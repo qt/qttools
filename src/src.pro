@@ -23,7 +23,6 @@ TEMPLATE        = subdirs
         unix:!symbian:!mac:!embedded:!qpa:SUBDIRS += qtconfig
         win32:!wince*:SUBDIRS += activeqt
     }
-    contains(QT_CONFIG, declarative):SUBDIRS += qml
 }
 
 !wince*:!symbian:SUBDIRS += linguist
@@ -36,7 +35,6 @@ embedded:SUBDIRS += kmap2qmap
 
 contains(QT_CONFIG, dbus):SUBDIRS += qdbus
 # We don't need these command line utilities on embedded platforms.
-!wince*:!symbian:contains(QT_CONFIG, xmlpatterns): SUBDIRS += xmlpatterns xmlpatternsvalidator
 embedded: SUBDIRS += makeqpf
 
 !wince*:!cross_compile:SUBDIRS += qdoc3
