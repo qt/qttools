@@ -1,3 +1,5 @@
+load(qt_module)
+
 QT += sql \
     xml \
     network
@@ -7,12 +9,13 @@ DEFINES += QHELP_LIB \
     QT_CLUCENE_SUPPORT
 CONFIG += qt \
     warn_on
-include(../../../src/qbase.pri)
+include($$QT_SOURCE_TREE/src/qbase.pri)
 QMAKE_TARGET_PRODUCT = Help
 QMAKE_TARGET_DESCRIPTION = Help \
     application \
     framework.
 DEFINES -= QT_ASCII_CAST_WARNINGS
+INCLUDEPATH += $$QT.help.includes
 qclucene = QtCLucene$${QT_LIBINFIX}
 if(!debug_and_release|build_pass):CONFIG(debug, debug|release) { 
     mac:qclucene = $${qclucene}_debug
