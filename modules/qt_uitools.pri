@@ -5,6 +5,7 @@ QT_UITOOLS_PATCH_VERSION = $$QT_PATCH_VERSION
 
 QT.uitools.name = QtUiTools
 QT.uitools.includes = $$QT_MODULE_INCLUDE_BASE $$QT_MODULE_INCLUDE_BASE/QtUiTools
+QT.uitools.private_includes = $$QT_MODULE_INCLUDE_BASE/QtUiTools/private
 QT.uitools.sources = $$QT_MODULE_BASE/src/designer/src/uitools
 QT.uitools.libs = $$QT_MODULE_LIB_BASE
 QT.uitools.depends = xml
