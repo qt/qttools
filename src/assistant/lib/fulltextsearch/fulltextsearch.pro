@@ -1,3 +1,4 @@
+load(qt_module)
 
 QMAKE_TARGET_PRODUCT = QtCLucene
 QMAKE_TARGET_DESCRIPTION = QtCLucene full text search library wrapper.
@@ -13,7 +14,7 @@ QT -= gui
 TEMPLATE = lib
 TARGET = QtCLucene
 DEFINES += QHELP_LIB
-include(../../../../src/qbase.pri)
+include($$QT_SOURCE_TREE/src/qbase.pri)
 include(fulltextsearch.pri)
 
 CONFIG += qt warn_off
