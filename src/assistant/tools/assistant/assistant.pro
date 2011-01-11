@@ -1,3 +1,4 @@
+DEFINES += QT_NO_WEBKIT
 include(../../../shared/fontpanel/fontpanel.pri)
 TEMPLATE = app
 LANGUAGE = C++
@@ -6,14 +7,13 @@ contains(QT_CONFIG, webkit):QT += webkit
 CONFIG += qt \
     warn_on \
     help
-QT += network
+QT += network help
 PROJECTNAME = Assistant
 DESTDIR = ../../../../bin
 target.path = $$[QT_INSTALL_BINS]
 INSTALLS += target
 DEPENDPATH += ../shared
-DEPENDPATH += .
-INCLUDEPATH += .
+INCLUDEPATH += $$QT.help.includes
 
 # ## Work around a qmake issue when statically linking to
 # ## not-yet-installed plugins

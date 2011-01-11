@@ -1,5 +1,6 @@
 QT += xml \
-    network
+    network \
+    help
 TEMPLATE = app
 DESTDIR = ../../../../bin
 TARGET = qcollectiongenerator

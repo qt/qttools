@@ -4,7 +4,7 @@ contains(QT_CONFIG, script): QT += script
 
 include(../../../../shared/qtpropertybrowser/qtpropertybrowserutils.pri)
 include(../../../../shared/deviceskin/deviceskin.pri)
-include(../../../../../src/tools/rcc/rcc.pri)
+include($$QT_SOURCE_TREE/src/tools/rcc/rcc.pri)
 include(../../../../shared/findwidget/findwidget.pri)
 include(../../../../shared/qtgradienteditor/qtgradienteditor.pri)
 

@@ -1,3 +1,5 @@
+load(qt_module)
+
 TEMPLATE = app
 CONFIG   += qt warn_on x11
 build_all:!build_pass {

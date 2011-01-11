@@ -1,8 +1,10 @@
+load(qt_modules)
+
 TEMPLATE = app
 LANGUAGE = C++
 DESTDIR = ../../../bin
 
-QT += xml
+QT += xml uitools designer
 
 CONFIG += qt \
     warn_on \
@@ -17,6 +19,7 @@ build_all:!build_pass {
 include(../shared/formats.pri)
 
 DEFINES += QFORMINTERNAL_NAMESPACE
+
 INCLUDEPATH += ../../designer/src/uitools
 INCLUDEPATH += ../../designer/src/lib/uilib
 

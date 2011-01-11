@@ -1,3 +1,5 @@
+load(qt_module)
+
 TEMPLATE        = app
 TARGET          = lrelease
 DESTDIR         = ../../../bin
@@ -12,10 +14,10 @@ SOURCES += \
 win32:SOURCES += $$QT_SOURCE_TREE/src/corelib/io/qsettings_win.cpp
 macx:SOURCES += $$QT_SOURCE_TREE/src/corelib/io/qsettings_mac.cpp
 
-include(../../../src/tools/bootstrap/bootstrap.pri)
+include($$QT_SOURCE_TREE/src/tools/bootstrap/bootstrap.pri)
 include(../shared/formats.pri)
 include(../shared/proparser.pri)
-include(../../shared/symbian/epocroot.pri)
+include($$QT_SOURCE_TREE/tools/shared/symbian/epocroot.pri)
 
 win32:LIBS += -ladvapi32   # for qsettings_win.cpp
 

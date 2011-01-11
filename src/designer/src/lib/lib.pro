@@ -1,11 +1,14 @@
+load(qt_module)
+
 TEMPLATE=lib
 TARGET=QtDesigner
 QT += xml
 contains(QT_CONFIG, reduce_exports):CONFIG += hide_symbols
 CONFIG += qt
 win32|mac: CONFIG += debug_and_release
-DESTDIR = ../../../../lib
-!wince*:DLLDESTDIR = ../../../../bin
+DESTDIR = $$QT_BUILD_TREE/lib
+!wince*:DLLDESTDIR = $$QT_BUILD_TREE/bin
+INCLUDEPATH += $$QT.designer.includes
 
 isEmpty(QT_MAJOR_VERSION) {
    VERSION=4.3.0
@@ -15,7 +18,7 @@ isEmpty(QT_MAJOR_VERSION) {
 
 unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES += QtXml
 
-include(../../../../src/qt_targets.pri)
+include($$QT_SOURCE_TREE/src/qt_targets.pri)
 QMAKE_TARGET_PRODUCT = Designer
 QMAKE_TARGET_DESCRIPTION = Graphical user interface designer.
 

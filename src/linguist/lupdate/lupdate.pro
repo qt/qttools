@@ -1,3 +1,5 @@
+load(qt_module)
+
 TEMPLATE        = app
 TARGET          = lupdate
 DESTDIR          = ../../../bin
@@ -15,8 +17,8 @@ build_all:!build_pass {
 include(../shared/formats.pri)
 include(../shared/proparser.pri)
 
-include($$QT_SOURCE_TREE/src/declarative/qml/parser/parser.pri)
-INCLUDEPATH += $$QT_SOURCE_TREE/src/declarative/qml $$QT_BUILD_TREE/include/QtDeclarative
+include($$QT.declarative.sources/qml/parser/parser.pri)
+INCLUDEPATH += $$QT.declarative.sources/qml $$QT.declarative.includes
 
 SOURCES += \
     main.cpp \

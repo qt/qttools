@@ -11,7 +11,6 @@ TEMPLATE        = subdirs
         } else {
             SUBDIRS = assistant \
                       pixeltool \
-                      porting \
                       qtestlib \
                       qttracereplay
             contains(QT_EDITION, Console) {
@@ -20,7 +19,7 @@ TEMPLATE        = subdirs
                 SUBDIRS += designer
             }
         }
-        unix:!symbian:!mac:!embedded:!qpa:SUBDIRS += qtconfig
+#        unix:!symbian:!mac:!embedded:!qpa:SUBDIRS += qtconfig
         win32:!wince*:SUBDIRS += activeqt
     }
 }

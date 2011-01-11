@@ -1,12 +1,13 @@
+load(qt_module)
+
 TEMPLATE = lib
 TARGET = QtDesignerComponents
 contains(QT_CONFIG, reduce_exports):CONFIG += hide_symbols
 CONFIG += qt depend_prl no_objective_c designer
 win32|mac: CONFIG += debug_and_release
-QTDIR_build { 
-    DESTDIR = $$QT_BUILD_TREE/lib
-    !wince*:DLLDESTDIR = $$QT_BUILD_TREE/bin
-}
+DESTDIR = $$QT_BUILD_TREE/lib
+!wince*:DLLDESTDIR = $$QT_BUILD_TREE/bin
+QT += designer
 
 # QtDesignerComponents uses
 DEFINES += QT_STATICPLUGIN
@@ -17,7 +18,7 @@ isEmpty(QT_MAJOR_VERSION) {
    VERSION=$${QT_MAJOR_VERSION}.$${QT_MINOR_VERSION}.$${QT_PATCH_VERSION}
 }
 
-include(../../../../../src/qt_targets.pri)
+include($$QT_SOURCE_TREE/src/qt_targets.pri)
 QMAKE_TARGET_PRODUCT = Designer
 QMAKE_TARGET_DESCRIPTION = Graphical user interface designer.
 

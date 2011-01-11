@@ -1,9 +1,11 @@
+load(qt_module)
+
 TEMPLATE = app
 
 DESTDIR     = ../../bin
 
 DEPENDPATH += .
-INCLUDEPATH += . ../../src/3rdparty/harfbuzz/src
+INCLUDEPATH += . $$QT_SOURCE_TREE/src/3rdparty/harfbuzz/src
 TARGET = qttracereplay
 
 # Input

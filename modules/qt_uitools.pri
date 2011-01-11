@@ -1,0 +1,10 @@
+QT_UITOOLS_VERSION = $$QT_VERSION
+QT_UITOOLS_MAJOR_VERSION = $$QT_MAJOR_VERSION
+QT_UITOOLS_MINOR_VERSION = $$QT_MINOR_VERSION
+QT_UITOOLS_PATCH_VERSION = $$QT_PATCH_VERSION
+
+QT.uitools.name = QtUiTools
+QT.uitools.includes = $$QT_MODULE_INCLUDE_BASE $$QT_MODULE_INCLUDE_BASE/QtUiTools
+QT.uitools.sources = $$QT_MODULE_BASE/src/designer/src/uitools
+QT.uitools.libs = $$QT_MODULE_LIB_BASE
+QT.uitools.depends = xml
