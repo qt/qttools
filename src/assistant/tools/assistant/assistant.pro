@@ -1,4 +1,3 @@
-DEFINES += QT_NO_WEBKIT
 include(../../../shared/fontpanel/fontpanel.pri)
 TEMPLATE = app
 LANGUAGE = C++
