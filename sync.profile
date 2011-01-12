@@ -2,7 +2,6 @@
     "QtCLucene" => "$basedir/src/assistant/lib/fulltextsearch",
     "QtHelp" => "$basedir/src/assistant/lib",
     "QtDesigner" => "$basedir/src/designer/src/lib",
-    "QtUiTools" => "$basedir/src/designer/src/uitools",
 );
 %moduleheaders = ( # restrict the module headers to those found in relative path
 );
@@ -24,5 +23,4 @@
     "QtCLucene" => "$basedir/modules/qt_clucene.pri",
     "QtHelp" => "$basedir/modules/qt_help.pri",
     "QtDesigner" => "$basedir/modules/qt_designer.pri",
-    "QtUiTools" => "$basedir/modules/qt_uitools.pri",
 );

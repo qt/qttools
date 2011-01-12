@@ -48,7 +48,7 @@ INCLUDEPATH += . .. \
     $$PWD/../../lib/components \
     $$PWD/../../lib/sdk \
     $$PWD/../../lib/extension \
-    $$PWD/../../lib/uilib \
+    $$QT_SOURCE_TREE/tools/uilib \
     $$PWD/../../lib/shared
 
 include(../propertyeditor/propertyeditor.pri)

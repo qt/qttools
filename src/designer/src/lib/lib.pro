@@ -59,7 +59,8 @@ mac:!static:contains(QT_CONFIG, qt_framework) {
 
 include(extension/extension.pri)
 include(sdk/sdk.pri)
-include(uilib/uilib.pri)
+include($$QT_SOURCE_TREE/tools/uilib/uilib.pri)
+INCLUDEPATH += $$QT_SOURCE_TREE/tools/uilib
 include(shared/shared.pri)
 PRECOMPILED_HEADER=lib_pch.h
 

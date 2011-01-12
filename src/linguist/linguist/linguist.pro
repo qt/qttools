@@ -1,4 +1,4 @@
-load(qt_modules)
+load(qt_module)
 
 TEMPLATE = app
 LANGUAGE = C++
@@ -20,8 +20,8 @@ include(../shared/formats.pri)
 
 DEFINES += QFORMINTERNAL_NAMESPACE
 
-INCLUDEPATH += ../../designer/src/uitools
-INCLUDEPATH += ../../designer/src/lib/uilib
+INCLUDEPATH += $$QT_SOURCE_TREE/src/uitools
+INCLUDEPATH += $$QT_SOURCE_TREE/tools/uilib
 
 SOURCES += \
     batchtranslationdialog.cpp \
