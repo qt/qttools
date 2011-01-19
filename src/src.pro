@@ -36,8 +36,6 @@ contains(QT_CONFIG, dbus):SUBDIRS += qdbus
 # We don't need these command line utilities on embedded platforms.
 embedded: SUBDIRS += makeqpf
 
-!wince*:!cross_compile:SUBDIRS += qdoc3
-
 CONFIG+=ordered
 QTDIR_build:REQUIRES = "contains(QT_CONFIG, full-config)"
 
