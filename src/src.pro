@@ -20,7 +20,6 @@ TEMPLATE        = subdirs
             }
         }
 #        unix:!symbian:!mac:!embedded:!qpa:SUBDIRS += qtconfig
-        win32:!wince*:SUBDIRS += activeqt
     }
 }
 
