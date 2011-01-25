@@ -54,6 +54,7 @@
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 #include <QtCore/QTextStream>
+#include <QtCore/QLibraryInfo>
 
 #include <iostream>
 
