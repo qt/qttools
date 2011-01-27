@@ -4,10 +4,13 @@ TEMPLATE        = app
 TARGET          = lrelease
 DESTDIR         = ../../../bin
 
+QT              -= gui
+
+CONFIG          += qt warn_on console
+CONFIG          -= app_bundle
+
 DEFINES += QT_NO_CAST_FROM_ASCII QT_NO_CAST_TO_ASCII
 SOURCES += main.cpp
-
-INCLUDEPATH += $$QT_BUILD_TREE/src/corelib/global # qlibraryinfo.cpp includes qconfig.cpp
 
 include(../shared/formats.pri)
 include(../shared/proparser.pri)
