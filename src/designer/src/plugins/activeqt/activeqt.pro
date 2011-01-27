@@ -8,9 +8,10 @@ build_all:!build_pass {
     CONFIG += release
 }
 
-INCLUDEPATH += $$QT_SOURCE_TREE/src/activeqt/shared/ \
-               $$QT_BUILD_TREE/src/activeqt/container \
-               ../../lib/uilib
+INCLUDEPATH += $$QT.activeqt.sources/shared/ \
+               $$QT.activeqt.sources/container \
+               ../../lib/uilib \
+               $$QT.designer.includes
 
 # Input
 SOURCES += qaxwidgetextrainfo.cpp \
@@ -18,14 +19,14 @@ qaxwidgetplugin.cpp \
 qdesigneraxwidget.cpp \
 qaxwidgetpropertysheet.cpp \
 qaxwidgettaskmenu.cpp \
-    $$QT_SOURCE_TREE/src/activeqt/shared/qaxtypes.cpp
+    $$QT.activeqt.sources/shared/qaxtypes.cpp
 
 HEADERS += qaxwidgetextrainfo.h \
 qaxwidgetplugin.h \
 qdesigneraxwidget.h \
 qaxwidgetpropertysheet.h \
 qaxwidgettaskmenu.h \
-    $$QT_SOURCE_TREE/src/activeqt/shared/qaxtypes.h
+    $$QT.activeqt.sources/shared/qaxtypes.h
 
 # install
 target.path = $$[QT_INSTALL_PLUGINS]/designer
