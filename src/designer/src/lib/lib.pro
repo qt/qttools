@@ -36,7 +36,10 @@ QMAKE_TARGET_DESCRIPTION = Graphical user interface designer.
 
 #load up the headers info
 CONFIG += qt_install_headers
-HEADERS_PRI = $$QT_BUILD_TREE/include/QtDesigner/headers.pri
+#headers.pri is loaded from the last include path
+LAST_MODULE_INCLUDE=$$INCLUDEPATH
+for(include_path, INCLUDEPATH):LAST_MODULE_INCLUDE=$${include_path}
+HEADERS_PRI = $$LAST_MODULE_INCLUDE/headers.pri
 include($$HEADERS_PRI, "", true)|clear(HEADERS_PRI)
 
 #mac frameworks
