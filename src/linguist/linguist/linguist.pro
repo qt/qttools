@@ -4,7 +4,7 @@ TEMPLATE = app
 LANGUAGE = C++
 DESTDIR = ../../../bin
 
-QT += xml uitools designer
+QT += xml designer
 
 CONFIG += qt \
     warn_on \
