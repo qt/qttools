@@ -2,7 +2,7 @@ QT += xml \
     network \
     help
 TEMPLATE = app
-DESTDIR = ../../../../bin
+DESTDIR = $$QT.designer.bins
 TARGET = qcollectiongenerator
 CONFIG += qt \
     warn_on \

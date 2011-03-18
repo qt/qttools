@@ -7,7 +7,7 @@ TARGET =
 DEPENDPATH += .
 INCLUDEPATH += . ../../src/3rdparty/harfbuzz/src
 CONFIG += console
-DESTDIR = ../../bin
+DESTDIR = $$QT.designer.bins
 
 target.path=$$[QT_INSTALL_BINS]
 INSTALLS += target

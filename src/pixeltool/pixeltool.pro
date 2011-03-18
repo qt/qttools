@@ -7,7 +7,7 @@ build_all:!build_pass {
     CONFIG += release
 }
 
-DESTDIR     = ../../bin
+DESTDIR     = $$QT.designer.bins
 
 DEPENDPATH += .
 INCLUDEPATH += .

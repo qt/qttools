@@ -1,7 +1,7 @@
 QT += xml help
 TEMPLATE = app
 TARGET = qhelpconverter
-DESTDIR = ../../../../bin
+DESTDIR = $$QT.designer.bins
 CONFIG += qt warn_on help
 
 target.path=$$[QT_INSTALL_BINS]

@@ -12,7 +12,7 @@ SOURCES         = qdbusviewer.cpp \
 
 RESOURCES += qdbusviewer.qrc
 
-DESTDIR = ../../../bin
+DESTDIR = $$QT.designer.bins
 
 CONFIG += qdbus
 QT += xml

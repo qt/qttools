@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = cetest
-DESTDIR = ../../../../bin
+DESTDIR = $$QT.designer.bins
 build_all:!build_pass {
     CONFIG -= build_all
     CONFIG += release

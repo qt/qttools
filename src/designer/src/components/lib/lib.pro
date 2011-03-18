@@ -6,7 +6,7 @@ contains(QT_CONFIG, reduce_exports):CONFIG += hide_symbols
 CONFIG += qt depend_prl no_objective_c designer
 win32|mac: CONFIG += debug_and_release
 DESTDIR = $$QT_BUILD_TREE/lib
-!wince*:DLLDESTDIR = $$QT_BUILD_TREE/bin
+!wince*:DLLDESTDIR = $$QT.designer.bins
 QT += designer
 
 # QtDesignerComponents uses

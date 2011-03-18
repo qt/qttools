@@ -1,7 +1,7 @@
 
 TEMPLATE = app
 TARGET = lconvert
-DESTDIR         = ../../../bin
+DESTDIR         = $$QT.designer.bins
 
 QT -= gui
 

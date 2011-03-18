@@ -2,7 +2,7 @@ load(qt_module)
 
 TEMPLATE = app
 
-DESTDIR     = ../../bin
+DESTDIR     = $$QT.designer.bins
 
 DEPENDPATH += .
 INCLUDEPATH += . $$QT_SOURCE_TREE/src/3rdparty/harfbuzz/src

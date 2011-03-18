@@ -2,7 +2,7 @@ TEMPLATE = app
 TARGET = macdeployqt
 DEPENDPATH += .
 INCLUDEPATH += .
-DESTDIR     = ../../../bin
+DESTDIR     = $$QT.designer.bins
 
 # Input
 SOURCES += main.cpp ../shared/shared.cpp

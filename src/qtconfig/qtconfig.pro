@@ -22,7 +22,7 @@ RESOURCES    = qtconfig.qrc
 
 PROJECTNAME        = Qt Configuration
 TARGET             = qtconfig
-DESTDIR            = ../../bin
+DESTDIR            = $$QT.designer.bins
 
 target.path=$$[QT_INSTALL_BINS]
 INSTALLS        += target

@@ -1,7 +1,7 @@
 TEMPLATE        = app
 CONFIG          += qt warn_on uic
 TARGET          = qvfb
-DESTDIR         = ../../bin
+DESTDIR         = $$QT.designer.bins
 
 !win32:!embedded:!mac:CONFIG += x11
 

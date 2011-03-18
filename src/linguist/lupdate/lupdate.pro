@@ -2,7 +2,7 @@ load(qt_module)
 
 TEMPLATE        = app
 TARGET          = lupdate
-DESTDIR          = ../../../bin
+DESTDIR          = $$QT.designer.bins
 
 QT              -= gui
 

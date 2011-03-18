@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = qhelpgenerator
-DESTDIR = ../../../../bin
+DESTDIR = $$QT.designer.bins
 CONFIG += qt warn_on help console
 CONFIG -= app_bundle
 QT += network help

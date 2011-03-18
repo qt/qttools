@@ -1,6 +1,6 @@
 load(qt_module)
 
-DESTDIR = ../../../../bin
+DESTDIR = $$QT.designer.bins
 QT += xml network designer
 contains(QT_CONFIG, script): QT += script
 build_all:!build_pass {

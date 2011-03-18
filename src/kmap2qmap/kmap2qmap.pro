@@ -1,6 +1,6 @@
 
 TEMPLATE = app
-DESTDIR = ../../bin
+DESTDIR = $$QT.designer.bins
 QT = core
 CONFIG += console
 CONFIG -= app_bundle

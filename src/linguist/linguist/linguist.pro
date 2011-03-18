@@ -2,7 +2,7 @@ load(qt_module)
 
 TEMPLATE = app
 LANGUAGE = C++
-DESTDIR = ../../../bin
+DESTDIR = $$QT.designer.bins
 
 QT += xml designer
 

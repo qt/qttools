@@ -1,5 +1,5 @@
 TARGET   = cetcpsync
-DESTDIR = ../../../../bin
+DESTDIR = $$QT.designer.bins
 CONFIG   += console
 CONFIG   -= app_bundle
 QT       += network

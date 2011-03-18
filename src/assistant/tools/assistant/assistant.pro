@@ -8,7 +8,7 @@ CONFIG += qt \
     help
 QT += network help
 PROJECTNAME = Assistant
-DESTDIR = ../../../../bin
+DESTDIR = $$QT.designer.bins
 target.path = $$[QT_INSTALL_BINS]
 INSTALLS += target
 DEPENDPATH += ../shared

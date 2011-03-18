@@ -1,5 +1,5 @@
 SOURCES = qdbusxml2cpp.cpp
-DESTDIR = ../../../bin
+DESTDIR = $$QT.designer.bins
 TARGET = qdbusxml2cpp
 QT = core xml
 CONFIG += qdbus

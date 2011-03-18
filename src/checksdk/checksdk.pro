@@ -1,5 +1,5 @@
 TEMPLATE = app
-DESTDIR = ../../bin
+DESTDIR = $$QT.designer.bins
 TARGET = checksdk
 DEPENDPATH += .
 INCLUDEPATH += .
