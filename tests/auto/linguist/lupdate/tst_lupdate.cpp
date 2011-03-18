@@ -130,7 +130,7 @@ void tst_lupdate::doCompare(const QStringList &_actual, const QString &expectedF
 
     QStringList actual;
     actual.reserve(_actual.size());
-    QRegExp niRx(".*:Function '\\w+' is not implemented");
+    QRegExp niRx(".*:(Function '\\w+' is not implemented|'\\w+' is not a recognized replace function)");
     foreach (const QString &a, _actual)
         if (!niRx.exactMatch(a))
             actual << a;
