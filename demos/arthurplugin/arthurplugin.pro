@@ -4,7 +4,7 @@ QTDIR       = $$QT_SOURCE_TREE
 CONFIG      += designer plugin
 TEMPLATE    = lib
 TARGET = $$qtLibraryTarget(arthurplugin)
-QTDIR_build:DESTDIR     = $$QT_BUILD_TREE/plugins/designer
+DESTDIR = $$QT.designer.plugins/designer
 
 contains(QT_CONFIG, opengl) {
 	DEFINES += QT_OPENGL_SUPPORT

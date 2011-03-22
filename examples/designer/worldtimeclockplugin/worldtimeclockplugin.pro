@@ -5,7 +5,7 @@ TARGET      = $$qtLibraryTarget($$TARGET)
 #! [1]
 TEMPLATE    = lib
 #! [1]
-QTDIR_build:DESTDIR     = $$QT_BUILD_TREE/plugins/designer
+DESTDIR = $$QT.designer.plugins/designer
 
 #! [2]
 HEADERS     = worldtimeclock.h \

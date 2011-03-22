@@ -5,7 +5,7 @@ TARGET      = $$qtLibraryTarget($$TARGET)
 #! [2]
 TEMPLATE    = lib
 #! [1] #! [2]
-QTDIR_build:DESTDIR     = $$QT_BUILD_TREE/plugins/designer
+DESTDIR = $$QT.designer.plugins/designer
 
 #! [3]
 HEADERS     = analogclock.h \

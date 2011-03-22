@@ -9,6 +9,7 @@ QT.designer.includes = $$QT_MODULE_INCLUDE_BASE $$QT_MODULE_INCLUDE_BASE/QtDesig
 QT.designer.private_includes = $$QT_MODULE_INCLUDE_BASE/QtDesigner/private
 QT.designer.sources = $$QT_MODULE_BASE/src/designer/src/lib
 QT.designer.libs = $$QT_MODULE_LIB_BASE
+QT.designer.plugins = $$QT_MODULE_PLUGIN_BASE
 QT.designer.imports = $$QT_MODULE_IMPORT_BASE
 QT.designer.depends = xml
 QT.designer.DEFINES = QT_DESIGNER_LIB
