@@ -7,3 +7,4 @@ SUBDIRS=\
     qhelpprojectdata \
 
 SUBDIRS += linguist
+!cross_compile:SUBDIRS += host.pro
