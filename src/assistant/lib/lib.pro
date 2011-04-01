@@ -5,6 +5,10 @@ QT += sql \
     network
 TEMPLATE = lib
 TARGET = QtHelp
+
+CONFIG += module
+MODULE_PRI += ../../../modules/qt_help.pri
+
 DEFINES += QHELP_LIB \
     QT_CLUCENE_SUPPORT
 CONFIG += qt \
