@@ -5,6 +5,7 @@ TARGET          = lupdate
 DESTDIR          = $$QT.designer.bins
 
 QT              -= gui
+QT              += core-private declarative-private
 
 CONFIG          += qt warn_on console
 CONFIG          -= app_bundle

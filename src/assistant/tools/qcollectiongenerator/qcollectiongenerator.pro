@@ -1,6 +1,6 @@
 QT += xml \
     network \
-    help
+    help-private
 TEMPLATE = app
 DESTDIR = $$QT.designer.bins
 TARGET = qcollectiongenerator

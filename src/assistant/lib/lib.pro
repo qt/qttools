@@ -2,7 +2,8 @@ load(qt_module)
 
 QT += sql \
     xml \
-    network
+    network \
+    core-private
 TEMPLATE = lib
 TARGET = QtHelp
 

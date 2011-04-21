@@ -1,7 +1,7 @@
 load(qt_module)
 
 DESTDIR = $$QT.designer.bins
-QT += xml network designer
+QT += core-private xml network designer-private uilib-private
 
 CONFIG += module
 MODULE_PRI = ../../../../modules/qt_designer.pri

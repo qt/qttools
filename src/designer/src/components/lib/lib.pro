@@ -4,10 +4,11 @@ TEMPLATE = lib
 TARGET = QtDesignerComponents
 contains(QT_CONFIG, reduce_exports):CONFIG += hide_symbols
 CONFIG += qt depend_prl no_objective_c designer
+QT += gui-private
 win32|mac: CONFIG += debug_and_release
 DESTDIR = $$QT_BUILD_TREE/lib
 !wince*:DLLDESTDIR = $$QT.designer.bins
-QT += designer
+QT += designer-private uilib-private
 
 # QtDesignerComponents uses
 DEFINES += QT_STATICPLUGIN
