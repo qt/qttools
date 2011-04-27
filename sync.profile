@@ -24,3 +24,47 @@
     "QtHelp" => "$basedir/modules/qt_help.pri",
     "QtDesigner" => "$basedir/modules/qt_designer.pri",
 );
+# Modules and programs, and their dependencies.
+# Each of the module version specifiers can take one of the following values:
+#   - A specific Git revision.
+#   - "LATEST_REVISION", to always test against the latest revision.
+#   - "LATEST_RELEASE", to always test against the latest public release.
+#   - "THIS_REPOSITORY", to indicate that the module is in this repository.
+%dependencies = (
+    "QtHelp" => {
+        "QtCore" => "0c637cb07ba3c9b353e7e483a209537485cc4e2a",
+        "QtGui" => "0c637cb07ba3c9b353e7e483a209537485cc4e2a",
+        "QtSql" => "0c637cb07ba3c9b353e7e483a209537485cc4e2a",
+        "QtXml" => "0c637cb07ba3c9b353e7e483a209537485cc4e2a",
+    },
+    "linguist" => {
+        "QtGui" => "0c637cb07ba3c9b353e7e483a209537485cc4e2a",
+        "QtDesigner" => "THIS_REPOSITORY",
+        "QtUiTools" => "0c637cb07ba3c9b353e7e483a209537485cc4e2a",
+        "QtXml" => "0c637cb07ba3c9b353e7e483a209537485cc4e2a",
+        "QtCore" => "0c637cb07ba3c9b353e7e483a209537485cc4e2a",
+    },
+    "designer" => {
+        "QtNetwork" => "0c637cb07ba3c9b353e7e483a209537485cc4e2a",
+        "QtGui" => "0c637cb07ba3c9b353e7e483a209537485cc4e2a",
+        "QtXml" => "0c637cb07ba3c9b353e7e483a209537485cc4e2a",
+        "QtDesigner" => "THIS_REPOSITORY",
+        "QtScript" => "4d15ca64fc7ca81bdadba9fbeb84d4e98a6c0edc",
+        "QtCore" => "0c637cb07ba3c9b353e7e483a209537485cc4e2a",
+    },
+    "assistant" => {
+        "QtWebKit" => "LATEST_REVISION",
+        "QtHelp" => "THIS_REPOSITORY",
+        "QtNetwork" => "0c637cb07ba3c9b353e7e483a209537485cc4e2a",
+        "QtGui" => "0c637cb07ba3c9b353e7e483a209537485cc4e2a",
+        "QtSql" => "0c637cb07ba3c9b353e7e483a209537485cc4e2a",
+        "QtXml" => "0c637cb07ba3c9b353e7e483a209537485cc4e2a",
+        "QtCore" => "0c637cb07ba3c9b353e7e483a209537485cc4e2a",
+    },
+    "QtDesigner" => {
+        "QtCore" => "0c637cb07ba3c9b353e7e483a209537485cc4e2a",
+        "QtGui" => "0c637cb07ba3c9b353e7e483a209537485cc4e2a",
+        "QtScript" => "4d15ca64fc7ca81bdadba9fbeb84d4e98a6c0edc",
+        "QtXml" => "0c637cb07ba3c9b353e7e483a209537485cc4e2a",
+    },
+);
