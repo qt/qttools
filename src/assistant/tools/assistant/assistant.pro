@@ -2,7 +2,7 @@ include(../../../shared/fontpanel/fontpanel.pri)
 TEMPLATE = app
 LANGUAGE = C++
 TARGET = assistant
-contains(QT_CONFIG, webkit) {
+!isEmpty(QT.webkit.name) {
     QT += webkit
 } else {
     DEFINES += QT_NO_WEBKIT
