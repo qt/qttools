@@ -949,9 +949,9 @@ QWidget *QDesignerResource::create(DomWidget *ui_widget, QWidget *parentWidget)
             sep->setSeparator(true);
             w->addAction(sep);
             addMenuAction(sep);
-        } else if (QAction *a = m_actions.value(name)) {
+        } else if (QAction *a = d->m_actions.value(name)) {
             w->addAction(a);
-        } else if (QActionGroup *g = m_actionGroups.value(name)) {
+        } else if (QActionGroup *g = d->m_actionGroups.value(name)) {
             w->addActions(g->actions());
         } else if (QMenu *menu = w->findChild<QMenu*>(name)) {
             w->addAction(menu->menuAction());
@@ -1089,7 +1089,6 @@ void QDesignerResource::applyProperties(QObject *o, const QList<DomProperty*> &p
     if (!sheet)
         return;
 
-    QFormBuilderExtra *formBuilderExtra = QFormBuilderExtra::instance(this);
     QDesignerDynamicPropertySheetExtension *dynamicSheet = qt_extension<QDesignerDynamicPropertySheetExtension*>(core()->extensionManager(), o);
     const bool dynamicPropertiesAllowed = dynamicSheet && dynamicSheet->dynamicPropertiesAllowed();
 
@@ -1135,7 +1134,7 @@ void QDesignerResource::applyProperties(QObject *o, const QList<DomProperty*> &p
             }
         }
 
-        formBuilderExtra->applyPropertyInternally(o, propertyName, v);
+        d->applyPropertyInternally(o, propertyName, v);
         if (index != -1) {
             sheet->setProperty(index, v);
             sheet->setChanged(index, true);
@@ -1371,14 +1370,14 @@ DomLayoutItem *QDesignerResource::createDom(QLayoutItem *item, DomLayout *ui_lay
 
         ui_item = new DomLayoutItem();
         ui_item->setElementSpacer(spacer);
-        m_laidout.insert(item->widget(), true);
+        d->m_laidout.insert(item->widget(), true);
     } else if (QLayoutWidget *layoutWidget = qobject_cast<QLayoutWidget*>(item->widget())) {
         // Do not save a QLayoutWidget if it is within a layout (else it is saved as "QWidget"
         Q_ASSERT(layoutWidget->layout());
         DomLayout *l = createDom(layoutWidget->layout(), ui_layout, ui_parentWidget);
         ui_item = new DomLayoutItem();
         ui_item->setElementLayout(l);
-        m_laidout.insert(item->widget(), true);
+        d->m_laidout.insert(item->widget(), true);
     } else if (!item->spacerItem()) { // we use spacer as fake item in the Designer
         ui_item = QAbstractFormBuilder::createDom(item, ui_layout, ui_parentWidget);
     } else {
@@ -1856,7 +1855,7 @@ bool QDesignerResource::copy(QIODevice *dev, const FormBuilderClipboard &selecti
 
     DomUI *ui = copy(selection);
 
-    m_laidout.clear();
+    d->m_laidout.clear();
     m_copyWidget = false;
 
     if (!ui)
@@ -1911,7 +1910,7 @@ DomUI *QDesignerResource::copy(const FormBuilderClipboard &selection)
         }
     }
 
-    m_laidout.clear();
+    d->m_laidout.clear();
     m_copyWidget = false;
 
     if (!hasItems) {

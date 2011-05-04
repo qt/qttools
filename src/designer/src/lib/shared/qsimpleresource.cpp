@@ -102,50 +102,6 @@ DomBrush *QSimpleResource::saveBrush(const QBrush &brush)
     return QAbstractFormBuilder::saveBrush(brush);
 }
 
-QIcon QSimpleResource::nameToIcon(const QString &filePath, const QString &qrcPath)
-{
-    Q_UNUSED(filePath)
-    Q_UNUSED(qrcPath)
-    qWarning() << "QSimpleResource::nameToIcon() is obsoleted";
-    return QIcon();
-}
-
-QString QSimpleResource::iconToFilePath(const QIcon &pm) const
-{
-    Q_UNUSED(pm)
-    qWarning() << "QSimpleResource::iconToFilePath() is obsoleted";
-    return QString();
-}
-
-QString QSimpleResource::iconToQrcPath(const QIcon &pm) const
-{
-    Q_UNUSED(pm)
-    qWarning() << "QSimpleResource::iconToQrcPath() is obsoleted";
-    return QString();
-}
-
-QPixmap QSimpleResource::nameToPixmap(const QString &filePath, const QString &qrcPath)
-{
-    Q_UNUSED(filePath)
-    Q_UNUSED(qrcPath)
-    qWarning() << "QSimpleResource::nameToPixmap() is obsoleted";
-    return QPixmap();
-}
-
-QString QSimpleResource::pixmapToFilePath(const QPixmap &pm) const
-{
-    Q_UNUSED(pm)
-    qWarning() << "QSimpleResource::pixmapToFilePath() is obsoleted";
-    return QString();
-}
-
-QString QSimpleResource::pixmapToQrcPath(const QPixmap &pm) const
-{
-    Q_UNUSED(pm)
-    qWarning() << "QSimpleResource::pixmapToQrcPath() is obsoleted";
-    return QString();
-}
-
 DomScript *QSimpleResource::createScript(const QString &script, ScriptSource source)
 {
     if (script.isEmpty())
