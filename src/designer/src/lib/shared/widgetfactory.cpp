@@ -178,7 +178,6 @@ WidgetFactory::Strings::Strings() :
     m_objectName(QLatin1String("objectName")),
     m_spacerName(QLatin1String("spacerName")),
     m_orientation(QLatin1String("orientation")),
-    m_q3WidgetStack(QLatin1String("Q3WidgetStack")),
     m_qAction(QLatin1String("QAction")),
     m_qButtonGroup(QLatin1String("QButtonGroup")),
     m_qAxWidget(QLatin1String("QAxWidget")),
@@ -457,9 +456,6 @@ QString WidgetFactory::classNameOf(QDesignerFormEditorInterface *c, const QObjec
     else if (isAxWidget(w))
         return QLatin1String("QAxWidget");
 #endif
-    else if (qstrcmp(className, "QDesignerQ3WidgetStack") == 0)
-        return QLatin1String("Q3WidgetStack");
-
     return QLatin1String(className);
 }
 
@@ -515,23 +511,7 @@ QLayout *WidgetFactory::createLayout(QWidget *widget, QLayout *parentLayout, int
     QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(core()->extensionManager(), layout);
 
     sheet->setChanged(sheet->indexOf(m_strings.m_objectName), true);
-    if (widget->inherits("Q3GroupBox")) {
-        layout->setContentsMargins(widget->style()->pixelMetric(QStyle::PM_LayoutLeftMargin),
-                                    widget->style()->pixelMetric(QStyle::PM_LayoutTopMargin),
-                                    widget->style()->pixelMetric(QStyle::PM_LayoutRightMargin),
-                                    widget->style()->pixelMetric(QStyle::PM_LayoutBottomMargin));
-        QGridLayout *grid = qobject_cast<QGridLayout *>(layout);
-        if (grid) {
-            grid->setHorizontalSpacing(-1);
-            grid->setVerticalSpacing(-1);
-        } else {
-            layout->setSpacing(-1);
-        }
-        layout->setAlignment(Qt::AlignTop);
-        // Just to ensure; before 4.3 orientation property was always set (now only for QSplitter class).
-        // Calling Q3GroupBox::setOrientation() invoked in turn setSpacing(0). Below fixes that
-        widget->layout()->setSpacing(-1);
-    } else if (widget->inherits("QLayoutWidget")) {
+    if (widget->inherits("QLayoutWidget")) {
         sheet->setProperty(sheet->indexOf(m_strings.m_leftMargin), 0);
         sheet->setProperty(sheet->indexOf(m_strings.m_topMargin), 0);
         sheet->setProperty(sheet->indexOf(m_strings.m_rightMargin), 0);

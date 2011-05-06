@@ -84,7 +84,7 @@ public:
 
     static void deleteLayout(const QDesignerFormEditorInterface *core, QWidget *widget);
 
-    // Examines the immediate layout of the widget (will fail for Q3Group Box).
+    // Examines the immediate layout of the widget.
     static Type layoutType(const QDesignerFormEditorInterface *core, const QWidget *w);
     // Examines the managed layout of the widget
     static Type managedLayoutType(const QDesignerFormEditorInterface *core, const QWidget *w, QLayout **layout = 0);

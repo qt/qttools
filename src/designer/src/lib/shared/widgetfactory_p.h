@@ -145,7 +145,6 @@ private:
         const QString m_objectName;
         const QString m_spacerName;
         const QString m_orientation;
-        const QString m_q3WidgetStack;
         const QString m_qAction;
         const QString m_qButtonGroup;
         const QString m_qAxWidget;

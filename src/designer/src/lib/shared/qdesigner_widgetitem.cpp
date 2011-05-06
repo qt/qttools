@@ -236,7 +236,7 @@ bool QDesignerWidgetItem::check(const QLayout *layout, QWidget *w, Qt::Orientati
     // within laid-out form editor widgets. No check for managed() here as we
     // want container pages and widgets in the process of being morphed as
     // well. Avoid nested layouts (as the effective stretch cannot be easily
-    // computed and may mess things up). Won't work for Q3 Group boxes.
+    // computed and may mess things up).
     if (ptrToOrientations)
         *ptrToOrientations = 0;
 
