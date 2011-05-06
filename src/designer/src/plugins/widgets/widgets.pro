@@ -1,4 +1,4 @@
-QT += qt3support
+QT += qt3support designer-private uilib-private
 TEMPLATE = lib
 CONFIG += plugin
 DESTDIR =

@@ -7,6 +7,7 @@ DESTDIR     = $$QT.designer.bins
 DEPENDPATH += .
 INCLUDEPATH += . $$QT_SOURCE_TREE/src/3rdparty/harfbuzz/src
 TARGET = qttracereplay
+QT += core-private gui-private
 
 # Input
 SOURCES += main.cpp

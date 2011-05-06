@@ -1,8 +1,7 @@
 SOURCES = qdbusxml2cpp.cpp
 DESTDIR = $$QT.designer.bins
 TARGET = qdbusxml2cpp
-QT = core xml
-CONFIG += qdbus
+QT = core dbus-private xml
 CONFIG -= app_bundle
 win32:CONFIG += console
 

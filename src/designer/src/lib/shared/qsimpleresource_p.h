@@ -104,13 +104,6 @@ public:
                                        const DomCustomWidgets *dom_custom_widgets);
 
 protected:
-    virtual QIcon nameToIcon(const QString &filePath, const QString &qrcPath);
-    virtual QString iconToFilePath(const QIcon &pm) const;
-    virtual QString iconToQrcPath(const QIcon &pm) const;
-    virtual QPixmap nameToPixmap(const QString &filePath, const QString &qrcPath);
-    virtual QString pixmapToFilePath(const QPixmap &pm) const;
-    virtual QString pixmapToQrcPath(const QPixmap &pm) const;
-
     enum ScriptSource { ScriptDesigner, ScriptExtension, ScriptCustomWidgetPlugin };
     static DomScript*createScript(const QString &script, ScriptSource source);
     typedef QList<DomScript*> DomScripts;

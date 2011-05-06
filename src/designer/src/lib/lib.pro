@@ -2,13 +2,16 @@ load(qt_module)
 
 TEMPLATE=lib
 TARGET=QtDesigner
-QT += xml
+QT += core-private gui-private xml uilib-private
 contains(QT_CONFIG, reduce_exports):CONFIG += hide_symbols
 CONFIG += qt
 win32|mac: CONFIG += debug_and_release
 DESTDIR = $$QT_BUILD_TREE/lib
 !wince*:DLLDESTDIR = $$QT.designer.bins
-INCLUDEPATH += $$QT.designer.includes
+
+INCLUDEPATH += $$QT.designer.includes \
+               $$QT.designer.private_includes \
+               $$QT.designer.private_includes/QtDesigner
 
 isEmpty(QT_MAJOR_VERSION) {
    VERSION=4.3.0

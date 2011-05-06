@@ -2,9 +2,14 @@ load(qt_module)
 
 QT += sql \
     xml \
-    network
+    network \
+    core-private
 TEMPLATE = lib
 TARGET = QtHelp
+
+CONFIG += module
+MODULE_PRI += ../../../modules/qt_help.pri
+
 DEFINES += QHELP_LIB \
     QT_CLUCENE_SUPPORT
 CONFIG += qt \

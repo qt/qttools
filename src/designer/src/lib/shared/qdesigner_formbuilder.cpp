@@ -281,7 +281,6 @@ void QDesignerFormBuilder::applyProperties(QObject *o, const QList<DomProperty*>
     if (properties.empty())
         return;
 
-    QFormBuilderExtra *formBuilderExtra = QFormBuilderExtra::instance(this);
     const QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(core()->extensionManager(), o);
     const QDesignerDynamicPropertySheetExtension *dynamicSheet = qt_extension<QDesignerDynamicPropertySheetExtension*>(core()->extensionManager(), o);
     const bool changingMetaObject = WidgetFactory::classNameOf(core(), o) == QLatin1String("QAxWidget");
@@ -309,7 +308,7 @@ void QDesignerFormBuilder::applyProperties(QObject *o, const QList<DomProperty*>
             continue;
 
         const QString attributeName = p->attributeName();
-        if (formBuilderExtra->applyPropertyInternally(o, attributeName, v))
+        if (d->applyPropertyInternally(o, attributeName, v))
             continue;
 
         // refuse fake properties like current tab name (weak test)
