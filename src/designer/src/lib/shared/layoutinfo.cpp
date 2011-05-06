@@ -210,15 +210,7 @@ LayoutInfo::Type LayoutInfo::laidoutWidgetType(const QDesignerFormEditorInterfac
 
 QLayout *LayoutInfo::internalLayout(const QWidget *widget)
 {
-    QLayout *widgetLayout = widget->layout();
-    if (widgetLayout && widget->inherits("Q3GroupBox")) {
-        if (widgetLayout->count()) {
-            widgetLayout = widgetLayout->itemAt(0)->layout();
-        } else {
-            widgetLayout = 0;
-        }
-    }
-    return widgetLayout;
+    return widget->layout();
 }
 
 

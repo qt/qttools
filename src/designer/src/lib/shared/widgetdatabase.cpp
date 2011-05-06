@@ -289,7 +289,6 @@ WidgetDataBase::WidgetDataBase(QDesignerFormEditorInterface *core, QObject *pare
     append(new WidgetDataBaseItem(QString::fromUtf8("QDesignerMenu")));
     append(new WidgetDataBaseItem(QString::fromUtf8("QDesignerMenuBar")));
     append(new WidgetDataBaseItem(QString::fromUtf8("QDesignerDockWidget")));
-    append(new WidgetDataBaseItem(QString::fromUtf8("QDesignerQ3WidgetStack")));
     append(new WidgetDataBaseItem(QString::fromUtf8("QAction")));
     append(new WidgetDataBaseItem(QString::fromUtf8("QButtonGroup")));
 
@@ -313,7 +312,6 @@ WidgetDataBase::WidgetDataBase(QDesignerFormEditorInterface *core, QObject *pare
     item(indexOfClassName(QLatin1String("QMainWindow")))->setContainer(true);
     item(indexOfClassName(QLatin1String("QDockWidget")))->setContainer(true);
     item(indexOfClassName(QLatin1String("QDesignerDockWidget")))->setContainer(true);
-    item(indexOfClassName(QLatin1String("QDesignerQ3WidgetStack")))->setContainer(true);
     item(indexOfClassName(QLatin1String("QMdiArea")))->setContainer(true);
     item(indexOfClassName(QLatin1String("QWorkspace")))->setContainer(true);
     item(indexOfClassName(QLatin1String("QWizard")))->setContainer(true);
@@ -514,7 +512,7 @@ static inline bool suitableForNewForm(const QString &className)
          return false;
     if (className == QLatin1String("QSplitter"))
          return false;
-    if (className.startsWith(QLatin1String("QDesigner")) || className.startsWith(QLatin1String("Q3")) ||  className.startsWith(QLatin1String("QLayout")))
+    if (className.startsWith(QLatin1String("QDesigner")) ||  className.startsWith(QLatin1String("QLayout")))
         return false;
     return true;
 }

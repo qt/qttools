@@ -180,7 +180,7 @@ public:
                         PropertyText
     };
 
-    enum ObjectType { ObjectNone, ObjectLabel, ObjectLayout, ObjectLayoutWidget, ObjectQ3GroupBox };
+    enum ObjectType { ObjectNone, ObjectLabel, ObjectLayout, ObjectLayoutWidget };
 
     static ObjectType objectTypeFromObject(const QObject *o);
     static PropertyType propertyTypeFromName(const QString &name);
