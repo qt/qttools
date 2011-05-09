@@ -47,8 +47,97 @@
 #include <QtCore/QRegExp>
 #include <QtCore/QDebug>
 #include <QtCore/QXmlStreamReader>
+#include <QtCore/QSharedData>
 
 QT_BEGIN_NAMESPACE
+
+class QDesignerWidgetBoxWidgetData : public QSharedData
+{
+public:
+    QDesignerWidgetBoxWidgetData(const QString &aname, const QString &xml,
+                                 const QString &icon_name,
+                                 QDesignerWidgetBoxInterface::Widget::Type atype);
+    QString m_name;
+    QString m_xml;
+    QString m_icon_name;
+    QDesignerWidgetBoxInterface::Widget::Type m_type;
+};
+
+QDesignerWidgetBoxWidgetData::QDesignerWidgetBoxWidgetData(const QString &aname,
+                                                           const QString &xml,
+                                                           const QString &icon_name,
+                                                           QDesignerWidgetBoxInterface::Widget::Type atype) :
+    m_name(aname), m_xml(xml), m_icon_name(icon_name), m_type(atype)
+{
+}
+
+QDesignerWidgetBoxInterface::Widget::Widget(const QString &aname, const QString &xml,
+                                            const QString &icon_name, Type atype) :
+    m_data(new QDesignerWidgetBoxWidgetData(aname, xml, icon_name, atype))
+{
+}
+
+QDesignerWidgetBoxInterface::Widget::~Widget()
+{
+}
+
+QDesignerWidgetBoxInterface::Widget::Widget(const Widget &w) :
+    m_data(w.m_data)
+{
+}
+
+QDesignerWidgetBoxInterface::Widget &QDesignerWidgetBoxInterface::Widget::operator=(const Widget &rhs)
+{
+    if (this != &rhs) {
+        m_data = rhs.m_data;
+    }
+    return *this;
+}
+
+QString QDesignerWidgetBoxInterface::Widget::name() const
+{
+    return m_data->m_name;
+}
+
+void QDesignerWidgetBoxInterface::Widget::setName(const QString &aname)
+{
+    m_data->m_name = aname;
+}
+
+QString QDesignerWidgetBoxInterface::Widget::domXml() const
+{
+    return m_data->m_xml;
+}
+
+void QDesignerWidgetBoxInterface::Widget::setDomXml(const QString &xml)
+{
+    m_data->m_xml = xml;
+}
+
+QString QDesignerWidgetBoxInterface::Widget::iconName() const
+{
+    return m_data->m_icon_name;
+}
+
+void QDesignerWidgetBoxInterface::Widget::setIconName(const QString &icon_name)
+{
+    m_data->m_icon_name = icon_name;
+}
+
+QDesignerWidgetBoxInterface::Widget::Type QDesignerWidgetBoxInterface::Widget::type() const
+{
+    return m_data->m_type;
+}
+
+void QDesignerWidgetBoxInterface::Widget::setType(Type atype)
+{
+    m_data->m_type = atype;
+}
+
+bool QDesignerWidgetBoxInterface::Widget::isNull() const
+{
+    return m_data->m_name.isEmpty();
+}
 
 namespace qdesigner_internal {
 QDesignerWidgetBox::QDesignerWidgetBox(QWidget *parent, Qt::WindowFlags flags)
