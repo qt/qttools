@@ -18,8 +18,6 @@ HEADERS += $$PWD/abstractformeditor.h \
     $$PWD/abstractwidgetfactory.h \
     $$PWD/abstractobjectinspector.h \
     $$PWD/abstractactioneditor.h \
-    $$PWD/abstractbrushmanager.h \
-    $$PWD/abstracticoncache.h \
     $$PWD/abstractlanguage.h \
     $$PWD/abstractoptionspage_p.h \
     $$PWD/propertysheet.h \

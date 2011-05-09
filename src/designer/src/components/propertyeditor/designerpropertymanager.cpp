@@ -56,8 +56,6 @@
 #include <iconselector_p.h>
 #include <abstractdialoggui_p.h>
 
-#include <QtDesigner/QDesignerIconCacheInterface>
-
 #include <QtGui/QLabel>
 #include <QtGui/QToolButton>
 #include <QtGui/QHBoxLayout>

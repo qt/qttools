@@ -53,9 +53,7 @@
 #include <QtDesigner/QDesignerWidgetDataBaseInterface>
 #include <QtDesigner/QDesignerWidgetFactoryInterface>
 #include <QtDesigner/QDesignerObjectInspectorInterface>
-#include <QtDesigner/QDesignerBrushManagerInterface>
 #include <QtDesigner/QDesignerIntegrationInterface>
-#include <QtDesigner/QDesignerIconCacheInterface>
 #include <QtDesigner/QDesignerActionEditorInterface>
 #include <pluginmanager_p.h>
 #include <qtresourcemodel_p.h>
@@ -97,9 +95,7 @@ public:
     QPointer<QDesignerWidgetDataBaseInterface> m_widgetDataBase;
     QPointer<QDesignerWidgetFactoryInterface> m_widgetFactory;
     QPointer<QDesignerObjectInspectorInterface> m_objectInspector;
-    QPointer<QDesignerBrushManagerInterface> m_brushManager;
     QPointer<QDesignerIntegrationInterface> m_integration;
-    QPointer<QDesignerIconCacheInterface> m_iconCache;
     QPointer<QDesignerActionEditorInterface> m_actionEditor;
     QDesignerSettingsInterface *m_settingsManager;
     QDesignerPluginManager *m_pluginManager;
@@ -192,7 +188,6 @@ QDesignerFormEditorInterface::QDesignerFormEditorInterface(QObject *parent)
 */
 QDesignerFormEditorInterface::~QDesignerFormEditorInterface()
 {
-    delete d;
 }
 
 /*!
@@ -404,24 +399,6 @@ void QDesignerFormEditorInterface::setObjectInspector(QDesignerObjectInspectorIn
 /*!
     \internal
 
-    Returns an interface to the brush manager used by the palette editor.
-*/
-QDesignerBrushManagerInterface *QDesignerFormEditorInterface::brushManager() const
-{
-    return d->m_brushManager;
-}
-
-/*!
-    \internal
-*/
-void QDesignerFormEditorInterface::setBrushManager(QDesignerBrushManagerInterface *brushManager)
-{
-    d->m_brushManager = brushManager;
-}
-
-/*!
-    \internal
-
     Returns an interface to the integration.
 */
 QDesignerIntegrationInterface *QDesignerFormEditorInterface::integration() const
@@ -435,25 +412,6 @@ QDesignerIntegrationInterface *QDesignerFormEditorInterface::integration() const
 void QDesignerFormEditorInterface::setIntegration(QDesignerIntegrationInterface *integration)
 {
     d->m_integration = integration;
-}
-
-/*!
-    \internal
-
-    Returns an interface to the icon cache used by the form editor to
-    manage icons.
-*/
-QDesignerIconCacheInterface *QDesignerFormEditorInterface::iconCache() const
-{
-    return d->m_iconCache;
-}
-
-/*!
-    \internal
-*/
-void QDesignerFormEditorInterface::setIconCache(QDesignerIconCacheInterface *cache)
-{
-    d->m_iconCache = cache;
 }
 
 /*!

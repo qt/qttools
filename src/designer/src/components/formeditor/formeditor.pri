@@ -28,9 +28,6 @@ HEADERS += $$PWD/qdesigner_resource.h \
            $$PWD/qmdiarea_container.h \
            $$PWD/qwizard_container.h \
            $$PWD/default_layoutdecoration.h \
-           $$PWD/qtbrushmanager.h \
-           $$PWD/brushmanagerproxy.h \
-           $$PWD/iconcache.h \
            $$PWD/tool_widgeteditor.h \
            $$PWD/formeditor_optionspage.h \
            $$PWD/embeddedoptionspage.h \
@@ -62,9 +59,6 @@ SOURCES += $$PWD/qdesigner_resource.cpp \
            $$PWD/default_layoutdecoration.cpp \
            $$PWD/default_actionprovider.cpp \
            $$PWD/tool_widgeteditor.cpp \
-           $$PWD/qtbrushmanager.cpp \
-           $$PWD/brushmanagerproxy.cpp \
-           $$PWD/iconcache.cpp \
            $$PWD/formeditor_optionspage.cpp \
            $$PWD/embeddedoptionspage.cpp \
            $$PWD/formwindowsettings.cpp \

@@ -50,7 +50,7 @@
 
 #include <QtDesigner/QDesignerFormWindowInterface>
 #include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerIconCacheInterface>
+
 #include <QtCore/QDir>
 #include <QtCore/QQueue>
 #include <QtCore/QTextStream>
