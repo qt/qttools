@@ -42,64 +42,53 @@
 #include "abstractintegration.h"
 #include "abstractformeditor.h"
 
-#include <QtCore/QVariant>
-#include <QtCore/QSharedPointer>
-
 QT_BEGIN_NAMESPACE
 
-// Add 'private' struct as a dynamic property.
-
-static const char privatePropertyC[] = "_q_integrationprivate";
-
-struct QDesignerIntegrationInterfacePrivate {
-    QDesignerIntegrationInterfacePrivate() :
+class QDesignerIntegrationInterfacePrivate
+{
+public:
+    QDesignerIntegrationInterfacePrivate(QDesignerFormEditorInterface *core) :
         headerSuffix(QLatin1String(".h")),
-        headerLowercase(true) {}
+        headerLowercase(true), m_core(core) {}
 
     QString headerSuffix;
     bool headerLowercase;
+    QDesignerFormEditorInterface *m_core;
 };
 
-typedef QSharedPointer<QDesignerIntegrationInterfacePrivate> QDesignerIntegrationInterfacePrivatePtr;
-
-QT_END_NAMESPACE
-Q_DECLARE_METATYPE(QT_PREPEND_NAMESPACE(QDesignerIntegrationInterfacePrivatePtr))
-QT_BEGIN_NAMESPACE
-
-static QDesignerIntegrationInterfacePrivatePtr integrationD(const QObject *o)
-{
-    const QVariant property = o->property(privatePropertyC);
-    Q_ASSERT(qVariantCanConvert<QDesignerIntegrationInterfacePrivatePtr>(property));
-    return qvariant_cast<QDesignerIntegrationInterfacePrivatePtr>(property);
-}
-
 QDesignerIntegrationInterface::QDesignerIntegrationInterface(QDesignerFormEditorInterface *core, QObject *parent)
-    : QObject(parent),
-      m_core(core)
+    : QObject(parent), d(new QDesignerIntegrationInterfacePrivate(core))
 {
     core->setIntegration(this);
-    const QDesignerIntegrationInterfacePrivatePtr d(new QDesignerIntegrationInterfacePrivate);
-    setProperty(privatePropertyC, qVariantFromValue<QDesignerIntegrationInterfacePrivatePtr>(d));
+}
+
+QDesignerIntegrationInterface::~QDesignerIntegrationInterface()
+{
 }
 
 QString QDesignerIntegrationInterface::headerSuffix() const
 {
-    return integrationD(this)->headerSuffix;
+    return d->headerSuffix;
 }
 
 void QDesignerIntegrationInterface::setHeaderSuffix(const QString &headerSuffix)
 {
-    integrationD(this)->headerSuffix = headerSuffix;
+    d->headerSuffix = headerSuffix;
 }
 
 bool QDesignerIntegrationInterface::isHeaderLowercase() const
 {
-    return integrationD(this)->headerLowercase;
+    return d->headerLowercase;
 }
 
 void QDesignerIntegrationInterface::setHeaderLowercase(bool headerLowercase)
 {
-    integrationD(this)->headerLowercase = headerLowercase;
+    d->headerLowercase = headerLowercase;
+}
+
+QDesignerFormEditorInterface *QDesignerIntegrationInterface::QDesignerIntegrationInterface::core() const
+{
+    return d->m_core;
 }
 
 QT_END_NAMESPACE

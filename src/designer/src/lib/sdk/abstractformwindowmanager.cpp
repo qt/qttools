@@ -99,7 +99,9 @@ QT_BEGIN_NAMESPACE
 
 // ------------- QDesignerFormWindowManagerInterfacePrivate
 
-struct QDesignerFormWindowManagerInterfacePrivate {
+class QDesignerFormWindowManagerInterfacePrivate
+{
+public:
     QDesignerFormWindowManagerInterfacePrivate();
     QAction *m_simplifyLayoutAction;
     QAction *m_formLayoutAction;
@@ -111,18 +113,14 @@ QDesignerFormWindowManagerInterfacePrivate::QDesignerFormWindowManagerInterfaceP
 {
 }
 
-typedef QMap<const QDesignerFormWindowManagerInterface *, QDesignerFormWindowManagerInterfacePrivate *> FormWindowManagerPrivateMap;
-
-Q_GLOBAL_STATIC(FormWindowManagerPrivateMap, g_FormWindowManagerPrivateMap)
-
 /*!
     Constructs an interface with the given \a parent for the form window
     manager.
 */
 QDesignerFormWindowManagerInterface::QDesignerFormWindowManagerInterface(QObject *parent)
-    : QObject(parent)
+    : QObject(parent), d(new QDesignerFormWindowManagerInterfacePrivate)
+
 {
-    g_FormWindowManagerPrivateMap()->insert(this, new QDesignerFormWindowManagerInterfacePrivate);
 }
 
 /*!
@@ -130,11 +128,6 @@ QDesignerFormWindowManagerInterface::QDesignerFormWindowManagerInterface(QObject
 */
 QDesignerFormWindowManagerInterface::~QDesignerFormWindowManagerInterface()
 {
-    FormWindowManagerPrivateMap *fwmpm = g_FormWindowManagerPrivateMap();
-    const FormWindowManagerPrivateMap::iterator it = fwmpm->find(this);
-    Q_ASSERT(it !=  fwmpm->end());
-    delete it.value();
-    fwmpm->erase(it);
 }
 
 /*!
@@ -284,8 +277,6 @@ FormWindowManagerPrivateMap *fwmpm = g_FormWindowManagerPrivateMap();    \sa QAc
 
 QAction *QDesignerFormWindowManagerInterface::actionFormLayout() const
 {
-    const QDesignerFormWindowManagerInterfacePrivate *d = g_FormWindowManagerPrivateMap()->value(this);
-    Q_ASSERT(d);
     return d->m_formLayoutAction;
 }
 
@@ -298,8 +289,6 @@ QAction *QDesignerFormWindowManagerInterface::actionFormLayout() const
 
 void QDesignerFormWindowManagerInterface::setActionFormLayout(QAction *action)
 {
-    QDesignerFormWindowManagerInterfacePrivate *d = g_FormWindowManagerPrivateMap()->value(this);
-    Q_ASSERT(d);
     d->m_formLayoutAction = action;
 }
 
@@ -335,8 +324,6 @@ QAction *QDesignerFormWindowManagerInterface::actionAdjustSize() const
 
 QAction *QDesignerFormWindowManagerInterface::actionSimplifyLayout() const
 {
-    const QDesignerFormWindowManagerInterfacePrivate *d = g_FormWindowManagerPrivateMap()->value(this);
-    Q_ASSERT(d);
     return d->m_simplifyLayoutAction;
 }
 
@@ -349,8 +336,6 @@ QAction *QDesignerFormWindowManagerInterface::actionSimplifyLayout() const
 
 void QDesignerFormWindowManagerInterface::setActionSimplifyLayout(QAction *action)
 {
-    QDesignerFormWindowManagerInterfacePrivate *d = g_FormWindowManagerPrivateMap()->value(this);
-    Q_ASSERT(d);
     d->m_simplifyLayoutAction = action;
 }
 

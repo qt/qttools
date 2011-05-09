@@ -45,6 +45,7 @@
 #include <QtDesigner/sdk_global.h>
 
 #include <QtCore/QObject>
+#include <QtCore/QScopedPointer>
 #include <QtCore/QString>
 
 QT_BEGIN_HEADER
@@ -52,6 +53,7 @@ QT_BEGIN_HEADER
 QT_BEGIN_NAMESPACE
 
 class QDesignerFormEditorInterface;
+class QDesignerIntegrationInterfacePrivate;
 
 class QDESIGNER_SDK_EXPORT QDesignerIntegrationInterface: public QObject
 {
@@ -61,8 +63,9 @@ class QDESIGNER_SDK_EXPORT QDesignerIntegrationInterface: public QObject
 
 public:
     QDesignerIntegrationInterface(QDesignerFormEditorInterface *core, QObject *parent = 0);
+    virtual ~QDesignerIntegrationInterface();
 
-    inline QDesignerFormEditorInterface *core() const;
+    QDesignerFormEditorInterface *core() const;
 
     virtual QWidget *containerWindow(QWidget *widget) const = 0;
 
@@ -73,11 +76,8 @@ public:
     void setHeaderLowercase(bool headerLowerCase);
 
 private:
-    QDesignerFormEditorInterface *m_core;
+    QScopedPointer<QDesignerIntegrationInterfacePrivate> d;
 };
-
-inline QDesignerFormEditorInterface *QDesignerIntegrationInterface::core() const
-{ return m_core; }
 
 QT_END_NAMESPACE
 

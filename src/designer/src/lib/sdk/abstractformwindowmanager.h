@@ -46,6 +46,7 @@
 #include <QtDesigner/abstractformwindow.h>
 
 #include <QtCore/QObject>
+#include <QtCore/QScopedPointer>
 
 QT_BEGIN_HEADER
 
@@ -57,6 +58,8 @@ class QDesignerFormEditorInterface;
 class DomUI;
 class QWidget;
 class QDesignerDnDItemInterface;
+
+class QDesignerFormWindowManagerInterfacePrivate;
 
 class QDESIGNER_SDK_EXPORT QDesignerFormWindowManagerInterface: public QObject
 {
@@ -111,8 +114,7 @@ protected:
     void setActionSimplifyLayout(QAction *action);
 
 private:
-    QDesignerFormWindowManagerInterface(const QDesignerFormWindowManagerInterface &other);
-    QDesignerFormWindowManagerInterface &operator = (const QDesignerFormWindowManagerInterface &other);
+    QScopedPointer<QDesignerFormWindowManagerInterfacePrivate> d;
 };
 
 QT_END_NAMESPACE

@@ -44,6 +44,7 @@
 
 #include <QtDesigner/sdk_global.h>
 
+#include <QtCore/QSharedDataPointer>
 #include <QtCore/QMetaType>
 #include <QtGui/QWidget>
 #include <QtGui/QIcon>
@@ -55,6 +56,8 @@ QT_BEGIN_NAMESPACE
 class DomUI;
 class QDesignerDnDItemInterface;
 
+class QDesignerWidgetBoxWidgetData;
+
 class QDESIGNER_SDK_EXPORT QDesignerWidgetBoxInterface : public QWidget
 {
     Q_OBJECT
@@ -63,25 +66,26 @@ public:
     public:
         enum Type { Default, Custom };
         Widget(const QString &aname = QString(), const QString &xml = QString(),
-                const QString &icon_name = QString(), Type atype = Default)
-            : m_name(aname), m_xml(xml), m_icon_name(icon_name), m_type(atype) {}
-        QString name() const { return m_name; }
-        void setName(const QString &aname) { m_name = aname; }
-        QString domXml() const { return m_xml; }
-        void setDomXml(const QString &xml) { m_xml = xml; }
-        QString iconName() const { return m_icon_name; }
-        void setIconName(const QString &icon_name) { m_icon_name = icon_name; }
-        Type type() const { return m_type; }
-        void setType(Type atype) { m_type = atype; }
+                const QString &icon_name = QString(), Type atype = Default);
+        ~Widget();
+        Widget(const Widget &w);
+        Widget &operator=(const Widget &w);
 
-        bool isNull() const { return m_name.isEmpty(); }
+        QString name() const;
+        void setName(const QString &aname);
+        QString domXml() const;
+        void setDomXml(const QString &xml);
+        QString iconName() const;
+        void setIconName(const QString &icon_name);
+        Type type() const;
+        void setType(Type atype);
+
+        bool isNull() const;
 
     private:
-        QString m_name;
-        QString m_xml;
-        QString m_icon_name;
-        Type m_type;
+        QSharedDataPointer<QDesignerWidgetBoxWidgetData> m_data;
     };
+
     typedef QList<Widget> WidgetList;
 
     class Category {
