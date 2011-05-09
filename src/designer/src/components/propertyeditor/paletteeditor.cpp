@@ -46,7 +46,6 @@
 
 #include <QtDesigner/QDesignerFormEditorInterface>
 #include <QtDesigner/QDesignerFormWindowManagerInterface>
-#include <QtDesigner/QDesignerIconCacheInterface>
 
 #include <QtCore/QMetaProperty>
 #include <QtGui/QPainter>

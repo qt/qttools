@@ -59,8 +59,6 @@ class QDesignerMetaDataBaseInterface;
 class QDesignerWidgetFactoryInterface;
 class QDesignerObjectInspectorInterface;
 class QDesignerPromotionInterface;
-class QDesignerBrushManagerInterface;
-class QDesignerIconCacheInterface;
 class QDesignerActionEditorInterface;
 class QDesignerIntegrationInterface;
 class QDesignerPluginManager;
@@ -95,8 +93,6 @@ public:
     QDesignerMetaDataBaseInterface *metaDataBase() const;
     QDesignerPromotionInterface *promotion() const;
     QDesignerWidgetFactoryInterface *widgetFactory() const;
-    QDesignerBrushManagerInterface *brushManager() const;
-    QDesignerIconCacheInterface *iconCache() const;
     QDesignerActionEditorInterface *actionEditor() const;
     QDesignerIntegrationInterface *integration() const;
     QDesignerPluginManager *pluginManager() const;
@@ -129,23 +125,9 @@ protected:
     void setPromotion(QDesignerPromotionInterface *promotion);
     void setWidgetFactory(QDesignerWidgetFactoryInterface *widgetFactory);
     void setExtensionManager(QExtensionManager *extensionManager);
-    void setBrushManager(QDesignerBrushManagerInterface *brushManager);
-    void setIconCache(QDesignerIconCacheInterface *cache);
 
 private:
-    QPointer<QWidget> m_pad1;
-    QPointer<QDesignerWidgetBoxInterface> m_pad2;
-    QPointer<QDesignerPropertyEditorInterface> m_pad3;
-    QPointer<QDesignerFormWindowManagerInterface> m_pad4;
-    QPointer<QExtensionManager> m_pad5;
-    QPointer<QDesignerMetaDataBaseInterface> m_pad6;
-    QPointer<QDesignerWidgetDataBaseInterface> m_pad7;
-    QPointer<QDesignerWidgetFactoryInterface> m_pad8;
-    QPointer<QDesignerObjectInspectorInterface> m_pad9;
-    QPointer<QDesignerBrushManagerInterface> m_pad10;
-    QPointer<QDesignerIconCacheInterface> m_pad11;
-    QPointer<QDesignerActionEditorInterface> m_pad12;
-    QDesignerFormEditorInterfacePrivate *d;
+    QScopedPointer<QDesignerFormEditorInterfacePrivate> d;
 
 private:
     QDesignerFormEditorInterface(const QDesignerFormEditorInterface &other);

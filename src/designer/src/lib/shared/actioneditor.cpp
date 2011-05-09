@@ -58,7 +58,6 @@
 #include <QtDesigner/QDesignerPropertySheetExtension>
 #include <QtDesigner/QExtensionManager>
 #include <QtDesigner/QDesignerMetaDataBaseInterface>
-#include <QtDesigner/QDesignerIconCacheInterface>
 #include <QtDesigner/private/abstractsettings_p.h>
 
 #include <QtGui/QMenu>

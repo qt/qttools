@@ -46,7 +46,6 @@
 
 #include <QtDesigner/QDesignerFormEditorInterface>
 #include <QtDesigner/QDesignerFormWindowInterface>
-#include <QtDesigner/QDesignerIconCacheInterface>
 #include <QtDesigner/QDesignerResourceBrowserInterface>
 #include <QtDesigner/QDesignerLanguageExtension>
 #include <QtDesigner/QDesignerTaskMenuExtension>
