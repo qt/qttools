@@ -15,6 +15,9 @@ DEFINES += QHELP_LIB \
 CONFIG += qt \
     warn_on
 include($$QT_SOURCE_TREE/src/qbase.pri)
+
+HEADERS += qthelpversion.h
+
 QMAKE_TARGET_PRODUCT = Help
 QMAKE_TARGET_DESCRIPTION = Help \
     application \

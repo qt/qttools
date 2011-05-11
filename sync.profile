@@ -6,6 +6,9 @@
 %moduleheaders = ( # restrict the module headers to those found in relative path
 );
 %classnames = (
+    "qtcluceneversion.h" => "QtCLuceneVersion",
+    "qthelpversion.h" => "QtHelpVersion",
+    "qtdesignerversion.h" => "QtDesigner",
 );
 %mastercontent = (
     "sql" => "#include <QtSql/QtSql>\n",
