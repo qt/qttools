@@ -62,6 +62,7 @@
 #include <shared_settings_p.h>
 #include <formwindowbase_p.h>
 #include <grid_p.h>
+#include <iconloader_p.h>
 #include <QtDesigner/QDesignerPromotionInterface>
 
 // Must be done outside of the Qt namespace
@@ -583,6 +584,32 @@ void QDesignerFormEditorInterface::setDialogGui(QDesignerDialogGuiInterface *dia
 {
     delete  d->m_dialogGui;
     d->m_dialogGui = dialogGui;
+}
+
+/*!
+    \internal
+
+    \since 5.0
+
+    Returns the plugin instances of QDesignerPluginManager.
+*/
+
+QObjectList QDesignerFormEditorInterface::pluginInstances() const
+{
+    return d->m_pluginManager->instances();
+}
+
+/*!
+    \internal
+
+    \since 5.0
+
+    Return icons for actions of \QD.
+*/
+
+QIcon QDesignerFormEditorInterface::createIcon(const QString &name)
+{
+    return qdesigner_internal::createIconSet(name);
 }
 
 QT_END_NAMESPACE
