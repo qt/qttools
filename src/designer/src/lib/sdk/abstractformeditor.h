@@ -70,6 +70,7 @@ class QtResourceModel;
 class QtGradientManager;
 
 class QWidget;
+class QIcon;
 
 class QExtensionManager;
 
@@ -117,6 +118,10 @@ public:
     void setResourceModel(QtResourceModel *model);
     void setGradientManager(QtGradientManager *manager);
     void setOptionsPages(const QList<QDesignerOptionsPageInterface*> &optionsPages);
+
+    QObjectList pluginInstances() const;
+
+    static QIcon createIcon(const QString &name);
 
 protected:
     void setFormManager(QDesignerFormWindowManagerInterface *formWindowManager);

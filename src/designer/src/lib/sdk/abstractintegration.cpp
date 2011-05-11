@@ -86,7 +86,7 @@ void QDesignerIntegrationInterface::setHeaderLowercase(bool headerLowercase)
     d->headerLowercase = headerLowercase;
 }
 
-QDesignerFormEditorInterface *QDesignerIntegrationInterface::QDesignerIntegrationInterface::core() const
+QDesignerFormEditorInterface *QDesignerIntegrationInterface::core() const
 {
     return d->m_core;
 }

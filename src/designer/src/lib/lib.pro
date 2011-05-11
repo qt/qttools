@@ -22,6 +22,9 @@ isEmpty(QT_MAJOR_VERSION) {
 unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES += QtXml
 
 include($$QT_SOURCE_TREE/src/qt_targets.pri)
+
+HEADERS += qtdesignerversion.h
+
 QMAKE_TARGET_PRODUCT = Designer
 QMAKE_TARGET_DESCRIPTION = Graphical user interface designer.
 

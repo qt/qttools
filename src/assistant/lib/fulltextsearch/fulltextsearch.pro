@@ -15,6 +15,9 @@ TEMPLATE = lib
 TARGET = QtCLucene
 DEFINES += QHELP_LIB
 include($$QT_SOURCE_TREE/src/qbase.pri)
+
+HEADERS += qtcluceneversion.h
+
 include(fulltextsearch.pri)
 
 CONFIG += qt warn_off
