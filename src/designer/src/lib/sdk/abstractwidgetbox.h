@@ -62,7 +62,7 @@ class QDESIGNER_SDK_EXPORT QDesignerWidgetBoxInterface : public QWidget
 {
     Q_OBJECT
 public:
-    class Widget {
+    class QDESIGNER_SDK_EXPORT Widget {
     public:
         enum Type { Default, Custom };
         Widget(const QString &aname = QString(), const QString &xml = QString(),
