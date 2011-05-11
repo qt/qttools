@@ -74,6 +74,12 @@
     selected widget has an implemented property sheet extension, this
     extension will override the default property sheet.
 
+    \warning The data types used by the property sheet for some properties
+    are opaque custom QVariant types containing additional information
+    instead of plain Qt data types.
+    For example, this is the case for enumerations, flags,
+    icons, pixmaps and strings.
+
     To create a property sheet extension, your extension class must
     inherit from both QObject and
     QDesignerPropertySheetExtension. Then, since we are implementing
@@ -285,4 +291,15 @@
     its default value, or not, depending on the \a changed parameter.
 
     \sa indexOf(), isChanged()
+*/
+
+/*!
+    \fn bool QDesignerPropertySheetExtension::isEnabled(int index) const
+
+    Returns true if the property at the given \a index is enabled in
+    \QD's property editor, otherwise false.
+
+    \since 5.0
+
+    \sa indexOf()
 */

@@ -952,9 +952,8 @@ bool PropertyListCommand::add(QObject *object, const QString &propertyName)
     if (index == -1)
         return false;
 
-    if (QDesignerPropertySheet *exSheet = qobject_cast<QDesignerPropertySheet*>(core()->extensionManager()->extension(object, Q_TYPEID(QDesignerPropertySheetExtension))))
-        if (!exSheet->isEnabled(index))
-            return false;
+    if (!sheet->isEnabled(index))
+    return false;
 
     const PropertyDescription description(propertyName, sheet, index);
 
