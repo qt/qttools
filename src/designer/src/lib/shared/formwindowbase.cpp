@@ -57,6 +57,7 @@
 #include <QtDesigner/QDesignerContainerExtension>
 #include <QtDesigner/QExtensionManager>
 #include <QtDesigner/QDesignerTaskMenuExtension>
+#include <QtDesigner/QDesignerIntegrationInterface>
 
 #include <QtCore/qdebug.h>
 #include <QtCore/QList>
@@ -119,6 +120,8 @@ FormWindowBase::FormWindowBase(QDesignerFormEditorInterface *core, QWidget *pare
     syncGridFeature();
     m_d->m_pixmapCache = new DesignerPixmapCache(this);
     m_d->m_iconCache = new DesignerIconCache(m_d->m_pixmapCache, this);
+    if (core->integration()->hasFeature(QDesignerIntegrationInterface::DefaultWidgetActionFeature))
+        connect(this, SIGNAL(activated(QWidget*)), this, SLOT(triggerDefaultAction(QWidget*)));
 }
 
 FormWindowBase::~FormWindowBase()
@@ -482,11 +485,6 @@ void FormWindowBase::triggerDefaultAction(QWidget *widget)
 {
     if (QAction *action = qdesigner_internal::preferredEditAction(core(), widget))
         QTimer::singleShot(0, action, SIGNAL(triggered()));
-}
-
-void FormWindowBase::setupDefaultAction(QDesignerFormWindowInterface *fw)
-{
-    QObject::connect(fw, SIGNAL(activated(QWidget*)), fw, SLOT(triggerDefaultAction(QWidget*)));
 }
 
 QString FormWindowBase::fileContents() const

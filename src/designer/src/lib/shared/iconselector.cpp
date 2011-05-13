@@ -44,14 +44,13 @@
 #include "qtresourcemodel_p.h"
 #include "qtresourceview_p.h"
 #include "iconloader_p.h"
-#include "qdesigner_integration_p.h"
 #include "formwindowbase_p.h"
 
 #include <abstractdialoggui_p.h>
-#include <qdesigner_integration_p.h>
 #include <QtDesigner/QDesignerFormEditorInterface>
 #include <QtDesigner/QDesignerResourceBrowserInterface>
 #include <QtDesigner/QDesignerLanguageExtension>
+#include <QtDesigner/QDesignerIntegrationInterface>
 #include <QtDesigner/QExtensionManager>
 
 #include <QtGui/QToolButton>
@@ -178,9 +177,8 @@ LanguageResourceDialog* LanguageResourceDialog::create(QDesignerFormEditorInterf
     if (QDesignerLanguageExtension *lang = qt_extension<QDesignerLanguageExtension *>(core->extensionManager(), core))
         if (QDesignerResourceBrowserInterface *rb = lang->createResourceBrowser(0))
             return new LanguageResourceDialog(rb, parent);
-    if (QDesignerIntegration *di = qobject_cast<QDesignerIntegration*>(core->integration()))
-        if (QDesignerResourceBrowserInterface *rb = di->createResourceBrowser(0))
-            return new LanguageResourceDialog(rb, parent);
+    if (QDesignerResourceBrowserInterface *rb = core->integration()->createResourceBrowser(0))
+        return new LanguageResourceDialog(rb, parent);
     return 0;
 }
 
@@ -303,10 +301,7 @@ QString IconSelector::choosePixmapResource(QDesignerFormEditorInterface *core, Q
         delete ldlg;
     } else {
         QtResourceViewDialog dlg(core, parent);
-
-        QDesignerIntegration *designerIntegration = qobject_cast<QDesignerIntegration *>(core->integration());
-        if (designerIntegration)
-            dlg.setResourceEditingEnabled(designerIntegration->isResourceEditingEnabled());
+        dlg.setResourceEditingEnabled(core->integration()->hasFeature(QDesignerIntegration::ResourceEditorFeature));
 
         dlg.selectResource(oldPath);
         if (dlg.exec() == QDialog::Accepted)

@@ -43,11 +43,11 @@
 #include "qdesigner_utils_p.h"
 #include "dynamicpropertysheet.h"
 #include "qdesigner_propertyeditor_p.h"
-#include "qdesigner_integration_p.h"
 #include "spacer_widget_p.h"
 #include "qdesigner_propertysheet_p.h"
 
 #include <QtDesigner/QDesignerFormEditorInterface>
+#include <QtDesigner/QDesignerIntegrationInterface>
 #include <QtDesigner/QDesignerFormWindowInterface>
 #include <QtDesigner/QDesignerFormWindowCursorInterface>
 #include <QtDesigner/QDesignerDynamicPropertySheetExtension>

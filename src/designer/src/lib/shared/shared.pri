@@ -42,7 +42,6 @@ HEADERS += \
     $$PWD/qdesigner_membersheet_p.h \
     $$PWD/qdesigner_propertyeditor_p.h \
     $$PWD/qdesigner_objectinspector_p.h \
-    $$PWD/qdesigner_integration_p.h \
     $$PWD/invisible_widget_p.h \
     $$PWD/qlayout_widget_p.h \
     $$PWD/sheet_delegate_p.h \
@@ -126,7 +125,6 @@ SOURCES += \
     $$PWD/qdesigner_membersheet.cpp \
     $$PWD/qdesigner_propertyeditor.cpp \
     $$PWD/qdesigner_objectinspector.cpp \
-    $$PWD/qdesigner_integration.cpp \
     $$PWD/qdesigner_dnditem.cpp \
     $$PWD/qsimpleresource.cpp \
     $$PWD/invisible_widget.cpp \

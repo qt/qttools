@@ -64,10 +64,9 @@ QT_BEGIN_NAMESPACE
 
 class QDesignerFormWindowInterface;
 class QDesignerPropertySheetExtension;
+class QDesignerIntegration;
 
 namespace qdesigner_internal {
-
-class QDesignerIntegration;
 
 enum SpecialProperty {
         SP_None, SP_ObjectName, SP_LayoutName, SP_SpacerName,SP_WindowTitle,

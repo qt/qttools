@@ -59,7 +59,6 @@
 #include "qdesigner_utils_p.h"
 #include "qdesigner_objectinspector_p.h"
 #include "morphmenu_p.h"
-#include "qdesigner_integration_p.h"
 #include "formlayoutmenu_p.h"
 #include "ui_selectsignaldialog.h"
 #include "widgetfactory_p.h"
@@ -73,6 +72,7 @@
 #include <QtDesigner/QDesignerPropertySheetExtension>
 #include <QtDesigner/QDesignerFormEditorInterface>
 #include <QtDesigner/QDesignerLanguageExtension>
+#include <QtDesigner/QDesignerIntegrationInterface>
 #include <QtDesigner/QExtensionManager>
 
 #include <QtGui/QAction>
@@ -119,10 +119,6 @@ static inline QAction *createSeparatorHelper(QObject *parent) {
     QAction *rc = new QAction(parent);
     rc->setSeparator(true);
     return rc;
-}
-
-static inline qdesigner_internal::QDesignerIntegration *integration(const QDesignerFormEditorInterface *core) {
-    return qobject_cast<qdesigner_internal::QDesignerIntegration *>(core->integration());
 }
 
 static QString objName(const QDesignerFormEditorInterface *core, QObject *object) {
@@ -701,9 +697,7 @@ static QString declaredInClass(const QDesignerMetaObjectInterface *metaObject, c
 
 bool QDesignerTaskMenu::isSlotNavigationEnabled(const QDesignerFormEditorInterface *core)
 {
-    if (QDesignerIntegration *integr = integration(core))
-        return integr->isSlotNavigationEnabled();
-    return false;
+    return core->integration()->hasFeature(QDesignerIntegration::SlotNavigationFeature);
 }
 
 void QDesignerTaskMenu::slotNavigateToSlot()
@@ -719,8 +713,6 @@ void QDesignerTaskMenu::navigateToSlot(QDesignerFormEditorInterface *core,
 {
     const QString objectName = objName(core, object);
     QMap<QString, QMap<QString, QStringList> > classToSignalList;
-
-    QDesignerIntegration *integr = integration(core);
 
     // "real" signals
     if (const QDesignerMetaObjectInterface *metaObject = core->introspection()->metaObject(object)) {
@@ -801,7 +793,7 @@ void QDesignerTaskMenu::navigateToSlot(QDesignerFormEditorInterface *core,
         const QStringList parameterNames = qvariant_cast<QStringList>(selectedItem->data(0, Qt::UserRole));
 
         // TODO: Check whether signal is connected to slot
-        integr->emitNavigateToSlot(objectName, signalSignature, parameterNames);
+        core->integration()->emitNavigateToSlot(objectName, signalSignature, parameterNames);
     }
 }
 

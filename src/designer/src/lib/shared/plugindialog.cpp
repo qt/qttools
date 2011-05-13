@@ -42,9 +42,9 @@
 
 #include "plugindialog_p.h"
 #include "pluginmanager_p.h"
-#include "qdesigner_integration_p.h"
 
 #include <QtDesigner/QDesignerFormEditorInterface>
+#include <QtDesigner/QDesignerIntegrationInterface>
 #include <QtDesigner/QDesignerCustomWidgetCollectionInterface>
 #include <QtDesigner/QDesignerWidgetDataBaseInterface>
 
@@ -85,14 +85,13 @@ PluginDialog::PluginDialog(QDesignerFormEditorInterface *core, QWidget *parent)
     setWindowTitle(tr("Plugin Information"));
     populateTreeWidget();
 
-    if (qobject_cast<qdesigner_internal::QDesignerIntegration *>(m_core->integration())) {
-        QPushButton *updateButton = new QPushButton(tr("Refresh"));
-        const QString tooltip = tr("Scan for newly installed custom widget plugins.");
-        updateButton->setToolTip(tooltip);
-        updateButton->setWhatsThis(tooltip);
-        connect(updateButton, SIGNAL(clicked()), this, SLOT(updateCustomWidgetPlugins()));
-        ui.buttonBox->addButton(updateButton, QDialogButtonBox::ActionRole);
-    }
+    QPushButton *updateButton = new QPushButton(tr("Refresh"));
+    const QString tooltip = tr("Scan for newly installed custom widget plugins.");
+    updateButton->setToolTip(tooltip);
+    updateButton->setWhatsThis(tooltip);
+    connect(updateButton, SIGNAL(clicked()), this, SLOT(updateCustomWidgetPlugins()));
+    ui.buttonBox->addButton(updateButton, QDialogButtonBox::ActionRole);
+
 }
 
 void PluginDialog::populateTreeWidget()
@@ -188,18 +187,16 @@ void PluginDialog::setItem(QTreeWidgetItem *pluginItem, const QString &name,
 
 void  PluginDialog::updateCustomWidgetPlugins()
 {
-    if (qdesigner_internal::QDesignerIntegration *integration = qobject_cast<qdesigner_internal::QDesignerIntegration *>(m_core->integration())) {
-        const int before = m_core->widgetDataBase()->count();
-        integration->updateCustomWidgetPlugins();
-        const int after = m_core->widgetDataBase()->count();
-        if (after >  before) {
-            ui.message->setText(tr("New custom widget plugins have been found."));
-            ui.message->show();
-        } else {
-            ui.message->setText(QString());
-        }
-        populateTreeWidget();
+    const int before = m_core->widgetDataBase()->count();
+    m_core->integration()->updateCustomWidgetPlugins();
+    const int after = m_core->widgetDataBase()->count();
+    if (after >  before) {
+        ui.message->setText(tr("New custom widget plugins have been found."));
+        ui.message->show();
+    } else {
+        ui.message->setText(QString());
     }
+    populateTreeWidget();
 }
 
 }
