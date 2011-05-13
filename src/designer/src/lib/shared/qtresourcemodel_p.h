@@ -65,7 +65,7 @@ class QtResourceModel;
 class QDESIGNER_SHARED_EXPORT QtResourceSet // one instance per one form
 {
 public:
-    QStringList activeQrcPaths() const;
+    QStringList activeResourceFilePaths() const;
 
     // activateQrcPaths(): if this QtResourceSet is active it emits resourceSetActivated();
     // otherwise only in case if active QtResource set contains one of
@@ -78,7 +78,7 @@ public:
     // resource set) it is automatically unloaded. The removed file can also be
     // marked as modified (later when another resource set which contains
     // removed path is activated will be reloaded)
-    void activateQrcPaths(const QStringList &paths, int *errorCount = 0, QString *errorMessages = 0);
+    void activateResourceFilePaths(const QStringList &paths, int *errorCount = 0, QString *errorMessages = 0);
 
     bool isModified(const QString &path) const; // for all paths in resource model (redundant here, maybe it should be removed from here)
     void setModified(const QString &path);      // for all paths in resource model (redundant here, maybe it should be removed from here)

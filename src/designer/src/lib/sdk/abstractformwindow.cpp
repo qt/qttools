@@ -40,6 +40,7 @@
 ****************************************************************************/
 
 #include "abstractformwindow.h"
+#include "qtresourcemodel_p.h"
 
 #include <widgetfactory_p.h>
 
@@ -150,6 +151,18 @@ QT_BEGIN_NAMESPACE
 */
 
 /*!
+    \enum QDesignerFormWindowInterface::ResourceFileSaveMode
+    \since 5.0
+
+    This enum describes how resource files are saved.
+
+
+    \value SaveAllResourceFiles        Save all resource files.
+    \value SaveOnlyUsedResourceFiles   Save resource files used by form.
+    \value DontSaveResourceFiles       Do not save resource files.
+*/
+
+/*!
     Constructs a form window interface with the given \a parent and
     the specified window \a flags.
 */
@@ -242,6 +255,53 @@ QDesignerFormWindowInterface *QDesignerFormWindowInterface::findFormWindow(QObje
     }
 
     return 0;
+}
+
+/*!
+    \fn virtual QtResourceSet *QDesignerFormWindowInterface::resourceSet() const
+
+    Returns the resource set used by the form window interface.
+
+    \since 5.0
+    \internal
+*/
+
+/*!
+    \fn virtual void QDesignerFormWindowInterface::setResourceSet(QtResourceSet *resourceSet)
+
+    Sets the resource set used by the form window interface to \a resourceSet.
+
+    \since 5.0
+    \internal
+*/
+
+/*!
+    Returns the active resource (.qrc) file paths currently loaded in \QD.
+    \since 5.0
+    \sa activateResourceFilePaths()
+*/
+
+QStringList QDesignerFormWindowInterface::activeResourceFilePaths() const
+{
+    return resourceSet()->activeResourceFilePaths();
+}
+
+/*!
+    Activates the resource (.qrc) file paths \a paths, returning the count of errors in \a errorCount and
+    error message in \a errorMessages. \QD loads the resources using the QResource class,
+    making them available for form editing.
+
+    In IDE integrations, a list of the project's resource (.qrc) file can be activated, making
+    them available to \QD.
+
+    \since 5.0
+    \sa activeResourceFilePaths()
+    \sa QResource
+*/
+
+void QDesignerFormWindowInterface::activateResourceFilePaths(const QStringList &paths, int *errorCount, QString *errorMessages)
+{
+    resourceSet()->activateResourceFilePaths(paths, errorCount, errorMessages);
 }
 
 /*!
@@ -485,6 +545,16 @@ QDesignerFormWindowInterface *QDesignerFormWindowInterface::findFormWindow(QObje
     Returns the main container widget for the form window.
 
     \sa setMainContainer()
+    \internal
+*/
+
+/*!
+    \fn virtual QWidget *QDesignerFormWindowInterface::formContainer() const
+
+    Returns the form the widget containing the main container widget.
+
+    \since 5.0
+    \sa mainContainer()
 */
 
 /*!

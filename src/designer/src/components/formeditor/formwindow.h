@@ -58,6 +58,7 @@ QT_BEGIN_NAMESPACE
 class QDesignerDnDItemInterface;
 class QDesignerTaskMenuExtension;
 class DomConnections;
+class DomUI;
 
 class QWidget;
 class QAction;
