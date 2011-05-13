@@ -75,27 +75,8 @@ public:
 
     virtual QDesignerFormEditorInterface *core() const;
 
-    inline QAction *actionCut() const { return m_actionCut; }
-    inline QAction *actionCopy() const { return m_actionCopy; }
-    inline QAction *actionPaste() const { return m_actionPaste; }
-    inline QAction *actionDelete() const { return m_actionDelete; }
-    inline QAction *actionSelectAll() const { return m_actionSelectAll; }
-    inline QAction *actionLower() const { return m_actionLower; }
-    inline QAction *actionRaise() const { return m_actionRaise; }
-    QAction *actionUndo() const;
-    QAction *actionRedo() const;
-
-    inline QAction *actionHorizontalLayout() const { return m_actionHorizontalLayout; }
-    inline QAction *actionVerticalLayout() const { return m_actionVerticalLayout; }
-    inline QAction *actionSplitHorizontal() const { return m_actionSplitHorizontal; }
-    inline QAction *actionSplitVertical() const { return m_actionSplitVertical; }
-    inline QAction *actionGridLayout() const { return m_actionGridLayout; }
-    inline QAction *actionBreakLayout() const { return m_actionBreakLayout; }
-    inline QAction *actionAdjustSize() const { return m_actionAdjustSize; }
-
-    inline QAction *actionDefaultPreview() const { return m_actionDefaultPreview; }
-    QActionGroup *actionGroupPreviewInStyle() const;
-    virtual QAction *actionShowFormWindowSettingsDialog() const;
+    virtual QAction *action(Action action) const;
+    virtual QActionGroup *actionGroup(ActionGroup actionGroup) const;
 
     QDesignerFormWindowInterface *activeFormWindow() const;
 
@@ -104,7 +85,7 @@ public:
 
     QDesignerFormWindowInterface *createFormWindow(QWidget *parentWidget = 0, Qt::WindowFlags flags = 0);
 
-    QPixmap createPreviewPixmap(QString *errorMessage);
+    QPixmap createPreviewPixmap() const;
 
     bool eventFilter(QObject *o, QEvent *e);
 
@@ -133,7 +114,7 @@ private slots:
     void slotActionBreakLayoutActivated();
     void slotActionAdjustSizeActivated();
     void slotActionSimplifyLayoutActivated();
-    void slotActionDefaultPreviewActivated();
+    void showPreview();
     void slotActionGroupPreviewInStyle(const QString &style, int deviceProfileIndex);
     void slotActionShowFormWindowSettingsDialog();
 
@@ -171,10 +152,12 @@ private:
     // layout actions
     QAction *m_actionHorizontalLayout;
     QAction *m_actionVerticalLayout;
+    QAction *m_actionFormLayout;
     QAction *m_actionSplitHorizontal;
     QAction *m_actionSplitVertical;
     QAction *m_actionGridLayout;
     QAction *m_actionBreakLayout;
+    QAction *m_actionSimplifyLayout;
     QAction *m_actionAdjustSize;
     // preview actions
     QAction *m_actionDefaultPreview;

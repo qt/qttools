@@ -73,20 +73,9 @@ public:
     explicit QDesignerFormWindowManager(QObject *parent = 0);
     virtual ~QDesignerFormWindowManager();
 
-    virtual QAction *actionDefaultPreview() const;
-    virtual QActionGroup *actionGroupPreviewInStyle() const;
-    virtual QAction *actionShowFormWindowSettingsDialog() const;
-
-    virtual QPixmap createPreviewPixmap(QString *errorMessage) = 0;
-
     virtual PreviewManager *previewManager() const = 0;
 
-Q_SIGNALS:
-    void formWindowSettingsChanged(QDesignerFormWindowInterface *fw);
-
-public Q_SLOTS:
-    virtual void closeAllPreviews() = 0;
-    void aboutPlugins();
+    virtual void showPluginDialog();
 
 private:
     void *m_unused;
