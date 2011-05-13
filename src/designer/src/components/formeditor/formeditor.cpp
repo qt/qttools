@@ -62,12 +62,11 @@
 #include "qdesigner_toolbox_p.h"
 #include "qdesigner_tabwidget_p.h"
 #include "qtresourcemodel_p.h"
-#include "qdesigner_integration_p.h"
 #include "itemview_propertysheet.h"
 
 // sdk
 #include <QtDesigner/QExtensionManager>
-
+#include <QtDesigner/QDesignerIntegrationInterface>
 // shared
 #include <pluginmanager_p.h>
 #include <qdesigner_taskmenu_p.h>
@@ -168,14 +167,13 @@ FormEditor::~FormEditor()
 
 void FormEditor::slotQrcFileChangedExternally(const QString &path)
 {
-    QDesignerIntegration *designerIntegration = qobject_cast<QDesignerIntegration *>(integration());
-    if (!designerIntegration)
+    if (!integration())
         return;
 
-    QDesignerIntegration::ResourceFileWatcherBehaviour behaviour = designerIntegration->resourceFileWatcherBehaviour();
-    if (behaviour == QDesignerIntegration::NoWatcher) {
+    QDesignerIntegration::ResourceFileWatcherBehaviour behaviour = integration()->resourceFileWatcherBehaviour();
+    if (behaviour == QDesignerIntegration::NoResourceFileWatcher) {
         return;
-    } else if (behaviour == QDesignerIntegration::PromptAndReload) {
+    } else if (behaviour == QDesignerIntegration::PromptToReloadResourceFile) {
         QMessageBox::StandardButton button = dialogGui()->message(topLevel(), QDesignerDialogGuiInterface::FileChangedMessage, QMessageBox::Warning,
                 tr("Resource File Changed"),
                 tr("The file \"%1\" has changed outside Designer. Do you want to reload it?").arg(path),

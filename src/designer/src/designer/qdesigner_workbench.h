@@ -75,10 +75,7 @@ class ToolBarManager;
 class QDesignerFormEditorInterface;
 class QDesignerFormWindowInterface;
 class QDesignerFormWindowManagerInterface;
-
-namespace qdesigner_internal {
 class QDesignerIntegration;
-}
 
 class QDesignerWorkbench: public QObject
 {
@@ -161,7 +158,7 @@ private:
     void saveSettings() const;
 
     QDesignerFormEditorInterface *m_core;
-    qdesigner_internal::QDesignerIntegration *m_integration;
+    QDesignerIntegration *m_integration;
 
     QDesignerActions *m_actionManager;
     QActionGroup *m_windowActions;

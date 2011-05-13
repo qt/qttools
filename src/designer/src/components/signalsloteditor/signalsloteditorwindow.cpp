@@ -42,7 +42,6 @@
 #include "signalsloteditorwindow.h"
 #include "signalsloteditor_p.h"
 #include "signalsloteditor.h"
-#include "qdesigner_integration_p.h"
 #include "signalslot_utils_p.h"
 
 #include <iconloader_p.h>
@@ -53,6 +52,7 @@
 #include <QtDesigner/QDesignerFormEditorInterface>
 #include <QtDesigner/QDesignerFormWindowManagerInterface>
 #include <QtDesigner/QExtensionManager>
+#include <QtDesigner/QDesignerIntegrationInterface>
 #include <QtDesigner/QDesignerContainerExtension>
 #include <QtDesigner/QDesignerMetaDataBaseInterface>
 #include <QtDesigner/QDesignerFormWindowCursorInterface>
@@ -757,7 +757,7 @@ SignalSlotEditorWindow::SignalSlotEditorWindow(QDesignerFormEditorInterface *cor
 
 void SignalSlotEditorWindow::setActiveFormWindow(QDesignerFormWindowInterface *form)
 {
-    QDesignerIntegration *integration = qobject_cast<QDesignerIntegration *>(m_core->integration());
+    QDesignerIntegrationInterface *integration = m_core->integration();
 
     if (!m_editor.isNull()) {
         disconnect(m_view->selectionModel(),

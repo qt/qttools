@@ -59,11 +59,11 @@
 #include <previewmanager_p.h>
 #include <codedialog_p.h>
 #include <qdesigner_formwindowmanager_p.h>
-#include "qdesigner_integration_p.h"
 
 // sdk
 #include <QtDesigner/QDesignerFormEditorInterface>
 #include <QtDesigner/QDesignerFormWindowInterface>
+#include <QtDesigner/QDesignerIntegrationInterface>
 #include <QtDesigner/QDesignerLanguageExtension>
 #include <QtDesigner/QDesignerMetaDataBaseInterface>
 #include <QtDesigner/QDesignerFormWindowManagerInterface>
@@ -1089,9 +1089,7 @@ QAction *QDesignerActions::editWidgets() const
 
 void QDesignerActions::showWidgetSpecificHelp()
 {
-    QString helpId;
-    if (const qdesigner_internal::QDesignerIntegration *integration = qobject_cast<qdesigner_internal::QDesignerIntegration *>(core()->integration()))
-        helpId = integration->contextHelpId();
+    const QString helpId = core()->integration()->contextHelpId();
 
     if (helpId.isEmpty()) {
         showDesignerHelp();

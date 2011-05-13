@@ -182,10 +182,6 @@ public:
     void setLineTerminatorMode(LineTerminatorMode mode);
     LineTerminatorMode lineTerminatorMode() const;
 
-    // Connect the 'activated' (doubleclicked) signal of the form window to a
-    // slot triggering the default action (of the task menu)
-    static void setupDefaultAction(QDesignerFormWindowInterface *fw);
-
 public slots:
     void resourceSetActivated(QtResourceSet *resourceSet, bool resourceSetChanged);
 

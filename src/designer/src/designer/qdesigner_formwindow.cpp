@@ -93,7 +93,6 @@ QDesignerFormWindow::QDesignerFormWindow(QDesignerFormWindowInterface *editor, Q
 
     connect(m_editor->commandHistory(), SIGNAL(indexChanged(int)), this, SLOT(updateChanged()));
     connect(m_editor, SIGNAL(geometryChanged()), this, SLOT(geometryChanged()));
-    qdesigner_internal::FormWindowBase::setupDefaultAction(m_editor);
 }
 
 QDesignerFormWindow::~QDesignerFormWindow()

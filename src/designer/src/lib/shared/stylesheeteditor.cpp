@@ -45,7 +45,6 @@
 #include "qtgradientmanager.h"
 #include "qtgradientviewdialog.h"
 #include "qtgradientutils.h"
-#include "qdesigner_integration_p.h"
 #include "qdesigner_utils_p.h"
 #include "abstractsettings_p.h"
 
@@ -53,6 +52,7 @@
 #include <QtDesigner/QDesignerFormWindowCursorInterface>
 #include <QtDesigner/QDesignerFormEditorInterface>
 #include <QtDesigner/QDesignerPropertySheetExtension>
+#include <QtDesigner/QDesignerIntegrationInterface>
 #include <QtDesigner/QExtensionManager>
 
 #include <QtCore/QSignalMapper>
@@ -331,8 +331,8 @@ void StyleSheetEditorDialog::insertCssProperty(const QString &name, const QStrin
 
 void StyleSheetEditorDialog::slotRequestHelp()
 {
-    QDesignerIntegration::requestHelp(m_core, QLatin1String("qt"),
-                                      QLatin1String("stylesheet-reference.html"));
+    m_core->integration()->emitHelpRequested(QLatin1String("qt"),
+                                             QLatin1String("stylesheet-reference.html"));
 }
 
 QDialogButtonBox * StyleSheetEditorDialog::buttonBox() const

@@ -56,7 +56,7 @@
 #include <QtDesigner/QDesignerMetaDataBaseInterface>
 
 #include <QtDesigner/QDesignerComponents>
-#include <QtDesigner/private/qdesigner_integration_p.h>
+#include <QtDesigner/QDesignerIntegrationInterface>
 #include <QtDesigner/private/pluginmanager_p.h>
 #include <QtDesigner/private/formwindowbase_p.h>
 #include <QtDesigner/private/actioneditor_p.h>
@@ -231,7 +231,7 @@ QDesignerWorkbench::QDesignerWorkbench()  :
             connect(toolWindow, SIGNAL(closeEventReceived(QCloseEvent*)), this, SLOT(handleCloseEvent(QCloseEvent*)));
     }
     // Integration
-    m_integration = new qdesigner_internal::QDesignerIntegration(m_core, this);
+    m_integration = new QDesignerIntegration(m_core, this);
     connect(m_integration, SIGNAL(helpRequested(QString,QString)), m_actionManager, SLOT(helpRequested(QString,QString)));
 
     // remaining view options (config toolbars)

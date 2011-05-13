@@ -51,7 +51,6 @@
 #include <objectinspector/objectinspector.h>
 #include <taskmenu/taskmenu_component.h>
 #include "qtresourceview_p.h"
-#include <qdesigner_integration_p.h>
 #include <signalsloteditor/signalsloteditorwindow.h>
 
 #include <buddyeditor/buddyeditor_plugin.h>
@@ -60,6 +59,7 @@
 
 #include <QtDesigner/QDesignerLanguageExtension>
 #include <QtDesigner/QExtensionManager>
+#include <QtDesigner/QDesignerIntegrationInterface>
 #include <QtDesigner/QDesignerResourceBrowserInterface>
 
 #include <QtCore/qplugin.h>
@@ -139,7 +139,7 @@ void QDesignerComponents::initializeResources()
     Initializes the plugins used by the components.*/
 void QDesignerComponents::initializePlugins(QDesignerFormEditorInterface *core)
 {
-    qdesigner_internal::QDesignerIntegration::initializePlugins(core);
+    QDesignerIntegration::initializePlugins(core);
 }
 
 /*!
@@ -258,11 +258,11 @@ QWidget *QDesignerComponents::createResourceEditor(QDesignerFormEditorInterface 
     QtResourceView *resourceView = new QtResourceView(core, parent);
     resourceView->setResourceModel(core->resourceModel());
     resourceView->setSettingsKey(QLatin1String("ResourceBrowser"));
-    qdesigner_internal::QDesignerIntegration *designerIntegration = qobject_cast<qdesigner_internal::QDesignerIntegration *>(core->integration());
     // Note for integrators: make sure you call createResourceEditor() after you instantiated your subclass of designer integration
     // (designer doesn't do that since by default editing resources is enabled)
-    if (designerIntegration)
-        resourceView->setResourceEditingEnabled(designerIntegration->isResourceEditingEnabled());
+    const QDesignerIntegrationInterface *integration = core->integration();
+    if (integration && !integration->hasFeature(QDesignerIntegrationInterface::ResourceEditorFeature))
+        resourceView->setResourceEditingEnabled(false);
     return resourceView;
 }
 
