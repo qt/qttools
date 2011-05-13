@@ -143,13 +143,13 @@ QtResourceSet::~QtResourceSet()
 {
 }
 
-QStringList QtResourceSet::activeQrcPaths() const
+QStringList QtResourceSet::activeResourceFilePaths() const
 {
     QtResourceSet *that = const_cast<QtResourceSet *>(this);
     return d_ptr->m_resourceModel->d_ptr->m_resourceSetToPaths.value(that);
 }
 
-void QtResourceSet::activateQrcPaths(const QStringList &paths, int *errorCount, QString *errorMessages)
+void QtResourceSet::activateResourceFilePaths(const QStringList &paths, int *errorCount, QString *errorMessages)
 {
     d_ptr->m_resourceModel->d_ptr->activate(this, paths, errorCount, errorMessages);
 }
@@ -217,7 +217,7 @@ void QtResourceModelPrivate::registerResourceSet(QtResourceSet *resourceSet)
         return;
 
     // unregister old paths (all because the order of registration is important), later it can be optimized a bit
-    QStringList toRegister = resourceSet->activeQrcPaths();
+    QStringList toRegister = resourceSet->activeResourceFilePaths();
     QStringListIterator itRegister(toRegister);
     while (itRegister.hasNext()) {
         const QString path = itRegister.next();
@@ -249,7 +249,7 @@ void QtResourceModelPrivate::unregisterResourceSet(QtResourceSet *resourceSet)
         return;
 
     // unregister old paths (all because the order of registration is importans), later it can be optimized a bit
-    QStringList toUnregister = resourceSet->activeQrcPaths();
+    QStringList toUnregister = resourceSet->activeResourceFilePaths();
     QStringListIterator itUnregister(toUnregister);
     while (itUnregister.hasNext()) {
         const QString path = itUnregister.next();
@@ -283,7 +283,7 @@ void QtResourceModelPrivate::activate(QtResourceSet *resourceSet, const QStringL
     int generatedCount = 0;
     bool newResourceSetChanged = false;
 
-    if (resourceSet && resourceSet->activeQrcPaths() != newPaths && !m_newlyCreated.contains(resourceSet))
+    if (resourceSet && resourceSet->activeResourceFilePaths() != newPaths && !m_newlyCreated.contains(resourceSet))
         newResourceSetChanged = true;
 
     PathDataMap newPathToData = m_pathToData;
@@ -356,7 +356,7 @@ void QtResourceModelPrivate::activate(QtResourceSet *resourceSet, const QStringL
 
     QStringList oldActivePaths;
     if (m_currentResourceSet)
-        oldActivePaths = m_currentResourceSet->activeQrcPaths();
+        oldActivePaths = m_currentResourceSet->activeResourceFilePaths();
 
     const bool needReregister = (oldActivePaths != newPaths) || newResourceSetChanged;
 

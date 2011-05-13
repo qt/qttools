@@ -2297,7 +2297,7 @@ void QDesignerResource::createResources(DomResources *resources)
 
     QtResourceSet *resourceSet = m_formWindow->resourceSet();
     if (resourceSet) {
-        QStringList oldPaths = resourceSet->activeQrcPaths();
+        QStringList oldPaths = resourceSet->activeResourceFilePaths();
         QStringList newPaths = oldPaths;
         QStringListIterator it(paths);
         while (it.hasNext()) {
@@ -2305,7 +2305,7 @@ void QDesignerResource::createResources(DomResources *resources)
             if (!newPaths.contains(path))
                 newPaths << path;
         }
-        resourceSet->activateQrcPaths(newPaths);
+        resourceSet->activateResourceFilePaths(newPaths);
     } else {
         resourceSet = m_formWindow->core()->resourceModel()->addResourceSet(paths);
         m_formWindow->setResourceSet(resourceSet);
@@ -2317,15 +2317,16 @@ void QDesignerResource::createResources(DomResources *resources)
 DomResources *QDesignerResource::saveResources()
 {
     QStringList paths;
-    if (m_formWindow->saveResourcesBehaviour() == FormWindowBase::SaveAll) {
-        QtResourceSet *resourceSet = m_formWindow->resourceSet();
-        QList<DomResource*> dom_include;
-        if (resourceSet)
-            paths = resourceSet->activeQrcPaths();
-    } else if (m_formWindow->saveResourcesBehaviour() == FormWindowBase::SaveOnlyUsedQrcFiles) {
+    switch (m_formWindow->resourceFileSaveMode()) {
+    case QDesignerFormWindowInterface::SaveAllResourceFiles:
+        paths = m_formWindow->activeResourceFilePaths();
+        break;
+    case QDesignerFormWindowInterface::SaveOnlyUsedResourceFiles:
         paths = m_resourceBuilder->usedQrcFiles();
+        break;
+    case QDesignerFormWindowInterface::DontSaveResourceFiles:
+        break;
     }
-
     return saveResources(paths);
 }
 
@@ -2334,7 +2335,7 @@ DomResources *QDesignerResource::saveResources(const QStringList &qrcPaths)
     QtResourceSet *resourceSet = m_formWindow->resourceSet();
     QList<DomResource*> dom_include;
     if (resourceSet) {
-        const QStringList activePaths = resourceSet->activeQrcPaths();
+        const QStringList activePaths = resourceSet->activeResourceFilePaths();
         foreach (const QString &path, activePaths) {
             if (qrcPaths.contains(path)) {
                 DomResource *dom_res = new DomResource;

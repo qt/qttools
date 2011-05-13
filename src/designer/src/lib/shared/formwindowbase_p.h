@@ -82,7 +82,6 @@ class QDESIGNER_SHARED_EXPORT FormWindowBase: public QDesignerFormWindowInterfac
     Q_OBJECT
 public:
     enum HighlightMode  { Restore, Highlight };
-    enum SaveResourcesBehaviour  { SaveAll, SaveOnlyUsedQrcFiles, DontSaveQrcFiles };
 
     explicit FormWindowBase(QDesignerFormEditorInterface *core, QWidget *parent = 0, Qt::WindowFlags flags = 0);
     virtual ~FormWindowBase();
@@ -92,12 +91,6 @@ public:
 
     // Return contents without warnings. Should be 'contents(bool quiet)'
     QString fileContents() const;
-
-    // Return the widget containing the form. This is used to
-    // apply embedded design settings to that are inherited (for example font).
-    // These are meant to be applied to the form only and not to the other editors
-    // in the widget stack.
-    virtual QWidget *formContainer() const = 0;
 
     // Deprecated
     virtual QPoint grid() const;
@@ -117,8 +110,8 @@ public:
 
     bool gridVisible() const;
 
-    SaveResourcesBehaviour saveResourcesBehaviour() const;
-    void setSaveResourcesBehaviour(SaveResourcesBehaviour behaviour);
+    virtual ResourceFileSaveMode resourceFileSaveMode() const;
+    virtual void setResourceFileSaveMode(ResourceFileSaveMode behaviour);
 
     static const Grid &defaultDesignerGrid();
     static void setDefaultDesignerGrid(const Grid& grid);
@@ -153,8 +146,8 @@ public:
 
     DesignerPixmapCache *pixmapCache() const;
     DesignerIconCache *iconCache() const;
-    QtResourceSet *resourceSet() const;
-    void setResourceSet(QtResourceSet *resourceSet);
+    virtual QtResourceSet *resourceSet() const;
+    virtual void setResourceSet(QtResourceSet *resourceSet);
     void addReloadableProperty(QDesignerPropertySheet *sheet, int index);
     void removeReloadableProperty(QDesignerPropertySheet *sheet, int index);
     void addReloadablePropertySheet(QDesignerPropertySheet *sheet, QObject *object);

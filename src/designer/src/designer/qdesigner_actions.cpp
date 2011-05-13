@@ -216,8 +216,8 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
     qdesigner_internal::QDesignerFormWindowManager *ifwm = qobject_cast<qdesigner_internal::QDesignerFormWindowManager *>(m_core->formWindowManager());
     Q_ASSERT(ifwm);
     m_previewManager = ifwm->previewManager();
-    m_previewFormAction = ifwm->actionDefaultPreview();
-    m_styleActions = ifwm->actionGroupPreviewInStyle();
+    m_previewFormAction = ifwm->action(QDesignerFormWindowManagerInterface::DefaultPreviewAction);
+    m_styleActions = ifwm->actionGroup(QDesignerFormWindowManagerInterface::StyledPreviewActionGroup);
     connect(ifwm, SIGNAL(formWindowSettingsChanged(QDesignerFormWindowInterface*)),
             this, SLOT(formWindowSettingsChanged(QDesignerFormWindowInterface*)));
 
@@ -304,32 +304,32 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
 //
 // edit actions
 //
-    QAction *undoAction = formWindowManager->actionUndo();
+    QAction *undoAction = formWindowManager->action(QDesignerFormWindowManagerInterface::UndoAction);
     undoAction->setObjectName(QLatin1String("__qt_undo_action"));
     undoAction->setShortcut(QKeySequence::Undo);
     m_editActions->addAction(undoAction);
 
-    QAction *redoAction = formWindowManager->actionRedo();
+    QAction *redoAction = formWindowManager->action(QDesignerFormWindowManagerInterface::RedoAction);
     redoAction->setObjectName(QLatin1String("__qt_redo_action"));
     redoAction->setShortcut(QKeySequence::Redo);
     m_editActions->addAction(redoAction);
 
     m_editActions->addAction(createSeparator(this));
 
-    m_editActions->addAction(formWindowManager->actionCut());
-    m_editActions->addAction(formWindowManager->actionCopy());
-    m_editActions->addAction(formWindowManager->actionPaste());
-    m_editActions->addAction(formWindowManager->actionDelete());
+    m_editActions->addAction(formWindowManager->action(QDesignerFormWindowManagerInterface::CutAction));
+    m_editActions->addAction(formWindowManager->action(QDesignerFormWindowManagerInterface::CopyAction));
+    m_editActions->addAction(formWindowManager->action(QDesignerFormWindowManagerInterface::PasteAction));
+    m_editActions->addAction(formWindowManager->action(QDesignerFormWindowManagerInterface::DeleteAction));
 
-    m_editActions->addAction(formWindowManager->actionSelectAll());
+    m_editActions->addAction(formWindowManager->action(QDesignerFormWindowManagerInterface::SelectAllAction));
 
     m_editActions->addAction(createSeparator(this));
 
-    m_editActions->addAction(formWindowManager->actionLower());
-    m_editActions->addAction(formWindowManager->actionRaise());
+    m_editActions->addAction(formWindowManager->action(QDesignerFormWindowManagerInterface::LowerAction));
+    m_editActions->addAction(formWindowManager->action(QDesignerFormWindowManagerInterface::RaiseAction));
 
-    formWindowManager->actionLower()->setProperty(QDesignerActions::defaultToolbarPropertyName, true);
-    formWindowManager->actionRaise()->setProperty(QDesignerActions::defaultToolbarPropertyName, true);
+    formWindowManager->action(QDesignerFormWindowManagerInterface::LowerAction)->setProperty(QDesignerActions::defaultToolbarPropertyName, true);
+    formWindowManager->action(QDesignerFormWindowManagerInterface::RaiseAction)->setProperty(QDesignerActions::defaultToolbarPropertyName, true);
 
 //
 // edit mode actions
@@ -376,25 +376,25 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
 // form actions
 //
 
-    m_formActions->addAction(formWindowManager->actionHorizontalLayout());
-    m_formActions->addAction(formWindowManager->actionVerticalLayout());
-    m_formActions->addAction(formWindowManager->actionSplitHorizontal());
-    m_formActions->addAction(formWindowManager->actionSplitVertical());
-    m_formActions->addAction(formWindowManager->actionGridLayout());
-    m_formActions->addAction(formWindowManager->actionFormLayout());
-    m_formActions->addAction(formWindowManager->actionBreakLayout());
-    m_formActions->addAction(formWindowManager->actionAdjustSize());
-    m_formActions->addAction(formWindowManager->actionSimplifyLayout());
+    m_formActions->addAction(formWindowManager->action(QDesignerFormWindowManagerInterface::HorizontalLayoutAction));
+    m_formActions->addAction(formWindowManager->action(QDesignerFormWindowManagerInterface::VerticalLayoutAction));
+    m_formActions->addAction(formWindowManager->action(QDesignerFormWindowManagerInterface::SplitHorizontalAction));
+    m_formActions->addAction(formWindowManager->action(QDesignerFormWindowManagerInterface::SplitVerticalAction));
+    m_formActions->addAction(formWindowManager->action(QDesignerFormWindowManagerInterface::GridLayoutAction));
+    m_formActions->addAction(formWindowManager->action(QDesignerFormWindowManagerInterface::FormLayoutAction));
+    m_formActions->addAction(formWindowManager->action(QDesignerFormWindowManagerInterface::BreakLayoutAction));
+    m_formActions->addAction(formWindowManager->action(QDesignerFormWindowManagerInterface::AdjustSizeAction));
+    m_formActions->addAction(formWindowManager->action(QDesignerFormWindowManagerInterface::SimplifyLayoutAction));
     m_formActions->addAction(createSeparator(this));
 
-    formWindowManager->actionHorizontalLayout()->setProperty(QDesignerActions::defaultToolbarPropertyName, true);
-    formWindowManager->actionVerticalLayout()->setProperty(QDesignerActions::defaultToolbarPropertyName, true);
-    formWindowManager->actionSplitHorizontal()->setProperty(QDesignerActions::defaultToolbarPropertyName, true);
-    formWindowManager->actionSplitVertical()->setProperty(QDesignerActions::defaultToolbarPropertyName, true);
-    formWindowManager->actionGridLayout()->setProperty(QDesignerActions::defaultToolbarPropertyName, true);
-    formWindowManager->actionFormLayout()->setProperty(QDesignerActions::defaultToolbarPropertyName, true);
-    formWindowManager->actionBreakLayout()->setProperty(QDesignerActions::defaultToolbarPropertyName, true);
-    formWindowManager->actionAdjustSize()->setProperty(QDesignerActions::defaultToolbarPropertyName, true);
+    formWindowManager->action(QDesignerFormWindowManagerInterface::HorizontalLayoutAction)->setProperty(QDesignerActions::defaultToolbarPropertyName, true);
+    formWindowManager->action(QDesignerFormWindowManagerInterface::VerticalLayoutAction)->setProperty(QDesignerActions::defaultToolbarPropertyName, true);
+    formWindowManager->action(QDesignerFormWindowManagerInterface::SplitHorizontalAction)->setProperty(QDesignerActions::defaultToolbarPropertyName, true);
+    formWindowManager->action(QDesignerFormWindowManagerInterface::SplitVerticalAction)->setProperty(QDesignerActions::defaultToolbarPropertyName, true);
+    formWindowManager->action(QDesignerFormWindowManagerInterface::GridLayoutAction)->setProperty(QDesignerActions::defaultToolbarPropertyName, true);
+    formWindowManager->action(QDesignerFormWindowManagerInterface::FormLayoutAction)->setProperty(QDesignerActions::defaultToolbarPropertyName, true);
+    formWindowManager->action(QDesignerFormWindowManagerInterface::BreakLayoutAction)->setProperty(QDesignerActions::defaultToolbarPropertyName, true);
+    formWindowManager->action(QDesignerFormWindowManagerInterface::AdjustSizeAction)->setProperty(QDesignerActions::defaultToolbarPropertyName, true);
 
     m_previewFormAction->setShortcut(tr("CTRL+R"));
     m_formActions->addAction(m_previewFormAction);
@@ -408,7 +408,7 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
 
     m_formActions->addAction(createSeparator(this));
 
-    m_formActions->addAction(ifwm->actionShowFormWindowSettingsDialog());
+    m_formActions->addAction(ifwm->action(QDesignerFormWindowManagerInterface::FormWindowSettingsDialogAction));
 //
 // window actions
 //
@@ -469,7 +469,7 @@ QActionGroup *QDesignerActions::createHelpActions()
     QAction *aboutPluginsAction = new QAction(tr("About Plugins"), this);
     aboutPluginsAction->setObjectName(QLatin1String("__qt_about_plugins_action"));
     aboutPluginsAction->setMenuRole(QAction::ApplicationSpecificRole);
-    connect(aboutPluginsAction, SIGNAL(triggered()), m_core->formWindowManager(), SLOT(aboutPlugins()));
+    connect(aboutPluginsAction, SIGNAL(triggered()), m_core->formWindowManager(), SLOT(showPluginDialog()));
     helpActions->addAction(aboutPluginsAction);
 
     QAction *aboutDesignerAction = new QAction(tr("About Qt Designer"), this);

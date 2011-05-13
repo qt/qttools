@@ -1,6 +1,6 @@
-QT.help.VERSION = 4.8.0
-QT.help.MAJOR_VERSION = 4
-QT.help.MINOR_VERSION = 8
+QT.help.VERSION = 5.0.0
+QT.help.MAJOR_VERSION = 5
+QT.help.MINOR_VERSION = 0
 QT.help.PATCH_VERSION = 0
 
 QT.help.name = QtHelp

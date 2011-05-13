@@ -95,7 +95,7 @@ public:
     QMap<QDesignerPropertySheet *, QObject *> m_reloadablePropertySheets;
     const DeviceProfile m_deviceProfile;
     FormWindowBase::LineTerminatorMode m_lineTerminatorMode;
-    FormWindowBase::SaveResourcesBehaviour m_saveResourcesBehaviour;
+    FormWindowBase::ResourceFileSaveMode m_saveResourcesBehaviour;
 };
 
 FormWindowBasePrivate::FormWindowBasePrivate(QDesignerFormEditorInterface *core) :
@@ -107,7 +107,7 @@ FormWindowBasePrivate::FormWindowBasePrivate(QDesignerFormEditorInterface *core)
     m_resourceSet(0),
     m_deviceProfile(QDesignerSharedSettings(core).currentDeviceProfile()),
     m_lineTerminatorMode(FormWindowBase::NativeLineTerminator),
-    m_saveResourcesBehaviour(FormWindowBase::SaveAll)
+    m_saveResourcesBehaviour(FormWindowBase::SaveAllResourceFiles)
 {
 }
 
@@ -302,12 +302,12 @@ bool FormWindowBase::gridVisible() const
     return m_d->m_grid.visible() && currentTool() == 0;
 }
 
-FormWindowBase::SaveResourcesBehaviour FormWindowBase::saveResourcesBehaviour() const
+FormWindowBase::ResourceFileSaveMode FormWindowBase::resourceFileSaveMode() const
 {
     return m_d->m_saveResourcesBehaviour;
 }
 
-void FormWindowBase::setSaveResourcesBehaviour(SaveResourcesBehaviour behaviour)
+void FormWindowBase::setResourceFileSaveMode(ResourceFileSaveMode behaviour)
 {
     m_d->m_saveResourcesBehaviour = behaviour;
 }

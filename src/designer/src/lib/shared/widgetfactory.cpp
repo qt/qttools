@@ -362,9 +362,8 @@ QWidget *WidgetFactory::createWidget(const QString &widgetName, QWidget *parentW
                 if (qt_extension<QDesignerContainerExtension*>(m_core->extensionManager(), parentWidget)) {
                     w = new QDesignerWidget(fw, parentWidget);
                 } else {
-                    if (const FormWindowBase *fwb = qobject_cast<FormWindowBase *>(fw))
-                        if (parentWidget == fwb->formContainer())
-                            w = new QDesignerWidget(fw, parentWidget);
+                    if (parentWidget == fw->formContainer())
+                        w = new QDesignerWidget(fw, parentWidget);
                 }
             }
             if (!w)

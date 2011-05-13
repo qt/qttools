@@ -52,69 +52,107 @@ QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
-class QAction;
-class QActionGroup;
 class QDesignerFormEditorInterface;
-class DomUI;
-class QWidget;
 class QDesignerDnDItemInterface;
 
-class QDesignerFormWindowManagerInterfacePrivate;
+class QWidget;
+class QPixmap;
+class QAction;
+class QActionGroup;
 
 class QDESIGNER_SDK_EXPORT QDesignerFormWindowManagerInterface: public QObject
 {
     Q_OBJECT
 public:
-    QDesignerFormWindowManagerInterface(QObject *parent = 0);
+    explicit QDesignerFormWindowManagerInterface(QObject *parent = 0);
     virtual ~QDesignerFormWindowManagerInterface();
 
-    virtual QAction *actionCut() const;
-    virtual QAction *actionCopy() const;
-    virtual QAction *actionPaste() const;
-    virtual QAction *actionDelete() const;
-    virtual QAction *actionSelectAll() const;
-    virtual QAction *actionLower() const;
-    virtual QAction *actionRaise() const;
-    virtual QAction *actionUndo() const;
-    virtual QAction *actionRedo() const;
+    enum Action
+    {
+        CutAction = 100,
+        CopyAction,
+        PasteAction,
+        DeleteAction,
+        SelectAllAction,
 
-    virtual QAction *actionHorizontalLayout() const;
-    virtual QAction *actionVerticalLayout() const;
-    virtual QAction *actionSplitHorizontal() const;
-    virtual QAction *actionSplitVertical() const;
-    virtual QAction *actionGridLayout() const;
+        LowerAction = 200,
+        RaiseAction,
+
+        UndoAction =  300,
+        RedoAction,
+
+        HorizontalLayoutAction = 400,
+        VerticalLayoutAction,
+        SplitHorizontalAction,
+        SplitVerticalAction,
+        GridLayoutAction,
+        FormLayoutAction,
+        BreakLayoutAction,
+        AdjustSizeAction,
+        SimplifyLayoutAction,
+
+        DefaultPreviewAction = 500,
+
+        FormWindowSettingsDialogAction =  600
+    };
+
+    enum ActionGroup
+    {
+        StyledPreviewActionGroup = 100
+    };
+
+    virtual QAction *action(Action action) const = 0;
+    virtual QActionGroup *actionGroup(ActionGroup actionGroup) const = 0;
+
+    QAction *actionCut() const;
+    QAction *actionCopy() const;
+    QAction *actionPaste() const;
+    QAction *actionDelete() const;
+    QAction *actionSelectAll() const;
+    QAction *actionLower() const;
+    QAction *actionRaise() const;
+    QAction *actionUndo() const;
+    QAction *actionRedo() const;
+
+    QAction *actionHorizontalLayout() const;
+    QAction *actionVerticalLayout() const;
+    QAction *actionSplitHorizontal() const;
+    QAction *actionSplitVertical() const;
+    QAction *actionGridLayout() const;
     QAction *actionFormLayout() const;
-    virtual QAction *actionBreakLayout() const;
-    virtual QAction *actionAdjustSize() const;
+    QAction *actionBreakLayout() const;
+    QAction *actionAdjustSize() const;
     QAction *actionSimplifyLayout() const;
 
-    virtual QDesignerFormWindowInterface *activeFormWindow() const;
+    virtual QDesignerFormWindowInterface *activeFormWindow() const = 0;
 
-    virtual int formWindowCount() const;
-    virtual QDesignerFormWindowInterface *formWindow(int index) const;
+    virtual int formWindowCount() const = 0;
+    virtual QDesignerFormWindowInterface *formWindow(int index) const = 0;
 
-    virtual QDesignerFormWindowInterface *createFormWindow(QWidget *parentWidget = 0, Qt::WindowFlags flags = 0);
+    virtual QDesignerFormWindowInterface *createFormWindow(QWidget *parentWidget = 0, Qt::WindowFlags flags = 0) = 0;
 
-    virtual QDesignerFormEditorInterface *core() const;
+    virtual QDesignerFormEditorInterface *core() const = 0;
 
     virtual void dragItems(const QList<QDesignerDnDItemInterface*> &item_list) = 0;
+
+    virtual QPixmap createPreviewPixmap() const = 0;
 
 Q_SIGNALS:
     void formWindowAdded(QDesignerFormWindowInterface *formWindow);
     void formWindowRemoved(QDesignerFormWindowInterface *formWindow);
     void activeFormWindowChanged(QDesignerFormWindowInterface *formWindow);
+    void formWindowSettingsChanged(QDesignerFormWindowInterface *fw);
 
 public Q_SLOTS:
-    virtual void addFormWindow(QDesignerFormWindowInterface *formWindow);
-    virtual void removeFormWindow(QDesignerFormWindowInterface *formWindow);
-    virtual void setActiveFormWindow(QDesignerFormWindowInterface *formWindow);
-
-protected:
-    void setActionFormLayout(QAction *action);
-    void setActionSimplifyLayout(QAction *action);
+    virtual void addFormWindow(QDesignerFormWindowInterface *formWindow) = 0;
+    virtual void removeFormWindow(QDesignerFormWindowInterface *formWindow) = 0;
+    virtual void setActiveFormWindow(QDesignerFormWindowInterface *formWindow) = 0;
+    virtual void showPreview() = 0;
+    virtual void closeAllPreviews() = 0;
+    virtual void showPluginDialog() = 0;
 
 private:
-    QScopedPointer<QDesignerFormWindowManagerInterfacePrivate> d;
+    QScopedPointer<int> d;
 };
 
 QT_END_NAMESPACE

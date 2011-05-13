@@ -97,29 +97,52 @@ QT_BEGIN_NAMESPACE
     \sa QDesignerFormEditorInterface, QDesignerFormWindowInterface
 */
 
-// ------------- QDesignerFormWindowManagerInterfacePrivate
+/*!
+    \enum QDesignerFormWindowManagerInterface::Action
 
-class QDesignerFormWindowManagerInterfacePrivate
-{
-public:
-    QDesignerFormWindowManagerInterfacePrivate();
-    QAction *m_simplifyLayoutAction;
-    QAction *m_formLayoutAction;
-};
+    Specifies an action of \QD.
 
-QDesignerFormWindowManagerInterfacePrivate::QDesignerFormWindowManagerInterfacePrivate() :
-    m_simplifyLayoutAction(0),
-    m_formLayoutAction(0)
-{
-}
+    \sa action()
+
+    \since 5.0
+    \value CutAction         Clipboard Cut
+    \value CopyAction        Clipboard Copy
+    \value PasteAction       Clipboard Paste
+    \value DeleteAction      Clipboard Delete
+    \value SelectAllAction   Select All
+    \value LowerAction       Lower current widget
+    \value RaiseAction       Raise current widget
+    \value UndoAction        Undo
+    \value RedoAction        Redo
+    \value HorizontalLayoutAction Lay out using QHBoxLayout
+    \value VerticalLayoutAction   Lay out using QVBoxLayout
+    \value SplitHorizontalAction  Lay out in horizontal QSplitter
+    \value SplitVerticalAction    Lay out in vertical QSplitter
+    \value GridLayoutAction       Lay out using QGridLayout
+    \value FormLayoutAction       Lay out using QFormLayout
+    \value BreakLayoutAction      Break existing layout
+    \value AdjustSizeAction       Adjust size
+    \value SimplifyLayoutAction   Simplify QGridLayout or QFormLayout
+    \value DefaultPreviewAction   Create a preview in default style
+    \value FormWindowSettingsDialogAction Show dialog with form settings
+*/
+
+/*!
+    \enum QDesignerFormWindowManagerInterface::ActionGroup
+
+    Specifies an action group of \QD.
+
+    \sa actionGroup()
+    \since 5.0
+    \value StyledPreviewActionGroup Action group containing styled preview actions
+*/
 
 /*!
     Constructs an interface with the given \a parent for the form window
     manager.
 */
 QDesignerFormWindowManagerInterface::QDesignerFormWindowManagerInterface(QObject *parent)
-    : QObject(parent), d(new QDesignerFormWindowManagerInterfacePrivate)
-
+    : QObject(parent)
 {
 }
 
@@ -135,10 +158,13 @@ QDesignerFormWindowManagerInterface::~QDesignerFormWindowManagerInterface()
     returns the original action.
 
     \sa QAction
+    \obsolete
+
+    Use action() instead.
 */
 QAction *QDesignerFormWindowManagerInterface::actionCut() const
 {
-    return 0;
+    return action(CutAction);
 }
 
 /*!
@@ -146,10 +172,13 @@ QAction *QDesignerFormWindowManagerInterface::actionCut() const
     function returns the original action.
 
     \sa QAction
+    \obsolete
+
+    Use action() instead.
 */
 QAction *QDesignerFormWindowManagerInterface::actionCopy() const
 {
-    return 0;
+    return action(CopyAction);
 }
 
 /*!
@@ -157,10 +186,13 @@ QAction *QDesignerFormWindowManagerInterface::actionCopy() const
     function returns the original action.
 
     \sa QAction
+    \obsolete
+
+    Use action() instead.
 */
 QAction *QDesignerFormWindowManagerInterface::actionPaste() const
 {
-    return 0;
+    return action(PasteAction);
 }
 
 /*!
@@ -168,10 +200,13 @@ QAction *QDesignerFormWindowManagerInterface::actionPaste() const
     returns the original action.
 
     \sa QAction
+    \obsolete
+
+    Use action() instead.
 */
 QAction *QDesignerFormWindowManagerInterface::actionDelete() const
 {
-    return 0;
+    return action(DeleteAction);
 }
 
 /*!
@@ -179,10 +214,13 @@ QAction *QDesignerFormWindowManagerInterface::actionDelete() const
     function returns the original action.
 
     \sa QAction
+    \obsolete
+
+    Use action() instead.
 */
 QAction *QDesignerFormWindowManagerInterface::actionSelectAll() const
 {
-    return 0;
+    return action(SelectAllAction);
 }
 
 /*!
@@ -191,10 +229,14 @@ QAction *QDesignerFormWindowManagerInterface::actionSelectAll() const
     action.
 
     \sa QAction
+    \obsolete
+
+    Use action() instead.
 */
+
 QAction *QDesignerFormWindowManagerInterface::actionLower() const
 {
-    return 0;
+    return action(LowerAction);
 }
 
 /*!
@@ -203,10 +245,13 @@ QAction *QDesignerFormWindowManagerInterface::actionLower() const
     action.
 
     \sa QAction
+    \obsolete
+
+    Use action() instead.
 */
 QAction *QDesignerFormWindowManagerInterface::actionRaise() const
 {
-    return 0;
+    return action(RaiseAction);
 }
 
 /*!
@@ -215,10 +260,13 @@ QAction *QDesignerFormWindowManagerInterface::actionRaise() const
     the original action.
 
     \sa QAction
+    \obsolete
+
+    Use action() instead.
 */
 QAction *QDesignerFormWindowManagerInterface::actionHorizontalLayout() const
 {
-    return 0;
+    return action(HorizontalLayoutAction);
 }
 
 /*!
@@ -227,10 +275,13 @@ QAction *QDesignerFormWindowManagerInterface::actionHorizontalLayout() const
     original action.
 
     \sa QAction
+    \obsolete
+
+    Use action() instead.
 */
 QAction *QDesignerFormWindowManagerInterface::actionVerticalLayout() const
 {
-    return 0;
+    return action(VerticalLayoutAction);
 }
 
 /*!
@@ -238,10 +289,13 @@ QAction *QDesignerFormWindowManagerInterface::actionVerticalLayout() const
     action. The function returns the original action.
 
     \sa QAction
+    \obsolete
+
+    Use action() instead.
 */
 QAction *QDesignerFormWindowManagerInterface::actionSplitHorizontal() const
 {
-    return 0;
+    return action(SplitHorizontalAction);
 }
 
 /*!
@@ -249,10 +303,13 @@ QAction *QDesignerFormWindowManagerInterface::actionSplitHorizontal() const
     action. The function returns the original action.
 
     \sa QAction
+    \obsolete
+
+    Use action() instead.
 */
 QAction *QDesignerFormWindowManagerInterface::actionSplitVertical() const
 {
-    return 0;
+    return action(SplitVerticalAction);
 }
 
 /*!
@@ -261,35 +318,29 @@ QAction *QDesignerFormWindowManagerInterface::actionSplitVertical() const
     original action.
 
     \sa QAction
+    \obsolete
+
+    Use action() instead.
 */
 QAction *QDesignerFormWindowManagerInterface::actionGridLayout() const
 {
-    return 0;
+    return action(GridLayoutAction);
 }
 
 /*!
     Allows you to intervene and control \QD's "form layout" action. The
     function returns the original action.
 
-FormWindowManagerPrivateMap *fwmpm = g_FormWindowManagerPrivateMap();    \sa QAction
+    \sa QAction
     \since 4.4
+    \obsolete
+
+    Use action() instead.
 */
 
 QAction *QDesignerFormWindowManagerInterface::actionFormLayout() const
 {
-    return d->m_formLayoutAction;
-}
-
-/*!
-    Sets the "form layout" action to \a action.
-
-    \internal
-    \since 4.4
-*/
-
-void QDesignerFormWindowManagerInterface::setActionFormLayout(QAction *action)
-{
-    d->m_formLayoutAction = action;
+    return action(FormLayoutAction);
 }
 
 /*!
@@ -297,10 +348,13 @@ void QDesignerFormWindowManagerInterface::setActionFormLayout(QAction *action)
     function returns the original action.
 
     \sa QAction
+    \obsolete
+
+    Use action() instead.
 */
 QAction *QDesignerFormWindowManagerInterface::actionBreakLayout() const
 {
-    return 0;
+    return action(BreakLayoutAction);
 }
 
 /*!
@@ -308,10 +362,13 @@ QAction *QDesignerFormWindowManagerInterface::actionBreakLayout() const
     function returns the original action.
 
     \sa QAction
+    \obsolete
+
+    Use action() instead.
 */
 QAction *QDesignerFormWindowManagerInterface::actionAdjustSize() const
 {
-    return 0;
+    return action(AdjustSizeAction);
 }
 
 /*!
@@ -320,96 +377,65 @@ QAction *QDesignerFormWindowManagerInterface::actionAdjustSize() const
 
     \sa QAction
     \since 4.4
+    \obsolete
+
+    Use action() instead.
 */
 
 QAction *QDesignerFormWindowManagerInterface::actionSimplifyLayout() const
 {
-    return d->m_simplifyLayoutAction;
+    return action(SimplifyLayoutAction);
 }
 
 /*!
-    Sets the "simplify layout" action to \a action.
-
-    \internal
-    \since 4.4
-*/
-
-void QDesignerFormWindowManagerInterface::setActionSimplifyLayout(QAction *action)
-{
-    d->m_simplifyLayoutAction = action;
-}
-
-/*!
+  \fn virtual QDesignerFormWindowInterface *QDesignerFormWindowManagerInterface::activeFormWindow() const
    Returns the currently active form window in \QD's workspace.
 
    \sa setActiveFormWindow(), removeFormWindow()
 */
-QDesignerFormWindowInterface *QDesignerFormWindowManagerInterface::activeFormWindow() const
-{
-    return 0;
-}
 
 /*!
+    \fn virtual QDesignerFormEditorInterface *QDesignerFormWindowManagerInterface::core() const
     Returns a pointer to \QD's current QDesignerFormEditorInterface
     object.
 */
-QDesignerFormEditorInterface *QDesignerFormWindowManagerInterface::core() const
-{
-    return 0;
-}
 
 /*!
+   \fn virtual void QDesignerFormWindowManagerInterface::addFormWindow(QDesignerFormWindowInterface *formWindow)
    Adds the given \a formWindow to the collection of windows that
    \QD's form window manager maintains.
 
    \sa formWindowAdded()
 */
-void QDesignerFormWindowManagerInterface::addFormWindow(QDesignerFormWindowInterface *formWindow)
-{
-    Q_UNUSED(formWindow);
-}
 
 /*!
+   \n virtual void QDesignerFormWindowManagerInterface::removeFormWindow(QDesignerFormWindowInterface *formWindow)
    Removes the given \a formWindow from the collection of windows that
    \QD's form window manager maintains.
 
    \sa formWindow(), formWindowRemoved()
 */
-void QDesignerFormWindowManagerInterface::removeFormWindow(QDesignerFormWindowInterface *formWindow)
-{
-    Q_UNUSED(formWindow);
-}
 
 /*!
+   \fn virtual void QDesignerFormWindowManagerInterface::setActiveFormWindow(QDesignerFormWindowInterface *formWindow)
    Sets the given \a formWindow to be the currently active form window in
    \QD's workspace.
 
    \sa activeFormWindow(), activeFormWindowChanged()
 */
-void QDesignerFormWindowManagerInterface::setActiveFormWindow(QDesignerFormWindowInterface *formWindow)
-{
-    Q_UNUSED(formWindow);
-}
 
 /*!
+   \fn int QDesignerFormWindowManagerInterface::formWindowCount() const
    Returns the number of form windows maintained by \QD's form window
    manager.
 */
-int QDesignerFormWindowManagerInterface::formWindowCount() const
-{
-    return 0;
-}
 
 /*!
+   \fn QDesignerFormWindowInterface *QDesignerFormWindowManagerInterface::formWindow(int index)
    Returns the form window at the given \a index.
 
    \sa setActiveFormWindow(), removeFormWindow()
 */
-QDesignerFormWindowInterface *QDesignerFormWindowManagerInterface::formWindow(int index) const
-{
-    Q_UNUSED(index);
-    return 0;
-}
 
 /*!
   \fn QDesignerFormWindowInterface *QDesignerFormWindowManagerInterface::createFormWindow(QWidget *parent, Qt::WindowFlags flags)
@@ -419,22 +445,19 @@ QDesignerFormWindowInterface *QDesignerFormWindowManagerInterface::formWindow(in
 
    \sa addFormWindow()
 */
-QDesignerFormWindowInterface *QDesignerFormWindowManagerInterface::createFormWindow(QWidget *parentWidget, Qt::WindowFlags flags)
-{
-    Q_UNUSED(parentWidget);
-    Q_UNUSED(flags);
-    return 0;
-}
 
 /*!
     Allows you to intervene and control \QD's "undo" action. The
     function returns the original action.
 
     \sa QAction
+    \obsolete
+
+    Use action() instead.
 */
 QAction *QDesignerFormWindowManagerInterface::actionUndo() const
 {
-    return 0;
+    return action(UndoAction);
 }
 
 /*!
@@ -442,10 +465,13 @@ QAction *QDesignerFormWindowManagerInterface::actionUndo() const
     function returns the original action.
 
     \sa QAction
+    \obsolete
+
+    Use action() instead.
 */
 QAction *QDesignerFormWindowManagerInterface::actionRedo() const
 {
-    return 0;
+    return action(RedoAction);
 }
 
 /*!
@@ -456,6 +482,15 @@ QAction *QDesignerFormWindowManagerInterface::actionRedo() const
     pointer to the new \a formWindow is passed as an argument.
 
     \sa addFormWindow(), setActiveFormWindow()
+*/
+
+/*!
+    \fn void QDesignerFormWindowManagerInterface::formWindowSettingsChanged(QDesignerFormWindowInterface *formWindow)
+
+    This signal is emitted when the settings of the form window change. It can be used to update
+    window titles, etc. accordingly.
+
+    \sa FormWindowSettingsDialogAction
 */
 
 /*!
@@ -482,6 +517,50 @@ QAction *QDesignerFormWindowManagerInterface::actionRedo() const
     \fn void QDesignerFormWindowManagerInterface::dragItems(const QList<QDesignerDnDItemInterface*> &item_list)
 
     \internal
+*/
+
+/*!
+    \fn virtual QAction QDesignerFormWindowManagerInterface::action(Action action) const
+
+    Returns the action specified by the enumeration value \a action.
+
+    Obsoletes the action accessors of Qt 4.X.
+
+    \since 5.0
+*/
+
+/*!
+    \fn virtual QActionGroup *QDesignerFormWindowManagerInterface::actionGroup(ActionGroup actionGroup) const
+
+    Returns the action group specified by the enumeration value \a actionGroup.
+
+    \since 5.0
+*/
+
+/*!
+    \fn virtual void QDesignerFormWindowManagerInterface::showPreview()
+
+    Show a preview of the current form using the default parameters.
+
+    \since 5.0
+    \sa closeAllPreviews()
+*/
+
+/*!
+    \fn virtual void QDesignerFormWindowManagerInterface::closeAllPreviews()
+
+    Close all currently open previews.
+
+    \since 5.0
+    \sa showPreview()
+*/
+
+/*!
+    \fn virtual void QDesignerFormWindowManagerInterface::showPluginDialog()
+
+    Opens a dialog showing the plugins loaded by \QD's and its plugin load failures.
+
+    \since 5.0
 */
 
 QT_END_NAMESPACE

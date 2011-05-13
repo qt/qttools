@@ -1,6 +1,6 @@
-QT.clucene.VERSION = 4.8.0
-QT.clucene.MAJOR_VERSION = 4
-QT.clucene.MINOR_VERSION = 8
+QT.clucene.VERSION = 5.0.0
+QT.clucene.MAJOR_VERSION = 5
+QT.clucene.MINOR_VERSION = 0
 QT.clucene.PATCH_VERSION = 0
 
 QT.clucene.name = QtCLucene
