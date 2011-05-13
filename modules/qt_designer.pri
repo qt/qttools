@@ -1,6 +1,6 @@
-QT.designer.VERSION = 4.8.0
-QT.designer.MAJOR_VERSION = 4
-QT.designer.MINOR_VERSION = 8
+QT.designer.VERSION = 5.0.0
+QT.designer.MAJOR_VERSION = 5
+QT.designer.MINOR_VERSION = 0
 QT.designer.PATCH_VERSION = 0
 
 QT.designer.name = QtDesigner
