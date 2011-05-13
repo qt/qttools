@@ -331,7 +331,6 @@ public:
     QDesignerIntegrationInterface::ResourceFileWatcherBehaviour m_resourceFileWatcherBehaviour;
     QString m_gradientsPath;
     QtGradientManager *m_gradientManager;
-    QDesignerIntegrationInterface::ResourceFileWatcherBehaviour m_fileWatcherBehaviour;
 };
 
 QDesignerIntegrationPrivate::QDesignerIntegrationPrivate(QDesignerIntegration *qq) :
@@ -340,8 +339,7 @@ QDesignerIntegrationPrivate::QDesignerIntegrationPrivate(QDesignerIntegration *q
     headerLowercase(true),
     m_features(QDesignerIntegrationInterface::DefaultFeature),
     m_resourceFileWatcherBehaviour(QDesignerIntegrationInterface::PromptToReloadResourceFile),
-    m_gradientManager(0),
-    m_fileWatcherBehaviour(QDesignerIntegrationInterface::PromptToReloadResourceFile)
+    m_gradientManager(0)
 {
 }
 

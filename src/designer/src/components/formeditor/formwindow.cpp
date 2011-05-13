@@ -2277,38 +2277,38 @@ QMenu *FormWindow::createPopupMenu(QWidget *w)
             QToolBoxHelper::addToolBoxContextMenuActions(toolBox, popup);
         }
 
-        if (manager->actionLower()->isEnabled()) {
-            popup->addAction(manager->actionLower());
-            popup->addAction(manager->actionRaise());
+        if (manager->action(QDesignerFormWindowManagerInterface::LowerAction)->isEnabled()) {
+            popup->addAction(manager->action(QDesignerFormWindowManagerInterface::LowerAction));
+            popup->addAction(manager->action(QDesignerFormWindowManagerInterface::RaiseAction));
             popup->addSeparator();
         }
-        popup->addAction(manager->actionCut());
-        popup->addAction(manager->actionCopy());
+        popup->addAction(manager->action(QDesignerFormWindowManagerInterface::CutAction));
+        popup->addAction(manager->action(QDesignerFormWindowManagerInterface::CopyAction));
     }
 
-    popup->addAction(manager->actionPaste());
+    popup->addAction(manager->action(QDesignerFormWindowManagerInterface::PasteAction));
 
     if (QAction *selectAncestorAction = createSelectAncestorSubMenu(w))
         popup->addAction(selectAncestorAction);
-    popup->addAction(manager->actionSelectAll());
+    popup->addAction(manager->action(QDesignerFormWindowManagerInterface::SelectAllAction));
 
     if (!isFormWindow) {
-        popup->addAction(manager->actionDelete());
+        popup->addAction(manager->action(QDesignerFormWindowManagerInterface::DeleteAction));
     }
 
     popup->addSeparator();
     QMenu *layoutMenu = popup->addMenu(tr("Lay out"));
-    layoutMenu->addAction(manager->actionAdjustSize());
-    layoutMenu->addAction(manager->actionHorizontalLayout());
-    layoutMenu->addAction(manager->actionVerticalLayout());
+    layoutMenu->addAction(manager->action(QDesignerFormWindowManagerInterface::AdjustSizeAction));
+    layoutMenu->addAction(manager->action(QDesignerFormWindowManagerInterface::HorizontalLayoutAction));
+    layoutMenu->addAction(manager->action(QDesignerFormWindowManagerInterface::VerticalLayoutAction));
     if (!isFormWindow) {
-        layoutMenu->addAction(manager->actionSplitHorizontal());
-        layoutMenu->addAction(manager->actionSplitVertical());
+        layoutMenu->addAction(manager->action(QDesignerFormWindowManagerInterface::SplitHorizontalAction));
+        layoutMenu->addAction(manager->action(QDesignerFormWindowManagerInterface::SplitVerticalAction));
     }
-    layoutMenu->addAction(manager->actionGridLayout());
-    layoutMenu->addAction(manager->actionFormLayout());
-    layoutMenu->addAction(manager->actionBreakLayout());
-    layoutMenu->addAction(manager->actionSimplifyLayout());
+    layoutMenu->addAction(manager->action(QDesignerFormWindowManagerInterface::GridLayoutAction));
+    layoutMenu->addAction(manager->action(QDesignerFormWindowManagerInterface::FormLayoutAction));
+    layoutMenu->addAction(manager->action(QDesignerFormWindowManagerInterface::BreakLayoutAction));
+    layoutMenu->addAction(manager->action(QDesignerFormWindowManagerInterface::SimplifyLayoutAction));
 
     return popup;
 }

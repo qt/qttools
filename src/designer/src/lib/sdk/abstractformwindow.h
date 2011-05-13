@@ -53,9 +53,9 @@ QT_BEGIN_NAMESPACE
 class QDesignerFormEditorInterface;
 class QDesignerFormWindowCursorInterface;
 class QDesignerFormWindowToolInterface;
-class DomUI;
 class QUndoStack;
 class QDir;
+class QtResourceSet;
 
 class QDESIGNER_SDK_EXPORT QDesignerFormWindowInterface: public QWidget
 {
@@ -69,6 +69,13 @@ public:
         DefaultFeature = EditFeature | GridFeature
     };
     Q_DECLARE_FLAGS(Feature, FeatureFlag)
+
+    enum ResourceFileSaveMode
+    {
+        SaveAllResourceFiles,
+        SaveOnlyUsedResourceFiles,
+        DontSaveResourceFiles
+    };
 
 public:
     QDesignerFormWindowInterface(QWidget *parent = 0, Qt::WindowFlags flags = 0);
@@ -104,6 +111,14 @@ public:
     virtual QStringList includeHints() const = 0;
     virtual void setIncludeHints(const QStringList &includeHints) = 0;
 
+    virtual ResourceFileSaveMode resourceFileSaveMode() const = 0;
+    virtual void setResourceFileSaveMode(ResourceFileSaveMode behaviour) = 0;
+
+    virtual QtResourceSet *resourceSet() const =  0;
+    virtual void setResourceSet(QtResourceSet *resourceSet) = 0;
+
+    QStringList activeResourceFilePaths() const;
+
     virtual QDesignerFormEditorInterface *core() const;
     virtual QDesignerFormWindowCursorInterface *cursor() const = 0;
 
@@ -119,6 +134,7 @@ public:
 
     virtual QWidget *mainContainer() const = 0;
     virtual void setMainContainer(QWidget *mainContainer) = 0;
+    virtual QWidget *formContainer() const = 0;
 
     virtual bool isManaged(QWidget *widget) const = 0;
 
@@ -155,6 +171,7 @@ public Q_SLOTS:
     virtual void setContents(const QString &contents) = 0;
 
     virtual void editWidgets() = 0;
+    void activateResourceFilePaths(const QStringList &paths, int *errorCount = 0, QString *errorMessages = 0);
 
 Q_SIGNALS:
     void mainContainerChanged(QWidget *mainContainer);

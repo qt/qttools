@@ -2105,7 +2105,7 @@ void QtResourceEditorDialog::setResourceModel(QtResourceModel *model)
 
     // enable qrcBox
 
-    QStringList paths = resourceSet->activeQrcPaths();
+    QStringList paths = resourceSet->activeResourceFilePaths();
     QStringListIterator it(paths);
     while (it.hasNext()) {
         const QString path = it.next();
@@ -2198,7 +2198,7 @@ void QtResourceEditorDialog::accept()
     } else {
         int errorCount;
         QString errorMessages;
-        d_ptr->m_resourceModel->currentResourceSet()->activateQrcPaths(newQrcPaths, &errorCount, &errorMessages);
+        d_ptr->m_resourceModel->currentResourceSet()->activateResourceFilePaths(newQrcPaths, &errorCount, &errorMessages);
         if (errorCount)
             displayResourceFailures(errorMessages, d_ptr->m_dlgGui, this);
     }

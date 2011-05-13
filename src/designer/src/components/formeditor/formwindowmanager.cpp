@@ -446,15 +446,14 @@ void FormWindowManager::setupActions()
     connect(m_actionVerticalLayout, SIGNAL(triggered()), this, SLOT(createLayout()));
 
     QIcon formIcon = QIcon::fromTheme("designer-form-layout", createIconSet(QLatin1String("editform.png")));
-    QAction *actionFormLayout = new QAction(formIcon, tr("Lay Out in a &Form Layout"), this);
-    actionFormLayout->setObjectName(QLatin1String("__qt_form_layout_action"));
-    actionFormLayout->setShortcut(Qt::CTRL + Qt::Key_6);
-    actionFormLayout->setStatusTip(tr("Lays out the selected widgets in a form layout"));
-    actionFormLayout->setWhatsThis(whatsThisFrom(QLatin1String("Layout|Lay Out in a Form")));
-    actionFormLayout->setData(LayoutInfo::Form);
-    actionFormLayout->setEnabled(false);
-    setActionFormLayout(actionFormLayout);
-    connect(actionFormLayout, SIGNAL(triggered()), this, SLOT(createLayout()));
+    m_actionFormLayout = new QAction(formIcon, tr("Lay Out in a &Form Layout"), this);
+    m_actionFormLayout->setObjectName(QLatin1String("__qt_form_layout_action"));
+    m_actionFormLayout->setShortcut(Qt::CTRL + Qt::Key_6);
+    m_actionFormLayout->setStatusTip(tr("Lays out the selected widgets in a form layout"));
+    m_actionFormLayout->setWhatsThis(whatsThisFrom(QLatin1String("Layout|Lay Out in a Form")));
+    m_actionFormLayout->setData(LayoutInfo::Form);
+    m_actionFormLayout->setEnabled(false);
+    connect(m_actionFormLayout, SIGNAL(triggered()), this, SLOT(createLayout()));
 
     m_actionGridLayout = new QAction(createIconSet(QLatin1String("editgrid.png")), tr("Lay Out in a &Grid"), this);
     m_actionGridLayout->setObjectName(QLatin1String("__qt_grid_layout_action"));
@@ -494,20 +493,19 @@ void FormWindowManager::setupActions()
     connect(m_actionBreakLayout, SIGNAL(triggered()), this, SLOT(slotActionBreakLayoutActivated()));
     m_actionBreakLayout->setEnabled(false);
 
-    QAction *simplifyLayoutAction = new QAction(tr("Si&mplify Grid Layout"), this);
-    simplifyLayoutAction->setObjectName(QLatin1String("__qt_simplify_layout_action"));
-    simplifyLayoutAction->setStatusTip(tr("Removes empty columns and rows"));
-    simplifyLayoutAction->setWhatsThis(whatsThisFrom(QLatin1String("Layout|Simplify Layout")));
-    connect(simplifyLayoutAction, SIGNAL(triggered()), this, SLOT(slotActionSimplifyLayoutActivated()));
-    simplifyLayoutAction->setEnabled(false);
-    setActionSimplifyLayout(simplifyLayoutAction);
+    m_actionSimplifyLayout = new QAction(tr("Si&mplify Grid Layout"), this);
+    m_actionSimplifyLayout->setObjectName(QLatin1String("__qt_simplify_layout_action"));
+    m_actionSimplifyLayout->setStatusTip(tr("Removes empty columns and rows"));
+    m_actionSimplifyLayout->setWhatsThis(whatsThisFrom(QLatin1String("Layout|Simplify Layout")));
+    connect(m_actionSimplifyLayout, SIGNAL(triggered()), this, SLOT(slotActionSimplifyLayoutActivated()));
+    m_actionSimplifyLayout->setEnabled(false);
 
     m_actionDefaultPreview = new QAction(tr("&Preview..."), this);
     m_actionDefaultPreview->setObjectName(QLatin1String("__qt_default_preview_action"));
     m_actionDefaultPreview->setStatusTip(tr("Preview current form"));
     m_actionDefaultPreview->setWhatsThis(whatsThisFrom(QLatin1String("Form|Preview")));
     connect(m_actionDefaultPreview, SIGNAL(triggered()),
-            this, SLOT(slotActionDefaultPreviewActivated()));
+            this, SLOT(showPreview()));
 
     m_undoGroup = new QUndoGroup(this);
 
@@ -669,7 +667,7 @@ void FormWindowManager::slotActionSelectAllActivated()
     m_activeFormWindow->selectAll();
 }
 
-void FormWindowManager::slotActionDefaultPreviewActivated()
+void FormWindowManager::showPreview()
 {
     slotActionGroupPreviewInStyle(QString(), -1);
 }
@@ -884,7 +882,7 @@ void FormWindowManager::slotUpdateActions()
 
         QLayout *widgetLayout = LayoutInfo::internalLayout(widget);
         QLayout *managedLayout = LayoutInfo::managedLayout(m_core, widgetLayout);
-        // We don't touch a layout createds by a custom widget
+        // We don't touch a layout created by a custom widget
         if (widgetLayout && !managedLayout)
             break;
 
@@ -930,11 +928,11 @@ void FormWindowManager::slotUpdateActions()
     m_actionVerticalLayout->setEnabled(layoutAvailable || canMorphIntoVBoxLayout);
     m_actionSplitHorizontal->setEnabled(layoutAvailable && !layoutContainer);
     m_actionSplitVertical->setEnabled(layoutAvailable && !layoutContainer);
-    actionFormLayout()->setEnabled(layoutAvailable || canMorphIntoFormLayout);
+    m_actionFormLayout->setEnabled(layoutAvailable || canMorphIntoFormLayout);
     m_actionGridLayout->setEnabled(layoutAvailable || canMorphIntoGridLayout);
 
     m_actionBreakLayout->setEnabled(breakAvailable);
-    actionSimplifyLayout()->setEnabled(simplifyAvailable);
+    m_actionSimplifyLayout->setEnabled(simplifyAvailable);
     m_actionShowFormWindowSettingsDialog->setEnabled(m_activeFormWindow != 0);
 }
 
@@ -946,37 +944,16 @@ QDesignerFormWindowInterface *FormWindowManager::createFormWindow(QWidget *paren
     return formWindow;
 }
 
-QPixmap FormWindowManager::createPreviewPixmap(QString *errorMessage)
+QPixmap FormWindowManager::createPreviewPixmap() const
 {
-    QPixmap pixmap;
-    QDesignerFormWindowInterface *fw = activeFormWindow();
+    const QDesignerFormWindowInterface *fw = activeFormWindow();
     if (!fw)
-        return pixmap;
-
-    pixmap = m_previewManager->createPreviewPixmap(fw, QString(), errorMessage);
-    return pixmap;
-}
-
-QAction *FormWindowManager::actionUndo() const
-{
-    return m_actionUndo;
-}
-
-QAction *FormWindowManager::actionRedo() const
-{
-    return m_actionRedo;
-}
-
-QActionGroup *FormWindowManager::actionGroupPreviewInStyle() const
-{
-    if (m_actionGroupPreviewInStyle == 0) {
-        // Wish we could make the 'this' pointer mutable ;-)
-        QObject *parent = const_cast<FormWindowManager*>(this);
-        m_actionGroupPreviewInStyle = new PreviewActionGroup(m_core, parent);
-        connect(m_actionGroupPreviewInStyle, SIGNAL(preview(QString,int)),
-                this, SLOT(slotActionGroupPreviewInStyle(QString,int)));
-    }
-    return m_actionGroupPreviewInStyle;
+        return QPixmap();
+    QString errorMessage;
+    const QPixmap pix = m_previewManager->createPreviewPixmap(fw, QString(), &errorMessage);
+    if (pix.isNull() && !errorMessage.isEmpty())
+        qWarning("Preview pixmap creation failed: %s", qPrintable(errorMessage));
+    return pix;
 }
 
 void FormWindowManager::deviceProfilesChanged()
@@ -995,11 +972,6 @@ void FormWindowManager::dragItems(const QList<QDesignerDnDItemInterface*> &item_
 QUndoGroup *FormWindowManager::undoGroup() const
 {
     return m_undoGroup;
-}
-
-QAction *FormWindowManager::actionShowFormWindowSettingsDialog() const
-{
-    return m_actionShowFormWindowSettingsDialog;
 }
 
 void FormWindowManager::slotActionShowFormWindowSettingsDialog()
@@ -1029,6 +1001,71 @@ void FormWindowManager::slotActionShowFormWindowSettingsDialog()
             emit formWindowSettingsChanged(fw);
 
     delete settingsDialog;
+}
+
+QAction *FormWindowManager::action(Action action) const
+{
+    switch (action) {
+    case QDesignerFormWindowManagerInterface::CutAction:
+        return m_actionCut;
+    case QDesignerFormWindowManagerInterface::CopyAction:
+        return m_actionCopy;
+    case QDesignerFormWindowManagerInterface::PasteAction:
+        return m_actionPaste;
+    case QDesignerFormWindowManagerInterface::DeleteAction:
+        return m_actionDelete;
+    case QDesignerFormWindowManagerInterface::SelectAllAction:
+        return m_actionSelectAll;
+    case QDesignerFormWindowManagerInterface::LowerAction:
+        return m_actionLower;
+    case QDesignerFormWindowManagerInterface::RaiseAction:
+        return m_actionRaise;
+    case QDesignerFormWindowManagerInterface::UndoAction:
+        return m_actionUndo;
+    case QDesignerFormWindowManagerInterface::RedoAction:
+        return m_actionRedo;
+    case QDesignerFormWindowManagerInterface::HorizontalLayoutAction:
+        return m_actionHorizontalLayout;
+    case QDesignerFormWindowManagerInterface::VerticalLayoutAction:
+        return m_actionVerticalLayout;
+    case QDesignerFormWindowManagerInterface::SplitHorizontalAction:
+        return m_actionSplitHorizontal;
+    case QDesignerFormWindowManagerInterface::SplitVerticalAction:
+        return m_actionSplitVertical;
+    case QDesignerFormWindowManagerInterface::GridLayoutAction:
+        return m_actionGridLayout;
+    case QDesignerFormWindowManagerInterface::FormLayoutAction:
+        return m_actionFormLayout;
+    case QDesignerFormWindowManagerInterface::BreakLayoutAction:
+        return m_actionBreakLayout;
+    case QDesignerFormWindowManagerInterface::AdjustSizeAction:
+        return m_actionAdjustSize;
+    case QDesignerFormWindowManagerInterface::SimplifyLayoutAction:
+        return m_actionSimplifyLayout;
+    case QDesignerFormWindowManagerInterface::DefaultPreviewAction:
+        return m_actionDefaultPreview;
+    case QDesignerFormWindowManagerInterface::FormWindowSettingsDialogAction:
+        return m_actionShowFormWindowSettingsDialog;
+    }
+    qWarning("FormWindowManager::action: Unhanded enumeration value %d", action);
+    return 0;
+}
+
+QActionGroup *FormWindowManager::actionGroup(ActionGroup actionGroup) const
+{
+    switch (actionGroup) {
+    case QDesignerFormWindowManagerInterface::StyledPreviewActionGroup:
+        if (m_actionGroupPreviewInStyle == 0) {
+            // Wish we could make the 'this' pointer mutable ;-)
+            QObject *parent = const_cast<FormWindowManager*>(this);
+            m_actionGroupPreviewInStyle = new PreviewActionGroup(m_core, parent);
+            connect(m_actionGroupPreviewInStyle, SIGNAL(preview(QString,int)),
+                    this, SLOT(slotActionGroupPreviewInStyle(QString,int)));
+        }
+        return m_actionGroupPreviewInStyle;
+    }
+    qWarning("FormWindowManager::actionGroup: Unhanded enumeration value %d", actionGroup);
+    return 0;
 }
 
 }
