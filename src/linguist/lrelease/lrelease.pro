@@ -5,7 +5,7 @@ TARGET          = lrelease
 DESTDIR         = $$QT.designer.bins
 
 QT              -= gui
-QT              += core-private xml
+QT              += core-private
 
 CONFIG          += qt warn_on console
 CONFIG          -= app_bundle
