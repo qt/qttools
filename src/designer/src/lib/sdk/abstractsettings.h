@@ -52,9 +52,6 @@ QT_BEGIN_NAMESPACE
 
 class QString;
 
-/*!
- To be implemented by IDEs that want to control the way designer retrieves/stores its settings.
- */
 class QDESIGNER_SDK_EXPORT QDesignerSettingsInterface
 {
 public:
