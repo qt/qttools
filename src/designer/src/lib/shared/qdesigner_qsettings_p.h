@@ -53,8 +53,9 @@
 #ifndef QDESIGNER_QSETTINGS_H
 #define QDESIGNER_QSETTINGS_H
 
-#include "abstractsettings_p.h"
 #include "shared_global_p.h"
+
+#include <QtDesigner/QDesignerSettingsInterface>
 
 #include <QtCore/QSettings>
 

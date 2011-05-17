@@ -46,13 +46,13 @@
 #include "qtgradientviewdialog.h"
 #include "qtgradientutils.h"
 #include "qdesigner_utils_p.h"
-#include "abstractsettings_p.h"
 
 #include <QtDesigner/QDesignerFormWindowInterface>
 #include <QtDesigner/QDesignerFormWindowCursorInterface>
 #include <QtDesigner/QDesignerFormEditorInterface>
 #include <QtDesigner/QDesignerPropertySheetExtension>
 #include <QtDesigner/QDesignerIntegrationInterface>
+#include <QtDesigner/QDesignerSettingsInterface>
 #include <QtDesigner/QExtensionManager>
 
 #include <QtCore/QSignalMapper>

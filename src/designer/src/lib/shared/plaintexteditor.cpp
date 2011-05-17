@@ -40,8 +40,8 @@
 ****************************************************************************/
 
 #include "plaintexteditor_p.h"
-#include "abstractsettings_p.h"
 
+#include <QtDesigner/QDesignerSettingsInterface>
 #include <QtDesigner/QDesignerFormEditorInterface>
 
 #include <QtGui/QPlainTextEdit>

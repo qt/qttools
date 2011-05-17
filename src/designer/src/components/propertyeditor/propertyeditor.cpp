@@ -59,7 +59,7 @@
 #include <QtDesigner/QExtensionManager>
 #include <QtDesigner/QDesignerPropertySheetExtension>
 #include <QtDesigner/QDesignerWidgetDataBaseInterface>
-#include <QtDesigner/private/abstractsettings_p.h>
+#include <QtDesigner/QDesignerSettingsInterface>
 // shared
 #include <qdesigner_utils_p.h>
 #include <qdesigner_propertycommand_p.h>

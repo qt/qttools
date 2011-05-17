@@ -39,14 +39,15 @@
 **
 ****************************************************************************/
 
-#include "abstractsettings_p.h"
-#include "abstractformeditor.h"
 #include "qtresourceeditordialog_p.h"
 #include "ui_qtresourceeditordialog.h"
 #include "qtresourcemodel_p.h"
 #include "iconloader_p.h"
 
 #include <abstractdialoggui_p.h>
+
+#include <QtDesigner/QDesignerSettingsInterface>
+#include <QtDesigner/QDesignerFormEditorInterface>
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>

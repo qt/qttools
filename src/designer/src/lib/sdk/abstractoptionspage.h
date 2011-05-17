@@ -39,50 +39,30 @@
 **
 ****************************************************************************/
 
-//
-//  W A R N I N G
-//  -------------
-//
-// This file is not part of the Qt API.  It exists for the convenience
-// of Qt Designer.  This header
-// file may change from version to version without notice, or even be removed.
-//
-// We mean it.
-//
-
-#ifndef ABSTRACTNEWFORMWIDGET_H
-#define ABSTRACTNEWFORMWIDGET_H
+#ifndef ABSTRACTOPTIONSPAGE_P_H
+#define ABSTRACTOPTIONSPAGE_P_H
 
 #include <QtDesigner/sdk_global.h>
-
-#include <QtGui/QWidget>
 
 QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
-class QDesignerFormEditorInterface;
+class QString;
+class QWidget;
 
-class QDESIGNER_SDK_EXPORT QDesignerNewFormWidgetInterface : public QWidget
+class QDESIGNER_SDK_EXPORT QDesignerOptionsPageInterface
 {
-    Q_DISABLE_COPY(QDesignerNewFormWidgetInterface)
-    Q_OBJECT
 public:
-    explicit QDesignerNewFormWidgetInterface(QWidget *parent = 0);
-    virtual ~QDesignerNewFormWidgetInterface();
-
-    virtual bool hasCurrentTemplate() const = 0;
-    virtual QString currentTemplate(QString *errorMessage = 0) = 0;
-
-    static QDesignerNewFormWidgetInterface *createNewFormWidget(QDesignerFormEditorInterface *core, QWidget *parent = 0);
-
-Q_SIGNALS:
-    void templateActivated();
-    void currentTemplateChanged(bool templateSelected);
+    virtual ~QDesignerOptionsPageInterface() {}
+    virtual QString name() const = 0;
+    virtual QWidget *createPage(QWidget *parent) = 0;
+    virtual void apply() = 0;
+    virtual void finish() = 0;
 };
 
 QT_END_NAMESPACE
 
 QT_END_HEADER
 
-#endif // ABSTRACTNEWFORMWIDGET_H
+#endif // ABSTRACTOPTIONSPAGE_P_H

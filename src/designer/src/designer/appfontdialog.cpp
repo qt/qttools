@@ -42,7 +42,8 @@
 #include "appfontdialog.h"
 
 #include <iconloader_p.h>
-#include <abstractsettings_p.h>
+
+#include <QtDesigner/QDesignerSettingsInterface>
 
 #include <QtGui/QTreeView>
 #include <QtGui/QToolButton>

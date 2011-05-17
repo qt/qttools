@@ -56,7 +56,7 @@
 #include "shared_global_p.h"
 #include "deviceprofile_p.h"
 
-#include <abstractnewformwidget_p.h>
+#include <QtDesigner/QDesignerNewFormWidgetInterface>
 
 #include <QtGui/QWidget>
 #include <QtGui/QPixmap>

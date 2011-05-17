@@ -43,9 +43,9 @@
 #include "ui_preferencesdialog.h"
 #include "qdesigner_appearanceoptions.h"
 
-#include <QtDesigner/private/abstractoptionspage_p.h>
-
+#include <QtDesigner/QDesignerOptionsPageInterface>
 #include <QtDesigner/QDesignerFormEditorInterface>
+
 #include <QtGui/QFileDialog>
 #include <QtGui/QPushButton>
 
