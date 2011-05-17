@@ -42,7 +42,7 @@
 #ifndef QDESIGNER_TEMPLATEOPTIONS_H
 #define QDESIGNER_TEMPLATEOPTIONS_H
 
-#include <QtDesigner/private/abstractoptionspage_p.h>
+#include <QtDesigner/QDesignerOptionsPageInterface>
 
 #include <QtCore/QPointer>
 #include <QtCore/QStringList>

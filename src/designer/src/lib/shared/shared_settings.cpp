@@ -43,8 +43,10 @@
 #include "grid_p.h"
 #include "previewmanager_p.h"
 #include "qdesigner_utils_p.h"
-#include <QtDesigner/abstractformeditor.h>
-#include <QtDesigner/private/abstractsettings_p.h>
+
+#include <QtDesigner/QDesignerFormEditorInterface>
+#include <QtDesigner/QDesignerSettingsInterface>
+
 #include <QtCore/QStringList>
 #include <QtCore/QDir>
 #include <QtCore/QVariantMap>

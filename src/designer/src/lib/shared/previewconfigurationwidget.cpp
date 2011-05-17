@@ -39,21 +39,17 @@
 **
 ****************************************************************************/
 
-/* It is possible to link the skins as resources into Designer by specifying:
- * QVFB_ROOT=$$QT_SOURCE_TREE/tools/qvfb
- * RESOURCES += $$QVFB_ROOT/ClamshellPhone.qrc  $$QVFB_ROOT/TouchScreenPhone.qrc ...
- * in lib/shared/shared.pri. However, this exceeds a limit of Visual Studio 6. */
-
 #include "previewconfigurationwidget_p.h"
 #include "ui_previewconfigurationwidget.h"
 #include "previewmanager_p.h"
-#include "abstractsettings_p.h"
 #include "shared_settings_p.h"
 
 #include <iconloader_p.h>
 #include <stylesheeteditor_p.h>
 
 #include <deviceskin.h>
+
+#include <QtDesigner/QDesignerSettingsInterface>
 
 #include <QtGui/QFileDialog>
 #include <QtGui/QStyleFactory>

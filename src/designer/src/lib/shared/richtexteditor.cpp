@@ -43,11 +43,11 @@
 #include "htmlhighlighter_p.h"
 #include "iconselector_p.h"
 #include "ui_addlinkdialog.h"
-#include "abstractsettings_p.h"
 
 #include "iconloader_p.h"
 
 #include <QtDesigner/QDesignerFormEditorInterface>
+#include <QtDesigner/QDesignerSettingsInterface>
 
 #include <QtCore/QList>
 #include <QtCore/QMap>

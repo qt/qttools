@@ -39,7 +39,6 @@
 **
 ****************************************************************************/
 
-#include "abstractsettings_p.h"
 #include "qtresourceview_p.h"
 #include "qtresourcemodel_p.h"
 #include "qtresourceeditordialog_p.h"
@@ -47,6 +46,7 @@
 #include "filterwidget_p.h" // For FilterWidget
 
 #include <QtDesigner/QDesignerFormEditorInterface>
+#include <QtDesigner/QDesignerSettingsInterface>
 
 #include <QtGui/QToolBar>
 #include <QtGui/QAction>

@@ -39,7 +39,6 @@
 **
 ****************************************************************************/
 
-#include "abstractsettings_p.h"
 #include "previewmanager_p.h"
 #include "qdesigner_formbuilder_p.h"
 #include "shared_settings_p.h"
@@ -53,6 +52,7 @@
 #include <QtDesigner/QDesignerFormWindowInterface>
 #include <QtDesigner/QDesignerFormEditorInterface>
 #include <QtDesigner/QDesignerFormWindowManagerInterface>
+#include <QtDesigner/QDesignerSettingsInterface>
 
 #include <QtGui/QWidget>
 #include <QtGui/qevent.h>

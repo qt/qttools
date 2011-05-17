@@ -42,7 +42,7 @@
 #ifndef EMBEDDEDOPTIONSPAGE_H
 #define EMBEDDEDOPTIONSPAGE_H
 
-#include <QtDesigner/private/abstractoptionspage_p.h>
+#include <QtDesigner/QDesignerOptionsPageInterface>
 #include <QtCore/QPointer>
 #include <QtGui/QWidget>
 

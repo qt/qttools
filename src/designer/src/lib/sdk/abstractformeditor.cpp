@@ -42,10 +42,9 @@
 #include "abstractformeditor.h"
 #include "abstractdialoggui_p.h"
 #include "abstractintrospection_p.h"
-#include "abstractsettings_p.h"
-#include "abstractoptionspage_p.h"
 
-#include <QtDesigner/QDesignerWidgetBoxInterface>
+#include <QtDesigner/QDesignerOptionsPageInterface>
+#include <QtDesigner/QDesignerSettingsInterface>
 #include <QtDesigner/QDesignerPropertyEditorInterface>
 #include <QtDesigner/QDesignerFormWindowManagerInterface>
 #include <QtDesigner/QExtensionManager>
@@ -55,6 +54,8 @@
 #include <QtDesigner/QDesignerObjectInspectorInterface>
 #include <QtDesigner/QDesignerIntegrationInterface>
 #include <QtDesigner/QDesignerActionEditorInterface>
+#include <QtDesigner/QDesignerWidgetBoxInterface>
+
 #include <pluginmanager_p.h>
 #include <qtresourcemodel_p.h>
 #include <qtgradientmanager.h>
@@ -64,6 +65,8 @@
 #include <grid_p.h>
 #include <iconloader_p.h>
 #include <QtDesigner/QDesignerPromotionInterface>
+
+#include <QtGui/QIcon>
 
 // Must be done outside of the Qt namespace
 static void initResources()

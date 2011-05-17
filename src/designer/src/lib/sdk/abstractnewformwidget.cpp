@@ -39,7 +39,7 @@
 **
 ****************************************************************************/
 
-#include "abstractnewformwidget_p.h"
+#include "abstractnewformwidget.h"
 #include <newformwidget_p.h>
 
 QT_BEGIN_NAMESPACE

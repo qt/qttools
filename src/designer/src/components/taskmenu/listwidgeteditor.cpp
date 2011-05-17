@@ -43,7 +43,7 @@
 #include <designerpropertymanager.h>
 #include <abstractformbuilder.h>
 
-#include <QtDesigner/private/abstractsettings_p.h>
+#include <QtDesigner/QDesignerSettingsInterface>
 #include <QtDesigner/QDesignerFormEditorInterface>
 
 #include <QtGui/QComboBox>

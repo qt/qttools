@@ -44,8 +44,9 @@
 #include "qdesigner_toolwindow.h"
 #include "qdesigner_workbench.h"
 
+#include <QtDesigner/QDesignerSettingsInterface>
+
 #include <abstractformeditor.h>
-#include <abstractsettings_p.h>
 #include <qdesigner_utils_p.h>
 #include <previewmanager_p.h>
 
