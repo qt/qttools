@@ -411,11 +411,15 @@ DomProperty *QDesignerTextBuilder::saveText(const QVariant &value) const
 QDesignerResource::QDesignerResource(FormWindow *formWindow)  :
     QEditorFormBuilder(formWindow->core()),
     m_formWindow(formWindow),
-    m_topLevelSpacerCount(0),
     m_copyWidget(false),
     m_selected(0),
     m_resourceBuilder(new QDesignerResourceBuilder(m_formWindow->core(), m_formWindow->pixmapCache(), m_formWindow->iconCache()))
 {
+    // Check language unless extension present (Jambi)
+    QDesignerFormEditorInterface *core = m_formWindow->core();
+    if (const QDesignerLanguageExtension *le = qt_extension<QDesignerLanguageExtension*>(core->extensionManager(), core))
+        d->m_language = le->name();
+
     setWorkingDirectory(formWindow->absoluteDir());
     setResourceBuilder(m_resourceBuilder);
     setTextBuilder(new QDesignerTextBuilder());
@@ -451,19 +455,7 @@ static inline QString messageBoxTitle()
 
 void QDesignerResource::save(QIODevice *dev, QWidget *widget)
 {
-    m_topLevelSpacerCount = 0;
-
     QAbstractFormBuilder::save(dev, widget);
-
-    if (QSimpleResource::warningsEnabled() && m_topLevelSpacerCount != 0) {
-        const QString message = QApplication::translate("Designer", "This file contains top level spacers.<br>"
-                           "They have <b>NOT</b> been saved into the form.");
-        const QString infoMessage = QApplication::translate("Designer", "Perhaps you forgot to create a layout?");
-
-        core()->dialogGui()->message(widget->window(), QDesignerDialogGuiInterface::TopLevelSpacerMessage,
-                                     QMessageBox::Warning, messageBoxTitle(), message, infoMessage,
-                                     QMessageBox::Ok);
-    }
 }
 
 void QDesignerResource::saveDom(DomUI *ui, QWidget *widget)
@@ -584,164 +576,10 @@ void QDesignerResource::saveDom(DomUI *ui, QWidget *widget)
     }
 }
 
-namespace {
-    enum LoadPreCheck {  LoadPreCheckFailed, LoadPreCheckVersion3, LoadPreCheckVersionMismatch,  LoadPreCheckOk  };
-    // Pair of major, minor
-    typedef QPair<int, int> UiVersion;
-}
-
-static UiVersion uiVersion(const QString &attr)
-{
-    const QStringList versions = attr.split(QLatin1Char('.'));
-    if (versions.empty())
-        return UiVersion(-1, -1);
-
-    bool ok = false;
-    UiVersion rc(versions.at(0).toInt(&ok), 0);
-
-    if (!ok)
-        return UiVersion(-1, -1);
-
-    if (versions.size() > 1) {
-        const int minorVersion = versions.at(1).toInt(&ok);
-        if (ok)
-            rc.second =  minorVersion;
-    }
-    return rc;
-}
-
-// Read version and language attributes of an <UI> element.
-static bool readUiAttributes(QIODevice *dev, QString *errorMessage,
-                             QString *version,
-                             QString *language)
-{
-    const QString uiElement = QLatin1String("ui");
-    const QString versionAttribute = QLatin1String("version");
-    const QString languageAttribute = QLatin1String("language");
-    QXmlStreamReader reader(dev);
-    // Read up to first element
-    while (!reader.atEnd()) {
-        if (reader.readNext() == QXmlStreamReader::StartElement) {
-            const QStringRef tag = reader.name();
-            if (reader.name().compare(uiElement, Qt::CaseInsensitive) == 0) {
-                const QXmlStreamAttributes attributes = reader.attributes();
-                if (attributes.hasAttribute(versionAttribute))
-                    *version = attributes.value(versionAttribute).toString();
-                if (attributes.hasAttribute(languageAttribute))
-                    *language = attributes.value(languageAttribute).toString();
-                return true;
-            } else {
-                *errorMessage = QCoreApplication::translate("Designer", "Invalid UI file: The root element <ui> is missing.");
-                return false;
-
-            }
-        }
-    }
-    *errorMessage = QCoreApplication::translate("Designer", "An error has occurred while reading the UI file at line %1, column %2: %3")
-                    .arg(reader.lineNumber()).arg(reader.columnNumber()).arg(reader.errorString());
-    return false;
-}
-
-// While loading a file, check language, version and extra extension
-static LoadPreCheck loadPrecheck(QDesignerFormEditorInterface *core,
-                                 QIODevice *dev,
-                                 QString *errorMessage, QString *versionString)
-{
-    QString language;
-    // Read attributes of <ui> and rewind
-    if (!readUiAttributes(dev, errorMessage, versionString, &language)) {
-        // XML error: Mimick the behaviour occurring if an XML error is
-        // detected later on, report to warning log and have embedding
-        // application display a dialog.
-        designerWarning(*errorMessage);
-        errorMessage->clear();
-        return LoadPreCheckFailed;
-    }
-    dev->seek(0);
-
-    // Check language unless extension present (Jambi)
-    if (!language.isEmpty() && !qt_extension<QDesignerLanguageExtension*>(core->extensionManager(), core)) {
-        if (language.toLower() != QLatin1String("c++")) {
-            // Jambi?!
-            *errorMessage = QApplication::translate("Designer", "This file cannot be read because it was created using %1.").arg(language);
-            return LoadPreCheckFailed;
-        }
-    }
-
-    // Version
-    if (!versionString->isEmpty()) {
-        const UiVersion version = uiVersion(*versionString);
-        switch (version.first) {
-        case 3:
-            return  LoadPreCheckVersion3;
-        case 4:
-            break;
-        default:
-            *errorMessage = QApplication::translate("Designer", "This file was created using Designer from Qt-%1 and cannot be read.").arg(*versionString);
-            return LoadPreCheckVersionMismatch;
-        }
-    }
-    return LoadPreCheckOk;
-}
-
 QWidget *QDesignerResource::load(QIODevice *dev, QWidget *parentWidget)
 {
-    // Run loadPreCheck for version and language
-    QString errorMessage;
-    QString version;
-    switch (loadPrecheck(core(), dev,  &errorMessage, &version)) {
-    case LoadPreCheckFailed:
-    case LoadPreCheckVersionMismatch:
-        if (!errorMessage.isEmpty())
-            core()->dialogGui()->message(parentWidget->window(), QDesignerDialogGuiInterface::FormLoadFailureMessage,
-                                         QMessageBox::Warning, messageBoxTitle(), errorMessage, QMessageBox::Ok);
-        return 0;
-    case LoadPreCheckVersion3: {
-        QWidget *w = 0;
-        QByteArray ba;
-        if (runUIC( m_formWindow->fileName(), UIC_ConvertV3, ba, errorMessage)) {
-            QBuffer buffer(&ba);
-            buffer.open(QIODevice::ReadOnly);
-            w = load(&buffer, parentWidget);
-            if (w) {
-                // Force the form to pop up a save file dialog
-                m_formWindow->setFileName(QString());
-            } else {
-                errorMessage = QApplication::translate("Designer", "The converted file could not be read.");
-            }
-        }
-        if (w) {
-            const QString message = QApplication::translate("Designer",
-                                     "This file was created using Designer from Qt-%1 and"
-                                     " will be converted to a new form by Qt Designer.").arg(version);
-            const QString infoMessage = QApplication::translate("Designer",
-                                     "The old form has not been touched, but you will have to save the form"
-                                     " under a new name.");
-
-            core()->dialogGui()->message(parentWidget->window(),
-                                         QDesignerDialogGuiInterface::UiVersionMismatchMessage,
-                                         QMessageBox::Information, messageBoxTitle(), message, infoMessage,
-                                         QMessageBox::Ok);
-            return w;
-        }
-
-        const QString message = QApplication::translate("Designer",
-                             "This file was created using Designer from Qt-%1 and "
-                             "could not be read:\n%2").arg(version).arg(errorMessage);
-        const QString infoMessage = QApplication::translate("Designer",
-                             "Please run it through <b>uic3&nbsp;-convert</b> to convert "
-                             "it to Qt-4's ui format.");
-        core()->dialogGui()->message(parentWidget->window(), QDesignerDialogGuiInterface::FormLoadFailureMessage,
-                                     QMessageBox::Warning, messageBoxTitle(), message, infoMessage,
-                                     QMessageBox::Ok);
-        return 0;
-    }
-
-    case LoadPreCheckOk:
-        break;
-    }
     QWidget *w = QEditorFormBuilder::load(dev, parentWidget);
-    if (w) // Store the class name as 'reset' value for the main container's object name.
+    if (w)  // Store the class name as 'reset' value for the main container's object name.
         w->setProperty("_q_classname", w->objectName());
     return w;
 }
@@ -1005,7 +843,6 @@ QLayoutItem *QDesignerResource::create(DomLayoutItem *ui_layoutItem, QLayout *la
 {
     if (ui_layoutItem->kind() == DomLayoutItem::Spacer) {
         const DomSpacer *domSpacer = ui_layoutItem->elementSpacer();
-        const QHash<QString, DomProperty*> properties = propertyMap(domSpacer->elementProperty());
         Spacer *spacer = static_cast<Spacer*>(core()->widgetFactory()->createWidget(QLatin1String("Spacer"), parentWidget));
         if (domSpacer->hasAttributeName())
             changeObjectName(spacer, domSpacer->attributeName());
@@ -1239,10 +1076,8 @@ DomWidget *QDesignerResource::createDom(QWidget *widget, DomWidget *ui_parentWid
     if (!item)
         return 0;
 
-    if (qobject_cast<Spacer*>(widget) && m_copyWidget == false) {
-        ++m_topLevelSpacerCount;
+    if (qobject_cast<Spacer*>(widget) && m_copyWidget == false)
         return 0;
-    }
 
     const QDesignerWidgetDataBaseInterface *wdb = core()->widgetDataBase();
     QDesignerWidgetDataBaseItemInterface *widgetInfo =  0;
@@ -1453,8 +1288,7 @@ DomWidget *QDesignerResource::saveWidget(QWidget *widget, QDesignerContainerExte
         if (DomWidget *ui_page = createDom(page, ui_widget)) {
             ui_widget_list.append(ui_page);
         } else {
-            if (QSimpleResource::warningsEnabled())
-                designerWarning(msgUnmanagedPage(core(), widget, i, page));
+            designerWarning(msgUnmanagedPage(core(), widget, i, page));
         }
     }
 
@@ -1474,8 +1308,7 @@ DomWidget *QDesignerResource::saveWidget(QStackedWidget *widget, DomWidget *ui_p
             if (DomWidget *ui_page = createDom(page, ui_widget)) {
                 ui_widget_list.append(ui_page);
             } else {
-                if (QSimpleResource::warningsEnabled())
-                    designerWarning(msgUnmanagedPage(core(), widget, i, page));
+                designerWarning(msgUnmanagedPage(core(), widget, i, page));
             }
         }
     }
@@ -1572,8 +1405,7 @@ DomWidget *QDesignerResource::saveWidget(QTabWidget *widget, DomWidget *ui_paren
 
             DomWidget *ui_page = createDom(page, ui_widget);
             if (!ui_page) {
-                if (QSimpleResource::warningsEnabled())
-                    designerWarning(msgUnmanagedPage(core(), widget, i, page));
+                designerWarning(msgUnmanagedPage(core(), widget, i, page));
                 continue;
             }
             QList<DomProperty*> ui_attribute_list;
@@ -1640,8 +1472,7 @@ DomWidget *QDesignerResource::saveWidget(QToolBox *widget, DomWidget *ui_parentW
 
             DomWidget *ui_page = createDom(page, ui_widget);
             if (!ui_page) {
-                if (QSimpleResource::warningsEnabled())
-                    designerWarning(msgUnmanagedPage(core(), widget, i, page));
+                designerWarning(msgUnmanagedPage(core(), widget, i, page));
                 continue;
             }
 

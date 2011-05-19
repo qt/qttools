@@ -124,8 +124,8 @@ public:
     virtual void setFileName(const QString &fileName);
 
     virtual QString contents() const;
-    virtual void setContents(const QString &contents);
-    virtual void setContents(QIODevice *dev);
+    virtual bool setContents(QIODevice *dev, QString *errorMessage = 0);
+    virtual bool setContents(const QString &);
 
     virtual QDir absoluteDir() const;
 

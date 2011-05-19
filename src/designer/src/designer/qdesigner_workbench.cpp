@@ -894,7 +894,6 @@ void QDesignerWorkbench::resizeForm(QDesignerFormWindow *fw, const QWidget *main
 
 QDesignerFormWindow * QDesignerWorkbench::loadForm(const QString &fileName,
                                                    bool detectLineTermiantorMode,
-                                                   bool *uic3Converted,
                                                    QString *errorMessage)
 {
     QFile file(fileName);
@@ -916,10 +915,9 @@ QDesignerFormWindow * QDesignerWorkbench::loadForm(const QString &fileName,
     }
 
     if (!file.open(QFile::ReadOnly|QFile::Text)) {
-        *errorMessage = tr("The file <b>%1</b> could not be opened.").arg(file.fileName());
+        *errorMessage = tr("The file <b>%1</b> could not be opened: %1").arg(file.fileName(), file.errorString());
         return 0;
     }
-
 
     // Create a form
     QDesignerFormWindowManagerInterface *formWindowManager = m_core->formWindowManager();
@@ -932,7 +930,13 @@ QDesignerFormWindow * QDesignerWorkbench::loadForm(const QString &fileName,
     // Temporarily set the file name. It is needed when converting a UIC 3 file.
     // In this case, the file name will we be cleared on return to force a save box.
     editor->setFileName(fileName);
-    editor->setContents(&file);
+
+    if (!editor->setContents(&file, errorMessage)) {
+        removeFormWindow(formWindow);
+        formWindowManager->removeFormWindow(editor);
+        m_core->metaDataBase()->remove(editor);
+        return 0;
+    }
 
     if (qdesigner_internal::FormWindowBase *fwb = qobject_cast<qdesigner_internal::FormWindowBase *>(editor))
         fwb->setLineTerminatorMode(mode);
@@ -958,14 +962,6 @@ QDesignerFormWindow * QDesignerWorkbench::loadForm(const QString &fileName,
         break;
     }
 
-    if (!editor->mainContainer()) {
-        removeFormWindow(formWindow);
-        formWindowManager->removeFormWindow(editor);
-        m_core->metaDataBase()->remove(editor);
-        *errorMessage = tr("The file <b>%1</b> is not a valid Designer UI file.").arg(file.fileName());
-        return 0;
-    }
-    *uic3Converted = editor->fileName().isEmpty();
     // Did user specify another (missing) resource path -> set dirty.
     const bool dirty = editor->property("_q_resourcepathchanged").toBool();
     editor->setDirty(dirty);
@@ -977,13 +973,10 @@ QDesignerFormWindow * QDesignerWorkbench::loadForm(const QString &fileName,
 
 QDesignerFormWindow * QDesignerWorkbench::openForm(const QString &fileName, QString *errorMessage)
 {
-    bool uic3Converted;
-    QDesignerFormWindow *rc =loadForm(fileName, true, &uic3Converted, errorMessage);
+    QDesignerFormWindow *rc = loadForm(fileName, true, errorMessage);
     if (!rc)
         return 0;
-
-    if (!uic3Converted)
-        rc->editor()->setFileName(fileName);
+    rc->editor()->setFileName(fileName);
     rc->firstShow();
     return rc;
 }
@@ -992,14 +985,11 @@ QDesignerFormWindow * QDesignerWorkbench::openTemplate(const QString &templateFi
                                                        const QString &editorFileName,
                                                        QString *errorMessage)
 {
-    bool uic3Converted;
-    QDesignerFormWindow *rc =loadForm(templateFileName, false, &uic3Converted, errorMessage);
+    QDesignerFormWindow *rc = loadForm(templateFileName, false, errorMessage);
     if (!rc)
         return 0;
 
-    if (!uic3Converted)
-        rc->editor()->setFileName(editorFileName);
-
+    rc->editor()->setFileName(editorFileName);
     rc->firstShow();
     return rc;
 }

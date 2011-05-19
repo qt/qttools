@@ -89,7 +89,7 @@ public:
     bool saveRelative() const;
     void setSaveRelative(bool relative);
 
-    virtual QWidget *load(QIODevice *dev, QWidget *parentWidget = 0);
+    virtual QWidget *load(QIODevice *dev, QWidget *parentWidget);
 
 protected:
     using QEditorFormBuilder::create;
@@ -165,7 +165,6 @@ private:
     QHash<QString, QString> m_qt_to_internal;
     QStack<QLayout*> m_chain;
     QHash<QDesignerWidgetDataBaseItemInterface*, bool> m_usedCustomWidgets;
-    int m_topLevelSpacerCount;
     bool m_copyWidget;
     QWidget *m_selected;
     class QDesignerResourceBuilder *m_resourceBuilder;

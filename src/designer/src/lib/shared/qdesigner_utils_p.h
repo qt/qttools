@@ -424,8 +424,7 @@ QDESIGNER_SHARED_EXPORT QDesignerFormWindowCommand *createTextPropertyCommand(co
 QDESIGNER_SHARED_EXPORT QAction *preferredEditAction(QDesignerFormEditorInterface *core, QWidget *managedWidget);
 
 // Convenience to run UIC
-enum UIC_Mode { UIC_GenerateCode, UIC_ConvertV3 };
-QDESIGNER_SHARED_EXPORT bool runUIC(const QString &fileName, UIC_Mode mode, QByteArray& ba, QString &errorMessage);
+QDESIGNER_SHARED_EXPORT bool runUIC(const QString &fileName, QByteArray& ba, QString &errorMessage);
 
 // Find a suitable variable name for a class.
 QDESIGNER_SHARED_EXPORT QString qtify(const QString &name);

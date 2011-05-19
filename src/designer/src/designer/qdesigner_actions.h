@@ -83,7 +83,7 @@ public:
 
     bool saveForm(QDesignerFormWindowInterface *fw);
     bool readInForm(const QString &fileName);
-    bool writeOutForm(QDesignerFormWindowInterface *formWindow, const QString &fileName);
+    bool writeOutForm(QDesignerFormWindowInterface *formWindow, const QString &fileName, bool check = true);
 
     QActionGroup *fileActions() const;
     QActionGroup *recentFilesActions() const;
