@@ -50,8 +50,7 @@
 #include "grid_p.h" 
 #include "deviceprofile_p.h"
 #include "qdesigner_utils_p.h"
-
-#include "qsimpleresource_p.h"
+#include "spacer_widget_p.h"
 
 #include <QtDesigner/QDesignerFormEditorInterface>
 #include <QtDesigner/QDesignerContainerExtension>
@@ -487,12 +486,22 @@ void FormWindowBase::triggerDefaultAction(QWidget *widget)
         QTimer::singleShot(0, action, SIGNAL(triggered()));
 }
 
-QString FormWindowBase::fileContents() const
+QStringList FormWindowBase::checkContents() const
 {
-    const bool oldValue = QSimpleResource::setWarningsEnabled(false);
-    const QString rc = contents();
-    QSimpleResource::setWarningsEnabled(oldValue);
-    return rc;
+    if (!mainContainer())
+        return QStringList(tr("Invalid form"));
+    // Test for non-laid toplevel spacers, which will not be saved
+    // as not to throw off uic.
+    QStringList problems;
+    foreach (const Spacer *spacer, mainContainer()->findChildren<Spacer *>()) {
+        if (spacer->parentWidget() && !spacer->parentWidget()->layout()) {
+            problems.push_back(tr("<p>This file contains top level spacers.<br>"
+                                  "They will <b>not</b> be saved.</p><p>"
+                                  "Perhaps you forgot to create a layout?</p>"));
+            break;
+        }
+    }
+    return problems;
 }
 
 } // namespace qdesigner_internal

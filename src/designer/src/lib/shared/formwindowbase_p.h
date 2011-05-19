@@ -89,8 +89,7 @@ public:
     QVariantMap formData();
     void setFormData(const QVariantMap &vm);
 
-    // Return contents without warnings. Should be 'contents(bool quiet)'
-    QString fileContents() const;
+    virtual QStringList checkContents() const;
 
     // Deprecated
     virtual QPoint grid() const;

@@ -774,23 +774,11 @@ namespace qdesigner_internal
         return action;
     }
 
-    QDESIGNER_SHARED_EXPORT bool runUIC(const QString &fileName, UIC_Mode mode, QByteArray& ba, QString &errorMessage)
+    QDESIGNER_SHARED_EXPORT bool runUIC(const QString &fileName, QByteArray& ba, QString &errorMessage)
     {
-        QStringList argv;
-        QString binary = QLibraryInfo::location(QLibraryInfo::BinariesPath);
-        binary += QDir::separator();
-        switch (mode) {
-        case UIC_GenerateCode:
-            binary += QLatin1String("uic");
-            break;
-        case UIC_ConvertV3:
-            binary += QLatin1String("uic3");
-            argv += QLatin1String("-convert");
-            break;
-        }
-        argv += fileName;
+        const QString binary = QLibraryInfo::location(QLibraryInfo::BinariesPath) + QLatin1String("/uic");
         QProcess uic;
-        uic.start(binary, argv);
+        uic.start(binary, QStringList(fileName));
         if (!uic.waitForStarted()) {
             errorMessage = QApplication::translate("Designer", "Unable to launch %1.").arg(binary);
             return false;

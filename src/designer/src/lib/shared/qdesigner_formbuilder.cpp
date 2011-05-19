@@ -133,14 +133,6 @@ QString QDesignerFormBuilder::systemStyle() const
         m_deviceProfile.style();
 }
 
-QWidget *QDesignerFormBuilder::createWidgetFromContents(const QString &contents, QWidget *parentWidget)
-{
-    QByteArray data = contents.toUtf8();
-    QBuffer buffer(&data);
-    buffer.open(QIODevice::ReadOnly);
-    return load(&buffer, parentWidget);
-}
-
 QWidget *QDesignerFormBuilder::create(DomUI *ui, QWidget *parentWidget)
 {
     m_mainWidget = true;
@@ -383,9 +375,7 @@ QWidget *QDesignerFormBuilder::createPreview(const QDesignerFormWindowInterface 
     QDesignerFormBuilder builder(fw->core(), EnableScripts, deviceProfile);
     builder.setWorkingDirectory(fw->absoluteDir());
 
-    const bool warningsEnabled = QSimpleResource::setWarningsEnabled(false);
     QByteArray bytes = fw->contents().toUtf8();
-    QSimpleResource::setWarningsEnabled(warningsEnabled);
 
     QBuffer buffer(&bytes);
     buffer.open(QIODevice::ReadOnly);

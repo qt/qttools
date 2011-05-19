@@ -188,7 +188,7 @@ bool CodeDialog::generateCode(const QDesignerFormWindowInterface *fw,
     tempFormFile.close();
     // Run uic
     QByteArray rc;
-    if (!runUIC(tempFormFileName, UIC_GenerateCode, rc, *errorMessage))
+    if (!runUIC(tempFormFileName, rc, *errorMessage))
         return false;
     *code = QString::fromUtf8(rc);
     return true;

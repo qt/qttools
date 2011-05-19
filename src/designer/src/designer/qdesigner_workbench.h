@@ -148,7 +148,7 @@ private:
     QDesignerFormWindowManagerInterface *formWindowManager() const;
     void closeAllToolWindows();
     QDesignerToolWindow *widgetBoxToolWindow() const;
-    QDesignerFormWindow *loadForm(const QString &fileName, bool detectLineTermiantorMode, bool *uic3Converted, QString *errorMessage);
+    QDesignerFormWindow *loadForm(const QString &fileName, bool detectLineTermiantorMode, QString *errorMessage);
     void resizeForm(QDesignerFormWindow *fw,  const QWidget *mainContainer) const;
     void saveGeometriesForModeChange();
     void saveGeometries(QDesignerSettings &settings) const;

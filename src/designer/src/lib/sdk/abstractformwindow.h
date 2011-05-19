@@ -85,7 +85,8 @@ public:
     virtual QDir absoluteDir() const = 0;
 
     virtual QString contents() const = 0;
-    virtual void setContents(QIODevice *dev) = 0;
+    virtual QStringList checkContents() const = 0;
+    virtual bool setContents(QIODevice *dev, QString *errorMessage = 0) = 0;
 
     virtual Feature features() const = 0;
     virtual bool hasFeature(Feature f) const = 0;
@@ -168,7 +169,7 @@ public Q_SLOTS:
     virtual void selectWidget(QWidget *w, bool select = true) = 0;
     virtual void setGrid(const QPoint &grid) = 0;
     virtual void setFileName(const QString &fileName) = 0;
-    virtual void setContents(const QString &contents) = 0;
+    virtual bool setContents(const QString &contents) = 0;
 
     virtual void editWidgets() = 0;
     void activateResourceFilePaths(const QStringList &paths, int *errorCount = 0, QString *errorMessages = 0);

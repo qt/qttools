@@ -70,6 +70,14 @@ class QDesignerLanguageExtension
 public:
     virtual ~QDesignerLanguageExtension() {}
 
+    /*!
+        Returns the name to be matched against the "language" attribute of the <ui> element.
+
+        \since 5.0
+     */
+
+    virtual QString name() const = 0;
+
     virtual QDialog *createFormWindowSettingsDialog(QDesignerFormWindowInterface *formWindow, QWidget *parentWidget) = 0;
     virtual QDesignerResourceBrowserInterface *createResourceBrowser(QWidget *parentWidget) = 0;
 

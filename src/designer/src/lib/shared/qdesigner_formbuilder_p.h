@@ -90,8 +90,6 @@ public:
                          Mode mode,
                          const DeviceProfile &deviceProfile = DeviceProfile());
 
-    QWidget *createWidgetFromContents(const QString &contents, QWidget *parentWidget = 0);
-
     virtual QWidget *createWidget(DomWidget *ui_widget, QWidget *parentWidget = 0)
     { return QFormBuilder::create(ui_widget, parentWidget); }
 

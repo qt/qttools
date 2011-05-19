@@ -2139,7 +2139,7 @@ bool FormWindow::handleContextMenu(QWidget *, QWidget *managedWidget, QContextMe
     return true;
 }
 
-void FormWindow::setContents(QIODevice *dev)
+bool FormWindow::setContents(QIODevice *dev, QString *errorMessageIn /* = 0 */)
 {
     UpdateBlocker ub(this);
     clearSelection();
@@ -2153,16 +2153,24 @@ void FormWindow::setContents(QIODevice *dev)
 
     QDesignerResource r(this);
     QWidget *w = r.load(dev, formContainer());
-    setMainContainer(w);
-    emit changed();
+    if (w) {
+        setMainContainer(w);
+        emit changed();
+    }
+    if (errorMessageIn)
+        *errorMessageIn = r.errorString();
+    return w != 0;
 }
 
-void FormWindow::setContents(const QString &contents)
+bool FormWindow::setContents(const QString &contents)
 {
+    QString errorMessage;
     QByteArray data = contents.toUtf8();
     QBuffer b(&data);
-    if (b.open(QIODevice::ReadOnly))
-        setContents(&b);
+    const bool success = b.open(QIODevice::ReadOnly) &&  setContents(&b, &errorMessage);
+    if (!success && !errorMessage.isEmpty())
+        designerWarning(errorMessage);
+    return success;
 }
 
 void FormWindow::layoutContainer(QWidget *w, int type)

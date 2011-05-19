@@ -216,18 +216,6 @@ QString QSimpleResource::customWidgetScript(QDesignerFormEditorInterface *, cons
     return QString();
 }
 
-bool QSimpleResource::setWarningsEnabled(bool warningsEnabled)
-{
-    const bool rc = m_warningsEnabled;
-    m_warningsEnabled = warningsEnabled;
-    return rc;
-}
-
-bool QSimpleResource::warningsEnabled()
-{
-    return m_warningsEnabled;
-}
-
 // Custom widgets handling helpers
 
 // Add unique fake slots and signals to lists

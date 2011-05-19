@@ -328,9 +328,21 @@ void QDesignerFormWindowInterface::activateResourceFilePaths(const QStringList &
 */
 
 /*!
-    \fn virtual void QDesignerFormWindowInterface::setContents(QIODevice *device)
+    \fn virtual QStringList QDesignerFormWindowInterface::checkContents() const
 
-    Sets the form's contents using data obtained from the given \a device.
+    Performs checks on the current form and returns a list of richtext warnings
+    about potential issues (for example, top level spacers on unlaid-out forms).
+
+    IDE integrations can call this before handling starting a save operation.
+
+    \since 5.0
+*/
+
+/*!
+    \fn virtual bool QDesignerFormWindowInterface::setContents(QIODevice *device, QString *errorMessage = 0)
+
+    Sets the form's contents using data obtained from the given \a device and returns whether
+    loading succeeded. If it fails, the error message is returned in \a errorMessage.
 
     Data can be read from QFile objects or any other subclass of QIODevice.
 */
@@ -742,10 +754,10 @@ void QDesignerFormWindowInterface::activateResourceFilePaths(const QStringList &
 */
 
 /*!
-    \fn virtual void QDesignerFormWindowInterface::setContents(const QString &contents)
+    \fn virtual bool QDesignerFormWindowInterface::setContents(const QString &contents)
 
     Sets the contents of the form using data read from the specified
-    \a contents string.
+    \a contents string and returns whether the operation succeeded.
 
     \sa contents()
 */

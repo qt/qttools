@@ -55,7 +55,6 @@
 #include <qdesigner_formbuilder_p.h>
 #include <qdesigner_utils_p.h>
 #include <iconloader_p.h>
-#include <qsimpleresource_p.h>
 #include <previewmanager_p.h>
 #include <codedialog_p.h>
 #include <qdesigner_formwindowmanager_p.h>
@@ -845,7 +844,7 @@ static void removeBackup(const QString &backupFile)
         QFile::remove(backupFile);
 }
 
-bool QDesignerActions::writeOutForm(QDesignerFormWindowInterface *fw, const QString &saveFile)
+bool QDesignerActions::writeOutForm(QDesignerFormWindowInterface *fw, const QString &saveFile, bool check)
 {
     Q_ASSERT(fw && !saveFile.isEmpty());
 
@@ -853,6 +852,12 @@ bool QDesignerActions::writeOutForm(QDesignerFormWindowInterface *fw, const QStr
     QFileInfo fi(saveFile);
     if (fi.exists())
         backupFile = createBackup(saveFile);
+
+    if (check) {
+        const QStringList problems = fw->checkContents();
+        if (!problems.isEmpty())
+            QMessageBox::information(fw->window(), tr("Qt Designer"), problems.join(QLatin1String("<br>")));
+    }
 
     QString contents = fw->contents();
     if (qdesigner_internal::FormWindowBase *fwb = qobject_cast<qdesigner_internal::FormWindowBase *>(fw)) {
@@ -1121,7 +1126,6 @@ void QDesignerActions::backupForms()
     QStringList tmpFiles;
     QMap<QString, QString> backupMap;
     QDir backupDir(m_backupPath);
-    const bool warningsEnabled = qdesigner_internal::QSimpleResource::setWarningsEnabled(false);
     for (int i = 0; i < count; ++i) {
         QDesignerFormWindow *fw = m_workbench->formWindow(i);
         QDesignerFormWindowInterface *fwi = fw->editor();
@@ -1153,7 +1157,6 @@ void QDesignerActions::backupForms()
             file.close();
         }
     }
-    qdesigner_internal::QSimpleResource::setWarningsEnabled(warningsEnabled);
     if(!tmpFiles.isEmpty()) {
         const QStringList backupFiles = backupDir.entryList(QDir::Files);
         if(!backupFiles.isEmpty()) {
