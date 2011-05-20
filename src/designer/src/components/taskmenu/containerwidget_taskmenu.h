@@ -100,6 +100,8 @@ private:
     QAction *m_pageMenuAction;
     QMenu *m_pageMenu;
     QList<QAction*> m_taskActions;
+    QAction *m_actionInsertPageAfter;
+    QAction *m_actionInsertPage;
     QAction *m_actionDeletePage;
 };
 
