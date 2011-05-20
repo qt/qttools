@@ -93,7 +93,7 @@ BookmarkModel::setBookmarks(const QByteArray &bookmarks)
     QStack<BookmarkItem*> parents;
     QDataStream stream(bookmarks);
 
-    qint32 version;
+    quint32 version;
     stream >> version;
     if (version < VERSION) {
         stream.device()->seek(0);
