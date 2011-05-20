@@ -139,6 +139,9 @@ public:
     virtual void insertWidget(int index, QWidget *widget);
     virtual void remove(int /*index*/) {}
 
+    virtual bool canAddWidget() const { return false; }
+    virtual bool canRemove(int) const { return false; }
+
 private:
     const bool m_active;
     Container *m_container;

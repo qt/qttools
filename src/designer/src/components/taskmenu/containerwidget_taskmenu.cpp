@@ -76,6 +76,8 @@ ContainerWidgetTaskMenu::ContainerWidgetTaskMenu(QWidget *widget, ContainerType 
     m_pagePromotionTaskMenu(new PromotionTaskMenu(0, PromotionTaskMenu::ModeSingleWidget, this)),
     m_pageMenuAction(new QAction(this)),
     m_pageMenu(new QMenu),
+    m_actionInsertPageAfter(new QAction(this)),
+    m_actionInsertPage(0),
     m_actionDeletePage(new QAction(tr("Delete"), this))
 {
     Q_ASSERT(m_core);
@@ -83,8 +85,7 @@ ContainerWidgetTaskMenu::ContainerWidgetTaskMenu(QWidget *widget, ContainerType 
 
     connect(m_actionDeletePage, SIGNAL(triggered()), this, SLOT(removeCurrentPage()));
 
-    QAction *actionInsertPageAfter = new QAction(this);
-    connect(actionInsertPageAfter, SIGNAL(triggered()), this, SLOT(addPageAfter()));
+    connect(m_actionInsertPageAfter, SIGNAL(triggered()), this, SLOT(addPageAfter()));
     // Empty Per-Page submenu, deletion and promotion. Updated on demand due to promotion state
     switch (m_type) {
     case WizardContainer:
@@ -104,20 +105,20 @@ ContainerWidgetTaskMenu::ContainerWidgetTaskMenu(QWidget *widget, ContainerType 
         QAction *insertMenuAction = new QAction(tr("Insert"), this);
         QMenu *insertMenu = new QMenu;
         // before
-        QAction *actionInsertPage = new QAction(tr("Insert Page Before Current Page"), this);
-        connect(actionInsertPage, SIGNAL(triggered()), this, SLOT(addPage()));
-        insertMenu->addAction(actionInsertPage);
+        m_actionInsertPage = new QAction(tr("Insert Page Before Current Page"), this);
+        connect(m_actionInsertPage, SIGNAL(triggered()), this, SLOT(addPage()));
+        insertMenu->addAction(m_actionInsertPage);
         // after
-        actionInsertPageAfter->setText(tr("Insert Page After Current Page"));
-        insertMenu->addAction(actionInsertPageAfter);
+        m_actionInsertPageAfter->setText(tr("Insert Page After Current Page"));
+        insertMenu->addAction(m_actionInsertPageAfter);
 
         insertMenuAction->setMenu(insertMenu);
         m_taskActions.append(insertMenuAction);
     }
         break;
     case MdiContainer: // No concept of order
-        actionInsertPageAfter->setText(tr("Add Subwindow"));
-        m_taskActions.append(actionInsertPageAfter);
+        m_actionInsertPageAfter->setText(tr("Add Subwindow"));
+        m_taskActions.append(m_actionInsertPageAfter);
         break;
     }
 }
@@ -162,14 +163,19 @@ QString ContainerWidgetTaskMenu::pageMenuText(ContainerType ct, int index, int c
 
 QList<QAction*> ContainerWidgetTaskMenu::taskActions() const
 {
+    const QDesignerContainerExtension *ce = containerExtension();
+    const int index = ce->currentIndex();
+
     QList<QAction*> actions = QDesignerTaskMenu::taskActions();
     actions += m_taskActions;
     // Update the page submenu, deletion and promotion. Updated on demand due to promotion state.
     m_pageMenu->clear();
+    const bool canAddWidget = ce->canAddWidget();
+    if (m_actionInsertPage)
+        m_actionInsertPage->setEnabled(canAddWidget);
+    m_actionInsertPageAfter->setEnabled(canAddWidget);
     m_pageMenu->addAction(m_actionDeletePage);
-    m_actionDeletePage->setEnabled(canDeletePage());
-    const QDesignerContainerExtension *ce = containerExtension();
-    const int index = ce->currentIndex();
+    m_actionDeletePage->setEnabled(index >= 0 && ce->canRemove(index) && canDeletePage());
     m_pageMenuAction->setText(pageMenuText(m_type, index, ce->count()));
     if (index != -1) { // Has a page
         m_pageMenuAction->setEnabled(true);
@@ -319,8 +325,6 @@ QObject *ContainerWidgetTaskMenuFactory::createExtension(QObject *object, const 
     if (qobject_cast<QStackedWidget*>(widget)
             || qobject_cast<QToolBox*>(widget)
             || qobject_cast<QTabWidget*>(widget)
-            || qobject_cast<QDesignerDockWidget*>(widget)
-            || qobject_cast<QScrollArea*>(widget)
             || qobject_cast<QMainWindow*>(widget)) {
         // Are we using Designer's own container extensions and task menus or did
         // someone provide an extra one with an addpage method, for example for a QScrollArea?
