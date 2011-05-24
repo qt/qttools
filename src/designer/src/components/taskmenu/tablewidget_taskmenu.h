@@ -45,7 +45,7 @@
 #include <qdesigner_taskmenu_p.h>
 #include <extensionfactory_p.h>
 
-#include <QtGui/QTableWidget>
+#include <QtWidgets/QTableWidget>
 #include <QtCore/QPointer>
 
 QT_BEGIN_NAMESPACE

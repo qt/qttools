@@ -45,11 +45,11 @@
 #include "openpagesmodel.h"
 #include "tracer.h"
 
-#include <QtGui/QApplication>
-#include <QtGui/QHeaderView>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QHeaderView>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
-#include <QtGui/QMenu>
+#include <QtWidgets/QMenu>
 #include <QtGui/QPainter>
 
 #ifdef Q_WS_MAC

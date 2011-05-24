@@ -45,7 +45,7 @@
 #include <qdesigner_propertysheet_p.h>
 #include <extensionfactory_p.h>
 
-#include <QtGui/QLayout>
+#include <QtWidgets/QLayout>
 
 QT_BEGIN_NAMESPACE
 

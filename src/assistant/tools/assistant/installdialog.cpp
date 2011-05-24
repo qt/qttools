@@ -49,8 +49,8 @@
 #include <QtCore/QFile>
 #include <QtCore/QCryptographicHash>
 
-#include <QtGui/QMessageBox>
-#include <QtGui/QFileDialog>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QFileDialog>
 
 #include <QtHelp/QHelpEngineCore>
 

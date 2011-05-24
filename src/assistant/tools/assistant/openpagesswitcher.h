@@ -42,7 +42,7 @@
 #ifndef OPENPAGESSWITCHER_H
 #define OPENPAGESSWITCHER_H
 
-#include <QtGui/QFrame>
+#include <QtWidgets/QFrame>
 
 QT_BEGIN_NAMESPACE
 

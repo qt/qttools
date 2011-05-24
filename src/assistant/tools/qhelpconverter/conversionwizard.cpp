@@ -43,7 +43,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QVariant>
 #include <QtCore/QTimer>
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 #include <QtGui/QMouseEvent>
 
 #include "conversionwizard.h"

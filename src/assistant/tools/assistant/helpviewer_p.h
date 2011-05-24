@@ -48,7 +48,7 @@
 
 #include <QtCore/QObject>
 #ifdef QT_NO_WEBKIT
-#include <QtGui/QTextBrowser>
+#include <QtWidgets/QTextBrowser>
 #endif
 
 QT_BEGIN_NAMESPACE

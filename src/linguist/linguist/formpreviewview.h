@@ -47,7 +47,7 @@
 #include <QtCore/QHash>
 #include <QtCore/QList>
 
-#include <QtGui/QMainWindow>
+#include <QtWidgets/QMainWindow>
 
 QT_BEGIN_NAMESPACE
 

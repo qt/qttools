@@ -45,7 +45,7 @@
 // sdk
 #include <QtDesigner/QExtensionManager>
 
-#include <QtGui/QLayout>
+#include <QtWidgets/QLayout>
 #include <QtCore/QMetaObject>
 #include <QtCore/QMetaProperty>
 #include <QtCore/qdebug.h>

@@ -42,7 +42,7 @@
 #ifndef FINISHPAGE_H
 #define FINISHPAGE_H
 
-#include <QtGui/QWizardPage>
+#include <QtWidgets/QWizardPage>
 
 QT_BEGIN_NAMESPACE
 

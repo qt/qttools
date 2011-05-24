@@ -10,7 +10,7 @@ TARGET = assistant
 CONFIG += qt \
     warn_on \
     help
-QT += network help
+QT += widgets network help
 PROJECTNAME = Assistant
 DESTDIR = $$QT.designer.bins
 target.path = $$[QT_INSTALL_BINS]

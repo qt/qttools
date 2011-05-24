@@ -60,11 +60,11 @@
 #include <QtCore/QList>
 #include <QtCore/QPointer>
 
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 #include <QtGui/QPixmap>
 #include <QtGui/QPolygonF>
 
-#include <QtGui/QUndoCommand>
+#include <QtWidgets/QUndoCommand>
 
 QT_BEGIN_NAMESPACE
 

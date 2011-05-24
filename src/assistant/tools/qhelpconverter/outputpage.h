@@ -42,7 +42,7 @@
 #ifndef OUTPUTPAGE_H
 #define OUTPUTPAGE_H
 
-#include <QtGui/QWizardPage>
+#include <QtWidgets/QWizardPage>
 #include "ui_outputpage.h"
 
 QT_BEGIN_NAMESPACE

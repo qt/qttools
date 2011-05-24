@@ -50,8 +50,8 @@
 #include "tracer.h"
 #include "../shared/collectionconfiguration.h"
 
-#include <QtGui/QApplication>
-#include <QtGui/QTreeView>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QTreeView>
 
 QT_BEGIN_NAMESPACE
 

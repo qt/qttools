@@ -42,7 +42,7 @@
 #ifndef IDENTIFIERPAGE_H
 #define IDENTIFIERPAGE_H
 
-#include <QtGui/QWizardPage>
+#include <QtWidgets/QWizardPage>
 #include "ui_identifierpage.h"
 
 QT_BEGIN_NAMESPACE

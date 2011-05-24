@@ -47,7 +47,7 @@
 
 #include <extensionfactory_p.h>
 
-#include <QtGui/QMainWindow>
+#include <QtWidgets/QMainWindow>
 
 QT_BEGIN_NAMESPACE
 

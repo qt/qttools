@@ -42,7 +42,7 @@
 #ifndef FILESPAGE_H
 #define FILESPAGE_H
 
-#include <QtGui/QWizardPage>
+#include <QtWidgets/QWizardPage>
 #include "ui_filespage.h"
 
 QT_BEGIN_NAMESPACE

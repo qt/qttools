@@ -51,10 +51,10 @@
 
 #include <QtDesigner/QDesignerSettingsInterface>
 
-#include <QtGui/QFileDialog>
-#include <QtGui/QStyleFactory>
-#include <QtGui/QFileDialog>
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QStyleFactory>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QMessageBox>
 #include <QtCore/QPair>
 #include <QtCore/QList>
 #include <QtCore/QDebug>

@@ -45,8 +45,8 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 #include <QtGui/QPainter>
-#include <QtGui/QMdiArea>
-#include <QtGui/QMdiSubWindow>
+#include <QtWidgets/QMdiArea>
+#include <QtWidgets/QMdiSubWindow>
 #include <QtGui/QPaintEvent>
 
 QT_BEGIN_NAMESPACE

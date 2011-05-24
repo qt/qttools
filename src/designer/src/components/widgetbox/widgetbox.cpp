@@ -51,10 +51,10 @@
 #include <filterwidget_p.h>
 
 #include <QtGui/QDropEvent>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QApplication>
-#include <QtGui/QToolBar>
-#include <QtGui/QIcon>
+#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QToolBar>
+#include <QtWidgets/QIcon>
 
 QT_BEGIN_NAMESPACE
 

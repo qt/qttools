@@ -41,8 +41,8 @@
 
 #include "dialoggui_p.h"
 
-#include <QtGui/QFileIconProvider>
-#include <QtGui/QIcon>
+#include <QtWidgets/QFileIconProvider>
+#include <QtWidgets/QIcon>
 #include <QtGui/QImage>
 #include <QtGui/QImageReader>
 #include <QtGui/QPixmap>

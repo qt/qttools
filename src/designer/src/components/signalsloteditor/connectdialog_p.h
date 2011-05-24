@@ -54,7 +54,7 @@
 //
 
 #include "ui_connectdialog.h"
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 
 QT_BEGIN_NAMESPACE
 

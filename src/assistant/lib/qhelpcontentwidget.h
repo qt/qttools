@@ -46,7 +46,7 @@
 
 #include <QtCore/QQueue>
 #include <QtCore/QString>
-#include <QtGui/QTreeView>
+#include <QtWidgets/QTreeView>
 
 QT_BEGIN_HEADER
 

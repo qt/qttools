@@ -48,7 +48,7 @@
 
 #include <QtDesigner/QDesignerFormEditorInterface>
 
-#include <QtGui/QLabel>
+#include <QtWidgets/QLabel>
 #include <QtGui/QPixmap>
 
 QT_BEGIN_NAMESPACE

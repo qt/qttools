@@ -64,9 +64,9 @@
 
 #include "itemviewfindwidget.h"
 
-#include <QtGui/QAbstractItemView>
-#include <QtGui/QCheckBox>
-#include <QtGui/QTreeView>
+#include <QtWidgets/QAbstractItemView>
+#include <QtWidgets/QCheckBox>
+#include <QtWidgets/QTreeView>
 
 QT_BEGIN_NAMESPACE
 

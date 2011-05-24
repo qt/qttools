@@ -40,6 +40,7 @@
 ****************************************************************************/
 
 #include <QtCore/QTextStream>
+#include <QtWidgets/QTextEdit>
 
 #include "htmlhighlighter_p.h"
 
@@ -48,7 +49,7 @@ QT_BEGIN_NAMESPACE
 namespace qdesigner_internal {
 
 HtmlHighlighter::HtmlHighlighter(QTextEdit *textEdit)
-    : QSyntaxHighlighter(textEdit)
+    : QSyntaxHighlighter(textEdit->document())
 {
     QTextCharFormat entityFormat;
     entityFormat.setForeground(Qt::red);

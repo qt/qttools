@@ -45,7 +45,7 @@
 #include "itemlisteditor.h"
 #include <qdesigner_command_p.h>
 
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
 

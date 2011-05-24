@@ -48,11 +48,11 @@
 
 #include <QtDesigner/QDesignerFormWindowInterface>
 
-#include <QtGui/QToolButton>
-#include <QtGui/QAction>
+#include <QtWidgets/QToolButton>
+#include <QtWidgets/QAction>
 #include <QtGui/qevent.h>
-#include <QtGui/QMenu>
-#include <QtGui/QStackedWidget>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QStackedWidget>
 #include <QtCore/QDebug>
 
 QT_BEGIN_NAMESPACE

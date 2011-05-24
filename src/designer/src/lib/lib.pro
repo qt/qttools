@@ -2,7 +2,7 @@ load(qt_module)
 
 TEMPLATE=lib
 TARGET=QtDesigner
-QT += core-private gui-private xml uilib-private
+QT += core-private gui-private widgets widgets-private xml uilib-private
 contains(QT_CONFIG, reduce_exports):CONFIG += hide_symbols
 CONFIG += qt
 win32|mac: CONFIG += debug_and_release

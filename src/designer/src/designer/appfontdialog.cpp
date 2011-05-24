@@ -45,16 +45,16 @@
 
 #include <QtDesigner/QDesignerSettingsInterface>
 
-#include <QtGui/QTreeView>
-#include <QtGui/QToolButton>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QSpacerItem>
-#include <QtGui/QFileDialog>
-#include <QtGui/QStandardItemModel>
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QTreeView>
+#include <QtWidgets/QToolButton>
+#include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QSpacerItem>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QStandardItemModel>
+#include <QtWidgets/QMessageBox>
 #include <QtGui/QFontDatabase>
-#include <QtGui/QDialogButtonBox>
+#include <QtWidgets/QDialogButtonBox>
 
 #include <QtCore/QSettings>
 #include <QtCore/QCoreApplication>

@@ -42,7 +42,7 @@
 #ifndef SKIN_H
 #define SKIN_H
 
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 #include <QtGui/QPolygon>
 #include <QtGui/QRegion>
 #include <QtGui/QPixmap>

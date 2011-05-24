@@ -53,7 +53,7 @@
 #ifndef FONTPANEL_H
 #define FONTPANEL_H
 
-#include <QtGui/QGroupBox>
+#include <QtWidgets/QGroupBox>
 #include <QtGui/QFont>
 #include <QtGui/QFontDatabase>
 

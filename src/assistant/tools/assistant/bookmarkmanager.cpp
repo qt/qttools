@@ -49,11 +49,11 @@
 #include "centralwidget.h"
 #include "helpenginewrapper.h"
 
-#include <QtGui/QMenu>
+#include <QtWidgets/QMenu>
 #include <QtGui/QKeyEvent>
-#include <QtGui/QMessageBox>
-#include <QtGui/QSortFilterProxyModel>
-#include <QtGui/QToolBar>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QSortFilterProxyModel>
+#include <QtWidgets/QToolBar>
 
 QT_BEGIN_NAMESPACE
 

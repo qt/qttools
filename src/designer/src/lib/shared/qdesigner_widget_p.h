@@ -54,8 +54,8 @@
 #define QDESIGNER_WIDGET_H
 
 #include "shared_global_p.h"
-#include <QtGui/QDialog>
-#include <QtGui/QLabel>
+#include <QtWidgets/QDialog>
+#include <QtWidgets/QLabel>
 
 QT_BEGIN_NAMESPACE
 

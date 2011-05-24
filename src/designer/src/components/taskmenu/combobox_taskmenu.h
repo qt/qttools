@@ -42,7 +42,7 @@
 #ifndef COMBOBOX_TASKMENU_H
 #define COMBOBOX_TASKMENU_H
 
-#include <QtGui/QComboBox>
+#include <QtWidgets/QComboBox>
 #include <QtCore/QPointer>
 
 #include <qdesigner_taskmenu_p.h>

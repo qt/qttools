@@ -65,16 +65,16 @@
 #include <qtresourcemodel_p.h>
 #include <scripterrordialog_p.h>
 
-#include <QtGui/QWidget>
-#include <QtGui/QMenu>
-#include <QtGui/QToolBar>
-#include <QtGui/QMenuBar>
-#include <QtGui/QMainWindow>
-#include <QtGui/QStyleFactory>
-#include <QtGui/QStyle>
-#include <QtGui/QApplication>
-#include <QtGui/QAbstractScrollArea>
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QWidget>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QToolBar>
+#include <QtWidgets/QMenuBar>
+#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QStyleFactory>
+#include <QtWidgets/QStyle>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QAbstractScrollArea>
+#include <QtWidgets/QMessageBox>
 #include <QtGui/QPixmap>
 
 #include <QtCore/QBuffer>

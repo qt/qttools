@@ -44,9 +44,9 @@
 
 #include <QtDesigner/QDesignerFormWindowInterface>
 
-#include <QtGui/QAction>
-#include <QtGui/QStyle>
-#include <QtGui/QStyleOption>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QStyle>
+#include <QtWidgets/QStyleOption>
 #include <QtGui/QTextDocument>
 
 static const char *textPropertyC = "text";

@@ -51,16 +51,16 @@
 #include <promotiontaskmenu_p.h>
 #include <widgetdatabase_p.h>
 
-#include <QtGui/QAction>
-#include <QtGui/QMainWindow>
-#include <QtGui/QToolBox>
-#include <QtGui/QStackedWidget>
-#include <QtGui/QTabWidget>
-#include <QtGui/QScrollArea>
-#include <QtGui/QMdiArea>
-#include <QtGui/QWorkspace>
-#include <QtGui/QWizard>
-#include <QtGui/QMenu>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QToolBox>
+#include <QtWidgets/QStackedWidget>
+#include <QtWidgets/QTabWidget>
+#include <QtWidgets/QScrollArea>
+#include <QtWidgets/QMdiArea>
+#include <QtWidgets/QWorkspace>
+#include <QtWidgets/QWizard>
+#include <QtWidgets/QMenu>
 
 #include <QtCore/qdebug.h>
 

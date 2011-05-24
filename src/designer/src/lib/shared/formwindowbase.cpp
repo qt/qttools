@@ -61,18 +61,18 @@
 #include <QtCore/qdebug.h>
 #include <QtCore/QList>
 #include <QtCore/QTimer>
-#include <QtGui/QMenu>
-#include <QtGui/QListWidget>
-#include <QtGui/QTreeWidget>
-#include <QtGui/QTableWidget>
-#include <QtGui/QComboBox>
-#include <QtGui/QTabWidget>
-#include <QtGui/QToolBox>
-#include <QtGui/QToolBar>
-#include <QtGui/QStatusBar>
-#include <QtGui/QMenu>
-#include <QtGui/QAction>
-#include <QtGui/QLabel>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QListWidget>
+#include <QtWidgets/QTreeWidget>
+#include <QtWidgets/QTableWidget>
+#include <QtWidgets/QComboBox>
+#include <QtWidgets/QTabWidget>
+#include <QtWidgets/QToolBox>
+#include <QtWidgets/QToolBar>
+#include <QtWidgets/QStatusBar>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QLabel>
 
 QT_BEGIN_NAMESPACE
 

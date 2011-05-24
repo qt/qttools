@@ -48,8 +48,8 @@
 #include <qdesigner_propertysheet_p.h>
 #include <extensionfactory_p.h>
 
-#include <QtGui/QMdiArea>
-#include <QtGui/QWorkspace>
+#include <QtWidgets/QMdiArea>
+#include <QtWidgets/QWorkspace>
 
 QT_BEGIN_NAMESPACE
 

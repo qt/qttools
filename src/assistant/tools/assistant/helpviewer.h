@@ -47,11 +47,11 @@
 #include <QtCore/QUrl>
 #include <QtCore/QVariant>
 
-#include <QtGui/QAction>
+#include <QtWidgets/QAction>
 #include <QtGui/QFont>
 
 #if defined(QT_NO_WEBKIT)
-#include <QtGui/QTextBrowser>
+#include <QtWidgets/QTextBrowser>
 #else
 #include <QtWebKit/QWebView>
 #endif

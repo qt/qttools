@@ -44,7 +44,7 @@
 
 #include <QtGui/QPainter>
 #include <QtGui/QPaintEvent>
-#include <QtGui/QStyleOption>
+#include <QtWidgets/QStyleOption>
 
 QT_BEGIN_NAMESPACE
 

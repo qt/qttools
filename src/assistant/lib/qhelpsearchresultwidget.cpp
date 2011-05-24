@@ -46,15 +46,15 @@
 #include <QtCore/QPointer>
 #include <QtCore/QStringList>
 
-#include <QtGui/QLabel>
-#include <QtGui/QLayout>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QLayout>
 #include <QtGui/QMouseEvent>
-#include <QtGui/QHeaderView>
-#include <QtGui/QSpacerItem>
-#include <QtGui/QToolButton>
-#include <QtGui/QTreeWidget>
-#include <QtGui/QTextBrowser>
-#include <QtGui/QTreeWidgetItem>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QSpacerItem>
+#include <QtWidgets/QToolButton>
+#include <QtWidgets/QTreeWidget>
+#include <QtWidgets/QTextBrowser>
+#include <QtWidgets/QTreeWidgetItem>
 
 QT_BEGIN_NAMESPACE
 

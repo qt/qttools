@@ -46,13 +46,13 @@
 #include <QtCore/QStringList>
 #include <QtCore/QtGlobal>
 
-#include <QtGui/QCompleter>
-#include <QtGui/QLabel>
-#include <QtGui/QLayout>
-#include <QtGui/QLineEdit>
+#include <QtWidgets/QCompleter>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QLayout>
+#include <QtWidgets/QLineEdit>
 #include <QtGui/QFocusEvent>
-#include <QtGui/QPushButton>
-#include <QtGui/QToolButton>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QToolButton>
 
 QT_BEGIN_NAMESPACE
 

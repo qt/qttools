@@ -5,6 +5,7 @@ HEADERS     = calculatorform.h
 RESOURCES   = calculatorbuilder.qrc
 SOURCES     = calculatorform.cpp \
               main.cpp
+QT += widgets
 #! [0]
 
 # install

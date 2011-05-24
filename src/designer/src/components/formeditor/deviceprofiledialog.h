@@ -53,7 +53,7 @@
 #ifndef SYSTEMSETTINGSDIALOG_H
 #define SYSTEMSETTINGSDIALOG_H
 
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 #include <QtCore/QStringList>
 
 QT_BEGIN_NAMESPACE

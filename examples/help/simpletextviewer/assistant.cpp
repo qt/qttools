@@ -43,7 +43,7 @@
 #include <QtCore/QLibraryInfo>
 #include <QtCore/QProcess>
 
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QMessageBox>
 
 #include "assistant.h"
 

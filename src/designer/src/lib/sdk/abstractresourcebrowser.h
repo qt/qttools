@@ -44,7 +44,7 @@
 
 #include <QtDesigner/sdk_global.h>
 
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 
 QT_BEGIN_HEADER
 

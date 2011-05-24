@@ -51,14 +51,14 @@
 #include <QtDesigner/QDesignerObjectInspectorInterface>
 #include <QtDesigner/QDesignerPropertyEditorInterface>
 
-#include <QtGui/QAction>
-#include <QtGui/QActionGroup>
-#include <QtGui/QMenu>
-#include <QtGui/QStyle>
-#include <QtGui/QStyleOption>
-#include <QtGui/QAbstractButton>
-#include <QtGui/QButtonGroup>
-#include <QtGui/QApplication>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QActionGroup>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QStyle>
+#include <QtWidgets/QStyleOption>
+#include <QtWidgets/QAbstractButton>
+#include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QApplication>
 #include <QtCore/QDebug>
 
 Q_DECLARE_METATYPE(QButtonGroup*)

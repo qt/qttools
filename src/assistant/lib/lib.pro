@@ -1,6 +1,7 @@
 load(qt_module)
 
-QT += sql \
+QT += widgets \
+    sql \
     xml \
     network \
     core-private

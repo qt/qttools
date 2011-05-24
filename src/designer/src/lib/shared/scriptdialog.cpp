@@ -44,11 +44,11 @@
 
 #include <abstractdialoggui_p.h>
 
-#include <QtGui/QTextEdit>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QDialogButtonBox>
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QTextEdit>
+#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QDialogButtonBox>
+#include <QtWidgets/QMessageBox>
 #ifdef QT_SCRIPT_LIB
 #include <QtScript/QScriptEngine>
 #endif

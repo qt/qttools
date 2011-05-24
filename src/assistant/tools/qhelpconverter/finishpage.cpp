@@ -39,10 +39,10 @@
 **
 ****************************************************************************/
 
-#include <QtGui/QTextEdit>
-#include <QtGui/QLayout>
-#include <QtGui/QSpacerItem>
-#include <QtGui/QApplication>
+#include <QtWidgets/QTextEdit>
+#include <QtWidgets/QLayout>
+#include <QtWidgets/QSpacerItem>
+#include <QtWidgets/QApplication>
 
 #include "finishpage.h"
 

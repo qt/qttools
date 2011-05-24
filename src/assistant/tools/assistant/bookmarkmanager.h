@@ -42,7 +42,7 @@
 #define BOOKMARKMANAGER_H
 
 #include <QtCore/QMutex>
-#include <QtGui/QTreeView>
+#include <QtWidgets/QTreeView>
 
 #include "ui_bookmarkwidget.h"
 

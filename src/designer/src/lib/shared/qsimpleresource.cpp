@@ -54,9 +54,9 @@
 #include <QtDesigner/QDesignerCustomWidgetInterface>
 #include <QtDesigner/extrainfo.h>
 
-#include <QtGui/QIcon>
-#include <QtGui/QWidget>
-#include <QtGui/QAction>
+#include <QtWidgets/QIcon>
+#include <QtWidgets/QWidget>
+#include <QtWidgets/QAction>
 #include <QtCore/QDebug>
 #include <QtCore/QCoreApplication>
 

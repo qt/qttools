@@ -41,13 +41,13 @@
 
 #include <QtCore/QVector>
 #include <QtGui/QMouseEvent>
-#include <QtGui/QGridLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QPushButton>
-#include <QtGui/QDialogButtonBox>
+#include <QtWidgets/QGridLayout>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QDialogButtonBox>
 #include <QtGui/QPainter>
 #include <QtGui/QPainterPath>
-#include <QtGui/QStyleOption>
+#include <QtWidgets/QStyleOption>
 #include "versiondialog.h"
 
 QT_BEGIN_NAMESPACE

@@ -53,21 +53,21 @@
 #include <QtDesigner/QDesignerIntegrationInterface>
 #include <QtDesigner/QExtensionManager>
 
-#include <QtGui/QToolButton>
+#include <QtWidgets/QToolButton>
 #include <QtCore/QSignalMapper>
-#include <QtGui/QComboBox>
-#include <QtGui/QAction>
-#include <QtGui/QDialogButtonBox>
-#include <QtGui/QPushButton>
-#include <QtGui/QDialog>
-#include <QtGui/QMenu>
-#include <QtGui/QApplication>
-#include <QtGui/QVBoxLayout>
+#include <QtWidgets/QComboBox>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QDialogButtonBox>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QDialog>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QVBoxLayout>
 #include <QtGui/QImageReader>
-#include <QtGui/QDialogButtonBox>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QLineEdit>
-#include <QtGui/QLabel>
+#include <QtWidgets/QDialogButtonBox>
+#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QLabel>
 #include <QtGui/QValidator>
 #include <QtCore/QDebug>
 

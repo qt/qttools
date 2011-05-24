@@ -42,16 +42,16 @@
 #include "filterwidget_p.h"
 #include "iconloader_p.h"
 
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QLineEdit>
+#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QLineEdit>
 #include <QtGui/QFocusEvent>
 #include <QtGui/QPalette>
 #include <QtGui/QCursor>
-#include <QtGui/QToolButton>
+#include <QtWidgets/QToolButton>
 #include <QtGui/QPainter>
-#include <QtGui/QStyle>
-#include <QtGui/QStyleOption>
+#include <QtWidgets/QStyle>
+#include <QtWidgets/QStyleOption>
 
 #include <QtCore/QDebug>
 #include <QtCore/QPropertyAnimation>

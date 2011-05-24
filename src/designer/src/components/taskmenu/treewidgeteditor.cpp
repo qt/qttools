@@ -53,8 +53,8 @@
 
 #include <QtCore/QDir>
 #include <QtCore/QQueue>
-#include <QtGui/QHeaderView>
-#include <QtGui/QTreeWidgetItemIterator>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QTreeWidgetItemIterator>
 
 QT_BEGIN_NAMESPACE
 

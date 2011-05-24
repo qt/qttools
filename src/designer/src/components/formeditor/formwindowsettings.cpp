@@ -45,7 +45,7 @@
 #include <formwindowbase_p.h>
 #include <grid_p.h>
 
-#include <QtGui/QStyle>
+#include <QtWidgets/QStyle>
 
 #include <QtCore/QRegExp>
 #include <QtCore/QDebug>

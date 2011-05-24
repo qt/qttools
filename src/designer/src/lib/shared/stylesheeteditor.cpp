@@ -56,16 +56,16 @@
 #include <QtDesigner/QExtensionManager>
 
 #include <QtCore/QSignalMapper>
-#include <QtGui/QAction>
-#include <QtGui/QColorDialog>
-#include <QtGui/QDialogButtonBox>
-#include <QtGui/QFontDialog>
-#include <QtGui/QMenu>
-#include <QtGui/QPushButton>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QColorDialog>
+#include <QtWidgets/QDialogButtonBox>
+#include <QtWidgets/QFontDialog>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QPushButton>
 #include <QtGui/QTextDocument>
-#include <QtGui/QToolBar>
-#include <QtGui/QVBoxLayout>
-#include "private/qcssparser_p.h"
+#include <QtWidgets/QToolBar>
+#include <QtWidgets/QVBoxLayout>
+#include <private/qcssparser_p.h>
 
 QT_BEGIN_NAMESPACE
 

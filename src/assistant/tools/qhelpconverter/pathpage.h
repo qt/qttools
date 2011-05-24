@@ -42,7 +42,7 @@
 #ifndef PATHPAGE_H
 #define PATHPAGE_H
 
-#include <QtGui/QWizardPage>
+#include <QtWidgets/QWizardPage>
 #include "ui_pathpage.h"
 
 QT_BEGIN_NAMESPACE

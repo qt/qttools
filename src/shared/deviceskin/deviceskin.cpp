@@ -42,7 +42,7 @@
 #include "deviceskin.h"
 
 #include <QtCore/qnamespace.h>
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 #include <QtGui/QBitmap>
 #include <QtGui/QPixmap>
 #include <QtGui/QPainter>

@@ -39,9 +39,12 @@
 **
 ****************************************************************************/
 
-#include <QtGui/qapplication.h>
-#include <QtGui/qmainwindow.h>
-#include <QtGui/qtabwidget.h>
+#include <QtWidgets/qapplication.h>
+#include <QtWidgets/qmainwindow.h>
+#include <QtWidgets/qtabwidget.h>
+#include <QtWidgets/QMenuBar>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QAction>
 #include <QtDBus/qdbusconnection.h>
 #include "qdbusviewer.h"
 

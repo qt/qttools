@@ -48,13 +48,13 @@
 #include "topicchooser.h"
 #include "tracer.h"
 
-#include <QtGui/QLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QLineEdit>
+#include <QtWidgets/QLayout>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QLineEdit>
 #include <QtGui/QKeyEvent>
-#include <QtGui/QMenu>
+#include <QtWidgets/QMenu>
 #include <QtGui/QContextMenuEvent>
-#include <QtGui/QListWidgetItem>
+#include <QtWidgets/QListWidgetItem>
 
 #include <QtHelp/QHelpIndexWidget>
 

@@ -43,7 +43,7 @@
 #define QDESIGNER_FORMWINDOW_H
 
 #include <QtCore/QPointer>
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
 

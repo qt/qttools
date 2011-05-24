@@ -48,9 +48,9 @@
 #include <QtDesigner/QDesignerFormEditorInterface>
 #include <QtDesigner/QExtensionManager>
 
-#include <QtGui/QUndoCommand>
-#include <QtGui/QMessageBox>
-#include <QtGui/QUndoStack>
+#include <QtWidgets/QUndoCommand>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QUndoStack>
 #include <QtCore/QUuid>
 #include <ActiveQt/qaxselect.h>
 

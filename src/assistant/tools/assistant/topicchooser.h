@@ -49,7 +49,7 @@
 #include <QtCore/QString>
 #include <QtCore/QUrl>
 
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 
 QT_BEGIN_NAMESPACE
 

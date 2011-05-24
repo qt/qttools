@@ -57,8 +57,8 @@
 #include <QtGui/QPainter>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QResizeEvent>
-#include <QtGui/QMenu>
-#include <QtGui/QApplication>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QApplication>
 
 Q_DECLARE_METATYPE(QWidgetList)
 

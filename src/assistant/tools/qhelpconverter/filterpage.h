@@ -42,7 +42,7 @@
 #ifndef FILTERPAGE_H
 #define FILTERPAGE_H
 
-#include <QtGui/QWizardPage>
+#include <QtWidgets/QWizardPage>
 #include "ui_filterpage.h"
 
 QT_BEGIN_NAMESPACE

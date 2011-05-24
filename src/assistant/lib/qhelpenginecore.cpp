@@ -50,7 +50,7 @@
 #include <QtCore/QPluginLoader>
 #include <QtCore/QFileInfo>
 #include <QtCore/QThread>
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 #include <QtSql/QSqlQuery>
 
 QT_BEGIN_NAMESPACE

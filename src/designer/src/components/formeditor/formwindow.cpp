@@ -87,22 +87,22 @@
 #include <QtCore/QBuffer>
 #include <QtCore/QTimer>
 #include <QtCore/QXmlStreamReader>
-#include <QtGui/QMenu>
-#include <QtGui/QAction>
-#include <QtGui/QActionGroup>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QActionGroup>
 #include <QtGui/QClipboard>
-#include <QtGui/QUndoGroup>
-#include <QtGui/QScrollArea>
-#include <QtGui/QRubberBand>
-#include <QtGui/QApplication>
-#include <QtGui/QSplitter>
+#include <QtWidgets/QUndoGroup>
+#include <QtWidgets/QScrollArea>
+#include <QtWidgets/QRubberBand>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QSplitter>
 #include <QtGui/QPainter>
-#include <QtGui/QGroupBox>
-#include <QtGui/QDockWidget>
-#include <QtGui/QToolBox>
-#include <QtGui/QStackedWidget>
-#include <QtGui/QTabWidget>
-#include <QtGui/QButtonGroup>
+#include <QtWidgets/QGroupBox>
+#include <QtWidgets/QDockWidget>
+#include <QtWidgets/QToolBox>
+#include <QtWidgets/QStackedWidget>
+#include <QtWidgets/QTabWidget>
+#include <QtWidgets/QButtonGroup>
 
 Q_DECLARE_METATYPE(QWidget*)
 

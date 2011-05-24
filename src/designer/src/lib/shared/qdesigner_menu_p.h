@@ -55,8 +55,8 @@
 
 #include "shared_global_p.h"
 
-#include <QtGui/QAction>
-#include <QtGui/QMenu>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QMenu>
 #include <QtGui/QPixmap>
 #include <QtCore/QHash>
 

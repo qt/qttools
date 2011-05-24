@@ -54,7 +54,7 @@
 #define QTRESOURCEEDITOR_H
 
 #include <QtCore/QScopedPointer>
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 
 QT_BEGIN_NAMESPACE
 

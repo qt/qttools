@@ -56,24 +56,24 @@
 #include <QtDesigner/QDesignerMetaDataBaseInterface>
 #include <QtDesigner/QDesignerPropertySheetExtension>
 
-#include <QtGui/QWidget>
-#include <QtGui/QAction>
-#include <QtGui/QMenu>
-#include <QtGui/QApplication>
-#include <QtGui/QLayout>
-#include <QtGui/QUndoStack>
+#include <QtWidgets/QWidget>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QLayout>
+#include <QtWidgets/QUndoStack>
 
-#include <QtGui/QFrame>
-#include <QtGui/QGroupBox>
-#include <QtGui/QTabWidget>
-#include <QtGui/QStackedWidget>
-#include <QtGui/QToolBox>
-#include <QtGui/QAbstractItemView>
-#include <QtGui/QAbstractButton>
-#include <QtGui/QAbstractSpinBox>
-#include <QtGui/QTextEdit>
-#include <QtGui/QPlainTextEdit>
-#include <QtGui/QLabel>
+#include <QtWidgets/QFrame>
+#include <QtWidgets/QGroupBox>
+#include <QtWidgets/QTabWidget>
+#include <QtWidgets/QStackedWidget>
+#include <QtWidgets/QToolBox>
+#include <QtWidgets/QAbstractItemView>
+#include <QtWidgets/QAbstractButton>
+#include <QtWidgets/QAbstractSpinBox>
+#include <QtWidgets/QTextEdit>
+#include <QtWidgets/QPlainTextEdit>
+#include <QtWidgets/QLabel>
 
 #include <QtCore/QStringList>
 #include <QtCore/QMap>

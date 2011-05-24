@@ -41,8 +41,8 @@
 
 #include "qdesignerundostack.h"
 
-#include <QtGui/QUndoStack>
-#include <QtGui/QUndoCommand>
+#include <QtWidgets/QUndoStack>
+#include <QtWidgets/QUndoCommand>
 
 QT_BEGIN_NAMESPACE
 

@@ -46,11 +46,11 @@
 
 #include <QtXml/QDomDocument>
 
-#include <QtGui/QIcon>
-#include <QtGui/QListView>
-#include <QtGui/QLineEdit>
-#include <QtGui/QItemDelegate>
-#include <QtGui/QSortFilterProxyModel>
+#include <QtWidgets/QIcon>
+#include <QtWidgets/QListView>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QItemDelegate>
+#include <QtWidgets/QSortFilterProxyModel>
 
 #include <QtCore/QAbstractListModel>
 #include <QtCore/QList>

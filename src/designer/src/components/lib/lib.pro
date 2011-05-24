@@ -8,7 +8,7 @@ QT += gui-private
 win32|mac: CONFIG += debug_and_release
 DESTDIR = $$QT_BUILD_TREE/lib
 !wince*:DLLDESTDIR = $$QT.designer.bins
-QT += designer-private uilib-private
+QT += widgets widgets-private designer-private uilib-private
 
 # QtDesignerComponents uses
 DEFINES += QT_STATICPLUGIN

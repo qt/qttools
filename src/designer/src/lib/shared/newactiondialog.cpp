@@ -50,7 +50,7 @@
 #include <QtDesigner/abstractformwindow.h>
 #include <QtDesigner/abstractformeditor.h>
 
-#include <QtGui/QPushButton>
+#include <QtWidgets/QPushButton>
 #include <QtCore/QRegExp>
 
 QT_BEGIN_NAMESPACE

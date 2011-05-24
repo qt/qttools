@@ -53,9 +53,9 @@
 #include <QtCore/QVariant>
 #include <QtCore/QDir>
 
-#include <QtGui/QDesktopWidget>
-#include <QtGui/QStyle>
-#include <QtGui/QListView>
+#include <QtWidgets/QDesktopWidget>
+#include <QtWidgets/QStyle>
+#include <QtWidgets/QListView>
 
 #include <QtCore/qdebug.h>
 

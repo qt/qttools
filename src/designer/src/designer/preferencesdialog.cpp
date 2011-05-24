@@ -46,8 +46,8 @@
 #include <QtDesigner/QDesignerOptionsPageInterface>
 #include <QtDesigner/QDesignerFormEditorInterface>
 
-#include <QtGui/QFileDialog>
-#include <QtGui/QPushButton>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QPushButton>
 
 QT_BEGIN_NAMESPACE
 

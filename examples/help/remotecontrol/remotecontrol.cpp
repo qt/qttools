@@ -43,7 +43,7 @@
 #include <QtCore/QTextStream>
 #include <QtCore/QLibraryInfo>
 
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QMessageBox>
 
 #include "remotecontrol.h"
 

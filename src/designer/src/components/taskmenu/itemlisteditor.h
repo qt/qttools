@@ -44,7 +44,7 @@
 
 #include "ui_itemlisteditor.h"
 
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 
 QT_BEGIN_NAMESPACE
 

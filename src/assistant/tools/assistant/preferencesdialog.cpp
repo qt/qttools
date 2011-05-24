@@ -51,12 +51,12 @@
 #include <QtCore/QtAlgorithms>
 #include <QtCore/QFileSystemWatcher>
 
-#include <QtGui/QDesktopWidget>
-#include <QtGui/QFileDialog>
+#include <QtWidgets/QDesktopWidget>
+#include <QtWidgets/QFileDialog>
 #include <QtGui/QFontDatabase>
-#include <QtGui/QHeaderView>
-#include <QtGui/QMenu>
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QMessageBox>
 
 #include <QtHelp/QHelpEngineCore>
 

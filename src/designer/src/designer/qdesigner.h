@@ -43,7 +43,7 @@
 #define QDESIGNER_H
 
 #include <QtCore/QPointer>
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 
 QT_BEGIN_NAMESPACE
 

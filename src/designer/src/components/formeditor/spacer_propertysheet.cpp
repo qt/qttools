@@ -46,7 +46,7 @@
 
 #include <QtDesigner/QExtensionManager>
 
-#include <QtGui/QLayout>
+#include <QtWidgets/QLayout>
 
 QT_BEGIN_NAMESPACE
 

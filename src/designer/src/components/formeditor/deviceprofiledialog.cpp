@@ -45,10 +45,10 @@
 #include <abstractdialoggui_p.h>
 #include <deviceprofile_p.h>
 
-#include <QtGui/QDialogButtonBox>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QPushButton>
-#include <QtGui/QStyleFactory>
+#include <QtWidgets/QDialogButtonBox>
+#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QStyleFactory>
 #include <QtGui/QFontDatabase>
 
 #include <QtCore/QFileInfo>

@@ -46,8 +46,8 @@
 
 #include <extensionfactory_p.h>
 
-#include <QtGui/QToolBar>
-#include <QtGui/QStatusBar>
+#include <QtWidgets/QToolBar>
+#include <QtWidgets/QStatusBar>
 
 QT_BEGIN_NAMESPACE
 

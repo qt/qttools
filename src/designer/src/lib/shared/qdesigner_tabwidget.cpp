@@ -47,13 +47,14 @@
 
 #include <QtDesigner/QDesignerFormWindowInterface>
 
-#include <QtGui/QApplication>
-#include <QtGui/QTabBar>
-#include <QtGui/QAction>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QTabBar>
+#include <QtWidgets/QAction>
 #include <QtGui/QMouseEvent>
-#include <QtGui/QMenu>
-#include <QtGui/QLabel>
-#include <QtGui/QTabWidget>
+#include <QtGui/QDrag>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QTabWidget>
 
 #include <QtCore/qdebug.h>
 

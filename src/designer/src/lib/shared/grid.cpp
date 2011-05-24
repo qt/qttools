@@ -44,7 +44,7 @@
 #include <QtCore/QString>
 #include <QtCore/QVector>
 #include <QtGui/QPainter>
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 #include <QtGui/qevent.h>
 
 QT_BEGIN_NAMESPACE

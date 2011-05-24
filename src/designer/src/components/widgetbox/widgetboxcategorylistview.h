@@ -44,7 +44,7 @@
 
 #include <QtDesigner/QDesignerWidgetBoxInterface>
 
-#include <QtGui/QListView>
+#include <QtWidgets/QListView>
 #include <QtCore/QList>
 
 QT_BEGIN_NAMESPACE

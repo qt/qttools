@@ -45,8 +45,8 @@
 #include "helpviewer.h"
 #include "tracer.h"
 
-#include <QtGui/QAction>
-#include <QtGui/QMenu>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QMenu>
 
 #if !defined(QT_NO_WEBKIT)
 #include <QtWebKit/QWebHistory>

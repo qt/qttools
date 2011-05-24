@@ -45,7 +45,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QTextCodec>
 
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QMessageBox>
 #include <QtGui/QPainter>
 #include <QtGui/QPixmap>
 #include <QtGui/QTextDocument>

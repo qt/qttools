@@ -1,4 +1,5 @@
 TEMPLATE   = app
+QT        += widgets
 
 HEADERS   += remotecontrol.h
 SOURCES   += main.cpp \

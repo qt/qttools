@@ -44,7 +44,22 @@
 #include "propertydialog.h"
 
 #include <QtXml/QtXml>
-#include <QtDBus/private/qdbusutil_p.h>
+
+#include <QtWidgets/QTreeWidget>
+#include <QtWidgets/QStringListModel>
+#include <QtWidgets/QSortFilterProxyModel>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QListView>
+#include <QtWidgets/QTextBrowser>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QShortcut>
+#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QSplitter>
+#include <QtWidgets/QInputDialog>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QMenu>
+
+#include <private/qdbusutil_p.h>
 
 class QDBusViewModel: public QDBusModel
 {

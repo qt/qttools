@@ -49,7 +49,7 @@
 #include <QtCore/QTranslator>
 #include <QtCore/QUrl>
 
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 #include <QtGui/QDesktopServices>
 
 #include <QtHelp/QHelpEngine>

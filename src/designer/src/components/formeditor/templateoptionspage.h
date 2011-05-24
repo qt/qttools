@@ -47,7 +47,7 @@
 #include <QtCore/QPointer>
 #include <QtCore/QStringList>
 
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
 

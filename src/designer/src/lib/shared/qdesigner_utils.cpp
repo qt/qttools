@@ -58,13 +58,13 @@
 #include <QtCore/QQueue>
 #include <QtCore/QSharedData>
 
-#include <QtGui/QApplication>
-#include <QtGui/QIcon>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QIcon>
 #include <QtGui/QPixmap>
-#include <QtGui/QListWidget>
-#include <QtGui/QTreeWidget>
-#include <QtGui/QTableWidget>
-#include <QtGui/QComboBox>
+#include <QtWidgets/QListWidget>
+#include <QtWidgets/QTreeWidget>
+#include <QtWidgets/QTableWidget>
+#include <QtWidgets/QComboBox>
 
 QT_BEGIN_NAMESPACE
 

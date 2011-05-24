@@ -45,8 +45,8 @@
 
 #include <QtDesigner/QDesignerFormWindowInterface>
 #include <QtGui/QPainter>
-#include <QtGui/QStyle>
-#include <QtGui/QStyleOption>
+#include <QtWidgets/QStyle>
+#include <QtWidgets/QStyleOption>
 #include <QtGui/qevent.h>
 
 QT_BEGIN_NAMESPACE

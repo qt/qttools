@@ -45,7 +45,7 @@
 #include "propertyeditor_global.h"
 
 #include <QtCore/QStringList>
-#include <QtGui/QToolButton>
+#include <QtWidgets/QToolButton>
 
 QT_BEGIN_NAMESPACE
 

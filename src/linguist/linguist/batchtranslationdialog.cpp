@@ -43,8 +43,8 @@
 #include "phrase.h"
 #include "messagemodel.h"
 
-#include <QtGui/QMessageBox>
-#include <QtGui/QProgressDialog>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QProgressDialog>
 
 QT_BEGIN_NAMESPACE
 

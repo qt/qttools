@@ -47,9 +47,9 @@
 #include "openpagesmanager.h"
 #include "tracer.h"
 
-#include <QtGui/QLayout>
+#include <QtWidgets/QLayout>
 #include <QtGui/QFocusEvent>
-#include <QtGui/QMenu>
+#include <QtWidgets/QMenu>
 
 #include <QtHelp/QHelpContentWidget>
 

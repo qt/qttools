@@ -42,7 +42,7 @@
 #ifndef CONVERSIONWIZARD_H
 #define CONVERSIONWIZARD_H
 
-#include <QtGui/QWizard>
+#include <QtWidgets/QWizard>
 #include "adpreader.h"
 
 QT_BEGIN_NAMESPACE

@@ -51,14 +51,14 @@
 #include <QtCore/QTimer>
 
 #include <QtGui/QKeyEvent>
-#include <QtGui/QMenu>
-#include <QtGui/QPageSetupDialog>
-#include <QtGui/QPrintDialog>
-#include <QtGui/QPrintPreviewDialog>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QPageSetupDialog>
+#include <QtWidgets/QPrintDialog>
+#include <QtWidgets/QPrintPreviewDialog>
 #include <QtGui/QPrinter>
-#include <QtGui/QStackedWidget>
-#include <QtGui/QTextBrowser>
-#include <QtGui/QVBoxLayout>
+#include <QtWidgets/QStackedWidget>
+#include <QtWidgets/QTextBrowser>
+#include <QtWidgets/QVBoxLayout>
 
 #include <QtHelp/QHelpSearchEngine>
 

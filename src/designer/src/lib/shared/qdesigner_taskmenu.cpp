@@ -75,16 +75,16 @@
 #include <QtDesigner/QDesignerIntegrationInterface>
 #include <QtDesigner/QExtensionManager>
 
-#include <QtGui/QAction>
-#include <QtGui/QActionGroup>
-#include <QtGui/QWidget>
-#include <QtGui/QMenuBar>
-#include <QtGui/QMainWindow>
-#include <QtGui/QStatusBar>
-#include <QtGui/QDialogButtonBox>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QPushButton>
-#include <QtGui/QUndoStack>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QActionGroup>
+#include <QtWidgets/QWidget>
+#include <QtWidgets/QMenuBar>
+#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QStatusBar>
+#include <QtWidgets/QDialogButtonBox>
+#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QUndoStack>
 #include <QtCore/QDebug>
 #include <QtCore/QSignalMapper>
 #include <QtCore/QCoreApplication>

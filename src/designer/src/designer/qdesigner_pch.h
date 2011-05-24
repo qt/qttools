@@ -45,9 +45,9 @@
 #include <QtCore/QSettings>
 #include <QtCore/qdebug.h>
 #include <QtGui/QCloseEvent>
-#include <QtGui/QHeaderView>
-#include <QtGui/QMessageBox>
-#include <QtGui/QVBoxLayout>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QVBoxLayout>
 #include <QtDesigner/abstractformeditor.h>
 #include <QtDesigner/abstractformwindow.h>
 

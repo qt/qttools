@@ -70,15 +70,15 @@
 #include <QtDesigner/QDesignerFormWindowManagerInterface>
 #include <QtDesigner/QDesignerFormWindowCursorInterface>
 
-#include <QtGui/QtGui>
-#include <QtGui/QScrollBar>
-#include <QtGui/QFontComboBox>
-#include <QtGui/QAbstractSpinBox>
-#include <QtGui/QLineEdit>
-#include <QtGui/QButtonGroup>
-#include <QtGui/QStyle>
-#include <QtGui/QStyleFactory>
-#include <QtGui/QWizard>
+#include <QtWidgets/QtWidgets>
+#include <QtWidgets/QScrollBar>
+#include <QtWidgets/QFontComboBox>
+#include <QtWidgets/QAbstractSpinBox>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QStyle>
+#include <QtWidgets/QStyleFactory>
+#include <QtWidgets/QWizard>
 #include <QtCore/qdebug.h>
 #include <QtCore/QMetaObject>
 

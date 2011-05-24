@@ -54,12 +54,12 @@
 #include <QtDesigner/QDesignerWidgetFactoryInterface>
 #include <abstractdialoggui_p.h>
 
-#include <QtGui/QStandardItemModel>
+#include <QtWidgets/QStandardItemModel>
 #include <QtGui/QRegExpValidator>
-#include <QtGui/QItemDelegate>
-#include <QtGui/QLineEdit>
-#include <QtGui/QApplication>
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QItemDelegate>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QMessageBox>
 
 #include <QtCore/QRegExp>
 #include <QtCore/QDebug>

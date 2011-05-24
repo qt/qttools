@@ -39,7 +39,7 @@
 **
 ****************************************************************************/
 
-#include <QtGui/QAction>
+#include <QtWidgets/QAction>
 
 #include "tabordereditor_plugin.h"
 #include "tabordereditor_tool.h"

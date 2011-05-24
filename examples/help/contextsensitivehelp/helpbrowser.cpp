@@ -39,7 +39,7 @@
 ****************************************************************************/
 
 #include <QtCore/QLibraryInfo>
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 #include <QtHelp/QHelpEngineCore>
 
 #include "helpbrowser.h"

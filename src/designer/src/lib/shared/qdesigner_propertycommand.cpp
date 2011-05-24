@@ -60,12 +60,12 @@
 
 #include <QtCore/QSize>
 #include <QtCore/QTextStream>
-#include <QtGui/QWidget>
-#include <QtGui/QApplication>
-#include <QtGui/QAction>
-#include <QtGui/QDialog>
-#include <QtGui/QPushButton>
-#include <QtGui/QLayout>
+#include <QtWidgets/QWidget>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QDialog>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QLayout>
 #include <qdebug.h>
 
 QT_BEGIN_NAMESPACE

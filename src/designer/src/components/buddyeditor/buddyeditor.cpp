@@ -54,10 +54,10 @@
 #include <metadatabase_p.h>
 
 #include <QtCore/qdebug.h>
-#include <QtGui/QLabel>
-#include <QtGui/QMenu>
-#include <QtGui/QAction>
-#include <QtGui/QApplication>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QApplication>
 
 QT_BEGIN_NAMESPACE
 

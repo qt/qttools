@@ -41,7 +41,7 @@
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qplugin.h>
-#include <QtGui/QAction>
+#include <QtWidgets/QAction>
 #include "view3d_plugin.h"
 #include "view3d_tool.h"
 

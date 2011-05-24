@@ -50,9 +50,9 @@
 #include <QtCore/QStringBuilder>
 
 #include <QtGui/QContextMenuEvent>
-#include <QtGui/QMenu>
+#include <QtWidgets/QMenu>
 #include <QtGui/QClipboard>
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 
 QT_BEGIN_NAMESPACE
 

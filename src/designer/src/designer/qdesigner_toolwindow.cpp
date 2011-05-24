@@ -53,7 +53,7 @@
 
 #include <QtCore/QEvent>
 #include <QtCore/QDebug>
-#include <QtGui/QAction>
+#include <QtWidgets/QAction>
 #include <QtGui/QCloseEvent>
 
 enum { debugToolWindow = 0 };

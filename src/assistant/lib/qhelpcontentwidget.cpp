@@ -48,7 +48,7 @@
 #include <QtCore/QStack>
 #include <QtCore/QThread>
 #include <QtCore/QMutex>
-#include <QtGui/QHeaderView>
+#include <QtWidgets/QHeaderView>
 
 QT_BEGIN_NAMESPACE
 

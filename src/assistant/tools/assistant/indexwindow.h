@@ -43,8 +43,8 @@
 #define INDEXWINDOW_H
 
 #include <QtCore/QUrl>
-#include <QtGui/QWidget>
-#include <QtGui/QLineEdit>
+#include <QtWidgets/QWidget>
+#include <QtWidgets/QLineEdit>
 
 QT_BEGIN_NAMESPACE
 

@@ -44,11 +44,11 @@
 
 #include <QtCore/QSet>
 #include <QtGui/QtEvents>
-#include <QtGui/QAction>
-#include <QtGui/QToolBar>
-#include <QtGui/QMainWindow>
-#include <QtGui/QHeaderView>
-#include <QtGui/QPushButton>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QToolBar>
+#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QPushButton>
 
 QT_BEGIN_NAMESPACE
 

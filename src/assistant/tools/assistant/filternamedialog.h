@@ -42,7 +42,7 @@
 #ifndef FILTERNAMEDIALOG_H
 #define FILTERNAMEDIALOG_H
 
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 #include "ui_filternamedialog.h"
 
 QT_BEGIN_NAMESPACE

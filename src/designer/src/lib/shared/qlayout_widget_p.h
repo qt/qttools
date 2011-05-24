@@ -59,8 +59,8 @@
 
 #include <QtCore/QPointer>
 #include <QtCore/QVariant>
-#include <QtGui/QWidget>
-#include <QtGui/QLayout>
+#include <QtWidgets/QWidget>
+#include <QtWidgets/QLayout>
 
 QT_BEGIN_NAMESPACE
 

@@ -46,11 +46,11 @@
 #include <QtDesigner/extension.h>
 #include <extensionfactory_p.h>
 
-#include <QtGui/QStackedWidget>
-#include <QtGui/QTabWidget>
-#include <QtGui/QToolBox>
-#include <QtGui/QScrollArea>
-#include <QtGui/QDockWidget>
+#include <QtWidgets/QStackedWidget>
+#include <QtWidgets/QTabWidget>
+#include <QtWidgets/QToolBox>
+#include <QtWidgets/QScrollArea>
+#include <QtWidgets/QDockWidget>
 
 QT_BEGIN_NAMESPACE
 

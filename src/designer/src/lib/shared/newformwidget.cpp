@@ -61,10 +61,10 @@
 #include <QtCore/QDir>
 #include <QtCore/QTextStream>
 
-#include <QtGui/QHeaderView>
-#include <QtGui/QTreeWidgetItem>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QTreeWidgetItem>
 #include <QtGui/QPainter>
-#include <QtGui/QPushButton>
+#include <QtWidgets/QPushButton>
 
 QT_BEGIN_NAMESPACE
 

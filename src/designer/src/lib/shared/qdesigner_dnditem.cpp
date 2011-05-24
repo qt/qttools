@@ -47,7 +47,7 @@
 #include <QtGui/QBitmap>
 #include <QtGui/QPixmap>
 #include <QtGui/QImage>
-#include <QtGui/QLabel>
+#include <QtWidgets/QLabel>
 #include <QtGui/QDrag>
 #include <QtGui/QCursor>
 #include <QtGui/QDropEvent>

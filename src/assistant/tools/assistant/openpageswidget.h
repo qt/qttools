@@ -42,8 +42,8 @@
 #ifndef OPENPAGESWIDGET_H
 #define OPENPAGESWIDGET_H
 
-#include <QtGui/QStyledItemDelegate>
-#include <QtGui/QTreeView>
+#include <QtWidgets/QStyledItemDelegate>
+#include <QtWidgets/QTreeView>
 
 QT_BEGIN_NAMESPACE
 

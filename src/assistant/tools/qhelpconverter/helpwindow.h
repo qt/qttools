@@ -42,7 +42,7 @@
 #ifndef HELPWINDOW_H
 #define HELPWINDOW_H
 
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
 

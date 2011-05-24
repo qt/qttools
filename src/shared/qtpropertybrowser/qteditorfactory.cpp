@@ -41,21 +41,21 @@
 
 #include "qteditorfactory.h"
 #include "qtpropertybrowserutils_p.h"
-#include <QtGui/QSpinBox>
-#include <QtGui/QScrollBar>
-#include <QtGui/QComboBox>
-#include <QtGui/QAbstractItemView>
-#include <QtGui/QLineEdit>
-#include <QtGui/QDateTimeEdit>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QMenu>
+#include <QtWidgets/QSpinBox>
+#include <QtWidgets/QScrollBar>
+#include <QtWidgets/QComboBox>
+#include <QtWidgets/QAbstractItemView>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QDateTimeEdit>
+#include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QMenu>
 #include <QtGui/QKeyEvent>
-#include <QtGui/QApplication>
-#include <QtGui/QLabel>
-#include <QtGui/QToolButton>
-#include <QtGui/QColorDialog>
-#include <QtGui/QFontDialog>
-#include <QtGui/QSpacerItem>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QToolButton>
+#include <QtWidgets/QColorDialog>
+#include <QtWidgets/QFontDialog>
+#include <QtWidgets/QSpacerItem>
 #include <QtCore/QMap>
 
 #if defined(Q_CC_MSVC)

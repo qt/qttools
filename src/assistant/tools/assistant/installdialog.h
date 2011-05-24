@@ -43,7 +43,7 @@
 #define INSTALLDIALOG_H
 
 #include <QtCore/QQueue>
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 #include <QtNetwork/QHttpResponseHeader>
 #include "ui_installdialog.h"
 

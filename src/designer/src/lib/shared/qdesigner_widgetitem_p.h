@@ -55,7 +55,7 @@
 
 #include "shared_global_p.h"
 
-#include <QtGui/QLayoutItem>
+#include <QtWidgets/QLayoutItem>
 #include <QtCore/QObject>
 
 QT_BEGIN_NAMESPACE

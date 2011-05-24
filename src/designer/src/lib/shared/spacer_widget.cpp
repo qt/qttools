@@ -48,7 +48,7 @@
 #include <QtDesigner/QDesignerPropertySheetExtension>
 #include <QtDesigner/QExtensionManager>
 
-#include <QtGui/QLayout>
+#include <QtWidgets/QLayout>
 #include <QtGui/QPainter>
 #include <QtGui/qevent.h>
 #include <QtCore/qdebug.h>

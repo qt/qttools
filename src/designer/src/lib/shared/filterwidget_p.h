@@ -55,10 +55,10 @@
 
 #include "shared_global_p.h"
 
-#include <QtGui/QWidget>
-#include <QtGui/QLineEdit>
+#include <QtWidgets/QWidget>
+#include <QtWidgets/QLineEdit>
 #include <QtGui/QColor>
-#include <QtGui/QToolButton>
+#include <QtWidgets/QToolButton>
 
 QT_BEGIN_NAMESPACE
 

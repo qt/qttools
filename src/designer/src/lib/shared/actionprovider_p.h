@@ -56,7 +56,7 @@
 #include <QtDesigner/extension.h>
 #include <QtCore/QPoint>
 #include <QtCore/QRect>
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 
 QT_BEGIN_NAMESPACE
 

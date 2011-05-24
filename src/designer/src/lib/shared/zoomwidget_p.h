@@ -55,8 +55,8 @@
 
 #include "shared_global_p.h"
 
-#include <QtGui/QGraphicsView>
-#include <QtGui/QGraphicsProxyWidget>
+#include <QtWidgets/QGraphicsView>
+#include <QtWidgets/QGraphicsProxyWidget>
 #include <QtCore/QList>
 
 QT_BEGIN_NAMESPACE

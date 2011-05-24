@@ -44,8 +44,8 @@
 
 #include <QtCore/QUrl>
 
-#include <QtGui/QTabBar>
-#include <QtGui/QWidget>
+#include <QtWidgets/QTabBar>
+#include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
 

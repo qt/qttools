@@ -42,7 +42,7 @@
 #ifndef PREFERENCESDIALOG_H
 #define PREFERENCESDIALOG_H
 
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 #include "ui_preferencesdialog.h"
 
 QT_BEGIN_NAMESPACE

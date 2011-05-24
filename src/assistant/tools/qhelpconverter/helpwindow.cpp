@@ -41,9 +41,9 @@
 
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QTextEdit>
+#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QTextEdit>
 
 #include "helpwindow.h"
 

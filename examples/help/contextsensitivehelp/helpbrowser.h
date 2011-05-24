@@ -41,7 +41,7 @@
 #ifndef HELPBROWSER_H
 #define HELPBROWSER_H
 
-#include <QtGui/QTextBrowser>
+#include <QtWidgets/QTextBrowser>
 
 QT_BEGIN_NAMESPACE
 class QHelpEngineCore;

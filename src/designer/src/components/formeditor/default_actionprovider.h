@@ -46,9 +46,9 @@
 #include "actionprovider_p.h"
 #include <extensionfactory_p.h>
 
-#include <QtGui/QMenu>
-#include <QtGui/QMenuBar>
-#include <QtGui/QToolBar>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QMenuBar>
+#include <QtWidgets/QToolBar>
 
 QT_BEGIN_NAMESPACE
 

@@ -43,8 +43,8 @@
 
 #include <QtDesigner/QDesignerFormEditorInterface>
 
-#include <QtGui/QAbstractItemView>
-#include <QtGui/QHeaderView>
+#include <QtWidgets/QAbstractItemView>
+#include <QtWidgets/QHeaderView>
 #include <QtCore/QDebug>
 
 QT_BEGIN_NAMESPACE

@@ -53,7 +53,7 @@
 #ifndef DPICHOOSER_H
 #define DPICHOOSER_H
 
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
 

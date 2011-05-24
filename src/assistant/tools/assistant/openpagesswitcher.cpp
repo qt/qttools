@@ -49,7 +49,7 @@
 #include <QtCore/QEvent>
 
 #include <QtGui/QKeyEvent>
-#include <QtGui/QVBoxLayout>
+#include <QtWidgets/QVBoxLayout>
 
 QT_BEGIN_NAMESPACE
 

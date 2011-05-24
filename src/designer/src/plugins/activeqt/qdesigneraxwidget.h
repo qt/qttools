@@ -44,7 +44,7 @@
 
 #include <QtCore/QPointer>
 #include <QtCore/QMap>
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 #include <QtGui/QPixmap>
 
 QT_BEGIN_NAMESPACE

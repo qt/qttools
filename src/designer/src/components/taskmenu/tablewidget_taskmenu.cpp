@@ -44,11 +44,11 @@
 
 #include <QtDesigner/QDesignerFormWindowInterface>
 
-#include <QtGui/QTableWidget>
-#include <QtGui/QAction>
-#include <QtGui/QLineEdit>
-#include <QtGui/QStyle>
-#include <QtGui/QStyleOption>
+#include <QtWidgets/QTableWidget>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QStyle>
+#include <QtWidgets/QStyleOption>
 
 #include <QtCore/QEvent>
 #include <QtCore/QVariant>

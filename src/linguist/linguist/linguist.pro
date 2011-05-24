@@ -4,7 +4,7 @@ TEMPLATE = app
 LANGUAGE = C++
 DESTDIR = $$QT.designer.bins
 
-QT += core-private xml designer
+QT += core-private widgets xml designer
 
 CONFIG += qt \
     warn_on \

@@ -46,9 +46,9 @@
 #include <QtDesigner/QDesignerSettingsInterface>
 #include <QtDesigner/QDesignerFormEditorInterface>
 
-#include <QtGui/QComboBox>
-#include <QtGui/QGroupBox>
-#include <QtGui/QDialogButtonBox>
+#include <QtWidgets/QComboBox>
+#include <QtWidgets/QGroupBox>
+#include <QtWidgets/QDialogButtonBox>
 
 QT_BEGIN_NAMESPACE
 

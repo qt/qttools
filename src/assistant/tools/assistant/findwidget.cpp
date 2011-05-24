@@ -41,14 +41,14 @@
 #include "tracer.h"
 #include "findwidget.h"
 
-#include <QtGui/QApplication>
-#include <QtGui/QCheckBox>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QCheckBox>
 #include <QtGui/QHideEvent>
 #include <QtGui/QKeyEvent>
-#include <QtGui/QLabel>
-#include <QtGui/QLayout>
-#include <QtGui/QLineEdit>
-#include <QtGui/QToolButton>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QLayout>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QToolButton>
 
 QT_BEGIN_NAMESPACE
 

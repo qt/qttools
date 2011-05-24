@@ -48,11 +48,11 @@
 #include <QtDesigner/QDesignerFormWindowInterface>
 
 #include <QtCore/QEvent>
-#include <QtGui/QAction>
-#include <QtGui/QToolBox>
-#include <QtGui/QMenu>
-#include <QtGui/QLayout>
-#include <QtGui/QApplication>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QToolBox>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QLayout>
+#include <QtWidgets/QApplication>
 #include <QtGui/QContextMenuEvent>
 #include <QtCore/QHash>
 

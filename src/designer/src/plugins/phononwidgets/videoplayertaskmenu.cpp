@@ -49,12 +49,12 @@
 #include <phonon/videoplayer.h>
 #include <phonon/mediaobject.h>
 
-#include <QtGui/QPlainTextEdit>
-#include <QtGui/QDialogButtonBox>
-#include <QtGui/QAction>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QFileDialog>
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QPlainTextEdit>
+#include <QtWidgets/QDialogButtonBox>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QMessageBox>
 
 QT_BEGIN_NAMESPACE
 

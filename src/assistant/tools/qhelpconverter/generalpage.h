@@ -42,7 +42,7 @@
 #ifndef GENERALPAGE_H
 #define GENERALPAGE_H
 
-#include <QtGui/QWizardPage>
+#include <QtWidgets/QWizardPage>
 #include "ui_generalpage.h"
 
 QT_BEGIN_NAMESPACE

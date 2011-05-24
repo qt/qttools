@@ -42,13 +42,13 @@
 #include <QtCore/QFile>
 #include <QtCore/QVariant>
 
-#include <QtGui/QLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QLineEdit>
-#include <QtGui/QToolButton>
-#include <QtGui/QFileDialog>
-#include <QtGui/QMessageBox>
-#include <QtGui/QApplication>
+#include <QtWidgets/QLayout>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QToolButton>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QApplication>
 
 #include "inputpage.h"
 #include "adpreader.h"

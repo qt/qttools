@@ -42,9 +42,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QtGui/QMainWindow>
+#include <QtWidgets/QMainWindow>
 #include <QtCore/QList>
-#include <QtGui/QMdiArea>
+#include <QtWidgets/QMdiArea>
 
 QT_BEGIN_NAMESPACE
 

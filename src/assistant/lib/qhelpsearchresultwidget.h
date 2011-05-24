@@ -49,7 +49,7 @@
 #include <QtCore/QPoint>
 #include <QtCore/QObject>
 
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 
 QT_BEGIN_HEADER
 

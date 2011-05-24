@@ -55,13 +55,13 @@
 #include <QtCore/QEvent>
 #include <QtCore/QFile>
 
-#include <QtGui/QAction>
+#include <QtWidgets/QAction>
 #include <QtGui/QCloseEvent>
-#include <QtGui/QFileDialog>
-#include <QtGui/QMessageBox>
-#include <QtGui/QPushButton>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QUndoCommand>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QUndoCommand>
 #include <QtGui/QWindowStateChangeEvent>
 
 QT_BEGIN_NAMESPACE

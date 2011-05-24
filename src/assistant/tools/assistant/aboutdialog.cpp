@@ -46,12 +46,12 @@
 
 #include <QtCore/QBuffer>
 
-#include <QtGui/QLabel>
-#include <QtGui/QPushButton>
-#include <QtGui/QLayout>
-#include <QtGui/QApplication>
-#include <QtGui/QDesktopWidget>
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QLayout>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QDesktopWidget>
+#include <QtWidgets/QMessageBox>
 #include <QtGui/QDesktopServices>
 
 QT_BEGIN_NAMESPACE

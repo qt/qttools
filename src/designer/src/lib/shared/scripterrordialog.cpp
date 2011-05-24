@@ -41,11 +41,11 @@
 
 #include "scripterrordialog_p.h"
 
-#include <QtGui/QTextEdit>
+#include <QtWidgets/QTextEdit>
 #include <QtGui/QTextCursor>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QDialogButtonBox>
+#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QDialogButtonBox>
 #include <QtGui/QPen>
 #include <QtCore/QCoreApplication>
 

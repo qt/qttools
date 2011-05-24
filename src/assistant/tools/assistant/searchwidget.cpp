@@ -47,12 +47,12 @@
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 
-#include <QtGui/QMenu>
-#include <QtGui/QLayout>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QLayout>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QClipboard>
-#include <QtGui/QApplication>
-#include <QtGui/QTextBrowser>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QTextBrowser>
 
 #include <QtHelp/QHelpSearchEngine>
 #include <QtHelp/QHelpSearchQueryWidget>

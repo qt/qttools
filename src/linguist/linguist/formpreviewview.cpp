@@ -48,19 +48,19 @@
 #include <QtCore/QDebug>
 #include <QtCore/QTime>
 
-#include <QtGui/QAction>
-#include <QtGui/QApplication>
-#include <QtGui/QFontComboBox>
-#include <QtGui/QFrame>
-#include <QtGui/QGridLayout>
-#include <QtGui/QListWidget>
-#include <QtGui/QMdiArea>
-#include <QtGui/QMdiSubWindow>
-#include <QtGui/QMenu>
-#include <QtGui/QTableWidget>
-#include <QtGui/QTabWidget>
-#include <QtGui/QToolBox>
-#include <QtGui/QTreeWidget>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QFontComboBox>
+#include <QtWidgets/QFrame>
+#include <QtWidgets/QGridLayout>
+#include <QtWidgets/QListWidget>
+#include <QtWidgets/QMdiArea>
+#include <QtWidgets/QMdiSubWindow>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QTableWidget>
+#include <QtWidgets/QTabWidget>
+#include <QtWidgets/QToolBox>
+#include <QtWidgets/QTreeWidget>
 
 QT_BEGIN_NAMESPACE
 

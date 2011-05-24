@@ -45,8 +45,8 @@
 #include <QtHelp/qhelp_global.h>
 
 #include <QtCore/QUrl>
-#include <QtGui/QStringListModel>
-#include <QtGui/QListView>
+#include <QtWidgets/QStringListModel>
+#include <QtWidgets/QListView>
 
 QT_BEGIN_HEADER
 

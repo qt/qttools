@@ -43,9 +43,9 @@
 #include "qdesigner_settings.h"
 
 #include <QtCore/QFile>
-#include <QtGui/QFileDialog>
-#include <QtGui/QMessageBox>
-#include <QtGui/QPushButton>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QPushButton>
 
 #include <QtDesigner/abstractformeditor.h>
 #include <QtDesigner/abstractformwindow.h>

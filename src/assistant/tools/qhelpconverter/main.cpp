@@ -43,7 +43,7 @@
 #include <QtCore/QTranslator>
 #include <QtCore/QLocale>
 #include <QtCore/QLibraryInfo>
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 
 #include "conversionwizard.h"
 

@@ -1,7 +1,7 @@
 TEMPLATE    = lib
 TARGET      = phononwidgets
 CONFIG     += qt warn_on plugin
-QT         += phonon designer-private
+QT         += widgets phonon designer-private
 
 include(../plugins.pri)
 build_all:!build_pass {

@@ -50,7 +50,7 @@
 #include <QtCore/QHash>
 #include <QtCore/QLocale>
 
-#include <QtGui/QMainWindow>
+#include <QtWidgets/QMainWindow>
 
 QT_BEGIN_NAMESPACE
 

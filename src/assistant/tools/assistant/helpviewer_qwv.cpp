@@ -51,8 +51,8 @@
 #include <QtCore/QString>
 #include <QtCore/QTimer>
 
-#include <QtGui/QApplication>
-#include <QtGui/QWheelEvent>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QWheelEvent>
 
 #include <QtHelp/QHelpEngineCore>
 

@@ -55,7 +55,7 @@
 
 #include "shared_global_p.h"
 
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 #include <QtCore/QMap>
 
 QT_BEGIN_NAMESPACE

@@ -53,8 +53,8 @@
 #ifndef RICHTEXTEDITOR_H
 #define RICHTEXTEDITOR_H
 
-#include <QtGui/QTextEdit>
-#include <QtGui/QDialog>
+#include <QtWidgets/QTextEdit>
+#include <QtWidgets/QDialog>
 #include "shared_global_p.h"
 
 QT_BEGIN_NAMESPACE

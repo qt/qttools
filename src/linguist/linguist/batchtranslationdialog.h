@@ -45,8 +45,8 @@
 #include "ui_batchtranslation.h"
 #include "phrase.h"
 
-#include <QtGui/QDialog>
-#include <QtGui/QStandardItemModel>
+#include <QtWidgets/QDialog>
+#include <QtWidgets/QStandardItemModel>
 
 QT_BEGIN_NAMESPACE
 

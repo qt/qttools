@@ -43,8 +43,8 @@
 
 #include <QtCore/QPersistentModelIndex>
 
-#include <QtGui/QAbstractProxyModel>
-#include <QtGui/QSortFilterProxyModel>
+#include <QtWidgets/QAbstractProxyModel>
+#include <QtWidgets/QSortFilterProxyModel>
 
 QT_BEGIN_NAMESPACE
 

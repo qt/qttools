@@ -50,7 +50,7 @@
 #include <qlayout_widget_p.h>
 #include <formbuilderextra_p.h>
 
-#include <QtGui/QFormLayout>
+#include <QtWidgets/QFormLayout>
 
 #include <QtCore/QHash>
 #include <QtCore/QDebug>

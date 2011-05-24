@@ -39,7 +39,7 @@
 **
 ****************************************************************************/
 
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QMessageBox>
 #include "filterpage.h"
 
 QT_BEGIN_NAMESPACE

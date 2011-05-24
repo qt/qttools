@@ -59,9 +59,9 @@
 
 #include <QtCore/qdebug.h>
 
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 #include <QtGui/QDrag>
-#include <QtGui/QLineEdit>
+#include <QtWidgets/QLineEdit>
 #include <QtGui/QPainter>
 #include <QtGui/qevent.h>
 

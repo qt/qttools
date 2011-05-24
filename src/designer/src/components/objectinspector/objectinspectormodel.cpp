@@ -53,11 +53,11 @@
 #include <QtDesigner/QDesignerContainerExtension>
 #include <QtDesigner/QDesignerMetaDataBaseInterface>
 #include <QtDesigner/QExtensionManager>
-#include <QtGui/QLayout>
-#include <QtGui/QAction>
-#include <QtGui/QLayoutItem>
-#include <QtGui/QMenu>
-#include <QtGui/QButtonGroup>
+#include <QtWidgets/QLayout>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QLayoutItem>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QButtonGroup>
 #include <QtCore/QSet>
 #include <QtCore/QDebug>
 #include <QtCore/QCoreApplication>

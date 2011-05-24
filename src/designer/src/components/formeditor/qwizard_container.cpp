@@ -44,8 +44,8 @@
 #include <QtDesigner/QExtensionManager>
 #include <QtDesigner/QDesignerFormEditorInterface>
 
-#include <QtGui/QWizard>
-#include <QtGui/QWizardPage>
+#include <QtWidgets/QWizard>
+#include <QtWidgets/QWizardPage>
 #include <QtCore/QDebug>
 
 QT_BEGIN_NAMESPACE

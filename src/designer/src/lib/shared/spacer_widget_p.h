@@ -56,8 +56,8 @@
 
 #include "shared_global_p.h"
 
-#include <QtGui/QWidget>
-#include <QtGui/QSizePolicy>
+#include <QtWidgets/QWidget>
+#include <QtWidgets/QSizePolicy>
 
 QT_BEGIN_NAMESPACE
 

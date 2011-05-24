@@ -42,7 +42,7 @@
 #ifndef QTCOLORLINE_H
 #define QTCOLORLINE_H
 
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
 

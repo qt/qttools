@@ -41,7 +41,7 @@
 
 #include "qtgradientviewdialog.h"
 #include "qtgradientmanager.h"
-#include <QtGui/QPushButton>
+#include <QtWidgets/QPushButton>
 
 QT_BEGIN_NAMESPACE
 

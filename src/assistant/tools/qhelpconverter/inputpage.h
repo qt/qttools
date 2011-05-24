@@ -42,7 +42,7 @@
 #ifndef INPUTPAGE_H
 #define INPUTPAGE_H
 
-#include <QtGui/QWizardPage>
+#include <QtWidgets/QWizardPage>
 #include "ui_inputpage.h"
 
 QT_BEGIN_NAMESPACE

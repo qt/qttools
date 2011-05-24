@@ -46,9 +46,9 @@
 #include <QtDesigner/QDesignerMetaDataBaseInterface>
 #include <QtDesigner/QExtensionManager>
 
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QFormLayout>
-#include <QtGui/QSplitter>
+#include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QFormLayout>
+#include <QtWidgets/QSplitter>
 #include <QtCore/QDebug>
 #include <QtCore/QHash>
 #include <QtCore/QRect>

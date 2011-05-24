@@ -59,13 +59,13 @@
 #include <QtCore/QFile>
 #include <QtCore/QTimer>
 
-#include <QtGui/QCheckBox>
+#include <QtWidgets/QCheckBox>
 #include <QtGui/QKeyEvent>
-#include <QtGui/QLabel>
-#include <QtGui/QLayout>
-#include <QtGui/QLineEdit>
-#include <QtGui/QSpacerItem>
-#include <QtGui/QToolButton>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QLayout>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QSpacerItem>
+#include <QtWidgets/QToolButton>
 
 QT_BEGIN_NAMESPACE
 

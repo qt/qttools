@@ -54,8 +54,8 @@
 #define QTPROPERTYBROWSERUTILS_H
 
 #include <QtCore/QMap>
-#include <QtGui/QIcon>
-#include <QtGui/QWidget>
+#include <QtWidgets/QIcon>
+#include <QtWidgets/QWidget>
 #include <QtCore/QStringList>
 
 QT_BEGIN_NAMESPACE

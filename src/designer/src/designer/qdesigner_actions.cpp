@@ -73,19 +73,19 @@
 #include <QtDesigner/private/shared_settings_p.h>
 #include <QtDesigner/private/formwindowbase_p.h>
 
-#include <QtGui/QAction>
-#include <QtGui/QActionGroup>
-#include <QtGui/QStyleFactory>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QActionGroup>
+#include <QtWidgets/QStyleFactory>
 #include <QtGui/QCloseEvent>
-#include <QtGui/QFileDialog>
-#include <QtGui/QMenu>
-#include <QtGui/QMessageBox>
-#include <QtGui/QPushButton>
-#include <QtGui/QIcon>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QIcon>
 #include <QtGui/QImage>
 #include <QtGui/QPixmap>
-#include <QtGui/QMdiSubWindow>
-#include <QtGui/QPrintDialog>
+#include <QtWidgets/QMdiSubWindow>
+#include <QtWidgets/QPrintDialog>
 #include <QtGui/QPainter>
 #include <QtGui/QTransform>
 #include <QtGui/QCursor>
@@ -98,8 +98,8 @@
 #include <QtCore/QTimer>
 #include <QtCore/QMetaObject>
 #include <QtCore/QFileInfo>
-#include <QtGui/QStatusBar>
-#include <QtGui/QDesktopWidget>
+#include <QtWidgets/QStatusBar>
+#include <QtWidgets/QDesktopWidget>
 #include <QtXml/QDomDocument>
 
 QT_BEGIN_NAMESPACE
