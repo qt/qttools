@@ -1740,7 +1740,7 @@ void QtVariantPropertyManager::setAttribute(QtProperty *property,
 }
 
 /*!
-    \reimp
+    \internal
 */
 bool QtVariantPropertyManager::hasValue(const QtProperty *property) const
 {
@@ -1750,7 +1750,7 @@ bool QtVariantPropertyManager::hasValue(const QtProperty *property) const
 }
 
 /*!
-    \reimp
+    \internal
 */
 QString QtVariantPropertyManager::valueText(const QtProperty *property) const
 {
@@ -1759,7 +1759,7 @@ QString QtVariantPropertyManager::valueText(const QtProperty *property) const
 }
 
 /*!
-    \reimp
+    \internal
 */
 QIcon QtVariantPropertyManager::valueIcon(const QtProperty *property) const
 {
@@ -1768,7 +1768,7 @@ QIcon QtVariantPropertyManager::valueIcon(const QtProperty *property) const
 }
 
 /*!
-    \reimp
+    \internal
 */
 void QtVariantPropertyManager::initializeProperty(QtProperty *property)
 {
@@ -1799,7 +1799,7 @@ void QtVariantPropertyManager::initializeProperty(QtProperty *property)
 }
 
 /*!
-    \reimp
+    \internal
 */
 void QtVariantPropertyManager::uninitializeProperty(QtProperty *property)
 {
@@ -1822,7 +1822,7 @@ void QtVariantPropertyManager::uninitializeProperty(QtProperty *property)
 }
 
 /*!
-    \reimp
+    \internal
 */
 QtProperty *QtVariantPropertyManager::createProperty()
 {
