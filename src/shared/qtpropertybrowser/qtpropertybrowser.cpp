@@ -1054,7 +1054,6 @@ void QtAbstractPropertyManager::uninitializeProperty(QtProperty *property)
     \fn virtual void QtAbstractEditorFactory::managerDestroyed(QObject *manager)
 
     \internal
-    \reimp
 */
 
 ////////////////////////////////////
