@@ -15,7 +15,6 @@ SOURCES += main.cpp
 
 include(../shared/formats.pri)
 include(../shared/proparser.pri)
-include($$QT_SOURCE_TREE/tools/shared/symbian/epocroot.pri)
 
 target.path=$$[QT_INSTALL_BINS]
 INSTALLS        += target
