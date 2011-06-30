@@ -44,11 +44,12 @@
 // sdk
 #include <QtDesigner/QExtensionManager>
 #include <QtDesigner/QDesignerFormEditorInterface>
-
 // shared
-#include <ui4_p.h>
+
 #include <qlayout_widget_p.h>
-#include <formbuilderextra_p.h>
+
+#include <QtDesigner/private/ui4_p.h>
+#include <QtDesigner/private/formbuilderextra_p.h>
 
 #include <QtGui/QFormLayout>
 

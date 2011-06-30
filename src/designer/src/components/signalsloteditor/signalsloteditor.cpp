@@ -45,9 +45,9 @@
 #include "signalslot_utils_p.h"
 
 #include <metadatabase_p.h>
-#include <ui4_p.h>
 #include <qdesigner_formwindowcommand_p.h>
 
+#include <QtDesigner/private/ui4_p.h>
 #include <QtDesigner/QDesignerFormWindowInterface>
 #include <QtDesigner/QDesignerFormEditorInterface>
 #include <QtDesigner/QDesignerMetaDataBaseInterface>

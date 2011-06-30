@@ -270,7 +270,7 @@ WidgetDataBase::WidgetDataBase(QDesignerFormEditorInterface *core, QObject *pare
 #define DECLARE_COMPAT_WIDGET(W, C) DECLARE_WIDGET(W, C)
 #define DECLARE_WIDGET(W, C) append(new WidgetDataBaseItem(QString::fromUtf8(#W)));
 
-#include "../../../../../../qtbase/tools/uilib/widgets.table"
+#include <widgets.table>
 
 #undef DECLARE_COMPAT_WIDGET
 #undef DECLARE_LAYOUT

@@ -42,11 +42,11 @@
 #include "formwindow_dnditem.h"
 #include "formwindow.h"
 
-#include <ui4_p.h>
 #include <qdesigner_resource.h>
 #include <qtresourcemodel_p.h>
 
 #include <QtDesigner/QDesignerFormEditorInterface>
+#include <QtDesigner/private/ui4_p.h>
 
 #include <QtGui/QLabel>
 #include <QtGui/QPixmap>
