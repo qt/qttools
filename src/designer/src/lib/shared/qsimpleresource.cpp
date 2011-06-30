@@ -43,9 +43,9 @@
 #include "widgetfactory_p.h"
 #include "widgetdatabase_p.h"
 
-#include <formscriptrunner_p.h>
-#include <properties_p.h>
-#include <ui4_p.h>
+#include <QtDesigner/private/formscriptrunner_p.h>
+#include <QtDesigner/private/properties_p.h>
+#include <QtDesigner/private/ui4_p.h>
 
 #include <QtDesigner/QDesignerFormEditorInterface>
 #include <QtDesigner/QDesignerLanguageExtension>

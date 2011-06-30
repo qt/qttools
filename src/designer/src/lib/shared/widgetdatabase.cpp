@@ -46,7 +46,7 @@
 #include "pluginmanager_p.h"
 #include "qdesigner_widgetbox_p.h"
 #include "qdesigner_utils_p.h"
-#include <ui4_p.h>
+#include <QtDesigner/private/ui4_p.h>
 
 #include <QtDesigner/customwidget.h>
 #include <QtDesigner/propertysheet.h>
@@ -270,7 +270,7 @@ WidgetDataBase::WidgetDataBase(QDesignerFormEditorInterface *core, QObject *pare
 #define DECLARE_COMPAT_WIDGET(W, C) DECLARE_WIDGET(W, C)
 #define DECLARE_WIDGET(W, C) append(new WidgetDataBaseItem(QString::fromUtf8(#W)));
 
-#include "widgets.table"
+#include "../../../../../../qtbase/tools/uilib/widgets.table"
 
 #undef DECLARE_COMPAT_WIDGET
 #undef DECLARE_LAYOUT

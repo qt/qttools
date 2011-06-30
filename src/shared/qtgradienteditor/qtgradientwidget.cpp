@@ -45,6 +45,7 @@
 #include <QtGui/QPainter>
 #include <QtGui/QScrollBar>
 #include <QtGui/QMouseEvent>
+#include <QtGui/QRegion>
 
 #define _USE_MATH_DEFINES
 
@@ -588,13 +589,15 @@ void QtGradientWidget::paintEvent(QPaintEvent *e)
         d_ptr->paintPoint(&p, d_ptr->m_centralRadial, d_ptr->m_handleSize);
         p.restore();
 
-        QRectF rect = QRectF(central.x() - d_ptr->m_radiusRadial * size().width(),
+        const QRectF rect = QRectF(central.x() - d_ptr->m_radiusRadial * size().width(),
                         central.y() - d_ptr->m_radiusRadial * size().height(),
                         2 * d_ptr->m_radiusRadial * size().width(),
                         2 * d_ptr->m_radiusRadial * size().height());
-        p.setClipRect(r1);
-        p.setClipRect(r2, Qt::UniteClip);
-        p.setClipRect(r3, Qt::UniteClip);
+        QRegion region(r1.toRect());
+        region += r2.toRect();
+        region += r3.toRect();
+        p.setClipRegion(region);
+
         p.drawEllipse(rect);
         if (d_ptr->m_dragHandle == QtGradientWidgetPrivate::RadiusRadialHandle) {
             p.save();

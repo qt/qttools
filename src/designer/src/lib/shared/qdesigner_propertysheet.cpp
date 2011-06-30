@@ -46,7 +46,7 @@
 #include "qlayout_widget_p.h"
 #include "qdesigner_introspection_p.h"
 
-#include <formbuilderextra_p.h>
+#include <QtDesigner/private/formbuilderextra_p.h>
 
 #include <QtDesigner/QDesignerFormWindowInterface>
 #include <QtDesigner/QDesignerFormEditorInterface>
