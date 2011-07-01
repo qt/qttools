@@ -1,3 +1,5 @@
+MODULE = designer
+
 load(qt_module)
 
 TEMPLATE=lib

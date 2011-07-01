@@ -1,3 +1,5 @@
+MODULE = clucene
+
 load(qt_module)
 
 QMAKE_TARGET_PRODUCT = QtCLucene
