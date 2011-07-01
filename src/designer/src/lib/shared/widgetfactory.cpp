@@ -384,7 +384,7 @@ QWidget *WidgetFactory::createWidget(const QString &widgetName, QWidget *parentW
 #define DECLARE_WIDGET(W, C) else if (!qstrcmp(widgetNameC, #W)) { Q_ASSERT(w == 0); w = new W(parentWidget); }
 #define DECLARE_WIDGET_1(W, C) else if (!qstrcmp(widgetNameC, #W)) { Q_ASSERT(w == 0); w = new W(0, parentWidget); }
 
-#include "widgets.table"
+#include <widgets.table>
 
 #undef DECLARE_COMPAT_WIDGET
 #undef DECLARE_LAYOUT

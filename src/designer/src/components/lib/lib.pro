@@ -4,7 +4,8 @@ TEMPLATE = lib
 TARGET = QtDesignerComponents
 contains(QT_CONFIG, reduce_exports):CONFIG += hide_symbols
 CONFIG += qt depend_prl no_objective_c designer
-QT += gui-private
+QT *= gui-private
+QT *= uilib-private
 win32|mac: CONFIG += debug_and_release
 DESTDIR = $$QT_BUILD_TREE/lib
 !wince*:DLLDESTDIR = $$QT.designer.bins
@@ -19,7 +20,7 @@ isEmpty(QT_MAJOR_VERSION) {
    VERSION=$${QT_MAJOR_VERSION}.$${QT_MINOR_VERSION}.$${QT_PATCH_VERSION}
 }
 
-include($$QT_SOURCE_TREE/src/qt_targets.pri)
+load(qt_targets)
 QMAKE_TARGET_PRODUCT = Designer
 QMAKE_TARGET_DESCRIPTION = Graphical user interface designer.
 
@@ -49,7 +50,6 @@ INCLUDEPATH += . .. \
     $$PWD/../../lib/components \
     $$PWD/../../lib/sdk \
     $$PWD/../../lib/extension \
-    $$QT_SOURCE_TREE/tools/uilib \
     $$PWD/../../lib/shared
 
 include(../propertyeditor/propertyeditor.pri)

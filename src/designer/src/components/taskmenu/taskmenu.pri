@@ -1,7 +1,6 @@
 INCLUDEPATH += $$PWD \
     ../propertyeditor \
-    $$QT_BUILD_TREE/tools/designer/src/components/taskmenu \
-    $$QT_SOURCE_TREE/tools/shared/qtpropertybrowser
+    ../../../../shared/tools/shared/qtpropertybrowser
 
 FORMS += $$PWD/itemlisteditor.ui \
     $$PWD/treewidgeteditor.ui \

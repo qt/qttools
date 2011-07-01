@@ -65,6 +65,18 @@ int main(int argc, char *argv[])
     mainWidget->addTab(sessionBusViewer, QObject::tr("Session Bus"));
     mainWidget->addTab(systemBusViewer, QObject::tr("System Bus"));
 
+    QStringList args = app.arguments();
+    while (args.count()) {
+        QString arg = args.takeFirst();
+        if (arg == QLatin1String("--bus")) {
+            QDBusConnection connection = QDBusConnection::connectToBus(args.takeFirst(), "QDBusViewer");
+            if (connection.isConnected()) {
+                QDBusViewer *customBusViewer = new QDBusViewer(connection);
+                mainWidget->addTab(customBusViewer, QObject::tr("Custom Bus"));
+            }
+        }
+    }
+
     QMenu *fileMenu = mw.menuBar()->addMenu(QObject::tr("&File"));
     QAction *quitAction = fileMenu->addAction(QObject::tr("&Quit"), &mw, SLOT(close()));
     Q_UNUSED(quitAction);

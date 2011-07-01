@@ -1,8 +1,10 @@
+MODULE = designer
+
 load(qt_module)
 
 TEMPLATE=lib
 TARGET=QtDesigner
-QT += core-private gui-private xml uilib-private
+QT += core-private gui-private xml uilib-private uilib-private
 contains(QT_CONFIG, reduce_exports):CONFIG += hide_symbols
 CONFIG += qt
 win32|mac: CONFIG += debug_and_release
@@ -13,15 +15,11 @@ INCLUDEPATH += $$QT.designer.includes \
                $$QT.designer.private_includes \
                $$QT.designer.private_includes/QtDesigner
 
-isEmpty(QT_MAJOR_VERSION) {
-   VERSION=4.3.0
-} else {
-   VERSION=$${QT_MAJOR_VERSION}.$${QT_MINOR_VERSION}.$${QT_PATCH_VERSION}
-}
+VERSION=$${QT_MAJOR_VERSION}.$${QT_MINOR_VERSION}.$${QT_PATCH_VERSION}
 
 unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES += QtXml
 
-include($$QT_SOURCE_TREE/src/qt_targets.pri)
+load(qt_targets)
 
 HEADERS += qtdesignerversion.h
 
@@ -68,8 +66,7 @@ mac:!static:contains(QT_CONFIG, qt_framework) {
 
 include(extension/extension.pri)
 include(sdk/sdk.pri)
-include($$QT_SOURCE_TREE/tools/uilib/uilib.pri)
-INCLUDEPATH += $$QT_SOURCE_TREE/tools/uilib
+include($$QT.uilib.sources/uilib.pri)
 include(shared/shared.pri)
 PRECOMPILED_HEADER=lib_pch.h
 

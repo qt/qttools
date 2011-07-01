@@ -16,7 +16,6 @@ INCLUDEPATH += \
     ../lib/sdk \
     ../lib/extension \
     ../lib/shared \
-    $$QT_SOURCE_TREE/tools/uilib \
     extra
 
 QMAKE_LIBDIR += ../../lib ../../../../lib

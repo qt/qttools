@@ -54,7 +54,7 @@
 #define SCRIPTERRORDIALOG_H
 
 #include "shared_global_p.h"
-#include "formscriptrunner_p.h"
+#include <QtDesigner/private/formscriptrunner_p.h>
 
 #include <QtGui/QDialog>
 

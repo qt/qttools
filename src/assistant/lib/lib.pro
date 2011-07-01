@@ -1,3 +1,5 @@
+MODULE = help
+
 load(qt_module)
 
 QT += sql \
