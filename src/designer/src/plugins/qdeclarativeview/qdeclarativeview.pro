@@ -1,7 +1,7 @@
 TEMPLATE    = lib
 TARGET      = qdeclarativeview
 CONFIG     += qt warn_on plugin designer
-QT         += declarative
+QT         += declarative qtquick1
 
 include(../plugins.pri)
 build_all:!build_pass {
