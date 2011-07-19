@@ -11,7 +11,7 @@ wince*: {
    QT += network
    addFiles.files = $$PWD/data/*.*                
    addFiles.path = data
-   clucene.files = $$QT_BUILD_TREE/lib/QtCLucene*.dll
+   clucene.files = $$QT.clucene.libs/QtCLucene*.dll
 
    DEPLOYMENT += addFiles
    DEPLOYMENT += clucene

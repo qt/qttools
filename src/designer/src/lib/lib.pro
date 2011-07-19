@@ -9,7 +9,7 @@ QT += core-private gui-private xml uilib-private
 contains(QT_CONFIG, reduce_exports):CONFIG += hide_symbols
 CONFIG += qt
 win32|mac: CONFIG += debug_and_release
-DESTDIR = $$QT_BUILD_TREE/lib
+DESTDIR = $$QT.designer.libs
 !wince*:DLLDESTDIR = $$QT.designer.bins
 
 INCLUDEPATH += $$QT.designer.includes \

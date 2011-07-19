@@ -35,7 +35,7 @@ linux-lsb-g++:LIBS_PRIVATE += --lsb-shared-libs=$$qclucene
 unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES += QtNetwork \
     QtSql \
     QtXml
-LIBS_PRIVATE += -l$$qclucene
+LIBS_PRIVATE += -L$$QT.clucene.libs -l$$qclucene
 RESOURCES += helpsystem.qrc
 SOURCES += qhelpenginecore.cpp \
     qhelpengine.cpp \

@@ -7,7 +7,7 @@ CONFIG += qt depend_prl no_objective_c designer
 QT *= gui-private
 QT *= uilib-private
 win32|mac: CONFIG += debug_and_release
-DESTDIR = $$QT_BUILD_TREE/lib
+DESTDIR = $$QT.designer.libs
 !wince*:DLLDESTDIR = $$QT.designer.bins
 QT += designer-private uilib-private
 
@@ -26,7 +26,7 @@ QMAKE_TARGET_DESCRIPTION = Graphical user interface designer.
 
 #load up the headers info
 CONFIG += qt_install_headers
-HEADERS_PRI = $$QT_BUILD_TREE/include/QtDesigner/headers.pri
+HEADERS_PRI = $$QT.designer.includes/headers.pri
 include($$HEADERS_PRI, "", true)|clear(HEADERS_PRI)
 
 #mac frameworks

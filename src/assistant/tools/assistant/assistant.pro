@@ -20,7 +20,7 @@ INCLUDEPATH += $$QT.help.includes
 
 # ## Work around a qmake issue when statically linking to
 # ## not-yet-installed plugins
-QMAKE_LIBDIR += $$QT_BUILD_TREE/plugins/sqldrivers
+QMAKE_LIBDIR += $$QT.core.plugins/sqldrivers
 HEADERS += aboutdialog.h \
     bookmarkdialog.h \
     bookmarkfiltermodel.h \
