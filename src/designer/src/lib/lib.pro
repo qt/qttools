@@ -1,10 +1,11 @@
 MODULE = designer
 
 load(qt_module)
+load(qt_module_config)
 
 TEMPLATE=lib
 TARGET=QtDesigner
-QT += core-private gui-private xml uilib-private uilib-private
+QT += core-private gui-private xml uilib-private
 contains(QT_CONFIG, reduce_exports):CONFIG += hide_symbols
 CONFIG += qt
 win32|mac: CONFIG += debug_and_release
