@@ -193,7 +193,7 @@ FilterWidget::FilterWidget(QWidget *parent, LayoutMode lm)  :
     QIcon icon = QIcon::fromTheme(layoutDirection() == Qt::LeftToRight ?
                      QLatin1String("edit-clear-locationbar-rtl") :
                      QLatin1String("edit-clear-locationbar-ltr"),
-                     QIcon::fromTheme("edit-clear", createIconSet(QLatin1String("cleartext.png"))));
+                     QIcon::fromTheme(QLatin1String("edit-clear"), createIconSet(QLatin1String("cleartext.png"))));
 
     m_button->setIcon(icon);
     m_button->setToolTip(tr("Clear text"));

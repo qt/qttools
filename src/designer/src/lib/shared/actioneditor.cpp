@@ -146,7 +146,7 @@ ActionEditor::ActionEditor(QDesignerFormEditorInterface *core, QWidget *parent, 
     toolbar->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
     l->addWidget(toolbar);
     // edit actions
-    QIcon documentNewIcon = QIcon::fromTheme("document-new", createIconSet(QLatin1String("filenew.png")));
+    QIcon documentNewIcon = QIcon::fromTheme(QLatin1String("document-new"), createIconSet(QLatin1String("filenew.png")));
     m_actionNew->setIcon(documentNewIcon);
     m_actionNew->setEnabled(false);
     connect(m_actionNew, SIGNAL(triggered()), this, SLOT(slotNewAction()));
@@ -156,17 +156,17 @@ ActionEditor::ActionEditor(QDesignerFormEditorInterface *core, QWidget *parent, 
 
     m_actionCut->setEnabled(false);
     connect(m_actionCut, SIGNAL(triggered()), this, SLOT(slotCut()));
-    QIcon editCutIcon = QIcon::fromTheme("edit-cut", createIconSet(QLatin1String("editcut.png")));
+    QIcon editCutIcon = QIcon::fromTheme(QLatin1String("edit-cut"), createIconSet(QLatin1String("editcut.png")));
     m_actionCut->setIcon(editCutIcon);
 
     m_actionCopy->setEnabled(false);
     connect(m_actionCopy, SIGNAL(triggered()), this, SLOT(slotCopy()));
-    QIcon editCopyIcon = QIcon::fromTheme("edit-copy", createIconSet(QLatin1String("editcopy.png")));
+    QIcon editCopyIcon = QIcon::fromTheme(QLatin1String("edit-copy"), createIconSet(QLatin1String("editcopy.png")));
     m_actionCopy->setIcon(editCopyIcon);
     toolbar->addAction(m_actionCopy);
 
     connect(m_actionPaste, SIGNAL(triggered()), this, SLOT(slotPaste()));
-    QIcon editPasteIcon = QIcon::fromTheme("edit-paste", createIconSet(QLatin1String("editpaste.png")));
+    QIcon editPasteIcon = QIcon::fromTheme(QLatin1String("edit-paste"), createIconSet(QLatin1String("editpaste.png")));
     m_actionPaste->setIcon(editPasteIcon);
     toolbar->addAction(m_actionPaste);
 
@@ -175,7 +175,7 @@ ActionEditor::ActionEditor(QDesignerFormEditorInterface *core, QWidget *parent, 
 
     connect(m_actionNavigateToSlot, SIGNAL(triggered()), this, SLOT(navigateToSlotCurrentAction()));
 
-    QIcon editDeleteIcon = QIcon::fromTheme("edit-delete", createIconSet(QLatin1String("editdelete.png")));
+    QIcon editDeleteIcon = QIcon::fromTheme(QLatin1String("edit-delete"), createIconSet(QLatin1String("editdelete.png")));
     m_actionDelete->setIcon(editDeleteIcon);
     m_actionDelete->setEnabled(false);
     connect(m_actionDelete, SIGNAL(triggered()), this, SLOT(slotDelete()));
@@ -247,7 +247,7 @@ QToolButton *ActionEditor::createConfigureMenuButton(const QString &t, QMenu **p
 {
     QToolButton *configureButton = new QToolButton;
     QAction *configureAction = new QAction(t, configureButton);
-    QIcon configureIcon = QIcon::fromTheme("document-properties", createIconSet(QLatin1String("configure.png")));
+    QIcon configureIcon = QIcon::fromTheme(QLatin1String("document-properties"), createIconSet(QLatin1String("configure.png")));
     configureAction->setIcon(configureIcon);
     QMenu *configureMenu = new QMenu;
     configureAction->setMenu(configureMenu);
