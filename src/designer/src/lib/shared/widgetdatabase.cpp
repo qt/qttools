@@ -53,7 +53,7 @@
 #include <QtDesigner/QExtensionManager>
 #include <QtDesigner/QDesignerFormEditorInterface>
 
-#include <QtXml/QXmlStreamWriter>
+#include <QtCore/QXmlStreamWriter>
 
 #include <QtCore/QScopedPointer>
 #include <QtCore/qdebug.h>

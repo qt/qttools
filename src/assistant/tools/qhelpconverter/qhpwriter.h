@@ -42,7 +42,7 @@
 #ifndef QHPWRITER_H
 #define QHPWRITER_H
 
-#include <QtXml/QXmlStreamWriter>
+#include <QtCore/QXmlStreamWriter>
 #include "filterpage.h"
 
 QT_BEGIN_NAMESPACE

@@ -52,7 +52,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
-#include <QtXml/QXmlStreamReader>
+#include <QtCore/QXmlStreamReader>
 
 QT_BEGIN_NAMESPACE
 

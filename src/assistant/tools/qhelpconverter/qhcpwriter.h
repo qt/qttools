@@ -42,7 +42,7 @@
 #ifndef QHCPWRITER_H
 #define QHCPWRITER_H
 
-#include <QtXml/QXmlStreamWriter>
+#include <QtCore/QXmlStreamWriter>
 #include "adpreader.h"
 
 QT_BEGIN_NAMESPACE

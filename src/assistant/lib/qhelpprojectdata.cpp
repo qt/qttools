@@ -49,7 +49,7 @@
 #include <QtCore/QRegExp>
 #include <QtCore/QUrl>
 #include <QtCore/QVariant>
-#include <QtXml/QXmlStreamReader>
+#include <QtCore/QXmlStreamReader>
 
 QT_BEGIN_NAMESPACE
 

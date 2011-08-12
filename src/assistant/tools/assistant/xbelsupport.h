@@ -42,7 +42,7 @@
 #ifndef XBELSUPPORT_H
 #define XBELSUPPORT_H
 
-#include <QtXml/QXmlStreamReader>
+#include <QtCore/QXmlStreamReader>
 #include <QtCore/QPersistentModelIndex>
 
 QT_FORWARD_DECLARE_CLASS(QIODevice)

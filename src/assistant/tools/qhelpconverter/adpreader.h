@@ -44,7 +44,7 @@
 
 #include <QtCore/QMap>
 #include <QtCore/QSet>
-#include <QtXml/QXmlStreamReader>
+#include <QtCore/QXmlStreamReader>
 
 QT_BEGIN_NAMESPACE
 

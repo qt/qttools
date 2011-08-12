@@ -55,7 +55,7 @@
 #include <QtCore/QLocale>
 #include <QtCore/QLibraryInfo>
 #include <QtHelp/QHelpEngineCore>
-#include <QtXml/QXmlStreamReader>
+#include <QtCore/QXmlStreamReader>
 
 
 QT_USE_NAMESPACE
