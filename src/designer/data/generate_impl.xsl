@@ -106,7 +106,7 @@
         </xsl:call-template>
 
         <xsl:if test="$node[@mixed='true']">
-            <xsl:text>    m_text = QLatin1String("");&endl;</xsl:text>
+            <xsl:text>    m_text.clear();&endl;</xsl:text>
         </xsl:if>
 
         <xsl:for-each select="$node//xs:sequence | $node//xs:choice | $node//xs:all">
@@ -208,7 +208,7 @@
 
         <xsl:choose>
             <xsl:when test="$node[@mixed='true']">
-                <xsl:text>    m_text = QLatin1String("");&endl;</xsl:text>
+                <xsl:text>    m_text.clear();&endl;</xsl:text>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:text>    m_text.clear();&endl;</xsl:text>
@@ -248,7 +248,7 @@
                 <xsl:text>'))</xsl:text>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:text>QLatin1String("</xsl:text>
+                <xsl:text>QStringLiteral("</xsl:text>
                     <xsl:value-of select="$literal"/>
                 <xsl:text>")</xsl:text>
            </xsl:otherwise>
@@ -299,7 +299,7 @@
                 <xsl:text>        }&endl;</xsl:text>
             </xsl:for-each>
 
-            <xsl:text>        reader.raiseError(QLatin1String("Unexpected attribute ") + name.toString());&endl;</xsl:text>
+            <xsl:text>        reader.raiseError(QStringLiteral("Unexpected attribute ") + name.toString());&endl;</xsl:text>
             <xsl:text>    }&endl;</xsl:text>
         </xsl:if>
     </xsl:template>
@@ -421,7 +421,7 @@
             </xsl:call-template>
         </xsl:for-each>
 
-        <xsl:text>            reader.raiseError(QLatin1String("Unexpected element ") + tag);&endl;</xsl:text>
+        <xsl:text>            reader.raiseError(QStringLiteral("Unexpected element ") + tag);&endl;</xsl:text>
         <xsl:text>        }&endl;</xsl:text>
         <xsl:text>            break;&endl;</xsl:text>
         <xsl:text>        case QXmlStreamReader::EndElement :&endl;</xsl:text>
@@ -439,191 +439,6 @@
         <xsl:text>}&endl;&endl;</xsl:text>
     </xsl:template>
 
-<!-- Implementation: read(QDomElement) -->
-
-    <xsl:template name="read-impl-qdom-load-attributes">
-        <xsl:param name="node"/>
-
-        <xsl:if test="$node/xs:attribute">
-            <xsl:text>&endl;</xsl:text>
-
-            <xsl:for-each select="$node/xs:attribute">
-                <xsl:variable name="camel-case-name">
-                    <xsl:call-template name="camel-case">
-                        <xsl:with-param name="text" select="@name"/>
-                    </xsl:call-template>
-                </xsl:variable>
-                <xsl:variable name="cap-name">
-                    <xsl:call-template name="cap-first-char">
-                        <xsl:with-param name="text" select="$camel-case-name"/>
-                    </xsl:call-template>
-                </xsl:variable>
-                <xsl:variable name="qstring-func">
-                    <xsl:call-template name="xs-type-from-qstring-func">
-                        <xsl:with-param name="xs-type" select="@type"/>
-                        <xsl:with-param name="val">
-                           <xsl:text>node.attribute(</xsl:text>
-                           <xsl:call-template name="string-constant">
-                               <xsl:with-param name="literal" select="@name"/>
-                           </xsl:call-template>
-                           <xsl:text>)</xsl:text>
-                        </xsl:with-param>
-                    </xsl:call-template>
-                </xsl:variable>
-
-                <xsl:text>    if (node.hasAttribute(</xsl:text>
-                <xsl:call-template name="string-constant">
-                    <xsl:with-param name="literal" select="@name"/>
-                </xsl:call-template>
-                <xsl:text>))&endl;</xsl:text>
-                <xsl:text>        setAttribute</xsl:text>
-                <xsl:value-of select="$cap-name"/>
-                <xsl:text>(</xsl:text>
-                <xsl:value-of select="$qstring-func"/>
-                <xsl:text>);&endl;</xsl:text>
-            </xsl:for-each>
-        </xsl:if>
-    </xsl:template>
-
-    <xsl:template name="read-impl-qdom-load-child-element">
-        <xsl:param name="node"/>
-
-        <xsl:for-each select="$node/xs:element">
-            <xsl:variable name="camel-case-name">
-                <xsl:call-template name="camel-case">
-                    <xsl:with-param name="text" select="@name"/>
-                </xsl:call-template>
-            </xsl:variable>
-            <xsl:variable name="cap-name">
-                <xsl:call-template name="cap-first-char">
-                    <xsl:with-param name="text" select="$camel-case-name"/>
-                </xsl:call-template>
-            </xsl:variable>
-            <xsl:variable name="xs-type-cat">
-                <xsl:call-template name="xs-type-category">
-                    <xsl:with-param name="xs-type" select="@type"/>
-                </xsl:call-template>
-            </xsl:variable>
-            <xsl:variable name="lower-name">
-                <xsl:call-template name="lower-text">
-                    <xsl:with-param name="text" select="@name"/>
-                </xsl:call-template>
-            </xsl:variable>
-            <xsl:variable name="array" select="@maxOccurs = 'unbounded'"/>
-
-            <xsl:text>            if (tag == </xsl:text>
-            <xsl:call-template name="string-constant">
-                <xsl:with-param name="literal" select="$lower-name"/>
-            </xsl:call-template>
-            <xsl:text>) {&endl;</xsl:text>
-
-            <xsl:choose>
-                <xsl:when test="not($array) and $xs-type-cat = 'value'">
-                    <xsl:variable name="qstring-func">
-                        <xsl:call-template name="xs-type-from-qstring-func">
-                            <xsl:with-param name="xs-type" select="@type"/>
-                            <xsl:with-param name="val" select="'e.text()'"/>
-                        </xsl:call-template>
-                    </xsl:variable>
-
-                    <xsl:text>                setElement</xsl:text>
-                    <xsl:value-of select="$cap-name"/>
-                    <xsl:text>(</xsl:text>
-                    <xsl:value-of select="$qstring-func"/>
-                    <xsl:text>);&endl;</xsl:text>
-                </xsl:when>
-                <xsl:when test="@maxOccurs='unbounded' and $xs-type-cat = 'value'">
-                    <xsl:variable name="qstring-func">
-                        <xsl:call-template name="xs-type-from-qstring-func">
-                            <xsl:with-param name="xs-type" select="@type"/>
-                            <xsl:with-param name="val" select="'e.text()'"/>
-                        </xsl:call-template>
-                    </xsl:variable>
-
-                    <xsl:text>                m_</xsl:text>
-                    <xsl:value-of select="$camel-case-name"/>
-                    <xsl:text>.append(</xsl:text>
-                    <xsl:value-of select="$qstring-func"/>
-                    <xsl:text>);&endl;</xsl:text>
-                </xsl:when>
-                <xsl:when test="not(@maxOccurs='unbounded') and $xs-type-cat = 'pointer'">
-                    <xsl:text>                Dom</xsl:text>
-                    <xsl:value-of select="@type"/>
-                    <xsl:text> *v = new Dom</xsl:text>
-                    <xsl:value-of select="@type"/>
-                    <xsl:text>();&endl;</xsl:text>
-                    <xsl:text>                v->read(e);&endl;</xsl:text>
-                    <xsl:text>                setElement</xsl:text>
-                    <xsl:value-of select="$cap-name"/>
-                    <xsl:text>(v);&endl;</xsl:text>
-                </xsl:when>
-                <xsl:when test="@maxOccurs='unbounded' and $xs-type-cat = 'pointer'">
-                    <xsl:text>                Dom</xsl:text>
-                    <xsl:value-of select="@type"/>
-                    <xsl:text> *v = new Dom</xsl:text>
-                    <xsl:value-of select="@type"/>
-                    <xsl:text>();&endl;</xsl:text>
-                    <xsl:text>                v->read(e);&endl;</xsl:text>
-                    <xsl:text>                m_</xsl:text>
-                    <xsl:value-of select="$camel-case-name"/>
-                    <xsl:text>.append(v);&endl;</xsl:text>
-                </xsl:when>
-            </xsl:choose>
-            <xsl:text>                continue;&endl;</xsl:text>
-            <xsl:text>            }&endl;</xsl:text>
-        </xsl:for-each>
-    </xsl:template>
-
-    <xsl:template name="read-impl-qdom">
-        <xsl:param name="node"/>
-        <xsl:variable name="name" select="concat('Dom', $node/@name)"/>
-
-        <xsl:text>#ifdef QUILOADER_QDOM_READ&endl;</xsl:text>
-
-        <xsl:text>void </xsl:text>
-        <xsl:value-of select="$name"/>
-        <xsl:text>::read(const QDomElement &amp;node)&endl;</xsl:text>
-
-        <xsl:text>{</xsl:text>
-
-        <xsl:call-template name="read-impl-qdom-load-attributes">
-            <xsl:with-param name="node" select="$node"/>
-        </xsl:call-template>
-
-        <xsl:text>&endl;</xsl:text>
-
-        <xsl:text>    for (QDomNode n = node.firstChild(); !n.isNull(); n = n.nextSibling()) {&endl;</xsl:text>
-        <xsl:text>        if (!n.isElement())&endl;</xsl:text>
-        <xsl:text>            continue;&endl;</xsl:text>
-        <xsl:text>        QDomElement e = n.toElement();&endl;</xsl:text>
-        <xsl:text>        QString tag = e.tagName().toLower();&endl;</xsl:text>
-
-        <xsl:for-each select="$node//xs:sequence | $node//xs:choice | $node//xs:all">
-            <xsl:call-template name="read-impl-qdom-load-child-element">
-                <xsl:with-param name="node" select="."/>
-            </xsl:call-template>
-        </xsl:for-each>
-
-        <xsl:text>    }&endl;</xsl:text>
-
-        <xsl:choose>
-            <xsl:when test="$node[@mixed='true']">
-                <xsl:text>    m_text = QLatin1String("");&endl;</xsl:text>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:text>    m_text.clear();&endl;</xsl:text>
-            </xsl:otherwise>
-        </xsl:choose>
-
-        <xsl:text>    for (QDomNode child = node.firstChild(); !child.isNull(); child = child.nextSibling()) {&endl;</xsl:text>
-        <xsl:text>        if (child.isText())&endl;</xsl:text>
-        <xsl:text>            m_text.append(child.nodeValue());&endl;</xsl:text>
-        <xsl:text>     }&endl;</xsl:text>
-
-        <xsl:text>}&endl;</xsl:text>
-        <xsl:text>#endif&endl;</xsl:text>
-        <xsl:text>&endl;</xsl:text>
-    </xsl:template>
 <!-- Implementation: write() -->
 
     <xsl:template name="write-impl-save-attributes">
@@ -1068,10 +883,6 @@
             <xsl:with-param name="node" select="$node"/>
         </xsl:call-template>
 
-        <xsl:call-template name="read-impl-qdom">
-            <xsl:with-param name="node" select="$node"/>
-        </xsl:call-template>
-
         <xsl:call-template name="write-impl">
             <xsl:with-param name="node" select="$node"/>
         </xsl:call-template>
@@ -1133,9 +944,6 @@
 </xsl:text>
         <xsl:text>#include "ui4_p.h"&endl;</xsl:text>
         <xsl:text>&endl;</xsl:text>
-        <xsl:text>#ifdef QUILOADER_QDOM_READ&endl;</xsl:text>
-        <xsl:text>#include &lt;QtXml/QDomElement&gt;&endl;</xsl:text>
-        <xsl:text>#endif&endl;</xsl:text>
         <xsl:text>&endl;</xsl:text>
         <xsl:text>QT_BEGIN_NAMESPACE&endl;</xsl:text>
 
