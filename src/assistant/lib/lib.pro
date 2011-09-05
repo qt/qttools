@@ -3,7 +3,6 @@ MODULE = help
 load(qt_module)
 
 QT += sql \
-    xml \
     network \
     core-private
 TEMPLATE = lib
