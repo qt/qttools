@@ -1,39 +1,28 @@
 load(qt_module)
 
-QT += widgets \
-    sql \
-    xml \
-    network \
-    core-private
-TEMPLATE = lib
 TARGET = QtHelp
+QPRO_PWD = $$PWD
+QT += widgets sql network core-private clucene clucene-private
 
 CONFIG += module
 MODULE_PRI += ../../../modules/qt_help.pri
 
-DEFINES += QHELP_LIB \
-    QT_CLUCENE_SUPPORT
-CONFIG += qt \
-    warn_on
-include($$QT_SOURCE_TREE/src/qbase.pri)
+DEFINES += QHELP_LIB QT_CLUCENE_SUPPORT
+
+load(qt_module_config)
 
 HEADERS += qthelpversion.h
 
-QMAKE_TARGET_PRODUCT = Help
-QMAKE_TARGET_DESCRIPTION = Help \
-    application \
-    framework.
 DEFINES -= QT_ASCII_CAST_WARNINGS
-INCLUDEPATH += $$QT.help.includes
+
 qclucene = QtCLucene$${QT_LIBINFIX}
 if(!debug_and_release|build_pass):CONFIG(debug, debug|release) { 
     mac:qclucene = $${qclucene}_debug
     win32:qclucene = $${qclucene}d
 }
 linux-lsb-g++:LIBS_PRIVATE += --lsb-shared-libs=$$qclucene
-unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES += QtNetwork \
-    QtSql \
-    QtXml
+unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES += QtCore QtNetwork QtSql 
+
 LIBS_PRIVATE += -l$$qclucene
 RESOURCES += helpsystem.qrc
 SOURCES += qhelpenginecore.cpp \

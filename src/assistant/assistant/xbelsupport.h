@@ -39,52 +39,49 @@
 **
 ****************************************************************************/
 
-#ifndef ADPREADER_H
-#define ADPREADER_H
+#ifndef XBELSUPPORT_H
+#define XBELSUPPORT_H
 
-#include <QtCore/QMap>
-#include <QtCore/QSet>
-#include <QtXml/QXmlStreamReader>
+#include <QtCore/QXmlStreamReader>
+#include <QtCore/QPersistentModelIndex>
+
+QT_FORWARD_DECLARE_CLASS(QIODevice)
+QT_FORWARD_DECLARE_CLASS(QModelIndex)
 
 QT_BEGIN_NAMESPACE
 
-struct ContentItem {
-    ContentItem(const QString &t, const QString &r, int d)
-       : title(t), reference(r), depth(d) {}
-    QString title;
-    QString reference;
-    int depth;
-};
+class BookmarkModel;
 
-struct KeywordItem {
-    KeywordItem(const QString &k, const QString &r)
-       : keyword(k), reference(r) {}
-    QString keyword;
-    QString reference;
-};
-
-class AdpReader : public QXmlStreamReader
+class XbelWriter : public QXmlStreamWriter
 {
 public:
-    void readData(const QByteArray &contents);
-    QList<ContentItem> contents() const;
-    QList<KeywordItem> keywords() const;
-    QSet<QString> files() const;
-
-    QMap<QString, QString> properties() const;
+    XbelWriter(BookmarkModel *model);
+    void writeToFile(QIODevice *device);
 
 private:
-    void readProject();
-    void readProfile();
-    void readDCF();
-    void addFile(const QString &file);
+    void writeData(const QModelIndex &index);
 
-    QMap<QString, QString> m_properties;
-    QList<ContentItem> m_contents;
-    QList<KeywordItem> m_keywords;
-    QSet<QString> m_files;
+private:
+    BookmarkModel *bookmarkModel;
+};
+
+class XbelReader : public QXmlStreamReader
+{
+public:
+    XbelReader(BookmarkModel *model);
+    bool readFromFile(QIODevice *device);
+
+private:
+    void readXBEL();
+    void readFolder();
+    void readBookmark();
+    void readUnknownElement();
+
+private:
+    BookmarkModel *bookmarkModel;
+    QList<QPersistentModelIndex> parents;
 };
 
 QT_END_NAMESPACE
 
-#endif
+#endif  // XBELSUPPORT_H

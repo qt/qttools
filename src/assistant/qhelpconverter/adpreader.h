@@ -39,45 +39,50 @@
 **
 ****************************************************************************/
 
-#ifndef QHPWRITER_H
-#define QHPWRITER_H
+#ifndef ADPREADER_H
+#define ADPREADER_H
 
-#include <QtXml/QXmlStreamWriter>
-#include "filterpage.h"
+#include <QtCore/QMap>
+#include <QtCore/QSet>
+#include <QtCore/QXmlStreamReader>
 
 QT_BEGIN_NAMESPACE
 
-class AdpReader;
+struct ContentItem {
+    ContentItem(const QString &t, const QString &r, int d)
+       : title(t), reference(r), depth(d) {}
+    QString title;
+    QString reference;
+    int depth;
+};
 
-class QhpWriter : public QXmlStreamWriter
+struct KeywordItem {
+    KeywordItem(const QString &k, const QString &r)
+       : keyword(k), reference(r) {}
+    QString keyword;
+    QString reference;
+};
+
+class AdpReader : public QXmlStreamReader
 {
 public:
-    enum IdentifierPrefix {SkipAll, FilePrefix, GlobalPrefix};
-    QhpWriter(const QString &namespaceName,
-        const QString &virtualFolder);
-    void setAdpReader(AdpReader *reader);
-    void setFilterAttributes(const QStringList &attributes);
-    void setCustomFilters(const QList<CustomFilter> filters);
-    void setFiles(const QStringList &files);
-    void generateIdentifiers(IdentifierPrefix prefix,
-        const QString prefixString = QString()); 
-    bool writeFile(const QString &fileName);
+    void readData(const QByteArray &contents);
+    QList<ContentItem> contents() const;
+    QList<KeywordItem> keywords() const;
+    QSet<QString> files() const;
+
+    QMap<QString, QString> properties() const;
 
 private:
-    void writeCustomFilters();
-    void writeFilterSection();
-    void writeToc();
-    void writeKeywords();
-    void writeFiles();
+    void readProject();
+    void readProfile();
+    void readDCF();
+    void addFile(const QString &file);
 
-    QString m_namespaceName;
-    QString m_virtualFolder;
-    AdpReader *m_adpReader;
-    QStringList m_filterAttributes;
-    QList<CustomFilter> m_customFilters;
-    QStringList m_files;
-    IdentifierPrefix m_prefix;
-    QString m_prefixString;
+    QMap<QString, QString> m_properties;
+    QList<ContentItem> m_contents;
+    QList<KeywordItem> m_keywords;
+    QSet<QString> m_files;
 };
 
 QT_END_NAMESPACE

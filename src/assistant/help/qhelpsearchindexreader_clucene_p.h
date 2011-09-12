@@ -57,8 +57,8 @@
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 
-#include "fulltextsearch/qanalyzer_p.h"
-#include "fulltextsearch/qquery_p.h"
+#include "private/qanalyzer_p.h"
+#include "private/qquery_p.h"
 #include "qhelpsearchindexreader_p.h"
 
 QT_BEGIN_NAMESPACE

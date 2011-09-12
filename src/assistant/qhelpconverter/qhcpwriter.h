@@ -39,49 +39,32 @@
 **
 ****************************************************************************/
 
-#ifndef XBELSUPPORT_H
-#define XBELSUPPORT_H
+#ifndef QHCPWRITER_H
+#define QHCPWRITER_H
 
-#include <QtXml/QXmlStreamReader>
-#include <QtCore/QPersistentModelIndex>
-
-QT_FORWARD_DECLARE_CLASS(QIODevice)
-QT_FORWARD_DECLARE_CLASS(QModelIndex)
+#include <QtCore/QXmlStreamWriter>
+#include "adpreader.h"
 
 QT_BEGIN_NAMESPACE
 
-class BookmarkModel;
-
-class XbelWriter : public QXmlStreamWriter
+class QhcpWriter : public QXmlStreamWriter
 {
 public:
-    XbelWriter(BookmarkModel *model);
-    void writeToFile(QIODevice *device);
+    QhcpWriter();
+    bool writeFile(const QString &fileName);
+    void setHelpProjectFile(const QString &qhpFile);
+    void setProperties(const QMap<QString, QString> props);
+    void setTitlePath(const QString &path);
 
 private:
-    void writeData(const QModelIndex &index);
+    void writeAssistantSettings();
+    void writeDocuments();
 
-private:
-    BookmarkModel *bookmarkModel;
-};
-
-class XbelReader : public QXmlStreamReader
-{
-public:
-    XbelReader(BookmarkModel *model);
-    bool readFromFile(QIODevice *device);
-
-private:
-    void readXBEL();
-    void readFolder();
-    void readBookmark();
-    void readUnknownElement();
-
-private:
-    BookmarkModel *bookmarkModel;
-    QList<QPersistentModelIndex> parents;
+    QString m_qhpFile;
+    QMap<QString, QString> m_properties;
+    QString m_titlePath;
 };
 
 QT_END_NAMESPACE
 
-#endif  // XBELSUPPORT_H
+#endif

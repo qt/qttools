@@ -39,9 +39,9 @@
 **
 ****************************************************************************/
 
-#include "fulltextsearch/qindexreader_p.h"
-#include "fulltextsearch/qqueryparser_p.h"
-#include "fulltextsearch/qsearchable_p.h"
+#include "private/qindexreader_p.h"
+#include "private/qqueryparser_p.h"
+#include "private/qsearchable_p.h"
 #include "qclucenefieldnames_p.h"
 #include "qhelpenginecore.h"
 

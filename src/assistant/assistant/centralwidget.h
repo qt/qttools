@@ -52,6 +52,7 @@ QT_BEGIN_NAMESPACE
 class FindWidget;
 class HelpViewer;
 class QStackedWidget;
+class QPrinter;
 
 class TabBar : public QTabBar
 {

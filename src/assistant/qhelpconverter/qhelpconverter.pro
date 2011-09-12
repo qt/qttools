@@ -1,4 +1,4 @@
-QT += xml help
+QT += help
 TEMPLATE = app
 TARGET = qhelpconverter
 DESTDIR = $$QT.designer.bins

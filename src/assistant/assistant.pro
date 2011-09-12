@@ -1,6 +1,10 @@
 TEMPLATE = subdirs
 CONFIG  += ordered
 
-SUBDIRS += lib/fulltextsearch \
-           lib \
-           tools
+SUBDIRS += clucene \
+	   help \
+           assistant \
+           qhelpgenerator \
+           qcollectiongenerator \
+           qhelpconverter
+

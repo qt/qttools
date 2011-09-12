@@ -1,7 +1,7 @@
 DEFINES += _BUILD_FOR_QT_ LUCENE_DISABLE_MEMTRACKING
 win32:DEFINES += _CRT_SECURE_NO_DEPRECATE _MT
 
-CLUCENEDIR = ../../../../3rdparty/clucene/src/CLucene
+CLUCENEDIR = ../3rdparty/clucene/src/CLucene
 
 INCLUDEPATH += . .. \
                $$CLUCENEDIR \

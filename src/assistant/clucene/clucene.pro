@@ -1,21 +1,16 @@
 load(qt_module)
 
-QMAKE_TARGET_PRODUCT = QtCLucene
-QMAKE_TARGET_DESCRIPTION = QtCLucene full text search library wrapper.
-#if qt is built with frameworks in debug, we must build QtCLucene in debug and release 
-#that's a similar logic as in qbase.pri 
-mac:!static:contains(QT_CONFIG, qt_framework) { 
-   CONFIG(debug, debug|release) { 
-      !build_pass:CONFIG += build_all 
-   } 
-}
-QT_CONFIG -= qt_framework 
-QT -= gui
-TEMPLATE = lib
 TARGET = QtCLucene
-DEFINES += QHELP_LIB
-include($$QT_SOURCE_TREE/src/qbase.pri)
+QPRO_PWD = $$PWD
 
+CONFIG += module
+MODULE_PRI = ../../../modules/qt_clucene.pri
+
+QT = core
+
+DEFINES += QHELP_LIB
+
+load(qt_module_config)
 HEADERS += qtcluceneversion.h
 
 include(fulltextsearch.pri)

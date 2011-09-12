@@ -39,30 +39,45 @@
 **
 ****************************************************************************/
 
-#ifndef QHCPWRITER_H
-#define QHCPWRITER_H
+#ifndef QHPWRITER_H
+#define QHPWRITER_H
 
-#include <QtXml/QXmlStreamWriter>
-#include "adpreader.h"
+#include <QtCore/QXmlStreamWriter>
+#include "filterpage.h"
 
 QT_BEGIN_NAMESPACE
 
-class QhcpWriter : public QXmlStreamWriter
+class AdpReader;
+
+class QhpWriter : public QXmlStreamWriter
 {
 public:
-    QhcpWriter();
+    enum IdentifierPrefix {SkipAll, FilePrefix, GlobalPrefix};
+    QhpWriter(const QString &namespaceName,
+        const QString &virtualFolder);
+    void setAdpReader(AdpReader *reader);
+    void setFilterAttributes(const QStringList &attributes);
+    void setCustomFilters(const QList<CustomFilter> filters);
+    void setFiles(const QStringList &files);
+    void generateIdentifiers(IdentifierPrefix prefix,
+        const QString prefixString = QString()); 
     bool writeFile(const QString &fileName);
-    void setHelpProjectFile(const QString &qhpFile);
-    void setProperties(const QMap<QString, QString> props);
-    void setTitlePath(const QString &path);
 
 private:
-    void writeAssistantSettings();
-    void writeDocuments();
+    void writeCustomFilters();
+    void writeFilterSection();
+    void writeToc();
+    void writeKeywords();
+    void writeFiles();
 
-    QString m_qhpFile;
-    QMap<QString, QString> m_properties;
-    QString m_titlePath;
+    QString m_namespaceName;
+    QString m_virtualFolder;
+    AdpReader *m_adpReader;
+    QStringList m_filterAttributes;
+    QList<CustomFilter> m_customFilters;
+    QStringList m_files;
+    IdentifierPrefix m_prefix;
+    QString m_prefixString;
 };
 
 QT_END_NAMESPACE

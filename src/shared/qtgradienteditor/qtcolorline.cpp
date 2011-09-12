@@ -682,11 +682,12 @@ void QtColorLinePrivate::paintEvent(QPaintEvent *)
             pmp.end();
 
             p.setBrushOrigin((rect.width() % pixSize + pixSize) / 2, (rect.height() % pixSize + pixSize) / 2);
-            p.setClipRect(r[1].adjusted(4, 4, -4, -4));
-            p.setClipRect(QRect(rect.topLeft(), QPoint(r[1].left() + 0, rect.bottom())), Qt::UniteClip);
-            p.setClipRect(QRect(QPoint(r[1].right() - 0, rect.top()), rect.bottomRight()), Qt::UniteClip);
-            p.setClipRect(QRect(rect.topLeft(), QPoint(rect.right(), r[1].top() + 0)), Qt::UniteClip);
-            p.setClipRect(QRect(QPoint(rect.left(), r[1].bottom() - 0), rect.bottomRight()), Qt::UniteClip);
+            QRegion region = r[1].adjusted(4, 4, -4, -4);
+            region |= QRect(rect.topLeft(), QPoint(r[1].left() + 0, rect.bottom()));
+            region |= QRect(QPoint(r[1].right() - 0, rect.top()), rect.bottomRight());
+            region |= QRect(rect.topLeft(), QPoint(rect.right(), r[1].top() + 0));
+            region |= QRect(QPoint(rect.left(), r[1].bottom() - 0), rect.bottomRight());
+            p.setClipRegion(region);
             /*
             p.setClipRect(r[1].adjusted(3, 3, -3, -3));
             p.setClipRect(QRect(rect.topLeft(), QPoint(r[1].left() + 1, rect.bottom())), Qt::UniteClip);
@@ -842,11 +843,13 @@ void QtColorLinePrivate::paintEvent(QPaintEvent *)
             }
             p.setBrush(m_alphalessPixmap);
             if (m_orientation == Qt::Horizontal) {
-                p.setClipRect(r[1].adjusted(0, qRound(r[1].height() * coef), 0, 0));
-                p.setClipRect(r[1].adjusted(0, 0, 0, -qRound(r[1].height() * coef)), Qt::UniteClip);
+                QRegion region = r[1].adjusted(0, qRound(r[1].height() * coef), 0, 0);
+                region |= r[1].adjusted(0, 0, 0, -qRound(r[1].height() * coef));
+                p.setClipRegion(region);
             } else {
-                p.setClipRect(r[1].adjusted(qRound(r[1].width() * coef), 0, 0, 0));
-                p.setClipRect(r[1].adjusted(0, 0, -qRound(r[1].width() * coef), 0), Qt::UniteClip);
+                QRegion region = r[1].adjusted(qRound(r[1].width() * coef), 0, 0, 0);
+                region |= r[1].adjusted(0, 0, -qRound(r[1].width() * coef), 0);
+                p.setClipRegion(region);
             }
             p.setBrush(Qt::NoBrush);
             p.setPen(QPen(QColor(c.rgb())));

@@ -1,4 +1,3 @@
-include(../../../shared/fontpanel/fontpanel.pri)
 TEMPLATE = app
 LANGUAGE = C++
 TARGET = assistant
@@ -10,13 +9,12 @@ TARGET = assistant
 CONFIG += qt \
     warn_on \
     help
-QT += widgets network help
+QT += widgets printsupport network help
 PROJECTNAME = Assistant
-DESTDIR = $$QT.designer.bins
-target.path = $$[QT_INSTALL_BINS]
-INSTALLS += target
+
 DEPENDPATH += ../shared
-INCLUDEPATH += $$QT.help.includes
+
+include(../../shared/fontpanel/fontpanel.pri)
 
 # ## Work around a qmake issue when statically linking to
 # ## not-yet-installed plugins

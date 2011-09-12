@@ -54,7 +54,7 @@
 //
 
 #include "qhelpenginecore.h"
-#include "fulltextsearch/qanalyzer_p.h"
+#include "private/qanalyzer_p.h"
 
 #include <QtCore/QUrl>
 #include <QtCore/QThread>

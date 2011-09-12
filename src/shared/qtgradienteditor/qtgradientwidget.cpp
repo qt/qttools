@@ -592,9 +592,10 @@ void QtGradientWidget::paintEvent(QPaintEvent *e)
                         central.y() - d_ptr->m_radiusRadial * size().height(),
                         2 * d_ptr->m_radiusRadial * size().width(),
                         2 * d_ptr->m_radiusRadial * size().height());
-        p.setClipRect(r1);
-        p.setClipRect(r2, Qt::UniteClip);
-        p.setClipRect(r3, Qt::UniteClip);
+        QRegion region = r1.toRect();
+        region |= r2.toRect();
+        region |= r3.toRect();
+        p.setClipRegion(region);
         p.drawEllipse(rect);
         if (d_ptr->m_dragHandle == QtGradientWidgetPrivate::RadiusRadialHandle) {
             p.save();

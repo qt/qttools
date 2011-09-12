@@ -12,7 +12,7 @@
 // It is internal CLucene header - DO NOT include it directly
 #if !defined(_SUPPRESS_MAKE_BASED_CONFIG)
     #if defined(_BUILD_FOR_QT_)
-        #include "fulltextsearch/qclucene-config_p.h"
+        #include "qclucene-config_p.h"
     #else
         #include "CLucene/clucene-config.h" //make clucene-config.h file
     #endif
