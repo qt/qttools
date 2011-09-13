@@ -47,12 +47,11 @@
 #include <QtCore/QFile>
 #include <QtCore/QString>
 
-#include "parser/qdeclarativejsengine_p.h"
-#include "parser/qdeclarativejsparser_p.h"
-#include "parser/qdeclarativejslexer_p.h"
-#include "parser/qdeclarativejsnodepool_p.h"
-#include "parser/qdeclarativejsastvisitor_p.h"
-#include "parser/qdeclarativejsast_p.h"
+#include "private/qdeclarativejsengine_p.h"
+#include "private/qdeclarativejsparser_p.h"
+#include "private/qdeclarativejslexer_p.h"
+#include "private/qdeclarativejsastvisitor_p.h"
+#include "private/qdeclarativejsast_p.h"
 
 #include <QCoreApplication>
 #include <QFile>
@@ -110,8 +109,8 @@ protected:
     {
         m_bSource.clear();
         if (AST::IdentifierExpression *idExpr = AST::cast<AST::IdentifierExpression *>(node->base)) {
-            if (idExpr->name->asString() == QLatin1String("qsTr") ||
-                idExpr->name->asString() == QLatin1String("QT_TR_NOOP")) {
+            if (idExpr->name == QLatin1String("qsTr") ||
+                idExpr->name == QLatin1String("QT_TR_NOOP")) {
                 if (!node->arguments)
                     return;
                 AST::BinaryExpression *binary = AST::cast<AST::BinaryExpression *>(node->arguments->expression);
@@ -121,14 +120,14 @@ protected:
                 }
                 AST::StringLiteral *literal = AST::cast<AST::StringLiteral *>(node->arguments->expression);
                 if (literal || !m_bSource.isEmpty()) {
-                    const QString source = literal ? literal->value->asString() : m_bSource;
+                    const QString source = literal ? literal->value.toString() : m_bSource;
 
                     QString comment;
                     bool plural = false;
                     AST::ArgumentList *commentNode = node->arguments->next;
                     if (commentNode && AST::cast<AST::StringLiteral *>(commentNode->expression)) {
                         literal = AST::cast<AST::StringLiteral *>(commentNode->expression);
-                        comment = literal->value->asString();
+                        comment = literal->value.toString();
 
                         AST::ArgumentList *nNode = commentNode->next;
                         if (nNode)
@@ -154,11 +153,11 @@ protected:
                     msg.setExtras(extra);
                     m_translator->extend(msg);
                 }
-            } else if (idExpr->name->asString() == QLatin1String("qsTranslate") ||
-                       idExpr->name->asString() == QLatin1String("QT_TRANSLATE_NOOP")) {
+            } else if (idExpr->name == QLatin1String("qsTranslate") ||
+                       idExpr->name == QLatin1String("QT_TRANSLATE_NOOP")) {
                 if (node->arguments && AST::cast<AST::StringLiteral *>(node->arguments->expression)) {
                     AST::StringLiteral *literal = AST::cast<AST::StringLiteral *>(node->arguments->expression);
-                    const QString context = literal->value->asString();
+                    const QString context = literal->value.toString();
 
                     QString source;
                     QString comment;
@@ -185,11 +184,11 @@ protected:
                         id = scomment.msgid;
                     }
 
-                    source = literal ? literal->value->asString() : m_bSource;
+                    source = literal ? literal->value.toString() : m_bSource;
                     AST::ArgumentList *commentNode = sourceNode->next;
                     if (commentNode && AST::cast<AST::StringLiteral *>(commentNode->expression)) {
                         literal = AST::cast<AST::StringLiteral *>(commentNode->expression);
-                        comment = literal->value->asString();
+                        comment = literal->value.toString();
 
                         AST::ArgumentList *nNode = commentNode->next;
                         if (nNode)
@@ -205,8 +204,8 @@ protected:
                     msg.setExtras(extra);
                     m_translator->extend(msg);
                 }
-            } else if (idExpr->name->asString() == QLatin1String("qsTrId") ||
-                       idExpr->name->asString() == QLatin1String("QT_TRID_NOOP")) {
+            } else if (idExpr->name == QLatin1String("qsTrId") ||
+                       idExpr->name == QLatin1String("QT_TRID_NOOP")) {
                 if (!node->arguments)
                     return;
 
@@ -223,7 +222,7 @@ protected:
                         extra = comment.extra;
                     }
 
-                    const QString id = literal->value->asString();
+                    const QString id = literal->value.toString();
                     bool plural = node->arguments->next;
 
                     TranslatorMessage msg(QString(), sourcetext,
@@ -254,13 +253,13 @@ private:
             if (!createString(l))
                 return false;
         } else
-            m_bSource.prepend(ls->value->asString());
+            m_bSource.prepend(ls->value.toString());
 
         if (r) {
             if (!createString(r))
                 return false;
         } else
-            m_bSource.append(rs->value->asString());
+            m_bSource.append(rs->value);
 
         return true;
     }
@@ -392,9 +391,6 @@ bool loadQml(Translator &translator, const QString &filename, ConversionData &cd
 
     Engine driver;
     Parser parser(&driver);
-
-    NodePool nodePool(filename, &driver);
-    driver.setNodePool(&nodePool);
 
     Lexer lexer(&driver);
     lexer.setCode(code, /*line = */ 1);

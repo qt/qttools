@@ -1022,8 +1022,6 @@ QString ProFileEvaluator::Private::propertyValue(const QString &name) const
         return QLibraryInfo::location(QLibraryInfo::SettingsPath);
     if (name == QLatin1String("QT_INSTALL_EXAMPLES"))
         return QLibraryInfo::location(QLibraryInfo::ExamplesPath);
-    if (name == QLatin1String("QT_INSTALL_DEMOS"))
-        return QLibraryInfo::location(QLibraryInfo::DemosPath);
     if (name == QLatin1String("QMAKE_MKSPECS"))
         return qmake_mkspec_paths().join(Option::dirlist_sep);
     if (name == QLatin1String("QMAKE_VERSION"))

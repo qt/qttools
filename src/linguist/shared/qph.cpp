@@ -46,8 +46,7 @@
 #include <QtCore/QTextCodec>
 #include <QtCore/QTextStream>
 
-#include <QtXml/QXmlStreamReader>
-#include <QtXml/QXmlStreamAttribute>
+#include <QtCore/QXmlStreamReader>
 
 QT_BEGIN_NAMESPACE
 

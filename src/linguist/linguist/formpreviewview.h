@@ -42,7 +42,7 @@
 #ifndef FORMPREVIEWVIEW_H
 #define FORMPREVIEWVIEW_H
 
-#include <quiloader_p.h>
+#include <private/quiloader_p.h>
 
 #include <QtCore/QHash>
 #include <QtCore/QList>
