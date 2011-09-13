@@ -1,6 +1,7 @@
 %modules = ( # path to module name map
     "QtCLucene" => "$basedir/src/assistant/clucene",
     "QtHelp" => "$basedir/src/assistant/help",
+    "QtUiTools" => "$basedir/src/designer/src/uitools",
     "QtDesigner" => "$basedir/src/designer/src/lib",
 );
 %moduleheaders = ( # restrict the module headers to those found in relative path
@@ -8,6 +9,7 @@
 %classnames = (
     "qtcluceneversion.h" => "QtCLuceneVersion",
     "qthelpversion.h" => "QtHelpVersion",
+    "qtuitoolsversion.h" => "QtUiToolsVersion",
     "qtdesignerversion.h" => "QtDesigner",
 );
 %mastercontent = (
@@ -24,6 +26,7 @@
 %modulepris = (
     "QtCLucene" => "$basedir/modules/qt_clucene.pri",
     "QtHelp" => "$basedir/modules/qt_help.pri",
+    "QtUiTools" => "$basedir/modules/qt_uitools.pri",
     "QtDesigner" => "$basedir/modules/qt_designer.pri",
 );
 %dependencies = (

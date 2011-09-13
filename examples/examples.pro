@@ -1,2 +1,2 @@
 TEMPLATE = subdirs
-SUBDIRS +=  help designer
+SUBDIRS +=  help designer uitools

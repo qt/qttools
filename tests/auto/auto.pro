@@ -6,5 +6,5 @@ SUBDIRS=\
     qhelpindexmodel \
     qhelpprojectdata \
 
-SUBDIRS += linguist
+SUBDIRS += linguist uitools
 !cross_compile:SUBDIRS += host.pro
