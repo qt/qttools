@@ -41,7 +41,7 @@
 #ifndef FINDFILEDIALOG_H
 #define FINDFILEDIALOG_H
 
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 
 QT_BEGIN_NAMESPACE
 class QComboBox;

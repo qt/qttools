@@ -51,7 +51,7 @@
 #include <QtDesigner/QExtensionManager>
 #include <QtDesigner/QDesignerLanguageExtension>
 
-#include <QtGui/QPushButton>
+#include <QtWidgets/QPushButton>
 
 QT_BEGIN_NAMESPACE
 

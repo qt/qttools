@@ -56,7 +56,7 @@
 #include "shared_global_p.h"
 #include <QtDesigner/private/formscriptrunner_p.h>
 
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 
 QT_BEGIN_NAMESPACE
 

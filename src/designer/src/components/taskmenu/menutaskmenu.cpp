@@ -43,7 +43,7 @@
 
 #include <promotiontaskmenu_p.h>
 
-#include <QtGui/QAction>
+#include <QtWidgets/QAction>
 #include <QtCore/QDebug>
 
 QT_BEGIN_NAMESPACE

@@ -43,8 +43,8 @@
 #include "invisible_widget_p.h"
 #include "qdesigner_toolbar_p.h"
 
-#include <QtGui/QAction>
-#include <QtGui/QApplication>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QApplication>
 #include <QtCore/QRect>
 #include <QtCore/QDebug>
 

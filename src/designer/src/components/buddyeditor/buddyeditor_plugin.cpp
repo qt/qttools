@@ -39,7 +39,7 @@
 **
 ****************************************************************************/
 
-#include <QtGui/QAction>
+#include <QtWidgets/QAction>
 
 #include "buddyeditor_plugin.h"
 #include "buddyeditor_tool.h"

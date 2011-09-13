@@ -60,9 +60,9 @@
 
 #include "texteditfindwidget.h"
 
-#include <QtGui/QCheckBox>
+#include <QtWidgets/QCheckBox>
 #include <QtGui/QTextCursor>
-#include <QtGui/QTextEdit>
+#include <QtWidgets/QTextEdit>
 
 QT_BEGIN_NAMESPACE
 

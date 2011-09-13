@@ -49,11 +49,11 @@
 #include <QtDesigner/QDesignerContainerExtension>
 #include <QtDesigner/QDesignerWidgetDataBaseInterface>
 
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QGridLayout>
-#include <QtGui/QFormLayout>
-#include <QtGui/QApplication>
+#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QGridLayout>
+#include <QtWidgets/QFormLayout>
+#include <QtWidgets/QApplication>
 
 #include <QtCore/QTextStream>
 #include <QtCore/QDebug>

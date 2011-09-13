@@ -42,7 +42,7 @@
 #ifndef QTGRADIENTSTOPSCONTROLLER_H
 #define QTGRADIENTSTOPSCONTROLLER_H
 
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
 

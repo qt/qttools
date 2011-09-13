@@ -50,14 +50,14 @@
 
 #include <QtDesigner/QDesignerFormWindowInterface>
 
-#include <QtGui/QAction>
+#include <QtWidgets/QAction>
 #include <QtGui/QCloseEvent>
-#include <QtGui/QToolBar>
-#include <QtGui/QMdiSubWindow>
-#include <QtGui/QStatusBar>
-#include <QtGui/QMenu>
-#include <QtGui/QLayout>
-#include <QtGui/QDockWidget>
+#include <QtWidgets/QToolBar>
+#include <QtWidgets/QMdiSubWindow>
+#include <QtWidgets/QStatusBar>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QLayout>
+#include <QtWidgets/QDockWidget>
 
 #include <QtCore/QUrl>
 #include <QtCore/QDebug>

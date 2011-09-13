@@ -42,7 +42,7 @@
 #ifndef TREEWIDGET_TASKMENU_H
 #define TREEWIDGET_TASKMENU_H
 
-#include <QtGui/QTreeWidget>
+#include <QtWidgets/QTreeWidget>
 #include <QtCore/QPointer>
 
 #include <qdesigner_taskmenu_p.h>

@@ -41,7 +41,9 @@
 //! [0]
 #include <QtUiTools>
 //! [0]
-#include <QtGui>
+#include <QSpinBox>
+#include <QLabel>
+#include <QVBoxLayout>
 
 #include "calculatorform.h"
 

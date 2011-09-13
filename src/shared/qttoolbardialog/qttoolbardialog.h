@@ -53,7 +53,7 @@
 #ifndef QTTOOLBARDIALOG_H
 #define QTTOOLBARDIALOG_H
 
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 
 QT_BEGIN_NAMESPACE
 

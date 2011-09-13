@@ -42,11 +42,11 @@
 #include "formwindow_widgetstack.h"
 #include <QtDesigner/QDesignerFormWindowToolInterface>
 
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 #include <QtGui/qevent.h>
-#include <QtGui/QAction>
-#include <QtGui/QStackedLayout>
-#include <QtGui/QVBoxLayout>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QStackedLayout>
+#include <QtWidgets/QVBoxLayout>
 
 #include <QtCore/qdebug.h>
 

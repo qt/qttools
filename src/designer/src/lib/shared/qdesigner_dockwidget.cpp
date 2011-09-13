@@ -48,8 +48,8 @@
 #include <QtDesigner/QExtensionManager>
 #include <QtDesigner/QDesignerFormWindowCursorInterface>
 
-#include <QtGui/QMainWindow>
-#include <QtGui/QLayout>
+#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QLayout>
 
 QT_BEGIN_NAMESPACE
 

@@ -44,7 +44,7 @@
 
 #include <QtDesigner/QDesignerFormWindowInterface>
 
-#include <QtGui/QAction>
+#include <QtWidgets/QAction>
 
 QT_BEGIN_NAMESPACE
 

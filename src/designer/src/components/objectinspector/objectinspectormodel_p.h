@@ -55,8 +55,8 @@
 
 #include <layoutinfo_p.h>
 
-#include <QtGui/QStandardItemModel>
-#include <QtGui/QIcon>
+#include <QtWidgets/QStandardItemModel>
+#include <QtWidgets/QIcon>
 #include <QtCore/QModelIndex>
 #include <QtCore/QString>
 #include <QtCore/QList>

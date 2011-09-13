@@ -56,7 +56,7 @@
 #include "shared_global_p.h"
 #include "qdesigner_formwindowcommand_p.h"
 
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
 

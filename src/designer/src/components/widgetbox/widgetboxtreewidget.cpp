@@ -55,13 +55,13 @@
 #include <QtDesigner/QDesignerCustomWidgetInterface>
 #include <QtDesigner/QDesignerSettingsInterface>
 
-#include <QtGui/QHeaderView>
-#include <QtGui/QApplication>
-#include <QtGui/QTreeWidgetItem>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QTreeWidgetItem>
 #include <QtGui/QContextMenuEvent>
-#include <QtGui/QAction>
-#include <QtGui/QActionGroup>
-#include <QtGui/QMenu>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QActionGroup>
+#include <QtWidgets/QMenu>
 
 #include <QtCore/QFile>
 #include <QtCore/QTimer>

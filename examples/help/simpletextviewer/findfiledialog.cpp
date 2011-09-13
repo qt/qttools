@@ -39,15 +39,15 @@
 ****************************************************************************/
 
 #include <QtCore/QDir>
-#include <QtGui/QLayout>
-#include <QtGui/QComboBox>
-#include <QtGui/QTreeWidget>
-#include <QtGui/QLayout>
-#include <QtGui/QFileDialog>
-#include <QtGui/QDialogButtonBox>
-#include <QtGui/QToolButton>
-#include <QtGui/QPushButton>
-#include <QtGui/QLabel>
+#include <QtWidgets/QLayout>
+#include <QtWidgets/QComboBox>
+#include <QtWidgets/QTreeWidget>
+#include <QtWidgets/QLayout>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QDialogButtonBox>
+#include <QtWidgets/QToolButton>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QLabel>
 
 #include "findfiledialog.h"
 #include "assistant.h"

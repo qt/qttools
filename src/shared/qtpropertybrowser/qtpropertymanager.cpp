@@ -45,14 +45,14 @@
 #include <QtCore/QLocale>
 #include <QtCore/QMap>
 #include <QtCore/QTimer>
-#include <QtGui/QIcon>
+#include <QtWidgets/QIcon>
 #include <QtCore/QMetaEnum>
 #include <QtGui/QFontDatabase>
-#include <QtGui/QStyleOption>
-#include <QtGui/QStyle>
-#include <QtGui/QApplication>
+#include <QtWidgets/QStyleOption>
+#include <QtWidgets/QStyle>
+#include <QtWidgets/QApplication>
 #include <QtGui/QPainter>
-#include <QtGui/QLabel>
+#include <QtWidgets/QLabel>
 
 #include <limits.h>
 #include <float.h>

@@ -55,14 +55,14 @@
 #include <QtCore/QDir>
 #include <QtCore/QTemporaryFile>
 
-#include <QtGui/QApplication>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QPushButton>
-#include <QtGui/QDialogButtonBox>
-#include <QtGui/QMenu>
-#include <QtGui/QCheckBox>
-#include <QtGui/QFrame>
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QDialogButtonBox>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QCheckBox>
+#include <QtWidgets/QFrame>
+#include <QtWidgets/QMessageBox>
 
 QT_BEGIN_NAMESPACE
 

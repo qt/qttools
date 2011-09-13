@@ -39,7 +39,7 @@
 **
 ****************************************************************************/
 
-#include <QtDesigner/default_extensionfactory.h>
+#include "default_extensionfactory.h"
 #include "qextensionmanager.h"
 #include <qpointer.h>
 #include <QtCore/qdebug.h>

@@ -42,7 +42,7 @@
 #ifndef PREVIEWFRAME_H
 #define PREVIEWFRAME_H
 
-#include <QtGui/QFrame>
+#include <QtWidgets/QFrame>
 #include <QtCore/QPointer>
 
 QT_BEGIN_NAMESPACE

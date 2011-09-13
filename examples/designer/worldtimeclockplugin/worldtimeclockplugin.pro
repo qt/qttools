@@ -1,5 +1,6 @@
 #! [0]
 CONFIG      += designer plugin
+QT          += widgets
 #! [0]
 TARGET      = $$qtLibraryTarget($$TARGET)
 #! [1]

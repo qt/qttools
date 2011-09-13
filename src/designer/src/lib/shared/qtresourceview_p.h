@@ -54,8 +54,8 @@
 #define QTRESOURCEVIEW_H
 
 #include "shared_global_p.h"
-#include <QtGui/QWidget>
-#include <QtGui/QDialog>
+#include <QtWidgets/QWidget>
+#include <QtWidgets/QDialog>
 
 QT_BEGIN_NAMESPACE
 

@@ -43,8 +43,8 @@
 
 #include "qmeegoswitchevent.h"
 
-#include <QtGui/QApplication>
-#include <QtGui/QWidget>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QWidget>
 
 #include <private/qlibrary_p.h>
 #include <private/qfactoryloader_p.h>

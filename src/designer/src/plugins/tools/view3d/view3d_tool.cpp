@@ -39,7 +39,7 @@
 **
 ****************************************************************************/
 
-#include <QtGui/QAction>
+#include <QtWidgets/QAction>
 #include "view3d_tool.h"
 
 QView3DTool::QView3DTool(QDesignerFormWindowInterface *formWindow, QObject *parent)

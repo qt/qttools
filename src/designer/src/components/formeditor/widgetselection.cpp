@@ -55,14 +55,14 @@
 #include <formwindowbase_p.h>
 #include <grid_p.h>
 
-#include <QtGui/QMenu>
-#include <QtGui/QWidget>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QWidget>
 #include <QtGui/QMouseEvent>
-#include <QtGui/QStylePainter>
-#include <QtGui/QGridLayout>
-#include <QtGui/QFormLayout>
-#include <QtGui/QStyleOptionToolButton>
-#include <QtGui/QApplication>
+#include <QtWidgets/QStylePainter>
+#include <QtWidgets/QGridLayout>
+#include <QtWidgets/QFormLayout>
+#include <QtWidgets/QStyleOptionToolButton>
+#include <QtWidgets/QApplication>
 
 #include <QtCore/QVariant>
 #include <QtCore/qdebug.h>

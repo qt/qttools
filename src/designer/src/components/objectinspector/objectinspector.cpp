@@ -63,15 +63,15 @@
 #include <grid_p.h>
 
 // Qt
-#include <QtGui/QApplication>
-#include <QtGui/QHeaderView>
-#include <QtGui/QScrollBar>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QScrollBar>
 #include <QtGui/QPainter>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QItemSelectionModel>
-#include <QtGui/QMenu>
-#include <QtGui/QTreeView>
-#include <QtGui/QItemDelegate>
+#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QItemSelectionModel>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QTreeView>
+#include <QtWidgets/QItemDelegate>
 #include <QtGui/qevent.h>
 
 #include <QtCore/QVector>

@@ -44,10 +44,10 @@
 #include <QtDesigner/QDesignerSettingsInterface>
 #include <QtDesigner/QDesignerFormEditorInterface>
 
-#include <QtGui/QPlainTextEdit>
-#include <QtGui/QDialogButtonBox>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QPushButton>
+#include <QtWidgets/QPlainTextEdit>
+#include <QtWidgets/QDialogButtonBox>
+#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QPushButton>
 
 QT_BEGIN_NAMESPACE
 

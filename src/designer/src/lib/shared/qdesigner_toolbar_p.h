@@ -55,8 +55,8 @@
 
 #include "shared_global_p.h"
 
-#include <QtGui/QAction>
-#include <QtGui/QToolButton>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QToolButton>
 
 #include <QtCore/QList>
 #include <QtCore/QPoint>

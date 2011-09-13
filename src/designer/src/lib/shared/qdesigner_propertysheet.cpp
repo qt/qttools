@@ -54,16 +54,16 @@
 
 #include <QtCore/QDebug>
 
-#include <QtGui/QLayout>
-#include <QtGui/QDockWidget>
-#include <QtGui/QDialog>
-#include <QtGui/QLabel>
-#include <QtGui/QGroupBox>
-#include <QtGui/QStyle>
-#include <QtGui/QApplication>
-#include <QtGui/QToolBar>
-#include <QtGui/QMainWindow>
-#include <QtGui/QMenuBar>
+#include <QtWidgets/QLayout>
+#include <QtWidgets/QDockWidget>
+#include <QtWidgets/QDialog>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QGroupBox>
+#include <QtWidgets/QStyle>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QToolBar>
+#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QMenuBar>
 
 QT_BEGIN_NAMESPACE
 

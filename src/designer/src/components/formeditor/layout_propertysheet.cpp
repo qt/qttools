@@ -51,7 +51,7 @@
 #include <QtDesigner/private/ui4_p.h>
 #include <QtDesigner/private/formbuilderextra_p.h>
 
-#include <QtGui/QFormLayout>
+#include <QtWidgets/QFormLayout>
 
 #include <QtCore/QHash>
 #include <QtCore/QDebug>

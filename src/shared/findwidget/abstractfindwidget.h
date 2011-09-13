@@ -42,8 +42,8 @@
 #ifndef ABSTRACTFINDWIDGET_H
 #define ABSTRACTFINDWIDGET_H
 
-#include <QtGui/QIcon>
-#include <QtGui/QWidget>
+#include <QtWidgets/QIcon>
+#include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
 

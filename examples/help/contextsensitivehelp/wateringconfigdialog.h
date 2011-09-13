@@ -41,7 +41,7 @@
 #ifndef WATERINGCONFIGDIALOG_H
 #define WATERINGCONFIGDIALOG_H
 
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 #include "ui_wateringconfigdialog.h"
 
 class WateringConfigDialog : public QDialog

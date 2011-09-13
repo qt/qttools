@@ -43,11 +43,11 @@
 #include "propertylineedit_p.h"
 #include "stylesheeteditor_p.h"
 
-#include <QtGui/QLineEdit>
+#include <QtWidgets/QLineEdit>
 #include <QtGui/QRegExpValidator>
 #include <QtGui/QResizeEvent>
-#include <QtGui/QCompleter>
-#include <QtGui/QAbstractItemView>
+#include <QtWidgets/QCompleter>
+#include <QtWidgets/QAbstractItemView>
 #include <QtCore/QRegExp>
 #include <QtCore/QUrl>
 #include <QtCore/QFile>

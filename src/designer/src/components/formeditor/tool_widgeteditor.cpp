@@ -52,8 +52,8 @@
 #include <qdesigner_resource.h>
 
 #include <QtGui/qevent.h>
-#include <QtGui/QAction>
-#include <QtGui/QMainWindow>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QMainWindow>
 #include <QtGui/QCursor>
 #include <QtCore/qdebug.h>
 

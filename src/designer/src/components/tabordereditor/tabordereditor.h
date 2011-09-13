@@ -45,7 +45,7 @@
 #include "tabordereditor_global.h"
 
 #include <QtCore/QPointer>
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 #include <QtGui/QRegion>
 #include <QtGui/QFont>
 #include <QtGui/QFontMetrics>

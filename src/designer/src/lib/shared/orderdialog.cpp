@@ -48,7 +48,7 @@
 #include <QtDesigner/QDesignerContainerExtension>
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QModelIndex>
-#include <QtGui/QPushButton>
+#include <QtWidgets/QPushButton>
 
 QT_BEGIN_NAMESPACE
 

@@ -56,8 +56,8 @@
 
 #include "shared_global_p.h"
 
-#include <QtGui/QItemDelegate>
-#include <QtGui/QTreeView>
+#include <QtWidgets/QItemDelegate>
+#include <QtWidgets/QTreeView>
 
 QT_BEGIN_NAMESPACE
 

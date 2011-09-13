@@ -56,8 +56,8 @@
 #include <QtDesigner/private/ui4_p.h>
 #include <QtDesigner/private/formscriptrunner_p.h>
 
-#include <QtGui/QStyle>
-#include <QtGui/QApplication>
+#include <QtWidgets/QStyle>
+#include <QtWidgets/QApplication>
 
 QT_BEGIN_NAMESPACE
 

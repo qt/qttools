@@ -42,11 +42,12 @@
 #include "messagehighlighter.h"
 
 #include <QtCore/QTextStream>
+#include <QtWidgets/QTextEdit>
 
 QT_BEGIN_NAMESPACE
 
 MessageHighlighter::MessageHighlighter(QTextEdit *textEdit)
-    : QSyntaxHighlighter(textEdit)
+    : QSyntaxHighlighter(textEdit->document())
 {
     QTextCharFormat entityFormat;
     entityFormat.setForeground(Qt::red);

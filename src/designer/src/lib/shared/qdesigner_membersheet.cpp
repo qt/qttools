@@ -44,7 +44,7 @@
 #include <QtDesigner/QDesignerFormEditorInterface>
 #include <abstractintrospection_p.h>
 
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 
 namespace {
 

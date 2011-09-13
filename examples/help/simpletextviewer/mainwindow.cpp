@@ -39,11 +39,11 @@
 ****************************************************************************/
 
 #include <QtCore/QLibraryInfo>
-#include <QtGui/QApplication>
-#include <QtGui/QAction>
-#include <QtGui/QMenu>
-#include <QtGui/QMenuBar>
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QMenuBar>
+#include <QtWidgets/QMessageBox>
 
 #include "mainwindow.h"
 #include "findfiledialog.h"

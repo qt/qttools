@@ -47,8 +47,8 @@
 #include <promotiontaskmenu_p.h>
 #include <qdesigner_command_p.h>
 
-#include <QtGui/QAction>
-#include <QtGui/QUndoStack>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QUndoStack>
 
 #include <QtCore/QDebug>
 

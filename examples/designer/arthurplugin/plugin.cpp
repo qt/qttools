@@ -43,8 +43,8 @@
 #include <QtDesigner/QDesignerCustomWidgetInterface>
 
 #include <QtCore/qplugin.h>
-#include <QtGui/QIcon>
-#include <QtGui/QPixmap>
+#include <QtWidgets/QIcon>
+#include <QtWidgets/QPixmap>
 
 #include "xform.h"
 #include "pathdeform.h"

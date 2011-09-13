@@ -42,7 +42,7 @@
 #include "qworkspace_container.h"
 #include "qmdiarea_container.h"
 
-#include <QtGui/QWorkspace>
+#include <QtWidgets/QWorkspace>
 
 QT_BEGIN_NAMESPACE
 

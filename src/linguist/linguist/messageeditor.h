@@ -47,8 +47,8 @@
 #include <QtCore/QLocale>
 #include <QtCore/QTimer>
 
-#include <QtGui/QFrame>
-#include <QtGui/QScrollArea>
+#include <QtWidgets/QFrame>
+#include <QtWidgets/QScrollArea>
 
 QT_BEGIN_NAMESPACE
 

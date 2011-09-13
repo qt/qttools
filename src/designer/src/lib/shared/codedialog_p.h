@@ -54,7 +54,7 @@
 #define CODEPREVIEWDIALOG_H
 
 #include "shared_global_p.h"
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 
 QT_BEGIN_NAMESPACE
 

@@ -47,7 +47,6 @@
 #include <QtCore/QTextStream>
 
 #include <QtCore/QXmlStreamReader>
-#include <QtCore/QXmlStreamAttribute>
 
 #define STRINGIFY_INTERNAL(x) #x
 #define STRINGIFY(x) STRINGIFY_INTERNAL(x)

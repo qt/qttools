@@ -42,8 +42,8 @@
 #include "sheet_delegate_p.h"
 
 #include <QtCore/QAbstractItemModel>
-#include <QtGui/QTreeView>
-#include <QtGui/QStyle>
+#include <QtWidgets/QTreeView>
+#include <QtWidgets/QStyle>
 #include <QtGui/QPainter>
 
 QT_BEGIN_NAMESPACE

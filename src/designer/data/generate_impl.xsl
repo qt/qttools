@@ -942,7 +942,7 @@
 **
 ****************************************************************************/
 </xsl:text>
-        <xsl:text>#include "ui4_p.h"&endl;</xsl:text>
+        <xsl:text>#include "private/ui4_p.h"&endl;</xsl:text>
         <xsl:text>&endl;</xsl:text>
         <xsl:text>&endl;</xsl:text>
         <xsl:text>QT_BEGIN_NAMESPACE&endl;</xsl:text>

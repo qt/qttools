@@ -47,11 +47,11 @@
 #include <QtCore/QString>
 #include <QtCore/QUrl>
 
-#include <QtGui/QListView>
-#include <QtGui/QStandardItem>
-#include <QtGui/QStandardItemModel>
-#include <QtGui/QTextEdit>
-#include <QtGui/QVBoxLayout>
+#include <QtWidgets/QListView>
+#include <QtWidgets/QStandardItem>
+#include <QtWidgets/QStandardItemModel>
+#include <QtWidgets/QTextEdit>
+#include <QtWidgets/QVBoxLayout>
 
 QT_BEGIN_NAMESPACE
 

@@ -49,10 +49,10 @@
 #include <QtGui/QFontMetrics>
 #include <QtGui/QPixmap>
 #include <QtGui/QMatrix>
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 #include <QtGui/QContextMenuEvent>
-#include <QtGui/QMenu>
-#include <QtGui/QAction>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QAction>
 
 #include <QtCore/QMultiMap>
 

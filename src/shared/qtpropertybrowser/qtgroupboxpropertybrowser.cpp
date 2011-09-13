@@ -41,9 +41,9 @@
 
 #include "qtgroupboxpropertybrowser.h"
 #include <QtCore/QSet>
-#include <QtGui/QGridLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QGroupBox>
+#include <QtWidgets/QGridLayout>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QGroupBox>
 #include <QtCore/QTimer>
 #include <QtCore/QMap>
 

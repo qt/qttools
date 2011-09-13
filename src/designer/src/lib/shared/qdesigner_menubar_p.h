@@ -55,8 +55,8 @@
 
 #include "shared_global_p.h"
 
-#include <QtGui/QAction>
-#include <QtGui/QMenuBar>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QMenuBar>
 
 #include <QtCore/QPointer>
 #include <QtCore/QMimeData>

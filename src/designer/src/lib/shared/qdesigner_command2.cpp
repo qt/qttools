@@ -49,8 +49,8 @@
 #include <QtDesigner/QDesignerFormEditorInterface>
 #include <QtDesigner/QDesignerMetaDataBaseInterface>
 
-#include <QtGui/QApplication>
-#include <QtGui/QLayout>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QLayout>
 
 QT_BEGIN_NAMESPACE
 

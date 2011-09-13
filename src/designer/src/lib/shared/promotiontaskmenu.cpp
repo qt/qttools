@@ -55,9 +55,9 @@
 #include <QtDesigner/QDesignerFormEditorInterface>
 #include <QtDesigner/QExtensionManager>
 
-#include <QtGui/QAction>
-#include <QtGui/QWidget>
-#include <QtGui/QMenu>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QWidget>
+#include <QtWidgets/QMenu>
 #include <QtCore/QSignalMapper>
 #include <QtCore/qdebug.h>
 

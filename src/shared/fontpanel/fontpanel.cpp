@@ -41,13 +41,13 @@
 
 #include "fontpanel.h"
 
-#include <QtGui/QLabel>
-#include <QtGui/QComboBox>
-#include <QtGui/QFormLayout>
-#include <QtGui/QSpacerItem>
-#include <QtGui/QFontComboBox>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QComboBox>
+#include <QtWidgets/QFormLayout>
+#include <QtWidgets/QSpacerItem>
+#include <QtWidgets/QFontComboBox>
 #include <QtCore/QTimer>
-#include <QtGui/QLineEdit>
+#include <QtWidgets/QLineEdit>
 
 QT_BEGIN_NAMESPACE
 

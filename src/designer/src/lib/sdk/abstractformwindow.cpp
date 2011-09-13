@@ -44,14 +44,14 @@
 
 #include <widgetfactory_p.h>
 
-#include <QtGui/QTabBar>
-#include <QtGui/QSizeGrip>
-#include <QtGui/QAbstractButton>
-#include <QtGui/QToolBox>
-#include <QtGui/QMenuBar>
-#include <QtGui/QMainWindow>
-#include <QtGui/QDockWidget>
-#include <QtGui/QToolBar>
+#include <QtWidgets/QTabBar>
+#include <QtWidgets/QSizeGrip>
+#include <QtWidgets/QAbstractButton>
+#include <QtWidgets/QToolBox>
+#include <QtWidgets/QMenuBar>
+#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QDockWidget>
+#include <QtWidgets/QToolBar>
 
 #include <QtCore/qdebug.h>
 

@@ -55,11 +55,11 @@
 
 #include "shared_global_p.h"
 #include <QtCore/QMimeData>
-#include <QtGui/QStandardItemModel>
-#include <QtGui/QTreeView>
-#include <QtGui/QListView>
-#include <QtGui/QStackedWidget>
-#include <QtGui/QIcon>
+#include <QtWidgets/QStandardItemModel>
+#include <QtWidgets/QTreeView>
+#include <QtWidgets/QListView>
+#include <QtWidgets/QStackedWidget>
+#include <QtWidgets/QIcon>
 
 QT_BEGIN_NAMESPACE
 

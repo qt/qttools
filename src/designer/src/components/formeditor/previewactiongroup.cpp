@@ -44,7 +44,7 @@
 #include <deviceprofile_p.h>
 #include <shared_settings_p.h>
 
-#include <QtGui/QStyleFactory>
+#include <QtWidgets/QStyleFactory>
 #include <QtCore/QVariant>
 
 QT_BEGIN_NAMESPACE

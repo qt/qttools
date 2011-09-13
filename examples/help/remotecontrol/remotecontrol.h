@@ -41,7 +41,7 @@
 #ifndef REMOTECONTROL_H
 #define REMOTECONTROL_H
 
-#include <QtGui/QMainWindow>
+#include <QtWidgets/QMainWindow>
 #include "ui_remotecontrol.h"
 
 QT_BEGIN_NAMESPACE

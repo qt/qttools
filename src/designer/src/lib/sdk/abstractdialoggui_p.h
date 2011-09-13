@@ -54,8 +54,8 @@
 #define ABSTRACTDIALOGGUI_H
 
 #include <QtDesigner/sdk_global.h>
-#include <QtGui/QMessageBox>
-#include <QtGui/QFileDialog>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QFileDialog>
 
 QT_BEGIN_HEADER
 

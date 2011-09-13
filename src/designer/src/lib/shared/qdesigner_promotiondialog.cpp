@@ -53,23 +53,23 @@
 #include <abstractdialoggui_p.h>
 
 #include <QtCore/QTimer>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QFormLayout>
-#include <QtGui/QDialogButtonBox>
-#include <QtGui/QTreeView>
-#include <QtGui/QHeaderView>
-#include <QtGui/QPushButton>
-#include <QtGui/QItemSelectionModel>
-#include <QtGui/QItemSelection>
-#include <QtGui/QComboBox>
-#include <QtGui/QLineEdit>
-#include <QtGui/QCheckBox>
+#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QFormLayout>
+#include <QtWidgets/QDialogButtonBox>
+#include <QtWidgets/QTreeView>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QItemSelectionModel>
+#include <QtWidgets/QItemSelection>
+#include <QtWidgets/QComboBox>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QCheckBox>
 #include <QtGui/QRegExpValidator>
-#include <QtGui/QLabel>
-#include <QtGui/QSpacerItem>
-#include <QtGui/QMenu>
-#include <QtGui/QAction>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QSpacerItem>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QAction>
 
 QT_BEGIN_NAMESPACE
 

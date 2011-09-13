@@ -51,9 +51,9 @@
 
 #include <QtGui/QFileOpenEvent>
 #include <QtGui/QCloseEvent>
-#include <QtGui/QMessageBox>
-#include <QtGui/QIcon>
-#include <QtGui/QErrorMessage>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QIcon>
+#include <QtWidgets/QErrorMessage>
 #include <QtCore/QMetaObject>
 #include <QtCore/QFile>
 #include <QtCore/QLibraryInfo>

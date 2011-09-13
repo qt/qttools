@@ -47,11 +47,11 @@
 #include <QtCore/QFile>
 #include <QtCore/QString>
 
-#include "parser/qdeclarativejsengine_p.h"
-#include "parser/qdeclarativejsparser_p.h"
-#include "parser/qdeclarativejslexer_p.h"
-#include "parser/qdeclarativejsastvisitor_p.h"
-#include "parser/qdeclarativejsast_p.h"
+#include "private/qdeclarativejsengine_p.h"
+#include "private/qdeclarativejsparser_p.h"
+#include "private/qdeclarativejslexer_p.h"
+#include "private/qdeclarativejsastvisitor_p.h"
+#include "private/qdeclarativejsast_p.h"
 
 #include <QCoreApplication>
 #include <QFile>

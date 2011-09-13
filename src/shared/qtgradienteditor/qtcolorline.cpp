@@ -44,7 +44,7 @@
 
 #include <QtGui/QPainter>
 #include <QtGui/QPaintEvent>
-#include <QtGui/QStyleOption>
+#include <QtWidgets/QStyleOption>
 #include <QtGui/QRegion>
 
 QT_BEGIN_NAMESPACE
@@ -841,9 +841,11 @@ void QtColorLinePrivate::paintEvent(QPaintEvent *)
             if (m_orientation == Qt::Horizontal) {
                 region += r[1].adjusted(0, qRound(r[1].height() * coef), 0, 0);
                 region += r[1].adjusted(0, 0, 0, -qRound(r[1].height() * coef));
+                p.setClipRegion(region);
             } else {
                 region += r[1].adjusted(qRound(r[1].width() * coef), 0, 0, 0);
                 region += r[1].adjusted(0, 0, -qRound(r[1].width() * coef), 0);
+                p.setClipRegion(region);
             }
             p.setClipRegion(region);
             p.setBrush(Qt::NoBrush);

@@ -61,9 +61,9 @@
 #include <QtCore/QMap>
 #include <QtCore/QHash>
 
-#include <QtGui/QLayout>
-#include <QtGui/QGridLayout>
-#include <QtGui/QWidget>
+#include <QtWidgets/QLayout>
+#include <QtWidgets/QGridLayout>
+#include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
 

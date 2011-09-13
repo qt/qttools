@@ -42,7 +42,7 @@
 #ifndef GRADIENTVIEW_H
 #define GRADIENTVIEW_H
 
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 #include <QtCore/QMap>
 #include "ui_qtgradientview.h"
 

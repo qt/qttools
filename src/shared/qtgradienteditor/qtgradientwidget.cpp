@@ -43,7 +43,7 @@
 #include <QtCore/QMap>
 #include <QtGui/QImage>
 #include <QtGui/QPainter>
-#include <QtGui/QScrollBar>
+#include <QtWidgets/QScrollBar>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QRegion>
 

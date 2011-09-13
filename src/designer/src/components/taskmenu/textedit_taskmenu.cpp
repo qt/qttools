@@ -43,7 +43,7 @@
 
 #include <QtDesigner/QDesignerFormWindowInterface>
 
-#include <QtGui/QAction>
+#include <QtWidgets/QAction>
 #include <QtCore/QEvent>
 #include <QtCore/qdebug.h>
 

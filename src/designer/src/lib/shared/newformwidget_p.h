@@ -58,7 +58,7 @@
 
 #include <QtDesigner/QDesignerNewFormWidgetInterface>
 
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 #include <QtGui/QPixmap>
 
 #include <QtCore/QStringList>

@@ -43,7 +43,7 @@
 #define SIGNALSLOTEDITORWINDOW_H
 
 #include <QtCore/QPointer>
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
 

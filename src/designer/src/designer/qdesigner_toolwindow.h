@@ -46,7 +46,7 @@
 
 #include <QtCore/QPointer>
 #include <QtGui/QFontDatabase>
-#include <QtGui/QMainWindow>
+#include <QtWidgets/QMainWindow>
 
 QT_BEGIN_NAMESPACE
 

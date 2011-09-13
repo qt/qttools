@@ -42,7 +42,7 @@
 #ifndef PALETTEEDITORADVANCED_H
 #define PALETTEEDITORADVANCED_H
 
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 
 QT_BEGIN_NAMESPACE
 

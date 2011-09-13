@@ -54,12 +54,12 @@
 #include <QtDesigner/QDesignerWidgetDataBaseInterface>
 #include <QtDesigner/QDesignerLanguageExtension>
 
-#include <QtGui/QAction>
-#include <QtGui/QWidget>
-#include <QtGui/QFormLayout>
-#include <QtGui/QUndoStack>
-#include <QtGui/QDialog>
-#include <QtGui/QPushButton>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QWidget>
+#include <QtWidgets/QFormLayout>
+#include <QtWidgets/QUndoStack>
+#include <QtWidgets/QDialog>
+#include <QtWidgets/QPushButton>
 #include <QtGui/QRegExpValidator>
 
 #include <QtCore/QPair>

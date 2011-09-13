@@ -60,21 +60,21 @@
 #include <QtDesigner/QDesignerMetaDataBaseInterface>
 #include <QtDesigner/QDesignerSettingsInterface>
 
-#include <QtGui/QMenu>
-#include <QtGui/QToolBar>
-#include <QtGui/QSplitter>
-#include <QtGui/QAction>
-#include <QtGui/QApplication>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QToolBar>
+#include <QtWidgets/QSplitter>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QApplication>
 #include <QtGui/QClipboard>
-#include <QtGui/QItemDelegate>
+#include <QtWidgets/QItemDelegate>
 #include <QtGui/QPainter>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QLineEdit>
-#include <QtGui/QLabel>
-#include <QtGui/QPushButton>
-#include <QtGui/QToolButton>
+#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QToolButton>
 #include <QtGui/QContextMenuEvent>
-#include <QtGui/QItemSelection>
+#include <QtWidgets/QItemSelection>
 
 #include <QtCore/QRegExp>
 #include <QtCore/QDebug>

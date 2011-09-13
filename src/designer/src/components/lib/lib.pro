@@ -1,24 +1,19 @@
+MODULE = designercomponents
 load(qt_module)
 
 TEMPLATE = lib
 TARGET = QtDesignerComponents
-contains(QT_CONFIG, reduce_exports):CONFIG += hide_symbols
-CONFIG += qt depend_prl no_objective_c designer
-QT *= gui-private
-QT *= uilib-private
-win32|mac: CONFIG += debug_and_release
-DESTDIR = $$QT.designer.libs
-!wince*:DLLDESTDIR = $$QT.designer.bins
-QT += designer-private uilib-private
+
+QT += gui-private widgets widgets-private designer designer-private
+
+CONFIG += module
+MODULE_PRI = ../../../../modules/qt_designercomponents.pri
+
+load(qt_module_config)
 
 # QtDesignerComponents uses
 DEFINES += QT_STATICPLUGIN
-
-isEmpty(QT_MAJOR_VERSION) {
-   VERSION=4.3.0
-} else {
-   VERSION=$${QT_MAJOR_VERSION}.$${QT_MINOR_VERSION}.$${QT_PATCH_VERSION}
-}
+DEFINES += QDESIGNER_COMPONENTS_LIBRARY
 
 load(qt_targets)
 QMAKE_TARGET_PRODUCT = Designer
@@ -37,14 +32,6 @@ mac:!static:contains(QT_CONFIG, qt_framework) {
 }
 
 SOURCES += qdesigner_components.cpp
-
-!contains(CONFIG, static) {
-    DEFINES += QDESIGNER_COMPONENTS_LIBRARY
-    CONFIG += dll
-    LIBS += -lQtDesigner
-} else {
-    DEFINES += QT_DESIGNER_STATIC
-}
 
 INCLUDEPATH += . .. \
     $$PWD/../../lib/components \
@@ -69,11 +56,4 @@ include(../component.pri)
 unix|win32-g++* {
     QMAKE_PKGCONFIG_REQUIRES = QtCore QtDesigner QtGui QtXml
     contains(QT_CONFIG, script): QMAKE_PKGCONFIG_REQUIRES += QtScript
-}
-
-target.path=$$[QT_INSTALL_LIBS]
-INSTALLS        += target
-win32 {
-    dlltarget.path=$$[QT_INSTALL_BINS]
-    INSTALLS += dlltarget
 }

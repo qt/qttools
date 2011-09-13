@@ -44,7 +44,7 @@
 #include <abstractdialoggui_p.h>
 #include <qdesigner_propertysheet_p.h>
 
-#include <QtGui/QPushButton>
+#include <QtWidgets/QPushButton>
 
 QT_BEGIN_NAMESPACE
 

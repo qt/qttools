@@ -43,9 +43,9 @@
 
 #include <QtCore/QMetaProperty>
 #include <QtCore/QDebug>
-#include <QtGui/QIcon>
+#include <QtWidgets/QIcon>
 #include <QtGui/QPainter>
-#include <QtGui/QResizeEvent>
+#include <QtWidgets/QResizeEvent>
 
 #include <ActiveQt/QAxWidget>
 

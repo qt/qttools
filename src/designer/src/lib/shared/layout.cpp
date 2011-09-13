@@ -58,18 +58,18 @@
 #include <QtCore/qdebug.h>
 #include <QtCore/QVector>
 
-#include <QtGui/qevent.h>
-#include <QtGui/QGridLayout>
+#include <QtGui/QKeyEvent>
+#include <QtWidgets/QGridLayout>
 #include <QtGui/QPainter>
 #include <QtGui/QBitmap>
-#include <QtGui/QSplitter>
-#include <QtGui/QMainWindow>
-#include <QtGui/QApplication>
-#include <QtGui/QScrollArea>
-#include <QtGui/QFormLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QWizardPage>
-#include <QtGui/QWizard>
+#include <QtWidgets/QSplitter>
+#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QScrollArea>
+#include <QtWidgets/QFormLayout>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QWizardPage>
+#include <QtWidgets/QWizard>
 #include <QtCore/QDebug>
 #include <QtCore/QSet>
 

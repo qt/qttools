@@ -43,7 +43,7 @@
 #define VIEW3D_H
 
 #include "view3d_global.h"
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
 

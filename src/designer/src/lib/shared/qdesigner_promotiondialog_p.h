@@ -53,8 +53,8 @@
 #ifndef PROMOTIONEDITORDIALOG_H
 #define PROMOTIONEDITORDIALOG_H
 
-#include <QtGui/QDialog>
-#include <QtGui/QGroupBox>
+#include <QtWidgets/QDialog>
+#include <QtWidgets/QGroupBox>
 
 QT_BEGIN_NAMESPACE
 

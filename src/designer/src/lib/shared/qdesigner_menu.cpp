@@ -58,13 +58,14 @@
 #include <QtDesigner/QDesignerMetaDataBaseInterface>
 #include <QtDesigner/QExtensionManager>
 
-#include <QtGui/QAction>
-#include <QtGui/QApplication>
-#include <QtGui/QLineEdit>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QLineEdit>
 #include <QtGui/QPainter>
-#include <QtGui/QRubberBand>
-#include <QtGui/QToolTip>
-#include <QtGui/QToolBar>
+#include <QtGui/QDrag>
+#include <QtWidgets/QRubberBand>
+#include <QtWidgets/QToolTip>
+#include <QtWidgets/QToolBar>
 #include <QtGui/qevent.h>
 
 Q_DECLARE_METATYPE(QAction*)

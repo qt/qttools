@@ -41,8 +41,8 @@
 //! [0]
 #include <QtUiTools>
 //! [0]
-#include <QtGui>
-
+#include <QApplication>
+#include <QWidget>
 //! [1]
 int main(int argc, char *argv[])
 {

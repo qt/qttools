@@ -39,8 +39,13 @@
 **
 ****************************************************************************/
 
-#include <QtGui>
-#include <QtDebug>
+#include <QtGui/QPainter>
+#include <QtWidgets/QWidget>
+#include <QtWidgets/QApplication>
+#include <QtCore/QtDebug>
+#include <QtCore/QTime>
+#include <QtCore/QTimer>
+#include <QtCore/qmath.h>
 
 #include <private/qpaintengineex_p.h>
 #include <private/qpaintbuffer_p.h>

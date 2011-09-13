@@ -46,10 +46,10 @@
 
 #include <QtDesigner/QDesignerFormWindowInterface>
 
-#include <QtGui/QAction>
-#include <QtGui/QStyle>
-#include <QtGui/QLineEdit>
-#include <QtGui/QStyleOption>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QStyle>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QStyleOption>
 
 #include <QtCore/QEvent>
 #include <QtCore/QVariant>

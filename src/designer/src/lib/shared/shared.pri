@@ -1,7 +1,5 @@
 
 INCLUDEPATH += $$PWD
-# -- widgets.table from uilib.
-INCLUDEPATH *= $$QT.uilib.sources
 contains(QT_CONFIG, script): QT += script
 
 include(../../../../shared/qtpropertybrowser/qtpropertybrowserutils.pri)

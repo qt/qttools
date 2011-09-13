@@ -55,10 +55,10 @@
 
 #include <QtCore/QString>
 #include <QtCore/QCoreApplication>
-#include <QtGui/QGroupBox>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QFormLayout>
-#include <QtGui/QComboBox>
+#include <QtWidgets/QGroupBox>
+#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QFormLayout>
+#include <QtWidgets/QComboBox>
 
 QT_BEGIN_NAMESPACE
 

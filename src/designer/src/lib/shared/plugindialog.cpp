@@ -48,9 +48,9 @@
 #include <QtDesigner/QDesignerCustomWidgetCollectionInterface>
 #include <QtDesigner/QDesignerWidgetDataBaseInterface>
 
-#include <QtGui/QStyle>
-#include <QtGui/QHeaderView>
-#include <QtGui/QPushButton>
+#include <QtWidgets/QStyle>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QPushButton>
 #include <QtCore/QFileInfo>
 #include <QtCore/QPluginLoader>
 

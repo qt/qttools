@@ -68,17 +68,17 @@
 #ifdef Q_OS_WIN
 #  include <widgetfactory_p.h>
 #endif
-#include <QtGui/QAction>
-#include <QtGui/QLineEdit>
-#include <QtGui/QMenu>
-#include <QtGui/QApplication>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QScrollArea>
-#include <QtGui/QStackedWidget>
-#include <QtGui/QToolBar>
-#include <QtGui/QToolButton>
-#include <QtGui/QActionGroup>
-#include <QtGui/QLabel>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QScrollArea>
+#include <QtWidgets/QStackedWidget>
+#include <QtWidgets/QToolBar>
+#include <QtWidgets/QToolButton>
+#include <QtWidgets/QActionGroup>
+#include <QtWidgets/QLabel>
 #include <QtGui/QPainter>
 
 #include <QtCore/QDebug>

@@ -45,10 +45,10 @@
 #include <QtCore/QMap>
 #include <QtGui/QImage>
 #include <QtGui/QPainter>
-#include <QtGui/QScrollBar>
+#include <QtWidgets/QScrollBar>
 #include <QtGui/QMouseEvent>
-#include <QtGui/QRubberBand>
-#include <QtGui/QMenu>
+#include <QtWidgets/QRubberBand>
+#include <QtWidgets/QMenu>
 
 QT_BEGIN_NAMESPACE
 

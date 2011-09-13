@@ -4,6 +4,7 @@ TEMPLATE = lib
 TARGET   = $$qtLibraryTarget($$TARGET)
 #! [1]
 CONFIG  += designer plugin
+QT      += widgets
 #! [1]
 DESTDIR = $$QT.designer.plugins/designer
 

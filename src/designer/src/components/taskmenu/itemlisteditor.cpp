@@ -49,7 +49,7 @@
 
 #include <qttreepropertybrowser.h>
 
-#include <QtGui/QSplitter>
+#include <QtWidgets/QSplitter>
 #include <QtCore/QCoreApplication>
 
 QT_BEGIN_NAMESPACE

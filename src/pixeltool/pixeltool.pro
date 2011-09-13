@@ -1,6 +1,6 @@
 TEMPLATE = app
 CONFIG  += qt warn_on
-QT += network
+QT += widgets network
 
 build_all:!build_pass {
     CONFIG -= build_all

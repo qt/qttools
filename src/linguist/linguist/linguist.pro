@@ -4,11 +4,9 @@ TEMPLATE = app
 LANGUAGE = C++
 DESTDIR = $$QT.designer.bins
 
-QT += core-private xml designer
+QT += core-private widgets xml designer uitools-private printsupport
 
-CONFIG += qt \
-    warn_on \
-    uitools
+CONFIG += qt warn_on
 
 DEFINES += QT_NO_CAST_FROM_ASCII QT_NO_CAST_TO_ASCII
 build_all:!build_pass {
@@ -19,9 +17,6 @@ build_all:!build_pass {
 include(../shared/formats.pri)
 
 DEFINES += QFORMINTERNAL_NAMESPACE
-
-INCLUDEPATH += $$QT_SOURCE_TREE/src/uitools
-INCLUDEPATH += $$QT_SOURCE_TREE/tools/uilib
 
 SOURCES += \
     batchtranslationdialog.cpp \

@@ -52,9 +52,9 @@
 #include <QtDesigner/QDesignerFormEditorInterface>
 #include <QtDesigner/QDesignerMetaDataBaseInterface>
 
-#include <QtGui/QApplication>
-#include <QtGui/QUndoCommand>
-#include <QtGui/QMenu>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QUndoCommand>
+#include <QtWidgets/QMenu>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>

@@ -49,9 +49,9 @@
 
 #include <QtCore/QMetaProperty>
 #include <QtGui/QPainter>
-#include <QtGui/QToolButton>
-#include <QtGui/QLabel>
-#include <QtGui/QHeaderView>
+#include <QtWidgets/QToolButton>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QHeaderView>
 
 QT_BEGIN_NAMESPACE
 

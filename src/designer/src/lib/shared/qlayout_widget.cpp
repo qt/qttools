@@ -53,10 +53,10 @@
 #include <QtDesigner/QDesignerWidgetFactoryInterface>
 
 #include <QtGui/QPainter>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QGridLayout>
-#include <QtGui/QFormLayout>
+#include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QGridLayout>
+#include <QtWidgets/QFormLayout>
 #include <QtGui/qevent.h>
 
 #include <QtCore/qdebug.h>

@@ -73,17 +73,17 @@
 #include <QtDesigner/QDesignerWidgetBoxInterface>
 #include <QtDesigner/QDesignerIntegrationInterface>
 
-#include <QtGui/QUndoGroup>
-#include <QtGui/QAction>
-#include <QtGui/QSplitter>
+#include <QtWidgets/QUndoGroup>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QSplitter>
 #include <QtGui/QMouseEvent>
-#include <QtGui/QApplication>
-#include <QtGui/QSizeGrip>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QSizeGrip>
 #include <QtGui/QClipboard>
-#include <QtGui/QMdiArea>
-#include <QtGui/QMdiSubWindow>
-#include <QtGui/QDesktopWidget>
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QMdiArea>
+#include <QtWidgets/QMdiSubWindow>
+#include <QtWidgets/QDesktopWidget>
+#include <QtWidgets/QMessageBox>
 
 #include <QtCore/qdebug.h>
 

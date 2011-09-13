@@ -47,8 +47,8 @@
 #include <qdesigner_propertysheet_p.h>
 #include <extensionfactory_p.h>
 
-#include <QtGui/QWizard>
-#include <QtGui/QWizardPage>
+#include <QtWidgets/QWizard>
+#include <QtWidgets/QWizardPage>
 
 QT_BEGIN_NAMESPACE
 

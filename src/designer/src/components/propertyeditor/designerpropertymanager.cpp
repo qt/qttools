@@ -56,19 +56,19 @@
 #include <iconselector_p.h>
 #include <abstractdialoggui_p.h>
 
-#include <QtGui/QLabel>
-#include <QtGui/QToolButton>
-#include <QtGui/QHBoxLayout>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QToolButton>
+#include <QtWidgets/QHBoxLayout>
 #include <QtCore/QFileInfo>
 #include <QtGui/QClipboard>
-#include <QtGui/QLineEdit>
-#include <QtGui/QDialogButtonBox>
-#include <QtGui/QPushButton>
-#include <QtGui/QFileDialog>
-#include <QtGui/QAction>
-#include <QtGui/QMenu>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QDialogButtonBox>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QMenu>
 #include <QtGui/QContextMenuEvent>
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 #include <QtCore/QUrl>
 
 #include <QtCore/QDebug>

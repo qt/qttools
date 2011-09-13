@@ -75,8 +75,7 @@
 #include <phonon/phononnamespace.h>
 #endif
 
-#ifdef Q_WS_X11
-#include <QtGui/private/qt_x11_p.h>
+#include <QtWidgets/private/qt_x11_p.h>
 #endif
 
 QT_BEGIN_NAMESPACE

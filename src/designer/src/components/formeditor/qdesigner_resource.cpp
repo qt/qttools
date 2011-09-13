@@ -74,7 +74,6 @@
 
 #include <qlayout_widget_p.h>
 #include <qdesigner_utils_p.h>
-
 #include <QtDesigner/private/ui4_p.h>
 
 // sdk
@@ -86,27 +85,27 @@
 #include <QtDesigner/QDesignerContainerExtension>
 #include <abstractdialoggui_p.h>
 
-#include <QtGui/QMenu>
-#include <QtGui/QMessageBox>
-#include <QtGui/QLayout>
-#include <QtGui/QFormLayout>
-#include <QtGui/QTabWidget>
-#include <QtGui/QToolBox>
-#include <QtGui/QStackedWidget>
-#include <QtGui/QToolBar>
-#include <QtGui/QTabBar>
-#include <QtGui/QAction>
-#include <QtGui/QActionGroup>
-#include <QtGui/QButtonGroup>
-#include <QtGui/QApplication>
-#include <QtGui/QMainWindow>
-#include <QtGui/QSplitter>
-#include <QtGui/QMdiArea>
-#include <QtGui/QWorkspace>
-#include <QtGui/QMenuBar>
-#include <QtGui/QFileDialog>
-#include <QtGui/QHeaderView>
-#include <QtGui/QWizardPage>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QLayout>
+#include <QtWidgets/QFormLayout>
+#include <QtWidgets/QTabWidget>
+#include <QtWidgets/QToolBox>
+#include <QtWidgets/QStackedWidget>
+#include <QtWidgets/QToolBar>
+#include <QtWidgets/QTabBar>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QActionGroup>
+#include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QSplitter>
+#include <QtWidgets/QMdiArea>
+#include <QtWidgets/QWorkspace>
+#include <QtWidgets/QMenuBar>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QWizardPage>
 #include <private/qlayoutengine_p.h>
 
 #include <QtCore/QBuffer>

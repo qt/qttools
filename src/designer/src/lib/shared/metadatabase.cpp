@@ -46,7 +46,7 @@
 #include <QtDesigner/QDesignerFormEditorInterface>
 
 // Qt
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 #include <QtCore/qalgorithms.h>
 #include <QtCore/qdebug.h>
 

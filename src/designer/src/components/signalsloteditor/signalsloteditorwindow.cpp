@@ -60,21 +60,21 @@
 
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QDebug>
-#include <QtGui/QAction>
-#include <QtGui/QButtonGroup>
-#include <QtGui/QMenu>
-#include <QtGui/QSortFilterProxyModel>
-#include <QtGui/QStandardItemModel>
-#include <QtGui/QComboBox>
-#include <QtGui/QApplication>
-#include <QtGui/QItemDelegate>
-#include <QtGui/QItemEditorFactory>
-#include <QtGui/QTreeView>
-#include <QtGui/QHeaderView>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QToolButton>
-#include <QtGui/QButtonGroup>
-#include <QtGui/QToolBar>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QSortFilterProxyModel>
+#include <QtWidgets/QStandardItemModel>
+#include <QtWidgets/QComboBox>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QItemDelegate>
+#include <QtWidgets/QItemEditorFactory>
+#include <QtWidgets/QTreeView>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QToolButton>
+#include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QToolBar>
 
 QT_BEGIN_NAMESPACE
 
@@ -445,7 +445,7 @@ void InlineEditorModel::addTitle(const QString &title)
     const int cnt = rowCount();
     insertRows(cnt, 1);
     QModelIndex cat_idx = index(cnt, 0);
-    setData(cat_idx, title + QLatin1Char(':'), Qt::DisplayRole);
+    setData(cat_idx, QString(title + QLatin1Char(':')), Qt::DisplayRole);
     setData(cat_idx, TitleItem, Qt::UserRole);
     QFont font = QApplication::font();
     font.setBold(true);

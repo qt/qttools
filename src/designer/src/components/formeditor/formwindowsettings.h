@@ -42,7 +42,7 @@
 #ifndef FORMWINDOWSETTINGS_H
 #define FORMWINDOWSETTINGS_H
 
-#include <QDialog>
+#include <QtWidgets/QDialog>
 
 QT_BEGIN_NAMESPACE
     

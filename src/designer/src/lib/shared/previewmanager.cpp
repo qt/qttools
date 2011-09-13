@@ -54,18 +54,18 @@
 #include <QtDesigner/QDesignerFormWindowManagerInterface>
 #include <QtDesigner/QDesignerSettingsInterface>
 
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 #include <QtGui/qevent.h>
-#include <QtGui/QDesktopWidget>
-#include <QtGui/QMainWindow>
-#include <QtGui/QDockWidget>
-#include <QtGui/QApplication>
+#include <QtWidgets/QDesktopWidget>
+#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QDockWidget>
+#include <QtWidgets/QApplication>
 #include <QtGui/QPixmap>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QDialog>
-#include <QtGui/QMenu>
-#include <QtGui/QAction>
-#include <QtGui/QActionGroup>
+#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QDialog>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QActionGroup>
 #include <QtGui/QCursor>
 #include <QtGui/QMatrix>
 

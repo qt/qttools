@@ -49,10 +49,10 @@
 #include <QtCore/QTextCodec>
 #include <QtCore/QTranslator>
 
-#include <QtGui/QApplication>
-#include <QtGui/QDesktopWidget>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QDesktopWidget>
 #include <QtGui/QPixmap>
-#include <QtGui/QSplashScreen>
+#include <QtWidgets/QSplashScreen>
 
 #ifdef Q_WS_MAC
 #include <QtCore/QUrl>

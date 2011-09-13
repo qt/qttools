@@ -45,7 +45,7 @@
 #include "ui_translationsettings.h"
 
 #include <QtCore/QLocale>
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 
 QT_BEGIN_NAMESPACE
 

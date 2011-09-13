@@ -38,7 +38,9 @@
 **
 ****************************************************************************/
 
-#include <QtGui>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 #include <QtDesigner>
 
 #include "tictactoe.h"

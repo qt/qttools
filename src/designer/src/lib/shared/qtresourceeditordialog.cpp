@@ -53,12 +53,12 @@
 #include <QtCore/QDir>
 #include <QtCore/QCoreApplication>
 #include <QtXml/QDomDocument>
-#include <QtGui/QMenu>
-#include <QtGui/QHeaderView>
-#include <QtGui/QInputDialog>
-#include <QtGui/QMessageBox>
-#include <QtGui/QPushButton>
-#include <QtGui/QStandardItemModel>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QInputDialog>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QStandardItemModel>
 
 QT_BEGIN_NAMESPACE
 

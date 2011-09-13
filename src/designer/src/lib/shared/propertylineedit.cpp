@@ -43,7 +43,7 @@
 
 #include <QtGui/QContextMenuEvent>
 #include <QtGui/QKeyEvent>
-#include <QtGui/QMenu>
+#include <QtWidgets/QMenu>
 
 QT_BEGIN_NAMESPACE
 

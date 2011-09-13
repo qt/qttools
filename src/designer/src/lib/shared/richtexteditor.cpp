@@ -56,24 +56,24 @@
 #include <QtCore/QXmlStreamWriter>
 #include <QtCore/QXmlStreamAttributes>
 
-#include <QtGui/QAction>
-#include <QtGui/QColorDialog>
-#include <QtGui/QComboBox>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QColorDialog>
+#include <QtWidgets/QComboBox>
 #include <QtGui/QFontDatabase>
 #include <QtGui/QTextCursor>
 #include <QtGui/QPainter>
-#include <QtGui/QIcon>
-#include <QtGui/QMenu>
+#include <QtWidgets/QIcon>
+#include <QtWidgets/QMenu>
 #include <QtGui/QMoveEvent>
-#include <QtGui/QTabWidget>
+#include <QtWidgets/QTabWidget>
 #include <QtGui/QTextDocument>
 #include <QtGui/QTextBlock>
-#include <QtGui/QToolBar>
-#include <QtGui/QToolButton>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QPushButton>
-#include <QtGui/QDialogButtonBox>
+#include <QtWidgets/QToolBar>
+#include <QtWidgets/QToolButton>
+#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QDialogButtonBox>
 
 QT_BEGIN_NAMESPACE
 

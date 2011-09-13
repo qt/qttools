@@ -45,12 +45,12 @@
 #include <widgetfactory_p.h>
 #include <qdesigner_utils_p.h>
 
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 #include <QtGui/QFont>
-#include <QtGui/QDesktopWidget>
-#include <QtGui/QStyle>
-#include <QtGui/QStyleFactory>
-#include <QtGui/QApplication>
+#include <QtWidgets/QDesktopWidget>
+#include <QtWidgets/QStyle>
+#include <QtWidgets/QStyleFactory>
+#include <QtWidgets/QApplication>
 
 #include <QtCore/QSharedData>
 #include <QtCore/QTextStream>

@@ -50,13 +50,13 @@
 
 #include <QtGui/QDrag>
 #include <QtGui/QContextMenuEvent>
-#include <QtGui/QStandardItemModel>
-#include <QtGui/QToolButton>
+#include <QtWidgets/QStandardItemModel>
+#include <QtWidgets/QToolButton>
 #include <QtGui/QPixmap>
-#include <QtGui/QAction>
-#include <QtGui/QHeaderView>
-#include <QtGui/QToolBar>
-#include <QtGui/QMenu>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QToolBar>
+#include <QtWidgets/QMenu>
 #include <QtGui/qevent.h>
 #include <QtCore/QSet>
 #include <QtCore/QDebug>

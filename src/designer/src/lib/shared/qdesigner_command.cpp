@@ -67,22 +67,22 @@
 #include <QtCore/QTextStream>
 #include <QtCore/QQueue>
 
-#include <QtGui/QMenuBar>
-#include <QtGui/QStatusBar>
-#include <QtGui/QToolBar>
-#include <QtGui/QToolBox>
-#include <QtGui/QStackedWidget>
-#include <QtGui/QTabWidget>
-#include <QtGui/QTableWidget>
-#include <QtGui/QTreeWidget>
-#include <QtGui/QListWidget>
-#include <QtGui/QComboBox>
-#include <QtGui/QSplitter>
-#include <QtGui/QDockWidget>
-#include <QtGui/QMainWindow>
-#include <QtGui/QWizardPage>
-#include <QtGui/QApplication>
-#include <QtGui/QFormLayout>
+#include <QtWidgets/QMenuBar>
+#include <QtWidgets/QStatusBar>
+#include <QtWidgets/QToolBar>
+#include <QtWidgets/QToolBox>
+#include <QtWidgets/QStackedWidget>
+#include <QtWidgets/QTabWidget>
+#include <QtWidgets/QTableWidget>
+#include <QtWidgets/QTreeWidget>
+#include <QtWidgets/QListWidget>
+#include <QtWidgets/QComboBox>
+#include <QtWidgets/QSplitter>
+#include <QtWidgets/QDockWidget>
+#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QWizardPage>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QFormLayout>
 
 Q_DECLARE_METATYPE(QWidgetList)
 

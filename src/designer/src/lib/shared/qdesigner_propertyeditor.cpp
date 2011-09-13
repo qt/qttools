@@ -44,9 +44,9 @@
 
 #include <QtDesigner/QDesignerFormEditorInterface>
 #include <widgetfactory_p.h>
-#include <QtGui/QAction>
-#include <QtGui/QLineEdit>
-#include <QtGui/QAbstractButton>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QAbstractButton>
 
 QT_BEGIN_NAMESPACE
 

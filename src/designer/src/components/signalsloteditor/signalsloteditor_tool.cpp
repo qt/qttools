@@ -45,7 +45,7 @@
 #include <QtDesigner/private/ui4_p.h>
 #include <QtDesigner/QDesignerFormWindowInterface>
 
-#include <QtGui/QAction>
+#include <QtWidgets/QAction>
 #include <QtCore/qdebug.h>
 
 QT_BEGIN_NAMESPACE

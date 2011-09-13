@@ -11,5 +11,7 @@ QT.designer.sources = $$QT_MODULE_BASE/src/designer/src/lib
 QT.designer.libs = $$QT_MODULE_LIB_BASE
 QT.designer.plugins = $$QT_MODULE_PLUGIN_BASE
 QT.designer.imports = $$QT_MODULE_IMPORT_BASE
-QT.designer.depends = xml
+QT.designer.depends = core xml gui widgets
 QT.designer.DEFINES = QT_DESIGNER_LIB
+
+QT_CONFIG += designer

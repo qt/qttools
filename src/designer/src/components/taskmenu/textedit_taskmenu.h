@@ -42,8 +42,8 @@
 #ifndef TEXTEDIT_TASKMENU_H
 #define TEXTEDIT_TASKMENU_H
 
-#include <QtGui/QTextEdit>
-#include <QtGui/QPlainTextEdit>
+#include <QtWidgets/QTextEdit>
+#include <QtWidgets/QPlainTextEdit>
 
 #include <qdesigner_taskmenu_p.h>
 #include <extensionfactory_p.h>

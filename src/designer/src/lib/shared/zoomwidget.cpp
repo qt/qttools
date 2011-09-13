@@ -41,13 +41,13 @@
 
 #include "zoomwidget_p.h"
 
-#include <QtGui/QGraphicsScene>
-#include <QtGui/QGraphicsProxyWidget>
-#include <QtGui/QMenu>
-#include <QtGui/QAction>
-#include <QtGui/QActionGroup>
+#include <QtWidgets/QGraphicsScene>
+#include <QtWidgets/QGraphicsProxyWidget>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QActionGroup>
 #include <QtGui/QContextMenuEvent>
-#include <QtGui/QScrollBar>
+#include <QtWidgets/QScrollBar>
 
 #include <QtCore/QTextStream>
 #include <QtCore/qmath.h>

@@ -54,8 +54,8 @@
 #include <QtDesigner/QExtensionManager>
 
 #include <QtCore/QVariant>
-#include <QtGui/QWidget>
-#include <QtGui/QLabel>
+#include <QtWidgets/QWidget>
+#include <QtWidgets/QLabel>
 
 QT_BEGIN_NAMESPACE
 

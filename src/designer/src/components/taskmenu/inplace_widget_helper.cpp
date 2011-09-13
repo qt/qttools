@@ -43,9 +43,9 @@
 #include "inplace_widget_helper.h"
 
 #include <QtGui/QResizeEvent>
-#include <QtGui/QPushButton>
-#include <QtGui/QToolButton>
-#include <QtGui/QShortcut>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QToolButton>
+#include <QtWidgets/QShortcut>
 
 QT_BEGIN_NAMESPACE
 

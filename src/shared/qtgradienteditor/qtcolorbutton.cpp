@@ -40,11 +40,12 @@
 ****************************************************************************/
 
 #include "qtcolorbutton.h"
-#include <QtGui/QColorDialog>
+#include <QtWidgets/QColorDialog>
 #include <QtGui/QPainter>
 #include <QtCore/QMimeData>
 #include <QtGui/QDragEnterEvent>
-#include <QtGui/QApplication>
+#include <QtGui/QDrag>
+#include <QtWidgets/QApplication>
 
 QT_BEGIN_NAMESPACE
 

@@ -42,7 +42,7 @@
 #ifndef QTGRADIENTSTOPSWIDGET_H
 #define QTGRADIENTSTOPSWIDGET_H
 
-#include <QtGui/QAbstractScrollArea>
+#include <QtWidgets/QAbstractScrollArea>
 
 QT_BEGIN_NAMESPACE
 

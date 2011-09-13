@@ -43,7 +43,7 @@
 #define PALETTEEDITOR_H
 
 #include "ui_paletteeditor.h"
-#include <QtGui/QItemDelegate>
+#include <QtWidgets/QItemDelegate>
 
 QT_BEGIN_NAMESPACE
 

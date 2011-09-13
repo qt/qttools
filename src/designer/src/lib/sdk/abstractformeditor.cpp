@@ -66,7 +66,7 @@
 #include <iconloader_p.h>
 #include <QtDesigner/QDesignerPromotionInterface>
 
-#include <QtGui/QIcon>
+#include <QtWidgets/QIcon>
 
 // Must be done outside of the Qt namespace
 static void initResources()

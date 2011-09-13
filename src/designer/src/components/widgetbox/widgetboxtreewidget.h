@@ -44,8 +44,8 @@
 
 #include <qdesigner_widgetbox_p.h>
 
-#include <QtGui/QTreeWidget>
-#include <QtGui/QIcon>
+#include <QtWidgets/QTreeWidget>
+#include <QtWidgets/QIcon>
 #include <QtCore/QList>
 #include <QtCore/QHash>
 #include <QtCore/QXmlStreamReader> // Cannot forward declare them on Mac
