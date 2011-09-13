@@ -55,10 +55,10 @@
 #include "qwizard_container.h"
 #include "layout_propertysheet.h"
 
-#include <ui4_p.h>
-#include <formbuilderextra_p.h>
-#include <resourcebuilder_p.h>
-#include <textbuilder_p.h>
+#include <private/ui4_p.h>
+#include <private/formbuilderextra_p.h>
+#include <private/resourcebuilder_p.h>
+#include <private/textbuilder_p.h>
 #include <qdesigner_widgetitem_p.h>
 
 // shared
@@ -74,7 +74,6 @@
 
 #include <qlayout_widget_p.h>
 #include <qdesigner_utils_p.h>
-#include <ui4_p.h>
 
 // sdk
 #include <QtDesigner/QDesignerPropertySheetExtension>

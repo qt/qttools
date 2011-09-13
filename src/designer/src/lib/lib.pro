@@ -14,17 +14,11 @@ load(qt_module_config)
 
 HEADERS += qtdesignerversion.h
 
-#!contains(CONFIG, static) {
-#    CONFIG += dll
-
-#    DEFINES += \
-#        QDESIGNER_SDK_LIBRARY \
-#        QDESIGNER_EXTENSION_LIBRARY \
-#        QDESIGNER_UILIB_LIBRARY \
-#        QDESIGNER_SHARED_LIBRARY
-#} else {
-#    DEFINES += QT_DESIGNER_STATIC
-#}
+DEFINES += \
+    QDESIGNER_SDK_LIBRARY \
+    QDESIGNER_EXTENSION_LIBRARY \
+    QDESIGNER_UILIB_LIBRARY \
+    QDESIGNER_SHARED_LIBRARY
 
 #mac frameworks
 mac:CONFIG += explicitlib

@@ -46,9 +46,9 @@
 #include <QtDesigner/QDesignerFormEditorInterface>
 
 // shared
-#include <ui4_p.h>
+#include <private/ui4_p.h>
 #include <qlayout_widget_p.h>
-#include <formbuilderextra_p.h>
+#include <private/formbuilderextra_p.h>
 
 #include <QtWidgets/QFormLayout>
 

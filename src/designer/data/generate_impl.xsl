@@ -1131,7 +1131,7 @@
 **
 ****************************************************************************/
 </xsl:text>
-        <xsl:text>#include "ui4_p.h"&endl;</xsl:text>
+        <xsl:text>#include "private/ui4_p.h"&endl;</xsl:text>
         <xsl:text>&endl;</xsl:text>
         <xsl:text>#ifdef QUILOADER_QDOM_READ&endl;</xsl:text>
         <xsl:text>#include &lt;QtXml/QDomElement&gt;&endl;</xsl:text>

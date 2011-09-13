@@ -69,7 +69,7 @@
 #include <qdesigner_objectinspector_p.h>
 #include <connectionedit_p.h>
 #include <actionprovider_p.h>
-#include <ui4_p.h>
+#include <private/ui4_p.h>
 #include <deviceprofile_p.h>
 #include <shared_settings_p.h>
 #include <grid_p.h>

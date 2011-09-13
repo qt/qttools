@@ -445,7 +445,7 @@ void InlineEditorModel::addTitle(const QString &title)
     const int cnt = rowCount();
     insertRows(cnt, 1);
     QModelIndex cat_idx = index(cnt, 0);
-    setData(cat_idx, title + QLatin1Char(':'), Qt::DisplayRole);
+    setData(cat_idx, QString(title + QLatin1Char(':')), Qt::DisplayRole);
     setData(cat_idx, TitleItem, Qt::UserRole);
     QFont font = QApplication::font();
     font.setBold(true);

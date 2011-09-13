@@ -47,7 +47,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QPointer>
-#include <QtGui/QPrinter>
+#include <QtPrintSupport/QPrinter>
 
 QT_BEGIN_NAMESPACE
 

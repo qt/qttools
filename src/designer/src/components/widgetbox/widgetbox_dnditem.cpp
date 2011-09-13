@@ -40,13 +40,13 @@
 ****************************************************************************/
 
 #include "widgetbox_dnditem.h"
-#include "ui4_p.h"
+#include "private/ui4_p.h"
 
 #include <widgetfactory_p.h>
 #include <spacer_widget_p.h>
 #include <qdesigner_formbuilder_p.h>
 #include <qtresourcemodel_p.h>
-#include <formscriptrunner_p.h>
+#include <private/formscriptrunner_p.h>
 #include <formwindowbase_p.h>
 #include <qdesigner_utils_p.h>
 #include <qdesigner_dockwidget_p.h>
