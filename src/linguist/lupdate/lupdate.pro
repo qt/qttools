@@ -18,8 +18,8 @@ build_all:!build_pass {
 include(../shared/formats.pri)
 include(../shared/proparser.pri)
 
-#include($$QT.declarative.sources/qml/parser/parser.pri)
-#INCLUDEPATH += $$QT.declarative.sources/qml $$QT.declarative.includes
+include($$QT.declarative.sources/qml/parser/parser.pri)
+INCLUDEPATH += $$QT.declarative.sources/qml $$QT.declarative.includes
 
 SOURCES += \
     main.cpp \
