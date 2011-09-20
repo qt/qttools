@@ -17,15 +17,22 @@ HEADERS += qthelpversion.h
 
 DEFINES -= QT_ASCII_CAST_WARNINGS
 
-qclucene = QtCLucene$${QT_LIBINFIX}
-if(!debug_and_release|build_pass):CONFIG(debug, debug|release) { 
-    mac:qclucene = $${qclucene}_debug
-    win32:qclucene = $${qclucene}d
+mac:CONFIG(qt_framework, qt_framework|qt_no_framework) {
+    qclucene = -framework QtCLucene$${QT_LIBINFIX}
 }
-linux-lsb-g++:LIBS_PRIVATE += --lsb-shared-libs=$$qclucene
-unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES += QtCore QtNetwork QtSql 
+else {
+    qclucene = QtCLucene$${QT_LIBINFIX}
+    if(!debug_and_release|build_pass):CONFIG(debug, debug|release) {
+        mac:qclucene = $${qclucene}_debug
+        win32:qclucene = $${qclucene}d
+    }
+    linux-lsb-g++:LIBS_PRIVATE += --lsb-shared-libs=$$qclucene
+    unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES += QtCore QtNetwork QtSql
+    qclucene = -l$$qclucene
+    LIBS_PRIVATE += -L$$QT.clucene.libs
+}
 
-LIBS_PRIVATE += -L$$QT.clucene.libs -l$$qclucene
+LIBS_PRIVATE += $$qclucene
 RESOURCES += helpsystem.qrc
 SOURCES += qhelpenginecore.cpp \
     qhelpengine.cpp \
