@@ -42,7 +42,6 @@
 %dependencies = (
     "qtbase" => "refs/heads/master",
     "qtscript" => "refs/heads/master",
-    "qtwebkit" => "refs/heads/qt-modularization-base",
     "qtscript" => "refs/heads/master",
     "qtsvg" => "refs/heads/master",
     "qtxmlpatterns" => "refs/heads/master",
