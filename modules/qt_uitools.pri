@@ -12,6 +12,7 @@ QT.uitools.libs = $$QT_MODULE_LIB_BASE
 QT.uitools.plugins = $$QT_MODULE_PLUGIN_BASE
 QT.uitools.imports = $$QT_MODULE_IMPORT_BASE
 QT.uitools.depends = xml
+QT.uitools.module_config = staticlib
 QT.uitools.DEFINES = QT_UITOOLS_LIB
 
 QT_CONFIG += uitools
