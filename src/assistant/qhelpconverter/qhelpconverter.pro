@@ -1,4 +1,4 @@
-QT += help
+QT += help widgets
 TEMPLATE = app
 TARGET = qhelpconverter
 DESTDIR = $$QT.designer.bins
