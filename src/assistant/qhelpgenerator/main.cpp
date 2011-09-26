@@ -43,7 +43,7 @@
 
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
-#include <QtCore/QCoreApplication>
+#include <QtGui/QGuiApplication>
 #include <QtCore/QTranslator>
 #include <QtCore/QLocale>
 #include <QtCore/QLibraryInfo>
@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
     bool showVersion = false;
     bool checkLinks = false;
 
-    QCoreApplication app(argc, argv);
+    QGuiApplication app(argc, argv);
 #ifndef Q_OS_WIN32
     QTranslator translator;
     QTranslator qtTranslator;
