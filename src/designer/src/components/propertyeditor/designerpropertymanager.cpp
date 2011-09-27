@@ -264,7 +264,7 @@ void TextEditor::buttonClicked()
         break;
     case ValidationURL: {
         QString oldPath = oldText;
-        if (oldPath.isEmpty() || oldPath.startsWith(QLatin1String("qrc:")))
+        if (oldPath.isEmpty() || oldPath.startsWith(QStringLiteral("qrc:")))
             resourceActionActivated();
         else
             fileActionActivated();
@@ -282,7 +282,7 @@ void TextEditor::buttonClicked()
 void TextEditor::resourceActionActivated()
 {
     QString oldPath = m_editor->text();
-    if (oldPath.startsWith(QLatin1String("qrc:")))
+    if (oldPath.startsWith(QStringLiteral("qrc:")))
         oldPath.remove(0, 4);
     // returns ':/file'
     QString newPath = IconSelector::choosePixmapResource(m_core, m_core->resourceModel(), oldPath, this);
@@ -290,7 +290,7 @@ void TextEditor::resourceActionActivated()
          newPath.remove(0, 1);
     if (newPath.isEmpty() || newPath == oldPath)
         return;
-    const QString newText = QLatin1String("qrc:") + newPath;
+    const QString newText = QStringLiteral("qrc:") + newPath;
     m_editor->setText(newText);
     emit textChanged(newText);
 }
@@ -298,7 +298,7 @@ void TextEditor::resourceActionActivated()
 void TextEditor::fileActionActivated()
 {
     QString oldPath = m_editor->text();
-    if (oldPath.startsWith(QLatin1String("file:")))
+    if (oldPath.startsWith(QStringLiteral("file:")))
         oldPath = oldPath.mid(5);
     const QString newPath = m_core->dialogGui()->getOpenFileName(this, tr("Choose a File"), oldPath);
     if (newPath.isEmpty() || newPath == oldPath)
@@ -410,8 +410,8 @@ PixmapEditor::PixmapEditor(QDesignerFormEditorInterface *core, QWidget *parent) 
     m_resourceAction(new QAction(tr("Choose Resource..."), this)),
     m_fileAction(new QAction(tr("Choose File..."), this)),
     m_themeAction(new QAction(tr("Set Icon From Theme..."), this)),
-    m_copyAction(new QAction(createIconSet(QLatin1String("editcopy.png")), tr("Copy Path"), this)),
-    m_pasteAction(new QAction(createIconSet(QLatin1String("editpaste.png")), tr("Paste Path"), this)),
+    m_copyAction(new QAction(createIconSet(QStringLiteral("editcopy.png")), tr("Copy Path"), this)),
+    m_pasteAction(new QAction(createIconSet(QStringLiteral("editpaste.png")), tr("Paste Path"), this)),
     m_layout(new QHBoxLayout(this)),
     m_pixmapCache(0)
 {
@@ -580,7 +580,7 @@ void PixmapEditor::copyActionActivated()
 void PixmapEditor::pasteActionActivated()
 {
     QClipboard *clipboard = QApplication::clipboard();
-    QString subtype = QLatin1String("plain");
+    QString subtype = QStringLiteral("plain");
     QString text = clipboard->text(subtype);
     if (!text.isNull()) {
         QStringList list = text.split(QLatin1Char('\n'));
@@ -602,7 +602,7 @@ void PixmapEditor::pasteActionActivated()
 void PixmapEditor::clipboardDataChanged()
 {
     QClipboard *clipboard = QApplication::clipboard();
-    QString subtype = QLatin1String("plain");
+    QString subtype = QStringLiteral("plain");
     const QString text = clipboard->text(subtype);
     m_pasteAction->setEnabled(!text.isNull());
 }
@@ -642,7 +642,7 @@ ResetWidget::ResetWidget(QtProperty *property, QWidget *parent) :
     m_textLabel->setSizePolicy(QSizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed));
     m_iconLabel->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
     m_button->setToolButtonStyle(Qt::ToolButtonIconOnly);
-    m_button->setIcon(createIconSet(QLatin1String("resetproperty.png")));
+    m_button->setIcon(createIconSet(QStringLiteral("resetproperty.png")));
     m_button->setIconSize(QSize(8,8));
     m_button->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::MinimumExpanding));
     connect(m_button, SIGNAL(clicked()), this, SLOT(slotClicked()));
@@ -1437,7 +1437,7 @@ QString DesignerPropertyManager::valueText(const QtProperty *property) const
         return QString::fromUtf8(m_byteArrayValues.value(const_cast<QtProperty *>(property)));
     }
     if (m_stringListValues.contains(const_cast<QtProperty *>(property))) {
-        return m_stringListValues.value(const_cast<QtProperty *>(property)).join(QLatin1String("; "));
+        return m_stringListValues.value(const_cast<QtProperty *>(property)).join(QStringLiteral("; "));
     }
     if (QtVariantPropertyManager::valueType(property) == QVariant::String || QtVariantPropertyManager::valueType(property) == designerStringTypeId()) {
         const QString str = (QtVariantPropertyManager::valueType(property) == QVariant::String) ? value(property).toString() : qvariant_cast<PropertySheetStringValue>(value(property)).value();
@@ -1983,7 +1983,7 @@ void DesignerPropertyManager::initializeProperty(QtProperty *property)
             QtVariantProperty *alignH = addProperty(enumTypeId(), tr("Horizontal"));
             QStringList namesH;
             namesH << indexHToString(0) << indexHToString(1) << indexHToString(2) << indexHToString(3);
-            alignH->setAttribute(QLatin1String("enumNames"), namesH);
+            alignH->setAttribute(QStringLiteral("enumNames"), namesH);
             alignH->setValue(alignToIndexH(align));
             m_propertyToAlignH[property] = alignH;
             m_alignHToProperty[alignH] = property;
@@ -1992,7 +1992,7 @@ void DesignerPropertyManager::initializeProperty(QtProperty *property)
             QtVariantProperty *alignV = addProperty(enumTypeId(), tr("Vertical"));
             QStringList namesV;
             namesV << indexVToString(0) << indexVToString(1) << indexVToString(2);
-            alignV->setAttribute(QLatin1String("enumNames"), namesV);
+            alignV->setAttribute(QStringLiteral("enumNames"), namesV);
             alignV->setValue(alignToIndexV(align));
             m_propertyToAlignV[property] = alignV;
             m_alignVToProperty[alignV] = property;
@@ -2070,7 +2070,7 @@ void DesignerPropertyManager::initializeProperty(QtProperty *property)
     QtVariantPropertyManager::initializeProperty(property);
     m_fontManager.postInitializeProperty(this, property, type, DesignerPropertyManager::enumTypeId());
     if (type == QVariant::Double)
-        setAttribute(property, QLatin1String("decimals"), 6);
+        setAttribute(property, QStringLiteral("decimals"), 6);
 }
 
 void DesignerPropertyManager::createIconSubProperty(QtProperty *iconProperty, QIcon::Mode mode, QIcon::State state, const QString &subName)

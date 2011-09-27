@@ -481,11 +481,11 @@ void FormWindow::setMainContainer(QWidget *w)
     manageWidget(m_mainContainer);
 
     if (QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(core()->extensionManager(), m_mainContainer)) {
-        sheet->setVisible(sheet->indexOf(QLatin1String("windowTitle")), true);
-        sheet->setVisible(sheet->indexOf(QLatin1String("windowIcon")), true);
-        sheet->setVisible(sheet->indexOf(QLatin1String("windowModality")), true);
-        sheet->setVisible(sheet->indexOf(QLatin1String("windowOpacity")), true);
-        sheet->setVisible(sheet->indexOf(QLatin1String("windowFilePath")), true);
+        sheet->setVisible(sheet->indexOf(QStringLiteral("windowTitle")), true);
+        sheet->setVisible(sheet->indexOf(QStringLiteral("windowIcon")), true);
+        sheet->setVisible(sheet->indexOf(QStringLiteral("windowModality")), true);
+        sheet->setVisible(sheet->indexOf(QStringLiteral("windowOpacity")), true);
+        sheet->setVisible(sheet->indexOf(QStringLiteral("windowFilePath")), true);
         // ### generalize
     }
 
@@ -1020,125 +1020,125 @@ static QSet<QString> languageKeywords()
     static QSet<QString> keywords;
     if (keywords.isEmpty()) {
         // C++ keywords
-        keywords.insert(QLatin1String("asm"));
-        keywords.insert(QLatin1String("auto"));
-        keywords.insert(QLatin1String("bool"));
-        keywords.insert(QLatin1String("break"));
-        keywords.insert(QLatin1String("case"));
-        keywords.insert(QLatin1String("catch"));
-        keywords.insert(QLatin1String("char"));
-        keywords.insert(QLatin1String("class"));
-        keywords.insert(QLatin1String("const"));
-        keywords.insert(QLatin1String("const_cast"));
-        keywords.insert(QLatin1String("continue"));
-        keywords.insert(QLatin1String("default"));
-        keywords.insert(QLatin1String("delete"));
-        keywords.insert(QLatin1String("do"));
-        keywords.insert(QLatin1String("double"));
-        keywords.insert(QLatin1String("dynamic_cast"));
-        keywords.insert(QLatin1String("else"));
-        keywords.insert(QLatin1String("enum"));
-        keywords.insert(QLatin1String("explicit"));
-        keywords.insert(QLatin1String("export"));
-        keywords.insert(QLatin1String("extern"));
-        keywords.insert(QLatin1String("false"));
-        keywords.insert(QLatin1String("float"));
-        keywords.insert(QLatin1String("for"));
-        keywords.insert(QLatin1String("friend"));
-        keywords.insert(QLatin1String("goto"));
-        keywords.insert(QLatin1String("if"));
-        keywords.insert(QLatin1String("inline"));
-        keywords.insert(QLatin1String("int"));
-        keywords.insert(QLatin1String("long"));
-        keywords.insert(QLatin1String("mutable"));
-        keywords.insert(QLatin1String("namespace"));
-        keywords.insert(QLatin1String("new"));
-        keywords.insert(QLatin1String("NULL"));
-        keywords.insert(QLatin1String("operator"));
-        keywords.insert(QLatin1String("private"));
-        keywords.insert(QLatin1String("protected"));
-        keywords.insert(QLatin1String("public"));
-        keywords.insert(QLatin1String("register"));
-        keywords.insert(QLatin1String("reinterpret_cast"));
-        keywords.insert(QLatin1String("return"));
-        keywords.insert(QLatin1String("short"));
-        keywords.insert(QLatin1String("signed"));
-        keywords.insert(QLatin1String("sizeof"));
-        keywords.insert(QLatin1String("static"));
-        keywords.insert(QLatin1String("static_cast"));
-        keywords.insert(QLatin1String("struct"));
-        keywords.insert(QLatin1String("switch"));
-        keywords.insert(QLatin1String("template"));
-        keywords.insert(QLatin1String("this"));
-        keywords.insert(QLatin1String("throw"));
-        keywords.insert(QLatin1String("true"));
-        keywords.insert(QLatin1String("try"));
-        keywords.insert(QLatin1String("typedef"));
-        keywords.insert(QLatin1String("typeid"));
-        keywords.insert(QLatin1String("typename"));
-        keywords.insert(QLatin1String("union"));
-        keywords.insert(QLatin1String("unsigned"));
-        keywords.insert(QLatin1String("using"));
-        keywords.insert(QLatin1String("virtual"));
-        keywords.insert(QLatin1String("void"));
-        keywords.insert(QLatin1String("volatile"));
-        keywords.insert(QLatin1String("wchar_t"));
-        keywords.insert(QLatin1String("while"));
+        keywords.insert(QStringLiteral("asm"));
+        keywords.insert(QStringLiteral("auto"));
+        keywords.insert(QStringLiteral("bool"));
+        keywords.insert(QStringLiteral("break"));
+        keywords.insert(QStringLiteral("case"));
+        keywords.insert(QStringLiteral("catch"));
+        keywords.insert(QStringLiteral("char"));
+        keywords.insert(QStringLiteral("class"));
+        keywords.insert(QStringLiteral("const"));
+        keywords.insert(QStringLiteral("const_cast"));
+        keywords.insert(QStringLiteral("continue"));
+        keywords.insert(QStringLiteral("default"));
+        keywords.insert(QStringLiteral("delete"));
+        keywords.insert(QStringLiteral("do"));
+        keywords.insert(QStringLiteral("double"));
+        keywords.insert(QStringLiteral("dynamic_cast"));
+        keywords.insert(QStringLiteral("else"));
+        keywords.insert(QStringLiteral("enum"));
+        keywords.insert(QStringLiteral("explicit"));
+        keywords.insert(QStringLiteral("export"));
+        keywords.insert(QStringLiteral("extern"));
+        keywords.insert(QStringLiteral("false"));
+        keywords.insert(QStringLiteral("float"));
+        keywords.insert(QStringLiteral("for"));
+        keywords.insert(QStringLiteral("friend"));
+        keywords.insert(QStringLiteral("goto"));
+        keywords.insert(QStringLiteral("if"));
+        keywords.insert(QStringLiteral("inline"));
+        keywords.insert(QStringLiteral("int"));
+        keywords.insert(QStringLiteral("long"));
+        keywords.insert(QStringLiteral("mutable"));
+        keywords.insert(QStringLiteral("namespace"));
+        keywords.insert(QStringLiteral("new"));
+        keywords.insert(QStringLiteral("NULL"));
+        keywords.insert(QStringLiteral("operator"));
+        keywords.insert(QStringLiteral("private"));
+        keywords.insert(QStringLiteral("protected"));
+        keywords.insert(QStringLiteral("public"));
+        keywords.insert(QStringLiteral("register"));
+        keywords.insert(QStringLiteral("reinterpret_cast"));
+        keywords.insert(QStringLiteral("return"));
+        keywords.insert(QStringLiteral("short"));
+        keywords.insert(QStringLiteral("signed"));
+        keywords.insert(QStringLiteral("sizeof"));
+        keywords.insert(QStringLiteral("static"));
+        keywords.insert(QStringLiteral("static_cast"));
+        keywords.insert(QStringLiteral("struct"));
+        keywords.insert(QStringLiteral("switch"));
+        keywords.insert(QStringLiteral("template"));
+        keywords.insert(QStringLiteral("this"));
+        keywords.insert(QStringLiteral("throw"));
+        keywords.insert(QStringLiteral("true"));
+        keywords.insert(QStringLiteral("try"));
+        keywords.insert(QStringLiteral("typedef"));
+        keywords.insert(QStringLiteral("typeid"));
+        keywords.insert(QStringLiteral("typename"));
+        keywords.insert(QStringLiteral("union"));
+        keywords.insert(QStringLiteral("unsigned"));
+        keywords.insert(QStringLiteral("using"));
+        keywords.insert(QStringLiteral("virtual"));
+        keywords.insert(QStringLiteral("void"));
+        keywords.insert(QStringLiteral("volatile"));
+        keywords.insert(QStringLiteral("wchar_t"));
+        keywords.insert(QStringLiteral("while"));
 
         // java keywords
-        keywords.insert(QLatin1String("abstract"));
-        keywords.insert(QLatin1String("assert"));
-        keywords.insert(QLatin1String("boolean"));
-        keywords.insert(QLatin1String("break"));
-        keywords.insert(QLatin1String("byte"));
-        keywords.insert(QLatin1String("case"));
-        keywords.insert(QLatin1String("catch"));
-        keywords.insert(QLatin1String("char"));
-        keywords.insert(QLatin1String("class"));
-        keywords.insert(QLatin1String("const"));
-        keywords.insert(QLatin1String("continue"));
-        keywords.insert(QLatin1String("default"));
-        keywords.insert(QLatin1String("do"));
-        keywords.insert(QLatin1String("double"));
-        keywords.insert(QLatin1String("else"));
-        keywords.insert(QLatin1String("enum"));
-        keywords.insert(QLatin1String("extends"));
-        keywords.insert(QLatin1String("false"));
-        keywords.insert(QLatin1String("final"));
-        keywords.insert(QLatin1String("finality"));
-        keywords.insert(QLatin1String("float"));
-        keywords.insert(QLatin1String("for"));
-        keywords.insert(QLatin1String("goto"));
-        keywords.insert(QLatin1String("if"));
-        keywords.insert(QLatin1String("implements"));
-        keywords.insert(QLatin1String("import"));
-        keywords.insert(QLatin1String("instanceof"));
-        keywords.insert(QLatin1String("int"));
-        keywords.insert(QLatin1String("interface"));
-        keywords.insert(QLatin1String("long"));
-        keywords.insert(QLatin1String("native"));
-        keywords.insert(QLatin1String("new"));
-        keywords.insert(QLatin1String("null"));
-        keywords.insert(QLatin1String("package"));
-        keywords.insert(QLatin1String("private"));
-        keywords.insert(QLatin1String("protected"));
-        keywords.insert(QLatin1String("public"));
-        keywords.insert(QLatin1String("return"));
-        keywords.insert(QLatin1String("short"));
-        keywords.insert(QLatin1String("static"));
-        keywords.insert(QLatin1String("strictfp"));
-        keywords.insert(QLatin1String("super"));
-        keywords.insert(QLatin1String("switch"));
-        keywords.insert(QLatin1String("synchronized"));
-        keywords.insert(QLatin1String("this"));
-        keywords.insert(QLatin1String("throw"));
-        keywords.insert(QLatin1String("throws"));
-        keywords.insert(QLatin1String("transient"));
-        keywords.insert(QLatin1String("true"));
-        keywords.insert(QLatin1String("try"));
-        keywords.insert(QLatin1String("void"));
-        keywords.insert(QLatin1String("volatile"));
-        keywords.insert(QLatin1String("while"));
+        keywords.insert(QStringLiteral("abstract"));
+        keywords.insert(QStringLiteral("assert"));
+        keywords.insert(QStringLiteral("boolean"));
+        keywords.insert(QStringLiteral("break"));
+        keywords.insert(QStringLiteral("byte"));
+        keywords.insert(QStringLiteral("case"));
+        keywords.insert(QStringLiteral("catch"));
+        keywords.insert(QStringLiteral("char"));
+        keywords.insert(QStringLiteral("class"));
+        keywords.insert(QStringLiteral("const"));
+        keywords.insert(QStringLiteral("continue"));
+        keywords.insert(QStringLiteral("default"));
+        keywords.insert(QStringLiteral("do"));
+        keywords.insert(QStringLiteral("double"));
+        keywords.insert(QStringLiteral("else"));
+        keywords.insert(QStringLiteral("enum"));
+        keywords.insert(QStringLiteral("extends"));
+        keywords.insert(QStringLiteral("false"));
+        keywords.insert(QStringLiteral("final"));
+        keywords.insert(QStringLiteral("finality"));
+        keywords.insert(QStringLiteral("float"));
+        keywords.insert(QStringLiteral("for"));
+        keywords.insert(QStringLiteral("goto"));
+        keywords.insert(QStringLiteral("if"));
+        keywords.insert(QStringLiteral("implements"));
+        keywords.insert(QStringLiteral("import"));
+        keywords.insert(QStringLiteral("instanceof"));
+        keywords.insert(QStringLiteral("int"));
+        keywords.insert(QStringLiteral("interface"));
+        keywords.insert(QStringLiteral("long"));
+        keywords.insert(QStringLiteral("native"));
+        keywords.insert(QStringLiteral("new"));
+        keywords.insert(QStringLiteral("null"));
+        keywords.insert(QStringLiteral("package"));
+        keywords.insert(QStringLiteral("private"));
+        keywords.insert(QStringLiteral("protected"));
+        keywords.insert(QStringLiteral("public"));
+        keywords.insert(QStringLiteral("return"));
+        keywords.insert(QStringLiteral("short"));
+        keywords.insert(QStringLiteral("static"));
+        keywords.insert(QStringLiteral("strictfp"));
+        keywords.insert(QStringLiteral("super"));
+        keywords.insert(QStringLiteral("switch"));
+        keywords.insert(QStringLiteral("synchronized"));
+        keywords.insert(QStringLiteral("this"));
+        keywords.insert(QStringLiteral("throw"));
+        keywords.insert(QStringLiteral("throws"));
+        keywords.insert(QStringLiteral("transient"));
+        keywords.insert(QStringLiteral("true"));
+        keywords.insert(QStringLiteral("try"));
+        keywords.insert(QStringLiteral("void"));
+        keywords.insert(QStringLiteral("volatile"));
+        keywords.insert(QStringLiteral("while"));
     }
     return keywords;
 }
@@ -1222,7 +1222,7 @@ void FormWindow::insertWidget(QWidget *w, const QRect &rect, QWidget *container,
     QRect r = rect;
     Q_ASSERT(r.isValid());
     SetPropertyCommand *geom_cmd = new SetPropertyCommand(this);
-    geom_cmd->init(w, QLatin1String("geometry"), r); // ### use rc.size()
+    geom_cmd->init(w, QStringLiteral("geometry"), r); // ### use rc.size()
 
     if (w->parentWidget() != container) {
         ReparentWidgetCommand *cmd = new ReparentWidgetCommand(this);
@@ -1278,7 +1278,7 @@ void FormWindow::resizeWidget(QWidget *widget, const QRect &geometry)
 
     QRect r = geometry;
     SetPropertyCommand *cmd = new SetPropertyCommand(this);
-    cmd->init(widget, QLatin1String("geometry"), r);
+    cmd->init(widget, QStringLiteral("geometry"), r);
     cmd->setText(tr("Resize"));
     m_undoStack.push(cmd);
 }
@@ -1525,7 +1525,7 @@ void ArrowKeyPropertyCommand::init(QWidgetList &l, const ArrowKeyOperation &op)
     QObjectList ol;
     foreach(QWidget *w, l)
         ol.push_back(w);
-    SetPropertyCommand::init(ol, QLatin1String("geometry"), QVariant::fromValue(op));
+    SetPropertyCommand::init(ol, QStringLiteral("geometry"), QVariant::fromValue(op));
 
     setText(op.resize ? FormWindow::tr("Key Resize") : FormWindow::tr("Key Move"));
 }
@@ -1752,7 +1752,7 @@ static inline DomUI *domUIFromClipboard(int *widgetCount, int *actionCount)
 
     QXmlStreamReader reader(clipboardText);
     DomUI *ui = 0;
-    const QString uiElement = QLatin1String("ui");
+    const QString uiElement = QStringLiteral("ui");
     while (!reader.atEnd()) {
         if (reader.readNext() == QXmlStreamReader::StartElement) {
             if (reader.name().compare(uiElement, Qt::CaseInsensitive) == 0 && !ui) {
@@ -2351,7 +2351,7 @@ QPoint FormWindow::mapToForm(const QWidget *w, const QPoint &pos) const
 bool FormWindow::canBeBuddy(QWidget *w) const // ### rename me.
 {
     if (QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(core()->extensionManager(), w)) {
-        const int index = sheet->indexOf(QLatin1String("focusPolicy"));
+        const int index = sheet->indexOf(QStringLiteral("focusPolicy"));
         if (index != -1) {
             bool ok = false;
             const Qt::FocusPolicy q = static_cast<Qt::FocusPolicy>(Utils::valueOf(sheet->property(index), &ok));
@@ -2809,7 +2809,7 @@ bool FormWindow::dropDockWidget(QDesignerDnDItemInterface *item, const QPoint &g
 
     QDesignerPropertySheetExtension *propertySheet = qobject_cast<QDesignerPropertySheetExtension*>(m_core->extensionManager()->extension(widget, Q_TYPEID(QDesignerPropertySheetExtension)));
     if (propertySheet) {
-        const QString dockWidgetAreaName = QLatin1String("dockWidgetArea");
+        const QString dockWidgetAreaName = QStringLiteral("dockWidgetArea");
         PropertySheetEnumValue e = qvariant_cast<PropertySheetEnumValue>(propertySheet->property(propertySheet->indexOf(dockWidgetAreaName)));
         e.value = area;
         QVariant v;

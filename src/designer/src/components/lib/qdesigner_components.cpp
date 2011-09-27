@@ -171,8 +171,8 @@ static inline QString widgetBoxFileName(int qtVersion, const QDesignerLanguageEx
     QString rc; {
         const QChar dot = QLatin1Char('.');
         QTextStream str(&rc);
-        str << QDir::homePath() << QDir::separator() << QLatin1String(".designer") << QDir::separator()
-            << QLatin1String("widgetbox");
+        str << QDir::homePath() << QDir::separator() << QStringLiteral(".designer") << QDir::separator()
+            << QStringLiteral("widgetbox");
         // The naming convention using the version was introduced with 4.4
         const int major = qtMajorVersion(qtVersion);
         const int minor = qtMinorVersion(qtVersion);
@@ -180,7 +180,7 @@ static inline QString widgetBoxFileName(int qtVersion, const QDesignerLanguageEx
             str << major << dot << minor;
         if (lang)
             str << dot << lang->uiExtension();
-        str << QLatin1String(".xml");
+        str << QStringLiteral(".xml");
     }
     return rc;
 }
@@ -202,7 +202,7 @@ QDesignerWidgetBoxInterface *QDesignerComponents::createWidgetBox(QDesignerFormE
             }
         }
 
-        widgetBox->setFileName(QLatin1String(":/trolltech/widgetbox/widgetbox.xml"));
+        widgetBox->setFileName(QStringLiteral(":/trolltech/widgetbox/widgetbox.xml"));
         widgetBox->load();
     } while (false);
 
@@ -257,7 +257,7 @@ QWidget *QDesignerComponents::createResourceEditor(QDesignerFormEditorInterface 
     }
     QtResourceView *resourceView = new QtResourceView(core, parent);
     resourceView->setResourceModel(core->resourceModel());
-    resourceView->setSettingsKey(QLatin1String("ResourceBrowser"));
+    resourceView->setSettingsKey(QStringLiteral("ResourceBrowser"));
     // Note for integrators: make sure you call createResourceEditor() after you instantiated your subclass of designer integration
     // (designer doesn't do that since by default editing resources is enabled)
     const QDesignerIntegrationInterface *integration = core->integration();

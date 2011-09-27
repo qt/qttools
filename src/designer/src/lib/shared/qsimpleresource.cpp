@@ -79,7 +79,7 @@ QSimpleResource::QSimpleResource(QDesignerFormEditorInterface *core) :
 {
     QString workingDirectory = QDir::homePath();
     workingDirectory +=  QDir::separator();
-    workingDirectory +=  QLatin1String(".designer");
+    workingDirectory +=  QStringLiteral(".designer");
     setWorkingDirectory(QDir(workingDirectory));
 #ifndef QT_FORMBUILDER_NO_SCRIPT
     // Disable scripting in the editors.
@@ -109,16 +109,16 @@ DomScript *QSimpleResource::createScript(const QString &script, ScriptSource sou
     DomScript *domScript = new DomScript();
     switch (source) {
     case ScriptExtension:
-        domScript->setAttributeSource(QLatin1String("extension"));
+        domScript->setAttributeSource(QStringLiteral("extension"));
         break;
     case ScriptDesigner:
-        domScript->setAttributeSource(QLatin1String("designer"));
+        domScript->setAttributeSource(QStringLiteral("designer"));
         break;
     case ScriptCustomWidgetPlugin:
-        domScript->setAttributeSource(QLatin1String("customwidgetplugin"));
+        domScript->setAttributeSource(QStringLiteral("customwidgetplugin"));
         break;
     }
-    domScript->setAttributeLanguage(QLatin1String("Qt Script"));
+    domScript->setAttributeLanguage(QStringLiteral("Qt Script"));
     domScript->setText(script);
     return domScript;
 }
@@ -272,7 +272,7 @@ void QSimpleResource::addCustomWidgetsToWidgetDatabase(const QDesignerFormEditor
         IncludeType includeType = IncludeLocal;
         if (const DomHeader *header = custom_widget->elementHeader()) {
             includeFile = header->text();
-            if (header->hasAttributeLocation() && header->attributeLocation() == QLatin1String("global"))
+            if (header->hasAttributeLocation() && header->attributeLocation() == QStringLiteral("global"))
                 includeType = IncludeGlobal;
         }
         const bool domIsContainer = custom_widget->elementContainer();
@@ -333,7 +333,7 @@ void QSimpleResource::handleDomCustomWidgets(const QDesignerFormEditorInterface 
     }
     // Oops, there are classes left whose base class could not be found.
     // Default them to QWidget with warnings.
-    const QString fallBackBaseClass = QLatin1String("QWidget");
+    const QString fallBackBaseClass = QStringLiteral("QWidget");
     for (int i=0; i < custom_widget_list.size(); i++ ) {
         DomCustomWidget *custom_widget = custom_widget_list[i];
         const QString customClassName = custom_widget->elementClass();

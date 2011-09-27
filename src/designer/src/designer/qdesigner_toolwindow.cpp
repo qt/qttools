@@ -186,9 +186,9 @@ protected:
 PropertyEditorToolWindow::PropertyEditorToolWindow(QDesignerWorkbench *workbench) :
     QDesignerToolWindow(workbench,
                         createPropertyEditor(workbench->core()),
-                        QLatin1String("qt_designer_propertyeditor"),
+                        QStringLiteral("qt_designer_propertyeditor"),
                         QDesignerToolWindow::tr("Property Editor"),
-                        QLatin1String("__qt_property_editor_action"),
+                        QStringLiteral("__qt_property_editor_action"),
                         Qt::RightDockWidgetArea)
 {
     action()->setShortcut(Qt::CTRL + Qt::Key_I);
@@ -240,9 +240,9 @@ public:
 ActionEditorToolWindow::ActionEditorToolWindow(QDesignerWorkbench *workbench) :
     QDesignerToolWindow(workbench,
                         createActionEditor(workbench->core()),
-                        QLatin1String("qt_designer_actioneditor"),
+                        QStringLiteral("qt_designer_actioneditor"),
                         QDesignerToolWindow::tr("Action Editor"),
-                        QLatin1String("__qt_action_editor_tool_action"),
+                        QStringLiteral("__qt_action_editor_tool_action"),
                         Qt::RightDockWidgetArea)
 {
 }
@@ -282,9 +282,9 @@ public:
 ObjectInspectorToolWindow::ObjectInspectorToolWindow(QDesignerWorkbench *workbench) :
     QDesignerToolWindow(workbench,
                         createObjectInspector(workbench->core()),
-                        QLatin1String("qt_designer_objectinspector"),
+                        QStringLiteral("qt_designer_objectinspector"),
                         QDesignerToolWindow::tr("Object Inspector"),
-                        QLatin1String("__qt_object_inspector_tool_action"),
+                        QStringLiteral("__qt_object_inspector_tool_action"),
                         Qt::RightDockWidgetArea)
 {
 }
@@ -317,9 +317,9 @@ public:
 ResourceEditorToolWindow::ResourceEditorToolWindow(QDesignerWorkbench *workbench)  :
     QDesignerToolWindow(workbench,
                         QDesignerComponents::createResourceEditor(workbench->core(), 0),
-                        QLatin1String("qt_designer_resourceeditor"),
+                        QStringLiteral("qt_designer_resourceeditor"),
                         QDesignerToolWindow::tr("Resource Browser"),
-                        QLatin1String("__qt_resource_editor_tool_action"),
+                        QStringLiteral("__qt_resource_editor_tool_action"),
                         Qt::RightDockWidgetArea)
 {
 }
@@ -351,9 +351,9 @@ public:
 SignalSlotEditorToolWindow::SignalSlotEditorToolWindow(QDesignerWorkbench *workbench) :
     QDesignerToolWindow(workbench,
                         QDesignerComponents::createSignalSlotEditor(workbench->core(), 0),
-                        QLatin1String("qt_designer_signalsloteditor"),
+                        QStringLiteral("qt_designer_signalsloteditor"),
                         QDesignerToolWindow::tr("Signal/Slot Editor"),
-                        QLatin1String("__qt_signal_slot_editor_tool_action"),
+                        QStringLiteral("__qt_signal_slot_editor_tool_action"),
                         Qt::RightDockWidgetArea)
 {
 }
@@ -392,9 +392,9 @@ public:
 WidgetBoxToolWindow::WidgetBoxToolWindow(QDesignerWorkbench *workbench) :
     QDesignerToolWindow(workbench,
                         createWidgetBox(workbench->core()),
-                        QLatin1String("qt_designer_widgetbox"),
+                        QStringLiteral("qt_designer_widgetbox"),
                         QDesignerToolWindow::tr("Widget Box"),
-                        QLatin1String("__qt_widget_box_tool_action"),
+                        QStringLiteral("__qt_widget_box_tool_action"),
                         Qt::LeftDockWidgetArea)
 {
 }

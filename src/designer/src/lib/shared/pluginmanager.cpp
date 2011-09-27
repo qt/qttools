@@ -111,7 +111,7 @@ QStringList QDesignerPluginManager::defaultPluginPaths()
 
     const QStringList path_list = QCoreApplication::libraryPaths();
 
-    const QString designer = QLatin1String("designer");
+    const QString designer = QStringLiteral("designer");
     foreach (const QString &path, path_list) {
         QString libPath = path;
         libPath += QDir::separator();
@@ -121,9 +121,9 @@ QStringList QDesignerPluginManager::defaultPluginPaths()
 
     QString homeLibPath = QDir::homePath();
     homeLibPath += QDir::separator();
-    homeLibPath += QLatin1String(".designer");
+    homeLibPath += QStringLiteral(".designer");
     homeLibPath += QDir::separator();
-    homeLibPath += QLatin1String("plugins");
+    homeLibPath += QStringLiteral("plugins");
 
     result.append(homeLibPath);
     return result;
@@ -135,11 +135,11 @@ QStringList QDesignerPluginManager::defaultPluginPaths()
 static inline QString getDesignerLanguage(QDesignerFormEditorInterface *core)
 {
     if (QDesignerLanguageExtension *lang = qt_extension<QDesignerLanguageExtension *>(core->extensionManager(), core)) {
-        if (lang->uiExtension() == QLatin1String("jui"))
+        if (lang->uiExtension() == QStringLiteral("jui"))
             return QLatin1String(jambiLanguageC);
-        return QLatin1String("unknown");
+        return QStringLiteral("unknown");
     }
-    return QLatin1String("c++");
+    return QStringLiteral("c++");
 }
 
 // ----------------  QDesignerCustomWidgetSharedData
@@ -279,19 +279,19 @@ static inline QString msgAttributeMissing(const QString &name)
 static qdesigner_internal::TextPropertyValidationMode typeStringToType(const QString &v, bool *ok)
 {
     *ok = true;
-    if (v  == QLatin1String("multiline"))
+    if (v  == QStringLiteral("multiline"))
         return qdesigner_internal::ValidationMultiLine;
-    if (v  == QLatin1String("richtext"))
+    if (v  == QStringLiteral("richtext"))
         return qdesigner_internal::ValidationRichText;
-    if (v  == QLatin1String("stylesheet"))
+    if (v  == QStringLiteral("stylesheet"))
         return qdesigner_internal::ValidationStyleSheet;
-    if (v  == QLatin1String("singleline"))
+    if (v  == QStringLiteral("singleline"))
         return qdesigner_internal::ValidationSingleLine;
-    if (v  == QLatin1String("objectname"))
+    if (v  == QStringLiteral("objectname"))
         return qdesigner_internal::ValidationObjectName;
-    if (v  == QLatin1String("objectnamescope"))
+    if (v  == QStringLiteral("objectnamescope"))
         return qdesigner_internal::ValidationObjectNameScope;
-    if (v  == QLatin1String("url"))
+    if (v  == QStringLiteral("url"))
         return qdesigner_internal::ValidationURL;
     *ok = false;
     return qdesigner_internal::ValidationRichText;
@@ -328,7 +328,7 @@ static  bool parsePropertySpecs(QXmlStreamReader &sr,
                 return false;
             }
             bool typeOk;
-            const bool noTr = notrS == QLatin1String("true") || notrS == QLatin1String("1");
+            const bool noTr = notrS == QStringLiteral("true") || notrS == QStringLiteral("1");
             QDesignerCustomWidgetSharedData::StringPropertyType v(typeStringToType(type, &typeOk), !noTr);
             if (!typeOk) {
                 *errorMessage = QDesignerPluginManager::tr("'%1' is not a valid string property specification.").arg(type);
@@ -556,7 +556,7 @@ QDesignerPluginManager::QDesignerPluginManager(QDesignerFormEditorInterface *cor
 {
     m_d->m_pluginPaths = defaultPluginPaths();
     const QSettings settings(qApp->organizationName(), QDesignerQSettings::settingsApplicationName());
-    m_d->m_disabledPlugins = unique(settings.value(QLatin1String("PluginManager/DisabledPlugins")).toStringList());
+    m_d->m_disabledPlugins = unique(settings.value(QStringLiteral("PluginManager/DisabledPlugins")).toStringList());
 
     // Register plugins
     updateRegisteredPlugins();
@@ -716,8 +716,8 @@ void QDesignerPluginManager::registerPlugin(const QString &plugin)
 bool QDesignerPluginManager::syncSettings()
 {
     QSettings settings(qApp->organizationName(), QDesignerQSettings::settingsApplicationName());
-    settings.beginGroup(QLatin1String("PluginManager"));
-    settings.setValue(QLatin1String("DisabledPlugins"), m_d->m_disabledPlugins);
+    settings.beginGroup(QStringLiteral("PluginManager"));
+    settings.setValue(QStringLiteral("DisabledPlugins"), m_d->m_disabledPlugins);
     settings.endGroup();
     return settings.status() == QSettings::NoError;
 }

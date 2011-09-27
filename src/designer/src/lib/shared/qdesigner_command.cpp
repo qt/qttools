@@ -91,7 +91,7 @@ QT_BEGIN_NAMESPACE
 static inline void setPropertySheetWindowTitle(const QDesignerFormEditorInterface *core, QObject *o, const QString &t)
 {
     if (QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(core->extensionManager(), o)) {
-        const int idx = sheet->indexOf(QLatin1String("windowTitle"));
+        const int idx = sheet->indexOf(QStringLiteral("windowTitle"));
         if (idx != -1) {
             sheet->setProperty(idx, t);
             sheet->setChanged(idx, true);
@@ -251,7 +251,7 @@ void InsertWidgetCommand::refreshBuddyLabels()
     if (label_list.empty())
         return;
 
-    const QString buddyProperty = QLatin1String("buddy");
+    const QString buddyProperty = QStringLiteral("buddy");
     const QByteArray objectNameU8 = m_widget->objectName().toUtf8();
     // Re-set the buddy (The sheet locates the object by name and sets it)
     const LabelList::const_iterator cend = label_list.constEnd();
@@ -1016,7 +1016,7 @@ void ToolBoxCommand::addPage()
     QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(formWindow()->core()->extensionManager(), m_toolBox);
     if (sheet) {
         qdesigner_internal::PropertySheetStringValue itemText(m_itemText);
-        sheet->setProperty(sheet->indexOf(QLatin1String("currentItemText")), QVariant::fromValue(itemText));
+        sheet->setProperty(sheet->indexOf(QStringLiteral("currentItemText")), QVariant::fromValue(itemText));
     }
 
     m_widget->show();
@@ -1113,7 +1113,7 @@ void AddToolBoxPageCommand::init(QToolBox *toolBox, InsertionMode mode)
     m_widget = new QDesignerWidget(formWindow(), m_toolBox);
     m_itemText = QApplication::translate("Command", "Page");
     m_itemIcon = QIcon();
-    m_widget->setObjectName(QLatin1String("page"));
+    m_widget->setObjectName(QStringLiteral("page"));
     formWindow()->ensureUniqueObjectName(m_widget);
 
     setText(QApplication::translate("Command", "Insert Page"));
@@ -1176,7 +1176,7 @@ void TabWidgetCommand::addPage()
     QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(formWindow()->core()->extensionManager(), m_tabWidget);
     if (sheet) {
         qdesigner_internal::PropertySheetStringValue itemText(m_itemText);
-        sheet->setProperty(sheet->indexOf(QLatin1String("currentTabText")), QVariant::fromValue(itemText));
+        sheet->setProperty(sheet->indexOf(QStringLiteral("currentTabText")), QVariant::fromValue(itemText));
     }
 
     formWindow()->clearSelection();
@@ -1236,7 +1236,7 @@ void AddTabPageCommand::init(QTabWidget *tabWidget, InsertionMode mode)
     m_widget = new QDesignerWidget(formWindow(), m_tabWidget);
     m_itemText = QApplication::translate("Command", "Page");
     m_itemIcon = QIcon();
-    m_widget->setObjectName(QLatin1String("tab"));
+    m_widget->setObjectName(QStringLiteral("tab"));
     formWindow()->ensureUniqueObjectName(m_widget);
 
     setText(QApplication::translate("Command", "Insert Page"));
@@ -1422,7 +1422,7 @@ void AddStackedWidgetPageCommand::init(QStackedWidget *stackedWidget, InsertionM
     if (mode == InsertAfter)
         m_index++;
     m_widget = new QDesignerWidget(formWindow(), m_stackedWidget);
-    m_widget->setObjectName(QLatin1String("page"));
+    m_widget->setObjectName(QStringLiteral("page"));
     formWindow()->ensureUniqueObjectName(m_widget);
 
     setText(QApplication::translate("Command", "Insert Page"));
@@ -1481,7 +1481,7 @@ void CreateMenuBarCommand::init(QMainWindow *mainWindow)
 {
     m_mainWindow = mainWindow;
     QDesignerFormEditorInterface *core = formWindow()->core();
-    m_menuBar = qobject_cast<QMenuBar*>(core->widgetFactory()->createWidget(QLatin1String("QMenuBar"), m_mainWindow));
+    m_menuBar = qobject_cast<QMenuBar*>(core->widgetFactory()->createWidget(QStringLiteral("QMenuBar"), m_mainWindow));
     core->widgetFactory()->initialize(m_menuBar);
 }
 
@@ -1492,7 +1492,7 @@ void CreateMenuBarCommand::redo()
     c = qt_extension<QDesignerContainerExtension*>(core->extensionManager(), m_mainWindow);
     c->addWidget(m_menuBar);
 
-    m_menuBar->setObjectName(QLatin1String("menuBar"));
+    m_menuBar->setObjectName(QStringLiteral("menuBar"));
     formWindow()->ensureUniqueObjectName(m_menuBar);
     core->metaDataBase()->add(m_menuBar);
     formWindow()->emitSelectionChanged();
@@ -1572,7 +1572,7 @@ void CreateStatusBarCommand::init(QMainWindow *mainWindow)
 {
     m_mainWindow = mainWindow;
     QDesignerFormEditorInterface *core = formWindow()->core();
-    m_statusBar = qobject_cast<QStatusBar*>(core->widgetFactory()->createWidget(QLatin1String("QStatusBar"), m_mainWindow));
+    m_statusBar = qobject_cast<QStatusBar*>(core->widgetFactory()->createWidget(QStringLiteral("QStatusBar"), m_mainWindow));
     core->widgetFactory()->initialize(m_statusBar);
 }
 
@@ -1583,7 +1583,7 @@ void CreateStatusBarCommand::redo()
     c = qt_extension<QDesignerContainerExtension*>(core->extensionManager(), m_mainWindow);
     c->addWidget(m_statusBar);
 
-    m_statusBar->setObjectName(QLatin1String("statusBar"));
+    m_statusBar->setObjectName(QStringLiteral("statusBar"));
     formWindow()->ensureUniqueObjectName(m_statusBar);
     core->metaDataBase()->add(m_statusBar);
     formWindow()->emitSelectionChanged();
@@ -1660,7 +1660,7 @@ void AddToolBarCommand::init(QMainWindow *mainWindow)
     m_mainWindow = mainWindow;
     QDesignerWidgetFactoryInterface * wf =  formWindow()->core()->widgetFactory();
     // Pass on 0 parent first to avoid reparenting flicker.
-    m_toolBar = qobject_cast<QToolBar*>(wf->createWidget(QLatin1String("QToolBar"), 0));
+    m_toolBar = qobject_cast<QToolBar*>(wf->createWidget(QStringLiteral("QToolBar"), 0));
     wf->initialize(m_toolBar);
     m_toolBar->hide();
 }
@@ -1673,7 +1673,7 @@ void AddToolBarCommand::redo()
     QDesignerContainerExtension *c = qt_extension<QDesignerContainerExtension*>(core->extensionManager(), m_mainWindow);
     c->addWidget(m_toolBar);
 
-    m_toolBar->setObjectName(QLatin1String("toolBar"));
+    m_toolBar->setObjectName(QStringLiteral("toolBar"));
     formWindow()->ensureUniqueObjectName(m_toolBar);
     setPropertySheetWindowTitle(core, m_toolBar, m_toolBar->objectName());
     formWindow()->emitSelectionChanged();
@@ -1724,7 +1724,7 @@ void AddDockWidgetCommand::init(QMainWindow *mainWindow)
 {
     m_mainWindow = mainWindow;
     QDesignerFormEditorInterface *core = formWindow()->core();
-    m_dockWidget = qobject_cast<QDockWidget*>(core->widgetFactory()->createWidget(QLatin1String("QDockWidget"), m_mainWindow));
+    m_dockWidget = qobject_cast<QDockWidget*>(core->widgetFactory()->createWidget(QStringLiteral("QDockWidget"), m_mainWindow));
 }
 
 void AddDockWidgetCommand::redo()
@@ -1733,7 +1733,7 @@ void AddDockWidgetCommand::redo()
     QDesignerContainerExtension *c = qt_extension<QDesignerContainerExtension*>(core->extensionManager(), m_mainWindow);
     c->addWidget(m_dockWidget);
 
-    m_dockWidget->setObjectName(QLatin1String("dockWidget"));
+    m_dockWidget->setObjectName(QStringLiteral("dockWidget"));
     formWindow()->ensureUniqueObjectName(m_dockWidget);
     formWindow()->manageWidget(m_dockWidget);
     formWindow()->emitSelectionChanged();
@@ -1814,7 +1814,7 @@ void AdjustWidgetSizeCommand::updatePropertyEditor() const
 {
     if (QDesignerPropertyEditorInterface *propertyEditor = formWindow()->core()->propertyEditor()) {
         if (propertyEditor->object() == m_widget)
-            propertyEditor->setPropertyValue(QLatin1String("geometry"), m_widget->geometry(), true);
+            propertyEditor->setPropertyValue(QStringLiteral("geometry"), m_widget->geometry(), true);
     }
 }
 // ------------  ChangeFormLayoutItemRoleCommand
@@ -2094,16 +2094,16 @@ void AddContainerWidgetPageCommand::init(QWidget *containerWidget, ContainerType
         case PageContainer:
             setText(QApplication::translate("Command", "Insert Page"));
             m_widget = new QDesignerWidget(formWindow(), m_containerWidget);
-            m_widget->setObjectName(QLatin1String("page"));
+            m_widget->setObjectName(QStringLiteral("page"));
             break;
         case MdiContainer:
             setText(QApplication::translate("Command", "Insert Subwindow"));
             m_widget = new QDesignerWidget(formWindow(), m_containerWidget);
-            m_widget->setObjectName(QLatin1String("subwindow"));
+            m_widget->setObjectName(QStringLiteral("subwindow"));
             setPropertySheetWindowTitle(core, m_widget, QApplication::translate("Command", "Subwindow"));
             break;
         case WizardContainer: // Apply style, don't manage
-            m_widget = core->widgetFactory()->createWidget(QLatin1String("QWizardPage"), 0);
+            m_widget = core->widgetFactory()->createWidget(QStringLiteral("QWizardPage"), 0);
             break;
         }
         formWindow()->ensureUniqueObjectName(m_widget);

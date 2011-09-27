@@ -154,8 +154,8 @@ void WidgetBoxTreeWidget::saveExpandedState() const
     }
     QDesignerSettingsInterface *settings = m_core->settingsManager();
     settings->beginGroup(QLatin1String(widgetBoxRootElementC));
-    settings->setValue(QLatin1String("Closed categories"), closedCategories);
-    settings->setValue(QLatin1String("View mode"), m_iconMode);
+    settings->setValue(QStringLiteral("Closed categories"), closedCategories);
+    settings->setValue(QStringLiteral("View mode"), m_iconMode);
     settings->endGroup();
 }
 
@@ -163,9 +163,9 @@ void  WidgetBoxTreeWidget::restoreExpandedState()
 {
     typedef QSet<QString> StringSet;
     QDesignerSettingsInterface *settings = m_core->settingsManager();
-    m_iconMode = settings->value(QLatin1String("WidgetBox/View mode")).toBool();
+    m_iconMode = settings->value(QStringLiteral("WidgetBox/View mode")).toBool();
     updateViewMode();
-    const StringSet closedCategories = settings->value(QLatin1String("WidgetBox/Closed categories"), QStringList()).toStringList().toSet();
+    const StringSet closedCategories = settings->value(QStringLiteral("WidgetBox/Closed categories"), QStringList()).toStringList().toSet();
     expandAll();
     if (closedCategories.empty())
         return;

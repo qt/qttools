@@ -110,7 +110,7 @@ void QDesignerFormWindow::changeEvent(QEvent *e)
 {
     switch (e->type()) {
         case QEvent::WindowTitleChange:
-            m_action->setText(windowTitle().remove(QLatin1String("[*]")));
+            m_action->setText(windowTitle().remove(QStringLiteral("[*]")));
             break;
         case QEvent::WindowIconChange:
             m_action->setIcon(windowIcon());
@@ -174,7 +174,7 @@ int QDesignerFormWindow::getNumberOfUntitledWindows() const
     // Find the number of untitled windows excluding ourselves.
     // Do not fall for 'untitled.ui', match with modified place holder.
     // This will cause some problems with i18n, but for now I need the string to be "static"
-    QRegExp rx(QLatin1String("untitled( (\\d+))?\\[\\*\\]"));
+    QRegExp rx(QStringLiteral("untitled( (\\d+))?\\[\\*\\]"));
     for (int i = 0; i < totalWindows; ++i) {
         QDesignerFormWindow *fw =  m_workbench->formWindow(i);
         if (fw != this) {
@@ -203,7 +203,7 @@ void QDesignerFormWindow::updateWindowTitle(const QString &fileName)
 
     QString fileNameTitle;
     if (fileName.isEmpty()) {
-        fileNameTitle = QLatin1String("untitled");
+        fileNameTitle = QStringLiteral("untitled");
         if (const int maxUntitled = getNumberOfUntitledWindows()) {
             fileNameTitle += QLatin1Char(' ');
             fileNameTitle += QString::number(maxUntitled + 1);
@@ -278,7 +278,7 @@ void QDesignerFormWindow::geometryChanged()
     QObject *object = core->propertyEditor()->object();
     if (object == 0 || !object->isWidgetType())
         return;
-    static const QString geometryProperty = QLatin1String("geometry");
+    static const QString geometryProperty = QStringLiteral("geometry");
     const QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(core->extensionManager(), object);
     const int geometryIndex = sheet->indexOf(geometryProperty);
     if (geometryIndex == -1)

@@ -63,7 +63,7 @@ protected:
 };
 
 LineEditTaskMenuInlineEditor::LineEditTaskMenuInlineEditor(QLineEdit *w, QObject *parent) :
-      TaskMenuInlineEditor(w, ValidationSingleLine, QLatin1String("text"), parent)
+      TaskMenuInlineEditor(w, ValidationSingleLine, QStringLiteral("text"), parent)
 {
 }
 

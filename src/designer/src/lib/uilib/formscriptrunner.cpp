@@ -118,7 +118,7 @@ void QFormScriptRunner::QFormScriptRunnerPrivate::initializeEngine(QWidget *w, c
 }
 
 QString QFormScriptRunner::QFormScriptRunnerPrivate::engineError(QScriptEngine &scriptEngine) {
-    QScriptValue error = scriptEngine.evaluate(QLatin1String("Error"));
+    QScriptValue error = scriptEngine.evaluate(QStringLiteral("Error"));
     if (error.isValid())
         return error.toString();
     return QCoreApplication::tr("Unknown error");

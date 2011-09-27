@@ -88,7 +88,7 @@ namespace qdesigner_internal {
 // Richtext simplification filter helpers: Elements to be discarded
 static inline bool filterElement(const QStringRef &name)
 {
-    return name != QLatin1String("meta") && name != QLatin1String("style");
+    return name != QStringLiteral("meta") && name != QStringLiteral("style");
 }
 
 // Richtext simplification filter helpers: Filter attributes of elements
@@ -102,15 +102,15 @@ static inline void filterAttributes(const QStringRef &name,
         return;
 
      // No style attributes for <body>
-    if (name == QLatin1String("body")) {
+    if (name == QStringLiteral("body")) {
         atts->clear();
         return;
     }
 
     // Clean out everything except 'align' for 'p'
-    if (name == QLatin1String("p")) {
+    if (name == QStringLiteral("p")) {
         for (AttributeIt it = atts->begin(); it != atts->end(); ) {
-            if (it->name() == QLatin1String("align")) {
+            if (it->name() == QStringLiteral("align")) {
                 ++it;
                 *paragraphAlignmentFound = true;
             } else {
@@ -256,11 +256,11 @@ void AddLinkDialog::accept()
     const QString url = m_ui->urlInput->text();
 
     if (!title.isEmpty()) {
-        QString html = QLatin1String("<a href=\"");
+        QString html = QStringLiteral("<a href=\"");
         html += url;
-        html += QLatin1String("\">");
+        html += QStringLiteral("\">");
         html += title;
-        html += QLatin1String("</a>");
+        html += QStringLiteral("</a>");
 
         m_editor->insertHtml(html);
     }
@@ -455,19 +455,19 @@ RichTextEditorToolBar::RichTextEditorToolBar(QDesignerFormEditorInterface *core,
     // Bold, italic and underline buttons
 
     m_bold_action = createCheckableAction(
-            createIconSet(QLatin1String("textbold.png")),
+            createIconSet(QStringLiteral("textbold.png")),
             tr("Bold"), editor, SLOT(setFontBold(bool)), this);
     m_bold_action->setShortcut(tr("CTRL+B"));
     addAction(m_bold_action);
 
     m_italic_action = createCheckableAction(
-            createIconSet(QLatin1String("textitalic.png")),
+            createIconSet(QStringLiteral("textitalic.png")),
             tr("Italic"), editor, SLOT(setFontItalic(bool)), this);
     m_italic_action->setShortcut(tr("CTRL+I"));
     addAction(m_italic_action);
 
     m_underline_action = createCheckableAction(
-            createIconSet(QLatin1String("textunder.png")),
+            createIconSet(QStringLiteral("textunder.png")),
             tr("Underline"), editor, SLOT(setFontUnderline(bool)), this);
     m_underline_action->setShortcut(tr("CTRL+U"));
     addAction(m_underline_action);
@@ -481,22 +481,22 @@ RichTextEditorToolBar::RichTextEditorToolBar(QDesignerFormEditorInterface *core,
                              SLOT(alignmentActionTriggered(QAction*)));
 
     m_align_left_action = createCheckableAction(
-            createIconSet(QLatin1String("textleft.png")),
+            createIconSet(QStringLiteral("textleft.png")),
             tr("Left Align"), editor, 0, alignment_group);
     addAction(m_align_left_action);
 
     m_align_center_action = createCheckableAction(
-            createIconSet(QLatin1String("textcenter.png")),
+            createIconSet(QStringLiteral("textcenter.png")),
             tr("Center"), editor, 0, alignment_group);
     addAction(m_align_center_action);
 
     m_align_right_action = createCheckableAction(
-            createIconSet(QLatin1String("textright.png")),
+            createIconSet(QStringLiteral("textright.png")),
             tr("Right Align"), editor, 0, alignment_group);
     addAction(m_align_right_action);
 
     m_align_justify_action = createCheckableAction(
-            createIconSet(QLatin1String("textjustify.png")),
+            createIconSet(QStringLiteral("textjustify.png")),
             tr("Justify"), editor, 0, alignment_group);
     addAction(m_align_justify_action);
 
@@ -505,13 +505,13 @@ RichTextEditorToolBar::RichTextEditorToolBar(QDesignerFormEditorInterface *core,
     // Superscript and subscript buttons
 
     m_valign_sup_action = createCheckableAction(
-            createIconSet(QLatin1String("textsuperscript.png")),
+            createIconSet(QStringLiteral("textsuperscript.png")),
             tr("Superscript"),
             this, SLOT(setVAlignSuper(bool)), this);
     addAction(m_valign_sup_action);
 
     m_valign_sub_action = createCheckableAction(
-            createIconSet(QLatin1String("textsubscript.png")),
+            createIconSet(QStringLiteral("textsubscript.png")),
             tr("Subscript"),
             this, SLOT(setVAlignSub(bool)), this);
     addAction(m_valign_sub_action);
@@ -520,12 +520,12 @@ RichTextEditorToolBar::RichTextEditorToolBar(QDesignerFormEditorInterface *core,
 
     // Insert hyperlink and image buttons
 
-    m_link_action->setIcon(createIconSet(QLatin1String("textanchor.png")));
+    m_link_action->setIcon(createIconSet(QStringLiteral("textanchor.png")));
     m_link_action->setText(tr("Insert &Link"));
     connect(m_link_action, SIGNAL(triggered()), SLOT(insertLink()));
     addAction(m_link_action);
 
-    m_image_action->setIcon(createIconSet(QLatin1String("insertimage.png")));
+    m_image_action->setIcon(createIconSet(QStringLiteral("insertimage.png")));
     m_image_action->setText(tr("Insert &Image"));
     connect(m_image_action, SIGNAL(triggered()), SLOT(insertImage()));
     addAction(m_image_action);
@@ -541,7 +541,7 @@ RichTextEditorToolBar::RichTextEditorToolBar(QDesignerFormEditorInterface *core,
 
     // Simplify rich text
     m_simplify_richtext_action
-        = createCheckableAction(createIconSet(QLatin1String("simplifyrichtext.png")),
+        = createCheckableAction(createIconSet(QStringLiteral("simplifyrichtext.png")),
                                 tr("Simplify Rich Text"), m_editor, SLOT(setSimplifyRichText(bool)));
     m_simplify_richtext_action->setChecked(m_editor->simplifyRichText());
     connect(m_editor, SIGNAL(simplifyRichTextChanged(bool)),
@@ -623,7 +623,7 @@ void RichTextEditorToolBar::insertImage()
 {
     const QString path = IconSelector::choosePixmapResource(m_core, m_core->resourceModel(), QString(), this);
     if (!path.isEmpty())
-        m_editor->insertHtml(QLatin1String("<img src=\"") + path + QLatin1String("\"/>"));
+        m_editor->insertHtml(QStringLiteral("<img src=\"") + path + QStringLiteral("\"/>"));
 }
 
 void RichTextEditorToolBar::updateActions()
@@ -843,7 +843,7 @@ void RichTextEditorDialog::setDefaultFont(const QFont &font)
 void RichTextEditorDialog::setText(const QString &text)
 {
     // Generally simplify rich text unless verbose text is found.
-    const bool isSimplifiedRichText = !text.startsWith(QLatin1String("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">"));
+    const bool isSimplifiedRichText = !text.startsWith(QStringLiteral("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">"));
     m_editor->setSimplifyRichText(isSimplifiedRichText);
     m_editor->setText(text);
     m_text_edit->setPlainText(text);

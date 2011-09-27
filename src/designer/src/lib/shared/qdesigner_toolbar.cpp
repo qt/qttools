@@ -233,7 +233,7 @@ void ToolBarEventFilter::slotInsertSeparator()
     QAction *theSender = qobject_cast<QAction*>(sender());
     QAction *previous = qvariant_cast<QAction *>(theSender->data());
     fw->beginCommand(tr("Insert Separator"));
-    QAction *action = createAction(fw, QLatin1String("separator"), true);
+    QAction *action = createAction(fw, QStringLiteral("separator"), true);
     InsertActionIntoCommand *cmd = new InsertActionIntoCommand(fw);
     cmd->init(m_toolBar, action, previous);
     fw->commandHistory()->push(cmd);

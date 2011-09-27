@@ -63,7 +63,7 @@ protected:
 };
 
 GroupBoxTaskMenuInlineEditor::GroupBoxTaskMenuInlineEditor(QGroupBox *w, QObject *parent) :
-      TaskMenuInlineEditor(w, ValidationSingleLine, QLatin1String("title"), parent)
+      TaskMenuInlineEditor(w, ValidationSingleLine, QStringLiteral("title"), parent)
 {
 }
 

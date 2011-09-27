@@ -349,7 +349,7 @@ void WidgetHandle::mouseReleaseEvent(QMouseEvent *e)
     case WidgetSelection::UnlaidOut:
        if (m_geom != m_widget->geometry()) {
            SetPropertyCommand *cmd = new SetPropertyCommand(m_formWindow);
-           cmd->init(m_widget, QLatin1String("geometry"), m_widget->geometry());
+           cmd->init(m_widget, QStringLiteral("geometry"), m_widget->geometry());
            cmd->setOldValue(m_origGeom);
            m_formWindow->commandHistory()->push(cmd);
            m_formWindow->emitSelectionChanged();

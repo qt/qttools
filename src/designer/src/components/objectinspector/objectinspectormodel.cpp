@@ -126,7 +126,7 @@ namespace qdesigner_internal {
     };
 
     ModelRecursionContext::ModelRecursionContext(QDesignerFormEditorInterface *c, const QString &sepName) :
-        designerPrefix(QLatin1String("QDesigner")),
+        designerPrefix(QStringLiteral("QDesigner")),
         separator(sepName),
         core(c),
         db(c->widgetDataBase()),
@@ -363,13 +363,13 @@ namespace qdesigner_internal {
         setColumnCount(NumColumns);
         setHorizontalHeaderLabels(headers);
         // Icons
-        m_icons.layoutIcons[LayoutInfo::NoLayout] = createIconSet(QLatin1String("editbreaklayout.png"));
-        m_icons.layoutIcons[LayoutInfo::HSplitter] = createIconSet(QLatin1String("edithlayoutsplit.png"));
-        m_icons.layoutIcons[LayoutInfo::VSplitter] = createIconSet(QLatin1String("editvlayoutsplit.png"));
-        m_icons.layoutIcons[LayoutInfo::HBox] = createIconSet(QLatin1String("edithlayout.png"));
-        m_icons.layoutIcons[LayoutInfo::VBox] = createIconSet(QLatin1String("editvlayout.png"));
-        m_icons.layoutIcons[LayoutInfo::Grid] = createIconSet(QLatin1String("editgrid.png"));
-        m_icons.layoutIcons[LayoutInfo::Form] = createIconSet(QLatin1String("editform.png"));
+        m_icons.layoutIcons[LayoutInfo::NoLayout] = createIconSet(QStringLiteral("editbreaklayout.png"));
+        m_icons.layoutIcons[LayoutInfo::HSplitter] = createIconSet(QStringLiteral("edithlayoutsplit.png"));
+        m_icons.layoutIcons[LayoutInfo::VSplitter] = createIconSet(QStringLiteral("editvlayoutsplit.png"));
+        m_icons.layoutIcons[LayoutInfo::HBox] = createIconSet(QStringLiteral("edithlayout.png"));
+        m_icons.layoutIcons[LayoutInfo::VBox] = createIconSet(QStringLiteral("editvlayout.png"));
+        m_icons.layoutIcons[LayoutInfo::Grid] = createIconSet(QStringLiteral("editgrid.png"));
+        m_icons.layoutIcons[LayoutInfo::Form] = createIconSet(QStringLiteral("editform.png"));
     }
 
     void ObjectInspectorModel::clearItems()
@@ -507,7 +507,7 @@ namespace qdesigner_internal {
         if (!object)
             return false;
         // Is this a layout widget?
-        const QString nameProperty = isQLayoutWidget(object) ? QLatin1String("layoutName") : QLatin1String("objectName");
+        const QString nameProperty = isQLayoutWidget(object) ? QStringLiteral("layoutName") : QStringLiteral("objectName");
         m_formWindow->commandHistory()->push(createTextPropertyCommand(nameProperty, value.toString(), object, m_formWindow));
         return true;
     }

@@ -96,7 +96,7 @@ namespace qdesigner_internal {
         setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
         QHBoxLayout *hboxLayout = new QHBoxLayout(this);
 
-        m_classNameEdit->setValidator(new QRegExpValidator(QRegExp(QLatin1String("[_a-zA-Z:][:_a-zA-Z0-9]*")), m_classNameEdit));
+        m_classNameEdit->setValidator(new QRegExpValidator(QRegExp(QStringLiteral("[_a-zA-Z:][:_a-zA-Z0-9]*")), m_classNameEdit));
         connect(m_classNameEdit,   SIGNAL(textChanged(QString)), this, SLOT(slotNameChanged(QString)));
         connect(m_includeFileEdit, SIGNAL(textChanged(QString)), this, SLOT(slotIncludeFileChanged(QString)));
 
@@ -156,7 +156,7 @@ namespace qdesigner_internal {
             const QChar dot(QLatin1Char('.'));
             QString suggestedHeader = m_promotedHeaderLowerCase ?
                                       className.toLower() : className;
-            suggestedHeader.replace(QLatin1String("::"), QString(QLatin1Char('_')));
+            suggestedHeader.replace(QStringLiteral("::"), QString(QLatin1Char('_')));
             if (!m_promotedHeaderSuffix.startsWith(dot))
                 suggestedHeader += dot;
             suggestedHeader += m_promotedHeaderSuffix;
@@ -251,7 +251,7 @@ namespace qdesigner_internal {
             preselectedBaseClass = baseClassNameList.indexOf(m_promotableWidgetClassName);
         }
         if (preselectedBaseClass == -1)
-            preselectedBaseClass = baseClassNameList.indexOf(QLatin1String("QFrame"));
+            preselectedBaseClass = baseClassNameList.indexOf(QStringLiteral("QFrame"));
 
         NewPromotedClassPanel *newPromotedClassPanel = new NewPromotedClassPanel(baseClassNameList, preselectedBaseClass);
         newPromotedClassPanel->setPromotedHeaderSuffix(core->integration()->headerSuffix());

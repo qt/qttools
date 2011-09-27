@@ -168,7 +168,7 @@ namespace {
     QUrl UrlValidator::guessUrlFromString(const QString &string) const
     {
         const QString urlStr = string.trimmed();
-        const QRegExp qualifiedUrl(QLatin1String("^[a-zA-Z]+\\:.*"));
+        const QRegExp qualifiedUrl(QStringLiteral("^[a-zA-Z]+\\:.*"));
 
         // Check if it looks like a qualified URL. Try parsing it and see.
         const bool hasSchema = qualifiedUrl.exactMatch(urlStr);
@@ -179,8 +179,8 @@ namespace {
         }
 
         // Might be a Qt resource
-        if (string.startsWith(QLatin1String(":/")))
-            return QUrl(QLatin1String("qrc") + string);
+        if (string.startsWith(QStringLiteral(":/")))
+            return QUrl(QStringLiteral("qrc") + string);
 
         // Might be a file.
         if (QFile::exists(urlStr))
@@ -192,11 +192,11 @@ namespace {
             if (dotIndex != -1) {
                 const QString prefix = urlStr.left(dotIndex).toLower();
                 QString urlString;
-                if (prefix == QLatin1String("ftp"))
+                if (prefix == QStringLiteral("ftp"))
                     urlString += prefix;
                 else
-                    urlString += QLatin1String("http");
-                urlString += QLatin1String("://");
+                    urlString += QStringLiteral("http");
+                urlString += QStringLiteral("://");
                 urlString += urlStr;
                 const QUrl url(urlString, QUrl::TolerantMode);
                 if (url.isValid())
@@ -265,25 +265,25 @@ namespace qdesigner_internal {
              m_lineEdit->setCompleter(0);
             break;
         case ValidationObjectName:
-            setRegExpValidator(QLatin1String("[_a-zA-Z][_a-zA-Z0-9]{,1023}"));
+            setRegExpValidator(QStringLiteral("[_a-zA-Z][_a-zA-Z0-9]{,1023}"));
              m_lineEdit->setCompleter(0);
              break;
         case ValidationObjectNameScope:
-            setRegExpValidator(QLatin1String("[_a-zA-Z:][_a-zA-Z0-9:]{,1023}"));
+            setRegExpValidator(QStringLiteral("[_a-zA-Z:][_a-zA-Z0-9:]{,1023}"));
             m_lineEdit->setCompleter(0);
             break;
         case ValidationURL: {
             static QStringList urlCompletions;
             if (urlCompletions.empty()) {
-                urlCompletions.push_back(QLatin1String("about:blank"));
-                urlCompletions.push_back(QLatin1String("http://"));
-                urlCompletions.push_back(QLatin1String("http://www."));
-                urlCompletions.push_back(QLatin1String("http://qt.nokia.com/"));
-                urlCompletions.push_back(QLatin1String("file://"));
-                urlCompletions.push_back(QLatin1String("ftp://"));
-                urlCompletions.push_back(QLatin1String("data:"));
-                urlCompletions.push_back(QLatin1String("data:text/html,"));
-                urlCompletions.push_back(QLatin1String("qrc:/"));
+                urlCompletions.push_back(QStringLiteral("about:blank"));
+                urlCompletions.push_back(QStringLiteral("http://"));
+                urlCompletions.push_back(QStringLiteral("http://www."));
+                urlCompletions.push_back(QStringLiteral("http://qt.nokia.com/"));
+                urlCompletions.push_back(QStringLiteral("file://"));
+                urlCompletions.push_back(QStringLiteral("ftp://"));
+                urlCompletions.push_back(QStringLiteral("data:"));
+                urlCompletions.push_back(QStringLiteral("data:text/html,"));
+                urlCompletions.push_back(QStringLiteral("qrc:/"));
             }
             QCompleter *completer = new QCompleter(urlCompletions, m_lineEdit);
             m_lineEdit->setCompleter(completer);
@@ -391,7 +391,7 @@ namespace qdesigner_internal {
 
         QString rc(s);
         // protect backslashes
-        rc.replace(QLatin1Char('\\'), QLatin1String("\\\\"));
+        rc.replace(QLatin1Char('\\'), QStringLiteral("\\\\"));
         // escape newlines
         rc.replace(NewLineChar, QString(EscapedNewLine));
         return rc;

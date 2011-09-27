@@ -170,31 +170,31 @@ void WizardPageChangeWatcher::pageChanged()
 
 // ---------------- WidgetFactory::Strings
 WidgetFactory::Strings::Strings() :
-    m_alignment(QLatin1String("alignment")),
-    m_bottomMargin(QLatin1String("bottomMargin")),
-    m_geometry(QLatin1String("geometry")),
-    m_leftMargin(QLatin1String("leftMargin")),
-    m_line(QLatin1String("Line")),
-    m_objectName(QLatin1String("objectName")),
-    m_spacerName(QLatin1String("spacerName")),
-    m_orientation(QLatin1String("orientation")),
-    m_qAction(QLatin1String("QAction")),
-    m_qButtonGroup(QLatin1String("QButtonGroup")),
-    m_qAxWidget(QLatin1String("QAxWidget")),
-    m_qDialog(QLatin1String("QDialog")),
-    m_qDockWidget(QLatin1String("QDockWidget")),
-    m_qLayoutWidget(QLatin1String("QLayoutWidget")),
-    m_qMenu(QLatin1String("QMenu")),
-    m_qMenuBar(QLatin1String("QMenuBar")),
-    m_qWidget(QLatin1String("QWidget")),
-    m_rightMargin(QLatin1String("rightMargin")),
-    m_sizeHint(QLatin1String("sizeHint")),
-    m_spacer(QLatin1String("Spacer")),
-    m_text(QLatin1String("text")),
-    m_title(QLatin1String("title")),
-    m_topMargin(QLatin1String("topMargin")),
-    m_windowIcon(QLatin1String("windowIcon")),
-    m_windowTitle(QLatin1String("windowTitle"))
+    m_alignment(QStringLiteral("alignment")),
+    m_bottomMargin(QStringLiteral("bottomMargin")),
+    m_geometry(QStringLiteral("geometry")),
+    m_leftMargin(QStringLiteral("leftMargin")),
+    m_line(QStringLiteral("Line")),
+    m_objectName(QStringLiteral("objectName")),
+    m_spacerName(QStringLiteral("spacerName")),
+    m_orientation(QStringLiteral("orientation")),
+    m_qAction(QStringLiteral("QAction")),
+    m_qButtonGroup(QStringLiteral("QButtonGroup")),
+    m_qAxWidget(QStringLiteral("QAxWidget")),
+    m_qDialog(QStringLiteral("QDialog")),
+    m_qDockWidget(QStringLiteral("QDockWidget")),
+    m_qLayoutWidget(QStringLiteral("QLayoutWidget")),
+    m_qMenu(QStringLiteral("QMenu")),
+    m_qMenuBar(QStringLiteral("QMenuBar")),
+    m_qWidget(QStringLiteral("QWidget")),
+    m_rightMargin(QStringLiteral("rightMargin")),
+    m_sizeHint(QStringLiteral("sizeHint")),
+    m_spacer(QStringLiteral("Spacer")),
+    m_text(QStringLiteral("text")),
+    m_title(QStringLiteral("title")),
+    m_topMargin(QStringLiteral("topMargin")),
+    m_windowIcon(QStringLiteral("windowIcon")),
+    m_windowTitle(QStringLiteral("windowTitle"))
 {
 }
 // ---------------- WidgetFactory
@@ -400,7 +400,7 @@ QWidget *WidgetFactory::createWidget(const QString &widgetName, QWidget *parentW
         if (item == 0) {
             // Emergency: Create, derived from QWidget
             QString includeFile = widgetName.toLower();
-            includeFile +=  QLatin1String(".h");
+            includeFile +=  QStringLiteral(".h");
             item = appendDerived(db,widgetName, tr("%1 Widget").arg(widgetName),fallBackBaseClass,
                                  includeFile, true, true);
             Q_ASSERT(item);
@@ -442,18 +442,18 @@ QString WidgetFactory::classNameOf(QDesignerFormEditorInterface *c, const QObjec
     if (!customClassName.isEmpty())
         return customClassName;
     if (qobject_cast<const QDesignerMenuBar*>(w))
-        return QLatin1String("QMenuBar");
+        return QStringLiteral("QMenuBar");
     else if (qobject_cast<const QDesignerMenu*>(w))
-        return QLatin1String("QMenu");
+        return QStringLiteral("QMenu");
      else if (qobject_cast<const QDesignerDockWidget*>(w))
-        return QLatin1String("QDockWidget");
+        return QStringLiteral("QDockWidget");
     else if (qobject_cast<const QDesignerDialog*>(w))
-        return QLatin1String("QDialog");
+        return QStringLiteral("QDialog");
     else if (qobject_cast<const QDesignerWidget*>(w))
-        return QLatin1String("QWidget");
+        return QStringLiteral("QWidget");
 #ifdef Q_OS_WIN
     else if (isAxWidget(w))
-        return QLatin1String("QAxWidget");
+        return QStringLiteral("QAxWidget");
 #endif
     return QLatin1String(className);
 }
@@ -803,7 +803,7 @@ static bool isTabBarInteractor(const QTabBar *tabBar)
 
 bool WidgetFactory::isPassiveInteractor(QWidget *widget)
 {
-    static const QString qtPassive = QLatin1String("__qt__passive_");
+    static const QString qtPassive = QStringLiteral("__qt__passive_");
     if (m_lastPassiveInteractor != 0 && (QWidget*)(*m_lastPassiveInteractor) == widget)
         return m_lastWasAPassiveInteractor;
 
@@ -833,10 +833,10 @@ bool WidgetFactory::isPassiveInteractor(QWidget *widget)
         // A scroll bar is an interactor on a QAbstractScrollArea only.
         if (const QWidget *parent = widget->parentWidget()) {
             const QString objectName = parent->objectName();
-            static const QString scrollAreaVContainer = QLatin1String("qt_scrollarea_vcontainer");
+            static const QString scrollAreaVContainer = QStringLiteral("qt_scrollarea_vcontainer");
     void activeFormWindowChanged(QDesignerFormWindowInterface *formWindow);
     void formWindowAdded(QDesignerFormWindowInterface *formWindow);
-            static const QString scrollAreaHContainer = QLatin1String("qt_scrollarea_hcontainer");
+            static const QString scrollAreaHContainer = QStringLiteral("qt_scrollarea_hcontainer");
             if (objectName == scrollAreaVContainer || objectName == scrollAreaHContainer) {
                 m_lastWasAPassiveInteractor = true;
                 return m_lastWasAPassiveInteractor;

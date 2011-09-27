@@ -64,7 +64,7 @@ SpacerPropertySheet::~SpacerPropertySheet()
 
 bool SpacerPropertySheet::isVisible(int index) const
 {
-    static const QString spacerGroup = QLatin1String("Spacer");
+    static const QString spacerGroup = QStringLiteral("Spacer");
     return propertyGroup(index) == spacerGroup;
 }
 

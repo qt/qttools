@@ -66,7 +66,7 @@ InPlaceEditor::InPlaceEditor(QWidget *widget,
     m_InPlaceWidgetHelper(this, widget, fw)
 {
     setAlignment(m_InPlaceWidgetHelper.alignment());
-    setObjectName(QLatin1String("__qt__passive_m_editor"));
+    setObjectName(QStringLiteral("__qt__passive_m_editor"));
 
     setText(text);
     selectAll();

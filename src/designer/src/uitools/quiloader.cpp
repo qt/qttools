@@ -101,7 +101,7 @@ QVariant TranslatingTextBuilder::loadText(const DomProperty *text) const
         return QVariant();
     if (str->hasAttributeNotr()) {
         const QString notr = str->attributeNotr();
-        if (notr == QLatin1String("true") || notr == QLatin1String("yes"))
+        if (notr == QStringLiteral("true") || notr == QStringLiteral("yes"))
             return QVariant::fromValue(str->text());
     }
     QUiTranslatableStringValue strVal;
@@ -395,7 +395,7 @@ static QString convertTranslatable(const DomProperty *p, const QByteArray &class
         return QString();
     if (dom_str->hasAttributeNotr()) {
         const QString notr = dom_str->attributeNotr();
-        if (notr == QLatin1String("yes") || notr == QLatin1String("true"))
+        if (notr == QStringLiteral("yes") || notr == QStringLiteral("true"))
             return QString();
     }
     strVal->setValue(dom_str->text().toUtf8());
@@ -635,7 +635,7 @@ QUiLoader::QUiLoader(QObject *parent)
     foreach (const QString &path, QApplication::libraryPaths()) {
         QString libPath = path;
         libPath  += QDir::separator();
-        libPath  += QLatin1String("designer");
+        libPath  += QStringLiteral("designer");
         paths.append(libPath);
     }
 

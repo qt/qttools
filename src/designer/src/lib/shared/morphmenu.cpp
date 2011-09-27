@@ -171,29 +171,29 @@ static QStringList classesOfCategory(MorphCategory cat)
         case MorphSimpleContainer:
             // Do not  generally allow to morph into a layout.
             // This can be risky in case of container pages,etc.
-            l << QLatin1String("QWidget") << QLatin1String("QFrame") <<  QLatin1String("QGroupBox");
+            l << QStringLiteral("QWidget") << QStringLiteral("QFrame") <<  QStringLiteral("QGroupBox");
             break;
         case MorphPageContainer:
-            l << QLatin1String("QTabWidget") <<  QLatin1String("QStackedWidget") << QLatin1String("QToolBox");
+            l << QStringLiteral("QTabWidget") <<  QStringLiteral("QStackedWidget") << QStringLiteral("QToolBox");
             break;
         case MorphItemView:
-            l << QLatin1String("QListView") << QLatin1String("QListWidget")
-              << QLatin1String("QTreeView") << QLatin1String("QTreeWidget")
-              << QLatin1String("QTableView") << QLatin1String("QTableWidget")
-              << QLatin1String("QColumnView");
+            l << QStringLiteral("QListView") << QStringLiteral("QListWidget")
+              << QStringLiteral("QTreeView") << QStringLiteral("QTreeWidget")
+              << QStringLiteral("QTableView") << QStringLiteral("QTableWidget")
+              << QStringLiteral("QColumnView");
             break;
         case MorphButton:
-            l << QLatin1String("QCheckBox") << QLatin1String("QRadioButton")
-              << QLatin1String("QPushButton") << QLatin1String("QToolButton")
-              << QLatin1String("QCommandLinkButton");
+            l << QStringLiteral("QCheckBox") << QStringLiteral("QRadioButton")
+              << QStringLiteral("QPushButton") << QStringLiteral("QToolButton")
+              << QStringLiteral("QCommandLinkButton");
             break;
         case MorphSpinBox:
-              l << QLatin1String("QDateTimeEdit") << QLatin1String("QDateEdit")
-                << QLatin1String("QTimeEdit")
-                << QLatin1String("QSpinBox") << QLatin1String("QDoubleSpinBox");
+              l << QStringLiteral("QDateTimeEdit") << QStringLiteral("QDateEdit")
+                << QStringLiteral("QTimeEdit")
+                << QStringLiteral("QSpinBox") << QStringLiteral("QDoubleSpinBox");
             break;
         case MorphTextEdit:
-             l << QLatin1String("QTextEdit") << QLatin1String("QPlainTextEdit") << QLatin1String("QTextBrowser");
+             l << QStringLiteral("QTextEdit") << QStringLiteral("QPlainTextEdit") << QStringLiteral("QTextBrowser");
             break;
         }
     }
@@ -317,7 +317,7 @@ bool MorphWidgetCommand::addMorphMacro(QDesignerFormWindowInterface *fw, QWidget
     // restore buddy using the QByteArray name.
     if (buddyLabel) {
         SetPropertyCommand *buddyCmd = new SetPropertyCommand(fw);
-        buddyCmd->init(buddyLabel, QLatin1String("buddy"), QVariant(newWidgetName.toUtf8()));
+        buddyCmd->init(buddyLabel, QStringLiteral("buddy"), QVariant(newWidgetName.toUtf8()));
         us->push(buddyCmd);
     }
     us->endMacro();
@@ -360,11 +360,11 @@ bool MorphWidgetCommand::init(QWidget *widget, const QString &newClassName)
     // up the children of the before widget
     if (QDesignerContainerExtension* c = qt_extension<QDesignerContainerExtension*>(core->extensionManager(), m_afterWidget)) {
         if (const int pageCount = childContainers(core, m_beforeWidget).size()) {
-            const QString qWidget = QLatin1String("QWidget");
+            const QString qWidget = QStringLiteral("QWidget");
             const QString containerName = m_afterWidget->objectName();
             for (int i = 0; i < pageCount; i++) {
                 QString name = containerName;
-                name += QLatin1String("Page");
+                name += QStringLiteral("Page");
                 name += QString::number(i + 1);
                 QWidget *page = core->widgetFactory()->createWidget(qWidget);
                 page->setObjectName(name);
@@ -378,7 +378,7 @@ bool MorphWidgetCommand::init(QWidget *widget, const QString &newClassName)
     // Copy over applicable properties
     const QDesignerPropertySheetExtension *beforeSheet = qt_extension<QDesignerPropertySheetExtension*>(core->extensionManager(), widget);
     QDesignerPropertySheetExtension *afterSheet = qt_extension<QDesignerPropertySheetExtension*>(core->extensionManager(), m_afterWidget);
-    const QString objectNameProperty = QLatin1String("objectName");
+    const QString objectNameProperty = QStringLiteral("objectName");
     const int count = beforeSheet->count();
     for (int i = 0; i < count; i++)
         if (beforeSheet->isVisible(i) && beforeSheet->isChanged(i)) {

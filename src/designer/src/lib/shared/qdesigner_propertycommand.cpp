@@ -78,21 +78,21 @@ QString fontMask(unsigned m)
 {
     QString rc;
     if (m & QFont::FamilyResolved)
-        rc += QLatin1String("Family");
+        rc += QStringLiteral("Family");
     if (m & QFont::SizeResolved)
-        rc += QLatin1String("Size ");
+        rc += QStringLiteral("Size ");
     if (m & QFont::WeightResolved)
-        rc += QLatin1String("Bold ");
+        rc += QStringLiteral("Bold ");
     if (m & QFont::StyleResolved)
-        rc += QLatin1String("Style ");
+        rc += QStringLiteral("Style ");
     if (m & QFont::UnderlineResolved)
-        rc += QLatin1String("Underline ");
+        rc += QStringLiteral("Underline ");
     if (m & QFont::StrikeOutResolved)
-        rc += QLatin1String("StrikeOut ");
+        rc += QStringLiteral("StrikeOut ");
     if (m & QFont::KerningResolved)
-        rc += QLatin1String("Kerning ");
+        rc += QStringLiteral("Kerning ");
     if (m & QFont::StyleStrategyResolved)
-        rc += QLatin1String("StyleStrategy");
+        rc += QStringLiteral("StyleStrategy");
     return rc;
 }
 
@@ -102,19 +102,19 @@ QString fontString(const QFont &f)
     QString rc; {
         const QChar comma = QLatin1Char(',');
         QTextStream str(&rc);
-        str << QLatin1String("QFont(\"") <<  f.family() << comma <<
+        str << QStringLiteral("QFont(\"") <<  f.family() << comma <<
             f.pointSize();
         if (f.bold())
-            str << comma <<  QLatin1String("bold");
+            str << comma <<  QStringLiteral("bold");
         if (f.italic())
-            str << comma <<  QLatin1String("italic");
+            str << comma <<  QStringLiteral("italic");
         if (f.underline())
-            str << comma <<  QLatin1String("underline");
+            str << comma <<  QStringLiteral("underline");
         if (f.strikeOut())
-            str << comma <<  QLatin1String("strikeOut");
+            str << comma <<  QStringLiteral("strikeOut");
         if (f.kerning())
-            str << comma << QLatin1String("kerning");
-        str <<  comma << f.styleStrategy() << QLatin1String(" resolve: ")
+            str << comma << QStringLiteral("kerning");
+        str <<  comma << f.styleStrategy() << QStringLiteral(" resolve: ")
             << fontMask(f.resolve()) << QLatin1Char(')');
     }
     return rc;
@@ -566,35 +566,35 @@ PropertyHelper::Value applySubProperty(const QVariant &oldValue, const QVariant 
 // figure out special property
 enum SpecialProperty getSpecialProperty(const QString& propertyName)
 {
-    if (propertyName == QLatin1String("objectName"))
+    if (propertyName == QStringLiteral("objectName"))
         return SP_ObjectName;
-    if (propertyName == QLatin1String("layoutName"))
+    if (propertyName == QStringLiteral("layoutName"))
         return SP_LayoutName;
-    if (propertyName == QLatin1String("spacerName"))
+    if (propertyName == QStringLiteral("spacerName"))
         return SP_SpacerName;
-    if (propertyName == QLatin1String("icon"))
+    if (propertyName == QStringLiteral("icon"))
         return SP_Icon;
-    if (propertyName == QLatin1String("currentTabName"))
+    if (propertyName == QStringLiteral("currentTabName"))
         return SP_CurrentTabName;
-    if (propertyName == QLatin1String("currentItemName"))
+    if (propertyName == QStringLiteral("currentItemName"))
         return SP_CurrentItemName;
-    if (propertyName == QLatin1String("currentPageName"))
+    if (propertyName == QStringLiteral("currentPageName"))
         return SP_CurrentPageName;
-    if (propertyName == QLatin1String("geometry"))
+    if (propertyName == QStringLiteral("geometry"))
         return SP_Geometry;
-    if (propertyName == QLatin1String("windowTitle"))
+    if (propertyName == QStringLiteral("windowTitle"))
         return SP_WindowTitle;
-    if (propertyName == QLatin1String("minimumSize"))
+    if (propertyName == QStringLiteral("minimumSize"))
         return SP_MinimumSize;
-    if (propertyName == QLatin1String("maximumSize"))
+    if (propertyName == QStringLiteral("maximumSize"))
         return SP_MaximumSize;
-    if (propertyName == QLatin1String("alignment"))
+    if (propertyName == QStringLiteral("alignment"))
         return SP_Alignment;
-    if (propertyName == QLatin1String("autoDefault"))
+    if (propertyName == QStringLiteral("autoDefault"))
         return SP_AutoDefault;
-    if (propertyName == QLatin1String("shortcut"))
+    if (propertyName == QStringLiteral("shortcut"))
         return SP_Shortcut;
-    if (propertyName == QLatin1String("orientation"))
+    if (propertyName == QStringLiteral("orientation"))
         return SP_Orientation;
     return SP_None;
 }

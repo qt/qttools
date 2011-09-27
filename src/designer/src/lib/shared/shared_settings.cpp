@@ -113,7 +113,7 @@ const QStringList &QDesignerSharedSettings::defaultFormTemplatePaths()
     static QStringList rc;
     if (rc.empty()) {
         // Ensure default form template paths
-        const QString templatePath = QLatin1String("/templates");
+        const QString templatePath = QStringLiteral("/templates");
         // home
         QString path = QDir::homePath();
         path += QLatin1String(designerPath);

@@ -139,7 +139,7 @@ FormEditor::FormEditor(QObject *parent)
     QTreeViewPropertySheetFactory::registerExtension(mgr);
     QTableViewPropertySheetFactory::registerExtension(mgr);
 
-    const QString internalTaskMenuId = QLatin1String("QDesignerInternalTaskMenuExtension");
+    const QString internalTaskMenuId = QStringLiteral("QDesignerInternalTaskMenuExtension");
     QDesignerTaskMenuFactory::registerExtension(mgr, internalTaskMenuId);
 
     mgr->registerExtensions(new QDesignerMemberSheetFactory(mgr),

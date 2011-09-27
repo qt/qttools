@@ -317,7 +317,7 @@ ContainerWidgetTaskMenuFactory::ContainerWidgetTaskMenuFactory(QDesignerFormEdit
 
 QObject *ContainerWidgetTaskMenuFactory::createExtension(QObject *object, const QString &iid, QObject *parent) const
 {
-    if (iid != QLatin1String("QDesignerInternalTaskMenuExtension") || !object->isWidgetType())
+    if (iid != QStringLiteral("QDesignerInternalTaskMenuExtension") || !object->isWidgetType())
         return 0;
 
     QWidget *widget = qobject_cast<QWidget*>(object);

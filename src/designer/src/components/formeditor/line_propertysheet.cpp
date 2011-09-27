@@ -68,7 +68,7 @@ bool LinePropertySheet::isVisible(int index) const
 {
     const QString name = propertyName(index);
 
-    if (name == QLatin1String("frameShape"))
+    if (name == QStringLiteral("frameShape"))
         return false;
     return QDesignerPropertySheet::isVisible(index);
 }

@@ -68,7 +68,7 @@ TaskMenuComponent::TaskMenuComponent(QDesignerFormEditorInterface *core, QObject
     Q_ASSERT(m_core != 0);
 
     QExtensionManager *mgr = core->extensionManager();
-    const QString taskMenuId =  QLatin1String("QDesignerInternalTaskMenuExtension");
+    const QString taskMenuId =  QStringLiteral("QDesignerInternalTaskMenuExtension");
 
     ButtonTaskMenuFactory::registerExtension(mgr, taskMenuId);
     CommandLinkButtonTaskMenuFactory::registerExtension(mgr, taskMenuId); // Order!

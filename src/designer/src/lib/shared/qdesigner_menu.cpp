@@ -90,7 +90,7 @@ static inline void extendClickableArea(QRect *subMenuRect, Qt::LayoutDirection d
 
 QDesignerMenu::QDesignerMenu(QWidget *parent) :
     QMenu(parent),
-    m_subMenuPixmap(QPixmap(QLatin1String(":/trolltech/formeditor/images/submenu.png"))),
+    m_subMenuPixmap(QPixmap(QStringLiteral(":/trolltech/formeditor/images/submenu.png"))),
     m_currentIndex(0),
     m_addItem(new SpecialMenuAction(this)),
     m_addSeparator(new SpecialMenuAction(this)),
@@ -116,7 +116,7 @@ QDesignerMenu::QDesignerMenu(QWidget *parent) :
 
     connect(m_deactivateWindowTimer, SIGNAL(timeout()), this, SLOT(slotDeactivateNow()));
 
-    m_editor->setObjectName(QLatin1String("__qt__passive_editor"));
+    m_editor->setObjectName(QStringLiteral("__qt__passive_editor"));
     m_editor->hide();
 
     m_editor->installEventFilter(this);
@@ -1007,7 +1007,7 @@ void QDesignerMenu::createRealMenuAction(QAction *action)
 
     core->widgetFactory()->initialize(menu);
 
-    const QString niceObjectName = ActionEditor::actionTextToName(menu->title(), QLatin1String("menu"));
+    const QString niceObjectName = ActionEditor::actionTextToName(menu->title(), QStringLiteral("menu"));
     menu->setObjectName(niceObjectName);
 
     core->metaDataBase()->add(menu);
@@ -1205,7 +1205,7 @@ void QDesignerMenu::leaveEditMode(LeaveEditMode mode)
     }
 
     SetPropertyCommand *cmd = new SetPropertyCommand(fw);
-    cmd->init(action, QLatin1String("text"), m_editor->text());
+    cmd->init(action, QStringLiteral("text"), m_editor->text());
     fw->commandHistory()->push(cmd);
 
     if (parentMenu()) {

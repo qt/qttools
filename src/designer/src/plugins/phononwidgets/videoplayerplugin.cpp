@@ -62,7 +62,7 @@ VideoPlayerPlugin::VideoPlayerPlugin(const QString &group, QObject *parent) :
 
 QString VideoPlayerPlugin::name() const
 {
-    return QLatin1String("Phonon::VideoPlayer");
+    return QStringLiteral("Phonon::VideoPlayer");
 }
 
 QString VideoPlayerPlugin::group() const
@@ -82,12 +82,12 @@ QString VideoPlayerPlugin::whatsThis() const
 
 QString VideoPlayerPlugin::includeFile() const
 {
-    return QLatin1String("<phonon/videoplayer.h>");
+    return QStringLiteral("<phonon/videoplayer.h>");
 }
 
 QIcon VideoPlayerPlugin::icon() const
 {
-    return QIcon(QLatin1String(":/trolltech/phononwidgets/images/videoplayer.png"));
+    return QIcon(QStringLiteral(":/trolltech/phononwidgets/images/videoplayer.png"));
 }
 
 bool VideoPlayerPlugin::isContainer() const
@@ -117,7 +117,7 @@ void VideoPlayerPlugin::initialize(QDesignerFormEditorInterface * core)
 
 QString VideoPlayerPlugin::domXml() const
 {
-    return QLatin1String("\
+    return QStringLiteral("\
     <ui language=\"c++\">\
         <widget class=\"Phonon::VideoPlayer\" name=\"videoPlayer\">\
             <property name=\"geometry\">\

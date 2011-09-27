@@ -126,7 +126,7 @@ static QString objName(const QDesignerFormEditorInterface *core, QObject *object
             = qt_extension<QDesignerPropertySheetExtension*>(core->extensionManager(), object);
     Q_ASSERT(sheet != 0);
 
-    const QString objectNameProperty = QLatin1String("objectName");
+    const QString objectNameProperty = QStringLiteral("objectName");
     const int index = sheet->indexOf(objectNameProperty);
     const qdesigner_internal::PropertySheetStringValue objectNameValue
             = qvariant_cast<qdesigner_internal::PropertySheetStringValue>(sheet->property(index));
@@ -565,7 +565,7 @@ void QDesignerTaskMenu::changeObjectName()
     if (dialog.exec() == QDialog::Accepted) {
         const QString newObjectName = dialog.newObjectName();
         if (!newObjectName.isEmpty() && newObjectName  != oldObjectName ) {
-            const QString objectNameProperty = QLatin1String("objectName");
+            const QString objectNameProperty = QStringLiteral("objectName");
             PropertySheetStringValue objectNameValue;
             objectNameValue.setValue(newObjectName);
             setProperty(fw, CurrentWidgetMode, objectNameProperty, QVariant::fromValue(objectNameValue));
@@ -624,12 +624,12 @@ void QDesignerTaskMenu::changeTextProperty(const QString &propertyName, const QS
 
 void QDesignerTaskMenu::changeToolTip()
 {
-    changeTextProperty(QLatin1String("toolTip"), tr("Edit ToolTip"), MultiSelectionMode, Qt::AutoText);
+    changeTextProperty(QStringLiteral("toolTip"), tr("Edit ToolTip"), MultiSelectionMode, Qt::AutoText);
 }
 
 void QDesignerTaskMenu::changeWhatsThis()
 {
-    changeTextProperty(QLatin1String("whatsThis"), tr("Edit WhatsThis"), MultiSelectionMode, Qt::AutoText);
+    changeTextProperty(QStringLiteral("whatsThis"), tr("Edit WhatsThis"), MultiSelectionMode, Qt::AutoText);
 }
 
 void QDesignerTaskMenu::changeStyleSheet()
@@ -809,7 +809,7 @@ static void createSizeCommand(QDesignerFormWindowInterface *fw, QWidget *w, int 
         if (flags & ApplyMinimumHeight)
              minimumSize.setHeight(size.height());
         SetPropertyCommand* cmd = new SetPropertyCommand(fw);
-        cmd->init(w, QLatin1String("minimumSize"), minimumSize);
+        cmd->init(w, QStringLiteral("minimumSize"), minimumSize);
         fw->commandHistory()->push(cmd);
     }
     if (flags & (ApplyMaximumWidth|ApplyMaximumHeight)) {
@@ -819,7 +819,7 @@ static void createSizeCommand(QDesignerFormWindowInterface *fw, QWidget *w, int 
         if (flags & ApplyMaximumHeight)
              maximumSize.setHeight(size.height());
         SetPropertyCommand* cmd = new SetPropertyCommand(fw);
-        cmd->init(w, QLatin1String("maximumSize"), maximumSize);
+        cmd->init(w, QStringLiteral("maximumSize"), maximumSize);
         fw->commandHistory()->push(cmd);
     }
 }

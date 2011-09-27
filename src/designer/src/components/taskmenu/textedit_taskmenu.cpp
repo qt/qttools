@@ -54,7 +54,7 @@ namespace qdesigner_internal {
 TextEditTaskMenu::TextEditTaskMenu(QTextEdit *textEdit, QObject *parent) :
     QDesignerTaskMenu(textEdit, parent),
     m_format(Qt::RichText),
-    m_property(QLatin1String("html")),
+    m_property(QStringLiteral("html")),
     m_windowTitle(tr("Edit HTML")),
     m_editTextAction(new QAction(tr("Change HTML..."), this))
 {
@@ -64,7 +64,7 @@ TextEditTaskMenu::TextEditTaskMenu(QTextEdit *textEdit, QObject *parent) :
 TextEditTaskMenu::TextEditTaskMenu(QPlainTextEdit *textEdit, QObject *parent) :
     QDesignerTaskMenu(textEdit, parent),
     m_format(Qt::PlainText),
-    m_property(QLatin1String("plainText")),
+    m_property(QStringLiteral("plainText")),
     m_windowTitle(tr("Edit Text")),
     m_editTextAction(new QAction(tr("Change Plain Text..."), this))
 {

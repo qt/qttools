@@ -118,16 +118,16 @@ QList<QToolBar *>  MainWindowBase::createToolBars(const QDesignerActions *action
     QList<QToolBar *> rc;
     if (singleToolBar) {
         //: Not currently used (main tool bar)
-        QToolBar *main = createToolBar(tr("Main"), QLatin1String("mainToolBar"), actions->fileActions()->actions());
+        QToolBar *main = createToolBar(tr("Main"), QStringLiteral("mainToolBar"), actions->fileActions()->actions());
         addActionsToToolBar(actions->editActions()->actions(), main);
         addActionsToToolBar(actions->toolActions()->actions(), main);
         addActionsToToolBar(actions->formActions()->actions(), main);
         rc.push_back(main);
     } else {
-        rc.push_back(createToolBar(tr("File"), QLatin1String("fileToolBar"), actions->fileActions()->actions()));
-        rc.push_back(createToolBar(tr("Edit"), QLatin1String("editToolBar"),  actions->editActions()->actions()));
-        rc.push_back(createToolBar(tr("Tools"), QLatin1String("toolsToolBar"), actions->toolActions()->actions()));
-        rc.push_back(createToolBar(tr("Form"), QLatin1String("formToolBar"), actions->formActions()->actions()));
+        rc.push_back(createToolBar(tr("File"), QStringLiteral("fileToolBar"), actions->fileActions()->actions()));
+        rc.push_back(createToolBar(tr("Edit"), QStringLiteral("editToolBar"),  actions->editActions()->actions()));
+        rc.push_back(createToolBar(tr("Tools"), QStringLiteral("toolsToolBar"), actions->toolActions()->actions()));
+        rc.push_back(createToolBar(tr("Form"), QStringLiteral("formToolBar"), actions->formActions()->actions()));
     }
     return rc;
 }
@@ -227,7 +227,7 @@ ToolBarManager::ToolBarManager(QMainWindow *configureableMainWindow,
     m_toolbars(toolbars)
 {
     m_configureAction->setMenuRole(QAction::NoRole);
-    m_configureAction->setObjectName(QLatin1String("__qt_configure_tool_bars_action"));
+    m_configureAction->setObjectName(QStringLiteral("__qt_configure_tool_bars_action"));
     connect(m_configureAction, SIGNAL(triggered()), this, SLOT(configureToolBars()));
 
     m_manager->setMainWindow(configureableMainWindow);
@@ -318,7 +318,7 @@ DockedMainWindow::DockedMainWindow(QDesignerWorkbench *wb,
                                    const QList<QDesignerToolWindow*> &toolWindows) :
     m_toolBarManager(0)
 {
-    setObjectName(QLatin1String("MDIWindow"));
+    setObjectName(QStringLiteral("MDIWindow"));
     setWindowTitle(mainWindowTitle());
 
     const QList<QToolBar *> toolbars = createToolBars(wb->actionManager(), false);
@@ -379,7 +379,7 @@ DockedMainWindow::DockWidgetList DockedMainWindow::addToolWindows(const Designer
     DockWidgetList rc;
     foreach (QDesignerToolWindow *tw, tls) {
         QDockWidget *dockWidget = new QDockWidget;
-        dockWidget->setObjectName(tw->objectName() + QLatin1String("_dock"));
+        dockWidget->setObjectName(tw->objectName() + QStringLiteral("_dock"));
         dockWidget->setWindowTitle(tw->windowTitle());
         addDockWidget(tw->dockWidgetAreaHint(), dockWidget);
         dockWidget->setWidget(tw);

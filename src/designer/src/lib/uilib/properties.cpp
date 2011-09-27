@@ -331,7 +331,7 @@ static bool applySimpleProperty(const QVariant &v, bool translateString, DomProp
         DomString *str = new DomString();
         str->setText(v.toString());
         if (!translateString)
-            str->setAttributeNotr(QLatin1String("true"));
+            str->setAttributeNotr(QStringLiteral("true"));
         dom_prop->setElementString(str);
     }
         return true;

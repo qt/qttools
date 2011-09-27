@@ -194,7 +194,7 @@ bool QTabWidgetEventFilter::eventFilter(QObject *o, QEvent *e)
                 if (tabbar->tabRect(i).contains(m_pressPoint)) {
                     if (i != tabbar->currentIndex()) {
                         qdesigner_internal::SetPropertyCommand *cmd = new qdesigner_internal::SetPropertyCommand(fw);
-                        cmd->init(m_tabWidget, QLatin1String("currentIndex"), i);
+                        cmd->init(m_tabWidget, QStringLiteral("currentIndex"), i);
                         fw->commandHistory()->push(cmd);
                     }
                     break;

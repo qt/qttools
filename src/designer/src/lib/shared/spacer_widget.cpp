@@ -171,7 +171,7 @@ void Spacer::resizeEvent(QResizeEvent* e)
         const QSize oldSize = e->oldSize();
         if (oldSize.isNull() || oldSize.width() <= m_SizeOffset.width() || oldSize.height() <= m_SizeOffset.height())
             if (QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(m_formWindow->core()->extensionManager(), this))
-                sheet->setChanged(sheet->indexOf(QLatin1String("sizeHint")), true);
+                sheet->setChanged(sheet->indexOf(QStringLiteral("sizeHint")), true);
     }
 
     updateMask();

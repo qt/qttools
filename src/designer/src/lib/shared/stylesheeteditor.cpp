@@ -228,7 +228,7 @@ void StyleSheetEditorDialog::slotAddResource(const QString &property)
 {
     const QString path = IconSelector::choosePixmapResource(m_core, m_core->resourceModel(), QString(), this);
     if (!path.isEmpty())
-        insertCssProperty(property, QString(QLatin1String("url(%1)")).arg(path));
+        insertCssProperty(property, QString(QStringLiteral("url(%1)")).arg(path));
 }
 
 void StyleSheetEditorDialog::slotAddGradient(const QString &property)
@@ -248,10 +248,10 @@ void StyleSheetEditorDialog::slotAddColor(const QString &property)
     QString colorStr;
 
     if (color.alpha() == 255) {
-        colorStr = QString(QLatin1String("rgb(%1, %2, %3)")).arg(
+        colorStr = QString(QStringLiteral("rgb(%1, %2, %3)")).arg(
                 color.red()).arg(color.green()).arg(color.blue());
     } else {
-        colorStr = QString(QLatin1String("rgba(%1, %2, %3, %4)")).arg(
+        colorStr = QString(QStringLiteral("rgba(%1, %2, %3, %4)")).arg(
                 color.red()).arg(color.green()).arg(color.blue()).arg(color.alpha());
     }
 
@@ -271,29 +271,29 @@ void StyleSheetEditorDialog::slotAddFont()
 
         switch (font.style()) {
         case QFont::StyleItalic:
-            fontStr += QLatin1String("italic ");
+            fontStr += QStringLiteral("italic ");
             break;
         case QFont::StyleOblique:
-            fontStr += QLatin1String("oblique ");
+            fontStr += QStringLiteral("oblique ");
             break;
         default:
             break;
         }
         fontStr += QString::number(font.pointSize());
-        fontStr += QLatin1String("pt \"");
+        fontStr += QStringLiteral("pt \"");
         fontStr += font.family();
         fontStr += QLatin1Char('"');
 
-        insertCssProperty(QLatin1String("font"), fontStr);
+        insertCssProperty(QStringLiteral("font"), fontStr);
         QString decoration;
         if (font.underline())
-            decoration += QLatin1String("underline");
+            decoration += QStringLiteral("underline");
         if (font.strikeOut()) {
             if (!decoration.isEmpty())
                 decoration += QLatin1Char(' ');
-            decoration += QLatin1String("line-through");
+            decoration += QStringLiteral("line-through");
         }
-        insertCssProperty(QLatin1String("text-decoration"), decoration);
+        insertCssProperty(QStringLiteral("text-decoration"), decoration);
     }
 }
 
@@ -308,8 +308,8 @@ void StyleSheetEditorDialog::insertCssProperty(const QString &name, const QStrin
 
             // Simple check to see if we're in a selector scope
             const QTextDocument *doc = m_editor->document();
-            const QTextCursor closing = doc->find(QLatin1String("}"), cursor, QTextDocument::FindBackward);
-            const QTextCursor opening = doc->find(QLatin1String("{"), cursor, QTextDocument::FindBackward);
+            const QTextCursor closing = doc->find(QStringLiteral("}"), cursor, QTextDocument::FindBackward);
+            const QTextCursor opening = doc->find(QStringLiteral("{"), cursor, QTextDocument::FindBackward);
             const bool inSelector = !opening.isNull() && (closing.isNull() ||
                                                           closing.position() < opening.position());
             QString insertion;
@@ -318,7 +318,7 @@ void StyleSheetEditorDialog::insertCssProperty(const QString &name, const QStrin
             if (inSelector)
                 insertion += QLatin1Char('\t');
             insertion += name;
-            insertion += QLatin1String(": ");
+            insertion += QStringLiteral(": ");
             insertion += value;
             insertion += QLatin1Char(';');
             cursor.insertText(insertion);
@@ -331,8 +331,8 @@ void StyleSheetEditorDialog::insertCssProperty(const QString &name, const QStrin
 
 void StyleSheetEditorDialog::slotRequestHelp()
 {
-    m_core->integration()->emitHelpRequested(QLatin1String("qt"),
-                                             QLatin1String("stylesheet-reference.html"));
+    m_core->integration()->emitHelpRequested(QStringLiteral("qt"),
+                                             QStringLiteral("stylesheet-reference.html"));
 }
 
 QDialogButtonBox * StyleSheetEditorDialog::buttonBox() const
@@ -356,7 +356,7 @@ bool StyleSheetEditorDialog::isStyleSheetValid(const QString &styleSheet)
     QCss::StyleSheet sheet;
     if (parser.parse(&sheet))
         return true;
-    QString fullSheet = QLatin1String("* { ");
+    QString fullSheet = QStringLiteral("* { ");
     fullSheet += styleSheet;
     fullSheet += QLatin1Char('}');
     QCss::Parser parser2(fullSheet);
@@ -369,10 +369,10 @@ void StyleSheetEditorDialog::validateStyleSheet()
     setOkButtonEnabled(valid);
     if (valid) {
         m_validityLabel->setText(tr("Valid Style Sheet"));
-        m_validityLabel->setStyleSheet(QLatin1String("color: green"));
+        m_validityLabel->setStyleSheet(QStringLiteral("color: green"));
     } else {
         m_validityLabel->setText(tr("Invalid Style Sheet"));
-        m_validityLabel->setStyleSheet(QLatin1String("color: red"));
+        m_validityLabel->setStyleSheet(QStringLiteral("color: red"));
     }
 }
 

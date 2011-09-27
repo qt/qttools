@@ -211,7 +211,7 @@ bool QWizardPagePropertySheet::reset(int index)
 // ---------------- QWizardPropertySheet
 QWizardPropertySheet::QWizardPropertySheet(QWizard *object, QObject *parent) :
     QDesignerPropertySheet(object, parent),
-    m_startId(QLatin1String("startId"))
+    m_startId(QStringLiteral("startId"))
 {
 }
 

@@ -467,24 +467,24 @@ QString QDesignerPropertySheetPrivate::transformLayoutPropertyName(int index) co
     typedef QMap<QDesignerPropertySheet::PropertyType, QString> TypeNameMap;
     static TypeNameMap typeNameMap;
     if (typeNameMap.empty()) {
-        typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutObjectName, QLatin1String("objectName"));
-        typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutLeftMargin, QLatin1String("leftMargin"));
-        typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutTopMargin, QLatin1String("topMargin"));
-        typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutRightMargin, QLatin1String("rightMargin"));
-        typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutBottomMargin, QLatin1String("bottomMargin"));
-        typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutSpacing, QLatin1String("spacing"));
-        typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutHorizontalSpacing, QLatin1String("horizontalSpacing"));
-        typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutVerticalSpacing, QLatin1String("verticalSpacing"));
-        typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutSizeConstraint, QLatin1String("sizeConstraint"));
-        typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutFieldGrowthPolicy, QLatin1String("fieldGrowthPolicy"));
-        typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutRowWrapPolicy, QLatin1String("rowWrapPolicy"));
-        typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutLabelAlignment, QLatin1String("labelAlignment"));
-        typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutFormAlignment, QLatin1String("formAlignment"));
-        typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutBoxStretch, QLatin1String("stretch"));
-        typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutGridRowStretch, QLatin1String("rowStretch"));
-        typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutGridColumnStretch, QLatin1String("columnStretch"));
-        typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutGridRowMinimumHeight, QLatin1String("rowMinimumHeight"));
-        typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutGridColumnMinimumWidth, QLatin1String("columnMinimumWidth"));
+        typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutObjectName, QStringLiteral("objectName"));
+        typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutLeftMargin, QStringLiteral("leftMargin"));
+        typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutTopMargin, QStringLiteral("topMargin"));
+        typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutRightMargin, QStringLiteral("rightMargin"));
+        typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutBottomMargin, QStringLiteral("bottomMargin"));
+        typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutSpacing, QStringLiteral("spacing"));
+        typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutHorizontalSpacing, QStringLiteral("horizontalSpacing"));
+        typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutVerticalSpacing, QStringLiteral("verticalSpacing"));
+        typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutSizeConstraint, QStringLiteral("sizeConstraint"));
+        typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutFieldGrowthPolicy, QStringLiteral("fieldGrowthPolicy"));
+        typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutRowWrapPolicy, QStringLiteral("rowWrapPolicy"));
+        typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutLabelAlignment, QStringLiteral("labelAlignment"));
+        typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutFormAlignment, QStringLiteral("formAlignment"));
+        typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutBoxStretch, QStringLiteral("stretch"));
+        typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutGridRowStretch, QStringLiteral("rowStretch"));
+        typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutGridColumnStretch, QStringLiteral("columnStretch"));
+        typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutGridRowMinimumHeight, QStringLiteral("rowMinimumHeight"));
+        typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutGridColumnMinimumWidth, QStringLiteral("columnMinimumWidth"));
     }
     const TypeNameMap::const_iterator it = typeNameMap.constFind(propertyType(index));
     if (it != typeNameMap.constEnd())
@@ -534,20 +534,20 @@ QDesignerPropertySheet::PropertyType QDesignerPropertySheet::propertyTypeFromNam
         propertyTypeHash.insert(QLatin1String(layoutGridColumnStretchPropertyC), PropertyLayoutGridColumnStretch);
         propertyTypeHash.insert(QLatin1String(layoutGridRowMinimumHeightC),      PropertyLayoutGridRowMinimumHeight);
         propertyTypeHash.insert(QLatin1String(layoutGridColumnMinimumWidthC),    PropertyLayoutGridColumnMinimumWidth);
-        propertyTypeHash.insert(QLatin1String("buddy"),                   PropertyBuddy);
-        propertyTypeHash.insert(QLatin1String("geometry"),                PropertyGeometry);
-        propertyTypeHash.insert(QLatin1String("checkable"),               PropertyCheckable);
-        propertyTypeHash.insert(QLatin1String("accessibleName"),          PropertyAccessibility);
-        propertyTypeHash.insert(QLatin1String("accessibleDescription"),   PropertyAccessibility);
-        propertyTypeHash.insert(QLatin1String("windowTitle"),             PropertyWindowTitle);
-        propertyTypeHash.insert(QLatin1String("windowIcon"),              PropertyWindowIcon);
-        propertyTypeHash.insert(QLatin1String("windowFilePath"),          PropertyWindowFilePath);
-        propertyTypeHash.insert(QLatin1String("windowOpacity"),           PropertyWindowOpacity);
-        propertyTypeHash.insert(QLatin1String("windowIconText"),          PropertyWindowIconText);
-        propertyTypeHash.insert(QLatin1String("windowModality"),          PropertyWindowModality);
-        propertyTypeHash.insert(QLatin1String("windowModified"),          PropertyWindowModified);
-        propertyTypeHash.insert(QLatin1String("styleSheet"),              PropertyStyleSheet);
-        propertyTypeHash.insert(QLatin1String("text"),                    PropertyText);
+        propertyTypeHash.insert(QStringLiteral("buddy"),                   PropertyBuddy);
+        propertyTypeHash.insert(QStringLiteral("geometry"),                PropertyGeometry);
+        propertyTypeHash.insert(QStringLiteral("checkable"),               PropertyCheckable);
+        propertyTypeHash.insert(QStringLiteral("accessibleName"),          PropertyAccessibility);
+        propertyTypeHash.insert(QStringLiteral("accessibleDescription"),   PropertyAccessibility);
+        propertyTypeHash.insert(QStringLiteral("windowTitle"),             PropertyWindowTitle);
+        propertyTypeHash.insert(QStringLiteral("windowIcon"),              PropertyWindowIcon);
+        propertyTypeHash.insert(QStringLiteral("windowFilePath"),          PropertyWindowFilePath);
+        propertyTypeHash.insert(QStringLiteral("windowOpacity"),           PropertyWindowOpacity);
+        propertyTypeHash.insert(QStringLiteral("windowIconText"),          PropertyWindowIconText);
+        propertyTypeHash.insert(QStringLiteral("windowModality"),          PropertyWindowModality);
+        propertyTypeHash.insert(QStringLiteral("windowModified"),          PropertyWindowModified);
+        propertyTypeHash.insert(QStringLiteral("styleSheet"),              PropertyStyleSheet);
+        propertyTypeHash.insert(QStringLiteral("text"),                    PropertyText);
     }
     return propertyTypeHash.value(name, PropertyNone);
 }
@@ -559,7 +559,7 @@ QDesignerPropertySheet::QDesignerPropertySheet(QObject *object, QObject *parent)
     typedef QDesignerPropertySheetPrivate::Info Info;
     const QDesignerMetaObjectInterface *baseMeta = d->m_meta;
 
-    while (baseMeta &&baseMeta->className().startsWith(QLatin1String("QDesigner"))) {
+    while (baseMeta &&baseMeta->className().startsWith(QStringLiteral("QDesigner"))) {
         baseMeta = baseMeta->superClass();
     }
     Q_ASSERT(baseMeta != 0);
@@ -603,26 +603,26 @@ QDesignerPropertySheet::QDesignerPropertySheet(QObject *object, QObject *parent)
     }
 
     if (object->isWidgetType()) {
-        createFakeProperty(QLatin1String("focusPolicy"));
-        createFakeProperty(QLatin1String("cursor"));
-        createFakeProperty(QLatin1String("toolTip"));
-        createFakeProperty(QLatin1String("whatsThis"));
-        createFakeProperty(QLatin1String("acceptDrops"));
-        createFakeProperty(QLatin1String("dragEnabled"));
+        createFakeProperty(QStringLiteral("focusPolicy"));
+        createFakeProperty(QStringLiteral("cursor"));
+        createFakeProperty(QStringLiteral("toolTip"));
+        createFakeProperty(QStringLiteral("whatsThis"));
+        createFakeProperty(QStringLiteral("acceptDrops"));
+        createFakeProperty(QStringLiteral("dragEnabled"));
         // windowModality/Opacity is visible only for the main container, in which case the form windows enables it on loading
-        setVisible(createFakeProperty(QLatin1String("windowModality")), false);
-        setVisible(createFakeProperty(QLatin1String("windowOpacity"), double(1.0)), false);
+        setVisible(createFakeProperty(QStringLiteral("windowModality")), false);
+        setVisible(createFakeProperty(QStringLiteral("windowOpacity"), double(1.0)), false);
         if (qobject_cast<const QToolBar *>(d->m_object)) { // prevent toolbars from being dragged off
-            createFakeProperty(QLatin1String("floatable"), QVariant(true));
+            createFakeProperty(QStringLiteral("floatable"), QVariant(true));
         } else {
             if (qobject_cast<const QMenuBar *>(d->m_object)) {
                 // Keep the menu bar editable in the form even if a native menu bar is used.
                 const bool nativeMenuBarDefault = !qApp->testAttribute(Qt::AA_DontUseNativeMenuBar);
-                createFakeProperty(QLatin1String("nativeMenuBar"), QVariant(nativeMenuBarDefault));
+                createFakeProperty(QStringLiteral("nativeMenuBar"), QVariant(nativeMenuBarDefault));
             }
         }
         if (d->m_canHaveLayoutAttributes) {
-            static const QString layoutGroup = QLatin1String("Layout");
+            static const QString layoutGroup = QStringLiteral("Layout");
             const char* fakeLayoutProperties[] = {
                 layoutObjectNameC, layoutLeftMarginC, layoutTopMarginC, layoutRightMarginC, layoutBottomMarginC, layoutSpacingC, layoutHorizontalSpacingC, layoutVerticalSpacingC,
                 layoutFieldGrowthPolicyC, layoutRowWrapPolicyC, layoutLabelAlignmentC, layoutFormAlignmentC,
@@ -642,19 +642,19 @@ QDesignerPropertySheet::QDesignerPropertySheet(QObject *object, QObject *parent)
         }
 
         if (d->m_objectType == ObjectLabel)
-            createFakeProperty(QLatin1String("buddy"), QVariant(QByteArray()));
+            createFakeProperty(QStringLiteral("buddy"), QVariant(QByteArray()));
         /* We need to create a fake property since the property does not work
          * for non-toplevel windows or on other systems than Mac and only if
          * it is above a certain Mac OS version. */
         if (qobject_cast<const QMainWindow *>(d->m_object))
-            createFakeProperty(QLatin1String("unifiedTitleAndToolBarOnMac"), false);
+            createFakeProperty(QStringLiteral("unifiedTitleAndToolBarOnMac"), false);
     }
 
     if (qobject_cast<const QDialog*>(object)) {
-        createFakeProperty(QLatin1String("modal"));
+        createFakeProperty(QStringLiteral("modal"));
     }
     if (qobject_cast<const QDockWidget*>(object)) {
-        createFakeProperty(QLatin1String("floating"));
+        createFakeProperty(QStringLiteral("floating"));
     }
 
     typedef QList<QByteArray> ByteArrayList;
@@ -691,8 +691,8 @@ bool QDesignerPropertySheet::dynamicPropertiesAllowed() const
 bool QDesignerPropertySheet::canAddDynamicProperty(const QString &propName) const
 {
     // used internally
-    if (propName == QLatin1String("database") ||
-        propName == QLatin1String("buttonGroupId"))
+    if (propName == QStringLiteral("database") ||
+        propName == QStringLiteral("buttonGroupId"))
         return false;
     const int index = d->m_meta->indexOfProperty(propName);
     if (index != -1)
@@ -704,7 +704,7 @@ bool QDesignerPropertySheet::canAddDynamicProperty(const QString &propName) cons
         else
             return true;
     }
-    if (!QDesignerPropertySheet::internalDynamicPropertiesEnabled() && propName.startsWith(QLatin1String("_q_")))
+    if (!QDesignerPropertySheet::internalDynamicPropertiesEnabled() && propName.startsWith(QStringLiteral("_q_")))
         return false;
     return true;
 }
@@ -1158,7 +1158,7 @@ void QDesignerPropertySheet::setProperty(int index, const QVariant &value)
         const QDesignerMetaPropertyInterface *p = d->m_meta->property(index);
         p->write(d->m_object, resolvePropertyValue(index, value));
         if (qobject_cast<QGroupBox *>(d->m_object) && propertyType(index) == PropertyCheckable) {
-            const int idx = indexOf(QLatin1String("focusPolicy"));
+            const int idx = indexOf(QStringLiteral("focusPolicy"));
             if (!isChanged(idx)) {
                 qdesigner_internal::PropertySheetEnumValue e = qvariant_cast<qdesigner_internal::PropertySheetEnumValue>(property(idx));
                 if (value.toBool()) {
@@ -1195,7 +1195,7 @@ bool QDesignerPropertySheet::reset(int index)
     if (d->isStringProperty(index)) {
         qdesigner_internal::PropertySheetStringValue value;
         // Main container: Reset to stored class name as not to change the file names generated by uic.
-        if (propertyName(index) == QLatin1String("objectName")) {
+        if (propertyName(index) == QStringLiteral("objectName")) {
             const QVariant classNameDefaultV = d->m_object->property("_q_classname");
             if (classNameDefaultV.isValid())
                 value.setValue(classNameDefaultV.toString());

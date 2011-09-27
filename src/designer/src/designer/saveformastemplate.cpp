@@ -86,7 +86,7 @@ void SaveFormAsTemplate::accept()
     templateFileName += QLatin1Char('/');
     const QString name = ui.templateNameEdit->text();
     templateFileName +=  name;
-    const QString extension = QLatin1String(".ui");
+    const QString extension = QStringLiteral(".ui");
     if (!templateFileName.endsWith(extension))
         templateFileName.append(extension);
     QFile file(templateFileName);

@@ -68,7 +68,7 @@ FormWindowWidgetStack::FormWindowWidgetStack(QObject *parent) :
     // the form windows as it ignores the sizePolicy of
     // its child (for example, Fixed would cause undesired side effects).
     m_formContainerLayout->setMargin(0);
-    m_formContainer->setObjectName(QLatin1String("formContainer"));
+    m_formContainer->setObjectName(QStringLiteral("formContainer"));
     m_formContainer->setLayout(m_formContainerLayout);
     m_formContainerLayout->setStackingMode(QStackedLayout::StackAll);
     // System settings might have different background colors, autofill them

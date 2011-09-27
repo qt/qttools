@@ -176,7 +176,7 @@ QString ButtonGroupCommand::nameList(const ButtonList& bl)
 {
     QString rc;
     const QChar quote = QLatin1Char('\'');
-    const QString separator =  QLatin1String(", ");
+    const QString separator =  QStringLiteral(", ");
     const int size = bl.size();
     for (int i = 0; i < size; i++) {
         if (i)
@@ -228,7 +228,7 @@ bool CreateButtonGroupCommand::init(const ButtonList &bl)
         return false;
     QDesignerFormWindowInterface *fw = formWindow();
     QButtonGroup *buttonGroup = new QButtonGroup(fw->mainContainer());
-    buttonGroup->setObjectName(QLatin1String("buttonGroup"));
+    buttonGroup->setObjectName(QStringLiteral("buttonGroup"));
     fw->ensureUniqueObjectName(buttonGroup);
     initialize(bl, buttonGroup);
     return true;
@@ -396,7 +396,7 @@ protected:
 };
 
 ButtonTextTaskMenuInlineEditor::ButtonTextTaskMenuInlineEditor(QAbstractButton *button, QObject *parent) :
-      TaskMenuInlineEditor(button, ValidationMultiLine, QLatin1String("text"), parent)
+      TaskMenuInlineEditor(button, ValidationMultiLine, QStringLiteral("text"), parent)
 {
 }
 
@@ -419,7 +419,7 @@ protected:
 };
 
 LinkDescriptionTaskMenuInlineEditor::LinkDescriptionTaskMenuInlineEditor(QAbstractButton *button, QObject *parent) :
-      TaskMenuInlineEditor(button, ValidationMultiLine, QLatin1String("description"), parent)
+      TaskMenuInlineEditor(button, ValidationMultiLine, QStringLiteral("description"), parent)
 {
 }
 

@@ -91,11 +91,11 @@ CodeDialog::CodeDialog(QWidget *parent) :
     // Edit tool bar
     QToolBar *toolBar = new QToolBar;
 
-    const QIcon saveIcon = createIconSet(QLatin1String("filesave.png"));
+    const QIcon saveIcon = createIconSet(QStringLiteral("filesave.png"));
     QAction *saveAction = toolBar->addAction(saveIcon, tr("Save..."));
     connect(saveAction, SIGNAL(triggered()), this, SLOT(slotSaveAs()));
 
-    const QIcon copyIcon = createIconSet(QLatin1String("editcopy.png"));
+    const QIcon copyIcon = createIconSet(QStringLiteral("editcopy.png"));
     QAction *copyAction = toolBar->addAction(copyIcon, tr("Copy All"));
     connect(copyAction, SIGNAL(triggered()), this, SLOT(copyAll()));
 
@@ -166,11 +166,11 @@ bool CodeDialog::generateCode(const QDesignerFormWindowInterface *fw,
         tempPattern += QDir::separator();
     const QString fileName = fw->fileName();
     if (fileName.isEmpty()) {
-        tempPattern += QLatin1String("designer");
+        tempPattern += QStringLiteral("designer");
     } else {
         tempPattern += QFileInfo(fileName).baseName();
     }
-    tempPattern += QLatin1String("XXXXXX.ui");
+    tempPattern += QStringLiteral("XXXXXX.ui");
     // Write to temp file
     QTemporaryFile tempFormFile(tempPattern);
 
@@ -218,7 +218,7 @@ void CodeDialog::slotSaveAs()
     const QString uiFile = formFileName();
 
     if (!uiFile.isEmpty()) {
-        filter = QLatin1String("ui_");
+        filter = QStringLiteral("ui_");
         filter += QFileInfo(uiFile).baseName();
         filter += QLatin1Char('.');
         filter += headerSuffix;

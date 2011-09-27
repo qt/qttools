@@ -63,9 +63,9 @@ PreviewActionGroup::PreviewActionGroup(QDesignerFormEditorInterface *core, QObje
     connect(this, SIGNAL(triggered(QAction*)), this, SLOT(slotTriggered(QAction*)));
     setExclusive(true);
 
-    const QString objNamePostfix = QLatin1String("_action");
+    const QString objNamePostfix = QStringLiteral("_action");
     // Create invisible actions for devices. Set index as action data.
-    QString objNamePrefix = QLatin1String("__qt_designer_device_");
+    QString objNamePrefix = QStringLiteral("__qt_designer_device_");
     for (int i = 0; i < MaxDeviceActions; i++) {
         QAction *a = new QAction(this);
         QString objName = objNamePrefix;
@@ -78,7 +78,7 @@ PreviewActionGroup::PreviewActionGroup(QDesignerFormEditorInterface *core, QObje
     }
     // Create separator at index MaxDeviceActions
     QAction *sep = new QAction(this);
-    sep->setObjectName(QLatin1String("__qt_designer_deviceseparator"));
+    sep->setObjectName(QStringLiteral("__qt_designer_deviceseparator"));
     sep->setSeparator(true);
     sep->setVisible(false);
     addAction(sep);
@@ -89,7 +89,7 @@ PreviewActionGroup::PreviewActionGroup(QDesignerFormEditorInterface *core, QObje
     const QStringList styles = QStyleFactory::keys();
     const QStringList::const_iterator cend = styles.constEnd();
     // Make sure ObjectName  is unique in case toolbar solution is used.
-    objNamePrefix = QLatin1String("__qt_designer_style_");
+    objNamePrefix = QStringLiteral("__qt_designer_style_");
     // Create styles. Set style name string as action data.
     for (QStringList::const_iterator it = styles.constBegin(); it !=  cend ;++it) {
         QAction *a = new QAction(tr("%1 Style").arg(*it), this);

@@ -60,7 +60,7 @@ const char *QAxWidgetPropertySheet::controlPropertyName = "control";
 QAxWidgetPropertySheet::QAxWidgetPropertySheet(QDesignerAxWidget *object, QObject *parent) :
     QDesignerPropertySheet(object, parent),
     m_controlProperty(controlPropertyName),
-    m_propertyGroup(QLatin1String("QAxWidget"))
+    m_propertyGroup(QStringLiteral("QAxWidget"))
 {
      if (!axWidget()->loaded()) { // For some obscure reason....
         const int controlIndex = QDesignerPropertySheet::indexOf(m_controlProperty);

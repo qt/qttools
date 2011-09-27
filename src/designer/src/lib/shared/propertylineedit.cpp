@@ -69,7 +69,7 @@ namespace qdesigner_internal {
     }
 
     void PropertyLineEdit::insertNewLine() {
-        insertText(QLatin1String("\\n"));
+        insertText(QStringLiteral("\\n"));
     }
 
     void PropertyLineEdit::insertText(const QString &text) {

@@ -64,7 +64,7 @@ private:
 PhononCollection::PhononCollection(QObject *parent) :
     QObject(parent)
 {
-    const QString group = QLatin1String("Phonon");
+    const QString group = QStringLiteral("Phonon");
     m_plugins.push_back(new VideoPlayerPlugin(group, this));
     m_plugins.push_back(new SeekSliderPlugin(group, this));
     m_plugins.push_back(new VolumeSliderPlugin(group, this));

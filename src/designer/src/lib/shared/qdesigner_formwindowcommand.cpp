@@ -119,7 +119,7 @@ void QDesignerFormWindowCommand::updateBuddies(QDesignerFormWindowInterface *for
     if (label_list.empty())
         return;
 
-    const QString buddyProperty = QLatin1String("buddy");
+    const QString buddyProperty = QStringLiteral("buddy");
     const QByteArray oldNameU8 = old_name.toUtf8();
     const QByteArray newNameU8 = new_name.toUtf8();
 

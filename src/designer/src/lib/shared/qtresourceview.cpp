@@ -378,7 +378,7 @@ void QtResourceViewPrivate::createPaths()
         return;
 
     // Resource root up until 4.6 was ':', changed to ":/" as of 4.7
-    const QString root(QLatin1String(":/"));
+    const QString root(QStringLiteral(":/"));
 
     QMap<QString, QString> contents = m_resourceModel->contents();
     QMapIterator<QString, QString> itContents(contents);
@@ -421,7 +421,7 @@ void QtResourceViewPrivate::filterOutResources()
     // 3) we hide these items which has pathToVisible value false.
 
     const bool matchAll = m_filterPattern.isEmpty();
-    const QString root(QLatin1String(":/"));
+    const QString root(QStringLiteral(":/"));
 
     QQueue<QString> pathQueue;
     pathQueue.enqueue(root);
@@ -536,7 +536,7 @@ QTreeWidgetItem *QtResourceViewPrivate::createPath(const QString &path, QTreeWid
         QFileInfo di(path);
         substPath = di.fileName();
     } else {
-        substPath = QLatin1String("<resource root>");
+        substPath = QStringLiteral("<resource root>");
     }
     item->setText(0, substPath);
     item->setToolTip(0, path);
@@ -583,20 +583,20 @@ QtResourceView::QtResourceView(QDesignerFormEditorInterface *core, QWidget *pare
 {
     d_ptr->q_ptr = this;
 
-    QIcon editIcon = QIcon::fromTheme(QLatin1String("document-properties"), qdesigner_internal::createIconSet(QLatin1String("edit.png")));
+    QIcon editIcon = QIcon::fromTheme(QStringLiteral("document-properties"), qdesigner_internal::createIconSet(QStringLiteral("edit.png")));
     d_ptr->m_editResourcesAction = new QAction(editIcon, tr("Edit Resources..."), this);
     d_ptr->m_toolBar->addAction(d_ptr->m_editResourcesAction);
     connect(d_ptr->m_editResourcesAction, SIGNAL(triggered()), this, SLOT(slotEditResources()));
     d_ptr->m_editResourcesAction->setEnabled(false);
 
-    QIcon refreshIcon = QIcon::fromTheme(QLatin1String("view-refresh"), qdesigner_internal::createIconSet(QLatin1String("reload.png")));
+    QIcon refreshIcon = QIcon::fromTheme(QStringLiteral("view-refresh"), qdesigner_internal::createIconSet(QStringLiteral("reload.png")));
     d_ptr->m_reloadResourcesAction = new QAction(refreshIcon, tr("Reload"), this);
 
     d_ptr->m_toolBar->addAction(d_ptr->m_reloadResourcesAction);
     connect(d_ptr->m_reloadResourcesAction, SIGNAL(triggered()), this, SLOT(slotReloadResources()));
     d_ptr->m_reloadResourcesAction->setEnabled(false);
 
-    QIcon copyIcon = QIcon::fromTheme(QLatin1String("edit-copy"), qdesigner_internal::createIconSet(QLatin1String("editcopy.png")));
+    QIcon copyIcon = QIcon::fromTheme(QStringLiteral("edit-copy"), qdesigner_internal::createIconSet(QStringLiteral("editcopy.png")));
     d_ptr->m_copyResourcePathAction = new QAction(copyIcon, tr("Copy Path"), this);
     connect(d_ptr->m_copyResourcePathAction, SIGNAL(triggered()), this, SLOT(slotCopyResourcePath()));
     d_ptr->m_copyResourcePathAction->setEnabled(false);

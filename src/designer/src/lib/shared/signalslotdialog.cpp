@@ -168,7 +168,7 @@ namespace {
         QString signature = le->text();
         if (!m_signatureRegexp.exactMatch(signature )) {
             if (m_methodNameRegexp.exactMatch(signature )) {
-                signature += QLatin1String("()");
+                signature += QStringLiteral("()");
                 le->setText(signature);
             } else {
                 return;
@@ -370,8 +370,8 @@ SignalSlotDialog::SignalSlotDialog(QDesignerDialogGuiInterface *dialogGui, QWidg
     m_ui->addSignalButton->setIcon(plusIcon);
     m_ui->removeSignalButton->setIcon(minusIcon);
 
-    m_slotPanel = new SignaturePanel(this, m_ui->slotListView, m_ui->addSlotButton, m_ui->removeSlotButton, QLatin1String("slot"));
-    m_signalPanel = new SignaturePanel(this, m_ui->signalListView, m_ui->addSignalButton, m_ui->removeSignalButton, QLatin1String("signal"));
+    m_slotPanel = new SignaturePanel(this, m_ui->slotListView, m_ui->addSlotButton, m_ui->removeSlotButton, QStringLiteral("slot"));
+    m_signalPanel = new SignaturePanel(this, m_ui->signalListView, m_ui->addSignalButton, m_ui->removeSignalButton, QStringLiteral("signal"));
     connect(m_slotPanel,   SIGNAL(checkSignature(QString,bool*)), this, SLOT(slotCheckSignature(QString,bool*)));
     connect(m_signalPanel, SIGNAL(checkSignature(QString,bool*)), this, SLOT(slotCheckSignature(QString,bool*)));
 

@@ -149,12 +149,12 @@ NewFormWidget::NewFormWidget(QDesignerFormEditorInterface *core, QWidget *parent
     m_ui->lblPreview->setBackgroundRole(QPalette::Base);
     QDesignerSharedSettings settings(m_core);
 
-    QString uiExtension = QLatin1String("ui");
-    QString templatePath = QLatin1String(":/trolltech/designer/templates/forms");
+    QString uiExtension = QStringLiteral("ui");
+    QString templatePath = QStringLiteral(":/trolltech/designer/templates/forms");
 
     QDesignerLanguageExtension *lang = qt_extension<QDesignerLanguageExtension *>(core->extensionManager(), core);
     if (lang) {
-        templatePath = QLatin1String(":/templates/forms");
+        templatePath = QStringLiteral(":/templates/forms");
         uiExtension = lang->uiExtension();
     }
 
@@ -409,7 +409,7 @@ void NewFormWidget::loadFrom(const QString &path, bool resourceFile, const QStri
         return;
 
     // Iterate through the directory and add the templates
-    const QFileInfoList list = dir.entryInfoList(QStringList(QLatin1String("*.") + uiExtension),
+    const QFileInfoList list = dir.entryInfoList(QStringList(QStringLiteral("*.") + uiExtension),
                                                  QDir::Files);
 
     if (list.isEmpty())

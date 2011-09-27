@@ -59,12 +59,12 @@ QDeclarativeViewPlugin::QDeclarativeViewPlugin(QObject *parent) :
 
 QString QDeclarativeViewPlugin::name() const
 {
-    return QLatin1String("QDeclarativeView");
+    return QStringLiteral("QDeclarativeView");
 }
 
 QString QDeclarativeViewPlugin::group() const
 {
-    return QLatin1String("Display Widgets");
+    return QStringLiteral("Display Widgets");
 }
 
 QString QDeclarativeViewPlugin::toolTip() const
@@ -79,7 +79,7 @@ QString QDeclarativeViewPlugin::whatsThis() const
 
 QString QDeclarativeViewPlugin::includeFile() const
 {
-    return QLatin1String("QtDeclarative/QDeclarativeView");
+    return QStringLiteral("QtDeclarative/QDeclarativeView");
 }
 
 QIcon QDeclarativeViewPlugin::icon() const
@@ -112,7 +112,7 @@ void QDeclarativeViewPlugin::initialize(QDesignerFormEditorInterface * /*core*/)
 
 QString QDeclarativeViewPlugin::domXml() const
 {
-    return QLatin1String("\
+    return QStringLiteral("\
     <ui language=\"c++\">\
         <widget class=\"QDeclarativeView\" name=\"declarativeView\">\
             <property name=\"geometry\">\

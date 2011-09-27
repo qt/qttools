@@ -97,7 +97,7 @@ WidgetBoxResource::WidgetBoxResource(QDesignerFormEditorInterface *core) :
 
 QWidget *WidgetBoxResource::createWidget(const QString &widgetName, QWidget *parentWidget, const QString &name)
 {
-    if (widgetName == QLatin1String("Spacer")) {
+    if (widgetName == QStringLiteral("Spacer")) {
         Spacer *spacer = new Spacer(parentWidget);
         spacer->setObjectName(name);
         return spacer;
@@ -138,7 +138,7 @@ void WidgetBoxResource::createCustomWidgets(DomCustomWidgets *dc)
 static QSize geometryProp(const DomWidget *dw)
 {
     const QList<DomProperty*> prop_list = dw->elementProperty();
-    const QString geometry = QLatin1String("geometry");
+    const QString geometry = QStringLiteral("geometry");
     foreach (DomProperty *prop, prop_list) {
         if (prop->attributeName() !=  geometry)
             continue;

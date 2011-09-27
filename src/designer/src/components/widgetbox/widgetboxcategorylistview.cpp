@@ -157,7 +157,7 @@ private:
 
 WidgetBoxCategoryModel::WidgetBoxCategoryModel(QDesignerFormEditorInterface *core, QObject *parent) :
     QAbstractListModel(parent),
-    m_classNameRegExp(QLatin1String("<widget +class *= *\"([^\"]+)\"")),
+    m_classNameRegExp(QStringLiteral("<widget +class *= *\"([^\"]+)\"")),
     m_core(core),
     m_viewMode(QListView::ListMode)
 {
@@ -217,7 +217,7 @@ void WidgetBoxCategoryModel::addWidget(const QDesignerWidgetBoxInterface::Widget
 {
     // build item. Filter on name + class name if it is different and not a layout.
     QString filter = widget.name();
-    if (!filter.contains(QLatin1String("Layout")) && m_classNameRegExp.indexIn(widget.domXml()) != -1) {
+    if (!filter.contains(QStringLiteral("Layout")) && m_classNameRegExp.indexIn(widget.domXml()) != -1) {
         const QString className = m_classNameRegExp.cap(1);
         if (!filter.contains(className))
             filter += className;
@@ -359,7 +359,7 @@ QWidget *WidgetBoxCategoryEntryDelegate::createEditor(QWidget *parent,
 {
     QWidget *result = QItemDelegate::createEditor(parent, option, index);
     if (QLineEdit *line_edit = qobject_cast<QLineEdit*>(result)) {
-        const QRegExp re = QRegExp(QLatin1String("[_a-zA-Z][_a-zA-Z0-9]*"));
+        const QRegExp re = QRegExp(QStringLiteral("[_a-zA-Z][_a-zA-Z0-9]*"));
         Q_ASSERT(re.isValid());
         line_edit->setValidator(new QRegExpValidator(re, line_edit));
     }
@@ -483,9 +483,9 @@ QString WidgetBoxCategoryListView::widgetDomXml(const QDesignerWidgetBoxInterfac
 
     if (domXml.isEmpty()) {
         domXml = QLatin1String(uiOpeningTagC);
-        domXml += QLatin1String("<widget class=\"");
+        domXml += QStringLiteral("<widget class=\"");
         domXml += widget.name();
-        domXml += QLatin1String("\"/>");
+        domXml += QStringLiteral("\"/>");
         domXml += QLatin1String(uiClosingTagC);
     }
     return domXml;

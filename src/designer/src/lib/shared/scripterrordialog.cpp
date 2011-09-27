@@ -61,7 +61,7 @@ static void formatError(const QFormScriptRunner::Error &error,
     QTextCharFormat format(oldFormat);
 
     // verbatim listing
-    format.setFontFamily(QLatin1String("Courier"));
+    format.setFontFamily(QStringLiteral("Courier"));
     cursor.insertText(error.script, format);
 
     const QString newLine(QLatin1Char('\n'));

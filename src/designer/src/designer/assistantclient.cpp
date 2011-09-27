@@ -71,21 +71,21 @@ AssistantClient::~AssistantClient()
 
 bool AssistantClient::showPage(const QString &path, QString *errorMessage)
 {
-    QString cmd = QLatin1String("SetSource ");
+    QString cmd = QStringLiteral("SetSource ");
     cmd += path;
     return sendCommand(cmd, errorMessage);
 }
 
 bool AssistantClient::activateIdentifier(const QString &identifier, QString *errorMessage)
 {
-    QString cmd = QLatin1String("ActivateIdentifier ");
+    QString cmd = QStringLiteral("ActivateIdentifier ");
     cmd += identifier;
     return sendCommand(cmd, errorMessage);
 }
 
 bool AssistantClient::activateKeyword(const QString &keyword, QString *errorMessage)
 {
-    QString cmd = QLatin1String("ActivateKeyword ");
+    QString cmd = QStringLiteral("ActivateKeyword ");
     cmd += keyword;
     return sendCommand(cmd, errorMessage);
 }
@@ -114,13 +114,13 @@ QString AssistantClient::binary()
 {
     QString app = QLibraryInfo::location(QLibraryInfo::BinariesPath) + QDir::separator();
 #if !defined(Q_OS_MAC)
-    app += QLatin1String("assistant");
+    app += QStringLiteral("assistant");
 #else
-    app += QLatin1String("Assistant.app/Contents/MacOS/Assistant");    
+    app += QStringLiteral("Assistant.app/Contents/MacOS/Assistant");
 #endif
 
 #if defined(Q_OS_WIN)
-    app += QLatin1String(".exe");
+    app += QStringLiteral(".exe");
 #endif
 
     return app;
@@ -142,7 +142,7 @@ bool AssistantClient::ensureRunning(QString *errorMessage)
     if (debugAssistantClient)
         qDebug() << "Running " << app;
     // run
-    QStringList args(QLatin1String("-enableRemoteControl"));
+    QStringList args(QStringLiteral("-enableRemoteControl"));
     m_process->start(app, args);
     if (!m_process->waitForStarted()) {
         *errorMessage = QCoreApplication::translate("AssistantClient", "Unable to launch assistant (%1).").arg(app);
@@ -156,20 +156,20 @@ QString AssistantClient::documentUrl(const QString &prefix, int qtVersion)
     if (qtVersion == 0)
         qtVersion = QT_VERSION;
     QString rc;
-    QTextStream(&rc) << QLatin1String("qthelp://com.trolltech.") << prefix << QLatin1Char('.')
+    QTextStream(&rc) << QStringLiteral("qthelp://com.trolltech.") << prefix << QLatin1Char('.')
                      << (qtVersion >> 16) << ((qtVersion >> 8) & 0xFF) << (qtVersion & 0xFF)
-                     << QLatin1String("/qdoc/");
+                     << QStringLiteral("/qdoc/");
     return rc;
 }
 
 QString AssistantClient::designerManualUrl(int qtVersion)
 {
-    return documentUrl(QLatin1String("designer"), qtVersion);
+    return documentUrl(QStringLiteral("designer"), qtVersion);
 }
 
 QString AssistantClient::qtReferenceManualUrl(int qtVersion)
 {
-    return documentUrl(QLatin1String("qt"), qtVersion);
+    return documentUrl(QStringLiteral("qt"), qtVersion);
 }
 
 QT_END_NAMESPACE

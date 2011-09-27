@@ -335,7 +335,7 @@ public:
 
 QDesignerIntegrationPrivate::QDesignerIntegrationPrivate(QDesignerIntegration *qq) :
     q(qq),
-    headerSuffix(QLatin1String(".h")),
+    headerSuffix(QStringLiteral(".h")),
     headerLowercase(true),
     m_features(QDesignerIntegrationInterface::DefaultFeature),
     m_resourceFileWatcherBehaviour(QDesignerIntegrationInterface::PromptToReloadResourceFile),
@@ -374,17 +374,17 @@ void QDesignerIntegrationPrivate::initialize()
 
     QString designerFolder = QDir::homePath();
     designerFolder += QDir::separator();
-    designerFolder += QLatin1String(".designer");
+    designerFolder += QStringLiteral(".designer");
     m_gradientsPath = designerFolder;
     m_gradientsPath += QDir::separator();
-    m_gradientsPath += QLatin1String("gradients.xml");
+    m_gradientsPath += QStringLiteral("gradients.xml");
 
     QFile f(m_gradientsPath);
     if (f.open(QIODevice::ReadOnly)) {
         QtGradientUtils::restoreState(m_gradientManager, QString::fromAscii(f.readAll()));
         f.close();
     } else {
-        QFile defaultGradients(QLatin1String(":/trolltech/designer/defaultgradients.xml"));
+        QFile defaultGradients(QStringLiteral(":/trolltech/designer/defaultgradients.xml"));
         if (defaultGradients.open(QIODevice::ReadOnly)) {
             QtGradientUtils::restoreState(m_gradientManager, QString::fromAscii(defaultGradients.readAll()));
             defaultGradients.close();
@@ -599,12 +599,12 @@ void QDesignerIntegrationPrivate::updateCustomWidgetPlugins()
 static QString fixHelpClassName(const QString &className)
 {
     // ### generalize using the Widget Data Base
-    if (className == QLatin1String("Line"))
-        return QLatin1String("QFrame");
-    if (className == QLatin1String("Spacer"))
-        return QLatin1String("QSpacerItem");
-    if (className == QLatin1String("QLayoutWidget"))
-        return QLatin1String("QLayout");
+    if (className == QStringLiteral("Line"))
+        return QStringLiteral("QFrame");
+    if (className == QStringLiteral("Spacer"))
+        return QStringLiteral("QSpacerItem");
+    if (className == QStringLiteral("QLayoutWidget"))
+        return QStringLiteral("QLayout");
     return className;
 }
 
@@ -638,7 +638,7 @@ QString QDesignerIntegrationPrivate::contextHelpId() const
     }
     QString helpId = fixHelpClassName(className);
     if (!currentPropertyName.isEmpty()) {
-        helpId += QLatin1String("::");
+        helpId += QStringLiteral("::");
         helpId += currentPropertyName;
     }
     return helpId;

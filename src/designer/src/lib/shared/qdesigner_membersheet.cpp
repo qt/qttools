@@ -65,46 +65,46 @@ Qt3Members *Qt3Members::m_instance = 0;
 
 Qt3Members::Qt3Members()
 {
-    m_classNameToSignals[QLatin1String("QTextEdit")].append(QLatin1String("currentFontChanged(QFont)"));
-    m_classNameToSignals[QLatin1String("QTextEdit")].append(QLatin1String("currentColorChanged(QColor)"));
-    m_classNameToSignals[QLatin1String("QTabWidget")].append(QLatin1String("currentChanged(QWidget*)"));
-    m_classNameToSignals[QLatin1String("QTabWidget")].append(QLatin1String("selected(QString)"));
-    m_classNameToSignals[QLatin1String("QTabBar")].append(QLatin1String("selected(int)"));
-    m_classNameToSignals[QLatin1String("QMenuBar")].append(QLatin1String("activated(int)"));
-    m_classNameToSignals[QLatin1String("QMenuBar")].append(QLatin1String("highlighted(int)"));
-    m_classNameToSignals[QLatin1String("QMenu")].append(QLatin1String("activated(int)"));
-    m_classNameToSignals[QLatin1String("QMenu")].append(QLatin1String("highlighted(int)"));
-    m_classNameToSignals[QLatin1String("QLineEdit")].append(QLatin1String("lostFocus()"));
-    m_classNameToSignals[QLatin1String("QDial")].append(QLatin1String("dialPressed()"));
-    m_classNameToSignals[QLatin1String("QDial")].append(QLatin1String("dialMoved(int)"));
-    m_classNameToSignals[QLatin1String("QDial")].append(QLatin1String("dialReleased()"));
-    m_classNameToSignals[QLatin1String("QComboBox")].append(QLatin1String("textChanged(QString)"));
-    m_classNameToSignals[QLatin1String("QActionGroup")].append(QLatin1String("selected(QAction*)"));
-    m_classNameToSignals[QLatin1String("QAction")].append(QLatin1String("activated(int)"));
-    m_classNameToSignals[QLatin1String("QAbstractSocket")].append(QLatin1String("connectionClosed()"));
-    m_classNameToSignals[QLatin1String("QAbstractSocket")].append(QLatin1String("delayedCloseFinished()"));
+    m_classNameToSignals[QStringLiteral("QTextEdit")].append(QStringLiteral("currentFontChanged(QFont)"));
+    m_classNameToSignals[QStringLiteral("QTextEdit")].append(QStringLiteral("currentColorChanged(QColor)"));
+    m_classNameToSignals[QStringLiteral("QTabWidget")].append(QStringLiteral("currentChanged(QWidget*)"));
+    m_classNameToSignals[QStringLiteral("QTabWidget")].append(QStringLiteral("selected(QString)"));
+    m_classNameToSignals[QStringLiteral("QTabBar")].append(QStringLiteral("selected(int)"));
+    m_classNameToSignals[QStringLiteral("QMenuBar")].append(QStringLiteral("activated(int)"));
+    m_classNameToSignals[QStringLiteral("QMenuBar")].append(QStringLiteral("highlighted(int)"));
+    m_classNameToSignals[QStringLiteral("QMenu")].append(QStringLiteral("activated(int)"));
+    m_classNameToSignals[QStringLiteral("QMenu")].append(QStringLiteral("highlighted(int)"));
+    m_classNameToSignals[QStringLiteral("QLineEdit")].append(QStringLiteral("lostFocus()"));
+    m_classNameToSignals[QStringLiteral("QDial")].append(QStringLiteral("dialPressed()"));
+    m_classNameToSignals[QStringLiteral("QDial")].append(QStringLiteral("dialMoved(int)"));
+    m_classNameToSignals[QStringLiteral("QDial")].append(QStringLiteral("dialReleased()"));
+    m_classNameToSignals[QStringLiteral("QComboBox")].append(QStringLiteral("textChanged(QString)"));
+    m_classNameToSignals[QStringLiteral("QActionGroup")].append(QStringLiteral("selected(QAction*)"));
+    m_classNameToSignals[QStringLiteral("QAction")].append(QStringLiteral("activated(int)"));
+    m_classNameToSignals[QStringLiteral("QAbstractSocket")].append(QStringLiteral("connectionClosed()"));
+    m_classNameToSignals[QStringLiteral("QAbstractSocket")].append(QStringLiteral("delayedCloseFinished()"));
 
-    m_classNameToSlots[QLatin1String("QWidget")].append(QLatin1String("setShown(bool)"));
-    m_classNameToSlots[QLatin1String("QToolButton")].append(QLatin1String("setTextPosition(QToolButton::TextPosition)"));
-    m_classNameToSlots[QLatin1String("QToolButton")].append(QLatin1String("setUsesBigPixmap(bool)"));
-    m_classNameToSlots[QLatin1String("QToolButton")].append(QLatin1String("setUsesTextLabel(bool)"));
-    m_classNameToSlots[QLatin1String("QTextEdit")].append(QLatin1String("setModified(bool)"));
-    m_classNameToSlots[QLatin1String("QTextEdit")].append(QLatin1String("setColor(QColor)"));
-    m_classNameToSlots[QLatin1String("QTabWidget")].append(QLatin1String("setCurrentPage(int)"));
-    m_classNameToSlots[QLatin1String("QTabWidget")].append(QLatin1String("showPage(QWidget*)"));
-    m_classNameToSlots[QLatin1String("QTabWidget")].append(QLatin1String("removePage(QWidget*)"));
-    m_classNameToSlots[QLatin1String("QTabBar")].append(QLatin1String("setCurrentTab(int)"));
-    m_classNameToSlots[QLatin1String("QStatusBar")].append(QLatin1String("message(QString,int)"));
-    m_classNameToSlots[QLatin1String("QStatusBar")].append(QLatin1String("clear()"));
-    m_classNameToSlots[QLatin1String("QSplashScreen")].append(QLatin1String("message(QString,int)"));
-    m_classNameToSlots[QLatin1String("QSplashScreen")].append(QLatin1String("clear()"));
-    m_classNameToSlots[QLatin1String("QSlider")].append(QLatin1String("addStep()"));
-    m_classNameToSlots[QLatin1String("QSlider")].append(QLatin1String("subtractStep()"));
-    m_classNameToSlots[QLatin1String("QAbstractButton")].append(QLatin1String("setOn(bool)"));
-    m_classNameToSlots[QLatin1String("QAction")].append(QLatin1String("setOn(bool)"));
-    m_classNameToSlots[QLatin1String("QErrorMessage")].append(QLatin1String("message(QString)"));
-    m_classNameToSlots[QLatin1String("QTimer")].append(QLatin1String("changeInterval(int)"));
-    m_classNameToSlots[QLatin1String("QTimer")].append(QLatin1String("start(int,bool)"));
+    m_classNameToSlots[QStringLiteral("QWidget")].append(QStringLiteral("setShown(bool)"));
+    m_classNameToSlots[QStringLiteral("QToolButton")].append(QStringLiteral("setTextPosition(QToolButton::TextPosition)"));
+    m_classNameToSlots[QStringLiteral("QToolButton")].append(QStringLiteral("setUsesBigPixmap(bool)"));
+    m_classNameToSlots[QStringLiteral("QToolButton")].append(QStringLiteral("setUsesTextLabel(bool)"));
+    m_classNameToSlots[QStringLiteral("QTextEdit")].append(QStringLiteral("setModified(bool)"));
+    m_classNameToSlots[QStringLiteral("QTextEdit")].append(QStringLiteral("setColor(QColor)"));
+    m_classNameToSlots[QStringLiteral("QTabWidget")].append(QStringLiteral("setCurrentPage(int)"));
+    m_classNameToSlots[QStringLiteral("QTabWidget")].append(QStringLiteral("showPage(QWidget*)"));
+    m_classNameToSlots[QStringLiteral("QTabWidget")].append(QStringLiteral("removePage(QWidget*)"));
+    m_classNameToSlots[QStringLiteral("QTabBar")].append(QStringLiteral("setCurrentTab(int)"));
+    m_classNameToSlots[QStringLiteral("QStatusBar")].append(QStringLiteral("message(QString,int)"));
+    m_classNameToSlots[QStringLiteral("QStatusBar")].append(QStringLiteral("clear()"));
+    m_classNameToSlots[QStringLiteral("QSplashScreen")].append(QStringLiteral("message(QString,int)"));
+    m_classNameToSlots[QStringLiteral("QSplashScreen")].append(QStringLiteral("clear()"));
+    m_classNameToSlots[QStringLiteral("QSlider")].append(QStringLiteral("addStep()"));
+    m_classNameToSlots[QStringLiteral("QSlider")].append(QStringLiteral("subtractStep()"));
+    m_classNameToSlots[QStringLiteral("QAbstractButton")].append(QStringLiteral("setOn(bool)"));
+    m_classNameToSlots[QStringLiteral("QAction")].append(QStringLiteral("setOn(bool)"));
+    m_classNameToSlots[QStringLiteral("QErrorMessage")].append(QStringLiteral("message(QString)"));
+    m_classNameToSlots[QStringLiteral("QTimer")].append(QStringLiteral("changeInterval(int)"));
+    m_classNameToSlots[QStringLiteral("QTimer")].append(QStringLiteral("start(int,bool)"));
 }
 
 Qt3Members *Qt3Members::instance()
@@ -270,7 +270,7 @@ bool QDesignerMemberSheet::isSlot(int index) const
 bool QDesignerMemberSheet::inheritedFromWidget(int index) const
 {
     const QString name = d->m_meta->method(index)->signature();
-    return declaredInClass(index) == QLatin1String("QWidget") || declaredInClass(index) == QLatin1String("QObject");
+    return declaredInClass(index) == QStringLiteral("QWidget") || declaredInClass(index) == QStringLiteral("QObject");
 }
 
 

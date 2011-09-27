@@ -125,7 +125,7 @@ namespace qdesigner_internal {
         QtVariantProperty *antialiasing = vm->addProperty(enumTypeId, QCoreApplication::translate("FontPropertyManager", "Antialiasing"));
         const QFont font = qvariant_cast<QFont>(vm->variantProperty(property)->value());
 
-        antialiasing->setAttribute(QLatin1String("enumNames"), m_aliasingEnumNames);
+        antialiasing->setAttribute(QStringLiteral("enumNames"), m_aliasingEnumNames);
         antialiasing->setValue(antialiasingToIndex(font.styleStrategy()));
         property->addSubProperty(antialiasing);
 
@@ -135,7 +135,7 @@ namespace qdesigner_internal {
         if (!m_familyMappings.empty()) {
             const PropertyToSubPropertiesMap::iterator it = m_propertyToFontSubProperties.find(m_createdFontProperty);
             QtVariantProperty *familyProperty = vm->variantProperty(it.value().front());
-            const QString enumNamesAttribute = QLatin1String("enumNames");
+            const QString enumNamesAttribute = QStringLiteral("enumNames");
             QStringList plainFamilyNames = familyProperty->attributeValue(enumNamesAttribute).toStringList();
             // Did someone load fonts or something?
             if (m_designerFamilyNames.size() != plainFamilyNames.size())
@@ -331,7 +331,7 @@ namespace qdesigner_internal {
     bool FontPropertyManager::readFamilyMapping(NameMap *rc, QString *errorMessage)
     {
         rc->clear();
-        const QString fileName = QLatin1String(":/trolltech/propertyeditor/fontmapping.xml");
+        const QString fileName = QStringLiteral(":/trolltech/propertyeditor/fontmapping.xml");
         QFile file(fileName);
         if (!file.open(QIODevice::ReadOnly)) {
             *errorMessage = QString::fromUtf8("Unable to open %1: %2").arg(fileName, file.errorString());

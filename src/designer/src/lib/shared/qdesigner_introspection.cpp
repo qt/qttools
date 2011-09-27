@@ -99,7 +99,7 @@ namespace  {
 
     QString QDesignerMetaEnum::separator() const
     {
-        static const QString rc = QLatin1String("::");
+        static const QString rc = QStringLiteral("::");
         return rc;
     }
 

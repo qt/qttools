@@ -64,7 +64,7 @@ TreeWidgetEditor::TreeWidgetEditor(QDesignerFormWindowInterface *form, QDialog *
     : AbstractItemEditor(form, 0), m_updatingBrowser(false)
 {
     m_columnEditor = new ItemListEditor(form, this);
-    m_columnEditor->setObjectName(QLatin1String("columnEditor"));
+    m_columnEditor->setObjectName(QStringLiteral("columnEditor"));
     m_columnEditor->setNewItemText(tr("New Column"));
     ui.setupUi(dialog);
 

@@ -158,7 +158,7 @@ ItemViewPropertySheet::ItemViewPropertySheet(QTreeView *treeViewObject, QObject 
         : QDesignerPropertySheet(treeViewObject, parent),
         d(new ItemViewPropertySheetPrivate(core(), treeViewObject->header(), 0))
 {
-    initHeaderProperties(treeViewObject->header(), QLatin1String("header"));
+    initHeaderProperties(treeViewObject->header(), QStringLiteral("header"));
 }
 
 ItemViewPropertySheet::ItemViewPropertySheet(QTableView *tableViewObject, QObject *parent)
@@ -167,8 +167,8 @@ ItemViewPropertySheet::ItemViewPropertySheet(QTableView *tableViewObject, QObjec
                                            tableViewObject->horizontalHeader(),
                                            tableViewObject->verticalHeader()))
 {
-    initHeaderProperties(tableViewObject->horizontalHeader(), QLatin1String("horizontalHeader"));
-    initHeaderProperties(tableViewObject->verticalHeader(), QLatin1String("verticalHeader"));
+    initHeaderProperties(tableViewObject->horizontalHeader(), QStringLiteral("horizontalHeader"));
+    initHeaderProperties(tableViewObject->verticalHeader(), QStringLiteral("verticalHeader"));
 }
 
 ItemViewPropertySheet::~ItemViewPropertySheet()

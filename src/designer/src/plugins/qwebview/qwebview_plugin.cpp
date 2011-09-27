@@ -59,12 +59,12 @@ QWebViewPlugin::QWebViewPlugin(QObject *parent) :
 
 QString QWebViewPlugin::name() const
 {
-    return QLatin1String("QWebView");
+    return QStringLiteral("QWebView");
 }
 
 QString QWebViewPlugin::group() const
 {
-    return QLatin1String("Display Widgets");
+    return QStringLiteral("Display Widgets");
 }
 
 QString QWebViewPlugin::toolTip() const
@@ -79,12 +79,12 @@ QString QWebViewPlugin::whatsThis() const
 
 QString QWebViewPlugin::includeFile() const
 {
-    return QLatin1String("QtWebKit/QWebView");
+    return QStringLiteral("QtWebKit/QWebView");
 }
 
 QIcon QWebViewPlugin::icon() const
 {
-    return QIcon(QLatin1String(":/trolltech/qwebview/images/qwebview.png"));
+    return QIcon(QStringLiteral(":/trolltech/qwebview/images/qwebview.png"));
 }
 
 bool QWebViewPlugin::isContainer() const
@@ -112,7 +112,7 @@ void QWebViewPlugin::initialize(QDesignerFormEditorInterface * /*core*/)
 
 QString QWebViewPlugin::domXml() const
 {
-    return QLatin1String("\
+    return QStringLiteral("\
     <ui language=\"c++\">\
         <widget class=\"QWebView\" name=\"webView\">\
             <property name=\"url\">\

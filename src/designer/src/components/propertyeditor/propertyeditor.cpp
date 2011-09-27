@@ -150,20 +150,20 @@ void ElidingLabel::paintEvent(QPaintEvent *) {
 // ----------- PropertyEditor::Strings
 
 PropertyEditor::Strings::Strings() :
-    m_fontProperty(QLatin1String("font")),
-    m_qLayoutWidget(QLatin1String("QLayoutWidget")),
-    m_designerPrefix(QLatin1String("QDesigner")),
-    m_layout(QLatin1String("Layout")),
-    m_validationModeAttribute(QLatin1String("validationMode")),
-    m_fontAttribute(QLatin1String("font")),
-    m_superPaletteAttribute(QLatin1String("superPalette")),
-    m_enumNamesAttribute(QLatin1String("enumNames")),
-    m_resettableAttribute(QLatin1String("resettable")),
-    m_flagsAttribute(QLatin1String("flags"))
+    m_fontProperty(QStringLiteral("font")),
+    m_qLayoutWidget(QStringLiteral("QLayoutWidget")),
+    m_designerPrefix(QStringLiteral("QDesigner")),
+    m_layout(QStringLiteral("Layout")),
+    m_validationModeAttribute(QStringLiteral("validationMode")),
+    m_fontAttribute(QStringLiteral("font")),
+    m_superPaletteAttribute(QStringLiteral("superPalette")),
+    m_enumNamesAttribute(QStringLiteral("enumNames")),
+    m_resettableAttribute(QStringLiteral("resettable")),
+    m_flagsAttribute(QStringLiteral("flags"))
 {
-    m_alignmentProperties.insert(QLatin1String("alignment"));
-    m_alignmentProperties.insert(QLatin1String("layoutLabelAlignment")); // QFormLayout
-    m_alignmentProperties.insert(QLatin1String("layoutFormAlignment"));
+    m_alignmentProperties.insert(QStringLiteral("alignment"));
+    m_alignmentProperties.insert(QStringLiteral("layoutLabelAlignment")); // QFormLayout
+    m_alignmentProperties.insert(QStringLiteral("layoutFormAlignment"));
 }
 
 // ----------- PropertyEditor
@@ -229,10 +229,10 @@ PropertyEditor::PropertyEditor(QDesignerFormEditorInterface *core, QWidget *pare
     m_filterWidget(new FilterWidget(0, FilterWidget::LayoutAlignNone)),
     m_buttonIndex(-1),
     m_treeIndex(-1),
-    m_addDynamicAction(new QAction(createIconSet(QLatin1String("plus.png")), tr("Add Dynamic Property..."), this)),
-    m_removeDynamicAction(new QAction(createIconSet(QLatin1String("minus.png")), tr("Remove Dynamic Property"), this)),
-    m_sortingAction(new QAction(createIconSet(QLatin1String("sort.png")), tr("Sorting"), this)),
-    m_coloringAction(new QAction(createIconSet(QLatin1String("color.png")), tr("Color Groups"), this)),
+    m_addDynamicAction(new QAction(createIconSet(QStringLiteral("plus.png")), tr("Add Dynamic Property..."), this)),
+    m_removeDynamicAction(new QAction(createIconSet(QStringLiteral("minus.png")), tr("Remove Dynamic Property"), this)),
+    m_sortingAction(new QAction(createIconSet(QStringLiteral("sort.png")), tr("Sorting"), this)),
+    m_coloringAction(new QAction(createIconSet(QStringLiteral("color.png")), tr("Color Groups"), this)),
     m_treeAction(new QAction(tr("Tree View"), this)),
     m_buttonAction(new QAction(tr("Drop Down Button View"), this)),
     m_classLabel(new ElidingLabel),
@@ -264,9 +264,9 @@ PropertyEditor::PropertyEditor(QDesignerFormEditorInterface *core, QWidget *pare
     QActionGroup *actionGroup = new QActionGroup(this);
 
     m_treeAction->setCheckable(true);
-    m_treeAction->setIcon(createIconSet(QLatin1String("widgets/listview.png")));
+    m_treeAction->setIcon(createIconSet(QStringLiteral("widgets/listview.png")));
     m_buttonAction->setCheckable(true);
-    m_buttonAction->setIcon(createIconSet(QLatin1String("dropdownbutton.png")));
+    m_buttonAction->setIcon(createIconSet(QStringLiteral("dropdownbutton.png")));
 
     actionGroup->addAction(m_treeAction);
     actionGroup->addAction(m_buttonAction);
@@ -294,7 +294,7 @@ PropertyEditor::PropertyEditor(QDesignerFormEditorInterface *core, QWidget *pare
     connect(m_removeDynamicAction, SIGNAL(triggered()), this, SLOT(slotRemoveDynamicProperty()));
     // Configure
     QAction *configureAction = new QAction(tr("Configure Property Editor"), this);
-    configureAction->setIcon(createIconSet(QLatin1String("configure.png")));
+    configureAction->setIcon(createIconSet(QStringLiteral("configure.png")));
     QMenu *configureMenu = new QMenu(this);
     configureAction->setMenu(configureMenu);
 
@@ -831,7 +831,7 @@ void PropertyEditor::updateToolBarLabel()
 
     QString classLabelText;
     if (!objectName.isEmpty())
-        classLabelText += objectName + QLatin1String(" : ");
+        classLabelText += objectName + QStringLiteral(" : ");
     classLabelText += className;
 
     m_classLabel->setText(classLabelText);
@@ -870,7 +870,7 @@ void PropertyEditor::updateBrowserValue(QtVariantProperty *property, const QVari
     m_updatingBrowser = true;
     property->setValue(v);
     if (sheet && sheet->isResourceProperty(index))
-        property->setAttribute(QLatin1String("defaultResource"), sheet->defaultResourceProperty(index));
+        property->setAttribute(QStringLiteral("defaultResource"), sheet->defaultResourceProperty(index));
     m_updatingBrowser = false;
 }
 
@@ -1116,11 +1116,11 @@ void PropertyEditor::setObject(QObject *object)
                 updateBrowserValue(property, value);
 
                 property->setModified(m_propertySheet->isChanged(i));
-                if (propertyName == QLatin1String("geometry") && type == QVariant::Rect) {
+                if (propertyName == QStringLiteral("geometry") && type == QVariant::Rect) {
                     QList<QtProperty *> subProperties = property->subProperties();
                     foreach (QtProperty *subProperty, subProperties) {
                         const QString subPropertyName = subProperty->propertyName();
-                        if (subPropertyName == QLatin1String("X") || subPropertyName == QLatin1String("Y"))
+                        if (subPropertyName == QStringLiteral("X") || subPropertyName == QStringLiteral("Y"))
                             subProperty->setEnabled(!isMainContainer);
                     }
                 }

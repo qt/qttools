@@ -296,29 +296,29 @@ WidgetDataBase::WidgetDataBase(QDesignerFormEditorInterface *core, QObject *pare
     // ### check the casts
 
 #if 0 // ### enable me after 4.1
-    item(indexOfClassName(QLatin1String("QToolBar")))->setContainer(true);
+    item(indexOfClassName(QStringLiteral("QToolBar")))->setContainer(true);
 #endif
 
-    item(indexOfClassName(QLatin1String("QTabWidget")))->setContainer(true);
-    item(indexOfClassName(QLatin1String("QGroupBox")))->setContainer(true);
-    item(indexOfClassName(QLatin1String("QScrollArea")))->setContainer(true);
-    item(indexOfClassName(QLatin1String("QStackedWidget")))->setContainer(true);
-    item(indexOfClassName(QLatin1String("QToolBox")))->setContainer(true);
-    item(indexOfClassName(QLatin1String("QFrame")))->setContainer(true);
-    item(indexOfClassName(QLatin1String("QLayoutWidget")))->setContainer(true);
-    item(indexOfClassName(QLatin1String("QDesignerWidget")))->setContainer(true);
-    item(indexOfClassName(QLatin1String("QDesignerDialog")))->setContainer(true);
-    item(indexOfClassName(QLatin1String("QSplitter")))->setContainer(true);
-    item(indexOfClassName(QLatin1String("QMainWindow")))->setContainer(true);
-    item(indexOfClassName(QLatin1String("QDockWidget")))->setContainer(true);
-    item(indexOfClassName(QLatin1String("QDesignerDockWidget")))->setContainer(true);
-    item(indexOfClassName(QLatin1String("QMdiArea")))->setContainer(true);
-    item(indexOfClassName(QLatin1String("QWorkspace")))->setContainer(true);
-    item(indexOfClassName(QLatin1String("QWizard")))->setContainer(true);
-    item(indexOfClassName(QLatin1String("QWizardPage")))->setContainer(true);
+    item(indexOfClassName(QStringLiteral("QTabWidget")))->setContainer(true);
+    item(indexOfClassName(QStringLiteral("QGroupBox")))->setContainer(true);
+    item(indexOfClassName(QStringLiteral("QScrollArea")))->setContainer(true);
+    item(indexOfClassName(QStringLiteral("QStackedWidget")))->setContainer(true);
+    item(indexOfClassName(QStringLiteral("QToolBox")))->setContainer(true);
+    item(indexOfClassName(QStringLiteral("QFrame")))->setContainer(true);
+    item(indexOfClassName(QStringLiteral("QLayoutWidget")))->setContainer(true);
+    item(indexOfClassName(QStringLiteral("QDesignerWidget")))->setContainer(true);
+    item(indexOfClassName(QStringLiteral("QDesignerDialog")))->setContainer(true);
+    item(indexOfClassName(QStringLiteral("QSplitter")))->setContainer(true);
+    item(indexOfClassName(QStringLiteral("QMainWindow")))->setContainer(true);
+    item(indexOfClassName(QStringLiteral("QDockWidget")))->setContainer(true);
+    item(indexOfClassName(QStringLiteral("QDesignerDockWidget")))->setContainer(true);
+    item(indexOfClassName(QStringLiteral("QMdiArea")))->setContainer(true);
+    item(indexOfClassName(QStringLiteral("QWorkspace")))->setContainer(true);
+    item(indexOfClassName(QStringLiteral("QWizard")))->setContainer(true);
+    item(indexOfClassName(QStringLiteral("QWizardPage")))->setContainer(true);
 
-    item(indexOfClassName(QLatin1String("QWidget")))->setContainer(true);
-    item(indexOfClassName(QLatin1String("QDialog")))->setContainer(true);
+    item(indexOfClassName(QStringLiteral("QWidget")))->setContainer(true);
+    item(indexOfClassName(QStringLiteral("QDialog")))->setContainer(true);
 }
 
 WidgetDataBase::~WidgetDataBase()
@@ -475,7 +475,7 @@ void WidgetDataBase::grabStandardWidgetBoxIcons()
     // At this point, grab the default icons for the non-custom widgets from
     // the widget box. They will show up in the object inspector.
     if (const QDesignerWidgetBox *wb = qobject_cast<const QDesignerWidgetBox *>(m_core->widgetBox())) {
-        const QString qWidgetClass = QLatin1String("QWidget");
+        const QString qWidgetClass = QStringLiteral("QWidget");
         const int itemCount = count();
         for (int i = 0; i < itemCount; ++i) {
             QDesignerWidgetDataBaseItemInterface *dbItem = item(i);
@@ -484,7 +484,7 @@ void WidgetDataBase::grabStandardWidgetBoxIcons()
                 // QWidget
                 const QString name = dbItem->name();
                 if (name == qWidgetClass) {
-                    dbItem->setIcon(wb->iconForWidget(name, QLatin1String("Containers")));
+                    dbItem->setIcon(wb->iconForWidget(name, QStringLiteral("Containers")));
                 } else {
                     dbItem->setIcon(wb->iconForWidget(name));
                 }
@@ -500,7 +500,7 @@ enum { NewFormWidth = 400, NewFormHeight = 300 };
 // Check if class is suitable to generate a form from
 static inline bool isExistingTemplate(const QString &className)
 {
-    return className == QLatin1String("QWidget") || className == QLatin1String("QDialog") || className == QLatin1String("QMainWindow");
+    return className == QStringLiteral("QWidget") || className == QStringLiteral("QDialog") || className == QStringLiteral("QMainWindow");
 }
 
 // Check if class is suitable to generate a form from
@@ -508,11 +508,11 @@ static inline bool suitableForNewForm(const QString &className)
 {
     if (className.isEmpty()) // Missing custom widget information
         return false;
-    if (className == QLatin1String("QWorkspace"))
+    if (className == QStringLiteral("QWorkspace"))
          return false;
-    if (className == QLatin1String("QSplitter"))
+    if (className == QStringLiteral("QSplitter"))
          return false;
-    if (className.startsWith(QLatin1String("QDesigner")) ||  className.startsWith(QLatin1String("QLayout")))
+    if (className.startsWith(QStringLiteral("QDesigner")) ||  className.startsWith(QStringLiteral("QLayout")))
         return false;
     return true;
 }
@@ -567,14 +567,14 @@ static QString xmlFromWidgetBox(const QDesignerFormEditorInterface *core, const 
     QScopedPointer<DomUI> domUI(QDesignerWidgetBox::xmlToUi(className, widget.domXml(), false));
     if (domUI.isNull())
         return QString();
-    domUI->setAttributeVersion(QLatin1String("4.0"));
+    domUI->setAttributeVersion(QStringLiteral("4.0"));
     DomWidget *domWidget = domUI->elementWidget();
     if (!domWidget)
         return QString();
     // Properties: Remove the "objectName" property in favour of the name attribute and check geometry.
     domWidget->setAttributeName(objectName);
-    const QString geometryProperty = QLatin1String("geometry");
-    const QString objectNameProperty  = QLatin1String("objectName");
+    const QString geometryProperty = QStringLiteral("geometry");
+    const QString objectNameProperty  = QStringLiteral("objectName");
     PropertyList properties = domWidget->elementProperty();
     for (PropertyList::iterator it = properties.begin(); it != properties.end(); ) {
         DomProperty *property = *it;
@@ -597,7 +597,7 @@ static QString xmlFromWidgetBox(const QDesignerFormEditorInterface *core, const 
     DomString *windowTitleString = new DomString;
     windowTitleString->setText(objectName);
     DomProperty *windowTitleProperty = new DomProperty;
-    windowTitleProperty->setAttributeName(QLatin1String("windowTitle"));
+    windowTitleProperty->setAttributeName(QStringLiteral("windowTitle"));
     windowTitleProperty->setElementString(windowTitleString);
     properties.push_back(windowTitleProperty);
     // ------
@@ -622,19 +622,19 @@ static QString generateNewFormXML(const QString &className, const QString &simil
 {
     QString rc; {
         QTextStream str(&rc);
-        str << QLatin1String("<ui version=\"4.0\" >\n<class>") << name << QLatin1String("</class>\n")
-            <<  QLatin1String("<widget class=\"") << className << QLatin1String("\" name=\"") << name << QLatin1String("\" >\n")
-            <<  QLatin1String("<property name=\"geometry\" >\n<rect><x>0</x><y>0</y><width>")
-            << NewFormWidth << QLatin1String("</width><height>") << NewFormHeight << QLatin1String("</height></rect>\n</property>\n");
-        str << QLatin1String("<property name=\"windowTitle\" >\n<string>") << name << QLatin1String("</string>\n</property>\n");
+        str << QStringLiteral("<ui version=\"4.0\" >\n<class>") << name << QStringLiteral("</class>\n")
+            <<  QStringLiteral("<widget class=\"") << className << QStringLiteral("\" name=\"") << name << QStringLiteral("\" >\n")
+            <<  QStringLiteral("<property name=\"geometry\" >\n<rect><x>0</x><y>0</y><width>")
+            << NewFormWidth << QStringLiteral("</width><height>") << NewFormHeight << QStringLiteral("</height></rect>\n</property>\n");
+        str << QStringLiteral("<property name=\"windowTitle\" >\n<string>") << name << QStringLiteral("</string>\n</property>\n");
 
-        if (similarClassName == QLatin1String("QMainWindow")) {
-            str << QLatin1String("<widget class=\"QWidget\" name=\"centralwidget\" />\n");
+        if (similarClassName == QStringLiteral("QMainWindow")) {
+            str << QStringLiteral("<widget class=\"QWidget\" name=\"centralwidget\" />\n");
         } else {
-            if (similarClassName == QLatin1String("QWizard"))
-                str << QLatin1String("<widget class=\"QWizardPage\" name=\"wizardPage1\" /><widget class=\"QWizardPage\" name=\"wizardPage2\" />\n");
+            if (similarClassName == QStringLiteral("QWizard"))
+                str << QStringLiteral("<widget class=\"QWizardPage\" name=\"wizardPage1\" /><widget class=\"QWizardPage\" name=\"wizardPage2\" />\n");
         }
-        str << QLatin1String("</widget>\n</ui>\n");
+        str << QStringLiteral("</widget>\n</ui>\n");
     }
     return rc;
 }
@@ -650,7 +650,7 @@ QString WidgetDataBase::formTemplate(const QDesignerFormEditorInterface *core, c
     // 2) If that fails, only custom main windows, custom dialogs and unsupported Qt Widgets should
     //    be left over. Generate something that is similar to the default templates. Find a similar class.
     const QDesignerWidgetDataBaseInterface *wdb = core->widgetDataBase();
-    QString similarClass = QLatin1String("QWidget");
+    QString similarClass = QStringLiteral("QWidget");
     const int index = wdb->indexOfClassName(className);
     if (index != -1) {
         const QDesignerWidgetDataBaseItemInterface *item = wdb->item(index);
@@ -665,16 +665,16 @@ QString WidgetDataBase::formTemplate(const QDesignerFormEditorInterface *core, c
 QString WidgetDataBase::scaleFormTemplate(const QString &xml, const QSize &size, bool fixed)
 {
     typedef QList<DomProperty*> PropertyList;
-    DomUI *domUI = QDesignerWidgetBox::xmlToUi(QLatin1String("Form"), xml, false);
+    DomUI *domUI = QDesignerWidgetBox::xmlToUi(QStringLiteral("Form"), xml, false);
     if (!domUI)
         return QString();
     DomWidget *domWidget = domUI->elementWidget();
     if (!domWidget)
         return QString();
     // Properties: Find/Ensure the geometry, minimum and maximum sizes properties
-    const QString geometryPropertyName = QLatin1String("geometry");
-    const QString minimumSizePropertyName = QLatin1String("minimumSize");
-    const QString maximumSizePropertyName = QLatin1String("maximumSize");
+    const QString geometryPropertyName = QStringLiteral("geometry");
+    const QString minimumSizePropertyName = QStringLiteral("minimumSize");
+    const QString maximumSizePropertyName = QStringLiteral("maximumSize");
     DomProperty *geomProperty = 0;
     DomProperty *minimumSizeProperty = 0;
     DomProperty *maximumSizeProperty = 0;
@@ -827,7 +827,7 @@ QDESIGNER_SHARED_EXPORT QDesignerWidgetDataBaseItemInterface *
     derivedItem = WidgetDataBaseItem::clone(baseItem);
     // Sort of hack: If base class is QWidget, we most likely
     // do not want to inherit the container attribute.
-    static const QString qWidgetName = QLatin1String("QWidget");
+    static const QString qWidgetName = QStringLiteral("QWidget");
     if (baseItem->name() == qWidgetName)
         derivedItem->setContainer(false);
     // set new props

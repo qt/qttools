@@ -56,7 +56,7 @@ VolumeSliderPlugin::VolumeSliderPlugin(const QString &group, QObject *parent) :
 
 QString VolumeSliderPlugin::name() const
 {
-    return QLatin1String("Phonon::VolumeSlider");
+    return QStringLiteral("Phonon::VolumeSlider");
 }
 
 QString VolumeSliderPlugin::group() const
@@ -76,12 +76,12 @@ QString VolumeSliderPlugin::whatsThis() const
 
 QString VolumeSliderPlugin::includeFile() const
 {
-    return QLatin1String("<phonon/volumeslider.h>");
+    return QStringLiteral("<phonon/volumeslider.h>");
 }
 
 QIcon VolumeSliderPlugin::icon() const
 {
-    return QIcon(QLatin1String(":/trolltech/phononwidgets/images/volumeslider.png"));
+    return QIcon(QStringLiteral(":/trolltech/phononwidgets/images/volumeslider.png"));
 }
 
 bool VolumeSliderPlugin::isContainer() const
@@ -108,7 +108,7 @@ void VolumeSliderPlugin::initialize(QDesignerFormEditorInterface *)
 
 QString VolumeSliderPlugin::domXml() const
 {
-    return QLatin1String("\
+    return QStringLiteral("\
     <ui language=\"c++\">\
         <widget class=\"Phonon::VolumeSlider\" name=\"volumeSlider\"/>\
     </ui>");

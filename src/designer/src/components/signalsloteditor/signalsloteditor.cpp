@@ -88,13 +88,13 @@ DomConnection *SignalSlotConnection::toUi() const
     QPoint tp = endPointPos(EndPoint::Target);
 
     DomConnectionHint *hint = new DomConnectionHint;
-    hint->setAttributeType(QLatin1String("sourcelabel"));
+    hint->setAttributeType(QStringLiteral("sourcelabel"));
     hint->setElementX(sp.x());
     hint->setElementY(sp.y());
     list.append(hint);
 
     hint = new DomConnectionHint;
-    hint->setAttributeType(QLatin1String("destinationlabel"));
+    hint->setAttributeType(QStringLiteral("destinationlabel"));
     hint->setElementX(tp.x());
     hint->setElementY(tp.y());
     list.append(hint);
@@ -408,9 +408,9 @@ void SignalSlotEditor::fromUi(const DomConnections *connections, QWidget *parent
             foreach (DomConnectionHint *hint, list) {
                 QString attr_type = hint->attributeType();
                 QPoint p = QPoint(hint->elementX(), hint->elementY());
-                if (attr_type == QLatin1String("sourcelabel"))
+                if (attr_type == QStringLiteral("sourcelabel"))
                     sp = p;
-                else if (attr_type == QLatin1String("destinationlabel"))
+                else if (attr_type == QStringLiteral("destinationlabel"))
                     tp = p;
             }
         }
@@ -428,13 +428,13 @@ void SignalSlotEditor::fromUi(const DomConnections *connections, QWidget *parent
 static bool skipWidget(const QWidget *w)
 {
     const QString name = QLatin1String(w->metaObject()->className());
-    if (name == QLatin1String("QDesignerWidget"))
+    if (name == QStringLiteral("QDesignerWidget"))
         return true;
-    if (name == QLatin1String("QLayoutWidget"))
+    if (name == QStringLiteral("QLayoutWidget"))
         return true;
-    if (name == QLatin1String("qdesigner_internal::FormWindow"))
+    if (name == QStringLiteral("qdesigner_internal::FormWindow"))
         return true;
-    if (name == QLatin1String("Spacer"))
+    if (name == QStringLiteral("Spacer"))
         return true;
     return false;
 }

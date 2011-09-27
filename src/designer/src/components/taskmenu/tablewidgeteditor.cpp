@@ -63,10 +63,10 @@ TableWidgetEditor::TableWidgetEditor(QDesignerFormWindowInterface *form, QDialog
     : AbstractItemEditor(form, 0), m_updatingBrowser(false)
 {
     m_columnEditor = new ItemListEditor(form, this);
-    m_columnEditor->setObjectName(QLatin1String("columnEditor"));
+    m_columnEditor->setObjectName(QStringLiteral("columnEditor"));
     m_columnEditor->setNewItemText(tr("New Column"));
     m_rowEditor = new ItemListEditor(form, this);
-    m_rowEditor->setObjectName(QLatin1String("rowEditor"));
+    m_rowEditor->setObjectName(QStringLiteral("rowEditor"));
     m_rowEditor->setNewItemText(tr("New Row"));
     ui.setupUi(dialog);
 

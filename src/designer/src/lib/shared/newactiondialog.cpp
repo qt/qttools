@@ -93,7 +93,7 @@ NewActionDialog::NewActionDialog(ActionEditor *parent) :
     m_ui->tooltipEditor->setTextPropertyValidationMode(ValidationRichText);
     connect(m_ui->toolTipToolButton, SIGNAL(clicked()), this, SLOT(slotEditToolTip()));
 
-    m_ui->keysequenceResetToolButton->setIcon(createIconSet(QLatin1String("resetproperty.png")));
+    m_ui->keysequenceResetToolButton->setIcon(createIconSet(QStringLiteral("resetproperty.png")));
     connect(m_ui->keysequenceResetToolButton, SIGNAL(clicked()), this, SLOT(slotResetKeySequence()));
 
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);

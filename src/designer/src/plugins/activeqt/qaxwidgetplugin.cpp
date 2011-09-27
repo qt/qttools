@@ -62,12 +62,12 @@ QAxWidgetPlugin::QAxWidgetPlugin(QObject *parent) :
 
 QString QAxWidgetPlugin::name() const
 {
-    return QLatin1String("QAxWidget");
+    return QStringLiteral("QAxWidget");
 }
 
 QString QAxWidgetPlugin::group() const
 {
-    return QLatin1String("Containers");
+    return QStringLiteral("Containers");
 }
 
 QString QAxWidgetPlugin::toolTip() const
@@ -82,7 +82,7 @@ QString QAxWidgetPlugin::whatsThis() const
 
 QString QAxWidgetPlugin::includeFile() const
 {
-    return QLatin1String("qaxwidget.h");
+    return QStringLiteral("qaxwidget.h");
 }
 
 QIcon QAxWidgetPlugin::icon() const
@@ -126,7 +126,7 @@ void QAxWidgetPlugin::initialize(QDesignerFormEditorInterface *core)
 
 QString QAxWidgetPlugin::domXml() const
 {
-    return QLatin1String("\
+    return QStringLiteral("\
 <ui language=\"c++\">\
     <widget class=\"QAxWidget\" name=\"axWidget\">\
         <property name=\"geometry\">\

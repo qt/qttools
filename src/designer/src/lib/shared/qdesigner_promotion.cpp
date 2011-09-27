@@ -62,14 +62,14 @@ namespace {
     const QSet<QString> &nonPromotableClasses() {
         static QSet<QString> rc;
         if (rc.empty()) {
-            rc.insert(QLatin1String("Line"));
-            rc.insert(QLatin1String("QAction"));
-            rc.insert(QLatin1String("Spacer"));
-            rc.insert(QLatin1String("QMainWindow"));
-            rc.insert(QLatin1String("QDialog"));
-            rc.insert(QLatin1String("QWorkspace"));
-            rc.insert(QLatin1String("QMdiArea"));
-            rc.insert(QLatin1String("QMdiSubWindow"));
+            rc.insert(QStringLiteral("Line"));
+            rc.insert(QStringLiteral("QAction"));
+            rc.insert(QStringLiteral("Spacer"));
+            rc.insert(QStringLiteral("QMainWindow"));
+            rc.insert(QStringLiteral("QDialog"));
+            rc.insert(QStringLiteral("QWorkspace"));
+            rc.insert(QStringLiteral("QMdiArea"));
+            rc.insert(QStringLiteral("QMdiSubWindow"));
         }
         return rc;
     }
@@ -99,7 +99,7 @@ namespace {
 
     // extract class name from xml  "<widget class="QWidget" ...>". Quite a hack.
     QString classNameFromXml(QString xml) {
-        static const QString tag = QLatin1String("class=\"");
+        static const QString tag = QStringLiteral("class=\"");
         const int pos = xml.indexOf(tag);
         if (pos == -1)
             return QString();
@@ -199,8 +199,8 @@ namespace qdesigner_internal {
         if (nonPromotableClasses().contains(name))
             return false;
 
-        if (name.startsWith(QLatin1String("QDesigner")) ||
-            name.startsWith(QLatin1String("QLayout")))
+        if (name.startsWith(QStringLiteral("QDesigner")) ||
+            name.startsWith(QStringLiteral("QLayout")))
             return false;
 
         return true;

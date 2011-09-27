@@ -191,9 +191,9 @@ FilterWidget::FilterWidget(QWidget *parent, LayoutMode lm)  :
     // If these icons are not avaiable we use the freedesktop standard name before
     // falling back to a bundled resource
     QIcon icon = QIcon::fromTheme(layoutDirection() == Qt::LeftToRight ?
-                     QLatin1String("edit-clear-locationbar-rtl") :
-                     QLatin1String("edit-clear-locationbar-ltr"),
-                     QIcon::fromTheme(QLatin1String("edit-clear"), createIconSet(QLatin1String("cleartext.png"))));
+                     QStringLiteral("edit-clear-locationbar-rtl") :
+                     QStringLiteral("edit-clear-locationbar-ltr"),
+                     QIcon::fromTheme(QStringLiteral("edit-clear"), createIconSet(QStringLiteral("cleartext.png"))));
 
     m_button->setIcon(icon);
     m_button->setToolTip(tr("Clear text"));

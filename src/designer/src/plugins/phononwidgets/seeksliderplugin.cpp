@@ -56,7 +56,7 @@ SeekSliderPlugin::SeekSliderPlugin(const QString &group, QObject *parent) :
 
 QString SeekSliderPlugin::name() const
 {
-    return QLatin1String("Phonon::SeekSlider");
+    return QStringLiteral("Phonon::SeekSlider");
 }
 
 QString SeekSliderPlugin::group() const
@@ -76,12 +76,12 @@ QString SeekSliderPlugin::whatsThis() const
 
 QString SeekSliderPlugin::includeFile() const
 {
-    return QLatin1String("<phonon/seekslider.h>");
+    return QStringLiteral("<phonon/seekslider.h>");
 }
 
 QIcon SeekSliderPlugin::icon() const
 {
-    return QIcon(QLatin1String(":/trolltech/phononwidgets/images/seekslider.png"));
+    return QIcon(QStringLiteral(":/trolltech/phononwidgets/images/seekslider.png"));
 }
 
 bool SeekSliderPlugin::isContainer() const
@@ -108,7 +108,7 @@ void SeekSliderPlugin::initialize(QDesignerFormEditorInterface *)
 
 QString SeekSliderPlugin::domXml() const
 {
-    return QLatin1String("\
+    return QStringLiteral("\
     <ui language=\"c++\">\
         <widget class=\"Phonon::SeekSlider\" name=\"seekSlider\"/>\
     </ui>");

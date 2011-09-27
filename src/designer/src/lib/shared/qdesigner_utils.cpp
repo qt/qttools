@@ -762,7 +762,7 @@ namespace qdesigner_internal
         }
         if (!action) {
             if (const QDesignerTaskMenuExtension *taskMenu = qobject_cast<QDesignerTaskMenuExtension *>(
-                        core->extensionManager()->extension(managedWidget, QLatin1String("QDesignerInternalTaskMenuExtension")))) {
+                        core->extensionManager()->extension(managedWidget, QStringLiteral("QDesignerInternalTaskMenuExtension")))) {
                 action = taskMenu->preferredEditAction();
                 if (!action) {
                     const QList<QAction *> actions = taskMenu->taskActions();
@@ -776,7 +776,7 @@ namespace qdesigner_internal
 
     QDESIGNER_SHARED_EXPORT bool runUIC(const QString &fileName, QByteArray& ba, QString &errorMessage)
     {
-        const QString binary = QLibraryInfo::location(QLibraryInfo::BinariesPath) + QLatin1String("/uic");
+        const QString binary = QLibraryInfo::location(QLibraryInfo::BinariesPath) + QStringLiteral("/uic");
         QProcess uic;
         uic.start(binary, QStringList(fileName));
         if (!uic.waitForStarted()) {

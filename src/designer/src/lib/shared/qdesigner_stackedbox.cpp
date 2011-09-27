@@ -74,8 +74,8 @@ QStackedWidgetPreviewEventFilter::QStackedWidgetPreviewEventFilter(QStackedWidge
     QObject(parent),
     m_buttonToolTipEnabled(false), // Not on preview
     m_stackedWidget(parent),
-    m_prev(createToolButton(m_stackedWidget, Qt::LeftArrow,  QLatin1String("__qt__passive_prev"))),
-    m_next(createToolButton(m_stackedWidget, Qt::RightArrow, QLatin1String("__qt__passive_next")))
+    m_prev(createToolButton(m_stackedWidget, Qt::LeftArrow,  QStringLiteral("__qt__passive_prev"))),
+    m_next(createToolButton(m_stackedWidget, Qt::RightArrow, QStringLiteral("__qt__passive_next")))
 {
     connect(m_prev, SIGNAL(clicked()), this, SLOT(prevPage()));
     connect(m_next, SIGNAL(clicked()), this, SLOT(nextPage()));
@@ -169,12 +169,12 @@ static inline QString stackedClassName(QStackedWidget *w)
 {
     if (const QDesignerFormWindowInterface *fw = QDesignerFormWindowInterface::findFormWindow(w))
         return qdesigner_internal::WidgetFactory::classNameOf(fw->core(), w);
-    return QLatin1String("Stacked widget");
+    return QStringLiteral("Stacked widget");
 }
 
 void QStackedWidgetPreviewEventFilter::updateButtonToolTip(QObject *o)
 {
-    QString className = QLatin1String("Stacked widget");
+    QString className = QStringLiteral("Stacked widget");
     if (const QDesignerFormWindowInterface *fw = QDesignerFormWindowInterface::findFormWindow(m_stackedWidget))
         className = qdesigner_internal::WidgetFactory::classNameOf(fw->core(), m_stackedWidget);
     if (o == m_prev) {
@@ -301,7 +301,7 @@ void QStackedWidgetEventFilter::gotoPage(int page) {
     // Are we on a form or in a preview?
     if (QDesignerFormWindowInterface *fw = QDesignerFormWindowInterface::findFormWindow(stackedWidget())) {
         qdesigner_internal::SetPropertyCommand *cmd = new  qdesigner_internal::SetPropertyCommand(fw);
-        cmd->init(stackedWidget(), QLatin1String("currentIndex"), page);
+        cmd->init(stackedWidget(), QStringLiteral("currentIndex"), page);
         fw->commandHistory()->push(cmd);
         fw->emitSelectionChanged(); // Magically prevent an endless loop triggered by auto-repeat.
         updateButtons();

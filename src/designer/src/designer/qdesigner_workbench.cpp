@@ -822,7 +822,7 @@ bool QDesignerWorkbench::readInBackup()
     if (answer == QMessageBox::No)
         return false;
 
-    const QString modifiedPlaceHolder = QLatin1String("[*]");
+    const QString modifiedPlaceHolder = QStringLiteral("[*]");
     QMapIterator<QString, QString> it(backupFileMap);
     while(it.hasNext()) {
         it.next();

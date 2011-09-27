@@ -147,7 +147,7 @@ static const char *subWindowNameC = "activeSubWindowName";
 
 QMdiAreaPropertySheet::QMdiAreaPropertySheet(QWidget *mdiArea, QObject *parent) :
     QDesignerPropertySheet(mdiArea, parent),
-    m_windowTitleProperty(QLatin1String("windowTitle"))
+    m_windowTitleProperty(QStringLiteral("windowTitle"))
 {
     createFakeProperty(QLatin1String(subWindowNameC), QString());
     createFakeProperty(QLatin1String(subWindowTitleC), QString());

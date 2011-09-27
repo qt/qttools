@@ -79,10 +79,10 @@ static const QHash<QString, LayoutInfo::Type> &layoutNameTypeMap()
 {
     static QHash<QString, LayoutInfo::Type> nameTypeMap;
     if (nameTypeMap.empty()) {
-        nameTypeMap.insert(QLatin1String("QVBoxLayout"), LayoutInfo::VBox);
-        nameTypeMap.insert(QLatin1String("QHBoxLayout"), LayoutInfo::HBox);
-        nameTypeMap.insert(QLatin1String("QGridLayout"), LayoutInfo::Grid);
-        nameTypeMap.insert(QLatin1String("QFormLayout"), LayoutInfo::Form);
+        nameTypeMap.insert(QStringLiteral("QVBoxLayout"), LayoutInfo::VBox);
+        nameTypeMap.insert(QStringLiteral("QHBoxLayout"), LayoutInfo::HBox);
+        nameTypeMap.insert(QStringLiteral("QGridLayout"), LayoutInfo::Grid);
+        nameTypeMap.insert(QStringLiteral("QFormLayout"), LayoutInfo::Form);
     }
     return nameTypeMap;
 }

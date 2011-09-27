@@ -89,12 +89,12 @@ QDesigner::QDesigner(int &argc, char **argv)
       m_client(0),
       m_workbench(0), m_suppressNewFormShow(false)
 {
-    setOrganizationName(QLatin1String("Trolltech"));
+    setOrganizationName(QStringLiteral("Trolltech"));
     setApplicationName(QLatin1String(designerApplicationName));
     QDesignerComponents::initializeResources();
 
 #ifndef Q_WS_MAC
-    setWindowIcon(QIcon(QLatin1String(":/trolltech/designer/images/designer.png")));
+    setWindowIcon(QIcon(QStringLiteral(":/trolltech/designer/images/designer.png")));
 #endif
     initialize();
 }
@@ -172,13 +172,13 @@ bool QDesigner::parseCommandLineArgs(QStringList &fileNames, QString &resourceDi
                 break;
             }
             // Options
-            if (argument == QLatin1String("-server")) {
+            if (argument == QStringLiteral("-server")) {
                 m_server = new QDesignerServer();
                 printf("%d\n", m_server->serverPort());
                 fflush(stdout);
                 break;
             }
-            if (argument == QLatin1String("-client")) {
+            if (argument == QStringLiteral("-client")) {
                 bool ok = true;
                 if (++it == acend) {
                     qWarning("** WARNING The option -client requires an argument");
@@ -193,7 +193,7 @@ bool QDesigner::parseCommandLineArgs(QStringList &fileNames, QString &resourceDi
                 }
                 break;
             }
-            if (argument == QLatin1String("-resourcedir")) {
+            if (argument == QStringLiteral("-resourcedir")) {
                 if (++it == acend) {
                     qWarning("** WARNING The option -resourcedir requires an argument");
                     return false;
@@ -201,7 +201,7 @@ bool QDesigner::parseCommandLineArgs(QStringList &fileNames, QString &resourceDi
                 resourceDir = QFile::decodeName(it->toLocal8Bit());
                 break;
             }
-            if (argument == QLatin1String("-enableinternaldynamicproperties")) {
+            if (argument == QStringLiteral("-enableinternaldynamicproperties")) {
                 QDesignerPropertySheet::setInternalDynamicPropertiesEnabled(true);
                 break;
             }
@@ -223,17 +223,17 @@ void QDesigner::initialize()
     QTranslator *qtTranslator = new QTranslator(this);
 
     const QString localSysName = QLocale::system().name();
-    QString  translatorFileName = QLatin1String("designer_");
+    QString  translatorFileName = QStringLiteral("designer_");
     translatorFileName += localSysName;
     translator->load(translatorFileName, resourceDir);
 
-    translatorFileName = QLatin1String("qt_");
+    translatorFileName = QStringLiteral("qt_");
     translatorFileName += localSysName;
     qtTranslator->load(translatorFileName, resourceDir);
     installTranslator(translator);
     installTranslator(qtTranslator);
 
-    if (QLibraryInfo::licensedProducts() == QLatin1String("Console")) {
+    if (QLibraryInfo::licensedProducts() == QStringLiteral("Console")) {
         QMessageBox::information(0, tr("Qt Designer"),
                 tr("This application cannot be used for the Console edition of Qt"));
         QMetaObject::invokeMethod(this, "quit", Qt::QueuedConnection);

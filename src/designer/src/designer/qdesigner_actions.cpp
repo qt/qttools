@@ -177,9 +177,9 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
       m_helpActions(0),
       m_styleActions(0),
       m_editWidgetsAction(new QAction(tr("Edit Widgets"), this)),
-      m_newFormAction(new QAction(qdesigner_internal::createIconSet(QLatin1String("filenew.png")), tr("&New..."), this)),
-      m_openFormAction(new QAction(qdesigner_internal::createIconSet(QLatin1String("fileopen.png")), tr("&Open..."), this)),
-      m_saveFormAction(new QAction(qdesigner_internal::createIconSet(QLatin1String("filesave.png")), tr("&Save"), this)),
+      m_newFormAction(new QAction(qdesigner_internal::createIconSet(QStringLiteral("filenew.png")), tr("&New..."), this)),
+      m_openFormAction(new QAction(qdesigner_internal::createIconSet(QStringLiteral("fileopen.png")), tr("&Open..."), this)),
+      m_saveFormAction(new QAction(qdesigner_internal::createIconSet(QStringLiteral("filesave.png")), tr("&Save"), this)),
       m_saveFormAsAction(new QAction(tr("Save &As..."), this)),
       m_saveAllFormsAction(new QAction(tr("Save A&ll"), this)),
       m_saveFormAsTemplateAction(new QAction(tr("Save As &Template..."), this)),
@@ -220,20 +220,20 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
     connect(ifwm, SIGNAL(formWindowSettingsChanged(QDesignerFormWindowInterface*)),
             this, SLOT(formWindowSettingsChanged(QDesignerFormWindowInterface*)));
 
-    m_editWidgetsAction->setObjectName(QLatin1String("__qt_edit_widgets_action"));
-    m_newFormAction->setObjectName(QLatin1String("__qt_new_form_action"));
-    m_openFormAction->setObjectName(QLatin1String("__qt_open_form_action"));
-    m_saveFormAction->setObjectName(QLatin1String("__qt_save_form_action"));
-    m_saveFormAsAction->setObjectName(QLatin1String("__qt_save_form_as_action"));
-    m_saveAllFormsAction->setObjectName(QLatin1String("__qt_save_all_forms_action"));
-    m_saveFormAsTemplateAction->setObjectName(QLatin1String("__qt_save_form_as_template_action"));
-    m_closeFormAction->setObjectName(QLatin1String("__qt_close_form_action"));
-    m_quitAction->setObjectName(QLatin1String("__qt_quit_action"));
-    m_previewFormAction->setObjectName(QLatin1String("__qt_preview_form_action"));
-    m_viewCodeAction->setObjectName(QLatin1String("__qt_preview_code_action"));
-    m_minimizeAction->setObjectName(QLatin1String("__qt_minimize_action"));
-    m_bringAllToFrontAction->setObjectName(QLatin1String("__qt_bring_all_to_front_action"));
-    m_preferencesAction->setObjectName(QLatin1String("__qt_preferences_action"));
+    m_editWidgetsAction->setObjectName(QStringLiteral("__qt_edit_widgets_action"));
+    m_newFormAction->setObjectName(QStringLiteral("__qt_new_form_action"));
+    m_openFormAction->setObjectName(QStringLiteral("__qt_open_form_action"));
+    m_saveFormAction->setObjectName(QStringLiteral("__qt_save_form_action"));
+    m_saveFormAsAction->setObjectName(QStringLiteral("__qt_save_form_as_action"));
+    m_saveAllFormsAction->setObjectName(QStringLiteral("__qt_save_all_forms_action"));
+    m_saveFormAsTemplateAction->setObjectName(QStringLiteral("__qt_save_form_as_template_action"));
+    m_closeFormAction->setObjectName(QStringLiteral("__qt_close_form_action"));
+    m_quitAction->setObjectName(QStringLiteral("__qt_quit_action"));
+    m_previewFormAction->setObjectName(QStringLiteral("__qt_preview_form_action"));
+    m_viewCodeAction->setObjectName(QStringLiteral("__qt_preview_code_action"));
+    m_minimizeAction->setObjectName(QStringLiteral("__qt_minimize_action"));
+    m_bringAllToFrontAction->setObjectName(QStringLiteral("__qt_bring_all_to_front_action"));
+    m_preferencesAction->setObjectName(QStringLiteral("__qt_preferences_action"));
 
     m_helpActions = createHelpActions();
 
@@ -281,10 +281,10 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
     m_printPreviewAction->setShortcut(QKeySequence::Print);
     connect(m_printPreviewAction,  SIGNAL(triggered()), this, SLOT(printPreviewImage()));
     m_fileActions->addAction(m_printPreviewAction);
-    m_printPreviewAction->setObjectName(QLatin1String("__qt_print_action"));
+    m_printPreviewAction->setObjectName(QStringLiteral("__qt_print_action"));
 
     connect(m_savePreviewImageAction,  SIGNAL(triggered()), this, SLOT(savePreviewImage()));
-    m_savePreviewImageAction->setObjectName(QLatin1String("__qt_saveimage_action"));
+    m_savePreviewImageAction->setObjectName(QStringLiteral("__qt_saveimage_action"));
     m_fileActions->addAction(m_savePreviewImageAction);
     m_fileActions->addAction(createSeparator(this));
 
@@ -304,12 +304,12 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
 // edit actions
 //
     QAction *undoAction = formWindowManager->action(QDesignerFormWindowManagerInterface::UndoAction);
-    undoAction->setObjectName(QLatin1String("__qt_undo_action"));
+    undoAction->setObjectName(QStringLiteral("__qt_undo_action"));
     undoAction->setShortcut(QKeySequence::Undo);
     m_editActions->addAction(undoAction);
 
     QAction *redoAction = formWindowManager->action(QDesignerFormWindowManagerInterface::RedoAction);
-    redoAction->setObjectName(QLatin1String("__qt_redo_action"));
+    redoAction->setObjectName(QStringLiteral("__qt_redo_action"));
     redoAction->setShortcut(QKeySequence::Redo);
     m_editActions->addAction(redoAction);
 
@@ -341,7 +341,7 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
     shortcuts.append(QKeySequence(Qt::Key_Escape));
 #endif
     m_editWidgetsAction->setShortcuts(shortcuts);
-    QIcon fallback(m_core->resourceLocation() + QLatin1String("/widgettool.png"));
+    QIcon fallback(m_core->resourceLocation() + QStringLiteral("/widgettool.png"));
     m_editWidgetsAction->setIcon(QIcon::fromTheme("designer-edit-widget", fallback));
     connect(m_editWidgetsAction, SIGNAL(triggered()), this, SLOT(editWidgetsSlot()));
     m_editWidgetsAction->setChecked(true);
@@ -445,41 +445,41 @@ QActionGroup *QDesignerActions::createHelpActions()
 
 #ifndef QT_JAMBI_BUILD
     QAction *mainHelpAction = new QAction(tr("Qt Designer &Help"), this);
-    mainHelpAction->setObjectName(QLatin1String("__qt_designer_help_action"));
+    mainHelpAction->setObjectName(QStringLiteral("__qt_designer_help_action"));
     connect(mainHelpAction, SIGNAL(triggered()), this, SLOT(showDesignerHelp()));
     mainHelpAction->setShortcut(Qt::CTRL + Qt::Key_Question);
     helpActions->addAction(mainHelpAction);
 
     helpActions->addAction(createSeparator(this));
     QAction *widgetHelp = new QAction(tr("Current Widget Help"), this);
-    widgetHelp->setObjectName(QLatin1String("__qt_current_widget_help_action"));
+    widgetHelp->setObjectName(QStringLiteral("__qt_current_widget_help_action"));
     widgetHelp->setShortcut(Qt::Key_F1);
     connect(widgetHelp, SIGNAL(triggered()), this, SLOT(showWidgetSpecificHelp()));
     helpActions->addAction(widgetHelp);
 
     helpActions->addAction(createSeparator(this));
     QAction *whatsNewAction = new QAction(tr("What's New in Qt Designer?"), this);
-    whatsNewAction->setObjectName(QLatin1String("__qt_whats_new_in_qt_designer_action"));
+    whatsNewAction->setObjectName(QStringLiteral("__qt_whats_new_in_qt_designer_action"));
     connect(whatsNewAction, SIGNAL(triggered()), this, SLOT(showWhatsNew()));
     helpActions->addAction(whatsNewAction);
 #endif
 
     helpActions->addAction(createSeparator(this));
     QAction *aboutPluginsAction = new QAction(tr("About Plugins"), this);
-    aboutPluginsAction->setObjectName(QLatin1String("__qt_about_plugins_action"));
+    aboutPluginsAction->setObjectName(QStringLiteral("__qt_about_plugins_action"));
     aboutPluginsAction->setMenuRole(QAction::ApplicationSpecificRole);
     connect(aboutPluginsAction, SIGNAL(triggered()), m_core->formWindowManager(), SLOT(showPluginDialog()));
     helpActions->addAction(aboutPluginsAction);
 
     QAction *aboutDesignerAction = new QAction(tr("About Qt Designer"), this);
     aboutDesignerAction->setMenuRole(QAction::AboutRole);
-    aboutDesignerAction->setObjectName(QLatin1String("__qt_about_designer_action"));
+    aboutDesignerAction->setObjectName(QStringLiteral("__qt_about_designer_action"));
     connect(aboutDesignerAction, SIGNAL(triggered()), this, SLOT(aboutDesigner()));
     helpActions->addAction(aboutDesignerAction);
 
     QAction *aboutQtAction = new QAction(tr("About Qt"), this);
     aboutQtAction->setMenuRole(QAction::AboutQtRole);
-    aboutQtAction->setObjectName(QLatin1String("__qt_about_qt_action"));
+    aboutQtAction->setObjectName(QStringLiteral("__qt_about_qt_action"));
     connect(aboutQtAction, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
     helpActions->addAction(aboutQtAction);
     return helpActions;
@@ -498,7 +498,7 @@ QString QDesignerActions::uiExtension() const
         = qt_extension<QDesignerLanguageExtension *>(m_core->extensionManager(), m_core);
     if (lang)
         return lang->uiExtension();
-    return QLatin1String("ui");
+    return QStringLiteral("ui");
 }
 
 QAction *QDesignerActions::createRecentFilesMenu()
@@ -516,7 +516,7 @@ QAction *QDesignerActions::createRecentFilesMenu()
     updateRecentFileActions();
     menu->addSeparator();
     act = new QAction(QIcon::fromTheme("edit-clear"), tr("Clear &Menu"), this);
-    act->setObjectName(QLatin1String("__qt_action_clear_menu_"));
+    act->setObjectName(QStringLiteral("__qt_action_clear_menu_"));
     connect(act, SIGNAL(triggered()), this, SLOT(clearRecentFiles()));
     m_recentFilesActions->addAction(act);
     menu->addAction(act);
@@ -632,7 +632,7 @@ bool QDesignerActions::saveFormAs(QDesignerFormWindowInterface *fw)
             dir = QDir::current().absolutePath();
         } while (false);
         dir += QDir::separator();
-        dir += QLatin1String("untitled.");
+        dir += QStringLiteral("untitled.");
         dir += extension;
     }
 
@@ -657,7 +657,7 @@ void QDesignerActions::saveAllForms()
     QString fileNames;
     QDesignerFormWindowManagerInterface *formWindowManager = core()->formWindowManager();
     if (const int totalWindows = formWindowManager->formWindowCount()) {
-        const QString separator = QLatin1String(", ");
+        const QString separator = QStringLiteral(", ");
         for (int i = 0; i < totalWindows; ++i) {
             QDesignerFormWindowInterface *fw = formWindowManager->formWindow(i);
             if (fw && fw->isDirty()) {
@@ -824,7 +824,7 @@ bool QDesignerActions::readInForm(const QString &fileName)
 
 static QString createBackup(const QString &fileName)
 {
-    const QString suffix = QLatin1String(".bak");
+    const QString suffix = QStringLiteral(".bak");
     QString backupFile = fileName + suffix;
     QFileInfo fi(backupFile);
     int i = 0;
@@ -856,13 +856,13 @@ bool QDesignerActions::writeOutForm(QDesignerFormWindowInterface *fw, const QStr
     if (check) {
         const QStringList problems = fw->checkContents();
         if (!problems.isEmpty())
-            QMessageBox::information(fw->window(), tr("Qt Designer"), problems.join(QLatin1String("<br>")));
+            QMessageBox::information(fw->window(), tr("Qt Designer"), problems.join(QStringLiteral("<br>")));
     }
 
     QString contents = fw->contents();
     if (qdesigner_internal::FormWindowBase *fwb = qobject_cast<qdesigner_internal::FormWindowBase *>(fw)) {
         if (fwb->lineTerminatorMode() == qdesigner_internal::FormWindowBase::CRLFLineTerminator)
-            contents.replace(QLatin1Char('\n'), QLatin1String("\r\n"));
+            contents.replace(QLatin1Char('\n'), QStringLiteral("\r\n"));
     }
     const QByteArray utf8Array = contents.toUtf8();
     m_workbench->updateBackup(fw);
@@ -892,7 +892,7 @@ bool QDesignerActions::writeOutForm(QDesignerFormWindowInterface *fw, const QStr
             QString extension = uiExtension();
             const QString fileName = QFileDialog::getSaveFileName(fw, tr("Save Form As"),
                                                                   QDir::current().absolutePath(),
-                                                                  QLatin1String("*.") + extension);
+                                                                  QStringLiteral("*.") + extension);
             if (fileName.isEmpty()) {
                 removeBackup(backupFile);
                 return false;
@@ -1050,14 +1050,14 @@ QAction *QDesignerActions::minimizeAction() const
 void QDesignerActions::showDesignerHelp()
 {
     QString url = AssistantClient::designerManualUrl();
-    url += QLatin1String("designer-manual.html");
+    url += QStringLiteral("designer-manual.html");
     showHelp(url);
 }
 
 void QDesignerActions::showWhatsNew()
 {
     QString url = AssistantClient::qtReferenceManualUrl();
-    url += QLatin1String("qt4-designer.html");
+    url += QStringLiteral("qt4-designer.html");
     showHelp(url);
 }
 
@@ -1080,9 +1080,9 @@ void QDesignerActions::aboutDesigner()
     VersionDialog mb(core()->topLevel());
     mb.setWindowTitle(tr("About Qt Designer"));
     if (mb.exec()) {
-        QMessageBox messageBox(QMessageBox::Information, QLatin1String("Easter Egg"),
-                               QLatin1String("Easter Egg"), QMessageBox::Ok, core()->topLevel());
-        messageBox.setInformativeText(QLatin1String("The Easter Egg has been removed."));
+        QMessageBox messageBox(QMessageBox::Information, QStringLiteral("Easter Egg"),
+                               QStringLiteral("Easter Egg"), QMessageBox::Ok, core()->topLevel());
+        messageBox.setInformativeText(QStringLiteral("The Easter Egg has been removed."));
         messageBox.exec();
     }
 }
@@ -1132,7 +1132,7 @@ void QDesignerActions::backupForms()
 
         QString formBackupName;
         QTextStream(&formBackupName) << m_backupPath << QDir::separator()
-                                     << QLatin1String("backup") << i << QLatin1String(".bak");
+                                     << QStringLiteral("backup") << i << QStringLiteral(".bak");
 
         QString fwn = QDir::convertSeparators(fwi->fileName());
         if (fwn.isEmpty())
@@ -1145,7 +1145,7 @@ void QDesignerActions::backupForms()
             QString contents = fixResourceFileBackupPath(fwi, backupDir);
             if (qdesigner_internal::FormWindowBase *fwb = qobject_cast<qdesigner_internal::FormWindowBase *>(fwi)) {
                 if (fwb->lineTerminatorMode() == qdesigner_internal::FormWindowBase::CRLFLineTerminator)
-                    contents.replace(QLatin1Char('\n'), QLatin1String("\r\n"));
+                    contents.replace(QLatin1Char('\n'), QStringLiteral("\r\n"));
             }
             const QByteArray utf8Array = contents.toUtf8();
             if (file.write(utf8Array, utf8Array.size()) != utf8Array.size()) {
@@ -1183,11 +1183,11 @@ void QDesignerActions::backupForms()
 QString QDesignerActions::fixResourceFileBackupPath(QDesignerFormWindowInterface *fwi, const QDir& backupDir)
 {
     const QString content = fwi->contents();
-    QDomDocument domDoc(QLatin1String("backup"));
+    QDomDocument domDoc(QStringLiteral("backup"));
     if(!domDoc.setContent(content))
         return content;
 
-    const QDomNodeList list = domDoc.elementsByTagName(QLatin1String("resources"));
+    const QDomNodeList list = domDoc.elementsByTagName(QStringLiteral("resources"));
     if (list.isEmpty())
         return content;
 
@@ -1195,14 +1195,14 @@ QString QDesignerActions::fixResourceFileBackupPath(QDesignerFormWindowInterface
         const QDomNode node = list.at(i);
         if (!node.isNull()) {
             const QDomElement element = node.toElement();
-            if(!element.isNull() && element.tagName() == QLatin1String("resources")) {
+            if(!element.isNull() && element.tagName() == QStringLiteral("resources")) {
                 QDomNode childNode = element.firstChild();
                 while (!childNode.isNull()) {
                     QDomElement childElement = childNode.toElement();
-                    if(!childElement.isNull() && childElement.tagName() == QLatin1String("include")) {
-                        const QString attr = childElement.attribute(QLatin1String("location"));
+                    if(!childElement.isNull() && childElement.tagName() == QStringLiteral("include")) {
+                        const QString attr = childElement.attribute(QStringLiteral("location"));
                         const QString path = fwi->absoluteDir().absoluteFilePath(attr);
-                        childElement.setAttribute(QLatin1String("location"), backupDir.relativeFilePath(path));
+                        childElement.setAttribute(QStringLiteral("location"), backupDir.relativeFilePath(path));
                     }
                     childNode = childNode.nextSibling();
                 }
@@ -1262,14 +1262,14 @@ bool QDesignerActions::ensureBackupDirectories() {
         // create names
         m_backupPath = QDir::homePath();
         m_backupPath += QDir::separator();
-        m_backupPath += QLatin1String(".designer");
+        m_backupPath += QStringLiteral(".designer");
         m_backupPath += QDir::separator();
-        m_backupPath += QLatin1String("backup");
+        m_backupPath += QStringLiteral("backup");
         m_backupPath = QDir::convertSeparators(m_backupPath );
 
         m_backupTmpPath = m_backupPath;
         m_backupTmpPath += QDir::separator();
-        m_backupTmpPath += QLatin1String("tmp");
+        m_backupTmpPath += QStringLiteral("tmp");
         m_backupTmpPath = QDir::convertSeparators(m_backupTmpPath);
     }
 

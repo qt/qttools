@@ -72,7 +72,7 @@ static bool canBeBuddy(QWidget *w, QDesignerFormWindowInterface *form)
 
     QExtensionManager *ext = form->core()->extensionManager();
     if (QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(ext, w)) {
-        const int index = sheet->indexOf(QLatin1String("focusPolicy"));
+        const int index = sheet->indexOf(QStringLiteral("focusPolicy"));
         if (index != -1) {
             bool ok = false;
             const Qt::FocusPolicy q = static_cast<Qt::FocusPolicy>(qdesigner_internal::Utils::valueOf(sheet->property(index), &ok));

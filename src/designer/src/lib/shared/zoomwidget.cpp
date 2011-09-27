@@ -237,7 +237,7 @@ void ZoomView::showContextMenu(const QPoint &globalPos)
     zoomMenu()->addActions(&menu);
     if (debugZoomWidget) {
         menu.addSeparator();
-        QAction *da = menu.addAction(QLatin1String("Dump"));
+        QAction *da = menu.addAction(QStringLiteral("Dump"));
         connect(da, SIGNAL(triggered()), this, SLOT(dump()));
     }
     menu.exec(globalPos);

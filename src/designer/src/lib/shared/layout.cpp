@@ -237,10 +237,10 @@ bool Layout::prepareLayout(bool &needMove, bool &needReparent)
 
     if (m_layoutBase == 0) {
         const bool useSplitter = m_layoutType == LayoutInfo::HSplitter || m_layoutType == LayoutInfo::VSplitter;
-        const QString baseWidgetClassName = useSplitter ? QLatin1String("QSplitter") : QLatin1String("QLayoutWidget");
+        const QString baseWidgetClassName = useSplitter ? QStringLiteral("QSplitter") : QStringLiteral("QLayoutWidget");
         m_layoutBase = widgetFactory->createWidget(baseWidgetClassName, widgetFactory->containerOfWidget(m_parentWidget));
         if (useSplitter) {
-            m_layoutBase->setObjectName(QLatin1String("splitter"));
+            m_layoutBase->setObjectName(QStringLiteral("splitter"));
             m_formWindow->ensureUniqueObjectName(m_layoutBase);
         }
     } else {
@@ -447,11 +447,11 @@ static QString suggestLayoutName(const char *className)
 {
     // Legacy
     if (!qstrcmp(className, "QHBoxLayout"))
-        return QLatin1String("horizontalLayout");
+        return QStringLiteral("horizontalLayout");
     if (!qstrcmp(className, "QVBoxLayout"))
-        return QLatin1String("verticalLayout");
+        return QStringLiteral("verticalLayout");
     if (!qstrcmp(className, "QGridLayout"))
-        return QLatin1String("gridLayout");
+        return QStringLiteral("gridLayout");
 
     return qtify(QString::fromUtf8(className));
 }
@@ -465,10 +465,10 @@ QLayout *Layout::createLayout(int type)
     // QLayoutWidget
     QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(m_formWindow->core()->extensionManager(), layout);
     if (sheet && qobject_cast<QLayoutWidget*>(m_layoutBase)) {
-        sheet->setProperty(sheet->indexOf(QLatin1String("leftMargin")), 0);
-        sheet->setProperty(sheet->indexOf(QLatin1String("topMargin")), 0);
-        sheet->setProperty(sheet->indexOf(QLatin1String("rightMargin")), 0);
-        sheet->setProperty(sheet->indexOf(QLatin1String("bottomMargin")), 0);
+        sheet->setProperty(sheet->indexOf(QStringLiteral("leftMargin")), 0);
+        sheet->setProperty(sheet->indexOf(QStringLiteral("topMargin")), 0);
+        sheet->setProperty(sheet->indexOf(QStringLiteral("rightMargin")), 0);
+        sheet->setProperty(sheet->indexOf(QStringLiteral("bottomMargin")), 0);
     }
     return layout;
 }

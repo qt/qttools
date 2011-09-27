@@ -1432,7 +1432,7 @@ void QtResourceEditorDialogPrivate::slotNewQrcFile()
                 QApplication::translate("QtResourceEditorDialog", "New Resource File", 0, QApplication::UnicodeUTF8),
                 m_firstQrcFileDialog ? qrcStartDirectory() : QString(),
                 QApplication::translate("QtResourceEditorDialog", "Resource files (*.qrc)", 0, QApplication::UnicodeUTF8),
-                QLatin1String("qrc"));
+                QStringLiteral("qrc"));
     if (qrcPath.isEmpty())
         return;
 
@@ -1634,7 +1634,7 @@ void QtResourceEditorDialogPrivate::slotAddFiles()
     while (itResourcePath.hasNext()) {
         QString resourcePath = itResourcePath.next();
         QString relativePath = dir.relativeFilePath(resourcePath);
-        if (relativePath.startsWith(QLatin1String(".."))) {
+        if (relativePath.startsWith(QStringLiteral(".."))) {
             QMessageBox msgBox(QMessageBox::Warning,
                     QApplication::translate("QtResourceEditorDialog", "Incorrect Path", 0, QApplication::UnicodeUTF8),
                     outOfPathWarning(relativePath), QMessageBox::Cancel);
@@ -1849,7 +1849,7 @@ QString QtResourceEditorDialogPrivate::browseForNewLocation(const QString &resou
                     QApplication::translate("QtResourceEditorDialog", "Copy As", 0, QApplication::UnicodeUTF8),
                     initialPath);
         QString relativePath = rootDir.relativeFilePath(newPath);
-        if (relativePath.startsWith(QLatin1String(".."))) {
+        if (relativePath.startsWith(QStringLiteral(".."))) {
             if (warning(QApplication::translate("QtResourceEditorDialog", "Copy As", 0, QApplication::UnicodeUTF8),
                         QApplication::translate("QtResourceEditorDialog", "<p>The selected file:</p>"
                                         "<p>%1</p><p>is outside of the current resource file's directory:</p><p>%2</p>"
@@ -2143,8 +2143,8 @@ QString QtResourceEditorDialog::selectedResource() const
     if (!currentResourceFile->alias().isEmpty())
         resourceEnding = currentResourceFile->alias();
 
-    const QString dotSlash(QLatin1String("./"));
-    const QString dotDotSlash(QLatin1String("../"));
+    const QString dotSlash(QStringLiteral("./"));
+    const QString dotDotSlash(QStringLiteral("../"));
     while (1) {
         if (resourceEnding.startsWith(slash))
             resourceEnding = resourceEnding.mid(1);

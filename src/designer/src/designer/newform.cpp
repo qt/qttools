@@ -142,7 +142,7 @@ void NewForm::recentFileChosen()
     QAction *action = qobject_cast<QAction *>(sender());
     if (!action)
         return;
-    if (action->objectName() == QLatin1String("__qt_action_clear_menu_"))
+    if (action->objectName() == QStringLiteral("__qt_action_clear_menu_"))
         return;
     close();
 }
@@ -198,7 +198,7 @@ bool NewForm::openTemplate(QString *ptrToErrorMessage)
     QString tempPattern = QDir::tempPath();
     if (!tempPattern.endsWith(QDir::separator())) // platform-dependant
         tempPattern += QDir::separator();
-    tempPattern += QLatin1String("XXXXXX.ui");
+    tempPattern += QStringLiteral("XXXXXX.ui");
     QTemporaryFile tempFormFile(tempPattern);
 
     tempFormFile.setAutoRemove(true);

@@ -107,7 +107,7 @@ namespace {
 static bool isIntegerList(const QString &s)
 {
     // Check for empty string or comma-separated list of integers
-    static const QRegExp re(QLatin1String("[0-9]+(,[0-9]+)+"));
+    static const QRegExp re(QStringLiteral("[0-9]+(,[0-9]+)+"));
     Q_ASSERT(re.isValid());
     return s.isEmpty() || re.exactMatch(s);
 }
@@ -192,7 +192,7 @@ namespace qdesigner_internal {
 LayoutPropertySheet::LayoutPropertySheet(QLayout *l, QObject *parent)
     : QDesignerPropertySheet(l, parent), m_layout(l)
 {
-    const QString layoutGroup = QLatin1String("Layout");
+    const QString layoutGroup = QStringLiteral("Layout");
     int pindex = createFakeProperty(QLatin1String(leftMargin), 0);
     setPropertyGroup(pindex, layoutGroup);
 

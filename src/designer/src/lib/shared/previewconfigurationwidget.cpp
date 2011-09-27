@@ -78,7 +78,7 @@ static const Skins &defaultSkins() {
     static Skins rc;
     if (rc.empty()) {
         const QString skinPath = QLatin1String(skinResourcePathC);
-        QString pattern = QLatin1String("*.");
+        QString pattern = QStringLiteral("*.");
         pattern += QLatin1String(skinExtensionC);
         const QDir dir(skinPath, pattern);
         const QFileInfoList list = dir.entryInfoList(QDir::Dirs|QDir::NoDotAndDotDot, QDir::Name);
