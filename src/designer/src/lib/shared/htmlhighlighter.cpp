@@ -93,9 +93,9 @@ void HtmlHighlighter::highlightBlock(const QString &text)
     static const QLatin1Char apos = QLatin1Char('\'');
     static const QLatin1Char semicolon = QLatin1Char(';');
     static const QLatin1Char equals = QLatin1Char('=');
-    static const QLatin1String startComment = QStringLiteral("<!--");
-    static const QLatin1String endComment = QStringLiteral("-->");
-    static const QLatin1String endElement = QStringLiteral("/>");
+    static const QLatin1String startComment("<!--");
+    static const QLatin1String endComment("-->");
+    static const QLatin1String endElement("/>");
 
     int state = previousBlockState();
     int len = text.length();

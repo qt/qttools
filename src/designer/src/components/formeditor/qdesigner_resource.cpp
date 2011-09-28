@@ -1334,7 +1334,7 @@ DomWidget *QDesignerResource::saveWidget(QToolBar *toolBar, DomWidget *ui_parent
 
         attr = new DomProperty();
         attr->setAttributeName(QStringLiteral("toolBarBreak"));
-        attr->setElementBool(toolBarBreak ? QStringLiteral("true") : QStringLiteral("false"));
+        attr->setElementBool(toolBarBreak ? QLatin1String("true") : QLatin1String("false"));
         attributes  << attr;
         ui_widget->setElementAttribute(attributes);
     }

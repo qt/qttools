@@ -238,7 +238,7 @@
 
     </xsl:template>
 
-    <!-- Format a string constant as QString(QLatin1Char('X')) or QLatin1String("foo"), respectively -->
+    <!-- Format a string constant as QString(QLatin1Char('X')) or QStringLiteral("foo"), respectively -->
     <xsl:template name="string-constant">
     <xsl:param name="literal"/>
         <xsl:choose>
@@ -942,7 +942,7 @@
 **
 ****************************************************************************/
 </xsl:text>
-        <xsl:text>#include "private/ui4_p.h"&endl;</xsl:text>
+        <xsl:text>#include "ui4_p.h"&endl;</xsl:text>
         <xsl:text>&endl;</xsl:text>
         <xsl:text>&endl;</xsl:text>
         <xsl:text>QT_BEGIN_NAMESPACE&endl;</xsl:text>

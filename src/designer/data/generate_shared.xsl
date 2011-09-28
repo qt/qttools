@@ -143,7 +143,7 @@
             <xsl:when test="$xs-type='xs:boolean'">
                 <xsl:text>(</xsl:text>
                 <xsl:value-of select="$val"/>
-                <xsl:text> == QLatin1String("true") ? true : false)</xsl:text>
+                <xsl:text> == QStringLiteral("true") ? true : false)</xsl:text>
             </xsl:when>
             <xsl:when test="$xs-type='xs:long'">
                 <xsl:value-of select="$val"/>
@@ -201,6 +201,8 @@
             <xsl:when test="$xs-type='xs:boolean'">
                 <xsl:text>(</xsl:text>
                 <xsl:value-of select="$val"/>
+                <!-- Note: Do not use QStringLiteral here as the types are not compatible:
+                     QConstStringData<5> vs QConstStringData<4> -->
                 <xsl:text> ? QLatin1String("true") : QLatin1String("false"))</xsl:text>
             </xsl:when>
             <xsl:otherwise>### BZZZZT! ###</xsl:otherwise>

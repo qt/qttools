@@ -3596,7 +3596,7 @@ void DomWidget::write(QXmlStreamWriter &writer, const QString &tagName) const
         writer.writeAttribute(QStringLiteral("name"), attributeName());
 
     if (hasAttributeNative())
-        writer.writeAttribute(QStringLiteral("native"), (attributeNative() ? QStringLiteral("true") : QStringLiteral("false")));
+        writer.writeAttribute(QStringLiteral("native"), (attributeNative() ? QLatin1String("true") : QLatin1String("false")));
 
     for (int i = 0; i < m_class.size(); ++i) {
         QString v = m_class[i];
@@ -4913,23 +4913,23 @@ void DomFont::write(QXmlStreamWriter &writer, const QString &tagName) const
     }
 
     if (m_children & Italic) {
-        writer.writeTextElement(QStringLiteral("italic"), (m_italic ? QStringLiteral("true") : QStringLiteral("false")));
+        writer.writeTextElement(QStringLiteral("italic"), (m_italic ? QLatin1String("true") : QLatin1String("false")));
     }
 
     if (m_children & Bold) {
-        writer.writeTextElement(QStringLiteral("bold"), (m_bold ? QStringLiteral("true") : QStringLiteral("false")));
+        writer.writeTextElement(QStringLiteral("bold"), (m_bold ? QLatin1String("true") : QLatin1String("false")));
     }
 
     if (m_children & Underline) {
-        writer.writeTextElement(QStringLiteral("underline"), (m_underline ? QStringLiteral("true") : QStringLiteral("false")));
+        writer.writeTextElement(QStringLiteral("underline"), (m_underline ? QLatin1String("true") : QLatin1String("false")));
     }
 
     if (m_children & StrikeOut) {
-        writer.writeTextElement(QStringLiteral("strikeout"), (m_strikeOut ? QStringLiteral("true") : QStringLiteral("false")));
+        writer.writeTextElement(QStringLiteral("strikeout"), (m_strikeOut ? QLatin1String("true") : QLatin1String("false")));
     }
 
     if (m_children & Antialiasing) {
-        writer.writeTextElement(QStringLiteral("antialiasing"), (m_antialiasing ? QStringLiteral("true") : QStringLiteral("false")));
+        writer.writeTextElement(QStringLiteral("antialiasing"), (m_antialiasing ? QLatin1String("true") : QLatin1String("false")));
     }
 
     if (m_children & StyleStrategy) {
@@ -4937,7 +4937,7 @@ void DomFont::write(QXmlStreamWriter &writer, const QString &tagName) const
     }
 
     if (m_children & Kerning) {
-        writer.writeTextElement(QStringLiteral("kerning"), (m_kerning ? QStringLiteral("true") : QStringLiteral("false")));
+        writer.writeTextElement(QStringLiteral("kerning"), (m_kerning ? QLatin1String("true") : QLatin1String("false")));
     }
 
     if (!m_text.isEmpty())
