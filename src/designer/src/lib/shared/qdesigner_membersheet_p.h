@@ -86,9 +86,6 @@ public:
     virtual bool isSignal(int index) const;
     virtual bool isSlot(int index) const;
 
-    virtual bool isQt3Signal(int index) const;
-    virtual bool isQt3Slot(int index) const;
-
     virtual bool inheritedFromWidget(int index) const;
 
     static bool signalMatchesSlot(const QString &signal, const QString &slot);

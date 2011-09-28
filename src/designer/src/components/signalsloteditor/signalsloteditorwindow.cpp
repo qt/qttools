@@ -259,6 +259,8 @@ int ConnectionModel::columnCount(const QModelIndex &parent) const
 
 QVariant ConnectionModel::data(const QModelIndex &index, int role) const
 {
+    enum { deprecatedMember = 0 };
+
     if ((role != Qt::DisplayRole && role != Qt::EditRole && role != Qt::FontRole && role != Qt::ForegroundRole) || !m_editor)
         return QVariant();
 
@@ -269,23 +271,14 @@ QVariant ConnectionModel::data(const QModelIndex &index, int role) const
     const SignalSlotConnection *con = static_cast<SignalSlotConnection*>(m_editor->connection(index.row()));
     Q_ASSERT(con != 0);
 
-    if (role == Qt::FontRole || role == Qt::ForegroundRole) {
-        bool isQt3Member = false;
-        if (index.column() == 1) {
-            QDesignerFormEditorInterface *core = m_editor->formWindow()->core();
-            isQt3Member = isQt3Signal(core, con->object(CETypes::EndPoint::Source), con->signal());
-        } else if (index.column() == 3) {
-            QDesignerFormEditorInterface *core = m_editor->formWindow()->core();
-            isQt3Member = isQt3Signal(core, con->object(CETypes::EndPoint::Target), con->slot());
-        }
-        if (isQt3Member) {
-            if (role == Qt::ForegroundRole)
-                return Qt::red;
-            QFont font = QApplication::font();
-            font.setItalic(true);
-            return font;
-        }
-        return QVariant();
+    // Mark deprecated slots red/italic. Not currently in use (historically for Qt 3 slots in Qt 4),
+    // but may be used again in the future.
+    if (deprecatedMember && role == Qt::ForegroundRole)
+        return Qt::red;
+    if (deprecatedMember && role ==  Qt::FontRole) {
+        QFont font = QApplication::font();
+        font.setItalic(true);
+        return font;
     }
 
     static const QVariant senderDefault = tr("<sender>");
@@ -665,22 +658,14 @@ QWidget *ConnectionDelegate::createEditor(QWidget *parent,
             object = m_form->mainContainer()->findChild<QObject*>(obj_name);
         }
         inline_editor->addText(type == qdesigner_internal::SignalMember ? tr("<signal>") : tr("<slot>"));
-        foreach (const qdesigner_internal::ClassMemberFunctions &class_info, class_list) {
-            if (class_info.m_className.isEmpty() || class_info.m_memberList.isEmpty())
+        foreach (const qdesigner_internal::ClassMemberFunctions &classInfo, class_list) {
+            if (classInfo.m_className.isEmpty() || classInfo.m_memberList.isEmpty())
                 continue;
-            QStringList memberList = class_info.m_memberList;
+            // Mark deprecated members by passing bool=true.
             QMap<QString, bool> markedMemberList;
-            foreach (const QString &member, memberList) {
-                bool mark = false;
-                if (type == qdesigner_internal::SignalMember)
-                    mark = qdesigner_internal::isQt3Signal(m_form->core(), object, member);
-                else
-                    mark = qdesigner_internal::isQt3Slot(m_form->core(), object, member);
-
-                if (!mark)
-                    markedMemberList.insert(member, mark);
-            }
-            inline_editor->addTitle(class_info.m_className);
+            foreach (const QString &member, classInfo.m_memberList)
+                markedMemberList.insert(member, false);
+            inline_editor->addTitle(classInfo.m_className);
             inline_editor->addTextList(markedMemberList);
         }
     }

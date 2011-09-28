@@ -94,9 +94,6 @@ bool signalMatchesSlot(QDesignerFormEditorInterface *core, const QString &signal
 
 QString realObjectName(QDesignerFormEditorInterface *core, QObject *object);
 
-bool isQt3Signal(QDesignerFormEditorInterface *core, QObject *object, const QString &signalSignature);
-bool isQt3Slot(QDesignerFormEditorInterface *core, QObject *object, const QString &signalSignature);
-
 } // namespace qdesigner_internal
 
 QT_END_NAMESPACE

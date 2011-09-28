@@ -267,42 +267,6 @@ namespace qdesigner_internal {
         return rc;
     }
 
-    bool isQt3Signal(QDesignerFormEditorInterface *core,
-                     QObject *object, const QString &signalSignature)
-    {
-        if (const QDesignerMemberSheetExtension *members
-                = qt_extension<QDesignerMemberSheetExtension*>(core->extensionManager(), object)) {
-            const int count = members->count();
-            for (int i = 0; i < count; ++i)
-                if (members->isSignal(i) && members->signature(i) == signalSignature) {
-                    const QDesignerMemberSheet *memberSheet
-                            = qobject_cast<QDesignerMemberSheet*>(core->extensionManager()->extension(object,
-                                                                                                      Q_TYPEID(QDesignerMemberSheetExtension)));
-                    return (memberSheet && memberSheet->isQt3Signal(i));
-                }
-        }
-
-        return false;
-    }
-
-    bool isQt3Slot(QDesignerFormEditorInterface *core,
-                   QObject *object, const QString &slotSignature)
-    {
-        if (const QDesignerMemberSheetExtension *members
-                = qt_extension<QDesignerMemberSheetExtension*>(core->extensionManager(), object)) {
-            Q_ASSERT(members != 0);
-            const int count = members->count();
-            for (int i = 0; i < count; ++i)
-                if (members->isSlot(i) && members->signature(i) == slotSignature) {
-                    const QDesignerMemberSheet *memberSheet
-                            = qobject_cast<QDesignerMemberSheet*>(core->extensionManager()->extension(object,
-                                                                                                      Q_TYPEID(QDesignerMemberSheetExtension)));
-                    return (memberSheet && memberSheet->isQt3Slot(i));
-                }
-        }
-        return false;
-    }
-
     QMap<QString, QString> getMatchingSlots(QDesignerFormEditorInterface *core, QObject *object, const QString &signalSignature, bool showAll)
     {
         QMap<QString, QString> rc;

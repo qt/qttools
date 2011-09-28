@@ -221,6 +221,7 @@ QString ConnectDialog::slot() const
 
 void ConnectDialog::populateSlotList(const QString &signal)
 {
+    enum { deprecatedSlot = 0 };
     QString selectedName;
     if (const QListWidgetItem * item = m_ui.slotList->currentItem())
         selectedName = item->text();
@@ -238,14 +239,14 @@ void ConnectDialog::populateSlotList(const QString &signal)
     const QMap<QString, QString>::ConstIterator itMemberEnd = memberToClassName.constEnd();
     while (itMember != itMemberEnd) {
         const QString member = itMember.key();
-        const bool qt3Slot = isQt3Slot(m_formWindow->core(), m_destination, member);
-
         QListWidgetItem *item = new QListWidgetItem(m_ui.slotList);
         item->setText(member);
         if (member == selectedName)
             curr = item;
 
-        if (qt3Slot) {
+        // Mark deprecated slots red. Not currently in use (historically for Qt 3 slots in Qt 4),
+        // but may be used again in the future.
+        if (deprecatedSlot) {
             item->setData(Qt::FontRole, variantFont);
             item->setData(Qt::ForegroundRole, Qt::red);
         }
@@ -261,6 +262,8 @@ void ConnectDialog::populateSlotList(const QString &signal)
 
 void ConnectDialog::populateSignalList()
 {
+    enum { deprecatedSignal = 0 };
+
     QString selectedName;
     if (const QListWidgetItem *item = m_ui.signalList->currentItem())
         selectedName = item->text();
@@ -278,14 +281,15 @@ void ConnectDialog::populateSignalList()
     const QMap<QString, QString>::ConstIterator itMemberEnd = memberToClassName.constEnd();
     while (itMember != itMemberEnd) {
         const QString member = itMember.key();
-        const bool qt3Signal = isQt3Signal(m_formWindow->core(), m_source, member);
 
         QListWidgetItem *item = new QListWidgetItem(m_ui.signalList);
         item->setText(member);
         if (!selectedName.isEmpty() && member == selectedName)
             curr = item;
 
-        if (qt3Signal) {
+        // Mark deprecated signals red. Not currently in use (historically for Qt 3 slots in Qt 4),
+        // but may be used again in the future.
+        if (deprecatedSignal) {
             item->setData(Qt::FontRole, variantFont);
             item->setData(Qt::ForegroundRole, Qt::red);
         }
