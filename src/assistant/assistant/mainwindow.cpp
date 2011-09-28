@@ -611,7 +611,7 @@ void MainWindow::setupActions()
 #if defined(QT_NO_PRINTER)
         m_pageSetupAction->setVisible(false);
         m_printPreviewAction->setVisible(false);
-        m_printAction->setVisible(false);
+        globalActions->printAction()->setVisible(false);
 #endif
 }
 
