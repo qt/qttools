@@ -44,6 +44,7 @@
 #include <QSpinBox>
 #include <QLabel>
 #include <QVBoxLayout>
+#include <QFile>
 
 #include "calculatorform.h"
 

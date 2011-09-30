@@ -43,6 +43,7 @@
 //! [0]
 #include <QApplication>
 #include <QWidget>
+#include <QFile>
 //! [1]
 int main(int argc, char *argv[])
 {

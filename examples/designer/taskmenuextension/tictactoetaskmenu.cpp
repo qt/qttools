@@ -39,7 +39,7 @@
 ****************************************************************************/
 
 #include <QtDesigner>
-#include <QtGui>
+#include <QtWidgets>
 
 #include "tictactoe.h"
 #include "tictactoedialog.h"
