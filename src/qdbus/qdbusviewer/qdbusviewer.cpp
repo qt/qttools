@@ -159,7 +159,7 @@ void QDBusViewer::logMessage(const QString &msg)
 
 void QDBusViewer::logError(const QString &msg)
 {
-    log->append(QLatin1String("<font color=\"red\">Error: </font>") + Qt::escape(msg) + QLatin1String("<br>"));
+    log->append(QLatin1String("<font color=\"red\">Error: </font>") + msg.toHtmlEscaped() + QLatin1String("<br>"));
 }
 
 void QDBusViewer::refresh()
@@ -411,7 +411,7 @@ void QDBusViewer::dumpMessage(const QDBusMessage &message)
     } else {
         out += QLatin1String("&nbsp;&nbsp;Arguments: ");
         foreach (QVariant arg, args) {
-            QString str = Qt::escape(QDBusUtil::argumentToString(arg));
+            QString str = QDBusUtil::argumentToString(arg).toHtmlEscaped();
             // turn object paths into clickable links
             str.replace(objectPathRegExp, QLatin1String("[ObjectPath: <a href=\"qdbus://bus\\1\">\\1</a>]"));
             out += str;

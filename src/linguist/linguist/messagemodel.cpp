@@ -212,20 +212,20 @@ bool DataModel::load(const QString &fileName, bool *langGuessed, QWidget *parent
     if (!tor.messageCount()) {
         QMessageBox::warning(parent, QObject::tr("Qt Linguist"),
                              tr("The translation file '%1' will not be loaded because it is empty.")
-                             .arg(Qt::escape(fileName)));
+                             .arg(fileName.toHtmlEscaped()));
         return false;
     }
 
     Translator::Duplicates dupes = tor.resolveDuplicates();
     if (!dupes.byId.isEmpty() || !dupes.byContents.isEmpty()) {
-        QString err = tr("<qt>Duplicate messages found in '%1':").arg(Qt::escape(fileName));
+        QString err = tr("<qt>Duplicate messages found in '%1':").arg(fileName.toHtmlEscaped());
         int numdups = 0;
         foreach (int i, dupes.byId) {
             if (++numdups >= 5) {
                 err += tr("<p>[more duplicates omitted]");
                 goto doWarn;
             }
-            err += tr("<p>* ID: %1").arg(Qt::escape(tor.message(i).id()));
+            err += tr("<p>* ID: %1").arg(tor.message(i).id().toHtmlEscaped());
         }
         foreach (int j, dupes.byContents) {
             const TranslatorMessage &msg = tor.message(j);
@@ -234,9 +234,9 @@ bool DataModel::load(const QString &fileName, bool *langGuessed, QWidget *parent
                 break;
             }
             err += tr("<p>* Context: %1<br>* Source: %2")
-                    .arg(Qt::escape(msg.context()), Qt::escape(msg.sourceText()));
+                    .arg(msg.context().toHtmlEscaped(), msg.sourceText().toHtmlEscaped());
             if (!msg.comment().isEmpty())
-                err += tr("<br>* Comment: %3").arg(Qt::escape(msg.comment()));
+                err += tr("<br>* Comment: %3").arg(msg.comment().toHtmlEscaped());
         }
       doWarn:
         QMessageBox::warning(parent, QObject::tr("Qt Linguist"), err);
