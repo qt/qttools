@@ -44,6 +44,7 @@
 #include "searchwidget.h"
 
 #include <QtCore/QMap>
+#include <QtCore/QMimeData>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 

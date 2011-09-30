@@ -43,6 +43,7 @@
 #include "qtgradientstopsmodel.h"
 
 #include <QtCore/QMap>
+#include <QtCore/QMimeData>
 #include <QtGui/QImage>
 #include <QtGui/QPainter>
 #include <QtWidgets/QScrollBar>

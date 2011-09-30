@@ -61,6 +61,7 @@
 
 #include <QtCore/QUrl>
 #include <QtCore/QDebug>
+#include <QtCore/QMimeData>
 
 static const char *uriListMimeFormatC = "text/uri-list";
 

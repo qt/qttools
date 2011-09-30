@@ -81,6 +81,7 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <QMessageBox>
+#include <QMimeData>
 #include <QPrintDialog>
 #include <QPrinter>
 #include <QProcess>

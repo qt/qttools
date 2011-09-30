@@ -57,6 +57,7 @@
 #include <QtWidgets/QTabWidget>
 
 #include <QtCore/qdebug.h>
+#include <QtCore/QMimeData>
 
 QT_BEGIN_NAMESPACE
 
