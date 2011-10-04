@@ -1,7 +1,6 @@
 MODULE = designer
 
 load(qt_module)
-load(qt_module_config)
 
 TARGET = QtDesigner
 QPRO_PWD = $$PWD
@@ -47,4 +46,3 @@ include(uilib/uilib.pri)
 PRECOMPILED_HEADER=lib_pch.h
 
 include(../sharedcomponents.pri)
-include(../components/component.pri)
