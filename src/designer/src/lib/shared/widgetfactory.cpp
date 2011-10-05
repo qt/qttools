@@ -344,8 +344,6 @@ QWidget *WidgetFactory::createWidget(const QString &widgetName, QWidget *parentW
             w = new QDesignerMenu(parentWidget);
         } else if (widgetName == m_strings.m_spacer) {
             w = new Spacer(parentWidget);
-        } else if (widgetName == m_strings.m_qDockWidget) {
-            w = new QDesignerDockWidget(parentWidget);
         } else if (widgetName == m_strings.m_qLayoutWidget) {
             w = fw ? new QLayoutWidget(fw, parentWidget) : new QWidget(parentWidget);
         } else if (widgetName == m_strings.m_qDialog) {
