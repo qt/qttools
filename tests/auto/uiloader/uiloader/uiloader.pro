@@ -1,4 +1,4 @@
-load(qttest_p4)
+CONFIG += testcase
 
 TEMPLATE = app
 !embedded:CONFIG += uitools
@@ -13,7 +13,7 @@ win32 {
   }
 }
 
-QT += widgets network
+QT += widgets network testlib
 
 wince*|symbian: {
    configuration.files = ../*.ini

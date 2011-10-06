@@ -1,4 +1,5 @@
-CONFIG += qttest_p4
+CONFIG += testcase
+QT += testlib
 
 TARGET = tst_lconvert
 

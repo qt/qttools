@@ -1,4 +1,4 @@
-load(qttest_p4)
+TARGET = tst_headersclean
+CONFIG += testcase
 SOURCES  += tst_headersclean.cpp
-QT = core
-QT += designer help
+QT = core designer help testlib

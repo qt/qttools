@@ -1,6 +1,7 @@
-load(qttest_p4)
+TARGET = tst_tests
+CONFIG += testcase
 
-QT += xml
+QT += xml testlib
 
 HEADERS += \
     tst_linguist.h \

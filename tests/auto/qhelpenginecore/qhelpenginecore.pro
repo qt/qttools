@@ -1,7 +1,8 @@
-load(qttest_p4)
+TARGET = tst_qhelpenginecore
+CONFIG += testcase
 SOURCES += tst_qhelpenginecore.cpp
 CONFIG  += help
-QT      += sql
+QT      += sql testlib
 
 
 DEFINES += QT_USE_USING_NAMESPACE

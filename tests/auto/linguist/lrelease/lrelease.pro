@@ -1,5 +1,5 @@
-CONFIG += qttest_p4
-CONFIG -= gui
+CONFIG += testcase
+QT = core testlib
 TARGET = tst_lrelease
 
 SOURCES += tst_lrelease.cpp

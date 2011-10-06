@@ -1,4 +1,6 @@
-load(qttest_p4)
+TARGET = tst_qhelpcontentmodel
+CONFIG += testcase
+QT += testlib
 SOURCES += tst_qhelpcontentmodel.cpp
 
 CONFIG += help
