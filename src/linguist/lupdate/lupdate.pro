@@ -5,7 +5,7 @@ TARGET          = lupdate
 DESTDIR          = $$QT.designer.bins
 
 QT              -= gui
-QT              += core-private declarative-private
+QT              += core-private qmldevtools-private
 
 CONFIG          += qt warn_on console
 CONFIG          -= app_bundle
@@ -17,9 +17,6 @@ build_all:!build_pass {
 
 include(../shared/formats.pri)
 include(../shared/proparser.pri)
-
-include($$QT.declarative.sources/qml/parser/parser.pri)
-INCLUDEPATH += $$QT.declarative.sources/qml $$QT.declarative.includes
 
 SOURCES += \
     main.cpp \
