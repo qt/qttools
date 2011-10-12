@@ -40,8 +40,6 @@
 ****************************************************************************/
 #include <QtTest/QtTest>
 
-#ifndef QT_NO_BUILD_TOOLS
-
 #include <QtCore/QFileInfo>
 
 #include <QtHelp/private/qhelpprojectdata_p.h>
@@ -187,7 +185,3 @@ void tst_QHelpProjectData::rootPath()
 
 QTEST_MAIN(tst_QHelpProjectData)
 #include "tst_qhelpprojectdata.moc"
-
-#else // QT_NO_BUILD_TOOLS
-QTEST_NOOP_MAIN
-#endif

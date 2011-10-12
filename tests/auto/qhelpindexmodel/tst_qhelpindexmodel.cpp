@@ -40,8 +40,6 @@
 ****************************************************************************/
 #include <QtTest/QtTest>
 
-#ifndef QT_NO_BUILD_TOOLS
-
 #include <QtCore/QThread>
 #include <QtCore/QUrl>
 #include <QtCore/QFileInfo>
@@ -213,7 +211,3 @@ void tst_QHelpIndexModel::linksForIndex()
 
 QTEST_MAIN(tst_QHelpIndexModel)
 #include "tst_qhelpindexmodel.moc"
-
-#else // QT_NO_BUILD_TOOLS
-QTEST_NOOP_MAIN
-#endif

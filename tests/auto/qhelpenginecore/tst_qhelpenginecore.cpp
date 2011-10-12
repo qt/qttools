@@ -40,8 +40,6 @@
 ****************************************************************************/
 #include <QtTest/QtTest>
 
-#ifndef QT_NO_BUILD_TOOLS
-
 #include <QtCore/QUrl>
 #include <QtCore/QFileInfo>
 #include <QtSql/QSqlDatabase>
@@ -456,7 +454,3 @@ void tst_QHelpEngineCore::metaData()
 
 QTEST_MAIN(tst_QHelpEngineCore)
 #include "tst_qhelpenginecore.moc"
-
-#else // QT_NO_BUILD_TOOLS
-QTEST_NOOP_MAIN
-#endif

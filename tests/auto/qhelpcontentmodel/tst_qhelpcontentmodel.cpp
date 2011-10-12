@@ -40,8 +40,6 @@
 ****************************************************************************/
 #include <QtTest/QtTest>
 
-#ifndef QT_NO_BUILD_TOOLS
-
 #include <QtCore/QThread>
 #include <QtCore/QUrl>
 #include <QtCore/QFileInfo>
@@ -176,7 +174,3 @@ void tst_QHelpContentModel::contentItemAt()
 
 QTEST_MAIN(tst_QHelpContentModel)
 #include "tst_qhelpcontentmodel.moc"
-
-#else // QT_NO_BUILD_TOOLS
-QTEST_NOOP_MAIN
-#endif

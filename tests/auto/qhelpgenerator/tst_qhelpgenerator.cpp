@@ -40,8 +40,6 @@
 ****************************************************************************/
 #include <QtTest/QtTest>
 
-#ifndef QT_NO_BUILD_TOOLS
-
 #include <QtCore/QFileInfo>
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>
@@ -211,8 +209,3 @@ void tst_QHelpGenerator::checkMetaData()
 
 QTEST_MAIN(tst_QHelpGenerator)
 #include "tst_qhelpgenerator.moc"
-
-#else // QT_NO_BUILD_TOOLS
-QTEST_NOOP_MAIN
-#endif
-
