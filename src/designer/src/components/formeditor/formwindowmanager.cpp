@@ -522,20 +522,20 @@ void FormWindowManager::setupActions()
     connect(m_actionShowFormWindowSettingsDialog, SIGNAL(triggered()), this, SLOT(slotActionShowFormWindowSettingsDialog()));
     m_actionShowFormWindowSettingsDialog->setEnabled(false);
 
-#ifdef Q_WS_X11
-    m_actionCopy->setIcon(QIcon::fromTheme("edit-copy", m_actionCopy->icon()));
-    m_actionCut->setIcon(QIcon::fromTheme("edit-cut", m_actionCut->icon()));
-    m_actionPaste->setIcon(QIcon::fromTheme("edit-paste", m_actionPaste->icon()));
-    m_actionDelete->setIcon(QIcon::fromTheme("edit-delete", m_actionDelete->icon()));
+#if defined (Q_OS_UNIX) && !defined(Q_OS_MAC)
+    m_actionCopy->setIcon(QIcon::fromTheme(QStringLiteral("edit-copy"), m_actionCopy->icon()));
+    m_actionCut->setIcon(QIcon::fromTheme(QStringLiteral("edit-cut"), m_actionCut->icon()));
+    m_actionPaste->setIcon(QIcon::fromTheme(QStringLiteral("edit-paste"), m_actionPaste->icon()));
+    m_actionDelete->setIcon(QIcon::fromTheme(QStringLiteral("edit-delete"), m_actionDelete->icon()));
 
     // These do not currently exist, but will allow theme authors to fill in the gaps
-    m_actionBreakLayout->setIcon(QIcon::fromTheme("designer-break-layout", m_actionBreakLayout->icon()));
-    m_actionGridLayout->setIcon(QIcon::fromTheme("designer-grid-layout", m_actionGridLayout->icon()));
-    m_actionHorizontalLayout->setIcon(QIcon::fromTheme("designer-horizontal-layout", m_actionHorizontalLayout->icon()));
-    m_actionVerticalLayout->setIcon(QIcon::fromTheme("designer-vertical-layout", m_actionVerticalLayout->icon()));
-    m_actionSplitHorizontal->setIcon(QIcon::fromTheme("designer-split-horizontal", m_actionSplitHorizontal->icon()));
-    m_actionSplitVertical->setIcon(QIcon::fromTheme("designer-split-vertical", m_actionSplitVertical->icon()));
-    m_actionAdjustSize->setIcon(QIcon::fromTheme("designer-adjust-size", m_actionAdjustSize->icon()));
+    m_actionBreakLayout->setIcon(QIcon::fromTheme(QStringLiteral("designer-break-layout"), m_actionBreakLayout->icon()));
+    m_actionGridLayout->setIcon(QIcon::fromTheme(QStringLiteral("designer-grid-layout"), m_actionGridLayout->icon()));
+    m_actionHorizontalLayout->setIcon(QIcon::fromTheme(QStringLiteral("designer-horizontal-layout"), m_actionHorizontalLayout->icon()));
+    m_actionVerticalLayout->setIcon(QIcon::fromTheme(QStringLiteral("designer-vertical-layout"), m_actionVerticalLayout->icon()));
+    m_actionSplitHorizontal->setIcon(QIcon::fromTheme(QStringLiteral("designer-split-horizontal"), m_actionSplitHorizontal->icon()));
+    m_actionSplitVertical->setIcon(QIcon::fromTheme(QStringLiteral("designer-split-vertical"), m_actionSplitVertical->icon()));
+    m_actionAdjustSize->setIcon(QIcon::fromTheme(QStringLiteral("designer-adjust-size"), m_actionAdjustSize->icon()));
 #endif
 }
 

@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     QMainWindow mw;
-#ifndef Q_WS_MAC
+#ifndef Q_OS_MAC
     app.setWindowIcon(QIcon(QLatin1String(":/trolltech/qdbusviewer/images/qdbusviewer.png")));
 #else
     mw.setWindowTitle(qApp->translate("QtDBusViewer", "Qt D-Bus Viewer"));

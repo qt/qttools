@@ -73,7 +73,7 @@ static QIcon createIconSet(const QString &name)
 {
     QStringList candidates = QStringList()
         << (QString::fromUtf8(":/trolltech/shared/images/") + name)
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
         << (QString::fromUtf8(":/trolltech/shared/images/mac/") + name);
 #else
         << (QString::fromUtf8(":/trolltech/shared/images/win/") + name);

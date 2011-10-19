@@ -603,7 +603,7 @@ PreviewManager:: ~PreviewManager()
 
 Qt::WindowFlags PreviewManager::previewWindowFlags(const QWidget *widget) const
 {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     Qt::WindowFlags windowFlags = (widget->windowType() == Qt::Window) ? Qt::Window | Qt::WindowMaximizeButtonHint : Qt::WindowFlags(Qt::Dialog);
 #else
     Q_UNUSED(widget)
@@ -875,7 +875,7 @@ bool PreviewManager::eventFilter(QObject *watched, QEvent *event)
             const  QKeyEvent *keyEvent = static_cast<const QKeyEvent *>(event);
             const int key = keyEvent->key();
             if ((key == Qt::Key_Escape
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
                  || (keyEvent->modifiers() == Qt::ControlModifier && key == Qt::Key_Period)
 #endif
                  )) {

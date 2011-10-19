@@ -537,7 +537,7 @@ static inline unsigned mouseFlags(Qt::KeyboardModifiers mod)
     case Qt::ShiftModifier:
         return CycleParentModifier;
         break;
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
     case Qt::AltModifier: // "Alt" or "option" key on Mac means copy
         return CopyDragModifier;
 #endif

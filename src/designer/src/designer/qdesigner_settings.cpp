@@ -217,7 +217,7 @@ void QDesignerSettings::setUiMode(UIMode mode)
 
 UIMode QDesignerSettings::uiMode() const
 {
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
     const UIMode defaultMode = TopLevelMode;
 #else
     const UIMode defaultMode = DockedMode;

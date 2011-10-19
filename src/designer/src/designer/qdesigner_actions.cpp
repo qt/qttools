@@ -108,7 +108,7 @@ using namespace qdesigner_internal;
 
 const char *QDesignerActions::defaultToolbarPropertyName = "__qt_defaultToolBarAction";
 
-//#ifdef Q_WS_MAC
+//#ifdef Q_OS_MAC
 #  define NONMODAL_PREVIEW
 //#endif
 
@@ -201,14 +201,14 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
 #endif
       m_previewManager(0)
 {
-#ifdef Q_WS_X11
-    m_newFormAction->setIcon(QIcon::fromTheme("document-new", m_newFormAction->icon()));
-    m_openFormAction->setIcon(QIcon::fromTheme("document-open", m_openFormAction->icon()));
-    m_saveFormAction->setIcon(QIcon::fromTheme("document-save", m_saveFormAction->icon()));
-    m_saveFormAsAction->setIcon(QIcon::fromTheme("document-save-as", m_saveFormAsAction->icon()));
-    m_printPreviewAction->setIcon(QIcon::fromTheme("document-print", m_printPreviewAction->icon()));
-    m_closeFormAction->setIcon(QIcon::fromTheme("window-close", m_closeFormAction->icon()));
-    m_quitAction->setIcon(QIcon::fromTheme("application-exit", m_quitAction->icon()));
+#if defined (Q_OS_UNIX) && !defined(Q_OS_MAC)
+    m_newFormAction->setIcon(QIcon::fromTheme(QStringLiteral("document-new"), m_newFormAction->icon()));
+    m_openFormAction->setIcon(QIcon::fromTheme(QStringLiteral("document-open"), m_openFormAction->icon()));
+    m_saveFormAction->setIcon(QIcon::fromTheme(QStringLiteral("document-save"), m_saveFormAction->icon()));
+    m_saveFormAsAction->setIcon(QIcon::fromTheme(QStringLiteral("document-save-as"), m_saveFormAsAction->icon()));
+    m_printPreviewAction->setIcon(QIcon::fromTheme(QStringLiteral("document-print"), m_printPreviewAction->icon()));
+    m_closeFormAction->setIcon(QIcon::fromTheme(QStringLiteral("window-close"), m_closeFormAction->icon()));
+    m_quitAction->setIcon(QIcon::fromTheme(QStringLiteral("application-exit"), m_quitAction->icon()));
 #endif
 
     Q_ASSERT(m_core != 0);

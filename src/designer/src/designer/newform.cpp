@@ -68,7 +68,7 @@ QT_BEGIN_NAMESPACE
 
 NewForm::NewForm(QDesignerWorkbench *workbench, QWidget *parentWidget, const QString &fileName)
     : QDialog(parentWidget,
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
             Qt::Tool |
 #endif
             Qt::WindowTitleHint | Qt::WindowSystemMenuHint),

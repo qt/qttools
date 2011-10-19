@@ -53,7 +53,7 @@ QDESIGNER_SHARED_EXPORT QIcon createIconSet(const QString &name)
 {
     QStringList candidates = QStringList()
         << (QString::fromUtf8(":/trolltech/formeditor/images/") + name)
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
         << (QString::fromUtf8(":/trolltech/formeditor/images/mac/") + name)
 #else
         << (QString::fromUtf8(":/trolltech/formeditor/images/win/") + name)

@@ -641,9 +641,6 @@ QPixmap  ActionRepositoryMimeData::actionDragPixmap(const QAction *action)
     QToolButton *tb = new QToolButton;
     tb->setText(action->text());
     tb->setToolButtonStyle(Qt::ToolButtonTextOnly);
-#ifdef Q_WS_WIN // Force alien off to make adjustSize() take the system minimumsize into account.
-    tb->createWinId();
-#endif
     tb->adjustSize();
     const QPixmap rc = QPixmap::grabWidget(tb);
     tb->deleteLater();
