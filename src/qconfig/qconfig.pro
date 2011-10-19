@@ -1,5 +1,6 @@
 TEMPLATE	= app
 CONFIG		+= qt warn_on
+QT += widgets
 build_all:!build_pass {
     CONFIG -= build_all
     CONFIG += release

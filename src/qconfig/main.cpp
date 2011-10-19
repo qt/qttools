@@ -43,7 +43,21 @@
 #include "feature.h"
 #include "featuretreemodel.h"
 
-#include <QtGui>
+#include <QtCore/QLibraryInfo>
+#include <QtCore/QSettings>
+#include <QtWidgets/QTextBrowser>
+#include <QtWidgets/QTreeView>
+#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QSplitter>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QMenuBar>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QToolBar>
+#include <QtWidgets/QToolButton>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QStatusBar>
+#include <QtWidgets/QApplication>
 
 QT_BEGIN_NAMESPACE
 

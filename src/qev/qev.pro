@@ -9,3 +9,4 @@ INCLUDEPATH += .
 # Input
 SOURCES += qev.cpp
 CONFIG += qt warn_on create_prl link_prl
+QT += widgets
