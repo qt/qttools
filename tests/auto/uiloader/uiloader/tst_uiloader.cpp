@@ -98,7 +98,7 @@ void uiLoaderAutotest::imageDiffTest()
         QVERIFY2(false, qPrintable(errorMessage));
         break;
         case uiLoader::TestNoConfig:
-        QSKIP(qPrintable(errorMessage), SkipAll);
+        QSKIP(qPrintable(errorMessage));
         break;
     }
 }
