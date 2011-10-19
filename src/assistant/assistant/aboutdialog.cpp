@@ -158,7 +158,7 @@ void AboutDialog::updateSize()
         .size();
     int limit = qMin(screenSize.width()/2, 500);
 
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
     limit = qMin(screenSize.width()/2, 420);
 #endif
 

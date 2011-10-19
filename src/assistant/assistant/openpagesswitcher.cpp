@@ -67,7 +67,7 @@ OpenPagesSwitcher::OpenPagesSwitcher(OpenPagesModel *model)
 
     // We disable the frame on this list view and use a QFrame around it instead.
     // This improves the look with QGTKStyle.
-#ifndef Q_WS_MAC
+#ifndef Q_OS_MAC
     setFrameStyle(m_openPagesWidget->frameStyle());
 #endif
     m_openPagesWidget->setFrameStyle(QFrame::NoFrame);
@@ -148,7 +148,7 @@ bool OpenPagesSwitcher::eventFilter(QObject *object, QEvent *event)
             }
 
             Qt::KeyboardModifier modifier = Qt::ControlModifier;
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
             modifier = Qt::AltModifier;
 #endif
             if (key == Qt::Key_Backtab

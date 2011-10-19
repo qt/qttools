@@ -530,7 +530,7 @@ void MainWindow::setupActions()
     tmp->setShortcuts(QList<QKeySequence>() << QKeySequence(tr("Ctrl+Alt+Left"))
         << QKeySequence(Qt::CTRL + Qt::Key_PageUp));
 
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
     QShortcut *sct = new QShortcut(QKeySequence(Qt::ALT + Qt::Key_Tab), this);
     connect(sct, SIGNAL(activated()), openPages, SLOT(nextPageWithSwitcher()));
     sct = new QShortcut(QKeySequence(Qt::ALT + Qt::SHIFT + Qt::Key_Tab), this);
@@ -548,7 +548,7 @@ void MainWindow::setupActions()
     m_aboutAction = menu->addAction(tr("About..."), this, SLOT(showAboutDialog()));
     m_aboutAction->setMenuRole(QAction::AboutRole);
 
-#ifdef Q_WS_X11
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MAC)
     m_resetZoomAction->setIcon(QIcon::fromTheme("zoom-original" , m_resetZoomAction->icon()));
     m_syncAction->setIcon(QIcon::fromTheme("view-refresh" , m_syncAction->icon()));
 #endif
@@ -568,7 +568,7 @@ void MainWindow::setupActions()
     navigationBar->addAction(globalActions->zoomOutAction());
     navigationBar->addAction(m_resetZoomAction);
 
-#if defined(Q_WS_MAC)
+#if defined(Q_OS_MAC)
     QMenu *windowMenu = new QMenu(tr("&Window"), this);
     menuBar()->insertMenu(menu->menuAction(), windowMenu);
     windowMenu->addAction(tr("Zoom"), this, SLOT(showMaximized()));

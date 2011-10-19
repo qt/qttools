@@ -141,15 +141,15 @@ GlobalActions::GlobalActions(QObject *parent) : QObject(parent)
     connect(m_findAction, SIGNAL(triggered()), centralWidget, SLOT(showTextSearch()));
     m_actionList << m_findAction;
 
-#ifdef Q_WS_X11
-    m_backAction->setIcon(QIcon::fromTheme("go-previous" , m_backAction->icon()));
-    m_nextAction->setIcon(QIcon::fromTheme("go-next" , m_nextAction->icon()));
-    m_zoomInAction->setIcon(QIcon::fromTheme("zoom-in" , m_zoomInAction->icon()));
-    m_zoomOutAction->setIcon(QIcon::fromTheme("zoom-out" , m_zoomOutAction->icon()));
-    m_copyAction->setIcon(QIcon::fromTheme("edit-copy" , m_copyAction->icon()));
-    m_findAction->setIcon(QIcon::fromTheme("edit-find" , m_findAction->icon()));
-    m_homeAction->setIcon(QIcon::fromTheme("go-home" , m_homeAction->icon()));
-    m_printAction->setIcon(QIcon::fromTheme("document-print" , m_printAction->icon()));
+#if defined (Q_OS_UNIX) && !defined(Q_OS_MAC)
+    m_backAction->setIcon(QIcon::fromTheme(QStringLiteral("go-previous") , m_backAction->icon()));
+    m_nextAction->setIcon(QIcon::fromTheme(QStringLiteral("go-next") , m_nextAction->icon()));
+    m_zoomInAction->setIcon(QIcon::fromTheme(QStringLiteral("zoom-in") , m_zoomInAction->icon()));
+    m_zoomOutAction->setIcon(QIcon::fromTheme(QStringLiteral("zoom-out") , m_zoomOutAction->icon()));
+    m_copyAction->setIcon(QIcon::fromTheme(QStringLiteral("edit-copy") , m_copyAction->icon()));
+    m_findAction->setIcon(QIcon::fromTheme(QStringLiteral("edit-find") , m_findAction->icon()));
+    m_homeAction->setIcon(QIcon::fromTheme(QStringLiteral("go-home") , m_homeAction->icon()));
+    m_printAction->setIcon(QIcon::fromTheme(QStringLiteral("document-print") , m_printAction->icon()));
 #endif
 }
 

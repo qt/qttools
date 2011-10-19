@@ -88,7 +88,7 @@ void StdInListenerWin::run()
     char chBuf[4096];
     DWORD dwRead;
 
-#ifndef Q_WS_WINCE
+#ifndef Q_OS_WINCE
     HANDLE hStdin, hStdinDup;
 
     hStdin = GetStdHandle(STD_INPUT_HANDLE);

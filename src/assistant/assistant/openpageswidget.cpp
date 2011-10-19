@@ -52,10 +52,6 @@
 #include <QtWidgets/QMenu>
 #include <QtGui/QPainter>
 
-#ifdef Q_WS_MAC
-#include <qmacstyle_mac.h>
-#endif
-
 QT_BEGIN_NAMESPACE
 
 OpenPagesDelegate::OpenPagesDelegate(QObject *parent)
