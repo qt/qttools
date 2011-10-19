@@ -4,26 +4,20 @@ TEMPLATE        = subdirs
     no-png {
         message("Some graphics-related tools are unavailable without PNG support")
     } else {
-        symbian {
-            SUBDIRS = designer
-        } else:wince* {
-            SUBDIRS = qtestlib designer
+        SUBDIRS = assistant \
+                  pixeltool \
+                  qtestlib \
+                  qttracereplay
+        contains(QT_EDITION, Console) {
+            SUBDIRS += designer/src/uitools     # Linguist depends on this
         } else {
-            SUBDIRS = assistant \
-                      pixeltool \
-                      qtestlib \
-                      qttracereplay
-            contains(QT_EDITION, Console) {
-                SUBDIRS += designer/src/uitools     # Linguist depends on this
-            } else {
-                SUBDIRS += designer
-            }
+            SUBDIRS += designer
         }
-#        unix:!symbian:!mac:!embedded:!qpa:SUBDIRS += qtconfig
+#    unix:!mac:!embedded:!qpa:SUBDIRS += qtconfig
     }
 }
 
-!wince*:!symbian:SUBDIRS += linguist
+SUBDIRS += linguist
 
 mac {
     SUBDIRS += macdeployqt
@@ -38,6 +32,6 @@ embedded: SUBDIRS += makeqpf
 CONFIG+=ordered
 QTDIR_build:REQUIRES = "contains(QT_CONFIG, full-config)"
 
-!win32:!embedded:!mac:!symbian:CONFIG += x11
+!win32:!embedded:!mac:CONFIG += x11
 
 x11:contains(QT_CONFIG, opengles2):contains(QT_CONFIG, egl):SUBDIRS += qmeegographicssystemhelper

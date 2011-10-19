@@ -45,8 +45,6 @@ sources.files = $$SOURCES $$HEADERS $$RESOURCES *.pro *.jpg *.png
 sources.path = $$[QT_INSTALL_EXAMPLES]/qttools/designer/arthurplugin
 INSTALLS += target sources
 
-symbian: CONFIG += qt_example
-
 win32-msvc* {
     QMAKE_CFLAGS += /Zm500
     QMAKE_CXXFLAGS += /Zm500
