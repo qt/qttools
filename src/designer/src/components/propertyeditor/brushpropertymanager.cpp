@@ -119,11 +119,20 @@ Qt::BrushStyle BrushPropertyManager::brushStyleIndexToStyle(int brushStyleIndex)
     return Qt::NoBrush;
 }
 
-
-typedef QMap<int, QIcon> EnumIndexIconMap;
-
 static void clearBrushIcons();
-Q_GLOBAL_STATIC_WITH_INITIALIZER(EnumIndexIconMap, brushIcons, qAddPostRoutine(clearBrushIcons))
+
+namespace {
+class EnumIndexIconMap : public QMap<int, QIcon>
+{
+public:
+    EnumIndexIconMap()
+    {
+        qAddPostRoutine(clearBrushIcons);
+    }
+};
+}
+
+Q_GLOBAL_STATIC(EnumIndexIconMap, brushIcons)
 
 static void clearBrushIcons()
 {

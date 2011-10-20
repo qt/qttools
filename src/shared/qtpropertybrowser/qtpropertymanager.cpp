@@ -6304,7 +6304,16 @@ void QtColorPropertyManager::uninitializeProperty(QtProperty *property)
 // Make sure icons are removed as soon as QApplication is destroyed, otherwise,
 // handles are leaked on X11.
 static void clearCursorDatabase();
-Q_GLOBAL_STATIC_WITH_INITIALIZER(QtCursorDatabase, cursorDatabase, qAddPostRoutine(clearCursorDatabase))
+namespace {
+struct CursorDatabase : public QtCursorDatabase
+{
+    CursorDatabase()
+    {
+        qAddPostRoutine(clearCursorDatabase);
+    }
+};
+}
+Q_GLOBAL_STATIC(QtCursorDatabase, cursorDatabase)
 
 static void clearCursorDatabase()
 {
