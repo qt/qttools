@@ -48,6 +48,7 @@
 #include <QMimeData>
 #include <QStyle>
 #include <QStyleOption>
+#include <QDrag>
 
 QT_BEGIN_NAMESPACE
 

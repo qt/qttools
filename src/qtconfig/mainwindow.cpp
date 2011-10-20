@@ -62,7 +62,6 @@
 #include <QStyle>
 #include <QtEvents>
 #include <QInputContext>
-#include <QInputContextFactory>
 #include <QtDebug>
 #include <QPixmap>
 
@@ -73,9 +72,6 @@
 #endif
 #ifdef HAVE_PHONON
 #include <phonon/phononnamespace.h>
-#endif
-
-#include <QtWidgets/private/qt_x11_p.h>
 #endif
 
 QT_BEGIN_NAMESPACE

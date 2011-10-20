@@ -8,7 +8,7 @@ DEPENDPATH += .
 INCLUDEPATH += . ../../src/3rdparty/harfbuzz/src
 CONFIG += console
 DESTDIR = $$QT.designer.bins
-
+QT += widgets gui-private core-private
 target.path=$$[QT_INSTALL_BINS]
 INSTALLS += target
 
