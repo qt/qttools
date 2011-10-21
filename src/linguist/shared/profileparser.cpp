@@ -1013,7 +1013,6 @@ void ProFileParser::finalizeCall(ushort *&tokPtr, ushort *uc, ushort *ptr, int a
                         }
                         putTok(tokPtr, defType);
                         putHashStr(tokPtr, uce + 2, nlen);
-                        uc = uce + 2 + nlen + 1;
                         enterScope(tokPtr, true, StCtrl);
                         return;
                     }
