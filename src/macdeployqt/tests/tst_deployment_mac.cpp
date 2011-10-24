@@ -87,19 +87,19 @@ void tst_deployment_mac::testParseOtoolLibraryLine()
 }
 
 {
-    QString line = "	/usr/local/Trolltech/Qt-4.4.0/lib/phonon.framework/Versions/4/phonon (compatibility version 4.1.0, current version 4.1.0)";
+    QString line = "	/usr/local/Qt-4.4.0/lib/phonon.framework/Versions/4/phonon (compatibility version 4.1.0, current version 4.1.0)";
     FrameworkInfo info = parseOtoolLibraryLine(line);    
 //    qDebug() << info;
-    QCOMPARE(info.frameworkDirectory, QLatin1String("/usr/local/Trolltech/Qt-4.4.0/lib/")); 
+    QCOMPARE(info.frameworkDirectory, QLatin1String("/usr/local/Qt-4.4.0/lib/")); 
     QCOMPARE(info.frameworkName, QLatin1String("phonon.framework")); 
-    QCOMPARE(info.frameworkPath, QLatin1String("/usr/local/Trolltech/Qt-4.4.0/lib/phonon.framework"));
+    QCOMPARE(info.frameworkPath, QLatin1String("/usr/local/Qt-4.4.0/lib/phonon.framework"));
     QCOMPARE(info.binaryDirectory, QLatin1String("Versions/4"));
     QCOMPARE(info.binaryName, QLatin1String("phonon"));
     QCOMPARE(info.binaryPath, QLatin1String("/Versions/4/phonon"));
     QCOMPARE(info.version, QLatin1String("4"));
-    QCOMPARE(info.installName, QLatin1String("/usr/local/Trolltech/Qt-4.4.0/lib/phonon.framework/Versions/4/phonon"));
+    QCOMPARE(info.installName, QLatin1String("/usr/local/Qt-4.4.0/lib/phonon.framework/Versions/4/phonon"));
     QCOMPARE(info.deployedInstallName, QLatin1String("@executable_path/../Frameworks/phonon.framework/Versions/4/phonon"));
-    QCOMPARE(info.sourceFilePath, QLatin1String("/usr/local/Trolltech/Qt-4.4.0/lib/phonon.framework/Versions/4/phonon"));
+    QCOMPARE(info.sourceFilePath, QLatin1String("/usr/local/Qt-4.4.0/lib/phonon.framework/Versions/4/phonon"));
     QCOMPARE(info.destinationDirectory, QLatin1String("Contents/Frameworks/phonon.framework/Versions/4"));
 }
 
