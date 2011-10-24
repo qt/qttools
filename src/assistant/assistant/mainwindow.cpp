@@ -63,12 +63,12 @@
 #include <QtCore/QDir>
 #include <QtCore/QPair>
 #include <QtCore/QResource>
+#include <QtCore/QStandardPaths>
 #include <QtCore/QTextStream>
 #include <QtCore/QTimer>
 
 #include <QtWidgets/QAction>
 #include <QtWidgets/QComboBox>
-#include <QtGui/QDesktopServices>
 #include <QtWidgets/QDesktopWidget>
 #include <QtWidgets/QDockWidget>
 #include <QtGui/QFontDatabase>
@@ -1015,7 +1015,7 @@ QString MainWindow::collectionFileDirectory(bool createDir, const QString &cache
 {
     TRACE_OBJ
     QString collectionPath =
-        QDesktopServices::storageLocation(QDesktopServices::DataLocation);
+        QStandardPaths::writableLocation(QStandardPaths::DataLocation);
     if (collectionPath.isEmpty()) {
         if (cacheDir.isEmpty())
             collectionPath = QDir::homePath() + QDir::separator()
