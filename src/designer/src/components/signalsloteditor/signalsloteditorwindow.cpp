@@ -651,12 +651,6 @@ QWidget *ConnectionDelegate::createEditor(QWidget *parent,
 
         const qdesigner_internal::ClassesMemberFunctions class_list = qdesigner_internal::reverseClassesMemberFunctions(obj_name, type, peer, m_form);
 
-        QObject *object = 0;
-        if (obj_name == m_form->mainContainer()->objectName()) {
-            object = m_form->mainContainer();
-        } else {
-            object = m_form->mainContainer()->findChild<QObject*>(obj_name);
-        }
         inline_editor->addText(type == qdesigner_internal::SignalMember ? tr("<signal>") : tr("<slot>"));
         foreach (const qdesigner_internal::ClassMemberFunctions &classInfo, class_list) {
             if (classInfo.m_className.isEmpty() || classInfo.m_memberList.isEmpty())
