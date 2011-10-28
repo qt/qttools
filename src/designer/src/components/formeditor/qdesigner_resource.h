@@ -150,7 +150,6 @@ protected:
     DomProperty *applyProperStdSetAttribute(QObject *object, const QString &propertyName, DomProperty *property);
 
 private:
-    void addUserDefinedScripts(QWidget *w, DomWidget *ui_widget);
     DomResources *saveResources(const QStringList &qrcPaths);
     bool canCompressMargins(QObject *object) const;
     bool canCompressSpacings(QObject *object) const;

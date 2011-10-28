@@ -6,7 +6,6 @@ QT += core-private widgets xml network designer-private printsupport
 CONFIG += module
 MODULE_PRI = ../../../../modules/qt_designer.pri
 
-contains(QT_CONFIG, script): QT += script
 build_all:!build_pass {
     CONFIG -= build_all
     CONFIG += release

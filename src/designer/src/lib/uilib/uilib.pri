@@ -2,7 +2,6 @@
 INCLUDEPATH += $$PWD
 
 DEFINES += QT_DESIGNER
-!contains(QT_CONFIG, script): DEFINES += QT_FORMBUILDER_NO_SCRIPT
 
 QT += gui widgets
 
@@ -26,9 +25,3 @@ SOURCES += \
     $$PWD/formbuilderextra.cpp \
     $$PWD/resourcebuilder.cpp \
     $$PWD/textbuilder.cpp
-
-!contains(DEFINES, QT_FORMBUILDER_NO_SCRIPT) {
-    QT += script
-    HEADERS += $$PWD/formscriptrunner_p.h
-    SOURCES += $$PWD/formscriptrunner.cpp
-}

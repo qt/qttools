@@ -108,10 +108,6 @@ class QResourceBuilder;
 class QTextBuilder;
 class QFormBuilderExtra;
 
-#ifndef QT_FORMBUILDER_NO_SCRIPT
-class QFormScriptRunner;
-#endif
-
 class QDESIGNER_UILIB_EXPORT QAbstractFormBuilder
 {
 public:
@@ -123,9 +119,6 @@ public:
 
     virtual QWidget *load(QIODevice *dev, QWidget *parentWidget=0);
     virtual void save(QIODevice *dev, QWidget *widget);
-
-    void setScriptingEnabled(bool enabled);
-    bool isScriptingEnabled() const;
 
     QString errorString() const;
 
@@ -229,9 +222,6 @@ protected:
     void reset();
     void initialize(const DomUI *ui);
 
-#ifndef QT_FORMBUILDER_NO_SCRIPT
-    QFormScriptRunner *formScriptRunner() const;
-#endif
 //
 //  utils
 //

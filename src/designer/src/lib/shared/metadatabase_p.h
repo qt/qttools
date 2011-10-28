@@ -84,9 +84,6 @@ public:
     QString customClassName() const;
     void setCustomClassName(const QString &customClassName);
 
-    QString script() const;
-    void setScript(const QString &script);
-
     QStringList fakeSlots() const;
     void setFakeSlots(const QStringList &);
 
@@ -98,7 +95,6 @@ private:
     TabOrder m_tabOrder;
     bool m_enabled;
     QString m_customClassName;
-    QString m_script;
     QStringList m_fakeSlots;
     QStringList m_fakeSignals;
 };

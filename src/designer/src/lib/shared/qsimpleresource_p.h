@@ -88,8 +88,7 @@ public:
                                       DomWidget *ui_widget, QWidget *widget);
     static void applyExtensionDataFromDOM(QAbstractFormBuilder *afb,
                                           QDesignerFormEditorInterface *core,
-                                          DomWidget *ui_widget, QWidget *widget,
-                                          bool applyState);
+                                          DomWidget *ui_widget, QWidget *widget);
     // Return the script returned by the CustomWidget codeTemplate API
     static QString customWidgetScript(QDesignerFormEditorInterface *core, QObject *object);
     static QString customWidgetScript(QDesignerFormEditorInterface *core, const QString &className);

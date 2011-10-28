@@ -51,8 +51,6 @@
 #include "textpropertyeditor_p.h"
 #include "promotiontaskmenu_p.h"
 #include "metadatabase_p.h"
-#include "scriptdialog_p.h"
-#include "scriptcommand_p.h"
 #include "signalslotdialog_p.h"
 #include "qdesigner_membersheet_p.h"
 #include "qdesigner_propertycommand_p.h"
@@ -324,7 +322,6 @@ public:
     QAction *m_addToolBar;
     QAction *m_addStatusBar;
     QAction *m_removeStatusBar;
-    QAction *m_changeScript;
     QAction *m_containerFakeMethods;
     QAction *m_navigateToSlot;
     PromotionTaskMenu* m_promotionTaskMenu;
@@ -353,7 +350,6 @@ QDesignerTaskMenuPrivate::QDesignerTaskMenuPrivate(QWidget *widget, QObject *par
     m_addToolBar(new QAction(QDesignerTaskMenu::tr("Add Tool Bar"), parent)),
     m_addStatusBar(new QAction(QDesignerTaskMenu::tr("Create Status Bar"), parent)),
     m_removeStatusBar(new QAction(QDesignerTaskMenu::tr("Remove Status Bar"), parent)),
-    m_changeScript(new QAction(QDesignerTaskMenu::tr("Change script..."), parent)),
     m_containerFakeMethods(new QAction(QDesignerTaskMenu::tr("Change signals/slots..."), parent)),
     m_navigateToSlot(new QAction(QDesignerTaskMenu::tr("Go to slot..."), parent)),
     m_promotionTaskMenu(new PromotionTaskMenu(widget, PromotionTaskMenu::ModeManagedMultiSelection, parent)),
@@ -406,7 +402,6 @@ QDesignerTaskMenu::QDesignerTaskMenu(QWidget *widget, QObject *parent) :
     connect(d->m_addToolBar, SIGNAL(triggered()), this, SLOT(addToolBar()));
     connect(d->m_addStatusBar, SIGNAL(triggered()), this, SLOT(createStatusBar()));
     connect(d->m_removeStatusBar, SIGNAL(triggered()), this, SLOT(removeStatusBar()));
-    connect(d->m_changeScript, SIGNAL(triggered()), this, SLOT(changeScript()));
     connect(d->m_containerFakeMethods, SIGNAL(triggered()), this, SLOT(containerFakeMethods()));
     connect(d->m_navigateToSlot, SIGNAL(triggered()), this, SLOT(slotNavigateToSlot()));
     connect(d->m_sizeActionGroup, SIGNAL(triggered(QAction*)), this,  SLOT(applySize(QAction*)));
@@ -535,12 +530,6 @@ QList<QAction*> QDesignerTaskMenu::taskActions() const
                                     PromotionTaskMenu::ModeManagedMultiSelection : PromotionTaskMenu::ModeUnmanagedMultiSelection);
     d->m_promotionTaskMenu->addActions(formWindow, PromotionTaskMenu::LeadingSeparator, actions);
 
-#ifdef WANT_SCRIPT_OPTION
-    if (!isMainContainer) {
-        actions.append(d->m_separator4);
-        actions.append(d->m_changeScript);
-    }
-#endif
     if (isMainContainer && !qt_extension<QDesignerLanguageExtension*>(formWindow->core()->extensionManager(), formWindow->core())) {
         actions.append(d->m_separator5);
         actions.append(d->m_containerFakeMethods);
@@ -638,37 +627,6 @@ void QDesignerTaskMenu::changeStyleSheet()
         StyleSheetPropertyEditorDialog dlg(fw, fw, d->m_widget);
         dlg.exec();
     }
-}
-
-void QDesignerTaskMenu::changeScript()
-{
-    QDesignerFormWindowInterface *fw = formWindow();
-    if (!fw)
-        return;
-
-    MetaDataBase *metaDataBase = qobject_cast<MetaDataBase*>(fw->core()->metaDataBase());
-    if (!metaDataBase)
-        return;
-
-    const MetaDataBaseItem* item = metaDataBase->metaDataBaseItem(d->m_widget);
-    if (!item)
-        return;
-
-    const QString oldScript = item->script();
-    QString newScript = oldScript;
-
-    ScriptDialog scriptDialog(fw->core()->dialogGui(), fw);
-    if (!scriptDialog.editScript(newScript))
-        return;
-
-    // compile list of selected objects
-    ScriptCommand *scriptCommand = new ScriptCommand(fw);
-    if (!scriptCommand->init(applicableObjects(fw, MultiSelectionMode), newScript)) {
-        delete scriptCommand;
-        return;
-    }
-
-    fw->commandHistory()->push(scriptCommand);
 }
 
 void QDesignerTaskMenu::containerFakeMethods()

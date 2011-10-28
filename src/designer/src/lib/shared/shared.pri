@@ -1,6 +1,5 @@
 
 INCLUDEPATH += $$PWD
-contains(QT_CONFIG, script): QT += script
 
 include(../../../../shared/qtpropertybrowser/qtpropertybrowserutils.pri)
 include(../../../../shared/deviceskin/deviceskin.pri)
@@ -75,10 +74,6 @@ HEADERS += \
     $$PWD/textpropertyeditor_p.h \
     $$PWD/propertylineedit_p.h \
     $$PWD/promotiontaskmenu_p.h \
-    $$PWD/scripterrordialog_p.h \
-    $$PWD/scriptcommand_p.h \
-    $$PWD/scriptdialog_p.h \
-    $$PWD/qscripthighlighter_p.h \
     $$PWD/gridpanel_p.h \
     $$PWD/grid_p.h \
     $$PWD/formwindowbase_p.h \
@@ -155,10 +150,6 @@ SOURCES += \
     $$PWD/textpropertyeditor.cpp \
     $$PWD/propertylineedit.cpp \
     $$PWD/promotiontaskmenu.cpp \
-    $$PWD/scripterrordialog.cpp \
-    $$PWD/scriptcommand.cpp \
-    $$PWD/scriptdialog.cpp \
-    $$PWD/qscripthighlighter.cpp\
     $$PWD/gridpanel.cpp \
     $$PWD/grid.cpp \
     $$PWD/formwindowbase.cpp \

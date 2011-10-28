@@ -56,7 +56,6 @@
 #include "shared_global_p.h"
 #include "deviceprofile_p.h"
 
-#include <QtDesigner/private/formscriptrunner_p.h>
 #include <QtDesigner/formbuilder.h>
 
 #include <QtCore/QMap>
@@ -81,13 +80,7 @@ class DesignerIconCache;
 class QDESIGNER_SHARED_EXPORT QDesignerFormBuilder: public QFormBuilder
 {
 public:
-    enum Mode {
-        DisableScripts,
-        EnableScripts
-    };
-
     QDesignerFormBuilder(QDesignerFormEditorInterface *core,
-                         Mode mode,
                          const DeviceProfile &deviceProfile = DeviceProfile());
 
     virtual QWidget *createWidget(DomWidget *ui_widget, QWidget *parentWidget = 0)
@@ -98,18 +91,16 @@ public:
 
     QString systemStyle() const;
 
-    typedef QFormScriptRunner::Errors ScriptErrors;
     // Create a preview widget (for integrations) or return 0. The widget has to be embedded into a main window.
     // Experimental, depending on script support.
     static QWidget *createPreview(const QDesignerFormWindowInterface *fw, const QString &styleName /* ="" */,
                                   const QString &appStyleSheet  /* ="" */,
                                   const DeviceProfile &deviceProfile,
-                                  ScriptErrors *scriptErrors, QString *errorMessage);
+                                  QString *errorMessage);
     // Convenience that pops up message boxes in case of failures.
     static QWidget *createPreview(const QDesignerFormWindowInterface *fw, const QString &styleName = QString());
     //  Create a preview widget (for integrations) or return 0. The widget has to be embedded into a main window.
     static QWidget *createPreview(const QDesignerFormWindowInterface *fw, const QString &styleName, const QString &appStyleSheet, QString *errorMessage);
-    static QWidget *createPreview(const QDesignerFormWindowInterface *fw, const QString &styleName, const QString &appStyleSheet, const DeviceProfile &deviceProfile, QString *errorMessage);
     // Convenience that pops up message boxes in case of failures.
     static QWidget *createPreview(const QDesignerFormWindowInterface *fw, const QString &styleName, const QString &appStyleSheet);
 
@@ -143,7 +134,6 @@ protected:
 
 private:
     QDesignerFormEditorInterface *m_core;
-    const Mode m_mode;
 
     typedef QSet<QWidget *> WidgetSet;
     WidgetSet m_customWidgetsWithScript;
@@ -164,7 +154,6 @@ private:
 class QDESIGNER_SHARED_EXPORT NewFormWidgetFormBuilder: public QDesignerFormBuilder {
 public:
     NewFormWidgetFormBuilder(QDesignerFormEditorInterface *core,
-                             Mode mode,
                              const DeviceProfile &deviceProfile = DeviceProfile());
 
 protected:

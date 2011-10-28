@@ -110,16 +110,6 @@ void MetaDataBaseItem::setEnabled(bool b)
     m_enabled = b;
 }
 
-QString MetaDataBaseItem::script() const
-{
-    return m_script;
-}
-
-void MetaDataBaseItem::setScript(const QString &script)
-{
-    m_script = script;
-}
-
 QStringList MetaDataBaseItem::fakeSlots() const
 {
     return m_fakeSlots;

@@ -54,7 +54,6 @@
 #include <QtDesigner/QDesignerFormWindowManagerInterface>
 
 #include <QtDesigner/private/ui4_p.h>
-#include <QtDesigner/private/formscriptrunner_p.h>
 
 #include <QtWidgets/QStyle>
 #include <QtWidgets/QApplication>
@@ -90,7 +89,7 @@ protected:
 };
 
 WidgetBoxResource::WidgetBoxResource(QDesignerFormEditorInterface *core) :
-    QDesignerFormBuilder(core, DisableScripts, currentDeviceProfile(core))
+    QDesignerFormBuilder(core, currentDeviceProfile(core))
 {
 }
 
