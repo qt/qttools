@@ -190,7 +190,7 @@ static Value getData(const QMap<const QtProperty *, PrivateData> &propertyMap,
             const QtProperty *property, const Value &defaultValue = Value())
 {
     typedef QMap<const QtProperty *, PrivateData> PropertyToData;
-    typedef Q_TYPENAME PropertyToData::const_iterator PropertyToDataConstIterator;
+    typedef typename PropertyToData::const_iterator PropertyToDataConstIterator;
     const PropertyToDataConstIterator it = propertyMap.constFind(property);
     if (it == propertyMap.constEnd())
         return defaultValue;
@@ -226,7 +226,7 @@ static void setSimpleValue(QMap<const QtProperty *, Value> &propertyMap,
             QtProperty *property, const Value &val)
 {
     typedef QMap<const QtProperty *, Value> PropertyToData;
-    typedef Q_TYPENAME PropertyToData::iterator PropertyToDataIterator;
+    typedef typename PropertyToData::iterator PropertyToDataIterator;
     const PropertyToDataIterator it = propertyMap.find(property);
     if (it == propertyMap.end())
         return;
@@ -247,9 +247,9 @@ static void setValueInRange(PropertyManager *manager, PropertyManagerPrivate *ma
             QtProperty *property, const Value &val,
             void (PropertyManagerPrivate::*setSubPropertyValue)(QtProperty *, ValueChangeParameter))
 {
-    typedef Q_TYPENAME PropertyManagerPrivate::Data PrivateData;
+    typedef typename PropertyManagerPrivate::Data PrivateData;
     typedef QMap<const QtProperty *, PrivateData> PropertyToData;
-    typedef Q_TYPENAME PropertyToData::iterator PropertyToDataIterator;
+    typedef typename PropertyToData::iterator PropertyToDataIterator;
     const PropertyToDataIterator it = managerPrivate->m_values.find(property);
     if (it == managerPrivate->m_values.end())
         return;
@@ -282,9 +282,9 @@ static void setBorderValues(PropertyManager *manager, PropertyManagerPrivate *ma
             void (PropertyManagerPrivate::*setSubPropertyRange)(QtProperty *,
                     ValueChangeParameter, ValueChangeParameter, ValueChangeParameter))
 {
-    typedef Q_TYPENAME PropertyManagerPrivate::Data PrivateData;
+    typedef typename PropertyManagerPrivate::Data PrivateData;
     typedef QMap<const QtProperty *, PrivateData> PropertyToData;
-    typedef Q_TYPENAME PropertyToData::iterator PropertyToDataIterator;
+    typedef typename PropertyToData::iterator PropertyToDataIterator;
     const PropertyToDataIterator it = managerPrivate->m_values.find(property);
     if (it == managerPrivate->m_values.end())
         return;
@@ -327,7 +327,7 @@ static void setBorderValue(PropertyManager *manager, PropertyManagerPrivate *man
                     ValueChangeParameter, ValueChangeParameter, ValueChangeParameter))
 {
     typedef QMap<const QtProperty *, PrivateData> PropertyToData;
-    typedef Q_TYPENAME PropertyToData::iterator PropertyToDataIterator;
+    typedef typename PropertyToData::iterator PropertyToDataIterator;
     const PropertyToDataIterator it = managerPrivate->m_values.find(property);
     if (it == managerPrivate->m_values.end())
         return;

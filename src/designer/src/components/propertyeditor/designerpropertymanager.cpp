@@ -2292,7 +2292,7 @@ void DesignerEditorFactory::disconnectPropertyManager(QtVariantPropertyManager *
 template <class EditorContainer, class Editor, class SetterParameter, class Value>
 static inline void applyToEditors(const EditorContainer &list, void (Editor::*setter)(SetterParameter), const Value &value)
 {
-    typedef Q_TYPENAME EditorContainer::const_iterator ListIterator;
+    typedef typename EditorContainer::const_iterator ListIterator;
     if (list.empty()) {
         return;
     }
