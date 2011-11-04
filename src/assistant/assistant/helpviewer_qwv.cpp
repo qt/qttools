@@ -52,7 +52,7 @@
 #include <QtCore/QTimer>
 
 #include <QtWidgets/QApplication>
-#include <QtWidgets/QWheelEvent>
+#include <QtGui/QWheelEvent>
 
 #include <QtHelp/QHelpEngineCore>
 
