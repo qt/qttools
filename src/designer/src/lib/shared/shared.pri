@@ -1,9 +1,19 @@
 
 INCLUDEPATH += $$PWD
 
-include(../../../../shared/qtpropertybrowser/qtpropertybrowserutils.pri)
-include(../../../../shared/deviceskin/deviceskin.pri)
+# When linking dynamically, use only the QKeySequenceEdit widget of
+# the property browser solution as the other symbols of the property
+# browser solution must not be duplicated (see e7762b60d51). When linking
+# statically, add the property browser solution to make the library self-contained
+# and use only the include path in the property editor (see propertyeditor.pri)
 
+contains(CONFIG, static) {
+    include(../../../../shared/qtpropertybrowser/qtpropertybrowser.pri)
+} else {
+   include(../../../../shared/qtpropertybrowser/qtpropertybrowserutils.pri)
+}
+
+include(../../../../shared/deviceskin/deviceskin.pri)
 include($$QT.core.sources/../tools/rcc/rcc.pri)
 include(../../../../shared/findwidget/findwidget.pri)
 include(../../../../shared/qtgradienteditor/qtgradienteditor.pri)
