@@ -107,12 +107,14 @@ static const char includeList[] =
     "#include <QtCore/QVariant>\n";
 
 static const char forwardDeclarations[] =
+    "QT_BEGIN_NAMESPACE\n"
     "class QByteArray;\n"
     "template<class T> class QList;\n"
     "template<class Key, class Value> class QMap;\n"
     "class QString;\n"
     "class QStringList;\n"
-    "class QVariant;\n";
+    "class QVariant;\n"
+    "QT_END_NAMESPACE\n";
 
 static void showHelp()
 {
