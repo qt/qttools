@@ -1641,6 +1641,7 @@ PrimaryExpression: T_LBRACKET ElisionOpt T_RBRACKET ;
 PrimaryExpression: T_LBRACKET ElementList T_RBRACKET ;
 PrimaryExpression: T_LBRACKET ElementList T_COMMA ElisionOpt T_RBRACKET ;
 PrimaryExpression: T_LBRACE PropertyNameAndValueListOpt T_RBRACE ;
+PrimaryExpression: T_LBRACE PropertyNameAndValueList T_COMMA T_RBRACE ;
 PrimaryExpression: T_LPAREN Expression T_RPAREN ;
 ElementList: ElisionOpt AssignmentExpression ;
 ElementList: ElementList T_COMMA ElisionOpt AssignmentExpression ;
