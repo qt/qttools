@@ -2113,7 +2113,6 @@ PropertyNameAndValueListOpt: PropertyNameAndValueList ;
               for (int s = 0; s < shifts; ++s)
                 {
                   if (first)
-                    error_message += QLatin1String ("Expected ");
                     //: Beginning of the string that contains
                     //: comma-separated list of expected tokens
                     error_message += LU::tr("Expected ");
