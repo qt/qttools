@@ -430,7 +430,8 @@ void FormBuilderPrivate::applyProperties(QObject *o, const QList<DomProperty*> &
             continue;
         const QByteArray name = p->attributeName().toUtf8();
         if (dynamicTr) {
-            o->setProperty(PROP_GENERIC_PREFIX + name, QVariant::fromValue(strVal));
+            const QByteArray dynname = QByteArray(PROP_GENERIC_PREFIX + name);
+            o->setProperty(dynname, QVariant::fromValue(strVal));
             anyTrs = trEnabled;
         }
         o->setProperty(name, text);
