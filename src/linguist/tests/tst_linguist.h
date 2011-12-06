@@ -45,10 +45,6 @@
 #include <QtTest/QtTest>
 #include <QtCore/QtCore>
 
-//TESTED_CLASS=
-//TESTED_FILES=
-
-
 class tst_linguist : public QObject
 {
     Q_OBJECT

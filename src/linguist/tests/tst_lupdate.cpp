@@ -42,9 +42,6 @@
 #include <QtTest/QtTest>
 #include <QtCore/QtCore>
 
-//TESTED_CLASS=
-//TESTED_FILES=
-
 #include "tst_linguist.h"
 
 void tst_linguist::fetchtr()
