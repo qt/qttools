@@ -1,0 +1,29 @@
+.*/lupdate/testdata/good/parsejs4/main.js:45: qsTranslate\(\) requires at least two arguments.
+.*/lupdate/testdata/good/parsejs4/main.js:46: qsTranslate\(\) requires at least two arguments.
+.*/lupdate/testdata/good/parsejs4/main.js:47: qsTranslate\(\): both arguments must be literal strings.
+.*/lupdate/testdata/good/parsejs4/main.js:48: qsTranslate\(\): both arguments must be literal strings.
+.*/lupdate/testdata/good/parsejs4/main.js:49: qsTranslate\(\): both arguments must be literal strings.
+.*/lupdate/testdata/good/parsejs4/main.js:51: QT_TRANSLATE_NOOP\(\) requires at least two arguments.
+.*/lupdate/testdata/good/parsejs4/main.js:52: QT_TRANSLATE_NOOP\(\) requires at least two arguments.
+.*/lupdate/testdata/good/parsejs4/main.js:53: QT_TRANSLATE_NOOP\(\): both arguments must be literal strings.
+.*/lupdate/testdata/good/parsejs4/main.js:54: QT_TRANSLATE_NOOP\(\): both arguments must be literal strings.
+.*/lupdate/testdata/good/parsejs4/main.js:55: QT_TRANSLATE_NOOP\(\): both arguments must be literal strings.
+.*/lupdate/testdata/good/parsejs4/main.js:57: qsTr\(\) requires at least one argument.
+.*/lupdate/testdata/good/parsejs4/main.js:58: qsTr\(\): text to translate must be a literal string.
+.*/lupdate/testdata/good/parsejs4/main.js:60: QT_TR_NOOP\(\) requires at least one argument.
+.*/lupdate/testdata/good/parsejs4/main.js:61: QT_TR_NOOP\(\): text to translate must be a literal string.
+.*/lupdate/testdata/good/parsejs4/main.js:63: qsTrId\(\) requires at least one argument.
+.*/lupdate/testdata/good/parsejs4/main.js:64: qsTrId\(\): identifier must be a literal string.
+.*/lupdate/testdata/good/parsejs4/main.js:66: QT_TRID_NOOP\(\) requires at least one argument.
+.*/lupdate/testdata/good/parsejs4/main.js:67: QT_TRID_NOOP\(\): identifier must be a literal string.
+.*/lupdate/testdata/good/parsejs4/main.js:69: Unexpected character in meta string
+.*/lupdate/testdata/good/parsejs4/main.js:70: Unexpected character in meta string
+.*/lupdate/testdata/good/parsejs4/main.js:71: Unterminated meta string
+.*/lupdate/testdata/good/parsejs4/main.js:72: Unterminated meta string
+.*/lupdate/testdata/good/parsejs4/main.js:75: //% cannot be used with qsTranslate\(\). Ignoring
+.*/lupdate/testdata/good/parsejs4/main.js:77: //% cannot be used with QT_TRANSLATE_NOOP\(\). Ignoring
+.*/lupdate/testdata/good/parsejs4/main.js:79: //% cannot be used with qsTr\(\). Ignoring
+.*/lupdate/testdata/good/parsejs4/main.js:81: //% cannot be used with QT_TR_NOOP\(\). Ignoring
+.*/lupdate/testdata/good/parsejs4/main.js:84: Discarding unconsumed meta data
+.*/lupdate/testdata/good/parsejs4/main.js:86: Discarding unconsumed meta data
+.*/lupdate/testdata/good/parsejs4/main.js:88: Discarding unconsumed meta data

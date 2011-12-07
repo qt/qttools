@@ -1,0 +1,29 @@
+.*/lupdate/testdata/good/parseqml2/main.qml:44: qsTranslate\(\) requires at least two arguments.
+.*/lupdate/testdata/good/parseqml2/main.qml:45: qsTranslate\(\) requires at least two arguments.
+.*/lupdate/testdata/good/parseqml2/main.qml:46: qsTranslate\(\): both arguments must be literal strings.
+.*/lupdate/testdata/good/parseqml2/main.qml:47: qsTranslate\(\): both arguments must be literal strings.
+.*/lupdate/testdata/good/parseqml2/main.qml:48: qsTranslate\(\): both arguments must be literal strings.
+.*/lupdate/testdata/good/parseqml2/main.qml:50: QT_TRANSLATE_NOOP\(\) requires at least two arguments.
+.*/lupdate/testdata/good/parseqml2/main.qml:51: QT_TRANSLATE_NOOP\(\) requires at least two arguments.
+.*/lupdate/testdata/good/parseqml2/main.qml:52: QT_TRANSLATE_NOOP\(\): both arguments must be literal strings.
+.*/lupdate/testdata/good/parseqml2/main.qml:53: QT_TRANSLATE_NOOP\(\): both arguments must be literal strings.
+.*/lupdate/testdata/good/parseqml2/main.qml:54: QT_TRANSLATE_NOOP\(\): both arguments must be literal strings.
+.*/lupdate/testdata/good/parseqml2/main.qml:56: qsTr\(\) requires at least one argument.
+.*/lupdate/testdata/good/parseqml2/main.qml:57: qsTr\(\): text to translate must be a literal string.
+.*/lupdate/testdata/good/parseqml2/main.qml:59: QT_TR_NOOP\(\) requires at least one argument.
+.*/lupdate/testdata/good/parseqml2/main.qml:60: QT_TR_NOOP\(\): text to translate must be a literal string.
+.*/lupdate/testdata/good/parseqml2/main.qml:62: qsTrId\(\) requires at least one argument.
+.*/lupdate/testdata/good/parseqml2/main.qml:63: qsTrId\(\): identifier must be a literal string.
+.*/lupdate/testdata/good/parseqml2/main.qml:65: QT_TRID_NOOP\(\) requires at least one argument.
+.*/lupdate/testdata/good/parseqml2/main.qml:66: QT_TRID_NOOP\(\): identifier must be a literal string.
+.*/lupdate/testdata/good/parseqml2/main.qml:68: Unexpected character in meta string
+.*/lupdate/testdata/good/parseqml2/main.qml:69: Unexpected character in meta string
+.*/lupdate/testdata/good/parseqml2/main.qml:70: Unterminated meta string
+.*/lupdate/testdata/good/parseqml2/main.qml:71: Unterminated meta string
+.*/lupdate/testdata/good/parseqml2/main.qml:74: //% cannot be used with qsTranslate\(\). Ignoring
+.*/lupdate/testdata/good/parseqml2/main.qml:76: //% cannot be used with QT_TRANSLATE_NOOP\(\). Ignoring
+.*/lupdate/testdata/good/parseqml2/main.qml:78: //% cannot be used with qsTr\(\). Ignoring
+.*/lupdate/testdata/good/parseqml2/main.qml:80: //% cannot be used with QT_TR_NOOP\(\). Ignoring
+.*/lupdate/testdata/good/parseqml2/main.qml:83: Discarding unconsumed meta data
+.*/lupdate/testdata/good/parseqml2/main.qml:85: Discarding unconsumed meta data
+.*/lupdate/testdata/good/parseqml2/main.qml:87: Discarding unconsumed meta data
