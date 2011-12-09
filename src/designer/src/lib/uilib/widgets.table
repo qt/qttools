@@ -106,9 +106,6 @@ DECLARE_WIDGET(QTreeView, "")
 DECLARE_WIDGET(QTreeWidget, "")
 #endif
 DECLARE_WIDGET(QWidget, "")
-#ifndef QT_NO_WORKSPACE
-DECLARE_WIDGET(QWorkspace, "")
-#endif
 #ifndef QT_NO_SPLITTER
 DECLARE_WIDGET(QSplitter, "")
 #endif

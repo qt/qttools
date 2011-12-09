@@ -596,13 +596,6 @@ bool QAbstractFormBuilder::addItem(DomWidget *ui_widget, QWidget *widget, QWidge
     }
 #endif
 
-#ifndef QT_NO_WORKSPACE
-    else if (QWorkspace *ws = qobject_cast<QWorkspace*>(parentWidget)) {
-        ws->addWindow(widget);
-        return true;
-    }
-#endif
-
 #ifndef QT_NO_DOCKWIDGET
     else if (QDockWidget *dockWidget = qobject_cast<QDockWidget*>(parentWidget)) {
         dockWidget->setWidget(widget);

@@ -67,7 +67,6 @@ namespace {
             rc.insert(QStringLiteral("Spacer"));
             rc.insert(QStringLiteral("QMainWindow"));
             rc.insert(QStringLiteral("QDialog"));
-            rc.insert(QStringLiteral("QWorkspace"));
             rc.insert(QStringLiteral("QMdiArea"));
             rc.insert(QStringLiteral("QMdiSubWindow"));
         }

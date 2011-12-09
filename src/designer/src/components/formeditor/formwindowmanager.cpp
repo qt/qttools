@@ -215,7 +215,7 @@ bool FormWindowManager::eventFilter(QObject *o, QEvent *e)
     }
 
     if (QWidget *managedWidget = findManagedWidget(fw, widget)) {
-        // Prevent MDI and QWorkspace subwindows from being closed by clicking at the title bar
+        // Prevent MDI subwindows from being closed by clicking at the title bar
         if (managedWidget != widget && eventType == QEvent::Close) {
             e->ignore();
             return true;

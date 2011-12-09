@@ -48,7 +48,6 @@
 #include "widgetfactory_p.h"
 #include "formwindowmanager.h"
 #include "qmainwindow_container.h"
-#include "qworkspace_container.h"
 #include "qmdiarea_container.h"
 #include "qwizard_container.h"
 #include "default_container.h"
@@ -111,7 +110,6 @@ FormEditor::FormEditor(QObject *parent)
     QMainWindowContainerFactory::registerExtension(mgr, containerExtensionId);
     QDockWidgetContainerFactory::registerExtension(mgr, containerExtensionId);
     QScrollAreaContainerFactory::registerExtension(mgr, containerExtensionId);
-    QWorkspaceContainerFactory::registerExtension(mgr, containerExtensionId);
     QMdiAreaContainerFactory::registerExtension(mgr, containerExtensionId);
     QWizardContainerFactory::registerExtension(mgr, containerExtensionId);
 
@@ -132,7 +130,6 @@ FormEditor::FormEditor(QObject *parent)
     QToolBoxWidgetPropertySheetFactory::registerExtension(mgr);
     QTabWidgetPropertySheetFactory::registerExtension(mgr);
     QMdiAreaPropertySheetFactory::registerExtension(mgr);
-    QWorkspacePropertySheetFactory::registerExtension(mgr);
     QWizardPagePropertySheetFactory::registerExtension(mgr);
     QWizardPropertySheetFactory::registerExtension(mgr);
 
