@@ -106,22 +106,9 @@ void usage()
 {
     cout <<
         "QTestLib options\n"
-        " -functions : Returns a list of current testfunctions\n"
-        " -xml       : Outputs results as XML document\n"
-        " -lightxml  : Outputs results as stream of XML tags\n"
-        " -o filename: Writes all output into a file\n"
-        " -silent    : Only outputs warnings and failures\n"
-        " -v1        : Print enter messages for each testfunction\n"
-        " -v2        : Also print out each QVERIFY/QCOMPARE/QTEST\n"
-        " -vs        : Print every signal emitted\n"
-        " -eventdelay ms    : Set default delay for mouse and keyboard simulation to ms milliseconds\n"
-        " -keydelay ms      : Set default delay for keyboard simulation to ms milliseconds\n"
-        " -mousedelay ms    : Set default delay for mouse simulation to ms milliseconds\n"
-        " -keyevent-verbose : Turn on verbose messages for keyboard simulation\n"
-        " -maxwarnings n    : Sets the maximum amount of messages to output.\n"
-        "                     0 means unlimited, default: 2000\n"
-        " -help             : This help\n";
-    cout <<
+        "  All valid QTestLib command-line options are accepted.\n"
+        "  For details of QTestLib options, refer to the QTestLib Manual.\n"
+        "\n"
         "cetest specific options\n"
         " -debug            : Test debug version[default]\n"
         " -release          : Test release version\n"
@@ -139,6 +126,7 @@ void usage()
         "                     -1 specifies waiting forever (default)\n"
         "                      0 specifies starting the process detached\n"
         "                     >0 wait <value> seconds\n"
+        " -help             : This help\n"
         "\n";
 }
 
