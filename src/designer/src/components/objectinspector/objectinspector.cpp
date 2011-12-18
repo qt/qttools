@@ -68,7 +68,7 @@
 #include <QtWidgets/QScrollBar>
 #include <QtGui/QPainter>
 #include <QtWidgets/QVBoxLayout>
-#include <QtWidgets/QItemSelectionModel>
+#include <QtCore/QItemSelectionModel>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QTreeView>
 #include <QtWidgets/QItemDelegate>

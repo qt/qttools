@@ -50,7 +50,7 @@
 #include <QtWidgets/QListView>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QItemDelegate>
-#include <QtWidgets/QSortFilterProxyModel>
+#include <QtCore/QSortFilterProxyModel>
 
 #include <QtCore/QAbstractListModel>
 #include <QtCore/QList>

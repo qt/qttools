@@ -60,8 +60,8 @@
 #include <QtWidgets/QTreeView>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QPushButton>
-#include <QtWidgets/QItemSelectionModel>
-#include <QtWidgets/QItemSelection>
+#include <QtCore/QItemSelectionModel>
+#include <QtCore/QItemSelection>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QCheckBox>

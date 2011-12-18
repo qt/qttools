@@ -74,7 +74,7 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QToolButton>
 #include <QtGui/QContextMenuEvent>
-#include <QtWidgets/QItemSelection>
+#include <QtCore/QItemSelection>
 
 #include <QtCore/QRegExp>
 #include <QtCore/QDebug>

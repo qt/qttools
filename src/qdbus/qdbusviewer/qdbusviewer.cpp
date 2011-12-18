@@ -46,8 +46,8 @@
 #include <QtXml/QtXml>
 
 #include <QtWidgets/QTreeWidget>
-#include <QtWidgets/QStringListModel>
-#include <QtWidgets/QSortFilterProxyModel>
+#include <QtCore/QStringListModel>
+#include <QtCore/QSortFilterProxyModel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QListView>
 #include <QtWidgets/QTextBrowser>

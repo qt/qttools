@@ -52,7 +52,7 @@
 #include <QtWidgets/QMenu>
 #include <QtGui/QKeyEvent>
 #include <QtWidgets/QMessageBox>
-#include <QtWidgets/QSortFilterProxyModel>
+#include <QtCore/QSortFilterProxyModel>
 #include <QtWidgets/QToolBar>
 
 QT_BEGIN_NAMESPACE
