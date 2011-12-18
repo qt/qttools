@@ -30,8 +30,6 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #=============================================================================
 
-include(MacroAddFileDependencies)
-
 MACRO (QT5_EXTRACT_OPTIONS _qt5_files _qt5_options)
   SET(${_qt5_files})
   SET(${_qt5_options})
