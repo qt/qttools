@@ -64,7 +64,7 @@ macro(QT5_ADD_DBUS_INTERFACE _sources _interface _basename)
 
     qt5_generate_moc(${_header} ${_moc})
 
-    set(${_sources} ${${_sources}} ${_impl} ${_header} ${_moc})
+    list(APPEND ${_sources} ${_impl} ${_header} ${_moc})
     macro_add_file_dependencies(${_impl} ${_moc}))
 endmacro()
 
@@ -146,5 +146,5 @@ macro(QT5_ADD_DBUS_ADAPTOR _sources _xml_file _include _parentClass) # _optional
     set_source_files_properties(${_impl} PROPERTIES SKIP_AUTOMOC TRUE)
     macro_add_file_dependencies(${_impl} ${_moc})
 
-    set(${_sources} ${${_sources}} ${_impl} ${_header} ${_moc})
+    list(APPEND ${_sources} ${_impl} ${_header} ${_moc})
 endmacro()

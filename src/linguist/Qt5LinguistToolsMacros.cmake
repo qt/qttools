@@ -96,6 +96,6 @@ macro(QT5_ADD_TRANSLATION _qm_files)
             ARGS ${_abs_FILE} -qm ${qm}
             DEPENDS ${_abs_FILE} VERBATIM
         )
-        set(${_qm_files} ${${_qm_files}} ${qm})
+        list(APPEND ${_qm_files} ${qm})
     endforeach()
 endmacro()
