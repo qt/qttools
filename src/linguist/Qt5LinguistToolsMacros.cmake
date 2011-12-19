@@ -31,26 +31,16 @@
 #=============================================================================
 
 
-macro(QT5_EXTRACT_OPTIONS _qt5_files _qt5_options)
-    set(${_qt5_files})
-    set(${_qt5_options})
-    set(_QT5_DOING_OPTIONS FALSE)
-    foreach(_currentArg ${ARGN})
-        if("${_currentArg}" STREQUAL "OPTIONS")
-            set(_QT5_DOING_OPTIONS TRUE)
-        else()
-            if(_QT5_DOING_OPTIONS)
-                list(APPEND ${_qt5_options} "${_currentArg}")
-            else()
-                list(APPEND ${_qt5_files} "${_currentArg}")
-            endif()
-        endif()
-    endforeach()
-endmacro()
-
 
 macro(QT5_CREATE_TRANSLATION _qm_files)
-    qt5_extract_options(_lupdate_files _lupdate_options ${ARGN})
+    set(options)
+    set(oneValueArgs)
+    set(multiValueArgs OPTIONS)
+
+    cmake_parse_arguments(_LUPDATE "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+    set(_lupdate_files ${_LUPDATE_UNPARSED_ARGUMENTS})
+    set(_lupdate_options ${_LUPDATE_OPTIONS})
+
     set(_my_sources)
     set(_my_dirs)
     set(_my_tsfiles)

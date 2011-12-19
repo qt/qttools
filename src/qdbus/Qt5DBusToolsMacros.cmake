@@ -32,23 +32,6 @@
 
 include(MacroAddFileDependencies)
 
-macro(QT5_EXTRACT_OPTIONS _qt5_files _qt5_options)
-    set(${_qt5_files})
-    set(${_qt5_options})
-    set(_QT5_DOING_OPTIONS FALSE)
-    foreach(_currentArg ${ARGN})
-        if("${_currentArg}" STREQUAL "OPTIONS")
-            set(_QT5_DOING_OPTIONS TRUE)
-        else()
-            if(_QT5_DOING_OPTIONS)
-                list(APPEND ${_qt5_options} "${_currentArg}")
-            else()
-                list(APPEND ${_qt5_files} "${_currentArg}")
-            endif()
-        endif()
-    endforeach()
-endmacro()
-
 
 macro(QT5_ADD_DBUS_INTERFACE _sources _interface _basename)
     get_filename_component(_infile ${_interface} ABSOLUTE)
@@ -98,7 +81,14 @@ endmacro()
 
 
 macro(QT5_GENERATE_DBUS_INTERFACE _header) # _customName OPTIONS -some -options )
-    qt5_extract_options(_customName _qt4_dbus_options ${ARGN})
+    set(options)
+    set(oneValueArgs)
+    set(multiValueArgs OPTIONS)
+
+    cmake_parse_arguments(_DBUS_INTERFACE "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+    set(_customName ${_DBUS_INTERFACE_UNPARSED_ARGUMENTS})
+    set(_qt4_dbus_options ${_DBUS_INTERFACE_OPTIONS})
 
     get_filename_component(_in_file ${_header} ABSOLUTE)
     get_filename_component(_basename ${_header} NAME_WE)
