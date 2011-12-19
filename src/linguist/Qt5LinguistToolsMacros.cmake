@@ -32,7 +32,7 @@
 
 
 
-macro(QT5_CREATE_TRANSLATION _qm_files)
+function(QT5_CREATE_TRANSLATION _qm_files)
     set(options)
     set(oneValueArgs)
     set(multiValueArgs OPTIONS)
@@ -76,10 +76,11 @@ macro(QT5_CREATE_TRANSLATION _qm_files)
             DEPENDS ${_my_sources} ${_ts_pro} VERBATIM)
     endforeach()
     qt5_add_translation(${_qm_files} ${_my_tsfiles})
-endmacro()
+    set(${_qm_files} ${${_qm_files}} PARENT_SCOPE)
+endfunction()
 
 
-macro(QT5_ADD_TRANSLATION _qm_files)
+function(QT5_ADD_TRANSLATION _qm_files)
     foreach(_current_FILE ${ARGN})
         get_filename_component(_abs_FILE ${_current_FILE} ABSOLUTE)
         get_filename_component(qm ${_abs_FILE} NAME_WE)
@@ -98,4 +99,5 @@ macro(QT5_ADD_TRANSLATION _qm_files)
         )
         list(APPEND ${_qm_files} ${qm})
     endforeach()
-endmacro()
+    set(${_qm_files} ${${_qm_files}} PARENT_SCOPE)
+endfunction()

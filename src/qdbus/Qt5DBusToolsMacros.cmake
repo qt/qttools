@@ -33,7 +33,7 @@
 include(MacroAddFileDependencies)
 
 
-macro(QT5_ADD_DBUS_INTERFACE _sources _interface _basename)
+function(QT5_ADD_DBUS_INTERFACE _sources _interface _basename)
     get_filename_component(_infile ${_interface} ABSOLUTE)
     set(_header ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.h)
     set(_impl   ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.cpp)
@@ -66,10 +66,11 @@ macro(QT5_ADD_DBUS_INTERFACE _sources _interface _basename)
 
     list(APPEND ${_sources} ${_impl} ${_header} ${_moc})
     macro_add_file_dependencies(${_impl} ${_moc}))
-endmacro()
+    set(${_sources} ${${_sources}} PARENT_SCOPE)
+endfunction()
 
 
-macro(QT5_ADD_DBUS_INTERFACES _sources)
+function(QT5_ADD_DBUS_INTERFACES _sources)
     foreach(_current_FILE ${ARGN})
         get_filename_component(_infile ${_current_FILE} ABSOLUTE)
         # get the part before the ".xml" suffix
@@ -77,10 +78,11 @@ macro(QT5_ADD_DBUS_INTERFACES _sources)
         string(TOLOWER ${_basename} _basename)
         qt5_add_dbus_interface(${_sources} ${_infile} ${_basename}interface)
     endforeach()
-endmacro()
+    set(${_sources} ${${_sources}} PARENT_SCOPE)
+endfunction()
 
 
-macro(QT5_GENERATE_DBUS_INTERFACE _header) # _customName OPTIONS -some -options )
+function(QT5_GENERATE_DBUS_INTERFACE _header) # _customName OPTIONS -some -options )
     set(options)
     set(oneValueArgs)
     set(multiValueArgs OPTIONS)
@@ -111,10 +113,10 @@ macro(QT5_GENERATE_DBUS_INTERFACE _header) # _customName OPTIONS -some -options 
         COMMAND ${QT_DBUSCPP2XML_EXECUTABLE} ${_qt4_dbus_options} ${_in_file} -o ${_target}
         DEPENDS ${_in_file} VERBATIM
     )
-endmacro()
+endfunction()
 
 
-macro(QT5_ADD_DBUS_ADAPTOR _sources _xml_file _include _parentClass) # _optionalBasename _optionalClassName)
+function(QT5_ADD_DBUS_ADAPTOR _sources _xml_file _include _parentClass) # _optionalBasename _optionalClassName)
     get_filename_component(_infile ${_xml_file} ABSOLUTE)
 
     set(_optionalBasename "${ARGV4}")
@@ -147,4 +149,5 @@ macro(QT5_ADD_DBUS_ADAPTOR _sources _xml_file _include _parentClass) # _optional
     macro_add_file_dependencies(${_impl} ${_moc})
 
     list(APPEND ${_sources} ${_impl} ${_header} ${_moc})
-endmacro()
+    set(${_sources} ${${_sources}} PARENT_SCOPE)
+endfunction()
