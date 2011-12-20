@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/trolltech/assistant">
-        <file>images/trolltech-logo.png</file>
+        <file>images/qt-logo.png</file>
         <file>images/assistant-128.png</file>
         <file>images/assistant.png</file>
         <file>images/wrap.png</file>
