@@ -469,10 +469,19 @@ namespace qdesigner_internal
 
     }
 
+    PropertySheetTranslatableData::PropertySheetTranslatableData(bool translatable, const QString &disambiguation, const QString &comment) :
+        m_translatable(translatable), m_disambiguation(disambiguation), m_comment(comment) { }
+
+    bool PropertySheetTranslatableData::equals(const PropertySheetTranslatableData &rhs) const
+    {
+        return m_translatable == rhs.m_translatable
+               && m_disambiguation == rhs.m_disambiguation
+               && m_comment == rhs.m_comment;
+    }
+
     PropertySheetStringValue::PropertySheetStringValue(const QString &value,
-                    bool translatable, const QString &disambiguation, const QString &comment)
-        : m_value(value), m_translatable(translatable), m_disambiguation(disambiguation), m_comment(comment)
-    {  }
+                    bool translatable, const QString &disambiguation, const QString &comment) :
+        PropertySheetTranslatableData(translatable, disambiguation, comment), m_value(value) {}
 
     QString PropertySheetStringValue::value() const
     {
@@ -484,59 +493,20 @@ namespace qdesigner_internal
         m_value = value;
     }
 
-    bool PropertySheetStringValue::translatable() const
-    {
-        return m_translatable;
-    }
-
-    void PropertySheetStringValue::setTranslatable(bool translatable)
-    {
-        m_translatable = translatable;
-    }
-
-    QString PropertySheetStringValue::disambiguation() const
-    {
-        return m_disambiguation;
-    }
-
-    void PropertySheetStringValue::setDisambiguation(const QString &disambiguation)
-    {
-        m_disambiguation = disambiguation;
-    }
-
-    QString PropertySheetStringValue::comment() const
-    {
-        return m_comment;
-    }
-
-    void PropertySheetStringValue::setComment(const QString &comment)
-    {
-        m_comment = comment;
-    }
-
     bool PropertySheetStringValue::equals(const PropertySheetStringValue &rhs) const
     {
-        return (m_value == rhs.m_value) && (m_translatable == rhs.m_translatable)
-            && (m_disambiguation == rhs.m_disambiguation) && (m_comment == rhs.m_comment);
+        return m_value == rhs.m_value && PropertySheetTranslatableData::equals(rhs);
     }
 
     PropertySheetKeySequenceValue::PropertySheetKeySequenceValue(const QKeySequence &value,
                     bool translatable, const QString &disambiguation, const QString &comment)
-        : m_value(value),
-          m_standardKey(QKeySequence::UnknownKey),
-          m_translatable(translatable),
-          m_disambiguation(disambiguation),
-          m_comment(comment)
-    {  }
+        : PropertySheetTranslatableData(translatable, disambiguation, comment),
+          m_value(value), m_standardKey(QKeySequence::UnknownKey) {}
 
     PropertySheetKeySequenceValue::PropertySheetKeySequenceValue(const QKeySequence::StandardKey &standardKey,
                     bool translatable, const QString &disambiguation, const QString &comment)
-        : m_value(QKeySequence(standardKey)),
-          m_standardKey(standardKey),
-          m_translatable(translatable),
-          m_disambiguation(disambiguation),
-          m_comment(comment)
-    {  }
+        : PropertySheetTranslatableData(translatable, disambiguation, comment),
+          m_value(QKeySequence(standardKey)), m_standardKey(standardKey) {}
 
     QKeySequence PropertySheetKeySequenceValue::value() const
     {
@@ -565,42 +535,11 @@ namespace qdesigner_internal
         return m_standardKey != QKeySequence::UnknownKey;
     }
 
-    QString PropertySheetKeySequenceValue::comment() const
-    {
-        return m_comment;
-    }
-
-    void PropertySheetKeySequenceValue::setComment(const QString &comment)
-    {
-        m_comment = comment;
-    }
-
-    QString PropertySheetKeySequenceValue::disambiguation() const
-    {
-        return m_disambiguation;
-    }
-
-    void PropertySheetKeySequenceValue::setDisambiguation(const QString &disambiguation)
-    {
-        m_disambiguation = disambiguation;
-    }
-
-    bool PropertySheetKeySequenceValue::translatable() const
-    {
-        return m_translatable;
-    }
-
-    void PropertySheetKeySequenceValue::setTranslatable(bool translatable)
-    {
-        m_translatable = translatable;
-    }
-
     bool PropertySheetKeySequenceValue::equals(const PropertySheetKeySequenceValue &rhs) const
     {
-        return (m_value == rhs.m_value) && (m_standardKey == rhs.m_standardKey)
-            && (m_translatable == rhs.m_translatable) && (m_disambiguation == rhs.m_disambiguation) && (m_comment == rhs.m_comment);
+        return m_value == rhs.m_value && m_standardKey == rhs.m_standardKey
+                && PropertySheetTranslatableData::equals(rhs);
     }
-
 
     /* IconSubPropertyMask: Assign each icon sub-property (pixmaps for the
      * various states/modes and the theme) a flag bit (see QFont) so that they

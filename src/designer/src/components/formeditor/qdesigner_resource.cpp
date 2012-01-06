@@ -339,6 +339,34 @@ bool QDesignerResourceBuilder::isResourceType(const QVariant &value) const
     return false;
 }
 // ------------------------- QDesignerTextBuilder
+
+template <class DomElement> // for DomString, potentially DomStringList
+inline void translationParametersToDom(const PropertySheetTranslatableData &data, DomElement *e)
+{
+    const QString propertyComment = data.disambiguation();
+    if (!propertyComment.isEmpty())
+        e->setAttributeComment(propertyComment);
+    const QString propertyExtracomment = data.comment();
+    if (!propertyExtracomment.isEmpty())
+        e->setAttributeExtraComment(propertyExtracomment);
+    if (!data.translatable())
+        e->setAttributeNotr(QStringLiteral("true"));
+}
+
+template <class DomElement> // for DomString, potentially DomStringList
+inline void translationParametersFromDom(const DomElement *e, PropertySheetTranslatableData *data)
+{
+    if (e->hasAttributeComment())
+        data->setDisambiguation(e->attributeComment());
+    if (e->hasAttributeExtraComment())
+        data->setComment(e->attributeExtraComment());
+    if (e->hasAttributeNotr()) {
+        const QString notr = e->attributeNotr();
+        const bool translatable = !(notr == QStringLiteral("true") || notr == QStringLiteral("yes"));
+        data->setTranslatable(translatable);
+    }
+}
+
 class QDesignerTextBuilder : public QTextBuilder
 {
 public:
@@ -353,21 +381,12 @@ public:
 
 QVariant QDesignerTextBuilder::loadText(const DomProperty *text) const
 {
-    const DomString *str = text->elementString();
-    PropertySheetStringValue strVal(str->text());
-    if (str->hasAttributeComment()) {
-        strVal.setDisambiguation(str->attributeComment());
+    if (const DomString *domString = text->elementString()) {
+        PropertySheetStringValue stringValue(domString->text());
+        translationParametersFromDom(domString, &stringValue);
+        return QVariant::fromValue(stringValue);
     }
-    if (str->hasAttributeExtraComment()) {
-        strVal.setComment(str->attributeExtraComment());
-    }
-    if (str->hasAttributeNotr()) {
-        const QString notr = str->attributeNotr();
-        const bool translatable = !(notr == QStringLiteral("true") || notr == QStringLiteral("yes"));
-        if (!translatable)
-            strVal.setTranslatable(translatable);
-    }
-    return QVariant::fromValue(strVal);
+    return QVariant(QString());
 }
 
 QVariant QDesignerTextBuilder::toNativeValue(const QVariant &value) const
@@ -377,34 +396,35 @@ QVariant QDesignerTextBuilder::toNativeValue(const QVariant &value) const
     return value;
 }
 
+static inline DomProperty *stringToDomProperty(const QString &value)
+{
+    DomString *domString = new DomString();
+    domString->setText(value);
+    DomProperty *property = new DomProperty();
+    property->setElementString(domString);
+    return property;
+}
+
+static inline DomProperty *stringToDomProperty(const QString &value,
+                                               const PropertySheetTranslatableData &translatableData)
+{
+    DomString *domString = new DomString();
+    domString->setText(value);
+    translationParametersToDom(translatableData, domString);
+    DomProperty *property = new DomProperty();
+    property->setElementString(domString);
+    return property;
+}
+
 DomProperty *QDesignerTextBuilder::saveText(const QVariant &value) const
 {
-    if (!value.canConvert<PropertySheetStringValue>() && !value.canConvert<QString>())
-        return 0;
-
-    DomProperty *property = new DomProperty();
-    DomString *domStr = new DomString();
-
     if (value.canConvert<PropertySheetStringValue>()) {
-        PropertySheetStringValue str = qvariant_cast<PropertySheetStringValue>(value);
-
-        domStr->setText(str.value());
-
-        const QString property_comment = str.disambiguation();
-        if (!property_comment.isEmpty())
-            domStr->setAttributeComment(property_comment);
-        const QString property_extraComment = str.comment();
-        if (!property_extraComment.isEmpty())
-            domStr->setAttributeExtraComment(property_extraComment);
-        const bool property_translatable = str.translatable();
-        if (!property_translatable)
-            domStr->setAttributeNotr(QStringLiteral("true"));
-    } else {
-        domStr->setText(value.toString());
+        const PropertySheetStringValue str = qvariant_cast<PropertySheetStringValue>(value);
+        return stringToDomProperty(str.value(), str);
     }
-
-    property->setElementString(domStr);
-    return property;
+    if (value.canConvert<QString>())
+        return stringToDomProperty(value.toString());
+    return 0;
 }
 
 QDesignerResource::QDesignerResource(FormWindow *formWindow)  :
@@ -928,30 +948,12 @@ void QDesignerResource::applyProperties(QObject *o, const QList<DomProperty*> &p
             if (index != -1 && sheet->property(index).userType() == qMetaTypeId<PropertySheetKeySequenceValue>()) {
                 const DomString *key = p->elementString();
                 PropertySheetKeySequenceValue keyVal(QKeySequence(key->text()));
-                if (key->hasAttributeComment())
-                    keyVal.setDisambiguation(key->attributeComment());
-                if (key->hasAttributeExtraComment())
-                    keyVal.setComment(key->attributeExtraComment());
-                if (key->hasAttributeNotr()) {
-                    const QString notr = key->attributeNotr();
-                    const bool translatable = !(notr == QStringLiteral("true") || notr == QStringLiteral("yes"));
-                    if (!translatable)
-                        keyVal.setTranslatable(translatable);
-                }
+                translationParametersFromDom(key, &keyVal);
                 v = QVariant::fromValue(keyVal);
             } else {
                 const DomString *str = p->elementString();
                 PropertySheetStringValue strVal(v.toString());
-                if (str->hasAttributeComment())
-                    strVal.setDisambiguation(str->attributeComment());
-                if (str->hasAttributeExtraComment())
-                    strVal.setComment(str->attributeExtraComment());
-                if (str->hasAttributeNotr()) {
-                    const QString notr = str->attributeNotr();
-                    const bool translatable = !(notr == QStringLiteral("true") || notr == QStringLiteral("yes"));
-                    if (!translatable)
-                        strVal.setTranslatable(translatable);
-                }
+                translationParametersFromDom(str, &strVal);
                 v = QVariant::fromValue(strVal);
             }
         }
@@ -1338,42 +1340,6 @@ DomWidget *QDesignerResource::saveWidget(QDesignerDockWidget *dockWidget, DomWid
     }
 
     return ui_widget;
-}
-
-static void saveStringProperty(DomProperty *property, const PropertySheetStringValue &value)
-{
-    DomString *str = new DomString();
-    str->setText(value.value());
-
-    const QString property_comment = value.disambiguation();
-    if (!property_comment.isEmpty())
-        str->setAttributeComment(property_comment);
-    const QString property_extraComment = value.comment();
-    if (!property_extraComment.isEmpty())
-        str->setAttributeExtraComment(property_extraComment);
-    const bool property_translatable = value.translatable();
-    if (!property_translatable)
-        str->setAttributeNotr(QStringLiteral("true"));
-
-    property->setElementString(str);
-}
-
-static void saveKeySequenceProperty(DomProperty *property, const PropertySheetKeySequenceValue &value)
-{
-    DomString *str = new DomString();
-    str->setText(value.value().toString());
-
-    const QString property_comment = value.disambiguation();
-    if (!property_comment.isEmpty())
-        str->setAttributeComment(property_comment);
-    const QString property_extraComment = value.comment();
-    if (!property_extraComment.isEmpty())
-        str->setAttributeExtraComment(property_extraComment);
-    const bool property_translatable = value.translatable();
-    if (!property_translatable)
-        str->setAttributeNotr(QStringLiteral("true"));
-
-    property->setElementString(str);
 }
 
 DomWidget *QDesignerResource::saveWidget(QTabWidget *widget, DomWidget *ui_parentWidget)
@@ -2028,24 +1994,20 @@ DomProperty *QDesignerResource::createProperty(QObject *object, const QString &p
         return applyProperStdSetAttribute(object, propertyName, p);
     } else if (value.canConvert<PropertySheetStringValue>()) {
         const PropertySheetStringValue strVal = qvariant_cast<PropertySheetStringValue>(value);
-        DomProperty *p = new DomProperty;
+        DomProperty *p = stringToDomProperty(strVal.value(), strVal);
         if (!hasSetter(core(), object, propertyName))
             p->setAttributeStdset(0);
 
         p->setAttributeName(propertyName);
-
-        saveStringProperty(p, strVal);
 
         return applyProperStdSetAttribute(object, propertyName, p);
     } else if (value.canConvert<PropertySheetKeySequenceValue>()) {
         const PropertySheetKeySequenceValue keyVal = qvariant_cast<PropertySheetKeySequenceValue>(value);
-        DomProperty *p = new DomProperty;
+        DomProperty *p = stringToDomProperty(keyVal.value().toString(), keyVal);
         if (!hasSetter(core(), object, propertyName))
             p->setAttributeStdset(0);
 
         p->setAttributeName(propertyName);
-
-        saveKeySequenceProperty(p, keyVal);
 
         return applyProperStdSetAttribute(object, propertyName, p);
     }

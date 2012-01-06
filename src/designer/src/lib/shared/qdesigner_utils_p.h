@@ -327,47 +327,59 @@ private:
     friend class FormWindowBase;
 };
 
+// -------------- PropertySheetTranslatableData: Base class for translatable properties.
+class QDESIGNER_SHARED_EXPORT PropertySheetTranslatableData
+{
+protected:
+    PropertySheetTranslatableData(bool translatable = true,
+                                  const QString &disambiguation = QString(),
+                                  const QString &comment = QString());
+    bool equals(const PropertySheetTranslatableData &rhs) const;
+
+public:
+    bool translatable() const                { return m_translatable; }
+    void setTranslatable(bool translatable)  { m_translatable = translatable; }
+    QString disambiguation() const           { return m_disambiguation; }
+    void setDisambiguation(const QString &d) { m_disambiguation = d; }
+    QString comment() const                  { return m_comment; }
+    void setComment(const QString &comment)  { m_comment = comment; }
+
+private:
+    bool m_translatable;
+    QString m_disambiguation;
+    QString m_comment;
+};
+
 // -------------- StringValue: Returned by the property sheet for strings
-class QDESIGNER_SHARED_EXPORT PropertySheetStringValue
+class QDESIGNER_SHARED_EXPORT PropertySheetStringValue : public PropertySheetTranslatableData
 {
 public:
-    explicit PropertySheetStringValue(const QString &value = QString(),
-                             bool translatable = true,
-                             const QString &disambiguation = QString(),
-                             const QString &comment = QString());
+    PropertySheetStringValue(const QString &value = QString(), bool translatable = true,
+                             const QString &disambiguation = QString(), const QString &comment = QString());
 
     bool operator==(const PropertySheetStringValue &other) const { return equals(other); }
     bool operator!=(const PropertySheetStringValue &other) const { return !equals(other); }
 
     QString value() const;
     void setValue(const QString &value);
-    bool translatable() const;
-    void setTranslatable(bool translatable);
-    QString disambiguation() const;
-    void setDisambiguation(const QString &disambiguation);
-    QString comment() const;
-    void setComment(const QString &comment);
 
 private:
     bool equals(const PropertySheetStringValue &rhs) const;
 
     QString m_value;
-    bool m_translatable;
-    QString m_disambiguation;
-    QString m_comment;
 };
 
 
 
 // -------------- StringValue: Returned by the property sheet for strings
-class QDESIGNER_SHARED_EXPORT PropertySheetKeySequenceValue
+class QDESIGNER_SHARED_EXPORT PropertySheetKeySequenceValue : public PropertySheetTranslatableData
 {
 public:
-    explicit PropertySheetKeySequenceValue(const QKeySequence &value = QKeySequence(),
+    PropertySheetKeySequenceValue(const QKeySequence &value = QKeySequence(),
                                   bool translatable = true,
                                   const QString &disambiguation = QString(),
                                   const QString &comment = QString());
-    explicit PropertySheetKeySequenceValue(const QKeySequence::StandardKey &standardKey,
+    PropertySheetKeySequenceValue(const QKeySequence::StandardKey &standardKey,
                                   bool translatable = true,
                                   const QString &disambiguation = QString(),
                                   const QString &comment = QString());
@@ -381,21 +393,11 @@ public:
     void setStandardKey(const QKeySequence::StandardKey &standardKey);
     bool isStandardKey() const;
 
-    bool translatable() const;
-    void setTranslatable(bool translatable);
-    QString disambiguation() const;
-    void setDisambiguation(const QString &disambiguation);
-    QString comment() const;
-    void setComment(const QString &comment);
-
 private:
     bool equals(const PropertySheetKeySequenceValue &rhs) const;
 
     QKeySequence m_value;
     QKeySequence::StandardKey m_standardKey;
-    bool m_translatable;
-    QString m_disambiguation;
-    QString m_comment;
 };
 
 } // namespace qdesigner_internal
