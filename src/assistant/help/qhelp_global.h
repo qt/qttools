@@ -50,7 +50,6 @@ QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
-QT_MODULE(Help)
 
 #if !defined(QT_SHARED) && !defined(QT_DLL)
 #   define QHELP_EXPORT

@@ -54,7 +54,6 @@ QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
-QT_MODULE(Help)
 
 class QHelpEngineCore;
 class QHelpSearchQueryWidget;
