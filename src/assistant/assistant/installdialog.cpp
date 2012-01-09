@@ -44,17 +44,20 @@
 
 #include <QtCore/QTimer>
 #include <QtCore/QUrl>
-#include <QtCore/QBuffer>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QCryptographicHash>
+#include <QtCore/QDebug>
+
+#include <QtNetwork/QNetworkRequest>
+#include <QtNetwork/QNetworkReply>
+#include <QtNetwork/QNetworkProxy>
+#include <QtNetwork/QNetworkAccessManager>
 
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QFileDialog>
 
 #include <QtHelp/QHelpEngineCore>
-
-#include <QtNetwork/QHttp>
 
 QT_BEGIN_NAMESPACE
 #ifndef QT_NO_HTTP
@@ -63,9 +66,17 @@ QT_BEGIN_NAMESPACE
 #define QCH_NAMESPACE 92944
 #define QCH_CHECKSUM  92945
 
+static const char targetFileProperty[] = "targetFile";
+static const char docInfoTargetFileId[] = "DocInfo";
+
+enum { debug = 0 };
+
 InstallDialog::InstallDialog(QHelpEngineCore *helpEngine, QWidget *parent,
                              const QString &host, int port)
-    : QDialog(parent), m_helpEngine(helpEngine), m_host(host), m_port(port)
+    : QDialog(parent), m_helpEngine(helpEngine),
+      m_networkAccessManager(new QNetworkAccessManager(this)),
+      m_networkReply(0),
+      m_host(host), m_port(port)
 {
     TRACE_OBJ
     m_ui.setupUi(this);
@@ -77,13 +88,9 @@ InstallDialog::InstallDialog(QHelpEngineCore *helpEngine, QWidget *parent,
 
     m_windowTitle = tr("Install Documentation");
 
-    m_http = new QHttp(this);
-    connect(m_http, SIGNAL(requestFinished(int,bool)),
-            this, SLOT(httpRequestFinished(int,bool)));
-    connect(m_http, SIGNAL(dataReadProgress(int,int)),
-            this, SLOT(updateDataReadProgress(int,int)));
-    connect(m_http, SIGNAL(responseHeaderReceived(QHttpResponseHeader)),
-            this, SLOT(readResponseHeader(QHttpResponseHeader)));
+
+    connect(m_networkAccessManager, SIGNAL(finished(QNetworkReply*)),
+            this, SLOT(httpRequestFinished(QNetworkReply*)));
     connect(m_ui.installButton, SIGNAL(clicked()), this, SLOT(install()));
     connect(m_ui.cancelButton, SIGNAL(clicked()), this, SLOT(cancelDownload()));
     connect(m_ui.browseButton, SIGNAL(clicked()), this, SLOT(browseDirectories()));
@@ -112,14 +119,14 @@ void InstallDialog::init()
     m_ui.progressBar->show();
     
     QUrl url(QLatin1String("http://qt.nokia.com/doc/assistantdocs/docs.txt"));
-    m_buffer = new QBuffer();
-    m_buffer->open(QBuffer::ReadWrite);
-
     if (m_port > -1)
-        m_http->setProxy(m_host, m_port);
-    m_http->setHost(url.host());
-    m_httpAborted = false;
-    m_docInfoId = m_http->get(url.path(), m_buffer);
+        m_networkAccessManager->setProxy(QNetworkProxy(QNetworkProxy::HttpProxy, m_host, m_port));
+    if (debug)
+        qDebug() << "Sending " << url.toString();
+    m_networkReply = m_networkAccessManager->get(QNetworkRequest(url));
+    m_networkReply->setProperty(targetFileProperty, QVariant(QLatin1String(docInfoTargetFileId)));
+    connect(m_networkReply, SIGNAL(uploadProgress(qint64,qint64)),
+            this, SLOT(dataReadProgress(qint64,qint64)));
 
     m_ui.cancelButton->setEnabled(true);
     m_ui.closeButton->setEnabled(false);    
@@ -162,7 +169,7 @@ void InstallDialog::cancelDownload()
     m_ui.statusLabel->setText(tr("Download canceled."));
     m_httpAborted = true;
     m_itemsToInstall.clear();
-    m_http->abort();
+    m_networkReply->abort();
     m_ui.cancelButton->setEnabled(false);
     m_ui.closeButton->setEnabled(true);
     updateInstallButton();
@@ -210,45 +217,38 @@ void InstallDialog::downloadNextFile()
         return;        
     }
 
-    m_file = new QFile(saveFileName);
-    if (!m_file->open(QIODevice::WriteOnly|QIODevice::Truncate)) {
-        QMessageBox::information(this, m_windowTitle,
-            tr("Unable to save the file %1: %2.")
-            .arg(saveFileName).arg(m_file->errorString()));
-        delete m_file;
-        m_file = 0;
-        downloadNextFile();
-        return;
-    }
-
     m_ui.statusLabel->setText(tr("Downloading %1...").arg(fileName));
     m_ui.progressBar->show();
 
-    QLatin1String urlStr("http://qt.nokia.com/doc/assistantdocs/%1");
-    QUrl url(QString(urlStr).arg(fileName));    
+    const QUrl url(QStringLiteral("http://qt.nokia.com/doc/assistantdocs/") + fileName);
     
     m_httpAborted = false;
-    m_docId = m_http->get(url.path(), m_file);
-    
+    m_networkReply = m_networkAccessManager->get(QNetworkRequest(url));
+    m_networkReply->setProperty(targetFileProperty, QVariant(saveFileName));
+    if (debug)
+        qDebug() << "Sending " << url.toString() << saveFileName;
+
     m_ui.cancelButton->setEnabled(true);
     m_ui.closeButton->setEnabled(false);    
 }
 
-void InstallDialog::httpRequestFinished(int requestId, bool error)
+void InstallDialog::httpRequestFinished(QNetworkReply *reply)
 {
     TRACE_OBJ
-    if (requestId == m_docInfoId  && m_buffer) {        
+
+    const QString targetFile = reply->property(targetFileProperty).toString();
+    if (targetFile == QLatin1String(docInfoTargetFileId)) {
         m_ui.progressBar->hide();
-        if (error) {
+        if (reply->error() != QNetworkReply::NoError) {
             QMessageBox::information(this, m_windowTitle,
                 tr("Download failed: %1.")
-                .arg(m_http->errorString()));
-        } else if (!m_httpAborted) {
-            QStringList registeredDocs = m_helpEngine->registeredDocumentations();
-            m_buffer->seek(0);
-            while (m_buffer->canReadLine()) {
-                QByteArray ba = m_buffer->readLine();
-                QStringList lst = QString::fromAscii(ba.constData()).split(QLatin1Char('|'));
+                .arg(m_networkReply->errorString()));
+            return;
+        }
+        if (!m_httpAborted) {
+            while (reply->canReadLine()) {
+                QByteArray ba = reply->readLine();
+                const QStringList lst = QString::fromAscii(ba.constData()).split(QLatin1Char('|'));
                 if (lst.count() != 4) {
                     QMessageBox::information(this, m_windowTitle,
                         tr("Documentation info file is corrupt!"));
@@ -262,47 +262,56 @@ void InstallDialog::httpRequestFinished(int requestId, bool error)
             }
             updateDocItemList();
         }
-        if (m_buffer)
-            m_buffer->close();
-        delete m_buffer;
-        m_buffer = 0;
         m_ui.statusLabel->setText(tr("Done."));
         m_ui.cancelButton->setEnabled(false);        
         m_ui.closeButton->setEnabled(true);
         updateInstallButton();
-    } else if (requestId == m_docId) {        
-        m_file->close();
-        if (!m_httpAborted) {
-            QString checkSum;
-            if (m_file->open(QIODevice::ReadOnly)) {                
-                QByteArray digest = QCryptographicHash::hash(m_file->readAll(),
-                    QCryptographicHash::Md5);
-                m_file->close();
-                checkSum = QString::fromLatin1(digest.toHex());             
-            }            
-            if (error) {
-                m_file->remove();
-                QMessageBox::warning(this, m_windowTitle,
-                    tr("Download failed: %1.")
-                    .arg(m_http->errorString()));
-            } else if (checkSum.isEmpty() || m_currentCheckSum != checkSum) {
-                m_file->remove();
-                QMessageBox::warning(this, m_windowTitle,
-                    tr("Download failed: Downloaded file is corrupted."));
-            } else {
-                m_ui.statusLabel->setText(tr("Installing documentation %1...")
-                    .arg(QFileInfo(m_file->fileName()).fileName()));
-                m_ui.progressBar->setMaximum(0);
-                m_ui.statusLabel->setText(tr("Done."));
-                installFile(m_file->fileName());                
-            }
-        } else {
-            m_file->remove();
-        }
-        delete m_file;
-        m_file = 0;
-        downloadNextFile();
+        return;
     }
+
+    // Download of file
+    if (reply->error() != QNetworkReply::NoError) {
+        QMessageBox::warning(this, m_windowTitle,
+            tr("Download failed: %1.")
+            .arg(reply->errorString()));
+        downloadNextFile();
+        return;
+    }
+
+    if (m_httpAborted) {
+        downloadNextFile();
+        return;
+    }
+
+    QFile file(targetFile);
+    if (!file.open(QIODevice::WriteOnly|QIODevice::Truncate)) {
+        QMessageBox::information(this, m_windowTitle,
+                                 tr("Unable to save the file %1: %2.")
+                                 .arg(targetFile).arg(file.errorString()));
+        downloadNextFile();
+        return;
+    }
+    const QByteArray data = reply->readAll();
+    file.write(data);
+    file.close();
+
+    const QByteArray digest = QCryptographicHash::hash(data, QCryptographicHash::Md5);
+    const QString checkSum = QString::fromLatin1(digest.toHex());
+
+    if (checkSum.isEmpty() || m_currentCheckSum != checkSum) {
+        file.remove();
+        QMessageBox::warning(this, m_windowTitle,
+                             tr("Download failed: Downloaded file is corrupted."));
+        downloadNextFile();
+        return;
+    }
+
+    m_ui.statusLabel->setText(tr("Installing documentation %1...")
+                              .arg(QFileInfo(targetFile).fileName()));
+    m_ui.progressBar->setMaximum(0);
+    m_ui.statusLabel->setText(tr("Done."));
+    installFile(targetFile);
+    downloadNextFile();
 }
 
 void InstallDialog::installFile(const QString &fileName)
@@ -318,21 +327,7 @@ void InstallDialog::installFile(const QString &fileName)
     }
 }
 
-void InstallDialog::readResponseHeader(const QHttpResponseHeader &responseHeader)
-{
-    TRACE_OBJ
-    if (responseHeader.statusCode() != 200) {
-        QMessageBox::information(this, m_windowTitle,
-            tr("Download failed: %1.")
-            .arg(responseHeader.reasonPhrase()));
-        m_httpAborted = true;
-        m_ui.progressBar->hide();
-        m_http->abort();
-        return;
-    }
-}
-
-void InstallDialog::updateDataReadProgress(int bytesRead, int totalBytes)
+void InstallDialog::updateDataReadProgress(qint64 bytesRead, qint64 totalBytes)
 {
     TRACE_OBJ
     if (m_httpAborted)

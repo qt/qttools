@@ -44,14 +44,14 @@
 
 #include <QtCore/QQueue>
 #include <QtWidgets/QDialog>
-#include <QtNetwork/QHttpResponseHeader>
 #include "ui_installdialog.h"
 
 #ifndef QT_NO_HTTP
 
 QT_BEGIN_NAMESPACE
 
-class QHttp;
+class QNetworkReply;
+class QNetworkAccessManager;
 class QBuffer;
 class QFile;
 class QHelpEngineCore;
@@ -71,9 +71,8 @@ private slots:
     void init();
     void cancelDownload();
     void install();
-    void httpRequestFinished(int requestId, bool error);
-    void readResponseHeader(const QHttpResponseHeader &responseHeader);
-    void updateDataReadProgress(int bytesRead, int totalBytes);
+    void httpRequestFinished(QNetworkReply *);
+    void updateDataReadProgress(qint64 bytesRead, qint64 totalBytes);
     void updateInstallButton();
     void browseDirectories();
 
@@ -84,12 +83,9 @@ private:
 
     Ui::InstallDialog m_ui;
     QHelpEngineCore *m_helpEngine;
-    QHttp *m_http;
-    QBuffer *m_buffer;
-    QFile *m_file;
+    QNetworkAccessManager *m_networkAccessManager;
+    QNetworkReply *m_networkReply;
     bool m_httpAborted;
-    int m_docInfoId;
-    int m_docId;
     QQueue<QListWidgetItem*> m_itemsToInstall;
     QString m_currentCheckSum;
     QString m_windowTitle;
