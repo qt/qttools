@@ -69,9 +69,8 @@ public:
     bool uninitializeProperty(QtProperty *property);
 
     // Call from slotValueChanged().
-    enum ValueChangedResult { NoMatch, Unchanged, Changed };
-    ValueChangedResult valueChanged(QtVariantPropertyManager *vm, QtProperty *property, const QVariant &value);
-    ValueChangedResult setValue(QtVariantPropertyManager *vm, QtProperty *property, const QVariant &value);
+    int valueChanged(QtVariantPropertyManager *vm, QtProperty *property, const QVariant &value);
+    int setValue(QtVariantPropertyManager *vm, QtProperty *property, const QVariant &value);
 
     bool valueText(const QtProperty *property, QString *text) const;
     bool valueIcon(const QtProperty *property, QIcon *icon) const;

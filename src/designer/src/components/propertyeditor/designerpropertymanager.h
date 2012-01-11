@@ -98,10 +98,40 @@ private:
     int m_spacing;
 };
 
+// Helper for handling sub-properties of properties inheriting PropertySheetTranslatableData
+// (translatable, disambiguation, comment).
+template <class PropertySheetValue>
+class TranslatablePropertyManager
+{
+public:
+    void initialize(QtVariantPropertyManager *m, QtProperty *property, const PropertySheetValue &value);
+    bool uninitialize(QtProperty *property);
+    bool destroy(QtProperty *subProperty);
+
+    bool value(const QtProperty *property, QVariant *rc) const;
+    int valueChanged(QtVariantPropertyManager *m, QtProperty *property,
+                                    const QVariant &value);
+
+    int setValue(QtVariantPropertyManager *m, QtProperty *property,
+                 int expectedTypeId, const QVariant &value);
+
+private:
+    QMap<QtProperty *, PropertySheetValue> m_values;
+    QMap<QtProperty *, QtProperty *> m_valueToComment;
+    QMap<QtProperty *, QtProperty *> m_valueToTranslatable;
+    QMap<QtProperty *, QtProperty *> m_valueToDisambiguation;
+
+    QMap<QtProperty *, QtProperty *> m_commentToValue;
+    QMap<QtProperty *, QtProperty *> m_translatableToValue;
+    QMap<QtProperty *, QtProperty *> m_disambiguationToValue;
+};
+
 class DesignerPropertyManager : public QtVariantPropertyManager
 {
     Q_OBJECT
 public:
+    enum ValueChangedResult { NoMatch, Unchanged, Changed };
+
     explicit DesignerPropertyManager(QDesignerFormEditorInterface *core, QObject *parent = 0);
     ~DesignerPropertyManager();
 
@@ -182,23 +212,8 @@ private:
     PropertyToPropertyMap m_iconSubPropertyToProperty;
     PropertyToPropertyMap m_propertyToTheme;
 
-    QMap<QtProperty *, qdesigner_internal::PropertySheetStringValue> m_stringValues;
-    QMap<QtProperty *, QtProperty *> m_stringToComment;
-    QMap<QtProperty *, QtProperty *> m_stringToTranslatable;
-    QMap<QtProperty *, QtProperty *> m_stringToDisambiguation;
-
-    QMap<QtProperty *, QtProperty *> m_commentToString;
-    QMap<QtProperty *, QtProperty *> m_translatableToString;
-    QMap<QtProperty *, QtProperty *> m_disambiguationToString;
-
-    QMap<QtProperty *, qdesigner_internal::PropertySheetKeySequenceValue> m_keySequenceValues;
-    QMap<QtProperty *, QtProperty *> m_keySequenceToComment;
-    QMap<QtProperty *, QtProperty *> m_keySequenceToTranslatable;
-    QMap<QtProperty *, QtProperty *> m_keySequenceToDisambiguation;
-
-    QMap<QtProperty *, QtProperty *> m_commentToKeySequence;
-    QMap<QtProperty *, QtProperty *> m_translatableToKeySequence;
-    QMap<QtProperty *, QtProperty *> m_disambiguationToKeySequence;
+    TranslatablePropertyManager<PropertySheetStringValue> m_stringManager;
+    TranslatablePropertyManager<PropertySheetKeySequenceValue> m_keySequenceManager;
 
     struct PaletteData
     {
@@ -304,7 +319,7 @@ private:
     QMap<StringListEditorButton *, QtProperty *>            m_editorToStringListProperty;
 };
 
-}
+} // namespace qdesigner_internal
 
 QT_END_NAMESPACE
 

@@ -41,7 +41,7 @@
 
 #include "fontpropertymanager.h"
 #include "qtpropertymanager.h"
-#include "qtvariantproperty.h"
+#include "designerpropertymanager.h"
 #include "qtpropertybrowserutils_p.h"
 
 #include <qdesigner_utils_p.h>
@@ -237,14 +237,14 @@ namespace qdesigner_internal {
         return 0;
     }
 
-    FontPropertyManager::ValueChangedResult FontPropertyManager::valueChanged(QtVariantPropertyManager *vm, QtProperty *property, const QVariant &value)
+    int FontPropertyManager::valueChanged(QtVariantPropertyManager *vm, QtProperty *property, const QVariant &value)
     {
         QtProperty *antialiasingProperty = m_antialiasingToProperty.value(property, 0);
         if (!antialiasingProperty) {
             if (m_propertyToFontSubProperties.contains(property)) {
                 updateModifiedState(property, value);
             }
-            return NoMatch;
+            return DesignerPropertyManager::NoMatch;
         }
 
         QtVariantProperty *fontProperty = vm->variantProperty(antialiasingProperty);
@@ -253,11 +253,11 @@ namespace qdesigner_internal {
         QFont font = qvariant_cast<QFont>(fontProperty->value());
         const QFont::StyleStrategy oldValue = font.styleStrategy();
         if (newValue == oldValue)
-            return Unchanged;
+            return DesignerPropertyManager::Unchanged;
 
         font.setStyleStrategy(newValue);
         fontProperty->setValue(QVariant::fromValue(font));
-        return Changed;
+        return DesignerPropertyManager::Changed;
     }
 
     void FontPropertyManager::updateModifiedState(QtProperty *property, const QVariant &value)

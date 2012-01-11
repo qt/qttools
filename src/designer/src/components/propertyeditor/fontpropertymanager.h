@@ -84,9 +84,8 @@ public:
 
     bool resetFontSubProperty(QtVariantPropertyManager *vm, QtProperty *subProperty);
 
-    // Call from slotValueChanged().
-    enum ValueChangedResult { NoMatch, Unchanged, Changed };
-    ValueChangedResult valueChanged(QtVariantPropertyManager *vm, QtProperty *property, const QVariant &value);
+    // Call from slotValueChanged(), returns DesignerPropertyManager::ValueChangedResult
+    int valueChanged(QtVariantPropertyManager *vm, QtProperty *property, const QVariant &value);
 
     // Call from setValue() before calling setValue() on  QtVariantPropertyManager.
     void setValue(QtVariantPropertyManager *vm, QtProperty *property, const QVariant &value);

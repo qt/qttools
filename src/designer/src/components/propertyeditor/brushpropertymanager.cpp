@@ -41,7 +41,7 @@
 
 #include "brushpropertymanager.h"
 #include "qtpropertymanager.h"
-#include "qtvariantproperty.h"
+#include "designerpropertymanager.h"
 #include "qtpropertybrowserutils_p.h"
 
 #include <QtCore/QCoreApplication>
@@ -213,7 +213,7 @@ void BrushPropertyManager::slotPropertyDestroyed(QtProperty *property)
 }
 
 
-BrushPropertyManager::ValueChangedResult BrushPropertyManager::valueChanged(QtVariantPropertyManager *vm, QtProperty *property, const QVariant &value)
+int BrushPropertyManager::valueChanged(QtVariantPropertyManager *vm, QtProperty *property, const QVariant &value)
 {
     switch (value.type()) {
     case QVariant::Int: // Style subproperty?
@@ -223,9 +223,9 @@ BrushPropertyManager::ValueChangedResult BrushPropertyManager::valueChanged(QtVa
             const int index = value.toInt();
             newBrush.setStyle(brushStyleIndexToStyle(index));
             if (newBrush == oldValue)
-                return Unchanged;
+                return DesignerPropertyManager::Unchanged;
             vm->variantProperty(brushProperty)->setValue(newBrush);
-            return Changed;
+            return DesignerPropertyManager::Changed;
         }
         break;
     case QVariant::Color: // Color  subproperty?
@@ -234,35 +234,35 @@ BrushPropertyManager::ValueChangedResult BrushPropertyManager::valueChanged(QtVa
             QBrush newBrush = oldValue;
             newBrush.setColor(qvariant_cast<QColor>(value));
             if (newBrush == oldValue)
-                return Unchanged;
+                return DesignerPropertyManager::Unchanged;
             vm->variantProperty(brushProperty)->setValue(newBrush);
-            return Changed;
+            return DesignerPropertyManager::Changed;
         }
         break;
     default:
         break;
     }
-    return NoMatch;
+    return DesignerPropertyManager::NoMatch;
 }
 
-BrushPropertyManager::ValueChangedResult BrushPropertyManager::setValue(QtVariantPropertyManager *vm, QtProperty *property, const QVariant &value)
+int BrushPropertyManager::setValue(QtVariantPropertyManager *vm, QtProperty *property, const QVariant &value)
 {
     if (value.type() != QVariant::Brush)
-        return NoMatch;
+        return DesignerPropertyManager::NoMatch;
     const PropertyBrushMap::iterator brit = m_brushValues.find(property);
     if (brit == m_brushValues.end())
-        return NoMatch;
+        return DesignerPropertyManager::NoMatch;
 
     const QBrush newBrush = qvariant_cast<QBrush>(value);
     if (newBrush == brit.value())
-        return Unchanged;
+        return DesignerPropertyManager::Unchanged;
     brit.value() = newBrush;
     if (QtProperty *styleProperty = m_brushPropertyToStyleSubProperty.value(property))
         vm->variantProperty(styleProperty)->setValue(brushStyleToIndex(newBrush.style()));
     if (QtProperty *colorProperty = m_brushPropertyToColorSubProperty.value(property))
         vm->variantProperty(colorProperty)->setValue(newBrush.color());
 
-    return Changed;
+    return DesignerPropertyManager::Changed;
 }
 
 bool BrushPropertyManager::valueText(const QtProperty *property, QString *text) const

@@ -101,6 +101,153 @@ QT_BEGIN_NAMESPACE
 
 namespace qdesigner_internal {
 
+template <class PropertySheetValue>
+void TranslatablePropertyManager<PropertySheetValue>::initialize(QtVariantPropertyManager *m,
+                                                                 QtProperty *property,
+                                                                 const PropertySheetValue &value)
+{
+    m_values.insert(property, value);
+
+    QtVariantProperty *translatable = m->addProperty(QVariant::Bool, DesignerPropertyManager::tr("translatable"));
+    translatable->setValue(value.translatable());
+    m_valueToTranslatable.insert(property, translatable);
+    m_translatableToValue.insert(translatable, property);
+    property->addSubProperty(translatable);
+
+    QtVariantProperty *disambiguation = m->addProperty(QVariant::String, DesignerPropertyManager::tr("disambiguation"));
+    disambiguation->setValue(value.disambiguation());
+    m_valueToDisambiguation.insert(property, disambiguation);
+    m_disambiguationToValue.insert(disambiguation, property);
+    property->addSubProperty(disambiguation);
+
+    QtVariantProperty *comment = m->addProperty(QVariant::String, DesignerPropertyManager::tr("comment"));
+    comment->setValue(value.comment());
+    m_valueToComment.insert(property, comment);
+    m_commentToValue.insert(comment, property);
+    property->addSubProperty(comment);
+}
+
+template <class PropertySheetValue>
+bool TranslatablePropertyManager<PropertySheetValue>::uninitialize(QtProperty *property)
+{
+    if (QtProperty *comment = m_valueToComment.value(property)) {
+        delete comment;
+        m_commentToValue.remove(comment);
+    } else {
+        return false;
+    }
+    if (QtProperty *translatable = m_valueToTranslatable.value(property)) {
+        delete translatable;
+        m_translatableToValue.remove(translatable);
+    }
+    if (QtProperty *disambiguation = m_valueToDisambiguation.value(property)) {
+        delete disambiguation;
+        m_disambiguationToValue.remove(disambiguation);
+    }
+    m_values.remove(property);
+    m_valueToComment.remove(property);
+    m_valueToTranslatable.remove(property);
+    m_valueToDisambiguation.remove(property);
+    return true;
+}
+
+template <class PropertySheetValue>
+bool TranslatablePropertyManager<PropertySheetValue>::destroy(QtProperty *subProperty)
+{
+    if (QtProperty *stringCommentProperty = m_commentToValue.value(subProperty, 0)) {
+        m_valueToComment.remove(stringCommentProperty);
+        m_commentToValue.remove(subProperty);
+        return true;
+    }
+    if (QtProperty *stringTranslatableProperty = m_translatableToValue.value(subProperty, 0)) {
+        m_valueToTranslatable.remove(stringTranslatableProperty);
+        m_translatableToValue.remove(subProperty);
+        return true;
+    }
+    if (QtProperty *stringDisambiguationProperty = m_disambiguationToValue.value(subProperty, 0)) {
+        m_valueToDisambiguation.remove(stringDisambiguationProperty);
+        m_disambiguationToValue.remove(subProperty);
+        return true;
+    }
+    return false;
+}
+
+template <class PropertySheetValue>
+int TranslatablePropertyManager<PropertySheetValue>::valueChanged(QtVariantPropertyManager *m,
+                                                                  QtProperty *propertyIn,
+                                                                  const QVariant &value)
+{
+    if (QtProperty *property = m_translatableToValue.value(propertyIn, 0)) {
+        const PropertySheetValue oldValue = m_values.value(property);
+        PropertySheetValue newValue = oldValue;
+        newValue.setTranslatable(value.toBool());
+        if (newValue != oldValue) {
+            m->variantProperty(property)->setValue(QVariant::fromValue(newValue));
+            return DesignerPropertyManager::Changed;
+        }
+        return DesignerPropertyManager::Unchanged;
+    }
+    if (QtProperty *property = m_commentToValue.value(propertyIn)) {
+        const PropertySheetValue oldValue = m_values.value(property);
+        PropertySheetValue newValue = oldValue;
+        newValue.setComment(value.toString());
+        if (newValue != oldValue) {
+            m->variantProperty(property)->setValue(QVariant::fromValue(newValue));
+            return DesignerPropertyManager::Changed;
+        }
+        return DesignerPropertyManager::Unchanged;
+    }
+    if (QtProperty *property = m_disambiguationToValue.value(propertyIn, 0)) {
+        const PropertySheetValue oldValue = m_values.value(property);
+        PropertySheetValue newValue = oldValue;
+        newValue.setDisambiguation(value.toString());
+        if (newValue != oldValue) {
+            m->variantProperty(property)->setValue(QVariant::fromValue(newValue));
+            return DesignerPropertyManager::Changed;
+        }
+        return DesignerPropertyManager::Unchanged;
+    }
+    return DesignerPropertyManager::NoMatch;
+}
+
+template <class PropertySheetValue>
+int TranslatablePropertyManager<PropertySheetValue>::setValue(QtVariantPropertyManager *m,
+                                                              QtProperty *property,
+                                                              int expectedTypeId,
+                                                              const QVariant &variantValue)
+{
+    typedef typename QMap<QtProperty *, PropertySheetValue>::iterator Iterator;
+
+    const Iterator it = m_values.find(property);
+    if (it == m_values.end())
+        return DesignerPropertyManager::NoMatch;
+    if (variantValue.userType() != expectedTypeId)
+        return DesignerPropertyManager::NoMatch;
+    const PropertySheetValue value = qvariant_cast<PropertySheetValue>(variantValue);
+    if (value == it.value())
+        return DesignerPropertyManager::Unchanged;
+    if (QtVariantProperty *comment = m->variantProperty(m_valueToComment.value(property)))
+        comment->setValue(value.comment());
+    if (QtVariantProperty *translatable = m->variantProperty(m_valueToTranslatable.value(property)))
+        translatable->setValue(value.translatable());
+    if (QtVariantProperty *disambiguation = m->variantProperty(m_valueToDisambiguation.value(property)))
+        disambiguation->setValue(value.disambiguation());
+    it.value() = value;
+    return DesignerPropertyManager::Changed;
+}
+
+template <class PropertySheetValue>
+bool TranslatablePropertyManager<PropertySheetValue>::value(const QtProperty *property, QVariant *rc) const
+{
+    typedef typename QMap<QtProperty *, PropertySheetValue>::const_iterator ConstIterator;
+
+    ConstIterator it = m_values.constFind(const_cast<QtProperty *>(property));
+    if (it == m_values.constEnd())
+        return false;
+    *rc = QVariant::fromValue(it.value());
+    return true;
+}
+
 // ------------ TextEditor
 class TextEditor : public QWidget
 {
@@ -808,6 +955,20 @@ void DesignerPropertyManager::slotValueChanged(QtProperty *property, const QVari
         return;
     bool enableSubPropertyHandling = true;
 
+    // Find a matching manager
+    int subResult = m_stringManager.valueChanged(this, property, value);
+    if (subResult == NoMatch)
+        subResult = m_keySequenceManager.valueChanged(this, property, value);
+    if (subResult == NoMatch)
+        subResult = m_brushManager.valueChanged(this, property, value);
+    if (subResult == NoMatch)
+        subResult = m_fontManager.valueChanged(this, property, value);
+    if (subResult != NoMatch) {
+        if (subResult == Changed)
+            emit valueChanged(property, value, enableSubPropertyHandling);
+        return;
+    }
+
     if (QtProperty *flagProperty = m_flagToProperty.value(property, 0)) {
         const QList<QtProperty *> subFlags = m_propertyToFlags.value(flagProperty);
         const int subFlagCount = subFlags.count();
@@ -894,54 +1055,6 @@ void DesignerPropertyManager::slotValueChanged(QtProperty *property, const QVari
             return;
 
         variantProperty(alignProperty)->setValue(newValue);
-    } else if (QtProperty *stringProperty = m_commentToString.value(property, 0)) {
-        const PropertySheetStringValue v = m_stringValues.value(stringProperty);
-        PropertySheetStringValue newValue = v;
-        newValue.setComment(value.toString());
-        if (v == newValue)
-            return;
-
-        variantProperty(stringProperty)->setValue(QVariant::fromValue(newValue));
-    } else if (QtProperty *stringProperty = m_translatableToString.value(property, 0)) {
-        const PropertySheetStringValue v = m_stringValues.value(stringProperty);
-        PropertySheetStringValue newValue = v;
-        newValue.setTranslatable(value.toBool());
-        if (v == newValue)
-            return;
-
-        variantProperty(stringProperty)->setValue(QVariant::fromValue(newValue));
-    } else if (QtProperty *stringProperty = m_disambiguationToString.value(property, 0)) {
-        const PropertySheetStringValue v = m_stringValues.value(stringProperty);
-        PropertySheetStringValue newValue = v;
-        newValue.setDisambiguation(value.toString());
-        if (v == newValue)
-            return;
-
-        variantProperty(stringProperty)->setValue(QVariant::fromValue(newValue));
-    } else if (QtProperty *keySequenceProperty = m_commentToKeySequence.value(property, 0)) {
-        const PropertySheetKeySequenceValue v = m_keySequenceValues.value(keySequenceProperty);
-        PropertySheetKeySequenceValue newValue = v;
-        newValue.setComment(value.toString());
-        if (v == newValue)
-            return;
-
-        variantProperty(keySequenceProperty)->setValue(QVariant::fromValue(newValue));
-    } else if (QtProperty *keySequenceProperty = m_translatableToKeySequence.value(property, 0)) {
-        const PropertySheetKeySequenceValue v = m_keySequenceValues.value(keySequenceProperty);
-        PropertySheetKeySequenceValue newValue = v;
-        newValue.setTranslatable(value.toBool());
-        if (v == newValue)
-            return;
-
-        variantProperty(keySequenceProperty)->setValue(QVariant::fromValue(newValue));
-    } else if (QtProperty *keySequenceProperty = m_disambiguationToKeySequence.value(property, 0)) {
-        const PropertySheetKeySequenceValue v = m_keySequenceValues.value(keySequenceProperty);
-        PropertySheetKeySequenceValue newValue = v;
-        newValue.setDisambiguation(value.toString());
-        if (v == newValue)
-            return;
-
-        variantProperty(keySequenceProperty)->setValue(QVariant::fromValue(newValue));
     } else if (QtProperty *iProperty = m_iconSubPropertyToProperty.value(property, 0)) {
         QtVariantProperty *iconProperty = variantProperty(iProperty);
         PropertySheetIconValue icon = qvariant_cast<PropertySheetIconValue>(iconProperty->value());
@@ -960,13 +1073,7 @@ void DesignerPropertyManager::slotValueChanged(QtProperty *property, const QVari
             m_sourceOfChange = origSourceOfChange;
     } else if (m_iconValues.contains(property)) {
         enableSubPropertyHandling = m_sourceOfChange;
-    } else {
-        if (m_brushManager.valueChanged(this, property, value) == BrushPropertyManager::Unchanged)
-            return;
-        if (m_fontManager.valueChanged(this, property, value) == FontPropertyManager::Unchanged)
-            return;
     }
-
     emit valueChanged(property, value, enableSubPropertyHandling);
 }
 
@@ -983,24 +1090,8 @@ void DesignerPropertyManager::slotPropertyDestroyed(QtProperty *property)
     } else if (QtProperty *alignProperty = m_alignVToProperty.value(property, 0)) {
         m_propertyToAlignV.remove(alignProperty);
         m_alignVToProperty.remove(property);
-    } else if (QtProperty *stringCommentProperty = m_commentToString.value(property, 0)) {
-        m_stringToComment.remove(stringCommentProperty);
-        m_commentToString.remove(property);
-    } else if (QtProperty *stringTranslatableProperty = m_translatableToString.value(property, 0)) {
-        m_stringToTranslatable.remove(stringTranslatableProperty);
-        m_translatableToString.remove(property);
-    } else if (QtProperty *stringDisambiguationProperty = m_disambiguationToString.value(property, 0)) {
-        m_stringToDisambiguation.remove(stringDisambiguationProperty);
-        m_disambiguationToString.remove(property);
-    } else if (QtProperty *keySequenceCommentProperty = m_commentToKeySequence.value(property, 0)) {
-        m_keySequenceToComment.remove(keySequenceCommentProperty);
-        m_commentToKeySequence.remove(property);
-    } else if (QtProperty *keySequenceTranslatableProperty = m_translatableToKeySequence.value(property, 0)) {
-        m_keySequenceToTranslatable.remove(keySequenceTranslatableProperty);
-        m_translatableToKeySequence.remove(property);
-    } else if (QtProperty *keySequenceDisambiguationProperty = m_disambiguationToKeySequence.value(property, 0)) {
-        m_keySequenceToDisambiguation.remove(keySequenceDisambiguationProperty);
-        m_disambiguationToKeySequence.remove(property);
+    } else if (m_stringManager.destroy(property)
+               || m_keySequenceManager.destroy(property)) {
     } else if (QtProperty *iconProperty = m_iconSubPropertyToProperty.value(property, 0)) {
         if (m_propertyToTheme.value(iconProperty) == property) {
             m_propertyToTheme.remove(iconProperty);
@@ -1537,10 +1628,11 @@ QVariant DesignerPropertyManager::value(const QtProperty *property) const
         return QVariant::fromValue(m_iconValues.value(const_cast<QtProperty *>(property)));
     if (m_pixmapValues.contains(const_cast<QtProperty *>(property)))
         return QVariant::fromValue(m_pixmapValues.value(const_cast<QtProperty *>(property)));
-    if (m_stringValues.contains(const_cast<QtProperty *>(property)))
-        return QVariant::fromValue(m_stringValues.value(const_cast<QtProperty *>(property)));
-    if (m_keySequenceValues.contains(const_cast<QtProperty *>(property)))
-        return QVariant::fromValue(m_keySequenceValues.value(const_cast<QtProperty *>(property)));
+    QVariant rc;
+    if (m_stringManager.value(property, &rc)
+        || m_keySequenceManager.value(property, &rc)
+        || m_brushManager.value(property, &rc))
+        return rc;
     if (m_uintValues.contains(const_cast<QtProperty *>(property)))
         return m_uintValues.value(const_cast<QtProperty *>(property));
     if (m_longLongValues.contains(const_cast<QtProperty *>(property)))
@@ -1554,9 +1646,6 @@ QVariant DesignerPropertyManager::value(const QtProperty *property) const
     if (m_stringListValues.contains(const_cast<QtProperty *>(property)))
         return m_stringListValues.value(const_cast<QtProperty *>(property));
 
-    QVariant rc;
-    if (m_brushManager.value(property, &rc))
-        return rc;
     return QtVariantPropertyManager::value(property);
 }
 
@@ -1592,6 +1681,19 @@ int DesignerPropertyManager::valueType(int propertyType) const
 
 void DesignerPropertyManager::setValue(QtProperty *property, const QVariant &value)
 {
+    int subResult = m_stringManager.setValue(this, property, designerStringTypeId(), value);
+    if (subResult == NoMatch)
+        subResult = m_keySequenceManager.setValue(this, property, designerKeySequenceTypeId(), value);
+    if (subResult == NoMatch)
+        subResult = m_brushManager.setValue(this, property, value);
+    if (subResult != NoMatch) {
+        if (subResult == Changed) {
+            emit QtVariantPropertyManager::valueChanged(property, value);
+            emit propertyChanged(property);
+        }
+        return;
+    }
+
     const PropertyFlagDataMap::iterator fit = m_flagValues.find(property);
 
     if (fit !=  m_flagValues.end()) {
@@ -1667,62 +1769,6 @@ void DesignerPropertyManager::setValue(QtProperty *property, const QVariant &val
         m_alignValues[property] = v;
 
         emit QtVariantPropertyManager::valueChanged(property, v);
-        emit propertyChanged(property);
-
-        return;
-    } else if (m_stringValues.contains(property)) {
-        if (value.userType() != designerStringTypeId())
-            return;
-
-        const PropertySheetStringValue v = qvariant_cast<PropertySheetStringValue>(value);
-
-        const PropertySheetStringValue val = m_stringValues.value(property);
-
-        if (val == v)
-            return;
-
-        QtVariantProperty *comment = variantProperty(m_stringToComment.value(property));
-        QtVariantProperty *translatable = variantProperty(m_stringToTranslatable.value(property));
-        QtVariantProperty *disambiguation = variantProperty(m_stringToDisambiguation.value(property));
-
-        if (comment)
-            comment->setValue(v.comment());
-        if (translatable)
-            translatable->setValue(v.translatable());
-        if (disambiguation)
-            disambiguation->setValue(v.disambiguation());
-
-        m_stringValues[property] = v;
-
-        emit QtVariantPropertyManager::valueChanged(property, QVariant::fromValue(v));
-        emit propertyChanged(property);
-
-        return;
-    } else if (m_keySequenceValues.contains(property)) {
-        if (value.userType() != designerKeySequenceTypeId())
-            return;
-
-        const PropertySheetKeySequenceValue v = qvariant_cast<PropertySheetKeySequenceValue>(value);
-
-        const PropertySheetKeySequenceValue val = m_keySequenceValues.value(property);
-
-        if (val == v)
-            return;
-
-        QtVariantProperty *comment = variantProperty(m_keySequenceToComment.value(property));
-        QtVariantProperty *translatable = variantProperty(m_keySequenceToTranslatable.value(property));
-        QtVariantProperty *disambiguation = variantProperty(m_keySequenceToDisambiguation.value(property));
-
-        if (comment)
-            comment->setValue(v.comment());
-        if (translatable)
-            translatable->setValue(v.translatable());
-        if (disambiguation)
-            disambiguation->setValue(v.disambiguation());
-
-        m_keySequenceValues[property] = v;
-
-        emit QtVariantPropertyManager::valueChanged(property, QVariant::fromValue(v));
         emit propertyChanged(property);
 
         return;
@@ -1914,16 +1960,6 @@ void DesignerPropertyManager::setValue(QtProperty *property, const QVariant &val
 
         return;
     }
-    switch (m_brushManager.setValue(this, property, value)) {
-    case BrushPropertyManager::Unchanged:
-        return;
-    case BrushPropertyManager::Changed:
-        emit QtVariantPropertyManager::valueChanged(property, value);
-        emit propertyChanged(property);
-        return;
-    default:
-        break;
-    }
     m_fontManager.setValue(this, property, value);
     QtVariantPropertyManager::setValue(property, value);
     if (QtVariantPropertyManager::valueType(property) == QVariant::String)
@@ -2020,50 +2056,12 @@ void DesignerPropertyManager::initializeProperty(QtProperty *property)
             createIconSubProperty(property, QIcon::Selected, QIcon::Off, tr("Selected Off"));
             createIconSubProperty(property, QIcon::Selected, QIcon::On, tr("Selected On"));
         } else if (type == designerStringTypeId()) {
-            PropertySheetStringValue val;
-            m_stringValues[property] = val;
-            m_stringAttributes[property] = ValidationMultiLine;
-            m_stringFontAttributes[property] = QApplication::font();
-            m_stringThemeAttributes[property] = false;
-
-            QtVariantProperty *translatable = addProperty(QVariant::Bool, tr("translatable"));
-            translatable->setValue(val.translatable());
-            m_stringToTranslatable[property] = translatable;
-            m_translatableToString[translatable] = property;
-            property->addSubProperty(translatable);
-
-            QtVariantProperty *disambiguation = addProperty(QVariant::String, tr("disambiguation"));
-            disambiguation->setValue(val.disambiguation());
-            m_stringToDisambiguation[property] = disambiguation;
-            m_disambiguationToString[disambiguation] = property;
-            property->addSubProperty(disambiguation);
-
-            QtVariantProperty *comment = addProperty(QVariant::String, tr("comment"));
-            comment->setValue(val.comment());
-            m_stringToComment[property] = comment;
-            m_commentToString[comment] = property;
-            property->addSubProperty(comment);
+            m_stringManager.initialize(this, property, PropertySheetStringValue());
+            m_stringAttributes.insert(property, ValidationMultiLine);
+            m_stringFontAttributes.insert(property, QApplication::font());
+            m_stringThemeAttributes.insert(property, false);
         } else if (type == designerKeySequenceTypeId()) {
-            PropertySheetKeySequenceValue val;
-            m_keySequenceValues[property] = val;
-
-            QtVariantProperty *translatable = addProperty(QVariant::Bool, tr("translatable"));
-            translatable->setValue(val.translatable());
-            m_keySequenceToTranslatable[property] = translatable;
-            m_translatableToKeySequence[translatable] = property;
-            property->addSubProperty(translatable);
-
-            QtVariantProperty *disambiguation = addProperty(QVariant::String, tr("disambiguation"));
-            disambiguation->setValue(val.disambiguation());
-            m_keySequenceToDisambiguation[property] = disambiguation;
-            m_disambiguationToKeySequence[disambiguation] = property;
-            property->addSubProperty(disambiguation);
-
-            QtVariantProperty *comment = addProperty(QVariant::String, tr("comment"));
-            comment->setValue(val.comment());
-            m_keySequenceToComment[property] = comment;
-            m_commentToKeySequence[comment] = property;
-            property->addSubProperty(comment);
+            m_keySequenceManager.initialize(this, property, PropertySheetKeySequenceValue());
         }
     }
 
@@ -2110,44 +2108,10 @@ void DesignerPropertyManager::uninitializeProperty(QtProperty *property)
         m_alignVToProperty.remove(alignV);
     }
 
-    QtProperty *stringComment = m_stringToComment.value(property);
-    if (stringComment) {
-        delete stringComment;
-        m_commentToString.remove(stringComment);
-    }
+    m_stringManager.uninitialize(property);
+    m_keySequenceManager.uninitialize(property);
 
-    QtProperty *stringTranslatable = m_stringToTranslatable.value(property);
-    if (stringTranslatable) {
-        delete stringTranslatable;
-        m_translatableToString.remove(stringTranslatable);
-    }
-
-    QtProperty *stringDisambiguation = m_stringToDisambiguation.value(property);
-    if (stringDisambiguation) {
-        delete stringDisambiguation;
-        m_disambiguationToString.remove(stringDisambiguation);
-    }
-
-    QtProperty *keySequenceComment = m_keySequenceToComment.value(property);
-    if (keySequenceComment) {
-        delete keySequenceComment;
-        m_commentToKeySequence.remove(keySequenceComment);
-    }
-
-    QtProperty *keySequenceTranslatable = m_keySequenceToTranslatable.value(property);
-    if (keySequenceTranslatable) {
-        delete keySequenceTranslatable;
-        m_translatableToKeySequence.remove(keySequenceTranslatable);
-    }
-
-    QtProperty *keySequenceDisambiguation = m_keySequenceToDisambiguation.value(property);
-    if (keySequenceDisambiguation) {
-        delete keySequenceDisambiguation;
-        m_disambiguationToKeySequence.remove(keySequenceDisambiguation);
-    }
-
-    QtProperty *iconTheme = m_propertyToTheme.value(property);
-    if (iconTheme) {
+    if (QtProperty *iconTheme = m_propertyToTheme.value(property)) {
         delete iconTheme;
         m_iconSubPropertyToProperty.remove(iconTheme);
     }
@@ -2155,17 +2119,8 @@ void DesignerPropertyManager::uninitializeProperty(QtProperty *property)
     m_propertyToAlignH.remove(property);
     m_propertyToAlignV.remove(property);
 
-    m_stringToComment.remove(property);
-    m_stringToTranslatable.remove(property);
-    m_stringToDisambiguation.remove(property);
-    m_stringValues.remove(property);
     m_stringAttributes.remove(property);
     m_stringFontAttributes.remove(property);
-
-    m_keySequenceToComment.remove(property);
-    m_keySequenceToTranslatable.remove(property);
-    m_keySequenceToDisambiguation.remove(property);
-    m_keySequenceValues.remove(property);
 
     m_paletteValues.remove(property);
 
