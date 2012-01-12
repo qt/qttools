@@ -209,6 +209,10 @@ public:
     void addStringProperty(int index);
     qdesigner_internal::PropertySheetStringValue stringProperty(int index) const;
     void setStringProperty(int index, const qdesigner_internal::PropertySheetStringValue &value);
+    bool isStringListProperty(int index) const;
+    void addStringListProperty(int index);
+    qdesigner_internal::PropertySheetStringListValue stringListProperty(int index) const;
+    void setStringListProperty(int index, const qdesigner_internal::PropertySheetStringListValue &value);
 
     bool isKeySequenceProperty(int index) const;
     void addKeySequenceProperty(int index);
@@ -244,6 +248,7 @@ public:
     QHash<QString, int> m_addIndex;
     QHash<int, QVariant> m_resourceProperties; // only PropertySheetPixmapValue snd PropertySheetIconValue here
     QHash<int, qdesigner_internal::PropertySheetStringValue> m_stringProperties; // only PropertySheetStringValue
+    QHash<int, qdesigner_internal::PropertySheetStringListValue> m_stringListProperties; // only PropertySheetStringListValue
     QHash<int, qdesigner_internal::PropertySheetKeySequenceValue> m_keySequenceProperties; // only PropertySheetKeySequenceValue
 
     const bool m_canHaveLayoutAttributes;
@@ -345,6 +350,28 @@ void QDesignerPropertySheetPrivate::setStringProperty(int index, const qdesigner
     Q_ASSERT(isStringProperty(index));
 
     m_stringProperties[index] = value;
+}
+
+bool QDesignerPropertySheetPrivate::isStringListProperty(int index) const
+{
+    return m_stringListProperties.contains(index);
+}
+
+void QDesignerPropertySheetPrivate::addStringListProperty(int index)
+{
+    m_stringListProperties.insert(index, qdesigner_internal::PropertySheetStringListValue());
+}
+
+qdesigner_internal::PropertySheetStringListValue QDesignerPropertySheetPrivate::stringListProperty(int index) const
+{
+    return m_stringListProperties.value(index);
+}
+
+void QDesignerPropertySheetPrivate::setStringListProperty(int index, const qdesigner_internal::PropertySheetStringListValue &value)
+{
+    Q_ASSERT(isStringListProperty(index));
+
+    m_stringListProperties[index] = value;
 }
 
 bool QDesignerPropertySheetPrivate::isKeySequenceProperty(int index) const
@@ -591,14 +618,26 @@ QDesignerPropertySheet::QDesignerPropertySheet(QObject *object, QObject *parent)
         info.group = pgroup;
         info.propertyType = propertyTypeFromName(name);
 
-        if (p->type() == QVariant::Cursor || p->type() == QVariant::Icon || p->type() == QVariant::Pixmap) {
+        const QVariant::Type type = p->type();
+        switch (type) {
+        case QVariant::Cursor:
+        case QVariant::Icon:
+        case QVariant::Pixmap:
             info.defaultValue = p->read(d->m_object);
-            if (p->type() == QVariant::Icon || p->type() == QVariant::Pixmap)
-                d->addResourceProperty(index, p->type());
-        } else if (p->type() == QVariant::String) {
+            if (type == QVariant::Icon || type == QVariant::Pixmap)
+                d->addResourceProperty(index, type);
+            break;
+        case QVariant::String:
             d->addStringProperty(index);
-        } else if (p->type() == QVariant::KeySequence) {
+            break;
+        case QVariant::StringList:
+            d->addStringListProperty(index);
+            break;
+        case QVariant::KeySequence:
             d->addKeySequenceProperty(index);
+            break;
+        default:
+            break;
         }
     }
 
@@ -724,6 +763,8 @@ int QDesignerPropertySheet::addDynamicProperty(const QString &propName, const QV
         v = QVariant::fromValue(qdesigner_internal::PropertySheetPixmapValue());
     else if (value.type() == QVariant::String)
         v = QVariant::fromValue(qdesigner_internal::PropertySheetStringValue(value.toString()));
+    else if (value.type() == QVariant::StringList)
+        v = QVariant::fromValue(qdesigner_internal::PropertySheetStringListValue(value.toStringList()));
     else if (value.type() == QVariant::KeySequence) {
         const QKeySequence keySequence = qvariant_cast<QKeySequence>(value);
         v = QVariant::fromValue(qdesigner_internal::PropertySheetKeySequenceValue(keySequence));
@@ -757,12 +798,23 @@ int QDesignerPropertySheet::addDynamicProperty(const QString &propName, const QV
     info.defaultValue = value;
     info.kind = QDesignerPropertySheetPrivate::DynamicProperty;
     setPropertyGroup(index, tr("Dynamic Properties"));
-    if (value.type() == QVariant::Icon || value.type() == QVariant::Pixmap)
+    switch (value.type()) {
+    case QVariant::Icon:
+    case QVariant::Pixmap:
         d->addResourceProperty(index, value.type());
-    else if (value.type() == QVariant::String)
+        break;
+    case QVariant::String:
         d->addStringProperty(index);
-    else if (value.type() == QVariant::KeySequence)
+        break;
+    case QVariant::StringList:
+        d->addStringListProperty(index);
+        break;
+    case QVariant::KeySequence:
         d->addKeySequenceProperty(index);
+        break;
+    default:
+        break;
+    }
     return index;
 }
 
@@ -871,6 +923,8 @@ int QDesignerPropertySheet::createFakeProperty(const QString &propertyName, cons
         QVariant v = value.isValid() ? value : metaProperty(index);
         if (v.type() == QVariant::String)
             v = QVariant::fromValue(qdesigner_internal::PropertySheetStringValue());
+        if (v.type() == QVariant::StringList)
+            v = QVariant::fromValue(qdesigner_internal::PropertySheetStringListValue());
         if (v.type() == QVariant::KeySequence)
             v = QVariant::fromValue(qdesigner_internal::PropertySheetKeySequenceValue());
         d->m_fakeProperties.insert(index, v);
@@ -1002,6 +1056,16 @@ QVariant QDesignerPropertySheet::property(int index) const
         return QVariant::fromValue(value);
     }
 
+    if (d->isStringListProperty(index)) {
+        const QStringList listValue = metaProperty(index).toStringList();
+        qdesigner_internal::PropertySheetStringListValue value = d->stringListProperty(index);
+        if (listValue != value.value()) {
+            value.setValue(listValue);
+            d->setStringListProperty(index, value); // cache it
+        }
+        return QVariant::fromValue(value);
+    }
+
     if (d->isKeySequenceProperty(index)) {
         QKeySequence keyValue = qvariant_cast<QKeySequence>(metaProperty(index));
         qdesigner_internal::PropertySheetKeySequenceValue value = d->keySequenceProperty(index);
@@ -1048,6 +1112,9 @@ QVariant QDesignerPropertySheet::resolvePropertyValue(int index, const QVariant 
 
     if (value.canConvert<qdesigner_internal::PropertySheetStringValue>())
         return qvariant_cast<qdesigner_internal::PropertySheetStringValue>(value).value();
+
+    if (value.canConvert<qdesigner_internal::PropertySheetStringListValue>())
+        return qvariant_cast<qdesigner_internal::PropertySheetStringListValue>(value).value();
 
     if (value.canConvert<qdesigner_internal::PropertySheetKeySequenceValue>())
         return qvariant_cast<qdesigner_internal::PropertySheetKeySequenceValue>(value).value();
@@ -1137,6 +1204,8 @@ void QDesignerPropertySheet::setProperty(int index, const QVariant &value)
                 d->setResourceProperty(index, value);
             if (d->isStringProperty(index))
                 d->setStringProperty(index, qvariant_cast<qdesigner_internal::PropertySheetStringValue>(value));
+            if (d->isStringListProperty(index))
+                d->setStringListProperty(index, qvariant_cast<qdesigner_internal::PropertySheetStringListValue>(value));
             if (d->isKeySequenceProperty(index))
                 d->setKeySequenceProperty(index, qvariant_cast<qdesigner_internal::PropertySheetKeySequenceValue>(value));
             d->m_object->setProperty(propertyName(index).toUtf8(), resolvePropertyValue(index, value));
@@ -1153,6 +1222,8 @@ void QDesignerPropertySheet::setProperty(int index, const QVariant &value)
             d->setResourceProperty(index, value);
         if (d->isStringProperty(index))
             d->setStringProperty(index, qvariant_cast<qdesigner_internal::PropertySheetStringValue>(value));
+        if (d->isStringListProperty(index))
+            d->setStringListProperty(index, qvariant_cast<qdesigner_internal::PropertySheetStringListValue>(value));
         if (d->isKeySequenceProperty(index))
             d->setKeySequenceProperty(index, qvariant_cast<qdesigner_internal::PropertySheetKeySequenceValue>(value));
         const QDesignerMetaPropertyInterface *p = d->m_meta->property(index);
@@ -1203,6 +1274,8 @@ bool QDesignerPropertySheet::reset(int index)
         setProperty(index, QVariant::fromValue(value));
         return true;
     }
+    if (d->isStringListProperty(index))
+        setProperty(index, QVariant::fromValue(qdesigner_internal::PropertySheetStringListValue()));
     if (d->isKeySequenceProperty(index))
         setProperty(index, QVariant::fromValue(qdesigner_internal::PropertySheetKeySequenceValue()));
     if (d->isResourceProperty(index)) {
@@ -1215,6 +1288,8 @@ bool QDesignerPropertySheet::reset(int index)
         QVariant newValue = defaultValue;
         if (d->isStringProperty(index)) {
             newValue = QVariant::fromValue(qdesigner_internal::PropertySheetStringValue(newValue.toString()));
+        } else if (d->isStringListProperty(index)) {
+            newValue = QVariant::fromValue(qdesigner_internal::PropertySheetStringListValue(newValue.toStringList()));
         } else if (d->isKeySequenceProperty(index)) {
             const QKeySequence keySequence = qvariant_cast<QKeySequence>(newValue);
             newValue = QVariant::fromValue(qdesigner_internal::PropertySheetKeySequenceValue(keySequence));

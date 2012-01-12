@@ -156,6 +156,7 @@ public:
     static int designerPixmapTypeId();
     static int designerIconTypeId();
     static int designerStringTypeId();
+    static int designerStringListTypeId();
     static int designerKeySequenceTypeId();
 
     void setObject(QObject *object) { m_object = object; }
@@ -214,6 +215,7 @@ private:
 
     TranslatablePropertyManager<PropertySheetStringValue> m_stringManager;
     TranslatablePropertyManager<PropertySheetKeySequenceValue> m_keySequenceManager;
+    TranslatablePropertyManager<PropertySheetStringListValue> m_stringListManager;
 
     struct PaletteData
     {
@@ -231,7 +233,6 @@ private:
     QMap<QtProperty *, qulonglong> m_uLongLongValues;
     QMap<QtProperty *, QUrl> m_urlValues;
     QMap<QtProperty *, QByteArray> m_byteArrayValues;
-    QMap<QtProperty *, QStringList> m_stringListValues;
 
     typedef QMap<QtProperty *, int>  PropertyIntMap;
     PropertyIntMap m_stringAttributes;

@@ -369,7 +369,26 @@ private:
     QString m_value;
 };
 
+// -------------- StringValue: Returned by the property sheet for string lists
+class QDESIGNER_SHARED_EXPORT PropertySheetStringListValue : public PropertySheetTranslatableData
+{
+public:
+    PropertySheetStringListValue(const QStringList &value = QStringList(),
+                                 bool translatable = true,
+                                 const QString &disambiguation = QString(),
+                                 const QString &comment = QString());
 
+    bool operator==(const PropertySheetStringListValue &other) const { return equals(other); }
+    bool operator!=(const PropertySheetStringListValue &other) const { return !equals(other); }
+
+    QStringList value() const;
+    void setValue(const QStringList &value);
+
+private:
+    bool equals(const PropertySheetStringListValue &rhs) const;
+
+    QStringList m_value;
+};
 
 // -------------- StringValue: Returned by the property sheet for strings
 class QDESIGNER_SHARED_EXPORT PropertySheetKeySequenceValue : public PropertySheetTranslatableData
@@ -411,6 +430,7 @@ Q_DECLARE_METATYPE(qdesigner_internal::PropertySheetFlagValue)
 Q_DECLARE_METATYPE(qdesigner_internal::PropertySheetPixmapValue)
 Q_DECLARE_METATYPE(qdesigner_internal::PropertySheetIconValue)
 Q_DECLARE_METATYPE(qdesigner_internal::PropertySheetStringValue)
+Q_DECLARE_METATYPE(qdesigner_internal::PropertySheetStringListValue)
 Q_DECLARE_METATYPE(qdesigner_internal::PropertySheetKeySequenceValue)
 
 

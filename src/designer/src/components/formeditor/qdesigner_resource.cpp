@@ -944,7 +944,8 @@ void QDesignerResource::applyProperties(QObject *o, const QList<DomProperty*> &p
         if (!readDomEnumerationValue(p, sheet, index, v))
             v = toVariant(o->metaObject(), *it);
 
-        if (p->kind() == DomProperty::String) {
+        switch (p->kind()) {
+        case DomProperty::String:
             if (index != -1 && sheet->property(index).userType() == qMetaTypeId<PropertySheetKeySequenceValue>()) {
                 const DomString *key = p->elementString();
                 PropertySheetKeySequenceValue keyVal(QKeySequence(key->text()));
@@ -956,6 +957,16 @@ void QDesignerResource::applyProperties(QObject *o, const QList<DomProperty*> &p
                 translationParametersFromDom(str, &strVal);
                 v = QVariant::fromValue(strVal);
             }
+            break;
+        case DomProperty::StringList: {
+            const DomStringList *list = p->elementStringList();
+            PropertySheetStringListValue listValue(list->elementString());
+            translationParametersFromDom(list, &listValue);
+            v = QVariant::fromValue(listValue);
+        }
+            break;
+        default:
+            break;
         }
 
         d->applyPropertyInternally(o, propertyName, v);
@@ -974,6 +985,9 @@ void QDesignerResource::applyProperties(QObject *o, const QList<DomProperty*> &p
             } else if (v.canConvert<PropertySheetStringValue>()) {
                 defaultValue = QVariant(QVariant::String);
                 isDefault = (qvariant_cast<PropertySheetStringValue>(v) == PropertySheetStringValue());
+            } else if (v.canConvert<PropertySheetStringListValue>()) {
+                defaultValue = QVariant(QVariant::StringList);
+                isDefault = (qvariant_cast<PropertySheetStringListValue>(v) == PropertySheetStringListValue());
             } else if (v.canConvert<PropertySheetKeySequenceValue>()) {
                 defaultValue = QVariant(QVariant::KeySequence);
                 isDefault = (qvariant_cast<PropertySheetKeySequenceValue>(v) == PropertySheetKeySequenceValue());
@@ -2000,6 +2014,19 @@ DomProperty *QDesignerResource::createProperty(QObject *object, const QString &p
 
         p->setAttributeName(propertyName);
 
+        return applyProperStdSetAttribute(object, propertyName, p);
+    } else if (value.canConvert<PropertySheetStringListValue>()) {
+        const PropertySheetStringListValue listValue = qvariant_cast<PropertySheetStringListValue>(value);
+        DomProperty *p = new DomProperty;
+        if (!hasSetter(core(), object, propertyName))
+            p->setAttributeStdset(0);
+
+        p->setAttributeName(propertyName);
+
+        DomStringList *domStringList = new DomStringList();
+        domStringList->setElementString(listValue.value());
+        translationParametersToDom(listValue, domStringList);
+        p->setElementStringList(domStringList);
         return applyProperStdSetAttribute(object, propertyName, p);
     } else if (value.canConvert<PropertySheetKeySequenceValue>()) {
         const PropertySheetKeySequenceValue keyVal = qvariant_cast<PropertySheetKeySequenceValue>(value);

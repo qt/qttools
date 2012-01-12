@@ -498,6 +498,32 @@ namespace qdesigner_internal
         return m_value == rhs.m_value && PropertySheetTranslatableData::equals(rhs);
     }
 
+    PropertySheetStringListValue::PropertySheetStringListValue(const QStringList &value,
+                                 bool translatable,
+                                 const QString &disambiguation,
+                                 const QString &comment) :
+        PropertySheetTranslatableData(translatable, disambiguation, comment), m_value(value)
+    {
+    }
+
+    QStringList PropertySheetStringListValue::value() const
+    {
+        return m_value;
+    }
+
+    void PropertySheetStringListValue::setValue(const QStringList &value)
+    {
+        m_value = value;
+    }
+
+    bool PropertySheetStringListValue::equals(const PropertySheetStringListValue &rhs) const
+    {
+        return m_value == rhs.m_value && PropertySheetTranslatableData::equals(rhs);
+    }
+
+    QStringList m_value;
+
+
     PropertySheetKeySequenceValue::PropertySheetKeySequenceValue(const QKeySequence &value,
                     bool translatable, const QString &disambiguation, const QString &comment)
         : PropertySheetTranslatableData(translatable, disambiguation, comment),

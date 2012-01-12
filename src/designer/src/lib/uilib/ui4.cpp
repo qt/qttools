@@ -6028,6 +6028,9 @@ void DomStringList::clear(bool clear_all)
 
     if (clear_all) {
     m_text.clear();
+    m_has_attr_notr = false;
+    m_has_attr_comment = false;
+    m_has_attr_extraComment = false;
     }
 
     m_children = 0;
@@ -6036,6 +6039,9 @@ void DomStringList::clear(bool clear_all)
 DomStringList::DomStringList()
 {
     m_children = 0;
+    m_has_attr_notr = false;
+    m_has_attr_comment = false;
+    m_has_attr_extraComment = false;
 }
 
 DomStringList::~DomStringList()
@@ -6045,6 +6051,23 @@ DomStringList::~DomStringList()
 
 void DomStringList::read(QXmlStreamReader &reader)
 {
+
+    foreach (const QXmlStreamAttribute &attribute, reader.attributes()) {
+        QStringRef name = attribute.name();
+        if (name == QStringLiteral("notr")) {
+            setAttributeNotr(attribute.value().toString());
+            continue;
+        }
+        if (name == QStringLiteral("comment")) {
+            setAttributeComment(attribute.value().toString());
+            continue;
+        }
+        if (name == QStringLiteral("extracomment")) {
+            setAttributeExtraComment(attribute.value().toString());
+            continue;
+        }
+        reader.raiseError(QStringLiteral("Unexpected attribute ") + name.toString());
+    }
 
     for (bool finished = false; !finished && !reader.hasError();) {
         switch (reader.readNext()) {
@@ -6073,6 +6096,15 @@ void DomStringList::read(QXmlStreamReader &reader)
 void DomStringList::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
     writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("stringlist") : tagName.toLower());
+
+    if (hasAttributeNotr())
+        writer.writeAttribute(QStringLiteral("notr"), attributeNotr());
+
+    if (hasAttributeComment())
+        writer.writeAttribute(QStringLiteral("comment"), attributeComment());
+
+    if (hasAttributeExtraComment())
+        writer.writeAttribute(QStringLiteral("extracomment"), attributeExtraComment());
 
     for (int i = 0; i < m_string.size(); ++i) {
         QString v = m_string[i];

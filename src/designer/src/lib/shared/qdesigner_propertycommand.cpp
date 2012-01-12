@@ -170,6 +170,7 @@ enum RectSubPropertyMask {  SubPropertyX=1, SubPropertyY = 2, SubPropertyWidth =
 enum SizePolicySubPropertyMask { SubPropertyHSizePolicy = 1, SubPropertyHStretch = 2, SubPropertyVSizePolicy = 4, SubPropertyVStretch = 8 };
 enum AlignmentSubPropertyMask { SubPropertyHorizontalAlignment = 1, SubPropertyVerticalAlignment = 2 };
 enum StringSubPropertyMask { SubPropertyStringValue = 1, SubPropertyStringComment = 2, SubPropertyStringTranslatable = 4, SubPropertyStringDisambiguation = 8 };
+enum StringListSubPropertyMask { SubPropertyStringListValue = 1, SubPropertyStringListComment = 2, SubPropertyStringListTranslatable = 4, SubPropertyStringListDisambiguation = 8 };
 enum KeySequenceSubPropertyMask { SubPropertyKeySequenceValue = 1, SubPropertyKeySequenceComment = 2, SubPropertyKeySequenceTranslatable = 4, SubPropertyKeySequenceDisambiguation = 8 };
 
 enum CommonSubPropertyMask { SubPropertyAll = 0xFFFFFFFF };
@@ -214,6 +215,16 @@ unsigned compareSubProperties(const qdesigner_internal::PropertySheetStringValue
     COMPARE_SUBPROPERTY(str1, str2, comment,        rc, SubPropertyStringComment)
     COMPARE_SUBPROPERTY(str1, str2, translatable,   rc, SubPropertyStringTranslatable)
     COMPARE_SUBPROPERTY(str1, str2, disambiguation, rc, SubPropertyStringDisambiguation)
+    return rc;
+}
+// find changed subproperties of qdesigner_internal::PropertySheetStringListValue
+unsigned compareSubProperties(const qdesigner_internal::PropertySheetStringListValue & str1, const qdesigner_internal::PropertySheetStringListValue & str2)
+{
+    unsigned rc = 0;
+    COMPARE_SUBPROPERTY(str1, str2, value,          rc, SubPropertyStringListValue)
+    COMPARE_SUBPROPERTY(str1, str2, comment,        rc, SubPropertyStringListComment)
+    COMPARE_SUBPROPERTY(str1, str2, translatable,   rc, SubPropertyStringListTranslatable)
+    COMPARE_SUBPROPERTY(str1, str2, disambiguation, rc, SubPropertyStringListDisambiguation)
     return rc;
 }
 // find changed subproperties of qdesigner_internal::PropertySheetKeySequenceValue
@@ -336,6 +347,8 @@ unsigned compareSubProperties(const QVariant & q1, const QVariant & q2, qdesigne
             return qvariant_cast<qdesigner_internal::PropertySheetIconValue>(q1).compare(qvariant_cast<qdesigner_internal::PropertySheetIconValue>(q2));
         else if (q1.userType() == qMetaTypeId<qdesigner_internal::PropertySheetStringValue>())
             return compareSubProperties(qvariant_cast<qdesigner_internal::PropertySheetStringValue>(q1), qvariant_cast<qdesigner_internal::PropertySheetStringValue>(q2));
+        else if (q1.userType() == qMetaTypeId<qdesigner_internal::PropertySheetStringListValue>())
+            return compareSubProperties(qvariant_cast<qdesigner_internal::PropertySheetStringListValue>(q1), qvariant_cast<qdesigner_internal::PropertySheetStringListValue>(q2));
         else if (q1.userType() == qMetaTypeId<qdesigner_internal::PropertySheetKeySequenceValue>())
             return compareSubProperties(qvariant_cast<qdesigner_internal::PropertySheetKeySequenceValue>(q1), qvariant_cast<qdesigner_internal::PropertySheetKeySequenceValue>(q2));
         // Enumerations, flags
@@ -395,6 +408,18 @@ qdesigner_internal::PropertySheetStringValue applyStringSubProperty(const qdesig
     SET_SUBPROPERTY(rc, newValue, comment, setComment, mask, SubPropertyStringComment)
     SET_SUBPROPERTY(rc, newValue, translatable, setTranslatable, mask, SubPropertyStringTranslatable)
     SET_SUBPROPERTY(rc, newValue, disambiguation, setDisambiguation, mask, SubPropertyStringDisambiguation)
+    return rc;
+}
+
+// apply changed subproperties to a qdesigner_internal::PropertySheetStringListValue
+qdesigner_internal::PropertySheetStringListValue applyStringListSubProperty(const qdesigner_internal::PropertySheetStringListValue &oldValue,
+            const qdesigner_internal::PropertySheetStringListValue &newValue, unsigned mask)
+{
+    qdesigner_internal::PropertySheetStringListValue rc = oldValue;
+    SET_SUBPROPERTY(rc, newValue, value, setValue, mask, SubPropertyStringListValue)
+    SET_SUBPROPERTY(rc, newValue, comment, setComment, mask, SubPropertyStringListComment)
+    SET_SUBPROPERTY(rc, newValue, translatable, setTranslatable, mask, SubPropertyStringListTranslatable)
+    SET_SUBPROPERTY(rc, newValue, disambiguation, setDisambiguation, mask, SubPropertyStringListDisambiguation)
     return rc;
 }
 
@@ -539,6 +564,11 @@ PropertyHelper::Value applySubProperty(const QVariant &oldValue, const QVariant 
             qdesigner_internal::PropertySheetStringValue str = applyStringSubProperty(
                         qvariant_cast<qdesigner_internal::PropertySheetStringValue>(oldValue),
                         qvariant_cast<qdesigner_internal::PropertySheetStringValue>(newValue), mask);
+            return PropertyHelper::Value(QVariant::fromValue(str), changed);
+        } else if (oldValue.userType() == qMetaTypeId<qdesigner_internal::PropertySheetStringListValue>()) {
+            qdesigner_internal::PropertySheetStringListValue str = applyStringListSubProperty(
+                        qvariant_cast<qdesigner_internal::PropertySheetStringListValue>(oldValue),
+                        qvariant_cast<qdesigner_internal::PropertySheetStringListValue>(newValue), mask);
             return PropertyHelper::Value(QVariant::fromValue(str), changed);
         } else if (oldValue.userType() == qMetaTypeId<qdesigner_internal::PropertySheetKeySequenceValue>()) {
             qdesigner_internal::PropertySheetKeySequenceValue key = applyKeySequenceSubProperty(

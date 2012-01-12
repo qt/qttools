@@ -414,6 +414,9 @@
         </xs:complexType>
 
         <xs:complexType name="StringList">
+                <xs:attribute name="notr" type="xs:string" />
+                <xs:attribute name="comment" type="xs:string" />
+                <xs:attribute name="extracomment" type="xs:string" />
             <xs:sequence>
                         <xs:element name="string" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
             </xs:sequence>
