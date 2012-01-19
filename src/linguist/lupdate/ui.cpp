@@ -65,7 +65,7 @@ class UiReader : public QXmlDefaultHandler
 public:
     UiReader(Translator &translator, ConversionData &cd)
       : m_translator(translator), m_cd(cd), m_lineNumber(-1), m_isTrString(false),
-        m_needUtf8(translator.codecName() != "UTF-8")
+        m_needUtf8(translator.codecName() != "UTF-8"), m_insideStringList(false)
     {}
 
     bool startElement(const QString &namespaceURI, const QString &localName,
@@ -79,6 +79,7 @@ public:
 
 private:
     void flush();
+    void readTranslationAttributes(const QXmlAttributes &atts);
 
     Translator &m_translator;
     ConversionData &m_cd;
@@ -92,6 +93,7 @@ private:
     int m_lineNumber;
     bool m_isTrString;
     bool m_needUtf8;
+    bool m_insideStringList;
 };
 
 bool UiReader::startElement(const QString &namespaceURI,
@@ -110,16 +112,12 @@ bool UiReader::startElement(const QString &namespaceURI,
         }
     } else if (qName == QLatin1String("string")) {
         flush();
-        if (atts.value(QLatin1String("notr")).isEmpty() ||
-            atts.value(QLatin1String("notr")) != QLatin1String("true")) {
-            m_isTrString = true;
-            m_comment = atts.value(QLatin1String("comment"));
-            m_extracomment = atts.value(QLatin1String("extracomment"));
-            if (!m_cd.m_noUiLines)
-                m_lineNumber = m_locator->lineNumber();
-        } else {
-            m_isTrString = false;
-        }
+        if (!m_insideStringList)
+            readTranslationAttributes(atts);
+    } else if (qName == QLatin1String("stringlist")) {
+        flush();
+        m_insideStringList = true;
+        readTranslationAttributes(atts);
     }
     m_accum.clear();
     return true;
@@ -143,6 +141,8 @@ bool UiReader::endElement(const QString &namespaceURI,
         flush();
     } else if (qName == QLatin1String("function")) { // UI3 embedded code
         fetchtrInlinedCpp(m_accum, m_translator, m_context);
+    } else if (qName == QLatin1String("stringlist")) {
+        m_insideStringList = false;
     } else {
         flush();
     }
@@ -176,8 +176,24 @@ void UiReader::flush()
         m_translator.extend(msg);
     }
     m_source.clear();
-    m_comment.clear();
-    m_extracomment.clear();
+    if (!m_insideStringList) {
+        m_comment.clear();
+        m_extracomment.clear();
+    }
+}
+
+void UiReader::readTranslationAttributes(const QXmlAttributes &atts)
+{
+    const QString notr = atts.value(QStringLiteral("notr"));
+    if (notr.isEmpty() || notr != QStringLiteral("true")) {
+        m_isTrString = true;
+        m_comment = atts.value(QStringLiteral("comment"));
+        m_extracomment = atts.value(QStringLiteral("extracomment"));
+        if (!m_cd.m_noUiLines)
+            m_lineNumber = m_locator->lineNumber();
+    } else {
+        m_isTrString = false;
+    }
 }
 
 bool loadUI(Translator &translator, const QString &filename, ConversionData &cd)
