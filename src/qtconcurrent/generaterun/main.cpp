@@ -2,7 +2,7 @@
 **
 ** Copyright (C) 2012 Nokia Corporation and/or its subsidiary(-ies).
 ** All rights reserved.
-** Contact: Nokia Corporation (qt-info@nokia.com)
+** Contact: http://www.qt-project.org/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
 **
@@ -326,7 +326,7 @@ int main()
                        Line("/****************************************************************************") +
                        Line("**") +
                        Line("** Copyright (C) 2012 Nokia Corporation and/or its subsidiary(-ies).") +
-                       Line("** Contact: Nokia Corporation (qt-info@nokia.com)") +
+                       Line("** Contact: http://www.qt-project.org/") +
                        Line("**") +
                        Line("** This file is part of the Qt Toolkit.") +
                        Line("**") +
@@ -376,7 +376,7 @@ int main()
                                      Line("/****************************************************************************") +
                                      Line("**") +
                                      Line("** Copyright (C) 2012 Nokia Corporation and/or its subsidiary(-ies).") +
-                                     Line("** Contact: Nokia Corporation (qt-info@nokia.com)") +
+                                     Line("** Contact: http://www.qt-project.org/") +
                                      Line("**") +
                                      Line("** This file is part of the Qt Toolkit.") +
                                      Line("**") +
