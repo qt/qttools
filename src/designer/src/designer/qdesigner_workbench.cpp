@@ -839,7 +839,7 @@ bool QDesignerWorkbench::readInBackup()
 
 void QDesignerWorkbench::updateBackup(QDesignerFormWindowInterface* fwi)
 {
-    QString fwn = QDir::convertSeparators(fwi->fileName());
+    QString fwn = QDir::toNativeSeparators(fwi->fileName());
     if (fwn.isEmpty())
         fwn = fwi->parentWidget()->windowTitle();
 

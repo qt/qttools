@@ -1134,7 +1134,7 @@ void QDesignerActions::backupForms()
         QTextStream(&formBackupName) << m_backupPath << QDir::separator()
                                      << QStringLiteral("backup") << i << QStringLiteral(".bak");
 
-        QString fwn = QDir::convertSeparators(fwi->fileName());
+        QString fwn = QDir::toNativeSeparators(fwi->fileName());
         if (fwn.isEmpty())
             fwn = fw->windowTitle();
 
@@ -1265,12 +1265,12 @@ bool QDesignerActions::ensureBackupDirectories() {
         m_backupPath += QStringLiteral(".designer");
         m_backupPath += QDir::separator();
         m_backupPath += QStringLiteral("backup");
-        m_backupPath = QDir::convertSeparators(m_backupPath );
+        m_backupPath = QDir::toNativeSeparators(m_backupPath);
 
         m_backupTmpPath = m_backupPath;
         m_backupTmpPath += QDir::separator();
         m_backupTmpPath += QStringLiteral("tmp");
-        m_backupTmpPath = QDir::convertSeparators(m_backupTmpPath);
+        m_backupTmpPath = QDir::toNativeSeparators(m_backupTmpPath);
     }
 
     // ensure directories
