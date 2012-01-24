@@ -43,7 +43,6 @@
 #include "messagemodel.h"
 
 #include <quiloader.h>
-#include <abstractformbuilder.h>
 
 #include <QtCore/QDebug>
 #include <QtCore/QTime>
