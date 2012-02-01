@@ -280,7 +280,7 @@ int  PreviewConfigurationWidget::PreviewConfigurationWidgetPrivate::browseSkin()
     dlg.setFileMode(QFileDialog::DirectoryOnly);
     const QString title = tr("Load Custom Device Skin");
     dlg.setWindowTitle(title);
-    dlg.setFilter(tr("All QVFB Skins (*.%1)").arg(QLatin1String(skinExtensionC)));
+    dlg.setNameFilter(tr("All QVFB Skins (*.%1)").arg(QLatin1String(skinExtensionC)));
 
     int rc = m_lastSkinIndex;
     do {

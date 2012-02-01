@@ -69,15 +69,14 @@ QT_BEGIN_NAMESPACE
 
 static const char *designerApplicationName = "Designer";
 static const char *designerWarningPrefix = "Designer: ";
+static QMessageHandler previousMessageHandler = 0;
 
-static void designerMessageHandler(QtMsgType type, const char *msg)
+static void designerMessageHandler(QtMsgType type, const QMessageLogContext &context, const char *msg)
 {
     // Only Designer warnings are displayed as box
     QDesigner *designerApp = qDesigner;
     if (type != QtWarningMsg || !designerApp || qstrncmp(designerWarningPrefix, msg, qstrlen(designerWarningPrefix))) {
-        qInstallMsgHandler(0);
-        qt_message_output(type, msg);
-        qInstallMsgHandler (designerMessageHandler);
+        previousMessageHandler(type, context, msg);
         return;
     }
     designerApp->showErrorMessage(msg);
@@ -118,9 +117,8 @@ void QDesigner::showErrorMessage(const char *message)
     if (m_mainWindow) {
         showErrorMessageBox(qMessage);
     } else {
-        qInstallMsgHandler(0);
-        qt_message_output(QtWarningMsg, message); // just in case we crash
-        qInstallMsgHandler (designerMessageHandler);
+        const QMessageLogContext emptyContext;
+        previousMessageHandler(QtWarningMsg, emptyContext, message); // just in case we crash
         m_initializationErrors += qMessage;
         m_initializationErrors += QLatin1Char('\n');
     }
@@ -243,7 +241,8 @@ void QDesigner::initialize()
     m_workbench = new QDesignerWorkbench();
 
     emit initialized();
-    qInstallMsgHandler(designerMessageHandler); // Warn when loading faulty forms
+    previousMessageHandler = qInstallMessageHandler(designerMessageHandler); // Warn when loading faulty forms
+    Q_ASSERT(previousMessageHandler);
 
     m_suppressNewFormShow = m_workbench->readInBackup();
 
