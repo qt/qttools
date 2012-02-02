@@ -65,7 +65,7 @@ function(QT5_ADD_DBUS_INTERFACE _sources _interface _basename)
     qt5_generate_moc(${_header} ${_moc})
 
     list(APPEND ${_sources} ${_impl} ${_header} ${_moc})
-    macro_add_file_dependencies(${_impl} ${_moc}))
+    macro_add_file_dependencies(${_impl} ${_moc})
     set(${_sources} ${${_sources}} PARENT_SCOPE)
 endfunction()
 
