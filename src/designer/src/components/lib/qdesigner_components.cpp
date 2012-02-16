@@ -69,25 +69,15 @@
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 
-// ### keep it in sync with Q_IMPORT_PLUGIN in qplugin.h
-#define DECLARE_PLUGIN_INSTANCE(PLUGIN) \
-    extern QT_PREPEND_NAMESPACE(QObject) *qt_plugin_instance_##PLUGIN(); \
-    class Static##PLUGIN##PluginInstance { public: \
-        Static##PLUGIN##PluginInstance() {                      \
-            QT_PREPEND_NAMESPACE(qRegisterStaticPluginInstanceFunction) \
-                (&qt_plugin_instance_##PLUGIN); \
-        } \
-    };
-
 #define INIT_PLUGIN_INSTANCE(PLUGIN) \
     do { \
         Static##PLUGIN##PluginInstance instance; \
         Q_UNUSED(instance); \
     } while (0)
 
-DECLARE_PLUGIN_INSTANCE(SignalSlotEditorPlugin)
-DECLARE_PLUGIN_INSTANCE(BuddyEditorPlugin)
-DECLARE_PLUGIN_INSTANCE(TabOrderEditorPlugin)
+Q_IMPORT_PLUGIN(SignalSlotEditorPlugin)
+Q_IMPORT_PLUGIN(BuddyEditorPlugin)
+Q_IMPORT_PLUGIN(TabOrderEditorPlugin)
 
 static void initResources()
 {
