@@ -12,5 +12,6 @@ HEADERS += \
 SOURCES += \
     $$PWD/tabordereditor.cpp \
     $$PWD/tabordereditor_tool.cpp \
-    $$PWD/tabordereditor_plugin.cpp \
-    $$PWD/tabordereditor_instance.cpp
+    $$PWD/tabordereditor_plugin.cpp
+
+OTHER_FILES += $$PWD/tabordereditor.json

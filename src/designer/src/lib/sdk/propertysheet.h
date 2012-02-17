@@ -84,7 +84,7 @@ public:
 };
 
 Q_DECLARE_EXTENSION_INTERFACE(QDesignerPropertySheetExtension,
-    "com.trolltech.Qt.Designer.PropertySheet")
+    "org.qt-project.Qt.Designer.PropertySheet")
 
 QT_END_NAMESPACE
 

@@ -84,7 +84,7 @@ QDESIGNER_SHARED_EXPORT void reloadIconResources(DesignerIconCache *iconCache, Q
  * by the form builders (names, etc).
  * Note that the property editor uses unqualified names ("Cancel") while the form builder serialization  (uic)
  * requires the whole string
- * ("QDialogButtonBox::Cancel" or "com.trolltech.qt.gui.QDialogButtonBox.StandardButton.Cancel").*/
+ * ("QDialogButtonBox::Cancel" or "org.qt-project.qt.gui.QDialogButtonBox.StandardButton.Cancel").*/
 
 /* --------- MetaEnum: Base class representing a QMetaEnum with lookup functions
  * in both ways. Template of int type since unsigned is more suitable for flags.

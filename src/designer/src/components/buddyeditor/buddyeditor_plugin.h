@@ -61,6 +61,7 @@ class BuddyEditorTool;
 class QT_BUDDYEDITOR_EXPORT BuddyEditorPlugin: public QObject, public QDesignerFormEditorPluginInterface
 {
     Q_OBJECT
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QDesignerFormEditorPluginInterface" FILE "buddyeditor.json")
     Q_INTERFACES(QDesignerFormEditorPluginInterface)
 public:
     BuddyEditorPlugin();

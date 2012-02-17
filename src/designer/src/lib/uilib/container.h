@@ -73,7 +73,7 @@ public:
     // ### Qt6 remove body, provided in Qt5 for source compatibility to Qt4.
          { Q_UNUSED(index); return true; }
 };
-Q_DECLARE_EXTENSION_INTERFACE(QDesignerContainerExtension, "com.trolltech.Qt.Designer.Container")
+Q_DECLARE_EXTENSION_INTERFACE(QDesignerContainerExtension, "org.qt-project.Qt.Designer.Container")
 
 QT_END_NAMESPACE
 

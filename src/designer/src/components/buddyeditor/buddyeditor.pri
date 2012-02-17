@@ -12,5 +12,6 @@ HEADERS += \
 SOURCES += \
     $$PWD/buddyeditor.cpp \
     $$PWD/buddyeditor_tool.cpp \
-    $$PWD/buddyeditor_plugin.cpp \
-    $$PWD/buddyeditor_instance.cpp
+    $$PWD/buddyeditor_plugin.cpp
+
+OTHER_FILES += $$PWD/buddyeditor.json

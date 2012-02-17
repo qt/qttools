@@ -61,6 +61,7 @@ class TabOrderEditorTool;
 class QT_TABORDEREDITOR_EXPORT TabOrderEditorPlugin: public QObject, public QDesignerFormEditorPluginInterface
 {
     Q_OBJECT
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QDesignerFormEditorPluginInterface" FILE "tabordereditor.json")
     Q_INTERFACES(QDesignerFormEditorPluginInterface)
 public:
     TabOrderEditorPlugin();

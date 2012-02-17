@@ -141,6 +141,4 @@ QString QAxWidgetPlugin::domXml() const
 </ui>");
 }
 
-Q_EXPORT_PLUGIN(QAxWidgetPlugin)
-
 QT_END_NAMESPACE

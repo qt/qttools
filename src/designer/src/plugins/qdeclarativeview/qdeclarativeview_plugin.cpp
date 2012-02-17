@@ -127,6 +127,4 @@ QString QDeclarativeViewPlugin::domXml() const
     </ui>");
 }
 
-Q_EXPORT_PLUGIN2(customwidgetplugin, QDeclarativeViewPlugin)
-
 QT_END_NAMESPACE

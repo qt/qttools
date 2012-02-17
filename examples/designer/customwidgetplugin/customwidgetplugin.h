@@ -47,8 +47,8 @@
 class AnalogClockPlugin : public QObject, public QDesignerCustomWidgetInterface
 {
     Q_OBJECT
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QDesignerCustomWidgetInterface" FILE "analogclock.json")
     Q_INTERFACES(QDesignerCustomWidgetInterface)
-
 public:
     AnalogClockPlugin(QObject *parent = 0);
 

@@ -117,7 +117,3 @@ QString WorldTimeClockPlugin::includeFile() const
 {
     return "worldtimeclock.h";
 }
-
-//! [0]
-Q_EXPORT_PLUGIN2(worldtimeclockplugin, WorldTimeClockPlugin)
-//! [0]

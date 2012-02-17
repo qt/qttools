@@ -52,9 +52,10 @@ class QDesignerFormEditorInterface;
 class QAxWidgetPlugin : public QObject, public QDesignerCustomWidgetInterface
 {
     Q_OBJECT
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QDesignerCustomWidget" FILE "activeqt.json")
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 public:
-    explicit inline QAxWidgetPlugin(QObject *parent = 0);
+    explicit QAxWidgetPlugin(QObject *parent = 0);
 
     virtual QString name() const;
     virtual QString group() const;

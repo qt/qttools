@@ -21,4 +21,6 @@ HEADERS += videoplayerplugin.h \
     seeksliderplugin.h \
     volumesliderplugin.h
 
+OTHER_FILES = "phonon.json"
+
 RESOURCES += phononwidgets.qrc

@@ -52,6 +52,7 @@ QT_END_NAMESPACE
 class MultiPageWidgetPlugin: public QObject, public QDesignerCustomWidgetInterface
 {
     Q_OBJECT
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QDesignerCustomWidget" FILE "multipagewidget.json")
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 public:
     MultiPageWidgetPlugin(QObject *parent = 0);

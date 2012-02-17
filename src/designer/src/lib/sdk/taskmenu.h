@@ -59,7 +59,7 @@ public:
 
     virtual QList<QAction*> taskActions() const = 0;
 };
-Q_DECLARE_EXTENSION_INTERFACE(QDesignerTaskMenuExtension, "com.trolltech.Qt.Designer.TaskMenu")
+Q_DECLARE_EXTENSION_INTERFACE(QDesignerTaskMenuExtension, "org.qt-project.Qt.Designer.TaskMenu")
 
 
 inline QAction *QDesignerTaskMenuExtension::preferredEditAction() const

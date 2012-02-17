@@ -13,6 +13,7 @@ HEADERS     = analogclock.h \
               customwidgetplugin.h
 SOURCES     = analogclock.cpp \
               customwidgetplugin.cpp
+OTHER_FILES += analogclock.json
 #! [3]
 
 # install

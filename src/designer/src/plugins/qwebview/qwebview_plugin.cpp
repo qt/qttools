@@ -132,6 +132,4 @@ QString QWebViewPlugin::domXml() const
     </ui>");
 }
 
-Q_EXPORT_PLUGIN2(customwidgetplugin, QWebViewPlugin)
-
 QT_END_NAMESPACE

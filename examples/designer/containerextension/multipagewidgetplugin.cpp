@@ -190,7 +190,3 @@ void MultiPageWidgetPlugin::pageTitleChanged(const QString &title)
 }
 
 //! [13]
-
-//! [14]
-Q_EXPORT_PLUGIN2(containerextension, MultiPageWidgetPlugin)
-//! [14]

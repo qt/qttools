@@ -99,7 +99,7 @@ public:
     virtual QString uiExtension() const = 0;
 };
 
-Q_DECLARE_EXTENSION_INTERFACE(QDesignerLanguageExtension, "com.trolltech.Qt.Designer.Language.3")
+Q_DECLARE_EXTENSION_INTERFACE(QDesignerLanguageExtension, "org.qt-project.Qt.Designer.Language.3")
 
 QT_END_NAMESPACE
 

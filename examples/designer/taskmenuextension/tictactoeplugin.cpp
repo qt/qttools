@@ -135,7 +135,3 @@ QString TicTacToePlugin::domXml() const
 }
 
 //! [3]
-
-//! [4]
-Q_EXPORT_PLUGIN2(taskmenuextension, TicTacToePlugin)
-//! [4]

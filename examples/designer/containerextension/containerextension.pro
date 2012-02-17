@@ -18,6 +18,8 @@ SOURCES += multipagewidget.cpp \
            multipagewidgetplugin.cpp \
            multipagewidgetcontainerextension.cpp \
            multipagewidgetextensionfactory.cpp 
+
+OTHER_FILES += multipagewidget.json
 #! [2]
 
 # install

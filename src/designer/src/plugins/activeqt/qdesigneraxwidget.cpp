@@ -45,7 +45,7 @@
 #include <QtCore/QDebug>
 #include <QtWidgets/QIcon>
 #include <QtGui/QPainter>
-#include <QtWidgets/QResizeEvent>
+#include <QtGui/QResizeEvent>
 
 #include <ActiveQt/QAxWidget>
 

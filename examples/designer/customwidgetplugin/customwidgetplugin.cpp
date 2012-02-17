@@ -149,7 +149,3 @@ QString AnalogClockPlugin::includeFile() const
     return "analogclock.h";
 }
 //! [12]
-
-//! [13]
-Q_EXPORT_PLUGIN2(customwidgetplugin, AnalogClockPlugin)
-//! [13]

@@ -17,6 +17,7 @@ SOURCES += tictactoe.cpp \
            tictactoedialog.cpp \
            tictactoeplugin.cpp \
            tictactoetaskmenu.cpp
+OTHER_FILES += tictactoe.json
 #! [2]
 
 # install

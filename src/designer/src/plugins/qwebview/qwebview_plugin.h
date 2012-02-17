@@ -49,6 +49,7 @@ QT_BEGIN_NAMESPACE
 class QWebViewPlugin: public QObject, public QDesignerCustomWidgetInterface
 {
     Q_OBJECT
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QDesignerCustomWidgetInterface" FILE "qwebview.json")
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 public:
     QWebViewPlugin(QObject *parent = 0);

@@ -75,7 +75,7 @@ public:
 private:
     QString m_workingDirectory;
 };
-Q_DECLARE_EXTENSION_INTERFACE(QDesignerExtraInfoExtension, "com.trolltech.Qt.Designer.ExtraInfo.2")
+Q_DECLARE_EXTENSION_INTERFACE(QDesignerExtraInfoExtension, "org.qt-project.Qt.Designer.ExtraInfo.2")
 
 QT_END_NAMESPACE
 

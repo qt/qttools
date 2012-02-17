@@ -49,6 +49,7 @@ QT_BEGIN_NAMESPACE
 class QDeclarativeViewPlugin: public QObject, public QDesignerCustomWidgetInterface
 {
     Q_OBJECT
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QDesignerCustomWidgetInterface" FILE "qdeclarativeview.json")
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 public:
     QDeclarativeViewPlugin(QObject *parent = 0);

@@ -11,3 +11,4 @@ build_all:!build_pass {
 
 SOURCES += qdeclarativeview_plugin.cpp
 HEADERS += qdeclarativeview_plugin.h
+OTHER_FILES += qdeclarativeview.json

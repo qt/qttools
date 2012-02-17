@@ -60,6 +60,7 @@ class SignalSlotEditorTool;
 class QT_SIGNALSLOTEDITOR_EXPORT SignalSlotEditorPlugin: public QObject, public QDesignerFormEditorPluginInterface
 {
     Q_OBJECT
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QDesignerFormEditorPluginInterface" FILE "signalsloteditor.json")
     Q_INTERFACES(QDesignerFormEditorPluginInterface)
 public:
     SignalSlotEditorPlugin();

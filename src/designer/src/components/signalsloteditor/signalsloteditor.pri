@@ -15,7 +15,8 @@ SOURCES += $$PWD/signalslot_utils.cpp \
     $$PWD/signalsloteditor.cpp \
     $$PWD/signalsloteditor_tool.cpp \
     $$PWD/signalsloteditor_plugin.cpp \
-    $$PWD/signalsloteditor_instance.cpp \
     $$PWD/signalsloteditorwindow.cpp
 
 FORMS += $$PWD/connectdialog.ui
+
+OTHER_FILES += $$PWD/signalsloteditor.json
