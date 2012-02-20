@@ -1,9 +1,10 @@
-TARGET      = $$qtLibraryTarget(qaxwidget)
 TEMPLATE    = lib
+TARGET      = qaxwidget
 DESTDIR = $$QT.designer.plugins/designer
+CONFIG     += qaxcontainer qt warn_on plugin designer
+QT         += widgets designer-private
 
-QT += designer-private widgets
-CONFIG     += qt warn_on qaxcontainer plugin designer debug_and_release
+include(../plugins.pri)
 build_all:!build_pass {
     CONFIG -= build_all
     CONFIG += release
@@ -31,5 +32,3 @@ qaxwidgettaskmenu.h \
 
 # install
 OTHER_FILES += activeqt.json
-target.path = $$[QT_INSTALL_PLUGINS]/designer
-INSTALLS += target

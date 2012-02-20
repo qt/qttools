@@ -6,3 +6,4 @@ REQUIRES = !CONFIG(static,shared|static)
 contains(QT_CONFIG, webkit): SUBDIRS += qwebview
 contains(QT_CONFIG, phonon): SUBDIRS += phononwidgets
 contains(QT_CONFIG, quick1): SUBDIRS += qdeclarativeview
+contains(QT_CONFIG, activeqt): SUBDIRS += activeqt
