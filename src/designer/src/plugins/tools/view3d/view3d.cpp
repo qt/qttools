@@ -50,6 +50,10 @@
 
 #define SELECTION_BUFSIZE 512
 
+#ifndef GL_TEXTURE_MAX_ANISOTROPY_EXT
+#    define GL_TEXTURE_MAX_ANISOTROPY_EXT 0x84FE
+#endif
+
 /*******************************************************************************
 ** QView3DWidget
 */

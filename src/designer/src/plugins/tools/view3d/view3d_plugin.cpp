@@ -39,11 +39,14 @@
 **
 ****************************************************************************/
 
-#include <QtCore/qdebug.h>
-#include <QtCore/qplugin.h>
-#include <QtWidgets/QAction>
 #include "view3d_plugin.h"
 #include "view3d_tool.h"
+
+#include <QtCore/QDebug>
+#include <QtCore/QtPlugin>
+#include <QtWidgets/QAction>
+#include <QtDesigner/QDesignerFormEditorInterface>
+#include <QtDesigner/QDesignerFormWindowManagerInterface>
 
 QView3DPlugin::QView3DPlugin()
 {

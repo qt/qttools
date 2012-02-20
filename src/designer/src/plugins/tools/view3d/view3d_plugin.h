@@ -42,13 +42,16 @@
 #ifndef Q3VIEW3D_PLUGIN_H
 #define Q3VIEW3D_PLUGIN_H
 
+#include "view3d_global.h"
+
 #include <QtCore/QList>
 #include <QtCore/QHash>
+#include <QtCore/QPointer>
 #include <QtDesigner/QDesignerFormEditorPluginInterface>
-#include "view3d_global.h"
 
 QT_BEGIN_NAMESPACE
 
+class QDesignerFormWindowInterface;
 class QView3DTool;
 class QAction;
 

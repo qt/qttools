@@ -44,7 +44,9 @@
 
 #include "view3d_global.h"
 #include "view3d.h"
+
 #include <QtDesigner/QDesignerFormWindowToolInterface>
+#include <QtCore/QPointer>
 
 QT_BEGIN_NAMESPACE
 

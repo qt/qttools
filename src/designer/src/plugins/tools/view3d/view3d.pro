@@ -1,8 +1,7 @@
 
 TEMPLATE = lib
-QT	+= opengl
-CONFIG  += qt warn_on plugin
-DESTDIR =
+QT      += opengl widgets
+CONFIG  += qt warn_on plugin designer
 TARGET = view3d
 
 include(../../plugins.pri)
