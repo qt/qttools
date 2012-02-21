@@ -1,3 +1,4 @@
+QT += widgets network testlib
 CONFIG += testcase
 
 TEMPLATE = app
@@ -13,8 +14,5 @@ win32 {
   }
 }
 
-QT += widgets network testlib
-
-# Input
 HEADERS += uiloader.h
 SOURCES += tst_uiloader.cpp uiloader.cpp

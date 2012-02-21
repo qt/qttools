@@ -1,4 +1,3 @@
-TEMPLATE = app
 CONFIG  += qt warn_on
 QT += widgets network
 
@@ -9,15 +8,10 @@ build_all:!build_pass {
 
 DESTDIR     = $$QT.designer.bins
 
-DEPENDPATH += .
-INCLUDEPATH += .
-TARGET = pixeltool
-
 mac {
     QMAKE_INFO_PLIST=Info_mac.plist
 }
 
-# Input
 SOURCES += main.cpp qpixeltool.cpp
 HEADERS += qpixeltool.h
 

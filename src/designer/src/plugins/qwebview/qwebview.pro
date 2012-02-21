@@ -9,7 +9,6 @@ build_all:!build_pass {
     CONFIG += release
 }
 
-# Input
 SOURCES += qwebview_plugin.cpp
 HEADERS += qwebview_plugin.h
 RESOURCES += qwebview_plugin.qrc

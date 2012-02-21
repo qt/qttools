@@ -1,8 +1,6 @@
 TEMPLATE = app
 DESTDIR = $$QT.designer.bins
 TARGET = checksdk
-DEPENDPATH += .
-INCLUDEPATH += .
 QT = core
 CONFIG += console
 
@@ -11,8 +9,6 @@ build_all:!build_pass {
     CONFIG += release
 }
 
-
-# Input
 SOURCES += \
            main.cpp \
            cesdkhandler.cpp

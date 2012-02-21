@@ -15,7 +15,6 @@ INCLUDEPATH += $$QT.activeqt.sources/shared/ \
                ../../lib/uilib \
                $$QT.designer.includes
 
-# Input
 SOURCES += qaxwidgetextrainfo.cpp \
 qaxwidgetplugin.cpp \
 qdesigneraxwidget.cpp \
@@ -30,5 +29,4 @@ qaxwidgetpropertysheet.h \
 qaxwidgettaskmenu.h \
     $$QT.activeqt.sources/shared/qaxtypes.h
 
-# install
 OTHER_FILES += activeqt.json

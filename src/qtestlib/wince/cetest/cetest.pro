@@ -28,7 +28,6 @@ VPATH += $$QT_SOURCE_TREE/tools/shared
 
 DEPENDPATH += $$QT_BUILD_TREE/src/corelib/tools $$QT_BUILD_TREE/src/corelib/io
 
-# Input
 HEADERS += \
         remoteconnection.h \
         deployment.h

@@ -9,7 +9,6 @@ build_all:!build_pass {
     CONFIG += release
 }
 
-# Input
 SOURCES += videoplayerplugin.cpp \
     videoplayertaskmenu.cpp \
     seeksliderplugin.cpp \
