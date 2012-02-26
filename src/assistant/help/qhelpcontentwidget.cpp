@@ -363,15 +363,18 @@ QHelpContentModel::~QHelpContentModel()
 
 void QHelpContentModel::invalidateContents(bool onShutDown)
 {
-    if (onShutDown)
+    if (onShutDown) {
         disconnect(this, SLOT(insertContents()));
+    } else {
+        beginResetModel();
+    }
     d->qhelpContentProvider->stopCollecting();
     if (d->rootItem) {
         delete d->rootItem;
         d->rootItem = 0;
     }
     if (!onShutDown)
-        reset();
+        endResetModel();
 }
 
 /*!
@@ -399,7 +402,6 @@ void QHelpContentModel::insertContents()
     beginInsertRows(QModelIndex(), 0, count > 0 ? count : 0);
     d->rootItem = d->qhelpContentProvider->rootItem();
     endInsertRows();
-    reset();
     emit contentsCreated();
 }
 

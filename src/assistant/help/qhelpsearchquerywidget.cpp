@@ -89,8 +89,9 @@ private:
         void addTerm(const QString &term)
         {
             if (!termList.contains(term)) {
+                beginResetModel();
                 termList.append(term);
-                reset();
+                endResetModel();
             }
         }
 
