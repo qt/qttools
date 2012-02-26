@@ -1548,7 +1548,7 @@ QString DesignerPropertyManager::valueText(const QtProperty *property) const
         return list.join(QStringLiteral("; "));
     }
     if (vType == designerKeySequenceTypeId()) {
-        return qvariant_cast<PropertySheetKeySequenceValue>(value(property)).value();
+        return qvariant_cast<PropertySheetKeySequenceValue>(value(property)).value().toString(QKeySequence::NativeText);
     }
     if (vType == QVariant::Bool) {
         return QString();
@@ -1964,7 +1964,7 @@ void DesignerPropertyManager::setValue(QtProperty *property, const QVariant &val
     else if (QtVariantPropertyManager::valueType(property) == designerStringTypeId())
         property->setToolTip(qvariant_cast<PropertySheetStringValue>(DesignerPropertyManager::value(property)).value());
     else if (QtVariantPropertyManager::valueType(property) == designerKeySequenceTypeId())
-        property->setToolTip(qvariant_cast<PropertySheetKeySequenceValue>(DesignerPropertyManager::value(property)).value());
+        property->setToolTip(qvariant_cast<PropertySheetKeySequenceValue>(DesignerPropertyManager::value(property)).value().toString(QKeySequence::NativeText));
     else if (QtVariantPropertyManager::valueType(property) == QVariant::Bool)
         property->setToolTip(QtVariantPropertyManager::valueText(property));
 }

@@ -625,7 +625,7 @@ void IconThemeEditor::updatePreview(const QString &t)
     // Update preview label with icon.
     if (t.isEmpty() || !QIcon::hasThemeIcon(t)) { // Empty
         const QPixmap *currentPixmap = d->m_themeLabel->pixmap();
-        if (currentPixmap == 0 || currentPixmap->serialNumber() != d->m_emptyPixmap.serialNumber())
+        if (currentPixmap == 0 || currentPixmap->cacheKey() != d->m_emptyPixmap.cacheKey())
             d->m_themeLabel->setPixmap(d->m_emptyPixmap);
     } else {
         const QIcon icon = QIcon::fromTheme(t);

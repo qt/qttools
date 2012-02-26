@@ -83,7 +83,7 @@ static bool sameIcon(const QIcon &i1, const QIcon &i2)
              return true;
     if (i1.isNull() !=  i2.isNull())
         return false;
-    return i1.serialNumber() == i2.serialNumber();
+    return i1.cacheKey() == i2.cacheKey();
 }
 
 static inline bool isNameColumnEditable(const QObject *)
@@ -374,9 +374,10 @@ namespace qdesigner_internal {
 
     void ObjectInspectorModel::clearItems()
     {
+        beginResetModel();
         m_objectIndexMultiMap.clear();
         m_model.clear();
-        reset(); // force editors to be closed in views
+        endResetModel(); // force editors to be closed in views
         removeRow(0);
     }
 

@@ -738,18 +738,18 @@ QRegion Connection::region() const
     QRegion result;
 
     for (int i = 0; i < m_knee_list.size() - 1; ++i)
-        result = result.unite(lineRect(m_knee_list.at(i), m_knee_list.at(i + 1)));
+        result = result.united(lineRect(m_knee_list.at(i), m_knee_list.at(i + 1)));
 
     if (!m_arrow_head.isEmpty()) {
         QRect r = m_arrow_head.boundingRect().toRect();
         r = expand(r, 1);
-        result = result.unite(r);
+        result = result.united(r);
     } else if (ground()) {
-        result = result.unite(groundRect());
+        result = result.united(groundRect());
     }
 
-    result = result.unite(labelRect(EndPoint::Source));
-    result = result.unite(labelRect(EndPoint::Target));
+    result = result.united(labelRect(EndPoint::Source));
+    result = result.united(labelRect(EndPoint::Target));
 
     return result;
 }

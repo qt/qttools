@@ -195,13 +195,13 @@ void Spacer::updateMask()
         if (m_orientation == Qt::Horizontal) {
             const int amplitude = qMin(3, h / 3);
             const int base = h / 2;
-            r = r.subtract(QRect(1, 0, w - 2, base - amplitude));
-            r = r.subtract(QRect(1, base + amplitude, w - 2, h - base - amplitude));
+            r = r.subtracted(QRect(1, 0, w - 2, base - amplitude));
+            r = r.subtracted(QRect(1, base + amplitude, w - 2, h - base - amplitude));
         } else {
             const int amplitude = qMin(3, w / 3);
             const int base = w / 2;
-            r = r.subtract(QRect(0, 1, base - amplitude, h - 2));
-            r = r.subtract(QRect(base + amplitude, 1, w - base - amplitude, h - 2));
+            r = r.subtracted(QRect(0, 1, base - amplitude, h - 2));
+            r = r.subtracted(QRect(base + amplitude, 1, w - base - amplitude, h - 2));
         }
     }
     setMask(r);

@@ -173,9 +173,12 @@ void WidgetBoxCategoryModel::setViewMode(QListView::ViewMode vm)
 {
     if (m_viewMode == vm)
         return;
+    const bool empty = m_items.isEmpty();
+    if (!empty)
+        beginResetModel();
     m_viewMode = vm;
-    if (!m_items.empty())
-        reset();
+    if (!empty)
+        endResetModel();
 }
 
 int WidgetBoxCategoryModel::indexOfWidget(const QString &name)
@@ -203,13 +206,15 @@ bool WidgetBoxCategoryModel::removeCustomWidgets()
     bool changed = false;
     for (WidgetBoxCategoryEntrys::iterator it = m_items.begin(); it != m_items.end(); )
         if (it->widget.type() == QDesignerWidgetBoxInterface::Widget::Custom) {
+            if (!changed)
+                beginResetModel();
             it = m_items.erase(it);
             changed = true;
         } else {
             ++it;
         }
     if (changed)
-        reset();
+        endResetModel();
     return changed;
 }
 

@@ -160,6 +160,7 @@ void ConnectionModel::setEditor(SignalSlotEditor *editor)
 {
     if (m_editor == editor)
         return;
+    beginResetModel();
 
     if (m_editor) {
         disconnect(m_editor, SIGNAL(connectionAdded(Connection*)),
@@ -186,7 +187,7 @@ void ConnectionModel::setEditor(SignalSlotEditor *editor)
         connect(m_editor, SIGNAL(connectionChanged(Connection*)),
                 this, SLOT(connectionChanged(Connection*)));
     }
-    reset();
+    endResetModel();
 }
 
 QVariant ConnectionModel::headerData(int section, Qt::Orientation orientation,
