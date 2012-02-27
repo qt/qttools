@@ -4,7 +4,6 @@ cmake_minimum_required(VERSION 2.8)
 project(pass1)
 
 find_package(Qt5Core REQUIRED)
-find_package(Qt5Xml REQUIRED)
 find_package(Qt5DBus REQUIRED)
 find_package(Qt5DBusTools REQUIRED)
 
@@ -12,6 +11,8 @@ include_directories(
     ${Qt5Core_INCLUDE_DIRS}
     ${Qt5DBus_INCLUDE_DIRS}
 )
+
+add_definitions(${Qt5DBus_DEFINITIONS})
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
