@@ -39,11 +39,11 @@
     Table of contents:
 
     \list
-    \o \l{Introduction}
-    \o \l{The One-Minute Guide to Using Qt Assistant}
-    \o \l{Introduction to the Qt Reference Documentation}
-    \o \l{Qt Assistant in More Detail}
-    \o \l{Full Text Searching}
+    \li \l{Introduction}
+    \li \l{The One-Minute Guide to Using Qt Assistant}
+    \li \l{Introduction to the Qt Reference Documentation}
+    \li \l{Qt Assistant in More Detail}
+    \li \l{Full Text Searching}
     \endlist
 
     \chapter The One-Minute Guide to Using Qt Assistant
@@ -51,9 +51,9 @@
     Once you have installed Qt, \QA should be ready to run:
 
     \list
-    \o On Windows, \QA is available as a menu option on the Qt menu.
-    \o On Mac OS X, \QA is installed in the /Developer/Applications/Qt directory.
-    \o On Unix/Linux, open a terminal, type \c{assistant} and press \key{Enter}.
+    \li On Windows, \QA is available as a menu option on the Qt menu.
+    \li On Mac OS X, \QA is installed in the /Developer/Applications/Qt directory.
+    \li On Unix/Linux, open a terminal, type \c{assistant} and press \key{Enter}.
     \endlist
 
     When you start up \QA, you will be presented with a standard main window
@@ -113,17 +113,17 @@
     documentation set:
 
     \list
-    \i The \menu{Qt's Classes} page lists every class
+    \li The \menu{Qt's Classes} page lists every class
     in Qt's public API, and consists of several hundred classes.
-    \i The \menu{Qt's Main Classes} page lists the
+    \li The \menu{Qt's Main Classes} page lists the
     classes you're most likely to use most often, and provides a much
     shorter and more managable list than the All Classes list.
-    \i The \menu{Grouped Classes} page presents a list
+    \li The \menu{Grouped Classes} page presents a list
     of groups, each of which leads to a list of related classes, for
     example, the \menu{Advanced Widgets} list.
-    \i The \menu{Class Inheritance Hierarchy} page
+    \li The \menu{Class Inheritance Hierarchy} page
     presents a list of classes in terms of the hierarchy of Qt classes.
-    \i The \menu{Member Function Index} page lists all the
+    \li The \menu{Member Function Index} page lists all the
     functions provided by Qt classes, each one with links to the class(es)
     in which it appears.
     \endlist
@@ -151,40 +151,40 @@
 
     \table
         \header
-            \o Command Line Option
-            \o Brief Description
+            \li Command Line Option
+            \li Brief Description
         \row
-            \o -collectionFile <file.qhc>
-            \o Uses the specified collection file instead of the default one.
+            \li -collectionFile <file.qhc>
+            \li Uses the specified collection file instead of the default one.
         \row
-            \o -showUrl URL
-            \o Shows the document referenced by URL.
+            \li -showUrl URL
+            \li Shows the document referenced by URL.
         \row
-            \o -enableRemoteControl
-            \o Enables \QA to be remotly controlled.
+            \li -enableRemoteControl
+            \li Enables \QA to be remotly controlled.
         \row
-            \o -show <widget>
-            \o Shows the specified dockwidget which can be "contents", "index",
+            \li -show <widget>
+            \li Shows the specified dockwidget which can be "contents", "index",
             "bookmarks" or "search".
         \row
-            \o -hide <widget>
-            \o Hides the specified dockwidget which can be "contents", "index",
+            \li -hide <widget>
+            \li Hides the specified dockwidget which can be "contents", "index",
             "bookmarks" or "search.
         \row
-            \o -activate <widget>
-            \o Activates the specified dockwidget which can be "contents",
+            \li -activate <widget>
+            \li Activates the specified dockwidget which can be "contents",
             "index", "bookmarks" or "search.
         \row
-            \o -register <doc.qch>
-            \o Registers the specified compressed help file in the given help
+            \li -register <doc.qch>
+            \li Registers the specified compressed help file in the given help
             collection.
         \row
-            \o -unregister <doc.qch>
-            \o Unregisters the specified compressed help file from the given
+            \li -unregister <doc.qch>
+            \li Unregisters the specified compressed help file from the given
             collection file.
         \row
-            \o -quiet
-            \o Doesn't show any error, warning or success messages.
+            \li -quiet
+            \li Doesn't show any error, warning or success messages.
     \endtable
 
     \section1 Tool Windows
@@ -194,16 +194,16 @@
     The tool windows provide four ways to navigate the documentation:
 
     \list
-    \o The \gui{Contents} window presents a table of contents implemented as a
+    \li The \gui{Contents} window presents a table of contents implemented as a
     tree view for the documentation that is available. If you click an item,
     its documentation will appear in the \e{Documentation} window. If you double
     click an item or click on the control to the left of it, the item's sub-items
     will appear. Click a sub-item to make its page appear in the \e{Documentation}
     window. Click on the control next to an open item to hide its sub-items.
-    \o The \gui{Index} window is used to look up key words or phrases.
+    \li The \gui{Index} window is used to look up key words or phrases.
     See \l{The One-Minute Guide to Using Qt Assistant} for how to use this
     window.
-    \o The \gui{Bookmarks} window lists any bookmarks you have made. Double
+    \li The \gui{Bookmarks} window lists any bookmarks you have made. Double
     click a bookmark to make its page appear in the \e{Documentation} window.
     The \gui{Bookmarks} window provides a context menu with \gui{Show Item},
     \gui{Delete Item} as well as \gui{Rename Item}. Click in the main menu
@@ -240,33 +240,33 @@
     The main toolbar provides fast access to the most common actions.
 
     \table
-    \header \o Action \o Description \o Menu Item \o Shortcut
-    \row \o \gui{Previous} \o Takes you to the previous page in the history.
-         \o \menu{Go|Previous} \o \key{Alt+Left Arrow}
-    \row \o \gui{Next} \o Takes you to the next page in the history.
-         \o \menu{Go|Next} \o \key{Alt+Right Arrow}
-    \row \o \gui{Home}
-         \o Takes you to the home page as specified in the Preferences Dialog.
-         \o \menu{Go|Home} \o \key{Ctrl+Home}.
-    \row \o \gui{Sync with Table of Contents}
-         \o Synchronizes the \gui{Contents} tool window with the page currently
+    \header \li Action \li Description \li Menu Item \li Shortcut
+    \row \li \gui{Previous} \li Takes you to the previous page in the history.
+         \li \menu{Go|Previous} \li \key{Alt+Left Arrow}
+    \row \li \gui{Next} \li Takes you to the next page in the history.
+         \li \menu{Go|Next} \li \key{Alt+Right Arrow}
+    \row \li \gui{Home}
+         \li Takes you to the home page as specified in the Preferences Dialog.
+         \li \menu{Go|Home} \li \key{Ctrl+Home}.
+    \row \li \gui{Sync with Table of Contents}
+         \li Synchronizes the \gui{Contents} tool window with the page currently
             shown in the \gui{Documentation} window.
-         \o \menu{Go|Sync with Table of Contents} \o
-    \row \o \gui{Copy} \o Copies any selected text to the clipboard.
-         \o \menu{Edit|Copy} \o \key{Ctrl+C}
-    \row \o \gui{Print} \o Opens the \gui{Print} dialog.
-         \o \menu{File|Print} \o \key{Ctrl+P}
-    \row \o \gui{Find in Text} \o Opens the \gui{Find Text} dialog.
-         \o \menu{Edit|Find in Text} \o \key{Ctrl+F}
-    \row \o \gui{Zoom in}
-         \o Increases the font size used to display text in the current tab.
-         \o \menu{View|Zoom in} \o \key{Ctrl++}
-    \row \o \gui{Zoom out}
-         \o Decreases the font size used to display text in the current tab.
-         \o \menu{View|Zoom out} \o \key{Ctrl+-}
-    \row \o \gui{Normal Size}
-         \o Resets the font size to its normal size in the current tab.
-         \o \menu{View|Normal Size} \o \key{Ctrl+0}
+         \li \menu{Go|Sync with Table of Contents} \li
+    \row \li \gui{Copy} \li Copies any selected text to the clipboard.
+         \li \menu{Edit|Copy} \li \key{Ctrl+C}
+    \row \li \gui{Print} \li Opens the \gui{Print} dialog.
+         \li \menu{File|Print} \li \key{Ctrl+P}
+    \row \li \gui{Find in Text} \li Opens the \gui{Find Text} dialog.
+         \li \menu{Edit|Find in Text} \li \key{Ctrl+F}
+    \row \li \gui{Zoom in}
+         \li Increases the font size used to display text in the current tab.
+         \li \menu{View|Zoom in} \li \key{Ctrl++}
+    \row \li \gui{Zoom out}
+         \li Decreases the font size used to display text in the current tab.
+         \li \menu{View|Zoom out} \li \key{Ctrl+-}
+    \row \li \gui{Normal Size}
+         \li Resets the font size to its normal size in the current tab.
+         \li \menu{View|Normal Size} \li \key{Ctrl+0}
     \endtable
 
     \img assistant-address-toolbar.png
@@ -286,57 +286,57 @@
     \section2 File Menu
 
     \list
-    \o \menu{File|Page Setup...} invokes a dialog allowing you to define
+    \li \menu{File|Page Setup...} invokes a dialog allowing you to define
     page layout properties, such as margin sizes, page orientation and paper size.
-    \o \menu{File|Print Preview...} provides a preview of the printed pages.
-    \o \menu{File|Print...} opens the \l{#Print Dialog}{\gui{Print} dialog}.
-    \o \menu{File|New Tab} opens a new empty tab in the \gui{Documentation}
+    \li \menu{File|Print Preview...} provides a preview of the printed pages.
+    \li \menu{File|Print...} opens the \l{#Print Dialog}{\gui{Print} dialog}.
+    \li \menu{File|New Tab} opens a new empty tab in the \gui{Documentation}
     window.
-    \o \menu{File|Close Tab} closes the current tab of the
+    \li \menu{File|Close Tab} closes the current tab of the
     \gui{Documentation} window.
-    \o \menu{File|Exit} closes the \QA application.
+    \li \menu{File|Exit} closes the \QA application.
     \endlist
 
     \section2 Edit Menu
 
     \list
-    \o \menu{Edit|Copy} copies any selected text to the clipboard.
-    \o \menu{Edit|Find in Text} invokes the \l{#Find Text Control}{\gui{Find Text}
+    \li \menu{Edit|Copy} copies any selected text to the clipboard.
+    \li \menu{Edit|Find in Text} invokes the \l{#Find Text Control}{\gui{Find Text}
     control} at the lower end of the \gui{Documentation} window.
-    \o \menu{Edit|Find Next} looks for the next occurance of the specified
+    \li \menu{Edit|Find Next} looks for the next occurance of the specified
     text in the \gui{Find Text} control.
-    \o \menu{Edit|Find Previous} looks for the previous occurance of
+    \li \menu{Edit|Find Previous} looks for the previous occurance of
     the specified text in the \l{#Find Text Control}{\gui{Find Text} control}.
-    \o \menu{Edit|Preferences} invokes the \l{#Preferences Dialog}{\gui{Preferences} dialog}.
+    \li \menu{Edit|Preferences} invokes the \l{#Preferences Dialog}{\gui{Preferences} dialog}.
     \endlist
 
     \section2 View Menu
 
     \list
-    \o \menu{View|Zoom in} increases the font size in the current tab.
-    \o \menu{View|Zoom out} decreases the font size in the current tab.
-    \o \menu{View|Normal Size} resets the font size in the current tab.
-    \o \menu{View|Contents} toggles the display of the \gui{Contents} tool window.
-    \o \menu{View|Index} toggles the display of the \gui{Index} tool window.
-    \o \menu{View|Bookmarks} toggles the display of the \gui{Bookmarks} tool window.
-    \o \menu{View|Search} toggles the display of the Search in the \gui{Documentation} window.
+    \li \menu{View|Zoom in} increases the font size in the current tab.
+    \li \menu{View|Zoom out} decreases the font size in the current tab.
+    \li \menu{View|Normal Size} resets the font size in the current tab.
+    \li \menu{View|Contents} toggles the display of the \gui{Contents} tool window.
+    \li \menu{View|Index} toggles the display of the \gui{Index} tool window.
+    \li \menu{View|Bookmarks} toggles the display of the \gui{Bookmarks} tool window.
+    \li \menu{View|Search} toggles the display of the Search in the \gui{Documentation} window.
     \endlist
 
     \section2 Go Menu
 
     \list
-    \o \menu{Go|Home} goes to the home page.
-    \o \menu{Go|Back} displays the previous page in the history.
-    \o \menu{Go|Forward} displays the next page in the history.
-    \o \menu{Go|Sync with Table of Contents} syncs the \gui{Contents} tool window to the currently shown page.
-    \o \menu{Go|Next Page} selects the next tab in the \gui{Documentation} window.
-    \o \menu{Go|Previous Page} selects the previous tab in the \gui{Documentation} window.
+    \li \menu{Go|Home} goes to the home page.
+    \li \menu{Go|Back} displays the previous page in the history.
+    \li \menu{Go|Forward} displays the next page in the history.
+    \li \menu{Go|Sync with Table of Contents} syncs the \gui{Contents} tool window to the currently shown page.
+    \li \menu{Go|Next Page} selects the next tab in the \gui{Documentation} window.
+    \li \menu{Go|Previous Page} selects the previous tab in the \gui{Documentation} window.
     \endlist
 
     \section2 Bookmarks Menu
 
     \list
-    \o \menu{Bookmarks|Add} adds the current page to the list of bookmarks.
+    \li \menu{Bookmarks|Add} adds the current page to the list of bookmarks.
     \endlist
 
     \section1 Dialogs
@@ -430,12 +430,12 @@
     examples of common search patterns:
 
     \list
-    \o \c deep -- lists all the documents that contain the word 'deep'
-    \o \c{deep*} -- lists all the documents that contain a word beginning
+    \li \c deep -- lists all the documents that contain the word 'deep'
+    \li \c{deep*} -- lists all the documents that contain a word beginning
     with 'deep'
-    \o \c{deep copy} -- lists all documents that contain both 'deep' \e
+    \li \c{deep copy} -- lists all documents that contain both 'deep' \e
     and 'copy'
-    \o \c{"deep copy"} -- list all documents that contain the phrase 'deep copy'
+    \li \c{"deep copy"} -- list all documents that contain the phrase 'deep copy'
     \endlist
 
     It is also possible to use the \gui{Advanced search} to get more flexibility.
@@ -444,9 +444,9 @@
     give results like these:
 
     \list
-    \o \c{QStin} -- lists all the documents with titles that are similar, such as \c{QString}
-    \o \c{QSting} -- lists all the documents with titles that are similar, such as \c{QString}
-    \o \c{QStrin} -- lists all the documents with titles that are similar, such as \c{QString}
+    \li \c{QStin} -- lists all the documents with titles that are similar, such as \c{QString}
+    \li \c{QSting} -- lists all the documents with titles that are similar, such as \c{QString}
+    \li \c{QStrin} -- lists all the documents with titles that are similar, such as \c{QString}
     \endlist
 
     Options can be combined to improve the search results.

@@ -112,12 +112,12 @@ public:
     functions:
 
     \list
-    \o load() handles reading of UI format files from arbitrary
+    \li load() handles reading of UI format files from arbitrary
        QIODevices, and construction of widgets from the XML data
        that they contain.
-    \o save() handles saving of widget details in UI format to
+    \li save() handles saving of widget details in UI format to
        arbitrary QIODevices.
-    \o workingDirectory() and setWorkingDirectory() control the
+    \li workingDirectory() and setWorkingDirectory() control the
        directory in which forms are held. The form builder looks for
        other resources on paths relative to this directory.
     \endlist

@@ -88,21 +88,21 @@
     {QVariant::Type}{types} are supported:
 
     \list
-    \o QVariant::ByteArray
-    \o QVariant::Bool
-    \o QVariant::Color
-    \o QVariant::Cursor
-    \o QVariant::Date
-    \o QVariant::DateTime
-    \o QVariant::Double
-    \o QVariant::Int
-    \o QVariant::Point
-    \o QVariant::Rect
-    \o QVariant::Size
-    \o QVariant::SizePolicy
-    \o QVariant::String
-    \o QVariant::Time
-    \o QVariant::UInt
+    \li QVariant::ByteArray
+    \li QVariant::Bool
+    \li QVariant::Color
+    \li QVariant::Cursor
+    \li QVariant::Date
+    \li QVariant::DateTime
+    \li QVariant::Double
+    \li QVariant::Int
+    \li QVariant::Point
+    \li QVariant::Rect
+    \li QVariant::Size
+    \li QVariant::SizePolicy
+    \li QVariant::String
+    \li QVariant::Time
+    \li QVariant::UInt
     \endlist
 
     For a complete example using the QDesignerCustomWidgetInterface

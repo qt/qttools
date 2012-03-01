@@ -79,15 +79,15 @@ namespace QFormInternal {
     plugins:
 
     \list
-    \o pluginPaths() returns the list of paths that the form builder
+    \li pluginPaths() returns the list of paths that the form builder
        searches when loading custom widget plugins.
-    \o addPluginPath() allows additional paths to be registered with
+    \li addPluginPath() allows additional paths to be registered with
        the form builder.
-    \o setPluginPath() is used to replace the existing list of paths
+    \li setPluginPath() is used to replace the existing list of paths
        with a list obtained from some other source.
-    \o clearPluginPaths() removes all paths registered with the form
+    \li clearPluginPaths() removes all paths registered with the form
        builder.
-    \o customWidgets() returns a list of interfaces to plugins that
+    \li customWidgets() returns a list of interfaces to plugins that
        can be used to create new instances of registered custom widgets.
     \endlist
 

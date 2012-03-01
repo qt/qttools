@@ -77,11 +77,11 @@ void QtGradientDialogPrivate::slotAboutToShowDetails(bool details, int extension
 
     \table
     \row
-    \o \inlineimage qtgradientdialog.png
-    \o \inlineimage qtgradientdialogextension.png
+    \li \inlineimage qtgradientdialog.png
+    \li \inlineimage qtgradientdialogextension.png
     \header
-    \o Details extension hidden
-    \o Details extension visible
+    \li Details extension hidden
+    \li Details extension visible
     \endtable
 
     Starting from the top of the dialog there are several buttons:
@@ -101,18 +101,18 @@ void QtGradientDialogPrivate::slotAboutToShowDetails(bool details, int extension
 
     \table
     \row
-    \o \inlineimage qtgradientdialoglineareditor.png
-    \o \inlineimage qtgradientdialogradialeditor.png
-    \o \inlineimage qtgradientdialogconicaleditor.png
+    \li \inlineimage qtgradientdialoglineareditor.png
+    \li \inlineimage qtgradientdialogradialeditor.png
+    \li \inlineimage qtgradientdialogconicaleditor.png
     \header
-    \o Editing linear type
-    \o Editing radial type
-    \o Editing conical type
+    \li Editing linear type
+    \li Editing radial type
+    \li Editing conical type
     \row
-    \o The user can change the start and final point positions by dragging the circular handles.
-    \o The user can change the center and focal point positions by dragging the circular handles
+    \li The user can change the start and final point positions by dragging the circular handles.
+    \li The user can change the center and focal point positions by dragging the circular handles
         and can change the gradient's radius by dragging horizontal or vertical line.
-    \o The user can change the center point by dragging the circular handle
+    \li The user can change the center point by dragging the circular handle
         and can change the gradient's angle by dragging the big wheel.
     \endtable
 
@@ -120,8 +120,8 @@ void QtGradientDialogPrivate::slotAboutToShowDetails(bool details, int extension
 
     \table
     \row
-    \o \inlineimage qtgradientdialogstops.png
-    \o \inlineimage qtgradientdialogstopszoomed.png
+    \li \inlineimage qtgradientdialogstops.png
+    \li \inlineimage qtgradientdialogstopszoomed.png
     \endtable
 
     The top part of this area contains stop handles, and bottom part shows the preview of gradient stops path.
@@ -142,13 +142,13 @@ void QtGradientDialogPrivate::slotAboutToShowDetails(bool details, int extension
     For convenience context menu is provided with the following actions:
 
     \list
-    \o New Stop - creates a new gradient stop
-    \o Delete - removes the active and all selected stops
-    \o Flip All - mirrors all stops
-    \o Select All - selects all stops
-    \o Zoom In - zooms in
-    \o Zoom Out - zooms out
-    \o Zoom All - goes back to original 100% zoom
+    \li New Stop - creates a new gradient stop
+    \li Delete - removes the active and all selected stops
+    \li Flip All - mirrors all stops
+    \li Select All - selects all stops
+    \li Zoom In - zooms in
+    \li Zoom Out - zooms out
+    \li Zoom All - goes back to original 100% zoom
     \endlist
 
     The bottom part of the QtGradientDialog contains a set of widgets allowing to control the color of
@@ -156,8 +156,8 @@ void QtGradientDialogPrivate::slotAboutToShowDetails(bool details, int extension
 
     \table
     \row
-    \o \inlineimage qtgradientdialogcolorhsv.png
-    \o \inlineimage qtgradientdialogcolorrgb.png
+    \li \inlineimage qtgradientdialogcolorhsv.png
+    \li \inlineimage qtgradientdialogcolorrgb.png
     \endtable
 
 
@@ -239,11 +239,11 @@ QGradient QtGradientDialog::gradient() const
 
     \table
     \row
-    \o \inlineimage qtgradientdialogbackgroundcheckered.png
-    \o \inlineimage qtgradientdialogbackgroundtransparent.png
+    \li \inlineimage qtgradientdialogbackgroundcheckered.png
+    \li \inlineimage qtgradientdialogbackgroundtransparent.png
     \row
-    \o \snippet doc/src/snippets/code/tools_shared_qtgradienteditor_qtgradientdialog.cpp 2
-    \o \snippet doc/src/snippets/code/tools_shared_qtgradienteditor_qtgradientdialog.cpp 3
+    \li \snippet doc/src/snippets/code/tools_shared_qtgradienteditor_qtgradientdialog.cpp 2
+    \li \snippet doc/src/snippets/code/tools_shared_qtgradienteditor_qtgradientdialog.cpp 3
     \endtable
 
     When this property is set to true (the default) widgets inside gradient dialog like color button,

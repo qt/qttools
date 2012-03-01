@@ -102,23 +102,23 @@ public:
     provides functions for retrieving as well as setting their values:
 
     \table
-    \header \o Getter \o Setter
+    \header \li Getter \li Setter
     \row
-    \o propertyName() \o setPropertyName()
+    \li propertyName() \li setPropertyName()
     \row
-    \o statusTip() \o setStatusTip()
+    \li statusTip() \li setStatusTip()
     \row
-    \o toolTip() \o setToolTip()
+    \li toolTip() \li setToolTip()
     \row
-    \o whatsThis() \o setWhatsThis()
+    \li whatsThis() \li setWhatsThis()
     \row
-    \o isEnabled() \o setEnabled()
+    \li isEnabled() \li setEnabled()
     \row
-    \o isModified() \o setModified()
+    \li isModified() \li setModified()
     \row
-    \o valueText() \o Nop
+    \li valueText() \li Nop
     \row
-    \o valueIcon() \o Nop
+    \li valueIcon() \li Nop
     \endtable
 
     It is also possible to nest properties: QtProperty provides the
@@ -549,23 +549,23 @@ void QtAbstractPropertyManagerPrivate::propertyInserted(QtProperty *property,
     implementations are available:
 
     \list
-    \o QtBoolPropertyManager
-    \o QtColorPropertyManager
-    \o QtDatePropertyManager
-    \o QtDateTimePropertyManager
-    \o QtDoublePropertyManager
-    \o QtEnumPropertyManager
-    \o QtFlagPropertyManager
-    \o QtFontPropertyManager
-    \o QtGroupPropertyManager
-    \o QtIntPropertyManager
-    \o QtPointPropertyManager
-    \o QtRectPropertyManager
-    \o QtSizePropertyManager
-    \o QtSizePolicyPropertyManager
-    \o QtStringPropertyManager
-    \o QtTimePropertyManager
-    \o QtVariantPropertyManager
+    \li QtBoolPropertyManager
+    \li QtColorPropertyManager
+    \li QtDatePropertyManager
+    \li QtDateTimePropertyManager
+    \li QtDoublePropertyManager
+    \li QtEnumPropertyManager
+    \li QtFlagPropertyManager
+    \li QtFontPropertyManager
+    \li QtGroupPropertyManager
+    \li QtIntPropertyManager
+    \li QtPointPropertyManager
+    \li QtRectPropertyManager
+    \li QtSizePropertyManager
+    \li QtSizePolicyPropertyManager
+    \li QtStringPropertyManager
+    \li QtTimePropertyManager
+    \li QtVariantPropertyManager
     \endlist
 
     \sa QtAbstractEditorFactoryBase, QtAbstractPropertyBrowser, QtProperty
@@ -815,17 +815,17 @@ void QtAbstractPropertyManager::uninitializeProperty(QtProperty *property)
     implementations are available:
 
     \list
-    \o QtCheckBoxFactory
-    \o QtDateEditFactory
-    \o QtDateTimeEditFactory
-    \o QtDoubleSpinBoxFactory
-    \o QtEnumEditorFactory
-    \o QtLineEditFactory
-    \o QtScrollBarFactory
-    \o QtSliderFactory
-    \o QtSpinBoxFactory
-    \o QtTimeEditFactory
-    \o QtVariantEditorFactory
+    \li QtCheckBoxFactory
+    \li QtDateEditFactory
+    \li QtDateTimeEditFactory
+    \li QtDoubleSpinBoxFactory
+    \li QtEnumEditorFactory
+    \li QtLineEditFactory
+    \li QtScrollBarFactory
+    \li QtSliderFactory
+    \li QtSpinBoxFactory
+    \li QtTimeEditFactory
+    \li QtVariantEditorFactory
     \endlist
 
     \sa QtAbstractPropertyManager, QtAbstractPropertyBrowser
@@ -916,17 +916,17 @@ void QtAbstractPropertyManager::uninitializeProperty(QtProperty *property)
     are available:
 
     \list
-    \o QtCheckBoxFactory
-    \o QtDateEditFactory
-    \o QtDateTimeEditFactory
-    \o QtDoubleSpinBoxFactory
-    \o QtEnumEditorFactory
-    \o QtLineEditFactory
-    \o QtScrollBarFactory
-    \o QtSliderFactory
-    \o QtSpinBoxFactory
-    \o QtTimeEditFactory
-    \o QtVariantEditorFactory
+    \li QtCheckBoxFactory
+    \li QtDateEditFactory
+    \li QtDateTimeEditFactory
+    \li QtDoubleSpinBoxFactory
+    \li QtEnumEditorFactory
+    \li QtLineEditFactory
+    \li QtScrollBarFactory
+    \li QtSliderFactory
+    \li QtSpinBoxFactory
+    \li QtTimeEditFactory
+    \li QtVariantEditorFactory
     \endlist
 
     When deriving from the QtAbstractEditorFactory class, several pure virtual
@@ -1529,9 +1529,9 @@ void QtAbstractPropertyBrowserPrivate::slotPropertyDataChanged(QtProperty *prope
 
     \table 100%
     \row
-    \o
+    \li
     \snippet doc/src/snippets/code/tools_shared_qtpropertybrowser_qtpropertybrowser.cpp 2
-    \o  \image qtpropertybrowser-duplicate.png
+    \li  \image qtpropertybrowser-duplicate.png
     \endtable
 
     The addProperty() function returns a QtBrowserItem that uniquely
@@ -1545,8 +1545,8 @@ void QtAbstractPropertyBrowserPrivate::slotPropertyDataChanged(QtProperty *prope
     implementations:
 
     \list
-        \o QtGroupBoxPropertyBrowser
-        \o QtTreePropertyBrowser
+        \li QtGroupBoxPropertyBrowser
+        \li QtTreePropertyBrowser
     \endlist
 
     \sa QtAbstractPropertyManager, QtAbstractEditorFactoryBase

@@ -699,77 +699,77 @@ void QtVariantPropertyManagerPrivate::slotFlagNamesChanged(QtProperty *property,
 
     \table
     \header
-        \o Property Type
-        \o Property Type Id
+        \li Property Type
+        \li Property Type Id
     \row
-        \o int
-        \o QVariant::Int
+        \li int
+        \li QVariant::Int
     \row
-        \o double
-        \o QVariant::Double
+        \li double
+        \li QVariant::Double
     \row
-        \o bool
-        \o QVariant::Bool
+        \li bool
+        \li QVariant::Bool
     \row
-        \o QString
-        \o QVariant::String
+        \li QString
+        \li QVariant::String
     \row
-        \o QDate
-        \o QVariant::Date
+        \li QDate
+        \li QVariant::Date
     \row
-        \o QTime
-        \o QVariant::Time
+        \li QTime
+        \li QVariant::Time
     \row
-        \o QDateTime
-        \o QVariant::DateTime
+        \li QDateTime
+        \li QVariant::DateTime
     \row
-        \o QKeySequence
-        \o QVariant::KeySequence
+        \li QKeySequence
+        \li QVariant::KeySequence
     \row
-        \o QChar
-        \o QVariant::Char
+        \li QChar
+        \li QVariant::Char
     \row
-        \o QLocale
-        \o QVariant::Locale
+        \li QLocale
+        \li QVariant::Locale
     \row
-        \o QPoint
-        \o QVariant::Point
+        \li QPoint
+        \li QVariant::Point
     \row
-        \o QPointF
-        \o QVariant::PointF
+        \li QPointF
+        \li QVariant::PointF
     \row
-        \o QSize
-        \o QVariant::Size
+        \li QSize
+        \li QVariant::Size
     \row
-        \o QSizeF
-        \o QVariant::SizeF
+        \li QSizeF
+        \li QVariant::SizeF
     \row
-        \o QRect
-        \o QVariant::Rect
+        \li QRect
+        \li QVariant::Rect
     \row
-        \o QRectF
-        \o QVariant::RectF
+        \li QRectF
+        \li QVariant::RectF
     \row
-        \o QColor
-        \o QVariant::Color
+        \li QColor
+        \li QVariant::Color
     \row
-        \o QSizePolicy
-        \o QVariant::SizePolicy
+        \li QSizePolicy
+        \li QVariant::SizePolicy
     \row
-        \o QFont
-        \o QVariant::Font
+        \li QFont
+        \li QVariant::Font
     \row
-        \o QCursor
-        \o QVariant::Cursor
+        \li QCursor
+        \li QVariant::Cursor
     \row
-        \o enum
-        \o enumTypeId()
+        \li enum
+        \li enumTypeId()
     \row
-        \o flag
-        \o flagTypeId()
+        \li flag
+        \li flagTypeId()
     \row
-        \o group
-        \o groupTypeId()
+        \li group
+        \li groupTypeId()
     \endtable
 
     Each property type can provide additional attributes,
@@ -778,97 +778,97 @@ void QtVariantPropertyManagerPrivate::slotFlagNamesChanged(QtProperty *property,
 
     \table
     \header
-        \o Property Type
-        \o Attribute Name
-        \o Attribute Type
+        \li Property Type
+        \li Attribute Name
+        \li Attribute Type
     \row
-        \o \c int
-        \o minimum
-        \o QVariant::Int
+        \li \c int
+        \li minimum
+        \li QVariant::Int
     \row
-        \o
-        \o maximum
-        \o QVariant::Int
+        \li
+        \li maximum
+        \li QVariant::Int
     \row
-        \o
-        \o singleStep
-        \o QVariant::Int
+        \li
+        \li singleStep
+        \li QVariant::Int
     \row
-        \o \c double
-        \o minimum
-        \o QVariant::Double
+        \li \c double
+        \li minimum
+        \li QVariant::Double
     \row
-        \o
-        \o maximum
-        \o QVariant::Double
+        \li
+        \li maximum
+        \li QVariant::Double
     \row
-        \o
-        \o singleStep
-        \o QVariant::Double
+        \li
+        \li singleStep
+        \li QVariant::Double
     \row
-        \o
-        \o decimals
-        \o QVariant::Int
+        \li
+        \li decimals
+        \li QVariant::Int
     \row
-        \o QString
-        \o regExp
-        \o QVariant::RegExp
+        \li QString
+        \li regExp
+        \li QVariant::RegExp
     \row
-        \o QDate
-        \o minimum
-        \o QVariant::Date
+        \li QDate
+        \li minimum
+        \li QVariant::Date
     \row
-        \o
-        \o maximum
-        \o QVariant::Date
+        \li
+        \li maximum
+        \li QVariant::Date
     \row
-        \o QPointF
-        \o decimals
-        \o QVariant::Int
+        \li QPointF
+        \li decimals
+        \li QVariant::Int
     \row
-        \o QSize
-        \o minimum
-        \o QVariant::Size
+        \li QSize
+        \li minimum
+        \li QVariant::Size
     \row
-        \o
-        \o maximum
-        \o QVariant::Size
+        \li
+        \li maximum
+        \li QVariant::Size
     \row
-        \o QSizeF
-        \o minimum
-        \o QVariant::SizeF
+        \li QSizeF
+        \li minimum
+        \li QVariant::SizeF
     \row
-        \o
-        \o maximum
-        \o QVariant::SizeF
+        \li
+        \li maximum
+        \li QVariant::SizeF
     \row
-        \o
-        \o decimals
-        \o QVariant::Int
+        \li
+        \li decimals
+        \li QVariant::Int
     \row
-        \o QRect
-        \o constraint
-        \o QVariant::Rect
+        \li QRect
+        \li constraint
+        \li QVariant::Rect
     \row
-        \o QRectF
-        \o constraint
-        \o QVariant::RectF
+        \li QRectF
+        \li constraint
+        \li QVariant::RectF
     \row
-        \o
-        \o decimals
-        \o QVariant::Int
+        \li
+        \li decimals
+        \li QVariant::Int
     \row
-        \o \c enum
-        \o enumNames
-        \o QVariant::StringList
+        \li \c enum
+        \li enumNames
+        \li QVariant::StringList
     \row
-        \o
-        \o enumIcons
-        \o iconMapTypeId()
+        \li
+        \li enumIcons
+        \li iconMapTypeId()
     \row
-        \o \c flag
-        \o flagNames
-        \o QVariant::StringList
+        \li \c flag
+        \li flagNames
+        \li QVariant::StringList
     \endtable
 
     The attributes for a given property type can be retrieved using
@@ -1875,41 +1875,41 @@ public:
 
     \table
     \header
-        \o Property Type
-        \o Widget
+        \li Property Type
+        \li Widget
     \row
-        \o \c int
-        \o QSpinBox
+        \li \c int
+        \li QSpinBox
     \row
-        \o \c double
-        \o QDoubleSpinBox
+        \li \c double
+        \li QDoubleSpinBox
     \row
-        \o \c bool
-        \o QCheckBox
+        \li \c bool
+        \li QCheckBox
     \row
-        \o QString
-        \o QLineEdit
+        \li QString
+        \li QLineEdit
     \row
-        \o QDate
-        \o QDateEdit
+        \li QDate
+        \li QDateEdit
     \row
-        \o QTime
-        \o QTimeEdit
+        \li QTime
+        \li QTimeEdit
     \row
-        \o QDateTime
-        \o QDateTimeEdit
+        \li QDateTime
+        \li QDateTimeEdit
     \row
-        \o QKeySequence
-        \o customized editor
+        \li QKeySequence
+        \li customized editor
     \row
-        \o QChar
-        \o customized editor
+        \li QChar
+        \li customized editor
     \row
-        \o \c enum
-        \o QComboBox
+        \li \c enum
+        \li QComboBox
     \row
-        \o QCursor
-        \o QComboBox
+        \li QCursor
+        \li QComboBox
     \endtable
 
     Note that QtVariantPropertyManager supports several additional property
