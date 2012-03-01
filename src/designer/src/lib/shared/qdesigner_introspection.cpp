@@ -222,8 +222,8 @@ namespace  {
     QDesignerMetaMethod::QDesignerMetaMethod(const QMetaMethod &method) :
        m_parameterNames(byteArrayListToStringList(method.parameterNames())),
        m_parameterTypes(byteArrayListToStringList(method.parameterTypes())),
-       m_signature(charToQString(method.signature())),
-       m_normalizedSignature(charToQString(QMetaObject::normalizedSignature(method.signature()))),
+       m_signature(QString::fromLatin1(method.methodSignature())),
+       m_normalizedSignature(QString::fromLatin1(QMetaObject::normalizedSignature(method.methodSignature().constData()))),
        m_tag(charToQString(method.tag())),
        m_typeName(charToQString(method.typeName()))
     {

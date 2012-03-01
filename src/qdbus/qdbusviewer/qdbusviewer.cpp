@@ -257,12 +257,12 @@ void QDBusViewer::callMethod(const BusSignature &sig)
     // find the method
     QMetaMethod method;
     for (int i = 0; i < mo->methodCount(); ++i) {
-        const QString signature = QString::fromLatin1(mo->method(i).signature());
+        const QString signature = QString::fromLatin1(mo->method(i).methodSignature());
         if (signature.startsWith(sig.mName) && signature.at(sig.mName.length()) == QLatin1Char('('))
             if (getDbusSignature(mo->method(i)) == sig.mTypeSig)
                 method = mo->method(i);
     }
-    if (!method.signature()) {
+    if (!method.isValid()) {
         QMessageBox::warning(this, tr("Unable to find method"),
                 tr("Unable to find method %1 on path %2 in interface %3").arg(
                     sig.mName).arg(sig.mPath).arg(sig.mInterface));
