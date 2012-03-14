@@ -66,6 +66,5 @@ macro(expect_fail _dir)
   )
 endmacro()
 
-expect_pass(pass1)
 expect_pass(pass2)
 
