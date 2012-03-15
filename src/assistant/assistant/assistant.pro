@@ -1,6 +1,7 @@
 TEMPLATE = app
 LANGUAGE = C++
 TARGET = assistant
+DESTDIR = $$QT.help.bins
 !isEmpty(QT.webkit.name) {
     QT += webkit
 } else {
@@ -117,3 +118,6 @@ contains(CONFIG, static): {
         DEFINES += USE_STATIC_SQLITE_PLUGIN
     }
 }
+
+target.path=$$[QT_INSTALL_BINS]
+INSTALLS += target

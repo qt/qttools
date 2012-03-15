@@ -1,6 +1,6 @@
 QT += network help-private
 TEMPLATE = app
-DESTDIR = $$QT.designer.bins
+DESTDIR = $$QT.help.bins
 TARGET = qcollectiongenerator
 CONFIG += qt \
     warn_on \
