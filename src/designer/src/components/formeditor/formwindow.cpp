@@ -1261,7 +1261,7 @@ QWidget *FormWindow::createWidget(DomUI *ui, const QRect &rc, QWidget *target)
     return widget;
 }
 
-#ifndef QT_NO_DEBUG
+#if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
 static bool isDescendant(const QWidget *parent, const QWidget *child)
 {
     for (; child != 0; child = child->parentWidget()) {
