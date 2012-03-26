@@ -85,7 +85,7 @@ BookmarkModel::setBookmarks(const QByteArray &bookmarks)
 
     delete rootItem;
     folderIcon = QApplication::style()->standardIcon(QStyle::SP_DirClosedIcon);
-    bookmarkIcon = QIcon(QLatin1String(":/trolltech/assistant/images/bookmark.png"));
+    bookmarkIcon = QIcon(QLatin1String(":/qt-project.org/assistant/images/bookmark.png"));
 
     rootItem = new BookmarkItem(DataVector() << tr("Name") << tr("Address")
         << true);

@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/trolltech/assistant" >
+    <qresource prefix="/qt-project.org/assistant" >
         <file>assistant.qch</file>
     </qresource>
 </RCC>

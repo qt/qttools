@@ -81,7 +81,7 @@ QString VolumeSliderPlugin::includeFile() const
 
 QIcon VolumeSliderPlugin::icon() const
 {
-    return QIcon(QStringLiteral(":/trolltech/phononwidgets/images/volumeslider.png"));
+    return QIcon(QStringLiteral(":/qt-project.org/phononwidgets/images/volumeslider.png"));
 }
 
 bool VolumeSliderPlugin::isContainer() const

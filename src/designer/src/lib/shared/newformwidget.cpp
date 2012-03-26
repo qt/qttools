@@ -150,7 +150,7 @@ NewFormWidget::NewFormWidget(QDesignerFormEditorInterface *core, QWidget *parent
     QDesignerSharedSettings settings(m_core);
 
     QString uiExtension = QStringLiteral("ui");
-    QString templatePath = QStringLiteral(":/trolltech/designer/templates/forms");
+    QString templatePath = QStringLiteral(":/qt-project.org/designer/templates/forms");
 
     QDesignerLanguageExtension *lang = qt_extension<QDesignerLanguageExtension *>(core->extensionManager(), core);
     if (lang) {

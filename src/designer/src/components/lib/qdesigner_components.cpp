@@ -192,7 +192,7 @@ QDesignerWidgetBoxInterface *QDesignerComponents::createWidgetBox(QDesignerFormE
             }
         }
 
-        widgetBox->setFileName(QStringLiteral(":/trolltech/widgetbox/widgetbox.xml"));
+        widgetBox->setFileName(QStringLiteral(":/qt-project.org/widgetbox/widgetbox.xml"));
         widgetBox->load();
     } while (false);
 

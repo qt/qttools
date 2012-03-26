@@ -1,5 +1,5 @@
 <RCC>
-  <qresource prefix="/trolltech/propertyeditor">
+  <qresource prefix="/qt-project.org/propertyeditor">
     <file>fontmapping.xml</file>
   </qresource>
 </RCC>

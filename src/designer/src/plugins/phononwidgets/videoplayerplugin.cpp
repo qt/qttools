@@ -87,7 +87,7 @@ QString VideoPlayerPlugin::includeFile() const
 
 QIcon VideoPlayerPlugin::icon() const
 {
-    return QIcon(QStringLiteral(":/trolltech/phononwidgets/images/videoplayer.png"));
+    return QIcon(QStringLiteral(":/qt-project.org/phononwidgets/images/videoplayer.png"));
 }
 
 bool VideoPlayerPlugin::isContainer() const

@@ -63,10 +63,10 @@ QT_BEGIN_NAMESPACE
 
 ConversionWizard::ConversionWizard()
 {
-    setWindowIcon(QIcon(QLatin1String(":/trolltech/qhelpconverter/assistant.png")));
+    setWindowIcon(QIcon(QLatin1String(":/qt-project.org/qhelpconverter/assistant.png")));
     setWindowTitle(tr("Help Conversion Wizard"));
     setPixmap(QWizard::WatermarkPixmap,
-        QPixmap(QLatin1String(":/trolltech/qhelpconverter/assistant-128.png"))) ;
+        QPixmap(QLatin1String(":/qt-project.org/qhelpconverter/assistant-128.png"))) ;
     setOptions(QWizard::IndependentPages|QWizard::NoBackButtonOnLastPage
         |QWizard::HaveHelpButton);
 

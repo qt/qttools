@@ -77,7 +77,7 @@ private:
 VersionLabel::VersionLabel(QWidget *parent)
         : QLabel(parent), secondStage(false), m_pushed(false)
 {
-    setPixmap(QPixmap(QStringLiteral(":/trolltech/designer/images/designer.png")));
+    setPixmap(QPixmap(QStringLiteral(":/qt-project.org/designer/images/designer.png")));
     hitPoints.append(QPoint(56, 25));
     hitPoints.append(QPoint(29, 55));
     hitPoints.append(QPoint(56, 87));

@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/trolltech/qhelpconverter" >
+    <qresource prefix="/qt-project.org/qhelpconverter" >
         <file>assistant-128.png</file>
         <file>assistant.png</file>
         <file>doc/inputpage.html</file>

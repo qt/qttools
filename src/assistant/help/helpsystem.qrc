@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/trolltech/assistant" >
+    <qresource prefix="/qt-project.org/assistant" >
         <file>images/1leftarrow.png</file>
         <file>images/1rightarrow.png</file>
         <file>images/3leftarrow.png</file>

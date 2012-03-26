@@ -194,7 +194,7 @@ MainWindow::MainWindow(CmdLineParser *cmdLine, QWidget *parent)
         QIcon appIcon(pix);
         qApp->setWindowIcon(appIcon);
     } else {
-        QIcon appIcon(QLatin1String(":/trolltech/assistant/images/assistant-128.png"));
+        QIcon appIcon(QLatin1String(":/qt-project.org/assistant/images/assistant-128.png"));
         qApp->setWindowIcon(appIcon);
     }
 
@@ -346,7 +346,7 @@ bool MainWindow::initHelpDB(bool registerInternalDoc)
     if (!assistantInternalDocRegistered || !QFile::exists(helpFile)) {
         QFile file(helpFile);
         if (file.open(QIODevice::WriteOnly)) {
-            QResource res(QLatin1String(":/trolltech/assistant/assistant.qch"));
+            QResource res(QLatin1String(":/qt-project.org/assistant/assistant.qch"));
             if (file.write((const char*)res.data(), res.size()) != res.size())
                 qDebug() << QLatin1String("could not write assistant.qch...");
 
@@ -431,7 +431,7 @@ void MainWindow::insertLastPages()
 void MainWindow::setupActions()
 {
     TRACE_OBJ
-    QString resourcePath = QLatin1String(":/trolltech/assistant/images/");
+    QString resourcePath = QLatin1String(":/qt-project.org/assistant/images/");
 #ifdef Q_OS_MAC
     setUnifiedTitleAndToolBarOnMac(true);
     resourcePath.append(QLatin1String("mac"));
@@ -812,7 +812,7 @@ void MainWindow::showAboutDialog()
             "<p>Copyright (C) 2012 Nokia Corporation and/or its subsidiary(-ies).</p>")
             .arg(tr("Qt Assistant")).arg(QLatin1String(QT_VERSION_STR)),
             resources);
-        QLatin1String path(":/trolltech/assistant/images/assistant-128.png");
+        QLatin1String path(":/qt-project.org/assistant/images/assistant-128.png");
         aboutDia.setPixmap(QString(path));
     }
     if (aboutDia.windowTitle().isEmpty())

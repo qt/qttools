@@ -65,7 +65,7 @@ GlobalActions::GlobalActions(QObject *parent) : QObject(parent)
     TRACE_OBJ
 
     // TODO: Put resource path in misc class
-    QString resourcePath = QLatin1String(":/trolltech/assistant/images/");
+    QString resourcePath = QLatin1String(":/qt-project.org/assistant/images/");
 #ifdef Q_OS_MAC
     resourcePath.append(QLatin1String("mac"));
 #else

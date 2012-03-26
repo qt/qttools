@@ -1,5 +1,5 @@
 <RCC>
-  <qresource prefix="/trolltech/phononwidgets">
+  <qresource prefix="/qt-project.org/phononwidgets">
     <file>images/videoplayer.png</file>
     <file>images/videowidget.png</file>
     <file>images/seekslider.png</file>

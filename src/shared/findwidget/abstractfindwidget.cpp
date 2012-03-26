@@ -72,11 +72,11 @@ QT_BEGIN_NAMESPACE
 static QIcon createIconSet(const QString &name)
 {
     QStringList candidates = QStringList()
-        << (QString::fromUtf8(":/trolltech/shared/images/") + name)
+        << (QString::fromUtf8(":/qt-project.org/shared/images/") + name)
 #ifdef Q_OS_MAC
-        << (QString::fromUtf8(":/trolltech/shared/images/mac/") + name);
+        << (QString::fromUtf8(":/qt-project.org/shared/images/mac/") + name);
 #else
-        << (QString::fromUtf8(":/trolltech/shared/images/win/") + name);
+        << (QString::fromUtf8(":/qt-project.org/shared/images/win/") + name);
 #endif
 
     foreach (const QString &f, candidates) {
@@ -176,7 +176,7 @@ AbstractFindWidget::AbstractFindWidget(FindFlags flags, QWidget *parent)
     m_labelWrapped->setAlignment(
             Qt::AlignLeading | Qt::AlignLeft | Qt::AlignVCenter);
     m_labelWrapped->setText(
-            tr("<img src=\":/trolltech/shared/images/wrap.png\">"
+            tr("<img src=\":/qt-project.org/shared/images/wrap.png\">"
                 "&nbsp;Search wrapped"));
     m_labelWrapped->hide();
     layOut->addWidget(m_labelWrapped);

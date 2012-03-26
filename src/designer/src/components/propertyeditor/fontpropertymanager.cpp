@@ -331,7 +331,7 @@ namespace qdesigner_internal {
     bool FontPropertyManager::readFamilyMapping(NameMap *rc, QString *errorMessage)
     {
         rc->clear();
-        const QString fileName = QStringLiteral(":/trolltech/propertyeditor/fontmapping.xml");
+        const QString fileName = QStringLiteral(":/qt-project.org/propertyeditor/fontmapping.xml");
         QFile file(fileName);
         if (!file.open(QIODevice::ReadOnly)) {
             *errorMessage = QString::fromUtf8("Unable to open %1: %2").arg(fileName, file.errorString());

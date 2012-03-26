@@ -663,8 +663,8 @@ void QtGradientStopsController::setUi(Ui::QtGradientEditor *ui)
                 this, SLOT(slotRgbClicked()));
 
     d_ptr->enableCurrent(false);
-    d_ptr->m_ui->zoomInButton->setIcon(QIcon(QLatin1String(":/trolltech/qtgradienteditor/images/zoomin.png")));
-    d_ptr->m_ui->zoomOutButton->setIcon(QIcon(QLatin1String(":/trolltech/qtgradienteditor/images/zoomout.png")));
+    d_ptr->m_ui->zoomInButton->setIcon(QIcon(QLatin1String(":/qt-project.org/qtgradienteditor/images/zoomin.png")));
+    d_ptr->m_ui->zoomOutButton->setIcon(QIcon(QLatin1String(":/qt-project.org/qtgradienteditor/images/zoomout.png")));
     d_ptr->updateZoom(1);
 }
 

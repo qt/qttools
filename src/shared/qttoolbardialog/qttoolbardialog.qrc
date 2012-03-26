@@ -1,5 +1,5 @@
 <RCC version="1.0">
-    <qresource prefix="/trolltech/qttoolbardialog">
+    <qresource prefix="/qt-project.org/qttoolbardialog">
         <file>images/up.png</file>
         <file>images/down.png</file>
         <file>images/forward.png</file>

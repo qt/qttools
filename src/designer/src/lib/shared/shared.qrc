@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/trolltech/designer">
+    <qresource prefix="/qt-project.org/designer">
         <file>defaultgradients.xml</file>
         <!-- Templates -->
         <file>templates/forms/Dialog_with_Buttons_Bottom.ui</file>

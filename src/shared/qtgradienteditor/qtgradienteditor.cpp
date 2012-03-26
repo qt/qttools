@@ -763,9 +763,9 @@ QtGradientEditor::QtGradientEditor(QWidget *parent)
     connect(d_ptr->m_gradientStopsController, SIGNAL(gradientStopsChanged(QGradientStops)),
                 this, SLOT(slotGradientStopsChanged(QGradientStops)));
 
-    QIcon iconLinear(QLatin1String(":/trolltech/qtgradienteditor/images/typelinear.png"));
-    QIcon iconRadial(QLatin1String(":/trolltech/qtgradienteditor/images/typeradial.png"));
-    QIcon iconConical(QLatin1String(":/trolltech/qtgradienteditor/images/typeconical.png"));
+    QIcon iconLinear(QLatin1String(":/qt-project.org/qtgradienteditor/images/typelinear.png"));
+    QIcon iconRadial(QLatin1String(":/qt-project.org/qtgradienteditor/images/typeradial.png"));
+    QIcon iconConical(QLatin1String(":/qt-project.org/qtgradienteditor/images/typeconical.png"));
 
     d_ptr->m_ui.typeComboBox->addItem(iconLinear, tr("Linear"));
     d_ptr->m_ui.typeComboBox->addItem(iconRadial, tr("Radial"));
@@ -785,9 +785,9 @@ QtGradientEditor::QtGradientEditor(QWidget *parent)
     connect(d_ptr->m_ui.typeComboBox, SIGNAL(activated(int)),
                 this, SLOT(slotTypeChanged(int)));
 
-    QIcon iconPad(QLatin1String(":/trolltech/qtgradienteditor/images/spreadpad.png"));
-    QIcon iconRepeat(QLatin1String(":/trolltech/qtgradienteditor/images/spreadrepeat.png"));
-    QIcon iconReflect(QLatin1String(":/trolltech/qtgradienteditor/images/spreadreflect.png"));
+    QIcon iconPad(QLatin1String(":/qt-project.org/qtgradienteditor/images/spreadpad.png"));
+    QIcon iconRepeat(QLatin1String(":/qt-project.org/qtgradienteditor/images/spreadrepeat.png"));
+    QIcon iconReflect(QLatin1String(":/qt-project.org/qtgradienteditor/images/spreadreflect.png"));
 
     d_ptr->m_ui.spreadComboBox->addItem(iconPad, tr("Pad"));
     d_ptr->m_ui.spreadComboBox->addItem(iconRepeat, tr("Repeat"));

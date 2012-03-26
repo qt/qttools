@@ -78,8 +78,8 @@ void OpenPagesDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
     if (index.column() == 1 && index.model()->rowCount() > 1
         && option.state & QStyle::State_MouseOver) {
         QIcon icon((option.state & QStyle::State_Selected)
-            ? ":/trolltech/assistant/images/closebutton.png"
-            : ":/trolltech/assistant/images/darkclosebutton.png");
+            ? ":/qt-project.org/assistant/images/closebutton.png"
+            : ":/qt-project.org/assistant/images/darkclosebutton.png");
 
         const QRect iconRect(option.rect.right() - option.rect.height(),
             option.rect.top(), option.rect.height(), option.rect.height());

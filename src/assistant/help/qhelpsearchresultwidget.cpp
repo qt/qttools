@@ -360,10 +360,10 @@ QHelpSearchResultWidget::QHelpSearchResultWidget(QHelpSearchEngine *engine)
     hBoxLayout->setSpacing(0);
 #endif
     hBoxLayout->addWidget(d->firstResultPage = d->setupToolButton(
-        QString::fromUtf8(":/trolltech/assistant/images/3leftarrow.png")));
+        QString::fromUtf8(":/qt-project.org/assistant/images/3leftarrow.png")));
 
     hBoxLayout->addWidget(d->previousResultPage = d->setupToolButton(
-        QString::fromUtf8(":/trolltech/assistant/images/1leftarrow.png")));
+        QString::fromUtf8(":/qt-project.org/assistant/images/1leftarrow.png")));
 
     d->hitsLabel = new QLabel(tr("0 - 0 of 0 Hits"), this);
     d->hitsLabel->setEnabled(false);
@@ -372,10 +372,10 @@ QHelpSearchResultWidget::QHelpSearchResultWidget(QHelpSearchEngine *engine)
     d->hitsLabel->setMinimumSize(QSize(150, d->hitsLabel->height()));
 
     hBoxLayout->addWidget(d->nextResultPage = d->setupToolButton(
-        QString::fromUtf8(":/trolltech/assistant/images/1rightarrow.png")));
+        QString::fromUtf8(":/qt-project.org/assistant/images/1rightarrow.png")));
 
     hBoxLayout->addWidget(d->lastResultPage = d->setupToolButton(
-        QString::fromUtf8(":/trolltech/assistant/images/3rightarrow.png")));
+        QString::fromUtf8(":/qt-project.org/assistant/images/3rightarrow.png")));
 
     QSpacerItem *spacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
     hBoxLayout->addItem(spacer);

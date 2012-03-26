@@ -179,7 +179,7 @@ public:
     {
         XFormRendererEx *xform = new XFormRendererEx(parent);
         xform->setText(QLatin1String("Qt - Hello World!!"));
-        xform->setPixmap(QPixmap(QLatin1String(":/trolltech/arthurplugin/bg1.jpg")));
+        xform->setPixmap(QPixmap(QLatin1String(":/qt-project.org/arthurplugin/bg1.jpg")));
         return xform;
     }
 };

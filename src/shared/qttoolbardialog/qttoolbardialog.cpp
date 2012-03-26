@@ -1787,12 +1787,12 @@ QtToolBarDialog::QtToolBarDialog(QWidget *parent, Qt::WindowFlags flags)
     d_ptr->ui.actionTree->setRootIsDecorated(false);
     d_ptr->ui.actionTree->header()->hide();
 
-    d_ptr->ui.upButton->setIcon(QIcon(QLatin1String(":/trolltech/qttoolbardialog/images/up.png")));
-    d_ptr->ui.downButton->setIcon(QIcon(QLatin1String(":/trolltech/qttoolbardialog/images/down.png")));
-    d_ptr->ui.leftButton->setIcon(QIcon(QLatin1String(":/trolltech/qttoolbardialog/images/back.png")));
-    d_ptr->ui.rightButton->setIcon(QIcon(QLatin1String(":/trolltech/qttoolbardialog/images/forward.png")));
-    d_ptr->ui.newButton->setIcon(QIcon(QLatin1String(":/trolltech/qttoolbardialog/images/plus.png")));
-    d_ptr->ui.removeButton->setIcon(QIcon(QLatin1String(":/trolltech/qttoolbardialog/images/minus.png")));
+    d_ptr->ui.upButton->setIcon(QIcon(QLatin1String(":/qt-project.org/qttoolbardialog/images/up.png")));
+    d_ptr->ui.downButton->setIcon(QIcon(QLatin1String(":/qt-project.org/qttoolbardialog/images/down.png")));
+    d_ptr->ui.leftButton->setIcon(QIcon(QLatin1String(":/qt-project.org/qttoolbardialog/images/back.png")));
+    d_ptr->ui.rightButton->setIcon(QIcon(QLatin1String(":/qt-project.org/qttoolbardialog/images/forward.png")));
+    d_ptr->ui.newButton->setIcon(QIcon(QLatin1String(":/qt-project.org/qttoolbardialog/images/plus.png")));
+    d_ptr->ui.removeButton->setIcon(QIcon(QLatin1String(":/qt-project.org/qttoolbardialog/images/minus.png")));
 
     connect(d_ptr->ui.newButton, SIGNAL(clicked()), this, SLOT(newClicked()));
     connect(d_ptr->ui.removeButton, SIGNAL(clicked()), this, SLOT(removeClicked()));

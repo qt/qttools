@@ -59,7 +59,7 @@ FindWidget::FindWidget(QWidget *parent)
     TRACE_OBJ
     installEventFilter(this);
     QHBoxLayout *hboxLayout = new QHBoxLayout(this);
-    QString resourcePath = QLatin1String(":/trolltech/assistant/images/");
+    QString resourcePath = QLatin1String(":/qt-project.org/assistant/images/");
 
 #ifndef Q_OS_MAC
     hboxLayout->setMargin(0);
@@ -102,7 +102,7 @@ FindWidget::FindWidget(QWidget *parent)
     labelWrapped->setMinimumSize(QSize(0, 20));
     labelWrapped->setMaximumSize(QSize(105, 20));
     labelWrapped->setAlignment(Qt::AlignLeading | Qt::AlignLeft | Qt::AlignVCenter);
-    labelWrapped->setText(tr("<img src=\":/trolltech/assistant/images/wrap.png\""
+    labelWrapped->setText(tr("<img src=\":/qt-project.org/assistant/images/wrap.png\""
         ">&nbsp;Search wrapped"));
     hboxLayout->addWidget(labelWrapped);
 

@@ -52,13 +52,13 @@ namespace qdesigner_internal {
 QDESIGNER_SHARED_EXPORT QIcon createIconSet(const QString &name)
 {
     QStringList candidates = QStringList()
-        << (QString::fromUtf8(":/trolltech/formeditor/images/") + name)
+        << (QString::fromUtf8(":/qt-project.org/formeditor/images/") + name)
 #ifdef Q_OS_MAC
-        << (QString::fromUtf8(":/trolltech/formeditor/images/mac/") + name)
+        << (QString::fromUtf8(":/qt-project.org/formeditor/images/mac/") + name)
 #else
-        << (QString::fromUtf8(":/trolltech/formeditor/images/win/") + name)
+        << (QString::fromUtf8(":/qt-project.org/formeditor/images/win/") + name)
 #endif
-        << (QString::fromUtf8(":/trolltech/formeditor/images/designer_") + name);
+        << (QString::fromUtf8(":/qt-project.org/formeditor/images/designer_") + name);
 
     foreach (const QString &f, candidates) {
         if (QFile::exists(f))
@@ -70,7 +70,7 @@ QDESIGNER_SHARED_EXPORT QIcon createIconSet(const QString &name)
 
 QDESIGNER_SHARED_EXPORT QIcon emptyIcon()
 {
-    return QIcon(QStringLiteral(":/trolltech/formeditor/images/emptyicon.png"));
+    return QIcon(QStringLiteral(":/qt-project.org/formeditor/images/emptyicon.png"));
 }
 
 } // namespace qdesigner_internal

@@ -84,7 +84,7 @@ QString QWebViewPlugin::includeFile() const
 
 QIcon QWebViewPlugin::icon() const
 {
-    return QIcon(QStringLiteral(":/trolltech/qwebview/images/qwebview.png"));
+    return QIcon(QStringLiteral(":/qt-project.org/qwebview/images/qwebview.png"));
 }
 
 bool QWebViewPlugin::isContainer() const

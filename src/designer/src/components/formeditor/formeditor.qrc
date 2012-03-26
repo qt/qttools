@@ -1,5 +1,5 @@
 <RCC>
-  <qresource prefix="/trolltech/formeditor">
+  <qresource prefix="/qt-project.org/formeditor">
     <file>images/submenu.png</file>
     <file>images/cursors/arrow.png</file>
     <file>images/cursors/busy.png</file>

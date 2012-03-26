@@ -1,5 +1,5 @@
 <!DOCTYPE RCC><RCC version="1.0">
-    <qresource prefix="/trolltech/qtgradienteditor">
+    <qresource prefix="/qt-project.org/qtgradienteditor">
         <file>images/edit.png</file>
         <file>images/zoomin.png</file>
         <file>images/zoomout.png</file>

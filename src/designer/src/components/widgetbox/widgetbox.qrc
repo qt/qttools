@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/trolltech/widgetbox">
+    <qresource prefix="/qt-project.org/widgetbox">
         <file>widgetbox.xml</file>
     </qresource>
 </RCC>

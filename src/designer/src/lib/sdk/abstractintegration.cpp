@@ -384,7 +384,7 @@ void QDesignerIntegrationPrivate::initialize()
         QtGradientUtils::restoreState(m_gradientManager, QString::fromAscii(f.readAll()));
         f.close();
     } else {
-        QFile defaultGradients(QStringLiteral(":/trolltech/designer/defaultgradients.xml"));
+        QFile defaultGradients(QStringLiteral(":/qt-project.org/designer/defaultgradients.xml"));
         if (defaultGradients.open(QIODevice::ReadOnly)) {
             QtGradientUtils::restoreState(m_gradientManager, QString::fromAscii(defaultGradients.readAll()));
             defaultGradients.close();

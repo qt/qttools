@@ -93,7 +93,7 @@ QDesigner::QDesigner(int &argc, char **argv)
     QDesignerComponents::initializeResources();
 
 #ifndef Q_OS_MAC
-    setWindowIcon(QIcon(QStringLiteral(":/trolltech/designer/images/designer.png")));
+    setWindowIcon(QIcon(QStringLiteral(":/qt-project.org/designer/images/designer.png")));
 #endif
     initialize();
 }

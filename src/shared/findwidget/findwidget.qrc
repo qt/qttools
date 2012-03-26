@@ -1,5 +1,5 @@
 <RCC>
-  <qresource prefix="/trolltech/shared">
+  <qresource prefix="/qt-project.org/shared">
     <file>images/mac/closetab.png</file>
     <file>images/mac/next.png</file>
     <file>images/mac/previous.png</file>

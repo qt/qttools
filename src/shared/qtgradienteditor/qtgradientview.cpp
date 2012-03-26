@@ -205,10 +205,10 @@ QtGradientView::QtGradientView(QWidget *parent)
     connect(m_ui.listWidget, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(slotRenameGradient(QListWidgetItem*)));
     connect(m_ui.listWidget, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)), this, SLOT(slotCurrentItemChanged(QListWidgetItem*)));
 
-    m_newAction = new QAction(QIcon(QLatin1String(":/trolltech/qtgradienteditor/images/plus.png")), tr("New..."), this);
-    m_editAction = new QAction(QIcon(QLatin1String(":/trolltech/qtgradienteditor/images/edit.png")), tr("Edit..."), this);
+    m_newAction = new QAction(QIcon(QLatin1String(":/qt-project.org/qtgradienteditor/images/plus.png")), tr("New..."), this);
+    m_editAction = new QAction(QIcon(QLatin1String(":/qt-project.org/qtgradienteditor/images/edit.png")), tr("Edit..."), this);
     m_renameAction = new QAction(tr("Rename"), this);
-    m_removeAction = new QAction(QIcon(QLatin1String(":/trolltech/qtgradienteditor/images/minus.png")), tr("Remove"), this);
+    m_removeAction = new QAction(QIcon(QLatin1String(":/qt-project.org/qtgradienteditor/images/minus.png")), tr("Remove"), this);
 
     connect(m_newAction, SIGNAL(triggered()), this, SLOT(slotNewGradient()));
     connect(m_editAction, SIGNAL(triggered()), this, SLOT(slotEditGradient()));

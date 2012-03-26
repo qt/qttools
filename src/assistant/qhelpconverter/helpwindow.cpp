@@ -74,7 +74,7 @@ HelpWindow::HelpWindow(QWidget *parent)
 
 void HelpWindow::setHelp(const QString &topic)
 {
-    QLatin1String fileStr(":/trolltech/qhelpconverter/doc/%1.html");
+    QLatin1String fileStr(":/qt-project.org/qhelpconverter/doc/%1.html");
     QFile f(QString(fileStr).arg(topic.toLower()));
     f.open(QIODevice::ReadOnly);
     QTextStream s(&f);

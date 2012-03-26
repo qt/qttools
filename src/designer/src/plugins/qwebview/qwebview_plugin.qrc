@@ -1,5 +1,5 @@
 <RCC>
-  <qresource prefix="/trolltech/qwebview">
+  <qresource prefix="/qt-project.org/qwebview">
     <file>images/qwebview.png</file>
   </qresource>
 </RCC>

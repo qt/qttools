@@ -90,7 +90,7 @@ static inline void extendClickableArea(QRect *subMenuRect, Qt::LayoutDirection d
 
 QDesignerMenu::QDesignerMenu(QWidget *parent) :
     QMenu(parent),
-    m_subMenuPixmap(QPixmap(QStringLiteral(":/trolltech/formeditor/images/submenu.png"))),
+    m_subMenuPixmap(QPixmap(QStringLiteral(":/qt-project.org/formeditor/images/submenu.png"))),
     m_currentIndex(0),
     m_addItem(new SpecialMenuAction(this)),
     m_addSeparator(new SpecialMenuAction(this)),

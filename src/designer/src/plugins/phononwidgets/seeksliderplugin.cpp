@@ -81,7 +81,7 @@ QString SeekSliderPlugin::includeFile() const
 
 QIcon SeekSliderPlugin::icon() const
 {
-    return QIcon(QStringLiteral(":/trolltech/phononwidgets/images/seekslider.png"));
+    return QIcon(QStringLiteral(":/qt-project.org/phononwidgets/images/seekslider.png"));
 }
 
 bool SeekSliderPlugin::isContainer() const
