@@ -14,7 +14,6 @@ contains(CONFIG, static) {
 }
 
 include(../../../../shared/deviceskin/deviceskin.pri)
-include($$QT.core.sources/../tools/rcc/rcc.pri)
 include(../../../../shared/findwidget/findwidget.pri)
 include(../../../../shared/qtgradienteditor/qtgradienteditor.pri)
 
@@ -108,7 +107,8 @@ HEADERS += \
     $$PWD/shared_settings_p.h \
     $$PWD/newformwidget_p.h \
     $$PWD/filterwidget_p.h \
-    $$PWD/plugindialog_p.h
+    $$PWD/plugindialog_p.h \
+    $$PWD/rcc_p.h
 
 SOURCES += \
     $$PWD/spacer_widget.cpp \
@@ -184,6 +184,7 @@ SOURCES += \
     $$PWD/shared_settings.cpp \
     $$PWD/newformwidget.cpp \
     $$PWD/filterwidget.cpp \
-    $$PWD/plugindialog.cpp
+    $$PWD/plugindialog.cpp \
+    $$PWD/rcc.cpp
 
 RESOURCES += $$PWD/shared.qrc

@@ -40,7 +40,7 @@
 ****************************************************************************/
 
 #include "qtresourcemodel_p.h"
-#include <rcc.h>
+#include "rcc_p.h"
 
 #include <QtCore/QStringList>
 #include <QtCore/QMap>
