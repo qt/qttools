@@ -46,9 +46,6 @@
 
 #include <QtDesigner/private/connectionedit_p.h>
 
-#include <QtXml/QDomDocument>
-#include <QtXml/QDomElement>
-
 QT_BEGIN_NAMESPACE
 
 class DomConnections;
