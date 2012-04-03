@@ -82,7 +82,7 @@ INSTALLS += target
 phrasebooks.path = $$[QT_INSTALL_DATA]/phrasebooks
 
 # ## will this work on windows?
-phrasebooks.files = $$QT_SOURCE_TREE/tools/linguist/phrasebooks/*
+phrasebooks.files = $$PWD/../phrasebooks/*
 INSTALLS += phrasebooks
 FORMS += statistics.ui \
     phrasebookbox.ui \

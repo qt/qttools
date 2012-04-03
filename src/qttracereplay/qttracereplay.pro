@@ -5,7 +5,7 @@ TEMPLATE = app
 DESTDIR     = $$QT.designer.bins
 
 DEPENDPATH += .
-INCLUDEPATH += . $$QT_SOURCE_TREE/src/3rdparty/harfbuzz/src
+INCLUDEPATH += . $$QT.gui.sources/../3rdparty/harfbuzz/src
 TARGET = qttracereplay
 QT += core-private gui-private widgets widgets-private
 CONFIG += console

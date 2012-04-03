@@ -1,6 +1,4 @@
 
-QTDIR       = $$QT_SOURCE_TREE
-
 CONFIG      += designer plugin
 TEMPLATE    = lib
 TARGET = $$qtLibraryTarget(arthurplugin)
