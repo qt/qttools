@@ -44,7 +44,7 @@
 
 #include <QtCore/qplugin.h>
 #include <QtWidgets/QIcon>
-#include <QtWidgets/QPixmap>
+#include <QtGui/QPixmap>
 
 #include "xform.h"
 #include "pathdeform.h"

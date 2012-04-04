@@ -9,19 +9,21 @@ contains(QT_CONFIG, opengl) {
     QT += opengl
 }
 
-SHARED_FOLDER = QT_CORE_SOURCES/examples/painting/shared
-include(QT_CORE_SOURCES/examples/painting/shared/shared.pri)
+QT_BASE_EXAMPLES = $$QT.core.sources/../../examples
 
-EXAMPLE_AFFINE_DIR = QT_CORE_SOURCES/examples/painting/affine
-EXAMPLE_COMPOSITION_DIR = QT_CORE_SOURCES/examples/painting/composition
-EXAMPLE_DEFORM_DIR = QT_CORE_SOURCES/examples/painting/deform
-EXAMPLE_GRADIENT_DIR = QT_CORE_SOURCES/examples/painting/gradients
-EXAMPLE_STROKE_DIR = QT_CORE_SOURCES/examples/painting/pathstroke
+SHARED_FOLDER = $$QT_BASE_EXAMPLES/painting/shared
+include($$QT_BASE_EXAMPLES/painting/shared/shared.pri)
+
+EXAMPLE_AFFINE_DIR = $$QT_BASE_EXAMPLES/painting/affine
+EXAMPLE_COMPOSITION_DIR = $$QT_BASE_EXAMPLES/painting/composition
+EXAMPLE_DEFORM_DIR = $$QT_BASE_EXAMPLES/painting/deform
+EXAMPLE_GRADIENT_DIR = $$QT_BASE_EXAMPLES/painting/gradients
+EXAMPLE_STROKE_DIR = $$QT_BASE_EXAMPLES/painting/pathstroke
 
 INCLUDEPATH += $$EXAMPLE_AFFINE_DIR $$EXAMPLE_COMPOSITION_DIR $$EXAMPLE_DEFORM_DIR $$EXAMPLE_GRADIENT_DIR $$EXAMPLE_STROKE_DIR
 
 SOURCES = plugin.cpp \
-    $EXAMPLE_AFFINE_DIR/xform.cpp \
+    $$EXAMPLE_AFFINE_DIR/xform.cpp \
     $$EXAMPLE_COMPOSITION_DIR/composition.cpp \
     $$EXAMPLE_DEFORM_DIR/pathdeform.cpp \
     $$EXAMPLE_GRADIENT_DIR/gradients.cpp \
