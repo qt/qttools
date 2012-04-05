@@ -319,7 +319,7 @@ QImage NewFormWidget::grabForm(QDesignerFormEditorInterface *core,
     if (!widget)
         return QImage();
 
-    const QPixmap pixmap = QPixmap::grabWidget(widget);
+    const QPixmap pixmap = widget->grab(QRect(0, 0, -1, -1));
     widget->deleteLater();
     return pixmap.toImage();
 }

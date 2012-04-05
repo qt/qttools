@@ -406,7 +406,7 @@ QPixmap QDesignerFormBuilder::createPreviewPixmap(const QDesignerFormWindowInter
     if (!widget)
         return QPixmap();
 
-    const QPixmap rc = QPixmap::grabWidget (widget);
+    const QPixmap rc = widget->grab(QRect(0, 0, -1, -1));
     widget->deleteLater();
     return rc;
 }

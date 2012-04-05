@@ -142,7 +142,7 @@ QDesignerMimeData::QDesignerMimeData(const QDesignerDnDItems &items, QDrag *drag
     case 1: {
         QWidget *deco = m_items.first()->decoration();
         decorationTopLeft = deco->pos();
-        const QPixmap widgetPixmap = QPixmap::grabWidget(deco);
+        const QPixmap widgetPixmap = deco->grab(QRect(0, 0, -1, -1));
 #ifdef TRANSPARENT_DRAG_PIXMAP
         QImage image(widgetPixmap.size(), QImage::Format_ARGB32);
         image.fill(QColor(Qt::transparent).rgba());
@@ -175,7 +175,7 @@ QDesignerMimeData::QDesignerMimeData(const QDesignerDnDItems &items, QDrag *drag
         decorationTopLeft = unitedGeometry.topLeft();
         for (it = m_items.constBegin() ; it != cend; ++it ) {
             QWidget *w = (*it)->decoration();
-            const QPixmap wp = QPixmap::grabWidget(w);
+            const QPixmap wp = w->grab(QRect(0, 0, -1, -1));
             const QPoint pos = w->pos() - decorationTopLeft;
             painter.drawPixmap(pos, wp);
             maskPainter.fillRect(QRect(pos, wp.size()), Qt::color1);

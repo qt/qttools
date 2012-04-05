@@ -635,14 +635,14 @@ QPixmap  ActionRepositoryMimeData::actionDragPixmap(const QAction *action)
 
     foreach (QWidget *w, action->associatedWidgets())
         if (QToolButton *tb = qobject_cast<QToolButton *>(w))
-            return QPixmap::grabWidget(tb);
+            return tb->grab(QRect(0, 0, -1, -1));
 
     // Create a QToolButton
     QToolButton *tb = new QToolButton;
     tb->setText(action->text());
     tb->setToolButtonStyle(Qt::ToolButtonTextOnly);
     tb->adjustSize();
-    const QPixmap rc = QPixmap::grabWidget(tb);
+    const QPixmap rc = tb->grab(QRect(0, 0, -1, -1));
     tb->deleteLater();
     return rc;
 }

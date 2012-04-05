@@ -226,7 +226,7 @@ bool QTabWidgetEventFilter::eventFilter(QObject *o, QEvent *e)
             if (m_dragIcon.isNull()) {
                 QLabel *label = new QLabel(m_dragLabel);
                 label->adjustSize();
-                drg->setPixmap(QPixmap::grabWidget(label));
+                drg->setPixmap(label->grab(QRect(0, 0, -1, -1)));
                 label->deleteLater();
             } else {
                 drg->setPixmap(m_dragIcon.pixmap(22, 22));

@@ -59,7 +59,7 @@ using namespace qdesigner_internal;
 static QWidget *decorationFromWidget(QWidget *w)
 {
     QLabel *label = new QLabel(0, Qt::ToolTip);
-    QPixmap pm = QPixmap::grabWidget(w);
+    QPixmap pm = w->grab(QRect(0, 0, -1, -1));
     label->setPixmap(pm);
     label->resize(pm.size());
 
