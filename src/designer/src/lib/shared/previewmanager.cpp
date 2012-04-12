@@ -604,7 +604,9 @@ PreviewManager:: ~PreviewManager()
 Qt::WindowFlags PreviewManager::previewWindowFlags(const QWidget *widget) const
 {
 #ifdef Q_OS_WIN
-    Qt::WindowFlags windowFlags = (widget->windowType() == Qt::Window) ? Qt::Window | Qt::WindowMaximizeButtonHint : Qt::WindowFlags(Qt::Dialog);
+    Qt::WindowFlags windowFlags = (widget->windowType() == Qt::Window) ?
+                                  Qt::Window | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint :
+                                  Qt::WindowFlags(Qt::Dialog);
 #else
     Q_UNUSED(widget)
     // Only Dialogs have close buttons on Mac.
