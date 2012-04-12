@@ -8,23 +8,6 @@
 %moduleheaders = ( # restrict the module headers to those found in relative path
 );
 %classnames = (
-    "qtcluceneversion.h" => "QtCLuceneVersion",
-    "qthelpversion.h" => "QtHelpVersion",
-    "qtuitoolsversion.h" => "QtUiToolsVersion",
-    "qtdesignerversion.h" => "QtDesigner",
-    "qtdesignercomponentsversion.h" => "QtDesignerComponents",
-);
-%mastercontent = (
-    "sql" => "#include <QtSql/QtSql>\n",
-    "xml" => "#include <QtXml/QtXml>\n",
-    "network" => "#include <QtNetwork/QtNetwork>\n",
-    "script" => "#include <QtScript/QtScript>\n",
-    "declarative" => "#include <QtDeclarative/QtDeclarative>\n",
-    "clucene" => "#include <QtCLucene/QtCLucene>\n",
-    "help" => "#include <QtHelp/QtHelp>\n",
-    "designer" => "#include <QtDesigner/QtDesigner>\n",
-    "designercomponents" => "#include <QtDesignerComponents/QtDesignerComponents>\n",
-    "uitools" => "#include <QtUiTools/QtUiTools>\n",
 );
 # Module dependencies.
 # Every module that is required to build this module should have one entry.

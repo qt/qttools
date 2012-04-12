@@ -1,12 +1,9 @@
-load(qt_module)
-
-TARGET = QtDesignerComponents
-
-
-CONFIG += module
-QT = core gui-private widgets-private designer-private
+load(qt_build_config)
 
 MODULE = designercomponents
+TARGET = QtDesignerComponents
+QT = core gui-private widgets-private designer-private
+
 load(qt_module_config)
 
 # private dependencies

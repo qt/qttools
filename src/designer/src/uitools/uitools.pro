@@ -1,12 +1,8 @@
-load(qt_module)
+load(qt_build_config)
 
 TARGET = QtUiTools
-QPRO_PWD = $$PWD
-
-CONFIG += qt staticlib module
+CONFIG += staticlib
 QT = core
-
-unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES += QtCore
 
 load(qt_module_config)
 

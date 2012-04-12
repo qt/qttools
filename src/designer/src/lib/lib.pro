@@ -1,19 +1,12 @@
 MODULE = designer
 
-load(qt_module)
+load(qt_build_config)
 
 TARGET = QtDesigner
-QPRO_PWD = $$PWD
-
-CONFIG += module
 QT = core-private gui-private widgets-private xml
-
-unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES += QtXml QtCore QtGui QtWidgets
 
 MODULE_CONFIG = designer_defines
 load(qt_module_config)
-
-HEADERS += qtdesignerversion.h
 
 DEFINES += \
     QDESIGNER_SDK_LIBRARY \

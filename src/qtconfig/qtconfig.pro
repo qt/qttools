@@ -1,4 +1,4 @@
-load(qt_module)
+load(qt_build_config)
 
 TEMPLATE = app
 CONFIG   += qt warn_on x11
@@ -27,5 +27,4 @@ DESTDIR            = $$QT.designer.bins
 
 target.path=$$[QT_INSTALL_BINS]
 INSTALLS        += target
-INCLUDEPATH     += .
 DBFILE          = qtconfig.db

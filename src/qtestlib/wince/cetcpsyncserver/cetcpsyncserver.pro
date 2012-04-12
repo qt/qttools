@@ -1,6 +1,5 @@
 TEMPLATE = app
 TARGET = cetcpsyncsvr
-DEPENDPATH += .
 QT -= gui
 QT += network
 
