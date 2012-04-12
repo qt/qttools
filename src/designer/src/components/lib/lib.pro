@@ -1,15 +1,16 @@
-MODULE = designercomponents
 load(qt_module)
 
-TEMPLATE = lib
 TARGET = QtDesignerComponents
 
-QT += gui-private widgets widgets-private designer designer-private
 
 CONFIG += module
-MODULE_PRI = ../../../../../modules/qt_designercomponents.pri
+QT = core gui-private widgets-private designer-private
 
+MODULE = designercomponents
 load(qt_module_config)
+
+# private dependencies
+QT += xml
 
 # QtDesignerComponents uses
 DEFINES += QT_STATICPLUGIN
@@ -20,7 +21,6 @@ QMAKE_TARGET_PRODUCT = Designer
 QMAKE_TARGET_DESCRIPTION = Graphical user interface designer.
 
 #load up the headers info
-CONFIG += qt_install_headers
 HEADERS_PRI = $$QT.designer.includes/headers.pri
 include($$HEADERS_PRI, "", true)|clear(HEADERS_PRI)
 

@@ -26,13 +26,6 @@
     "designercomponents" => "#include <QtDesignerComponents/QtDesignerComponents>\n",
     "uitools" => "#include <QtUiTools/QtUiTools>\n",
 );
-%modulepris = (
-    "QtCLucene" => "$basedir/modules/qt_clucene.pri",
-    "QtHelp" => "$basedir/modules/qt_help.pri",
-    "QtUiTools" => "$basedir/modules/qt_uitools.pri",
-    "QtDesigner" => "$basedir/modules/qt_designer.pri",
-    "QtDesignerComponents" => "$basedir/modules/qt_designercomponents.pri",
-);
 # Module dependencies.
 # Every module that is required to build this module should have one entry.
 # Each of the module version specifiers can take one of the following values:

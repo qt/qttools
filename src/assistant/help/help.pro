@@ -1,17 +1,17 @@
-MODULE = help
-
 load(qt_module)
 
 TARGET = QtHelp
 QPRO_PWD = $$PWD
-QT += widgets sql network core-private clucene clucene-private
 
 CONFIG += module
-MODULE_PRI += ../../../modules/qt_help.pri
+QT = core-private gui widgets
 
 DEFINES += QHELP_LIB QT_CLUCENE_SUPPORT
 
 load(qt_module_config)
+
+# private dependencies
+QT += network sql clucene-private
 
 HEADERS += qthelpversion.h
 

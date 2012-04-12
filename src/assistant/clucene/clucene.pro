@@ -6,7 +6,6 @@ TARGET = QtCLucene
 QPRO_PWD = $$PWD
 
 CONFIG += module
-MODULE_PRI = ../../../modules/qt_clucene.pri
 
 QT = core
 

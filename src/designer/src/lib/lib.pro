@@ -4,13 +4,13 @@ load(qt_module)
 
 TARGET = QtDesigner
 QPRO_PWD = $$PWD
-QT += core-private gui-private widgets widgets-private xml
 
 CONFIG += module
-MODULE_PRI = ../../../../modules/qt_designer.pri
+QT = core-private gui-private widgets-private xml
 
 unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES += QtXml QtCore QtGui QtWidgets
 
+MODULE_CONFIG = designer_defines
 load(qt_module_config)
 
 HEADERS += qtdesignerversion.h

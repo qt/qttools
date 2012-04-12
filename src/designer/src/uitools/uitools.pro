@@ -1,12 +1,10 @@
-MODULE = uitools
-
 load(qt_module)
 
 TARGET = QtUiTools
 QPRO_PWD = $$PWD
 
 CONFIG += qt staticlib module
-MODULE_PRI = ../../../../modules/qt_uitools.pri
+QT = core
 
 unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES += QtCore
 
