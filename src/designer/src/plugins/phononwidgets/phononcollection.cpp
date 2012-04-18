@@ -51,7 +51,7 @@ QT_BEGIN_NAMESPACE
 class PhononCollection: public QObject, public QDesignerCustomWidgetCollectionInterface
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QDesignerCustomWidgetCollectionInterface" FILE "phonon.json")
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QDesignerCustomWidgetCollectionInterface" FILE "phononwidgets.json")
     Q_INTERFACES(QDesignerCustomWidgetCollectionInterface)
 public:
     explicit PhononCollection(QObject *parent = 0);

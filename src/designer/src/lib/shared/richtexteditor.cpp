@@ -731,7 +731,6 @@ void RichTextEditor::setDefaultFont(QFont font)
 QString RichTextEditor::text(Qt::TextFormat format) const
 {
     switch (format) {
-    case Qt::LogText:
     case Qt::PlainText:
         return toPlainText();
     case Qt::RichText:
