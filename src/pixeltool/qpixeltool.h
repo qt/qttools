@@ -74,7 +74,9 @@ public slots:
     void toggleGrid();
     void toggleFreeze();
     void setZoomVisible(bool visible);
+#ifndef QT_NO_CLIPBOARD
     void copyToClipboard();
+#endif
     void saveToFile();
     void increaseGridSize() { setGridSize(m_gridSize + 1); }
     void decreaseGridSize() { setGridSize(m_gridSize - 1); }

@@ -44,7 +44,9 @@
 #include <qapplication.h>
 #include <qdesktopwidget.h>
 #include <qapplication.h>
+#ifndef QT_NO_CLIPBOARD
 #include <qclipboard.h>
+#endif
 #include <qpainter.h>
 #include <qevent.h>
 #include <qfiledialog.h>
@@ -250,10 +252,12 @@ void QPixelTool::keyPressEvent(QKeyEvent *e)
     case Qt::Key_A:
         m_autoUpdate = !m_autoUpdate;
         break;
+#ifndef QT_NO_CLIPBOARD
     case Qt::Key_C:
         if (e->modifiers() & Qt::ControlModifier)
             copyToClipboard();
         break;
+#endif
     case Qt::Key_S:
         if (e->modifiers() & Qt::ControlModifier) {
             releaseKeyboard();
@@ -365,9 +369,11 @@ void QPixelTool::contextMenuEvent(QContextMenuEvent *e)
     QAction save(QLatin1String("Save as image"), &menu);
     save.setShortcut(QKeySequence(QLatin1String("Ctrl+S")));
     connect(&save, SIGNAL(triggered()), this, SLOT(saveToFile()));
+#ifndef QT_NO_CLIPBOARD
     QAction copy(QLatin1String("Copy to clipboard"), &menu);
     copy.setShortcut(QKeySequence(QLatin1String("Ctrl+C")));
     connect(&copy, SIGNAL(triggered()), this, SLOT(copyToClipboard()));
+#endif
 
     menu.addAction(&title);
     menu.addSeparator();
@@ -385,7 +391,9 @@ void QPixelTool::contextMenuEvent(QContextMenuEvent *e)
     menu.addAction(&autoUpdate);
     menu.addSeparator();
     menu.addAction(&save);
+#ifndef QT_NO_CLIPBOARD
     menu.addAction(&copy);
+#endif
 
     menu.exec(mapToGlobal(e->pos()));
 
@@ -514,11 +522,13 @@ void QPixelTool::setGridSize(int gridSize)
     }
 }
 
+#ifndef QT_NO_CLIPBOARD
 void QPixelTool::copyToClipboard()
 {
     QClipboard *cb = QApplication::clipboard();
     cb->setPixmap(m_buffer);
 }
+#endif
 
 void QPixelTool::saveToFile()
 {
