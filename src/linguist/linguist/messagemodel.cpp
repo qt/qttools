@@ -804,13 +804,14 @@ void MultiDataModel::close(int model)
 
 void MultiDataModel::closeAll()
 {
+    m_msgModel->beginResetModel();
     m_numFinished = 0;
     m_numEditable = 0;
     m_numMessages = 0;
     qDeleteAll(m_dataModels);
     m_dataModels.clear();
     m_multiContextList.clear();
-    m_msgModel->reset();
+    m_msgModel->endResetModel();
     emit allModelsDeleted();
     onModifiedChanged();
 }

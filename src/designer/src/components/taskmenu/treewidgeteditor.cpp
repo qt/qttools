@@ -85,7 +85,7 @@ TreeWidgetEditor::TreeWidgetEditor(QDesignerFormWindowInterface *form, QDialog *
     ui.moveItemRightButton->setIcon(createIconSet(QString::fromUtf8("leveldown.png")));
     ui.moveItemLeftButton->setIcon(createIconSet(QString::fromUtf8("levelup.png")));
 
-    ui.treeWidget->header()->setMovable(false);
+    ui.treeWidget->header()->setSectionsMovable(false);
 
     connect(ui.newItemButton, SIGNAL(clicked()), this, SLOT(on_newItemButton_clicked()));
     connect(ui.newSubItemButton, SIGNAL(clicked()), this, SLOT(on_newSubItemButton_clicked()));

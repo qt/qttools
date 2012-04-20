@@ -87,7 +87,7 @@ PhraseView::PhraseView(MultiDataModel *model, QList<QHash<QString, QList<Phrase 
         (void) new GuessShortcut(i, this, SLOT(guessShortcut(int)));
 
     header()->setResizeMode(QHeaderView::Interactive);
-    header()->setClickable(true);
+    header()->setSectionsClickable(true);
     header()->restoreState(QSettings().value(phraseViewHeaderKey()).toByteArray());
 
     connect(this, SIGNAL(activated(QModelIndex)), this, SLOT(selectPhrase(QModelIndex)));
@@ -235,7 +235,7 @@ void PhraseView::setSourceText(int model, const QString &sourceText)
         foreach (const Candidate &candidate, cl) {
             QString def;
             if (n < 9)
-                def = tr("Guess (%1)").arg(QString(QKeySequence(Qt::CTRL | (Qt::Key_0 + (n + 1)))));
+                def = tr("Guess (%1)").arg(QKeySequence(Qt::CTRL | (Qt::Key_0 + (n + 1))).toString(QKeySequence::NativeText));
             else
                 def = tr("Guess");
             Phrase *guess = new Phrase(candidate.source, candidate.target, def, n);

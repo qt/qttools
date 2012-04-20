@@ -519,7 +519,6 @@ public:
     QModelIndex modelIndex(const MultiDataIndex &index);
 
 private slots:
-    void reset() { QAbstractItemModel::reset(); }
     void multiContextItemChanged(const MultiDataIndex &index);
     void contextItemChanged(const MultiDataIndex &index);
     void messageItemChanged(const MultiDataIndex &index);

@@ -255,7 +255,7 @@ ObjectInspector::ObjectInspectorPrivate::ObjectInspectorPrivate(QDesignerFormEdi
     m_treeView->setModel(m_model);
     m_treeView->setItemDelegate(new ObjectInspectorDelegate);
     m_treeView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-    m_treeView->header()->setResizeMode(1, QHeaderView::Stretch);
+    m_treeView->header()->setSectionResizeMode(1, QHeaderView::Stretch);
     m_treeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     m_treeView->setAlternatingRowColors(true);
     m_treeView->setTextElideMode (Qt::ElideMiddle);
