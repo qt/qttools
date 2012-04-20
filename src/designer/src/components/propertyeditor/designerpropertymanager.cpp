@@ -60,7 +60,9 @@
 #include <QtWidgets/QToolButton>
 #include <QtWidgets/QHBoxLayout>
 #include <QtCore/QFileInfo>
+#ifndef QT_NO_CLIPBOARD
 #include <QtGui/QClipboard>
+#endif
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QDialogButtonBox>
 #include <QtWidgets/QPushButton>
@@ -525,9 +527,11 @@ private slots:
     void resourceActionActivated();
     void fileActionActivated();
     void themeActionActivated();
+#ifndef QT_NO_CLIPBOARD
     void copyActionActivated();
     void pasteActionActivated();
     void clipboardDataChanged();
+#endif
 private:
     void updateLabels();
     bool m_iconThemeModeEnabled;
@@ -588,13 +592,17 @@ PixmapEditor::PixmapEditor(QDesignerFormEditorInterface *core, QWidget *parent) 
     connect(m_resourceAction, SIGNAL(triggered()), this, SLOT(resourceActionActivated()));
     connect(m_fileAction, SIGNAL(triggered()), this, SLOT(fileActionActivated()));
     connect(m_themeAction, SIGNAL(triggered()), this, SLOT(themeActionActivated()));
+#ifndef QT_NO_CLIPBOARD
     connect(m_copyAction, SIGNAL(triggered()), this, SLOT(copyActionActivated()));
     connect(m_pasteAction, SIGNAL(triggered()), this, SLOT(pasteActionActivated()));
+#endif
     setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Ignored));
     setFocusProxy(m_button);
 
+#ifndef QT_NO_CLIPBOARD
     connect(QApplication::clipboard(), SIGNAL(dataChanged()), this, SLOT(clipboardDataChanged()));
     clipboardDataChanged();
+#endif
 }
 
 void PixmapEditor::setPixmapCache(DesignerPixmapCache *cache)
@@ -715,6 +723,7 @@ void PixmapEditor::themeActionActivated()
     }
 }
 
+#ifndef QT_NO_CLIPBOARD
 void PixmapEditor::copyActionActivated()
 {
     QClipboard *clipboard = QApplication::clipboard();
@@ -753,6 +762,7 @@ void PixmapEditor::clipboardDataChanged()
     const QString text = clipboard->text(subtype);
     m_pasteAction->setEnabled(!text.isNull());
 }
+#endif
 
 // --------------- ResetWidget
 class ResetWidget : public QWidget

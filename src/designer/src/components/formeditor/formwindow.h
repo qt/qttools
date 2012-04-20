@@ -206,7 +206,9 @@ public:
     //  Initialize and return a popup menu for a managed widget
     QMenu *initializePopupMenu(QWidget *managedWidget);
 
+#ifndef QT_NO_CLIPBOARD
     virtual void paste(PasteMode pasteMode);
+#endif
     virtual QEditorFormBuilder *createFormBuilder();
 
     bool eventFilter(QObject *watched, QEvent *event);
@@ -218,9 +220,11 @@ public slots:
     void deleteWidgets();
     void raiseWidgets();
     void lowerWidgets();
+#ifndef QT_NO_CLIPBOARD
     void copy();
     void cut();
     void paste();
+#endif
     void selectAll();
 
     void createLayout(int type, QWidget *container = 0);

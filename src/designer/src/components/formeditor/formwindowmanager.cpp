@@ -79,7 +79,9 @@
 #include <QtGui/QMouseEvent>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QSizeGrip>
+#ifndef QT_NO_CLIPBOARD
 #include <QtGui/QClipboard>
+#endif
 #include <QtWidgets/QMdiArea>
 #include <QtWidgets/QMdiSubWindow>
 #include <QtWidgets/QDesktopWidget>
@@ -168,7 +170,9 @@ bool FormWindowManager::eventFilter(QObject *o, QEvent *e)
     case QEvent::ChildAdded:
     case QEvent::ChildPolished:
     case QEvent::ChildRemoved:
+#ifndef QT_NO_CLIPBOARD
     case QEvent::Clipboard:
+#endif
     case QEvent::ContentsRectChange:
     case QEvent::DeferredDelete:
     case QEvent::FileOpen:
@@ -360,6 +364,7 @@ QWidget *FormWindowManager::findManagedWidget(FormWindow *fw, QWidget *w)
 
 void FormWindowManager::setupActions()
 {
+#ifndef QT_NO_CLIPBOARD
     m_actionCut = new QAction(createIconSet(QStringLiteral("editcut.png")), tr("Cu&t"), this);
     m_actionCut->setObjectName(QStringLiteral("__qt_cut_action"));
     m_actionCut->setShortcut(QKeySequence::Cut);
@@ -383,6 +388,7 @@ void FormWindowManager::setupActions()
     m_actionPaste->setWhatsThis(whatsThisFrom(QStringLiteral("Edit|Paste")));
     connect(m_actionPaste, SIGNAL(triggered()), this, SLOT(slotActionPasteActivated()));
     m_actionPaste->setEnabled(false);
+#endif
 
     m_actionDelete = new QAction(tr("&Delete"), this);
     m_actionDelete->setObjectName(QStringLiteral("__qt_delete_action"));
@@ -520,9 +526,11 @@ void FormWindowManager::setupActions()
     m_actionShowFormWindowSettingsDialog->setEnabled(false);
 
 #if defined (Q_OS_UNIX) && !defined(Q_OS_MAC)
+#ifndef QT_NO_CLIPBOARD
     m_actionCopy->setIcon(QIcon::fromTheme(QStringLiteral("edit-copy"), m_actionCopy->icon()));
     m_actionCut->setIcon(QIcon::fromTheme(QStringLiteral("edit-cut"), m_actionCut->icon()));
     m_actionPaste->setIcon(QIcon::fromTheme(QStringLiteral("edit-paste"), m_actionPaste->icon()));
+#endif
     m_actionDelete->setIcon(QIcon::fromTheme(QStringLiteral("edit-delete"), m_actionDelete->icon()));
 
     // These do not currently exist, but will allow theme authors to fill in the gaps
@@ -536,6 +544,7 @@ void FormWindowManager::setupActions()
 #endif
 }
 
+#ifndef QT_NO_CLIPBOARD
 void FormWindowManager::slotActionCutActivated()
 {
     m_activeFormWindow->cut();
@@ -551,6 +560,7 @@ void FormWindowManager::slotActionPasteActivated()
 {
     m_activeFormWindow->paste();
 }
+#endif
 
 void FormWindowManager::slotActionDeleteActivated()
 {
@@ -825,7 +835,9 @@ void FormWindowManager::slotUpdateActions()
     int selectedWidgetCount = 0;
     int laidoutWidgetCount = 0;
     int unlaidoutWidgetCount = 0;
+#ifndef QT_NO_CLIPBOARD
     bool pasteAvailable = false;
+#endif
     bool layoutAvailable = false;
     bool breakAvailable = false;
     bool simplifyAvailable = false;
@@ -841,7 +853,9 @@ void FormWindowManager::slotUpdateActions()
         QWidgetList simplifiedSelection = m_activeFormWindow->selectedWidgets();
 
         selectedWidgetCount = simplifiedSelection.count();
+#ifndef QT_NO_CLIPBOARD
         pasteAvailable = qApp->clipboard()->mimeData() && qApp->clipboard()->mimeData()->hasText();
+#endif
 
         m_activeFormWindow->simplifySelection(&simplifiedSelection);
         QWidget *mainContainer = m_activeFormWindow->mainContainer();
@@ -909,13 +923,15 @@ void FormWindowManager::slotUpdateActions()
         }
     } while(false);
 
+#ifndef QT_NO_CLIPBOARD
     m_actionCut->setEnabled(selectedWidgetCount > 0);
     m_actionCopy->setEnabled(selectedWidgetCount > 0);
+    m_actionPaste->setEnabled(pasteAvailable);
+#endif
     m_actionDelete->setEnabled(selectedWidgetCount > 0);
     m_actionLower->setEnabled(canChangeZOrder && selectedWidgetCount > 0);
     m_actionRaise->setEnabled(canChangeZOrder && selectedWidgetCount > 0);
 
-    m_actionPaste->setEnabled(pasteAvailable);
 
     m_actionSelectAll->setEnabled(m_activeFormWindow != 0);
 
@@ -1003,12 +1019,14 @@ void FormWindowManager::slotActionShowFormWindowSettingsDialog()
 QAction *FormWindowManager::action(Action action) const
 {
     switch (action) {
+#ifndef QT_NO_CLIPBOARD
     case QDesignerFormWindowManagerInterface::CutAction:
         return m_actionCut;
     case QDesignerFormWindowManagerInterface::CopyAction:
         return m_actionCopy;
     case QDesignerFormWindowManagerInterface::PasteAction:
         return m_actionPaste;
+#endif
     case QDesignerFormWindowManagerInterface::DeleteAction:
         return m_actionDelete;
     case QDesignerFormWindowManagerInterface::SelectAllAction:

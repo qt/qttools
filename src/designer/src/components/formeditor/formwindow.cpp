@@ -92,7 +92,9 @@
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QActionGroup>
+#ifndef QT_NO_CLIPBOARD
 #include <QtGui/QClipboard>
+#endif
 #include <QtWidgets/QUndoGroup>
 #include <QtWidgets/QScrollArea>
 #include <QtWidgets/QRubberBand>
@@ -1660,6 +1662,7 @@ QString FormWindow::contents() const
     return QString::fromUtf8(b.buffer());
 }
 
+#ifndef QT_NO_CLIPBOARD
 void FormWindow::copy()
 {
     QBuffer b;
@@ -1681,6 +1684,12 @@ void FormWindow::cut()
     copy();
     deleteWidgets();
 }
+
+void FormWindow::paste()
+{
+    paste(PasteAll);
+}
+#endif
 
 // for cases like QMainWindow (central widget is an inner container) or QStackedWidget (page is an inner container)
 QWidget *FormWindow::innerContainer(QWidget *outerContainer) const
@@ -1737,11 +1746,7 @@ QWidget *FormWindow::containerForPaste() const
     return w;
 }
 
-void FormWindow::paste()
-{
-    paste(PasteAll);
-}
-
+#ifndef QT_NO_CLIPBOARD
 // Construct DomUI from clipboard (paste) and determine number of widgets/actions.
 static inline DomUI *domUIFromClipboard(int *widgetCount, int *actionCount)
 {
@@ -1782,6 +1787,7 @@ static inline DomUI *domUIFromClipboard(int *widgetCount, int *actionCount)
     }
     return ui;
 }
+#endif
 
 static inline QString pasteCommandDescription(int widgetCount, int actionCount)
 {
@@ -1824,6 +1830,7 @@ static void positionPastedWidgetsAtMousePosition(FormWindow *fw, const QPoint &c
         (*it)->move((*it)->pos() + offset);
 }
 
+#ifndef QT_NO_CLIPBOARD
 void FormWindow::paste(PasteMode pasteMode)
 {
     // Avoid QDesignerResource constructing widgets that are not used as
@@ -1886,6 +1893,7 @@ void FormWindow::paste(PasteMode pasteMode)
     } while (false);
     delete ui;
 }
+#endif
 
 // Draw a dotted frame around containers
 bool FormWindow::frameNeeded(QWidget *w) const

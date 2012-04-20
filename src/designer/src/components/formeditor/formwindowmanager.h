@@ -103,9 +103,11 @@ public slots:
     void deviceProfilesChanged();
 
 private slots:
+#ifndef QT_NO_CLIPBOARD
     void slotActionCutActivated();
     void slotActionCopyActivated();
     void slotActionPasteActivated();
+#endif
     void slotActionDeleteActivated();
     void slotActionSelectAllActivated();
     void slotActionLowerActivated();
@@ -142,9 +144,11 @@ private:
     QWidget *m_morphLayoutContainer;
 
     // edit actions
+#ifndef QT_NO_CLIPBOARD
     QAction *m_actionCut;
     QAction *m_actionCopy;
     QAction *m_actionPaste;
+#endif
     QAction *m_actionSelectAll;
     QAction *m_actionDelete;
     QAction *m_actionLower;
