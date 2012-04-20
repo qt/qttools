@@ -118,9 +118,11 @@ private slots:
     void slotContextMenuRequested(QContextMenuEvent *, QAction *);
     void slotViewMode(QAction *a);
     void slotSelectAssociatedWidget(QWidget *w);
+#ifndef QT_NO_CLIPBOARD
     void slotCopy();
     void slotCut();
     void slotPaste();
+#endif
 
 signals:
     void itemActivated(QAction *item);
@@ -130,7 +132,9 @@ signals:
 private:
     typedef QList<QAction *> ActionList;
     void deleteActions(QDesignerFormWindowInterface *formWindow, const ActionList &);
+#ifndef QT_NO_CLIPBOARD
     void copyActions(QDesignerFormWindowInterface *formWindow, const ActionList &);
+#endif
 
     void restoreSettings();
     void saveSettings();
@@ -146,9 +150,11 @@ private:
     QAction *m_actionNew;
     QAction *m_actionEdit;
     QAction *m_actionNavigateToSlot;
+#ifndef QT_NO_CLIPBOARD
     QAction *m_actionCopy;
     QAction *m_actionCut;
     QAction *m_actionPaste;
+#endif
     QAction *m_actionSelectAll;
     QAction *m_actionDelete;
 

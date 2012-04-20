@@ -64,7 +64,9 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QApplication>
+#ifndef QT_NO_CLIPBOARD
 #include <QtGui/QClipboard>
+#endif
 #include <QtWidgets/QMenu>
 #include <QtGui/QDrag>
 #include <QtCore/QMimeData>
@@ -143,7 +145,9 @@ public:
     void slotResourceActivated(QListWidgetItem *);
     void slotEditResources();
     void slotReloadResources();
+#ifndef QT_NO_CLIPBOARD
     void slotCopyResourcePath();
+#endif
     void slotListWidgetContextMenuRequested(const QPoint &pos);
     void slotFilterChanged(const QString &pattern);
     void createPaths();
@@ -244,12 +248,14 @@ void QtResourceViewPrivate::slotReloadResources()
     }
 }
 
+#ifndef QT_NO_CLIPBOARD
 void QtResourceViewPrivate::slotCopyResourcePath()
 {
     const QString path = q_ptr->selectedResource();
     QClipboard *clipboard = QApplication::clipboard();
     clipboard->setText(path);
 }
+#endif
 
 void QtResourceViewPrivate::slotListWidgetContextMenuRequested(const QPoint &pos)
 {
@@ -596,10 +602,12 @@ QtResourceView::QtResourceView(QDesignerFormEditorInterface *core, QWidget *pare
     connect(d_ptr->m_reloadResourcesAction, SIGNAL(triggered()), this, SLOT(slotReloadResources()));
     d_ptr->m_reloadResourcesAction->setEnabled(false);
 
+#ifndef QT_NO_CLIPBOARD
     QIcon copyIcon = QIcon::fromTheme(QStringLiteral("edit-copy"), qdesigner_internal::createIconSet(QStringLiteral("editcopy.png")));
     d_ptr->m_copyResourcePathAction = new QAction(copyIcon, tr("Copy Path"), this);
     connect(d_ptr->m_copyResourcePathAction, SIGNAL(triggered()), this, SLOT(slotCopyResourcePath()));
     d_ptr->m_copyResourcePathAction->setEnabled(false);
+#endif
 
     //d_ptr->m_filterWidget = new qdesigner_internal::FilterWidget(0, qdesigner_internal::FilterWidget::LayoutAlignNone);
     d_ptr->m_filterWidget = new qdesigner_internal::FilterWidget(d_ptr->m_toolBar);

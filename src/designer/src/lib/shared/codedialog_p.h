@@ -79,7 +79,9 @@ public:
 
 private slots:
     void slotSaveAs();
+#ifndef QT_NO_CLIPBOARD
     void copyAll();
+#endif
 
 private:
     void setCode(const QString &code);

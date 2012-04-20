@@ -47,7 +47,9 @@
 
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
+#ifndef QT_NO_CLIPBOARD
 #include <QtGui/QClipboard>
+#endif
 #include <QtWidgets/QDialogButtonBox>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QIcon>
@@ -95,9 +97,11 @@ CodeDialog::CodeDialog(QWidget *parent) :
     QAction *saveAction = toolBar->addAction(saveIcon, tr("Save..."));
     connect(saveAction, SIGNAL(triggered()), this, SLOT(slotSaveAs()));
 
+#ifndef QT_NO_CLIPBOARD
     const QIcon copyIcon = createIconSet(QStringLiteral("editcopy.png"));
     QAction *copyAction = toolBar->addAction(copyIcon, tr("Copy All"));
     connect(copyAction, SIGNAL(triggered()), this, SLOT(copyAll()));
+#endif
 
     QAction *findAction = toolBar->addAction(
             TextEditFindWidget::findIconSet(),
@@ -252,10 +256,12 @@ void CodeDialog::warning(const QString &msg)
              msg, QMessageBox::Close);
 }
 
+#ifndef QT_NO_CLIPBOARD
 void CodeDialog::copyAll()
 {
     QApplication::clipboard()->setText(code());
 }
+#endif
 
 } // namespace qdesigner_internal
 

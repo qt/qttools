@@ -65,7 +65,9 @@
 #include <QtWidgets/QSplitter>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
+#ifndef QT_NO_CLIPBOARD
 #include <QtGui/QClipboard>
+#endif
 #include <QtWidgets/QItemDelegate>
 #include <QtGui/QPainter>
 #include <QtWidgets/QVBoxLayout>
@@ -122,9 +124,11 @@ ActionEditor::ActionEditor(QDesignerFormEditorInterface *core, QWidget *parent, 
     m_actionNew(new QAction(tr("New..."), this)),
     m_actionEdit(new QAction(tr("Edit..."), this)),
     m_actionNavigateToSlot(new QAction(tr("Go to slot..."), this)),
+#ifndef QT_NO_CLIPBOARD
     m_actionCopy(new QAction(tr("Copy"), this)),
     m_actionCut(new QAction(tr("Cut"), this)),
     m_actionPaste(new QAction(tr("Paste"), this)),
+#endif
     m_actionSelectAll(new QAction(tr("Select all"), this)),
     m_actionDelete(new QAction(tr("Delete"), this)),
     m_viewModeGroup(new  QActionGroup(this)),
@@ -154,6 +158,7 @@ ActionEditor::ActionEditor(QDesignerFormEditorInterface *core, QWidget *parent, 
 
     connect(m_actionSelectAll, SIGNAL(triggered()), m_actionView, SLOT(selectAll()));
 
+#ifndef QT_NO_CLIPBOARD
     m_actionCut->setEnabled(false);
     connect(m_actionCut, SIGNAL(triggered()), this, SLOT(slotCut()));
     QIcon editCutIcon = QIcon::fromTheme(QStringLiteral("edit-cut"), createIconSet(QStringLiteral("editcut.png")));
@@ -169,6 +174,7 @@ ActionEditor::ActionEditor(QDesignerFormEditorInterface *core, QWidget *parent, 
     QIcon editPasteIcon = QIcon::fromTheme(QStringLiteral("edit-paste"), createIconSet(QStringLiteral("editpaste.png")));
     m_actionPaste->setIcon(editPasteIcon);
     toolbar->addAction(m_actionPaste);
+#endif
 
     m_actionEdit->setEnabled(false);
     connect(m_actionEdit, SIGNAL(triggered()), this, SLOT(editCurrentAction()));
@@ -297,8 +303,10 @@ void ActionEditor::setFormWindow(QDesignerFormWindowInterface *formWindow)
     m_actionView->model()->clearActions();
 
     m_actionEdit->setEnabled(false);
+#ifndef QT_NO_CLIPBOARD
     m_actionCopy->setEnabled(false);
     m_actionCut->setEnabled(false);
+#endif
     m_actionDelete->setEnabled(false);
 
     if (!formWindow || !formWindow->mainContainer()) {
@@ -324,9 +332,11 @@ void ActionEditor::setFormWindow(QDesignerFormWindowInterface *formWindow)
 
 void  ActionEditor::slotSelectionChanged(const QItemSelection& selected, const QItemSelection& /*deselected*/)
 {
+#ifndef QT_NO_CLIPBOARD
     const bool hasSelection = !selected.indexes().empty();
     m_actionCopy->setEnabled(hasSelection);
     m_actionCut->setEnabled(hasSelection);
+#endif
     m_actionDelete->setEnabled(hasSelection);
 }
 
@@ -615,6 +625,7 @@ void ActionEditor::deleteActions(QDesignerFormWindowInterface *fw, const ActionL
     fw->endCommand();
 }
 
+#ifndef QT_NO_CLIPBOARD
 void ActionEditor::copyActions(QDesignerFormWindowInterface *fwi, const ActionList &actions)
 {
     FormWindowBase *fw = qobject_cast<FormWindowBase *>(fwi);
@@ -636,6 +647,7 @@ void ActionEditor::copyActions(QDesignerFormWindowInterface *fwi, const ActionLi
             qApp->clipboard()->setText(QString::fromUtf8(buffer.buffer()), QClipboard::Clipboard);
     delete formBuilder;
 }
+#endif
 
 void ActionEditor::slotDelete()
 {
@@ -736,6 +748,7 @@ void ActionEditor::updateViewModeActions()
     }
 }
 
+#ifndef QT_NO_CLIPBOARD
 void ActionEditor::slotCopy()
 {
     QDesignerFormWindowInterface *fw = formWindow();
@@ -771,6 +784,7 @@ void ActionEditor::slotPaste()
     m_actionView->clearSelection();
     fw->paste(FormWindowBase::PasteActionsOnly);
 }
+#endif
 
 void ActionEditor::slotContextMenuRequested(QContextMenuEvent *e, QAction *item)
 {
@@ -801,9 +815,11 @@ void ActionEditor::slotContextMenuRequested(QContextMenuEvent *e, QAction *item)
     }
 
     menu.addSeparator();
+#ifndef QT_NO_CLIPBOARD
     menu.addAction(m_actionCut);
     menu.addAction(m_actionCopy);
     menu.addAction(m_actionPaste);
+#endif
     menu.addAction(m_actionSelectAll);
     menu.addAction(m_actionDelete);
     menu.addSeparator();
