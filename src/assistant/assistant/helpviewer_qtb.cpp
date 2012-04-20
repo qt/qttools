@@ -51,7 +51,9 @@
 
 #include <QtGui/QContextMenuEvent>
 #include <QtWidgets/QMenu>
+#ifndef QT_NO_CLIPBOARD
 #include <QtGui/QClipboard>
+#endif
 #include <QtWidgets/QApplication>
 
 QT_BEGIN_NAMESPACE
@@ -248,11 +250,13 @@ bool HelpViewer::findText(const QString &text, FindFlags flags, bool incremental
 
 // -- public slots
 
+#ifndef QT_NO_CLIPBOARD
 void HelpViewer::copy()
 {
     TRACE_OBJ
     QTextBrowser::copy();
 }
+#endif
 
 void HelpViewer::forward()
 {
@@ -356,13 +360,17 @@ void HelpViewer::contextMenuEvent(QContextMenuEvent *event)
         if (!link.isEmpty() && link.isValid())
             copyAnchorAction = menu.addAction(tr("Copy &Link Location"));
     } else if (!selectedText().isEmpty()) {
+#ifndef QT_NO_CLIPBOARD
         menu.addAction(tr("Copy"), this, SLOT(copy()));
+#endif
     } else {
         menu.addAction(tr("Reload"), this, SLOT(reload()));
     }
 
+#ifndef QT_NO_CLIPBOARD
     if (copyAnchorAction == menu.exec(event->globalPos()))
         QApplication::clipboard()->setText(link.toString());
+#endif
 }
 
 QVariant HelpViewer::loadResource(int type, const QUrl &name)

@@ -394,12 +394,13 @@ bool HelpViewer::findText(const QString &text, FindFlags flags, bool incremental
 }
 
 // -- public slots
-
+#ifndef QT_NO_CLIPBOARD
 void HelpViewer::copy()
 {
     TRACE_OBJ
     triggerPageAction(QWebPage::Copy);
 }
+#endif
 
 void HelpViewer::forward()
 {
@@ -419,10 +420,12 @@ void HelpViewer::keyPressEvent(QKeyEvent *e)
 {
     TRACE_OBJ
     // TODO: remove this once we support multiple keysequences per command
+#ifndef QT_NO_CLIPBOARD
     if (e->key() == Qt::Key_Insert && e->modifiers() == Qt::CTRL) {
         if (!selectedText().isEmpty())
             copy();
     }
+#endif
     QWebView::keyPressEvent(e);
 }
 

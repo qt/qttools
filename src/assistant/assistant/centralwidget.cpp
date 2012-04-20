@@ -339,12 +339,13 @@ void CentralWidget::connectTabBar()
 }
 
 // -- public slots
-
+#ifndef QT_NO_CLIPBOARD
 void CentralWidget::copy()
 {
     TRACE_OBJ
     currentHelpViewer()->copy();
 }
+#endif
 
 void CentralWidget::home()
 {

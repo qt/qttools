@@ -107,7 +107,9 @@ public:
     void connectTabBar();
 
 public slots:
+#ifndef QT_NO_CLIPBOARD
     void copy();
+#endif
     void home();
 
     void zoomIn();
