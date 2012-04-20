@@ -364,7 +364,7 @@ void FindTrCalls::processComment(const AST::SourceLocation &loc)
             if (p >= length)
                 break;
             c = chars[p++].unicode();
-            if (isspace(c))
+            if (std::isspace(c))
                 continue;
             if (c != '"') {
                 yyMsg(loc.startLine) << qPrintable(LU::tr("Unexpected character in meta string\n"));
