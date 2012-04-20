@@ -12,6 +12,8 @@ include_directories(
 
 add_definitions(${Qt5Core_DEFINITIONS})
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt5Core_EXECUTABLE_COMPILE_FLAGS}")
+
 set(my_srcs myi18nobject.cpp)
 
 qt5_create_translation(qm_files ${my_srcs} myobject_de.ts)
