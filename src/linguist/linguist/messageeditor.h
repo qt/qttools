@@ -95,17 +95,21 @@ signals:
 
     void undoAvailable(bool avail);
     void redoAvailable(bool avail);
+#ifndef QT_NO_CLIPBOARD
     void cutAvailable(bool avail);
     void copyAvailable(bool avail);
     void pasteAvailable(bool avail);
+#endif
     void beginFromSourceAvailable(bool enable);
 
 public slots:
     void undo();
     void redo();
+#ifndef QT_NO_CLIPBOARD
     void cut();
     void copy();
     void paste();
+#endif
     void selectAll();
     void beginFromSource();
     void setEditorFocus();
@@ -119,8 +123,10 @@ private slots:
     void resetHoverSelection();
     void emitTranslationChanged(QTextEdit *);
     void emitTranslatorCommentChanged(QTextEdit *);
+#ifndef QT_NO_CLIPBOARD
     void updateCanPaste();
     void clipboardChanged();
+#endif
     void messageModelAppended();
     void messageModelDeleted(int model);
     void allModelsDeleted();
@@ -145,7 +151,9 @@ private:
     QStringList translations(int model) const;
     void updateBeginFromSource();
     void updateUndoRedo();
+#ifndef QT_NO_CLIPBOARD
     void updateCanCutCopy();
+#endif
     void addPluralForm(int model, const QString &label, bool writable);
     void fixTabOrder();
     QPalette paletteForModel(int model) const;

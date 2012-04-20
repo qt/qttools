@@ -51,7 +51,9 @@
 
 #include <QApplication>
 #include <QBoxLayout>
+#ifndef QT_NO_CLIPBOARD
 #include <QClipboard>
+#endif
 #include <QDebug>
 #include <QDockWidget>
 #include <QHeaderView>
@@ -105,8 +107,10 @@ MessageEditor::MessageEditor(MultiDataModel *dataModel, QMainWindow *parent)
     setupEditorPage();
 
     // Signals
+#ifndef QT_NO_CLIPBOARD
     connect(qApp->clipboard(), SIGNAL(dataChanged()),
             SLOT(clipboardChanged()));
+#endif
     connect(m_dataModel, SIGNAL(modelAppended()),
             SLOT(messageModelAppended()));
     connect(m_dataModel, SIGNAL(modelDeleted(int)),
@@ -119,7 +123,9 @@ MessageEditor::MessageEditor(MultiDataModel *dataModel, QMainWindow *parent)
     m_tabOrderTimer.setSingleShot(true);
     connect(&m_tabOrderTimer, SIGNAL(timeout()), SLOT(reallyFixTabOrder()));
 
+#ifndef QT_NO_CLIPBOARD
     clipboardChanged();
+#endif
 
     setWhatsThis(tr("This whole panel allows you to view and edit "
                     "the translation of some source text."));
@@ -358,7 +364,9 @@ void MessageEditor::selectionChanged(QTextEdit *te)
         m_selectionHolder = (te->textCursor().hasSelection() ? te : 0);
         if (FormatTextEdit *fte = qobject_cast<FormatTextEdit*>(m_selectionHolder))
             connect(fte, SIGNAL(editorDestroyed()), SLOT(editorDestroyed()));
+#ifndef QT_NO_CLIPBOARD
         updateCanCutCopy();
+#endif
     }
 }
 
@@ -376,7 +384,9 @@ void MessageEditor::resetSelection()
         clearSelection(m_selectionHolder);
         disconnect(this, SLOT(editorDestroyed()));
         m_selectionHolder = 0;
+#ifndef QT_NO_CLIPBOARD
         updateCanCutCopy();
+#endif
     }
 }
 
@@ -515,6 +525,7 @@ bool MessageEditor::eventFilter(QObject *o, QEvent *e)
         QKeyEvent *ke = static_cast<QKeyEvent *>(e);
 
         if (ke->modifiers() & Qt::ControlModifier) {
+#ifndef QT_NO_CLIPBOARD
             if (ke->key() == Qt::Key_C) {
                 if (m_source->getEditor()->textCursor().hasSelection()) {
                     m_source->getEditor()->copy();
@@ -524,7 +535,9 @@ bool MessageEditor::eventFilter(QObject *o, QEvent *e)
                     m_pluralSource->getEditor()->copy();
                     return true;
                 }
-            } else if (ke->key() == Qt::Key_A) {
+            } else
+#endif
+                if (ke->key() == Qt::Key_A) {
                 return true;
             }
         }
@@ -579,7 +592,9 @@ void MessageEditor::trackFocus(QWidget *widget)
         emit activeModelChanged(activeModel());
         updateBeginFromSource();
         updateUndoRedo();
+#ifndef QT_NO_CLIPBOARD
         updateCanPaste();
+#endif
     }
 }
 
@@ -594,7 +609,9 @@ void MessageEditor::showNothing()
             widget->clearTranslation();
         m_editors[j].transCommentText->clearTranslation();
     }
+#ifndef QT_NO_CLIPBOARD
     emit pasteAvailable(false);
+#endif
     updateBeginFromSource();
     updateUndoRedo();
 }
@@ -706,7 +723,9 @@ void MessageEditor::setEditingEnabled(int model, bool enabled)
         widget->setEditingEnabled(enabled);
     ed.transCommentText->setEditingEnabled(enabled);
 
+#ifndef QT_NO_CLIPBOARD
     updateCanPaste();
+#endif
 }
 
 void MessageEditor::setLengthVariants(bool on)
@@ -748,6 +767,7 @@ void MessageEditor::updateUndoRedo()
     }
 }
 
+#ifndef QT_NO_CLIPBOARD
 void MessageEditor::cut()
 {
     m_selectionHolder->cut();
@@ -797,6 +817,7 @@ void MessageEditor::clipboardChanged()
     m_clipboardEmpty = qApp->clipboard()->text().isNull();
     updateCanPaste();
 }
+#endif
 
 void MessageEditor::selectAll()
 {
@@ -859,7 +880,9 @@ void MessageEditor::setEditorFocus(int model)
             emit activeModelChanged(activeModel());
             updateBeginFromSource();
             updateUndoRedo();
+#ifndef QT_NO_CLIPBOARD
             updateCanPaste();
+#endif
         } else {
             m_editors[model].transTexts.first()->getEditors().first()->setFocus();
         }
