@@ -170,7 +170,7 @@ bool QDesignerWidgetBox::findWidget(const QDesignerWidgetBoxInterface *wbox,
     QString pattern = QStringLiteral("^<widget\\s+class\\s*=\\s*\"");
     pattern += className;
     pattern += QStringLiteral("\".*$");
-    const QRegExp regexp(pattern);
+    QRegExp regexp(pattern);
     Q_ASSERT(regexp.isValid());
     const int catCount = wbox->categoryCount();
     for (int c = 0; c < catCount; c++) {

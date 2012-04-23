@@ -130,7 +130,7 @@ private:
     void updateOkButton();
 
     // Check for buddy marker in string
-    const QRegExp m_buddyMarkerRegexp;
+    QRegExp m_buddyMarkerRegexp;
 
     Ui::FormLayoutRowDialog m_ui;
     bool m_labelNameEdited;

@@ -138,8 +138,8 @@ namespace {
         virtual void setModelData (QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
 
     private:
-        const QRegExp m_signatureRegexp;
-        const QRegExp m_methodNameRegexp;
+        QRegExp m_signatureRegexp;
+        QRegExp m_methodNameRegexp;
     };
 
     SignatureDelegate::SignatureDelegate(QObject * parent) :
@@ -166,8 +166,10 @@ namespace {
         Q_ASSERT(le);
         // Did the user just type a name? .. Add parentheses
         QString signature = le->text();
-        if (!m_signatureRegexp.exactMatch(signature )) {
-            if (m_methodNameRegexp.exactMatch(signature )) {
+        QRegExp signatureRegexp = m_signatureRegexp;
+        QRegExp methodNameRegexp = m_methodNameRegexp;
+        if (!signatureRegexp.exactMatch(signature )) {
+            if (methodNameRegexp.exactMatch(signature )) {
                 signature += QStringLiteral("()");
                 le->setText(signature);
             } else {

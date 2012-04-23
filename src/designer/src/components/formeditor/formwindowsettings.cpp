@@ -226,7 +226,7 @@ FormWindowData FormWindowSettings::data() const
     if (!hints.isEmpty()) {
         rc.includeHints = hints.split(QString(QLatin1Char('\n')));
         // Purge out any lines consisting of blanks only
-        const QRegExp blankLine = QRegExp(QStringLiteral("^\\s*$"));
+        QRegExp blankLine = QRegExp(QStringLiteral("^\\s*$"));
         Q_ASSERT(blankLine.isValid());
         for (QStringList::iterator it = rc.includeHints.begin(); it != rc.includeHints.end(); )
             if (blankLine.exactMatch(*it)) {

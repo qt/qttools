@@ -971,7 +971,7 @@ void WidgetBoxTreeWidget::dropWidgets(const QList<QDesignerDnDItemInterface*> &i
 void WidgetBoxTreeWidget::filter(const QString &f)
 {
     const bool empty = f.isEmpty();
-    const QRegExp re = empty ? QRegExp() : QRegExp(f, Qt::CaseInsensitive, QRegExp::FixedString);
+    QRegExp re = empty ? QRegExp() : QRegExp(f, Qt::CaseInsensitive, QRegExp::FixedString);
     const int numTopLevels = topLevelItemCount();
     bool changed = false;
     for (int i = 0; i < numTopLevels; i++) {

@@ -364,7 +364,7 @@ QWidget *WidgetBoxCategoryEntryDelegate::createEditor(QWidget *parent,
 {
     QWidget *result = QItemDelegate::createEditor(parent, option, index);
     if (QLineEdit *line_edit = qobject_cast<QLineEdit*>(result)) {
-        const QRegExp re = QRegExp(QStringLiteral("[_a-zA-Z][_a-zA-Z0-9]*"));
+        QRegExp re = QRegExp(QStringLiteral("[_a-zA-Z][_a-zA-Z0-9]*"));
         Q_ASSERT(re.isValid());
         line_edit->setValidator(new QRegExpValidator(re, line_edit));
     }

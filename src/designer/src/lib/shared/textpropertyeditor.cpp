@@ -168,7 +168,7 @@ namespace {
     QUrl UrlValidator::guessUrlFromString(const QString &string) const
     {
         const QString urlStr = string.trimmed();
-        const QRegExp qualifiedUrl(QStringLiteral("^[a-zA-Z]+\\:.*"));
+        QRegExp qualifiedUrl(QStringLiteral("^[a-zA-Z]+\\:.*"));
 
         // Check if it looks like a qualified URL. Try parsing it and see.
         const bool hasSchema = qualifiedUrl.exactMatch(urlStr);
@@ -299,7 +299,7 @@ namespace qdesigner_internal {
 
     void TextPropertyEditor::setRegExpValidator(const QString &pattern)
     {
-        const QRegExp regExp(pattern);
+        QRegExp regExp(pattern);
         Q_ASSERT(regExp.isValid());
         m_lineEdit->setValidator(new QRegExpValidator(regExp,m_lineEdit));
     }

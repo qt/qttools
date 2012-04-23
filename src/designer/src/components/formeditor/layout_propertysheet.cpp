@@ -107,7 +107,7 @@ namespace {
 static bool isIntegerList(const QString &s)
 {
     // Check for empty string or comma-separated list of integers
-    static const QRegExp re(QStringLiteral("[0-9]+(,[0-9]+)+"));
+    static QRegExp re(QStringLiteral("[0-9]+(,[0-9]+)+"));
     Q_ASSERT(re.isValid());
     return s.isEmpty() || re.exactMatch(s);
 }
