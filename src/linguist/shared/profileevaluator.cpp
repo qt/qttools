@@ -2544,7 +2544,7 @@ ProStringList ProFileEvaluator::Private::evaluateExpandFunction(
                 }
 
                 r.detach(); // Keep m_tmp out of QRegExp's cache
-                const QRegExp regex(r, Qt::CaseSensitive, QRegExp::Wildcard);
+                QRegExp regex(r, Qt::CaseSensitive, QRegExp::Wildcard);
                 for (int d = 0; d < dirs.count(); d++) {
                     QString dir = dirs[d];
                     QDir qdir(pfx + dir);
@@ -2566,7 +2566,7 @@ ProStringList ProFileEvaluator::Private::evaluateExpandFunction(
             if(args.count() != 3 ) {
                 evalError(fL1S("replace(var, before, after) requires three arguments"));
             } else {
-                const QRegExp before(args.at(1).toQString());
+                QRegExp before(args.at(1).toQString());
                 const QString &after(args.at(2).toQString(m_tmp2));
                 foreach (const ProString &val, values(map(args.at(0)))) {
                     QString rstr = val.toQString(m_tmp1);

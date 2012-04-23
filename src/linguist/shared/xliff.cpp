@@ -192,7 +192,7 @@ static QString protect(const QString &str, bool makePhs = true)
 
 
 static void writeExtras(QTextStream &ts, int indent,
-                        const TranslatorMessage::ExtraData &extras, const QRegExp &drops)
+                        const TranslatorMessage::ExtraData &extras, QRegExp drops)
 {
     for (Translator::ExtraData::ConstIterator it = extras.begin(); it != extras.end(); ++it) {
         if (!drops.exactMatch(it.key())) {

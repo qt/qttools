@@ -502,7 +502,7 @@ static QString evilBytes(const QString& str,
 }
 
 static void writeExtras(QTextStream &t, const char *indent,
-                        const TranslatorMessage::ExtraData &extras, const QRegExp &drops)
+                        const TranslatorMessage::ExtraData &extras, QRegExp drops)
 {
     for (Translator::ExtraData::ConstIterator it = extras.begin(); it != extras.end(); ++it) {
         if (!drops.exactMatch(it.key())) {
