@@ -108,7 +108,7 @@ QString QHelpGlobal::codecFromHtmlData(const QByteArray &data)
 QString QHelpGlobal::codecFromXmlData(const QByteArray &data)
 {
     QString head = QString::fromUtf8(data.constData(), qMin(1000, data.size()));
-    const QRegExp encodingExp(QLatin1String("^\\s*<\\?xml version="
+    QRegExp encodingExp(QLatin1String("^\\s*<\\?xml version="
         "\"\\d\\.\\d\" encoding=\"([^\"]+)\"\\?>.*"));
     return encodingExp.exactMatch(head) ? encodingExp.cap(1) : QString();
 }

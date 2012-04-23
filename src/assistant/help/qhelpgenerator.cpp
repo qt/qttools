@@ -876,7 +876,7 @@ bool QHelpGenerator::checkLinks(const QHelpDataInterface &helpData)
             emit warning(tr("File '%1' cannot be opened.").arg(fileName));
             continue;
         }
-        const QRegExp linkPattern(QLatin1String("<(?:a href|img src)=\"?([^#\">]+)[#\">]"));
+        QRegExp linkPattern(QLatin1String("<(?:a href|img src)=\"?([^#\">]+)[#\">]"));
         QTextStream stream(&htmlFile);
         const QString codec = QHelpGlobal::codecFromData(htmlFile.read(1000));
         stream.setCodec(QTextCodec::codecForName(codec.toLatin1().constData()));

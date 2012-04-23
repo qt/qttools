@@ -161,7 +161,7 @@ private:
         if (s)
             searchTerm.replace(phrase, phrase.mid(1));
 
-        const QRegExp exp(QLatin1String("\\s+"));
+        QRegExp exp(QLatin1String("\\s+"));
         wordList += searchTerm.split(exp, QString::SkipEmptyParts);
         return wordList;
     }
@@ -285,7 +285,7 @@ private slots:
             queryList.append(QHelpSearchQuery(QHelpSearchQuery::DEFAULT,
                 buildTermList(defaultQuery->text())));
         } else {
-            const QRegExp exp(QLatin1String("\\s+"));
+            QRegExp exp(QLatin1String("\\s+"));
             QStringList lst = similarQuery->text().split(exp,
                 QString::SkipEmptyParts);
             if (!lst.isEmpty()) {
