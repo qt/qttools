@@ -69,7 +69,7 @@ class LU {
     Q_DECLARE_TR_FUNCTIONS(LUpdate)
 };
 
-using namespace QDeclarativeJS;
+using namespace QQmlJS;
 
 static QString MagicComment(QLatin1String("TRANSLATOR"));
 
