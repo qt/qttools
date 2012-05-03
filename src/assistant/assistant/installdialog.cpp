@@ -248,7 +248,7 @@ void InstallDialog::httpRequestFinished(QNetworkReply *reply)
         if (!m_httpAborted) {
             while (reply->canReadLine()) {
                 QByteArray ba = reply->readLine();
-                const QStringList lst = QString::fromAscii(ba.constData()).split(QLatin1Char('|'));
+                const QStringList lst = QString::fromLatin1(ba.constData()).split(QLatin1Char('|'));
                 if (lst.count() != 4) {
                     QMessageBox::information(this, m_windowTitle,
                         tr("Documentation info file is corrupt!"));

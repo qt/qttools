@@ -110,7 +110,7 @@ namespace {
         #if defined(UNICODE) || defined(_CL_HAVE_WCHAR_H) && defined(_CL_HAVE_WCHAR_T)
             str.toWCharArray(string);
         #else
-            const QByteArray ba = str.toAscii();
+            const QByteArray ba = str.toLatin1();
             strcpy(string, ba.constData());
         #endif
         return string;

@@ -88,7 +88,7 @@ QCLuceneFileReader::QCLuceneFileReader(const QString &path, const QString &encod
     : QCLuceneReader()
 {
     const QByteArray tmpPath = path.toLocal8Bit();
-    const QByteArray tmpEncoding = encoding.toAscii();
+    const QByteArray tmpEncoding = encoding.toLatin1();
     d->reader = new lucene::util::FileReader(tmpPath.constData(),
         tmpEncoding.constData(), int32_t(cacheLength), int32_t(cacheBuffer));
 }
