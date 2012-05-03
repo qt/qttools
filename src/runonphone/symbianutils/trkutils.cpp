@@ -292,7 +292,7 @@ SYMBIANUTILS_EXPORT QString stringFromArray(const QByteArray &ba, int maxLen)
     const int size = maxLen == -1 ? ba.size() : qMin(ba.size(), maxLen);
     for (int i = 0; i < size; ++i) {
         const int c = byte(ba.at(i));
-        str += QString::fromAscii("%1 ").arg(c, 2, 16, QChar('0'));
+        str += QString::fromLatin1("%1 ").arg(c, 2, 16, QChar('0'));
         ascii += QChar(c).isPrint() ? QChar(c) : QChar('.');
     }
     if (size != ba.size()) {

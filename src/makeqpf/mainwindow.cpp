@@ -257,7 +257,7 @@ void MainWindow::populateCharacterRanges()
         ellipsis = QLatin1String("...");
 
     while (!f.atEnd()) {
-        QString line = QString::fromAscii(f.readLine());
+        QString line = QString::fromLatin1(f.readLine());
 
         if (line.endsWith(QLatin1Char('\n')))
             line.chop(1);

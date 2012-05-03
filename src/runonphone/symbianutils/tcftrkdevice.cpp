@@ -408,7 +408,7 @@ int TcfTrkDevice::parseMessage(const QByteArray &message)
     // "\3\2{"Time":1276096098255,"Code":3,"Format": "Protocol format error"}"
     if (message.startsWith("\003\002")) {
         QByteArray text = message.mid(2);
-        const QString errorMessage = QString::fromLatin1("Parse error received: %1").arg(QString::fromAscii(text));
+        const QString errorMessage = QString::fromLatin1("Parse error received: %1").arg(QString::fromLatin1(text));
         emit error(errorMessage);
         return 0;
     }

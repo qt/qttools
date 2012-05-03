@@ -470,9 +470,9 @@ void Launcher::handleResult(const TrkResult &result)
             const uint tid = result.data.size() >= 10 ? extractShort(result.data.constData() + 6) : 0;
             Q_UNUSED(tid)
             const ushort len = result.data.size() > 12 ? extractShort(result.data.constData() + 10) : ushort(0);
-            const QString name = len ? QString::fromAscii(result.data.mid(12, len)) : QString();
+            const QString name = len ? QString::fromLatin1(result.data.mid(12, len)) : QString();
             logMessage(QString::fromLatin1("%1 %2 UNLOAD: %3").
-                       arg(QString::fromAscii(prefix)).arg(itemType ? QLatin1String("LIB") : QLatin1String("PROCESS")).
+                       arg(QString::fromLatin1(prefix)).arg(itemType ? QLatin1String("LIB") : QLatin1String("PROCESS")).
                        arg(name));
             d->m_device->sendTrkAck(result.token);
             if (itemType == kDSOSProcessItem // process

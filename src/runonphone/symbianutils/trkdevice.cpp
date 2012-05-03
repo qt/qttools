@@ -987,7 +987,7 @@ bool TrkDevice::open(QString *errorMessage)
 
     struct termios termInfo;
     if (tcgetattr(d->deviceContext->file.handle(), &termInfo) < 0) {
-        *errorMessage = QString::fromLatin1("Unable to retrieve terminal settings: %1 %2").arg(errno).arg(QString::fromAscii(strerror(errno)));
+        *errorMessage = QString::fromLatin1("Unable to retrieve terminal settings: %1 %2").arg(errno).arg(QString::fromLatin1(strerror(errno)));
         return false;
     }
     // Turn off terminal echo as not get messages back, among other things
@@ -1002,7 +1002,7 @@ bool TrkDevice::open(QString *errorMessage)
     termInfo.c_cc[VSTOP] = _POSIX_VDISABLE;
     termInfo.c_cc[VSUSP] = _POSIX_VDISABLE;
     if (tcsetattr(d->deviceContext->file.handle(), TCSAFLUSH, &termInfo) < 0) {
-        *errorMessage = QString::fromLatin1("Unable to apply terminal settings: %1 %2").arg(errno).arg(QString::fromAscii(strerror(errno)));
+        *errorMessage = QString::fromLatin1("Unable to apply terminal settings: %1 %2").arg(errno).arg(QString::fromLatin1(strerror(errno)));
         return false;
     }
 #endif

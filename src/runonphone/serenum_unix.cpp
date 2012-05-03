@@ -124,7 +124,7 @@ QList<SerialPortId> enumerateSerialPorts(int loglevel)
                         if (loglevel > 1)
                             qDebug() << "      can't read manufacturer name, error:" << err;
                     } else {
-                        manufacturerString = QString::fromAscii(buf);
+                        manufacturerString = QString::fromLatin1(buf);
                         if (loglevel > 1)
                             qDebug() << "      manufacturer:" << manufacturerString;
                     }
@@ -135,7 +135,7 @@ QList<SerialPortId> enumerateSerialPorts(int loglevel)
                         if (loglevel > 1)
                             qDebug() << "      can't read product name, error:" << err;
                     } else {
-                        productString = QString::fromAscii(buf);
+                        productString = QString::fromLatin1(buf);
                         if (loglevel > 1)
                             qDebug() << "      product:" << productString;
                     }
