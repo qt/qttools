@@ -275,19 +275,19 @@ static inline PrefixCharacterKind prefixCharacterKind(const QChar &c)
     case QChar::Number_DecimalDigit:
         return PC_Digit;
     case QChar::Letter_Lowercase: {
-            const char a = c.toAscii();
+            const char a = c.toLatin1();
             if (a >= 'a' && a <= 'z')
                 return PC_LowerCaseLetter;
         }
         break;
     case QChar::Letter_Uppercase: {
-            const char a = c.toAscii();
+            const char a = c.toLatin1();
             if (a >= 'A' && a <= 'Z')
                 return PC_UpperCaseLetter;
         }
         break;
     case QChar::Punctuation_Connector:
-        if (c.toAscii() == '_')
+        if (c.toLatin1() == '_')
             return PC_Other;
         break;
     default:

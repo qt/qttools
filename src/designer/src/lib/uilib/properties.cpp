@@ -622,9 +622,9 @@ DomProperty *variantToDomProperty(QAbstractFormBuilder *afb, const QMetaObject *
         if ((v.type() == QVariant::Int || v.type() == QVariant::UInt) && meta_property.isEnumType()) {
             const QMetaEnum e = meta_property.enumerator();
             if (e.isFlag())
-                dom_prop->setElementSet(QString::fromAscii(e.valueToKeys(v.toInt())));
+                dom_prop->setElementSet(QString::fromLatin1(e.valueToKeys(v.toInt())));
             else
-                dom_prop->setElementEnum(QString::fromAscii(e.valueToKey(v.toInt())));
+                dom_prop->setElementEnum(QString::fromLatin1(e.valueToKey(v.toInt())));
             return dom_prop;
         }
         if (!meta_property.hasStdCppSet() || (isOfType(meta, &QAbstractScrollArea::staticMetaObject) && pname == strings.cursorProperty))

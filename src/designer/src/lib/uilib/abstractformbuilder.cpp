@@ -1837,7 +1837,7 @@ static void storeItemFlags(const T *item, QList<DomProperty*> *properties)
     if (item->flags() != defaultFlags) {
         DomProperty *p = new DomProperty;
         p->setAttributeName(strings.flagsAttribute);
-        p->setElementSet(QString::fromAscii(itemFlags_enum.valueToKeys(item->flags())));
+        p->setElementSet(QString::fromLatin1(itemFlags_enum.valueToKeys(item->flags())));
         properties->append(p);
     }
 }
@@ -1920,7 +1920,7 @@ static void loadItemPropsNFlags(QAbstractFormBuilder *abstractFormBuilder, T *it
 
     DomProperty *p;
     if ((p = properties.value(strings.flagsAttribute)) && p->kind() == DomProperty::Set)
-        item->setFlags(enumKeysToValue<Qt::ItemFlags>(itemFlags_enum, p->elementSet().toAscii()));
+        item->setFlags(enumKeysToValue<Qt::ItemFlags>(itemFlags_enum, p->elementSet().toLatin1()));
 }
 
 #else
@@ -2057,7 +2057,7 @@ static void loadItemPropsNFlags(QAbstractFormBuilder *abstractFormBuilder, QTabl
 
     DomProperty *p;
     if ((p = properties.value(strings.flagsAttribute)) && p->kind() == DomProperty::Set)
-        item->setFlags(enumKeysToValue<Qt::ItemFlags>(itemFlags_enum, p->elementSet().toAscii()));
+        item->setFlags(enumKeysToValue<Qt::ItemFlags>(itemFlags_enum, p->elementSet().toLatin1()));
 }
 
 static void loadItemPropsNFlags(QAbstractFormBuilder *abstractFormBuilder, QListWidgetItem *item,
@@ -2070,7 +2070,7 @@ static void loadItemPropsNFlags(QAbstractFormBuilder *abstractFormBuilder, QList
 
     DomProperty *p;
     if ((p = properties.value(strings.flagsAttribute)) && p->kind() == DomProperty::Set)
-        item->setFlags(enumKeysToValue<Qt::ItemFlags>(itemFlags_enum, p->elementSet().toAscii()));
+        item->setFlags(enumKeysToValue<Qt::ItemFlags>(itemFlags_enum, p->elementSet().toLatin1()));
 }
 
 #endif
@@ -2499,7 +2499,7 @@ void QAbstractFormBuilder::loadTreeWidgetExtraInfo(DomWidget *ui_widget, QTreeWi
         int col = -1;
         foreach (DomProperty *property, properties) {
             if (property->attributeName() == strings.flagsAttribute && !property->elementSet().isEmpty()) {
-                currentItem->setFlags(enumKeysToValue<Qt::ItemFlags>(itemFlags_enum, property->elementSet().toAscii()));
+                currentItem->setFlags(enumKeysToValue<Qt::ItemFlags>(itemFlags_enum, property->elementSet().toLatin1()));
             } else if (property->attributeName() == strings.textAttribute && property->elementString()) {
                 col++;
                 QVariant textV = textBuilder()->loadText(property);

@@ -1338,7 +1338,7 @@ void QDesignerActions::savePreviewImage()
         return;
 
     QImage image;
-    const QString extension = QString::fromAscii(format);
+    const QString extension = QString::fromLatin1(format);
     const QString filter = tr("Image files (*.%1)").arg(extension);
 
     QString suggestion = fw->fileName();

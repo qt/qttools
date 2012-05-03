@@ -753,7 +753,7 @@ namespace qdesigner_internal
             return false;
         }
         if (uic.exitCode()) {
-            errorMessage =  QString::fromAscii(uic.readAllStandardError());
+            errorMessage =  QString::fromLatin1(uic.readAllStandardError());
             return false;
         }
         ba = uic.readAllStandardOutput();

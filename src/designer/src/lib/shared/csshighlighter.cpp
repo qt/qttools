@@ -94,7 +94,7 @@ void CssHighlighter::highlightBlock(const QString& text)
     for (int i = 0; i < text.length(); i++) {
         int token = ALNUM;
         const QChar c = text.at(i);
-        const char a = c.toAscii();
+        const char a = c.toLatin1();
 
         if (state == Quote) {
             if (a == '\\') {

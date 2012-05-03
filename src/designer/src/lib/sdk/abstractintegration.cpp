@@ -381,12 +381,12 @@ void QDesignerIntegrationPrivate::initialize()
 
     QFile f(m_gradientsPath);
     if (f.open(QIODevice::ReadOnly)) {
-        QtGradientUtils::restoreState(m_gradientManager, QString::fromAscii(f.readAll()));
+        QtGradientUtils::restoreState(m_gradientManager, QString::fromLatin1(f.readAll()));
         f.close();
     } else {
         QFile defaultGradients(QStringLiteral(":/qt-project.org/designer/defaultgradients.xml"));
         if (defaultGradients.open(QIODevice::ReadOnly)) {
-            QtGradientUtils::restoreState(m_gradientManager, QString::fromAscii(defaultGradients.readAll()));
+            QtGradientUtils::restoreState(m_gradientManager, QString::fromLatin1(defaultGradients.readAll()));
             defaultGradients.close();
         }
     }
