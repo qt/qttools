@@ -134,12 +134,12 @@ void tst_lrelease::translate()
     QCOMPARE(QObject::tr(" \tspace and tab at the start"), QString(" \tSPACE AND TAB AT THE START"));
     QCOMPARE(QObject::tr(" string that does not exist"), QString(" string that does not exist"));
 
-    QCOMPARE(QCoreApplication::translate("CubeForm", "Test"), QString::fromAscii("BBBB"));
+    QCOMPARE(QCoreApplication::translate("CubeForm", "Test"), QString::fromLatin1("BBBB"));
     QCOMPARE(QCoreApplication::translate("", "Test", "Empty context"), QString("AAAA"));
 
     // Test plurals
     QString txed = QCoreApplication::translate("Plurals", "There are %n houses", 0, QCoreApplication::UnicodeUTF8, 0);
-    QCOMPARE(QString::fromAscii("[%1]").arg(txed), QString("[There are 0 houses]"));
+    QCOMPARE(QString::fromLatin1("[%1]").arg(txed), QString("[There are 0 houses]"));
     QCOMPARE(QCoreApplication::translate("Plurals", "There are %n houses", 0, QCoreApplication::UnicodeUTF8, 1), QString("There is 1 house"));
     QCOMPARE(QCoreApplication::translate("Plurals", "There are %n houses", 0, QCoreApplication::UnicodeUTF8, 2), QString("There are 2 houses"));
     QCOMPARE(QCoreApplication::translate("Plurals", "There are %n houses", 0, QCoreApplication::UnicodeUTF8, 3), QString("There are 3 houses"));
@@ -152,9 +152,9 @@ void tst_lrelease::translate()
     QCOMPARE(tr("There are %n cars", "More Plurals", 3) , QString("There are 3 cars"));
 
 
-    QCOMPARE(QCoreApplication::translate("no_en", "Kj\370r K\345re, kj\346re"), QString::fromAscii("Drive K\345re, dear"));
-    QCOMPARE(QCoreApplication::translate("en_no", "Drive K\345re, dear"), QString::fromAscii("Kj\370r K\345re, kj\346re"));
-    QCOMPARE(QCoreApplication::translate("en_ch", "Chinese symbol:"), QString::fromAscii("Chinese symbol:%1").arg(QChar(0x7c1f)));
+    QCOMPARE(QCoreApplication::translate("no_en", "Kj\370r K\345re, kj\346re"), QString::fromLatin1("Drive K\345re, dear"));
+    QCOMPARE(QCoreApplication::translate("en_no", "Drive K\345re, dear"), QString::fromLatin1("Kj\370r K\345re, kj\346re"));
+    QCOMPARE(QCoreApplication::translate("en_ch", "Chinese symbol:"), QString::fromLatin1("Chinese symbol:%1").arg(QChar(0x7c1f)));
 
 //    printf("halo\r\nhallo");
   //  QCOMPARE(tr("This\r\nwill fail"), QString("THIS\nWILL FAIL"));    // \r\n =  0d 0a
@@ -182,9 +182,9 @@ void tst_lrelease::mixedcodecs()
     qApp->installTranslator(&translator);
 
     QCOMPARE(QCoreApplication::translate("FooBar", "this contains an umlaut \xfc &uuml;"),
-             QString::fromAscii("random stuff with umlaut"));
+             QString::fromLatin1("random stuff with umlaut"));
     QCOMPARE(QCoreApplication::translate("FooBar", "umlaut \xc3\xbc &uuml; in utf8"),
-             QString::fromAscii("more random stuff with umlaut"));
+             QString::fromLatin1("more random stuff with umlaut"));
 }
 
 void tst_lrelease::compressed()
@@ -195,12 +195,12 @@ void tst_lrelease::compressed()
     QVERIFY(translator.load("testdata/compressed.qm"));
     qApp->installTranslator(&translator);
 
-    QCOMPARE(QCoreApplication::translate("Context1", "Foo"), QString::fromAscii("in first context"));
-    QCOMPARE(QCoreApplication::translate("Context2", "Bar"), QString::fromAscii("in second context"));
+    QCOMPARE(QCoreApplication::translate("Context1", "Foo"), QString::fromLatin1("in first context"));
+    QCOMPARE(QCoreApplication::translate("Context2", "Bar"), QString::fromLatin1("in second context"));
 
-    QCOMPARE(QCoreApplication::translate("Action1", "Component Name"), QString::fromAscii("translation in first context"));
-    QCOMPARE(QCoreApplication::translate("Action2", "Component Name"), QString::fromAscii("translation in second context"));
-    QCOMPARE(QCoreApplication::translate("Action3", "Component Name"), QString::fromAscii("translation in third context"));
+    QCOMPARE(QCoreApplication::translate("Action1", "Component Name"), QString::fromLatin1("translation in first context"));
+    QCOMPARE(QCoreApplication::translate("Action2", "Component Name"), QString::fromLatin1("translation in second context"));
+    QCOMPARE(QCoreApplication::translate("Action3", "Component Name"), QString::fromLatin1("translation in third context"));
 
 }
 
@@ -212,8 +212,8 @@ void tst_lrelease::idbased()
     QVERIFY(translator.load("testdata/idbased.qm"));
     qApp->installTranslator(&translator);
 
-    QCOMPARE(qtTrId("test_id"), QString::fromAscii("This is a test string."));
-    QCOMPARE(qtTrId("untranslated_id"), QString::fromAscii("This has no translation."));
+    QCOMPARE(qtTrId("test_id"), QString::fromLatin1("This is a test string."));
+    QCOMPARE(qtTrId("untranslated_id"), QString::fromLatin1("This has no translation."));
 }
 
 void tst_lrelease::markuntranslated()
@@ -224,8 +224,8 @@ void tst_lrelease::markuntranslated()
     QVERIFY(translator.load("testdata/idbased.qm"));
     qApp->installTranslator(&translator);
 
-    QCOMPARE(qtTrId("test_id"), QString::fromAscii("This is a test string."));
-    QCOMPARE(qtTrId("untranslated_id"), QString::fromAscii("#This has no translation."));
+    QCOMPARE(qtTrId("test_id"), QString::fromLatin1("This is a test string."));
+    QCOMPARE(qtTrId("untranslated_id"), QString::fromLatin1("#This has no translation."));
 }
 
 void tst_lrelease::dupes()
