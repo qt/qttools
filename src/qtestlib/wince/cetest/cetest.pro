@@ -6,7 +6,7 @@ build_all:!build_pass {
     CONFIG += release
 }
 
-CONFIG += console no_batch
+CONFIG += console no_batch depend_includepath
 CONFIG -= qt
 
 DEFINES        += QT_BUILD_QMAKE QT_BOOTSTRAPPED QT_NO_CODECS QT_LITE_UNICODE QT_NO_LIBRARY \
@@ -26,7 +26,6 @@ INCLUDEPATH = \
 			  
 VPATH += $$QT_SOURCE_TREE/tools/shared
 
-DEPENDPATH += $$QT_BUILD_TREE/src/corelib/tools $$QT_BUILD_TREE/src/corelib/io
 
 HEADERS += \
         remoteconnection.h \
