@@ -232,7 +232,7 @@ namespace qdesigner_internal {
                 this, SLOT(slotTreeViewContextMenu(QPoint)));
 
         QHeaderView *headerView = m_treeView->header();
-        headerView->setResizeMode(QHeaderView::ResizeToContents);
+        headerView->setSectionResizeMode(QHeaderView::ResizeToContents);
         treeViewVBoxLayout->addWidget(m_treeView);
         // remove button
         QHBoxLayout *hboxLayout = new QHBoxLayout();
