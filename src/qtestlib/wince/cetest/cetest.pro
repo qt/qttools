@@ -16,16 +16,13 @@ DEFINES        += QT_BUILD_QMAKE QT_BOOTSTRAPPED QT_NO_CODECS QT_LITE_UNICODE QT
                   QT_NODLL QT_NO_QOBJECT
 
 INCLUDEPATH = \
-              $$QT_SOURCE_TREE/tools/qtestlib/ce/cetest \
-              $$QT_SOURCE_TREE/qmake \
-              $$QT_SOURCE_TREE/qmake/generators/symbian \
-			  $$QT_SOURCE_TREE/tools/shared \
-              $$QT_BUILD_TREE/include \
-              $$QT_BUILD_TREE/include/QtCore \
-              $$QT_BUILD_TREE/src/corelib/global
-			  
-VPATH += $$QT_SOURCE_TREE/tools/shared
+              $$QT.core.sources/../../tools/qtestlib/ce/cetest \
+              $$QT.core.sources/../../qmake \
+              $$QT.core.sources/../../qmake/generators/symbian \
+              $$QT.core.sources/../../tools/shared \
+              $$QT.core.includes
 
+VPATH += $$QT.core.sources/../../tools/shared
 
 HEADERS += \
         remoteconnection.h \
