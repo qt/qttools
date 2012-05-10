@@ -110,8 +110,7 @@
     Example}. The example shows how to create a custom widget plugin
     for \QD.
 
-    \sa QDesignerCustomWidgetCollectionInterface {Creating Custom
-    Widgets for Qt Designer}
+    \sa QDesignerCustomWidgetCollectionInterface, {Creating Custom Widgets for Qt Designer}
 */
 
 /*!

@@ -767,7 +767,7 @@ void QDesignerFormWindowInterface::activateResourceFilePaths(const QStringList &
 
     Switches the form window into editing mode.
 
-    \sa \l {Qt Designer's Form Editing Mode}
+    \sa {Qt Designer's Form Editing Mode}
 
     \internal
 */

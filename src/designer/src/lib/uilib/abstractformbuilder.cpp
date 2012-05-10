@@ -1249,7 +1249,8 @@ QActionGroup *QAbstractFormBuilder::createActionGroup(QObject *parent, const QSt
     Saves an XML representation of the given \a widget to the
     specified \a device in the standard UI file format.
 
-    \sa load()*/
+    \sa load()
+*/
 void QAbstractFormBuilder::save(QIODevice *dev, QWidget *widget)
 {
     DomWidget *ui_widget = createDom(widget, 0);
@@ -2788,7 +2789,8 @@ void QAbstractFormBuilder::loadExtraInfo(DomWidget *ui_widget, QWidget *widget, 
 /*!
     Returns the current working directory of the form builder.
 
-    \sa setWorkingDirectory() */
+    \sa setWorkingDirectory()
+*/
 QDir QAbstractFormBuilder::workingDirectory() const
 {
     return d->m_workingDirectory;
@@ -2798,7 +2800,8 @@ QDir QAbstractFormBuilder::workingDirectory() const
     Sets the current working directory of the form builder to the
     specified \a directory.
 
-    \sa workingDirectory()*/
+    \sa workingDirectory()
+*/
 void QAbstractFormBuilder::setWorkingDirectory(const QDir &directory)
 {
     d->m_workingDirectory = directory;
