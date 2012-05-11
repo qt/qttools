@@ -1117,7 +1117,7 @@ QVariant QDesignerPropertySheet::resolvePropertyValue(int index, const QVariant 
         return qvariant_cast<qdesigner_internal::PropertySheetStringListValue>(value).value();
 
     if (value.canConvert<qdesigner_internal::PropertySheetKeySequenceValue>())
-        return qvariant_cast<qdesigner_internal::PropertySheetKeySequenceValue>(value).value();
+        return QVariant::fromValue(qvariant_cast<qdesigner_internal::PropertySheetKeySequenceValue>(value).value());
 
     if (value.canConvert<qdesigner_internal::PropertySheetPixmapValue>()) {
         const QString path = qvariant_cast<qdesigner_internal::PropertySheetPixmapValue>(value).path();
