@@ -222,7 +222,7 @@ QWidget *QAbstractFormBuilder::load(QIODevice *dev, QWidget *parentWidget)
     d->m_errorString.clear();
     if (!readUiAttributes(reader, d->m_language, &d->m_errorString)) {
         uiLibWarning(d->m_errorString);
-        return false;
+        return 0;
     }
     DomUI ui;
     ui.read(reader);
