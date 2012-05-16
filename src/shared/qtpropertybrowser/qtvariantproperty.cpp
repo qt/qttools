@@ -43,7 +43,7 @@
 #include "qtpropertymanager.h"
 #include "qteditorfactory.h"
 #include <QtCore/QVariant>
-#include <QtWidgets/QIcon>
+#include <QtGui/QIcon>
 #include <QtCore/QDate>
 #include <QtCore/QLocale>
 

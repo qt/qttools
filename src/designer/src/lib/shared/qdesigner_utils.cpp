@@ -59,7 +59,7 @@
 #include <QtCore/QSharedData>
 
 #include <QtWidgets/QApplication>
-#include <QtWidgets/QIcon>
+#include <QtGui/QIcon>
 #include <QtGui/QPixmap>
 #include <QtWidgets/QListWidget>
 #include <QtWidgets/QTreeWidget>

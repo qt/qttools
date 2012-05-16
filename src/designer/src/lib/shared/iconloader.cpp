@@ -42,7 +42,7 @@
 #include "iconloader_p.h"
 
 #include <QtCore/QFile>
-#include <QtWidgets/QIcon>
+#include <QtGui/QIcon>
 #include <QtGui/QPixmap>
 
 QT_BEGIN_NAMESPACE

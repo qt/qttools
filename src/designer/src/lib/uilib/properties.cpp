@@ -49,7 +49,7 @@
 #include <QtCore/QUrl>
 #include <QtCore/qdebug.h>
 
-#include <QtWidgets/QIcon>
+#include <QtGui/QIcon>
 #include <QtGui/QPixmap>
 #include <QtGui/QFont>
 #include <QtWidgets/QFrame>

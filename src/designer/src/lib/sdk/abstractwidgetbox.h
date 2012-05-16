@@ -47,7 +47,7 @@
 #include <QtCore/QSharedDataPointer>
 #include <QtCore/QMetaType>
 #include <QtWidgets/QWidget>
-#include <QtWidgets/QIcon>
+#include <QtGui/QIcon>
 
 QT_BEGIN_HEADER
 

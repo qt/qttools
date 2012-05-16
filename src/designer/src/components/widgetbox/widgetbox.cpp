@@ -54,7 +54,7 @@
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QToolBar>
-#include <QtWidgets/QIcon>
+#include <QtGui/QIcon>
 
 QT_BEGIN_NAMESPACE
 

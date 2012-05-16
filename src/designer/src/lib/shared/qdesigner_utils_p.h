@@ -61,7 +61,7 @@
 #include <QtCore/QSharedDataPointer>
 #include <QtCore/QMap>
 #include <QtWidgets/QMainWindow>
-#include <QtWidgets/QIcon>
+#include <QtGui/QIcon>
 #include <QtGui/QPixmap>
 
 QT_BEGIN_NAMESPACE

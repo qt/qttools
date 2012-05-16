@@ -45,7 +45,7 @@
 #include <QtCore/QLocale>
 #include <QtCore/QMap>
 #include <QtCore/QTimer>
-#include <QtWidgets/QIcon>
+#include <QtGui/QIcon>
 #include <QtCore/QMetaEnum>
 #include <QtGui/QFontDatabase>
 #include <QtWidgets/QStyleOption>

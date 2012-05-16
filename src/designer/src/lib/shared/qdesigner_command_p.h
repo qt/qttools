@@ -62,7 +62,7 @@
 
 #include <QtDesigner/layoutdecoration.h>
 
-#include <QtWidgets/QIcon>
+#include <QtGui/QIcon>
 #include <QtCore/QObject>
 #include <QtCore/QPair>
 #include <QtCore/QMap>

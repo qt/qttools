@@ -58,7 +58,7 @@
 
 #include <QtDesigner/QDesignerWidgetDataBaseInterface>
 
-#include <QtWidgets/QIcon>
+#include <QtGui/QIcon>
 #include <QtCore/QString>
 #include <QtCore/QVariant>
 #include <QtCore/QPair>

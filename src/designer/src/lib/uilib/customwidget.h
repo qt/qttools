@@ -45,7 +45,7 @@
 #include "extension.h"
 #include <QtCore/QObject>
 #include <QtCore/QString>
-#include <QtWidgets/QIcon>
+#include <QtGui/QIcon>
 
 QT_BEGIN_HEADER
 

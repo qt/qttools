@@ -49,7 +49,7 @@
 #include <QtDesigner/QDesignerFormWindowInterface>
 
 #include <QtCore/qplugin.h>
-#include <QtWidgets/QIcon>
+#include <QtGui/QIcon>
 #include <ActiveQt/QAxWidget>
 
 QT_BEGIN_NAMESPACE

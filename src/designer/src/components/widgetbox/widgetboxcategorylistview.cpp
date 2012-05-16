@@ -46,7 +46,7 @@
 
 #include <QtXml/QDomDocument>
 
-#include <QtWidgets/QIcon>
+#include <QtGui/QIcon>
 #include <QtWidgets/QListView>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QItemDelegate>

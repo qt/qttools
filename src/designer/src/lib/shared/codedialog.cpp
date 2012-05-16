@@ -52,7 +52,7 @@
 #endif
 #include <QtWidgets/QDialogButtonBox>
 #include <QtWidgets/QFileDialog>
-#include <QtWidgets/QIcon>
+#include <QtGui/QIcon>
 #include <QtGui/QKeyEvent>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QPushButton>

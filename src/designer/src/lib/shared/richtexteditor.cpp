@@ -62,7 +62,7 @@
 #include <QtGui/QFontDatabase>
 #include <QtGui/QTextCursor>
 #include <QtGui/QPainter>
-#include <QtWidgets/QIcon>
+#include <QtGui/QIcon>
 #include <QtWidgets/QMenu>
 #include <QtGui/QMoveEvent>
 #include <QtWidgets/QTabWidget>

@@ -43,7 +43,7 @@
 
 #include <QtCore/QAbstractItemModel>
 
-#include <QtWidgets/QIcon>
+#include <QtGui/QIcon>
 
 QT_BEGIN_NAMESPACE
 

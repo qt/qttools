@@ -81,7 +81,7 @@
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QPushButton>
-#include <QtWidgets/QIcon>
+#include <QtGui/QIcon>
 #include <QtGui/QImage>
 #include <QtGui/QPixmap>
 #include <QtWidgets/QMdiSubWindow>

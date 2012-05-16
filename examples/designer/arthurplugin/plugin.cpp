@@ -43,7 +43,7 @@
 #include <QtDesigner/QDesignerCustomWidgetInterface>
 
 #include <QtCore/qplugin.h>
-#include <QtWidgets/QIcon>
+#include <QtGui/QIcon>
 #include <QtGui/QPixmap>
 
 #include "xform.h"

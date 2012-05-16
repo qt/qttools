@@ -54,7 +54,7 @@
 #define QTPROPERTYBROWSERUTILS_H
 
 #include <QtCore/QMap>
-#include <QtWidgets/QIcon>
+#include <QtGui/QIcon>
 #include <QtWidgets/QWidget>
 #include <QtCore/QStringList>
 

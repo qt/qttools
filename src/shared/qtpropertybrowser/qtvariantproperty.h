@@ -44,7 +44,7 @@
 
 #include "qtpropertybrowser.h"
 #include <QtCore/QVariant>
-#include <QtWidgets/QIcon>
+#include <QtGui/QIcon>
 
 QT_BEGIN_NAMESPACE
 

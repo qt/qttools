@@ -44,7 +44,7 @@
 
 #include <QtCore/QMap>
 #include <QtGui/QBrush>
-#include <QtWidgets/QIcon>
+#include <QtGui/QIcon>
 
 QT_BEGIN_NAMESPACE
 

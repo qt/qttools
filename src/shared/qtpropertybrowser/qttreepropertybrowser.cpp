@@ -41,7 +41,7 @@
 
 #include "qttreepropertybrowser.h"
 #include <QtCore/QSet>
-#include <QtWidgets/QIcon>
+#include <QtGui/QIcon>
 #include <QtWidgets/QTreeWidget>
 #include <QtWidgets/QItemDelegate>
 #include <QtWidgets/QHBoxLayout>

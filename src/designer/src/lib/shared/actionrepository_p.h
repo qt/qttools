@@ -59,7 +59,7 @@
 #include <QtWidgets/QTreeView>
 #include <QtWidgets/QListView>
 #include <QtWidgets/QStackedWidget>
-#include <QtWidgets/QIcon>
+#include <QtGui/QIcon>
 
 QT_BEGIN_NAMESPACE
 

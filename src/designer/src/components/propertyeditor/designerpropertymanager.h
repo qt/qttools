@@ -52,7 +52,7 @@
 #include <QtCore/QUrl>
 #include <QtCore/QMap>
 #include <QtGui/QFont>
-#include <QtWidgets/QIcon>
+#include <QtGui/QIcon>
 
 QT_BEGIN_NAMESPACE
 

@@ -43,7 +43,7 @@
 
 #include <QtCore/QMetaProperty>
 #include <QtCore/QDebug>
-#include <QtWidgets/QIcon>
+#include <QtGui/QIcon>
 #include <QtGui/QPainter>
 #include <QtGui/QResizeEvent>
 
