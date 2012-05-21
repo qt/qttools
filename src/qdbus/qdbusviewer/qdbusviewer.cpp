@@ -243,7 +243,7 @@ static QString getDbusSignature(const QMetaMethod& method)
     // create a D-Bus type signature from QMetaMethod's parameters
     QString sig;
     for (int i = 0; i < method.parameterTypes().count(); ++i) {
-        QVariant::Type type = QVariant::nameToType(method.parameterTypes().at(i));
+        int type = QMetaType::type(method.parameterTypes().at(i));
         sig.append(QString::fromLatin1(QDBusMetaType::typeToSignature(type)));
     }
     return sig;
@@ -280,9 +280,9 @@ void QDBusViewer::callMethod(const BusSignature &sig)
         if (paramType.endsWith('&'))
             continue; // ignore OUT parameters
 
-        QVariant::Type type = QVariant::nameToType(paramType);
+        int type = QMetaType::type(paramType);
         dialog.addProperty(QString::fromLatin1(paramNames.value(i)), type);
-        types.append(QMetaType::type(paramType));
+        types.append(type);
     }
 
     if (!types.isEmpty()) {
