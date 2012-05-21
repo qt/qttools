@@ -428,42 +428,42 @@ void QtGradientEditorPrivate::setType(QGradient::Type type)
     if (type == QGradient::LinearGradient) {
         startLinearXSpinBox = m_ui.spinBox1;
         setSpinBox(startLinearXSpinBox, SLOT(slotStartLinearXChanged(double)));
-        m_ui.label1->setText(QApplication::translate("QtGradientEditor", "Start X", 0, QApplication::UnicodeUTF8));
+        m_ui.label1->setText(QCoreApplication::translate("QtGradientEditor", "Start X"));
 
         startLinearYSpinBox = m_ui.spinBox2;
         setSpinBox(startLinearYSpinBox, SLOT(slotStartLinearYChanged(double)));
-        m_ui.label2->setText(QApplication::translate("QtGradientEditor", "Start Y", 0, QApplication::UnicodeUTF8));
+        m_ui.label2->setText(QCoreApplication::translate("QtGradientEditor", "Start Y"));
 
         endLinearXSpinBox = m_ui.spinBox3;
         setSpinBox(endLinearXSpinBox, SLOT(slotEndLinearXChanged(double)));
-        m_ui.label3->setText(QApplication::translate("QtGradientEditor", "Final X", 0, QApplication::UnicodeUTF8));
+        m_ui.label3->setText(QCoreApplication::translate("QtGradientEditor", "Final X"));
 
         endLinearYSpinBox = m_ui.spinBox4;
         setSpinBox(endLinearYSpinBox, SLOT(slotEndLinearYChanged(double)));
-        m_ui.label4->setText(QApplication::translate("QtGradientEditor", "Final Y", 0, QApplication::UnicodeUTF8));
+        m_ui.label4->setText(QCoreApplication::translate("QtGradientEditor", "Final Y"));
 
         setStartLinear(m_ui.gradientWidget->startLinear());
         setEndLinear(m_ui.gradientWidget->endLinear());
     } else if (type == QGradient::RadialGradient) {
         centralRadialXSpinBox = m_ui.spinBox1;
         setSpinBox(centralRadialXSpinBox, SLOT(slotCentralRadialXChanged(double)));
-        m_ui.label1->setText(QApplication::translate("QtGradientEditor", "Central X", 0, QApplication::UnicodeUTF8));
+        m_ui.label1->setText(QCoreApplication::translate("QtGradientEditor", "Central X"));
 
         centralRadialYSpinBox = m_ui.spinBox2;
         setSpinBox(centralRadialYSpinBox, SLOT(slotCentralRadialYChanged(double)));
-        m_ui.label2->setText(QApplication::translate("QtGradientEditor", "Central Y", 0, QApplication::UnicodeUTF8));
+        m_ui.label2->setText(QCoreApplication::translate("QtGradientEditor", "Central Y"));
 
         focalRadialXSpinBox = m_ui.spinBox3;
         setSpinBox(focalRadialXSpinBox, SLOT(slotFocalRadialXChanged(double)));
-        m_ui.label3->setText(QApplication::translate("QtGradientEditor", "Focal X", 0, QApplication::UnicodeUTF8));
+        m_ui.label3->setText(QCoreApplication::translate("QtGradientEditor", "Focal X"));
 
         focalRadialYSpinBox = m_ui.spinBox4;
         setSpinBox(focalRadialYSpinBox, SLOT(slotFocalRadialYChanged(double)));
-        m_ui.label4->setText(QApplication::translate("QtGradientEditor", "Focal Y", 0, QApplication::UnicodeUTF8));
+        m_ui.label4->setText(QCoreApplication::translate("QtGradientEditor", "Focal Y"));
 
         radiusRadialSpinBox = m_ui.spinBox5;
         setSpinBox(radiusRadialSpinBox, SLOT(slotRadiusRadialChanged(double)), 2.0);
-        m_ui.label5->setText(QApplication::translate("QtGradientEditor", "Radius", 0, QApplication::UnicodeUTF8));
+        m_ui.label5->setText(QCoreApplication::translate("QtGradientEditor", "Radius"));
 
         setCentralRadial(m_ui.gradientWidget->centralRadial());
         setFocalRadial(m_ui.gradientWidget->focalRadial());
@@ -471,15 +471,15 @@ void QtGradientEditorPrivate::setType(QGradient::Type type)
     } else if (type == QGradient::ConicalGradient) {
         centralConicalXSpinBox = m_ui.spinBox1;
         setSpinBox(centralConicalXSpinBox, SLOT(slotCentralConicalXChanged(double)));
-        m_ui.label1->setText(QApplication::translate("QtGradientEditor", "Central X", 0, QApplication::UnicodeUTF8));
+        m_ui.label1->setText(QCoreApplication::translate("QtGradientEditor", "Central X"));
 
         centralConicalYSpinBox = m_ui.spinBox2;
         setSpinBox(centralConicalYSpinBox, SLOT(slotCentralConicalYChanged(double)));
-        m_ui.label2->setText(QApplication::translate("QtGradientEditor", "Central Y", 0, QApplication::UnicodeUTF8));
+        m_ui.label2->setText(QCoreApplication::translate("QtGradientEditor", "Central Y"));
 
         angleConicalSpinBox = m_ui.spinBox3;
         setSpinBox(angleConicalSpinBox, SLOT(slotAngleConicalChanged(double)), 360.0, 1.0, 1);
-        m_ui.label3->setText(QApplication::translate("QtGradientEditor", "Angle", 0, QApplication::UnicodeUTF8));
+        m_ui.label3->setText(QCoreApplication::translate("QtGradientEditor", "Angle"));
 
         setCentralConical(m_ui.gradientWidget->centralConical());
         setAngleConical(m_ui.gradientWidget->angleConical());

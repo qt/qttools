@@ -170,21 +170,21 @@ void QtGradientStopsControllerPrivate::updateZoom(double zoom)
 
 void QtGradientStopsControllerPrivate::slotHsvClicked()
 {
-    QString h = QApplication::translate("qdesigner_internal::QtGradientStopsController", "H", 0, QApplication::UnicodeUTF8);
-    QString s = QApplication::translate("qdesigner_internal::QtGradientStopsController", "S", 0, QApplication::UnicodeUTF8);
-    QString v = QApplication::translate("qdesigner_internal::QtGradientStopsController", "V", 0, QApplication::UnicodeUTF8);
+    QString h = QCoreApplication::translate("qdesigner_internal::QtGradientStopsController", "H");
+    QString s = QCoreApplication::translate("qdesigner_internal::QtGradientStopsController", "S");
+    QString v = QCoreApplication::translate("qdesigner_internal::QtGradientStopsController", "V");
 
     m_ui->hLabel->setText(h);
     m_ui->sLabel->setText(s);
     m_ui->vLabel->setText(v);
 
-    h = QApplication::translate("qdesigner_internal::QtGradientStopsController", "Hue", 0, QApplication::UnicodeUTF8);
-    s = QApplication::translate("qdesigner_internal::QtGradientStopsController", "Sat", 0, QApplication::UnicodeUTF8);
-    v = QApplication::translate("qdesigner_internal::QtGradientStopsController", "Val", 0, QApplication::UnicodeUTF8);
+    h = QCoreApplication::translate("qdesigner_internal::QtGradientStopsController", "Hue");
+    s = QCoreApplication::translate("qdesigner_internal::QtGradientStopsController", "Sat");
+    v = QCoreApplication::translate("qdesigner_internal::QtGradientStopsController", "Val");
 
-    const QString hue = QApplication::translate("qdesigner_internal::QtGradientStopsController", "Hue", 0, QApplication::UnicodeUTF8);
-    const QString saturation = QApplication::translate("qdesigner_internal::QtGradientStopsController", "Saturation", 0, QApplication::UnicodeUTF8);
-    const QString value = QApplication::translate("qdesigner_internal::QtGradientStopsController", "Value", 0, QApplication::UnicodeUTF8);
+    const QString hue = QCoreApplication::translate("qdesigner_internal::QtGradientStopsController", "Hue");
+    const QString saturation = QCoreApplication::translate("qdesigner_internal::QtGradientStopsController", "Saturation");
+    const QString value = QCoreApplication::translate("qdesigner_internal::QtGradientStopsController", "Value");
 
     m_ui->hLabel->setToolTip(hue);
     m_ui->hueLabel->setText(h);
@@ -206,17 +206,17 @@ void QtGradientStopsControllerPrivate::slotHsvClicked()
 
 void QtGradientStopsControllerPrivate::slotRgbClicked()
 {
-    QString r = QApplication::translate("qdesigner_internal::QtGradientStopsController", "R", 0, QApplication::UnicodeUTF8);
-    QString g = QApplication::translate("qdesigner_internal::QtGradientStopsController", "G", 0, QApplication::UnicodeUTF8);
-    QString b = QApplication::translate("qdesigner_internal::QtGradientStopsController", "B", 0, QApplication::UnicodeUTF8);
+    QString r = QCoreApplication::translate("qdesigner_internal::QtGradientStopsController", "R");
+    QString g = QCoreApplication::translate("qdesigner_internal::QtGradientStopsController", "G");
+    QString b = QCoreApplication::translate("qdesigner_internal::QtGradientStopsController", "B");
 
     m_ui->hLabel->setText(r);
     m_ui->sLabel->setText(g);
     m_ui->vLabel->setText(b);
 
-    QString red = QApplication::translate("qdesigner_internal::QtGradientStopsController", "Red", 0, QApplication::UnicodeUTF8);
-    QString green = QApplication::translate("qdesigner_internal::QtGradientStopsController", "Green", 0, QApplication::UnicodeUTF8);
-    QString blue = QApplication::translate("qdesigner_internal::QtGradientStopsController", "Blue", 0, QApplication::UnicodeUTF8);
+    QString red = QCoreApplication::translate("qdesigner_internal::QtGradientStopsController", "Red");
+    QString green = QCoreApplication::translate("qdesigner_internal::QtGradientStopsController", "Green");
+    QString blue = QCoreApplication::translate("qdesigner_internal::QtGradientStopsController", "Blue");
 
     m_ui->hLabel->setToolTip(red);
     m_ui->hueLabel->setText(red);
