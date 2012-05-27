@@ -271,6 +271,7 @@ class ArthurPlugins : public QObject, public QDesignerCustomWidgetCollectionInte
 {
     Q_OBJECT
     Q_INTERFACES(QDesignerCustomWidgetCollectionInterface)
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QDesignerCustomWidgetCollectionInterface")
 
 public:
     explicit ArthurPlugins(QObject *parent = 0);
@@ -293,4 +294,3 @@ ArthurPlugins::ArthurPlugins(QObject *parent) :
 
 #include "plugin.moc"
 
-Q_EXPORT_PLUGIN2(ArthurPlugins, ArthurPlugins)

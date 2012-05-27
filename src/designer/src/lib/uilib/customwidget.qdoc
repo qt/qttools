@@ -66,12 +66,11 @@
     construct and return an instance of a custom widget with the specified
     parent widget. 
 
-    In the implementation of the class you must remember to export
-    your custom widget plugin to \QD using the Q_EXPORT_PLUGIN2()
+    Exporting your custom widget plugin to \QD using the Q_PLUGIN_METADATA()
     macro. For example, if a library called \c libcustomwidgetplugin.so
     (on Unix) or \c libcustomwidget.dll (on Windows) contains a widget
     class called \c MyCustomWidget, we can export it by adding the
-    following line to the file containing the plugin implementation:
+    following line to the file containing the plugin header:
 
     \snippet doc/src/snippets/code/doc_src_qtdesigner.cpp 14
 
@@ -272,8 +271,8 @@
     \snippet doc/src/snippets/code/doc_src_qtdesigner.cpp 13
 
     Note that instead of exporting each custom widget plugin using the
-    Q_EXPORT_PLUGIN2() macro, you export the entire collection. The
-    Q_EXPORT_PLUGIN2() macro ensures that \QD can access and construct
+    Q_PLUGIN_METADATA() macro, you export the entire collection. The
+    Q_PLUGIN_METADATA() macro ensures that \QD can access and construct
     the custom widgets. Without this macro, there is no way for \QD to
     use them.
 

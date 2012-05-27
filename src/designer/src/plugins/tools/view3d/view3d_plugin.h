@@ -59,6 +59,7 @@ class VIEW3D_EXPORT QView3DPlugin : public QObject, public QDesignerFormEditorPl
 {
     Q_OBJECT
     Q_INTERFACES(QDesignerFormEditorPluginInterface)
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.Designer.QDesignerFormEditorPluginInterface")
 
 public:
     QView3DPlugin();
