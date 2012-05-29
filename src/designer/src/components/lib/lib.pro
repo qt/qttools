@@ -7,7 +7,7 @@ TARGET = QtDesignerComponents
 QT += gui-private widgets widgets-private designer designer-private
 
 CONFIG += module
-MODULE_PRI = ../../../../modules/qt_designercomponents.pri
+MODULE_PRI = ../../../../../modules/qt_designercomponents.pri
 
 load(qt_module_config)
 
