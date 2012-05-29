@@ -1,7 +1,7 @@
 load(qt_build_config)
 
 TARGET = QtUiTools
-CONFIG += staticlib
+CONFIG += static
 QT = core
 
 load(qt_module_config)
