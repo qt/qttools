@@ -368,7 +368,7 @@ FSDirectory::FSDirectory(const QString& path, const bool createDir)
     QDir dir(lockDir);
     if (!dir.exists()) {
         if (!dir.mkpath(lockDir))
-            _CLTHROWA_DEL(CL_ERR_IO, "Cannot create temp directory");
+            _CLTHROWA(CL_ERR_IO, "Cannot create temp directory");
     }
 
     QFileInfo info(lockDir);
