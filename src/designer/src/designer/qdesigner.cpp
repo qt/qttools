@@ -69,17 +69,17 @@ QT_BEGIN_NAMESPACE
 
 static const char *designerApplicationName = "Designer";
 static const char *designerWarningPrefix = "Designer: ";
-static QMessageHandler previousMessageHandler = 0;
+static QtMessageHandler previousMessageHandler = 0;
 
-static void designerMessageHandler(QtMsgType type, const QMessageLogContext &context, const char *msg)
+static void designerMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
     // Only Designer warnings are displayed as box
     QDesigner *designerApp = qDesigner;
-    if (type != QtWarningMsg || !designerApp || qstrncmp(designerWarningPrefix, msg, qstrlen(designerWarningPrefix))) {
+    if (type != QtWarningMsg || !designerApp || !msg.startsWith(QLatin1String(designerWarningPrefix))) {
         previousMessageHandler(type, context, msg);
         return;
     }
-    designerApp->showErrorMessage(msg);
+    designerApp->showErrorMessage(qPrintable(msg));
 }
 
 QDesigner::QDesigner(int &argc, char **argv)
