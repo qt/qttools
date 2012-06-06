@@ -187,7 +187,7 @@ public:
     bool showTabs() const;
     void setShowTabs(bool show);
 
-    static const QString TrUnfiltered;
+    static const QString TrUnfiltered();
 
     bool fullTextSearchFallbackEnabled() const;
 

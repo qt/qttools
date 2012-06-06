@@ -115,7 +115,13 @@ private:
     QMap<QString, RecentSignal> m_recentQchUpdates;
 };
 
-const QString HelpEngineWrapper::TrUnfiltered = HelpEngineWrapper::tr("Unfiltered");
+const QString HelpEngineWrapper::TrUnfiltered()
+{
+    static QString s;
+    if (s.isNull())
+        s = HelpEngineWrapper::tr("Unfiltered");
+    return s;
+}
 
 HelpEngineWrapper *HelpEngineWrapper::helpEngineWrapper = 0;
 
@@ -273,7 +279,7 @@ void HelpEngineWrapper::setCurrentFilter(const QString &currentFilter)
 {
     TRACE_OBJ
     const QString &filter
-        = currentFilter == TrUnfiltered ? Unfiltered : currentFilter;
+            = currentFilter == TrUnfiltered() ? Unfiltered : currentFilter;
     d->m_helpEngine->setCurrentFilter(filter);
 }
 
@@ -281,7 +287,7 @@ const QString HelpEngineWrapper::currentFilter() const
 {
     TRACE_OBJ
     const QString &filter = d->m_helpEngine->currentFilter();
-    return filter == Unfiltered ? TrUnfiltered : filter;
+    return filter == Unfiltered ? TrUnfiltered() : filter;
 }
 
 const QStringList HelpEngineWrapper::customFilters() const
@@ -289,7 +295,7 @@ const QStringList HelpEngineWrapper::customFilters() const
     TRACE_OBJ
     QStringList filters = d->m_helpEngine->customFilters();
     filters.removeOne(Unfiltered);
-    filters.prepend(TrUnfiltered);
+    filters.prepend(TrUnfiltered());
     return filters;
 }
 
@@ -695,7 +701,7 @@ void HelpEngineWrapper::handleCurrentFilterChanged(const QString &filter)
 {
     TRACE_OBJ
     const QString &filterToReport
-        = filter == Unfiltered ? TrUnfiltered : filter;
+            = filter == Unfiltered ? TrUnfiltered() : filter;
     emit currentFilterChanged(filterToReport);
 }
 
