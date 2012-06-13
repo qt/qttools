@@ -49,6 +49,7 @@
 
 #include <ActiveQt/QAxWidget>
 
+#include <qt_windows.h>
 #include <olectl.h>
 #include <qaxtypes.h>
 

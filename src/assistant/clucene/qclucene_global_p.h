@@ -41,7 +41,7 @@
 #       define TCHAR wchar_t
 #   endif
 #else
-#   include <windows.h>
+#   include <qt_windows.h>
 #endif
 
 QT_BEGIN_HEADER

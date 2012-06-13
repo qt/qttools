@@ -54,6 +54,7 @@
 #include <QtCore/QUuid>
 #include <ActiveQt/qaxselect.h>
 
+#include <qt_windows.h>
 #include <olectl.h>
 #include <qaxtypes.h>
 
