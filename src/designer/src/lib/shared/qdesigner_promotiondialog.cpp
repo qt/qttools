@@ -107,6 +107,7 @@ namespace qdesigner_internal {
 
         // Grid
         QFormLayout *formLayout = new QFormLayout();
+        formLayout->setFieldGrowthPolicy(QFormLayout::ExpandingFieldsGrow); // Mac
         formLayout->addRow(tr("Base class name:"),     m_baseClassCombo);
         formLayout->addRow(tr("Promoted class name:"), m_classNameEdit);
         formLayout->addRow(tr("Header file:"),         m_includeFileEdit);
