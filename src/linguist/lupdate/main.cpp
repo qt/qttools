@@ -140,7 +140,8 @@ static void printUsage()
         "    -version\n"
         "           Display the version of lupdate and exit.\n"
         "    @lst-file\n"
-        "           Read additional file names (one per line) from lst-file.\n"
+        "           Read additional file names (one per line) or includepaths (one per\n"
+        "           line, and prefixed with -I) from lst-file.\n"
     ).arg(m_defaultExtensions));
 }
 
@@ -642,8 +643,19 @@ int main(int argc, char **argv)
                          .arg(lstFile.fileName()));
                 return 1;
             }
-            while (!lstFile.atEnd())
-                files << QString::fromLocal8Bit(lstFile.readLine().trimmed());
+            while (!lstFile.atEnd()) {
+                QString lineContent = QString::fromLocal8Bit(lstFile.readLine().trimmed());
+
+                if (lineContent.startsWith(QLatin1Literal("-I"))) {
+                    if (lineContent.length() == 2) {
+                        printErr(LU::tr("The -I option should be followed by a path.\n"));
+                        return 1;
+                    }
+                    includePath += lineContent.mid(2);
+                } else {
+                    files << lineContent;
+                }
+            }
         } else {
             files << arg;
         }
