@@ -39,21 +39,11 @@
 **
 ****************************************************************************/
 
-#include <QDebug>
-#include <QCoreApplication>
-#include <QTranslator>
+#ifndef SOME_INCLUDE_H
+#define SOME_INCLUDE_H
 
-#include "some_include.h"
+enum {
+  Non_Empty_File
+};
 
-int main(int argc, char **argv)
-{
-    QCoreApplication app(argc, argv);
-    QTranslator *myappTranslator = new QTranslator;
-    QString localeName = QLocale::system().name();
-    myappTranslator->load("myobject_" + localeName + ".qm", qApp->applicationDirPath());
-    myappTranslator->setObjectName("myobject_" + localeName);
-    app.installTranslator(myappTranslator);
-
-    qDebug() << QObject::tr("Hello, world!");
-    return 0;
-}
+#endif

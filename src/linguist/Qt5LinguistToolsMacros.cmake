@@ -62,6 +62,13 @@ function(QT5_CREATE_TRANSLATION _qm_files)
           foreach(_lst_file_src ${_my_sources})
               set(_lst_file_srcs "${_lst_file_src}\n${_lst_file_srcs}")
           endforeach()
+
+          get_directory_property(_inc_DIRS INCLUDE_DIRECTORIES)
+          foreach(_pro_include ${_inc_DIRS})
+              get_filename_component(_abs_include "${_pro_include}" ABSOLUTE)
+              set(_lst_file_srcs "-I${_pro_include}\n${_lst_file_srcs}")
+          endforeach()
+
           file(WRITE ${_ts_lst_file} "${_lst_file_srcs}")
         endif()
         add_custom_command(OUTPUT ${_ts_file}

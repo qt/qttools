@@ -16,6 +16,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt5Core_EXECUTABLE_COMPILE_FLAGS}")
 
 set(my_srcs myi18nobject.cpp)
 
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/some_dir")
+
 qt5_create_translation(qm_files ${my_srcs} myobject_de.ts)
 
 add_executable(myobject ${my_srcs} ${qm_files})
