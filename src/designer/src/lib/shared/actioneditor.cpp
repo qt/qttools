@@ -332,8 +332,8 @@ void ActionEditor::setFormWindow(QDesignerFormWindowInterface *formWindow)
 
 void  ActionEditor::slotSelectionChanged(const QItemSelection& selected, const QItemSelection& /*deselected*/)
 {
-#ifndef QT_NO_CLIPBOARD
     const bool hasSelection = !selected.indexes().empty();
+#ifndef QT_NO_CLIPBOARD
     m_actionCopy->setEnabled(hasSelection);
     m_actionCut->setEnabled(hasSelection);
 #endif
