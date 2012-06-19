@@ -4,7 +4,8 @@ TEMPLATE = app
 LANGUAGE = C++
 DESTDIR = $$QT.designer.bins
 
-QT += core-private widgets xml uitools-private printsupport
+QT += core-private widgets xml uitools-private
+!isEmpty(QT.printsupport.name): QT += printsupport
 
 CONFIG += qt warn_on
 

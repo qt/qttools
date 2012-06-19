@@ -10,7 +10,8 @@ DESTDIR = $$QT.help.bins
 CONFIG += qt \
     warn_on \
     help
-QT += widgets printsupport network help
+QT += widgets network help
+!isEmpty(QT.printsupport.name): QT += printsupport
 PROJECTNAME = Assistant
 
 DEPENDPATH += ../shared

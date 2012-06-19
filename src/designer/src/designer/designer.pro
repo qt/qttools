@@ -1,7 +1,8 @@
 load(qt_module)
 
 DESTDIR = $$QT.designer.bins
-QT += core-private widgets xml network designer-private printsupport
+QT += core-private widgets xml network designer-private
+!isEmpty(QT.printsupport.name): QT += printsupport
 
 CONFIG += module
 MODULE_PRI = ../../../../modules/qt_designer.pri
