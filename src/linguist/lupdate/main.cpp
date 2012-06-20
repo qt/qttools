@@ -499,7 +499,7 @@ int main(int argc, char **argv)
     QString extensions = m_defaultExtensions;
     QSet<QString> extensionsNameFilters;
 
-    for (int i = 1; i < argc; ++i) {
+    for (int i = 1; i < args.size(); ++i) {
         QString arg = args.at(i);
         if (arg == QLatin1String("-help")
                 || arg == QLatin1String("--help")
