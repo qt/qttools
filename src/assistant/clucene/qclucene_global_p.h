@@ -48,7 +48,7 @@ QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
-#if !defined(QT_SHARED) && !defined(QT_DLL)
+#ifdef QT_STATIC
 #   define QHELP_EXPORT
 #elif defined(QHELP_LIB)
 #   define QHELP_EXPORT Q_DECL_EXPORT
