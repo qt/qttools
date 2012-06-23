@@ -30,4 +30,4 @@ find_package(Qt5Core REQUIRED)
 include("${_Qt5CTestMacros}")
 
 expect_pass(test_translation_macros)
-
+expect_pass(test_modules)
