@@ -27,7 +27,7 @@
  !   extra-loc-blank
   -->
 <!ELEMENT extra-* %evilstring; >
-<!ELEMENT TS (defaultcodec?, extra-**, (context|message)+) > 
+<!ELEMENT TS (defaultcodec?, extra-**, dependencies?, (context|message)+) >
 <!ATTLIST TS
           version CDATA #IMPLIED
           sourcelanguage CDATA #IMPLIED
@@ -37,6 +37,9 @@
 <!ELEMENT context (name, comment?, (context|message)+) >
 <!ATTLIST context
           encoding CDATA #IMPLIED>
+<!ELEMENT dependencies (dependency+) >
+<!ATTLIST dependency
+          catalog CDATA #IMPLIED>
 <!ELEMENT name %evilstring; >
 <!-- This is "disambiguation" in the (new) API, or "msgctxt" in gettext speak -->
 <!ELEMENT comment %evilstring; >

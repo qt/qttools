@@ -213,9 +213,12 @@ bool TSReader::read(Translator &translator)
 {
     STRING(both);
     STRING(byte);
+    STRING(catalog);
     STRING(comment);
     STRING(context);
     STRING(defaultcodec);
+    STRING(dependencies);
+    STRING(dependency);
     STRING(encoding);
     STRING(extracomment);
     STRING(filename);
@@ -288,6 +291,33 @@ bool TSReader::read(Translator &translator)
                     QString tag = name().toString();
                     translator.setExtra(tag.mid(6), readContents());
                     // </extra-...>
+                } else if (elementStarts(strdependencies)) {
+                    /*
+                     * <dependencies>
+                     *   <dependency catalog="qtsystems_no"/>
+                     *   <dependency catalog="qtbase_no"/>
+                     * </dependencies>
+                     **/
+                    QStringList dependencies;
+                    while (!atEnd()) {
+                        readNext();
+                        if (isEndElement()) {
+                            // </dependencies> found, finish local loop
+                            break;
+                        } else if (elementStarts(strdependency)) {
+                            // <dependency>
+                            QXmlStreamAttributes atts = attributes();
+                            dependencies.append(atts.value(strcatalog).toString());
+                            while (!atEnd()) {
+                                readNext();
+                                if (isEndElement()) {
+                                    // </dependency> found, finish local loop
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    translator.setDependencies(dependencies);
                 } else if (elementStarts(strcontext)) {
                     // <context>
                     QString context;
@@ -566,6 +596,14 @@ bool saveTS(const Translator &translator, QIODevice &dev, ConversionData &cd, in
     QByteArray codecName = translator.codecName();
     if (codecName != "ISO-8859-1")
         t << "<defaultcodec>" << codecName << "</defaultcodec>\n";
+
+    QStringList deps = translator.dependencies();
+    if (!deps.isEmpty()) {
+        t << "<dependencies>\n";
+        foreach (const QString &dep, deps)
+            t << "<dependency catalog=\"" << dep << "\"/>\n";
+        t << "</dependencies>\n";
+    }
 
     QRegExp drops(cd.dropTags().join(QLatin1String("|")));
 

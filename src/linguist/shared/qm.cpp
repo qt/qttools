@@ -163,7 +163,7 @@ public:
         uint o;
     };
 
-    enum { Contexts = 0x2f, Hashes = 0x42, Messages = 0x69, NumerusRules = 0x88 };
+    enum { Contexts = 0x2f, Hashes = 0x42, Messages = 0x69, NumerusRules = 0x88, Dependencies = 0x96 };
 
     Releaser() : m_codec(0) {}
 
@@ -180,6 +180,7 @@ public:
     void squeeze(TranslatorSaveMode mode);
 
     void setNumerusRules(const QByteArray &rules);
+    void setDependencies(const QStringList &dependencies);
 
 private:
     Q_DISABLE_COPY(Releaser)
@@ -204,6 +205,8 @@ private:
     QByteArray m_contextArray;
     QMap<ByteTranslatorMessage, void *> m_messages;
     QByteArray m_numerusRules;
+    QStringList m_dependencies;
+    QByteArray m_dependencyArray;
 
     // Used to reproduce the original bytes
     QTextCodec *m_codec;
@@ -271,6 +274,11 @@ bool Releaser::save(QIODevice *iod)
     QDataStream s(iod);
     s.writeRawData((const char *)magic, MagicLength);
 
+    if (!m_dependencyArray.isEmpty()) {
+        quint32 das = quint32(m_dependencyArray.size());
+        s << quint8(Dependencies) << das;
+        s.writeRawData(m_dependencyArray.constData(), das);
+    }
     if (!m_offsetArray.isEmpty()) {
         quint32 oas = quint32(m_offsetArray.size());
         s << quint8(Hashes) << oas;
@@ -296,6 +304,11 @@ bool Releaser::save(QIODevice *iod)
 
 void Releaser::squeeze(TranslatorSaveMode mode)
 {
+    m_dependencyArray.clear();
+    QDataStream depstream(&m_dependencyArray, QIODevice::WriteOnly);
+    foreach (const QString &dep, m_dependencies)
+        depstream << dep;
+
     if (m_messages.isEmpty() && mode == SaveEverything)
         return;
 
@@ -452,6 +465,11 @@ void Releaser::setNumerusRules(const QByteArray &rules)
     m_numerusRules = rules;
 }
 
+void Releaser::setDependencies(const QStringList &dependencies)
+{
+    m_dependencies = dependencies;
+}
+
 static quint8 read8(const uchar *data)
 {
     return *data;
@@ -498,7 +516,7 @@ bool loadQM(Translator &translator, QIODevice &dev, ConversionData &cd)
         return false;
     }
 
-    enum { Contexts = 0x2f, Hashes = 0x42, Messages = 0x69, NumerusRules = 0x88 };
+    enum { Contexts = 0x2f, Hashes = 0x42, Messages = 0x69, NumerusRules = 0x88, Dependencies = 0x96 };
 
     // for squeezed but non-file data, this is what needs to be deleted
     const uchar *messageArray = 0;
@@ -529,6 +547,15 @@ bool loadQM(Translator &translator, QIODevice &dev, ConversionData &cd)
         } else if (tag == Messages) {
             messageArray = data;
             //qDebug() << "MESSAGES: " << blockLen << QByteArray((const char *)data, blockLen).toHex();
+        } else if (tag == Dependencies) {
+            QStringList dependencies;
+            QDataStream stream(QByteArray::fromRawData((const char*)data, blockLen));
+            QString dep;
+            while (!stream.atEnd()) {
+                stream >> dep;
+                dependencies.append(dep);
+            }
+            translator.setDependencies(dependencies);
         }
 
         data += blockLen;
@@ -754,6 +781,7 @@ bool saveQM(const Translator &translator, QIODevice &dev, ConversionData &cd)
             "Excess context/disambiguation dropped from %n message(s).", 0,
             QCoreApplication::DefaultCodec, droppedData));
 
+    releaser.setDependencies(translator.dependencies());
     releaser.squeeze(cd.m_saveMode);
     bool saved = releaser.save(&dev);
     if (saved && cd.isVerbose()) {

@@ -190,6 +190,9 @@ public:
     const TranslatorMessage &constMessage(int i) const { return m_messages.at(i); }
     void dump() const;
 
+    void setDependencies(const QStringList &dependencies) { m_dependencies = dependencies; }
+    QStringList dependencies() const { return m_dependencies; }
+
     // additional file format specific data
     // note: use '<fileformat>:' as prefix for file format specific members,
     // e.g. "po-flags", "po-msgid_plural"
@@ -243,6 +246,7 @@ private:
     // 'por_BR'     Brazilian portuguese (ISO 639-2 language code)
     QString m_language;
     QString m_sourceLanguage;
+    QStringList m_dependencies;
     ExtraData m_extra;
 
     mutable bool m_indexOk;
