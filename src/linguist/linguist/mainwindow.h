@@ -90,7 +90,6 @@ public:
 
     bool openFiles(const QStringList &names, bool readWrite = true);
     static RecentFiles &recentFiles();
-    static const QString &resourcePrefix();
     static QString friendlyString(const QString &str);
 
 protected:

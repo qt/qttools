@@ -54,14 +54,14 @@
 #include <QtGui/QPixmap>
 #include <QtWidgets/QSplashScreen>
 
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
 #include <QtCore/QUrl>
 #include <QtGui/QFileOpenEvent>
-#endif // Q_WS_MAC
+#endif // Q_OS_MAC
 
 QT_USE_NAMESPACE
 
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
 class ApplicationEventFilter : public QObject
 {
     Q_OBJECT
@@ -100,7 +100,7 @@ private:
     MainWindow *m_mainWindow;
     QStringList m_filesToOpen;
 };
-#endif // Q_WS_MAC
+#endif // Q_OS_MAC
 
 int main(int argc, char **argv)
 {
@@ -109,10 +109,10 @@ int main(int argc, char **argv)
     QApplication app(argc, argv);
     QApplication::setOverrideCursor(Qt::WaitCursor);
 
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
     ApplicationEventFilter eventFilter;
     app.installEventFilter(&eventFilter);
-#endif // Q_WS_MAC
+#endif // Q_OS_MAC
 
     QStringList files;
     QString resourceDir = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
@@ -162,9 +162,9 @@ int main(int argc, char **argv)
     splash->show();
 
     MainWindow mw;
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
     eventFilter.setMainWindow(&mw);
-#endif // Q_WS_MAC
+#endif // Q_OS_MAC
     mw.show();
     splash->finish(&mw);
     QApplication::restoreOverrideCursor();
@@ -174,6 +174,6 @@ int main(int argc, char **argv)
     return app.exec();
 }
 
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
 #include "main.moc"
-#endif // Q_WS_MAC
+#endif // Q_OS_MAC

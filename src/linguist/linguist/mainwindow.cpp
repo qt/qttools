@@ -278,7 +278,7 @@ MainWindow::MainWindow()
     setUnifiedTitleAndToolBarOnMac(true);
     m_ui.setupUi(this);
 
-#ifndef Q_WS_MAC
+#ifndef Q_OS_MAC
     setWindowIcon(QPixmap(QLatin1String(":/images/appicon.png") ));
 #endif
 
@@ -709,16 +709,6 @@ RecentFiles &MainWindow::recentFiles()
 {
     static RecentFiles recentFiles(10);
     return recentFiles;
-}
-
-const QString &MainWindow::resourcePrefix()
-{
-#ifdef Q_WS_MAC
-    static const QString prefix(QLatin1String(":/images/mac"));
-#else
-    static const QString prefix(QLatin1String(":/images/win"));
-#endif
-    return prefix;
 }
 
 void MainWindow::open()
@@ -1816,52 +1806,56 @@ QString MainWindow::friendlyString(const QString& str)
     return f.simplified();
 }
 
-static inline void setThemeIcon(QAction *action, const char *name, const char *fallback)
-{
-    const QIcon fallbackIcon(MainWindow::resourcePrefix() + QLatin1String(fallback));
-#ifdef Q_WS_X11
-    action->setIcon(QIcon::fromTheme(QLatin1String(name), fallbackIcon));
-#else
-    Q_UNUSED(name)
-    action->setIcon(fallbackIcon);
-#endif
-}
-
 void MainWindow::setupMenuBar()
 {
-    // There are no fallback icons for these
-#ifdef Q_WS_X11
-    m_ui.menuRecentlyOpenedFiles->setIcon(QIcon::fromTheme(QLatin1String("document-open-recent")));
-    m_ui.actionCloseAll->setIcon(QIcon::fromTheme(QLatin1String("window-close")));
-    m_ui.actionExit->setIcon(QIcon::fromTheme(QLatin1String("application-exit")));
-    m_ui.actionSelectAll->setIcon(QIcon::fromTheme(QLatin1String("edit-select-all")));
-#endif
+
+    const bool hasThemeIcons = !QApplication::platformName().compare(QStringLiteral("xcb"), Qt::CaseInsensitive);
+    if (hasThemeIcons) {  // There are no fallback icons for these
+        m_ui.menuRecentlyOpenedFiles->setIcon(QIcon::fromTheme(QStringLiteral("document-open-recent")));
+        m_ui.actionCloseAll->setIcon(QIcon::fromTheme(QStringLiteral("window-close")));
+        m_ui.actionExit->setIcon(QIcon::fromTheme(QStringLiteral("application-exit")));
+        m_ui.actionSelectAll->setIcon(QIcon::fromTheme(QStringLiteral("edit-select-all")));
+    }
 
     // Prefer theme icons when available for these actions
-    setThemeIcon(m_ui.actionOpen, "document-open", "/fileopen.png");
-    setThemeIcon(m_ui.actionOpenAux, "document-open", "/fileopen.png");
-    setThemeIcon(m_ui.actionSave, "document-save", "/filesave.png");
-    setThemeIcon(m_ui.actionSaveAll, "document-save", "/filesave.png");
-    setThemeIcon(m_ui.actionPrint, "document-print", "/print.png");
-    setThemeIcon(m_ui.actionRedo, "edit-redo", "/redo.png");
-    setThemeIcon(m_ui.actionUndo, "edit-undo", "/undo.png");
-    setThemeIcon(m_ui.actionCut, "edit-cut", "/editcut.png");
-    setThemeIcon(m_ui.actionCopy, "edit-copy", "/editcopy.png");
-    setThemeIcon(m_ui.actionPaste, "edit-paste", "/editpaste.png");
-    setThemeIcon(m_ui.actionFind, "edit-find", "/searchfind.png");
+    const QString prefix = QApplication::platformName().compare(QStringLiteral("cocoa"), Qt::CaseInsensitive) ?
+                           QStringLiteral(":/images/win") : QStringLiteral(":/images/mac");
+
+    m_ui.actionOpen->setIcon(QIcon::fromTheme(QStringLiteral("document-open"),
+                                              QIcon(prefix + QStringLiteral("/fileopen.png"))));
+    m_ui.actionOpenAux->setIcon(QIcon::fromTheme(QStringLiteral("document-open"),
+                                                 QIcon(prefix + QStringLiteral("/fileopen.png"))));
+    m_ui.actionSave->setIcon(QIcon::fromTheme(QStringLiteral("document-save"),
+                                              QIcon(prefix + QStringLiteral("/filesave.png"))));
+    m_ui.actionSaveAll->setIcon(QIcon::fromTheme(QStringLiteral("document-save"),
+                                                 QIcon(prefix + QStringLiteral("/filesave.png"))));
+    m_ui.actionPrint->setIcon(QIcon::fromTheme(QStringLiteral("document-print"),
+                                               QIcon(prefix + QStringLiteral("/print.png"))));
+    m_ui.actionRedo->setIcon(QIcon::fromTheme(QStringLiteral("edit-redo"),
+                                              QIcon(prefix + QStringLiteral("/redo.png"))));
+    m_ui.actionUndo->setIcon(QIcon::fromTheme(QStringLiteral("edit-undo"),
+                                              QIcon(prefix + QStringLiteral("/undo.png"))));
+    m_ui.actionCut->setIcon(QIcon::fromTheme(QStringLiteral("edit-cut"),
+                                             QIcon(prefix + QStringLiteral("/editcut.png"))));
+    m_ui.actionCopy->setIcon(QIcon::fromTheme(QStringLiteral("edit-copy"),
+                                              QIcon(prefix + QStringLiteral("/editcopy.png"))));
+    m_ui.actionPaste->setIcon(QIcon::fromTheme(QStringLiteral("edit-paste"),
+                                               QIcon(prefix + QStringLiteral("/editpaste.png"))));
+    m_ui.actionFind->setIcon(QIcon::fromTheme(QStringLiteral("edit-find"),
+                                              QIcon(prefix + QStringLiteral("/searchfind.png"))));
 
     // No well defined theme icons for these actions
-    m_ui.actionAccelerators->setIcon(QIcon(resourcePrefix() + QLatin1String("/accelerator.png")));
-    m_ui.actionOpenPhraseBook->setIcon(QIcon(resourcePrefix() + QLatin1String("/book.png")));
-    m_ui.actionDoneAndNext->setIcon(QIcon(resourcePrefix() + QLatin1String("/doneandnext.png")));
-    m_ui.actionNext->setIcon(QIcon(resourcePrefix() + QLatin1String("/next.png")));
-    m_ui.actionNextUnfinished->setIcon(QIcon(resourcePrefix() + QLatin1String("/nextunfinished.png")));
-    m_ui.actionPhraseMatches->setIcon(QIcon(resourcePrefix() + QLatin1String("/phrase.png")));
-    m_ui.actionEndingPunctuation->setIcon(QIcon(resourcePrefix() + QLatin1String("/punctuation.png")));
-    m_ui.actionPrev->setIcon(QIcon(resourcePrefix() + QLatin1String("/prev.png")));
-    m_ui.actionPrevUnfinished->setIcon(QIcon(resourcePrefix() + QLatin1String("/prevunfinished.png")));
-    m_ui.actionPlaceMarkerMatches->setIcon(QIcon(resourcePrefix() + QLatin1String("/validateplacemarkers.png")));
-    m_ui.actionWhatsThis->setIcon(QIcon(resourcePrefix() + QLatin1String("/whatsthis.png")));
+    m_ui.actionAccelerators->setIcon(QIcon(prefix + QStringLiteral("/accelerator.png")));
+    m_ui.actionOpenPhraseBook->setIcon(QIcon(prefix + QStringLiteral("/book.png")));
+    m_ui.actionDoneAndNext->setIcon(QIcon(prefix + QStringLiteral("/doneandnext.png")));
+    m_ui.actionNext->setIcon(QIcon(prefix + QStringLiteral("/next.png")));
+    m_ui.actionNextUnfinished->setIcon(QIcon(prefix + QStringLiteral("/nextunfinished.png")));
+    m_ui.actionPhraseMatches->setIcon(QIcon(prefix + QStringLiteral("/phrase.png")));
+    m_ui.actionEndingPunctuation->setIcon(QIcon(prefix + QStringLiteral("/punctuation.png")));
+    m_ui.actionPrev->setIcon(QIcon(prefix + QStringLiteral("/prev.png")));
+    m_ui.actionPrevUnfinished->setIcon(QIcon(prefix + QStringLiteral("/prevunfinished.png")));
+    m_ui.actionPlaceMarkerMatches->setIcon(QIcon(prefix + QStringLiteral("/validateplacemarkers.png")));
+    m_ui.actionWhatsThis->setIcon(QIcon(prefix + QStringLiteral("/whatsthis.png")));
 
     // File menu
     connect(m_ui.menuFile, SIGNAL(aboutToShow()), SLOT(fileAboutToShow()));
@@ -1943,7 +1937,7 @@ void MainWindow::setupMenuBar()
     m_ui.menuViewViews->addAction(m_sourceAndFormDock->toggleViewAction());
     m_ui.menuViewViews->addAction(m_errorsDock->toggleViewAction());
 
-#if defined(Q_WS_MAC)
+#if defined(Q_OS_MAC)
     // Window menu
     QMenu *windowMenu = new QMenu(tr("&Window"), this);
     menuBar()->insertMenu(m_ui.menuHelp->menuAction(), windowMenu);
