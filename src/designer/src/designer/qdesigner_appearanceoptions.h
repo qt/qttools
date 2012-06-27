@@ -105,11 +105,7 @@ private:
     UIMode m_initialUIMode;
 };
 
-/* The options page for appearance options. Emits a Timer-0 delayed changed
- * signal to allow the preferences dialog to close (and be deleted) before a
- * possible switch from docked mode to top-level mode happens. (The switch
- * would delete the main window, which the preference dialog is a child of
- * -> BOOM) */
+/* The options page for appearance options. */
 
 class QDesignerAppearanceOptionsPage : public QObject, public QDesignerOptionsPageInterface
 {
@@ -124,7 +120,7 @@ public:
     virtual void finish();
 
 signals:
-    void settingsChangedDelayed();
+    void settingsChanged();
 
 private:
     QDesignerFormEditorInterface *m_core;

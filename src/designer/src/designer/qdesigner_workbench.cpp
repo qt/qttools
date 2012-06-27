@@ -182,7 +182,8 @@ QDesignerWorkbench::QDesignerWorkbench()  :
     m_globalMenuBar(new QMenuBar),
     m_mode(NeutralMode),
     m_dockedMainWindow(0),
-    m_state(StateInitializing)
+    m_state(StateInitializing),
+    m_uiSettingsChanged(false)
 {
     QDesignerSettings settings(m_core);
 
@@ -246,7 +247,7 @@ QDesignerWorkbench::QDesignerWorkbench()  :
 
     { // Add application specific options pages
         QDesignerAppearanceOptionsPage *appearanceOptions = new QDesignerAppearanceOptionsPage(m_core);
-        connect(appearanceOptions, SIGNAL(settingsChangedDelayed()), this, SLOT(restoreUISettings()));
+        connect(appearanceOptions, SIGNAL(settingsChanged()), this, SLOT(notifyUISettingsChanged()));
         QList<QDesignerOptionsPageInterface*> optionsPages = m_core->optionsPages();
         optionsPages.push_front(appearanceOptions);
         m_core->setOptionsPages(optionsPages);
@@ -1059,6 +1060,25 @@ void QDesignerWorkbench::setFormWindowMinimized(QDesignerFormWindow *fw, bool mi
     default:
         break;
     }
+}
+
+/* Applies UI mode changes using Timer-0 delayed signal
+ * signal to make sure the preferences dialog is closed and destroyed
+ * before a possible switch from docked mode to top-level mode happens.
+ * (The switch deletes the main window, which the preference dialog is
+ * a child of -> BOOM) */
+
+void QDesignerWorkbench::applyUiSettings()
+{
+    if (m_uiSettingsChanged) {
+        m_uiSettingsChanged = false;
+        QTimer::singleShot(0, this, SLOT(restoreUISettings()));
+    }
+}
+
+void QDesignerWorkbench::notifyUISettingsChanged()
+{
+    m_uiSettingsChanged = true;
 }
 
 void QDesignerWorkbench::restoreUISettings()

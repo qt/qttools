@@ -153,8 +153,8 @@ void QDesignerAppearanceOptionsPage::apply()
         if (newOptions != m_initialOptions) {
             QDesignerSettings settings(m_core);
             newOptions.toSettings(settings);
-            QTimer::singleShot(0, this, SIGNAL(settingsChangedDelayed()));
             m_initialOptions = newOptions;
+            emit settingsChanged();
         }
     }
 }

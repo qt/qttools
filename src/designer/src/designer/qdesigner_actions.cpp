@@ -1294,8 +1294,11 @@ bool QDesignerActions::ensureBackupDirectories() {
 
 void QDesignerActions::showPreferencesDialog()
 {
-    PreferencesDialog preferencesDialog(workbench()->core(), m_core->topLevel());
-    preferencesDialog.exec();
+    {
+        PreferencesDialog preferencesDialog(workbench()->core(), m_core->topLevel());
+        preferencesDialog.exec();
+    }   // Make sure the preference dialog is destroyed before switching UI modes.
+    m_workbench->applyUiSettings();
 }
 
 void QDesignerActions::showAppFontDialog()

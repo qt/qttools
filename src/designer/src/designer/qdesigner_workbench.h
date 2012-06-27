@@ -116,6 +116,7 @@ public:
     bool handleClose();
     bool readInBackup();
     void updateBackup(QDesignerFormWindowInterface* fwi);
+    void applyUiSettings();
 
 signals:
     void modeChanged(UIMode mode);
@@ -140,6 +141,7 @@ private slots:
     void minimizationStateChanged(QDesignerFormWindowInterface *formWindow, bool minimized);
 
     void restoreUISettings();
+    void notifyUISettingsChanged();
     void slotFileDropped(const QString &f);
 
 private:
@@ -205,6 +207,7 @@ private:
 
     enum State { StateInitializing, StateUp, StateClosing };
     State m_state;
+    bool m_uiSettingsChanged; // UI mode changed in preference dialog, trigger delayed slot.
 };
 
 QT_END_NAMESPACE
