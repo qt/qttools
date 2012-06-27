@@ -27,7 +27,9 @@ contains(CMAKE_BIN_DIR, "$${CMAKE_QT_INSTALL_PREFIX_ESCAPED}.*") {
 }
 
 cmake_linguist_config_file.input = $$PWD/Qt5LinguistToolsConfig.cmake.in
-cmake_linguist_config_file.output = $$OUT_PWD/Qt5LinguistToolsConfig.cmake
+# NOTE: We need to put the linguist tools cmake files in the lib directory. The lib directory
+# as set by the uitools module is used for that, as linguist doesn't set such a variable.
+cmake_linguist_config_file.output = $$eval(QT.uitools.libs)/cmake/Qt5LinguistTools/Qt5LinguistToolsConfig.cmake
 QMAKE_SUBSTITUTES += cmake_linguist_config_file
 
 cmake_linguist_tools_files.files += $$cmake_linguist_config_file.output $$PWD/Qt5LinguistToolsMacros.cmake
