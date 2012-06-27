@@ -3,7 +3,7 @@ INCLUDEPATH += $$PWD
 
 DEFINES += QT_DESIGNER
 
-QT += gui widgets
+QT += widgets
 
 # Input
 HEADERS += \

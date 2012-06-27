@@ -10,7 +10,7 @@ DESTDIR = $$QT.help.bins
 CONFIG += qt \
     warn_on \
     help
-QT += widgets network help
+QT += widgets network help sql
 !isEmpty(QT.printsupport.name): QT += printsupport
 PROJECTNAME = Assistant
 

@@ -1,19 +1,13 @@
 MODULE = clucene
 
-load(qt_module)
+load(qt_build_config)
 
 TARGET = QtCLucene
-QPRO_PWD = $$PWD
-
-CONFIG += module
-MODULE_PRI = ../../../modules/qt_clucene.pri
-
 QT = core
 
 DEFINES += QHELP_LIB
 
 load(qt_module_config)
-HEADERS += qtcluceneversion.h
 
 include(fulltextsearch.pri)
 
@@ -23,8 +17,6 @@ contains(QT_CONFIG, reduce_exports) {
     # workaround for compiler errors on Ubuntu
     linux*-g++*:DEFINES += _GLIBCXX_EXTERN_TEMPLATE=0
 }
-
-unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES = QtCore
 
 # impossible to disable exceptions in clucene atm
 CONFIG(exceptions_off) {
