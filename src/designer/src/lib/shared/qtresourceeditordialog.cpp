@@ -58,7 +58,7 @@
 #include <QtWidgets/QInputDialog>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QPushButton>
-#include <QtWidgets/QStandardItemModel>
+#include <QtGui/QStandardItemModel>
 
 QT_BEGIN_NAMESPACE
 

@@ -51,7 +51,7 @@
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QFileDialog>
-#include <QtWidgets/QStandardItemModel>
+#include <QtGui/QStandardItemModel>
 #include <QtWidgets/QMessageBox>
 #include <QtGui/QFontDatabase>
 #include <QtWidgets/QDialogButtonBox>

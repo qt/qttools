@@ -47,9 +47,9 @@
 #include <QtCore/QString>
 #include <QtCore/QUrl>
 
+#include <QtGui/QStandardItem>
+#include <QtGui/QStandardItemModel>
 #include <QtWidgets/QListView>
-#include <QtWidgets/QStandardItem>
-#include <QtWidgets/QStandardItemModel>
 #include <QtWidgets/QTextEdit>
 #include <QtWidgets/QVBoxLayout>
 

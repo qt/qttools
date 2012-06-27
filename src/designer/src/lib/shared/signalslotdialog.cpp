@@ -54,7 +54,7 @@
 #include <QtDesigner/QDesignerWidgetFactoryInterface>
 #include <abstractdialoggui_p.h>
 
-#include <QtWidgets/QStandardItemModel>
+#include <QtGui/QStandardItemModel>
 #include <QtGui/QRegExpValidator>
 #include <QtWidgets/QItemDelegate>
 #include <QtWidgets/QLineEdit>

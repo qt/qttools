@@ -46,7 +46,7 @@
 #include "phrase.h"
 
 #include <QtWidgets/QDialog>
-#include <QtWidgets/QStandardItemModel>
+#include <QtGui/QStandardItemModel>
 
 QT_BEGIN_NAMESPACE
 

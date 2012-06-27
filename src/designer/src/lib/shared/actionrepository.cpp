@@ -50,7 +50,7 @@
 
 #include <QtGui/QDrag>
 #include <QtGui/QContextMenuEvent>
-#include <QtWidgets/QStandardItemModel>
+#include <QtGui/QStandardItemModel>
 #include <QtWidgets/QToolButton>
 #include <QtGui/QPixmap>
 #include <QtWidgets/QAction>

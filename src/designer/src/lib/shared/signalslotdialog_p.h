@@ -56,7 +56,7 @@
 #include "shared_global_p.h"
 #include <QtCore/QStringList>
 #include <QtWidgets/QDialog>
-#include <QtWidgets/QStandardItemModel>
+#include <QtGui/QStandardItemModel>
 
 QT_BEGIN_NAMESPACE
 

@@ -46,7 +46,7 @@
 #include <QtDesigner/QDesignerPromotionInterface>
 #include <QtDesigner/QDesignerFormEditorInterface>
 
-#include <QtWidgets/QStandardItem>
+#include <QtGui/QStandardItem>
 #include <QtCore/QCoreApplication>
 
 QT_BEGIN_NAMESPACE

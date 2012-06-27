@@ -64,7 +64,7 @@
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QMenu>
 #include <QtCore/QSortFilterProxyModel>
-#include <QtWidgets/QStandardItemModel>
+#include <QtGui/QStandardItemModel>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QItemDelegate>

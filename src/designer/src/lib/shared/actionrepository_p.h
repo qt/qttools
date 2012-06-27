@@ -55,7 +55,7 @@
 
 #include "shared_global_p.h"
 #include <QtCore/QMimeData>
-#include <QtWidgets/QStandardItemModel>
+#include <QtGui/QStandardItemModel>
 #include <QtWidgets/QTreeView>
 #include <QtWidgets/QListView>
 #include <QtWidgets/QStackedWidget>

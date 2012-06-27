@@ -53,7 +53,7 @@
 #ifndef PROMOTIONMODEL_H
 #define PROMOTIONMODEL_H
 
-#include <QtWidgets/QStandardItemModel>
+#include <QtGui/QStandardItemModel>
 #include <QtCore/QSet>
 
 QT_BEGIN_NAMESPACE
