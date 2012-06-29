@@ -30,6 +30,5 @@ contains(QT_CONFIG, dbus):SUBDIRS += qdbus
 embedded: SUBDIRS += makeqpf
 
 CONFIG+=ordered
-QTDIR_build:REQUIRES = "contains(QT_CONFIG, full-config)"
 
 !win32:!embedded:!mac:CONFIG += x11
