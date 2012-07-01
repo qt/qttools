@@ -65,7 +65,7 @@
 #include <unistd.h>
 #include <sys/utsname.h>
 #else
-#include <Windows.h>
+#include <windows.h>
 #endif
 #include <stdio.h>
 #include <stdlib.h>
