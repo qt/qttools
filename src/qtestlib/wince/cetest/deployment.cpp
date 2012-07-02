@@ -229,7 +229,7 @@ void DeploymentHandler::initProjectDeploy(QMakeProject* project, DeploymentList 
     for (int it = 0; it < list.size(); ++it) {
         QString argSource = list.at(it);
         QString argPath = list.at(it) + QString(".path");
-        if (((project->values(argSource + QString(".files")).isEmpty() && project->values(argSource + QString(".sources")).isEmpty()) || project->values(argPath).isEmpty()) && list.at(it) != "deploy") {
+        if ((project->values(argSource + QString(".files")).isEmpty() || project->values(argPath).isEmpty()) && list.at(it) != "deploy") {
             debugOutput(QString::fromLatin1("cannot deploy \"%1\" because of missing data.").arg(list.at(it)), 0);
             continue;
         }
@@ -240,7 +240,7 @@ void DeploymentHandler::initProjectDeploy(QMakeProject* project, DeploymentList 
         if (!addPath.startsWith("/") && !addPath.startsWith(QLatin1String("\\")))
             addPath = targetPath + "/" + addPath;
 
-        QStringList addSources = project->values(argSource + QString(".files")) + project->values(argSource + QString(".sources"));
+        QStringList addSources = project->values(argSource + QString(".files"));
         addSources.replaceInStrings(QLatin1String("/"), QLatin1String("\\"));
         for(int index=0; index < addSources.size(); ++index) {
             QString dirstr = qmake_getpwd();
