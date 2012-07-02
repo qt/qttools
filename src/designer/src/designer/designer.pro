@@ -1,7 +1,7 @@
 load(qt_build_config)
 
 DESTDIR = $$QT.designer.bins
-QT += core-private widgets xml network designer-private
+QT += core-private widgets xml network designer-private designercomponents
 !isEmpty(QT.printsupport.name): QT += printsupport
 
 build_all:!build_pass {
@@ -14,9 +14,6 @@ INCLUDEPATH += \
     ../lib/extension \
     ../lib/shared \
     extra
-
-QMAKE_LIBDIR += ../../lib ../../../../lib
-LIBS += -lQtDesignerComponents -lQtDesigner
 
 RESOURCES += designer.qrc
 
