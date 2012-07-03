@@ -1,19 +1,9 @@
 load(qt_build_config)
 
-TEMPLATE        = app
-TARGET          = lupdate
-DESTDIR          = $$QT.designer.bins
+DESTDIR = $$QT.designer.bins
 
-QT              -= gui
-QT              += core-private qmldevtools-private
-
-CONFIG          += qt warn_on console
-CONFIG          -= app_bundle
-
-build_all:!build_pass {
-    CONFIG -= build_all
-    CONFIG += release
-}
+QT = core-private qmldevtools-private
+DEFINES += QT_NO_CAST_TO_ASCII QT_NO_CAST_FROM_ASCII
 
 include(../shared/formats.pri)
 include(../shared/proparser.pri)
@@ -32,9 +22,6 @@ HEADERS += \
     lupdate.h \
     ../shared/simtexth.h
 
-DEFINES += QT_NO_CAST_TO_ASCII QT_NO_CAST_FROM_ASCII
-
-
 win32:RC_FILE = winmanifest.rc
 
 embed_manifest_exe:win32-msvc2005 {
@@ -43,6 +30,4 @@ embed_manifest_exe:win32-msvc2005 {
     QMAKE_POST_LINK += $$quote(mt.exe -updateresource:$$DESTDIR/lupdate.exe -manifest \"$${PWD}\\lupdate.exe.manifest\")
 }
 
-target.path=$$[QT_INSTALL_BINS]
-INSTALLS        += target
-
+load(qt_tool)
