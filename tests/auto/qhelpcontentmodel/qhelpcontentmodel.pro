@@ -1,9 +1,7 @@
 TARGET = tst_qhelpcontentmodel
 CONFIG += testcase
-QT += testlib
+QT += help testlib
 SOURCES += tst_qhelpcontentmodel.cpp
-
-CONFIG += help
 
 DEFINES += QT_USE_USING_NAMESPACE
 

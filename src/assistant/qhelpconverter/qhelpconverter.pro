@@ -2,7 +2,7 @@ QT += help widgets
 TEMPLATE = app
 TARGET = qhelpconverter
 DESTDIR = $$QT.help.bins
-CONFIG += qt warn_on help
+CONFIG += qt warn_on
 
 target.path=$$[QT_INSTALL_BINS]
 INSTALLS += target

@@ -1,7 +1,6 @@
 TEMPLATE = app
 
-CONFIG += help
-QT     += widgets
+QT     += help widgets
 SOURCES += main.cpp \
            wateringconfigdialog.cpp \
            helpbrowser.cpp
