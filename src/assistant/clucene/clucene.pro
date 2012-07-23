@@ -4,6 +4,7 @@ load(qt_build_config)
 
 TARGET = QtCLucene
 QT = core
+CONFIG += internal_module
 
 DEFINES += QHELP_LIB
 
