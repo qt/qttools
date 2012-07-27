@@ -2,7 +2,14 @@ load(qt_build_config)
 
 DESTDIR = $$QT.designer.bins
 
-QT = core-private qmldevtools-private
+QT = core-private
+
+!isEmpty(QT.declarative.name) {
+    QT += qmldevtools-private
+} else {
+    DEFINES += QT_NO_QML
+}
+
 DEFINES += QT_NO_CAST_TO_ASCII QT_NO_CAST_FROM_ASCII
 
 include(../shared/formats.pri)
@@ -15,8 +22,9 @@ SOURCES += \
     \
     cpp.cpp \
     java.cpp \
-    qdeclarative.cpp \
     ui.cpp
+
+!isEmpty(QT.declarative.name): SOURCES += qdeclarative.cpp
 
 HEADERS += \
     lupdate.h \

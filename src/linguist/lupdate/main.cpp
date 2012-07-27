@@ -302,6 +302,9 @@ static QStringList getSources(const ProFileEvaluator &visitor, const QString &pr
 static void processSources(Translator &fetchedTor,
                            const QStringList &sourceFiles, ConversionData &cd)
 {
+#ifdef QT_NO_QML
+    bool requireQmlSupport = false;
+#endif
     QStringList sourceFilesCpp;
     for (QStringList::const_iterator it = sourceFiles.begin(); it != sourceFiles.end(); ++it) {
         if (it->endsWith(QLatin1String(".java"), Qt::CaseInsensitive))
@@ -309,14 +312,27 @@ static void processSources(Translator &fetchedTor,
         else if (it->endsWith(QLatin1String(".ui"), Qt::CaseInsensitive)
                  || it->endsWith(QLatin1String(".jui"), Qt::CaseInsensitive))
             loadUI(fetchedTor, *it, cd);
+#ifndef QT_NO_QML
         else if (it->endsWith(QLatin1String(".js"), Qt::CaseInsensitive)
                  || it->endsWith(QLatin1String(".qs"), Qt::CaseInsensitive))
             loadQScript(fetchedTor, *it, cd);
         else if (it->endsWith(QLatin1String(".qml"), Qt::CaseInsensitive))
             loadQml(fetchedTor, *it, cd);
+#else
+        else if (it->endsWith(QLatin1String(".qml"), Qt::CaseInsensitive)
+                 || it->endsWith(QLatin1String(".js"), Qt::CaseInsensitive)
+                 || it->endsWith(QLatin1String(".qs"), Qt::CaseInsensitive))
+            requireQmlSupport = true;
+#endif // QT_NO_QML
         else
             sourceFilesCpp << *it;
     }
+
+#ifdef QT_NO_QML
+    if (requireQmlSupport)
+        printErr(LU::tr("lupdate warning: Some files have been ignored due to missing qml/javascript support\n"));
+#endif
+
     loadCPP(fetchedTor, sourceFilesCpp, cd);
     if (!cd.error().isEmpty())
         printErr(cd.error());
