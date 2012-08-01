@@ -59,6 +59,11 @@
 
 #include <QtSql/QSqlDatabase>
 
+#if !defined(QT_NO_WEBKIT)
+#include <QtGui/QFont>
+#include <QtWebKit/QWebSettings>
+#endif
+
 #include "../shared/collectionconfiguration.h"
 #include "helpenginewrapper.h"
 #include "mainwindow.h"
@@ -318,6 +323,12 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv, useGui(argc, argv));
     a.addLibraryPath(a.applicationDirPath() + QLatin1String("/plugins"));
     setupTranslations();
+
+#if !defined(QT_NO_WEBKIT)
+    QFont f;
+    f.setStyleHint(QFont::SansSerif);
+    QWebSettings::globalSettings()->setFontFamily(QWebSettings::StandardFont, f.defaultFamily());
+#endif
 
     // Parse arguments.
     CmdLineParser cmd(a.arguments());
