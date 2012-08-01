@@ -86,7 +86,7 @@ PhraseView::PhraseView(MultiDataModel *model, QList<QHash<QString, QList<Phrase 
     for (int i = 0; i < 10; i++)
         (void) new GuessShortcut(i, this, SLOT(guessShortcut(int)));
 
-    header()->setResizeMode(QHeaderView::Interactive);
+    header()->setSectionResizeMode(QHeaderView::Interactive);
     header()->setSectionsClickable(true);
     header()->restoreState(QSettings().value(phraseViewHeaderKey()).toByteArray());
 

@@ -7,3 +7,4 @@ include(relativity/relativity.pri)
 message($$SOURCES)
 
 TRANSLATIONS = project.ts
+DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0

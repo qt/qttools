@@ -16,3 +16,4 @@ win32 {
 
 HEADERS += uiloader.h
 SOURCES += tst_uiloader.cpp uiloader.cpp
+DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0

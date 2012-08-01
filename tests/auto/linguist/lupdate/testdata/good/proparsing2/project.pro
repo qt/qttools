@@ -31,3 +31,4 @@ win32: SOURCES += $$system(type files-cc.txt)
 unix: SOURCES += $$system(cat files-cc.txt)
 
 TRANSLATIONS = project.ts
+DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0
