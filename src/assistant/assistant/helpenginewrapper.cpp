@@ -42,6 +42,7 @@
 
 #include "helpenginewrapper.h"
 #include "../shared/collectionconfiguration.h"
+#include "../help/qhelpengine_p.h"
 
 #include <QtCore/QDateTime>
 #include <QtCore/QFileInfo>
@@ -333,6 +334,12 @@ QString HelpEngineWrapper::error() const
 {
     TRACE_OBJ
     return d->m_helpEngine->error();
+}
+
+QString HelpEngineWrapper::virtualFolderForNameSpace(const QString &nameSpace) const
+{
+    TRACE_OBJ
+    return d->m_helpEngine->d->nameSpaceVirtualFolderMap.value(nameSpace, QString());
 }
 
 const QStringList HelpEngineWrapper::qtDocInfo(const QString &component) const
