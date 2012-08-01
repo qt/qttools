@@ -945,7 +945,7 @@ void MainWindow::updateApplicationFont()
     if (helpEngine.usesAppFont())
         font = helpEngine.appFont();
 
-    const QWidgetList &widgets = qApp->allWidgets();
+    QWidgetList widgets = qApp->allWidgets();
     foreach (QWidget* widget, widgets)
         widget->setFont(font);
 }
