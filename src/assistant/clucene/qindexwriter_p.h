@@ -46,7 +46,7 @@ QT_BEGIN_NAMESPACE
 
 class QCLuceneIndexReader;
 
-class QHELP_EXPORT QCLuceneIndexWriterPrivate : public QSharedData
+class Q_CLUCENE_EXPORT QCLuceneIndexWriterPrivate : public QSharedData
 {
 public:
     QCLuceneIndexWriterPrivate();
@@ -61,7 +61,7 @@ private:
     QCLuceneIndexWriterPrivate &operator=(const QCLuceneIndexWriterPrivate &other);
 };
 
-class QHELP_EXPORT QCLuceneIndexWriter
+class Q_CLUCENE_EXPORT QCLuceneIndexWriter
 {
 public:
     enum {

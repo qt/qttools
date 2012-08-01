@@ -48,7 +48,7 @@ QT_BEGIN_NAMESPACE
 class QCLuceneQuery;
 class QCLuceneMultiFieldQueryParser;
 
-class QHELP_EXPORT QCLuceneQueryParserPrivate : public QSharedData
+class Q_CLUCENE_EXPORT QCLuceneQueryParserPrivate : public QSharedData
 {
 public:
     QCLuceneQueryParserPrivate();
@@ -63,7 +63,7 @@ private:
     QCLuceneQueryParserPrivate &operator=(const QCLuceneQueryParserPrivate &other);
 };
 
-class QHELP_EXPORT QCLuceneQueryParser
+class Q_CLUCENE_EXPORT QCLuceneQueryParser
 {
 public:
     QCLuceneQueryParser(const QString &field, QCLuceneAnalyzer &analyzer);
@@ -85,7 +85,7 @@ private:
     QCLuceneAnalyzer analyzer;
 };
 
-class QHELP_EXPORT QCLuceneMultiFieldQueryParser : public QCLuceneQueryParser
+class Q_CLUCENE_EXPORT QCLuceneMultiFieldQueryParser : public QCLuceneQueryParser
 {
 public:
     enum FieldFlags {

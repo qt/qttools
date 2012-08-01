@@ -6,8 +6,6 @@ TARGET = QtCLucene
 QT = core
 CONFIG += internal_module
 
-DEFINES += QHELP_LIB
-
 load(qt_module_config)
 
 include(fulltextsearch.pri)

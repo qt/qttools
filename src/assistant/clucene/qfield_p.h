@@ -45,7 +45,7 @@ QT_BEGIN_NAMESPACE
 class QCLuceneReader;
 class QCLuceneDocument;
 
-class QHELP_EXPORT QCLuceneFieldPrivate : public QSharedData
+class Q_CLUCENE_EXPORT QCLuceneFieldPrivate : public QSharedData
 {
 public:
     QCLuceneFieldPrivate();
@@ -60,7 +60,7 @@ private:
     QCLuceneFieldPrivate &operator=(const QCLuceneFieldPrivate &other);
 };
 
-class QHELP_EXPORT QCLuceneField
+class Q_CLUCENE_EXPORT QCLuceneField
 {
 public:
 	enum Store { 

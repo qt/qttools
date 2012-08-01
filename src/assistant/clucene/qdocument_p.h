@@ -51,7 +51,7 @@ class QCLuceneIndexWriter;
 class QCLuceneIndexSearcher;
 class QCLuceneMultiSearcher;
 
-class QHELP_EXPORT QCLuceneDocumentPrivate : public QSharedData
+class Q_CLUCENE_EXPORT QCLuceneDocumentPrivate : public QSharedData
 {
 public:
     QCLuceneDocumentPrivate();
@@ -66,7 +66,7 @@ private:
     QCLuceneDocumentPrivate &operator=(const QCLuceneDocumentPrivate &other);
 };
 
-class QHELP_EXPORT QCLuceneDocument
+class Q_CLUCENE_EXPORT QCLuceneDocument
 {
 public:
     QCLuceneDocument();

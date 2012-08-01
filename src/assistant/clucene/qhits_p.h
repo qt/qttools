@@ -47,7 +47,7 @@ QT_BEGIN_NAMESPACE
 
 class QCLuceneSearcher;
 
-class QHELP_EXPORT QCLuceneHitsPrivate : public QSharedData
+class Q_CLUCENE_EXPORT QCLuceneHitsPrivate : public QSharedData
 {
 public:
     QCLuceneHitsPrivate();
@@ -62,7 +62,7 @@ private:
     QCLuceneHitsPrivate &operator=(const QCLuceneHitsPrivate &other);
 };
 
-class QHELP_EXPORT QCLuceneHits
+class Q_CLUCENE_EXPORT QCLuceneHits
 {
 public:
     QCLuceneHits(const QCLuceneSearcher &searcher, const QCLuceneQuery &query, 

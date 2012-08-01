@@ -46,7 +46,7 @@ QT_BEGIN_NAMESPACE
 class QCLuceneHits;
 class QCLuceneField;
 
-class QHELP_EXPORT QCLuceneSortPrivate : public QSharedData
+class Q_CLUCENE_EXPORT QCLuceneSortPrivate : public QSharedData
 {
 public:
     QCLuceneSortPrivate();
@@ -61,7 +61,7 @@ private:
     QCLuceneSortPrivate &operator=(const QCLuceneSortPrivate &other);
 };
 
-class QHELP_EXPORT QCLuceneSort
+class Q_CLUCENE_EXPORT QCLuceneSort
 {
 public:
     QCLuceneSort();

@@ -46,7 +46,7 @@ class QCLuceneTokenizer;
 class QCLuceneTokenStream;
 class QCLuceneStandardTokenizer;
 
-class QHELP_EXPORT QCLuceneTokenPrivate : public QSharedData
+class Q_CLUCENE_EXPORT QCLuceneTokenPrivate : public QSharedData
 {
 public:
     QCLuceneTokenPrivate();
@@ -61,7 +61,7 @@ private:
     QCLuceneTokenPrivate &operator=(const QCLuceneTokenPrivate &other);
 };
 
-class QHELP_EXPORT QCLuceneToken
+class Q_CLUCENE_EXPORT QCLuceneToken
 {
 public:
     QCLuceneToken();

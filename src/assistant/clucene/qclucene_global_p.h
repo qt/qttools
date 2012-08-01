@@ -49,11 +49,11 @@ QT_BEGIN_HEADER
 QT_BEGIN_NAMESPACE
 
 #ifdef QT_STATIC
-#   define QHELP_EXPORT
-#elif defined(QHELP_LIB)
-#   define QHELP_EXPORT Q_DECL_EXPORT
+#   define Q_CLUCENE_EXPORT
+#elif defined(QT_BUILD_CLUCENE_LIB)
+#   define Q_CLUCENE_EXPORT Q_DECL_EXPORT
 #else
-#   define QHELP_EXPORT Q_DECL_IMPORT
+#   define Q_CLUCENE_EXPORT Q_DECL_IMPORT
 #endif
 
 //

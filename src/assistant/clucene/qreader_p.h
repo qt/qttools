@@ -48,7 +48,7 @@ class QCLuceneDocument;
 class QCLuceneQueryParser;
 class QCLuceneStandardTokenizer;
 
-class QHELP_EXPORT QCLuceneReaderPrivate : public QSharedData
+class Q_CLUCENE_EXPORT QCLuceneReaderPrivate : public QSharedData
 {
 public:
     QCLuceneReaderPrivate();
@@ -63,7 +63,7 @@ private:
     QCLuceneReaderPrivate &operator=(const QCLuceneReaderPrivate &other);
 };
 
-class QHELP_EXPORT QCLuceneReader
+class Q_CLUCENE_EXPORT QCLuceneReader
 {
 public:
     QCLuceneReader();
@@ -91,7 +91,7 @@ private:
     TCHAR *string;
 };
 
-class QHELP_EXPORT QCLuceneFileReader : public QCLuceneReader
+class Q_CLUCENE_EXPORT QCLuceneFileReader : public QCLuceneReader
 {
 public:
     QCLuceneFileReader(const QString &path, const QString &encoding,

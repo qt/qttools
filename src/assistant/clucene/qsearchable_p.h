@@ -54,7 +54,7 @@ class QCLuceneSearcher;
 class QCLuceneIndexSearcher;
 class QCLuceneMultiSearcher;
 
-class QHELP_EXPORT QCLuceneSearchablePrivate : public QSharedData
+class Q_CLUCENE_EXPORT QCLuceneSearchablePrivate : public QSharedData
 {
 public:
     QCLuceneSearchablePrivate();
@@ -69,7 +69,7 @@ private:
     QCLuceneSearchablePrivate &operator=(const QCLuceneSearchablePrivate &other);
 };
 
-class QHELP_EXPORT QCLuceneSearchable
+class Q_CLUCENE_EXPORT QCLuceneSearchable
 {
 public:
     virtual ~QCLuceneSearchable();
@@ -84,7 +84,7 @@ private:
     QCLuceneSearchable();
 };
 
-class QHELP_EXPORT QCLuceneSearcher : public QCLuceneSearchable
+class Q_CLUCENE_EXPORT QCLuceneSearcher : public QCLuceneSearchable
 {
 public:
     QCLuceneSearcher();
@@ -100,7 +100,7 @@ protected:
     friend class QCLuceneHits;
 };
 
-class QHELP_EXPORT QCLuceneIndexSearcher : public QCLuceneSearcher
+class Q_CLUCENE_EXPORT QCLuceneIndexSearcher : public QCLuceneSearcher
 {
 public:
     QCLuceneIndexSearcher(const QString &path);
@@ -116,7 +116,7 @@ private:
     QCLuceneIndexReader reader;
 };
 
-class QHELP_EXPORT QCLuceneMultiSearcher : public QCLuceneSearcher
+class Q_CLUCENE_EXPORT QCLuceneMultiSearcher : public QCLuceneSearcher
 {
 public:
     QCLuceneMultiSearcher(const QList<QCLuceneSearchable> searchables);

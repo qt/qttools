@@ -44,7 +44,7 @@ QT_BEGIN_NAMESPACE
 class QCLuceneHits;
 class QCLuceneSearcher;
 
-class QHELP_EXPORT QCLuceneFilterPrivate : public QSharedData
+class Q_CLUCENE_EXPORT QCLuceneFilterPrivate : public QSharedData
 {
 public:
     QCLuceneFilterPrivate();
@@ -59,7 +59,7 @@ private:
     QCLuceneFilterPrivate &operator=(const QCLuceneFilterPrivate &other);
 };
 
-class QHELP_EXPORT QCLuceneFilter
+class Q_CLUCENE_EXPORT QCLuceneFilter
 {
     QCLuceneFilter();
     virtual ~QCLuceneFilter();

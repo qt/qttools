@@ -39,7 +39,7 @@
 
 QT_BEGIN_NAMESPACE
 
-class QHELP_EXPORT QCLuceneTokenizer : public QCLuceneTokenStream
+class Q_CLUCENE_EXPORT QCLuceneTokenizer : public QCLuceneTokenStream
 {
 public:
     QCLuceneTokenizer(const QCLuceneReader &reader);
@@ -56,7 +56,7 @@ private:
     QCLuceneReader reader;
 };
 
-class QHELP_EXPORT QCLuceneStandardTokenizer : public QCLuceneTokenizer
+class Q_CLUCENE_EXPORT QCLuceneStandardTokenizer : public QCLuceneTokenizer
 {
 public:
     QCLuceneStandardTokenizer(const QCLuceneReader &reader);

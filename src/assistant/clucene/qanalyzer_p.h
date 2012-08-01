@@ -55,7 +55,7 @@ class QCLuceneStandardAnalyzer;
 class QCLuceneWhitespaceAnalyzer;
 class QCLucenePerFieldAnalyzerWrapper;
 
-class QHELP_EXPORT QCLuceneAnalyzerPrivate : public QSharedData
+class Q_CLUCENE_EXPORT QCLuceneAnalyzerPrivate : public QSharedData
 {
 public:
     QCLuceneAnalyzerPrivate();
@@ -70,7 +70,7 @@ private:
     QCLuceneAnalyzerPrivate &operator=(const QCLuceneAnalyzerPrivate &other);
 };
 
-class QHELP_EXPORT QCLuceneAnalyzer
+class Q_CLUCENE_EXPORT QCLuceneAnalyzer
 {
 public:
     virtual ~QCLuceneAnalyzer();
@@ -94,7 +94,7 @@ private:
     QCLuceneAnalyzer();
 };
 
-class QHELP_EXPORT QCLuceneStandardAnalyzer : public QCLuceneAnalyzer
+class Q_CLUCENE_EXPORT QCLuceneStandardAnalyzer : public QCLuceneAnalyzer
 {
 public:
     QCLuceneStandardAnalyzer();
@@ -103,21 +103,21 @@ public:
     ~QCLuceneStandardAnalyzer();
 };
 
-class QHELP_EXPORT QCLuceneWhitespaceAnalyzer : public QCLuceneAnalyzer
+class Q_CLUCENE_EXPORT QCLuceneWhitespaceAnalyzer : public QCLuceneAnalyzer
 {
 public:
     QCLuceneWhitespaceAnalyzer();
     ~QCLuceneWhitespaceAnalyzer();
 };
 
-class QHELP_EXPORT QCLuceneSimpleAnalyzer : public QCLuceneAnalyzer
+class Q_CLUCENE_EXPORT QCLuceneSimpleAnalyzer : public QCLuceneAnalyzer
 {
 public:
     QCLuceneSimpleAnalyzer();
     ~QCLuceneSimpleAnalyzer();
 };
 
-class QHELP_EXPORT QCLuceneStopAnalyzer : public QCLuceneAnalyzer
+class Q_CLUCENE_EXPORT QCLuceneStopAnalyzer : public QCLuceneAnalyzer
 {
 public:
     QCLuceneStopAnalyzer();
@@ -128,14 +128,14 @@ public:
     QStringList englishStopWords() const;
 };
 
-class QHELP_EXPORT QCLuceneKeywordAnalyzer : public QCLuceneAnalyzer
+class Q_CLUCENE_EXPORT QCLuceneKeywordAnalyzer : public QCLuceneAnalyzer
 {
 public:
     QCLuceneKeywordAnalyzer();
     ~QCLuceneKeywordAnalyzer();
 };
 
-class QHELP_EXPORT QCLucenePerFieldAnalyzerWrapper : public QCLuceneAnalyzer
+class Q_CLUCENE_EXPORT QCLucenePerFieldAnalyzerWrapper : public QCLuceneAnalyzer
 {
 public:
     QCLucenePerFieldAnalyzerWrapper(QCLuceneAnalyzer *defaultAnalyzer);

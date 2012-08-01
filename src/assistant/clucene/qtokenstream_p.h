@@ -52,7 +52,7 @@ class QCLuceneStandardAnalyzer;
 class QCLuceneWhitespaceAnalyzer;
 class QCLucenePerFieldAnalyzerWrapper;
 
-class QHELP_EXPORT QCLuceneTokenStreamPrivate : public QSharedData
+class Q_CLUCENE_EXPORT QCLuceneTokenStreamPrivate : public QSharedData
 {
 public:
     QCLuceneTokenStreamPrivate();
@@ -67,7 +67,7 @@ private:
     QCLuceneTokenStreamPrivate &operator=(const QCLuceneTokenStreamPrivate &other);
 };
 
-class QHELP_EXPORT QCLuceneTokenStream
+class Q_CLUCENE_EXPORT QCLuceneTokenStream
 {
 public:
     virtual ~QCLuceneTokenStream();
