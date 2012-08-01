@@ -79,7 +79,7 @@ PhraseBookBox::PhraseBookBox(PhraseBook *phraseBook, QWidget *parent)
 
     phraseList->setModel(m_sortedPhraseModel);
     phraseList->header()->setDefaultSectionSize(150);
-    phraseList->header()->setResizeMode(QHeaderView::Interactive);
+    phraseList->header()->setSectionResizeMode(QHeaderView::Interactive);
 
     connect(sourceLed, SIGNAL(textChanged(QString)),
             this, SLOT(sourceChanged(QString)));
