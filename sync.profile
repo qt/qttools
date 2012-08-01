@@ -20,6 +20,5 @@
     "qtxmlpatterns" => "refs/heads/master",
     "qtdeclarative" => "refs/heads/master",
     "qtjsbackend" => "refs/heads/master",
-    "qtphonon" => "refs/heads/master",
     "qtactiveqt" => "refs/heads/master",
 );
