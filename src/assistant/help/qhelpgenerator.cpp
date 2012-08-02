@@ -284,12 +284,8 @@ void QHelpGenerator::cleanupDB()
 
 void QHelpGenerator::writeTree(QDataStream &s, QHelpDataContentItem *item, int depth)
 {
-    QString fReference = QDir::cleanPath(item->reference());
-    if (fReference.startsWith(QLatin1String("./")))
-        fReference = fReference.mid(2);
-
     s << depth;
-    s << fReference;
+    s << item->reference();
     s << item->title();
     foreach (QHelpDataContentItem *i, item->children())
         writeTree(s, i, depth+1);
@@ -510,11 +506,6 @@ bool QHelpGenerator::insertFiles(const QStringList &files, const QString &rootPa
     int i = 0;
     foreach (const QString &file, files) {
         const QString fileName = QDir::cleanPath(file);
-        if (fileName.startsWith(QLatin1String("../"))) {
-            emit warning(tr("The referenced file %1 must be inside or within a "
-                "subdirectory of (%2). Skipping it.").arg(fileName).arg(rootPath));
-            continue;
-        }
 
         QFile fi(rootPath + QDir::separator() + fileName);
         if (!fi.exists()) {
