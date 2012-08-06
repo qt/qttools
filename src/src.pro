@@ -1,4 +1,5 @@
-TEMPLATE        = subdirs
+TEMPLATE = subdirs
+CONFIG += ordered
 
 !contains(QT_CONFIG, no-gui) {
     no-png {
@@ -6,12 +7,8 @@ TEMPLATE        = subdirs
     } else {
         SUBDIRS = assistant \
                   pixeltool \
-                  qtestlib
-        contains(QT_EDITION, Console) {
-            SUBDIRS += designer/src/uitools     # Linguist depends on this
-        } else {
-            SUBDIRS += designer
-        }
+                  qtestlib \
+                  designer
 #    unix:!mac:!embedded:!qpa:SUBDIRS += qtconfig
     }
 }
@@ -28,6 +25,3 @@ contains(QT_CONFIG, dbus):SUBDIRS += qdbus
 # We don't need these command line utilities on embedded platforms.
 embedded: SUBDIRS += makeqpf
 
-CONFIG+=ordered
-
-!win32:!embedded:!mac:CONFIG += x11
