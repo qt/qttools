@@ -6,8 +6,7 @@ TEMPLATE        = subdirs
     } else {
         SUBDIRS = assistant \
                   pixeltool \
-                  qtestlib \
-                  qttracereplay
+                  qtestlib
         contains(QT_EDITION, Console) {
             SUBDIRS += designer/src/uitools     # Linguist depends on this
         } else {
