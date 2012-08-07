@@ -5,7 +5,7 @@ QT = core-private gui widgets
 
 DEFINES += QHELP_LIB QT_CLUCENE_SUPPORT
 
-load(qt_module_config)
+load(qt_module)
 
 # private dependencies
 QT += network sql clucene-private

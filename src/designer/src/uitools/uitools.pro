@@ -4,7 +4,7 @@ TARGET = QtUiTools
 CONFIG += static
 QT = core
 
-load(qt_module_config)
+load(qt_module)
 
 HEADERS += quiloader.h
 SOURCES += quiloader.cpp

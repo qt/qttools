@@ -5,7 +5,7 @@ TARGET = QtDesignerComponents
 QT = core gui-private widgets-private designer-private
 CONFIG += internal_module
 
-load(qt_module_config)
+load(qt_module)
 
 # private dependencies
 QT += xml

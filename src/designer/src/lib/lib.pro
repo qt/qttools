@@ -6,7 +6,7 @@ TARGET = QtDesigner
 QT = core-private gui-private widgets-private xml
 
 MODULE_CONFIG = designer_defines
-load(qt_module_config)
+load(qt_module)
 
 DEFINES += \
     QDESIGNER_SDK_LIBRARY \
