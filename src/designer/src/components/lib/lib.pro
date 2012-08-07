@@ -3,12 +3,10 @@ load(qt_build_config)
 MODULE = designercomponents
 TARGET = QtDesignerComponents
 QT = core gui-private widgets-private designer-private
+QT_PRIVATE = xml
 CONFIG += internal_module
 
 load(qt_module)
-
-# private dependencies
-QT += xml
 
 # QtDesignerComponents uses
 DEFINES += QT_STATICPLUGIN

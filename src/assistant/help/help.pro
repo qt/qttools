@@ -2,13 +2,11 @@ load(qt_build_config)
 
 TARGET = QtHelp
 QT = core-private gui widgets
+QT_PRIVATE = network sql clucene-private
 
 DEFINES += QHELP_LIB QT_CLUCENE_SUPPORT
 
 load(qt_module)
-
-# private dependencies
-QT += network sql clucene-private
 
 DEFINES -= QT_ASCII_CAST_WARNINGS
 
