@@ -47,7 +47,7 @@
 
 #include "remotecontrol.h"
 
-RemoteControl::RemoteControl(QWidget *parent, Qt::WFlags flags)
+RemoteControl::RemoteControl(QWidget *parent, Qt::WindowFlags flags)
         : QMainWindow(parent, flags)
 {
     ui.setupUi(this);
