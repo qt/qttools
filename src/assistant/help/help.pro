@@ -12,21 +12,6 @@ QT += network sql clucene-private
 
 DEFINES -= QT_ASCII_CAST_WARNINGS
 
-mac:CONFIG(qt_framework, qt_framework|qt_no_framework) {
-    qclucene = -framework QtCLucene$${QT_LIBINFIX}
-}
-else {
-    qclucene = QtCLucene$${QT_LIBINFIX}
-    if(!debug_and_release|build_pass):CONFIG(debug, debug|release) {
-        mac:qclucene = $${qclucene}_debug
-        win32:qclucene = $${qclucene}d
-    }
-    linux-lsb-g++:LIBS_PRIVATE += --lsb-shared-libs=$$qclucene
-    qclucene = -l$$qclucene
-    LIBS_PRIVATE += -L$$QT.clucene.libs
-}
-
-LIBS_PRIVATE += $$qclucene
 RESOURCES += helpsystem.qrc
 SOURCES += qhelpenginecore.cpp \
     qhelpengine.cpp \
