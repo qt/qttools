@@ -233,10 +233,10 @@ void QHelpProjectDataPrivate::readKeywords()
             if (name() == QLatin1String("keyword")) {
                 if (attributes().value(QLatin1String("ref")).toString().isEmpty()
                     || (attributes().value(QLatin1String("name")).toString().isEmpty()
-                    && attributes().value(QLatin1String("id")).toString().isEmpty()))
-                    raiseError(QCoreApplication::translate("QHelpProject",
-                                   "Missing attribute in keyword at line %1.")
-                               .arg(lineNumber()));
+                    && attributes().value(QLatin1String("id")).toString().isEmpty())) {
+                    qWarning("Missing attribute in keyword at line %d.", (int)lineNumber());
+                    continue;
+                }
                 filterSectionList.last()
                     .addIndex(QHelpDataIndexItem(attributes().
                                   value(QLatin1String("name")).toString(),
