@@ -30,7 +30,7 @@ HEADERS += \
     lupdate.h \
     ../shared/simtexth.h
 
-win32:RC_FILE = winmanifest.rc
+win32:QMAKE_MANIFEST = lupdate.exe.manifest
 
 embed_manifest_exe:win32-msvc2005 {
     # The default configuration embed_manifest_exe overrides the manifest file
