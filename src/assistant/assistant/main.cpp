@@ -230,10 +230,10 @@ bool rebuildSearchIndex(QCoreApplication &app, const QString &collectionFile,
     return app.exec() == 0;
 }
 
-bool useGui(int argc, char *argv[])
+QApplication::Type useGui(int argc, char *argv[])
 {
     TRACE_OBJ
-    bool gui = true;
+    QApplication::Type appType = QApplication::GuiClient;
 #ifndef Q_OS_WIN
     // Look for arguments that imply command-line mode.
     const char * cmdModeArgs[] = {
@@ -243,7 +243,7 @@ bool useGui(int argc, char *argv[])
     for (int i = 1; i < argc; ++i) {
         for (size_t j = 0; j < sizeof cmdModeArgs/sizeof *cmdModeArgs; ++j) {
             if(strcmp(argv[i], cmdModeArgs[j]) == 0) {
-                gui = false;
+                appType = QApplication::Tty;
                 break;
             }
         }
@@ -252,7 +252,7 @@ bool useGui(int argc, char *argv[])
     Q_UNUSED(argc)
     Q_UNUSED(argv)
 #endif
-    return gui;
+    return appType;
 }
 
 bool registerDocumentation(QHelpEngineCore &collection, CmdLineParser &cmd,
@@ -320,14 +320,17 @@ void setupTranslations()
 int main(int argc, char *argv[])
 {
     TRACE_OBJ
-    QApplication a(argc, argv, useGui(argc, argv));
+    QApplication::Type appType = useGui(argc, argv);
+    QApplication a(argc, argv, appType);
     a.addLibraryPath(a.applicationDirPath() + QLatin1String("/plugins"));
     setupTranslations();
 
 #if !defined(QT_NO_WEBKIT)
-    QFont f;
-    f.setStyleHint(QFont::SansSerif);
-    QWebSettings::globalSettings()->setFontFamily(QWebSettings::StandardFont, f.defaultFamily());
+    if (appType != QApplication::Tty) {
+        QFont f;
+        f.setStyleHint(QFont::SansSerif);
+        QWebSettings::globalSettings()->setFontFamily(QWebSettings::StandardFont, f.defaultFamily());
+    }
 #endif
 
     // Parse arguments.
