@@ -482,7 +482,7 @@ int main(int argc, char **argv)
     QDBusConnectionInterface *bus = connection.interface();
     if (args.isEmpty()) {
         printAllServices(bus);
-        exit(0);
+        return 0;
     }
 
     QString service = args.takeFirst();
@@ -492,22 +492,22 @@ int main(int argc, char **argv)
                 return 0;
         }
         fprintf(stderr, "Service '%s' is not a valid name.\n", qPrintable(service));
-        exit(1);
+        return 1;
     }
 
     if (args.isEmpty()) {
         listObjects(service, QString());
-        exit(0);
+        return 0;
     }
 
     QString path = args.takeFirst();
     if (!QDBusUtil::isValidObjectPath(path)) {
         fprintf(stderr, "Path '%s' is not a valid path name.\n", qPrintable(path));
-        exit(1);
+        return 1;
     }
     if (args.isEmpty()) {
         listAllInterfaces(service, path);
-        exit(0);
+        return 0;
     }
 
     QString interface = args.takeFirst();
@@ -526,10 +526,10 @@ int main(int argc, char **argv)
     }
     if (!QDBusUtil::isValidMemberName(member)) {
         fprintf(stderr, "Method name '%s' is not a valid member name.\n", qPrintable(member));
-        exit(1);
+        return 1;
     }
 
     int ret = placeCall(service, path, interface, member, args);
-    exit(ret);
+    return ret;
 }
 
