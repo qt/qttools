@@ -1,7 +1,7 @@
 TEMPLATE = subdirs
 CONFIG += ordered
 
-!contains(QT_CONFIG, no-gui) {
+!isEmpty(QT.widgets.name) {
     no-png {
         message("Some graphics-related tools are unavailable without PNG support")
     } else {

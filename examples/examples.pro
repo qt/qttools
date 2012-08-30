@@ -1,2 +1,3 @@
 TEMPLATE = subdirs
-SUBDIRS +=  help designer uitools
+!isEmpty(QT.widgets.name): SUBDIRS += help designer uitools
+

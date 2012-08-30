@@ -3,7 +3,7 @@ SUBDIRS  = \
     lrelease \
     lupdate \
     lconvert
-!no-png:!contains(QT_CONFIG, no-gui):SUBDIRS += linguist
+!no-png:!isEmpty(QT.widgets.name): SUBDIRS += linguist
 
 win32:CMAKE_BIN_SUFFIX = ".exe"
 

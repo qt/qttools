@@ -1,3 +1,3 @@
 TEMPLATE = subdirs
 SUBDIRS = qdbus
-!contains(QT_CONFIG, no-gui): SUBDIRS += qdbusviewer
+!isEmpty(QT.widgets.name): SUBDIRS += qdbusviewer
