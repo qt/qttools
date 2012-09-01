@@ -51,3 +51,12 @@ include(../../sharedcomponents.pri)
 unix|win32-g++* {
     QMAKE_PKGCONFIG_REQUIRES = QtCore QtDesigner QtGui QtXml
 }
+
+# MinGW GCC cc1plus crashes when using precompiled header
+# Date Checked: 3rd September 2012
+#
+# Compilers known to be affected:
+# * MinGW-builds GCC 4.6.3 64-bit
+# * MinGW-builds GCC 4.7.1 64-bit
+# * MinGW-w64 GCC 4.7.1 64-bit (rubenvb)
+win32-g++*:CONFIG -= precompile_header
