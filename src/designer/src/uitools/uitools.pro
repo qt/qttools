@@ -1,5 +1,3 @@
-load(qt_build_config)
-
 TARGET = QtUiTools
 CONFIG += static
 QT = core

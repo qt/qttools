@@ -1,5 +1,3 @@
-load(qt_build_config)
-
 MODULE = designercomponents
 TARGET = QtDesignerComponents
 QT = core gui-private widgets-private designer-private

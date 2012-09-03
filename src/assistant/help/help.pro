@@ -1,5 +1,3 @@
-load(qt_build_config)
-
 TARGET = QtHelp
 QT = core-private gui widgets
 QT_PRIVATE = network sql clucene-private

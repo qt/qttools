@@ -1,5 +1,3 @@
-load(qt_build_config)
-
 TEMPLATE = app
 LANGUAGE = C++
 DESTDIR = $$QT.designer.bins

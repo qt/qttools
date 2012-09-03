@@ -1,5 +1,3 @@
-load(qt_build_config)
-
 DESTDIR = $$QT.designer.bins
 
 QT = core-private
