@@ -117,7 +117,7 @@ bool Lexer::GetNextToken(QueryToken* token) {
       if( _istspace(ch)!=0 ) {
          continue;
       }
-      TCHAR buf[2] = {ch,'\0'};
+      TCHAR buf[2] = {TCHAR(ch),'\0'};
       switch(ch) {
          case '+':
             token->set(buf, QueryToken::PLUS);
