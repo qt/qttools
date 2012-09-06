@@ -8,4 +8,8 @@ SOURCES += main.cpp
 include(../shared/formats.pri)
 include(../shared/proparser.pri)
 
+qmake.name = QMAKE
+qmake.value = $$shell_path($$QMAKE_QMAKE)
+QT_TOOL_ENV += qmake
+
 load(qt_tool)

@@ -36,4 +36,8 @@ embed_manifest_exe:win32-msvc2005 {
     QMAKE_POST_LINK += $$quote(mt.exe -updateresource:$$DESTDIR/lupdate.exe -manifest \"$${PWD}\\lupdate.exe.manifest\")
 }
 
+qmake.name = QMAKE
+qmake.value = $$shell_path($$QMAKE_QMAKE)
+QT_TOOL_ENV += qmake
+
 load(qt_tool)

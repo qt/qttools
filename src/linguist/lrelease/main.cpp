@@ -308,10 +308,12 @@ int main(int argc, char **argv)
 
             evalHandler.verbose = cd.isVerbose();
             ProFileGlobals option;
+            option.qmake_abslocation = QString::fromLocal8Bit(qgetenv("QMAKE"));
+            if (option.qmake_abslocation.isEmpty())
 #ifdef QT_BOOTSTRAPPED
-            option.qmake_abslocation = binDir + QLatin1String("/qmake");
+                option.qmake_abslocation = binDir + QLatin1String("/qmake");
 #else
-            option.qmake_abslocation = app.applicationDirPath() + QLatin1String("/qmake");
+                option.qmake_abslocation = app.applicationDirPath() + QLatin1String("/qmake");
 #endif
             option.initProperties();
             QMakeParser parser(0, &evalHandler);

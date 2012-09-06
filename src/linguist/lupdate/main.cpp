@@ -833,7 +833,9 @@ int main(int argc, char **argv)
 
         evalHandler.verbose = !!(options & Verbose);
         ProFileGlobals option;
-        option.qmake_abslocation = app.applicationDirPath() + QLatin1String("/qmake");
+        option.qmake_abslocation = QString::fromLocal8Bit(qgetenv("QMAKE"));
+        if (option.qmake_abslocation.isEmpty())
+            option.qmake_abslocation = app.applicationDirPath() + QLatin1String("/qmake");
         option.initProperties();
         option.setCommandLineArguments(QDir::currentPath(),
                                        QStringList() << QLatin1String("CONFIG+=lupdate_run"));
