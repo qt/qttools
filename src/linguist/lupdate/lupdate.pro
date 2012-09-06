@@ -2,7 +2,7 @@ DESTDIR = $$QT.designer.bins
 
 QT = core-private
 
-!isEmpty(QT.declarative.name) {
+!isEmpty(QT.qmldevtools.name) {
     QT += qmldevtools-private
 } else {
     DEFINES += QT_NO_QML
@@ -22,7 +22,7 @@ SOURCES += \
     java.cpp \
     ui.cpp
 
-!isEmpty(QT.declarative.name): SOURCES += qdeclarative.cpp
+!isEmpty(QT.qmldevtools.name): SOURCES += qdeclarative.cpp
 
 HEADERS += \
     lupdate.h \
