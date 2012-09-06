@@ -39,14 +39,14 @@
 **
 ****************************************************************************/
 
-#include "profileparser.h"
+#include "qmakeparser.h"
 
 #include "ioutils.h"
-using namespace ProFileEvaluatorInternal;
+using namespace QMakeInternal;
 
-#include <QtCore/QFile>
+#include <qfile.h>
 #ifdef PROPARSER_THREAD_SAFE
-# include <QtCore/QThreadPool>
+# include <qthreadpool.h>
 #endif
 
 QT_BEGIN_NAMESPACE
@@ -107,11 +107,18 @@ static struct {
     QString strfor;
     QString strdefineTest;
     QString strdefineReplace;
+    QString stroption;
+    QString strhost_build;
+    QString strLINE;
+    QString strFILE;
+    QString strLITERAL_HASH;
+    QString strLITERAL_DOLLAR;
+    QString strLITERAL_WHITESPACE;
 } statics;
 
 }
 
-void ProFileParser::initialize()
+void QMakeParser::initialize()
 {
     if (!statics.strelse.isNull())
         return;
@@ -120,9 +127,16 @@ void ProFileParser::initialize()
     statics.strfor = QLatin1String("for");
     statics.strdefineTest = QLatin1String("defineTest");
     statics.strdefineReplace = QLatin1String("defineReplace");
+    statics.stroption = QLatin1String("option");
+    statics.strhost_build = QLatin1String("host_build");
+    statics.strLINE = QLatin1String("_LINE_");
+    statics.strFILE = QLatin1String("_FILE_");
+    statics.strLITERAL_HASH = QLatin1String("LITERAL_HASH");
+    statics.strLITERAL_DOLLAR = QLatin1String("LITERAL_DOLLAR");
+    statics.strLITERAL_WHITESPACE = QLatin1String("LITERAL_WHITESPACE");
 }
 
-ProFileParser::ProFileParser(ProFileCache *cache, ProFileParserHandler *handler)
+QMakeParser::QMakeParser(ProFileCache *cache, QMakeParserHandler *handler)
     : m_cache(cache)
     , m_handler(handler)
 {
@@ -130,7 +144,7 @@ ProFileParser::ProFileParser(ProFileCache *cache, ProFileParserHandler *handler)
     initialize();
 }
 
-ProFile *ProFileParser::parsedProFile(const QString &fileName, bool cache, const QString *contents)
+ProFile *QMakeParser::parsedProFile(const QString &fileName, bool cache)
 {
     ProFile *pro;
     if (cache && m_cache) {
@@ -162,10 +176,11 @@ ProFile *ProFileParser::parsedProFile(const QString &fileName, bool cache, const
             locker.unlock();
 #endif
             pro = new ProFile(fileName);
-            if (!(!contents ? read(pro) : read(pro, *contents))) {
+            if (!read(pro)) {
                 delete pro;
                 pro = 0;
             } else {
+                pro->itemsRef()->squeeze();
                 pro->ref();
             }
             ent->pro = pro;
@@ -182,7 +197,7 @@ ProFile *ProFileParser::parsedProFile(const QString &fileName, bool cache, const
         }
     } else {
         pro = new ProFile(fileName);
-        if (!(!contents ? read(pro) : read(pro, *contents))) {
+        if (!read(pro)) {
             delete pro;
             pro = 0;
         }
@@ -190,38 +205,58 @@ ProFile *ProFileParser::parsedProFile(const QString &fileName, bool cache, const
     return pro;
 }
 
-bool ProFileParser::read(ProFile *pro)
+ProFile *QMakeParser::parsedProBlock(
+        const QString &contents, const QString &name, int line, SubGrammar grammar)
+{
+    ProFile *pro = new ProFile(name);
+    if (!read(pro, contents, line, grammar)) {
+        delete pro;
+        pro = 0;
+    }
+    return pro;
+}
+
+bool QMakeParser::read(ProFile *pro)
 {
     QFile file(pro->fileName());
     if (!file.open(QIODevice::ReadOnly)) {
         if (m_handler && IoUtils::exists(pro->fileName()))
-            m_handler->parseError(QString(), 0, fL1S("%1 not readable.").arg(pro->fileName()));
+            m_handler->message(QMakeParserHandler::ParserIoError,
+                               fL1S("Cannot read %1: %2").arg(pro->fileName(), file.errorString()));
         return false;
     }
 
-    QString content(QString::fromLocal8Bit(file.readAll()));
+    QByteArray bcont = file.readAll();
+    if (bcont.startsWith(QByteArray("\xef\xbb\xbf"))) {
+        // UTF-8 BOM will cause subtle errors
+        m_handler->message(QMakeParserHandler::ParserIoError,
+                           fL1S("Unexpected UTF-8 BOM in %1").arg(pro->fileName()));
+        return false;
+    }
+    QString content(QString::fromLocal8Bit(bcont));
+    bcont.clear();
     file.close();
-    return read(pro, content);
+    return read(pro, content, 1, FullGrammar);
 }
 
-void ProFileParser::putTok(ushort *&tokPtr, ushort tok)
+void QMakeParser::putTok(ushort *&tokPtr, ushort tok)
 {
     *tokPtr++ = tok;
 }
 
-void ProFileParser::putBlockLen(ushort *&tokPtr, uint len)
+void QMakeParser::putBlockLen(ushort *&tokPtr, uint len)
 {
     *tokPtr++ = (ushort)len;
     *tokPtr++ = (ushort)(len >> 16);
 }
 
-void ProFileParser::putBlock(ushort *&tokPtr, const ushort *buf, uint len)
+void QMakeParser::putBlock(ushort *&tokPtr, const ushort *buf, uint len)
 {
     memcpy(tokPtr, buf, len * 2);
     tokPtr += len;
 }
 
-void ProFileParser::putHashStr(ushort *&pTokPtr, const ushort *buf, uint len)
+void QMakeParser::putHashStr(ushort *&pTokPtr, const ushort *buf, uint len)
 {
     uint hash = ProString::hash((const QChar *)buf, len);
     ushort *tokPtr = pTokPtr;
@@ -232,7 +267,7 @@ void ProFileParser::putHashStr(ushort *&pTokPtr, const ushort *buf, uint len)
     pTokPtr = tokPtr + len;
 }
 
-void ProFileParser::finalizeHashStr(ushort *buf, uint len)
+void QMakeParser::finalizeHashStr(ushort *buf, uint len)
 {
     buf[-4] = TokHashLiteral;
     buf[-1] = len;
@@ -241,10 +276,10 @@ void ProFileParser::finalizeHashStr(ushort *buf, uint len)
     buf[-2] = (ushort)(hash >> 16);
 }
 
-bool ProFileParser::read(ProFile *pro, const QString &in)
+bool QMakeParser::read(ProFile *pro, const QString &in, int line, SubGrammar grammar)
 {
     m_proFile = pro;
-    m_lineNo = 1;
+    m_lineNo = line;
 
     // Final precompiled token stream buffer
     QString tokBuff;
@@ -277,7 +312,7 @@ bool ProFileParser::read(ProFile *pro, const QString &in)
     // Expression precompiler buffer.
     QString xprBuff;
     xprBuff.reserve(tokBuff.capacity()); // Excessive, but simple
-    ushort * const buf = (ushort *)xprBuff.constData();
+    ushort *buf = (ushort *)xprBuff.constData();
 
     // Parser state
     m_blockstack.clear();
@@ -295,18 +330,24 @@ bool ProFileParser::read(ProFile *pro, const QString &in)
     m_operator = NoOperator;
     m_markLine = m_lineNo;
     m_inError = false;
-    Context context = CtxTest;
     int parens = 0; // Braces in value context
     int argc = 0;
     int wordCount = 0; // Number of words in currently accumulated expression
-    bool putSpace = false; // Only ever true inside quoted string
+    int lastIndent = 0; // Previous line's indentation, to detect accidental continuation abuse
     bool lineMarked = true; // For in-expression markers
-    ushort needSep = TokNewStr; // Complementary to putSpace: separator outside quotes
+    ushort needSep = TokNewStr; // Met unquoted whitespace
     ushort quote = 0;
     ushort term = 0;
 
-    ushort *ptr = buf;
-    ptr += 4;
+    Context context;
+    ushort *ptr;
+    if (grammar == ValueGrammar) {
+        context = CtxPureValue;
+        ptr = tokPtr + 2;
+    } else {
+        context = CtxTest;
+        ptr = buf + 4;
+    }
     ushort *xprPtr = ptr;
 
 #define FLUSH_LHS_LITERAL() \
@@ -358,16 +399,30 @@ bool ProFileParser::read(ProFile *pro, const QString &in)
         putTok(tokPtr, TokValueTerminator); \
     } while (0)
 
+    const ushort *end; // End of this line
+    const ushort *cptr; // Start of next line
+    bool lineCont;
+    int indent;
+
+    if (context == CtxPureValue) {
+        end = (const ushort *)in.unicode() + in.length();
+        cptr = 0;
+        lineCont = false;
+        indent = 0; // just gcc being stupid
+        goto nextChr;
+    }
+
     forever {
         ushort c;
 
         // First, skip leading whitespace
-        for (;; ++cur) {
+        for (indent = 0; ; ++cur, ++indent) {
             c = *cur;
             if (c == '\n') {
                 ++cur;
                 goto flushLine;
             } else if (!c) {
+                cur = 0;
                 goto flushLine;
             } else if (c != ' ' && c != '\t' && c != '\r') {
                 break;
@@ -375,8 +430,6 @@ bool ProFileParser::read(ProFile *pro, const QString &in)
         }
 
         // Then strip comments. Yep - no escaping is possible.
-        const ushort *end; // End of this line
-        const ushort *cptr; // Start of next line
         for (cptr = cur;; ++cptr) {
             c = *cptr;
             if (c == '#') {
@@ -405,7 +458,6 @@ bool ProFileParser::read(ProFile *pro, const QString &in)
         }
 
         // Then look for line continuations. Yep - no escaping here as well.
-        bool lineCont;
         forever {
             // We don't have to check for underrun here, as we already determined
             // that the line is non-empty.
@@ -435,10 +487,6 @@ bool ProFileParser::read(ProFile *pro, const QString &in)
                 if (c == '$') {
                     if (*cur == '$') { // may be EOF, EOL, WS, '#' or '\\' if past end
                         cur++;
-                        if (putSpace) {
-                            putSpace = false;
-                            *ptr++ = ' ';
-                        }
                         FLUSH_LITERAL();
                         if (!lineMarked) {
                             lineMarked = true;
@@ -449,7 +497,7 @@ bool ProFileParser::read(ProFile *pro, const QString &in)
                         tok = TokVariable;
                         c = *cur;
                         if (c == '[') {
-                            ptr += 2;
+                            ptr += 4;
                             tok = TokProperty;
                             term = ']';
                             c = *++cur;
@@ -458,7 +506,6 @@ bool ProFileParser::read(ProFile *pro, const QString &in)
                             term = '}';
                             c = *++cur;
                         } else if (c == '(') {
-                            // FIXME: could/should expand this immediately
                             ptr += 2;
                             tok = TokEnvVar;
                             term = ')';
@@ -470,7 +517,7 @@ bool ProFileParser::read(ProFile *pro, const QString &in)
                         rtok = tok;
                         while ((c & 0xFF00) || c == '.' || c == '_' ||
                                (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
-                               (c >= '0' && c <= '9')) {
+                               (c >= '0' && c <= '9') || (c == '/' && term)) {
                             *ptr++ = c;
                             if (++cur == end) {
                                 c = 0;
@@ -481,6 +528,8 @@ bool ProFileParser::read(ProFile *pro, const QString &in)
                         if (tok == TokVariable && c == '(')
                             tok = TokFuncName;
                       notfunc:
+                        if (ptr == xprPtr)
+                            languageWarning(fL1S("Missing name in expansion"));
                         if (quote)
                             tok |= TokQuoted;
                         if (needSep) {
@@ -488,15 +537,20 @@ bool ProFileParser::read(ProFile *pro, const QString &in)
                             wordCount++;
                         }
                         tlen = ptr - xprPtr;
-                        if (rtok == TokVariable) {
-                            xprPtr[-4] = tok;
-                            uint hash = ProString::hash((const QChar *)xprPtr, tlen);
-                            xprPtr[-3] = (ushort)hash;
-                            xprPtr[-2] = (ushort)(hash >> 16);
-                        } else {
-                            xprPtr[-2] = tok;
+                        if (rtok != TokVariable
+                            || !resolveVariable(xprPtr, tlen, needSep, &ptr,
+                                                &buf, &xprBuff, &tokPtr, &tokBuff, cur, in)) {
+                            if (rtok == TokVariable || rtok == TokProperty) {
+                                xprPtr[-4] = tok;
+                                uint hash = ProString::hash((const QChar *)xprPtr, tlen);
+                                xprPtr[-3] = (ushort)hash;
+                                xprPtr[-2] = (ushort)(hash >> 16);
+                                xprPtr[-1] = tlen;
+                            } else {
+                                xprPtr[-2] = tok;
+                                xprPtr[-1] = tlen;
+                            }
                         }
-                        xprPtr[-1] = tlen;
                         if ((tok & TokMask) == TokFuncName) {
                             cur++;
                           funcCall:
@@ -524,7 +578,6 @@ bool ProFileParser::read(ProFile *pro, const QString &in)
                             goto newWord;
                         }
                         if (term) {
-                            cur++;
                           checkTerm:
                             if (c != term) {
                                 parseError(fL1S("Missing %1 terminator [found %2]")
@@ -532,9 +585,9 @@ bool ProFileParser::read(ProFile *pro, const QString &in)
                                     .arg(c ? QString(c) : QString::fromLatin1("end-of-line")));
                                 pro->setOk(false);
                                 m_inError = true;
-                                if (c)
-                                    cur--;
                                 // Just parse on, as if there was a terminator ...
+                            } else {
+                                cur++;
                             }
                         }
                       joinToken:
@@ -543,23 +596,18 @@ bool ProFileParser::read(ProFile *pro, const QString &in)
                         needSep = 0;
                         goto nextChr;
                     }
-                } else if (c == '\\' && cur != end) {
+                } else if (c == '\\') {
                     static const char symbols[] = "[]{}()$\\'\"";
-                    ushort c2 = *cur;
-                    if (!(c2 & 0xff00) && strchr(symbols, c2)) {
+                    ushort c2;
+                    if (cur != end && !((c2 = *cur) & 0xff00) && strchr(symbols, c2)) {
                         c = c2;
                         cur++;
+                    } else {
+                        deprecationWarning(fL1S("Unescaped backslashes are deprecated"));
                     }
                 } else if (quote) {
                     if (c == quote) {
                         quote = 0;
-                        if (putSpace) {
-                            putSpace = false;
-                            *ptr++ = ' ';
-                        }
-                        goto nextChr;
-                    } else if (c == ' ' || c == '\t') {
-                        putSpace = true;
                         goto nextChr;
                     } else if (c == '!' && ptr == xprPtr && context == CtxTest) {
                         m_invert ^= true;
@@ -568,12 +616,12 @@ bool ProFileParser::read(ProFile *pro, const QString &in)
                 } else if (c == '\'' || c == '"') {
                     quote = c;
                     goto nextChr;
-                } else if (c == ' ' || c == '\t') {
-                    FLUSH_LITERAL();
-                    goto nextWord;
                 } else if (context == CtxArgs) {
                     // Function arg context
-                    if (c == '(') {
+                    if (c == ' ' || c == '\t') {
+                        FLUSH_RHS_LITERAL();
+                        goto nextWord;
+                    } else if (c == '(') {
                         ++parens;
                     } else if (c == ')') {
                         if (--parens < 0) {
@@ -594,7 +642,7 @@ bool ProFileParser::read(ProFile *pro, const QString &in)
                                 finalizeCall(tokPtr, buf, ptr, theargc);
                                 goto nextItem;
                             } else if (term == '}') {
-                                c = (cur == end) ? 0 : *cur++;
+                                c = (cur == end) ? 0 : *cur;
                                 goto checkTerm;
                             } else {
                                 Q_ASSERT(!term);
@@ -609,7 +657,10 @@ bool ProFileParser::read(ProFile *pro, const QString &in)
                     }
                 } else if (context == CtxTest) {
                     // Test or LHS context
-                    if (c == '(') {
+                    if (c == ' ' || c == '\t') {
+                        FLUSH_LHS_LITERAL();
+                        goto nextWord;
+                    } else if (c == '(') {
                         FLUSH_LHS_LITERAL();
                         if (wordCount != 1) {
                             if (wordCount)
@@ -648,6 +699,10 @@ bool ProFileParser::read(ProFile *pro, const QString &in)
                         finalizeCond(tokPtr, buf, ptr, wordCount);
                         flushCond(tokPtr);
                         ++m_blockstack.top().braceLevel;
+                        if (grammar == TestGrammar) {
+                            parseError(fL1S("Opening scope not permitted in this context."));
+                            pro->setOk(false);
+                        }
                         goto nextItem;
                     } else if (c == '}') {
                         FLUSH_LHS_LITERAL();
@@ -686,7 +741,10 @@ bool ProFileParser::read(ProFile *pro, const QString &in)
                         FLUSH_LHS_LITERAL();
                         flushCond(tokPtr);
                         putLineMarker(tokPtr);
-                        if (wordCount != 1) {
+                        if (grammar == TestGrammar) {
+                            parseError(fL1S("Assignment not permitted in this context."));
+                            pro->setOk(false);
+                        } else if (wordCount != 1) {
                             parseError(fL1S("Assignment needs exactly one word on the left hand side."));
                             pro->setOk(false);
                             // Put empty variable name.
@@ -698,8 +756,11 @@ bool ProFileParser::read(ProFile *pro, const QString &in)
                         ptr = ++tokPtr;
                         goto nextToken;
                     }
-                } else { // context == CtxValue
-                    if (c == '{') {
+                } else if (context == CtxValue) {
+                    if (c == ' ' || c == '\t') {
+                        FLUSH_RHS_LITERAL();
+                        goto nextWord;
+                    } else if (c == '{') {
                         ++parens;
                     } else if (c == '}') {
                         if (!parens) {
@@ -709,11 +770,10 @@ bool ProFileParser::read(ProFile *pro, const QString &in)
                             goto closeScope;
                         }
                         --parens;
+                    } else if (c == '=') {
+                        if (indent < lastIndent)
+                            languageWarning(fL1S("Possible accidental line continuation"));
                     }
-                }
-                if (putSpace) {
-                    putSpace = false;
-                    *ptr++ = ' ';
                 }
                 *ptr++ = c;
               nextChr:
@@ -725,7 +785,7 @@ bool ProFileParser::read(ProFile *pro, const QString &in)
           lineEnd:
             if (lineCont) {
                 if (quote) {
-                    putSpace = true;
+                    *ptr++ = ' ';
                 } else {
                     FLUSH_LITERAL();
                     needSep = TokNewStr;
@@ -733,7 +793,6 @@ bool ProFileParser::read(ProFile *pro, const QString &in)
                     xprPtr = ptr;
                 }
             } else {
-                c = '\n';
                 cur = cptr;
               flushLine:
                 FLUSH_LITERAL();
@@ -753,25 +812,28 @@ bool ProFileParser::read(ProFile *pro, const QString &in)
                     if (context == CtxValue) {
                         tokPtr[-1] = 0; // sizehint
                         putTok(tokPtr, TokValueTerminator);
+                    } else if (context == CtxPureValue) {
+                        putTok(tokPtr, TokValueTerminator);
                     } else {
                         bogusTest(tokPtr);
                     }
                 } else if (context == CtxValue) {
                     FLUSH_VALUE_LIST();
+                    if (parens)
+                        languageWarning(fL1S("Possible braces mismatch"));
+                } else if (context == CtxPureValue) {
+                    tokPtr = ptr;
+                    putTok(tokPtr, TokValueTerminator);
                 } else {
                     finalizeCond(tokPtr, buf, ptr, wordCount);
                 }
-                if (!c)
+                if (!cur)
                     break;
                 ++m_lineNo;
                 goto freshLine;
             }
 
-        if (!lineCont) {
-            cur = cptr;
-            ++m_lineNo;
-            goto freshLine;
-        }
+        lastIndent = indent;
         lineMarked = false;
       ignore:
         cur = cptr;
@@ -785,8 +847,8 @@ bool ProFileParser::read(ProFile *pro, const QString &in)
     }
     while (m_blockstack.size())
         leaveScope(tokPtr);
-    xprBuff.clear();
-    *pro->itemsRef() = QString(tokBuff.constData(), tokPtr - (ushort *)tokBuff.constData());
+    tokBuff.resize(tokPtr - (ushort *)tokBuff.constData()); // Reserved capacity stays
+    *pro->itemsRef() = tokBuff;
     return true;
 
 #undef FLUSH_VALUE_LIST
@@ -795,7 +857,7 @@ bool ProFileParser::read(ProFile *pro, const QString &in)
 #undef FLUSH_RHS_LITERAL
 }
 
-void ProFileParser::putLineMarker(ushort *&tokPtr)
+void QMakeParser::putLineMarker(ushort *&tokPtr)
 {
     if (m_markLine) {
         *tokPtr++ = TokLine;
@@ -804,7 +866,7 @@ void ProFileParser::putLineMarker(ushort *&tokPtr)
     }
 }
 
-void ProFileParser::enterScope(ushort *&tokPtr, bool special, ScopeState state)
+void QMakeParser::enterScope(ushort *&tokPtr, bool special, ScopeState state)
 {
     m_blockstack.resize(m_blockstack.size() + 1);
     m_blockstack.top().special = special;
@@ -816,7 +878,7 @@ void ProFileParser::enterScope(ushort *&tokPtr, bool special, ScopeState state)
         m_markLine = m_lineNo;
 }
 
-void ProFileParser::leaveScope(ushort *&tokPtr)
+void QMakeParser::leaveScope(ushort *&tokPtr)
 {
     if (m_blockstack.top().inBranch) {
         // Put empty else block
@@ -832,7 +894,7 @@ void ProFileParser::leaveScope(ushort *&tokPtr)
 }
 
 // If we are on a fresh line, close all open one-line scopes.
-void ProFileParser::flushScopes(ushort *&tokPtr)
+void QMakeParser::flushScopes(ushort *&tokPtr)
 {
     if (m_state == StNew) {
         while (!m_blockstack.top().braceLevel && m_blockstack.size() > 1)
@@ -847,7 +909,7 @@ void ProFileParser::flushScopes(ushort *&tokPtr)
 }
 
 // If there is a pending conditional, enter a new scope, otherwise flush scopes.
-void ProFileParser::flushCond(ushort *&tokPtr)
+void QMakeParser::flushCond(ushort *&tokPtr)
 {
     if (m_state == StCond) {
         putTok(tokPtr, TokBranch);
@@ -858,7 +920,7 @@ void ProFileParser::flushCond(ushort *&tokPtr)
     }
 }
 
-void ProFileParser::finalizeTest(ushort *&tokPtr)
+void QMakeParser::finalizeTest(ushort *&tokPtr)
 {
     flushScopes(tokPtr);
     putLineMarker(tokPtr);
@@ -874,7 +936,7 @@ void ProFileParser::finalizeTest(ushort *&tokPtr)
     m_canElse = true;
 }
 
-void ProFileParser::bogusTest(ushort *&tokPtr)
+void QMakeParser::bogusTest(ushort *&tokPtr)
 {
     flushScopes(tokPtr);
     m_operator = NoOperator;
@@ -884,7 +946,7 @@ void ProFileParser::bogusTest(ushort *&tokPtr)
     m_proFile->setOk(false);
 }
 
-void ProFileParser::finalizeCond(ushort *&tokPtr, ushort *uc, ushort *ptr, int wordCount)
+void QMakeParser::finalizeCond(ushort *&tokPtr, ushort *uc, ushort *ptr, int wordCount)
 {
     if (wordCount != 1) {
         if (wordCount) {
@@ -937,7 +999,7 @@ void ProFileParser::finalizeCond(ushort *&tokPtr, ushort *uc, ushort *ptr, int w
     putTok(tokPtr, TokCondition);
 }
 
-void ProFileParser::finalizeCall(ushort *&tokPtr, ushort *uc, ushort *ptr, int argc)
+void QMakeParser::finalizeCall(ushort *&tokPtr, ushort *uc, ushort *ptr, int argc)
 {
     // Check for magic tokens
     if (*uc == TokHashLiteral) {
@@ -1019,6 +1081,26 @@ void ProFileParser::finalizeCall(ushort *&tokPtr, ushort *uc, ushort *ptr, int a
                 }
                 parseError(fL1S("%1(function) requires one literal argument.").arg(*defName));
                 return;
+            } else if (m_tmp == statics.stroption) {
+                if (m_state != StNew || m_blockstack.top().braceLevel || m_blockstack.size() > 1
+                        || m_invert || m_operator != NoOperator) {
+                    parseError(fL1S("option() must appear outside any control structures."));
+                    return;
+                }
+                if (*uce == (TokLiteral|TokNewStr)) {
+                    uint nlen = uce[1];
+                    if (uce[nlen + 2] == TokFuncTerminator) {
+                        m_tmp.setRawData((QChar *)uce + 2, nlen);
+                        if (m_tmp == statics.strhost_build) {
+                            m_proFile->setHostBuild(true);
+                        } else {
+                            parseError(fL1S("Unknown option() %1.").arg(m_tmp));
+                        }
+                        return;
+                    }
+                }
+                parseError(fL1S("option() requires one literal argument."));
+                return;
             }
         }
     }
@@ -1027,10 +1109,61 @@ void ProFileParser::finalizeCall(ushort *&tokPtr, ushort *uc, ushort *ptr, int a
     putBlock(tokPtr, uc, ptr - uc);
 }
 
-void ProFileParser::parseError(const QString &msg) const
+bool QMakeParser::resolveVariable(ushort *xprPtr, int tlen, int needSep, ushort **ptr,
+                                  ushort **buf, QString *xprBuff,
+                                  ushort **tokPtr, QString *tokBuff,
+                                  const ushort *cur, const QString &in)
+{
+    QString out;
+    m_tmp.setRawData((const QChar *)xprPtr, tlen);
+    if (m_tmp == statics.strLINE) {
+        out.setNum(m_lineNo);
+    } else if (m_tmp == statics.strFILE) {
+        out = m_proFile->fileName();
+        // The string is typically longer than the variable reference, so we need
+        // to ensure that there is enough space in the output buffer - as unlikely
+        // as an overflow is to actually happen in practice.
+        int need = (in.length() - (cur - (const ushort *)in.constData()) + 2) * 5 + out.length();
+        int tused = *tokPtr - (ushort *)tokBuff->constData();
+        int xused;
+        int total;
+        bool ptrFinal = xprPtr >= (ushort *)tokBuff->constData()
+                && xprPtr < (ushort *)tokBuff->constData() + tokBuff->capacity();
+        if (ptrFinal) {
+            xused = xprPtr - (ushort *)tokBuff->constData();
+            total = xused + need;
+        } else {
+            xused = xprPtr - *buf;
+            total = tused + xused + need;
+        }
+        if (tokBuff->capacity() < total) {
+            tokBuff->reserve(total);
+            *tokPtr = (ushort *)tokBuff->constData() + tused;
+            xprBuff->reserve(total);
+            *buf = (ushort *)xprBuff->constData();
+            xprPtr = (ptrFinal ? (ushort *)tokBuff->constData() : *buf) + xused;
+        }
+    } else if (m_tmp == statics.strLITERAL_HASH) {
+        out = QLatin1String("#");
+    } else if (m_tmp == statics.strLITERAL_DOLLAR) {
+        out = QLatin1String("$");
+    } else if (m_tmp == statics.strLITERAL_WHITESPACE) {
+        out = QLatin1String("\t");
+    } else {
+        return false;
+    }
+    xprPtr -= 2; // Was set up for variable reference
+    xprPtr[-2] = TokLiteral | needSep;
+    xprPtr[-1] = out.length();
+    memcpy(xprPtr, out.constData(), out.length() * 2);
+    *ptr = xprPtr + out.length();
+    return true;
+}
+
+void QMakeParser::message(int type, const QString &msg) const
 {
     if (!m_inError && m_handler)
-        m_handler->parseError(m_proFile->fileName(), m_lineNo, msg);
+        m_handler->message(type, msg, m_proFile->fileName(), m_lineNo);
 }
 
 QT_END_NAMESPACE

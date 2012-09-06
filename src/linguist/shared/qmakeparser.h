@@ -39,52 +39,60 @@
 **
 ****************************************************************************/
 
-#ifndef PROFILEPARSER_H
-#define PROFILEPARSER_H
+#ifndef QMAKEPARSER_H
+#define QMAKEPARSER_H
 
-#include "proparser_global.h"
+#include "qmake_global.h"
 #include "proitems.h"
-#include <QtCore/QHash>
-#include <QtCore/QStack>
-#ifdef PROPARSER_THREAD_SAFE
-# include <QtCore/QMutex>
-# include <QtCore/QWaitCondition>
-#endif
 
-// Be fast even for debug builds
-// MinGW GCC 4.5+ has a problem with always_inline putTok and putBlockLen
-#if defined(__GNUC__) && !(defined(__MINGW32__) && __GNUC__ == 4 && __GNUC_MINOR__ >= 5)
-# define ALWAYS_INLINE inline __attribute__((always_inline))
-#elif defined(_MSC_VER)
-# define ALWAYS_INLINE __forceinline
-#else
-# define ALWAYS_INLINE inline
+#include <qhash.h>
+#include <qstack.h>
+#ifdef PROPARSER_THREAD_SAFE
+# include <qmutex.h>
+# include <qwaitcondition.h>
 #endif
 
 QT_BEGIN_NAMESPACE
-class PROPARSER_EXPORT ProFileParserHandler
+class QMAKE_EXPORT QMakeParserHandler
 {
 public:
-    // Some error during parsing
-    virtual void parseError(const QString &filename, int lineNo, const QString &msg) = 0;
+    enum {
+        CategoryMask = 0xf00,
+        WarningMessage = 0x000,
+        ErrorMessage = 0x100,
+
+        SourceMask = 0xf0,
+        SourceParser = 0,
+
+        CodeMask = 0xf,
+        WarnLanguage = 0,
+        WarnDeprecated,
+
+        ParserWarnLanguage = SourceParser | WarningMessage | WarnLanguage,
+        ParserWarnDeprecated = SourceParser | WarningMessage | WarnDeprecated,
+
+        ParserIoError = ErrorMessage | SourceParser,
+        ParserError
+    };
+    virtual void message(int type, const QString &msg,
+                         const QString &fileName = QString(), int lineNo = 0) = 0;
 };
 
 class ProFileCache;
 
-class PROPARSER_EXPORT ProFileParser
+class QMAKE_EXPORT QMakeParser
 {
 public:
     // Call this from a concurrency-free context
     static void initialize();
 
-    ProFileParser(ProFileCache *cache, ProFileParserHandler *handler);
+    QMakeParser(ProFileCache *cache, QMakeParserHandler *handler);
 
+    enum SubGrammar { FullGrammar, TestGrammar, ValueGrammar };
     // fileName is expected to be absolute and cleanPath()ed.
-    // If contents is non-null, it will be used instead of the file's actual content
-    ProFile *parsedProFile(const QString &fileName, bool cache = false,
-                           const QString *contents = 0);
-    ProFile *parsedProBlock(const QString &name, const QString &contents)
-        { return parsedProFile(name, false, &contents); }
+    ProFile *parsedProFile(const QString &fileName, bool cache = false);
+    ProFile *parsedProBlock(const QString &contents, const QString &name, int line = 0,
+                            SubGrammar grammar = FullGrammar);
 
 private:
     struct BlockScope {
@@ -102,7 +110,7 @@ private:
         StCond  // Conditionals met on current line
     };
 
-    enum Context { CtxTest, CtxValue, CtxArgs };
+    enum Context { CtxTest, CtxValue, CtxPureValue, CtxArgs };
     struct ParseCtx {
         int parens; // Nesting of non-functional parentheses
         int argc; // Number of arguments in current function call
@@ -113,7 +121,7 @@ private:
     };
 
     bool read(ProFile *pro);
-    bool read(ProFile *pro, const QString &content);
+    bool read(ProFile *pro, const QString &content, int line, SubGrammar grammar);
 
     ALWAYS_INLINE void putTok(ushort *&tokPtr, ushort tok);
     ALWAYS_INLINE void putBlockLen(ushort *&tokPtr, uint len);
@@ -121,6 +129,10 @@ private:
     void putHashStr(ushort *&pTokPtr, const ushort *buf, uint len);
     void finalizeHashStr(ushort *buf, uint len);
     void putLineMarker(ushort *&tokPtr);
+    ALWAYS_INLINE bool resolveVariable(ushort *xprPtr, int tlen, int needSep, ushort **ptr,
+                                       ushort **buf, QString *xprBuff,
+                                       ushort **tokPtr, QString *tokBuff,
+                                       const ushort *cur, const QString &in);
     void finalizeCond(ushort *&tokPtr, ushort *uc, ushort *ptr, int wordCount);
     void finalizeCall(ushort *&tokPtr, ushort *uc, ushort *ptr, int argc);
     void finalizeTest(ushort *&tokPtr);
@@ -130,7 +142,13 @@ private:
     void flushCond(ushort *&tokPtr);
     void flushScopes(ushort *&tokPtr);
 
-    void parseError(const QString &msg) const;
+    void message(int type, const QString &msg) const;
+    void parseError(const QString &msg) const
+            { message(QMakeParserHandler::ParserError, msg); }
+    void languageWarning(const QString &msg) const
+            { message(QMakeParserHandler::ParserWarnLanguage, msg); }
+    void deprecationWarning(const QString &msg) const
+            { message(QMakeParserHandler::ParserWarnDeprecated, msg); }
 
     // Current location
     ProFile *m_proFile;
@@ -147,7 +165,7 @@ private:
     QString m_tmp; // Temporary for efficient toQString
 
     ProFileCache *m_cache;
-    ProFileParserHandler *m_handler;
+    QMakeParserHandler *m_handler;
 
     // This doesn't help gcc 3.3 ...
     template<typename T> friend class QTypeInfo;
@@ -155,7 +173,7 @@ private:
     friend class ProFileCache;
 };
 
-class PROPARSER_EXPORT ProFileCache
+class QMAKE_EXPORT ProFileCache
 {
 public:
     ProFileCache() {}
@@ -183,12 +201,12 @@ private:
     QMutex mutex;
 #endif
 
-    friend class ProFileParser;
+    friend class QMakeParser;
 };
 
 #if !defined(__GNUC__) || __GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ > 3)
-Q_DECLARE_TYPEINFO(ProFileParser::BlockScope, Q_MOVABLE_TYPE);
-Q_DECLARE_TYPEINFO(ProFileParser::Context, Q_PRIMITIVE_TYPE);
+Q_DECLARE_TYPEINFO(QMakeParser::BlockScope, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(QMakeParser::Context, Q_PRIMITIVE_TYPE);
 #endif
 
 QT_END_NAMESPACE

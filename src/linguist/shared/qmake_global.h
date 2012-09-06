@@ -39,45 +39,29 @@
 **
 ****************************************************************************/
 
-#ifndef IOUTILS_H
-#define IOUTILS_H
+#ifndef QMAKE_GLOBAL_H
+#define QMAKE_GLOBAL_H
 
-#include <qstring.h>
+#include <qglobal.h>
 
-QT_BEGIN_NAMESPACE
-
-namespace QMakeInternal {
-
-/*!
-  This class provides replacement functionality for QFileInfo, QFile & QDir,
-  as these are abysmally slow.
-*/
-class IoUtils {
-public:
-    enum FileType {
-        FileNotFound = 0,
-        FileIsRegular = 1,
-        FileIsDir = 2
-    };
-
-    static FileType fileType(const QString &fileName);
-    static bool exists(const QString &fileName) { return fileType(fileName) != FileNotFound; }
-    static bool isRelativePath(const QString &fileName);
-    static bool isAbsolutePath(const QString &fileName) { return !isRelativePath(fileName); }
-    static QStringRef fileName(const QString &fileName); // Requires normalized path
-    static QString resolvePath(const QString &baseDir, const QString &fileName);
-    static QString shellQuoteUnix(const QString &arg);
-    static QString shellQuoteWin(const QString &arg);
-    static QString shellQuote(const QString &arg)
-#ifdef Q_OS_UNIX
-        { return shellQuoteUnix(arg); }
+#if defined(QMAKE_AS_LIBRARY)
+#  if defined(QMAKE_LIBRARY)
+#    define QMAKE_EXPORT Q_DECL_EXPORT
+#  else
+#    define QMAKE_EXPORT Q_DECL_IMPORT
+#  endif
 #else
-        { return shellQuoteWin(arg); }
+#  define QMAKE_EXPORT
 #endif
-};
 
-} // namespace ProFileEvaluatorInternal
+// Be fast even for debug builds
+// MinGW GCC 4.5+ has a problem with always_inline putTok and putBlockLen
+#if defined(__GNUC__) && !(defined(__MINGW32__) && __GNUC__ == 4 && __GNUC_MINOR__ >= 5)
+# define ALWAYS_INLINE inline __attribute__((always_inline))
+#elif defined(_MSC_VER)
+# define ALWAYS_INLINE __forceinline
+#else
+# define ALWAYS_INLINE inline
+#endif
 
-QT_END_NAMESPACE
-
-#endif // IOUTILS_H
+#endif

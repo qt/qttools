@@ -41,7 +41,7 @@
 
 #include "translator.h"
 
-#include <profileparser.h>
+#include <qmakeparser.h>
 #include <profileevaluator.h>
 
 #ifndef QT_BOOTSTRAPPED
@@ -190,30 +190,25 @@ static bool releaseTsFile(const QString& tsFileName,
     return releaseTranslator(tor, qmFileName, cd, removeIdentical);
 }
 
-static void print(const QString &fileName, int lineNo, const QString &msg)
+static void print(const QString &fileName, int lineNo, int type, const QString &msg)
 {
-    if (lineNo)
-        printErr(QString::fromLatin1("%2(%1): %3").arg(lineNo).arg(fileName, msg));
+    QString pfx = ((type & QMakeHandler::CategoryMask) == QMakeHandler::WarningMessage)
+                  ? QString::fromLatin1("WARNING: ") : QString();
+    if (lineNo > 0)
+        printErr(QString::fromLatin1("%1%2:%3: %4\n").arg(pfx, fileName, QString::number(lineNo), msg));
+    else if (lineNo)
+        printErr(QString::fromLatin1("%1%2: %3\n").arg(pfx, fileName, msg));
     else
-        printErr(msg);
+        printErr(QString::fromLatin1("%1%2\n").arg(pfx, msg));
 }
 
-class ParseHandler : public ProFileParserHandler {
+class EvalHandler : public QMakeHandler {
 public:
-    virtual void parseError(const QString &fileName, int lineNo, const QString &msg)
-        { if (verbose) print(fileName, lineNo, msg); }
+    virtual void message(int type, const QString &msg, const QString &fileName, int lineNo)
+        { if (verbose) print(fileName, lineNo, type, msg); }
 
-    bool verbose;
-};
-
-class EvalHandler : public ProFileEvaluatorHandler {
-public:
-    virtual void configError(const QString &msg)
-        { printErr(msg); }
-    virtual void evalError(const QString &fileName, int lineNo, const QString &msg)
-        { if (verbose) print(fileName, lineNo, msg); }
     virtual void fileMessage(const QString &msg)
-        { printErr(msg); }
+        { printErr(msg + QLatin1Char('\n')); }
 
     virtual void aboutToEval(ProFile *, ProFile *, EvalFileType) {}
     virtual void doneWithEval(ProFile *) {}
@@ -221,7 +216,6 @@ public:
     bool verbose;
 };
 
-static ParseHandler parseHandler;
 static EvalHandler evalHandler;
 
 int main(int argc, char **argv)
@@ -312,15 +306,17 @@ int main(int argc, char **argv)
             || inputFile.endsWith(QLatin1String(".pri"), Qt::CaseInsensitive)) {
             QFileInfo fi(inputFile);
 
-            parseHandler.verbose = evalHandler.verbose = cd.isVerbose();
-            ProFileOption option;
+            evalHandler.verbose = cd.isVerbose();
+            ProFileGlobals option;
 #ifdef QT_BOOTSTRAPPED
-            option.initProperties(binDir + QLatin1String("/qmake"));
+            option.qmake_abslocation = binDir + QLatin1String("/qmake");
 #else
-            option.initProperties(app.applicationDirPath() + QLatin1String("/qmake"));
+            option.qmake_abslocation = app.applicationDirPath() + QLatin1String("/qmake");
 #endif
-            ProFileParser parser(0, &parseHandler);
+            option.initProperties();
+            QMakeParser parser(0, &evalHandler);
             ProFileEvaluator visitor(&option, &parser, &evalHandler);
+            visitor.setCumulative(true);
 
             ProFile *pro;
             if (!(pro = parser.parsedProFile(QDir::cleanPath(fi.absoluteFilePath())))) {

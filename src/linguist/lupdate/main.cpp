@@ -42,7 +42,7 @@
 #include "lupdate.h"
 
 #include <translator.h>
-#include <profileparser.h>
+#include <qmakeparser.h>
 #include <profileevaluator.h>
 
 #include <QtCore/QCoreApplication>
@@ -229,30 +229,25 @@ static void updateTsFiles(const Translator &fetchedTor, const QStringList &tsFil
     }
 }
 
-static void print(const QString &fileName, int lineNo, const QString &msg)
+static void print(const QString &fileName, int lineNo, int type, const QString &msg)
 {
-    if (lineNo)
-        printErr(QString::fromLatin1("%2(%1): %3").arg(lineNo).arg(fileName, msg));
+    QString pfx = ((type & QMakeHandler::CategoryMask) == QMakeHandler::WarningMessage)
+                  ? QString::fromLatin1("WARNING: ") : QString();
+    if (lineNo > 0)
+        printErr(QString::fromLatin1("%1%2:%3: %4\n").arg(pfx, fileName, QString::number(lineNo), msg));
+    else if (lineNo)
+        printErr(QString::fromLatin1("%1%2: %3\n").arg(pfx, fileName, msg));
     else
-        printErr(msg);
+        printErr(QString::fromLatin1("%1%2\n").arg(pfx, msg));
 }
 
-class ParseHandler : public ProFileParserHandler {
+class EvalHandler : public QMakeHandler {
 public:
-    virtual void parseError(const QString &fileName, int lineNo, const QString &msg)
-        { if (verbose) print(fileName, lineNo, msg); }
+    virtual void message(int type, const QString &msg, const QString &fileName, int lineNo)
+        { if (verbose) print(fileName, lineNo, type, msg); }
 
-    bool verbose;
-};
-
-class EvalHandler : public ProFileEvaluatorHandler {
-public:
-    virtual void configError(const QString &msg)
-        { printErr(msg); }
-    virtual void evalError(const QString &fileName, int lineNo, const QString &msg)
-        { if (verbose) print(fileName, lineNo, msg); }
     virtual void fileMessage(const QString &msg)
-        { printErr(msg); }
+        { printErr(msg + QLatin1Char('\n')); }
 
     virtual void aboutToEval(ProFile *, ProFile *, EvalFileType) {}
     virtual void doneWithEval(ProFile *) {}
@@ -260,7 +255,6 @@ public:
     bool verbose;
 };
 
-static ParseHandler parseHandler;
 static EvalHandler evalHandler;
 
 static QStringList getSources(const char *var, const char *vvar, const QStringList &baseVPaths,
@@ -338,16 +332,15 @@ static void processSources(Translator &fetchedTor,
         printErr(cd.error());
 }
 
-static void processProjects(
-        bool topLevel, bool nestComplain, const QStringList &proFiles,
-        ProFileOption *option, ProFileParser *parser,
+static void processProjects(bool topLevel, bool nestComplain, const QStringList &proFiles,
+        ProFileGlobals *option, QMakeParser *parser,
         UpdateOptions options, const QByteArray &codecForSource,
         const QString &targetLanguage, const QString &sourceLanguage,
         Translator *parentTor, bool *fail);
 
 static void processProject(
         bool nestComplain, const QFileInfo &pfi,
-        ProFileOption *option, ProFileParser *parser, ProFileEvaluator &visitor,
+        ProFileGlobals *option, QMakeParser *parser, ProFileEvaluator &visitor,
         UpdateOptions options, const QByteArray &_codecForSource,
         const QString &targetLanguage, const QString &sourceLanguage,
         Translator *fetchedTor, bool *fail)
@@ -399,9 +392,8 @@ static void processProject(
     }
 }
 
-static void processProjects(
-        bool topLevel, bool nestComplain, const QStringList &proFiles,
-        ProFileOption *option, ProFileParser *parser,
+static void processProjects(bool topLevel, bool nestComplain, const QStringList &proFiles,
+        ProFileGlobals *option, QMakeParser *parser,
         UpdateOptions options, const QByteArray &codecForSource,
         const QString &targetLanguage, const QString &sourceLanguage,
         Translator *parentTor, bool *fail)
@@ -410,6 +402,7 @@ static void processProjects(
         QFileInfo pfi(proFile);
 
         ProFileEvaluator visitor(option, parser, &evalHandler);
+        visitor.setCumulative(true);
         ProFile *pro;
         if (!(pro = parser->parsedProFile(QDir::cleanPath(pfi.absoluteFilePath())))) {
             if (topLevel)
@@ -789,11 +782,13 @@ int main(int argc, char **argv)
             return 1;
         }
 
-        parseHandler.verbose = evalHandler.verbose = !!(options & Verbose);
-        ProFileOption option;
-        option.initProperties(app.applicationDirPath() + QLatin1String("/qmake"));
-        option.setCommandLineArguments(QStringList() << QLatin1String("CONFIG+=lupdate_run"));
-        ProFileParser parser(0, &parseHandler);
+        evalHandler.verbose = !!(options & Verbose);
+        ProFileGlobals option;
+        option.qmake_abslocation = app.applicationDirPath() + QLatin1String("/qmake");
+        option.initProperties();
+        option.setCommandLineArguments(QDir::currentPath(),
+                                       QStringList() << QLatin1String("CONFIG+=lupdate_run"));
+        QMakeParser parser(0, &evalHandler);
 
         if (!tsFileNames.isEmpty()) {
             Translator fetchedTor;
