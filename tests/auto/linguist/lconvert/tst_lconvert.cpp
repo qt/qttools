@@ -47,7 +47,7 @@ class tst_lconvert : public QObject
     Q_OBJECT
 
 public:
-    tst_lconvert() : dataDir("data/"), binDir(QLibraryInfo::location(QLibraryInfo::BinariesPath)) {}
+    tst_lconvert() : dataDir(QFINDTESTDATA("data/")), binDir(QLibraryInfo::location(QLibraryInfo::BinariesPath)) {}
 
 private slots:
     void initTestCase();
@@ -78,9 +78,9 @@ private:
 
 void tst_lconvert::initTestCase()
 {
-    if (!QFile::exists(QLatin1String("data/plural-1.po")))
-        QProcess::execute(QLatin1String("perl"), QStringList() << QLatin1String("data/makeplurals.pl") << QLatin1String("data/"));
-    QVERIFY(QFile::exists(QLatin1String("data/plural-1.po")));
+    if (!QFile::exists(dataDir + QLatin1String("plural-1.po")))
+        QProcess::execute(QLatin1String("perl"), QStringList() << dataDir + QLatin1String("makeplurals.pl") << dataDir + QLatin1String(""));
+    QVERIFY(QFile::exists(dataDir + QLatin1String("plural-1.po")));
 }
 
 void tst_lconvert::doWait(QProcess *cvt, int stage)

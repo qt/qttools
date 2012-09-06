@@ -77,7 +77,7 @@ tst_lupdate::tst_lupdate()
 {
     QString binPath = QLibraryInfo::location(QLibraryInfo::BinariesPath);
     m_cmdLupdate = binPath + QLatin1String("/lupdate");
-    m_basePath = QDir::currentPath() + QLatin1String("/testdata/");
+    m_basePath = QFINDTESTDATA("testdata/");
 }
 
 static bool prepareMatch(const QString &expect, QString *tmpl, int *require, int *accept)

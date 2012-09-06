@@ -51,7 +51,10 @@ class tst_lrelease : public QObject
     Q_OBJECT
 
 public:
-    tst_lrelease() : binDir(QLibraryInfo::location(QLibraryInfo::BinariesPath)) {}
+    tst_lrelease()
+         : binDir(QLibraryInfo::location(QLibraryInfo::BinariesPath))
+         , dataDir(QFINDTESTDATA("testdata/"))
+    {}
 
 private:
 
@@ -67,6 +70,7 @@ private:
     void doCompare(const QStringList &actual, const QString &expectedFn);
 
     QString binDir;
+    QString dataDir;
 };
 
 void tst_lrelease::doCompare(const QStringList &actual, const QString &expectedFn)
@@ -119,10 +123,10 @@ void tst_lrelease::doCompare(const QStringList &actual, const QString &expectedF
 
 void tst_lrelease::translate()
 {
-    QVERIFY(!QProcess::execute(binDir + "/lrelease testdata/translate.ts"));
+    QVERIFY(!QProcess::execute(binDir + "/lrelease " + dataDir + "translate.ts"));
 
     QTranslator translator;
-    QVERIFY(translator.load("testdata/translate.qm"));
+    QVERIFY(translator.load(dataDir + "translate.qm"));
     qApp->installTranslator(&translator);
 
     QCOMPARE(QObject::tr("\nnewline at the start"), QString("\nNEWLINE AT THE START"));
@@ -169,16 +173,16 @@ void tst_lrelease::translate()
 
 void tst_lrelease::mixedcodecs()
 {
-    QVERIFY(!QProcess::execute(binDir + "/lrelease testdata/mixedcodecs-ts11.ts"));
-    QVERIFY(!QProcess::execute(binDir + "/lrelease testdata/mixedcodecs-ts20.ts"));
+    QVERIFY(!QProcess::execute(binDir + "/lrelease " + dataDir + "mixedcodecs-ts11.ts"));
+    QVERIFY(!QProcess::execute(binDir + "/lrelease " + dataDir + "mixedcodecs-ts20.ts"));
 #ifdef Q_OS_WIN
     QVERIFY(!QProcess::execute("fc /b testdata\\mixedcodecs-ts11.qm testdata\\mixedcodecs-ts20.qm"));
 #else
-    QVERIFY(!QProcess::execute("cmp testdata/mixedcodecs-ts11.qm testdata/mixedcodecs-ts20.qm"));
+    QVERIFY(!QProcess::execute("cmp " + dataDir + "mixedcodecs-ts11.qm " + dataDir + "mixedcodecs-ts20.qm"));
 #endif
 
     QTranslator translator;
-    QVERIFY(translator.load("testdata/mixedcodecs-ts11.qm"));
+    QVERIFY(translator.load(dataDir + "mixedcodecs-ts11.qm"));
     qApp->installTranslator(&translator);
 
     QCOMPARE(QCoreApplication::translate("FooBar", "this contains an umlaut \xfc &uuml;"),
@@ -189,10 +193,10 @@ void tst_lrelease::mixedcodecs()
 
 void tst_lrelease::compressed()
 {
-    QVERIFY(!QProcess::execute(binDir + "/lrelease -compress testdata/compressed.ts"));
+    QVERIFY(!QProcess::execute(binDir + "/lrelease -compress " + dataDir + "compressed.ts"));
 
     QTranslator translator;
-    QVERIFY(translator.load("testdata/compressed.qm"));
+    QVERIFY(translator.load(dataDir + "compressed.qm"));
     qApp->installTranslator(&translator);
 
     QCOMPARE(QCoreApplication::translate("Context1", "Foo"), QString::fromLatin1("in first context"));
@@ -206,10 +210,10 @@ void tst_lrelease::compressed()
 
 void tst_lrelease::idbased()
 {
-    QVERIFY(!QProcess::execute(binDir + "/lrelease -idbased testdata/idbased.ts"));
+    QVERIFY(!QProcess::execute(binDir + "/lrelease -idbased " + dataDir + "idbased.ts"));
 
     QTranslator translator;
-    QVERIFY(translator.load("testdata/idbased.qm"));
+    QVERIFY(translator.load(dataDir + "idbased.qm"));
     qApp->installTranslator(&translator);
 
     QCOMPARE(qtTrId("test_id"), QString::fromLatin1("This is a test string."));
@@ -218,10 +222,10 @@ void tst_lrelease::idbased()
 
 void tst_lrelease::markuntranslated()
 {
-    QVERIFY(!QProcess::execute(binDir + "/lrelease -markuntranslated # -idbased testdata/idbased.ts"));
+    QVERIFY(!QProcess::execute(binDir + "/lrelease -markuntranslated # -idbased " + dataDir + "idbased.ts"));
 
     QTranslator translator;
-    QVERIFY(translator.load("testdata/idbased.qm"));
+    QVERIFY(translator.load(dataDir + "idbased.qm"));
     qApp->installTranslator(&translator);
 
     QCOMPARE(qtTrId("test_id"), QString::fromLatin1("This is a test string."));
@@ -231,10 +235,10 @@ void tst_lrelease::markuntranslated()
 void tst_lrelease::dupes()
 {
     QProcess proc;
-    proc.start(binDir + "/lrelease testdata/dupes.ts", QIODevice::ReadWrite | QIODevice::Text);
+    proc.start(binDir + "/lrelease " + dataDir + "dupes.ts", QIODevice::ReadWrite | QIODevice::Text);
     QVERIFY(proc.waitForFinished());
     QVERIFY(proc.exitStatus() == QProcess::NormalExit);
-    doCompare(QString(proc.readAllStandardError()).trimmed().split('\n'), "testdata/dupes.errors");
+    doCompare(QString(proc.readAllStandardError()).trimmed().split('\n'), dataDir + "dupes.errors");
 }
 
 QTEST_MAIN(tst_lrelease)
