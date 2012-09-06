@@ -534,13 +534,17 @@ static QString evilBytes(const QString& str,
 static void writeExtras(QTextStream &t, const char *indent,
                         const TranslatorMessage::ExtraData &extras, QRegExp drops)
 {
+    QStringList outs;
     for (Translator::ExtraData::ConstIterator it = extras.begin(); it != extras.end(); ++it) {
         if (!drops.exactMatch(it.key())) {
-            t << indent << "<extra-" << it.key() << '>'
-              << protect(it.value())
-              << "</extra-" << it.key() << ">\n";
+            outs << (QStringLiteral("<extra-") + it.key() + QLatin1Char('>')
+                     + protect(it.value())
+                     + QStringLiteral("</extra-") + it.key() + QLatin1Char('>'));
         }
     }
+    outs.sort();
+    foreach (const QString &out, outs)
+        t << indent << out << endl;
 }
 
 static void writeVariants(QTextStream &t, const char *indent, const QString &input)

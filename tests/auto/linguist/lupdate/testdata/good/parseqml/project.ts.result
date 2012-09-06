@@ -107,9 +107,9 @@
         <source>This string has even more information</source>
         <extracomment>This is another comment for the translator.</extracomment>
         <translation type="unfinished"></translation>
+        <extra-foo-bar>Important stuff</extra-foo-bar>
         <extra-needle-in-haystack>Found</extra-needle-in-haystack>
         <extra-overflow>True</extra-overflow>
-        <extra-foo-bar>Important stuff</extra-foo-bar>
     </message>
 </context>
 <context>

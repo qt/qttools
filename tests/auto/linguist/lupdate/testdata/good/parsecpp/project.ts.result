@@ -315,8 +315,8 @@ backslashed \ stuff.</source>
         <source>something cool</source>
         <extracomment>random comment</extracomment>
         <translation type="unfinished"></translation>
-        <extra-po-ignore_me>totally foo-barred  nonsense</extra-po-ignore_me>
         <extra-loc-layout_id>fooish_bar</extra-loc-layout_id>
+        <extra-po-ignore_me>totally foo-barred  nonsense</extra-po-ignore_me>
     </message>
     <message>
         <location filename="main.cpp" line="213"/>
