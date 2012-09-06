@@ -126,6 +126,8 @@ static void printUsage()
         "    -pro <filename>\n"
         "           Name of a .pro file. Useful for files with .pro file syntax but\n"
         "           different file suffix. Projects are recursed into and merged.\n"
+        "    -pro-out <directory>\n"
+        "           Virtual output directory for processing subsequent .pro files.\n"
         "    -source-language <language>[_<region>]\n"
         "           Specify the language of the source strings for new files.\n"
         "           Defaults to POSIX if not specified.\n"
@@ -333,7 +335,7 @@ static void processSources(Translator &fetchedTor,
 }
 
 static void processProjects(bool topLevel, bool nestComplain, const QStringList &proFiles,
-        ProFileGlobals *option, QMakeParser *parser,
+        const QHash<QString, QString> &outDirMap, ProFileGlobals *option, QMakeParser *parser,
         UpdateOptions options, const QByteArray &codecForSource,
         const QString &targetLanguage, const QString &sourceLanguage,
         Translator *parentTor, bool *fail);
@@ -374,7 +376,8 @@ static void processProject(
             else
                 subProFiles << subPro;
         }
-        processProjects(false, nestComplain, subProFiles, option, parser, options, codecForSource,
+        processProjects(false, nestComplain, subProFiles, QHash<QString, QString>(),
+                        option, parser, options, codecForSource,
                         targetLanguage, sourceLanguage, fetchedTor, fail);
     } else {
         ConversionData cd;
@@ -399,14 +402,19 @@ static void processProject(
 }
 
 static void processProjects(bool topLevel, bool nestComplain, const QStringList &proFiles,
-        ProFileGlobals *option, QMakeParser *parser,
+        const QHash<QString, QString> &outDirMap, ProFileGlobals *option, QMakeParser *parser,
         UpdateOptions options, const QByteArray &codecForSource,
         const QString &targetLanguage, const QString &sourceLanguage,
         Translator *parentTor, bool *fail)
 {
     foreach (const QString &proFile, proFiles) {
+
+        if (!outDirMap.isEmpty())
+            option->setDirectories(QFileInfo(proFile).path(), outDirMap[proFile]);
+
         ProFileEvaluator visitor(option, parser, &evalHandler);
         visitor.setCumulative(true);
+        visitor.setOutputDir(option->shadowedPath(proFile));
         ProFile *pro;
         if (!(pro = parser->parsedProFile(proFile))) {
             if (topLevel)
@@ -495,6 +503,8 @@ int main(int argc, char **argv)
     QStringList args = app.arguments();
     QStringList tsFileNames;
     QStringList proFiles;
+    QString outDir = QDir::currentPath();
+    QHash<QString, QString> outDirMap;
     QMultiHash<QString, QString> allCSources;
     QSet<QString> projectRoots;
     QStringList sourceFiles;
@@ -630,7 +640,16 @@ int main(int argc, char **argv)
             }
             QString file = QDir::cleanPath(QFileInfo(args[i]).absoluteFilePath());
             proFiles += file;
+            outDirMap[file] = outDir;
             numFiles++;
+            continue;
+        } else if (arg == QLatin1String("-pro-out")) {
+            ++i;
+            if (i == argc) {
+                printErr(LU::tr("The -pro-out option should be followed by a directory name.\n"));
+                return 1;
+            }
+            outDir = QDir::cleanPath(QFileInfo(args[i]).absoluteFilePath());
             continue;
         } else if (arg.startsWith(QLatin1String("-I"))) {
             if (arg.length() == 2) {
@@ -707,6 +726,7 @@ int main(int argc, char **argv)
                     || file.endsWith(QLatin1String(".pri"), Qt::CaseInsensitive)) {
                     QString cleanFile = QDir::cleanPath(fi.absoluteFilePath());
                     proFiles << cleanFile;
+                    outDirMap[cleanFile] = outDir;
                 } else if (fi.isDir()) {
                     if (options & Verbose)
                         printOut(LU::tr("Scanning directory '%1'...\n").arg(file));
@@ -799,12 +819,12 @@ int main(int argc, char **argv)
         if (!tsFileNames.isEmpty()) {
             Translator fetchedTor;
             fetchedTor.setCodecName(codecForTr);
-            processProjects(true, true, proFiles, &option, &parser, options, QByteArray(),
+            processProjects(true, true, proFiles, outDirMap, &option, &parser, options, QByteArray(),
                             targetLanguage, sourceLanguage, &fetchedTor, &fail);
             updateTsFiles(fetchedTor, tsFileNames, !codecForTr.isEmpty(),
                           sourceLanguage, targetLanguage, options, &fail);
         } else {
-            processProjects(true, false, proFiles, &option, &parser, options, QByteArray(),
+            processProjects(true, false, proFiles, outDirMap, &option, &parser, options, QByteArray(),
                             targetLanguage, sourceLanguage, 0, &fail);
         }
     }

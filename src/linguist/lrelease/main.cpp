@@ -317,6 +317,7 @@ int main(int argc, char **argv)
             QMakeParser parser(0, &evalHandler);
             ProFileEvaluator visitor(&option, &parser, &evalHandler);
             visitor.setCumulative(true);
+            visitor.setOutputDir(QDir::currentPath());
 
             ProFile *pro;
             if (!(pro = parser.parsedProFile(QDir::cleanPath(fi.absoluteFilePath())))) {
