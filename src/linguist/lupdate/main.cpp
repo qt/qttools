@@ -339,7 +339,7 @@ static void processProjects(bool topLevel, bool nestComplain, const QStringList 
         Translator *parentTor, bool *fail);
 
 static void processProject(
-        bool nestComplain, const QFileInfo &pfi,
+        bool nestComplain, const QString &proFile,
         ProFileGlobals *option, QMakeParser *parser, ProFileEvaluator &visitor,
         UpdateOptions options, const QByteArray &_codecForSource,
         const QString &targetLanguage, const QString &sourceLanguage,
@@ -356,9 +356,10 @@ static void processProject(
             codecForSource.clear();
         }
     }
+    QString proPath = QFileInfo(proFile).path();
     if (visitor.templateType() == ProFileEvaluator::TT_Subdirs) {
         QStringList subProFiles;
-        QDir proDir(pfi.absoluteDir());
+        QDir proDir(proPath);
         foreach (const QString &subdir, visitor.values(QLatin1String("SUBDIRS"))) {
             QString subPro = QDir::cleanPath(proDir.absoluteFilePath(subdir));
             QFileInfo subInfo(subPro);
@@ -375,9 +376,9 @@ static void processProject(
         cd.m_noUiLines = options & NoUiLines;
         cd.m_codecForSource = codecForSource;
         cd.m_includePath = visitor.values(QLatin1String("INCLUDEPATH"));
-        QStringList sourceFiles = getSources(visitor, pfi.absolutePath());
+        QStringList sourceFiles = getSources(visitor, proPath);
         QSet<QString> sourceDirs;
-        sourceDirs.insert(QDir::cleanPath(pfi.absolutePath()) + QLatin1Char('/'));
+        sourceDirs.insert(proPath + QLatin1Char('/'));
         foreach (const QString &sf, sourceFiles)
             sourceDirs.insert(sf.left(sf.lastIndexOf(QLatin1Char('/')) + 1));
         QStringList rootList = sourceDirs.toList();
@@ -399,12 +400,10 @@ static void processProjects(bool topLevel, bool nestComplain, const QStringList 
         Translator *parentTor, bool *fail)
 {
     foreach (const QString &proFile, proFiles) {
-        QFileInfo pfi(proFile);
-
         ProFileEvaluator visitor(option, parser, &evalHandler);
         visitor.setCumulative(true);
         ProFile *pro;
-        if (!(pro = parser->parsedProFile(QDir::cleanPath(pfi.absoluteFilePath())))) {
+        if (!(pro = parser->parsedProFile(proFile))) {
             if (topLevel)
                 *fail = true;
             continue;
@@ -430,7 +429,7 @@ static void processProjects(bool topLevel, bool nestComplain, const QStringList 
                 }
             }
             QStringList tsFiles;
-            QDir proDir(pfi.absolutePath());
+            QDir proDir(QFileInfo(proFile).path());
             foreach (const QString &tsFile, visitor.values(QLatin1String("TRANSLATIONS")))
                 tsFiles << QFileInfo(proDir, tsFile).filePath();
             if (tsFiles.isEmpty()) {
@@ -449,7 +448,7 @@ static void processProjects(bool topLevel, bool nestComplain, const QStringList 
                 tor.setCodecName(tmp.last().toLatin1());
                 setCodec = true;
             }
-            processProject(false, pfi, option, parser, visitor, options, codecForSource,
+            processProject(false, proFile, option, parser, visitor, options, codecForSource,
                            targetLanguage, sourceLanguage, &tor, fail);
             updateTsFiles(tor, tsFiles, setCodec, sourceLanguage, targetLanguage, options, fail);
             pro->deref();
@@ -461,10 +460,10 @@ static void processProjects(bool topLevel, bool nestComplain, const QStringList 
                 printErr(LU::tr("lupdate warning: no TS files specified. Only diagnostics "
                                 "will be produced for '%1'.\n").arg(proFile));
             Translator tor;
-            processProject(nestComplain, pfi, option, parser, visitor, options, codecForSource,
+            processProject(nestComplain, proFile, option, parser, visitor, options, codecForSource,
                            targetLanguage, sourceLanguage, &tor, fail);
         } else {
-            processProject(nestComplain, pfi, option, parser, visitor, options, codecForSource,
+            processProject(nestComplain, proFile, option, parser, visitor, options, codecForSource,
                            targetLanguage, sourceLanguage, parentTor, fail);
         }
         pro->deref();
@@ -624,7 +623,8 @@ int main(int argc, char **argv)
                 printErr(LU::tr("The -pro option should be followed by a filename of .pro file.\n"));
                 return 1;
             }
-            proFiles += args[i];
+            QString file = QDir::cleanPath(QFileInfo(args[i]).absoluteFilePath());
+            proFiles += file;
             numFiles++;
             continue;
         } else if (arg.startsWith(QLatin1String("-I"))) {
@@ -700,7 +700,8 @@ int main(int argc, char **argv)
                 }
                 if (file.endsWith(QLatin1String(".pro"), Qt::CaseInsensitive)
                     || file.endsWith(QLatin1String(".pri"), Qt::CaseInsensitive)) {
-                    proFiles << file;
+                    QString cleanFile = QDir::cleanPath(fi.absoluteFilePath());
+                    proFiles << cleanFile;
                 } else if (fi.isDir()) {
                     if (options & Verbose)
                         printOut(LU::tr("Scanning directory '%1'...\n").arg(file));
