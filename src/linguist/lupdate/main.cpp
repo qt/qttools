@@ -148,9 +148,23 @@ static void printUsage()
 }
 
 static void updateTsFiles(const Translator &fetchedTor, const QStringList &tsFileNames,
+    const QStringList &alienFiles,
     bool setCodec, const QString &sourceLanguage, const QString &targetLanguage,
     UpdateOptions options, bool *fail)
 {
+    QList<Translator> aliens;
+    foreach (const QString &fileName, alienFiles) {
+        ConversionData cd;
+        Translator tor;
+        if (!tor.load(fileName, cd, QLatin1String("auto"))) {
+            printErr(cd.error());
+            *fail = true;
+            continue;
+        }
+        tor.resolveDuplicates();
+        aliens << tor;
+    }
+
     QDir dir;
     QString err;
     foreach (const QString &fileName, tsFileNames) {
@@ -202,7 +216,7 @@ static void updateTsFiles(const Translator &fetchedTor, const QStringList &tsFil
         UpdateOptions theseOptions = options;
         if (tor.locationsType() == Translator::NoLocations) // Could be set from file
             theseOptions |= NoLocations;
-        Translator out = merge(tor, fetchedTor, theseOptions, err);
+        Translator out = merge(tor, fetchedTor, aliens, theseOptions, err);
         if (setCodec)
             out.setCodec(fetchedTor.codec());
 
@@ -463,7 +477,8 @@ static void processProjects(bool topLevel, bool nestComplain, const QStringList 
             }
             processProject(false, proFile, option, parser, visitor, options, codecForSource,
                            targetLanguage, sourceLanguage, &tor, fail);
-            updateTsFiles(tor, tsFiles, setCodec, sourceLanguage, targetLanguage, options, fail);
+            updateTsFiles(tor, tsFiles, QStringList(),
+                          setCodec, sourceLanguage, targetLanguage, options, fail);
             pro->deref();
             continue;
         }
@@ -509,6 +524,7 @@ int main(int argc, char **argv)
     QSet<QString> projectRoots;
     QStringList sourceFiles;
     QStringList includePath;
+    QStringList alienFiles;
     QString targetLanguage;
     QString sourceLanguage;
     QByteArray codecForTr;
@@ -766,10 +782,17 @@ int main(int argc, char **argv)
                         }
                     }
                 } else {
+                    foreach (const Translator::FileFormat &fmt, Translator::registeredFileFormats()) {
+                        if (file.endsWith(QLatin1Char('.') + fmt.extension, Qt::CaseInsensitive)) {
+                            alienFiles << file;
+                            goto gotfile;
+                        }
+                    }
                     sourceFiles << QDir::cleanPath(fi.absoluteFilePath());;
                     projectRoots.insert(fi.absolutePath() + QLatin1Char('/'));
                 }
             }
+          gotfile:
             numFiles++;
         }
     } // for args
@@ -799,7 +822,7 @@ int main(int argc, char **argv)
         cd.m_allCSources = allCSources;
         fetchedTor.setCodecName(codecForTr);
         processSources(fetchedTor, sourceFiles, cd);
-        updateTsFiles(fetchedTor, tsFileNames, !codecForTr.isEmpty(),
+        updateTsFiles(fetchedTor, tsFileNames, alienFiles, !codecForTr.isEmpty(),
                       sourceLanguage, targetLanguage, options, &fail);
     } else {
         if (!sourceFiles.isEmpty() || !includePath.isEmpty()) {
@@ -821,7 +844,7 @@ int main(int argc, char **argv)
             fetchedTor.setCodecName(codecForTr);
             processProjects(true, true, proFiles, outDirMap, &option, &parser, options, QByteArray(),
                             targetLanguage, sourceLanguage, &fetchedTor, &fail);
-            updateTsFiles(fetchedTor, tsFileNames, !codecForTr.isEmpty(),
+            updateTsFiles(fetchedTor, tsFileNames, alienFiles, !codecForTr.isEmpty(),
                           sourceLanguage, targetLanguage, options, &fail);
         } else {
             processProjects(true, false, proFiles, outDirMap, &option, &parser, options, QByteArray(),

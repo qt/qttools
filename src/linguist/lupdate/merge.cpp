@@ -325,7 +325,8 @@ int applySameTextHeuristic(Translator &tor)
   translation yet.
 */
 
-Translator merge(const Translator &tor, const Translator &virginTor,
+Translator merge(
+    const Translator &tor, const Translator &virginTor, const QList<Translator> &aliens,
     UpdateOptions options, QString &err)
 {
     int known = 0;
@@ -474,6 +475,42 @@ Translator merge(const Translator &tor, const Translator &virginTor,
             outTor.appendSorted(mv);
         if (!mv.sourceText().isEmpty() || !mv.id().isEmpty())
             ++neww;
+    }
+
+    /*
+      "Alien" translators can be used to augment the vernacular translator.
+    */
+    foreach (const Translator &alf, aliens) {
+        foreach (TranslatorMessage mv, alf.messages()) {
+            if (mv.sourceText().isEmpty() || !mv.isTranslated())
+                continue;
+            int mvi = outTor.find(mv);
+            if (mvi >= 0) {
+                TranslatorMessage &tm = outTor.message(mvi);
+                if (tm.type() != TranslatorMessage::Finished && !tm.isTranslated()) {
+                    tm.setTranslations(mv.translations());
+                    --neww;
+                    ++known;
+                }
+            } else {
+                /*
+                 * Don't do simtex search, as the locations are likely to be
+                 * completely off anyway, so we'd find nothing.
+                 */
+                /*
+                 * Add the unmatched messages as obsoletes, so the Linguist GUI
+                 * will offer them as possible translations.
+                 */
+                mv.clearReferences();
+                mv.setType(TranslatorMessage::Obsolete);
+                if (options & NoLocations)
+                    outTor.append(mv);
+                else
+                    outTor.appendSorted(mv);
+                ++known;
+                ++obsoleted;
+            }
+        }
     }
 
     /*

@@ -71,7 +71,8 @@ enum UpdateOption {
 Q_DECLARE_FLAGS(UpdateOptions, UpdateOption)
 Q_DECLARE_OPERATORS_FOR_FLAGS(UpdateOptions)
 
-Translator merge(const Translator &tor, const Translator &virginTor,
+Translator merge(
+    const Translator &tor, const Translator &virginTor, const QList<Translator> &aliens,
     UpdateOptions options, QString &err);
 
 void fetchtrInlinedCpp(const QString &in, Translator &translator, const QString &context);
