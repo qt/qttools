@@ -102,7 +102,17 @@ private:
     int m_length;
 };
 
-int getSimilarityScore(const QString &str1, const QString &str2);
+/**
+ * Checks how similar two strings are.
+ * The return value is the score, and a higher score is more similar
+ * than one with a low score.
+ * Linguist considers a score over 190 to be a good match.
+ * \sa StringSimilarityMatcher
+ */
+static inline int getSimilarityScore(const QString &str1, const QString &str2)
+{
+    return StringSimilarityMatcher(str1).getSimilarityScore(str2);
+}
 
 CandidateList similarTextHeuristicCandidates( const Translator *tor,
 					      const QString &text,

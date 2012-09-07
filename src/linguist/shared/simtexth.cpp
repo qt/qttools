@@ -196,25 +196,6 @@ int StringSimilarityMatcher::getSimilarityScore(const QString &strCandidate)
     return score;
 }
 
-/**
- * Checks how similar two strings are.
- * The return value is the score, and a higher score is more similar
- * than one with a low score.
- * Linguist considers a score over 190 to be a good match.
- * \sa StringSimilarityMatcher
- */
-int getSimilarityScore(const QString &str1, const QString &str2)
-{
-    CoMatrix cmTarget(str2);
-    CoMatrix cm(str1);
-    int delta = qAbs(str1.size() - str2.size());
-
-    int score = ( (worth(intersection(cm, cmTarget)) + 1) << 10 )
-        / ( worth(reunion(cm, cmTarget)) + (delta << 1) + 1 );
-
-    return score;
-}
-
 CandidateList similarTextHeuristicCandidates(const Translator *tor,
     const QString &text, int maxCandidates)
 {
