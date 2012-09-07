@@ -237,6 +237,7 @@ CandidateList similarTextHeuristicCandidates(const Translator *tor,
 {
     QList<int> scores;
     CandidateList candidates;
+    StringSimilarityMatcher matcher(text);
 
     foreach (const TranslatorMessage &mtm, tor->messages()) {
         if (mtm.type() == TranslatorMessage::Unfinished
@@ -244,7 +245,7 @@ CandidateList similarTextHeuristicCandidates(const Translator *tor,
             continue;
 
         QString s = mtm.sourceText();
-        int score = getSimilarityScore(s, text);
+        int score = matcher.getSimilarityScore(s);
 
         if (candidates.size() == maxCandidates && score > scores[maxCandidates - 1] )
             candidates.removeLast();
