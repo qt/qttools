@@ -71,7 +71,21 @@ inline bool operator!=( const Candidate& c, const Candidate& d ) {
 
 typedef QList<Candidate> CandidateList;
 
-struct CoMatrix;
+struct CoMatrix
+{
+    CoMatrix(const QString &str);
+    CoMatrix() {}
+
+    /*
+      The matrix has 20 * 20 = 400 entries.  This requires 50 bytes, or 13
+      words.  Some operations are performed on words for more efficiency.
+    */
+    union {
+        quint8 b[52];
+        quint32 w[13];
+    };
+};
+
 /**
  * This class is more efficient for searching through a large array of candidate strings, since we only
  * have to construct the CoMatrix for the \a stringToMatch once,
@@ -81,11 +95,10 @@ struct CoMatrix;
 class StringSimilarityMatcher {
 public:
     StringSimilarityMatcher(const QString &stringToMatch);
-    ~StringSimilarityMatcher();
     int getSimilarityScore(const QString &strCandidate);
 
 private:
-    CoMatrix *m_cm;
+    CoMatrix m_cm;
     int m_length;
 };
 

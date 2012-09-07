@@ -132,50 +132,38 @@ static const int bitCount[256] = {
     4,  5,  5,  6,  5,  6,  6,  7,  5,  6,  6,  7,  6,  7,  7,  8
 };
 
-struct CoMatrix
+static inline void setCoOccurence(CoMatrix &m, char c, char d)
 {
+    int k = indexOf[(uchar) c] + 20 * indexOf[(uchar) d];
+    m.b[k >> 3] |= (1 << (k & 0x7));
+}
+
+CoMatrix::CoMatrix(const QString &str)
+{
+    QByteArray ba = str.toUtf8();
+    const char *text = ba.constData();
+    char c = '\0', d;
+    memset( b, 0, 52 );
     /*
-      The matrix has 20 * 20 = 400 entries.  This requires 50 bytes, or 13
-      words.  Some operations are performed on words for more efficiency.
+      The Knuth books are not in the office only for show; they help make
+      loops 30% faster and 20% as readable.
     */
-    union {
-        quint8 b[52];
-        quint32 w[13];
-    };
-
-    CoMatrix() { memset( b, 0, 52 ); }
-
-    CoMatrix(const QString &str)
-    {
-        QByteArray ba = str.toUtf8();
-        const char *text = ba.constData();
-        char c = '\0', d;
-        memset( b, 0, 52 );
-        /*
-          The Knuth books are not in the office only for show; they help make
-          loops 30% faster and 20% as readable.
-        */
-        while ( (d = *text) != '\0' ) {
-            setCoOccurence( c, d );
-            if ( (c = *++text) != '\0' ) {
-                setCoOccurence( d, c );
-                text++;
-            }
+    while ( (d = *text) != '\0' ) {
+        setCoOccurence(*this, c, d);
+        if ( (c = *++text) != '\0' ) {
+            setCoOccurence(*this, d, c);
+            text++;
         }
     }
+}
 
-    void setCoOccurence( char c, char d ) {
-        int k = indexOf[(uchar) c] + 20 * indexOf[(uchar) d];
-        b[k >> 3] |= (1 << (k & 0x7));
-    }
-
-    int worth() const {
-        int w = 0;
-        for ( int i = 0; i < 50; i++ )
-            w += bitCount[b[i]];
-        return w;
-    }
-};
+static inline int worth(const CoMatrix &m)
+{
+    int w = 0;
+    for (int i = 0; i < 50; i++)
+        w += bitCount[m.b[i]];
+    return w;
+}
 
 static inline CoMatrix reunion(const CoMatrix &m, const CoMatrix &n)
 {
@@ -194,8 +182,8 @@ static inline CoMatrix intersection(const CoMatrix &m, const CoMatrix &n)
 }
 
 StringSimilarityMatcher::StringSimilarityMatcher(const QString &stringToMatch)
+    : m_cm(stringToMatch)
 {
-    m_cm = new CoMatrix(stringToMatch);
     m_length = stringToMatch.length();
 }
 
@@ -203,14 +191,9 @@ int StringSimilarityMatcher::getSimilarityScore(const QString &strCandidate)
 {
     CoMatrix cmTarget(strCandidate);
     int delta = qAbs(m_length - strCandidate.size());
-    int score = ( (intersection(*m_cm, cmTarget).worth() + 1) << 10 ) /
-        ( reunion(*m_cm, cmTarget).worth() + (delta << 1) + 1 );
+    int score = ( (worth(intersection(m_cm, cmTarget)) + 1) << 10 ) /
+        ( worth(reunion(m_cm, cmTarget)) + (delta << 1) + 1 );
     return score;
-}
-
-StringSimilarityMatcher::~StringSimilarityMatcher()
-{
-    delete m_cm;
 }
 
 /**
@@ -226,8 +209,8 @@ int getSimilarityScore(const QString &str1, const QString &str2)
     CoMatrix cm(str1);
     int delta = qAbs(str1.size() - str2.size());
 
-    int score = ( (intersection(cm, cmTarget).worth() + 1) << 10 )
-        / ( reunion(cm, cmTarget).worth() + (delta << 1) + 1 );
+    int score = ( (worth(intersection(cm, cmTarget)) + 1) << 10 )
+        / ( worth(reunion(cm, cmTarget)) + (delta << 1) + 1 );
 
     return score;
 }
