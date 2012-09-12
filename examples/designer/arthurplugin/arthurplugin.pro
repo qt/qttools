@@ -1,5 +1,6 @@
 
-CONFIG      += designer plugin
+CONFIG      += plugin
+QT          += designer
 TEMPLATE    = lib
 TARGET = $$qtLibraryTarget(arthurplugin)
 DESTDIR = $$QT.designer.plugins/designer

@@ -1,11 +1,9 @@
 #! [0]
-CONFIG      += uitools
-
 HEADERS     = calculatorform.h
 RESOURCES   = calculatorbuilder.qrc
 SOURCES     = calculatorform.cpp \
               main.cpp
-QT += widgets
+QT += widgets uitools
 #! [0]
 
 # install

@@ -1,6 +1,5 @@
 #! [0]
-CONFIG      += uitools
-QT          += widgets
+QT          += widgets uitools
 SOURCES     = main.cpp
 RESOURCES   = worldtimeclockbuilder.qrc
 #! [0]
