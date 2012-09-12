@@ -832,8 +832,6 @@ bool WidgetFactory::isPassiveInteractor(QWidget *widget)
         if (const QWidget *parent = widget->parentWidget()) {
             const QString objectName = parent->objectName();
             static const QString scrollAreaVContainer = QStringLiteral("qt_scrollarea_vcontainer");
-    void activeFormWindowChanged(QDesignerFormWindowInterface *formWindow);
-    void formWindowAdded(QDesignerFormWindowInterface *formWindow);
             static const QString scrollAreaHContainer = QStringLiteral("qt_scrollarea_hcontainer");
             if (objectName == scrollAreaVContainer || objectName == scrollAreaHContainer) {
                 m_lastWasAPassiveInteractor = true;

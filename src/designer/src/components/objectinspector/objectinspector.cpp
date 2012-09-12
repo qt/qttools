@@ -717,7 +717,6 @@ void ObjectInspector::ObjectInspectorPrivate::slotPopupContextMenu(QWidget * /*p
     if (m_formWindow == 0 || m_formWindow->currentTool() != 0)
         return;
 
-    const QModelIndex index =  m_treeView->indexAt (pos);
     if (QObject *object = m_model->objectAt(m_treeView->indexAt(pos)))
         if (QMenu *menu = createTaskMenu(object, m_formWindow)) {
             menu->exec(m_treeView->viewport()->mapToGlobal(pos));
