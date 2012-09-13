@@ -43,18 +43,18 @@
 #include <QtCore>
 #include <QtNetwork>
 
-void messageOutput(QtMsgType type, const char *msg)
+void messageOutput(QtMsgType type, const QMessageLogContext &, const QString &msg)
 {
     switch(type) {
-        case QtDebugMsg: fprintf(stderr, "Debug: %s\n", msg); break;
-        case QtWarningMsg: fprintf(stderr, "Warning: %s\n", msg); break;
-        default: fprintf(stderr, "Some Msg: %s\n", msg); break;
+        case QtDebugMsg: fprintf(stderr, "Debug: %s\n", qPrintable(msg)); break;
+        case QtWarningMsg: fprintf(stderr, "Warning: %s\n", qPrintable(msg)); break;
+        default: fprintf(stderr, "Some Msg: %s\n", qPrintable(msg)); break;
     }
 }
 
 int main(int argc, char **argv)
 {
-    qInstallMsgHandler(messageOutput);
+    qInstallMessageHandler(messageOutput);
     
     QCoreApplication app(argc, argv);
     ConnectionManager manager;
