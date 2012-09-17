@@ -383,7 +383,7 @@ void FindTrCalls::processComment(const AST::SourceLocation &loc)
                     if (p >= length)
                         goto whoops;
                     c = chars[p++].unicode();
-                    if (c == '\n')
+                    if (c == '\r' || c == '\n')
                         goto whoops;
                     *ptr++ = '\\';
                 }
@@ -394,7 +394,7 @@ void FindTrCalls::processComment(const AST::SourceLocation &loc)
     } else {
         int idx = 0;
         ushort c;
-        while ((c = chars[idx].unicode()) == ' ' || c == '\t' || c == '\n')
+        while ((c = chars[idx].unicode()) == ' ' || c == '\t' || c == '\r' || c == '\n')
             ++idx;
         if (!memcmp(chars + idx, MagicComment.unicode(), MagicComment.length() * 2)) {
             idx += MagicComment.length();
