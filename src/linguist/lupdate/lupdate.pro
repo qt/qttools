@@ -28,14 +28,6 @@ HEADERS += \
     lupdate.h \
     ../shared/simtexth.h
 
-win32:QMAKE_MANIFEST = lupdate.exe.manifest
-
-embed_manifest_exe:win32-msvc2005 {
-    # The default configuration embed_manifest_exe overrides the manifest file
-    # already embedded via RC_FILE. Vs2008 already have the necessary manifest entry
-    QMAKE_POST_LINK += $$quote(mt.exe -updateresource:$$DESTDIR/lupdate.exe -manifest \"$${PWD}\\lupdate.exe.manifest\")
-}
-
 qmake.name = QMAKE
 qmake.value = $$shell_path($$QMAKE_QMAKE)
 QT_TOOL_ENV += qmake
