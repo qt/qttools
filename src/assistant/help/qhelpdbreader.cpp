@@ -399,7 +399,7 @@ QUrl QHelpDBReader::buildQUrl(const QString &ns, const QString &folder,
     QUrl url;
     url.setScheme(QLatin1String("qthelp"));
     url.setAuthority(ns);
-    url.setPath(folder + QLatin1Char('/') + relFileName);
+    url.setPath(QLatin1Char('/') + folder + QLatin1Char('/') + relFileName);
     url.setFragment(anchor);
     return url;
 }
