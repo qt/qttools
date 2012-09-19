@@ -12,8 +12,8 @@ SUBDIRS=\
 # These tests don't make sense for cross-compiled builds
 cross_compile:SUBDIRS -= host.pro
 
-# These tests don't make sense unless the tools will be built.
-!contains(QT_BUILD_PARTS, tools): SUBDIRS -= \
+# These tests need the QtHelp module
+isEmpty(QT.help.name): SUBDIRS -= \
     qhelpcontentmodel \
     qhelpenginecore \
     qhelpgenerator \
