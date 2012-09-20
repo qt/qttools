@@ -30,4 +30,8 @@ find_package(Qt5Core REQUIRED)
 include("${_Qt5CTestMacros}")
 
 expect_pass(test_translation_macros)
-expect_pass(test_modules)
+
+find_package(Qt5Widgets)
+if (Qt5Widgets_FOUND)
+    expect_pass(test_modules)
+endif()
