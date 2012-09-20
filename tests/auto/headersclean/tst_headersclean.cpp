@@ -49,8 +49,12 @@
 #include <QtCore/QtCore>
 #include <QtTest/QtTest>
 
+#ifdef QT_DESIGNER_LIB
 #include <QtDesigner/QtDesigner>
+#endif
+#ifdef QT_HELP_LIB
 #include <QtHelp/QtHelp>
+#endif
 
 class tst_HeadersClean: public QObject
 {
