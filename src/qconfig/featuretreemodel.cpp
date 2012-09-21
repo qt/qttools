@@ -189,7 +189,7 @@ QModelIndex FeatureTreeModel::index(int row, int column,
 {
     if (!parent.isValid()) { // index is a section
         if (row < sections.size() && column == 0)
-            return QAbstractItemModel::createIndex(row, column, 0);
+            return QAbstractItemModel::createIndex(row, column);
 	return QModelIndex();
     }
 
