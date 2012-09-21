@@ -1,11 +1,7 @@
 DESTDIR = $$QT.designer.bins
 QT += core-private widgets xml network designer-private designercomponents
 !isEmpty(QT.printsupport.name): QT += printsupport
-
-build_all:!build_pass {
-    CONFIG -= build_all
-    CONFIG += release
-}
+!build_pass:contains(QT_CONFIG, build_all): CONFIG += release
 
 INCLUDEPATH += \
     ../lib/sdk \

@@ -1,10 +1,6 @@
 CONFIG  += qt warn_on
+!build_pass:contains(QT_CONFIG, build_all): CONFIG += release
 QT += widgets network
-
-build_all:!build_pass {
-    CONFIG -= build_all
-    CONFIG += release
-}
 
 DESTDIR     = $$QT.designer.bins
 

@@ -5,10 +5,6 @@ CONFIG     += qaxcontainer qt warn_on plugin designer
 QT         += widgets designer-private
 
 include(../plugins.pri)
-build_all:!build_pass {
-    CONFIG -= build_all
-    CONFIG += release
-}
 
 INCLUDEPATH += $$QT.activeqt.sources/shared/ \
                $$QT.activeqt.sources/container \

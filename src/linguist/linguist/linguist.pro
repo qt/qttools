@@ -8,10 +8,7 @@ QT += core-private widgets xml uitools-private
 CONFIG += qt warn_on
 
 DEFINES += QT_NO_CAST_FROM_ASCII QT_NO_CAST_TO_ASCII
-build_all:!build_pass {
-    CONFIG -= build_all
-    CONFIG += release
-}
+!build_pass:contains(QT_CONFIG, build_all): CONFIG += release
 
 include(../shared/formats.pri)
 

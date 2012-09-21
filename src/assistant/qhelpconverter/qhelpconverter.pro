@@ -3,6 +3,7 @@ TEMPLATE = app
 TARGET = qhelpconverter
 DESTDIR = $$QT.help.bins
 CONFIG += qt warn_on
+!build_pass:contains(QT_CONFIG, build_all): CONFIG += release
 
 target.path=$$[QT_INSTALL_BINS]
 INSTALLS += target
