@@ -74,7 +74,35 @@ void SheetDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
         buttonOption.rect = option.rect;
         buttonOption.palette = option.palette;
         buttonOption.features = QStyleOptionButton::None;
-        m_view->style()->drawControl(QStyle::CE_PushButton, &buttonOption, painter, m_view);
+
+        painter->save();
+        QColor buttonColor(230, 230, 230);
+        QBrush buttonBrush = option.palette.button();
+        if (!buttonBrush.gradient() && buttonBrush.texture().isNull())
+            buttonColor = buttonBrush.color();
+        QColor outlineColor = buttonColor.darker(150);
+        QColor highlightColor = buttonColor.lighter(130);
+
+        // Only draw topline if the previous item is expanded
+        QModelIndex previousIndex = model->index(index.row() - 1, index.column());
+        bool drawTopline = (index.row() > 0 && m_view->isExpanded(previousIndex));
+        int highlightOffset = drawTopline ? 1 : 0;
+
+        QLinearGradient gradient(option.rect.topLeft(), option.rect.bottomLeft());
+        gradient.setColorAt(0, buttonColor.lighter(102));
+        gradient.setColorAt(1, buttonColor.darker(106));
+
+        painter->setPen(Qt::NoPen);
+        painter->setBrush(gradient);
+        painter->drawRect(option.rect);
+        painter->setPen(highlightColor);
+        painter->drawLine(option.rect.topLeft() + QPoint(0, highlightOffset),
+                          option.rect.topRight() + QPoint(0, highlightOffset));
+        painter->setPen(outlineColor);
+        if (drawTopline)
+            painter->drawLine(option.rect.topLeft(), option.rect.topRight());
+        painter->drawLine(option.rect.bottomLeft(), option.rect.bottomRight());
+        painter->restore();
 
         QStyleOption branchOption;
         static const int i = 9; // ### hardcoded in qcommonstyle.cpp
