@@ -72,7 +72,7 @@ function(QT5_CREATE_TRANSLATION _qm_files)
           file(WRITE ${_ts_lst_file} "${_lst_file_srcs}")
         endif()
         add_custom_command(OUTPUT ${_ts_file}
-            COMMAND ${QT_LUPDATE_EXECUTABLE}
+            COMMAND ${Qt5_LUPDATE_EXECUTABLE}
             ARGS ${_lupdate_options} "@${_ts_lst_file}" -ts ${_ts_file}
             DEPENDS ${_my_sources} ${_ts_lst_file} VERBATIM)
     endforeach()
@@ -94,7 +94,7 @@ function(QT5_ADD_TRANSLATION _qm_files)
         endif()
 
         add_custom_command(OUTPUT ${qm}
-            COMMAND ${QT_LRELEASE_EXECUTABLE}
+            COMMAND ${Qt5_LRELEASE_EXECUTABLE}
             ARGS ${_abs_FILE} -qm ${qm}
             DEPENDS ${_abs_FILE} VERBATIM
         )
