@@ -369,7 +369,6 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
     m_settingsActions->addAction(m_preferencesAction);
 
     connect(m_appFontAction, SIGNAL(triggered()),  this, SLOT(showAppFontDialog()));
-    m_appFontAction->setMenuRole(QAction::PreferencesRole);
     m_settingsActions->addAction(m_appFontAction);
 //
 // form actions
