@@ -329,7 +329,7 @@ bool QHelpProjectDataPrivate::hasValidSyntax(const QString &nameSpace,
     url.setScheme(scheme);
     const QString canonicalNamespace = nameSpace.toLower();
     url.setHost(canonicalNamespace);
-    url.setPath(vFolder);
+    url.setPath(slash + vFolder);
 
     const QString expectedUrl(scheme + QLatin1String("://")
         + canonicalNamespace + slash + vFolder);
