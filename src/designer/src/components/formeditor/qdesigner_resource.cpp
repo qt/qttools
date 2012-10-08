@@ -938,7 +938,9 @@ void QDesignerResource::applyProperties(QObject *o, const QList<DomProperty*> &p
     const DomPropertyList::const_iterator cend = properties.constEnd();
     for (DomPropertyList::const_iterator it = properties.constBegin(); it != cend; ++it) {
         const DomProperty *p = *it;
-        const QString propertyName = p->attributeName();
+        QString propertyName = p->attributeName();
+        if (propertyName == QLatin1String("numDigits") && o->inherits("QLCDNumber")) // Deprecated in Qt 4, removed in Qt 5.
+            propertyName = QLatin1String("digitCount");
         const int index = sheet->indexOf(propertyName);
         QVariant v;
         if (!readDomEnumerationValue(p, sheet, index, v))

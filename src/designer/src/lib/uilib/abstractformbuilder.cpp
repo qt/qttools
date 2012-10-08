@@ -968,7 +968,9 @@ void QAbstractFormBuilder::applyProperties(QObject *o, const QList<DomProperty*>
     for (DomPropertyList::const_iterator it = properties.constBegin(); it != cend; ++it) {
         const QVariant v = toVariant(o->metaObject(), *it);
         if (!v.isNull()) {
-            const  QString attributeName = (*it)->attributeName();
+            QString attributeName = (*it)->attributeName();
+            if (attributeName == QLatin1String("numDigits") && o->inherits("QLCDNumber")) // Deprecated in Qt 4, removed in Qt 5.
+                attributeName = QLatin1String("digitCount");
             if (!d->applyPropertyInternally(o, attributeName, v))
                 o->setProperty(attributeName.toUtf8(), v);
         }
