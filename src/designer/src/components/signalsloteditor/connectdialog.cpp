@@ -248,7 +248,7 @@ void ConnectDialog::populateSlotList(const QString &signal)
         // but may be used again in the future.
         if (deprecatedSlot) {
             item->setData(Qt::FontRole, variantFont);
-            item->setData(Qt::ForegroundRole, Qt::red);
+            item->setData(Qt::ForegroundRole, QColor(Qt::red));
         }
         ++itMember;
     }
@@ -291,7 +291,7 @@ void ConnectDialog::populateSignalList()
         // but may be used again in the future.
         if (deprecatedSignal) {
             item->setData(Qt::FontRole, variantFont);
-            item->setData(Qt::ForegroundRole, Qt::red);
+            item->setData(Qt::ForegroundRole, QColor(Qt::red));
         }
         ++itMember;
     }

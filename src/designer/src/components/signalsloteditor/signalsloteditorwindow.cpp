@@ -275,7 +275,7 @@ QVariant ConnectionModel::data(const QModelIndex &index, int role) const
     // Mark deprecated slots red/italic. Not currently in use (historically for Qt 3 slots in Qt 4),
     // but may be used again in the future.
     if (deprecatedMember && role == Qt::ForegroundRole)
-        return Qt::red;
+        return QColor(Qt::red);
     if (deprecatedMember && role ==  Qt::FontRole) {
         QFont font = QApplication::font();
         font.setItalic(true);
@@ -475,7 +475,7 @@ void InlineEditorModel::addTextList(const QMap<QString, bool> &text_list)
         setData(text_idx, it.key(), Qt::DisplayRole);
         if (it.value()) {
             setData(text_idx, fontVariant, Qt::FontRole);
-            setData(text_idx, Qt::red, Qt::ForegroundRole);
+            setData(text_idx, QColor(Qt::red), Qt::ForegroundRole);
         }
         ++it;
     }
