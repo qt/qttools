@@ -39,7 +39,9 @@
 **
 ****************************************************************************/
 
-#include <QtWidgets>
+#include <QWidget>
+#include <QApplication>
+#include <QDebug>
 
 QT_USE_NAMESPACE
 

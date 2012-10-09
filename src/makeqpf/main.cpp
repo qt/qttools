@@ -39,7 +39,7 @@
 **
 ****************************************************************************/
 
-#include <QtGui>
+#include <QApplication>
 
 #include "qpf2.h"
 #include "mainwindow.h"
