@@ -1,7 +1,7 @@
 TEMPLATE    = lib
 TARGET      = qaxwidget
 DESTDIR = $$QT.designer.plugins/designer
-CONFIG     += qaxcontainer qt warn_on plugin designer
+CONFIG     += qaxcontainer qt warn_on plugin
 QT         += widgets designer-private
 
 include(../plugins.pri)

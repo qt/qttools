@@ -44,9 +44,7 @@
 #include "formbuilderextra_p.h"
 #include "ui4_p.h"
 
-#include <QtGui/QtGui>
 #include <QtWidgets/QtWidgets>
-#include <QtCore/QCoreApplication>
 
 QT_BEGIN_NAMESPACE
 

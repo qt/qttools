@@ -39,14 +39,15 @@
 **
 ****************************************************************************/
 
-#include <QtCore>
-#include <QtGui>
-#include <QtOpenGL>
-
 #include "abstractformeditor.h"
 #include "abstractmetadatabase.h"
 #include "abstractformwindow.h"
 #include "view3d.h"
+
+#include <QKeyEvent>
+#include <QGLFunctions>
+#include <QApplication>
+#include <QGridLayout>
 
 #define SELECTION_BUFSIZE 512
 
@@ -279,7 +280,7 @@ void QView3DWidget::paintGL()
     glPopAttrib();
 }
 
-QWidget *QView3DWidget::widgetAt(const QPoint &pos)
+QWidget *QView3DWidget::widgetAt(const QPoint & /* pos */)
 {
     makeCurrent();
     GLuint selectBuf[SELECTION_BUFSIZE];
