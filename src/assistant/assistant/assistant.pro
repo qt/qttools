@@ -2,8 +2,8 @@ TEMPLATE = app
 LANGUAGE = C++
 TARGET = assistant
 DESTDIR = $$QT.help.bins
-!isEmpty(QT.webkit.name) {
-    QT += webkit
+!isEmpty(QT.webkitwidgets.name) {
+    QT += webkitwidgets
 } else {
     DEFINES += QT_NO_WEBKIT
 }
@@ -85,7 +85,7 @@ SOURCES += aboutdialog.cpp \
     openpageswidget.cpp \
     openpagesmanager.cpp \
     openpagesswitcher.cpp
-contains(QT_CONFIG, webkit) {
+contains(QT_CONFIG, webkitwidgets) {
     SOURCES += helpviewer_qwv.cpp
 } else {
     SOURCES += helpviewer_qtb.cpp

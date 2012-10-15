@@ -49,7 +49,7 @@
 #include <QtWidgets/QMenu>
 
 #if !defined(QT_NO_WEBKIT)
-#include <QtWebKit/QWebHistory>
+#include <QWebHistory>
 #endif
 
 GlobalActions *GlobalActions::instance(QObject *parent)

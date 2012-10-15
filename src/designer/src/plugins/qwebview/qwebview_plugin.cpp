@@ -45,7 +45,7 @@
 #include <QtDesigner/QExtensionManager>
 
 #include <QtCore/qplugin.h>
-#include <QtWebKit/QWebView>
+#include <QWebView>
 
 static const char *toolTipC = "QtWebKit Web widget";
 
@@ -79,7 +79,7 @@ QString QWebViewPlugin::whatsThis() const
 
 QString QWebViewPlugin::includeFile() const
 {
-    return QStringLiteral("QtWebKit/QWebView");
+    return QStringLiteral("QtWebKitWidgets/QWebView");
 }
 
 QIcon QWebViewPlugin::icon() const

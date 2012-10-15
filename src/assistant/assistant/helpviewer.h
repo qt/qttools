@@ -53,7 +53,7 @@
 #if defined(QT_NO_WEBKIT)
 #include <QtWidgets/QTextBrowser>
 #else
-#include <QtWebKit/QWebView>
+#include <QWebView>
 #endif
 
 QT_BEGIN_NAMESPACE

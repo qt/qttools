@@ -61,7 +61,7 @@
 
 #if !defined(QT_NO_WEBKIT)
 #include <QtGui/QFont>
-#include <QtWebKit/QWebSettings>
+#include <QWebSettings>
 #endif
 
 #include "../shared/collectionconfiguration.h"
