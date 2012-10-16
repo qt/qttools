@@ -169,7 +169,7 @@
     <file>images/mac/textsubscript.png</file>
     <file>images/mac/simplifyrichtext.png</file>
   </qresource>
-  <qresource prefix="/trolltech/brushes">
+  <qresource prefix="/qt-project.org/brushes">
     <file>defaultbrushes.xml</file>
   </qresource>
 </RCC>
