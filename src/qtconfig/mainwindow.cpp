@@ -239,7 +239,7 @@ MainWindow::MainWindow()
                                    Qt::ToolTipRole);
     ui->guiStyleCombo->addItems(gstyles);
 
-    QSettings settings(QLatin1String("Trolltech"));
+    QSettings settings(QLatin1String("QtProject"));
     settings.beginGroup(QLatin1String("Qt"));
 
     QString currentstyle = settings.value(QLatin1String("style")).toString();
@@ -510,7 +510,7 @@ void MainWindow::fileSave()
     statusBar()->showMessage(tr("Saving changes..."));
 
     {
-        QSettings settings(QLatin1String("Trolltech"));
+        QSettings settings(QLatin1String("QtProject"));
         settings.beginGroup(QLatin1String("Qt"));
         QFontDatabase db;
         QFont font = db.font(ui->fontFamilyCombo->currentText(),

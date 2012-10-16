@@ -70,7 +70,7 @@ int main(int argc, char **argv)
     QT_USE_NAMESPACE
 
     QApplication app(argc, argv);
-    app.setOrganizationName(QLatin1String("Trolltech"));
+    app.setOrganizationName(QLatin1String("QtProject"));
     app.setApplicationName(QLatin1String("MakeQPF"));
 
     const QStringList arguments = app.arguments();

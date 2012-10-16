@@ -142,7 +142,7 @@ int main(int argc, char **argv)
             app.removeTranslator(&translator);
     }
 
-    app.setOrganizationName(QLatin1String("Trolltech"));
+    app.setOrganizationName(QLatin1String("QtProject"));
     app.setApplicationName(QLatin1String("Linguist"));
 
     QSettings config;

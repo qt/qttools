@@ -535,8 +535,8 @@ int main(int argc, char** argv)
 {
     QT_USE_NAMESPACE
     QApplication app(argc,argv);
-    app.setOrganizationDomain("trolltech.com");
-    app.setOrganizationName("Trolltech");
+    app.setOrganizationDomain("qt-project.org");
+    app.setOrganizationName("QtProject");
     app.setApplicationName("QConfig");
     Main m;
 

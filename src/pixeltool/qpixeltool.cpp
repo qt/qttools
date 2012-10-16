@@ -62,7 +62,7 @@ QPixelTool::QPixelTool(QWidget *parent)
     : QWidget(parent)
 {
     setWindowTitle(QLatin1String("PixelTool"));
-    QSettings settings(QLatin1String("Trolltech"), QLatin1String("QPixelTool"));
+    QSettings settings(QLatin1String("QtProject"), QLatin1String("QPixelTool"));
 
     m_freeze = false;
 
@@ -95,7 +95,7 @@ QPixelTool::QPixelTool(QWidget *parent)
 
 QPixelTool::~QPixelTool()
 {
-    QSettings settings(QLatin1String("Trolltech"), QLatin1String("QPixelTool"));
+    QSettings settings(QLatin1String("QtProject"), QLatin1String("QPixelTool"));
     settings.setValue(QLatin1String("autoUpdate"), int(m_autoUpdate));
     settings.setValue(QLatin1String("gridSize"), m_gridSize);
     settings.setValue(QLatin1String("gridActive"), m_gridActive);
