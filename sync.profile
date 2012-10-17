@@ -21,4 +21,5 @@
     "qtdeclarative" => "refs/heads/master",
     "qtjsbackend" => "refs/heads/master",
     "qtactiveqt" => "refs/heads/master",
+    "qtwebkit" => "refs/heads/master",
 );
