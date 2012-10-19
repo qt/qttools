@@ -107,7 +107,7 @@ static void printArg(const QVariant &v)
         else
             printf("qdbus: I don't know how to display an argument of type '%s', run with --literal.\n",
                    qPrintable(arg.currentSignature()));
-    } else {
+    } else if (v.userType() != QVariant::Invalid) {
         printf("%s\n", qPrintable(v.toString()));
     }
 }
