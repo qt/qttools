@@ -489,75 +489,65 @@ void deployPlugins(const ApplicationBundleInfo &appBundleInfo, const QString &pl
         const QString pluginDestinationPath, DeploymentInfo deploymentInfo, bool useDebugLibs)
 {
     LogNormal() << "Deploying plugins from" << pluginSourcePath;
-    QStringList plugins = QDir(pluginSourcePath).entryList(QStringList() << "*.dylib");
 
-    foreach (QString pluginName, plugins) {
-        if (pluginSourcePath.contains(deploymentInfo.pluginPath)) {
-            QStringList deployedFrameworks = deploymentInfo.deployedFrameworks;
+    if (!pluginSourcePath.contains(deploymentInfo.pluginPath))
+        return;
 
-            // Skip the debug versions of the plugins, unless specified otherwise.
-            if (!useDebugLibs && pluginName.endsWith("_debug.dylib"))
-                continue;
+    // Plugin white list:
+    QStringList pluginList;
 
-            // Skip the release versions of the plugins, unless specified otherwise.
-            if (useDebugLibs && !pluginName.endsWith("_debug.dylib"))
-                continue;
+    // Platform plugin:
+    pluginList.append("platforms/libqcocoa.dylib");
 
-            // Skip the designer plugins
-            if (pluginSourcePath.contains("plugins/designer"))
-                continue;
+    // Cocoa print support
+    pluginList.append("printsupport/libcocoaprintersupport.dylib");
 
-#ifndef QT_GRAPHICSSYSTEM_OPENGL
-            // SKip the opengl graphicssystem plugin when not in use.
-            if (pluginName.contains("libqglgraphicssystem"))
-                continue;
-#endif
-            // Deploy accessibility for Qt3Support only if the Qt3Support.framework is in use
-            if (deployedFrameworks.indexOf("Qt3Support.framework") == -1 && pluginName.contains("accessiblecompatwidgets"))
-                continue;
+    // Accessibility
+    if (deploymentInfo.deployedFrameworks.contains(QStringLiteral("QtWidgets.framework")))
+        pluginList.append("accessible/libqtaccessiblewidgets.dylib");
+    if (deploymentInfo.deployedFrameworks.contains(QStringLiteral("QtQuick.framework")))
+        pluginList.append("accessible/libqtaccessiblequick.dylib");
 
-            // Deploy the svg icon plugin if QtSvg.framework is in use.
-            if (deployedFrameworks.indexOf("QtSvg.framework") == -1 && pluginName.contains("svg"))
-                continue;
+    // All image formats (svg if QtSvg.framework is used)
+    QStringList imagePlugins = QDir(pluginSourcePath +  QStringLiteral("/imageformats")).entryList(QStringList() << QStringLiteral("*.dylib"));
+    foreach (const QString &plugin, imagePlugins) {
+        if (plugin.contains(QStringLiteral("qsvg"))) {
+            if (deploymentInfo.deployedFrameworks.contains(QStringLiteral("QtSvg.framework")))
+                pluginList.append(QStringLiteral("imageformats/") + plugin);
+        } else if (!plugin.endsWith(QStringLiteral("_debug.dylib"))) {
+            pluginList.append(QStringLiteral("imageformats/") + plugin);
+        }
+    }
 
-            // Deploy the phonon plugins if phonon.framework is in use
-            if (deployedFrameworks.indexOf("phonon.framework") == -1 && pluginName.contains("phonon"))
-                continue;
+    // Sql plugins if QtSql.framework is in use
+    if (deploymentInfo.deployedFrameworks.contains(QStringLiteral("QtSql.framework"))) {
+        QStringList sqlPlugins = QDir(pluginSourcePath +  QStringLiteral("/sqldrivers")).entryList(QStringList() << QStringLiteral("*.dylib"));
+        foreach (const QString &plugin, sqlPlugins) {
+            if (!plugin.endsWith(QStringLiteral("_debug.dylib")))
+                pluginList.append(QStringLiteral("/sqldrivers") + plugin);
+        }
+    }
 
-            // Deploy the sql plugins if QtSql.framework is in use
-            if (deployedFrameworks.indexOf("QtSql.framework") == -1 && pluginName.contains("sql"))
-                continue;
+    foreach (const QString &plugin, pluginList) {
 
-            // Deploy the script plugins if QtScript.framework is in use
-            if (deployedFrameworks.indexOf("QtScript.framework") == -1 && pluginName.contains("script"))
-                continue;
+        QString sourcePath = pluginSourcePath + "/" + plugin;
+        if (useDebugLibs) {
+            // Use debug plugins if found.
+            QString debugSourcePath = sourcePath.replace(".dylib", "_debug.dylib");
+            if (QFile::exists(debugSourcePath))
+                sourcePath = debugSourcePath;
         }
 
+        const QString destinationPath = pluginDestinationPath + "/" + plugin;
         QDir dir;
-        dir.mkpath(pluginDestinationPath);
+        dir.mkpath(QFileInfo(destinationPath).path());
 
-        const QString sourcePath = pluginSourcePath + "/" + pluginName;
-        const QString destinationPath = pluginDestinationPath + "/" + pluginName;
         if (copyFilePrintStatus(sourcePath, destinationPath)) {
-
             runStrip(destinationPath);
-
-            // Special case for the phonon plugin: CoreVideo is not available as a separate framework
-            // on panther, link against the QuartzCore framework instead. (QuartzCore contians CoreVideo.)
-            if (pluginName.contains("libphonon_qt7")) {
-                changeInstallName("/System/Library/Frameworks/CoreVideo.framework/Versions/A/CoreVideo",
-                        "/System/Library/Frameworks/QuartzCore.framework/Versions/A/QuartzCore",
-                        destinationPath);
-            }
-
             QList<FrameworkInfo> frameworks = getQtFrameworks(destinationPath, useDebugLibs);
             deployQtFrameworks(frameworks, appBundleInfo.path, QStringList() << destinationPath, useDebugLibs, deploymentInfo.useLoaderPath);
         }
-    } // foreach plugins
-
-    QStringList subdirs = QDir(pluginSourcePath).entryList(QStringList() << "*", QDir::Dirs | QDir::NoDotAndDotDot);
-    foreach (const QString &subdir, subdirs)
-        deployPlugins(appBundleInfo, pluginSourcePath + "/" + subdir, pluginDestinationPath + "/" + subdir, deploymentInfo, useDebugLibs);
+    }
 }
 
 void createQtConf(const QString &appBundlePath)
