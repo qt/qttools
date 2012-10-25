@@ -1,6 +1,4 @@
-TEMPLATE    = lib
 TARGET      = qwebview
-CONFIG     += qt warn_on plugin
 QT         += widgets webkitwidgets
 
 include(../plugins.pri)

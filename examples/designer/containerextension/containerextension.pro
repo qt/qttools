@@ -1,12 +1,25 @@
+QTDIR_build {
+# This is only for the Qt build. Do not use externally. We mean it.
+PLUGIN_TYPE = designer
+load(qt_plugin)
+} else {
+# Public example:
+
 #! [0]
 TEMPLATE = lib
-#! [0]
-TARGET   = $$qtLibraryTarget($$TARGET)
-#! [1]
 CONFIG  += plugin
+#! [0]
+
+TARGET   = $$qtLibraryTarget($$TARGET)
+
+target.path = $$[QT_INSTALL_PLUGINS]/designer
+INSTALLS += target
+
+}
+
+#! [1]
 QT      += widgets designer
 #! [1]
-DESTDIR = $$QT.designer.plugins/designer
 
 #! [2]
 HEADERS += multipagewidget.h \
@@ -23,8 +36,7 @@ OTHER_FILES += multipagewidget.json
 #! [2]
 
 # install
-target.path = $$[QT_INSTALL_PLUGINS]/designer
 sources.files = $$SOURCES $$HEADERS *.pro
 sources.path = $$[QT_INSTALL_EXAMPLES]/qttools/designer/containerextension
-INSTALLS += target sources
+INSTALLS += sources
 

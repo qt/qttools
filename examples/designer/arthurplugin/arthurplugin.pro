@@ -1,9 +1,21 @@
+QT += designer
+
+QTDIR_build {
+# This is only for the Qt build. Do not use externally. We mean it.
+PLUGIN_TYPE = designer
+load(qt_plugin)
+} else {
+# Public example:
 
 CONFIG      += plugin
-QT          += designer
 TEMPLATE    = lib
-TARGET = $$qtLibraryTarget(arthurplugin)
-DESTDIR = $$QT.designer.plugins/designer
+
+TARGET = $$qtLibraryTarget($$TARGET)
+
+target.path = $$[QT_INSTALL_PLUGINS]/designer
+INSTALLS += target
+
+}
 
 contains(QT_CONFIG, opengl) {
     DEFINES += QT_OPENGL_SUPPORT
@@ -41,10 +53,9 @@ HEADERS = \
 RESOURCES += arthur_plugin.qrc
 
 # install
-target.path = $$[QT_INSTALL_PLUGINS]/designer
 sources.files = $$SOURCES $$HEADERS $$RESOURCES *.pro *.jpg *.png
 sources.path = $$[QT_INSTALL_EXAMPLES]/qttools/designer/arthurplugin
-INSTALLS += target sources
+INSTALLS += sources
 
 win32-msvc* {
     QMAKE_CFLAGS += /Zm500
