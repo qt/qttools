@@ -94,6 +94,8 @@ public:
     ProFile *parsedProBlock(const QString &contents, const QString &name, int line = 0,
                             SubGrammar grammar = FullGrammar);
 
+    void discardFileFromCache(const QString &fileName);
+
 private:
     struct BlockScope {
         BlockScope() : start(0), braceLevel(0), special(false), inBranch(false) {}
