@@ -19,9 +19,6 @@ DEPENDPATH += ../shared
 
 include(../../shared/fontpanel/fontpanel.pri)
 
-# ## Work around a qmake issue when statically linking to
-# ## not-yet-installed plugins
-QMAKE_LIBDIR += $$QT.core.plugins/sqldrivers
 HEADERS += aboutdialog.h \
     bookmarkdialog.h \
     bookmarkfiltermodel.h \
