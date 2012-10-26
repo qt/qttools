@@ -1,5 +1,3 @@
-DESTDIR = $$QT.designer.bins
-
 QT = core-private
 
 !isEmpty(QT.qmldevtools.name) {

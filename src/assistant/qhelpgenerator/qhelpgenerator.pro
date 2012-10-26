@@ -1,4 +1,3 @@
-DESTDIR = $$QT.help.bins
 QT += network help-private
 
 SOURCES += ../shared/helpgenerator.cpp \

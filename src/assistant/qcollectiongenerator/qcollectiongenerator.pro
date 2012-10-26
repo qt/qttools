@@ -1,5 +1,4 @@
 QT += network help-private
-DESTDIR = $$QT.help.bins
 TARGET = qcollectiongenerator
 SOURCES += ../shared/helpgenerator.cpp \
     main.cpp \
