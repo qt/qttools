@@ -43,8 +43,6 @@
 
 #include <qplatformdefs.h>
 
-#ifndef QT_NO_TRANSLATION
-
 #include <QDataStream>
 #include <QDebug>
 
@@ -183,5 +181,3 @@ void TranslatorMessage::dump() const
 
 
 QT_END_NAMESPACE
-
-#endif // QT_NO_TRANSLATION

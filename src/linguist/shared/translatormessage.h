@@ -42,8 +42,6 @@
 #ifndef TRANSLATORMESSAGE_H
 #define TRANSLATORMESSAGE_H
 
-#ifndef QT_NO_TRANSLATION
-
 #include <QString>
 #include <QStringList>
 #include <QHash>
@@ -175,7 +173,5 @@ private:
 Q_DECLARE_TYPEINFO(TranslatorMessage, Q_MOVABLE_TYPE);
 
 QT_END_NAMESPACE
-
-#endif // QT_NO_TRANSLATION
 
 #endif // TRANSLATORMESSAGE_H
