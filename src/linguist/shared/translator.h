@@ -61,9 +61,8 @@ public:
 };
 class QCoreApplication : public QObject {
 public:
-    enum Encoding { UnicodeUTF8, Latin1, DefaultCodec = Latin1 };
     static QString translate(const char *, const char *sourceText, const char * = 0,
-                             Encoding = DefaultCodec, int n = -1)
+                             int n = -1)
         { return tr(sourceText, 0, n); }
 };
 #endif
