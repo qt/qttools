@@ -1,4 +1,5 @@
-QT = core-private
+option(host_build)
+QT = bootstrap-private
 DEFINES += QT_NO_CAST_FROM_ASCII QT_NO_CAST_TO_ASCII
 
 SOURCES += main.cpp

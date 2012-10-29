@@ -1,6 +1,6 @@
 
 # infrastructure
-QT *= xml
+!host_build: QT *= xml
 
 INCLUDEPATH *= $$PWD
 
