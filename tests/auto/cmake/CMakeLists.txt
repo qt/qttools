@@ -36,4 +36,13 @@ endif()
 find_package(Qt5Widgets)
 if (Qt5Widgets_FOUND)
     expect_pass(test_modules)
+
+    set(Qt5_MODULE_TEST_DEPENDS Xml Widgets)
+
+    test_module_includes(
+      Designer QFormBuilder
+      Help QHelpSearchQuery
+      UiTools QUiLoader
+    )
+
 endif()
