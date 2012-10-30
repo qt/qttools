@@ -2,7 +2,7 @@ QT += widgets network testlib
 CONFIG += testcase
 
 TEMPLATE = app
-!embedded:CONFIG += uitools
+!embedded:QT += uitools
 TARGET = ../tst_uiloader
 DEFINES += SRCDIR=\\\"$$PWD\\\"
 
