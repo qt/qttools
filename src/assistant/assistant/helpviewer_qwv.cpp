@@ -89,6 +89,7 @@ HelpNetworkReply::HelpNetworkReply(const QNetworkRequest &request,
 {
     TRACE_OBJ
     setRequest(request);
+    setUrl(request.url());
     setOpenMode(QIODevice::ReadOnly);
 
     setHeader(QNetworkRequest::ContentTypeHeader, mimeType);
@@ -274,7 +275,7 @@ HelpViewer::HelpViewer(qreal zoom, QWidget *parent)
     connect(page(), SIGNAL(printRequested(QWebFrame*)), this, SIGNAL(printRequested()));
 
     setFont(viewerFont());
-    setTextSizeMultiplier(zoom == 0.0 ? 1.0 : zoom);
+    setZoomFactor(zoom == 0.0 ? 1.0 : zoom);
 }
 
 QFont HelpViewer::viewerFont() const
@@ -299,25 +300,25 @@ void HelpViewer::setViewerFont(const QFont &font)
 void HelpViewer::scaleUp()
 {
     TRACE_OBJ
-    setTextSizeMultiplier(textSizeMultiplier() + 0.1);
+    setZoomFactor(zoomFactor() + 0.1);
 }
 
 void HelpViewer::scaleDown()
 {
     TRACE_OBJ
-    setTextSizeMultiplier(qMax(0.0, textSizeMultiplier() - 0.1));
+    setZoomFactor(qMax(0.0, zoomFactor() - 0.1));
 }
 
 void HelpViewer::resetScale()
 {
     TRACE_OBJ
-    setTextSizeMultiplier(1.0);
+    setZoomFactor(1.0);
 }
 
 qreal HelpViewer::scale() const
 {
     TRACE_OBJ
-    return textSizeMultiplier();
+    return zoomFactor();
 }
 
 QString HelpViewer::title() const
