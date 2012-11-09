@@ -19,6 +19,8 @@ DEPENDPATH += ../shared
 
 include(../../shared/fontpanel/fontpanel.pri)
 
+QMAKE_DOCS = $$PWD/doc/assistant.qdocconf
+
 # ## Work around a qmake issue when statically linking to
 # ## not-yet-installed plugins
 QMAKE_LIBDIR += $$QT.core.plugins/sqldrivers
