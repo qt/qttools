@@ -57,6 +57,7 @@ int main(int argc, char **argv)
         qDebug() << "   -no-strip          : Don't run 'strip' on the binaries";
         qDebug() << "   -use-debug-libs    : Deploy with debug versions of frameworks and plugins (implies -no-strip)";
         qDebug() << "   -executable=<path> : Let the given executable use the deployed frameworks too";
+        qDebug() << "   -qmldir=<path>     : Deploy imports used by .qml files in the given path";
         qDebug() << "";
         qDebug() << "macdeployqt takes an application bundle as input and makes it";
         qDebug() << "self-contained by copying in the Qt frameworks and plugins that";
@@ -85,6 +86,7 @@ int main(int argc, char **argv)
     bool useDebugLibs = false;
     extern bool runStripEnabled;
     QStringList additionalExecutables;
+    QStringList qmlDirs;
 
     for (int i = 2; i < argc; ++i) {
         QByteArray argument = QByteArray(argv[i]);
@@ -112,11 +114,18 @@ int main(int argc, char **argv)
                 logLevel = number;
         } else if (argument.startsWith(QByteArray("-executable"))) {
             LogDebug() << "Argument found:" << argument;
-            int index = argument.indexOf("=");
-            if (index < 0 || index >= argument.size())
+            int index = argument.indexOf('=');
+            if (index == -1)
                 LogError() << "Missing executable path";
             else
                 additionalExecutables << argument.mid(index+1);
+        } else if (argument.startsWith(QByteArray("-qmldir"))) {
+            LogDebug() << "Argument found:" << argument;
+            int index = argument.indexOf('=');
+            if (index == -1)
+                LogError() << "Missing qml directory path";
+            else
+                qmlDirs << argument.mid(index+1);
         } else if (argument.startsWith("-")) {
             LogError() << "Unknown argument" << argument << "\n";
             return 0;
@@ -135,6 +144,17 @@ int main(int argc, char **argv)
         deployPlugins(appBundlePath, deploymentInfo, useDebugLibs);
         createQtConf(appBundlePath);
     }
+
+    // Convenience: Look for .qml files in the current directoty if no -qmldir specified.
+    if (qmlDirs.isEmpty()) {
+        QDir dir;
+        if (!dir.entryList(QStringList() << QStringLiteral("*.qml")).isEmpty()) {
+            qmlDirs += QStringLiteral(".");
+        }
+    }
+
+    if (!qmlDirs.isEmpty())
+        deployQmlImports(appBundlePath, qmlDirs);
 
     if (dmg) {
         LogNormal();

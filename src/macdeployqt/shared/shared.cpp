@@ -47,6 +47,11 @@
 #include <QRegExp>
 #include <QSet>
 #include <QDirIterator>
+#include <QLibraryInfo>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QJsonValue>
 #include "shared.h"
 
 bool runStripEnabled = true;
@@ -90,7 +95,10 @@ inline QDebug operator<<(QDebug debug, const ApplicationBundleInfo &info)
 
 bool copyFilePrintStatus(const QString &from, const QString &to)
 {
-    if (QFile::copy(from, to)) {
+    if (QFile(to).exists()) {
+        LogNormal() << "File exists, skip copy:" << to;
+        return false;
+    } else if (QFile::copy(from, to)) {
         LogNormal() << " copied:" << from;
         LogNormal() << " to" << to;
         return true;
@@ -279,6 +287,8 @@ void recursiveCopy(const QString &sourcePath, const QString &destinationPath)
 {
     QDir().mkpath(destinationPath);
 
+    LogNormal() << "copy:" << sourcePath << destinationPath;
+
     QStringList files = QDir(sourcePath).entryList(QStringList() << "*", QDir::Files | QDir::NoDotAndDotDot);
     foreach (QString file, files) {
         const QString fileSourcePath = sourcePath + "/" + file;
@@ -292,6 +302,39 @@ void recursiveCopy(const QString &sourcePath, const QString &destinationPath)
     }
 }
 
+void recursiveCopyAndDeploy(const QString &appBundlePath, const QString &sourcePath, const QString &destinationPath)
+{
+    QDir().mkpath(destinationPath);
+
+    LogNormal() << "copy:" << sourcePath << destinationPath;
+
+    QStringList files = QDir(sourcePath).entryList(QStringList() << QStringLiteral("*"), QDir::Files | QDir::NoDotAndDotDot);
+    foreach (QString file, files) {
+        const QString fileSourcePath = sourcePath + QLatin1Char('/') + file;
+        const QString fileDestinationPath = destinationPath + QLatin1Char('/') + file;
+
+        if (file.endsWith("_debug.dylib")) {
+            continue; // Skip debug versions
+        } else if (file.endsWith(QStringLiteral(".dylib"))) {
+            if (copyFilePrintStatus(fileSourcePath, fileDestinationPath)) {
+                runStrip(fileDestinationPath);
+                bool useDebugLibs = false;
+                bool useLoaderPath = false;
+                QList<FrameworkInfo> frameworks = getQtFrameworks(fileDestinationPath, useDebugLibs);
+                deployQtFrameworks(frameworks, appBundlePath, QStringList(fileDestinationPath), useDebugLibs, useLoaderPath);
+            }
+        } else {
+            copyFilePrintStatus(fileSourcePath, fileDestinationPath);
+        }
+    }
+
+    QStringList subdirs = QDir(sourcePath).entryList(QStringList() << QStringLiteral("*"), QDir::Dirs | QDir::NoDotAndDotDot);
+    foreach (QString dir, subdirs) {
+        recursiveCopyAndDeploy(appBundlePath, sourcePath + QLatin1Char('/') + dir, destinationPath + QLatin1Char('/') + dir);
+    }
+}
+
+
 QString copyFramework(const FrameworkInfo &framework, const QString path)
 {
     QString from = framework.sourceFilePath;
@@ -304,7 +347,7 @@ QString copyFramework(const FrameworkInfo &framework, const QString path)
     QFileInfo fromDirInfo(framework.frameworkPath + QLatin1Char('/')
                       + framework.binaryDirectory);
     bool fromDirIsSymLink = fromDirInfo.isSymLink();
-    QString unresolvedToDir = path + "/" + framework.destinationDirectory;
+    QString unresolvedToDir = path + QLatin1Char('/') + framework.destinationDirectory;
     QString resolvedToDir;
     QString relativeLinkTarget; // will contain the link from Current to e.g. 4 in the Versions directory
     if (fromDirIsSymLink) {
@@ -560,7 +603,12 @@ void deployPlugins(const ApplicationBundleInfo &appBundleInfo, const QString &pl
 
 void createQtConf(const QString &appBundlePath)
 {
-    QByteArray contents = "[Paths]\nPlugins = PlugIns\n";
+    // Set Plugins and imports paths. These are relative to App.app/Contents.
+    QByteArray contents = "[Paths]\n"
+                          "Plugins = PlugIns\n"
+                          "Imports = Resources/qml\n"
+                          "Qml2Imports = Resources/qml\n";
+
     QString filePath = appBundlePath + "/Contents/Resources/";
     QString fileName = filePath + "qt.conf";
 
@@ -594,6 +642,65 @@ void deployPlugins(const QString &appBundlePath, DeploymentInfo deploymentInfo, 
     deployPlugins(applicationBundle, deploymentInfo.pluginPath, pluginDestinationPath, deploymentInfo, useDebugLibs);
 }
 
+void deployQmlImport(const QString &appBundlePath, const QString &importSourcePath, const QString &importName)
+{
+    QString importDestinationPath = appBundlePath + "/Contents/Resources/qml/" + importName;
+    recursiveCopyAndDeploy(appBundlePath, importSourcePath, importDestinationPath);
+}
+
+// Scan qml files in qmldirs for import statements, deploy used imports from Qml2ImportsPath to Contents/Resources/qml.
+void deployQmlImports(const QString &appBundlePath, QStringList &qmlDirs)
+{
+    // verify that qmlimportscanner is in BinariesPath
+    QString qmlImportScannerPath = QDir::cleanPath(QLibraryInfo::location(QLibraryInfo::BinariesPath) + "/qmlimportscanner");
+    if (!QFile(qmlImportScannerPath).exists()) {
+        LogError() << "qmlimportscanner not found at" << qmlImportScannerPath;
+        LogError() << "Rebuild qtdeclarative/tools/qmlimportscanner";
+        return;
+    }
+
+    // run qmlimportscanner
+    QString qmlImportsPath = QLibraryInfo::location(QLibraryInfo::Qml2ImportsPath);
+    QProcess qmlImportScanner;
+    qmlImportScanner.setProcessChannelMode(QProcess::MergedChannels);
+    qmlImportScanner.start(qmlImportScannerPath, QStringList() << qmlDirs << "-importPath" << qmlImportsPath);
+    if (!qmlImportScanner.waitForStarted()) {
+        LogError() << "Could not start qmlimpoortscanner. Process error is" << qmlImportScanner.errorString();
+        return;
+    }
+
+    qmlImportScanner.waitForFinished();
+    QByteArray json = qmlImportScanner.readAll();
+
+    // parse qmlimportscanner json
+    QJsonDocument doc = QJsonDocument::fromJson(json);
+    if (!doc.isArray()) {
+        LogError() << "qmlimportscanner output error. Expected json array, got:";
+        LogError() << json;
+        return;
+    }
+
+    // deploy each import
+    foreach (const QJsonValue &importValue, doc.array()) {
+        if (!importValue.isObject())
+            continue;
+
+        QJsonObject import = importValue.toObject();
+        QString name = import["name"].toString();
+        QString path = import["path"].toString();
+
+        // Create the destination path from the name
+        // and version (grabbed from the source path)
+        // ### let qmlimportscanner provide this.
+        name.replace(QLatin1Char('.'), QLatin1Char('/'));
+        int secondTolast = path.length() - 2;
+        QString version = path.mid(secondTolast);
+        if (version.startsWith(QLatin1Char('.')))
+            name.append(version);
+
+        deployQmlImport(appBundlePath, path, name);
+    }
+}
 
 void changeQtFrameworks(const QList<FrameworkInfo> frameworks, const QStringList &binaryPaths, const QString &absoluteQtPath)
 {
