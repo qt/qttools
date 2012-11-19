@@ -305,6 +305,23 @@ static QStringList getSources(const ProFileEvaluator &visitor, const QString &pr
     sourceFiles.removeDuplicates();
     sourceFiles.sort();
 
+    QStringList excludes;
+    foreach (QString ex, visitor.values(QLatin1String("TR_EXCLUDE"))) {
+        if (!QFileInfo(ex).isAbsolute())
+            ex = QDir(projectDir).absoluteFilePath(ex);
+        excludes << QDir::cleanPath(ex);
+    }
+    foreach (const QString &ex, excludes) {
+        // TODO: take advantage of the file list being sorted
+        QRegExp rx(ex, Qt::CaseSensitive, QRegExp::Wildcard);
+        for (QStringList::Iterator it = sourceFiles.begin(); it != sourceFiles.end(); ) {
+            if (rx.exactMatch(*it))
+                it = sourceFiles.erase(it);
+            else
+                ++it;
+        }
+    }
+
     return sourceFiles;
 }
 
