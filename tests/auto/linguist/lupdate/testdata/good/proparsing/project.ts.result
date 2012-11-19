@@ -56,8 +56,8 @@
     <name>QCoreApplication</name>
     <message>
         <location filename="vpaths/dependpath/main_dependpath.cpp" line="48"/>
-        <source>Hello from a DEPENDPATH</source>
-        <comment>See if the DEPENDPATH thing works</comment>
+        <source>Hello from a VPATH</source>
+        <comment>See if the VPATH thing works</comment>
         <translation type="unfinished"></translation>
     </message>
 </context>

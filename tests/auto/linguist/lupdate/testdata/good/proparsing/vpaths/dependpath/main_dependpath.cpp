@@ -45,7 +45,7 @@
 
 int main(int argc, char **argv)
 {
-    QCoreApplication::tr("Hello from a DEPENDPATH", "See if the DEPENDPATH thing works");
+    QCoreApplication::tr("Hello from a VPATH", "See if the VPATH thing works");
 }
 
 

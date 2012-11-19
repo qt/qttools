@@ -287,7 +287,6 @@ static QStringList getSources(const ProFileEvaluator &visitor, const QString &pr
     QStringList baseVPaths;
     baseVPaths += visitor.absolutePathValues(QLatin1String("VPATH"), projectDir);
     baseVPaths << projectDir; // QMAKE_ABSOLUTE_SOURCE_PATH
-    baseVPaths += visitor.absolutePathValues(QLatin1String("DEPENDPATH"), projectDir);
     baseVPaths.removeDuplicates();
 
     QStringList sourceFiles;

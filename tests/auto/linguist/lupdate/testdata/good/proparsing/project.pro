@@ -20,7 +20,7 @@ SOURCES += wildcard/main*.cpp \
             wildcard*.cpp
 
 
-DEPENDPATH = vpaths/dependpath
+VPATH = vpaths/dependpath
 
 # The purpose of this test is to test expansion of environment variables,
 # and to test if the DEPENDPATH variable is considered correctly.
