@@ -91,7 +91,7 @@ template <> inline IFace *qt_extension_helper<IFace *>(QAbstractExtensionManager
 #else
 
 template <class T>
-inline T qt_extension(QAbstractExtensionManager* manager, QObject *object)
+inline T qt_extension(QAbstractExtensionManager *, QObject *)
 { return 0; }
 
 #define Q_DECLARE_EXTENSION_INTERFACE(IFace, IId) \
