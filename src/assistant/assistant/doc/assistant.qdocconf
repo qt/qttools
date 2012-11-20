@@ -1,16 +1,37 @@
-include(../../../../qdoc3/test/qt.qdocconf)
+include($QT_INSTALL_DOCS/global/qt-module-defaults.qdocconf)
 
-version                 =
+project                 = Qt Assistant
+description             = Qt Assistant Manual
+url                     = http://qt-project.org/doc/qtassistant
 
-sourcedirs = $QTDIR/tools/assistant/tools/assistant/doc
-imagedirs = $QTDIR/tools/assistant/tools/assistant/doc/images
-outputdir = $QTDIR/tools/assistant/tools/assistant/doc/html
-project = assistant
-description = "Qt Assistant"
-HTML.{postheader,address} = ""
-HTML.footer = "<p /><address><hr /><div align=\"center\">\n" \
-              "<table width=\"100%\" cellspacing=\"0\" border=\"0\"><tr class=\"address\">\n" \
-              "<td width=\"30%\" align=\"left\">Copyright &copy; 2012 Digia Plc and/or its subsidiary(-ies)</td>\n" \
-              "<td width=\"40%\" align=\"center\">Trademarks</td>\n" \
-              "<td width=\"30%\" align=\"right\"><div align=\"right\">Qt 5.0.0</div></td>\n" \
-              "</tr></table></div></address>"
+qhp.projects            = Assistant
+
+qhp.Assistant.file                = assistant.qhp
+qhp.Assistant.namespace           = com.qt-project.assistant.500
+qhp.Assistant.virtualFolder       = assistant
+qhp.Assistant.indexTitle          = Qt Assistant Manual
+
+qhp.Assistant.filterAttributes    = qt 5.0.0 tools assistant
+qhp.Assistant.customFilters.Assistant.name = Qt Assistant Manual
+qhp.Assistant.customFilters.Assistant.filterAttributes = qt tools assistant
+qhp.Assistant.subprojects         = manual examples
+qhp.Assistant.subprojects.manual.title = Manual
+qhp.Assistant.subprojects.manual.indexTitle = Qt Assistant Manual
+qhp.Assistant.subprojects.manual.selectors = fake:page
+qhp.Assistant.subprojects.examples.title = Examples
+qhp.Assistant.subprojects.examples.indexTitle = Qt Examples
+qhp.Assistant.subprojects.examples.selectors = fake:example
+qhp.Assistant.subprojects.examples.sortPages = true
+
+language                = Cpp
+
+sourcedirs              = ..
+
+exampledirs             = ../../../../examples \
+                          snippets
+
+imagedirs               = images
+
+outputdir               = $QT_INSTALL_DOCS/assistant
+
+depends                 += qtdoc

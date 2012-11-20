@@ -19,6 +19,8 @@ DEPENDPATH += ../shared
 
 include(../../shared/fontpanel/fontpanel.pri)
 
+QMAKE_DOCS = $$PWD/doc/assistant.qdocconf
+
 HEADERS += aboutdialog.h \
     bookmarkdialog.h \
     bookmarkfiltermodel.h \
