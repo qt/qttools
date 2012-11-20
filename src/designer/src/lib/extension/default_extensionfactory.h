@@ -42,7 +42,7 @@
 #ifndef DEFAULT_EXTENSIONFACTORY_H
 #define DEFAULT_EXTENSIONFACTORY_H
 
-#include "extension_global.h"
+#include <QtDesigner/extension_global.h>
 #include <QtDesigner/extension.h>
 
 #include <QtCore/QMap>
