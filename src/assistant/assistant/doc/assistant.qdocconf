@@ -1,6 +1,6 @@
 include($QT_INSTALL_DOCS/global/qt-module-defaults.qdocconf)
 
-project                 = Qt Assistant
+project                 = qtassistant
 description             = Qt Assistant Manual
 url                     = http://qt-project.org/doc/qtassistant
 
@@ -32,6 +32,6 @@ exampledirs             = ../../../../examples \
 
 imagedirs               = images
 
-outputdir               = $QT_INSTALL_DOCS/assistant
+outputdir               = $QT_INSTALL_DOCS/qtassistant
 
 depends                 += qtdoc
