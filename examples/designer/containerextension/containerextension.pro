@@ -36,7 +36,7 @@ OTHER_FILES += multipagewidget.json
 #! [2]
 
 # install
-sources.files = $$SOURCES $$HEADERS *.pro
+sources.files = $$SOURCES $$HEADERS *.pro multipagewidget.json
 sources.path = $$[QT_INSTALL_EXAMPLES]/qttools/designer/containerextension
 INSTALLS += sources
 
