@@ -58,7 +58,7 @@
            displayed properly.
     \endlist
 
-    Note that we will only comment on the parts of the implementation
+    \note We will only comment on the parts of the implementation
     that are relevant to the main issue, that is making Qt Assistant
     act as a customized help viewer for our Simple Text Viewer
     application.
@@ -228,7 +228,7 @@
 
     The \c cacheDirectory tag specifies a subdirectory of the users
     data directory (see the
-    \l{Using Qt Assistant as a Custom Help Viewer#Qt Help Collection Files}{Qt Help Collection Files})
+    \l{Customizing Qt Assistant#Qt Help Collection Files}{Qt Help Collection Files})
     where the cache file for the full text search or the settings file will
     be stored.
 
@@ -259,7 +259,7 @@
     preferences dialog. This functionality is helpful when using \QA
     as the central help viewer for more applications, but in our case
     we want to actually prevent the user from removing the documentation.
-    So, we disable the documentation manager.
+    So, we hide the \gui Documentation tab in the \gui Preferences dialog.
 
     Since the address bar is not really relevant in such a small
     documentation set we switch it off as well. By having just one filter
@@ -386,7 +386,7 @@
 
     Then we create all the actions for the Simple Text Viewer application.
     Of special interest is the \c assistantAct action accessible
-    via the \key{F1} shortcut or the \menu{Help|Help Contents} menu item.
+    via the \key{F1} shortcut or the \gui Help > \gui {Help Contents} menu item.
     This action is connected to the \c showDocumentation() slot of
     the \c MainWindow class.
 
@@ -441,7 +441,7 @@
     process that controls \QA in addition to a custom help collection
     file including Qt compressed help files.
 
-    The \l{Using Qt Assistant as a Custom Help Viewer} document contains
-    more information about the options and settings available to
-    applications that use \QA as a custom help viewer.
+    For  more information about the options and settings available to
+    applications that use \QA as a custom help viewer, see
+    \l{Customizing Qt Assistant}.
 */
