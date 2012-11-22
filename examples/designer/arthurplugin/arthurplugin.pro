@@ -23,15 +23,14 @@ contains(QT_CONFIG, opengl) {
 }
 
 QT_BASE_EXAMPLES = $$QT.core.sources/../../examples
+SHARED_FOLDER = $$QT_BASE_EXAMPLES/widgets/painting/shared
+include($$QT_BASE_EXAMPLES/widgets/painting/shared/shared.pri)
 
-SHARED_FOLDER = $$QT_BASE_EXAMPLES/painting/shared
-include($$QT_BASE_EXAMPLES/painting/shared/shared.pri)
-
-EXAMPLE_AFFINE_DIR = $$QT_BASE_EXAMPLES/painting/affine
-EXAMPLE_COMPOSITION_DIR = $$QT_BASE_EXAMPLES/painting/composition
-EXAMPLE_DEFORM_DIR = $$QT_BASE_EXAMPLES/painting/deform
-EXAMPLE_GRADIENT_DIR = $$QT_BASE_EXAMPLES/painting/gradients
-EXAMPLE_STROKE_DIR = $$QT_BASE_EXAMPLES/painting/pathstroke
+EXAMPLE_AFFINE_DIR = $$QT_BASE_EXAMPLES/widgets/painting/affine
+EXAMPLE_COMPOSITION_DIR = $$QT_BASE_EXAMPLES/widgets/painting/composition
+EXAMPLE_DEFORM_DIR = $$QT_BASE_EXAMPLES/widgets/painting/deform
+EXAMPLE_GRADIENT_DIR = $$QT_BASE_EXAMPLES/widgets/painting/gradients
+EXAMPLE_STROKE_DIR = $$QT_BASE_EXAMPLES/widgets/painting/pathstroke
 
 INCLUDEPATH += $$EXAMPLE_AFFINE_DIR $$EXAMPLE_COMPOSITION_DIR $$EXAMPLE_DEFORM_DIR $$EXAMPLE_GRADIENT_DIR $$EXAMPLE_STROKE_DIR
 
