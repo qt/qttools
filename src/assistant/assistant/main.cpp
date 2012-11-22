@@ -212,7 +212,7 @@ bool removeSearchIndex(const QString &collectionFile)
     return true;
 }
 
-bool rebuildSearchIndex(QCoreApplication &app, const QString &collectionFile,
+bool rebuildSearchIndex(QCoreApplication *app, const QString &collectionFile,
                         CmdLineParser &cmd)
 {
     TRACE_OBJ
@@ -224,16 +224,15 @@ bool rebuildSearchIndex(QCoreApplication &app, const QString &collectionFile,
     }
 
     QHelpSearchEngine * const searchEngine = engine.searchEngine();
-    QObject::connect(searchEngine, SIGNAL(indexingFinished()), &app,
+    QObject::connect(searchEngine, SIGNAL(indexingFinished()), app,
                      SLOT(quit()));
     searchEngine->reindexDocumentation();
-    return app.exec() == 0;
+    return app->exec() == 0;
 }
 
-QApplication::Type useGui(int argc, char *argv[])
+QCoreApplication* createApplication(int &argc, char *argv[])
 {
     TRACE_OBJ
-    QApplication::Type appType = QApplication::GuiClient;
 #ifndef Q_OS_WIN
     // Look for arguments that imply command-line mode.
     const char * cmdModeArgs[] = {
@@ -242,17 +241,12 @@ QApplication::Type useGui(int argc, char *argv[])
     };
     for (int i = 1; i < argc; ++i) {
         for (size_t j = 0; j < sizeof cmdModeArgs/sizeof *cmdModeArgs; ++j) {
-            if(strcmp(argv[i], cmdModeArgs[j]) == 0) {
-                appType = QApplication::Tty;
-                break;
-            }
+            if (strcmp(argv[i], cmdModeArgs[j]) == 0)
+                return new QCoreApplication(argc, argv);
         }
     }
-#else
-    Q_UNUSED(argc)
-    Q_UNUSED(argv)
 #endif
-    return appType;
+    return new QApplication(argc, argv);
 }
 
 bool registerDocumentation(QHelpEngineCore &collection, CmdLineParser &cmd,
@@ -320,13 +314,12 @@ void setupTranslations()
 int main(int argc, char *argv[])
 {
     TRACE_OBJ
-    QApplication::Type appType = useGui(argc, argv);
-    QApplication a(argc, argv, appType);
-    a.addLibraryPath(a.applicationDirPath() + QLatin1String("/plugins"));
+    QScopedPointer<QCoreApplication> a(createApplication(argc, argv));
+    a->addLibraryPath(a->applicationDirPath() + QLatin1String("/plugins"));
     setupTranslations();
 
 #if !defined(QT_NO_WEBKIT)
-    if (appType != QApplication::Tty) {
+    if (qobject_cast<QApplication *>(a.data())) {
         QFont f;
         f.setStyleHint(QFont::SansSerif);
         QWebSettings::globalSettings()->setFontFamily(QWebSettings::StandardFont, f.defaultFamily());
@@ -334,7 +327,7 @@ int main(int argc, char *argv[])
 #endif
 
     // Parse arguments.
-    CmdLineParser cmd(a.arguments());
+    CmdLineParser cmd(a->arguments());
     CmdLineParser::Result res = cmd.parse();
     if (res == CmdLineParser::Help)
         return 0;
@@ -418,7 +411,7 @@ int main(int argc, char *argv[])
     }
 
     if (cmd.rebuildSearchIndex()) {
-        return rebuildSearchIndex(a, cachedCollectionFile, cmd)
+        return rebuildSearchIndex(a.data(), cachedCollectionFile, cmd)
             ? EXIT_SUCCESS : EXIT_FAILURE;
     }
 
@@ -440,14 +433,14 @@ int main(int argc, char *argv[])
 
     MainWindow *w = new MainWindow(&cmd);
     w->show();
-    a.connect(&a, SIGNAL(lastWindowClosed()), &a, SLOT(quit()));
+    a->connect(a.data(), SIGNAL(lastWindowClosed()), a.data(), SLOT(quit()));
 
     /*
      * We need to be careful here: The main window has to be deleted before
      * the help engine wrapper, which has to be deleted before the
      * QApplication.
      */
-    const int retval = a.exec();
+    const int retval = a->exec();
     delete w;
     HelpEngineWrapper::removeInstance();
     return retval;
