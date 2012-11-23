@@ -1859,21 +1859,6 @@ DomCustomWidgets *QDesignerResource::saveCustomWidgets()
     return customWidgets;
 }
 
-bool QDesignerResource::canCompressMargins(QObject *object) const
-{
-    if (QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(core()->extensionManager(), object)) {
-        if (qobject_cast<QLayout *>(object)) {
-            const int l = sheet->property(sheet->indexOf(QStringLiteral("leftMargin"))).toInt();
-            const int t = sheet->property(sheet->indexOf(QStringLiteral("topMargin"))).toInt();
-            const int r = sheet->property(sheet->indexOf(QStringLiteral("rightMargin"))).toInt();
-            const int b = sheet->property(sheet->indexOf(QStringLiteral("bottomMargin"))).toInt();
-            if (l == t && l == r && l == b)
-                return true;
-        }
-    }
-    return false;
-}
-
 bool QDesignerResource::canCompressSpacings(QObject *object) const
 {
     if (QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(core()->extensionManager(), object)) {
@@ -1893,9 +1878,7 @@ QList<DomProperty*> QDesignerResource::computeProperties(QObject *object)
     if (QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(core()->extensionManager(), object)) {
         QDesignerDynamicPropertySheetExtension *dynamicSheet = qt_extension<QDesignerDynamicPropertySheetExtension*>(core()->extensionManager(), object);
         const int count = sheet->count();
-        QList<DomProperty *> marginProperties;
         QList<DomProperty *> spacingProperties;
-        const bool compressMargins = canCompressMargins(object);
         const bool compressSpacings = canCompressSpacings(object);
         for (int index = 0; index < count; ++index) {
             if (!sheet->isChanged(index) && (!dynamicSheet || !dynamicSheet->isDynamicProperty(index)))
@@ -1908,29 +1891,12 @@ QList<DomProperty*> QDesignerResource::computeProperties(QObject *object)
 
             const QVariant value = sheet->property(index);
             if (DomProperty *p = createProperty(object, propertyName, value)) {
-                if (compressMargins && (propertyName == QStringLiteral("leftMargin")
-                        || propertyName == QStringLiteral("rightMargin")
-                        || propertyName == QStringLiteral("topMargin")
-                        || propertyName == QStringLiteral("bottomMargin"))) {
-                    marginProperties.append(p);
-                } else if (compressSpacings && (propertyName == QStringLiteral("horizontalSpacing")
+                if (compressSpacings && (propertyName == QStringLiteral("horizontalSpacing")
                         || propertyName == QStringLiteral("verticalSpacing"))) {
                     spacingProperties.append(p);
                 } else {
                     properties.append(p);
                 }
-            }
-        }
-        if (compressMargins) {
-            if (marginProperties.count() == 4) { // if we have 3 it means one is reset so we can't compress
-                DomProperty *marginProperty = marginProperties.at(0);
-                marginProperty->setAttributeName(QStringLiteral("margin"));
-                properties.append(marginProperty);
-                delete marginProperties.at(1);
-                delete marginProperties.at(2);
-                delete marginProperties.at(3);
-            } else {
-                properties += marginProperties;
             }
         }
         if (compressSpacings) {
