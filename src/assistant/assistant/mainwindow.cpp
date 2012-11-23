@@ -223,6 +223,9 @@ MainWindow::MainWindow(CmdLineParser *cmdLine, QWidget *parent)
         contentDock->raise();
         const QRect screen = QApplication::desktop()->screenGeometry();
         resize(4*screen.width()/5, 4*screen.height()/5);
+
+        adjustSize();   // make sure we won't start outside of the screen
+        move(screen.center() - rect().center());
     }
 
     if (!helpEngineWrapper.hasFontSettings()) {
@@ -326,7 +329,7 @@ bool MainWindow::initHelpDB(bool registerInternalDoc)
         return true;
     }
     bool assistantInternalDocRegistered = false;
-    QString intern(QLatin1String("com.trolltech.com.assistantinternal-"));
+    QString intern(QLatin1String("org.qt-project.assistantinternal-"));
     foreach (const QString &ns, helpEngineWrapper.registeredDocumentations()) {
         if (ns.startsWith(intern)) {
             intern = ns;
@@ -1016,7 +1019,7 @@ QString MainWindow::collectionFileDirectory(bool createDir, const QString &cache
 {
     TRACE_OBJ
     QString collectionPath =
-        QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+        QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation);
     if (collectionPath.isEmpty()) {
         if (cacheDir.isEmpty())
             collectionPath = QDir::homePath() + QDir::separator()
@@ -1025,7 +1028,7 @@ QString MainWindow::collectionFileDirectory(bool createDir, const QString &cache
             collectionPath = QDir::homePath() + QLatin1String("/.") + cacheDir;
     } else {
         if (cacheDir.isEmpty())
-            collectionPath = collectionPath + QLatin1String("/Trolltech/Assistant");
+            collectionPath = collectionPath + QLatin1String("/QtProject/Assistant");
         else
             collectionPath = collectionPath + QDir::separator() + cacheDir;
     }

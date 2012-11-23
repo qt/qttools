@@ -62,6 +62,22 @@
 
 QT_BEGIN_NAMESPACE
 
+static const char g_htmlPage[] = "<html><head><meta http-equiv=\"content-type\" content=\"text/html; "
+    "charset=UTF-8\"><title>%1</title><style>body{padding: 3em 0em;background: #eeeeee;}"
+    "hr{color: lightgray;width: 100%;}img{float: left;opacity: .8;}#box{background: white;border: 1px solid "
+    "lightgray;width: 600px;padding: 60px;margin: auto;}h1{font-size: 130%;font-weight: bold;border-bottom: "
+    "1px solid lightgray;margin-left: 48px;}h2{font-size: 100%;font-weight: normal;border-bottom: 1px solid "
+    "lightgray;margin-left: 48px;}ul{font-size: 80%;padding-left: 48px;margin: 0;}#reloadButton{padding-left:"
+    "48px;}</style></head><body><div id=\"box\"><h1>%2</h1><h2>%3</h2><h2><b>%4</b></h2></div></body></html>";
+
+// some of the values we will replace %1...4 inside the former html
+const QString g_percent1 = QCoreApplication::translate("HelpViewer", "Error 404...");
+const QString g_percent2 = QCoreApplication::translate("HelpViewer", "The page could not be found!");
+// percent3 will be the url of the page we got the error from
+const QString g_percent4 = QCoreApplication::translate("HelpViewer", "Please make sure that you have all "
+    "documentation sets installed.");
+
+
 // -- HelpNetworkReply
 
 class HelpNetworkReply : public QNetworkReply
@@ -148,8 +164,8 @@ QNetworkReply *HelpNetworkAccessManager::createRequest(Operation /*op*/,
         url = HelpViewer::fixupVirtualFolderForUrl(&engine, request.url(), &fileFound);
 
     const QString &mimeType = HelpViewer::mimeFromUrl(url);
-    const QByteArray &data = fileFound ? engine.fileData(url)
-        : HelpViewer::PageNotFoundMessage.arg(url).toUtf8();
+    const QByteArray &data = fileFound ? engine.fileData(url) : QString::fromLatin1(g_htmlPage)
+        .arg(g_percent1, g_percent2, HelpViewer::tr("Error loading: %1").arg(url), g_percent4).toUtf8();
 
     return new HelpNetworkReply(request, data, mimeType.isEmpty()
         ? QLatin1String("application/octet-stream") : mimeType);
