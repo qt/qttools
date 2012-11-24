@@ -134,12 +134,11 @@ static const char * const catalanForms[] = { "Singular", "Undecal (11)", "Plural
 #define EOL QLocale::C
 
 static const QLocale::Language japaneseStyleLanguages[] = {
-    QLocale::Afan,
     QLocale::Armenian,
-    QLocale::Bhutani,
     QLocale::Bislama,
     QLocale::Burmese,
     QLocale::Chinese,
+    QLocale::Dzongkha,
     QLocale::Fijian,
     QLocale::Guarani,
     QLocale::Hungarian,
@@ -149,6 +148,7 @@ static const QLocale::Language japaneseStyleLanguages[] = {
     QLocale::Korean,
     QLocale::Malay,
     QLocale::NauruLanguage,
+    QLocale::Oromo,
     QLocale::Persian,
     QLocale::Sundanese,
     QLocale::Thai,
@@ -173,9 +173,7 @@ static const QLocale::Language englishStyleLanguages[] = {
     QLocale::Basque,
     QLocale::Bengali,
     QLocale::Bihari,
-    // Missing: Bokmal,
     QLocale::Bulgarian,
-    QLocale::Cambodian,
     QLocale::Cornish,
     QLocale::Corsican,
     QLocale::Danish,
@@ -185,8 +183,8 @@ static const QLocale::Language englishStyleLanguages[] = {
     QLocale::Estonian,
     QLocale::Faroese,
     QLocale::Finnish,
-    // Missing: Friulian,
-    QLocale::Frisian,
+    QLocale::Friulian,
+    QLocale::WesternFrisian,
     QLocale::Galician,
     QLocale::Georgian,
     QLocale::German,
@@ -202,22 +200,22 @@ static const QLocale::Language englishStyleLanguages[] = {
     QLocale::Kannada,
     QLocale::Kashmiri,
     QLocale::Kazakh,
+    QLocale::Khmer,
     QLocale::Kinyarwanda,
     QLocale::Kirghiz,
     QLocale::Kurdish,
-    QLocale::Kurundi,
     QLocale::Lao,
     QLocale::Latin,
-    // Missing: Letzeburgesch,
     QLocale::Lingala,
+    QLocale::Luxembourgish,
     QLocale::Malagasy,
     QLocale::Malayalam,
     QLocale::Marathi,
     QLocale::Mongolian,
     // Missing: Nahuatl,
     QLocale::Nepali,
-    // Missing: Northern Sotho,
-    QLocale::Norwegian,
+    QLocale::NorthernSotho,
+    QLocale::NorwegianBokmal, // same as Norwegian
     QLocale::NorwegianNynorsk,
     QLocale::Occitan,
     QLocale::Oriya,
@@ -225,25 +223,26 @@ static const QLocale::Language englishStyleLanguages[] = {
     QLocale::Portuguese,
     QLocale::Punjabi,
     QLocale::Quechua,
-    QLocale::RhaetoRomance,
-    QLocale::Sesotho,
-    QLocale::Setswana,
+    QLocale::Romansh,
+    QLocale::Rundi,
     QLocale::Shona,
     QLocale::Sindhi,
-    QLocale::Singhalese,
-    QLocale::Siswati,
+    QLocale::Sinhala,
     QLocale::Somali,
+    QLocale::SouthernSotho,
     QLocale::Spanish,
     QLocale::Swahili,
+    QLocale::Swati,
     QLocale::Swedish,
     QLocale::Tajik,
     QLocale::Tamil,
     QLocale::Tatar,
     QLocale::Telugu,
-    QLocale::TongaLanguage,
+    QLocale::Tongan,
     QLocale::Tsonga,
+    QLocale::Tswana,
     QLocale::Turkmen,
-    QLocale::Twi,
+    // QLocale::Twi, // mapped to Akan
     QLocale::Uigur,
     QLocale::Urdu,
     QLocale::Uzbek,
@@ -259,9 +258,9 @@ static const QLocale::Language frenchStyleLanguages[] = {
     QLocale::Breton,
     QLocale::French,
     QLocale::Portuguese,
-    // Missing: Filipino,
+    QLocale::Filipino,
     QLocale::Tigrinya,
-    // Missing: Walloon
+    QLocale::Walloon,
     EOL
 };
 static const QLocale::Language latvianLanguage[] = { QLocale::Latvian, EOL };
@@ -274,7 +273,7 @@ static const QLocale::Language irishStyleLanguages[] = {
     QLocale::Irish,
     QLocale::Manx,
     QLocale::Maori,
-    // Missing: Sami,
+    QLocale::NorthernSami,
     QLocale::Samoan,
     QLocale::Sanskrit,
     EOL
@@ -284,17 +283,17 @@ static const QLocale::Language macedonianLanguage[] = { QLocale::Macedonian, EOL
 static const QLocale::Language lithuanianLanguage[] = { QLocale::Lithuanian, EOL };
 static const QLocale::Language russianStyleLanguages[] = {
     QLocale::Bosnian,
-    QLocale::Byelorussian,
+    QLocale::Belarusian,
     QLocale::Croatian,
     QLocale::Russian,
     QLocale::Serbian,
-    QLocale::SerboCroatian,
+    // QLocale::SerboCroatian, // deprecated, mapped to Serbian
     QLocale::Ukrainian,
     EOL
 };
 static const QLocale::Language polishLanguage[] = { QLocale::Polish, EOL };
 static const QLocale::Language romanianLanguages[] = {
-    QLocale::Moldavian,
+    // QLocale::Moldavian, // deprecated, mapped to Romanian
     QLocale::Romanian,
     EOL
 };
@@ -310,6 +309,8 @@ static const QLocale::Country frenchStyleCountries[] = {
     QLocale::AnyCountry,
     QLocale::AnyCountry,
     QLocale::Brazil,
+    QLocale::AnyCountry,
+    QLocale::AnyCountry,
     QLocale::AnyCountry
 };
 struct NumerusTableEntry {
