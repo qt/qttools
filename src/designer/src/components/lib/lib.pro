@@ -10,6 +10,8 @@ load(qt_module)
 DEFINES += QT_STATICPLUGIN
 DEFINES += QDESIGNER_COMPONENTS_LIBRARY
 
+static:DEFINES += QT_DESIGNER_STATIC
+
 load(qt_targets)
 QMAKE_TARGET_PRODUCT = Designer
 QMAKE_TARGET_DESCRIPTION = Graphical user interface designer.

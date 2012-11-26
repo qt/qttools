@@ -11,7 +11,7 @@ INCLUDEPATH += \
 
 RESOURCES += designer.qrc
 
-contains(CONFIG, static) {
+contains(QT_CONFIG, static) {
     DEFINES += QT_DESIGNER_STATIC
 }
 

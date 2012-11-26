@@ -12,6 +12,8 @@ DEFINES += \
     QDESIGNER_UILIB_LIBRARY \
     QDESIGNER_SHARED_LIBRARY
 
+static:DEFINES += QT_DESIGNER_STATIC
+
 #mac frameworks
 mac:CONFIG += explicitlib
 mac:!static:contains(QT_CONFIG, qt_framework) {
