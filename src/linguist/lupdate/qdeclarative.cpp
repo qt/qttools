@@ -107,8 +107,9 @@ protected:
 
             const QString name = idExpr->name.toString();
             const int identLineNo = idExpr->identifierToken.startLine;
-            if (name == QLatin1String("qsTr") ||
-                name == QLatin1String("QT_TR_NOOP")) {
+            switch (trFunctionAliasManager.trFunctionByName(name)) {
+            case TrFunctionAliasManager::Function_qsTr:
+            case TrFunctionAliasManager::Function_QT_TR_NOOP: {
                 if (!node->arguments) {
                     yyMsg(identLineNo) << qPrintable(LU::tr("%1() requires at least one argument.\n").arg(name));
                     return;
@@ -142,8 +143,9 @@ protected:
                 msg.setExtras(extra);
                 m_translator->extend(msg);
                 consumeComment();
-            } else if (name == QLatin1String("qsTranslate") ||
-                       name == QLatin1String("QT_TRANSLATE_NOOP")) {
+                break; }
+            case TrFunctionAliasManager::Function_qsTranslate:
+            case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP: {
                 if (! (node->arguments && node->arguments->next)) {
                     yyMsg(identLineNo) << qPrintable(LU::tr("%1() requires at least two arguments.\n").arg(name));
                     return;
@@ -186,8 +188,9 @@ protected:
                 msg.setExtras(extra);
                 m_translator->extend(msg);
                 consumeComment();
-            } else if (name == QLatin1String("qsTrId") ||
-                       name == QLatin1String("QT_TRID_NOOP")) {
+                break; }
+            case TrFunctionAliasManager::Function_qsTrId:
+            case TrFunctionAliasManager::Function_QT_TRID_NOOP: {
                 if (!node->arguments) {
                     yyMsg(identLineNo) << qPrintable(LU::tr("%1() requires at least one argument.\n").arg(name));
                     return;
@@ -215,6 +218,7 @@ protected:
                 msg.setExtras(extra);
                 m_translator->extend(msg);
                 consumeComment();
+                break; }
             }
         }
     }

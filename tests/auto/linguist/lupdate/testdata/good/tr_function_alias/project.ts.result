@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.0">
+<context>
+    <name></name>
+    <message id="this_a_id">
+        <location filename="main.cpp" line="55"/>
+        <source></source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="this_a_id_alias">
+        <location filename="main.cpp" line="56"/>
+        <source></source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="yet_another_id">
+        <location filename="main.cpp" line="57"/>
+        <source></source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="yet_another_id_alias">
+        <location filename="main.cpp" line="58"/>
+        <source></source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Bogus</name>
+    <message>
+        <location filename="main.cpp" line="67"/>
+        <source>this should be in Bogus</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="68"/>
+        <source>this should be in Bogus Alias</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="69"/>
+        <source>this should be utf8 in Bogus</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="70"/>
+        <source>this should be utf8 in Bogus Alias</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>MyObject</name>
+    <message>
+        <location filename="main.cpp" line="78"/>
+        <source>Boo</source>
+        <comment>nsF::D</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="79"/>
+        <source>Boo_alias</source>
+        <comment>nsB::C</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="80"/>
+        <source>utf8_Boo</source>
+        <comment>nsF::D</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="81"/>
+        <source>utf8_Boo_alias</source>
+        <comment>nsF::D</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>NonQObject</name>
+    <message>
+        <location filename="main.cpp" line="93"/>
+        <source>NonQObject_Boo</source>
+        <comment>nsF::NonQObject_D</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="94"/>
+        <source>NonQObject_Boo_alias</source>
+        <comment>nsB::NonQObject_C</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="95"/>
+        <source>utf_NonQObject_Boo</source>
+        <comment>nsF::D</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="96"/>
+        <source>utf8_NonQObject_Boo_alias</source>
+        <comment>nsF::D</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>NonQObject_QTranslator</name>
+    <message>
+        <location filename="main.cpp" line="97"/>
+        <source>Simple</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="98"/>
+        <source>Simple with comment alias</source>
+        <comment>with comment</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QTranslator</name>
+    <message>
+        <location filename="main.cpp" line="82"/>
+        <source>Simple</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="83"/>
+        <source>Simple with comment alias</source>
+        <comment>with comment</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>scope</name>
+    <message>
+        <location filename="main.cpp" line="47"/>
+        <source>string</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="48"/>
+        <source>string_alias</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="49"/>
+        <source>utf8_string</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="50"/>
+        <source>utf8_string_alias</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="51"/>
+        <source>string_with_comment</source>
+        <comment>comment</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="52"/>
+        <source>string_with_comment_alias</source>
+        <comment>comment</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="53"/>
+        <source>utf8_string_with_comment</source>
+        <comment>comment</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="54"/>
+        <source>utf8_string_with_comment_alias</source>
+        <comment>comment</comment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+</TS>

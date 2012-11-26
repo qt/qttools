@@ -1,6 +1,7 @@
 /****************************************************************************
 **
 ** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2012 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com, author Marc Mutz <marc.mutz@kdab.com>
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Linguist of the Qt Toolkit.
@@ -56,6 +57,107 @@
 #include <QtCore/QLibraryInfo>
 
 #include <iostream>
+
+// Can't have an array of QStaticByteArrayData<N> for different N, so
+// use QByteArray, which requires constructor calls. Doesn't matter
+// much, since this is in an app, not a lib:
+static const QByteArray defaultTrFunctionNames[] = {
+// MSVC can't handle the lambda in this array if QByteArrayLiteral expands
+// to a lambda. In that case, use a QByteArray instead.
+#if defined(Q_CC_MSVC) && defined(Q_COMPILER_LAMBDA)
+#define BYTEARRAYLITERAL(F) QByteArray(#F),
+#else
+#define BYTEARRAYLITERAL(F) QByteArrayLiteral(#F),
+#endif
+    LUPDATE_FOR_EACH_TR_FUNCTION(BYTEARRAYLITERAL)
+#undef BYTEARRAYLITERAL
+};
+Q_STATIC_ASSERT((TrFunctionAliasManager::NumTrFunctions == sizeof defaultTrFunctionNames / sizeof *defaultTrFunctionNames));
+
+static int trFunctionByDefaultName(const QByteArray &trFunctionName)
+{
+    for (int i = 0; i < TrFunctionAliasManager::NumTrFunctions; ++i)
+        if (trFunctionName == defaultTrFunctionNames[i])
+            return i;
+    return -1;
+}
+
+static int trFunctionByDefaultName(const QString &trFunctionName)
+{
+    return trFunctionByDefaultName(trFunctionName.toLatin1());
+}
+
+TrFunctionAliasManager::TrFunctionAliasManager()
+    : m_trFunctionAliases()
+{
+    for (int i = 0; i < NumTrFunctions; ++i)
+        m_trFunctionAliases[i].push_back(defaultTrFunctionNames[i]);
+}
+
+TrFunctionAliasManager::~TrFunctionAliasManager() {}
+
+int TrFunctionAliasManager::trFunctionByName(const QByteArray &trFunctionName) const
+{
+    ensureTrFunctionHashUpdated();
+    // this function needs to be fast
+    const QHash<QByteArray, TrFunction>::const_iterator it
+        = m_nameToTrFunctionMap.find(trFunctionName);
+    return it == m_nameToTrFunctionMap.end() ? -1 : *it;
+}
+
+void TrFunctionAliasManager::modifyAlias(int trFunction, const QByteArray &alias, Operation op)
+{
+    QList<QByteArray> &list = m_trFunctionAliases[trFunction];
+    if (op == SetAlias)
+        list.clear();
+    list.push_back(alias);
+    m_nameToTrFunctionMap.clear();
+}
+
+void TrFunctionAliasManager::ensureTrFunctionHashUpdated() const
+{
+    if (!m_nameToTrFunctionMap.empty())
+        return;
+
+    QHash<QByteArray, TrFunction> nameToTrFunctionMap;
+    for (int i = 0; i < NumTrFunctions; ++i)
+        foreach (const QByteArray &alias, m_trFunctionAliases[i])
+            nameToTrFunctionMap[alias] = TrFunction(i);
+    // commit:
+    m_nameToTrFunctionMap.swap(nameToTrFunctionMap);
+}
+
+static QStringList availableFunctions()
+{
+    QStringList result;
+    result.reserve(TrFunctionAliasManager::NumTrFunctions);
+    for (int i = 0; i < TrFunctionAliasManager::NumTrFunctions; ++i)
+        result.push_back(QString::fromLatin1(defaultTrFunctionNames[i]));
+    return result;
+}
+
+static QStringList byteArrayToStringList(const QList<QByteArray> &in)
+{
+    QStringList result;
+    result.reserve(in.size());
+    foreach (const QByteArray &function, in)
+        result.push_back(QString::fromLatin1(function));
+    return result;
+}
+
+QStringList TrFunctionAliasManager::availableFunctionsWithAliases() const
+{
+    QStringList result;
+    result.reserve(NumTrFunctions);
+    for (int i = 0; i < NumTrFunctions; ++i)
+        result.push_back(QString::fromLatin1(defaultTrFunctionNames[i]) +
+                         QLatin1String(" (=") +
+                         byteArrayToStringList(m_trFunctionAliases[i]).join(QLatin1Char('=')) +
+                         QLatin1Char(')'));
+    return result;
+}
+
+TrFunctionAliasManager trFunctionAliasManager;
 
 static QString m_defaultExtensions;
 
@@ -133,6 +235,11 @@ static void printUsage()
         "    -target-language <language>[_<region>]\n"
         "           Specify the language of the translations for new files.\n"
         "           Guessed from the file name if not specified.\n"
+        "    -tr-function-alias <function>{+=,=}<alias>[,<function>{+=,=}<alias>]...\n"
+        "           With +=, recognize <alias> as an alternative spelling of <function>.\n"
+        "           With  =, recognize <alias> as the only spelling of <function>.\n"
+        "           Available <function>s (with their currently defined aliases) are:\n"
+        "             %2\n"
         "    -ts <ts-file>...\n"
         "           Specify the output file(s). This will override the TRANSLATIONS.\n"
         "    -version\n"
@@ -140,7 +247,39 @@ static void printUsage()
         "    @lst-file\n"
         "           Read additional file names (one per line) or includepaths (one per\n"
         "           line, and prefixed with -I) from lst-file.\n"
-    ).arg(m_defaultExtensions));
+    ).arg(m_defaultExtensions,
+          trFunctionAliasManager.availableFunctionsWithAliases()
+                                .join(QStringLiteral("\n             "))));
+}
+
+static bool handleTrFunctionAliases(const QString &arg)
+{
+    foreach (const QString &pair, arg.split(QLatin1Char(','), QString::SkipEmptyParts)) {
+        const int equalSign = pair.indexOf(QLatin1Char('='));
+        if (equalSign < 0) {
+            printErr(LU::tr("tr-function mapping '%1' in -tr-function-alias is missing the '='.\n").arg(pair));
+            return false;
+        }
+        const bool plusEqual = equalSign > 0 && pair[equalSign-1] == QLatin1Char('+');
+        const int trFunctionEnd = plusEqual ? equalSign-1 : equalSign;
+        const QString trFunctionName = pair.left(trFunctionEnd).trimmed();
+        const QString alias = pair.mid(equalSign+1).trimmed();
+        const int trFunction = trFunctionByDefaultName(trFunctionName);
+        if (trFunction < 0) {
+            printErr(LU::tr("Unknown tr-function '%1' in -tr-function-alias option.\n"
+                            "Available tr-functions are: %2")
+                     .arg(trFunctionName, availableFunctions().join(QLatin1Char(','))));
+            return false;
+        }
+        if (alias.isEmpty()) {
+            printErr(LU::tr("Empty alias for tr-function '%1' in -tr-function-alias option.\n")
+                     .arg(trFunctionName));
+            return false;
+        }
+        trFunctionAliasManager.modifyAlias(trFunction, alias.toLatin1(),
+                                           plusEqual ? TrFunctionAliasManager::AddAlias : TrFunctionAliasManager::SetAlias);
+    }
+    return true;
 }
 
 static void updateTsFiles(const Translator &fetchedTor, const QStringList &tsFileNames,
@@ -638,6 +777,15 @@ int main(int argc, char **argv)
                 return 1;
             }
             extensions = args[i];
+            continue;
+        } else if (arg == QLatin1String("-tr-function-alias")) {
+            ++i;
+            if (i == argc) {
+                printErr(LU::tr("The -tr-function-alias option should be followed by a list of function=alias mappings.\n"));
+                return 1;
+            }
+            if (!handleTrFunctionAliases(args[i]))
+                return 1;
             continue;
         } else if (arg == QLatin1String("-pro")) {
             ++i;

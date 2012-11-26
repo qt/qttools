@@ -292,7 +292,7 @@ private:
     void truncateNamespaces(NamespaceList *namespaces, int lenght);
     Namespace *modifyNamespace(NamespaceList *namespaces, bool haveLast = true);
 
-    enum {
+    enum TokenType {
         Tok_Eof, Tok_class, Tok_friend, Tok_namespace, Tok_using, Tok_return,
         Tok_tr, Tok_trUtf8, Tok_translate, Tok_translateUtf8, Tok_trid,
         Tok_Q_OBJECT, Tok_Q_DECLARE_TR_FUNCTIONS,
@@ -478,28 +478,12 @@ bool CppParser::getMacroArgs()
 }
 
 STRING(Q_OBJECT);
-STRING(Q_DECLARE_TR_FUNCTIONS);
-STRING(QT_TR_NOOP);
-STRING(QT_TRID_NOOP);
-STRING(QT_TRANSLATE_NOOP);
-STRING(QT_TRANSLATE_NOOP3);
-STRING(QT_TR_NOOP_UTF8);
-STRING(QT_TRANSLATE_NOOP_UTF8);
-STRING(QT_TRANSLATE_NOOP3_UTF8);
 STRING(class);
-// QTranslator::findMessage() has the same parameters as QApplication::translate()
-STRING(findMessage);
 STRING(friend);
 STRING(namespace);
 STRING(operator);
-STRING(qtTrId);
 STRING(return);
 STRING(struct);
-STRING(TR);
-STRING(Tr);
-STRING(tr);
-STRING(trUtf8);
-STRING(translate);
 STRING(using);
 
 uint CppParser::getToken()
@@ -716,39 +700,12 @@ uint CppParser::getToken()
             case 'Q':
                 if (yyWord == strQ_OBJECT)
                     return Tok_Q_OBJECT;
-                if (yyWord == strQ_DECLARE_TR_FUNCTIONS)
-                    return Tok_Q_DECLARE_TR_FUNCTIONS;
-                if (yyWord == strQT_TR_NOOP)
-                    return Tok_tr;
-                if (yyWord == strQT_TRID_NOOP)
-                    return Tok_trid;
-                if (yyWord == strQT_TRANSLATE_NOOP)
-                    return Tok_translate;
-                if (yyWord == strQT_TRANSLATE_NOOP3)
-                    return Tok_translate;
-                if (yyWord == strQT_TR_NOOP_UTF8)
-                    return Tok_trUtf8;
-                if (yyWord == strQT_TRANSLATE_NOOP_UTF8)
-                    return Tok_translateUtf8;
-                if (yyWord == strQT_TRANSLATE_NOOP3_UTF8)
-                    return Tok_translateUtf8;
-                break;
-            case 'T':
-                // TR() for when all else fails
-                if (yyWord == strTR || yyWord == strTr)
-                    return Tok_tr;
                 break;
             case 'c':
                 if (yyWord == strclass)
                     return Tok_class;
                 break;
             case 'f':
-                /*
-                  QTranslator::findMessage() has the same parameters as
-                  QApplication::translate().
-                */
-                if (yyWord == strfindMessage)
-                    return Tok_translate;
                 if (yyWord == strfriend)
                     return Tok_friend;
                 break;
@@ -770,10 +727,6 @@ uint CppParser::getToken()
                         yyCh = getChar();
                 }
                 break;
-            case 'q':
-                if (yyWord == strqtTrId)
-                    return Tok_trid;
-                break;
             case 'r':
                 if (yyWord == strreturn)
                     return Tok_return;
@@ -782,19 +735,38 @@ uint CppParser::getToken()
                 if (yyWord == strstruct)
                     return Tok_class;
                 break;
-            case 't':
-                if (yyWord == strtr)
-                    return Tok_tr;
-                if (yyWord == strtrUtf8)
-                    return Tok_trUtf8;
-                if (yyWord == strtranslate)
-                    return Tok_translate;
-                break;
             case 'u':
                 if (yyWord == strusing)
                     return Tok_using;
                 break;
             }
+
+            static const TokenType trFunctionTokens[] = {
+                Tok_Q_DECLARE_TR_FUNCTIONS, // Q_DECLARE_TR_FUNCTIONS
+                Tok_tr,                     // QT_TR_NOOP
+                Tok_trid,                   // QT_TRID_NOOP
+                Tok_translate,              // QT_TRANSLATE_NOOP
+                Tok_translate,              // QT_TRANSLATE_NOOP3
+                Tok_trUtf8,                 // QT_TR_NOOP_UTF8
+                Tok_translateUtf8,          // QT_TRANSLATE_NOOP_UTF8
+                Tok_translateUtf8,          // QT_TRANSLATE_NOOP3_UTF8
+                Tok_translate,              // findMessage
+                Tok_trid,                   // qtTrId
+                Tok_tr,                     // TR
+                Tok_tr,                     // Tr
+                Tok_tr,                     // tr
+                Tok_trUtf8,                 // trUtf8
+                Tok_translate,              // translate
+                Tok_Ident,                  // qsTr (QML only)
+                Tok_Ident,                  // qsTrId (QML only)
+                Tok_Ident,                  // qsTranslate (QML only)
+            };
+            Q_STATIC_ASSERT((sizeof trFunctionTokens / sizeof *trFunctionTokens == TrFunctionAliasManager::NumTrFunctions));
+
+            const int trFunction = trFunctionAliasManager.trFunctionByName(yyWord);
+            if (trFunction >= 0)
+                return trFunctionTokens[trFunction];
+
             return Tok_Ident;
         } else {
             switch (yyCh) {

@@ -107,6 +107,12 @@ POSIX if not specified and the file does not name it yet.
 Specify/override the language of the translation.
 The target language is guessed from the file name if this option
 is not specified and the file contents name no language yet.
+.TP
+.I "-tr-function-alias <function>{+=,=}<alias>[,<function>{+=,=}<alias>]..."
+With +=, recognize <alias> as an alternative spelling of <function>.
+With  =, recognize <alias>> as the only spelling of <function>.
+See lupdate -h for a list of available function names.
+.TP
 .I "-version"
 Display the version of
 .B lupdate
