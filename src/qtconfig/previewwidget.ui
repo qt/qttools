@@ -220,7 +220,7 @@
           <bool>true</bool>
          </property>
          <property name="html">
-          <string>&lt;p&gt;&lt;a href=&quot;http://qt.nokia.com&quot;&gt;http://qt.nokia.com&lt;/a&gt;&lt;/p&gt;
+          <string>&lt;p&gt;&lt;a href=&quot;http://qt-project.org&quot;&gt;http://qt-project.org&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href=&quot;http://www.kde.org&quot;&gt;http://www.kde.org&lt;/a&gt;&lt;/p&gt;</string>
          </property>
         </widget>
