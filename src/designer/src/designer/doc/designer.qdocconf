@@ -1,0 +1,37 @@
+include($QT_INSTALL_DOCS/global/qt-module-defaults.qdocconf)
+
+project                 = qtdesigner
+description             = Qt Designer Manual
+url                     = http://qt-project.org/doc/qtdesigner
+
+qhp.projects            = Designer
+
+qhp.Designer.file                = qtdesigner.qhp
+qhp.Designer.namespace           = org.qt-project.designer.500
+qhp.Designer.virtualFolder       = designer
+qhp.Designer.indexTitle          = Qt Designer Manual
+
+qhp.Designer.filterAttributes    = qt 5.0.0 tools designer
+qhp.Designer.customFilters.Designer.name = Qt Designer Manual
+qhp.Designer.customFilters.Designer.filterAttributes = qt tools designer
+qhp.Designer.subprojects         = manual examples
+qhp.Designer.subprojects.manual.title = Manual
+qhp.Designer.subprojects.manual.indexTitle = Qt Designer Manual
+qhp.Designer.subprojects.manual.selectors = fake:page
+qhp.Designer.subprojects.examples.title = Examples
+qhp.Designer.subprojects.examples.indexTitle = Qt Examples
+qhp.Designer.subprojects.examples.selectors = fake:example
+qhp.Designer.subprojects.examples.sortPages = true
+
+language                = Cpp
+
+sourcedirs              = ..
+
+exampledirs             = ../../../../../examples \
+                          snippets
+
+imagedirs               = images
+
+outputdir               = $QT_INSTALL_DOCS/qtdesigner
+
+depends                 += qtdoc

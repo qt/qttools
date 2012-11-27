@@ -20,6 +20,8 @@ TARGET = designer
 include(../../../shared/fontpanel/fontpanel.pri)
 include(../../../shared/qttoolbardialog/qttoolbardialog.pri)
 
+QMAKE_DOCS = $$PWD/doc/designer.qdocconf
+
 HEADERS += \
     qdesigner.h \
     qdesigner_toolwindow.h \
