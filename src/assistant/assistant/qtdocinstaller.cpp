@@ -76,8 +76,7 @@ void QtDocInstaller::installDocs()
 void QtDocInstaller::run()
 {
     TRACE_OBJ
-    m_qchDir = QLibraryInfo::location(QLibraryInfo::DocumentationPath)
-        + QDir::separator() + QLatin1String("qch");
+    m_qchDir = QLibraryInfo::location(QLibraryInfo::DocumentationPath);
     m_qchFiles = m_qchDir.entryList(QStringList() << QLatin1String("*.qch"));
 
     bool changes = false;
