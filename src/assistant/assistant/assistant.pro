@@ -16,7 +16,7 @@ DEPENDPATH += ../shared
 
 include(../../shared/fontpanel/fontpanel.pri)
 
-QMAKE_DOCS = $$PWD/doc/assistant.qdocconf
+QMAKE_DOCS = $$PWD/doc/qtassistant.qdocconf
 
 HEADERS += aboutdialog.h \
     bookmarkdialog.h \
