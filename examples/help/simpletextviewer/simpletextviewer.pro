@@ -12,6 +12,4 @@ QT += widgets
 
 # install
 target.path = $$[QT_INSTALL_EXAMPLES]/qttools/help/simpletextviewer
-sources.files = $$SOURCES $$HEADERS $$RESOURCES documentation *.pro
-sources.path = $$[QT_INSTALL_EXAMPLES]/qttools/help/simpletextviewer
-INSTALLS += target sources
+INSTALLS += target

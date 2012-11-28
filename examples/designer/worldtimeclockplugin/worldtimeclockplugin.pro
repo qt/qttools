@@ -26,8 +26,3 @@ HEADERS     = worldtimeclock.h \
 SOURCES     = worldtimeclock.cpp \
               worldtimeclockplugin.cpp
 #! [2]
-
-# install
-sources.files = $$SOURCES $$HEADERS *.pro worldtimeclock.json
-sources.path = $$[QT_INSTALL_EXAMPLES]/qttools/designer/worldtimeclockplugin
-INSTALLS += sources

@@ -51,11 +51,6 @@ HEADERS = \
 
 RESOURCES += arthur_plugin.qrc
 
-# install
-sources.files = $$SOURCES $$HEADERS $$RESOURCES *.pro *.jpg *.png
-sources.path = $$[QT_INSTALL_EXAMPLES]/qttools/designer/arthurplugin
-INSTALLS += sources
-
 win32-msvc* {
     QMAKE_CFLAGS += /Zm500
     QMAKE_CXXFLAGS += /Zm500

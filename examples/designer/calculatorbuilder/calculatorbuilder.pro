@@ -8,6 +8,4 @@ QT += widgets uitools
 
 # install
 target.path = $$[QT_INSTALL_EXAMPLES]/qttools/designer/calculatorbuilder
-sources.files = $$SOURCES $$HEADERS $$RESOURCES *.ui *.pro
-sources.path = $$[QT_INSTALL_EXAMPLES]/qttools/designer/calculatorbuilder
-INSTALLS += target sources
+INSTALLS += target

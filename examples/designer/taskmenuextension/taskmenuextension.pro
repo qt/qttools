@@ -32,8 +32,3 @@ SOURCES += tictactoe.cpp \
            tictactoetaskmenu.cpp
 OTHER_FILES += tictactoe.json
 #! [2]
-
-# install
-sources.files = $$SOURCES $$HEADERS *.pro tictactoe.json
-sources.path = $$[QT_INSTALL_EXAMPLES]/qttools/designer/taskmenuextension
-INSTALLS += sources

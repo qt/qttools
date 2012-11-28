@@ -28,8 +28,3 @@ SOURCES     = analogclock.cpp \
               customwidgetplugin.cpp
 OTHER_FILES += analogclock.json
 #! [3]
-
-# install
-sources.files = $$SOURCES $$HEADERS *.pro analogclock.json
-sources.path = $$[QT_INSTALL_EXAMPLES]/qttools/designer/customwidgetplugin
-INSTALLS += sources

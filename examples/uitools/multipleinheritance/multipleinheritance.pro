@@ -6,8 +6,6 @@ FORMS = calculatorform.ui
 
 # install
 target.path = $$[QT_INSTALL_EXAMPLES]/qtbase/uitools/multipleinheritance
-sources.files = $$SOURCES $$HEADERS $$RESOURCES $$FORMS *.pro
-sources.path = $$[QT_INSTALL_EXAMPLES]/qtbase/uitools/multipleinheritance
-INSTALLS += target sources
+INSTALLS += target
 
 QT += widgets
