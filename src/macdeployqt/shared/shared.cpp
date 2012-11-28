@@ -524,7 +524,7 @@ void deployPlugins(const ApplicationBundleInfo &appBundleInfo, const QString &pl
         QStringList sqlPlugins = QDir(pluginSourcePath +  QStringLiteral("/sqldrivers")).entryList(QStringList() << QStringLiteral("*.dylib"));
         foreach (const QString &plugin, sqlPlugins) {
             if (!plugin.endsWith(QStringLiteral("_debug.dylib")))
-                pluginList.append(QStringLiteral("/sqldrivers") + plugin);
+                pluginList.append(QStringLiteral("sqldrivers/") + plugin);
         }
     }
 
