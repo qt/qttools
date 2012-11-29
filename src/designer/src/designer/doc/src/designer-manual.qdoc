@@ -26,22 +26,28 @@
 ****************************************************************************/
 
 /*!
-    \page designer-manual.html
+    \page qtdesigner-index.html
 
     \title Qt Designer Manual
     \ingroup qttools
     \keyword Qt Designer
 
-    \QD is Qt's tool for designing and building graphical user
-    interfaces (GUIs) from Qt components. You can compose and customize your
-    widgets or dialogs in a what-you-see-is-what-you-get (WYSIWYG) manner, and
+    \QD is the Qt tool for designing and building graphical user
+    interfaces (GUIs) with \l {Qt Widgets}. You can compose and customize your
+    windows or dialogs in a what-you-see-is-what-you-get (WYSIWYG) manner, and
     test them using different styles and resolutions.
 
-    Widgets and forms created with \QD integrated seamlessly with programmed
-    code, using Qt's signals and slots mechanism, that lets you easily assign
+    Widgets and forms created with \QD integrate seamlessly with programmed
+    code, using Qt's signals and slots mechanism, so that you can easily assign
     behavior to graphical elements. All properties set in \QD can be changed
     dynamically within the code. Furthermore, features like widget promotion
     and custom plugins allow you to use your own components with \QD.
+
+    \note You have the option of using \l {Qt Quick} for user interface
+    design rather than widgets. It is a much easier way to write many kinds of
+    applications. It enables a completely customizable appearance,
+    touch-reactive elements, and smooth animated transitions, backed up by the
+    power of OpenGL graphics acceleration.
 
     If you are new to \QD, you can take a look at the
     \l{Getting To Know Qt Designer} document. For a quick tutorial on how to
@@ -49,8 +55,7 @@
 
     \image designer-multiple-screenshot.png
 
-    For more information on using \QD, you can take a look at the following
-    links:
+    \section1 Table of Contents
 
     \list
         \li  \l{Qt Designer's Editing Modes}
@@ -70,10 +75,7 @@
         \li  \l{Editing Resources with Qt Designer}
         \li  \l{Using Stylesheets with Qt Designer}
         \li  \l{Using a Designer UI File in Your Application}
-    \endlist
-
-    For advanced usage of \QD, you can refer to these links:
-
+    \li Advanced Use
     \list
         \li  \l{Customizing Qt Designer Forms}
         \li  \l{Using Custom Widgets with Qt Designer}
@@ -81,7 +83,7 @@
         \li  \l{Creating Custom Widget Extensions}
         \li  \l{Qt Designer's UI File Format}
     \endlist
-
+    \endlist
 
     \section1 Legal Notices
 
@@ -104,23 +106,21 @@
 
     \title Getting to Know Qt Designer
 
-    \tableofcontents
-
     \image designer-screenshot.png
 
     \section1 Launching Designer
 
-    The way that you launch \QD depends on your platform:
+    Once you have installed Qt, you can start \QD in the same way as any other
+    application on the development host. You can also launch \QD directly from
+    Qt Creator. Qt Creator automatically opens all .ui files in the integrated
+    \QD, in \gui Design mode.
 
-    \list
-        \li On Windows, click the Start button, under the \gui Programs submenu,
-           open the \gui{Qt 4} submenu and click \gui Designer.
-        \li On Unix or Linux, you might find a \QD icon on the desktop
-           background or in the desktop start menu under the \gui Programming
-           or \gui Development submenus. You can launch \QD from this icon.
-           Alternatively, you can type \c{designer} in a terminal window.
-        \li On Mac OS X, double click on \QD in \gui Finder.
-    \endlist
+    Generally, the integrated \QD contains the same functions as the standalone
+    \QD. For more information about the differences, see the
+    \l{external: Qt Creator Manual}.
+
+    If you have large forms that do not fit in the Qt Creator \gui Design mode,
+    you can open them in the stand-alone \QD.
 
     \section1 The User Interface
 
@@ -170,10 +170,6 @@
         and other objects that can be used to create user interfaces on forms.
         Each of the categories in the widget box contain widgets with similar
         uses or related features.
-
-        \note Since Qt 4.4, new widgets have been included, e.g.,
-        QPlainTextEdit, QCommandLinkButton, QScrollArea, QMdiArea, and
-        QWebView.
 
         You can display all of the available objects in a category by clicking
         on the handle next to the category label. When in
@@ -505,8 +501,6 @@
     them with the left mouse button. You can also use the \key Tab key to
     change the selection.
 
-    ### Screenshot of widget box, again
-
     The widget box contains objects in a number of different categories, all of
     which can be placed on the form as required. The only objects that require
     a little more preparation are the \gui Container widgets. These are
@@ -791,26 +785,9 @@
     suitable than a nested arrangement of horizontal and vertical layouts.
 
 
-    \section3 Splitter Layouts
-
-    Another common way to manage the layout of objects on a form is to place
-    them in a splitter. These splitters arrange the objects horizontally or
-    vertically in the same way as normal layouts, but also allow the user to
-    adjust the amount of space allocated to each object.
-
-    \image designer-splitter-layout.png
-
-    Although QSplitter is a container widget, \QD treats splitter objects as
-    layouts that are applied to existing widgets. To place a group of widgets
-    into a splitter, select them
-    \l{Qt Designer's Widget Editing Mode#SelectingObjects}{as described here}
-    then apply the splitter layout by using the appropriate toolbar button,
-    keyboard shortcut, or \gui{Lay out} context menu entry.
-
-
     \section3 The Form Layout
 
-    Since Qt 4.4, another layout class has been included -- QFormLayout. This
+    The QFormLayout
     class manages widgets in a two-column form; the left column holds labels
     and the right column holds field widgets such as line edits, spin boxes,
     etc. The QFormLayout class adheres to various platform look and feel
@@ -830,6 +807,23 @@
             \li  \inlineimage designer-form-layout-macintosh.png
             \li  \inlineimage designer-form-layout-cleanlooks.png
     \endtable
+
+
+\section3 Splitter Layouts
+
+    Another common way to manage the layout of objects on a form is to place
+    them in a splitter. These splitters arrange the objects horizontally or
+    vertically in the same way as normal layouts, but also allow the user to
+    adjust the amount of space allocated to each object.
+
+    \image designer-splitter-layout.png
+
+    Although QSplitter is a container widget, \QD treats splitter objects as
+    layouts that are applied to existing widgets. To place a group of widgets
+    into a splitter, select them
+    \l{Qt Designer's Widget Editing Mode#SelectingObjects}{as described here}
+    then apply the splitter layout by using the appropriate toolbar button,
+    keyboard shortcut, or \gui{Lay out} context menu entry.
 
 
     \section2 Shortcut Keys
@@ -1855,16 +1849,16 @@ pixmap property in the property editor.
     To ensure that we can use the user interface, we need to include the header
     file that \c uic generates before referring to \c{Ui::CalculatorForm}:
 
-    \snippet ../examples/designer/calculatorform/calculatorform.h 0
+    \snippet designer/calculatorform/calculatorform.h 0
 
     This means that the \c{.pro} file must be updated to include
     \c{calculatorform.h}:
 
-    \snippet ../examples/designer/calculatorform/calculatorform.pro 0
+    \snippet designer/calculatorform/calculatorform.pro 0
 
     The subclass is defined in the following way:
 
-    \snippet ../examples/designer/calculatorform/calculatorform.h 1
+    \snippet designer/calculatorform/calculatorform.h 1
 
     The important feature of the class is the private \c ui object which
     provides the code for setting up and managing the user interface.
@@ -1874,7 +1868,7 @@ pixmap property in the property editor.
     function. Once this has been done, it is possible to modify the user
     interface as needed.
 
-    \snippet ../examples/designer/calculatorform/calculatorform.cpp 0
+    \snippet designer/calculatorform/calculatorform.cpp 0
 
     We can connect signals and slots in user interface widgets in the usual
     way by adding the on_<object name> - prefix. For more information,
@@ -1949,14 +1943,14 @@ pixmap property in the property editor.
     We need to include the header file that \c uic generates from the
     \c calculatorform.ui file, as follows:
 
-    \snippet ../examples/uitools/multipleinheritance/calculatorform.h 0
+    \snippet uitools/multipleinheritance/calculatorform.h 0
 
     The class is defined in a similar way to the one used in the
     \l{The Single Inheritance Approach}{single inheritance approach}, except that
     this time we inherit from \e{both} QWidget and \c{Ui::CalculatorForm},
     as follows:
 
-    \snippet ../examples/uitools/multipleinheritance/calculatorform.h 1
+    \snippet uitools/multipleinheritance/calculatorform.h 1
 
     We inherit \c{Ui::CalculatorForm} privately to ensure that the user
     interface objects are private in our subclass. We can also inherit it with
@@ -1967,7 +1961,7 @@ pixmap property in the property editor.
     constructor used in the \l{The Single Inheritance Approach}
     {single inheritance} example:
 
-    \snippet ../examples/uitools/multipleinheritance/calculatorform.cpp 0
+    \snippet uitools/multipleinheritance/calculatorform.cpp 0
 
     In this case, the widgets used in the user interface can be accessed in the
     same say as a widget created in code by hand. We no longer require the
@@ -2024,14 +2018,14 @@ pixmap property in the property editor.
     The QUiLoader::load() function is invoked as shown in this code from the
     \l{Text Finder Example}{Text Finder} example:
 
-    \snippet ../examples/uitools/textfinder/textfinder.cpp 4
+    \snippet uitools/textfinder/textfinder.cpp 4
 
     In a class that uses QtUiTools to build its user interface at run time, we
     can locate objects in the form using qFindChild(). For example, in the
     follownig code, we locate some components based on their object names and
     widget types:
 
-    \snippet ../examples/uitools/textfinder/textfinder.cpp 1
+    \snippet uitools/textfinder/textfinder.cpp 1
 
     Processing forms at run-time gives the developer the freedom to change a
     program's user interface, just by changing the UI file. This is useful
@@ -2104,13 +2098,13 @@ pixmap property in the property editor.
 
     We use QMetaObject's system to enable signal and slot connections:
 
-    \snippet ../examples/uitools/textfinder/textfinder.cpp 2
+    \snippet uitools/textfinder/textfinder.cpp 2
 
     This enables us to implement the slot, as shown below:
 
-    \snippet ../examples/uitools/textfinder/textfinder.cpp 6
+    \snippet uitools/textfinder/textfinder.cpp 6
     \dots
-    \snippet ../examples/uitools/textfinder/textfinder.cpp 8
+    \snippet uitools/textfinder/textfinder.cpp 8
 
     Automatic connection of signals and slots provides both a standard naming
     convention and an explicit interface for widget designers to work to. By
@@ -2170,7 +2164,7 @@ pixmap property in the property editor.
     of the header files which will then be included in the form window's
     associated UI file. Header files may be local, i.e., relative to the
     project's directory, \c "mywidget.h", or global, i.e. part of Qt or the
-    compilers standard libraries: \c <QtGui/QWidget>.
+    compilers standard libraries: \c <QtWidgets/QWidget>.
 
     Finally, you can specify the function used to load pixmaps into the form
     window (the \gui {Pixmap Function}).
@@ -2392,7 +2386,7 @@ pixmap property in the property editor.
     following way:
 
     \dots
-    \snippet ../examples/designer/customwidgetplugin/customwidgetplugin.cpp 11
+    \snippet designer/customwidgetplugin/customwidgetplugin.cpp 11
     \dots
 
     An additional feature of the \c domXml() function is that, if it returns
@@ -2540,7 +2534,7 @@ pixmap property in the property editor.
     with specific plugin support for \QD. This is done with the following
     declarations:
 
-    \snippet ../examples/designer/customwidgetplugin/customwidgetplugin.pro 1
+    \snippet designer/customwidgetplugin/customwidgetplugin.pro 1
 
     If Qt is configured to build in both debug and release modes, \QD will be
     built in release mode. When this occurs, it is necessary to ensure that
@@ -2688,7 +2682,7 @@ pixmap property in the property editor.
         \li \b {QDesignerScriptExtension}
 
          The QDesignerScriptExtension class allows you to define script
-         ../snippets that are executed when a form is loaded. The extension
+         snippets that are executed when a form is loaded. The extension
          is primarily intended to be used to set up the internal states
          of custom widgets.
     \endtable
