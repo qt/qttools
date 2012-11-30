@@ -507,15 +507,15 @@ QLayout *WidgetFactory::createLayout(QWidget *widget, QLayout *parentLayout, int
 
     QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(core()->extensionManager(), layout);
 
-    sheet->setChanged(sheet->indexOf(m_strings.m_objectName), true);
-    if (widget->inherits("QLayoutWidget")) {
-        sheet->setProperty(sheet->indexOf(m_strings.m_leftMargin), 0);
-        sheet->setProperty(sheet->indexOf(m_strings.m_topMargin), 0);
-        sheet->setProperty(sheet->indexOf(m_strings.m_rightMargin), 0);
-        sheet->setProperty(sheet->indexOf(m_strings.m_bottomMargin), 0);
-    }
-
     if (sheet) {
+        sheet->setChanged(sheet->indexOf(m_strings.m_objectName), true);
+        if (widget->inherits("QLayoutWidget")) {
+            sheet->setProperty(sheet->indexOf(m_strings.m_leftMargin), 0);
+            sheet->setProperty(sheet->indexOf(m_strings.m_topMargin), 0);
+            sheet->setProperty(sheet->indexOf(m_strings.m_rightMargin), 0);
+            sheet->setProperty(sheet->indexOf(m_strings.m_bottomMargin), 0);
+        }
+
         const int index = sheet->indexOf(m_strings.m_alignment);
         if (index != -1)
             sheet->setChanged(index, true);
