@@ -222,17 +222,4 @@
     containing the custom widget class definition:
 
     \snippet designer/customwidgetplugin/customwidgetplugin.cpp 12
-
-    Finally, we use the Q_EXPORT_PLUGIN2() macro to export the \c
-    AnalogClockPlugin class for use with \QD:
-
-    \snippet designer/customwidgetplugin/customwidgetplugin.cpp 13
-
-    This macro ensures that \QD can access and construct the custom widget.
-    Without this macro, there is no way for \QD to use the widget.
-
-    It is important to note that you can only use the Q_EXPORT_PLUGIN2()
-    macro once in any implementation. If you have several custom widgets in
-    an implementation that you wish to make available to \QD, you will need
-    to implement \l{QDesignerCustomWidgetCollectionInterface}.
 */
