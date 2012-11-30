@@ -396,7 +396,7 @@ void tst_QHelpEngineCore::linksForIdentifier()
     QCOMPARE(map.contains("Test Manual"), true);
     QCOMPARE(map.count(), 1);
     QCOMPARE(map.value("Test Manual"),
-        QUrl("qthelp://trolltech.com.1-0-0.test/testFolder/test.html#foo"));
+        QUrl("qthelp://trolltech.com.1.0.0.test/testFolder/test.html#foo"));
 
     help.setCurrentFilter("Custom Filter 2");
     map = help.linksForIdentifier("People::newton");
@@ -405,7 +405,7 @@ void tst_QHelpEngineCore::linksForIdentifier()
     QCOMPARE(map.contains("Fancy"), true);
     QCOMPARE(map.count(), 1);
     QCOMPARE(map.value("Fancy"),
-        QUrl("qthelp://trolltech.com.1-0-0.test/testFolder/fancy.html#foobar"));
+        QUrl("qthelp://trolltech.com.1.0.0.test/testFolder/fancy.html#foobar"));
 }
 
 void tst_QHelpEngineCore::customValue()
@@ -447,7 +447,7 @@ void tst_QHelpEngineCore::setAutoSaveFilter()
 void tst_QHelpEngineCore::metaData()
 {
     QCOMPARE(QHelpEngineCore::metaData(m_path + "/data/test.qch", "author").toString(),
-        QString("Nokia Corporation and/or its subsidiary(-ies)"));
+        QString("Digia Plc and/or its subsidiary(-ies)"));
     QCOMPARE(QHelpEngineCore::metaData(m_path + "/data/test.qch", "notExisting").isValid(),
         false);
 }

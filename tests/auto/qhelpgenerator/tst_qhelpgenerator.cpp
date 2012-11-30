@@ -1,7 +1,7 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Nokia Corporation and/or its subsidiary(-ies).
-** Contact: http://www.qt-project.org/
+** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the test suite of the Qt Toolkit.
 **
@@ -204,7 +204,7 @@ void tst_QHelpGenerator::checkMetaData()
     m_query->exec("SELECT Value FROM MetaDataTable WHERE Name=\'author\'");
     if (!m_query->next())
         QFAIL("Meta Data Error");
-    QCOMPARE(m_query->value(0).toString(), QString("Nokia Corporation and/or its subsidiary(-ies)"));
+    QCOMPARE(m_query->value(0).toString(), QString("Digia Plc and/or its subsidiary(-ies)"));
 }
 
 QTEST_MAIN(tst_QHelpGenerator)
