@@ -12,7 +12,7 @@ DEFINES += QT_NO_CAST_FROM_ASCII QT_NO_CAST_TO_ASCII
 
 include(../shared/formats.pri)
 
-QMAKE_DOCS = $$PWD/doc/linguist.qdocconf
+QMAKE_DOCS = $$PWD/doc/qtlinguist.qdocconf
 
 DEFINES += QFORMINTERNAL_NAMESPACE
 
