@@ -67,6 +67,9 @@ int main(int argc, char *argv[])
     bool showVersion = false;
     bool checkLinks = false;
 
+    // don't require a window manager even though we're a QGuiApplication
+    qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("minimal"));
+
     QGuiApplication app(argc, argv);
 #ifndef Q_OS_WIN32
     QTranslator translator;
