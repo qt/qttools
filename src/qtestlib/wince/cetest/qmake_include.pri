@@ -6,8 +6,6 @@ SOURCES += \
            $$QT.core.sources/../../qmake/project.cpp \
            $$QT.core.sources/../../qmake/property.cpp \
            $$QT.core.sources/../../qmake/generators/metamakefile.cpp \
-           $$QT.core.sources/../../qmake/generators/symbian/initprojectdeploy_symbian.cpp \
-           $$QT.core.sources/../../tools/shared/symbian/epocroot.cpp \
            $$QT.core.sources/../../tools/shared/windows/registry.cpp
 
 DEFINES += QT_QMAKE_PARSER_ONLY
