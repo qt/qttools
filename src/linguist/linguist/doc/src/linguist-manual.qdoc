@@ -36,60 +36,56 @@
 
     \keyword Qt Linguist
 
-    Qt provides excellent support for translating applications into local
-    languages. This Guide explains how to use Qt's translation tools for
-    each of the roles involved in translating an application. The Guide
-    begins with a brief overview of the issues that must be considered,
-    followed by chapters devoted to each role and the supporting tools
-    provided.
+    Qt provides excellent support for translating Qt C++ and Qt Quick
+    applications into local languages. Release managers, translators, and
+    developers can use Qt tools to accomplish their tasks.
 
-    The \l{linguist-manager.html}{Release Manager} chapter is aimed
-    at the person with overall responsibility for the release of the
-    application. They will typically coordinate the work of the
-    software engineers and the translator. The chapter describes the
-    use of two tools. The \l{linguist-manager.html#lupdate}{lupdate}
-    tool is used to synchronize source code and translations. The
-    \l{linguist-manager.html#lrelease}{lrelease} tool is used to create
+    \l{linguist-manager.html}{Release managers} bear the overall responsibility
+    for the release of the application. Typically, they coordinate the work of
+    developers and translators. They can use the \e lupdate tool to synchronize
+    source code and translations and the \e lrelease tool to create
     run-time translation files for use by the released application.
 
-    The \l{linguist-translators.html}{Translators} chapter is for
-    translators. It describes the use of the \QL tool.
+    \l{linguist-translators.html}{Translators} can use the \QL tool to
+    translate text in applications.
     No computer knowledge beyond the ability to start a program and
     use a text editor or word processor is required.
 
-    The \l{linguist-programmers.html}{Programmers} chapter is for Qt
-    programmers. It explains how to create Qt applications that are
-    able to use translated text. It also provides guidance on how to
-    help the translator identify the context in which phrases appear.
-    This chapter's three short tutorials cover everything the
-    programmer needs to do.
+    \l{linguist-programmers.html}{Developers} must create Qt applications that are
+    able to use translated text. They should also help translators identify
+    the context in which phrases appear. Developers can use tutorials to learn
+    about their tasks.
 
     \section1 Overview of the Translation Process
 
-    Most of the text that must be translated in an application program
+    Most of the text that must be translated in an application
     consists of either single words or short phrases. These typically
     appear as window titles, menu items, pop-up help text (balloon help),
     and labels to buttons, check boxes and radio buttons.
 
-    The phrases are entered into the source code by the programmer in
+    The phrases are entered into the source code by the developer in
     their native language using a simple but special syntax to identify
     that the phrases require translation. The Qt tools provide context
     information for each of the phrases to help the translator, and the
-    programmer is able to add additional context information to phrases
-    when necessary. The release manager generates a set of translation
+    developer is able to add additional context information to phrases
+    when necessary.
+
+    The release manager generates a set of translation
     files that are produced from the source files and passes these to the
     translator. The translator opens the translation files using \QL,
     enters their translations and saves the results back into
     the translation files, which they pass back to the release manager.
     The release manager then generates fast compact versions of these
-    translation files ready for use by the application. The tools are
+    translation files ready for use by the application.
+
+    The tools are
     designed to be used in repeated cycles as applications change and
     evolve, preserving existing translations and making it easy to
     identify which new translations are required. \QL also
     provides a phrase book facility to help ensure consistent
     translations across multiple applications and projects.
 
-    Translators and programmers must address a number of issues because
+    Translators and developers must address a number of issues because
     of the subtleties and complexities of human language:
 
     \list
@@ -115,21 +111,21 @@
     The Qt translation tools provide clear and simple solutions to these
     issues.
 
-    Chapters:
+    \QL and lupdate are able to import and export XML Localization
+    Interchange File Format (XLIFF) files, making it possible to take
+    advantage of tools and translation services that work with this
+    format. For more information on working with these files, see
+    \l{Qt Linguist Manual: Translators}{Translators}.
+
+    \section1 Table of Contents
 
     \list
     \li \l{Qt Linguist Manual: Release Manager}{Release Manager}
     \li \l{Qt Linguist Manual: Translators}{Translators}
-    \li \l{Qt Linguist Manual: Programmers}{Programmers}
+    \li \l{Qt Linguist Manual: Developers}{Developers}
     \li \l{Qt Linguist Manual: TS File Format}{TS File Format}
     \li \l{Qt Linguist Manual: Text ID Based Translations}{Text ID Based Translations}
     \endlist
-
-    \QL and \c lupdate are able to import and export XML Localization
-    Interchange File Format (XLIFF) files, making it possible to take
-    advantage of tools and translation services that work with this
-    format. See the \l{Qt Linguist Manual: Translators} {Translators}
-    section for more information on working with these files.
 
     \table
 
@@ -167,7 +163,7 @@
 
     Using a locale within the translation file name is useful for
     determining which language to load at runtime. This is explained
-    in the \l{linguist-programmers.html} {Programmers} chapter.
+    in the \l{linguist-programmers.html} {Developers} chapter.
 
     An example of a complete \c .pro file with four translation source
     files:
@@ -202,11 +198,11 @@
 
     \snippet doc_src_linguist-manual.cpp 3
 
-    \section1 lupdate
+    \section1 Using lupdate
 
     Usage: \c {lupdate myproject.pro}
 
-    \l lupdate is a command line tool that finds the translatable
+    The lupdate command line tool finds the translatable
     strings in the specified source, header and \e {Qt Designer}
     interface files, and produces or updates \c .ts translation
     files. The files to process and the files to update can be set at
@@ -216,19 +212,19 @@
     translations.
 
     Companies that have their own translators in-house may find it
-    useful to run \l lupdate regularly, perhaps monthly, as the
+    useful to run lupdate regularly, perhaps monthly, as the
     application develops. This will lead to a fairly low volume of
     translation work spread evenly over the life of the project and
     will allow the translators to support a number of projects
     simultaneously.
 
     Companies that hire in translators as required may prefer to run
-    \l lupdate only a few times in the application's life cycle, the
+    lupdate only a few times during the application life cycle. The
     first time might be just before the first test phase. This will
     provide the translator with a substantial single block of work and
     any bugs that the translator detects may easily be included with
     those found during the initial test phase. The second and any
-    subsequent \l lupdate runs would probably take place during the
+    subsequent lupdate runs would probably take place during the
     final beta phase.
 
     The TS file format is a simple human-readable XML format that
@@ -249,14 +245,14 @@
     \l{Qt Linguist Manual: Translators}{Translators} section for more
     information.
 
-    \section1 lrelease
+    \section1 Using lrelease
 
     Usage: \c {lrelease myproject.pro}
 
-    \l lrelease is a command line tool that produces QM files out
+    The lrelease command line tool produces QM files out
     of TS files. The QM file format is a compact binary format
     that is used by the localized application. It provides extremely
-    fast lookups for translations. The TS files \l lrelease
+    fast lookups for translations. The TS files lrelease
     processes can be specified at the command line, or given
     indirectly by a Qt \c .pro project file.
 
@@ -265,12 +261,12 @@
     version. If the QM files are not created, e.g. because an
     alpha release is required before any translation has been
     undertaken, the application will run perfectly well using the text
-    the programmers placed in the source files. Once the QM files
+    the developers placed in the source files. Once the QM files
     are available the application will detect them and use them
     automatically.
 
-    Note that \l lrelease will only incorporate translations that are
-    marked as "finished". Otherwise the original text will be used
+    \note The lrelease tool only incorporates translations that are
+    marked as "finished". Otherwise the original text is used
     instead.
 
     Pass the \c -help option to \c lrelease to obtain the list of
@@ -280,7 +276,7 @@
 
     \section1 Missing Translations
 
-    Both \l lupdate and \l lrelease may be used with TS
+    Both lupdate and lrelease may be used with TS
     translation source files which are incomplete. Missing
     translations will be replaced with the native language phrases at
     runtime.
@@ -293,15 +289,15 @@
 
     \contentspage {Qt Linguist Manual}{Contents}
     \previouspage Qt Linguist Manual: Release Manager
-    \nextpage Qt Linguist Manual: Programmers
+    \nextpage Qt Linguist Manual: Developers
 
     \QL is a tool for adding translations to Qt applications. Run \QL
     from the taskbar menu, or by double clicking the desktop icon, or
     by entering the command \c {linguist} at the command line. Once
     \QL has started, choose \menu{File|Open} from the \l{menubar}
     {menu bar} and select a translation source (TS file) to
-    load. If you do not have a TS file, see the \l {Qt Linguist
-    Manual: Release Manager} {release manager manual} to learn how to
+    load. If you do not have a TS file, see \l {Qt Linguist
+    Manual: Release Manager}{Release Manager} to learn how to
     generate one.
 
     The \QL main window is divided into several, dockable subwindows
@@ -599,8 +595,8 @@
 
     If the source context shows the wrong source line, it probably
     means the translation file is out of sync with the source files.
-    To re-sync the translation file with the source files, see the
-    \l{linguist-manager.html#lupdate}{lupdate} manual.
+    To re-sync the translation file with the source files, see
+    \l{Using lupdate}.
 
     The Sources and Forms window is a dockable window. If it has been
     closed, it can be made visible again by pressing the \e{Sources
@@ -693,10 +689,10 @@
     only be shown once in \QL's \l{Context Window} {context list} and
     the translation will be applied to every occurrence within the
     context.  If the same phrase needs to be translated differently
-    within the same context the programmer must provide a
+    within the same context the developer must provide a
     distinguishing comment for each of the phrases concerned. If such
     comments are used the duplicate phrases will appear in the
-    \l{Context Window} {context list}. The programmers comments will
+    \l{Context Window} {context list}. The developer's comments will
     appear in the \l{The Translation Area} {translation area} on a
     light blue background.
 
@@ -821,7 +817,7 @@
     and \c app_de_ch.ts sets the target language to German and the
     target country to Switzerland (this also helps loading
     translations for the current locale automatically; see
-    \l{linguist-programmers.html}{Programmers Manual} for details).
+    \l{linguist-programmers.html}{Developers} for details).
     If your files do not follow this convention, you can also set the
     locale information explicitly using \e {Translation File Settings}
     in the \menu Edit menu.
@@ -940,7 +936,7 @@
     \list
     \li TS \e {translation source files} \BR are human-readable XML
     files containing source phrases and their translations. These files are
-    usually created and updated by \l{linguist-manager.html#lupdate}{lupdate}
+    usually created and updated by lupdate
     and are specific to an application.
     \li \c .xlf \e {XLIFF files} \BR are human-readable XML files that adhere
     to the international XML Localization Interchange File Format. \QL
@@ -950,7 +946,7 @@
     are not supported.
     \li QM \e {Qt message files} \BR are binary files that contain
     translations used by an application at run-time. These files are
-    generated by \l{linguist-manager.html#lrelease}{lrelease}, but can also
+    generated by lrelease, but can also
     be generated by \QL.
     \li \c .qph \e {Qt phrase book files} \BR are human-readable XML
     files containing standard phrases and their translations. These files
@@ -976,13 +972,13 @@
         name, format and/or put in a different location.
         \li \gui {Release} \BR create a Qt message QM file with the same base
         name as the current translation source file. The release manager's
-        command line tool \l{linguist-manager.html#lrelease}{lrelease}
+        command line tool lrelease
         performs the same function on \e all of an application's translation
         source files.
         \li \gui {Release As...} \BR pops up a save as file dialog. The
         filename entered will be a Qt message QM file of the translation
         based on the current translation source file. The release manager's
-        command line tool \l{linguist-manager.html#lrelease}{lrelease}
+        command line tool lrelease
         performs the same function on \e all of an application's translation
         source files.
         \li \gui {Print... Ctrl+P} \BR pops up a print dialog. If you click
@@ -1214,7 +1210,7 @@
 
 /*!
     \page linguist-programmers.html
-    \title Qt Linguist Manual: Programmers
+    \title Qt Linguist Manual: Developers
     \ingroup internationalization
 
     \contentspage {Qt Linguist Manual}{Contents}
@@ -1222,7 +1218,7 @@
     \nextpage Qt Linguist Manual: TS File Format
 
     Support for multiple languages is extremely simple in Qt
-    applications, and adds little overhead to the programmer's workload.
+    applications, and adds little overhead to the developer's workload.
 
     Qt minimizes the performance cost of using translations by
     translating the phrases for each window as they are created. In most
@@ -1234,12 +1230,12 @@
     performance cost.
 
     Creating applications that can switch language at runtime is possible
-    with Qt, but requires a certain amount of programmer intervention and
+    with Qt, but requires a certain amount of developer intervention and
     will of course incur some runtime performance cost.
 
     \section1 Making the Application Translation-Aware
 
-    Programmers should make their application look for and load the
+    Developers should make their application look for and load the
     appropriate translation file and mark user-visible text and Ctrl
     keyboard accelerators as targets for translation.
 
@@ -1249,8 +1245,15 @@
     the translator also requires some information to disambiguate the
     source texts. Marking text for translation will automatically cause
     the class name to be used as basic context information. In some cases
-    the programmer may be required to add additional information to help
+    the developer may be required to add additional information to help
     the translator.
+
+    You can develop applications that use both C++ and QML sources in the same
+    application and even have user interface strings in both sources. The tools
+    create a single combined translation file and the strings are accessible
+    from C++ and QML. The following sections describe how to make C++ sources
+    translatable. For more information about making QML sources translatable, see
+    \l{Internationalization and Localization with Qt Quick}.
 
     \section2 Creating Translation Files
 
@@ -1259,31 +1262,25 @@
     Translation files are created as follows:
 
     \list 1
-    \li Run \l {linguist-manager.html#lupdate}{lupdate} initially to
-    generate the first set of TS translation source files with all the
-    user-visible text but no translations.
-    \li The TS files are given to the translator who adds translations
-    using \QL. \QL takes care of any changed
-    or deleted source text.
-    \li Run \l{linguist-manager.html#lupdate}{lupdate} to incorporate any new
-    text added to the application. \l{linguist-manager.html#lupdate}{lupdate}
-    synchronizes the user-visible text from the application with the
-    translations; it does not destroy any data.
-    \li Steps 2 and 3 are repeated as often as necessary.
-    \li When a release of the application is needed
-    \l{linguist-manager.html#lrelease}{lrelease} is run to
-    read the TS files and produce the QM files used by the
-    application at runtime.
+    \li Run lupdate to generate the first set of TS translation source files
+        with all the user-visible text but no translations.
+    \li Give the TS files to the translator who adds translations using \QL. \QL
+        takes care of any changed or deleted source text.
+    \li Run lupdate to incorporate any new text added to the application.
+        lupdate synchronizes the user-visible text from the application with the
+        translations. It does not destroy any data.
+    \li To release the application, run lrelease to read the TS files and
+        produce the QM files used by the application at runtime.
     \endlist
 
-    For \l{linguist-manager.html#lupdate}{lupdate} to work successfully,
-    it must know which translation files to produce. The files are simply
+    For lupdate to work successfully, it must know which translation files to
+    produce. The files are
     listed in the application's \c .pro Qt project file, for example:
 
     \snippet arrowpad/arrowpad.pro 1
 
     If your sources contain genuine non-Latin1 strings,
-    \l{linguist-manager.html#lupdate}{lupdate} needs
+    lupdate needs
     to be told about it in the \c .pro file by using, for example,
     the following line:
 
@@ -1291,8 +1288,7 @@
         CODECFORTR = UTF-8
     \endcode
 
-    See the \l{linguist-manager.html#lupdate}{lupdate} and
-    \l{linguist-manager.html#lrelease}{lrelease} sections.
+    For more information, see \l{Using lupdate} and \l{Using lrelease}.
 
     \section2 Loading Translations
 
@@ -1355,7 +1351,7 @@
 
     \section2 Distinguishing Between Identical Translatable Strings
 
-    The \l{linguist-manager.html#lupdate}{lupdate} program automatically
+    The lupdate tool automatically
     provides a \e context for every source text. This context is the class
     name of the class that contains the \c tr() call. This is sufficient in
     the vast majority of cases. Sometimes however, the translator will need
@@ -1412,7 +1408,7 @@
 
     To handle plural forms in the native language, you need to load a
     translation file for this language, too.
-    \l{linguist-manager.html#lupdate}{lupdate} has the
+    The lupdate tool has the
     \c -pluralonly command line option, which allows the creation of
     TS files containing only entries with plural forms.
 
@@ -1423,7 +1419,7 @@
     \section2 Coping With C++ Namespaces
 
     C++ namespaces and the \c {using namespace} statement can confuse
-    \l{linguist-manager.html#lupdate}{lupdate}. It will interpret
+    lupdate. It will interpret
     \c MyClass::tr() as meaning just that, not as
     \c MyNamespace::MyClass::tr(), even if \c MyClass is
     defined in the \c MyNamespace namespace. Runtime translation of
@@ -1453,7 +1449,7 @@
     If you need to have translatable text completely outside a function,
     there are two macros to help: QT_TR_NOOP() and QT_TRANSLATE_NOOP().
     These macros merely mark the text for extraction by
-    \l{linguist-manager.html#lupdate}{lupdate}.
+    lupdate.
     The macros expand to just the text (without the context).
 
     Example of QT_TR_NOOP():
@@ -1489,14 +1485,13 @@
 
     At the beginning of a project add the translation source files to be
     used to the project file and add calls to
-    \l{linguist-manager.html#lupdate}{lupdate} and
-    \l{linguist-manager.html#lrelease}{lrelease} to the Makefile.
+    lupdate and lrelease to the Makefile.
 
-    During the project all the programmer must do is wrap any user-visible
+    During the project all the developer must do is wrap any user-visible
     text in \c tr() calls. They should also use the two argument form for
     Ctrl key accelerators, or when asked by the translator for the cases
     where the same text translates into two different forms in the same
-    context. The programmer should also include \c TRANSLATION comments to
+    context. The developer should also include \c TRANSLATION comments to
     help the translator navigate the application.
 */
 
@@ -1506,7 +1501,7 @@
     \ingroup internationalization
 
     \contentspage {Qt Linguist Manual}{Contents}
-    \previouspage Qt Linguist Manual: Programmers
+    \previouspage Qt Linguist Manual: Developers
     \nextpage Qt Linguist Manual: Text ID Based Translations
 
     The TS file format used by \QL is described by the

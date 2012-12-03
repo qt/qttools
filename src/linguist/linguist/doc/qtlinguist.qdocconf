@@ -34,4 +34,4 @@ imagedirs               = images
 
 outputdir               = $QT_INSTALL_DOCS/qtlinguist
 
-depends                 += qtdoc
+depends                 += qtdoc qtqml qtquick
