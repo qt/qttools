@@ -1,6 +1,5 @@
 TARGET      = qaxwidget
-CONFIG     += qaxcontainer
-QT         += widgets designer-private
+QT         += widgets designer-private axcontainer
 
 include(../plugins.pri)
 
@@ -14,13 +13,13 @@ qaxwidgetplugin.cpp \
 qdesigneraxwidget.cpp \
 qaxwidgetpropertysheet.cpp \
 qaxwidgettaskmenu.cpp \
-    $$QT.activeqt.sources/shared/qaxtypes.cpp
+    $$QT.axcontainer.sources/../shared/qaxtypes.cpp
 
 HEADERS += qaxwidgetextrainfo.h \
 qaxwidgetplugin.h \
 qdesigneraxwidget.h \
 qaxwidgetpropertysheet.h \
 qaxwidgettaskmenu.h \
-    $$QT.activeqt.sources/shared/qaxtypes.h
+    $$QT.axcontainer.sources/../shared/qaxtypes.h
 
 OTHER_FILES += activeqt.json

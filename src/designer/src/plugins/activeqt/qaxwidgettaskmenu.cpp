@@ -51,6 +51,7 @@
 #include <QtWidgets/QUndoCommand>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QUndoStack>
+#include <QtWidgets/QAction>
 #include <QtCore/QUuid>
 #include <ActiveQt/qaxselect.h>
 
