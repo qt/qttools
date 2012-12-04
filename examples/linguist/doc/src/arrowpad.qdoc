@@ -47,7 +47,7 @@
     \c arrowpad_fr.ts and \c arrowpad_nl.ts. These files will contain all the source
     texts marked for translation with \c tr() calls and their contexts.
 
-    See the \l{Qt Linguist manual} for more information about
+    See the \l{Qt Linguist Manual} for more information about
     translating Qt application.
 
     \section1 Line by Line Walkthrough

@@ -44,7 +44,7 @@
     some source files. It's probably best to copy all the files to a new
     temporary directory and work from there.)
 
-    See the \l{Qt Linguist manual} for more information about
+    See the \l{Qt Linguist Manual} for more information about
     translating Qt application.
 
     \section1 Line by Line Walkthrough
