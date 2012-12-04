@@ -9,8 +9,7 @@ TRANSLATIONS = arrowpad_fr.ts \
                arrowpad_nl.ts
 #! [1]
 
-# install
-target.path = $$[QT_INSTALL_EXAMPLES]/qtbase/linguist/arrowpad
+target.path = $$[QT_INSTALL_EXAMPLES]/linguist/arrowpad
 INSTALLS += target
 
 QT += widgets

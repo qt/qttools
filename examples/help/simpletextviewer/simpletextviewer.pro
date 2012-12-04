@@ -10,6 +10,5 @@ SOURCES       = main.cpp \
 
 QT += widgets
 
-# install
-target.path = $$[QT_INSTALL_EXAMPLES]/qttools/help/simpletextviewer
+target.path = $$[QT_INSTALL_EXAMPLES]/help/simpletextviewer
 INSTALLS += target

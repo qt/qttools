@@ -5,8 +5,7 @@ SOURCES       = main.cpp \
                 printpanel.cpp
 TRANSLATIONS  = trollprint_pt.ts
 
-# install
-target.path = $$[QT_INSTALL_EXAMPLES]/qtbase/linguist/trollprint
+target.path = $$[QT_INSTALL_EXAMPLES]/linguist/trollprint
 INSTALLS += target
 
 QT += widgets

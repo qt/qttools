@@ -4,6 +4,5 @@ SOURCES     = main.cpp
 RESOURCES   = worldtimeclockbuilder.qrc
 #! [0]
 
-# install
-target.path = $$[QT_INSTALL_EXAMPLES]/qttools/designer/worldtimeclockbuilder
+target.path = $$[QT_INSTALL_EXAMPLES]/designer/worldtimeclockbuilder
 INSTALLS += target
