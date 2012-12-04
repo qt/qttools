@@ -1,7 +1,7 @@
 
 TEMPLATE = app
 DESTDIR = $$QT.designer.bins
-QT = core
+QT = core platformsupport-private
 CONFIG += console
 CONFIG -= app_bundle
 
