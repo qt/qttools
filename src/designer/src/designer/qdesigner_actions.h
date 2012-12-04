@@ -139,7 +139,6 @@ private slots:
     void clearRecentFiles();
     void closeForm();
     void showDesignerHelp();
-    void showWhatsNew();
     void aboutDesigner();
     void showWidgetSpecificHelp();
     void backupForms();

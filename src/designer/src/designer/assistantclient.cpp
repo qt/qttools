@@ -151,14 +151,14 @@ bool AssistantClient::ensureRunning(QString *errorMessage)
     return true;
 }
 
-QString AssistantClient::documentUrl(const QString &prefix, int qtVersion)
+QString AssistantClient::documentUrl(const QString &module, int qtVersion)
 {
     if (qtVersion == 0)
         qtVersion = QT_VERSION;
     QString rc;
-    QTextStream(&rc) << QStringLiteral("qthelp://com.trolltech.") << prefix << QLatin1Char('.')
+    QTextStream(&rc) << "qthelp://org.qt-project." << module << '.'
                      << (qtVersion >> 16) << ((qtVersion >> 8) & 0xFF) << (qtVersion & 0xFF)
-                     << QStringLiteral("/qdoc/");
+                     << '/' << module << '/';
     return rc;
 }
 

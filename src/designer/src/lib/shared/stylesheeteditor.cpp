@@ -331,7 +331,7 @@ void StyleSheetEditorDialog::insertCssProperty(const QString &name, const QStrin
 
 void StyleSheetEditorDialog::slotRequestHelp()
 {
-    m_core->integration()->emitHelpRequested(QStringLiteral("qt"),
+    m_core->integration()->emitHelpRequested(QStringLiteral("qtwidgets"),
                                              QStringLiteral("stylesheet-reference.html"));
 }
 
