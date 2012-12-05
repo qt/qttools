@@ -3,23 +3,19 @@ QT         += widgets designer-private axcontainer
 
 include(../plugins.pri)
 
-INCLUDEPATH += $$QT.activeqt.sources/shared/ \
-               $$QT.activeqt.sources/container \
-               ../../lib/uilib \
+INCLUDEPATH += ../../lib/uilib \
                $$QT.designer.includes
 
 SOURCES += qaxwidgetextrainfo.cpp \
 qaxwidgetplugin.cpp \
 qdesigneraxwidget.cpp \
 qaxwidgetpropertysheet.cpp \
-qaxwidgettaskmenu.cpp \
-    $$QT.axcontainer.sources/../shared/qaxtypes.cpp
+qaxwidgettaskmenu.cpp
 
 HEADERS += qaxwidgetextrainfo.h \
 qaxwidgetplugin.h \
 qdesigneraxwidget.h \
 qaxwidgetpropertysheet.h \
-qaxwidgettaskmenu.h \
-    $$QT.axcontainer.sources/../shared/qaxtypes.h
+qaxwidgettaskmenu.h
 
 OTHER_FILES += activeqt.json
