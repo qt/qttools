@@ -29,14 +29,14 @@
     \example help/simpletextviewer
     \title Simple Text Viewer Example
 
-    The Simple Text Viewer example shows how to use \QA as a customized
+    \brief The Simple Text Viewer example shows how to use \QA as a customized
     help viewer for your application.
+
+    \image simpletextviewer-example.png
 
     This is done in two stages. Firstly, documentation is created and \QA
     is customized; secondly, the functionality to launch and control
     \QA is added to the application.
-
-    \image simpletextviewer-example.png
 
     The Simple Text Viewer application lets the user select and view
     existing files.

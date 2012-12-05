@@ -29,7 +29,7 @@
     \example designer/arthurplugin
     \title Arthur Plugin
 
-    In this example we demonstrate the abilities of Qt's painting system
+    \brief In this example we demonstrate the abilities of Qt's painting system
     in combination with \QD's custom widget plugin facilities.
 
     \image arthurplugin-demo.png
