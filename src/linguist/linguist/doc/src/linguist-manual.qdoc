@@ -148,13 +148,13 @@
     \previouspage Qt Linguist Manual
     \nextpage Qt Linguist Manual: Translators
 
-    Two tools are provided for the release manager, \l lupdate and \l
+    Two tools are provided for the release manager, lupdate and
     lrelease. These tools can process \l qmake project files, or operate
     directly on the file system.
 
     \section1 Qt Project Files
 
-    The easiest method to use \l lupdate and \l lrelease is by specifying
+    The easiest method to use lupdate and lrelease is by specifying
     a \c .pro Qt project file. There must be an entry in the \c TRANSLATIONS
     section of the project file for each language that is additional to
     the native language. A typical entry looks like this:
