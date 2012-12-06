@@ -428,6 +428,11 @@ void QPixelTool::grabScreen()
     if (mousePos == m_lastMousePos && !m_autoUpdate)
         return;
 
+    if (m_lastMousePos != mousePos) {
+        setWindowTitle(QString::fromLatin1("PixelTool [%1, %2] ")
+                       .arg(mousePos.x()).arg(mousePos.y()));
+    }
+
     int w = int(width() / float(m_zoom));
     int h = int(height() / float(m_zoom));
 
