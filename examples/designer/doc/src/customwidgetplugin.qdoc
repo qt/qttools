@@ -26,7 +26,7 @@
 ****************************************************************************/
 
 /*!
-    \example designer/customwidgetplugin
+    \example customwidgetplugin
     \title Custom Widget Plugin Example
 
     \brief The Custom Widget example shows how to create a custom widget plugin for \QD.
@@ -48,8 +48,8 @@
     project file that we use needs to contain information about \QD's
     library components:
 
-    \snippet designer/customwidgetplugin/customwidgetplugin.pro 2
-    \snippet designer/customwidgetplugin/customwidgetplugin.pro 0
+    \snippet customwidgetplugin/customwidgetplugin.pro 2
+    \snippet customwidgetplugin/customwidgetplugin.pro 0
 
     The \c TEMPLATE variable's value makes \c qmake create the custom
     widget as a library. Later, we will ensure that the widget will be
@@ -82,14 +82,14 @@
     and we provide an implementation of the plugin interface so that \QD can
     use the custom widget:
 
-    \snippet designer/customwidgetplugin/customwidgetplugin.pro 3
+    \snippet customwidgetplugin/customwidgetplugin.pro 3
 
     It is also important to ensure that the plugin is installed in a
     location that is searched by \QD. We do this by specifying a
     target path for the project and adding it to the list of items to
     install:
 
-    \snippet designer/doc/snippets/doc_src_examples_customwidgetplugin.pro 0
+    \snippet doc/snippets/doc_src_examples_customwidgetplugin.pro 0
 
     The custom widget is created as a library, and will be installed
     alongside the other \QD plugins when the project is installed
@@ -122,7 +122,7 @@
     the QDesignerCustomWidgetInterface class, and implements an
     interface defined by QDesignerCustomWidgetInterface:
 
-    \snippet designer/customwidgetplugin/customwidgetplugin.h 0
+    \snippet customwidgetplugin/customwidgetplugin.h 0
 
     The functions provide information about the widget that \QD can use in
     the \l{Getting to Know Qt Designer#WidgetBox}{widget box}.
@@ -137,12 +137,12 @@
     The class constructor simply calls the QObject base class constructor
     and sets the \c initialized variable to \c false.
 
-    \snippet designer/customwidgetplugin/customwidgetplugin.cpp 0
+    \snippet customwidgetplugin/customwidgetplugin.cpp 0
 
     \QD will initialize the plugin when it is required by calling the
     \c initialize() function:
 
-    \snippet designer/customwidgetplugin/customwidgetplugin.cpp 1
+    \snippet customwidgetplugin/customwidgetplugin.cpp 1
 
     In this example, the \c initialized private variable is tested, and only
     set to \c true if the plugin is not already initialized. Although, this
@@ -152,12 +152,12 @@
     The \c isInitialized() function lets \QD know whether the plugin is
     ready for use:
 
-    \snippet designer/customwidgetplugin/customwidgetplugin.cpp 2
+    \snippet customwidgetplugin/customwidgetplugin.cpp 2
 
     Instances of the custom widget are supplied by the \c createWidget()
     function. The implementation for the analog clock is straightforward:
 
-    \snippet designer/customwidgetplugin/customwidgetplugin.cpp 3
+    \snippet customwidgetplugin/customwidgetplugin.cpp 3
 
     In this case, the custom widget only requires a \c parent to be specified.
     If other arguments need to be supplied to the widget, they can be
@@ -168,18 +168,18 @@
     The \c name() function returns the name of class that provides the
     custom widget:
 
-    \snippet designer/customwidgetplugin/customwidgetplugin.cpp 4
+    \snippet customwidgetplugin/customwidgetplugin.cpp 4
 
     The \c group() function is used to describe the type of widget that the
     custom widget belongs to:
 
-    \snippet designer/customwidgetplugin/customwidgetplugin.cpp 5
+    \snippet customwidgetplugin/customwidgetplugin.cpp 5
 
     The widget plugin will be placed in a section identified by its
     group name in \QD's widget box. The icon used to represent the
     widget in the widget box is returned by the \c icon() function:
 
-    \snippet designer/customwidgetplugin/customwidgetplugin.cpp 6
+    \snippet customwidgetplugin/customwidgetplugin.cpp 6
 
     In this case, we return a null icon to indicate that we have no icon
     that can be used to represent the widget.
@@ -188,17 +188,17 @@
     entry in the widget box. The \c toolTip() function should return a short
     message describing the widget:
 
-    \snippet designer/customwidgetplugin/customwidgetplugin.cpp 7
+    \snippet customwidgetplugin/customwidgetplugin.cpp 7
 
     The \c whatsThis() function can return a longer description:
 
-    \snippet designer/customwidgetplugin/customwidgetplugin.cpp 8
+    \snippet customwidgetplugin/customwidgetplugin.cpp 8
 
     The \c isContainer() function tells \QD whether the widget is supposed to
     be used as a container for other widgets. If not, \QD will not allow the
     user to place widgets inside it.
 
-    \snippet designer/customwidgetplugin/customwidgetplugin.cpp 9
+    \snippet customwidgetplugin/customwidgetplugin.cpp 9
 
     Most widgets in Qt can contain child widgets, but it only makes sense
     to use dedicated container widgets for this purpose in \QD. By returning
@@ -210,7 +210,7 @@
     the widget in the standard XML format used by \QD. In this case, we only
     specify the widget's geometry:
 
-    \snippet designer/customwidgetplugin/customwidgetplugin.cpp 10
+    \snippet customwidgetplugin/customwidgetplugin.cpp 10
 
     If the widget provides a reasonable size hint, it is not necessary to
     define it here. In addition, returning an empty string instead of a
@@ -221,5 +221,5 @@
     the \c includeFile() function to return the name of the header file
     containing the custom widget class definition:
 
-    \snippet designer/customwidgetplugin/customwidgetplugin.cpp 12
+    \snippet customwidgetplugin/customwidgetplugin.cpp 12
 */

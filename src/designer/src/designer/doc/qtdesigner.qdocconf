@@ -28,6 +28,7 @@ language                = Cpp
 sourcedirs              = ..
 
 exampledirs             = ../../../../../examples/designer \
+                          ../../../../../examples/uitools \
                           snippets
 
 imagedirs               = images

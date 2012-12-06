@@ -26,7 +26,7 @@
 ****************************************************************************/
 
 /*!
-    \example help/simpletextviewer
+    \example simpletextviewer
     \title Simple Text Viewer Example
 
     \brief The Simple Text Viewer example shows how to use \QA as a customized

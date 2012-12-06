@@ -26,7 +26,7 @@
 ****************************************************************************/
 
 /*!
-    \example designer/taskmenuextension
+    \example taskmenuextension
     \title Task Menu Extension Example
 
     \brief The Task Menu Extension example shows how to create a custom
@@ -96,8 +96,8 @@
     The project file must contain some additional information to
     ensure that the plugin will work as expected:
 
-    \snippet designer/taskmenuextension/taskmenuextension.pro 0
-    \snippet designer/taskmenuextension/taskmenuextension.pro 1
+    \snippet taskmenuextension/taskmenuextension.pro 0
+    \snippet taskmenuextension/taskmenuextension.pro 1
 
     The \c TEMPLATE variable's value makes \c qmake create the custom
     widget as a library. Later, we will ensure that the widget will be
@@ -127,7 +127,7 @@
     The header and source files for the widget are declared in the
     usual way:
 
-    \snippet designer/taskmenuextension/taskmenuextension.pro 2
+    \snippet taskmenuextension/taskmenuextension.pro 2
 
     We provide an implementation of the plugin interface so that \QD
     can use the custom widget.  In this particular example we also
@@ -139,7 +139,7 @@
     target path for the project and adding it to the list of items to
     install:
 
-    \snippet designer/doc/snippets/doc_src_examples_taskmenuextension.pro 0
+    \snippet doc/snippets/doc_src_examples_taskmenuextension.pro 0
 
     The task menu extension is created as a library, and will be
     installed alongside the other \QD plugins when the project is
@@ -159,12 +159,12 @@
 
     The \c TicTacToePlugin class exposes \c the TicTacToe class to
     \QD. Its definition is equivalent to the \l
-    {designer/customwidgetplugin}{Custom Widget Plugin} example's
+    {customwidgetplugin}{Custom Widget Plugin} example's
     plugin class which is explained in detail. The only part of the
     class definition that is specific to this particular custom widget
     is the class name:
 
-    \snippet designer/taskmenuextension/tictactoeplugin.h 0
+    \snippet taskmenuextension/tictactoeplugin.h 0
 
     The plugin class provides \QD with basic information about our
     plugin, such as its class name and its include file. Furthermore
@@ -186,15 +186,15 @@
     \section1 TicTacToePlugin Class Implementation
 
     The TicTacToePlugin class implementation is in most parts
-    equivalent to the \l {designer/customwidgetplugin}{Custom Widget
+    equivalent to the \l {customwidgetplugin}{Custom Widget
     Plugin} example's plugin class:
 
-    \snippet designer/taskmenuextension/tictactoeplugin.cpp 0
+    \snippet taskmenuextension/tictactoeplugin.cpp 0
 
     The only function that differs significantly is the initialize()
     function:
 
-    \snippet designer/taskmenuextension/tictactoeplugin.cpp 1
+    \snippet taskmenuextension/tictactoeplugin.cpp 1
 
     The \c initialize() function takes a QDesignerFormEditorInterface
     object as argument.  The QDesignerFormEditorInterface class
@@ -207,7 +207,7 @@
     editor and the widget box. Custom widget plugins have access to
     the same components.
 
-    \snippet designer/taskmenuextension/tictactoeplugin.cpp 2
+    \snippet taskmenuextension/tictactoeplugin.cpp 2
 
     When creating extensions associated with custom widget plugins, we
     need to access \QD's current extension manager which we retrieve
@@ -230,7 +230,7 @@
     required. So, in this example, the task menu extension itself is
     not created until a task menu is requested by the user.
 
-    \snippet designer/taskmenuextension/tictactoeplugin.cpp 3
+    \snippet taskmenuextension/tictactoeplugin.cpp 3
 
     We create a \c TicTacToeTaskMenuFactory object that we register
     using \QD's current \l {QExtensionManager}{extension manager}
@@ -252,7 +252,7 @@
     default settings for the widget in the standard XML format used by
     Qt Designer), since no default values are necessary.
 
-    \snippet designer/taskmenuextension/tictactoeplugin.cpp 4
+    \snippet taskmenuextension/tictactoeplugin.cpp 4
 
     Finally, we use the Q_EXPORT_PLUGIN2() macro to export the
     TicTacToePlugin class for use with Qt's plugin handling classes:
@@ -265,7 +265,7 @@
     The \c TicTacToeTaskMenuFactory class inherits QExtensionFactory
     which provides a standard extension factory for \QD.
 
-    \snippet designer/taskmenuextension/tictactoetaskmenu.h 1
+    \snippet taskmenuextension/tictactoetaskmenu.h 1
 
     The subclass's purpose is to reimplement the
     QExtensionFactory::createExtension() function, making it able to
@@ -276,7 +276,7 @@
     The class constructor simply calls the QExtensionFactory base
     class constructor:
 
-    \snippet designer/taskmenuextension/tictactoetaskmenu.cpp 4
+    \snippet taskmenuextension/tictactoetaskmenu.cpp 4
 
     As described above, the factory is invoked when the user request a
     task menu by clicking the right mouse button over a widget with
@@ -288,7 +288,7 @@
     extension factories calling \c createExtension() for each until
     one responds by creating the requested extension.
 
-    \snippet designer/taskmenuextension/tictactoetaskmenu.cpp 5
+    \snippet taskmenuextension/tictactoetaskmenu.cpp 5
 
     So the first thing we do in \c
     TicTacToeTaskMenuFactory::createExtension() is to check if the
@@ -307,7 +307,7 @@
     which allows you to add custom entries (in the form of QActions)
     to the task menu in \QD.
 
-    \snippet designer/taskmenuextension/tictactoetaskmenu.h 0
+    \snippet taskmenuextension/tictactoetaskmenu.h 0
 
     We reimplement the \c preferredEditAction() and \c taskActions()
     functions. Note that we implement a constructor that takes \e two
@@ -320,7 +320,7 @@
 
     \section1 TicTacToeTaskMenu Class Implementation
 
-    \snippet designer/taskmenuextension/tictactoetaskmenu.cpp 0
+    \snippet taskmenuextension/tictactoetaskmenu.cpp 0
 
     In the constructor we first save the reference to the \c TicTacToe
     widget sent as parameter, i.e the widget which state we want to
@@ -328,7 +328,7 @@
     invoked. We also create our custom \c editStateAction and connect
     it to the \c editState() slot.
 
-    \snippet designer/taskmenuextension/tictactoetaskmenu.cpp 1
+    \snippet taskmenuextension/tictactoetaskmenu.cpp 1
 
     The \c editState() slot is called whenever the user chooses the
     \gui {Edit State...} option in a \c TicTacToe widget's task menu. The
@@ -336,13 +336,13 @@
     the widget, and allowing the user to edit its state by playing the
     game.
 
-    \snippet designer/taskmenuextension/tictactoetaskmenu.cpp 2
+    \snippet taskmenuextension/tictactoetaskmenu.cpp 2
 
     We reimplement the \c preferredEditAction() function to return our
     custom \c editStateAction as the action that should be invoked
     when selecting a \c TicTacToe widget and pressing \key F2 .
 
-    \snippet designer/taskmenuextension/tictactoetaskmenu.cpp 3
+    \snippet taskmenuextension/tictactoetaskmenu.cpp 3
 
     We reimplement the \c taskActions() function to return a list of
     our custom actions making these appear on top of the default menu
@@ -356,7 +356,7 @@
     user modify the state of the currently selected Tic-Tac-Toe
     plugin.
 
-    \snippet designer/taskmenuextension/tictactoedialog.h 0
+    \snippet taskmenuextension/tictactoedialog.h 0
 
     We reimplement the \c sizeHint() function. We also declare two
     private slots: \c resetState() and \c saveState(). In addition to
@@ -367,7 +367,7 @@
 
     \section1 TicTacToeDialog Class Implementation
 
-    \snippet designer/taskmenuextension/tictactoedialog.cpp 0
+    \snippet taskmenuextension/tictactoedialog.cpp 0
 
     In the constructor we first save the reference to the TicTacToe
     widget sent as parameter, i.e the widget which state the user want
@@ -376,19 +376,19 @@
 
     Finally, we create the dialog's buttons and layout.
 
-    \snippet designer/taskmenuextension/tictactoedialog.cpp 1
+    \snippet taskmenuextension/tictactoedialog.cpp 1
 
     We reimplement the \c sizeHint() function to ensure that the
     dialog is given a reasonable size.
 
-    \snippet designer/taskmenuextension/tictactoedialog.cpp 2
+    \snippet taskmenuextension/tictactoedialog.cpp 2
 
     The \c resetState() slot is called whenever the user press the
     \gui Reset button. The only thing we do is to call the \c
     clearBoard() function for the editor widget, i.e. the \c TicTacToe
     widget we created in the dialog's constructor.
 
-    \snippet designer/taskmenuextension/tictactoedialog.cpp 3
+    \snippet taskmenuextension/tictactoedialog.cpp 3
 
     The \c saveState() slot is called whenever the user press the \gui
     OK button, and transfers the state of the editor widget to the
@@ -406,7 +406,7 @@
     widget, you can use the static
     QDesignerFormWindowInterface::findFormWindow() function:
 
-    \snippet designer/taskmenuextension/tictactoedialog.cpp 4
+    \snippet taskmenuextension/tictactoedialog.cpp 4
 
     After retrieving the form window of the widget (which state we
     want to modify), we use the QDesignerFormWindowInterface::cursor()
@@ -417,7 +417,7 @@
     finally set the state property using the
     QDesignerFormWindowCursorInterface::setProperty() function.
 
-    \snippet designer/taskmenuextension/tictactoedialog.cpp 5
+    \snippet taskmenuextension/tictactoedialog.cpp 5
 
     In the end we call the QEvent::accept() function which sets the
     accept flag of the event object. Setting the \c accept parameter
@@ -429,7 +429,7 @@
     The \c TicTacToe class is a custom widget that lets the user play
     the Tic-Tac-Toe game.
 
-    \snippet designer/taskmenuextension/tictactoe.h 0
+    \snippet taskmenuextension/tictactoe.h 0
 
     The main details to observe in the \c TicTacToe class defintion is
     the declaration of the \c state property and its \c state() and \c

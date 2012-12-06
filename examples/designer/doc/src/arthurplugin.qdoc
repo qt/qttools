@@ -26,7 +26,7 @@
 ****************************************************************************/
 
 /*!
-    \example designer/arthurplugin
+    \example arthurplugin
     \title Arthur Plugin
 
     \brief In this example we demonstrate the abilities of Qt's painting system

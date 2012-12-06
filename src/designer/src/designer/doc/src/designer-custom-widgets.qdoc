@@ -68,8 +68,8 @@
     QExtensionManager.
 
     For a complete example creating a custom widget plugin with an
-    extension, see the \l {designer/taskmenuextension}{Task Menu
-    Extension} or \l {designer/containerextension}{Container
+    extension, see the \l {taskmenuextension}{Task Menu
+    Extension} or \l {containerextension}{Container
     Extension} examples.
 
     \section1 Retrieving Access to \QD Components
@@ -125,7 +125,7 @@
     the QtUiTools module.
 
     For a complete example using QUiLoader, see
-    the \l {designer/calculatorbuilder}{Calculator Builder example}.
+    the \l {calculatorbuilder}{Calculator Builder example}.
 
     \sa {Qt Designer Manual}, {QtUiTools Module}
 */

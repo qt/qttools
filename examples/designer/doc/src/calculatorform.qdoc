@@ -26,7 +26,7 @@
 ****************************************************************************/
 
 /*!
-    \example designer/calculatorform
+    \example calculatorform
     \title Calculator Form Example
 
     \brief The Calculator Form Example shows how to use a form created with
@@ -51,7 +51,7 @@
     To ensure that the example can use this file, we need to include a \c FORMS
     declaration in the example's project file:
 
-    \snippet designer/calculatorform/calculatorform.pro 1
+    \snippet calculatorform/calculatorform.pro 1
 
     When the project is built, \c uic will create a header file that lets us
     construct the form.
@@ -63,12 +63,12 @@
     to include the \c ui_calculatorform.h header file created by \c uic
     during the build process:
 
-    \snippet designer/calculatorform/calculatorform.h 0
+    \snippet calculatorform/calculatorform.h 0
 
     We define the \c CalculatorForm class by subclassing QWidget because the
     form itself is based on QWidget:
 
-    \snippet designer/calculatorform/calculatorform.h 1
+    \snippet calculatorform/calculatorform.h 1
 
     Apart from the constructor, the class contains two private slots that
     are named according to the auto-connection naming convention required
@@ -81,7 +81,7 @@
     The constructor simply calls the base class's constructor and
     sets up the form's user interface.
 
-    \snippet designer/calculatorform/calculatorform.cpp 0
+    \snippet calculatorform/calculatorform.cpp 0
 
     The user interface is set up with the \c setupUI() function. We pass
     \c this as the argument to this function to use the \c CalculatorForm
@@ -94,7 +94,7 @@
     "inputSpinBox1" in the user interface emits the
     \l{QSpinBox::valueChanged()}{valueChanged()} signal:
 
-    \snippet designer/calculatorform/calculatorform.cpp 1
+    \snippet calculatorform/calculatorform.cpp 1
 
     When this occurs, we use the value supplied by the signal to update the
     output label by setting its new text directly. We access the output label
@@ -104,7 +104,7 @@
     "inputSpinBox2", emits the \l{QSpinBox::valueChanged()}{valueChanged()}
     signal:
 
-    \snippet designer/calculatorform/calculatorform.cpp 2
+    \snippet calculatorform/calculatorform.cpp 2
 
     In this case, the value from the first spin box is read and combined
     with the value supplied by the signal. Again, the output label is

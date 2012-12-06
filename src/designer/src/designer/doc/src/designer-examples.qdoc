@@ -36,14 +36,14 @@
     Qt Designer can be compiled into an application or created at run-time.
 
     \list
-    \li \l{designer/arthurplugin}{Arthur Plugin}
-    \li \l{designer/calculatorbuilder}{Calculator Builder}\raisedaster
-    \li \l{designer/calculatorform}{Calculator Form}\raisedaster
-    \li \l{designer/customwidgetplugin}{Custom Widget Plugin}\raisedaster
-    \li \l{designer/taskmenuextension}{Task Menu Extension}\raisedaster
-    \li \l{designer/containerextension}{Container Extension}\raisedaster
-    \li \l{designer/worldtimeclockbuilder}{World Time Clock Builder}\raisedaster
-    \li \l{designer/worldtimeclockplugin}{World Time Clock Plugin}\raisedaster
+    \li \l{arthurplugin}{Arthur Plugin}
+    \li \l{calculatorbuilder}{Calculator Builder}\raisedaster
+    \li \l{calculatorform}{Calculator Form}\raisedaster
+    \li \l{customwidgetplugin}{Custom Widget Plugin}\raisedaster
+    \li \l{taskmenuextension}{Task Menu Extension}\raisedaster
+    \li \l{containerextension}{Container Extension}\raisedaster
+    \li \l{worldtimeclockbuilder}{World Time Clock Builder}\raisedaster
+    \li \l{worldtimeclockplugin}{World Time Clock Plugin}\raisedaster
     \endlist
 
     Examples marked with an asterisk (*) are fully documented.
