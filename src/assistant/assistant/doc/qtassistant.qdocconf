@@ -27,7 +27,7 @@ language                = Cpp
 
 sourcedirs              = ..
 
-exampledirs             = ../../../../examples \
+exampledirs             = ../../../../examples/assistant \
                           snippets
 
 imagedirs               = images
