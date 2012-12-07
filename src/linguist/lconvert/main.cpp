@@ -134,6 +134,7 @@ struct File
 int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
+#ifndef QT_BOOTSTRAPPED
 #ifndef Q_OS_WIN32
     QTranslator translator;
     QTranslator qtTranslator;
@@ -145,6 +146,7 @@ int main(int argc, char *argv[])
         app.installTranslator(&qtTranslator);
     }
 #endif // Q_OS_WIN32
+#endif
 
     QStringList args = app.arguments();
     QList<File> inFiles;
