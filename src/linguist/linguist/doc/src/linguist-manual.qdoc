@@ -127,16 +127,6 @@
     \li \l{Qt Linguist Manual: Text ID Based Translations}{Text ID Based Translations}
     \endlist
 
-    \table
-
-    \row \li{1,2} \inlineimage wVista-Cert-border-small.png
-    \li \e{Qt Linguist 4.3 is Certified for Windows Vista}
-
-    \row \li Windows Vista and the Windows Vista Start button are
-    trademarks or registered trademarks of Microsoft Corporation in
-    the United States and/or other countries.
-
-    \endtable
 */
 
 /*!
