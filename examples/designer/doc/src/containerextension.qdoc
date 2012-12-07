@@ -101,7 +101,7 @@
 
     The \c TEMPLATE variable's value makes \c qmake create the custom
     widget as a library. Later, we will ensure that the widget will be
-    recognized as a plugin by Qt by using the Q_EXPORT_PLUGIN2() macro
+    recognized as a plugin by Qt by using the Q_PLUGIN_METADATA() macro
     to export the relevant widget information.
 
     The \c CONFIG variable contains two values, \c designer and \c
@@ -346,7 +346,7 @@
 
     \snippet containerextension/multipagewidgetplugin.cpp 14
 
-    Remember to use the Q_EXPORT_PLUGIN2() macro to export the
+    Remember to use the Q_PLUGIN_METADATA() macro to export the
     MultiPageWidgetPlugin class for use with Qt's plugin handling
     classes: This macro ensures that \QD can access and construct the
     custom widget. Without this macro, there is no way for \QD to use

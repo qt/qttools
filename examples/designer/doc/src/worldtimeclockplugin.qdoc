@@ -129,10 +129,10 @@
     {customwidgetplugin}{Custom Widget Plugin} example (only
     the class name and the implementation of
     QDesignerCustomWidgetInterface::domXml() differ). The main thing
-    to remember is to use the Q_EXPORT_PLUGIN2() macro to export the \c
+    to remember is to use the Q_PLUGIN_METADATA() macro to export the \c
     WorldTimeClockPlugin class for use with \QD:
 
-    \snippet worldtimeclockplugin/worldtimeclockplugin.cpp 0
+    \snippet worldtimeclockplugin/worldtimeclockplugin.h 1
 
     Without this macro, there is no way for Qt Designer to use the
     widget.
@@ -182,7 +182,7 @@
     alongside the other \QD plugins when the project is installed
     (using \c{make install} or an equivalent installation procedure).
     Later, we will ensure that it is recognized as a plugin by \QD by
-    using the Q_EXPORT_PLUGIN2() macro to export the relevant widget
+    using the Q_PLUGIN_METADATA() macro to export the relevant widget
     information.
 
     Note that if you want the plugins to appear in a Visual Studio

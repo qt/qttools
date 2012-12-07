@@ -2501,7 +2501,7 @@ pixmap property in the property editor.
     that they export the symbols needed by \QD.
 
     First of all, the plugin class must be exported in order for the plugin to
-    be loaded by \QD. Use the Q_EXPORT_PLUGIN2() macro to do this. Also, the
+    be loaded by \QD. Use the Q_PLUGIN_METADATA() macro to do this. Also, the
     QDESIGNER_WIDGET_EXPORT macro must be used to define each custom widget class
     within a plugin, that \QD will instantiate.
 
