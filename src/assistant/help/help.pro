@@ -4,6 +4,8 @@ QT_PRIVATE = network sql clucene-private
 
 DEFINES += QHELP_LIB QT_CLUCENE_SUPPORT
 
+QMAKE_DOCS = $$PWD/doc/qthelp.qdocconf
+
 load(qt_module)
 
 DEFINES -= QT_ASCII_CAST_WARNINGS
