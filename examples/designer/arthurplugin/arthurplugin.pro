@@ -23,8 +23,8 @@ contains(QT_CONFIG, opengl) {
     QT += opengl
 }
 
-QT_BASE_EXAMPLES = $$QT.core.sources/../../examples
-SHARED_FOLDER = $$QT_BASE_EXAMPLES/widgets/painting/shared
+requires(!isEmpty(_QMAKE_SUPER_CACHE_))
+QT_BASE_EXAMPLES = ../../../../qtbase/examples
 include($$QT_BASE_EXAMPLES/widgets/painting/shared/shared.pri)
 
 EXAMPLE_AFFINE_DIR = $$QT_BASE_EXAMPLES/widgets/painting/affine
