@@ -127,5 +127,5 @@
     For a complete example using QUiLoader, see
     the \l {calculatorbuilder}{Calculator Builder example}.
 
-    \sa {Qt Designer Manual}, {QtUiTools Module}
+    \sa {Qt Designer Manual}, {Qt UI Tools}
 */

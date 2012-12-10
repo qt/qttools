@@ -1,0 +1,40 @@
+include($QT_INSTALL_DOCS/global/qt-module-defaults.qdocconf)
+
+project                 = QtUiTools
+description             = Qt UI Tools Reference Documentation
+url                     = http://qt-project.org/doc/qtuitools
+version                 = 5.0.0
+
+examplesinstallpath     = uitools
+
+qhp.projects            = QtUiTools
+
+qhp.QtUiTools.file                = qtuitools.qhp
+qhp.QtUiTools.namespace           = org.qt-project.qtuitools.500
+qhp.QtUiTools.virtualFolder       = qtuitools
+qhp.QtUiTools.indexTitle          = Qt UI Tools
+qhp.QtHelp.indexRoot           =
+
+qhp.QtUiTools.filterAttributes    = qtuitools 5.0.0 tools designer qtrefdoc
+qhp.QtUiTools.customFilters.QtUiTools.name = QtUiTools 5.0.0
+qhp.QtUiTools.customFilters.QtUiTools.filterAttributes = qtuitools 5.0.0
+qhp.QtUiTools.subprojects         = classes
+qhp.QtUiTools.subprojects.classes.title = C++ Classes
+qhp.QtUiTools.subprojects.classes.indexTitle = Qt Help C++ Classes
+qhp.QtUiTools.subprojects.classes.selectors = class fake:headerfile
+qhp.QtUiTools.subprojects.classes.sortPages = true
+
+language                = Cpp
+
+headerdirs            += ..
+
+sourcedirs              = ..
+
+exampledirs             = ../../../../../examples/uitools \
+                          snippets
+
+imagedirs               = images
+
+outputdir               = $QT_INSTALL_DOCS/qtuitools
+
+depends                += qtdoc qtbase qtdesigner qtcore qtwidgets
