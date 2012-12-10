@@ -61,7 +61,7 @@ QT_BEGIN_NAMESPACE
     the QDesignerFormEditorInterface::formWindowManager()
     function. For example:
 
-    \snippet doc/src/snippets/code/tools_designer_src_lib_sdk_abstractformwindowmanager.cpp 0
+    \snippet lib/tools_designer_src_lib_sdk_abstractformwindowmanager.cpp 0
 
     When implementing a custom widget plugin, a pointer to \QD's
     current QDesignerFormEditorInterface object (\c formEditor in the
@@ -409,7 +409,7 @@ QAction *QDesignerFormWindowManagerInterface::actionSimplifyLayout() const
 */
 
 /*!
-   \n virtual void QDesignerFormWindowManagerInterface::removeFormWindow(QDesignerFormWindowInterface *formWindow)
+   \fn virtual void QDesignerFormWindowManagerInterface::removeFormWindow(QDesignerFormWindowInterface *formWindow)
    Removes the given \a formWindow from the collection of windows that
    \QD's form window manager maintains.
 
@@ -488,7 +488,7 @@ QAction *QDesignerFormWindowManagerInterface::actionRedo() const
     \fn void QDesignerFormWindowManagerInterface::formWindowSettingsChanged(QDesignerFormWindowInterface *formWindow)
 
     This signal is emitted when the settings of the form window change. It can be used to update
-    window titles, etc. accordingly.
+    window titles, etc. accordingly. A pointer to the \a formWindow is passed as an argument.
 
     \sa FormWindowSettingsDialogAction
 */

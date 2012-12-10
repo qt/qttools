@@ -147,7 +147,7 @@ QT_BEGIN_NAMESPACE
    object is of type T (or of a subclass); otherwise returns 0. The
    extension is retrieved using the given extension \a manager.
 
-   \snippet doc/src/snippets/code/tools_designer_src_lib_extension_extension.cpp 0
+   \snippet lib/tools_designer_src_lib_extension_extension.cpp 0
 
    When implementing a custom widget plugin, a pointer to \QD's
    current QDesignerFormEditorInterface object (\c formEditor) is
@@ -169,7 +169,7 @@ QT_BEGIN_NAMESPACE
    extension class called \a ExtensionName. The \a Identifier must be
    unique. For example:
 
-   \snippet doc/src/snippets/code/tools_designer_src_lib_extension_extension.cpp 1
+   \snippet lib/tools_designer_src_lib_extension_extension.cpp 1
 
    Using the company and product names is a good way to ensure
    uniqueness of the identifier.

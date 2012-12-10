@@ -64,7 +64,7 @@
 
     You can use all the extensions following the same pattern as in
     this example, only replacing the respective extension base
-    class. For more information, see the \l {QtDesigner Module}.
+    class. For more information, see the \l{Qt Designer C++ Classes}.
 
     The Task Menu Extension example consists of five classes:
 

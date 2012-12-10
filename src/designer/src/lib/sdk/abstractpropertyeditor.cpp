@@ -63,13 +63,13 @@ QT_BEGIN_NAMESPACE
     For example, when implementing a custom widget plugin, you can
     connect the signal to a custom slot:
 
-    \snippet doc/src/snippets/code/tools_designer_src_lib_sdk_abstractpropertyeditor.cpp 0
+    \snippet lib/tools_designer_src_lib_sdk_abstractpropertyeditor.cpp 0
 
     Then the custom slot can check if the new value is within the
     range we want when a specified property, belonging to a particular
     widget, changes:
 
-    \snippet doc/src/snippets/code/tools_designer_src_lib_sdk_abstractpropertyeditor.cpp 1
+    \snippet lib/tools_designer_src_lib_sdk_abstractpropertyeditor.cpp 1
 
     The QDesignerPropertyEditorInterface class is not intended to be
     instantiated directly. You can retrieve an interface to \QD's

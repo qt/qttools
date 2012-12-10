@@ -59,7 +59,7 @@ QT_BEGIN_NAMESPACE
     The registration of an extension factory is typically made in the
     QDesignerCustomWidgetInterface::initialize() function:
 
-    \snippet doc/src/snippets/code/tools_designer_src_lib_extension_qextensionmanager.cpp 0
+    \snippet lib/tools_designer_src_lib_extension_qextensionmanager.cpp 0
 
     The QExtensionManager is not intended to be instantiated
     directly. You can retrieve an interface to \QD's extension manager
@@ -86,7 +86,7 @@ QT_BEGIN_NAMESPACE
     sheet, a property sheet or a task menu.
 
     For a complete example using the QExtensionManager class, see the
-    \l {designer/taskmenuextension}{Task Menu Extension example}. The
+    \l {taskmenuextension}{Task Menu Extension example}. The
     example shows how to create a custom widget plugin for Qt
     Designer, and how to to use the QDesignerTaskMenuExtension class
     to add custom items to \QD's task menu.

@@ -22,17 +22,28 @@ qhp.QtDesigner.subprojects.examples.title = Examples
 qhp.QtDesigner.subprojects.examples.indexTitle = Qt Examples
 qhp.QtDesigner.subprojects.examples.selectors = fake:example
 qhp.QtDesigner.subprojects.examples.sortPages = true
+qhp.QtDesigner.subprojects         = classes
+qhp.QtDesigner.subprojects.classes.title = C++ Classes
+qhp.QtDesigner.subprojects.classes.indexTitle = Qt Designer C++ Classes
+qhp.QtDesigner.subprojects.classes.selectors = class fake:headerfile
+qhp.QtDesigner.subprojects.classes.sortPages = true
 
 language                = Cpp
 
-sourcedirs              = ..
+headerdirs             += .. \
+                          ../../lib
+
+sourcedirs              = .. \
+                          ../../lib
 
 exampledirs             = ../../../../../examples/designer \
                           ../../../../../examples/uitools \
                           snippets
 
+excludefiles           += ../../lib/uilib/extension.h
+
 imagedirs               = images
 
 outputdir               = $QT_INSTALL_DOCS/qtdesigner
 
-depends                 += qtdoc qtbase qtwidgets qtcore
+depends                 += qtdoc qtwidgets qtcore

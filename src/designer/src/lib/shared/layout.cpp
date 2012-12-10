@@ -100,7 +100,7 @@ void updateWizardLayout(QWidget *layoutBase)
 }
 
 /*!
-  \class Layout layout.h
+  \class qdesigner_internal::Layout
   \brief Baseclass for layouting widgets in the Designer (Helper for Layout commands)
   \internal
 

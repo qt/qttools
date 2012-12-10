@@ -47,12 +47,6 @@
 #include <QtCore/QString>
 #include <QtCore/QDebug>
 
-/*!
-  \class QDesignerSettingsSimple
-
-  \brief Implements QDesignerSettingsInterface by calls to QSettings
-  */
-
 QDesignerQSettings::QDesignerQSettings() :
     m_settings(qApp->organizationName(), settingsApplicationName())
 {

@@ -50,6 +50,7 @@ using namespace qdesigner_internal;
 
 /*!
     \class QDesignerFormWindowManager
+    \inmodule QtDesigner
 
     Extends QDesignerFormWindowManagerInterface with methods to control
     the preview and printing of forms. It provides a facade that simplifies
@@ -85,8 +86,7 @@ void QDesignerFormWindowManager::showPluginDialog()
 }
 
 /*!
-    \fn
-    void QDesignerFormWindowManager::formWindowSettingsChanged(QDesignerFormWindowInterface *fw);
+    \fn void QDesignerFormWindowManager::formWindowSettingsChanged(QDesignerFormWindowInterface *fw);
 
     This signal is emitted when the form settings dialog was shown
     and changes have been made to the form.
