@@ -1,6 +1,7 @@
 TARGET      = qaxwidget
 QT         += widgets designer-private axcontainer
 
+PLUGIN_CLASS_NAME = QAxWidgetPlugin
 include(../plugins.pri)
 
 INCLUDEPATH += ../../lib/uilib \
