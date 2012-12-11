@@ -344,7 +344,7 @@
     page; any inital pages of a multi-page widget must be specified
     within this function.
 
-    \snippet containerextension/multipagewidgetplugin.cpp 14
+    \snippet containerextension/multipagewidgetplugin.h 1
 
     Remember to use the Q_PLUGIN_METADATA() macro to export the
     MultiPageWidgetPlugin class for use with Qt's plugin handling

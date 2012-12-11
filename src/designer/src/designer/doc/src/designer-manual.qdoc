@@ -1803,13 +1803,13 @@ pixmap property in the property editor.
     To use the direct approach, we include the \c ui_calculatorform.h file
     directly in \c main.cpp:
 
-    \snippet calculatorform/main.cpp 0
+    \snippet uitools/calculatorform/main.cpp 0
 
     The \c main function creates the calculator widget by constructing a
     standard QWidget that we use to host the user interface described by the
     \c calculatorform.ui file.
 
-    \snippet calculatorform/main.cpp 1
+    \snippet uitools/calculatorform/main.cpp 1
 
     In this case, the \c{Ui::CalculatorForm} is an interface description object
     from the \c ui_calculatorform.h file that sets up all the dialog's widgets

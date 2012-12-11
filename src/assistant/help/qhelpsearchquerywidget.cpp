@@ -575,7 +575,8 @@ void QHelpSearchQueryWidget::focusInEvent(QFocusEvent *focusEvent)
     }
 }
 
-/*! \reimp
+/*!
+    \reimp
 */
 void QHelpSearchQueryWidget::changeEvent(QEvent *event)
 {

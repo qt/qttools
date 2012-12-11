@@ -46,4 +46,4 @@ imagedirs               = images
 
 outputdir               = $QT_INSTALL_DOCS/qtdesigner
 
-depends                 += qtdoc qtwidgets qtcore
+depends                 += qtdoc qtwidgets qtcore qtuitools

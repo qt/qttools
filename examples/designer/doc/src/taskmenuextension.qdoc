@@ -252,7 +252,7 @@
     default settings for the widget in the standard XML format used by
     Qt Designer), since no default values are necessary.
 
-    \snippet taskmenuextension/tictactoeplugin.cpp 4
+    \snippet taskmenuextension/tictactoeplugin.h 1
 
     Finally, we use the Q_PLUGIN_METADATA() macro to export the
     TicTacToePlugin class for use with Qt's plugin handling classes:
