@@ -1943,14 +1943,14 @@ pixmap property in the property editor.
     We need to include the header file that \c uic generates from the
     \c calculatorform.ui file, as follows:
 
-    \snippet multipleinheritance/calculatorform.h 0
+    \snippet ../uitools/multipleinheritance/calculatorform.h 0
 
     The class is defined in a similar way to the one used in the
     \l{The Single Inheritance Approach}{single inheritance approach}, except that
     this time we inherit from \e{both} QWidget and \c{Ui::CalculatorForm},
     as follows:
 
-    \snippet multipleinheritance/calculatorform.h 1
+    \snippet ../uitools/multipleinheritance/calculatorform.h 1
 
     We inherit \c{Ui::CalculatorForm} privately to ensure that the user
     interface objects are private in our subclass. We can also inherit it with
@@ -1961,7 +1961,7 @@ pixmap property in the property editor.
     constructor used in the \l{The Single Inheritance Approach}
     {single inheritance} example:
 
-    \snippet multipleinheritance/calculatorform.cpp 0
+    \snippet ../uitools/multipleinheritance/calculatorform.cpp 0
 
     In this case, the widgets used in the user interface can be accessed in the
     same say as a widget created in code by hand. We no longer require the
@@ -2018,14 +2018,14 @@ pixmap property in the property editor.
     The QUiLoader::load() function is invoked as shown in this code from the
     \l{Text Finder Example}{Text Finder} example:
 
-    \snippet textfinder/textfinder.cpp 4
+    \snippet ../uitools/textfinder/textfinder.cpp 4
 
     In a class that uses QtUiTools to build its user interface at run time, we
     can locate objects in the form using qFindChild(). For example, in the
     follownig code, we locate some components based on their object names and
     widget types:
 
-    \snippet textfinder/textfinder.cpp 1
+    \snippet ../uitools/textfinder/textfinder.cpp 1
 
     Processing forms at run-time gives the developer the freedom to change a
     program's user interface, just by changing the UI file. This is useful
@@ -2098,13 +2098,13 @@ pixmap property in the property editor.
 
     We use QMetaObject's system to enable signal and slot connections:
 
-    \snippet textfinder/textfinder.cpp 2
+    \snippet ../uitools/textfinder/textfinder.cpp 2
 
     This enables us to implement the slot, as shown below:
 
-    \snippet textfinder/textfinder.cpp 6
+    \snippet ../uitools/textfinder/textfinder.cpp 6
     \dots
-    \snippet textfinder/textfinder.cpp 8
+    \snippet ../uitools/textfinder/textfinder.cpp 8
 
     Automatic connection of signals and slots provides both a standard naming
     convention and an explicit interface for widget designers to work to. By

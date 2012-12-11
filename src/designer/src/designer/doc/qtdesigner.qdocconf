@@ -37,7 +37,6 @@ sourcedirs              = .. \
                           ../../lib
 
 exampledirs             = ../../../../../examples/designer \
-                          ../../../../../examples/uitools \
                           snippets
 
 excludefiles           += ../../lib/uilib/extension.h
