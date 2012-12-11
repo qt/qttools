@@ -1403,7 +1403,7 @@
     TS files containing only entries with plural forms.
 
     See the \l{Qt Quarterly} Article
-    \l{Qt Quarterly: Plural Form in Translation}{Plural Forms in Translations}
+    \l{http://doc.qt.digia.com/qq/qq19-plurals.html}{Plural Forms in Translations}
     for further details on this issue.
 
     \section2 Coping With C++ Namespaces
