@@ -27,10 +27,10 @@
 
 /*!
     \example simpletextviewer
+    \ingroup examples-qtassistant
     \title Simple Text Viewer Example
 
-    \brief The Simple Text Viewer example shows how to use \QA as a customized
-    help viewer for your application.
+    \brief Using \QA as a customized help viewer for your application.
 
     \image simpletextviewer-example.png
 

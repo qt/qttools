@@ -26,21 +26,25 @@
 ****************************************************************************/
 
 /*!
-    \group examples-qtassistant.html
+    \group examples-qtassistant
     \ingroup all-examples
     \title Qt Assistant Examples
-    \brief Adding interactive help to your Qt application.
+    \brief Using Qt Assistant as a help viewer for  Qt applications.
 
-    \image assistant-examples.png HelpSystem
+    \image assistant-examples.png
 
-    Support for interactive help is provided by the Qt Assistant application.
-    Developers can take advantages of the facilities it offers to display
-    specially-prepared documentation to users of their applications.
+    Qt Assistant provides support for interactive help and enables you to
+    display customer documentation to users of your Qt applications.
 
+    The following examples illustrate how to use Qt Assistant as a help viewer
+    for applications.
+
+*/
+
+/*
     \list
     \li \l{simpletextviewer}{Simple Text Viewer}\raisedaster
-    \li \l{help/remotecontrol}{Remote Control}
-    \li \l{help/contextsensitivehelp}{Context-Sensitive Help}
+    \li \l{remotecontrol}{Remote Control}
     \endlist
 
     Examples marked with an asterisk (*) are fully documented.

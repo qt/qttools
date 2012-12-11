@@ -27,10 +27,13 @@
 
 /*!
     \example containerextension
+    \ingroup examples-designer
     \title Container Extension Example
 
-    \brief The Container Extension example shows how to create a custom
-    multi-page plugin for Qt Designer using the
+    \brief Creating a custom multi-page plugin for \QD.
+
+    The Container Extension example shows how to create a custom multi-page
+    plugin for \QD using the
     QDesignerContainerExtension class.
 
     \image containerextension-example.png

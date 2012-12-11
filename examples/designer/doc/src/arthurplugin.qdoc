@@ -27,10 +27,10 @@
 
 /*!
     \example arthurplugin
+    \ingroup examples-designer
     \title Arthur Plugin
 
-    \brief In this example we demonstrate the abilities of Qt's painting system
-    in combination with \QD's custom widget plugin facilities.
+    \brief Using the Qt painting system with \QD custom widget plugins.
 
     \image arthurplugin-demo.png
 

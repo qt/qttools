@@ -26,18 +26,25 @@
 ****************************************************************************/
 
 /*!
-    \group examples-qtuitools.html
+    \group examples-qtuitools
     \ingroup all-examples
     \title Qt UI Tools Examples
     \brief Using Qt UI Tools to process UI forms.
 
     \image uitools-examples.png UiTools
 
+    The \l{Qt UI Tools} module provides classes to handle UI forms created with
+    Qt Designer. The forms are processed at run-time to dynamically generate
+    user interfaces.
+
+    The following examples illustrate how to use Qt UI Tools to process UI
+    forms.
+*/
+
+/*
     \list
         \li \l{Multiple Inheritance Example}\raisedaster
         \li \l{Text Finder Example}\raisedaster
-        \li \l{Calculator Builder Example}\raisedaster
-        \li \l{World Time Clock Builder Example}\raisedaster
     \endlist
 
     Examples marked with an asterisk (*) are fully documented.

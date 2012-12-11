@@ -26,30 +26,22 @@
 ****************************************************************************/
 
 /*!
-    \group examples-designer
+    \group examples-qthelp
     \ingroup all-examples
-    \title Qt Designer Examples
-    \brief Using Qt Designer to build your UI.
+    \title Qt Help Examples
+    \brief Adding context-sensitive help to Qt applications.
 
-    Qt Designer is a capable graphical user interface designer that lets you
-    create and configure forms without writing code. GUIs created with
-    Qt Designer can be compiled into an application or created at run-time.
+    The Qt help system includes tools for generating and viewing Qt help files.
+    In addition, it provides classes for accessing help contents programatically
+    to be able to integrate online help into Qt applications.
 
-    The following examples illustrate how to create and use Qt Designer forms
-    and how to create Qt Designer custom widget plugins.
+    The following example illustrates how to add context-sensitive help to
+    applications.
+
 */
 
 /*
     \list
-    \li \l{arthurplugin}{Arthur Plugin}
-    \li \l{calculatorbuilder}{Calculator Builder}\raisedaster
-    \li \l{calculatorform}{Calculator Form}\raisedaster
-    \li \l{customwidgetplugin}{Custom Widget Plugin}\raisedaster
-    \li \l{taskmenuextension}{Task Menu Extension}\raisedaster
-    \li \l{containerextension}{Container Extension}\raisedaster
-    \li \l{worldtimeclockbuilder}{World Time Clock Builder}\raisedaster
-    \li \l{worldtimeclockplugin}{World Time Clock Plugin}\raisedaster
+    \li \l{contextsensitivehelp}{Context-Sensitive Help}
     \endlist
-
-    Examples marked with an asterisk (*) are fully documented.
 */

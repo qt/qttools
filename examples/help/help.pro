@@ -1,5 +1,4 @@
 TEMPLATE = subdirs
 CONFIG  += ordered
 
-SUBDIRS += contextsensitivehelp \
-           remotecontrol
+SUBDIRS += contextsensitivehelp

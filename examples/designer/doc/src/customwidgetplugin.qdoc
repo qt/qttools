@@ -27,9 +27,10 @@
 
 /*!
     \example customwidgetplugin
+    \ingroup examples-designer
     \title Custom Widget Plugin Example
 
-    \brief The Custom Widget example shows how to create a custom widget plugin for \QD.
+    \brief Creating a custom widget plugin for Qt Designer.
 
     \image customwidgetplugin-example.png
 

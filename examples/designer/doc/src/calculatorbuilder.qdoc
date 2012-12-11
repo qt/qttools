@@ -27,10 +27,10 @@
 
 /*!
     \example calculatorbuilder
+    \ingroup examples-designer
     \title Calculator Builder Example
 
-    \brief The Calculator Builder example shows how to create a user interface from
-    a \QD form at run-time, using the QUiLoader class.
+    \brief Creating a user interface from a \QD form at run-time.
 
     \image calculatorbuilder-example.png
 

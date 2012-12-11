@@ -27,9 +27,13 @@
 
 /*!
     \example taskmenuextension
+    \ingroup examples-designer
     \title Task Menu Extension Example
 
-    \brief The Task Menu Extension example shows how to create a custom
+    \brief Creating a custom widget plugin for \QD and providing custom task
+    menu entries that are associated with the plugin.
+
+    The Task Menu Extension example shows how to create a custom
     widget plugin for \l {Qt Designer Manual}{\QD}, and how to to use
     the QDesignerTaskMenuExtension class to provide custom task menu
     entries associated with the plugin.

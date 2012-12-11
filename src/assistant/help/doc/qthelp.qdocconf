@@ -32,7 +32,7 @@ headerdirs += ..
 
 sourcedirs              = ..
 
-exampledirs             = ../../../../../examples/help \
+exampledirs             = ../../../../examples/help \
                           snippets
 
 imagedirs               = images

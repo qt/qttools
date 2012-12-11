@@ -27,7 +27,10 @@
 
 /*!
     \example multipleinheritance
+    \ingroup examples-qtuitools
     \title Multiple Inheritance Example
+
+    \brief Using a form created with Qt Designer in an application.
 
     The Multiple Inheritance Example shows how to use a form created with
     Qt Designer in an application by subclassing both QWidget and the user
