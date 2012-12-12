@@ -1,5 +1,7 @@
 QT += network help-private
 
+CONFIG += qpa_minimal_plugin
+
 SOURCES += ../shared/helpgenerator.cpp \
            main.cpp
 
