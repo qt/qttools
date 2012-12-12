@@ -26,7 +26,7 @@
 ****************************************************************************/
 
 /*!
-    \group examples-linguist.html
+    \group examples-linguist
     \ingroup all-examples
     \ingroup internationalization
     \title Qt Linguist Examples
@@ -34,7 +34,9 @@
 
     Internationalization is a core feature of Qt. These examples show how to
     access translation and localization facilities at run-time.
+*/
 
+/*
     \list
     \li \l{hellotr}{Hello tr()}\raisedaster
     \li \l{arrowpad}{Arrow Pad}\raisedaster

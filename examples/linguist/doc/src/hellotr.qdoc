@@ -27,10 +27,12 @@
 
 /*!
     \example hellotr
+    \ingroup examples-linguist
     \title Hello tr() Example
 
-    \brief This example is a small Hello World program with a Latin translation. The
-    screenshot shows the English version.
+    \brief Translating a small Hello World program to Latin.
+
+    The screenshot shows the English version.
 
     \image linguist-hellotr_en.png
 

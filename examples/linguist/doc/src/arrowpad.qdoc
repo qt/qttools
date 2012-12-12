@@ -28,9 +28,8 @@
 /*!
     \example arrowpad
     \title Arrow Pad Example
-
-    \brief This example is a slightly more involved and introduces a key \e
-    {Qt Linguist} concept: "contexts". It also shows how to use two
+    \ingroup examples-linguist
+    \brief Understanding the Qt Linguist \e contexts concept and using two
     or more languages.
 
     \image linguist-arrowpad_en.png

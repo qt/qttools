@@ -27,9 +27,12 @@
 
 /*!
     \example trollprint
+    \ingroup examples-linguist
     \title Troll Print Example
 
-    \brief Troll Print is an example application that lets the user choose
+    \brief Updating translations for later releases.
+
+    Troll Print is an example application that lets the user choose
     printer settings. It comes in two versions: English and
     Portuguese.
 
