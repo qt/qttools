@@ -1,5 +1,4 @@
 TEMPLATE = app
-DEPENDPATH += . ../shared/
 INCLUDEPATH += . ../shared/
 TARGET=tst_deployment_mac
 CONFIG += qtestlib

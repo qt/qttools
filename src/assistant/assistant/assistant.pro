@@ -12,8 +12,6 @@ QT += widgets network help sql help
 !isEmpty(QT.printsupport.name): QT += printsupport
 PROJECTNAME = Assistant
 
-DEPENDPATH += ../shared
-
 include(../../shared/fontpanel/fontpanel.pri)
 
 QMAKE_DOCS = $$PWD/doc/qtassistant.qdocconf
