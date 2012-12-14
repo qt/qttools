@@ -1,4 +1,3 @@
-INCLUDEPATH += ../../src/3rdparty/harfbuzz/src
 QT += widgets gui-private core-private
 CONFIG += console
 DESTDIR = $$QT.designer.bins
