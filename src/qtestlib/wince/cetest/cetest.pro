@@ -6,7 +6,7 @@ build_all:!build_pass {
     CONFIG += release
 }
 
-CONFIG += console no_batch depend_includepath
+CONFIG += console no_batch
 CONFIG -= qt
 
 DEFINES        += QT_BUILD_QMAKE QT_BOOTSTRAPPED QT_NO_CODECS QT_LITE_UNICODE QT_NO_LIBRARY \
