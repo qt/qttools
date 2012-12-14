@@ -107,9 +107,7 @@ void QHelpSearchIndexReaderClucene::run()
 
         emit searchingStarted();
 
-#if !defined(QT_NO_EXCEPTIONS)
         try {
-#endif
             QCLuceneBooleanQuery booleanQueryTitle;
             QCLuceneBooleanQuery booleanQueryContent;
             QCLuceneStandardAnalyzer analyzer;
@@ -199,15 +197,12 @@ void QHelpSearchIndexReaderClucene::run()
             if ((count > 0) && boost)
                 boostSearchHits(engine, hitList, queryList);
             emit searchingFinished(hitList.count());
-
-#if !defined(QT_NO_EXCEPTIONS)
         } catch(...) {
             mutex.lock();
             hitList.clear();
             mutex.unlock();
             emit searchingFinished(0);
         }
-#endif
     }
 }
 
