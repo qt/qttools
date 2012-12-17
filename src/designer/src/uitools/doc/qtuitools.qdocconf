@@ -20,7 +20,7 @@ qhp.QtUiTools.customFilters.QtUiTools.name = QtUiTools 5.0.0
 qhp.QtUiTools.customFilters.QtUiTools.filterAttributes = qtuitools 5.0.0
 qhp.QtUiTools.subprojects         = classes
 qhp.QtUiTools.subprojects.classes.title = C++ Classes
-qhp.QtUiTools.subprojects.classes.indexTitle = Qt Help C++ Classes
+qhp.QtUiTools.subprojects.classes.indexTitle = Qt UI Tools C++ Classes
 qhp.QtUiTools.subprojects.classes.selectors = class fake:headerfile
 qhp.QtUiTools.subprojects.classes.sortPages = true
 
