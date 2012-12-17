@@ -19,7 +19,7 @@ qhp.QtAssistant.subprojects.manual.title = Manual
 qhp.QtAssistant.subprojects.manual.indexTitle = Qt Assistant Manual
 qhp.QtAssistant.subprojects.manual.selectors = fake:page
 qhp.QtAssistant.subprojects.examples.title = Examples
-qhp.QtAssistant.subprojects.examples.indexTitle = Qt Examples
+qhp.QtAssistant.subprojects.examples.indexTitle = Qt Assistant Examples
 qhp.QtAssistant.subprojects.examples.selectors = fake:example
 qhp.QtAssistant.subprojects.examples.sortPages = true
 
