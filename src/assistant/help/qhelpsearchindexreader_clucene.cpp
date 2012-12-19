@@ -269,7 +269,7 @@ bool QHelpSearchIndexReaderClucene::buildTryHarderQuery(
         return false;
     if (isNegativeQuery(query))
         return false;
-    if (!addDefaultQuery(query, fieldName, false, booleanQuery, analyzer))
+    if (!addDefaultQuery(query, fieldName, !filterAttributes.isEmpty(), booleanQuery, analyzer))
         return false;
     if (filterAttributes.isEmpty())
         return true;
