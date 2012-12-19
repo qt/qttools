@@ -20,11 +20,3 @@ for(QTSHAREDLIB, $$list($$unique(LIBS))) {
         qtAddLibrary($$QT_SHARED_LIB_NAME)
     }
 }
-
-unix {
-   CONFIG     += create_pc
-   QMAKE_PKGCONFIG_LIBDIR = $$[QT_INSTALL_LIBS]
-   QMAKE_PKGCONFIG_INCDIR = $$[QT_INSTALL_HEADERS]/$$TARGET
-   QMAKE_PKGCONFIG_CFLAGS = -I$$[QT_INSTALL_HEADERS]
-   QMAKE_PKGCONFIG_DESTDIR = pkgconfig
-}

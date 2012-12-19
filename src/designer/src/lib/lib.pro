@@ -14,24 +14,6 @@ DEFINES += \
 
 static:DEFINES += QT_DESIGNER_STATIC
 
-#mac frameworks
-mac:CONFIG += explicitlib
-mac:!static:contains(QT_CONFIG, qt_framework) {
-   QMAKE_FRAMEWORK_BUNDLE_NAME = $$TARGET
-   CONFIG += lib_bundle qt_no_framework_direct_includes qt_framework
-   CONFIG(debug, debug|release) {
-      !build_pass:CONFIG += build_all
-   } else { #release
-      !debug_and_release|build_pass {
-	  CONFIG -= qt_install_headers #no need to install these as well
-	  FRAMEWORK_HEADERS.version = Versions
-	  FRAMEWORK_HEADERS.files = $$SYNCQT.HEADER_FILES $$SYNCQT.HEADER_CLASSES
-      	  FRAMEWORK_HEADERS.path = Headers
-      }
-      QMAKE_BUNDLE_DATA += FRAMEWORK_HEADERS
-   }
-}
-
 include(extension/extension.pri)
 include(sdk/sdk.pri)
 include(shared/shared.pri)
