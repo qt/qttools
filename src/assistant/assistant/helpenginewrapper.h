@@ -192,6 +192,9 @@ public:
 
     bool fullTextSearchFallbackEnabled() const;
 
+    const QByteArray topicChooserGeometry() const;
+    void setTopicChooserGeometry(const QByteArray &geometry);
+
 signals:
 
     // For asynchronous doc updates triggered by external actions.

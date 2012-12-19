@@ -44,28 +44,36 @@
 
 #include "ui_topicchooser.h"
 
-#include <QtCore/QList>
-#include <QtCore/QMap>
-#include <QtCore/QString>
-#include <QtCore/QUrl>
-
 #include <QtWidgets/QDialog>
 
 QT_BEGIN_NAMESPACE
+
+class QSortFilterProxyModel;
 
 class TopicChooser : public QDialog
 {
     Q_OBJECT
 
 public:
-    TopicChooser(QWidget *parent, const QString &keyword,
-        const QMap<QString, QUrl> &links);
+    TopicChooser(QWidget *parent, const QString &keyword, const QMap<QString, QUrl> &links);
+    ~TopicChooser();
 
-    QUrl link() const;    
-    
+    QUrl link() const;
+
+private slots:
+    void acceptDialog();
+    void setFilter(const QString &pattern);
+    void activated(const QModelIndex &index);
+
+private:
+    bool eventFilter(QObject *object, QEvent *event);
+
 private:
     Ui::TopicChooser ui;
     QList<QUrl> m_links;
+
+    QModelIndex m_activedIndex;
+    QSortFilterProxyModel *m_filterModel;
 };
 
 QT_END_NAMESPACE

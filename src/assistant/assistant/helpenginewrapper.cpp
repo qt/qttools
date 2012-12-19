@@ -74,6 +74,7 @@ namespace {
     const QString VersionKey(QString(QLatin1String("qtVersion%1$$$%2")).
                              arg(QLatin1String(QT_VERSION_STR)));
     const QString ShowTabsKey(QLatin1String("showTabs"));
+    const QString TopicChooserGeometryKey(QLatin1String("TopicChooserGeometry"));
 } // anonymous namespace
 
 class TimeoutForwarder : public QObject
@@ -728,6 +729,18 @@ bool HelpEngineWrapper::fullTextSearchFallbackEnabled() const
 {
     TRACE_OBJ
     return CollectionConfiguration::fullTextSearchFallbackEnabled(*d->m_helpEngine);
+}
+
+const QByteArray HelpEngineWrapper::topicChooserGeometry() const
+{
+    TRACE_OBJ
+    return d->m_helpEngine->customValue(TopicChooserGeometryKey).toByteArray();
+}
+
+void HelpEngineWrapper::setTopicChooserGeometry(const QByteArray &geometry)
+{
+    TRACE_OBJ
+    d->m_helpEngine->setCustomValue(TopicChooserGeometryKey, geometry);
 }
 
 // -- TimeoutForwarder
