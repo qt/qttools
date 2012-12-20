@@ -262,3 +262,6 @@ src/xml/lib/
 *.dep
 *.map
 work
+
+# Generated static plugin import sources
+*_plugin_import.cpp
