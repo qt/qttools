@@ -1,6 +1,6 @@
 QT = core-private
 
-!isEmpty(QT.qmldevtools.name) {
+qtHaveModule(qmldevtools) {
     QT += qmldevtools-private
 } else {
     DEFINES += QT_NO_QML
@@ -20,7 +20,7 @@ SOURCES += \
     java.cpp \
     ui.cpp
 
-!isEmpty(QT.qmldevtools.name): SOURCES += qdeclarative.cpp
+qtHaveModule(qmldevtools): SOURCES += qdeclarative.cpp
 
 HEADERS += \
     lupdate.h \

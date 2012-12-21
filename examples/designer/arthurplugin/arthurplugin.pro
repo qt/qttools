@@ -18,7 +18,7 @@ INSTALLS += target
 
 }
 
-contains(QT_CONFIG, opengl) {
+qtHaveModule(opengl) {
     DEFINES += QT_OPENGL_SUPPORT
     QT += opengl
 }

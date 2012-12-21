@@ -13,7 +13,7 @@ SUBDIRS=\
 cross_compile:SUBDIRS -= host.pro
 
 # These tests need the QtHelp module
-isEmpty(QT.help.name): SUBDIRS -= \
+!qtHaveModule(help): SUBDIRS -= \
     qhelpcontentmodel \
     qhelpenginecore \
     qhelpgenerator \
