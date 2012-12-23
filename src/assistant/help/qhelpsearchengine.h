@@ -67,8 +67,8 @@ public:
 
     QHelpSearchQuery()
         : fieldName(DEFAULT) { wordList.clear(); }
-    QHelpSearchQuery(FieldName field, const QStringList &wordList)
-        : fieldName(field), wordList(wordList) {}
+    QHelpSearchQuery(FieldName field, const QStringList &wordList_)
+        : fieldName(field), wordList(wordList_) {}
 
     FieldName fieldName;
     QStringList wordList;
