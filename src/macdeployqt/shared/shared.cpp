@@ -528,6 +528,14 @@ void deployPlugins(const ApplicationBundleInfo &appBundleInfo, const QString &pl
         }
     }
 
+    if (deploymentInfo.deployedFrameworks.contains(QStringLiteral("QtMultimedia.framework"))) {
+        QStringList sqlPlugins = QDir(pluginSourcePath + QStringLiteral("/mediaservice")).entryList(QStringList() << QStringLiteral("*.dylib"));
+        foreach (const QString &plugin, sqlPlugins) {
+            if (!plugin.endsWith(QStringLiteral("_debug.dylib")))
+                pluginList.append(QStringLiteral("mediaservice/") + plugin);
+        }
+    }
+
     foreach (const QString &plugin, pluginList) {
 
         QString sourcePath = pluginSourcePath + "/" + plugin;
