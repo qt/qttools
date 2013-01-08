@@ -89,7 +89,6 @@ public:
     QMap<QString, QHelpDBReader*> fileNameReaderMap;
     QMultiMap<QString, QHelpDBReader*> virtualFolderMap;
     QStringList orderedFileNameList;
-    QHash<QString, QString> nameSpaceVirtualFolderMap;
 
     QHelpCollectionHandler *collectionHandler;
     QString currentFilter;

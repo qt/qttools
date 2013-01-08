@@ -155,6 +155,7 @@ private slots:
     void highlightSearchTerms();
     void printPreview(QPrinter *printer);
     void handleSourceChanged(const QUrl &url);
+    void slotHighlighted(const QString &link);
 
 private:
     void initPrinter();
@@ -168,6 +169,7 @@ private:
     FindWidget *m_findWidget;
     QStackedWidget *m_stackedWidget;
     TabBar *m_tabBar;
+    QHash<QString, QString> m_resolvedLinks;
 };
 
 QT_END_NAMESPACE

@@ -541,11 +541,8 @@ QModelIndex QHelpContentWidget::indexOf(const QUrl &link)
             contentModel->contentItemAt(contentModel->index(i, 0));
         if (itm && itm->url().host() == link.host()) {
             QString path = link.path();
-            if (path.startsWith(QLatin1Char('/')))
-                path = path.mid(1);
-            if (searchContentItem(contentModel, contentModel->index(i, 0), path)) {
+            if (searchContentItem(contentModel, contentModel->index(i, 0), link.path()))
                 return m_syncIndex;
-            }
         }
     }
     return QModelIndex();

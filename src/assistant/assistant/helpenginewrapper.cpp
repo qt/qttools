@@ -337,12 +337,6 @@ QString HelpEngineWrapper::error() const
     return d->m_helpEngine->error();
 }
 
-QString HelpEngineWrapper::virtualFolderForNameSpace(const QString &nameSpace) const
-{
-    TRACE_OBJ
-    return d->m_helpEngine->d->nameSpaceVirtualFolderMap.value(nameSpace, QString());
-}
-
 const QStringList HelpEngineWrapper::qtDocInfo(const QString &component) const
 {
     TRACE_OBJ

@@ -100,7 +100,6 @@ public:
     const QStringList filterAttributes() const;
     const QStringList filterAttributes(const QString &filterName) const;
     QString error() const;
-    QString virtualFolderForNameSpace(const QString &nameSpace) const;
 
     /*
      * To be called after assistant has finished looking for new documentation.

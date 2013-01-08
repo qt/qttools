@@ -88,7 +88,6 @@ void QHelpEngineCorePrivate::clearMaps()
     fileNameReaderMap.clear();
     virtualFolderMap.clear();
     orderedFileNameList.clear();
-    nameSpaceVirtualFolderMap.clear();
 }
 
 bool QHelpEngineCorePrivate::setup()
@@ -129,7 +128,6 @@ bool QHelpEngineCorePrivate::setup()
         fileNameReaderMap.insert(absFileName, reader);
         virtualFolderMap.insert(info.folderName, reader);
         orderedFileNameList.append(absFileName);
-        nameSpaceVirtualFolderMap.insert(info.namespaceName, info.folderName);
     }
     q->currentFilter();
     emit q->setupFinished();
