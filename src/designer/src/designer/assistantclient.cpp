@@ -164,12 +164,12 @@ QString AssistantClient::documentUrl(const QString &module, int qtVersion)
 
 QString AssistantClient::designerManualUrl(int qtVersion)
 {
-    return documentUrl(QStringLiteral("designer"), qtVersion);
+    return documentUrl(QStringLiteral("qtdesigner"), qtVersion);
 }
 
 QString AssistantClient::qtReferenceManualUrl(int qtVersion)
 {
-    return documentUrl(QStringLiteral("qt"), qtVersion);
+    return documentUrl(QStringLiteral("qtdoc"), qtVersion);
 }
 
 QT_END_NAMESPACE

@@ -2,14 +2,14 @@ TEMPLATE = app
 LANGUAGE = C++
 TARGET = assistant
 DESTDIR = $$QT.help.bins
-!isEmpty(QT.webkitwidgets.name) {
+qtHaveModule(webkitwidgets) {
     QT += webkitwidgets
 } else {
     DEFINES += QT_NO_WEBKIT
 }
 !build_pass:contains(QT_CONFIG, build_all): CONFIG += release
 QT += widgets network help sql help
-!isEmpty(QT.printsupport.name): QT += printsupport
+qtHaveModule(printsupport): QT += printsupport
 PROJECTNAME = Assistant
 
 include(../../shared/fontpanel/fontpanel.pri)
@@ -79,7 +79,7 @@ SOURCES += aboutdialog.cpp \
     openpageswidget.cpp \
     openpagesmanager.cpp \
     openpagesswitcher.cpp
-contains(QT_CONFIG, webkitwidgets) {
+qtHaveModule(webkitwidgets) {
     SOURCES += helpviewer_qwv.cpp
 } else {
     SOURCES += helpviewer_qtb.cpp

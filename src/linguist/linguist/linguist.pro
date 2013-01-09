@@ -3,7 +3,7 @@ LANGUAGE = C++
 DESTDIR = $$QT.designer.bins
 
 QT += core-private widgets xml uitools-private
-!isEmpty(QT.printsupport.name): QT += printsupport
+qtHaveModule(printsupport): QT += printsupport
 
 DEFINES += QT_NO_CAST_FROM_ASCII QT_NO_CAST_TO_ASCII
 !build_pass:contains(QT_CONFIG, build_all): CONFIG += release

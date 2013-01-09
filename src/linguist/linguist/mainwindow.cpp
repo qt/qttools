@@ -1341,7 +1341,7 @@ void MainWindow::manual()
     str << QLatin1String("SetSource qthelp://org.qt-project.linguist.")
         << (QT_VERSION >> 16) << ((QT_VERSION >> 8) & 0xFF)
         << (QT_VERSION & 0xFF)
-        << QLatin1String("/linguist/qtlinguist-index.html")
+        << QLatin1String("/qtlinguist/qtlinguist-index.html")
         << QLatin1Char('\n') << endl;
 }
 

@@ -7,6 +7,6 @@ SOURCES   += main.cpp \
 FORMS     += remotecontrol.ui
 RESOURCES += remotecontrol.qrc
 
-target.path = $$[QT_INSTALL_EXAMPLES]/help/remotecontrol
+target.path = $$[QT_INSTALL_EXAMPLES]/assistant/remotecontrol
 INSTALLS += target
 

@@ -1,7 +1,7 @@
 TEMPLATE = subdirs
 CONFIG += ordered
 
-!isEmpty(QT.widgets.name) {
+qtHaveModule(widgets) {
     no-png {
         message("Some graphics-related tools are unavailable without PNG support")
     } else {
@@ -21,7 +21,7 @@ mac {
 
 embedded:SUBDIRS += kmap2qmap
 
-contains(QT_CONFIG, dbus):SUBDIRS += qdbus
+qtHaveModule(dbus): SUBDIRS += qdbus
 # We don't need these command line utilities on embedded platforms.
 embedded: SUBDIRS += makeqpf
 

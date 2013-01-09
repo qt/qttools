@@ -102,8 +102,8 @@ QT_BEGIN_NAMESPACE
 #   define CL_NS2(sub,sub2)
 #endif
 
-namespace {
-    TCHAR* QStringToTChar(const QString &str)
+namespace QtCLuceneHelpers {
+    inline TCHAR* QStringToTChar(const QString &str)
     {
         TCHAR *string = new TCHAR[(str.length() +1) * sizeof(TCHAR)];
         memset(string, 0, (str.length() +1) * sizeof(TCHAR));
@@ -116,7 +116,7 @@ namespace {
         return string;
     }
 
-    QString TCharToQString(const TCHAR *string)
+    inline QString TCharToQString(const TCHAR *string)
     {
         #if defined(UNICODE) || defined(_CL_HAVE_WCHAR_H) && defined(_CL_HAVE_WCHAR_T)
             QString retValue = QString::fromWCharArray(string);
@@ -126,6 +126,7 @@ namespace {
         #endif
     }
 }
+using namespace QtCLuceneHelpers;
 
 QT_END_NAMESPACE
 
