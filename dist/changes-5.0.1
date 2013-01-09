@@ -22,13 +22,12 @@ information about a particular change.
 General Improvements
 --------------------
 
+ - [QTBUG-28633] Fix bogus include paths in some pkg-config files
+ - [QTBUG-28689] Fix help URLs in tools.
+ - [QTBUG-28579] Doc: Correcting qhp links to the Linguist and Assistant examples
+
 Third party components
 ----------------------
-
-****************************************************************************
-*                          Library                                         *
-****************************************************************************
-
 
 ****************************************************************************
 *                      Platform Specific Changes                           *
@@ -44,8 +43,21 @@ Third party components
 *                          Tools                                           *
 ****************************************************************************
 
+Qt Assistant
+------------
+
+ - Fix warnings found by the headersclean test
+ - Move functions from an anonymous namespace in a header
+
+Qt DBus Viewer
+--------------
+
+ - Try harder in matching the method signature
+
 Qt Designer
 -----------
+
+ - Fix warning about hidden overloaded virtual, found by Clang
 
 Qt Help
 -------
