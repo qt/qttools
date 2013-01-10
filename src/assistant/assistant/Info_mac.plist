@@ -11,7 +11,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.trolltech.assistant</string>
+        <string>org.qt-project.assistant</string>
 	<key>CFBundleExecutable</key>
 	<string>@EXECUTABLE@</string>
 </dict>

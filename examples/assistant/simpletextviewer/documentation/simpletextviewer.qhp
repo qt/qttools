@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <QtHelpProject version="1.0">
-    <namespace>com.trolltech.examples.simpletextviewer</namespace>
+    <namespace>org.qt-project.examples.simpletextviewer</namespace>
     <virtualFolder>doc</virtualFolder>
     <filterSection>
         <toc>

@@ -3,8 +3,8 @@
     <assistant>
         <title>Simple Text Viewer</title>
         <applicationIcon>images/handbook.png</applicationIcon>
-        <cacheDirectory>Trolltech/SimpleTextViewer</cacheDirectory>
-        <startPage>qthelp://com.trolltech.examples.simpletextviewer/doc/index.html</startPage>
+        <cacheDirectory>QtProject/SimpleTextViewer</cacheDirectory>
+        <startPage>qthelp://org.qt-project.examples.simpletextviewer/doc/index.html</startPage>
         <aboutMenuText>
             <text>About Simple Text Viewer</text>
         </aboutMenuText>
