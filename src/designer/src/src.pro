@@ -7,4 +7,4 @@ SUBDIRS = \
     components \
     designer
 
-CONFIG(shared,shared|static):SUBDIRS += plugins
+contains(QT_CONFIG, shared): SUBDIRS += plugins
