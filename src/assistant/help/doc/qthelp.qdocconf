@@ -10,7 +10,7 @@ examplesinstallpath     = help
 qhp.projects            = QtHelp
 
 qhp.QtHelp.file                = qthelp.qhp
-qhp.QtHelp.namespace           = org.qt-project.qthelp.500
+qhp.QtHelp.namespace           = org.qt-project.qthelp.501
 qhp.QtHelp.virtualFolder       = qthelp
 qhp.QtHelp.indexTitle          = Qt Help
 qhp.QtHelp.indexRoot           =
