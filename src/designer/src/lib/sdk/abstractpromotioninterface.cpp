@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Designer of the Qt Toolkit.
@@ -59,16 +59,20 @@ QDesignerPromotionInterface::~QDesignerPromotionInterface()
 
 /*!
     \class QDesignerPromotionInterface::PromotedClass
+    \inmodule QtDesigner
     A pair of database items containing the base class and the promoted class.
+*/
 
+/*!
     \typedef QDesignerPromotionInterface::PromotedClasses
     A list of PromotedClass items.
+*/
 
-    virtual QDesignerPromotionInterface::PromotedClasses promotedClasses()  const
+/*!
+    \fn virtual QDesignerPromotionInterface::PromotedClasses promotedClasses()  const
 
     Returns a list of promoted classes along with their base classes in alphabetical order.
     It can be used to populate tree models for editing promoted widgets.
-
 */
 
 /*!

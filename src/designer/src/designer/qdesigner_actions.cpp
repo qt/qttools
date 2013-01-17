@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Designer of the Qt Toolkit.
@@ -456,11 +456,6 @@ QActionGroup *QDesignerActions::createHelpActions()
     connect(widgetHelp, SIGNAL(triggered()), this, SLOT(showWidgetSpecificHelp()));
     helpActions->addAction(widgetHelp);
 
-    helpActions->addAction(createSeparator(this));
-    QAction *whatsNewAction = new QAction(tr("What's New in Qt Designer?"), this);
-    whatsNewAction->setObjectName(QStringLiteral("__qt_whats_new_in_qt_designer_action"));
-    connect(whatsNewAction, SIGNAL(triggered()), this, SLOT(showWhatsNew()));
-    helpActions->addAction(whatsNewAction);
 #endif
 
     helpActions->addAction(createSeparator(this));
@@ -1049,14 +1044,7 @@ QAction *QDesignerActions::minimizeAction() const
 void QDesignerActions::showDesignerHelp()
 {
     QString url = AssistantClient::designerManualUrl();
-    url += QStringLiteral("designer-manual.html");
-    showHelp(url);
-}
-
-void QDesignerActions::showWhatsNew()
-{
-    QString url = AssistantClient::qtReferenceManualUrl();
-    url += QStringLiteral("qt4-designer.html");
+    url += QStringLiteral("qtdesigner-index.html");
     showHelp(url);
 }
 

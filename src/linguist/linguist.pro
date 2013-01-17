@@ -3,7 +3,7 @@ SUBDIRS  = \
     lrelease \
     lupdate \
     lconvert
-!no-png:!isEmpty(QT.widgets.name): SUBDIRS += linguist
+!no-png:qtHaveModule(widgets): SUBDIRS += linguist
 
 win32:CMAKE_BIN_SUFFIX = ".exe"
 
@@ -27,7 +27,7 @@ contains(CMAKE_BIN_DIR, "$${CMAKE_QT_INSTALL_PREFIX_ESCAPED}.*") {
 }
 
 cmake_linguist_config_file.input = $$PWD/Qt5LinguistToolsConfig.cmake.in
-cmake_linguist_config_version_file.input = $$[QT_INSTALL_DATA]/mkspecs/cmake/Qt5ConfigVersion.cmake.in
+cmake_linguist_config_version_file.input = $$[QT_HOST_DATA]/mkspecs/features/data/cmake/Qt5ConfigVersion.cmake.in
 cmake_linguist_macros_file.input = $$PWD/Qt5LinguistToolsMacros.cmake
 # NOTE: We need to put the linguist tools cmake files in the lib directory. The lib directory
 # as set by the uitools module is used for that, as linguist doesn't set such a variable.

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Designer of the Qt Toolkit.
@@ -174,7 +174,7 @@ void QDesignerAxWidget::paintEvent(QPaintEvent * /*event */)
     if (m_axobject) { // QAxWidget has no concept of sizeHint()
         if (m_drawFlags & DrawControl) {
             m_axobject->resize(size());
-            m_axobject->render(&p);
+            m_axobject->render(&p, pos());
         }
         if (m_drawFlags & DrawIndicator) {
             static const QString loaded = tr("Control loaded");

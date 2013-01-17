@@ -1,3 +1,3 @@
 TEMPLATE = subdirs
 SUBDIRS = qdbus
-!isEmpty(QT.widgets.name): SUBDIRS += qdbusviewer
+qtHaveModule(widgets): SUBDIRS += qdbusviewer

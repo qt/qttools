@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Designer of the Qt Toolkit.
@@ -46,12 +46,6 @@
 #include <QtCore/QTextStream>
 #include <QtCore/QString>
 #include <QtCore/QDebug>
-
-/*!
-  \class QDesignerSettingsSimple
-
-  \brief Implements QDesignerSettingsInterface by calls to QSettings
-  */
 
 QDesignerQSettings::QDesignerQSettings() :
     m_settings(qApp->organizationName(), settingsApplicationName())

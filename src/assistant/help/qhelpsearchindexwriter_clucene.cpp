@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Assistant of the Qt Toolkit.
@@ -591,9 +591,7 @@ void QHelpSearchIndexWriter::updateIndex(const QString &collectionFile,
 
 void QHelpSearchIndexWriter::optimizeIndex()
 {
-#if !defined(QT_NO_EXCEPTIONS)
     try {
-#endif
         if (QCLuceneIndexReader::indexExists(m_indexFilesFolder)) {
             if (QCLuceneIndexReader::isLocked(m_indexFilesFolder))
                 return;
@@ -603,19 +601,15 @@ void QHelpSearchIndexWriter::optimizeIndex()
             writer.optimize();
             writer.close();
         }
-#if !defined(QT_NO_EXCEPTIONS)
     } catch (...) {
         qWarning("Full Text Search, could not optimize index.");
         return;
     }
-#endif
 }
 
 void QHelpSearchIndexWriter::run()
 {
-#if !defined(QT_NO_EXCEPTIONS)
     try {
-#endif
         QMutexLocker mutexLocker(&mutex);
 
         if (m_cancel)
@@ -801,13 +795,9 @@ void QHelpSearchIndexWriter::run()
                 }
             }
         }
-
-#if !defined(QT_NO_EXCEPTIONS)
     } catch (...) {
         qWarning("%s: Failed because of CLucene exception.", Q_FUNC_INFO);
     }
-#endif
-
     emit indexingFinished();
 }
 
@@ -824,16 +814,12 @@ bool QHelpSearchIndexWriter::addDocuments(const QList<QUrl> docFiles,
         QCLuceneDocument document;
         DocumentHelper helper(url.toString(), engine.fileData(url));
         if (helper.addFieldsToDocument(&document, namespaceName, attrList)) {
-#if !defined(QT_NO_EXCEPTIONS)
             try {
-#endif
                 writer->addDocument(document, analyzer);
-#if !defined(QT_NO_EXCEPTIONS)
             } catch (...) {
                 qWarning("Full Text Search, could not properly add documents.");
                 return false;
             }
-#endif
         }
         locker.relock();
         if (m_cancel)
@@ -880,16 +866,12 @@ QList<QUrl> QHelpSearchIndexWriter::indexableFiles(QHelpEngineCore *helpEngine,
 
 void QHelpSearchIndexWriter::closeIndexWriter(QCLuceneIndexWriter *writer)
 {
-#if !defined(QT_NO_EXCEPTIONS)
     try {
-#endif
         writer->close();
         delete writer;
-#if !defined(QT_NO_EXCEPTIONS)
     } catch (...) {
         qWarning("Full Text Search, could not properly close index writer.");
     }
-#endif
 }
 
 }   // namespace clucene

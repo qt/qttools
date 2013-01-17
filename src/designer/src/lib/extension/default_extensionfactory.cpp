@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Designer of the Qt Toolkit.
@@ -80,16 +80,16 @@ QT_BEGIN_NAMESPACE
     You can either create a new QExtensionFactory and reimplement the
     QExtensionFactory::createExtension() function. For example:
 
-    \snippet doc/src/snippets/code/tools_designer_src_lib_extension_default_extensionfactory.cpp 0
+    \snippet lib/tools_designer_src_lib_extension_default_extensionfactory.cpp 0
 
     Or you can use an existing factory, expanding the
     QExtensionFactory::createExtension() function to make the factory
     able to create your extension as well. For example:
 
-    \snippet doc/src/snippets/code/tools_designer_src_lib_extension_default_extensionfactory.cpp 1
+    \snippet lib/tools_designer_src_lib_extension_default_extensionfactory.cpp 1
 
     For a complete example using the QExtensionFactory class, see the
-    \l {designer/taskmenuextension}{Task Menu Extension example}. The
+    \l {taskmenuextension}{Task Menu Extension example}. The
     example shows how to create a custom widget plugin for Qt
     Designer, and how to to use the QDesignerTaskMenuExtension class
     to add custom items to Qt Designer's task menu.

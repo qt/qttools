@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Assistant of the Qt Toolkit.
@@ -67,8 +67,8 @@ public:
 
     QHelpSearchQuery()
         : fieldName(DEFAULT) { wordList.clear(); }
-    QHelpSearchQuery(FieldName field, const QStringList &wordList)
-        : fieldName(field), wordList(wordList) {}
+    QHelpSearchQuery(FieldName field, const QStringList &wordList_)
+        : fieldName(field), wordList(wordList_) {}
 
     FieldName fieldName;
     QStringList wordList;

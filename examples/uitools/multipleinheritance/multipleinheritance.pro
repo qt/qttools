@@ -4,8 +4,7 @@ HEADERS	= calculatorform.h
 FORMS = calculatorform.ui
 #! [0]
 
-# install
-target.path = $$[QT_INSTALL_EXAMPLES]/qtbase/uitools/multipleinheritance
+target.path = $$[QT_INSTALL_EXAMPLES]/uitools/multipleinheritance
 INSTALLS += target
 
 QT += widgets

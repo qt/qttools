@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the documentation of the Qt Toolkit.
@@ -26,16 +26,16 @@
 ****************************************************************************/
 
 /*!
-    \example designer/worldtimeclockplugin
+    \example worldtimeclockplugin
+    \ingroup examples-designer
     \title World Time Clock Plugin Example
 
-    The World Time Clock Plugin example shows how to create a custom
-    widget plugin for \QD that uses signals and slots.
+    \brief Creating a custom widget plugin for \QD that uses signals and slots.
 
     \image worldtimeclockplugin-example.png
 
     In this example, we simply extend the \l
-    {designer/customwidgetplugin}{Custom Widget Plugin} example and
+    {customwidgetplugin}{Custom Widget Plugin} example and
     its custom widget (based on the \l{widgets/analogclock}{Analog
     Clock} example), by introducing the concept of signals and slots.
 
@@ -48,17 +48,17 @@
     \endlist
 
     First we will take a look at the \c WorldTimeClock class which
-    extends the \l {designer/customwidgetplugin}{Custom Widget Plugin}
+    extends the \l {customwidgetplugin}{Custom Widget Plugin}
     example's \c AnalogClock class by providing a signal and a
     slot. Then we will take a quick look at the \c
     WorldTimeClockPlugin class, but this class is in most parts
-    identical to the \l {designer/customwidgetplugin}{Custom Widget
+    identical to the \l {customwidgetplugin}{Custom Widget
     Plugin} example's implementation.
 
     Finally we take a look at the plugin's project file. The project
     file for custom widget plugins needs some additional information
     to ensure that they will work within \QD. This is also covered in
-    the \l {designer/customwidgetplugin}{Custom Widget Plugin} example,
+    the \l {customwidgetplugin}{Custom Widget Plugin} example,
     but due to its importance (custom widget plugins rely on
     components supplied with \QD which must be specified in the
     project file that we use) we will repeat it here.
@@ -68,11 +68,11 @@
     The \c WorldTimeClock class inherits QWidget, and is a custom
     clock widget with hour and minute hands that is automatically
     updated every few seconds. What makes this example different from
-    the \l {designer/customwidgetplugin}{Custom Widget Plugin}
+    the \l {customwidgetplugin}{Custom Widget Plugin}
     example, is the introduction of the signal and slot in the custom
     widget class:
 
-    \snippet designer/worldtimeclockplugin/worldtimeclock.h 1
+    \snippet worldtimeclockplugin/worldtimeclock.h 1
 
     Note the use of the QDESIGNER_WIDGET_EXPORT macro. This is needed
     to ensure that \QD can create instances of the widget on some
@@ -100,12 +100,12 @@
 
     The \c WorldTimeClockPlugin class exposes the \c WorldTimeClock
     class to \QD. Its definition is equivalent to the \l
-    {designer/customwidgetplugin}{Custom Widget Plugin} example's
+    {customwidgetplugin}{Custom Widget Plugin} example's
     plugin class which is explained in detail. The only part of the
     class definition that is specific to this particular custom widget
     is the class name:
 
-    \snippet designer/worldtimeclockplugin/worldtimeclockplugin.h 0
+    \snippet worldtimeclockplugin/worldtimeclockplugin.h 0
 
     The plugin class provides \QD with basic information about our
     plugin, such as its class name and its include file. Furthermore
@@ -126,13 +126,13 @@
 
     The implementation of the \c WorldTimeClockPlugin is also
     equivalent to the plugin interface implementation in the \l
-    {designer/customwidgetplugin}{Custom Widget Plugin} example (only
+    {customwidgetplugin}{Custom Widget Plugin} example (only
     the class name and the implementation of
     QDesignerCustomWidgetInterface::domXml() differ). The main thing
-    to remember is to use the Q_EXPORT_PLUGIN2() macro to export the \c
+    to remember is to use the Q_PLUGIN_METADATA() macro to export the \c
     WorldTimeClockPlugin class for use with \QD:
 
-    \snippet designer/worldtimeclockplugin/worldtimeclockplugin.cpp 0
+    \snippet worldtimeclockplugin/worldtimeclockplugin.h 1
 
     Without this macro, there is no way for Qt Designer to use the
     widget.
@@ -142,8 +142,8 @@
     The project file for custom widget plugins needs some additional
     information to ensure that they will work as expected within \QD:
 
-    \snippet designer/worldtimeclockplugin/worldtimeclockplugin.pro 0
-    \snippet designer/worldtimeclockplugin/worldtimeclockplugin.pro 1
+    \snippet worldtimeclockplugin/worldtimeclockplugin.pro 0
+    \snippet worldtimeclockplugin/worldtimeclockplugin.pro 1
 
     The \c TEMPLATE variable's value make \c qmake create the custom
     widget as a library. The \c CONFIG variable contains two values,
@@ -170,19 +170,19 @@
     usual way, and in addition we provide an implementation of the
     plugin interface so that \QD can use the custom widget.
 
-    \snippet designer/worldtimeclockplugin/worldtimeclockplugin.pro 2
+    \snippet worldtimeclockplugin/worldtimeclockplugin.pro 2
 
     It is important to ensure that the plugin is installed in a location that
     is searched by \QD. We do this by specifying a target path for the project
     and adding it to the list of items to install:
 
-    \snippet designer/doc/snippets/doc_src_examples_worldtimeclockplugin.pro 0
+    \snippet doc/snippets/doc_src_examples_worldtimeclockplugin.pro 0
 
     The custom widget is created as a library, and will be installed
     alongside the other \QD plugins when the project is installed
     (using \c{make install} or an equivalent installation procedure).
     Later, we will ensure that it is recognized as a plugin by \QD by
-    using the Q_EXPORT_PLUGIN2() macro to export the relevant widget
+    using the Q_PLUGIN_METADATA() macro to export the relevant widget
     information.
 
     Note that if you want the plugins to appear in a Visual Studio

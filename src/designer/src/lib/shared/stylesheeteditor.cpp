@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Designer of the Qt Toolkit.
@@ -331,7 +331,7 @@ void StyleSheetEditorDialog::insertCssProperty(const QString &name, const QStrin
 
 void StyleSheetEditorDialog::slotRequestHelp()
 {
-    m_core->integration()->emitHelpRequested(QStringLiteral("qt"),
+    m_core->integration()->emitHelpRequested(QStringLiteral("qtwidgets"),
                                              QStringLiteral("stylesheet-reference.html"));
 }
 

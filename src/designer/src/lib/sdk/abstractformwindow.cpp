@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Designer of the Qt Toolkit.
@@ -76,7 +76,7 @@ QT_BEGIN_NAMESPACE
     widget, you can use the static
     QDesignerFormWindowInterface::findFormWindow() function:
 
-    \snippet doc/src/snippets/code/tools_designer_src_lib_sdk_abstractformwindow.cpp 0
+    \snippet lib/tools_designer_src_lib_sdk_abstractformwindow.cpp 0
 
     But in addition, you can access any of the current form windows
     through \QD's form window manager: Use the
@@ -86,7 +86,7 @@ QT_BEGIN_NAMESPACE
     through the QDesignerFormWindowManagerInterface::formWindow()
     function. For example:
 
-    \snippet doc/src/snippets/code/tools_designer_src_lib_sdk_abstractformwindow.cpp 1
+    \snippet lib/tools_designer_src_lib_sdk_abstractformwindow.cpp 1
 
     The pointer to \QD's current QDesignerFormEditorInterface object
     (\c formEditor in the example above) is provided by the
@@ -102,7 +102,7 @@ QT_BEGIN_NAMESPACE
     with functions that enables you to control whether a widget should
     be managed by \QD, or not:
 
-    \snippet doc/src/snippets/code/tools_designer_src_lib_sdk_abstractformwindow.cpp 2
+    \snippet lib/tools_designer_src_lib_sdk_abstractformwindow.cpp 2
 
     The complete list of functions concerning widget management is:
     isManaged(), manageWidget() and unmanageWidget(). There is also

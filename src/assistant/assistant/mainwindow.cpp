@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Assistant of the Qt Toolkit.
@@ -374,7 +374,37 @@ void MainWindow::lookForNewQtDocumentation()
         << QLatin1String("designer")
         << QLatin1String("linguist")
         << QLatin1String("qmake")
-        << QLatin1String("qt");
+        << QLatin1String("qt")
+        << QLatin1String("qtqmake")
+        << QLatin1String("activeqt")
+        << QLatin1String("qtassistant")
+        << QLatin1String("qtconcurrent")
+        << QLatin1String("qtcore")
+        << QLatin1String("qtdbus")
+        << QLatin1String("qtdesigner")
+        << QLatin1String("qtdoc")
+        << QLatin1String("qtgraphicaleffects")
+        << QLatin1String("qtgui")
+        << QLatin1String("qthelp")
+        << QLatin1String("qtimageformats")
+        << QLatin1String("qtlinguist")
+        << QLatin1String("qtmultimedia")
+        << QLatin1String("qtnetwork")
+        << QLatin1String("qtopengl")
+        << QLatin1String("qtprintsupport")
+        << QLatin1String("qtqml")
+        << QLatin1String("qtquick")
+        << QLatin1String("qtscript")
+        << QLatin1String("qtsql")
+        << QLatin1String("qtsvg")
+        << QLatin1String("qttestlib")
+        << QLatin1String("qtuitools")
+        << QLatin1String("qtwebkit")
+        << QLatin1String("qtwebkitexamples")
+        << QLatin1String("qtwidgets")
+        << QLatin1String("qtxml")
+        << QLatin1String("qtxmlpatterns");
+
     QList<QtDocInstaller::DocInfo> qtDocInfos;
     foreach (const QString &doc, docs)
         qtDocInfos.append(QtDocInstaller::DocInfo(doc, helpEngine.qtDocInfo(doc)));
@@ -813,7 +843,7 @@ void MainWindow::showAboutDialog()
         aboutDia.setText(tr("<center>"
             "<h3>%1</h3>"
             "<p>Version %2</p></center>"
-            "<p>Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).</p>")
+            "<p>Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).</p>")
             .arg(tr("Qt Assistant")).arg(QLatin1String(QT_VERSION_STR)),
             resources);
         QLatin1String path(":/qt-project.org/assistant/images/assistant-128.png");

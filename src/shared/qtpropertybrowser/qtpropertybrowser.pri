@@ -1,5 +1,4 @@
 INCLUDEPATH += $$PWD
-DEPENDPATH += $$PWD
 SOURCES += $$PWD/qtpropertybrowser.cpp \
             $$PWD/qtpropertymanager.cpp \
             $$PWD/qteditorfactory.cpp \

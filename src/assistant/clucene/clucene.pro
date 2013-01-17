@@ -8,7 +8,7 @@ load(qt_module)
 
 include(fulltextsearch.pri)
 
-CONFIG += qt warn_off
+CONFIG += warn_off
 contains(QT_CONFIG, reduce_exports) {
     CONFIG += hide_symbols
     # workaround for compiler errors on Ubuntu

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Designer of the Qt Toolkit.
@@ -583,18 +583,18 @@ void QUiLoaderPrivate::setupWidgetMap() const
     contents of a UI file can be retrieved using the load() function. For
     example:
 
-    \snippet doc/src/snippets/quiloader/mywidget.cpp 0
+    \snippet quiloader/mywidget.cpp 0
 
     By including the user interface in the form's resources (\c myform.qrc), we
     ensure that it will be present at run-time:
 
-    \quotefile doc/src/snippets/quiloader/mywidget.qrc
+    \quotefile quiloader/mywidget.qrc
 
     The availableWidgets() function returns a QStringList with the class names
     of the widgets available in the specified plugin paths. To create these
     widgets, simply use the createWidget() function. For example:
 
-    \snippet doc/src/snippets/quiloader/main.cpp 0
+    \snippet quiloader/main.cpp 0
 
     To make a custom widget available to the loader, you can use the
     addPluginPath() function; to remove all available widgets, you can call
@@ -611,7 +611,7 @@ void QUiLoaderPrivate::setupWidgetMap() const
     For a complete example using the QUiLoader class, see the
     \l{Calculator Builder Example}.
 
-    \sa QtUiTools, QFormBuilder
+    \sa {Qt UI Tools}, QFormBuilder
 */
 
 /*!

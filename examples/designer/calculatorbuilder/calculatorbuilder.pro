@@ -6,6 +6,5 @@ SOURCES     = calculatorform.cpp \
 QT += widgets uitools
 #! [0]
 
-# install
-target.path = $$[QT_INSTALL_EXAMPLES]/qttools/designer/calculatorbuilder
+target.path = $$[QT_INSTALL_EXAMPLES]/designer/calculatorbuilder
 INSTALLS += target

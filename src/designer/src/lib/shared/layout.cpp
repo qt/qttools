@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Designer of the Qt Toolkit.
@@ -100,7 +100,7 @@ void updateWizardLayout(QWidget *layoutBase)
 }
 
 /*!
-  \class Layout layout.h
+  \class qdesigner_internal::Layout
   \brief Baseclass for layouting widgets in the Designer (Helper for Layout commands)
   \internal
 

@@ -4,8 +4,7 @@ SOURCES      = main.cpp
 TRANSLATIONS = hellotr_la.ts
 #! [1]
 
-# install
-target.path = $$[QT_INSTALL_EXAMPLES]/qtbase/linguist/hellotr
+target.path = $$[QT_INSTALL_EXAMPLES]/linguist/hellotr
 INSTALLS += target
 
 QT += widgets

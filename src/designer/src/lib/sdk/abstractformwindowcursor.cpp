@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Designer of the Qt Toolkit.
@@ -68,7 +68,7 @@ QT_BEGIN_NAMESPACE
     QDesignerFormWindowInterface::findFormWindow() functions. For
     example:
 
-    \snippet doc/src/snippets/code/tools_designer_src_lib_sdk_abstractformwindowcursor.cpp 0
+    \snippet lib/tools_designer_src_lib_sdk_abstractformwindowcursor.cpp 0
 
     You can retrieve any of \QD's current form windows through
     \QD's \l {QDesignerFormWindowManagerInterface}{form window

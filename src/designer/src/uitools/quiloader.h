@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Designer of the Qt Toolkit.
@@ -80,9 +80,6 @@ public:
 
     void setWorkingDirectory(const QDir &dir);
     QDir workingDirectory() const;
-
-    void setScriptingEnabled(bool enabled);
-    bool isScriptingEnabled() const;
 
     void setLanguageChangeEnabled(bool enabled);
     bool isLanguageChangeEnabled() const;

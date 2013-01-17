@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Designer of the Qt Toolkit.
@@ -151,25 +151,25 @@ bool AssistantClient::ensureRunning(QString *errorMessage)
     return true;
 }
 
-QString AssistantClient::documentUrl(const QString &prefix, int qtVersion)
+QString AssistantClient::documentUrl(const QString &module, int qtVersion)
 {
     if (qtVersion == 0)
         qtVersion = QT_VERSION;
     QString rc;
-    QTextStream(&rc) << QStringLiteral("qthelp://com.trolltech.") << prefix << QLatin1Char('.')
+    QTextStream(&rc) << "qthelp://org.qt-project." << module << '.'
                      << (qtVersion >> 16) << ((qtVersion >> 8) & 0xFF) << (qtVersion & 0xFF)
-                     << QStringLiteral("/qdoc/");
+                     << '/' << module << '/';
     return rc;
 }
 
 QString AssistantClient::designerManualUrl(int qtVersion)
 {
-    return documentUrl(QStringLiteral("designer"), qtVersion);
+    return documentUrl(QStringLiteral("qtdesigner"), qtVersion);
 }
 
 QString AssistantClient::qtReferenceManualUrl(int qtVersion)
 {
-    return documentUrl(QStringLiteral("qt"), qtVersion);
+    return documentUrl(QStringLiteral("qtdoc"), qtVersion);
 }
 
 QT_END_NAMESPACE

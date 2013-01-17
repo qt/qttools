@@ -3,7 +3,7 @@
 ** Copyright (C) 2003-2006 Ben van Klinken and the CLucene Team.
 ** All rights reserved.
 **
-** Portion Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Portion Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** All rights reserved.
 **
 ** This file may be used under the terms of the GNU Lesser General Public
@@ -102,8 +102,8 @@ QT_BEGIN_NAMESPACE
 #   define CL_NS2(sub,sub2)
 #endif
 
-namespace {
-    TCHAR* QStringToTChar(const QString &str)
+namespace QtCLuceneHelpers {
+    inline TCHAR* QStringToTChar(const QString &str)
     {
         TCHAR *string = new TCHAR[(str.length() +1) * sizeof(TCHAR)];
         memset(string, 0, (str.length() +1) * sizeof(TCHAR));
@@ -116,7 +116,7 @@ namespace {
         return string;
     }
 
-    QString TCharToQString(const TCHAR *string)
+    inline QString TCharToQString(const TCHAR *string)
     {
         #if defined(UNICODE) || defined(_CL_HAVE_WCHAR_H) && defined(_CL_HAVE_WCHAR_T)
             QString retValue = QString::fromWCharArray(string);
@@ -126,6 +126,7 @@ namespace {
         #endif
     }
 }
+using namespace QtCLuceneHelpers;
 
 QT_END_NAMESPACE
 

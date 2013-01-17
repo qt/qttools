@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Designer of the Qt Toolkit.
@@ -127,7 +127,7 @@ public:
     QFormBuilder class to create user interfaces from UI files at
     run-time. For example:
 
-    \snippet doc/src/snippets/code/tools_designer_src_lib_uilib_abstractformbuilder.cpp 0
+    \snippet lib/tools_designer_src_lib_uilib_abstractformbuilder.cpp 0
 
     To override certain aspects of the form builder's behavior,
     subclass QAbstractFormBuilder and reimplement the relevant virtual

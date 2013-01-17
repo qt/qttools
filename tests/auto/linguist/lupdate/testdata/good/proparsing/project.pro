@@ -23,7 +23,7 @@ SOURCES += wildcard/main*.cpp \
 VPATH = vpaths/dependpath
 
 # The purpose of this test is to test expansion of environment variables,
-# and to test if the DEPENDPATH variable is considered correctly.
+# and to test if the VPATH variable is considered correctly.
 if (exists($$member($$(PATH), 0))) {
     SOURCES += main_dependpath.cpp
 }

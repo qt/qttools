@@ -1,5 +1,4 @@
 INCLUDEPATH += $$PWD
-DEPENDPATH += $$PWD
 FORMS +=     $$PWD/qtgradienteditor.ui \
              $$PWD/qtgradientdialog.ui \
              $$PWD/qtgradientview.ui \

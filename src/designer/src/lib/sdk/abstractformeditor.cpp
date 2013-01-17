@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Designer of the Qt Toolkit.
@@ -149,7 +149,7 @@ QDesignerFormEditorInterfacePrivate::~QDesignerFormEditorInterfacePrivate()
     these components. They are typically used to query (and
     manipulate) the respective component. For example:
 
-    \snippet doc/src/snippets/code/tools_designer_src_lib_sdk_abstractformeditor.cpp 0
+    \snippet lib/tools_designer_src_lib_sdk_abstractformeditor.cpp 0
 
     QDesignerFormEditorInterface is not intended to be instantiated
     directly. A pointer to \QD's current QDesignerFormEditorInterface

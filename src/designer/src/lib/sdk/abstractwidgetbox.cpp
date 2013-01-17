@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Designer of the Qt Toolkit.
@@ -66,7 +66,7 @@ QT_BEGIN_NAMESPACE
     without calling the save() function, the original content can be
     restored by a simple invocation of the load() function:
 
-    \snippet doc/src/snippets/code/tools_designer_src_lib_sdk_abstractwidgetbox.cpp 0
+    \snippet lib/tools_designer_src_lib_sdk_abstractwidgetbox.cpp 0
 
     The QDesignerWidgetBoxInterface class is not intended to be
     instantiated directly. You can retrieve an interface to Qt
@@ -84,16 +84,16 @@ QT_BEGIN_NAMESPACE
     with the setFileName() function to save your changes into another
     file. Remember to store the name of the original file first:
 
-    \snippet doc/src/snippets/code/tools_designer_src_lib_sdk_abstractwidgetbox.cpp 1
+    \snippet lib/tools_designer_src_lib_sdk_abstractwidgetbox.cpp 1
 
     Then you can restore the original contents of the widget box by
     resetting the file name to the original file and calling load():
 
-    \snippet doc/src/snippets/code/tools_designer_src_lib_sdk_abstractwidgetbox.cpp 2
+    \snippet lib/tools_designer_src_lib_sdk_abstractwidgetbox.cpp 2
 
     In a similar way, you can later use your customized XML file:
 
-    \snippet doc/src/snippets/code/tools_designer_src_lib_sdk_abstractwidgetbox.cpp 3
+    \snippet lib/tools_designer_src_lib_sdk_abstractwidgetbox.cpp 3
 
 
     \sa QDesignerFormEditorInterface

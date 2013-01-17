@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Designer of the Qt Toolkit.
@@ -51,6 +51,7 @@
 #include <QtWidgets/QUndoCommand>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QUndoStack>
+#include <QtWidgets/QAction>
 #include <QtCore/QUuid>
 #include <ActiveQt/qaxselect.h>
 

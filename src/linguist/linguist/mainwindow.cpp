@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Linguist of the Qt Toolkit.
@@ -1337,12 +1337,11 @@ void MainWindow::manual()
             return;
         }
     }
-
     QTextStream str(m_assistantProcess);
-    str << QLatin1String("SetSource qthelp://com.trolltech.linguist.")
+    str << QLatin1String("SetSource qthelp://org.qt-project.linguist.")
         << (QT_VERSION >> 16) << ((QT_VERSION >> 8) & 0xFF)
         << (QT_VERSION & 0xFF)
-        << QLatin1String("/qdoc/linguist-manual.html")
+        << QLatin1String("/qtlinguist/qtlinguist-index.html")
         << QLatin1Char('\n') << endl;
 }
 
@@ -1356,7 +1355,7 @@ void MainWindow::about()
     box.setText(tr("<center><img src=\":/images/splash.png\"/></img><p>%1</p></center>"
                     "<p>Qt Linguist is a tool for adding translations to Qt "
                     "applications.</p>"
-                    "<p>Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies)."
+                    "<p>Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies)."
                    ).arg(version));
 
     box.setWindowTitle(QApplication::translate("AboutDialog", "Qt Linguist"));

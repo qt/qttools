@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Assistant of the Qt Toolkit.
@@ -44,6 +44,7 @@
 #include "qhelpengine_p.h"
 #include "qhelpdbreader_p.h"
 
+#include <QDir>
 #include <QtCore/QStack>
 #include <QtCore/QThread>
 #include <QtCore/QMutex>
@@ -530,41 +531,35 @@ QHelpContentWidget::QHelpContentWidget()
 */
 QModelIndex QHelpContentWidget::indexOf(const QUrl &link)
 {
-    QHelpContentModel *contentModel =
-        qobject_cast<QHelpContentModel*>(model());
+    QHelpContentModel *contentModel = qobject_cast<QHelpContentModel*>(model());
     if (!contentModel || link.scheme() != QLatin1String("qthelp"))
         return QModelIndex();
 
     m_syncIndex = QModelIndex();
-    for (int i=0; i<contentModel->rowCount(); ++i) {
-        QHelpContentItem *itm =
-            contentModel->contentItemAt(contentModel->index(i, 0));
+    for (int i = 0; i < contentModel->rowCount(); ++i) {
+        QHelpContentItem *itm = contentModel->contentItemAt(contentModel->index(i, 0));
         if (itm && itm->url().host() == link.host()) {
-            QString path = link.path();
-            if (path.startsWith(QLatin1Char('/')))
-                path = path.mid(1);
-            if (searchContentItem(contentModel, contentModel->index(i, 0), path)) {
+            if (searchContentItem(contentModel, contentModel->index(i, 0), QDir::cleanPath(link.path())))
                 return m_syncIndex;
-            }
         }
     }
     return QModelIndex();
 }
 
-bool QHelpContentWidget::searchContentItem(QHelpContentModel *model,
-                                           const QModelIndex &parent, const QString &path)
+bool QHelpContentWidget::searchContentItem(QHelpContentModel *model, const QModelIndex &parent,
+    const QString &cleanPath)
 {
     QHelpContentItem *parentItem = model->contentItemAt(parent);
     if (!parentItem)
         return false;
 
-    if (parentItem->url().path() == path) {
+    if (QDir::cleanPath(parentItem->url().path()) == cleanPath) {
         m_syncIndex = parent;
         return true;
     }
 
     for (int i=0; i<parentItem->childCount(); ++i) {
-        if (searchContentItem(model, model->index(i, 0, parent), path))
+        if (searchContentItem(model, model->index(i, 0, parent), cleanPath))
             return true;
     }
     return false;

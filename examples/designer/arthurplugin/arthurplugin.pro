@@ -3,6 +3,7 @@ QT += designer
 QTDIR_build {
 # This is only for the Qt build. Do not use externally. We mean it.
 PLUGIN_TYPE = designer
+PLUGIN_CLASS_NAME = ArthurPlugins
 load(qt_plugin)
 } else {
 # Public example:
@@ -17,13 +18,13 @@ INSTALLS += target
 
 }
 
-contains(QT_CONFIG, opengl) {
+qtHaveModule(opengl) {
     DEFINES += QT_OPENGL_SUPPORT
     QT += opengl
 }
 
-QT_BASE_EXAMPLES = $$QT.core.sources/../../examples
-SHARED_FOLDER = $$QT_BASE_EXAMPLES/widgets/painting/shared
+requires(!isEmpty(_QMAKE_SUPER_CACHE_))
+QT_BASE_EXAMPLES = ../../../../qtbase/examples
 include($$QT_BASE_EXAMPLES/widgets/painting/shared/shared.pri)
 
 EXAMPLE_AFFINE_DIR = $$QT_BASE_EXAMPLES/widgets/painting/affine

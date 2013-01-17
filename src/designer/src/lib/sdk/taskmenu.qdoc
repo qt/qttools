@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the documentation of the Qt Toolkit.
@@ -51,7 +51,7 @@
     inherit from both QObject and QDesignerTaskMenuExtension. For
     example:
 
-    \snippet doc/src/snippets/code/doc_src_qtdesigner.cpp 9
+    \snippet plugins/doc_src_qtdesigner.cpp 9
 
     Since we are implementing an interface, we must ensure that it
     is made known to the meta-object system using the Q_INTERFACES()
@@ -94,16 +94,16 @@
     reimplement the QExtensionFactory::createExtension() function. For
     example:
 
-    \snippet doc/src/snippets/code/doc_src_qtdesigner.cpp 10
+    \snippet plugins/doc_src_qtdesigner.cpp 10
 
     Or you can use an existing factory, expanding the
     QExtensionFactory::createExtension() function to make the factory
     able to create a task menu extension as well. For example:
 
-    \snippet doc/src/snippets/code/doc_src_qtdesigner.cpp 11
+    \snippet plugins/doc_src_qtdesigner.cpp 11
 
     For a complete example using the QDesignerTaskMenuExtension class,
-    see the \l {designer/taskmenuextension}{Task Menu Extension
+    see the \l {taskmenuextension}{Task Menu Extension
     example}. The example shows how to create a custom widget plugin
     for \QD, and how to to use the QDesignerTaskMenuExtension
     class to add custom items to \QD's task menu.

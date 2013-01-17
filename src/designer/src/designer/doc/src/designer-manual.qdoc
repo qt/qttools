@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the documentation of the Qt Toolkit.
@@ -26,7 +26,7 @@
 ****************************************************************************/
 
 /*!
-    \page qtdesigner-index.html
+    \page qtdesigner-manual.html
 
     \title Qt Designer Manual
     \ingroup qttools
@@ -117,7 +117,7 @@
 
     Generally, the integrated \QD contains the same functions as the standalone
     \QD. For more information about the differences, see the
-    \l{external: Qt Creator Manual}.
+    \l{http://qt-project.org/doc/qtcreator/index.html}{Qt Creator Manual}.
 
     If you have large forms that do not fit in the Qt Creator \gui Design mode,
     you can open them in the stand-alone \QD.
@@ -1787,7 +1787,7 @@ pixmap property in the property editor.
     We will use \c qmake to build the executable, so we need to write a
     \c{.pro} file:
 
-    \snippet uitools/calculatorform/calculatorform.pro 0
+    \snippet calculatorform/calculatorform.pro 0
 
     The special feature of this file is the \c FORMS declaration that tells
     \c qmake which files to process with \c uic. In this case, the
@@ -1849,16 +1849,16 @@ pixmap property in the property editor.
     To ensure that we can use the user interface, we need to include the header
     file that \c uic generates before referring to \c{Ui::CalculatorForm}:
 
-    \snippet designer/calculatorform/calculatorform.h 0
+    \snippet calculatorform/calculatorform.h 0
 
     This means that the \c{.pro} file must be updated to include
     \c{calculatorform.h}:
 
-    \snippet designer/calculatorform/calculatorform.pro 0
+    \snippet calculatorform/calculatorform.pro 0
 
     The subclass is defined in the following way:
 
-    \snippet designer/calculatorform/calculatorform.h 1
+    \snippet calculatorform/calculatorform.h 1
 
     The important feature of the class is the private \c ui object which
     provides the code for setting up and managing the user interface.
@@ -1868,7 +1868,7 @@ pixmap property in the property editor.
     function. Once this has been done, it is possible to modify the user
     interface as needed.
 
-    \snippet designer/calculatorform/calculatorform.cpp 0
+    \snippet calculatorform/calculatorform.cpp 0
 
     We can connect signals and slots in user interface widgets in the usual
     way by adding the on_<object name> - prefix. For more information,
@@ -1943,14 +1943,14 @@ pixmap property in the property editor.
     We need to include the header file that \c uic generates from the
     \c calculatorform.ui file, as follows:
 
-    \snippet uitools/multipleinheritance/calculatorform.h 0
+    \snippet ../uitools/multipleinheritance/calculatorform.h 0
 
     The class is defined in a similar way to the one used in the
     \l{The Single Inheritance Approach}{single inheritance approach}, except that
     this time we inherit from \e{both} QWidget and \c{Ui::CalculatorForm},
     as follows:
 
-    \snippet uitools/multipleinheritance/calculatorform.h 1
+    \snippet ../uitools/multipleinheritance/calculatorform.h 1
 
     We inherit \c{Ui::CalculatorForm} privately to ensure that the user
     interface objects are private in our subclass. We can also inherit it with
@@ -1961,7 +1961,7 @@ pixmap property in the property editor.
     constructor used in the \l{The Single Inheritance Approach}
     {single inheritance} example:
 
-    \snippet uitools/multipleinheritance/calculatorform.cpp 0
+    \snippet ../uitools/multipleinheritance/calculatorform.cpp 0
 
     In this case, the widgets used in the user interface can be accessed in the
     same say as a widget created in code by hand. We no longer require the
@@ -2018,14 +2018,14 @@ pixmap property in the property editor.
     The QUiLoader::load() function is invoked as shown in this code from the
     \l{Text Finder Example}{Text Finder} example:
 
-    \snippet uitools/textfinder/textfinder.cpp 4
+    \snippet ../uitools/textfinder/textfinder.cpp 4
 
     In a class that uses QtUiTools to build its user interface at run time, we
     can locate objects in the form using qFindChild(). For example, in the
     follownig code, we locate some components based on their object names and
     widget types:
 
-    \snippet uitools/textfinder/textfinder.cpp 1
+    \snippet ../uitools/textfinder/textfinder.cpp 1
 
     Processing forms at run-time gives the developer the freedom to change a
     program's user interface, just by changing the UI file. This is useful
@@ -2098,13 +2098,13 @@ pixmap property in the property editor.
 
     We use QMetaObject's system to enable signal and slot connections:
 
-    \snippet uitools/textfinder/textfinder.cpp 2
+    \snippet ../uitools/textfinder/textfinder.cpp 2
 
     This enables us to implement the slot, as shown below:
 
-    \snippet uitools/textfinder/textfinder.cpp 6
+    \snippet ../uitools/textfinder/textfinder.cpp 6
     \dots
-    \snippet uitools/textfinder/textfinder.cpp 8
+    \snippet ../uitools/textfinder/textfinder.cpp 8
 
     Automatic connection of signals and slots provides both a standard naming
     convention and an explicit interface for widget designers to work to. By
@@ -2381,12 +2381,12 @@ pixmap property in the property editor.
     If the custom widget does not provide a reasonable size hint, it is
     necessary to specify a default geometry in the string returned by the
     \c domXml() function in your subclass. For example, the
-    \c AnalogClockPlugin provided by the \l{designer/customwidgetplugin}
+    \c AnalogClockPlugin provided by the \l{customwidgetplugin}
     {Custom Widget Plugin} example, defines a default widgetgeometry in the
     following way:
 
     \dots
-    \snippet designer/customwidgetplugin/customwidgetplugin.cpp 11
+    \snippet customwidgetplugin/customwidgetplugin.cpp 11
     \dots
 
     An additional feature of the \c domXml() function is that, if it returns
@@ -2501,7 +2501,7 @@ pixmap property in the property editor.
     that they export the symbols needed by \QD.
 
     First of all, the plugin class must be exported in order for the plugin to
-    be loaded by \QD. Use the Q_EXPORT_PLUGIN2() macro to do this. Also, the
+    be loaded by \QD. Use the Q_PLUGIN_METADATA() macro to do this. Also, the
     QDESIGNER_WIDGET_EXPORT macro must be used to define each custom widget class
     within a plugin, that \QD will instantiate.
 
@@ -2534,7 +2534,7 @@ pixmap property in the property editor.
     with specific plugin support for \QD. This is done with the following
     declarations:
 
-    \snippet designer/customwidgetplugin/customwidgetplugin.pro 1
+    \snippet customwidgetplugin/customwidgetplugin.pro 1
 
     If Qt is configured to build in both debug and release modes, \QD will be
     built in release mode. When this occurs, it is necessary to ensure that
@@ -2602,8 +2602,8 @@ pixmap property in the property editor.
     \section1 Related Examples
 
     For more information on using custom widgets in \QD, refer to the
-    \l{designer/customwidgetplugin}{Custom Widget Plugin} and
-    \l{designer/worldtimeclockplugin}{World Time Clock Plugin} examples for more
+    \l{customwidgetplugin}{Custom Widget Plugin} and
+    \l{worldtimeclockplugin}{World Time Clock Plugin} examples for more
     information about using custom widgets in \QD. Also, you can use the
     QDesignerCustomWidgetCollectionInterface class to combine several custom
     widgets into a single library.
@@ -2641,7 +2641,7 @@ pixmap property in the property editor.
         extension that allows you to add custom menu entries to \QD's task
         menu.
 
-        The \l{designer/taskmenuextension}{Task Menu Extension} example
+        The \l{taskmenuextension}{Task Menu Extension} example
         illustrates how to use this class.
 
         \row
@@ -2652,7 +2652,7 @@ pixmap property in the property editor.
         multi-page container. It provides an extension that allows you to add
         and delete pages for a multi-page container plugin in \QD.
 
-        The \l{designer/containerextension}{Container Extension} example
+        The \l{containerextension}{Container Extension} example
         further explains how to use this class.
 
         \note It is not possible to add custom per-page properties for some
@@ -2739,7 +2739,7 @@ pixmap property in the property editor.
 
     The purpose is to reimplement the QExtensionFactory::createExtension()
     function, making it able to create your extension, such as a
-     \l{designer/containerextension}{MultiPageWidget} container extension.
+     \l{containerextension}{MultiPageWidget} container extension.
 
     You can either create a new QExtensionFactory and reimplement the
     QExtensionFactory::createExtension() function:
@@ -2776,8 +2776,8 @@ pixmap property in the property editor.
     \section1 Related Examples
 
     For more information on creating custom widget extensions in \QD, refer to
-    the \l{designer/taskmenuextension}{Task Menu Extension} and
-    \l{designer/containerextension}{Container Extension} examples.
+    the \l{taskmenuextension}{Task Menu Extension} and
+    \l{containerextension}{Container Extension} examples.
 */
 
 
@@ -2807,7 +2807,7 @@ pixmap property in the property editor.
     Designer source code.
 
     \legalese
-    Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies). \BR
+    Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies). \BR
     Copyright (C) 2005 Bjoern Bergstroem
 
     Permission is hereby granted, free of charge, to any person obtaining

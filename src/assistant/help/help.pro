@@ -4,9 +4,25 @@ QT_PRIVATE = network sql clucene-private
 
 DEFINES += QHELP_LIB QT_CLUCENE_SUPPORT
 
+QMAKE_DOCS = $$PWD/doc/qthelp.qdocconf
+
 load(qt_module)
 
 DEFINES -= QT_ASCII_CAST_WARNINGS
+
+# impossible to disable exceptions in clucene atm and use help lib without
+CONFIG(exceptions_off) {
+    CONFIG -= exceptions_off
+    CONFIG += exceptions
+    !win32|win32-g++* {
+        QMAKE_CFLAGS -= -fno-exceptions
+        QMAKE_CXXFLAGS -= -fno-exceptions
+        QMAKE_LFLAGS -= -fno-exceptions
+        QMAKE_CFLAGS += -fexceptions
+        QMAKE_CXXFLAGS += -fexceptions
+        QMAKE_LFLAGS += -fexceptions
+    }
+}
 
 RESOURCES += helpsystem.qrc
 SOURCES += qhelpenginecore.cpp \

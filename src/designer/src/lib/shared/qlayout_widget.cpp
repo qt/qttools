@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Designer of the Qt Toolkit.
@@ -1575,6 +1575,7 @@ public:
     virtual void insertColumn(int /*column*/) {}
 
     virtual int findItemAt(int /*at_row*/, int /*at_column*/) const {    return -1; }
+    using QLayoutSupport::findItemAt;
 
 private:
     virtual void setCurrentCellFromIndicatorOnEmptyCell(int index);
@@ -1702,6 +1703,7 @@ public:
     void insertWidget(QWidget *widget, const QPair<int, int> &cell);
     virtual void removeWidget(QWidget *widget) { helper()->removeWidget(layout(), widget); }
     virtual int findItemAt(int row, int column) const;
+    using QLayoutSupport::findItemAt;
 
 protected:
     GridLikeLayout *gridLikeLayout() const {

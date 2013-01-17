@@ -2,6 +2,8 @@ TARGET = QtUiTools
 CONFIG += static
 QT = core
 
+QMAKE_DOCS = $$PWD/doc/qtuitools.qdocconf
+
 load(qt_module)
 
 HEADERS += quiloader.h

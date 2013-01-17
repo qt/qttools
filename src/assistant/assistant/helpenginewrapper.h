@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Assistant of the Qt Toolkit.
@@ -100,7 +100,6 @@ public:
     const QStringList filterAttributes() const;
     const QStringList filterAttributes(const QString &filterName) const;
     QString error() const;
-    QString virtualFolderForNameSpace(const QString &nameSpace) const;
 
     /*
      * To be called after assistant has finished looking for new documentation.
@@ -191,6 +190,9 @@ public:
     static const QString TrUnfiltered();
 
     bool fullTextSearchFallbackEnabled() const;
+
+    const QByteArray topicChooserGeometry() const;
+    void setTopicChooserGeometry(const QByteArray &geometry);
 
 signals:
 

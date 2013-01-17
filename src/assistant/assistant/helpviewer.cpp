@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Assistant of the Qt Toolkit.
@@ -143,7 +143,7 @@ QString HelpViewer::mimeFromUrl(const QUrl &url)
             return QLatin1String(e->mimeType);
         ++e;
     }
-    return QLatin1String("");
+    return QLatin1String("application/octet-stream");
 }
 
 bool HelpViewer::launchWithExternalApp(const QUrl &url)
@@ -175,31 +175,6 @@ bool HelpViewer::launchWithExternalApp(const QUrl &url)
         return QDesktopServices::openUrl(url);
     }
     return false;
-}
-
-QString HelpViewer::fixupVirtualFolderForUrl(const HelpEngineWrapper *engine, const QUrl &url, bool *fixed)
-{
-    TRACE_OBJ
-    Q_ASSERT(engine);
-
-    QString ret = url.toString();
-    const QString virtualFolder = engine->virtualFolderForNameSpace(url.host());
-    QString effectiveVirtualFolder = virtualFolder;
-    const QStringList tokens = url.path().split('/');
-    Q_FOREACH (const QString& token, tokens) {
-        if (!token.isEmpty()) {
-            effectiveVirtualFolder = token;
-            break;
-        }
-    }
-
-    if (QString::localeAwareCompare(effectiveVirtualFolder, virtualFolder)) {
-        ret = url.scheme() + QLatin1String("://") + url.host() + QLatin1Char('/')
-                + virtualFolder + QLatin1String("/..") + url.path();
-    }
-    if (fixed && engine->findFile(ret).isValid())
-        *fixed = true;
-    return ret;
 }
 
 // -- public slots

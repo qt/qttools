@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the examples of the Qt Toolkit.
@@ -48,7 +48,9 @@ class WorldTimeClockPlugin : public QObject,
                              public QDesignerCustomWidgetInterface
 {
     Q_OBJECT
+//! [1]
     Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QDesignerCustomWidgetInterface" FILE "worldtimeclock.json")
+//! [1]
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 
 public:

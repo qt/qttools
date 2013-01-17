@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the documentation of the Qt Toolkit.
@@ -46,7 +46,7 @@
     \l{Custom Widget Plugin Example}{Custom Widget Plugin example} that
     enables an analog clock custom widget to be used by \QD:
 
-    \snippet examples/designer/customwidgetplugin/customwidgetplugin.h 0
+    \snippet customwidgetplugin/customwidgetplugin.h 0
 
     Note that the only part of the class definition that is specific
     to this particular custom widget is the class name. In addition,
@@ -72,7 +72,7 @@
     class called \c MyCustomWidget, we can export it by adding the
     following line to the file containing the plugin header:
 
-    \snippet doc/src/snippets/code/doc_src_qtdesigner.cpp 14
+    \snippet plugins/doc_src_qtdesigner.cpp 14
 
     This macro ensures that \QD can access and construct the custom widget.
     Without this macro, there is no way for \QD to use it.
@@ -105,7 +105,7 @@
     \endlist
 
     For a complete example using the QDesignerCustomWidgetInterface
-    class, see the \l {designer/customwidgetplugin}{Custom Widget
+    class, see the \l {customwidgetplugin}{Custom Widget
     Example}. The example shows how to create a custom widget plugin
     for \QD.
 
@@ -229,12 +229,12 @@
     Using this macro ensures that the symbols are retained on those platforms,
     and has no side effects on other platforms.
 
-    For example, the \l{designer/worldtimeclockplugin}{World Time Clock Plugin}
+    For example, the \l{worldtimeclockplugin}{World Time Clock Plugin}
     example exports a custom widget class with the following declaration:
 
-    \snippet examples/designer/worldtimeclockplugin/worldtimeclock.h 0
+    \snippet worldtimeclockplugin/worldtimeclock.h 0
     \dots
-    \snippet examples/designer/worldtimeclockplugin/worldtimeclock.h 2
+    \snippet worldtimeclockplugin/worldtimeclock.h 2
 
     \sa {Creating Custom Widgets for Qt Designer}
 */
@@ -262,13 +262,13 @@
     several custom widgets \c CustomWidgetOne, \c CustomWidgetTwo and
     \c CustomWidgetThree, the class definition may look like this:
 
-    \snippet doc/src/snippets/code/doc_src_qtdesigner.cpp 12
+    \snippet plugins/doc_src_qtdesigner.cpp 12
 
     In the class constructor you add the interfaces to your custom
     widgets to the list which you return in the customWidgets()
     function:
 
-    \snippet doc/src/snippets/code/doc_src_qtdesigner.cpp 13
+    \snippet plugins/doc_src_qtdesigner.cpp 13
 
     Note that instead of exporting each custom widget plugin using the
     Q_PLUGIN_METADATA() macro, you export the entire collection. The
