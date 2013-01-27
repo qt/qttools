@@ -52,8 +52,6 @@
 #include <QtWidgets/QSizePolicy>
 #include <QtGui/QPalette>
 
-QT_BEGIN_HEADER
-
 QT_BEGIN_NAMESPACE
 #if 0
 // pragma for syncqt, don't remove.
@@ -267,7 +265,5 @@ protected:
 #endif
 
 QT_END_NAMESPACE
-
-QT_END_HEADER
 
 #endif // ABSTRACTFORMBUILDER_H

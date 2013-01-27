@@ -57,8 +57,6 @@
 #include <QtCore/QVariant>
 #include <QtCore/QFlags>
 
-QT_BEGIN_HEADER
-
 QT_BEGIN_NAMESPACE
 
 class QDESIGNER_SDK_EXPORT QDesignerMetaEnumInterface
@@ -168,7 +166,5 @@ public:
 };
 
 QT_END_NAMESPACE
-
-QT_END_HEADER
 
 #endif // ABSTRACTMETAOBJECT_H

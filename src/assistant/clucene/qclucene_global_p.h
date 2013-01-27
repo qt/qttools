@@ -44,8 +44,6 @@
 #   include <qt_windows.h>
 #endif
 
-QT_BEGIN_HEADER
-
 QT_BEGIN_NAMESPACE
 
 #ifdef QT_STATIC
@@ -129,7 +127,5 @@ namespace QtCLuceneHelpers {
 using namespace QtCLuceneHelpers;
 
 QT_END_NAMESPACE
-
-QT_END_HEADER
 
 #endif // QCLUCENE_GLOBAL_P_H

@@ -58,8 +58,6 @@
 #include <QtCore/QStringList>
 #include <QtCore/QSharedData>
 
-QT_BEGIN_HEADER
-
 QT_BEGIN_NAMESPACE
 
 class QHELP_EXPORT QHelpDataContentItem
@@ -149,7 +147,5 @@ public:
 };
 
 QT_END_NAMESPACE
-
-QT_END_HEADER
 
 #endif // QHELPDATAINTERFACE_H

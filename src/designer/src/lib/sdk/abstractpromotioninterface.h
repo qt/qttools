@@ -48,8 +48,6 @@
 #include <QtCore/QList>
 #include <QtCore/QSet>
 
-QT_BEGIN_HEADER
-
 QT_BEGIN_NAMESPACE
 
 class QDesignerWidgetDataBaseItemInterface;
@@ -85,7 +83,5 @@ public:
 };
 
 QT_END_NAMESPACE
-
-QT_END_HEADER
 
 #endif // ABSTRACTPROMOTIONINTERFACE_H

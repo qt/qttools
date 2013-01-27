@@ -44,8 +44,6 @@
 
 #include <QtDesigner/sdk_global.h>
 
-QT_BEGIN_HEADER
-
 QT_BEGIN_NAMESPACE
 
 class QDesignerFormWindowInterface;
@@ -103,7 +101,5 @@ public:
 };
 
 QT_END_NAMESPACE
-
-QT_END_HEADER
 
 #endif // ABSTRACTFORMWINDOWCURSOR_H

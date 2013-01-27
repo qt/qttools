@@ -55,8 +55,6 @@
 
 #include <QtDesigner/extension.h>
 
-QT_BEGIN_HEADER
-
 QT_BEGIN_NAMESPACE
 
 class QDialog;
@@ -102,7 +100,5 @@ public:
 Q_DECLARE_EXTENSION_INTERFACE(QDesignerLanguageExtension, "org.qt-project.Qt.Designer.Language.3")
 
 QT_END_NAMESPACE
-
-QT_END_HEADER
 
 #endif // QDESIGNER_ABTRACT_LANGUAGE_H
