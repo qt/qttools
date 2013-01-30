@@ -2,7 +2,7 @@ include($QT_INSTALL_DOCS/global/qt-module-defaults.qdocconf)
 
 project                 = QtHelp
 description             = Qt Help Reference Documentation
-url                     = http://qt-project.org/doc/qthelp
+url                     = http://qt-project.org/doc/qt-$QT_VER/qthelp
 version                 = $QT_VERSION
 
 examplesinstallpath     = help
