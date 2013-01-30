@@ -70,7 +70,7 @@ HintLineEdit::HintLineEdit(QWidget *parent) :
 }
 
 IconButton::IconButton(QWidget *parent)
-    : QToolButton(parent)
+    : QToolButton(parent), m_fader(1.0f)
 {
     setCursor(Qt::ArrowCursor);
 }
