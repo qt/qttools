@@ -7,7 +7,7 @@ url                     = http://qt-project.org/doc/qtlinguist
 qhp.projects            = QtLinguist
 
 qhp.QtLinguist.file                = qtlinguist.qhp
-qhp.QtLinguist.namespace           = org.qt-project.linguist.500
+qhp.QtLinguist.namespace           = org.qt-project.linguist.501
 qhp.QtLinguist.virtualFolder       = qtlinguist
 qhp.QtLinguist.indexTitle          = Qt Linguist Manual
 
