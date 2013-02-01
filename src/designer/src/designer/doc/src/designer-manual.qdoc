@@ -2534,7 +2534,7 @@ pixmap property in the property editor.
     with specific plugin support for \QD. This is done with the following
     declarations:
 
-    \snippet customwidgetplugin/customwidgetplugin.pro 1
+    \snippet customwidgetplugin/customwidgetplugin.pro 3
 
     If Qt is configured to build in both debug and release modes, \QD will be
     built in release mode. When this occurs, it is necessary to ensure that

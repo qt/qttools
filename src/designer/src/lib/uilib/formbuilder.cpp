@@ -94,7 +94,7 @@ namespace QFormInternal {
     dynamically generate user interfaces at run-time use the
     QUiLoader class, found in the QtUiTools module.
 
-    \sa QAbstractFormBuilder, {QtUiTools Module}
+    \sa QAbstractFormBuilder, {Qt UI Tools}
 */
 
 /*!

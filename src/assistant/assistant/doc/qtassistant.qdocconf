@@ -7,7 +7,7 @@ url                     = http://qt-project.org/doc/qtassistant
 qhp.projects            = QtAssistant
 
 qhp.QtAssistant.file                = qtassistant.qhp
-qhp.QtAssistant.namespace           = org.qt-project.assistant.500
+qhp.QtAssistant.namespace           = org.qt-project.assistant.501
 qhp.QtAssistant.virtualFolder       = assistant
 qhp.QtAssistant.indexTitle          = Qt Assistant Manual
 
