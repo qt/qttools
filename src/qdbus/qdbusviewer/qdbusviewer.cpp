@@ -43,11 +43,11 @@
 #include "qdbusmodel.h"
 #include "propertydialog.h"
 
-#include <QtXml/QtXml>
 
 #include <QtWidgets/QTreeWidget>
 #include <QtCore/QStringListModel>
 #include <QtCore/QSortFilterProxyModel>
+#include <QtCore/QMetaProperty>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QListView>
 #include <QtWidgets/QTextBrowser>
@@ -58,6 +58,9 @@
 #include <QtWidgets/QInputDialog>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QMenu>
+#include <QtDBus/QDBusConnectionInterface>
+#include <QtDBus/QDBusInterface>
+#include <QtDBus/QDBusMetaType>
 
 #include <private/qdbusutil_p.h>
 
