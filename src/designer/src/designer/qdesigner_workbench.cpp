@@ -926,7 +926,7 @@ QDesignerFormWindow * QDesignerWorkbench::loadForm(const QString &fileName,
     }
 
     if (!file.open(QFile::ReadOnly|QFile::Text)) {
-        *errorMessage = tr("The file <b>%1</b> could not be opened: %1").arg(file.fileName(), file.errorString());
+        *errorMessage = tr("The file <b>%1</b> could not be opened: %2").arg(file.fileName(), file.errorString());
         return 0;
     }
 
