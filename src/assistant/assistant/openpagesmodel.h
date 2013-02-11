@@ -42,6 +42,8 @@
 #ifndef OPENPAGESMODEL_H
 #define OPENPAGESMODEL_H
 
+#include "openpagesmanager.h"
+
 #include <QtCore/QAbstractTableModel>
 #include <QtCore/QList>
 
@@ -53,9 +55,8 @@ class QUrl;
 class OpenPagesModel : public QAbstractTableModel
 {
     Q_OBJECT
+    friend class OpenPagesManager;
 public:
-    OpenPagesModel(QObject *parent);
-
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
@@ -66,6 +67,9 @@ public:
 
 private slots:
     void handleTitleChanged();
+
+private:
+    OpenPagesModel(QObject *parent);
 
 private:
     QList<HelpViewer *> m_pages;

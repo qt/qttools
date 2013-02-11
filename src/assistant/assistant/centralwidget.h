@@ -57,8 +57,9 @@ class QPrinter;
 class TabBar : public QTabBar
 {
     Q_OBJECT
+    friend class CentralWidget;
+
 public:
-    TabBar(QWidget *parent = 0);
     ~TabBar();
 
     int addNewTab(const QString &title);
@@ -72,6 +73,9 @@ signals:
     void currentTabChanged(HelpViewer *viewer);
     void addBookmark(const QString &title, const QString &url);
 
+private:
+    TabBar(QWidget *parent = 0);
+
 private slots:
     void slotCurrentChanged(int index);
     void slotTabCloseRequested(int index);
@@ -81,6 +85,7 @@ private slots:
 class CentralWidget : public QWidget
 {
     Q_OBJECT
+    friend class OpenPagesManager;
 
 public:
     CentralWidget(QWidget *parent = 0);
@@ -97,12 +102,7 @@ public:
 
     HelpViewer *viewerAt(int index) const;
     HelpViewer *currentHelpViewer() const;
-
-    void addPage(HelpViewer *page, bool fromSearch = false);
-    void removePage(int index);
-
     int currentIndex() const;
-    void setCurrentPage(HelpViewer *page);
 
     void connectTabBar();
 
@@ -161,6 +161,10 @@ private:
     void initPrinter();
     void connectSignals(HelpViewer *page);
     bool eventFilter(QObject *object, QEvent *e);
+
+    void removePage(int index);
+    void setCurrentPage(HelpViewer *page);
+    void addPage(HelpViewer *page, bool fromSearch = false);
 
 private:
 #ifndef QT_NO_PRINTER
