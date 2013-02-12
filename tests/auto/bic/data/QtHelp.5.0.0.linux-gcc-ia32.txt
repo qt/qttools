@@ -2412,11 +2412,6 @@ QObjectCleanupHandler (0xb42d15dc) 0
   QObject (0xb40c5508) 0
       primary-for QObjectCleanupHandler (0xb42d15dc)
 
-Class QPointerBase
-   size=8 align=4
-   base size=8 base align=4
-QPointerBase (0xb40c5a48) 0
-
 Class QSharedMemory::QPrivateSignal
    size=1 align=1
    base size=0 base align=1
