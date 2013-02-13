@@ -495,7 +495,7 @@ QStringList FormWindowBase::checkContents() const
     QStringList problems;
     foreach (const Spacer *spacer, mainContainer()->findChildren<Spacer *>()) {
         if (spacer->parentWidget() && !spacer->parentWidget()->layout()) {
-            problems.push_back(tr("<p>This file contains top level spacers.<br>"
+            problems.push_back(tr("<p>This file contains top level spacers.<br/>"
                                   "They will <b>not</b> be saved.</p><p>"
                                   "Perhaps you forgot to create a layout?</p>"));
             break;
