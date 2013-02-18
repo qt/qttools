@@ -47,7 +47,13 @@
 #include <QtCore/qmetaobject.h>
 #include <QtXml/QDomDocument>
 #include <QtXml/QDomElement>
-#include <QtDBus/QtDBus>
+#include <QtDBus/QDBusConnection>
+#include <QtDBus/QDBusInterface>
+#include <QtDBus/QDBusConnectionInterface>
+#include <QtDBus/QDBusVariant>
+#include <QtDBus/QDBusArgument>
+#include <QtDBus/QDBusMessage>
+#include <QtDBus/QDBusReply>
 #include <private/qdbusutil_p.h>
 
 QT_BEGIN_NAMESPACE

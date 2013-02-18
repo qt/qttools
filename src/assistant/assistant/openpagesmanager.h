@@ -86,6 +86,13 @@ public slots:
     void closePage(HelpViewer *page);
     void setCurrentPage(HelpViewer *page);
 
+signals:
+    void aboutToAddPage();
+    void pageAdded(int index);
+
+    void pageClosed();
+    void aboutToClosePage(int index);
+
 private slots:
     void setCurrentPage(const QModelIndex &index);
     void closePage(const QModelIndex &index);

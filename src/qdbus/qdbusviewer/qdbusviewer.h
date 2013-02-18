@@ -43,7 +43,7 @@
 #define QDBUSVIEWER_H
 
 #include <QtWidgets/QWidget>
-#include <QtDBus/QtDBus>
+#include <QtDBus/QDBusConnection>
 
 QT_FORWARD_DECLARE_CLASS(QTreeView)
 QT_FORWARD_DECLARE_CLASS(QTreeWidget)

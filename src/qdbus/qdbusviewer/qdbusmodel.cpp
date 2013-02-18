@@ -42,7 +42,11 @@
 #include "qdbusmodel.h"
 
 #include <QtCore/qvector.h>
-#include <QtXml/QtXml>
+#include <QtCore/QDebug>
+#include <QtXml/QDomDocument>
+#include <QtDBus/QDBusObjectPath>
+#include <QtDBus/QDBusInterface>
+#include <QtDBus/QDBusReply>
 
 struct QDBusItem
 {
