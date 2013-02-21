@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Assistant of the Qt Toolkit.
@@ -88,7 +88,6 @@ void QHelpEngineCorePrivate::clearMaps()
     fileNameReaderMap.clear();
     virtualFolderMap.clear();
     orderedFileNameList.clear();
-    nameSpaceVirtualFolderMap.clear();
 }
 
 bool QHelpEngineCorePrivate::setup()
@@ -129,7 +128,6 @@ bool QHelpEngineCorePrivate::setup()
         fileNameReaderMap.insert(absFileName, reader);
         virtualFolderMap.insert(info.folderName, reader);
         orderedFileNameList.append(absFileName);
-        nameSpaceVirtualFolderMap.insert(info.namespaceName, info.folderName);
     }
     q->currentFilter();
     emit q->setupFinished();

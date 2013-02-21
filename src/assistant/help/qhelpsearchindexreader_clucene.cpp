@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Assistant of the Qt Toolkit.
@@ -269,7 +269,7 @@ bool QHelpSearchIndexReaderClucene::buildTryHarderQuery(
         return false;
     if (isNegativeQuery(query))
         return false;
-    if (!addDefaultQuery(query, fieldName, false, booleanQuery, analyzer))
+    if (!addDefaultQuery(query, fieldName, !filterAttributes.isEmpty(), booleanQuery, analyzer))
         return false;
     if (filterAttributes.isEmpty())
         return true;

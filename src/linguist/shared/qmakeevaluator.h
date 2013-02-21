@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Linguist of the Qt Toolkit.
@@ -219,7 +219,7 @@ public:
     bool isActiveConfig(const QString &config, bool regex = false);
 
     void populateDeps(
-            const ProStringList &deps, const ProString &prefix,
+            const ProStringList &deps, const ProString &prefix, const ProStringList &suffixes,
             QHash<ProKey, QSet<ProKey> > &dependencies,
             ProValueMap &dependees, ProStringList &rootSet) const;
 

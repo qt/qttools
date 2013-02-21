@@ -1,7 +1,7 @@
 <ui version="4.0" >
  <comment>*********************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Designer of the Qt Toolkit.
@@ -58,7 +58,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle" >
-   <string>Preview Window</string>
+   <string extracomment="Palette Editor Preview Widget">Preview Window</string>
   </property>
   <layout class="QGridLayout" >
    <property name="margin" >
@@ -78,7 +78,7 @@
      <item>
       <widget class="QLineEdit" name="LineEdit1" >
        <property name="text" >
-        <string>LineEdit</string>
+        <string extracomment="Palette Editor Preview Widget">LineEdit</string>
        </property>
       </widget>
      </item>
@@ -86,7 +86,7 @@
       <widget class="QComboBox" name="ComboBox1" >
        <item>
         <property name="text" >
-         <string>ComboBox</string>
+         <string extracomment="Palette Editor Preview Widget">ComboBox</string>
         </property>
        </item>
       </widget>
@@ -105,7 +105,7 @@
        <item>
         <widget class="QPushButton" name="PushButton1" >
          <property name="text" >
-          <string>PushButton</string>
+          <string extracomment="Palette Editor Preview Widget">PushButton</string>
          </property>
         </widget>
        </item>
@@ -163,7 +163,7 @@
    <item row="1" column="0" >
     <widget class="QGroupBox" name="ButtonGroup2" >
      <property name="title" >
-      <string>ButtonGroup2</string>
+      <string extracomment="Palette Editor Preview Widget">ButtonGroup2</string>
      </property>
      <layout class="QVBoxLayout" >
       <property name="margin" >
@@ -175,7 +175,7 @@
       <item>
        <widget class="QCheckBox" name="CheckBox1" >
         <property name="text" >
-         <string>CheckBox1</string>
+         <string extracomment="Palette Editor Preview Widget">CheckBox1</string>
         </property>
         <property name="checked" >
          <bool>true</bool>
@@ -185,7 +185,7 @@
       <item>
        <widget class="QCheckBox" name="CheckBox2" >
         <property name="text" >
-         <string>CheckBox2</string>
+         <string extracomment="Palette Editor Preview Widget">CheckBox2</string>
         </property>
        </widget>
       </item>
@@ -195,7 +195,7 @@
    <item row="0" column="0" >
     <widget class="QGroupBox" name="ButtonGroup1" >
      <property name="title" >
-      <string>ButtonGroup</string>
+      <string extracomment="Palette Editor Preview Widget">ButtonGroup</string>
      </property>
      <layout class="QVBoxLayout" >
       <property name="margin" >
@@ -207,7 +207,7 @@
       <item>
        <widget class="QRadioButton" name="RadioButton1" >
         <property name="text" >
-         <string>RadioButton1</string>
+         <string extracomment="Palette Editor Preview Widget">RadioButton1</string>
         </property>
         <property name="checked" >
          <bool>true</bool>
@@ -217,14 +217,14 @@
       <item>
        <widget class="QRadioButton" name="RadioButton2" >
         <property name="text" >
-         <string>RadioButton2</string>
+         <string extracomment="Palette Editor Preview Widget">RadioButton2</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QRadioButton" name="RadioButton3" >
         <property name="text" >
-         <string>RadioButton3</string>
+         <string extracomment="Palette Editor Preview Widget">RadioButton3</string>
         </property>
        </widget>
       </item>

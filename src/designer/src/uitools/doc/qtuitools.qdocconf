@@ -2,22 +2,22 @@ include($QT_INSTALL_DOCS/global/qt-module-defaults.qdocconf)
 
 project                 = QtUiTools
 description             = Qt UI Tools Reference Documentation
-url                     = http://qt-project.org/doc/qtuitools
-version                 = 5.0.1
+url                     = http://qt-project.org/doc/qt-$QT_VER/qtuitools
+version                 = $QT_VERSION
 
 examplesinstallpath     = uitools
 
 qhp.projects            = QtUiTools
 
 qhp.QtUiTools.file                = qtuitools.qhp
-qhp.QtUiTools.namespace           = org.qt-project.qtuitools.501
+qhp.QtUiTools.namespace           = org.qt-project.qtuitools.$QT_VERSION_TAG
 qhp.QtUiTools.virtualFolder       = qtuitools
 qhp.QtUiTools.indexTitle          = Qt UI Tools
 qhp.QtHelp.indexRoot           =
 
-qhp.QtUiTools.filterAttributes    = qtuitools 5.0.1 tools designer qtrefdoc
-qhp.QtUiTools.customFilters.QtUiTools.name = QtUiTools 5.0.1
-qhp.QtUiTools.customFilters.QtUiTools.filterAttributes = qtuitools 5.0.1
+qhp.QtUiTools.filterAttributes    = qtuitools $QT_VERSION tools designer qtrefdoc
+qhp.QtUiTools.customFilters.QtUiTools.name = QtUiTools $QT_VERSION
+qhp.QtUiTools.customFilters.QtUiTools.filterAttributes = qtuitools $QT_VERSION
 qhp.QtUiTools.subprojects         = classes
 qhp.QtUiTools.subprojects.classes.title = C++ Classes
 qhp.QtUiTools.subprojects.classes.indexTitle = Qt UI Tools C++ Classes

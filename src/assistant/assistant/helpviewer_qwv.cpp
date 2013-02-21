@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Assistant of the Qt Toolkit.
@@ -47,6 +47,7 @@
 #include "openpagesmanager.h"
 #include "tracer.h"
 
+#include <QClipboard>
 #include <QtCore/QFileInfo>
 #include <QtCore/QString>
 #include <QtCore/QTimer>
@@ -133,6 +134,25 @@ qint64 HelpNetworkReply::readData(char *buffer, qint64 maxlen)
     return len;
 }
 
+// -- HelpRedirectNetworkReply
+
+class HelpRedirectNetworkReply : public QNetworkReply
+{
+public:
+    HelpRedirectNetworkReply(const QNetworkRequest &request, const QUrl &newUrl)
+    {
+        setRequest(request);
+        setAttribute(QNetworkRequest::HttpStatusCodeAttribute, 301);
+        setAttribute(QNetworkRequest::RedirectionTargetAttribute, newUrl);
+
+        QTimer::singleShot(0, this, SIGNAL(finished()));
+    }
+
+protected:
+    void abort() { TRACE_OBJ }
+    qint64 readData(char*, qint64) { TRACE_OBJ return qint64(-1); }
+};
+
 // -- HelpNetworkAccessManager
 
 class HelpNetworkAccessManager : public QNetworkAccessManager
@@ -151,24 +171,21 @@ HelpNetworkAccessManager::HelpNetworkAccessManager(QObject *parent)
     TRACE_OBJ
 }
 
-QNetworkReply *HelpNetworkAccessManager::createRequest(Operation /*op*/,
-    const QNetworkRequest &request, QIODevice* /*outgoingData*/)
+QNetworkReply *HelpNetworkAccessManager::createRequest(Operation, const QNetworkRequest &request, QIODevice*)
 {
     TRACE_OBJ
-    QString url = request.url().toString();
-
     const HelpEngineWrapper &engine = HelpEngineWrapper::instance();
 
-    bool fileFound = engine.findFile(url).isValid();
-    if (!fileFound && HelpViewer::isLocalUrl(request.url()))
-        url = HelpViewer::fixupVirtualFolderForUrl(&engine, request.url(), &fileFound);
+    const QUrl url = engine.findFile(request.url());
+    if (url.isValid() && (url != request.url()))
+        return new HelpRedirectNetworkReply(request, url);
 
-    const QString &mimeType = HelpViewer::mimeFromUrl(url);
-    const QByteArray &data = fileFound ? engine.fileData(url) : QString::fromLatin1(g_htmlPage)
-        .arg(g_percent1, g_percent2, HelpViewer::tr("Error loading: %1").arg(url), g_percent4).toUtf8();
+    if (url.isValid())
+        return new HelpNetworkReply(request, engine.fileData(url), HelpViewer::mimeFromUrl(url));
 
-    return new HelpNetworkReply(request, data, mimeType.isEmpty()
-        ? QLatin1String("application/octet-stream") : mimeType);
+    return new HelpNetworkReply(request, QString::fromLatin1(g_htmlPage).arg(g_percent1, g_percent2,
+        HelpViewer::tr("Error loading: %1").arg(request.url().toString()), g_percent4).toUtf8(),
+        QLatin1String("text/html"));
 }
 
 // -- HelpPage
@@ -223,6 +240,13 @@ void HelpPage::triggerAction(WebAction action, bool checked)
             QWebPage::triggerAction(action, checked);
             break;
     }
+
+#ifndef QT_NO_CLIPBOARD
+    if (action == CopyLinkToClipboard || action == CopyImageUrlToClipboard) {
+        const QString link = QApplication::clipboard()->text();
+        QApplication::clipboard()->setText(HelpEngineWrapper::instance().findFile(link).toString());
+    }
+#endif
 }
 
 bool HelpPage::acceptNavigationRequest(QWebFrame *,
@@ -403,6 +427,7 @@ bool HelpViewer::findText(const QString &text, FindFlags flags, bool incremental
 }
 
 // -- public slots
+
 #ifndef QT_NO_CLIPBOARD
 void HelpViewer::copy()
 {

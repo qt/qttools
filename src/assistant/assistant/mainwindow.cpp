@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Assistant of the Qt Toolkit.
@@ -473,15 +473,15 @@ void MainWindow::setupActions()
 #endif
 
     QMenu *menu = menuBar()->addMenu(tr("&File"));
-    connect(menu, SIGNAL(aboutToShow()), this, SLOT(aboutToShowFileMenu()));
-
     OpenPagesManager * const openPages = OpenPagesManager::instance();
-    m_newTabAction
-        = menu->addAction(tr("New &Tab"), openPages, SLOT(createPage()));
+    m_newTabAction = menu->addAction(tr("New &Tab"), openPages, SLOT(createPage()));
     m_newTabAction->setShortcut(QKeySequence::AddTab);
     m_closeTabAction = menu->addAction(tr("&Close Tab"),
                                           openPages, SLOT(closeCurrentPage()));
     m_closeTabAction->setShortcuts(QKeySequence::Close);
+    m_closeTabAction->setEnabled(openPages->pageCount() > 1);
+    connect(openPages, SIGNAL(pageClosed()), this, SLOT(handlePageCountChanged()));
+    connect(openPages, SIGNAL(pageAdded(int)), this, SLOT(handlePageCountChanged()));
 
     menu->addSeparator();
 
@@ -843,7 +843,7 @@ void MainWindow::showAboutDialog()
         aboutDia.setText(tr("<center>"
             "<h3>%1</h3>"
             "<p>Version %2</p></center>"
-            "<p>Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).</p>")
+            "<p>Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).</p>")
             .arg(tr("Qt Assistant")).arg(QLatin1String(QT_VERSION_STR)),
             resources);
         QLatin1String path(":/qt-project.org/assistant/images/assistant-128.png");
@@ -1129,13 +1129,9 @@ void MainWindow::registerDocumentation(const QString &component,
     }
 }
 
-void MainWindow::aboutToShowFileMenu()
+void MainWindow::handlePageCountChanged()
 {
-    OpenPagesManager * const openPages = OpenPagesManager::instance();
-    if (openPages->pageCount() > 1)
-        m_closeTabAction->setEnabled(true);
-    else
-        m_closeTabAction->setEnabled(false);
+    m_closeTabAction->setEnabled(OpenPagesManager::instance()->pageCount() > 1);
 }
 
 QT_END_NAMESPACE

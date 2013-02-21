@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <UI version="4.0" stdsetdef="1" >
  <class>TopicChooser</class> 
  <widget class="QDialog" name="TopicChooser" >
@@ -42,17 +43,12 @@
     </widget>
    </item>
    <item>
-    <widget class="QListWidget" name="listWidget" >
-     <property name="objectName" >
-      <string notr="true">listWidget</string>
-     </property>     
-    </widget>
+    <widget class="QLineEdit" name="lineEdit" />
    </item>
    <item>
-    <widget class="QWidget" name="Layout16" >
-     <property name="objectName" >
-      <string notr="true">Layout16</string>
-     </property>
+    <widget class="QListView" name="listWidget" />
+   </item>
+   <item>
      <layout class="QHBoxLayout" >
       <property name="objectName" >
        <string notr="true">unnamed</string>
@@ -107,9 +103,8 @@
          <bool>true</bool>
         </property>        
        </widget>
-      </item>
-     </layout>
-    </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>

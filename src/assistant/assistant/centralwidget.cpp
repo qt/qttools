@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Assistant of the Qt Toolkit.
@@ -339,6 +339,7 @@ void CentralWidget::connectTabBar()
 }
 
 // -- public slots
+
 #ifndef QT_NO_CLIPBOARD
 void CentralWidget::copy()
 {
@@ -587,6 +588,17 @@ void CentralWidget::handleSourceChanged(const QUrl &url)
         emit sourceChanged(url);
 }
 
+void CentralWidget::slotHighlighted(const QString &link)
+{
+    TRACE_OBJ
+    QString resolvedLink = m_resolvedLinks.value(link);
+    if (!link.isEmpty() && resolvedLink.isEmpty()) {
+        resolvedLink = HelpEngineWrapper::instance().findFile(link).toString();
+        m_resolvedLinks.insert(link, resolvedLink);
+    }
+    emit highlighted(resolvedLink);
+}
+
 // -- private
 
 void CentralWidget::initPrinter()
@@ -609,9 +621,8 @@ void CentralWidget::connectSignals(HelpViewer *page)
         SIGNAL(backwardAvailable(bool)));
     connect(page, SIGNAL(sourceChanged(QUrl)), this,
         SLOT(handleSourceChanged(QUrl)));
-    connect(page, SIGNAL(highlighted(QString)), this,
-            SIGNAL(highlighted(QString)));
     connect(page, SIGNAL(printRequested()), this, SLOT(print()));
+    connect(page, SIGNAL(highlighted(QString)), this, SLOT(slotHighlighted(QString)));
 }
 
 bool CentralWidget::eventFilter(QObject *object, QEvent *e)

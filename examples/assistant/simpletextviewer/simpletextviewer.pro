@@ -11,4 +11,7 @@ SOURCES       = main.cpp \
 QT += widgets
 
 target.path = $$[QT_INSTALL_EXAMPLES]/assistant/simpletextviewer
-INSTALLS += target
+docs.files += $$PWD/documentation
+docs.path = $$target.path
+
+INSTALLS += target docs

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Assistant of the Qt Toolkit.
@@ -163,18 +163,14 @@ void HelpViewer::setSource(const QUrl &url)
         return;
 
     emit loadStarted();
-    QString string = url.toString();
-    const HelpEngineWrapper &engine = HelpEngineWrapper::instance();
-    QUrl resolvedUrl = (string == QLatin1String("help") ? LocalHelpFile :
-        engine.findFile(string));
-    bool fileFound = resolvedUrl.isValid();
-    if (!fileFound && isLocalUrl(url))
-        resolvedUrl = fixupVirtualFolderForUrl(&engine, url, &fileFound);
+    bool helpOrAbout = (url.toString() == QLatin1String("help"));
+    const QUrl resolvedUrl = (helpOrAbout ? LocalHelpFile : HelpEngineWrapper::instance().findFile(url));
 
     QTextBrowser::setSource(resolvedUrl);
-    if (!fileFound) {
-        setHtml(string == QLatin1String("about:blank") ? AboutBlank
-            : PageNotFoundMessage.arg(url.toString()));
+
+    if (!resolvedUrl.isValid()) {
+        helpOrAbout = (url.toString() == QLatin1String("about:blank"));
+        setHtml(helpOrAbout ? AboutBlank : PageNotFoundMessage.arg(url.toString()));
     }
     emit loadFinished(true);
 }
@@ -382,7 +378,7 @@ QVariant HelpViewer::loadResource(int type, const QUrl &name)
     TRACE_OBJ
     QByteArray ba;
     if (type < 4) {
-        QUrl url = fixupVirtualFolderForUrl(&HelpEngineWrapper::instance(), name);
+        const QUrl url = HelpEngineWrapper::instance().findFile(name);
         ba = HelpEngineWrapper::instance().fileData(url);
         if (url.toString().endsWith(QLatin1String(".svg"), Qt::CaseInsensitive)) {
             QImage image;

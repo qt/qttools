@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the examples of the Qt Toolkit.
@@ -70,7 +70,7 @@ void Assistant::showDocumentation(const QString &page)
         return;
 
     QByteArray ba("SetSource ");
-    ba.append("qthelp://com.trolltech.examples.simpletextviewer/doc/");
+    ba.append("qthelp://org.qt-project.examples.simpletextviewer/doc/");
     
     proc->write(ba + page.toLocal8Bit() + '\n');
 }
@@ -93,7 +93,7 @@ bool Assistant::startAssistant()
         QStringList args;
         args << QLatin1String("-collectionFile")
             << QLibraryInfo::location(QLibraryInfo::ExamplesPath)
-            + QLatin1String("/qtassistant/simpletextviewer/documentation/simpletextviewer.qhc")
+            + QLatin1String("/assistant/simpletextviewer/documentation/simpletextviewer.qhc")
             << QLatin1String("-enableRemoteControl");
 
         proc->start(app, args);

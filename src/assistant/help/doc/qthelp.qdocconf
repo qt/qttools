@@ -2,22 +2,22 @@ include($QT_INSTALL_DOCS/global/qt-module-defaults.qdocconf)
 
 project                 = QtHelp
 description             = Qt Help Reference Documentation
-url                     = http://qt-project.org/doc/qthelp
-version                 = 5.0.1
+url                     = http://qt-project.org/doc/qt-$QT_VER/qthelp
+version                 = $QT_VERSION
 
 examplesinstallpath     = help
 
 qhp.projects            = QtHelp
 
 qhp.QtHelp.file                = qthelp.qhp
-qhp.QtHelp.namespace           = org.qt-project.qthelp.501
+qhp.QtHelp.namespace           = org.qt-project.qthelp.$QT_VERSION_TAG
 qhp.QtHelp.virtualFolder       = qthelp
 qhp.QtHelp.indexTitle          = Qt Help
 qhp.QtHelp.indexRoot           =
 
-qhp.QtHelp.filterAttributes    = qthelp 5.0.1 tools assistant qtrefdoc
-qhp.QtHelp.customFilters.QtHelp.name = QtHelp 5.0.1
-qhp.QtHelp.customFilters.QtHelp.filterAttributes = qthelp 5.0.1
+qhp.QtHelp.filterAttributes    = qthelp $QT_VERSION tools assistant qtrefdoc
+qhp.QtHelp.customFilters.QtHelp.name = QtHelp $QT_VERSION
+qhp.QtHelp.customFilters.QtHelp.filterAttributes = qthelp $QT_VERSION
 qhp.QtHelp.subprojects         = classes
 qhp.QtHelp.subprojects.classes.title = C++ Classes
 qhp.QtHelp.subprojects.classes.indexTitle = Qt Help C++ Classes

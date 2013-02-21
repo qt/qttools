@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -43,7 +43,7 @@
 #define QDBUSVIEWER_H
 
 #include <QtWidgets/QWidget>
-#include <QtDBus/QtDBus>
+#include <QtDBus/QDBusConnection>
 
 QT_FORWARD_DECLARE_CLASS(QTreeView)
 QT_FORWARD_DECLARE_CLASS(QTreeWidget)

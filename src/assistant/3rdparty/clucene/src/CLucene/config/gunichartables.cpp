@@ -41,7 +41,7 @@
  */
  
 /*
- * Changes are Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+ * Changes are Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 */
 
 #include "CLucene/StdHeader.h"

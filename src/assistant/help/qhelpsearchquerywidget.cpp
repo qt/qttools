@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Assistant of the Qt Toolkit.
@@ -134,6 +134,35 @@ private:
         allLabel->setText(QHelpSearchQueryWidget::tr("with <B>all</B> of the words:"));
         atLeastLabel->setText(QHelpSearchQueryWidget::tr("with <B>at least one</B> of the words:"));
 #endif
+    }
+
+    QList<QHelpSearchQuery> escapeQueries(const QList<QHelpSearchQuery> &queries)
+    {
+        static QStringList charsToEscapeList;
+        if (charsToEscapeList.isEmpty()) {
+            charsToEscapeList << QLatin1String("\\") << QLatin1String("+") << QLatin1String("-")
+                << QLatin1String("!") << QLatin1String("(") << QLatin1String(")") << QLatin1String(":")
+                << QLatin1String("^") << QLatin1String("[") << QLatin1String("]") << QLatin1String("{")
+                << QLatin1String("}") << QLatin1String("~");
+        }
+
+        static QString escapeChar(QLatin1String("\\"));
+        static QRegExp regExp(QLatin1String("[\\+\\-\\!\\(\\)\\^\\[\\]\\{\\}~:]"));
+
+        QList<QHelpSearchQuery> escapedQueries;
+        foreach (const QHelpSearchQuery &query, queries) {
+            QHelpSearchQuery escapedQuery;
+            escapedQuery.fieldName = query.fieldName;
+            foreach (QString word, query.wordList) {
+                if (word.contains(regExp)) {
+                    foreach (const QString &charToEscape, charsToEscapeList)
+                        word.replace(charToEscape, escapeChar + charToEscape);
+                }
+                escapedQuery.wordList.append(word);
+            }
+            escapedQueries.append(escapedQuery);
+        }
+        return escapedQueries;
     }
 
     QStringList buildTermList(const QString query)
@@ -279,7 +308,6 @@ private slots:
 #if !defined(QT_CLUCENE_SUPPORT)
         queryList.append(QHelpSearchQuery(QHelpSearchQuery::DEFAULT,
             QStringList(defaultQuery->text())));
-
 #else
         if (defaultQuery->isEnabled()) {
             queryList.append(QHelpSearchQuery(QHelpSearchQuery::DEFAULT,
@@ -393,7 +421,7 @@ private:
     \fn void QHelpSearchQueryWidget::search()
 
     This signal is emitted when a the user has the search button invoked.
-    After reciving the signal you can ask the QHelpSearchQueryWidget for the
+    After receiving the signal you can ask the QHelpSearchQueryWidget for the
     build list of QHelpSearchQuery's that you may pass to the QHelpSearchEngine's
     search() function.
 */
@@ -538,8 +566,9 @@ QList<QHelpSearchQuery> QHelpSearchQueryWidget::query() const
 {
     const QHelpSearchQueryWidgetPrivate::QueryHistory &queryHist =
         d->simpleSearch ? d->simpleQueries : d->complexQueries;
-    return queryHist.queries.isEmpty() ?
-        QList<QHelpSearchQuery>() : queryHist.queries.last();
+    if (queryHist.queries.isEmpty())
+        return QList<QHelpSearchQuery>();
+    return d->escapeQueries(queryHist.queries.last());
 }
 
 /*!

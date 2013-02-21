@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Assistant module of the Qt Toolkit.
@@ -85,6 +85,13 @@ public slots:
 
     void closePage(HelpViewer *page);
     void setCurrentPage(HelpViewer *page);
+
+signals:
+    void aboutToAddPage();
+    void pageAdded(int index);
+
+    void pageClosed();
+    void aboutToClosePage(int index);
 
 private slots:
     void setCurrentPage(const QModelIndex &index);

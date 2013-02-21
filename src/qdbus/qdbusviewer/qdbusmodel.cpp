@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -42,7 +42,11 @@
 #include "qdbusmodel.h"
 
 #include <QtCore/qvector.h>
-#include <QtXml/QtXml>
+#include <QtCore/QDebug>
+#include <QtXml/QDomDocument>
+#include <QtDBus/QDBusObjectPath>
+#include <QtDBus/QDBusInterface>
+#include <QtDBus/QDBusReply>
 
 struct QDBusItem
 {

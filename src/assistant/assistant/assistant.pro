@@ -2,7 +2,7 @@ TEMPLATE = app
 LANGUAGE = C++
 TARGET = assistant
 DESTDIR = $$QT.help.bins
-qtHaveModule(webkitwidgets) {
+qtHaveModule(webkitwidgets):!contains(QT_CONFIG, static) {
     QT += webkitwidgets
 } else {
     DEFINES += QT_NO_WEBKIT
@@ -79,7 +79,7 @@ SOURCES += aboutdialog.cpp \
     openpageswidget.cpp \
     openpagesmanager.cpp \
     openpagesswitcher.cpp
-qtHaveModule(webkitwidgets) {
+qtHaveModule(webkitwidgets):!contains(QT_CONFIG, static) {
     SOURCES += helpviewer_qwv.cpp
 } else {
     SOURCES += helpviewer_qtb.cpp
@@ -107,7 +107,7 @@ mac {
     QMAKE_INFO_PLIST = Info_mac.plist
 }
 
-contains(CONFIG, static): {
+contains(QT_CONFIG, static): {
     SQLPLUGINS = $$unique(sql-plugins)
     contains(SQLPLUGINS, sqlite): {
         QTPLUGIN += qsqlite

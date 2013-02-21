@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the examples of the Qt Toolkit.
@@ -57,7 +57,7 @@ MainWindow::MainWindow()
 // ![0]
     textViewer = new TextEdit;
     textViewer->setContents(QLibraryInfo::location(QLibraryInfo::ExamplesPath)
-            + QLatin1String("/qtassistant/simpletextviewer/documentation/intro.html"));
+            + QLatin1String("/assistant/simpletextviewer/documentation/intro.html"));
     setCentralWidget(textViewer);
 
     createActions();

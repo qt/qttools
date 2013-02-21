@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Assistant module of the Qt Toolkit.
@@ -196,11 +196,15 @@ HelpViewer *OpenPagesManager::createPage(const QUrl &url, bool fromSearch)
     if (HelpViewer::launchWithExternalApp(url))
         return 0;
 
+    emit aboutToAddPage();
+
     m_model->addPage(url);
     const int index = m_model->rowCount() - 1;
     HelpViewer * const page = m_model->pageAt(index);
     CentralWidget::instance()->addPage(page, fromSearch);
     setCurrentPage(index);
+
+    emit pageAdded(index);
     return page;
 }
 
@@ -289,9 +293,13 @@ void OpenPagesManager::setCurrentPage(HelpViewer *page)
 void OpenPagesManager::removePage(int index)
 {
     TRACE_OBJ
+    emit aboutToClosePage(index);
+
     CentralWidget::instance()->removePage(index);
     m_model->removePage(index);
     m_openPagesWidget->selectCurrentPage();
+
+    emit pageClosed();
 }
 
 

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Designer of the Qt Toolkit.
@@ -926,7 +926,7 @@ QDesignerFormWindow * QDesignerWorkbench::loadForm(const QString &fileName,
     }
 
     if (!file.open(QFile::ReadOnly|QFile::Text)) {
-        *errorMessage = tr("The file <b>%1</b> could not be opened: %1").arg(file.fileName(), file.errorString());
+        *errorMessage = tr("The file <b>%1</b> could not be opened: %2").arg(file.fileName(), file.errorString());
         return 0;
     }
 

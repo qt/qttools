@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Assistant of the Qt Toolkit.
@@ -110,7 +110,6 @@ public:
     static bool canOpenPage(const QString &url);
     static QString mimeFromUrl(const QUrl &url);
     static bool launchWithExternalApp(const QUrl &url);
-    static QString fixupVirtualFolderForUrl(const HelpEngineWrapper *engine, const QUrl &url, bool *fixed = 0);
 
 public slots:
 #ifndef QT_NO_CLIPBOARD

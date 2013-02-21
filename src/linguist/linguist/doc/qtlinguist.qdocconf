@@ -2,16 +2,16 @@ include($QT_INSTALL_DOCS/global/qt-module-defaults.qdocconf)
 
 project                 = QtLinguist
 description             = Qt Linguist Manual
-url                     = http://qt-project.org/doc/qtlinguist
+url                     = http://qt-project.org/doc/qt-$QT_VER/qtlinguist
 
 qhp.projects            = QtLinguist
 
 qhp.QtLinguist.file                = qtlinguist.qhp
-qhp.QtLinguist.namespace           = org.qt-project.linguist.501
+qhp.QtLinguist.namespace           = org.qt-project.linguist.$QT_VERSION_TAG
 qhp.QtLinguist.virtualFolder       = qtlinguist
 qhp.QtLinguist.indexTitle          = Qt Linguist Manual
 
-qhp.QtLinguist.filterAttributes    = qt 5.0.1 tools qtlinguist
+qhp.QtLinguist.filterAttributes    = qt $QT_VERSION tools qtlinguist
 qhp.QtLinguist.customFilters.QtLinguist.name = Qt Linguist Manual
 qhp.QtLinguist.customFilters.QtLinguist.filterAttributes = qt tools qtlinguist
 qhp.QtLinguist.subprojects         = manual examples

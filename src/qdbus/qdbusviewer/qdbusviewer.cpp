@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -43,11 +43,11 @@
 #include "qdbusmodel.h"
 #include "propertydialog.h"
 
-#include <QtXml/QtXml>
 
 #include <QtWidgets/QTreeWidget>
 #include <QtCore/QStringListModel>
 #include <QtCore/QSortFilterProxyModel>
+#include <QtCore/QMetaProperty>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QListView>
 #include <QtWidgets/QTextBrowser>
@@ -58,6 +58,9 @@
 #include <QtWidgets/QInputDialog>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QMenu>
+#include <QtDBus/QDBusConnectionInterface>
+#include <QtDBus/QDBusInterface>
+#include <QtDBus/QDBusMetaType>
 
 #include <private/qdbusutil_p.h>
 
@@ -500,7 +503,7 @@ void QDBusViewer::about()
     box.setText(QString::fromLatin1("<center><img src=\":/qt-project.org/qdbusviewer/images/qdbusviewer-128.png\">"
                 "<h3>%1</h3>"
                 "<p>Version %2</p></center>"
-                "<p>Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).</p>")
+                "<p>Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).</p>")
             .arg(tr("D-Bus Viewer")).arg(QLatin1String(QT_VERSION_STR)));
     box.setWindowTitle(tr("D-Bus Viewer"));
     box.exec();

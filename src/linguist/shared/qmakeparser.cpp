@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Linguist of the Qt Toolkit.
@@ -233,7 +233,7 @@ bool QMakeParser::read(ProFile *pro)
     }
 
     QByteArray bcont = file.readAll();
-    if (bcont.startsWith(QByteArray("\xef\xbb\xbf"))) {
+    if (bcont.startsWith("\xef\xbb\xbf")) {
         // UTF-8 BOM will cause subtle errors
         m_handler->message(QMakeParserHandler::ParserIoError,
                            fL1S("Unexpected UTF-8 BOM in %1").arg(pro->fileName()));
@@ -1097,11 +1097,10 @@ void QMakeParser::finalizeCall(ushort *&tokPtr, ushort *uc, ushort *ptr, int arg
                     uint nlen = uce[1];
                     if (uce[nlen + 2] == TokFuncTerminator) {
                         m_tmp.setRawData((QChar *)uce + 2, nlen);
-                        if (m_tmp == statics.strhost_build) {
+                        if (m_tmp == statics.strhost_build)
                             m_proFile->setHostBuild(true);
-                        } else {
+                        else
                             parseError(fL1S("Unknown option() %1.").arg(m_tmp));
-                        }
                         return;
                     }
                 }

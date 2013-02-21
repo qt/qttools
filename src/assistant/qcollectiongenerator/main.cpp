@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Assistant of the Qt Toolkit.
@@ -45,7 +45,6 @@
 #include <private/qhelpgenerator_p.h>
 #include <private/qhelpprojectdata_p.h>
 
-#include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtCore/QMap>
 #include <QtCore/QFileInfo>
@@ -57,6 +56,7 @@
 #include <QtHelp/QHelpEngineCore>
 #include <QtCore/QXmlStreamReader>
 
+#include <QtGui/QGuiApplication>
 
 QT_USE_NAMESPACE
 
@@ -362,7 +362,10 @@ int main(int argc, char *argv[])
     bool showHelp = false;
     bool showVersion = false;
 
-    QCoreApplication app(argc, argv);
+    // don't require a window manager even though we're a QGuiApplication
+    qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("minimal"));
+    QGuiApplication app(argc, argv);
+
 #ifndef Q_OS_WIN32
     QTranslator translator;
     QTranslator qtTranslator;

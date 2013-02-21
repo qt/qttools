@@ -1,5 +1,5 @@
 QT += designer
 
 PLUGIN_TYPE = designer
-CNOFIG += tool_plugin
+CONFIG += tool_plugin
 load(qt_plugin)

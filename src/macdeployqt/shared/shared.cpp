@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -525,6 +525,14 @@ void deployPlugins(const ApplicationBundleInfo &appBundleInfo, const QString &pl
         foreach (const QString &plugin, sqlPlugins) {
             if (!plugin.endsWith(QStringLiteral("_debug.dylib")))
                 pluginList.append(QStringLiteral("sqldrivers/") + plugin);
+        }
+    }
+
+    if (deploymentInfo.deployedFrameworks.contains(QStringLiteral("QtMultimedia.framework"))) {
+        QStringList sqlPlugins = QDir(pluginSourcePath + QStringLiteral("/mediaservice")).entryList(QStringList() << QStringLiteral("*.dylib"));
+        foreach (const QString &plugin, sqlPlugins) {
+            if (!plugin.endsWith(QStringLiteral("_debug.dylib")))
+                pluginList.append(QStringLiteral("mediaservice/") + plugin);
         }
     }
 
