@@ -14,5 +14,3 @@ DEFINES += \
     QT_DESIGNER_STATIC
 
 include(../lib/uilib/uilib.pri)
-
-include(../sharedcomponents.pri)
