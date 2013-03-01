@@ -35,8 +35,6 @@ include(../tabordereditor/tabordereditor.pri)
 
 PRECOMPILED_HEADER= lib_pch.h
 
-include(../../sharedcomponents.pri)
-
 # MinGW GCC cc1plus crashes when using precompiled header
 # Date Checked: 3rd September 2012
 #

@@ -19,5 +19,3 @@ include(sdk/sdk.pri)
 include(shared/shared.pri)
 include(uilib/uilib.pri)
 PRECOMPILED_HEADER=lib_pch.h
-
-include(../sharedcomponents.pri)
