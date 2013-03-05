@@ -173,16 +173,10 @@ void tst_lrelease::translate()
 
 void tst_lrelease::mixedcodecs()
 {
-    QVERIFY(!QProcess::execute(binDir + "/lrelease " + dataDir + "mixedcodecs-ts11.ts"));
     QVERIFY(!QProcess::execute(binDir + "/lrelease " + dataDir + "mixedcodecs-ts20.ts"));
-#ifdef Q_OS_WIN
-    QVERIFY(!QProcess::execute("fc /b testdata\\mixedcodecs-ts11.qm testdata\\mixedcodecs-ts20.qm"));
-#else
-    QVERIFY(!QProcess::execute("cmp " + dataDir + "mixedcodecs-ts11.qm " + dataDir + "mixedcodecs-ts20.qm"));
-#endif
 
     QTranslator translator;
-    QVERIFY(translator.load(dataDir + "mixedcodecs-ts11.qm"));
+    QVERIFY(translator.load(dataDir + "mixedcodecs-ts20.qm"));
     qApp->installTranslator(&translator);
 
     QCOMPARE(QCoreApplication::translate("FooBar", "this contains an umlaut \xfc &uuml;"),
