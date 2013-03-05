@@ -2236,21 +2236,6 @@ const ParseResults *CppParser::recordResults(bool isHeader)
     }
 }
 
-/*
-  Fetches tr() calls in C++ code in UI files (inside "<function>"
-  tag). This mechanism is obsolete.
-*/
-void fetchtrInlinedCpp(const QString &in, Translator &translator, const QString &context)
-{
-    CppParser parser;
-    parser.setInput(in);
-    ConversionData cd;
-    QSet<QString> inclusions;
-    parser.setTranslator(&translator);
-    parser.parse(context, cd, QStringList(), inclusions);
-    parser.deleteResults();
-}
-
 void loadCPP(Translator &translator, const QStringList &filenames, ConversionData &cd)
 {
     QByteArray codecName = cd.m_codecForSource.isEmpty()
