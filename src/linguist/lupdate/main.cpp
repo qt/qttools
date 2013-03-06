@@ -52,7 +52,6 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
-#include <QtCore/QTextCodec>
 #include <QtCore/QTranslator>
 #include <QtCore/QLibraryInfo>
 
@@ -354,26 +353,29 @@ static void processSources(Translator &fetchedTor,
 
 static void processProjects(bool topLevel, bool nestComplain, const QStringList &proFiles,
         const QHash<QString, QString> &outDirMap, ProFileGlobals *option, QMakeParser *parser,
-        UpdateOptions options, const QByteArray &codecForSource,
+        UpdateOptions options,
         const QString &targetLanguage, const QString &sourceLanguage,
         Translator *parentTor, bool *fail);
 
 static void processProject(
         bool nestComplain, const QString &proFile,
         ProFileGlobals *option, QMakeParser *parser, ProFileEvaluator &visitor,
-        UpdateOptions options, const QByteArray &_codecForSource,
+        UpdateOptions options,
         const QString &targetLanguage, const QString &sourceLanguage,
         Translator *fetchedTor, bool *fail)
 {
-    QByteArray codecForSource = _codecForSource;
     QStringList tmp = visitor.values(QLatin1String("CODECFORSRC"));
     if (!tmp.isEmpty()) {
-        codecForSource = tmp.last().toLatin1();
-        if (!QTextCodec::codecForName(codecForSource)) {
+        QByteArray codecForSource = tmp.last().toLatin1().toUpper();
+        if (codecForSource == "UTF16" || codecForSource == "UTF-16") {
+            options |= SourceIsUtf16;
+        } else if (codecForSource == "UTF8" || codecForSource == "UTF-8") {
+            options &= ~SourceIsUtf16;
+        } else {
             printErr(LU::tr("lupdate warning: Codec for source '%1' is invalid."
-                            " Falling back to codec for tr().\n")
+                            " Falling back to UTF-8.\n")
                      .arg(QString::fromLatin1(codecForSource)));
-            codecForSource.clear();
+            options &= ~SourceIsUtf16;
         }
     }
     QString proPath = QFileInfo(proFile).path();
@@ -395,12 +397,12 @@ static void processProject(
                 subProFiles << subPro;
         }
         processProjects(false, nestComplain, subProFiles, QHash<QString, QString>(),
-                        option, parser, options, codecForSource,
+                        option, parser, options,
                         targetLanguage, sourceLanguage, fetchedTor, fail);
     } else {
         ConversionData cd;
         cd.m_noUiLines = options & NoUiLines;
-        cd.m_codecForSource = codecForSource;
+        cd.m_sourceIsUtf16 = options & SourceIsUtf16;
         cd.m_includePath = visitor.values(QLatin1String("INCLUDEPATH"));
         QStringList sourceFiles = getSources(visitor, proPath);
         QSet<QString> sourceDirs;
@@ -421,7 +423,7 @@ static void processProject(
 
 static void processProjects(bool topLevel, bool nestComplain, const QStringList &proFiles,
         const QHash<QString, QString> &outDirMap, ProFileGlobals *option, QMakeParser *parser,
-        UpdateOptions options, const QByteArray &codecForSource,
+        UpdateOptions options,
         const QString &targetLanguage, const QString &sourceLanguage,
         Translator *parentTor, bool *fail)
 {
@@ -471,7 +473,7 @@ static void processProjects(bool topLevel, bool nestComplain, const QStringList 
                 continue;
             }
             Translator tor;
-            processProject(false, proFile, option, parser, visitor, options, codecForSource,
+            processProject(false, proFile, option, parser, visitor, options,
                            targetLanguage, sourceLanguage, &tor, fail);
             updateTsFiles(tor, tsFiles, QStringList(),
                           sourceLanguage, targetLanguage, options, fail);
@@ -484,10 +486,10 @@ static void processProjects(bool topLevel, bool nestComplain, const QStringList 
                 printErr(LU::tr("lupdate warning: no TS files specified. Only diagnostics "
                                 "will be produced for '%1'.\n").arg(proFile));
             Translator tor;
-            processProject(nestComplain, proFile, option, parser, visitor, options, codecForSource,
+            processProject(nestComplain, proFile, option, parser, visitor, options,
                            targetLanguage, sourceLanguage, &tor, fail);
         } else {
-            processProject(nestComplain, proFile, option, parser, visitor, options, codecForSource,
+            processProject(nestComplain, proFile, option, parser, visitor, options,
                            targetLanguage, sourceLanguage, parentTor, fail);
         }
         pro->deref();
@@ -802,6 +804,7 @@ int main(int argc, char **argv)
         Translator fetchedTor;
         ConversionData cd;
         cd.m_noUiLines = options & NoUiLines;
+        cd.m_sourceIsUtf16 = options & SourceIsUtf16;
         cd.m_projectRoots = projectRoots;
         cd.m_includePath = includePath;
         cd.m_allCSources = allCSources;
@@ -827,12 +830,12 @@ int main(int argc, char **argv)
 
         if (!tsFileNames.isEmpty()) {
             Translator fetchedTor;
-            processProjects(true, true, proFiles, outDirMap, &option, &parser, options, QByteArray(),
+            processProjects(true, true, proFiles, outDirMap, &option, &parser, options,
                             targetLanguage, sourceLanguage, &fetchedTor, &fail);
             updateTsFiles(fetchedTor, tsFileNames, alienFiles,
                           sourceLanguage, targetLanguage, options, &fail);
         } else {
-            processProjects(true, false, proFiles, outDirMap, &option, &parser, options, QByteArray(),
+            processProjects(true, false, proFiles, outDirMap, &option, &parser, options,
                             targetLanguage, sourceLanguage, 0, &fail);
         }
     }

@@ -65,7 +65,8 @@ enum UpdateOption {
     AbsoluteLocations = 256,
     RelativeLocations = 512,
     NoLocations = 1024,
-    NoUiLines = 2048
+    NoUiLines = 2048,
+    SourceIsUtf16 = 4096
 };
 
 Q_DECLARE_FLAGS(UpdateOptions, UpdateOption)

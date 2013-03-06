@@ -97,7 +97,7 @@ public:
 
 public:
     QString m_defaultContext;
-    QByteArray m_codecForSource; // CPP, PO & QM specific
+    bool m_sourceIsUtf16; // CPP & JAVA specific
     QString m_unTrPrefix; // QM specific
     QString m_sourceFileName;
     QString m_targetFileName;

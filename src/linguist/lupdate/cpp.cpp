@@ -2217,9 +2217,7 @@ const ParseResults *CppParser::recordResults(bool isHeader)
 
 void loadCPP(Translator &translator, const QStringList &filenames, ConversionData &cd)
 {
-    QByteArray codecName = cd.m_codecForSource.isEmpty()
-                            ? "UTF-8" : cd.m_codecForSource;
-    QTextCodec *codec = QTextCodec::codecForName(codecName);
+    QTextCodec *codec = QTextCodec::codecForName(cd.m_sourceIsUtf16 ? "UTF-16" : "UTF-8");
 
     foreach (const QString &filename, filenames) {
         if (!CppFiles::getResults(filename).isEmpty() || CppFiles::isBlacklisted(filename))
