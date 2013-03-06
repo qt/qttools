@@ -1178,7 +1178,7 @@ void removeIntVecDuplicates(QVector<int> &v)
         return;
 
     for (QVector<int>::iterator current = v.begin() ; (current != v.end()) && ((current+1) != v.end()) ; )
-        if ( (*current == *(current+1)) )
+        if ( *current == *(current+1) )
             v.erase(current+1);
         else
             ++current;
