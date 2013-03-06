@@ -60,7 +60,6 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
-#include <QtCore/QTextCodec>
 #include <QtCore/QTextStream>
 
 #include <private/qtranslator_p.h>
@@ -78,7 +77,6 @@ QString QObject::tr(const char *sourceText, const char *, int n)
 #endif
 
 Translator::Translator() :
-    m_codec(QTextCodec::codecForName("ISO-8859-1")),
     m_locationsType(AbsoluteLocations),
     m_indexOk(true)
 {
@@ -163,10 +161,6 @@ void Translator::extend(const TranslatorMessage &msg)
                 cmt.append(QLatin1String("\n----------\n"));
             cmt.append(msg.extraComment());
             emsg.setExtraComment(cmt);
-        }
-        if (msg.isUtf8() != emsg.isUtf8()) {
-            emsg.setUtf8(true);
-            emsg.setNonUtf8(true);
         }
     }
 }
@@ -593,14 +587,7 @@ Translator::Duplicates Translator::resolveDuplicates()
         ++i;
         continue;
       gotDupe:
-        if (omsg->isUtf8() != msg.isUtf8() && !omsg->isNonUtf8()) {
-            // Dual-encoded message
-            omsg->setUtf8(true);
-            omsg->setNonUtf8(true);
-        } else {
-            // Duplicate
-            pDup->insert(oi);
-        }
+        pDup->insert(oi);
         if (!omsg->isTranslated() && msg.isTranslated())
             omsg->setTranslations(msg.translations());
         m_indexOk = false;
@@ -743,23 +730,6 @@ QString Translator::extra(const QString &key) const
 void Translator::setExtra(const QString &key, const QString &value)
 {
     m_extra[key] = value;
-}
-
-void Translator::setCodecName(const QByteArray &name)
-{
-    QTextCodec *codec = QTextCodec::codecForName(name);
-    if (!codec) {
-        if (!name.isEmpty())
-            std::cerr << "No QTextCodec for " << name.constData() << " available. Using Latin1.\n";
-        m_codec = QTextCodec::codecForName("ISO-8859-1");
-    } else {
-        m_codec = codec;
-    }
-}
-
-QByteArray Translator::codecName() const
-{
-    return m_codec->name();
 }
 
 void Translator::dump() const

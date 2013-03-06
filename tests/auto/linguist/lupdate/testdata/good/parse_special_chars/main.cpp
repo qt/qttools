@@ -51,9 +51,9 @@ class Dialog2 : public QDialog
 
 void Dialog2::func()
 {
-    tr("cat\351gorie");
+    tr("cat\xc3\xa9gorie");
 
-    tr("F\374r \310lise")
+    tr("F\xc3\xbcr \xc3\x88lise")
 }
 
 

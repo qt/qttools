@@ -626,7 +626,7 @@ bool loadJava(Translator &translator, const QString &filename, ConversionData &c
     if (!cd.m_codecForSource.isEmpty())
         codecName = cd.m_codecForSource;
     else
-        codecName = translator.codecName(); // Just because it should be latin1 already
+        codecName = "UTF-8";
     ts.setCodec(QTextCodec::codecForName(codecName));
     ts.setAutoDetectUnicode(true);
     yyInStr = ts.readAll();
@@ -636,9 +636,6 @@ bool loadJava(Translator &translator, const QString &filename, ConversionData &c
     yyParenLineNo = 1;
 
     parse(&translator);
-
-    // Java uses UTF-16 internally and Jambi makes UTF-8 for tr() purposes of it.
-    translator.setCodecName("UTF-8");
     return true;
 }
 

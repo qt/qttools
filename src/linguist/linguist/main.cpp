@@ -46,7 +46,6 @@
 #include <QtCore/QLibraryInfo>
 #include <QtCore/QLocale>
 #include <QtCore/QSettings>
-#include <QtCore/QTextCodec>
 #include <QtCore/QTranslator>
 
 #include <QtWidgets/QApplication>

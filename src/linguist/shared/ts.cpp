@@ -54,15 +54,6 @@
 
 QT_BEGIN_NAMESPACE
 
-/*
- * The encodings are a total mess.
- * A Translator has a codecForTr(). Each message's text will be passed to tr()
- * in that encoding or as UTF-8 to trUtf8() if it is flagged as such.
- * For ts 2.0, the file content is always uniformly in UTF-8. The file stores
- * the codecForTr default and marks deviating messages accordingly.
- */
-
-
 QDebug &operator<<(QDebug &d, const QXmlStreamAttribute &attr)
 {
     return d << "[" << attr.name().toString() << "," << attr.value().toString() << "]";
@@ -207,7 +198,6 @@ QString TSReader::readTransContents()
 
 bool TSReader::read(Translator &translator)
 {
-    STRING(both);
     STRING(byte);
     STRING(catalog);
     STRING(comment);
@@ -215,7 +205,6 @@ bool TSReader::read(Translator &translator)
     STRING(defaultcodec);
     STRING(dependencies);
     STRING(dependency);
-    STRING(encoding);
     STRING(extracomment);
     STRING(filename);
     STRING(id);
@@ -233,12 +222,10 @@ bool TSReader::read(Translator &translator)
     STRING(sourcelanguage);
     STRING(translation);
     STRING(translatorcomment);
-    STRING(true);
     STRING(TS);
     STRING(type);
     STRING(unfinished);
     STRING(userdata);
-    STRING(utf8);
     STRING(value);
     //STRING(version);
     STRING(yes);
@@ -277,9 +264,8 @@ bool TSReader::read(Translator &translator)
                     // ignore these, just whitespace
                 } else if (elementStarts(strdefaultcodec)) {
                     // <defaultcodec>
-                    const QString &codec = readElementText();
-                    if (!codec.isEmpty())
-                        translator.setCodecName(codec.toLatin1());
+                    readElementText();
+                    m_cd.appendError(QString::fromLatin1("Warning: ignoring <defaultcodec> element"));
                     // </defaultcodec>
                 } else if (isStartElement()
                         && name().toString().startsWith(strextrans)) {
@@ -338,10 +324,6 @@ bool TSReader::read(Translator &translator)
                             msg.setContext(context);
                             msg.setType(TranslatorMessage::Finished);
                             msg.setPlural(attributes().value(strnumerus) == stryes);
-                            const QStringRef &utf8Attr = attributes().value(strutf8);
-                            msg.setNonUtf8(utf8Attr == strboth);
-                            msg.setUtf8(msg.isNonUtf8() || utf8Attr == strtrue
-                                 ||  attributes().value(strencoding) == strUtf8);
                             while (!atEnd()) {
                                 readNext();
                                 if (isEndElement()) {
@@ -544,7 +526,6 @@ bool saveTS(const Translator &translator, QIODevice &dev, ConversionData &cd)
     bool result = true;
     QTextStream t(&dev);
     t.setCodec(QTextCodec::codecForName("UTF-8"));
-    bool trIsUtf8 = (translator.codecName() == "UTF-8");
     //qDebug() << translator.codecName();
 
     // The xml prolog allows processors to easily detect the correct encoding
@@ -559,10 +540,6 @@ bool saveTS(const Translator &translator, QIODevice &dev, ConversionData &cd)
     if (!languageCode.isEmpty() && languageCode != QLatin1String("C"))
         t << " sourcelanguage=\"" << languageCode << "\"";
     t << ">\n";
-
-    QByteArray codecName = translator.codecName();
-    if (codecName != "ISO-8859-1")
-        t << "<defaultcodec>" << codecName << "</defaultcodec>\n";
 
     QStringList deps = translator.dependencies();
     if (!deps.isEmpty()) {
@@ -604,14 +581,6 @@ bool saveTS(const Translator &translator, QIODevice &dev, ConversionData &cd)
                 t << "    <message";
                 if (!msg.id().isEmpty())
                     t << " id=\"" << msg.id() << "\"";
-                if (!trIsUtf8) {
-                        if (msg.isUtf8()) {
-                            if (msg.isNonUtf8())
-                                t << " utf8=\"both\"";
-                            else
-                                t << " utf8=\"true\"";
-                        }
-                }
                 if (msg.isPlural())
                     t << " numerus=\"yes\"";
                 t << ">\n";

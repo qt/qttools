@@ -65,7 +65,7 @@ class UiReader : public QXmlDefaultHandler
 public:
     UiReader(Translator &translator, ConversionData &cd)
       : m_translator(translator), m_cd(cd), m_lineNumber(-1), m_isTrString(false),
-        m_needUtf8(translator.codecName() != "UTF-8"), m_insideStringList(false)
+        m_insideStringList(false)
     {}
 
     bool startElement(const QString &namespaceURI, const QString &localName,
@@ -92,7 +92,6 @@ private:
     QString m_accum;
     int m_lineNumber;
     bool m_isTrString;
-    bool m_needUtf8;
     bool m_insideStringList;
 };
 
@@ -161,8 +160,6 @@ void UiReader::flush()
            m_comment, QString(), m_cd.m_sourceFileName,
            m_lineNumber, QStringList());
         msg.setExtraComment(m_extracomment);
-        if (m_needUtf8 && msg.needs8Bit())
-            msg.setUtf8(true);
         m_translator.extend(msg);
     }
     m_source.clear();

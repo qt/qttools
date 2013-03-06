@@ -316,7 +316,6 @@ void tst_lconvert::roundtrips_data()
 
     QTest::newRow("po-ts-po (references)") << "test-refs.po" << poTsPo << noArgs;
 
-    QTest::newRow("ts-qm-ts (dual-encoding)") << "dual-encoding.ts" << tsQmTs << noArgs;
     QTest::newRow("ts-qm-ts (plurals-de)") << "plurals-de.ts" << tsQmTs << outDeArgs;
     QTest::newRow("ts-qm-ts (plurals-cn)") << "plurals-cn.ts" << tsQmTs << outCnArgs;
     QTest::newRow("ts-qm-ts (variants)") << "variants.ts" << tsQmTs << outDeArgs;
