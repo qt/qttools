@@ -878,14 +878,14 @@ int initPO()
 {
     Translator::FileFormat format;
     format.extension = QLatin1String("po");
-    format.description = QObject::tr("GNU Gettext localization files");
+    format.description = FMT::tr("GNU Gettext localization files");
     format.loader = &loadPO;
     format.saver = &savePO;
     format.fileType = Translator::FileFormat::TranslationSource;
     format.priority = 1;
     Translator::registerFileFormat(format);
     format.extension = QLatin1String("pot");
-    format.description = QObject::tr("GNU Gettext localization template files");
+    format.description = FMT::tr("GNU Gettext localization template files");
     format.loader = &loadPO;
     format.saver = &savePOT;
     format.fileType = Translator::FileFormat::TranslationSource;

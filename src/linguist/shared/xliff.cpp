@@ -837,7 +837,7 @@ int initXLIFF()
 {
     Translator::FileFormat format;
     format.extension = QLatin1String("xlf");
-    format.description = QObject::tr("XLIFF localization files");
+    format.description = FMT::tr("XLIFF localization files");
     format.fileType = Translator::FileFormat::TranslationSource;
     format.priority = 1;
     format.loader = &loadXLIFF;

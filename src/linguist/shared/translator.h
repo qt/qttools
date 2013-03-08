@@ -44,6 +44,7 @@
 
 #include "translatormessage.h"
 
+#include <QCoreApplication>
 #include <QDir>
 #include <QList>
 #include <QLocale>
@@ -54,18 +55,9 @@
 
 QT_BEGIN_NAMESPACE
 
-#ifdef QT_BOOTSTRAPPED
-class QObject {
-public:
-    static QString tr(const char *sourceText, const char * = 0, int n = -1);
+class FMT {
+    Q_DECLARE_TR_FUNCTIONS(Linguist)
 };
-class QCoreApplication : public QObject {
-public:
-    static QString translate(const char *, const char *sourceText, const char * = 0,
-                             int n = -1)
-        { return tr(sourceText, 0, n); }
-};
-#endif
 
 class QIODevice;
 

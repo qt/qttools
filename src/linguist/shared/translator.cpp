@@ -66,16 +66,6 @@
 
 QT_BEGIN_NAMESPACE
 
-#ifdef QT_BOOTSTRAPPED
-QString QObject::tr(const char *sourceText, const char *, int n)
-{
-    QString ret = QString::fromLatin1(sourceText);
-    if (n >= 0)
-        ret.replace(QLatin1String("%n"), QString::number(n));
-    return ret;
-}
-#endif
-
 Translator::Translator() :
     m_locationsType(AbsoluteLocations),
     m_indexOk(true)

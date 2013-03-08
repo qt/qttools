@@ -191,7 +191,7 @@ int initQPH()
     Translator::FileFormat format;
 
     format.extension = QLatin1String("qph");
-    format.description = QObject::tr("Qt Linguist 'Phrase Book'");
+    format.description = FMT::tr("Qt Linguist 'Phrase Book'");
     format.fileType = Translator::FileFormat::TranslationSource;
     format.priority = 0;
     format.loader = &loadQPH;

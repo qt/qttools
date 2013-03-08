@@ -691,7 +691,7 @@ int initTS()
     format.extension = QLatin1String("ts");
     format.fileType = Translator::FileFormat::TranslationSource;
     format.priority = 0;
-    format.description = QObject::tr("Qt translation sources");
+    format.description = FMT::tr("Qt translation sources");
     format.loader = &loadTS;
     format.saver = &saveTS;
     Translator::registerFileFormat(format);

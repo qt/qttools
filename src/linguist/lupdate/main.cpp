@@ -624,7 +624,7 @@ int main(int argc, char **argv)
             options |= NoSort;
             continue;
         } else if (arg == QLatin1String("-version")) {
-            printOut(QObject::tr("lupdate version %1\n").arg(QLatin1String(QT_VERSION_STR)));
+            printOut(LU::tr("lupdate version %1\n").arg(QLatin1String(QT_VERSION_STR)));
             return 0;
         } else if (arg == QLatin1String("-ts")) {
             metTsFlag = true;

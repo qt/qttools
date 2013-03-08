@@ -733,7 +733,7 @@ int initQM()
     Translator::FileFormat format;
 
     format.extension = QLatin1String("qm");
-    format.description = QObject::tr("Compiled Qt translations");
+    format.description = FMT::tr("Compiled Qt translations");
     format.fileType = Translator::FileFormat::TranslationBinary;
     format.priority = 0;
     format.loader = &loadQM;
