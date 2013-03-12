@@ -38,7 +38,7 @@ cmake_linguist_macros_file.output = $$eval(QT.uitools.libs)/cmake/Qt5LinguistToo
 cmake_linguist_macros_file.CONFIG = verbatim
 QMAKE_SUBSTITUTES += cmake_linguist_config_file cmake_linguist_config_version_file cmake_linguist_macros_file
 
-cmake_linguist_tools_files.files += $$cmake_linguist_config_file.output $$cmake_linguist_macros_file.output
+cmake_linguist_tools_files.files += $$cmake_linguist_config_file.output $$cmake_linguist_config_version_file.output $$cmake_linguist_macros_file.output
 cmake_linguist_tools_files.path = $$[QT_INSTALL_LIBS]/cmake/Qt5LinguistTools
 cmake_linguist_tools_files.CONFIG = no_check_exists
 INSTALLS += cmake_linguist_tools_files
