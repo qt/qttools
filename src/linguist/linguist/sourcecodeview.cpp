@@ -108,7 +108,7 @@ void SourceCodeView::showSourceCode(const QString &absFileName, const int lineNu
             appendHtml(tr("<i>File %1 not readable</i>").arg(absFileName));
             return;
         }
-        fileText = QString::fromLatin1(file.readAll());
+        fileText = QString::fromUtf8(file.readAll());
         fileHash.insert(absFileName, fileText);
     }
 
