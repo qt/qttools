@@ -747,7 +747,7 @@
                 <xsl:value-of select="$name"/>
                 <xsl:text>::takeElement</xsl:text>
                 <xsl:value-of select="$cap-name"/>
-                <xsl:text>() &endl;{&endl;</xsl:text>
+                <xsl:text>()&endl;{&endl;</xsl:text>
                 <xsl:text>    </xsl:text>
                 <xsl:value-of select="$return-cpp-type"/>
                 <xsl:text> a = m_</xsl:text>
