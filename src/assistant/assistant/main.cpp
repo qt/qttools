@@ -73,11 +73,6 @@
 
 QT_USE_NAMESPACE
 
-#if defined(USE_STATIC_SQLITE_PLUGIN)
-  #include <QtPlugin>
-  Q_IMPORT_PLUGIN(qsqlite)
-#endif
-
 namespace {
 
 void
