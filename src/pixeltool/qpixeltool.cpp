@@ -44,6 +44,7 @@
 #include <qapplication.h>
 #include <qdesktopwidget.h>
 #include <qapplication.h>
+#include <qscreen.h>
 #ifndef QT_NO_CLIPBOARD
 #include <qclipboard.h>
 #endif
@@ -428,6 +429,11 @@ void QPixelTool::grabScreen()
     if (mousePos == m_lastMousePos && !m_autoUpdate)
         return;
 
+    if (m_lastMousePos != mousePos) {
+        setWindowTitle(QString::fromLatin1("PixelTool [%1, %2] ")
+                       .arg(mousePos.x()).arg(mousePos.y()));
+    }
+
     int w = int(width() / float(m_zoom));
     int h = int(height() / float(m_zoom));
 
@@ -439,7 +445,8 @@ void QPixelTool::grabScreen()
     int x = mousePos.x() - w/2;
     int y = mousePos.y() - h/2;
 
-    m_buffer = QPixmap::grabWindow(qApp->desktop()->winId(), x, y, w, h);
+    QScreen *screen = qApp->screens().at(qApp->desktop()->screenNumber());
+    m_buffer = screen->grabWindow(qApp->desktop()->winId(), x, y, w, h);
 
     QRegion geom(x, y, w, h);
     QRect screenRect;

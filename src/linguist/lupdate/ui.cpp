@@ -65,7 +65,7 @@ class UiReader : public QXmlDefaultHandler
 public:
     UiReader(Translator &translator, ConversionData &cd)
       : m_translator(translator), m_cd(cd), m_lineNumber(-1), m_isTrString(false),
-        m_needUtf8(translator.codecName() != "UTF-8"), m_insideStringList(false)
+        m_insideStringList(false)
     {}
 
     bool startElement(const QString &namespaceURI, const QString &localName,
@@ -92,7 +92,6 @@ private:
     QString m_accum;
     int m_lineNumber;
     bool m_isTrString;
-    bool m_needUtf8;
     bool m_insideStringList;
 };
 
@@ -102,15 +101,7 @@ bool UiReader::startElement(const QString &namespaceURI,
     Q_UNUSED(namespaceURI);
     Q_UNUSED(localName);
 
-    if (qName == QLatin1String("item")) { // UI3 menu entries
-        flush();
-        if (!atts.value(QLatin1String("text")).isEmpty()) {
-            m_source = atts.value(QLatin1String("text"));
-            m_isTrString = true;
-            if (!m_cd.m_noUiLines)
-                m_lineNumber = m_locator->lineNumber();
-        }
-    } else if (qName == QLatin1String("string")) {
+    if (qName == QLatin1String("string")) {
         flush();
         if (!m_insideStringList)
             readTranslationAttributes(atts);
@@ -139,8 +130,6 @@ bool UiReader::endElement(const QString &namespaceURI,
     } else if (qName == QLatin1String("comment")) { // FIXME: what's that?
         m_comment = m_accum;
         flush();
-    } else if (qName == QLatin1String("function")) { // UI3 embedded code
-        fetchtrInlinedCpp(m_accum, m_translator, m_context);
     } else if (qName == QLatin1String("stringlist")) {
         m_insideStringList = false;
     } else {
@@ -171,8 +160,6 @@ void UiReader::flush()
            m_comment, QString(), m_cd.m_sourceFileName,
            m_lineNumber, QStringList());
         msg.setExtraComment(m_extracomment);
-        if (m_needUtf8 && msg.needs8Bit())
-            msg.setUtf8(true);
         m_translator.extend(msg);
     }
     m_source.clear();

@@ -65,7 +65,8 @@ enum UpdateOption {
     AbsoluteLocations = 256,
     RelativeLocations = 512,
     NoLocations = 1024,
-    NoUiLines = 2048
+    NoUiLines = 2048,
+    SourceIsUtf16 = 4096
 };
 
 Q_DECLARE_FLAGS(UpdateOptions, UpdateOption)
@@ -75,7 +76,6 @@ Translator merge(
     const Translator &tor, const Translator &virginTor, const QList<Translator> &aliens,
     UpdateOptions options, QString &err);
 
-void fetchtrInlinedCpp(const QString &in, Translator &translator, const QString &context);
 void loadCPP(Translator &translator, const QStringList &filenames, ConversionData &cd);
 bool loadJava(Translator &translator, const QString &filename, ConversionData &cd);
 bool loadUI(Translator &translator, const QString &filename, ConversionData &cd);

@@ -159,22 +159,9 @@
     files:
 
     \snippet doc_src_linguist-manual.pro 0
-    \snippet doc_src_linguist-manual.pro 1
 
-    QTextCodec::setCodecForTr() makes it possible to choose a 8-bit
-    encoding for literal strings that appear within \c tr() calls.
-    This is useful for applications whose source language is, for
-    example, Chinese or Japanese. If no encoding is set, \c tr() uses
-    Latin1.
-
-    If you do use the QTextCodec::codecForTr() mechanism in your
-    application, \QL needs you to set the \c CODECFORTR
-    entry in the \c .pro file as well. For example:
-
-    \snippet doc_src_linguist-manual.pro 1
-
-    Also, if your compiler uses a different encoding for its runtime
-    system as for its source code and you want to use  non-ASCII
+    If your compiler uses a different encoding for its runtime
+    system than for its source code and you want to use  non-ASCII
     characters in string literals, you will need to set the \c
     CODECFORSRC. For example:
 
@@ -1269,15 +1256,6 @@
 
     \snippet arrowpad/arrowpad.pro 1
 
-    If your sources contain genuine non-Latin1 strings,
-    lupdate needs
-    to be told about it in the \c .pro file by using, for example,
-    the following line:
-
-    \code
-        CODECFORTR = UTF-8
-    \endcode
-
     For more information, see \l{Using lupdate} and \l{Using lrelease}.
 
     \section2 Loading Translations
@@ -1296,12 +1274,6 @@
 
     \snippet arrowpad/main.cpp 0
     \snippet arrowpad/main.cpp 1
-
-    For non-Latin1 strings in the sources you will also need for example:
-
-    \code
-            QTextCodec::setCodecForTr(QTextCodec::codecForName("utf8"));
-    \endcode
 
     In production applications a more flexible approach, for example,
     loading translations according to locale, might be more appropriate. If

@@ -90,12 +90,6 @@ static int usage(const QStringList &args)
         "    -of <outformat>\n"
         "    --output-format <outformat>\n"
         "           Specify output format. See -if.\n\n"
-        "    --input-codec <codec>\n"
-        "           Specify encoding for QM and PO input files. Default is 'Latin1'\n"
-        "           for QM and 'UTF-8' for PO files. UTF-8 is always tried as well for\n"
-        "           QM, corresponding to the possible use of the trUtf8() function.\n\n"
-        "    --output-codec <codec>\n"
-        "           Specify encoding for PO output files. Default is 'UTF-8'.\n\n"
         "    --drop-tags <regexp>\n"
         "           Drop named extra tags when writing TS or XLIFF files.\n"
         "           May be specified repeatedly.\n\n"
@@ -140,6 +134,7 @@ struct File
 int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
+#ifndef QT_BOOTSTRAPPED
 #ifndef Q_OS_WIN32
     QTranslator translator;
     QTranslator qtTranslator;
@@ -151,6 +146,7 @@ int main(int argc, char *argv[])
         app.installTranslator(&qtTranslator);
     }
 #endif // Q_OS_WIN32
+#endif
 
     QStringList args = app.arguments();
     QList<File> inFiles;
@@ -195,14 +191,6 @@ int main(int argc, char *argv[])
             if (++i >= args.size())
                 return usage(args);
             inFormat = args[i];
-        } else if (args[i] == QLatin1String("-input-codec")) {
-            if (++i >= args.size())
-                return usage(args);
-            cd.m_codecForSource = args[i].toLatin1();
-        } else if (args[i] == QLatin1String("-output-codec")) {
-            if (++i >= args.size())
-                return usage(args);
-            cd.m_outputCodec = args[i].toLatin1();
         } else if (args[i] == QLatin1String("-drop-tag")) {
             if (++i >= args.size())
                 return usage(args);

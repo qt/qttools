@@ -45,8 +45,6 @@
 #include "uilib_global.h"
 #include "abstractformbuilder.h"
 
-QT_BEGIN_HEADER
-
 QT_BEGIN_NAMESPACE
 #if 0
 // pragma for syncqt, don't remove.
@@ -104,7 +102,5 @@ private:
 #endif
 
 QT_END_NAMESPACE
-
-QT_END_HEADER
 
 #endif // FORMBUILDER_H

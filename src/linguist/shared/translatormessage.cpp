@@ -52,7 +52,7 @@
 QT_BEGIN_NAMESPACE
 
 TranslatorMessage::TranslatorMessage()
-  : m_lineNumber(-1), m_type(Unfinished), m_utf8(false), m_nonUtf8(false), m_plural(false)
+  : m_lineNumber(-1), m_type(Unfinished), m_plural(false)
 {
 }
 
@@ -64,7 +64,7 @@ TranslatorMessage::TranslatorMessage(const QString &context,
   : m_context(context), m_sourcetext(sourceText), m_comment(comment),
     m_userData(userData),
     m_translations(translations), m_fileName(fileName), m_lineNumber(lineNumber),
-    m_type(type), m_utf8(false), m_nonUtf8(false), m_plural(plural)
+    m_type(type), m_plural(plural)
 {
 }
 
@@ -122,22 +122,6 @@ TranslatorMessage::References TranslatorMessage::allReferences() const
         refs += m_extraRefs;
     }
     return refs;
-}
-
-static bool needs8BitHelper(const QString &ba)
-{
-    for (int i = ba.size(); --i >= 0; )
-        if (ba.at(i).unicode() >= 0x80)
-            return true;
-    return false;
-}
-
-bool TranslatorMessage::needs8Bit() const
-{
-    //dump();
-    return needs8BitHelper(m_sourcetext)
-        || needs8BitHelper(m_comment)
-        || needs8BitHelper(m_context);
 }
 
 

@@ -44,6 +44,7 @@
 
 #include "translatormessage.h"
 
+#include <QCoreApplication>
 #include <QDir>
 #include <QList>
 #include <QLocale>
@@ -54,18 +55,9 @@
 
 QT_BEGIN_NAMESPACE
 
-#ifdef QT_BOOTSTRAPPED
-class QObject {
-public:
-    static QString tr(const char *sourceText, const char * = 0, int n = -1);
+class FMT {
+    Q_DECLARE_TR_FUNCTIONS(Linguist)
 };
-class QCoreApplication : public QObject {
-public:
-    static QString translate(const char *, const char *sourceText, const char * = 0,
-                             int n = -1)
-        { return tr(sourceText, 0, n); }
-};
-#endif
 
 class QIODevice;
 
@@ -97,8 +89,7 @@ public:
 
 public:
     QString m_defaultContext;
-    QByteArray m_codecForSource; // CPP, PO & QM specific
-    QByteArray m_outputCodec; // CPP & PO specific
+    bool m_sourceIsUtf16; // CPP & JAVA specific
     QString m_unTrPrefix; // QM specific
     QString m_sourceFileName;
     QString m_targetFileName;
@@ -159,11 +150,6 @@ public:
     struct Duplicates { QSet<int> byId, byContents; };
     Duplicates resolveDuplicates();
     void reportDuplicates(const Duplicates &dupes, const QString &fileName, bool verbose);
-
-    void setCodecName(const QByteArray &name);
-    void setCodec(QTextCodec *codec) { m_codec = codec; }
-    QByteArray codecName() const;
-    QTextCodec *codec() const { return m_codec; }
 
     QString languageCode() const { return m_language; }
     QString sourceLanguageCode() const { return m_sourceLanguage; }
@@ -231,7 +217,6 @@ private:
     typedef QList<TranslatorMessage> TMM;       // int stores the sequence position.
 
     TMM m_messages;
-    QTextCodec *m_codec;
     LocationsType m_locationsType;
 
     // A string beginning with a 2 or 3 letter language code (ISO 639-1

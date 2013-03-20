@@ -394,6 +394,7 @@ private slots:
     void setVAlignSub(bool sub);
     void insertLink();
     void insertImage();
+    void layoutDirectionChanged();
 
 private:
     QAction *m_bold_action;
@@ -405,6 +406,7 @@ private:
     QAction *m_align_center_action;
     QAction *m_align_right_action;
     QAction *m_align_justify_action;
+    QAction *m_layoutDirectionAction;
     QAction *m_link_action;
     QAction *m_image_action;
     QAction *m_simplify_richtext_action;
@@ -499,6 +501,11 @@ RichTextEditorToolBar::RichTextEditorToolBar(QDesignerFormEditorInterface *core,
             createIconSet(QStringLiteral("textjustify.png")),
             tr("Justify"), editor, 0, alignment_group);
     addAction(m_align_justify_action);
+
+    m_layoutDirectionAction = createCheckableAction(
+            createIconSet(QStringLiteral("righttoleft.png")),
+            tr("Right to Left"), this, SLOT(layoutDirectionChanged()));
+    addAction(m_layoutDirectionAction);
 
     addSeparator();
 
@@ -626,6 +633,20 @@ void RichTextEditorToolBar::insertImage()
         m_editor->insertHtml(QStringLiteral("<img src=\"") + path + QStringLiteral("\"/>"));
 }
 
+void RichTextEditorToolBar::layoutDirectionChanged()
+{
+    QTextCursor cursor = m_editor->textCursor();
+    QTextBlock block = cursor.block();
+    if (block.isValid()) {
+        QTextBlockFormat format = block.blockFormat();
+        const Qt::LayoutDirection newDirection = m_layoutDirectionAction->isChecked() ? Qt::RightToLeft : Qt::LeftToRight;
+        if (format.layoutDirection() != newDirection) {
+            format.setLayoutDirection(newDirection);
+            cursor.setBlockFormat(format);
+        }
+    }
+}
+
 void RichTextEditorToolBar::updateActions()
 {
     if (m_editor == 0) {
@@ -651,6 +672,7 @@ void RichTextEditorToolBar::updateActions()
     } else {
         m_align_justify_action->setChecked(true);
     }
+    m_layoutDirectionAction->setChecked(cursor.blockFormat().layoutDirection() == Qt::RightToLeft);
 
     m_bold_action->setChecked(font.bold());
     m_italic_action->setChecked(font.italic());

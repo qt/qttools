@@ -48,7 +48,6 @@
 #include <QtCore/QDebug>
 #include <QtCore/QMap>
 #include <QtCore/QStringList>
-#include <QtCore/QTextCodec>
 #include <QtCore/QVector>
 
 QT_BEGIN_NAMESPACE
@@ -338,7 +337,6 @@ Translator merge(
     outTor.setLanguageCode(tor.languageCode());
     outTor.setSourceLanguageCode(tor.sourceLanguageCode());
     outTor.setLocationsType(tor.locationsType());
-    outTor.setCodecName(tor.codecName());
 
     /*
       The types of all the messages from the vernacular translator
@@ -439,7 +437,6 @@ Translator merge(
               copyAttribs:
                 m.setReferences(mv->allReferences());
                 m.setPlural(mv->isPlural());
-                m.setUtf8(mv->isUtf8());
                 m.setExtraComment(mv->extraComment());
                 m.setId(mv->id());
             }

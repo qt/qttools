@@ -1099,19 +1099,9 @@ bool Grid::locateWidget(QWidget *w, int &row, int &col, int &rowspan, int &colsp
 
 // QGridLayout/QFormLayout Helpers: get item position/add item (overloads to make templates work)
 
-void getGridItemPosition(QGridLayout *gridLayout, int index, int *row, int *column, int *rowspan, int *colspan)
-{
-    gridLayout->getItemPosition(index, row, column, rowspan, colspan);
-}
-
 void addWidgetToGrid(QGridLayout *lt, QWidget * widget, int row, int column, int rowSpan, int columnSpan, Qt::Alignment alignment)
 {
     lt->addWidget(widget, row, column, rowSpan, columnSpan, alignment);
-}
-
-inline void getGridItemPosition(QFormLayout *formLayout, int index, int *row, int *column, int *rowspan, int *colspan)
-{
-    getFormLayoutItemPosition(formLayout, index, row, column, rowspan, colspan);
 }
 
 inline void addWidgetToGrid(QFormLayout *lt, QWidget * widget, int row, int column, int, int columnSpan, Qt::Alignment)
@@ -1130,9 +1120,6 @@ public:
     virtual void sort()                  { setWidgets(buildGrid(widgets())); }
 
 protected:
-    QWidget *widgetAt(GridLikeLayout *layout, int row, int column) const;
-
-protected:
     QWidgetList buildGrid(const QWidgetList &);
     Grid m_grid;
 };
@@ -1142,22 +1129,6 @@ GridLayout<GridLikeLayout, LayoutType, GridMode>::GridLayout(const QWidgetList &
     Layout(wl, p, fw, lb, LayoutInfo::Grid),
     m_grid(static_cast<Grid::Mode>(GridMode))
 {
-}
-
-template <class GridLikeLayout, int LayoutType, int GridMode>
-QWidget *GridLayout<GridLikeLayout, LayoutType, GridMode>::widgetAt(GridLikeLayout *layout, int row, int column) const
-{
-    int index = 0;
-    while (QLayoutItem *item = layout->itemAt(index)) {
-        if (item->widget()) {
-            int r, c, rowspan, colspan;
-            getGridItemPosition(layout, index, &r, &c, &rowspan, &colspan);
-            if (row == r && column == c)
-                return item->widget();
-        }
-        ++index;
-    }
-    return 0;
 }
 
 template <class GridLikeLayout, int LayoutType, int GridMode>
@@ -1207,7 +1178,7 @@ void removeIntVecDuplicates(QVector<int> &v)
         return;
 
     for (QVector<int>::iterator current = v.begin() ; (current != v.end()) && ((current+1) != v.end()) ; )
-        if ( (*current == *(current+1)) )
+        if ( *current == *(current+1) )
             v.erase(current+1);
         else
             ++current;

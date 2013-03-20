@@ -48,6 +48,7 @@
 #include <QtDesigner/QDesignerPropertyEditorInterface>
 
 #include <QtDesigner/QExtensionManager>
+#include <private/qdesigner_utils_p.h>
 #include <QtCore/QDebug>
 #include <QtCore/QTimer>
 
@@ -111,7 +112,9 @@ void QAxWidgetPropertySheet::setProperty(int index, const QVariant &value)
     }
     // Loading forms: Reload
     if (name == m_controlProperty) {
-        const QString clsid = value.toString();
+        const QString clsid = value.canConvert<qdesigner_internal::PropertySheetStringValue>() ?
+            qvariant_cast<qdesigner_internal::PropertySheetStringValue>(value).value() :
+            value.toString();
         if (clsid.isEmpty() || !axWidget()->loadControl(clsid))
             reset(index);
         else

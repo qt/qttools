@@ -285,9 +285,7 @@ void tst_lconvert::roundtrips_data()
 
     QStringList poTsPo; poTsPo << "po" << "ts" << "po";
     QStringList poXlfPo; poXlfPo << "po" << "xlf" << "po";
-    QStringList tsTs11Ts; tsTs11Ts << "ts" << "ts11" << "ts";
     QStringList tsPoTs; tsPoTs << "ts" << "po" << "ts";
-    QStringList ts11PoTs11; ts11PoTs11 << "ts11" << "po" << "ts11";
     QStringList tsXlfTs; tsXlfTs << "ts" << "xlf" << "ts";
     QStringList tsQmTs; tsQmTs << "ts" << "qm" << "ts";
 
@@ -301,7 +299,6 @@ void tst_lconvert::roundtrips_data()
     QTest::newRow("po-ts-po (developer comment)") << "test-developer-comment.po" << poTsPo << noArgs;
     QTest::newRow("po-xliff-po (developer comment)") << "test-developer-comment.po" << poXlfPo << noArgs;
 
-    QTest::newRow("ts11-po-ts11") << "test11.ts" << ts11PoTs11 << filterPoArgs;
     QTest::newRow("ts20-po-ts20") << "test20.ts" << tsPoTs << filterPoArgs;
     QTest::newRow("po-ts-po (de)") << "test1-de.po" << poTsPo << noArgs;
     QTest::newRow("po-ts-po (cn)") << "test1-cn.po" << poTsPo << noArgs;
@@ -319,11 +316,6 @@ void tst_lconvert::roundtrips_data()
 
     QTest::newRow("po-ts-po (references)") << "test-refs.po" << poTsPo << noArgs;
 
-    QTest::newRow("ts20-ts11-ts20 (utf8)") << "codec-utf8.ts" << tsTs11Ts << noArgs;
-    QTest::newRow("ts20-ts11-ts20 (cp1252)") << "codec-cp1252.ts" << tsTs11Ts << noArgs;
-    QTest::newRow("ts20-ts11-ts20 (dual-encoding)") << "dual-encoding.ts" << tsTs11Ts << noArgs;
-
-    QTest::newRow("ts-qm-ts (dual-encoding)") << "dual-encoding.ts" << tsQmTs << noArgs;
     QTest::newRow("ts-qm-ts (plurals-de)") << "plurals-de.ts" << tsQmTs << outDeArgs;
     QTest::newRow("ts-qm-ts (plurals-cn)") << "plurals-cn.ts" << tsQmTs << outCnArgs;
     QTest::newRow("ts-qm-ts (variants)") << "variants.ts" << tsQmTs << outDeArgs;

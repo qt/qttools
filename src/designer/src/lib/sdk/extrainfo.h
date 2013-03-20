@@ -45,8 +45,6 @@
 #include <QtDesigner/sdk_global.h>
 #include <QtDesigner/extension.h>
 
-QT_BEGIN_HEADER
-
 QT_BEGIN_NAMESPACE
 
 class DomWidget;
@@ -78,7 +76,5 @@ private:
 Q_DECLARE_EXTENSION_INTERFACE(QDesignerExtraInfoExtension, "org.qt-project.Qt.Designer.ExtraInfo.2")
 
 QT_END_NAMESPACE
-
-QT_END_HEADER
 
 #endif // EXTRAINFO_H

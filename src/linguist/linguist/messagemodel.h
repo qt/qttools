@@ -257,7 +257,6 @@ private:
     QLocale::Language m_sourceLanguage;
     QLocale::Country m_country;
     QLocale::Country m_sourceCountry;
-    QByteArray m_codecName;
     bool m_relativeLocations;
     Translator::ExtraData m_extra;
 

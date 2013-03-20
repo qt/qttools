@@ -54,19 +54,6 @@
 
 QT_BEGIN_NAMESPACE
 
-/*
- * The encodings are a total mess.
- * A Translator has a codecForTr(). Each message's text will be passed to tr()
- * in that encoding or as UTF-8 to trUtf8() if it is flagged as such.
- * For ts 2.0, the file content is always uniformly in UTF-8. The file stores
- * the codecForTr default and marks deviating messages accordingly.
- * For ts 1.1, the file content is in mixed encoding. Each message is encoded
- * the way it will be passed to tr() (with 8-bit characters encoded as numeric
- * entities) or trUtf8(). The file stores the encoding and codecForTr in one
- * attribute, for both the default and each deviating message.
- */
-
-
 QDebug &operator<<(QDebug &d, const QXmlStreamAttribute &attr)
 {
     return d << "[" << attr.name().toString() << "," << attr.value().toString() << "]";
@@ -211,7 +198,6 @@ QString TSReader::readTransContents()
 
 bool TSReader::read(Translator &translator)
 {
-    STRING(both);
     STRING(byte);
     STRING(catalog);
     STRING(comment);
@@ -219,7 +205,6 @@ bool TSReader::read(Translator &translator)
     STRING(defaultcodec);
     STRING(dependencies);
     STRING(dependency);
-    STRING(encoding);
     STRING(extracomment);
     STRING(filename);
     STRING(id);
@@ -237,12 +222,10 @@ bool TSReader::read(Translator &translator)
     STRING(sourcelanguage);
     STRING(translation);
     STRING(translatorcomment);
-    STRING(true);
     STRING(TS);
     STRING(type);
     STRING(unfinished);
     STRING(userdata);
-    STRING(utf8);
     STRING(value);
     //STRING(version);
     STRING(yes);
@@ -281,9 +264,8 @@ bool TSReader::read(Translator &translator)
                     // ignore these, just whitespace
                 } else if (elementStarts(strdefaultcodec)) {
                     // <defaultcodec>
-                    const QString &codec = readElementText();
-                    if (!codec.isEmpty())
-                        translator.setCodecName(codec.toLatin1());
+                    readElementText();
+                    m_cd.appendError(QString::fromLatin1("Warning: ignoring <defaultcodec> element"));
                     // </defaultcodec>
                 } else if (isStartElement()
                         && name().toString().startsWith(strextrans)) {
@@ -342,10 +324,6 @@ bool TSReader::read(Translator &translator)
                             msg.setContext(context);
                             msg.setType(TranslatorMessage::Finished);
                             msg.setPlural(attributes().value(strnumerus) == stryes);
-                            const QStringRef &utf8Attr = attributes().value(strutf8);
-                            msg.setNonUtf8(utf8Attr == strboth);
-                            msg.setUtf8(msg.isNonUtf8() || utf8Attr == strtrue
-                                 ||  attributes().value(strencoding) == strUtf8);
                             while (!atEnd()) {
                                 readNext();
                                 if (isEndElement()) {
@@ -504,33 +482,6 @@ static QString protect(const QString &str)
     return result;
 }
 
-static QString evilBytes(const QString& str,
-    bool isUtf8, int format, const QByteArray &codecName)
-{
-    //qDebug() << "EVIL: " << str << isUtf8 << format << codecName;
-    if (isUtf8)
-        return protect(str);
-    if (format == 20)
-        return protect(str);
-    if (codecName == "UTF-8")
-        return protect(str);
-    QTextCodec *codec = QTextCodec::codecForName(codecName);
-    if (!codec)
-        return protect(str);
-    QString t = QString::fromLatin1(codec->fromUnicode(protect(str)).data());
-    int len = (int) t.length();
-    QString result;
-    // FIXME: Factor is sensible only for latin scripts, probably.
-    result.reserve(t.length() * 2);
-    for (int k = 0; k < len; k++) {
-        if (t[k].unicode() >= 0x7f)
-            result += numericEntity(t[k].unicode());
-        else
-            result += t[k];
-    }
-    return result;
-}
-
 static void writeExtras(QTextStream &t, const char *indent,
                         const TranslatorMessage::ExtraData &extras, QRegExp drops)
 {
@@ -570,36 +521,25 @@ static void writeVariants(QTextStream &t, const char *indent, const QString &inp
     }
 }
 
-bool saveTS(const Translator &translator, QIODevice &dev, ConversionData &cd, int format)
+bool saveTS(const Translator &translator, QIODevice &dev, ConversionData &cd)
 {
     bool result = true;
     QTextStream t(&dev);
     t.setCodec(QTextCodec::codecForName("UTF-8"));
-    bool trIsUtf8 = (translator.codecName() == "UTF-8");
     //qDebug() << translator.codecName();
-    bool fileIsUtf8 = (format == 20 || trIsUtf8);
 
     // The xml prolog allows processors to easily detect the correct encoding
     t << "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<!DOCTYPE TS>\n";
 
-    if (format == 11)
-        t << "<TS version=\"1.1\"";
-    else
-        t << "<TS version=\"2.0\"";
+    t << "<TS version=\"2.0\"";
 
     QString languageCode = translator.languageCode();
     if (!languageCode.isEmpty() && languageCode != QLatin1String("C"))
         t << " language=\"" << languageCode << "\"";
-    if (format == 20) {
-        languageCode = translator.sourceLanguageCode();
-        if (!languageCode.isEmpty() && languageCode != QLatin1String("C"))
-            t << " sourcelanguage=\"" << languageCode << "\"";
-    }
+    languageCode = translator.sourceLanguageCode();
+    if (!languageCode.isEmpty() && languageCode != QLatin1String("C"))
+        t << " sourcelanguage=\"" << languageCode << "\"";
     t << ">\n";
-
-    QByteArray codecName = translator.codecName();
-    if (codecName != "ISO-8859-1")
-        t << "<defaultcodec>" << codecName << "</defaultcodec>\n";
 
     QStringList deps = translator.dependencies();
     if (!deps.isEmpty()) {
@@ -611,8 +551,7 @@ bool saveTS(const Translator &translator, QIODevice &dev, ConversionData &cd, in
 
     QRegExp drops(cd.dropTags().join(QLatin1String("|")));
 
-    if (format == 20)
-        writeExtras(t, "    ", translator.extras(), drops);
+    writeExtras(t, "    ", translator.extras(), drops);
 
     QHash<QString, QList<TranslatorMessage> > messageOrder;
     QList<QString> contextOrder;
@@ -632,35 +571,16 @@ bool saveTS(const Translator &translator, QIODevice &dev, ConversionData &cd, in
     QHash<QString, int> currentLine;
     QString currentFile;
     foreach (const QString &context, contextOrder) {
-        const TranslatorMessage &firstMsg = messageOrder[context].first();
-        t << "<context" << ((!fileIsUtf8 && firstMsg.isUtf8()) ? " encoding=\"UTF-8\"" : "") << ">\n";
-
-        t << "    <name>"
-          << evilBytes(context, firstMsg.isUtf8() || fileIsUtf8, format, codecName)
+        t << "<context>\n"
+             "    <name>"
+          << protect(context)
           << "</name>\n";
         foreach (const TranslatorMessage &msg, messageOrder[context]) {
             //msg.dump();
 
-            bool isUtf8 = msg.isUtf8();
-            bool second = false;
-            forever {
-
                 t << "    <message";
                 if (!msg.id().isEmpty())
                     t << " id=\"" << msg.id() << "\"";
-                if (!trIsUtf8) {
-                    if (format == 11) {
-                        if (isUtf8)
-                            t << " encoding=\"UTF-8\"";
-                    } else {
-                        if (msg.isUtf8()) {
-                            if (msg.isNonUtf8())
-                                t << " utf8=\"both\"";
-                            else
-                                t << " utf8=\"true\"";
-                        }
-                    }
-                }
                 if (msg.isPlural())
                     t << " numerus=\"yes\"";
                 t << ">\n";
@@ -703,19 +623,17 @@ bool saveTS(const Translator &translator, QIODevice &dev, ConversionData &cd, in
                 }
 
                 t << "        <source>"
-                  << evilBytes(msg.sourceText(), isUtf8, format, codecName)
+                  << protect(msg.sourceText())
                   << "</source>\n";
 
-                if (format != 11 && !msg.oldSourceText().isEmpty())
+                if (!msg.oldSourceText().isEmpty())
                     t << "        <oldsource>" << protect(msg.oldSourceText()) << "</oldsource>\n";
 
                 if (!msg.comment().isEmpty()) {
                     t << "        <comment>"
-                      << evilBytes(msg.comment(), isUtf8, format, codecName)
+                      << protect(msg.comment())
                       << "</comment>\n";
                 }
-
-                if (format != 11) {
 
                     if (!msg.oldComment().isEmpty())
                         t << "        <oldcomment>" << protect(msg.oldComment()) << "</oldcomment>\n";
@@ -727,8 +645,6 @@ bool saveTS(const Translator &translator, QIODevice &dev, ConversionData &cd, in
                     if (!msg.translatorComment().isEmpty())
                         t << "        <translatorcomment>" << protect(msg.translatorComment())
                           << "</translatorcomment>\n";
-
-                }
 
                 t << "        <translation";
                 if (msg.type() == TranslatorMessage::Unfinished)
@@ -749,18 +665,11 @@ bool saveTS(const Translator &translator, QIODevice &dev, ConversionData &cd, in
                 }
                 t << "</translation>\n";
 
-                if (format != 11)
-                    writeExtras(t, "        ", msg.extras(), drops);
+                writeExtras(t, "        ", msg.extras(), drops);
 
                 if (!msg.userData().isEmpty())
                     t << "        <userdata>" << msg.userData() << "</userdata>\n";
                 t << "    </message>\n";
-
-                if (format != 11 || second || !msg.isUtf8() || !msg.isNonUtf8())
-                    break;
-                isUtf8 = false;
-                second = true;
-            }
         }
         t << "</context>\n";
     }
@@ -775,43 +684,16 @@ bool loadTS(Translator &translator, QIODevice &dev, ConversionData &cd)
     return reader.read(translator);
 }
 
-bool saveTS11(const Translator &translator, QIODevice &dev, ConversionData &cd)
-{
-    return saveTS(translator, dev, cd, 11);
-}
-
-bool saveTS20(const Translator &translator, QIODevice &dev, ConversionData &cd)
-{
-    return saveTS(translator, dev, cd, 20);
-}
-
 int initTS()
 {
     Translator::FileFormat format;
 
-    format.extension = QLatin1String("ts11");
-    format.fileType = Translator::FileFormat::TranslationSource;
-    format.priority = -1;
-    format.description = QObject::tr("Qt translation sources (format 1.1)");
-    format.loader = &loadTS;
-    format.saver = &saveTS11;
-    Translator::registerFileFormat(format);
-
-    format.extension = QLatin1String("ts20");
-    format.fileType = Translator::FileFormat::TranslationSource;
-    format.priority = -1;
-    format.description = QObject::tr("Qt translation sources (format 2.0)");
-    format.loader = &loadTS;
-    format.saver = &saveTS20;
-    Translator::registerFileFormat(format);
-
-    // "ts" is always the latest. right now it's ts20.
     format.extension = QLatin1String("ts");
     format.fileType = Translator::FileFormat::TranslationSource;
     format.priority = 0;
-    format.description = QObject::tr("Qt translation sources (latest format)");
+    format.description = FMT::tr("Qt translation sources");
     format.loader = &loadTS;
-    format.saver = &saveTS20;
+    format.saver = &saveTS;
     Translator::registerFileFormat(format);
 
     return 1;

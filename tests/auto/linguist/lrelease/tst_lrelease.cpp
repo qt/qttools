@@ -60,7 +60,6 @@ private:
 
 private slots:
     void translate();
-    void mixedcodecs();
     void compressed();
     void idbased();
     void markuntranslated();
@@ -156,9 +155,9 @@ void tst_lrelease::translate()
     QCOMPARE(tr("There are %n cars", "More Plurals", 3) , QString("There are 3 cars"));
 
 
-    QCOMPARE(QCoreApplication::translate("no_en", "Kj\370r K\345re, kj\346re"), QString::fromLatin1("Drive K\345re, dear"));
-    QCOMPARE(QCoreApplication::translate("en_no", "Drive K\345re, dear"), QString::fromLatin1("Kj\370r K\345re, kj\346re"));
-    QCOMPARE(QCoreApplication::translate("en_ch", "Chinese symbol:"), QString::fromLatin1("Chinese symbol:%1").arg(QChar(0x7c1f)));
+    QCOMPARE(QCoreApplication::translate("no_en", "Kj\xc3\xb8r K\xc3\xa5re, kj\xc3\xa6re"), QString::fromUtf8("Drive K\xc3\xa5re, dear"));
+    QCOMPARE(QCoreApplication::translate("en_no", "Drive K\xc3\xa5re, dear"), QString::fromUtf8("Kj\xc3\xb8r K\xc3\xa5re, kj\xc3\xa6re"));
+    QCOMPARE(QCoreApplication::translate("en_ch", "Chinese symbol:"), QString::fromUtf8("Chinese symbol:\xe7\xb0\x9f"));
 
 //    printf("halo\r\nhallo");
   //  QCOMPARE(tr("This\r\nwill fail"), QString("THIS\nWILL FAIL"));    // \r\n =  0d 0a
@@ -169,26 +168,6 @@ void tst_lrelease::translate()
                                  "Kurze Uebers."));
 
     qApp->removeTranslator(&translator);
-}
-
-void tst_lrelease::mixedcodecs()
-{
-    QVERIFY(!QProcess::execute(binDir + "/lrelease " + dataDir + "mixedcodecs-ts11.ts"));
-    QVERIFY(!QProcess::execute(binDir + "/lrelease " + dataDir + "mixedcodecs-ts20.ts"));
-#ifdef Q_OS_WIN
-    QVERIFY(!QProcess::execute("fc /b testdata\\mixedcodecs-ts11.qm testdata\\mixedcodecs-ts20.qm"));
-#else
-    QVERIFY(!QProcess::execute("cmp " + dataDir + "mixedcodecs-ts11.qm " + dataDir + "mixedcodecs-ts20.qm"));
-#endif
-
-    QTranslator translator;
-    QVERIFY(translator.load(dataDir + "mixedcodecs-ts11.qm"));
-    qApp->installTranslator(&translator);
-
-    QCOMPARE(QCoreApplication::translate("FooBar", "this contains an umlaut \xfc &uuml;"),
-             QString::fromLatin1("random stuff with umlaut"));
-    QCOMPARE(QCoreApplication::translate("FooBar", "umlaut \xc3\xbc &uuml; in utf8"),
-             QString::fromLatin1("more random stuff with umlaut"));
 }
 
 void tst_lrelease::compressed()

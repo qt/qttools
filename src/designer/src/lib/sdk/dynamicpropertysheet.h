@@ -55,8 +55,6 @@
 
 #include <QtDesigner/extension.h>
 
-QT_BEGIN_HEADER
-
 QT_BEGIN_NAMESPACE
 
 class QString; // FIXME: fool syncqt
@@ -75,7 +73,5 @@ public:
 Q_DECLARE_EXTENSION_INTERFACE(QDesignerDynamicPropertySheetExtension, "org.qt-project.Qt.Designer.DynamicPropertySheet")
 
 QT_END_NAMESPACE
-
-QT_END_HEADER
 
 #endif // DYNAMICPROPERTYSHEET_H

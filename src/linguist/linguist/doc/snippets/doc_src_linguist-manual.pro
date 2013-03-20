@@ -52,11 +52,6 @@ TRANSLATIONS    = superapp_dk.ts \
 #! [0]
 
 
-#! [1]
-CODECFORTR      = ISO-8859-5
-#! [1]
-
-
 #! [2]
 CODECFORSRC     = UTF-8
 #! [2]

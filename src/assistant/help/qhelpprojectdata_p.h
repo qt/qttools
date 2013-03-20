@@ -56,8 +56,6 @@
 #include "qhelp_global.h"
 #include "qhelpdatainterface_p.h"
 
-QT_BEGIN_HEADER
-
 QT_BEGIN_NAMESPACE
 
 class QHelpProjectDataPrivate;
@@ -83,7 +81,5 @@ private:
 };
 
 QT_END_NAMESPACE
-
-QT_END_HEADER
 
 #endif

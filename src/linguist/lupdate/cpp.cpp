@@ -246,15 +246,15 @@ private:
     bool getMacroArgs();
     bool match(uint t);
     bool matchString(QString *s);
-    bool matchEncoding(bool *utf8);
+    bool matchEncoding();
     bool matchStringOrNull(QString *s);
     bool matchExpression();
 
-    QString transcode(const QString &str, bool utf8);
+    QString transcode(const QString &str);
     void recordMessage(
         int line, const QString &context, const QString &text, const QString &comment,
         const QString &extracomment, const QString &msgid, const TranslatorMessage::ExtraData &extra,
-        bool utf8, bool plural);
+        bool plural);
 
     void processInclude(const QString &file, ConversionData &cd,
                         const QStringList &includeStack, QSet<QString> &inclusions);
@@ -308,8 +308,6 @@ private:
     QString yyFileName;
     int yyCh;
     bool yyAtNewline;
-    bool yyCodecIsUtf8;
-    bool yyForceUtf8;
     QString yyWord;
     qlonglong yyInteger;
     QStack<IfdefState> yyIfdefStack;
@@ -378,7 +376,6 @@ void CppParser::setInput(const QString &in)
     yyInStr = in;
     yyFileName = QString();
     yySourceCodec = 0;
-    yyForceUtf8 = true;
 }
 
 void CppParser::setInput(QTextStream &ts, const QString &fileName)
@@ -386,7 +383,6 @@ void CppParser::setInput(QTextStream &ts, const QString &fileName)
     yyInStr = ts.readAll();
     yyFileName = fileName;
     yySourceCodec = ts.codec();
-    yyForceUtf8 = false;
 }
 
 /*
@@ -1460,7 +1456,7 @@ STRING(UnicodeUTF8);
 STRING(DefaultCodec);
 STRING(CodecForTr);
 
-bool CppParser::matchEncoding(bool *utf8)
+bool CppParser::matchEncoding()
 {
     if (yyTok != Tok_Ident)
         return false;
@@ -1469,16 +1465,11 @@ bool CppParser::matchEncoding(bool *utf8)
         if (yyTok == Tok_ColonColon)
             yyTok = getToken();
     }
-    if (yyWord == strUnicodeUTF8) {
-        *utf8 = true;
+    if (yyWord == strUnicodeUTF8 || yyWord == strDefaultCodec || yyWord == strCodecForTr) {
         yyTok = getToken();
         return true;
     }
-    if (yyWord == strDefaultCodec || yyWord == strCodecForTr) {
-        *utf8 = false;
-        yyTok = getToken();
-        return true;
-    }
+    yyMsg() << qPrintable(LU::tr("Unsupported encoding Latin1\n"));
     return false;
 }
 
@@ -1530,12 +1521,12 @@ bool CppParser::matchExpression()
     return true;
 }
 
-QString CppParser::transcode(const QString &str, bool utf8)
+QString CppParser::transcode(const QString &str)
 {
     static const char tab[] = "abfnrtv";
     static const char backTab[] = "\a\b\f\n\r\t\v";
     // This function has to convert back to bytes, as C's \0* sequences work at that level.
-    const QByteArray in = yyForceUtf8 ? str.toUtf8() : tor->codec()->fromUnicode(str);
+    const QByteArray in = str.toUtf8();
     QByteArray out;
 
     out.reserve(in.length());
@@ -1574,33 +1565,25 @@ QString CppParser::transcode(const QString &str, bool utf8)
             out += c;
         }
     }
-    return (utf8 || yyForceUtf8) ? QString::fromUtf8(out.constData(), out.length())
-                                 : tor->codec()->toUnicode(out);
+    return QString::fromUtf8(out.constData(), out.length());
 }
 
-void CppParser::recordMessage(
-    int line, const QString &context, const QString &text, const QString &comment,
-    const QString &extracomment, const QString &msgid, const TranslatorMessage::ExtraData &extra,
-    bool utf8, bool plural)
+void CppParser::recordMessage(int line, const QString &context, const QString &text, const QString &comment,
+    const QString &extracomment, const QString &msgid, const TranslatorMessage::ExtraData &extra, bool plural)
 {
     TranslatorMessage msg(
-        transcode(context, utf8), transcode(text, utf8), transcode(comment, utf8), QString(),
+        transcode(context), transcode(text), transcode(comment), QString(),
         yyFileName, line, QStringList(),
         TranslatorMessage::Unfinished, plural);
-    msg.setExtraComment(transcode(extracomment.simplified(), utf8));
+    msg.setExtraComment(transcode(extracomment.simplified()));
     msg.setId(msgid);
     msg.setExtras(extra);
-    if ((utf8 || yyForceUtf8) && !yyCodecIsUtf8 && msg.needs8Bit())
-        msg.setUtf8(true);
     tor->append(msg);
 }
 
 void CppParser::parse(const QString &initialContext, ConversionData &cd, const QStringList &includeStack,
                       QSet<QString> &inclusions)
 {
-    if (tor)
-        yyCodecIsUtf8 = (tor->codecName() == "UTF-8");
-
     namespaces << HashString();
     functionContext = namespaces;
     functionContextUnresolved = initialContext;
@@ -1624,7 +1607,6 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
     QString functionName;
 #endif
     int line;
-    bool utf8;
     bool yyTokColonSeen = false; // Start of c'tor's initializer list
 
     yyWord.reserve(yyInStr.size()); // Rather insane. That's because we do no length checking.
@@ -1834,7 +1816,6 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                 goto case_default;
             if (!sourcetext.isEmpty())
                 yyMsg() << qPrintable(LU::tr("//% cannot be used with tr() / QT_TR_NOOP(). Ignoring\n"));
-            utf8 = (yyTok == Tok_trUtf8);
             line = yyLineNo;
             yyTok = getToken();
             if (match(Tok_LeftParen) && matchString(&text) && !text.isEmpty()) {
@@ -1927,7 +1908,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                 }
 
               gotctx:
-                recordMessage(line, context, text, comment, extracomment, msgid, extra, utf8, plural);
+                recordMessage(line, context, text, comment, extracomment, msgid, extra, plural);
             }
             sourcetext.clear(); // Will have warned about that already
             extracomment.clear();
@@ -1940,7 +1921,6 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                 goto case_default;
             if (!sourcetext.isEmpty())
                 yyMsg() << qPrintable(LU::tr("//% cannot be used with translate() / QT_TRANSLATE_NOOP(). Ignoring\n"));
-            utf8 = (yyTok == Tok_translateUtf8);
             line = yyLineNo;
             yyTok = getToken();
             if (match(Tok_LeftParen)
@@ -1956,7 +1936,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                         if (!match(Tok_RightParen)) {
                             // look for encoding
                             if (match(Tok_Comma)) {
-                                if (matchEncoding(&utf8)) {
+                                if (matchEncoding()) {
                                     if (!match(Tok_RightParen)) {
                                         // look for the plural quantifier,
                                         // this can be a number, an identifier or
@@ -1983,7 +1963,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                         break;
                     }
                 }
-                recordMessage(line, context, text, comment, extracomment, msgid, extra, utf8, plural);
+                recordMessage(line, context, text, comment, extracomment, msgid, extra, plural);
             }
             sourcetext.clear(); // Will have warned about that already
             extracomment.clear();
@@ -1995,13 +1975,12 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                 goto case_default;
             if (!msgid.isEmpty())
                 yyMsg() << qPrintable(LU::tr("//= cannot be used with qtTrId() / QT_TRID_NOOP(). Ignoring\n"));
-            //utf8 = false; // Maybe use //%% or something like that
             line = yyLineNo;
             yyTok = getToken();
             if (match(Tok_LeftParen) && matchString(&msgid) && !msgid.isEmpty()) {
                 bool plural = match(Tok_Comma);
                 recordMessage(line, QString(), sourcetext, QString(), extracomment,
-                              msgid, extra, false, plural);
+                              msgid, extra, plural);
             }
             sourcetext.clear();
             extracomment.clear();
@@ -2102,11 +2081,11 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                         context = comment.left(k);
                         comment.remove(0, k + 1);
                         TranslatorMessage msg(
-                                transcode(context, false), QString(),
-                                transcode(comment, false), QString(),
+                                transcode(context), QString(),
+                                transcode(comment), QString(),
                                 yyFileName, yyLineNo, QStringList(),
                                 TranslatorMessage::Finished, false);
-                        msg.setExtraComment(transcode(extracomment.simplified(), false));
+                        msg.setExtraComment(transcode(extracomment.simplified()));
                         extracomment.clear();
                         tor->append(msg);
                         tor->setExtras(extra);
@@ -2236,26 +2215,9 @@ const ParseResults *CppParser::recordResults(bool isHeader)
     }
 }
 
-/*
-  Fetches tr() calls in C++ code in UI files (inside "<function>"
-  tag). This mechanism is obsolete.
-*/
-void fetchtrInlinedCpp(const QString &in, Translator &translator, const QString &context)
-{
-    CppParser parser;
-    parser.setInput(in);
-    ConversionData cd;
-    QSet<QString> inclusions;
-    parser.setTranslator(&translator);
-    parser.parse(context, cd, QStringList(), inclusions);
-    parser.deleteResults();
-}
-
 void loadCPP(Translator &translator, const QStringList &filenames, ConversionData &cd)
 {
-    QByteArray codecName = cd.m_codecForSource.isEmpty()
-                            ? translator.codecName() : cd.m_codecForSource;
-    QTextCodec *codec = QTextCodec::codecForName(codecName);
+    QTextCodec *codec = QTextCodec::codecForName(cd.m_sourceIsUtf16 ? "UTF-16" : "UTF-8");
 
     foreach (const QString &filename, filenames) {
         if (!CppFiles::getResults(filename).isEmpty() || CppFiles::isBlacklisted(filename))
@@ -2272,10 +2234,7 @@ void loadCPP(Translator &translator, const QStringList &filenames, ConversionDat
         ts.setCodec(codec);
         ts.setAutoDetectUnicode(true);
         parser.setInput(ts, filename);
-        if (cd.m_outputCodec.isEmpty() && ts.codec()->name() == "UTF-16")
-            translator.setCodecName("System");
         Translator *tor = new Translator;
-        tor->setCodecName(translator.codecName());
         parser.setTranslator(tor);
         QSet<QString> inclusions;
         parser.parse(cd.m_defaultContext, cd, QStringList(), inclusions);

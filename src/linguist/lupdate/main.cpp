@@ -52,7 +52,6 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
-#include <QtCore/QTextCodec>
 #include <QtCore/QTranslator>
 #include <QtCore/QLibraryInfo>
 
@@ -135,10 +134,7 @@ static void printUsage()
         "           Specify the language of the translations for new files.\n"
         "           Guessed from the file name if not specified.\n"
         "    -ts <ts-file>...\n"
-        "           Specify the output file(s). This will override the TRANSLATIONS\n"
-        "           and nullify the CODECFORTR from possibly specified project files.\n"
-        "    -codecfortr <codec>\n"
-        "           Specify the codec assumed for tr() calls. Effective only with -ts.\n"
+        "           Specify the output file(s). This will override the TRANSLATIONS.\n"
         "    -version\n"
         "           Display the version of lupdate and exit.\n"
         "    @lst-file\n"
@@ -149,7 +145,7 @@ static void printUsage()
 
 static void updateTsFiles(const Translator &fetchedTor, const QStringList &tsFileNames,
     const QStringList &alienFiles,
-    bool setCodec, const QString &sourceLanguage, const QString &targetLanguage,
+    const QString &sourceLanguage, const QString &targetLanguage,
     UpdateOptions options, bool *fail)
 {
     QList<Translator> aliens;
@@ -180,11 +176,6 @@ static void updateTsFiles(const Translator &fetchedTor, const QStringList &tsFil
             }
             tor.resolveDuplicates();
             cd.clearErrors();
-            if (setCodec && fetchedTor.codec() != tor.codec())
-                printErr(LU::tr("lupdate warning: Codec for tr() '%1' disagrees with"
-                                " existing file's codec '%2'. Expect trouble.\n")
-                         .arg(QString::fromLatin1(fetchedTor.codecName()),
-                              QString::fromLatin1(tor.codecName())));
             if (!targetLanguage.isEmpty() && targetLanguage != tor.languageCode())
                 printErr(LU::tr("lupdate warning: Specified target language '%1' disagrees with"
                                 " existing file's language '%2'. Ignoring.\n")
@@ -194,8 +185,6 @@ static void updateTsFiles(const Translator &fetchedTor, const QStringList &tsFil
                                 " existing file's language '%2'. Ignoring.\n")
                          .arg(sourceLanguage, tor.sourceLanguageCode()));
         } else {
-            if (setCodec)
-                tor.setCodec(fetchedTor.codec());
             if (!targetLanguage.isEmpty())
                 tor.setLanguageCode(targetLanguage);
             else
@@ -217,8 +206,6 @@ static void updateTsFiles(const Translator &fetchedTor, const QStringList &tsFil
         if (tor.locationsType() == Translator::NoLocations) // Could be set from file
             theseOptions |= NoLocations;
         Translator out = merge(tor, fetchedTor, aliens, theseOptions, err);
-        if (setCodec)
-            out.setCodec(fetchedTor.codec());
 
         if ((options & Verbose) && !err.isEmpty()) {
             printOut(err);
@@ -366,26 +353,29 @@ static void processSources(Translator &fetchedTor,
 
 static void processProjects(bool topLevel, bool nestComplain, const QStringList &proFiles,
         const QHash<QString, QString> &outDirMap, ProFileGlobals *option, QMakeParser *parser,
-        UpdateOptions options, const QByteArray &codecForSource,
+        UpdateOptions options,
         const QString &targetLanguage, const QString &sourceLanguage,
         Translator *parentTor, bool *fail);
 
 static void processProject(
         bool nestComplain, const QString &proFile,
         ProFileGlobals *option, QMakeParser *parser, ProFileEvaluator &visitor,
-        UpdateOptions options, const QByteArray &_codecForSource,
+        UpdateOptions options,
         const QString &targetLanguage, const QString &sourceLanguage,
         Translator *fetchedTor, bool *fail)
 {
-    QByteArray codecForSource = _codecForSource;
     QStringList tmp = visitor.values(QLatin1String("CODECFORSRC"));
     if (!tmp.isEmpty()) {
-        codecForSource = tmp.last().toLatin1();
-        if (!QTextCodec::codecForName(codecForSource)) {
+        QByteArray codecForSource = tmp.last().toLatin1().toUpper();
+        if (codecForSource == "UTF16" || codecForSource == "UTF-16") {
+            options |= SourceIsUtf16;
+        } else if (codecForSource == "UTF8" || codecForSource == "UTF-8") {
+            options &= ~SourceIsUtf16;
+        } else {
             printErr(LU::tr("lupdate warning: Codec for source '%1' is invalid."
-                            " Falling back to codec for tr().\n")
+                            " Falling back to UTF-8.\n")
                      .arg(QString::fromLatin1(codecForSource)));
-            codecForSource.clear();
+            options &= ~SourceIsUtf16;
         }
     }
     QString proPath = QFileInfo(proFile).path();
@@ -407,12 +397,12 @@ static void processProject(
                 subProFiles << subPro;
         }
         processProjects(false, nestComplain, subProFiles, QHash<QString, QString>(),
-                        option, parser, options, codecForSource,
+                        option, parser, options,
                         targetLanguage, sourceLanguage, fetchedTor, fail);
     } else {
         ConversionData cd;
         cd.m_noUiLines = options & NoUiLines;
-        cd.m_codecForSource = codecForSource;
+        cd.m_sourceIsUtf16 = options & SourceIsUtf16;
         cd.m_includePath = visitor.values(QLatin1String("INCLUDEPATH"));
         QStringList sourceFiles = getSources(visitor, proPath);
         QSet<QString> sourceDirs;
@@ -433,7 +423,7 @@ static void processProject(
 
 static void processProjects(bool topLevel, bool nestComplain, const QStringList &proFiles,
         const QHash<QString, QString> &outDirMap, ProFileGlobals *option, QMakeParser *parser,
-        UpdateOptions options, const QByteArray &codecForSource,
+        UpdateOptions options,
         const QString &targetLanguage, const QString &sourceLanguage,
         Translator *parentTor, bool *fail)
 {
@@ -483,18 +473,10 @@ static void processProjects(bool topLevel, bool nestComplain, const QStringList 
                 continue;
             }
             Translator tor;
-            bool setCodec = false;
-            QStringList tmp = visitor.values(QLatin1String("CODEC"))
-                              + visitor.values(QLatin1String("DEFAULTCODEC"))
-                              + visitor.values(QLatin1String("CODECFORTR"));
-            if (!tmp.isEmpty()) {
-                tor.setCodecName(tmp.last().toLatin1());
-                setCodec = true;
-            }
-            processProject(false, proFile, option, parser, visitor, options, codecForSource,
+            processProject(false, proFile, option, parser, visitor, options,
                            targetLanguage, sourceLanguage, &tor, fail);
             updateTsFiles(tor, tsFiles, QStringList(),
-                          setCodec, sourceLanguage, targetLanguage, options, fail);
+                          sourceLanguage, targetLanguage, options, fail);
             pro->deref();
             continue;
         }
@@ -504,10 +486,10 @@ static void processProjects(bool topLevel, bool nestComplain, const QStringList 
                 printErr(LU::tr("lupdate warning: no TS files specified. Only diagnostics "
                                 "will be produced for '%1'.\n").arg(proFile));
             Translator tor;
-            processProject(nestComplain, proFile, option, parser, visitor, options, codecForSource,
+            processProject(nestComplain, proFile, option, parser, visitor, options,
                            targetLanguage, sourceLanguage, &tor, fail);
         } else {
-            processProject(nestComplain, proFile, option, parser, visitor, options, codecForSource,
+            processProject(nestComplain, proFile, option, parser, visitor, options,
                            targetLanguage, sourceLanguage, parentTor, fail);
         }
         pro->deref();
@@ -517,6 +499,7 @@ static void processProjects(bool topLevel, bool nestComplain, const QStringList 
 int main(int argc, char **argv)
 {
     QCoreApplication app(argc, argv);
+#ifndef QT_BOOTSTRAPPED
 #ifndef Q_OS_WIN32
     QTranslator translator;
     QTranslator qtTranslator;
@@ -528,6 +511,7 @@ int main(int argc, char **argv)
         app.installTranslator(&qtTranslator);
     }
 #endif // Q_OS_WIN32
+#endif
 
     m_defaultExtensions = QLatin1String("java,jui,ui,c,c++,cc,cpp,cxx,ch,h,h++,hh,hpp,hxx,js,qs,qml");
 
@@ -543,7 +527,6 @@ int main(int argc, char **argv)
     QStringList alienFiles;
     QString targetLanguage;
     QString sourceLanguage;
-    QByteArray codecForTr;
 
     UpdateOptions options =
         Verbose | // verbose is on by default starting with Qt 4.2
@@ -643,16 +626,8 @@ int main(int argc, char **argv)
             options |= NoSort;
             continue;
         } else if (arg == QLatin1String("-version")) {
-            printOut(QObject::tr("lupdate version %1\n").arg(QLatin1String(QT_VERSION_STR)));
+            printOut(LU::tr("lupdate version %1\n").arg(QLatin1String(QT_VERSION_STR)));
             return 0;
-        } else if (arg == QLatin1String("-codecfortr")) {
-            ++i;
-            if (i == argc) {
-                printErr(LU::tr("The -codecfortr option should be followed by a codec name.\n"));
-                return 1;
-            }
-            codecForTr = args[i].toLatin1();
-            continue;
         } else if (arg == QLatin1String("-ts")) {
             metTsFlag = true;
             continue;
@@ -821,8 +796,6 @@ int main(int argc, char **argv)
     if (!targetLanguage.isEmpty() && tsFileNames.count() != 1)
         printErr(LU::tr("lupdate warning: -target-language usually only"
                         " makes sense with exactly one TS file.\n"));
-    if (!codecForTr.isEmpty() && tsFileNames.isEmpty())
-        printErr(LU::tr("lupdate warning: -codecfortr has no effect without -ts.\n"));
 
     bool fail = false;
     if (proFiles.isEmpty()) {
@@ -833,12 +806,12 @@ int main(int argc, char **argv)
         Translator fetchedTor;
         ConversionData cd;
         cd.m_noUiLines = options & NoUiLines;
+        cd.m_sourceIsUtf16 = options & SourceIsUtf16;
         cd.m_projectRoots = projectRoots;
         cd.m_includePath = includePath;
         cd.m_allCSources = allCSources;
-        fetchedTor.setCodecName(codecForTr);
         processSources(fetchedTor, sourceFiles, cd);
-        updateTsFiles(fetchedTor, tsFileNames, alienFiles, !codecForTr.isEmpty(),
+        updateTsFiles(fetchedTor, tsFileNames, alienFiles,
                       sourceLanguage, targetLanguage, options, &fail);
     } else {
         if (!sourceFiles.isEmpty() || !includePath.isEmpty()) {
@@ -859,13 +832,12 @@ int main(int argc, char **argv)
 
         if (!tsFileNames.isEmpty()) {
             Translator fetchedTor;
-            fetchedTor.setCodecName(codecForTr);
-            processProjects(true, true, proFiles, outDirMap, &option, &parser, options, QByteArray(),
+            processProjects(true, true, proFiles, outDirMap, &option, &parser, options,
                             targetLanguage, sourceLanguage, &fetchedTor, &fail);
-            updateTsFiles(fetchedTor, tsFileNames, alienFiles, !codecForTr.isEmpty(),
+            updateTsFiles(fetchedTor, tsFileNames, alienFiles,
                           sourceLanguage, targetLanguage, options, &fail);
         } else {
-            processProjects(true, false, proFiles, outDirMap, &option, &parser, options, QByteArray(),
+            processProjects(true, false, proFiles, outDirMap, &option, &parser, options,
                             targetLanguage, sourceLanguage, 0, &fail);
         }
     }

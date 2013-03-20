@@ -404,8 +404,7 @@ static QByteArray QByteArrayList_join(const QList<QByteArray> &that, char sep)
 
 bool loadPO(Translator &translator, QIODevice &dev, ConversionData &cd)
 {
-    QTextCodec *codec = QTextCodec::codecForName(
-            cd.m_codecForSource.isEmpty() ? QByteArray("UTF-8") : cd.m_codecForSource);
+    QTextCodec *codec = QTextCodec::codecForName("UTF-8");
     bool error = false;
 
     // format of a .po file entry:
@@ -478,7 +477,6 @@ bool loadPO(Translator &translator, QIODevice &dev, ConversionData &cd)
                     } else if (hdrName == "MIME-Version") {
                         // just assume it is 1.0
                     } else if (hdrName == "Content-Type") {
-                        if (cd.m_codecForSource.isEmpty()) {
                             if (!hdrValue.startsWith("text/plain; charset=")) {
                                 cd.appendError(QString::fromLatin1("Unexpected Content-Type header '%1'")
                                     .arg(QString::fromLatin1(hdrValue)));
@@ -498,7 +496,6 @@ bool loadPO(Translator &translator, QIODevice &dev, ConversionData &cd)
                                     codec = cdc;
                                 }
                             }
-                        }
                     } else if (hdrName == "Content-Transfer-Encoding") {
                         if (hdrValue != "8bit") {
                             cd.appendError(QString::fromLatin1("Unexpected Content-Transfer-Encoding '%1'")
@@ -723,13 +720,13 @@ static QString escapeComment(const QString &in, bool escape)
     return out;
 }
 
-bool savePO(const Translator &translator, QIODevice &dev, ConversionData &cd)
+bool savePO(const Translator &translator, QIODevice &dev, ConversionData &)
 {
     QString str_format = QLatin1String("-format");
 
     bool ok = true;
     QTextStream out(&dev);
-    out.setCodec(cd.m_outputCodec.isEmpty() ? QByteArray("UTF-8") : cd.m_outputCodec);
+    out.setCodec("UTF-8");
 
     bool qtContexts = false;
     foreach (const TranslatorMessage &msg, translator.messages())
@@ -881,14 +878,14 @@ int initPO()
 {
     Translator::FileFormat format;
     format.extension = QLatin1String("po");
-    format.description = QObject::tr("GNU Gettext localization files");
+    format.description = FMT::tr("GNU Gettext localization files");
     format.loader = &loadPO;
     format.saver = &savePO;
     format.fileType = Translator::FileFormat::TranslationSource;
     format.priority = 1;
     Translator::registerFileFormat(format);
     format.extension = QLatin1String("pot");
-    format.description = QObject::tr("GNU Gettext localization template files");
+    format.description = FMT::tr("GNU Gettext localization template files");
     format.loader = &loadPO;
     format.saver = &savePOT;
     format.fileType = Translator::FileFormat::TranslationSource;

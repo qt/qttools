@@ -165,12 +165,7 @@ public:
 
     enum { Contexts = 0x2f, Hashes = 0x42, Messages = 0x69, NumerusRules = 0x88, Dependencies = 0x96 };
 
-    Releaser() : m_codec(0) {}
-
-    void setCodecName(const QByteArray &codecName)
-    {
-        m_codec = QTextCodec::codecForName(codecName);
-    }
+    Releaser() {}
 
     bool save(QIODevice *iod);
 
@@ -187,10 +182,7 @@ private:
 
     // This should reproduce the byte array fetched from the source file, which
     // on turn should be the same as passed to the actual tr(...) calls
-    QByteArray originalBytes(const QString &str, bool isUtf8) const;
-
-    void insertInternal(const TranslatorMessage &message, const QStringList &tlns,
-                        bool forceComment, bool isUtf8);
+    QByteArray originalBytes(const QString &str) const;
 
     static Prefix commonPrefix(const ByteTranslatorMessage &m1, const ByteTranslatorMessage &m2);
 
@@ -207,21 +199,16 @@ private:
     QByteArray m_numerusRules;
     QStringList m_dependencies;
     QByteArray m_dependencyArray;
-
-    // Used to reproduce the original bytes
-    QTextCodec *m_codec;
 };
 
-QByteArray Releaser::originalBytes(const QString &str, bool isUtf8) const
+QByteArray Releaser::originalBytes(const QString &str) const
 {
     if (str.isEmpty()) {
         // Do not use QByteArray() here as the result of the serialization
         // will be different.
         return QByteArray("");
     }
-    if (isUtf8)
-        return str.toUtf8();
-    return m_codec ? m_codec->fromUnicode(str) : str.toLatin1();
+    return str.toUtf8();
 }
 
 uint Releaser::msgHash(const ByteTranslatorMessage &msg)
@@ -429,12 +416,11 @@ void Releaser::squeeze(TranslatorSaveMode mode)
     }
 }
 
-void Releaser::insertInternal(const TranslatorMessage &message, const QStringList &tlns,
-                              bool forceComment, bool isUtf8)
+void Releaser::insert(const TranslatorMessage &message, const QStringList &tlns, bool forceComment)
 {
-    ByteTranslatorMessage bmsg(originalBytes(message.context(), isUtf8),
-                               originalBytes(message.sourceText(), isUtf8),
-                               originalBytes(message.comment(), isUtf8),
+    ByteTranslatorMessage bmsg(originalBytes(message.context()),
+                               originalBytes(message.sourceText()),
+                               originalBytes(message.comment()),
                                tlns);
     if (!forceComment) {
         ByteTranslatorMessage bmsg2(
@@ -447,16 +433,9 @@ void Releaser::insertInternal(const TranslatorMessage &message, const QStringLis
     m_messages.insert(bmsg, 0);
 }
 
-void Releaser::insert(const TranslatorMessage &message, const QStringList &tlns, bool forceComment)
-{
-    insertInternal(message, tlns, forceComment, message.isUtf8());
-    if (message.isUtf8() && message.isNonUtf8())
-        insertInternal(message, tlns, forceComment, false);
-}
-
 void Releaser::insertIdBased(const TranslatorMessage &message, const QStringList &tlns)
 {
-    ByteTranslatorMessage bmsg("", originalBytes(message.id(), false), "", tlns);
+    ByteTranslatorMessage bmsg("", originalBytes(message.id()), "", tlns);
     m_messages.insert(bmsg, 0);
 }
 
@@ -480,30 +459,12 @@ static quint32 read32(const uchar *data)
     return (data[0] << 24) | (data[1] << 16) | (data[2] << 8) | (data[3]);
 }
 
-static void fromBytes(const char *str, int len, QTextCodec *codec, QTextCodec *utf8Codec,
-                      QString *out, QString *utf8Out,
-                      bool *isSystem, bool *isUtf8, bool *needs8Bit)
+static void fromBytes(const char *str, int len, QString *out, bool *utf8Fail)
 {
-    for (int i = 0; i < len; ++i)
-        if (str[i] & 0x80) {
-            if (utf8Codec) {
-                QTextCodec::ConverterState cvtState;
-                *utf8Out = utf8Codec->toUnicode(str, len, &cvtState);
-                *isUtf8 = !cvtState.invalidChars;
-            }
-            QTextCodec::ConverterState cvtState;
-            *out = codec->toUnicode(str, len, &cvtState);
-            *isSystem = !cvtState.invalidChars;
-            *needs8Bit = true;
-            return;
-        }
-    *out = QString::fromLatin1(str, len);
-    *isSystem = true;
-    if (utf8Codec) {
-        *utf8Out = *out;
-        *isUtf8 = true;
-    }
-    *needs8Bit = false;
+    static QTextCodec *utf8Codec = QTextCodec::codecForName("UTF-8");
+    QTextCodec::ConverterState cvtState;
+    *out = utf8Codec->toUnicode(str, len, &cvtState);
+    *utf8Fail = cvtState.invalidChars;
 }
 
 bool loadQM(Translator &translator, QIODevice &dev, ConversionData &cd)
@@ -565,12 +526,6 @@ bool loadQM(Translator &translator, QIODevice &dev, ConversionData &cd)
     size_t numItems = offsetLength / (2 * sizeof(quint32));
     //qDebug() << "NUMITEMS: " << numItems;
 
-    QTextCodec *codec = QTextCodec::codecForName(
-        cd.m_codecForSource.isEmpty() ? QByteArray("Latin1") : cd.m_codecForSource);
-    QTextCodec *utf8Codec = 0;
-    if (codec->name() != "UTF-8")
-        utf8Codec = QTextCodec::codecForName("UTF-8");
-
     QString strProN = QLatin1String("%n");
     QLocale::Language l;
     QLocale::Country c;
@@ -580,12 +535,8 @@ bool loadQM(Translator &translator, QIODevice &dev, ConversionData &cd)
     if (getNumerusInfo(l, c, 0, &numerusForms, 0))
         guessPlurals = (numerusForms.count() == 1);
 
-    QString context, contextUtf8;
-    bool contextIsSystem, contextIsUtf8, contextNeeds8Bit;
-    QString sourcetext, sourcetextUtf8;
-    bool sourcetextIsSystem, sourcetextIsUtf8, sourcetextNeeds8Bit;
-    QString comment, commentUtf8;
-    bool commentIsSystem, commentIsUtf8, commentNeeds8Bit;
+    QString context, sourcetext, comment;
+    bool utf8Fail = false;
     QStringList translations;
 
     for (const uchar *start = offsetArray; start != offsetArray + (numItems << 3); start += 8) {
@@ -626,9 +577,7 @@ bool loadQM(Translator &translator, QIODevice &dev, ConversionData &cd)
                 m += 4;
                 //qDebug() << "SOURCE LEN: " << len;
                 //qDebug() << "SOURCE: " << QByteArray((const char*)m, len);
-                fromBytes((const char*)m, len, codec, utf8Codec,
-                          &sourcetext, &sourcetextUtf8,
-                          &sourcetextIsSystem, &sourcetextIsUtf8, &sourcetextNeeds8Bit);
+                fromBytes((const char*)m, len, &sourcetext, &utf8Fail);
                 m += len;
                 break;
             }
@@ -637,9 +586,7 @@ bool loadQM(Translator &translator, QIODevice &dev, ConversionData &cd)
                 m += 4;
                 //qDebug() << "CONTEXT LEN: " << len;
                 //qDebug() << "CONTEXT: " << QByteArray((const char*)m, len);
-                fromBytes((const char*)m, len, codec, utf8Codec,
-                          &context, &contextUtf8,
-                          &contextIsSystem, &contextIsUtf8, &contextNeeds8Bit);
+                fromBytes((const char*)m, len, &context, &utf8Fail);
                 m += len;
                 break;
             }
@@ -648,9 +595,7 @@ bool loadQM(Translator &translator, QIODevice &dev, ConversionData &cd)
                 m += 4;
                 //qDebug() << "COMMENT LEN: " << len;
                 //qDebug() << "COMMENT: " << QByteArray((const char*)m, len);
-                fromBytes((const char*)m, len, codec, utf8Codec,
-                          &comment, &commentUtf8,
-                          &commentIsSystem, &commentIsUtf8, &commentNeeds8Bit);
+                fromBytes((const char*)m, len, &comment, &utf8Fail);
                 m += len;
                 break;
             }
@@ -673,27 +618,14 @@ bool loadQM(Translator &translator, QIODevice &dev, ConversionData &cd)
         }
         msg.setTranslations(translations);
         translations.clear();
-        if (contextNeeds8Bit || sourcetextNeeds8Bit || commentNeeds8Bit) {
-            if (utf8Codec && contextIsUtf8 && sourcetextIsUtf8 && commentIsUtf8) {
-                // The message is utf-8, but file is not.
-                msg.setUtf8(true);
-                msg.setContext(contextUtf8);
-                msg.setSourceText(sourcetextUtf8);
-                msg.setComment(commentUtf8);
-                translator.append(msg);
-                continue;
-            }
-            if (!(contextIsSystem && sourcetextIsSystem && commentIsSystem)) {
-                cd.appendError(QLatin1String(
-                        "Cannot read file with specified input codec"));
-                return false;
-            }
-            // The message is 8-bit in the file's encoding (utf-8 or not).
-        }
         msg.setContext(context);
         msg.setSourceText(sourcetext);
         msg.setComment(comment);
         translator.append(msg);
+    }
+    if (utf8Fail) {
+        cd.appendError(QLatin1String("Cannot read file with UTF-8 codec"));
+        return false;
     }
     return ok;
 }
@@ -719,7 +651,6 @@ bool saveQM(const Translator &translator, QIODevice &dev, ConversionData &cd)
     QByteArray rules;
     if (getNumerusInfo(l, c, &rules, 0, 0))
         releaser.setNumerusRules(rules);
-    releaser.setCodecName(translator.codecName());
 
     int finished = 0;
     int unfinished = 0;
@@ -802,7 +733,7 @@ int initQM()
     Translator::FileFormat format;
 
     format.extension = QLatin1String("qm");
-    format.description = QObject::tr("Compiled Qt translations");
+    format.description = FMT::tr("Compiled Qt translations");
     format.fileType = Translator::FileFormat::TranslationBinary;
     format.priority = 0;
     format.loader = &loadQM;
