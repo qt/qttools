@@ -32,7 +32,7 @@
     \ingroup internationalization
 
     \startpage {index.html}{Qt Reference Documentation}
-    \nextpage Qt Linguist Manual: Release Manager
+    \nextpage Overview of the Translation Process
 
     \keyword Qt Linguist
 
@@ -56,7 +56,27 @@
     the context in which phrases appear. Developers can use tutorials to learn
     about their tasks.
 
-    \section1 Overview of the Translation Process
+    \section1 Table of Contents
+
+    \list
+    \li \l{Overview of the Translation Process}
+    \li \l{Qt Linguist Manual: Release Manager}{Release Manager}
+    \li \l{Qt Linguist Manual: Translators}{Translators}
+    \li \l{Qt Linguist Manual: Developers}{Developers}
+    \li \l{Qt Linguist Manual: TS File Format}{TS File Format}
+    \li \l{Qt Linguist Manual: Text ID Based Translations}{Text ID Based Translations}
+    \endlist
+
+*/
+
+/*!
+    \page linguist-overview.html
+    \title Overview of the Translation Process
+    \ingroup internationalization
+
+    \contentspage {Qt Linguist Manual}{Contents}
+    \previouspage Qt Linguist Manual
+    \nextpage Qt Linguist Manual: Release Manager
 
     Most of the text that must be translated in an application
     consists of either single words or short phrases. These typically
@@ -116,17 +136,6 @@
     advantage of tools and translation services that work with this
     format. For more information on working with these files, see
     \l{Qt Linguist Manual: Translators}{Translators}.
-
-    \section1 Table of Contents
-
-    \list
-    \li \l{Qt Linguist Manual: Release Manager}{Release Manager}
-    \li \l{Qt Linguist Manual: Translators}{Translators}
-    \li \l{Qt Linguist Manual: Developers}{Developers}
-    \li \l{Qt Linguist Manual: TS File Format}{TS File Format}
-    \li \l{Qt Linguist Manual: Text ID Based Translations}{Text ID Based Translations}
-    \endlist
-
 */
 
 /*!
@@ -135,7 +144,7 @@
     \ingroup internationalization
 
     \contentspage {Qt Linguist Manual}{Contents}
-    \previouspage Qt Linguist Manual
+    \previouspage Overview of the Translation Process
     \nextpage Qt Linguist Manual: Translators
 
     Two tools are provided for the release manager, lupdate and
