@@ -4,6 +4,6 @@ TEMPLATE = subdirs
 
 qtHaveModule(widgets) {
     CMAKE_QT_MODULES_UNDER_TEST = designer help uitools
-
-    CONFIG += ctest_testcase
 }
+
+CONFIG += ctest_testcase
