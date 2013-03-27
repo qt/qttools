@@ -107,13 +107,7 @@ mac {
     QMAKE_INFO_PLIST = Info_mac.plist
 }
 
-contains(QT_CONFIG, static): {
-    SQLPLUGINS = $$unique(sql-plugins)
-    contains(SQLPLUGINS, sqlite): {
-        QTPLUGIN += qsqlite
-        DEFINES += USE_STATIC_SQLITE_PLUGIN
-    }
-}
+QTPLUGIN += qsqlite
 
 target.path=$$[QT_INSTALL_BINS]
 INSTALLS += target

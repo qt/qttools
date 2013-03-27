@@ -32,7 +32,7 @@
     \ingroup internationalization
 
     \startpage {index.html}{Qt Reference Documentation}
-    \nextpage Qt Linguist Manual: Release Manager
+    \nextpage Overview of the Translation Process
 
     \keyword Qt Linguist
 
@@ -56,7 +56,27 @@
     the context in which phrases appear. Developers can use tutorials to learn
     about their tasks.
 
-    \section1 Overview of the Translation Process
+    \section1 Table of Contents
+
+    \list
+    \li \l{Overview of the Translation Process}
+    \li \l{Qt Linguist Manual: Release Manager}{Release Manager}
+    \li \l{Qt Linguist Manual: Translators}{Translators}
+    \li \l{Qt Linguist Manual: Developers}{Developers}
+    \li \l{Qt Linguist Manual: TS File Format}{TS File Format}
+    \li \l{Qt Linguist Manual: Text ID Based Translations}{Text ID Based Translations}
+    \endlist
+
+*/
+
+/*!
+    \page linguist-overview.html
+    \title Overview of the Translation Process
+    \ingroup internationalization
+
+    \contentspage {Qt Linguist Manual}{Contents}
+    \previouspage Qt Linguist Manual
+    \nextpage Qt Linguist Manual: Release Manager
 
     Most of the text that must be translated in an application
     consists of either single words or short phrases. These typically
@@ -91,13 +111,13 @@
     \list
 
     \li A single phrase may need to be translated into several
-    different forms depending on context, e.g. \e open in English
+    different forms depending on context. For example, \e open in English
     might become \e{\ouml}\e{ffnen}, "open file", or \e aufbauen,
     "open internet connection", in German.
 
     \li Keyboard accelerators may need to be changed but without
-    introducing conflicts, e.g. "\&Quit" in English becomes "Avslutt"
-    in Norwegian which doesn't contain a "Q". We cannot use a letter
+    introducing conflicts. For example, "\&Quit" in English becomes "Avslutt"
+    in Norwegian which does not contain a "Q". We cannot use a letter
     that is already in use - unless we change several accelerators.
 
     \li Phrases that contain variables, for example, "The 25 files
@@ -116,17 +136,6 @@
     advantage of tools and translation services that work with this
     format. For more information on working with these files, see
     \l{Qt Linguist Manual: Translators}{Translators}.
-
-    \section1 Table of Contents
-
-    \list
-    \li \l{Qt Linguist Manual: Release Manager}{Release Manager}
-    \li \l{Qt Linguist Manual: Translators}{Translators}
-    \li \l{Qt Linguist Manual: Developers}{Developers}
-    \li \l{Qt Linguist Manual: TS File Format}{TS File Format}
-    \li \l{Qt Linguist Manual: Text ID Based Translations}{Text ID Based Translations}
-    \endlist
-
 */
 
 /*!
@@ -135,7 +144,7 @@
     \ingroup internationalization
 
     \contentspage {Qt Linguist Manual}{Contents}
-    \previouspage Qt Linguist Manual
+    \previouspage Overview of the Translation Process
     \nextpage Qt Linguist Manual: Translators
 
     Two tools are provided for the release manager, lupdate and
@@ -235,7 +244,7 @@
 
     This tool is run whenever a release of the application is to be
     made, from initial test version through to final release
-    version. If the QM files are not created, e.g. because an
+    version. If the QM files are not created, for example because an
     alpha release is required before any translation has been
     undertaken, the application will run perfectly well using the text
     the developers placed in the source files. Once the QM files
@@ -685,12 +694,12 @@
     The underlined character in a menu item or button label signifies
     that pressing the Alt key with the underlined character will
     perform the same action as clicking the menu item or pressing the
-    button.  For example, most applications have a \e{File} menu with
+    button. For example, most applications have a \e{File} menu with
     the "F" in the word "File" underlined. In these applications the
     \e{File} menu can be invoked either by clicking the word "File" on
     the menu bar or by pressing \e{Alt+F}. To identify an accelerator
-    key in the translation text ("File") precede it with an ampersand,
-    e.g. \e{\&File}. If a string to be translated has an ampersand in
+    key in the translation text ("File") precede it with an ampersand:
+    \e{\&File}. If a string to be translated has an ampersand in
     it, then the translation for that string should also have an
     ampersand in it, preferably in front of the same character.
 
@@ -700,7 +709,7 @@
     translated phrase does not contain the same character or if that
     character has already been used in the translation of some other
     Alt key accelerator. Conflicts with other Alt key accelerators
-    must be avoided within a context.  Note that some Alt key
+    must be avoided within a context. Note that some Alt key
     accelerators, usually those on the menu bar, may apply in other
     contexts.
 
@@ -718,9 +727,9 @@
     and then clicking \e{New} with the mouse, or by entering \e{Alt+F}
     and \e{N}.
 
-    Each Ctrl key accelerator is shown in the \l{Strings Window}
-    {string list} as a separate string, e.g. \key{Ctrl+Enter}. Since
-    the string doesn't have a context to give it meaning, e.g. like
+    Each Ctrl key accelerator is shown in the \gui Strings window
+    as a separate string, for example \key{Ctrl+Enter}. Since
+    the string does not have a context to give it meaning, such as
     the context of the phrase in which an Alt key accelerator appears,
     the translator must rely on the UI developer to include a
     \l{QObject::tr()} {disambiguation comment} to explain the action
@@ -756,7 +765,7 @@
     be replaced with the first and next file names respectively. The
     same numbered arguments must appear in the translation, but not
     necessarily in the same order. A German translation of the string
-    might reverse the phrases, e.g. \c{Datei %2 wird bearbeitet, wenn
+    might reverse the phrases, for example \c{Datei %2 wird bearbeitet, wenn
     Datei %1 fertig ist}. Both numbered arguments appear in the
     translation, but in the reverse order. \c{%i} will always be
     replaced by the same text in the translation strings, regardless
@@ -1278,7 +1287,7 @@
     In production applications a more flexible approach, for example,
     loading translations according to locale, might be more appropriate. If
     the TS files are all named according to a convention such as
-    \e appname_locale, e.g. \c tt2_fr, \c tt2_de etc, then the
+    \e appname_locale, for example \c tt2_fr, \c tt2_de, and so on, then the
     code above will load the current locale's translation at runtime.
 
     If there is no translation file for the current locale the application
@@ -1321,7 +1330,9 @@
     a dialog that contained two separate frames, each of which contained an
     "Enabled" option would need each identified because in some languages the
     translation would differ between the two. This is easily achieved using the
-    two argument form of the \c tr() call, e.g.
+    two argument form of the \c tr() call.
+
+    For example:
 
     \snippet doc_src_linguist-manual.cpp 10
 
@@ -1342,7 +1353,9 @@
     In large complex applications it may be difficult for the translator to
     see where a particular source text comes from. This problem can be
     solved by adding a comment using the keyword \e TRANSLATOR which
-    describes the navigation steps to reach the text in question; e.g.
+    describes the navigation steps to reach the text in question.
+
+    For example:
 
     \snippet doc_src_linguist-manual.cpp 12
 
@@ -1364,9 +1377,9 @@
 
     If a French translation is loaded, this will expand to "0 item
     remplac\unicode{233}", "1 item remplac\unicode{233}", "2 items
-    remplac\unicode{233}s", etc., depending on \c{n}'s value.
+    remplac\unicode{233}s", and so on, depending on \c{n}'s value.
     And if no translation is loaded, the original string is used, with \c %n
-    replaced with count's value (e.g., "6 item(s) replaced").
+    replaced with count's value (for example, "6 item(s) replaced").
 
     To handle plural forms in the native language, you need to load a
     translation file for this language, too.
