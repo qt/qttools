@@ -26,15 +26,15 @@ contains(CMAKE_BIN_DIR, "$${CMAKE_QT_INSTALL_PREFIX_ESCAPED}.*") {
     CMAKE_BIN_DIR_IS_ABSOLUTE = True
 }
 
+load(qt_build_paths)
+
 cmake_linguist_config_file.input = $$PWD/Qt5LinguistToolsConfig.cmake.in
 cmake_linguist_config_version_file.input = $$[QT_HOST_DATA]/mkspecs/features/data/cmake/Qt5ConfigVersion.cmake.in
 cmake_linguist_macros_file.input = $$PWD/Qt5LinguistToolsMacros.cmake
-# NOTE: We need to put the linguist tools cmake files in the lib directory. The lib directory
-# as set by the uitools module is used for that, as linguist doesn't set such a variable.
-CMAKE_PACKAGE_VERSION = $$eval(QT.uitools.VERSION)
-cmake_linguist_config_file.output = $$eval(QT.uitools.libs)/cmake/Qt5LinguistTools/Qt5LinguistToolsConfig.cmake
-cmake_linguist_config_version_file.output = $$eval(QT.uitools.libs)/cmake/Qt5LinguistTools/Qt5LinguistToolsConfigVersion.cmake
-cmake_linguist_macros_file.output = $$eval(QT.uitools.libs)/cmake/Qt5LinguistTools/Qt5LinguistToolsMacros.cmake
+CMAKE_PACKAGE_VERSION = $$MODULE_VERSION
+cmake_linguist_config_file.output = $$MODULE_BASE_OUTDIR/lib/cmake/Qt5LinguistTools/Qt5LinguistToolsConfig.cmake
+cmake_linguist_config_version_file.output = $$MODULE_BASE_OUTDIR/lib/cmake/Qt5LinguistTools/Qt5LinguistToolsConfigVersion.cmake
+cmake_linguist_macros_file.output = $$MODULE_BASE_OUTDIR/lib/cmake/Qt5LinguistTools/Qt5LinguistToolsMacros.cmake
 cmake_linguist_macros_file.CONFIG = verbatim
 QMAKE_SUBSTITUTES += cmake_linguist_config_file cmake_linguist_config_version_file cmake_linguist_macros_file
 
