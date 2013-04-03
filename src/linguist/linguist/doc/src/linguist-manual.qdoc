@@ -151,6 +151,33 @@
     lrelease. These tools can process \l qmake project files, or operate
     directly on the file system.
 
+    \section1 Creating Translation Files
+
+    Translation files consist of all the user-visible text and Ctrl key
+    accelerators in an application and translations of that text.
+
+    To create translation files:
+
+    \list 1
+
+        \li Run lupdate to generate the first set of translation source (TS) files
+            with all the user-visible text but no translations.
+
+        \li Give the TS files to the translator who adds translations using \QL. \QL
+            takes care of any changed or deleted source text.
+
+        \li Run lupdate to incorporate any new text added to the application.
+            lupdate synchronizes the user-visible text from the application with the
+            translations. It does not destroy any data.
+
+        \li To release the application, run lrelease to read the TS files and
+            produce the QM files used by the application at runtime.
+
+    \endlist
+
+    For lupdate to work successfully, it must know which translation files to
+    produce. The files are listed in the application's \c .pro Qt project file.
+
     \section1 Qt Project Files
 
     The easiest method to use lupdate and lrelease is by specifying
@@ -1240,32 +1267,6 @@
     from C++ and QML. The following sections describe how to make C++ sources
     translatable. For more information about making QML sources translatable, see
     \l{Internationalization and Localization with Qt Quick}.
-
-    \section2 Creating Translation Files
-
-    Translation files consist of all the user-visible text and Ctrl key
-    accelerators in an application and translations of that text.
-    Translation files are created as follows:
-
-    \list 1
-    \li Run lupdate to generate the first set of TS translation source files
-        with all the user-visible text but no translations.
-    \li Give the TS files to the translator who adds translations using \QL. \QL
-        takes care of any changed or deleted source text.
-    \li Run lupdate to incorporate any new text added to the application.
-        lupdate synchronizes the user-visible text from the application with the
-        translations. It does not destroy any data.
-    \li To release the application, run lrelease to read the TS files and
-        produce the QM files used by the application at runtime.
-    \endlist
-
-    For lupdate to work successfully, it must know which translation files to
-    produce. The files are
-    listed in the application's \c .pro Qt project file, for example:
-
-    \snippet arrowpad/arrowpad.pro 1
-
-    For more information, see \l{Using lupdate} and \l{Using lrelease}.
 
     \section2 Loading Translations
 
