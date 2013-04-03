@@ -107,7 +107,7 @@ mac {
     QMAKE_INFO_PLIST = Info_mac.plist
 }
 
-QTPLUGIN += qsqlite
+contains(SQLPLUGINS, sqlite):QTPLUGIN += qsqlite
 
 target.path=$$[QT_INSTALL_BINS]
 INSTALLS += target
