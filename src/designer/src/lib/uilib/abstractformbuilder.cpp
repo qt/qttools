@@ -1824,7 +1824,6 @@ DomResources *QAbstractFormBuilder::saveResources()
 DomButtonGroups *QAbstractFormBuilder::saveButtonGroups(const QWidget *mainContainer)
 {
     // Save fst order buttongroup children of maincontainer
-    typedef QList<QButtonGroup*> ButtonGroupList;
     const QObjectList mchildren = mainContainer->children();
     if (mchildren.empty())
         return 0;
@@ -2671,7 +2670,6 @@ static QString buttonGroupName(const DomWidget *ui_widget)
 
 void QAbstractFormBuilder::loadButtonExtraInfo(const DomWidget *ui_widget, QAbstractButton *button, QWidget *)
 {
-    typedef QFormBuilderExtra::ButtonGroupEntry ButtonGroupEntry;
     typedef QFormBuilderExtra::ButtonGroupHash ButtonGroupHash;
 
     const QString groupName = buttonGroupName(ui_widget);
