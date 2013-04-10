@@ -83,7 +83,7 @@
 
     Most of the text that must be translated in an application
     consists of either single words or short phrases. These typically
-    appear as window titles, menu items, pop-up help text (balloon help),
+    appear as window titles, menu items, tooltips,
     and labels to buttons, check boxes and radio buttons.
 
     The phrases are entered into the source code by the developer in
