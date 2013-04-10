@@ -867,14 +867,48 @@
     with Qt, but requires a certain amount of developer intervention and
     will of course incur some runtime performance cost.
 
-    \section1 Making the Application Translation-Aware
+    \section1 Internationalizing Applications
 
-    Developers should make their application look for and load the
-    appropriate translation file and mark user-visible text and Ctrl
-    keyboard accelerators as targets for translation.
+    Design your application so that it can be adapted to various languages and
+    regions without engineering changes. Qt tries to make internationalization
+    as painless as possible for you. All input controls and text drawing methods
+    in Qt offer built-in support for all supported languages. But you still need
+    to keep the following things in mind when writing source code for your
+    application:
+
+    \list
+
+        \li Make your application look for and load the appropriate translation
+            file.
+
+        \li Mark user-visible text and Ctrl keyboard accelerators as targets for
+            translation.
+
+        \li Provide context for text to be translated.
+
+        \li Disambiguate identical texts.
+
+        \li Use numbered arguments (%n) as placeholders for parameters that are
+            replaced with text or numbers at run-time.
+
+        \li Internationalize numbers, dates, times, and currencies.
+
+        \li Mark data text strings outside functions translatable.
+
+    \endlist
+
+    You can develop applications that use both C++ and QML sources in the same
+    application and even have user interface strings in both sources. The tools
+    create a single combined translation file and the strings are accessible
+    from C++ and QML.
+
+    The classes that support internationalizing of Qt applications are described
+    in \l{Internationalization with Qt}. The process of making source code
+    translatable is described in \l{Writing Source Code for Translation} and in
+    \l{Internationalization and Localization with Qt Quick}.
 
     Each piece of text that requires translating requires context to help
-    the translator identify where in the program the text occurs. In the
+    the translator identify where in the program the text appears. In the
     case of multiple identical texts that require different translations,
     the translator also requires some information to disambiguate the
     source texts. Marking text for translation will automatically cause
@@ -882,214 +916,33 @@
     the developer may be required to add additional information to help
     the translator.
 
-    You can develop applications that use both C++ and QML sources in the same
-    application and even have user interface strings in both sources. The tools
-    create a single combined translation file and the strings are accessible
-    from C++ and QML. The following sections describe how to make C++ sources
-    translatable. For more information about making QML sources translatable, see
-    \l{Internationalization and Localization with Qt Quick}.
-
-    \section2 Loading Translations
-
-    \snippet hellotr/main.cpp 1
-    \snippet hellotr/main.cpp 3
-
-    This is how a simple \c main() function of a Qt application begins.
-
-    \snippet hellotr/main.cpp 1
-    \snippet hellotr/main.cpp 4
-
-    For a translation-aware application a translator object is created, a
-    translation is loaded and the translator object installed into the
-    application.
-
-    \snippet arrowpad/main.cpp 0
-    \snippet arrowpad/main.cpp 1
-
-    In production applications a more flexible approach, for example,
-    loading translations according to locale, might be more appropriate. If
-    the TS files are all named according to a convention such as
-    \e appname_locale, for example \c tt2_fr, \c tt2_de, and so on, then the
-    code above will load the current locale's translation at runtime.
-
-    If there is no translation file for the current locale the application
-    will fall back to using the original source text.
-
-    Note that if you need to programmatically add translations at
-    runtime, you can reimplement QTranslator::translate().
-
-    \section2 Making the Application Translate User-Visible Strings
-
-    User-visible strings are marked as translation targets by wrapping them
-    in a \c tr() call, for example:
-
-    \snippet doc_src_linguist-manual.cpp 6
-
-    would become
-
-    \snippet doc_src_linguist-manual.cpp 7
-
-    All QObject subclasses that use the \c Q_OBJECT macro implement
-    the \c tr() function.
-
-    Although the \c tr() call is normally made directly since it is
-    usually called as a member function of a QObject subclass, in
-    other cases an explicit class name can be supplied, for example:
-
-    \snippet doc_src_linguist-manual.cpp 8
-
-    or
-
-    \snippet doc_src_linguist-manual.cpp 9
-
-    \section2 Distinguishing Between Identical Translatable Strings
-
-    The lupdate tool automatically
-    provides a \e context for every source text. This context is the class
-    name of the class that contains the \c tr() call. This is sufficient in
-    the vast majority of cases. Sometimes however, the translator will need
-    further information to uniquely identify a source text; for example,
-    a dialog that contained two separate frames, each of which contained an
-    "Enabled" option would need each identified because in some languages the
-    translation would differ between the two. This is easily achieved using the
-    two argument form of the \c tr() call.
-
-    For example:
-
-    \snippet doc_src_linguist-manual.cpp 10
-
-    and
-
-    \snippet doc_src_linguist-manual.cpp 11
-
-    Ctrl key accelerators are also translatable:
-
-    \snippet trollprint/mainwindow.cpp 2
-
-    It is strongly recommended that the two argument form of \c tr() is used
-    for Ctrl key accelerators. The second argument is the only clue the
-    translator has as to the function performed by the accelerator.
-
-    \section2 Helping the Translator with Navigation Information
-
-    In large complex applications it may be difficult for the translator to
-    see where a particular source text comes from. This problem can be
-    solved by adding a comment using the keyword \e TRANSLATOR which
-    describes the navigation steps to reach the text in question.
-
-    For example:
-
-    \snippet doc_src_linguist-manual.cpp 12
-
-    These comments are particularly useful for widget classes.
-
-    \section2 Handling Plural Forms
-
-    Qt includes a \c tr() overload that will make it very easy to
-    write "plural-aware" internationalized applications. This overload
-    has the following signature:
-
-    \snippet doc_src_linguist-manual.cpp 17
-
-    Depending on the value of \c n, the \c tr() function will return a different
-    translation, with the correct grammatical number for the target language.
-    Also, any occurrence of \c %n is replaced with \c{n}'s value. For example:
-
-    \snippet doc_src_linguist-manual.cpp 18
-
-    If a French translation is loaded, this will expand to "0 item
-    remplac\unicode{233}", "1 item remplac\unicode{233}", "2 items
-    remplac\unicode{233}s", and so on, depending on \c{n}'s value.
-    And if no translation is loaded, the original string is used, with \c %n
-    replaced with count's value (for example, "6 item(s) replaced").
-
-    To handle plural forms in the native language, you need to load a
-    translation file for this language, too.
-    The lupdate tool has the
-    \c -pluralonly command line option, which allows the creation of
-    TS files containing only entries with plural forms.
-
-    See the \l{Qt Quarterly} Article
-    \l{http://doc.qt.digia.com/qq/qq19-plurals.html}{Plural Forms in Translations}
-    for further details on this issue.
-
-    \section2 Coping With C++ Namespaces
-
-    C++ namespaces and the \c {using namespace} statement can confuse
-    lupdate. It will interpret
-    \c MyClass::tr() as meaning just that, not as
-    \c MyNamespace::MyClass::tr(), even if \c MyClass is
-    defined in the \c MyNamespace namespace. Runtime translation of
-    these strings will fail because of that.
-
-    You can work around this limitation by putting a \e TRANSLATOR
-    comment at the beginning of the source files that use \c
-    MyClass::tr():
-
-    \snippet doc_src_linguist-manual.cpp 13
-
-    After the comment, all references to \c MyClass::tr() will be
-    understood as meaning \c MyNamespace::MyClass::tr().
-
-    \section2 Translating Text That is Outside of a QObject Subclass
-
-    \section3 Using QCoreApplication::translate()
-
-    If the quoted text is not in a member function of a QObject subclass,
-    use either the tr() function of an appropriate class, or the
-    QCoreApplication::translate() function directly:
-
-    \snippet doc_src_linguist-manual.cpp 14
-
-    \section3 Using QT_TR_NOOP() and QT_TRANSLATE_NOOP()
-
-    If you need to have translatable text completely outside a function,
-    there are two macros to help: QT_TR_NOOP() and QT_TRANSLATE_NOOP().
-    These macros merely mark the text for extraction by
-    lupdate.
-    The macros expand to just the text (without the context).
-
-    Example of QT_TR_NOOP():
-    \snippet doc_src_linguist-manual.cpp 15
-
-    Example of QT_TRANSLATE_NOOP():
-    \snippet doc_src_linguist-manual.cpp 16
-
     \section1 Tutorials
 
-    Three tutorials are presented:
+    The following tutorials illustrate how to prepare Qt applications for
+    translation:
 
-    \list 1
-    \li \l{hellotr}{Hello tr()} demonstrates the creation of
-        a \l QTranslator object. It also shows the simplest use of
+    \list
+    \li \l{hellotr}{Hello tr()} is a C++ application that demonstrates the
+        creation of a \l QTranslator object. It also shows the simplest use of
         the \c tr() function to mark user-visible source text for
         translation.
 
-    \li \l{arrowpad}{Arrow Pad} explains how to make the application load the
+    \li \l{arrowpad}{Arrow Pad} is a C++ application that demonstrates how to
+       make the application load the
        translation file applicable to the current locale. It also shows the
        use of the two-argument form of \c tr() which provides additional
        information to the translator.
 
-    \li \l{trollprint}{Troll Print} explains how
+    \li \l{trollprint}{Troll Print} is a C++ application that demonstrates how
         identical source texts can be distinguished even when they occur in
         the same context. This tutorial also discusses how the translation
         tools help minimize the translator's work when an application is
         upgraded.
+
+    \li \l{QML Examples - Internationalization}{Internationalization} is a
+        Qt Quick application that demonstrates how to internationalize Qt Quick
+        applications.
     \endlist
-
-    These tutorials cover all that you need to know to prepare your Qt
-    applications for translation.
-
-    At the beginning of a project add the translation source files to be
-    used to the project file and add calls to
-    lupdate and lrelease to the Makefile.
-
-    During the project all the developer must do is wrap any user-visible
-    text in \c tr() calls. They should also use the two argument form for
-    Ctrl key accelerators, or when asked by the translator for the cases
-    where the same text translates into two different forms in the same
-    context. The developer should also include \c TRANSLATION comments to
-    help the translator navigate the application.
 */
 
 /*!
