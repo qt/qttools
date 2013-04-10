@@ -56,6 +56,9 @@
     the context in which phrases appear. Developers can use tutorials to learn
     about their tasks.
 
+    For more information about the supported languages and writing systems, see
+    \l{Internationalization with Qt}.
+
     \section1 Table of Contents
 
     \list
