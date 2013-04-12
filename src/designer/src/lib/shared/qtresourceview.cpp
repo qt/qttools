@@ -43,7 +43,6 @@
 #include "qtresourcemodel_p.h"
 #include "qtresourceeditordialog_p.h"
 #include "iconloader_p.h"
-#include "filterwidget_p.h" // For FilterWidget
 
 #include <QtDesigner/QDesignerFormEditorInterface>
 #include <QtDesigner/QDesignerSettingsInterface>
@@ -68,6 +67,7 @@
 #include <QtGui/QClipboard>
 #endif
 #include <QtWidgets/QMenu>
+#include <QtWidgets/QLineEdit>
 #include <QtGui/QDrag>
 #include <QtCore/QMimeData>
 #include <QtXml/QDomDocument>
@@ -165,7 +165,7 @@ public:
     QDesignerFormEditorInterface *m_core;
     QtResourceModel *m_resourceModel;
     QToolBar *m_toolBar;
-    qdesigner_internal::FilterWidget *m_filterWidget;
+    QWidget *m_filterWidget;
     QTreeWidget *m_treeWidget;
     QListWidget *m_listWidget;
     QSplitter *m_splitter;
@@ -609,10 +609,15 @@ QtResourceView::QtResourceView(QDesignerFormEditorInterface *core, QWidget *pare
     d_ptr->m_copyResourcePathAction->setEnabled(false);
 #endif
 
-    //d_ptr->m_filterWidget = new qdesigner_internal::FilterWidget(0, qdesigner_internal::FilterWidget::LayoutAlignNone);
-    d_ptr->m_filterWidget = new qdesigner_internal::FilterWidget(d_ptr->m_toolBar);
+    d_ptr->m_filterWidget = new QWidget(d_ptr->m_toolBar);
+    QHBoxLayout *filterLayout = new QHBoxLayout(d_ptr->m_filterWidget);
+    QLineEdit *filterLineEdit = new QLineEdit(d_ptr->m_filterWidget);
+    connect(filterLineEdit, SIGNAL(textChanged(QString)), this, SLOT(slotFilterChanged(QString)));
+    filterLineEdit->setPlaceholderText(tr("Filter"));
+    filterLineEdit->setClearButtonEnabled(true);
+    filterLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::MinimumExpanding, QSizePolicy::Ignored));
+    filterLayout->addWidget(filterLineEdit);
     d_ptr->m_toolBar->addWidget(d_ptr->m_filterWidget);
-    connect(d_ptr->m_filterWidget, SIGNAL(filterChanged(QString)), this, SLOT(slotFilterChanged(QString)));
 
     d_ptr->m_splitter = new QSplitter;
     d_ptr->m_splitter->setChildrenCollapsible(false);

@@ -55,6 +55,7 @@ QT_BEGIN_NAMESPACE
 class DomProperty;
 class QDesignerMetaDataBaseItemInterface;
 class QDesignerPropertySheetExtension;
+class QLineEdit;
 
 class QtAbstractPropertyBrowser;
 class QtButtonPropertyBrowser;
@@ -69,7 +70,6 @@ namespace qdesigner_internal {
 class StringProperty;
 class DesignerPropertyManager;
 class DesignerEditorFactory;
-class FilterWidget;
 class ElidingLabel;
 
 class QT_PROPERTYEDITOR_EXPORT PropertyEditor: public QDesignerPropertyEditor
@@ -176,7 +176,7 @@ private:
     bool m_updatingBrowser;
 
     QStackedWidget *m_stackedWidget;
-    FilterWidget *m_filterWidget;
+    QLineEdit *m_filterWidget;
     int m_buttonIndex;
     int m_treeIndex;
     QAction *m_addDynamicAction;

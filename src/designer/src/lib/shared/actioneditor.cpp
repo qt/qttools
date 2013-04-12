@@ -40,7 +40,6 @@
 ****************************************************************************/
 
 #include "actioneditor_p.h"
-#include "filterwidget_p.h"
 #include "actionrepository_p.h"
 #include "iconloader_p.h"
 #include "newactiondialog_p.h"
@@ -205,8 +204,14 @@ ActionEditor::ActionEditor(QDesignerFormEditorInterface *core, QWidget *parent, 
     m_listViewAction->setIcon(style()->standardIcon (QStyle::SP_FileDialogDetailedView));
     configureMenu->addAction(m_listViewAction);
     // filter
-    m_filterWidget = new FilterWidget(toolbar);
-    connect(m_filterWidget, SIGNAL(filterChanged(QString)), this, SLOT(setFilter(QString)));
+    m_filterWidget = new QWidget(toolbar);
+    QHBoxLayout *filterLayout = new QHBoxLayout(m_filterWidget);
+    QLineEdit *filterLineEdit = new QLineEdit(m_filterWidget);
+    connect(filterLineEdit, SIGNAL(textChanged(QString)), this, SLOT(setFilter(QString)));
+    filterLineEdit->setPlaceholderText(tr("Filter"));
+    filterLineEdit->setClearButtonEnabled(true);
+    filterLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::MinimumExpanding, QSizePolicy::Ignored));
+    filterLayout->addWidget(filterLineEdit);
     m_filterWidget->setEnabled(false);
     toolbar->addWidget(m_filterWidget);
 

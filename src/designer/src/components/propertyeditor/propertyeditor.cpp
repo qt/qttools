@@ -47,7 +47,6 @@
 #include "designerpropertymanager.h"
 #include "qdesigner_propertysheet_p.h"
 #include "formwindowbase_p.h"
-#include "filterwidget_p.h" // For FilterWidget
 
 #include "newdynamicpropertydialog.h"
 #include "dynamicpropertysheet.h"
@@ -226,7 +225,7 @@ PropertyEditor::PropertyEditor(QDesignerFormEditorInterface *core, QWidget *pare
     m_dynamicGroup(0),
     m_updatingBrowser(false),
     m_stackedWidget(new QStackedWidget),
-    m_filterWidget(new FilterWidget(0, FilterWidget::LayoutAlignNone)),
+    m_filterWidget(new QLineEdit),
     m_buttonIndex(-1),
     m_treeIndex(-1),
     m_addDynamicAction(new QAction(createIconSet(QStringLiteral("plus.png")), tr("Add Dynamic Property..."), this)),
@@ -331,7 +330,9 @@ PropertyEditor::PropertyEditor(QDesignerFormEditorInterface *core, QWidget *pare
     m_treeBrowser->setResizeMode(QtTreePropertyBrowser::Interactive);
     m_treeIndex = m_stackedWidget->addWidget(m_treeBrowser);
     connect(m_treeBrowser, SIGNAL(currentItemChanged(QtBrowserItem*)), this, SLOT(slotCurrentItemChanged(QtBrowserItem*)));
-    connect(m_filterWidget, SIGNAL(filterChanged(QString)), this, SLOT(setFilter(QString)));
+    m_filterWidget->setPlaceholderText(tr("Filter"));
+    m_filterWidget->setClearButtonEnabled(true);
+    connect(m_filterWidget, SIGNAL(textChanged(QString)), this, SLOT(setFilter(QString)));
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->addWidget(toolBar);

@@ -48,17 +48,60 @@
 
 #include <iconloader_p.h>
 #include <qdesigner_utils_p.h>
-#include <filterwidget_p.h>
 
 #include <QtGui/QDropEvent>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QToolBar>
+#include <QtWidgets/QLineEdit>
 #include <QtGui/QIcon>
 
 QT_BEGIN_NAMESPACE
 
 namespace qdesigner_internal {
+
+/* WidgetBoxFilterLineEdit: This widget should never have initial focus
+ * (ie, be the first widget of a dialog, else, the hint cannot be displayed.
+ * As it is the only focusable control in the widget box, it clears the focus
+ * policy and focusses explicitly on click only (note that setting Qt::ClickFocus
+ * is not sufficient for that as an ActivationFocus will occur). */
+
+class WidgetBoxFilterLineEdit : public QLineEdit {
+public:
+    explicit WidgetBoxFilterLineEdit(QWidget *parent = 0) : QLineEdit(parent), m_defaultFocusPolicy(focusPolicy())
+        { setFocusPolicy(Qt::NoFocus); }
+
+protected:
+    virtual void mousePressEvent(QMouseEvent *event);
+    virtual void focusInEvent(QFocusEvent *e);
+
+private:
+    const Qt::FocusPolicy m_defaultFocusPolicy;
+};
+
+void WidgetBoxFilterLineEdit::mousePressEvent(QMouseEvent *e)
+{
+    if (!hasFocus()) // Explicitly focus on click.
+        setFocus(Qt::OtherFocusReason);
+    QLineEdit::mousePressEvent(e);
+}
+
+void WidgetBoxFilterLineEdit::focusInEvent(QFocusEvent *e)
+{
+    // Refuse the focus if the mouse it outside. In addition to the mouse
+    // press logic, this prevents a re-focussing which occurs once
+    // we actually had focus
+    const Qt::FocusReason reason = e->reason();
+    if (reason == Qt::ActiveWindowFocusReason || reason == Qt::PopupFocusReason) {
+        const QPoint mousePos = mapFromGlobal(QCursor::pos());
+        const bool refuse = !geometry().contains(mousePos);
+        if (refuse) {
+            e->ignore();
+            return;
+        }
+    }
+    QLineEdit::focusInEvent(e);
+}
 
 WidgetBox::WidgetBox(QDesignerFormEditorInterface *core, QWidget *parent, Qt::WindowFlags flags)
     : QDesignerWidgetBox(parent, flags),
@@ -71,11 +114,11 @@ WidgetBox::WidgetBox(QDesignerFormEditorInterface *core, QWidget *parent, Qt::Wi
     l->setSpacing(0);
 
     // Prevent the filter from grabbing focus since Our view has Qt::NoFocus
-    FilterWidget *filterWidget = new FilterWidget(0, FilterWidget::LayoutAlignNone);
-    filterWidget->setRefuseFocus(true);
-    connect(filterWidget, SIGNAL(filterChanged(QString)), m_view, SLOT(filter(QString)));
-
     QToolBar *toolBar = new QToolBar(this);
+    QLineEdit *filterWidget = new WidgetBoxFilterLineEdit(toolBar);
+    filterWidget->setPlaceholderText(tr("Filter"));
+    filterWidget->setClearButtonEnabled(true);
+    connect(filterWidget, SIGNAL(textChanged(QString)), m_view, SLOT(filter(QString)));
     toolBar->addWidget(filterWidget);
     l->addWidget(toolBar);
 

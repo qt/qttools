@@ -106,7 +106,6 @@ HEADERS += \
     $$PWD/qdesigner_formwindowmanager_p.h \
     $$PWD/shared_settings_p.h \
     $$PWD/newformwidget_p.h \
-    $$PWD/filterwidget_p.h \
     $$PWD/plugindialog_p.h \
     $$PWD/rcc_p.h
 
@@ -183,7 +182,6 @@ SOURCES += \
     $$PWD/qdesigner_formwindowmanager.cpp \
     $$PWD/shared_settings.cpp \
     $$PWD/newformwidget.cpp \
-    $$PWD/filterwidget.cpp \
     $$PWD/plugindialog.cpp \
     $$PWD/rcc.cpp
 
