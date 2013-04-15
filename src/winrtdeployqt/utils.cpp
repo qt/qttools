@@ -303,11 +303,19 @@ bool updateFile(const QString &sourceFileName, const QString &targetDirectory, Q
         return false;
     }
     const QFileInfo targetFileInfo(targetFileName);
-    if (targetFileInfo.exists() && targetFileInfo.lastModified() >= sourceFileInfo.lastModified()) {
-        if (optVerboseLevel)
-            std::printf("%s is up to date.\n", qPrintable(sourceFileInfo.fileName()));
-        return true;
-    }
+    if (targetFileInfo.exists()) {
+        if (targetFileInfo.lastModified() >= sourceFileInfo.lastModified()) {
+            if (optVerboseLevel)
+                std::printf("%s is up to date.\n", qPrintable(sourceFileInfo.fileName()));
+            return true;
+        }
+        QFile targetFile(targetFileName);
+        if (!targetFile.remove()) {
+            *errorMessage = QString::fromLatin1("Cannot remove existing file %1: %2")
+                            .arg(QDir::toNativeSeparators(targetFileName), targetFile.errorString());
+            return false;
+        }
+    } // target exists
     QFile file(sourceFileName);
     if (optVerboseLevel)
         std::printf("Updating %s.\n", qPrintable(sourceFileInfo.fileName()));
