@@ -222,10 +222,7 @@
     \note The minimum supported version for XLIFF format files is
     1.1. XLIFF 1.0 version files are not supported.
 
-    Pass the \c -help option to \c lupdate to obtain the list of
-    supported options:
-
-    \snippet doc_src_linguist-manual.qdoc 4
+    Pass the \c -help option to \c lupdate to view supported options.
 
     \QL is also able to import and export XLIFF files. See the
     \l{Qt Linguist Manual: Translators}{Translators} section for more
@@ -255,10 +252,7 @@
     marked as "finished". Otherwise the original text is used
     instead.
 
-    Pass the \c -help option to \c lrelease to obtain the list of
-    supported options:
-
-    \snippet doc_src_linguist-manual.qdoc 5
+    Pass the \c -help option to \c lrelease to view supported options.
 
     \section1 Missing Translations
 
