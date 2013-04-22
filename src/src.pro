@@ -22,6 +22,3 @@ mac {
 embedded:SUBDIRS += kmap2qmap
 
 qtHaveModule(dbus): SUBDIRS += qdbus
-# We don't need these command line utilities on embedded platforms.
-embedded: SUBDIRS += makeqpf
-
