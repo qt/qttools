@@ -19,6 +19,4 @@ mac {
     SUBDIRS += macdeployqt
 }
 
-embedded:SUBDIRS += kmap2qmap
-
 qtHaveModule(dbus): SUBDIRS += qdbus
