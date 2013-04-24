@@ -85,7 +85,9 @@
 #include <QtGui/QImage>
 #include <QtGui/QPixmap>
 #include <QtWidgets/QMdiSubWindow>
+#ifndef QT_NO_PRINTER
 #include <QtPrintSupport/QPrintDialog>
+#endif
 #include <QtGui/QPainter>
 #include <QtGui/QTransform>
 #include <QtGui/QCursor>
