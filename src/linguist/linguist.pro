@@ -5,6 +5,10 @@ SUBDIRS  = \
     lconvert
 !no-png:qtHaveModule(widgets): SUBDIRS += linguist
 
+qtNomakeTools( \
+    linguist \
+)
+
 win32:CMAKE_BIN_SUFFIX = ".exe"
 
 CMAKE_QT_INSTALL_PREFIX_ESCAPED = "^$$re_escape($$[QT_INSTALL_PREFIX])/"

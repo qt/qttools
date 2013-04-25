@@ -12,3 +12,10 @@ assistant.depends = help
 qhelpgenerator.depends = help
 qcollectiongenerator.depends = help
 qhelpconverter.depends = help
+
+qtNomakeTools( \
+    assistant \
+    qhelpgenerator \
+    qcollectiongenerator \
+    qhelpconverter \
+)

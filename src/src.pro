@@ -21,3 +21,9 @@ mac {
 }
 
 qtHaveModule(dbus): SUBDIRS += qdbus
+
+qtNomakeTools( \
+    pixeltool \
+    qtconfig \
+    macdeployqt \
+)
