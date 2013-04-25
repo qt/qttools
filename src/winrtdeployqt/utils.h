@@ -56,6 +56,7 @@ bool runProcess(const QString &commandLine, const QString &workingDirectory = QS
                 unsigned long *exitCode = 0, QByteArray *stdOut = 0, QByteArray *stdErr = 0,
                 QString *errorMessage = 0);
 QString winErrorMessage(unsigned long error);
+QStringList findDependentLibraries(const QString &peExecutableFileName, QString *errorMessage);
 
 extern int optVerboseLevel;
 

@@ -127,7 +127,7 @@ int main(int argc, char **argv)
     if (optVerboseLevel > 1)
         std::fprintf(stderr, "Qt binaries in %s\n", qPrintable(QDir::toNativeSeparators(qtBinDir)));
 
-    const QStringList dependentLibs = findDependentLibs(binary, &errorMessage);
+    const QStringList dependentLibs = findDependentLibraries(binary, &errorMessage);
     if (dependentLibs.isEmpty()) {
         std::fprintf(stderr, "Unable to find dependent libraries of %s: %s\n",
                      qPrintable(binary), qPrintable(errorMessage));

@@ -208,67 +208,6 @@ QString queryQMake(const QString &variable, QString *errorMessage)
     return QString::fromLocal8Bit(stdOut).trimmed();
 }
 
-// run "depends.exe" in command line mode to find dependent libs.
-// Note that this returns non-normalized (all CAPS) file names.
-QStringList findDependentLibs(const QString &binary, QString *errorMessage)
-{
-    const QString depends = QStringLiteral("depends.exe");
-    const QString dependsPath = findSdkTool(depends);
-    if (dependsPath.isEmpty()) {
-        *errorMessage = QString::fromLatin1("Cannot find %1.").arg(depends);
-        return QStringList();
-    }
-    QString tempPattern = QDir::tempPath();
-    if (!tempPattern.endsWith(QLatin1Char('/')))
-        tempPattern += QLatin1Char('/');
-    tempPattern += QLatin1String("dependsXXXXXX.csv");
-    QScopedPointer<QTemporaryFile> temporaryFile(new QTemporaryFile(tempPattern));
-    if (!temporaryFile->open()) {
-        *errorMessage = QString::fromLatin1("Cannot open temporary file.");
-        return QStringList();
-    }
-    const QString fileName = temporaryFile->fileName();
-    temporaryFile->close();
-    temporaryFile.reset();
-
-    const QString commandLine = QLatin1Char('"') + QDir::toNativeSeparators(dependsPath)
-        + QStringLiteral("\" /c /f:1 \"/oc:") + QDir::toNativeSeparators(fileName)
-        +  QStringLiteral("\" \"") + QDir::toNativeSeparators(binary) + QLatin1Char('"');
-
-    if (!runProcess(commandLine, QString(), 0, 0, 0, errorMessage))
-        return QStringList();
-    // Ignore return codes by missing dependencies (iexplorer,etc).
-    QFile resultFile(fileName);
-    if (!resultFile.open(QIODevice::Text | QIODevice::ReadOnly)) {
-        *errorMessage = QString::fromLatin1("Cannot open %1: %2")
-                        .arg(QDir::toNativeSeparators(fileName), resultFile.errorString());
-        return QStringList();
-    }
-    // Read CSV lines: 0,"c:\x.dll",...'
-    QStringList result;
-    resultFile.readLine(); // Skip header
-    for (int l = 0; ; ++l) {
-        const QByteArray line = resultFile.readLine();
-        if (line.isEmpty() )
-            break;
-        if (l > 1) { // Skip header and exe
-            int start = line.indexOf(',');
-            if (start < 0)
-                continue;
-            ++start;
-            if (line.at(start) == '"')
-                ++start;
-            int end = line.indexOf(',', start + 1);
-            if (end < 0)
-                continue;
-            if (line.at(end - 1) == '"')
-                --end;
-            result.push_back(QDir::cleanPath(QString::fromLocal8Bit(line.mid(start, end - start))));
-        }
-    }
-    return result;
-}
-
 QStringList findQtPlugins(bool debug, QString *errorMessage)
 {
     const QString qtPluginsDirName = queryQMake(QStringLiteral("QT_INSTALL_PLUGINS"), errorMessage);
@@ -327,6 +266,151 @@ bool updateFile(const QString &sourceFileName, const QString &targetDirectory, Q
         return false;
     }
     return true;
+}
+
+// Helper for reading out PE executable files: Find a section header for an RVA
+// (IMAGE_NT_HEADERS64, IMAGE_NT_HEADERS32).
+template <class ImageNtHeader>
+const IMAGE_SECTION_HEADER *findSectionHeader(DWORD rva, const ImageNtHeader *nTHeader)
+{
+    const IMAGE_SECTION_HEADER *section = IMAGE_FIRST_SECTION(nTHeader);
+    const IMAGE_SECTION_HEADER *sectionEnd = section + nTHeader->FileHeader.NumberOfSections;
+    for ( ; section < sectionEnd; ++section)
+        if (rva >= section->VirtualAddress && rva < (section->VirtualAddress + section->Misc.VirtualSize))
+                return section;
+    return 0;
+}
+
+// Helper for reading out PE executable files: convert RVA to pointer (IMAGE_NT_HEADERS64, IMAGE_NT_HEADERS32).
+template <class ImageNtHeader>
+inline const void *rvaToPtr(DWORD rva, const ImageNtHeader *nTHeader, const void *imageBase)
+{
+    const IMAGE_SECTION_HEADER *sectionHdr = findSectionHeader(rva, nTHeader);
+    if (!sectionHdr)
+        return 0;
+    const DWORD delta = sectionHdr->VirtualAddress - sectionHdr->PointerToRawData;
+    return static_cast<const char *>(imageBase) + rva - delta;
+}
+
+// Helper for reading out PE executable files: return word size of a IMAGE_NT_HEADERS64, IMAGE_NT_HEADERS32
+template <class ImageNtHeader>
+inline unsigned ntHeaderWordSize(const ImageNtHeader *header)
+{
+    // defines IMAGE_NT_OPTIONAL_HDR32_MAGIC, IMAGE_NT_OPTIONAL_HDR64_MAGIC
+    enum { imageNtOptionlHeader32Magic = 0x10b, imageNtOptionlHeader64Magic = 0x20b };
+    if (header->OptionalHeader.Magic == imageNtOptionlHeader32Magic)
+        return 32;
+    if (header->OptionalHeader.Magic == imageNtOptionlHeader64Magic)
+        return 64;
+    return 0;
+}
+
+// Helper for reading out PE executable files: Retrieve the NT image header of an
+// executable via the legacy DOS header.
+static IMAGE_NT_HEADERS *getNtHeader(void *fileMemory, QString *errorMessage)
+{
+    IMAGE_DOS_HEADER *dosHeader = static_cast<PIMAGE_DOS_HEADER>(fileMemory);
+    // Check DOS header consistency
+    if (IsBadReadPtr(dosHeader, sizeof(IMAGE_DOS_HEADER))
+        || dosHeader->e_magic != IMAGE_DOS_SIGNATURE) {
+        *errorMessage = QString::fromLatin1("DOS header check failed.");
+        return 0;
+    }
+    // Retrieve NT header
+    char *ntHeaderC = static_cast<char *>(fileMemory) + dosHeader->e_lfanew;
+    IMAGE_NT_HEADERS *ntHeaders = reinterpret_cast<IMAGE_NT_HEADERS *>(ntHeaderC);
+    // check NT header consistency
+    if (IsBadReadPtr(ntHeaders, sizeof(ntHeaders->Signature))
+        || ntHeaders->Signature != IMAGE_NT_SIGNATURE
+        || IsBadReadPtr(&ntHeaders->FileHeader, sizeof(IMAGE_FILE_HEADER))) {
+        *errorMessage = QString::fromLatin1("NT header check failed.");
+        return 0;
+    }
+    // Check magic
+    if (!ntHeaderWordSize(ntHeaders)) {
+        *errorMessage = QString::fromLatin1("NT header check failed; magic %1 is invalid.").
+                        arg(ntHeaders->OptionalHeader.Magic);
+        return 0;
+    }
+    // Check section headers
+    IMAGE_SECTION_HEADER *sectionHeaders = IMAGE_FIRST_SECTION(ntHeaders);
+    if (IsBadReadPtr(sectionHeaders, ntHeaders->FileHeader.NumberOfSections * sizeof(IMAGE_SECTION_HEADER))) {
+        *errorMessage = QString::fromLatin1("NT header section header check failed.");
+        return 0;
+    }
+    return ntHeaders;
+}
+
+// Helper for reading out PE executable files: Read out import sections from
+// IMAGE_NT_HEADERS64, IMAGE_NT_HEADERS32.
+template <class ImageNtHeader>
+inline QStringList readImportSections(const ImageNtHeader *ntHeaders, const void *base, QString *errorMessage)
+{
+    // Get import directory entry RVA and read out
+    const DWORD importsStartRVA = ntHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress;
+    if (!importsStartRVA) {
+        *errorMessage = QString::fromLatin1("Failed to find IMAGE_DIRECTORY_ENTRY_IMPORT entry.");
+        return QStringList();
+    }
+    const IMAGE_IMPORT_DESCRIPTOR *importDesc = (const IMAGE_IMPORT_DESCRIPTOR *)rvaToPtr(importsStartRVA, ntHeaders, base);
+    if (!importDesc) {
+        *errorMessage = QString::fromLatin1("Failed to find IMAGE_IMPORT_DESCRIPTOR entry.");
+        return QStringList();
+    }
+    QStringList result;
+    for ( ; importDesc->Name; ++importDesc)
+        result.push_back(QString::fromLocal8Bit((const char *)rvaToPtr(importDesc->Name, ntHeaders, base)));
+    return result;
+}
+
+// Return dependent modules of a PE executable files.
+QStringList findDependentLibraries(const QString &peExecutableFileName, QString *errorMessage)
+{
+    HANDLE hFile = NULL;
+    HANDLE hFileMap = NULL;
+    void *fileMemory = 0;
+    QStringList result;
+
+    do {
+        // Create a memory mapping of the file
+        hFile = CreateFile(reinterpret_cast<const WCHAR*>(peExecutableFileName.utf16()), GENERIC_READ, FILE_SHARE_READ, NULL,
+                             OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+        if (hFile == INVALID_HANDLE_VALUE || hFile == NULL) {
+            *errorMessage = QString::fromLatin1("Cannot open '%1': %2").arg(peExecutableFileName, winErrorMessage(GetLastError()));
+            break;
+        }
+
+        hFileMap = CreateFileMapping(hFile, NULL, PAGE_READONLY, 0, 0, NULL);
+        if (hFileMap == NULL) {
+            *errorMessage = QString::fromLatin1("Cannot create file mapping of '%1': %2").arg(peExecutableFileName, winErrorMessage(GetLastError()));
+            break;
+        }
+
+        fileMemory = MapViewOfFile(hFileMap, FILE_MAP_READ, 0, 0, 0);
+        if (!fileMemory) {
+            *errorMessage = QString::fromLatin1("Cannot map '%1': %2").arg(peExecutableFileName, winErrorMessage(GetLastError()));
+            break;
+        }
+
+        const IMAGE_NT_HEADERS *ntHeaders = getNtHeader(fileMemory, errorMessage);
+        if (!ntHeaders)
+            break;
+
+        result = ntHeaderWordSize(ntHeaders) == 32 ?
+            readImportSections(reinterpret_cast<const IMAGE_NT_HEADERS32 *>(ntHeaders), fileMemory, errorMessage) :
+            readImportSections(reinterpret_cast<const IMAGE_NT_HEADERS64 *>(ntHeaders), fileMemory, errorMessage);
+    } while (false);
+
+    if (fileMemory)
+        UnmapViewOfFile(fileMemory);
+
+    if (hFileMap != NULL)
+        CloseHandle(hFileMap);
+
+    if (hFile != NULL && hFile != INVALID_HANDLE_VALUE)
+        CloseHandle(hFile);
+
+    return result;
 }
 
 QT_END_NAMESPACE
