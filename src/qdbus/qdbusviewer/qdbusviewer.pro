@@ -1,6 +1,3 @@
-TEMPLATE        = app
-TARGET          = qdbusviewer
-
 HEADERS         = qdbusviewer.h \
                   qdbusmodel.h \
                   propertydialog.h
@@ -12,12 +9,7 @@ SOURCES         = qdbusviewer.cpp \
 
 RESOURCES += qdbusviewer.qrc
 
-DESTDIR = $$QT.designer.bins
-
 QT += widgets dbus-private xml
-
-target.path=$$[QT_INSTALL_BINS]
-INSTALLS += target
 
 mac {
     ICON = images/qdbusviewer.icns
@@ -27,3 +19,5 @@ mac {
 win32 {
     RC_FILE = qdbusviewer.rc
 }
+
+load(qt_app)

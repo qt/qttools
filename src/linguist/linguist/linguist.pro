@@ -1,12 +1,7 @@
-TEMPLATE = app
-LANGUAGE = C++
-DESTDIR = $$QT.designer.bins
-
 QT += core-private widgets xml uitools-private
 qtHaveModule(printsupport): QT += printsupport
 
 DEFINES += QT_NO_CAST_FROM_ASCII QT_NO_CAST_TO_ASCII
-!build_pass:contains(QT_CONFIG, build_all): CONFIG += release
 
 include(../shared/formats.pri)
 
@@ -73,13 +68,12 @@ mac {
 }
 PROJECTNAME = Qt \
     Linguist
-target.path = $$[QT_INSTALL_BINS]
-INSTALLS += target
-phrasebooks.path = $$[QT_INSTALL_DATA]/phrasebooks
 
+phrasebooks.path = $$[QT_INSTALL_DATA]/phrasebooks
 # ## will this work on windows?
 phrasebooks.files = $$PWD/../phrasebooks/*
 INSTALLS += phrasebooks
+
 FORMS += statistics.ui \
     phrasebookbox.ui \
     batchtranslation.ui \
@@ -88,3 +82,5 @@ FORMS += statistics.ui \
     translationsettings.ui \
     finddialog.ui
 RESOURCES += linguist.qrc
+
+load(qt_app)

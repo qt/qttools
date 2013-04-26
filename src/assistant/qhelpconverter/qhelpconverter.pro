@@ -1,11 +1,4 @@
 QT += help widgets
-TEMPLATE = app
-TARGET = qhelpconverter
-DESTDIR = $$QT.help.bins
-!build_pass:contains(QT_CONFIG, build_all): CONFIG += release
-
-target.path=$$[QT_INSTALL_BINS]
-INSTALLS += target
 
 SOURCES += conversionwizard.cpp \
            inputpage.cpp \
@@ -45,3 +38,5 @@ FORMS   += inputpage.ui \
            outputpage.ui
 
 RESOURCES += qhelpconverter.qrc
+
+load(qt_app)

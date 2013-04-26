@@ -1,7 +1,5 @@
-DESTDIR = $$QT.designer.bins
 QT += core-private widgets xml network designer-private designercomponents
 qtHaveModule(printsupport): QT += printsupport
-!build_pass:contains(QT_CONFIG, build_all): CONFIG += release
 
 INCLUDEPATH += \
     ../lib/sdk \
@@ -14,8 +12,6 @@ RESOURCES += designer.qrc
 contains(QT_CONFIG, static) {
     DEFINES += QT_DESIGNER_STATIC
 }
-
-TARGET = designer
 
 include(../../../shared/fontpanel/fontpanel.pri)
 include(../../../shared/qttoolbardialog/qttoolbardialog.pri)
@@ -76,7 +72,6 @@ mac {
     QMAKE_BUNDLE_DATA += FILETYPES
 }
 
-target.path=$$[QT_INSTALL_BINS]
-INSTALLS += target
-
 unix:!mac:LIBS += -lm
+
+load(qt_app)

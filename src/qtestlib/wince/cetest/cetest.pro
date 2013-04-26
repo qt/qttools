@@ -1,11 +1,3 @@
-TEMPLATE = app
-TARGET = cetest
-DESTDIR = $$QT.designer.bins
-build_all:!build_pass {
-    CONFIG -= build_all
-    CONFIG += release
-}
-
 CONFIG += console no_batch
 CONFIG -= qt
 
@@ -48,3 +40,5 @@ isEmpty(QT_CE_RAPI_INC) {
 
 include(qmake_include.pri)
 include(bootstrapped.pri)
+
+load(qt_app)

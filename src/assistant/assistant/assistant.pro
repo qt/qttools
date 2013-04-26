@@ -1,13 +1,8 @@
-TEMPLATE = app
-LANGUAGE = C++
-TARGET = assistant
-DESTDIR = $$QT.help.bins
 qtHaveModule(webkitwidgets):!contains(QT_CONFIG, static) {
     QT += webkitwidgets
 } else {
     DEFINES += QT_NO_WEBKIT
 }
-!build_pass:contains(QT_CONFIG, build_all): CONFIG += release
 QT += widgets network help sql help
 qtHaveModule(printsupport): QT += printsupport
 PROJECTNAME = Assistant
@@ -109,5 +104,4 @@ mac {
 
 contains(SQLPLUGINS, sqlite):QTPLUGIN += qsqlite
 
-target.path=$$[QT_INSTALL_BINS]
-INSTALLS += target
+load(qt_app)

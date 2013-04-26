@@ -1,6 +1,5 @@
 QT += widgets gui-private core-private
 CONFIG += console
-DESTDIR = $$QT.designer.bins
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0
 
 HEADERS += qpf2.h mainwindow.h
@@ -9,5 +8,4 @@ DEFINES += QT_NO_FREETYPE
 FORMS += mainwindow.ui
 RESOURCES += makeqpf.qrc
 
-target.path = $$[QT_INSTALL_BINS]
-INSTALLS += target
+load(qt_app)
