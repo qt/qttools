@@ -1,5 +1,4 @@
 TEMPLATE = subdirs
-CONFIG += ordered
 
 qtHaveModule(widgets) {
     no-png {
@@ -10,6 +9,8 @@ qtHaveModule(widgets) {
                   qtestlib \
                   designer
 #    unix:!mac:!embedded:!qpa:SUBDIRS += qtconfig
+
+        linguist.depends = designer
     }
 }
 
