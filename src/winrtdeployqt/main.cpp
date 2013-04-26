@@ -51,6 +51,8 @@ bool optPlugins = true;
 bool optLibraries = true;
 bool optHelp = false;
 
+Platform platform = Windows;
+
 QString optDirectory;
 
 static const char usageC[] =
@@ -100,6 +102,17 @@ static inline QString findBinary(const QString &directory)
     return exes.isEmpty() ? QString() : dir.filePath(exes.front());
 }
 
+// Find the latest D3D compiler DLL in path
+static inline QString findD3dCompiler()
+{
+    for (int i = 46 ; i >= 40 ; --i) {
+        const QString dll = findInPath(QStringLiteral("D3Dcompiler_") + QString::number(i) + QStringLiteral(".dll"));
+        if (!dll.isEmpty())
+            return dll;
+    }
+    return QString();
+}
+
 int main(int argc, char **argv)
 {
     QCoreApplication a(argc, argv);
@@ -124,6 +137,8 @@ int main(int argc, char **argv)
         return 1;
     }
 
+    platform = queryQMake(QStringLiteral("QMAKE_XSPEC"), &errorMessage).startsWith(QLatin1String("winrt")) ? WinRt : Windows;
+
     if (optVerboseLevel > 1)
         std::fprintf(stderr, "Qt binaries in %s\n", qPrintable(QDir::toNativeSeparators(qtBinDir)));
 
@@ -141,6 +156,35 @@ int main(int argc, char **argv)
     foreach (const QString &qtLib, dependentLibs.filter(filterRegExp))
         dependentQtLibs.push_back(normalizeFileName(qtBinDir + slash + QFileInfo(qtLib).fileName()));
 
+    // Some checks in QtCore: Debug, ICU
+    bool isDebug = false;
+    const QStringList qt5Core = dependentQtLibs.filter(QStringLiteral("Qt5Core"), Qt::CaseInsensitive);
+    if (!qt5Core.isEmpty()) {
+        isDebug = qt5Core.front().contains(QStringLiteral("Qt5Cored.dll"), Qt::CaseInsensitive);
+        QStringList icuLibs = findDependentLibraries(qt5Core.front(), &errorMessage).filter(QStringLiteral("ICU"), Qt::CaseInsensitive);
+        if (!icuLibs.isEmpty()) {
+            // Find out the ICU version to add the data library icudtXX.dll, which does not show
+            // as a dependency.
+            QRegExp numberExpression(QStringLiteral("\\d+"));
+            Q_ASSERT(numberExpression.isValid());
+            const int index = numberExpression.indexIn(icuLibs.front());
+            if (index >= 0)  {
+                const QString icuVersion = icuLibs.front().mid(index, numberExpression.matchedLength());
+                if (optVerboseLevel > 1)
+                    std::fprintf(stderr, "Adding ICU version %s\n", qPrintable(icuVersion));
+                icuLibs.push_back(QStringLiteral("icudt") + icuVersion + QStringLiteral(".dll"));
+            }
+            foreach (const QString &icuLib, icuLibs) {
+                const QString icuPath = findInPath(icuLib);
+                if (icuPath.isEmpty()) {
+                    std::fprintf(stderr, "Unable to locate ICU library %s\n", qPrintable(icuLib));
+                    return -1;
+                }
+                dependentQtLibs.push_back(icuPath);
+            } // foreach icuLib
+        } // !icuLibs.isEmpty()
+    } // Qt5Core
+
     if (optVerboseLevel > 1)
         std::fprintf(stderr, "Qt libraries required: %s\n", qPrintable(dependentQtLibs.join(QLatin1Char(','))));
 
@@ -149,9 +193,44 @@ int main(int argc, char **argv)
                          qPrintable(QDir::toNativeSeparators(binary)));
         return 1;
     }
-    const bool isDebug =
-        !dependentQtLibs.filter(QRegExp(QStringLiteral("Qt5Cored.dll"),
-                                        Qt::CaseInsensitive, QRegExp::FixedString)).isEmpty();
+
+    // Find the plugins and check whether ANGLE, D3D are required on the platform plugin.
+    QString platformPlugin;
+    const QStringList plugins = findQtPlugins(isDebug, platform, &platformPlugin, &errorMessage);
+    if (optVerboseLevel > 1)
+        std::fprintf(stderr, "Plugins: %s\n", qPrintable(plugins.join(QLatin1Char(','))));
+
+    if (plugins.isEmpty()) {
+        std::fprintf(stderr, "%s\n", qPrintable(errorMessage));
+        return 1;
+    }
+
+    if (platformPlugin.isEmpty()) {
+        std::fprintf(stderr, "Unable to find the platform plugin.\n");
+        return 1;
+    }
+
+    // Check for ANGLE on the platform plugin.
+    const QStringList platformPluginLibraries = findDependentLibraries(platformPlugin, &errorMessage);
+    const QStringList libEgl = platformPluginLibraries.filter(QStringLiteral("libegl"), Qt::CaseInsensitive);
+    if (!libEgl.isEmpty()) {
+        const QString libEglFullPath = qtBinDir + slash + QFileInfo(libEgl.front()).fileName();
+        dependentQtLibs.push_back(libEglFullPath);
+        const QStringList libGLESv2 = findDependentLibraries(libEglFullPath, &errorMessage).filter(QStringLiteral("libGLESv2"), Qt::CaseInsensitive);
+        if (!libGLESv2.isEmpty()) {
+            const QString libGLESv2FullPath = qtBinDir + slash + QFileInfo(libGLESv2.front()).fileName();
+            dependentQtLibs.push_back(libGLESv2FullPath);
+        }
+        // Find the D3d Compiler matching the D3D library.
+        const QString d3dCompiler = findD3dCompiler();
+        if (d3dCompiler.isEmpty()) {
+            std::fprintf(stderr, "Warning: Cannot find any version of the d3dcompiler DLL.\n");
+        } else {
+            dependentQtLibs.push_back(d3dCompiler);
+        }
+    } // !libEgl.isEmpty()
+
+    // Update libraries
     if (optLibraries) {
         foreach (const QString &qtLib, dependentQtLibs) {
             if (!updateFile(qtLib, optDirectory, &errorMessage)) {
@@ -161,15 +240,8 @@ int main(int argc, char **argv)
         }
     } // optLibraries
 
+    // Update plugins
     if (optPlugins) {
-        const QStringList plugins = findQtPlugins(isDebug, &errorMessage);
-        if (optVerboseLevel > 1)
-            std::fprintf(stderr, "Plugins: %s\n", qPrintable(plugins.join(QLatin1Char(','))));
-
-        if (plugins.isEmpty()) {
-            std::fprintf(stderr, "%s\n", qPrintable(errorMessage));
-            return 1;
-        }
         QDir dir(optDirectory);
         foreach (const QString &plugin, plugins) {
             const QString targetDirName = plugin.section(slash, -2, -2);

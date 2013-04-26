@@ -52,8 +52,23 @@
 #include <QtCore/QStandardPaths>
 
 #include <cstdio>
+#include <Shlwapi.h>
 
 int optVerboseLevel = 1;
+
+// Find a file in the path using ShellAPI. This can be used to locate DLLs which
+// QStandardPaths cannot do.
+QString findInPath(const QString &file)
+{
+    if (file.size() < MAX_PATH -  1) {
+        wchar_t buffer[MAX_PATH];
+        file.toWCharArray(buffer);
+        buffer[file.size()] = 0;
+        if (PathFindOnPath(buffer, NULL))
+            return QString::fromWCharArray(buffer);
+    }
+    return QString();
+}
 
 QString winErrorMessage(unsigned long error)
 {
@@ -208,7 +223,7 @@ QString queryQMake(const QString &variable, QString *errorMessage)
     return QString::fromLocal8Bit(stdOut).trimmed();
 }
 
-QStringList findQtPlugins(bool debug, QString *errorMessage)
+QStringList findQtPlugins(bool debug, Platform platform, QString *platformPlugin, QString *errorMessage)
 {
     const QString qtPluginsDirName = queryQMake(QStringLiteral("QT_INSTALL_PLUGINS"), errorMessage);
     if (qtPluginsDirName.isEmpty())
@@ -220,13 +235,19 @@ QStringList findQtPlugins(bool debug, QString *errorMessage)
         if (subDirName != QLatin1String("designer")) {
             const QString subDirPath = qtPluginsDirName + QLatin1Char('/') + subDirName;
             QDir subDir(subDirPath);
-            // Use only the 'winrt' plugin from "platforms".
-            const QString effectiveFilter = subDirName == QLatin1String("platforms") ?
-                (QStringLiteral("qwinrt") + filter) : filter;
-            foreach (const QString &dll, subDir.entryList(QStringList(effectiveFilter), QDir::Files))
-                result.push_back(subDirPath + QLatin1Char('/') + dll);
-        }
-    }
+            QString effectiveFilter = filter;
+            // Use only the platform plugin from "platforms".
+            const bool isPlatformPluginFolder = subDirName == QLatin1String("platforms");
+            if (isPlatformPluginFolder)
+                effectiveFilter.prepend(platform == WinRt ? QStringLiteral("qwinrt") : QStringLiteral("qwindows"));
+            foreach (const QString &dll, subDir.entryList(QStringList(effectiveFilter), QDir::Files)) {
+                const QString plugin = subDirPath + QLatin1Char('/') + dll;
+                result.push_back(plugin);
+                if (isPlatformPluginFolder && platformPlugin)
+                    *platformPlugin = plugin;
+            } // for filter
+        } // not designer plugin folder
+    } // for plugin folder
     return result;
 }
 

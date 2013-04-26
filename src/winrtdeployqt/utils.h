@@ -46,11 +46,15 @@
 
 QT_FORWARD_DECLARE_CLASS(QStringList)
 
+enum Platform { Windows, WinRt };
+
+QString findInPath(const QString &file);
 QString normalizeFileName(const QString &name);
 QString findSdkTool(const QString &tool);
 QString queryQMake(const QString &variable, QString *errorMessage);
 QStringList findDependentLibs(const QString &binary, QString *errorMessage);
-QStringList findQtPlugins(bool debug, QString *errorMessage);
+QStringList findQtPlugins(bool debug, Platform platform,
+                          QString *platformPlugin, QString *errorMessage);
 bool updateFile(const QString &sourceFileName, const QString &targetDirectory, QString *errorMessage);
 bool runProcess(const QString &commandLine, const QString &workingDirectory = QString(),
                 unsigned long *exitCode = 0, QByteArray *stdOut = 0, QByteArray *stdErr = 0,
