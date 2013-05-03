@@ -113,6 +113,50 @@ static inline QString findD3dCompiler()
     return QString();
 }
 
+// Helper for recursively finding all dependent Qt libraries.
+static bool findDependentQtLibraries(const QString &qtBinDir, const QString &binary,
+                                     QStringList *result, QString *errorMessage)
+{
+    const QStringList dependentLibs = findDependentLibraries(binary, errorMessage);
+    if (dependentLibs.isEmpty()) {
+        errorMessage->prepend(QLatin1String("Unable to find dependent libraries of ") +
+                              QDir::toNativeSeparators(binary) + QLatin1String(" :"));
+        return false;
+    }
+    // Filter out the Qt libraries. Note that depends.exe finds libs from optDirectory if we
+    // are run the 2nd time (updating). We want to check against the Qt bin dir libraries
+    const QRegExp filterRegExp(QStringLiteral("Qt5"), Qt::CaseInsensitive, QRegExp::FixedString);
+    foreach (const QString &qtLib, dependentLibs.filter(filterRegExp)) {
+        const QString path = normalizeFileName(qtBinDir + QLatin1Char('/') + QFileInfo(qtLib).fileName());
+        if (!result->contains(path)) {
+            result->append(path);
+            if (!findDependentQtLibraries(qtBinDir, path, result, errorMessage))
+                return false;
+        }
+    }
+    return true;
+}
+
+static unsigned requiredQtPlugins(const QStringList &qtLibraries)
+{
+    unsigned result = 0;
+    if (!qtLibraries.filter(QStringLiteral("Qt5Gui"), Qt::CaseInsensitive).isEmpty())
+        result |= GuiPlugin | PlatformPlugin;
+    if (!qtLibraries.filter(QStringLiteral("Qt5Sql"), Qt::CaseInsensitive).isEmpty())
+        result |= SqlPlugin;
+    if (!qtLibraries.filter(QStringLiteral("Qt5Network"), Qt::CaseInsensitive).isEmpty())
+        result |= NetworkPlugin;
+    if (!qtLibraries.filter(QStringLiteral("Qt5PrintSupport"), Qt::CaseInsensitive).isEmpty())
+        result |= PrintSupportPlugin;
+    if (!qtLibraries.filter(QStringLiteral("Qt5Multimedia"), Qt::CaseInsensitive).isEmpty())
+        result |= MultimediaPlugin;
+    if (!qtLibraries.filter(QStringLiteral("Qt5Quick"), Qt::CaseInsensitive).isEmpty()
+        || !qtLibraries.filter(QStringLiteral("Qt5Declarative"), Qt::CaseInsensitive).isEmpty()) {
+        result |= QmlToolingPlugin;
+    }
+    return result;
+}
+
 int main(int argc, char **argv)
 {
     QCoreApplication a(argc, argv);
@@ -142,19 +186,17 @@ int main(int argc, char **argv)
     if (optVerboseLevel > 1)
         std::fprintf(stderr, "Qt binaries in %s\n", qPrintable(QDir::toNativeSeparators(qtBinDir)));
 
-    const QStringList dependentLibs = findDependentLibraries(binary, &errorMessage);
-    if (dependentLibs.isEmpty()) {
-        std::fprintf(stderr, "Unable to find dependent libraries of %s: %s\n",
-                     qPrintable(binary), qPrintable(errorMessage));
+    QStringList dependentQtLibs;
+    if (!findDependentQtLibraries(qtBinDir, binary, &dependentQtLibs, &errorMessage)) {
+        std::fputs(qPrintable(errorMessage), stderr);
         return 1;
     }
 
-    // Filter out the Qt libraries. Note that depends.exe finds libs from optDirectory if we
-    // are run the 2nd time (updating). We want to check against the Qt bin dir libraries
-    QStringList dependentQtLibs;
-    const QRegExp filterRegExp(QRegExp(QStringLiteral("Qt5"), Qt::CaseInsensitive, QRegExp::FixedString));
-    foreach (const QString &qtLib, dependentLibs.filter(filterRegExp))
-        dependentQtLibs.push_back(normalizeFileName(qtBinDir + slash + QFileInfo(qtLib).fileName()));
+    if (dependentQtLibs.isEmpty()) {
+            std::fprintf(stderr, "%s does not seem to be a Qt executable\n",
+                         qPrintable(QDir::toNativeSeparators(binary)));
+        return 1;
+    }
 
     // Some checks in QtCore: Debug, ICU
     bool isDebug = false;
@@ -188,15 +230,10 @@ int main(int argc, char **argv)
     if (optVerboseLevel > 1)
         std::fprintf(stderr, "Qt libraries required: %s\n", qPrintable(dependentQtLibs.join(QLatin1Char(','))));
 
-    if (dependentQtLibs.isEmpty()) {
-            std::fprintf(stderr, "%s does not seem to be a Qt executable\n",
-                         qPrintable(QDir::toNativeSeparators(binary)));
-        return 1;
-    }
 
     // Find the plugins and check whether ANGLE, D3D are required on the platform plugin.
     QString platformPlugin;
-    const QStringList plugins = findQtPlugins(isDebug, platform, &platformPlugin, &errorMessage);
+    const QStringList plugins = findQtPlugins(requiredQtPlugins(dependentQtLibs), isDebug, platform, &platformPlugin, &errorMessage);
     if (optVerboseLevel > 1)
         std::fprintf(stderr, "Plugins: %s\n", qPrintable(plugins.join(QLatin1Char(','))));
 

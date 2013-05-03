@@ -53,7 +53,19 @@ QString normalizeFileName(const QString &name);
 QString findSdkTool(const QString &tool);
 QString queryQMake(const QString &variable, QString *errorMessage);
 QStringList findDependentLibs(const QString &binary, QString *errorMessage);
-QStringList findQtPlugins(bool debug, Platform platform,
+
+enum QtPluginType {
+    GuiPlugin = 0x1,
+    PlatformPlugin = 0x2,
+    SqlPlugin = 0x4,
+    NetworkPlugin = 0x8,
+    MultimediaPlugin = 0x10,
+    PrintSupportPlugin = 0x20,
+    QmlToolingPlugin = 0x40,
+    OtherPlugin = 0x80
+};
+
+QStringList findQtPlugins(unsigned pluginTypes, bool debug, Platform platform,
                           QString *platformPlugin, QString *errorMessage);
 bool updateFile(const QString &sourceFileName, const QString &targetDirectory, QString *errorMessage);
 bool runProcess(const QString &commandLine, const QString &workingDirectory = QString(),
