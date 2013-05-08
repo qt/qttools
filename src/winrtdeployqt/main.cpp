@@ -181,7 +181,11 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    platform = queryQMake(QStringLiteral("QMAKE_XSPEC"), &errorMessage).startsWith(QLatin1String("winrt")) ? WinRt : Windows;
+    QString xSpec = queryQMake(QStringLiteral("QMAKE_XSPEC"), &errorMessage);
+    if (xSpec.startsWith(QLatin1String("winrt")) || xSpec.startsWith(QLatin1String("winphone")))
+        platform = WinRt;
+    else
+        platform = Windows;
 
     if (optVerboseLevel > 1)
         std::fprintf(stderr, "Qt binaries in %s\n", qPrintable(QDir::toNativeSeparators(qtBinDir)));
