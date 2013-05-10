@@ -1044,7 +1044,7 @@ QAction *QDesignerActions::minimizeAction() const
 void QDesignerActions::showDesignerHelp()
 {
     QString url = AssistantClient::designerManualUrl();
-    url += QStringLiteral("qtdesigner-index.html");
+    url += QStringLiteral("qtdesigner-manual.html");
     showHelp(url);
 }
 
