@@ -2,3 +2,4 @@ tst_lupdate
 testdata/*/*.ts
 testdata/*/*/*.ts
 testdata/*/*/*/*.ts
+testdata/good/*/.qmake.cache

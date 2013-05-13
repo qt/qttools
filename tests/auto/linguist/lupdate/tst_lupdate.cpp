@@ -280,6 +280,10 @@ void tst_lupdate::good()
             QVERIFY2(QFile::copy(beforetsfile, genTs), qPrintable(beforetsfile));
     }
 
+    file.setFileName(workDir + QStringLiteral("/.qmake.cache"));
+    QVERIFY(file.open(QIODevice::WriteOnly));
+    file.close();
+
     if (lupdatecmd.isEmpty())
         lupdatecmd = QLatin1String("project.pro");
     lupdatecmd.prepend("-silent ");
