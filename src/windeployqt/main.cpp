@@ -56,9 +56,9 @@ Platform platform = Windows;
 QString optDirectory;
 
 static const char usageC[] =
-"Usage: winrtdeployqt build-directory [options]\n\n"
+"Usage: windeployqt build-directory [options]\n\n"
 "Copies/updates the dependent Qt libraries and plugins required for\n"
-"a WinRT application to the build-directory.\n\n"
+"a Windows/WinRT application to the build-directory.\n\n"
 "Options: -no-plugins        : Skip plugin deployment\n"
 "         -no-libraries      : Skip library deployment\n"
 "         -h                 : Display help\n"
@@ -164,7 +164,7 @@ int main(int argc, char **argv)
     const QChar slash = QLatin1Char('/');
 
     if (!parseArguments(QCoreApplication::arguments()) || optHelp) {
-        std::printf("\nwinrtdeployqt based on Qt %s\n\n%s", QT_VERSION_STR, usageC);
+        std::printf("\nwindeployqt based on Qt %s\n\n%s", QT_VERSION_STR, usageC);
         return optHelp ? 0 : 1;
     }
 

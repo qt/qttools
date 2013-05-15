@@ -15,7 +15,7 @@ qtHaveModule(widgets) {
 
 SUBDIRS += linguist
 
-win32:SUBDIRS += winrtdeployqt
+win32:SUBDIRS += windeployqt
 
 mac {
     SUBDIRS += macdeployqt
