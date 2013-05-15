@@ -403,7 +403,15 @@ void MainWindow::lookForNewQtDocumentation()
         << QLatin1String("qtwebkitexamples")
         << QLatin1String("qtwidgets")
         << QLatin1String("qtxml")
-        << QLatin1String("qtxmlpatterns");
+        << QLatin1String("qtxmlpatterns")
+        << QLatin1String("qdoc")
+        << QLatin1String("qtsensors")
+        << QLatin1String("qtx11extras")
+        << QLatin1String("qtserialport")
+        << QLatin1String("qtscripttools")
+        << QLatin1String("qtquickcontrols")
+        << QLatin1String("qtquicklayouts")
+        << QLatin1String("qtmultimediawidgets");
 
     QList<QtDocInstaller::DocInfo> qtDocInfos;
     foreach (const QString &doc, docs)
