@@ -323,7 +323,8 @@ QStringList findQtPlugins(unsigned pluginTypes, bool debug, Platform platform, Q
 }
 
 // Update a file or directory.
-bool updateFile(const QString &sourceFileName, const QString &targetDirectory, QString *errorMessage)
+bool updateFile(const QString &sourceFileName, const QStringList &nameFilters,
+                const QString &targetDirectory, QString *errorMessage)
 {
     const QFileInfo sourceFileInfo(sourceFileName);
     const QString targetFileName = targetDirectory + QLatin1Char('/') + sourceFileInfo.fileName();
@@ -361,8 +362,9 @@ bool updateFile(const QString &sourceFileName, const QString &targetDirectory, Q
         }
         // Recurse into directory
         QDir dir(sourceFileName);
-        foreach (const QString &entry, dir.entryList(QDir::AllEntries | QDir::NoDotAndDotDot))
-            if (!updateFile(sourceFileName + QLatin1Char('/') + entry, targetFileName, errorMessage))
+        const QStringList allEntries = dir.entryList(nameFilters, QDir::Files) + dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+        foreach (const QString &entry, allEntries)
+            if (!updateFile(sourceFileName + QLatin1Char('/') + entry, nameFilters, targetFileName, errorMessage))
                 return false;
         return true;
     } // Source is directory.

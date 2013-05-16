@@ -42,10 +42,8 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include <QString>
+#include <QStringList>
 #include <QMap>
-
-QT_FORWARD_DECLARE_CLASS(QStringList)
 
 enum Platform { Windows, WinRt };
 
@@ -69,7 +67,10 @@ enum QtPluginType {
 
 QStringList findQtPlugins(unsigned pluginTypes, bool debug, Platform platform,
                           QString *platformPlugin, QString *errorMessage);
-bool updateFile(const QString &sourceFileName, const QString &targetDirectory, QString *errorMessage);
+bool updateFile(const QString &sourceFileName, const QStringList &nameFilters,
+                const QString &targetDirectory, QString *errorMessage);
+inline bool updateFile(const QString &sourceFileName, const QString &targetDirectory, QString *errorMessage)
+{ return updateFile(sourceFileName, QStringList(), targetDirectory, errorMessage); }
 bool runProcess(const QString &commandLine, const QString &workingDirectory = QString(),
                 unsigned long *exitCode = 0, QByteArray *stdOut = 0, QByteArray *stdErr = 0,
                 QString *errorMessage = 0);
