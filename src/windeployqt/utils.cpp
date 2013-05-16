@@ -155,8 +155,13 @@ bool runProcess(const QString &commandLine, const QString &workingDirectory,
     STARTUPINFO si;
     ZeroMemory(&si, sizeof(si));
     si.cb = sizeof(si);
-    si.dwFlags |= STARTF_USESTDHANDLES;
-    si.hStdError = si.hStdOutput = si.hStdInput = INVALID_HANDLE_VALUE;
+
+    STARTUPINFO myInfo;
+    GetStartupInfo(&myInfo);
+    si.hStdInput = myInfo.hStdInput;
+    si.hStdOutput = myInfo.hStdOutput;
+    si.hStdError = myInfo.hStdError;
+
     PROCESS_INFORMATION pi;
     ZeroMemory(&pi, sizeof(PROCESS_INFORMATION));
     const QChar backSlash = QLatin1Char('\\');
@@ -184,10 +189,19 @@ bool runProcess(const QString &commandLine, const QString &workingDirectory,
         si.dwFlags |= STARTF_USESTDHANDLES;
     }
 
-    if (!CreateProcessW(0, (WCHAR*)commandLine.utf16(), 0, 0, /* InheritHandles */ TRUE, 0, 0, 0, &si, &pi)) {
-        if (si.hStdOutput != INVALID_HANDLE_VALUE)
+    // Create a copy of the command line which CreateProcessW can modify.
+    if (commandLine.size() >= MAX_PATH) {
+        if (errorMessage)
+            *errorMessage = QStringLiteral("Command line too long.");
+        return false;
+    }
+    wchar_t commandLineW[MAX_PATH];
+    commandLine.toWCharArray(commandLineW);
+    commandLineW[commandLine.size()] = 0;
+    if (!CreateProcessW(0, commandLineW, 0, 0, /* InheritHandles */ TRUE, 0, 0, 0, &si, &pi)) {
+        if (stdOut)
             CloseHandle(si.hStdOutput);
-        if (si.hStdError != INVALID_HANDLE_VALUE)
+        if (stdErr)
             CloseHandle(si.hStdError);
         if (errorMessage)
             *errorMessage = QStringLiteral("CreateProcessW failed: ") + winErrorMessage(GetLastError());
