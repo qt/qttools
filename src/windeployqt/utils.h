@@ -54,18 +54,19 @@ QMap<QString, QString> queryQMakeAll(QString *errorMessage);
 QString queryQMake(const QString &variable, QString *errorMessage);
 QStringList findDependentLibs(const QString &binary, QString *errorMessage);
 
-enum QtPluginType {
-    GuiPlugin = 0x1,
-    PlatformPlugin = 0x2,
-    SqlPlugin = 0x4,
-    NetworkPlugin = 0x8,
-    MultimediaPlugin = 0x10,
-    PrintSupportPlugin = 0x20,
-    QmlToolingPlugin = 0x40,
-    OtherPlugin = 0x80
+enum QtModule {
+    GuiModule = 0x1,
+    SqlModule = 0x4,
+    NetworkModule = 0x8,
+    MultimediaModule = 0x10,
+    PrintSupportModule = 0x20,
+    Quick1Module = 0x40,
+    Quick2Module = 0x80,
+    SensorsModule = 0x100,
+    WebKitModule = 0x400
 };
 
-QStringList findQtPlugins(unsigned pluginTypes, bool debug, Platform platform,
+QStringList findQtPlugins(unsigned usedQtModules, bool debug, Platform platform,
                           QString *platformPlugin, QString *errorMessage);
 bool updateFile(const QString &sourceFileName, const QStringList &nameFilters,
                 const QString &targetDirectory, QString *errorMessage);

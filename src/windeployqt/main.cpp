@@ -49,6 +49,7 @@
 
 bool optPlugins = true;
 bool optLibraries = true;
+bool optQuickImports = true;
 bool optHelp = false;
 
 Platform platform = Windows;
@@ -61,6 +62,7 @@ static const char usageC[] =
 "a Windows/WinRT application to the build-directory.\n\n"
 "Options: -no-plugins        : Skip plugin deployment\n"
 "         -no-libraries      : Skip library deployment\n"
+"         -no-quick-imports  : Skip deployment of Qt Quick imports\n"
 "         -h                 : Display help\n"
 "         -verbose=<0-3>     : 0 = no output, 1 = progress (default),\n"
 "                              2 = normal, 3 = debug\n";
@@ -73,6 +75,8 @@ static inline bool parseArguments(const QStringList &arguments)
             optPlugins = false;
         } else if (argument == QLatin1String("-no-libraries")) {
            optLibraries = false;
+        } else if (argument == QLatin1String("-no-quick-imports")) {
+           optQuickImports = false;
         } else if (argument.startsWith(QLatin1String("-h"))) {
             optHelp = true;
         } else if (argument.startsWith(QLatin1String("-verbose"))) {
@@ -137,23 +141,27 @@ static bool findDependentQtLibraries(const QString &qtBinDir, const QString &bin
     return true;
 }
 
-static unsigned requiredQtPlugins(const QStringList &qtLibraries)
+static unsigned qtModules(const QStringList &qtLibraries)
 {
     unsigned result = 0;
     if (!qtLibraries.filter(QStringLiteral("Qt5Gui"), Qt::CaseInsensitive).isEmpty())
-        result |= GuiPlugin | PlatformPlugin;
+        result |= GuiModule;
     if (!qtLibraries.filter(QStringLiteral("Qt5Sql"), Qt::CaseInsensitive).isEmpty())
-        result |= SqlPlugin;
+        result |= SqlModule;
     if (!qtLibraries.filter(QStringLiteral("Qt5Network"), Qt::CaseInsensitive).isEmpty())
-        result |= NetworkPlugin;
+        result |= NetworkModule;
     if (!qtLibraries.filter(QStringLiteral("Qt5PrintSupport"), Qt::CaseInsensitive).isEmpty())
-        result |= PrintSupportPlugin;
+        result |= PrintSupportModule;
     if (!qtLibraries.filter(QStringLiteral("Qt5Multimedia"), Qt::CaseInsensitive).isEmpty())
-        result |= MultimediaPlugin;
-    if (!qtLibraries.filter(QStringLiteral("Qt5Quick"), Qt::CaseInsensitive).isEmpty()
-        || !qtLibraries.filter(QStringLiteral("Qt5Declarative"), Qt::CaseInsensitive).isEmpty()) {
-        result |= QmlToolingPlugin;
-    }
+        result |= MultimediaModule;
+    if (!qtLibraries.filter(QStringLiteral("Qt5Sensors"), Qt::CaseInsensitive).isEmpty())
+        result |= SensorsModule;
+    if (!qtLibraries.filter(QStringLiteral("Qt5Quick"), Qt::CaseInsensitive).isEmpty())
+        result |= Quick2Module;
+    if (!qtLibraries.filter(QStringLiteral("Qt5Declarative"), Qt::CaseInsensitive).isEmpty())
+        result |= Quick1Module;
+    if (!qtLibraries.filter(QStringLiteral("Qt5WebKit"), Qt::CaseInsensitive).isEmpty())
+        result |= WebKitModule;
     return result;
 }
 
@@ -238,7 +246,8 @@ int main(int argc, char **argv)
 
     // Find the plugins and check whether ANGLE, D3D are required on the platform plugin.
     QString platformPlugin;
-    const QStringList plugins = findQtPlugins(requiredQtPlugins(dependentQtLibs), isDebug, platform, &platformPlugin, &errorMessage);
+    const unsigned usedQtModules = qtModules(dependentQtLibs);
+    const QStringList plugins = findQtPlugins(usedQtModules, isDebug, platform, &platformPlugin, &errorMessage);
     if (optVerboseLevel > 1)
         std::fprintf(stderr, "Plugins: %s\n", qPrintable(plugins.join(QLatin1Char(','))));
 
@@ -300,5 +309,42 @@ int main(int argc, char **argv)
             }
         }
     } // optPlugins
+
+    // Update Quick imports
+    if (optQuickImports && (usedQtModules & (Quick1Module | Quick2Module))) {
+        const QStringList importNameFilters = QStringList() << QStringLiteral("*.qml")
+            << QStringLiteral("*.js") << QStringLiteral("*.dll")
+            << QStringLiteral("qmldir") << QStringLiteral("*.qmltypes");
+        if (usedQtModules & Quick2Module) {
+            const QString quick2ImportPath = qmakeVariables.value(QStringLiteral("QT_INSTALL_QML"));
+            QStringList quick2Imports;
+            quick2Imports << QStringLiteral("QtQml") << QStringLiteral("QtQuick") << QStringLiteral("QtQuick.2");
+            if (usedQtModules & MultimediaModule)
+                quick2Imports << QStringLiteral("QtMultimedia");
+            if (usedQtModules & SensorsModule)
+                quick2Imports << QStringLiteral("QtSensors");
+            if (usedQtModules & WebKitModule)
+                quick2Imports << QStringLiteral("QtWebKit");
+            foreach (const QString &quick2Import, quick2Imports) {
+                if (!updateFile(quick2ImportPath + slash + quick2Import, importNameFilters, optDirectory, &errorMessage)) {
+                    std::fprintf(stderr, "%s\n", qPrintable(errorMessage));
+                    return 1;
+                }
+            }
+        } // Quick 2
+        if (usedQtModules & Quick1Module) {
+            const QString quick1ImportPath = qmakeVariables.value(QStringLiteral("QT_INSTALL_IMPORTS"));
+            QStringList quick1Imports(QStringLiteral("Qt"));
+            if (usedQtModules & WebKitModule)
+                quick1Imports << QStringLiteral("QtWebKit");
+            foreach (const QString &quick1Import, quick1Imports) {
+                if (!updateFile(quick1ImportPath + slash + quick1Import, importNameFilters, optDirectory, &errorMessage)) {
+                    std::fprintf(stderr, "%s\n", qPrintable(errorMessage));
+                    return 1;
+                }
+            }
+        } // Quick 1
+    } // optQuickImports
+
     return 0;
 }

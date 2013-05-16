@@ -268,28 +268,26 @@ QString queryQMake(const QString &variable, QString *errorMessage)
     return QString::fromLocal8Bit(stdOut).trimmed();
 }
 
-static inline unsigned qtPluginType(const QString &subDirName)
+static inline unsigned qtModuleForPlugin(const QString &subDirName)
 {
     if (subDirName == QLatin1String("accessible") || subDirName == QLatin1String("iconengines")
-        || subDirName == QLatin1String("imageformats")) {
-        return GuiPlugin;
+        || subDirName == QLatin1String("imageformats") || subDirName == QLatin1String("platforms")) {
+        return GuiModule;
     }
-    if (subDirName == QLatin1String("platforms"))
-        return GuiPlugin | PlatformPlugin;
     if (subDirName == QLatin1String("bearer"))
-        return NetworkPlugin;
+        return NetworkModule;
     if (subDirName == QLatin1String("sqldrivers"))
-        return SqlPlugin;
+        return SqlModule;
     if (subDirName == QLatin1String("mediaservice") || subDirName == QLatin1String("playlistformats"))
-        return MultimediaPlugin;
+        return MultimediaModule;
     if (subDirName == QLatin1String("printsupport"))
-        return PrintSupportPlugin;
+        return PrintSupportModule;
     if (subDirName == QLatin1String("qmltooling"))
-        return PrintSupportPlugin;
-    return OtherPlugin; // "designer"
+        return Quick1Module | Quick2Module;
+    return 0; // "designer"
 }
 
-QStringList findQtPlugins(unsigned pluginTypes, bool debug, Platform platform, QString *platformPlugin, QString *errorMessage)
+QStringList findQtPlugins(unsigned usedQtModules, bool debug, Platform platform, QString *platformPlugin, QString *errorMessage)
 {
     const QString qtPluginsDirName = queryQMake(QStringLiteral("QT_INSTALL_PLUGINS"), errorMessage);
     if (qtPluginsDirName.isEmpty())
@@ -297,13 +295,14 @@ QStringList findQtPlugins(unsigned pluginTypes, bool debug, Platform platform, Q
     QDir pluginsDir(qtPluginsDirName);
     QStringList result;
     foreach (const QString &subDirName, pluginsDir.entryList(QStringList(QLatin1String("*")), QDir::Dirs | QDir::NoDotAndDotDot)) {
-        const unsigned type = qtPluginType(subDirName);
-        if (type & pluginTypes) {
+        const unsigned module = qtModuleForPlugin(subDirName);
+        if (module & usedQtModules) {
             const QString subDirPath = qtPluginsDirName + QLatin1Char('/') + subDirName;
             QDir subDir(subDirPath);
             // Filter for platform or any.
             QString filter;
-            if (type & PlatformPlugin) {
+            const bool isPlatformPlugin = subDirName == QLatin1String("platforms");
+            if (isPlatformPlugin) {
                 filter = platform == WinRt ? QStringLiteral("qwinrt") : QStringLiteral("qwindows");
                 if (debug)
                     filter.append(QLatin1Char('d'));
@@ -314,7 +313,7 @@ QStringList findQtPlugins(unsigned pluginTypes, bool debug, Platform platform, Q
             foreach (const QString &dll, subDir.entryList(QStringList(filter), QDir::Files)) {
                 const QString plugin = subDirPath + QLatin1Char('/') + dll;
                 result.push_back(plugin);
-                if ((type & PlatformPlugin) && platformPlugin)
+                if (isPlatformPlugin && platformPlugin)
                     *platformPlugin = plugin;
             } // for filter
         } // type matches
