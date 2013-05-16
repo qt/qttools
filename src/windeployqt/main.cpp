@@ -174,14 +174,15 @@ int main(int argc, char **argv)
         return 1;
     }
     QString errorMessage;
-    const QString qtBinDir = queryQMake(QStringLiteral("QT_INSTALL_BINS"), &errorMessage);
 
-    if (qtBinDir.isEmpty()) {
-        std::fprintf(stderr, "Unable to find Qt bin directory: %s\n", qPrintable(errorMessage));
+    const QMap<QString, QString> qmakeVariables = queryQMakeAll(&errorMessage);
+    const QString qtBinDir = qmakeVariables.value(QStringLiteral("QT_INSTALL_BINS"));
+    if (qmakeVariables.isEmpty() || qtBinDir.isEmpty()) {
+        std::fprintf(stderr, "Unable to query qmake: %s\n", qPrintable(errorMessage));
         return 1;
     }
 
-    QString xSpec = queryQMake(QStringLiteral("QMAKE_XSPEC"), &errorMessage);
+    const QString xSpec = qmakeVariables.value(QStringLiteral("QMAKE_XSPEC"));
     if (xSpec.startsWith(QLatin1String("winrt")) || xSpec.startsWith(QLatin1String("winphone")))
         platform = WinRt;
     else

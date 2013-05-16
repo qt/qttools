@@ -43,6 +43,7 @@
 #define UTILS_H
 
 #include <QString>
+#include <QMap>
 
 QT_FORWARD_DECLARE_CLASS(QStringList)
 
@@ -51,6 +52,7 @@ enum Platform { Windows, WinRt };
 QString findInPath(const QString &file);
 QString normalizeFileName(const QString &name);
 QString findSdkTool(const QString &tool);
+QMap<QString, QString> queryQMakeAll(QString *errorMessage);
 QString queryQMake(const QString &variable, QString *errorMessage);
 QStringList findDependentLibs(const QString &binary, QString *errorMessage);
 

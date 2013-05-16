@@ -221,6 +221,37 @@ bool runProcess(const QString &commandLine, const QString &workingDirectory,
     return true;
 }
 
+QMap<QString, QString> queryQMakeAll(QString *errorMessage)
+{
+    QByteArray stdOut;
+    QByteArray stdErr;
+    unsigned long exitCode = 0;
+    const QString commandLine = QStringLiteral("qmake.exe -query");
+    if (!runProcess(commandLine, QString(), &exitCode, &stdOut, &stdErr, errorMessage))
+        return QMap<QString, QString>();
+    if (exitCode) {
+        *errorMessage = commandLine + QStringLiteral(" returns ") + QString::number(exitCode)
+            + QStringLiteral(": ") + QString::fromLocal8Bit(stdErr);
+        return QMap<QString, QString>();
+    }
+    const QString output = QString::fromLocal8Bit(stdOut).trimmed();
+    QMap<QString, QString> result;
+    int pos = 0;
+    while (true) {
+        const int colonPos = output.indexOf(QLatin1Char(':'), pos);
+        if (colonPos < 0)
+            break;
+        const int endPos = output.indexOf(QLatin1Char('\n'), colonPos + 1);
+        if (endPos < 0)
+            break;
+        const QString key = output.mid(pos, colonPos - pos);
+        const QString value = output.mid(colonPos + 1, endPos - colonPos - 2); // Skip '\r'
+        result.insert(key, value);
+        pos = endPos + 1;
+    }
+    return result;
+}
+
 QString queryQMake(const QString &variable, QString *errorMessage)
 {
     QByteArray stdOut;
