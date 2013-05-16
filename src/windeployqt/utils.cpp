@@ -277,18 +277,51 @@ QStringList findQtPlugins(unsigned pluginTypes, bool debug, Platform platform, Q
     return result;
 }
 
-// Update a file
+// Update a file or directory.
 bool updateFile(const QString &sourceFileName, const QString &targetDirectory, QString *errorMessage)
 {
     const QFileInfo sourceFileInfo(sourceFileName);
     const QString targetFileName = targetDirectory + QLatin1Char('/') + sourceFileInfo.fileName();
     if (optVerboseLevel > 1)
         std::fprintf(stderr, "Checking %s, %s\n", qPrintable(sourceFileName), qPrintable(targetFileName));
+
     if (!sourceFileInfo.exists()) {
         *errorMessage = QString::fromLatin1("%1 does not exist.").arg(QDir::toNativeSeparators(sourceFileName));
         return false;
     }
+
+    if (sourceFileInfo.isSymLink()) {
+        *errorMessage = QString::fromLatin1("Symbolic links are not supported (%1).")
+                        .arg(QDir::toNativeSeparators(sourceFileName));
+        return false;
+    }
+
     const QFileInfo targetFileInfo(targetFileName);
+
+    if (sourceFileInfo.isDir()) {
+        if (targetFileInfo.exists()) {
+            if (!targetFileInfo.isDir()) {
+                *errorMessage = QString::fromLatin1("%1 already exists and is not a directory.")
+                                .arg(QDir::toNativeSeparators(targetFileName));
+                return false;
+            } // Not a directory.
+        } else { // exists.
+            QDir d(targetDirectory);
+            std::printf("Creating %s.\n", qPrintable(targetFileName));
+            if (!d.mkdir(sourceFileInfo.fileName())) {
+                *errorMessage = QString::fromLatin1("Cannot create directory %1 under %2.")
+                                .arg(sourceFileInfo.fileName(), QDir::toNativeSeparators(targetDirectory));
+                return false;
+            }
+        }
+        // Recurse into directory
+        QDir dir(sourceFileName);
+        foreach (const QString &entry, dir.entryList(QDir::AllEntries | QDir::NoDotAndDotDot))
+            if (!updateFile(sourceFileName + QLatin1Char('/') + entry, targetFileName, errorMessage))
+                return false;
+        return true;
+    } // Source is directory.
+
     if (targetFileInfo.exists()) {
         if (targetFileInfo.lastModified() >= sourceFileInfo.lastModified()) {
             if (optVerboseLevel)
