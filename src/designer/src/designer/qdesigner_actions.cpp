@@ -85,7 +85,9 @@
 #include <QtGui/QImage>
 #include <QtGui/QPixmap>
 #include <QtWidgets/QMdiSubWindow>
+#ifndef QT_NO_PRINTER
 #include <QtPrintSupport/QPrintDialog>
+#endif
 #include <QtGui/QPainter>
 #include <QtGui/QTransform>
 #include <QtGui/QCursor>
@@ -1044,7 +1046,7 @@ QAction *QDesignerActions::minimizeAction() const
 void QDesignerActions::showDesignerHelp()
 {
     QString url = AssistantClient::designerManualUrl();
-    url += QStringLiteral("qtdesigner-index.html");
+    url += QStringLiteral("qtdesigner-manual.html");
     showHelp(url);
 }
 

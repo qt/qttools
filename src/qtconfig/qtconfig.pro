@@ -1,10 +1,4 @@
-TEMPLATE = app
 CONFIG   += x11
-build_all:!build_pass {
-    CONFIG -= build_all
-    CONFIG += release
-}
-LANGUAGE = C++
 QT += gui-private widgets
 
 contains(QT_CONFIG, gstreamer):LIBS += $$QT_LIBS_GSTREAMER -lgstinterfaces-0.10 -lgstvideo-0.10 -lgstbase-0.10
@@ -20,9 +14,7 @@ FORMS        = mainwindow.ui paletteeditoradvanced.ui previewwidget.ui
 RESOURCES    = qtconfig.qrc
 
 PROJECTNAME        = Qt Configuration
-TARGET             = qtconfig
-DESTDIR            = $$QT.designer.bins
 
-target.path=$$[QT_INSTALL_BINS]
-INSTALLS        += target
 DBFILE          = qtconfig.db
+
+load(qt_app)

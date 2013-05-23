@@ -52,10 +52,12 @@
 
 #include <QtGui/QKeyEvent>
 #include <QtWidgets/QMenu>
+#ifndef QT_NO_PRINTER
 #include <QtPrintSupport/QPageSetupDialog>
 #include <QtPrintSupport/QPrintDialog>
 #include <QtPrintSupport/QPrintPreviewDialog>
 #include <QtPrintSupport/QPrinter>
+#endif
 #include <QtWidgets/QStackedWidget>
 #include <QtWidgets/QTextBrowser>
 #include <QtWidgets/QVBoxLayout>

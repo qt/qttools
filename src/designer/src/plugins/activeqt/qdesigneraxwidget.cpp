@@ -215,11 +215,15 @@ const QMetaObject *QDesignerAxPluginWidget::metaObject() const
     return QDesignerAxWidget::metaObject();
 }
 
+#ifndef QT_NO_EXCEPTIONS
+
 static QString msgComException(const QObject *o, const QMetaObject::Call call, int index)
 {
     return QDesignerAxWidget::tr("A COM exception occurred when executing a meta call of type %1, index %2 of \"%3\".").
             arg(call).arg(index).arg(o->objectName());
 }
+
+#endif // QT_NO_EXCEPTIONS
 
 int QDesignerAxPluginWidget::qt_metacall(QMetaObject::Call call, int signal, void **argv)
 {

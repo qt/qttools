@@ -126,6 +126,7 @@ void QMakeEvaluator::initStatics()
     statics.strforever = QLatin1String("forever");
     statics.strhost_build = QLatin1String("host_build");
     statics.strTEMPLATE = ProKey("TEMPLATE");
+    statics.strQMAKE_PLATFORM = ProKey("QMAKE_PLATFORM");
 #ifdef PROEVALUATOR_FULL
     statics.strREQUIRES = ProKey("REQUIRES");
 #endif
@@ -195,7 +196,6 @@ QMakeEvaluator::QMakeEvaluator(QMakeGlobals *option,
 #ifdef PROEVALUATOR_CUMULATIVE
     m_skipLevel = 0;
 #endif
-    m_loopLevel = 0;
     m_listCount = 0;
     m_valuemapStack.push(ProValueMap());
     m_valuemapInited = false;
@@ -264,48 +264,55 @@ ProStringList QMakeEvaluator::split_value_list(const QString &vals, const ProFil
 {
     QString build;
     ProStringList ret;
-    QStack<char> quote;
-
-    const ushort SPACE = ' ';
-    const ushort LPAREN = '(';
-    const ushort RPAREN = ')';
-    const ushort SINGLEQUOTE = '\'';
-    const ushort DOUBLEQUOTE = '"';
-    const ushort BACKSLASH = '\\';
 
     if (!source)
         source = currentProFile();
 
-    ushort unicode;
     const QChar *vals_data = vals.data();
     const int vals_len = vals.length();
-    int parens = 0;
+    ushort quote = 0;
+    bool hadWord = false;
     for (int x = 0; x < vals_len; x++) {
-        unicode = vals_data[x].unicode();
-        if (x != (int)vals_len-1 && unicode == BACKSLASH &&
-            (vals_data[x+1].unicode() == SINGLEQUOTE || vals_data[x+1].unicode() == DOUBLEQUOTE)) {
-            build += vals_data[x++]; //get that 'escape'
-        } else if (!quote.isEmpty() && unicode == quote.top()) {
-            quote.pop();
-        } else if (unicode == SINGLEQUOTE || unicode == DOUBLEQUOTE) {
-            quote.push(unicode);
-        } else if (unicode == RPAREN) {
-            --parens;
-        } else if (unicode == LPAREN) {
-            ++parens;
+        ushort unicode = vals_data[x].unicode();
+        if (unicode == quote) {
+            quote = 0;
+            continue;
         }
-
-        if (!parens && quote.isEmpty() && vals_data[x] == SPACE) {
-            ret << ProString(build).setSource(source);
-            build.clear();
-        } else {
-            build += vals_data[x];
+        switch (unicode) {
+        case '"':
+        case '\'':
+            quote = unicode;
+            hadWord = true;
+            continue;
+        case ' ':
+        case '\t':
+            if (!quote) {
+                if (hadWord) {
+                    ret << ProString(build).setSource(source);
+                    build.clear();
+                    hadWord = false;
+                }
+                continue;
+            }
+            build += QChar(unicode);
+            break;
+        case '\\':
+            if (x + 1 != vals_len) {
+                ushort next = vals_data[++x].unicode();
+                if (next == '\'' || next == '"' || next == '\\')
+                    unicode = next;
+                else
+                    --x;
+            }
+            // fallthrough
+        default:
+            hadWord = true;
+            build += QChar(unicode);
+            break;
         }
     }
-    if (!build.isEmpty())
+    if (hadWord)
         ret << ProString(build).setSource(source);
-    if (parens)
-        deprecationWarning(fL1S("Unmatched parentheses are deprecated."));
     return ret;
 }
 
@@ -454,9 +461,9 @@ void QMakeEvaluator::evaluateExpression(
             break; }
         case TokEnvVar: {
             const ProString &var = getStr(tokPtr);
-            const ProStringList &val = split_value_list(m_option->getEnv(var.toQString(m_tmp1)));
-            debugMsg(2, "env var %s => %s", dbgStr(var), dbgStrList(val));
-            addStrList(val, tok, ret, pending, joined);
+            const ProString &val = ProString(m_option->getEnv(var.toQString(m_tmp1)));
+            debugMsg(2, "env var %s => %s", dbgStr(var), dbgStr(val));
+            addStr(val, ret, pending, joined);
             break; }
         case TokFuncName: {
             const ProKey &func = getHashStr(tokPtr);
@@ -683,6 +690,24 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::visitProBlock(
             invert = false;
             curr.clear();
             continue;
+        case TokReturn:
+            m_returnValue = curr;
+            curr.clear();
+            ret = ReturnReturn;
+            goto ctrlstm;
+        case TokBreak:
+            ret = ReturnBreak;
+            goto ctrlstm;
+        case TokNext:
+            ret = ReturnNext;
+          ctrlstm:
+            if (!m_skipLevel && okey != or_op) {
+                traceMsg("flow control statement '%s', aborting block", dbgReturn(ret));
+                return ret;
+            }
+            traceMsg("skipped flow control statement '%s'", dbgReturn(ret));
+            okey = false, or_op = true; // force next evaluation
+            continue;
         default: {
                 const ushort *oTokPtr = --tokPtr;
                 evaluateExpression(tokPtr, &curr, false);
@@ -762,7 +787,6 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::visitProLoop(
     else
         traceMsg("entering loop for %s over %s", dbgKey(variable), dbgStrList(list));
 
-    m_loopLevel++;
     forever {
         if (infinite) {
             if (!variable.isEmpty())
@@ -799,7 +823,6 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::visitProLoop(
         }
     }
   do_break:
-    m_loopLevel--;
 
     traceMsg("done looping");
 
@@ -909,6 +932,8 @@ void QMakeEvaluator::visitProVariable(
 
     if (varName == statics.strTEMPLATE)
         setTemplate();
+    else if (varName == statics.strQMAKE_PLATFORM)
+        updateFeaturePaths();
 #ifdef PROEVALUATOR_FULL
     else if (varName == statics.strREQUIRES)
         checkRequirements(values(varName));
@@ -1037,7 +1062,7 @@ bool QMakeEvaluator::prepareProject(const QString &inDir)
             forever {
                 QString superfile = superdir + QLatin1String("/.qmake.super");
                 if (IoUtils::exists(superfile)) {
-                    m_superfile = superfile;
+                    m_superfile = QDir::cleanPath(superfile);
                     break;
                 }
                 QFileInfo qdfi(superdir);
@@ -1074,8 +1099,8 @@ bool QMakeEvaluator::prepareProject(const QString &inDir)
         } else {
             m_buildRoot = QFileInfo(cachefile).path();
         }
-        m_conffile = conffile;
-        m_cachefile = cachefile;
+        m_conffile = QDir::cleanPath(conffile);
+        m_cachefile = QDir::cleanPath(cachefile);
     }
   no_cache:
 
@@ -1199,7 +1224,6 @@ bool QMakeEvaluator::loadSpec()
     }
     if (!loadSpecInternal())
         return false;
-    updateFeaturePaths(); // The spec extends the feature search path, so rebuild the cache.
     if (!m_conffile.isEmpty()
         && !evaluateFile(m_conffile, QMakeHandler::EvalConfigFile, LoadProOnly)) {
         return false;
@@ -1589,8 +1613,6 @@ ProStringList QMakeEvaluator::evaluateFunction(
     } else {
         m_valuemapStack.push(ProValueMap());
         m_locationStack.push(m_current);
-        int loopLevel = m_loopLevel;
-        m_loopLevel = 0;
 
         ProStringList args;
         for (int i = 0; i < argumentsList.count(); ++i) {
@@ -1603,7 +1625,6 @@ ProStringList QMakeEvaluator::evaluateFunction(
         ret = m_returnValue;
         m_returnValue.clear();
 
-        m_loopLevel = loopLevel;
         m_current = m_locationStack.pop();
         m_valuemapStack.pop();
     }

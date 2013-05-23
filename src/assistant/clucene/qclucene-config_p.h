@@ -416,7 +416,7 @@ configure.
 #define _CL_HAVE_WCSTOD  1
 #endif
 
-#if !defined(__SUNPRO_CC) && !defined(__SUNPRO_C) && !defined(__HP_aCC)
+#if !defined(__SUNPRO_CC) && !defined(__SUNPRO_C) && !defined(__HP_aCC) && !defined(Q_OS_ANDROID)
     /* Define to 1 if you have the `wcstoll' function. */
 #   ifndef _CL_HAVE_WCSTOLL
 #   define _CL_HAVE_WCSTOLL  1

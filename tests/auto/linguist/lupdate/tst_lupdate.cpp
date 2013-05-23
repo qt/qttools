@@ -122,18 +122,11 @@ static bool prepareMatch(const QString &expect, QString *tmpl, int *require, int
     return true;
 }
 
-void tst_lupdate::doCompare(const QStringList &_actual, const QString &expectedFn, bool err)
+void tst_lupdate::doCompare(const QStringList &actual, const QString &expectedFn, bool err)
 {
     QFile file(expectedFn);
     QVERIFY2(file.open(QIODevice::ReadOnly | QIODevice::Text), qPrintable(expectedFn));
     QStringList expected = QString(file.readAll()).split('\n');
-
-    QStringList actual;
-    actual.reserve(_actual.size());
-    QRegExp niRx(".*:(Function '\\w+' is not implemented|'\\w+' is not a recognized replace function)");
-    foreach (const QString &a, _actual)
-        if (!niRx.exactMatch(a))
-            actual << a;
 
     int ei = 0, ai = 0, em = expected.size(), am = actual.size();
     int oei = 0, oai = 0, oem = em, oam = am;
@@ -286,6 +279,10 @@ void tst_lupdate::good()
         if (QFile::exists(beforetsfile))
             QVERIFY2(QFile::copy(beforetsfile, genTs), qPrintable(beforetsfile));
     }
+
+    file.setFileName(workDir + QStringLiteral("/.qmake.cache"));
+    QVERIFY(file.open(QIODevice::WriteOnly));
+    file.close();
 
     if (lupdatecmd.isEmpty())
         lupdatecmd = QLatin1String("project.pro");

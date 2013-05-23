@@ -100,7 +100,11 @@ void lucene_vfnwprintf(StringBuffer* buffer, size_t count, const wchar_t * forma
 		size_t v;
 		size_t len = tmp->length();
 		for (size_t i=0;i<len;i++){
+#if !defined(__ANDROID__) && !defined(ANDROID)
 			v = wctomb(ob,*pointer);
+#else
+			v = wcrtomb(ob,*pointer,0);
+#endif // __ANDROID__
 			if ( v > 0 ){
 				ob[v]='\0';
 				fputs(ob,stdout);

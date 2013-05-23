@@ -1,5 +1,4 @@
 TEMPLATE = subdirs
-CONFIG  += ordered
 
 SUBDIRS += clucene \
 	   help \
@@ -8,3 +7,15 @@ SUBDIRS += clucene \
            qcollectiongenerator \
            qhelpconverter
 
+help.depends = clucene
+assistant.depends = help
+qhelpgenerator.depends = help
+qcollectiongenerator.depends = help
+qhelpconverter.depends = help
+
+qtNomakeTools( \
+    assistant \
+    qhelpgenerator \
+    qcollectiongenerator \
+    qhelpconverter \
+)

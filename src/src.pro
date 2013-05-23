@@ -1,5 +1,4 @@
 TEMPLATE = subdirs
-CONFIG += ordered
 
 qtHaveModule(widgets) {
     no-png {
@@ -10,6 +9,8 @@ qtHaveModule(widgets) {
                   qtestlib \
                   designer
 #    unix:!mac:!embedded:!qpa:SUBDIRS += qtconfig
+
+        linguist.depends = designer
     }
 }
 
@@ -19,9 +20,10 @@ mac {
     SUBDIRS += macdeployqt
 }
 
-embedded:SUBDIRS += kmap2qmap
-
 qtHaveModule(dbus): SUBDIRS += qdbus
-# We don't need these command line utilities on embedded platforms.
-embedded: SUBDIRS += makeqpf
 
+qtNomakeTools( \
+    pixeltool \
+    qtconfig \
+    macdeployqt \
+)

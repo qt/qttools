@@ -1,4 +1,3 @@
-TEMPLATE = app
 TARGET = cetcpsyncsvr
 QT -= gui
 QT += network
@@ -14,3 +13,5 @@ SOURCES +=  \
             connectionmanager.cpp \
             commands.cpp \
             main.cpp
+
+load(qt_app)
