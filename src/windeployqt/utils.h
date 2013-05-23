@@ -76,7 +76,18 @@ bool runProcess(const QString &commandLine, const QString &workingDirectory = QS
                 unsigned long *exitCode = 0, QByteArray *stdOut = 0, QByteArray *stdErr = 0,
                 QString *errorMessage = 0);
 QString winErrorMessage(unsigned long error);
-QStringList findDependentLibraries(const QString &peExecutableFileName, QString *errorMessage);
+
+bool readPeExecutable(const QString &peExecutableFileName, QString *errorMessage,
+                      QStringList *dependentLibraries = 0, unsigned *wordSize = 0,
+                      bool *isDebug = 0);
+// Return dependent modules of a PE executable files.
+
+inline QStringList findDependentLibraries(const QString &peExecutableFileName, QString *errorMessage)
+{
+    QStringList result;
+    readPeExecutable(peExecutableFileName, errorMessage, &result);
+    return result;
+}
 
 extern int optVerboseLevel;
 

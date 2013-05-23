@@ -489,13 +489,23 @@ inline QStringList readImportSections(const ImageNtHeader *ntHeaders, const void
     return result;
 }
 
-// Return dependent modules of a PE executable files.
-QStringList findDependentLibraries(const QString &peExecutableFileName, QString *errorMessage)
+// Read a PE executable and determine dependent libraries, word size
+// and debug flags. Note that the debug flag cannot be relied on for MinGW.
+bool readPeExecutable(const QString &peExecutableFileName, QString *errorMessage,
+                      QStringList *dependentLibrariesIn, unsigned *wordSizeIn,
+                      bool *isDebugIn)
 {
+    bool result = false;
     HANDLE hFile = NULL;
     HANDLE hFileMap = NULL;
     void *fileMemory = 0;
-    QStringList result;
+
+    if (dependentLibrariesIn)
+        dependentLibrariesIn->clear();
+    if (wordSizeIn)
+        *wordSizeIn = 0;
+    if (isDebugIn)
+        *isDebugIn = false;
 
     do {
         // Create a memory mapping of the file
@@ -522,9 +532,28 @@ QStringList findDependentLibraries(const QString &peExecutableFileName, QString 
         if (!ntHeaders)
             break;
 
-        result = ntHeaderWordSize(ntHeaders) == 32 ?
-            readImportSections(reinterpret_cast<const IMAGE_NT_HEADERS32 *>(ntHeaders), fileMemory, errorMessage) :
-            readImportSections(reinterpret_cast<const IMAGE_NT_HEADERS64 *>(ntHeaders), fileMemory, errorMessage);
+        const unsigned wordSize = ntHeaderWordSize(ntHeaders);
+        if (wordSizeIn)
+            *wordSizeIn = wordSize;
+        bool debug = false;
+        if (wordSize == 32) {
+            const IMAGE_NT_HEADERS32 *ntHeaders32 = reinterpret_cast<const IMAGE_NT_HEADERS32 *>(ntHeaders);
+            debug = ntHeaders32->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_DEBUG].Size;
+            if (dependentLibrariesIn)
+                *dependentLibrariesIn = readImportSections(ntHeaders32, fileMemory, errorMessage);
+        } else {
+            const IMAGE_NT_HEADERS64 *ntHeaders64 = reinterpret_cast<const IMAGE_NT_HEADERS64 *>(ntHeaders);
+            debug = ntHeaders64->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_DEBUG].Size;
+            if (dependentLibrariesIn)
+                *dependentLibrariesIn = readImportSections(ntHeaders64, fileMemory, errorMessage);
+        }
+
+        if (isDebugIn)
+            *isDebugIn = debug;
+        result = true;
+        if (optVerboseLevel > 1)
+            std::fprintf(stderr, "%s: %s %u bit, debug: %d\n", __FUNCTION__,
+                         qPrintable(peExecutableFileName), wordSize, debug);
     } while (false);
 
     if (fileMemory)
