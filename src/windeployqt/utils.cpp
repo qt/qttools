@@ -45,10 +45,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/qt_windows.h>
 #include <QtCore/QTemporaryFile>
-#include <QtCore/QFile>
-#include <QtCore/QDir>
 #include <QtCore/QScopedPointer>
-#include <QtCore/QDateTime>
 #include <QtCore/QStandardPaths>
 
 #include <cstdio>
@@ -266,59 +263,6 @@ QString queryQMake(const QString &variable, QString *errorMessage)
         return QString();
     }
     return QString::fromLocal8Bit(stdOut).trimmed();
-}
-
-static inline unsigned qtModuleForPlugin(const QString &subDirName)
-{
-    if (subDirName == QLatin1String("accessible") || subDirName == QLatin1String("iconengines")
-        || subDirName == QLatin1String("imageformats") || subDirName == QLatin1String("platforms")) {
-        return GuiModule;
-    }
-    if (subDirName == QLatin1String("bearer"))
-        return NetworkModule;
-    if (subDirName == QLatin1String("sqldrivers"))
-        return SqlModule;
-    if (subDirName == QLatin1String("mediaservice") || subDirName == QLatin1String("playlistformats"))
-        return MultimediaModule;
-    if (subDirName == QLatin1String("printsupport"))
-        return PrintSupportModule;
-    if (subDirName == QLatin1String("qmltooling"))
-        return Quick1Module | Quick2Module;
-    return 0; // "designer"
-}
-
-QStringList findQtPlugins(unsigned usedQtModules, bool debug, Platform platform, QString *platformPlugin, QString *errorMessage)
-{
-    const QString qtPluginsDirName = queryQMake(QStringLiteral("QT_INSTALL_PLUGINS"), errorMessage);
-    if (qtPluginsDirName.isEmpty())
-        return QStringList();
-    QDir pluginsDir(qtPluginsDirName);
-    QStringList result;
-    foreach (const QString &subDirName, pluginsDir.entryList(QStringList(QLatin1String("*")), QDir::Dirs | QDir::NoDotAndDotDot)) {
-        const unsigned module = qtModuleForPlugin(subDirName);
-        if (module & usedQtModules) {
-            const QString subDirPath = qtPluginsDirName + QLatin1Char('/') + subDirName;
-            QDir subDir(subDirPath);
-            // Filter for platform or any.
-            QString filter;
-            const bool isPlatformPlugin = subDirName == QLatin1String("platforms");
-            if (isPlatformPlugin) {
-                filter = platform == WinRt ? QStringLiteral("qwinrt") : QStringLiteral("qwindows");
-                if (debug)
-                    filter.append(QLatin1Char('d'));
-            } else {
-                filter  = QLatin1String(debug ? "*d" : "*[^d]");
-            }
-            filter += QStringLiteral(".dll");
-            foreach (const QString &dll, subDir.entryList(QStringList(filter), QDir::Files)) {
-                const QString plugin = subDirPath + QLatin1Char('/') + dll;
-                result.push_back(plugin);
-                if (isPlatformPlugin && platformPlugin)
-                    *platformPlugin = plugin;
-            } // for filter
-        } // type matches
-    } // for plugin folder
-    return result;
 }
 
 // Update a file or directory.

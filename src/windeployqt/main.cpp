@@ -119,10 +119,11 @@ static inline QString findD3dCompiler()
 
 // Helper for recursively finding all dependent Qt libraries.
 static bool findDependentQtLibraries(const QString &qtBinDir, const QString &binary,
-                                     QStringList *result, QString *errorMessage)
+                                     QString *errorMessage, QStringList *result,
+                                     unsigned *wordSize = 0, bool *isDebug = 0)
 {
-    const QStringList dependentLibs = findDependentLibraries(binary, errorMessage);
-    if (dependentLibs.isEmpty()) {
+    QStringList dependentLibs;
+    if (!readPeExecutable(binary, errorMessage, &dependentLibs, wordSize, isDebug)) {
         errorMessage->prepend(QLatin1String("Unable to find dependent libraries of ") +
                               QDir::toNativeSeparators(binary) + QLatin1String(" :"));
         return false;
@@ -134,11 +135,111 @@ static bool findDependentQtLibraries(const QString &qtBinDir, const QString &bin
         const QString path = normalizeFileName(qtBinDir + QLatin1Char('/') + QFileInfo(qtLib).fileName());
         if (!result->contains(path)) {
             result->append(path);
-            if (!findDependentQtLibraries(qtBinDir, path, result, errorMessage))
+            if (!findDependentQtLibraries(qtBinDir, path, errorMessage, result))
                 return false;
         }
     }
     return true;
+}
+
+// Base class to filter debug/release DLLs for functions to be passed to updateFile().
+// Tries to pre-filter by namefilter and does check via PE.
+class DllDirectoryFileEntryFunction {
+public:
+    explicit DllDirectoryFileEntryFunction(bool debug, const QString &prefix = QStringLiteral("*")) :
+        m_nameFilter(QStringList(prefix  + (debug ? QStringLiteral("d.dll") : QStringLiteral(".dll")))),
+        m_dllDebug(debug) {}
+
+    QStringList operator()(const QDir &dir) const
+    {
+        QStringList result;
+        QString errorMessage;
+        foreach (const QString &dll, m_nameFilter(dir)) {
+            const QString dllPath = dir.absoluteFilePath(dll);
+            bool debugDll;
+            if (readPeExecutable(dllPath, &errorMessage, 0, 0, &debugDll)) {
+                if (debugDll == m_dllDebug) {
+                    result.push_back(dll);
+                }
+            } else {
+                std::fprintf(stderr, "Warning: Unable to read %s: %s",
+                             qPrintable(QDir::toNativeSeparators(dllPath)), qPrintable(errorMessage));
+            }
+        }
+        return result;
+    }
+
+private:
+    const NameFilterFileEntryFunction m_nameFilter;
+    const bool m_dllDebug;
+};
+
+// File entry filter function for updateFile() that returns a list of files for
+// QML import trees: DLLs (matching debgug) and .qml/,js, etc.
+class QmlDirectoryFileEntryFunction {
+public:
+    explicit QmlDirectoryFileEntryFunction(bool debug)
+        : m_qmlNameFilter(QStringList() << QStringLiteral("*.js") << QStringLiteral("qmldir") << QStringLiteral("*.qmltypes"))
+        , m_dllFilter(debug)
+    {}
+
+    QStringList operator()(const QDir &dir) const { return m_dllFilter(dir) + m_qmlNameFilter(dir);  }
+
+private:
+    NameFilterFileEntryFunction m_qmlNameFilter;
+    DllDirectoryFileEntryFunction m_dllFilter;
+};
+
+static inline unsigned qtModuleForPlugin(const QString &subDirName)
+{
+    if (subDirName == QLatin1String("accessible") || subDirName == QLatin1String("iconengines")
+        || subDirName == QLatin1String("imageformats") || subDirName == QLatin1String("platforms")) {
+        return GuiModule;
+    }
+    if (subDirName == QLatin1String("bearer"))
+        return NetworkModule;
+    if (subDirName == QLatin1String("sqldrivers"))
+        return SqlModule;
+    if (subDirName == QLatin1String("mediaservice") || subDirName == QLatin1String("playlistformats"))
+        return MultimediaModule;
+    if (subDirName == QLatin1String("printsupport"))
+        return PrintSupportModule;
+    if (subDirName == QLatin1String("qmltooling"))
+        return Quick1Module | Quick2Module;
+    return 0; // "designer"
+}
+
+QStringList findQtPlugins(unsigned usedQtModules,
+                          const QString qtPluginsDirName,
+                          bool debug, Platform platform,
+                          QString *platformPlugin)
+{
+    if (qtPluginsDirName.isEmpty())
+        return QStringList();
+    QDir pluginsDir(qtPluginsDirName);
+    QStringList result;
+    foreach (const QString &subDirName, pluginsDir.entryList(QStringList(QLatin1String("*")), QDir::Dirs | QDir::NoDotAndDotDot)) {
+        const unsigned module = qtModuleForPlugin(subDirName);
+        if (module & usedQtModules) {
+            const QString subDirPath = qtPluginsDirName + QLatin1Char('/') + subDirName;
+            QDir subDir(subDirPath);
+            // Filter for platform or any.
+            QString filter;
+            const bool isPlatformPlugin = subDirName == QLatin1String("platforms");
+            if (isPlatformPlugin) {
+                filter = platform == WinRt ? QStringLiteral("qwinrt") : QStringLiteral("qwindows");
+            } else {
+                filter  = QLatin1String("*");
+            }
+            foreach (const QString &plugin, DllDirectoryFileEntryFunction(debug, filter)(subDir)) {
+                const QString pluginPath = subDir.absoluteFilePath(plugin);
+                if (isPlatformPlugin)
+                    *platformPlugin = pluginPath;
+                result.push_back(pluginPath);
+            } // for filter
+        } // type matches
+    } // for plugin folder
+    return result;
 }
 
 static unsigned qtModules(const QStringList &qtLibraries)
@@ -200,10 +301,15 @@ int main(int argc, char **argv)
         std::fprintf(stderr, "Qt binaries in %s\n", qPrintable(QDir::toNativeSeparators(qtBinDir)));
 
     QStringList dependentQtLibs;
-    if (!findDependentQtLibraries(qtBinDir, binary, &dependentQtLibs, &errorMessage)) {
+    bool isDebug;
+    unsigned wordSize;
+    if (!findDependentQtLibraries(qtBinDir, binary, &errorMessage, &dependentQtLibs, &wordSize, &isDebug)) {
         std::fputs(qPrintable(errorMessage), stderr);
         return 1;
     }
+
+    std::printf("%s: %ubit, %s executable.\n", qPrintable(QDir::toNativeSeparators(binary)),
+                wordSize, isDebug ? "debug" : "release");
 
     if (dependentQtLibs.isEmpty()) {
             std::fprintf(stderr, "%s does not seem to be a Qt executable\n",
@@ -211,11 +317,9 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    // Some checks in QtCore: Debug, ICU
-    bool isDebug = false;
+    // Some checks in QtCore: ICU
     const QStringList qt5Core = dependentQtLibs.filter(QStringLiteral("Qt5Core"), Qt::CaseInsensitive);
     if (!qt5Core.isEmpty()) {
-        isDebug = qt5Core.front().contains(QStringLiteral("Qt5Cored.dll"), Qt::CaseInsensitive);
         QStringList icuLibs = findDependentLibraries(qt5Core.front(), &errorMessage).filter(QStringLiteral("ICU"), Qt::CaseInsensitive);
         if (!icuLibs.isEmpty()) {
             // Find out the ICU version to add the data library icudtXX.dll, which does not show
@@ -247,7 +351,8 @@ int main(int argc, char **argv)
     // Find the plugins and check whether ANGLE, D3D are required on the platform plugin.
     QString platformPlugin;
     const unsigned usedQtModules = qtModules(dependentQtLibs);
-    const QStringList plugins = findQtPlugins(usedQtModules, isDebug, platform, &platformPlugin, &errorMessage);
+    const QStringList plugins = findQtPlugins(usedQtModules, qmakeVariables.value(QStringLiteral("QT_INSTALL_PLUGINS")),
+                                              isDebug, platform, &platformPlugin);
     if (optVerboseLevel > 1)
         std::fprintf(stderr, "Plugins: %s\n", qPrintable(plugins.join(QLatin1Char(','))));
 
@@ -312,9 +417,7 @@ int main(int argc, char **argv)
 
     // Update Quick imports
     if (optQuickImports && (usedQtModules & (Quick1Module | Quick2Module))) {
-        const QStringList importNameFilters = QStringList() << QStringLiteral("*.qml")
-            << QStringLiteral("*.js") << QStringLiteral("*.dll")
-            << QStringLiteral("qmldir") << QStringLiteral("*.qmltypes");
+        const QmlDirectoryFileEntryFunction qmlFileEntryFunction(isDebug);
         if (usedQtModules & Quick2Module) {
             const QString quick2ImportPath = qmakeVariables.value(QStringLiteral("QT_INSTALL_QML"));
             QStringList quick2Imports;
@@ -326,7 +429,7 @@ int main(int argc, char **argv)
             if (usedQtModules & WebKitModule)
                 quick2Imports << QStringLiteral("QtWebKit");
             foreach (const QString &quick2Import, quick2Imports) {
-                if (!updateFile(quick2ImportPath + slash + quick2Import, importNameFilters, optDirectory, &errorMessage)) {
+                if (!updateFile(quick2ImportPath + slash + quick2Import, qmlFileEntryFunction, optDirectory, &errorMessage)) {
                     std::fprintf(stderr, "%s\n", qPrintable(errorMessage));
                     return 1;
                 }
@@ -338,7 +441,7 @@ int main(int argc, char **argv)
             if (usedQtModules & WebKitModule)
                 quick1Imports << QStringLiteral("QtWebKit");
             foreach (const QString &quick1Import, quick1Imports) {
-                if (!updateFile(quick1ImportPath + slash + quick1Import, importNameFilters, optDirectory, &errorMessage)) {
+                if (!updateFile(quick1ImportPath + slash + quick1Import, qmlFileEntryFunction, optDirectory, &errorMessage)) {
                     std::fprintf(stderr, "%s\n", qPrintable(errorMessage));
                     return 1;
                 }

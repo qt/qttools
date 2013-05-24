@@ -44,6 +44,9 @@
 
 #include <QStringList>
 #include <QMap>
+#include <QtCore/QFile>
+#include <QtCore/QDir>
+#include <QtCore/QDateTime>
 
 enum Platform { Windows, WinRt };
 
@@ -66,12 +69,8 @@ enum QtModule {
     WebKitModule = 0x400
 };
 
-QStringList findQtPlugins(unsigned usedQtModules, bool debug, Platform platform,
-                          QString *platformPlugin, QString *errorMessage);
 bool updateFile(const QString &sourceFileName, const QStringList &nameFilters,
                 const QString &targetDirectory, QString *errorMessage);
-inline bool updateFile(const QString &sourceFileName, const QString &targetDirectory, QString *errorMessage)
-{ return updateFile(sourceFileName, QStringList(), targetDirectory, errorMessage); }
 bool runProcess(const QString &commandLine, const QString &workingDirectory = QString(),
                 unsigned long *exitCode = 0, QByteArray *stdOut = 0, QByteArray *stdErr = 0,
                 QString *errorMessage = 0);
@@ -90,5 +89,99 @@ inline QStringList findDependentLibraries(const QString &peExecutableFileName, Q
 }
 
 extern int optVerboseLevel;
+
+// Recursively update a file or directory, matching DirectoryFileEntryFunction against the QDir
+// to obtain the files.
+template <class DirectoryFileEntryFunction>
+bool updateFile(const QString &sourceFileName,
+                DirectoryFileEntryFunction directoryFileEntryFunction,
+                const QString &targetDirectory,
+                QString *errorMessage)
+{
+    const QFileInfo sourceFileInfo(sourceFileName);
+    const QString targetFileName = targetDirectory + QLatin1Char('/') + sourceFileInfo.fileName();
+    if (optVerboseLevel > 1)
+        std::fprintf(stderr, "Checking %s, %s\n", qPrintable(sourceFileName), qPrintable(targetFileName));
+
+    if (!sourceFileInfo.exists()) {
+        *errorMessage = QString::fromLatin1("%1 does not exist.").arg(QDir::toNativeSeparators(sourceFileName));
+        return false;
+    }
+
+    if (sourceFileInfo.isSymLink()) {
+        *errorMessage = QString::fromLatin1("Symbolic links are not supported (%1).")
+                        .arg(QDir::toNativeSeparators(sourceFileName));
+        return false;
+    }
+
+    const QFileInfo targetFileInfo(targetFileName);
+
+    if (sourceFileInfo.isDir()) {
+        if (targetFileInfo.exists()) {
+            if (!targetFileInfo.isDir()) {
+                *errorMessage = QString::fromLatin1("%1 already exists and is not a directory.")
+                                .arg(QDir::toNativeSeparators(targetFileName));
+                return false;
+            } // Not a directory.
+        } else { // exists.
+            QDir d(targetDirectory);
+            std::printf("Creating %s.\n", qPrintable(targetFileName));
+            if (!d.mkdir(sourceFileInfo.fileName())) {
+                *errorMessage = QString::fromLatin1("Cannot create directory %1 under %2.")
+                                .arg(sourceFileInfo.fileName(), QDir::toNativeSeparators(targetDirectory));
+                return false;
+            }
+        }
+        // Recurse into directory
+        QDir dir(sourceFileName);
+
+        const QStringList allEntries = directoryFileEntryFunction(dir) + dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+        foreach (const QString &entry, allEntries)
+            if (!updateFile(sourceFileName + QLatin1Char('/') + entry, directoryFileEntryFunction, targetFileName, errorMessage))
+                return false;
+        return true;
+    } // Source is directory.
+
+    if (targetFileInfo.exists()) {
+        if (targetFileInfo.lastModified() >= sourceFileInfo.lastModified()) {
+            if (optVerboseLevel)
+                std::printf("%s is up to date.\n", qPrintable(sourceFileInfo.fileName()));
+            return true;
+        }
+        QFile targetFile(targetFileName);
+        if (!targetFile.remove()) {
+            *errorMessage = QString::fromLatin1("Cannot remove existing file %1: %2")
+                            .arg(QDir::toNativeSeparators(targetFileName), targetFile.errorString());
+            return false;
+        }
+    } // target exists
+    QFile file(sourceFileName);
+    if (optVerboseLevel)
+        std::printf("Updating %s.\n", qPrintable(sourceFileInfo.fileName()));
+    if (!file.copy(targetFileName)) {
+        *errorMessage = QString::fromLatin1("Cannot copy %1 to %2: %3")
+                .arg(QDir::toNativeSeparators(sourceFileName),
+                     QDir::toNativeSeparators(targetFileName),
+                     file.errorString());
+        return false;
+    }
+    return true;
+}
+
+// Base class to filter files by name filters functions to be passed to updateFile().
+class NameFilterFileEntryFunction {
+public:
+    explicit NameFilterFileEntryFunction(const QStringList &nameFilters) : m_nameFilters(nameFilters) {}
+    QStringList operator()(const QDir &dir) const { return dir.entryList(m_nameFilters, QDir::Files); }
+
+private:
+    const QStringList m_nameFilters;
+};
+
+// Convenience for all files.
+inline bool updateFile(const QString &sourceFileName, const QString &targetDirectory, QString *errorMessage)
+{
+    return updateFile(sourceFileName, NameFilterFileEntryFunction(QStringList()), targetDirectory, errorMessage);
+}
 
 #endif // UTILS_H
