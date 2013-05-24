@@ -1867,7 +1867,14 @@ QWidget *QtAbstractPropertyBrowser::createEditor(QtProperty *property,
 
     if (!factory)
         return 0;
-    return factory->createEditor(property, parent);
+    QWidget *w = factory->createEditor(property, parent);
+    // Since some editors can be QComboBoxes, and we changed their focus policy in Qt 5
+    // to make them feel more native on Mac, we need to relax the focus policy to something
+    // more permissive to keep the combo box from losing focus, allowing it to stay alive,
+    // when the user clicks on it to show the popup.
+    if (w)
+        w->setFocusPolicy(Qt::WheelFocus);
+    return w;
 }
 
 bool QtAbstractPropertyBrowser::addFactory(QtAbstractPropertyManager *abstractManager,
