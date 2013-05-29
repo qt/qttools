@@ -39,79 +39,47 @@
 **
 ****************************************************************************/
 
-#ifndef PROFILEEVALUATOR_H
-#define PROFILEEVALUATOR_H
+#ifndef QMAKEVFS_H
+#define QMAKEVFS_H
 
 #include "qmake_global.h"
-#include "qmakeglobals.h"
-#include "qmakeevaluator.h"
-#include "proitems.h"
 
-#include <QHash>
-#include <QStringList>
+# include <qiodevice.h>
+#ifndef PROEVALUATOR_FULL
+# include <qhash.h>
+# include <qstring.h>
+# ifdef PROEVALUATOR_THREAD_SAFE
+#  include <qmutex.h>
+# endif
+#endif
 
 QT_BEGIN_NAMESPACE
 
-class QMakeVfs;
-class QMakeParser;
-class QMakeEvaluator;
-class QMakeHandler;
-
-class QMAKE_EXPORT ProFileGlobals : public QMakeGlobals
+class QMAKE_EXPORT QMakeVfs
 {
 public:
-    QString sysroot;
-};
+    QMakeVfs();
 
-class QMAKE_EXPORT ProFileEvaluator
-{
-public:
-    enum TemplateType {
-        TT_Unknown = 0,
-        TT_Application,
-        TT_Library,
-        TT_Script,
-        TT_Aux,
-        TT_Subdirs
-    };
+    bool writeFile(const QString &fn, QIODevice::OpenMode mode, const QString &contents, QString *errStr);
+    bool readFile(const QString &fn, QString *contents, QString *errStr);
+    bool exists(const QString &fn);
 
-    // Call this from a concurrency-free context
-    static void initialize();
-
-    ProFileEvaluator(ProFileGlobals *option, QMakeParser *parser, QMakeVfs *vfs,
-                     QMakeHandler *handler);
-    ~ProFileEvaluator();
-
-    ProFileEvaluator::TemplateType templateType() const;
-#ifdef PROEVALUATOR_CUMULATIVE
-    void setCumulative(bool on); // Default is false
+#ifndef PROEVALUATOR_FULL
+    void invalidateCache();
+    void invalidateContents();
 #endif
-    void setExtraVars(const QHash<QString, QStringList> &extraVars);
-    void setExtraConfigs(const QStringList &extraConfigs);
-    void setOutputDir(const QString &dir); // Default is empty
-
-    bool loadNamedSpec(const QString &specDir, bool hostSpec);
-
-    bool accept(ProFile *pro, QMakeEvaluator::LoadFlags flags = QMakeEvaluator::LoadAll);
-
-    bool contains(const QString &variableName) const;
-    QString value(const QString &variableName) const;
-    QStringList values(const QString &variableName) const;
-    QStringList values(const QString &variableName, const ProFile *pro) const;
-    QStringList absolutePathValues(const QString &variable, const QString &baseDirectory) const;
-    QStringList absoluteFileValues(
-            const QString &variable, const QString &baseDirectory, const QStringList &searchDirs,
-            const ProFile *pro) const;
-    QString propertyValue(const QString &val) const;
-
-    QString resolvedMkSpec() const;
 
 private:
-    QString sysrootify(const QString &path, const QString &baseDir) const;
-
-    QMakeEvaluator *d;
+#ifndef PROEVALUATOR_FULL
+# ifdef PROEVALUATOR_THREAD_SAFE
+    QMutex m_mutex;
+# endif
+    QHash<QString, QString> m_files;
+    QString m_magicMissing;
+    QString m_magicExisting;
+#endif
 };
 
 QT_END_NAMESPACE
 
-#endif // PROFILEEVALUATOR_H
+#endif // QMAKEVFS_H

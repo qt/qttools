@@ -6,6 +6,7 @@ DEFINES += PROEVALUATOR_CUMULATIVE PROEVALUATOR_INIT_PROPS
 HEADERS += \
     $$PWD/qmake_global.h \
     $$PWD/ioutils.h \
+    $$PWD/qmakevfs.h \
     $$PWD/proitems.h \
     $$PWD/qmakeglobals.h \
     $$PWD/qmakeparser.h \
@@ -15,6 +16,7 @@ HEADERS += \
 
 SOURCES += \
     $$PWD/ioutils.cpp \
+    $$PWD/qmakevfs.cpp \
     $$PWD/proitems.cpp \
     $$PWD/qmakeglobals.cpp \
     $$PWD/qmakeparser.cpp \

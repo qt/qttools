@@ -41,6 +41,7 @@
 
 #include "translator.h"
 
+#include <qmakevfs.h>
 #include <qmakeparser.h>
 #include <profileevaluator.h>
 
@@ -318,8 +319,9 @@ int main(int argc, char **argv)
                 option.qmake_abslocation = app.applicationDirPath() + QLatin1String("/qmake");
 #endif
             option.initProperties();
-            QMakeParser parser(0, &evalHandler);
-            ProFileEvaluator visitor(&option, &parser, &evalHandler);
+            QMakeVfs vfs;
+            QMakeParser parser(0, &vfs, &evalHandler);
+            ProFileEvaluator visitor(&option, &parser, &vfs, &evalHandler);
             visitor.setCumulative(true);
             visitor.setOutputDir(QDir::currentPath());
 
