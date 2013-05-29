@@ -179,7 +179,7 @@ private:
 class QmlDirectoryFileEntryFunction {
 public:
     explicit QmlDirectoryFileEntryFunction(bool debug)
-        : m_qmlNameFilter(QStringList() << QStringLiteral("*.js") << QStringLiteral("qmldir") << QStringLiteral("*.qmltypes"))
+        : m_qmlNameFilter(QStringList() << QStringLiteral("*.js") << QStringLiteral("qmldir") << QStringLiteral("*.qmltypes") << QStringLiteral("*.png"))
         , m_dllFilter(debug)
     {}
 
