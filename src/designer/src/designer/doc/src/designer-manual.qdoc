@@ -94,7 +94,7 @@
     appendix to the documentation.
 
     \list
-    \li \l{Implementation of the Recursive Shadow Casting Algorithm in Qt Designer}
+    \li \l{Qt Designer License Information}
     \endlist
 */
 
@@ -2798,13 +2798,15 @@ pixmap property in the property editor.
 
 
 /*!
-    \page designer-recursive-shadow-casting.html
-    \title Implementation of the Recursive Shadow Casting Algorithm in Qt Designer
+    \page designer-license-information.html
+    \title Qt Designer License Information
     \contentspage {Qt Designer Manual}{Contents}
 
     \ingroup licensing
     \brief License information for contributions to specific parts of the Qt
     Designer source code.
+
+    \section1 Implementation of the Recursive Shadow Casting Algorithm in Qt Designer
 
     \legalese
     Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies). \BR

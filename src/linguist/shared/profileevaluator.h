@@ -84,6 +84,8 @@ public:
 #ifdef PROEVALUATOR_CUMULATIVE
     void setCumulative(bool on); // Default is false
 #endif
+    void setExtraVars(const QHash<QString, QStringList> &extraVars);
+    void setExtraConfigs(const QStringList &extraConfigs);
     void setOutputDir(const QString &dir); // Default is empty
 
     bool loadNamedSpec(const QString &specDir, bool hostSpec);
@@ -99,6 +101,8 @@ public:
             const QString &variable, const QString &baseDirectory, const QStringList &searchDirs,
             const ProFile *pro) const;
     QString propertyValue(const QString &val) const;
+
+    QString resolvedMkSpec() const;
 
 private:
     QString sysrootify(const QString &path, const QString &baseDir) const;
