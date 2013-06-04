@@ -46,6 +46,7 @@
 #include <QtCore/qt_windows.h>
 #include <QtCore/QTemporaryFile>
 #include <QtCore/QScopedPointer>
+#include <QtCore/QScopedArrayPointer>
 #include <QtCore/QStandardPaths>
 
 #include <cstdio>
@@ -187,15 +188,11 @@ bool runProcess(const QString &commandLine, const QString &workingDirectory,
     }
 
     // Create a copy of the command line which CreateProcessW can modify.
-    if (commandLine.size() >= MAX_PATH) {
-        if (errorMessage)
-            *errorMessage = QStringLiteral("Command line too long.");
-        return false;
-    }
-    wchar_t commandLineW[MAX_PATH];
-    commandLine.toWCharArray(commandLineW);
+    QScopedArrayPointer<wchar_t> commandLineW(new wchar_t[commandLine.size() + 1]);
+    commandLine.toWCharArray(commandLineW.data());
     commandLineW[commandLine.size()] = 0;
-    if (!CreateProcessW(0, commandLineW, 0, 0, /* InheritHandles */ TRUE, 0, 0, 0, &si, &pi)) {
+    if (!CreateProcessW(0, commandLineW.data(), 0, 0, /* InheritHandles */ TRUE, 0, 0,
+                        (wchar_t *)nativeWorkingDir.utf16(), &si, &pi)) {
         if (stdOut)
             CloseHandle(si.hStdOutput);
         if (stdErr)
