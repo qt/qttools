@@ -47,14 +47,18 @@
 
 #include <cstdio>
 
-bool optPlugins = true;
-bool optLibraries = true;
-bool optQuickImports = true;
 bool optHelp = false;
-
-Platform platform = Windows;
-
 QString optDirectory;
+
+struct Options {
+    Options() : plugins(true), libraries(true), quickImports(true), platform(Windows) {}
+
+    bool plugins;
+    bool libraries;
+    bool quickImports;
+    Platform platform;
+    QString binary;
+};
 
 static const char usageC[] =
 "Usage: windeployqt build-directory [options]\n\n"
@@ -67,16 +71,16 @@ static const char usageC[] =
 "         -verbose=<0-3>     : 0 = no output, 1 = progress (default),\n"
 "                              2 = normal, 3 = debug\n";
 
-static inline bool parseArguments(const QStringList &arguments)
+static inline bool parseArguments(const QStringList &arguments, Options *options)
 {
     for (int i = 1; i < arguments.size(); ++i) {
         const QString argument = arguments.at(i);
         if (argument == QLatin1String("-no-plugins")) {
-            optPlugins = false;
+            options->plugins = false;
         } else if (argument == QLatin1String("-no-libraries")) {
-           optLibraries = false;
+           options->libraries = false;
         } else if (argument == QLatin1String("-no-quick-imports")) {
-           optQuickImports = false;
+           options->quickImports = false;
         } else if (argument.startsWith(QLatin1String("-h"))) {
             optHelp = true;
         } else if (argument.startsWith(QLatin1String("-verbose"))) {
@@ -266,36 +270,13 @@ static unsigned qtModules(const QStringList &qtLibraries)
     return result;
 }
 
-int main(int argc, char **argv)
+static bool deploy(const Options &options,
+                   const QMap<QString, QString> &qmakeVariables,
+                   QString *errorMessage)
 {
-    QCoreApplication a(argc, argv);
-
     const QChar slash = QLatin1Char('/');
 
-    if (!parseArguments(QCoreApplication::arguments()) || optHelp) {
-        std::printf("\nwindeployqt based on Qt %s\n\n%s", QT_VERSION_STR, usageC);
-        return optHelp ? 0 : 1;
-    }
-
-    const QString binary = findBinary(optDirectory);
-    if (binary.isEmpty()) {
-        std::fprintf(stderr, "Unable to find binary in %s.\n", qPrintable(optDirectory));
-        return 1;
-    }
-    QString errorMessage;
-
-    const QMap<QString, QString> qmakeVariables = queryQMakeAll(&errorMessage);
     const QString qtBinDir = qmakeVariables.value(QStringLiteral("QT_INSTALL_BINS"));
-    if (qmakeVariables.isEmpty() || qtBinDir.isEmpty()) {
-        std::fprintf(stderr, "Unable to query qmake: %s\n", qPrintable(errorMessage));
-        return 1;
-    }
-
-    const QString xSpec = qmakeVariables.value(QStringLiteral("QMAKE_XSPEC"));
-    if (xSpec.startsWith(QLatin1String("winrt")) || xSpec.startsWith(QLatin1String("winphone")))
-        platform = WinRt;
-    else
-        platform = Windows;
 
     if (optVerboseLevel > 1)
         std::fprintf(stderr, "Qt binaries in %s\n", qPrintable(QDir::toNativeSeparators(qtBinDir)));
@@ -303,24 +284,21 @@ int main(int argc, char **argv)
     QStringList dependentQtLibs;
     bool isDebug;
     unsigned wordSize;
-    if (!findDependentQtLibraries(qtBinDir, binary, &errorMessage, &dependentQtLibs, &wordSize, &isDebug)) {
-        std::fputs(qPrintable(errorMessage), stderr);
-        return 1;
-    }
+    if (!findDependentQtLibraries(qtBinDir, options.binary, errorMessage, &dependentQtLibs, &wordSize, &isDebug))
+        return false;
 
-    std::printf("%s: %ubit, %s executable.\n", qPrintable(QDir::toNativeSeparators(binary)),
+    std::printf("%s: %ubit, %s executable.\n", qPrintable(QDir::toNativeSeparators(options.binary)),
                 wordSize, isDebug ? "debug" : "release");
 
     if (dependentQtLibs.isEmpty()) {
-            std::fprintf(stderr, "%s does not seem to be a Qt executable\n",
-                         qPrintable(QDir::toNativeSeparators(binary)));
-        return 1;
+        *errorMessage = QDir::toNativeSeparators(options.binary) +  QStringLiteral(" does not seem to be a Qt executable.");
+        return false;
     }
 
     // Some checks in QtCore: ICU
     const QStringList qt5Core = dependentQtLibs.filter(QStringLiteral("Qt5Core"), Qt::CaseInsensitive);
     if (!qt5Core.isEmpty()) {
-        QStringList icuLibs = findDependentLibraries(qt5Core.front(), &errorMessage).filter(QStringLiteral("ICU"), Qt::CaseInsensitive);
+        QStringList icuLibs = findDependentLibraries(qt5Core.front(), errorMessage).filter(QStringLiteral("ICU"), Qt::CaseInsensitive);
         if (!icuLibs.isEmpty()) {
             // Find out the ICU version to add the data library icudtXX.dll, which does not show
             // as a dependency.
@@ -336,8 +314,8 @@ int main(int argc, char **argv)
             foreach (const QString &icuLib, icuLibs) {
                 const QString icuPath = findInPath(icuLib);
                 if (icuPath.isEmpty()) {
-                    std::fprintf(stderr, "Unable to locate ICU library %s\n", qPrintable(icuLib));
-                    return -1;
+                    *errorMessage = QStringLiteral("Unable to locate ICU library ") + icuLib;
+                    return false;
                 }
                 dependentQtLibs.push_back(icuPath);
             } // foreach icuLib
@@ -352,27 +330,25 @@ int main(int argc, char **argv)
     QString platformPlugin;
     const unsigned usedQtModules = qtModules(dependentQtLibs);
     const QStringList plugins = findQtPlugins(usedQtModules, qmakeVariables.value(QStringLiteral("QT_INSTALL_PLUGINS")),
-                                              isDebug, platform, &platformPlugin);
+                                              isDebug, options.platform, &platformPlugin);
     if (optVerboseLevel > 1)
         std::fprintf(stderr, "Plugins: %s\n", qPrintable(plugins.join(QLatin1Char(','))));
 
-    if (plugins.isEmpty()) {
-        std::fprintf(stderr, "%s\n", qPrintable(errorMessage));
-        return 1;
-    }
+    if (plugins.isEmpty())
+        return false;
 
     if (platformPlugin.isEmpty()) {
-        std::fprintf(stderr, "Unable to find the platform plugin.\n");
-        return 1;
+        *errorMessage =QStringLiteral("Unable to find the platform plugin.");
+        return false;
     }
 
     // Check for ANGLE on the platform plugin.
-    const QStringList platformPluginLibraries = findDependentLibraries(platformPlugin, &errorMessage);
+    const QStringList platformPluginLibraries = findDependentLibraries(platformPlugin, errorMessage);
     const QStringList libEgl = platformPluginLibraries.filter(QStringLiteral("libegl"), Qt::CaseInsensitive);
     if (!libEgl.isEmpty()) {
         const QString libEglFullPath = qtBinDir + slash + QFileInfo(libEgl.front()).fileName();
         dependentQtLibs.push_back(libEglFullPath);
-        const QStringList libGLESv2 = findDependentLibraries(libEglFullPath, &errorMessage).filter(QStringLiteral("libGLESv2"), Qt::CaseInsensitive);
+        const QStringList libGLESv2 = findDependentLibraries(libEglFullPath, errorMessage).filter(QStringLiteral("libGLESv2"), Qt::CaseInsensitive);
         if (!libGLESv2.isEmpty()) {
             const QString libGLESv2FullPath = qtBinDir + slash + QFileInfo(libGLESv2.front()).fileName();
             dependentQtLibs.push_back(libGLESv2FullPath);
@@ -387,17 +363,15 @@ int main(int argc, char **argv)
     } // !libEgl.isEmpty()
 
     // Update libraries
-    if (optLibraries) {
+    if (options.libraries) {
         foreach (const QString &qtLib, dependentQtLibs) {
-            if (!updateFile(qtLib, optDirectory, &errorMessage)) {
-                std::fprintf(stderr, "%s\n", qPrintable(errorMessage));
-                return 1;
-            }
+            if (!updateFile(qtLib, optDirectory, errorMessage))
+                return false;
         }
     } // optLibraries
 
     // Update plugins
-    if (optPlugins) {
+    if (options.plugins) {
         QDir dir(optDirectory);
         foreach (const QString &plugin, plugins) {
             const QString targetDirName = plugin.section(slash, -2, -2);
@@ -405,18 +379,17 @@ int main(int argc, char **argv)
                 std::printf("Creating directory %s.\n", qPrintable(targetDirName));
                 if (!dir.mkdir(targetDirName)) {
                     std::fprintf(stderr, "Cannot create %s.\n",  qPrintable(targetDirName));
-                    return -1;
+                    *errorMessage = QStringLiteral("Cannot create ") + targetDirName +  QLatin1Char('.');
+                    return false;
                 }
             }
-            if (!updateFile(plugin, optDirectory + slash + targetDirName, &errorMessage)) {
-                std::fprintf(stderr, "%s\n", qPrintable(errorMessage));
-                return 1;
-            }
+            if (!updateFile(plugin, optDirectory + slash + targetDirName, errorMessage))
+                return false;
         }
     } // optPlugins
 
     // Update Quick imports
-    if (optQuickImports && (usedQtModules & (Quick1Module | Quick2Module))) {
+    if (options.quickImports && (usedQtModules & (Quick1Module | Quick2Module))) {
         const QmlDirectoryFileEntryFunction qmlFileEntryFunction(isDebug);
         if (usedQtModules & Quick2Module) {
             const QString quick2ImportPath = qmakeVariables.value(QStringLiteral("QT_INSTALL_QML"));
@@ -429,10 +402,8 @@ int main(int argc, char **argv)
             if (usedQtModules & WebKitModule)
                 quick2Imports << QStringLiteral("QtWebKit");
             foreach (const QString &quick2Import, quick2Imports) {
-                if (!updateFile(quick2ImportPath + slash + quick2Import, qmlFileEntryFunction, optDirectory, &errorMessage)) {
-                    std::fprintf(stderr, "%s\n", qPrintable(errorMessage));
-                    return 1;
-                }
+                if (!updateFile(quick2ImportPath + slash + quick2Import, qmlFileEntryFunction, optDirectory, errorMessage))
+                    return false;
             }
         } // Quick 2
         if (usedQtModules & Quick1Module) {
@@ -441,13 +412,45 @@ int main(int argc, char **argv)
             if (usedQtModules & WebKitModule)
                 quick1Imports << QStringLiteral("QtWebKit");
             foreach (const QString &quick1Import, quick1Imports) {
-                if (!updateFile(quick1ImportPath + slash + quick1Import, qmlFileEntryFunction, optDirectory, &errorMessage)) {
-                    std::fprintf(stderr, "%s\n", qPrintable(errorMessage));
-                    return 1;
-                }
+                if (!updateFile(quick1ImportPath + slash + quick1Import, qmlFileEntryFunction, optDirectory, errorMessage))
+                    return false;
             }
         } // Quick 1
     } // optQuickImports
+    return true;
+}
+
+int main(int argc, char **argv)
+{
+    QCoreApplication a(argc, argv);
+
+    Options options;
+    if (!parseArguments(QCoreApplication::arguments(), &options) || optHelp) {
+        std::printf("\nwindeployqt based on Qt %s\n\n%s", QT_VERSION_STR, usageC);
+        return optHelp ? 0 : 1;
+    }
+
+    options.binary = findBinary(optDirectory);
+    if (options.binary.isEmpty()) {
+        std::fprintf(stderr, "Unable to find binary in %s.\n", qPrintable(optDirectory));
+        return 1;
+    }
+    QString errorMessage;
+
+    const QMap<QString, QString> qmakeVariables = queryQMakeAll(&errorMessage);
+    if (qmakeVariables.isEmpty() || !qmakeVariables.contains(QStringLiteral("QT_INSTALL_BINS"))) {
+        std::fprintf(stderr, "Unable to query qmake: %s\n", qPrintable(errorMessage));
+        return 1;
+    }
+
+    const QString xSpec = qmakeVariables.value(QStringLiteral("QMAKE_XSPEC"));
+    if (xSpec.startsWith(QLatin1String("winrt")) || xSpec.startsWith(QLatin1String("winphone")))
+        options.platform = WinRt;
+
+    if (!deploy(options, qmakeVariables, &errorMessage)) {
+        std::fprintf(stderr, "%s\n", qPrintable(errorMessage));
+        return 1;
+    }
 
     return 0;
 }
