@@ -51,11 +51,13 @@ bool optHelp = false;
 QString optDirectory;
 
 struct Options {
-    Options() : plugins(true), libraries(true), quickImports(true), platform(Windows) {}
+    Options() : plugins(true), libraries(true), quickImports(true), translations(true)
+              , platform(Windows) {}
 
     bool plugins;
     bool libraries;
     bool quickImports;
+    bool translations;
     Platform platform;
     QString binary;
 };
@@ -64,9 +66,11 @@ static const char usageC[] =
 "Usage: windeployqt build-directory [options]\n\n"
 "Copies/updates the dependent Qt libraries and plugins required for\n"
 "a Windows/WinRT application to the build-directory.\n\n"
-"Options: -no-plugins        : Skip plugin deployment\n"
+"Options:\n"
+"         -no-plugins        : Skip plugin deployment\n"
 "         -no-libraries      : Skip library deployment\n"
 "         -no-quick-imports  : Skip deployment of Qt Quick imports\n"
+"         -no-translations   : Skip deployment of the translations\n"
 "         -h                 : Display help\n"
 "         -verbose=<0-3>     : 0 = no output, 1 = progress (default),\n"
 "                              2 = normal, 3 = debug\n";
@@ -81,6 +85,8 @@ static inline bool parseArguments(const QStringList &arguments, Options *options
            options->libraries = false;
         } else if (argument == QLatin1String("-no-quick-imports")) {
            options->quickImports = false;
+        } else if (argument == QLatin1String("-no-translations")) {
+            options->translations = false;
         } else if (argument.startsWith(QLatin1String("-h"))) {
             optHelp = true;
         } else if (argument.startsWith(QLatin1String("-verbose"))) {
@@ -267,7 +273,70 @@ static unsigned qtModules(const QStringList &qtLibraries)
         result |= Quick1Module;
     if (!qtLibraries.filter(QStringLiteral("Qt5WebKit"), Qt::CaseInsensitive).isEmpty())
         result |= WebKitModule;
+    if (!qtLibraries.filter(QStringLiteral("Qt5Script"), Qt::CaseInsensitive).isEmpty())
+        result |= ScriptModule;
+    if (!qtLibraries.filter(QStringLiteral("Qt5XmlPatterns"), Qt::CaseInsensitive).isEmpty())
+        result |= XmlPatternsModule;
+    if (!qtLibraries.filter(QStringLiteral("Qt5Help"), Qt::CaseInsensitive).isEmpty())
+        result |= HelpModule;
+    if (!qtLibraries.filter(QStringLiteral("Qt5WebKit"), Qt::CaseInsensitive).isEmpty())
+        result |= WebKitModule;
     return result;
+}
+
+static QStringList translationNameFilters(unsigned modules, const QString &prefix)
+{
+    QStringList result;
+    result << QStringLiteral("qtbase_") + prefix + QStringLiteral(".qm");
+    if (modules & ScriptModule)
+        result << QStringLiteral("qtscript_") + prefix + QStringLiteral(".qm");
+    if (modules & Quick1Module)
+        result << QStringLiteral("qtquick1_") + prefix + QStringLiteral(".qm");
+    if (modules & Quick2Module)
+        result << QStringLiteral("qtdeclarative_") + prefix + QStringLiteral(".qm");
+    if (modules & HelpModule)
+        result << QStringLiteral("qthelp_") + prefix + QStringLiteral(".qm");
+    if (modules & XmlPatternsModule)
+        result << QStringLiteral("qtxmlpatterns_") + prefix + QStringLiteral(".qm");
+    return result;
+}
+
+static bool deployTranslations(const QString &sourcePath, unsigned usedQtModules,
+                               const QString &target, QString *errorMessage)
+{
+    // Find available languages prefixes by checking on qtbase.
+    QStringList prefixes;
+    QDir sourceDir(sourcePath);
+    foreach (QString qmFile,sourceDir.entryList(QStringList(QStringLiteral("qtbase_*.qm")))) {
+       qmFile.chop(3);
+       qmFile.remove(0, 7);
+       prefixes.push_back(qmFile);
+    }
+    if (prefixes.isEmpty()) {
+        fprintf(stderr, "Warning: Could not find any translations in %1 (developer build?)\n.",
+                qPrintable(QDir::toNativeSeparators(sourcePath)));
+        return true;
+    }
+    // Run lconvert to concatenate all files into a single named "qt_<prefix>.qm" in the application folder
+    // Use QT_INSTALL_TRANSLATIONS as working directory to keep the command line short.
+    const QString absoluteTarget = QFileInfo(target).absoluteFilePath();
+    QString commandLine = QStringLiteral("lconvert");
+    foreach (const QString &prefix, prefixes) {
+        const QString targetFile = QStringLiteral("qt_") + prefix + QStringLiteral(".qm");
+        commandLine += QStringLiteral(" -o \"");
+        commandLine += QDir::toNativeSeparators(absoluteTarget + QLatin1Char('/') + targetFile);
+        commandLine += QLatin1Char('"');
+        foreach (const QString &qmFile, sourceDir.entryList(translationNameFilters(usedQtModules, prefix))) {
+            commandLine += QLatin1Char(' ');
+            commandLine += qmFile;
+        }
+        if (optVerboseLevel)
+            std::fprintf(stderr, "Creating %s...\n", qPrintable(targetFile));
+        unsigned long exitCode;
+        if (!runProcess(commandLine, sourcePath, &exitCode, 0, 0, errorMessage) || exitCode)
+            return false;
+    } // for prefixes.
+    return true;
 }
 
 static bool deploy(const Options &options,
@@ -417,6 +486,13 @@ static bool deploy(const Options &options,
             }
         } // Quick 1
     } // optQuickImports
+
+    if (options.translations
+        && !deployTranslations(qmakeVariables.value(QStringLiteral("QT_INSTALL_TRANSLATIONS")),
+                               usedQtModules, optDirectory, errorMessage)) {
+        return false;
+    }
+
     return true;
 }
 

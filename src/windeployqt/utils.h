@@ -65,8 +65,11 @@ enum QtModule {
     PrintSupportModule = 0x20,
     Quick1Module = 0x40,
     Quick2Module = 0x80,
-    SensorsModule = 0x100,
-    WebKitModule = 0x400
+    ScriptModule = 0x100,
+    XmlPatternsModule = 0x200,
+    HelpModule = 0x400,
+    SensorsModule = 0x800,
+    WebKitModule = 0x1000
 };
 
 bool updateFile(const QString &sourceFileName, const QStringList &nameFilters,
