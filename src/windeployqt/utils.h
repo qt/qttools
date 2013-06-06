@@ -57,21 +57,6 @@ QMap<QString, QString> queryQMakeAll(QString *errorMessage);
 QString queryQMake(const QString &variable, QString *errorMessage);
 QStringList findDependentLibs(const QString &binary, QString *errorMessage);
 
-enum QtModule {
-    GuiModule = 0x1,
-    SqlModule = 0x4,
-    NetworkModule = 0x8,
-    MultimediaModule = 0x10,
-    PrintSupportModule = 0x20,
-    Quick1Module = 0x40,
-    Quick2Module = 0x80,
-    ScriptModule = 0x100,
-    XmlPatternsModule = 0x200,
-    HelpModule = 0x400,
-    SensorsModule = 0x800,
-    WebKitModule = 0x1000
-};
-
 bool updateFile(const QString &sourceFileName, const QStringList &nameFilters,
                 const QString &targetDirectory, QString *errorMessage);
 bool runProcess(const QString &commandLine, const QString &workingDirectory = QString(),

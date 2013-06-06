@@ -47,23 +47,106 @@
 
 #include <cstdio>
 
+enum QtModule {
+    QtCoreModule = 0x1,
+    QtGuiModule = 0x2,
+    QtSqlModule = 0x4,
+    QtNetworkModule = 0x8,
+    QtMultimediaModule = 0x10,
+    QtMultimediaWidgetsModule = 0x20,
+    QtOpenGlModule = 0x40,
+    QtPrintSupportModule = 0x80,
+    QtDeclarativeModule = 0x100,
+    QtQmlModule = 0x200,
+    QtQuickModule = 0x400,
+    QtQuickParticlesModule = 0x800,
+    QtScriptModule = 0x1000,
+    QtSvgModule = 0x2000,
+    QtXmlModule = 0x4000,
+    QtXmlPatternsModule = 0x8000,
+    QtHelpModule = 0x10000,
+    QtSensorsModule = 0x20000,
+    QtV8Module = 0x40000,
+    QtWidgetsModule = 0x80000,
+    QtWebKitModule = 0x100000,
+    QtWebKitWidgetsModule = 0x200000
+};
+
+struct QtModuleEntry {
+    unsigned module;
+    const char *option;
+    const char *libraryName;
+    const char *translation;
+};
+
+QtModuleEntry qtModuleEntries[] = {
+    { QtCoreModule, "core", "Qt5Core", "qtbase" },
+    { QtGuiModule, "gui", "Qt5Gui", "qtbase" },
+    { QtSqlModule, "sql", "Qt5Sql", "qtbase" },
+    { QtNetworkModule, "network", "Qt5Network", "qtbase" },
+    { QtMultimediaModule, "multimedia", "Qt5Multimedia", "qtmultimedia" },
+    { QtMultimediaWidgetsModule, "multimediawidgets", "Qt5MultimediaWidgets", "qtmultimedia" },
+    { QtOpenGlModule, "opengl", "Qt5OpenGL", 0 },
+    { QtPrintSupportModule, "printsupport", "Qt5PrintSupport", 0 },
+    { QtDeclarativeModule, "declarative", "Qt5Declarative", "qtquick1" },
+    { QtQmlModule, "qml", "Qt5Qml", "qtdeclarative" },
+    { QtQuickModule, "quick", "Qt5Quick", "qtdeclarative" },
+    { QtQuickParticlesModule, "quickparticles", "Qt5QuickParticles", 0 },
+    { QtScriptModule, "script", "Qt5Script", "qtscript" },
+    { QtXmlModule, "xml", "Qt5Xml", 0 },
+    { QtXmlPatternsModule, "xmlpatterns", "Qt5XmlPatterns", "qtxmlpatterns" },
+    { QtHelpModule, "help", "Qt5Help", "qt_help" },
+    { QtSensorsModule, "sensors", "Qt5Sensors", 0 },
+    { QtSvgModule, "svg", "Qt5Svg", 0 },
+    { QtV8Module, "v8", "Qt5V8", 0 },
+    { QtWebKitModule, "webkit", "Qt5WebKit", 0 },
+    { QtWebKitWidgetsModule, "webkitwidgets", "Qt5WebKitWidgets", 0 },
+    { QtWidgetsModule, "widgets", "Qt5Widgets", "qtbase" }
+};
+
+static QByteArray formatQtModules(unsigned mask, bool option = false)
+{
+    QByteArray result;
+    const size_t qtModulesCount = sizeof(qtModuleEntries)/sizeof(QtModuleEntry);
+    for (size_t i = 0; i < qtModulesCount; ++i) {
+        if (mask & qtModuleEntries[i].module) {
+            if (!result.isEmpty())
+                result.append(' ');
+            result.append(option ? qtModuleEntries[i].option : qtModuleEntries[i].libraryName);
+        }
+    }
+    return result;
+}
+
+static unsigned qtModuleByOption(const QStringRef &r)
+{
+    const size_t qtModulesCount = sizeof(qtModuleEntries)/sizeof(QtModuleEntry);
+    for (size_t i = 0; i < qtModulesCount; ++i)
+        if (r == QLatin1String(qtModuleEntries[i].option))
+            return qtModuleEntries[i].module;
+    return 0;
+}
+
 bool optHelp = false;
 QString optDirectory;
 
 struct Options {
     Options() : plugins(true), libraries(true), quickImports(true), translations(true)
-              , platform(Windows) {}
+              , platform(Windows), additionalLibraries(0), disabledLibraries(0) {}
 
     bool plugins;
     bool libraries;
     bool quickImports;
     bool translations;
     Platform platform;
+    unsigned additionalLibraries;
+    unsigned disabledLibraries;
     QString binary;
 };
 
-static const char usageC[] =
-"Usage: windeployqt build-directory [options]\n\n"
+static QByteArray usage()
+{
+    QByteArray result = QByteArrayLiteral("Usage: windeployqt build-directory [options]\n\n"
 "Copies/updates the dependent Qt libraries and plugins required for\n"
 "a Windows/WinRT application to the build-directory.\n\n"
 "Options:\n"
@@ -73,34 +156,76 @@ static const char usageC[] =
 "         -no-translations   : Skip deployment of the translations\n"
 "         -h                 : Display help\n"
 "         -verbose=<0-3>     : 0 = no output, 1 = progress (default),\n"
-"                              2 = normal, 3 = debug\n";
+"                              2 = normal, 3 = debug\n"
+"\nLibraries can be added by passing their name (-xml) or disabled by passing\n"
+"the name prepended by -no- (-no-xml).\nAvailable libraries: ");
+    result += formatQtModules(0xFFFFFFFF, true);
+    return result;
+}
+
+static inline bool parseOption(QStringList::ConstIterator &it,
+                               const QStringList::ConstIterator &end,
+                               Options *options)
+{
+    Q_UNUSED(end)
+    const QString &option = *it;
+    if (option == QLatin1String("-no-plugins")) {
+        options->plugins = false;
+        return true;
+    }
+    if (option == QLatin1String("-no-libraries")) {
+       options->libraries = false;
+       return true;
+    }
+    if (option == QLatin1String("-no-quick-imports")) {
+       options->quickImports = false;
+       return true;
+    }
+    if (option == QLatin1String("-no-translations")) {
+        options->translations = false;
+        return true;
+    }
+    if (option == QLatin1String("-h")) {
+        optHelp = true;
+        return true;
+    }
+    if (option.startsWith(QLatin1String("-verbose"))) {
+        const int index = option.indexOf(QLatin1Char('='));
+        bool ok = false;
+        optVerboseLevel = option.mid(index + 1).toInt(&ok);
+        if (!ok) {
+            std::fprintf(stderr, "Could not parse verbose level.\n");
+            return false;
+        }
+        return true;
+    }
+    // Enabled, disabled module
+    if (option.startsWith(QLatin1String("-no-"))) {
+        if (const unsigned qtModule = qtModuleByOption(option.rightRef(it->size() - 4))) {
+            options->disabledLibraries |= qtModule;
+            return true;
+        }
+    }
+    if (const unsigned qtModule = qtModuleByOption(option.rightRef(option.size() - 1))) {
+        options->additionalLibraries |= qtModule;
+        return true;
+    }
+    std::fprintf(stderr, "Unhandled option '%s'.\n", qPrintable(option));
+    return false;
+}
 
 static inline bool parseArguments(const QStringList &arguments, Options *options)
 {
-    for (int i = 1; i < arguments.size(); ++i) {
-        const QString argument = arguments.at(i);
-        if (argument == QLatin1String("-no-plugins")) {
-            options->plugins = false;
-        } else if (argument == QLatin1String("-no-libraries")) {
-           options->libraries = false;
-        } else if (argument == QLatin1String("-no-quick-imports")) {
-           options->quickImports = false;
-        } else if (argument == QLatin1String("-no-translations")) {
-            options->translations = false;
-        } else if (argument.startsWith(QLatin1String("-h"))) {
-            optHelp = true;
-        } else if (argument.startsWith(QLatin1String("-verbose"))) {
-            const int index = argument.indexOf(QLatin1Char('='));
-            bool ok = false;
-            optVerboseLevel = argument.mid(index + 1).toInt(&ok);
-            if (!ok) {
-                std::fprintf(stderr, "Could not parse verbose level.\n");
+    const QStringList::ConstIterator end = arguments.end();
+    QStringList::ConstIterator it = arguments.begin();
+    for (++it ; it != end ; ++it) {
+        if (it->startsWith(QLatin1Char('-'))) {
+            if (!parseOption(it, end, options))
                 return false;
-            }
         } else {
             if (!optDirectory.isEmpty())
                 return false;
-            optDirectory = QDir::cleanPath(argument);
+            optDirectory = QDir::cleanPath(*it);
             if (optDirectory.endsWith(QLatin1Char('/')))
                 optDirectory.chop(1);
         }
@@ -204,18 +329,18 @@ static inline unsigned qtModuleForPlugin(const QString &subDirName)
 {
     if (subDirName == QLatin1String("accessible") || subDirName == QLatin1String("iconengines")
         || subDirName == QLatin1String("imageformats") || subDirName == QLatin1String("platforms")) {
-        return GuiModule;
+        return QtGuiModule;
     }
     if (subDirName == QLatin1String("bearer"))
-        return NetworkModule;
+        return QtNetworkModule;
     if (subDirName == QLatin1String("sqldrivers"))
-        return SqlModule;
+        return QtSqlModule;
     if (subDirName == QLatin1String("mediaservice") || subDirName == QLatin1String("playlistformats"))
-        return MultimediaModule;
+        return QtMultimediaModule;
     if (subDirName == QLatin1String("printsupport"))
-        return PrintSupportModule;
+        return QtPrintSupportModule;
     if (subDirName == QLatin1String("qmltooling"))
-        return Quick1Module | Quick2Module;
+        return QtDeclarativeModule | QtQuickModule;
     return 0; // "designer"
 }
 
@@ -252,52 +377,27 @@ QStringList findQtPlugins(unsigned usedQtModules,
     return result;
 }
 
-static unsigned qtModules(const QStringList &qtLibraries)
+static unsigned qtModule(const QString &module)
 {
-    unsigned result = 0;
-    if (!qtLibraries.filter(QStringLiteral("Qt5Gui"), Qt::CaseInsensitive).isEmpty())
-        result |= GuiModule;
-    if (!qtLibraries.filter(QStringLiteral("Qt5Sql"), Qt::CaseInsensitive).isEmpty())
-        result |= SqlModule;
-    if (!qtLibraries.filter(QStringLiteral("Qt5Network"), Qt::CaseInsensitive).isEmpty())
-        result |= NetworkModule;
-    if (!qtLibraries.filter(QStringLiteral("Qt5PrintSupport"), Qt::CaseInsensitive).isEmpty())
-        result |= PrintSupportModule;
-    if (!qtLibraries.filter(QStringLiteral("Qt5Multimedia"), Qt::CaseInsensitive).isEmpty())
-        result |= MultimediaModule;
-    if (!qtLibraries.filter(QStringLiteral("Qt5Sensors"), Qt::CaseInsensitive).isEmpty())
-        result |= SensorsModule;
-    if (!qtLibraries.filter(QStringLiteral("Qt5Quick"), Qt::CaseInsensitive).isEmpty())
-        result |= Quick2Module;
-    if (!qtLibraries.filter(QStringLiteral("Qt5Declarative"), Qt::CaseInsensitive).isEmpty())
-        result |= Quick1Module;
-    if (!qtLibraries.filter(QStringLiteral("Qt5WebKit"), Qt::CaseInsensitive).isEmpty())
-        result |= WebKitModule;
-    if (!qtLibraries.filter(QStringLiteral("Qt5Script"), Qt::CaseInsensitive).isEmpty())
-        result |= ScriptModule;
-    if (!qtLibraries.filter(QStringLiteral("Qt5XmlPatterns"), Qt::CaseInsensitive).isEmpty())
-        result |= XmlPatternsModule;
-    if (!qtLibraries.filter(QStringLiteral("Qt5Help"), Qt::CaseInsensitive).isEmpty())
-        result |= HelpModule;
-    if (!qtLibraries.filter(QStringLiteral("Qt5WebKit"), Qt::CaseInsensitive).isEmpty())
-        result |= WebKitModule;
-    return result;
+    const size_t qtModulesCount = sizeof(qtModuleEntries)/sizeof(QtModuleEntry);
+    for (size_t i = 0; i < qtModulesCount; ++i)
+        if (module.contains(QLatin1String(qtModuleEntries[i].libraryName), Qt::CaseInsensitive))
+            return qtModuleEntries[i].module;
+    return 0;
 }
 
 static QStringList translationNameFilters(unsigned modules, const QString &prefix)
 {
     QStringList result;
-    result << QStringLiteral("qtbase_") + prefix + QStringLiteral(".qm");
-    if (modules & ScriptModule)
-        result << QStringLiteral("qtscript_") + prefix + QStringLiteral(".qm");
-    if (modules & Quick1Module)
-        result << QStringLiteral("qtquick1_") + prefix + QStringLiteral(".qm");
-    if (modules & Quick2Module)
-        result << QStringLiteral("qtdeclarative_") + prefix + QStringLiteral(".qm");
-    if (modules & HelpModule)
-        result << QStringLiteral("qthelp_") + prefix + QStringLiteral(".qm");
-    if (modules & XmlPatternsModule)
-        result << QStringLiteral("qtxmlpatterns_") + prefix + QStringLiteral(".qm");
+    const size_t qtModulesCount = sizeof(qtModuleEntries)/sizeof(QtModuleEntry);
+    for (size_t i = 0; i < qtModulesCount; ++i) {
+        if ((qtModuleEntries[i].module & modules) && qtModuleEntries[i].translation) {
+            const QString name = QLatin1String(qtModuleEntries[i].translation) +
+                                 QLatin1Char('_') +  prefix + QStringLiteral(".qm");
+            if (!result.contains(name))
+                result.push_back(name);
+        }
+    }
     return result;
 }
 
@@ -397,7 +497,29 @@ static bool deploy(const Options &options,
 
     // Find the plugins and check whether ANGLE, D3D are required on the platform plugin.
     QString platformPlugin;
-    const unsigned usedQtModules = qtModules(dependentQtLibs);
+    unsigned usedQtModules = 0;
+    // Sort apart Qt 5 libraries in the ones that are represented by the
+    // QtModule enumeration (and thus controlled by flags) and others.
+    for (int i = dependentQtLibs.size() - 1 ; i >= 0; --i)  {
+        if (const unsigned qtm = qtModule(dependentQtLibs.at(i))) {
+            usedQtModules |= qtm;
+            dependentQtLibs.removeAt(i);
+        }
+    }
+    // Apply options flags and re-add library names.
+    usedQtModules |= options.additionalLibraries;
+    usedQtModules &= ~options.disabledLibraries;
+    const size_t qtModulesCount = sizeof(qtModuleEntries)/sizeof(QtModuleEntry);
+    for (size_t i = 0; i < qtModulesCount; ++i) {
+        if (usedQtModules & qtModuleEntries[i].module) {
+            QString libName = qtBinDir + slash + QLatin1String(qtModuleEntries[i].libraryName);
+            if (isDebug)
+                libName += QLatin1Char('d');
+            libName += QStringLiteral(".dll");
+            dependentQtLibs.push_back(libName);
+        }
+    }
+
     const QStringList plugins = findQtPlugins(usedQtModules, qmakeVariables.value(QStringLiteral("QT_INSTALL_PLUGINS")),
                                               isDebug, options.platform, &platformPlugin);
     if (optVerboseLevel > 1)
@@ -458,27 +580,27 @@ static bool deploy(const Options &options,
     } // optPlugins
 
     // Update Quick imports
-    if (options.quickImports && (usedQtModules & (Quick1Module | Quick2Module))) {
+    if (options.quickImports && (usedQtModules & (QtDeclarativeModule | QtQuickModule))) {
         const QmlDirectoryFileEntryFunction qmlFileEntryFunction(isDebug);
-        if (usedQtModules & Quick2Module) {
+        if (usedQtModules & QtQuickModule) {
             const QString quick2ImportPath = qmakeVariables.value(QStringLiteral("QT_INSTALL_QML"));
             QStringList quick2Imports;
             quick2Imports << QStringLiteral("QtQml") << QStringLiteral("QtQuick") << QStringLiteral("QtQuick.2");
-            if (usedQtModules & MultimediaModule)
+            if (usedQtModules & QtMultimediaModule)
                 quick2Imports << QStringLiteral("QtMultimedia");
-            if (usedQtModules & SensorsModule)
+            if (usedQtModules & QtSensorsModule)
                 quick2Imports << QStringLiteral("QtSensors");
-            if (usedQtModules & WebKitModule)
+            if (usedQtModules & QtWebKitModule)
                 quick2Imports << QStringLiteral("QtWebKit");
             foreach (const QString &quick2Import, quick2Imports) {
                 if (!updateFile(quick2ImportPath + slash + quick2Import, qmlFileEntryFunction, optDirectory, errorMessage))
                     return false;
             }
         } // Quick 2
-        if (usedQtModules & Quick1Module) {
+        if (usedQtModules & QtDeclarativeModule) {
             const QString quick1ImportPath = qmakeVariables.value(QStringLiteral("QT_INSTALL_IMPORTS"));
             QStringList quick1Imports(QStringLiteral("Qt"));
-            if (usedQtModules & WebKitModule)
+            if (usedQtModules & QtWebKitModule)
                 quick1Imports << QStringLiteral("QtWebKit");
             foreach (const QString &quick1Import, quick1Imports) {
                 if (!updateFile(quick1ImportPath + slash + quick1Import, qmlFileEntryFunction, optDirectory, errorMessage))
@@ -502,7 +624,7 @@ int main(int argc, char **argv)
 
     Options options;
     if (!parseArguments(QCoreApplication::arguments(), &options) || optHelp) {
-        std::printf("\nwindeployqt based on Qt %s\n\n%s", QT_VERSION_STR, usageC);
+        std::printf("\nwindeployqt based on Qt %s\n\n%s", QT_VERSION_STR, usage().constData());
         return optHelp ? 0 : 1;
     }
 
