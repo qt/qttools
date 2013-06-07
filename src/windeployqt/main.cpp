@@ -118,6 +118,8 @@ static QByteArray formatQtModules(unsigned mask, bool option = false)
     return result;
 }
 
+static const char webProcessC[] = "QtWebProcess.exe";
+
 static unsigned qtModuleByOption(const QStringRef &r)
 {
     const size_t qtModulesCount = sizeof(qtModuleEntries)/sizeof(QtModuleEntry);
@@ -128,7 +130,6 @@ static unsigned qtModuleByOption(const QStringRef &r)
 }
 
 bool optHelp = false;
-QString optDirectory;
 
 struct Options {
     Options() : plugins(true), libraries(true), quickImports(true), translations(true)
@@ -141,14 +142,16 @@ struct Options {
     Platform platform;
     unsigned additionalLibraries;
     unsigned disabledLibraries;
+    QString directory;
     QString binary;
 };
 
 static QByteArray usage()
 {
-    QByteArray result = QByteArrayLiteral("Usage: windeployqt build-directory [options]\n\n"
+    QByteArray result = QByteArrayLiteral("Usage: windeployqt file [options]\n\n"
 "Copies/updates the dependent Qt libraries and plugins required for\n"
 "a Windows/WinRT application to the build-directory.\n\n"
+"<file> is an executable file or build directory.\n\n"
 "Options:\n"
 "         -no-plugins        : Skip plugin deployment\n"
 "         -no-libraries      : Skip library deployment\n"
@@ -214,6 +217,16 @@ static inline bool parseOption(QStringList::ConstIterator &it,
     return false;
 }
 
+// Return binary from folder
+static inline QString findBinary(const QString &directory)
+{
+    QDir dir(QDir::cleanPath(directory));
+    foreach (const QString &binary, dir.entryList(QStringList(QLatin1String("*.exe"))))
+        if (binary.compare(QLatin1String(webProcessC), Qt::CaseInsensitive))
+            return dir.filePath(binary);
+    return QString();
+}
+
 static inline bool parseArguments(const QStringList &arguments, Options *options)
 {
     const QStringList::ConstIterator end = arguments.end();
@@ -223,22 +236,27 @@ static inline bool parseArguments(const QStringList &arguments, Options *options
             if (!parseOption(it, end, options))
                 return false;
         } else {
-            if (!optDirectory.isEmpty())
+            if (!options->directory.isEmpty())
                 return false;
-            optDirectory = QDir::cleanPath(*it);
-            if (optDirectory.endsWith(QLatin1Char('/')))
-                optDirectory.chop(1);
-        }
-    }
-    return !optDirectory.isEmpty();
-}
-
-// Return binary from folder
-static inline QString findBinary(const QString &directory)
-{
-    QDir dir(QDir::cleanPath(directory));
-    const QStringList exes = dir.entryList(QStringList(QLatin1String("*.exe")));
-    return exes.isEmpty() ? QString() : dir.filePath(exes.front());
+            const QFileInfo fi(QDir::cleanPath(*it));
+            if (!fi.exists()) {
+                std::fprintf(stderr, "'%s' does not exist.\n", qPrintable(*it));
+                return false;
+            }
+            if (fi.isFile()) {
+                options->binary = fi.absoluteFilePath();
+                options->directory = fi.absolutePath();
+            } else {
+                options->binary = findBinary(fi.absoluteFilePath());
+                if (options->binary.isEmpty()) {
+                    std::fprintf(stderr, "Unable to find binary in %s.\n", qPrintable(*it));
+                    return false;
+                }
+                options->directory = fi.absoluteFilePath();
+            } // directory.
+        }     // argument
+    }         // for
+    return !options->binary.isEmpty();
 }
 
 // Find the latest D3D compiler DLL in path
@@ -556,14 +574,14 @@ static bool deploy(const Options &options,
     // Update libraries
     if (options.libraries) {
         foreach (const QString &qtLib, dependentQtLibs) {
-            if (!updateFile(qtLib, optDirectory, errorMessage))
+            if (!updateFile(qtLib, options.directory, errorMessage))
                 return false;
         }
     } // optLibraries
 
     // Update plugins
     if (options.plugins) {
-        QDir dir(optDirectory);
+        QDir dir(options.directory);
         foreach (const QString &plugin, plugins) {
             const QString targetDirName = plugin.section(slash, -2, -2);
             if (!dir.exists(targetDirName)) {
@@ -574,7 +592,7 @@ static bool deploy(const Options &options,
                     return false;
                 }
             }
-            if (!updateFile(plugin, optDirectory + slash + targetDirName, errorMessage))
+            if (!updateFile(plugin, options.directory + slash + targetDirName, errorMessage))
                 return false;
         }
     } // optPlugins
@@ -593,7 +611,7 @@ static bool deploy(const Options &options,
             if (usedQtModules & QtWebKitModule)
                 quick2Imports << QStringLiteral("QtWebKit");
             foreach (const QString &quick2Import, quick2Imports) {
-                if (!updateFile(quick2ImportPath + slash + quick2Import, qmlFileEntryFunction, optDirectory, errorMessage))
+                if (!updateFile(quick2ImportPath + slash + quick2Import, qmlFileEntryFunction, options.directory, errorMessage))
                     return false;
             }
         } // Quick 2
@@ -603,7 +621,7 @@ static bool deploy(const Options &options,
             if (usedQtModules & QtWebKitModule)
                 quick1Imports << QStringLiteral("QtWebKit");
             foreach (const QString &quick1Import, quick1Imports) {
-                if (!updateFile(quick1ImportPath + slash + quick1Import, qmlFileEntryFunction, optDirectory, errorMessage))
+                if (!updateFile(quick1ImportPath + slash + quick1Import, qmlFileEntryFunction, options.directory, errorMessage))
                     return false;
             }
         } // Quick 1
@@ -611,7 +629,7 @@ static bool deploy(const Options &options,
 
     if (options.translations
         && !deployTranslations(qmakeVariables.value(QStringLiteral("QT_INSTALL_TRANSLATIONS")),
-                               usedQtModules, optDirectory, errorMessage)) {
+                               usedQtModules, options.directory, errorMessage)) {
         return false;
     }
 
@@ -628,11 +646,6 @@ int main(int argc, char **argv)
         return optHelp ? 0 : 1;
     }
 
-    options.binary = findBinary(optDirectory);
-    if (options.binary.isEmpty()) {
-        std::fprintf(stderr, "Unable to find binary in %s.\n", qPrintable(optDirectory));
-        return 1;
-    }
     QString errorMessage;
 
     const QMap<QString, QString> qmakeVariables = queryQMakeAll(&errorMessage);
