@@ -273,9 +273,12 @@ static inline QString findD3dCompiler()
 // Helper for recursively finding all dependent Qt libraries.
 static bool findDependentQtLibraries(const QString &qtBinDir, const QString &binary,
                                      QString *errorMessage, QStringList *result,
-                                     unsigned *wordSize = 0, bool *isDebug = 0)
+                                     unsigned *wordSize = 0, bool *isDebug = 0,
+                                     int *directDependencyCount = 0, int recursionDepth = 0)
 {
     QStringList dependentLibs;
+    if (directDependencyCount)
+        *directDependencyCount = 0;
     if (!readPeExecutable(binary, errorMessage, &dependentLibs, wordSize, isDebug)) {
         errorMessage->prepend(QLatin1String("Unable to find dependent libraries of ") +
                               QDir::toNativeSeparators(binary) + QLatin1String(" :"));
@@ -283,15 +286,20 @@ static bool findDependentQtLibraries(const QString &qtBinDir, const QString &bin
     }
     // Filter out the Qt libraries. Note that depends.exe finds libs from optDirectory if we
     // are run the 2nd time (updating). We want to check against the Qt bin dir libraries
+    const int start = result->size();
     const QRegExp filterRegExp(QStringLiteral("Qt5"), Qt::CaseInsensitive, QRegExp::FixedString);
     foreach (const QString &qtLib, dependentLibs.filter(filterRegExp)) {
         const QString path = normalizeFileName(qtBinDir + QLatin1Char('/') + QFileInfo(qtLib).fileName());
-        if (!result->contains(path)) {
+        if (!result->contains(path))
             result->append(path);
-            if (!findDependentQtLibraries(qtBinDir, path, errorMessage, result))
-                return false;
-        }
     }
+    const int end = result->size();
+    if (directDependencyCount)
+        *directDependencyCount = end - start;
+    // Recurse
+    for (int i = start; i < end; ++i)
+        if (!findDependentQtLibraries(qtBinDir, result->at(i), errorMessage, result, 0, 0, 0, recursionDepth + 1))
+            return false;
     return true;
 }
 
@@ -457,10 +465,23 @@ static bool deployTranslations(const QString &sourcePath, unsigned usedQtModules
     return true;
 }
 
-static bool deploy(const Options &options,
-                   const QMap<QString, QString> &qmakeVariables,
-                   QString *errorMessage)
+struct DeployResult
 {
+    DeployResult() : success(false), directlyUsedQtLibraries(0), usedQtLibraries(0), deployedQtLibraries(0) {}
+    operator bool() const { return success; }
+
+    bool success;
+    unsigned directlyUsedQtLibraries;
+    unsigned usedQtLibraries;
+    unsigned deployedQtLibraries;
+};
+
+static DeployResult deploy(const Options &options,
+                           const QMap<QString, QString> &qmakeVariables,
+                           QString *errorMessage)
+{
+    DeployResult result;
+
     const QChar slash = QLatin1Char('/');
 
     const QString qtBinDir = qmakeVariables.value(QStringLiteral("QT_INSTALL_BINS"));
@@ -471,15 +492,16 @@ static bool deploy(const Options &options,
     QStringList dependentQtLibs;
     bool isDebug;
     unsigned wordSize;
-    if (!findDependentQtLibraries(qtBinDir, options.binary, errorMessage, &dependentQtLibs, &wordSize, &isDebug))
-        return false;
+    int directDependencyCount;
+    if (!findDependentQtLibraries(qtBinDir, options.binary, errorMessage, &dependentQtLibs, &wordSize, &isDebug, &directDependencyCount))
+        return result;
 
     std::printf("%s: %ubit, %s executable.\n", qPrintable(QDir::toNativeSeparators(options.binary)),
                 wordSize, isDebug ? "debug" : "release");
 
     if (dependentQtLibs.isEmpty()) {
         *errorMessage = QDir::toNativeSeparators(options.binary) +  QStringLiteral(" does not seem to be a Qt executable.");
-        return false;
+        return result;
     }
 
     // Some checks in QtCore: ICU
@@ -502,53 +524,58 @@ static bool deploy(const Options &options,
                 const QString icuPath = findInPath(icuLib);
                 if (icuPath.isEmpty()) {
                     *errorMessage = QStringLiteral("Unable to locate ICU library ") + icuLib;
-                    return false;
+                    return result;
                 }
                 dependentQtLibs.push_back(icuPath);
             } // foreach icuLib
         } // !icuLibs.isEmpty()
     } // Qt5Core
 
-    if (optVerboseLevel > 1)
-        std::fprintf(stderr, "Qt libraries required: %s\n", qPrintable(dependentQtLibs.join(QLatin1Char(','))));
-
-
     // Find the plugins and check whether ANGLE, D3D are required on the platform plugin.
     QString platformPlugin;
-    unsigned usedQtModules = 0;
     // Sort apart Qt 5 libraries in the ones that are represented by the
     // QtModule enumeration (and thus controlled by flags) and others.
-    for (int i = dependentQtLibs.size() - 1 ; i >= 0; --i)  {
+    QStringList deployedQtLibraries;
+    for (int i = 0 ; i < dependentQtLibs.size(); ++i)  {
         if (const unsigned qtm = qtModule(dependentQtLibs.at(i))) {
-            usedQtModules |= qtm;
-            dependentQtLibs.removeAt(i);
+            result.usedQtLibraries |= qtm;
+            if (i < directDependencyCount)
+                result.directlyUsedQtLibraries |= qtm;
+        } else {
+            deployedQtLibraries.push_back(dependentQtLibs.at(i)); // Not represented by flag.
         }
     }
+    result.deployedQtLibraries = (result.usedQtLibraries | options.additionalLibraries) & ~options.disabledLibraries;
     // Apply options flags and re-add library names.
-    usedQtModules |= options.additionalLibraries;
-    usedQtModules &= ~options.disabledLibraries;
     const size_t qtModulesCount = sizeof(qtModuleEntries)/sizeof(QtModuleEntry);
     for (size_t i = 0; i < qtModulesCount; ++i) {
-        if (usedQtModules & qtModuleEntries[i].module) {
+        if (result.deployedQtLibraries & qtModuleEntries[i].module) {
             QString libName = qtBinDir + slash + QLatin1String(qtModuleEntries[i].libraryName);
             if (isDebug)
                 libName += QLatin1Char('d');
             libName += QStringLiteral(".dll");
-            dependentQtLibs.push_back(libName);
+            deployedQtLibraries.push_back(libName);
         }
     }
 
-    const QStringList plugins = findQtPlugins(usedQtModules, qmakeVariables.value(QStringLiteral("QT_INSTALL_PLUGINS")),
+    if (optVerboseLevel >= 1) {
+        std::fprintf(stderr, "Direct dependencies: %s\nAll dependencies   : %s\nTo be deployed     : %s\n",
+                     formatQtModules(result.directlyUsedQtLibraries).constData(),
+                     formatQtModules(result.usedQtLibraries).constData(),
+                     formatQtModules(result.deployedQtLibraries).constData());
+    }
+
+    const QStringList plugins = findQtPlugins(result.deployedQtLibraries, qmakeVariables.value(QStringLiteral("QT_INSTALL_PLUGINS")),
                                               isDebug, options.platform, &platformPlugin);
     if (optVerboseLevel > 1)
         std::fprintf(stderr, "Plugins: %s\n", qPrintable(plugins.join(QLatin1Char(','))));
 
     if (plugins.isEmpty())
-        return false;
+        return result;
 
     if (platformPlugin.isEmpty()) {
         *errorMessage =QStringLiteral("Unable to find the platform plugin.");
-        return false;
+        return result;
     }
 
     // Check for ANGLE on the platform plugin.
@@ -573,9 +600,9 @@ static bool deploy(const Options &options,
 
     // Update libraries
     if (options.libraries) {
-        foreach (const QString &qtLib, dependentQtLibs) {
+        foreach (const QString &qtLib, deployedQtLibraries) {
             if (!updateFile(qtLib, options.directory, errorMessage))
-                return false;
+                return result;
         }
     } // optLibraries
 
@@ -589,51 +616,57 @@ static bool deploy(const Options &options,
                 if (!dir.mkdir(targetDirName)) {
                     std::fprintf(stderr, "Cannot create %s.\n",  qPrintable(targetDirName));
                     *errorMessage = QStringLiteral("Cannot create ") + targetDirName +  QLatin1Char('.');
-                    return false;
+                    return result;
                 }
             }
             if (!updateFile(plugin, options.directory + slash + targetDirName, errorMessage))
-                return false;
+                return result;
         }
     } // optPlugins
 
     // Update Quick imports
-    if (options.quickImports && (usedQtModules & (QtDeclarativeModule | QtQuickModule))) {
+    const bool usesQuick1 = result.deployedQtLibraries & QtDeclarativeModule;
+    // Do not be fooled by QtWebKit.dll depending on Quick into always installing Quick imports
+    // for WebKit1-applications. Check direct dependency only.
+    const bool usesQuick2 = (result.directlyUsedQtLibraries & QtQuickModule)
+                            || (options.additionalLibraries & QtQuickModule);
+    if (options.quickImports && (usesQuick1 || usesQuick2)) {
         const QmlDirectoryFileEntryFunction qmlFileEntryFunction(isDebug);
-        if (usedQtModules & QtQuickModule) {
+        if (usesQuick2) {
             const QString quick2ImportPath = qmakeVariables.value(QStringLiteral("QT_INSTALL_QML"));
             QStringList quick2Imports;
             quick2Imports << QStringLiteral("QtQml") << QStringLiteral("QtQuick") << QStringLiteral("QtQuick.2");
-            if (usedQtModules & QtMultimediaModule)
+            if (result.deployedQtLibraries & QtMultimediaModule)
                 quick2Imports << QStringLiteral("QtMultimedia");
-            if (usedQtModules & QtSensorsModule)
+            if (result.deployedQtLibraries & QtSensorsModule)
                 quick2Imports << QStringLiteral("QtSensors");
-            if (usedQtModules & QtWebKitModule)
+            if (result.deployedQtLibraries & QtWebKitModule)
                 quick2Imports << QStringLiteral("QtWebKit");
             foreach (const QString &quick2Import, quick2Imports) {
                 if (!updateFile(quick2ImportPath + slash + quick2Import, qmlFileEntryFunction, options.directory, errorMessage))
-                    return false;
+                    return result;
             }
         } // Quick 2
-        if (usedQtModules & QtDeclarativeModule) {
+        if (usesQuick1) {
             const QString quick1ImportPath = qmakeVariables.value(QStringLiteral("QT_INSTALL_IMPORTS"));
             QStringList quick1Imports(QStringLiteral("Qt"));
-            if (usedQtModules & QtWebKitModule)
+            if (result.deployedQtLibraries & QtWebKitModule)
                 quick1Imports << QStringLiteral("QtWebKit");
             foreach (const QString &quick1Import, quick1Imports) {
                 if (!updateFile(quick1ImportPath + slash + quick1Import, qmlFileEntryFunction, options.directory, errorMessage))
-                    return false;
+                    return result;
             }
         } // Quick 1
     } // optQuickImports
 
     if (options.translations
         && !deployTranslations(qmakeVariables.value(QStringLiteral("QT_INSTALL_TRANSLATIONS")),
-                               usedQtModules, options.directory, errorMessage)) {
-        return false;
+                               result.deployedQtLibraries, options.directory, errorMessage)) {
+        return result;
     }
 
-    return true;
+    result.success = true;
+    return result;
 }
 
 int main(int argc, char **argv)
