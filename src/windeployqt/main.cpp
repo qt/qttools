@@ -433,13 +433,14 @@ static bool deployTranslations(const QString &sourcePath, unsigned usedQtModules
     // Find available languages prefixes by checking on qtbase.
     QStringList prefixes;
     QDir sourceDir(sourcePath);
-    foreach (QString qmFile,sourceDir.entryList(QStringList(QStringLiteral("qtbase_*.qm")))) {
+    const QStringList qmFilter = QStringList(QStringLiteral("qtbase_*.qm"));
+    foreach (QString qmFile, sourceDir.entryList(qmFilter)) {
        qmFile.chop(3);
        qmFile.remove(0, 7);
        prefixes.push_back(qmFile);
     }
     if (prefixes.isEmpty()) {
-        fprintf(stderr, "Warning: Could not find any translations in %1 (developer build?)\n.",
+        fprintf(stderr, "Warning: Could not find any translations in %s (developer build?)\n.",
                 qPrintable(QDir::toNativeSeparators(sourcePath)));
         return true;
     }
