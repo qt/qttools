@@ -1435,6 +1435,7 @@ void QMakeEvaluator::updateMkspecPaths()
         ret << m_sourceRoot + concat;
 
     ret << m_option->propertyValue(ProKey("QT_HOST_DATA/get")) + concat;
+    ret << m_option->propertyValue(ProKey("QT_HOST_DATA/src")) + concat;
 
     ret.removeDuplicates();
     m_mkspecPaths = ret;
@@ -1488,6 +1489,7 @@ void QMakeEvaluator::updateFeaturePaths()
     }
 
     feature_bases << (m_option->propertyValue(ProKey("QT_HOST_DATA/get")) + mkspecs_concat);
+    feature_bases << (m_option->propertyValue(ProKey("QT_HOST_DATA/src")) + mkspecs_concat);
 
     foreach (const QString &fb, feature_bases) {
         foreach (const ProString &sfx, values(ProKey("QMAKE_PLATFORM")))
