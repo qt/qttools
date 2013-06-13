@@ -293,7 +293,7 @@ bool updateFile(const QString &sourceFileName, const QStringList &nameFilters,
             } // Not a directory.
         } else { // exists.
             QDir d(targetDirectory);
-            std::printf("Creating %s.\n", qPrintable(targetFileName));
+            std::printf("Creating %s.\n", qPrintable( QDir::toNativeSeparators(targetFileName)));
             if (!d.mkdir(sourceFileInfo.fileName())) {
                 *errorMessage = QString::fromLatin1("Cannot create directory %1 under %2.")
                                 .arg(sourceFileInfo.fileName(), QDir::toNativeSeparators(targetDirectory));
