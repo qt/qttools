@@ -130,6 +130,7 @@ static unsigned qtModuleByOption(const QStringRef &r)
 }
 
 bool optHelp = false;
+int optWebKit2 = 0;
 
 struct Options {
     Options() : plugins(true), libraries(true), quickImports(true), translations(true)
@@ -157,6 +158,8 @@ static QByteArray usage()
 "         -no-libraries      : Skip library deployment\n"
 "         -no-quick-imports  : Skip deployment of Qt Quick imports\n"
 "         -no-translations   : Skip deployment of the translations\n"
+"         -webkit2           : Deployment of WebKit2 (web process)\n"
+"         -no-webkit2        : Skip deployment of WebKit2\n"
 "         -h                 : Display help\n"
 "         -verbose=<0-3>     : 0 = no output, 1 = progress (default),\n"
 "                              2 = normal, 3 = debug\n"
@@ -190,6 +193,18 @@ static inline bool parseOption(QStringList::ConstIterator &it,
     }
     if (option == QLatin1String("-h")) {
         optHelp = true;
+        return true;
+    }
+    if (option == QLatin1String("-h")) {
+        optHelp = true;
+        return true;
+    }
+    if (option == QLatin1String("-webkit2")) {
+        optWebKit2 = 1;
+        return true;
+    }
+    if (option == QLatin1String("-no-webkit2")) {
+        optWebKit2 = -1;
         return true;
     }
     if (option.startsWith(QLatin1String("-verbose"))) {
@@ -670,6 +685,22 @@ static DeployResult deploy(const Options &options,
     return result;
 }
 
+static bool deployWebKit2(const QMap<QString, QString> &qmakeVariables,
+                          const Options &sourceOptions, QString *errorMessage)
+{
+    // Copy the web process and its dependencies
+    const QString webProcess = QLatin1String(webProcessC);
+    const QString webProcessSource = qmakeVariables.value(QStringLiteral("QT_INSTALL_BINS")) +
+                                     QLatin1Char('/') + webProcess;
+    if (!updateFile(webProcessSource, sourceOptions.directory, errorMessage))
+        return false;
+    Options options(sourceOptions);
+    options.binary = options.directory + QLatin1Char('/') + webProcess;
+    options.quickImports = false;
+    options.translations = false;
+    return deploy(options, qmakeVariables, errorMessage);
+}
+
 int main(int argc, char **argv)
 {
     QCoreApplication a(argc, argv);
@@ -679,6 +710,9 @@ int main(int argc, char **argv)
         std::printf("\nwindeployqt based on Qt %s\n\n%s", QT_VERSION_STR, usage().constData());
         return optHelp ? 0 : 1;
     }
+
+    if (optWebKit2)
+        options.additionalLibraries |= QtWebKitModule;
 
     QString errorMessage;
 
@@ -692,9 +726,22 @@ int main(int argc, char **argv)
     if (xSpec.startsWith(QLatin1String("winrt")) || xSpec.startsWith(QLatin1String("winphone")))
         options.platform = WinRt;
 
-    if (!deploy(options, qmakeVariables, &errorMessage)) {
+    const DeployResult result = deploy(options, qmakeVariables, &errorMessage);
+    if (!result) {
         std::fprintf(stderr, "%s\n", qPrintable(errorMessage));
         return 1;
+    }
+
+    if ((optWebKit2 != -1)
+        && (optWebKit2 == 1
+            || ((result.deployedQtLibraries & QtWebKitModule)
+                && (result.directlyUsedQtLibraries & QtQuickModule)))) {
+        if (optVerboseLevel)
+            std::fprintf(stderr, "Deploying: %s...\n", webProcessC);
+        if (!deployWebKit2(qmakeVariables, options, &errorMessage)) {
+            std::fprintf(stderr, "%s\n", qPrintable(errorMessage));
+            return 1;
+        }
     }
 
     return 0;
