@@ -411,6 +411,8 @@ void MainWindow::lookForNewQtDocumentation()
         << QLatin1String("qtscripttools")
         << QLatin1String("qtquickcontrols")
         << QLatin1String("qtquicklayouts")
+        << QLatin1String("qtquickcontrolsstyles")
+        << QLatin1String("qtquickdialogs")
         << QLatin1String("qtmultimediawidgets");
 
     QList<QtDocInstaller::DocInfo> qtDocInfos;

@@ -33,7 +33,7 @@ contains(CMAKE_BIN_DIR, "$${CMAKE_QT_INSTALL_PREFIX_ESCAPED}.*") {
 load(qt_build_paths)
 
 cmake_linguist_config_file.input = $$PWD/Qt5LinguistToolsConfig.cmake.in
-cmake_linguist_config_version_file.input = $$[QT_HOST_DATA]/mkspecs/features/data/cmake/Qt5ConfigVersion.cmake.in
+cmake_linguist_config_version_file.input = $$[QT_HOST_DATA/get]/mkspecs/features/data/cmake/Qt5ConfigVersion.cmake.in
 cmake_linguist_macros_file.input = $$PWD/Qt5LinguistToolsMacros.cmake
 CMAKE_PACKAGE_VERSION = $$MODULE_VERSION
 cmake_linguist_config_file.output = $$MODULE_BASE_OUTDIR/lib/cmake/Qt5LinguistTools/Qt5LinguistToolsConfig.cmake
