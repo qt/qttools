@@ -60,6 +60,7 @@ QString findSdkTool(const QString &tool);
 inline QString normalizeFileName(const QString &name) { return name; }
 #endif // !Q_OS_WIN
 
+bool createSymbolicLink(const QFileInfo &source, const QString &target, QString *errorMessage);
 QString findInPath(const QString &file);
 QMap<QString, QString> queryQMakeAll(QString *errorMessage);
 QString queryQMake(const QString &variable, QString *errorMessage);
@@ -105,13 +106,39 @@ bool updateFile(const QString &sourceFileName,
         return false;
     }
 
-    if (sourceFileInfo.isSymLink()) {
-        *errorMessage = QString::fromLatin1("Symbolic links are not supported (%1).")
-                        .arg(QDir::toNativeSeparators(sourceFileName));
-        return false;
-    }
-
     const QFileInfo targetFileInfo(targetFileName);
+
+    if (sourceFileInfo.isSymLink()) {
+        const QString sourcePath = sourceFileInfo.symLinkTarget();
+        const QString relativeSource = QDir(sourceFileInfo.absolutePath()).relativeFilePath(sourcePath);
+        if (relativeSource.contains(QLatin1Char('/'))) {
+            *errorMessage = QString::fromLatin1("Symbolic links across directories are not supported (%1).")
+                            .arg(QDir::toNativeSeparators(sourceFileName));
+            return false;
+        }
+
+        // Update the linked-to file
+        if (!updateFile(sourcePath, directoryFileEntryFunction, targetDirectory, errorMessage))
+            return false;
+
+        if (targetFileInfo.exists()) {
+            if (!targetFileInfo.isSymLink()) {
+                *errorMessage = QString::fromLatin1("%1 already exists and is not a symbolic link.")
+                                .arg(QDir::toNativeSeparators(targetFileName));
+                return false;
+            } // Not a symlink
+            const QString relativeTarget = QDir(targetFileInfo.absolutePath()).relativeFilePath(targetFileInfo.symLinkTarget());
+            if (relativeSource == relativeTarget) // Exists and points to same entry: happy.
+                return true;
+            QFile existingTargetFile(targetFileName);
+            if (!existingTargetFile.remove()) {
+                *errorMessage = QString::fromLatin1("Cannot remove existing symbolic link %1: %2")
+                                .arg(QDir::toNativeSeparators(targetFileName), existingTargetFile.errorString());
+                return false;
+            }
+        } // target symbolic link exists
+        return createSymbolicLink(QFileInfo(targetDirectory + QLatin1Char('/') + relativeSource), sourceFileInfo.fileName(), errorMessage);
+    } // Source is symbolic link
 
     if (sourceFileInfo.isDir()) {
         if (targetFileInfo.exists()) {

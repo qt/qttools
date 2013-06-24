@@ -66,6 +66,27 @@
 #include <cstdio>
 int optVerboseLevel = 1;
 
+// Create a symbolic link by changing to the source directory to make sure the
+// link uses relative paths only (QFile::link() otherwise uses the absolute path).
+bool createSymbolicLink(const QFileInfo &source, const QString &target, QString *errorMessage)
+{
+    const QString oldDirectory = QDir::currentPath();
+    if (!QDir::setCurrent(source.absolutePath())) {
+        *errorMessage = QStringLiteral("Unable to change to directory %1.").arg(QDir::toNativeSeparators(source.absolutePath()));
+        return false;
+    }
+    QFile file(source.fileName());
+    const bool success = file.link(target);
+    QDir::setCurrent(oldDirectory);
+    if (!success) {
+        *errorMessage = QString::fromLatin1("Failed to create symbolic link %1 -> %2: %3")
+                        .arg(QDir::toNativeSeparators(source.absoluteFilePath()),
+                             QDir::toNativeSeparators(target), file.errorString());
+        return false;
+    }
+    return true;
+}
+
 #ifdef Q_OS_WIN
 QString winErrorMessage(unsigned long error)
 {
