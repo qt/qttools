@@ -48,25 +48,34 @@
 #include <QtCore/QDir>
 #include <QtCore/QDateTime>
 
+#include <cstdio>
+
 enum Platform { Windows, WinRt };
 
-QString findInPath(const QString &file);
+#ifdef Q_OS_WIN
 QString normalizeFileName(const QString &name);
+QString winErrorMessage(unsigned long error);
 QString findSdkTool(const QString &tool);
+#else // !Q_OS_WIN
+inline QString normalizeFileName(const QString &name) { return name; }
+#endif // !Q_OS_WIN
+
+QString findInPath(const QString &file);
 QMap<QString, QString> queryQMakeAll(QString *errorMessage);
 QString queryQMake(const QString &variable, QString *errorMessage);
 QStringList findDependentLibs(const QString &binary, QString *errorMessage);
 
 bool updateFile(const QString &sourceFileName, const QStringList &nameFilters,
                 const QString &targetDirectory, QString *errorMessage);
-bool runProcess(const QString &commandLine, const QString &workingDirectory = QString(),
+bool runProcess(const QString &binary, const QStringList &args,
+                const QString &workingDirectory = QString(),
                 unsigned long *exitCode = 0, QByteArray *stdOut = 0, QByteArray *stdErr = 0,
                 QString *errorMessage = 0);
-QString winErrorMessage(unsigned long error);
 
 bool readPeExecutable(const QString &peExecutableFileName, QString *errorMessage,
                       QStringList *dependentLibraries = 0, unsigned *wordSize = 0,
                       bool *isDebug = 0);
+
 // Return dependent modules of a PE executable files.
 
 inline QStringList findDependentLibraries(const QString &peExecutableFileName, QString *errorMessage)

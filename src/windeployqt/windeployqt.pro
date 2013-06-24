@@ -9,6 +9,6 @@ CONFIG += force_bootstrap console
 
 INCLUDEPATH += $$QT_BUILD_TREE/src/corelib/global
 
-LIBS += -lShlwapi
+win32: LIBS += -lShlwapi
 
 load(qt_tool)

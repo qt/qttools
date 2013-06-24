@@ -462,20 +462,18 @@ static bool deployTranslations(const QString &sourcePath, unsigned usedQtModules
     // Run lconvert to concatenate all files into a single named "qt_<prefix>.qm" in the application folder
     // Use QT_INSTALL_TRANSLATIONS as working directory to keep the command line short.
     const QString absoluteTarget = QFileInfo(target).absoluteFilePath();
-    QString commandLine = QStringLiteral("lconvert");
+    const QString binary = QStringLiteral("lconvert");
+    QStringList arguments;
     foreach (const QString &prefix, prefixes) {
         const QString targetFile = QStringLiteral("qt_") + prefix + QStringLiteral(".qm");
-        commandLine += QStringLiteral(" -o \"");
-        commandLine += QDir::toNativeSeparators(absoluteTarget + QLatin1Char('/') + targetFile);
-        commandLine += QLatin1Char('"');
-        foreach (const QString &qmFile, sourceDir.entryList(translationNameFilters(usedQtModules, prefix))) {
-            commandLine += QLatin1Char(' ');
-            commandLine += qmFile;
-        }
+        arguments.append(QStringLiteral("-o"));
+        arguments.append(QDir::toNativeSeparators(absoluteTarget + QLatin1Char('/') + targetFile));
+        foreach (const QString &qmFile, sourceDir.entryList(translationNameFilters(usedQtModules, prefix)))
+            arguments.append(qmFile);
         if (optVerboseLevel)
             std::fprintf(stderr, "Creating %s...\n", qPrintable(targetFile));
         unsigned long exitCode;
-        if (!runProcess(commandLine, sourcePath, &exitCode, 0, 0, errorMessage) || exitCode)
+        if (!runProcess(binary, arguments, sourcePath, &exitCode, 0, 0, errorMessage) || exitCode)
             return false;
     } // for prefixes.
     return true;

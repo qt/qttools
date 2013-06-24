@@ -42,32 +42,31 @@
 #include "utils.h"
 
 #include <QtCore/QString>
+#include <QtCore/QFile>
 #include <QtCore/QFileInfo>
-#include <QtCore/qt_windows.h>
 #include <QtCore/QTemporaryFile>
 #include <QtCore/QScopedPointer>
 #include <QtCore/QScopedArrayPointer>
 #include <QtCore/QStandardPaths>
 
-#include <cstdio>
-#include <Shlwapi.h>
+#if defined(Q_OS_WIN)
+#  include <QtCore/qt_windows.h>
+#  include <Shlwapi.h>
+#else // Q_OS_WIN
+#  include <sys/wait.h>
+#  include <sys/types.h>
+#  include <sys/stat.h>
+#  include <unistd.h>
+#  include <stdlib.h>
+#  include <string.h>
+#  include <errno.h>
+#  include <fcntl.h>
+#endif  // !Q_OS_WIN
 
+#include <cstdio>
 int optVerboseLevel = 1;
 
-// Find a file in the path using ShellAPI. This can be used to locate DLLs which
-// QStandardPaths cannot do.
-QString findInPath(const QString &file)
-{
-    if (file.size() < MAX_PATH -  1) {
-        wchar_t buffer[MAX_PATH];
-        file.toWCharArray(buffer);
-        buffer[file.size()] = 0;
-        if (PathFindOnPath(buffer, NULL))
-            return QString::fromWCharArray(buffer);
-    }
-    return QString();
-}
-
+#ifdef Q_OS_WIN
 QString winErrorMessage(unsigned long error)
 {
     QString rc = QString::fromLatin1("#%1: ").arg(error);
@@ -138,17 +137,27 @@ static inline void readTemporaryProcessFile(HANDLE handle, QByteArray *result)
     CloseHandle(handle);
 }
 
+static inline void appendToCommandLine(const QString &argument, QString *commandLine)
+{
+    const bool needsQuote = argument.contains(QLatin1Char(' '));
+    if (!commandLine->isEmpty())
+        commandLine->append(QLatin1Char(' '));
+    if (needsQuote)
+        commandLine->append(QLatin1Char('"'));
+    commandLine->append(argument);
+    if (needsQuote)
+        commandLine->append(QLatin1Char('"'));
+}
+
 // runProcess: Run a command line process (replacement for QProcess which
 // does not exist in the bootstrap library).
-bool runProcess(const QString &commandLine, const QString &workingDirectory,
+bool runProcess(const QString &binary, const QStringList &args,
+                const QString &workingDirectory,
                 unsigned long *exitCode, QByteArray *stdOut, QByteArray *stdErr,
                 QString *errorMessage)
 {
     if (exitCode)
         *exitCode = 0;
-
-    if (optVerboseLevel > 1)
-        std::fprintf(stderr, "Running: %s\n", qPrintable(commandLine));
 
     STARTUPINFO si;
     ZeroMemory(&si, sizeof(si));
@@ -188,6 +197,13 @@ bool runProcess(const QString &commandLine, const QString &workingDirectory,
     }
 
     // Create a copy of the command line which CreateProcessW can modify.
+    QString commandLine;
+    appendToCommandLine(binary, &commandLine);
+    foreach (const QString &a, args)
+        appendToCommandLine(a, &commandLine);
+    if (optVerboseLevel > 1)
+        std::fprintf(stderr, "Running: %s\n", qPrintable(commandLine));
+
     QScopedArrayPointer<wchar_t> commandLineW(new wchar_t[commandLine.size() + 1]);
     commandLine.toWCharArray(commandLineW.data());
     commandLineW[commandLine.size()] = 0;
@@ -215,20 +231,169 @@ bool runProcess(const QString &commandLine, const QString &workingDirectory,
     return true;
 }
 
+#else // Q_OS_WIN
+
+static inline char *encodeFileName(const QString &f)
+{
+    const QByteArray encoded = QFile::encodeName(f);
+    char *result = new char[encoded.size() + 1];
+    strcpy(result, encoded.constData());
+    return result;
+}
+
+static inline char *tempFilePattern()
+{
+    QString path = QDir::tempPath();
+    if (!path.endsWith(QLatin1Char('/')))
+        path += QLatin1Char('/');
+    path += QStringLiteral("tmpXXXXXX");
+    return encodeFileName(path);
+}
+
+static inline QByteArray readOutRedirectFile(int fd)
+{
+    enum { bufSize = 256 };
+
+    QByteArray result;
+    if (!lseek(fd, 0, 0)) {
+        char buf[bufSize];
+        while (true) {
+            const ssize_t rs = read(fd, buf, bufSize);
+            if (rs <= 0)
+                break;
+            result.append(buf, int(rs));
+        }
+    }
+    close(fd);
+    return result;
+}
+
+// runProcess: Run a command line process (replacement for QProcess which
+// does not exist in the bootstrap library).
+bool runProcess(const QString &binary, const QStringList &args,
+                const QString &workingDirectory,
+                unsigned long *exitCode, QByteArray *stdOut, QByteArray *stdErr,
+                QString *errorMessage)
+{
+    QScopedArrayPointer<char> stdOutFileName;
+    QScopedArrayPointer<char> stdErrFileName;
+
+    int stdOutFile = 0;
+    if (stdOut) {
+        stdOutFileName.reset(tempFilePattern());
+        stdOutFile = mkstemp(stdOutFileName.data());
+        if (stdOutFile < 0) {
+            *errorMessage = QStringLiteral("mkstemp() failed: ") + QString::fromLocal8Bit(strerror(errno));
+            return false;
+        }
+    }
+
+    int stdErrFile = 0;
+    if (stdErr) {
+        stdErrFileName.reset(tempFilePattern());
+        stdErrFile = mkstemp(stdErrFileName.data());
+        if (stdErrFile < 0) {
+            *errorMessage = QStringLiteral("mkstemp() failed: ") + QString::fromLocal8Bit(strerror(errno));
+            return false;
+        }
+    }
+
+    const pid_t pID = fork();
+
+    if (pID < 0) {
+        *errorMessage = QStringLiteral("Fork failed: ") + QString::fromLocal8Bit(strerror(errno));
+        return false;
+    }
+
+    if (!pID) { // Child
+        if (stdOut) {
+            dup2(stdOutFile, STDOUT_FILENO);
+            close(stdOutFile);
+        }
+        if (stdErr) {
+            dup2(stdErrFile, STDERR_FILENO);
+            close(stdErrFile);
+        }
+
+        if (!workingDirectory.isEmpty() && !QDir::setCurrent(workingDirectory)) {
+            std::fprintf(stderr, "Failed to change working directory to %s.\n", qPrintable(workingDirectory));
+            ::_exit(-1);
+        }
+
+        char **argv  = new char *[args.size() + 2]; // Create argv.
+        char **ap = argv;
+        *ap++ = encodeFileName(binary);
+        foreach (const QString &a, args)
+            *ap++ = encodeFileName(a);
+        *ap = 0;
+
+        execvp(argv[0], argv);
+        ::_exit(-1);
+    }
+
+    int status;
+    pid_t waitResult;
+
+    do {
+        waitResult = waitpid(pID, &status, 0);
+    } while (waitResult == -1 && errno == EINTR);
+
+    if (stdOut) {
+        *stdOut = readOutRedirectFile(stdOutFile);
+        unlink(stdOutFileName.data());
+    }
+    if (stdErr) {
+        *stdErr = readOutRedirectFile(stdErrFile);
+        unlink(stdErrFileName.data());
+    }
+
+    if (waitResult < 0) {
+        *errorMessage = QStringLiteral("Wait failed: ") + QString::fromLocal8Bit(strerror(errno));
+        return false;
+    }
+    if (!WIFEXITED(status)) {
+        *errorMessage = binary + QStringLiteral(" did not exit cleanly.");
+        return false;
+    }
+    if (exitCode)
+        *exitCode = WEXITSTATUS(status);
+    return true;
+}
+
+#endif // !Q_OS_WIN
+
+// Find a file in the path using ShellAPI. This can be used to locate DLLs which
+// QStandardPaths cannot do.
+QString findInPath(const QString &file)
+{
+#if defined(Q_OS_WIN)
+    if (file.size() < MAX_PATH -  1) {
+        wchar_t buffer[MAX_PATH];
+        file.toWCharArray(buffer);
+        buffer[file.size()] = 0;
+        if (PathFindOnPath(buffer, NULL))
+            return QString::fromWCharArray(buffer);
+    }
+    return QString();
+#else // Q_OS_WIN
+    return QStandardPaths::findExecutable(file);
+#endif // !Q_OS_WIN
+}
+
 QMap<QString, QString> queryQMakeAll(QString *errorMessage)
 {
     QByteArray stdOut;
     QByteArray stdErr;
     unsigned long exitCode = 0;
-    const QString commandLine = QStringLiteral("qmake.exe -query");
-    if (!runProcess(commandLine, QString(), &exitCode, &stdOut, &stdErr, errorMessage))
+    const QString binary = QStringLiteral("qmake");
+    if (!runProcess(binary, QStringList(QStringLiteral("-query")), QString(), &exitCode, &stdOut, &stdErr, errorMessage))
         return QMap<QString, QString>();
     if (exitCode) {
-        *errorMessage = commandLine + QStringLiteral(" returns ") + QString::number(exitCode)
+        *errorMessage = binary + QStringLiteral(" returns ") + QString::number(exitCode)
             + QStringLiteral(": ") + QString::fromLocal8Bit(stdErr);
         return QMap<QString, QString>();
     }
-    const QString output = QString::fromLocal8Bit(stdOut).trimmed();
+    const QString output = QString::fromLocal8Bit(stdOut).trimmed().remove(QLatin1Char('\r'));
     QMap<QString, QString> result;
     int pos = 0;
     while (true) {
@@ -239,7 +404,7 @@ QMap<QString, QString> queryQMakeAll(QString *errorMessage)
         if (endPos < 0)
             break;
         const QString key = output.mid(pos, colonPos - pos);
-        const QString value = output.mid(colonPos + 1, endPos - colonPos - 2); // Skip '\r'
+        const QString value = output.mid(colonPos + 1, endPos - colonPos - 1);
         result.insert(key, value);
         pos = endPos + 1;
     }
@@ -251,11 +416,13 @@ QString queryQMake(const QString &variable, QString *errorMessage)
     QByteArray stdOut;
     QByteArray stdErr;
     unsigned long exitCode;
-    const QString commandLine = QStringLiteral("qmake.exe -query ") + variable;
-    if (!runProcess(commandLine, QString(), &exitCode, &stdOut, &stdErr, errorMessage))
+    const QString binary = QStringLiteral("qmake");
+    QStringList args;
+    args << QStringLiteral("-query ") << variable;
+    if (!runProcess(binary, args, QString(), &exitCode, &stdOut, &stdErr, errorMessage))
         return QString();
     if (exitCode) {
-        *errorMessage = commandLine + QStringLiteral(" returns ") + QString::number(exitCode)
+        *errorMessage = binary + QStringLiteral(" returns ") + QString::number(exitCode)
             + QStringLiteral(": ") + QString::fromLocal8Bit(stdErr);
         return QString();
     }
@@ -334,6 +501,8 @@ bool updateFile(const QString &sourceFileName, const QStringList &nameFilters,
     }
     return true;
 }
+
+#ifdef Q_OS_WIN
 
 // Helper for reading out PE executable files: Find a section header for an RVA
 // (IMAGE_NT_HEADERS64, IMAGE_NT_HEADERS32).
@@ -508,5 +677,15 @@ bool readPeExecutable(const QString &peExecutableFileName, QString *errorMessage
 
     return result;
 }
+#else // Q_OS_WIN
+
+bool readPeExecutable(const QString &, QString *errorMessage,
+                      QStringList *, unsigned *, bool *)
+{
+    *errorMessage = QStringLiteral("Not implemented.");
+    return false;
+}
+
+#endif // !Q_OS_WIN
 
 QT_END_NAMESPACE
