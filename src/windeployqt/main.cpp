@@ -688,7 +688,7 @@ static bool deployWebKit2(const QMap<QString, QString> &qmakeVariables,
 {
     // Copy the web process and its dependencies
     const QString webProcess = QLatin1String(webProcessC);
-    const QString webProcessSource = qmakeVariables.value(QStringLiteral("QT_INSTALL_BINS")) +
+    const QString webProcessSource = qmakeVariables.value(QStringLiteral("QT_INSTALL_LIBEXECS")) +
                                      QLatin1Char('/') + webProcess;
     if (!updateFile(webProcessSource, sourceOptions.directory, errorMessage))
         return false;
