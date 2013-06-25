@@ -312,6 +312,19 @@ static QStringList getSources(const ProFileEvaluator &visitor, const QString &pr
     return sourceFiles;
 }
 
+static void excludeProjects(const ProFileEvaluator &visitor, QStringList *subProjects)
+{
+    foreach (const QString &ex, visitor.values(QLatin1String("TR_EXCLUDE"))) {
+        QRegExp rx(ex, Qt::CaseSensitive, QRegExp::Wildcard);
+        for (QStringList::Iterator it = subProjects->begin(); it != subProjects->end(); ) {
+            if (rx.exactMatch(*it))
+                it = subProjects->erase(it);
+            else
+                ++it;
+        }
+    }
+}
+
 static void processSources(Translator &fetchedTor,
                            const QStringList &sourceFiles, ConversionData &cd)
 {
@@ -380,9 +393,11 @@ static void processProject(
     }
     QString proPath = QFileInfo(proFile).path();
     if (visitor.templateType() == ProFileEvaluator::TT_Subdirs) {
+        QStringList subProjects = visitor.values(QLatin1String("SUBDIRS"));
+        excludeProjects(visitor, &subProjects);
         QStringList subProFiles;
         QDir proDir(proPath);
-        foreach (const QString &subdir, visitor.values(QLatin1String("SUBDIRS"))) {
+        foreach (const QString &subdir, subProjects) {
             QString realdir = visitor.value(subdir + QLatin1String(".subdir"));
             if (realdir.isEmpty())
                 realdir = visitor.value(subdir + QLatin1String(".file"));
