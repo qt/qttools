@@ -36,3 +36,6 @@ exampledirs             = ../../../../examples/help \
                           snippets
 
 imagedirs               = images
+
+navigation.landingpage = "Qt Help"
+navigation.cppclassespage = "Qt Help C++ Classes"

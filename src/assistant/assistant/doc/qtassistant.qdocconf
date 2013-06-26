@@ -35,3 +35,5 @@ imagedirs               = images
 outputdir               = $QT_INSTALL_DOCS/qtassistant
 
 depends                 += qtdoc
+
+navigation.landingpage = "Qt Assistant Manual"

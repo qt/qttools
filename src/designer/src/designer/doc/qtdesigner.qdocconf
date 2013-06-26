@@ -46,3 +46,6 @@ imagedirs               = images
 outputdir               = $QT_INSTALL_DOCS/qtdesigner
 
 depends                 += qtdoc qtwidgets qtcore qtuitools
+
+navigation.landingpage = "Qt Designer Manual"
+navigation.cppclassespage = "Qt Designer C++ Classes"
