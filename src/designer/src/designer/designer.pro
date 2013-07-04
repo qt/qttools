@@ -1,4 +1,4 @@
-QT += core-private widgets xml network designer-private designercomponents
+QT += core-private widgets xml network designer-private designercomponents-private
 qtHaveModule(printsupport): QT += printsupport
 
 INCLUDEPATH += \
