@@ -14,7 +14,8 @@ qtHaveModule(widgets) {
     }
 }
 
-SUBDIRS += linguist
+SUBDIRS += linguist \
+           qtpaths
 
 mac {
     SUBDIRS += macdeployqt
