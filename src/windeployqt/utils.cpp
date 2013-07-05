@@ -698,6 +698,14 @@ bool readPeExecutable(const QString &peExecutableFileName, QString *errorMessage
 
     return result;
 }
+
+bool readElfExecutable(const QString &, QString *errorMessage,
+                       QStringList *, unsigned *, bool *)
+{
+    *errorMessage = QStringLiteral("Not implemented.");
+    return false;
+}
+
 #else // Q_OS_WIN
 
 bool readPeExecutable(const QString &, QString *errorMessage,
@@ -705,6 +713,48 @@ bool readPeExecutable(const QString &, QString *errorMessage,
 {
     *errorMessage = QStringLiteral("Not implemented.");
     return false;
+}
+
+bool readElfExecutable(const QString &elfExecutableFileName, QString *errorMessage,
+                       QStringList *dependentLibraries, unsigned *wordSize,
+                       bool *isDebug)
+{
+    if (dependentLibraries) {
+        dependentLibraries->clear();
+        QByteArray stdOut;
+        unsigned long exitCode = 0;
+        const QString lddBinary = QStringLiteral("ldd");
+        if (!runProcess(lddBinary, QStringList(elfExecutableFileName), QString(), &exitCode, &stdOut, 0, errorMessage))
+            return false;
+        if (exitCode) {
+            *errorMessage = lddBinary + QStringLiteral(" returns ") + QString::number(exitCode);
+            return false;
+        }
+        // Split ldd output: "<tab>libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6"
+        foreach (QByteArray line, stdOut.split('\n')) {
+            const int arrowPos = line.indexOf("=>");
+            if (arrowPos >= 0) {
+                line.truncate(arrowPos);
+                dependentLibraries->push_back(QFile::decodeName(line).trimmed());
+            }
+        }
+    } // dependentLibraries
+    if (wordSize || isDebug) { // Additional information from 'file' command.
+        QByteArray stdOut;
+        unsigned long exitCode = 0;
+        const QString fileBinary = QStringLiteral("file");
+        if (!runProcess(fileBinary, QStringList(elfExecutableFileName), QString(), &exitCode, &stdOut, 0, errorMessage))
+            return false;
+        if (exitCode) {
+            *errorMessage = fileBinary + QStringLiteral(" returns ") + QString::number(exitCode);
+            return false;
+        }
+        if (wordSize)
+            *wordSize = stdOut.contains("64-bit") ? 64 : 32;
+        if (isDebug)
+            *isDebug = stdOut.contains("not stripped");
+    }
+    return true;
 }
 
 #endif // !Q_OS_WIN

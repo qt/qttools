@@ -50,7 +50,7 @@
 
 #include <cstdio>
 
-enum Platform { Windows, WinRt };
+enum Platform { Windows, WinRt, Unix, UnknownPlatform };
 
 #ifdef Q_OS_WIN
 QString normalizeFileName(const QString &name);
@@ -76,13 +76,25 @@ bool runProcess(const QString &binary, const QStringList &args,
 bool readPeExecutable(const QString &peExecutableFileName, QString *errorMessage,
                       QStringList *dependentLibraries = 0, unsigned *wordSize = 0,
                       bool *isDebug = 0);
+bool readElfExecutable(const QString &elfExecutableFileName, QString *errorMessage,
+                      QStringList *dependentLibraries = 0, unsigned *wordSize = 0,
+                      bool *isDebug = 0);
+
+inline bool readExecutable(const QString &executableFileName, Platform platform,
+                           QString *errorMessage, QStringList *dependentLibraries = 0,
+                           unsigned *wordSize = 0, bool *isDebug = 0)
+{
+    return platform == Unix ?
+        readElfExecutable(executableFileName, errorMessage, dependentLibraries, wordSize, isDebug) :
+        readPeExecutable(executableFileName, errorMessage, dependentLibraries, wordSize, isDebug);
+}
 
 // Return dependent modules of a PE executable files.
 
-inline QStringList findDependentLibraries(const QString &peExecutableFileName, QString *errorMessage)
+inline QStringList findDependentLibraries(const QString &peExecutableFileName, Platform platform, QString *errorMessage)
 {
     QStringList result;
-    readPeExecutable(peExecutableFileName, errorMessage, &result);
+    readExecutable(peExecutableFileName, platform, errorMessage, &result);
     return result;
 }
 

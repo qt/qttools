@@ -118,7 +118,13 @@ static QByteArray formatQtModules(unsigned mask, bool option = false)
     return result;
 }
 
-static const char webProcessC[] = "QtWebProcess.exe";
+static const char webProcessC[] = "QtWebProcess";
+
+static inline QString webProcessBinary(Platform p)
+{
+    const QString webProcess = QLatin1String(webProcessC);
+    return p == Windows || p == WinRt ? webProcess + QStringLiteral(".exe") : webProcess;
+}
 
 static unsigned qtModuleByOption(const QStringRef &r)
 {
@@ -127,6 +133,17 @@ static unsigned qtModuleByOption(const QStringRef &r)
         if (r == QLatin1String(qtModuleEntries[i].option))
             return qtModuleEntries[i].module;
     return 0;
+}
+
+static Platform platformFromMkSpec(const QString &xSpec)
+{
+    if (xSpec == QLatin1String("linux-g++"))
+        return Unix;
+    if (xSpec.startsWith(QLatin1String("win32-")))
+        return Windows;
+    if (xSpec.startsWith(QLatin1String("winrt")) || xSpec.startsWith(QLatin1String("winphone")))
+        return WinRt;
+    return UnknownPlatform;
 }
 
 bool optHelp = false;
@@ -233,11 +250,14 @@ static inline bool parseOption(QStringList::ConstIterator &it,
 }
 
 // Return binary from folder
-static inline QString findBinary(const QString &directory)
+static inline QString findBinary(const QString &directory, Platform platform)
 {
     QDir dir(QDir::cleanPath(directory));
-    foreach (const QString &binary, dir.entryList(QStringList(QLatin1String("*.exe"))))
-        if (binary.compare(QLatin1String(webProcessC), Qt::CaseInsensitive))
+
+    const QStringList nameFilters = platform == Windows || platform == WinRt ?
+        QStringList(QStringLiteral("*.exe")) : QStringList();
+    foreach (const QString &binary, dir.entryList(nameFilters, QDir::Files | QDir::Executable))
+        if (!binary.contains(QLatin1String(webProcessC), Qt::CaseInsensitive))
             return dir.filePath(binary);
     return QString();
 }
@@ -262,7 +282,7 @@ static inline bool parseArguments(const QStringList &arguments, Options *options
                 options->binary = fi.absoluteFilePath();
                 options->directory = fi.absolutePath();
             } else {
-                options->binary = findBinary(fi.absoluteFilePath());
+                options->binary = findBinary(fi.absoluteFilePath(), options->platform);
                 if (options->binary.isEmpty()) {
                     std::fprintf(stderr, "Unable to find binary in %s.\n", qPrintable(*it));
                     return false;
@@ -286,7 +306,7 @@ static inline QString findD3dCompiler()
 }
 
 // Helper for recursively finding all dependent Qt libraries.
-static bool findDependentQtLibraries(const QString &qtBinDir, const QString &binary,
+static bool findDependentQtLibraries(const QString &qtBinDir, const QString &binary, Platform platform,
                                      QString *errorMessage, QStringList *result,
                                      unsigned *wordSize = 0, bool *isDebug = 0,
                                      int *directDependencyCount = 0, int recursionDepth = 0)
@@ -294,7 +314,7 @@ static bool findDependentQtLibraries(const QString &qtBinDir, const QString &bin
     QStringList dependentLibs;
     if (directDependencyCount)
         *directDependencyCount = 0;
-    if (!readPeExecutable(binary, errorMessage, &dependentLibs, wordSize, isDebug)) {
+    if (!readExecutable(binary, platform, errorMessage, &dependentLibs, wordSize, isDebug)) {
         errorMessage->prepend(QLatin1String("Unable to find dependent libraries of ") +
                               QDir::toNativeSeparators(binary) + QLatin1String(" :"));
         return false;
@@ -313,12 +333,12 @@ static bool findDependentQtLibraries(const QString &qtBinDir, const QString &bin
         *directDependencyCount = end - start;
     // Recurse
     for (int i = start; i < end; ++i)
-        if (!findDependentQtLibraries(qtBinDir, result->at(i), errorMessage, result, 0, 0, 0, recursionDepth + 1))
+        if (!findDependentQtLibraries(qtBinDir, result->at(i), platform, errorMessage, result, 0, 0, 0, recursionDepth + 1))
             return false;
     return true;
 }
 
-// Base class to filter debug/release DLLs for functions to be passed to updateFile().
+// Base class to filter debug/release Windows DLLs for functions to be passed to updateFile().
 // Tries to pre-filter by namefilter and does check via PE.
 class DllDirectoryFileEntryFunction {
 public:
@@ -403,11 +423,26 @@ QStringList findQtPlugins(unsigned usedQtModules,
             QString filter;
             const bool isPlatformPlugin = subDirName == QLatin1String("platforms");
             if (isPlatformPlugin) {
-                filter = platform == WinRt ? QStringLiteral("qwinrt") : QStringLiteral("qwindows");
+                switch (platform) {
+                case Windows:
+                    filter = QStringLiteral("qwindows");
+                    break;
+                case WinRt:
+                    filter = QStringLiteral("qwinrt");
+                    break;
+                case Unix:
+                    filter = QStringLiteral("libqxcb");
+                    break;
+                case UnknownPlatform:
+                    break;
+                }
             } else {
                 filter  = QLatin1String("*");
             }
-            foreach (const QString &plugin, DllDirectoryFileEntryFunction(debug, filter)(subDir)) {
+            const QStringList plugins = platform == Unix ?
+                        NameFilterFileEntryFunction(QStringList(filter + QStringLiteral(".so")))(subDir) :
+                        DllDirectoryFileEntryFunction(debug, filter)(subDir);
+            foreach (const QString &plugin, plugins) {
                 const QString pluginPath = subDir.absoluteFilePath(plugin);
                 if (isPlatformPlugin)
                     *platformPlugin = pluginPath;
@@ -490,6 +525,28 @@ struct DeployResult
     unsigned deployedQtLibraries;
 };
 
+static QString libraryPath(const QString &libraryLocation, const char *name, Platform platform, bool debug)
+{
+    QString result = libraryLocation + QLatin1Char('/');
+    switch (platform) {
+    case Windows:
+    case WinRt:
+        result += QLatin1String(name);
+        if (debug)
+            result += QLatin1Char('d');
+        result += QStringLiteral(".dll");
+        break;
+    case Unix:
+        result += QStringLiteral("lib");
+        result += QLatin1String(name);
+        result += QStringLiteral(".so");
+        break;
+    default:
+        break;
+    }
+    return result;
+}
+
 static DeployResult deploy(const Options &options,
                            const QMap<QString, QString> &qmakeVariables,
                            QString *errorMessage)
@@ -499,6 +556,7 @@ static DeployResult deploy(const Options &options,
     const QChar slash = QLatin1Char('/');
 
     const QString qtBinDir = qmakeVariables.value(QStringLiteral("QT_INSTALL_BINS"));
+    const QString libraryLocation = options.platform == Unix ? qmakeVariables.value(QStringLiteral("QT_INSTALL_LIBS")) : qtBinDir;
 
     if (optVerboseLevel > 1)
         std::fprintf(stderr, "Qt binaries in %s\n", qPrintable(QDir::toNativeSeparators(qtBinDir)));
@@ -507,7 +565,7 @@ static DeployResult deploy(const Options &options,
     bool isDebug;
     unsigned wordSize;
     int directDependencyCount;
-    if (!findDependentQtLibraries(qtBinDir, options.binary, errorMessage, &dependentQtLibs, &wordSize, &isDebug, &directDependencyCount))
+    if (!findDependentQtLibraries(libraryLocation, options.binary, options.platform, errorMessage, &dependentQtLibs, &wordSize, &isDebug, &directDependencyCount))
         return result;
 
     std::printf("%s: %ubit, %s executable.\n", qPrintable(QDir::toNativeSeparators(options.binary)),
@@ -518,32 +576,34 @@ static DeployResult deploy(const Options &options,
         return result;
     }
 
-    // Some checks in QtCore: ICU
-    const QStringList qt5Core = dependentQtLibs.filter(QStringLiteral("Qt5Core"), Qt::CaseInsensitive);
-    if (!qt5Core.isEmpty()) {
-        QStringList icuLibs = findDependentLibraries(qt5Core.front(), errorMessage).filter(QStringLiteral("ICU"), Qt::CaseInsensitive);
-        if (!icuLibs.isEmpty()) {
-            // Find out the ICU version to add the data library icudtXX.dll, which does not show
-            // as a dependency.
-            QRegExp numberExpression(QStringLiteral("\\d+"));
-            Q_ASSERT(numberExpression.isValid());
-            const int index = numberExpression.indexIn(icuLibs.front());
-            if (index >= 0)  {
-                const QString icuVersion = icuLibs.front().mid(index, numberExpression.matchedLength());
-                if (optVerboseLevel > 1)
-                    std::fprintf(stderr, "Adding ICU version %s\n", qPrintable(icuVersion));
-                icuLibs.push_back(QStringLiteral("icudt") + icuVersion + QStringLiteral(".dll"));
-            }
-            foreach (const QString &icuLib, icuLibs) {
-                const QString icuPath = findInPath(icuLib);
-                if (icuPath.isEmpty()) {
-                    *errorMessage = QStringLiteral("Unable to locate ICU library ") + icuLib;
-                    return result;
+    // Some Windows-specific checks in QtCore: ICU
+    if (options.platform  == Windows || options.platform == WinRt)  {
+        const QStringList qt5Core = dependentQtLibs.filter(QStringLiteral("Qt5Core"), Qt::CaseInsensitive);
+        if (!qt5Core.isEmpty()) {
+            QStringList icuLibs = findDependentLibraries(qt5Core.front(), options.platform, errorMessage).filter(QStringLiteral("ICU"), Qt::CaseInsensitive);
+            if (!icuLibs.isEmpty()) {
+                // Find out the ICU version to add the data library icudtXX.dll, which does not show
+                // as a dependency.
+                QRegExp numberExpression(QStringLiteral("\\d+"));
+                Q_ASSERT(numberExpression.isValid());
+                const int index = numberExpression.indexIn(icuLibs.front());
+                if (index >= 0)  {
+                    const QString icuVersion = icuLibs.front().mid(index, numberExpression.matchedLength());
+                    if (optVerboseLevel > 1)
+                        std::fprintf(stderr, "Adding ICU version %s\n", qPrintable(icuVersion));
+                    icuLibs.push_back(QStringLiteral("icudt") + icuVersion + QStringLiteral(".dll"));
                 }
-                dependentQtLibs.push_back(icuPath);
-            } // foreach icuLib
-        } // !icuLibs.isEmpty()
-    } // Qt5Core
+                foreach (const QString &icuLib, icuLibs) {
+                    const QString icuPath = findInPath(icuLib);
+                    if (icuPath.isEmpty()) {
+                        *errorMessage = QStringLiteral("Unable to locate ICU library ") + icuLib;
+                        return result;
+                    }
+                    dependentQtLibs.push_back(icuPath);
+                } // foreach icuLib
+            } // !icuLibs.isEmpty()
+        } // Qt5Core
+    } // Windows
 
     // Find the plugins and check whether ANGLE, D3D are required on the platform plugin.
     QString platformPlugin;
@@ -562,15 +622,9 @@ static DeployResult deploy(const Options &options,
     result.deployedQtLibraries = (result.usedQtLibraries | options.additionalLibraries) & ~options.disabledLibraries;
     // Apply options flags and re-add library names.
     const size_t qtModulesCount = sizeof(qtModuleEntries)/sizeof(QtModuleEntry);
-    for (size_t i = 0; i < qtModulesCount; ++i) {
-        if (result.deployedQtLibraries & qtModuleEntries[i].module) {
-            QString libName = qtBinDir + slash + QLatin1String(qtModuleEntries[i].libraryName);
-            if (isDebug)
-                libName += QLatin1Char('d');
-            libName += QStringLiteral(".dll");
-            deployedQtLibraries.push_back(libName);
-        }
-    }
+    for (size_t i = 0; i < qtModulesCount; ++i)
+        if (result.deployedQtLibraries & qtModuleEntries[i].module)
+            deployedQtLibraries.push_back(libraryPath(libraryLocation, qtModuleEntries[i].libraryName, options.platform, isDebug));
 
     if (optVerboseLevel >= 1) {
         std::fprintf(stderr, "Direct dependencies: %s\nAll dependencies   : %s\nTo be deployed     : %s\n",
@@ -593,24 +647,26 @@ static DeployResult deploy(const Options &options,
     }
 
     // Check for ANGLE on the platform plugin.
-    const QStringList platformPluginLibraries = findDependentLibraries(platformPlugin, errorMessage);
-    const QStringList libEgl = platformPluginLibraries.filter(QStringLiteral("libegl"), Qt::CaseInsensitive);
-    if (!libEgl.isEmpty()) {
-        const QString libEglFullPath = qtBinDir + slash + QFileInfo(libEgl.front()).fileName();
-        deployedQtLibraries.push_back(libEglFullPath);
-        const QStringList libGLESv2 = findDependentLibraries(libEglFullPath, errorMessage).filter(QStringLiteral("libGLESv2"), Qt::CaseInsensitive);
-        if (!libGLESv2.isEmpty()) {
-            const QString libGLESv2FullPath = qtBinDir + slash + QFileInfo(libGLESv2.front()).fileName();
-            deployedQtLibraries.push_back(libGLESv2FullPath);
-        }
-        // Find the D3d Compiler matching the D3D library.
-        const QString d3dCompiler = findD3dCompiler();
-        if (d3dCompiler.isEmpty()) {
-            std::fprintf(stderr, "Warning: Cannot find any version of the d3dcompiler DLL.\n");
-        } else {
-            deployedQtLibraries.push_back(d3dCompiler);
-        }
-    } // !libEgl.isEmpty()
+    if (options.platform  == Windows || options.platform == WinRt)  {
+        const QStringList platformPluginLibraries = findDependentLibraries(platformPlugin, options.platform, errorMessage);
+        const QStringList libEgl = platformPluginLibraries.filter(QStringLiteral("libegl"), Qt::CaseInsensitive);
+        if (!libEgl.isEmpty()) {
+            const QString libEglFullPath = qtBinDir + slash + QFileInfo(libEgl.front()).fileName();
+            deployedQtLibraries.push_back(libEglFullPath);
+            const QStringList libGLESv2 = findDependentLibraries(libEglFullPath, options.platform, errorMessage).filter(QStringLiteral("libGLESv2"), Qt::CaseInsensitive);
+            if (!libGLESv2.isEmpty()) {
+                const QString libGLESv2FullPath = qtBinDir + slash + QFileInfo(libGLESv2.front()).fileName();
+                deployedQtLibraries.push_back(libGLESv2FullPath);
+            }
+            // Find the D3d Compiler matching the D3D library.
+            const QString d3dCompiler = findD3dCompiler();
+            if (d3dCompiler.isEmpty()) {
+                std::fprintf(stderr, "Warning: Cannot find any version of the d3dcompiler DLL.\n");
+            } else {
+                deployedQtLibraries.push_back(d3dCompiler);
+            }
+        } // !libEgl.isEmpty()
+    } // Windows
 
     // Update libraries
     if (options.libraries) {
@@ -687,7 +743,7 @@ static bool deployWebKit2(const QMap<QString, QString> &qmakeVariables,
                           const Options &sourceOptions, QString *errorMessage)
 {
     // Copy the web process and its dependencies
-    const QString webProcess = QLatin1String(webProcessC);
+    const QString webProcess = webProcessBinary(sourceOptions.platform);
     const QString webProcessSource = qmakeVariables.value(QStringLiteral("QT_INSTALL_LIBEXECS")) +
                                      QLatin1Char('/') + webProcess;
     if (!updateFile(webProcessSource, sourceOptions.directory, errorMessage))
@@ -703,26 +759,31 @@ int main(int argc, char **argv)
 {
     QCoreApplication a(argc, argv);
 
+
     Options options;
+    QString errorMessage;
+    const QMap<QString, QString> qmakeVariables = queryQMakeAll(&errorMessage);
+    const QString xSpec = qmakeVariables.value(QStringLiteral("QMAKE_XSPEC"));
+    options.platform = platformFromMkSpec(xSpec);
+
     if (!parseArguments(QCoreApplication::arguments(), &options) || optHelp) {
         std::printf("\nwindeployqt based on Qt %s\n\n%s", QT_VERSION_STR, usage().constData());
         return optHelp ? 0 : 1;
     }
 
-    if (optWebKit2)
-        options.additionalLibraries |= QtWebKitModule;
-
-    QString errorMessage;
-
-    const QMap<QString, QString> qmakeVariables = queryQMakeAll(&errorMessage);
-    if (qmakeVariables.isEmpty() || !qmakeVariables.contains(QStringLiteral("QT_INSTALL_BINS"))) {
+    if (qmakeVariables.isEmpty() || xSpec.isEmpty() || !qmakeVariables.contains(QStringLiteral("QT_INSTALL_BINS"))) {
         std::fprintf(stderr, "Unable to query qmake: %s\n", qPrintable(errorMessage));
         return 1;
     }
 
-    const QString xSpec = qmakeVariables.value(QStringLiteral("QMAKE_XSPEC"));
-    if (xSpec.startsWith(QLatin1String("winrt")) || xSpec.startsWith(QLatin1String("winphone")))
-        options.platform = WinRt;
+    if (options.platform == UnknownPlatform) {
+        std::fprintf(stderr, "Unsupported platform %s\n", qPrintable(xSpec));
+        return 1;
+    }
+
+    if (optWebKit2)
+        options.additionalLibraries |= QtWebKitModule;
+
 
     const DeployResult result = deploy(options, qmakeVariables, &errorMessage);
     if (!result) {
