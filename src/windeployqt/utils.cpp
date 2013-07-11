@@ -87,6 +87,27 @@ bool createSymbolicLink(const QFileInfo &source, const QString &target, QString 
     return true;
 }
 
+bool createDirectory(const QString &directory, QString *errorMessage)
+{
+    const QFileInfo fi(directory);
+    if (fi.isDir())
+        return true;
+    if (fi.exists()) {
+        *errorMessage = QString::fromLatin1("%1 already exists and is not a directory.").
+                        arg(QDir::toNativeSeparators(directory));
+        return false;
+    }
+    if (optVerboseLevel)
+        std::fprintf(stderr, "Creating %s...\n", qPrintable(QDir::toNativeSeparators(directory)));
+    QDir dir;
+    if (!dir.mkpath(directory)) {
+        *errorMessage = QString::fromLatin1("Could not create directory %1.").
+                        arg(QDir::toNativeSeparators(directory));
+        return false;
+    }
+    return true;
+}
+
 #ifdef Q_OS_WIN
 QString winErrorMessage(unsigned long error)
 {

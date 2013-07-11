@@ -161,6 +161,7 @@ struct Options {
     unsigned additionalLibraries;
     unsigned disabledLibraries;
     QString directory;
+    QString libraryDirectory;
     QString binary;
 };
 
@@ -171,6 +172,7 @@ static QByteArray usage()
 "a Windows/WinRT application to the build-directory.\n\n"
 "<file> is an executable file or build directory.\n\n"
 "Options:\n"
+"         -libdir <path>     : Copy libraries to <path>\n"
 "         -no-plugins        : Skip plugin deployment\n"
 "         -no-libraries      : Skip library deployment\n"
 "         -no-quick-imports  : Skip deployment of Qt Quick imports\n"
@@ -190,8 +192,13 @@ static inline bool parseOption(QStringList::ConstIterator &it,
                                const QStringList::ConstIterator &end,
                                Options *options)
 {
-    Q_UNUSED(end)
     const QString &option = *it;
+    if (option == QLatin1String("-libdir")) {
+        if (++it == end)
+            return false;
+        options->libraryDirectory = *it;
+        return true;
+    }
     if (option == QLatin1String("-no-plugins")) {
         options->plugins = false;
         return true;
@@ -670,8 +677,14 @@ static DeployResult deploy(const Options &options,
 
     // Update libraries
     if (options.libraries) {
+        QString targetPath = options.directory;
+        if (!options.libraryDirectory.isEmpty()) {
+            if (!createDirectory(options.libraryDirectory, errorMessage))
+                return result;
+            targetPath = options.libraryDirectory;
+        }
         foreach (const QString &qtLib, deployedQtLibraries) {
-            if (!updateFile(qtLib, options.directory, errorMessage))
+            if (!updateFile(qtLib, targetPath, errorMessage))
                 return result;
         }
     } // optLibraries

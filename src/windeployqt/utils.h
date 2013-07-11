@@ -61,6 +61,7 @@ inline QString normalizeFileName(const QString &name) { return name; }
 #endif // !Q_OS_WIN
 
 bool createSymbolicLink(const QFileInfo &source, const QString &target, QString *errorMessage);
+bool createDirectory(const QString &directory, QString *errorMessage);
 QString findInPath(const QString &file);
 QMap<QString, QString> queryQMakeAll(QString *errorMessage);
 QString queryQMake(const QString &variable, QString *errorMessage);
