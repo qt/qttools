@@ -70,6 +70,7 @@
 #include "cmdlineparser.h"
 
 // #define TRACING_REQUESTED
+// #define DEBUG_TRANSLATIONS
 
 QT_USE_NAMESPACE
 
@@ -284,13 +285,15 @@ bool unregisterDocumentation(QHelpEngineCore &collection,
 void setupTranslation(const QString &fileName, const QString &dir)
 {
     QTranslator *translator = new QTranslator(QCoreApplication::instance());
-    if (translator->load(fileName, dir)) {
+    if (translator->load(fileName, dir))
         QCoreApplication::installTranslator(translator);
-    } else if (!fileName.endsWith(QLatin1String("en_US"))
-            && !fileName.endsWith(QLatin1String("_C"))) {
-        qWarning("Could not load translation file %s in directory %s.",
-                 qPrintable(fileName), qPrintable(dir));
+#ifdef DEBUG_TRANSLATIONS
+    else if (!fileName.endsWith(QLatin1String("en_US"))
+             && !fileName.endsWith(QLatin1String("_C"))) {
+        qDebug("Could not load translation file %s in directory %s.",
+               qPrintable(fileName), qPrintable(dir));
     }
+#endif
 }
 
 void setupTranslations()

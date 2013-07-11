@@ -7,7 +7,10 @@ SUBDIRS=\
     qhelpgenerator \
     qhelpindexmodel \
     qhelpprojectdata \
-    cmake
+    cmake \
+    installed_cmake
+
+installed_cmake.depends = cmake
 
 # These tests don't make sense for cross-compiled builds
 cross_compile:SUBDIRS -= host.pro
