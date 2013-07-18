@@ -27,7 +27,6 @@ HEADERS += aboutdialog.h \
     helpviewer.h \
     helpviewer_p.h \
     indexwindow.h \
-    installdialog.h \
     mainwindow.h \
     preferencesdialog.h \
     qtdocinstaller.h \
@@ -59,7 +58,6 @@ SOURCES += aboutdialog.cpp \
     helpenginewrapper.cpp \
     helpviewer.cpp \
     indexwindow.cpp \
-    installdialog.cpp \
     main.cpp \
     mainwindow.cpp \
     preferencesdialog.cpp \
@@ -84,7 +82,6 @@ FORMS += bookmarkdialog.ui \
     bookmarkmanagerwidget.ui \
     bookmarkwidget.ui \
     filternamedialog.ui \
-    installdialog.ui \
     preferencesdialog.ui \
     topicchooser.ui
 

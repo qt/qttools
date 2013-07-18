@@ -44,7 +44,6 @@
 #include "filternamedialog.h"
 #include "fontpanel.h"
 #include "helpenginewrapper.h"
-#include "installdialog.h"
 #include "openpagesmanager.h"
 #include "tracer.h"
 
