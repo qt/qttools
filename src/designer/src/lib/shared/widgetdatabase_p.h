@@ -140,7 +140,6 @@ private:
     QIcon m_icon;
     uint m_compat: 1;
     uint m_container: 1;
-    uint m_form: 1;
     uint m_custom: 1;
     uint m_promoted: 1;
     QList<QVariant> m_defaultPropertyValues;
