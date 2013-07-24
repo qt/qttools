@@ -1824,7 +1824,10 @@ ProString QMakeEvaluator::first(const ProKey &variableName) const
 QMakeEvaluator::VisitReturn QMakeEvaluator::evaluateFile(
         const QString &fileName, QMakeHandler::EvalFileType type, LoadFlags flags)
 {
-    if (ProFile *pro = m_parser->parsedProFile(fileName, QMakeParser::ParseUseCache)) {
+    QMakeParser::ParseFlags pflags = QMakeParser::ParseUseCache;
+    if (!(flags & LoadSilent))
+        pflags |= QMakeParser::ParseReportMissing;
+    if (ProFile *pro = m_parser->parsedProFile(fileName, pflags)) {
         m_locationStack.push(m_current);
         VisitReturn ok = visitProFile(pro, type, flags);
         m_current = m_locationStack.pop();
@@ -1839,8 +1842,6 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::evaluateFile(
 #endif
         return ok;
     } else {
-        if (!(flags & LoadSilent) && !IoUtils::exists(fileName))
-            evalError(fL1S("WARNING: Include file %1 not found").arg(fileName));
         return ReturnFalse;
     }
 }
