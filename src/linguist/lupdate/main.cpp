@@ -436,7 +436,8 @@ static void processProjects(bool topLevel, bool nestComplain, const QStringList 
         visitor.setCumulative(true);
         visitor.setOutputDir(option->shadowedPath(proFile));
         ProFile *pro;
-        if (!(pro = parser->parsedProFile(proFile))) {
+        if (!(pro = parser->parsedProFile(proFile, topLevel ? QMakeParser::ParseReportMissing
+                                                            : QMakeParser::ParseDefault))) {
             if (topLevel)
                 *fail = true;
             continue;
