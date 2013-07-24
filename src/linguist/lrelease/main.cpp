@@ -322,10 +322,8 @@ int main(int argc, char **argv)
             visitor.setOutputDir(QDir::currentPath());
 
             ProFile *pro;
-            if (!(pro = parser.parsedProFile(QDir::cleanPath(fi.absoluteFilePath())))) {
-                printErr(LR::tr(
-                          "lrelease error: cannot read project file '%1'.\n")
-                          .arg(inputFile));
+            if (!(pro = parser.parsedProFile(QDir::cleanPath(fi.absoluteFilePath()),
+                                             QMakeParser::ParseReportMissing))) {
                 continue;
             }
             if (!visitor.accept(pro)) {
