@@ -79,16 +79,14 @@ public:
     bool operator==(const HashString &other) const { return m_str == other.m_str; }
 private:
     QString m_str;
-    // qHash() of a QString is only 28 bits wide, so we can use
-    // the highest bit(s) as the "hash valid" flag.
-    mutable uint m_hash;
+    mutable uint m_hash; // We use the highest bit as a validity indicator (set => invalid)
     friend uint qHash(const HashString &str);
 };
 
 uint qHash(const HashString &str)
 {
     if (str.m_hash & 0x80000000)
-        str.m_hash = qHash(str.m_str);
+        str.m_hash = qHash(str.m_str) & 0x7fffffff;
     return str.m_hash;
 }
 
@@ -99,7 +97,7 @@ public:
     bool operator==(const HashStringList &other) const { return m_list == other.m_list; }
 private:
     QList<HashString> m_list;
-    mutable uint m_hash;
+    mutable uint m_hash; // We use the highest bit as a validity indicator (set => invalid)
     friend uint qHash(const HashStringList &list);
 };
 
@@ -108,8 +106,8 @@ uint qHash(const HashStringList &list)
     if (list.m_hash & 0x80000000) {
         uint hash = 0;
         foreach (const HashString &qs, list.m_list) {
-            hash ^= qHash(qs) ^ 0x0ad9f526;
-            hash = ((hash << 13) & 0x0fffffff) | (hash >> 15);
+            hash ^= qHash(qs) ^ 0x6ad9f526;
+            hash = ((hash << 13) & 0x7fffffff) | (hash >> 18);
         }
         list.m_hash = hash;
     }
