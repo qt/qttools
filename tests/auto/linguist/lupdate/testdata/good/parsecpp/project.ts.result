@@ -35,6 +35,19 @@ backslashed \ stuff.</source>
     </message>
 </context>
 <context>
+    <name>Class42</name>
+    <message>
+        <location filename="main.cpp" line="380"/>
+        <source>does that make sense?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="388"/>
+        <source>and does that?</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>Dialog2</name>
     <message numerus="yes">
         <location filename="main.cpp" line="70"/>

@@ -365,3 +365,25 @@ public:
 };
 
 const char TestClass::TEST_STRING[] = QT_TR_NOOP("Test value");
+
+
+
+// derivation from namespaced class
+class Class42 : public NameSchpase::YetMoreFun, Gui::BaseClass
+{
+    Q_OBJECT
+
+    Class42() :
+        NameSchpase::YetMoreFun(),
+        Gui::BaseClass()
+    {
+        tr("does that make sense?");
+    }
+};
+
+Class42::Class42() :
+    NameSchpase::YetMoreFun(),
+    Gui::BaseClass()
+{
+    tr("and does that?");
+}

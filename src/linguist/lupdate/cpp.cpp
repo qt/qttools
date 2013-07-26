@@ -293,7 +293,7 @@ private:
     enum {
         Tok_Eof, Tok_class, Tok_friend, Tok_namespace, Tok_using, Tok_return,
         Tok_tr, Tok_trUtf8, Tok_translate, Tok_translateUtf8, Tok_trid,
-        Tok_Q_OBJECT, Tok_Q_DECLARE_TR_FUNCTIONS,
+        Tok_Q_OBJECT, Tok_Q_DECLARE_TR_FUNCTIONS, Tok_Access,
         Tok_Ident, Tok_Comment, Tok_String, Tok_Arrow, Tok_Colon, Tok_ColonColon,
         Tok_Equals, Tok_LeftBracket, Tok_RightBracket,
         Tok_LeftBrace, Tok_RightBrace, Tok_LeftParen, Tok_RightParen, Tok_Comma, Tok_Semicolon,
@@ -499,6 +499,13 @@ STRING(tr);
 STRING(trUtf8);
 STRING(translate);
 STRING(using);
+STRING(private);
+STRING(protected);
+STRING(public);
+STRING(slots);
+STRING(signals);
+STRING(Q_SLOTS);
+STRING(Q_SIGNALS);
 
 uint CppParser::getToken()
 {
@@ -730,6 +737,8 @@ uint CppParser::getToken()
                     return Tok_translateUtf8;
                 if (yyWord == strQT_TRANSLATE_NOOP3_UTF8)
                     return Tok_translateUtf8;
+                if (yyWord == strQ_SLOTS || yyWord == strQ_SIGNALS)
+                    return Tok_Access;
                 break;
             case 'T':
                 // TR() for when all else fails
@@ -768,6 +777,10 @@ uint CppParser::getToken()
                         yyCh = getChar();
                 }
                 break;
+            case 'p':
+                if (yyWord == strpublic || yyWord == strprotected || yyWord == strprivate)
+                    return Tok_Access;
+                break;
             case 'q':
                 if (yyWord == strqtTrId)
                     return Tok_trid;
@@ -779,6 +792,8 @@ uint CppParser::getToken()
             case 's':
                 if (yyWord == strstruct)
                     return Tok_class;
+                if (yyWord == strslots || yyWord == strsignals)
+                    return Tok_Access;
                 break;
             case 't':
                 if (yyWord == strtr)
@@ -1658,7 +1673,6 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                 yyTok = getToken();
             break;
         case Tok_class:
-            yyTokColonSeen = false;
             /*
               Partial support for inlined functions.
             */
@@ -1727,7 +1741,6 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
             }
             break;
         case Tok_namespace:
-            yyTokColonSeen = false;
             yyTok = getToken();
             if (yyTok == Tok_Ident) {
                 text = yyWord;
@@ -2138,17 +2151,25 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                 msgid.clear();
                 extra.clear();
             }
-            yyTokColonSeen = false;
             yyTok = getToken();
             break;
+        case Tok_Access:
+            // Eat access specifiers, so their colons are not mistaken for c'tor initializer list starts
+            do {
+                yyTok = getToken();
+            } while (yyTok == Tok_Access); // Multiple specifiers are possible, e.g. "public slots"
+            if (yyTok == Tok_Colon)
+                goto case_default;
+            break;
         case Tok_Colon:
-            yyTokColonSeen = true;
-            // fallthrough
         case Tok_Equals:
-            if (!prospectiveContext.isEmpty()
-                && yyBraceDepth == namespaceDepths.count() && yyParenDepth == 0) {
-                pendingContext = prospectiveContext;
-                prospectiveContext.clear();
+            if (yyBraceDepth == namespaceDepths.count() && yyParenDepth == 0) {
+                if (!prospectiveContext.isEmpty()) {
+                    pendingContext = prospectiveContext;
+                    prospectiveContext.clear();
+                }
+                if (yyTok == Tok_Colon)
+                    yyTokColonSeen = true;
             }
             yyTok = getToken();
             break;
@@ -2158,10 +2179,10 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                 pendingContext = prospectiveContext;
                 prospectiveContext.clear();
             }
+            yyTokColonSeen = false;
             // fallthrough
         case Tok_LeftParen:
         case Tok_RightParen:
-            yyTokColonSeen = false;
             yyTok = getToken();
             break;
         default:
