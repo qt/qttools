@@ -403,7 +403,7 @@ void CentralWidget::previousPage()
 void CentralWidget::print()
 {
     TRACE_OBJ
-#ifndef QT_NO_PRINTER
+#if !defined(QT_NO_PRINTER) && !defined(QT_NO_PRINTDIALOG)
     initPrinter();
     QPrintDialog dlg(m_printer, this);
 
@@ -420,7 +420,7 @@ void CentralWidget::print()
 void CentralWidget::pageSetup()
 {
     TRACE_OBJ
-#ifndef QT_NO_PRINTER
+#if !defined(QT_NO_PRINTER) && !defined(QT_NO_PRINTDIALOG)
     initPrinter();
     QPageSetupDialog dlg(m_printer);
     dlg.exec();
@@ -430,7 +430,7 @@ void CentralWidget::pageSetup()
 void CentralWidget::printPreview()
 {
     TRACE_OBJ
-#ifndef QT_NO_PRINTER
+#if !defined(QT_NO_PRINTER) && !defined(QT_NO_PRINTDIALOG)
     initPrinter();
     QPrintPreviewDialog preview(m_printer, this);
     connect(&preview, SIGNAL(paintRequested(QPrinter*)),

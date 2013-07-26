@@ -1378,7 +1378,7 @@ void QDesignerActions::formWindowCountChanged()
 
 void QDesignerActions::printPreviewImage()
 {
-#ifndef QT_NO_PRINTER
+#if !defined(QT_NO_PRINTER) && !defined(QT_NO_PRINTDIALOG)
     QDesignerFormWindowInterface *fw = core()->formWindowManager()->activeFormWindow();
     if (!fw)
         return;
