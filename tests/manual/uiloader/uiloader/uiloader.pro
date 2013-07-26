@@ -1,5 +1,6 @@
-QT += widgets network testlib
-CONFIG += testcase
+requires(contains(QT_CONFIG,private_tests))
+QT += network network-private testlib
+qtHaveModule(widgets): QT += widgets
 
 TEMPLATE = app
 !embedded:QT += uitools

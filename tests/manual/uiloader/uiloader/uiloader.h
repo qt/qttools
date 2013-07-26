@@ -43,9 +43,10 @@
 
 #include <QHash>
 #include <QString>
-#include <QUrlInfo>
 #include <QList>
 #include <QImage>
+
+#include <private/qurlinfo_p.h>
 
 class uiLoader : public QObject
 {
