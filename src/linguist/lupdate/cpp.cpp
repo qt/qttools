@@ -2142,10 +2142,12 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
             yyTok = getToken();
             break;
         case Tok_Colon:
+            yyTokColonSeen = true;
+            // fallthrough
+        case Tok_Equals:
             if (!prospectiveContext.isEmpty()
                 && yyBraceDepth == namespaceDepths.count() && yyParenDepth == 0)
                 pendingContext = prospectiveContext;
-            yyTokColonSeen = true;
             yyTok = getToken();
             break;
         case Tok_LeftBrace:
@@ -2162,8 +2164,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
             if (!yyParenDepth)
                 prospectiveContext.clear();
             // fallthrough
-        case Tok_Equals: // for static initializers; other cases make no difference
-        case Tok_RightBracket: // ignoring indexing; same reason
+        case Tok_RightBracket: // ignoring indexing; for static initializers
         case_default:
             yyTok = getToken();
             break;

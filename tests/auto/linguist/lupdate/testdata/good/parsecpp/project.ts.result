@@ -292,6 +292,11 @@ backslashed \ stuff.</source>
         <comment>TestClass</comment>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="main.cpp" line="367"/>
+        <source>Test value</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Testing</name>

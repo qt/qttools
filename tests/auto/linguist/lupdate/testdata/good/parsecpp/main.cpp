@@ -352,3 +352,16 @@ void blubb()
     QMap<QString, QString> d;
     d[LotsaFun::tr("bracketed")] = "plain";
 }
+
+
+
+// QTBUG-9276 part 2: QT_TR_NOOP in static member initializers
+class TestClass
+{
+    Q_DECLARE_TR_FUNCTIONS(TestClass);
+
+public:
+    static const char TEST_STRING[];
+};
+
+const char TestClass::TEST_STRING[] = QT_TR_NOOP("Test value");
