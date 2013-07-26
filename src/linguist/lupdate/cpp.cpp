@@ -2146,14 +2146,18 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
             // fallthrough
         case Tok_Equals:
             if (!prospectiveContext.isEmpty()
-                && yyBraceDepth == namespaceDepths.count() && yyParenDepth == 0)
+                && yyBraceDepth == namespaceDepths.count() && yyParenDepth == 0) {
                 pendingContext = prospectiveContext;
+                prospectiveContext.clear();
+            }
             yyTok = getToken();
             break;
         case Tok_LeftBrace:
             if (!prospectiveContext.isEmpty()
-                && yyBraceDepth == namespaceDepths.count() + 1 && yyParenDepth == 0)
+                && yyBraceDepth == namespaceDepths.count() + 1 && yyParenDepth == 0) {
                 pendingContext = prospectiveContext;
+                prospectiveContext.clear();
+            }
             // fallthrough
         case Tok_LeftParen:
         case Tok_RightParen:
