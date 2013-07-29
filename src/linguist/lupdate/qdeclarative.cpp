@@ -460,7 +460,15 @@ static bool load(Translator &translator, const QString &filename, ConversionData
         return false;
     }
 
-    QString code = QTextStream(&file).readAll();
+    QString code;
+    if (!qmlMode) {
+        code = QTextStream(&file).readAll();
+    } else {
+        QTextStream ts(&file);
+        ts.setCodec("UTF-8");
+        ts.setAutoDetectUnicode(true);
+        code = ts.readAll();
+    }
 
     if (! qmlMode) {
         // fetch the optional pragma directives for Javascript files.
