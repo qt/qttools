@@ -343,3 +343,12 @@ void YetMoreFun::funStuff()
 }
 
 }
+
+
+
+// QTBUG-29998: tr() macro inside square brackets
+void blubb()
+{
+    QMap<QString, QString> d;
+    d[LotsaFun::tr("bracketed")] = "plain";
+}

@@ -1616,7 +1616,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
         // so they don't confuse our scoping of static initializers.
         // we enter the loop by either reading a left bracket or by an
         // #else popping the state.
-        if (yyBracketDepth) {
+        if (yyBracketDepth && yyBraceDepth == namespaceDepths.count()) {
             yyTok = getToken();
             continue;
         }
