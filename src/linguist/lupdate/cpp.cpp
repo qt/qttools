@@ -1711,7 +1711,9 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                     // a '::' token here.
                     do {
                         yyTok = getToken();
-                    } while (yyTok != Tok_LeftBrace && yyTok != Tok_Eof);
+                        if (yyTok == Tok_Eof)
+                            goto goteof;
+                    } while (yyTok != Tok_LeftBrace);
                 } else {
                     if (yyTok != Tok_LeftBrace) {
                         // Obviously a forward declaration. We skip those, as they
@@ -2198,6 +2200,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
         }
     }
 
+  goteof:
     if (yyBraceDepth != 0)
         yyMsg(yyBraceLineNo)
             << qPrintable(LU::tr("Unbalanced opening brace in C++ code"
