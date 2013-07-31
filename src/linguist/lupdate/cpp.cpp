@@ -824,7 +824,7 @@ uint CppParser::getToken()
             case '/':
                 yyCh = getChar();
                 if (yyCh == '/') {
-                    ushort *ptr = (ushort *)yyWord.unicode() + yyWord.length();
+                    ushort *ptr = (ushort *)yyWord.unicode();
                     do {
                         yyCh = getChar();
                         if (yyCh == EOF)
@@ -835,7 +835,7 @@ uint CppParser::getToken()
                     return Tok_Comment;
                 } else if (yyCh == '*') {
                     bool metAster = false;
-                    ushort *ptr = (ushort *)yyWord.unicode() + yyWord.length();
+                    ushort *ptr = (ushort *)yyWord.unicode();
 
                     forever {
                         yyCh = getChar();
@@ -859,7 +859,7 @@ uint CppParser::getToken()
                 }
                 break;
             case '"': {
-                ushort *ptr = (ushort *)yyWord.unicode() + yyWord.length();
+                ushort *ptr = (ushort *)yyWord.unicode();
                 yyCh = getChar();
                 while (yyCh != EOF && yyCh != '\n' && yyCh != '"') {
                     if (yyCh == '\\') {
