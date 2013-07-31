@@ -293,7 +293,7 @@ private:
     enum {
         Tok_Eof, Tok_class, Tok_friend, Tok_namespace, Tok_using, Tok_return,
         Tok_tr, Tok_trUtf8, Tok_translate, Tok_translateUtf8, Tok_trid,
-        Tok_Q_OBJECT, Tok_Q_DECLARE_TR_FUNCTIONS, Tok_Access,
+        Tok_Q_OBJECT, Tok_Q_DECLARE_TR_FUNCTIONS, Tok_Access, Tok_Cancel,
         Tok_Ident, Tok_Comment, Tok_String, Tok_Arrow, Tok_Colon, Tok_ColonColon,
         Tok_Equals, Tok_LeftBracket, Tok_RightBracket,
         Tok_LeftBrace, Tok_RightBrace, Tok_LeftParen, Tok_RightParen, Tok_Comma, Tok_Semicolon,
@@ -818,6 +818,8 @@ uint CppParser::getToken()
                     yyBraceDepth = yyMinBraceDepth;
                     yyMinBraceDepth = 0;
                     inDefine = false;
+                    yyCh = getChar();
+                    return Tok_Cancel; // Break out of any multi-token constructs
                 }
                 yyCh = getChar();
                 break;
@@ -1529,7 +1531,7 @@ bool CppParser::matchExpression()
             continue;
         } else if (yyTok == Tok_Arrow) {
             yyTok = getToken();
-        } else if (parenlevel == 0) {
+        } else if (parenlevel == 0 || yyTok == Tok_Cancel) {
             return false;
         }
     }
@@ -1713,6 +1715,8 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                         yyTok = getToken();
                         if (yyTok == Tok_Eof)
                             goto goteof;
+                        if (yyTok == Tok_Cancel)
+                            goto case_default;
                     } while (yyTok != Tok_LeftBrace);
                 } else {
                     if (yyTok != Tok_LeftBrace) {

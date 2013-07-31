@@ -136,7 +136,7 @@ class ForwardDecl;
   struct FT_Service_ ## name ## Rec_
 
 
-/* removing this comment will break this test */
+
 
 void Dialog2::func3()
 {
