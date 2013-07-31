@@ -832,6 +832,7 @@ uint CppParser::getToken()
                         *ptr++ = yyCh;
                     } while (yyCh != '\n');
                     yyWord.resize(ptr - (ushort *)yyWord.unicode());
+                    return Tok_Comment;
                 } else if (yyCh == '*') {
                     bool metAster = false;
                     ushort *ptr = (ushort *)yyWord.unicode() + yyWord.length();
@@ -854,8 +855,9 @@ uint CppParser::getToken()
                     yyWord.resize(ptr - (ushort *)yyWord.unicode() - 2);
 
                     yyCh = getChar();
+                    return Tok_Comment;
                 }
-                return Tok_Comment;
+                break;
             case '"': {
                 ushort *ptr = (ushort *)yyWord.unicode() + yyWord.length();
                 yyCh = getChar();
