@@ -365,36 +365,24 @@ Translator merge(
                     if (mvi < 0) {
                         // did not find it in the virgin, mark it as obsolete
                         goto makeObsolete;
-                    } else {
-                        mv = &virginTor.constMessage(mvi);
-                        // Do not just accept it if its on the same line number,
-                        // but different source text.
-                        // Also check if the texts are more or less similar before
-                        // we consider them to represent the same message...
-                        if (getSimilarityScore(m.sourceText(), mv->sourceText()) >= textSimilarityThreshold) {
-                            // It is just slightly modified, assume that it is the same string
-
-                            // Mark it as unfinished. (Since the source text
-                            // was changed it might require re-translating...)
-                            newType = TranslatorMessage::Unfinished;
-                            ++similarTextHeuristicCount;
-                            neww++;
-
-                          outdateSource:
-                            m.setOldSourceText(m.sourceText());
-                            m.setSourceText(mv->sourceText());
-                            const QString &oldpluralsource = m.extra(QLatin1String("po-msgid_plural"));
-                            if (!oldpluralsource.isEmpty()) {
-                                m.setExtra(QLatin1String("po-old_msgid_plural"), oldpluralsource);
-                                m.unsetExtra(QLatin1String("po-msgid_plural"));
-                            }
-                            goto copyAttribs; // Update secondary references
-                        } else {
-                            // The virgin and vernacular sourceTexts are so
-                            // different that we could not find it.
-                            goto makeObsolete;
-                        }
                     }
+                    mv = &virginTor.constMessage(mvi);
+                    // Do not just accept it if its on the same line number,
+                    // but different source text.
+                    // Also check if the texts are more or less similar before
+                    // we consider them to represent the same message...
+                    if (getSimilarityScore(m.sourceText(), mv->sourceText()) < textSimilarityThreshold) {
+                        // The virgin and vernacular sourceTexts are so different that we could not find it
+                        goto makeObsolete;
+                    }
+                    // It is just slightly modified, assume that it is the same string
+
+                    // Mark it as unfinished. (Since the source text
+                    // was changed it might require re-translating...)
+                    newType = TranslatorMessage::Unfinished;
+                    ++similarTextHeuristicCount;
+                    neww++;
+                    goto outdateSource;
                 }
             } else {
                 mv = &virginTor.message(mvi);
@@ -406,8 +394,16 @@ Translator merge(
                     newType = TranslatorMessage::Unfinished;
                     m.setContext(mv->context());
                     m.setComment(mv->comment());
-                    if (mv->sourceText() != m.sourceText())
-                        goto outdateSource;
+                    if (mv->sourceText() != m.sourceText()) {
+                      outdateSource:
+                        m.setOldSourceText(m.sourceText());
+                        m.setSourceText(mv->sourceText());
+                        const QString &oldpluralsource = m.extra(QLatin1String("po-msgid_plural"));
+                        if (!oldpluralsource.isEmpty()) {
+                            m.setExtra(QLatin1String("po-old_msgid_plural"), oldpluralsource);
+                            m.unsetExtra(QLatin1String("po-msgid_plural"));
+                        }
+                    }
                 } else {
                     switch (m.type()) {
                     case TranslatorMessage::Finished:
@@ -434,7 +430,6 @@ Translator merge(
                 // This should also enable us to read a file that does not
                 // have the <location> element.
                 // why not use operator=()? Because it overwrites e.g. userData.
-              copyAttribs:
                 m.setReferences(mv->allReferences());
                 m.setPlural(mv->isPlural());
                 m.setExtraComment(mv->extraComment());
