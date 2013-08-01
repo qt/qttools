@@ -329,6 +329,7 @@ private:
     // Parser state
     uint yyTok;
 
+    bool metaExpected;
     QString context;
     QString text;
     QString comment;
@@ -829,6 +830,7 @@ uint CppParser::getToken()
                     yyBraceDepth = yyMinBraceDepth;
                     yyMinBraceDepth = 0;
                     inDefine = false;
+                    metaExpected = true;
                     yyCh = getChar();
                     return Tok_Cancel; // Break out of any multi-token constructs
                 }
@@ -1627,6 +1629,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
 #endif
     int line;
     bool yyTokColonSeen = false; // Start of c'tor's initializer list
+    metaExpected = true;
 
     yyWord.reserve(yyInStr.size()); // Rather insane. That's because we do no length checking.
     yyInPtr = (const ushort *)yyInStr.unicode();
@@ -1745,6 +1748,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                 prospectiveContext.clear();
                 pendingContext.clear();
 
+                metaExpected = true;
                 yyTok = getToken();
             }
             break;
@@ -1763,6 +1767,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                     functionContextUnresolved.clear();
                     prospectiveContext.clear();
                     pendingContext.clear();
+                    metaExpected = true;
                     yyTok = getToken();
                 } else if (yyTok == Tok_Equals) {
                     // e.g. namespace Is = OuterSpace::InnerSpace;
@@ -1786,6 +1791,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
             } else if (yyTok == Tok_LeftBrace) {
                 // Anonymous namespace
                 namespaceDepths.push(namespaces.count());
+                metaExpected = true;
                 yyTok = getToken();
             }
             break;
@@ -1935,6 +1941,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
             extracomment.clear();
             msgid.clear();
             extra.clear();
+            metaExpected = false;
             yyTok = getToken();
             break;
         case Tok_translateUtf8:
@@ -1991,6 +1998,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
             extracomment.clear();
             msgid.clear();
             extra.clear();
+            metaExpected = false;
             yyTok = getToken();
             break;
         case Tok_trid:
@@ -2009,6 +2017,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
             extracomment.clear();
             msgid.clear();
             extra.clear();
+            metaExpected = false;
             break;
         case Tok_Q_DECLARE_TR_FUNCTIONS:
             if (getMacroArgs()) {
@@ -2032,6 +2041,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                 if (yyTok == Tok_Ident && !yyParenDepth)
                     prospectiveContext.clear();
             }
+            metaExpected = false;
             break;
         case Tok_Arrow:
             yyTok = getToken();
@@ -2075,6 +2085,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                 msgid.clear();
                 extra.clear();
             }
+            metaExpected = true;
             yyTok = getToken();
             break;
         case Tok_Access:
@@ -2082,6 +2093,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
             do {
                 yyTok = getToken();
             } while (yyTok == Tok_Access); // Multiple specifiers are possible, e.g. "public slots"
+            metaExpected = true;
             if (yyTok == Tok_Colon)
                 goto case_default;
             break;
@@ -2095,6 +2107,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                 if (yyTok == Tok_Colon)
                     yyTokColonSeen = true;
             }
+            metaExpected = true;
             yyTok = getToken();
             break;
         case Tok_LeftBrace:
@@ -2105,8 +2118,13 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
             }
             yyTokColonSeen = false;
             // fallthrough
+        case Tok_Comma:
         case Tok_LeftParen:
+            metaExpected = true;
+            yyTok = getToken();
+            break;
         case Tok_RightParen:
+            metaExpected = false;
             yyTok = getToken();
             break;
         default:
@@ -2137,7 +2155,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
 
 void CppParser::processComment()
 {
-    if (!tor)
+    if (!tor || !metaExpected)
         return;
 
     const QChar *ptr = yyWord.unicode();

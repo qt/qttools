@@ -43,7 +43,7 @@
 
 
 //: This is a comment, too.
-QT_TRANSLATE_NOOP("context", "just a message")
+QT_TRANSLATE_NOOP("context", "just a message");
 
 
 
