@@ -226,7 +226,6 @@ class ButtonWrapper : public QWidget
 public:
     ButtonWrapper(QWidget *wrapee, QWidget *relator) : m_wrapee(wrapee)
     {
-        setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Ignored);
         QBoxLayout *box = new QVBoxLayout;
         box->setMargin(0);
         setLayout(box);
@@ -240,7 +239,7 @@ protected:
     {
         if (event->type() == QEvent::Resize) {
             QWidget *relator = static_cast<QWidget *>(object);
-            setFixedHeight((relator->height() + layout()->spacing() + m_wrapee->height()) / 2);
+            setFixedHeight(relator->height());
         }
         return false;
     }
@@ -334,20 +333,33 @@ void FormMultiWidget::updateLayout()
 
     bool variants = m_multiEnabled && m_label->isEnabled();
 
-    layout->addWidget(m_label, 0, 0, 1, variants ? 3 : 1);
+    layout->addWidget(m_label, 0, 0, 1, variants ? 2 : 1);
 
-    for (int i = 0; i < m_plusButtons.count(); ++i) {
-        if (variants)
-            layout->addWidget(m_plusButtons.at(i), 1 + i * 2, 0, 2, 1, Qt::AlignTop);
+    if (variants) {
+        QVBoxLayout *layoutForPlusButtons = new QVBoxLayout;
+        layoutForPlusButtons->setMargin(0);
+        for (int i = 0; i < m_plusButtons.count(); ++i)
+            layoutForPlusButtons->addWidget(m_plusButtons.at(i), Qt::AlignTop);
+        layout->addLayout(layoutForPlusButtons, 1, 0);
+
+        QGridLayout *layoutForLabels = new QGridLayout;
+        layoutForLabels->setMargin(0);
+        layoutForLabels->setRowMinimumHeight(0, m_plusButtons.at(0)->height()/2.0);
+        for (int j = 0; j < m_editors.count(); ++j) {
+            layoutForLabels->addWidget(m_editors.at(j), 1 + j, 0, Qt::AlignVCenter);
+            layoutForLabels->addWidget(m_minusButtons.at(j), 1 + j, 1, Qt::AlignVCenter);
+        }
+        layoutForLabels->setRowMinimumHeight(m_editors.count() + 1, m_plusButtons.at(0)->height()/2.0);
+        layout->addLayout(layoutForLabels, 1, 1);
+    } else {
+        for (int k = 0; k < m_editors.count(); ++k)
+            layout->addWidget(m_editors.at(k), 1 + k, 0, Qt::AlignVCenter);
+    }
+
+    for (int i = 0; i < m_plusButtons.count(); ++i)
         m_plusButtons.at(i)->setVisible(variants);
-    }
-    for (int j = 0; j < m_minusButtons.count(); ++j) {
-        if (variants)
-            layout->addWidget(m_minusButtons.at(j), 2 + j * 2, 2, 2, 1, Qt::AlignVCenter);
+    for (int j = 0; j < m_minusButtons.count(); ++j)
         m_minusButtons.at(j)->setVisible(variants);
-    }
-    for (int k = 0; k < m_editors.count(); ++k)
-        layout->addWidget(m_editors.at(k), 2 + k * 2, variants ? 1 : 0, 2, 1, Qt::AlignVCenter);
 
     updateGeometry();
 }
