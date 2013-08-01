@@ -30,6 +30,7 @@
     \title Qt UI Tools C++ Classes
     \since 4.1
     \ingroup modules
+    \qtvariable uitools
 
     \brief Provides classes to handle forms created with Qt Designer.
 
