@@ -351,6 +351,7 @@ Translator merge(
             if (mvi >= 0)
                 m.setComment(virginTor.constMessage(mvi).comment());
         } else {
+            TranslatorMessage::ExtraData extras;
             const TranslatorMessage *mv;
             int mvi = virginTor.find(m);
             if (mvi < 0) {
@@ -377,6 +378,8 @@ Translator merge(
                     }
                     // It is just slightly modified, assume that it is the same string
 
+                    extras = mv->extras();
+
                     // Mark it as unfinished. (Since the source text
                     // was changed it might require re-translating...)
                     newType = TranslatorMessage::Unfinished;
@@ -386,6 +389,7 @@ Translator merge(
                 }
             } else {
                 mv = &virginTor.message(mvi);
+                extras = mv->extras();
                 if (!mv->id().isEmpty()
                     && (mv->context() != m.context()
                         || mv->sourceText() != m.sourceText()
@@ -399,10 +403,8 @@ Translator merge(
                         m.setOldSourceText(m.sourceText());
                         m.setSourceText(mv->sourceText());
                         const QString &oldpluralsource = m.extra(QLatin1String("po-msgid_plural"));
-                        if (!oldpluralsource.isEmpty()) {
-                            m.setExtra(QLatin1String("po-old_msgid_plural"), oldpluralsource);
-                            m.unsetExtra(QLatin1String("po-msgid_plural"));
-                        }
+                        if (!oldpluralsource.isEmpty())
+                            extras.insert(QLatin1String("po-old_msgid_plural"), oldpluralsource);
                     }
                 } else {
                     switch (m.type()) {
@@ -432,6 +434,7 @@ Translator merge(
                 // why not use operator=()? Because it overwrites e.g. userData.
                 m.setReferences(mv->allReferences());
                 m.setPlural(mv->isPlural());
+                m.setExtras(extras);
                 m.setExtraComment(mv->extraComment());
                 m.setId(mv->id());
             }

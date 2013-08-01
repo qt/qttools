@@ -6,6 +6,7 @@
         <location filename="finddialog.cpp" line="70"/>
         <source>Hello</source>
         <translation>Hallo</translation>
+        <extra-meta>something really clever</extra-meta>
     </message>
     <message id="xx_world">
         <location filename="finddialog.cpp" line="73"/>
