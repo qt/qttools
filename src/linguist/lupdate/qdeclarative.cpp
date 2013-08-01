@@ -76,8 +76,9 @@ static QString MagicComment(QLatin1String("TRANSLATOR"));
 class FindTrCalls: protected AST::Visitor
 {
 public:
-    FindTrCalls(Engine *engine)
+    FindTrCalls(Engine *engine, ConversionData &cd)
         : engine(engine)
+        , m_cd(cd)
     {
     }
 
@@ -140,7 +141,7 @@ protected:
                 msg.setExtraComment(extracomment.simplified());
                 msg.setId(msgid);
                 msg.setExtras(extra);
-                m_translator->extend(msg);
+                m_translator->extend(msg, m_cd);
                 consumeComment();
             } else if (name == QLatin1String("qsTranslate") ||
                        name == QLatin1String("QT_TRANSLATE_NOOP")) {
@@ -184,7 +185,7 @@ protected:
                 msg.setExtraComment(extracomment.simplified());
                 msg.setId(msgid);
                 msg.setExtras(extra);
-                m_translator->extend(msg);
+                m_translator->extend(msg, m_cd);
                 consumeComment();
             } else if (name == QLatin1String("qsTrId") ||
                        name == QLatin1String("QT_TRID_NOOP")) {
@@ -213,7 +214,7 @@ protected:
                 msg.setExtraComment(extracomment.simplified());
                 msg.setId(id);
                 msg.setExtras(extra);
-                m_translator->extend(msg);
+                m_translator->extend(msg, m_cd);
                 consumeComment();
             }
         }
@@ -248,6 +249,7 @@ private:
 
     Engine *engine;
     Translator *m_translator;
+    ConversionData &m_cd;
     QString m_fileName;
     QString m_component;
 
@@ -496,7 +498,7 @@ static bool load(Translator &translator, const QString &filename, ConversionData
     driver.setLexer(&lexer);
 
     if (qmlMode ? parser.parse() : parser.parseProgram()) {
-        FindTrCalls trCalls(&driver);
+        FindTrCalls trCalls(&driver, cd);
 
         //find all tr calls in the code
         trCalls(&translator, filename, parser.rootNode());

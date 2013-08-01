@@ -137,13 +137,42 @@ void Translator::replaceSorted(const TranslatorMessage &msg)
     }
 }
 
-void Translator::extend(const TranslatorMessage &msg)
+static QString elidedId(const QString &id, int len)
+{
+    return id.length() <= len ? id : id.left(len - 5) + QLatin1String("[...]");
+}
+
+static QString makeMsgId(const TranslatorMessage &msg)
+{
+    QString id = msg.context() + QLatin1String("//") + elidedId(msg.sourceText(), 100);
+    if (!msg.comment().isEmpty())
+        id += QLatin1String("//") + elidedId(msg.comment(), 30);
+    return id;
+}
+
+void Translator::extend(const TranslatorMessage &msg, ConversionData &cd)
 {
     int index = find(msg);
     if (index == -1) {
         append(msg);
     } else {
         TranslatorMessage &emsg = m_messages[index];
+        if (emsg.sourceText().isEmpty()) {
+            emsg.setSourceText(msg.sourceText());
+        } else if (!msg.sourceText().isEmpty() && emsg.sourceText() != msg.sourceText()) {
+            cd.appendError(QString::fromLatin1("Contradicting source strings for message with id '%1'.")
+                           .arg(emsg.id()));
+            return;
+        }
+        if (emsg.extras().isEmpty()) {
+            emsg.setExtras(msg.extras());
+        } else if (!msg.extras().isEmpty() && emsg.extras() != msg.extras()) {
+            cd.appendError(QString::fromLatin1("Contradicting meta data for for %1.")
+                           .arg(!emsg.id().isEmpty()
+                                ? QString::fromLatin1("message with id '%1'").arg(emsg.id())
+                                : QString::fromLatin1("message '%1'").arg(makeMsgId(msg))));
+            return;
+        }
         emsg.addReferenceUniq(msg.fileName(), msg.lineNumber());
         if (!msg.extraComment().isEmpty()) {
             QString cmt = emsg.extraComment();
