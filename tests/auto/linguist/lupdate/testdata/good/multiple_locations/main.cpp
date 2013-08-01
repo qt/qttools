@@ -68,3 +68,8 @@ QObject::tr("another message", "here with a lot of noise in the comment so it is
 
 //~ meta too-much-meta
 QObject::tr("another message", "here with a lot of noise in the comment so it is long enough");
+
+
+
+//: commented
+qtTrId("lollipop");

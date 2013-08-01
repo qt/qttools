@@ -6,6 +6,7 @@
     <message id="lollipop">
         <location filename="main.cpp" line="51"/>
         <location filename="main.cpp" line="56"/>
+        <location filename="main.cpp" line="75"/>
         <source>this is the source text</source>
         <extracomment>commented
 ----------

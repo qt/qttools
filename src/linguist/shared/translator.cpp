@@ -176,9 +176,15 @@ void Translator::extend(const TranslatorMessage &msg, ConversionData &cd)
         emsg.addReferenceUniq(msg.fileName(), msg.lineNumber());
         if (!msg.extraComment().isEmpty()) {
             QString cmt = emsg.extraComment();
-            if (!cmt.isEmpty())
-                cmt.append(QLatin1String("\n----------\n"));
-            cmt.append(msg.extraComment());
+            if (!cmt.isEmpty()) {
+                QStringList cmts = cmt.split(QLatin1String("\n----------\n"));
+                if (!cmts.contains(msg.extraComment())) {
+                    cmts.append(msg.extraComment());
+                    cmt = cmts.join(QLatin1String("\n----------\n"));
+                }
+            } else {
+                cmt = msg.extraComment();
+            }
             emsg.setExtraComment(cmt);
         }
     }
