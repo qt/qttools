@@ -125,3 +125,8 @@ QApplication::translate("QObject", "Hello World");
 //% "Baz"
 clear = me;
 QObject::tr("Hello World");
+
+
+
+// QTBUG-11843: complain about missing source in id-based messages
+qtTrId("no_source");

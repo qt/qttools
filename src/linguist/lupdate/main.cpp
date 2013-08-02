@@ -287,6 +287,13 @@ static void updateTsFiles(const Translator &fetchedTor, const QStringList &tsFil
     const QString &sourceLanguage, const QString &targetLanguage,
     UpdateOptions options, bool *fail)
 {
+    for (int i = 0; i < fetchedTor.messageCount(); i++) {
+        const TranslatorMessage &msg = fetchedTor.constMessage(i);
+        if (!msg.id().isEmpty() && msg.sourceText().isEmpty())
+            printErr(LU::tr("lupdate warning: Message with id '%1' has no source.\n")
+                     .arg(msg.id()));
+    }
+
     QList<Translator> aliens;
     foreach (const QString &fileName, alienFiles) {
         ConversionData cd;
