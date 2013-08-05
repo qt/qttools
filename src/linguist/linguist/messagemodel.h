@@ -87,7 +87,8 @@ public:
     void setType(TranslatorMessage::Type type) { m_message.setType(type); }
 
     bool isFinished() const { return type() == TranslatorMessage::Finished; }
-    bool isObsolete() const { return type() == TranslatorMessage::Obsolete; }
+    bool isObsolete() const
+        { return type() == TranslatorMessage::Obsolete || type() == TranslatorMessage::Vanished; }
     const TranslatorMessage &message() const { return m_message; }
 
     bool compare(const QString &findText, bool matchSubstring,

@@ -29,3 +29,15 @@ msgid ""
 msgstr ""
 "%1 wird angemeldet ...\n"
 "\n"
+
+#: kgverify.cpp:460
+#, fuzzy, kde-format
+#~| msgid ""
+#~| "Logging out %1 ...\n"
+#~| "\n"
+#~ msgid ""
+#~ "Logging out %1...\n"
+#~ "\n"
+#~ msgstr ""
+#~ "%1 wird abgemeldet ...\n"
+#~ "\n"

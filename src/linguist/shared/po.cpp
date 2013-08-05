@@ -415,6 +415,7 @@ bool loadPO(Translator &translator, QIODevice &dev, ConversionData &cd)
     // #, flag...
     // #~ msgctxt, msgid*, msgstr - used for obsoleted messages
     // #| msgctxt, msgid* previous untranslated-string - for fuzzy message
+    // #~| msgctxt, msgid* previous untranslated-string - for fuzzy obsoleted messages
     // msgctx string-context
     // msgid untranslated-string
     // -- For singular:
@@ -587,9 +588,12 @@ bool loadPO(Translator &translator, QIODevice &dev, ConversionData &cd)
                 translations << str;
             }
             msg.setTranslations(translations);
-            if (isObsolete)
+            bool isFuzzy = item.isFuzzy || (!msg.sourceText().isEmpty() && !msg.isTranslated());
+            if (isObsolete && isFuzzy)
                 msg.setType(TranslatorMessage::Obsolete);
-            else if (item.isFuzzy || (!msg.sourceText().isEmpty() && !msg.isTranslated()))
+            else if (isObsolete)
+                msg.setType(TranslatorMessage::Vanished);
+            else if (isFuzzy)
                 msg.setType(TranslatorMessage::Unfinished);
             else
                 msg.setType(TranslatorMessage::Finished);
@@ -668,6 +672,17 @@ bool loadPO(Translator &translator, QIODevice &dev, ConversionData &cd)
                         item.tscomment = slurpEscapedString(lines, l, 11, "#~ ", cd);
                         if (qtContexts)
                             splitContext(&item.tscomment, &item.context);
+                    } else if (line.startsWith("#~| msgid ")) {
+                        item.oldMsgId = slurpEscapedString(lines, l, 10, "#~| ", cd);
+                    } else if (line.startsWith("#~| msgid_plural ")) {
+                        QByteArray extra = slurpEscapedString(lines, l, 17, "#~| ", cd);
+                        if (extra != item.oldMsgId)
+                            item.extra[QLatin1String("po-old_msgid_plural")] =
+                                    codec->toUnicode(extra);
+                    } else if (line.startsWith("#~| msgctxt ")) {
+                        item.oldTscomment = slurpEscapedString(lines, l, 12, "#~| ", cd);
+                        if (qtContexts)
+                            splitContext(&item.oldTscomment, &item.context);
                     } else {
                         cd.appendError(QString(QLatin1String("PO-format parse error in line %1: '%2'"))
                             .arg(l + 1).arg(codec->toUnicode(lines[l])));
@@ -795,7 +810,8 @@ bool savePO(const Translator &translator, QIODevice &dev, ConversionData &)
         bool noWrap = false;
         bool skipFormat = false;
         QStringList flags;
-        if (msg.type() == TranslatorMessage::Unfinished && msg.isTranslated())
+        if ((msg.type() == TranslatorMessage::Unfinished
+             || msg.type() == TranslatorMessage::Obsolete) && msg.isTranslated())
             flags.append(QLatin1String("fuzzy"));
         TranslatorMessage::ExtraData::const_iterator itr =
                 msg.extras().find(QLatin1String("po-flags"));
@@ -826,7 +842,9 @@ bool savePO(const Translator &translator, QIODevice &dev, ConversionData &)
         if (!flags.isEmpty())
             out << "#, " << flags.join(QLatin1String(", ")) << '\n';
 
-        QString prefix = QLatin1String("#| ");
+        bool isObsolete = (msg.type() == TranslatorMessage::Obsolete
+                           || msg.type() == TranslatorMessage::Vanished);
+        QString prefix = QLatin1String(isObsolete ? "#~| " : "#| ");
         if (!msg.oldComment().isEmpty())
             out << poEscapedString(prefix, QLatin1String("msgctxt"), noWrap,
                                    escapeComment(msg.oldComment(), qtContexts));
@@ -835,7 +853,7 @@ bool savePO(const Translator &translator, QIODevice &dev, ConversionData &)
         QString plural = msg.extra(QLatin1String("po-old_msgid_plural"));
         if (!plural.isEmpty())
             out << poEscapedString(prefix, QLatin1String("msgid_plural"), noWrap, plural);
-        prefix = QLatin1String((msg.type() == TranslatorMessage::Obsolete) ? "#~ " : "");
+        prefix = QLatin1String(isObsolete ? "#~ " : "");
         if (!msg.context().isEmpty())
             out << poEscapedString(prefix, QLatin1String("msgctxt"), noWrap,
                                    escapeComment(msg.context(), true) + QLatin1Char('|')

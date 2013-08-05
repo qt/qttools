@@ -660,7 +660,8 @@ void MessageEditor::showMessage(const MultiDataIndex &index)
         }
 
         setEditingEnabled(j, m_dataModel->isModelWritable(j)
-                             && item->message().type() != TranslatorMessage::Obsolete);
+                             && item->message().type() != TranslatorMessage::Obsolete
+                             && item->message().type() != TranslatorMessage::Vanished);
 
         // Translation label
         ed.pluralEditMode = item->translations().count() > 1;

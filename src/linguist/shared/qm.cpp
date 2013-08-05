@@ -661,7 +661,7 @@ bool saveQM(const Translator &translator, QIODevice &dev, ConversionData &cd)
     for (int i = 0; i != translator.messageCount(); ++i) {
         const TranslatorMessage &msg = translator.message(i);
         TranslatorMessage::Type typ = msg.type();
-        if (typ != TranslatorMessage::Obsolete) {
+        if (typ != TranslatorMessage::Obsolete && typ != TranslatorMessage::Vanished) {
             if (cd.m_idBased && msg.id().isEmpty()) {
                 ++missingIds;
                 continue;

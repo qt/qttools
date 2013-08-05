@@ -266,7 +266,7 @@ bool DataModel::load(const QString &fileName, bool *langGuessed, QWidget *parent
             MessageItem tmp(msg);
             if (msg.type() == TranslatorMessage::Finished)
                 c->incrementFinishedCount();
-            if (msg.type() != TranslatorMessage::Obsolete) {
+            if (msg.type() == TranslatorMessage::Unfinished) {
                 doCharCounting(tmp.text(), m_srcWords, m_srcChars, m_srcCharsSpc);
                 doCharCounting(tmp.pluralText(), m_srcWords, m_srcChars, m_srcCharsSpc);
                 c->incrementNonobsoleteCount();

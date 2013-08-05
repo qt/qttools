@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0">
+<TS version="2.1">
 <context>
     <name>Dialog2</name>
     <message numerus="yes">
@@ -113,16 +113,16 @@
         <location filename="main.cpp" line="41"/>
         <source>Plurals, QCoreApplication</source>
         <comment>%n car(s)</comment>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>looks quite finished</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location filename="main.cpp" line="42"/>
         <source>Plurals, QCoreApplication</source>
         <comment>%n horse(s)</comment>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation type="vanished">
+            <numerusform>looks kinda vanished</numerusform>
         </translation>
     </message>
 </context>
@@ -138,13 +138,13 @@
         <location filename="main.cpp" line="120"/>
         <source>inline function 2</source>
         <comment>TestClass</comment>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">just fine here</translation>
     </message>
     <message>
         <location filename="main.cpp" line="124"/>
         <source>static inline function</source>
         <comment>TestClass</comment>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">not quite fine here</translation>
     </message>
 </context>
 <context>

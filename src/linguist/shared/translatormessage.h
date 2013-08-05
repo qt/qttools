@@ -54,7 +54,7 @@ enum TranslatorSaveMode { SaveEverything, SaveStripped };
 class TranslatorMessage
 {
 public:
-    enum Type { Unfinished, Finished, Obsolete };
+    enum Type { Unfinished, Finished, Vanished, Obsolete };
     typedef QHash<QString, QString> ExtraData;
     class Reference
     {

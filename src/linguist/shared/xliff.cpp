@@ -281,12 +281,16 @@ static void writeTransUnits(QTextStream &ts, const TranslatorMessage &msg, const
     while (srcit != srcend || oldsrcit != oldsrcend || transit != transend) {
         QByteArray attribs;
         QByteArray state;
-        if (msg.type() == TranslatorMessage::Obsolete) {
-            if (!msg.isPlural())
-                attribs = " translate=\"no\"";
-        } else if (msg.type() == TranslatorMessage::Finished) {
-            attribs = " approved=\"yes\"";
-        } else if (transit != transend && !transit->isEmpty()) {
+        if ((msg.type() == TranslatorMessage::Obsolete
+             || msg.type() == TranslatorMessage::Vanished)
+            && !msg.isPlural()) {
+            attribs = " translate=\"no\"";
+        }
+        if (msg.type() == TranslatorMessage::Finished
+            || msg.type() == TranslatorMessage::Vanished) {
+            attribs += " approved=\"yes\"";
+        } else if (msg.type() == TranslatorMessage::Unfinished
+                   && transit != transend && !transit->isEmpty()) {
             state = " state=\"needs-review-translation\"";
         }
         writeIndent(ts, indent);
@@ -360,7 +364,7 @@ static void writeMessage(QTextStream &ts, const TranslatorMessage &msg, const QR
         ts << "<group restype=\"" << restypePlurals << "\"";
         if (!msg.id().isEmpty())
             ts << " id=\"" << msg.id() << "\"";
-        if (msg.type() == TranslatorMessage::Obsolete)
+        if (msg.type() == TranslatorMessage::Obsolete || msg.type() == TranslatorMessage::Vanished)
             ts << " translate=\"no\"";
         ts << ">\n";
         ++indent;
@@ -421,7 +425,6 @@ private:
 private:
     Translator &m_translator;
     ConversionData &m_cd;
-    TranslatorMessage::Type m_type;
     QString m_language;
     QString m_sourceLanguage;
     QString m_context;
@@ -432,6 +435,8 @@ private:
     QString m_oldComment;
     QString m_extraComment;
     QString m_translatorComment;
+    bool m_translate;
+    bool m_approved;
     bool m_isPlural;
     bool m_hadAlt;
     QStringList m_translations;
@@ -451,7 +456,8 @@ private:
 
 XLIFFHandler::XLIFFHandler(Translator &translator, ConversionData &cd)
   : m_translator(translator), m_cd(cd),
-    m_type(TranslatorMessage::Finished),
+    m_translate(true),
+    m_approved(true),
     m_lineNumber(-1),
     m_URITT(QLatin1String(TrollTsNamespaceURI)),
     m_URI(QLatin1String(XLIFF11namespaceURI)),
@@ -519,7 +525,7 @@ bool XLIFFHandler::startElement(const QString& namespaceURI,
                 pushContext(XC_restype_plurals);
                 m_id = atts.value(QLatin1String("id"));
                 if (atts.value(QLatin1String("translate")) == QLatin1String("no"))
-                    m_type = TranslatorMessage::Obsolete;
+                    m_translate = false;
             } else {
                 pushContext(XC_group);
             }
@@ -527,15 +533,14 @@ bool XLIFFHandler::startElement(const QString& namespaceURI,
     } else if (localName == QLatin1String("trans-unit")) {
         if (!hasContext(XC_restype_plurals) || m_sources.isEmpty() /* who knows ... */)
             if (atts.value(QLatin1String("translate")) == QLatin1String("no"))
-                m_type = TranslatorMessage::Obsolete;
+                m_translate = false;
         if (!hasContext(XC_restype_plurals)) {
             m_id = atts.value(QLatin1String("id"));
             if (m_id.startsWith(QLatin1String("_msg")))
                 m_id.clear();
         }
-        if (m_type != TranslatorMessage::Obsolete &&
-            atts.value(QLatin1String("approved")) != QLatin1String("yes"))
-            m_type = TranslatorMessage::Unfinished;
+        if (atts.value(QLatin1String("approved")) != QLatin1String("yes"))
+            m_approved = false;
         pushContext(XC_trans_unit);
         m_hadAlt = false;
     } else if (localName == QLatin1String("alt-trans")) {
@@ -697,12 +702,15 @@ bool XLIFFHandler::finalizeMessage(bool isPlural)
         m_cd.appendError(QLatin1String("XLIFF syntax error: Message without source string."));
         return false;
     }
-    if (m_type == TranslatorMessage::Obsolete && m_refs.size() == 1
+    if (!m_translate && m_refs.size() == 1
         && m_refs.at(0).fileName() == QLatin1String(MAGIC_OBSOLETE_REFERENCE))
         m_refs.clear();
+    TranslatorMessage::Type type
+            = m_translate ? (m_approved ? TranslatorMessage::Finished : TranslatorMessage::Unfinished)
+                          : (m_approved ? TranslatorMessage::Vanished : TranslatorMessage::Obsolete);
     TranslatorMessage msg(m_context, m_sources[0],
                           m_comment, QString(), QString(), -1,
-                          m_translations, m_type, isPlural);
+                          m_translations, type, isPlural);
     msg.setId(m_id);
     msg.setReferences(m_refs);
     msg.setOldComment(m_oldComment);
@@ -729,7 +737,8 @@ bool XLIFFHandler::finalizeMessage(bool isPlural)
     m_translatorComment.clear();
     m_extra.clear();
     m_refs.clear();
-    m_type = TranslatorMessage::Finished;
+    m_translate = true;
+    m_approved = true;
     return true;
 }
 

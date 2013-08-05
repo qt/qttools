@@ -227,6 +227,7 @@ bool TSReader::read(Translator &translator)
     STRING(unfinished);
     STRING(userdata);
     STRING(value);
+    STRING(vanished);
     //STRING(version);
     STRING(yes);
 
@@ -388,6 +389,8 @@ bool TSReader::read(Translator &translator)
                                     QStringRef type = atts.value(strtype);
                                     if (type == strunfinished)
                                         msg.setType(TranslatorMessage::Unfinished);
+                                    else if (type == strvanished)
+                                        msg.setType(TranslatorMessage::Vanished);
                                     else if (type == strobsolete)
                                         msg.setType(TranslatorMessage::Obsolete);
                                     if (msg.isPlural()) {
@@ -531,7 +534,7 @@ bool saveTS(const Translator &translator, QIODevice &dev, ConversionData &cd)
     // The xml prolog allows processors to easily detect the correct encoding
     t << "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<!DOCTYPE TS>\n";
 
-    t << "<TS version=\"2.0\"";
+    t << "<TS version=\"2.1\"";
 
     QString languageCode = translator.languageCode();
     if (!languageCode.isEmpty() && languageCode != QLatin1String("C"))
@@ -557,8 +560,10 @@ bool saveTS(const Translator &translator, QIODevice &dev, ConversionData &cd)
     QList<QString> contextOrder;
     foreach (const TranslatorMessage &msg, translator.messages()) {
         // no need for such noise
-        if (msg.type() == TranslatorMessage::Obsolete && msg.translation().isEmpty())
+        if ((msg.type() == TranslatorMessage::Obsolete || msg.type() == TranslatorMessage::Vanished)
+            && msg.translation().isEmpty()) {
             continue;
+        }
 
         QList<TranslatorMessage> &context = messageOrder[msg.context()];
         if (context.isEmpty())
@@ -649,6 +654,8 @@ bool saveTS(const Translator &translator, QIODevice &dev, ConversionData &cd)
                 t << "        <translation";
                 if (msg.type() == TranslatorMessage::Unfinished)
                     t << " type=\"unfinished\"";
+                else if (msg.type() == TranslatorMessage::Vanished)
+                    t << " type=\"vanished\"";
                 else if (msg.type() == TranslatorMessage::Obsolete)
                     t << " type=\"obsolete\"";
                 if (msg.isPlural()) {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0">
+<TS version="2.1">
 <context>
     <name></name>
     <message id="keep_id">
@@ -17,7 +17,7 @@
     <name>FindDialog</name>
     <message>
         <source>Enter the text you are looking for.</source>
-        <translation type="obsolete">Skriv inn teksten du soker etter</translation>
+        <translation type="vanished">Skriv inn teksten du soker etter</translation>
     </message>
     <message>
         <location filename="finddialog.cpp" line="88"/>

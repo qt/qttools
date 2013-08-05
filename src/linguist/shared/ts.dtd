@@ -4,6 +4,7 @@
  !
  ! The location element is set as optional since it was introduced first in Qt 4.2.
  ! The userdata element is set as optional since it was introduced first in Qt 4.4.
+ ! The vanished message type was introduced first in Qt 5.2.
  !
   -->
 <!-- 
@@ -88,7 +89,7 @@
  ! variants may not be yes if the message has numerus yes.
   -->
 <!ATTLIST translation
-          type (unfinished|obsolete) #IMPLIED
+          type (unfinished|vanished|obsolete) #IMPLIED
           variants (yes|no) "no">
 <!-- Deprecated. Use extra-* -->
 <!ELEMENT userdata (#PCDATA)* >

@@ -936,6 +936,7 @@ void MainWindow::print()
                             type = m->danger() ? tr("unresolved") : QLatin1String("unfinished");
                             break;
                         case TranslatorMessage::Obsolete:
+                        case TranslatorMessage::Vanished:
                             type = tr("obsolete");
                             break;
                         }
@@ -1620,7 +1621,8 @@ void MainWindow::toggleFinished(const QModelIndex &index)
     MultiDataIndex dataIndex = m_messageModel->dataIndex(item);
     MessageItem *m = m_dataModel->messageItem(dataIndex);
 
-    if (!m || m->message().type() == TranslatorMessage::Obsolete)
+    if (!m || m->message().type() == TranslatorMessage::Obsolete
+           || m->message().type() == TranslatorMessage::Vanished)
         return;
 
     m_dataModel->setFinished(dataIndex, !m->isFinished());

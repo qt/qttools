@@ -395,7 +395,7 @@ int Translator::find(const QString &context) const
 void Translator::stripObsoleteMessages()
 {
     for (TMM::Iterator it = m_messages.begin(); it != m_messages.end(); )
-        if (it->type() == TranslatorMessage::Obsolete)
+        if (it->type() == TranslatorMessage::Obsolete || it->type() == TranslatorMessage::Vanished)
             it = m_messages.erase(it);
         else
             ++it;

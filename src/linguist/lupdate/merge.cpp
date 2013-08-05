@@ -356,9 +356,19 @@ Translator merge(
             if (mvi < 0) {
                 if (!(options & HeuristicSimilarText)) {
                   makeObsolete:
-                    newType = TranslatorMessage::Obsolete;
-                    if (m.type() != TranslatorMessage::Obsolete)
+                    switch (m.type()) {
+                    case TranslatorMessage::Finished:
+                        newType = TranslatorMessage::Vanished;
                         obsoleted++;
+                        break;
+                    case TranslatorMessage::Unfinished:
+                        newType = TranslatorMessage::Obsolete;
+                        obsoleted++;
+                        break;
+                    default:
+                        newType = m.type();
+                        break;
+                    }
                     m.clearReferences();
                 } else {
                     mvi = virginTor.find(m.context(), m.comment(), m.allReferences());
@@ -423,9 +433,14 @@ Translator merge(
                         newType = TranslatorMessage::Unfinished;
                         known++;
                         break;
+                    case TranslatorMessage::Vanished:
+                        newType = TranslatorMessage::Finished;
+                        neww++;
+                        break;
                     case TranslatorMessage::Obsolete:
                         newType = TranslatorMessage::Unfinished;
                         neww++;
+                        break;
                     }
                 }
 
@@ -499,7 +514,8 @@ Translator merge(
                  * will offer them as possible translations.
                  */
                 mv.clearReferences();
-                mv.setType(TranslatorMessage::Obsolete);
+                mv.setType(mv.type() == TranslatorMessage::Finished
+                           ? TranslatorMessage::Vanished : TranslatorMessage::Obsolete);
                 if (options & NoLocations)
                     outTor.append(mv);
                 else

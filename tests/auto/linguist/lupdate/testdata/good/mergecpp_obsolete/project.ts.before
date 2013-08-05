@@ -18,7 +18,7 @@
     <message>
         <location filename="finddialog.cpp" line="85"/>
         <source>Enter the text you are looking for.</source>
-        <translation type="unfinished">Skriv inn teksten du soker etter</translation>
+        <translation>Skriv inn teksten du soker etter</translation>
     </message>
     <message>
         <location filename="finddialog.cpp" line="135"/>

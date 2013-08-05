@@ -38,12 +38,12 @@
     <message>
         <location filename="finddialog.cpp" line="58"/>
         <source>Search reached start of the document</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete"></translation>
     </message>
     <message>
         <location filename="finddialog.cpp" line="59"/>
         <source>Text not found</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">text not found (in chinese)</translation>
     </message>
     <message numerus="yes">
         <location filename="finddialog.cpp" line="64"/>

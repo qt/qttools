@@ -202,6 +202,7 @@ void tst_lconvert::readverifies_data()
     QTest::addColumn<QString>("fileName");
     QTest::addColumn<QString>("format");
 
+    QTest::newRow("ts") << "test20.ts" << "ts";
     QTest::newRow("empty comment") << "test-empty-comment.po" << "po";
     QTest::newRow("translator comment") << "test-translator-comment.po" << "po";
     QTest::newRow("developer comment") << "test-developer-comment.po" << "po";
