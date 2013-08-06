@@ -394,3 +394,8 @@ Class42::Class42() :
 Class42::hello(int something /*= 17 */, QString str = Class42::tr("eyo"))
 {
 }
+
+
+
+// QTBUG-27974: strings from included sources are not collected
+#include "included.cpp"
