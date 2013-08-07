@@ -249,8 +249,7 @@ public:
     virtual void message(int type, const QString &msg, const QString &fileName, int lineNo)
         { if (verbose) print(fileName, lineNo, type, msg); }
 
-    virtual void fileMessage(const QString &msg)
-        { printErr(msg + QLatin1Char('\n')); }
+    virtual void fileMessage(const QString &) {}
 
     virtual void aboutToEval(ProFile *, ProFile *, EvalFileType) {}
     virtual void doneWithEval(ProFile *) {}
