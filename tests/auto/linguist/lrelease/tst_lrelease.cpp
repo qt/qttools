@@ -141,11 +141,11 @@ void tst_lrelease::translate()
     QCOMPARE(QCoreApplication::translate("", "Test", "Empty context"), QString("AAAA"));
 
     // Test plurals
-    QString txed = QCoreApplication::translate("Plurals", "There are %n houses", 0, QCoreApplication::UnicodeUTF8, 0);
+    QString txed = QCoreApplication::translate("Plurals", "There are %n houses", 0, 0);
     QCOMPARE(QString::fromLatin1("[%1]").arg(txed), QString("[There are 0 houses]"));
-    QCOMPARE(QCoreApplication::translate("Plurals", "There are %n houses", 0, QCoreApplication::UnicodeUTF8, 1), QString("There is 1 house"));
-    QCOMPARE(QCoreApplication::translate("Plurals", "There are %n houses", 0, QCoreApplication::UnicodeUTF8, 2), QString("There are 2 houses"));
-    QCOMPARE(QCoreApplication::translate("Plurals", "There are %n houses", 0, QCoreApplication::UnicodeUTF8, 3), QString("There are 3 houses"));
+    QCOMPARE(QCoreApplication::translate("Plurals", "There are %n houses", 0, 1), QString("There is 1 house"));
+    QCOMPARE(QCoreApplication::translate("Plurals", "There are %n houses", 0, 2), QString("There are 2 houses"));
+    QCOMPARE(QCoreApplication::translate("Plurals", "There are %n houses", 0, 3), QString("There are 3 houses"));
 
 
     // More plurals
