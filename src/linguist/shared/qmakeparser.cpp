@@ -153,7 +153,7 @@ QMakeParser::QMakeParser(ProFileCache *cache, QMakeParserHandler *handler)
 ProFile *QMakeParser::parsedProFile(const QString &fileName, ParseFlags flags)
 {
     ProFile *pro;
-    if ((flags && ParseUseCache) && m_cache) {
+    if ((flags & ParseUseCache) && m_cache) {
         ProFileCache::Entry *ent;
 #ifdef PROPARSER_THREAD_SAFE
         QMutexLocker locker(&m_cache->mutex);
@@ -232,7 +232,7 @@ bool QMakeParser::read(ProFile *pro, ParseFlags flags)
 {
     QFile file(pro->fileName());
     if (!file.open(QIODevice::ReadOnly)) {
-        if (m_handler && ((flags && ParseReportMissing) || IoUtils::exists(pro->fileName())))
+        if (m_handler && ((flags & ParseReportMissing) || IoUtils::exists(pro->fileName())))
             m_handler->message(QMakeParserHandler::ParserIoError,
                                fL1S("Cannot read %1: %2").arg(pro->fileName(), file.errorString()));
         return false;
