@@ -247,7 +247,10 @@ static void print(const QString &fileName, int lineNo, int type, const QString &
 class EvalHandler : public QMakeHandler {
 public:
     virtual void message(int type, const QString &msg, const QString &fileName, int lineNo)
-        { if (verbose) print(fileName, lineNo, type, msg); }
+    {
+        if (verbose && (type & CategoryMask) == ErrorMessage)
+            print(fileName, lineNo, type, msg);
+    }
 
     virtual void fileMessage(const QString &) {}
 
