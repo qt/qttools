@@ -1,4 +1,3 @@
 SOURCES += src\\main.cpp
 
 TRANSLATIONS = ts\\project.ts
-DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0
