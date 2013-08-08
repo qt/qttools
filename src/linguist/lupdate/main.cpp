@@ -229,6 +229,8 @@ static void printUsage()
         "           different file suffix. Projects are recursed into and merged.\n"
         "    -pro-out <directory>\n"
         "           Virtual output directory for processing subsequent .pro files.\n"
+        "    -pro-debug\n"
+        "           Trace processing .pro files. Specify twice for more verbosity.\n"
         "    -source-language <language>[_<region>]\n"
         "           Specify the language of the source strings for new files.\n"
         "           Defaults to POSIX if not specified.\n"
@@ -693,6 +695,7 @@ int main(int argc, char **argv)
     UpdateOptions options =
         Verbose | // verbose is on by default starting with Qt 4.2
         HeuristicSameText | HeuristicSimilarText | HeuristicNumber;
+    int proDebug = 0;
     int numFiles = 0;
     bool metTsFlag = false;
     bool recursiveScan = true;
@@ -719,6 +722,9 @@ int main(int argc, char **argv)
             continue;
         } else if (arg == QLatin1String("-silent")) {
             options &= ~Verbose;
+            continue;
+        } else if (arg == QLatin1String("-pro-debug")) {
+            proDebug++;
             continue;
         } else if (arg == QLatin1String("-target-language")) {
             ++i;
@@ -996,6 +1002,7 @@ int main(int argc, char **argv)
         option.qmake_abslocation = QString::fromLocal8Bit(qgetenv("QMAKE"));
         if (option.qmake_abslocation.isEmpty())
             option.qmake_abslocation = app.applicationDirPath() + QLatin1String("/qmake");
+        option.debugLevel = proDebug;
         option.initProperties();
         option.setCommandLineArguments(QDir::currentPath(),
                                        QStringList() << QLatin1String("CONFIG+=lupdate_run"));
