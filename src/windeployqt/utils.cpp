@@ -98,7 +98,7 @@ bool createDirectory(const QString &directory, QString *errorMessage)
         return false;
     }
     if (optVerboseLevel)
-        std::fprintf(stderr, "Creating %s...\n", qPrintable(QDir::toNativeSeparators(directory)));
+        std::printf("Creating %s...\n", qPrintable(QDir::toNativeSeparators(directory)));
     QDir dir;
     if (!dir.mkpath(directory)) {
         *errorMessage = QString::fromLatin1("Could not create directory %1.").
@@ -244,7 +244,7 @@ bool runProcess(const QString &binary, const QStringList &args,
     foreach (const QString &a, args)
         appendToCommandLine(a, &commandLine);
     if (optVerboseLevel > 1)
-        std::fprintf(stderr, "Running: %s\n", qPrintable(commandLine));
+        std::printf("Running: %s\n", qPrintable(commandLine));
 
     QScopedArrayPointer<wchar_t> commandLineW(new wchar_t[commandLine.size() + 1]);
     commandLine.toWCharArray(commandLineW.data());
@@ -478,7 +478,7 @@ bool updateFile(const QString &sourceFileName, const QStringList &nameFilters,
     const QFileInfo sourceFileInfo(sourceFileName);
     const QString targetFileName = targetDirectory + QLatin1Char('/') + sourceFileInfo.fileName();
     if (optVerboseLevel > 1)
-        std::fprintf(stderr, "Checking %s, %s\n", qPrintable(sourceFileName), qPrintable(targetFileName));
+        std::printf("Checking %s, %s\n", qPrintable(sourceFileName), qPrintable(targetFileName));
 
     if (!sourceFileInfo.exists()) {
         *errorMessage = QString::fromLatin1("%1 does not exist.").arg(QDir::toNativeSeparators(sourceFileName));
@@ -502,7 +502,8 @@ bool updateFile(const QString &sourceFileName, const QStringList &nameFilters,
             } // Not a directory.
         } else { // exists.
             QDir d(targetDirectory);
-            std::printf("Creating %s.\n", qPrintable( QDir::toNativeSeparators(targetFileName)));
+            if (optVerboseLevel)
+                std::printf("Creating %s.\n", qPrintable( QDir::toNativeSeparators(targetFileName)));
             if (!d.mkdir(sourceFileInfo.fileName())) {
                 *errorMessage = QString::fromLatin1("Cannot create directory %1 under %2.")
                                 .arg(sourceFileInfo.fileName(), QDir::toNativeSeparators(targetDirectory));
@@ -704,8 +705,8 @@ bool readPeExecutable(const QString &peExecutableFileName, QString *errorMessage
             *isDebugIn = debug;
         result = true;
         if (optVerboseLevel > 1)
-            std::fprintf(stderr, "%s: %s %u bit, debug: %d\n", __FUNCTION__,
-                         qPrintable(peExecutableFileName), wordSize, debug);
+            std::printf("%s: %s %u bit, debug: %d\n", __FUNCTION__,
+                        qPrintable(peExecutableFileName), wordSize, debug);
     } while (false);
 
     if (fileMemory)
