@@ -752,7 +752,7 @@ void MainWindow::removeSubstitute()
     if (row > ui->substitutionsListBox->count())
         row = ui->substitutionsListBox->count() - 1;
     ui->substitutionsListBox->setCurrentRow(row);
-    QFont::removeSubstitution(ui->familySubstitutionCombo->currentText());
+    QFont::removeSubstitutions(ui->familySubstitutionCombo->currentText());
     QFont::insertSubstitutions(ui->familySubstitutionCombo->currentText(), subs);
     setModified(true);
 }
@@ -791,7 +791,7 @@ void MainWindow::downSubstitute()
     ui->substitutionsListBox->clear();
     ui->substitutionsListBox->insertItems(0, subs);
     ui->substitutionsListBox->setCurrentRow(row + 1);
-    QFont::removeSubstitution(ui->familySubstitutionCombo->currentText());
+    QFont::removeSubstitutions(ui->familySubstitutionCombo->currentText());
     QFont::insertSubstitutions(ui->familySubstitutionCombo->currentText(), subs);
     setModified(true);
 }
@@ -809,7 +809,7 @@ void MainWindow::upSubstitute()
     ui->substitutionsListBox->clear();
     ui->substitutionsListBox->insertItems(0, subs);
     ui->substitutionsListBox->setCurrentRow(row - 1);
-    QFont::removeSubstitution(ui->familySubstitutionCombo->currentText());
+    QFont::removeSubstitutions(ui->familySubstitutionCombo->currentText());
     QFont::insertSubstitutions(ui->familySubstitutionCombo->currentText(), subs);
     setModified(true);
 }
