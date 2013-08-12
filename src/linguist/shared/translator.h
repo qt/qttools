@@ -134,7 +134,7 @@ public:
     int find(const QString &context) const;
 
     void replaceSorted(const TranslatorMessage &msg);
-    void extend(const TranslatorMessage &msg); // Only for single-location messages
+    void extend(const TranslatorMessage &msg, ConversionData &cd); // Only for single-location messages
     void append(const TranslatorMessage &msg);
     void appendSorted(const TranslatorMessage &msg);
 

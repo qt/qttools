@@ -11,22 +11,24 @@ qtNomakeTools( \
 
 win32:CMAKE_BIN_SUFFIX = ".exe"
 
-CMAKE_QT_INSTALL_PREFIX_ESCAPED = "^$$re_escape($$[QT_INSTALL_PREFIX])/"
-win32:CMAKE_QT_INSTALL_PREFIX_ESCAPED ~= s,\\\\,/
+load(cmake_functions)
 
-CMAKE_LIB_DIR = $$replace($$list($$[QT_INSTALL_LIBS]), \\\\, /)/
-contains(CMAKE_LIB_DIR, "$${CMAKE_QT_INSTALL_PREFIX_ESCAPED}.*") {
-    CMAKE_LIB_DIR = $$replace(CMAKE_LIB_DIR, "$$CMAKE_QT_INSTALL_PREFIX_ESCAPED", )
-    CMAKE_RELATIVE_INSTALL_DIR = $$replace(CMAKE_LIB_DIR, "[^/]+", ..)
+CMAKE_INSTALL_LIBS_DIR = $$cmakeTargetPath($$[QT_INSTALL_LIBS])
+contains(CMAKE_INSTALL_LIBS_DIR, ^(/usr)?/lib(64)?.*): CMAKE_USR_MOVE_WORKAROUND = $$CMAKE_INSTALL_LIBS_DIR
+
+CMAKE_LIB_DIR = $$cmakeRelativePath($$[QT_INSTALL_LIBS], $$[QT_INSTALL_PREFIX])
+!contains(CMAKE_LIB_DIR,"^\\.\\./.*") {
+    CMAKE_RELATIVE_INSTALL_DIR = $$cmakeRelativePath($$[QT_INSTALL_PREFIX], $$[QT_INSTALL_LIBS])
     # We need to go up another two levels because the CMake files are
     # installed in $${CMAKE_LIB_DIR}/cmake/Qt5$${CMAKE_MODULE_NAME}
-    CMAKE_RELATIVE_INSTALL_DIR = "$${CMAKE_RELATIVE_INSTALL_DIR}/../../"
+    CMAKE_RELATIVE_INSTALL_DIR = "$${CMAKE_RELATIVE_INSTALL_DIR}../../"
+} else {
+    CMAKE_LIB_DIR_IS_ABSOLUTE = True
 }
 
-CMAKE_BIN_DIR = $$replace($$list($$[QT_INSTALL_BINS]), \\\\, /)/
-contains(CMAKE_BIN_DIR, "$${CMAKE_QT_INSTALL_PREFIX_ESCAPED}.*") {
-    CMAKE_BIN_DIR = $$replace(CMAKE_BIN_DIR, "$$CMAKE_QT_INSTALL_PREFIX_ESCAPED", )
-} else {
+CMAKE_BIN_DIR = $$cmakeRelativePath($$[QT_HOST_BINS], $$[QT_INSTALL_PREFIX])
+contains(CMAKE_BIN_DIR, "^\\.\\./.*") {
+    CMAKE_BIN_DIR = $$[QT_HOST_BINS]/
     CMAKE_BIN_DIR_IS_ABSOLUTE = True
 }
 

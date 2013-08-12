@@ -62,7 +62,7 @@ RemoteControl::RemoteControl(QWidget *parent, Qt::WindowFlags flags)
     QTextStream(&rc) << QLatin1String("qthelp://org.qt-project.qtdoc.")
                      << (QT_VERSION >> 16) << ((QT_VERSION >> 8) & 0xFF)
                      << (QT_VERSION & 0xFF)
-                     << QLatin1String("/qdoc/index.html");
+                     << QLatin1String("/qtdoc/index.html");
 
     ui.startUrlLineEdit->setText(rc);
 

@@ -3,7 +3,7 @@
 ** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
-** This file is part of the QtCore module of the Qt Toolkit.
+** This file is part of the test suite of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -38,32 +38,73 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
+#ifndef ATWRAPPER_H
+#define ATWRAPPER_H
 
-// IMPORTANT!!!! If you want to add testdata to this file, 
-// always add it to the end in order to not change the linenumbers of translations!!!
+#include <QHash>
+#include <QString>
+#include <QList>
+#include <QImage>
 
-// nothing here
+#include <private/qurlinfo_p.h>
 
-// sickness: multi-\
-line c++ comment } (with brace)
+class uiLoader : public QObject
+{
+    Q_OBJECT
 
-#define This is a closing brace } which was ignored
-} // complain here
+    public:
+        uiLoader(const QString &pathToProgram);
 
-#define This is another \
-    closing brace } which was ignored
-} // complain here
+        enum TestResult { TestRunDone, TestConfigError, TestNoConfig };
+        TestResult runAutoTests(QString *errorMessage);
 
-#define This is another /* comment in } define */\
-     something /* comment )
-       spanning {multiple} lines */ \
-    closing brace } which was ignored
-} // complain here
+    private:
+        bool loadConfig(const QString &, QString *errorMessage);
+        void initTests();
 
-#define This is another // comment in } define \
-     something } comment
-} // complain here
+        void setupFTP();
+        void setupLocal();
+        void clearDirectory(const QString&);
 
-char somestring[] = "\
-    continued\n\
-    here and \"quoted\" to activate\n";
+        void ftpMkDir( QString );
+        void ftpGetFiles(QList<QString>&, const QString&,  const QString&);
+        void ftpList(const QString&);
+        void ftpClearDirectory(const QString&);
+        bool ftpUploadFile(const QString&, const QString&);
+        void executeTests();
+
+        void createBaseline();
+        void downloadBaseline();
+
+        bool compare();
+
+        void diff(const QString&, const QString&, const QString&);
+        int imgDiff(const QString fileA, const QString fileB, const QString output);
+        QStringList uiFiles() const;
+    
+        QHash<QString, QString> enginesToTest;
+
+        QString framework;
+        QString suite;
+        QString output;
+        QString ftpUser;
+        QString ftpPass;
+        QString ftpHost;
+        QString ftpBaseDir;
+        QString threshold;
+
+        QString errorMsg;
+
+        QList<QString> lsDirList;
+        QList<QString> lsNeedBaseline;
+
+        QString configPath;
+        
+        QString pathToProgram;
+
+    private slots:
+        //void ftpAddLsDone( bool );
+        void ftpAddLsEntry( const QUrlInfo &urlInfo );
+};
+
+#endif

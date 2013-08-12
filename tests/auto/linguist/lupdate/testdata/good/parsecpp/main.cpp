@@ -136,7 +136,7 @@ class ForwardDecl;
   struct FT_Service_ ## name ## Rec_
 
 
-/* removing this comment will break this test */
+
 
 void Dialog2::func3()
 {
@@ -191,12 +191,12 @@ class Testing : QObject {
 
 //: extra comment for NOOP
 //: which spans multiple lines
-QT_TRANSLATE_NOOP("scope", "string") // 4.4 says the line of this is at the next statement
+QT_TRANSLATE_NOOP("scope", "string") /*: complain & ignore */; // 4.4 says the line of this is at the next statement
 //: extra comment for NOOP3
-QT_TRANSLATE_NOOP3_UTF8("scope", "string", "comment") // 4.4 doesn't see this
+QT_TRANSLATE_NOOP3_UTF8("scope", "string", "comment"); // 4.4 doesn't see this
 
 QT_TRANSLATE_NOOP("scope", "string " // this is an interleaved comment
-                  "continuation on next line")
+                  "continuation on next line");
 
 
 class TestingTake17 : QObject {
@@ -223,7 +223,7 @@ class TestingTake17 : QObject {
 //: again an extra comment, this time for id-based NOOP
 //% "This is supposed\tto be quoted \" newline\n"
 //% "backslashed \\ stuff."
-QT_TRID_NOOP("this_a_id")
+QT_TRID_NOOP("this_a_id");
 
 //~ some thing
 //% "This needs to be here. Really."
@@ -343,3 +343,59 @@ void YetMoreFun::funStuff()
 }
 
 }
+
+
+
+// QTBUG-29998: tr() macro inside square brackets
+void blubb()
+{
+    QMap<QString, QString> d;
+    d[LotsaFun::tr("bracketed")] = "plain";
+}
+
+
+
+// QTBUG-9276 part 2: QT_TR_NOOP in static member initializers
+class TestClass
+{
+    Q_DECLARE_TR_FUNCTIONS(TestClass);
+
+public:
+    static const char TEST_STRING[];
+};
+
+const char TestClass::TEST_STRING[] = QT_TR_NOOP("Test value");
+
+
+
+// derivation from namespaced class
+class Class42 : public NameSchpase::YetMoreFun, Gui::BaseClass
+{
+    Q_OBJECT
+
+    Class42() :
+        NameSchpase::YetMoreFun(),
+        Gui::BaseClass()
+    {
+        tr("does that make sense?");
+    }
+};
+
+Class42::Class42() :
+    NameSchpase::YetMoreFun(),
+    Gui::BaseClass()
+{
+    tr("and does that?");
+}
+
+
+
+// QTBUG-11866: magic comment parsing is too greedy
+Class42::hello(int something /*= 17 */, QString str = Class42::tr("eyo"))
+{
+}
+
+
+
+// QTBUG-27974: strings from included sources are not collected
+#include "included.cpp"

@@ -65,7 +65,7 @@ void FindDialog::reset()
     tr("%n item(s)", "merge from a finished singular form to an unfinished plural form", 4);
 
 
-
+    //~ meta matter
     //% "Hello"
     qtTrId("xx_hello");
 

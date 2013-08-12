@@ -76,8 +76,9 @@ static QString MagicComment(QLatin1String("TRANSLATOR"));
 class FindTrCalls: protected AST::Visitor
 {
 public:
-    FindTrCalls(Engine *engine)
+    FindTrCalls(Engine *engine, ConversionData &cd)
         : engine(engine)
+        , m_cd(cd)
     {
     }
 
@@ -141,7 +142,7 @@ protected:
                 msg.setExtraComment(extracomment.simplified());
                 msg.setId(msgid);
                 msg.setExtras(extra);
-                m_translator->extend(msg);
+                m_translator->extend(msg, m_cd);
                 consumeComment();
                 break; }
             case TrFunctionAliasManager::Function_qsTranslate:
@@ -186,7 +187,7 @@ protected:
                 msg.setExtraComment(extracomment.simplified());
                 msg.setId(msgid);
                 msg.setExtras(extra);
-                m_translator->extend(msg);
+                m_translator->extend(msg, m_cd);
                 consumeComment();
                 break; }
             case TrFunctionAliasManager::Function_qsTrId:
@@ -216,7 +217,7 @@ protected:
                 msg.setExtraComment(extracomment.simplified());
                 msg.setId(id);
                 msg.setExtras(extra);
-                m_translator->extend(msg);
+                m_translator->extend(msg, m_cd);
                 consumeComment();
                 break; }
             }
@@ -252,6 +253,7 @@ private:
 
     Engine *engine;
     Translator *m_translator;
+    ConversionData &m_cd;
     QString m_fileName;
     QString m_component;
 
@@ -464,7 +466,15 @@ static bool load(Translator &translator, const QString &filename, ConversionData
         return false;
     }
 
-    QString code = QTextStream(&file).readAll();
+    QString code;
+    if (!qmlMode) {
+        code = QTextStream(&file).readAll();
+    } else {
+        QTextStream ts(&file);
+        ts.setCodec("UTF-8");
+        ts.setAutoDetectUnicode(true);
+        code = ts.readAll();
+    }
 
     if (! qmlMode) {
         // fetch the optional pragma directives for Javascript files.
@@ -492,7 +502,7 @@ static bool load(Translator &translator, const QString &filename, ConversionData
     driver.setLexer(&lexer);
 
     if (qmlMode ? parser.parse() : parser.parseProgram()) {
-        FindTrCalls trCalls(&driver);
+        FindTrCalls trCalls(&driver, cd);
 
         //find all tr calls in the code
         trCalls(&translator, filename, parser.rootNode());

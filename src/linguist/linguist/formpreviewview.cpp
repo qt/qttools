@@ -511,6 +511,7 @@ void FormPreviewView::setSourceContext(int model, MessageItem *messageItem)
         m_form->setFocusPolicy(Qt::NoFocus);
         m_form->show(); // needed, otherwide the Qt::NoFocus is not propagated.
         m_mdiSubWindow->setWidget(m_form);
+        m_mdiSubWindow->setWindowTitle(m_form->windowTitle());
         m_mdiSubWindow->show();
         m_mdiArea->cascadeSubWindows();
         m_lastFormName = fileName;

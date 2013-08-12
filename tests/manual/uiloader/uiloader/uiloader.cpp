@@ -53,7 +53,6 @@
 #include <QString>
 #include <QHash>
 #include <QFile>
-#include <QFtp>
 #include <QObject>
 #include <QHostInfo>
 #include <QWidget>
@@ -61,6 +60,8 @@
 
 #include <QLibraryInfo>
 
+#include <private/qurlinfo_p.h>
+#include <private/qftp_p.h>
 
 /*
  * Our own QVERIFY since the one from QTest can't be used in non-void functions.
@@ -143,7 +144,7 @@ bool uiLoader::loadConfig(const QString &filePath, QString *errorMessage)
     settings.endArray();
 
     output = settings.value(QLatin1String("output")).toString();
-    output += QDir::separator() + QLibraryInfo::buildKey() + QDir::separator() + QString( qVersion() );
+    output += QDir::separator() + QString("QLibraryInfo::buildKey()") + QDir::separator() + QString( qVersion() );
     ftpUser = settings.value( QLatin1String("ftpUser") ).toString();
     ftpPass = settings.value( QLatin1String("ftpPass") ).toString();
     ftpHost = settings.value( QLatin1String("ftpHost") ).toString();
@@ -330,7 +331,7 @@ void uiLoader::setupFTP()
 
     // create dirs on ftp server
     ftpMkDir( ftpBaseDir );
-    ftpBaseDir += "/" + QLibraryInfo::buildKey();
+    ftpBaseDir += "/" + QString("QLibraryInfo::buildKey()");
     ftpMkDir( ftpBaseDir );
     ftpBaseDir += "/" + QString( qVersion() );
     ftpMkDir( ftpBaseDir );
@@ -716,7 +717,7 @@ uiLoader::TestResult uiLoader::runAutoTests(QString *errorMessage)
     // SVG needs this widget...
     QWidget dummy;
 
-    qDebug() << "Running test on buildkey:" << QLibraryInfo::buildKey() << "  qt version:" << qVersion();
+    qDebug() << "Running test on buildkey:" << "QLibraryInfo::buildKey()" << "  qt version:" << qVersion();
     qDebug() << "Initializing tests...";
 
     // load config

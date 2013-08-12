@@ -160,7 +160,7 @@ void UiReader::flush()
            m_comment, QString(), m_cd.m_sourceFileName,
            m_lineNumber, QStringList());
         msg.setExtraComment(m_extracomment);
-        m_translator.extend(msg);
+        m_translator.extend(msg, m_cd);
     }
     m_source.clear();
     if (!m_insideStringList) {

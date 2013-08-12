@@ -2,6 +2,30 @@
 <!DOCTYPE TS>
 <TS version="2.1">
 <context>
+    <name></name>
+    <message id="lollipop">
+        <location filename="main.cpp" line="51"/>
+        <location filename="main.cpp" line="56"/>
+        <location filename="main.cpp" line="75"/>
+        <source>this is the source text</source>
+        <extracomment>commented
+----------
+even more commented</extracomment>
+        <translation type="unfinished"></translation>
+        <extra-meta>so-meta</extra-meta>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <location filename="main.cpp" line="67"/>
+        <source>another message</source>
+        <comment>here with a lot of noise in the comment so it is long enough</comment>
+        <translation type="unfinished"></translation>
+        <extra-meta>so-meta</extra-meta>
+    </message>
+</context>
+<context>
     <name>context</name>
     <message>
         <location filename="finddialog.cpp" line="42"/>

@@ -456,17 +456,17 @@ static const QString context()
 
 static void recordMessage(
     Translator *tor, const QString &context, const QString &text, const QString &comment,
-    const QString &extracomment, bool plural)
+    const QString &extracomment, bool plural, ConversionData &cd)
 {
     TranslatorMessage msg(
         context, text, comment, QString(),
         yyFileName, yyLineNo, QStringList(),
         TranslatorMessage::Unfinished, plural);
     msg.setExtraComment(extracomment.simplified());
-    tor->extend(msg);
+    tor->extend(msg, cd);
 }
 
-static void parse( Translator *tor )
+static void parse(Translator *tor, ConversionData &cd)
 {
     QString text;
     QString com;
@@ -507,7 +507,7 @@ static void parse( Translator *tor )
                     }
                 }
                 if (!text.isEmpty())
-                    recordMessage(tor, context(), text, com, extracomment, plural);
+                    recordMessage(tor, context(), text, com, extracomment, plural, cd);
             }
             break;
         case Tok_translate:
@@ -536,7 +536,7 @@ static void parse( Translator *tor )
                         }
                     }
                     if (!text.isEmpty())
-                        recordMessage(tor, contextOverride, text, com, extracomment, plural);
+                        recordMessage(tor, contextOverride, text, com, extracomment, plural, cd);
                 }
             }
             break;
@@ -630,7 +630,7 @@ bool loadJava(Translator &translator, const QString &filename, ConversionData &c
     yyCurLineNo = 1;
     yyParenLineNo = 1;
 
-    parse(&translator);
+    parse(&translator, cd);
     return true;
 }
 

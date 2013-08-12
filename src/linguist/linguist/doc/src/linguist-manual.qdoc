@@ -950,6 +950,37 @@
     the developer may be required to add additional information to help
     the translator.
 
+    \section1 Deploying Translations
+
+    The \c .qm files required for the application should be placed in a
+    location where the loader code using \l QTranslator can locate them.
+    Typically, this is done by specifying a path relative to
+    \l QCoreApplication::applicationDirPath().
+
+    Usually, there are \c .qm files for the application, and, if a version of
+    Qt is used that is not installed on the system, Qt's .qm files need to be
+    deployed as well.
+
+    In Qt 4, there is one big, monolithic \c .qm file per locale. For example,
+    the file \c qt_de.qm contains the German translation of all libraries.
+
+    In Qt 5, the \c .qm files were split up by module and there is a so-called
+    meta catalog file which includes the \c .qm files of all modules. The
+    name of the meta catalog file is identical to the name of Qt 4's monolithic
+    \c .qm file so that existing loader code works as before provided
+    all included \c .qm files are found.
+
+    However, it is not necessary to always deploy all of Qt 5's \c .qm files.
+    We recommend concatenating the \c .qm files of the modules required to
+    one file matching the meta catalog file name using the tool \l lconvert in
+    the deploy step. For example, to create a German translation file for an
+    application using the modules \l QtCore, \l QtGui and \l {Qt Declarative},
+    run:
+
+    \code
+    lconvert -o installation_folder/qt_de.qm qtbase_de.qm qtdeclarative_de.qm
+    \endcode
+
     \section1 Tutorials
 
     The following tutorials illustrate how to prepare Qt applications for
