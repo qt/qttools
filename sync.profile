@@ -20,7 +20,6 @@
     "qtbase" => "",
     "qtxmlpatterns" => "",
     "qtdeclarative" => "",
-    "qtjsbackend" => "",
     "qtactiveqt" => "",
     "qtwebkit" => "",
 );
