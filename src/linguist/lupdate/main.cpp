@@ -271,7 +271,8 @@ static QStringList getSources(const char *var, const char *vvar, const QStringLi
     return visitor.absoluteFileValues(QLatin1String(var), projectDir, vPaths, 0);
 }
 
-static QStringList getSources(const ProFileEvaluator &visitor, const QString &projectDir)
+static QStringList getSources(const ProFileEvaluator &visitor, const QString &projectDir,
+                              const QStringList &excludes)
 {
     QStringList baseVPaths;
     baseVPaths += visitor.absolutePathValues(QLatin1String("VPATH"), projectDir);
@@ -294,12 +295,6 @@ static QStringList getSources(const ProFileEvaluator &visitor, const QString &pr
     sourceFiles.removeDuplicates();
     sourceFiles.sort();
 
-    QStringList excludes;
-    foreach (QString ex, visitor.values(QLatin1String("TR_EXCLUDE"))) {
-        if (!QFileInfo(ex).isAbsolute())
-            ex = QDir(projectDir).absoluteFilePath(ex);
-        excludes << QDir::cleanPath(ex);
-    }
     foreach (const QString &ex, excludes) {
         // TODO: take advantage of the file list being sorted
         QRegExp rx(ex, Qt::CaseSensitive, QRegExp::Wildcard);
@@ -312,6 +307,18 @@ static QStringList getSources(const ProFileEvaluator &visitor, const QString &pr
     }
 
     return sourceFiles;
+}
+
+QStringList getExcludes(const ProFileEvaluator &visitor, const QString &projectDir)
+{
+    QStringList excludes;
+    foreach (QString ex, visitor.values(QLatin1String("TR_EXCLUDE"))) {
+        if (!QFileInfo(ex).isAbsolute())
+            ex = QDir(projectDir).absoluteFilePath(ex);
+        excludes << QDir::cleanPath(ex);
+    }
+
+    return excludes;
 }
 
 static void excludeProjects(const ProFileEvaluator &visitor, QStringList *subProjects)
@@ -421,7 +428,8 @@ static void processProject(
         cd.m_noUiLines = options & NoUiLines;
         cd.m_sourceIsUtf16 = options & SourceIsUtf16;
         cd.m_includePath = visitor.values(QLatin1String("INCLUDEPATH"));
-        QStringList sourceFiles = getSources(visitor, proPath);
+        cd.m_excludes = getExcludes(visitor, proPath);
+        QStringList sourceFiles = getSources(visitor, proPath, cd.m_excludes);
         QSet<QString> sourceDirs;
         sourceDirs.insert(proPath + QLatin1Char('/'));
         foreach (const QString &sf, sourceFiles)

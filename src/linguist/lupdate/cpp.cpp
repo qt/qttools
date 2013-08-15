@@ -1382,6 +1382,12 @@ void CppParser::processInclude(const QString &file, ConversionData &cd, const QS
 {
     QString cleanFile = QDir::cleanPath(file);
 
+    foreach (const QString &ex, cd.m_excludes) {
+        QRegExp rx(ex, Qt::CaseSensitive, QRegExp::Wildcard);
+        if (rx.exactMatch(cleanFile))
+            return;
+    }
+
     const int index = includeStack.indexOf(cleanFile);
     if (index != -1) {
         CppFiles::addIncludeCycle(includeStack.mid(index).toSet());

@@ -93,6 +93,7 @@ public:
     QString m_unTrPrefix; // QM specific
     QString m_sourceFileName;
     QString m_targetFileName;
+    QStringList m_excludes;
     QDir m_sourceDir;
     QDir m_targetDir; // FIXME: TS specific
     QSet<QString> m_projectRoots;
