@@ -62,6 +62,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QTextStream>
 
+#include <private/qlocale_p.h>
 #include <private/qtranslator_p.h>
 
 QT_BEGIN_NAMESPACE
@@ -367,30 +368,19 @@ bool Translator::save(const QString &filename, ConversionData &cd, const QString
 
 QString Translator::makeLanguageCode(QLocale::Language language, QLocale::Country country)
 {
-    QLocale locale(language, country);
-    if (country == QLocale::AnyCountry) {
-        QString languageCode = locale.name().section(QLatin1Char('_'), 0, 0);
-        if (languageCode.length() <= 3)
-            return languageCode;
-        return QString();
-    } else {
-        return locale.name();
+    QString result = QLocalePrivate::languageToCode(language);
+    if (language != QLocale::C && country != QLocale::AnyCountry) {
+        result.append(QLatin1Char('_'));
+        result.append(QLocalePrivate::countryToCode(country));
     }
+    return result;
 }
 
 void Translator::languageAndCountry(const QString &languageCode,
     QLocale::Language *lang, QLocale::Country *country)
 {
-    QLocale locale(languageCode);
-    if (lang)
-        *lang = locale.language();
-
-    if (country) {
-        if (languageCode.indexOf(QLatin1Char('_')) != -1)
-            *country = locale.country();
-        else
-            *country = QLocale::AnyCountry;
-    }
+    QLocale::Script script;
+    QLocalePrivate::getLangAndCountry(languageCode, *lang, script, *country);
 }
 
 int Translator::find(const TranslatorMessage &msg) const
