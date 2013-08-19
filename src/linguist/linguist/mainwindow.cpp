@@ -268,7 +268,6 @@ MainWindow::MainWindow()
       m_findMatchCase(Qt::CaseInsensitive),
       m_findIgnoreAccelerators(true),
       m_findWhere(DataModel::NoLocation),
-      m_foundWhere(DataModel::NoLocation),
       m_translationSettingsDialog(0),
       m_settingCurrentMessage(false),
       m_fileActiveModel(-1),
@@ -964,9 +963,9 @@ void MainWindow::print()
     }
 }
 
-bool MainWindow::searchItem(const QString &searchWhat)
+bool MainWindow::searchItem(DataModel::FindLocation where, const QString &searchWhat)
 {
-    if ((m_findWhere & m_foundWhere) == 0)
+    if ((m_findWhere & where) == 0)
         return false;
 
     QString text = searchWhat;
@@ -993,41 +992,31 @@ void MainWindow::findAgain()
         bool hadMessage = false;
         for (int i = 0; i < m_dataModel->modelCount(); ++i) {
             if (MessageItem *m = m_dataModel->messageItem(dataIndex, i)) {
+                bool found = true;
                 // Note: we do not look into plurals on grounds of them not
                 // containing anything much different from the singular.
                 if (hadMessage) {
-                    m_foundWhere = DataModel::Translations;
-                    if (!searchItem(m->translation()))
-                        m_foundWhere = DataModel::NoLocation;
+                    if (!searchItem(DataModel::Translations, m->translation()))
+                        found = false;
                 } else {
-                    switch (m_foundWhere) {
-                    case 0:
-                        m_foundWhere = DataModel::SourceText;
-                        // fall-through to search source text
-                    case DataModel::SourceText:
-                        if (searchItem(m->text()))
+                    do {
+                        if (searchItem(DataModel::SourceText, m->text()))
                             break;
-                        if (searchItem(m->pluralText()))
+                        if (searchItem(DataModel::SourceText, m->pluralText()))
                             break;
-                        m_foundWhere = DataModel::Translations;
-                        // fall-through to search translation
-                    case DataModel::Translations:
-                        if (searchItem(m->translation()))
+                        if (searchItem(DataModel::Translations, m->translation()))
                             break;
-                        m_foundWhere = DataModel::Comments;
-                        // fall-through to search comment
-                    case DataModel::Comments:
-                        if (searchItem(m->comment()))
+                        if (searchItem(DataModel::Comments, m->comment()))
                             break;
-                        if (searchItem(m->extraComment()))
+                        if (searchItem(DataModel::Comments, m->extraComment()))
                             break;
-                        if (searchItem(m->translatorComment()))
+                        if (searchItem(DataModel::Comments, m->translatorComment()))
                             break;
-                        m_foundWhere = DataModel::NoLocation;
+                        found = false;
                         // did not find the search string in this message
-                    }
+                    } while (0);
                 }
-                if (m_foundWhere != DataModel::NoLocation) {
+                if (found) {
                     setCurrentMessage(realIndex, i);
 
                     // determine whether the search wrapped
@@ -1056,7 +1045,6 @@ void MainWindow::findAgain()
     qApp->beep();
     QMessageBox::warning(m_findDialog, tr("Qt Linguist"),
                          tr("Cannot find the string '%1'.").arg(m_findText));
-    m_foundWhere  = DataModel::NoLocation;
 }
 
 void MainWindow::showBatchTranslateDialog()
