@@ -993,18 +993,11 @@ void MainWindow::findAgain()
         for (int i = 0; i < m_dataModel->modelCount(); ++i) {
             if (MessageItem *m = m_dataModel->messageItem(dataIndex, i)) {
                 bool found = true;
-                // Note: we do not look into plurals on grounds of them not
-                // containing anything much different from the singular.
-                if (hadMessage) {
-                    if (!searchItem(DataModel::Translations, m->translation()))
-                        found = false;
-                } else {
-                    do {
+                do {
+                    if (!hadMessage) {
                         if (searchItem(DataModel::SourceText, m->text()))
                             break;
                         if (searchItem(DataModel::SourceText, m->pluralText()))
-                            break;
-                        if (searchItem(DataModel::Translations, m->translation()))
                             break;
                         if (searchItem(DataModel::Comments, m->comment()))
                             break;
@@ -1012,10 +1005,14 @@ void MainWindow::findAgain()
                             break;
                         if (searchItem(DataModel::Comments, m->translatorComment()))
                             break;
-                        found = false;
-                        // did not find the search string in this message
-                    } while (0);
-                }
+                    }
+                    // Note: we do not look into plurals on grounds of them not
+                    // containing anything much different from the singular.
+                    if (searchItem(DataModel::Translations, m->translation()))
+                        break;
+                    found = false;
+                    // did not find the search string in this message
+                } while (0);
                 if (found) {
                     setCurrentMessage(realIndex, i);
 
