@@ -1004,16 +1004,16 @@ void MainWindow::findAgain()
                         if (searchItem(DataModel::Comments, m->extraComment()))
                             break;
                     }
-                    // Note: we do not look into plurals on grounds of them not
-                    // containing anything much different from the singular.
-                    if (searchItem(DataModel::Translations, m->translation()))
-                        break;
+                    foreach (const QString &trans, m->translations())
+                        if (searchItem(DataModel::Translations, trans))
+                            goto didfind;
                     if (searchItem(DataModel::Comments, m->translatorComment()))
                         break;
                     found = false;
                     // did not find the search string in this message
                 } while (0);
                 if (found) {
+                  didfind:
                     setCurrentMessage(realIndex, i);
 
                     // determine whether the search wrapped
