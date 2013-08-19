@@ -49,6 +49,7 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
+#include <QtCore/QDirIterator>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 #include <QtCore/QString>
@@ -436,6 +437,41 @@ static QStringList getSources(const ProFileEvaluator &visitor, const QString &pr
     vPathsInc += visitor.absolutePathValues(QLatin1String("INCLUDEPATH"), projectDir);
     vPathsInc.removeDuplicates();
     sourceFiles += visitor.absoluteFileValues(QLatin1String("HEADERS"), projectDir, vPathsInc, 0);
+
+    QStringList installs = visitor.values(QLatin1String("INSTALLS"))
+                         + visitor.values(QLatin1String("DEPLOYMENT"));
+    installs.removeDuplicates();
+    QDir baseDir(projectDir);
+    foreach (const QString inst, installs) {
+        foreach (const QString &file, visitor.values(inst + QLatin1String(".files"))) {
+            QFileInfo info(file);
+            if (!info.isAbsolute())
+                info.setFile(baseDir.absoluteFilePath(file));
+            QStringList nameFilter;
+            QString searchPath;
+            if (info.isDir()) {
+                nameFilter << QLatin1String("*");
+                searchPath = info.filePath();
+            } else {
+                nameFilter << info.fileName();
+                searchPath = info.path();
+            }
+
+            QDirIterator iterator(searchPath, nameFilter,
+                                  QDir::Files | QDir::NoDotAndDotDot | QDir::NoSymLinks,
+                                  QDirIterator::Subdirectories);
+            while (iterator.hasNext()) {
+                iterator.next();
+                QFileInfo cfi = iterator.fileInfo();
+                QString ext = cfi.suffix();
+                if (ext == QLatin1String("qml")
+                    || ext == QLatin1String("js") || ext == QLatin1String("qs")
+                    || ext == QLatin1String("ui") || ext == QLatin1String("jui")) {
+                    sourceFiles << cfi.filePath();
+                }
+            }
+        }
+    }
 
     sourceFiles.removeDuplicates();
     sourceFiles.sort();

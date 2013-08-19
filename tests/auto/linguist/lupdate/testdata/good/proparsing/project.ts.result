@@ -61,4 +61,20 @@
         <translation type="unfinished"></translation>
     </message>
 </context>
+<context>
+    <name>main</name>
+    <message>
+        <location filename="main.qml" line="46"/>
+        <source>From QML file in root</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>notmain</name>
+    <message>
+        <location filename="qml/notmain.qml" line="46"/>
+        <source>From QML file in qml</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
 </TS>
