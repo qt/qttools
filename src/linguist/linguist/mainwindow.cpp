@@ -1003,12 +1003,12 @@ void MainWindow::findAgain()
                             break;
                         if (searchItem(DataModel::Comments, m->extraComment()))
                             break;
-                        if (searchItem(DataModel::Comments, m->translatorComment()))
-                            break;
                     }
                     // Note: we do not look into plurals on grounds of them not
                     // containing anything much different from the singular.
                     if (searchItem(DataModel::Translations, m->translation()))
+                        break;
+                    if (searchItem(DataModel::Comments, m->translatorComment()))
                         break;
                     found = false;
                     // did not find the search string in this message
