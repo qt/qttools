@@ -39,7 +39,7 @@
 **
 ****************************************************************************/
 
-int main(char **argv, int argc)
+int main(int argc, char **argv)
 {
      QString fake = QApplication::tr("fake", "This message will not be collected");
 }
