@@ -78,7 +78,7 @@ void FindDialog::emitFindNext()
                 (comments->isChecked() ? DataModel::Comments : 0));
     else
         where = DataModel::Translations;
-    emit findNext(led->text(), where, matchCase->isChecked(), ignoreAccelerators->isChecked());
+    emit findNext(led->text(), where, matchCase->isChecked(), ignoreAccelerators->isChecked(), skipObsolete->isChecked());
     led->selectAll();
 }
 

@@ -267,6 +267,7 @@ MainWindow::MainWindow()
       m_printer(0),
       m_findMatchCase(Qt::CaseInsensitive),
       m_findIgnoreAccelerators(true),
+      m_findSkipObsolete(false),
       m_findWhere(DataModel::NoLocation),
       m_translationSettingsDialog(0),
       m_settingCurrentMessage(false),
@@ -473,8 +474,8 @@ MainWindow::MainWindow()
             this, SLOT(updateTranslation(QStringList)));
     connect(m_messageEditor, SIGNAL(translatorCommentChanged(QString)),
             this, SLOT(updateTranslatorComment(QString)));
-    connect(m_findDialog, SIGNAL(findNext(QString,DataModel::FindLocation,bool,bool)),
-            this, SLOT(findNext(QString,DataModel::FindLocation,bool,bool)));
+    connect(m_findDialog, SIGNAL(findNext(QString,DataModel::FindLocation,bool,bool,bool)),
+            this, SLOT(findNext(QString,DataModel::FindLocation,bool,bool,bool)));
     connect(m_translateDialog, SIGNAL(requestMatchUpdate(bool&)), SLOT(updateTranslateHit(bool&)));
     connect(m_translateDialog, SIGNAL(activated(int)), SLOT(translate(int)));
 
@@ -993,6 +994,8 @@ void MainWindow::findAgain()
         bool hadMessage = false;
         for (int i = 0; i < m_dataModel->modelCount(); ++i) {
             if (MessageItem *m = m_dataModel->messageItem(dataIndex, i)) {
+                if (m_findSkipObsolete && m->isObsolete())
+                    continue;
                 bool found = true;
                 do {
                     if (!hadMessage) {
@@ -1748,7 +1751,8 @@ bool MainWindow::next(bool checkUnfinished)
     return index.isValid();
 }
 
-void MainWindow::findNext(const QString &text, DataModel::FindLocation where, bool matchCase, bool ignoreAccelerators)
+void MainWindow::findNext(const QString &text, DataModel::FindLocation where,
+                          bool matchCase, bool ignoreAccelerators, bool skipObsolete)
 {
     if (text.isEmpty())
         return;
@@ -1756,6 +1760,7 @@ void MainWindow::findNext(const QString &text, DataModel::FindLocation where, bo
     m_findWhere = where;
     m_findMatchCase = matchCase ? Qt::CaseSensitive : Qt::CaseInsensitive;
     m_findIgnoreAccelerators = ignoreAccelerators;
+    m_findSkipObsolete = skipObsolete;
     m_ui.actionFindNext->setEnabled(true);
     findAgain();
 }

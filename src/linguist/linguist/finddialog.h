@@ -56,7 +56,8 @@ public:
     FindDialog(QWidget *parent = 0);
 
 signals:
-    void findNext(const QString& text, DataModel::FindLocation where, bool matchCase, bool ignoreAccelerators);
+    void findNext(const QString& text, DataModel::FindLocation where,
+                  bool matchCase, bool ignoreAccelerators, bool skipObsolete);
 
 private slots:
     void emitFindNext();

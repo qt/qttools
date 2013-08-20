@@ -175,6 +175,16 @@
           </property>
          </widget>
         </item>
+        <item row="2" column="1">
+         <widget class="QCheckBox" name="skipObsolete">
+          <property name="whatsThis">
+           <string>Obsoleted messages are skipped when checked.</string>
+          </property>
+          <property name="text">
+           <string>Skip &amp;obsolete</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </widget>
      </item>

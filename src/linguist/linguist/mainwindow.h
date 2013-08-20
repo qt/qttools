@@ -162,7 +162,8 @@ private slots:
     void toggleFinished(const QModelIndex &index);
     void prevUnfinished();
     void nextUnfinished();
-    void findNext(const QString &text, DataModel::FindLocation where, bool matchCase, bool ignoreAccelerators);
+    void findNext(const QString &text, DataModel::FindLocation where,
+                  bool matchCase, bool ignoreAccelerators, bool skipObsolete);
     void revalidate();
     void toggleStatistics();
     void onWhatsThis();
@@ -235,6 +236,7 @@ private:
     QString m_findText;
     Qt::CaseSensitivity m_findMatchCase;
     bool m_findIgnoreAccelerators;
+    bool m_findSkipObsolete;
     DataModel::FindLocation m_findWhere;
 
     TranslateDialog *m_translateDialog;
