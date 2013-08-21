@@ -44,6 +44,9 @@
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
 #include <QtCore/QCoreApplication>
+#include <QtCore/QJsonDocument>
+#include <QtCore/QJsonObject>
+#include <QtCore/QJsonArray>
 
 #include <cstdio>
 
@@ -149,9 +152,29 @@ static Platform platformFromMkSpec(const QString &xSpec)
 bool optHelp = false;
 int optWebKit2 = 0;
 
+// Container class for JSON output
+class JsonOutput {
+public:
+    void addFile(const QString &source, const QString &target)
+    {
+        QJsonObject object;
+        object.insert(QStringLiteral("source"), QDir::toNativeSeparators(source));
+        object.insert(QStringLiteral("target"), QDir::toNativeSeparators(target));
+        m_files.append(object);
+    }
+    QByteArray toJson() const
+    {
+        QJsonObject document;
+        document.insert(QStringLiteral("files"), m_files);
+        return QJsonDocument(document).toJson();
+    }
+private:
+    QJsonArray m_files;
+};
+
 struct Options {
     Options() : plugins(true), libraries(true), quickImports(true), translations(true)
-              , platform(Windows), additionalLibraries(0), disabledLibraries(0) {}
+              , platform(Windows), additionalLibraries(0), disabledLibraries(0), json(0) {}
 
     bool plugins;
     bool libraries;
@@ -163,6 +186,7 @@ struct Options {
     QString directory;
     QString libraryDirectory;
     QString binary;
+    JsonOutput *json;
 };
 
 static QByteArray usage()
@@ -180,6 +204,7 @@ static QByteArray usage()
 "         -webkit2           : Deployment of WebKit2 (web process)\n"
 "         -no-webkit2        : Skip deployment of WebKit2\n"
 "         -h                 : Display help\n"
+"         -json              : Print to stdout in JSON format\n"
 "         -verbose=<0-3>     : 0 = no output, 1 = progress (default),\n"
 "                              2 = normal, 3 = debug\n"
 "\nLibraries can be added by passing their name (-xml) or disabled by passing\n"
@@ -231,7 +256,18 @@ static inline bool parseOption(QStringList::ConstIterator &it,
         optWebKit2 = -1;
         return true;
     }
+    if (option == QLatin1String("-json")) {
+        if (optVerboseLevel > 1)
+            std::fprintf(stderr, "-json was passed, -verbose ignored.\n");
+        optVerboseLevel = 0;
+        options->json = new JsonOutput;
+        return true;
+    }
     if (option.startsWith(QLatin1String("-verbose"))) {
+        if (options->json) {
+            std::fprintf(stderr, "-json was passed, -verbose ignored.\n");
+            return true;
+        }
         const int index = option.indexOf(QLatin1Char('='));
         bool ok = false;
         optVerboseLevel = option.mid(index + 1).toInt(&ok);
@@ -688,6 +724,8 @@ static DeployResult deploy(const Options &options,
         foreach (const QString &qtLib, deployedQtLibraries) {
             if (!updateFile(qtLib, targetPath, errorMessage))
                 return result;
+            if (options.json)
+                options.json->addFile(qtLib, targetPath);
         }
     } // optLibraries
 
@@ -705,8 +743,11 @@ static DeployResult deploy(const Options &options,
                     return result;
                 }
             }
-            if (!updateFile(plugin, options.directory + slash + targetDirName, errorMessage))
+            const QString targetPath = options.directory + slash + targetDirName;
+            if (!updateFile(plugin, targetPath, errorMessage))
                 return result;
+            if (options.json)
+                options.json->addFile(plugin, targetPath);
         }
     } // optPlugins
 
@@ -729,8 +770,11 @@ static DeployResult deploy(const Options &options,
             if (result.deployedQtLibraries & QtWebKitModule)
                 quick2Imports << QStringLiteral("QtWebKit");
             foreach (const QString &quick2Import, quick2Imports) {
-                if (!updateFile(quick2ImportPath + slash + quick2Import, qmlFileEntryFunction, options.directory, errorMessage))
+                const QString sourceFile = quick2ImportPath + slash + quick2Import;
+                if (!updateFile(sourceFile, qmlFileEntryFunction, options.directory, errorMessage))
                     return result;
+                if (options.json)
+                    options.json->addFile(sourceFile, options.directory);
             }
         } // Quick 2
         if (usesQuick1) {
@@ -739,8 +783,11 @@ static DeployResult deploy(const Options &options,
             if (result.deployedQtLibraries & QtWebKitModule)
                 quick1Imports << QStringLiteral("QtWebKit");
             foreach (const QString &quick1Import, quick1Imports) {
-                if (!updateFile(quick1ImportPath + slash + quick1Import, qmlFileEntryFunction, options.directory, errorMessage))
+                const QString sourceFile = quick1ImportPath + slash + quick1Import;
+                if (!updateFile(sourceFile, qmlFileEntryFunction, options.directory, errorMessage))
                     return result;
+                if (options.json)
+                    options.json->addFile(sourceFile, options.directory);
             }
         } // Quick 1
     } // optQuickImports
@@ -764,6 +811,8 @@ static bool deployWebKit2(const QMap<QString, QString> &qmakeVariables,
                                      QLatin1Char('/') + webProcess;
     if (!updateFile(webProcessSource, sourceOptions.directory, errorMessage))
         return false;
+    if (sourceOptions.json)
+        sourceOptions.json->addFile(webProcessSource, sourceOptions.directory);
     Options options(sourceOptions);
     options.binary = options.directory + QLatin1Char('/') + webProcess;
     options.quickImports = false;
@@ -817,6 +866,12 @@ int main(int argc, char **argv)
             std::fprintf(stderr, "%s\n", qPrintable(errorMessage));
             return 1;
         }
+    }
+
+    if (options.json) {
+        std::fputs(options.json->toJson().constData(), stdout);
+        delete options.json;
+        options.json = 0;
     }
 
     return 0;
