@@ -191,7 +191,7 @@ int main(int argc, char *argv[])
             if (++i >= args.size())
                 return usage(args);
             inFormat = args[i];
-        } else if (args[i] == QLatin1String("-drop-tag")) {
+        } else if (args[i] == QLatin1String("-drop-tag") || args[i] == QLatin1String("-drop-tags")) {
             if (++i >= args.size())
                 return usage(args);
             cd.m_dropTags.append(args[i]);
