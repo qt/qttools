@@ -1476,13 +1476,14 @@ void MainWindow::selectedMessageChanged(const QModelIndex &sortedIndex, const QM
         return;
     }
 
+    int model = -1;
+    MessageItem *m = 0;
     QModelIndex index = m_sortedMessagesModel->mapToSource(sortedIndex);
     if (index.isValid()) {
-        int model = (index.column() && (index.column() - 1 < m_dataModel->modelCount())) ?
+        model = (index.column() && (index.column() - 1 < m_dataModel->modelCount())) ?
                         index.column() - 1 : m_currentIndex.model();
         m_currentIndex = m_messageModel->dataIndex(index, model);
         m_messageEditor->showMessage(m_currentIndex);
-        MessageItem *m = 0;
         if (model >= 0 && (m = m_dataModel->messageItem(m_currentIndex))) {
             if (m_dataModel->isModelWritable(model) && !m->isObsolete())
                 m_phraseView->setSourceText(m_currentIndex.model(), m->text());
@@ -1497,29 +1498,14 @@ void MainWindow::selectedMessageChanged(const QModelIndex &sortedIndex, const QM
             }
             m_phraseView->setSourceText(-1, QString());
         }
-        if (m && !m->fileName().isEmpty()) {
-            if (hasFormPreview(m->fileName())) {
-                m_sourceAndFormView->setCurrentWidget(m_formPreviewView);
-                m_formPreviewView->setSourceContext(model, m);
-            } else {
-                m_sourceAndFormView->setCurrentWidget(m_sourceCodeView);
-                QDir dir = QFileInfo(m_dataModel->srcFileName(model)).dir();
-                QString fileName = QDir::cleanPath(dir.absoluteFilePath(m->fileName()));
-                m_sourceCodeView->setSourceContext(fileName, m->lineNumber());
-            }
-        } else {
-            m_sourceAndFormView->setCurrentWidget(m_sourceCodeView);
-            m_sourceCodeView->setSourceContext(QString(), 0);
-        }
         m_errorsView->setEnabled(m != 0);
         updateDanger(m_currentIndex, true);
     } else {
         m_currentIndex = MultiDataIndex();
         m_messageEditor->showNothing();
         m_phraseView->setSourceText(-1, QString());
-        m_sourceAndFormView->setCurrentWidget(m_sourceCodeView);
-        m_sourceCodeView->setSourceContext(QString(), 0);
     }
+    updateSourceView(model, m);
 
     updatePhraseBookActions();
     m_ui.actionSelectAll->setEnabled(index.isValid());
@@ -1967,15 +1953,14 @@ void MainWindow::updateLatestModel(int model)
     m_currentIndex = MultiDataIndex(model, m_currentIndex.context(), m_currentIndex.message());
     bool enable = false;
     bool enableRw = false;
+    MessageItem *item = 0;
     if (model >= 0) {
         enable = true;
         if (m_dataModel->isModelWritable(model))
             enableRw = true;
 
         if (m_currentIndex.isValid()) {
-            if (MessageItem *item = m_dataModel->messageItem(m_currentIndex)) {
-                if (!item->fileName().isEmpty() && hasFormPreview(item->fileName()))
-                    m_formPreviewView->setSourceContext(model, item);
+            if ((item = m_dataModel->messageItem(m_currentIndex))) {
                 if (enableRw && !item->isObsolete())
                     m_phraseView->setSourceText(model, item->text());
                 else
@@ -1985,6 +1970,7 @@ void MainWindow::updateLatestModel(int model)
             }
         }
     }
+    updateSourceView(model, item);
     m_ui.actionSave->setEnabled(enableRw);
     m_ui.actionSaveAs->setEnabled(enableRw);
     m_ui.actionRelease->setEnabled(enableRw);
@@ -1995,6 +1981,24 @@ void MainWindow::updateLatestModel(int model)
     // cut & paste - edit only
     updatePhraseBookActions();
     updateStatistics();
+}
+
+void MainWindow::updateSourceView(int model, MessageItem *item)
+{
+    if (item && !item->fileName().isEmpty()) {
+        if (hasFormPreview(item->fileName())) {
+            m_sourceAndFormView->setCurrentWidget(m_formPreviewView);
+            m_formPreviewView->setSourceContext(model, item);
+        } else {
+            m_sourceAndFormView->setCurrentWidget(m_sourceCodeView);
+            QDir dir = QFileInfo(m_dataModel->srcFileName(model)).dir();
+            QString fileName = QDir::cleanPath(dir.absoluteFilePath(item->fileName()));
+            m_sourceCodeView->setSourceContext(fileName, item->lineNumber());
+        }
+    } else {
+        m_sourceAndFormView->setCurrentWidget(m_sourceCodeView);
+        m_sourceCodeView->setSourceContext(QString(), 0);
+    }
 }
 
 // Note for *AboutToShow: Due to the delayed nature, only actions without shortcuts

@@ -195,6 +195,7 @@ private:
     QStringList pickTranslationFiles();
     void showTranslationSettings(int model);
     void updateLatestModel(int model);
+    void updateSourceView(int model, MessageItem *item);
     void updatePhraseBookActions();
     void updatePhraseDictInternal(int model);
     void releaseInternal(int model);
