@@ -523,7 +523,7 @@ void QFormBuilder::applyProperties(QObject *o, const QList<DomProperty*> &proper
     const DomPropertyList::const_iterator cend = properties.constEnd();
     for (DomPropertyList::const_iterator it = properties.constBegin(); it != cend; ++it) {
         const QVariant v = toVariant(o->metaObject(), *it);
-        if (v.isNull())
+        if (!v.isValid()) // QTBUG-33130, do not fall for QVariant(QString()).isNull() == true.
             continue;
 
         const QString attributeName = (*it)->attributeName();
