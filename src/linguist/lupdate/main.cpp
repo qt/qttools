@@ -460,9 +460,6 @@ static void processProjects(bool topLevel, bool nestComplain, const QStringList 
         if (!outDirMap.isEmpty())
             option->setDirectories(QFileInfo(proFile).path(), outDirMap[proFile]);
 
-        ProFileEvaluator visitor(option, parser, vfs, &evalHandler);
-        visitor.setCumulative(true);
-        visitor.setOutputDir(option->shadowedPath(proFile));
         ProFile *pro;
         if (!(pro = parser->parsedProFile(proFile, topLevel ? QMakeParser::ParseReportMissing
                                                             : QMakeParser::ParseDefault))) {
@@ -470,6 +467,9 @@ static void processProjects(bool topLevel, bool nestComplain, const QStringList 
                 *fail = true;
             continue;
         }
+        ProFileEvaluator visitor(option, parser, vfs, &evalHandler);
+        visitor.setCumulative(true);
+        visitor.setOutputDir(option->shadowedPath(pro->directoryName()));
         if (!visitor.accept(pro)) {
             if (topLevel)
                 *fail = true;
