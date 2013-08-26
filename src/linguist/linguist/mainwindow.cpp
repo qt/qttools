@@ -1507,12 +1507,11 @@ void MainWindow::selectedMessageChanged(const QModelIndex &sortedIndex, const QM
                 QString fileName = QDir::cleanPath(dir.absoluteFilePath(m->fileName()));
                 m_sourceCodeView->setSourceContext(fileName, m->lineNumber());
             }
-            m_errorsView->setEnabled(true);
         } else {
             m_sourceAndFormView->setCurrentWidget(m_sourceCodeView);
             m_sourceCodeView->setSourceContext(QString(), 0);
-            m_errorsView->setEnabled(false);
         }
+        m_errorsView->setEnabled(m != 0);
         updateDanger(m_currentIndex, true);
     } else {
         m_currentIndex = MultiDataIndex();
