@@ -195,6 +195,7 @@ private:
     QStringList pickTranslationFiles();
     void showTranslationSettings(int model);
     void updateLatestModel(int model);
+    void updateSourceView(int model, MessageItem *item);
     void updatePhraseBookActions();
     void updatePhraseDictInternal(int model);
     void releaseInternal(int model);
@@ -205,7 +206,7 @@ private:
     // FIXME: move to DataModel
     void updateDanger(const MultiDataIndex &index, bool verbose);
 
-    bool searchItem(const QString &searchWhat);
+    bool searchItem(DataModel::FindLocation where, const QString &searchWhat);
 
     QProcess *m_assistantProcess;
     QTreeView *m_contextView;
@@ -235,7 +236,6 @@ private:
     Qt::CaseSensitivity m_findMatchCase;
     bool m_findIgnoreAccelerators;
     DataModel::FindLocation m_findWhere;
-    DataModel::FindLocation m_foundWhere;
 
     TranslateDialog *m_translateDialog;
     QString m_latestFindText;

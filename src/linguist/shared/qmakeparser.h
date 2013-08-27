@@ -79,6 +79,7 @@ public:
 };
 
 class ProFileCache;
+class QMakeVfs;
 
 class QMAKE_EXPORT QMakeParser
 {
@@ -93,7 +94,7 @@ public:
     };
     Q_DECLARE_FLAGS(ParseFlags, ParseFlag)
 
-    QMakeParser(ProFileCache *cache, QMakeParserHandler *handler);
+    QMakeParser(ProFileCache *cache, QMakeVfs *vfs, QMakeParserHandler *handler);
 
     enum SubGrammar { FullGrammar, TestGrammar, ValueGrammar };
     // fileName is expected to be absolute and cleanPath()ed.
@@ -182,6 +183,7 @@ private:
 
     ProFileCache *m_cache;
     QMakeParserHandler *m_handler;
+    QMakeVfs *m_vfs;
 
     // This doesn't help gcc 3.3 ...
     template<typename T> friend class QTypeInfo;

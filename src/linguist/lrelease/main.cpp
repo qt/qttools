@@ -41,6 +41,7 @@
 
 #include "translator.h"
 
+#include <qmakevfs.h>
 #include <qmakeparser.h>
 #include <profileevaluator.h>
 
@@ -205,10 +206,12 @@ static void print(const QString &fileName, int lineNo, int type, const QString &
 class EvalHandler : public QMakeHandler {
 public:
     virtual void message(int type, const QString &msg, const QString &fileName, int lineNo)
-        { if (verbose) print(fileName, lineNo, type, msg); }
+    {
+        if (verbose && (type & CategoryMask) == ErrorMessage)
+            print(fileName, lineNo, type, msg);
+    }
 
-    virtual void fileMessage(const QString &msg)
-        { printErr(msg + QLatin1Char('\n')); }
+    virtual void fileMessage(const QString &) {}
 
     virtual void aboutToEval(ProFile *, ProFile *, EvalFileType) {}
     virtual void doneWithEval(ProFile *) {}
@@ -316,8 +319,9 @@ int main(int argc, char **argv)
                 option.qmake_abslocation = app.applicationDirPath() + QLatin1String("/qmake");
 #endif
             option.initProperties();
-            QMakeParser parser(0, &evalHandler);
-            ProFileEvaluator visitor(&option, &parser, &evalHandler);
+            QMakeVfs vfs;
+            QMakeParser parser(0, &vfs, &evalHandler);
+            ProFileEvaluator visitor(&option, &parser, &vfs, &evalHandler);
             visitor.setCumulative(true);
             visitor.setOutputDir(QDir::currentPath());
 

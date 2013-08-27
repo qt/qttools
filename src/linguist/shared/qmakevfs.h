@@ -3,7 +3,7 @@
 ** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
-** This file is part of the test suite of the Qt Toolkit.
+** This file is part of the Qt Linguist of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,21 +39,47 @@
 **
 ****************************************************************************/
 
-#ifndef TST_LINGUIST
-#define TST_LINGUIST
+#ifndef QMAKEVFS_H
+#define QMAKEVFS_H
 
-#include <QtTest/QtTest>
-#include <QtCore/QtCore>
+#include "qmake_global.h"
 
-class tst_linguist : public QObject
+# include <qiodevice.h>
+#ifndef PROEVALUATOR_FULL
+# include <qhash.h>
+# include <qstring.h>
+# ifdef PROEVALUATOR_THREAD_SAFE
+#  include <qmutex.h>
+# endif
+#endif
+
+QT_BEGIN_NAMESPACE
+
+class QMAKE_EXPORT QMakeVfs
 {
-    Q_OBJECT
-private slots:
-    void fetchtr();
-    void fetchtr_data();
+public:
+    QMakeVfs();
 
-    void simtexth();
-    void simtexth_data();
+    bool writeFile(const QString &fn, QIODevice::OpenMode mode, const QString &contents, QString *errStr);
+    bool readFile(const QString &fn, QString *contents, QString *errStr);
+    bool exists(const QString &fn);
+
+#ifndef PROEVALUATOR_FULL
+    void invalidateCache();
+    void invalidateContents();
+#endif
+
+private:
+#ifndef PROEVALUATOR_FULL
+# ifdef PROEVALUATOR_THREAD_SAFE
+    QMutex m_mutex;
+# endif
+    QHash<QString, QString> m_files;
+    QString m_magicMissing;
+    QString m_magicExisting;
+#endif
 };
 
-#endif
+QT_END_NAMESPACE
+
+#endif // QMAKEVFS_H

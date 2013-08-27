@@ -249,7 +249,8 @@ void QMakeGlobals::setDirectories(const QString &input_dir, const QString &outpu
         int srcLen = srcpath.length();
         int dstLen = dstpath.length();
         int lastSl = -1;
-        while (++lastSl, srcpath.at(--srcLen) == dstpath.at(--dstLen))
+        while (++lastSl, --srcLen, --dstLen,
+               srcLen && dstLen && srcpath.at(srcLen) == dstpath.at(dstLen))
             if (srcpath.at(srcLen) == QLatin1Char('/'))
                 lastSl = 0;
         source_root = srcpath.left(srcLen + lastSl);
@@ -323,33 +324,46 @@ bool QMakeGlobals::initProperties()
         QT_PCLOSE(proc);
     }
 #endif
-    foreach (QByteArray line, data.split('\n'))
-        {
-            int off = line.indexOf(':');
-            if (off < 0) // huh?
-                continue;
-            if (line.endsWith('\r'))
-                line.chop(1);
-            QString name = QString::fromLatin1(line.left(off));
-            ProString value = ProString(QDir::fromNativeSeparators(
-                        QString::fromLocal8Bit(line.mid(off + 1))));
-            properties.insert(ProKey(name), value);
-            if (name.startsWith(QLatin1String("QT_")) && !name.contains(QLatin1Char('/'))) {
-                if (name.startsWith(QLatin1String("QT_INSTALL_"))) {
+    foreach (QByteArray line, data.split('\n')) {
+        int off = line.indexOf(':');
+        if (off < 0) // huh?
+            continue;
+        if (line.endsWith('\r'))
+            line.chop(1);
+        QString name = QString::fromLatin1(line.left(off));
+        ProString value = ProString(QDir::fromNativeSeparators(
+                    QString::fromLocal8Bit(line.mid(off + 1))));
+        properties.insert(ProKey(name), value);
+        if (name.startsWith(QLatin1String("QT_"))) {
+            bool plain = !name.contains(QLatin1Char('/'));
+            if (!plain) {
+                if (!name.endsWith(QLatin1String("/get")))
+                    continue;
+                name.chop(4);
+            }
+            if (name.startsWith(QLatin1String("QT_INSTALL_"))) {
+                if (plain) {
                     properties.insert(ProKey(name + QLatin1String("/raw")), value);
                     properties.insert(ProKey(name + QLatin1String("/get")), value);
-                    if (name == QLatin1String("QT_INSTALL_PREFIX")
-                        || name == QLatin1String("QT_INSTALL_DATA")
-                        || name == QLatin1String("QT_INSTALL_BINS")) {
-                        name.replace(3, 7, QLatin1String("HOST"));
+                }
+                properties.insert(ProKey(name + QLatin1String("/src")), value);
+                if (name == QLatin1String("QT_INSTALL_PREFIX")
+                    || name == QLatin1String("QT_INSTALL_DATA")
+                    || name == QLatin1String("QT_INSTALL_BINS")) {
+                    name.replace(3, 7, QLatin1String("HOST"));
+                    if (plain) {
                         properties.insert(ProKey(name), value);
                         properties.insert(ProKey(name + QLatin1String("/get")), value);
                     }
-                } else if (name.startsWith(QLatin1String("QT_HOST_"))) {
-                    properties.insert(ProKey(name + QLatin1String("/get")), value);
+                    properties.insert(ProKey(name + QLatin1String("/src")), value);
                 }
+            } else if (name.startsWith(QLatin1String("QT_HOST_"))) {
+                if (plain)
+                    properties.insert(ProKey(name + QLatin1String("/get")), value);
+                properties.insert(ProKey(name + QLatin1String("/src")), value);
             }
         }
+    }
     return true;
 }
 #else

@@ -43,6 +43,7 @@
 #include "lupdate.h"
 
 #include <translator.h>
+#include <qmakevfs.h>
 #include <qmakeparser.h>
 #include <profileevaluator.h>
 
@@ -396,10 +397,12 @@ static void print(const QString &fileName, int lineNo, int type, const QString &
 class EvalHandler : public QMakeHandler {
 public:
     virtual void message(int type, const QString &msg, const QString &fileName, int lineNo)
-        { if (verbose) print(fileName, lineNo, type, msg); }
+    {
+        if (verbose && (type & CategoryMask) == ErrorMessage)
+            print(fileName, lineNo, type, msg);
+    }
 
-    virtual void fileMessage(const QString &msg)
-        { printErr(msg + QLatin1Char('\n')); }
+    virtual void fileMessage(const QString &) {}
 
     virtual void aboutToEval(ProFile *, ProFile *, EvalFileType) {}
     virtual void doneWithEval(ProFile *) {}
@@ -418,7 +421,8 @@ static QStringList getSources(const char *var, const char *vvar, const QStringLi
     return visitor.absoluteFileValues(QLatin1String(var), projectDir, vPaths, 0);
 }
 
-static QStringList getSources(const ProFileEvaluator &visitor, const QString &projectDir)
+static QStringList getSources(const ProFileEvaluator &visitor, const QString &projectDir,
+                              const QStringList &excludes)
 {
     QStringList baseVPaths;
     baseVPaths += visitor.absolutePathValues(QLatin1String("VPATH"), projectDir);
@@ -476,12 +480,6 @@ static QStringList getSources(const ProFileEvaluator &visitor, const QString &pr
     sourceFiles.removeDuplicates();
     sourceFiles.sort();
 
-    QStringList excludes;
-    foreach (QString ex, visitor.values(QLatin1String("TR_EXCLUDE"))) {
-        if (!QFileInfo(ex).isAbsolute())
-            ex = QDir(projectDir).absoluteFilePath(ex);
-        excludes << QDir::cleanPath(ex);
-    }
     foreach (const QString &ex, excludes) {
         // TODO: take advantage of the file list being sorted
         QRegExp rx(ex, Qt::CaseSensitive, QRegExp::Wildcard);
@@ -494,6 +492,18 @@ static QStringList getSources(const ProFileEvaluator &visitor, const QString &pr
     }
 
     return sourceFiles;
+}
+
+QStringList getExcludes(const ProFileEvaluator &visitor, const QString &projectDir)
+{
+    QStringList excludes;
+    foreach (QString ex, visitor.values(QLatin1String("TR_EXCLUDE"))) {
+        if (!QFileInfo(ex).isAbsolute())
+            ex = QDir(projectDir).absoluteFilePath(ex);
+        excludes << QDir::cleanPath(ex);
+    }
+
+    return excludes;
 }
 
 static void excludeProjects(const ProFileEvaluator &visitor, QStringList *subProjects)
@@ -549,14 +559,15 @@ static void processSources(Translator &fetchedTor,
 }
 
 static void processProjects(bool topLevel, bool nestComplain, const QStringList &proFiles,
-        const QHash<QString, QString> &outDirMap, ProFileGlobals *option, QMakeParser *parser,
+        const QHash<QString, QString> &outDirMap,
+        ProFileGlobals *option, QMakeVfs *vfs, QMakeParser *parser,
         UpdateOptions options,
         const QString &targetLanguage, const QString &sourceLanguage,
         Translator *parentTor, bool *fail);
 
 static void processProject(
         bool nestComplain, const QString &proFile,
-        ProFileGlobals *option, QMakeParser *parser, ProFileEvaluator &visitor,
+        ProFileGlobals *option, QMakeVfs *vfs, QMakeParser *parser, ProFileEvaluator &visitor,
         UpdateOptions options,
         const QString &targetLanguage, const QString &sourceLanguage,
         Translator *fetchedTor, bool *fail)
@@ -596,14 +607,15 @@ static void processProject(
                 subProFiles << subPro;
         }
         processProjects(false, nestComplain, subProFiles, QHash<QString, QString>(),
-                        option, parser, options,
+                        option, vfs, parser, options,
                         targetLanguage, sourceLanguage, fetchedTor, fail);
     } else {
         ConversionData cd;
         cd.m_noUiLines = options & NoUiLines;
         cd.m_sourceIsUtf16 = options & SourceIsUtf16;
         cd.m_includePath = visitor.values(QLatin1String("INCLUDEPATH"));
-        QStringList sourceFiles = getSources(visitor, proPath);
+        cd.m_excludes = getExcludes(visitor, proPath);
+        QStringList sourceFiles = getSources(visitor, proPath, cd.m_excludes);
         QSet<QString> sourceDirs;
         sourceDirs.insert(proPath + QLatin1Char('/'));
         foreach (const QString &sf, sourceFiles)
@@ -621,7 +633,8 @@ static void processProject(
 }
 
 static void processProjects(bool topLevel, bool nestComplain, const QStringList &proFiles,
-        const QHash<QString, QString> &outDirMap, ProFileGlobals *option, QMakeParser *parser,
+        const QHash<QString, QString> &outDirMap,
+        ProFileGlobals *option, QMakeVfs *vfs, QMakeParser *parser,
         UpdateOptions options,
         const QString &targetLanguage, const QString &sourceLanguage,
         Translator *parentTor, bool *fail)
@@ -631,9 +644,6 @@ static void processProjects(bool topLevel, bool nestComplain, const QStringList 
         if (!outDirMap.isEmpty())
             option->setDirectories(QFileInfo(proFile).path(), outDirMap[proFile]);
 
-        ProFileEvaluator visitor(option, parser, &evalHandler);
-        visitor.setCumulative(true);
-        visitor.setOutputDir(option->shadowedPath(proFile));
         ProFile *pro;
         if (!(pro = parser->parsedProFile(proFile, topLevel ? QMakeParser::ParseReportMissing
                                                             : QMakeParser::ParseDefault))) {
@@ -641,6 +651,9 @@ static void processProjects(bool topLevel, bool nestComplain, const QStringList 
                 *fail = true;
             continue;
         }
+        ProFileEvaluator visitor(option, parser, vfs, &evalHandler);
+        visitor.setCumulative(true);
+        visitor.setOutputDir(option->shadowedPath(pro->directoryName()));
         if (!visitor.accept(pro)) {
             if (topLevel)
                 *fail = true;
@@ -673,7 +686,7 @@ static void processProjects(bool topLevel, bool nestComplain, const QStringList 
                 continue;
             }
             Translator tor;
-            processProject(false, proFile, option, parser, visitor, options,
+            processProject(false, proFile, option, vfs, parser, visitor, options,
                            targetLanguage, sourceLanguage, &tor, fail);
             updateTsFiles(tor, tsFiles, QStringList(),
                           sourceLanguage, targetLanguage, options, fail);
@@ -686,10 +699,10 @@ static void processProjects(bool topLevel, bool nestComplain, const QStringList 
                 printErr(LU::tr("lupdate warning: no TS files specified. Only diagnostics "
                                 "will be produced for '%1'.\n").arg(proFile));
             Translator tor;
-            processProject(nestComplain, proFile, option, parser, visitor, options,
+            processProject(nestComplain, proFile, option, vfs, parser, visitor, options,
                            targetLanguage, sourceLanguage, &tor, fail);
         } else {
-            processProject(nestComplain, proFile, option, parser, visitor, options,
+            processProject(nestComplain, proFile, option, vfs, parser, visitor, options,
                            targetLanguage, sourceLanguage, parentTor, fail);
         }
         pro->deref();
@@ -1042,16 +1055,17 @@ int main(int argc, char **argv)
         option.initProperties();
         option.setCommandLineArguments(QDir::currentPath(),
                                        QStringList() << QLatin1String("CONFIG+=lupdate_run"));
-        QMakeParser parser(0, &evalHandler);
+        QMakeVfs vfs;
+        QMakeParser parser(0, &vfs, &evalHandler);
 
         if (!tsFileNames.isEmpty()) {
             Translator fetchedTor;
-            processProjects(true, true, proFiles, outDirMap, &option, &parser, options,
+            processProjects(true, true, proFiles, outDirMap, &option, &vfs, &parser, options,
                             targetLanguage, sourceLanguage, &fetchedTor, &fail);
             updateTsFiles(fetchedTor, tsFileNames, alienFiles,
                           sourceLanguage, targetLanguage, options, &fail);
         } else {
-            processProjects(true, false, proFiles, outDirMap, &option, &parser, options,
+            processProjects(true, false, proFiles, outDirMap, &option, &vfs, &parser, options,
                             targetLanguage, sourceLanguage, 0, &fail);
         }
     }

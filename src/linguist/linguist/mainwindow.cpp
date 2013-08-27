@@ -268,7 +268,6 @@ MainWindow::MainWindow()
       m_findMatchCase(Qt::CaseInsensitive),
       m_findIgnoreAccelerators(true),
       m_findWhere(DataModel::NoLocation),
-      m_foundWhere(DataModel::NoLocation),
       m_translationSettingsDialog(0),
       m_settingCurrentMessage(false),
       m_fileActiveModel(-1),
@@ -965,9 +964,9 @@ void MainWindow::print()
     }
 }
 
-bool MainWindow::searchItem(const QString &searchWhat)
+bool MainWindow::searchItem(DataModel::FindLocation where, const QString &searchWhat)
 {
-    if ((m_findWhere & m_foundWhere) == 0)
+    if ((m_findWhere & where) == 0)
         return false;
 
     QString text = searchWhat;
@@ -994,41 +993,28 @@ void MainWindow::findAgain()
         bool hadMessage = false;
         for (int i = 0; i < m_dataModel->modelCount(); ++i) {
             if (MessageItem *m = m_dataModel->messageItem(dataIndex, i)) {
-                // Note: we do not look into plurals on grounds of them not
-                // containing anything much different from the singular.
-                if (hadMessage) {
-                    m_foundWhere = DataModel::Translations;
-                    if (!searchItem(m->translation()))
-                        m_foundWhere = DataModel::NoLocation;
-                } else {
-                    switch (m_foundWhere) {
-                    case 0:
-                        m_foundWhere = DataModel::SourceText;
-                        // fall-through to search source text
-                    case DataModel::SourceText:
-                        if (searchItem(m->text()))
+                bool found = true;
+                do {
+                    if (!hadMessage) {
+                        if (searchItem(DataModel::SourceText, m->text()))
                             break;
-                        if (searchItem(m->pluralText()))
+                        if (searchItem(DataModel::SourceText, m->pluralText()))
                             break;
-                        m_foundWhere = DataModel::Translations;
-                        // fall-through to search translation
-                    case DataModel::Translations:
-                        if (searchItem(m->translation()))
+                        if (searchItem(DataModel::Comments, m->comment()))
                             break;
-                        m_foundWhere = DataModel::Comments;
-                        // fall-through to search comment
-                    case DataModel::Comments:
-                        if (searchItem(m->comment()))
+                        if (searchItem(DataModel::Comments, m->extraComment()))
                             break;
-                        if (searchItem(m->extraComment()))
-                            break;
-                        if (searchItem(m->translatorComment()))
-                            break;
-                        m_foundWhere = DataModel::NoLocation;
-                        // did not find the search string in this message
                     }
-                }
-                if (m_foundWhere != DataModel::NoLocation) {
+                    foreach (const QString &trans, m->translations())
+                        if (searchItem(DataModel::Translations, trans))
+                            goto didfind;
+                    if (searchItem(DataModel::Comments, m->translatorComment()))
+                        break;
+                    found = false;
+                    // did not find the search string in this message
+                } while (0);
+                if (found) {
+                  didfind:
                     setCurrentMessage(realIndex, i);
 
                     // determine whether the search wrapped
@@ -1057,7 +1043,6 @@ void MainWindow::findAgain()
     qApp->beep();
     QMessageBox::warning(m_findDialog, tr("Qt Linguist"),
                          tr("Cannot find the string '%1'.").arg(m_findText));
-    m_foundWhere  = DataModel::NoLocation;
 }
 
 void MainWindow::showBatchTranslateDialog()
@@ -1492,13 +1477,14 @@ void MainWindow::selectedMessageChanged(const QModelIndex &sortedIndex, const QM
         return;
     }
 
+    int model = -1;
+    MessageItem *m = 0;
     QModelIndex index = m_sortedMessagesModel->mapToSource(sortedIndex);
     if (index.isValid()) {
-        int model = (index.column() && (index.column() - 1 < m_dataModel->modelCount())) ?
+        model = (index.column() && (index.column() - 1 < m_dataModel->modelCount())) ?
                         index.column() - 1 : m_currentIndex.model();
         m_currentIndex = m_messageModel->dataIndex(index, model);
         m_messageEditor->showMessage(m_currentIndex);
-        MessageItem *m = 0;
         if (model >= 0 && (m = m_dataModel->messageItem(m_currentIndex))) {
             if (m_dataModel->isModelWritable(model) && !m->isObsolete())
                 m_phraseView->setSourceText(m_currentIndex.model(), m->text());
@@ -1513,30 +1499,14 @@ void MainWindow::selectedMessageChanged(const QModelIndex &sortedIndex, const QM
             }
             m_phraseView->setSourceText(-1, QString());
         }
-        if (m && !m->fileName().isEmpty()) {
-            if (hasFormPreview(m->fileName())) {
-                m_sourceAndFormView->setCurrentWidget(m_formPreviewView);
-                m_formPreviewView->setSourceContext(model, m);
-            } else {
-                m_sourceAndFormView->setCurrentWidget(m_sourceCodeView);
-                QDir dir = QFileInfo(m_dataModel->srcFileName(model)).dir();
-                QString fileName = QDir::cleanPath(dir.absoluteFilePath(m->fileName()));
-                m_sourceCodeView->setSourceContext(fileName, m->lineNumber());
-            }
-            m_errorsView->setEnabled(true);
-        } else {
-            m_sourceAndFormView->setCurrentWidget(m_sourceCodeView);
-            m_sourceCodeView->setSourceContext(QString(), 0);
-            m_errorsView->setEnabled(false);
-        }
+        m_errorsView->setEnabled(m != 0);
         updateDanger(m_currentIndex, true);
     } else {
         m_currentIndex = MultiDataIndex();
         m_messageEditor->showNothing();
         m_phraseView->setSourceText(-1, QString());
-        m_sourceAndFormView->setCurrentWidget(m_sourceCodeView);
-        m_sourceCodeView->setSourceContext(QString(), 0);
     }
+    updateSourceView(model, m);
 
     updatePhraseBookActions();
     m_ui.actionSelectAll->setEnabled(index.isValid());
@@ -1985,15 +1955,14 @@ void MainWindow::updateLatestModel(int model)
     m_currentIndex = MultiDataIndex(model, m_currentIndex.context(), m_currentIndex.message());
     bool enable = false;
     bool enableRw = false;
+    MessageItem *item = 0;
     if (model >= 0) {
         enable = true;
         if (m_dataModel->isModelWritable(model))
             enableRw = true;
 
         if (m_currentIndex.isValid()) {
-            if (MessageItem *item = m_dataModel->messageItem(m_currentIndex)) {
-                if (!item->fileName().isEmpty() && hasFormPreview(item->fileName()))
-                    m_formPreviewView->setSourceContext(model, item);
+            if ((item = m_dataModel->messageItem(m_currentIndex))) {
                 if (enableRw && !item->isObsolete())
                     m_phraseView->setSourceText(model, item->text());
                 else
@@ -2003,6 +1972,7 @@ void MainWindow::updateLatestModel(int model)
             }
         }
     }
+    updateSourceView(model, item);
     m_ui.actionSave->setEnabled(enableRw);
     m_ui.actionSaveAs->setEnabled(enableRw);
     m_ui.actionRelease->setEnabled(enableRw);
@@ -2013,6 +1983,24 @@ void MainWindow::updateLatestModel(int model)
     // cut & paste - edit only
     updatePhraseBookActions();
     updateStatistics();
+}
+
+void MainWindow::updateSourceView(int model, MessageItem *item)
+{
+    if (item && !item->fileName().isEmpty()) {
+        if (hasFormPreview(item->fileName())) {
+            m_sourceAndFormView->setCurrentWidget(m_formPreviewView);
+            m_formPreviewView->setSourceContext(model, item);
+        } else {
+            m_sourceAndFormView->setCurrentWidget(m_sourceCodeView);
+            QDir dir = QFileInfo(m_dataModel->srcFileName(model)).dir();
+            QString fileName = QDir::cleanPath(dir.absoluteFilePath(item->fileName()));
+            m_sourceCodeView->setSourceContext(fileName, item->lineNumber());
+        }
+    } else {
+        m_sourceAndFormView->setCurrentWidget(m_sourceCodeView);
+        m_sourceCodeView->setSourceContext(QString(), 0);
+    }
 }
 
 // Note for *AboutToShow: Due to the delayed nature, only actions without shortcuts
