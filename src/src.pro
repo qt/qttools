@@ -21,6 +21,10 @@ mac {
     SUBDIRS += macdeployqt
 }
 
+android {
+    SUBDIRS += androiddeployqt
+}
+
 qtHaveModule(dbus): SUBDIRS += qdbus
 
 qtNomakeTools( \
