@@ -252,7 +252,13 @@ public:
             print(fileName, lineNo, msg);
     }
 
-    virtual void fileMessage(const QString &) {}
+    virtual void fileMessage(int type, const QString &msg)
+    {
+        if (verbose && !(type & CumulativeEvalMessage) && (type & CategoryMask) == ErrorMessage) {
+            // "Downgrade" errors, as we don't really care for them
+            printErr(QLatin1String("WARNING: ") + msg + QLatin1Char('\n'));
+        }
+    }
 
     virtual void aboutToEval(ProFile *, ProFile *, EvalFileType) {}
     virtual void doneWithEval(ProFile *) {}
