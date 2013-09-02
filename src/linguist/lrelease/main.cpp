@@ -191,16 +191,14 @@ static bool releaseTsFile(const QString& tsFileName,
     return releaseTranslator(tor, qmFileName, cd, removeIdentical);
 }
 
-static void print(const QString &fileName, int lineNo, int type, const QString &msg)
+static void print(const QString &fileName, int lineNo, const QString &msg)
 {
-    QString pfx = ((type & QMakeHandler::CategoryMask) == QMakeHandler::WarningMessage)
-                  ? QString::fromLatin1("WARNING: ") : QString();
     if (lineNo > 0)
-        printErr(QString::fromLatin1("%1%2:%3: %4\n").arg(pfx, fileName, QString::number(lineNo), msg));
+        printErr(QString::fromLatin1("%1:%2: %3\n").arg(fileName, QString::number(lineNo), msg));
     else if (lineNo)
-        printErr(QString::fromLatin1("%1%2: %3\n").arg(pfx, fileName, msg));
+        printErr(QString::fromLatin1("%1: %2\n").arg(fileName, msg));
     else
-        printErr(QString::fromLatin1("%1%2\n").arg(pfx, msg));
+        printErr(QString::fromLatin1("%1\n").arg(msg));
 }
 
 class EvalHandler : public QMakeHandler {
@@ -208,7 +206,7 @@ public:
     virtual void message(int type, const QString &msg, const QString &fileName, int lineNo)
     {
         if (verbose && (type & CategoryMask) == ErrorMessage)
-            print(fileName, lineNo, type, msg);
+            print(fileName, lineNo, msg);
     }
 
     virtual void fileMessage(const QString &) {}
