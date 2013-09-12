@@ -658,7 +658,7 @@
 
     \image designer-property-editor-toolbar.png
 
-    To add a dynamic property, clcik on the \gui Add button
+    To add a dynamic property, click on the \gui Add button
     \inlineimage designer-property-editor-add-dynamic.png
     . To remove it, click on the \gui Remove button
     \inlineimage designer-property-editor-remove-dynamic.png
