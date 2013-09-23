@@ -806,7 +806,23 @@
                 </widget>
             </ui>
         </categoryentry>
-
+        <categoryentry name="Key sequence Edit" icon="widgets/lineedit.png">
+            <ui>
+                <widget class="QKeySequenceEdit">
+                    <property name="geometry" >
+                        <rect>
+                            <x>0</x>
+                            <y>1</y>
+                            <width>113</width>
+                            <height>20</height>
+                        </rect>
+                    </property>
+                    <property name="objectName">
+                        <string notr="true">keySequenceEdit</string>
+                    </property>
+                </widget>
+            </ui>
+        </categoryentry>
     </category>
 
 

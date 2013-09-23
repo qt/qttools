@@ -106,6 +106,9 @@ DECLARE_WIDGET(QTreeView, "")
 DECLARE_WIDGET(QTreeWidget, "")
 #endif
 DECLARE_WIDGET(QWidget, "")
+#ifndef QT_NO_KEYSEQUENCEEDIT
+DECLARE_WIDGET(QKeySequenceEdit, "")
+#endif
 #ifndef QT_NO_SPLITTER
 DECLARE_WIDGET(QSplitter, "")
 #endif
