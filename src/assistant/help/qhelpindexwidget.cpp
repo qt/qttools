@@ -49,6 +49,8 @@
 #include <QtWidgets/QListView>
 #include <QtWidgets/QHeaderView>
 
+#include <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 class QHelpIndexProvider : public QThread
@@ -192,7 +194,7 @@ void QHelpIndexProvider::run()
     }
     m_mutex.lock();
     m_indices = indicesSet.values();
-    qSort(m_indices.begin(), m_indices.end(), caseInsensitiveLessThan);
+    std::sort(m_indices.begin(), m_indices.end(), caseInsensitiveLessThan);
     m_mutex.unlock();
 }
 
