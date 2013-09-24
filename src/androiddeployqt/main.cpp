@@ -54,6 +54,8 @@
 #include <QStandardPaths>
 #include <QUuid>
 
+static const bool mustReadOutputAnyway = true; // pclose seems to return the wrong error code unless we read the output
+
 void deleteRecursively(const QString &dirName)
 {
     QDir dir(dirName);
@@ -1560,10 +1562,11 @@ bool uninstallApk(const Options &options)
     if (adbCommand == 0)
         return false;
 
-    if (options.verbose) {
+    if (options.verbose || mustReadOutputAnyway) {
         char buffer[512];
         while (fgets(buffer, sizeof(buffer), adbCommand) != 0)
-            fprintf(stdout, "%s", buffer);
+            if (options.verbose)
+                fprintf(stdout, "%s", buffer);
     }
 
     int returnCode = pclose(adbCommand);
@@ -1604,10 +1607,11 @@ bool installApk(const Options &options)
     if (adbCommand == 0)
         return false;
 
-    if (options.verbose) {
+    if (options.verbose || mustReadOutputAnyway) {
         char buffer[512];
         while (fgets(buffer, sizeof(buffer), adbCommand) != 0)
-            fprintf(stdout, "%s", buffer);
+            if (options.verbose)
+                fprintf(stdout, "%s", buffer);
     }
 
     int returnCode = pclose(adbCommand);
