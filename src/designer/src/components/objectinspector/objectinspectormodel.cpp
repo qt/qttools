@@ -62,6 +62,8 @@
 #include <QtCore/QDebug>
 #include <QtCore/QCoreApplication>
 
+#include <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 namespace {
@@ -311,7 +313,7 @@ namespace qdesigner_internal {
         QObjectList children = object->children();
         if (!children.empty()) {
             ButtonGroupList buttonGroups;
-            qSort(children.begin(), children.end(), sortEntry);
+            std::sort(children.begin(), children.end(), sortEntry);
             const QObjectList::const_iterator cend = children.constEnd();
             for (QObjectList::const_iterator it = children.constBegin(); it != cend; ++it) {
                 // Managed child widgets unless we had a container extension

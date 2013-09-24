@@ -73,6 +73,8 @@
 #include <QtCore/QDebug>
 #include <QtCore/QSet>
 
+#include <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 enum { FormLayoutColumns = 2 };
@@ -518,7 +520,7 @@ BoxLayout::BoxLayout(const QWidgetList &wl, QWidget *p, QDesignerFormWindowInter
 void BoxLayout::sort()
 {
     QWidgetList wl = widgets();
-    qStableSort(wl.begin(), wl.end(), PositionSortPredicate(m_orientation));
+    std::stable_sort(wl.begin(), wl.end(), PositionSortPredicate(m_orientation));
     setWidgets(wl);
 }
 
@@ -571,7 +573,7 @@ SplitterLayout::SplitterLayout(const QWidgetList &wl, QWidget *p, QDesignerFormW
 void SplitterLayout::sort()
 {
     QWidgetList wl = widgets();
-    qStableSort(wl.begin(), wl.end(), PositionSortPredicate(m_orientation));
+    std::stable_sort(wl.begin(), wl.end(), PositionSortPredicate(m_orientation));
     setWidgets(wl);
 }
 
@@ -674,7 +676,7 @@ void Grid::resize(int nrows, int ncols)
     m_ncols = ncols;
     if (const int allocSize = m_nrows * m_ncols) {
         m_cells = new QWidget*[allocSize];
-        qFill(m_cells, m_cells + allocSize, static_cast<QWidget *>(0));
+        std::fill(m_cells, m_cells + allocSize, static_cast<QWidget *>(0));
     }
 }
 
@@ -707,7 +709,7 @@ void Grid::setCells(const QRect &c, QWidget* w)
 
     for (int r = c.top(); r < bottom; r++) {
         QWidget **pos = m_cells + r * m_ncols + c.left();
-        qFill(pos, pos + width, w);
+        std::fill(pos, pos + width, w);
     }
 }
 
@@ -962,7 +964,7 @@ void Grid::shrink()
         return;
     // reallocate and copy omitting the empty cells
     QWidget **simplifiedCells = new QWidget*[simplifiedNCols * simplifiedNRows];
-    qFill(simplifiedCells, simplifiedCells + simplifiedNCols * simplifiedNRows, static_cast<QWidget *>(0));
+    std::fill(simplifiedCells, simplifiedCells + simplifiedNCols * simplifiedNRows, static_cast<QWidget *>(0));
     QWidget **simplifiedPtr = simplifiedCells;
 
     for (int r = 0; r < m_nrows; r++)
@@ -1061,7 +1063,7 @@ void Grid::reallocFormLayout()
     // Reallocate with 2 columns. Just insert the protruding ones as fields.
     const int formNRows = m_nrows + pastRightWidgetCount;
     QWidget **formCells = new QWidget*[FormLayoutColumns * formNRows];
-    qFill(formCells, formCells + FormLayoutColumns * formNRows, static_cast<QWidget *>(0));
+    std::fill(formCells, formCells + FormLayoutColumns * formNRows, static_cast<QWidget *>(0));
     QWidget **formPtr = formCells;
     const int matchingColumns = qMin(m_ncols, static_cast<int>(FormLayoutColumns));
     for (int r = 0; r < m_nrows; r++) {
@@ -1086,7 +1088,7 @@ void Grid::reallocFormLayout()
 bool Grid::locateWidget(QWidget *w, int &row, int &col, int &rowspan, int &colspan) const
 {
     const int end = m_nrows * m_ncols;
-    const int startIndex = qFind(m_cells, m_cells + end, w) - m_cells;
+    const int startIndex = std::find(m_cells, m_cells + end, w) - m_cells;
     if (startIndex == end)
         return false;
 
@@ -1218,8 +1220,8 @@ QWidgetList GridLayout<GridLikeLayout, LayoutType, GridMode>::buildGrid(const QW
         index += 2;
     }
 
-    qSort(x);
-    qSort(y);
+    std::sort(x.begin(), x.end());
+    std::sort(y.begin(), y.end());
 
     // Remove duplicate x entries (Remove next, if equal to current)
     removeIntVecDuplicates(x);

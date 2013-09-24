@@ -67,6 +67,8 @@
 
 #include <QtCore/QSet>
 
+#include <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 namespace qdesigner_internal {
@@ -276,7 +278,7 @@ void EmbeddedOptionsControlPrivate::sortAndPopulateProfileCombo()
     for (int i = m_profileCombo->count() - 1; i > 0; i--)
         m_profileCombo->removeItem(i);
     if (!m_sortedProfiles.empty()) {
-        qSort(m_sortedProfiles.begin(), m_sortedProfiles.end(), deviceProfileLessThan);
+        std::sort(m_sortedProfiles.begin(), m_sortedProfiles.end(), deviceProfileLessThan);
         m_profileCombo->addItems(existingProfileNames());
     }
 }
