@@ -54,6 +54,7 @@
 #include <QStandardPaths>
 #include <QUuid>
 
+#include <algorithm>
 static const bool mustReadOutputAnyway = true; // pclose seems to return the wrong error code unless we read the output
 
 void deleteRecursively(const QString &dirName)
@@ -429,7 +430,7 @@ QString detectLatestAndroidPlatform(const QString &sdkPath)
         return QString();
     }
 
-    qSort(fileInfos.begin(), fileInfos.end(), quasiLexicographicalReverseLessThan);
+    std::sort(fileInfos.begin(), fileInfos.end(), quasiLexicographicalReverseLessThan);
 
     QFileInfo latestPlatform = fileInfos.first();
     return latestPlatform.baseName();
