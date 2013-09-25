@@ -48,6 +48,8 @@
 
 #include <QtCore/QXmlStreamReader>
 
+#include <algorithm>
+
 #define STRINGIFY_INTERNAL(x) #x
 #define STRINGIFY(x) STRINGIFY_INTERNAL(x)
 #define STRING(s) static QString str##s(QLatin1String(STRINGIFY(s)))
@@ -571,7 +573,7 @@ bool saveTS(const Translator &translator, QIODevice &dev, ConversionData &cd)
         context.append(msg);
     }
     if (cd.sortContexts())
-        qSort(contextOrder);
+        std::sort(contextOrder.begin(), contextOrder.end());
 
     QHash<QString, int> currentLine;
     QString currentFile;
