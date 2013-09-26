@@ -848,10 +848,37 @@ bool updateStringsXml(const Options &options)
     if (options.verbose)
         fprintf(stdout, "  -- res/values/strings.xml\n");
 
+    QStringList localLibs = options.localLibs;
+
+    // If .pro file overrides dependency detection, we need to see which platform plugin they picked
+    if (localLibs.isEmpty()) {
+        QString plugin;
+        foreach (QString qtDependency, options.qtDependencies) {
+            if (qtDependency.endsWith(QLatin1String("libqtforandroid.so"))
+                    || qtDependency.endsWith(QLatin1String("libqtforandroidGL.so"))) {
+                if (!plugin.isEmpty() && plugin != qtDependency) {
+                    fprintf(stderr, "Both platform plugins libqtforandroid.so and libqtforandroidGL.so included in package. Please include only one.\n");
+                    return false;
+                }
+
+                plugin = qtDependency;
+            }
+        }
+
+        if (plugin.isEmpty()) {
+            fprintf(stderr, "No platform plugin, neither libqtforandroid.so or libqtforandroidGL.so, included in package. Please include one.\n");
+            return false;
+        }
+
+        localLibs.append(plugin);
+        if (options.verbose)
+            fprintf(stdout, "  -- Using platform plugin %s\n", qPrintable(plugin));
+    }
+
     QHash<QString, QString> replacements;
     replacements[QLatin1String("<!-- %%INSERT_APP_NAME%% -->")] = options.appName;
     replacements[QLatin1String("<!-- %%INSERT_APP_LIB_NAME%% -->")] = QFileInfo(options.applicationBinary).baseName().mid(sizeof("lib") - 1);
-    replacements[QLatin1String("<!-- %%INSERT_LOCAL_LIBS%% -->")] = options.localLibs.join(QLatin1Char(':'));
+    replacements[QLatin1String("<!-- %%INSERT_LOCAL_LIBS%% -->")] = localLibs.join(QLatin1Char(':'));
     replacements[QLatin1String("<!-- %%INSERT_LOCAL_JARS%% -->")] = options.localJars.join(QLatin1Char(':'));
     replacements[QLatin1String("<!-- %%INSERT_INIT_CLASSES%% -->")] = options.initClasses.join(QLatin1Char(':'));
 
