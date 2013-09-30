@@ -68,6 +68,8 @@
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QTreeView>
 
+#include <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 /*!
@@ -179,7 +181,7 @@ void ItemViewFindWidget::find(const QString &ttf, bool skipCurrent, bool backwar
     QModelIndex idx;
     if (skipCurrent && m_itemView->selectionModel()->hasSelection()) {
         QModelIndexList il = m_itemView->selectionModel()->selectedIndexes();
-        qSort(il.begin(), il.end(), indexLessThan);
+        std::sort(il.begin(), il.end(), indexLessThan);
         idx = backward ? il.first() : il.last();
     } else {
         idx = m_itemView->currentIndex();

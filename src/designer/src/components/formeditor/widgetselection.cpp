@@ -67,6 +67,8 @@
 #include <QtCore/QVariant>
 #include <QtCore/qdebug.h>
 
+#include <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 namespace qdesigner_internal {
@@ -599,11 +601,11 @@ void WidgetSelection::updateActive()
 {
     const WidgetState ws = widgetState(m_formWindow->core(), m_widget);
     bool active[WidgetHandle::TypeCount];
-    qFill(active, active + WidgetHandle::TypeCount, false);
+    std::fill(active, active + WidgetHandle::TypeCount, false);
     // Determine active handles
     switch (ws) {
     case UnlaidOut:
-        qFill(active, active + WidgetHandle::TypeCount, true);
+        std::fill(active, active + WidgetHandle::TypeCount, true);
         break;
     case ManagedGridLayout: // Grid: Allow changing span
         active[WidgetHandle::Left] = active[WidgetHandle::Top] = active[WidgetHandle::Right] = active[WidgetHandle::Bottom] = true;

@@ -54,6 +54,9 @@
 #include <QStandardPaths>
 #include <QUuid>
 
+#include <algorithm>
+static const bool mustReadOutputAnyway = true; // pclose seems to return the wrong error code unless we read the output
+
 void deleteRecursively(const QString &dirName)
 {
     QDir dir(dirName);
@@ -427,7 +430,7 @@ QString detectLatestAndroidPlatform(const QString &sdkPath)
         return QString();
     }
 
-    qSort(fileInfos.begin(), fileInfos.end(), quasiLexicographicalReverseLessThan);
+    std::sort(fileInfos.begin(), fileInfos.end(), quasiLexicographicalReverseLessThan);
 
     QFileInfo latestPlatform = fileInfos.first();
     return latestPlatform.baseName();
@@ -845,10 +848,37 @@ bool updateStringsXml(const Options &options)
     if (options.verbose)
         fprintf(stdout, "  -- res/values/strings.xml\n");
 
+    QStringList localLibs = options.localLibs;
+
+    // If .pro file overrides dependency detection, we need to see which platform plugin they picked
+    if (localLibs.isEmpty()) {
+        QString plugin;
+        foreach (QString qtDependency, options.qtDependencies) {
+            if (qtDependency.endsWith(QLatin1String("libqtforandroid.so"))
+                    || qtDependency.endsWith(QLatin1String("libqtforandroidGL.so"))) {
+                if (!plugin.isEmpty() && plugin != qtDependency) {
+                    fprintf(stderr, "Both platform plugins libqtforandroid.so and libqtforandroidGL.so included in package. Please include only one.\n");
+                    return false;
+                }
+
+                plugin = qtDependency;
+            }
+        }
+
+        if (plugin.isEmpty()) {
+            fprintf(stderr, "No platform plugin, neither libqtforandroid.so or libqtforandroidGL.so, included in package. Please include one.\n");
+            return false;
+        }
+
+        localLibs.append(plugin);
+        if (options.verbose)
+            fprintf(stdout, "  -- Using platform plugin %s\n", qPrintable(plugin));
+    }
+
     QHash<QString, QString> replacements;
     replacements[QLatin1String("<!-- %%INSERT_APP_NAME%% -->")] = options.appName;
     replacements[QLatin1String("<!-- %%INSERT_APP_LIB_NAME%% -->")] = QFileInfo(options.applicationBinary).baseName().mid(sizeof("lib") - 1);
-    replacements[QLatin1String("<!-- %%INSERT_LOCAL_LIBS%% -->")] = options.localLibs.join(QLatin1Char(':'));
+    replacements[QLatin1String("<!-- %%INSERT_LOCAL_LIBS%% -->")] = localLibs.join(QLatin1Char(':'));
     replacements[QLatin1String("<!-- %%INSERT_LOCAL_JARS%% -->")] = options.localJars.join(QLatin1Char(':'));
     replacements[QLatin1String("<!-- %%INSERT_INIT_CLASSES%% -->")] = options.initClasses.join(QLatin1Char(':'));
 
@@ -1081,7 +1111,7 @@ QStringList getQtLibsFromElf(const Options &options, const QString &fileName)
         return QStringList();
     }
 
-    readElf += QLatin1String(" -d -W ") + fileName;
+    readElf = QString::fromLatin1("\"%1\" -d -W %2").arg(readElf).arg(fileName);
 
     FILE *readElfCommand = popen(readElf.toLocal8Bit().constData(), "r");
     if (readElfCommand == 0) {
@@ -1194,7 +1224,7 @@ bool stripFile(const Options &options, const QString &fileName)
         return false;
     }
 
-    strip += QLatin1Char(' ') + fileName;
+    strip = QString::fromLatin1("\"%1\" %2").arg(strip).arg(fileName);
 
     FILE *stripCommand = popen(strip.toLocal8Bit().constData(), "r");
     if (stripCommand == 0) {
@@ -1272,7 +1302,7 @@ FILE *runAdb(const Options &options, const QString &arguments)
     if (!options.installLocation.isEmpty())
         adb += QLatin1String(" -s ") + options.installLocation;
 
-    adb += QLatin1Char(' ') + arguments;
+    adb = QString::fromLatin1("\"%1\" %2").arg(adb).arg(arguments);
     FILE *adbCommand = popen(adb.toLocal8Bit().constData(), "r");
     if (adbCommand == 0) {
         fprintf(stderr, "Cannot start adb: %s\n", qPrintable(adb));
@@ -1457,9 +1487,11 @@ bool createAndroidProject(const Options &options)
         return false;
     }
 
-    androidTool += QString::fromLatin1(" update project --path %1 --target %2 --name QtApp")
+    androidTool = QString::fromLatin1("\"%1\" update project --path %2 --target %3 --name QtApp")
+            .arg(androidTool)
             .arg(options.outputDirectory)
             .arg(options.androidPlatform);
+
     if (options.verbose)
         fprintf(stdout, "  -- Command: %s\n", qPrintable(androidTool));
 
@@ -1520,7 +1552,7 @@ bool buildAndroidProject(const Options &options)
         return false;
     }
 
-    QString ant = antTool + (options.releasePackage ? QLatin1String(" release") : QLatin1String(" debug"));
+    QString ant = QString::fromLatin1("\"%1\" %2").arg(antTool).arg(options.releasePackage ? QLatin1String(" release") : QLatin1String(" debug"));
     if (!options.verbose)
         ant += QLatin1String(" -quiet");
 
@@ -1560,10 +1592,11 @@ bool uninstallApk(const Options &options)
     if (adbCommand == 0)
         return false;
 
-    if (options.verbose) {
+    if (options.verbose || mustReadOutputAnyway) {
         char buffer[512];
         while (fgets(buffer, sizeof(buffer), adbCommand) != 0)
-            fprintf(stdout, "%s", buffer);
+            if (options.verbose)
+                fprintf(stdout, "%s", buffer);
     }
 
     int returnCode = pclose(adbCommand);
@@ -1604,10 +1637,11 @@ bool installApk(const Options &options)
     if (adbCommand == 0)
         return false;
 
-    if (options.verbose) {
+    if (options.verbose || mustReadOutputAnyway) {
         char buffer[512];
         while (fgets(buffer, sizeof(buffer), adbCommand) != 0)
-            fprintf(stdout, "%s", buffer);
+            if (options.verbose)
+                fprintf(stdout, "%s", buffer);
     }
 
     int returnCode = pclose(adbCommand);
@@ -1679,8 +1713,8 @@ bool signPackage(const Options &options)
         return false;
     }
 
-    jarSignerTool += QString::fromLatin1(" -sigalg %1 -digestalg %2 -keystore %3")
-            .arg(options.sigAlg).arg(options.digestAlg).arg(options.keyStore);
+    jarSignerTool = QString::fromLatin1("\"%1\" -sigalg %2 -digestalg %3 -keystore %4")
+            .arg(jarSignerTool).arg(options.sigAlg).arg(options.digestAlg).arg(options.keyStore);
 
     if (!options.keyStorePassword.isEmpty())
         jarSignerTool += QString::fromLatin1(" -storepass %1").arg(options.keyStorePassword);
@@ -1752,15 +1786,16 @@ bool signPackage(const Options &options)
     if (options.verbose)
         zipAlignTool += QLatin1String(" -v");
 
-    zipAlignTool += QLatin1String(" -f 4 ")
-            + options.outputDirectory
-            + QLatin1String("/bin/")
-            + apkName(options)
-            + QLatin1String("-unsigned.apk ")
-            + options.outputDirectory
-            + QLatin1String("/bin/")
-            + apkName(options)
-            + QLatin1String(".apk");
+    zipAlignTool = QString::fromLatin1("\"%1\" -f 4 %2 %3")
+            .arg(zipAlignTool)
+            .arg(options.outputDirectory
+                 + QLatin1String("/bin/")
+                 + apkName(options)
+                 + QLatin1String("-unsigned.apk "))
+            .arg(options.outputDirectory
+                 + QLatin1String("/bin/")
+                 + apkName(options)
+                 + QLatin1String(".apk"));
 
     FILE *zipAlignCommand = popen(zipAlignTool.toLocal8Bit(), "r");
     if (zipAlignCommand == 0) {

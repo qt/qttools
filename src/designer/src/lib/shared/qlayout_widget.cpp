@@ -67,6 +67,8 @@
 #include <QtCore/QPair>
 #include <QtCore/QSet>
 
+#include <algorithm>
+
 enum { ShiftValue = 1 };
 enum { debugLayout = 0 };
 enum { FormLayoutColumns = 2 };
@@ -238,7 +240,7 @@ static bool removeEmptyCellsOnGrid(GridLikeLayout *grid, const QRect &area)
         }
     // remove, starting from last
     if (!indexesToBeRemoved.empty()) {
-        qStableSort(indexesToBeRemoved.begin(), indexesToBeRemoved.end());
+        std::stable_sort(indexesToBeRemoved.begin(), indexesToBeRemoved.end());
         for (int i = indexesToBeRemoved.size() - 1; i >= 0; i--)
             delete grid->takeAt(indexesToBeRemoved[i]);
     }
@@ -255,10 +257,10 @@ LayoutProperties::LayoutProperties()
 
 void LayoutProperties::clear()
 {
-    qFill(m_margins, m_margins + MarginCount, 0);
-    qFill(m_marginsChanged, m_marginsChanged + MarginCount, false);
-    qFill(m_spacings, m_spacings + SpacingsCount, 0);
-    qFill(m_spacingsChanged, m_spacingsChanged + SpacingsCount, false);
+    std::fill(m_margins, m_margins + MarginCount, 0);
+    std::fill(m_marginsChanged, m_marginsChanged + MarginCount, false);
+    std::fill(m_spacings, m_spacings + SpacingsCount, 0);
+    std::fill(m_spacingsChanged, m_spacingsChanged + SpacingsCount, false);
 
     m_objectName = QVariant();
     m_objectNameChanged = false;

@@ -50,6 +50,8 @@
 #include <QtCore/QDataStream>
 #include <QtCore/QTextStream>
 
+#include <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 namespace fulltextsearch {
@@ -276,7 +278,7 @@ void Reader::searchInIndex(const QStringList &terms)
             }
         }
     }
-    qSort(termList);
+    ::std::sort(termList.begin(), termList.end());
 }
 
 QVector<DocumentInfo> Reader::hits()
@@ -307,7 +309,7 @@ QVector<DocumentInfo> Reader::hits()
         }
     }
 
-    qSort(documents);
+    ::std::sort(documents.begin(), documents.end());
     return documents;
 }
 
@@ -405,7 +407,7 @@ QVector<Document> Reader::setupDummyTerm(const QStringList &terms,
     QVector<Document> maxList(0);
     if ( !termList.count() )
         return maxList;
-    qSort(termList);
+    ::std::sort(termList.begin(), termList.end());
 
     maxList = termList.takeLast().documents;
     for(QList<Term>::Iterator it = termList.begin(); it != termList.end(); ++it) {
