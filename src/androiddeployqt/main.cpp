@@ -1854,22 +1854,22 @@ bool copyGdbServer(const Options &options)
 enum ErrorCode
 {
     Success,
-    SyntaxErrorOrHelpRequested,
-    CannotReadInputFile,
-    CannotCopyAndroidTemplate,
-    CannotReadDependencies,
-    CannotCopyGnuStl,
-    CannotCopyQtFiles,
-    CannotFindApplicationBinary,
-    CannotCopyGdbServer,
-    CannotStripLibraries,
-    CannotCopyAndroidExtraLibs,
-    CannotCopyAndroidSources,
-    CannotUpdateAndroidFiles,
-    CannotCreateAndroidProject,
-    CannotBuildAndroidProject,
-    CannotSignPackage,
-    CannotInstallApk
+    SyntaxErrorOrHelpRequested = 1,
+    CannotReadInputFile = 2,
+    CannotCopyAndroidTemplate = 3,
+    CannotReadDependencies = 4,
+    CannotCopyGnuStl = 5,
+    CannotCopyQtFiles = 6,
+    CannotFindApplicationBinary = 7,
+    CannotCopyGdbServer = 8,
+    CannotStripLibraries = 9,
+    CannotCopyAndroidExtraLibs = 10,
+    CannotCopyAndroidSources = 11,
+    CannotUpdateAndroidFiles = 12,
+    CannotCreateAndroidProject = 13,
+    CannotBuildAndroidProject = 14,
+    CannotSignPackage = 15,
+    CannotInstallApk = 16
 };
 
 int main(int argc, char *argv[])
