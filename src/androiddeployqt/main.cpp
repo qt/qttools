@@ -1298,11 +1298,12 @@ FILE *runAdb(const Options &options, const QString &arguments)
         fprintf(stderr, "Cannot find adb tool: %s\n", qPrintable(adb));
         return 0;
     }
-
+    QString installOption;
     if (!options.installLocation.isEmpty())
-        adb += QLatin1String(" -s ") + options.installLocation;
+        installOption = QLatin1String(" -s ") + options.installLocation;
 
-    adb = QString::fromLatin1("\"%1\" %2").arg(adb).arg(arguments);
+    adb = QString::fromLatin1("\"%1\"%2 %3").arg(adb).arg(installOption).arg(arguments);
+
     FILE *adbCommand = popen(adb.toLocal8Bit().constData(), "r");
     if (adbCommand == 0) {
         fprintf(stderr, "Cannot start adb: %s\n", qPrintable(adb));
