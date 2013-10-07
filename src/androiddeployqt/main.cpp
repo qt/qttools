@@ -1518,7 +1518,8 @@ QString findInPath(const QString &fileName)
 
     QStringList paths = path.split(separator);
     foreach (QString path, paths) {
-        if (QFile::exists(path + QLatin1Char('/') + fileName))
+        QFileInfo fileInfo(path + QLatin1Char('/') + fileName);
+        if (fileInfo.exists() && fileInfo.isFile() && fileInfo.isExecutable())
             return path + QLatin1Char('/') + fileName;
     }
 
