@@ -99,6 +99,8 @@ bool copyFilePrintStatus(const QString &from, const QString &to)
         LogNormal() << "File exists, skip copy:" << to;
         return false;
     } else if (QFile::copy(from, to)) {
+        QFile dest(to);
+        dest.setPermissions(dest.permissions() | QFile::WriteOwner | QFile::WriteUser);
         LogNormal() << " copied:" << from;
         LogNormal() << " to" << to;
         return true;
