@@ -613,7 +613,7 @@ static void processProject(
         ConversionData cd;
         cd.m_noUiLines = options & NoUiLines;
         cd.m_sourceIsUtf16 = options & SourceIsUtf16;
-        cd.m_includePath = visitor.values(QLatin1String("INCLUDEPATH"));
+        cd.m_includePath = visitor.absolutePathValues(QLatin1String("INCLUDEPATH"), proPath);
         cd.m_excludes = getExcludes(visitor, proPath);
         QStringList sourceFiles = getSources(visitor, proPath, cd.m_excludes);
         QSet<QString> sourceDirs;
