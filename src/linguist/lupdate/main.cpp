@@ -438,13 +438,9 @@ static QStringList getSources(const ProFileEvaluator &visitor, const QString &pr
 
     // app/lib template
     sourceFiles += getSources("SOURCES", "VPATH_SOURCES", baseVPaths, projectDir, visitor);
+    sourceFiles += getSources("HEADERS", "VPATH_HEADERS", baseVPaths, projectDir, visitor);
 
     sourceFiles += getSources("FORMS", "VPATH_FORMS", baseVPaths, projectDir, visitor);
-
-    QStringList vPathsInc = baseVPaths;
-    vPathsInc += visitor.absolutePathValues(QLatin1String("INCLUDEPATH"), projectDir);
-    vPathsInc.removeDuplicates();
-    sourceFiles += visitor.absoluteFileValues(QLatin1String("HEADERS"), projectDir, vPathsInc, 0);
 
     QStringList installs = visitor.values(QLatin1String("INSTALLS"))
                          + visitor.values(QLatin1String("DEPLOYMENT"));
