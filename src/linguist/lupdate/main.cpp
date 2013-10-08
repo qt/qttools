@@ -440,7 +440,6 @@ static QStringList getSources(const ProFileEvaluator &visitor, const QString &pr
     sourceFiles += getSources("SOURCES", "VPATH_SOURCES", baseVPaths, projectDir, visitor);
 
     sourceFiles += getSources("FORMS", "VPATH_FORMS", baseVPaths, projectDir, visitor);
-    sourceFiles += getSources("FORMS3", "VPATH_FORMS3", baseVPaths, projectDir, visitor);
 
     QStringList vPathsInc = baseVPaths;
     vPathsInc += visitor.absolutePathValues(QLatin1String("INCLUDEPATH"), projectDir);
