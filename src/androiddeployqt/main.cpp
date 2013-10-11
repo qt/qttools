@@ -1298,11 +1298,12 @@ FILE *runAdb(const Options &options, const QString &arguments)
         fprintf(stderr, "Cannot find adb tool: %s\n", qPrintable(adb));
         return 0;
     }
-
+    QString installOption;
     if (!options.installLocation.isEmpty())
-        adb += QLatin1String(" -s ") + options.installLocation;
+        installOption = QLatin1String(" -s ") + options.installLocation;
 
-    adb = QString::fromLatin1("\"%1\" %2").arg(adb).arg(arguments);
+    adb = QString::fromLatin1("\"%1\"%2 %3").arg(adb).arg(installOption).arg(arguments);
+
     FILE *adbCommand = popen(adb.toLocal8Bit().constData(), "r");
     if (adbCommand == 0) {
         fprintf(stderr, "Cannot start adb: %s\n", qPrintable(adb));
@@ -1517,7 +1518,8 @@ QString findInPath(const QString &fileName)
 
     QStringList paths = path.split(separator);
     foreach (QString path, paths) {
-        if (QFile::exists(path + QLatin1Char('/') + fileName))
+        QFileInfo fileInfo(path + QLatin1Char('/') + fileName);
+        if (fileInfo.exists() && fileInfo.isFile() && fileInfo.isExecutable())
             return path + QLatin1Char('/') + fileName;
     }
 
@@ -1853,22 +1855,22 @@ bool copyGdbServer(const Options &options)
 enum ErrorCode
 {
     Success,
-    SyntaxErrorOrHelpRequested,
-    CannotReadInputFile,
-    CannotCopyAndroidTemplate,
-    CannotReadDependencies,
-    CannotCopyGnuStl,
-    CannotCopyQtFiles,
-    CannotFindApplicationBinary,
-    CannotCopyGdbServer,
-    CannotStripLibraries,
-    CannotCopyAndroidExtraLibs,
-    CannotCopyAndroidSources,
-    CannotUpdateAndroidFiles,
-    CannotCreateAndroidProject,
-    CannotBuildAndroidProject,
-    CannotSignPackage,
-    CannotInstallApk
+    SyntaxErrorOrHelpRequested = 1,
+    CannotReadInputFile = 2,
+    CannotCopyAndroidTemplate = 3,
+    CannotReadDependencies = 4,
+    CannotCopyGnuStl = 5,
+    CannotCopyQtFiles = 6,
+    CannotFindApplicationBinary = 7,
+    CannotCopyGdbServer = 8,
+    CannotStripLibraries = 9,
+    CannotCopyAndroidExtraLibs = 10,
+    CannotCopyAndroidSources = 11,
+    CannotUpdateAndroidFiles = 12,
+    CannotCreateAndroidProject = 13,
+    CannotBuildAndroidProject = 14,
+    CannotSignPackage = 15,
+    CannotInstallApk = 16
 };
 
 int main(int argc, char *argv[])

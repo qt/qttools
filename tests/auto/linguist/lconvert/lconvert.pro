@@ -1,5 +1,5 @@
 CONFIG += testcase
-QT += testlib
+QT = core testlib
 
 TARGET = tst_lconvert
 
