@@ -732,10 +732,7 @@ static DeployResult deploy(const Options &options,
     if (optVerboseLevel > 1)
         std::printf("Plugins: %s\n", qPrintable(plugins.join(QLatin1Char(','))));
 
-    if (plugins.isEmpty())
-        return result;
-
-    if (platformPlugin.isEmpty()) {
+    if ((result.deployedQtLibraries & QtGuiModule) && platformPlugin.isEmpty()) {
         *errorMessage =QStringLiteral("Unable to find the platform plugin.");
         return result;
     }
