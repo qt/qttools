@@ -999,11 +999,10 @@ QStringList findFilesRecursively(const Options &options, const QString &fileName
     }
 }
 
-bool readDependencies(Options *options, const QString &fileName, QSet<QString> *usedDependencies, QSet<QString> *readAndroidDependencies);
 bool readAndroidDependencyXml(Options *options,
                               const QString &moduleName,
                               QSet<QString> *usedDependencies,
-                              QSet<QString> *readAndroidDependencies)
+                              QSet<QString> *remainingDependencies)
 {
     QString androidDependencyName = options->qtInstallDirectory + QString::fromLatin1("/lib/%1-android-dependencies.xml").arg(moduleName);
 
@@ -1036,12 +1035,7 @@ bool readAndroidDependencyXml(Options *options,
 
                         usedDependencies->insert(fileName);
                         if (fileName.endsWith(QLatin1String(".so"))) {
-                            if (!readDependencies(options,
-                                                  options->qtInstallDirectory + QLatin1Char('/')  + fileName,
-                                                  usedDependencies,
-                                                  readAndroidDependencies)) {
-                                return false;
-                            }
+                            remainingDependencies->insert(fileName);
                         }
 
                         options->qtDependencies.append(fileName);
@@ -1139,45 +1133,46 @@ QStringList getQtLibsFromElf(const Options &options, const QString &fileName)
     return ret;
 }
 
-bool readDependencies(Options *options,
-                      const QString &fileName,
-                      QSet<QString> *usedDependencies,
-                      QSet<QString> *readAndroidDependencies)
+bool readDependenciesFromElf(Options *options,
+                             const QString &fileName,
+                             QSet<QString> *usedDependencies,
+                             QSet<QString> *remainingDependencies)
 {
     // Get dependencies on libraries in $QTDIR/lib
     QStringList dependencies = getQtLibsFromElf(*options, fileName);
 
+    if (options->verbose) {
+        fprintf(stdout, "Reading dependencies from %s\n", qPrintable(fileName));
+        foreach (QString dep, dependencies)
+            fprintf(stdout, "      %s\n", qPrintable(dep));
+    }
     // Recursively add dependencies from ELF and supplementary XML information
     foreach (QString dependency, dependencies) {
         if (usedDependencies->contains(dependency))
             continue;
 
         usedDependencies->insert(dependency);
-        if (!readDependencies(options,
+        if (!readDependenciesFromElf(options,
                               options->qtInstallDirectory + QLatin1Char('/') + dependency,
                               usedDependencies,
-                              readAndroidDependencies)) {
+                              remainingDependencies)) {
             return false;
         }
 
         options->qtDependencies.append(dependency);
+        if (options->verbose)
+            fprintf(stderr, "Appending dependency: %s\n", qPrintable(dependency));
     }
-
-    // Second pass: Add the implicit dependencies
+    // Add the implicit dependencies for later
     foreach (QString dependency, dependencies) {
-        if (readAndroidDependencies->contains(dependency))
-            continue;
-
-        readAndroidDependencies->insert(dependency);
         if (dependency.startsWith(QLatin1String("lib/lib")) && dependency.endsWith(QLatin1String(".so"))) {
             QString qtBaseName = dependency.mid(sizeof("lib/lib") - 1);
             qtBaseName = qtBaseName.left(qtBaseName.size() - (sizeof(".so") - 1));
-            if (!readAndroidDependencyXml(options, qtBaseName, usedDependencies, readAndroidDependencies)) {
+            if (!readAndroidDependencyXml(options, qtBaseName, usedDependencies, remainingDependencies)) {
                 return false;
             }
         }
     }
-
     return true;
 }
 
@@ -1196,10 +1191,19 @@ bool readDependencies(Options *options)
 
     // Add dependencies of application binary first
     QSet<QString> usedDependencies;
-    QSet<QString> readAndroidDependencies;
-    if (!readDependencies(options, options->applicationBinary, &usedDependencies, &readAndroidDependencies))
-        return false;
+    QSet<QString> remainingDependencies;
 
+    QString fileName = options->applicationBinary;
+    QString qtDir = options->qtInstallDirectory + QLatin1Char('/');
+    for (;;) {
+        if (!readDependenciesFromElf(options, fileName, &usedDependencies, &remainingDependencies))
+            return false;
+        if (remainingDependencies.isEmpty())
+            break;
+        QSet<QString>::iterator start = remainingDependencies.begin();
+        fileName = qtDir+*start;
+        remainingDependencies.erase(start);
+    };
     return true;
 }
 
