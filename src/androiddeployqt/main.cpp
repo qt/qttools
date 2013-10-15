@@ -867,16 +867,10 @@ bool updateAndroidManifest(const Options &options)
     replacements[QLatin1String("-- %%INSERT_INIT_CLASSES%% --")] = options.initClasses.join(QLatin1Char(':'));
     replacements[QLatin1String("<!-- %%INSERT_USES_SDK%% -->")] = usesSdk;
     replacements[QLatin1String("package=\"org.qtproject.example\"")] = QString::fromLatin1("package=\"%1\"").arg(options.packageName);
-
-    if (options.deploymentMechanism == Options::Ministro) {
-        replacements[QLatin1String("<meta-data android:value=\"1\" android:name=\"android.app.use_local_qt_libs\"/>")]
-                = QString::fromLatin1("<meta-data android:value=\"0\" android:name=\"android.app.use_local_qt_libs\"/>");
-    }
-
-    if (options.deploymentMechanism != Options::Bundled) {
-        replacements[QLatin1String("<meta-data android:value=\"1\" android:name=\"android.app.bundle_local_qt_libs\"/>")]
-                = QString::fromLatin1("<meta-data android:value=\"0\" android:name=\"android.app.bundle_local_qt_libs\"/>");
-    }
+    replacements[QLatin1String("-- %%BUNDLE_LOCAL_QT_LIBS%% --")]
+            = (options.deploymentMechanism == Options::Bundled) ? QString::fromLatin1("1") : QString::fromLatin1("0");
+    replacements[QLatin1String("-- %%USE_LOCAL_QT_LIBS%% --")]
+            = (options.deploymentMechanism != Options::Ministro) ? QString::fromLatin1("1") : QString::fromLatin1("0");
 
     if (!androidOrientation.isEmpty())
         replacements[QLatin1String("android:screenOrientation=\"unspecified\"")] = QString::fromLatin1("android:screenOrientation=\"%1\"").arg(androidOrientation);
