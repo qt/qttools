@@ -785,6 +785,7 @@ bool updateLibsXml(const Options &options)
 
     QHash<QString, QString> replacements;
     replacements[QLatin1String("<!-- %%INSERT_QT_LIBS%% -->")] = qtLibs;
+
     if (options.deploymentMechanism == Options::Bundled) {
         replacements[QLatin1String("<!-- %%INSERT_BUNDLED_IN_LIB%% -->")] = bundledInLibs;
         replacements[QLatin1String("<!-- %%INSERT_BUNDLED_IN_ASSETS%% -->")] = bundledInAssets;
@@ -832,33 +833,6 @@ bool updateAndroidManifest(const Options &options)
         fprintf(stderr, "Warning: Multiple supported orientations specified. Orientation of Android app will be unspecified.");
     }
 
-    QHash<QString, QString> replacements;
-    replacements[QLatin1String("<!-- %%INSERT_USES_SDK%% -->")] = usesSdk;
-    replacements[QLatin1String("package=\"org.qtproject.example\"")] = QString::fromLatin1("package=\"%1\"").arg(options.packageName);
-
-    if (options.deploymentMechanism == Options::Ministro) {
-        replacements[QLatin1String("<meta-data android:value=\"1\" android:name=\"android.app.use_local_qt_libs\"/>")]
-                = QString::fromLatin1("<meta-data android:value=\"0\" android:name=\"android.app.use_local_qt_libs\"/>");
-    }
-
-    if (options.deploymentMechanism != Options::Bundled) {
-        replacements[QLatin1String("<meta-data android:value=\"1\" android:name=\"android.app.bundle_local_qt_libs\"/>")]
-                = QString::fromLatin1("<meta-data android:value=\"0\" android:name=\"android.app.bundle_local_qt_libs\"/>");
-    }
-
-    if (!androidOrientation.isEmpty())
-        replacements[QLatin1String("android:screenOrientation=\"unspecified\"")] = QString::fromLatin1("android:screenOrientation=\"%1\"").arg(androidOrientation);
-    if (!updateFile(options.outputDirectory + QLatin1String("/AndroidManifest.xml"), replacements))
-        return false;
-
-    return true;
-}
-
-bool updateStringsXml(const Options &options)
-{
-    if (options.verbose)
-        fprintf(stdout, "  -- res/values/strings.xml\n");
-
     QStringList localLibs = options.localLibs;
 
     // If .pro file overrides dependency detection, we need to see which platform plugin they picked
@@ -887,11 +861,38 @@ bool updateStringsXml(const Options &options)
     }
 
     QHash<QString, QString> replacements;
+    replacements[QLatin1String("-- %%INSERT_APP_LIB_NAME%% --")] = QFileInfo(options.applicationBinary).baseName().mid(sizeof("lib") - 1);
+    replacements[QLatin1String("-- %%INSERT_LOCAL_LIBS%% --")] = localLibs.join(QLatin1Char(':'));
+    replacements[QLatin1String("-- %%INSERT_LOCAL_JARS%% --")] = options.localJars.join(QLatin1Char(':'));
+    replacements[QLatin1String("-- %%INSERT_INIT_CLASSES%% --")] = options.initClasses.join(QLatin1Char(':'));
+    replacements[QLatin1String("<!-- %%INSERT_USES_SDK%% -->")] = usesSdk;
+    replacements[QLatin1String("package=\"org.qtproject.example\"")] = QString::fromLatin1("package=\"%1\"").arg(options.packageName);
+
+    if (options.deploymentMechanism == Options::Ministro) {
+        replacements[QLatin1String("<meta-data android:value=\"1\" android:name=\"android.app.use_local_qt_libs\"/>")]
+                = QString::fromLatin1("<meta-data android:value=\"0\" android:name=\"android.app.use_local_qt_libs\"/>");
+    }
+
+    if (options.deploymentMechanism != Options::Bundled) {
+        replacements[QLatin1String("<meta-data android:value=\"1\" android:name=\"android.app.bundle_local_qt_libs\"/>")]
+                = QString::fromLatin1("<meta-data android:value=\"0\" android:name=\"android.app.bundle_local_qt_libs\"/>");
+    }
+
+    if (!androidOrientation.isEmpty())
+        replacements[QLatin1String("android:screenOrientation=\"unspecified\"")] = QString::fromLatin1("android:screenOrientation=\"%1\"").arg(androidOrientation);
+    if (!updateFile(options.outputDirectory + QLatin1String("/AndroidManifest.xml"), replacements))
+        return false;
+
+    return true;
+}
+
+bool updateStringsXml(const Options &options)
+{
+    if (options.verbose)
+        fprintf(stdout, "  -- res/values/strings.xml\n");
+
+    QHash<QString, QString> replacements;
     replacements[QLatin1String("<!-- %%INSERT_APP_NAME%% -->")] = options.appName;
-    replacements[QLatin1String("<!-- %%INSERT_APP_LIB_NAME%% -->")] = QFileInfo(options.applicationBinary).baseName().mid(sizeof("lib") - 1);
-    replacements[QLatin1String("<!-- %%INSERT_LOCAL_LIBS%% -->")] = localLibs.join(QLatin1Char(':'));
-    replacements[QLatin1String("<!-- %%INSERT_LOCAL_JARS%% -->")] = options.localJars.join(QLatin1Char(':'));
-    replacements[QLatin1String("<!-- %%INSERT_INIT_CLASSES%% -->")] = options.initClasses.join(QLatin1Char(':'));
 
     QString fileName = options.outputDirectory + QLatin1String("/res/values/strings.xml");
     if (!QFile::exists(fileName)) {
