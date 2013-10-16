@@ -126,6 +126,7 @@ struct Options
     QString architecture;
     QString toolchainVersion;
     QString toolchainPrefix;
+    QString toolPrefix;
     QString ndkHost;
 
     // Package information
@@ -534,6 +535,16 @@ bool readInputFile(Options *options)
             return false;
         }
         options->toolchainPrefix = toolchainPrefix.toString();
+    }
+
+    {
+        QJsonValue toolPrefix = jsonObject.value("tool-prefix");
+        if (toolPrefix.isUndefined()) {
+            fprintf(stderr, "Warning: No tool prefix defined in json file.\n");
+            options->toolPrefix = options->toolchainPrefix;
+        } else {
+            options->toolPrefix = toolPrefix.toString();
+        }
     }
 
     {
@@ -1094,7 +1105,7 @@ QStringList getQtLibsFromElf(const Options &options, const QString &fileName)
             + QLatin1String("/prebuilt/")
             + options.ndkHost
             + QLatin1String("/bin/")
-            + options.toolchainPrefix
+            + options.toolPrefix
             + QLatin1String("-readelf");
 #if defined(Q_OS_WIN32)
     readElf += QLatin1String(".exe");
@@ -1217,7 +1228,7 @@ bool stripFile(const Options &options, const QString &fileName)
             + QLatin1String("/prebuilt/")
             + options.ndkHost
             + QLatin1String("/bin/")
-            + options.toolchainPrefix
+            + options.toolPrefix
             + QLatin1String("-strip");
 #if defined(Q_OS_WIN32)
     strip += QLatin1String(".exe");
