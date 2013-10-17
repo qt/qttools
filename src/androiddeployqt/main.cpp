@@ -1040,6 +1040,10 @@ bool readAndroidDependencyXml(Options *options,
                             continue;
 
                         usedDependencies->insert(fileName);
+
+                        if (options->verbose)
+                            fprintf(stdout, "Appending dependency from xml: %s\n", qPrintable(fileName));
+
                         options->qtDependencies.append(fileName);
                     }
                 } else if (reader.name() == QLatin1String("jar")) {
@@ -1166,7 +1170,7 @@ bool readDependenciesFromElf(Options *options,
 
         options->qtDependencies.append(dependency);
         if (options->verbose)
-            fprintf(stderr, "Appending dependency: %s\n", qPrintable(dependency));
+            fprintf(stdout, "Appending dependency: %s\n", qPrintable(dependency));
         QString qtBaseName = dependency.mid(sizeof("lib/lib") - 1);
         qtBaseName = qtBaseName.left(qtBaseName.size() - (sizeof(".so") - 1));
         if (!readAndroidDependencyXml(options, qtBaseName, usedDependencies, remainingDependencies)) {
@@ -1389,7 +1393,7 @@ bool deployToLocalTmp(Options *options,
 
     if (!goodToCopy(options, fileInfo.absoluteFilePath())) {
         if (options->verbose)
-            fprintf(stderr, "  -- Skipping %s. It has unmet dependencies.\n", qPrintable(fileInfo.absoluteFilePath()));
+            fprintf(stdout, "  -- Skipping %s. It has unmet dependencies.\n", qPrintable(fileInfo.absoluteFilePath()));
         return true;
     }
 
@@ -1490,7 +1494,7 @@ bool copyQtFiles(Options *options)
 
             if (!goodToCopy(options, sourceFileName)) {
                 if (options->verbose)
-                    fprintf(stderr, "  -- Skipping %s. It has unmet dependencies.\n", qPrintable(sourceFileName));
+                    fprintf(stdout, "  -- Skipping %s. It has unmet dependencies.\n", qPrintable(sourceFileName));
                 continue;
             }
 
