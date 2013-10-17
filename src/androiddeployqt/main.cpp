@@ -1173,20 +1173,14 @@ bool readDependenciesFromElf(Options *options,
         options->qtDependencies.append(dependency);
         if (options->verbose)
             fprintf(stderr, "Appending dependency: %s\n", qPrintable(dependency));
-    }
-    // Add the implicit dependencies for later
-    foreach (QString dependency, dependencies) {
-        if (dependency.startsWith(QLatin1String("lib/lib")) && dependency.endsWith(QLatin1String(".so"))) {
-            QString qtBaseName = dependency.mid(sizeof("lib/lib") - 1);
-            qtBaseName = qtBaseName.left(qtBaseName.size() - (sizeof(".so") - 1));
-            if (!readAndroidDependencyXml(options, qtBaseName, usedDependencies, remainingDependencies)) {
-                return false;
-            }
+        QString qtBaseName = dependency.mid(sizeof("lib/lib") - 1);
+        qtBaseName = qtBaseName.left(qtBaseName.size() - (sizeof(".so") - 1));
+        if (!readAndroidDependencyXml(options, qtBaseName, usedDependencies, remainingDependencies)) {
+            return false;
         }
     }
     return true;
 }
-
 
 bool readDependencies(Options *options)
 {
