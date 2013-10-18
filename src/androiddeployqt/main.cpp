@@ -1045,10 +1045,6 @@ bool readAndroidDependencyXml(Options *options,
                             continue;
 
                         usedDependencies->insert(fileName);
-                        if (fileName.endsWith(QLatin1String(".so"))) {
-                            remainingDependencies->insert(fileName);
-                        }
-
                         options->qtDependencies.append(fileName);
                     }
                 } else if (reader.name() == QLatin1String("jar")) {
@@ -1079,6 +1075,9 @@ bool readAndroidDependencyXml(Options *options,
                         }
                     } else if (!fileName.isEmpty()) {
                         options->localLibs.append(fileName);
+                    }
+                    if (fileName.endsWith(QLatin1String(".so"))) {
+                        remainingDependencies->insert(fileName);
                     }
                 }
             }
@@ -1365,6 +1364,18 @@ bool fetchRemoteModifications(Options *options, const QString &directory)
     return true;
 }
 
+bool goodToCopy(const Options *options, const QString &file)
+{
+    if (!file.endsWith(QLatin1String(".so")))
+        return true;
+
+    foreach (const QString &lib, getQtLibsFromElf(*options, file))
+        if (!options->qtDependencies.contains(lib))
+            return false;
+
+    return true;
+}
+
 bool deployToLocalTmp(Options *options,
                       const QString &qtDependency)
 {
@@ -1372,6 +1383,12 @@ bool deployToLocalTmp(Options *options,
         fetchRemoteModifications(options, QLatin1String("/data/local/tmp/qt"));
 
     QFileInfo fileInfo(options->qtInstallDirectory + QLatin1Char('/') + qtDependency);
+
+    if (!goodToCopy(options, fileInfo.absoluteFilePath())) {
+        if (options->verbose)
+            fprintf(stderr, "  -- Skipping %s. It has unmet dependencies.\n", qPrintable(fileInfo.absoluteFilePath()));
+        return true;
+    }
 
     // Make sure precision is the same as what we get from Android
     QDateTime sourceModified = QDateTime::fromTime_t(fileInfo.lastModified().toTime_t());
@@ -1466,6 +1483,12 @@ bool copyQtFiles(Options *options)
             if (!QFile::exists(sourceFileName)) {
                 fprintf(stderr, "Source Qt file does not exist: %s.\n", qPrintable(sourceFileName));
                 return false;
+            }
+
+            if (!goodToCopy(options, sourceFileName)) {
+                if (options->verbose)
+                    fprintf(stderr, "  -- Skipping %s. It has unmet dependencies.\n", qPrintable(sourceFileName));
+                continue;
             }
 
             if (options->deploymentMechanism == Options::Bundled
