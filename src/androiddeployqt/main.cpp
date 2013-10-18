@@ -135,7 +135,6 @@ struct Options
     DeploymentMechanism deploymentMechanism;
     QString appName;
     QString packageName;
-    QStringList supportedOrientations;
     QStringList extraLibs;
 
     // Signing information
@@ -607,12 +606,6 @@ bool readInputFile(Options *options)
     }
 
     {
-        QJsonValue supportedOrientations = jsonObject.value("supported-orientations");
-        if (!supportedOrientations.isUndefined())
-            options->supportedOrientations = supportedOrientations.toString().split(QLatin1Char(','));
-    }
-
-    {
         QJsonValue extraLibs = jsonObject.value("android-extra-libs");
         if (!extraLibs.isUndefined())
             options->extraLibs = extraLibs.toString().split(QLatin1Char(','));
@@ -818,21 +811,6 @@ bool updateAndroidManifest(const Options &options)
     if (options.targetAndroidVersion >= 0)
         usesSdk = usesSdk.arg(QString::fromLatin1("android:targetSdkVersion=\"%1\"").arg(options.targetAndroidVersion));
 
-    QString androidOrientation;
-    if (options.supportedOrientations.size() == 1) {
-        const QString &orientation = options.supportedOrientations.at(0);
-        if (orientation == QLatin1String("Portrait"))
-            androidOrientation = QLatin1String("portrait");
-        else if (orientation == QLatin1String("Landscape"))
-            androidOrientation = QLatin1String("landscape");
-        else if (orientation == QLatin1String("InvertedLandscape"))
-            androidOrientation = QLatin1String("reverseLandscape");
-        else if (orientation == QLatin1String("InvertedPortrait"))
-            androidOrientation = QLatin1String("reversePortrait");
-    } else if (options.supportedOrientations.size() > 1) {
-        fprintf(stderr, "Warning: Multiple supported orientations specified. Orientation of Android app will be unspecified.");
-    }
-
     QStringList localLibs = options.localLibs;
 
     // If .pro file overrides dependency detection, we need to see which platform plugin they picked
@@ -872,8 +850,6 @@ bool updateAndroidManifest(const Options &options)
     replacements[QLatin1String("-- %%USE_LOCAL_QT_LIBS%% --")]
             = (options.deploymentMechanism != Options::Ministro) ? QString::fromLatin1("1") : QString::fromLatin1("0");
 
-    if (!androidOrientation.isEmpty())
-        replacements[QLatin1String("android:screenOrientation=\"unspecified\"")] = QString::fromLatin1("android:screenOrientation=\"%1\"").arg(androidOrientation);
     if (!updateFile(options.outputDirectory + QLatin1String("/AndroidManifest.xml"), replacements))
         return false;
 
