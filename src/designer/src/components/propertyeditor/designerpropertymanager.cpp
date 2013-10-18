@@ -69,6 +69,7 @@
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QMenu>
+#include <QtWidgets/QKeySequenceEdit>
 #include <QtGui/QContextMenuEvent>
 #include <QtWidgets/QApplication>
 #include <QtCore/QUrl>
@@ -2353,7 +2354,7 @@ void DesignerEditorFactory::slotValueChanged(QtProperty *property, const QVarian
         } else if (type == DesignerPropertyManager::designerStringListTypeId()) {
             applyToEditors(m_stringListPropertyToEditors.value(property), &StringListEditorButton::setStringList, qvariant_cast<PropertySheetStringListValue>(value).value());
         } else if (type == DesignerPropertyManager::designerKeySequenceTypeId()) {
-            applyToEditors(m_keySequencePropertyToEditors.value(property), &QtKeySequenceEdit::setKeySequence, qvariant_cast<PropertySheetKeySequenceValue>(value).value());
+            applyToEditors(m_keySequencePropertyToEditors.value(property), &QKeySequenceEdit::setKeySequence, qvariant_cast<PropertySheetKeySequenceValue>(value).value());
         }
         break;
     }
@@ -2513,7 +2514,7 @@ QWidget *DesignerEditorFactory::createEditor(QtVariantPropertyManager *manager, 
             connect(ed, SIGNAL(stringListChanged(QStringList)), this, SLOT(slotStringListChanged(QStringList)));
             editor = ed;
         } else if (type == DesignerPropertyManager::designerKeySequenceTypeId()) {
-            QtKeySequenceEdit *ed = new QtKeySequenceEdit(parent);
+            QKeySequenceEdit *ed = new QKeySequenceEdit(parent);
             ed->setKeySequence(qvariant_cast<PropertySheetKeySequenceValue>(manager->value(property)).value());
             m_keySequencePropertyToEditors[property].append(ed);
             m_editorToKeySequenceProperty[ed] = property;

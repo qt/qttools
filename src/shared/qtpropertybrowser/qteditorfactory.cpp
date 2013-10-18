@@ -56,6 +56,7 @@
 #include <QtWidgets/QColorDialog>
 #include <QtWidgets/QFontDialog>
 #include <QtWidgets/QSpacerItem>
+#include <QtWidgets/QKeySequenceEdit>
 #include <QtCore/QMap>
 
 #if defined(Q_CC_MSVC)
@@ -1410,7 +1411,7 @@ void QtDateTimeEditFactory::disconnectPropertyManager(QtDateTimePropertyManager 
 
 // QtKeySequenceEditorFactory
 
-class QtKeySequenceEditorFactoryPrivate : public EditorFactoryPrivate<QtKeySequenceEdit>
+class QtKeySequenceEditorFactoryPrivate : public EditorFactoryPrivate<QKeySequenceEdit>
 {
     QtKeySequenceEditorFactory *q_ptr;
     Q_DECLARE_PUBLIC(QtKeySequenceEditorFactory)
@@ -1426,9 +1427,9 @@ void QtKeySequenceEditorFactoryPrivate::slotPropertyChanged(QtProperty *property
     if (!m_createdEditors.contains(property))
         return;
 
-    QListIterator<QtKeySequenceEdit *> itEditor(m_createdEditors[property]);
+    QListIterator<QKeySequenceEdit *> itEditor(m_createdEditors[property]);
     while (itEditor.hasNext()) {
-        QtKeySequenceEdit *editor = itEditor.next();
+        QKeySequenceEdit *editor = itEditor.next();
         editor->blockSignals(true);
         editor->setKeySequence(value);
         editor->blockSignals(false);
@@ -1438,8 +1439,8 @@ void QtKeySequenceEditorFactoryPrivate::slotPropertyChanged(QtProperty *property
 void QtKeySequenceEditorFactoryPrivate::slotSetValue(const QKeySequence &value)
 {
     QObject *object = q_ptr->sender();
-    const  QMap<QtKeySequenceEdit *, QtProperty *>::ConstIterator ecend = m_editorToProperty.constEnd();
-    for (QMap<QtKeySequenceEdit *, QtProperty *>::ConstIterator itEditor =  m_editorToProperty.constBegin(); itEditor != ecend; ++itEditor)
+    const  QMap<QKeySequenceEdit *, QtProperty *>::ConstIterator ecend = m_editorToProperty.constEnd();
+    for (QMap<QKeySequenceEdit *, QtProperty *>::ConstIterator itEditor =  m_editorToProperty.constBegin(); itEditor != ecend; ++itEditor)
         if (itEditor.key() == object) {
             QtProperty *property = itEditor.value();
             QtKeySequencePropertyManager *manager = q_ptr->propertyManager(property);
@@ -1499,7 +1500,7 @@ void QtKeySequenceEditorFactory::connectPropertyManager(QtKeySequencePropertyMan
 QWidget *QtKeySequenceEditorFactory::createEditor(QtKeySequencePropertyManager *manager,
         QtProperty *property, QWidget *parent)
 {
-    QtKeySequenceEdit *editor = d_ptr->createEditor(property, parent);
+    QKeySequenceEdit *editor = d_ptr->createEditor(property, parent);
     editor->setKeySequence(manager->value(property));
 
     connect(editor, SIGNAL(keySequenceChanged(QKeySequence)),

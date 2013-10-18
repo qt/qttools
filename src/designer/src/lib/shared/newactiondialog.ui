@@ -196,7 +196,7 @@
      <item row="6" column="1">
       <layout class="QHBoxLayout" name="keysequenceLayout">
        <item>
-        <widget class="QtKeySequenceEdit" name="keySequenceEdit" native="true">
+        <widget class="QKeySequenceEdit" name="keySequenceEdit" native="true">
          <property name="sizePolicy">
           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
            <horstretch>0</horstretch>
@@ -253,12 +253,6 @@
    <class>qdesigner_internal::IconSelector</class>
    <extends>QWidget</extends>
    <header>iconselector_p.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>QtKeySequenceEdit</class>
-   <extends>QWidget</extends>
-   <header>qtpropertybrowserutils_p.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

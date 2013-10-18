@@ -62,7 +62,7 @@ typedef QList<DesignerIntPair> DesignerFlagList;
 class QDesignerFormEditorInterface;
 class QLineEdit;
 class QUrl;
-class QtKeySequenceEdit;
+class QKeySequenceEdit;
 
 namespace qdesigner_internal
 {
@@ -298,8 +298,8 @@ private:
 
     QMap<QtProperty *, QList<TextEditor *> >                m_stringPropertyToEditors;
     QMap<TextEditor *, QtProperty *>                        m_editorToStringProperty;
-    QMap<QtProperty *, QList<QtKeySequenceEdit *> >         m_keySequencePropertyToEditors;
-    QMap<QtKeySequenceEdit *, QtProperty *>                 m_editorToKeySequenceProperty;
+    QMap<QtProperty *, QList<QKeySequenceEdit *> >         m_keySequencePropertyToEditors;
+    QMap<QKeySequenceEdit *, QtProperty *>                 m_editorToKeySequenceProperty;
     QMap<QtProperty *, QList<PaletteEditorButton *> >       m_palettePropertyToEditors;
     QMap<PaletteEditorButton *, QtProperty *>               m_editorToPaletteProperty;
     QMap<QtProperty *, QList<PixmapEditor *> >              m_pixmapPropertyToEditors;
