@@ -476,7 +476,7 @@ QString queryQMake(const QString &variable, QString *errorMessage)
 
 // Update a file or directory.
 bool updateFile(const QString &sourceFileName, const QStringList &nameFilters,
-                const QString &targetDirectory, QString *errorMessage)
+                const QString &targetDirectory, JsonOutput *json, QString *errorMessage)
 {
     const QFileInfo sourceFileInfo(sourceFileName);
     const QString targetFileName = targetDirectory + QLatin1Char('/') + sourceFileInfo.fileName();
@@ -517,7 +517,7 @@ bool updateFile(const QString &sourceFileName, const QStringList &nameFilters,
         QDir dir(sourceFileName);
         const QStringList allEntries = dir.entryList(nameFilters, QDir::Files) + dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
         foreach (const QString &entry, allEntries)
-            if (!updateFile(sourceFileName + QLatin1Char('/') + entry, nameFilters, targetFileName, errorMessage))
+            if (!updateFile(sourceFileName + QLatin1Char('/') + entry, nameFilters, targetFileName, json, errorMessage))
                 return false;
         return true;
     } // Source is directory.
@@ -526,6 +526,8 @@ bool updateFile(const QString &sourceFileName, const QStringList &nameFilters,
         if (targetFileInfo.lastModified() >= sourceFileInfo.lastModified()) {
             if (optVerboseLevel)
                 std::printf("%s is up to date.\n", qPrintable(sourceFileInfo.fileName()));
+            if (json)
+                json->addFile(sourceFileName, targetDirectory);
             return true;
         }
         QFile targetFile(targetFileName);
@@ -545,6 +547,8 @@ bool updateFile(const QString &sourceFileName, const QStringList &nameFilters,
                      file.errorString());
         return false;
     }
+    if (json)
+        json->addFile(sourceFileName, targetDirectory);
     return true;
 }
 

@@ -152,26 +152,6 @@ static Platform platformFromMkSpec(const QString &xSpec)
 bool optHelp = false;
 int optWebKit2 = 0;
 
-// Container class for JSON output
-class JsonOutput {
-public:
-    void addFile(const QString &source, const QString &target)
-    {
-        QJsonObject object;
-        object.insert(QStringLiteral("source"), QDir::toNativeSeparators(source));
-        object.insert(QStringLiteral("target"), QDir::toNativeSeparators(target));
-        m_files.append(object);
-    }
-    QByteArray toJson() const
-    {
-        QJsonObject document;
-        document.insert(QStringLiteral("files"), m_files);
-        return QJsonDocument(document).toJson();
-    }
-private:
-    QJsonArray m_files;
-};
-
 struct Options {
     Options() : plugins(true), libraries(true), quickImports(true), translations(true)
               , platform(Windows), additionalLibraries(0), disabledLibraries(0)
@@ -764,10 +744,8 @@ static DeployResult deploy(const Options &options,
         const QString targetPath = options.libraryDirectory.isEmpty() ?
             options.directory : options.libraryDirectory;
         foreach (const QString &qtLib, deployedQtLibraries) {
-            if (!updateFile(qtLib, targetPath, options.updateFileFlags, errorMessage))
+            if (!updateFile(qtLib, targetPath, options.updateFileFlags, options.json, errorMessage))
                 return result;
-            if (options.json)
-                options.json->addFile(qtLib, targetPath);
         }
     } // optLibraries
 
@@ -786,10 +764,8 @@ static DeployResult deploy(const Options &options,
                 }
             }
             const QString targetPath = options.directory + slash + targetDirName;
-            if (!updateFile(plugin, targetPath, options.updateFileFlags, errorMessage))
+            if (!updateFile(plugin, targetPath, options.updateFileFlags, options.json, errorMessage))
                 return result;
-            if (options.json)
-                options.json->addFile(plugin, targetPath);
         }
     } // optPlugins
 
@@ -813,10 +789,8 @@ static DeployResult deploy(const Options &options,
                 quick2Imports << QStringLiteral("QtWebKit");
             foreach (const QString &quick2Import, quick2Imports) {
                 const QString sourceFile = quick2ImportPath + slash + quick2Import;
-                if (!updateFile(sourceFile, qmlFileEntryFunction, options.directory, options.updateFileFlags, errorMessage))
+                if (!updateFile(sourceFile, qmlFileEntryFunction, options.directory, options.updateFileFlags, options.json, errorMessage))
                     return result;
-                if (options.json)
-                    options.json->addFile(sourceFile, options.directory);
             }
         } // Quick 2
         if (usesQuick1) {
@@ -826,10 +800,8 @@ static DeployResult deploy(const Options &options,
                 quick1Imports << QStringLiteral("QtWebKit");
             foreach (const QString &quick1Import, quick1Imports) {
                 const QString sourceFile = quick1ImportPath + slash + quick1Import;
-                if (!updateFile(sourceFile, qmlFileEntryFunction, options.directory, options.updateFileFlags, errorMessage))
+                if (!updateFile(sourceFile, qmlFileEntryFunction, options.directory, options.updateFileFlags, options.json, errorMessage))
                     return result;
-                if (options.json)
-                    options.json->addFile(sourceFile, options.directory);
             }
         } // Quick 1
     } // optQuickImports
@@ -851,10 +823,8 @@ static bool deployWebKit2(const QMap<QString, QString> &qmakeVariables,
     const QString webProcess = webProcessBinary(sourceOptions.platform);
     const QString webProcessSource = qmakeVariables.value(QStringLiteral("QT_INSTALL_LIBEXECS")) +
                                      QLatin1Char('/') + webProcess;
-    if (!updateFile(webProcessSource, sourceOptions.directory, sourceOptions.updateFileFlags, errorMessage))
+    if (!updateFile(webProcessSource, sourceOptions.directory, sourceOptions.updateFileFlags, sourceOptions.json, errorMessage))
         return false;
-    if (sourceOptions.json)
-        sourceOptions.json->addFile(webProcessSource, sourceOptions.directory);
     Options options(sourceOptions);
     options.binary = options.directory + QLatin1Char('/') + webProcess;
     options.quickImports = false;
