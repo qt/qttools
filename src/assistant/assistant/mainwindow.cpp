@@ -365,59 +365,74 @@ bool MainWindow::initHelpDB(bool registerInternalDoc)
     return true;
 }
 
+static const char *docs[] = {
+    "assistant", "designer", "linguist", // Qt 4
+    "qmake",
+    "qt",
+    "qtqmake",
+    "activeqt",
+    "qtandroidextras",
+    "qtassistant",
+    "qtbluetooth",
+    "qtconcurrent",
+    "qtconnectivity",
+    "qtcore",
+    "qtdbus",
+    "qtdesigner",
+    "qtdoc",
+    "qtgraphicaleffects",
+    "qtgui",
+    "qthelp",
+    "qtimageformats",
+    "qtlinguist",
+    "qtlocation",
+    "qtmultimedia",
+    "qtmultimediawidgets",
+    "qtnfc",
+    "qtnetwork",
+    "qtopengl",
+    "qtpositioning",
+    "qtprintsupport",
+    "qtqml",
+    "qtquick",
+    "qtscript",
+    "qtscripttools",
+    "qtsensors",
+    "qtsql",
+    "qtsvg",
+    "qttestlib",
+    "qtuitools",
+    "qtwebkit",
+    "qtwebkitexamples",
+    "qtwidgets",
+    "qtxml",
+    "qtxmlpatterns",
+    "qdoc",
+    "qtx11extras",
+    "qtserialport",
+    "qtquickcontrols",
+    "qtquickcontrolsstyles",
+    "qtquickdialogs",
+    "qtquicklayouts",
+    "qtwinextras"
+};
+
 void MainWindow::lookForNewQtDocumentation()
 {
+    enum { warnAboutMissingModules = 0 };
     TRACE_OBJ
     HelpEngineWrapper &helpEngine = HelpEngineWrapper::instance();
-    QStringList docs;
-    docs << QLatin1String("assistant")
-        << QLatin1String("designer")
-        << QLatin1String("linguist")
-        << QLatin1String("qmake")
-        << QLatin1String("qt")
-        << QLatin1String("qtqmake")
-        << QLatin1String("activeqt")
-        << QLatin1String("qtassistant")
-        << QLatin1String("qtconcurrent")
-        << QLatin1String("qtcore")
-        << QLatin1String("qtdbus")
-        << QLatin1String("qtdesigner")
-        << QLatin1String("qtdoc")
-        << QLatin1String("qtgraphicaleffects")
-        << QLatin1String("qtgui")
-        << QLatin1String("qthelp")
-        << QLatin1String("qtimageformats")
-        << QLatin1String("qtlinguist")
-        << QLatin1String("qtmultimedia")
-        << QLatin1String("qtnetwork")
-        << QLatin1String("qtopengl")
-        << QLatin1String("qtprintsupport")
-        << QLatin1String("qtqml")
-        << QLatin1String("qtquick")
-        << QLatin1String("qtscript")
-        << QLatin1String("qtsql")
-        << QLatin1String("qtsvg")
-        << QLatin1String("qttestlib")
-        << QLatin1String("qtuitools")
-        << QLatin1String("qtwebkit")
-        << QLatin1String("qtwebkitexamples")
-        << QLatin1String("qtwidgets")
-        << QLatin1String("qtxml")
-        << QLatin1String("qtxmlpatterns")
-        << QLatin1String("qdoc")
-        << QLatin1String("qtsensors")
-        << QLatin1String("qtx11extras")
-        << QLatin1String("qtserialport")
-        << QLatin1String("qtscripttools")
-        << QLatin1String("qtquickcontrols")
-        << QLatin1String("qtquicklayouts")
-        << QLatin1String("qtquickcontrolsstyles")
-        << QLatin1String("qtquickdialogs")
-        << QLatin1String("qtmultimediawidgets");
 
+    const int docCount = int(sizeof(docs) / sizeof(docs[0]));
     QList<QtDocInstaller::DocInfo> qtDocInfos;
-    foreach (const QString &doc, docs)
-        qtDocInfos.append(QtDocInstaller::DocInfo(doc, helpEngine.qtDocInfo(doc)));
+    qtDocInfos.reserve(docCount);
+    for (int d = 0; d < docCount; ++d) {
+        const QString doc = QLatin1String(docs[d]);
+        const QtDocInstaller::DocInfo docInfo(doc, helpEngine.qtDocInfo(doc));
+        qtDocInfos.append(docInfo);
+        if (warnAboutMissingModules && (docInfo.second.isEmpty() || docInfo.second.first().isEmpty()))
+            qWarning() << "No documentation found for " << doc;
+    }
 
     m_qtDocInstaller = new QtDocInstaller(qtDocInfos);
     connect(m_qtDocInstaller, SIGNAL(docsInstalled(bool)), this,
