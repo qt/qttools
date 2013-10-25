@@ -533,11 +533,17 @@ QStringList findQtPlugins(unsigned usedQtModules,
 
 static unsigned qtModule(const QString &module)
 {
+    unsigned bestMatch = 0;
+    int bestMatchLength = 0;
     const size_t qtModulesCount = sizeof(qtModuleEntries)/sizeof(QtModuleEntry);
-    for (size_t i = 0; i < qtModulesCount; ++i)
-        if (module.contains(QLatin1String(qtModuleEntries[i].libraryName), Qt::CaseInsensitive))
-            return qtModuleEntries[i].module;
-    return 0;
+    for (size_t i = 0; i < qtModulesCount; ++i) {
+        const QString libraryName = QLatin1String(qtModuleEntries[i].libraryName);
+        if (libraryName.size() > bestMatchLength && module.contains(libraryName, Qt::CaseInsensitive)) {
+            bestMatch = qtModuleEntries[i].module;
+            bestMatchLength = libraryName.size();
+        }
+    }
+    return bestMatch;
 }
 
 static QStringList translationNameFilters(unsigned modules, const QString &prefix)
