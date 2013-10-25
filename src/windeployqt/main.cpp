@@ -40,6 +40,7 @@
 ****************************************************************************/
 
 #include "utils.h"
+#include "qmlutils.h"
 
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
@@ -191,6 +192,7 @@ struct Options {
     unsigned additionalLibraries;
     unsigned disabledLibraries;
     unsigned updateFileFlags;
+    QString qmlDirectory; // Project's QML files.
     QString directory;
     QString libraryDirectory;
     QString binary;
@@ -248,6 +250,11 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
     QCommandLineOption noLibraryOption(QStringLiteral("no-libraries"),
                                        QStringLiteral("Skip library deployment."));
     parser->addOption(noLibraryOption);
+
+    QCommandLineOption qmlDirOption(QStringLiteral("qmldir"),
+                                    QStringLiteral("Scan for QML-imports starting from directory."),
+                                    QStringLiteral("directory"));
+    parser->addOption(qmlDirOption);
 
     QCommandLineOption noQuickImportOption(QStringLiteral("no-quick-import"),
                                            QStringLiteral("Skip deployment of Qt Quick imports."));
@@ -347,6 +354,9 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
 
     if (parser->isSet(dirOption))
         options->directory = parser->value(dirOption);
+
+    if (parser->isSet(qmlDirOption))
+        options->qmlDirectory = parser->value(qmlDirOption);
 
     const QString &file = posArgs.front();
     const QFileInfo fi(QDir::cleanPath(file));
@@ -653,9 +663,20 @@ static DeployResult deploy(const Options &options,
     if (!findDependentQtLibraries(libraryLocation, options.binary, options.platform, errorMessage, &dependentQtLibs, &wordSize, &isDebug, &directDependencyCount))
         return result;
 
+    // Determine application type, check Quick2 is used by looking at the
+    // direct dependencies (do not be fooled by QtWebKit depending on it).
+    for (int m = 0; m < directDependencyCount; ++m)
+        result.directlyUsedQtLibraries |= qtModule(dependentQtLibs.at(m));
+    const bool usesQml2 = !(options.disabledLibraries & QtQmlModule)
+                            && ((result.directlyUsedQtLibraries & QtQmlModule)
+                                || (options.additionalLibraries & QtQmlModule));
+
     if (optVerboseLevel) {
-        std::printf("%s: %ubit, %s executable.\n", qPrintable(QDir::toNativeSeparators(options.binary)),
+        std::printf("%s: %ubit, %s executable", qPrintable(QDir::toNativeSeparators(options.binary)),
                     wordSize, isDebug ? "debug" : "release");
+        if (usesQml2)
+            std::fputs("[QML]", stdout);
+        std::fputc('\n', stdout);
     }
 
     if (dependentQtLibs.isEmpty()) {
@@ -692,19 +713,42 @@ static DeployResult deploy(const Options &options,
         } // Qt5Core
     } // Windows
 
+    // Scan Quick2 imports
+    QmlImportScanResult qmlScanResult;
+    if (options.quickImports && usesQml2) {
+        const QString qmlDirectory = options.qmlDirectory.isEmpty() ? findQmlDirectory(options.platform, options.directory) : options.qmlDirectory;
+        if (!qmlDirectory.isEmpty()) {
+            qmlScanResult = runQmlImportScanner(qmlDirectory, qmakeVariables.value(QStringLiteral("QT_INSTALL_QML")), options.platform, isDebug, errorMessage);
+            if (!qmlScanResult.ok)
+                return result;
+            // Additional dependencies of QML plugins.
+            foreach (const QString &plugin, qmlScanResult.plugins) {
+                if (!findDependentQtLibraries(libraryLocation, plugin, options.platform, errorMessage, &dependentQtLibs, &wordSize, &isDebug))
+                    return result;
+            }
+            if (optVerboseLevel >= 1) {
+                std::fputs("QML imports:\n", stdout);
+                foreach (const QString &mod, qmlScanResult.modulesDirectories)
+                    std::printf("  %s\n",  qPrintable(QDir::toNativeSeparators(mod)));
+                if (optVerboseLevel >= 2) {
+                std::fputs("QML plugins:\n", stdout);
+                foreach (const QString &p, qmlScanResult.plugins)
+                    std::printf("  %s\n",  qPrintable(QDir::toNativeSeparators(p)));
+                }
+            }
+        }
+    }
+
     // Find the plugins and check whether ANGLE, D3D are required on the platform plugin.
     QString platformPlugin;
     // Sort apart Qt 5 libraries in the ones that are represented by the
     // QtModule enumeration (and thus controlled by flags) and others.
     QStringList deployedQtLibraries;
     for (int i = 0 ; i < dependentQtLibs.size(); ++i)  {
-        if (const unsigned qtm = qtModule(dependentQtLibs.at(i))) {
+        if (const unsigned qtm = qtModule(dependentQtLibs.at(i)))
             result.usedQtLibraries |= qtm;
-            if (i < directDependencyCount)
-                result.directlyUsedQtLibraries |= qtm;
-        } else {
+        else
             deployedQtLibraries.push_back(dependentQtLibs.at(i)); // Not represented by flag.
-        }
     }
     result.deployedQtLibraries = (result.usedQtLibraries | options.additionalLibraries) & ~options.disabledLibraries;
     // Apply options flags and re-add library names.
@@ -786,23 +830,11 @@ static DeployResult deploy(const Options &options,
     const bool usesQuick1 = result.deployedQtLibraries & QtDeclarativeModule;
     // Do not be fooled by QtWebKit.dll depending on Quick into always installing Quick imports
     // for WebKit1-applications. Check direct dependency only.
-    const bool usesQuick2 = (result.directlyUsedQtLibraries & QtQuickModule)
-                            || (options.additionalLibraries & QtQuickModule);
-    if (options.quickImports && (usesQuick1 || usesQuick2)) {
+    if (options.quickImports && (usesQuick1 || usesQml2)) {
         const QmlDirectoryFileEntryFunction qmlFileEntryFunction(options.platform, isDebug);
-        if (usesQuick2) {
-            const QString quick2ImportPath = qmakeVariables.value(QStringLiteral("QT_INSTALL_QML"));
-            QStringList quick2Imports;
-            quick2Imports << QStringLiteral("QtQml") << QStringLiteral("QtQuick") << QStringLiteral("QtQuick.2");
-            if (result.deployedQtLibraries & QtMultimediaModule)
-                quick2Imports << QStringLiteral("QtMultimedia");
-            if (result.deployedQtLibraries & QtSensorsModule)
-                quick2Imports << QStringLiteral("QtSensors");
-            if (result.deployedQtLibraries & QtWebKitModule)
-                quick2Imports << QStringLiteral("QtWebKit");
-            foreach (const QString &quick2Import, quick2Imports) {
-                const QString sourceFile = quick2ImportPath + slash + quick2Import;
-                if (!updateFile(sourceFile, qmlFileEntryFunction, options.directory, options.updateFileFlags, options.json, errorMessage))
+        if (usesQml2) {
+            foreach (const QString &module, qmlScanResult.modulesDirectories) {
+                if (!updateFile(module, qmlFileEntryFunction, options.directory, options.updateFileFlags, options.json, errorMessage))
                     return result;
             }
         } // Quick 2

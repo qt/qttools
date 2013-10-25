@@ -69,6 +69,11 @@ QT_BEGIN_NAMESPACE
 
 int optVerboseLevel = 1;
 
+bool isBuildDirectory(Platform platform, const QString &dirName)
+{
+    return (platform & WindowsBased) && (dirName == QLatin1String("debug") || dirName == QLatin1String("release"));
+}
+
 // Create a symbolic link by changing to the source directory to make sure the
 // link uses relative paths only (QFile::link() otherwise uses the absolute path).
 bool createSymbolicLink(const QFileInfo &source, const QString &target, QString *errorMessage)

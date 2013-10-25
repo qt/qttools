@@ -105,6 +105,7 @@ static const char windowsSharedLibrarySuffix[] = ".dll";
 static const char unixSharedLibrarySuffix[] = ".so";
 
 inline QString sharedLibrarySuffix(Platform platform) { return QLatin1String((platform & WindowsBased) ? windowsSharedLibrarySuffix : unixSharedLibrarySuffix); }
+bool isBuildDirectory(Platform platform, const QString &dirName);
 
 bool createSymbolicLink(const QFileInfo &source, const QString &target, QString *errorMessage);
 bool createDirectory(const QString &directory, QString *errorMessage);
