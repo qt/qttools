@@ -1561,8 +1561,6 @@ bool buildAndroidProject(const Options &options)
     }
 
     QString ant = QString::fromLatin1("\"%1\" %2").arg(antTool).arg(options.releasePackage ? QLatin1String(" release") : QLatin1String(" debug"));
-    if (!options.verbose)
-        ant += QLatin1String(" -quiet");
 
     FILE *antCommand = popen(ant.toLocal8Bit().constData(), "r");
     if (antCommand == 0) {
