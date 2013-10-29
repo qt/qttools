@@ -1176,6 +1176,8 @@ bool readDependenciesFromElf(Options *options,
     return true;
 }
 
+bool goodToCopy(const Options *options, const QString &file);
+
 bool readDependencies(Options *options)
 {
     if (options->verbose)
@@ -1188,21 +1190,27 @@ bool readDependencies(Options *options)
         return true;
     }
 
-    // Add dependencies of application binary first
     QSet<QString> usedDependencies;
     QSet<QString> remainingDependencies;
 
-    QString fileName = options->applicationBinary;
+    // Add dependencies of application binary first
+    if (!readDependenciesFromElf(options, options->applicationBinary, &usedDependencies, &remainingDependencies))
+        return false;
+
     QString qtDir = options->qtInstallDirectory + QLatin1Char('/');
-    for (;;) {
-        if (!readDependenciesFromElf(options, fileName, &usedDependencies, &remainingDependencies))
-            return false;
-        if (remainingDependencies.isEmpty())
-            break;
+
+    while (!remainingDependencies.isEmpty()) {
         QSet<QString>::iterator start = remainingDependencies.begin();
-        fileName = qtDir+*start;
+        QString fileName = qtDir+*start;
         remainingDependencies.erase(start);
-    };
+        if (goodToCopy(options, fileName)) {
+            bool ok = readDependenciesFromElf(options, fileName, &usedDependencies, &remainingDependencies);
+            if (!ok)
+                return false;
+        }
+        else if (options->verbose)
+            fprintf(stdout, "Skipping %s due to unmet dependencies\n", qPrintable(fileName));
+    }
     return true;
 }
 
