@@ -80,8 +80,6 @@ static const struct StringEnum {
     { "DesktopLocation", QStandardPaths::DesktopLocation },
     { "DocumentsLocation", QStandardPaths::DocumentsLocation },
     { "FontsLocation", QStandardPaths::FontsLocation },
-    { "DesktopLocation", QStandardPaths::DesktopLocation },
-    { "DocumentsLocation", QStandardPaths::DocumentsLocation },
     { "MusicLocation", QStandardPaths::MusicLocation },
     { "MoviesLocation", QStandardPaths::MoviesLocation },
     { "PicturesLocation", QStandardPaths::PicturesLocation },
