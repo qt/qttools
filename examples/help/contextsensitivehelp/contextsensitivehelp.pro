@@ -11,7 +11,7 @@ HEADERS += wateringconfigdialog.h \
 FORMS   += wateringconfigdialog.ui
 
 target.path = $$[QT_INSTALL_EXAMPLES]/help/contextsensitivehelp
-docs.files += $$PWD/doc
+docs.files += $$PWD/docs
 docs.path = $$target.path
 
 INSTALLS += target docs
