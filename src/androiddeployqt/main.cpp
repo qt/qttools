@@ -48,8 +48,6 @@
 #include <QJsonValue>
 #include <QDebug>
 #include <QXmlStreamReader>
-#include <QXmlStreamAttribute>
-#include <QXmlStreamAttributes>
 #include <QDateTime>
 #include <QStandardPaths>
 #include <QUuid>
@@ -79,8 +77,8 @@ struct Options
     Options()
         : helpRequested(false)
         , verbose(false)
-        , minimumAndroidVersion(-1)
-        , targetAndroidVersion(-1)
+        , minimumAndroidVersion(9)
+        , targetAndroidVersion(10)
         , deploymentMechanism(Bundled)
         , releasePackage(false)
         , digestAlg(QLatin1String("SHA1"))
@@ -133,7 +131,6 @@ struct Options
     int minimumAndroidVersion;
     int targetAndroidVersion;
     DeploymentMechanism deploymentMechanism;
-    QString appName;
     QString packageName;
     QStringList extraLibs;
 
@@ -564,46 +561,7 @@ bool readInputFile(Options *options)
         options->ndkHost = ndkHost.toString();
     }
 
-    {
-        QJsonValue androidMinimumVersion = jsonObject.value("android-minimum-version");
-        if (!androidMinimumVersion.isUndefined()) {
-            options->minimumAndroidVersion = androidMinimumVersion.toInt();
-            if (options->minimumAndroidVersion < 9)
-                fprintf(stderr, "Warning: Unsupported minimum version");
-        }
-    }
-
-    {
-        QJsonValue androidTargetVersion = jsonObject.value("android-target-version");
-        if (!androidTargetVersion.isUndefined()) {
-            options->targetAndroidVersion = androidTargetVersion.toInt();
-            if (options->targetAndroidVersion < 9)
-                fprintf(stderr, "Warning: Unsupported target version");
-        }
-    }
-
-    if (options->minimumAndroidVersion < 0) {
-        options->minimumAndroidVersion = 9;
-        if (options->targetAndroidVersion < 0)
-            options->targetAndroidVersion = 14;
-    }
-
-    {
-        QJsonValue androidAppName = jsonObject.value("android-app-name");
-        if (!androidAppName.isUndefined())
-            options->appName = androidAppName.toString();
-        else
-            options->appName = QFileInfo(options->applicationBinary).baseName().mid(sizeof("lib") - 1);
-    }
-
-
-    {
-        QJsonValue androidPackage = jsonObject.value("android-package");
-        if (!androidPackage.isUndefined())
-            options->packageName = androidPackage.toString();
-        else
-            options->packageName = QString::fromLatin1("org.qtproject.example.%1").arg(options->appName);
-    }
+    options->packageName = QString::fromLatin1("org.qtproject.example.%1").arg(QFileInfo(options->applicationBinary).baseName().mid(sizeof("lib") - 1));
 
     {
         QJsonValue extraLibs = jsonObject.value("android-extra-libs");
@@ -802,14 +760,10 @@ bool updateLibsXml(const Options &options)
     return true;
 }
 
-bool updateAndroidManifest(const Options &options)
+bool updateAndroidManifest(Options &options)
 {
     if (options.verbose)
         fprintf(stdout, "  -- AndroidManifest.xml \n");
-
-    QString usesSdk = QString("<uses-sdk android:minSdkVersion=\"%1\" %2 />").arg(options.minimumAndroidVersion);
-    if (options.targetAndroidVersion >= 0)
-        usesSdk = usesSdk.arg(QString::fromLatin1("android:targetSdkVersion=\"%1\"").arg(options.targetAndroidVersion));
 
     QStringList localLibs = options.localLibs;
 
@@ -843,16 +797,54 @@ bool updateAndroidManifest(const Options &options)
     replacements[QLatin1String("-- %%INSERT_LOCAL_LIBS%% --")] = localLibs.join(QLatin1Char(':'));
     replacements[QLatin1String("-- %%INSERT_LOCAL_JARS%% --")] = options.localJars.join(QLatin1Char(':'));
     replacements[QLatin1String("-- %%INSERT_INIT_CLASSES%% --")] = options.initClasses.join(QLatin1Char(':'));
-    replacements[QLatin1String("<!-- %%INSERT_USES_SDK%% -->")] = usesSdk;
     replacements[QLatin1String("package=\"org.qtproject.example\"")] = QString::fromLatin1("package=\"%1\"").arg(options.packageName);
     replacements[QLatin1String("-- %%BUNDLE_LOCAL_QT_LIBS%% --")]
             = (options.deploymentMechanism == Options::Bundled) ? QString::fromLatin1("1") : QString::fromLatin1("0");
     replacements[QLatin1String("-- %%USE_LOCAL_QT_LIBS%% --")]
             = (options.deploymentMechanism != Options::Ministro) ? QString::fromLatin1("1") : QString::fromLatin1("0");
 
-    if (!updateFile(options.outputDirectory + QLatin1String("/AndroidManifest.xml"), replacements))
+
+    QString androidManifestPath = options.outputDirectory + QLatin1String("/AndroidManifest.xml");
+    if (!updateFile(androidManifestPath, replacements))
         return false;
 
+    // read the package, min & target sdk API levels from manifest file.
+    QFile androidManifestXml(androidManifestPath);
+    if (androidManifestXml.exists()) {
+        if (!androidManifestXml.open(QIODevice::ReadOnly)) {
+            fprintf(stderr, "Cannot open %s for reading.\n", qPrintable(androidManifestPath));
+            return false;
+        }
+
+        QXmlStreamReader reader(&androidManifestXml);
+        while (!reader.atEnd()) {
+            reader.readNext();
+
+            if (reader.isStartElement()) {
+                if (reader.name() == QLatin1String("manifest")) {
+                    if (!reader.attributes().hasAttribute(QLatin1String("package"))) {
+                        fprintf(stderr, "Invalid android manifest file: %s\n", qPrintable(androidManifestPath));
+                        return false;
+                    }
+                    options.packageName = reader.attributes().value(QLatin1String("package")).toString();
+                } else if (reader.name() == QLatin1String("uses-sdk")) {
+                    if (reader.attributes().hasAttribute(QLatin1String("android:minSdkVersion")))
+                        options.minimumAndroidVersion = reader.attributes().value(QLatin1String("android:minSdkVersion")).toInt();
+
+                    if (reader.attributes().hasAttribute(QLatin1String("android:targetSdkVersion")))
+                        options.targetAndroidVersion = reader.attributes().value(QLatin1String("android:targetSdkVersion")).toInt();
+                }
+            }
+        }
+
+        if (reader.hasError()) {
+            fprintf(stderr, "Error in %s: %s\n", qPrintable(androidManifestPath), qPrintable(reader.errorString()));
+            return false;
+        }
+    } else {
+        fprintf(stderr, "No android manifest file");
+        return false;
+    }
     return true;
 }
 
@@ -862,7 +854,6 @@ bool updateStringsXml(const Options &options)
         fprintf(stdout, "  -- res/values/strings.xml\n");
 
     QHash<QString, QString> replacements;
-    replacements[QLatin1String("<!-- %%INSERT_APP_NAME%% -->")] = options.appName;
 
     QString fileName = options.outputDirectory + QLatin1String("/res/values/strings.xml");
     if (!QFile::exists(fileName)) {
@@ -936,7 +927,7 @@ bool updateJavaFiles(const Options &options)
     return true;
 }
 
-bool updateAndroidFiles(const Options &options)
+bool updateAndroidFiles(Options &options)
 {
     if (options.verbose)
         fprintf(stdout, "Updating Android package files with project settings.\n");
