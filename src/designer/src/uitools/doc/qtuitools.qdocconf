@@ -37,7 +37,7 @@ imagedirs               = images
 
 outputdir               = $QT_INSTALL_DOCS/qtuitools
 
-depends                += qtdoc qtbase qtdesigner qtcore qtwidgets
+depends                += qtdoc qtdesigner qtcore qtwidgets
 
 navigation.landingpage = "Qt UI Tools"
 navigation.cppclassespage = "Qt UI Tools C++ Classes"
