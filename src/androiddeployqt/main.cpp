@@ -910,6 +910,7 @@ bool updateStringsXml(const Options &options)
         fprintf(stdout, "  -- res/values/strings.xml\n");
 
     QHash<QString, QString> replacements;
+    replacements["<!-- %%INSERT_APP_NAME%% -->"] = QFileInfo(options.applicationBinary).baseName().mid(sizeof("lib") - 1);
 
     QString fileName = options.outputDirectory + QLatin1String("/res/values/strings.xml");
     if (!QFile::exists(fileName)) {
