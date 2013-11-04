@@ -55,59 +55,85 @@
 
 QT_BEGIN_NAMESPACE
 
-enum QtModule {
-    QtCoreModule = 0x1,
-    QtGuiModule = 0x2,
-    QtSqlModule = 0x4,
-    QtNetworkModule = 0x8,
-    QtMultimediaModule = 0x10,
-    QtMultimediaWidgetsModule = 0x20,
-    QtOpenGlModule = 0x40,
-    QtPrintSupportModule = 0x80,
-    QtDeclarativeModule = 0x100,
-    QtQmlModule = 0x200,
-    QtQuickModule = 0x400,
-    QtQuickParticlesModule = 0x800,
-    QtScriptModule = 0x1000,
-    QtSvgModule = 0x2000,
-    QtXmlModule = 0x4000,
-    QtXmlPatternsModule = 0x8000,
-    QtHelpModule = 0x10000,
-    QtSensorsModule = 0x20000,
-    QtWidgetsModule = 0x40000,
-    QtWebKitModule = 0x80000,
-    QtWebKitWidgetsModule = 0x100000
+enum QtModule
+#ifdef Q_COMPILER_CLASS_ENUM
+    : quint64
+#endif
+{
+    QtBluetoothModule = 0x1,
+    QtCLuceneModule = 0x2,
+    QtConcurrentModule = 0x4,
+    QtCoreModule = 0x8,
+    QtDeclarativeModule = 0x10,
+    QtDesignerComponents = 0x20,
+    QtDesignerModule = 0x40,
+    QtGuiModule = 0x80,
+    QtHelpModule = 0x100,
+    QtMultimediaModule = 0x200,
+    QtMultimediaWidgetsModule = 0x400,
+    QtNetworkModule = 0x800,
+    QtNfcModule = 0x1000,
+    QtOpenGLModule = 0x2000,
+    QtPositioningModule = 0x4000,
+    QtPrintSupportModule = 0x8000,
+    QtQmlModule = 0x10000,
+    QtQuickModule = 0x20000,
+    QtQuickParticlesModule = 0x40000,
+    QtScriptModule = 0x80000,
+    QtScriptToolsModule = 0x100000,
+    QtSensorsModule = 0x200000,
+    QtSerialPortModule = 0x400000,
+    QtSqlModule = 0x800000,
+    QtSvgModule = 0x1000000,
+    QtTestModule = 0x2000000,
+    QtWidgetsModule = 0x4000000,
+    QtWinExtrasModule = 0x8000000,
+    QtXmlModule = 0x10000000,
+    QtXmlPatternsModule = 0x20000000,
+    QtWebKitModule = 0x40000000,
+    QtWebKitWidgetsModule = 0x80000000
 };
 
 struct QtModuleEntry {
-    unsigned module;
+    quint64 module;
     const char *option;
     const char *libraryName;
     const char *translation;
 };
 
 QtModuleEntry qtModuleEntries[] = {
+    { QtBluetoothModule, "bluetooth", "Qt5Bluetooth", 0 },
+    { QtCLuceneModule, "clucene", "Qt5CLucene", "qt_help" },
+    { QtConcurrentModule, "concurrent", "Qt5Concurrent", "qtbase" },
     { QtCoreModule, "core", "Qt5Core", "qtbase" },
+    { QtDeclarativeModule, "declarative", "Qt5Declarative", "qtquick1" },
+    { QtDesignerComponents, "designercomponents", "Qt5DesignerComponents", 0 },
+    { QtDesignerModule, "designer", "Qt5Designer", 0 },
     { QtGuiModule, "gui", "Qt5Gui", "qtbase" },
-    { QtQmlModule, "qml", "Qt5Qml", "qtdeclarative" },
-    { QtQuickModule, "quick", "Qt5Quick", "qtdeclarative" },
-    { QtWidgetsModule, "widgets", "Qt5Widgets", "qtbase" },
-    { QtOpenGlModule, "opengl", "Qt5OpenGL", 0 },
-    { QtPrintSupportModule, "printsupport", "Qt5PrintSupport", 0 },
-    { QtNetworkModule, "network", "Qt5Network", "qtbase" },
-    { QtSqlModule, "sql", "Qt5Sql", "qtbase" },
+    { QtHelpModule, "help", "Qt5Help", "qt_help" },
     { QtMultimediaModule, "multimedia", "Qt5Multimedia", "qtmultimedia" },
     { QtMultimediaWidgetsModule, "multimediawidgets", "Qt5MultimediaWidgets", "qtmultimedia" },
+    { QtNetworkModule, "network", "Qt5Network", "qtbase" },
+    { QtNfcModule, "nfc", "Qt5Nfc", 0 },
+    { QtOpenGLModule, "opengl", "Qt5OpenGL", 0 },
+    { QtPositioningModule, "positioning", "Qt5Positioning", 0 },
+    { QtPrintSupportModule, "printsupport", "Qt5PrintSupport", 0 },
+    { QtQmlModule, "qml", "Qt5Qml", "qtdeclarative" },
+    { QtQuickModule, "quick", "Qt5Quick", "qtdeclarative" },
     { QtQuickParticlesModule, "quickparticles", "Qt5QuickParticles", 0 },
-    { QtXmlPatternsModule, "xmlpatterns", "Qt5XmlPatterns", "qtxmlpatterns" },
-    { QtHelpModule, "help", "Qt5Help", "qt_help" },
-    { QtSensorsModule, "sensors", "Qt5Sensors", 0 },
-    { QtSvgModule, "svg", "Qt5Svg", 0 },
-    { QtWebKitModule, "webkit", "Qt5WebKit", 0 },
-    { QtWebKitWidgetsModule, "webkitwidgets", "Qt5WebKitWidgets", 0 },
     { QtScriptModule, "script", "Qt5Script", "qtscript" },
-    { QtXmlModule, "xml", "Qt5Xml", 0 },
-    { QtDeclarativeModule, "declarative", "Qt5Declarative", "qtquick1" },
+    { QtScriptToolsModule, "scripttools", "Qt5ScriptTools", "qtscript" },
+    { QtSensorsModule, "sensors", "Qt5Sensors", 0 },
+    { QtSerialPortModule, "serialport", "Qt5SerialPort", 0 },
+    { QtSqlModule, "sql", "Qt5Sql", "qtbase" },
+    { QtSvgModule, "svg", "Qt5Svg", 0 },
+    { QtTestModule, "test", "Qt5Test", "qtbase" },
+    { QtWidgetsModule, "widgets", "Qt5Widgets", "qtbase" },
+    { QtWinExtrasModule, "winextras", "Qt5WinExtras", 0 },
+    { QtXmlModule, "xml", "Qt5Xml", "qtbase" },
+    { QtXmlPatternsModule, "xmlpatterns", "Qt5XmlPatterns", "qtxmlpatterns" },
+    { QtWebKitModule, "webkit", "Qt5WebKit", 0 },
+    { QtWebKitWidgetsModule, "webkitwidgets", "Qt5WebKitWidgets", 0 }
 };
 
 static const char webProcessC[] = "QtWebProcess";
