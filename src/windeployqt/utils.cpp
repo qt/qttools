@@ -762,7 +762,7 @@ bool readPeExecutable(const QString &peExecutableFileName, QString *errorMessage
 QString findD3dCompiler(Platform platform, unsigned wordSize)
 {
     const QString prefix = QStringLiteral("D3Dcompiler_");
-    const QString suffix = QStringLiteral(".dll");
+    const QString suffix = QLatin1String(windowsSharedLibrarySuffix);
     // Get the DLL from Kit 8.0 onwards
     const QString kitDir = QString::fromLocal8Bit(qgetenv("WindowsSdkDir"));
     if (!kitDir.isEmpty()) {

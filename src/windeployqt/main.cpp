@@ -444,7 +444,7 @@ static bool findDependentQtLibraries(const QString &qtBinDir, const QString &bin
 class DllDirectoryFileEntryFunction {
 public:
     explicit DllDirectoryFileEntryFunction(bool debug, const QString &prefix = QLatin1String("*")) :
-        m_nameFilter(QStringList(prefix  + (debug ? QStringLiteral("d.dll") : QStringLiteral(".dll")))),
+        m_nameFilter(DllDirectoryFileEntryFunction::nameFilter(debug, prefix)),
         m_dllDebug(debug) {}
 
     QStringList operator()(const QDir &dir) const
@@ -467,6 +467,15 @@ public:
     }
 
 private:
+    static QStringList nameFilter(bool debug, const QString &prefix)
+    {
+        QString result = prefix;
+        if (debug)
+            result += QLatin1Char('d');
+        result += QLatin1String(windowsSharedLibrarySuffix);
+        return QStringList(result);
+    }
+
     const NameFilterFileEntryFunction m_nameFilter;
     const bool m_dllDebug;
 };
@@ -543,9 +552,9 @@ QStringList findQtPlugins(unsigned usedQtModules,
             } else {
                 filter  = QLatin1String("*");
             }
-            const QStringList plugins = platform == Unix ?
-                        NameFilterFileEntryFunction(QStringList(filter + QStringLiteral(".so")))(subDir) :
-                        DllDirectoryFileEntryFunction(debug, filter)(subDir);
+            const QStringList plugins = (platform & WindowsBased) ?
+                DllDirectoryFileEntryFunction(debug, filter)(subDir) :
+                NameFilterFileEntryFunction(QStringList(filter + sharedLibrarySuffix(platform)))(subDir);
             foreach (const QString &plugin, plugins) {
                 const QString pluginPath = subDir.absoluteFilePath(plugin);
                 if (isPlatformPlugin)
@@ -642,12 +651,11 @@ static QString libraryPath(const QString &libraryLocation, const char *name, Pla
         result += QLatin1String(name);
         if (debug)
             result += QLatin1Char('d');
-        result += QStringLiteral(".dll");
     } else if (platform & UnixBased) {
         result += QStringLiteral("lib");
         result += QLatin1String(name);
-        result += QStringLiteral(".so");
     }
+    result += sharedLibrarySuffix(platform);
     return result;
 }
 
@@ -697,7 +705,7 @@ static DeployResult deploy(const Options &options,
                     const QString icuVersion = icuLibs.front().mid(index, numberExpression.matchedLength());
                     if (optVerboseLevel > 1)
                         std::printf("Adding ICU version %s\n", qPrintable(icuVersion));
-                    icuLibs.push_back(QStringLiteral("icudt") + icuVersion + QStringLiteral(".dll"));
+                    icuLibs.push_back(QStringLiteral("icudt") + icuVersion + QLatin1String(windowsSharedLibrarySuffix));
                 }
                 foreach (const QString &icuLib, icuLibs) {
                     const QString icuPath = findInPath(icuLib);
