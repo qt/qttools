@@ -165,6 +165,8 @@ struct Options
     QString temporaryDirectoryName;
     bool fetchedRemoteModificationDates;
     QHash<QString, QDateTime> remoteModificationDates;
+    QStringList permissions;
+    QStringList features;
 };
 
 Options parseOptions()
@@ -859,6 +861,15 @@ bool updateAndroidManifest(Options &options)
     replacements[QLatin1String("-- %%USE_LOCAL_QT_LIBS%% --")]
             = (options.deploymentMechanism != Options::Ministro) ? QString::fromLatin1("1") : QString::fromLatin1("0");
 
+    QString permissions;
+    foreach (QString permission, options.permissions)
+        permissions += QString::fromLatin1("<uses-permission android:name=\"%1\" />\n").arg(permission);
+    replacements[QLatin1String("<!-- %%INSERT_PERMISSIONS -->")] = permissions;
+
+    QString features;
+    foreach (QString feature, options.features)
+        features += QString::fromLatin1("<uses-feature android:name=\"%1\" />\n").arg(feature);
+    replacements[QLatin1String("<!-- %%INSERT_FEATURES -->")] = features;
 
     QString androidManifestPath = options.outputDirectory + QLatin1String("/AndroidManifest.xml");
     if (!updateFile(androidManifestPath, replacements))
@@ -1102,6 +1113,12 @@ bool readAndroidDependencyXml(Options *options,
                     if (fileName.endsWith(QLatin1String(".so"))) {
                         remainingDependencies->insert(fileName);
                     }
+                } else if (reader.name() == QLatin1String("permission")) {
+                    QString name = reader.attributes().value(QLatin1String("name")).toString();
+                    options->permissions.append(name);
+                } else if (reader.name() == QLatin1String("feature")) {
+                    QString name = reader.attributes().value(QLatin1String("name")).toString();
+                    options->features.append(name);
                 }
             }
         }
