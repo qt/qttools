@@ -111,6 +111,7 @@ bool createDirectory(const QString &directory, QString *errorMessage);
 QString findInPath(const QString &file);
 QMap<QString, QString> queryQMakeAll(QString *errorMessage);
 QString queryQMake(const QString &variable, QString *errorMessage);
+QStringList findSharedLibraries(const QDir &directory, Platform platform, bool debug, const QString &prefix = QString());
 
 bool updateFile(const QString &sourceFileName, const QStringList &nameFilters,
                 const QString &targetDirectory, JsonOutput *json, QString *errorMessage);

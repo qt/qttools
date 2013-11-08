@@ -111,6 +111,35 @@ bool createDirectory(const QString &directory, QString *errorMessage)
     return true;
 }
 
+// Find shared libraries matching debug/Platform in a directory, return relative names.
+QStringList findSharedLibraries(const QDir &directory, Platform platform, bool debug, const QString &prefix)
+{
+    QString nameFilter = prefix;
+    if (nameFilter.isEmpty())
+        nameFilter += QLatin1Char('*');
+    if (debug && (platform & WindowsBased))
+        nameFilter += QLatin1Char('d');
+    nameFilter += sharedLibrarySuffix(platform);
+    QStringList result;
+    QString errorMessage;
+    foreach (const QString &dll, directory.entryList(QStringList(nameFilter), QDir::Files)) {
+        const QString dllPath = directory.absoluteFilePath(dll);
+        bool matches = true;
+        if (platform & WindowsBased) {
+            bool debugDll;
+            if (readPeExecutable(dllPath, &errorMessage, 0, 0, &debugDll)) {
+                matches = debugDll == debug;
+            } else {
+                std::fprintf(stderr, "Warning: Unable to read %s: %s",
+                             qPrintable(QDir::toNativeSeparators(dllPath)), qPrintable(errorMessage));
+            }
+        } // Windows
+        if (matches)
+            result += dll;
+    } // for
+    return result;
+}
+
 #ifdef Q_OS_WIN
 QString winErrorMessage(unsigned long error)
 {

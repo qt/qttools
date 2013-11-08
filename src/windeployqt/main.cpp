@@ -443,50 +443,25 @@ static bool findDependentQtLibraries(const QString &qtBinDir, const QString &bin
 // Tries to pre-filter by namefilter and does check via PE.
 class DllDirectoryFileEntryFunction {
 public:
-    explicit DllDirectoryFileEntryFunction(bool debug, const QString &prefix = QLatin1String("*")) :
-        m_nameFilter(DllDirectoryFileEntryFunction::nameFilter(debug, prefix)),
-        m_dllDebug(debug) {}
+    explicit DllDirectoryFileEntryFunction(Platform platform, bool debug, const QString &prefix = QString()) :
+        m_platform(platform), m_dllDebug(debug), m_prefix(prefix) {}
 
     QStringList operator()(const QDir &dir) const
-    {
-        QStringList result;
-        QString errorMessage;
-        foreach (const QString &dll, m_nameFilter(dir)) {
-            const QString dllPath = dir.absoluteFilePath(dll);
-            bool debugDll;
-            if (readPeExecutable(dllPath, &errorMessage, 0, 0, &debugDll)) {
-                if (debugDll == m_dllDebug) {
-                    result.push_back(dll);
-                }
-            } else {
-                std::fprintf(stderr, "Warning: Unable to read %s: %s",
-                             qPrintable(QDir::toNativeSeparators(dllPath)), qPrintable(errorMessage));
-            }
-        }
-        return result;
-    }
+        { return findSharedLibraries(dir, m_platform, m_dllDebug, m_prefix); }
 
 private:
-    static QStringList nameFilter(bool debug, const QString &prefix)
-    {
-        QString result = prefix;
-        if (debug)
-            result += QLatin1Char('d');
-        result += QLatin1String(windowsSharedLibrarySuffix);
-        return QStringList(result);
-    }
-
-    const NameFilterFileEntryFunction m_nameFilter;
+    const Platform m_platform;
     const bool m_dllDebug;
+    const QString m_prefix;
 };
 
 // File entry filter function for updateFile() that returns a list of files for
 // QML import trees: DLLs (matching debgug) and .qml/,js, etc.
 class QmlDirectoryFileEntryFunction {
 public:
-    explicit QmlDirectoryFileEntryFunction(bool debug)
+    explicit QmlDirectoryFileEntryFunction(Platform platform, bool debug)
         : m_qmlNameFilter(QStringList() << QStringLiteral("*.js") << QStringLiteral("qmldir") << QStringLiteral("*.qmltypes") << QStringLiteral("*.png"))
-        , m_dllFilter(debug)
+        , m_dllFilter(platform, debug)
     {}
 
     QStringList operator()(const QDir &dir) const { return m_dllFilter(dir) + m_qmlNameFilter(dir);  }
@@ -552,9 +527,7 @@ QStringList findQtPlugins(unsigned usedQtModules,
             } else {
                 filter  = QLatin1String("*");
             }
-            const QStringList plugins = (platform & WindowsBased) ?
-                DllDirectoryFileEntryFunction(debug, filter)(subDir) :
-                NameFilterFileEntryFunction(QStringList(filter + sharedLibrarySuffix(platform)))(subDir);
+            const QStringList plugins = findSharedLibraries(subDir, platform ,debug, filter);
             foreach (const QString &plugin, plugins) {
                 const QString pluginPath = subDir.absoluteFilePath(plugin);
                 if (isPlatformPlugin)
@@ -816,7 +789,7 @@ static DeployResult deploy(const Options &options,
     const bool usesQuick2 = (result.directlyUsedQtLibraries & QtQuickModule)
                             || (options.additionalLibraries & QtQuickModule);
     if (options.quickImports && (usesQuick1 || usesQuick2)) {
-        const QmlDirectoryFileEntryFunction qmlFileEntryFunction(isDebug);
+        const QmlDirectoryFileEntryFunction qmlFileEntryFunction(options.platform, isDebug);
         if (usesQuick2) {
             const QString quick2ImportPath = qmakeVariables.value(QStringLiteral("QT_INSTALL_QML"));
             QStringList quick2Imports;
