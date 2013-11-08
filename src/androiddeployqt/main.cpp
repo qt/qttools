@@ -1878,11 +1878,9 @@ bool signPackage(const Options &options)
         return false;
     }
 
-    if (options.verbose)
-        zipAlignTool += QLatin1String(" -v");
-
-    zipAlignTool = QString::fromLatin1("\"%1\" -f 4 %2 %3")
+    zipAlignTool = QString::fromLatin1("\"%1\"%2 -f 4 %3 %4")
             .arg(zipAlignTool)
+            .arg(options.verbose ? QString::fromLatin1(" -v") : QString())
             .arg(options.outputDirectory
                  + QLatin1String("/bin/")
                  + apkName(options)
