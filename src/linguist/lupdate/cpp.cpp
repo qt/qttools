@@ -207,7 +207,7 @@ public:
     void setInput(const QString &in);
     void setInput(QTextStream &ts, const QString &fileName);
     void setTranslator(Translator *_tor) { tor = _tor; }
-    void parse(const QString &initialContext, ConversionData &cd, const QStringList &includeStack, QSet<QString> &inclusions);
+    void parse(ConversionData &cd, const QStringList &includeStack, QSet<QString> &inclusions);
     void parseInternal(ConversionData &cd, const QStringList &includeStack, QSet<QString> &inclusions);
     const ParseResults *recordResults(bool isHeader);
     void deleteResults() { delete results; }
@@ -1404,7 +1404,7 @@ void CppParser::processInclude(const QString &file, ConversionData &cd, const QS
         parser.setInput(ts, cleanFile);
         QStringList stack = includeStack;
         stack << cleanFile;
-        parser.parse(cd.m_defaultContext, cd, stack, inclusions);
+        parser.parse(cd, stack, inclusions);
         results->includes.insert(parser.recordResults(true));
     } else {
         CppParser parser(results);
@@ -1588,12 +1588,12 @@ void CppParser::recordMessage(int line, const QString &context, const QString &t
     tor->append(msg);
 }
 
-void CppParser::parse(const QString &initialContext, ConversionData &cd, const QStringList &includeStack,
+void CppParser::parse(ConversionData &cd, const QStringList &includeStack,
                       QSet<QString> &inclusions)
 {
     namespaces << HashString();
     functionContext = namespaces;
-    functionContextUnresolved = initialContext;
+    functionContextUnresolved.clear();
 
     parseInternal(cd, includeStack, inclusions);
 }
@@ -2047,13 +2047,11 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                 truncateNamespaces(&namespaces, namespaceDepths.pop());
             if (yyBraceDepth == namespaceDepths.count()) {
                 // function, class or namespace
-                if (!yyBraceDepth && !directInclude) {
+                if (!yyBraceDepth && !directInclude)
                     truncateNamespaces(&functionContext, 1);
-                    functionContextUnresolved = cd.m_defaultContext;
-                } else {
+                else
                     functionContext = namespaces;
-                    functionContextUnresolved.clear();
-                }
+                functionContextUnresolved.clear();
                 pendingContext.clear();
             }
             // fallthrough
@@ -2275,7 +2273,7 @@ void loadCPP(Translator &translator, const QStringList &filenames, ConversionDat
         Translator *tor = new Translator;
         parser.setTranslator(tor);
         QSet<QString> inclusions;
-        parser.parse(cd.m_defaultContext, cd, QStringList(), inclusions);
+        parser.parse(cd, QStringList(), inclusions);
         parser.recordResults(isHeader(filename));
     }
 

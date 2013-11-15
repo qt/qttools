@@ -112,7 +112,6 @@ static int yyInPos;
 // The parser maintains the following global variables.
 static QString yyPackage;
 static QStack<Scope*> yyScope;
-static QString yyDefaultContext;
 
 std::ostream &yyMsg(int line = 0)
 {
@@ -446,7 +445,7 @@ static const QString context()
              innerClass = true;
          }
      }
-     return context.isEmpty() ? yyDefaultContext : context;
+     return context;
 }
 
 static void recordMessage(
@@ -606,7 +605,6 @@ bool loadJava(Translator &translator, const QString &filename, ConversionData &c
         return false;
     }
 
-    yyDefaultContext = cd.m_defaultContext;
     yyInPos = -1;
     yyFileName = filename;
     yyPackage.clear();
