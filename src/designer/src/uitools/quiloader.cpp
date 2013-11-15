@@ -50,6 +50,7 @@
 #include <ui4_p.h>
 
 #include <QtCore/qdebug.h>
+#include <QtCore/QDataStream>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QActionGroup>
 #include <QtWidgets/QApplication>
@@ -73,6 +74,22 @@ Q_GLOBAL_STATIC(widget_map, g_widgets)
 
 class QUiLoader;
 class QUiLoaderPrivate;
+
+#ifndef QT_NO_DATASTREAM
+// QUiTranslatableStringValue must be streamable since they become part of the QVariant-based
+// mime data when dragging items in views with QAbstractItemView::InternalMove.
+QDataStream &operator<<(QDataStream &out, const QUiTranslatableStringValue &s)
+{
+    out << s.comment() << s.value();
+    return out;
+}
+
+QDataStream &operator>>(QDataStream &in, QUiTranslatableStringValue &s)
+{
+    in >> s.m_comment >> s.m_value;
+    return in;
+}
+#endif // QT_NO_DATASTREAM
 
 #ifdef QFORMINTERNAL_NAMESPACE
 namespace QFormInternal
@@ -620,6 +637,13 @@ QUiLoader::QUiLoader(QObject *parent)
 {
     Q_D(QUiLoader);
 
+#ifndef QT_NO_DATASTREAM
+    static int metaTypeId = 0;
+    if (!metaTypeId) {
+        metaTypeId = qRegisterMetaType<QUiTranslatableStringValue>("QUiTranslatableStringValue");
+        qRegisterMetaTypeStreamOperators<QUiTranslatableStringValue>("QUiTranslatableStringValue");
+    }
+#endif // QT_NO_DATASTREAM
     d->builder.loader = this;
 
     QStringList paths;
