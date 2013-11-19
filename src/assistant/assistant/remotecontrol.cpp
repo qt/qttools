@@ -143,11 +143,11 @@ void RemoteControl::receivedData()
     TRACE_OBJ
     QByteArray ba;
     while (true) {
-        char c = getc(stdin);
+        const int c = getc(stdin);
         if (c == EOF || c == '\0')
             break;
         if (c)
-            ba.append(c);
+            ba.append(char(c));
          if (c == '\n')
              break;
     }
