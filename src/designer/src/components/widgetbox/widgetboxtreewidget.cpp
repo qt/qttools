@@ -111,7 +111,7 @@ WidgetBoxTreeWidget::WidgetBoxTreeWidget(QDesignerFormEditorInterface *core, QWi
     header()->hide();
     header()->setSectionResizeMode(QHeaderView::Stretch);
     setTextElideMode(Qt::ElideMiddle);
-    setVerticalScrollMode(ScrollPerPixel);
+    setVerticalScrollMode(ScrollPerItem);
 
     setItemDelegate(new SheetDelegate(this, this));
 
