@@ -338,10 +338,11 @@ bool DataModel::save(const QString &fileName, QWidget *parent)
                                              : Translator::AbsoluteLocations);
     tor.setExtras(m_extra);
     ConversionData cd;
+    tor.normalizeTranslations(cd);
     bool ok = tor.save(fileName, cd, QLatin1String("auto"));
     if (ok)
         setModified(false);
-    else
+    if (!cd.error().isEmpty())
         QMessageBox::warning(parent, QObject::tr("Qt Linguist"), cd.error());
     return ok;
 }
