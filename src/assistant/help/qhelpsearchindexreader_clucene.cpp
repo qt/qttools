@@ -321,27 +321,25 @@ bool QHelpSearchIndexReaderClucene::addWithoutQuery(const QHelpSearchQuery &quer
 bool QHelpSearchIndexReaderClucene::addPhraseQuery(const QHelpSearchQuery &query,
     const QString &fieldName, QCLuceneBooleanQuery &booleanQuery)
 {
-    bool queryIsValid = false;
-    const QString &term = query.wordList.at(0).toLower();
-    if (term.contains(QLatin1Char(' '))) {
-        const QStringList termList = term.split(QLatin1String(" "));
-        QCLucenePhraseQuery *q = new QCLucenePhraseQuery();
-        const QStringList stopWords = QCLuceneStopAnalyzer().englishStopWords();
-        foreach (const QString &term, termList) {
-            if (!stopWords.contains(term, Qt::CaseInsensitive))
-                q->addTerm(QCLuceneTerm(fieldName, term.toLower()));
-        }
-        if (!q->getTerms().isEmpty()) {
-            booleanQuery.add(q, true, true, false);
-            queryIsValid = true;
-        }
-    } else {
-        QCLuceneQuery *lQuery = new QCLuceneTermQuery(QCLuceneTerm(
-                fieldName, term.toLower()));
-        booleanQuery.add(lQuery, true, true, false);
-        queryIsValid = true;
+    const QString phrase = query.wordList.at(0).toLower();
+    QStringList terms = phrase.split(QLatin1String(" "));
+    foreach (const QString &word, QCLuceneStopAnalyzer().englishStopWords())
+        terms.removeAll(word);
+
+    if (terms.isEmpty())
+        return false;
+
+    if (terms.count() == 1) {
+        QCLuceneQuery *term = new QCLuceneTermQuery(QCLuceneTerm(fieldName, terms[0].toLower()));
+        booleanQuery.add(term, true, true, false);
+        return true;
     }
-    return queryIsValid;
+
+    QCLucenePhraseQuery *phraseQuery = new QCLucenePhraseQuery();
+    foreach (const QString &term, terms)
+        phraseQuery->addTerm(QCLuceneTerm(fieldName, term.toLower()));
+    booleanQuery.add(phraseQuery, true, true, false);
+    return true;
 }
 
 bool QHelpSearchIndexReaderClucene::addAllQuery(const QHelpSearchQuery &query,
