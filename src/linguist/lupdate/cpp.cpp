@@ -1413,7 +1413,6 @@ void CppParser::processInclude(const QString &file, ConversionData &cd, const QS
         parser.namespaces = namespaces;
         parser.functionContext = functionContext;
         parser.functionContextUnresolved = functionContextUnresolved;
-        parser.pendingContext = pendingContext;
         parser.setInput(ts, cleanFile);
         parser.setTranslator(tor);
         QStringList stack = includeStack;
@@ -1423,6 +1422,9 @@ void CppParser::processInclude(const QString &file, ConversionData &cd, const QS
         CppFiles::setBlacklisted(cleanFile);
     }
     inclusions.remove(cleanFile);
+
+    prospectiveContext.clear();
+    pendingContext.clear();
 }
 
 /*
@@ -1609,6 +1611,9 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
     int line;
     bool yyTokColonSeen = false; // Start of c'tor's initializer list
     metaExpected = true;
+
+    prospectiveContext.clear();
+    pendingContext.clear();
 
     yyWord.reserve(yyInStr.size()); // Rather insane. That's because we do no length checking.
     yyInPtr = (const ushort *)yyInStr.unicode();

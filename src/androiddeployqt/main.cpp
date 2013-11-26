@@ -1221,7 +1221,7 @@ bool readDependenciesFromElf(Options *options,
     return true;
 }
 
-bool goodToCopy(const Options *options, const QString &file);
+bool goodToCopy(const Options *options, const QString &file, QStringList *unmetDependencies);
 
 bool readDependencies(Options *options)
 {
@@ -1248,13 +1248,17 @@ bool readDependencies(Options *options)
         QSet<QString>::iterator start = remainingDependencies.begin();
         QString fileName = qtDir+*start;
         remainingDependencies.erase(start);
-        if (goodToCopy(options, fileName)) {
+
+        QStringList unmetDependencies;
+        if (goodToCopy(options, fileName, &unmetDependencies)) {
             bool ok = readDependenciesFromElf(options, fileName, &usedDependencies, &remainingDependencies);
             if (!ok)
                 return false;
+        } else if (options->verbose) {
+            fprintf(stdout, "Skipping %s due to unmet dependencies: %s\n",
+                    qPrintable(fileName),
+                    qPrintable(unmetDependencies.join(QLatin1Char(','))));
         }
-        else if (options->verbose)
-            fprintf(stdout, "Skipping %s due to unmet dependencies\n", qPrintable(fileName));
     }
     return true;
 }
@@ -1412,16 +1416,20 @@ bool fetchRemoteModifications(Options *options, const QString &directory)
     return true;
 }
 
-bool goodToCopy(const Options *options, const QString &file)
+bool goodToCopy(const Options *options, const QString &file, QStringList *unmetDependencies)
 {
     if (!file.endsWith(QLatin1String(".so")))
         return true;
 
-    foreach (const QString &lib, getQtLibsFromElf(*options, file))
-        if (!options->qtDependencies.contains(lib))
-            return false;
+    bool ret = true;
+    foreach (const QString &lib, getQtLibsFromElf(*options, file)) {
+        if (!options->qtDependencies.contains(lib)) {
+            ret = false;
+            unmetDependencies->append(lib);
+        }
+    }
 
-    return true;
+    return ret;
 }
 
 bool deployToLocalTmp(Options *options,
@@ -1432,9 +1440,12 @@ bool deployToLocalTmp(Options *options,
 
     QFileInfo fileInfo(options->qtInstallDirectory + QLatin1Char('/') + qtDependency);
 
-    if (!goodToCopy(options, fileInfo.absoluteFilePath())) {
+    QStringList unmetDependencies;
+    if (!goodToCopy(options, fileInfo.absoluteFilePath(), &unmetDependencies)) {
         if (options->verbose)
-            fprintf(stdout, "  -- Skipping %s. It has unmet dependencies.\n", qPrintable(fileInfo.absoluteFilePath()));
+            fprintf(stdout, "  -- Skipping %s. It has unmet dependencies: %s.\n",
+                    qPrintable(fileInfo.absoluteFilePath()),
+                    qPrintable(unmetDependencies.join(QLatin1Char(','))));
         return true;
     }
 
@@ -1533,9 +1544,13 @@ bool copyQtFiles(Options *options)
                 return false;
             }
 
-            if (!goodToCopy(options, sourceFileName)) {
-                if (options->verbose)
-                    fprintf(stdout, "  -- Skipping %s. It has unmet dependencies.\n", qPrintable(sourceFileName));
+            QStringList unmetDependencies;
+            if (!goodToCopy(options, sourceFileName, &unmetDependencies)) {
+                if (options->verbose) {
+                    fprintf(stdout, "  -- Skipping %s. It has unmet dependencies: %s.\n",
+                            qPrintable(sourceFileName),
+                            qPrintable(unmetDependencies.join(QLatin1Char(','))));
+                }
                 continue;
             }
 
@@ -1863,11 +1878,9 @@ bool signPackage(const Options &options)
         return false;
     }
 
-    if (options.verbose)
-        zipAlignTool += QLatin1String(" -v");
-
-    zipAlignTool = QString::fromLatin1("\"%1\" -f 4 %2 %3")
+    zipAlignTool = QString::fromLatin1("\"%1\"%2 -f 4 %3 %4")
             .arg(zipAlignTool)
+            .arg(options.verbose ? QString::fromLatin1(" -v") : QString())
             .arg(options.outputDirectory
                  + QLatin1String("/bin/")
                  + apkName(options)
