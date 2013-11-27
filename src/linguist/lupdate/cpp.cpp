@@ -237,15 +237,27 @@ private:
         int elseLine;
     };
 
+    enum TokenType {
+        Tok_Eof, Tok_class, Tok_friend, Tok_namespace, Tok_using, Tok_return,
+        Tok_tr, Tok_trUtf8, Tok_translate, Tok_translateUtf8, Tok_trid,
+        Tok_Q_OBJECT, Tok_Q_DECLARE_TR_FUNCTIONS, Tok_Access, Tok_Cancel,
+        Tok_Ident, Tok_String, Tok_Arrow, Tok_Colon, Tok_ColonColon,
+        Tok_Equals, Tok_LeftBracket, Tok_RightBracket,
+        Tok_LeftBrace, Tok_RightBrace, Tok_LeftParen, Tok_RightParen, Tok_Comma, Tok_Semicolon,
+        Tok_Null, Tok_Integer,
+        Tok_QuotedInclude, Tok_AngledInclude,
+        Tok_Other
+    };
+
     std::ostream &yyMsg(int line = 0);
 
     int getChar();
-    uint getToken();
+    TokenType getToken();
     bool getMacroArgs();
 
     void processComment();
 
-    bool match(uint t);
+    bool match(TokenType t);
     bool matchString(QString *s);
     bool matchEncoding();
     bool matchStringOrNull(QString *s);
@@ -293,18 +305,6 @@ private:
     void truncateNamespaces(NamespaceList *namespaces, int lenght);
     Namespace *modifyNamespace(NamespaceList *namespaces, bool haveLast = true);
 
-    enum TokenType {
-        Tok_Eof, Tok_class, Tok_friend, Tok_namespace, Tok_using, Tok_return,
-        Tok_tr, Tok_trUtf8, Tok_translate, Tok_translateUtf8, Tok_trid,
-        Tok_Q_OBJECT, Tok_Q_DECLARE_TR_FUNCTIONS, Tok_Access, Tok_Cancel,
-        Tok_Ident, Tok_String, Tok_Arrow, Tok_Colon, Tok_ColonColon,
-        Tok_Equals, Tok_LeftBracket, Tok_RightBracket,
-        Tok_LeftBrace, Tok_RightBrace, Tok_LeftParen, Tok_RightParen, Tok_Comma, Tok_Semicolon,
-        Tok_Null, Tok_Integer,
-        Tok_QuotedInclude, Tok_AngledInclude,
-        Tok_Other
-    };
-
     // Tokenizer state
     QString yyFileName;
     int yyCh;
@@ -327,7 +327,7 @@ private:
     const ushort *yyInPtr;
 
     // Parser state
-    uint yyTok;
+    TokenType yyTok;
 
     bool metaExpected;
     QString context;
@@ -503,7 +503,7 @@ STRING(signals);
 STRING(Q_SLOTS);
 STRING(Q_SIGNALS);
 
-uint CppParser::getToken()
+CppParser::TokenType CppParser::getToken()
 {
   restart:
     // Failing this assertion would mean losing the preallocated buffer.
@@ -1435,7 +1435,7 @@ void CppParser::processInclude(const QString &file, ConversionData &cd, const QS
   appears within a function defined outside the class definition.
 */
 
-bool CppParser::match(uint t)
+bool CppParser::match(TokenType t)
 {
     bool matches = (yyTok == t);
     if (matches)
