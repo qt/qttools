@@ -60,33 +60,28 @@
 
 #include <iostream>
 
-// Can't have an array of QStaticByteArrayData<N> for different N, so
-// use QByteArray, which requires constructor calls. Doesn't matter
+// Can't have an array of QStaticStringData<N> for different N, so
+// use QString, which requires constructor calls. Doesn't matter
 // much, since this is in an app, not a lib:
-static const QByteArray defaultTrFunctionNames[] = {
-// MSVC can't handle the lambda in this array if QByteArrayLiteral expands
-// to a lambda. In that case, use a QByteArray instead.
+static const QString defaultTrFunctionNames[] = {
+// MSVC can't handle the lambda in this array if QStringLiteral expands
+// to a lambda. In that case, use a QString instead.
 #if defined(Q_CC_MSVC) && defined(Q_COMPILER_LAMBDA)
-#define BYTEARRAYLITERAL(F) QByteArray(#F),
+#define STRINGLITERAL(F) QLatin1String(#F),
 #else
-#define BYTEARRAYLITERAL(F) QByteArrayLiteral(#F),
+#define STRINGLITERAL(F) QStringLiteral(#F),
 #endif
-    LUPDATE_FOR_EACH_TR_FUNCTION(BYTEARRAYLITERAL)
-#undef BYTEARRAYLITERAL
+    LUPDATE_FOR_EACH_TR_FUNCTION(STRINGLITERAL)
+#undef STRINGLITERAL
 };
 Q_STATIC_ASSERT((TrFunctionAliasManager::NumTrFunctions == sizeof defaultTrFunctionNames / sizeof *defaultTrFunctionNames));
 
-static int trFunctionByDefaultName(const QByteArray &trFunctionName)
+static int trFunctionByDefaultName(const QString &trFunctionName)
 {
     for (int i = 0; i < TrFunctionAliasManager::NumTrFunctions; ++i)
         if (trFunctionName == defaultTrFunctionNames[i])
             return i;
     return -1;
-}
-
-static int trFunctionByDefaultName(const QString &trFunctionName)
-{
-    return trFunctionByDefaultName(trFunctionName.toLatin1());
 }
 
 TrFunctionAliasManager::TrFunctionAliasManager()
@@ -98,18 +93,18 @@ TrFunctionAliasManager::TrFunctionAliasManager()
 
 TrFunctionAliasManager::~TrFunctionAliasManager() {}
 
-int TrFunctionAliasManager::trFunctionByName(const QByteArray &trFunctionName) const
+int TrFunctionAliasManager::trFunctionByName(const QString &trFunctionName) const
 {
     ensureTrFunctionHashUpdated();
     // this function needs to be fast
-    const QHash<QByteArray, TrFunction>::const_iterator it
+    const QHash<QString, TrFunction>::const_iterator it
         = m_nameToTrFunctionMap.find(trFunctionName);
     return it == m_nameToTrFunctionMap.end() ? -1 : *it;
 }
 
-void TrFunctionAliasManager::modifyAlias(int trFunction, const QByteArray &alias, Operation op)
+void TrFunctionAliasManager::modifyAlias(int trFunction, const QString &alias, Operation op)
 {
-    QList<QByteArray> &list = m_trFunctionAliases[trFunction];
+    QList<QString> &list = m_trFunctionAliases[trFunction];
     if (op == SetAlias)
         list.clear();
     list.push_back(alias);
@@ -121,9 +116,9 @@ void TrFunctionAliasManager::ensureTrFunctionHashUpdated() const
     if (!m_nameToTrFunctionMap.empty())
         return;
 
-    QHash<QByteArray, TrFunction> nameToTrFunctionMap;
+    QHash<QString, TrFunction> nameToTrFunctionMap;
     for (int i = 0; i < NumTrFunctions; ++i)
-        foreach (const QByteArray &alias, m_trFunctionAliases[i])
+        foreach (const QString &alias, m_trFunctionAliases[i])
             nameToTrFunctionMap[alias] = TrFunction(i);
     // commit:
     m_nameToTrFunctionMap.swap(nameToTrFunctionMap);
@@ -134,16 +129,7 @@ static QStringList availableFunctions()
     QStringList result;
     result.reserve(TrFunctionAliasManager::NumTrFunctions);
     for (int i = 0; i < TrFunctionAliasManager::NumTrFunctions; ++i)
-        result.push_back(QString::fromLatin1(defaultTrFunctionNames[i]));
-    return result;
-}
-
-static QStringList byteArrayToStringList(const QList<QByteArray> &in)
-{
-    QStringList result;
-    result.reserve(in.size());
-    foreach (const QByteArray &function, in)
-        result.push_back(QString::fromLatin1(function));
+        result.push_back(defaultTrFunctionNames[i]);
     return result;
 }
 
@@ -152,9 +138,9 @@ QStringList TrFunctionAliasManager::availableFunctionsWithAliases() const
     QStringList result;
     result.reserve(NumTrFunctions);
     for (int i = 0; i < NumTrFunctions; ++i)
-        result.push_back(QString::fromLatin1(defaultTrFunctionNames[i]) +
+        result.push_back(defaultTrFunctionNames[i] +
                          QLatin1String(" (=") +
-                         byteArrayToStringList(m_trFunctionAliases[i]).join(QLatin1Char('=')) +
+                         m_trFunctionAliases[i].join(QLatin1Char('=')) +
                          QLatin1Char(')'));
     return result;
 }
@@ -280,7 +266,7 @@ static bool handleTrFunctionAliases(const QString &arg)
                      .arg(trFunctionName));
             return false;
         }
-        trFunctionAliasManager.modifyAlias(trFunction, alias.toLatin1(),
+        trFunctionAliasManager.modifyAlias(trFunction, alias,
                                            plusEqual ? TrFunctionAliasManager::AddAlias : TrFunctionAliasManager::SetAlias);
     }
     return true;

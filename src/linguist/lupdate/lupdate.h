@@ -44,9 +44,9 @@
 
 #include "qglobal.h"
 
-#include <QByteArray>
 #include <QList>
 #include <QString>
+#include <QStringList>
 #include <QHash>
 
 QT_BEGIN_NAMESPACE
@@ -124,16 +124,12 @@ public:
 
     enum Operation { AddAlias, SetAlias };
 
-    int trFunctionByName(const QByteArray &trFunctionByName) const;
-    int trFunctionByName(const QString &trFunctionName) const
-    { return trFunctionByName(trFunctionName.toLatin1()); }
+    int trFunctionByName(const QString &trFunctionName) const;
 
-    void modifyAlias(int trFunction, const QByteArray &alias, Operation op);
+    void modifyAlias(int trFunction, const QString &alias, Operation op);
 
-    bool isAliasFor(const QByteArray &identifier, TrFunction trFunction) const
-    { return m_trFunctionAliases[trFunction].contains(identifier); }
     bool isAliasFor(const QString &identifier, TrFunction trFunction) const
-    { return isAliasFor(identifier.toLatin1(), trFunction); }
+    { return m_trFunctionAliases[trFunction].contains(identifier); }
 
     QStringList availableFunctionsWithAliases() const;
 
@@ -141,8 +137,8 @@ private:
     void ensureTrFunctionHashUpdated() const;
 
 private:
-    QList<QByteArray> m_trFunctionAliases[NumTrFunctions];
-    mutable QHash<QByteArray,TrFunction> m_nameToTrFunctionMap;
+    QStringList m_trFunctionAliases[NumTrFunctions];
+    mutable QHash<QString,TrFunction> m_nameToTrFunctionMap;
 };
 
 QT_END_NAMESPACE
