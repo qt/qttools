@@ -56,10 +56,6 @@
 
 QT_BEGIN_NAMESPACE
 
-namespace {
-    #define TR(x) QCoreApplication::translate("BookmarkManager", x)
-}
-
 BookmarkManagerWidget::BookmarkManagerWidget(BookmarkModel *sourceModel,
         QWidget *parent)
     : QWidget(parent)
@@ -196,8 +192,8 @@ void BookmarkManagerWidget::findPrevious()
 void BookmarkManagerWidget::importBookmarks()
 {
     TRACE_OBJ
-    const QString &fileName = QFileDialog::getOpenFileName(0, TR("Open File"),
-        QDir::currentPath(), TR("Files (*.xbel)"));
+    const QString &fileName = QFileDialog::getOpenFileName(0, tr("Open File"),
+        QDir::currentPath(), tr("Files (*.xbel)"));
 
     if (fileName.isEmpty())
         return;
@@ -212,8 +208,8 @@ void BookmarkManagerWidget::importBookmarks()
 void BookmarkManagerWidget::exportBookmarks()
 {
     TRACE_OBJ
-    QString fileName = QFileDialog::getSaveFileName(0, TR("Save File"),
-        QLatin1String("untitled.xbel"), TR("Files (*.xbel)"));
+    QString fileName = QFileDialog::getSaveFileName(0, tr("Save File"),
+        QLatin1String("untitled.xbel"), tr("Files (*.xbel)"));
 
     const QLatin1String suffix(".xbel");
     if (!fileName.endsWith(suffix))
@@ -224,8 +220,8 @@ void BookmarkManagerWidget::exportBookmarks()
         XbelWriter writer(bookmarkModel);
         writer.writeToFile(&file);
     } else {
-        QMessageBox::information(this, TR("Qt Assistant"),
-            TR("Unable to save bookmarks."), TR("OK"));
+        QMessageBox::information(this, tr("Qt Assistant"),
+            tr("Unable to save bookmarks."), tr("OK"));
     }
 }
 
@@ -255,7 +251,7 @@ void BookmarkManagerWidget::removeItem(const QModelIndex &index)
         return;  // check if we should delete the "Bookmarks Menu", bail
 
     if (bookmarkModel->hasChildren(current)) {
-        int value = QMessageBox::question(this, TR("Remove"), TR("You are going"
+        int value = QMessageBox::question(this, tr("Remove"), tr("You are going"
             "to delete a Folder, this will also<br> remove it's content. Are "
             "you sure to continue?"),
             QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
@@ -283,14 +279,14 @@ void BookmarkManagerWidget::customContextMenuRequested(const QPoint &point)
 
     QMenu menu(QLatin1String(""));
     if (bookmarkModel->data(index, UserRoleFolder).toBool()) {
-        remove = menu.addAction(TR("Delete Folder"));
-        rename = menu.addAction(TR("Rename Folder"));
+        remove = menu.addAction(tr("Delete Folder"));
+        rename = menu.addAction(tr("Rename Folder"));
     } else {
-        showItem = menu.addAction(TR("Show Bookmark"));
-        showItemInNewTab = menu.addAction(TR("Show Bookmark in New Tab"));
+        showItem = menu.addAction(tr("Show Bookmark"));
+        showItemInNewTab = menu.addAction(tr("Show Bookmark in New Tab"));
         menu.addSeparator();
-        remove = menu.addAction(TR("Delete Bookmark"));
-        rename = menu.addAction(TR("Rename Bookmark"));
+        remove = menu.addAction(tr("Delete Bookmark"));
+        rename = menu.addAction(tr("Rename Bookmark"));
     }
 
     QAction *pickedAction = menu.exec(ui.treeView->mapToGlobal(point));
