@@ -2,7 +2,7 @@ include($QT_INSTALL_DOCS/global/qt-module-defaults.qdocconf)
 
 project                 = QtLinguist
 description             = Qt Linguist Manual
-url                     = http://qt-project.org/doc/qt-$QT_VER/qtlinguist
+url                     = http://qt-project.org/doc/qt-$QT_VER
 
 qhp.projects            = QtLinguist
 

@@ -56,6 +56,8 @@
 #include <QtCore/QByteArray>
 #include <QtCore/QMetaType>
 
+QT_FORWARD_DECLARE_CLASS(QDataStream)
+
 // This file is here for use by the form preview in Linguist. If you change anything
 // here or in the code which uses it, remember to adapt Linguist accordingly.
 
@@ -77,6 +79,8 @@ public:
     void setComment(const QByteArray &comment) { m_comment = comment; }
 
 private:
+    friend QDataStream &operator>>(QDataStream &in, QUiTranslatableStringValue &s);
+
     QByteArray m_value;
     QByteArray m_comment;
 };

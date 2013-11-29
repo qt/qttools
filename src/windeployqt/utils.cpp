@@ -69,6 +69,11 @@ QT_BEGIN_NAMESPACE
 
 int optVerboseLevel = 1;
 
+bool isBuildDirectory(Platform platform, const QString &dirName)
+{
+    return (platform & WindowsBased) && (dirName == QLatin1String("debug") || dirName == QLatin1String("release"));
+}
+
 // Create a symbolic link by changing to the source directory to make sure the
 // link uses relative paths only (QFile::link() otherwise uses the absolute path).
 bool createSymbolicLink(const QFileInfo &source, const QString &target, QString *errorMessage)
@@ -109,6 +114,35 @@ bool createDirectory(const QString &directory, QString *errorMessage)
         return false;
     }
     return true;
+}
+
+// Find shared libraries matching debug/Platform in a directory, return relative names.
+QStringList findSharedLibraries(const QDir &directory, Platform platform, bool debug, const QString &prefix)
+{
+    QString nameFilter = prefix;
+    if (nameFilter.isEmpty())
+        nameFilter += QLatin1Char('*');
+    if (debug && (platform & WindowsBased))
+        nameFilter += QLatin1Char('d');
+    nameFilter += sharedLibrarySuffix(platform);
+    QStringList result;
+    QString errorMessage;
+    foreach (const QString &dll, directory.entryList(QStringList(nameFilter), QDir::Files)) {
+        const QString dllPath = directory.absoluteFilePath(dll);
+        bool matches = true;
+        if (platform & WindowsBased) {
+            bool debugDll;
+            if (readPeExecutable(dllPath, &errorMessage, 0, 0, &debugDll)) {
+                matches = debugDll == debug;
+            } else {
+                std::fprintf(stderr, "Warning: Unable to read %s: %s",
+                             qPrintable(QDir::toNativeSeparators(dllPath)), qPrintable(errorMessage));
+            }
+        } // Windows
+        if (matches)
+            result += dll;
+    } // for
+    return result;
 }
 
 #ifdef Q_OS_WIN
@@ -762,7 +796,7 @@ bool readPeExecutable(const QString &peExecutableFileName, QString *errorMessage
 QString findD3dCompiler(Platform platform, unsigned wordSize)
 {
     const QString prefix = QStringLiteral("D3Dcompiler_");
-    const QString suffix = QStringLiteral(".dll");
+    const QString suffix = QLatin1String(windowsSharedLibrarySuffix);
     // Get the DLL from Kit 8.0 onwards
     const QString kitDir = QString::fromLocal8Bit(qgetenv("WindowsSdkDir"));
     if (!kitDir.isEmpty()) {

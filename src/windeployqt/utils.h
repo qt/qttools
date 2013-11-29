@@ -101,12 +101,18 @@ QString findSdkTool(const QString &tool);
 inline QString normalizeFileName(const QString &name) { return name; }
 #endif // !Q_OS_WIN
 
+static const char windowsSharedLibrarySuffix[] = ".dll";
+static const char unixSharedLibrarySuffix[] = ".so";
+
+inline QString sharedLibrarySuffix(Platform platform) { return QLatin1String((platform & WindowsBased) ? windowsSharedLibrarySuffix : unixSharedLibrarySuffix); }
+bool isBuildDirectory(Platform platform, const QString &dirName);
+
 bool createSymbolicLink(const QFileInfo &source, const QString &target, QString *errorMessage);
 bool createDirectory(const QString &directory, QString *errorMessage);
 QString findInPath(const QString &file);
 QMap<QString, QString> queryQMakeAll(QString *errorMessage);
 QString queryQMake(const QString &variable, QString *errorMessage);
-QStringList findDependentLibs(const QString &binary, QString *errorMessage);
+QStringList findSharedLibraries(const QDir &directory, Platform platform, bool debug, const QString &prefix = QString());
 
 bool updateFile(const QString &sourceFileName, const QStringList &nameFilters,
                 const QString &targetDirectory, JsonOutput *json, QString *errorMessage);
@@ -131,12 +137,12 @@ inline bool readExecutable(const QString &executableFileName, Platform platform,
         readPeExecutable(executableFileName, errorMessage, dependentLibraries, wordSize, isDebug);
 }
 
-// Return dependent modules of a PE executable files.
+// Return dependent modules of executable files.
 
-inline QStringList findDependentLibraries(const QString &peExecutableFileName, Platform platform, QString *errorMessage)
+inline QStringList findDependentLibraries(const QString &executableFileName, Platform platform, QString *errorMessage)
 {
     QStringList result;
-    readExecutable(peExecutableFileName, platform, errorMessage, &result);
+    readExecutable(executableFileName, platform, errorMessage, &result);
     return result;
 }
 

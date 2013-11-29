@@ -2,7 +2,7 @@ include($QT_INSTALL_DOCS/global/qt-module-defaults.qdocconf)
 
 project                 = QtUiTools
 description             = Qt UI Tools Reference Documentation
-url                     = http://qt-project.org/doc/qt-$QT_VER/qtuitools
+url                     = http://qt-project.org/doc/qt-$QT_VER
 version                 = $QT_VERSION
 
 examplesinstallpath     = uitools
@@ -37,7 +37,7 @@ imagedirs               = images
 
 outputdir               = $QT_INSTALL_DOCS/qtuitools
 
-depends                += qtdoc qtbase qtdesigner qtcore qtwidgets
+depends                += qtdoc qtdesigner qtcore qtwidgets
 
 navigation.landingpage = "Qt UI Tools"
 navigation.cppclassespage = "Qt UI Tools C++ Classes"

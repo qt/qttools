@@ -519,6 +519,25 @@ static void excludeProjects(const ProFileEvaluator &visitor, QStringList *subPro
     }
 }
 
+static bool processTs(Translator &fetchedTor, const QString &file, ConversionData &cd)
+{
+    foreach (const Translator::FileFormat &fmt, Translator::registeredFileFormats()) {
+        if (file.endsWith(QLatin1Char('.') + fmt.extension, Qt::CaseInsensitive)) {
+            Translator tor;
+            if (tor.load(file, cd, fmt.extension)) {
+                foreach (TranslatorMessage msg, tor.messages()) {
+                    msg.setType(TranslatorMessage::Unfinished);
+                    msg.setTranslations(QStringList());
+                    msg.setTranslatorComment(QString());
+                    fetchedTor.extend(msg, cd);
+                }
+            }
+            return true;
+        }
+    }
+    return false;
+}
+
 static void processSources(Translator &fetchedTor,
                            const QStringList &sourceFiles, ConversionData &cd)
 {
@@ -544,7 +563,7 @@ static void processSources(Translator &fetchedTor,
                  || it->endsWith(QLatin1String(".qs"), Qt::CaseInsensitive))
             requireQmlSupport = true;
 #endif // QT_NO_QML
-        else
+        else if (!processTs(fetchedTor, *it, cd))
             sourceFilesCpp << *it;
     }
 
@@ -747,6 +766,7 @@ int main(int argc, char **argv)
     int proDebug = 0;
     int numFiles = 0;
     bool metTsFlag = false;
+    bool metXTsFlag = false;
     bool recursiveScan = true;
 
     QString extensions = m_defaultExtensions;
@@ -847,6 +867,11 @@ int main(int argc, char **argv)
             return 0;
         } else if (arg == QLatin1String("-ts")) {
             metTsFlag = true;
+            metXTsFlag = false;
+            continue;
+        } else if (arg == QLatin1String("-xts")) {
+            metTsFlag = false;
+            metXTsFlag = true;
             continue;
         } else if (arg == QLatin1String("-extensions")) {
             ++i;
@@ -948,6 +973,8 @@ int main(int argc, char **argv)
                 }
             }
             numFiles++;
+        } else if (metXTsFlag) {
+            alienFiles += files;
         } else {
             foreach (const QString &file, files) {
                 QFileInfo fi(file);
@@ -999,17 +1026,10 @@ int main(int argc, char **argv)
                         }
                     }
                 } else {
-                    foreach (const Translator::FileFormat &fmt, Translator::registeredFileFormats()) {
-                        if (file.endsWith(QLatin1Char('.') + fmt.extension, Qt::CaseInsensitive)) {
-                            alienFiles << file;
-                            goto gotfile;
-                        }
-                    }
                     sourceFiles << QDir::cleanPath(fi.absoluteFilePath());;
                     projectRoots.insert(fi.absolutePath() + QLatin1Char('/'));
                 }
             }
-          gotfile:
             numFiles++;
         }
     } // for args

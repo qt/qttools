@@ -172,6 +172,7 @@ public:
     void initFrom(const QMakeEvaluator &other);
     void setupProject();
     void evaluateCommand(const QString &cmds, const QString &where);
+    void applyExtraConfigs();
     VisitReturn visitProFile(ProFile *pro, QMakeHandler::EvalFileType type,
                              LoadFlags flags);
     VisitReturn visitProBlock(ProFile *pro, const ushort *tokPtr);
@@ -299,6 +300,7 @@ public:
     QString m_superfile;
     QString m_conffile;
     QString m_cachefile;
+    QString m_stashfile;
     QString m_sourceRoot;
     QString m_buildRoot;
     QStringList m_qmakepath;

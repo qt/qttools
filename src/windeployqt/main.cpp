@@ -40,6 +40,7 @@
 ****************************************************************************/
 
 #include "utils.h"
+#include "qmlutils.h"
 
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
@@ -55,59 +56,85 @@
 
 QT_BEGIN_NAMESPACE
 
-enum QtModule {
-    QtCoreModule = 0x1,
-    QtGuiModule = 0x2,
-    QtSqlModule = 0x4,
-    QtNetworkModule = 0x8,
-    QtMultimediaModule = 0x10,
-    QtMultimediaWidgetsModule = 0x20,
-    QtOpenGlModule = 0x40,
-    QtPrintSupportModule = 0x80,
-    QtDeclarativeModule = 0x100,
-    QtQmlModule = 0x200,
-    QtQuickModule = 0x400,
-    QtQuickParticlesModule = 0x800,
-    QtScriptModule = 0x1000,
-    QtSvgModule = 0x2000,
-    QtXmlModule = 0x4000,
-    QtXmlPatternsModule = 0x8000,
-    QtHelpModule = 0x10000,
-    QtSensorsModule = 0x20000,
-    QtWidgetsModule = 0x40000,
-    QtWebKitModule = 0x80000,
-    QtWebKitWidgetsModule = 0x100000
+enum QtModule
+#ifdef Q_COMPILER_CLASS_ENUM
+    : quint64
+#endif
+{
+    QtBluetoothModule = 0x1,
+    QtCLuceneModule = 0x2,
+    QtConcurrentModule = 0x4,
+    QtCoreModule = 0x8,
+    QtDeclarativeModule = 0x10,
+    QtDesignerComponents = 0x20,
+    QtDesignerModule = 0x40,
+    QtGuiModule = 0x80,
+    QtHelpModule = 0x100,
+    QtMultimediaModule = 0x200,
+    QtMultimediaWidgetsModule = 0x400,
+    QtNetworkModule = 0x800,
+    QtNfcModule = 0x1000,
+    QtOpenGLModule = 0x2000,
+    QtPositioningModule = 0x4000,
+    QtPrintSupportModule = 0x8000,
+    QtQmlModule = 0x10000,
+    QtQuickModule = 0x20000,
+    QtQuickParticlesModule = 0x40000,
+    QtScriptModule = 0x80000,
+    QtScriptToolsModule = 0x100000,
+    QtSensorsModule = 0x200000,
+    QtSerialPortModule = 0x400000,
+    QtSqlModule = 0x800000,
+    QtSvgModule = 0x1000000,
+    QtTestModule = 0x2000000,
+    QtWidgetsModule = 0x4000000,
+    QtWinExtrasModule = 0x8000000,
+    QtXmlModule = 0x10000000,
+    QtXmlPatternsModule = 0x20000000,
+    QtWebKitModule = 0x40000000,
+    QtWebKitWidgetsModule = 0x80000000
 };
 
 struct QtModuleEntry {
-    unsigned module;
+    quint64 module;
     const char *option;
     const char *libraryName;
     const char *translation;
 };
 
 QtModuleEntry qtModuleEntries[] = {
+    { QtBluetoothModule, "bluetooth", "Qt5Bluetooth", 0 },
+    { QtCLuceneModule, "clucene", "Qt5CLucene", "qt_help" },
+    { QtConcurrentModule, "concurrent", "Qt5Concurrent", "qtbase" },
     { QtCoreModule, "core", "Qt5Core", "qtbase" },
+    { QtDeclarativeModule, "declarative", "Qt5Declarative", "qtquick1" },
+    { QtDesignerComponents, "designercomponents", "Qt5DesignerComponents", 0 },
+    { QtDesignerModule, "designer", "Qt5Designer", 0 },
     { QtGuiModule, "gui", "Qt5Gui", "qtbase" },
-    { QtQmlModule, "qml", "Qt5Qml", "qtdeclarative" },
-    { QtQuickModule, "quick", "Qt5Quick", "qtdeclarative" },
-    { QtWidgetsModule, "widgets", "Qt5Widgets", "qtbase" },
-    { QtOpenGlModule, "opengl", "Qt5OpenGL", 0 },
-    { QtPrintSupportModule, "printsupport", "Qt5PrintSupport", 0 },
-    { QtNetworkModule, "network", "Qt5Network", "qtbase" },
-    { QtSqlModule, "sql", "Qt5Sql", "qtbase" },
+    { QtHelpModule, "help", "Qt5Help", "qt_help" },
     { QtMultimediaModule, "multimedia", "Qt5Multimedia", "qtmultimedia" },
     { QtMultimediaWidgetsModule, "multimediawidgets", "Qt5MultimediaWidgets", "qtmultimedia" },
+    { QtNetworkModule, "network", "Qt5Network", "qtbase" },
+    { QtNfcModule, "nfc", "Qt5Nfc", 0 },
+    { QtOpenGLModule, "opengl", "Qt5OpenGL", 0 },
+    { QtPositioningModule, "positioning", "Qt5Positioning", 0 },
+    { QtPrintSupportModule, "printsupport", "Qt5PrintSupport", 0 },
+    { QtQmlModule, "qml", "Qt5Qml", "qtdeclarative" },
+    { QtQuickModule, "quick", "Qt5Quick", "qtdeclarative" },
     { QtQuickParticlesModule, "quickparticles", "Qt5QuickParticles", 0 },
-    { QtXmlPatternsModule, "xmlpatterns", "Qt5XmlPatterns", "qtxmlpatterns" },
-    { QtHelpModule, "help", "Qt5Help", "qt_help" },
-    { QtSensorsModule, "sensors", "Qt5Sensors", 0 },
-    { QtSvgModule, "svg", "Qt5Svg", 0 },
-    { QtWebKitModule, "webkit", "Qt5WebKit", 0 },
-    { QtWebKitWidgetsModule, "webkitwidgets", "Qt5WebKitWidgets", 0 },
     { QtScriptModule, "script", "Qt5Script", "qtscript" },
-    { QtXmlModule, "xml", "Qt5Xml", 0 },
-    { QtDeclarativeModule, "declarative", "Qt5Declarative", "qtquick1" },
+    { QtScriptToolsModule, "scripttools", "Qt5ScriptTools", "qtscript" },
+    { QtSensorsModule, "sensors", "Qt5Sensors", 0 },
+    { QtSerialPortModule, "serialport", "Qt5SerialPort", 0 },
+    { QtSqlModule, "sql", "Qt5Sql", "qtbase" },
+    { QtSvgModule, "svg", "Qt5Svg", 0 },
+    { QtTestModule, "test", "Qt5Test", "qtbase" },
+    { QtWidgetsModule, "widgets", "Qt5Widgets", "qtbase" },
+    { QtWinExtrasModule, "winextras", "Qt5WinExtras", 0 },
+    { QtXmlModule, "xml", "Qt5Xml", "qtbase" },
+    { QtXmlPatternsModule, "xmlpatterns", "Qt5XmlPatterns", "qtxmlpatterns" },
+    { QtWebKitModule, "webkit", "Qt5WebKit", 0 },
+    { QtWebKitWidgetsModule, "webkitwidgets", "Qt5WebKitWidgets", 0 }
 };
 
 static const char webProcessC[] = "QtWebProcess";
@@ -165,6 +192,7 @@ struct Options {
     unsigned additionalLibraries;
     unsigned disabledLibraries;
     unsigned updateFileFlags;
+    QString qmlDirectory; // Project's QML files.
     QString directory;
     QString libraryDirectory;
     QString binary;
@@ -222,6 +250,11 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
     QCommandLineOption noLibraryOption(QStringLiteral("no-libraries"),
                                        QStringLiteral("Skip library deployment."));
     parser->addOption(noLibraryOption);
+
+    QCommandLineOption qmlDirOption(QStringLiteral("qmldir"),
+                                    QStringLiteral("Scan for QML-imports starting from directory."),
+                                    QStringLiteral("directory"));
+    parser->addOption(qmlDirOption);
 
     QCommandLineOption noQuickImportOption(QStringLiteral("no-quick-import"),
                                            QStringLiteral("Skip deployment of Qt Quick imports."));
@@ -322,6 +355,9 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
     if (parser->isSet(dirOption))
         options->directory = parser->value(dirOption);
 
+    if (parser->isSet(qmlDirOption))
+        options->qmlDirectory = parser->value(qmlDirOption);
+
     const QString &file = posArgs.front();
     const QFileInfo fi(QDir::cleanPath(file));
     if (!fi.exists()) {
@@ -417,41 +453,25 @@ static bool findDependentQtLibraries(const QString &qtBinDir, const QString &bin
 // Tries to pre-filter by namefilter and does check via PE.
 class DllDirectoryFileEntryFunction {
 public:
-    explicit DllDirectoryFileEntryFunction(bool debug, const QString &prefix = QLatin1String("*")) :
-        m_nameFilter(QStringList(prefix  + (debug ? QStringLiteral("d.dll") : QStringLiteral(".dll")))),
-        m_dllDebug(debug) {}
+    explicit DllDirectoryFileEntryFunction(Platform platform, bool debug, const QString &prefix = QString()) :
+        m_platform(platform), m_dllDebug(debug), m_prefix(prefix) {}
 
     QStringList operator()(const QDir &dir) const
-    {
-        QStringList result;
-        QString errorMessage;
-        foreach (const QString &dll, m_nameFilter(dir)) {
-            const QString dllPath = dir.absoluteFilePath(dll);
-            bool debugDll;
-            if (readPeExecutable(dllPath, &errorMessage, 0, 0, &debugDll)) {
-                if (debugDll == m_dllDebug) {
-                    result.push_back(dll);
-                }
-            } else {
-                std::fprintf(stderr, "Warning: Unable to read %s: %s",
-                             qPrintable(QDir::toNativeSeparators(dllPath)), qPrintable(errorMessage));
-            }
-        }
-        return result;
-    }
+        { return findSharedLibraries(dir, m_platform, m_dllDebug, m_prefix); }
 
 private:
-    const NameFilterFileEntryFunction m_nameFilter;
+    const Platform m_platform;
     const bool m_dllDebug;
+    const QString m_prefix;
 };
 
 // File entry filter function for updateFile() that returns a list of files for
 // QML import trees: DLLs (matching debgug) and .qml/,js, etc.
 class QmlDirectoryFileEntryFunction {
 public:
-    explicit QmlDirectoryFileEntryFunction(bool debug)
+    explicit QmlDirectoryFileEntryFunction(Platform platform, bool debug)
         : m_qmlNameFilter(QStringList() << QStringLiteral("*.js") << QStringLiteral("qmldir") << QStringLiteral("*.qmltypes") << QStringLiteral("*.png"))
-        , m_dllFilter(debug)
+        , m_dllFilter(platform, debug)
     {}
 
     QStringList operator()(const QDir &dir) const { return m_dllFilter(dir) + m_qmlNameFilter(dir);  }
@@ -517,9 +537,7 @@ QStringList findQtPlugins(unsigned usedQtModules,
             } else {
                 filter  = QLatin1String("*");
             }
-            const QStringList plugins = platform == Unix ?
-                        NameFilterFileEntryFunction(QStringList(filter + QStringLiteral(".so")))(subDir) :
-                        DllDirectoryFileEntryFunction(debug, filter)(subDir);
+            const QStringList plugins = findSharedLibraries(subDir, platform ,debug, filter);
             foreach (const QString &plugin, plugins) {
                 const QString pluginPath = subDir.absoluteFilePath(plugin);
                 if (isPlatformPlugin)
@@ -533,11 +551,17 @@ QStringList findQtPlugins(unsigned usedQtModules,
 
 static unsigned qtModule(const QString &module)
 {
+    unsigned bestMatch = 0;
+    int bestMatchLength = 0;
     const size_t qtModulesCount = sizeof(qtModuleEntries)/sizeof(QtModuleEntry);
-    for (size_t i = 0; i < qtModulesCount; ++i)
-        if (module.contains(QLatin1String(qtModuleEntries[i].libraryName), Qt::CaseInsensitive))
-            return qtModuleEntries[i].module;
-    return 0;
+    for (size_t i = 0; i < qtModulesCount; ++i) {
+        const QString libraryName = QLatin1String(qtModuleEntries[i].libraryName);
+        if (libraryName.size() > bestMatchLength && module.contains(libraryName, Qt::CaseInsensitive)) {
+            bestMatch = qtModuleEntries[i].module;
+            bestMatchLength = libraryName.size();
+        }
+    }
+    return bestMatch;
 }
 
 static QStringList translationNameFilters(unsigned modules, const QString &prefix)
@@ -610,12 +634,11 @@ static QString libraryPath(const QString &libraryLocation, const char *name, Pla
         result += QLatin1String(name);
         if (debug)
             result += QLatin1Char('d');
-        result += QStringLiteral(".dll");
     } else if (platform & UnixBased) {
         result += QStringLiteral("lib");
         result += QLatin1String(name);
-        result += QStringLiteral(".so");
     }
+    result += sharedLibrarySuffix(platform);
     return result;
 }
 
@@ -640,9 +663,20 @@ static DeployResult deploy(const Options &options,
     if (!findDependentQtLibraries(libraryLocation, options.binary, options.platform, errorMessage, &dependentQtLibs, &wordSize, &isDebug, &directDependencyCount))
         return result;
 
+    // Determine application type, check Quick2 is used by looking at the
+    // direct dependencies (do not be fooled by QtWebKit depending on it).
+    for (int m = 0; m < directDependencyCount; ++m)
+        result.directlyUsedQtLibraries |= qtModule(dependentQtLibs.at(m));
+    const bool usesQml2 = !(options.disabledLibraries & QtQmlModule)
+                            && ((result.directlyUsedQtLibraries & QtQmlModule)
+                                || (options.additionalLibraries & QtQmlModule));
+
     if (optVerboseLevel) {
-        std::printf("%s: %ubit, %s executable.\n", qPrintable(QDir::toNativeSeparators(options.binary)),
+        std::printf("%s: %ubit, %s executable", qPrintable(QDir::toNativeSeparators(options.binary)),
                     wordSize, isDebug ? "debug" : "release");
+        if (usesQml2)
+            std::fputs("[QML]", stdout);
+        std::fputc('\n', stdout);
     }
 
     if (dependentQtLibs.isEmpty()) {
@@ -665,7 +699,7 @@ static DeployResult deploy(const Options &options,
                     const QString icuVersion = icuLibs.front().mid(index, numberExpression.matchedLength());
                     if (optVerboseLevel > 1)
                         std::printf("Adding ICU version %s\n", qPrintable(icuVersion));
-                    icuLibs.push_back(QStringLiteral("icudt") + icuVersion + QStringLiteral(".dll"));
+                    icuLibs.push_back(QStringLiteral("icudt") + icuVersion + QLatin1String(windowsSharedLibrarySuffix));
                 }
                 foreach (const QString &icuLib, icuLibs) {
                     const QString icuPath = findInPath(icuLib);
@@ -679,19 +713,42 @@ static DeployResult deploy(const Options &options,
         } // Qt5Core
     } // Windows
 
+    // Scan Quick2 imports
+    QmlImportScanResult qmlScanResult;
+    if (options.quickImports && usesQml2) {
+        const QString qmlDirectory = options.qmlDirectory.isEmpty() ? findQmlDirectory(options.platform, options.directory) : options.qmlDirectory;
+        if (!qmlDirectory.isEmpty()) {
+            qmlScanResult = runQmlImportScanner(qmlDirectory, qmakeVariables.value(QStringLiteral("QT_INSTALL_QML")), options.platform, isDebug, errorMessage);
+            if (!qmlScanResult.ok)
+                return result;
+            // Additional dependencies of QML plugins.
+            foreach (const QString &plugin, qmlScanResult.plugins) {
+                if (!findDependentQtLibraries(libraryLocation, plugin, options.platform, errorMessage, &dependentQtLibs, &wordSize, &isDebug))
+                    return result;
+            }
+            if (optVerboseLevel >= 1) {
+                std::fputs("QML imports:\n", stdout);
+                foreach (const QString &mod, qmlScanResult.modulesDirectories)
+                    std::printf("  %s\n",  qPrintable(QDir::toNativeSeparators(mod)));
+                if (optVerboseLevel >= 2) {
+                std::fputs("QML plugins:\n", stdout);
+                foreach (const QString &p, qmlScanResult.plugins)
+                    std::printf("  %s\n",  qPrintable(QDir::toNativeSeparators(p)));
+                }
+            }
+        }
+    }
+
     // Find the plugins and check whether ANGLE, D3D are required on the platform plugin.
     QString platformPlugin;
     // Sort apart Qt 5 libraries in the ones that are represented by the
     // QtModule enumeration (and thus controlled by flags) and others.
     QStringList deployedQtLibraries;
     for (int i = 0 ; i < dependentQtLibs.size(); ++i)  {
-        if (const unsigned qtm = qtModule(dependentQtLibs.at(i))) {
+        if (const unsigned qtm = qtModule(dependentQtLibs.at(i)))
             result.usedQtLibraries |= qtm;
-            if (i < directDependencyCount)
-                result.directlyUsedQtLibraries |= qtm;
-        } else {
+        else
             deployedQtLibraries.push_back(dependentQtLibs.at(i)); // Not represented by flag.
-        }
     }
     result.deployedQtLibraries = (result.usedQtLibraries | options.additionalLibraries) & ~options.disabledLibraries;
     // Apply options flags and re-add library names.
@@ -773,23 +830,11 @@ static DeployResult deploy(const Options &options,
     const bool usesQuick1 = result.deployedQtLibraries & QtDeclarativeModule;
     // Do not be fooled by QtWebKit.dll depending on Quick into always installing Quick imports
     // for WebKit1-applications. Check direct dependency only.
-    const bool usesQuick2 = (result.directlyUsedQtLibraries & QtQuickModule)
-                            || (options.additionalLibraries & QtQuickModule);
-    if (options.quickImports && (usesQuick1 || usesQuick2)) {
-        const QmlDirectoryFileEntryFunction qmlFileEntryFunction(isDebug);
-        if (usesQuick2) {
-            const QString quick2ImportPath = qmakeVariables.value(QStringLiteral("QT_INSTALL_QML"));
-            QStringList quick2Imports;
-            quick2Imports << QStringLiteral("QtQml") << QStringLiteral("QtQuick") << QStringLiteral("QtQuick.2");
-            if (result.deployedQtLibraries & QtMultimediaModule)
-                quick2Imports << QStringLiteral("QtMultimedia");
-            if (result.deployedQtLibraries & QtSensorsModule)
-                quick2Imports << QStringLiteral("QtSensors");
-            if (result.deployedQtLibraries & QtWebKitModule)
-                quick2Imports << QStringLiteral("QtWebKit");
-            foreach (const QString &quick2Import, quick2Imports) {
-                const QString sourceFile = quick2ImportPath + slash + quick2Import;
-                if (!updateFile(sourceFile, qmlFileEntryFunction, options.directory, options.updateFileFlags, options.json, errorMessage))
+    if (options.quickImports && (usesQuick1 || usesQml2)) {
+        const QmlDirectoryFileEntryFunction qmlFileEntryFunction(options.platform, isDebug);
+        if (usesQml2) {
+            foreach (const QString &module, qmlScanResult.modulesDirectories) {
+                if (!updateFile(module, qmlFileEntryFunction, options.directory, options.updateFileFlags, options.json, errorMessage))
                     return result;
             }
         } // Quick 2

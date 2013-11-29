@@ -48,8 +48,6 @@
 #include <QJsonValue>
 #include <QDebug>
 #include <QXmlStreamReader>
-#include <QXmlStreamAttribute>
-#include <QXmlStreamAttributes>
 #include <QDateTime>
 #include <QStandardPaths>
 #include <QUuid>
@@ -79,8 +77,8 @@ struct Options
     Options()
         : helpRequested(false)
         , verbose(false)
-        , minimumAndroidVersion(-1)
-        , targetAndroidVersion(-1)
+        , minimumAndroidVersion(9)
+        , targetAndroidVersion(10)
         , deploymentMechanism(Bundled)
         , releasePackage(false)
         , digestAlg(QLatin1String("SHA1"))
@@ -133,9 +131,7 @@ struct Options
     int minimumAndroidVersion;
     int targetAndroidVersion;
     DeploymentMechanism deploymentMechanism;
-    QString appName;
     QString packageName;
-    QStringList supportedOrientations;
     QStringList extraLibs;
 
     // Signing information
@@ -169,6 +165,8 @@ struct Options
     QString temporaryDirectoryName;
     bool fetchedRemoteModificationDates;
     QHash<QString, QDateTime> remoteModificationDates;
+    QStringList permissions;
+    QStringList features;
 };
 
 Options parseOptions()
@@ -417,6 +415,62 @@ bool copyFileIfNewer(const QString &sourceFileName, const QString &destinationFi
     return true;
 }
 
+QString cleanPackageName(QString packageName)
+{
+    QRegExp legalChars(QLatin1String("[a-zA-Z0-9_\\.]"));
+
+    for (int i = 0; i < packageName.length(); ++i) {
+        if (!legalChars.exactMatch(packageName.mid(i, 1)))
+            packageName[i] = QLatin1Char('_');
+    }
+
+    static QStringList keywords;
+    if (keywords.isEmpty()) {
+        keywords << QLatin1String("abstract") << QLatin1String("continue") << QLatin1String("for")
+                 << QLatin1String("new") << QLatin1String("switch") << QLatin1String("assert")
+                 << QLatin1String("default") << QLatin1String("if") << QLatin1String("package")
+                 << QLatin1String("synchronized") << QLatin1String("boolean") << QLatin1String("do")
+                 << QLatin1String("goto") << QLatin1String("private") << QLatin1String("this")
+                 << QLatin1String("break") << QLatin1String("double") << QLatin1String("implements")
+                 << QLatin1String("protected") << QLatin1String("throw") << QLatin1String("byte")
+                 << QLatin1String("else") << QLatin1String("import") << QLatin1String("public")
+                 << QLatin1String("throws") << QLatin1String("case") << QLatin1String("enum")
+                 << QLatin1String("instanceof") << QLatin1String("return") << QLatin1String("transient")
+                 << QLatin1String("catch") << QLatin1String("extends") << QLatin1String("int")
+                 << QLatin1String("short") << QLatin1String("try") << QLatin1String("char")
+                 << QLatin1String("final") << QLatin1String("interface") << QLatin1String("static")
+                 << QLatin1String("void") << QLatin1String("class") << QLatin1String("finally")
+                 << QLatin1String("long") << QLatin1String("strictfp") << QLatin1String("volatile")
+                 << QLatin1String("const") << QLatin1String("float") << QLatin1String("native")
+                 << QLatin1String("super") << QLatin1String("while");
+    }
+
+    // No keywords
+    int index = -1;
+    while (index < packageName.length()) {
+        int next = packageName.indexOf(QLatin1Char('.'), index + 1);
+        if (next == -1)
+            next = packageName.length();
+        QString word = packageName.mid(index + 1, next - index - 1);
+        if (!word.isEmpty()) {
+            QChar c = word[0];
+            if (c >= QChar(QLatin1Char('0')) && c<= QChar(QLatin1Char('9'))) {
+                packageName.insert(index + 1, QLatin1Char('_'));
+                index = next + 1;
+                continue;
+            }
+        }
+        if (keywords.contains(word)) {
+            packageName.insert(next, QLatin1String("_"));
+            index = next + 1;
+        } else {
+            index = next;
+        }
+    }
+
+    return packageName;
+}
+
 QString detectLatestAndroidPlatform(const QString &sdkPath)
 {
     QDir dir(sdkPath + QLatin1String("/platforms"));
@@ -565,52 +619,7 @@ bool readInputFile(Options *options)
         options->ndkHost = ndkHost.toString();
     }
 
-    {
-        QJsonValue androidMinimumVersion = jsonObject.value("android-minimum-version");
-        if (!androidMinimumVersion.isUndefined()) {
-            options->minimumAndroidVersion = androidMinimumVersion.toInt();
-            if (options->minimumAndroidVersion < 9)
-                fprintf(stderr, "Warning: Unsupported minimum version");
-        }
-    }
-
-    {
-        QJsonValue androidTargetVersion = jsonObject.value("android-target-version");
-        if (!androidTargetVersion.isUndefined()) {
-            options->targetAndroidVersion = androidTargetVersion.toInt();
-            if (options->targetAndroidVersion < 9)
-                fprintf(stderr, "Warning: Unsupported target version");
-        }
-    }
-
-    if (options->minimumAndroidVersion < 0) {
-        options->minimumAndroidVersion = 9;
-        if (options->targetAndroidVersion < 0)
-            options->targetAndroidVersion = 14;
-    }
-
-    {
-        QJsonValue androidAppName = jsonObject.value("android-app-name");
-        if (!androidAppName.isUndefined())
-            options->appName = androidAppName.toString();
-        else
-            options->appName = QFileInfo(options->applicationBinary).baseName().mid(sizeof("lib") - 1);
-    }
-
-
-    {
-        QJsonValue androidPackage = jsonObject.value("android-package");
-        if (!androidPackage.isUndefined())
-            options->packageName = androidPackage.toString();
-        else
-            options->packageName = QString::fromLatin1("org.qtproject.example.%1").arg(options->appName);
-    }
-
-    {
-        QJsonValue supportedOrientations = jsonObject.value("supported-orientations");
-        if (!supportedOrientations.isUndefined())
-            options->supportedOrientations = supportedOrientations.toString().split(QLatin1Char(','));
-    }
+    options->packageName = cleanPackageName(QString::fromLatin1("org.qtproject.example.%1").arg(QFileInfo(options->applicationBinary).baseName().mid(sizeof("lib") - 1)));
 
     {
         QJsonValue extraLibs = jsonObject.value("android-extra-libs");
@@ -809,29 +818,10 @@ bool updateLibsXml(const Options &options)
     return true;
 }
 
-bool updateAndroidManifest(const Options &options)
+bool updateAndroidManifest(Options &options)
 {
     if (options.verbose)
         fprintf(stdout, "  -- AndroidManifest.xml \n");
-
-    QString usesSdk = QString("<uses-sdk android:minSdkVersion=\"%1\" %2 />").arg(options.minimumAndroidVersion);
-    if (options.targetAndroidVersion >= 0)
-        usesSdk = usesSdk.arg(QString::fromLatin1("android:targetSdkVersion=\"%1\"").arg(options.targetAndroidVersion));
-
-    QString androidOrientation;
-    if (options.supportedOrientations.size() == 1) {
-        const QString &orientation = options.supportedOrientations.at(0);
-        if (orientation == QLatin1String("Portrait"))
-            androidOrientation = QLatin1String("portrait");
-        else if (orientation == QLatin1String("Landscape"))
-            androidOrientation = QLatin1String("landscape");
-        else if (orientation == QLatin1String("InvertedLandscape"))
-            androidOrientation = QLatin1String("reverseLandscape");
-        else if (orientation == QLatin1String("InvertedPortrait"))
-            androidOrientation = QLatin1String("reversePortrait");
-    } else if (options.supportedOrientations.size() > 1) {
-        fprintf(stderr, "Warning: Multiple supported orientations specified. Orientation of Android app will be unspecified.");
-    }
 
     QStringList localLibs = options.localLibs;
 
@@ -865,18 +855,63 @@ bool updateAndroidManifest(const Options &options)
     replacements[QLatin1String("-- %%INSERT_LOCAL_LIBS%% --")] = localLibs.join(QLatin1Char(':'));
     replacements[QLatin1String("-- %%INSERT_LOCAL_JARS%% --")] = options.localJars.join(QLatin1Char(':'));
     replacements[QLatin1String("-- %%INSERT_INIT_CLASSES%% --")] = options.initClasses.join(QLatin1Char(':'));
-    replacements[QLatin1String("<!-- %%INSERT_USES_SDK%% -->")] = usesSdk;
     replacements[QLatin1String("package=\"org.qtproject.example\"")] = QString::fromLatin1("package=\"%1\"").arg(options.packageName);
     replacements[QLatin1String("-- %%BUNDLE_LOCAL_QT_LIBS%% --")]
             = (options.deploymentMechanism == Options::Bundled) ? QString::fromLatin1("1") : QString::fromLatin1("0");
     replacements[QLatin1String("-- %%USE_LOCAL_QT_LIBS%% --")]
             = (options.deploymentMechanism != Options::Ministro) ? QString::fromLatin1("1") : QString::fromLatin1("0");
 
-    if (!androidOrientation.isEmpty())
-        replacements[QLatin1String("android:screenOrientation=\"unspecified\"")] = QString::fromLatin1("android:screenOrientation=\"%1\"").arg(androidOrientation);
-    if (!updateFile(options.outputDirectory + QLatin1String("/AndroidManifest.xml"), replacements))
+    QString permissions;
+    foreach (QString permission, options.permissions)
+        permissions += QString::fromLatin1("<uses-permission android:name=\"%1\" />\n").arg(permission);
+    replacements[QLatin1String("<!-- %%INSERT_PERMISSIONS -->")] = permissions;
+
+    QString features;
+    foreach (QString feature, options.features)
+        features += QString::fromLatin1("<uses-feature android:name=\"%1\" />\n").arg(feature);
+    replacements[QLatin1String("<!-- %%INSERT_FEATURES -->")] = features;
+
+    QString androidManifestPath = options.outputDirectory + QLatin1String("/AndroidManifest.xml");
+    if (!updateFile(androidManifestPath, replacements))
         return false;
 
+    // read the package, min & target sdk API levels from manifest file.
+    QFile androidManifestXml(androidManifestPath);
+    if (androidManifestXml.exists()) {
+        if (!androidManifestXml.open(QIODevice::ReadOnly)) {
+            fprintf(stderr, "Cannot open %s for reading.\n", qPrintable(androidManifestPath));
+            return false;
+        }
+
+        QXmlStreamReader reader(&androidManifestXml);
+        while (!reader.atEnd()) {
+            reader.readNext();
+
+            if (reader.isStartElement()) {
+                if (reader.name() == QLatin1String("manifest")) {
+                    if (!reader.attributes().hasAttribute(QLatin1String("package"))) {
+                        fprintf(stderr, "Invalid android manifest file: %s\n", qPrintable(androidManifestPath));
+                        return false;
+                    }
+                    options.packageName = reader.attributes().value(QLatin1String("package")).toString();
+                } else if (reader.name() == QLatin1String("uses-sdk")) {
+                    if (reader.attributes().hasAttribute(QLatin1String("android:minSdkVersion")))
+                        options.minimumAndroidVersion = reader.attributes().value(QLatin1String("android:minSdkVersion")).toInt();
+
+                    if (reader.attributes().hasAttribute(QLatin1String("android:targetSdkVersion")))
+                        options.targetAndroidVersion = reader.attributes().value(QLatin1String("android:targetSdkVersion")).toInt();
+                }
+            }
+        }
+
+        if (reader.hasError()) {
+            fprintf(stderr, "Error in %s: %s\n", qPrintable(androidManifestPath), qPrintable(reader.errorString()));
+            return false;
+        }
+    } else {
+        fprintf(stderr, "No android manifest file");
+        return false;
+    }
     return true;
 }
 
@@ -886,7 +921,7 @@ bool updateStringsXml(const Options &options)
         fprintf(stdout, "  -- res/values/strings.xml\n");
 
     QHash<QString, QString> replacements;
-    replacements[QLatin1String("<!-- %%INSERT_APP_NAME%% -->")] = options.appName;
+    replacements["<!-- %%INSERT_APP_NAME%% -->"] = QFileInfo(options.applicationBinary).baseName().mid(sizeof("lib") - 1);
 
     QString fileName = options.outputDirectory + QLatin1String("/res/values/strings.xml");
     if (!QFile::exists(fileName)) {
@@ -960,7 +995,7 @@ bool updateJavaFiles(const Options &options)
     return true;
 }
 
-bool updateAndroidFiles(const Options &options)
+bool updateAndroidFiles(Options &options)
 {
     if (options.verbose)
         fprintf(stdout, "Updating Android package files with project settings.\n");
@@ -1040,6 +1075,10 @@ bool readAndroidDependencyXml(Options *options,
                             continue;
 
                         usedDependencies->insert(fileName);
+
+                        if (options->verbose)
+                            fprintf(stdout, "Appending dependency from xml: %s\n", qPrintable(fileName));
+
                         options->qtDependencies.append(fileName);
                     }
                 } else if (reader.name() == QLatin1String("jar")) {
@@ -1074,6 +1113,12 @@ bool readAndroidDependencyXml(Options *options,
                     if (fileName.endsWith(QLatin1String(".so"))) {
                         remainingDependencies->insert(fileName);
                     }
+                } else if (reader.name() == QLatin1String("permission")) {
+                    QString name = reader.attributes().value(QLatin1String("name")).toString();
+                    options->permissions.append(name);
+                } else if (reader.name() == QLatin1String("feature")) {
+                    QString name = reader.attributes().value(QLatin1String("name")).toString();
+                    options->features.append(name);
                 }
             }
         }
@@ -1166,7 +1211,7 @@ bool readDependenciesFromElf(Options *options,
 
         options->qtDependencies.append(dependency);
         if (options->verbose)
-            fprintf(stderr, "Appending dependency: %s\n", qPrintable(dependency));
+            fprintf(stdout, "Appending dependency: %s\n", qPrintable(dependency));
         QString qtBaseName = dependency.mid(sizeof("lib/lib") - 1);
         qtBaseName = qtBaseName.left(qtBaseName.size() - (sizeof(".so") - 1));
         if (!readAndroidDependencyXml(options, qtBaseName, usedDependencies, remainingDependencies)) {
@@ -1175,6 +1220,8 @@ bool readDependenciesFromElf(Options *options,
     }
     return true;
 }
+
+bool goodToCopy(const Options *options, const QString &file, QStringList *unmetDependencies);
 
 bool readDependencies(Options *options)
 {
@@ -1188,21 +1235,31 @@ bool readDependencies(Options *options)
         return true;
     }
 
-    // Add dependencies of application binary first
     QSet<QString> usedDependencies;
     QSet<QString> remainingDependencies;
 
-    QString fileName = options->applicationBinary;
+    // Add dependencies of application binary first
+    if (!readDependenciesFromElf(options, options->applicationBinary, &usedDependencies, &remainingDependencies))
+        return false;
+
     QString qtDir = options->qtInstallDirectory + QLatin1Char('/');
-    for (;;) {
-        if (!readDependenciesFromElf(options, fileName, &usedDependencies, &remainingDependencies))
-            return false;
-        if (remainingDependencies.isEmpty())
-            break;
+
+    while (!remainingDependencies.isEmpty()) {
         QSet<QString>::iterator start = remainingDependencies.begin();
-        fileName = qtDir+*start;
+        QString fileName = qtDir+*start;
         remainingDependencies.erase(start);
-    };
+
+        QStringList unmetDependencies;
+        if (goodToCopy(options, fileName, &unmetDependencies)) {
+            bool ok = readDependenciesFromElf(options, fileName, &usedDependencies, &remainingDependencies);
+            if (!ok)
+                return false;
+        } else if (options->verbose) {
+            fprintf(stdout, "Skipping %s due to unmet dependencies: %s\n",
+                    qPrintable(fileName),
+                    qPrintable(unmetDependencies.join(QLatin1Char(','))));
+        }
+    }
     return true;
 }
 
@@ -1359,16 +1416,20 @@ bool fetchRemoteModifications(Options *options, const QString &directory)
     return true;
 }
 
-bool goodToCopy(const Options *options, const QString &file)
+bool goodToCopy(const Options *options, const QString &file, QStringList *unmetDependencies)
 {
     if (!file.endsWith(QLatin1String(".so")))
         return true;
 
-    foreach (const QString &lib, getQtLibsFromElf(*options, file))
-        if (!options->qtDependencies.contains(lib))
-            return false;
+    bool ret = true;
+    foreach (const QString &lib, getQtLibsFromElf(*options, file)) {
+        if (!options->qtDependencies.contains(lib)) {
+            ret = false;
+            unmetDependencies->append(lib);
+        }
+    }
 
-    return true;
+    return ret;
 }
 
 bool deployToLocalTmp(Options *options,
@@ -1379,9 +1440,12 @@ bool deployToLocalTmp(Options *options,
 
     QFileInfo fileInfo(options->qtInstallDirectory + QLatin1Char('/') + qtDependency);
 
-    if (!goodToCopy(options, fileInfo.absoluteFilePath())) {
+    QStringList unmetDependencies;
+    if (!goodToCopy(options, fileInfo.absoluteFilePath(), &unmetDependencies)) {
         if (options->verbose)
-            fprintf(stderr, "  -- Skipping %s. It has unmet dependencies.\n", qPrintable(fileInfo.absoluteFilePath()));
+            fprintf(stdout, "  -- Skipping %s. It has unmet dependencies: %s.\n",
+                    qPrintable(fileInfo.absoluteFilePath()),
+                    qPrintable(unmetDependencies.join(QLatin1Char(','))));
         return true;
     }
 
@@ -1480,9 +1544,13 @@ bool copyQtFiles(Options *options)
                 return false;
             }
 
-            if (!goodToCopy(options, sourceFileName)) {
-                if (options->verbose)
-                    fprintf(stderr, "  -- Skipping %s. It has unmet dependencies.\n", qPrintable(sourceFileName));
+            QStringList unmetDependencies;
+            if (!goodToCopy(options, sourceFileName, &unmetDependencies)) {
+                if (options->verbose) {
+                    fprintf(stdout, "  -- Skipping %s. It has unmet dependencies: %s.\n",
+                            qPrintable(sourceFileName),
+                            qPrintable(unmetDependencies.join(QLatin1Char(','))));
+                }
                 continue;
             }
 
@@ -1582,8 +1650,6 @@ bool buildAndroidProject(const Options &options)
     }
 
     QString ant = QString::fromLatin1("\"%1\" %2").arg(antTool).arg(options.releasePackage ? QLatin1String(" release") : QLatin1String(" debug"));
-    if (!options.verbose)
-        ant += QLatin1String(" -quiet");
 
     FILE *antCommand = popen(ant.toLocal8Bit().constData(), "r");
     if (antCommand == 0) {
@@ -1812,11 +1878,9 @@ bool signPackage(const Options &options)
         return false;
     }
 
-    if (options.verbose)
-        zipAlignTool += QLatin1String(" -v");
-
-    zipAlignTool = QString::fromLatin1("\"%1\" -f 4 %2 %3")
+    zipAlignTool = QString::fromLatin1("\"%1\"%2 -f 4 %3 %4")
             .arg(zipAlignTool)
+            .arg(options.verbose ? QString::fromLatin1(" -v") : QString())
             .arg(options.outputDirectory
                  + QLatin1String("/bin/")
                  + apkName(options)
