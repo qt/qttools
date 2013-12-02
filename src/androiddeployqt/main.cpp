@@ -139,6 +139,7 @@ struct Options
     DeploymentMechanism deploymentMechanism;
     QString packageName;
     QStringList extraLibs;
+    QStringList extraPlugins;
 
     // Signing information
     bool releasePackage;
@@ -645,6 +646,11 @@ bool readInputFile(Options *options)
             options->extraLibs = extraLibs.toString().split(QLatin1Char(','));
     }
 
+    {
+        QJsonValue extraPlugins = jsonObject.value("android-extra-plugins");
+        if (!extraPlugins.isUndefined())
+            options->extraPlugins = extraPlugins.toString().split(QLatin1Char(','));
+    }
     return true;
 }
 
@@ -741,6 +747,55 @@ bool copyAndroidExtraLibs(const Options &options)
     return true;
 }
 
+QStringList allFilesInside(const QDir& current, const QDir& rootDir)
+{
+    QStringList files;
+    foreach (QString dir, current.entryList(QDir::Dirs|QDir::NoDotAndDotDot)) {
+        files += allFilesInside(QDir(current.filePath(dir)), rootDir);
+    }
+    foreach (QString file, current.entryList(QDir::Files)) {
+        files += rootDir.relativeFilePath(current.filePath(file));
+    }
+    return files;
+}
+
+bool copyAndroidExtraResources(const Options &options)
+{
+    if (options.extraPlugins.isEmpty())
+        return true;
+
+    if (options.verbose)
+        fprintf(stdout, "Copying %d external resources to package.\n", options.extraPlugins.size());
+
+    foreach (QString extraResource, options.extraPlugins) {
+        QFileInfo extraResourceInfo(extraResource);
+        if (!extraResourceInfo.exists() || !extraResourceInfo.isDir()) {
+            fprintf(stderr, "External resource %s does not exist or not a correct directory!\n", qPrintable(extraResource));
+            return false;
+        }
+
+        QDir resourceDir(extraResource);
+        QString assetsDir = options.outputDirectory + QStringLiteral("/assets/") + resourceDir.dirName() + QLatin1Char('/');
+        QString libsDir = options.outputDirectory + QStringLiteral("/libs/") + options.architecture + QLatin1Char('/');
+
+        QStringList files = allFilesInside(resourceDir, resourceDir);
+        foreach (const QString &resourceFile, files) {
+            QString originFile(resourceDir.filePath(resourceFile));
+            QString destinationFile;
+            if (!resourceFile.endsWith(".so")) {
+                destinationFile = assetsDir + resourceFile;
+            } else {
+                destinationFile = libsDir + QStringLiteral("/lib") + QString(resourceDir.dirName() + QLatin1Char('/') + resourceFile).replace(QLatin1Char('/'), QLatin1Char('_'));
+            }
+
+            if (!copyFileIfNewer(originFile, destinationFile, options.verbose))
+                return false;
+        }
+    }
+
+    return true;
+}
+
 bool updateFile(const QString &fileName, const QHash<QString, QString> &replacements)
 {
     QFile inputFile(fileName);
@@ -807,6 +862,24 @@ bool updateLibsXml(const Options &options)
             QString s = bundledFile.first.mid(sizeof("assets/") - 1);
             bundledInAssets += QString::fromLatin1("<item>%1:%2</item>\n")
                     .arg(s).arg(bundledFile.second);
+        }
+    }
+
+    if (!options.extraPlugins.isEmpty()) {
+        foreach (QString extraRes, options.extraPlugins) {
+            QDir resourceDir(extraRes);
+            QStringList files = allFilesInside(resourceDir, resourceDir);
+            foreach (const QString &file, files) {
+                QString destinationPath = resourceDir.dirName()+'/'+file;
+                if (!file.endsWith(".so")) {
+                    bundledInAssets += QStringLiteral("<item>%1:%1</item>\n")
+                        .arg(destinationPath);
+                } else {
+                    bundledInLibs += QStringLiteral("<item>lib%1:%2</item>\n")
+                        .arg(QString(destinationPath).replace('/', '_'))
+                        .arg(destinationPath);
+                }
+            }
         }
     }
 
@@ -2095,7 +2168,8 @@ enum ErrorCode
     CannotSignPackage = 15,
     CannotInstallApk = 16,
     CannotDeployAllToLocalTmp = 17,
-    CannotGenerateAssetsFileList = 18
+    CannotGenerateAssetsFileList = 18,
+    CannotCopyAndroidExtraResources = 19
 };
 
 int main(int argc, char *argv[])
@@ -2184,6 +2258,9 @@ int main(int argc, char *argv[])
 
     if (Q_UNLIKELY(options.timing))
         fprintf(stdout, "[TIMING] %d ms: Copied extra libs\n", options.timer.elapsed());
+
+    if (!copyAndroidExtraResources(options))
+        return CannotCopyAndroidExtraResources;
 
     if (!copyAndroidSources(options))
         return CannotCopyAndroidSources;
