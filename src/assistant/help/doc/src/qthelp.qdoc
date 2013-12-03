@@ -141,7 +141,7 @@
     an extension of \c .qhp, has to be created. After specifying all relevant
     information in this file, it needs to be compiled by calling:
 
-    \snippet doc/src/snippets/code/doc_src_qthelp.qdoc 2
+    \snippet doc_src_qthelp.qdoc 2
 
     The file 'doc.qch' contains then all HTML files in compressed
     form along with the table of contents and index keywords. To
