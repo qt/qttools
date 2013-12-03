@@ -164,11 +164,6 @@ static int getToken()
                 }
             }
             switch ( yyIdent.at(0).toLatin1() ) {
-            case 'T':
-                // TR() for when all else fails
-                if ( yyIdent == QLatin1String("TR") )
-                    return Tok_tr;
-                break;
             case 'p':
                 if( yyIdent == QLatin1String("package") )
                     return Tok_Package;

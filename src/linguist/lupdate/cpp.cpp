@@ -777,8 +777,6 @@ uint CppParser::getToken()
                 Tok_translateUtf8,          // QT_TRANSLATE_NOOP3_UTF8
                 Tok_translate,              // findMessage
                 Tok_trid,                   // qtTrId
-                Tok_tr,                     // TR
-                Tok_tr,                     // Tr
                 Tok_tr,                     // tr
                 Tok_trUtf8,                 // trUtf8
                 Tok_translate,              // translate
