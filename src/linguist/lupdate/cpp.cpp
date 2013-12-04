@@ -1042,6 +1042,10 @@ Namespace *CppParser::modifyNamespace(NamespaceList *namespaces, bool haveLast)
 QString CppParser::stringifyNamespace(int start, const NamespaceList &namespaces)
 {
     QString ret;
+    int l = 0;
+    for (int j = start; j < namespaces.count(); ++j)
+        l += namespaces.at(j).value().length();
+    ret.reserve(l + qMax(0, (namespaces.count() - start - 1)) * 2);
     for (int i = start; i < namespaces.count(); ++i) {
         if (i > start)
             ret += QLatin1String("::");
