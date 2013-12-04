@@ -276,7 +276,7 @@ private:
     void loadState(const SavedState *state);
 
     static QString stringifyNamespace(const NamespaceList &namespaces);
-    static QStringList stringListifyNamespace(const NamespaceList &namespaces);
+    static QString joinNamespaces(const QString &one, const QString &two);
     typedef bool (CppParser::*VisitNamespaceCallback)(const Namespace *ns, void *context) const;
     bool visitNamespace(const NamespaceList &namespaces, int nsCount,
                         VisitNamespaceCallback callback, void *context,
@@ -1049,12 +1049,9 @@ QString CppParser::stringifyNamespace(const NamespaceList &namespaces)
     return ret;
 }
 
-QStringList CppParser::stringListifyNamespace(const NamespaceList &namespaces)
+QString CppParser::joinNamespaces(const QString &one, const QString &two)
 {
-    QStringList ret;
-    for (int i = 1; i < namespaces.count(); ++i)
-        ret << namespaces.at(i).value();
-    return ret;
+    return two.isEmpty() ? one : one.isEmpty() ? two : one + QStringLiteral("::") + two;
 }
 
 bool CppParser::visitNamespace(const NamespaceList &namespaces, int nsCount,
@@ -1883,8 +1880,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                             context = fctx->trQualification;
                         }
                     } else {
-                        context = (stringListifyNamespace(functionContext)
-                                   << functionContextUnresolved).join(strColons);
+                        context = joinNamespaces(stringifyNamespace(functionContext), functionContextUnresolved);
                     }
                 } else {
 #ifdef DIAGNOSE_RETRANSLATABILITY
@@ -1911,7 +1907,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                             fctx->complained = true;
                         }
                     } else {
-                        context = (stringListifyNamespace(nsl) + unresolved).join(strColons);
+                        context = joinNamespaces(stringifyNamespace(nsl), unresolved.join(strColons));
                     }
                     prefix.clear();
                 }
