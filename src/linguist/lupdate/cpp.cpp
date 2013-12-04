@@ -1811,8 +1811,8 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                 // fullName is already the resolved name we actually want.
                 // As we do no resolution here, we'll collect useless usings of data
                 // members and methods as well. This is no big deal.
-                HashString &ns = fullName.last();
                 fullName.append(HashString(QString())); // Mark as unresolved
+                const HashString &ns = *(fullName.constEnd() - 2);
                 modifyNamespace(&namespaces)->aliases[ns] = fullName;
             }
             break;
