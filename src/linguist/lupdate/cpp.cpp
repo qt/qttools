@@ -471,7 +471,6 @@ bool CppParser::getMacroArgs()
 {
     // Failing this assertion would mean losing the preallocated buffer.
     Q_ASSERT(yyWord.isDetached());
-    yyWord.resize(0);
 
     while (isspace(yyCh))
         yyCh = getChar();
@@ -514,7 +513,6 @@ CppParser::TokenType CppParser::getToken()
   restart:
     // Failing this assertion would mean losing the preallocated buffer.
     Q_ASSERT(yyWord.isDetached());
-    yyWord.resize(0);
 
     while (yyCh != EOF) {
         yyLineNo = yyCurLineNo;
