@@ -283,7 +283,7 @@ private:
                         VisitRecorder &vr, const ParseResults *rslt) const;
     bool visitNamespace(const NamespaceList &namespaces, int nsCount,
                         VisitNamespaceCallback callback, void *context) const;
-    static QStringList stringListifySegments(const QList<HashString> &namespaces);
+    static QStringList stringListifySegments(const NamespaceList &namespaces);
     bool qualifyOneCallbackOwn(const Namespace *ns, void *context) const;
     bool qualifyOneCallbackUsing(const Namespace *ns, void *context) const;
     bool qualifyOne(const NamespaceList &namespaces, int nsCnt, const HashString &segment,
@@ -291,10 +291,10 @@ private:
     bool qualifyOne(const NamespaceList &namespaces, int nsCnt, const HashString &segment,
                     NamespaceList *resolved) const;
     bool fullyQualify(const NamespaceList &namespaces, int nsCnt,
-                      const QList<HashString> &segments, bool isDeclaration,
+                      const NamespaceList &segments, bool isDeclaration,
                       NamespaceList *resolved, QStringList *unresolved) const;
     bool fullyQualify(const NamespaceList &namespaces,
-                      const QList<HashString> &segments, bool isDeclaration,
+                      const NamespaceList &segments, bool isDeclaration,
                       NamespaceList *resolved, QStringList *unresolved) const;
     bool fullyQualify(const NamespaceList &namespaces,
                       const QString &segments, bool isDeclaration,
@@ -1079,7 +1079,7 @@ bool CppParser::visitNamespace(const NamespaceList &namespaces, int nsCount,
     return visitNamespace(namespaces, nsCount, callback, context, vr, results);
 }
 
-QStringList CppParser::stringListifySegments(const QList<HashString> &segments)
+QStringList CppParser::stringListifySegments(const NamespaceList &segments)
 {
     QStringList ret;
     for (int i = 0; i < segments.count(); ++i)
@@ -1160,7 +1160,7 @@ bool CppParser::qualifyOne(const NamespaceList &namespaces, int nsCnt, const Has
 }
 
 bool CppParser::fullyQualify(const NamespaceList &namespaces, int nsCnt,
-                             const QList<HashString> &segments, bool isDeclaration,
+                             const NamespaceList &segments, bool isDeclaration,
                              NamespaceList *resolved, QStringList *unresolved) const
 {
     int nsIdx;
@@ -1201,7 +1201,7 @@ bool CppParser::fullyQualify(const NamespaceList &namespaces, int nsCnt,
 }
 
 bool CppParser::fullyQualify(const NamespaceList &namespaces,
-                             const QList<HashString> &segments, bool isDeclaration,
+                             const NamespaceList &segments, bool isDeclaration,
                              NamespaceList *resolved, QStringList *unresolved) const
 {
     return fullyQualify(namespaces, namespaces.count(),
@@ -1214,7 +1214,7 @@ bool CppParser::fullyQualify(const NamespaceList &namespaces,
 {
     static QString strColons(QLatin1String("::"));
 
-    QList<HashString> segments;
+    NamespaceList segments;
     foreach (const QString &str, quali.split(strColons)) // XXX slow, but needs to be fast(?)
         segments << HashString(str);
     return fullyQualify(namespaces, segments, isDeclaration, resolved, unresolved);
@@ -1666,7 +1666,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
             */
             yyTok = getToken();
             if (yyBraceDepth == namespaceDepths.count() && yyParenDepth == 0) {
-                QList<HashString> quali;
+                NamespaceList quali;
                 HashString fct;
                 do {
                     /*
@@ -1750,7 +1750,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                     yyTok = getToken();
                 } else if (yyTok == Tok_Equals) {
                     // e.g. namespace Is = OuterSpace::InnerSpace;
-                    QList<HashString> fullName;
+                    NamespaceList fullName;
                     yyTok = getToken();
                     if (yyTok == Tok_ColonColon)
                         fullName.append(HashString(QString()));
@@ -1778,7 +1778,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
             yyTok = getToken();
             // XXX this should affect only the current scope, not the entire current namespace
             if (yyTok == Tok_namespace) {
-                QList<HashString> fullName;
+                NamespaceList fullName;
                 yyTok = getToken();
                 if (yyTok == Tok_ColonColon)
                     fullName.append(HashString(QString()));
@@ -1794,7 +1794,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                 if (fullyQualify(namespaces, fullName, false, &nsl, 0))
                     modifyNamespace(&namespaces)->usings << HashStringList(nsl);
             } else {
-                QList<HashString> fullName;
+                NamespaceList fullName;
                 if (yyTok == Tok_ColonColon)
                     fullName.append(HashString(QString()));
                 while (yyTok == Tok_ColonColon || yyTok == Tok_Ident) {
