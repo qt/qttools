@@ -275,7 +275,9 @@ private:
     void saveState(SavedState *state);
     void loadState(const SavedState *state);
 
-    static QString stringifyNamespace(const NamespaceList &namespaces);
+    static QString stringifyNamespace(int start, const NamespaceList &namespaces);
+    static QString stringifyNamespace(const NamespaceList &namespaces)
+        { return stringifyNamespace(1, namespaces); }
     static QString joinNamespaces(const QString &one, const QString &two);
     typedef bool (CppParser::*VisitNamespaceCallback)(const Namespace *ns, void *context) const;
     bool visitNamespace(const NamespaceList &namespaces, int nsCount,
@@ -283,7 +285,6 @@ private:
                         VisitRecorder &vr, const ParseResults *rslt) const;
     bool visitNamespace(const NamespaceList &namespaces, int nsCount,
                         VisitNamespaceCallback callback, void *context) const;
-    static QStringList stringListifySegments(const NamespaceList &namespaces);
     bool qualifyOneCallbackOwn(const Namespace *ns, void *context) const;
     bool qualifyOneCallbackUsing(const Namespace *ns, void *context) const;
     bool qualifyOne(const NamespaceList &namespaces, int nsCnt, const HashString &segment,
@@ -292,13 +293,13 @@ private:
                     NamespaceList *resolved) const;
     bool fullyQualify(const NamespaceList &namespaces, int nsCnt,
                       const NamespaceList &segments, bool isDeclaration,
-                      NamespaceList *resolved, QStringList *unresolved) const;
+                      NamespaceList *resolved, NamespaceList *unresolved) const;
     bool fullyQualify(const NamespaceList &namespaces,
                       const NamespaceList &segments, bool isDeclaration,
-                      NamespaceList *resolved, QStringList *unresolved) const;
+                      NamespaceList *resolved, NamespaceList *unresolved) const;
     bool fullyQualify(const NamespaceList &namespaces,
                       const QString &segments, bool isDeclaration,
-                      NamespaceList *resolved, QStringList *unresolved) const;
+                      NamespaceList *resolved, NamespaceList *unresolved) const;
     bool findNamespaceCallback(const Namespace *ns, void *context) const;
     const Namespace *findNamespace(const NamespaceList &namespaces, int nsCount = -1) const;
     void enterNamespace(NamespaceList *namespaces, const HashString &name);
@@ -1038,11 +1039,11 @@ Namespace *CppParser::modifyNamespace(NamespaceList *namespaces, bool haveLast)
     return ns;
 }
 
-QString CppParser::stringifyNamespace(const NamespaceList &namespaces)
+QString CppParser::stringifyNamespace(int start, const NamespaceList &namespaces)
 {
     QString ret;
-    for (int i = 1; i < namespaces.count(); ++i) {
-        if (i > 1)
+    for (int i = start; i < namespaces.count(); ++i) {
+        if (i > start)
             ret += QLatin1String("::");
         ret += namespaces.at(i).value();
     }
@@ -1077,14 +1078,6 @@ bool CppParser::visitNamespace(const NamespaceList &namespaces, int nsCount,
 {
     VisitRecorder vr;
     return visitNamespace(namespaces, nsCount, callback, context, vr, results);
-}
-
-QStringList CppParser::stringListifySegments(const NamespaceList &segments)
-{
-    QStringList ret;
-    for (int i = 0; i < segments.count(); ++i)
-        ret << segments.at(i).value();
-    return ret;
 }
 
 struct QualifyOneData {
@@ -1161,7 +1154,7 @@ bool CppParser::qualifyOne(const NamespaceList &namespaces, int nsCnt, const Has
 
 bool CppParser::fullyQualify(const NamespaceList &namespaces, int nsCnt,
                              const NamespaceList &segments, bool isDeclaration,
-                             NamespaceList *resolved, QStringList *unresolved) const
+                             NamespaceList *resolved, NamespaceList *unresolved) const
 {
     int nsIdx;
     int initSegIdx;
@@ -1186,7 +1179,7 @@ bool CppParser::fullyQualify(const NamespaceList &namespaces, int nsCnt,
             while (++segIdx < segments.count()) {
                 if (!qualifyOne(*resolved, resolved->count(), segments[segIdx], resolved)) {
                     if (unresolved)
-                        *unresolved = stringListifySegments(segments.mid(segIdx));
+                        *unresolved = segments.mid(segIdx);
                     return false;
                 }
             }
@@ -1196,13 +1189,13 @@ bool CppParser::fullyQualify(const NamespaceList &namespaces, int nsCnt,
     resolved->clear();
     *resolved << HashString(QString());
     if (unresolved)
-        *unresolved = stringListifySegments(segments.mid(initSegIdx));
+        *unresolved = segments.mid(initSegIdx);
     return false;
 }
 
 bool CppParser::fullyQualify(const NamespaceList &namespaces,
                              const NamespaceList &segments, bool isDeclaration,
-                             NamespaceList *resolved, QStringList *unresolved) const
+                             NamespaceList *resolved, NamespaceList *unresolved) const
 {
     return fullyQualify(namespaces, namespaces.count(),
                         segments, isDeclaration, resolved, unresolved);
@@ -1210,7 +1203,7 @@ bool CppParser::fullyQualify(const NamespaceList &namespaces,
 
 bool CppParser::fullyQualify(const NamespaceList &namespaces,
                              const QString &quali, bool isDeclaration,
-                             NamespaceList *resolved, QStringList *unresolved) const
+                             NamespaceList *resolved, NamespaceList *unresolved) const
 {
     static QString strColons(QLatin1String("::"));
 
@@ -1838,11 +1831,11 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                     }
                 }
                 if (!pendingContext.isEmpty() && !prefix.startsWith(strColons)) {
-                    QStringList unresolved;
+                    NamespaceList unresolved;
                     if (!fullyQualify(namespaces, pendingContext, true, &functionContext, &unresolved)) {
-                        functionContextUnresolved = unresolved.join(strColons);
+                        functionContextUnresolved = stringifyNamespace(0, unresolved);
                         yyMsg() << qPrintable(LU::tr("Qualifying with unknown namespace/class %1::%2\n")
-                                              .arg(stringifyNamespace(functionContext)).arg(unresolved.first()));
+                                              .arg(stringifyNamespace(functionContext)).arg(unresolved.first().value()));
                     }
                     pendingContext.clear();
                 }
@@ -1893,7 +1886,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
 #endif
                     prefix.chop(2);
                     NamespaceList nsl;
-                    QStringList unresolved;
+                    NamespaceList unresolved;
                     if (fullyQualify(functionContext, prefix, false, &nsl, &unresolved)) {
                         Namespace *fctx = findNamespace(nsl)->classDef;
                         if (fctx->trQualification.isEmpty()) {
@@ -1907,7 +1900,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                             fctx->complained = true;
                         }
                     } else {
-                        context = joinNamespaces(stringifyNamespace(nsl), unresolved.join(strColons));
+                        context = joinNamespaces(stringifyNamespace(nsl), stringifyNamespace(0, unresolved));
                     }
                     prefix.clear();
                 }
