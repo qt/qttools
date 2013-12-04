@@ -269,6 +269,11 @@ private:
         const QString &extracomment, const QString &msgid, const TranslatorMessage::ExtraData &extra,
         bool plural);
 
+    void handleTr(QString &prefix);
+    void handleTranslate();
+    void handleTrId();
+    void handleDeclareTrFunctions();
+
     void processInclude(const QString &file, ConversionData &cd,
                         const QStringList &includeStack, QSet<QString> &inclusions);
 
@@ -1582,6 +1587,193 @@ void CppParser::recordMessage(int line, const QString &context, const QString &t
     tor->append(msg);
 }
 
+void CppParser::handleTr(QString &prefix)
+{
+    if (!sourcetext.isEmpty())
+        yyMsg() << qPrintable(LU::tr("//% cannot be used with tr() / QT_TR_NOOP(). Ignoring\n"));
+    int line = yyLineNo;
+    yyTok = getToken();
+    if (match(Tok_LeftParen) && matchString(&text) && !text.isEmpty()) {
+        comment.clear();
+        bool plural = false;
+
+        if (yyTok == Tok_RightParen) {
+            // no comment
+        } else if (match(Tok_Comma) && matchStringOrNull(&comment)) {   //comment
+            if (yyTok == Tok_RightParen) {
+                // ok,
+            } else if (match(Tok_Comma)) {
+                plural = true;
+            }
+        }
+        if (!pendingContext.isEmpty() && !prefix.startsWith(QLatin1String("::"))) {
+            NamespaceList unresolved;
+            if (!fullyQualify(namespaces, pendingContext, true, &functionContext, &unresolved)) {
+                functionContextUnresolved = stringifyNamespace(0, unresolved);
+                yyMsg() << qPrintable(LU::tr("Qualifying with unknown namespace/class %1::%2\n")
+                                      .arg(stringifyNamespace(functionContext)).arg(unresolved.first().value()));
+            }
+            pendingContext.clear();
+        }
+        if (prefix.isEmpty()) {
+            if (functionContextUnresolved.isEmpty()) {
+                int idx = functionContext.length();
+                if (idx < 2) {
+                    yyMsg() << qPrintable(LU::tr("tr() cannot be called without context\n"));
+                    return;
+                }
+                Namespace *fctx;
+                while (!(fctx = findNamespace(functionContext, idx)->classDef)->hasTrFunctions) {
+                    if (idx == 1) {
+                        context = stringifyNamespace(functionContext);
+                        fctx = findNamespace(functionContext)->classDef;
+                        if (!fctx->complained) {
+                            yyMsg() << qPrintable(LU::tr("Class '%1' lacks Q_OBJECT macro\n")
+                                                 .arg(context));
+                            fctx->complained = true;
+                        }
+                        goto gotctx;
+                    }
+                    --idx;
+                }
+                if (fctx->trQualification.isEmpty()) {
+                    context.clear();
+                    for (int i = 1;;) {
+                        context += functionContext.at(i).value();
+                        if (++i == idx)
+                            break;
+                        context += QLatin1String("::");
+                    }
+                    fctx->trQualification = context;
+                } else {
+                    context = fctx->trQualification;
+                }
+            } else {
+                context = joinNamespaces(stringifyNamespace(functionContext), functionContextUnresolved);
+            }
+        } else {
+#ifdef DIAGNOSE_RETRANSLATABILITY
+            int last = prefix.lastIndexOf(QLatin1String("::"));
+            QString className = prefix.mid(last == -1 ? 0 : last + 2);
+            if (!className.isEmpty() && className == functionName) {
+                yyMsg() << qPrintable(LU::tr("It is not recommended to call tr() from within a constructor '%1::%2'\n")
+                        .arg(className).arg(functionName));
+            }
+#endif
+            prefix.chop(2);
+            NamespaceList nsl;
+            NamespaceList unresolved;
+            if (fullyQualify(functionContext, prefix, false, &nsl, &unresolved)) {
+                Namespace *fctx = findNamespace(nsl)->classDef;
+                if (fctx->trQualification.isEmpty()) {
+                    context = stringifyNamespace(nsl);
+                    fctx->trQualification = context;
+                } else {
+                    context = fctx->trQualification;
+                }
+                if (!fctx->hasTrFunctions && !fctx->complained) {
+                    yyMsg() << qPrintable(LU::tr("Class '%1' lacks Q_OBJECT macro\n").arg(context));
+                    fctx->complained = true;
+                }
+            } else {
+                context = joinNamespaces(stringifyNamespace(nsl), stringifyNamespace(0, unresolved));
+            }
+            prefix.clear();
+        }
+
+      gotctx:
+        recordMessage(line, context, text, comment, extracomment, msgid, extra, plural);
+    }
+    sourcetext.clear(); // Will have warned about that already
+    extracomment.clear();
+    msgid.clear();
+    extra.clear();
+    metaExpected = false;
+}
+
+void CppParser::handleTranslate()
+{
+    if (!sourcetext.isEmpty())
+        yyMsg() << qPrintable(LU::tr("//% cannot be used with translate() / QT_TRANSLATE_NOOP(). Ignoring\n"));
+    int line = yyLineNo;
+    yyTok = getToken();
+    if (match(Tok_LeftParen)
+        && matchString(&context)
+        && match(Tok_Comma)
+        && matchString(&text) && !text.isEmpty())
+    {
+        comment.clear();
+        bool plural = false;
+        if (yyTok != Tok_RightParen) {
+            // look for comment
+            if (match(Tok_Comma) && matchStringOrNull(&comment)) {
+                if (yyTok != Tok_RightParen) {
+                    // look for encoding
+                    if (match(Tok_Comma)) {
+                        if (matchEncoding()) {
+                            if (yyTok != Tok_RightParen) {
+                                // look for the plural quantifier,
+                                // this can be a number, an identifier or
+                                // a function call,
+                                // so for simplicity we mark it as plural if
+                                // we know we have a comma instead of an
+                                // right parentheses.
+                                plural = match(Tok_Comma);
+                            }
+                        } else {
+                            // This can be a QTranslator::translate("context",
+                            // "source", "comment", n) plural translation
+                            if (matchExpression() && yyTok == Tok_RightParen) {
+                                plural = true;
+                            } else {
+                                return;
+                            }
+                        }
+                    } else {
+                        return;
+                    }
+                }
+            } else {
+                return;
+            }
+        }
+        recordMessage(line, context, text, comment, extracomment, msgid, extra, plural);
+    }
+    sourcetext.clear(); // Will have warned about that already
+    extracomment.clear();
+    msgid.clear();
+    extra.clear();
+    metaExpected = false;
+}
+
+void CppParser::handleTrId()
+{
+    if (!msgid.isEmpty())
+        yyMsg() << qPrintable(LU::tr("//= cannot be used with qtTrId() / QT_TRID_NOOP(). Ignoring\n"));
+    int line = yyLineNo;
+    yyTok = getToken();
+    if (match(Tok_LeftParen) && matchString(&msgid) && !msgid.isEmpty()) {
+        bool plural = match(Tok_Comma);
+        recordMessage(line, QString(), sourcetext, QString(), extracomment,
+                      msgid, extra, plural);
+    }
+    sourcetext.clear();
+    extracomment.clear();
+    msgid.clear();
+    extra.clear();
+    metaExpected = false;
+}
+
+void CppParser::handleDeclareTrFunctions()
+{
+    if (getMacroArgs()) {
+        Namespace *ns = modifyNamespace(&namespaces);
+        ns->hasTrFunctions = true;
+        ns->trQualification = yyWord;
+        ns->trQualification.detach();
+    }
+}
+
 void CppParser::parse(ConversionData &cd, const QStringList &includeStack,
                       QSet<QString> &inclusions)
 {
@@ -1600,7 +1792,6 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
 #ifdef DIAGNOSE_RETRANSLATABILITY
     QString functionName;
 #endif
-    int line;
     bool yyTokColonSeen = false; // Start of c'tor's initializer list
     metaExpected = true;
 
@@ -1815,192 +2006,23 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
             break;
         case Tok_tr:
         case Tok_trUtf8:
-            if (!tor)
-                goto case_default;
-            if (!sourcetext.isEmpty())
-                yyMsg() << qPrintable(LU::tr("//% cannot be used with tr() / QT_TR_NOOP(). Ignoring\n"));
-            line = yyLineNo;
-            yyTok = getToken();
-            if (match(Tok_LeftParen) && matchString(&text) && !text.isEmpty()) {
-                comment.clear();
-                bool plural = false;
-
-                if (yyTok == Tok_RightParen) {
-                    // no comment
-                } else if (match(Tok_Comma) && matchStringOrNull(&comment)) {   //comment
-                    if (yyTok == Tok_RightParen) {
-                        // ok,
-                    } else if (match(Tok_Comma)) {
-                        plural = true;
-                    }
-                }
-                if (!pendingContext.isEmpty() && !prefix.startsWith(strColons)) {
-                    NamespaceList unresolved;
-                    if (!fullyQualify(namespaces, pendingContext, true, &functionContext, &unresolved)) {
-                        functionContextUnresolved = stringifyNamespace(0, unresolved);
-                        yyMsg() << qPrintable(LU::tr("Qualifying with unknown namespace/class %1::%2\n")
-                                              .arg(stringifyNamespace(functionContext)).arg(unresolved.first().value()));
-                    }
-                    pendingContext.clear();
-                }
-                if (prefix.isEmpty()) {
-                    if (functionContextUnresolved.isEmpty()) {
-                        int idx = functionContext.length();
-                        if (idx < 2) {
-                            yyMsg() << qPrintable(LU::tr("tr() cannot be called without context\n"));
-                            goto case_default;
-                        }
-                        Namespace *fctx;
-                        while (!(fctx = findNamespace(functionContext, idx)->classDef)->hasTrFunctions) {
-                            if (idx == 1) {
-                                context = stringifyNamespace(functionContext);
-                                fctx = findNamespace(functionContext)->classDef;
-                                if (!fctx->complained) {
-                                    yyMsg() << qPrintable(LU::tr("Class '%1' lacks Q_OBJECT macro\n")
-                                                         .arg(context));
-                                    fctx->complained = true;
-                                }
-                                goto gotctx;
-                            }
-                            --idx;
-                        }
-                        if (fctx->trQualification.isEmpty()) {
-                            context.clear();
-                            for (int i = 1;;) {
-                                context += functionContext.at(i).value();
-                                if (++i == idx)
-                                    break;
-                                context += strColons;
-                            }
-                            fctx->trQualification = context;
-                        } else {
-                            context = fctx->trQualification;
-                        }
-                    } else {
-                        context = joinNamespaces(stringifyNamespace(functionContext), functionContextUnresolved);
-                    }
-                } else {
-#ifdef DIAGNOSE_RETRANSLATABILITY
-                    int last = prefix.lastIndexOf(strColons);
-                    QString className = prefix.mid(last == -1 ? 0 : last + 2);
-                    if (!className.isEmpty() && className == functionName) {
-                        yyMsg() << qPrintable(LU::tr("It is not recommended to call tr() from within a constructor '%1::%2'\n")
-                                .arg(className).arg(functionName));
-                    }
-#endif
-                    prefix.chop(2);
-                    NamespaceList nsl;
-                    NamespaceList unresolved;
-                    if (fullyQualify(functionContext, prefix, false, &nsl, &unresolved)) {
-                        Namespace *fctx = findNamespace(nsl)->classDef;
-                        if (fctx->trQualification.isEmpty()) {
-                            context = stringifyNamespace(nsl);
-                            fctx->trQualification = context;
-                        } else {
-                            context = fctx->trQualification;
-                        }
-                        if (!fctx->hasTrFunctions && !fctx->complained) {
-                            yyMsg() << qPrintable(LU::tr("Class '%1' lacks Q_OBJECT macro\n").arg(context));
-                            fctx->complained = true;
-                        }
-                    } else {
-                        context = joinNamespaces(stringifyNamespace(nsl), stringifyNamespace(0, unresolved));
-                    }
-                    prefix.clear();
-                }
-
-              gotctx:
-                recordMessage(line, context, text, comment, extracomment, msgid, extra, plural);
-            }
-            sourcetext.clear(); // Will have warned about that already
-            extracomment.clear();
-            msgid.clear();
-            extra.clear();
-            metaExpected = false;
+            if (tor)
+                handleTr(prefix);
             yyTok = getToken();
             break;
         case Tok_translateUtf8:
         case Tok_translate:
-            if (!tor)
-                goto case_default;
-            if (!sourcetext.isEmpty())
-                yyMsg() << qPrintable(LU::tr("//% cannot be used with translate() / QT_TRANSLATE_NOOP(). Ignoring\n"));
-            line = yyLineNo;
-            yyTok = getToken();
-            if (match(Tok_LeftParen)
-                && matchString(&context)
-                && match(Tok_Comma)
-                && matchString(&text) && !text.isEmpty())
-            {
-                comment.clear();
-                bool plural = false;
-                if (yyTok != Tok_RightParen) {
-                    // look for comment
-                    if (match(Tok_Comma) && matchStringOrNull(&comment)) {
-                        if (yyTok != Tok_RightParen) {
-                            // look for encoding
-                            if (match(Tok_Comma)) {
-                                if (matchEncoding()) {
-                                    if (yyTok != Tok_RightParen) {
-                                        // look for the plural quantifier,
-                                        // this can be a number, an identifier or
-                                        // a function call,
-                                        // so for simplicity we mark it as plural if
-                                        // we know we have a comma instead of an
-                                        // right parentheses.
-                                        plural = match(Tok_Comma);
-                                    }
-                                } else {
-                                    // This can be a QTranslator::translate("context",
-                                    // "source", "comment", n) plural translation
-                                    if (matchExpression() && yyTok == Tok_RightParen) {
-                                        plural = true;
-                                    } else {
-                                        goto case_default;
-                                    }
-                                }
-                            } else {
-                                goto case_default;
-                            }
-                        }
-                    } else {
-                        goto case_default;
-                    }
-                }
-                recordMessage(line, context, text, comment, extracomment, msgid, extra, plural);
-            }
-            sourcetext.clear(); // Will have warned about that already
-            extracomment.clear();
-            msgid.clear();
-            extra.clear();
-            metaExpected = false;
+            if (tor)
+                handleTranslate();
             yyTok = getToken();
             break;
         case Tok_trid:
-            if (!tor)
-                goto case_default;
-            if (!msgid.isEmpty())
-                yyMsg() << qPrintable(LU::tr("//= cannot be used with qtTrId() / QT_TRID_NOOP(). Ignoring\n"));
-            line = yyLineNo;
+            if (tor)
+                handleTrId();
             yyTok = getToken();
-            if (match(Tok_LeftParen) && matchString(&msgid) && !msgid.isEmpty()) {
-                bool plural = match(Tok_Comma);
-                recordMessage(line, QString(), sourcetext, QString(), extracomment,
-                              msgid, extra, plural);
-            }
-            sourcetext.clear();
-            extracomment.clear();
-            msgid.clear();
-            extra.clear();
-            metaExpected = false;
             break;
         case Tok_Q_DECLARE_TR_FUNCTIONS:
-            if (getMacroArgs()) {
-                Namespace *ns = modifyNamespace(&namespaces);
-                ns->hasTrFunctions = true;
-                ns->trQualification = yyWord;
-                ns->trQualification.detach();
-            }
+            handleDeclareTrFunctions();
             yyTok = getToken();
             break;
         case Tok_Q_OBJECT:
