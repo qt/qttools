@@ -850,6 +850,14 @@ bool updateAndroidManifest(Options &options)
             fprintf(stdout, "  -- Using platform plugin %s\n", qPrintable(plugin));
     }
 
+    bool usesGL = false;
+    foreach (QString localLib, localLibs) {
+        if (localLib.endsWith(QLatin1String("libqtforandroidGL.so"))) {
+            usesGL = true;
+            break;
+        }
+    }
+
     QHash<QString, QString> replacements;
     replacements[QLatin1String("-- %%INSERT_APP_LIB_NAME%% --")] = QFileInfo(options.applicationBinary).baseName().mid(sizeof("lib") - 1);
     replacements[QLatin1String("-- %%INSERT_LOCAL_LIBS%% --")] = localLibs.join(QLatin1Char(':'));
@@ -869,6 +877,9 @@ bool updateAndroidManifest(Options &options)
     QString features;
     foreach (QString feature, options.features)
         features += QString::fromLatin1("<uses-feature android:name=\"%1\" />\n").arg(feature);
+    if (usesGL)
+        features += QStringLiteral("<uses-feature android:glEsVersion=\"0x00020000\" android:required=\"true\" />");
+
     replacements[QLatin1String("<!-- %%INSERT_FEATURES -->")] = features;
 
     QString androidManifestPath = options.outputDirectory + QLatin1String("/AndroidManifest.xml");

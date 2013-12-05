@@ -26,7 +26,7 @@ qhp.QtHelp.subprojects.classes.sortPages = true
 
 language                = Cpp
 
-depends                 += qtdoc qtcore qtassistant
+depends                 += qtdoc qtcore qtassistant qtwidgets
 
 headerdirs += ..
 
