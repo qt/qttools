@@ -63,7 +63,6 @@ public:
     QString fileName;
     QString rootPath;
 
-    QStringList fileList;
     QList<QHelpDataCustomFilter> customFilterList;
     QList<QHelpDataFilterSection> filterSectionList;
     QMap<QString, QVariant> metaData;
