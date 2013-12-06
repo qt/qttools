@@ -60,6 +60,7 @@ public:
 
     QString virtualFolder;
     QString namespaceName;
+    QString fileName;
     QString rootPath;
 
     QStringList fileList;
@@ -85,7 +86,7 @@ private:
 
 void QHelpProjectDataPrivate::raiseUnknownTokenError()
 {
-    raiseError(QCoreApplication::translate("QHelpProject", "Unknown token."));
+    raiseError(QCoreApplication::translate("QHelpProject", "Unknown token in file \"%1\".").arg(fileName));
 }
 
 void QHelpProjectDataPrivate::readData(const QByteArray &contents)
@@ -119,12 +120,12 @@ void QHelpProjectDataPrivate::readProject()
                 virtualFolder = readElementText();
                 if (!hasValidSyntax(QLatin1String("test"), virtualFolder))
                     raiseError(QCoreApplication::translate("QHelpProject",
-                                   "Virtual folder has invalid syntax."));
+                                   "Virtual folder has invalid syntax in file: \"%1\"").arg(fileName));
             } else if (name() == QLatin1String("namespace")) {
                 namespaceName = readElementText();
                 if (!hasValidSyntax(namespaceName, QLatin1String("test")))
                     raiseError(QCoreApplication::translate("QHelpProject",
-                                   "Namespace has invalid syntax."));
+                                   "Namespace \"%1\" has invalid syntax in file: \"%2\"").arg(namespaceName, fileName));
             } else if (name() == QLatin1String("customFilter")) {
                 readCustomFilter();
             } else if (name() == QLatin1String("filterSection")) {
@@ -143,10 +144,10 @@ void QHelpProjectDataPrivate::readProject()
         } else if (isEndElement() && name() == QLatin1String("QtHelpProject")) {
             if (namespaceName.isEmpty())
                 raiseError(QCoreApplication::translate("QHelpProject",
-                              "Missing namespace in QtHelpProject."));
+                              "Missing namespace in QtHelpProject file: \"%1\"").arg(fileName));
             else if (virtualFolder.isEmpty())
                 raiseError(QCoreApplication::translate("QHelpProject",
-                               "Missing virtual folder in QtHelpProject"));
+                               "Missing virtual folder in QtHelpProject file: \"%1\"").arg(fileName));
             break;
         }
     }
@@ -374,6 +375,7 @@ QHelpProjectData::~QHelpProjectData()
 */
 bool QHelpProjectData::readData(const QString &fileName)
 {
+    d->fileName = fileName;
     d->rootPath = QFileInfo(fileName).absolutePath();
     QFile file(fileName);
     if (!file.open(QIODevice::ReadOnly)) {
