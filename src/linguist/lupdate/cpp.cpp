@@ -239,8 +239,7 @@ private:
 
     enum TokenType {
         Tok_Eof, Tok_class, Tok_friend, Tok_namespace, Tok_using, Tok_return,
-        Tok_tr, Tok_trUtf8, Tok_translate, Tok_translateUtf8, Tok_trid,
-        Tok_Q_OBJECT, Tok_Q_DECLARE_TR_FUNCTIONS, Tok_Access, Tok_Cancel,
+        Tok_Q_OBJECT, Tok_Access, Tok_Cancel,
         Tok_Ident, Tok_String, Tok_Arrow, Tok_Colon, Tok_ColonColon,
         Tok_Equals, Tok_LeftBracket, Tok_RightBracket,
         Tok_LeftBrace, Tok_RightBrace, Tok_LeftParen, Tok_RightParen, Tok_Comma, Tok_Semicolon,
@@ -741,30 +740,6 @@ CppParser::TokenType CppParser::getToken()
                     return Tok_using;
                 break;
             }
-
-            static const TokenType trFunctionTokens[] = {
-                Tok_Q_DECLARE_TR_FUNCTIONS, // Q_DECLARE_TR_FUNCTIONS
-                Tok_tr,                     // QT_TR_NOOP
-                Tok_trid,                   // QT_TRID_NOOP
-                Tok_translate,              // QT_TRANSLATE_NOOP
-                Tok_translate,              // QT_TRANSLATE_NOOP3
-                Tok_trUtf8,                 // QT_TR_NOOP_UTF8
-                Tok_translateUtf8,          // QT_TRANSLATE_NOOP_UTF8
-                Tok_translateUtf8,          // QT_TRANSLATE_NOOP3_UTF8
-                Tok_translate,              // findMessage
-                Tok_trid,                   // qtTrId
-                Tok_tr,                     // tr
-                Tok_trUtf8,                 // trUtf8
-                Tok_translate,              // translate
-                Tok_Ident,                  // qsTr (QML only)
-                Tok_Ident,                  // qsTrId (QML only)
-                Tok_Ident,                  // qsTranslate (QML only)
-            };
-            Q_STATIC_ASSERT((sizeof trFunctionTokens / sizeof *trFunctionTokens == TrFunctionAliasManager::NumTrFunctions));
-
-            const int trFunction = trFunctionAliasManager.trFunctionByName(yyWord);
-            if (trFunction >= 0)
-                return trFunctionTokens[trFunction];
 
             return Tok_Ident;
         } else {
@@ -1563,7 +1538,7 @@ void CppParser::handleTr(QString &prefix)
         yyMsg() << qPrintable(LU::tr("//% cannot be used with tr() / QT_TR_NOOP(). Ignoring\n"));
     int line = yyLineNo;
     yyTok = getToken();
-    if (match(Tok_LeftParen) && matchString(&text) && !text.isEmpty()) {
+    if (matchString(&text) && !text.isEmpty()) {
         comment.clear();
         bool plural = false;
 
@@ -1667,8 +1642,7 @@ void CppParser::handleTranslate()
         yyMsg() << qPrintable(LU::tr("//% cannot be used with translate() / QT_TRANSLATE_NOOP(). Ignoring\n"));
     int line = yyLineNo;
     yyTok = getToken();
-    if (match(Tok_LeftParen)
-        && matchString(&context)
+    if (matchString(&context)
         && match(Tok_Comma)
         && matchString(&text) && !text.isEmpty())
     {
@@ -1722,7 +1696,7 @@ void CppParser::handleTrId()
         yyMsg() << qPrintable(LU::tr("//= cannot be used with qtTrId() / QT_TRID_NOOP(). Ignoring\n"));
     int line = yyLineNo;
     yyTok = getToken();
-    if (match(Tok_LeftParen) && matchString(&msgid) && !msgid.isEmpty()) {
+    if (matchString(&msgid) && !msgid.isEmpty()) {
         bool plural = match(Tok_Comma);
         recordMessage(line, QString(), sourcetext, QString(), extracomment,
                       msgid, extra, plural);
@@ -1737,9 +1711,6 @@ void CppParser::handleTrId()
 void CppParser::handleDeclareTrFunctions()
 {
     QString name;
-    yyTok = getToken();
-    if (yyTok != Tok_LeftParen)
-        return;
     forever {
         yyTok = getToken();
         if (yyTok != Tok_Ident)
@@ -1989,36 +1960,49 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                 modifyNamespace(&namespaces)->aliases[ns] = fullName;
             }
             break;
-        case Tok_tr:
-        case Tok_trUtf8:
-            if (tor)
-                handleTr(prefix);
-            yyTok = getToken();
-            break;
-        case Tok_translateUtf8:
-        case Tok_translate:
-            if (tor)
-                handleTranslate();
-            yyTok = getToken();
-            break;
-        case Tok_trid:
-            if (tor)
-                handleTrId();
-            yyTok = getToken();
-            break;
-        case Tok_Q_DECLARE_TR_FUNCTIONS:
-            handleDeclareTrFunctions();
-            yyTok = getToken();
-            break;
         case Tok_Q_OBJECT:
             modifyNamespace(&namespaces)->hasTrFunctions = true;
             yyTok = getToken();
             break;
         case Tok_Ident:
-            prefix += yyWord;
-            prefix.detach();
             yyTok = getToken();
-            if (yyTok != Tok_ColonColon) {
+            if (yyTok == Tok_LeftParen) {
+                switch (trFunctionAliasManager.trFunctionByName(yyWord)) {
+                case TrFunctionAliasManager::Function_Q_DECLARE_TR_FUNCTIONS:
+                    handleDeclareTrFunctions();
+                    break;
+                case TrFunctionAliasManager::Function_tr:
+                case TrFunctionAliasManager::Function_trUtf8:
+                case TrFunctionAliasManager::Function_QT_TR_NOOP:
+                case TrFunctionAliasManager::Function_QT_TR_NOOP_UTF8:
+                    if (tor)
+                        handleTr(prefix);
+                    break;
+                case TrFunctionAliasManager::Function_translate:
+                case TrFunctionAliasManager::Function_findMessage:
+                case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP:
+                case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP_UTF8:
+                case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP3:
+                case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP3_UTF8:
+                    if (tor)
+                        handleTranslate();
+                    break;
+                case TrFunctionAliasManager::Function_qtTrId:
+                case TrFunctionAliasManager::Function_QT_TRID_NOOP:
+                    if (tor)
+                        handleTrId();
+                    break;
+                default:
+                    goto notrfunc;
+                }
+                yyTok = getToken();
+                break;
+            }
+            if (yyTok == Tok_ColonColon) {
+                prefix += yyWord;
+                prefix.detach();
+            } else {
+              notrfunc:
                 prefix.clear();
                 if (yyTok == Tok_Ident && !yyParenDepth)
                     prospectiveContext.clear();
@@ -2027,8 +2011,14 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
             break;
         case Tok_Arrow:
             yyTok = getToken();
-            if (yyTok == Tok_tr || yyTok == Tok_trUtf8)
-                yyMsg() << qPrintable(LU::tr("Cannot invoke tr() like this\n"));
+            if (yyTok == Tok_Ident) {
+                switch (trFunctionAliasManager.trFunctionByName(yyWord)) {
+                case TrFunctionAliasManager::Function_tr:
+                case TrFunctionAliasManager::Function_trUtf8:
+                    yyMsg() << qPrintable(LU::tr("Cannot invoke tr() like this\n"));
+                    break;
+                }
+            }
             break;
         case Tok_ColonColon:
             if (yyBraceDepth == namespaceDepths.count() && yyParenDepth == 0 && !yyTokColonSeen)
