@@ -253,7 +253,6 @@ private:
 
     int getChar();
     TokenType getToken();
-    bool getMacroArgs();
 
     void processComment();
 
@@ -463,33 +462,6 @@ int CppParser::getChar()
         yyInPtr = uc;
         return int(c);
     }
-}
-
-// This ignores commas, parens and comments.
-// IOW, it understands only a single, simple argument.
-bool CppParser::getMacroArgs()
-{
-    // Failing this assertion would mean losing the preallocated buffer.
-    Q_ASSERT(yyWord.isDetached());
-
-    while (isspace(yyCh))
-        yyCh = getChar();
-    if (yyCh != '(')
-        return false;
-    do {
-        yyCh = getChar();
-    } while (isspace(yyCh));
-    ushort *ptr = (ushort *)yyWord.unicode();
-    while (yyCh != ')') {
-        if (yyCh == EOF)
-            return false;
-        *ptr++ = yyCh;
-        yyCh = getChar();
-    }
-    yyCh = getChar();
-    for (; ptr != (ushort *)yyWord.unicode() && isspace(*(ptr - 1)); --ptr) ;
-    yyWord.resize(ptr - (ushort *)yyWord.unicode());
-    return true;
 }
 
 STRING(Q_OBJECT);
@@ -1764,12 +1736,27 @@ void CppParser::handleTrId()
 
 void CppParser::handleDeclareTrFunctions()
 {
-    if (getMacroArgs()) {
-        Namespace *ns = modifyNamespace(&namespaces);
-        ns->hasTrFunctions = true;
-        ns->trQualification = yyWord;
-        ns->trQualification.detach();
+    QString name;
+    yyTok = getToken();
+    if (yyTok != Tok_LeftParen)
+        return;
+    forever {
+        yyTok = getToken();
+        if (yyTok != Tok_Ident)
+            return;
+        name += yyWord;
+        name.detach();
+        yyTok = getToken();
+        if (yyTok == Tok_RightParen)
+            break;
+        if (yyTok != Tok_ColonColon)
+            return;
+        name += QLatin1String("::");
     }
+    Namespace *ns = modifyNamespace(&namespaces);
+    ns->hasTrFunctions = true;
+    ns->trQualification = name;
+    ns->trQualification.detach();
 }
 
 void CppParser::parse(ConversionData &cd, const QStringList &includeStack,
