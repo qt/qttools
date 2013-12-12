@@ -118,8 +118,10 @@ QmlImportScanResult runQmlImportScanner(const QString &directory, const QString 
         const QJsonObject object = array.at(c).toObject();
         if (object.value(QStringLiteral("type")).toString() == QLatin1String("module")) {
             const QString path = object.value(QStringLiteral("path")).toString();
-            result.modulesDirectories.append(path);
-            findFileRecursion(QDir(path), Platform(platform), debug, &result.plugins);
+            if (!path.isEmpty()) {
+                result.modulesDirectories.append(path);
+                findFileRecursion(QDir(path), Platform(platform), debug, &result.plugins);
+            }
         }
     }
     result.ok = true;
