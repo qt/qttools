@@ -111,7 +111,7 @@ QtModuleEntry qtModuleEntries[] = {
     { QtDesignerComponents, "designercomponents", "Qt5DesignerComponents", 0 },
     { QtDesignerModule, "designer", "Qt5Designer", 0 },
     { QtGuiModule, "gui", "Qt5Gui", "qtbase" },
-    { QtHelpModule, "help", "Qt5Help", "qt_help" },
+    { QtHelpModule, "qthelp", "Qt5Help", "qt_help" },
     { QtMultimediaModule, "multimedia", "Qt5Multimedia", "qtmultimedia" },
     { QtMultimediaWidgetsModule, "multimediawidgets", "Qt5MultimediaWidgets", "qtmultimedia" },
     { QtNetworkModule, "network", "Qt5Network", "qtbase" },
