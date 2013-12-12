@@ -327,6 +327,14 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
             options->disabledLibraries |= disabledModules.at(int(i)).second;
     }
 
+    // Add some dependencies
+    if (options->additionalLibraries | QtQuickModule)
+        options->additionalLibraries |= QtQmlModule;
+    if (options->additionalLibraries | QtHelpModule)
+        options->additionalLibraries |= QtCLuceneModule;
+    if (options->additionalLibraries | QtDesignerComponents)
+        options->additionalLibraries |= QtDesignerModule;
+
     if (parser->isSet(jsonOption)) {
         optVerboseLevel = 0;
         options->json = new JsonOutput;
