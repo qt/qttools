@@ -192,7 +192,7 @@ struct Options {
     unsigned additionalLibraries;
     unsigned disabledLibraries;
     unsigned updateFileFlags;
-    QString qmlDirectory; // Project's QML files.
+    QStringList qmlDirectories; // Project's QML files.
     QString directory;
     QString libraryDirectory;
     QString binary;
@@ -356,7 +356,7 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
         options->directory = parser->value(dirOption);
 
     if (parser->isSet(qmlDirOption))
-        options->qmlDirectory = parser->value(qmlDirOption);
+        options->qmlDirectories = parser->values(qmlDirOption);
 
     const QString &file = posArgs.front();
     const QFileInfo fi(QDir::cleanPath(file));
@@ -716,8 +716,15 @@ static DeployResult deploy(const Options &options,
     // Scan Quick2 imports
     QmlImportScanResult qmlScanResult;
     if (options.quickImports && usesQml2) {
-        const QString qmlDirectory = options.qmlDirectory.isEmpty() ? findQmlDirectory(options.platform, options.directory) : options.qmlDirectory;
-        if (!qmlDirectory.isEmpty()) {
+        QStringList qmlDirectories = options.qmlDirectories;
+        if (qmlDirectories.isEmpty()) {
+            const QString qmlDirectory = findQmlDirectory(options.platform, options.directory);
+            if (!qmlDirectory.isEmpty())
+                qmlDirectories.append(qmlDirectory);
+        }
+        foreach (const QString &qmlDirectory, qmlDirectories) {
+            if (optVerboseLevel >= 1)
+                std::printf("Scanning %s:\n", qPrintable(QDir::toNativeSeparators(qmlDirectory)));
             qmlScanResult = runQmlImportScanner(qmlDirectory, qmakeVariables.value(QStringLiteral("QT_INSTALL_QML")), options.platform, isDebug, errorMessage);
             if (!qmlScanResult.ok)
                 return result;
