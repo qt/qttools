@@ -97,7 +97,7 @@ QmlImportScanResult runQmlImportScanner(const QString &directory, const QString 
     QByteArray stdOut;
     QByteArray stdErr;
     const QString binary = QStringLiteral("qmlimportscanner");
-    if (!runProcess(binary, arguments, directory, &exitCode, &stdOut, &stdErr, errorMessage))
+    if (!runProcess(binary, arguments, QDir::currentPath(), &exitCode, &stdOut, &stdErr, errorMessage))
         return result;
     if (exitCode) {
         *errorMessage = binary + QStringLiteral(" returned ") + QString::number(exitCode)
