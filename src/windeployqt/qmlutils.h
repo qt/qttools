@@ -50,6 +50,7 @@ QString findQmlDirectory(int platform, const QString &startDirectoryName);
 
 struct QmlImportScanResult {
     QmlImportScanResult() : ok(false) {}
+    void append(const QmlImportScanResult &other);
 
     bool ok;
     QStringList modulesDirectories;

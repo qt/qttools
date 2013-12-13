@@ -735,9 +735,10 @@ static DeployResult deploy(const Options &options,
         foreach (const QString &qmlDirectory, qmlDirectories) {
             if (optVerboseLevel >= 1)
                 std::printf("Scanning %s:\n", qPrintable(QDir::toNativeSeparators(qmlDirectory)));
-            qmlScanResult = runQmlImportScanner(qmlDirectory, qmakeVariables.value(QStringLiteral("QT_INSTALL_QML")), options.platform, isDebug, errorMessage);
-            if (!qmlScanResult.ok)
+            const QmlImportScanResult scanResult = runQmlImportScanner(qmlDirectory, qmakeVariables.value(QStringLiteral("QT_INSTALL_QML")), options.platform, isDebug, errorMessage);
+            if (!scanResult.ok)
                 return result;
+            qmlScanResult.append(scanResult);
             // Additional dependencies of QML plugins.
             foreach (const QString &plugin, qmlScanResult.plugins) {
                 if (!findDependentQtLibraries(libraryLocation, plugin, options.platform, errorMessage, &dependentQtLibs, &wordSize, &isDebug))

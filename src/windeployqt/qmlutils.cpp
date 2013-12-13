@@ -128,4 +128,16 @@ QmlImportScanResult runQmlImportScanner(const QString &directory, const QString 
     return result;
 }
 
+void QmlImportScanResult::append(const QmlImportScanResult &other)
+{
+    foreach (const QString &module, other.modulesDirectories) {
+        if (!modulesDirectories.contains(module))
+            modulesDirectories.append(module);
+    }
+    foreach (const QString &plugin, other.plugins) {
+        if (!plugin.contains(plugin))
+            plugins.append(plugin);
+    }
+}
+
 QT_END_NAMESPACE
