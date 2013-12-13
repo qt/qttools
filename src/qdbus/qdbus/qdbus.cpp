@@ -479,9 +479,15 @@ int main(int argc, char **argv)
         connection = QDBusConnection::sessionBus();
 
     if (!connection.isConnected()) {
-        fprintf(stderr, "Could not connect to D-Bus server: %s: %s\n",
-                qPrintable(connection.lastError().name()),
-                qPrintable(connection.lastError().message()));
+        const QDBusError lastError = connection.lastError();
+        if (lastError.isValid()) {
+            fprintf(stderr, "Could not connect to D-Bus server: %s: %s\n",
+                    qPrintable(lastError.name()),
+                    qPrintable(lastError.message()));
+        } else {
+            // an invalid last error means that we were not able to even load the D-Bus library
+            fprintf(stderr, "Could not connect to D-Bus server: Unable to load dbus libraries\n");
+        }
         return 1;
     }
 
