@@ -99,6 +99,7 @@ signals:
 
 public slots:
     void setPlainText(const QString & text, bool userAction);
+    void setVisualizeWhitespace(bool value);
 
 private:
     MessageHighlighter *m_highlighter;

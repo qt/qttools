@@ -95,6 +95,7 @@ MessageEditor::MessageEditor(MultiDataModel *dataModel, QMainWindow *parent)
       m_redoAvail(false),
       m_cutAvail(false),
       m_copyAvail(false),
+      m_visualizeWhitespace(true),
       m_selectionHolder(0),
       m_focusWidget(0)
 {
@@ -216,6 +217,7 @@ void MessageEditor::messageModelAppended()
     ed.transCommentText->setWhatsThis(tr("Here you can enter comments for your own use."
                         " They have no effect on the translated applications.") );
     ed.transCommentText->getEditor()->installEventFilter(this);
+    ed.transCommentText->getEditor()->setVisualizeWhitespace(m_visualizeWhitespace);
     connect(ed.transCommentText, SIGNAL(selectionChanged(QTextEdit*)),
             SLOT(selectionChanged(QTextEdit*)));
     connect(ed.transCommentText, SIGNAL(textChanged(QTextEdit*)),
@@ -299,6 +301,15 @@ void MessageEditor::editorCreated(QTextEdit *te)
             te->setFont(font);
 
             te->installEventFilter(this);
+
+            if (m_visualizeWhitespace) {
+                QTextOption option = te->document()->defaultTextOption();
+
+                option.setFlags(option.flags()
+                                | QTextOption::ShowLineAndParagraphSeparators
+                                | QTextOption::ShowTabsAndSpaces);
+                te->document()->setDefaultTextOption(option);
+            }
 
             fixTabOrder();
             return;
@@ -912,6 +923,21 @@ void MessageEditor::setUnfinishedEditorFocus()
 bool MessageEditor::focusNextUnfinished()
 {
     return focusNextUnfinished(m_currentModel + 1);
+}
+
+void MessageEditor::setVisualizeWhitespace(bool value)
+{
+    m_visualizeWhitespace = value;
+    m_source->getEditor()->setVisualizeWhitespace(value);
+    m_pluralSource->getEditor()->setVisualizeWhitespace(value);
+    m_commentText->getEditor()->setVisualizeWhitespace(value);
+
+    foreach (const MessageEditorData &med, m_editors) {
+        med.transCommentText->getEditor()->setVisualizeWhitespace(value);
+        foreach (FormMultiWidget *widget, med.transTexts)
+            foreach (FormatTextEdit *te, widget->getEditors())
+                te->setVisualizeWhitespace(value);
+    }
 }
 
 QT_END_NAMESPACE

@@ -166,6 +166,7 @@ private slots:
                   bool matchCase, bool ignoreAccelerators, bool skipObsolete);
     void revalidate();
     void toggleStatistics();
+    void toggleVisualizeWhitespace();
     void onWhatsThis();
     void updatePhraseDicts();
     void updatePhraseDict(int model);

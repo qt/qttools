@@ -489,6 +489,7 @@ MainWindow::MainWindow()
     connect(m_ui.actionLengthVariants, SIGNAL(toggled(bool)),
             m_messageEditor, SLOT(setLengthVariants(bool)));
     m_messageEditor->setLengthVariants(m_ui.actionLengthVariants->isChecked());
+    m_messageEditor->setVisualizeWhitespace(m_ui.actionVisualizeWhitespace->isChecked());
 
     m_focusWatcher = new FocusWatcher(m_messageEditor, this);
     m_contextView->installEventFilter(m_focusWatcher);
@@ -1906,6 +1907,7 @@ void MainWindow::setupMenuBar()
     connect(m_ui.actionResetSorting, SIGNAL(triggered()), this, SLOT(resetSorting()));
     connect(m_ui.actionDisplayGuesses, SIGNAL(triggered()), m_phraseView, SLOT(toggleGuessing()));
     connect(m_ui.actionStatistics, SIGNAL(triggered()), this, SLOT(toggleStatistics()));
+    connect(m_ui.actionVisualizeWhitespace, SIGNAL(triggered()), this, SLOT(toggleVisualizeWhitespace()));
     connect(m_ui.menuView, SIGNAL(aboutToShow()), this, SLOT(updateViewMenu()));
     m_ui.menuViewViews->addAction(m_contextDock->toggleViewAction());
     m_ui.menuViewViews->addAction(m_messagesDock->toggleViewAction());
@@ -2572,6 +2574,8 @@ void MainWindow::readConfig()
         config.value(settingPath("Validators/PlaceMarkers"), true).toBool());
     m_ui.actionLengthVariants->setChecked(
         config.value(settingPath("Options/LengthVariants"), false).toBool());
+    m_ui.actionVisualizeWhitespace->setChecked(
+        config.value(settingPath("Options/VisualizeWhitespace"), true).toBool());
 
     recentFiles().readConfig();
 
@@ -2598,6 +2602,8 @@ void MainWindow::writeConfig()
         m_ui.actionPlaceMarkerMatches->isChecked());
     config.setValue(settingPath("Options/LengthVariants"),
         m_ui.actionLengthVariants->isChecked());
+    config.setValue(settingPath("Options/VisualizeWhitespace"),
+        m_ui.actionVisualizeWhitespace->isChecked());
     config.setValue(settingPath("MainWindowState"),
         saveState());
     recentFiles().writeConfig();
@@ -2648,6 +2654,11 @@ void MainWindow::toggleStatistics()
     else if (m_statistics) {
         m_statistics->close();
     }
+}
+
+void MainWindow::toggleVisualizeWhitespace()
+{
+    m_messageEditor->setVisualizeWhitespace(m_ui.actionVisualizeWhitespace->isChecked());
 }
 
 void MainWindow::maybeUpdateStatistics(const MultiDataIndex &index)

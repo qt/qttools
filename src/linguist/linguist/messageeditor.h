@@ -87,6 +87,7 @@ public:
     void setEditorFocus(int model);
     void setUnfinishedEditorFocus();
     bool focusNextUnfinished();
+    void setVisualizeWhitespace(bool value);
 
 signals:
     void translationChanged(const QStringList &translations);
@@ -172,6 +173,7 @@ private:
     bool m_copyAvail;
 
     bool m_clipboardEmpty;
+    bool m_visualizeWhitespace;
 
     QTextEdit *m_selectionHolder;
     QWidget *m_focusWidget;
