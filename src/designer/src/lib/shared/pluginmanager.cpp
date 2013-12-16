@@ -698,6 +698,14 @@ void QDesignerPluginManager::registerPlugin(const QString &plugin)
     if (m_d->m_registeredPlugins.contains(plugin))
         return;
 
+    // ###fixme: Temporary workaround for QTCREATORBUG-10273
+    if (QCoreApplication::applicationName() == QLatin1String("QtCreator")
+        && plugin.contains(QLatin1String("declarativeview"), Qt::CaseInsensitive)) {
+        const QString errorMessage = tr("Not loaded due to potential symbol clashes (QTCREATORBUG-10273)");
+        m_d->m_failedPlugins.insert(plugin, errorMessage);
+        return;
+    }
+
     QPluginLoader loader(plugin);
     if (loader.isLoaded() || loader.load()) {
         m_d->m_registeredPlugins += plugin;

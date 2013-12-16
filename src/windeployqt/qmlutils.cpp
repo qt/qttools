@@ -97,7 +97,7 @@ QmlImportScanResult runQmlImportScanner(const QString &directory, const QString 
     QByteArray stdOut;
     QByteArray stdErr;
     const QString binary = QStringLiteral("qmlimportscanner");
-    if (!runProcess(binary, arguments, directory, &exitCode, &stdOut, &stdErr, errorMessage))
+    if (!runProcess(binary, arguments, QDir::currentPath(), &exitCode, &stdOut, &stdErr, errorMessage))
         return result;
     if (exitCode) {
         *errorMessage = binary + QStringLiteral(" returned ") + QString::number(exitCode)
@@ -118,12 +118,26 @@ QmlImportScanResult runQmlImportScanner(const QString &directory, const QString 
         const QJsonObject object = array.at(c).toObject();
         if (object.value(QStringLiteral("type")).toString() == QLatin1String("module")) {
             const QString path = object.value(QStringLiteral("path")).toString();
-            result.modulesDirectories.append(path);
-            findFileRecursion(QDir(path), Platform(platform), debug, &result.plugins);
+            if (!path.isEmpty()) {
+                result.modulesDirectories.append(path);
+                findFileRecursion(QDir(path), Platform(platform), debug, &result.plugins);
+            }
         }
     }
     result.ok = true;
     return result;
+}
+
+void QmlImportScanResult::append(const QmlImportScanResult &other)
+{
+    foreach (const QString &module, other.modulesDirectories) {
+        if (!modulesDirectories.contains(module))
+            modulesDirectories.append(module);
+    }
+    foreach (const QString &plugin, other.plugins) {
+        if (!plugin.contains(plugin))
+            plugins.append(plugin);
+    }
 }
 
 QT_END_NAMESPACE

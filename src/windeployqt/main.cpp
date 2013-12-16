@@ -69,30 +69,31 @@ enum QtModule
     QtDesignerComponents = 0x20,
     QtDesignerModule = 0x40,
     QtGuiModule = 0x80,
-    QtHelpModule = 0x100,
-    QtMultimediaModule = 0x200,
-    QtMultimediaWidgetsModule = 0x400,
-    QtNetworkModule = 0x800,
-    QtNfcModule = 0x1000,
-    QtOpenGLModule = 0x2000,
-    QtPositioningModule = 0x4000,
-    QtPrintSupportModule = 0x8000,
-    QtQmlModule = 0x10000,
-    QtQuickModule = 0x20000,
-    QtQuickParticlesModule = 0x40000,
-    QtScriptModule = 0x80000,
-    QtScriptToolsModule = 0x100000,
-    QtSensorsModule = 0x200000,
-    QtSerialPortModule = 0x400000,
-    QtSqlModule = 0x800000,
-    QtSvgModule = 0x1000000,
-    QtTestModule = 0x2000000,
-    QtWidgetsModule = 0x4000000,
-    QtWinExtrasModule = 0x8000000,
-    QtXmlModule = 0x10000000,
-    QtXmlPatternsModule = 0x20000000,
-    QtWebKitModule = 0x40000000,
-    QtWebKitWidgetsModule = 0x80000000
+    QtCluceneModule = 0x100,
+    QtHelpModule = 0x200,
+    QtMultimediaModule = 0x400,
+    QtMultimediaWidgetsModule = 0x800,
+    QtNetworkModule = 0x1000,
+    QtNfcModule = 0x2000,
+    QtOpenGLModule = 0x4000,
+    QtPositioningModule = 0x8000,
+    QtPrintSupportModule = 0x10000,
+    QtQmlModule = 0x20000,
+    QtQuickModule = 0x40000,
+    QtQuickParticlesModule = 0x80000,
+    QtScriptModule = 0x100000,
+    QtScriptToolsModule = 0x200000,
+    QtSensorsModule = 0x400000,
+    QtSerialPortModule = 0x800000,
+    QtSqlModule = 0x1000000,
+    QtSvgModule = 0x2000000,
+    QtTestModule = 0x4000000,
+    QtWidgetsModule = 0x8000000,
+    QtWinExtrasModule = 0x10000000,
+    QtXmlModule = 0x20000000,
+    QtXmlPatternsModule = 0x40000000,
+    QtWebKitModule = 0x80000000,
+    QtWebKitWidgetsModule = 0x100000000
 };
 
 struct QtModuleEntry {
@@ -111,7 +112,8 @@ QtModuleEntry qtModuleEntries[] = {
     { QtDesignerComponents, "designercomponents", "Qt5DesignerComponents", 0 },
     { QtDesignerModule, "designer", "Qt5Designer", 0 },
     { QtGuiModule, "gui", "Qt5Gui", "qtbase" },
-    { QtHelpModule, "help", "Qt5Help", "qt_help" },
+    { QtCluceneModule, "clucene", "Qt5CLucene", 0 },
+    { QtHelpModule, "qthelp", "Qt5Help", "qt_help" },
     { QtMultimediaModule, "multimedia", "Qt5Multimedia", "qtmultimedia" },
     { QtMultimediaWidgetsModule, "multimediawidgets", "Qt5MultimediaWidgets", "qtmultimedia" },
     { QtNetworkModule, "network", "Qt5Network", "qtbase" },
@@ -192,7 +194,7 @@ struct Options {
     unsigned additionalLibraries;
     unsigned disabledLibraries;
     unsigned updateFileFlags;
-    QString qmlDirectory; // Project's QML files.
+    QStringList qmlDirectories; // Project's QML files.
     QString directory;
     QString libraryDirectory;
     QString binary;
@@ -325,6 +327,14 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
             options->disabledLibraries |= disabledModules.at(int(i)).second;
     }
 
+    // Add some dependencies
+    if (options->additionalLibraries & QtQuickModule)
+        options->additionalLibraries |= QtQmlModule;
+    if (options->additionalLibraries & QtHelpModule)
+        options->additionalLibraries |= QtCLuceneModule;
+    if (options->additionalLibraries & QtDesignerComponents)
+        options->additionalLibraries |= QtDesignerModule;
+
     if (parser->isSet(jsonOption)) {
         optVerboseLevel = 0;
         options->json = new JsonOutput;
@@ -356,7 +366,7 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
         options->directory = parser->value(dirOption);
 
     if (parser->isSet(qmlDirOption))
-        options->qmlDirectory = parser->value(qmlDirOption);
+        options->qmlDirectories = parser->values(qmlDirOption);
 
     const QString &file = posArgs.front();
     const QFileInfo fi(QDir::cleanPath(file));
@@ -716,11 +726,19 @@ static DeployResult deploy(const Options &options,
     // Scan Quick2 imports
     QmlImportScanResult qmlScanResult;
     if (options.quickImports && usesQml2) {
-        const QString qmlDirectory = options.qmlDirectory.isEmpty() ? findQmlDirectory(options.platform, options.directory) : options.qmlDirectory;
-        if (!qmlDirectory.isEmpty()) {
-            qmlScanResult = runQmlImportScanner(qmlDirectory, qmakeVariables.value(QStringLiteral("QT_INSTALL_QML")), options.platform, isDebug, errorMessage);
-            if (!qmlScanResult.ok)
+        QStringList qmlDirectories = options.qmlDirectories;
+        if (qmlDirectories.isEmpty()) {
+            const QString qmlDirectory = findQmlDirectory(options.platform, options.directory);
+            if (!qmlDirectory.isEmpty())
+                qmlDirectories.append(qmlDirectory);
+        }
+        foreach (const QString &qmlDirectory, qmlDirectories) {
+            if (optVerboseLevel >= 1)
+                std::printf("Scanning %s:\n", qPrintable(QDir::toNativeSeparators(qmlDirectory)));
+            const QmlImportScanResult scanResult = runQmlImportScanner(qmlDirectory, qmakeVariables.value(QStringLiteral("QT_INSTALL_QML")), options.platform, isDebug, errorMessage);
+            if (!scanResult.ok)
                 return result;
+            qmlScanResult.append(scanResult);
             // Additional dependencies of QML plugins.
             foreach (const QString &plugin, qmlScanResult.plugins) {
                 if (!findDependentQtLibraries(libraryLocation, plugin, options.platform, errorMessage, &dependentQtLibs, &wordSize, &isDebug))

@@ -239,7 +239,7 @@ private:
 
     std::ostream &yyMsg(int line = 0);
 
-    uint getChar();
+    int getChar();
     uint getToken();
     bool getMacroArgs();
 
@@ -417,7 +417,7 @@ void CppParser::setInput(QTextStream &ts, const QString &fileName)
   The 0 doesn't produce any token.
 */
 
-uint CppParser::getChar()
+int CppParser::getChar()
 {
     const ushort *uc = yyInPtr;
     forever {
@@ -455,7 +455,7 @@ uint CppParser::getChar()
             yyAtNewline = false;
         }
         yyInPtr = uc;
-        return c;
+        return int(c);
     }
 }
 
