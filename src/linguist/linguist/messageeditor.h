@@ -88,6 +88,10 @@ public:
     void setUnfinishedEditorFocus();
     bool focusNextUnfinished();
     void setVisualizeWhitespace(bool value);
+    void setFontSize(const float fontSize);
+    float fontSize();
+    void increaseFontSize();
+    void decreaseFontSize();
 
 signals:
     void translationChanged(const QStringList &translations);
@@ -158,6 +162,7 @@ private:
     void addPluralForm(int model, const QString &label, bool writable);
     void fixTabOrder();
     QPalette paletteForModel(int model) const;
+    void applyFontSize();
 
     MultiDataModel *m_dataModel;
 
@@ -166,6 +171,7 @@ private:
     int m_currentNumerus;
 
     bool m_lengthVariants;
+    float m_fontSize;
 
     bool m_undoAvail;
     bool m_redoAvail;

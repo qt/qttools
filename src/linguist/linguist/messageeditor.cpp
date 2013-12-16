@@ -91,6 +91,7 @@ MessageEditor::MessageEditor(MultiDataModel *dataModel, QMainWindow *parent)
       m_currentModel(-1),
       m_currentNumerus(-1),
       m_lengthVariants(false),
+      m_fontSize(font().pointSize()),
       m_undoAvail(false),
       m_redoAvail(false),
       m_cutAvail(false),
@@ -200,7 +201,7 @@ void MessageEditor::messageModelAppended()
     m_editors.append(MessageEditorData());
     MessageEditorData &ed = m_editors.last();
     ed.pluralEditMode = false;
-    ed.fontSize = font().pointSize();
+    ed.fontSize = m_fontSize;
     ed.container = new QWidget;
     if (model > 0) {
         ed.container->setPalette(paletteForModel(model));
@@ -292,12 +293,14 @@ void MessageEditor::addPluralForm(int model, const QString &label, bool writable
 
 void MessageEditor::editorCreated(QTextEdit *te)
 {
+    QFont font;
+    font.setPointSize(static_cast<int>(m_fontSize));
+
     FormMultiWidget *snd = static_cast<FormMultiWidget *>(sender());
     for (int model = 0; ; ++model) {
         MessageEditorData med = m_editors.at(model);
+        med.transCommentText->getEditor()->setFont(font);
         if (med.transTexts.contains(snd)) {
-            QFont font;
-            font.setPointSize(static_cast<int>(med.fontSize));
             te->setFont(font);
 
             te->installEventFilter(this);
@@ -504,33 +507,6 @@ MessageEditorData *MessageEditor::modelForWidget(const QObject *o)
     return 0;
 }
 
-static bool applyFont(MessageEditorData *med)
-{
-    QFont font;
-    font.setPointSize(static_cast<int>(med->fontSize));
-    for (int i = 0; i < med->transTexts.count(); ++i)
-        foreach (QTextEdit *te, med->transTexts[i]->getEditors())
-            te->setFont(font);
-    med->transCommentText->getEditor()->setFont(font);
-    return true;
-}
-
-static bool incFont(MessageEditorData *med)
-{
-    if (!med || med->fontSize >= 32)
-        return true;
-    med->fontSize *= 1.2;
-    return applyFont(med);
-}
-
-static bool decFont(MessageEditorData *med)
-{
-    if (!med || med->fontSize <= 8)
-        return true;
-    med->fontSize /= 1.2;
-    return applyFont(med);
-}
-
 bool MessageEditor::eventFilter(QObject *o, QEvent *e)
 {
     // handle copying from the source
@@ -555,25 +531,12 @@ bool MessageEditor::eventFilter(QObject *o, QEvent *e)
             }
         }
     } else if (e->type() == QEvent::KeyPress) {
+        // Ctrl-Tab is still passed through to the textedit and causes a tab to be inserted.
         QKeyEvent *ke = static_cast<QKeyEvent *>(e);
-        if (ke->modifiers() & Qt::ControlModifier) {
-            if (ke->key() == Qt::Key_Plus || ke->key() == Qt::Key_Equal)
-                return incFont(modelForWidget(o));
-            if (ke->key() == Qt::Key_Minus)
-                return decFont(modelForWidget(o));
-        } else {
-            // Ctrl-Tab is still passed through to the textedit and causes a tab to be inserted.
-            if (ke->key() == Qt::Key_Tab) {
-                focusNextChild();
-                return true;
-            }
-        }
-    } else if (e->type() == QEvent::Wheel) {
-        QWheelEvent *we = static_cast<QWheelEvent *>(e);
-        if (we->modifiers() & Qt::ControlModifier) {
-            if (we->delta() > 0)
-                return incFont(modelForWidget(o));
-            return decFont(modelForWidget(o));
+        if (ke->key() == Qt::Key_Tab &&
+            !(ke->modifiers() & Qt::ControlModifier)) {
+            focusNextChild();
+            return true;
         }
     } else if (e->type() == QEvent::FocusIn) {
         QWidget *widget = static_cast<QWidget *>(o);
@@ -937,6 +900,53 @@ void MessageEditor::setVisualizeWhitespace(bool value)
         foreach (FormMultiWidget *widget, med.transTexts)
             foreach (FormatTextEdit *te, widget->getEditors())
                 te->setVisualizeWhitespace(value);
+    }
+}
+
+void MessageEditor::setFontSize(const float fontSize)
+{
+    if (m_fontSize != fontSize) {
+        m_fontSize = fontSize;
+        applyFontSize();
+    }
+}
+
+float MessageEditor::fontSize()
+{
+    return m_fontSize;
+}
+
+void MessageEditor::applyFontSize()
+{
+    QFont font;
+    font.setPointSize(static_cast<int>(m_fontSize));
+
+    m_source->getEditor()->setFont(font);
+    m_pluralSource->getEditor()->setFont(font);
+    m_commentText->getEditor()->setFont(font);
+
+    foreach (MessageEditorData med, m_editors) {
+        for (int i = 0; i < med.transTexts.count(); ++i)
+            foreach (QTextEdit *te, med.transTexts[i]->getEditors())
+                te->setFont(font);
+        med.transCommentText->getEditor()->setFont(font);
+    }
+}
+
+void MessageEditor::increaseFontSize()
+{
+    if (m_fontSize >= 32)
+        return;
+
+    m_fontSize *= 1.2;
+    applyFontSize();
+}
+
+void MessageEditor::decreaseFontSize()
+{
+    if (m_fontSize > 8) {
+        m_fontSize /= 1.2;
+        applyFontSize();
     }
 }
 
