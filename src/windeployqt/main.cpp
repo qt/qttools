@@ -328,11 +328,11 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
     }
 
     // Add some dependencies
-    if (options->additionalLibraries | QtQuickModule)
+    if (options->additionalLibraries & QtQuickModule)
         options->additionalLibraries |= QtQmlModule;
-    if (options->additionalLibraries | QtHelpModule)
+    if (options->additionalLibraries & QtHelpModule)
         options->additionalLibraries |= QtCLuceneModule;
-    if (options->additionalLibraries | QtDesignerComponents)
+    if (options->additionalLibraries & QtDesignerComponents)
         options->additionalLibraries |= QtDesignerModule;
 
     if (parser->isSet(jsonOption)) {
