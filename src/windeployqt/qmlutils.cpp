@@ -135,7 +135,7 @@ void QmlImportScanResult::append(const QmlImportScanResult &other)
             modulesDirectories.append(module);
     }
     foreach (const QString &plugin, other.plugins) {
-        if (!plugin.contains(plugin))
+        if (!plugins.contains(plugin))
             plugins.append(plugin);
     }
 }
