@@ -746,8 +746,8 @@ static DeployResult deploy(const Options &options,
             }
             if (optVerboseLevel >= 1) {
                 std::fputs("QML imports:\n", stdout);
-                foreach (const QString &mod, qmlScanResult.modulesDirectories)
-                    std::printf("  %s\n",  qPrintable(QDir::toNativeSeparators(mod)));
+                foreach (const QmlImportScanResult::Module &mod, qmlScanResult.modules)
+                    std::printf("  '%s' %s\n", qPrintable(mod.name), qPrintable(QDir::toNativeSeparators(mod.sourcePath)));
                 if (optVerboseLevel >= 2) {
                 std::fputs("QML plugins:\n", stdout);
                 foreach (const QString &p, qmlScanResult.plugins)
@@ -851,8 +851,14 @@ static DeployResult deploy(const Options &options,
     if (options.quickImports && (usesQuick1 || usesQml2)) {
         const QmlDirectoryFileEntryFunction qmlFileEntryFunction(options.platform, isDebug);
         if (usesQml2) {
-            foreach (const QString &module, qmlScanResult.modulesDirectories) {
-                if (!updateFile(module, qmlFileEntryFunction, options.directory, options.updateFileFlags, options.json, errorMessage))
+            foreach (const QmlImportScanResult::Module &module, qmlScanResult.modules) {
+                const QString installPath = module.installPath(options.directory);
+                if (optVerboseLevel > 1)
+                    std::printf("Installing: '%s' from %s to %s\n",
+                                qPrintable(module.name), qPrintable(module.sourcePath), qPrintable(QDir::toNativeSeparators(installPath)));
+                if (installPath != options.directory && !createDirectory(installPath, errorMessage))
+                    return result;
+                if (!updateFile(module.sourcePath, qmlFileEntryFunction, installPath, options.updateFileFlags, options.json, errorMessage))
                     return result;
             }
         } // Quick 2

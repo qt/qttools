@@ -52,6 +52,41 @@
 
 QT_BEGIN_NAMESPACE
 
+// Return the relative install path, that is, for example for
+// module "QtQuick.Controls.Styles" in "path/qtbase/qml/QtQuick/Controls/Styles.3"
+// --> "QtQuick/Controls" suitable for updateFile() (cp -r semantics).
+QString QmlImportScanResult::Module::relativeInstallPath() const
+{
+    const QChar dot = QLatin1Char('.');
+    const QChar slash = QLatin1Char('/');
+
+    // Find relative path by module name.
+    if (!name.contains(dot))
+        return QString(); // "QtQuick.2" -> flat folder.
+    QString result = sourcePath;
+    QString pathComponent = name;
+    pathComponent.replace(dot, slash);
+    const int pos = result.lastIndexOf(pathComponent);
+    if (pos < 0)
+        return QString();
+    result.remove(0, pos);
+    // return base name.
+    const int lastSlash = result.lastIndexOf(slash);
+    if (lastSlash >= 0)
+        result.truncate(lastSlash);
+    return result;
+}
+
+QString QmlImportScanResult::Module::installPath(const QString &root) const
+{
+    QString result = root;
+    const QString relPath = relativeInstallPath();
+    if (!relPath.isEmpty())
+        result += QLatin1Char('/');
+    result += relPath;
+    return result;
+}
+
 static QString qmlDirectoryRecursion(Platform platform, const QString &path)
 {
     QDir dir(path);
@@ -119,7 +154,11 @@ QmlImportScanResult runQmlImportScanner(const QString &directory, const QString 
         if (object.value(QStringLiteral("type")).toString() == QLatin1String("module")) {
             const QString path = object.value(QStringLiteral("path")).toString();
             if (!path.isEmpty()) {
-                result.modulesDirectories.append(path);
+                QmlImportScanResult::Module module;
+                module.name = object.value(QStringLiteral("name")).toString();
+                module.className = object.value(QStringLiteral("classname")).toString();
+                module.sourcePath = path;
+                result.modules.append(module);
                 findFileRecursion(QDir(path), Platform(platform), debug, &result.plugins);
             }
         }
@@ -128,11 +167,20 @@ QmlImportScanResult runQmlImportScanner(const QString &directory, const QString 
     return result;
 }
 
+static inline bool contains(const QList<QmlImportScanResult::Module> &modules, const QString &name)
+{
+    foreach (const QmlImportScanResult::Module &m, modules) {
+        if (m.name == name)
+            return true;
+    }
+    return false;
+}
+
 void QmlImportScanResult::append(const QmlImportScanResult &other)
 {
-    foreach (const QString &module, other.modulesDirectories) {
-        if (!modulesDirectories.contains(module))
-            modulesDirectories.append(module);
+    foreach (const QmlImportScanResult::Module &module, other.modules) {
+        if (!contains(modules, module.name))
+            modules.append(module);
     }
     foreach (const QString &plugin, other.plugins) {
         if (!plugins.contains(plugin))
