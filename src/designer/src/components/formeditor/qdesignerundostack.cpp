@@ -60,6 +60,12 @@ QDesignerUndoStack::~QDesignerUndoStack()
 { // QUndoStack is managed by the QUndoGroup
 }
 
+void QDesignerUndoStack::clear()
+{
+    m_fakeDirty  = false;
+    m_undoStack->clear();
+}
+
 void QDesignerUndoStack::push(QUndoCommand * cmd)
 {
     m_undoStack->push(cmd);
