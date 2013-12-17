@@ -474,14 +474,14 @@ QMap<QString, QString> queryQMakeAll(QString *errorMessage)
     }
     const QString output = QString::fromLocal8Bit(stdOut).trimmed().remove(QLatin1Char('\r'));
     QMap<QString, QString> result;
-    int pos = 0;
-    while (true) {
+    const int size = output.size();
+    for (int pos = 0; pos < size; ) {
         const int colonPos = output.indexOf(QLatin1Char(':'), pos);
         if (colonPos < 0)
             break;
-        const int endPos = output.indexOf(QLatin1Char('\n'), colonPos + 1);
+        int endPos = output.indexOf(QLatin1Char('\n'), colonPos + 1);
         if (endPos < 0)
-            break;
+            endPos = size;
         const QString key = output.mid(pos, colonPos - pos);
         const QString value = output.mid(colonPos + 1, endPos - colonPos - 1);
         result.insert(key, value);

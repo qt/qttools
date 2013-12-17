@@ -182,7 +182,7 @@ bool optHelp = false;
 int optWebKit2 = 0;
 
 struct Options {
-    Options() : plugins(true), libraries(true), quickImports(true), translations(true)
+    Options() : plugins(true), libraries(true), quickImports(true), translations(true), systemD3dCompiler(true)
               , platform(Windows), additionalLibraries(0), disabledLibraries(0)
               , updateFileFlags(0), json(0) {}
 
@@ -190,6 +190,7 @@ struct Options {
     bool libraries;
     bool quickImports;
     bool translations;
+    bool systemD3dCompiler;
     Platform platform;
     unsigned additionalLibraries;
     unsigned disabledLibraries;
@@ -266,6 +267,10 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
                                            QStringLiteral("Skip deployment of translations."));
     parser->addOption(noTranslationOption);
 
+    QCommandLineOption noSystemD3DCompilerOption(QStringLiteral("no-system-d3d-compiler"),
+                                                 QStringLiteral("Skip deployment of the system D3D compiler."));
+    parser->addOption(noSystemD3DCompilerOption);
+
     QCommandLineOption webKitOption(QStringLiteral("webkit2"),
                                     QStringLiteral("Deployment of WebKit2 (web process)."));
     parser->addOption(webKitOption);
@@ -316,6 +321,7 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
     options->plugins = !parser->isSet(noPluginsOption);
     options->libraries = !parser->isSet(noLibraryOption);
     options->translations = !parser->isSet(noTranslationOption);
+    options->systemD3dCompiler = !parser->isSet(noSystemD3DCompilerOption);
     options->quickImports = !parser->isSet(noQuickImportOption);
     if (parser->isSet(forceOption))
         options->updateFileFlags |= ForceUpdateFile;
@@ -652,6 +658,16 @@ static QString libraryPath(const QString &libraryLocation, const char *name, Pla
     return result;
 }
 
+static inline int qtVersion(const QMap<QString, QString> &qmakeVariables)
+{
+    const QString versionString = qmakeVariables.value(QStringLiteral("QT_VERSION"));
+    const QChar dot = QLatin1Char('.');
+    const int majorVersion = versionString.section(dot, 0, 0).toInt();
+    const int minorVersion = versionString.section(dot, 1, 1).toInt();
+    const int patchVersion = versionString.section(dot, 2, 2).toInt();
+    return (majorVersion << 16) | (minorVersion << 8) | patchVersion;
+}
+
 static DeployResult deploy(const Options &options,
                            const QMap<QString, QString> &qmakeVariables,
                            QString *errorMessage)
@@ -662,6 +678,7 @@ static DeployResult deploy(const Options &options,
 
     const QString qtBinDir = qmakeVariables.value(QStringLiteral("QT_INSTALL_BINS"));
     const QString libraryLocation = options.platform == Unix ? qmakeVariables.value(QStringLiteral("QT_INSTALL_LIBS")) : qtBinDir;
+    const int version = qtVersion(qmakeVariables);
 
     if (optVerboseLevel > 1)
         std::printf("Qt binaries in %s\n", qPrintable(QDir::toNativeSeparators(qtBinDir)));
@@ -804,12 +821,23 @@ static DeployResult deploy(const Options &options,
                 const QString libGLESv2FullPath = qtBinDir + slash + QFileInfo(libGLESv2.front()).fileName();
                 deployedQtLibraries.push_back(libGLESv2FullPath);
             }
-            // Find the D3d Compiler matching the D3D library.
-            const QString d3dCompiler = findD3dCompiler(options.platform, wordSize);
-            if (d3dCompiler.isEmpty()) {
-                std::fprintf(stderr, "Warning: Cannot find any version of the d3dcompiler DLL.\n");
-            } else {
-                deployedQtLibraries.push_back(d3dCompiler);
+            // Find the system D3d Compiler matching the D3D library.
+            if (options.systemD3dCompiler && options.platform != WinPhoneArm && options.platform != WinPhoneIntel) {
+                const QString d3dCompiler = findD3dCompiler(options.platform, wordSize);
+                if (d3dCompiler.isEmpty()) {
+                    std::fprintf(stderr, "Warning: Cannot find any version of the d3dcompiler DLL.\n");
+                } else {
+                    deployedQtLibraries.push_back(d3dCompiler);
+                }
+            }
+            // Deploy Qt's D3D compiler starting from 5.3 onwards.
+            if (version >= 0x050300) {
+                QString d3dCompilerQt = qtBinDir + QStringLiteral("/d3dcompiler_qt");
+                if (isDebug)
+                    d3dCompilerQt += QLatin1Char('d');
+                d3dCompilerQt += QLatin1String(windowsSharedLibrarySuffix);
+                if (QFileInfo(d3dCompilerQt).exists())
+                    deployedQtLibraries.push_back(d3dCompilerQt);
             }
         } // !libEgl.isEmpty()
     } // Windows
