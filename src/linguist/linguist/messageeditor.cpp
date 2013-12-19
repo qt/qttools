@@ -155,6 +155,8 @@ void MessageEditor::setupEditorPage()
     m_commentText->setWhatsThis(tr("This area shows a comment that"
                         " may guide you, and the context in which the text"
                         " occurs.") );
+    connect(m_commentText, SIGNAL(selectionChanged(QTextEdit*)),
+            SLOT(selectionChanged(QTextEdit*)));
 
     QBoxLayout *subLayout = new QVBoxLayout;
 
