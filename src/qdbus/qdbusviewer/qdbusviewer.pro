@@ -1,10 +1,12 @@
 HEADERS         = qdbusviewer.h \
                   qdbusmodel.h \
-                  propertydialog.h
+                  propertydialog.h \
+                  logviewer.h
 
 SOURCES         = qdbusviewer.cpp \
                   qdbusmodel.cpp \
                   propertydialog.cpp \
+                  logviewer.cpp \
                   main.cpp
 
 RESOURCES += qdbusviewer.qrc

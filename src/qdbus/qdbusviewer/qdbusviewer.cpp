@@ -42,7 +42,7 @@
 #include "qdbusviewer.h"
 #include "qdbusmodel.h"
 #include "propertydialog.h"
-
+#include "logviewer.h"
 
 #include <QtWidgets/QTreeWidget>
 #include <QtCore/QStringListModel>
@@ -50,7 +50,6 @@
 #include <QtCore/QMetaProperty>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QListView>
-#include <QtWidgets/QTextBrowser>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QShortcut>
 #include <QtWidgets/QVBoxLayout>
@@ -115,7 +114,7 @@ QDBusViewer::QDBusViewer(const QDBusConnection &connection, QWidget *parent)  :
     QSplitter *topSplitter = new QSplitter(Qt::Vertical, this);
     layout->addWidget(topSplitter);
 
-    log = new QTextBrowser;
+    log = new LogViewer;
     connect(log, SIGNAL(anchorClicked(QUrl)), this, SLOT(anchorClicked(QUrl)));
 
     QSplitter *splitter = new QSplitter(topSplitter);
