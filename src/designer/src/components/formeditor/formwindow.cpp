@@ -2159,6 +2159,7 @@ bool FormWindow::setContents(QIODevice *dev, QString *errorMessageIn /* = 0 */)
     // The main container is cleared as otherwise
     // the names of the newly loaded objects will be unified.
     clearMainContainer();
+    m_undoStack.clear();
     emit changed();
 
     QDesignerResource r(this);

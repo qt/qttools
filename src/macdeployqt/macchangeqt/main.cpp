@@ -65,7 +65,7 @@ int main(int argc, char **argv)
     }
 
     if (argc != (3 + optionsSpecified)) {
-        qDebug() << "Changeqt: changes witch Qt frameworks an application links against.";
+        qDebug() << "Changeqt: changes which Qt frameworks an application links against.";
         qDebug() << "Usage: changeqt app-bundle qt-dir <-verbose=[0-3]>";
         return 0;
     }

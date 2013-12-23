@@ -62,6 +62,7 @@ public:
     explicit QDesignerUndoStack(QObject *parent = 0);
     virtual ~QDesignerUndoStack();
 
+    void clear();
     void push(QUndoCommand * cmd);
     void beginMacro(const QString &text);
     void endMacro();

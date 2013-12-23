@@ -51,6 +51,7 @@
 #include <QDateTime>
 #include <QStandardPaths>
 #include <QUuid>
+#include <QDirIterator>
 
 #include <algorithm>
 static const bool mustReadOutputAnyway = true; // pclose seems to return the wrong error code unless we read the output
@@ -77,6 +78,7 @@ struct Options
     Options()
         : helpRequested(false)
         , verbose(false)
+        , timing(false)
         , minimumAndroidVersion(9)
         , targetAndroidVersion(10)
         , deploymentMechanism(Bundled)
@@ -105,6 +107,8 @@ struct Options
 
     bool helpRequested;
     bool verbose;
+    bool timing;
+    QTime timer;
 
     // External tools
     QString sdkPath;
@@ -164,7 +168,7 @@ struct Options
     QStringList initClasses;
     QString temporaryDirectoryName;
     bool fetchedRemoteModificationDates;
-    QHash<QString, QDateTime> remoteModificationDates;
+    QDateTime remoteModificationDate;
     QStringList permissions;
     QStringList features;
 };
@@ -301,6 +305,8 @@ Options parseOptions()
 
     if (options.inputFileName.isEmpty())
         options.inputFileName = QString::fromLatin1("android-lib%1.so-deployment-settings.json").arg(QDir::current().dirName());
+
+    options.timing = qEnvironmentVariableIsSet("ANDROIDDEPLOYQT_TIMING_OUTPUT");
 
     return options;
 }
@@ -1389,11 +1395,9 @@ bool fetchRemoteModifications(Options *options, const QString &directory)
     options->fetchedRemoteModificationDates = true;
 
     FILE *adbCommand = runAdb(*options, QLatin1String(" ls ") + directory);
-    QHash<QString, QDateTime> ret;
     if (adbCommand == 0)
         return false;
 
-    QStringList possibleDirectoriesToTry;
     char buffer[512];
     while (fgets(buffer, sizeof(buffer), adbCommand) != 0) {
         QByteArray line = QByteArray::fromRawData(buffer, qstrlen(buffer));
@@ -1405,24 +1409,27 @@ bool fetchRemoteModifications(Options *options, const QString &directory)
                 || line.at(26) != ' ') {
             continue;
         }
+        QString fileName = QString::fromLocal8Bit(line.mid(27)).trimmed();
+        if (fileName != QLatin1String("modification.txt"))
+            continue;
         bool ok;
         int time = line.mid(18, 8).toUInt(&ok, 16);
         if (!ok)
             continue;
 
-        QString fileName = QString::fromLocal8Bit(line.mid(27)).trimmed();
-
-        ret[directory + QLatin1Char('/') + fileName] = QDateTime::fromTime_t(time);
-
-        if (fileName != QLatin1String("..") && fileName != QLatin1String(".") && !fileName.isEmpty())
-            possibleDirectoriesToTry.append(directory + QLatin1Char('/') + fileName);
+        options->remoteModificationDate = QDateTime::fromTime_t(time);
+        break;
     }
 
-    foreach (QString possibleDirectoryToTry, possibleDirectoriesToTry)
-        fetchRemoteModifications(options, possibleDirectoryToTry);
-
     pclose(adbCommand);
-    options->remoteModificationDates.unite(ret);
+
+    {
+        QFile file(options->temporaryDirectoryName + QLatin1String("/modification.txt"));
+        if (!file.open(QIODevice::WriteOnly)) {
+            fprintf(stderr, "Cannot create modification timestamp.\n");
+            return false;
+        }
+    }
 
     return true;
 }
@@ -1451,20 +1458,10 @@ bool deployToLocalTmp(Options *options,
 
     QFileInfo fileInfo(options->qtInstallDirectory + QLatin1Char('/') + qtDependency);
 
-    QStringList unmetDependencies;
-    if (!goodToCopy(options, fileInfo.absoluteFilePath(), &unmetDependencies)) {
-        if (options->verbose)
-            fprintf(stdout, "  -- Skipping %s. It has unmet dependencies: %s.\n",
-                    qPrintable(fileInfo.absoluteFilePath()),
-                    qPrintable(unmetDependencies.join(QLatin1Char(','))));
-        return true;
-    }
-
     // Make sure precision is the same as what we get from Android
     QDateTime sourceModified = QDateTime::fromTime_t(fileInfo.lastModified().toTime_t());
 
-    QDateTime destinationModified = options->remoteModificationDates.value(QLatin1String("/data/local/tmp/qt/") + qtDependency);
-    if (destinationModified.isNull() || destinationModified < sourceModified) {
+    if (options->remoteModificationDate.isNull() || options->remoteModificationDate < sourceModified) {
         if (!copyFileIfNewer(options->qtInstallDirectory + QLatin1Char('/') + qtDependency,
                              options->temporaryDirectoryName + QLatin1Char('/') + qtDependency,
                              options->verbose)) {
@@ -1473,26 +1470,6 @@ bool deployToLocalTmp(Options *options,
 
         if (qtDependency.endsWith(QLatin1String(".so"))
                 && !stripFile(*options, options->temporaryDirectoryName + QLatin1Char('/') + qtDependency)) {
-            return false;
-        }
-
-        FILE *adbCommand = runAdb(*options,
-                                  QString::fromLatin1(" push %1 %2")
-                                  .arg(options->temporaryDirectoryName + QLatin1Char('/') + qtDependency)
-                                  .arg(QLatin1String("/data/local/tmp/qt/") + qtDependency));
-        if (adbCommand == 0)
-            return false;
-
-        if (options->verbose) {
-            fprintf(stdout, "  -- Deploying %s to device.\n", qPrintable(qtDependency));
-            char buffer[512];
-            while (fgets(buffer, sizeof(buffer), adbCommand) != 0)
-                fprintf(stdout, "%s", buffer);
-        }
-
-        int errorCode = pclose(adbCommand);
-        if (errorCode != 0) {
-            fprintf(stderr, "Copying file to device failed!\n");
             return false;
         }
     }
@@ -1517,12 +1494,29 @@ bool copyQtFiles(Options *options)
     }
 
     if (options->deploymentMechanism == Options::Debug) {
-        foreach (QString qtDependency, options->qtDependencies) {
-            if (!deployToLocalTmp(options, qtDependency))
-                return false;
-
-            options->bundledFiles += qMakePair(qtDependency, qtDependency);
+        // For debug deployment, we copy all libraries and plugins
+        QDirIterator dirIterator(options->qtInstallDirectory, QDirIterator::Subdirectories);
+        while (dirIterator.hasNext()) {
+            QFileInfo info = dirIterator.fileInfo();
+            if (!info.isDir()) {
+                QString relativePath = info.absoluteFilePath().mid(options->qtInstallDirectory.length());
+                if (relativePath.startsWith(QLatin1Char('/')))
+                    relativePath.remove(0, 1);
+                if ((relativePath.startsWith("lib/") && relativePath.endsWith(".so"))
+                        || relativePath.startsWith("jar/")
+                        || relativePath.startsWith("plugins/")
+                        || relativePath.startsWith("imports/")
+                        || relativePath.startsWith("qml/")
+                        || relativePath.startsWith("plugins/")) {
+                    if (!deployToLocalTmp(options, relativePath))
+                        return false;
+                }
+            }
+            dirIterator.next();
         }
+
+        foreach (QString qtDependency, options->qtDependencies)
+            options->bundledFiles += qMakePair(qtDependency, qtDependency);
     } else {
         QString libsDirectory = QLatin1String("libs/");
 
@@ -1954,6 +1948,30 @@ bool copyGdbServer(const Options &options)
     return true;
 }
 
+bool deployAllToLocalTmp(const Options &options)
+{
+    FILE *adbCommand = runAdb(options,
+                              QString::fromLatin1(" push %1 /data/local/tmp/qt/")
+                              .arg(options.temporaryDirectoryName + QLatin1Char('/')));
+    if (adbCommand == 0)
+        return false;
+
+    if (options.verbose) {
+        fprintf(stdout, "  -- Deploying Qt files to device.\n");
+        char buffer[512];
+        while (fgets(buffer, sizeof(buffer), adbCommand) != 0)
+            fprintf(stdout, "%s", buffer);
+    }
+
+    int errorCode = pclose(adbCommand);
+    if (errorCode != 0) {
+        fprintf(stderr, "Copying files to device failed!\n");
+        return false;
+    }
+
+    return true;
+}
+
 enum ErrorCode
 {
     Success,
@@ -1972,7 +1990,8 @@ enum ErrorCode
     CannotCreateAndroidProject = 13,
     CannotBuildAndroidProject = 14,
     CannotSignPackage = 15,
-    CannotInstallApk = 16
+    CannotInstallApk = 16,
+    CannotDeployAllToLocalTmp = 17
 };
 
 int main(int argc, char *argv[])
@@ -1985,8 +2004,14 @@ int main(int argc, char *argv[])
         return SyntaxErrorOrHelpRequested;
     }
 
+    if (Q_UNLIKELY(options.timing))
+        options.timer.start();
+
     if (!readInputFile(&options))
         return CannotReadInputFile;
+
+    if (Q_UNLIKELY(options.timing))
+        fprintf(stdout, "[TIMING] %d ms: Read input file\n", options.timer.elapsed());
 
     fprintf(stdout,
 //          "012345678901234567890123456789012345678901234567890123456789012345678901"
@@ -2008,44 +2033,89 @@ int main(int argc, char *argv[])
     if (!copyAndroidTemplate(options))
         return CannotCopyAndroidTemplate;
 
+    if (Q_UNLIKELY(options.timing))
+        fprintf(stdout, "[TIMING] %d ms: Copied Android template\n", options.timer.elapsed());
+
     if (!readDependencies(&options))
         return CannotReadDependencies;
+
+    if (Q_UNLIKELY(options.timing))
+        fprintf(stdout, "[TIMING] %d ms: Read dependencies\n", options.timer.elapsed());
 
     if (options.deploymentMechanism != Options::Ministro && !copyGnuStl(&options))
         return CannotCopyGnuStl;
 
+    if (Q_UNLIKELY(options.timing))
+        fprintf(stdout, "[TIMING] %d ms: Copied GNU STL\n", options.timer.elapsed());
+
     if (!copyQtFiles(&options))
         return CannotCopyQtFiles;
+
+    if (options.deploymentMechanism == Options::Debug && !deployAllToLocalTmp(options))
+        return CannotDeployAllToLocalTmp;
+
+    if (Q_UNLIKELY(options.timing))
+        fprintf(stdout, "[TIMING] %d ms: Copied Qt files\n", options.timer.elapsed());
 
     if (!containsApplicationBinary(options))
         return CannotFindApplicationBinary;
 
+    if (Q_UNLIKELY(options.timing))
+        fprintf(stdout, "[TIMING] %d ms: Checked for application binary\n", options.timer.elapsed());
+
     if (!options.releasePackage && !copyGdbServer(options))
         return CannotCopyGdbServer;
+
+    if (Q_UNLIKELY(options.timing))
+        fprintf(stdout, "[TIMING] %d ms: Copied GDB server\n", options.timer.elapsed());
 
     if (!stripLibraries(options))
         return CannotStripLibraries;
 
+    if (Q_UNLIKELY(options.timing))
+        fprintf(stdout, "[TIMING] %d ms: Stripped libraries\n", options.timer.elapsed());
+
     if (!copyAndroidExtraLibs(options))
         return CannotCopyAndroidExtraLibs;
+
+    if (Q_UNLIKELY(options.timing))
+        fprintf(stdout, "[TIMING] %d ms: Copied extra libs\n", options.timer.elapsed());
 
     if (!copyAndroidSources(options))
         return CannotCopyAndroidSources;
 
+    if (Q_UNLIKELY(options.timing))
+        fprintf(stdout, "[TIMING] %d ms: Copied android sources\n", options.timer.elapsed());
+
     if (!updateAndroidFiles(options))
         return CannotUpdateAndroidFiles;
+
+    if (Q_UNLIKELY(options.timing))
+        fprintf(stdout, "[TIMING] %d ms: Updated files\n", options.timer.elapsed());
 
     if (!createAndroidProject(options))
         return CannotCreateAndroidProject;
 
+    if (Q_UNLIKELY(options.timing))
+        fprintf(stdout, "[TIMING] %d ms: Created project\n", options.timer.elapsed());
+
     if (!buildAndroidProject(options))
         return CannotBuildAndroidProject;
+
+    if (Q_UNLIKELY(options.timing))
+        fprintf(stdout, "[TIMING] %d ms: Built project\n", options.timer.elapsed());
 
     if (!options.keyStore.isEmpty() && !signPackage(options))
         return CannotSignPackage;
 
+    if (Q_UNLIKELY(options.timing))
+        fprintf(stdout, "[TIMING] %d ms: Signed package\n", options.timer.elapsed());
+
     if (options.installApk && !installApk(options))
         return CannotInstallApk;
+
+    if (Q_UNLIKELY(options.timing))
+        fprintf(stdout, "[TIMING] %d ms: Installed APK\n", options.timer.elapsed());
 
     fprintf(stdout, "Android package built successfully.\n");
 

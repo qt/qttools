@@ -49,11 +49,20 @@ QT_BEGIN_NAMESPACE
 QString findQmlDirectory(int platform, const QString &startDirectoryName);
 
 struct QmlImportScanResult {
+    struct Module {
+        QString relativeInstallPath() const;
+        QString installPath(const QString &root) const;
+
+        QString name;
+        QString className;
+        QString sourcePath;
+    };
+
     QmlImportScanResult() : ok(false) {}
     void append(const QmlImportScanResult &other);
 
     bool ok;
-    QStringList modulesDirectories;
+    QList<Module> modules;
     QStringList plugins;
 };
 
