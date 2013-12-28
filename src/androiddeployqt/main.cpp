@@ -1381,6 +1381,9 @@ FILE *runAdb(const Options &options, const QString &arguments)
 
     adb = QString::fromLatin1("\"%1\"%2 %3").arg(adb).arg(installOption).arg(arguments);
 
+    if (options.verbose)
+        fprintf(stdout, "Running command \"%s\"\n", adb.toLocal8Bit().constData());
+
     FILE *adbCommand = popen(adb.toLocal8Bit().constData(), "r");
     if (adbCommand == 0) {
         fprintf(stderr, "Cannot start adb: %s\n", qPrintable(adb));
