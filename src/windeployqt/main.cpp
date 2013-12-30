@@ -184,7 +184,7 @@ int optWebKit2 = 0;
 struct Options {
     Options() : plugins(true), libraries(true), quickImports(true), translations(true), systemD3dCompiler(true)
               , platform(Windows), additionalLibraries(0), disabledLibraries(0)
-              , updateFileFlags(0), json(0) {}
+              , updateFileFlags(0), json(0), list(ListNone) {}
 
     bool plugins;
     bool libraries;
@@ -200,6 +200,7 @@ struct Options {
     QString libraryDirectory;
     QString binary;
     JsonOutput *json;
+    ListOption list;
 };
 
 // Return binary from folder
@@ -283,6 +284,16 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
                                   QStringLiteral("Print to stdout in JSON format."));
     parser->addOption(jsonOption);
 
+    QCommandLineOption listOption(QStringLiteral("list"),
+                                  QLatin1String("Print only the names of the files copied.\n"
+                                                "Available options:\n"
+                                                "  source:   absolute path of the source files\n"
+                                                "  target:   absolute path of the target files\n"
+                                                "  relative: paths of the target files, relative\n"
+                                                "            to the target directory"),
+                                  QStringLiteral("option"));
+    parser->addOption(listOption);
+
     QCommandLineOption verboseOption(QStringLiteral("verbose"),
                                      QStringLiteral("Verbose level."),
                                      QStringLiteral("level"));
@@ -341,7 +352,21 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
     if (options->additionalLibraries & QtDesignerComponents)
         options->additionalLibraries |= QtDesignerModule;
 
-    if (parser->isSet(jsonOption)) {
+    if (parser->isSet(listOption)) {
+        const QString value = parser->value(listOption);
+        if (value == QStringLiteral("source")) {
+            options->list = ListSource;
+        } else if (value == QStringLiteral("target")) {
+            options->list = ListTarget;
+        } else if (value == QStringLiteral("relative")) {
+            options->list = ListRelative;
+        } else {
+            *errorMessage = QStringLiteral("Please specify a valid option for -list (source, target, relative).");
+            return CommandLineParseError;
+        }
+    }
+
+    if (parser->isSet(jsonOption) || options->list) {
         optVerboseLevel = 0;
         options->json = new JsonOutput;
     } else {
@@ -998,7 +1023,10 @@ int main(int argc, char **argv)
     }
 
     if (options.json) {
-        std::fputs(options.json->toJson().constData(), stdout);
+        if (options.list)
+            std::fputs(options.json->toList(options.list, options.directory).constData(), stdout);
+        else
+            std::fputs(options.json->toJson().constData(), stdout);
         delete options.json;
         options.json = 0;
     }

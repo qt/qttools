@@ -72,6 +72,13 @@ enum Platform {
     UnknownPlatform
 };
 
+enum ListOption {
+    ListNone = 0,
+    ListSource,
+    ListTarget,
+    ListRelative
+};
+
 // Container class for JSON output
 class JsonOutput
 {
@@ -88,6 +95,29 @@ public:
         QJsonObject document;
         document.insert(QStringLiteral("files"), m_files);
         return QJsonDocument(document).toJson();
+    }
+    QByteArray toList(ListOption option, const QDir &base) const
+    {
+        QByteArray list;
+        foreach (const QJsonValue &file, m_files) {
+            const QString source = file.toObject().value(QStringLiteral("source")).toString();
+            const QString fileName = QFileInfo(source).fileName();
+            const QString target = file.toObject().value(QStringLiteral("target")).toString() + QDir::separator() + fileName;
+            switch (option) {
+            case ListNone:
+                break;
+            case ListSource:
+                list += source.toUtf8() + '\n';
+                break;
+            case ListTarget:
+                list += target.toUtf8() + '\n';
+                break;
+            case ListRelative:
+                list += QDir::toNativeSeparators(base.relativeFilePath(target)).toUtf8() + '\n';
+                break;
+            }
+        }
+        return list;
     }
 private:
     QJsonArray m_files;
