@@ -290,7 +290,10 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
                                                 "  source:   absolute path of the source files\n"
                                                 "  target:   absolute path of the target files\n"
                                                 "  relative: paths of the target files, relative\n"
-                                                "            to the target directory"),
+                                                "            to the target directory\n"
+                                                "  mapping:  outputs the source and the relative\n"
+                                                "            target, suitable for use within an\n"
+                                                "            Appx mapping file"),
                                   QStringLiteral("option"));
     parser->addOption(listOption);
 
@@ -360,8 +363,10 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
             options->list = ListTarget;
         } else if (value == QStringLiteral("relative")) {
             options->list = ListRelative;
+        } else if (value == QStringLiteral("mapping")) {
+            options->list = ListMapping;
         } else {
-            *errorMessage = QStringLiteral("Please specify a valid option for -list (source, target, relative).");
+            *errorMessage = QStringLiteral("Please specify a valid option for -list (source, target, relative, mapping).");
             return CommandLineParseError;
         }
     }

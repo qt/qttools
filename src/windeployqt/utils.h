@@ -76,7 +76,8 @@ enum ListOption {
     ListNone = 0,
     ListSource,
     ListTarget,
-    ListRelative
+    ListRelative,
+    ListMapping
 };
 
 // Container class for JSON output
@@ -114,6 +115,9 @@ public:
                 break;
             case ListRelative:
                 list += QDir::toNativeSeparators(base.relativeFilePath(target)).toUtf8() + '\n';
+                break;
+            case ListMapping:
+                list += '"' + source.toUtf8() + "\" \"" + QDir::toNativeSeparators(base.relativeFilePath(target)).toUtf8() + "\"\n";
                 break;
             }
         }
