@@ -1381,6 +1381,9 @@ FILE *runAdb(const Options &options, const QString &arguments)
 
     adb = QString::fromLatin1("\"%1\"%2 %3").arg(adb).arg(installOption).arg(arguments);
 
+    if (options.verbose)
+        fprintf(stdout, "Running command \"%s\"\n", adb.toLocal8Bit().constData());
+
     FILE *adbCommand = popen(adb.toLocal8Bit().constData(), "r");
     if (adbCommand == 0) {
         fprintf(stderr, "Cannot start adb: %s\n", qPrintable(adb));
@@ -1394,14 +1397,33 @@ bool fetchRemoteModifications(Options *options, const QString &directory)
 {
     options->fetchedRemoteModificationDates = true;
 
-    FILE *adbCommand = runAdb(*options, QLatin1String(" ls ") + directory);
+    FILE *adbCommand = runAdb(*options, QLatin1String(" shell cat ") + directory + QLatin1String("/modification.txt"));
     if (adbCommand == 0)
         return false;
 
     char buffer[512];
+    QString qtPath;
+    while (fgets(buffer, sizeof(buffer), adbCommand) != 0)
+        qtPath += QString::fromUtf8(buffer, qstrlen(buffer));
+
+    pclose(adbCommand);
+
+    if (options->qtInstallDirectory != qtPath) {
+        adbCommand = runAdb(*options, QLatin1String(" shell rm -r ") + directory);
+        if (options->verbose) {
+            fprintf(stdout, "  -- Removing old Qt libs.\n");
+            while (fgets(buffer, sizeof(buffer), adbCommand) != 0)
+                fprintf(stdout, "%s", buffer);
+        }
+        pclose(adbCommand);
+    }
+
+    adbCommand = runAdb(*options, QLatin1String(" ls ") + directory);
+    if (adbCommand == 0)
+        return false;
+
     while (fgets(buffer, sizeof(buffer), adbCommand) != 0) {
         QByteArray line = QByteArray::fromRawData(buffer, qstrlen(buffer));
-
         if (line.count() < (3 * 8 + 3))
             continue;
         if (line.at(8) != ' '
@@ -1429,6 +1451,7 @@ bool fetchRemoteModifications(Options *options, const QString &directory)
             fprintf(stderr, "Cannot create modification timestamp.\n");
             return false;
         }
+        file.write(options->qtInstallDirectory.toUtf8());
     }
 
     return true;
