@@ -149,7 +149,7 @@ QString queryQMake(const QString &variable, QString *errorMessage);
 QStringList findSharedLibraries(const QDir &directory, Platform platform, bool debug, const QString &prefix = QString());
 
 bool updateFile(const QString &sourceFileName, const QStringList &nameFilters,
-                const QString &targetDirectory, JsonOutput *json, QString *errorMessage);
+                const QString &targetDirectory, unsigned flags, JsonOutput *json, QString *errorMessage);
 bool runProcess(const QString &binary, const QStringList &args,
                 const QString &workingDirectory = QString(),
                 unsigned long *exitCode = 0, QByteArray *stdOut = 0, QByteArray *stdErr = 0,
@@ -187,7 +187,8 @@ extern int optVerboseLevel;
 // Recursively update a file or directory, matching DirectoryFileEntryFunction against the QDir
 // to obtain the files.
 enum UpdateFileFlag  {
-    ForceUpdateFile = 0x1
+    ForceUpdateFile = 0x1,
+    SkipUpdateFile = 0x2
 };
 
 template <class DirectoryFileEntryFunction>
@@ -233,7 +234,7 @@ bool updateFile(const QString &sourceFileName,
             if (relativeSource == relativeTarget) // Exists and points to same entry: happy.
                 return true;
             QFile existingTargetFile(targetFileName);
-            if (!existingTargetFile.remove()) {
+            if (!(flags & SkipUpdateFile) && !existingTargetFile.remove()) {
                 *errorMessage = QString::fromLatin1("Cannot remove existing symbolic link %1: %2")
                                 .arg(QDir::toNativeSeparators(targetFileName), existingTargetFile.errorString());
                 return false;
@@ -253,7 +254,7 @@ bool updateFile(const QString &sourceFileName,
             QDir d(targetDirectory);
             if (optVerboseLevel)
                 std::printf("Creating %s.\n", qPrintable(targetFileName));
-            if (!d.mkdir(sourceFileInfo.fileName())) {
+            if (!(flags & SkipUpdateFile) && !d.mkdir(sourceFileInfo.fileName())) {
                 *errorMessage = QString::fromLatin1("Cannot create directory %1 under %2.")
                                 .arg(sourceFileInfo.fileName(), QDir::toNativeSeparators(targetDirectory));
                 return false;
@@ -279,7 +280,7 @@ bool updateFile(const QString &sourceFileName,
             return true;
         }
         QFile targetFile(targetFileName);
-        if (!targetFile.remove()) {
+        if (!(flags & SkipUpdateFile) && !targetFile.remove()) {
             *errorMessage = QString::fromLatin1("Cannot remove existing file %1: %2")
                             .arg(QDir::toNativeSeparators(targetFileName), targetFile.errorString());
             return false;
@@ -288,7 +289,7 @@ bool updateFile(const QString &sourceFileName,
     QFile file(sourceFileName);
     if (optVerboseLevel)
         std::printf("Updating %s.\n", qPrintable(sourceFileInfo.fileName()));
-    if (!file.copy(targetFileName)) {
+    if (!(flags & SkipUpdateFile) && !file.copy(targetFileName)) {
         *errorMessage = QString::fromLatin1("Cannot copy %1 to %2: %3")
                 .arg(QDir::toNativeSeparators(sourceFileName),
                      QDir::toNativeSeparators(targetFileName),

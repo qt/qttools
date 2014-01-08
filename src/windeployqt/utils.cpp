@@ -510,7 +510,7 @@ QString queryQMake(const QString &variable, QString *errorMessage)
 
 // Update a file or directory.
 bool updateFile(const QString &sourceFileName, const QStringList &nameFilters,
-                const QString &targetDirectory, JsonOutput *json, QString *errorMessage)
+                const QString &targetDirectory, unsigned flags, JsonOutput *json, QString *errorMessage)
 {
     const QFileInfo sourceFileInfo(sourceFileName);
     const QString targetFileName = targetDirectory + QLatin1Char('/') + sourceFileInfo.fileName();
@@ -541,7 +541,7 @@ bool updateFile(const QString &sourceFileName, const QStringList &nameFilters,
             QDir d(targetDirectory);
             if (optVerboseLevel)
                 std::printf("Creating %s.\n", qPrintable( QDir::toNativeSeparators(targetFileName)));
-            if (!d.mkdir(sourceFileInfo.fileName())) {
+            if (!(flags & SkipUpdateFile) && !d.mkdir(sourceFileInfo.fileName())) {
                 *errorMessage = QString::fromLatin1("Cannot create directory %1 under %2.")
                                 .arg(sourceFileInfo.fileName(), QDir::toNativeSeparators(targetDirectory));
                 return false;
@@ -551,13 +551,14 @@ bool updateFile(const QString &sourceFileName, const QStringList &nameFilters,
         QDir dir(sourceFileName);
         const QStringList allEntries = dir.entryList(nameFilters, QDir::Files) + dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
         foreach (const QString &entry, allEntries)
-            if (!updateFile(sourceFileName + QLatin1Char('/') + entry, nameFilters, targetFileName, json, errorMessage))
+            if (!updateFile(sourceFileName + QLatin1Char('/') + entry, nameFilters, targetFileName, flags, json, errorMessage))
                 return false;
         return true;
     } // Source is directory.
 
     if (targetFileInfo.exists()) {
-        if (targetFileInfo.lastModified() >= sourceFileInfo.lastModified()) {
+        if (!(flags & ForceUpdateFile)
+            && targetFileInfo.lastModified() >= sourceFileInfo.lastModified()) {
             if (optVerboseLevel)
                 std::printf("%s is up to date.\n", qPrintable(sourceFileInfo.fileName()));
             if (json)
@@ -565,7 +566,7 @@ bool updateFile(const QString &sourceFileName, const QStringList &nameFilters,
             return true;
         }
         QFile targetFile(targetFileName);
-        if (!targetFile.remove()) {
+        if (!(flags & SkipUpdateFile) && !targetFile.remove()) {
             *errorMessage = QString::fromLatin1("Cannot remove existing file %1: %2")
                             .arg(QDir::toNativeSeparators(targetFileName), targetFile.errorString());
             return false;
@@ -574,7 +575,7 @@ bool updateFile(const QString &sourceFileName, const QStringList &nameFilters,
     QFile file(sourceFileName);
     if (optVerboseLevel)
         std::printf("Updating %s.\n", qPrintable(sourceFileInfo.fileName()));
-    if (!file.copy(targetFileName)) {
+    if (!(flags & SkipUpdateFile) && !file.copy(targetFileName)) {
         *errorMessage = QString::fromLatin1("Cannot copy %1 to %2: %3")
                 .arg(QDir::toNativeSeparators(sourceFileName),
                      QDir::toNativeSeparators(targetFileName),

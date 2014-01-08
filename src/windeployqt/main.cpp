@@ -247,6 +247,10 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
                                     QStringLiteral("Force updating files."));
     parser->addOption(forceOption);
 
+    QCommandLineOption dryRunOption(QStringLiteral("dry-run"),
+                                    QStringLiteral("Simulation mode. Behave normally, but do not copy/update any files."));
+    parser->addOption(dryRunOption);
+
     QCommandLineOption noPluginsOption(QStringLiteral("no-plugins"),
                                        QStringLiteral("Skip plugin deployment."));
     parser->addOption(noPluginsOption);
@@ -339,6 +343,8 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
     options->quickImports = !parser->isSet(noQuickImportOption);
     if (parser->isSet(forceOption))
         options->updateFileFlags |= ForceUpdateFile;
+    if (parser->isSet(dryRunOption))
+        options->updateFileFlags |= SkipUpdateFile;
 
     for (size_t i = 0; i < qtModulesCount; ++i) {
         if (parser->isSet(*enabledModules.at(int(i)).first.data()))
@@ -626,7 +632,7 @@ static QStringList translationNameFilters(unsigned modules, const QString &prefi
 }
 
 static bool deployTranslations(const QString &sourcePath, unsigned usedQtModules,
-                               const QString &target, QString *errorMessage)
+                               const QString &target, unsigned flags, QString *errorMessage)
 {
     // Find available languages prefixes by checking on qtbase.
     QStringList prefixes;
@@ -656,8 +662,10 @@ static bool deployTranslations(const QString &sourcePath, unsigned usedQtModules
         if (optVerboseLevel)
             std::printf("Creating %s...\n", qPrintable(targetFile));
         unsigned long exitCode;
-        if (!runProcess(binary, arguments, sourcePath, &exitCode, 0, 0, errorMessage) || exitCode)
+        if (!(flags & SkipUpdateFile)
+            && (!runProcess(binary, arguments, sourcePath, &exitCode, 0, 0, errorMessage) || exitCode)) {
             return false;
+        }
     } // for prefixes.
     return true;
 }
@@ -890,7 +898,7 @@ static DeployResult deploy(const Options &options,
             if (!dir.exists(targetDirName)) {
                 if (optVerboseLevel)
                     std::printf("Creating directory %s.\n", qPrintable(targetDirName));
-                if (!dir.mkdir(targetDirName)) {
+                if (!(options.updateFileFlags & SkipUpdateFile) && !dir.mkdir(targetDirName)) {
                     std::fprintf(stderr, "Cannot create %s.\n",  qPrintable(targetDirName));
                     *errorMessage = QStringLiteral("Cannot create ") + targetDirName +  QLatin1Char('.');
                     return result;
@@ -935,7 +943,8 @@ static DeployResult deploy(const Options &options,
 
     if (options.translations
         && !deployTranslations(qmakeVariables.value(QStringLiteral("QT_INSTALL_TRANSLATIONS")),
-                               result.deployedQtLibraries, options.directory, errorMessage)) {
+                               result.deployedQtLibraries, options.directory,
+                               options.updateFileFlags, errorMessage)) {
         return result;
     }
 
