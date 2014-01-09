@@ -71,6 +71,9 @@ public:
     QList<QHelpSearchQuery> query() const;
     void setQuery(const QList<QHelpSearchQuery> &queryList);
 
+    bool isCompactMode() const;
+    Q_SLOT void setCompactMode(bool on);
+
 Q_SIGNALS:
     void search();
 

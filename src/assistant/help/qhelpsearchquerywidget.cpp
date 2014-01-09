@@ -101,6 +101,7 @@ private:
 
     QHelpSearchQueryWidgetPrivate()
         : QObject()
+        , compactMode(false)
         , simpleSearch(true)
         , searchCompleter(new CompleterModel(this), this)
     {
@@ -287,6 +288,25 @@ private:
     }
 
 private slots:
+    bool eventFilter(QObject *ob, QEvent *event)
+    {
+        if (event->type() == QEvent::KeyPress) {
+            QKeyEvent *const keyEvent = static_cast<QKeyEvent *>(event);
+            if (keyEvent->key() == Qt::Key_Down) {
+                if (simpleQueries.curQuery + 1 < simpleQueries.queries.size())
+                    nextQuery();
+                return true;
+            }
+            if (keyEvent->key() == Qt::Key_Up) {
+                if (simpleQueries.curQuery > 0)
+                    prevQuery();
+                return true;
+            }
+
+        }
+        return QObject::eventFilter(ob, event);
+    }
+
     void showHideAdvancedSearch()
     {
         if (simpleSearch) {
@@ -381,6 +401,7 @@ private slots:
 private:
     friend class QHelpSearchQueryWidget;
 
+    bool compactMode;
     bool simpleSearch;
     QLabel *simpleSearchLabel;
     QLabel *advancedSearchLabel;
@@ -441,6 +462,7 @@ QHelpSearchQueryWidget::QHelpSearchQueryWidget(QWidget *parent)
     d->simpleSearchLabel = new QLabel(this);
     d->defaultQuery = new QLineEdit(this);
     d->defaultQuery->setCompleter(&d->searchCompleter);
+    d->defaultQuery->installEventFilter(d);
     d->prevQueryButton = new QToolButton(this);
     d->prevQueryButton->setArrowType(Qt::LeftArrow);
     d->prevQueryButton->setEnabled(false);
@@ -529,6 +551,7 @@ QHelpSearchQueryWidget::QHelpSearchQueryWidget(QWidget *parent)
         d, SLOT(showHideAdvancedSearch()));
 #endif
     connect(this, SIGNAL(search()), d, SLOT(searchRequested()));
+    setCompactMode(true);
 }
 
 /*!
@@ -591,6 +614,21 @@ void QHelpSearchQueryWidget::setQuery(const QList<QHelpSearchQuery> &queryList)
             lineEdit->setText(lineEdit->text() + q.wordList.join(space) + space);
     }
     d->searchRequested();
+}
+
+bool QHelpSearchQueryWidget::isCompactMode() const
+{
+    return d->compactMode;
+}
+
+void QHelpSearchQueryWidget::setCompactMode(bool on)
+{
+    if (d->compactMode != on) {
+        d->compactMode = on;
+        d->prevQueryButton->setVisible(!on);
+        d->nextQueryButton->setVisible(!on);
+        d->simpleSearchLabel->setVisible(!on);
+    }
 }
 
 /*!
