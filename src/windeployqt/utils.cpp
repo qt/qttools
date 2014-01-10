@@ -52,6 +52,7 @@
 #if defined(Q_OS_WIN)
 #  include <QtCore/qt_windows.h>
 #  include <Shlwapi.h>
+#  include <delayimp.h>
 #else // Q_OS_WIN
 #  include <sys/wait.h>
 #  include <sys/types.h>
@@ -618,6 +619,11 @@ bool readElfExecutable(const QString &elfExecutableFileName, QString *errorMessa
 
 #ifdef Q_OS_WIN
 
+static inline QString stringFromRvaPtr(const void *rvaPtr)
+{
+    return QString::fromLocal8Bit((const char *)rvaPtr);
+}
+
 // Helper for reading out PE executable files: Find a section header for an RVA
 // (IMAGE_NT_HEADERS64, IMAGE_NT_HEADERS32).
 template <class ImageNtHeader>
@@ -709,7 +715,16 @@ inline QStringList readImportSections(const ImageNtHeader *ntHeaders, const void
     }
     QStringList result;
     for ( ; importDesc->Name; ++importDesc)
-        result.push_back(QString::fromLocal8Bit((const char *)rvaToPtr(importDesc->Name, ntHeaders, base)));
+        result.push_back(stringFromRvaPtr(rvaToPtr(importDesc->Name, ntHeaders, base)));
+
+    // Read delay-loaded DLLs, see http://msdn.microsoft.com/en-us/magazine/cc301808.aspx .
+    // Check on grAttr bit 1 whether this is the format using RVA's > VS 6
+    if (const DWORD delayedImportsStartRVA = ntHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT].VirtualAddress) {
+        const ImgDelayDescr *delayedImportDesc = (const ImgDelayDescr *)rvaToPtr(delayedImportsStartRVA, ntHeaders, base);
+        for ( ; delayedImportDesc->rvaDLLName && (delayedImportDesc->grAttrs & 1); ++delayedImportDesc)
+            result.push_back(stringFromRvaPtr(rvaToPtr(delayedImportDesc->rvaDLLName, ntHeaders, base)));
+    }
+
     return result;
 }
 
