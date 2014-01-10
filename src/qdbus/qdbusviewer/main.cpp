@@ -82,7 +82,8 @@ int main(int argc, char *argv[])
 
     QMenu *fileMenu = mw.menuBar()->addMenu(QObject::tr("&File"));
     QAction *quitAction = fileMenu->addAction(QObject::tr("&Quit"), &mw, SLOT(close()));
-    Q_UNUSED(quitAction);
+    quitAction->setShortcut(QKeySequence::Quit);
+    quitAction->setMenuRole(QAction::QuitRole);
 
     QMenu *helpMenu = mw.menuBar()->addMenu(QObject::tr("&Help"));
     QAction *aboutAction = helpMenu->addAction(QObject::tr("&About"));
