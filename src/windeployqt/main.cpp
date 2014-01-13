@@ -52,7 +52,7 @@
 #include <QtCore/QCommandLineOption>
 #include <QtCore/QVector>
 
-#include <cstdio>
+#include <iostream>
 
 QT_BEGIN_NAMESPACE
 
@@ -644,8 +644,8 @@ static bool deployTranslations(const QString &sourcePath, unsigned usedQtModules
        prefixes.push_back(qmFile);
     }
     if (prefixes.isEmpty()) {
-        fprintf(stderr, "Warning: Could not find any translations in %s (developer build?)\n.",
-                qPrintable(QDir::toNativeSeparators(sourcePath)));
+        std::wcerr << "Warning: Could not find any translations in "
+                   << QDir::toNativeSeparators(sourcePath) << " (developer build?)\n.";
         return true;
     }
     // Run lconvert to concatenate all files into a single named "qt_<prefix>.qm" in the application folder
@@ -660,7 +660,7 @@ static bool deployTranslations(const QString &sourcePath, unsigned usedQtModules
         foreach (const QString &qmFile, sourceDir.entryList(translationNameFilters(usedQtModules, prefix)))
             arguments.append(qmFile);
         if (optVerboseLevel)
-            std::printf("Creating %s...\n", qPrintable(targetFile));
+            std::wcout << "Creating " << targetFile << "...\n";
         unsigned long exitCode;
         if (!(flags & SkipUpdateFile)
             && (!runProcess(binary, arguments, sourcePath, &exitCode, 0, 0, errorMessage) || exitCode)) {
@@ -719,7 +719,7 @@ static DeployResult deploy(const Options &options,
     const int version = qtVersion(qmakeVariables);
 
     if (optVerboseLevel > 1)
-        std::printf("Qt binaries in %s\n", qPrintable(QDir::toNativeSeparators(qtBinDir)));
+        std::wcout << "Qt binaries in " << QDir::toNativeSeparators(qtBinDir) << '\n';
 
     QStringList dependentQtLibs;
     bool isDebug;
@@ -737,11 +737,12 @@ static DeployResult deploy(const Options &options,
                                 || (options.additionalLibraries & QtQmlModule));
 
     if (optVerboseLevel) {
-        std::printf("%s: %ubit, %s executable", qPrintable(QDir::toNativeSeparators(options.binary)),
-                    wordSize, isDebug ? "debug" : "release");
+        std::wcout << QDir::toNativeSeparators(options.binary)
+                   << wordSize << "bit, " << (isDebug ? "debug" : "release")
+                   << QDir::toNativeSeparators(options.binary) << " executable";
         if (usesQml2)
-            std::fputs("[QML]", stdout);
-        std::fputc('\n', stdout);
+            std::wcout << "[QML]";
+        std::wcout << '\n';
     }
 
     if (dependentQtLibs.isEmpty()) {
@@ -763,7 +764,7 @@ static DeployResult deploy(const Options &options,
                 if (index >= 0)  {
                     const QString icuVersion = icuLibs.front().mid(index, numberExpression.matchedLength());
                     if (optVerboseLevel > 1)
-                        std::printf("Adding ICU version %s\n", qPrintable(icuVersion));
+                        std::wcout << "Adding ICU version " << icuVersion << '\n';
                     icuLibs.push_back(QStringLiteral("icudt") + icuVersion + QLatin1String(windowsSharedLibrarySuffix));
                 }
                 foreach (const QString &icuLib, icuLibs) {
@@ -789,7 +790,7 @@ static DeployResult deploy(const Options &options,
         }
         foreach (const QString &qmlDirectory, qmlDirectories) {
             if (optVerboseLevel >= 1)
-                std::printf("Scanning %s:\n", qPrintable(QDir::toNativeSeparators(qmlDirectory)));
+                std::wcout << "Scanning " << QDir::toNativeSeparators(qmlDirectory) << ":\n";
             const QmlImportScanResult scanResult = runQmlImportScanner(qmlDirectory, qmakeVariables.value(QStringLiteral("QT_INSTALL_QML")), options.platform, isDebug, errorMessage);
             if (!scanResult.ok)
                 return result;
@@ -800,13 +801,15 @@ static DeployResult deploy(const Options &options,
                     return result;
             }
             if (optVerboseLevel >= 1) {
-                std::fputs("QML imports:\n", stdout);
-                foreach (const QmlImportScanResult::Module &mod, qmlScanResult.modules)
-                    std::printf("  '%s' %s\n", qPrintable(mod.name), qPrintable(QDir::toNativeSeparators(mod.sourcePath)));
+                std::wcout << "QML imports:\n";
+                foreach (const QmlImportScanResult::Module &mod, qmlScanResult.modules) {
+                    std::wcout << "  '" << mod.name << "' "
+                               << QDir::toNativeSeparators(mod.sourcePath) << '\n';
+                }
                 if (optVerboseLevel >= 2) {
-                std::fputs("QML plugins:\n", stdout);
-                foreach (const QString &p, qmlScanResult.plugins)
-                    std::printf("  %s\n",  qPrintable(QDir::toNativeSeparators(p)));
+                    std::wcout << "QML plugins:\n";
+                    foreach (const QString &p, qmlScanResult.plugins)
+                        std::wcout << "  " << QDir::toNativeSeparators(p) << '\n';
                 }
             }
         }
@@ -831,16 +834,15 @@ static DeployResult deploy(const Options &options,
             deployedQtLibraries.push_back(libraryPath(libraryLocation, qtModuleEntries[i].libraryName, options.platform, isDebug));
 
     if (optVerboseLevel >= 1) {
-        std::printf("Direct dependencies: %s\nAll dependencies   : %s\nTo be deployed     : %s\n",
-                    formatQtModules(result.directlyUsedQtLibraries).constData(),
-                    formatQtModules(result.usedQtLibraries).constData(),
-                    formatQtModules(result.deployedQtLibraries).constData());
+        std::wcout << "Direct dependencies: " << formatQtModules(result.directlyUsedQtLibraries).constData()
+                   << "\nAll dependencies   : " << formatQtModules(result.usedQtLibraries).constData()
+                   << "\nTo be deployed     : " << formatQtModules(result.deployedQtLibraries).constData() << '\n';
     }
 
     const QStringList plugins = findQtPlugins(result.deployedQtLibraries, qmakeVariables.value(QStringLiteral("QT_INSTALL_PLUGINS")),
                                               isDebug, options.platform, &platformPlugin);
     if (optVerboseLevel > 1)
-        std::printf("Plugins: %s\n", qPrintable(plugins.join(QLatin1Char(','))));
+        std::wcout << "Plugins: " << plugins.join(QLatin1Char(',')) << '\n';
 
     if ((result.deployedQtLibraries & QtGuiModule) && platformPlugin.isEmpty()) {
         *errorMessage =QStringLiteral("Unable to find the platform plugin.");
@@ -863,7 +865,7 @@ static DeployResult deploy(const Options &options,
             if (options.systemD3dCompiler && options.platform != WinPhoneArm && options.platform != WinPhoneIntel) {
                 const QString d3dCompiler = findD3dCompiler(options.platform, wordSize);
                 if (d3dCompiler.isEmpty()) {
-                    std::fprintf(stderr, "Warning: Cannot find any version of the d3dcompiler DLL.\n");
+                    std::wcerr << "Warning: Cannot find any version of the d3dcompiler DLL.\n";
                 } else {
                     deployedQtLibraries.push_back(d3dCompiler);
                 }
@@ -897,9 +899,9 @@ static DeployResult deploy(const Options &options,
             const QString targetDirName = plugin.section(slash, -2, -2);
             if (!dir.exists(targetDirName)) {
                 if (optVerboseLevel)
-                    std::printf("Creating directory %s.\n", qPrintable(targetDirName));
+                    std::wcout << "Creating directory " << targetDirName << ".\n";
                 if (!(options.updateFileFlags & SkipUpdateFile) && !dir.mkdir(targetDirName)) {
-                    std::fprintf(stderr, "Cannot create %s.\n",  qPrintable(targetDirName));
+                    std::wcerr << "Cannot create " << targetDirName << ".\n";
                     *errorMessage = QStringLiteral("Cannot create ") + targetDirName +  QLatin1Char('.');
                     return result;
                 }
@@ -920,8 +922,9 @@ static DeployResult deploy(const Options &options,
             foreach (const QmlImportScanResult::Module &module, qmlScanResult.modules) {
                 const QString installPath = module.installPath(options.directory);
                 if (optVerboseLevel > 1)
-                    std::printf("Installing: '%s' from %s to %s\n",
-                                qPrintable(module.name), qPrintable(module.sourcePath), qPrintable(QDir::toNativeSeparators(installPath)));
+                    std::wcout << "Installing: '" << module.name
+                               << "' from " << module.sourcePath << " to "
+                               << QDir::toNativeSeparators(installPath) << '\n';
                 if (installPath != options.directory && !createDirectory(installPath, errorMessage))
                     return result;
                 if (!updateFile(module.sourcePath, qmlFileEntryFunction, installPath, options.updateFileFlags, options.json, errorMessage))
@@ -984,7 +987,7 @@ int main(int argc, char **argv)
         QString errorMessage;
         const int result = parseArguments(QCoreApplication::arguments(), &parser, &options, &errorMessage);
         if (result & CommandLineParseError)
-            std::fprintf(stderr, "%s\n\n", qPrintable(errorMessage));
+            std::wcerr << errorMessage << "\n\n";
         if (result & CommandLineParseHelpRequested)
             std::fputs(qPrintable(helpText(parser)), stdout);
         if (result & CommandLineParseError)
@@ -994,23 +997,23 @@ int main(int argc, char **argv)
     }
 
     if (qmakeVariables.isEmpty() || xSpec.isEmpty() || !qmakeVariables.contains(QStringLiteral("QT_INSTALL_BINS"))) {
-        std::fprintf(stderr, "Unable to query qmake: %s\n", qPrintable(errorMessage));
+        std::wcerr << "Unable to query qmake: " << errorMessage << '\n';
         return 1;
     }
 
     if (options.platform == UnknownPlatform) {
-        std::fprintf(stderr, "Unsupported platform %s\n", qPrintable(xSpec));
+        std::wcerr << "Unsupported platform " << xSpec << '\n';
         return 1;
     }
 
     // Create directories
     if (!createDirectory(options.directory, &errorMessage)) {
-        std::fprintf(stderr, "%s\n", qPrintable(errorMessage));
+        std::wcerr << errorMessage << '\n';
         return 1;
     }
     if (!options.libraryDirectory.isEmpty() && options.libraryDirectory != options.directory
         && !createDirectory(options.libraryDirectory, &errorMessage)) {
-        std::fprintf(stderr, "%s\n", qPrintable(errorMessage));
+        std::wcerr << errorMessage << '\n';
         return 1;
     }
 
@@ -1020,7 +1023,7 @@ int main(int argc, char **argv)
 
     const DeployResult result = deploy(options, qmakeVariables, &errorMessage);
     if (!result) {
-        std::fprintf(stderr, "%s\n", qPrintable(errorMessage));
+        std::wcerr << errorMessage << '\n';
         return 1;
     }
 
@@ -1029,9 +1032,9 @@ int main(int argc, char **argv)
             || ((result.deployedQtLibraries & QtWebKitModule)
                 && (result.directlyUsedQtLibraries & QtQuickModule)))) {
         if (optVerboseLevel)
-            std::printf("Deploying: %s...\n", webProcessC);
+            std::wcout << "Deploying: " << webProcessC << "...\n";
         if (!deployWebKit2(qmakeVariables, options, &errorMessage)) {
-            std::fprintf(stderr, "%s\n", qPrintable(errorMessage));
+            std::wcerr << errorMessage << '\n';
             return 1;
         }
     }

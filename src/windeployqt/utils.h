@@ -51,7 +51,7 @@
 #include <QtCore/QJsonObject>
 #include <QtCore/QJsonDocument>
 
-#include <cstdio>
+#include <iostream>
 
 QT_BEGIN_NAMESPACE
 
@@ -79,6 +79,16 @@ enum ListOption {
     ListRelative,
     ListMapping
 };
+
+inline std::wostream &operator<<(std::wostream &str, const QString &s)
+{
+#ifdef Q_OS_WIN
+    str << reinterpret_cast<const wchar_t *>(s.utf16());
+#else
+    str << s.toStdWString();
+#endif
+    return str;
+}
 
 // Container class for JSON output
 class JsonOutput
@@ -202,7 +212,7 @@ bool updateFile(const QString &sourceFileName,
     const QFileInfo sourceFileInfo(sourceFileName);
     const QString targetFileName = targetDirectory + QLatin1Char('/') + sourceFileInfo.fileName();
     if (optVerboseLevel > 1)
-        std::printf("Checking %s, %s\n", qPrintable(sourceFileName), qPrintable(targetFileName));
+        std::wcout << "Checking " << sourceFileName << ", " << targetFileName << '\n';
 
     if (!sourceFileInfo.exists()) {
         *errorMessage = QString::fromLatin1("%1 does not exist.").arg(QDir::toNativeSeparators(sourceFileName));
@@ -253,7 +263,7 @@ bool updateFile(const QString &sourceFileName,
         } else { // exists.
             QDir d(targetDirectory);
             if (optVerboseLevel)
-                std::printf("Creating %s.\n", qPrintable(targetFileName));
+                std::wcout << "Creating " << targetFileName << ".\n";
             if (!(flags & SkipUpdateFile) && !d.mkdir(sourceFileInfo.fileName())) {
                 *errorMessage = QString::fromLatin1("Cannot create directory %1 under %2.")
                                 .arg(sourceFileInfo.fileName(), QDir::toNativeSeparators(targetDirectory));
@@ -274,7 +284,7 @@ bool updateFile(const QString &sourceFileName,
         if (!(flags & ForceUpdateFile)
             && targetFileInfo.lastModified() >= sourceFileInfo.lastModified()) {
             if (optVerboseLevel)
-                std::printf("%s is up to date.\n", qPrintable(sourceFileInfo.fileName()));
+                std::wcout << sourceFileInfo.fileName() << " is up to date.\n";
             if (json)
                 json->addFile(sourceFileName, targetDirectory);
             return true;
@@ -288,7 +298,7 @@ bool updateFile(const QString &sourceFileName,
     } // target exists
     QFile file(sourceFileName);
     if (optVerboseLevel)
-        std::printf("Updating %s.\n", qPrintable(sourceFileInfo.fileName()));
+        std::wcout << "Updating " << sourceFileInfo.fileName() << ".\n";
     if (!(flags & SkipUpdateFile) && !file.copy(targetFileName)) {
         *errorMessage = QString::fromLatin1("Cannot copy %1 to %2: %3")
                 .arg(QDir::toNativeSeparators(sourceFileName),

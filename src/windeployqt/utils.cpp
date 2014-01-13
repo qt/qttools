@@ -63,8 +63,6 @@
 #  include <fcntl.h>
 #endif  // !Q_OS_WIN
 
-#include <cstdio>
-
 QT_BEGIN_NAMESPACE
 
 int optVerboseLevel = 1;
@@ -106,7 +104,7 @@ bool createDirectory(const QString &directory, QString *errorMessage)
         return false;
     }
     if (optVerboseLevel)
-        std::printf("Creating %s...\n", qPrintable(QDir::toNativeSeparators(directory)));
+        std::wcout << "Creating " << QDir::toNativeSeparators(directory) << "...\n";
     QDir dir;
     if (!dir.mkpath(directory)) {
         *errorMessage = QString::fromLatin1("Could not create directory %1.").
@@ -135,8 +133,8 @@ QStringList findSharedLibraries(const QDir &directory, Platform platform, bool d
             if (readPeExecutable(dllPath, &errorMessage, 0, 0, &debugDll)) {
                 matches = debugDll == debug;
             } else {
-                std::fprintf(stderr, "Warning: Unable to read %s: %s",
-                             qPrintable(QDir::toNativeSeparators(dllPath)), qPrintable(errorMessage));
+                std::wcerr << "Warning: Unable to read " << QDir::toNativeSeparators(dllPath)
+                           << ": " << errorMessage;
             }
         } // Windows
         if (matches)
@@ -281,7 +279,7 @@ bool runProcess(const QString &binary, const QStringList &args,
     foreach (const QString &a, args)
         appendToCommandLine(a, &commandLine);
     if (optVerboseLevel > 1)
-        std::printf("Running: %s\n", qPrintable(commandLine));
+        std::wcout << "Running: " << commandLine << '\n';
 
     QScopedArrayPointer<wchar_t> commandLineW(new wchar_t[commandLine.size() + 1]);
     commandLine.toWCharArray(commandLineW.data());
@@ -395,7 +393,7 @@ bool runProcess(const QString &binary, const QStringList &args,
         }
 
         if (!workingDirectory.isEmpty() && !QDir::setCurrent(workingDirectory)) {
-            std::fprintf(stderr, "Failed to change working directory to %s.\n", qPrintable(workingDirectory));
+            std::wcerr << "Failed to change working directory to " << workingDirectory << ".\n";
             ::_exit(-1);
         }
 
@@ -515,7 +513,7 @@ bool updateFile(const QString &sourceFileName, const QStringList &nameFilters,
     const QFileInfo sourceFileInfo(sourceFileName);
     const QString targetFileName = targetDirectory + QLatin1Char('/') + sourceFileInfo.fileName();
     if (optVerboseLevel > 1)
-        std::printf("Checking %s, %s\n", qPrintable(sourceFileName), qPrintable(targetFileName));
+        std::wcout << "Checking " << sourceFileName << ", " << targetFileName<< '\n';
 
     if (!sourceFileInfo.exists()) {
         *errorMessage = QString::fromLatin1("%1 does not exist.").arg(QDir::toNativeSeparators(sourceFileName));
@@ -540,7 +538,7 @@ bool updateFile(const QString &sourceFileName, const QStringList &nameFilters,
         } else { // exists.
             QDir d(targetDirectory);
             if (optVerboseLevel)
-                std::printf("Creating %s.\n", qPrintable( QDir::toNativeSeparators(targetFileName)));
+                std::wcout << "Creating " << QDir::toNativeSeparators(targetFileName) << ".\n";
             if (!(flags & SkipUpdateFile) && !d.mkdir(sourceFileInfo.fileName())) {
                 *errorMessage = QString::fromLatin1("Cannot create directory %1 under %2.")
                                 .arg(sourceFileInfo.fileName(), QDir::toNativeSeparators(targetDirectory));
@@ -560,7 +558,7 @@ bool updateFile(const QString &sourceFileName, const QStringList &nameFilters,
         if (!(flags & ForceUpdateFile)
             && targetFileInfo.lastModified() >= sourceFileInfo.lastModified()) {
             if (optVerboseLevel)
-                std::printf("%s is up to date.\n", qPrintable(sourceFileInfo.fileName()));
+                std::wcout << sourceFileInfo.fileName() << " is up to date.\n";
             if (json)
                 json->addFile(sourceFileName, targetDirectory);
             return true;
@@ -574,7 +572,7 @@ bool updateFile(const QString &sourceFileName, const QStringList &nameFilters,
     } // target exists
     QFile file(sourceFileName);
     if (optVerboseLevel)
-        std::printf("Updating %s.\n", qPrintable(sourceFileInfo.fileName()));
+        std::wcout << "Updating " << sourceFileInfo.fileName() << ".\n";
     if (!(flags & SkipUpdateFile) && !file.copy(targetFileName)) {
         *errorMessage = QString::fromLatin1("Cannot copy %1 to %2: %3")
                 .arg(QDir::toNativeSeparators(sourceFileName),
@@ -778,8 +776,8 @@ bool readPeExecutable(const QString &peExecutableFileName, QString *errorMessage
             *isDebugIn = debug;
         result = true;
         if (optVerboseLevel > 1)
-            std::printf("%s: %s %u bit, debug: %d\n", __FUNCTION__,
-                        qPrintable(peExecutableFileName), wordSize, debug);
+            std::wcout << __FUNCTION__ << ": " << peExecutableFileName
+                       << ' ' << wordSize << " bit, debug: " << debug << '\n';
     } while (false);
 
     if (fileMemory)
