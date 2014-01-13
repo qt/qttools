@@ -419,7 +419,7 @@ static inline QString helpText(const QCommandLineParser &p)
     QString result = p.helpText();
     // Replace the default-generated text which is too long by a short summary
     // explaining how to enable single libraries.
-    const int moduleStart = result.indexOf(QLatin1String("\n  --core"));
+    const int moduleStart = result.indexOf(QLatin1String("\n  --bluetooth"));
     const int argumentsStart = result.lastIndexOf(QLatin1String("\nArguments:"));
     if (moduleStart >= argumentsStart)
         return result;
