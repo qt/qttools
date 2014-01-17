@@ -81,7 +81,7 @@ class uiLoader : public QObject
         void diff(const QString&, const QString&, const QString&);
         int imgDiff(const QString fileA, const QString fileB, const QString output);
         QStringList uiFiles() const;
-    
+
         QHash<QString, QString> enginesToTest;
 
         QString framework;
@@ -99,7 +99,7 @@ class uiLoader : public QObject
         QList<QString> lsNeedBaseline;
 
         QString configPath;
-        
+
         QString pathToProgram;
 
     private slots:

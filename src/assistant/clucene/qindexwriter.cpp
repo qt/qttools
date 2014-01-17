@@ -50,7 +50,7 @@ QCLuceneIndexWriter::QCLuceneIndexWriter(const QString &path,
     : d(new QCLuceneIndexWriterPrivate())
     , analyzer(analyzer)
 {
-    d->writer = new lucene::index::IndexWriter(path, 
+    d->writer = new lucene::index::IndexWriter(path,
         analyzer.d->analyzer, create, closeDir);
 }
 
@@ -83,7 +83,7 @@ void QCLuceneIndexWriter::addIndexes(const QList<QCLuceneIndexReader*> &readers)
 {
     using namespace lucene::index;
     IndexReader** readerArray = new IndexReader*[readers.count()];
-    
+
     for (int i = 0; i < readers.count(); ++i)
         readerArray[i] = (readers.at(i))->d->reader;
 
@@ -91,7 +91,7 @@ void QCLuceneIndexWriter::addIndexes(const QList<QCLuceneIndexReader*> &readers)
     delete [] readerArray;
 }
 
-void QCLuceneIndexWriter::addDocument(QCLuceneDocument &doc, 
+void QCLuceneIndexWriter::addDocument(QCLuceneDocument &doc,
                                       QCLuceneAnalyzer &analyzer)
 {
     if (doc.d->document)

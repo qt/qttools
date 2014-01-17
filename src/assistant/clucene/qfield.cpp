@@ -65,7 +65,7 @@ QCLuceneField::QCLuceneField(const QString &name, const QString &value, int conf
     delete [] fieldValue;
 }
 
-QCLuceneField::QCLuceneField(const QString &name, QCLuceneReader *reader, 
+QCLuceneField::QCLuceneField(const QString &name, QCLuceneReader *reader,
                              int configs)
     : d(new QCLuceneFieldPrivate())
     , reader(reader)

@@ -150,7 +150,7 @@ QDesignerMetaDataBaseInterface::~QDesignerMetaDataBaseInterface()
     \sa tabOrder()
 */
 
-    
+
 /*!
     \fn bool QDesignerMetaDataBaseItemInterface::enabled() const
 

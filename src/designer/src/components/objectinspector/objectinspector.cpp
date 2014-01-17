@@ -262,7 +262,7 @@ ObjectInspector::ObjectInspectorPrivate::ObjectInspectorPrivate(QDesignerFormEdi
 
     m_treeView->setContextMenuPolicy(Qt::CustomContextMenu);
 }
-    
+
 ObjectInspector::ObjectInspectorPrivate::~ObjectInspectorPrivate()
 {
     delete m_treeView->itemDelegate();

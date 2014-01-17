@@ -87,7 +87,7 @@ void MainWindow::about()
 //! [3]
 void MainWindow::showDocumentation()
 {
-    assistant->showDocumentation("index.html");    
+    assistant->showDocumentation("index.html");
 }
 //! [3]
 

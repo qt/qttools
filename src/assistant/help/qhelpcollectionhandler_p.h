@@ -101,7 +101,7 @@ public:
     bool addFilterAttributes(const QStringList &attributes);
     QStringList filterAttributes() const;
     QStringList filterAttributes(const QString &filterName) const;
-    
+
     int registerNamespace(const QString &nspace, const QString &fileName);
     bool registerVirtualFolder(const QString &folderName, int namespaceId);
     void optimizeDatabase(const QString &fileName);

@@ -6,10 +6,10 @@ QT      += help sql testlib help
 
 DEFINES += QT_USE_USING_NAMESPACE
 
-wince*: {   
+wince*: {
    DEFINES += SRCDIR=\\\"./\\\"
    QT += network
-   addFiles.files = $$PWD/data/*.*                
+   addFiles.files = $$PWD/data/*.*
    addFiles.path = data
    clucene.files = $$QT.clucene.libs/QtCLucene*.dll
 

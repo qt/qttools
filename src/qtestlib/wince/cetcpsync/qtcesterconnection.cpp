@@ -91,12 +91,12 @@ bool QtCesterConnection::copyFileToDevice(const QString &localSource, const QStr
         qDebug() << "Could not open File!";
         return false;
     }
-    
+
     QTcpSocket* socket = 0;
     if (!_initCommand(socket, COMMAND_CREATE_FILE)) {
         END_ERROR(socket, "Could not initialized command");
     }
-    
+
     CreateFileOptions option;
     strcpy(option.fileName, qPrintable(deviceDest));
 #ifdef Q_OS_WIN
@@ -116,7 +116,7 @@ bool QtCesterConnection::copyFileToDevice(const QString &localSource, const QStr
 #endif
     option.fileSize = info.size();
     option.overwriteExisting = !failIfExists;
-    
+
     if (!_sendData(socket, (char*) &option, sizeof(option))) {
         END_ERROR(socket, "Could not send options...");
     }
@@ -124,7 +124,7 @@ bool QtCesterConnection::copyFileToDevice(const QString &localSource, const QStr
     if (!_checkResult(socket)) {
         END_ERROR(socket, "Server did not accept configuration");
     }
-    
+
     int bytesWritten = 0;
     const int bufferSize = 1024;
     QByteArray data;
@@ -159,7 +159,7 @@ bool QtCesterConnection::copyDirectoryToDevice(const QString &localSource, const
     if (!info.exists() || !info.isDir()) {
         END_ERROR(socket, "Input directory invalid");
     }
-    
+
     createDirectory(deviceDest, true);
     QDir dir(localSource);
     QFileInfoList list = dir.entryInfoList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot);
@@ -185,31 +185,31 @@ bool QtCesterConnection::copyFileFromDevice(const QString &deviceSource, const Q
     if (targetFile.exists() && failIfExists) {
         END_ERROR(socket, "Local file not supposed to be overwritten");
     }
-    
+
     if (!targetFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
         END_ERROR(socket, "Could not open local file for writing");
     }
-    
+
     if (!_initCommand(socket, COMMAND_READ_FILE)) {
         END_ERROR(socket, "Could not establish connection");
     }
-    
+
     ReadFileOptions option;
     strcpy(option.fileName, qPrintable(deviceSource));
     if (!_sendData(socket, (char*) &option, sizeof(option))) {
         END_ERROR(socket, "Could not send options");
     }
-    
+
     QByteArray data;
     if (!_receiveData(socket, data)) {
         END_ERROR(socket, "Did not receive any data");
     }
-    
+
     ReadFileReply* reply = (ReadFileReply*) data.data();
     if (!reply->fileValid) {
         END_ERROR(socket, "Requested file invalid");
     }
-    
+
     int fileSize = reply->fileSize;
     int currentSize = 0;
     // ### TODO: make a little bit more error-prone
@@ -219,12 +219,12 @@ bool QtCesterConnection::copyFileFromDevice(const QString &deviceSource, const Q
         currentSize += data.size();
         targetFile.write(data);
     } while(currentSize < fileSize);
-    
+
     _freeSocket(socket);
     targetFile.close();
     return true;
 }
- 
+
 bool QtCesterConnection::copyDirectoryFromDevice(const QString& /*deviceSource*/
                                                  , const QString& /*localDest*/
                                                  , bool /*recursive*/)
@@ -240,7 +240,7 @@ bool QtCesterConnection::copyFile(const QString &srcFile, const QString &destFil
     if (!_initCommand(socket, COMMAND_COPY_FILE)) {
         END_ERROR(socket, "Could not establish connection for copy");
     }
-    
+
     CopyFileOptions option;
     strcpy(option.from, qPrintable(srcFile));
     strcpy(option.to, qPrintable(destFile));
@@ -248,11 +248,11 @@ bool QtCesterConnection::copyFile(const QString &srcFile, const QString &destFil
     if (!_sendData(socket, (char*) &option, sizeof(option))) {
         END_ERROR(socket, "Could not send copy options");
     }
-    
+
     if (!_checkResult(socket)) {
         END_ERROR(socket, "Copy failed");
     }
-    
+
     _freeSocket(socket);
     return true;
 }
@@ -264,7 +264,7 @@ bool QtCesterConnection::copyDirectory(const QString &srcDirectory, const QStrin
     if (!_initCommand(socket, COMMAND_COPY_DIRECTORY)) {
         END_ERROR(socket, "Could not establish connection for dir copy");
     }
-    
+
     CopyDirectoryOptions option;
     strcpy(option.from, qPrintable(srcDirectory));
     strcpy(option.to, qPrintable(destDirectory));
@@ -272,11 +272,11 @@ bool QtCesterConnection::copyDirectory(const QString &srcDirectory, const QStrin
     if (!_sendData(socket, (char*) &option, sizeof(option))) {
         END_ERROR(socket, "Could not send dir copy options");
     }
-    
+
     if (!_checkResult(socket)) {
         END_ERROR(socket, "Dir Copy failed");
     }
-    
+
     _freeSocket(socket);
     return true;
 }
@@ -287,18 +287,18 @@ bool QtCesterConnection::deleteFile(const QString &fileName)
     if (!_initCommand(socket, COMMAND_DELETE_FILE)) {
         END_ERROR(socket, "Could not establish connection for file deletion");
     }
-    
+
     DeleteFileOptions option;
     strcpy(option.fileName, qPrintable(fileName));
     if (!_sendData(socket, (char*) &option, sizeof(option))) {
         END_ERROR(socket, "Could not send file options");
     }
-    
+
     if (!_checkResult(socket)) {
         //END_ERROR(socket, "File Deletion failed");
         // This is actually not an error so ignore it.
     }
-    
+
     _freeSocket(socket);
     return true;
 }
@@ -309,7 +309,7 @@ bool QtCesterConnection::deleteDirectory(const QString &directory, bool recursiv
     if (!_initCommand(socket, COMMAND_DELETE_DIRECTORY)) {
         END_ERROR(socket, "Could not establish connection for dir deletion");
     }
-    
+
     DeleteDirectoryOptions option;
     strcpy(option.dirName, qPrintable(directory));
     option.recursive = recursive;
@@ -317,12 +317,12 @@ bool QtCesterConnection::deleteDirectory(const QString &directory, bool recursiv
     if (!_sendData(socket, (char*) &option, sizeof(option))) {
         END_ERROR(socket, "Could not send dir options");
     }
-    
+
     if (!_checkResult(socket)) {
         // we do not write an error as this will fail a lot on recursive.
         END_ERROR(socket, 0);
     }
-    
+
     _freeSocket(socket);
     return true;
 }
@@ -365,19 +365,19 @@ bool QtCesterConnection::execute(QString program,
     if (!_sendData(socket, COMMAND_SUCCESS, strlen(COMMAND_SUCCESS))) {
         END_ERROR(socket, "Could not trigger startup");
     }
-    
+
     const int waitTime = 60 * 60 * 1000;
     if (!socket->waitForReadyRead(waitTime)) {
         END_ERROR(socket, "Process timed out");
     }
-    
+
     QByteArray result = socket->readAll();
     if (result != COMMAND_SUCCESS) {
         if (returnValue)
             *returnValue = -1; // just some at least
         END_ERROR(socket, "Application did not start or returned error");
     }
-    
+
     if (returnValue)
         *returnValue = 0;
     _freeSocket(socket);
@@ -388,23 +388,23 @@ bool QtCesterConnection::createDirectory(const QString &path, bool deleteBefore)
 {
     if (deleteBefore)
         deleteDirectory(path, true, true);
-    
+
     QTcpSocket* socket = 0;
     if (!_initCommand(socket, COMMAND_CREATE_DIRECTORY)) {
         END_ERROR(socket, "Could not establish connection for dir creation");
     }
-    
+
     CreateDirectoryOptions option;
     strcpy(option.dirName, qPrintable(path));
     option.recursively = true;
     if (!_sendData(socket, (char*) &option, sizeof(option))) {
         END_ERROR(socket, "Could not send dir options");
     }
-    
+
     if (!_checkResult(socket)) {
         END_ERROR(socket, "Dir creation failed");
     }
-    
+
     _freeSocket(socket);
     return true;
 }
@@ -413,29 +413,29 @@ bool QtCesterConnection::timeStampForLocalFileTime(FILETIME* fTime) const
 {
     if (!fTime)
         return false;
-    
+
     FILETIME copyTime = *fTime;
     LocalFileTimeToFileTime(&copyTime, &copyTime);
-    
+
     QTcpSocket* socket = 0;
     if (!_initCommand(socket, COMMAND_TIME_STAMP)) {
         END_ERROR(socket, "Could not establish time stamp connection");
     }
-    
+
     if (!_sendData(socket, (char*) &copyTime, sizeof(copyTime))) {
         END_ERROR(socket, "Could not send stamp time");
     }
-    
+
     QByteArray data;
     if (!_receiveData(socket, data)) {
         END_ERROR(socket, "Did not receive time stamp or connection interrupted");
     }
-    
+
     copyTime = *((FILETIME*)data.data());
     if (copyTime.dwLowDateTime == -1 && copyTime.dwHighDateTime == -1) {
         END_ERROR(socket, "remote Time stamp failed!");
     }
-    
+
     *fTime = copyTime;
     _freeSocket(socket);
     return true;
@@ -445,29 +445,29 @@ bool QtCesterConnection::fileCreationTime(const QString &fileName, FILETIME* dev
 {
     if (!deviceCreationTime)
         return false;
-    
+
     QTcpSocket* socket = 0;
     if (!_initCommand(socket, COMMAND_FILE_TIME)) {
         END_ERROR(socket, "Could not establish connection for file time access");
     }
-    
+
     FileTimeOptions option;
     strcpy(option.fileName, qPrintable(fileName));
     if (!_sendData(socket, (char*) &option, sizeof(option))) {
         END_ERROR(socket, "Could not send file time name");
     }
-    
+
     QByteArray data;
     if (!_receiveData(socket, data)) {
         END_ERROR(socket, "File Time request failed");
     }
-    
+
     FILETIME* resultTime = (FILETIME*) data.data();
     if (resultTime->dwLowDateTime == -1 && resultTime->dwHighDateTime == -1) {
         END_ERROR(socket, 0);
         debugOutput("Could not access file time", 0);
     }
-    
+
     *deviceCreationTime = *resultTime;
     _freeSocket(socket);
     return true;
@@ -482,7 +482,7 @@ bool QtCesterConnection::_createSocket(QTcpSocket*& result) const
         exit(0);
     }
     sock->connectToHost(QHostAddress(QString(ipAddress)), 12145);
-    
+
     if (!sock->waitForConnected()) {
         qDebug() << "connection timeout...";
         result = NULL;
@@ -514,8 +514,8 @@ bool QtCesterConnection::_initCommand(QTcpSocket*& sock, const char* command) co
     if (!_createSocket(socket)) {
         END_ERROR(socket, "Could not connect to server");
     }
-    
-    if (!_sendData(socket, command, strlen(command)) || 
+
+    if (!_sendData(socket, command, strlen(command)) ||
         !_checkResult(socket)) {
         END_ERROR(socket, "Cound not send command");
     }

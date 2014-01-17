@@ -55,11 +55,11 @@ class RemoteControl : public QMainWindow
 public:
     RemoteControl(QWidget *parent = 0, Qt::WindowFlags flags = 0);
     ~RemoteControl();
-    
+
 private:
     Ui::RemoteControlClass ui;
     QProcess *process;
-    
+
 private slots:
     void on_launchButton_clicked();
     void on_actionQuit_triggered();

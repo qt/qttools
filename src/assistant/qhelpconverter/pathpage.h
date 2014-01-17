@@ -56,7 +56,7 @@ public:
     void setPath(const QString &path);
     QStringList paths() const;
     QStringList filters() const;
-        
+
 private slots:
     void addPath();
     void removePath();

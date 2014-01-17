@@ -98,7 +98,7 @@ bool OutputPage::checkFile(const QString &fileName, const QString &title)
     QFile fi(m_path + QDir::separator() + fileName);
     if (!fi.exists())
         return true;
-    
+
     if (QMessageBox::warning(this, title,
         tr("The specified file %1 already exist.\n\nDo you want to remove it?")
         .arg(fileName), tr("Remove"), tr("Cancel")) == 0) {

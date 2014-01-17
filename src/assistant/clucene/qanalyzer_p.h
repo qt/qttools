@@ -76,7 +76,7 @@ public:
     virtual ~QCLuceneAnalyzer();
 
     qint32 positionIncrementGap(const QString &fieldName) const;
-    QCLuceneTokenStream tokenStream(const QString &fieldName, 
+    QCLuceneTokenStream tokenStream(const QString &fieldName,
                                     const QCLuceneReader &reader) const;
 
 protected:

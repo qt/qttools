@@ -177,7 +177,7 @@ private slots:
 
 protected:
     // Fit the widget in case the orientation changes (transposing screensize)
-    virtual void fitWidget(const QSize &size);    
+    virtual void fitWidget(const QSize &size);
     //  Calculate the complete transformation for the skin
     // (base class implementation provides rotation).
     virtual QMatrix skinTransform() const;
@@ -193,7 +193,7 @@ private:
 };
 
 PreviewDeviceSkin::PreviewDeviceSkin(const DeviceSkinParameters &parameters, QWidget *parent) :
-    DeviceSkin(parameters, parent),    
+    DeviceSkin(parameters, parent),
     m_screenSize(parameters.screenSize()),
     m_direction(DirectionUp),
     m_directionUpAction(0),
@@ -257,7 +257,7 @@ void PreviewDeviceSkin::slotPopupMenu()
         connect(directionGroup, SIGNAL(triggered(QAction*)), this, SLOT(slotDirection(QAction*)));
         directionGroup->setExclusive(true);
         m_directionUpAction = createCheckableActionIntData(tr("&Portrait"), DirectionUp, m_direction, directionGroup, this);
-	//: Rotate form preview counter-clockwise
+        //: Rotate form preview counter-clockwise
         m_directionLeftAction = createCheckableActionIntData(tr("Landscape (&CCW)"), DirectionLeft, m_direction, directionGroup, this);
         //: Rotate form preview clockwise
         m_directionRightAction = createCheckableActionIntData(tr("&Landscape (CW)"), DirectionRight, m_direction, directionGroup, this);
@@ -299,7 +299,7 @@ void PreviewDeviceSkin::fitWidget(const QSize &size)
 
 QMatrix PreviewDeviceSkin::skinTransform() const
 {
-    QMatrix newTransform;    
+    QMatrix newTransform;
     switch (m_direction)  {
         case DirectionUp:
             break;
@@ -352,7 +352,7 @@ signals:
     void zoomPercentChanged(int);
 
 protected:
-    virtual void populateContextMenu(QMenu *m);    
+    virtual void populateContextMenu(QMenu *m);
     virtual QMatrix skinTransform() const;
     virtual void fitWidget(const QSize &size);
 
@@ -389,7 +389,7 @@ static inline QSize scaleSize(int zoomPercent, const QSize &size)
 }
 
 void ZoomablePreviewDeviceSkin::setPreview(QWidget *formWidget)
-{    
+{
     m_zoomWidget->setWidget(formWidget);
     m_zoomWidget->resize(scaleSize(zoomPercent(), screenSize()));
 }
@@ -408,7 +408,7 @@ void ZoomablePreviewDeviceSkin::setZoomPercent(int zp)
     if (m_zoomMenu->zoom() != zp)
         m_zoomMenu->setZoom(zp);
 
-    QApplication::setOverrideCursor(Qt::WaitCursor);    
+    QApplication::setOverrideCursor(Qt::WaitCursor);
     m_zoomWidget->setZoom(zp);
     setTransform(skinTransform());
     QApplication::restoreOverrideCursor();

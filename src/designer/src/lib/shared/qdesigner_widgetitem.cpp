@@ -304,7 +304,7 @@ const QLayout *QDesignerWidgetItem::containingLayout() const
     return m_cachedContainingLayout;
 }
 
-void QDesignerWidgetItem::layoutChanged()        
+void QDesignerWidgetItem::layoutChanged()
 {
     if (DebugWidgetItem)
         qDebug() << Q_FUNC_INFO;
@@ -312,7 +312,7 @@ void QDesignerWidgetItem::layoutChanged()
 }
 
 bool QDesignerWidgetItem::eventFilter(QObject * /* watched */, QEvent *event)
-{    
+{
     if (event->type() == QEvent::ParentChange)
         layoutChanged();
     return false;

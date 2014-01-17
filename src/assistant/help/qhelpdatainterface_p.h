@@ -85,7 +85,7 @@ struct QHELP_EXPORT QHelpDataIndexItem {
     QString name;
     QString identifier;
     QString reference;
-    
+
     bool operator==(const QHelpDataIndexItem & other) const;
 };
 

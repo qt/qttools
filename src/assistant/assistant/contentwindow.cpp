@@ -176,7 +176,7 @@ void ContentWindow::showContextMenu(const QPoint &pos)
     QAction *newTab = menu.addAction(tr("Open Link in New Tab"));
     if (!HelpViewer::canOpenPage(itm->url().path()))
         newTab->setEnabled(false);
-    
+
     menu.move(m_contentWidget->mapToGlobal(pos));
 
     QAction *action = menu.exec();

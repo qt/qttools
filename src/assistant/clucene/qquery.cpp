@@ -73,10 +73,10 @@ QString QCLuceneQuery::getQueryName() const
 
 bool QCLuceneQuery::instanceOf(const QString &other) const
 {
-	if (other == getQueryName())
-		return true;
+    if (other == getQueryName())
+        return true;
 
-	return false;
+    return false;
 }
 
 QString QCLuceneQuery::toString(const QString &field) const
@@ -160,7 +160,7 @@ QCLuceneTerm QCLuceneRangeQuery::getUpperTerm() const
 
 bool QCLuceneRangeQuery::isInclusive() const
 {
-    lucene::search::RangeQuery *query = 
+    lucene::search::RangeQuery *query =
         static_cast<lucene::search::RangeQuery*> (d->query);
 
     if (query == 0)
@@ -171,7 +171,7 @@ bool QCLuceneRangeQuery::isInclusive() const
 
 QString QCLuceneRangeQuery::getField() const
 {
-    lucene::search::RangeQuery *query = 
+    lucene::search::RangeQuery *query =
         static_cast<lucene::search::RangeQuery*> (d->query);
 
     if (query == 0)
@@ -222,7 +222,7 @@ QString QCLuceneBooleanQuery::getClassName()
 
 quint32 QCLuceneBooleanQuery::getClauseCount() const
 {
-    lucene::search::BooleanQuery *query = 
+    lucene::search::BooleanQuery *query =
         static_cast<lucene::search::BooleanQuery*> (d->query);
 
     if (query == 0)
@@ -233,7 +233,7 @@ quint32 QCLuceneBooleanQuery::getClauseCount() const
 
 quint32 QCLuceneBooleanQuery::getMaxClauseCount() const
 {
-    lucene::search::BooleanQuery *query = 
+    lucene::search::BooleanQuery *query =
         static_cast<lucene::search::BooleanQuery*> (d->query);
 
     if (query == 0)
@@ -244,7 +244,7 @@ quint32 QCLuceneBooleanQuery::getMaxClauseCount() const
 
 void QCLuceneBooleanQuery::setMaxClauseCount(quint32 maxClauseCount)
 {
-    lucene::search::BooleanQuery *query = 
+    lucene::search::BooleanQuery *query =
         static_cast<lucene::search::BooleanQuery*> (d->query);
 
     if (query == 0)
@@ -254,14 +254,14 @@ void QCLuceneBooleanQuery::setMaxClauseCount(quint32 maxClauseCount)
 }
 
 void QCLuceneBooleanQuery::add(QCLuceneQuery *query, bool required, bool prohibited)
-{ 
-    add(query, false, required, prohibited); 
+{
+    add(query, false, required, prohibited);
 }
 
-void QCLuceneBooleanQuery::add(QCLuceneQuery *query, bool delQuery, 
+void QCLuceneBooleanQuery::add(QCLuceneQuery *query, bool delQuery,
                                bool required, bool prohibited)
 {
-    lucene::search::BooleanQuery *booleanQuery = 
+    lucene::search::BooleanQuery *booleanQuery =
         static_cast<lucene::search::BooleanQuery*> (d->query);
 
     if (booleanQuery == 0)
@@ -294,7 +294,7 @@ QString QCLucenePhraseQuery::getClassName()
 
 qint32 QCLucenePhraseQuery::getSlop() const
 {
-    lucene::search::PhraseQuery *phraseQuery = 
+    lucene::search::PhraseQuery *phraseQuery =
         static_cast<lucene::search::PhraseQuery*> (d->query);
 
     if (phraseQuery == 0)
@@ -305,7 +305,7 @@ qint32 QCLucenePhraseQuery::getSlop() const
 
 void QCLucenePhraseQuery::setSlop(const qint32 slop)
 {
-    lucene::search::PhraseQuery *phraseQuery = 
+    lucene::search::PhraseQuery *phraseQuery =
         static_cast<lucene::search::PhraseQuery*> (d->query);
 
     if (phraseQuery == 0)
@@ -316,7 +316,7 @@ void QCLucenePhraseQuery::setSlop(const qint32 slop)
 
 void QCLucenePhraseQuery::addTerm(const QCLuceneTerm &term)
 {
-    lucene::search::PhraseQuery *phraseQuery = 
+    lucene::search::PhraseQuery *phraseQuery =
         static_cast<lucene::search::PhraseQuery*> (d->query);
 
     if (phraseQuery == 0)
@@ -328,7 +328,7 @@ void QCLucenePhraseQuery::addTerm(const QCLuceneTerm &term)
 
 void QCLucenePhraseQuery::addTerm(const QCLuceneTerm &term, qint32 position)
 {
-    lucene::search::PhraseQuery *phraseQuery = 
+    lucene::search::PhraseQuery *phraseQuery =
         static_cast<lucene::search::PhraseQuery*> (d->query);
 
     if (phraseQuery == 0)
@@ -341,7 +341,7 @@ void QCLucenePhraseQuery::addTerm(const QCLuceneTerm &term, qint32 position)
 
 QString QCLucenePhraseQuery::getFieldName() const
 {
-    lucene::search::PhraseQuery *phraseQuery = 
+    lucene::search::PhraseQuery *phraseQuery =
         static_cast<lucene::search::PhraseQuery*> (d->query);
 
     if (phraseQuery == 0)

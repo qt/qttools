@@ -181,7 +181,7 @@ void QAxWidgetPropertySheet::reloadPropertySheet(const struct SavedProperties &p
             foundGeometry = true;
             continue;
         }
-        if (name == QLatin1String(controlPropertyName))	 {
+        if (name == QLatin1String(controlPropertyName))  {
             sheet->setChanged(index, !i.value().toString().isEmpty());
             continue;
         }

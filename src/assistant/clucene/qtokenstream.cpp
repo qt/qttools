@@ -61,7 +61,7 @@ void QCLuceneTokenStream::close()
 
 bool QCLuceneTokenStream::next(QCLuceneToken &token)
 {
-    return d->tokenStream->next(token.d->token);   
+    return d->tokenStream->next(token.d->token);
 }
 
 QT_END_NAMESPACE

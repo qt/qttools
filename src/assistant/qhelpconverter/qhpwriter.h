@@ -60,7 +60,7 @@ public:
     void setCustomFilters(const QList<CustomFilter> filters);
     void setFiles(const QStringList &files);
     void generateIdentifiers(IdentifierPrefix prefix,
-        const QString prefixString = QString()); 
+        const QString prefixString = QString());
     bool writeFile(const QString &fileName);
 
 private:

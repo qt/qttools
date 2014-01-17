@@ -546,13 +546,13 @@ QSet<int> QHelpDBReader::indexIds(const QStringList &attributes) const
             "a.FilterAttributeId=b.Id AND b.Name='%1'"))
             .arg(attributes.at(i)));
     }
-    
+
     if (!m_query->exec(query))
             return ids;
 
     while (m_query->next())
         ids.insert(m_query->value(0).toInt());
-    
+
     return ids;
 }
 
@@ -573,7 +573,7 @@ bool QHelpDBReader::createAttributesCache(const QStringList &attributes,
 
     if (m_viewAttributes.count() || needUpdate) {
         m_viewAttributes.clear();
-        m_indicesCache = indexIds;        
+        m_indicesCache = indexIds;
     }
     foreach (const QString &s, attributes)
         m_viewAttributes.insert(s);

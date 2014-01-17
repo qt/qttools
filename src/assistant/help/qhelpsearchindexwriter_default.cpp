@@ -207,7 +207,7 @@ void QHelpSearchIndexWriter::run()
     const QLatin1String key("DefaultSearchNamespaces");
     const QString collectionFile(this->m_collectionFile);
     const QString indexPath = m_indexFilesFolder;
-    
+
     mutex.unlock();
 
     QHelpEngineCore engine(collectionFile, 0);
@@ -255,7 +255,7 @@ void QHelpSearchIndexWriter::run()
                 // get rid of duplicated files
                 if (url.hasFragment())
                     url.setFragment(QString());
-                
+
                 QString s = url.toString();
                 if (s.endsWith(QLatin1String(".html"))
                     || s.endsWith(QLatin1String(".htm"))

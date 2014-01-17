@@ -64,7 +64,7 @@ public:
     // For "intelligent deployment" we need to investigate on filetimes on the device
     virtual bool timeStampForLocalFileTime(FILETIME*) const = 0;
     virtual bool fileCreationTime(const QString &fileName, FILETIME*) const = 0;
-    
+
     // These functions only work on files existing on the device
     virtual bool copyFile(const QString&, const QString&, bool failIfExists = false) = 0;
     virtual bool copyDirectory(const QString&, const QString&, bool recursive = true) = 0;

@@ -73,7 +73,7 @@ private slots:
     void appFontSettingChanged(int index);
     void browserFontSettingToggled(bool on);
     void browserFontSettingChanged(int index);
-    
+
     void setBlankPage();
     void setCurrentPage();
     void setDefaultPage();

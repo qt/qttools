@@ -71,9 +71,9 @@ QVariant HelpBrowser::loadResource(int type, const QUrl &name)
     QByteArray ba;
     if (type < 4 && m_helpEngine) {
         QUrl url(name);
-        if (name.isRelative())            
+        if (name.isRelative())
             url = source().resolved(url);
-        ba = m_helpEngine->fileData(url);        
+        ba = m_helpEngine->fileData(url);
     }
     return ba;
 }

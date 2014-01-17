@@ -52,7 +52,7 @@ QhcpWriter::QhcpWriter()
 
 void QhcpWriter::setHelpProjectFile(const QString &qhpFile)
 {
-    m_qhpFile = qhpFile;    
+    m_qhpFile = qhpFile;
 }
 
 void QhcpWriter::setProperties(const QMap<QString, QString> props)
@@ -70,7 +70,7 @@ bool QhcpWriter::writeFile(const QString &fileName)
     QFile out(fileName);
     if (!out.open(QIODevice::WriteOnly))
         return false;
-    
+
     setDevice(&out);
     writeStartDocument();
     writeStartElement(QLatin1String("QHelpCollectionProject"));
@@ -127,7 +127,7 @@ void QhcpWriter::writeDocuments()
     out.append(QLatin1String(".qch"));
 
     writeStartElement(QLatin1String("docFiles"));
-    
+
     writeStartElement(QLatin1String("generate"));
     writeStartElement(QLatin1String("file"));
     writeTextElement(QLatin1String("input"), m_qhpFile);

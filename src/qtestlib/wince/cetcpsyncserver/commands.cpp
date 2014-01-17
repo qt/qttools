@@ -82,7 +82,7 @@ void AbstractCommand::commandFinished()
     debugOutput(1, "AbstractCommand::commandFinished()NOT SUPPOSED TO BE HERE");
 }
 
-void AbstractCommand::setSocket(QTcpSocket* socket) 
+void AbstractCommand::setSocket(QTcpSocket* socket)
 {
     debugOutput(0, "AbstractCommand::setSocket()");
     Q_ASSERT(socket);
@@ -91,9 +91,9 @@ void AbstractCommand::setSocket(QTcpSocket* socket)
     reportSuccess();
 }
 
-QTcpSocket* AbstractCommand::socket() 
-{ 
-    return m_socket; 
+QTcpSocket* AbstractCommand::socket()
+{
+    return m_socket;
 }
 
 void AbstractCommand::_readData()
@@ -158,7 +158,7 @@ void CreateFileCommand::dataReceived(QByteArray &data)
             m_file.close();
         }
     }
-    
+
     if (successful)
         reportSuccess();
     else
@@ -205,7 +205,7 @@ void CreateDirectoryCommand::dataReceived(QByteArray &data)
         success = dir.mkpath(options->dirName);
     else
         success = dir.mkdir(options->dirName);
-    
+
     if (success)
         reportSuccess();
     else
@@ -246,7 +246,7 @@ void CopyFileCommand::dataReceived(QByteArray &data)
     if (success)
         if (!QFile::copy(options->from , options->to))
             success = false;
-    
+
     if (success)
         reportSuccess();
     else
@@ -423,7 +423,7 @@ ExecuteCommand::~ExecuteCommand()
 void ExecuteCommand::dataReceived(QByteArray &data)
 {
     debugOutput(0, "ExecuteCommand::dataReceived()");
-    
+
     if (m_argumentCount == 0) {
         ExecuteOptions* options = (ExecuteOptions*) data.data();
         if (!QFileInfo(options->appName).exists()) {
@@ -431,7 +431,7 @@ void ExecuteCommand::dataReceived(QByteArray &data)
             reportError();
             return;
         }
-    
+
         m_program = QLatin1String(options->appName);
         m_argumentCount = options->argumentsCount;
         m_waitFinished = options->waitForFinished;
@@ -610,7 +610,7 @@ void FileTimeCommand::dataReceived(QByteArray &data)
     FILETIME resultTime;
     resultTime.dwLowDateTime = -1;
     resultTime.dwHighDateTime = -1;
-    
+
 #ifdef Q_OS_WIN
     QString fileName = QLatin1String(option->fileName);
     HANDLE deviceHandle = CreateFile(fileName.utf16(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, 0);
@@ -653,10 +653,10 @@ void TimeStampCommand::dataReceived(QByteArray &data)
     FILETIME resultTime;
     resultTime.dwLowDateTime = -1;
     resultTime.dwHighDateTime = -1;
-    
+
 #ifdef Q_OS_WIN
     FILETIME stampTime = *((FILETIME*)data.data());
-    
+
     QString tmpFile = QString::fromLatin1("\\qt_tmp_ftime_convert");
     HANDLE remoteHandle = CreateFile(tmpFile.utf16(), GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
     if (remoteHandle != INVALID_HANDLE_VALUE) {

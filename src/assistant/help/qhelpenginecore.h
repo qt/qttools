@@ -60,7 +60,7 @@ class QHELP_EXPORT QHelpEngineCore : public QObject
     Q_PROPERTY(bool autoSaveFilter READ autoSaveFilter WRITE setAutoSaveFilter)
     Q_PROPERTY(QString collectionFile READ collectionFile WRITE setCollectionFile)
     Q_PROPERTY(QString currentFilter READ currentFilter WRITE setCurrentFilter)
-    
+
 public:
     explicit QHelpEngineCore(const QString &collectionFile, QObject *parent = 0);
     virtual ~QHelpEngineCore();

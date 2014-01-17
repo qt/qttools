@@ -120,9 +120,9 @@ void TextFinder::on_findButton_clicked()
                 "The search field is empty. Please enter a word and click Find.");
     } else {
 
-        QTextCursor highlightCursor(document);  
+        QTextCursor highlightCursor(document);
         QTextCursor cursor(document);
-        
+
         cursor.beginEditBlock();
 //! [6]
 
@@ -149,7 +149,7 @@ void TextFinder::on_findButton_clicked()
         if (found == false) {
             QMessageBox::information(this, tr("Word Not Found"),
                 "Sorry, the word cannot be found.");
-        }    
+        }
     }
 }
 //! [8] //! [9]

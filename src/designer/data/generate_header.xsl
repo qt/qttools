@@ -163,7 +163,7 @@
                     <xsl:text>,</xsl:text>
                 </xsl:if>
                 <xsl:text>&endl;</xsl:text>
-                                     
+
             </xsl:for-each>
             <xsl:text>    };&endl;</xsl:text>
         </xsl:if>

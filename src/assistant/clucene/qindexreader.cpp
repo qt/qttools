@@ -74,7 +74,7 @@ QCLuceneIndexReader QCLuceneIndexReader::open(const QString &path)
 
     QCLuceneIndexReader indexReader;
     indexReader.d->reader = IndexReader::open(path);
-    
+
     return indexReader;
 }
 

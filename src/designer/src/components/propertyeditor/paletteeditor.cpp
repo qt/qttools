@@ -59,7 +59,7 @@ namespace qdesigner_internal {
 
 enum { BrushRole = 33 };
 
-PaletteEditor::PaletteEditor(QDesignerFormEditorInterface *core, QWidget *parent) : 
+PaletteEditor::PaletteEditor(QDesignerFormEditorInterface *core, QWidget *parent) :
     QDialog(parent),
     m_currentColorGroup(QPalette::Active),
     m_paletteModel(new PaletteModel(this)),
@@ -238,7 +238,7 @@ QPalette PaletteEditor::getPalette(QDesignerFormEditorInterface *core, QWidget* 
 
 //////////////////////
 
-PaletteModel::PaletteModel(QObject *parent)  : 
+PaletteModel::PaletteModel(QObject *parent)  :
     QAbstractTableModel(parent),
     m_compute(true)
 {
@@ -419,7 +419,7 @@ BrushEditor::BrushEditor(QDesignerFormEditorInterface *core, QWidget *parent) :
     QWidget(parent),
     m_button(new QtColorButton(this)),
     m_changed(false),
-    m_core(core)    
+    m_core(core)
 {
     QLayout *layout = new QHBoxLayout(this);
     layout->setMargin(0);
@@ -500,12 +500,12 @@ void RoleEditor::emitResetProperty()
     setEdited(false);
     emit changed(this);
 }
-        
+
 //////////////////////////
 ColorDelegate::ColorDelegate(QDesignerFormEditorInterface *core, QObject *parent) :
     QItemDelegate(parent),
     m_core(core)
-{ 
+{
 }
 
 QWidget *ColorDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &,
@@ -593,8 +593,8 @@ void ColorDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt,
         painter->restore();
     }
     QItemDelegate::paint(painter, option, index);
-    
-    
+
+
     const QColor color = static_cast<QRgb>(QApplication::style()->styleHint(QStyle::SH_Table_GridLineColor, &option));
     const QPen oldPen = painter->pen();
     painter->setPen(QPen(color));

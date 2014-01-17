@@ -60,10 +60,10 @@ public slots:
 
 private slots:
     void imageDiffTest();
-    
+
 private:
     QString currentDir;
-        
+
 };
 
 

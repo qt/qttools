@@ -96,7 +96,7 @@ public:
     const QStringList customFilters() const;
     QUrl findFile(const QUrl &url) const;
     QByteArray fileData(const QUrl &url) const;
-    QMap<QString, QUrl>	linksForIdentifier(const QString &id) const;
+    QMap<QString, QUrl> linksForIdentifier(const QString &id) const;
     const QStringList filterAttributes() const;
     const QStringList filterAttributes(const QString &filterName) const;
     QString error() const;

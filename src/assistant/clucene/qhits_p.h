@@ -65,16 +65,16 @@ private:
 class Q_CLUCENE_EXPORT QCLuceneHits
 {
 public:
-    QCLuceneHits(const QCLuceneSearcher &searcher, const QCLuceneQuery &query, 
+    QCLuceneHits(const QCLuceneSearcher &searcher, const QCLuceneQuery &query,
         const QCLuceneFilter &filter);
-    QCLuceneHits(const QCLuceneSearcher &searcher, const QCLuceneQuery &query, 
+    QCLuceneHits(const QCLuceneSearcher &searcher, const QCLuceneQuery &query,
         const QCLuceneFilter &filter, const QCLuceneSort &sort);
     virtual ~QCLuceneHits();
 
     QCLuceneDocument document(const qint32 index);
     qint32 length() const;
-	qint32 id (const qint32 index);
-	qreal score(const qint32 index);
+    qint32 id(const qint32 index);
+    qreal score(const qint32 index);
 
 protected:
     friend class QCLuceneSearcher;

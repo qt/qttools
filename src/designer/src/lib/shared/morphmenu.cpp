@@ -266,7 +266,7 @@ static void replaceWidgetListDynamicProperty(QWidget *parentWidget,
 }
 
 /* Morph a widget into another class. Use the static addMorphMacro() to
- * add a respective command sequence to the undo stack as it emits signals 
+ * add a respective command sequence to the undo stack as it emits signals
  * which cause other commands to be added. */
 class MorphWidgetCommand : public QDesignerFormWindowCommand
 {

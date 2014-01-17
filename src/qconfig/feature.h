@@ -56,8 +56,8 @@ class FeaturePrivate
 {
 public:
     FeaturePrivate(const QString &k)
-	: key(k), enabled(true), selectable(true) {};
-    
+        : key(k), enabled(true), selectable(true) {};
+
     const QString key;
     QString section;
     QString title;
@@ -71,7 +71,7 @@ public:
 
 class Feature : public QObject
 {
-    Q_OBJECT    
+    Q_OBJECT
 
 public:
     static Feature* getInstance(const QString &key);
@@ -86,36 +86,36 @@ public:
     void setSection(const QString &section);
     QString section() const { return d->section; }
 
-    void setDescription(const QString &description);    
+    void setDescription(const QString &description);
     QString description() const { return d->description; };
 
     void addRelation(const QString &key);
     void setRelations(const QStringList &keys);
-    QList<Feature*> relations() const;    
+    QList<Feature*> relations() const;
 
     void addDependency(const QString &dependency);
     void setDependencies(const QStringList &dependencies);
     QList<Feature*> dependencies() const;
 
-    QList<Feature*> supports() const;    
+    QList<Feature*> supports() const;
     QString getDocumentation() const;
 
     void setEnabled(bool on);
     bool enabled() const { return d->enabled; };
 
     bool selectable() const { return d->selectable; }
-    
-    QString toHtml() const;    
-    
-    ~Feature();    
+
+    QString toHtml() const;
+
+    ~Feature();
 
 signals:
     void changed();
-    
+
 private:
     Feature(const QString &key);
     void updateSelectable();
-    
+
     static QMap<QString, Feature*> instances;
     FeaturePrivate *d;
 };

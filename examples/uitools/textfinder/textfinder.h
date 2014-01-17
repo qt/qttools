@@ -59,7 +59,7 @@ public:
 
 private slots:
     void on_findButton_clicked();
-    
+
 private:
     QWidget* loadUiFile();
     void loadTextFile();

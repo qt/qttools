@@ -71,7 +71,7 @@ protected:
     void highlight(const QString&, int, int, int/*State*/);
 
 private:
-    enum State { Selector, Property, Value, Pseudo, Pseudo1, Pseudo2, Quote, 
+    enum State { Selector, Property, Value, Pseudo, Pseudo1, Pseudo2, Quote,
                  MaybeComment, Comment, MaybeCommentEnd };
 };
 

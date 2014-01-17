@@ -57,7 +57,7 @@ namespace qdesigner_internal {
     class PromotionTaskMenu;
 
 // The QMenu task menu provides promotion and a remove option. The actual
-// menu context options are not forwarded since they make only sense 
+// menu context options are not forwarded since they make only sense
 // when a menu is being edited/visible.
 
 class MenuTaskMenu : public QObject, public QDesignerTaskMenuExtension

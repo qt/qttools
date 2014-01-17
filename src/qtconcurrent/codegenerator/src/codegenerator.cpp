@@ -81,7 +81,7 @@ int BaseGenerator::repeatCount(GeneratorStack * const stack) const
                 GroupGenerator const * const group = static_cast<GroupGenerator const * const>(generator);
                 return group->currentRepeat;
             } break;
-*/  
+*/
             default:
             break;
         }
@@ -90,7 +90,7 @@ int BaseGenerator::repeatCount(GeneratorStack * const stack) const
 }
 
 QByteArray RepeaterGenerator::generate(GeneratorStack * const stack)
-{ 
+{
     GeneratorStacker stacker(stack, this);
     QByteArray generated;
     for (int i = repeatOffset; i < repeatCount + repeatOffset; ++i) {
@@ -101,7 +101,7 @@ QByteArray RepeaterGenerator::generate(GeneratorStack * const stack)
 };
 
 QByteArray GroupGenerator::generate(GeneratorStack * const stack)
-{ 
+{
     const int repeatCount = currentCount(stack);
     GeneratorStacker stacker(stack, this);
     QByteArray generated;
@@ -134,7 +134,7 @@ const Compound operator+(const Item &a, const char * const text)
 
 const Compound operator+(const char * const text, const Item &b)
 {
-    return Compound(Text(text), b);    
+    return Compound(Text(text), b);
 }
 
 }

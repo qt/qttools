@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
         QFileInfo fi(QString::fromLocal8Bit(argv[1]));
         if (fi.exists())
             w.setAdpFileName(fi.absoluteFilePath());
-    }    
+    }
     w.show();
     return app.exec();
 }

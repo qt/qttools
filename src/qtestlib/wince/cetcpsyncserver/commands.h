@@ -116,7 +116,7 @@ class CreateDirectoryCommand : public AbstractCommand
 public:
     CreateDirectoryCommand();
     ~CreateDirectoryCommand();
-    
+
 public slots:
     void dataReceived(QByteArray&);
     void commandFinished();
@@ -130,7 +130,7 @@ class CopyFileCommand : public AbstractCommand
 public:
     CopyFileCommand();
     ~CopyFileCommand();
-    
+
 public slots:
     void dataReceived(QByteArray&);
     void commandFinished();

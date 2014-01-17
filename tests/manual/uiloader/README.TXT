@@ -51,7 +51,7 @@ HOW IT WORKS
         tst_uiloader/       Actual program executing the tests.
         tst_screenshot/     Program to generate one *.png file out of *.ui
         baseline/           This is a dir with *.ui files.
-        
+
     ./uiloader (compiled from tst_uiloader) will use the tst_screenshot program
     and the files in baseline/.
 
@@ -60,7 +60,7 @@ HOW IT WORKS
     created/used.
 
     Structure of testresults/:
-        
+
         |-- testresults
         |   `-- i686 Linux g++-4 full-config    That's buildKey().
         |       `-- 4.5.0                       Used Qt version.

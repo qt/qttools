@@ -71,7 +71,7 @@ void Assistant::showDocumentation(const QString &page)
 
     QByteArray ba("SetSource ");
     ba.append("qthelp://org.qt-project.examples.simpletextviewer/doc/");
-    
+
     proc->write(ba + page.toLocal8Bit() + '\n');
 }
 //! [1]
@@ -87,7 +87,7 @@ bool Assistant::startAssistant()
 #if !defined(Q_OS_MAC)
         app += QLatin1String("assistant");
 #else
-        app += QLatin1String("Assistant.app/Contents/MacOS/Assistant");    
+        app += QLatin1String("Assistant.app/Contents/MacOS/Assistant");
 #endif
 
         QStringList args;
@@ -102,7 +102,7 @@ bool Assistant::startAssistant()
             QMessageBox::critical(0, QObject::tr("Simple Text Viewer"),
                 QObject::tr("Unable to launch Qt Assistant (%1)").arg(app));
             return false;
-        }    
+        }
     }
     return true;
 }

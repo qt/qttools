@@ -99,14 +99,14 @@ QDebug &operator<<(QDebug &str, const DeviceSkinButtonArea &a)
 QDebug operator<<(QDebug str, const DeviceSkinParameters &p)
 {
     str << "Images " << p.skinImageUpFileName << ','
-	<< p.skinImageDownFileName<< ',' << p.skinImageClosedFileName
-	<<  ',' <<  p.skinCursorFileName <<"\nScreen: " << p.screenRect
-	<< " back: " << p.backScreenRect << " closed: " << p.closedScreenRect
-	<< " cursor: " << p.cursorHot << " Prefix: " <<  p.prefix
-	<< " Joystick: " << p.joystick << " MouseHover" << p.hasMouseHover;
+        << p.skinImageDownFileName<< ',' << p.skinImageClosedFileName
+        <<  ',' <<  p.skinCursorFileName <<"\nScreen: " << p.screenRect
+        << " back: " << p.backScreenRect << " closed: " << p.closedScreenRect
+        << " cursor: " << p.cursorHot << " Prefix: " <<  p.prefix
+        << " Joystick: " << p.joystick << " MouseHover" << p.hasMouseHover;
     const int numAreas = p.buttonAreas.size();
     for (int i = 0; i < numAreas; i++)
-	str <<  p.buttonAreas[i];
+        str <<  p.buttonAreas[i];
     return str;
 }
 
@@ -151,7 +151,7 @@ bool DeviceSkinParameters::read(const QString &skinDirectory,  ReadMode rm,  QSt
     QTextStream ts(&f);
     const bool rc = read(ts, rm, errorMessage);
     if (!rc)
-	*errorMessage =  DeviceSkin::tr("The skin configuration file '%1' could not be read: %2").arg(fn).arg(*errorMessage);
+        *errorMessage =  DeviceSkin::tr("The skin configuration file '%1' could not be read: %2").arg(fn).arg(*errorMessage);
     return rc;
 }
 bool DeviceSkinParameters::read(QTextStream &ts, ReadMode rm, QString *errorMessage)
@@ -329,10 +329,10 @@ bool DeviceSkinParameters::read(QTextStream &ts, ReadMode rm, QString *errorMess
                     joystick = i;
                 area.activeWhenClosed = closedAreas.contains(area.name)
                     || area.keyCode == Qt::Key_Flip; // must be to work
-		area.toggleArea = toggleAreas.contains(area.name);
-		area.toggleActiveArea = toggleActiveAreas.contains(area.name);
-		if ( area.toggleArea )
-		    toggleAreaList += i;
+                area.toggleArea = toggleAreas.contains(area.name);
+                area.toggleActiveArea = toggleActiveAreas.contains(area.name);
+                if (area.toggleArea)
+                    toggleAreaList += i;
                 i++;
             }
         }
@@ -342,7 +342,7 @@ bool DeviceSkinParameters::read(QTextStream &ts, ReadMode rm, QString *errorMess
                       .arg(nareas).arg(i);
     }
     if (debugDeviceSkin)
-	qDebug() << *this;
+        qDebug() << *this;
     return true;
 }
 
@@ -401,10 +401,10 @@ DeviceSkin::DeviceSkin(const DeviceSkinParameters &parameters,  QWidget *p ) :
 void DeviceSkin::skinKeyRepeat()
 {
     if ( m_view ) {
-	const DeviceSkinButtonArea &area = m_parameters.buttonAreas[buttonIndex];
-	emit skinKeyReleaseEvent( area.keyCode,area.text, true );
-	emit skinKeyPressEvent( area.keyCode, area.text, true );
-	t_skinkey->start(key_repeat_period);
+        const DeviceSkinButtonArea &area = m_parameters.buttonAreas[buttonIndex];
+        emit skinKeyReleaseEvent(area.keyCode,area.text, true);
+        emit skinKeyPressEvent(area.keyCode, area.text, true);
+        t_skinkey->start(key_repeat_period);
     }
 }
 
@@ -412,16 +412,16 @@ void DeviceSkin::calcRegions()
 {
     const int numAreas = m_parameters.buttonAreas.size();
     for (int i=0; i<numAreas; i++) {
-	QPolygon xa(m_parameters.buttonAreas[i].area.count());
-	int n = m_parameters.buttonAreas[i].area.count();
-	for (int p=0; p<n; p++) {
-	    xa.setPoint(p,transform.map(m_parameters.buttonAreas[i].area[p]));
-	}
-	if ( n == 2 ) {
-	    buttonRegions[i] = QRegion(xa.boundingRect());
-	} else {
-	    buttonRegions[i] = QRegion(xa);
-	}
+        QPolygon xa(m_parameters.buttonAreas[i].area.count());
+        int n = m_parameters.buttonAreas[i].area.count();
+        for (int p = 0; p < n; p++) {
+            xa.setPoint(p,transform.map(m_parameters.buttonAreas[i].area[p]));
+        }
+        if (n == 2) {
+            buttonRegions[i] = QRegion(xa.boundingRect());
+        } else {
+            buttonRegions[i] = QRegion(xa);
+        }
     }
 }
 
@@ -434,33 +434,33 @@ void DeviceSkin::loadImages()
     const bool hasClosedImage = !m_parameters.skinImageClosed.isNull();
 
     if (hasClosedImage)
-	iclosed =  m_parameters.skinImageClosed;
+        iclosed =  m_parameters.skinImageClosed;
     QImage icurs;
     const bool hasCursorImage = !m_parameters.skinCursor.isNull();
     if (hasCursorImage)
-	icurs =  m_parameters.skinCursor;
+        icurs =  m_parameters.skinCursor;
 
     if (!transform.isIdentity()) {
-	iup = iup.transformed(transform, Qt::SmoothTransformation);
-	idown = idown.transformed(transform, Qt::SmoothTransformation);
-	if (hasClosedImage)
-	    iclosed = iclosed.transformed(transform, Qt::SmoothTransformation);
-	if (hasCursorImage)
-	    icurs = icurs.transformed(transform, Qt::SmoothTransformation);
+        iup = iup.transformed(transform, Qt::SmoothTransformation);
+        idown = idown.transformed(transform, Qt::SmoothTransformation);
+        if (hasClosedImage)
+            iclosed = iclosed.transformed(transform, Qt::SmoothTransformation);
+        if (hasCursorImage)
+            icurs = icurs.transformed(transform, Qt::SmoothTransformation);
     }
     const Qt::ImageConversionFlags conv = Qt::ThresholdAlphaDither|Qt::AvoidDither;
     skinImageUp = QPixmap::fromImage(iup);
     skinImageDown = QPixmap::fromImage(idown, conv);
     if (hasClosedImage)
-	skinImageClosed = QPixmap::fromImage(iclosed, conv);
+        skinImageClosed = QPixmap::fromImage(iclosed, conv);
     if (hasCursorImage)
-	skinCursor = QPixmap::fromImage(icurs, conv);
+        skinCursor = QPixmap::fromImage(icurs, conv);
 
     setFixedSize( skinImageUp.size() );
     if (!skinImageUp.mask())
-	skinImageUp.setMask(skinImageUp.createHeuristicMask());
+        skinImageUp.setMask(skinImageUp.createHeuristicMask());
     if (!skinImageClosed.mask())
-	skinImageClosed.setMask(skinImageClosed.createHeuristicMask());
+        skinImageClosed.setMask(skinImageClosed.createHeuristicMask());
 
     QWidget* parent = parentWidget();
     parent->setMask( skinImageUp.mask() );
@@ -469,9 +469,9 @@ void DeviceSkin::loadImages()
     delete cursorw;
     cursorw = 0;
     if (hasCursorImage) {
-	cursorw = new qvfb_internal::CursorWindow(m_parameters.skinCursor, m_parameters.cursorHot, this);
-	if ( m_view )
-	    cursorw->setView(m_view);
+        cursorw = new qvfb_internal::CursorWindow(m_parameters.skinCursor, m_parameters.cursorHot, this);
+        if (m_view)
+            cursorw->setView(m_view);
     }
 }
 
@@ -487,7 +487,7 @@ void DeviceSkin::setTransform( const QMatrix& wm )
     loadImages();
     if ( m_view ) {
         QPoint p = transform.map(QPolygon(m_parameters.screenRect)).boundingRect().topLeft();
-	m_view->move(p);
+        m_view->move(p);
     }
     updateSecondaryScreen();
 }
@@ -524,7 +524,7 @@ void DeviceSkin::setView( QWidget *v )
     m_view->setFocus();
     m_view->move(transform.map(QPolygon(m_parameters.screenRect)).boundingRect().topLeft());
     if ( cursorw )
-	cursorw->setView(v);
+        cursorw->setView(v);
 }
 
 void DeviceSkin::setSecondaryView( QWidget *v )
@@ -537,9 +537,9 @@ void DeviceSkin::paintEvent( QPaintEvent *)
 {
     QPainter p( this );
     if ( flipped_open ) {
-	p.drawPixmap( 0, 0, skinImageUp );
+        p.drawPixmap(0, 0, skinImageUp);
     } else {
-	p.drawPixmap( 0, 0, skinImageClosed );
+        p.drawPixmap(0, 0, skinImageClosed);
     }
     QList<int> toDraw;
     if ( buttonPressed == true ) {
@@ -547,13 +547,13 @@ void DeviceSkin::paintEvent( QPaintEvent *)
     }
     foreach (int toggle, m_parameters.toggleAreaList) {
         const DeviceSkinButtonArea &ba = m_parameters.buttonAreas[toggle];
-	if ( flipped_open || ba.activeWhenClosed ) {
-	    if ( ba.toggleArea && ba.toggleActiveArea )
-		toDraw += toggle;
-	}
+        if (flipped_open || ba.activeWhenClosed) {
+            if (ba.toggleArea && ba.toggleActiveArea)
+                toDraw += toggle;
+        }
     }
     foreach (int button, toDraw ) {
-	const DeviceSkinButtonArea &ba = m_parameters.buttonAreas[button];
+        const DeviceSkinButtonArea &ba = m_parameters.buttonAreas[button];
         const QRect r = buttonRegions[button].boundingRect();
         if ( ba.area.count() > 2 )
             p.setClipRegion(buttonRegions[button]);
@@ -564,14 +564,14 @@ void DeviceSkin::paintEvent( QPaintEvent *)
 void DeviceSkin::mousePressEvent( QMouseEvent *e )
 {
     if (e->button() == Qt::RightButton) {
-	emit popupMenu();
+        emit popupMenu();
     } else {
-	buttonPressed = false;
+        buttonPressed = false;
 
-	onjoyrelease = -1;
-	const int numAreas = m_parameters.buttonAreas.size();
+        onjoyrelease = -1;
+        const int numAreas = m_parameters.buttonAreas.size();
         for (int i = 0; i < numAreas ; i++) {
-	    const DeviceSkinButtonArea &ba = m_parameters.buttonAreas[i];
+            const DeviceSkinButtonArea &ba = m_parameters.buttonAreas[i];
             if (  buttonRegions[i].contains( e->pos() ) ) {
                 if ( flipped_open || ba.activeWhenClosed ) {
                     if ( m_parameters.joystick == i ) {
@@ -582,30 +582,30 @@ void DeviceSkin::mousePressEvent( QMouseEvent *e )
                         else
                             startPress(i);
                         break;
-			if (debugDeviceSkin)// Debug message to be sure we are clicking the right areas
-			    qDebug()<< m_parameters.buttonAreas[i].name << " clicked";
+                        if (debugDeviceSkin)// Debug message to be sure we are clicking the right areas
+                            qDebug()<< m_parameters.buttonAreas[i].name << " clicked";
                     }
                 }
             }
         }
-	clickPos = e->pos();
-//	This is handy for finding the areas to define rectangles for new skins
-	if (debugDeviceSkin)
-	    qDebug()<< "Clicked in " <<  e->pos().x() << ',' <<  e->pos().y();
-	clickPos = e->pos();
+        clickPos = e->pos();
+//      This is handy for finding the areas to define rectangles for new skins
+        if (debugDeviceSkin)
+            qDebug()<< "Clicked in " <<  e->pos().x() << ',' <<  e->pos().y();
+        clickPos = e->pos();
     }
 }
 
 void DeviceSkin::flip(bool open)
 {
     if ( flipped_open == open )
-	return;
+        return;
     if ( open ) {
-	parent->setMask( skinImageUp.mask() );
-	emit skinKeyReleaseEvent( Qt::Key(Qt::Key_Flip), QString(), false);
+        parent->setMask(skinImageUp.mask());
+        emit skinKeyReleaseEvent(Qt::Key(Qt::Key_Flip), QString(), false);
     } else {
-	parent->setMask( skinImageClosed.mask() );
-	emit skinKeyPressEvent( Qt::Key(Qt::Key_Flip), QString(), false);
+        parent->setMask(skinImageClosed.mask());
+        emit skinKeyPressEvent(Qt::Key(Qt::Key_Flip), QString(), false);
     }
     flipped_open = open;
     updateSecondaryScreen();
@@ -617,21 +617,21 @@ void DeviceSkin::startPress(int i)
     buttonPressed = true;
     buttonIndex = i;
     if (m_view) {
-	const DeviceSkinButtonArea &ba = m_parameters.buttonAreas[buttonIndex];
-	if ( ba.keyCode == Qt::Key_Flip ) {
-	    flip(!flipped_open);
-	} else if ( ba.toggleArea ) {
-	    bool active = !ba.toggleActiveArea;
-	    const_cast<DeviceSkinButtonArea &>(ba).toggleActiveArea = active;
-	    if ( active )
-	        emit skinKeyPressEvent( ba.keyCode, ba.text, false);
-	    else
-	        emit skinKeyReleaseEvent( ba.keyCode, ba.text, false);
-	} else {
-	    emit skinKeyPressEvent( ba.keyCode, ba.text, false);
-	    t_skinkey->start(key_repeat_delay);
-	}
-	repaint( buttonRegions[buttonIndex].boundingRect() );
+        const DeviceSkinButtonArea &ba = m_parameters.buttonAreas[buttonIndex];
+        if (ba.keyCode == Qt::Key_Flip) {
+            flip(!flipped_open);
+        } else if (ba.toggleArea) {
+            bool active = !ba.toggleActiveArea;
+            const_cast<DeviceSkinButtonArea &>(ba).toggleActiveArea = active;
+            if (active)
+                emit skinKeyPressEvent(ba.keyCode, ba.text, false);
+            else
+                emit skinKeyReleaseEvent(ba.keyCode, ba.text, false);
+        } else {
+            emit skinKeyPressEvent(ba.keyCode, ba.text, false);
+            t_skinkey->start(key_repeat_delay);
+        }
+        repaint(buttonRegions[buttonIndex].boundingRect());
     }
 }
 
@@ -639,7 +639,7 @@ void DeviceSkin::endPress()
 {
     const DeviceSkinButtonArea &ba = m_parameters.buttonAreas[buttonIndex];
     if (m_view && ba.keyCode != Qt::Key_Flip && !ba.toggleArea )
-	emit skinKeyReleaseEvent(ba.keyCode, ba.text, false );
+        emit skinKeyReleaseEvent(ba.keyCode, ba.text, false);
     t_skinkey->stop();
     buttonPressed = false;
     repaint( buttonRegions[buttonIndex].boundingRect() );
@@ -648,40 +648,40 @@ void DeviceSkin::endPress()
 void DeviceSkin::mouseMoveEvent( QMouseEvent *e )
 {
     if ( e->buttons() & Qt::LeftButton ) {
-	const int joystick = m_parameters.joystick;
-	QPoint newpos =  e->globalPos() - clickPos;
-	if ( joydown ) {
-	    int k1=0, k2=0;
-	    if ( newpos.x() < -joydistance ) {
-		k1 = joystick+1;
-	    } else if ( newpos.x() > +joydistance ) {
-		k1 = joystick+3;
-	    }
-	    if ( newpos.y() < -joydistance ) {
-		k2 = joystick+2;
-	    } else if ( newpos.y() > +joydistance ) {
-		k2 = joystick+4;
-	    }
-	    if ( k1 || k2 ) {
-		if ( !buttonPressed ) {
-		    onjoyrelease = -1;
-		    if ( k1 && k2 ) {
-			startPress(k2);
-			endPress();
-		    }
-		    startPress(k1 ? k1 : k2);
-		}
-	    } else if ( buttonPressed ) {
-		endPress();
-	    }
-	} else if ( buttonPressed == false ) {
-	    parentpos = newpos;
-	    if ( !t_parentmove->isActive() )
-		t_parentmove->start(50);
-	}
+        const int joystick = m_parameters.joystick;
+        QPoint newpos =  e->globalPos() - clickPos;
+        if (joydown) {
+            int k1=0, k2=0;
+            if (newpos.x() < -joydistance) {
+                k1 = joystick+1;
+            } else if (newpos.x() > +joydistance) {
+                k1 = joystick+3;
+            }
+            if (newpos.y() < -joydistance) {
+                k2 = joystick+2;
+            } else if (newpos.y() > +joydistance) {
+                k2 = joystick+4;
+            }
+            if (k1 || k2) {
+                if (!buttonPressed) {
+                    onjoyrelease = -1;
+                    if (k1 && k2) {
+                        startPress(k2);
+                        endPress();
+                    }
+                    startPress(k1 ? k1 : k2);
+                }
+            } else if (buttonPressed) {
+                endPress();
+            }
+        } else if (buttonPressed == false) {
+            parentpos = newpos;
+            if (!t_parentmove->isActive())
+                t_parentmove->start(50);
+        }
     }
     if ( cursorw )
-	cursorw->setPos(e->globalPos());
+        cursorw->setPos(e->globalPos());
 }
 
 void DeviceSkin::moveParent()
@@ -692,13 +692,13 @@ void DeviceSkin::moveParent()
 void DeviceSkin::mouseReleaseEvent( QMouseEvent * )
 {
     if ( buttonPressed )
-	endPress();
+        endPress();
     if ( joydown ) {
-	joydown = false;
-	if ( onjoyrelease >= 0 ) {
-	    startPress(onjoyrelease);
-	    endPress();
-	}
+        joydown = false;
+        if (onjoyrelease >= 0) {
+            startPress(onjoyrelease);
+            endPress();
+        }
     }
 }
 
@@ -729,36 +729,36 @@ bool CursorWindow::handleMouseEvent(QEvent *ev)
     bool handledEvent = false;
     static int inhere=0;
     if ( !inhere ) {
-	inhere++;
-	if ( m_view ) {
-	    if ( ev->type() >= QEvent::MouseButtonPress && ev->type() <= QEvent::MouseMove ) {
-		QMouseEvent *e = (QMouseEvent*)ev;
-		QPoint gp = e->globalPos();
-		QPoint vp = m_view->mapFromGlobal(gp);
-		QPoint sp = skin->mapFromGlobal(gp);
-		if ( e->type() == QEvent::MouseButtonPress || e->type() == QEvent::MouseButtonDblClick ) {
-		    if ( m_view->rect().contains(vp) )
-			mouseRecipient = m_view;
-		    else if ( skin->parentWidget()->geometry().contains(gp) )
-			mouseRecipient = skin;
-		    else
-			mouseRecipient = 0;
-		}
-		if ( mouseRecipient ) {
-		    setPos(gp);
-		    QMouseEvent me(e->type(),mouseRecipient==skin ? sp : vp,gp,e->button(),e->buttons(),e->modifiers());
-		    QApplication::sendEvent(mouseRecipient, &me);
-		} else if ( !skin->parentWidget()->geometry().contains(gp) ) {
-		    hide();
-		} else {
-		    setPos(gp);
-		}
-		if ( e->type() == QEvent::MouseButtonRelease )
-		    mouseRecipient = 0;
-		handledEvent = true;
-	    }
-	}
-	inhere--;
+        inhere++;
+        if (m_view) {
+            if (ev->type() >= QEvent::MouseButtonPress && ev->type() <= QEvent::MouseMove) {
+                QMouseEvent *e = (QMouseEvent*)ev;
+                QPoint gp = e->globalPos();
+                QPoint vp = m_view->mapFromGlobal(gp);
+                QPoint sp = skin->mapFromGlobal(gp);
+                if (e->type() == QEvent::MouseButtonPress || e->type() == QEvent::MouseButtonDblClick) {
+                    if (m_view->rect().contains(vp))
+                        mouseRecipient = m_view;
+                    else if (skin->parentWidget()->geometry().contains(gp))
+                        mouseRecipient = skin;
+                    else
+                        mouseRecipient = 0;
+                }
+                if (mouseRecipient) {
+                    setPos(gp);
+                    QMouseEvent me(e->type(),mouseRecipient==skin ? sp : vp,gp,e->button(),e->buttons(),e->modifiers());
+                    QApplication::sendEvent(mouseRecipient, &me);
+                } else if (!skin->parentWidget()->geometry().contains(gp)) {
+                    hide();
+                } else {
+                    setPos(gp);
+                }
+                if (e->type() == QEvent::MouseButtonRelease)
+                    mouseRecipient = 0;
+                handledEvent = true;
+            }
+        }
+        inhere--;
     }
     return handledEvent;
 }
@@ -766,8 +766,8 @@ bool CursorWindow::handleMouseEvent(QEvent *ev)
 void CursorWindow::setView(QWidget* v)
 {
     if ( m_view ) {
-	m_view->removeEventFilter(this);
-	m_view->removeEventFilter(this);
+        m_view->removeEventFilter(this);
+        m_view->removeEventFilter(this);
     }
     m_view = v;
     m_view->installEventFilter(this);
@@ -776,9 +776,10 @@ void CursorWindow::setView(QWidget* v)
 }
 
 CursorWindow::CursorWindow(const QImage &img, QPoint hot, QWidget* sk)
-	:QWidget(0),
-	m_view(0), skin(sk),
-	hotspot(hot)
+    : QWidget(0),
+      m_view(0),
+      skin(sk),
+      hotspot(hot)
 {
     setWindowFlags( Qt::FramelessWindowHint );
     mouseRecipient = 0;
@@ -789,22 +790,22 @@ CursorWindow::CursorWindow(const QImage &img, QPoint hot, QWidget* sk)
     QPixmap p;
     p = QPixmap::fromImage(img);
     if (!p.mask()) {
-	if ( img.hasAlphaChannel() ) {
-	    QBitmap bm;
-	    bm = QPixmap::fromImage(img.createAlphaMask());
-	    p.setMask( bm );
-	} else {
-	    QBitmap bm;
-	    bm = QPixmap::fromImage(img.createHeuristicMask());
-	    p.setMask( bm );
-	}
+        if (img.hasAlphaChannel()) {
+            QBitmap bm;
+            bm = QPixmap::fromImage(img.createAlphaMask());
+            p.setMask(bm);
+        } else {
+            QBitmap bm;
+            bm = QPixmap::fromImage(img.createHeuristicMask());
+            p.setMask(bm);
+        }
     }
     QPalette palette;
     palette.setBrush(backgroundRole(), QBrush(p));
     setPalette(palette);
     setFixedSize( p.size() );
     if ( !p.mask().isNull() )
-	setMask( p.mask() );
+        setMask(p.mask());
 }
 
 void CursorWindow::setPos(QPoint p)
@@ -828,8 +829,8 @@ int main(int argc,char *argv[])
     DeviceSkinParameters params;
     QString errorMessage;
     if (!params.read(skinFile, DeviceSkinParameters::ReadAll, &errorMessage)) {
-	qWarning() << errorMessage;
-	return 1;
+        qWarning() << errorMessage;
+        return 1;
     }
     DeviceSkin ds(params, &mw);
     // View Dialog

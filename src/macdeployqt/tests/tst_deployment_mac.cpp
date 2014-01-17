@@ -55,10 +55,10 @@ void tst_deployment_mac::testParseOtoolLibraryLine()
 {
 {
     QString line = "   /Users/foo/build/qt-4.4/lib/QtGui.framework/Versions/4/QtGui (compatibility version 4.4.0, current version 4.4.0)";
-    FrameworkInfo info = parseOtoolLibraryLine(line);    
+    FrameworkInfo info = parseOtoolLibraryLine(line);
 //    qDebug() << info;
-    QCOMPARE(info.frameworkDirectory, QLatin1String("/Users/foo/build/qt-4.4/lib/")); 
-    QCOMPARE(info.frameworkName, QLatin1String("QtGui.framework")); 
+    QCOMPARE(info.frameworkDirectory, QLatin1String("/Users/foo/build/qt-4.4/lib/"));
+    QCOMPARE(info.frameworkName, QLatin1String("QtGui.framework"));
     QCOMPARE(info.frameworkPath, QLatin1String("/Users/foo/build/qt-4.4/lib/QtGui.framework"));
     QCOMPARE(info.binaryDirectory, QLatin1String("Versions/4"));
     QCOMPARE(info.binaryName, QLatin1String("QtGui"));
@@ -71,10 +71,10 @@ void tst_deployment_mac::testParseOtoolLibraryLine()
 }
 {
     QString line = "	/Users/foo/build/qt-4.4/lib/phonon.framework/Versions/4/phonon (compatibility version 4.1.0, current version 4.1.0)";
-    FrameworkInfo info = parseOtoolLibraryLine(line);    
+    FrameworkInfo info = parseOtoolLibraryLine(line);
 //    qDebug() << info;
-    QCOMPARE(info.frameworkDirectory, QLatin1String("/Users/foo/build/qt-4.4/lib/")); 
-    QCOMPARE(info.frameworkName, QLatin1String("phonon.framework")); 
+    QCOMPARE(info.frameworkDirectory, QLatin1String("/Users/foo/build/qt-4.4/lib/"));
+    QCOMPARE(info.frameworkName, QLatin1String("phonon.framework"));
     QCOMPARE(info.frameworkPath, QLatin1String("/Users/foo/build/qt-4.4/lib/phonon.framework"));
     QCOMPARE(info.binaryDirectory, QLatin1String("Versions/4"));
     QCOMPARE(info.binaryName, QLatin1String("phonon"));
@@ -88,10 +88,10 @@ void tst_deployment_mac::testParseOtoolLibraryLine()
 
 {
     QString line = "	/usr/local/Qt-4.4.0/lib/phonon.framework/Versions/4/phonon (compatibility version 4.1.0, current version 4.1.0)";
-    FrameworkInfo info = parseOtoolLibraryLine(line);    
+    FrameworkInfo info = parseOtoolLibraryLine(line);
 //    qDebug() << info;
-    QCOMPARE(info.frameworkDirectory, QLatin1String("/usr/local/Qt-4.4.0/lib/")); 
-    QCOMPARE(info.frameworkName, QLatin1String("phonon.framework")); 
+    QCOMPARE(info.frameworkDirectory, QLatin1String("/usr/local/Qt-4.4.0/lib/"));
+    QCOMPARE(info.frameworkName, QLatin1String("phonon.framework"));
     QCOMPARE(info.frameworkPath, QLatin1String("/usr/local/Qt-4.4.0/lib/phonon.framework"));
     QCOMPARE(info.binaryDirectory, QLatin1String("Versions/4"));
     QCOMPARE(info.binaryName, QLatin1String("phonon"));
@@ -105,10 +105,10 @@ void tst_deployment_mac::testParseOtoolLibraryLine()
 
 {
     QString line = "	QtGui.framework/Versions/4/QtGui (compatibility version 4.1.0, current version 4.1.0)";
-    FrameworkInfo info = parseOtoolLibraryLine(line);    
+    FrameworkInfo info = parseOtoolLibraryLine(line);
 //    qDebug() << info;
-    QCOMPARE(info.frameworkDirectory, QLatin1String("/Library/Frameworks/")); 
-    QCOMPARE(info.frameworkName, QLatin1String("QtGui.framework")); 
+    QCOMPARE(info.frameworkDirectory, QLatin1String("/Library/Frameworks/"));
+    QCOMPARE(info.frameworkName, QLatin1String("QtGui.framework"));
     QCOMPARE(info.frameworkPath, QLatin1String("/Library/Frameworks/QtGui.framework"));
     QCOMPARE(info.binaryDirectory, QLatin1String("Versions/4"));
     QCOMPARE(info.binaryName, QLatin1String("QtGui"));
@@ -122,10 +122,10 @@ void tst_deployment_mac::testParseOtoolLibraryLine()
 
 {
     QString line = "	phonon.framework/Versions/4/QtGui (compatibility version 4.1.0, current version 4.1.0)";
-    FrameworkInfo info = parseOtoolLibraryLine(line);    
+    FrameworkInfo info = parseOtoolLibraryLine(line);
 //    qDebug() << info;
-    QCOMPARE(info.frameworkDirectory, QLatin1String("/Library/Frameworks/")); 
-    QCOMPARE(info.frameworkName, QLatin1String("phonon.framework")); 
+    QCOMPARE(info.frameworkDirectory, QLatin1String("/Library/Frameworks/"));
+    QCOMPARE(info.frameworkName, QLatin1String("phonon.framework"));
     QCOMPARE(info.frameworkPath, QLatin1String("/Library/Frameworks/phonon.framework"));
     QCOMPARE(info.binaryDirectory, QLatin1String("Versions/4"));
     QCOMPARE(info.binaryName, QLatin1String("phonon"));
@@ -139,11 +139,11 @@ void tst_deployment_mac::testParseOtoolLibraryLine()
 
 {
     QString line = "	/Users/foo/build/qt-4.4/lib/libQtCLucene.4.dylib (compatibility version 4.4.0, current version 4.4.0)";
-    FrameworkInfo info = parseOtoolLibraryLine(line);    
+    FrameworkInfo info = parseOtoolLibraryLine(line);
 //    qDebug() << info;
-    QCOMPARE(info.frameworkDirectory, QLatin1String("/Users/foo/build/qt-4.4/lib/")); 
+    QCOMPARE(info.frameworkDirectory, QLatin1String("/Users/foo/build/qt-4.4/lib/"));
     QCOMPARE(info.binaryName, QLatin1String("libQtCLucene.4.dylib"));
-    QCOMPARE(info.frameworkName, QLatin1String("libQtCLucene.4.dylib")); 
+    QCOMPARE(info.frameworkName, QLatin1String("libQtCLucene.4.dylib"));
     QCOMPARE(info.frameworkPath, QLatin1String("/Users/foo/build/qt-4.4/lib/libQtCLucene.4.dylib"));
     QCOMPARE(info.installName, QLatin1String("/Users/foo/build/qt-4.4/lib/libQtCLucene.4.dylib"));
     QCOMPARE(info.deployedInstallName, QLatin1String("@executable_path/../Frameworks/libQtCLucene.4.dylib"));
@@ -154,9 +154,9 @@ void tst_deployment_mac::testParseOtoolLibraryLine()
     QString line = "libQtCLucene.4.dylib (compatibility version 4.4.0, current version 4.4.0)";
     FrameworkInfo info = parseOtoolLibraryLine(line);
 //    qDebug() << info;
-    QCOMPARE(info.frameworkDirectory, QLatin1String("/usr/lib/")); 
+    QCOMPARE(info.frameworkDirectory, QLatin1String("/usr/lib/"));
     QCOMPARE(info.binaryName, QLatin1String("libQtCLucene.4.dylib"));
-    QCOMPARE(info.frameworkName, QLatin1String("libQtCLucene.4.dylib")); 
+    QCOMPARE(info.frameworkName, QLatin1String("libQtCLucene.4.dylib"));
     QCOMPARE(info.frameworkPath, QLatin1String("/usr/lib/libQtCLucene.4.dylib"));
     QCOMPARE(info.installName, QLatin1String("libQtCLucene.4.dylib"));
     QCOMPARE(info.deployedInstallName, QLatin1String("@executable_path/../Frameworks/libQtCLucene.4.dylib"));
@@ -166,7 +166,7 @@ void tst_deployment_mac::testParseOtoolLibraryLine()
 {
     QString line = "/foo"; //invalid
     FrameworkInfo info = parseOtoolLibraryLine(line);
-    QCOMPARE(info.frameworkName, QString()); 
+    QCOMPARE(info.frameworkName, QString());
 }
 
 }
@@ -175,18 +175,18 @@ void tst_deployment_mac::testgetQtFrameworks()
 {
 {
     QStringList otool = QStringList()
-	<< "/Users/foo/build/qt-4.4/lib/phonon.framework/Versions/4/phonon (compatibility version 4.1.0, current version 4.1.0)"
-	<< "/Users/foo/build/qt-4.4/lib/QtGui.framework/Versions/4/QtGui (compatibility version 4.4.0, current version 4.4.0)"
-	<< "/System/Library/Frameworks/Carbon.framework/Versions/A/Carbon (compatibility version 2.0.0, current version 136.0.0)"
-	<< "/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit (compatibility version 45.0.0, current version 949.27.0)"
-	<< "/Users/foo/build/qt-4.4/lib/QtCore.framework/Versions/4/QtCore (compatibility version 4.4.0, current version 4.4.0)"
-	<< "/usr/lib/libz.1.dylib (compatibility version 1.0.0, current version 1.2.3)"
-	<< "/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 111.0.0)"
-	<< "/usr/lib/libstdc++.6.dylib (compatibility version 7.0.0, current version 7.4.0)"
-	<< "/usr/lib/libgcc_s.1.dylib (compatibility version 1.0.0, current version 1.0.0)"
+    << "/Users/foo/build/qt-4.4/lib/phonon.framework/Versions/4/phonon (compatibility version 4.1.0, current version 4.1.0)"
+    << "/Users/foo/build/qt-4.4/lib/QtGui.framework/Versions/4/QtGui (compatibility version 4.4.0, current version 4.4.0)"
+    << "/System/Library/Frameworks/Carbon.framework/Versions/A/Carbon (compatibility version 2.0.0, current version 136.0.0)"
+    << "/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit (compatibility version 45.0.0, current version 949.27.0)"
+    << "/Users/foo/build/qt-4.4/lib/QtCore.framework/Versions/4/QtCore (compatibility version 4.4.0, current version 4.4.0)"
+    << "/usr/lib/libz.1.dylib (compatibility version 1.0.0, current version 1.2.3)"
+    << "/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 111.0.0)"
+    << "/usr/lib/libstdc++.6.dylib (compatibility version 7.0.0, current version 7.4.0)"
+    << "/usr/lib/libgcc_s.1.dylib (compatibility version 1.0.0, current version 1.0.0)"
     << " "
     ;
-    
+
     QList<FrameworkInfo> frameworks = getQtFrameworks(otool);
     QCOMPARE(frameworks.count(), 3);
     QCOMPARE(frameworks.at(0).binaryName, QLatin1String("phonon"));
@@ -196,18 +196,18 @@ void tst_deployment_mac::testgetQtFrameworks()
 {
     QStringList otool = QStringList()
     << "QtHelp.framework/Versions/4/QtHelp (compatibility version 4.4.0, current version 4.4.0)"
-	<< "libQtCLucene.4.dylib (compatibility version 4.4.0, current version 4.4.0)"
-	<< "QtSql.framework/Versions/4/QtSql (compatibility version 4.4.0, current version 4.4.0)"
-	<< "QtXml.framework/Versions/4/QtXml (compatibility version 4.4.0, current version 4.4.0)"
-	<< "QtGui.framework/Versions/4/QtGui (compatibility version 4.4.0, current version 4.4.0)"
-	<< "/System/Library/Frameworks/Carbon.framework/Versions/A/Carbon (compatibility version 2.0.0, current version 128.0.0)"
-	<< "/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit (compatibility version 45.0.0, current version 824.42.0)"
-	<< "QtNetwork.framework/Versions/4/QtNetwork (compatibility version 4.4.0, current version 4.4.0)"
-	<< "QtCore.framework/Versions/4/QtCore (compatibility version 4.4.0, current version 4.4.0)"
-	<< "/usr/lib/libz.1.dylib (compatibility version 1.0.0, current version 1.2.3)"
-	<< "/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 88.3.6)"
-	<< "/usr/lib/libstdc++.6.dylib (compatibility version 7.0.0, current version 7.4.0)"
-	<< "/usr/lib/libgcc_s.1.dylib (compatibility version 1.0.0, current version 1.0.0)"
+    << "libQtCLucene.4.dylib (compatibility version 4.4.0, current version 4.4.0)"
+    << "QtSql.framework/Versions/4/QtSql (compatibility version 4.4.0, current version 4.4.0)"
+    << "QtXml.framework/Versions/4/QtXml (compatibility version 4.4.0, current version 4.4.0)"
+    << "QtGui.framework/Versions/4/QtGui (compatibility version 4.4.0, current version 4.4.0)"
+    << "/System/Library/Frameworks/Carbon.framework/Versions/A/Carbon (compatibility version 2.0.0, current version 128.0.0)"
+    << "/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit (compatibility version 45.0.0, current version 824.42.0)"
+    << "QtNetwork.framework/Versions/4/QtNetwork (compatibility version 4.4.0, current version 4.4.0)"
+    << "QtCore.framework/Versions/4/QtCore (compatibility version 4.4.0, current version 4.4.0)"
+    << "/usr/lib/libz.1.dylib (compatibility version 1.0.0, current version 1.2.3)"
+    << "/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 88.3.6)"
+    << "/usr/lib/libstdc++.6.dylib (compatibility version 7.0.0, current version 7.4.0)"
+    << "/usr/lib/libgcc_s.1.dylib (compatibility version 1.0.0, current version 1.0.0)"
     ;
 
     QList<FrameworkInfo> frameworks = getQtFrameworks(otool);

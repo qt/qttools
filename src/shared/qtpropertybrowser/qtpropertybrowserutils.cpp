@@ -223,7 +223,7 @@ QString QtPropertyBrowserUtils::timeFormat()
 {
     QLocale loc;
     // ShortFormat is missing seconds on UNIX.
-    return loc.timeFormat(QLocale::LongFormat);    
+    return loc.timeFormat(QLocale::LongFormat);
 }
 
 QString QtPropertyBrowserUtils::dateTimeFormat()

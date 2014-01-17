@@ -71,7 +71,7 @@ public:
 
     QCLuceneQuery* parse(const QString &query);
     QCLuceneQuery* parse(QCLuceneReader &reader);
-    static QCLuceneQuery* parse(const QString &query, const QString &field, 
+    static QCLuceneQuery* parse(const QString &query, const QString &field,
                                 QCLuceneAnalyzer &analyzer);
     QCLuceneAnalyzer getAnalyzer();
     QString getField();
@@ -94,7 +94,7 @@ public:
         PROHIBITED_FIELD = 2
     };
 
-    QCLuceneMultiFieldQueryParser(const QStringList &fieldList, 
+    QCLuceneMultiFieldQueryParser(const QStringList &fieldList,
                                   QCLuceneAnalyzer &analyzer);
     ~QCLuceneMultiFieldQueryParser();
 

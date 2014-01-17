@@ -88,7 +88,7 @@ void QMainWindowContainer::setCurrentIndex(int index)
 namespace {
     // Pair of <area,break_before>
     typedef QPair<Qt::ToolBarArea,bool> ToolBarData;
-    
+
     ToolBarData toolBarData(QToolBar *me) {
         const QMainWindow *mw = qobject_cast<const QMainWindow*>(me->parentWidget());
         if (!mw || !mw->layout() ||  mw->layout()->indexOf(me) == -1)
@@ -96,7 +96,7 @@ namespace {
         return ToolBarData(mw->toolBarArea(me), mw->toolBarBreak(me));
     }
 
-Qt::DockWidgetArea dockWidgetArea(QDockWidget *me) 
+Qt::DockWidgetArea dockWidgetArea(QDockWidget *me)
 {
     if (const QMainWindow *mw = qobject_cast<const QMainWindow*>(me->parentWidget())) {
         // Make sure that me is actually managed by mw, otherwise

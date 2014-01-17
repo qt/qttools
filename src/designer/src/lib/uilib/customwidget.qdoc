@@ -64,7 +64,7 @@
     \QD constructs instances of the custom widget by calling the plugin's
     createWidget() function with a suitable parent widget. Plugins must
     construct and return an instance of a custom widget with the specified
-    parent widget. 
+    parent widget.
 
     Exporting your custom widget plugin to \QD using the Q_PLUGIN_METADATA()
     macro. For example, if a library called \c libcustomwidgetplugin.so

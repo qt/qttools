@@ -55,7 +55,7 @@ class FinishPage : public QWizardPage
 public:
     FinishPage(QWidget *parent = 0);
     void appendMessage(const QString &msg);
-    
+
 private:
     QTextEdit *m_textEdit;
 };

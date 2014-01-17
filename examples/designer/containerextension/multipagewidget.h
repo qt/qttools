@@ -65,8 +65,8 @@ public:
     int currentIndex() const;
     QWidget *widget(int index);
     QString pageTitle() const;
-    
-public slots:   
+
+public slots:
     void addPage(QWidget *page);
     void insertPage(int index, QWidget *page);
     void removePage(int index);

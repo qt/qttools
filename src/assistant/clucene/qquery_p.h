@@ -76,7 +76,7 @@ public:
     qreal getBoost() const;
     QString getQueryName() const;
     bool instanceOf(const QString &other) const;
-    QString toString(const QString &field) const;    
+    QString toString(const QString &field) const;
     quint32 hashCode() const;
     QString toString() const;
     bool equals(const QCLuceneQuery &other) const;
@@ -102,8 +102,8 @@ public:
     ~QCLucenePrefixQuery();
 
     static QString getClassName();
-	    
-	QCLuceneTerm getPrefix() const;
+
+    QCLuceneTerm getPrefix() const;
 
 private:
     QCLuceneTerm prefix;
@@ -112,13 +112,13 @@ private:
 class Q_CLUCENE_EXPORT QCLuceneRangeQuery : public QCLuceneQuery
 {
 public:
-    QCLuceneRangeQuery(const QCLuceneTerm &lowerTerm, 
+    QCLuceneRangeQuery(const QCLuceneTerm &lowerTerm,
         const QCLuceneTerm &upperTerm, bool inclusive);
     ~QCLuceneRangeQuery();
 
     static QString getClassName();
-	    
-	QCLuceneTerm getLowerTerm() const;
+
+    QCLuceneTerm getLowerTerm() const;
     QCLuceneTerm getUpperTerm() const;
 
     bool isInclusive() const;
@@ -136,8 +136,8 @@ public:
     ~QCLuceneTermQuery();
 
     static QString getClassName();
-	    
-	QCLuceneTerm getTerm() const;
+
+    QCLuceneTerm getTerm() const;
 
 private:
     QCLuceneTerm term;
@@ -172,7 +172,7 @@ public:
 
     qint32 getSlop() const;
     void setSlop(const qint32 slop);
-    
+
     void addTerm(const QCLuceneTerm &term);
     void addTerm(const QCLuceneTerm &term, qint32 position);
 

@@ -93,7 +93,7 @@ public:
     QCLuceneHits search(const QCLuceneQuery &query);
     QCLuceneHits search(const QCLuceneQuery &query, const QCLuceneFilter &filter);
     QCLuceneHits search(const QCLuceneQuery &query, const QCLuceneSort &sort);
-    QCLuceneHits search(const QCLuceneQuery &query, const QCLuceneFilter &filter, 
+    QCLuceneHits search(const QCLuceneQuery &query, const QCLuceneFilter &filter,
         const QCLuceneSort &sort);
 
 protected:

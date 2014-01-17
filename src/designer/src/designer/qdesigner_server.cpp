@@ -131,7 +131,7 @@ QDesignerClient::QDesignerClient(quint16 port, QObject *parent)
     m_socket->connectToHost(QHostAddress::LocalHost, port);
     connect(m_socket, SIGNAL(readyRead()),
                 this, SLOT(readFromSocket()));
- 
+
 }
 
 QDesignerClient::~QDesignerClient()

@@ -55,7 +55,7 @@ bool QCLuceneTokenizer::next(QCLuceneToken &token)
 QCLuceneStandardTokenizer::QCLuceneStandardTokenizer(const QCLuceneReader &reader)
     : QCLuceneTokenizer(reader)
 {
-    d->tokenStream = 
+    d->tokenStream =
         new lucene::analysis::standard::StandardTokenizer(reader.d->reader);
 }
 
@@ -64,10 +64,10 @@ QCLuceneStandardTokenizer::~QCLuceneStandardTokenizer()
     // nothing todo
 }
 
-bool QCLuceneStandardTokenizer::readApostrophe(const QString &string, 
+bool QCLuceneStandardTokenizer::readApostrophe(const QString &string,
                                                QCLuceneToken &token)
 {
-    lucene::analysis::standard::StandardTokenizer *stdTokenizer = 
+    lucene::analysis::standard::StandardTokenizer *stdTokenizer =
         static_cast<lucene::analysis::standard::StandardTokenizer*> (d->tokenStream);
 
     if (stdTokenizer == 0)
@@ -77,13 +77,13 @@ bool QCLuceneStandardTokenizer::readApostrophe(const QString &string,
     lucene::util::StringBuffer buffer(value);
     bool retValue = stdTokenizer->ReadApostrophe(&buffer, token.d->token);
     delete [] value;
-    
+
     return retValue;
 }
 
 bool QCLuceneStandardTokenizer::readAt(const QString &string, QCLuceneToken &token)
 {
-    lucene::analysis::standard::StandardTokenizer *stdTokenizer = 
+    lucene::analysis::standard::StandardTokenizer *stdTokenizer =
         static_cast<lucene::analysis::standard::StandardTokenizer*> (d->tokenStream);
 
     if (stdTokenizer == 0)
@@ -93,14 +93,14 @@ bool QCLuceneStandardTokenizer::readAt(const QString &string, QCLuceneToken &tok
     lucene::util::StringBuffer buffer(value);
     bool retValue = stdTokenizer->ReadAt(&buffer, token.d->token);
     delete [] value;
-    
+
     return retValue;
 }
 
-bool QCLuceneStandardTokenizer::readCompany(const QString &string, 
+bool QCLuceneStandardTokenizer::readCompany(const QString &string,
                                             QCLuceneToken &token)
 {
-    lucene::analysis::standard::StandardTokenizer *stdTokenizer = 
+    lucene::analysis::standard::StandardTokenizer *stdTokenizer =
         static_cast<lucene::analysis::standard::StandardTokenizer*> (d->tokenStream);
 
     if (stdTokenizer == 0)
@@ -110,7 +110,7 @@ bool QCLuceneStandardTokenizer::readCompany(const QString &string,
     lucene::util::StringBuffer buffer(value);
     bool retValue = stdTokenizer->ReadCompany(&buffer, token.d->token);
     delete [] value;
-    
+
     return retValue;
 }
 

@@ -65,12 +65,12 @@ class Q_CLUCENE_EXPORT QCLuceneToken
 {
 public:
     QCLuceneToken();
-    QCLuceneToken(const QString &text, qint32 startOffset, 
+    QCLuceneToken(const QString &text, qint32 startOffset,
                   qint32 endOffset, const QString &defaultTyp = QLatin1String("word"));
-    
+
     virtual ~QCLuceneToken();
 
-    void set(const QString &text, qint32 startOffset, 
+    void set(const QString &text, qint32 startOffset,
              qint32 endOffset, const QString &defaultTyp = QLatin1String("word"));
 
     quint32 bufferLength() const;

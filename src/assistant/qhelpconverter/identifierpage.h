@@ -53,12 +53,12 @@ class IdentifierPage : public QWizardPage
 
 public:
     IdentifierPage(QWidget *parent = 0);
-    
+
 private slots:
     void setupButtons(bool checked);
 
 private:
-    Ui::IdentifierPage m_ui;    
+    Ui::IdentifierPage m_ui;
 };
 
 QT_END_NAMESPACE

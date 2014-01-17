@@ -63,7 +63,7 @@ public:
     ~FeatureTreeModel();
 
     void clear();
-    
+
     QVariant data(const QModelIndex &index, int role) const;
     bool setData(const QModelIndex &index, const QVariant &value, int role);
     Qt::ItemFlags flags(const QModelIndex &index) const;
@@ -71,32 +71,32 @@ public:
                         int role = Qt::DisplayRole) const;
     QModelIndex index(int row, int column,
                       const QModelIndex &parent = QModelIndex()) const;
-    QModelIndex index(const Feature *feature) const;    
+    QModelIndex index(const Feature *feature) const;
     QModelIndex parent(const QModelIndex &index) const;
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
 
-    void addFeature(Feature *feature);    
+    void addFeature(Feature *feature);
     Feature* getFeature(const QModelIndex &index) const;
 
     void readConfig(QTextStream &stream);
     void writeConfig(QTextStream &stream) const;
-    
+
 public slots:
     void featureChanged();
-    
+
 private:
     QModelIndex createIndex(int row, int column,
                             const QModelIndex &parent,
-                            const Node *feature) const;    
+                            const Node *feature) const;
     QModelIndex index(const QModelIndex &parent, const Feature *feature) const;
     bool contains(const QString &section, const Feature *f) const;
     Node* find(const QString &section, const Feature *f) const;
-    QStringList findDisabled(const QModelIndex &parent) const;    
-    
+    QStringList findDisabled(const QModelIndex &parent) const;
+
     QMap<QString, QList<Node*> > sections;
     mutable QHash<QModelIndex, QModelIndex> parentMap;
-    mutable QHash<const Feature*, QModelIndex> featureIndexMap;    
+    mutable QHash<const Feature*, QModelIndex> featureIndexMap;
 };
 
 QT_END_NAMESPACE

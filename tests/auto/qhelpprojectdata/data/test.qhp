@@ -6,11 +6,11 @@
 	<namespace>trolltech.com.1.0.0.test</namespace>
 	<customFilter name="Custom Filter 1">
 		<filterAttribute>test</filterAttribute>
-		<filterAttribute>filter1</filterAttribute>		
+		<filterAttribute>filter1</filterAttribute>
 	</customFilter>
 	<customFilter name="Custom Filter 2">
 		<filterAttribute>test</filterAttribute>
-		<filterAttribute>filter2</filterAttribute>		
+		<filterAttribute>filter2</filterAttribute>
 	</customFilter>
 	<filterSection>
 		<filterAttribute>test</filterAttribute>
@@ -22,11 +22,11 @@
 				<section title="Section 2" ref="test.html#section2">
 				</section>
 				<section title="Section 3" ref="test.html#section3">
-				</section>				
+				</section>
 				<section title="People" ref="people.html">
 				</section>
 				<section title="About" ref="./sub/about.html">
-				</section>				
+				</section>
 			</section>
 		</toc>
 		<keywords>
@@ -35,12 +35,12 @@
 			<keyword name="bla" id="Test::bla" ref="test.html#bla"/>
 			<keyword name="einstein" id="People::einstein" ref="people.html#einstein"/>
 			<keyword name="newton" id="People::newton" ref="people.html#newton"/>
-		</keywords>	
+		</keywords>
 		<files>
 			<file>classic.css</file>
 			<file>test.html</file>
 			<file>people.html</file>
-			<file>./sub/about.html</file>			
+			<file>./sub/about.html</file>
 		</files>
 	</filterSection>
 	<filterSection>
@@ -53,20 +53,20 @@
 				<section title="Section 2" ref="fancy.html#section2">
 				</section>
 				<section title="Section 3" ref="fancy.html#section3">
-				</section>				
+				</section>
 				<section title="Cars" ref="cars.html">
-				</section>				
+				</section>
 			</section>
 		</toc>
 		<keywords>
 			<keyword name="foo" id="Fancy::foo" ref="fancy.html#foo"/>
 			<keyword name="foobar" id="Fancy::foobar" ref="fancy.html#foobar"/>
-			<keyword name="audi" id="Cars::newton" ref="cars.html#audi"/>			
-		</keywords>	
+			<keyword name="audi" id="Cars::newton" ref="cars.html#audi"/>
+		</keywords>
 		<files>
 			<file>classic.css</file>
 			<file>fancy.html</file>
-			<file>cars.html</file>			
+			<file>cars.html</file>
 		</files>
 	</filterSection>
 </QtHelpProject>

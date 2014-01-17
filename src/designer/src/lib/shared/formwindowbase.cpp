@@ -47,7 +47,7 @@
 #include "qdesigner_menu_p.h"
 #include "qdesigner_menubar_p.h"
 #include "shared_settings_p.h"
-#include "grid_p.h" 
+#include "grid_p.h"
 #include "deviceprofile_p.h"
 #include "qdesigner_utils_p.h"
 #include "spacer_widget_p.h"

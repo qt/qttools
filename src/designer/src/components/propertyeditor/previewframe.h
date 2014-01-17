@@ -60,7 +60,7 @@ public:
 
     void setPreviewPalette(const QPalette &palette);
     void setSubWindowActive(bool active);
-    
+
 private:
     // The user can on some platforms close the mdi child by invoking the system menu.
     // Ensure a child is present.

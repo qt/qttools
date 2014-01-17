@@ -1,7 +1,7 @@
 TEMPLATE = subdirs
 
 SUBDIRS += clucene \
-	   help \
+           help \
            assistant \
            qhelpgenerator \
            qcollectiongenerator \

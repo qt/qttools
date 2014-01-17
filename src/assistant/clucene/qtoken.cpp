@@ -52,13 +52,13 @@ QCLuceneToken::QCLuceneToken()
     d->token = new lucene::analysis::Token();
 }
 
-QCLuceneToken::QCLuceneToken(const QString &text, qint32 startOffset, 
+QCLuceneToken::QCLuceneToken(const QString &text, qint32 startOffset,
                              qint32 endOffset, const QString &defaultTyp)
     : d(new QCLuceneTokenPrivate())
     , tokenText(QStringToTChar(text))
     , tokenType(QStringToTChar(defaultTyp))
 {
-    d->token = new lucene::analysis::Token(tokenText, int32_t(startOffset), 
+    d->token = new lucene::analysis::Token(tokenText, int32_t(startOffset),
         int32_t(endOffset), tokenType);
 }
 

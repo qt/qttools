@@ -89,7 +89,7 @@ NewActionDialog::NewActionDialog(ActionEditor *parent) :
     m_actionEditor(parent)
 {
     m_ui->setupUi(this);
-    
+
     m_ui->tooltipEditor->setTextPropertyValidationMode(ValidationRichText);
     connect(m_ui->toolTipToolButton, SIGNAL(clicked()), this, SLOT(slotEditToolTip()));
 

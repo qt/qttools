@@ -490,8 +490,8 @@ void QPF::addGlyphs(QFontEngine *fe, const QList<CharacterRange> &ranges)
     QByteArray glyphs;
     if (options & RenderGlyphs) {
         // this is only a rough estimation
-        glyphs.reserve(glyphCount 
-                * (sizeof(QFontEngineQPF::Glyph) 
+        glyphs.reserve(glyphCount
+                * (sizeof(QFontEngineQPF::Glyph)
                     + qRound(fe->maxCharWidth() * (fe->ascent() + fe->descent()).toReal())));
 
         QGlyphLayoutArray<10> layout;
@@ -638,7 +638,7 @@ const uchar *QPF::dumpHeader(const uchar *data)
 {
     const QFontEngineQPF::Header *header = reinterpret_cast<const QFontEngineQPF::Header *>(data);
     qDebug() << "Header:";
-    qDebug() << "magic =" 
+    qDebug() << "magic ="
              << header->magic[0]
              << header->magic[1]
              << header->magic[2]

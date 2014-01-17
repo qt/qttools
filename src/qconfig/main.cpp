@@ -188,7 +188,7 @@ Main::Main()
     connect(textBrowser, SIGNAL(featureClicked(QString)),
             this, SLOT(showInfo(QString)));
     connect(featureTree, SIGNAL(activated(QModelIndex)),
-	    this, SLOT(showInfo(QModelIndex)));
+            this, SLOT(showInfo(QModelIndex)));
     connect(featureModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
             this, SLOT(modelChanged()));
     connect(featureTree, SIGNAL(clicked(QModelIndex)),
@@ -385,9 +385,9 @@ void Main::saveConfig()
 
     QFile file(configFile);
     if (!file.open(QIODevice::WriteOnly)) {
-	QMessageBox::warning(this,"Warning",
+        QMessageBox::warning(this,"Warning",
                              "Cannot write to file " + configFile);
-	return;
+        return;
     }
 
     QTextStream stream(&file);
@@ -403,12 +403,12 @@ void Main::saveConfig()
 void Main::loadConfig(const QString &filename)
 {
     if (!QFileInfo(filename).isFile())
-	return;
+        return;
 
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly)) {
-	QMessageBox::warning(this,"Warning", "Cannot open file " + filename);
-	return;
+        QMessageBox::warning(this,"Warning", "Cannot open file " + filename);
+        return;
     }
 
     QTextStream stream(&file);
@@ -428,8 +428,8 @@ void Main::loadFeatures(const QString &filename)
 
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly)) {
-	QMessageBox::warning(this,"Warning", "Cannot open file " + filename);
-	return;
+        QMessageBox::warning(this,"Warning", "Cannot open file " + filename);
+        return;
     }
 
     Feature *feature = 0;
@@ -437,43 +437,43 @@ void Main::loadFeatures(const QString &filename)
     updateStatus(numFeatures);
     QTextStream s(&file);
     for (QString line = s.readLine(); !s.atEnd(); line = s.readLine()) {
-	line = line.simplified();
-	if (line.isEmpty())
-	    continue;
-	if (line.startsWith('#'))
-	    continue;
+        line = line.simplified();
+        if (line.isEmpty())
+            continue;
+        if (line.startsWith('#'))
+            continue;
 
-	int colon = line.indexOf(':');
-	if (colon < 0) { // assume description
+        int colon = line.indexOf(':');
+        if (colon < 0) { // assume description
             QString description = feature->description().simplified();
             description += " " + line;
             feature->setDescription(description);
-	    continue;
-	}
+            continue;
+        }
 
-	QString tag = line.left(colon);
-	QString value = line.mid(colon+1).simplified();
-	if (tag == "Feature") {
+        QString tag = line.left(colon);
+        QString value = line.mid(colon+1).simplified();
+        if (tag == "Feature") {
             if (feature)
                 featureModel->addFeature(feature);
             feature = Feature::getInstance(value);
             updateStatus(++numFeatures);
-	} else if (tag == "Requires") {
+        } else if (tag == "Requires") {
             Q_ASSERT(feature);
             feature->setDependencies(value.split(' ', QString::SkipEmptyParts));
-	} else if (tag == "Name") {
-	    Q_ASSERT(feature);
+        } else if (tag == "Name") {
+            Q_ASSERT(feature);
             feature->setTitle(value);
-	} else if (tag == "Section") {
-	    Q_ASSERT(feature);
+        } else if (tag == "Section") {
+            Q_ASSERT(feature);
             feature->setSection(value);
-	} else if (tag == "SeeAlso") {
-	    Q_ASSERT(feature);
+        } else if (tag == "SeeAlso") {
+            Q_ASSERT(feature);
             feature->setRelations(value.split(' ', QString::SkipEmptyParts));
         } else if (tag == "Description") {
             Q_ASSERT(feature);
             feature->setDescription(value);
-	}
+        }
     }
     if (feature)
         featureModel->addFeature(feature);
@@ -492,7 +492,7 @@ void Main::showInfo(const QModelIndex &index)
     model = static_cast<FeatureTreeModel*>(featureTree->model());
 
     if (const Feature *feature = model->getFeature(index))
-	textBrowser->setHtml(feature->toHtml());
+        textBrowser->setHtml(feature->toHtml());
 
     // Ensure index is visible
     QModelIndex parent = model->parent(index);
@@ -544,10 +544,10 @@ int main(int argc, char** argv)
                   + "/src/corelib/global";
 
     for (int i = 1; i < argc; ++i) {
-	QString arg = argv[i];
-	if (arg == "-f" && i+1 < argc)
+        QString arg = argv[i];
+        if (arg == "-f" && i+1 < argc)
             m.loadFeatures(argv[++i]);
-	else if (arg == "-c" && i+1 < argc)
+        else if (arg == "-c" && i+1 < argc)
             m.loadConfig(argv[++i]);
     }
     m.resize(m.sizeHint() + QSize(500,300));

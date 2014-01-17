@@ -169,12 +169,12 @@ void FormWindowCursor::setProperty(const QString &name, const QVariant &value)
     // build selection
     const int N = selectedWidgetCount();
     Q_ASSERT(N);
-    
+
     SetPropertyCommand::ObjectList selection;
-    for (int i=0; i<N; ++i) 
+    for (int i=0; i<N; ++i)
          selection.push_back(selectedWidget(i));
 
-    
+
     SetPropertyCommand* setPropertyCommand = new SetPropertyCommand(m_formWindow);
     if (setPropertyCommand->init(selection, name, value, current())) {
         m_formWindow->commandHistory()->push(setPropertyCommand);

@@ -1,6 +1,6 @@
 #! [0]
 SOURCES = calculatorform.cpp main.cpp
-HEADERS	= calculatorform.h
+HEADERS = calculatorform.h
 FORMS = calculatorform.ui
 #! [0]
 

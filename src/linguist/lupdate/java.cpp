@@ -305,11 +305,11 @@ static int getToken()
                 if (yyCh == QLatin1Char('+')) {
                     yyCh = getChar();
                     return Tok_PlusPlus;
-		}
+                }
                 if( yyCh == QLatin1Char('=') ){
                     yyCh = getChar();
                     return Tok_PlusEq;
-		}
+                }
                 return Tok_Plus;
             case '0':
             case '1':

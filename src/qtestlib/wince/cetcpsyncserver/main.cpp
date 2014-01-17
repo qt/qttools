@@ -55,7 +55,7 @@ void messageOutput(QtMsgType type, const QMessageLogContext &, const QString &ms
 int main(int argc, char **argv)
 {
     qInstallMessageHandler(messageOutput);
-    
+
     QCoreApplication app(argc, argv);
     ConnectionManager manager;
     manager.init();

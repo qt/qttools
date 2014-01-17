@@ -52,7 +52,7 @@ public:
 
 private slots:
     void focusChanged(QWidget *old, QWidget *now);
-    
+
 private:
     Ui::WateringConfigDialog m_ui;
     QMap<QWidget*, QString> m_widgetInfo;

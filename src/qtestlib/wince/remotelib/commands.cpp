@@ -131,13 +131,13 @@ bool qRemoteExecute(const wchar_t* program, const wchar_t* arguments, int *retur
 \brief Reset the device.
 */
 int qRemoteSoftReset(DWORD, BYTE*, DWORD*, BYTE**, IRAPIStream* stream)
-{   
-    //POWER_STATE_ON        On state 
-    //POWER_STATE_OFF       Off state 
-    //POWER_STATE_CRITICAL  Critical state 
-    //POWER_STATE_BOOT      Boot state 
-    //POWER_STATE_IDLE      Idle state 
-    //POWER_STATE_SUSPEND   Suspend state 
+{
+    //POWER_STATE_ON        On state
+    //POWER_STATE_OFF       Off state
+    //POWER_STATE_CRITICAL  Critical state
+    //POWER_STATE_BOOT      Boot state
+    //POWER_STATE_IDLE      Idle state
+    //POWER_STATE_SUSPEND   Suspend state
     //POWER_STATE_RESET     Reset state
 
     DWORD returnValue  = SetSystemPowerState(0, POWER_STATE_RESET, POWER_FORCE);
@@ -159,16 +159,16 @@ int qRemoteToggleUnattendedPowerMode(DWORD, BYTE*, DWORD*, BYTE**, IRAPIStream* 
     if (S_OK != stream->Read(&toggleVal, sizeof(toggleVal), &bytesRead))
         return -2;
 
-    //PPN_REEVALUATESTATE 0x0001 Reserved. Set dwData to zero (0). 
-    //PPN_POWERCHANGE 0x0002 Reserved. Set dwData to zero (0). 
-    //PPN_UNATTENDEDMODE 0x0003 Set dwData to TRUE or FALSE. 
+    //PPN_REEVALUATESTATE 0x0001 Reserved. Set dwData to zero (0).
+    //PPN_POWERCHANGE 0x0002 Reserved. Set dwData to zero (0).
+    //PPN_UNATTENDEDMODE 0x0003 Set dwData to TRUE or FALSE.
     //PPN_SUSPENDKEYPRESSED or
-    //PPN_POWERBUTTONPRESSED 0x0004 Reserved. Set dwData to zero (0). 
-    //PPN_SUSPENDKEYRELEASED 0x0005 Reserved. Set dwData to zero (0). 
-    //PPN_APPBUTTONPRESSED 0x0006 Reserved. Set dwData to zero (0). 
-    //PPN_OEMBASE Greater than or equal to 0x10000 
+    //PPN_POWERBUTTONPRESSED 0x0004 Reserved. Set dwData to zero (0).
+    //PPN_SUSPENDKEYRELEASED 0x0005 Reserved. Set dwData to zero (0).
+    //PPN_APPBUTTONPRESSED 0x0006 Reserved. Set dwData to zero (0).
+    //PPN_OEMBASE Greater than or equal to 0x10000
     //You can define higher values, such as 0x10001, 0x10002, and so on.
-    // Reserved. Set dwData to zero (0). 
+    // Reserved. Set dwData to zero (0).
     returnValue = PowerPolicyNotify(PPN_UNATTENDEDMODE, toggleVal);
 
     if (S_OK != stream->Write(&returnValue, sizeof(returnValue), &bytesRead))
@@ -192,16 +192,16 @@ int qRemotePowerButton(DWORD, BYTE*, DWORD*, BYTE**, IRAPIStream* stream)
     if (S_OK != stream->Read(&toggleVal, sizeof(toggleVal), &bytesRead))
         return -2;
 
-    //PPN_REEVALUATESTATE 0x0001 Reserved. Set dwData to zero (0). 
-    //PPN_POWERCHANGE 0x0002 Reserved. Set dwData to zero (0). 
-    //PPN_UNATTENDEDMODE 0x0003 Set dwData to TRUE or FALSE. 
+    //PPN_REEVALUATESTATE 0x0001 Reserved. Set dwData to zero (0).
+    //PPN_POWERCHANGE 0x0002 Reserved. Set dwData to zero (0).
+    //PPN_UNATTENDEDMODE 0x0003 Set dwData to TRUE or FALSE.
     //PPN_SUSPENDKEYPRESSED or
-    //PPN_POWERBUTTONPRESSED 0x0004 Reserved. Set dwData to zero (0). 
-    //PPN_SUSPENDKEYRELEASED 0x0005 Reserved. Set dwData to zero (0). 
-    //PPN_APPBUTTONPRESSED 0x0006 Reserved. Set dwData to zero (0). 
-    //PPN_OEMBASE Greater than or equal to 0x10000 
+    //PPN_POWERBUTTONPRESSED 0x0004 Reserved. Set dwData to zero (0).
+    //PPN_SUSPENDKEYRELEASED 0x0005 Reserved. Set dwData to zero (0).
+    //PPN_APPBUTTONPRESSED 0x0006 Reserved. Set dwData to zero (0).
+    //PPN_OEMBASE Greater than or equal to 0x10000
     //You can define higher values, such as 0x10001, 0x10002, and so on.
-    // Reserved. Set dwData to zero (0). 
+    // Reserved. Set dwData to zero (0).
     returnValue = PowerPolicyNotify(PPN_SUSPENDKEYPRESSED, 0);
 
     if (S_OK != stream->Write(&returnValue, sizeof(returnValue), &bytesRead))

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-	
+
 	<xs:element name="UI">
 		<xs:complexType>
 			<xs:choice maxOccurs="unbounded">
@@ -66,7 +66,7 @@
 					</xs:complexType>
 				</xs:element>
 				<xs:element name="includes">
-					<xs:complexType>						
+					<xs:complexType>
 						<xs:sequence maxOccurs="unbounded">
 							<xs:element name="include">
 								<xs:complexType>
@@ -77,7 +77,7 @@
 										</xs:extension>
 									</xs:simpleContent>
 								</xs:complexType>
-							</xs:element>									
+							</xs:element>
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
@@ -133,7 +133,7 @@
 					</xs:complexType>
 				</xs:element>
 				<xs:element name="slots">
-					<xs:complexType>						
+					<xs:complexType>
 						<xs:sequence maxOccurs="unbounded">
 							<xs:element name="slot">
 								<xs:complexType>
@@ -206,7 +206,7 @@
 			<xs:element name="spacer" type="spacer" />
 		</xs:choice>
 	</xs:complexType>
-	
+
 	<xs:complexType name="widget">
 			<xs:choice maxOccurs="unbounded">
 				<xs:element name="class" type="xs:string" />
@@ -220,7 +220,7 @@
 		<xs:attribute name="row" type="xs:integer" />            <!-- ### remove me -->
 		<xs:attribute name="column" type="xs:integer" />         <!-- ### remove me -->
 	</xs:complexType>
-		
+
 	<xs:complexType name="spacer">
 		<xs:sequence maxOccurs="unbounded">
 			<xs:element name="property" type="property" />
@@ -238,7 +238,7 @@
 			<xs:element name="blue" type="xs:integer" />
 		</xs:sequence>
 	</xs:complexType>
-	
+
 	<xs:complexType name="colorGroup">
 		<xs:choice maxOccurs="unbounded">
 			<xs:element name="color" type="color" />
@@ -272,7 +272,7 @@
 			<xs:element name="y" type="xs:integer" />
 		</xs:sequence>
 	</xs:complexType>
-	
+
 	<xs:complexType name="rect">
 		<xs:sequence>
 			<xs:element name="x" type="xs:integer" />
@@ -297,7 +297,7 @@
 			<xs:element name="height" type="xs:integer" />
 		</xs:sequence>
 	</xs:complexType>
-	
+
 	<xs:complexType name="date">
 		<xs:sequence>
 			<xs:element name="year" type="xs:integer" />
@@ -313,7 +313,7 @@
 			<xs:element name="second" type="xs:integer" />
 		</xs:sequence>
 	</xs:complexType>
-	
+
 	<xs:complexType name="dateTime">
 		<xs:sequence>
 			<xs:element name="hour" type="xs:integer" />
@@ -349,5 +349,5 @@
 		<xs:attribute name="name" type="xs:string" />
 		<xs:attribute name="stdset" type="xs:integer" />
 	</xs:complexType>
-	
+
 </xs:schema>

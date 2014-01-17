@@ -19,4 +19,4 @@ SOURCES += \
     $$PWD/qph.cpp \
     $$PWD/po.cpp \
     $$PWD/ts.cpp \
-    $$PWD/xliff.cpp 
+    $$PWD/xliff.cpp

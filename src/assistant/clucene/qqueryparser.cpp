@@ -141,13 +141,13 @@ QCLuceneQuery* QCLuceneMultiFieldQueryParser::parse(const QString &query,
 
 QCLuceneQuery* QCLuceneMultiFieldQueryParser::parse(const QString &query,
                                                     const QStringList &fieldList,
-                                                    QList<FieldFlags> flags, 
+                                                    QList<FieldFlags> flags,
                                                     QCLuceneAnalyzer &analyzer)
 {
     QCLuceneBooleanQuery *retValue = new QCLuceneBooleanQuery();
     qint32 i = 0;
     foreach (const QString &field, fieldList) {
-		QCLuceneQuery *q = QCLuceneQueryParser::parse(query, field, analyzer);
+        QCLuceneQuery *q = QCLuceneQueryParser::parse(query, field, analyzer);
         if (q) {
             qint32 flag = flags.at(i);
             switch (flag) {

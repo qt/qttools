@@ -91,7 +91,7 @@ void FindFileDialog::browse()
 //! [2]
 void FindFileDialog::help()
 {
-    currentAssistant->showDocumentation("filedialog.html");    
+    currentAssistant->showDocumentation("filedialog.html");
 }
 //! [2]
 

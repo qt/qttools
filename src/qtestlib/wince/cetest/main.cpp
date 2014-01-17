@@ -382,7 +382,7 @@ int main(int argc, char **argv)
         int retryCount = 21;
         while (--retryCount)
         {
-            if (!connection.connect()) 
+            if (!connection.connect())
                 Sleep(SLEEP_RECONNECT);
             else
                 break;

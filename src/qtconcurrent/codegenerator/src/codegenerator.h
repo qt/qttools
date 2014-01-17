@@ -51,7 +51,7 @@ namespace CodeGenerator
     enum GeneratorType {NoopType, CompoundType, TextType, RepeaterType, CounterType, GroupType};
     class BaseGenerator;
     typedef QStack<BaseGenerator *> GeneratorStack;
-    
+
     template <typename ValueType>
     class Stacker {
     public:
@@ -61,7 +61,7 @@ namespace CodeGenerator
         QStack<ValueType> *stack;
     };
     typedef Stacker<BaseGenerator *> GeneratorStacker;
-    
+
     class BaseGenerator
     {
     public:
@@ -70,7 +70,7 @@ namespace CodeGenerator
         virtual QByteArray generate(GeneratorStack *stack) { Q_UNUSED(stack); return QByteArray(); };
         int currentCount(GeneratorStack *stack) const;
         int repeatCount(GeneratorStack *stack) const;
-        GeneratorType type;   
+        GeneratorType type;
     };
 
     class Item
@@ -84,34 +84,34 @@ namespace CodeGenerator
         // QExplicitlySharedDataPointer<BaseGenerator> generator;
         BaseGenerator * const generator;
     };
-    
+
     class CompoundGenerator : public BaseGenerator
     {
     public:
-        CompoundGenerator(BaseGenerator * const a, BaseGenerator * const b) 
+        CompoundGenerator(BaseGenerator * const a, BaseGenerator * const b)
           : BaseGenerator(CompoundType), a(a), b(b) {}
         virtual QByteArray generate(GeneratorStack *stack)
         { return a->generate(stack) + b->generate(stack); };
-    protected:    
+    protected:
         BaseGenerator * const a;
         BaseGenerator * const b;
     };
-    
+
     class Compound : public Item
     {
     public:
         Compound(const Item &a, const Item &b) : Item(new CompoundGenerator(a.generator, b.generator)) {}
     };
-    
+
     class TextGenerator : public BaseGenerator
     {
     public:
         TextGenerator(const QByteArray &text) : BaseGenerator(TextType), text(text) {}
         virtual QByteArray generate(GeneratorStack *) { return text; };
-    protected:    
+    protected:
         QByteArray text;
     };
-        
+
     class Text : public Item {
     public:
         Text(const QByteArray &text) : Item(new TextGenerator(text)) {}
@@ -121,7 +121,7 @@ namespace CodeGenerator
     class RepeaterGenerator : public BaseGenerator
     {
     public:
-        RepeaterGenerator(BaseGenerator * const childGenerator) 
+        RepeaterGenerator(BaseGenerator * const childGenerator)
           : BaseGenerator(RepeaterType), repeatCount(1), repeatOffset(0), childGenerator(childGenerator) {}
         virtual QByteArray generate(GeneratorStack *stack);
 
@@ -130,22 +130,22 @@ namespace CodeGenerator
         int currentRepeat;
         BaseGenerator * const childGenerator;
     };
-    
+
     class Repeater : public Item {
     public:
         Repeater(const Item &item) : Item(new RepeaterGenerator(item.generator)) {}
-        void setRepeatCount(int count) 
+        void setRepeatCount(int count)
         { static_cast<RepeaterGenerator * const>(generator)->repeatCount = count;  }
         void setRepeatOffset(int offset)
         { static_cast<RepeaterGenerator * const>(generator)->repeatOffset = offset;  }
     };
-    
+
     class CounterGenerator : public BaseGenerator
     {
     public:
         CounterGenerator() : BaseGenerator(CounterType), offset(0), increment(1), reverse(false) {}
         QByteArray generate(GeneratorStack *stack)
-        { 
+        {
             if (reverse)
                 return QByteArray::number(repeatCount(stack) - (currentCount(stack) * increment) + offset + 1);
             else
@@ -155,7 +155,7 @@ namespace CodeGenerator
         int increment;
         bool reverse;
     };
-    
+
     class Counter : public Item {
     public:
         Counter() : Item(new CounterGenerator()) {}
@@ -168,12 +168,12 @@ namespace CodeGenerator
         { static_cast<CounterGenerator *>(generator)->reverse = reverse; }
 
     };
-    
+
     class GroupGenerator : public BaseGenerator
     {
     public:
         GroupGenerator(BaseGenerator * const childGenerator)
-          : BaseGenerator(GroupType), currentRepeat(0), childGenerator(childGenerator), 
+          : BaseGenerator(GroupType), currentRepeat(0), childGenerator(childGenerator),
             separator(new BaseGenerator()), prefix(new BaseGenerator()), postfix(new BaseGenerator()) { }
         virtual QByteArray generate(GeneratorStack *stack);
         int currentRepeat;
@@ -182,20 +182,20 @@ namespace CodeGenerator
         BaseGenerator *prefix;
         BaseGenerator *postfix;
     };
-    
+
     class Group : public Item
     {
     public:
         Group(const Item &item) : Item(new GroupGenerator(item.generator)) { setSeparator(", "); }
-        void setSeparator(const Item &separator)        
+        void setSeparator(const Item &separator)
         { static_cast<GroupGenerator *>(generator)->separator = separator.generator; }
-        void setPrefix(const Item &prefix)        
+        void setPrefix(const Item &prefix)
         { static_cast<GroupGenerator *>(generator)->prefix = prefix.generator; }
-        void setPostfix(const Item &postfix)        
+        void setPostfix(const Item &postfix)
         { static_cast<GroupGenerator *>(generator)->postfix = postfix.generator; }
     };
 
-    const Compound operator+(const Item &a, const Item &b); 
+    const Compound operator+(const Item &a, const Item &b);
     const Compound operator+(const Item &a, const char * const text);
     const Compound operator+(const char * const text, const Item &b);
 

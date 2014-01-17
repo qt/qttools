@@ -84,7 +84,7 @@ bool DeploymentHandler::deviceDeploy(const DeploymentList &deploymentList)
             copyList.append(deploymentList.at(i));
             continue;
         }
-        
+
         int res = CompareFileTime(&localCreationTime, &deviceCreationTime);
         if (res != 0)
             copyList.append(deploymentList.at(i));
@@ -253,7 +253,7 @@ void DeploymentHandler::initProjectDeploy(QMakeProject* project, DeploymentList 
             if(dirstr.right(Option::dir_sep.length()) != Option::dir_sep)
                 dirstr += Option::dir_sep;
             QFileInfo info(dirstr + filestr);
-            
+
             static int addQMakeDeployCounter = 0;
             QStringList entryList = info.absoluteDir().entryList(QStringList() << info.fileName());
             if (entryList.size() > 1) {
@@ -270,7 +270,7 @@ void DeploymentHandler::initProjectDeploy(QMakeProject* project, DeploymentList 
                 }
                 continue;
             }
-                                                                            
+
             if (info.isDir()) {
                 QDir additionalDir(dirstr + filestr);
                 QStringList additionalEntries = additionalDir.entryList(QDir::NoDotAndDotDot | QDir::AllEntries | QDir::NoSymLinks);

@@ -58,7 +58,7 @@ QT_BEGIN_NAMESPACE
 //  W A R N I N G
 //  -------------
 //
-// adjustments here, need to be done in 
+// adjustments here, need to be done in
 // QTDIR/src/3rdparty/clucene/src/CLucene/StdHeader.h as well
 //
 #if defined(_LUCENE_DONTIMPLEMENT_NS_MACROS)

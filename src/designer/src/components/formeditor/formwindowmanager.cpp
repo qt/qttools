@@ -816,7 +816,7 @@ static inline bool hasManagedLayoutItems(const QDesignerFormEditorInterface *cor
 {
     if (const QLayout *ml = LayoutInfo::managedLayout(core, w)) {
         // Try to find managed items, ignore dummy grid spacers
-        const int count = ml->count();        
+        const int count = ml->count();
         for (int i = 0; i < count; i++)
             if (!LayoutInfo::isEmptyItem(ml->itemAt(i)))
                 return true;

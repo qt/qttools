@@ -2455,7 +2455,7 @@ void QAbstractFormBuilder::loadListWidgetExtraInfo(DomWidget *ui_widget, QListWi
         loadItemPropsNFlags<QListWidgetItem>(this, item, properties);
 #else
         loadItemPropsNFlags(this, item, properties);
-#endif        
+#endif
     }
 
     DomProperty *currentRow = propertyMap(ui_widget->elementProperty()).value(strings.currentRowProperty);

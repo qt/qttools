@@ -68,7 +68,7 @@ class QHelpDBReader : public QObject
     Q_OBJECT
 
 public:
-    QHelpDBReader(const QString &dbName); 
+    QHelpDBReader(const QString &dbName);
     QHelpDBReader(const QString &dbName, const QString &uniqueId,
         QObject *parent);
     ~QHelpDBReader();

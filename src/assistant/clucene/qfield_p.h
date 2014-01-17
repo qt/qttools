@@ -63,47 +63,47 @@ private:
 class Q_CLUCENE_EXPORT QCLuceneField
 {
 public:
-	enum Store { 
-		STORE_YES = 1, 
-		STORE_NO = 2,
-	    STORE_COMPRESS = 4
-	};
+    enum Store {
+        STORE_YES = 1,
+        STORE_NO = 2,
+        STORE_COMPRESS = 4
+    };
 
-	enum Index { 
-		INDEX_NO = 16, 
-		INDEX_TOKENIZED = 32, 
-		INDEX_UNTOKENIZED = 64, 
-		INDEX_NONORMS = 128
-	};
+    enum Index {
+        INDEX_NO = 16,
+        INDEX_TOKENIZED = 32,
+        INDEX_UNTOKENIZED = 64,
+        INDEX_NONORMS = 128
+    };
 
-	enum TermVector {
-		TERMVECTOR_NO = 256,
-		TERMVECTOR_YES = 512,    
-		TERMVECTOR_WITH_POSITIONS = 1024,
-		TERMVECTOR_WITH_OFFSETS = 2048
-	};
+    enum TermVector {
+        TERMVECTOR_NO = 256,
+        TERMVECTOR_YES = 512,
+        TERMVECTOR_WITH_POSITIONS = 1024,
+        TERMVECTOR_WITH_OFFSETS = 2048
+    };
 
-	QCLuceneField(const QString &name, const QString &value, int configs);
-	QCLuceneField(const QString &name, QCLuceneReader *reader, int configs);
+    QCLuceneField(const QString &name, const QString &value, int configs);
+    QCLuceneField(const QString &name, QCLuceneReader *reader, int configs);
     ~QCLuceneField();
 
     QString name() const;
     QString stringValue() const;
     QCLuceneReader* readerValue() const;
-	bool isStored() const;
-	bool isIndexed() const;
-	bool isTokenized() const;
-	bool isCompressed() const;
-	void setConfig(int termVector);
-	bool isTermVectorStored() const;
-	bool isStoreOffsetWithTermVector() const;
-	bool isStorePositionWithTermVector() const;
-	qreal getBoost() const;
-	void setBoost(qreal value);
-	bool isBinary() const;
-	bool getOmitNorms() const;
-	void setOmitNorms(bool omitNorms);
-	QString toString() const;
+    bool isStored() const;
+    bool isIndexed() const;
+    bool isTokenized() const;
+    bool isCompressed() const;
+    void setConfig(int termVector);
+    bool isTermVectorStored() const;
+    bool isStoreOffsetWithTermVector() const;
+    bool isStorePositionWithTermVector() const;
+    qreal getBoost() const;
+    void setBoost(qreal value);
+    bool isBinary() const;
+    bool getOmitNorms() const;
+    void setOmitNorms(bool omitNorms);
+    QString toString() const;
 
 protected:
     QCLuceneField();

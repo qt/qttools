@@ -77,7 +77,7 @@ private:
     void initializePage(int id);
     QStringList getUnreferencedFiles(const QStringList &files);
     bool eventFilter(QObject *obj, QEvent *e);
-    
+
     AdpReader m_adpReader;
     InputPage *m_inputPage;
     GeneralPage *m_generalPage;

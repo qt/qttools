@@ -227,7 +227,7 @@ QDESIGNER_SHARED_EXPORT bool promoteWidget(QDesignerFormEditorInterface *core,QW
         qDebug() << "WARNING: Recursive promotion of " << oldCustomClassName << " to " << customClassName
             << ". A plugin is missing.";
     }
-    item->setCustomClassName(customClassName);  
+    item->setCustomClassName(customClassName);
     if (debugMetaDatabase) {
         qDebug() << "Promoting " << widget->metaObject()->className() << " to " << customClassName;
     }
@@ -267,7 +267,7 @@ QDESIGNER_SHARED_EXPORT QString promotedCustomClassName(QDesignerFormEditorInter
         return QString();
     return item->customClassName();
 }
- 
+
 QDESIGNER_SHARED_EXPORT QString promotedExtends(QDesignerFormEditorInterface *core, QWidget* widget)
 {
     const QString customClassName = promotedCustomClassName(core,widget);

@@ -73,44 +73,44 @@ public:
         DEFAULT_MAX_MERGE_DOCS = 0x7FFFFFFFL
     };
 
-	QCLuceneIndexWriter(const QString &path, QCLuceneAnalyzer &analyzer, 
-        bool create, bool closeDir = true);
+    QCLuceneIndexWriter(const QString &path, QCLuceneAnalyzer &analyzer,
+    bool create, bool closeDir = true);
     virtual ~QCLuceneIndexWriter();
 
-	void close();
-	void optimize();
+    void close();
+    void optimize();
     qint32 docCount();
     QCLuceneAnalyzer getAnalyzer();
-	
+
     void addIndexes(const QList<QCLuceneIndexReader*> &readers);
     void addDocument(QCLuceneDocument &doc, QCLuceneAnalyzer &analyzer);
 
-	qint32 getMaxFieldLength() const;
-	void setMaxFieldLength(qint32 value);
-	
+    qint32 getMaxFieldLength() const;
+    void setMaxFieldLength(qint32 value);
+
     qint32 getMaxBufferedDocs() const;
     void setMaxBufferedDocs(qint32 value);
-	
-	qint64 getWriteLockTimeout() const;
-    void setWriteLockTimeout(qint64 writeLockTimeout);
-	
-    qint64 getCommitLockTimeout() const;
-	void setCommitLockTimeout(qint64 commitLockTimeout);
 
-	qint32 getMergeFactor() const;
-	void setMergeFactor(qint32 value);
+    qint64 getWriteLockTimeout() const;
+    void setWriteLockTimeout(qint64 writeLockTimeout);
+
+    qint64 getCommitLockTimeout() const;
+    void setCommitLockTimeout(qint64 commitLockTimeout);
+
+    qint32 getMergeFactor() const;
+    void setMergeFactor(qint32 value);
 
     qint32 getTermIndexInterval() const;
-	void setTermIndexInterval(qint32 interval);
-	
-	qint32 getMinMergeDocs() const;
-	void setMinMergeDocs(qint32 value);
+    void setTermIndexInterval(qint32 interval);
 
-	qint32 getMaxMergeDocs() const;
-	void setMaxMergeDocs(qint32 value);
+    qint32 getMinMergeDocs() const;
+    void setMinMergeDocs(qint32 value);
+
+    qint32 getMaxMergeDocs() const;
+    void setMaxMergeDocs(qint32 value);
 
     bool getUseCompoundFile() const;
-	void setUseCompoundFile(bool value);
+    void setUseCompoundFile(bool value);
 
 protected:
     QSharedDataPointer<QCLuceneIndexWriterPrivate> d;

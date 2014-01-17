@@ -54,7 +54,7 @@ class StdInListenerWin : public QThread
 public:
     StdInListenerWin(QObject *parent);
     ~StdInListenerWin();
-    
+
 signals:
     void receivedCommand(const QString &cmd);
 

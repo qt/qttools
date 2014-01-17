@@ -184,12 +184,12 @@ QCLuceneKeywordAnalyzer::~QCLuceneKeywordAnalyzer()
 
 
 QCLucenePerFieldAnalyzerWrapper::QCLucenePerFieldAnalyzerWrapper(
-    QCLuceneAnalyzer *defaultAnalyzer) 
+    QCLuceneAnalyzer *defaultAnalyzer)
     : QCLuceneAnalyzer()
 {
-    d->analyzer = new 
+    d->analyzer = new
         lucene::analysis::PerFieldAnalyzerWrapper(defaultAnalyzer->d->analyzer);
-    
+
     analyzers.append(defaultAnalyzer);
     defaultAnalyzer->d->deleteCLuceneAnalyzer = false;
 }
@@ -199,10 +199,10 @@ QCLucenePerFieldAnalyzerWrapper::~QCLucenePerFieldAnalyzerWrapper()
     qDeleteAll(analyzers);
 }
 
-void QCLucenePerFieldAnalyzerWrapper::addAnalyzer(const QString &fieldName, 
+void QCLucenePerFieldAnalyzerWrapper::addAnalyzer(const QString &fieldName,
                                                   QCLuceneAnalyzer *analyzer)
 {
-    lucene::analysis::PerFieldAnalyzerWrapper *analyzerWrapper = 
+    lucene::analysis::PerFieldAnalyzerWrapper *analyzerWrapper =
         static_cast<lucene::analysis::PerFieldAnalyzerWrapper*> (d->analyzer);
 
     if (analyzerWrapper == 0)

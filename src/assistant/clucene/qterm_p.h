@@ -73,17 +73,17 @@ public:
     virtual ~QCLuceneTerm();
 
     QString field() const;
-	QString text() const;
-	
-	void set(const QString &field, const QString &text);
-	void set(const QCLuceneTerm &fieldTerm, const QString &text);
-	void set(const QString &field, const QString &text, bool internField);
+    QString text() const;
+
+    void set(const QString &field, const QString &text);
+    void set(const QCLuceneTerm &fieldTerm, const QString &text);
+    void set(const QString &field, const QString &text, bool internField);
 
     bool equals(const QCLuceneTerm &other) const;
     qint32 compareTo(const QCLuceneTerm &other) const;
-	
-	QString toString() const;
-	quint32 hashCode() const;
+
+    QString toString() const;
+    quint32 hashCode() const;
     quint32 textLength() const;
 
 protected:

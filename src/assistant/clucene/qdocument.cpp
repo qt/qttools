@@ -90,7 +90,7 @@ QCLuceneField* QCLuceneDocument::getField(const QString &name) const
         }
     }
     delete [] fieldName;
-    
+
     return field;
 }
 
@@ -99,7 +99,7 @@ QString QCLuceneDocument::get(const QString &name) const
     QCLuceneField* field = getField(name);
     if (field)
         return field->stringValue();
-    
+
     return QString();
 }
 

@@ -51,7 +51,7 @@ IdentifierPage::IdentifierPage(QWidget *parent)
         "the keywords found in the .adp or .dcf file."));
 
     m_ui.setupUi(this);
-    
+
     connect(m_ui.identifierCheckBox, SIGNAL(toggled(bool)),
         this, SLOT(setupButtons(bool)));
 
@@ -64,7 +64,7 @@ void IdentifierPage::setupButtons(bool checked)
 {
     m_ui.globalButton->setEnabled(checked);
     m_ui.fileNameButton->setEnabled(checked);
-    m_ui.prefixLineEdit->setEnabled(checked 
+    m_ui.prefixLineEdit->setEnabled(checked
         && m_ui.globalButton->isChecked());
 }
 

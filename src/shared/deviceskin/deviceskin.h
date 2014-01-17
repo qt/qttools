@@ -60,7 +60,7 @@ class QTextStream;
 struct DeviceSkinButtonArea {
     DeviceSkinButtonArea();
     QString name;
-    int	keyCode;
+    int keyCode;
     QPolygon area;
     QString text;
     bool activeWhenClosed;

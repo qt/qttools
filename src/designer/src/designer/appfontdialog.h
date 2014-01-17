@@ -54,7 +54,7 @@ class QToolButton;
 class QItemSelection;
 class QDesignerSettingsInterface;
 
-// AppFontWidget: Manages application fonts which the user can load and 
+// AppFontWidget: Manages application fonts which the user can load and
 // provides API for saving/restoring them.
 
 class AppFontWidget : public QGroupBox

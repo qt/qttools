@@ -55,7 +55,7 @@ struct Candidate
 {
     Candidate() {}
     Candidate(const QString& source0, const QString &target0)
-	: source(source0), target(target0)
+        : source(source0), target(target0)
     {}
 
     QString source;
@@ -115,8 +115,8 @@ static inline int getSimilarityScore(const QString &str1, const QString &str2)
 }
 
 CandidateList similarTextHeuristicCandidates( const Translator *tor,
-					      const QString &text,
-					      int maxCandidates );
+                                              const QString &text,
+                                              int maxCandidates );
 
 QT_END_NAMESPACE
 

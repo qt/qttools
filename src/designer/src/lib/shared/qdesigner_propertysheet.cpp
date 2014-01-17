@@ -1476,7 +1476,7 @@ enum DesignableState { PropertyIsDesignable,
                        PropertyNotDesignable };
 
 static inline DesignableState designableState(const QDesignerMetaPropertyInterface *p, const QObject *object)
-{   
+{
     if (p->attributes(object) & QDesignerMetaPropertyInterface::DesignableAttribute)
         return PropertyIsDesignable;
     return (p->attributes() & QDesignerMetaPropertyInterface::DesignableAttribute) ?

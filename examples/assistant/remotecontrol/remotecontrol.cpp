@@ -112,7 +112,7 @@ void RemoteControl::on_launchButton_clicked()
     if (!ui.startUrlLineEdit->text().isEmpty())
         sendCommand(QLatin1String("SetSource ")
             + ui.startUrlLineEdit->text());
-        
+
     ui.launchButton->setEnabled(false);
     ui.startUrlLineEdit->setEnabled(false);
     ui.actionGroupBox->setEnabled(true);

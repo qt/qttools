@@ -74,7 +74,7 @@ void Feature::clear()
 static QString listToHtml(const QString &title, const QStringList &list)
 {
     if (list.isEmpty())
-	return QString();
+        return QString();
 
     QString str;
     QTextStream stream(&str);
@@ -82,7 +82,7 @@ static QString listToHtml(const QString &title, const QStringList &list)
     stream << "<h3>" << title << ":</h3>";
     stream << "<ul>";
     foreach (QString l, list)
-	stream << "<li>" << l << "</li>";
+        stream << "<li>" << l << "</li>";
     stream << "</ul>";
 
     return str;
@@ -131,13 +131,13 @@ QString Feature::toHtml() const
     const QString linkColor = QApplication::palette().color(QPalette::Link).name();
     stream << "<h2><font size=\"+2\" color=\"" << linkColor << "\">"
            << key() << "</font></h2>"
-	   << "<h2><font size=\"+2\">" << title() << "</font></h2>";
+           << "<h2><font size=\"+2\">" << title() << "</font></h2>";
     if (!description().isEmpty())
         stream << "<p>" << description() << "</p>";
     stream << listToHtml("Section", QStringList(section()))
-	   << listToHtml("Requires", dependencies())
-	   << listToHtml("Required for", supports())
-	   << listToHtml("See also", relations());
+           << listToHtml("Requires", dependencies())
+           << listToHtml("Required for", supports())
+           << listToHtml("See also", relations());
 
     return linkify(str);
 }
@@ -215,7 +215,7 @@ void Feature::setEnabled(bool on)
 
     d->enabled = on;
     foreach (Feature *f, supports())
-	f->updateSelectable();
+        f->updateSelectable();
     emit changed();
 }
 

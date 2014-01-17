@@ -63,7 +63,7 @@ public:
 private slots:
     void printStatus(const QString &msg);
     void printWarning(const QString &msg);
-    
+
 private:
     QHelpGenerator *generator;
 };

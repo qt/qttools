@@ -67,34 +67,34 @@ class Q_CLUCENE_EXPORT QCLuceneIndexReader
 {
 public:
     enum FieldOption {
-		ALL = 1,
-		INDEXED = 2,
-		UNINDEXED = 4,
-		INDEXED_WITH_TERMVECTOR = 8,
-		INDEXED_NO_TERMVECTOR = 16,
-		TERMVECTOR = 32,
-		TERMVECTOR_WITH_POSITION = 64,
-		TERMVECTOR_WITH_OFFSET = 128,
-		TERMVECTOR_WITH_POSITION_OFFSET = 256
-	};
+        ALL = 1,
+        INDEXED = 2,
+        UNINDEXED = 4,
+        INDEXED_WITH_TERMVECTOR = 8,
+        INDEXED_NO_TERMVECTOR = 16,
+        TERMVECTOR = 32,
+        TERMVECTOR_WITH_POSITION = 64,
+        TERMVECTOR_WITH_OFFSET = 128,
+        TERMVECTOR_WITH_POSITION_OFFSET = 256
+    };
 
     virtual ~QCLuceneIndexReader();
 
     static bool isLuceneFile(const QString &filename);
     static bool indexExists(const QString &directory);
     static QCLuceneIndexReader open(const QString &path);
-    
+
     static void unlock(const QString &path);
     static bool isLocked(const QString &directory);
 
-	static quint64 lastModified(const QString &directory);
-	static qint64 getCurrentVersion(const QString &directory);
+    static quint64 lastModified(const QString &directory);
+    static qint64 getCurrentVersion(const QString &directory);
 
     void close();
     bool isCurrent();
-	void undeleteAll();
-	qint64 getVersion();
-	void deleteDocument(qint32 docNum);
+    void undeleteAll();
+    qint64 getVersion();
+    void deleteDocument(qint32 docNum);
     bool hasNorms(const QString &field);
     qint32 deleteDocuments(const QCLuceneTerm &term);
     bool document(qint32 index, QCLuceneDocument &document);

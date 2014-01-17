@@ -47,23 +47,23 @@ int main()
     // The code generator works on items. Each item has a generate() function:
     Item item("");
     qDebug() << item.generate(); // produces "".
-    
+
     // There are several Item subclasses. Text items contains a text string which they
     // reproduce when generate is called:
     Text text(" Hi there");
     qDebug() << text.generate(); // produces " Hi there".
-    
+
     // Items can be concatenated:
     Item sentence = text + Text(" Bye there") ;
     qDebug() << sentence.generate(); // produces "Hi there Bye there".
-    // (Internally, this creates a tree of items, and generate is called recursively 
+    // (Internally, this creates a tree of items, and generate is called recursively
     // for items that have children.)
 
     // Repeater items repeat their content when generate is called:
     Repeater repeater = text;
     repeater.setRepeatCount(3);
     qDebug() << repeater.generate(); // produces "Hi there Hi there Hi there".
-    
+
     // Counters evaluate to the current repeat index.
     Repeater repeater2 = text + Counter();
     repeater2.setRepeatCount(3);

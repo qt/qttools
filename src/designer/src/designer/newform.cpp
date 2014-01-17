@@ -96,7 +96,7 @@ NewForm::NewForm(QDesignerWorkbench *workbench, QWidget *parentWidget, const QSt
     m_buttonBox = createButtonBox();
     vBoxLayout->addWidget(m_buttonBox);
     setLayout(vBoxLayout);
-    
+
     resize(500, 400);
     slotCurrentTemplateChanged(m_newFormWidget->hasCurrentTemplate());
 }
