@@ -894,30 +894,9 @@ void QMakeEvaluator::visitProVariable(
         default: // whatever - cannot happen
         case TokAssign:          // =
             zipEmpty(&varVal);
-            if (!m_cumulative) {
-                // FIXME: add check+warning about accidental value removal.
-                // This may be a bit too noisy, though.
-                m_valuemapStack.top()[varName] = varVal;
-            } else {
-                if (!varVal.isEmpty()) {
-                    // We are greedy for values. But avoid exponential growth.
-                    ProStringList &v = valuesRef(varName);
-                    if (v.isEmpty()) {
-                        v = varVal;
-                    } else {
-                        ProStringList old = v;
-                        v = varVal;
-                        QSet<ProString> has;
-                        has.reserve(v.size());
-                        foreach (const ProString &s, v)
-                            has.insert(s);
-                        v.reserve(v.size() + old.size());
-                        foreach (const ProString &s, old)
-                            if (!has.contains(s))
-                                v << s;
-                    }
-                }
-            }
+            // FIXME: add check+warning about accidental value removal.
+            // This may be a bit too noisy, though.
+            m_valuemapStack.top()[varName] = varVal;
             debugMsg(2, "assigning");
             break;
         case TokAppendUnique:    // *=
@@ -933,7 +912,7 @@ void QMakeEvaluator::visitProVariable(
             if (!m_cumulative) {
                 removeEach(&valuesRef(varName), varVal);
             } else {
-                // We are stingy with our values, too.
+                // We are stingy with our values.
             }
             debugMsg(2, "removing");
             break;
@@ -1123,28 +1102,7 @@ bool QMakeEvaluator::prepareProject(const QString &inDir)
     }
   no_cache:
 
-    // Look for mkspecs/ in source and build. First to win determines the root.
-    QString sdir = inDir;
     QString dir = m_outputDir;
-    while (dir != m_buildRoot) {
-        if ((dir != sdir && QFileInfo(sdir, QLatin1String("mkspecs")).isDir())
-                || QFileInfo(dir, QLatin1String("mkspecs")).isDir()) {
-            if (dir != sdir)
-                m_sourceRoot = sdir;
-            m_buildRoot = dir;
-            break;
-        }
-        if (dir == superdir)
-            break;
-        QFileInfo qsdfi(sdir);
-        QFileInfo qdfi(dir);
-        if (qsdfi.isRoot() || qdfi.isRoot())
-            break;
-        sdir = qsdfi.path();
-        dir = qdfi.path();
-    }
-
-    dir = m_outputDir;
     forever {
         QString stashfile = dir + QLatin1String("/.qmake.stash");
         if (dir == (!superdir.isEmpty() ? superdir : m_buildRoot) || m_vfs->exists(stashfile)) {
@@ -1876,14 +1834,12 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::evaluateFile(
         VisitReturn ok = visitProFile(pro, type, flags);
         m_current = m_locationStack.pop();
         pro->deref();
-#ifdef PROEVALUATOR_FULL
         if (ok == ReturnTrue && !(flags & LoadHidden)) {
             ProStringList &iif = m_valuemapStack.first()[ProKey("QMAKE_INTERNAL_INCLUDED_FILES")];
             ProString ifn(fileName);
             if (!iif.contains(ifn))
                 iif << ifn;
         }
-#endif
         return ok;
     } else {
         return ReturnFalse;
@@ -1996,13 +1952,11 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::evaluateFileInto(
     if (ret != ReturnTrue)
         return ret;
     *values = visitor.m_valuemapStack.top();
-#ifdef PROEVALUATOR_FULL
     ProKey qiif("QMAKE_INTERNAL_INCLUDED_FILES");
     ProStringList &iif = m_valuemapStack.first()[qiif];
     foreach (const ProString &ifn, values->value(qiif))
         if (!iif.contains(ifn))
             iif << ifn;
-#endif
     return ReturnTrue;
 }
 

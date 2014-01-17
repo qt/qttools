@@ -388,13 +388,18 @@ bool alwaysOverwritableFile(const QString &fileName)
             || fileName.endsWith(QLatin1String("/src/org/qtproject/qt5/android/bindings/QtActivity.java")));
 }
 
-bool copyFileIfNewer(const QString &sourceFileName, const QString &destinationFileName, bool verbose)
+bool copyFileIfNewer(const QString &sourceFileName,
+                     const QString &destinationFileName,
+                     bool verbose,
+                     bool forceOverwrite = false)
 {
     if (QFile::exists(destinationFileName)) {
         QFileInfo destinationFileInfo(destinationFileName);
         QFileInfo sourceFileInfo(sourceFileName);
 
-        if (sourceFileInfo.lastModified() <= destinationFileInfo.lastModified() && !alwaysOverwritableFile(destinationFileName)) {
+        if (!forceOverwrite
+                && sourceFileInfo.lastModified() <= destinationFileInfo.lastModified()
+                && !alwaysOverwritableFile(destinationFileName)) {
             if (verbose)
                 fprintf(stdout, "  -- Skipping file %s. Same or newer file already in place.\n", qPrintable(sourceFileName));
             return true;
@@ -636,7 +641,7 @@ bool readInputFile(Options *options)
     return true;
 }
 
-bool copyFiles(const QDir &sourceDirectory, const QDir &destinationDirectory, bool verbose)
+bool copyFiles(const QDir &sourceDirectory, const QDir &destinationDirectory, bool verbose, bool forceOverwrite = false)
 {
     QFileInfoList entries = sourceDirectory.entryInfoList(QDir::NoDotAndDotDot | QDir::Files | QDir::Dirs);
     foreach (QFileInfo entry, entries) {
@@ -647,11 +652,11 @@ bool copyFiles(const QDir &sourceDirectory, const QDir &destinationDirectory, bo
                 return false;
             }
 
-            if (!copyFiles(dir, QDir(destinationDirectory.path() + QLatin1String("/") + dir.dirName()), verbose))
+            if (!copyFiles(dir, QDir(destinationDirectory.path() + QLatin1String("/") + dir.dirName()), verbose, forceOverwrite))
                 return false;
         } else {
             QString destination = destinationDirectory.absoluteFilePath(entry.fileName());
-            if (!copyFileIfNewer(entry.absoluteFilePath(), destination, verbose))
+            if (!copyFileIfNewer(entry.absoluteFilePath(), destination, verbose, forceOverwrite))
                 return false;
         }
     }
@@ -692,7 +697,7 @@ bool copyAndroidSources(const Options &options)
         return false;
     }
 
-    return copyFiles(sourceDirectory, QDir(options.outputDirectory), options.verbose);
+    return copyFiles(sourceDirectory, QDir(options.outputDirectory), options.verbose, true);
 }
 
 bool copyAndroidExtraLibs(const Options &options)
