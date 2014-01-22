@@ -182,9 +182,15 @@ bool optHelp = false;
 int optWebKit2 = 0;
 
 struct Options {
+    enum DebugDetection {
+        DebugDetectionAuto,
+        DebugDetectionForceDebug,
+        DebugDetectionForceRelease
+    };
+
     Options() : plugins(true), libraries(true), quickImports(true), translations(true), systemD3dCompiler(true)
               , platform(Windows), additionalLibraries(0), disabledLibraries(0)
-              , updateFileFlags(0), json(0), list(ListNone) {}
+              , updateFileFlags(0), json(0), list(ListNone), debugDetection(DebugDetectionAuto) {}
 
     bool plugins;
     bool libraries;
@@ -201,6 +207,7 @@ struct Options {
     QString binary;
     JsonOutput *json;
     ListOption list;
+    DebugDetection debugDetection;
 };
 
 // Return binary from folder
@@ -242,6 +249,13 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
                                     QStringLiteral("Copy libraries to path."),
                                     QStringLiteral("path"));
     parser->addOption(libDirOption);
+
+    QCommandLineOption debugOption(QStringLiteral("debug"),
+                                   QStringLiteral("Assume debug binaries."));
+    parser->addOption(debugOption);
+    QCommandLineOption releaseOption(QStringLiteral("release"),
+                                   QStringLiteral("Assume release binaries."));
+    parser->addOption(releaseOption);
 
     QCommandLineOption forceOption(QStringLiteral("force"),
                                     QStringLiteral("Force updating files."));
@@ -341,6 +355,16 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
     options->translations = !parser->isSet(noTranslationOption);
     options->systemD3dCompiler = !parser->isSet(noSystemD3DCompilerOption);
     options->quickImports = !parser->isSet(noQuickImportOption);
+
+    const bool forceDebug = parser->isSet(debugOption);
+    const bool forceRelease = parser->isSet(releaseOption);
+    if (forceDebug && forceRelease)
+        std::wcerr << "Warning: both -debug and -release were specified, defaulting to debug.\n";
+    if (forceDebug)
+        options->debugDetection = Options::DebugDetectionForceDebug;
+    else if (forceRelease)
+        options->debugDetection = Options::DebugDetectionForceRelease;
+
     if (parser->isSet(forceOption))
         options->updateFileFlags |= ForceUpdateFile;
     if (parser->isSet(dryRunOption))
@@ -727,6 +751,9 @@ static DeployResult deploy(const Options &options,
     int directDependencyCount;
     if (!findDependentQtLibraries(libraryLocation, options.binary, options.platform, errorMessage, &dependentQtLibs, &wordSize, &isDebug, &directDependencyCount))
         return result;
+
+    if (options.debugDetection != Options::DebugDetectionAuto)
+        isDebug = options.debugDetection == Options::DebugDetectionForceDebug;
 
     // Determine application type, check Quick2 is used by looking at the
     // direct dependencies (do not be fooled by QtWebKit depending on it).
