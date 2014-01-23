@@ -465,8 +465,9 @@ QString cleanPackageName(QString packageName)
         QString word = packageName.mid(index + 1, next - index - 1);
         if (!word.isEmpty()) {
             QChar c = word[0];
-            if (c >= QChar(QLatin1Char('0')) && c<= QChar(QLatin1Char('9'))) {
-                packageName.insert(index + 1, QLatin1Char('_'));
+            if (c >= QChar(QLatin1Char('0')) && c<= QChar(QLatin1Char('9'))
+                   || c == QLatin1Char('_')) {
+                packageName.insert(index + 1, QLatin1Char('a'));
                 index = next + 1;
                 continue;
             }
