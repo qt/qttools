@@ -510,7 +510,7 @@ bool KeymapParser::generateHeader(QFile *f)
     ts << "#ifndef QEVDEVKEYBOARDHANDLER_DEFAULTMAP_H" << endl;
     ts << "#define QEVDEVKEYBOARDHANDLER_DEFAULTMAP_H" << endl << endl;
 
-    ts << "const QEvdevKeyboardMap::Mapping QWSKbPrivate::s_keymap_default[] = {" << endl;
+    ts << "const QEvdevKeyboardMap::Mapping QEvdevKeyboardHandler::s_keymap_default[] = {" << endl;
 
     for (int i = 0; i < m_keymap.size(); ++i) {
         const QEvdevKeyboardMap::Mapping &m = m_keymap.at(i);
@@ -521,7 +521,7 @@ bool KeymapParser::generateHeader(QFile *f)
 
     ts << "};" << endl << endl;
 
-    ts << "const QEvdevKeyboardMap::Composing QWSKbPrivate::s_keycompose_default[] = {" << endl;
+    ts << "const QEvdevKeyboardMap::Composing QEvdevKeyboardHandler::s_keycompose_default[] = {" << endl;
 
     for (int i = 0; i < m_keycompose.size(); ++i) {
         const QEvdevKeyboardMap::Composing &c = m_keycompose.at(i);
@@ -682,7 +682,7 @@ bool KeymapParser::parseKmap(QFile *f)
                 parseWarning("codec doesn't habe exactly one argument");
         }
         else if (tokens[0] == "strings") {
-            // simply ignore those - they have no meaning for QWS
+            // simply ignore those - they have no meaning for us
         }
         else if (tokens[0] == "compose") {
             if (tokens.count() == 5 && tokens[3] == "to") {
