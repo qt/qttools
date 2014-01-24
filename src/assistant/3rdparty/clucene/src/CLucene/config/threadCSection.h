@@ -62,6 +62,9 @@ CL_NS_DEF(util)
 		}
 	};
 	
+#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY==WINAPI_FAMILY_APP || WINAPI_FAMILY==WINAPI_FAMILY_PHONE_APP)
+    #define Sleep(x) WaitForSingleObjectEx(GetCurrentThread(), x, FALSE)
+#endif
 	#define _LUCENE_SLEEP(x) Sleep(x)
 	#define _LUCENE_THREADMUTEX CL_NS(util)::mutex_win32
 	#define _LUCENE_CURRTHREADID GetCurrentThreadId()

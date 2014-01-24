@@ -41,20 +41,31 @@ mutexGuard::~mutexGuard()
       //we have not explicity included windows.h and windows.h has
       //not been included (check _WINDOWS_), then we must define
       //our own definitions to the thread locking functions:
+#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY==WINAPI_FAMILY_APP || WINAPI_FAMILY==WINAPI_FAMILY_PHONE_APP)
+      extern "C" __declspec(dllimport) void __stdcall InitializeCriticalSectionEx(CRITICAL_SECTION *, DWORD, DWORD);
+#else
       extern "C" __declspec(dllimport) void __stdcall InitializeCriticalSection(CRITICAL_SECTION *);
+#endif
       extern "C" __declspec(dllimport) void __stdcall EnterCriticalSection(CRITICAL_SECTION *);
       extern "C" __declspec(dllimport) void __stdcall LeaveCriticalSection(CRITICAL_SECTION *);
       extern "C" __declspec(dllimport) void __stdcall DeleteCriticalSection(CRITICAL_SECTION *);
 	  extern "C" __declspec(dllimport) unsigned long __stdcall GetCurrentThreadId();
    #endif
-	
 	mutex_win32::mutex_win32(const mutex_win32& clone){
-		InitializeCriticalSection(&mtx); 
+#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY==WINAPI_FAMILY_APP || WINAPI_FAMILY==WINAPI_FAMILY_PHONE_APP)
+        InitializeCriticalSectionEx(&mtx, 0, 0);
+#else
+        InitializeCriticalSection(&mtx);
+#endif
 	}
 	mutex_win32::mutex_win32()
 	{ 
-		InitializeCriticalSection(&mtx); 
-	}
+#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY==WINAPI_FAMILY_APP || WINAPI_FAMILY==WINAPI_FAMILY_PHONE_APP)
+        InitializeCriticalSectionEx(&mtx, 0, 0);
+#else
+        InitializeCriticalSection(&mtx);
+#endif
+    }
 	
 	mutex_win32::~mutex_win32()
 	{ 
