@@ -883,8 +883,6 @@ bool KeymapParser::parseSymbol(const QByteArray &str, const QTextCodec * /*codec
     if (sym == "VoidSymbol" || sym == "nul")
         return true;
 
-    bool try_to_find_qtcode = false;
-
     if (sym[0] >= '0' && sym[0] <= '9') {  // kernel internal action number
         return false;
     } else if (sym.length() == 6 && sym[1] == '+' && (sym[0] == 'U' || sym[0] == 'u')) { // unicode
@@ -892,7 +890,6 @@ bool KeymapParser::parseSymbol(const QByteArray &str, const QTextCodec * /*codec
         unicode = sym.mid(2).toUInt(&ok, 16);
         if (!ok)
             return false;
-        try_to_find_qtcode = true;
     } else { // symbolic
         for (int i = 0; i < symbol_synonyms_size; ++i) {
             if (sym == symbol_synonyms[i].from) {
