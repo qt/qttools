@@ -883,14 +883,14 @@ bool updateAndroidManifest(Options &options)
 
     QString permissions;
     foreach (QString permission, options.permissions)
-        permissions += QString::fromLatin1("<uses-permission android:name=\"%1\" />\n").arg(permission);
+        permissions += QString::fromLatin1("    <uses-permission android:name=\"%1\" />\n").arg(permission);
     replacements[QLatin1String("<!-- %%INSERT_PERMISSIONS -->")] = permissions;
 
     QString features;
     foreach (QString feature, options.features)
-        features += QString::fromLatin1("<uses-feature android:name=\"%1\" />\n").arg(feature);
+        features += QString::fromLatin1("    <uses-feature android:name=\"%1\" />\n").arg(feature);
     if (usesGL)
-        features += QStringLiteral("<uses-feature android:glEsVersion=\"0x00020000\" android:required=\"true\" />");
+        features += QStringLiteral("    <uses-feature android:glEsVersion=\"0x00020000\" android:required=\"true\" />");
 
     replacements[QLatin1String("<!-- %%INSERT_FEATURES -->")] = features;
 
