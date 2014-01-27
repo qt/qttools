@@ -1284,6 +1284,21 @@ bool readDependencies(Options *options)
                     qPrintable(unmetDependencies.join(QLatin1Char(','))));
         }
     }
+
+    QStringList::iterator it = options->localLibs.begin();
+    while (it != options->localLibs.end()) {
+        QStringList unmetDependencies;
+        if (!goodToCopy(options, qtDir + *it, &unmetDependencies)) {
+            if (options->verbose) {
+                fprintf(stdout, "Skipping %s due to unmet dependencies: %s\n",
+                        qPrintable(*it),
+                        qPrintable(unmetDependencies.join(QLatin1Char(','))));
+            }
+            it = options->localLibs.erase(it);
+        } else {
+            ++it;
+        }
+    }
     return true;
 }
 
