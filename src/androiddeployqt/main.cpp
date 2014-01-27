@@ -1269,7 +1269,7 @@ bool readDependencies(Options *options)
 
     while (!remainingDependencies.isEmpty()) {
         QSet<QString>::iterator start = remainingDependencies.begin();
-        QString fileName = qtDir+*start;
+        QString fileName = qtDir + *start;
         remainingDependencies.erase(start);
 
         QStringList unmetDependencies;
