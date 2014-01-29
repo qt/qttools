@@ -16,18 +16,7 @@ contains(QT_CONFIG, reduce_exports) {
 }
 
 # impossible to disable exceptions in clucene atm
-CONFIG(exceptions_off) {
-    CONFIG -= exceptions_off
-    CONFIG += exceptions
-    !win32|win32-g++* {
-        QMAKE_CFLAGS -= -fno-exceptions
-        QMAKE_CXXFLAGS -= -fno-exceptions
-        QMAKE_LFLAGS -= -fno-exceptions
-        QMAKE_CFLAGS += -fexceptions
-        QMAKE_CXXFLAGS += -fexceptions
-        QMAKE_LFLAGS += -fexceptions
-    }
-}
+CONFIG += exceptions
 
 # otherwise mingw headers do not declare common functions like _i64tow
 win32-g++*:QMAKE_CXXFLAGS_CXX11 = -std=gnu++0x
