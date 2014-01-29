@@ -42,4 +42,4 @@ PRECOMPILED_HEADER= lib_pch.h
 # * MinGW-builds GCC 4.6.3 64-bit
 # * MinGW-builds GCC 4.7.1 64-bit
 # * MinGW-w64 GCC 4.7.1 64-bit (rubenvb)
-win32-g++*:CONFIG -= precompile_header
+mingw:CONFIG -= precompile_header
