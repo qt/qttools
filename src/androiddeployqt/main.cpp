@@ -863,8 +863,9 @@ bool updateAndroidManifest(Options &options)
     }
 
     bool usesGL = false;
-    foreach (QString localLib, localLibs) {
-        if (localLib.endsWith(QLatin1String("libqtforandroidGL.so"))) {
+    foreach (QString qtDependency, options.qtDependencies) {
+        if (qtDependency.endsWith(QLatin1String("libQt5OpenGL.so"))
+                || qtDependency.endsWith(QLatin1String("libQt5Quick.so"))) {
             usesGL = true;
             break;
         }
