@@ -14,7 +14,7 @@ qtHaveModule(widgets) {
     }
 }
 
-SUBDIRS += linguist
+SUBDIRS += linguist winrtrunner
 !android|android_app: SUBDIRS += qtpaths
 
 mac {
