@@ -29,6 +29,10 @@ HEADERS += \
     lupdate.h \
     ../shared/simtexth.h
 
+mingw {
+    RC_FILE = lupdate.rc
+}
+
 qmake.name = QMAKE
 qmake.value = $$shell_path($$QMAKE_QMAKE)
 QT_TOOL_ENV += qmake

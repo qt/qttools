@@ -1858,29 +1858,29 @@ bool signPackage(const Options &options)
         return false;
     }
 
-    jarSignerTool = QString::fromLatin1("\"%1\" -sigalg %2 -digestalg %3 -keystore %4")
+    jarSignerTool = QString::fromLatin1("\"%1\" -sigalg \"%2\" -digestalg \"%3\" -keystore \"%4\"")
             .arg(jarSignerTool).arg(options.sigAlg).arg(options.digestAlg).arg(options.keyStore);
 
     if (!options.keyStorePassword.isEmpty())
-        jarSignerTool += QString::fromLatin1(" -storepass %1").arg(options.keyStorePassword);
+        jarSignerTool += QString::fromLatin1(" -storepass \"%1\"").arg(options.keyStorePassword);
 
     if (!options.storeType.isEmpty())
-        jarSignerTool += QString::fromLatin1(" -storetype %1").arg(options.storeType);
+        jarSignerTool += QString::fromLatin1(" -storetype \"%1\"").arg(options.storeType);
 
     if (!options.keyPass.isEmpty())
-        jarSignerTool += QString::fromLatin1(" -keypass %1").arg(options.keyPass);
+        jarSignerTool += QString::fromLatin1(" -keypass \"%1\"").arg(options.keyPass);
 
     if (!options.sigFile.isEmpty())
-        jarSignerTool += QString::fromLatin1(" -sigfile %1").arg(options.sigFile);
+        jarSignerTool += QString::fromLatin1(" -sigfile \"%1\"").arg(options.sigFile);
 
     if (!options.signedJar.isEmpty())
-        jarSignerTool += QString::fromLatin1(" -signedjar %1").arg(options.signedJar);
+        jarSignerTool += QString::fromLatin1(" -signedjar \"%1\"").arg(options.signedJar);
 
     if (!options.tsaUrl.isEmpty())
-        jarSignerTool += QString::fromLatin1(" -tsa %1").arg(options.tsaUrl);
+        jarSignerTool += QString::fromLatin1(" -tsa \"%1\"").arg(options.tsaUrl);
 
     if (!options.tsaCert.isEmpty())
-        jarSignerTool += QString::fromLatin1(" -tsacert %1").arg(options.tsaCert);
+        jarSignerTool += QString::fromLatin1(" -tsacert \"%1\"").arg(options.tsaCert);
 
     if (options.internalSf)
         jarSignerTool += QLatin1String(" -internalsf");
@@ -1891,7 +1891,7 @@ bool signPackage(const Options &options)
     if (options.protectedAuthenticationPath)
         jarSignerTool += QLatin1String(" -protected");
 
-    jarSignerTool += QString::fromLatin1(" %1 %2")
+    jarSignerTool += QString::fromLatin1(" %1 \"%2\"")
             .arg(options.outputDirectory
                  + QLatin1String("/bin/")
                  + apkName(options)
