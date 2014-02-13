@@ -66,12 +66,14 @@
 #include <QtCore/QStandardPaths>
 #include <QtCore/QTextStream>
 #include <QtCore/QTimer>
+#include <QtCore/QBuffer>
 
 #include <QtWidgets/QAction>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QDesktopWidget>
 #include <QtWidgets/QDockWidget>
 #include <QtGui/QFontDatabase>
+#include <QtGui/QImageReader>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLayout>
@@ -189,9 +191,14 @@ MainWindow::MainWindow(CmdLineParser *cmdLine, QWidget *parent)
     setWindowTitle(windowTitle.isEmpty() ? defWindowTitle : windowTitle);
     QByteArray iconArray = helpEngineWrapper.applicationIcon();
     if (iconArray.size() > 0) {
-        QPixmap pix;
-        pix.loadFromData(iconArray);
-        QIcon appIcon(pix);
+        QBuffer buffer(&iconArray);
+        QImageReader reader(&buffer);
+        QIcon appIcon;
+        do {
+            QPixmap pix;
+            pix.convertFromImage(reader.read());
+            appIcon.addPixmap(pix);
+        } while (reader.jumpToNextImage());
         qApp->setWindowIcon(appIcon);
     } else {
         QIcon appIcon(QLatin1String(":/qt-project.org/assistant/images/assistant-128.png"));
