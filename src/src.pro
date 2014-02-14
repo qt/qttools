@@ -28,6 +28,7 @@ android {
 qtHaveModule(dbus): SUBDIRS += qdbus
 
 win32|winrt:SUBDIRS += windeployqt
+winrt:SUBDIRS += qtd3dservice
 
 qtNomakeTools( \
     pixeltool \
