@@ -138,7 +138,8 @@ public:
 CoreConServer::CoreConServer() : d(new CoreConServerPrivate)
 {
     HRESULT hr = CoCreateInstance(CLSID_ConMan, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&d->handle));
-    qCDebug(lcCoreCon) << "Failed to initialize connection server." << formatError(hr);
+    if (FAILED(hr))
+        qCWarning(lcCoreCon) << "Failed to initialize connection server." << formatError(hr);
 
     // The language module is available as long as the above succeeded
     d->langModule = GetModuleHandle(L"conmanui");
@@ -157,7 +158,7 @@ QList<CoreConDevice *> CoreConServer::devices() const
 {
     qCDebug(lcCoreCon) << __FUNCTION__;
 
-    if (!d->devices.isEmpty())
+    if (!d->devices.isEmpty() || !d->handle)
         return d->devices;
 
     ComPtr<ICcDatastore> dataStore;
