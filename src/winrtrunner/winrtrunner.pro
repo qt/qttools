@@ -14,21 +14,18 @@ win32-msvc2012|win32-msvc2013 {
     LIBS += -lruntimeobject
     DEFINES -= RTRUNNER_NO_APPX
 
-    # XAP libraries only support 32-bit
-    equals(QT_ARCH, i386) {
-        include(../shared/corecon/corecon.pri)
-        SOURCES += xapengine.cpp
-        HEADERS += xapengine.h
-        DEFINES -= RTRUNNER_NO_XAP
+    include(../shared/corecon/corecon.pri)
+    SOURCES += xapengine.cpp
+    HEADERS += xapengine.h
+    DEFINES -= RTRUNNER_NO_XAP
 
-        # Use zip class from qtbase
-        SOURCES += \
-            qzip/qzip.cpp
-        HEADERS += \
-            qzip/qzipreader_p.h \
-            qzip/qzipwriter_p.h
-        INCLUDEPATH += qzip $$[QT_INSTALL_HEADERS]/QtZlib
-    }
+    # Use zip class from qtbase
+    SOURCES += \
+        qzip/qzip.cpp
+    HEADERS += \
+        qzip/qzipreader_p.h \
+        qzip/qzipwriter_p.h
+    INCLUDEPATH += qzip $$[QT_INSTALL_HEADERS]/QtZlib
 }
 
 load(qt_tool)
