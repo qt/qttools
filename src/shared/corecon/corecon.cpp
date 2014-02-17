@@ -42,6 +42,8 @@
 #include "corecon.h"
 
 #include <QtCore/QString>
+#include <QtCore/QMutex>
+#include <QtCore/QMutexLocker>
 
 #include <comdef.h>
 #include <wrl.h>
@@ -133,10 +135,12 @@ public:
     ComPtr<ICcServer> handle;
     QList<CoreConDevice *> devices;
     HMODULE langModule;
+    QMutex mutex;
 };
 
 CoreConServer::CoreConServer() : d(new CoreConServerPrivate)
 {
+    QMutexLocker(&d->mutex);
     HRESULT hr = CoCreateInstance(CLSID_ConMan, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&d->handle));
     if (FAILED(hr))
         qCWarning(lcCoreCon) << "Failed to initialize connection server." << formatError(hr);
@@ -157,6 +161,11 @@ ICcServer *CoreConServer::handle() const
 QList<CoreConDevice *> CoreConServer::devices() const
 {
     qCDebug(lcCoreCon) << __FUNCTION__;
+
+    while (!d)
+        Sleep(1);
+
+    QMutexLocker(&d->mutex);
 
     if (!d->devices.isEmpty() || !d->handle)
         return d->devices;
