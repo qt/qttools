@@ -552,6 +552,9 @@ bool XapEngine::stop()
     Q_D(XapEngine);
     qCDebug(lcWinRtRunner) << __FUNCTION__;
 
+    if (!connect())
+        return false;
+
     ComPtr<ICcConnection3> connection;
     HRESULT hr = d->connection.As(&connection);
     if (FAILED(hr)) {
