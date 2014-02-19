@@ -344,7 +344,7 @@ QString CoreConServer::formatError(HRESULT hr) const
     wchar_t error[1024];
     HMODULE module = 0;
     DWORD origin = HRESULT_FACILITY(hr);
-    if (origin == 0x974)
+    if (origin == 0x973 || origin == 0x974)
         module = d->langModule;
     if (module)
         LoadString(module, HRESULT_CODE(hr), error, sizeof(error)/sizeof(wchar_t));
