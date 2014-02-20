@@ -895,7 +895,7 @@ bool updateAndroidManifest(Options &options)
 
     QString features;
     foreach (QString feature, options.features)
-        features += QString::fromLatin1("    <uses-feature android:name=\"%1\" />\n").arg(feature);
+        features += QStringLiteral("    <uses-feature android:name=\"%1\" android:required=\"false\" />\n").arg(feature);
     if (usesGL)
         features += QStringLiteral("    <uses-feature android:glEsVersion=\"0x00020000\" android:required=\"true\" />");
 
