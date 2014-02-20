@@ -62,7 +62,8 @@ public:
     bool isEmulator() const;
     ICcDevice *handle() const;
 private:
-    QScopedPointer<CoreConDevicePrivate> d;
+    QScopedPointer<CoreConDevicePrivate> d_ptr;
+    Q_DECLARE_PRIVATE(CoreConDevice)
 friend class CoreConServer;
 };
 
@@ -72,11 +73,13 @@ class CoreConServer
 public:
     CoreConServer();
     ~CoreConServer();
+    bool initialize();
     ICcServer *handle() const;
     QList<CoreConDevice *> devices() const;
     QString formatError(HRESULT hr) const;
 private:
-    QScopedPointer<CoreConServerPrivate> d;
+    QScopedPointer<CoreConServerPrivate> d_ptr;
+    Q_DECLARE_PRIVATE(CoreConServer)
 };
 
 Q_DECLARE_LOGGING_CATEGORY(lcCoreCon)

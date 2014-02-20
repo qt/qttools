@@ -76,7 +76,7 @@ public:
 };
 
 CoreConDevice::CoreConDevice()
-    : d(new CoreConDevicePrivate)
+    : d_ptr(new CoreConDevicePrivate)
 {
 }
 
@@ -86,21 +86,25 @@ CoreConDevice::~CoreConDevice()
 
 QString CoreConDevice::name() const
 {
+    Q_D(const CoreConDevice);
     return d->name;
 }
 
 QString CoreConDevice::id() const
 {
+    Q_D(const CoreConDevice);
     return d->id;
 }
 
 bool CoreConDevice::isEmulator() const
 {
+    Q_D(const CoreConDevice);
     return d->isEmulator;
 }
 
 ICcDevice *CoreConDevice::handle() const
 {
+    Q_D(const CoreConDevice);
     return d->handle.Get();
 }
 
@@ -109,7 +113,7 @@ class ComInitializer
 protected:
     ComInitializer()
     {
-        hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
+        hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
         if (FAILED(hr))
             qCDebug(lcCoreCon) << "Failed to initialize COM.";
     }
@@ -124,29 +128,30 @@ protected:
 class CoreConServerPrivate : private ComInitializer
 {
 public:
-    CoreConServerPrivate() : langModule(0)
+    CoreConServerPrivate(CoreConServer *server) : langModule(0)
     {
+        HRESULT hr = CoCreateInstance(CLSID_ConMan, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&handle));
+        if (FAILED(hr))
+            qCWarning(lcCoreCon) << "Failed to initialize connection server." << server->formatError(hr);
+
+        // The language module is available as long as the above succeeded
+        langModule = GetModuleHandle(L"conmanui");
     }
     ~CoreConServerPrivate()
     {
         qDeleteAll(devices);
         devices.clear();
     }
+
     ComPtr<ICcServer> handle;
     QList<CoreConDevice *> devices;
     HMODULE langModule;
-    QMutex mutex;
 };
 
-CoreConServer::CoreConServer() : d(new CoreConServerPrivate)
+CoreConServer::CoreConServer()
+    : d_ptr(new CoreConServerPrivate(this))
 {
-    QMutexLocker(&d->mutex);
-    HRESULT hr = CoCreateInstance(CLSID_ConMan, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&d->handle));
-    if (FAILED(hr))
-        qCWarning(lcCoreCon) << "Failed to initialize connection server." << formatError(hr);
-
-    // The language module is available as long as the above succeeded
-    d->langModule = GetModuleHandle(L"conmanui");
+    initialize();
 }
 
 CoreConServer::~CoreConServer()
@@ -155,47 +160,51 @@ CoreConServer::~CoreConServer()
 
 ICcServer *CoreConServer::handle() const
 {
+    Q_D(const CoreConServer);
     return d->handle.Get();
 }
 
 QList<CoreConDevice *> CoreConServer::devices() const
 {
-    qCDebug(lcCoreCon) << __FUNCTION__;
+    Q_D(const CoreConServer);
+    return d->devices;
+}
 
-    while (!d)
-        Sleep(1);
+bool CoreConServer::initialize()
+{
+    Q_D(CoreConServer);
+    if (!d || !d->handle)
+        return false;
 
-    QMutexLocker(&d->mutex);
-
-    if (!d->devices.isEmpty() || !d->handle)
-        return d->devices;
+    if (!d->devices.isEmpty())
+        return true;
 
     ComPtr<ICcDatastore> dataStore;
     HRESULT hr = d->handle->GetDatastore(GetUserDefaultLCID(), &dataStore);
     if (FAILED(hr)) {
         qCDebug(lcCoreCon, "Failed to obtain the data store. HRESULT: 0x%x", hr);
-        return d->devices;
+        return false;
     }
 
     ComPtr<ICcPlatformContainer> platformContainer;
     hr = dataStore->get_PlatformContainer(&platformContainer);
     if (FAILED(hr)) {
         qCDebug(lcCoreCon, "Failed to obtain the platform container. HRESULT: 0x%x", hr);
-        return d->devices;
+        return false;
     }
 
     ComPtr<ICcCollection> platformCollection;
     hr = collectionFor(platformContainer, platformCollection);
     if (FAILED(hr)) {
         qCDebug(lcCoreCon, "Failed to obtain the platform collection. HRESULT: 0x%x", hr);
-        return d->devices;
+        return false;
     }
 
     long platformCount;
     hr = platformCollection->get_Count(&platformCount);
     if (FAILED(hr)) {
         qCDebug(lcCoreCon, "Failed to obtain the platform object count. HRESULT: 0x%x", hr);
-        return d->devices;
+        return false;
     }
     for (long platformIndex = 0; platformIndex < platformCount; ++platformIndex) {
         ComPtr<ICcObject> platformObject;
@@ -242,7 +251,7 @@ QList<CoreConDevice *> CoreConServer::devices() const
                 continue;
             }
 
-            hr = deviceObject.As(&device->d->handle);
+            hr = deviceObject.As(&device->d_ptr->handle);
             if (FAILED(hr)) {
                 qCDebug(lcCoreCon, "Failed to confirm a device from the object at index: %d", deviceIndex);
                 continue;
@@ -254,14 +263,14 @@ QList<CoreConDevice *> CoreConServer::devices() const
                 qCDebug(lcCoreCon, "Failed to obtain device id at index: %d", deviceIndex);
                 continue;
             }
-            device->d->id = QString::fromWCharArray(deviceId);
+            device->d_ptr->id = QString::fromWCharArray(deviceId);
             _bstr_t deviceName;
             hr = deviceObject->get_Name(deviceName.GetAddress());
             if (FAILED(hr)) {
                 qCDebug(lcCoreCon, "Failed to obtain device name at index: %d", deviceIndex);
                 continue;
             }
-            device->d->name = QString::fromWCharArray(deviceName);
+            device->d_ptr->name = QString::fromWCharArray(deviceName);
 
             ComPtr<ICcPropertyContainer> propertyContainer;
             hr = deviceObject->get_PropertyContainer(&propertyContainer);
@@ -327,20 +336,20 @@ QList<CoreConDevice *> CoreConServer::devices() const
                         qCDebug(lcCoreCon, "Failed to cast the property value at index: %d", propertyIndex);
                         continue;
                     }
-                    device->d->isEmulator = value == _bstr_t(L"true");
+                    device->d_ptr->isEmulator = value == _bstr_t(L"true");
                 }
             }
-
 
             if (!isPseudoDevice)
                 d->devices.append(device.take());
         }
     }
-    return d->devices;
+    return true;
 }
 
 QString CoreConServer::formatError(HRESULT hr) const
 {
+    Q_D(const CoreConServer);
     wchar_t error[1024];
     HMODULE module = 0;
     DWORD origin = HRESULT_FACILITY(hr);
