@@ -57,7 +57,7 @@
 QT_BEGIN_NAMESPACE
 
 enum QtModule
-#ifdef Q_COMPILER_CLASS_ENUM
+#if defined(Q_COMPILER_CLASS_ENUM) || defined(Q_CC_MSVC)
     : quint64
 #endif
 {
