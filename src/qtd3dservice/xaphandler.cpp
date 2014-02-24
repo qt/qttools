@@ -60,6 +60,11 @@ Q_GLOBAL_STATIC(CoreConServer, coreConServer)
  * the service is currently handling. */
 extern void handleXapDevice(int deviceIndex, const QString &app, const QString &localBase)
 {
+    if (!coreConServer->initialize()) {
+        while (!coreConServer.exists())
+            Sleep(1);
+    }
+
     CoreConDevice *device = coreConServer->devices().value(deviceIndex, 0);
     if (!device) {
         qCWarning(lcD3DService) << "Device at index" << deviceIndex << "not found.";

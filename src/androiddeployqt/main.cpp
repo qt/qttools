@@ -79,6 +79,7 @@ struct Options
         : helpRequested(false)
         , verbose(false)
         , timing(false)
+        , generateAssetsFileList(true)
         , minimumAndroidVersion(9)
         , targetAndroidVersion(10)
         , deploymentMechanism(Bundled)
@@ -108,6 +109,7 @@ struct Options
     bool helpRequested;
     bool verbose;
     bool timing;
+    bool generateAssetsFileList;
     QTime timer;
 
     // External tools
@@ -300,6 +302,8 @@ Options parseOptions()
             options.sectionsOnly = true;
         } else if (argument.compare(QLatin1String("--protected"), Qt::CaseInsensitive) == 0) {
             options.protectedAuthenticationPath = true;
+        } else if (argument.compare(QLatin1String("--no-generated-assets-cache"), Qt::CaseInsensitive) == 0) {
+            options.generateAssetsFileList = false;
         }
     }
 
@@ -359,6 +363,8 @@ void printHelp()
                     "       an attempt is made to detect the tool using the JAVA_HOME and\n"
                     "       PATH environment variables, in that order.\n"
                     "    --verbose: Prints out information during processing.\n"
+                    "    --no-generated-assets-cache: Do not pregenerate the entry list for\n"
+                    "       the assets file engine.\n"
                     "    --help: Displays this information.\n\n",
                     qPrintable(QCoreApplication::arguments().at(0))
             );
@@ -889,7 +895,7 @@ bool updateAndroidManifest(Options &options)
 
     QString features;
     foreach (QString feature, options.features)
-        features += QString::fromLatin1("    <uses-feature android:name=\"%1\" />\n").arg(feature);
+        features += QStringLiteral("    <uses-feature android:name=\"%1\" android:required=\"false\" />\n").arg(feature);
     if (usesGL)
         features += QStringLiteral("    <uses-feature android:glEsVersion=\"0x00020000\" android:required=\"true\" />");
 
@@ -2017,6 +2023,58 @@ bool deployAllToLocalTmp(const Options &options)
     return true;
 }
 
+bool generateAssetsFileList(const Options &options)
+{
+    if (options.verbose)
+        fprintf(stdout, "Pregenerating entry list for assets file engine.\n");
+
+    QString assetsPath = options.outputDirectory + QLatin1String("/assets/");
+    QString addedByAndroidDeployQtPath = assetsPath + QLatin1String("--Added-by-androiddeployqt--/");
+    if (!QDir().mkpath(addedByAndroidDeployQtPath)) {
+        fprintf(stderr, "Failed to create directory '%s'", qPrintable(addedByAndroidDeployQtPath));
+        return false;
+    }
+
+    QFile file(addedByAndroidDeployQtPath + QLatin1String("/qt_cache_pregenerated_file_list"));
+    if (file.open(QIODevice::WriteOnly)) {
+        QDirIterator dirIterator(assetsPath,
+                                 QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot,
+                                 QDirIterator::Subdirectories);
+
+        QHash<QString, QStringList> directoryContents;
+        while (dirIterator.hasNext()) {
+            const QString name = dirIterator.next().mid(assetsPath.length());
+
+            int slashIndex = name.lastIndexOf(QLatin1Char('/'));
+            QString pathName = slashIndex >= 0 ? name.left(slashIndex) : QString::fromLatin1("/");
+            QString fileName = slashIndex >= 0 ? name.mid(pathName.length() + 1) : name;
+
+            if (!fileName.isEmpty() && dirIterator.fileInfo().isDir() && !fileName.endsWith(QLatin1Char('/')))
+                fileName += QLatin1Char('/');
+
+            if (fileName.isEmpty() && !directoryContents.contains(pathName))
+                directoryContents[pathName] = QStringList();
+            else if (!fileName.isEmpty())
+                directoryContents[pathName].append(fileName);
+        }
+
+        QDataStream stream(&file);
+        stream.setVersion(QDataStream::Qt_5_3);
+        QList<QString> directories = directoryContents.keys();
+        foreach (const QString &directory, directories) {
+            QStringList entryList = directoryContents.value(directory);
+            stream << directory << entryList.size();
+            foreach (const QString &entry, entryList)
+                stream << entry;
+        }
+    } else {
+        fprintf(stderr, "Pregenerating entry list for assets file engine failed!\n");
+        return false;
+    }
+
+    return true;
+}
+
 enum ErrorCode
 {
     Success,
@@ -2036,7 +2094,8 @@ enum ErrorCode
     CannotBuildAndroidProject = 14,
     CannotSignPackage = 15,
     CannotInstallApk = 16,
-    CannotDeployAllToLocalTmp = 17
+    CannotDeployAllToLocalTmp = 17,
+    CannotGenerateAssetsFileList = 18
 };
 
 int main(int argc, char *argv[])
@@ -2134,6 +2193,9 @@ int main(int argc, char *argv[])
 
     if (!updateAndroidFiles(options))
         return CannotUpdateAndroidFiles;
+
+    if (options.generateAssetsFileList && !generateAssetsFileList(options))
+        return CannotGenerateAssetsFileList;
 
     if (Q_UNLIKELY(options.timing))
         fprintf(stdout, "[TIMING] %d ms: Updated files\n", options.timer.elapsed());

@@ -419,18 +419,18 @@ bool XapEngine::install(bool removeFirst)
         }
     }
 
-    const bool hasArguments = !d->runner->arguments().isEmpty();
     QZipWriter xapPackage(&xapFile);
     for (QHash<QString, QString>::const_iterator i = xapFiles.begin(); i != xapFiles.end(); ++i) {
         QFile file(i.key());
         if (!file.open(QFile::ReadOnly))
             continue;
 
-        if (hasArguments && i.key() == d->manifest) {
+        if (i.key() == d->manifest) {
+            const QStringList args = d->runner->arguments() << QStringLiteral("-qdevel");
             QByteArray manifestWithArgs = file.readAll();
             manifestWithArgs.replace(QByteArrayLiteral("ImageParams=\"\""),
                                      QByteArrayLiteral("ImageParams=\"")
-                                     + d->runner->arguments().join(QLatin1Char(' ')).toUtf8()
+                                     + args.join(QLatin1Char(' ')).toUtf8()
                                      + '"');
             xapPackage.addFile(i.value(), manifestWithArgs);
             continue;
@@ -551,6 +551,9 @@ bool XapEngine::stop()
 {
     Q_D(XapEngine);
     qCDebug(lcWinRtRunner) << __FUNCTION__;
+
+    if (!connect())
+        return false;
 
     ComPtr<ICcConnection3> connection;
     HRESULT hr = d->connection.As(&connection);
