@@ -14,7 +14,7 @@ qtHaveModule(widgets) {
     }
 }
 
-SUBDIRS += linguist winrtrunner
+SUBDIRS += linguist
 !android|android_app: SUBDIRS += qtpaths
 
 mac {
@@ -28,7 +28,7 @@ android {
 qtHaveModule(dbus): SUBDIRS += qdbus
 
 win32|winrt:SUBDIRS += windeployqt
-winrt:SUBDIRS += qtd3dservice
+winrt:SUBDIRS += winrtrunner qtd3dservice
 
 qtNomakeTools( \
     pixeltool \
