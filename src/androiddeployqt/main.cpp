@@ -2003,7 +2003,7 @@ bool deployAllToLocalTmp(const Options &options)
 {
     FILE *adbCommand = runAdb(options,
                               QString::fromLatin1(" push %1 /data/local/tmp/qt/")
-                              .arg(options.temporaryDirectoryName + QLatin1Char('/')));
+                              .arg(options.temporaryDirectoryName));
     if (adbCommand == 0)
         return false;
 
