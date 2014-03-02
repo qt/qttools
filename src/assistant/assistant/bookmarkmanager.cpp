@@ -196,18 +196,18 @@ BookmarkManager::BookmarkManager()
 
     connect(&HelpEngineWrapper::instance(), SIGNAL(setupFinished()), this,
         SLOT(setupFinished()));
-    connect(bookmarkModel, SIGNAL(rowsRemoved(QModelIndex, int, int)), this,
+    connect(bookmarkModel, SIGNAL(rowsRemoved(QModelIndex,int,int)), this,
         SLOT(refreshBookmarkMenu()));
-    connect(bookmarkModel, SIGNAL(rowsInserted(QModelIndex, int, int)), this,
+    connect(bookmarkModel, SIGNAL(rowsInserted(QModelIndex,int,int)), this,
         SLOT(refreshBookmarkMenu()));
-    connect(bookmarkModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)), this,
+    connect(bookmarkModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this,
         SLOT(refreshBookmarkMenu()));
 
-    connect(bookmarkModel, SIGNAL(rowsRemoved(QModelIndex, int, int)), this,
+    connect(bookmarkModel, SIGNAL(rowsRemoved(QModelIndex,int,int)), this,
         SLOT(refreshBookmarkToolBar()));
-    connect(bookmarkModel, SIGNAL(rowsInserted(QModelIndex, int, int)), this,
+    connect(bookmarkModel, SIGNAL(rowsInserted(QModelIndex,int,int)), this,
         SLOT(refreshBookmarkToolBar()));
-    connect(bookmarkModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)), this,
+    connect(bookmarkModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this,
         SLOT(refreshBookmarkToolBar()));
 }
 

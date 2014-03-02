@@ -42,8 +42,8 @@
         QDesignerPropertyEditorInterface *propertyEditor = 0;
         propertyEditor = formEditor->propertyEditor();
 
-        connect(propertyEditor, SIGNAL(propertyChanged(QString, QVariant)),
-                this, SLOT(checkProperty(QString, QVariant)));
+        connect(propertyEditor, SIGNAL(propertyChanged(QString,QVariant)),
+                this, SLOT(checkProperty(QString,QVariant)));
 //! [0]
 
 

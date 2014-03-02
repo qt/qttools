@@ -55,15 +55,15 @@ void BookmarkFilterModel::setSourceModel(QAbstractItemModel *_sourceModel)
     beginResetModel();
 
     if (sourceModel) {
-        disconnect(sourceModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)),
-            this, SLOT(changed(QModelIndex, QModelIndex)));
-        disconnect(sourceModel, SIGNAL(rowsInserted(QModelIndex, int, int)),
-            this, SLOT(rowsInserted(QModelIndex, int, int)));
+        disconnect(sourceModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+            this, SLOT(changed(QModelIndex,QModelIndex)));
+        disconnect(sourceModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
+            this, SLOT(rowsInserted(QModelIndex,int,int)));
         disconnect(sourceModel,
-            SIGNAL(rowsAboutToBeRemoved(QModelIndex, int, int)), this,
-            SLOT(rowsAboutToBeRemoved(QModelIndex, int, int)));
-        disconnect(sourceModel, SIGNAL(rowsRemoved(QModelIndex, int, int)),
-            this, SLOT(rowsRemoved(QModelIndex, int, int)));
+            SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)), this,
+            SLOT(rowsAboutToBeRemoved(QModelIndex,int,int)));
+        disconnect(sourceModel, SIGNAL(rowsRemoved(QModelIndex,int,int)),
+            this, SLOT(rowsRemoved(QModelIndex,int,int)));
         disconnect(sourceModel, SIGNAL(layoutAboutToBeChanged()), this,
             SLOT(layoutAboutToBeChanged()));
         disconnect(sourceModel, SIGNAL(layoutChanged()), this,
@@ -76,16 +76,16 @@ void BookmarkFilterModel::setSourceModel(QAbstractItemModel *_sourceModel)
     QAbstractProxyModel::setSourceModel(sourceModel);
     sourceModel = qobject_cast<BookmarkModel*> (_sourceModel);
 
-    connect(sourceModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)), this,
-        SLOT(changed(QModelIndex, QModelIndex)));
+    connect(sourceModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this,
+        SLOT(changed(QModelIndex,QModelIndex)));
 
-    connect(sourceModel, SIGNAL(rowsInserted(QModelIndex, int, int)),
-        this, SLOT(rowsInserted(QModelIndex, int, int)));
+    connect(sourceModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
+        this, SLOT(rowsInserted(QModelIndex,int,int)));
 
-    connect(sourceModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex, int, int)),
-        this, SLOT(rowsAboutToBeRemoved(QModelIndex, int, int)));
-    connect(sourceModel, SIGNAL(rowsRemoved(QModelIndex, int, int)), this,
-        SLOT(rowsRemoved(QModelIndex, int, int)));
+    connect(sourceModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
+        this, SLOT(rowsAboutToBeRemoved(QModelIndex,int,int)));
+    connect(sourceModel, SIGNAL(rowsRemoved(QModelIndex,int,int)), this,
+        SLOT(rowsRemoved(QModelIndex,int,int)));
 
     connect(sourceModel, SIGNAL(layoutAboutToBeChanged()), this,
         SLOT(layoutAboutToBeChanged()));
