@@ -56,6 +56,47 @@ Q_GLOBAL_STATIC(CoreConServer, coreConServer)
 
 #define bstr(s) _bstr_t((const wchar_t *)s.utf16())
 
+static bool isEmulatorRunning(CoreConDevice *device)
+{
+    const QString deviceName = device->name();
+    HWND window = FindWindow(NULL, reinterpret_cast<LPCWSTR>(deviceName.utf16()));
+    if (!window)
+        return false;
+
+    // Sanity check: make sure the window belongs to XDE
+    DWORD processId = 0;
+    GetWindowThreadProcessId(window, &processId);
+    if (!processId) {
+        qCDebug(lcD3DService) << "Unable to get process ID for window:"
+                              << qt_error_string(GetLastError());
+        return false;
+    }
+
+    HANDLE process = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, processId);
+    if (!process) {
+        qCDebug(lcD3DService) << "Unable to open process:"
+                              << qt_error_string(GetLastError());
+        return false;
+    }
+
+    WCHAR imageName[MAX_PATH];
+    DWORD imageNameSize = MAX_PATH;
+    if (!QueryFullProcessImageName(process, 0, imageName, &imageNameSize)) {
+        qCDebug(lcD3DService) << "Unable to query process:" << imageName
+                              << qt_error_string(GetLastError());
+        CloseHandle(process);
+        return false;
+    }
+    CloseHandle(process);
+
+    // Fuzzy logic: simply check that the owning process is XDE
+    const QString imageNameString = QString::fromWCharArray(imageName);
+    if (imageNameString.endsWith(QStringLiteral("XDE.exe")))
+        return true;
+
+    return false;
+}
+
 // This is used by the service to simplify gathering of device data
 extern QStringList xapDeviceNames()
 {
@@ -82,6 +123,13 @@ extern int xapAppNames(int deviceIndex, QSet<QString> &apps)
     CoreConDevice *device = coreConServer->devices().value(deviceIndex, 0);
     if (!device) {
         qCWarning(lcD3DService) << "Device at index" << deviceIndex << "not found.";
+        return 1;
+    }
+
+    // For emulators, check that XDE is still running
+    if (device->isEmulator() && !isEmulatorRunning(device)) {
+        qCWarning(lcD3DService) << "The emulator" << device->name()
+                                << "does not appear to be running.";
         return 1;
     }
 
@@ -158,6 +206,13 @@ extern int handleXapDevice(int deviceIndex, const QString &app, const QString &l
     CoreConDevice *device = coreConServer->devices().value(deviceIndex, 0);
     if (!device) {
         qCWarning(lcD3DService) << "Device at index" << deviceIndex << "not found.";
+        return 1;
+    }
+
+    // For emulators, check that XDE is still running
+    if (device->isEmulator() && !isEmulatorRunning(device)) {
+        qCWarning(lcD3DService) << "The emulator" << device->name()
+                                << "does not appear to be running.";
         return 1;
     }
 
