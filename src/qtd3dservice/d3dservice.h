@@ -66,6 +66,11 @@ namespace D3DService
     bool startDirectly();
 
     void reportStatus(DWORD state, DWORD exitCode, DWORD waitHint);
+
+    bool getCredentials(LPWSTR username, DWORD *usernameSize,
+                        LPWSTR password, DWORD *passwordSize);
+    bool executeElevated(LPCWSTR exe, LPCWSTR param, DWORD *exitCode);
+    bool addLogonRight(LPCWSTR username);
 }
 
 Q_DECLARE_LOGGING_CATEGORY(lcD3DService)

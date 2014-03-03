@@ -7,7 +7,7 @@ DEFINES += QT_NO_CAST_FROM_ASCII QT_NO_CAST_TO_ASCII WINRT_LIBRARY WINAPI_FAMILY
 
 QMAKE_CXXFLAGS += -EHsc
 
-LIBS += -lruntimeobject -lsetupapi
+LIBS += -lruntimeobject -lsetupapi -lcredui -lsecur32
 
 SOURCES = \
     appxhandler.cpp \
@@ -15,7 +15,8 @@ SOURCES = \
     main.cpp \
     xaphandler.cpp \
     compilation.cpp \
-    registry.cpp
+    registry.cpp \
+    credentials.cpp
 
 HEADERS = \
     d3dservice.h

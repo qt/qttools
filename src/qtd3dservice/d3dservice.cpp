@@ -236,9 +236,34 @@ bool D3DService::install()
 {
     SC_HANDLE manager = OpenSCManager(NULL, SERVICES_ACTIVE_DATABASE, SC_MANAGER_CREATE_SERVICE);
     if (!manager) {
+        // Try to self-elevate if access is denied
+        DWORD error = GetLastError();
+        if (error == ERROR_ACCESS_DENIED) {
+            DWORD exitCode;
+            if (!D3DService::executeElevated(d->path, L"-install", &exitCode))
+                return false;
+
+            return exitCode == 0;
+        }
+
         qCWarning(lcD3DService) << qt_error_string(GetLastError());
         qCWarning(lcD3DService) << "When installing, run this program as an administrator.";
-        return 0;
+        return false;
+    }
+
+    WCHAR username[MAX_PATH] = { 0 };
+    DWORD usernameSize = MAX_PATH;
+    WCHAR password[MAX_PATH] = { 0 };
+    DWORD passwordSize = MAX_PATH;
+    if (!D3DService::getCredentials(username, &usernameSize, password, &passwordSize)) {
+        qCWarning(lcD3DService) << "Failed to install the service.";
+        return false;
+    }
+
+    // Ensure the user has the "Log on as a service" right
+    if (!D3DService::addLogonRight(username)) {
+        qCWarning(lcD3DService) << "Failed to install the service.";
+        return false;
     }
 
     SC_HANDLE service = CreateService(manager, d->name, L"Qt D3D Compiler Service " LQT_VERSION_STR,
@@ -272,9 +297,18 @@ bool D3DService::remove()
 {
     SC_HANDLE manager = OpenSCManager(NULL, SERVICES_ACTIVE_DATABASE, DELETE);
     if (!manager) {
+        // Try to self-elevate if access is denied
+        DWORD error = GetLastError();
+        if (error == ERROR_ACCESS_DENIED) {
+            DWORD exitCode;
+            if (!executeElevated(d->path, L"-remove", &exitCode))
+                return false;
+
+            return exitCode == 0;
+        }
         qCWarning(lcD3DService) << qt_error_string(GetLastError());
         qCWarning(lcD3DService) << "When removing, run this program as an administrator.";
-        return 0;
+        return false;
     }
 
     // Get a handle to the SCM database.
