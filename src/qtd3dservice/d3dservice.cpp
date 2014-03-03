@@ -80,8 +80,8 @@ union ErrorId
         Customer = 0x20000000
     };
     struct {
-        ushort facility : 2;
-        ushort code : 2;
+        ushort facility;
+        ushort code;
     };
     ulong val;
 };
@@ -167,19 +167,23 @@ void d3dserviceMessageHandler(QtMsgType type, const QMessageLogContext &, const 
     if (eventSource) {
         if (type > QtDebugMsg) {
             ErrorId id = { ushort(FACILITY_NULL | ErrorId::Customer), type };
+            WORD eventType;
             switch (type) {
             default:
             case 1:
                 id.facility |= ErrorId::Informational;
+                eventType = EVENTLOG_SUCCESS;
                 break;
             case 2:
                 id.facility |= ErrorId::Warning;
+                eventType = EVENTLOG_WARNING_TYPE;
                 break;
             case 3:
                 id.facility |= ErrorId::Error;
+                eventType = EVENTLOG_ERROR_TYPE;
                 break;
             }
-            ReportEvent(eventSource, type, 0, id.val, NULL, 2, 0, strings, NULL);
+            ReportEvent(eventSource, eventType, 0, id.val, NULL, 2, 0, strings, NULL);
             DeregisterEventSource(eventSource);
         }
     }

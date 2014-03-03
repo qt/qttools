@@ -94,7 +94,7 @@ extern int handleAppxDevice(int deviceIndex, const QString &app, const QString &
     HRESULT hr = RoActivateInstance(HString::MakeReference(RuntimeClass_Windows_Management_Deployment_PackageManager).Get(),
                             &packageManager);
     if (FAILED(hr)) {
-        qCWarning(lcD3DService) << "Unable to instantiate package manager. HRESULT: 0x" << QByteArray::number(hr, 16).constData();
+        qCWarning(lcD3DService) << "Unable to instantiate package manager:" << qt_error_string(hr);
         return 1;
     }
 
@@ -102,8 +102,7 @@ extern int handleAppxDevice(int deviceIndex, const QString &app, const QString &
     ComPtr<IPackage> package;
     hr = packageManager->FindPackageByUserSecurityIdPackageFullName(NULL, packageFullName.Get(), &package);
     if (FAILED(hr)) {
-        qCWarning(lcD3DService).nospace() << "Unable to query package. HRESULT: 0x"
-                                          << QByteArray::number(hr, 16).constData();
+        qCWarning(lcD3DService) << "Unable to query package:" << qt_error_string(hr);
         return 1;
     }
     if (!package) {
@@ -113,15 +112,13 @@ extern int handleAppxDevice(int deviceIndex, const QString &app, const QString &
     ComPtr<IPackageId> packageId;
     hr = package->get_Id(&packageId);
     if (FAILED(hr)) {
-        qCWarning(lcD3DService).nospace() << "Unable to get package ID. HRESULT: 0x"
-                                          << QByteArray::number(hr, 16).constData();
+        qCWarning(lcD3DService) << "Unable to get package ID:" << qt_error_string(hr);
         return 1;
     }
     HSTRING packageFamilyName;
     hr = packageId->get_FamilyName(&packageFamilyName);
     if (FAILED(hr)) {
-        qCWarning(lcD3DService).nospace() << "Unable to get package name. HRESULT: 0x"
-                                          << QByteArray::number(hr, 16).constData();
+        qCWarning(lcD3DService) << "Unable to get package name:" << qt_error_string(hr);
         return 1;
     }
 

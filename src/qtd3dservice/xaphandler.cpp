@@ -87,7 +87,7 @@ extern int handleXapDevice(int deviceIndex, const QString &app, const QString &l
     hr = coreConServer->handle()->GetConnection(
         device->handle(), 5000, NULL, connectionName.GetAddress(), &connection);
     if (FAILED(hr)) {
-        qCWarning(lcD3DService) << "Unable to initialize connection."
+        qCWarning(lcD3DService) << "Unable to initialize connection:"
                                 << coreConServer->formatError(hr);
         return 1;
     }
@@ -95,7 +95,7 @@ extern int handleXapDevice(int deviceIndex, const QString &app, const QString &l
     ComPtr<ICcConnection3> connection3;
     hr = connection.As(&connection3);
     if (FAILED(hr)) {
-        qCWarning(lcD3DService) << "Unable to obtain connection3 interface."
+        qCWarning(lcD3DService) << "Unable to obtain connection3 interface:"
                                 << coreConServer->formatError(hr);
         return 1;
     }
@@ -103,7 +103,7 @@ extern int handleXapDevice(int deviceIndex, const QString &app, const QString &l
     ComPtr<ICcConnection4> connection4;
     hr = connection.As(&connection4);
     if (FAILED(hr)) {
-        qCWarning(lcD3DService) << "Unable to obtain connection4 interface."
+        qCWarning(lcD3DService) << "Unable to obtain connection4 interface:"
                                 << coreConServer->formatError(hr);
         return 1;
     }
@@ -119,7 +119,7 @@ extern int handleXapDevice(int deviceIndex, const QString &app, const QString &l
         VARIANT_BOOL connected;
         hr = connection->IsConnected(&connected);
         if (FAILED(hr)) {
-            qCWarning(lcD3DService) << "Unable to query connection state."
+            qCWarning(lcD3DService) << "Unable to query connection state:"
                                     << coreConServer->formatError(hr);
             Sleep(1000);
             continue;
@@ -130,7 +130,7 @@ extern int handleXapDevice(int deviceIndex, const QString &app, const QString &l
             hr = connection->ConnectDevice();
             connected = SUCCEEDED(hr);
             if (connected) {
-                qCDebug(lcD3DService) << "Connected.";
+                qCWarning(lcD3DService).nospace() << "Connected to " << device->name() << ".";
                 wasDisconnected = true;
             }
             if (FAILED(hr)) {
@@ -149,7 +149,7 @@ extern int handleXapDevice(int deviceIndex, const QString &app, const QString &l
         while (!isInstalled) {
             hr = connection3->IsApplicationInstalled(bstr(app), &isInstalled);
             if (FAILED(hr)) {
-                qCCritical(lcD3DService) << "Unable to determine if package is installed - check that the app option contains a valid UUID."
+                qCCritical(lcD3DService) << "Unable to determine if package is installed:"
                                          << coreConServer->formatError(hr);
                 return 1;
             }
@@ -170,7 +170,7 @@ extern int handleXapDevice(int deviceIndex, const QString &app, const QString &l
             hr = connection->GetFileInfo(bstr(remoteControlFile), &controlFileInfo);
             if (FAILED(hr)) {
                 if (hr != 0x80070003 /* Not found */) {
-                    qCWarning(lcD3DService) << "Unable to obtain file info"
+                    qCWarning(lcD3DService) << "Unable to obtain file info:"
                                             << coreConServer->formatError(hr);
                     Sleep(1000);
                     continue;
@@ -178,10 +178,16 @@ extern int handleXapDevice(int deviceIndex, const QString &app, const QString &l
                 // Not found, so let's upload it
                 hr = connection->SendFile(bstr(localControlFile), bstr(remoteControlFile), 2, 2, NULL);
                 if (FAILED(hr)) {
-                    qCWarning(lcD3DService) << "Unable to send control file."
-                                            << coreConServer->formatError(hr);
-                    wasDisconnected = true;
-                    Sleep(1000);
+                    if (hr == 0x8973190e) {
+                        // This can happen during normal reinstallation, so continue
+                        qCDebug(lcD3DService) << "Unable to send control file, retrying...";
+                        wasDisconnected = true;
+                        Sleep(1000);
+                    } else {
+                        qCWarning(lcD3DService) << "Unable to send control file:"
+                                                << coreConServer->formatError(hr);
+                        return 1;
+                    }
                     continue;
                 }
             }
@@ -190,7 +196,7 @@ extern int handleXapDevice(int deviceIndex, const QString &app, const QString &l
             hr = connection->GetFileInfo(bstr(remoteSourcePath), &remoteDirectoryInfo);
             if (FAILED(hr)) {
                 if (hr != 0x80070002 && hr != 0x80070003 /* Not found */) {
-                    qCWarning(lcD3DService) << "Unable to get remote directory info."
+                    qCWarning(lcD3DService) << "Unable to get remote directory info:"
                                             << coreConServer->formatError(hr);
                     Sleep(1000);
                     continue;
@@ -199,7 +205,7 @@ extern int handleXapDevice(int deviceIndex, const QString &app, const QString &l
                 // Not found, create remote source path
                 hr = connection->MakeDirectory(bstr(remoteSourcePath));
                 if (FAILED(hr)) {
-                    qCWarning(lcD3DService) << "Unable to create the shader source directory."
+                    qCWarning(lcD3DService) << "Unable to create the shader source directory:"
                                             << coreConServer->formatError(hr);
                     continue;
                 }
@@ -208,7 +214,7 @@ extern int handleXapDevice(int deviceIndex, const QString &app, const QString &l
             hr = connection->GetFileInfo(bstr(remoteBinaryPath), &remoteDirectoryInfo);
             if (FAILED(hr)) {
                 if (hr != 0x80070002 && hr != 0x80070003 /* Not found */) {
-                    qCWarning(lcD3DService) << "Unable to get remote directory info."
+                    qCWarning(lcD3DService) << "Unable to get remote directory info:"
                                             << coreConServer->formatError(hr);
                     Sleep(1000);
                     continue;
@@ -217,7 +223,7 @@ extern int handleXapDevice(int deviceIndex, const QString &app, const QString &l
                 // Not found, create remote source path
                 hr = connection->MakeDirectory(bstr(remoteBinaryPath));
                 if (FAILED(hr)) {
-                    qCWarning(lcD3DService) << "Unable to create the shader source directory."
+                    qCWarning(lcD3DService) << "Unable to create the shader source directory:"
                                             << coreConServer->formatError(hr);
                     continue;
                 }
@@ -232,7 +238,7 @@ extern int handleXapDevice(int deviceIndex, const QString &app, const QString &l
             hr = connection->SetFileInfo(bstr(remoteControlFile), &controlFileInfo);
             round = 1;
             if (FAILED(hr)) {
-                qCWarning(lcD3DService) << "Unable to update control file"
+                qCWarning(lcD3DService) << "Unable to update control file:"
                                         << coreConServer->formatError(hr);
                 Sleep(1000);
                 continue;
@@ -243,7 +249,7 @@ extern int handleXapDevice(int deviceIndex, const QString &app, const QString &l
         SAFEARRAY *listing;
         hr = connection4->GetDirectoryListing(bstr(remoteSourcePath), &listing);
         if (FAILED(hr)) {
-            qCWarning(lcD3DService) << "Unable to get the shader source directory listing"
+            qCWarning(lcD3DService) << "Unable to get the shader source directory listing:"
                                     << coreConServer->formatError(hr);
             wasDisconnected = true;
             Sleep(1000);
