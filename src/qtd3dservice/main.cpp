@@ -97,6 +97,12 @@ int main(int argc, char *argv[])
                 QStringLiteral("Write output to a file."),
                 QStringLiteral("file"));
     parser.addOption(outputOption);
+    QCommandLineOption verbosityOption(
+                QStringLiteral("verbose"),
+                QLatin1String("The verbosity level of the message output "
+                              "(0 - silent, 1 - info, 2 - debug). Defaults to 1."),
+                QStringLiteral("level"), QStringLiteral("1"));
+    parser.addOption(verbosityOption);
 
     parser.setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
     parser.addHelpOption();
@@ -111,6 +117,32 @@ int main(int argc, char *argv[])
         }
         qInstallMessageHandler(&outputFileMessageHandler);
     }
+
+    QStringList filterRules = QStringList() // Default logging rules
+            << QStringLiteral("qt.d3dservice.warning=true")
+            << QStringLiteral("qt.d3dservice.critical=true");
+    if (parser.isSet(verbosityOption)) {
+        bool ok;
+        uint verbosity = parser.value(verbosityOption).toUInt(&ok);
+        if (!ok || verbosity > 2) {
+            qCCritical(lcD3DService) << "Incorrect value specified for verbosity.";
+            parser.showHelp(1);
+        }
+        switch (verbosity) {
+        case 2: // Enable debug print
+            filterRules.append(QStringLiteral("qt.d3dservice.debug=true"));
+            break;
+        case 1: // Remove warnings
+            filterRules.removeFirst();
+            // fall through
+        case 0: // Silent
+            filterRules.removeFirst();
+            // fall through
+        default: // Impossible
+            break;
+        }
+    }
+    QLoggingCategory::setFilterRules(filterRules.join(QLatin1Char('\n')));
 
     const bool installSet = parser.isSet(installOption);
     const bool removeSet = parser.isSet(removeOption);
