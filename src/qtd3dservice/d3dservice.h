@@ -62,7 +62,7 @@ namespace D3DService
     QList<QStringPair> registrations();
     bool clearRegistrations();
 
-    bool startService();
+    bool startService(bool replaceMessageHandler = true);
     bool startDirectly();
 
     void reportStatus(DWORD state, DWORD exitCode, DWORD waitHint);

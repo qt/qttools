@@ -290,10 +290,11 @@ bool D3DService::remove()
     return true;
 }
 
-bool D3DService::startService()
+bool D3DService::startService(bool replaceMessageHandler)
 {
     d->isService = true;
-    qInstallMessageHandler(&d3dserviceMessageHandler);
+    if (replaceMessageHandler)
+        qInstallMessageHandler(&d3dserviceMessageHandler);
     SERVICE_TABLE_ENTRY dispatchTable[] = {
         { const_cast<wchar_t *>(d->name), &run },
         { NULL, NULL }

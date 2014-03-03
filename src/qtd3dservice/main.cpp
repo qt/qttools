@@ -40,10 +40,18 @@
 ****************************************************************************/
 
 #include <QtCore/QCommandLineParser>
+#include <QtCore/QFile>
 
 #include <iostream>
 
 #include "d3dservice.h"
+
+static QFile outputFile;
+static void outputFileMessageHandler(QtMsgType, const QMessageLogContext &, const QString &text)
+{
+    outputFile.write(text.toUtf8());
+    outputFile.write("\r\n");
+}
 
 int main(int argc, char *argv[])
 {
@@ -84,10 +92,25 @@ int main(int argc, char *argv[])
                 QStringLiteral("direct"),
                 QStringLiteral("Run directly (not as a Windows service)."));
     parser.addOption(directOption);
+    QCommandLineOption outputOption(
+                QStringLiteral("output"),
+                QStringLiteral("Write output to a file."),
+                QStringLiteral("file"));
+    parser.addOption(outputOption);
 
     parser.setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
     parser.addHelpOption();
     parser.process(app.arguments());
+
+    if (parser.isSet(outputOption)) {
+        outputFile.setFileName(parser.value(outputOption));
+        if (!outputFile.open(QFile::WriteOnly)) {
+            qCWarning(lcD3DService) << "The output file could not be opened:"
+                                    << outputFile.errorString();
+            return 1;
+        }
+        qInstallMessageHandler(&outputFileMessageHandler);
+    }
 
     const bool installSet = parser.isSet(installOption);
     const bool removeSet = parser.isSet(removeOption);
@@ -152,7 +175,7 @@ int main(int argc, char *argv[])
             return 0;
     }
 
-    if (D3DService::startService())
+    if (D3DService::startService(!parser.isSet(outputOption)))
         return 0;
 
     // App was launched directly without -direct
