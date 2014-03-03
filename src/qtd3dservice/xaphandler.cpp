@@ -58,7 +58,7 @@ Q_GLOBAL_STATIC(CoreConServer, coreConServer)
 
 /* This method runs in its own thread for each CoreCon device/application combo
  * the service is currently handling. */
-extern void handleXapDevice(int deviceIndex, const QString &app, const QString &localBase)
+extern int handleXapDevice(int deviceIndex, const QString &app, const QString &localBase, HANDLE runLock)
 {
     if (!coreConServer->initialize()) {
         while (!coreConServer.exists())
@@ -68,7 +68,7 @@ extern void handleXapDevice(int deviceIndex, const QString &app, const QString &
     CoreConDevice *device = coreConServer->devices().value(deviceIndex, 0);
     if (!device) {
         qCWarning(lcD3DService) << "Device at index" << deviceIndex << "not found.";
-        return;
+        return 1;
     }
 
     const QString localControlFile = localBase + QStringLiteral("\\control");
@@ -89,7 +89,7 @@ extern void handleXapDevice(int deviceIndex, const QString &app, const QString &
     if (FAILED(hr)) {
         qCWarning(lcD3DService) << "Unable to initialize connection."
                                 << coreConServer->formatError(hr);
-        return;
+        return 1;
     }
 
     ComPtr<ICcConnection3> connection3;
@@ -97,7 +97,7 @@ extern void handleXapDevice(int deviceIndex, const QString &app, const QString &
     if (FAILED(hr)) {
         qCWarning(lcD3DService) << "Unable to obtain connection3 interface."
                                 << coreConServer->formatError(hr);
-        return;
+        return 1;
     }
 
     ComPtr<ICcConnection4> connection4;
@@ -105,15 +105,17 @@ extern void handleXapDevice(int deviceIndex, const QString &app, const QString &
     if (FAILED(hr)) {
         qCWarning(lcD3DService) << "Unable to obtain connection4 interface."
                                 << coreConServer->formatError(hr);
-        return;
+        return 1;
     }
-
-    D3DService::reportStatus(SERVICE_RUNNING, NO_ERROR, 0);
 
     int round = 0;
     bool wasDisconnected = true;
     FileInfo controlFileInfo;
     forever {
+        // If the run lock is signaled, it's time to quit
+        if (WaitForSingleObject(runLock, 0) == WAIT_OBJECT_0)
+            return 0;
+
         VARIANT_BOOL connected;
         hr = connection->IsConnected(&connected);
         if (FAILED(hr)) {
@@ -136,7 +138,7 @@ extern void handleXapDevice(int deviceIndex, const QString &app, const QString &
                                       << coreConServer->formatError(hr);
                 if (++retryCount > 30) {
                     qCCritical(lcD3DService) << "Unable to connect to device. Exiting.";
-                    return;
+                    return 1;
                 }
                 Sleep(1000);
             }
@@ -149,14 +151,14 @@ extern void handleXapDevice(int deviceIndex, const QString &app, const QString &
             if (FAILED(hr)) {
                 qCCritical(lcD3DService) << "Unable to determine if package is installed - check that the app option contains a valid UUID."
                                          << coreConServer->formatError(hr);
-                return;
+                return 1;
             }
 
             if (!isInstalled) {
                 qCDebug(lcD3DService) << "Package is not installed. Checking again...";
                 if (++retryCount > 30) {
                     qCCritical(lcD3DService) << "Package did not materialize within 30 seconds. Exiting.";
-                    return;
+                    return 1;
                 }
                 Sleep(1000);
             }

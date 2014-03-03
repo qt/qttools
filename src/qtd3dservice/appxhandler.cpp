@@ -79,23 +79,23 @@ private:
 };
 
 /* This function handles a worker thread servicing an Appx application */
-extern void handleAppxDevice(int deviceIndex, const QString &app, const QString &localBase)
+extern int handleAppxDevice(int deviceIndex, const QString &app, const QString &localBase, HANDLE runLock)
 {
     if (deviceIndex) {
         qCWarning(lcD3DService) << "Unsupported device index:" << deviceIndex;
-        return;
+        return 1;
     }
 
     ComInitializer com;
     if (!com.isValid())
-        return;
+        return 1;
 
     ComPtr<IPackageManager> packageManager;
     HRESULT hr = RoActivateInstance(HString::MakeReference(RuntimeClass_Windows_Management_Deployment_PackageManager).Get(),
                             &packageManager);
     if (FAILED(hr)) {
         qCWarning(lcD3DService) << "Unable to instantiate package manager. HRESULT: 0x" << QByteArray::number(hr, 16).constData();
-        return;
+        return 1;
     }
 
     HStringReference packageFullName(reinterpret_cast<LPCWSTR>(app.utf16()));
@@ -104,25 +104,25 @@ extern void handleAppxDevice(int deviceIndex, const QString &app, const QString 
     if (FAILED(hr)) {
         qCWarning(lcD3DService).nospace() << "Unable to query package. HRESULT: 0x"
                                           << QByteArray::number(hr, 16).constData();
-        return;
+        return 1;
     }
     if (!package) {
         qCWarning(lcD3DService) << "Package is not installed.";
-        return;
+        return 1;
     }
     ComPtr<IPackageId> packageId;
     hr = package->get_Id(&packageId);
     if (FAILED(hr)) {
         qCWarning(lcD3DService).nospace() << "Unable to get package ID. HRESULT: 0x"
                                           << QByteArray::number(hr, 16).constData();
-        return;
+        return 1;
     }
     HSTRING packageFamilyName;
     hr = packageId->get_FamilyName(&packageFamilyName);
     if (FAILED(hr)) {
         qCWarning(lcD3DService).nospace() << "Unable to get package name. HRESULT: 0x"
                                           << QByteArray::number(hr, 16).constData();
-        return;
+        return 1;
     }
 
     const QString localSourcePath = localBase + QStringLiteral("\\source\\");
@@ -137,11 +137,13 @@ extern void handleAppxDevice(int deviceIndex, const QString &app, const QString 
     const QString remoteSourcePath = remoteBase + QStringLiteral("\\source\\");
     const QString remoteBinaryPath = remoteBase + QStringLiteral("\\binary\\");
 
-    D3DService::reportStatus(SERVICE_RUNNING, NO_ERROR, 0);
-
     int round = 0;
     bool checkDirectories = true;
     forever {
+        // If the run lock is signaled, it's time to quit
+        if (WaitForSingleObject(runLock, 0) == WAIT_OBJECT_0)
+            return 0;
+
         // Run certain setup steps once per connection
         if (checkDirectories) {
             // Check remote directory

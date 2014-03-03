@@ -50,7 +50,6 @@
 #include <QtCore/QBitArray>
 
 #include <iostream>
-#include <thread>
 
 QT_USE_NAMESPACE
 
@@ -61,12 +60,15 @@ Q_LOGGING_CATEGORY(lcD3DService, "qt.d3dservice")
 #define LQT_VERSION_STR WIDEN(QT_VERSION_STR)
 
 // Handlers
-extern void handleAppxDevice(int deviceIndex, const QString &app, const QString &cacheDir);
-extern void handleXapDevice(int deviceIndex, const QString &app, const QString &cacheDir);
+typedef int (*HandleDeviceFunction)(int, const QString &, const QString &, HANDLE);
+extern int handleAppxDevice(int deviceIndex, const QString &app, const QString &cacheDir, HANDLE runLock);
+extern int handleXapDevice(int deviceIndex, const QString &app, const QString &cacheDir, HANDLE runLock);
 
 // Callbacks
 static void __stdcall run(DWORD argc, LPWSTR argv[]);
-static void __stdcall control(DWORD code);
+static DWORD __stdcall control(DWORD control, DWORD eventType, void *eventData, void *context);
+static BOOL __stdcall control(DWORD type);
+static DWORD __stdcall appWorker(LPVOID param);
 
 union ErrorId
 {
@@ -84,51 +86,84 @@ union ErrorId
     ulong val;
 };
 
-// This class instance is shared between all runners
-struct D3DServiceShared
+enum ControlEvent
 {
-    D3DServiceShared()
-        : name(L"qtd3dservice")
-    {
-        GetModuleFileName(NULL, path, MAX_PATH);
-        registrations = D3DService::registrations();
-    }
-
-    const wchar_t *name;
-    wchar_t path[MAX_PATH];
-    QList<QPair<QString, QString>> registrations;
+    NoCommand = 0, Stop = 1, NewWorker = 2
 };
-Q_GLOBAL_STATIC(D3DServiceShared, shared)
 
-// One instance of this class is created for each runner
 struct D3DServicePrivate
 {
-    D3DServicePrivate() : stopEvent(NULL), isService(false), checkPoint(1)
+    D3DServicePrivate()
+        : name(L"qtd3dservice")
+        , checkPoint(1)
+        , isService(false)
+        , controlEvent(CreateEvent(NULL, FALSE, FALSE, NULL))
     {
-        status.dwServiceType = SERVICE_WIN32_SHARE_PROCESS;
+        GetModuleFileName(NULL, path, MAX_PATH);
+        status.dwServiceType = SERVICE_WIN32_OWN_PROCESS;
         status.dwServiceSpecificExitCode = 0;
     }
+    ~D3DServicePrivate()
+    {
+        if (controlEvent)
+            CloseHandle(controlEvent);
+    }
 
-    HANDLE stopEvent;
-    bool isService;
+    // Service use
+    const wchar_t *name;
+    wchar_t path[MAX_PATH];
     SERVICE_STATUS status;
     SERVICE_STATUS_HANDLE statusHandle;
     DWORD checkPoint;
+
+    // Internal use
+    bool isService;
+    HANDLE controlEvent;
+    QList<ControlEvent> eventQueue;
+    QList<QStringPair> workerQueue;
 };
-// Unrolled Q_GLOBAL_STATIC to add __declspec(thread) to the declaration
-namespace {
-    namespace Q_QGS_d {
-        typedef D3DServicePrivate Type;
-        QBasicAtomicInt guard = Q_BASIC_ATOMIC_INITIALIZER(QtGlobalStatic::Uninitialized);
-        Q_GLOBAL_STATIC_INTERNAL(())
+Q_GLOBAL_STATIC(D3DServicePrivate, d)
+
+struct WorkerParam
+{
+    enum { NoError = 0, GeneralError = 1, BadDeviceIndex = 2, NoCacheDir = 3 };
+    WorkerParam(const QString &deviceName, const QString &app, HANDLE runLock)
+        : deviceName(deviceName), app(app), runLock(runLock) { }
+    QString deviceName;
+    QString app;
+    HANDLE runLock;
+};
+
+class Worker
+{
+public:
+    Worker(const QStringPair &config, LPTHREAD_START_ROUTINE worker)
+        : m_runLock(CreateEvent(NULL, FALSE, FALSE, NULL))
+        , m_param(config.first, config.second, m_runLock)
+        , m_thread(CreateThread(NULL, 0, worker, &m_param, 0, NULL))
+    {
     }
-}
-static __declspec(thread) QGlobalStatic<D3DServicePrivate, Q_QGS_d::innerFunction, Q_QGS_d::guard> d;
+    ~Worker()
+    {
+        SetEvent(m_runLock);
+        WaitForSingleObject(m_thread, INFINITE);
+        CloseHandle(m_runLock);
+        CloseHandle(m_thread);
+    }
+    HANDLE thread() const
+    {
+        return m_thread;
+    }
+private:
+    HANDLE m_runLock;
+    WorkerParam m_param;
+    HANDLE m_thread;
+};
 
 void d3dserviceMessageHandler(QtMsgType type, const QMessageLogContext &, const QString &text)
 {
-    LPCWSTR strings[2] = { shared->name, reinterpret_cast<const wchar_t *>(text.utf16()) };
-    HANDLE eventSource = RegisterEventSource(NULL, shared->name);
+    LPCWSTR strings[2] = { d->name, reinterpret_cast<const wchar_t *>(text.utf16()) };
+    HANDLE eventSource = RegisterEventSource(NULL, d->name);
     if (eventSource) {
         if (type > QtDebugMsg) {
             ErrorId id = { ushort(FACILITY_NULL | ErrorId::Customer), type };
@@ -183,11 +218,10 @@ bool D3DService::install()
         return 0;
     }
 
-    // Create the service
-    SC_HANDLE service = CreateService(manager, shared->name, L"Qt D3D Compiler Service " LQT_VERSION_STR,
-                                      SERVICE_ALL_ACCESS, SERVICE_WIN32_SHARE_PROCESS,
+    SC_HANDLE service = CreateService(manager, d->name, L"Qt D3D Compiler Service " LQT_VERSION_STR,
+                                      SERVICE_ALL_ACCESS, SERVICE_WIN32_OWN_PROCESS,
                                       SERVICE_DEMAND_START, SERVICE_ERROR_NORMAL,
-                                      shared->path, NULL, NULL, NULL, NULL, NULL);
+                                      d->path, NULL, NULL, NULL, NULL, NULL);
     if (!service) {
         qCWarning(lcD3DService) << qt_error_string(GetLastError());
         switch (GetLastError()) {
@@ -221,7 +255,7 @@ bool D3DService::remove()
     }
 
     // Get a handle to the SCM database.
-    SC_HANDLE service = OpenService(manager, shared->name, DELETE);
+    SC_HANDLE service = OpenService(manager, d->name, DELETE);
     if (!service) {
         // System message
         qCWarning(lcD3DService) << qt_error_string(GetLastError());
@@ -254,39 +288,18 @@ bool D3DService::remove()
 
 bool D3DService::startService()
 {
-    int registrationCount = shared->registrations.count();
-    if (!registrationCount) {
-        // If there are no registrations, we'll run once and exit
-        SERVICE_TABLE_ENTRY dispatchTableStub[] = {
-            { const_cast<wchar_t *>(shared->name), &run },
-            { NULL, NULL }
-        };
-        return StartServiceCtrlDispatcher(dispatchTableStub);
-    }
-    QVector<SERVICE_TABLE_ENTRY> dispatchTable(registrationCount + 1);
-    for (int i = 0; i < registrationCount; ++i)
-        dispatchTable[i] = { const_cast<wchar_t *>(shared->name), &run };
-    dispatchTable[registrationCount] = { NULL, NULL };
-    return StartServiceCtrlDispatcher(dispatchTable.data());
+    d->isService = true;
+    qInstallMessageHandler(&d3dserviceMessageHandler);
+    SERVICE_TABLE_ENTRY dispatchTable[] = {
+        { const_cast<wchar_t *>(d->name), &run },
+        { NULL, NULL }
+    };
+    return StartServiceCtrlDispatcher(dispatchTable);
 }
 
 bool D3DService::startDirectly()
 {
-    if (shared->registrations.isEmpty())
-        return true;
-
-    // Create one worker per registration
-    int threadCount = shared->registrations.count();
-    QVector<std::thread *> threads(threadCount);
-    for (int i = 0; i < threadCount; ++i) {
-        LPWSTR *args = 0;
-        threads[i] = new std::thread(&run, 0, args);
-    }
-    for (int i = 0; i < threadCount; ++i) {
-        threads[i]->join();
-        delete threads[i];
-    }
-
+    run(0, 0);
     return true;
 }
 
@@ -305,8 +318,9 @@ void D3DService::reportStatus(DWORD state, DWORD exitCode, DWORD waitHint)
 
 void __stdcall run(DWORD argc, LPWSTR argv[])
 {
-    if (argc && lstrcmp(argv[0], shared->name) == 0) {
-        d->isService = true;
+    Q_UNUSED(argc);
+    Q_UNUSED(argv);
+    if (d->isService) {
 #if defined(_DEBUG)
         // Debugging aid. Gives 15 seconds after startup to attach a debuggger.
         // The SCM will give the service 30 seconds to start.
@@ -314,68 +328,153 @@ void __stdcall run(DWORD argc, LPWSTR argv[])
         while (!IsDebuggerPresent() && count++ < 15)
             Sleep(1000);
 #endif
-        qInstallMessageHandler(&d3dserviceMessageHandler);
-    }
-
-    if (d->isService) {
-        d->stopEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
-        d->statusHandle = RegisterServiceCtrlHandler(shared->name, &control);
-        D3DService::reportStatus(SERVICE_START_PENDING, NO_ERROR, 3000);
-    }
-
-    if (shared->registrations.isEmpty()) {
-        qCWarning(lcD3DService) << "No configuration available - have you registered applications to be monitored?";
+        d->statusHandle = RegisterServiceCtrlHandlerEx(d->name, &control, NULL);
+        D3DService::reportStatus(SERVICE_START_PENDING, NO_ERROR, 0);
         D3DService::reportStatus(SERVICE_RUNNING, NO_ERROR, 0);
-        D3DService::reportStatus(SERVICE_STOP_PENDING, NO_ERROR, 0);
-        D3DService::reportStatus(SERVICE_STOPPED, NO_ERROR, 0);
-        return;
+    } else {
+        SetConsoleCtrlHandler(&control, TRUE);
     }
 
-    QPair<QString, QString> config = shared->registrations.takeFirst();
-    QString deviceName = config.first;
-    QString app = config.second;
+    QVector<HANDLE> waitHandles;
+    waitHandles.append(d->controlEvent);
 
-    // Simple case, local device
-    if (deviceName.isEmpty() || deviceName == QStringLiteral("local")) {
-        const QString cachePath = prepareCache(QStringLiteral("local"), app);
-        if (cachePath.isEmpty()) {
-            qCCritical(lcD3DService) << "Unable to create local shader cache.";
-            return;
+    // App monitoring threads
+    QVector<Worker *> workers;
+
+    // Static list of registrations
+    foreach (const QStringPair &registration, D3DService::registrations()) {
+        Worker *worker = new Worker(registration, &appWorker);
+        workers.append(worker);
+        waitHandles.append(worker->thread());
+    }
+
+    // Master loop
+    // This loop handles incoming events from the service controller and
+    // worker threads. It also creates new worker threads as needed.
+    const uint minWorker = WAIT_OBJECT_0 + 1;
+    uint maxWorker = minWorker + workers.size() - 1;
+    forever {
+        DWORD event = WaitForMultipleObjects(waitHandles.size(), waitHandles.data(), FALSE, INFINITE);
+        if (event >= WAIT_OBJECT_0 && event < WAIT_OBJECT_0 + waitHandles.size()) {
+            // A control event occurred
+            if (event == WAIT_OBJECT_0) {
+                bool shutdown = false;
+                while (!d->eventQueue.isEmpty()) {
+                    ControlEvent controlEvent = d->eventQueue.takeFirst();
+
+                    // Break out and shutdown
+                    if (controlEvent == Stop) {
+                        shutdown = true;
+                        break;
+                    }
+
+                    // A new worker is in the queue
+                    if (controlEvent == NewWorker) {
+                        while (!d->workerQueue.isEmpty()) {
+                            Worker *worker = new Worker(d->workerQueue.takeFirst(), &appWorker);
+                            workers.append(worker);
+                            waitHandles.append(worker->thread());
+                            maxWorker = minWorker + workers.size() - 1;
+                        }
+                        continue;
+                    }
+                }
+
+                if (shutdown)
+                    break;
+
+                continue;
+            }
+
+            // A worker exited
+            if (event >= minWorker && event <= maxWorker) {
+                // Delete the worker and clear the handle (TODO: remove it?)
+                waitHandles.remove(event - WAIT_OBJECT_0);
+                Worker *worker = workers.takeAt(event - minWorker);
+                delete worker;
+                continue;
+            }
         }
-        handleAppxDevice(0, app, cachePath);
-        D3DService::reportStatus(SERVICE_STOPPED, NO_ERROR, 0);
-        return;
     }
 
-    // CoreCon (Windows Phone) case
-    bool ok;
-    int deviceIndex = deviceName.toInt(&ok);
-    if (!ok) {
-        D3DService::reportStatus(SERVICE_RUNNING, NO_ERROR, 0);
-        return;
+    qDeleteAll(workers);
+
+    foreach (HANDLE handle, waitHandles) {
+        if (handle)
+            CloseHandle(handle);
     }
 
-    const QString cachePath = prepareCache(deviceName, app);
-    if (cachePath.isEmpty()) {
-        qCCritical(lcD3DService) << "Unable to create local shader cache.";
-        return;
-    }
-    handleXapDevice(deviceIndex, app, cachePath);
     D3DService::reportStatus(SERVICE_STOPPED, NO_ERROR, 0);
 }
 
-void __stdcall control(DWORD code)
+DWORD __stdcall appWorker(LPVOID param)
 {
+    WorkerParam *args = reinterpret_cast<WorkerParam *>(param);
+
+    HandleDeviceFunction handleDevice;
+    QString cachePath;
+    int deviceIndex = 0;
+    // Simple case, local device
+    if (args->deviceName.isEmpty() || args->deviceName == QStringLiteral("local")) {
+        cachePath = prepareCache(QStringLiteral("local"), args->app);
+        if (cachePath.isEmpty()) {
+            qCCritical(lcD3DService) << "Unable to create local shader cache.";
+            return WorkerParam::NoCacheDir;
+        }
+        handleDevice = &handleAppxDevice;
+    } else {
+        // CoreCon (Windows Phone) case
+        bool ok;
+        deviceIndex = args->deviceName.toInt(&ok);
+        if (!ok)
+            return WorkerParam::BadDeviceIndex;
+        cachePath = prepareCache(args->deviceName, args->app);
+        if (cachePath.isEmpty()) {
+            qCCritical(lcD3DService) << "Unable to create local shader cache.";
+            return WorkerParam::NoCacheDir;
+        }
+        handleDevice = &handleXapDevice;
+    }
+
+    return handleXapDevice(deviceIndex, args->app, cachePath, args->runLock);
+}
+
+// Service controller
+DWORD __stdcall control(DWORD code, DWORD eventType, void *eventData, void *context)
+{
+    Q_UNUSED(context);
+
     switch (code) {
-      case SERVICE_CONTROL_STOP:
-         //ReportSvcStatus(SERVICE_STOP_PENDING, NO_ERROR, 0);
-         // Signal the service to stop.
-         SetEvent(d->stopEvent);
-         //ReportSvcStatus(gShared->status.dwCurrentState, NO_ERROR, 0);
-         return;
-      case SERVICE_CONTROL_INTERROGATE:
-         break;
-      default:
-         break;
-   }
+    case SERVICE_CONTROL_INTERROGATE:
+        D3DService::reportStatus(0, NO_ERROR, 0);
+        return NO_ERROR;
+    case SERVICE_CONTROL_STOP: {
+        d->eventQueue.append(Stop);
+        SetEvent(d->controlEvent);
+        return NO_ERROR;
+    }
+    default:
+        break;
+    }
+    return ERROR_CALL_NOT_IMPLEMENTED;
+}
+
+// Console CTRL controller
+BOOL __stdcall control(DWORD type)
+{
+    switch (type) {
+    case CTRL_C_EVENT:
+    case CTRL_CLOSE_EVENT:
+    case CTRL_LOGOFF_EVENT:
+    case CTRL_SHUTDOWN_EVENT: {
+        d->eventQueue.append(Stop);
+        SetEvent(d->controlEvent);
+        return true;
+    }
+    // fall through
+    case CTRL_BREAK_EVENT:
+    default:
+        break;
+    }
+    return false;
 }
