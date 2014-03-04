@@ -608,7 +608,7 @@ bool XapEngine::sendFile(const QString &localFile, const QString &deviceFile)
     qCDebug(lcWinRtRunner) << __FUNCTION__;
 
     HRESULT hr = d->connection->SendFile(_bstr_t(wchar(localFile)), _bstr_t(wchar(deviceFile)),
-                                         uint(2), uint(2), 0);
+                                         CREATE_ALWAYS, NULL);
     if (FAILED(hr)) {
         qCWarning(lcWinRtRunner) << "Unable to send the file." << coreConServer->formatError(hr);
         return false;

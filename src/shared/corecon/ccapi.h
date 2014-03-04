@@ -144,7 +144,7 @@ struct __declspec(uuid("{CEF4C928-326F-49A9-B7E7-8FE7588B74B5}")) ICcConnection 
 {
     virtual HRESULT __stdcall DeviceId(BSTR *deviceId) = 0;
     virtual HRESULT __stdcall GetSystemInfo(SystemInfo *systemInfo) = 0;
-    virtual HRESULT __stdcall SendFile(BSTR desktopFile, BSTR deviceFile, DWORD fileAction, DWORD creationFlags, BSTR customFileAction) = 0;
+    virtual HRESULT __stdcall SendFile(BSTR desktopFile, BSTR deviceFile, DWORD creationFlags, BSTR customFileAction) = 0;
     virtual HRESULT __stdcall ReceiveFile(BSTR deviceFile, BSTR desktopFile, DWORD fileAction) = 0;
     virtual HRESULT __stdcall RemoveFile(BSTR deviceFile) = 0;
     virtual HRESULT __stdcall GetFileInfo(BSTR deviceFile, FileInfo *fileInfo) = 0;

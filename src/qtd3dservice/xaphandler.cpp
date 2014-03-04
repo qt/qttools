@@ -307,7 +307,7 @@ extern int handleXapDevice(int deviceIndex, const QString &app, const QString &l
                     continue;
                 }
                 // Not found, so let's upload it
-                hr = connection->SendFile(bstr(localControlFile), bstr(remoteControlFile), 2, 2, NULL);
+                hr = connection->SendFile(bstr(localControlFile), bstr(remoteControlFile), CREATE_ALWAYS, NULL);
                 if (FAILED(hr)) {
                     if (hr == 0x8973190e) {
                         // This can happen during normal reinstallation, so continue
@@ -427,7 +427,7 @@ extern int handleXapDevice(int deviceIndex, const QString &app, const QString &l
 
             // All went well, upload the file
             const QString remoteBinary = remoteBinaryPath + shaderFileName;
-            hr = connection->SendFile(bstr(localBinary), bstr(remoteBinary), 2, 2, NULL);
+            hr = connection->SendFile(bstr(localBinary), bstr(remoteBinary), CREATE_ALWAYS, NULL);
             if (FAILED(hr)) {
                 qCWarning(lcD3DService) << "Unable to upload binary:"
                                         << remoteBinary << coreConServer->formatError(hr);
