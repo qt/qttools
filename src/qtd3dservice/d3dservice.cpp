@@ -50,6 +50,8 @@
 #include <QtCore/QBitArray>
 
 #include <iostream>
+#include <dbt.h>
+#include <setupapi.h>
 
 QT_USE_NAMESPACE
 
@@ -59,15 +61,24 @@ Q_LOGGING_CATEGORY(lcD3DService, "qt.d3dservice")
 #define WIDEN(x) _WIDEN(x)
 #define LQT_VERSION_STR WIDEN(QT_VERSION_STR)
 
+// The GUID used by the Windows Phone IP over USB service
+static const GUID GUID_DEVICE_WINPHONE8_USB = { 0x26fedc4eL, 0x6ac3, 0x4241, 0x9e, 0x4d, 0xe3, 0xd4, 0xb2, 0xc5, 0xc5, 0x34 };
+
 // Handlers
 typedef int (*HandleDeviceFunction)(int, const QString &, const QString &, HANDLE);
 extern int handleAppxDevice(int deviceIndex, const QString &app, const QString &cacheDir, HANDLE runLock);
 extern int handleXapDevice(int deviceIndex, const QString &app, const QString &cacheDir, HANDLE runLock);
+typedef int (*AppListFunction)(int, QSet<QString> &);
+extern int xapAppNames(int deviceIndex, QSet<QString> &apps);
+
+extern QStringList xapDeviceNames();
 
 // Callbacks
 static void __stdcall run(DWORD argc, LPWSTR argv[]);
 static DWORD __stdcall control(DWORD control, DWORD eventType, void *eventData, void *context);
 static BOOL __stdcall control(DWORD type);
+static LRESULT __stdcall control(HWND window, UINT msg, WPARAM wParam, LPARAM lParam);
+static DWORD __stdcall deviceWorker(LPVOID param);
 static DWORD __stdcall appWorker(LPVOID param);
 
 union ErrorId
@@ -88,7 +99,7 @@ union ErrorId
 
 enum ControlEvent
 {
-    NoCommand = 0, Stop = 1, NewWorker = 2
+    NoCommand = 0, Stop = 1, NewWorker = 2, PhoneConnected = 3
 };
 
 struct D3DServicePrivate
@@ -98,6 +109,8 @@ struct D3DServicePrivate
         , checkPoint(1)
         , isService(false)
         , controlEvent(CreateEvent(NULL, FALSE, FALSE, NULL))
+        , controlWindow(0)
+        , deviceHandle(0)
     {
         GetModuleFileName(NULL, path, MAX_PATH);
         status.dwServiceType = SERVICE_WIN32_OWN_PROCESS;
@@ -105,6 +118,10 @@ struct D3DServicePrivate
     }
     ~D3DServicePrivate()
     {
+        if (deviceHandle)
+            UnregisterDeviceNotification(deviceHandle);
+        if (controlWindow)
+            CloseHandle(controlWindow);
         if (controlEvent)
             CloseHandle(controlEvent);
     }
@@ -119,6 +136,8 @@ struct D3DServicePrivate
     // Internal use
     bool isService;
     HANDLE controlEvent;
+    HWND controlWindow;
+    HDEVNOTIFY deviceHandle;
     QList<ControlEvent> eventQueue;
     QList<QStringPair> workerQueue;
 };
@@ -338,13 +357,57 @@ void __stdcall run(DWORD argc, LPWSTR argv[])
         D3DService::reportStatus(SERVICE_RUNNING, NO_ERROR, 0);
     } else {
         SetConsoleCtrlHandler(&control, TRUE);
+
+        // Create an invisible window for getting broadcast events
+        WNDCLASS controlWindowClass = { 0, &control, 0, 0, NULL, NULL,
+                                        NULL, NULL, NULL, L"controlWindow" };
+        if (!RegisterClass(&controlWindowClass)) {
+            qCCritical(lcD3DService) << "Unable to register control window class:"
+                                     << qt_error_string(GetLastError());
+            return;
+        }
+        d->controlWindow = CreateWindowEx(0, L"controlWindow", NULL, 0, 0, 0, 0, 0,
+                                          NULL, NULL, NULL, NULL);
     }
+
+    // Register for USB notifications
+    DEV_BROADCAST_DEVICEINTERFACE filter = {
+        sizeof(DEV_BROADCAST_DEVICEINTERFACE), DBT_DEVTYP_DEVICEINTERFACE,
+        0, GUID_DEVICE_WINPHONE8_USB, 0
+    };
+    d->deviceHandle = RegisterDeviceNotification(
+                d->isService ? d->statusHandle : static_cast<HANDLE>(d->controlWindow), &filter,
+                d->isService ? DEVICE_NOTIFY_SERVICE_HANDLE : DEVICE_NOTIFY_WINDOW_HANDLE);
 
     QVector<HANDLE> waitHandles;
     waitHandles.append(d->controlEvent);
 
+    // Dummy handle for phone (gets replaced by a worker when needed)
+    HANDLE dummyHandle;
+    DuplicateHandle(GetCurrentProcess(), GetCurrentProcess(),
+                    GetCurrentProcess(), &dummyHandle, SYNCHRONIZE, FALSE, 0);
+    waitHandles.append(dummyHandle);
+
+    // Event handles for emulators (XDE)
+    WCHAR username[MAX_PATH];
+    ULONG usernameSize = MAX_PATH;
+    GetUserName(username, &usernameSize);
+    const QStringList emulatorNames = xapDeviceNames().mid(1);
+    foreach (const QString &name, emulatorNames) {
+        const QString eventName = QStringLiteral("Local\\XdeOnServerInitialize")
+                + name + QLatin1Char('.') + QString::fromWCharArray(username, usernameSize).toLower();
+        HANDLE event = CreateEvent(NULL, TRUE, FALSE, reinterpret_cast<LPCWSTR>(eventName.utf16()));
+        if (event)
+            waitHandles.append(event);
+        else
+            qCWarning(lcD3DService) << "Unable to create event:" << qt_error_string(GetLastError());
+    }
+
     // App monitoring threads
     QVector<Worker *> workers;
+
+    // Device monitoring threads - one per device
+    QVector<Worker *> deviceWorkers(emulatorNames.size() + 1, NULL);
 
     // Static list of registrations
     foreach (const QStringPair &registration, D3DService::registrations()) {
@@ -353,13 +416,28 @@ void __stdcall run(DWORD argc, LPWSTR argv[])
         waitHandles.append(worker->thread());
     }
 
+    // If a Windows Phone is already connected, queue a device worker
+    HDEVINFO info = SetupDiGetClassDevs(&GUID_DEVICE_WINPHONE8_USB, NULL, NULL,
+                                        DIGCF_DEVICEINTERFACE|DIGCF_PRESENT);
+    if (info != INVALID_HANDLE_VALUE) {
+        SP_DEVINFO_DATA infoData = { sizeof(SP_DEVINFO_DATA) };
+        if (SetupDiEnumDeviceInfo(info, 0, &infoData)) {
+            d->eventQueue.append(PhoneConnected);
+            SetEvent(d->controlEvent);
+        }
+        SetupDiDestroyDeviceInfoList(info);
+    }
+
     // Master loop
     // This loop handles incoming events from the service controller and
     // worker threads. It also creates new worker threads as needed.
-    const uint minWorker = WAIT_OBJECT_0 + 1;
+    const uint phoneEvent = WAIT_OBJECT_0 + 1;
+    const uint minEmulatorEvent = phoneEvent + 1;
+    const uint maxEmulatorEvent = minEmulatorEvent + emulatorNames.size() - 1;
+    const uint minWorker = maxEmulatorEvent + 1;
     uint maxWorker = minWorker + workers.size() - 1;
     forever {
-        DWORD event = WaitForMultipleObjects(waitHandles.size(), waitHandles.data(), FALSE, INFINITE);
+        DWORD event = MsgWaitForMultipleObjects(waitHandles.size(), waitHandles.data(), FALSE, INFINITE, QS_ALLINPUT);
         if (event >= WAIT_OBJECT_0 && event < WAIT_OBJECT_0 + waitHandles.size()) {
             // A control event occurred
             if (event == WAIT_OBJECT_0) {
@@ -383,11 +461,80 @@ void __stdcall run(DWORD argc, LPWSTR argv[])
                         }
                         continue;
                     }
+
+                    // A Windows Phone device was connected
+                    if (controlEvent == PhoneConnected) {
+                        qCDebug(lcD3DService) << "A Windows Phone has connected.";
+                        // The worker is already active
+                        if (deviceWorkers.first())
+                            continue;
+
+                        // Start the phone monitoring thread
+                        Worker *worker = new Worker(qMakePair(QString::number(0), QString()), &deviceWorker);
+                        deviceWorkers[0] = worker;
+                        CloseHandle(waitHandles[phoneEvent - WAIT_OBJECT_0]);
+                        waitHandles[phoneEvent - WAIT_OBJECT_0] = worker->thread();
+                        continue;
+                    }
                 }
 
                 if (shutdown)
                     break;
 
+                continue;
+            }
+
+            // Device events
+            if (event >= phoneEvent && event <= maxEmulatorEvent) {
+                const int deviceIndex = event - phoneEvent;
+                // Determine if the handle in the slot is an event or thread
+                if (GetThreadId(waitHandles[event - WAIT_OBJECT_0])) {
+                    qCDebug(lcD3DService) << "Device worker exited:" << deviceIndex;
+                    // The thread has exited, close the handle and replace the event
+                    delete deviceWorkers.at(deviceIndex);
+                    deviceWorkers[deviceIndex] = 0;
+
+                    // The phone case is handled elsewhere; set a dummy handle
+                    if (event == phoneEvent) {
+                        HANDLE dummyHandle;
+                        DuplicateHandle(GetCurrentProcess(), GetCurrentProcess(),
+                                        GetCurrentProcess(), &dummyHandle, SYNCHRONIZE, FALSE, 0);
+                        waitHandles[event - WAIT_OBJECT_0] = dummyHandle;
+                        continue;
+                    }
+
+                    // Re-create the event handle
+                    const QString eventName = QStringLiteral("Local\\XdeOnServerInitialize")
+                            + emulatorNames.at(deviceIndex - 1) + QLatin1Char('.')
+                            + QString::fromWCharArray(username, usernameSize).toLower();
+                    HANDLE emulatorEvent = CreateEvent(
+                                NULL, TRUE, FALSE, reinterpret_cast<LPCWSTR>(eventName.utf16()));
+                    if (emulatorEvent) {
+                        waitHandles[event - WAIT_OBJECT_0] = emulatorEvent;
+                    } else {
+                        // If the above fails, replace it with a dummy to keep things going
+                        qCCritical(lcD3DService).nospace() << "Unable to create event for emulator "
+                                                           << emulatorNames.at(deviceIndex - 1)
+                                                           << ": " << qt_error_string(GetLastError());
+                        HANDLE dummyHandle;
+                        DuplicateHandle(GetCurrentProcess(), GetCurrentProcess(),
+                                        GetCurrentProcess(), &dummyHandle, SYNCHRONIZE, FALSE, 0);
+                        waitHandles[event - WAIT_OBJECT_0] = dummyHandle;
+                    }
+                } else {
+                    qCDebug(lcD3DService) << "An emulator was activated:" << deviceIndex;
+                    // The event was set; close the handle and replace with a thread
+                    CloseHandle(waitHandles[event - WAIT_OBJECT_0]);
+
+                    // This shouldn't happen
+                    if (event == phoneEvent)
+                        continue;
+
+                    const QStringPair config = qMakePair(QString::number(deviceIndex), QString());
+                    Worker *worker = new Worker(config, &deviceWorker);
+                    deviceWorkers[deviceIndex] = worker;
+                    waitHandles[event - WAIT_OBJECT_0] = worker->thread();
+                }
                 continue;
             }
 
@@ -400,6 +547,13 @@ void __stdcall run(DWORD argc, LPWSTR argv[])
                 continue;
             }
         }
+
+        // TODO: check return val for this
+        if (!d->isService) {
+            MSG msg;
+            if (PeekMessage(&msg, d->controlWindow, 0, 0, PM_REMOVE))
+                DispatchMessage(&msg);
+        }
     }
 
     qDeleteAll(workers);
@@ -410,6 +564,59 @@ void __stdcall run(DWORD argc, LPWSTR argv[])
     }
 
     D3DService::reportStatus(SERVICE_STOPPED, NO_ERROR, 0);
+}
+
+DWORD __stdcall deviceWorker(LPVOID param)
+{
+    WorkerParam *args = reinterpret_cast<WorkerParam *>(param);
+
+    // The list of applications on this device will be polled until
+    // an error code is returned (e.g. the device is disconnected) or
+    // the thread is told to exit.
+    QSet<QString> appNames;
+    AppListFunction appList;
+
+    int deviceIndex = 0;
+    if (args->deviceName.isEmpty() || args->deviceName == QStringLiteral("local")) {
+        // Not implemented
+        return 0;
+    } else {
+        // CoreCon (Windows Phone)
+        bool ok;
+        deviceIndex = args->deviceName.toInt(&ok);
+        if (!ok)
+            return WorkerParam::BadDeviceIndex;
+
+        appList = xapAppNames;
+    }
+
+    forever {
+        if (WaitForSingleObject(args->runLock, 0) == WAIT_OBJECT_0)
+            return 0;
+
+        QSet<QString> latestAppNames;
+        int exitCode = appList(deviceIndex, latestAppNames);
+        if (exitCode != WorkerParam::NoError)
+            return exitCode;
+
+        QSet<QString> newAppNames = latestAppNames - appNames;
+        if (!newAppNames.isEmpty()) {
+            // Create a new app watcher for each new app
+            foreach (const QString &app, newAppNames) {
+                qCWarning(lcD3DService).nospace() << "Found app " << app << " on device "
+                                                  << args->deviceName << '.';
+                d->workerQueue.append(qMakePair(args->deviceName, app));
+            }
+
+            d->eventQueue.append(NewWorker);
+            SetEvent(d->controlEvent);
+        }
+
+        appNames = latestAppNames;
+        Sleep(1000);
+    }
+
+    return 0;
 }
 
 DWORD __stdcall appWorker(LPVOID param)
@@ -458,10 +665,36 @@ DWORD __stdcall control(DWORD code, DWORD eventType, void *eventData, void *cont
         SetEvent(d->controlEvent);
         return NO_ERROR;
     }
+    case SERVICE_CONTROL_DEVICEEVENT: {
+        if (eventType == DBT_DEVICEARRIVAL) {
+            DEV_BROADCAST_DEVICEINTERFACE *header =
+                reinterpret_cast<DEV_BROADCAST_DEVICEINTERFACE *>(eventData);
+            if (header->dbcc_classguid != GUID_DEVICE_WINPHONE8_USB)
+                break;
+            d->eventQueue.append(PhoneConnected);
+            SetEvent(d->controlEvent);
+            return NO_ERROR;
+        }
+        break;
+    }
     default:
         break;
     }
     return ERROR_CALL_NOT_IMPLEMENTED;
+}
+
+// Console message controller
+LRESULT __stdcall control(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+    if (msg == WM_DEVICECHANGE && wParam == DBT_DEVICEARRIVAL) {
+        DEV_BROADCAST_DEVICEINTERFACE *header =
+                reinterpret_cast<DEV_BROADCAST_DEVICEINTERFACE *>(lParam);
+        if (header->dbcc_classguid == GUID_DEVICE_WINPHONE8_USB) {
+            d->eventQueue.append(PhoneConnected);
+            SetEvent(d->controlEvent);
+        }
+    }
+    return DefWindowProc(window, msg, wParam, lParam);
 }
 
 // Console CTRL controller

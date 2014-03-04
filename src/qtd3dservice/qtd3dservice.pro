@@ -7,7 +7,7 @@ DEFINES += QT_NO_CAST_FROM_ASCII QT_NO_CAST_TO_ASCII WINRT_LIBRARY WINAPI_FAMILY
 
 QMAKE_CXXFLAGS += -EHsc
 
-LIBS += -lruntimeobject
+LIBS += -lruntimeobject -lsetupapi
 
 SOURCES = \
     appxhandler.cpp \

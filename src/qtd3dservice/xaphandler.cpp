@@ -56,6 +56,96 @@ Q_GLOBAL_STATIC(CoreConServer, coreConServer)
 
 #define bstr(s) _bstr_t((const wchar_t *)s.utf16())
 
+// This is used by the service to simplify gathering of device data
+extern QStringList xapDeviceNames()
+{
+    if (!coreConServer->initialize()) {
+        while (!coreConServer.exists())
+            Sleep(1);
+    }
+
+    QStringList deviceNames;
+    foreach (const CoreConDevice *device, coreConServer->devices())
+        deviceNames.append(device->name());
+
+    return deviceNames;
+}
+
+// Allows looking up of application names
+extern int xapAppNames(int deviceIndex, QSet<QString> &apps)
+{
+    if (!coreConServer->initialize()) {
+        while (!coreConServer.exists())
+            Sleep(1);
+    }
+
+    CoreConDevice *device = coreConServer->devices().value(deviceIndex, 0);
+    if (!device) {
+        qCWarning(lcD3DService) << "Device at index" << deviceIndex << "not found.";
+        return 1;
+    }
+
+    HRESULT hr;
+    _bstr_t connectionName;
+    ComPtr<ICcConnection> connection;
+    hr = coreConServer->handle()->GetConnection(
+        device->handle(), 5000, NULL, connectionName.GetAddress(), &connection);
+    if (FAILED(hr)) {
+        qCWarning(lcD3DService) << "Unable to initialize connection:"
+                                << coreConServer->formatError(hr);
+        return 1;
+    }
+
+    hr = connection->ConnectDevice();
+    // For phones, we wait around for a pin unlock (or a different error)
+    if (!device->isEmulator()) {
+        while (hr == 0x89740006) { // Device is pinlocked
+            qCDebug(lcD3DService) << coreConServer->formatError(hr);
+            Sleep(1000);
+            hr = connection->ConnectDevice();
+        }
+    }
+    if (FAILED(hr)) {
+        qCWarning(lcD3DService) << "Unable to connect to device:"
+                                << coreConServer->formatError(hr);
+        return 1;
+    }
+
+    ComPtr<ICcConnection3> connection3;
+    hr = connection.As(&connection3);
+    if (FAILED(hr)) {
+        qCWarning(lcD3DService) << "Unable to obtain connection3 interface:"
+                                << coreConServer->formatError(hr);
+        return 1;
+    }
+
+    SAFEARRAY *productIds, *instanceIds;
+    hr = connection3->GetInstalledApplicationIDs(&productIds, &instanceIds);
+    if (FAILED(hr)) {
+        qCWarning(lcD3DService) << "Unable to get installed applications:"
+                                 << coreConServer->formatError(hr);
+        return 1;
+    }
+    if (productIds && instanceIds) {
+        Q_ASSERT(productIds->rgsabound[0].cElements == instanceIds->rgsabound[0].cElements);
+        for (ulong i = 0; i < productIds->rgsabound[0].cElements; ++i) {
+            LONG indices[] = { i };
+            _bstr_t productId;
+            _bstr_t instanceId;
+            if (SUCCEEDED(SafeArrayGetElement(productIds, indices, productId.GetAddress()))
+                    && SUCCEEDED(SafeArrayGetElement(instanceIds, indices, instanceId.GetAddress()))) {
+                apps.insert(QString::fromWCharArray(productId));
+            }
+        }
+        SafeArrayDestroy(productIds);
+        SafeArrayDestroy(instanceIds);
+        return 0;
+    }
+
+    // No installed applications
+    return 0;
+}
+
 /* This method runs in its own thread for each CoreCon device/application combo
  * the service is currently handling. */
 extern int handleXapDevice(int deviceIndex, const QString &app, const QString &localBase, HANDLE runLock)
@@ -125,43 +215,29 @@ extern int handleXapDevice(int deviceIndex, const QString &app, const QString &l
             continue;
         }
 
-        int retryCount = 0;
-        while (!connected) {
+        if (!connected) {
             hr = connection->ConnectDevice();
             connected = SUCCEEDED(hr);
             if (connected) {
                 qCWarning(lcD3DService).nospace() << "Connected to " << device->name() << ".";
                 wasDisconnected = true;
-            }
-            if (FAILED(hr)) {
-                qCDebug(lcD3DService) << "Unable to connect to device. Retrying..."
-                                      << coreConServer->formatError(hr);
-                if (++retryCount > 30) {
-                    qCCritical(lcD3DService) << "Unable to connect to device. Exiting.";
-                    return 1;
-                }
-                Sleep(1000);
+            } else {
+                qCDebug(lcD3DService).nospace() << "Unable to connect to " << device->name()
+                                                << ": " << coreConServer->formatError(hr);
+                return 1;
             }
         }
 
-        VARIANT_BOOL isInstalled = false;
-        retryCount = 0;
-        while (!isInstalled) {
-            hr = connection3->IsApplicationInstalled(bstr(app), &isInstalled);
-            if (FAILED(hr)) {
-                qCCritical(lcD3DService) << "Unable to determine if package is installed:"
-                                         << coreConServer->formatError(hr);
-                return 1;
-            }
-
-            if (!isInstalled) {
-                qCDebug(lcD3DService) << "Package is not installed. Checking again...";
-                if (++retryCount > 30) {
-                    qCCritical(lcD3DService) << "Package did not materialize within 30 seconds. Exiting.";
-                    return 1;
-                }
-                Sleep(1000);
-            }
+        VARIANT_BOOL isInstalled;
+        hr = connection3->IsApplicationInstalled(bstr(app), &isInstalled);
+        if (FAILED(hr)) {
+            qCCritical(lcD3DService) << "Unable to determine if package is installed:"
+                                     << coreConServer->formatError(hr);
+            return 1;
+        }
+        if (!isInstalled) {
+            qCWarning(lcD3DService) << "Package" << app << "is not installed. Exiting worker.";
+            return 1;
         }
 
         // Run certain setup steps once per connection
