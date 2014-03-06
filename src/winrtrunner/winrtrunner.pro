@@ -11,7 +11,7 @@ DEFINES += RTRUNNER_NO_APPX RTRUNNER_NO_XAP
 win32-msvc2012|win32-msvc2013 {
     SOURCES += appxengine.cpp
     HEADERS += appxengine.h
-    LIBS += -lruntimeobject
+    LIBS += -lruntimeobject -lwsclient
     DEFINES -= RTRUNNER_NO_APPX
 
     include(../shared/corecon/corecon.pri)
