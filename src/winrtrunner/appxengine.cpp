@@ -568,7 +568,7 @@ bool AppxEngine::waitForFinished(int secs)
             return false;
         }
         qCDebug(lcWinRtRunner) << "Current execution state:" << state;
-        if (state == PES_TERMINATED)
+        if (state == PES_TERMINATED || state == PES_UNKNOWN)
             break;
 
         ++time;
