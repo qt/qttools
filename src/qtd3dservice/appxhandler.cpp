@@ -43,6 +43,7 @@
 
 #include <QtCore/QDateTime>
 #include <QtCore/QDir>
+#include <QtCore/QDirIterator>
 #include <QtCore/QStandardPaths>
 #include <QtCore/QStringList>
 
@@ -56,6 +57,7 @@ using namespace Microsoft::WRL::Wrappers;
 using namespace ABI::Windows::Management::Deployment;
 using namespace ABI::Windows::ApplicationModel;
 using namespace ABI::Windows::Storage;
+using namespace ABI::Windows::Foundation::Collections;
 
 struct ComInitializer
 {
@@ -70,13 +72,94 @@ struct ComInitializer
         if (isValid())
             CoUninitialize();
     }
-    bool isValid()
+    bool isValid() const
     {
         return SUCCEEDED(m_hr);
     }
 private:
     HRESULT m_hr;
 };
+
+extern int appxAppNames(int deviceIndex, QSet<QString> &apps)
+{
+    if (deviceIndex) {
+        qCWarning(lcD3DService) << "Unsupported device index:" << deviceIndex;
+        return 1;
+    }
+
+    ComInitializer com;
+    if (!com.isValid())
+        return 1;
+
+    ComPtr<IPackageManager> packageManager;
+    HRESULT hr = RoActivateInstance(HString::MakeReference(RuntimeClass_Windows_Management_Deployment_PackageManager).Get(),
+                                    &packageManager);
+    if (FAILED(hr)) {
+        qCWarning(lcD3DService) << "Unable to instantiate package manager:"
+                                << qt_error_string(hr);
+        return 1;
+    }
+
+    ComPtr<IIterable<Package *>> packageCollection;
+    hr = packageManager->FindPackagesByUserSecurityId(NULL, &packageCollection);
+    if (FAILED(hr)) {
+        qCWarning(lcD3DService) << "Failed to find Appx packages:"
+                                << qt_error_string(hr);
+        return 1;
+    }
+    ComPtr<IIterator<Package *>> iterator;
+    hr = packageCollection->First(&iterator);
+    if (FAILED(hr)) {
+        qCWarning(lcD3DService) << "Failed to get package iterator:"
+                                << qt_error_string(hr);
+        return 1;
+    }
+    boolean hasCurrent;
+    hr = iterator->get_HasCurrent(&hasCurrent);
+    while (SUCCEEDED(hr) && hasCurrent) {
+        ComPtr<IPackage> package;
+        hr = iterator->get_Current(&package);
+        if (FAILED(hr)) {
+            qCWarning(lcD3DService) << qt_error_string(hr);
+            return 1;
+        }
+
+        ComPtr<IPackage2> package2;
+        hr = package.As(&package2);
+        if (FAILED(hr)) {
+            qCWarning(lcD3DService) << qt_error_string(hr);
+            return 1;
+        }
+
+        boolean isDevelopmentMode;
+        hr = package2->get_IsDevelopmentMode(&isDevelopmentMode);
+        if (FAILED(hr)) {
+            qCWarning(lcD3DService) << qt_error_string(hr);
+            return 1;
+        }
+        if (!isDevelopmentMode) {
+            hr = iterator->MoveNext(&hasCurrent);
+            continue;
+        }
+
+        ComPtr<IPackageId> id;
+        hr = package->get_Id(&id);
+        if (FAILED(hr)) {
+            qCWarning(lcD3DService) << qt_error_string(hr);
+            return 1;
+        }
+
+        HSTRING fullName;
+        hr = id->get_FullName(&fullName);
+        if (FAILED(hr)) {
+            qCWarning(lcD3DService) << qt_error_string(hr);
+            return 1;
+        }
+        apps.insert(QString::fromWCharArray(WindowsGetStringRawBuffer(fullName, Q_NULLPTR)));
+        hr = iterator->MoveNext(&hasCurrent);
+    }
+    return 0;
+}
 
 /* This function handles a worker thread servicing an Appx application */
 extern int handleAppxDevice(int deviceIndex, const QString &app, const QString &localBase, HANDLE runLock)
@@ -134,7 +217,6 @@ extern int handleAppxDevice(int deviceIndex, const QString &app, const QString &
     const QString remoteSourcePath = remoteBase + QStringLiteral("\\source\\");
     const QString remoteBinaryPath = remoteBase + QStringLiteral("\\binary\\");
 
-    int round = 0;
     bool checkDirectories = true;
     forever {
         // If the run lock is signaled, it's time to quit
@@ -185,50 +267,59 @@ extern int handleAppxDevice(int deviceIndex, const QString &app, const QString &
             checkDirectories = false;
         }
 
-        // Update roughly every 30 seconds
-        if (round++ % 30 == 0) {
-            QFile file(remoteControlFile);
-            if (!file.open(QFile::WriteOnly)) {
-                qCWarning(lcD3DService) << "Could not create control file.";
-                Sleep(1000);
-                continue;
-            }
-            file.write("Qt D3D compilation service");
+        QFile file(remoteControlFile);
+        if (!file.open(QFile::WriteOnly)) {
+            qCWarning(lcD3DService) << "Could not create control file:"
+                                    << file.errorString();
+            checkDirectories = true;
+            Sleep(1000);
+            continue;
         }
+        file.write("Qt D3D compilation service");
 
         // Ok, ready to check for shaders
-        QDir remoteSourceDir(remoteSourcePath);
-        const QStringList shaderSources = remoteSourceDir.entryList(QDir::Files);
-        foreach (const QString &shaderSource, shaderSources) {
-            const QString remoteSource = remoteSourceDir.absoluteFilePath(shaderSource);
-            const QString shaderFileName = QFileInfo(remoteSource).fileName();
+        QDirIterator it(remoteSourcePath);
+        while (it.hasNext()) {
+            const QString remoteSource = it.next();
+            if (!it.fileInfo().isFile())
+                continue;
+            const QString shaderFileName = it.fileName();
             const QString localSource = localSourcePath + shaderFileName;
             const QString localBinary = localBinaryPath + shaderFileName;
 
             // Copy remote source to local
-            if (!QFile::copy(remoteSource, localSource)) {
+            if (QFile::exists(localSource))
+                QFile::remove(localSource);
+            QFile remoteSourceFile(remoteSource);
+            if (!remoteSourceFile.copy(localSource)) {
                 qCWarning(lcD3DService) << "Unable to copy shader source:" << remoteSource;
+                qCWarning(lcD3DService) << remoteSourceFile.errorString();
                 continue;
             }
 
             // Remove the remote file
-            if (!QFile::remove(remoteSource)) {
+            if (!remoteSourceFile.remove()) {
                 qCWarning(lcD3DService) << "Unable to remove shader source:" << remoteSource;
+                qCWarning(lcD3DService) << remoteSourceFile.errorString();
                 continue;
             }
 
             // Compile shader
             hr = D3DService::compileShader(localSource, localBinary);
             if (FAILED(hr)) {
-                qCWarning(lcD3DService) << "Unable to compile shader:" << shaderSource;
+                qCWarning(lcD3DService) << "Unable to compile shader:" << localSource;
                 qCWarning(lcD3DService) << qt_error_string(hr);
                 continue;
             }
 
             // All went well, copy the blob to the device
             const QString remoteBinary = remoteBinaryPath + shaderFileName;
-            if (!QFile::copy(localBinary, remoteBinary)) {
+            if (QFile::exists(remoteBinary))
+                QFile::remove(remoteBinary);
+            QFile localBinaryFile(localBinary);
+            if (!localBinaryFile.copy(remoteBinary)) {
                 qCWarning(lcD3DService) << "Unable to copy to remote: " << localBinary;
+                qCWarning(lcD3DService) << localBinaryFile.errorString();
                 continue;
             }
 
@@ -236,7 +327,35 @@ extern int handleAppxDevice(int deviceIndex, const QString &app, const QString &
                                   << "and uploaded to:" << remoteBinary;
         }
 
-        // Done, take a break.
-        Sleep(1000);
+        HANDLE notification = FindFirstChangeNotification(
+                    reinterpret_cast<LPCWSTR>(remoteSourcePath.utf16()),
+                    FALSE, FILE_NOTIFY_CHANGE_FILE_NAME);
+        if (!notification) {
+            qCCritical(lcD3DService) << "Failed to set up shader directory notification:"
+                                     << qt_error_string(GetLastError());
+            return 1;
+        }
+
+        // Sleep for up to 30 seconds; wake if a new shader appears
+        HANDLE waitHandles[] = { notification, runLock };
+        DWORD event = WaitForMultipleObjects(2, waitHandles, FALSE, 30000);
+        FindCloseChangeNotification(notification);
+        // Timeout or directory change; loop and update
+        if (event == WAIT_TIMEOUT || event == WAIT_OBJECT_0)
+            continue;
+        // runLock set; exit
+        if (event == WAIT_OBJECT_0 + 1)
+            return 0;
+
+        hr = GetLastError();
+        // If the app was uninstalled, this is expected
+        if (hr == ERROR_INVALID_HANDLE) {
+            qCDebug(lcD3DService) << "The wait handle was invalidated; worker exiting.";
+            return 1;
+        }
+
+        qCWarning(lcD3DService) << "Appx handler wait failed:"
+                                << qt_error_string(hr);
+        return 1;
     }
 }

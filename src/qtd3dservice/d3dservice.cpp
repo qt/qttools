@@ -70,6 +70,7 @@ extern int handleAppxDevice(int deviceIndex, const QString &app, const QString &
 extern int handleXapDevice(int deviceIndex, const QString &app, const QString &cacheDir, HANDLE runLock);
 typedef int (*AppListFunction)(int, QSet<QString> &);
 extern int xapAppNames(int deviceIndex, QSet<QString> &apps);
+extern int appxAppNames(int deviceIndex, QSet<QString> &app);
 
 extern QStringList xapDeviceNames();
 
@@ -438,7 +439,8 @@ void __stdcall run(DWORD argc, LPWSTR argv[])
     }
 
     // App monitoring threads
-    QVector<Worker *> workers;
+    QHash<QStringPair, Worker *> workers;
+    QHash<HANDLE, QStringPair> workerThreads;
 
     // Device monitoring threads - one per device
     QVector<Worker *> deviceWorkers(emulatorNames.size() + 1, NULL);
@@ -446,7 +448,8 @@ void __stdcall run(DWORD argc, LPWSTR argv[])
     // Static list of registrations
     foreach (const QStringPair &registration, D3DService::registrations()) {
         Worker *worker = new Worker(registration, &appWorker);
-        workers.append(worker);
+        workers.insert(registration, worker);
+        workerThreads.insert(worker->thread(), registration);
         waitHandles.append(worker->thread());
     }
 
@@ -461,6 +464,10 @@ void __stdcall run(DWORD argc, LPWSTR argv[])
         }
         SetupDiDestroyDeviceInfoList(info);
     }
+
+    // Create a monitoring thread for local Appx packages
+    Worker appxWorker(qMakePair(QStringLiteral("local"), QString()), &deviceWorker);
+    Q_UNUSED(appxWorker);
 
     // Master loop
     // This loop handles incoming events from the service controller and
@@ -488,8 +495,16 @@ void __stdcall run(DWORD argc, LPWSTR argv[])
                     // A new worker is in the queue
                     if (controlEvent == NewWorker) {
                         while (!d->workerQueue.isEmpty()) {
-                            Worker *worker = new Worker(d->workerQueue.takeFirst(), &appWorker);
-                            workers.append(worker);
+                            const QStringPair config = d->workerQueue.takeFirst();
+                            if (workers.contains(config)) { // The config is already running
+                                qCDebug(lcD3DService) << "Discarded worker configuration:"
+                                                      << config.first << config.second;
+                                continue;
+                            }
+
+                            Worker *worker = new Worker(config, &appWorker);
+                            workers.insert(config, worker);
+                            workerThreads.insert(worker->thread(), config);
                             waitHandles.append(worker->thread());
                             maxWorker = minWorker + workers.size() - 1;
                         }
@@ -575,8 +590,9 @@ void __stdcall run(DWORD argc, LPWSTR argv[])
             // A worker exited
             if (event >= minWorker && event <= maxWorker) {
                 // Delete the worker and clear the handle (TODO: remove it?)
-                waitHandles.remove(event - WAIT_OBJECT_0);
-                Worker *worker = workers.takeAt(event - minWorker);
+                HANDLE thread = waitHandles.takeAt(event - WAIT_OBJECT_0);
+                QStringPair config = workerThreads.take(thread);
+                Worker *worker = workers.take(config);
                 delete worker;
                 continue;
             }
@@ -611,9 +627,18 @@ DWORD __stdcall deviceWorker(LPVOID param)
     AppListFunction appList;
 
     int deviceIndex = 0;
+    HKEY waitKey = 0;
     if (args->deviceName.isEmpty() || args->deviceName == QStringLiteral("local")) {
-        // Not implemented
-        return 0;
+        appList = appxAppNames;
+        LONG result = RegOpenKeyEx(
+                    HKEY_CLASSES_ROOT,
+                    L"\\Local Settings\\Software\\Microsoft\\Windows\\CurrentVersion\\AppModel\\Repository\\Packages",
+                    0, KEY_NOTIFY, &waitKey);
+        if (result != ERROR_SUCCESS) {
+            qCWarning(lcD3DService) << "Unable to open registry key for Appx discovery:"
+                                    << qt_error_string(result);
+            waitKey = 0;
+        }
     } else {
         // CoreCon (Windows Phone)
         bool ok;
@@ -647,9 +672,37 @@ DWORD __stdcall deviceWorker(LPVOID param)
         }
 
         appNames = latestAppNames;
+
+        // If possible, wait for the registry event (otherwise, go straight to sleep)
+        if (waitKey) {
+            HANDLE waitEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+            LONG result = RegNotifyChangeKeyValue(waitKey, TRUE, REG_NOTIFY_CHANGE_NAME, waitEvent, TRUE);
+            if (result != ERROR_SUCCESS) {
+                qCWarning(lcD3DService) << "Unable to create registry notifier:"
+                                        << qt_error_string(result);
+                RegCloseKey(waitKey); // Revert to polling
+                waitKey = 0;
+            }
+
+            HANDLE waitHandles[] = { args->runLock, waitEvent };
+            result = WaitForMultipleObjects(2, waitHandles, FALSE, INFINITE);
+            CloseHandle(waitEvent);
+            if (result == WAIT_OBJECT_0) // runLock, exit
+                return 0;
+            if (result == WAIT_OBJECT_0 + 1) { // registry changed, reset app list
+                appNames.clear();
+            } else {
+                qCWarning(lcD3DService) << "Unexpected wait result:" << result
+                                        << qt_error_string(GetLastError());
+                RegCloseKey(waitKey); // Revert to polling
+                waitKey = 0;
+            }
+        }
         Sleep(1000);
     }
 
+    if (waitKey)
+        RegCloseKey(waitKey);
     return 0;
 }
 
@@ -682,7 +735,7 @@ DWORD __stdcall appWorker(LPVOID param)
         handleDevice = &handleXapDevice;
     }
 
-    return handleXapDevice(deviceIndex, args->app, cachePath, args->runLock);
+    return handleDevice(deviceIndex, args->app, cachePath, args->runLock);
 }
 
 // Service controller
