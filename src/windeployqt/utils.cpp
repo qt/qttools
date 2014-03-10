@@ -807,7 +807,7 @@ bool readPeExecutable(const QString &peExecutableFileName, QString *errorMessage
     return result;
 }
 
-QString findD3dCompiler(Platform platform, unsigned wordSize)
+QString findD3dCompiler(Platform platform, const QString &qtBinDir, unsigned wordSize)
 {
     const QString prefix = QStringLiteral("D3Dcompiler_");
     const QString suffix = QLatin1String(windowsSharedLibrarySuffix);
@@ -827,12 +827,27 @@ QString findD3dCompiler(Platform platform, unsigned wordSize)
                 return files.front().absoluteFilePath();
         }
     }
+    QStringList candidateVersions;
+    for (int i = 47 ; i >= 40 ; --i)
+        candidateVersions.append(prefix + QString::number(i) + suffix);
+    // Check the bin directory of the Qt SDK (in case it is shadowed by the
+    // Windows system directory in PATH).
+    foreach (const QString &candidate, candidateVersions) {
+        const QFileInfo fi(qtBinDir + QLatin1Char('/') + candidate);
+        if (fi.isFile())
+            return fi.absoluteFilePath();
+    }
     // Find the latest D3D compiler DLL in path (Windows 8.1 has d3dcompiler_47).
     if (platform & IntelBased) {
-        for (int i = 47 ; i >= 40 ; --i) {
-            const QString dll = findInPath(prefix + QString::number(i) + suffix);
-            if (!dll.isEmpty())
+        QString errorMessage;
+        unsigned detectedWordSize;
+        foreach (const QString &candidate, candidateVersions) {
+            const QString dll = findInPath(candidate);
+            if (!dll.isEmpty()
+                && readPeExecutable(dll, &errorMessage, 0, &detectedWordSize, 0)
+                && detectedWordSize == wordSize) {
                 return dll;
+            }
         }
     }
     return QString();

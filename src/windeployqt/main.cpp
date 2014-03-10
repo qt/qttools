@@ -894,7 +894,7 @@ static DeployResult deploy(const Options &options,
             }
             // Find the system D3d Compiler matching the D3D library.
             if (options.systemD3dCompiler && options.platform != WinPhoneArm && options.platform != WinPhoneIntel) {
-                const QString d3dCompiler = findD3dCompiler(options.platform, wordSize);
+                const QString d3dCompiler = findD3dCompiler(options.platform, qtBinDir, wordSize);
                 if (d3dCompiler.isEmpty()) {
                     std::wcerr << "Warning: Cannot find any version of the d3dcompiler DLL.\n";
                 } else {
