@@ -623,8 +623,8 @@ DWORD __stdcall deviceWorker(LPVOID param)
     if (args->deviceName.isEmpty() || args->deviceName == QStringLiteral("local")) {
         appList = appxAppNames;
         LONG result = RegOpenKeyEx(
-                    HKEY_CLASSES_ROOT,
-                    L"\\Local Settings\\Software\\Microsoft\\Windows\\CurrentVersion\\AppModel\\Repository\\Packages",
+                    HKEY_LOCAL_MACHINE,
+                    L"SOFTWARE\\Classes\\Local Settings\\Software\\Microsoft\\Windows\\CurrentVersion\\AppModel\\PackageRepository\\Packages",
                     0, KEY_NOTIFY, &waitKey);
         if (result != ERROR_SUCCESS) {
             qCWarning(lcD3DService) << "Unable to open registry key for Appx discovery:"
