@@ -57,11 +57,6 @@ namespace D3DService
     bool install();
     bool remove();
 
-    bool registerApp(const QString &device, const QString &app);
-    bool unregisterApp(const QString &device, const QString &app);
-    QList<QStringPair> registrations();
-    bool clearRegistrations();
-
     bool startService(bool replaceMessageHandler = true);
     bool startDirectly();
 

@@ -15,7 +15,6 @@ SOURCES = \
     main.cpp \
     xaphandler.cpp \
     compilation.cpp \
-    registry.cpp \
     credentials.cpp
 
 HEADERS = \

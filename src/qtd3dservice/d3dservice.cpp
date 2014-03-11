@@ -445,14 +445,6 @@ void __stdcall run(DWORD argc, LPWSTR argv[])
     // Device monitoring threads - one per device
     QVector<Worker *> deviceWorkers(emulatorNames.size() + 1, NULL);
 
-    // Static list of registrations
-    foreach (const QStringPair &registration, D3DService::registrations()) {
-        Worker *worker = new Worker(registration, &appWorker);
-        workers.insert(registration, worker);
-        workerThreads.insert(worker->thread(), registration);
-        waitHandles.append(worker->thread());
-    }
-
     // If a Windows Phone is already connected, queue a device worker
     HDEVINFO info = SetupDiGetClassDevs(&GUID_DEVICE_WINPHONE8_USB, NULL, NULL,
                                         DIGCF_DEVICEINTERFACE|DIGCF_PRESENT);
