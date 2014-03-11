@@ -47,7 +47,7 @@ static HKEY openBase()
     LONG result = RegCreateKeyEx(HKEY_CURRENT_USER_LOCAL_SETTINGS, L"qtd3dservice",
                                  0, NULL, 0, KEY_ALL_ACCESS, NULL, &regKey, NULL);
     if (result != ERROR_SUCCESS) {
-        qCCritical(lcD3DService) << "Unable to open registry, error:" << result;
+        qCCritical(lcD3DService) << "Unable to open registry:" << qt_error_string(result);
         return 0;
     }
     return regKey;

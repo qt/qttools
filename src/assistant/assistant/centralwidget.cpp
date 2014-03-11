@@ -213,11 +213,11 @@ CentralWidget::CentralWidget(QWidget *parent)
 
     connect(m_findWidget, SIGNAL(findNext()), this, SLOT(findNext()));
     connect(m_findWidget, SIGNAL(findPrevious()), this, SLOT(findPrevious()));
-    connect(m_findWidget, SIGNAL(find(QString, bool, bool)), this,
-        SLOT(find(QString, bool, bool)));
+    connect(m_findWidget, SIGNAL(find(QString,bool,bool)), this,
+        SLOT(find(QString,bool,bool)));
     connect(m_findWidget, SIGNAL(escapePressed()), this, SLOT(activateTab()));
-    connect(m_tabBar, SIGNAL(addBookmark(QString, QString)), this,
-        SIGNAL(addBookmark(QString, QString)));
+    connect(m_tabBar, SIGNAL(addBookmark(QString,QString)), this,
+        SIGNAL(addBookmark(QString,QString)));
 }
 
 CentralWidget::~CentralWidget()

@@ -96,22 +96,30 @@ void QHelpEnginePrivate::applyCurrentFilter()
 
 void QHelpEnginePrivate::setContentsWidgetBusy()
 {
+#ifndef QT_NO_CURSOR
     contentWidget->setCursor(Qt::WaitCursor);
+#endif
 }
 
 void QHelpEnginePrivate::unsetContentsWidgetBusy()
 {
+#ifndef QT_NO_CURSOR
     contentWidget->unsetCursor();
+#endif
 }
 
 void QHelpEnginePrivate::setIndexWidgetBusy()
 {
+#ifndef QT_NO_CURSOR
     indexWidget->setCursor(Qt::WaitCursor);
+#endif
 }
 
 void QHelpEnginePrivate::unsetIndexWidgetBusy()
 {
+#ifndef QT_NO_CURSOR
     indexWidget->unsetCursor();
+#endif
 }
 
 void QHelpEnginePrivate::stopDataCollection()

@@ -164,8 +164,8 @@ MainWindow::MainWindow(CmdLineParser *cmdLine, QWidget *parent)
     openPagesDock->setWidget(openPagesManager->openPagesWidget());
     addDockWidget(Qt::LeftDockWidgetArea, openPagesDock);
 
-    connect(m_centralWidget, SIGNAL(addBookmark(QString, QString)),
-        bookMarkManager, SLOT(addBookmark(QString, QString)));
+    connect(m_centralWidget, SIGNAL(addBookmark(QString,QString)),
+        bookMarkManager, SLOT(addBookmark(QString,QString)));
     connect(bookMarkManager, SIGNAL(escapePressed()), this,
             SLOT(activateCurrentCentralWidgetTab()));
     connect(bookMarkManager, SIGNAL(setSource(QUrl)), m_centralWidget,
@@ -446,8 +446,8 @@ void MainWindow::lookForNewQtDocumentation()
         SLOT(qtDocumentationInstalled()));
     connect(m_qtDocInstaller, SIGNAL(qchFileNotFound(QString)), this,
             SLOT(resetQtDocInfo(QString)));
-    connect(m_qtDocInstaller, SIGNAL(registerDocumentation(QString, QString)),
-            this, SLOT(registerDocumentation(QString, QString)));
+    connect(m_qtDocInstaller, SIGNAL(registerDocumentation(QString,QString)),
+            this, SLOT(registerDocumentation(QString,QString)));
     if (helpEngine.qtDocInfo(QLatin1String("qt")).count() != 2)
         statusBar()->showMessage(tr("Looking for Qt Documentation..."));
     m_qtDocInstaller->installDocs();

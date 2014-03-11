@@ -86,11 +86,11 @@ BookmarkManagerWidget::BookmarkManagerWidget(BookmarkModel *sourceModel,
     new QShortcut(QKeySequence::FindNext, this, SLOT(findNext()));
     new QShortcut(QKeySequence::FindPrevious, this, SLOT(findPrevious()));
 
-    connect(bookmarkModel, SIGNAL(rowsRemoved(QModelIndex, int, int)), this,
+    connect(bookmarkModel, SIGNAL(rowsRemoved(QModelIndex,int,int)), this,
         SLOT(refeshBookmarkCache()));
-    connect(bookmarkModel, SIGNAL(rowsInserted(QModelIndex, int, int)), this,
+    connect(bookmarkModel, SIGNAL(rowsInserted(QModelIndex,int,int)), this,
         SLOT(refeshBookmarkCache()));
-    connect(bookmarkModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)), this,
+    connect(bookmarkModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this,
         SLOT(refeshBookmarkCache()));
 
     ui.treeView->setCurrentIndex(ui.treeView->indexAt(QPoint(2, 2)));

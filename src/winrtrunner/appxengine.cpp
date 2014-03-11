@@ -49,6 +49,7 @@
 #include <QtCore/QStandardPaths>
 
 #include <ShlObj.h>
+#include <wsdevlicensing.h>
 #include <AppxPackaging.h>
 #include <wrl.h>
 #include <windows.applicationmodel.h>
@@ -470,6 +471,17 @@ bool AppxEngine::install(bool removeFirst)
             qCWarning(lcWinRtRunner) << "Unable to register package:"
                                      << QString::fromWCharArray(WindowsGetStringRawBuffer(errorText, 0));
         }
+        if (HRESULT_CODE(errorCode) == ERROR_INSTALL_POLICY_FAILURE) {
+            // The user's license has expired. Give them the opportunity to renew it.
+            FILETIME expiration;
+            hr = AcquireDeveloperLicense(GetForegroundWindow(), &expiration);
+            if (FAILED(hr)) {
+                qCWarning(lcWinRtRunner) << "Unable to renew developer license:"
+                                         << qt_error_string(hr);
+            }
+            if (SUCCEEDED(hr))
+                return install(false);
+        }
         return false;
     }
 
@@ -556,7 +568,7 @@ bool AppxEngine::waitForFinished(int secs)
             return false;
         }
         qCDebug(lcWinRtRunner) << "Current execution state:" << state;
-        if (state == PES_TERMINATED)
+        if (state == PES_TERMINATED || state == PES_UNKNOWN)
             break;
 
         ++time;

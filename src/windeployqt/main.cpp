@@ -750,14 +750,14 @@ static DeployResult deploy(const Options &options,
         std::wcout << "Qt binaries in " << QDir::toNativeSeparators(qtBinDir) << '\n';
 
     QStringList dependentQtLibs;
-    bool isDebug;
+    bool detectedDebug;
     unsigned wordSize;
     int directDependencyCount;
-    if (!findDependentQtLibraries(libraryLocation, options.binary, options.platform, errorMessage, &dependentQtLibs, &wordSize, &isDebug, &directDependencyCount))
+    if (!findDependentQtLibraries(libraryLocation, options.binary, options.platform, errorMessage, &dependentQtLibs, &wordSize,
+                                  &detectedDebug, &directDependencyCount))
         return result;
 
-    if (options.debugDetection != Options::DebugDetectionAuto)
-        isDebug = options.debugDetection == Options::DebugDetectionForceDebug;
+    const bool isDebug = options.debugDetection == Options::DebugDetectionAuto ? detectedDebug: options.debugDetection == Options::DebugDetectionForceDebug;
 
     // Determine application type, check Quick2 is used by looking at the
     // direct dependencies (do not be fooled by QtWebKit depending on it).
@@ -828,7 +828,7 @@ static DeployResult deploy(const Options &options,
             qmlScanResult.append(scanResult);
             // Additional dependencies of QML plugins.
             foreach (const QString &plugin, qmlScanResult.plugins) {
-                if (!findDependentQtLibraries(libraryLocation, plugin, options.platform, errorMessage, &dependentQtLibs, &wordSize, &isDebug))
+                if (!findDependentQtLibraries(libraryLocation, plugin, options.platform, errorMessage, &dependentQtLibs, &wordSize, &detectedDebug))
                     return result;
             }
             if (optVerboseLevel >= 1) {
@@ -894,7 +894,7 @@ static DeployResult deploy(const Options &options,
             }
             // Find the system D3d Compiler matching the D3D library.
             if (options.systemD3dCompiler && options.platform != WinPhoneArm && options.platform != WinPhoneIntel) {
-                const QString d3dCompiler = findD3dCompiler(options.platform, wordSize);
+                const QString d3dCompiler = findD3dCompiler(options.platform, qtBinDir, wordSize);
                 if (d3dCompiler.isEmpty()) {
                     std::wcerr << "Warning: Cannot find any version of the d3dcompiler DLL.\n";
                 } else {

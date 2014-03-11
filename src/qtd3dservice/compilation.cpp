@@ -66,7 +66,7 @@ HRESULT D3DService::compileShader(const QString &source, const QString &destinat
     }
 
     QFile sourceFile(source);
-    qDebug(qPrintable(source));
+    qCDebug(lcD3DService) << "Shader source observed at:" << source;
     if (!sourceFile.open(QFile::ReadOnly)) {
         qCWarning(lcD3DService) << "Unable to open shader source:" << sourceFile.errorString();
         return E_FAIL;

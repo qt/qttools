@@ -190,7 +190,7 @@ inline QStringList findDependentLibraries(const QString &executableFileName, Pla
     return result;
 }
 
-QString findD3dCompiler(Platform platform, unsigned wordSize);
+QString findD3dCompiler(Platform platform, const QString &qtBinDir, unsigned wordSize);
 
 extern int optVerboseLevel;
 
