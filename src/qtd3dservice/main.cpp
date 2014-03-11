@@ -62,18 +62,6 @@ int main(int argc, char *argv[])
     app.setOrganizationDomain(QStringLiteral("qt-project.org"));
 
     QCommandLineParser parser;
-    QCommandLineOption installOption(
-                QStringLiteral("install"),
-                QStringLiteral("Install the Qt D3D shader compilation service."));
-    parser.addOption(installOption);
-    QCommandLineOption removeOption(
-                QStringLiteral("remove"),
-                QStringLiteral("Uninstall the Qt D3D shader compilation service."));
-    parser.addOption(removeOption);
-    QCommandLineOption directOption(
-                QStringLiteral("direct"),
-                QStringLiteral("Run directly (not as a Windows service)."));
-    parser.addOption(directOption);
     QCommandLineOption outputOption(
                 QStringLiteral("output"),
                 QStringLiteral("Write output to a file."),
@@ -126,27 +114,10 @@ int main(int argc, char *argv[])
     }
     QLoggingCategory::setFilterRules(filterRules.join(QLatin1Char('\n')));
 
-    const bool installSet = parser.isSet(installOption);
-    const bool removeSet = parser.isSet(removeOption);
-    const bool directSet = parser.isSet(directOption);
-    // All options are mutually exclusive
-    if (installSet + removeSet + directSet > 1)
-        parser.showHelp(1);
-
-    if (installSet)
-        return D3DService::install() ? 0 : 1;
-
-    if (removeSet)
-        return D3DService::remove() ? 0 : 1;
-
-    if (directSet) {
-        if (D3DService::startDirectly())
-            return 0;
+    if (!D3DService::start()) {
+        qCWarning(lcD3DService) << "The service failed to start.";
+        return 1;
     }
 
-    if (D3DService::startService(!parser.isSet(outputOption)))
-        return 0;
-
-    // App was launched directly without -direct
-    parser.showHelp(1);
+    return 0;
 }

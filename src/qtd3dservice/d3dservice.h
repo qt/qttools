@@ -54,18 +54,7 @@ namespace D3DService
 {
     HRESULT compileShader(const QString &source, const QString &destination);
 
-    bool install();
-    bool remove();
-
-    bool startService(bool replaceMessageHandler = true);
-    bool startDirectly();
-
-    void reportStatus(DWORD state, DWORD exitCode, DWORD waitHint);
-
-    bool getCredentials(LPWSTR username, DWORD *usernameSize,
-                        LPWSTR password, DWORD *passwordSize);
-    bool executeElevated(LPCWSTR exe, LPCWSTR param, DWORD *exitCode);
-    bool addLogonRight(LPCWSTR username);
+    bool start();
 }
 
 Q_DECLARE_LOGGING_CATEGORY(lcD3DService)
