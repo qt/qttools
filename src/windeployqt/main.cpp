@@ -768,11 +768,11 @@ static DeployResult deploy(const Options &options,
                                 || (options.additionalLibraries & QtQmlModule));
 
     if (optVerboseLevel) {
-        std::wcout << QDir::toNativeSeparators(options.binary)
-                   << wordSize << "bit, " << (isDebug ? "debug" : "release")
-                   << QDir::toNativeSeparators(options.binary) << " executable";
+        std::wcout << QDir::toNativeSeparators(options.binary) << ' '
+                   << wordSize << " bit, " << (isDebug ? "debug" : "release")
+                   << " executable";
         if (usesQml2)
-            std::wcout << "[QML]";
+            std::wcout << " [QML]";
         std::wcout << '\n';
     }
 
