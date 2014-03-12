@@ -124,6 +124,7 @@ extern int appxAppNames(int deviceIndex, QSet<QString> &apps)
             return 1;
         }
 
+#if _MSC_VER >= 1800
         ComPtr<IPackage2> package2;
         hr = package.As(&package2);
         if (FAILED(hr)) {
@@ -141,6 +142,7 @@ extern int appxAppNames(int deviceIndex, QSet<QString> &apps)
             hr = iterator->MoveNext(&hasCurrent);
             continue;
         }
+#endif // _MSC_VER >= 1800
 
         ComPtr<IPackageId> id;
         hr = package->get_Id(&id);
