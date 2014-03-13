@@ -189,6 +189,12 @@ static QString prepareCache(const QString &device, const QString &app)
 
 bool D3DService::start()
 {
+    HANDLE runLock = CreateMutex(NULL, TRUE, L"Local\\qtd3dservice");
+    if (!runLock || GetLastError() == ERROR_ALREADY_EXISTS) {
+        qCWarning(lcD3DService) << "The service is already running.";
+        return false;
+    }
+
     SetConsoleCtrlHandler(&control, TRUE);
 
     // Create an invisible window for getting broadcast events
@@ -399,6 +405,8 @@ bool D3DService::start()
         else
             CloseHandle(waitHandles[i + 1]);
     }
+
+    CloseHandle(runLock);
 
     return true;
 }
