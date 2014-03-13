@@ -392,9 +392,12 @@ bool D3DService::start()
 
     qDeleteAll(workers);
 
-    foreach (HANDLE handle, waitHandles) {
-        if (handle)
-            CloseHandle(handle);
+    // Close the phone and emulator handles
+    for (int i = 0; i <= emulatorNames.size(); ++i) {
+        if (GetThreadId(waitHandles[i + 1]))
+            delete deviceWorkers.at(i);
+        else
+            CloseHandle(waitHandles[i + 1]);
     }
 
     return true;
