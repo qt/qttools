@@ -216,13 +216,11 @@ extern int handleXapDevice(int deviceIndex, const QString &app, const QString &l
         return 1;
     }
 
-    const QString localControlFile = localBase + QStringLiteral("\\control");
     const QString localSourcePath = localBase + QStringLiteral("\\source\\");
     const QString localBinaryPath = localBase + QStringLiteral("\\binary\\");
 
     const QString remoteBase = QStringLiteral("%FOLDERID_APPID_ISOROOT%\\")
                     + app + QStringLiteral("\\d3dcompiler");
-    const QString remoteControlFile = remoteBase + QStringLiteral("\\control");
     const QString remoteSourcePath = remoteBase + QStringLiteral("\\source\\");
     const QString remoteBinaryPath = remoteBase + QStringLiteral("\\binary\\");
 
@@ -253,9 +251,7 @@ extern int handleXapDevice(int deviceIndex, const QString &app, const QString &l
         return 1;
     }
 
-    int round = 0;
     bool wasDisconnected = true;
-    FileInfo controlFileInfo;
     forever {
         // If the run lock is signaled, it's time to quit
         if (WaitForSingleObject(runLock, 0) == WAIT_OBJECT_0)
@@ -297,32 +293,6 @@ extern int handleXapDevice(int deviceIndex, const QString &app, const QString &l
 
         // Run certain setup steps once per connection
         if (wasDisconnected) {
-            // Check if control file exists
-            hr = connection->GetFileInfo(bstr(remoteControlFile), &controlFileInfo);
-            if (FAILED(hr)) {
-                if (hr != 0x80070003 /* Not found */) {
-                    qCWarning(lcD3DService) << "Unable to obtain file info:"
-                                            << coreConServer->formatError(hr);
-                    Sleep(1000);
-                    continue;
-                }
-                // Not found, so let's upload it
-                hr = connection->SendFile(bstr(localControlFile), bstr(remoteControlFile), CREATE_ALWAYS, NULL);
-                if (FAILED(hr)) {
-                    if (hr == 0x8973190e) {
-                        // This can happen during normal reinstallation, so continue
-                        qCDebug(lcD3DService) << "Unable to send control file, retrying...";
-                        wasDisconnected = true;
-                        Sleep(1000);
-                    } else {
-                        qCWarning(lcD3DService) << "Unable to send control file:"
-                                                << coreConServer->formatError(hr);
-                        return 1;
-                    }
-                    continue;
-                }
-            }
-
             FileInfo remoteDirectoryInfo;
             hr = connection->GetFileInfo(bstr(remoteSourcePath), &remoteDirectoryInfo);
             if (FAILED(hr)) {
@@ -361,19 +331,6 @@ extern int handleXapDevice(int deviceIndex, const QString &app, const QString &l
             }
 
             wasDisconnected = false;
-        }
-
-        // Update roughly every 30 seconds
-        if (round++ % 30 == 0) {
-            GetSystemTimeAsFileTime(&controlFileInfo.m_LastWriteTime);
-            hr = connection->SetFileInfo(bstr(remoteControlFile), &controlFileInfo);
-            round = 1;
-            if (FAILED(hr)) {
-                qCWarning(lcD3DService) << "Unable to update control file:"
-                                        << coreConServer->formatError(hr);
-                Sleep(1000);
-                continue;
-            }
         }
 
         // Ok, ready to check for shaders

@@ -180,10 +180,6 @@ static QString prepareCache(const QString &device, const QString &app)
         return QString();
     if (!baseDir.mkpath(QStringLiteral("binary")))
         return QString();
-    QFile controlFile(baseDir.absoluteFilePath(QStringLiteral("control")));
-    if (!controlFile.open(QFile::WriteOnly))
-        return QString();
-    controlFile.write(QByteArrayLiteral("Qt D3D shader compilation service"));
     return QDir::toNativeSeparators(baseDir.absolutePath());
 }
 

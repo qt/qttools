@@ -215,7 +215,6 @@ extern int handleAppxDevice(int deviceIndex, const QString &app, const QString &
             + QStringLiteral("\\Packages\\")
             + QString::fromWCharArray(WindowsGetStringRawBuffer(packageFamilyName, Q_NULLPTR))
             + QStringLiteral("\\LocalState\\d3dcompiler");
-    const QString remoteControlFile = remoteBase + QStringLiteral("\\control");
     const QString remoteSourcePath = remoteBase + QStringLiteral("\\source\\");
     const QString remoteBinaryPath = remoteBase + QStringLiteral("\\binary\\");
 
@@ -239,17 +238,6 @@ extern int handleAppxDevice(int deviceIndex, const QString &app, const QString &
                 dir.cd(QStringLiteral("d3dcompiler"));
             }
 
-            // Check if control file exists
-            if (!QFile::exists(remoteControlFile)) {
-                QFile file(remoteControlFile);
-                if (!file.open(QFile::WriteOnly)) {
-                    qCWarning(lcD3DService) << "Could not create control file:" << file.errorString();
-                    Sleep(1000);
-                    continue;
-                }
-                file.write("Qt D3D compilation service");
-            }
-
             if (!QFile::exists(remoteSourcePath)) {
                 if (!dir.mkpath(QStringLiteral("source"))) {
                     qCWarning(lcD3DService) << "Could not create source directory.";
@@ -268,16 +256,6 @@ extern int handleAppxDevice(int deviceIndex, const QString &app, const QString &
 
             checkDirectories = false;
         }
-
-        QFile file(remoteControlFile);
-        if (!file.open(QFile::WriteOnly)) {
-            qCWarning(lcD3DService) << "Could not create control file:"
-                                    << file.errorString();
-            checkDirectories = true;
-            Sleep(1000);
-            continue;
-        }
-        file.write("Qt D3D compilation service");
 
         // Ok, ready to check for shaders
         QDirIterator it(remoteSourcePath);
