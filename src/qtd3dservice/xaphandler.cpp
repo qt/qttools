@@ -308,6 +308,7 @@ extern int handleXapDevice(int deviceIndex, const QString &app, const QString &l
                 if (FAILED(hr)) {
                     qCWarning(lcD3DService) << "Unable to create the shader source directory:"
                                             << coreConServer->formatError(hr);
+                    Sleep(1000);
                     continue;
                 }
             }
@@ -326,6 +327,7 @@ extern int handleXapDevice(int deviceIndex, const QString &app, const QString &l
                 if (FAILED(hr)) {
                     qCWarning(lcD3DService) << "Unable to create the shader source directory:"
                                             << coreConServer->formatError(hr);
+                    Sleep(1000);
                     continue;
                 }
             }
