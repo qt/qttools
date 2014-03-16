@@ -137,7 +137,8 @@ int main(int argc, char *argv[])
 
     QStringList filterRules = QStringList() // Default logging rules
             << QStringLiteral("qt.winrtrunner.warning=true")
-            << QStringLiteral("qt.winrtrunner.critical=true");
+            << QStringLiteral("qt.winrtrunner.critical=true")
+            << QStringLiteral("qt.winrtrunner.app=true");
     if (parser.isSet(verbosityOption)) {
         bool ok;
         uint verbosity = parser.value(verbosityOption).toUInt(&ok);

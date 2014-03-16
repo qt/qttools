@@ -57,6 +57,7 @@
 QT_USE_NAMESPACE
 
 Q_LOGGING_CATEGORY(lcWinRtRunner, "qt.winrtrunner")
+Q_LOGGING_CATEGORY(lcWinRtRunnerApp, "qt.winrtrunner.app")
 
 class RunnerPrivate
 {

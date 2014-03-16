@@ -82,5 +82,6 @@ private:
 };
 
 Q_DECLARE_LOGGING_CATEGORY(lcWinRtRunner)
+Q_DECLARE_LOGGING_CATEGORY(lcWinRtRunnerApp)
 
 #endif // RUNNER_H

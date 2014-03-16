@@ -85,6 +85,155 @@ static BOOL WINAPI ctrlHandler(DWORD type)
     return false;
 }
 
+QString sidForPackage(const QString &packageFamilyName)
+{
+    QString sid;
+    HKEY regKey;
+    LONG result = RegOpenKeyEx(
+                HKEY_CLASSES_ROOT,
+                L"Local Settings\\Software\\Microsoft\\Windows\\CurrentVersion\\AppContainer\\Mappings",
+                0, KEY_READ, &regKey);
+    if (result != ERROR_SUCCESS) {
+        qCWarning(lcWinRtRunner) << "Unable to open registry key:" << qt_error_string(result);
+        return sid;
+    }
+
+    DWORD index = 0;
+    wchar_t subKey[MAX_PATH];
+    forever {
+        result = RegEnumKey(regKey, index++, subKey, MAX_PATH);
+        if (result != ERROR_SUCCESS)
+            break;
+        wchar_t moniker[MAX_PATH];
+        DWORD monikerSize = MAX_PATH;
+        result = RegGetValue(regKey, subKey, L"Moniker", RRF_RT_REG_SZ, NULL, moniker, &monikerSize);
+        if (result != ERROR_SUCCESS)
+            continue;
+        if (lstrcmp(moniker, reinterpret_cast<LPCWSTR>(packageFamilyName.utf16())) == 0) {
+            sid = QString::fromWCharArray(subKey);
+            break;
+        }
+    }
+    RegCloseKey(regKey);
+    return sid;
+}
+
+class OutputDebugMonitor
+{
+public:
+    OutputDebugMonitor()
+        : runLock(CreateEvent(NULL, FALSE, FALSE, NULL)), thread(0)
+    {
+    }
+    ~OutputDebugMonitor()
+    {
+        if (runLock) {
+            SetEvent(runLock);
+            CloseHandle(runLock);
+        }
+        if (thread) {
+            WaitForSingleObject(thread, INFINITE);
+            CloseHandle(thread);
+        }
+    }
+    void start(const QString &packageFamilyName)
+    {
+        if (thread) {
+            qCWarning(lcWinRtRunner) << "OutputDebugMonitor is already running.";
+            return;
+        }
+
+        package = packageFamilyName;
+
+        thread = CreateThread(NULL, 0, &monitor, this, NULL, NULL);
+        if (!thread) {
+            qCWarning(lcWinRtRunner) << "Unable to create thread for app debugging:"
+                                     << qt_error_string(GetLastError());
+            return;
+        }
+
+        return;
+    }
+private:
+    static DWORD __stdcall monitor(LPVOID param)
+    {
+        OutputDebugMonitor *that = static_cast<OutputDebugMonitor *>(param);
+
+        const QString handleBase = QStringLiteral("Local\\AppContainerNamedObjects\\")
+                + sidForPackage(that->package);
+        const QString eventName = handleBase + QStringLiteral("\\qdebug-event");
+        const QString shmemName = handleBase + QStringLiteral("\\qdebug-shmem");
+
+        HANDLE event = CreateEvent(NULL, FALSE, FALSE, reinterpret_cast<LPCWSTR>(eventName.utf16()));
+        if (!event) {
+            qCWarning(lcWinRtRunner) << "Unable to open shared event for app debugging:"
+                                     << qt_error_string(GetLastError());
+            return 1;
+        }
+
+        HANDLE shmem = 0;
+        DWORD ret = 0;
+        forever {
+            HANDLE handles[] = { that->runLock, event };
+            DWORD result = WaitForMultipleObjects(2, handles, FALSE, INFINITE);
+
+            // runLock set; exit thread
+            if (result == WAIT_OBJECT_0)
+                break;
+
+            // debug event set; print message
+            if (result == WAIT_OBJECT_0 + 1) {
+                if (!shmem) {
+                    shmem = OpenFileMapping(GENERIC_READ, FALSE,
+                                            reinterpret_cast<LPCWSTR>(shmemName.utf16()));
+                    if (!shmem) {
+                        qCWarning(lcWinRtRunner) << "Unable to open shared memory for app debugging:"
+                                                 << qt_error_string(GetLastError());
+                        ret = 1;
+                        break;
+                    }
+                }
+
+                const quint32 *data = reinterpret_cast<const quint32 *>(
+                            MapViewOfFile(shmem, FILE_MAP_READ, 0, 0, 4096));
+                QtMsgType messageType = static_cast<QtMsgType>(data[0]);
+                QString message = QString::fromWCharArray(
+                            reinterpret_cast<const wchar_t *>(data + 1));
+                UnmapViewOfFile(data);
+                switch (messageType) {
+                default:
+                case QtDebugMsg:
+                    qCDebug(lcWinRtRunnerApp, qPrintable(message));
+                    break;
+                case QtWarningMsg:
+                    qCWarning(lcWinRtRunnerApp, qPrintable(message));
+                    break;
+                case QtCriticalMsg:
+                case QtFatalMsg:
+                    qCCritical(lcWinRtRunnerApp, qPrintable(message));
+                    break;
+                }
+                continue;
+            }
+
+            // An error occurred; exit thread
+            qCWarning(lcWinRtRunner) << "Debug output monitor error:"
+                                     << qt_error_string(GetLastError());
+            ret = 1;
+            break;
+        }
+        if (shmem)
+            CloseHandle(shmem);
+        if (event)
+            CloseHandle(event);
+        return ret;
+    }
+    HANDLE runLock;
+    HANDLE thread;
+    QString package;
+};
+Q_GLOBAL_STATIC(OutputDebugMonitor, debugMonitor)
+
 class AppxEnginePrivate
 {
 public:
@@ -517,7 +666,8 @@ bool AppxEngine::start()
     Q_D(AppxEngine);
     qCDebug(lcWinRtRunner) << __FUNCTION__;
 
-    const QString launchArguments = d->runner->arguments().join(QLatin1Char(' '));
+    const QString launchArguments =
+            (d->runner->arguments() << QStringLiteral("-qdevel")).join(QLatin1Char(' '));
     DWORD pid;
     const QString activationId = d->packageFamilyName + QStringLiteral("!App");
     HRESULT hr = d->appLauncher->ActivateApplication(wchar(activationId),
@@ -555,6 +705,8 @@ bool AppxEngine::waitForFinished(int secs)
 {
     Q_D(AppxEngine);
     qCDebug(lcWinRtRunner) << __FUNCTION__;
+
+    debugMonitor->start(d->packageFamilyName);
 
     g_handleCtrl = true;
     int time = 0;
