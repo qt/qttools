@@ -892,10 +892,10 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Visualize whitespaces</string>
+    <string>Visualize whitespace</string>
    </property>
    <property name="toolTip">
-    <string>Toogle visualize whitespaces in editors</string>
+    <string>Toggle visualize whitespace in editors</string>
    </property>
   </action>
  </widget>
