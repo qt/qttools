@@ -61,6 +61,9 @@ public:
     bool install(bool removeFirst = false) Q_DECL_OVERRIDE;
     bool remove() Q_DECL_OVERRIDE;
     bool start() Q_DECL_OVERRIDE;
+    bool enableDebugging(const QString &debuggerExecutable,
+                        const QString &debuggerArguments) Q_DECL_OVERRIDE;
+    bool disableDebugging() Q_DECL_OVERRIDE;
     bool suspend() Q_DECL_OVERRIDE;
     bool waitForFinished(int secs) Q_DECL_OVERRIDE;
     bool stop() Q_DECL_OVERRIDE;

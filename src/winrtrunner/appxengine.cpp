@@ -685,6 +685,37 @@ bool AppxEngine::start()
     return true;
 }
 
+bool AppxEngine::enableDebugging(const QString &debuggerExecutable, const QString &debuggerArguments)
+{
+    Q_D(AppxEngine);
+
+    const QString &debuggerCommand = debuggerExecutable + QLatin1Char(' ') + debuggerArguments;
+    HRESULT hr = d->packageDebug->EnableDebugging(wchar(d->packageFullName),
+                                                  wchar(debuggerCommand),
+                                                  NULL);
+    if (FAILED(hr)) {
+        qCWarning(lcWinRtRunner).nospace() << "Failed to enable debugging for application. (0x"
+                                           << QByteArray::number(hr, 16).constData()
+                                           << ' ' << qt_error_string(hr) << ')';
+        return false;
+    }
+    return true;
+}
+
+bool AppxEngine::disableDebugging()
+{
+    Q_D(AppxEngine);
+
+    HRESULT hr = d->packageDebug->DisableDebugging(wchar(d->packageFullName));
+    if (FAILED(hr)) {
+        qCWarning(lcWinRtRunner).nospace() << "Failed to disable debugging for application. (0x"
+                                           << QByteArray::number(hr, 16).constData()
+                                           << ' ' << qt_error_string(hr) << ')';
+        return false;
+    }
+    return true;
+}
+
 bool AppxEngine::suspend()
 {
     Q_D(AppxEngine);

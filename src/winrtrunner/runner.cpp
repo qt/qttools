@@ -187,6 +187,22 @@ bool Runner::start()
     return d->engine->start();
 }
 
+bool Runner::enableDebugging(const QString &debuggerExecutable, const QString &debuggerArguments)
+{
+    Q_D(Runner);
+    Q_ASSERT(d->engine);
+
+    return d->engine->enableDebugging(debuggerExecutable, debuggerArguments);
+}
+
+bool Runner::disableDebugging()
+{
+    Q_D(Runner);
+    Q_ASSERT(d->engine);
+
+    return d->engine->disableDebugging();
+}
+
 bool Runner::suspend()
 {
     Q_D(Runner);
