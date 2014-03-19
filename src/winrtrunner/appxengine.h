@@ -79,6 +79,9 @@ private:
     explicit AppxEngine(Runner *runner);
     ~AppxEngine();
 
+    bool installDependencies();
+    bool installPackage(const QString &filePath);
+
     QScopedPointer<AppxEnginePrivate> d_ptr;
     Q_DECLARE_PRIVATE(AppxEngine)
 };

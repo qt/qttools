@@ -43,12 +43,14 @@
 
 #include <QtCore/QDateTime>
 #include <QtCore/QDir>
+#include <QtCore/QDirIterator>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 #include <QtCore/QLoggingCategory>
 #include <QtCore/QStandardPaths>
 
 #include <ShlObj.h>
+#include <Shlwapi.h>
 #include <wsdevlicensing.h>
 #include <AppxPackaging.h>
 #include <wrl.h>
@@ -60,11 +62,13 @@ using namespace Microsoft::WRL::Wrappers;
 using namespace ABI::Windows::Foundation;
 using namespace ABI::Windows::Management::Deployment;
 using namespace ABI::Windows::ApplicationModel;
+using namespace ABI::Windows::System;
 
 QT_USE_NAMESPACE
 
 #define wchar(str) reinterpret_cast<LPCWSTR>(str.utf16())
 #define hStringFromQString(str) HStringReference(reinterpret_cast<const wchar_t *>(str.utf16())).Get()
+#define QStringFromHString(hstr) QString::fromWCharArray(WindowsGetStringRawBuffer(hstr, Q_NULLPTR))
 
 // Set a break handler for gracefully breaking long-running ops
 static bool g_ctrlReceived = false;
@@ -243,15 +247,21 @@ public:
     QString manifest;
     QString packageFullName;
     QString packageFamilyName;
+    ProcessorArchitecture packageArchitecture;
     QString executable;
     qint64 pid;
     HANDLE processHandle;
     DWORD exitCode;
+    QSet<QString> dependencies;
+    QSet<QString> installedPackages;
 
     ComPtr<IPackageManager> packageManager;
     ComPtr<IUriRuntimeClassFactory> uriFactory;
     ComPtr<IApplicationActivationManager> appLauncher;
+    ComPtr<IAppxFactory> packageFactory;
     ComPtr<IPackageDebugSettings> packageDebug;
+
+    void retrieveInstalledPackages();
 };
 
 class XmlStream : public RuntimeClass<Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::WinRtClassicComMix>, IStream>
@@ -398,6 +408,22 @@ QStringList AppxEngine::deviceNames()
 #define CHECK_RESULT_FATAL(errorMessage, action)\
     do {CHECK_RESULT(errorMessage, d->hasFatalError = true; action;);} while (false)
 
+static ProcessorArchitecture toProcessorArchitecture(APPX_PACKAGE_ARCHITECTURE appxArch)
+{
+    switch (appxArch) {
+    case APPX_PACKAGE_ARCHITECTURE_X86:
+        return ProcessorArchitecture_X86;
+    case APPX_PACKAGE_ARCHITECTURE_ARM:
+        return ProcessorArchitecture_Arm;
+    case APPX_PACKAGE_ARCHITECTURE_X64:
+        return ProcessorArchitecture_X64;
+    case APPX_PACKAGE_ARCHITECTURE_NEUTRAL:
+        // fall-through intended
+    default:
+        return ProcessorArchitecture_Neutral;
+    }
+}
+
 AppxEngine::AppxEngine(Runner *runner) : d_ptr(new AppxEnginePrivate)
 {
     Q_D(AppxEngine);
@@ -432,14 +458,13 @@ AppxEngine::AppxEngine(Runner *runner) : d_ptr(new AppxEnginePrivate)
                           IID_IPackageDebugSettings, &d->packageDebug);
     CHECK_RESULT_FATAL("Failed to instantiate package debug settings.", return);
 
-    ComPtr<IAppxFactory> packageFactory;
     hr = CoCreateInstance(CLSID_AppxFactory, nullptr, CLSCTX_INPROC_SERVER,
-                          IID_IAppxFactory, &packageFactory);
+                          IID_IAppxFactory, &d->packageFactory);
     CHECK_RESULT_FATAL("Failed to instantiate package factory.", return);
 
     ComPtr<IStream> manifestStream = Make<XmlStream>(d->manifest);
     ComPtr<IAppxManifestReader> manifestReader;
-    hr = packageFactory->CreateManifestReader(manifestStream.Get(), &manifestReader);
+    hr = d->packageFactory->CreateManifestReader(manifestStream.Get(), &manifestReader);
     if (FAILED(hr)) {
         qCWarning(lcWinRtRunner).nospace() << "Failed to instantiate manifest reader. (0x"
                                            << QByteArray::number(hr, 16).constData()
@@ -457,6 +482,11 @@ AppxEngine::AppxEngine(Runner *runner) : d_ptr(new AppxEnginePrivate)
     ComPtr<IAppxManifestPackageId> packageId;
     hr = manifestReader->GetPackageId(&packageId);
     CHECK_RESULT_FATAL("Unable to obtain the package ID from the manifest.", return);
+
+    APPX_PACKAGE_ARCHITECTURE arch;
+    hr = packageId->GetArchitecture(&arch);
+    CHECK_RESULT_FATAL("Failed to retrieve the app's architecture.", return);
+    d->packageArchitecture = toProcessorArchitecture(arch);
 
     LPWSTR packageFullName;
     hr = packageId->GetPackageFullName(&packageFullName);
@@ -490,6 +520,27 @@ AppxEngine::AppxEngine(Runner *runner) : d_ptr(new AppxEnginePrivate)
             .absoluteFilePath(QString::fromWCharArray(executable));
     CoTaskMemFree(executable);
 
+    d->retrieveInstalledPackages();
+
+    ComPtr<IAppxManifestPackageDependenciesEnumerator> dependencies;
+    hr = manifestReader->GetPackageDependencies(&dependencies);
+    CHECK_RESULT_FATAL("Failed to retrieve the package dependencies from the manifest.", return);
+
+    hr = dependencies->GetHasCurrent(&hasCurrent);
+    CHECK_RESULT_FATAL("Failed to iterate over dependencies in the manifest.", return);
+    while (SUCCEEDED(hr) && hasCurrent) {
+        ComPtr<IAppxManifestPackageDependency> dependency;
+        hr = dependencies->GetCurrent(&dependency);
+        CHECK_RESULT_FATAL("Failed to access dependency in the manifest.", return);
+
+        LPWSTR name;
+        hr = dependency->GetName(&name);
+        CHECK_RESULT_FATAL("Failed to access dependency name.", return);
+        d->dependencies.insert(QString::fromWCharArray(name));
+        CoTaskMemFree(name);
+        hr = dependencies->MoveNext(&hasCurrent);
+    }
+
     // Set a break handler for gracefully exiting from long-running operations
     SetConsoleCtrlHandler(&ctrlHandler, true);
 }
@@ -500,30 +551,111 @@ AppxEngine::~AppxEngine()
     CloseHandle(d->processHandle);
 }
 
-bool AppxEngine::install(bool removeFirst)
+bool AppxEngine::installDependencies()
 {
-    Q_D(const AppxEngine);
+    Q_D(AppxEngine);
     qCDebug(lcWinRtRunner) << __FUNCTION__;
 
-    ComPtr<IPackage> packageInformation;
-    HRESULT hr = d->packageManager->FindPackageByUserSecurityIdPackageFullName(
-                NULL, hStringFromQString(d->packageFullName), &packageInformation);
-    if (SUCCEEDED(hr) && packageInformation) {
-        qCWarning(lcWinRtRunner) << "Package already installed.";
-        if (removeFirst)
-            remove();
-        else
-            return true;
+    QSet<QString> toInstall;
+    foreach (const QString &dependencyName, d->dependencies) {
+        if (d->installedPackages.contains(dependencyName))
+            continue;
+        toInstall.insert(dependencyName);
+        qCDebug(lcWinRtRunner).nospace()
+            << "dependency to be installed: " << dependencyName;
     }
 
-    const QString appPath = QDir::toNativeSeparators(QFileInfo(d->manifest).absoluteFilePath());
+    if (toInstall.isEmpty())
+        return true;
+
+    const QByteArray extensionSdkDirRaw = qgetenv("ExtensionSdkDir");
+    if (extensionSdkDirRaw.isEmpty()) {
+        qCWarning(lcWinRtRunner).nospace()
+                << QStringLiteral("The environment variable ExtensionSdkDir is not set.");
+        return false;
+    }
+    const QString extensionSdkDir = QString::fromLocal8Bit(extensionSdkDirRaw);
+    if (!QFile::exists(extensionSdkDir)) {
+        qCWarning(lcWinRtRunner).nospace()
+                << QString(QStringLiteral("The directory '%1' does not exist.")).arg(
+                       QDir::toNativeSeparators(extensionSdkDir));
+        return false;
+    }
+    qCDebug(lcWinRtRunner).nospace()
+        << "looking for dependency packages in " << extensionSdkDir;
+    QDirIterator dit(extensionSdkDir, QStringList() << QStringLiteral("*.appx"),
+                     QDir::Files,
+                     QDirIterator::Subdirectories);
+    while (dit.hasNext()) {
+        dit.next();
+
+        HRESULT hr;
+        ComPtr<IStream> inputStream;
+        hr = SHCreateStreamOnFileEx(wchar(dit.filePath()),
+                                    STGM_READ | STGM_SHARE_EXCLUSIVE,
+                                    0, FALSE, NULL, &inputStream);
+        CHECK_RESULT("Failed to create input stream for package in ExtensionSdkDir.", continue);
+
+        ComPtr<IAppxPackageReader> packageReader;
+        hr = d->packageFactory->CreatePackageReader(inputStream.Get(), &packageReader);
+        CHECK_RESULT("Failed to create package reader for package in ExtensionSdkDir.", continue);
+
+        ComPtr<IAppxManifestReader> manifestReader;
+        hr = packageReader->GetManifest(&manifestReader);
+        CHECK_RESULT("Failed to create manifest reader for package in ExtensionSdkDir.", continue);
+
+        ComPtr<IAppxManifestPackageId> packageId;
+        hr = manifestReader->GetPackageId(&packageId);
+        CHECK_RESULT("Failed to retrieve package id for package in ExtensionSdkDir.", continue);
+
+        LPWSTR sz;
+        hr = packageId->GetName(&sz);
+        CHECK_RESULT("Failed to retrieve name from package in ExtensionSdkDir.", continue);
+        const QString name = QString::fromWCharArray(sz);
+        CoTaskMemFree(sz);
+
+        if (!toInstall.contains(name))
+            continue;
+
+        APPX_PACKAGE_ARCHITECTURE arch;
+        hr = packageId->GetArchitecture(&arch);
+        CHECK_RESULT("Failed to retrieve architecture from package in ExtensionSdkDir.", continue);
+        if (d->packageArchitecture != arch)
+            continue;
+
+        qCDebug(lcWinRtRunner).nospace()
+            << "installing dependency " << name << " from " << dit.filePath();
+        if (installPackage(dit.filePath()))
+            toInstall.remove(name);
+    }
+
+    return true;
+}
+
+bool AppxEngine::installPackage(const QString &filePath)
+{
+    Q_D(const AppxEngine);
+    qCDebug(lcWinRtRunner) << __FUNCTION__ << filePath;
+
+    const QString nativeFilePath = QDir::toNativeSeparators(QFileInfo(filePath).absoluteFilePath());
+    const bool addInsteadOfRegister = nativeFilePath.endsWith(QStringLiteral(".appx"),
+                                                              Qt::CaseInsensitive);
+    HRESULT hr;
     ComPtr<IUriRuntimeClass> uri;
-    hr = d->uriFactory->CreateUri(hStringFromQString(appPath), &uri);
-    CHECK_RESULT("Unable to create a URI for the package manifest.", return false);
+    hr = d->uriFactory->CreateUri(hStringFromQString(nativeFilePath), &uri);
+    CHECK_RESULT("Unable to create an URI for the package.", return false);
 
     ComPtr<IAsyncOperationWithProgress<DeploymentResult *, DeploymentProgress>> deploymentOperation;
-    hr = d->packageManager->RegisterPackageAsync(uri.Get(), 0, DeploymentOptions_DevelopmentMode, &deploymentOperation);
-    CHECK_RESULT("Unable to start package registration.", return false);
+    if (addInsteadOfRegister) {
+        hr = d->packageManager->AddPackageAsync(uri.Get(), NULL, DeploymentOptions_None,
+                                                &deploymentOperation);
+        CHECK_RESULT("Unable to add package.", return false);
+    } else {
+        hr = d->packageManager->RegisterPackageAsync(uri.Get(), 0,
+                                                     DeploymentOptions_DevelopmentMode,
+                                                     &deploymentOperation);
+        CHECK_RESULT("Unable to start package registration.", return false);
+    }
 
     ComPtr<IDeploymentResult> results;
     while ((hr = deploymentOperation->GetResults(&results)) == E_ILLEGAL_METHOD_CALL)
@@ -554,6 +686,25 @@ bool AppxEngine::install(bool removeFirst)
     }
 
     return SUCCEEDED(hr);
+}
+
+bool AppxEngine::install(bool removeFirst)
+{
+    Q_D(const AppxEngine);
+    qCDebug(lcWinRtRunner) << __FUNCTION__;
+
+    ComPtr<IPackage> packageInformation;
+    HRESULT hr = d->packageManager->FindPackageByUserSecurityIdPackageFullName(
+                NULL, hStringFromQString(d->packageFullName), &packageInformation);
+    if (SUCCEEDED(hr) && packageInformation) {
+        qCWarning(lcWinRtRunner) << "Package already installed.";
+        if (removeFirst)
+            remove();
+        else
+            return true;
+    }
+
+    return installDependencies() && installPackage(d->manifest);
 }
 
 bool AppxEngine::remove()
@@ -756,4 +907,49 @@ bool AppxEngine::receiveFile(const QString &deviceFile, const QString &localFile
 
     // Both files are local, so just reverse the sendFile arguments
     return sendFile(deviceFile, localFile);
+}
+
+void AppxEnginePrivate::retrieveInstalledPackages()
+{
+    qCDebug(lcWinRtRunner) << __FUNCTION__;
+
+    ComPtr<ABI::Windows::Foundation::Collections::IIterable<Package*>> packages;
+    HRESULT hr = packageManager->FindPackagesByUserSecurityId(NULL, &packages);
+    CHECK_RESULT("Failed to find packages.", return);
+
+    ComPtr<ABI::Windows::Foundation::Collections::IIterator<Package*>> pkgit;
+    hr = packages->First(&pkgit);
+    CHECK_RESULT("Failed to get package iterator.", return);
+
+    boolean hasCurrent;
+    hr = pkgit->get_HasCurrent(&hasCurrent);
+    while (SUCCEEDED(hr) && hasCurrent) {
+        ComPtr<IPackage> pkg;
+        hr = pkgit->get_Current(&pkg);
+        CHECK_RESULT("Failed to get current package.", return);
+
+        ComPtr<IPackageId> pkgId;
+        hr = pkg->get_Id(&pkgId);
+        CHECK_RESULT("Failed to get package id.", return);
+
+        HString name;
+        hr = pkgId->get_Name(name.GetAddressOf());
+        CHECK_RESULT("Failed retrieve package name.", return);
+
+        ProcessorArchitecture architecture;
+        if (packageArchitecture == ProcessorArchitecture_Neutral) {
+            architecture = packageArchitecture;
+        } else {
+            hr = pkgId->get_Architecture(&architecture);
+            CHECK_RESULT("Failed to retrieve package architecture.", return);
+        }
+
+        const QString pkgName = QStringFromHString(name.Get());
+        qCDebug(lcWinRtRunner) << "found installed package" << pkgName;
+
+        if (architecture == packageArchitecture)
+            installedPackages.insert(pkgName);
+
+        hr = pkgit->MoveNext(&hasCurrent);
+    }
 }
