@@ -385,6 +385,19 @@ QStringList AppxEngine::deviceNames()
     return QStringList(QStringLiteral("local"));
 }
 
+#define CHECK_RESULT(errorMessage, action)\
+    do {\
+        if (FAILED(hr)) {\
+            qCWarning(lcWinRtRunner).nospace() << errorMessage " (0x"\
+                                               << QByteArray::number(hr, 16).constData()\
+                                               << ' ' << qt_error_string(hr) << ')';\
+            action;\
+        }\
+    } while (false)
+
+#define CHECK_RESULT_FATAL(errorMessage, action)\
+    do {CHECK_RESULT(errorMessage, d->hasFatalError = true; action;);} while (false)
+
 AppxEngine::AppxEngine(Runner *runner) : d_ptr(new AppxEnginePrivate)
 {
     Q_D(AppxEngine);
@@ -401,64 +414,28 @@ AppxEngine::AppxEngine(Runner *runner) : d_ptr(new AppxEnginePrivate)
     }
 
     HRESULT hr = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
-    if (FAILED(hr)) {
-        qCWarning(lcWinRtRunner).nospace() << "Failed to initialize COM. (0x"
-                                           << QByteArray::number(hr, 16).constData()
-                                           << ' ' << qt_error_string(hr) << ')';
-        d->hasFatalError = true;
-        return;
-    }
+    CHECK_RESULT_FATAL("Failed to initialize COM.", return);
 
     hr = RoActivateInstance(HString::MakeReference(RuntimeClass_Windows_Management_Deployment_PackageManager).Get(),
                             &d->packageManager);
-    if (FAILED(hr)) {
-        qCWarning(lcWinRtRunner).nospace() << "Failed to instantiate package manager. (0x"
-                                           << QByteArray::number(hr, 16).constData()
-                                           << ' ' << qt_error_string(hr) << ')';
-        d->hasFatalError = true;
-        return;
-    }
+    CHECK_RESULT_FATAL("Failed to instantiate package manager.", return);
 
     hr = RoGetActivationFactory(HString::MakeReference(RuntimeClass_Windows_Foundation_Uri).Get(),
                                 IID_PPV_ARGS(&d->uriFactory));
-    if (FAILED(hr)) {
-        qCWarning(lcWinRtRunner).nospace() << "Failed to instantiate URI factory. (0x"
-                                           << QByteArray::number(hr, 16).constData()
-                                           << ' ' << qt_error_string(hr) << ')';
-        d->hasFatalError = true;
-        return;
-    }
+    CHECK_RESULT_FATAL("Failed to instantiate URI factory.", return);
 
     hr = CoCreateInstance(CLSID_ApplicationActivationManager, nullptr, CLSCTX_INPROC_SERVER,
                           IID_IApplicationActivationManager, &d->appLauncher);
-    if (FAILED(hr)) {
-        qCWarning(lcWinRtRunner).nospace() << "Failed to instantiate application activation manager. (0x"
-                                           << QByteArray::number(hr, 16).constData()
-                                           << ' ' << qt_error_string(hr) << ')';
-        d->hasFatalError = true;
-        return;
-    }
+    CHECK_RESULT_FATAL("Failed to instantiate application activation manager.", return);
 
     hr = CoCreateInstance(CLSID_PackageDebugSettings, nullptr, CLSCTX_INPROC_SERVER,
                           IID_IPackageDebugSettings, &d->packageDebug);
-    if (FAILED(hr)) {
-        qCWarning(lcWinRtRunner).nospace() << "Failed to instantiate package debug settings. (0x"
-                                           << QByteArray::number(hr, 16).constData()
-                                           << ' ' << qt_error_string(hr) << ')';
-        d->hasFatalError = true;
-        return;
-    }
+    CHECK_RESULT_FATAL("Failed to instantiate package debug settings.", return);
 
     ComPtr<IAppxFactory> packageFactory;
     hr = CoCreateInstance(CLSID_AppxFactory, nullptr, CLSCTX_INPROC_SERVER,
                           IID_IAppxFactory, &packageFactory);
-    if (FAILED(hr)) {
-        qCWarning(lcWinRtRunner).nospace() << "Failed to instantiate package factory. (0x"
-                                           << QByteArray::number(hr, 16).constData()
-                                           << ' ' << qt_error_string(hr) << ')';
-        d->hasFatalError = true;
-        return;
-    }
+    CHECK_RESULT_FATAL("Failed to instantiate package factory.", return);
 
     ComPtr<IStream> manifestStream = Make<XmlStream>(d->manifest);
     ComPtr<IAppxManifestReader> manifestReader;
@@ -479,78 +456,36 @@ AppxEngine::AppxEngine(Runner *runner) : d_ptr(new AppxEnginePrivate)
 
     ComPtr<IAppxManifestPackageId> packageId;
     hr = manifestReader->GetPackageId(&packageId);
-    if (FAILED(hr)) {
-        qCWarning(lcWinRtRunner).nospace() << "Unable to obtain the package ID from the manifest. (0x"
-                                           << QByteArray::number(hr, 16).constData()
-                                           << ' ' << qt_error_string(hr) << ')';
-        d->hasFatalError = true;
-        return;
-    }
+    CHECK_RESULT_FATAL("Unable to obtain the package ID from the manifest.", return);
 
     LPWSTR packageFullName;
     hr = packageId->GetPackageFullName(&packageFullName);
-    if (FAILED(hr)) {
-        qCWarning(lcWinRtRunner).nospace() << "Unable to obtain the package full name from the manifest. (0x"
-                                           << QByteArray::number(hr, 16).constData()
-                                           << ' ' << qt_error_string(hr) << ')';
-        d->hasFatalError = true;
-        return;
-    }
+    CHECK_RESULT_FATAL("Unable to obtain the package full name from the manifest.", return);
     d->packageFullName = QString::fromWCharArray(packageFullName);
     CoTaskMemFree(packageFullName);
 
     LPWSTR packageFamilyName;
     hr = packageId->GetPackageFamilyName(&packageFamilyName);
-    if (FAILED(hr)) {
-        qCWarning(lcWinRtRunner).nospace() << "Unable to obtain the package full family name from the manifest. (0x"
-                                           << QByteArray::number(hr, 16).constData()
-                                           << ' ' << qt_error_string(hr) << ')';
-        d->hasFatalError = true;
-        return;
-    }
+    CHECK_RESULT_FATAL("Unable to obtain the package full family name from the manifest.", return);
     d->packageFamilyName = QString::fromWCharArray(packageFamilyName);
     CoTaskMemFree(packageFamilyName);
 
     ComPtr<IAppxManifestApplicationsEnumerator> applications;
     hr = manifestReader->GetApplications(&applications);
-    if (FAILED(hr)) {
-        qCWarning(lcWinRtRunner).nospace() << "Failed to get a list of applications from the manifest. (0x"
-                                           << QByteArray::number(hr, 16).constData()
-                                           << ' ' << qt_error_string(hr) << ')';
-        d->hasFatalError = true;
-        return;
-    }
+    CHECK_RESULT_FATAL("Failed to get a list of applications from the manifest.", return);
 
     BOOL hasCurrent;
     hr = applications->GetHasCurrent(&hasCurrent);
-    if (FAILED(hr)) {
-        qCWarning(lcWinRtRunner).nospace() << "Failed to iterate over applications in the manifest. (0x"
-                                           << QByteArray::number(hr, 16).constData()
-                                           << ' ' << qt_error_string(hr) << ')';
-        d->hasFatalError = true;
-        return;
-    }
+    CHECK_RESULT_FATAL("Failed to iterate over applications in the manifest.", return);
 
     // For now, we are only interested in the first application
     ComPtr<IAppxManifestApplication> application;
     hr = applications->GetCurrent(&application);
-    if (FAILED(hr)) {
-        qCWarning(lcWinRtRunner).nospace() << "Failed to access the first application in the manifest. (0x"
-                                           << QByteArray::number(hr, 16).constData()
-                                           << ' ' << qt_error_string(hr) << ')';
-        d->hasFatalError = true;
-        return;
-    }
+    CHECK_RESULT_FATAL("Failed to access the first application in the manifest.", return);
 
     LPWSTR executable;
     application->GetStringValue(L"Executable", &executable);
-    if (FAILED(hr)) {
-        qCWarning(lcWinRtRunner).nospace() << "Failed to retrieve the application executable from the manifest. (0x"
-                                           << QByteArray::number(hr, 16).constData()
-                                           << ' ' << qt_error_string(hr) << ')';
-        d->hasFatalError = true;
-        return;
-    }
+    CHECK_RESULT_FATAL("Failed to retrieve the application executable from the manifest.", return);
     d->executable = QFileInfo(d->manifest).absoluteDir()
             .absoluteFilePath(QString::fromWCharArray(executable));
     CoTaskMemFree(executable);
@@ -584,22 +519,11 @@ bool AppxEngine::install(bool removeFirst)
     const QString appPath = QDir::toNativeSeparators(QFileInfo(d->manifest).absoluteFilePath());
     ComPtr<IUriRuntimeClass> uri;
     hr = d->uriFactory->CreateUri(hStringFromQString(appPath), &uri);
-    if (FAILED(hr)) {
-        qCWarning(lcWinRtRunner).nospace() << "Unable to create a URI for the package manifest. (0x"
-                                           << QByteArray::number(hr, 16).constData()
-                                           << ' ' << qt_error_string(hr) << ')';
-
-        return false;
-    }
+    CHECK_RESULT("Unable to create a URI for the package manifest.", return false);
 
     ComPtr<IAsyncOperationWithProgress<DeploymentResult *, DeploymentProgress>> deploymentOperation;
     hr = d->packageManager->RegisterPackageAsync(uri.Get(), 0, DeploymentOptions_DevelopmentMode, &deploymentOperation);
-    if (FAILED(hr)) {
-        qCWarning(lcWinRtRunner).nospace() << "Unable to start package registration. (0x"
-                                           << QByteArray::number(hr, 16).constData()
-                                           << ' ' << qt_error_string(hr) << ')';
-        return false;
-    }
+    CHECK_RESULT("Unable to start package registration.", return false);
 
     ComPtr<IDeploymentResult> results;
     while ((hr = deploymentOperation->GetResults(&results)) == E_ILLEGAL_METHOD_CALL)
@@ -607,12 +531,7 @@ bool AppxEngine::install(bool removeFirst)
 
     HRESULT errorCode;
     hr = results->get_ExtendedErrorCode(&errorCode);
-    if (FAILED(hr)) {
-        qCWarning(lcWinRtRunner).nospace() << "Unable to retrieve package registration results. (0x"
-                                           << QByteArray::number(hr, 16).constData()
-                                           << ' ' << qt_error_string(hr) << ')';
-        return false;
-    }
+    CHECK_RESULT("Unable to retrieve package registration results.", return false);
 
     if (FAILED(errorCode)) {
         HString errorText;
@@ -672,12 +591,7 @@ bool AppxEngine::start()
     const QString activationId = d->packageFamilyName + QStringLiteral("!App");
     HRESULT hr = d->appLauncher->ActivateApplication(wchar(activationId),
                                                      wchar(launchArguments), AO_NONE, &pid);
-    if (FAILED(hr)) {
-        qCWarning(lcWinRtRunner).nospace() << "Failed to activate application. (0x"
-                                           << QByteArray::number(hr, 16).constData()
-                                           << ' ' << qt_error_string(hr) << ')';
-        return false;
-    }
+    CHECK_RESULT("Failed to activate application.", return false);
     d->pid = qint64(pid);
     CloseHandle(d->processHandle);
     d->processHandle = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, true, pid);
@@ -693,12 +607,7 @@ bool AppxEngine::enableDebugging(const QString &debuggerExecutable, const QStrin
     HRESULT hr = d->packageDebug->EnableDebugging(wchar(d->packageFullName),
                                                   wchar(debuggerCommand),
                                                   NULL);
-    if (FAILED(hr)) {
-        qCWarning(lcWinRtRunner).nospace() << "Failed to enable debugging for application. (0x"
-                                           << QByteArray::number(hr, 16).constData()
-                                           << ' ' << qt_error_string(hr) << ')';
-        return false;
-    }
+    CHECK_RESULT("Failed to enable debugging for application.", return false);
     return true;
 }
 
@@ -707,12 +616,8 @@ bool AppxEngine::disableDebugging()
     Q_D(AppxEngine);
 
     HRESULT hr = d->packageDebug->DisableDebugging(wchar(d->packageFullName));
-    if (FAILED(hr)) {
-        qCWarning(lcWinRtRunner).nospace() << "Failed to disable debugging for application. (0x"
-                                           << QByteArray::number(hr, 16).constData()
-                                           << ' ' << qt_error_string(hr) << ')';
-        return false;
-    }
+    CHECK_RESULT("Failed to disable debugging for application.", return false);
+
     return true;
 }
 
@@ -722,12 +627,7 @@ bool AppxEngine::suspend()
     qCDebug(lcWinRtRunner) << __FUNCTION__;
 
     HRESULT hr = d->packageDebug->Suspend(wchar(d->packageFullName));
-    if (FAILED(hr)) {
-        qCWarning(lcWinRtRunner).nospace() << "Failed to suspend application. (0x"
-                                           << QByteArray::number(hr, 16).constData()
-                                           << ' ' << qt_error_string(hr) << ')';
-        return false;
-    }
+    CHECK_RESULT("Failed to suspend application.", return false);
 
     return true;
 }
@@ -744,12 +644,7 @@ bool AppxEngine::waitForFinished(int secs)
     forever {
         PACKAGE_EXECUTION_STATE state;
         HRESULT hr = d->packageDebug->GetPackageExecutionState(wchar(d->packageFullName), &state);
-        if (FAILED(hr)) {
-            qCWarning(lcWinRtRunner).nospace() << "Failed to get package execution state. (0x"
-                                               << QByteArray::number(hr, 16).constData()
-                                               << ' ' << qt_error_string(hr) << ')';
-            return false;
-        }
+        CHECK_RESULT("Failed to get package execution state.", return false);
         qCDebug(lcWinRtRunner) << "Current execution state:" << state;
         if (state == PES_TERMINATED || state == PES_UNKNOWN)
             break;
@@ -791,12 +686,7 @@ bool AppxEngine::stop()
 
     if (!d->processHandle || d->exitCode == STILL_ACTIVE) {
         HRESULT hr = d->packageDebug->TerminateAllProcesses(wchar(d->packageFullName));
-        if (FAILED(hr)) {
-            qCWarning(lcWinRtRunner).nospace() << "Failed to terminate package process. (0x"
-                                               << QByteArray::number(hr, 16).constData()
-                                               << ' ' << qt_error_string(hr) << ')';
-            return false;
-        }
+        CHECK_RESULT("Failed to terminate package process.", return false);
 
         if (d->processHandle && !GetExitCodeProcess(d->processHandle, &d->exitCode))
             d->exitCode = UINT_MAX;
