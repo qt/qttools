@@ -151,13 +151,13 @@ extern int appxAppNames(int deviceIndex, QSet<QString> &apps)
             return 1;
         }
 
-        HSTRING fullName;
-        hr = id->get_FullName(&fullName);
+        HString fullName;
+        hr = id->get_FullName(fullName.GetAddressOf());
         if (FAILED(hr)) {
             qCWarning(lcD3DService) << qt_error_string(hr);
             return 1;
         }
-        apps.insert(QString::fromWCharArray(WindowsGetStringRawBuffer(fullName, Q_NULLPTR)));
+        apps.insert(QString::fromWCharArray(fullName.GetRawBuffer(NULL)));
         hr = iterator->MoveNext(&hasCurrent);
     }
     return 0;
@@ -200,8 +200,8 @@ extern int handleAppxDevice(int deviceIndex, const QString &app, const QString &
         qCWarning(lcD3DService) << "Unable to get package ID:" << qt_error_string(hr);
         return 1;
     }
-    HSTRING packageFamilyName;
-    hr = packageId->get_FamilyName(&packageFamilyName);
+    HString packageFamilyName;
+    hr = packageId->get_FamilyName(packageFamilyName.GetAddressOf());
     if (FAILED(hr)) {
         qCWarning(lcD3DService) << "Unable to get package name:" << qt_error_string(hr);
         return 1;
@@ -213,7 +213,7 @@ extern int handleAppxDevice(int deviceIndex, const QString &app, const QString &
     const QString remoteBase =
             QDir::toNativeSeparators(QStandardPaths::writableLocation(QStandardPaths::DataLocation))
             + QStringLiteral("\\Packages\\")
-            + QString::fromWCharArray(WindowsGetStringRawBuffer(packageFamilyName, Q_NULLPTR))
+            + QString::fromWCharArray(packageFamilyName.GetRawBuffer(NULL))
             + QStringLiteral("\\LocalState\\d3dcompiler");
     const QString remoteSourcePath = remoteBase + QStringLiteral("\\source\\");
     const QString remoteBinaryPath = remoteBase + QStringLiteral("\\binary\\");
