@@ -615,10 +615,10 @@ bool AppxEngine::install(bool removeFirst)
     }
 
     if (FAILED(errorCode)) {
-        HSTRING errorText;
-        if (SUCCEEDED(results->get_ErrorText(&errorText))) {
+        HString errorText;
+        if (SUCCEEDED(results->get_ErrorText(errorText.GetAddressOf()))) {
             qCWarning(lcWinRtRunner) << "Unable to register package:"
-                                     << QString::fromWCharArray(WindowsGetStringRawBuffer(errorText, 0));
+                                     << QString::fromWCharArray(errorText.GetRawBuffer(NULL));
         }
         if (HRESULT_CODE(errorCode) == ERROR_INSTALL_POLICY_FAILURE) {
             // The user's license has expired. Give them the opportunity to renew it.
