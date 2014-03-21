@@ -387,12 +387,14 @@ static const char *docs[] = {
     "qtdbus",
     "qtdesigner",
     "qtdoc",
+    "qtenginio",
     "qtgraphicaleffects",
     "qtgui",
     "qthelp",
     "qtimageformats",
     "qtlinguist",
     "qtlocation",
+    "qtmacextras",
     "qtmultimedia",
     "qtmultimediawidgets",
     "qtnfc",
@@ -421,6 +423,7 @@ static const char *docs[] = {
     "qtquickcontrolsstyles",
     "qtquickdialogs",
     "qtquicklayouts",
+    "qtwebsockets",
     "qtwinextras"
 };
 
