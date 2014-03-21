@@ -8,7 +8,8 @@ SUBDIRS=\
     qhelpindexmodel \
     qhelpprojectdata \
     cmake \
-    installed_cmake
+    installed_cmake \
+    qtdiag
 
 installed_cmake.depends = cmake
 
@@ -22,3 +23,5 @@ cross_compile:SUBDIRS -= host.pro
     qhelpgenerator \
     qhelpindexmodel \
     qhelpprojectdata \
+
+android|ios|qnx|wince*|winrt*:SUBDIRS -= qtdiag
