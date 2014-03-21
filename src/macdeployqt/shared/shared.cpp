@@ -103,6 +103,19 @@ bool copyFilePrintStatus(const QString &from, const QString &to)
         dest.setPermissions(dest.permissions() | QFile::WriteOwner | QFile::WriteUser);
         LogNormal() << " copied:" << from;
         LogNormal() << " to" << to;
+
+        // The source file might not have write permissions set. Set the
+        // write permission on the target file to make sure we can use
+        // install_name_tool on it later.
+        QFile toFile(to);
+        if (toFile.permissions() & QFile::WriteOwner)
+            return true;
+
+        if (!toFile.setPermissions(toFile.permissions() | QFile::WriteOwner)) {
+            LogError() << "Failed to set u+w permissions on target file: " << to;
+            return false;
+        }
+
         return true;
     } else {
         LogError() << "file copy failed from" << from;
