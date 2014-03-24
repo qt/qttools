@@ -67,6 +67,9 @@
 #include <QtCore/QTextStream>
 #include <QtCore/QTimer>
 #include <QtCore/QBuffer>
+#include <QtCore/QLibraryInfo>
+#include <QtCore/QFileInfo>
+#include <QtCore/QDir>
 
 #include <QtWidgets/QAction>
 #include <QtWidgets/QComboBox>
@@ -94,6 +97,8 @@
 #include <cstdlib>
 
 QT_BEGIN_NAMESPACE
+
+enum { warnAboutMissingModules = 0 };
 
 MainWindow::MainWindow(CmdLineParser *cmdLine, QWidget *parent)
     : QMainWindow(parent)
@@ -427,17 +432,38 @@ static const char *docs[] = {
     "qtwinextras"
 };
 
+static QStringList newQtDocumentation()
+{
+    QStringList result;
+    const QDir docDirectory(QLibraryInfo::location(QLibraryInfo::DocumentationPath));
+    const QFileInfoList entries = docDirectory.entryInfoList(QStringList(QStringLiteral("*.qch")),
+                                                             QDir::Files, QDir::Name);
+    if (!entries.isEmpty()) {
+        result.reserve(entries.size());
+        foreach (const QFileInfo &fi, entries)
+            result.append(fi.baseName());
+        return result;
+    }
+    if (warnAboutMissingModules)
+        qWarning() << "No documentation found in " << QDir::toNativeSeparators(docDirectory.absolutePath());
+    const int docCount = int(sizeof(docs) / sizeof(docs[0]));
+    result.reserve(docCount);
+    for (int d = 0; d < docCount; ++d)
+        result.append(QLatin1String(docs[d]));
+    return result;
+}
+
 void MainWindow::lookForNewQtDocumentation()
 {
-    enum { warnAboutMissingModules = 0 };
     TRACE_OBJ
     HelpEngineWrapper &helpEngine = HelpEngineWrapper::instance();
 
-    const int docCount = int(sizeof(docs) / sizeof(docs[0]));
+    const QStringList docs = newQtDocumentation();
+    const int docCount = docs.size();
     QList<QtDocInstaller::DocInfo> qtDocInfos;
     qtDocInfos.reserve(docCount);
     for (int d = 0; d < docCount; ++d) {
-        const QString doc = QLatin1String(docs[d]);
+        const QString &doc = docs.at(d);
         const QtDocInstaller::DocInfo docInfo(doc, helpEngine.qtDocInfo(doc));
         qtDocInfos.append(docInfo);
         if (warnAboutMissingModules && (docInfo.second.isEmpty() || docInfo.second.first().isEmpty()))
