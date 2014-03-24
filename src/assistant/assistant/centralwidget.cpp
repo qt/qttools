@@ -616,6 +616,8 @@ void CentralWidget::connectSignals(HelpViewer *page)
 {
     TRACE_OBJ
 #if !defined(QT_NO_WEBKIT)
+    connect(page, SIGNAL(printRequested()), this, SLOT(print()));
+#endif
     connect(page, SIGNAL(copyAvailable(bool)), this,
         SIGNAL(copyAvailable(bool)));
     connect(page, SIGNAL(forwardAvailable(bool)), this,
@@ -624,11 +626,7 @@ void CentralWidget::connectSignals(HelpViewer *page)
         SIGNAL(backwardAvailable(bool)));
     connect(page, SIGNAL(sourceChanged(QUrl)), this,
         SLOT(handleSourceChanged(QUrl)));
-    connect(page, SIGNAL(printRequested()), this, SLOT(print()));
     connect(page, SIGNAL(highlighted(QString)), this, SLOT(slotHighlighted(QString)));
-#else
-    Q_UNUSED(page)
-#endif
 }
 
 bool CentralWidget::eventFilter(QObject *object, QEvent *e)
