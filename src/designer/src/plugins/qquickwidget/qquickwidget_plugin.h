@@ -3,7 +3,7 @@
 ** Copyright (C) 2014 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
-** This file is part of the tools applications of the Qt Toolkit.
+** This file is part of the Qt Designer of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,50 +39,41 @@
 **
 ****************************************************************************/
 
-#ifndef XAPENGINE_H
-#define XAPENGINE_H
+#ifndef QQUICKWIDGET_PLUGIN_H
+#define QQUICKWIDGET_PLUGIN_H
 
-#include "runnerengine.h"
-#include "runner.h"
+#include <QtQuick/QQuickWindow>
+#include <QtDesigner/QDesignerCustomWidgetInterface>
 
-#include <QtCore/QScopedPointer>
+QT_BEGIN_NAMESPACE
 
-QT_USE_NAMESPACE
-
-class XapEnginePrivate;
-class XapEngine : public RunnerEngine
+class QQuickWidgetPlugin: public QObject, public QDesignerCustomWidgetInterface
 {
+    Q_OBJECT
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QDesignerCustomWidgetInterface")
+    Q_INTERFACES(QDesignerCustomWidgetInterface)
 public:
-    static bool canHandle(Runner *runner);
-    static RunnerEngine *create(Runner *runner);
-    static QStringList deviceNames();
+    explicit QQuickWidgetPlugin(QObject *parent = 0);
 
-    bool install(bool removeFirst = false) Q_DECL_OVERRIDE;
-    bool remove() Q_DECL_OVERRIDE;
-    bool start() Q_DECL_OVERRIDE;
-    bool enableDebugging(const QString &debuggerExecutable,
-                        const QString &debuggerArguments) Q_DECL_OVERRIDE;
-    bool disableDebugging() Q_DECL_OVERRIDE;
-    bool suspend() Q_DECL_OVERRIDE;
-    bool waitForFinished(int secs) Q_DECL_OVERRIDE;
-    bool stop() Q_DECL_OVERRIDE;
-    qint64 pid() const Q_DECL_OVERRIDE;
-    int exitCode() const Q_DECL_OVERRIDE;
+    QString name() const Q_DECL_OVERRIDE;
+    QString group() const Q_DECL_OVERRIDE;
+    QString toolTip() const Q_DECL_OVERRIDE;
+    QString whatsThis() const Q_DECL_OVERRIDE;
+    QString includeFile() const Q_DECL_OVERRIDE;
+    QIcon icon() const Q_DECL_OVERRIDE;
+    bool isContainer() const Q_DECL_OVERRIDE;
+    QWidget *createWidget(QWidget *parent) Q_DECL_OVERRIDE;
+    bool isInitialized() const Q_DECL_OVERRIDE;
+    void initialize(QDesignerFormEditorInterface *core) Q_DECL_OVERRIDE;
+    QString domXml() const Q_DECL_OVERRIDE;
 
-    QString executable() const Q_DECL_OVERRIDE;
-    QString devicePath(const QString &relativePath) const Q_DECL_OVERRIDE;
-    bool sendFile(const QString &localFile, const QString &deviceFile) Q_DECL_OVERRIDE;
-    bool receiveFile(const QString &deviceFile, const QString &localFile) Q_DECL_OVERRIDE;
+private slots:
+    void sceneGraphError(QQuickWindow::SceneGraphError, const QString &);
 
 private:
-    explicit XapEngine(Runner *runner);
-    ~XapEngine();
-
-    uint fetchPid();
-    bool connect();
-
-    QScopedPointer<XapEnginePrivate> d_ptr;
-    Q_DECLARE_PRIVATE(XapEngine)
+    bool m_initialized;
 };
 
-#endif // XAPENGINE_H
+QT_END_NAMESPACE
+
+#endif // QQUICKWIDGET_PLUGIN_H

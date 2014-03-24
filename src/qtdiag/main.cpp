@@ -39,50 +39,24 @@
 **
 ****************************************************************************/
 
-#ifndef XAPENGINE_H
-#define XAPENGINE_H
+#include "qtdiag.h"
 
-#include "runnerengine.h"
-#include "runner.h"
+#include <QtGui/QGuiApplication>
 
-#include <QtCore/QScopedPointer>
+#include <iostream>
+#include <string>
 
 QT_USE_NAMESPACE
 
-class XapEnginePrivate;
-class XapEngine : public RunnerEngine
+int main(int argc, char **argv)
 {
-public:
-    static bool canHandle(Runner *runner);
-    static RunnerEngine *create(Runner *runner);
-    static QStringList deviceNames();
+    QGuiApplication app(argc, argv);
 
-    bool install(bool removeFirst = false) Q_DECL_OVERRIDE;
-    bool remove() Q_DECL_OVERRIDE;
-    bool start() Q_DECL_OVERRIDE;
-    bool enableDebugging(const QString &debuggerExecutable,
-                        const QString &debuggerArguments) Q_DECL_OVERRIDE;
-    bool disableDebugging() Q_DECL_OVERRIDE;
-    bool suspend() Q_DECL_OVERRIDE;
-    bool waitForFinished(int secs) Q_DECL_OVERRIDE;
-    bool stop() Q_DECL_OVERRIDE;
-    qint64 pid() const Q_DECL_OVERRIDE;
-    int exitCode() const Q_DECL_OVERRIDE;
+    QCoreApplication::setApplicationName(QStringLiteral("qtdiag"));
+    QCoreApplication::setApplicationVersion(QLatin1String(QT_VERSION_STR));
+    QCoreApplication::setOrganizationName(QStringLiteral("Qt Project"));
+    QCoreApplication::setOrganizationDomain(QStringLiteral("qt-project.org"));
 
-    QString executable() const Q_DECL_OVERRIDE;
-    QString devicePath(const QString &relativePath) const Q_DECL_OVERRIDE;
-    bool sendFile(const QString &localFile, const QString &deviceFile) Q_DECL_OVERRIDE;
-    bool receiveFile(const QString &deviceFile, const QString &localFile) Q_DECL_OVERRIDE;
-
-private:
-    explicit XapEngine(Runner *runner);
-    ~XapEngine();
-
-    uint fetchPid();
-    bool connect();
-
-    QScopedPointer<XapEnginePrivate> d_ptr;
-    Q_DECLARE_PRIVATE(XapEngine)
-};
-
-#endif // XAPENGINE_H
+    std::wcout << qtDiag().toStdWString();
+    return 0;
+}

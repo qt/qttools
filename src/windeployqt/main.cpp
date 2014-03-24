@@ -73,27 +73,28 @@ enum QtModule
     QtHelpModule = 0x200,
     QtMultimediaModule = 0x400,
     QtMultimediaWidgetsModule = 0x800,
-    QtNetworkModule = 0x1000,
-    QtNfcModule = 0x2000,
-    QtOpenGLModule = 0x4000,
-    QtPositioningModule = 0x8000,
-    QtPrintSupportModule = 0x10000,
-    QtQmlModule = 0x20000,
-    QtQuickModule = 0x40000,
-    QtQuickParticlesModule = 0x80000,
-    QtScriptModule = 0x100000,
-    QtScriptToolsModule = 0x200000,
-    QtSensorsModule = 0x400000,
-    QtSerialPortModule = 0x800000,
-    QtSqlModule = 0x1000000,
-    QtSvgModule = 0x2000000,
-    QtTestModule = 0x4000000,
-    QtWidgetsModule = 0x8000000,
-    QtWinExtrasModule = 0x10000000,
-    QtXmlModule = 0x20000000,
-    QtXmlPatternsModule = 0x40000000,
-    QtWebKitModule = 0x80000000,
-    QtWebKitWidgetsModule = 0x100000000
+    QtMultimediaQuickModule = 0x1000,
+    QtNetworkModule = 0x2000,
+    QtNfcModule = 0x4000,
+    QtOpenGLModule = 0x8000,
+    QtPositioningModule = 0x10000,
+    QtPrintSupportModule = 0x20000,
+    QtQmlModule = 0x40000,
+    QtQuickModule = 0x80000,
+    QtQuickParticlesModule = 0x100000,
+    QtScriptModule = 0x200000,
+    QtScriptToolsModule = 0x400000,
+    QtSensorsModule = 0x800000,
+    QtSerialPortModule = 0x1000000,
+    QtSqlModule = 0x2000000,
+    QtSvgModule = 0x4000000,
+    QtTestModule = 0x8000000,
+    QtWidgetsModule = 0x10000000,
+    QtWinExtrasModule = 0x20000000,
+    QtXmlModule = 0x40000000,
+    QtXmlPatternsModule = 0x80000000,
+    QtWebKitModule = 0x100000000,
+    QtWebKitWidgetsModule = 0x200000000
 };
 
 struct QtModuleEntry {
@@ -116,6 +117,7 @@ QtModuleEntry qtModuleEntries[] = {
     { QtHelpModule, "qthelp", "Qt5Help", "qt_help" },
     { QtMultimediaModule, "multimedia", "Qt5Multimedia", "qtmultimedia" },
     { QtMultimediaWidgetsModule, "multimediawidgets", "Qt5MultimediaWidgets", "qtmultimedia" },
+    { QtMultimediaQuickModule, "multimediaquick", "Qt5MultimediaQuick_p", "qtmultimedia" },
     { QtNetworkModule, "network", "Qt5Network", "qtbase" },
     { QtNfcModule, "nfc", "Qt5Nfc", 0 },
     { QtOpenGLModule, "opengl", "Qt5OpenGL", 0 },
@@ -768,11 +770,11 @@ static DeployResult deploy(const Options &options,
                                 || (options.additionalLibraries & QtQmlModule));
 
     if (optVerboseLevel) {
-        std::wcout << QDir::toNativeSeparators(options.binary)
-                   << wordSize << "bit, " << (isDebug ? "debug" : "release")
-                   << QDir::toNativeSeparators(options.binary) << " executable";
+        std::wcout << QDir::toNativeSeparators(options.binary) << ' '
+                   << wordSize << " bit, " << (isDebug ? "debug" : "release")
+                   << " executable";
         if (usesQml2)
-            std::wcout << "[QML]";
+            std::wcout << " [QML]";
         std::wcout << '\n';
     }
 

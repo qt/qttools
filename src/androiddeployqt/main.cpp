@@ -337,7 +337,7 @@ void printHelp()
                     "       platform. By default, the highest available version will be\n"
                     "       used.\n"
                     "    --ant <path/to/ant>: If unspecified, ant from the PATH will be\n"
-                    "       used."
+                    "       used.\n"
                     "    --release: Builds a package ready for release. By default, the\n"
                     "       package will be signed with a debug key.\n"
                     "    --sign <url/to/keystore> <alias>: Signs the package with the\n"

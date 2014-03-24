@@ -1,9 +1,9 @@
 /****************************************************************************
 **
-** Copyright (C) 2014 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
-** This file is part of the tools applications of the Qt Toolkit.
+** This file is part of the test suite of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -38,51 +38,66 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
+#include <QtTest/QtTest>
 
-#ifndef XAPENGINE_H
-#define XAPENGINE_H
+#include <QtCore/QProcess>
+#include <QtCore/QLibraryInfo>
+#include <QtCore/QFileInfo>
+#include <QtCore/QDir>
 
-#include "runnerengine.h"
-#include "runner.h"
-
-#include <QtCore/QScopedPointer>
-
-QT_USE_NAMESPACE
-
-class XapEnginePrivate;
-class XapEngine : public RunnerEngine
+class tst_QtDiag : public QObject
 {
-public:
-    static bool canHandle(Runner *runner);
-    static RunnerEngine *create(Runner *runner);
-    static QStringList deviceNames();
+    Q_OBJECT
 
-    bool install(bool removeFirst = false) Q_DECL_OVERRIDE;
-    bool remove() Q_DECL_OVERRIDE;
-    bool start() Q_DECL_OVERRIDE;
-    bool enableDebugging(const QString &debuggerExecutable,
-                        const QString &debuggerArguments) Q_DECL_OVERRIDE;
-    bool disableDebugging() Q_DECL_OVERRIDE;
-    bool suspend() Q_DECL_OVERRIDE;
-    bool waitForFinished(int secs) Q_DECL_OVERRIDE;
-    bool stop() Q_DECL_OVERRIDE;
-    qint64 pid() const Q_DECL_OVERRIDE;
-    int exitCode() const Q_DECL_OVERRIDE;
-
-    QString executable() const Q_DECL_OVERRIDE;
-    QString devicePath(const QString &relativePath) const Q_DECL_OVERRIDE;
-    bool sendFile(const QString &localFile, const QString &deviceFile) Q_DECL_OVERRIDE;
-    bool receiveFile(const QString &deviceFile, const QString &localFile) Q_DECL_OVERRIDE;
+private slots:
+    void initTestCase();
+    void run();
 
 private:
-    explicit XapEngine(Runner *runner);
-    ~XapEngine();
-
-    uint fetchPid();
-    bool connect();
-
-    QScopedPointer<XapEnginePrivate> d_ptr;
-    Q_DECLARE_PRIVATE(XapEngine)
+    QString m_binary;
 };
 
-#endif // XAPENGINE_H
+void tst_QtDiag::initTestCase()
+{
+#ifdef QT_NO_PROCESS
+    QSKIP("This test requires QProcess support");
+#else
+    QString binary = QLibraryInfo::location(QLibraryInfo::BinariesPath) + QStringLiteral("/qtdiag");
+#  ifdef Q_OS_WIN
+    binary += QStringLiteral(".exe");
+#  endif
+    const QFileInfo fi(binary);
+    if (fi.isFile()) {
+        m_binary = fi.absoluteFilePath();
+    } else {
+        const QByteArray message = QByteArrayLiteral("The binary '")
+            + QDir::toNativeSeparators(binary).toLocal8Bit()
+            +  QByteArrayLiteral("' does not exist.");
+        QSKIP(message.constData());
+    }
+#endif // !QT_NO_PROCESS
+}
+
+void tst_QtDiag::run()
+{
+#ifdef QT_NO_PROCESS
+    QSKIP("This test requires QProcess support");
+#else
+    if (m_binary.isEmpty())
+        QSKIP("Binary could not be found");
+    QProcess process;
+    qDebug() << "Launching " << QDir::toNativeSeparators(m_binary);
+    process.start(m_binary);
+    QVERIFY2(process.waitForStarted(), qPrintable(process.errorString()));
+    QVERIFY(process.waitForFinished());
+    QCOMPARE(process.exitStatus(), QProcess::NormalExit);
+    QCOMPARE(process.exitCode(), 0);
+    QByteArray output = process.readAll();
+    QVERIFY(!output.isEmpty());
+    output.replace('\r', "");
+    qDebug("\n%s", output.constData());
+#endif // !QT_NO_PROCESS
+}
+
+QTEST_MAIN(tst_QtDiag)
+#include "tst_qtdiag.moc"

@@ -14,9 +14,7 @@ SOURCES = \
     d3dservice.cpp \
     main.cpp \
     xaphandler.cpp \
-    compilation.cpp \
-    registry.cpp \
-    credentials.cpp
+    compilation.cpp
 
 HEADERS = \
     d3dservice.h

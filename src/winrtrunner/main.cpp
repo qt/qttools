@@ -75,6 +75,22 @@ int main(int argc, char *argv[])
                                                  "force reinstallation."));
     parser.addOption(startOption);
 
+    QCommandLineOption debugOption(QStringLiteral("debug"),
+                                   QLatin1String("Start the package with the debugger attached. "
+                                                 "The package is installed if it is not already "
+                                                 "installed. Pass --install to force "
+                                                 "reinstallation."),
+                                   QLatin1Literal("debugger"));
+    parser.addOption(debugOption);
+
+    QCommandLineOption debuggerArgumentsOption(QStringLiteral("debugger-arguments"),
+                                               QLatin1String("Arguments that are passed to the "
+                                                             "debugger when --debug is used. If no "
+                                                             "debugger was provided this option is "
+                                                             "ignored."),
+                                               QLatin1String("arguments"));
+    parser.addOption(debuggerArgumentsOption);
+
     QCommandLineOption suspendOption(QStringLiteral("suspend"),
                                      QLatin1String("Suspend a running package. When combined "
                                                    "with --stop or --test, the app will be "
@@ -137,7 +153,8 @@ int main(int argc, char *argv[])
 
     QStringList filterRules = QStringList() // Default logging rules
             << QStringLiteral("qt.winrtrunner.warning=true")
-            << QStringLiteral("qt.winrtrunner.critical=true");
+            << QStringLiteral("qt.winrtrunner.critical=true")
+            << QStringLiteral("qt.winrtrunner.app=true");
     if (parser.isSet(verbosityOption)) {
         bool ok;
         uint verbosity = parser.value(verbosityOption).toUInt(&ok);
@@ -195,11 +212,12 @@ int main(int argc, char *argv[])
     // 7 - Stop failed
     // 8 - Test setup failed
     // 9 - Test results retrieval failed
+    // 10 - Enabling debugging failed
     // In "test" mode, the exit code of the app is returned
 
     bool ignoreErrors = parser.isSet(ignoreErrorsOption);
     bool testEnabled = parser.isSet(testOption);
-    bool startEnabled = testEnabled || parser.isSet(startOption);
+    bool startEnabled = testEnabled || parser.isSet(startOption) || parser.isSet(debugOption);
     bool suspendEnabled = parser.isSet(suspendOption);
     bool waitEnabled = testEnabled || parser.isSet(waitOption);
     bool stopEnabled = !testEnabled && parser.isSet(stopOption); // test and stop are mutually exclusive
@@ -229,7 +247,24 @@ int main(int argc, char *argv[])
         return ignoreErrors ? 0 : 3;
     }
 
-    if (startEnabled && !runner.start()) {
+    if (parser.isSet(debugOption)) {
+        const QString &debuggerExecutable = parser.value(debugOption);
+        const QString &debuggerArguments = parser.value(debuggerArgumentsOption);
+        qCDebug(lcWinRtRunner) << "Debugger:         " << debuggerExecutable;
+        qCDebug(lcWinRtRunner) << "Debugger Options: " << debuggerArguments;
+        if (debuggerExecutable.isEmpty()
+                || !runner.enableDebugging(debuggerExecutable, debuggerArguments)) {
+            qCDebug(lcWinRtRunner) << "Failed to enable debugging, exiting with code 10.";
+            return ignoreErrors ? 0 : 10;
+        }
+    }
+
+    bool startFailed = startEnabled && !runner.start();
+
+    if (parser.isSet(debugOption) && !runner.disableDebugging())
+        qCDebug(lcWinRtRunner) << "Failed to disable debugging";
+
+    if (startFailed) {
         qCDebug(lcWinRtRunner) << "Start failed, exiting with code 5.";
         return ignoreErrors ? 0 : 5;
     }

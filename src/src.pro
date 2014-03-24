@@ -35,3 +35,5 @@ qtNomakeTools( \
     qtconfig \
     macdeployqt \
 )
+
+!android:!ios:!qnx:!wince*:!winrt*:SUBDIRS += qtdiag

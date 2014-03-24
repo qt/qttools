@@ -517,6 +517,18 @@ bool XapEngine::start()
     return true;
 }
 
+bool XapEngine::enableDebugging(const QString &debuggerExecutable, const QString &debuggerArguments)
+{
+    Q_UNUSED(debuggerExecutable);
+    Q_UNUSED(debuggerArguments);
+    return false;
+}
+
+bool XapEngine::disableDebugging()
+{
+    return false;
+}
+
 bool XapEngine::suspend()
 {
     qCDebug(lcWinRtRunner) << __FUNCTION__;

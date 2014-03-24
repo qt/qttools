@@ -57,6 +57,7 @@
 QT_USE_NAMESPACE
 
 Q_LOGGING_CATEGORY(lcWinRtRunner, "qt.winrtrunner")
+Q_LOGGING_CATEGORY(lcWinRtRunnerApp, "qt.winrtrunner.app")
 
 class RunnerPrivate
 {
@@ -184,6 +185,22 @@ bool Runner::start()
     Q_ASSERT(d->engine);
 
     return d->engine->start();
+}
+
+bool Runner::enableDebugging(const QString &debuggerExecutable, const QString &debuggerArguments)
+{
+    Q_D(Runner);
+    Q_ASSERT(d->engine);
+
+    return d->engine->enableDebugging(debuggerExecutable, debuggerArguments);
+}
+
+bool Runner::disableDebugging()
+{
+    Q_D(Runner);
+    Q_ASSERT(d->engine);
+
+    return d->engine->disableDebugging();
 }
 
 bool Runner::suspend()

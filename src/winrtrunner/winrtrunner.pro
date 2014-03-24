@@ -11,7 +11,7 @@ DEFINES += RTRUNNER_NO_APPX RTRUNNER_NO_XAP
 win32-msvc2012|win32-msvc2013 {
     SOURCES += appxengine.cpp
     HEADERS += appxengine.h
-    LIBS += -lruntimeobject -lwsclient
+    LIBS += -lruntimeobject -lwsclient -lShlwapi
     DEFINES -= RTRUNNER_NO_APPX
 
     include(../shared/corecon/corecon.pri)
@@ -25,7 +25,7 @@ win32-msvc2012|win32-msvc2013 {
     HEADERS += \
         qzip/qzipreader_p.h \
         qzip/qzipwriter_p.h
-    INCLUDEPATH += qzip $$[QT_INSTALL_HEADERS]/QtZlib
+    INCLUDEPATH += qzip $$[QT_INSTALL_HEADERS/get]/QtZlib
 }
 
 load(qt_tool)

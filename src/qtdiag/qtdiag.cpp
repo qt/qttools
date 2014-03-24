@@ -1,0 +1,316 @@
+/****************************************************************************
+**
+** Copyright (C) 2014 Digia Plc and/or its subsidiary(-ies).
+** Contact: http://www.qt-project.org/legal
+**
+** This file is part of the tools applications of the Qt Toolkit.
+**
+** $QT_BEGIN_LICENSE:LGPL$
+** Commercial License Usage
+** Licensees holding valid commercial Qt licenses may use this file in
+** accordance with the commercial license agreement provided with the
+** Software or, alternatively, in accordance with the terms contained in
+** a written agreement between you and Digia.  For licensing terms and
+** conditions see http://qt.digia.com/licensing.  For further information
+** use the contact form at http://qt.digia.com/contact-us.
+**
+** GNU Lesser General Public License Usage
+** Alternatively, this file may be used under the terms of the GNU Lesser
+** General Public License version 2.1 as published by the Free Software
+** Foundation and appearing in the file LICENSE.LGPL included in the
+** packaging of this file.  Please review the following information to
+** ensure the GNU Lesser General Public License version 2.1 requirements
+** will be met: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
+**
+** In addition, as a special exception, Digia gives you certain additional
+** rights.  These rights are described in the Digia Qt LGPL Exception
+** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
+**
+** GNU General Public License Usage
+** Alternatively, this file may be used under the terms of the GNU
+** General Public License version 3.0 as published by the Free Software
+** Foundation and appearing in the file LICENSE.GPL included in the
+** packaging of this file.  Please review the following information to
+** ensure the GNU General Public License version 3.0 requirements will be
+** met: http://www.gnu.org/copyleft/gpl.html.
+**
+**
+** $QT_END_LICENSE$
+**
+****************************************************************************/
+
+#include "qtdiag.h"
+
+#include <QtGui/QGuiApplication>
+#include <QtGui/QStyleHints>
+#include <QtGui/QScreen>
+#include <QtGui/QFont>
+#include <QtGui/QFontDatabase>
+#ifndef QT_NO_OPENGL
+#  include <QtGui/QOpenGLContext>
+#  include <QtGui/QOpenGLFunctions>
+#endif // QT_NO_OPENGL
+#include <QtGui/QWindow>
+
+#include <QtCore/QLibraryInfo>
+#include <QtCore/QStringList>
+#include <QtCore/QVariant>
+#include <QtCore/QSysInfo>
+#include <QtCore/QLibraryInfo>
+#include <QtCore/QTextStream>
+#include <QtCore/QStandardPaths>
+#include <QtCore/QDir>
+
+#include <private/qguiapplication_p.h>
+#include <qpa/qplatformintegration.h>
+#include <qpa/qplatformtheme.h>
+
+QT_BEGIN_NAMESPACE
+
+QTextStream &operator<<(QTextStream &str, const QSize &s)
+{
+    str << s.width() << 'x' << s.height();
+    return str;
+}
+
+QTextStream &operator<<(QTextStream &str, const QSizeF &s)
+{
+    str << s.width() << 'x' << s.height();
+    return str;
+}
+
+QTextStream &operator<<(QTextStream &str, const QRect &r)
+{
+    str << r.size() << '+' << r.x() << '+' << r.y();
+    return str;
+}
+
+QTextStream &operator<<(QTextStream &str, const QStringList &l)
+{
+    for (int i = 0; i < l.size(); ++i) {
+        if (i)
+            str << ',';
+        str << l.at(i);
+    }
+    return str;
+}
+
+QTextStream &operator<<(QTextStream &str, const QFont &f)
+{
+    str << '"' << f.family() << "\" "  << f.pointSize();
+    return str;
+}
+
+#ifndef QT_NO_OPENGL
+
+QTextStream &operator<<(QTextStream &str, const QSurfaceFormat &format)
+{
+    str << "Version: " << format.majorVersion() << '.'
+        << format.minorVersion() << " Profile: " << format.profile()
+        << " Swap behavior: " << format.swapBehavior()
+        << " Buffer size (RGB";
+    if (format.hasAlpha())
+        str << 'A';
+    str << "): " << format.redBufferSize() << ',' << format.greenBufferSize()
+        << ',' << format.blueBufferSize();
+    if (format.hasAlpha())
+        str << ',' << format.alphaBufferSize();
+    if (const int dbs = format.depthBufferSize())
+        str << " Depth buffer: " << dbs;
+    if (const int sbs = format.stencilBufferSize())
+        str << " Stencil buffer: " << sbs;
+    const int samples = format.samples();
+    if (samples > 0)
+        str << " Samples: " << samples;
+    return str;
+}
+
+void dumpGlInfo(QTextStream &str)
+{
+    QOpenGLContext context;
+    if (context.create()) {
+#  ifdef QT_OPENGL_DYNAMIC
+        str << "Dynamic GL ";
+#  endif
+        switch (context.openGLModuleType()) {
+        case QOpenGLContext::DesktopGL:
+            str << "DesktopGL";
+            break;
+        case QOpenGLContext::GLES2:
+            str << "GLES2";
+            break;
+        case QOpenGLContext::GLES1:
+            str << "GLES1";
+            break;
+        }
+        QWindow window;
+        window.setSurfaceType(QSurface::OpenGLSurface);
+        window.create();
+        context.makeCurrent(&window);
+        QOpenGLFunctions functions(&context);
+
+        str << " Vendor: " << reinterpret_cast<const char *>(functions.glGetString(GL_VENDOR))
+            << "\nRenderer: " << reinterpret_cast<const char *>(functions.glGetString(GL_RENDERER))
+            << "\nVersion: " << reinterpret_cast<const char *>(functions.glGetString(GL_VERSION))
+            << "\nShading language: " << reinterpret_cast<const char *>(functions.glGetString(GL_SHADING_LANGUAGE_VERSION))
+            <<  "\nFormat: " << context.format();
+    } else {
+        str << "Unable to create an Open GL context.\n";
+    }
+}
+
+#endif // !QT_NO_OPENGL
+
+static QStringList toNativeSeparators(QStringList in)
+{
+    for (int i = 0; i < in.size(); ++i)
+        in[i] = QDir::toNativeSeparators(in.at(i));
+    return in;
+}
+
+#define DUMP_CAPABILITY(str, integration, capability) \
+    if (platformIntegration->hasCapability(QPlatformIntegration::capability)) \
+        str << ' ' << #capability;
+
+#define DUMP_STANDARDPATH(str, location) \
+    str << "  " << #location << ": \"" \
+        << QStandardPaths::displayName(QStandardPaths::location) << '"' \
+        << ' ' << toNativeSeparators(QStandardPaths::standardLocations(QStandardPaths::location)) << '\n';
+
+#define DUMP_LIBRARYPATH(str, loc) \
+    str << "  " << #loc << ": " << QDir::toNativeSeparators(QLibraryInfo::location(QLibraryInfo::loc)) << '\n';
+
+
+QString qtDiag()
+{
+    QString result;
+    QTextStream str(&result);
+
+    const QPlatformIntegration *platformIntegration = QGuiApplicationPrivate::platformIntegration();
+    str << QLibraryInfo::build() << " on \"" << QGuiApplication::platformName() << "\" "
+              << (QSysInfo::ByteOrder == QSysInfo::LittleEndian ? "little endian" : "big endian") << '/'
+              << '\n';
+
+#if defined(Q_OS_WIN)
+    str << hex << "Windows version: 0x" << QSysInfo::windowsVersion() << dec << '\n';
+#elif defined(Q_OS_MAC)
+    str << hex << "Mac OS version: 0x" << QSysInfo::macVersion() << dec << '\n';
+#endif
+
+    str << "\nLibrary info:\n";
+    DUMP_LIBRARYPATH(str, PrefixPath)
+    DUMP_LIBRARYPATH(str, DocumentationPath)
+    DUMP_LIBRARYPATH(str, HeadersPath)
+    DUMP_LIBRARYPATH(str, LibrariesPath)
+    DUMP_LIBRARYPATH(str, LibraryExecutablesPath)
+    DUMP_LIBRARYPATH(str, BinariesPath)
+    DUMP_LIBRARYPATH(str, PluginsPath)
+    DUMP_LIBRARYPATH(str, ImportsPath)
+    DUMP_LIBRARYPATH(str, Qml2ImportsPath)
+    DUMP_LIBRARYPATH(str, ArchDataPath)
+    DUMP_LIBRARYPATH(str, DataPath)
+    DUMP_LIBRARYPATH(str, TranslationsPath)
+    DUMP_LIBRARYPATH(str, ExamplesPath)
+    DUMP_LIBRARYPATH(str, TestsPath)
+
+    str << "\nStandard paths:\n";
+    DUMP_STANDARDPATH(str, DesktopLocation)
+    DUMP_STANDARDPATH(str, DocumentsLocation)
+    DUMP_STANDARDPATH(str, FontsLocation)
+    DUMP_STANDARDPATH(str, ApplicationsLocation)
+    DUMP_STANDARDPATH(str, MusicLocation)
+    DUMP_STANDARDPATH(str, MoviesLocation)
+    DUMP_STANDARDPATH(str, PicturesLocation)
+    DUMP_STANDARDPATH(str, TempLocation)
+    DUMP_STANDARDPATH(str, HomeLocation)
+    DUMP_STANDARDPATH(str, DataLocation)
+    DUMP_STANDARDPATH(str, CacheLocation)
+    DUMP_STANDARDPATH(str, GenericDataLocation)
+    DUMP_STANDARDPATH(str, RuntimeLocation)
+    DUMP_STANDARDPATH(str, ConfigLocation)
+    DUMP_STANDARDPATH(str, DownloadLocation)
+    DUMP_STANDARDPATH(str, GenericCacheLocation)
+
+    str << "\nPlatform capabilities:";
+    DUMP_CAPABILITY(str, platformIntegration, ThreadedPixmaps)
+    DUMP_CAPABILITY(str, platformIntegration, OpenGL)
+    DUMP_CAPABILITY(str, platformIntegration, ThreadedOpenGL)
+    DUMP_CAPABILITY(str, platformIntegration, SharedGraphicsCache)
+    DUMP_CAPABILITY(str, platformIntegration, BufferQueueingOpenGL)
+    DUMP_CAPABILITY(str, platformIntegration, WindowMasks)
+    DUMP_CAPABILITY(str, platformIntegration, MultipleWindows)
+    DUMP_CAPABILITY(str, platformIntegration, ApplicationState)
+    DUMP_CAPABILITY(str, platformIntegration, ForeignWindows)
+    DUMP_CAPABILITY(str, platformIntegration, AllGLFunctionsQueryable)
+    str << '\n';
+
+    const QStyleHints *styleHints = QGuiApplication::styleHints();
+    str << "\nStyle hints:\n  mouseDoubleClickInterval: " << styleHints->mouseDoubleClickInterval() << '\n'
+        << "  startDragDistance: " << styleHints->startDragDistance() << '\n'
+        << "  startDragTime: " << styleHints->startDragTime() << '\n'
+        << "  startDragVelocity: " << styleHints->startDragVelocity() << '\n'
+        << "  keyboardInputInterval: " << styleHints->keyboardInputInterval() << '\n'
+        << "  keyboardAutoRepeatRate: " << styleHints->keyboardAutoRepeatRate() << '\n'
+        << "  cursorFlashTime: " << styleHints->cursorFlashTime() << '\n'
+        << "  showIsFullScreen: " << styleHints->showIsFullScreen() << '\n'
+        << "  passwordMaskDelay: " << styleHints->passwordMaskDelay() << '\n'
+        << "  fontSmoothingGamma: " << styleHints->fontSmoothingGamma() << '\n'
+        << "  useRtlExtensions: " << styleHints->useRtlExtensions() << '\n'
+        << "  mousePressAndHoldInterval: " << styleHints->mousePressAndHoldInterval() << '\n';
+
+    const QPlatformTheme *platformTheme = QGuiApplicationPrivate::platformTheme();
+    str << "\nTheme:\n  Styles: " << platformTheme->themeHint(QPlatformTheme::StyleNames).toStringList();
+    const QString iconTheme = platformTheme->themeHint(QPlatformTheme::SystemIconThemeName).toString();
+    if (!iconTheme.isEmpty()) {
+        str << "\n  Icon theme: " << iconTheme
+            << ", " << platformTheme->themeHint(QPlatformTheme::SystemIconFallbackThemeName).toString()
+            << " from " << platformTheme->themeHint(QPlatformTheme::IconThemeSearchPaths).toStringList() << '\n';
+    }
+    if (const QFont *systemFont = platformTheme->font())
+        str << "  System font: " << *systemFont<< '\n';
+    str << "  General font : " << QFontDatabase::systemFont(QFontDatabase::GeneralFont) << '\n'
+              << "  Fixed font   : " << QFontDatabase::systemFont(QFontDatabase::FixedFont) << '\n'
+              << "  Title font   : " << QFontDatabase::systemFont(QFontDatabase::TitleFont) << '\n'
+              << "  Smallest font: " << QFontDatabase::systemFont(QFontDatabase::SmallestReadableFont) << "\n\n";
+
+    if (platformTheme->usePlatformNativeDialog(QPlatformTheme::FileDialog))
+        str << "  Native file dialog\n";
+    if (platformTheme->usePlatformNativeDialog(QPlatformTheme::ColorDialog))
+        str << "  Native color dialog\n";
+    if (platformTheme->usePlatformNativeDialog(QPlatformTheme::FontDialog))
+        str << "  Native font dialog\n";
+
+    const QList<QScreen*> screens = QGuiApplication::screens();
+    const int screenCount = screens.size();
+    str << "\nScreens: " << screenCount << '\n';
+    for (int s = 0; s < screenCount; ++s) {
+        const QScreen *screen = screens.at(s);
+        str << (screen == QGuiApplication::primaryScreen() ? '*' : ' ')
+                  << '#' << ' ' << s << " \"" << screen->name() << '"'
+                  << " Depth: " << screen->depth()
+            << "\n  Geometry: " << screen->geometry() << " Available: " << screen->availableGeometry();
+        if (screen->geometry() != screen->virtualGeometry())
+            str << "\n  Virtual geometry: " << screen->virtualGeometry() << " Available: " << screen->availableVirtualGeometry();
+        if (screen->virtualSiblings().size() > 1)
+            str << "\n  " << screen->virtualSiblings().size() << " virtual siblings";
+        str << "\n  Physical size: " << screen->physicalSize() << " mm"
+                  << "  Refresh: " << screen->refreshRate() << " Hz"
+            << "\n  Physical DPI: " << screen->physicalDotsPerInchX()
+            << ',' << screen->physicalDotsPerInchY()
+            << " Logical DPI: " << screen->logicalDotsPerInchX()
+            << ',' << screen->logicalDotsPerInchY()
+            << "\n  DevicePixelRatio: " << screen->devicePixelRatio()
+            << " Primary orientation: " << screen->primaryOrientation()
+            << "\n  Orientation: " << screen->orientation()
+            << " OrientationUpdateMask: " << screen->orientationUpdateMask()
+            << "\n\n";
+    }
+
+#ifndef QT_NO_OPENGL
+    dumpGlInfo(str);
+    str << "\n\n";
+#endif // !QT_NO_OPENGL
+    return result;
+}
+
+QT_END_NAMESPACE

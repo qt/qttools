@@ -39,50 +39,15 @@
 **
 ****************************************************************************/
 
-#ifndef XAPENGINE_H
-#define XAPENGINE_H
+#ifndef QTDIAG_H
+#define QTDIAG_H
 
-#include "runnerengine.h"
-#include "runner.h"
+#include <QtCore/QString>
 
-#include <QtCore/QScopedPointer>
+QT_BEGIN_NAMESPACE
 
-QT_USE_NAMESPACE
+QString qtDiag();
 
-class XapEnginePrivate;
-class XapEngine : public RunnerEngine
-{
-public:
-    static bool canHandle(Runner *runner);
-    static RunnerEngine *create(Runner *runner);
-    static QStringList deviceNames();
+QT_END_NAMESPACE
 
-    bool install(bool removeFirst = false) Q_DECL_OVERRIDE;
-    bool remove() Q_DECL_OVERRIDE;
-    bool start() Q_DECL_OVERRIDE;
-    bool enableDebugging(const QString &debuggerExecutable,
-                        const QString &debuggerArguments) Q_DECL_OVERRIDE;
-    bool disableDebugging() Q_DECL_OVERRIDE;
-    bool suspend() Q_DECL_OVERRIDE;
-    bool waitForFinished(int secs) Q_DECL_OVERRIDE;
-    bool stop() Q_DECL_OVERRIDE;
-    qint64 pid() const Q_DECL_OVERRIDE;
-    int exitCode() const Q_DECL_OVERRIDE;
-
-    QString executable() const Q_DECL_OVERRIDE;
-    QString devicePath(const QString &relativePath) const Q_DECL_OVERRIDE;
-    bool sendFile(const QString &localFile, const QString &deviceFile) Q_DECL_OVERRIDE;
-    bool receiveFile(const QString &deviceFile, const QString &localFile) Q_DECL_OVERRIDE;
-
-private:
-    explicit XapEngine(Runner *runner);
-    ~XapEngine();
-
-    uint fetchPid();
-    bool connect();
-
-    QScopedPointer<XapEnginePrivate> d_ptr;
-    Q_DECLARE_PRIVATE(XapEngine)
-};
-
-#endif // XAPENGINE_H
+#endif // QTDIAG_H

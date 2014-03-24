@@ -124,6 +124,7 @@ extern int appxAppNames(int deviceIndex, QSet<QString> &apps)
             return 1;
         }
 
+#if _MSC_VER >= 1800
         ComPtr<IPackage2> package2;
         hr = package.As(&package2);
         if (FAILED(hr)) {
@@ -141,6 +142,7 @@ extern int appxAppNames(int deviceIndex, QSet<QString> &apps)
             hr = iterator->MoveNext(&hasCurrent);
             continue;
         }
+#endif // _MSC_VER >= 1800
 
         ComPtr<IPackageId> id;
         hr = package->get_Id(&id);
@@ -149,13 +151,13 @@ extern int appxAppNames(int deviceIndex, QSet<QString> &apps)
             return 1;
         }
 
-        HSTRING fullName;
-        hr = id->get_FullName(&fullName);
+        HString fullName;
+        hr = id->get_FullName(fullName.GetAddressOf());
         if (FAILED(hr)) {
             qCWarning(lcD3DService) << qt_error_string(hr);
             return 1;
         }
-        apps.insert(QString::fromWCharArray(WindowsGetStringRawBuffer(fullName, Q_NULLPTR)));
+        apps.insert(QString::fromWCharArray(fullName.GetRawBuffer(NULL)));
         hr = iterator->MoveNext(&hasCurrent);
     }
     return 0;
@@ -198,8 +200,8 @@ extern int handleAppxDevice(int deviceIndex, const QString &app, const QString &
         qCWarning(lcD3DService) << "Unable to get package ID:" << qt_error_string(hr);
         return 1;
     }
-    HSTRING packageFamilyName;
-    hr = packageId->get_FamilyName(&packageFamilyName);
+    HString packageFamilyName;
+    hr = packageId->get_FamilyName(packageFamilyName.GetAddressOf());
     if (FAILED(hr)) {
         qCWarning(lcD3DService) << "Unable to get package name:" << qt_error_string(hr);
         return 1;
@@ -211,9 +213,8 @@ extern int handleAppxDevice(int deviceIndex, const QString &app, const QString &
     const QString remoteBase =
             QDir::toNativeSeparators(QStandardPaths::writableLocation(QStandardPaths::DataLocation))
             + QStringLiteral("\\Packages\\")
-            + QString::fromWCharArray(WindowsGetStringRawBuffer(packageFamilyName, Q_NULLPTR))
+            + QString::fromWCharArray(packageFamilyName.GetRawBuffer(NULL))
             + QStringLiteral("\\LocalState\\d3dcompiler");
-    const QString remoteControlFile = remoteBase + QStringLiteral("\\control");
     const QString remoteSourcePath = remoteBase + QStringLiteral("\\source\\");
     const QString remoteBinaryPath = remoteBase + QStringLiteral("\\binary\\");
 
@@ -237,17 +238,6 @@ extern int handleAppxDevice(int deviceIndex, const QString &app, const QString &
                 dir.cd(QStringLiteral("d3dcompiler"));
             }
 
-            // Check if control file exists
-            if (!QFile::exists(remoteControlFile)) {
-                QFile file(remoteControlFile);
-                if (!file.open(QFile::WriteOnly)) {
-                    qCWarning(lcD3DService) << "Could not create control file:" << file.errorString();
-                    Sleep(1000);
-                    continue;
-                }
-                file.write("Qt D3D compilation service");
-            }
-
             if (!QFile::exists(remoteSourcePath)) {
                 if (!dir.mkpath(QStringLiteral("source"))) {
                     qCWarning(lcD3DService) << "Could not create source directory.";
@@ -266,16 +256,6 @@ extern int handleAppxDevice(int deviceIndex, const QString &app, const QString &
 
             checkDirectories = false;
         }
-
-        QFile file(remoteControlFile);
-        if (!file.open(QFile::WriteOnly)) {
-            qCWarning(lcD3DService) << "Could not create control file:"
-                                    << file.errorString();
-            checkDirectories = true;
-            Sleep(1000);
-            continue;
-        }
-        file.write("Qt D3D compilation service");
 
         // Ok, ready to check for shaders
         QDirIterator it(remoteSourcePath);

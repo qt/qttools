@@ -75,8 +75,6 @@ extern int appxAppNames(int deviceIndex, QSet<QString> &app);
 extern QStringList xapDeviceNames();
 
 // Callbacks
-static void __stdcall run(DWORD argc, LPWSTR argv[]);
-static DWORD __stdcall control(DWORD control, DWORD eventType, void *eventData, void *context);
 static BOOL __stdcall control(DWORD type);
 static LRESULT __stdcall control(HWND window, UINT msg, WPARAM wParam, LPARAM lParam);
 static DWORD __stdcall deviceWorker(LPVOID param);
@@ -106,16 +104,10 @@ enum ControlEvent
 struct D3DServicePrivate
 {
     D3DServicePrivate()
-        : name(L"qtd3dservice")
-        , checkPoint(1)
-        , isService(false)
-        , controlEvent(CreateEvent(NULL, FALSE, FALSE, NULL))
+        : controlEvent(CreateEvent(NULL, FALSE, FALSE, NULL))
         , controlWindow(0)
         , deviceHandle(0)
     {
-        GetModuleFileName(NULL, path, MAX_PATH);
-        status.dwServiceType = SERVICE_WIN32_OWN_PROCESS;
-        status.dwServiceSpecificExitCode = 0;
     }
     ~D3DServicePrivate()
     {
@@ -127,15 +119,6 @@ struct D3DServicePrivate
             CloseHandle(controlEvent);
     }
 
-    // Service use
-    const wchar_t *name;
-    wchar_t path[MAX_PATH];
-    SERVICE_STATUS status;
-    SERVICE_STATUS_HANDLE statusHandle;
-    DWORD checkPoint;
-
-    // Internal use
-    bool isService;
     HANDLE controlEvent;
     HWND controlWindow;
     HDEVNOTIFY deviceHandle;
@@ -180,35 +163,6 @@ private:
     HANDLE m_thread;
 };
 
-void d3dserviceMessageHandler(QtMsgType type, const QMessageLogContext &, const QString &text)
-{
-    LPCWSTR strings[2] = { d->name, reinterpret_cast<const wchar_t *>(text.utf16()) };
-    HANDLE eventSource = RegisterEventSource(NULL, d->name);
-    if (eventSource) {
-        if (type > QtDebugMsg) {
-            ErrorId id = { ushort(FACILITY_NULL | ErrorId::Customer), type };
-            WORD eventType;
-            switch (type) {
-            default:
-            case 1:
-                id.facility |= ErrorId::Informational;
-                eventType = EVENTLOG_SUCCESS;
-                break;
-            case 2:
-                id.facility |= ErrorId::Warning;
-                eventType = EVENTLOG_WARNING_TYPE;
-                break;
-            case 3:
-                id.facility |= ErrorId::Error;
-                eventType = EVENTLOG_ERROR_TYPE;
-                break;
-            }
-            ReportEvent(eventSource, eventType, 0, id.val, NULL, 2, 0, strings, NULL);
-            DeregisterEventSource(eventSource);
-        }
-    }
-}
-
 static QString prepareCache(const QString &device, const QString &app)
 {
     // Make sure we have a writable cache
@@ -226,193 +180,35 @@ static QString prepareCache(const QString &device, const QString &app)
         return QString();
     if (!baseDir.mkpath(QStringLiteral("binary")))
         return QString();
-    QFile controlFile(baseDir.absoluteFilePath(QStringLiteral("control")));
-    if (!controlFile.open(QFile::WriteOnly))
-        return QString();
-    controlFile.write(QByteArrayLiteral("Qt D3D shader compilation service"));
     return QDir::toNativeSeparators(baseDir.absolutePath());
 }
 
-bool D3DService::install()
+bool D3DService::start()
 {
-    SC_HANDLE manager = OpenSCManager(NULL, SERVICES_ACTIVE_DATABASE, SC_MANAGER_CREATE_SERVICE);
-    if (!manager) {
-        // Try to self-elevate if access is denied
-        DWORD error = GetLastError();
-        if (error == ERROR_ACCESS_DENIED) {
-            DWORD exitCode;
-            if (!D3DService::executeElevated(d->path, L"-install", &exitCode))
-                return false;
-
-            return exitCode == 0;
-        }
-
-        qCWarning(lcD3DService) << qt_error_string(GetLastError());
-        qCWarning(lcD3DService) << "When installing, run this program as an administrator.";
+    HANDLE runLock = CreateMutex(NULL, TRUE, L"Local\\qtd3dservice");
+    if (!runLock || GetLastError() == ERROR_ALREADY_EXISTS) {
+        qCWarning(lcD3DService) << "The service is already running.";
         return false;
     }
 
-    WCHAR username[MAX_PATH] = { 0 };
-    DWORD usernameSize = MAX_PATH;
-    WCHAR password[MAX_PATH] = { 0 };
-    DWORD passwordSize = MAX_PATH;
-    if (!D3DService::getCredentials(username, &usernameSize, password, &passwordSize)) {
-        qCWarning(lcD3DService) << "Failed to install the service.";
+    SetConsoleCtrlHandler(&control, TRUE);
+
+    // Create an invisible window for getting broadcast events
+    WNDCLASS controlWindowClass = { 0, &control, 0, 0, NULL, NULL,
+                                    NULL, NULL, NULL, L"controlWindow" };
+    if (!RegisterClass(&controlWindowClass)) {
+        qCCritical(lcD3DService) << "Unable to register control window class:"
+                                 << qt_error_string(GetLastError());
         return false;
     }
-
-    // Ensure the user has the "Log on as a service" right
-    if (!D3DService::addLogonRight(username)) {
-        qCWarning(lcD3DService) << "Failed to install the service.";
-        return false;
-    }
-
-    SC_HANDLE service = CreateService(manager, d->name, L"Qt D3D Compiler Service " LQT_VERSION_STR,
-                                      SERVICE_ALL_ACCESS, SERVICE_WIN32_OWN_PROCESS,
-                                      SERVICE_DEMAND_START, SERVICE_ERROR_NORMAL,
-                                      d->path, NULL, NULL, NULL, NULL, NULL);
-    if (!service) {
-        qCWarning(lcD3DService) << qt_error_string(GetLastError());
-        switch (GetLastError()) {
-        case ERROR_SERVICE_EXISTS:
-            qCWarning(lcD3DService) << "Please remove the service before reinstalling.";
-            break;
-        default:
-            qCWarning(lcD3DService) << "Failed to install the service.";
-            break;
-        }
-        CloseServiceHandle(manager);
-        return false;
-    }
-
-    qCWarning(lcD3DService) << "Service installation successful.";
-
-    // Do some more stuff
-
-    CloseServiceHandle(service);
-    CloseServiceHandle(manager);
-    return true;
-}
-
-bool D3DService::remove()
-{
-    SC_HANDLE manager = OpenSCManager(NULL, SERVICES_ACTIVE_DATABASE, DELETE);
-    if (!manager) {
-        // Try to self-elevate if access is denied
-        DWORD error = GetLastError();
-        if (error == ERROR_ACCESS_DENIED) {
-            DWORD exitCode;
-            if (!executeElevated(d->path, L"-remove", &exitCode))
-                return false;
-
-            return exitCode == 0;
-        }
-        qCWarning(lcD3DService) << qt_error_string(GetLastError());
-        qCWarning(lcD3DService) << "When removing, run this program as an administrator.";
-        return false;
-    }
-
-    // Get a handle to the SCM database.
-    SC_HANDLE service = OpenService(manager, d->name, DELETE);
-    if (!service) {
-        // System message
-        qCWarning(lcD3DService) << qt_error_string(GetLastError());
-        // Friendly message
-        switch (GetLastError()) {
-        case ERROR_ACCESS_DENIED:
-            qCWarning(lcD3DService) << "When removing, run this program as an administrator.";
-            break;
-        default:
-            qCWarning(lcD3DService) << "Failed to remove the service.";
-            break;
-        }
-        CloseServiceHandle(manager);
-        return false;
-    }
-
-    if (!DeleteService(service)) {
-        qCWarning(lcD3DService) << qt_error_string(GetLastError());
-        qCWarning(lcD3DService) << "Unable to remove the service.";
-        CloseServiceHandle(service);
-        CloseServiceHandle(manager);
-        return false;
-    }
-
-    qCWarning(lcD3DService) << "Service removal successful.";
-    CloseServiceHandle(service);
-    CloseServiceHandle(manager);
-    return true;
-}
-
-bool D3DService::startService(bool replaceMessageHandler)
-{
-    d->isService = true;
-    if (replaceMessageHandler)
-        qInstallMessageHandler(&d3dserviceMessageHandler);
-    SERVICE_TABLE_ENTRY dispatchTable[] = {
-        { const_cast<wchar_t *>(d->name), &run },
-        { NULL, NULL }
-    };
-    return StartServiceCtrlDispatcher(dispatchTable);
-}
-
-bool D3DService::startDirectly()
-{
-    run(0, 0);
-    return true;
-}
-
-void D3DService::reportStatus(DWORD state, DWORD exitCode, DWORD waitHint)
-{
-    if (!d->isService)
-        return;
-
-    d->status.dwCurrentState = state;
-    d->status.dwWin32ExitCode = exitCode;
-    d->status.dwWaitHint = waitHint;
-    d->status.dwControlsAccepted = state == SERVICE_START_PENDING ? 0 : SERVICE_ACCEPT_STOP;
-    d->status.dwCheckPoint = (state == SERVICE_RUNNING || state == SERVICE_STOPPED) ? 0 : d->checkPoint++;
-    SetServiceStatus(d->statusHandle, &d->status);
-}
-
-void __stdcall run(DWORD argc, LPWSTR argv[])
-{
-    Q_UNUSED(argc);
-    Q_UNUSED(argv);
-    if (d->isService) {
-#if defined(_DEBUG)
-        // Debugging aid. Gives 15 seconds after startup to attach a debuggger.
-        // The SCM will give the service 30 seconds to start.
-        int count = 0;
-        while (!IsDebuggerPresent() && count++ < 15)
-            Sleep(1000);
-#endif
-        d->statusHandle = RegisterServiceCtrlHandlerEx(d->name, &control, NULL);
-        D3DService::reportStatus(SERVICE_START_PENDING, NO_ERROR, 0);
-        D3DService::reportStatus(SERVICE_RUNNING, NO_ERROR, 0);
-    } else {
-        SetConsoleCtrlHandler(&control, TRUE);
-
-        // Create an invisible window for getting broadcast events
-        WNDCLASS controlWindowClass = { 0, &control, 0, 0, NULL, NULL,
-                                        NULL, NULL, NULL, L"controlWindow" };
-        if (!RegisterClass(&controlWindowClass)) {
-            qCCritical(lcD3DService) << "Unable to register control window class:"
-                                     << qt_error_string(GetLastError());
-            return;
-        }
-        d->controlWindow = CreateWindowEx(0, L"controlWindow", NULL, 0, 0, 0, 0, 0,
-                                          NULL, NULL, NULL, NULL);
-    }
+    d->controlWindow = CreateWindowEx(0, L"controlWindow", NULL, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL);
 
     // Register for USB notifications
     DEV_BROADCAST_DEVICEINTERFACE filter = {
         sizeof(DEV_BROADCAST_DEVICEINTERFACE), DBT_DEVTYP_DEVICEINTERFACE,
         0, GUID_DEVICE_WINPHONE8_USB, 0
     };
-    d->deviceHandle = RegisterDeviceNotification(
-                d->isService ? d->statusHandle : static_cast<HANDLE>(d->controlWindow), &filter,
-                d->isService ? DEVICE_NOTIFY_SERVICE_HANDLE : DEVICE_NOTIFY_WINDOW_HANDLE);
+    d->deviceHandle = RegisterDeviceNotification(d->controlWindow, &filter, DEVICE_NOTIFY_WINDOW_HANDLE);
 
     QVector<HANDLE> waitHandles;
     waitHandles.append(d->controlEvent);
@@ -444,14 +240,6 @@ void __stdcall run(DWORD argc, LPWSTR argv[])
 
     // Device monitoring threads - one per device
     QVector<Worker *> deviceWorkers(emulatorNames.size() + 1, NULL);
-
-    // Static list of registrations
-    foreach (const QStringPair &registration, D3DService::registrations()) {
-        Worker *worker = new Worker(registration, &appWorker);
-        workers.insert(registration, worker);
-        workerThreads.insert(worker->thread(), registration);
-        waitHandles.append(worker->thread());
-    }
 
     // If a Windows Phone is already connected, queue a device worker
     HDEVINFO info = SetupDiGetClassDevs(&GUID_DEVICE_WINPHONE8_USB, NULL, NULL,
@@ -599,21 +387,24 @@ void __stdcall run(DWORD argc, LPWSTR argv[])
         }
 
         // TODO: check return val for this
-        if (!d->isService) {
-            MSG msg;
-            if (PeekMessage(&msg, d->controlWindow, 0, 0, PM_REMOVE))
-                DispatchMessage(&msg);
-        }
+        MSG msg;
+        if (PeekMessage(&msg, d->controlWindow, 0, 0, PM_REMOVE))
+            DispatchMessage(&msg);
     }
 
     qDeleteAll(workers);
 
-    foreach (HANDLE handle, waitHandles) {
-        if (handle)
-            CloseHandle(handle);
+    // Close the phone and emulator handles
+    for (int i = 0; i <= emulatorNames.size(); ++i) {
+        if (GetThreadId(waitHandles[i + 1]))
+            delete deviceWorkers.at(i);
+        else
+            CloseHandle(waitHandles[i + 1]);
     }
 
-    D3DService::reportStatus(SERVICE_STOPPED, NO_ERROR, 0);
+    CloseHandle(runLock);
+
+    return true;
 }
 
 DWORD __stdcall deviceWorker(LPVOID param)
@@ -631,8 +422,8 @@ DWORD __stdcall deviceWorker(LPVOID param)
     if (args->deviceName.isEmpty() || args->deviceName == QStringLiteral("local")) {
         appList = appxAppNames;
         LONG result = RegOpenKeyEx(
-                    HKEY_CLASSES_ROOT,
-                    L"\\Local Settings\\Software\\Microsoft\\Windows\\CurrentVersion\\AppModel\\Repository\\Packages",
+                    HKEY_LOCAL_MACHINE,
+                    L"SOFTWARE\\Classes\\Local Settings\\Software\\Microsoft\\Windows\\CurrentVersion\\AppModel\\PackageRepository\\Packages",
                     0, KEY_NOTIFY, &waitKey);
         if (result != ERROR_SUCCESS) {
             qCWarning(lcD3DService) << "Unable to open registry key for Appx discovery:"
@@ -736,38 +527,6 @@ DWORD __stdcall appWorker(LPVOID param)
     }
 
     return handleDevice(deviceIndex, args->app, cachePath, args->runLock);
-}
-
-// Service controller
-DWORD __stdcall control(DWORD code, DWORD eventType, void *eventData, void *context)
-{
-    Q_UNUSED(context);
-
-    switch (code) {
-    case SERVICE_CONTROL_INTERROGATE:
-        D3DService::reportStatus(0, NO_ERROR, 0);
-        return NO_ERROR;
-    case SERVICE_CONTROL_STOP: {
-        d->eventQueue.append(Stop);
-        SetEvent(d->controlEvent);
-        return NO_ERROR;
-    }
-    case SERVICE_CONTROL_DEVICEEVENT: {
-        if (eventType == DBT_DEVICEARRIVAL) {
-            DEV_BROADCAST_DEVICEINTERFACE *header =
-                reinterpret_cast<DEV_BROADCAST_DEVICEINTERFACE *>(eventData);
-            if (header->dbcc_classguid != GUID_DEVICE_WINPHONE8_USB)
-                break;
-            d->eventQueue.append(PhoneConnected);
-            SetEvent(d->controlEvent);
-            return NO_ERROR;
-        }
-        break;
-    }
-    default:
-        break;
-    }
-    return ERROR_CALL_NOT_IMPLEMENTED;
 }
 
 // Console message controller

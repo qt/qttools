@@ -68,6 +68,8 @@ public:
     bool install(bool removeFirst = false);
     bool remove();
     bool start();
+    bool enableDebugging(const QString &debuggerExecutable, const QString &debuggerArguments);
+    bool disableDebugging();
     bool suspend();
     bool stop();
     bool wait(int maxWaitTime = 0);
@@ -82,5 +84,6 @@ private:
 };
 
 Q_DECLARE_LOGGING_CATEGORY(lcWinRtRunner)
+Q_DECLARE_LOGGING_CATEGORY(lcWinRtRunnerApp)
 
 #endif // RUNNER_H

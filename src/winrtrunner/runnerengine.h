@@ -53,6 +53,8 @@ public:
     virtual bool install(bool removeFirst = false) = 0;
     virtual bool remove() = 0;
     virtual bool start() = 0;
+    virtual bool enableDebugging(const QString &debugger, const QString &debuggerArguments) = 0;
+    virtual bool disableDebugging() = 0;
     virtual bool suspend() = 0;
     virtual bool waitForFinished(int secs) = 0;
     virtual bool stop() = 0;
