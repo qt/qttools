@@ -9,7 +9,7 @@ qtNomakeTools( \
     linguist \
 )
 
-win32:CMAKE_BIN_SUFFIX = ".exe"
+equals(QMAKE_HOST.os, Windows): CMAKE_BIN_SUFFIX = ".exe"
 
 load(cmake_functions)
 
