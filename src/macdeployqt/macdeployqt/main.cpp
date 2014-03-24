@@ -58,6 +58,7 @@ int main(int argc, char **argv)
         qDebug() << "   -use-debug-libs    : Deploy with debug versions of frameworks and plugins (implies -no-strip)";
         qDebug() << "   -executable=<path> : Let the given executable use the deployed frameworks too";
         qDebug() << "   -qmldir=<path>     : Deploy imports used by .qml files in the given path";
+        qDebug() << "   -always-overwrite  : Copy files enven if the target file exists";
         qDebug() << "";
         qDebug() << "macdeployqt takes an application bundle as input and makes it";
         qDebug() << "self-contained by copying in the Qt frameworks and plugins that";
@@ -85,6 +86,7 @@ int main(int argc, char **argv)
     bool dmg = false;
     bool useDebugLibs = false;
     extern bool runStripEnabled;
+    extern bool alwaysOwerwriteEnabled;
     QStringList additionalExecutables;
     QStringList qmlDirs;
 
@@ -126,6 +128,9 @@ int main(int argc, char **argv)
                 LogError() << "Missing qml directory path";
             else
                 qmlDirs << argument.mid(index+1);
+        } else if (argument == QByteArray("-always-overwrite")) {
+            LogDebug() << "Argument found:" << argument;
+            alwaysOwerwriteEnabled = true;
         } else if (argument.startsWith("-")) {
             LogError() << "Unknown argument" << argument << "\n";
             return 0;
@@ -134,12 +139,8 @@ int main(int argc, char **argv)
 
     DeploymentInfo deploymentInfo  = deployQtFrameworks(appBundlePath, additionalExecutables, useDebugLibs);
 
-    if (plugins) {
-        if (deploymentInfo.qtPath.isEmpty())
-            deploymentInfo.pluginPath = "/Developer/Applications/Qt/plugins"; // Assume binary package.
-        else
-            deploymentInfo.pluginPath = deploymentInfo.qtPath + "/plugins";
-
+    if (plugins && !deploymentInfo.qtPath.isEmpty()) {
+        deploymentInfo.pluginPath = deploymentInfo.qtPath + "/plugins";
         LogNormal();
         deployPlugins(appBundlePath, deploymentInfo, useDebugLibs);
         createQtConf(appBundlePath);

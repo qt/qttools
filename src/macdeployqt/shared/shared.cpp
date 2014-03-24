@@ -55,6 +55,7 @@
 #include "shared.h"
 
 bool runStripEnabled = true;
+bool alwaysOwerwriteEnabled = false;
 int logLevel = 1;
 
 using std::cout;
@@ -96,9 +97,15 @@ inline QDebug operator<<(QDebug debug, const ApplicationBundleInfo &info)
 bool copyFilePrintStatus(const QString &from, const QString &to)
 {
     if (QFile(to).exists()) {
-        LogNormal() << "File exists, skip copy:" << to;
-        return false;
-    } else if (QFile::copy(from, to)) {
+        if (alwaysOwerwriteEnabled) {
+            QFile(to).remove();
+        } else {
+            qDebug() << "File exists, skip copy:" << to;
+            return false;
+        }
+    }
+
+    if (QFile::copy(from, to)) {
         QFile dest(to);
         dest.setPermissions(dest.permissions() | QFile::WriteOwner | QFile::WriteUser);
         LogNormal() << " copied:" << from;
@@ -384,7 +391,7 @@ QString copyFramework(const FrameworkInfo &framework, const QString path)
         return QString();
     }
 
-    if (!QFile::exists(to)) { // copy the binary and resources if that wasn't done before
+    if (!QFile::exists(to) || alwaysOwerwriteEnabled) { // copy the binary and resources if that wasn't done before
         copyFilePrintStatus(from, to);
 
         const QString resourcesSourcePath = framework.frameworkPath + "/Resources";
@@ -532,7 +539,7 @@ DeploymentInfo deployQtFrameworks(const QString &appBundlePath, const QStringLis
    QStringList allBinaryPaths = QStringList() << applicationBundle.binaryPath << applicationBundle.libraryPaths
                                                  << additionalExecutables;
    QList<FrameworkInfo> frameworks = getQtFrameworksForPaths(allBinaryPaths, useDebugLibs);
-   if (frameworks.isEmpty()) {
+   if (frameworks.isEmpty() && !alwaysOwerwriteEnabled) {
         LogWarning();
         LogWarning() << "Could not find any external Qt frameworks to deploy in" << appBundlePath;
         LogWarning() << "Perhaps macdeployqt was already used on" << appBundlePath << "?";
@@ -636,7 +643,7 @@ void createQtConf(const QString &appBundlePath)
     QDir().mkpath(filePath);
 
     QFile qtconf(fileName);
-    if (qtconf.exists()) {
+    if (qtconf.exists() && !alwaysOwerwriteEnabled) {
         LogWarning();
         LogWarning() << fileName << "already exists, will not overwrite.";
         LogWarning() << "To make sure the plugins are loaded from the correct location,";
@@ -764,6 +771,9 @@ void createDiskImage(const QString &appBundlePath)
     QString dmgName = appBaseName + ".dmg";
 
     QFile dmg(dmgName);
+
+    if (dmg.exists() && alwaysOwerwriteEnabled)
+        dmg.remove();
 
     if (dmg.exists()) {
         LogNormal() << "Disk image already exists, skipping .dmg creation for" << dmg.fileName();
