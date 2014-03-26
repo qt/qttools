@@ -1909,6 +1909,9 @@ void MainWindow::setupMenuBar()
     connect(m_ui.actionStatistics, SIGNAL(triggered()), this, SLOT(toggleStatistics()));
     connect(m_ui.actionVisualizeWhitespace, SIGNAL(triggered()), this, SLOT(toggleVisualizeWhitespace()));
     connect(m_ui.menuView, SIGNAL(aboutToShow()), this, SLOT(updateViewMenu()));
+    connect(m_ui.actionIncreaseZoom, SIGNAL(triggered()), m_messageEditor, SLOT(increaseFontSize()));
+    connect(m_ui.actionDecreaseZoom, SIGNAL(triggered()), m_messageEditor, SLOT(decreaseFontSize()));
+    connect(m_ui.actionResetZoomToDefault, SIGNAL(triggered()), m_messageEditor, SLOT(resetFontSize()));
     m_ui.menuViewViews->addAction(m_contextDock->toggleViewAction());
     m_ui.menuViewViews->addAction(m_messagesDock->toggleViewAction());
     m_ui.menuViewViews->addAction(m_phrasesDock->toggleViewAction());

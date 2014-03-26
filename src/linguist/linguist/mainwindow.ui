@@ -113,11 +113,22 @@
       <string>&amp;Toolbars</string>
      </property>
     </widget>
+    <widget class="QMenu" name="menuZoom">
+     <property name="title">
+      <string>&amp;Zoom</string>
+     </property>
+     <addaction name="actionIncreaseZoom"/>
+     <addaction name="actionDecreaseZoom"/>
+     <addaction name="separator"/>
+     <addaction name="actionResetZoomToDefault"/>
+    </widget>
     <addaction name="actionResetSorting"/>
     <addaction name="actionDisplayGuesses"/>
     <addaction name="actionStatistics"/>
     <addaction name="actionLengthVariants"/>
     <addaction name="actionVisualizeWhitespace"/>
+    <addaction name="separator"/>
+    <addaction name="menuZoom"/>
     <addaction name="separator"/>
     <addaction name="menuToolbars"/>
     <addaction name="menuViewViews"/>
@@ -896,6 +907,30 @@
    </property>
    <property name="toolTip">
     <string>Toggle visualize whitespace in editors</string>
+   </property>
+  </action>
+  <action name="actionIncreaseZoom">
+   <property name="text">
+    <string>Increase</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl++</string>
+   </property>
+  </action>
+  <action name="actionDecreaseZoom">
+   <property name="text">
+    <string>Decrease</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+-</string>
+   </property>
+  </action>
+  <action name="actionResetZoomToDefault">
+   <property name="text">
+    <string>Reset to default</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+0</string>
    </property>
   </action>
  </widget>

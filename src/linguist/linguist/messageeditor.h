@@ -90,8 +90,6 @@ public:
     void setVisualizeWhitespace(bool value);
     void setFontSize(const float fontSize);
     float fontSize();
-    void increaseFontSize();
-    void decreaseFontSize();
 
 signals:
     void translationChanged(const QStringList &translations);
@@ -120,6 +118,9 @@ public slots:
     void setEditorFocus();
     void setTranslation(int latestModel, const QString &translation);
     void setLengthVariants(bool on);
+    void increaseFontSize();
+    void decreaseFontSize();
+    void resetFontSize();
 
 private slots:
     void editorCreated(QTextEdit *);

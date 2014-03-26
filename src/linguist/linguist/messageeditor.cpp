@@ -950,4 +950,10 @@ void MessageEditor::decreaseFontSize()
     }
 }
 
+void MessageEditor::resetFontSize()
+{
+    m_fontSize = font().pointSize();
+    applyFontSize();
+}
+
 QT_END_NAMESPACE
