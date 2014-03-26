@@ -431,7 +431,7 @@ QAction *QDesignerFormWindowManagerInterface::actionSimplifyLayout() const
 */
 
 /*!
-   \fn QDesignerFormWindowInterface *QDesignerFormWindowManagerInterface::formWindow(int index)
+   \fn QDesignerFormWindowInterface *QDesignerFormWindowManagerInterface::formWindow(int index) const
    Returns the form window at the given \a index.
 
    \sa setActiveFormWindow(), removeFormWindow()

@@ -71,7 +71,7 @@ QDesignerFormWindowManager::~QDesignerFormWindowManager()
 }
 
 /*!
-    \fn PreviewManager *QDesignerFormWindowManager::previewManager()
+    \fn PreviewManager *QDesignerFormWindowManager::previewManager() const
 
     Accesses the previewmanager implementation.
 
@@ -84,16 +84,5 @@ void QDesignerFormWindowManager::showPluginDialog()
     PluginDialog dlg(core(), core()->topLevel());
     dlg.exec();
 }
-
-/*!
-    \fn void QDesignerFormWindowManager::formWindowSettingsChanged(QDesignerFormWindowInterface *fw);
-
-    This signal is emitted when the form settings dialog was shown
-    and changes have been made to the form.
-
-    \since 4.5
-    \internal
-*/
-
 
 QT_END_NAMESPACE

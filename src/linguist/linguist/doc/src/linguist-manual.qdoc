@@ -974,7 +974,7 @@
     We recommend concatenating the \c .qm files of the modules required to
     one file matching the meta catalog file name using the tool \l lconvert in
     the deploy step. For example, to create a German translation file for an
-    application using the modules \l QtCore, \l QtGui and \l {Qt Declarative},
+    application using the modules \l{Qt Core}, \l {Qt GUI}, and \l {Qt Quick},
     run:
 
     \code

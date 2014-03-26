@@ -30,7 +30,7 @@
     \title Qt Assistant Manual
     \ingroup qttools
 
-    \startpage {Qt Reference Documentation}
+    \startpage {Qt Reference Pages}
     \nextpage Qt Assistant Quick Guide
 
     \keyword Qt Assistant
@@ -568,7 +568,7 @@
     \endtable
 
     In addition to those \QA specific tags, the tags for generating and registering
-    documentation can be used. See \l{Qt Help Collection Project} documentation for more information.
+    documentation can be used. See \l{Qt Help Collection Files} documentation for more information.
 
     An example of a help collection file that uses all the available tags is shown below:
 
