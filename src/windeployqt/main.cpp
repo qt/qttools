@@ -899,7 +899,8 @@ static DeployResult deploy(const Options &options,
                 deployedQtLibraries.push_back(libGLESv2FullPath);
             }
             // Find the system D3d Compiler matching the D3D library.
-            if (options.systemD3dCompiler && options.platform != WinPhoneArm && options.platform != WinPhoneIntel) {
+            if (options.systemD3dCompiler && options.platform != WinPhoneArm && options.platform != WinPhoneIntel
+                    && options.platform != WinRtArm && options.platform != WinRtIntel) {
                 const QString d3dCompiler = findD3dCompiler(options.platform, qtBinDir, wordSize);
                 if (d3dCompiler.isEmpty()) {
                     std::wcerr << "Warning: Cannot find any version of the d3dcompiler DLL.\n";
