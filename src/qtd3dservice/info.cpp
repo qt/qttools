@@ -39,30 +39,48 @@
 **
 ****************************************************************************/
 
-#ifndef D3DSERVICE_H
-#define D3DSERVICE_H
+#include "d3dservice.h"
 
-#include <QtCore/qt_windows.h>
-#include <QtCore/QPair>
-#include <QtCore/QString>
-#include <QtCore/QStringList>
-#include <QtCore/QLoggingCategory>
+#include <QtCore/QDir>
+#include <QtCore/QStandardPaths>
 
 QT_USE_NAMESPACE
 
-typedef QPair<QString, QString> QStringPair;
-namespace D3DService
+QStringList D3DService::devices()
 {
-    HRESULT compileShader(const QString &source, const QString &destination);
-
-    bool start();
-
-    QStringList devices();
-    QStringList apps(const QString &device);
-    QStringList sources(const QString &device, const QString &app);
-    QStringList binaries(const QString &device, const QString &app);
+    const QDir dir(QStandardPaths::writableLocation(QStandardPaths::DataLocation)
+                   + QStringLiteral("/qtd3dservice"));
+    return dir.entryList(QDir::Dirs|QDir::NoDotAndDotDot);
 }
 
-Q_DECLARE_LOGGING_CATEGORY(lcD3DService)
+QStringList D3DService::apps(const QString &device)
+{
+    const QDir dir(QStandardPaths::writableLocation(QStandardPaths::DataLocation)
+                   + QStringLiteral("/qtd3dservice/")
+                   + (device.isEmpty() ? QStringLiteral("local") : device));
+    return dir.entryList(QDir::Dirs|QDir::NoDotAndDotDot);
+}
 
-#endif // D3DSERVICE_H
+QStringList D3DService::sources( const QString &device, const QString &app)
+{
+    const QDir dir(QStandardPaths::writableLocation(QStandardPaths::DataLocation)
+                   + QStringLiteral("/qtd3dservice/")
+                   + (device.isEmpty() ? QStringLiteral("local") : device)
+                   + QLatin1Char('/') + app + QStringLiteral("/source"));
+    QStringList entries;
+    foreach (const QFileInfo &info, dir.entryInfoList(QDir::Files))
+        entries.append(info.absoluteFilePath());
+    return entries;
+}
+
+QStringList D3DService::binaries(const QString &device, const QString &app)
+{
+    const QDir dir(QStandardPaths::writableLocation(QStandardPaths::DataLocation)
+                   + QStringLiteral("/qtd3dservice/")
+                   + (device.isEmpty() ? QStringLiteral("local") : device)
+                   + QLatin1Char('/') + app + QStringLiteral("/binary"));
+    QStringList entries;
+    foreach (const QFileInfo &info, dir.entryInfoList(QDir::Files))
+        entries.append(info.absoluteFilePath());
+    return entries;
+}
