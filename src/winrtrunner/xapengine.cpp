@@ -425,7 +425,7 @@ bool XapEngine::install(bool removeFirst)
         if (!file.open(QFile::ReadOnly))
             continue;
 
-        if (i.key() == d->manifest) {
+        if (QFileInfo(i.key()) == QFileInfo(d->manifest)) {
             const QStringList args = d->runner->arguments() << QStringLiteral("-qdevel");
             QByteArray manifestWithArgs = file.readAll();
             manifestWithArgs.replace(QByteArrayLiteral("ImageParams=\"\""),
