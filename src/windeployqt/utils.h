@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2014 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -59,11 +59,13 @@ enum PlatformFlag {
     WindowsBased = 0x1000,
     UnixBased = 0x2000,
     IntelBased = 0x4000,
-    ArmBased = 0x8000
+    ArmBased = 0x8000,
+    MinGW = 0x10000
 };
 
 enum Platform {
     Windows = WindowsBased + IntelBased,
+    WindowsMinGW = WindowsBased + IntelBased + MinGW,
     WinRtIntel = WindowsBased + IntelBased + 1,
     WinRtArm = WindowsBased + ArmBased + 2,
     WinPhoneIntel = WindowsBased + IntelBased + 3,
