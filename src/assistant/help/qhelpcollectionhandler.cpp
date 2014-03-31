@@ -76,7 +76,7 @@ bool QHelpCollectionHandler::isDBOpened()
 {
     if (m_dbOpened)
         return true;
-    emit error(tr("The collection file '%1' is not set up yet!").
+    emit error(tr("The collection file '%1' is not set up yet.").
                arg(m_collectionFile));
     return false;
 }
@@ -99,7 +99,7 @@ bool QHelpCollectionHandler::openCollectionFile()
             m_connectionName);
         if (db.driver()
             && db.driver()->lastError().type() == QSqlError::ConnectionError) {
-            emit error(tr("Cannot load sqlite database driver!"));
+            emit error(tr("Cannot load sqlite database driver."));
             return false;
         }
 
@@ -122,7 +122,7 @@ bool QHelpCollectionHandler::openCollectionFile()
     m_query.next();
     if (m_query.value(0).toInt() < 1) {
         if (!createTables(&m_query)) {
-            emit error(tr("Cannot create tables in file %1!").arg(collectionFile()));
+            emit error(tr("Cannot create tables in file %1.").arg(collectionFile()));
             return false;
         }
     }
@@ -138,7 +138,7 @@ bool QHelpCollectionHandler::copyCollectionFile(const QString &fileName)
 
     QFileInfo fi(fileName);
     if (fi.exists()) {
-        emit error(tr("The collection file '%1' already exists!").
+        emit error(tr("The collection file '%1' already exists.").
                    arg(fileName));
         return false;
     }
@@ -289,7 +289,7 @@ bool QHelpCollectionHandler::removeCustomFilter(const QString &filterName)
         filterNameId = m_query.value(0).toInt();
 
     if (filterNameId < 0) {
-        emit error(tr("Unknown filter '%1'!").arg(filterName));
+        emit error(tr("Unknown filter '%1'.").arg(filterName));
         return false;
     }
 
@@ -342,7 +342,7 @@ bool QHelpCollectionHandler::addCustomFilter(const QString &filterName,
     }
 
     if (nameId < 0) {
-        emit error(tr("Cannot register filter %1!").arg(filterName));
+        emit error(tr("Cannot register filter %1.").arg(filterName));
         return false;
     }
 
@@ -386,13 +386,13 @@ bool QHelpCollectionHandler::registerDocumentation(const QString &fileName)
     QHelpDBReader reader(fileName, QHelpGlobal::uniquifyConnectionName(
         QLatin1String("QHelpCollectionHandler"), this), 0);
     if (!reader.init()) {
-        emit error(tr("Cannot open documentation file %1!").arg(fileName));
+        emit error(tr("Cannot open documentation file %1.").arg(fileName));
         return false;
     }
 
     QString ns = reader.namespaceName();
     if (ns.isEmpty()) {
-        emit error(tr("Invalid documentation file '%1'!").arg(fileName));
+        emit error(tr("Invalid documentation file '%1'.").arg(fileName));
         return false;
     }
 
@@ -426,7 +426,7 @@ bool QHelpCollectionHandler::unregisterDocumentation(const QString &namespaceNam
         nsId = m_query.value(0).toInt();
 
     if (nsId < 0) {
-        emit error(tr("The namespace %1 was not registered!").arg(namespaceName));
+        emit error(tr("The namespace %1 was not registered.").arg(namespaceName));
         return false;
     }
 
@@ -546,7 +546,7 @@ int QHelpCollectionHandler::registerNamespace(const QString &nspace, const QStri
     m_query.exec();
     while (m_query.next()) {
         if (m_query.value(0).toInt() > 0) {
-            emit error(tr("Namespace %1 already exists!").arg(nspace));
+            emit error(tr("Namespace %1 already exists.").arg(nspace));
             return -1;
         }
     }
@@ -559,7 +559,7 @@ int QHelpCollectionHandler::registerNamespace(const QString &nspace, const QStri
     if (m_query.exec())
         namespaceId = m_query.lastInsertId().toInt();
     if (namespaceId < 1) {
-        emit error(tr("Cannot register namespace '%1'!").arg(nspace));
+        emit error(tr("Cannot register namespace '%1'.").arg(nspace));
         return -1;
     }
     return namespaceId;
@@ -583,7 +583,7 @@ void QHelpCollectionHandler::optimizeDatabase(const QString &fileName)
         db.setDatabaseName(fileName);
         if (!db.open()) {
             QSqlDatabase::removeDatabase(QLatin1String("optimize"));
-            emit error(tr("Cannot open database '%1' to optimize!").arg(fileName));
+            emit error(tr("Cannot open database '%1' to optimize.").arg(fileName));
             return;
         }
 

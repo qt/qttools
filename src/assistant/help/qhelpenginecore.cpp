@@ -119,7 +119,7 @@ bool QHelpEngineCorePrivate::setup()
         QHelpDBReader *reader = new QHelpDBReader(absFileName,
             QHelpGlobal::uniquifyConnectionName(info.fileName, this), this);
         if (!reader->init()) {
-            emit q->warning(QHelpEngineCore::tr("Cannot open documentation file %1: %2!")
+            emit q->warning(QHelpEngineCore::tr("Cannot open documentation file %1: %2.")
                 .arg(absFileName, reader->errorMessage()));
             continue;
         }
@@ -523,7 +523,7 @@ QList<QUrl> QHelpEngineCore::files(const QString namespaceName,
         return res;
     QHelpDBReader *reader = d->readerMap.value(namespaceName);
     if (!reader) {
-        d->error = tr("The specified namespace does not exist!");
+        d->error = tr("The specified namespace does not exist.");
         return res;
     }
 

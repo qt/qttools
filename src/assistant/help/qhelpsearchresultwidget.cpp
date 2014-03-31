@@ -116,7 +116,7 @@ public:
                     "%1&nbsp;<span style=\"font-weight:normal; color:black\">"
                     "%2</span></div></div><br>")).arg(tr("Note:"))
                     .arg(tr("The search results may not be complete since the "
-                            "documentation is still being indexed!"));
+                            "documentation is still being indexed."));
 
             foreach (const QHelpSearchEngine::SearchHit &hit, hits) {
                 htmlFile += QString(QLatin1String("<div style=\"text-align:left; font-weight:bold\""

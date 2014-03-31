@@ -99,7 +99,7 @@ void QHelpProjectDataPrivate::readData(const QByteArray &contents)
                 readProject();
             else
                 raiseError(QCoreApplication::translate("QHelpProject",
-                               "Unknown token. Expected \"QtHelpProject\"!"));
+                               "Unknown token. Expected \"QtHelpProject\"."));
         }
     }
 
@@ -379,7 +379,7 @@ bool QHelpProjectData::readData(const QString &fileName)
     QFile file(fileName);
     if (!file.open(QIODevice::ReadOnly)) {
         d->errorMsg = QCoreApplication::translate("QHelpProject",
-                          "The input file %1 could not be opened!").arg(fileName);
+                          "The input file %1 could not be opened.").arg(fileName);
         return false;
     }
 
