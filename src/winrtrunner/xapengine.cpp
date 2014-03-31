@@ -644,5 +644,5 @@ bool XapEngine::receiveFile(const QString &deviceFile, const QString &localFile)
         return false;
     }
 
-    return false;
+    return true;
 }
