@@ -579,6 +579,10 @@ static inline unsigned qtModuleForPlugin(const QString &subDirName)
         return QtPrintSupportModule;
     if (subDirName == QLatin1String("qmltooling"))
         return QtDeclarativeModule | QtQuickModule;
+    if (subDirName == QLatin1String("position"))
+        return QtPositioningModule;
+    if (subDirName == QLatin1String("sensors") || subDirName == QLatin1String("sensorgestures"))
+        return QtSensorsModule;
     return 0; // "designer"
 }
 
