@@ -353,11 +353,12 @@ QString CoreConServer::formatError(HRESULT hr) const
     wchar_t error[1024];
     HMODULE module = 0;
     DWORD origin = HRESULT_FACILITY(hr);
-    if (origin == 0x973 || origin == 0x974)
+    if (origin == 0x973 || origin == 0x974 || origin == 0x103)
         module = d->langModule;
-    if (module)
-        LoadString(module, HRESULT_CODE(hr), error, sizeof(error)/sizeof(wchar_t));
-    else
-        FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, hr, 0, error, sizeof(error)/sizeof(wchar_t), NULL);
-    return QString::fromWCharArray(error).trimmed();
+    if (module) {
+        int length = LoadString(module, HRESULT_CODE(hr), error, sizeof(error)/sizeof(wchar_t));
+        if (length)
+            return QString::fromWCharArray(error, length).trimmed();
+    }
+    return qt_error_string(hr);
 }

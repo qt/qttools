@@ -579,6 +579,10 @@ static inline unsigned qtModuleForPlugin(const QString &subDirName)
         return QtPrintSupportModule;
     if (subDirName == QLatin1String("qmltooling"))
         return QtDeclarativeModule | QtQuickModule;
+    if (subDirName == QLatin1String("position"))
+        return QtPositioningModule;
+    if (subDirName == QLatin1String("sensors") || subDirName == QLatin1String("sensorgestures"))
+        return QtSensorsModule;
     return 0; // "designer"
 }
 
@@ -895,7 +899,8 @@ static DeployResult deploy(const Options &options,
                 deployedQtLibraries.push_back(libGLESv2FullPath);
             }
             // Find the system D3d Compiler matching the D3D library.
-            if (options.systemD3dCompiler && options.platform != WinPhoneArm && options.platform != WinPhoneIntel) {
+            if (options.systemD3dCompiler && options.platform != WinPhoneArm && options.platform != WinPhoneIntel
+                    && options.platform != WinRtArm && options.platform != WinRtIntel) {
                 const QString d3dCompiler = findD3dCompiler(options.platform, qtBinDir, wordSize);
                 if (d3dCompiler.isEmpty()) {
                     std::wcerr << "Warning: Cannot find any version of the d3dcompiler DLL.\n";

@@ -147,9 +147,9 @@ public:
     The QFormBuilder class is typically used by custom components and
     applications that embed \QD. Standalone applications that need to
     dynamically generate user interfaces at run-time use the
-    QUiLoader, found in the QtUiTools module.
+    QUiLoader, found in the \l{Qt UI Tools} module.
 
-    \sa {QtUiTools Module}
+    \sa {Qt UI Tools}
 */
 
 /*!
