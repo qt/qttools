@@ -94,6 +94,7 @@ public:
     QString genre;
     QString productId;
     QString executable;
+    QString relativeExecutable;
     QStringList icons;
     qint64 pid;
     DWORD exitCode;
@@ -198,7 +199,8 @@ XapEngine::XapEngine(Runner *runner)
         qCWarning(lcWinRtRunner) << "Unable to determine executable in manifest: " << d->manifest;
         return;
     }
-    d->executable = QFileInfo(d->manifest).absoluteDir().absoluteFilePath(executablePattern.cap(1));
+    d->relativeExecutable = executablePattern.cap(1);
+    d->executable = QFileInfo(d->manifest).absoluteDir().absoluteFilePath(d->relativeExecutable);
 
     // Icons
     QRegExp iconPattern(QStringLiteral("[\\\\/a-zA-Z0-9_\\-\\!]*\\.(png|jpg|jpeg)"));
@@ -426,7 +428,8 @@ bool XapEngine::install(bool removeFirst)
             continue;
 
         if (QFileInfo(i.key()) == QFileInfo(d->manifest)) {
-            const QStringList args = d->runner->arguments() << QStringLiteral("-qdevel");
+            const QStringList args = QStringList(d->relativeExecutable)
+                    << d->runner->arguments() << QStringLiteral("-qdevel");
             QByteArray manifestWithArgs = file.readAll();
             manifestWithArgs.replace(QByteArrayLiteral("ImageParams=\"\""),
                                      QByteArrayLiteral("ImageParams=\"")
