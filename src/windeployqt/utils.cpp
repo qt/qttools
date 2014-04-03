@@ -131,7 +131,8 @@ QStringList findSharedLibraries(const QDir &directory, Platform platform, bool d
         bool matches = true;
         if (platform & WindowsBased) {
             bool debugDll;
-            if (readPeExecutable(dllPath, &errorMessage, 0, 0, &debugDll)) {
+            if (readPeExecutable(dllPath, &errorMessage, 0, 0, &debugDll,
+                                 (platform == WindowsMinGW))) {
                 matches = debugDll == debug;
             } else {
                 std::wcerr << "Warning: Unable to read " << QDir::toNativeSeparators(dllPath)
@@ -729,10 +730,10 @@ inline QStringList readImportSections(const ImageNtHeader *ntHeaders, const void
 }
 
 // Read a PE executable and determine dependent libraries, word size
-// and debug flags. Note that the debug flag cannot be relied on for MinGW.
+// and debug flags.
 bool readPeExecutable(const QString &peExecutableFileName, QString *errorMessage,
                       QStringList *dependentLibrariesIn, unsigned *wordSizeIn,
-                      bool *isDebugIn)
+                      bool *isDebugIn, bool isMinGW)
 {
     bool result = false;
     HANDLE hFile = NULL;
@@ -777,14 +778,29 @@ bool readPeExecutable(const QString &peExecutableFileName, QString *errorMessage
         bool debug = false;
         if (wordSize == 32) {
             const IMAGE_NT_HEADERS32 *ntHeaders32 = reinterpret_cast<const IMAGE_NT_HEADERS32 *>(ntHeaders);
-            debug = ntHeaders32->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_DEBUG].Size;
+
+            if (!isMinGW) {
+                debug = ntHeaders32->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_DEBUG].Size;
+            } else {
+                // Use logic that's used e.g. in objdump / pfd library
+                debug = !(ntHeaders32->FileHeader.Characteristics & IMAGE_FILE_DEBUG_STRIPPED);
+            }
+
             if (dependentLibrariesIn)
                 *dependentLibrariesIn = readImportSections(ntHeaders32, fileMemory, errorMessage);
+
         } else {
             const IMAGE_NT_HEADERS64 *ntHeaders64 = reinterpret_cast<const IMAGE_NT_HEADERS64 *>(ntHeaders);
             debug = ntHeaders64->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_DEBUG].Size;
             if (dependentLibrariesIn)
                 *dependentLibrariesIn = readImportSections(ntHeaders64, fileMemory, errorMessage);
+
+            if (!isMinGW) {
+                debug = !(ntHeaders64->FileHeader.Characteristics & IMAGE_FILE_DEBUG_STRIPPED);
+            } else {
+                // Use logic that's used e.g. in objdump / pfd library
+                debug = !(ntHeaders64->FileHeader.Characteristics & IMAGE_FILE_DEBUG_STRIPPED);
+            }
         }
 
         if (isDebugIn)

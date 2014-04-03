@@ -169,7 +169,7 @@ bool runProcess(const QString &binary, const QStringList &args,
 
 bool readPeExecutable(const QString &peExecutableFileName, QString *errorMessage,
                       QStringList *dependentLibraries = 0, unsigned *wordSize = 0,
-                      bool *isDebug = 0);
+                      bool *isDebug = 0, bool isMinGW = false);
 bool readElfExecutable(const QString &elfExecutableFileName, QString *errorMessage,
                       QStringList *dependentLibraries = 0, unsigned *wordSize = 0,
                       bool *isDebug = 0);
@@ -180,7 +180,8 @@ inline bool readExecutable(const QString &executableFileName, Platform platform,
 {
     return platform == Unix ?
         readElfExecutable(executableFileName, errorMessage, dependentLibraries, wordSize, isDebug) :
-        readPeExecutable(executableFileName, errorMessage, dependentLibraries, wordSize, isDebug);
+        readPeExecutable(executableFileName, errorMessage, dependentLibraries, wordSize, isDebug,
+                         (platform == WindowsMinGW));
 }
 
 // Return dependent modules of executable files.
