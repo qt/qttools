@@ -139,9 +139,6 @@ void dumpGlInfo(QTextStream &str)
         case QOpenGLContext::GLES2:
             str << "GLES2";
             break;
-        case QOpenGLContext::GLES1:
-            str << "GLES1";
-            break;
         }
         QWindow window;
         window.setSurfaceType(QSurface::OpenGLSurface);
