@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2014 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -168,7 +168,7 @@ static Platform platformFromMkSpec(const QString &xSpec)
     if (xSpec == QLatin1String("linux-g++"))
         return Unix;
     if (xSpec.startsWith(QLatin1String("win32-")))
-        return Windows;
+        return xSpec.contains(QLatin1String("g++")) ? WindowsMinGW : Windows;
     if (xSpec.startsWith(QLatin1String("winrt-x")))
         return WinRtIntel;
     if (xSpec.startsWith(QLatin1String("winrt-arm")))
@@ -190,7 +190,7 @@ struct Options {
         DebugDetectionForceRelease
     };
 
-    Options() : plugins(true), libraries(true), quickImports(true), translations(true), systemD3dCompiler(true)
+    Options() : plugins(true), libraries(true), quickImports(true), translations(true), systemD3dCompiler(true), compilerRunTime(false)
               , platform(Windows), additionalLibraries(0), disabledLibraries(0)
               , updateFileFlags(0), json(0), list(ListNone), debugDetection(DebugDetectionAuto) {}
 
@@ -199,6 +199,7 @@ struct Options {
     bool quickImports;
     bool translations;
     bool systemD3dCompiler;
+    bool compilerRunTime;
     Platform platform;
     unsigned additionalLibraries;
     unsigned disabledLibraries;
@@ -296,6 +297,15 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
                                                  QStringLiteral("Skip deployment of the system D3D compiler."));
     parser->addOption(noSystemD3DCompilerOption);
 
+
+    QCommandLineOption compilerRunTimeOption(QStringLiteral("compiler-runtime"),
+                                             QStringLiteral("Deploy compiler runtime (Desktop only)."));
+    parser->addOption(compilerRunTimeOption);
+
+    QCommandLineOption noCompilerRunTimeOption(QStringLiteral("no-compiler-runtime"),
+                                             QStringLiteral("Do not deploy compiler runtime (Desktop only)."));
+    parser->addOption(noCompilerRunTimeOption);
+
     QCommandLineOption webKitOption(QStringLiteral("webkit2"),
                                     QStringLiteral("Deployment of WebKit2 (web process)."));
     parser->addOption(webKitOption);
@@ -361,6 +371,16 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
     options->translations = !parser->isSet(noTranslationOption);
     options->systemD3dCompiler = !parser->isSet(noSystemD3DCompilerOption);
     options->quickImports = !parser->isSet(noQuickImportOption);
+
+    if (parser->isSet(compilerRunTimeOption))
+        options->compilerRunTime = true;
+    else if (parser->isSet(noCompilerRunTimeOption))
+        options->compilerRunTime = false;
+
+    if (options->compilerRunTime && options->platform != WindowsMinGW && options->platform != Windows) {
+        *errorMessage = QStringLiteral("Deployment of the compiler runtime is implemented for Desktop only.");
+        return CommandLineParseError;
+    }
 
     const bool forceDebug = parser->isSet(debugOption);
     const bool forceRelease = parser->isSet(releaseOption);
@@ -606,6 +626,7 @@ QStringList findQtPlugins(unsigned usedQtModules,
             if (isPlatformPlugin) {
                 switch (platform) {
                 case Windows:
+                case WindowsMinGW:
                     filter = QStringLiteral("qwindows");
                     break;
                 case WinRtIntel:
@@ -727,6 +748,65 @@ static QString libraryPath(const QString &libraryLocation, const char *name, Pla
         result += QLatin1String(name);
     }
     result += sharedLibrarySuffix(platform);
+    return result;
+}
+
+static QStringList compilerRunTimeLibs(Platform platform, unsigned wordSize)
+{
+    QStringList result;
+    switch (platform) {
+    case WindowsMinGW: { // MinGW: Add runtime libraries
+        static const char *minGwRuntimes[] = {"*gcc_", "*stdc++", "*winpthread"};
+        const QString gcc = findInPath(QStringLiteral("g++.exe"));
+        if (gcc.isEmpty())
+            break;
+        const QString binPath = QFileInfo(gcc).absolutePath();
+        QDir dir(binPath);
+        QStringList filters;
+        const QString suffix = QLatin1Char('*') + sharedLibrarySuffix(platform);
+        const size_t count = sizeof(minGwRuntimes) / sizeof(minGwRuntimes[0]);
+        for (size_t i = 0; i < count; ++i)
+            filters.append(QLatin1String(minGwRuntimes[i]) + suffix);
+        foreach (const QString &dll, dir.entryList(filters, QDir::Files))
+                result.append(binPath + QLatin1Char('/') + dll);
+    }
+        break;
+    case Windows: { // MSVC/Desktop: Add redistributable packages.
+        const char vcDirVar[] = "VCINSTALLDIR";
+        const QChar slash(QLatin1Char('/'));
+        QString vcRedistDirName = QDir::cleanPath(QFile::decodeName(qgetenv(vcDirVar)));
+        if (vcRedistDirName.isEmpty()) {
+             std::wcerr << "Warning: Cannot find Visual Studio installation directory, " << vcDirVar << " is not set.\n";
+             break;
+        }
+        if (!vcRedistDirName.endsWith(slash))
+            vcRedistDirName.append(slash);
+        vcRedistDirName.append(QStringLiteral("redist"));
+        QDir vcRedistDir(vcRedistDirName);
+        if (!vcRedistDir.exists()) {
+            std::wcerr << "Warning: Cannot find Visual Studio redist directory, "
+                       << QDir::toNativeSeparators(vcRedistDirName).toStdWString() << ".\n";
+            break;
+        }
+        const QStringList countryCodes = vcRedistDir.entryList(QStringList(QStringLiteral("[0-9]*")), QDir::Dirs);
+        QString redist;
+        if (!countryCodes.isEmpty()) {
+            const QFileInfo fi(vcRedistDirName + slash + countryCodes.first() + slash
+                               + QStringLiteral("vcredist_x") + QLatin1String(wordSize > 32 ? "64" : "86")
+                               + QStringLiteral(".exe"));
+            if (fi.isFile())
+                redist = fi.absoluteFilePath();
+        }
+        if (redist.isEmpty()) {
+            std::wcerr << "Warning: Cannot find Visual Studio redistributable in "
+                       << QDir::toNativeSeparators(vcRedistDirName).toStdWString() << ".\n";
+            break;
+        }
+        result.append(redist);
+    }
+    default:
+        break;
+    }
     return result;
 }
 
@@ -924,7 +1004,10 @@ static DeployResult deploy(const Options &options,
     if (options.libraries) {
         const QString targetPath = options.libraryDirectory.isEmpty() ?
             options.directory : options.libraryDirectory;
-        foreach (const QString &qtLib, deployedQtLibraries) {
+        QStringList libraries = deployedQtLibraries;
+        if (options.compilerRunTime)
+            libraries.append(compilerRunTimeLibs(options.platform, wordSize));
+        foreach (const QString &qtLib, libraries) {
             if (!updateFile(qtLib, targetPath, options.updateFileFlags, options.json, errorMessage))
                 return result;
         }
@@ -1019,6 +1102,8 @@ int main(int argc, char **argv)
     const QMap<QString, QString> qmakeVariables = queryQMakeAll(&errorMessage);
     const QString xSpec = qmakeVariables.value(QStringLiteral("QMAKE_XSPEC"));
     options.platform = platformFromMkSpec(xSpec);
+    if (options.platform == WindowsMinGW || options.platform == Windows)
+        options.compilerRunTime = true;
 
     {   // Command line
         QCommandLineParser parser;

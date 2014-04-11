@@ -3,6 +3,7 @@ MODULE = designer
 TARGET = QtDesigner
 QT = core-private gui-private widgets-private xml
 
+MODULE_PLUGIN_TYPES = designer
 MODULE_CONFIG = designer_defines
 load(qt_module)
 

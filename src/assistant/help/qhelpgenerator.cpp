@@ -155,20 +155,20 @@ bool QHelpGenerator::generate(QHelpDataInterface *helpData,
     emit progressChanged(0);
     d->error.clear();
     if (!helpData || helpData->namespaceName().isEmpty()) {
-        d->error = tr("Invalid help data!");
+        d->error = tr("Invalid help data.");
         return false;
     }
 
     QString outFileName = outputFileName;
     if (outFileName.isEmpty()) {
-        d->error = tr("No output file name specified!");
+        d->error = tr("No output file name specified.");
         return false;
     }
 
     QFileInfo fi(outFileName);
     if (fi.exists()) {
         if (!fi.dir().remove(fi.fileName())) {
-            d->error = tr("The file %1 cannot be overwritten!").arg(outFileName);
+            d->error = tr("The file %1 cannot be overwritten.").arg(outFileName);
             return false;
         }
     }
@@ -186,7 +186,7 @@ bool QHelpGenerator::generate(QHelpDataInterface *helpData,
     }
 
     if (!openingOk) {
-        d->error = tr("Cannot open data base file %1!").arg(outFileName);
+        d->error = tr("Cannot open data base file %1.").arg(outFileName);
         cleanupDB();
         return false;
     }
@@ -200,7 +200,7 @@ bool QHelpGenerator::generate(QHelpDataInterface *helpData,
     insertMetaData(helpData->metaData());
 
     if (!registerVirtualFolder(helpData->virtualFolder(), helpData->namespaceName())) {
-        d->error = tr("Cannot register namespace %1!").arg(helpData->namespaceName());
+        d->error = tr("Cannot register namespace %1.").arg(helpData->namespaceName());
         cleanupDB();
         return false;
     }
@@ -308,7 +308,7 @@ bool QHelpGenerator::createTables()
         "AND Name=\'NamespaceTable\'"));
     d->query->next();
     if (d->query->value(0).toInt() > 0) {
-        d->error = tr("Some tables already exist!");
+        d->error = tr("Some tables already exist.");
         return false;
     }
 
@@ -369,7 +369,7 @@ bool QHelpGenerator::createTables()
 
     foreach (const QString &q, tables) {
         if (!d->query->exec(q)) {
-            d->error = tr("Cannot create tables!");
+            d->error = tr("Cannot create tables.");
             return false;
         }
     }
@@ -455,7 +455,7 @@ bool QHelpGenerator::registerVirtualFolder(const QString &folderName, const QStr
             return d->virtualFolderId > 0;
         }
     }
-    d->error = tr("Cannot register virtual folder!");
+    d->error = tr("Cannot register virtual folder.");
     return false;
 }
 
@@ -648,12 +648,12 @@ bool QHelpGenerator::registerCustomFilter(const QString &filterName,
         if (d->query->exec())
             nameId = d->query->lastInsertId().toInt();
     } else if (!forceUpdate) {
-        d->error = tr("The filter %1 is already registered!").arg(filterName);
+        d->error = tr("The filter %1 is already registered.").arg(filterName);
         return false;
     }
 
     if (nameId < 0) {
-        d->error = tr("Cannot register filter %1!").arg(filterName);
+        d->error = tr("Cannot register filter %1.").arg(filterName);
         return false;
     }
 
@@ -777,7 +777,7 @@ bool QHelpGenerator::insertContents(const QByteArray &ba,
     d->query->exec();
     int contentId = d->query->lastInsertId().toInt();
     if (contentId < 1) {
-        d->error = tr("Cannot insert contents!");
+        d->error = tr("Cannot insert contents.");
         return false;
     }
 
@@ -789,7 +789,7 @@ bool QHelpGenerator::insertContents(const QByteArray &ba,
         d->query->bindValue(1, filterAtt);
         d->query->exec();
         if (!d->query->isActive()) {
-            d->error = tr("Cannot register contents!");
+            d->error = tr("Cannot register contents.");
             return false;
         }
     }
