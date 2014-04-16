@@ -71,6 +71,21 @@ if (NOT TARGET Qt5::lupdate)
     )
 endif()
 
+if (NOT TARGET Qt5::lconvert)
+    add_executable(Qt5::lconvert IMPORTED)
+
+!!IF isEmpty(CMAKE_BIN_DIR_IS_ABSOLUTE)
+    set(imported_location \"${_qt5_linguisttools_install_prefix}/$${CMAKE_BIN_DIR}lconvert$$CMAKE_BIN_SUFFIX\")
+!!ELSE
+    set(imported_location \"$${CMAKE_BIN_DIR}lconvert$$CMAKE_BIN_SUFFIX\")
+!!ENDIF
+    _qt5_LinguistTools_check_file_exists(${imported_location})
+
+    set_target_properties(Qt5::lconvert PROPERTIES
+        IMPORTED_LOCATION ${imported_location}
+    )
+endif()
+
 set(Qt5_LRELEASE_EXECUTABLE Qt5::lrelease)
 set(Qt5_LUPDATE_EXECUTABLE Qt5::lupdate)
 
