@@ -30,7 +30,7 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #=============================================================================
 
-
+include(CMakeParseArguments)
 
 function(QT5_CREATE_TRANSLATION _qm_files)
     set(options)
