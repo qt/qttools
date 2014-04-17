@@ -46,7 +46,11 @@
 
 QT_BEGIN_NAMESPACE
 
-QString qtDiag();
+enum QtDiagFlags {
+    QtDiagGlExtensions = 0x1
+};
+
+QString qtDiag(unsigned flags = 0);
 
 QT_END_NAMESPACE
 

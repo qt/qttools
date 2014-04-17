@@ -52,6 +52,10 @@
 #endif // QT_NO_OPENGL
 #include <QtGui/QWindow>
 
+#ifdef NETWORK_DIAG
+#  include <QSslSocket>
+#endif
+
 #include <QtCore/QLibraryInfo>
 #include <QtCore/QStringList>
 #include <QtCore/QVariant>
@@ -64,6 +68,8 @@
 #include <private/qguiapplication_p.h>
 #include <qpa/qplatformintegration.h>
 #include <qpa/qplatformtheme.h>
+
+#include <algorithm>
 
 QT_BEGIN_NAMESPACE
 
@@ -125,7 +131,7 @@ QTextStream &operator<<(QTextStream &str, const QSurfaceFormat &format)
     return str;
 }
 
-void dumpGlInfo(QTextStream &str)
+void dumpGlInfo(QTextStream &str, bool listExtensions)
 {
     QOpenGLContext context;
     if (context.create()) {
@@ -151,6 +157,14 @@ void dumpGlInfo(QTextStream &str)
             << "\nVersion: " << reinterpret_cast<const char *>(functions.glGetString(GL_VERSION))
             << "\nShading language: " << reinterpret_cast<const char *>(functions.glGetString(GL_SHADING_LANGUAGE_VERSION))
             <<  "\nFormat: " << context.format();
+
+        if (listExtensions) {
+            QList<QByteArray> extensionList = context.extensions().toList();
+            std::sort(extensionList.begin(), extensionList.end());
+            str << " \nFound " << extensionList.size() << " extensions:\n";
+            foreach (const QByteArray &extension, extensionList)
+                str << "  " << extension << '\n';
+        }
     } else {
         str << "Unable to create an Open GL context.\n";
     }
@@ -178,7 +192,7 @@ static QStringList toNativeSeparators(QStringList in)
     str << "  " << #loc << ": " << QDir::toNativeSeparators(QLibraryInfo::location(QLibraryInfo::loc)) << '\n';
 
 
-QString qtDiag()
+QString qtDiag(unsigned flags)
 {
     QString result;
     QTextStream str(&result);
@@ -227,8 +241,25 @@ QString qtDiag()
     DUMP_STANDARDPATH(str, ConfigLocation)
     DUMP_STANDARDPATH(str, DownloadLocation)
     DUMP_STANDARDPATH(str, GenericCacheLocation)
+    DUMP_STANDARDPATH(str, GenericConfigLocation)
 
-    str << "\nPlatform capabilities:";
+    str << "\nNetwork:\n  ";
+#ifdef NETWORK_DIAG
+#  ifndef QT_NO_SSL
+    if (QSslSocket::supportsSsl()) {
+        str << "Using \"" << QSslSocket::sslLibraryVersionString() << "\", version: "
+            << QSslSocket::sslLibraryVersionNumber();
+    } else {
+        str << "\nSSL is not supported.";
+    }
+#  else // !QT_NO_SSL
+    str << "SSL is not available.";
+#  endif // QT_NO_SSL
+#else
+    str << "Qt Network module is not available.";
+#endif // NETWORK_DIAG
+
+    str << "\n\nPlatform capabilities:";
     DUMP_CAPABILITY(str, platformIntegration, ThreadedPixmaps)
     DUMP_CAPABILITY(str, platformIntegration, OpenGL)
     DUMP_CAPABILITY(str, platformIntegration, ThreadedOpenGL)
@@ -238,11 +269,18 @@ QString qtDiag()
     DUMP_CAPABILITY(str, platformIntegration, MultipleWindows)
     DUMP_CAPABILITY(str, platformIntegration, ApplicationState)
     DUMP_CAPABILITY(str, platformIntegration, ForeignWindows)
+    DUMP_CAPABILITY(str, platformIntegration, NonFullScreenWindows)
+    DUMP_CAPABILITY(str, platformIntegration, NativeWidgets)
+    DUMP_CAPABILITY(str, platformIntegration, WindowManagement)
+    DUMP_CAPABILITY(str, platformIntegration, SyncState)
+    DUMP_CAPABILITY(str, platformIntegration, RasterGLSurface)
     DUMP_CAPABILITY(str, platformIntegration, AllGLFunctionsQueryable)
     str << '\n';
 
     const QStyleHints *styleHints = QGuiApplication::styleHints();
+    const QChar passwordMaskCharacter = styleHints->passwordMaskCharacter();
     str << "\nStyle hints:\n  mouseDoubleClickInterval: " << styleHints->mouseDoubleClickInterval() << '\n'
+        << "  mousePressAndHoldInterval: " << styleHints->mousePressAndHoldInterval() << '\n'
         << "  startDragDistance: " << styleHints->startDragDistance() << '\n'
         << "  startDragTime: " << styleHints->startDragTime() << '\n'
         << "  startDragVelocity: " << styleHints->startDragVelocity() << '\n'
@@ -251,9 +289,15 @@ QString qtDiag()
         << "  cursorFlashTime: " << styleHints->cursorFlashTime() << '\n'
         << "  showIsFullScreen: " << styleHints->showIsFullScreen() << '\n'
         << "  passwordMaskDelay: " << styleHints->passwordMaskDelay() << '\n'
+        << "  passwordMaskCharacter: ";
+    if (passwordMaskCharacter.unicode() >= 32 && passwordMaskCharacter.unicode() < 128)
+        str << '\'' << passwordMaskCharacter << '\'';
+    else
+        str << hex << showbase << passwordMaskCharacter.unicode() << noshowbase << dec;
+    str << '\n'
         << "  fontSmoothingGamma: " << styleHints->fontSmoothingGamma() << '\n'
         << "  useRtlExtensions: " << styleHints->useRtlExtensions() << '\n'
-        << "  mousePressAndHoldInterval: " << styleHints->mousePressAndHoldInterval() << '\n';
+        << "  setFocusOnTouchRelease: " << styleHints->setFocusOnTouchRelease() << '\n';
 
     const QPlatformTheme *platformTheme = QGuiApplicationPrivate::platformTheme();
     str << "\nTheme:\n  Styles: " << platformTheme->themeHint(QPlatformTheme::StyleNames).toStringList();
@@ -299,13 +343,16 @@ QString qtDiag()
             << "\n  DevicePixelRatio: " << screen->devicePixelRatio()
             << " Primary orientation: " << screen->primaryOrientation()
             << "\n  Orientation: " << screen->orientation()
+            << " Native orientation: " << screen->nativeOrientation()
             << " OrientationUpdateMask: " << screen->orientationUpdateMask()
             << "\n\n";
     }
 
 #ifndef QT_NO_OPENGL
-    dumpGlInfo(str);
+    dumpGlInfo(str, flags & QtDiagGlExtensions);
     str << "\n\n";
+#else
+    Q_UNUSED(flags)
 #endif // !QT_NO_OPENGL
     return result;
 }
