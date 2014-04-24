@@ -183,10 +183,29 @@ static QStringList toNativeSeparators(QStringList in)
     if (platformIntegration->hasCapability(QPlatformIntegration::capability)) \
         str << ' ' << #capability;
 
+// Dump values of QStandardPaths, indicate writable locations by asterisk.
+static void dumpStandardLocation(QTextStream &str, QStandardPaths::StandardLocation location)
+{
+    str << '"' << QStandardPaths::displayName(location) << '"';
+    const QStringList directories = QStandardPaths::standardLocations(location);
+    const QString writableDirectory = QStandardPaths::writableLocation(location);
+    const int writableIndex = directories.indexOf(writableDirectory);
+    for (int i = 0; i < directories.size(); ++i) {
+        str << ' ';
+        if (i == writableIndex)
+            str << '*';
+        str << QDir::toNativeSeparators(directories.at(i));
+        if (i == writableIndex)
+            str << '*';
+    }
+    if (!writableDirectory.isEmpty() && writableIndex < 0)
+        str << " *" << QDir::toNativeSeparators(writableDirectory) << '*';
+}
+
 #define DUMP_STANDARDPATH(str, location) \
-    str << "  " << #location << ": \"" \
-        << QStandardPaths::displayName(QStandardPaths::location) << '"' \
-        << ' ' << toNativeSeparators(QStandardPaths::standardLocations(QStandardPaths::location)) << '\n';
+    str << "  " << #location << ": "; \
+    dumpStandardLocation(str, QStandardPaths::location); \
+    str << '\n';
 
 #define DUMP_LIBRARYPATH(str, loc) \
     str << "  " << #loc << ": " << QDir::toNativeSeparators(QLibraryInfo::location(QLibraryInfo::loc)) << '\n';
