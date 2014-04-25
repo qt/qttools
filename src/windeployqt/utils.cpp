@@ -791,16 +791,16 @@ bool readPeExecutable(const QString &peExecutableFileName, QString *errorMessage
 
         } else {
             const IMAGE_NT_HEADERS64 *ntHeaders64 = reinterpret_cast<const IMAGE_NT_HEADERS64 *>(ntHeaders);
-            debug = ntHeaders64->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_DEBUG].Size;
-            if (dependentLibrariesIn)
-                *dependentLibrariesIn = readImportSections(ntHeaders64, fileMemory, errorMessage);
 
             if (!isMinGW) {
-                debug = !(ntHeaders64->FileHeader.Characteristics & IMAGE_FILE_DEBUG_STRIPPED);
+                debug = ntHeaders64->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_DEBUG].Size;
             } else {
                 // Use logic that's used e.g. in objdump / pfd library
                 debug = !(ntHeaders64->FileHeader.Characteristics & IMAGE_FILE_DEBUG_STRIPPED);
             }
+
+            if (dependentLibrariesIn)
+                *dependentLibrariesIn = readImportSections(ntHeaders64, fileMemory, errorMessage);
         }
 
         if (isDebugIn)
