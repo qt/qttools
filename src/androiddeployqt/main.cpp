@@ -1548,6 +1548,8 @@ bool copyQtFiles(Options *options)
         // For debug deployment, we copy all libraries and plugins
         QDirIterator dirIterator(options->qtInstallDirectory, QDirIterator::Subdirectories);
         while (dirIterator.hasNext()) {
+            dirIterator.next();
+
             QFileInfo info = dirIterator.fileInfo();
             if (!info.isDir()) {
                 QString relativePath = info.absoluteFilePath().mid(options->qtInstallDirectory.length());
@@ -1563,7 +1565,6 @@ bool copyQtFiles(Options *options)
                         return false;
                 }
             }
-            dirIterator.next();
         }
 
         foreach (QString qtDependency, options->qtDependencies)
