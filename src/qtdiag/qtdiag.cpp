@@ -133,11 +133,11 @@ void dumpGlInfo(QTextStream &str)
         str << "Dynamic GL ";
 #  endif
         switch (context.openGLModuleType()) {
-        case QOpenGLContext::DesktopGL:
-            str << "DesktopGL";
+        case QOpenGLContext::LibGL:
+            str << "LibGL";
             break;
-        case QOpenGLContext::GLES2:
-            str << "GLES2";
+        case QOpenGLContext::LibGLES:
+            str << "LibGLES";
             break;
         }
         QWindow window;
