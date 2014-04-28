@@ -1697,25 +1697,53 @@ bool copyQtFiles(Options *options)
     return true;
 }
 
+QStringList getLibraryProjectsInOutputFolder(const Options &options)
+{
+    QStringList ret;
+
+    QFile file(options.outputDirectory + QLatin1String("/project.properties"));
+    if (file.open(QIODevice::ReadOnly)) {
+        while (!file.atEnd()) {
+            QByteArray line = file.readLine().trimmed();
+            if (line.startsWith("android.library.reference")) {
+                int equalSignIndex = line.indexOf('=');
+                if (equalSignIndex >= 0) {
+                    QString path = QString::fromLocal8Bit(line.mid(equalSignIndex + 1));
+
+                    QFileInfo info(options.outputDirectory + QLatin1Char('/') + path);
+                    if (QDir::isRelativePath(path)
+                            && info.exists()
+                            && info.isDir()
+                            && info.canonicalFilePath().startsWith(options.outputDirectory)) {
+                        ret += info.canonicalFilePath();
+                    }
+                }
+            }
+        }
+    }
+
+    return ret;
+}
+
 bool createAndroidProject(const Options &options)
 {
     if (options.verbose)
         fprintf(stdout, "Running Android tool to create package definition.\n");
 
-    QString androidTool = options.sdkPath + QLatin1String("/tools/android");
+    QString androidToolExecutable = options.sdkPath + QLatin1String("/tools/android");
 #if defined(Q_OS_WIN32)
-    androidTool += QLatin1String(".bat");
+    androidToolExecutable += QLatin1String(".bat");
 #endif
 
-    if (!QFile::exists(androidTool)) {
-        fprintf(stderr, "Cannot find Android tool: %s\n", qPrintable(androidTool));
+    if (!QFile::exists(androidToolExecutable)) {
+        fprintf(stderr, "Cannot find Android tool: %s\n", qPrintable(androidToolExecutable));
         return false;
     }
 
-    androidTool = QString::fromLatin1("%1 update project --path %2 --target %3 --name QtApp")
-            .arg(shellQuote(androidTool))
-            .arg(shellQuote(options.outputDirectory))
-            .arg(shellQuote(options.androidPlatform));
+    QString androidTool = QString::fromLatin1("%1 update project --path %2 --target %3 --name QtApp")
+                            .arg(shellQuote(androidToolExecutable))
+                            .arg(shellQuote(options.outputDirectory))
+                            .arg(shellQuote(options.androidPlatform));
 
     if (options.verbose)
         fprintf(stdout, "  -- Command: %s\n", qPrintable(androidTool));
@@ -1727,6 +1755,29 @@ bool createAndroidProject(const Options &options)
     }
 
     pclose(androidToolCommand);
+
+    // If the project has subprojects inside the current folder, we need to also run android update on these.
+    QStringList libraryProjects = getLibraryProjectsInOutputFolder(options);
+    foreach (QString libraryProject, libraryProjects) {
+        if (options.verbose)
+            fprintf(stdout, "Updating subproject %s\n", qPrintable(libraryProject));
+
+        androidTool = QString::fromLatin1("%1 update lib-project --path %2 --target %3")
+                .arg(shellQuote(androidToolExecutable))
+                .arg(shellQuote(libraryProject))
+                .arg(shellQuote(options.androidPlatform));
+
+        if (options.verbose)
+            fprintf(stdout, "  -- Command: %s\n", qPrintable(androidTool));
+
+        FILE *androidToolCommand = popen(androidTool.toLocal8Bit().constData(), "r");
+        if (androidToolCommand == 0) {
+            fprintf(stderr, "Cannot run command '%s'\n", qPrintable(androidTool));
+            return false;
+        }
+
+        pclose(androidToolCommand);
+    }
 
     return true;
 }
