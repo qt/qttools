@@ -571,14 +571,23 @@ private:
 // QML import trees: DLLs (matching debgug) and .qml/,js, etc.
 class QmlDirectoryFileEntryFunction {
 public:
-    explicit QmlDirectoryFileEntryFunction(Platform platform, bool debug)
-        : m_qmlNameFilter(QStringList() << QStringLiteral("*.js") << QStringLiteral("qmldir") << QStringLiteral("*.qml") << QStringLiteral("*.qmltypes") << QStringLiteral("*.png"))
+    explicit QmlDirectoryFileEntryFunction(Platform platform, bool debug, bool skipQmlSources = false)
+        : m_qmlNameFilter(QmlDirectoryFileEntryFunction::qmlNameFilters(skipQmlSources))
         , m_dllFilter(platform, debug)
     {}
 
     QStringList operator()(const QDir &dir) const { return m_dllFilter(dir) + m_qmlNameFilter(dir);  }
 
 private:
+    static inline QStringList qmlNameFilters(bool skipQmlSources)
+    {
+        QStringList result;
+        result << QStringLiteral("qmldir") << QStringLiteral("*.qmltypes");
+        if (!skipQmlSources)
+            result << QStringLiteral("*.js") <<  QStringLiteral("*.qml") << QStringLiteral("*.png");
+        return result;
+    }
+
     NameFilterFileEntryFunction m_qmlNameFilter;
     DllDirectoryFileEntryFunction m_dllFilter;
 };
@@ -1048,7 +1057,14 @@ static DeployResult deploy(const Options &options,
                                << QDir::toNativeSeparators(installPath) << '\n';
                 if (installPath != options.directory && !createDirectory(installPath, errorMessage))
                     return result;
-                if (!updateFile(module.sourcePath, qmlFileEntryFunction, installPath, options.updateFileFlags, options.json, errorMessage))
+                const bool updateResult = module.sourcePath.contains(QLatin1String("QtQuick/Controls"))
+                    || module.sourcePath.contains(QLatin1String("QtQuick/Dialogs")) ?
+                    updateFile(module.sourcePath, QmlDirectoryFileEntryFunction(options.platform, isDebug, true),
+                               installPath, options.updateFileFlags | RemoveEmptyQmlDirectories,
+                               options.json, errorMessage) :
+                    updateFile(module.sourcePath, qmlFileEntryFunction, installPath, options.updateFileFlags,
+                               options.json, errorMessage);
+                if (!updateResult)
                     return result;
             }
         } // Quick 2
