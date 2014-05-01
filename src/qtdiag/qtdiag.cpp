@@ -305,7 +305,7 @@ QString qtDiag(unsigned flags)
     if (passwordMaskCharacter.unicode() >= 32 && passwordMaskCharacter.unicode() < 128)
         str << '\'' << passwordMaskCharacter << '\'';
     else
-        str << hex << showbase << passwordMaskCharacter.unicode() << noshowbase << dec;
+        str << "U+" << qSetFieldWidth(4) << qSetPadChar('0') << uppercasedigits << hex << passwordMaskCharacter.unicode() << dec << qSetFieldWidth(0);
     str << '\n'
         << "  fontSmoothingGamma: " << styleHints->fontSmoothingGamma() << '\n'
         << "  useRtlExtensions: " << styleHints->useRtlExtensions() << '\n'
