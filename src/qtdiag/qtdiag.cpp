@@ -185,7 +185,6 @@ QString qtDiag()
 
     const QPlatformIntegration *platformIntegration = QGuiApplicationPrivate::platformIntegration();
     str << QLibraryInfo::build() << " on \"" << QGuiApplication::platformName() << "\" "
-              << (QSysInfo::ByteOrder == QSysInfo::LittleEndian ? "little endian" : "big endian") << '/'
               << '\n';
 
 #if defined(Q_OS_WIN)
