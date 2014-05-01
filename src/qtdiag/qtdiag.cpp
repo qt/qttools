@@ -324,7 +324,7 @@ QString qtDiag(unsigned flags)
     str << "  General font : " << QFontDatabase::systemFont(QFontDatabase::GeneralFont) << '\n'
               << "  Fixed font   : " << QFontDatabase::systemFont(QFontDatabase::FixedFont) << '\n'
               << "  Title font   : " << QFontDatabase::systemFont(QFontDatabase::TitleFont) << '\n'
-              << "  Smallest font: " << QFontDatabase::systemFont(QFontDatabase::SmallestReadableFont) << "\n\n";
+              << "  Smallest font: " << QFontDatabase::systemFont(QFontDatabase::SmallestReadableFont) << '\n';
 
     if (platformTheme->usePlatformNativeDialog(QPlatformTheme::FileDialog))
         str << "  Native file dialog\n";
