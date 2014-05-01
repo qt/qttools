@@ -236,7 +236,7 @@ QString qtDiag(unsigned flags)
     DUMP_LIBRARYPATH(str, ExamplesPath)
     DUMP_LIBRARYPATH(str, TestsPath)
 
-    str << "\nStandard paths:\n";
+    str << "\nStandard paths [*...* denote writable entry]:\n";
     DUMP_STANDARDPATH(str, DesktopLocation)
     DUMP_STANDARDPATH(str, DocumentsLocation)
     DUMP_STANDARDPATH(str, FontsLocation)
@@ -338,9 +338,9 @@ QString qtDiag(unsigned flags)
     str << "\nScreens: " << screenCount << '\n';
     for (int s = 0; s < screenCount; ++s) {
         const QScreen *screen = screens.at(s);
-        str << (screen == QGuiApplication::primaryScreen() ? '*' : ' ')
-                  << '#' << ' ' << s << " \"" << screen->name() << '"'
+        str << '#' << ' ' << s << " \"" << screen->name() << '"'
                   << " Depth: " << screen->depth()
+                  << " Primary: " <<  (screen == QGuiApplication::primaryScreen() ? "yes" : "no")
             << "\n  Geometry: " << screen->geometry() << " Available: " << screen->availableGeometry();
         if (screen->geometry() != screen->virtualGeometry())
             str << "\n  Virtual geometry: " << screen->virtualGeometry() << " Available: " << screen->availableVirtualGeometry();
