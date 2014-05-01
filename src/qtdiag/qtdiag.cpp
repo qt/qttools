@@ -172,13 +172,6 @@ void dumpGlInfo(QTextStream &str, bool listExtensions)
 
 #endif // !QT_NO_OPENGL
 
-static QStringList toNativeSeparators(QStringList in)
-{
-    for (int i = 0; i < in.size(); ++i)
-        in[i] = QDir::toNativeSeparators(in.at(i));
-    return in;
-}
-
 #define DUMP_CAPABILITY(str, integration, capability) \
     if (platformIntegration->hasCapability(QPlatformIntegration::capability)) \
         str << ' ' << #capability;
