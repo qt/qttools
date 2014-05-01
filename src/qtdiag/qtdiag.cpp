@@ -65,6 +65,7 @@
 #include <QtCore/QStandardPaths>
 #include <QtCore/QDir>
 
+#include <private/qsimd_p.h>
 #include <private/qguiapplication_p.h>
 #include <qpa/qplatformintegration.h>
 #include <qpa/qplatformtheme.h>
@@ -195,6 +196,10 @@ static void dumpStandardLocation(QTextStream &str, QStandardPaths::StandardLocat
         str << " *" << QDir::toNativeSeparators(writableDirectory) << '*';
 }
 
+#define DUMP_CPU_FEATURE(feature, name)                 \
+    if (qCpuHasFeature(feature))                        \
+        str << " " name;
+
 #define DUMP_STANDARDPATH(str, location) \
     str << "  " << #location << ": "; \
     dumpStandardLocation(str, QStandardPaths::location); \
@@ -214,6 +219,19 @@ QString qtDiag(unsigned flags)
               << '\n'
         << "OS: " << QSysInfo::prettyOsName()
               << " [kernel version " << QSysInfo::osKernelVersion() << "]\n";
+
+    str << "\nCPU features:";
+    DUMP_CPU_FEATURE(SSE2, "SSE2");
+    DUMP_CPU_FEATURE(SSE3, "SSE3");
+    DUMP_CPU_FEATURE(SSSE3, "SSSE3");
+    DUMP_CPU_FEATURE(SSE4_1, "SSE4.1");
+    DUMP_CPU_FEATURE(SSE4_2, "SSE4.2");
+    DUMP_CPU_FEATURE(AVX, "AVX");
+    DUMP_CPU_FEATURE(AVX2, "AVX2");
+    DUMP_CPU_FEATURE(RTM, "RTM");
+    DUMP_CPU_FEATURE(HLE, "HLE");
+    DUMP_CPU_FEATURE(ARM_NEON, "Neon");
+    str << '\n';
 
     str << "\nLibrary info:\n";
     DUMP_LIBRARYPATH(str, PrefixPath)
