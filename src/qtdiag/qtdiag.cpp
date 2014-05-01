@@ -185,13 +185,9 @@ QString qtDiag()
 
     const QPlatformIntegration *platformIntegration = QGuiApplicationPrivate::platformIntegration();
     str << QLibraryInfo::build() << " on \"" << QGuiApplication::platformName() << "\" "
-              << '\n';
-
-#if defined(Q_OS_WIN)
-    str << hex << "Windows version: 0x" << QSysInfo::windowsVersion() << dec << '\n';
-#elif defined(Q_OS_MAC)
-    str << hex << "Mac OS version: 0x" << QSysInfo::macVersion() << dec << '\n';
-#endif
+              << '\n'
+        << "OS: " << QSysInfo::prettyOsName()
+              << " [kernel version " << QSysInfo::osKernelVersion() << "]\n";
 
     str << "\nLibrary info:\n";
     DUMP_LIBRARYPATH(str, PrefixPath)
