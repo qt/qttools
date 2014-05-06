@@ -673,6 +673,10 @@ void deployQmlImport(const QString &appBundlePath, const QString &importSourcePa
 // Scan qml files in qmldirs for import statements, deploy used imports from Qml2ImportsPath to Contents/Resources/qml.
 void deployQmlImports(const QString &appBundlePath, QStringList &qmlDirs)
 {
+    LogNormal() << "";
+    LogNormal() << "Deploying QML imports ";
+    LogNormal() << "Application QML file search path(s) is" << qmlDirs;
+
     // verify that qmlimportscanner is in BinariesPath
     QString qmlImportScannerPath = QDir::cleanPath(QLibraryInfo::location(QLibraryInfo::BinariesPath) + "/qmlimportscanner");
     if (!QFile(qmlImportScannerPath).exists()) {
@@ -681,20 +685,37 @@ void deployQmlImports(const QString &appBundlePath, QStringList &qmlDirs)
         return;
     }
 
-    // run qmlimportscanner
+    // build argument list for qmlimportsanner: "-rootPath foo/ -rootPath bar/ -importPath path/to/qt/qml"
+    // ("rootPath" points to a directory containing app qml, "importPath" is where the Qt imports are installed)
+    QStringList argumentList;
+    foreach (const QString &qmlDir, qmlDirs) {
+        argumentList.append("-rootPath");
+        argumentList.append(qmlDir);
+    }
     QString qmlImportsPath = QLibraryInfo::location(QLibraryInfo::Qml2ImportsPath);
+    argumentList.append( "-importPath");
+    argumentList.append(qmlImportsPath);
+
+    // run qmlimportscanner
     QProcess qmlImportScanner;
-    qmlImportScanner.setProcessChannelMode(QProcess::MergedChannels);
-    qmlImportScanner.start(qmlImportScannerPath, QStringList() << qmlDirs << "-importPath" << qmlImportsPath);
+    qmlImportScanner.start(qmlImportScannerPath, argumentList);
     if (!qmlImportScanner.waitForStarted()) {
         LogError() << "Could not start qmlimpoortscanner. Process error is" << qmlImportScanner.errorString();
         return;
     }
-
     qmlImportScanner.waitForFinished();
-    QByteArray json = qmlImportScanner.readAll();
+
+    // log qmlimportscanner errors
+    qmlImportScanner.setReadChannel(QProcess::StandardError);
+    QByteArray errors = qmlImportScanner.readAll();
+    if (!errors.isEmpty()) {
+        LogWarning() << "QML file parse error (deployment will continue):";
+        LogWarning() << errors;
+    }
 
     // parse qmlimportscanner json
+    qmlImportScanner.setReadChannel(QProcess::StandardOutput);
+    QByteArray json = qmlImportScanner.readAll();
     QJsonDocument doc = QJsonDocument::fromJson(json);
     if (!doc.isArray()) {
         LogError() << "qmlimportscanner output error. Expected json array, got:";
@@ -739,6 +760,7 @@ void deployQmlImports(const QString &appBundlePath, QStringList &qmlDirs)
             name.append(version);
 
         deployQmlImport(appBundlePath, path, name);
+        LogNormal() << "";
     }
 }
 
