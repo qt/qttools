@@ -52,6 +52,7 @@ int main(int argc, char **argv)
         qDebug() << "   -qmldir=<path>     : Deploy imports used by .qml files in the given path";
         qDebug() << "   -always-overwrite  : Copy files even if the target file exists";
         qDebug() << "   -codesign=<ident>  : Run codesign with the given identity on all executables";
+        qDebug() << "   -appstore-compliant: Skip deployment of components that use private API";
         qDebug() << "";
         qDebug() << "macdeployqt takes an application bundle as input and makes it";
         qDebug() << "self-contained by copying in the Qt frameworks and plugins that";
@@ -60,6 +61,12 @@ int main(int argc, char **argv)
         qDebug() << "Plugins related to a framework are copied in with the";
         qDebug() << "framework. The accessibility, image formats, and text codec";
         qDebug() << "plugins are always copied, unless \"-no-plugins\" is specified.";
+        qDebug() << "";
+        qDebug() << "Qt plugins may use private API and will cause the app to be";
+        qDebug() << "rejected from the Mac App store. MacDeployQt will print a warning";
+        qDebug() << "when known incompatible plugins are deployed. Use -appstore-compliant ";
+        qDebug() << "to skip these plugins. Currently two SQL plugins are known to";
+        qDebug() << "be incompatible: qsqlodbc and qsqlpsql.";
         qDebug() << "";
         qDebug() << "See the \"Deploying an Application on Qt/Mac\" topic in the";
         qDebug() << "documentation for more information about deployment on Mac OS X.";
@@ -83,6 +90,7 @@ int main(int argc, char **argv)
     QStringList qmlDirs;
     extern bool runCodesign;
     extern QString codesignIdentiy;
+    extern bool appstoreCompliant;
 
     for (int i = 2; i < argc; ++i) {
         QByteArray argument = QByteArray(argv[i]);
@@ -134,6 +142,9 @@ int main(int argc, char **argv)
                 runCodesign = true;
                 codesignIdentiy = argument.mid(index+1);
             }
+        } else if (argument == QByteArray("-appstore-compliant")) {
+            LogDebug() << "Argument found:" << argument;
+            appstoreCompliant = true;
         } else if (argument.startsWith("-")) {
             LogError() << "Unknown argument" << argument << "\n";
             return 1;

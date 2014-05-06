@@ -55,6 +55,7 @@ bool runStripEnabled = true;
 bool alwaysOwerwriteEnabled = false;
 bool runCodesign = false;
 QString codesignIdentiy;
+bool appstoreCompliant = false;
 int logLevel = 1;
 
 using std::cout;
@@ -959,8 +960,19 @@ void deployPlugins(const ApplicationBundleInfo &appBundleInfo, const QString &pl
     if (deploymentInfo.deployedFrameworks.contains(QStringLiteral("QtSql.framework"))) {
         QStringList sqlPlugins = QDir(pluginSourcePath +  QStringLiteral("/sqldrivers")).entryList(QStringList() << QStringLiteral("*.dylib"));
         foreach (const QString &plugin, sqlPlugins) {
-            if (!plugin.endsWith(QStringLiteral("_debug.dylib")))
-                pluginList.append(QStringLiteral("sqldrivers/") + plugin);
+            if (plugin.endsWith(QStringLiteral("_debug.dylib")))
+                continue;
+
+            // Some sql plugins are known to cause app store rejections. Skip or warn for these plugins.
+            if (plugin.startsWith(QStringLiteral("libqsqlodbc")) || plugin.startsWith(QStringLiteral("libqsqlpsql"))) {
+                LogWarning() << "Plugin" << plugin << "uses private API and is not Mac App store compliant.";
+                if (appstoreCompliant) {
+                    LogWarning() << "Skip plugin" << plugin;
+                    continue;
+                }
+            }
+
+            pluginList.append(QStringLiteral("sqldrivers/") + plugin);
         }
     }
 
