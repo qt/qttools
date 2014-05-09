@@ -872,7 +872,7 @@ QString findD3dCompiler(Platform platform, const QString &qtBinDir, unsigned wor
 #else // Q_OS_WIN
 
 bool readPeExecutable(const QString &, QString *errorMessage,
-                      QStringList *, unsigned *, bool *)
+                      QStringList *, unsigned *, bool *, bool)
 {
     *errorMessage = QStringLiteral("Not implemented.");
     return false;
