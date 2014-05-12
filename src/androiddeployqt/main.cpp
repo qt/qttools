@@ -1120,10 +1120,8 @@ bool updateAndroidFiles(Options &options)
 QStringList findFilesRecursively(const Options &options, const QString &fileName)
 {
     QFileInfo info(options.qtInstallDirectory + QLatin1Char('/') + fileName);
-    if (!info.exists()) {
-        fprintf(stderr, "Warning: Dependency not found: %s\n", qPrintable(info.filePath()));
+    if (!info.exists())
         return QStringList();
-    }
 
     if (info.isDir()) {
         QStringList ret;
