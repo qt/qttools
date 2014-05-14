@@ -27,27 +27,62 @@ get_filename_component(_qt5_linguisttools_install_prefix \"${CMAKE_CURRENT_LIST_
 set(_qt5_linguisttools_install_prefix \"$$[QT_INSTALL_PREFIX]\")
 !!ENDIF
 
+macro(_qt5_LinguistTools_check_file_exists file)
+    if(NOT EXISTS \"${file}\" )
+        message(FATAL_ERROR \"The package \\\"Qt5LinguistTools\\\" references the file
+   \\\"${file}\\\"
+but this file does not exist.  Possible reasons include:
+* The file was deleted, renamed, or moved to another location.
+* An install or uninstall procedure did not complete successfully.
+* The installation package was faulty and contained
+   \\\"${CMAKE_CURRENT_LIST_FILE}\\\"
+but not all the files it references.
+\")
+    endif()
+endmacro()
+
 if (NOT TARGET Qt5::lrelease)
     add_executable(Qt5::lrelease IMPORTED)
 
-    set_target_properties(Qt5::lrelease PROPERTIES
 !!IF isEmpty(CMAKE_BIN_DIR_IS_ABSOLUTE)
-        IMPORTED_LOCATION \"${_qt5_linguisttools_install_prefix}/$${CMAKE_BIN_DIR}lrelease$$CMAKE_BIN_SUFFIX\"
+    set(imported_location \"${_qt5_linguisttools_install_prefix}/$${CMAKE_BIN_DIR}lrelease$$CMAKE_BIN_SUFFIX\")
 !!ELSE
-        IMPORTED_LOCATION \"$${CMAKE_BIN_DIR}lrelease$$CMAKE_BIN_SUFFIX\"
+    set(imported_location \"$${CMAKE_BIN_DIR}lrelease$$CMAKE_BIN_SUFFIX\")
 !!ENDIF
+    _qt5_LinguistTools_check_file_exists(${imported_location})
+
+    set_target_properties(Qt5::lrelease PROPERTIES
+        IMPORTED_LOCATION ${imported_location}
     )
 endif()
 
 if (NOT TARGET Qt5::lupdate)
     add_executable(Qt5::lupdate IMPORTED)
 
-    set_target_properties(Qt5::lupdate PROPERTIES
 !!IF isEmpty(CMAKE_BIN_DIR_IS_ABSOLUTE)
-        IMPORTED_LOCATION \"${_qt5_linguisttools_install_prefix}/$${CMAKE_BIN_DIR}lupdate$$CMAKE_BIN_SUFFIX\"
+    set(imported_location \"${_qt5_linguisttools_install_prefix}/$${CMAKE_BIN_DIR}lupdate$$CMAKE_BIN_SUFFIX\")
 !!ELSE
-        IMPORTED_LOCATION \"$${CMAKE_BIN_DIR}lupdate$$CMAKE_BIN_SUFFIX\"
+    set(imported_location \"$${CMAKE_BIN_DIR}lupdate$$CMAKE_BIN_SUFFIX\")
 !!ENDIF
+    _qt5_LinguistTools_check_file_exists(${imported_location})
+
+    set_target_properties(Qt5::lupdate PROPERTIES
+        IMPORTED_LOCATION ${imported_location}
+    )
+endif()
+
+if (NOT TARGET Qt5::lconvert)
+    add_executable(Qt5::lconvert IMPORTED)
+
+!!IF isEmpty(CMAKE_BIN_DIR_IS_ABSOLUTE)
+    set(imported_location \"${_qt5_linguisttools_install_prefix}/$${CMAKE_BIN_DIR}lconvert$$CMAKE_BIN_SUFFIX\")
+!!ELSE
+    set(imported_location \"$${CMAKE_BIN_DIR}lconvert$$CMAKE_BIN_SUFFIX\")
+!!ENDIF
+    _qt5_LinguistTools_check_file_exists(${imported_location})
+
+    set_target_properties(Qt5::lconvert PROPERTIES
+        IMPORTED_LOCATION ${imported_location}
     )
 endif()
 

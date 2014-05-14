@@ -201,7 +201,8 @@ extern int optVerboseLevel;
 // to obtain the files.
 enum UpdateFileFlag  {
     ForceUpdateFile = 0x1,
-    SkipUpdateFile = 0x2
+    SkipUpdateFile = 0x2,
+    RemoveEmptyQmlDirectories = 0x4
 };
 
 template <class DirectoryFileEntryFunction>
@@ -257,6 +258,7 @@ bool updateFile(const QString &sourceFileName,
     } // Source is symbolic link
 
     if (sourceFileInfo.isDir()) {
+        bool created = false;
         if (targetFileInfo.exists()) {
             if (!targetFileInfo.isDir()) {
                 *errorMessage = QString::fromLatin1("%1 already exists and is not a directory.")
@@ -267,10 +269,13 @@ bool updateFile(const QString &sourceFileName,
             QDir d(targetDirectory);
             if (optVerboseLevel)
                 std::wcout << "Creating " << targetFileName << ".\n";
-            if (!(flags & SkipUpdateFile) && !d.mkdir(sourceFileInfo.fileName())) {
-                *errorMessage = QString::fromLatin1("Cannot create directory %1 under %2.")
-                                .arg(sourceFileInfo.fileName(), QDir::toNativeSeparators(targetDirectory));
-                return false;
+            if (!(flags & SkipUpdateFile)) {
+                created = d.mkdir(sourceFileInfo.fileName());
+                if (!created) {
+                    *errorMessage = QString::fromLatin1("Cannot create directory %1 under %2.")
+                            .arg(sourceFileInfo.fileName(), QDir::toNativeSeparators(targetDirectory));
+                    return false;
+                }
             }
         }
         // Recurse into directory
@@ -280,6 +285,18 @@ bool updateFile(const QString &sourceFileName,
         foreach (const QString &entry, allEntries)
             if (!updateFile(sourceFileName + QLatin1Char('/') + entry, directoryFileEntryFunction, targetFileName, flags, json, errorMessage))
                 return false;
+        // Remove empty directories, for example QML import folders for which the filter did not match.
+        if (created && (flags & RemoveEmptyQmlDirectories)) {
+            QDir d(targetFileName);
+            const QStringList entries = d.entryList(QStringList(), QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot);
+            if (entries.isEmpty() || (entries.size() == 1 && entries.first() == QLatin1String("qmldir"))) {
+                if (!d.removeRecursively()) {
+                    *errorMessage = QString::fromLatin1("Cannot remove empty directory %1.")
+                            .arg(QDir::toNativeSeparators(targetFileName));
+                    return false;
+                }
+            }
+        }
         return true;
     } // Source is directory.
 

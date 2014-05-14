@@ -52,6 +52,10 @@
 #endif // QT_NO_OPENGL
 #include <QtGui/QWindow>
 
+#ifdef NETWORK_DIAG
+#  include <QSslSocket>
+#endif
+
 #include <QtCore/QLibraryInfo>
 #include <QtCore/QStringList>
 #include <QtCore/QVariant>
@@ -64,6 +68,8 @@
 #include <private/qguiapplication_p.h>
 #include <qpa/qplatformintegration.h>
 #include <qpa/qplatformtheme.h>
+
+#include <algorithm>
 
 QT_BEGIN_NAMESPACE
 
@@ -125,7 +131,7 @@ QTextStream &operator<<(QTextStream &str, const QSurfaceFormat &format)
     return str;
 }
 
-void dumpGlInfo(QTextStream &str)
+void dumpGlInfo(QTextStream &str, bool listExtensions)
 {
     QOpenGLContext context;
     if (context.create()) {
@@ -133,11 +139,11 @@ void dumpGlInfo(QTextStream &str)
         str << "Dynamic GL ";
 #  endif
         switch (context.openGLModuleType()) {
-        case QOpenGLContext::DesktopGL:
-            str << "DesktopGL";
+        case QOpenGLContext::LibGL:
+            str << "LibGL";
             break;
-        case QOpenGLContext::GLES2:
-            str << "GLES2";
+        case QOpenGLContext::LibGLES:
+            str << "LibGLES";
             break;
         }
         QWindow window;
@@ -151,6 +157,14 @@ void dumpGlInfo(QTextStream &str)
             << "\nVersion: " << reinterpret_cast<const char *>(functions.glGetString(GL_VERSION))
             << "\nShading language: " << reinterpret_cast<const char *>(functions.glGetString(GL_SHADING_LANGUAGE_VERSION))
             <<  "\nFormat: " << context.format();
+
+        if (listExtensions) {
+            QList<QByteArray> extensionList = context.extensions().toList();
+            std::sort(extensionList.begin(), extensionList.end());
+            str << " \nFound " << extensionList.size() << " extensions:\n";
+            foreach (const QByteArray &extension, extensionList)
+                str << "  " << extension << '\n';
+        }
     } else {
         str << "Unable to create an Open GL context.\n";
     }
@@ -158,27 +172,39 @@ void dumpGlInfo(QTextStream &str)
 
 #endif // !QT_NO_OPENGL
 
-static QStringList toNativeSeparators(QStringList in)
-{
-    for (int i = 0; i < in.size(); ++i)
-        in[i] = QDir::toNativeSeparators(in.at(i));
-    return in;
-}
-
 #define DUMP_CAPABILITY(str, integration, capability) \
     if (platformIntegration->hasCapability(QPlatformIntegration::capability)) \
         str << ' ' << #capability;
 
+// Dump values of QStandardPaths, indicate writable locations by asterisk.
+static void dumpStandardLocation(QTextStream &str, QStandardPaths::StandardLocation location)
+{
+    str << '"' << QStandardPaths::displayName(location) << '"';
+    const QStringList directories = QStandardPaths::standardLocations(location);
+    const QString writableDirectory = QStandardPaths::writableLocation(location);
+    const int writableIndex = directories.indexOf(writableDirectory);
+    for (int i = 0; i < directories.size(); ++i) {
+        str << ' ';
+        if (i == writableIndex)
+            str << '*';
+        str << QDir::toNativeSeparators(directories.at(i));
+        if (i == writableIndex)
+            str << '*';
+    }
+    if (!writableDirectory.isEmpty() && writableIndex < 0)
+        str << " *" << QDir::toNativeSeparators(writableDirectory) << '*';
+}
+
 #define DUMP_STANDARDPATH(str, location) \
-    str << "  " << #location << ": \"" \
-        << QStandardPaths::displayName(QStandardPaths::location) << '"' \
-        << ' ' << toNativeSeparators(QStandardPaths::standardLocations(QStandardPaths::location)) << '\n';
+    str << "  " << #location << ": "; \
+    dumpStandardLocation(str, QStandardPaths::location); \
+    str << '\n';
 
 #define DUMP_LIBRARYPATH(str, loc) \
     str << "  " << #loc << ": " << QDir::toNativeSeparators(QLibraryInfo::location(QLibraryInfo::loc)) << '\n';
 
 
-QString qtDiag()
+QString qtDiag(unsigned flags)
 {
     QString result;
     QTextStream str(&result);
@@ -205,7 +231,7 @@ QString qtDiag()
     DUMP_LIBRARYPATH(str, ExamplesPath)
     DUMP_LIBRARYPATH(str, TestsPath)
 
-    str << "\nStandard paths:\n";
+    str << "\nStandard paths [*...* denote writable entry]:\n";
     DUMP_STANDARDPATH(str, DesktopLocation)
     DUMP_STANDARDPATH(str, DocumentsLocation)
     DUMP_STANDARDPATH(str, FontsLocation)
@@ -222,8 +248,25 @@ QString qtDiag()
     DUMP_STANDARDPATH(str, ConfigLocation)
     DUMP_STANDARDPATH(str, DownloadLocation)
     DUMP_STANDARDPATH(str, GenericCacheLocation)
+    DUMP_STANDARDPATH(str, GenericConfigLocation)
 
-    str << "\nPlatform capabilities:";
+    str << "\nNetwork:\n  ";
+#ifdef NETWORK_DIAG
+#  ifndef QT_NO_SSL
+    if (QSslSocket::supportsSsl()) {
+        str << "Using \"" << QSslSocket::sslLibraryVersionString() << "\", version: "
+            << QSslSocket::sslLibraryVersionNumber();
+    } else {
+        str << "\nSSL is not supported.";
+    }
+#  else // !QT_NO_SSL
+    str << "SSL is not available.";
+#  endif // QT_NO_SSL
+#else
+    str << "Qt Network module is not available.";
+#endif // NETWORK_DIAG
+
+    str << "\n\nPlatform capabilities:";
     DUMP_CAPABILITY(str, platformIntegration, ThreadedPixmaps)
     DUMP_CAPABILITY(str, platformIntegration, OpenGL)
     DUMP_CAPABILITY(str, platformIntegration, ThreadedOpenGL)
@@ -233,11 +276,18 @@ QString qtDiag()
     DUMP_CAPABILITY(str, platformIntegration, MultipleWindows)
     DUMP_CAPABILITY(str, platformIntegration, ApplicationState)
     DUMP_CAPABILITY(str, platformIntegration, ForeignWindows)
+    DUMP_CAPABILITY(str, platformIntegration, NonFullScreenWindows)
+    DUMP_CAPABILITY(str, platformIntegration, NativeWidgets)
+    DUMP_CAPABILITY(str, platformIntegration, WindowManagement)
+    DUMP_CAPABILITY(str, platformIntegration, SyncState)
+    DUMP_CAPABILITY(str, platformIntegration, RasterGLSurface)
     DUMP_CAPABILITY(str, platformIntegration, AllGLFunctionsQueryable)
     str << '\n';
 
     const QStyleHints *styleHints = QGuiApplication::styleHints();
+    const QChar passwordMaskCharacter = styleHints->passwordMaskCharacter();
     str << "\nStyle hints:\n  mouseDoubleClickInterval: " << styleHints->mouseDoubleClickInterval() << '\n'
+        << "  mousePressAndHoldInterval: " << styleHints->mousePressAndHoldInterval() << '\n'
         << "  startDragDistance: " << styleHints->startDragDistance() << '\n'
         << "  startDragTime: " << styleHints->startDragTime() << '\n'
         << "  startDragVelocity: " << styleHints->startDragVelocity() << '\n'
@@ -246,9 +296,15 @@ QString qtDiag()
         << "  cursorFlashTime: " << styleHints->cursorFlashTime() << '\n'
         << "  showIsFullScreen: " << styleHints->showIsFullScreen() << '\n'
         << "  passwordMaskDelay: " << styleHints->passwordMaskDelay() << '\n'
+        << "  passwordMaskCharacter: ";
+    if (passwordMaskCharacter.unicode() >= 32 && passwordMaskCharacter.unicode() < 128)
+        str << '\'' << passwordMaskCharacter << '\'';
+    else
+        str << "U+" << qSetFieldWidth(4) << qSetPadChar('0') << uppercasedigits << hex << passwordMaskCharacter.unicode() << dec << qSetFieldWidth(0);
+    str << '\n'
         << "  fontSmoothingGamma: " << styleHints->fontSmoothingGamma() << '\n'
         << "  useRtlExtensions: " << styleHints->useRtlExtensions() << '\n'
-        << "  mousePressAndHoldInterval: " << styleHints->mousePressAndHoldInterval() << '\n';
+        << "  setFocusOnTouchRelease: " << styleHints->setFocusOnTouchRelease() << '\n';
 
     const QPlatformTheme *platformTheme = QGuiApplicationPrivate::platformTheme();
     str << "\nTheme:\n  Styles: " << platformTheme->themeHint(QPlatformTheme::StyleNames).toStringList();
@@ -263,7 +319,7 @@ QString qtDiag()
     str << "  General font : " << QFontDatabase::systemFont(QFontDatabase::GeneralFont) << '\n'
               << "  Fixed font   : " << QFontDatabase::systemFont(QFontDatabase::FixedFont) << '\n'
               << "  Title font   : " << QFontDatabase::systemFont(QFontDatabase::TitleFont) << '\n'
-              << "  Smallest font: " << QFontDatabase::systemFont(QFontDatabase::SmallestReadableFont) << "\n\n";
+              << "  Smallest font: " << QFontDatabase::systemFont(QFontDatabase::SmallestReadableFont) << '\n';
 
     if (platformTheme->usePlatformNativeDialog(QPlatformTheme::FileDialog))
         str << "  Native file dialog\n";
@@ -277,9 +333,9 @@ QString qtDiag()
     str << "\nScreens: " << screenCount << '\n';
     for (int s = 0; s < screenCount; ++s) {
         const QScreen *screen = screens.at(s);
-        str << (screen == QGuiApplication::primaryScreen() ? '*' : ' ')
-                  << '#' << ' ' << s << " \"" << screen->name() << '"'
+        str << '#' << ' ' << s << " \"" << screen->name() << '"'
                   << " Depth: " << screen->depth()
+                  << " Primary: " <<  (screen == QGuiApplication::primaryScreen() ? "yes" : "no")
             << "\n  Geometry: " << screen->geometry() << " Available: " << screen->availableGeometry();
         if (screen->geometry() != screen->virtualGeometry())
             str << "\n  Virtual geometry: " << screen->virtualGeometry() << " Available: " << screen->availableVirtualGeometry();
@@ -294,13 +350,16 @@ QString qtDiag()
             << "\n  DevicePixelRatio: " << screen->devicePixelRatio()
             << " Primary orientation: " << screen->primaryOrientation()
             << "\n  Orientation: " << screen->orientation()
+            << " Native orientation: " << screen->nativeOrientation()
             << " OrientationUpdateMask: " << screen->orientationUpdateMask()
             << "\n\n";
     }
 
 #ifndef QT_NO_OPENGL
-    dumpGlInfo(str);
+    dumpGlInfo(str, flags & QtDiagGlExtensions);
     str << "\n\n";
+#else
+    Q_UNUSED(flags)
 #endif // !QT_NO_OPENGL
     return result;
 }

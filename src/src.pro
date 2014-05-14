@@ -15,7 +15,7 @@ qtHaveModule(widgets) {
 }
 
 SUBDIRS += linguist
-!android|android_app: SUBDIRS += qtpaths
+if(!android|android_app):!ios: SUBDIRS += qtpaths
 
 mac {
     SUBDIRS += macdeployqt

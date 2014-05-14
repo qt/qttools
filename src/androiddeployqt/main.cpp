@@ -176,6 +176,78 @@ struct Options
     QStringList features;
 };
 
+// Copy-pasted from qmake/library/ioutil.cpp
+inline static bool hasSpecialChars(const QString &arg, const uchar (&iqm)[16])
+{
+    for (int x = arg.length() - 1; x >= 0; --x) {
+        ushort c = arg.unicode()[x].unicode();
+        if ((c < sizeof(iqm) * 8) && (iqm[c / 8] & (1 << (c & 7))))
+            return true;
+    }
+    return false;
+}
+
+static QString shellQuoteUnix(const QString &arg)
+{
+    // Chars that should be quoted (TM). This includes:
+    static const uchar iqm[] = {
+        0xff, 0xff, 0xff, 0xff, 0xdf, 0x07, 0x00, 0xd8,
+        0x00, 0x00, 0x00, 0x38, 0x01, 0x00, 0x00, 0x78
+    }; // 0-32 \'"$`<>|;&(){}*?#!~[]
+
+    if (!arg.length())
+        return QString::fromLatin1("\"\"");
+
+    QString ret(arg);
+    if (hasSpecialChars(ret, iqm)) {
+        ret.replace(QLatin1Char('\''), QLatin1String("'\\''"));
+        ret.prepend(QLatin1Char('\''));
+        ret.append(QLatin1Char('\''));
+    }
+    return ret;
+}
+
+static QString shellQuoteWin(const QString &arg)
+{
+    // Chars that should be quoted (TM). This includes:
+    // - control chars & space
+    // - the shell meta chars "&()<>^|
+    // - the potential separators ,;=
+    static const uchar iqm[] = {
+        0xff, 0xff, 0xff, 0xff, 0x45, 0x13, 0x00, 0x78,
+        0x00, 0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x10
+    };
+
+    if (!arg.length())
+        return QString::fromLatin1("\"\"");
+
+    QString ret(arg);
+    if (hasSpecialChars(ret, iqm)) {
+        // Quotes are escaped and their preceding backslashes are doubled.
+        // It's impossible to escape anything inside a quoted string on cmd
+        // level, so the outer quoting must be "suspended".
+        ret.replace(QRegExp(QLatin1String("(\\\\*)\"")), QLatin1String("\"\\1\\1\\^\"\""));
+        // The argument must not end with a \ since this would be interpreted
+        // as escaping the quote -- rather put the \ behind the quote: e.g.
+        // rather use "foo"\ than "foo\"
+        int i = ret.length();
+        while (i > 0 && ret.at(i - 1) == QLatin1Char('\\'))
+            --i;
+        ret.insert(i, QLatin1Char('"'));
+        ret.prepend(QLatin1Char('"'));
+    }
+    return ret;
+}
+
+static QString shellQuote(const QString &arg)
+{
+    if (QDir::separator() == QLatin1Char('\\'))
+        return shellQuoteWin(arg);
+    else
+        return shellQuoteUnix(arg);
+}
+
+
 Options parseOptions()
 {
     Options options;
@@ -1258,7 +1330,7 @@ QStringList getQtLibsFromElf(const Options &options, const QString &fileName)
         return QStringList();
     }
 
-    readElf = QString::fromLatin1("\"%1\" -d -W %2").arg(readElf).arg(fileName);
+    readElf = QString::fromLatin1("%1 -d -W %2").arg(shellQuote(readElf)).arg(shellQuote(fileName));
 
     FILE *readElfCommand = popen(readElf.toLocal8Bit().constData(), "r");
     if (readElfCommand == 0) {
@@ -1402,7 +1474,7 @@ bool stripFile(const Options &options, const QString &fileName)
         return false;
     }
 
-    strip = QString::fromLatin1("\"%1\" %2").arg(strip).arg(fileName);
+    strip = QString::fromLatin1("%1 %2").arg(shellQuote(strip)).arg(shellQuote(fileName));
 
     FILE *stripCommand = popen(strip.toLocal8Bit().constData(), "r");
     if (stripCommand == 0) {
@@ -1478,9 +1550,9 @@ FILE *runAdb(const Options &options, const QString &arguments)
     }
     QString installOption;
     if (!options.installLocation.isEmpty())
-        installOption = QLatin1String(" -s ") + options.installLocation;
+        installOption = QLatin1String(" -s ") + shellQuote(options.installLocation);
 
-    adb = QString::fromLatin1("\"%1\"%2 %3").arg(adb).arg(installOption).arg(arguments);
+    adb = QString::fromLatin1("%1%2 %3").arg(shellQuote(adb)).arg(installOption).arg(arguments);
 
     if (options.verbose)
         fprintf(stdout, "Running command \"%s\"\n", adb.toLocal8Bit().constData());
@@ -1498,7 +1570,7 @@ bool fetchRemoteModifications(Options *options, const QString &directory)
 {
     options->fetchedRemoteModificationDates = true;
 
-    FILE *adbCommand = runAdb(*options, QLatin1String(" shell cat ") + directory + QLatin1String("/modification.txt"));
+    FILE *adbCommand = runAdb(*options, QLatin1String(" shell cat ") + shellQuote(directory + QLatin1String("/modification.txt")));
     if (adbCommand == 0)
         return false;
 
@@ -1510,7 +1582,7 @@ bool fetchRemoteModifications(Options *options, const QString &directory)
     pclose(adbCommand);
 
     if (options->qtInstallDirectory != qtPath) {
-        adbCommand = runAdb(*options, QLatin1String(" shell rm -r ") + directory);
+        adbCommand = runAdb(*options, QLatin1String(" shell rm -r ") + shellQuote(directory));
         if (options->verbose) {
             fprintf(stdout, "  -- Removing old Qt libs.\n");
             while (fgets(buffer, sizeof(buffer), adbCommand) != 0)
@@ -1519,7 +1591,7 @@ bool fetchRemoteModifications(Options *options, const QString &directory)
         pclose(adbCommand);
     }
 
-    adbCommand = runAdb(*options, QLatin1String(" ls ") + directory);
+    adbCommand = runAdb(*options, QLatin1String(" ls ") + shellQuote(directory));
     if (adbCommand == 0)
         return false;
 
@@ -1621,6 +1693,8 @@ bool copyQtFiles(Options *options)
         // For debug deployment, we copy all libraries and plugins
         QDirIterator dirIterator(options->qtInstallDirectory, QDirIterator::Subdirectories);
         while (dirIterator.hasNext()) {
+            dirIterator.next();
+
             QFileInfo info = dirIterator.fileInfo();
             if (!info.isDir()) {
                 QString relativePath = info.absoluteFilePath().mid(options->qtInstallDirectory.length());
@@ -1636,7 +1710,6 @@ bool copyQtFiles(Options *options)
                         return false;
                 }
             }
-            dirIterator.next();
         }
 
         foreach (QString qtDependency, options->qtDependencies)
@@ -1697,25 +1770,53 @@ bool copyQtFiles(Options *options)
     return true;
 }
 
+QStringList getLibraryProjectsInOutputFolder(const Options &options)
+{
+    QStringList ret;
+
+    QFile file(options.outputDirectory + QLatin1String("/project.properties"));
+    if (file.open(QIODevice::ReadOnly)) {
+        while (!file.atEnd()) {
+            QByteArray line = file.readLine().trimmed();
+            if (line.startsWith("android.library.reference")) {
+                int equalSignIndex = line.indexOf('=');
+                if (equalSignIndex >= 0) {
+                    QString path = QString::fromLocal8Bit(line.mid(equalSignIndex + 1));
+
+                    QFileInfo info(options.outputDirectory + QLatin1Char('/') + path);
+                    if (QDir::isRelativePath(path)
+                            && info.exists()
+                            && info.isDir()
+                            && info.canonicalFilePath().startsWith(options.outputDirectory)) {
+                        ret += info.canonicalFilePath();
+                    }
+                }
+            }
+        }
+    }
+
+    return ret;
+}
+
 bool createAndroidProject(const Options &options)
 {
     if (options.verbose)
         fprintf(stdout, "Running Android tool to create package definition.\n");
 
-    QString androidTool = options.sdkPath + QLatin1String("/tools/android");
+    QString androidToolExecutable = options.sdkPath + QLatin1String("/tools/android");
 #if defined(Q_OS_WIN32)
-    androidTool += QLatin1String(".bat");
+    androidToolExecutable += QLatin1String(".bat");
 #endif
 
-    if (!QFile::exists(androidTool)) {
-        fprintf(stderr, "Cannot find Android tool: %s\n", qPrintable(androidTool));
+    if (!QFile::exists(androidToolExecutable)) {
+        fprintf(stderr, "Cannot find Android tool: %s\n", qPrintable(androidToolExecutable));
         return false;
     }
 
-    androidTool = QString::fromLatin1("\"%1\" update project --path %2 --target %3 --name QtApp")
-            .arg(androidTool)
-            .arg(options.outputDirectory)
-            .arg(options.androidPlatform);
+    QString androidTool = QString::fromLatin1("%1 update project --path %2 --target %3 --name QtApp")
+                            .arg(shellQuote(androidToolExecutable))
+                            .arg(shellQuote(options.outputDirectory))
+                            .arg(shellQuote(options.androidPlatform));
 
     if (options.verbose)
         fprintf(stdout, "  -- Command: %s\n", qPrintable(androidTool));
@@ -1727,6 +1828,29 @@ bool createAndroidProject(const Options &options)
     }
 
     pclose(androidToolCommand);
+
+    // If the project has subprojects inside the current folder, we need to also run android update on these.
+    QStringList libraryProjects = getLibraryProjectsInOutputFolder(options);
+    foreach (QString libraryProject, libraryProjects) {
+        if (options.verbose)
+            fprintf(stdout, "Updating subproject %s\n", qPrintable(libraryProject));
+
+        androidTool = QString::fromLatin1("%1 update lib-project --path %2 --target %3")
+                .arg(shellQuote(androidToolExecutable))
+                .arg(shellQuote(libraryProject))
+                .arg(shellQuote(options.androidPlatform));
+
+        if (options.verbose)
+            fprintf(stdout, "  -- Command: %s\n", qPrintable(androidTool));
+
+        FILE *androidToolCommand = popen(androidTool.toLocal8Bit().constData(), "r");
+        if (androidToolCommand == 0) {
+            fprintf(stderr, "Cannot run command '%s'\n", qPrintable(androidTool));
+            return false;
+        }
+
+        pclose(androidToolCommand);
+    }
 
     return true;
 }
@@ -1778,7 +1902,7 @@ bool buildAndroidProject(const Options &options)
         return false;
     }
 
-    QString ant = QString::fromLatin1("\"%1\" %2").arg(antTool).arg(options.releasePackage ? QLatin1String(" release") : QLatin1String(" debug"));
+    QString ant = QString::fromLatin1("%1 %2").arg(shellQuote(antTool)).arg(options.releasePackage ? QLatin1String(" release") : QLatin1String(" debug"));
 
     FILE *antCommand = popen(ant.toLocal8Bit().constData(), "r");
     if (antCommand == 0) {
@@ -1812,7 +1936,7 @@ bool uninstallApk(const Options &options)
         fprintf(stdout, "Uninstalling old Android package %s if present.\n", qPrintable(options.packageName));
 
 
-    FILE *adbCommand = runAdb(options, QLatin1String(" uninstall ") + options.packageName);
+    FILE *adbCommand = runAdb(options, QLatin1String(" uninstall ") + shellQuote(options.packageName));
     if (adbCommand == 0)
         return false;
 
@@ -1854,10 +1978,10 @@ bool installApk(const Options &options)
 
     FILE *adbCommand = runAdb(options,
                               QLatin1String(" install -r ")
-                              + options.outputDirectory
-                              + QLatin1String("/bin/")
-                              + apkName(options)
-                              + QLatin1String(".apk"));
+                              + shellQuote(options.outputDirectory)
+                              + shellQuote(QLatin1String("/bin/")
+                                + apkName(options)
+                                + QLatin1String(".apk")));
     if (adbCommand == 0)
         return false;
 
@@ -1937,29 +2061,29 @@ bool signPackage(const Options &options)
         return false;
     }
 
-    jarSignerTool = QString::fromLatin1("\"%1\" -sigalg \"%2\" -digestalg \"%3\" -keystore \"%4\"")
-            .arg(jarSignerTool).arg(options.sigAlg).arg(options.digestAlg).arg(options.keyStore);
+    jarSignerTool = QString::fromLatin1("%1 -sigalg %2 -digestalg %3 -keystore %4")
+            .arg(shellQuote(jarSignerTool)).arg(shellQuote(options.sigAlg)).arg(shellQuote(options.digestAlg)).arg(shellQuote(options.keyStore));
 
     if (!options.keyStorePassword.isEmpty())
-        jarSignerTool += QString::fromLatin1(" -storepass \"%1\"").arg(options.keyStorePassword);
+        jarSignerTool += QString::fromLatin1(" -storepass %1").arg(shellQuote(options.keyStorePassword));
 
     if (!options.storeType.isEmpty())
-        jarSignerTool += QString::fromLatin1(" -storetype \"%1\"").arg(options.storeType);
+        jarSignerTool += QString::fromLatin1(" -storetype %1").arg(shellQuote(options.storeType));
 
     if (!options.keyPass.isEmpty())
-        jarSignerTool += QString::fromLatin1(" -keypass \"%1\"").arg(options.keyPass);
+        jarSignerTool += QString::fromLatin1(" -keypass %1").arg(shellQuote(options.keyPass));
 
     if (!options.sigFile.isEmpty())
-        jarSignerTool += QString::fromLatin1(" -sigfile \"%1\"").arg(options.sigFile);
+        jarSignerTool += QString::fromLatin1(" -sigfile %1").arg(shellQuote(options.sigFile));
 
     if (!options.signedJar.isEmpty())
-        jarSignerTool += QString::fromLatin1(" -signedjar \"%1\"").arg(options.signedJar);
+        jarSignerTool += QString::fromLatin1(" -signedjar %1").arg(shellQuote(options.signedJar));
 
     if (!options.tsaUrl.isEmpty())
-        jarSignerTool += QString::fromLatin1(" -tsa \"%1\"").arg(options.tsaUrl);
+        jarSignerTool += QString::fromLatin1(" -tsa %1").arg(shellQuote(options.tsaUrl));
 
     if (!options.tsaCert.isEmpty())
-        jarSignerTool += QString::fromLatin1(" -tsacert \"%1\"").arg(options.tsaCert);
+        jarSignerTool += QString::fromLatin1(" -tsacert %1").arg(shellQuote(options.tsaCert));
 
     if (options.internalSf)
         jarSignerTool += QLatin1String(" -internalsf");
@@ -1970,12 +2094,12 @@ bool signPackage(const Options &options)
     if (options.protectedAuthenticationPath)
         jarSignerTool += QLatin1String(" -protected");
 
-    jarSignerTool += QString::fromLatin1(" %1 \"%2\"")
-            .arg(options.outputDirectory
+    jarSignerTool += QString::fromLatin1(" %1 %2")
+            .arg(shellQuote(options.outputDirectory
                  + QLatin1String("/bin/")
                  + apkName(options)
-                 + QLatin1String("-unsigned.apk"))
-            .arg(options.keyStoreAlias);
+                 + QLatin1String("-unsigned.apk")))
+            .arg(shellQuote(options.keyStoreAlias));
 
     FILE *jarSignerCommand = popen(jarSignerTool.toLocal8Bit().constData(), "r");
     if (jarSignerCommand == 0) {
@@ -2007,17 +2131,17 @@ bool signPackage(const Options &options)
         return false;
     }
 
-    zipAlignTool = QString::fromLatin1("\"%1\"%2 -f 4 %3 %4")
-            .arg(zipAlignTool)
+    zipAlignTool = QString::fromLatin1("%1%2 -f 4 %3 %4")
+            .arg(shellQuote(zipAlignTool))
             .arg(options.verbose ? QString::fromLatin1(" -v") : QString())
-            .arg(options.outputDirectory
+            .arg(shellQuote(options.outputDirectory
                  + QLatin1String("/bin/")
                  + apkName(options)
-                 + QLatin1String("-unsigned.apk "))
-            .arg(options.outputDirectory
+                 + QLatin1String("-unsigned.apk")))
+            .arg(shellQuote(options.outputDirectory
                  + QLatin1String("/bin/")
                  + apkName(options)
-                 + QLatin1String(".apk"));
+                 + QLatin1String(".apk")));
 
     FILE *zipAlignCommand = popen(zipAlignTool.toLocal8Bit(), "r");
     if (zipAlignCommand == 0) {
@@ -2076,7 +2200,7 @@ bool deployAllToLocalTmp(const Options &options)
 {
     FILE *adbCommand = runAdb(options,
                               QString::fromLatin1(" push %1 /data/local/tmp/qt/")
-                              .arg(options.temporaryDirectoryName));
+                              .arg(shellQuote(options.temporaryDirectoryName)));
     if (adbCommand == 0)
         return false;
 

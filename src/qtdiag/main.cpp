@@ -42,6 +42,7 @@
 #include "qtdiag.h"
 
 #include <QtGui/QGuiApplication>
+#include <QtCore/QCommandLineParser>
 
 #include <iostream>
 #include <string>
@@ -57,6 +58,16 @@ int main(int argc, char **argv)
     QCoreApplication::setOrganizationName(QStringLiteral("Qt Project"));
     QCoreApplication::setOrganizationDomain(QStringLiteral("qt-project.org"));
 
-    std::wcout << qtDiag().toStdWString();
+    QCommandLineParser commandLineParser;
+    const QCommandLineOption glExtensionOption(QStringLiteral("gl-extensions"), QStringLiteral("List GL extensions"));
+    commandLineParser.setApplicationDescription(QStringLiteral("Prints diagnostic output about the Qt library."));
+    commandLineParser.addOption(glExtensionOption);
+    commandLineParser.addHelpOption();
+    commandLineParser.process(app);
+    unsigned flags = 0;
+    if (commandLineParser.isSet(glExtensionOption))
+        flags |= QtDiagGlExtensions;
+
+    std::wcout << qtDiag(flags).toStdWString();
     return 0;
 }
