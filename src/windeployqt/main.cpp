@@ -615,18 +615,33 @@ static inline unsigned qtModuleForPlugin(const QString &subDirName)
     return 0; // "designer"
 }
 
-QStringList findQtPlugins(unsigned usedQtModules,
-                          const QString qtPluginsDirName,
-                          bool debug, Platform platform,
-                          QString *platformPlugin)
+static unsigned qtModule(const QString &module)
 {
+    unsigned bestMatch = 0;
+    int bestMatchLength = 0;
+    const size_t qtModulesCount = sizeof(qtModuleEntries)/sizeof(QtModuleEntry);
+    for (size_t i = 0; i < qtModulesCount; ++i) {
+        const QString libraryName = QLatin1String(qtModuleEntries[i].libraryName);
+        if (libraryName.size() > bestMatchLength && module.contains(libraryName, Qt::CaseInsensitive)) {
+            bestMatch = qtModuleEntries[i].module;
+            bestMatchLength = libraryName.size();
+        }
+    }
+    return bestMatch;
+}
+
+QStringList findQtPlugins(unsigned *usedQtModules, unsigned disabledQtModules,
+                          const QString &qtPluginsDirName, const QString &libraryLocation,
+                          bool debug, Platform platform, QString *platformPlugin)
+{
+    QString errorMessage;
     if (qtPluginsDirName.isEmpty())
         return QStringList();
     QDir pluginsDir(qtPluginsDirName);
     QStringList result;
     foreach (const QString &subDirName, pluginsDir.entryList(QStringList(QLatin1String("*")), QDir::Dirs | QDir::NoDotAndDotDot)) {
         const unsigned module = qtModuleForPlugin(subDirName);
-        if (module & usedQtModules) {
+        if (module & *usedQtModules) {
             const QString subDirPath = qtPluginsDirName + QLatin1Char('/') + subDirName;
             QDir subDir(subDirPath);
             // Filter for platform or any.
@@ -658,26 +673,30 @@ QStringList findQtPlugins(unsigned usedQtModules,
                 const QString pluginPath = subDir.absoluteFilePath(plugin);
                 if (isPlatformPlugin)
                     *platformPlugin = pluginPath;
-                result.push_back(pluginPath);
+                QStringList dependentQtLibs;
+                unsigned neededModules = 0;
+                if (findDependentQtLibraries(libraryLocation, pluginPath, platform, &errorMessage, &dependentQtLibs)) {
+                    for (int d = 0; d < dependentQtLibs.size(); ++ d)
+                        neededModules |= qtModule(dependentQtLibs.at(d));
+                } else {
+                    std::wcerr << "Warning: Cannot determine dependencies of "
+                        << QDir::toNativeSeparators(pluginPath) << ": " << errorMessage << '\n';
+                }
+                if (neededModules & disabledQtModules) {
+                    if (optVerboseLevel)
+                        std::wcout << "Skipping plugin " << plugin << " due to disabled dependencies.\n";
+                } else {
+                    if (const unsigned missingModules = (neededModules & ~*usedQtModules)) {
+                        *usedQtModules |= missingModules;
+                        if (optVerboseLevel)
+                            std::wcout << "Adding " << formatQtModules(missingModules).constData() << " for " << plugin << '\n';
+                    }
+                    result.append(pluginPath);
+                }
             } // for filter
         } // type matches
     } // for plugin folder
     return result;
-}
-
-static unsigned qtModule(const QString &module)
-{
-    unsigned bestMatch = 0;
-    int bestMatchLength = 0;
-    const size_t qtModulesCount = sizeof(qtModuleEntries)/sizeof(QtModuleEntry);
-    for (size_t i = 0; i < qtModulesCount; ++i) {
-        const QString libraryName = QLatin1String(qtModuleEntries[i].libraryName);
-        if (libraryName.size() > bestMatchLength && module.contains(libraryName, Qt::CaseInsensitive)) {
-            bestMatch = qtModuleEntries[i].module;
-            bestMatchLength = libraryName.size();
-        }
-    }
-    return bestMatch;
 }
 
 static QStringList translationNameFilters(unsigned modules, const QString &prefix)
@@ -953,6 +972,14 @@ static DeployResult deploy(const Options &options,
             deployedQtLibraries.push_back(dependentQtLibs.at(i)); // Not represented by flag.
     }
     result.deployedQtLibraries = (result.usedQtLibraries | options.additionalLibraries) & ~options.disabledLibraries;
+
+    const QStringList plugins =
+        findQtPlugins(&result.deployedQtLibraries,
+                      // For non-QML applications, disable QML to prevent it from being pulled in by the qtaccessiblequick plugin.
+                      options.disabledLibraries | (usesQml2 ? 0 : (QtQmlModule | QtQuickModule)),
+                      qmakeVariables.value(QStringLiteral("QT_INSTALL_PLUGINS")), libraryLocation,
+                      isDebug, options.platform, &platformPlugin);
+
     // Apply options flags and re-add library names.
     const size_t qtModulesCount = sizeof(qtModuleEntries)/sizeof(QtModuleEntry);
     for (size_t i = 0; i < qtModulesCount; ++i)
@@ -965,8 +992,6 @@ static DeployResult deploy(const Options &options,
                    << "\nTo be deployed     : " << formatQtModules(result.deployedQtLibraries).constData() << '\n';
     }
 
-    const QStringList plugins = findQtPlugins(result.deployedQtLibraries, qmakeVariables.value(QStringLiteral("QT_INSTALL_PLUGINS")),
-                                              isDebug, options.platform, &platformPlugin);
     if (optVerboseLevel > 1)
         std::wcout << "Plugins: " << plugins.join(QLatin1Char(',')) << '\n';
 
