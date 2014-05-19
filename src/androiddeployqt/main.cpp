@@ -90,6 +90,7 @@ struct Options
         , sectionsOnly(false)
         , protectedAuthenticationPath(false)
         , installApk(false)
+        , uninstallApk(false)
         , fetchedRemoteModificationDates(false)
     {}
 
@@ -159,6 +160,7 @@ struct Options
 
     // Installation information
     bool installApk;
+    bool uninstallApk;
     QString installLocation;
 
     // Collected information
@@ -266,6 +268,10 @@ Options parseOptions()
                 options.inputFileName = arguments.at(++i);
         } else if (argument.compare(QLatin1String("--install"), Qt::CaseInsensitive) == 0) {
             options.installApk = true;
+            options.uninstallApk = true;
+        } else if (argument.compare(QLatin1String("--reinstall"), Qt::CaseInsensitive) == 0) {
+            options.installApk = true;
+            options.uninstallApk = false;
         } else if (argument.compare(QLatin1String("--android-platform"), Qt::CaseInsensitive) == 0) {
             if (i + 1 == arguments.size())
                 options.helpRequested = true;
@@ -402,7 +408,12 @@ void printHelp()
                     "       ministro: Use the Ministro service to manage Qt files.\n"
                     "       debug: Copy Qt files to device for quick debugging.\n"
                     "    --install: Installs apk to device/emulator. By default this step is\n"
-                    "       not taken.\n"
+                    "       not taken. If the application has previously been installed on\n"
+                    "       the device, it will be uninstalled first.\n"
+                    "    --reinstall: Installs apk to device/emulator. By default this step\n"
+                    "       is not taken. If the application has previously been installed on\n"
+                    "       the device, it will be overwritten, but its data will be left\n"
+                    "       intact.\n"
                     "    --device [device ID]: Use specified device for deployment. Default\n"
                     "       is the device selected by default by adb.\n"
                     "    --android-platform <platform>: Builds against the given android\n"
@@ -1896,7 +1907,8 @@ QString apkName(const Options &options)
 bool installApk(const Options &options)
 {
     // Uninstall if necessary
-    uninstallApk(options);
+    if (options.uninstallApk)
+        uninstallApk(options);
 
     if (options.verbose)
         fprintf(stdout, "Installing Android package to device.\n");
