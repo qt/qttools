@@ -73,6 +73,17 @@ void deleteRecursively(const QString &dirName)
     QDir().rmdir(dirName);
 }
 
+FILE *openProcess(const QString &command)
+{
+#if defined(Q_OS_WIN32)
+    QString processedCommand = QLatin1Char('\"') + command + QLatin1Char('\"');
+#else
+    QString processedCommand = command;
+#endif
+
+    return popen(processedCommand.toLocal8Bit().constData(), "r");
+}
+
 struct Options
 {
     Options()
@@ -1268,7 +1279,7 @@ QStringList getQtLibsFromElf(const Options &options, const QString &fileName)
 
     readElf = QString::fromLatin1("%1 -d -W %2").arg(shellQuote(readElf)).arg(shellQuote(fileName));
 
-    FILE *readElfCommand = popen(readElf.toLocal8Bit().constData(), "r");
+    FILE *readElfCommand = openProcess(readElf);
     if (readElfCommand == 0) {
         fprintf(stderr, "Cannot execute command %s", qPrintable(readElf));
         return QStringList();
@@ -1412,7 +1423,7 @@ bool stripFile(const Options &options, const QString &fileName)
 
     strip = QString::fromLatin1("%1 %2").arg(shellQuote(strip)).arg(shellQuote(fileName));
 
-    FILE *stripCommand = popen(strip.toLocal8Bit().constData(), "r");
+    FILE *stripCommand = openProcess(strip);
     if (stripCommand == 0) {
         fprintf(stderr, "Cannot execute command %s", qPrintable(strip));
         return false;
@@ -1493,7 +1504,7 @@ FILE *runAdb(const Options &options, const QString &arguments)
     if (options.verbose)
         fprintf(stdout, "Running command \"%s\"\n", adb.toLocal8Bit().constData());
 
-    FILE *adbCommand = popen(adb.toLocal8Bit().constData(), "r");
+    FILE *adbCommand = openProcess(adb);
     if (adbCommand == 0) {
         fprintf(stderr, "Cannot start adb: %s\n", qPrintable(adb));
         return 0;
@@ -1757,7 +1768,7 @@ bool createAndroidProject(const Options &options)
     if (options.verbose)
         fprintf(stdout, "  -- Command: %s\n", qPrintable(androidTool));
 
-    FILE *androidToolCommand = popen(androidTool.toLocal8Bit().constData(), "r");
+    FILE *androidToolCommand = openProcess(androidTool);
     if (androidToolCommand == 0) {
         fprintf(stderr, "Cannot run command '%s'\n", qPrintable(androidTool));
         return false;
@@ -1840,7 +1851,7 @@ bool buildAndroidProject(const Options &options)
 
     QString ant = QString::fromLatin1("%1 %2").arg(shellQuote(antTool)).arg(options.releasePackage ? QLatin1String(" release") : QLatin1String(" debug"));
 
-    FILE *antCommand = popen(ant.toLocal8Bit().constData(), "r");
+    FILE *antCommand = openProcess(ant);
     if (antCommand == 0) {
         fprintf(stderr, "Cannot run ant command: %s\n.", qPrintable(ant));
         return false;
@@ -2038,7 +2049,7 @@ bool signPackage(const Options &options)
                  + QLatin1String("-unsigned.apk")))
             .arg(shellQuote(options.keyStoreAlias));
 
-    FILE *jarSignerCommand = popen(jarSignerTool.toLocal8Bit().constData(), "r");
+    FILE *jarSignerCommand = openProcess(jarSignerTool);
     if (jarSignerCommand == 0) {
         fprintf(stderr, "Couldn't run jarsigner.\n");
         return false;
@@ -2080,7 +2091,7 @@ bool signPackage(const Options &options)
                  + apkName(options)
                  + QLatin1String(".apk")));
 
-    FILE *zipAlignCommand = popen(zipAlignTool.toLocal8Bit(), "r");
+    FILE *zipAlignCommand = openProcess(zipAlignTool);
     if (zipAlignCommand == 0) {
         fprintf(stderr, "Couldn't run zipalign.\n");
         return false;
