@@ -29,11 +29,10 @@ qtHaveModule(dbus): SUBDIRS += qdbus
 
 win32|winrt:SUBDIRS += windeployqt
 winrt:SUBDIRS += winrtrunner qtd3dservice
+qtHaveModule(gui):!android:!ios:!qnx:!wince*:!winrt*:SUBDIRS += qtdiag
 
 qtNomakeTools( \
     pixeltool \
     qtconfig \
     macdeployqt \
 )
-
-!android:!ios:!qnx:!wince*:!winrt*:SUBDIRS += qtdiag
