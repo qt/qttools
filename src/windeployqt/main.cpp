@@ -602,7 +602,7 @@ static inline unsigned qtModuleForPlugin(const QString &subDirName)
         return QtNetworkModule;
     if (subDirName == QLatin1String("sqldrivers"))
         return QtSqlModule;
-    if (subDirName == QLatin1String("mediaservice") || subDirName == QLatin1String("playlistformats"))
+    if (subDirName == QLatin1String("audio") || subDirName == QLatin1String("mediaservice") || subDirName == QLatin1String("playlistformats"))
         return QtMultimediaModule;
     if (subDirName == QLatin1String("printsupport"))
         return QtPrintSupportModule;
