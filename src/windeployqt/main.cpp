@@ -190,8 +190,14 @@ struct Options {
         DebugDetectionForceRelease
     };
 
+    enum AngleDetection {
+        AngleDetectionAuto,
+        AngleDetectionForceOn,
+        AngleDetectionForceOff
+    };
+
     Options() : plugins(true), libraries(true), quickImports(true), translations(true), systemD3dCompiler(true), compilerRunTime(false)
-              , platform(Windows), additionalLibraries(0), disabledLibraries(0)
+              , angleDetection(AngleDetectionAuto), platform(Windows), additionalLibraries(0), disabledLibraries(0)
               , updateFileFlags(0), json(0), list(ListNone), debugDetection(DebugDetectionAuto) {}
 
     bool plugins;
@@ -200,6 +206,7 @@ struct Options {
     bool translations;
     bool systemD3dCompiler;
     bool compilerRunTime;
+    AngleDetection angleDetection;
     Platform platform;
     unsigned additionalLibraries;
     unsigned disabledLibraries;
@@ -318,6 +325,14 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
                                   QStringLiteral("Print to stdout in JSON format."));
     parser->addOption(jsonOption);
 
+    QCommandLineOption angleOption(QStringLiteral("angle"),
+                                   QStringLiteral("Force deployment of ANGLE."));
+    parser->addOption(angleOption);
+
+    QCommandLineOption noAngleOption(QStringLiteral("no-angle"),
+                                     QStringLiteral("Disable deployment of ANGLE."));
+    parser->addOption(noAngleOption);
+
     QCommandLineOption listOption(QStringLiteral("list"),
                                   QLatin1String("Print only the names of the files copied.\n"
                                                 "Available options:\n"
@@ -390,6 +405,15 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
         options->debugDetection = Options::DebugDetectionForceDebug;
     else if (forceRelease)
         options->debugDetection = Options::DebugDetectionForceRelease;
+
+    const bool forceAngle = parser->isSet(angleOption);
+    const bool disableAngle = parser->isSet(noAngleOption);
+    if (forceAngle && disableAngle)
+        std::wcerr << "Warning: both -angle and -no-angle specified, defaulting to on.\n";
+    if (forceAngle)
+        options->angleDetection = Options::AngleDetectionForceOn;
+    else if (disableAngle)
+        options->angleDetection = Options::AngleDetectionForceOff;
 
     if (parser->isSet(forceOption))
         options->updateFileFlags |= ForceUpdateFile;
@@ -977,10 +1001,19 @@ static DeployResult deploy(const Options &options,
 
     // Check for ANGLE on the platform plugin.
     if (options.platform & WindowsBased)  {
-        const QStringList platformPluginLibraries = findDependentLibraries(platformPlugin, options.platform, errorMessage);
-        const QStringList libEgl = platformPluginLibraries.filter(QStringLiteral("libegl"), Qt::CaseInsensitive);
-        if (!libEgl.isEmpty()) {
-            const QString libEglFullPath = qtBinDir + slash + QFileInfo(libEgl.front()).fileName();
+        QString libEglName = QStringLiteral("libEGL");
+        if (isDebug)
+            libEglName += QLatin1Char('d');
+        libEglName += QLatin1String(windowsSharedLibrarySuffix);
+        bool deployAngle = options.angleDetection == Options::AngleDetectionForceOn;
+        if (options.angleDetection == Options::AngleDetectionAuto) {
+            // Deploy ANGLE if direct dependency is there or dynamic build (no dependency to any GL library).
+            const QStringList platformPluginLibraries = findDependentLibraries(platformPlugin, options.platform, errorMessage);
+            deployAngle = !platformPluginLibraries.filter(libEglName, Qt::CaseInsensitive).isEmpty()
+                || platformPluginLibraries.filter(QStringLiteral("opengl32"), Qt::CaseInsensitive).isEmpty();
+        }
+        if (deployAngle) {
+            const QString libEglFullPath = qtBinDir + slash + libEglName;
             deployedQtLibraries.push_back(libEglFullPath);
             const QStringList libGLESv2 = findDependentLibraries(libEglFullPath, options.platform, errorMessage).filter(QStringLiteral("libGLESv2"), Qt::CaseInsensitive);
             if (!libGLESv2.isEmpty()) {
@@ -1006,7 +1039,7 @@ static DeployResult deploy(const Options &options,
                 if (QFileInfo(d3dCompilerQt).exists())
                     deployedQtLibraries.push_back(d3dCompilerQt);
             }
-        } // !libEgl.isEmpty()
+        } // deployAngle
     } // Windows
 
     // Update libraries
