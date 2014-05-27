@@ -764,16 +764,19 @@ struct DeployResult
     unsigned deployedQtLibraries;
 };
 
-static QString libraryPath(const QString &libraryLocation, const char *name, Platform platform, bool debug)
+static QString libraryPath(const QString &libraryLocation, const char *name,
+                           const QString &qtLibInfix, Platform platform, bool debug)
 {
     QString result = libraryLocation + QLatin1Char('/');
     if (platform & WindowsBased) {
         result += QLatin1String(name);
+        result += qtLibInfix;
         if (debug)
             result += QLatin1Char('d');
     } else if (platform & UnixBased) {
         result += QStringLiteral("lib");
         result += QLatin1String(name);
+        result += qtLibInfix;
     }
     result += sharedLibrarySuffix(platform);
     return result;
@@ -848,6 +851,16 @@ static inline int qtVersion(const QMap<QString, QString> &qmakeVariables)
     return (majorVersion << 16) | (minorVersion << 8) | patchVersion;
 }
 
+// Determine the Qt lib infix from the library path of "Qt5Core<qtblibinfix>[d].dll".
+static inline QString qtlibInfixFromCoreLibName(const QString &path, bool isDebug, Platform platform)
+{
+    const int startPos = path.lastIndexOf(QLatin1Char('/')) + 8;
+    int endPos = path.lastIndexOf(QLatin1Char('.'));
+    if (isDebug && (platform & WindowsBased))
+        endPos--;
+    return endPos > startPos ? path.mid(startPos, endPos - startPos) : QString();
+}
+
 static DeployResult deploy(const Options &options,
                            const QMap<QString, QString> &qmakeVariables,
                            QString *errorMessage)
@@ -875,8 +888,14 @@ static DeployResult deploy(const Options &options,
 
     // Determine application type, check Quick2 is used by looking at the
     // direct dependencies (do not be fooled by QtWebKit depending on it).
-    for (int m = 0; m < directDependencyCount; ++m)
-        result.directlyUsedQtLibraries |= qtModule(dependentQtLibs.at(m));
+    QString qtLibInfix;
+    for (int m = 0; m < directDependencyCount; ++m) {
+        const unsigned module = qtModule(dependentQtLibs.at(m));
+        result.directlyUsedQtLibraries |= module;
+        if (module == QtCoreModule)
+            qtLibInfix = qtlibInfixFromCoreLibName(dependentQtLibs.at(m), isDebug, options.platform);
+    }
+
     const bool usesQml2 = !(options.disabledLibraries & QtQmlModule)
                             && ((result.directlyUsedQtLibraries & QtQmlModule)
                                 || (options.additionalLibraries & QtQmlModule));
@@ -984,7 +1003,7 @@ static DeployResult deploy(const Options &options,
     const size_t qtModulesCount = sizeof(qtModuleEntries)/sizeof(QtModuleEntry);
     for (size_t i = 0; i < qtModulesCount; ++i)
         if (result.deployedQtLibraries & qtModuleEntries[i].module)
-            deployedQtLibraries.push_back(libraryPath(libraryLocation, qtModuleEntries[i].libraryName, options.platform, isDebug));
+            deployedQtLibraries.push_back(libraryPath(libraryLocation, qtModuleEntries[i].libraryName, qtLibInfix, options.platform, isDebug));
 
     if (optVerboseLevel >= 1) {
         std::wcout << "Direct dependencies: " << formatQtModules(result.directlyUsedQtLibraries).constData()
