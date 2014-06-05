@@ -67,6 +67,7 @@ protected:
     virtual bool installPackage(IAppxManifestReader *reader, const QString &filePath) = 0;
 
     bool installDependencies();
+    bool createPackage(const QString &packageFileName);
     static bool getManifestFile(const QString &fileName, QString *manifest = 0);
 
     QScopedPointer<AppxEnginePrivate> d_ptr;
