@@ -39,38 +39,56 @@
 **
 ****************************************************************************/
 
-#ifndef APPXENGINE_H
-#define APPXENGINE_H
+#ifndef APPXENGINE_P_H
+#define APPXENGINE_P_H
 
-#include "runnerengine.h"
-#include "runner.h"
-
-#include <QtCore/QScopedPointer>
+#include <QtCore/qt_windows.h>
+#include <QtCore/QSet>
 #include <QtCore/QString>
+
+#include <wrl.h>
+#include <windows.system.h>
 
 QT_USE_NAMESPACE
 
-struct IAppxManifestReader;
-class AppxEnginePrivate;
-class AppxEngine : public RunnerEngine
+class Runner;
+struct IAppxFactory;
+class AppxEnginePrivate
 {
 public:
-    qint64 pid() const Q_DECL_OVERRIDE;
-    int exitCode() const Q_DECL_OVERRIDE;
-    QString executable() const Q_DECL_OVERRIDE;
+    virtual ~AppxEnginePrivate() { }
+    Runner *runner;
+    bool hasFatalError;
 
-protected:
-    explicit AppxEngine(Runner *runner, AppxEnginePrivate *dd);
-    ~AppxEngine();
+    QString manifest;
+    QString packageFullName;
+    QString packageFamilyName;
+    ABI::Windows::System::ProcessorArchitecture packageArchitecture;
+    QString executable;
+    qint64 pid;
+    HANDLE processHandle;
+    DWORD exitCode;
+    QSet<QString> dependencies;
+    QSet<QString> installedPackages;
 
-    virtual QString extensionSdkPath() const = 0;
-    virtual bool installPackage(IAppxManifestReader *reader, const QString &filePath) = 0;
-
-    bool installDependencies();
-    static bool getManifestFile(const QString &fileName, QString *manifest = 0);
-
-    QScopedPointer<AppxEnginePrivate> d_ptr;
-    Q_DECLARE_PRIVATE(AppxEngine)
+    Microsoft::WRL::ComPtr<ABI::Windows::Foundation::IUriRuntimeClassFactory> uriFactory;
+    Microsoft::WRL::ComPtr<IAppxFactory> packageFactory;
 };
 
-#endif // APPXENGINE_H
+#define wchar(str) reinterpret_cast<LPCWSTR>(str.utf16())
+#define hStringFromQString(str) HStringReference(reinterpret_cast<const wchar_t *>(str.utf16())).Get()
+#define QStringFromHString(hstr) QString::fromWCharArray(WindowsGetStringRawBuffer(hstr, Q_NULLPTR))
+
+#define RETURN_IF_FAILED(msg, ret) \
+    if (FAILED(hr)) { \
+        qCWarning(lcWinRtRunner).nospace() << msg << ": 0x" << QByteArray::number(hr, 16).constData() \
+                                           << ' ' << qt_error_string(hr); \
+        ret; \
+    }
+
+#define RETURN_HR_IF_FAILED(msg) RETURN_IF_FAILED(msg, return hr)
+#define RETURN_OK_IF_FAILED(msg) RETURN_IF_FAILED(msg, return S_OK)
+#define RETURN_FALSE_IF_FAILED(msg) RETURN_IF_FAILED(msg, return false)
+#define RETURN_VOID_IF_FAILED(msg) RETURN_IF_FAILED(msg, return)
+
+#endif // APPXENGINE_P_H

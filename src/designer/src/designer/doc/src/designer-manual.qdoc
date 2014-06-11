@@ -2802,7 +2802,6 @@ pixmap property in the property editor.
     \title Qt Designer License Information
     \contentspage {Qt Designer Manual}{Contents}
 
-    \ingroup licensing
     \brief License information for contributions to specific parts of the Qt
     Designer source code.
 

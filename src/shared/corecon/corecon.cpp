@@ -155,7 +155,7 @@ protected:
         if (FAILED(hr))
             qCDebug(lcCoreCon) << "Failed to initialize COM.";
     }
-    ~ComInitializer()
+    virtual ~ComInitializer()
     {
         if (SUCCEEDED(hr))
             CoUninitialize();
