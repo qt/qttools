@@ -56,7 +56,21 @@ struct IAppxFactory;
 class AppxEnginePrivate
 {
 public:
-    virtual ~AppxEnginePrivate() { }
+    AppxEnginePrivate()
+    {
+        HRESULT hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
+        if (FAILED(hr)) {
+            qCWarning(lcWinRtRunner) << "Failed to initialize COM:" << qt_error_string(hr);
+            hasFatalError = true;
+        }
+        hasFatalError = false;
+    }
+
+    virtual ~AppxEnginePrivate()
+    {
+        CoUninitialize();
+    }
+
     Runner *runner;
     bool hasFatalError;
 

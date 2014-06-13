@@ -135,8 +135,10 @@ AppxEngine::AppxEngine(Runner *runner, AppxEnginePrivate *dd)
     : d_ptr(dd)
 {
     Q_D(AppxEngine);
+    if (d->hasFatalError)
+        return;
+
     d->runner = runner;
-    d->hasFatalError = false;
     d->processHandle = NULL;
     d->pid = -1;
     d->exitCode = UINT_MAX;
@@ -147,9 +149,7 @@ AppxEngine::AppxEngine(Runner *runner, AppxEnginePrivate *dd)
         return;
     }
 
-    HRESULT hr = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
-    CHECK_RESULT_FATAL("Failed to initialize COM.", return);
-
+    HRESULT hr;
     hr = RoGetActivationFactory(HString::MakeReference(RuntimeClass_Windows_Foundation_Uri).Get(),
                                 IID_PPV_ARGS(&d->uriFactory));
     CHECK_RESULT_FATAL("Failed to instantiate URI factory.", return);
