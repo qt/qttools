@@ -95,27 +95,43 @@ inline std::wostream &operator<<(std::wostream &str, const QString &s)
 // Container class for JSON output
 class JsonOutput
 {
+    typedef QPair<QString, QString> SourceTargetMapping;
+    typedef QList<SourceTargetMapping> SourceTargetMappings;
+
 public:
     void addFile(const QString &source, const QString &target)
     {
-        QJsonObject object;
-        object.insert(QStringLiteral("source"), QDir::toNativeSeparators(source));
-        object.insert(QStringLiteral("target"), QDir::toNativeSeparators(target));
-        m_files.append(object);
+        m_files.append(SourceTargetMapping(source, target));
     }
+
+    void removeTargetDirectory(const QString &targetDirectory)
+    {
+        for (int i = m_files.size() - 1; i >= 0; --i) {
+            if (m_files.at(i).second == targetDirectory)
+                m_files.removeAt(i);
+        }
+    }
+
     QByteArray toJson() const
     {
         QJsonObject document;
-        document.insert(QStringLiteral("files"), m_files);
+        QJsonArray files;
+        foreach (const SourceTargetMapping &mapping, m_files) {
+            QJsonObject object;
+            object.insert(QStringLiteral("source"), QDir::toNativeSeparators(mapping.first));
+            object.insert(QStringLiteral("target"), QDir::toNativeSeparators(mapping.second));
+            files.append(object);
+        }
+        document.insert(QStringLiteral("files"), files);
         return QJsonDocument(document).toJson();
     }
     QByteArray toList(ListOption option, const QDir &base) const
     {
         QByteArray list;
-        foreach (const QJsonValue &file, m_files) {
-            const QString source = file.toObject().value(QStringLiteral("source")).toString();
-            const QString fileName = QFileInfo(source).fileName();
-            const QString target = file.toObject().value(QStringLiteral("target")).toString() + QDir::separator() + fileName;
+        foreach (const SourceTargetMapping &mapping, m_files) {
+            const QString source = QDir::toNativeSeparators(mapping.first);
+            const QString fileName = QFileInfo(mapping.first).fileName();
+            const QString target = QDir::toNativeSeparators(mapping.second) + QDir::separator() + fileName;
             switch (option) {
             case ListNone:
                 break;
@@ -136,7 +152,7 @@ public:
         return list;
     }
 private:
-    QJsonArray m_files;
+    SourceTargetMappings m_files;
 };
 
 #ifdef Q_OS_WIN
@@ -295,6 +311,8 @@ bool updateFile(const QString &sourceFileName,
                             .arg(QDir::toNativeSeparators(targetFileName));
                     return false;
                 }
+                if (json)
+                    json->removeTargetDirectory(targetFileName);
             }
         }
         return true;
