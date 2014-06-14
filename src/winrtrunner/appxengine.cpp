@@ -135,8 +135,10 @@ AppxEngine::AppxEngine(Runner *runner, AppxEnginePrivate *dd)
     : d_ptr(dd)
 {
     Q_D(AppxEngine);
+    if (d->hasFatalError)
+        return;
+
     d->runner = runner;
-    d->hasFatalError = false;
     d->processHandle = NULL;
     d->pid = -1;
     d->exitCode = UINT_MAX;
@@ -147,9 +149,7 @@ AppxEngine::AppxEngine(Runner *runner, AppxEnginePrivate *dd)
         return;
     }
 
-    HRESULT hr = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
-    CHECK_RESULT_FATAL("Failed to initialize COM.", return);
-
+    HRESULT hr;
     hr = RoGetActivationFactory(HString::MakeReference(RuntimeClass_Windows_Foundation_Uri).Get(),
                                 IID_PPV_ARGS(&d->uriFactory));
     CHECK_RESULT_FATAL("Failed to instantiate URI factory.", return);
@@ -340,6 +340,98 @@ bool AppxEngine::installDependencies()
             return false;
         }
     }
+
+    return true;
+}
+
+bool AppxEngine::createPackage(const QString &packageFileName)
+{
+    Q_D(AppxEngine);
+
+    static QHash<QString, QString> contentTypes;
+    if (contentTypes.isEmpty()) {
+        contentTypes.insert(QStringLiteral("dll"), QStringLiteral("application/x-msdownload"));
+        contentTypes.insert(QStringLiteral("exe"), QStringLiteral("application/x-msdownload"));
+        contentTypes.insert(QStringLiteral("png"), QStringLiteral("image/png"));
+        contentTypes.insert(QStringLiteral("xml"), QStringLiteral("vnd.ms-appx.manifest+xml"));
+    }
+
+    // Check for package map, or create one if needed
+    QDir base = QFileInfo(d->manifest).absoluteDir();
+    QFile packageFile(packageFileName);
+
+    QHash<QString, QString> files;
+    QFile mappingFile(base.absoluteFilePath(QStringLiteral("AppxManifest.map")));
+    if (mappingFile.exists()) {
+        qCWarning(lcWinRtRunner) << "Creating package from mapping file:" << mappingFile.fileName();
+        if (!mappingFile.open(QFile::ReadOnly)) {
+            qCWarning(lcWinRtRunner) << "Unable to read mapping file:" << mappingFile.errorString();
+            return false;
+        }
+
+        QRegExp pattern(QStringLiteral("^\"([^\"]*)\"\\s*\"([^\"]*)\"$"));
+        bool inFileSection = false;
+        while (!mappingFile.atEnd()) {
+            const QString line = QString::fromUtf8(mappingFile.readLine()).trimmed();
+            if (line.startsWith(QLatin1Char('['))) {
+                inFileSection = line == QStringLiteral("[Files]");
+                continue;
+            }
+            if (pattern.cap(2).compare(QStringLiteral("AppxManifest.xml"), Qt::CaseInsensitive) == 0)
+                continue;
+            if (inFileSection && pattern.indexIn(line) >= 0 && pattern.captureCount() == 2) {
+                QString inputFile = pattern.cap(1);
+                if (!QFile::exists(inputFile))
+                    inputFile = base.absoluteFilePath(inputFile);
+                files.insert(QDir::toNativeSeparators(inputFile), QDir::toNativeSeparators(pattern.cap(2)));
+            }
+        }
+    } else {
+        qCWarning(lcWinRtRunner) << "No mapping file exists. Only recognized files will be packaged.";
+        // Add executable
+        files.insert(QDir::toNativeSeparators(d->executable), QFileInfo(d->executable).fileName());
+        // Add potential Qt files
+        const QStringList fileTypes = QStringList()
+                << QStringLiteral("*.dll") << QStringLiteral("*.png") << QStringLiteral("*.qm")
+                << QStringLiteral("*.qml") << QStringLiteral("*.qmldir");
+        QDirIterator dirIterator(base.absolutePath(), fileTypes, QDir::Files, QDirIterator::Subdirectories);
+        while (dirIterator.hasNext()) {
+            const QString filePath = dirIterator.next();
+            files.insert(QDir::toNativeSeparators(filePath), QDir::toNativeSeparators(base.relativeFilePath(filePath)));
+        }
+    }
+
+    ComPtr<IStream> outputStream;
+    HRESULT hr = SHCreateStreamOnFile(wchar(packageFile.fileName()), STGM_WRITE|STGM_CREATE, &outputStream);
+    RETURN_FALSE_IF_FAILED("Failed to create package file output stream");
+
+    ComPtr<IUri> hashMethod;
+    hr = CreateUri(L"http://www.w3.org/2001/04/xmlenc#sha512", Uri_CREATE_CANONICALIZE, 0, &hashMethod);
+    RETURN_FALSE_IF_FAILED("Failed to create the has method URI");
+
+    APPX_PACKAGE_SETTINGS packageSettings = { FALSE, hashMethod.Get() };
+    ComPtr<IAppxPackageWriter> packageWriter;
+    hr = d->packageFactory->CreatePackageWriter(outputStream.Get(), &packageSettings, &packageWriter);
+    RETURN_FALSE_IF_FAILED("Failed to create package writer");
+
+    for (QHash<QString, QString>::const_iterator i = files.begin(); i != files.end(); ++i) {
+        qCDebug(lcWinRtRunner) << "Packaging" << i.key() << i.value();
+        ComPtr<IStream> inputStream;
+        hr = SHCreateStreamOnFile(wchar(i.key()), STGM_READ, &inputStream);
+        RETURN_FALSE_IF_FAILED("Failed to open file");
+        const QString contentType = contentTypes.value(QFileInfo(i.key()).suffix().toLower(),
+                                                       QStringLiteral("application/octet-stream"));
+        hr = packageWriter->AddPayloadFile(wchar(i.value()), wchar(contentType),
+                                           APPX_COMPRESSION_OPTION_NORMAL, inputStream.Get());
+        RETURN_FALSE_IF_FAILED("Failed to add payload file");
+    }
+
+    // Write out the manifest
+    ComPtr<IStream> manifestStream;
+    hr = SHCreateStreamOnFile(wchar(d->manifest), STGM_READ, &manifestStream);
+    RETURN_FALSE_IF_FAILED("Failed to open manifest for packaging");
+    hr = packageWriter->Close(manifestStream.Get());
+    RETURN_FALSE_IF_FAILED("Failed to finalize package.");
 
     return true;
 }
