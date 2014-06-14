@@ -59,9 +59,9 @@ using namespace Microsoft::WRL;
 
 QT_USE_NAMESPACE
 
-#include <ccapi.h>
+#include <ccapi_11.h>
 #include <corecon.h>
-Q_GLOBAL_STATIC(CoreConServer, coreConServer)
+Q_GLOBAL_STATIC_WITH_ARGS(CoreConServer, coreConServer, (11))
 
 #define wchar(str) reinterpret_cast<LPCWSTR>(str.utf16())
 
@@ -250,8 +250,8 @@ bool XapEngine::connect()
     HRESULT hr;
     if (!d->connection) {
         _bstr_t connectionName;
-        hr = coreConServer->handle()->GetConnection(
-                    d->device->handle(), 5000, NULL, connectionName.GetAddress(), &d->connection);
+        hr = static_cast<ICcServer *>(coreConServer->handle())->GetConnection(
+                    static_cast<ICcDevice *>(d->device->handle()), 5000, NULL, connectionName.GetAddress(), &d->connection);
         if (FAILED(hr)) {
             qCWarning(lcWinRtRunner) << "Unable to connect to device." << coreConServer->formatError(hr);
             return false;

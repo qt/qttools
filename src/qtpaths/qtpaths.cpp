@@ -64,7 +64,7 @@ static void message(const QString &string)
 Q_NORETURN static void error(const QString &message)
 {
     fprintf(stderr, "%s\n", qPrintable(message));
-    ::exit(1);
+    ::exit(EXIT_FAILURE);
 }
 
 
@@ -285,10 +285,13 @@ int main(int argc, char **argv)
     if (results.isEmpty()) {
         parser.showHelp();
     } else if (results.size() == 1) {
-        message(results.first());
+        const QString &item = results.first();
+        message(item);
+        if (item.isEmpty())
+            return EXIT_FAILURE;
     } else {
         QString errorMessage = QCoreApplication::translate("qtpaths", "Several options given, only one is supported at a time.");
         error(errorMessage);
     }
-    return 0;
+    return EXIT_SUCCESS;
 }

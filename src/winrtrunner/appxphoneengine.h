@@ -39,39 +39,50 @@
 **
 ****************************************************************************/
 
-#ifndef APPXENGINE_H
-#define APPXENGINE_H
+#ifndef APPXPHONEENGINE_H
+#define APPXPHONEENGINE_H
 
+#include "appxengine.h"
 #include "runnerengine.h"
 #include "runner.h"
 
 #include <QtCore/QScopedPointer>
-#include <QtCore/QString>
 
 QT_USE_NAMESPACE
 
-struct IAppxManifestReader;
-class AppxEnginePrivate;
-class AppxEngine : public RunnerEngine
+class AppxPhoneEnginePrivate;
+class AppxPhoneEngine : public AppxEngine
 {
 public:
-    qint64 pid() const Q_DECL_OVERRIDE;
-    int exitCode() const Q_DECL_OVERRIDE;
-    QString executable() const Q_DECL_OVERRIDE;
+    static bool canHandle(Runner *runner);
+    static RunnerEngine *create(Runner *runner);
+    static QStringList deviceNames();
 
-protected:
-    explicit AppxEngine(Runner *runner, AppxEnginePrivate *dd);
-    ~AppxEngine();
+    bool install(bool removeFirst = false) Q_DECL_OVERRIDE;
+    bool remove() Q_DECL_OVERRIDE;
+    bool start() Q_DECL_OVERRIDE;
+    bool enableDebugging(const QString &debuggerExecutable,
+                        const QString &debuggerArguments) Q_DECL_OVERRIDE;
+    bool disableDebugging() Q_DECL_OVERRIDE;
+    bool suspend() Q_DECL_OVERRIDE;
+    bool waitForFinished(int secs) Q_DECL_OVERRIDE;
+    bool stop() Q_DECL_OVERRIDE;
 
-    virtual QString extensionSdkPath() const = 0;
-    virtual bool installPackage(IAppxManifestReader *reader, const QString &filePath) = 0;
+    QString devicePath(const QString &relativePath) const Q_DECL_OVERRIDE;
+    bool sendFile(const QString &localFile, const QString &deviceFile) Q_DECL_OVERRIDE;
+    bool receiveFile(const QString &deviceFile, const QString &localFile) Q_DECL_OVERRIDE;
 
-    bool installDependencies();
-    bool createPackage(const QString &packageFileName);
-    static bool getManifestFile(const QString &fileName, QString *manifest = 0);
+private:
+    explicit AppxPhoneEngine(Runner *runner);
+    ~AppxPhoneEngine();
 
-    QScopedPointer<AppxEnginePrivate> d_ptr;
-    Q_DECLARE_PRIVATE(AppxEngine)
+    QString extensionSdkPath() const;
+    bool installPackage(IAppxManifestReader *reader, const QString &filePath) Q_DECL_OVERRIDE;
+
+    bool connect();
+
+    friend struct QScopedPointerDeleter<AppxPhoneEngine>;
+    Q_DECLARE_PRIVATE(AppxPhoneEngine)
 };
 
-#endif // APPXENGINE_H
+#endif // APPXPHONEENGINE_H

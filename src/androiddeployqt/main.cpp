@@ -73,6 +73,17 @@ void deleteRecursively(const QString &dirName)
     QDir().rmdir(dirName);
 }
 
+FILE *openProcess(const QString &command)
+{
+#if defined(Q_OS_WIN32)
+    QString processedCommand = QLatin1Char('\"') + command + QLatin1Char('\"');
+#else
+    QString processedCommand = command;
+#endif
+
+    return popen(processedCommand.toLocal8Bit().constData(), "r");
+}
+
 struct Options
 {
     Options()
@@ -90,6 +101,7 @@ struct Options
         , sectionsOnly(false)
         , protectedAuthenticationPath(false)
         , installApk(false)
+        , uninstallApk(false)
         , fetchedRemoteModificationDates(false)
     {}
 
@@ -160,6 +172,7 @@ struct Options
 
     // Installation information
     bool installApk;
+    bool uninstallApk;
     QString installLocation;
 
     // Collected information
@@ -267,6 +280,10 @@ Options parseOptions()
                 options.inputFileName = arguments.at(++i);
         } else if (argument.compare(QLatin1String("--install"), Qt::CaseInsensitive) == 0) {
             options.installApk = true;
+            options.uninstallApk = true;
+        } else if (argument.compare(QLatin1String("--reinstall"), Qt::CaseInsensitive) == 0) {
+            options.installApk = true;
+            options.uninstallApk = false;
         } else if (argument.compare(QLatin1String("--android-platform"), Qt::CaseInsensitive) == 0) {
             if (i + 1 == arguments.size())
                 options.helpRequested = true;
@@ -403,7 +420,12 @@ void printHelp()
                     "       ministro: Use the Ministro service to manage Qt files.\n"
                     "       debug: Copy Qt files to device for quick debugging.\n"
                     "    --install: Installs apk to device/emulator. By default this step is\n"
-                    "       not taken.\n"
+                    "       not taken. If the application has previously been installed on\n"
+                    "       the device, it will be uninstalled first.\n"
+                    "    --reinstall: Installs apk to device/emulator. By default this step\n"
+                    "       is not taken. If the application has previously been installed on\n"
+                    "       the device, it will be overwritten, but its data will be left\n"
+                    "       intact.\n"
                     "    --device [device ID]: Use specified device for deployment. Default\n"
                     "       is the device selected by default by adb.\n"
                     "    --android-platform <platform>: Builds against the given android\n"
@@ -1193,10 +1215,8 @@ bool updateAndroidFiles(Options &options)
 QStringList findFilesRecursively(const Options &options, const QString &fileName)
 {
     QFileInfo info(options.qtInstallDirectory + QLatin1Char('/') + fileName);
-    if (!info.exists()) {
-        fprintf(stderr, "Warning: Dependency not found: %s\n", qPrintable(info.filePath()));
+    if (!info.exists())
         return QStringList();
-    }
 
     if (info.isDir()) {
         QStringList ret;
@@ -1332,7 +1352,7 @@ QStringList getQtLibsFromElf(const Options &options, const QString &fileName)
 
     readElf = QString::fromLatin1("%1 -d -W %2").arg(shellQuote(readElf)).arg(shellQuote(fileName));
 
-    FILE *readElfCommand = popen(readElf.toLocal8Bit().constData(), "r");
+    FILE *readElfCommand = openProcess(readElf);
     if (readElfCommand == 0) {
         fprintf(stderr, "Cannot execute command %s", qPrintable(readElf));
         return QStringList();
@@ -1476,7 +1496,7 @@ bool stripFile(const Options &options, const QString &fileName)
 
     strip = QString::fromLatin1("%1 %2").arg(shellQuote(strip)).arg(shellQuote(fileName));
 
-    FILE *stripCommand = popen(strip.toLocal8Bit().constData(), "r");
+    FILE *stripCommand = openProcess(strip);
     if (stripCommand == 0) {
         fprintf(stderr, "Cannot execute command %s", qPrintable(strip));
         return false;
@@ -1557,7 +1577,7 @@ FILE *runAdb(const Options &options, const QString &arguments)
     if (options.verbose)
         fprintf(stdout, "Running command \"%s\"\n", adb.toLocal8Bit().constData());
 
-    FILE *adbCommand = popen(adb.toLocal8Bit().constData(), "r");
+    FILE *adbCommand = openProcess(adb);
     if (adbCommand == 0) {
         fprintf(stderr, "Cannot start adb: %s\n", qPrintable(adb));
         return 0;
@@ -1821,7 +1841,7 @@ bool createAndroidProject(const Options &options)
     if (options.verbose)
         fprintf(stdout, "  -- Command: %s\n", qPrintable(androidTool));
 
-    FILE *androidToolCommand = popen(androidTool.toLocal8Bit().constData(), "r");
+    FILE *androidToolCommand = openProcess(androidTool);
     if (androidToolCommand == 0) {
         fprintf(stderr, "Cannot run command '%s'\n", qPrintable(androidTool));
         return false;
@@ -1904,7 +1924,7 @@ bool buildAndroidProject(const Options &options)
 
     QString ant = QString::fromLatin1("%1 %2").arg(shellQuote(antTool)).arg(options.releasePackage ? QLatin1String(" release") : QLatin1String(" debug"));
 
-    FILE *antCommand = popen(ant.toLocal8Bit().constData(), "r");
+    FILE *antCommand = openProcess(ant);
     if (antCommand == 0) {
         fprintf(stderr, "Cannot run ant command: %s\n.", qPrintable(ant));
         return false;
@@ -1971,7 +1991,8 @@ QString apkName(const Options &options)
 bool installApk(const Options &options)
 {
     // Uninstall if necessary
-    uninstallApk(options);
+    if (options.uninstallApk)
+        uninstallApk(options);
 
     if (options.verbose)
         fprintf(stdout, "Installing Android package to device.\n");
@@ -2101,7 +2122,7 @@ bool signPackage(const Options &options)
                  + QLatin1String("-unsigned.apk")))
             .arg(shellQuote(options.keyStoreAlias));
 
-    FILE *jarSignerCommand = popen(jarSignerTool.toLocal8Bit().constData(), "r");
+    FILE *jarSignerCommand = openProcess(jarSignerTool);
     if (jarSignerCommand == 0) {
         fprintf(stderr, "Couldn't run jarsigner.\n");
         return false;
@@ -2143,7 +2164,7 @@ bool signPackage(const Options &options)
                  + apkName(options)
                  + QLatin1String(".apk")));
 
-    FILE *zipAlignCommand = popen(zipAlignTool.toLocal8Bit(), "r");
+    FILE *zipAlignCommand = openProcess(zipAlignTool);
     if (zipAlignCommand == 0) {
         fprintf(stderr, "Couldn't run zipalign.\n");
         return false;

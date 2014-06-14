@@ -50,9 +50,9 @@
 #include <wrl.h>
 using namespace Microsoft::WRL;
 
-#include <ccapi.h>
+#include <ccapi_11.h>
 #include <corecon.h>
-Q_GLOBAL_STATIC(CoreConServer, coreConServer)
+Q_GLOBAL_STATIC_WITH_ARGS(CoreConServer, coreConServer, (11))
 
 #define bstr(s) _bstr_t((const wchar_t *)s.utf16())
 
@@ -136,8 +136,8 @@ extern int xapAppNames(int deviceIndex, QSet<QString> &apps)
     HRESULT hr;
     _bstr_t connectionName;
     ComPtr<ICcConnection> connection;
-    hr = coreConServer->handle()->GetConnection(
-        device->handle(), 5000, NULL, connectionName.GetAddress(), &connection);
+    hr = static_cast<ICcServer *>(coreConServer->handle())->GetConnection(
+        static_cast<ICcDevice *>(device->handle()), 5000, NULL, connectionName.GetAddress(), &connection);
     if (FAILED(hr)) {
         qCWarning(lcD3DService) << "Unable to initialize connection:"
                                 << coreConServer->formatError(hr);
@@ -227,8 +227,8 @@ extern int handleXapDevice(int deviceIndex, const QString &app, const QString &l
     HRESULT hr;
     _bstr_t connectionName;
     ComPtr<ICcConnection> connection;
-    hr = coreConServer->handle()->GetConnection(
-        device->handle(), 5000, NULL, connectionName.GetAddress(), &connection);
+    hr = static_cast<ICcServer *>(coreConServer->handle())->GetConnection(
+        static_cast<ICcDevice *>(device->handle()), 5000, NULL, connectionName.GetAddress(), &connection);
     if (FAILED(hr)) {
         qCWarning(lcD3DService) << "Unable to initialize connection:"
                                 << coreConServer->formatError(hr);

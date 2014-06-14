@@ -38,8 +38,26 @@
 **
 ****************************************************************************/
 
-#include "ccapi.h"
 #include "corecon.h"
+
+// Force all versions of CoreCon in scope
+#ifdef CCAPI_VERSIONED_H
+#undef CCAPI_VERSIONED_H
+#endif
+#ifdef CORECON_VER
+#undef CORECON_VER
+#endif
+#define CORECON_VER 11
+#include "ccapi.h"
+
+#ifdef CCAPI_VERSIONED_H
+#undef CCAPI_VERSIONED_H
+#endif
+#ifdef CORECON_VER
+#undef CORECON_VER
+#endif
+#define CORECON_VER 12
+#include "ccapi.h"
 
 #include <QtCore/QString>
 #include <QtCore/QMutex>
@@ -55,10 +73,10 @@ Q_LOGGING_CATEGORY(lcCoreCon, "qt.corecon")
 
 #define wchar(str) reinterpret_cast<LPCWSTR>(str.utf16())
 
-template <typename T>
-static inline HRESULT collectionFor(const ComPtr<T> &container, ComPtr<ICcCollection> &collection)
+template <typename ObjectContainerType, typename ContainerType, typename CollectionType>
+static inline HRESULT collectionFor(const ComPtr<ContainerType> &container, ComPtr<CollectionType> &collection)
 {
-    ComPtr<ICcObjectContainer> objectContainer;
+    ComPtr<ObjectContainerType> objectContainer;
     HRESULT hr = container.As(&objectContainer);
     if (FAILED(hr))
         return hr;
@@ -72,12 +90,28 @@ public:
     QString name;
     QString id;
     bool isEmulator;
-    ComPtr<ICcDevice> handle;
+    int version;
+
+protected:
+    CoreConDevicePrivate(int version) : version(version) { }
 };
 
-CoreConDevice::CoreConDevice()
-    : d_ptr(new CoreConDevicePrivate)
+template <typename DeviceType>
+class CoreConDevicePrivateVersioned : public CoreConDevicePrivate
 {
+public:
+    CoreConDevicePrivateVersioned(int version) : CoreConDevicePrivate(version) { }
+    ComPtr<DeviceType> handle;
+};
+
+CoreConDevice::CoreConDevice(int version)
+{
+    if (version == 11)
+        d_ptr.reset(new CoreConDevicePrivateVersioned<ICcDevice_11>(version));
+    else if (version == 12)
+        d_ptr.reset(new CoreConDevicePrivateVersioned<ICcDevice_12>(version));
+    else
+        qCCritical(lcCoreCon) << "Invalid CoreCon version specified:" << version;
 }
 
 CoreConDevice::~CoreConDevice()
@@ -102,10 +136,14 @@ bool CoreConDevice::isEmulator() const
     return d->isEmulator;
 }
 
-ICcDevice *CoreConDevice::handle() const
+Qt::HANDLE CoreConDevice::handle() const
 {
     Q_D(const CoreConDevice);
-    return d->handle.Get();
+    if (d->version == 11)
+        return static_cast<const CoreConDevicePrivateVersioned<ICcDevice_11> *>(d)->handle.Get();
+    if (d->version == 12)
+        return static_cast<const CoreConDevicePrivateVersioned<ICcDevice_12> *>(d)->handle.Get();
+    return 0;
 }
 
 class ComInitializer
@@ -117,7 +155,7 @@ protected:
         if (FAILED(hr))
             qCDebug(lcCoreCon) << "Failed to initialize COM.";
     }
-    ~ComInitializer()
+    virtual ~ComInitializer()
     {
         if (SUCCEEDED(hr))
             CoUninitialize();
@@ -128,14 +166,8 @@ protected:
 class CoreConServerPrivate : private ComInitializer
 {
 public:
-    CoreConServerPrivate(CoreConServer *server) : langModule(0)
+    CoreConServerPrivate(int version) : version(version), langModule(0)
     {
-        HRESULT hr = CoCreateInstance(CLSID_ConMan, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&handle));
-        if (FAILED(hr))
-            qCWarning(lcCoreCon) << "Failed to initialize connection server." << server->formatError(hr);
-
-        // The language module is available as long as the above succeeded
-        langModule = GetModuleHandle(L"conmanui");
     }
     ~CoreConServerPrivate()
     {
@@ -143,14 +175,235 @@ public:
         devices.clear();
     }
 
-    ComPtr<ICcServer> handle;
+    virtual bool initialize() = 0;
+
+    int version;
     QList<CoreConDevice *> devices;
     HMODULE langModule;
+
+    template <typename T>
+    static CoreConDevicePrivateVersioned<T> *deviceHandle(CoreConDevice *device)
+    {
+        return static_cast<CoreConDevicePrivateVersioned<T> *>(device->d_ptr.data());
+    }
 };
 
-CoreConServer::CoreConServer()
-    : d_ptr(new CoreConServerPrivate(this))
+template <typename ServerType, typename DataStoreType, typename PlatformType,
+          typename PlatformContainerType, typename CollectionType, typename DeviceType, typename DeviceContainerType,
+          typename ObjectType, typename ObjectContainerType, typename PropertyType, typename PropertyContainerType>
+class CoreConServerPrivateVersioned : public CoreConServerPrivate
 {
+public:
+    CoreConServerPrivateVersioned(CoreConServer *server, int version)
+        : CoreConServerPrivate(version)
+    {
+        HRESULT hr = E_FAIL;
+        if (version == 11)
+            hr = CoCreateInstance(CLSID_ConMan_11, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&handle));
+        else if (version == 12)
+            hr = CoCreateInstance(CLSID_ConMan_12, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&handle));
+        else
+            qCCritical(lcCoreCon) << "Invalid CoreCon version specified:" << version;
+
+        if (FAILED(hr))
+            qCWarning(lcCoreCon) << "Failed to initialize connection server." << server->formatError(hr);
+
+        // The language module is available as long as the above succeeded
+        langModule = GetModuleHandle(L"conmanui");
+    }
+
+    bool initialize()
+    {
+        ComPtr<DataStoreType> dataStore;
+        HRESULT hr = handle->GetDatastore(GetUserDefaultLCID(), &dataStore);
+        if (FAILED(hr)) {
+            qCDebug(lcCoreCon, "Failed to obtain the data store. HRESULT: 0x%x", hr);
+            return false;
+        }
+
+        ComPtr<PlatformContainerType> platformContainer;
+        hr = dataStore->get_PlatformContainer(&platformContainer);
+        if (FAILED(hr)) {
+            qCDebug(lcCoreCon, "Failed to obtain the platform container. HRESULT: 0x%x", hr);
+            return false;
+        }
+
+        ComPtr<CollectionType> platformCollection;
+        hr = collectionFor<ObjectContainerType>(platformContainer, platformCollection);
+        if (FAILED(hr)) {
+            qCDebug(lcCoreCon, "Failed to obtain the platform collection. HRESULT: 0x%x", hr);
+            return false;
+        }
+
+        long platformCount;
+        hr = platformCollection->get_Count(&platformCount);
+        if (FAILED(hr)) {
+            qCDebug(lcCoreCon, "Failed to obtain the platform object count. HRESULT: 0x%x", hr);
+            return false;
+        }
+        for (long platformIndex = 0; platformIndex < platformCount; ++platformIndex) {
+            ComPtr<ObjectType> platformObject;
+            hr = platformCollection->get_Item(platformIndex, &platformObject);
+            if (FAILED(hr)) {
+                qCDebug(lcCoreCon, "\1: %d", platformIndex);
+                continue;
+            }
+
+            ComPtr<PlatformType> platform;
+            hr = platformObject.As(&platform);
+            if (FAILED(hr)) {
+                qCDebug(lcCoreCon, "\1: %d", platformIndex);
+                continue;
+            }
+
+            ComPtr<DeviceContainerType> deviceContainer;
+            hr = platform->get_DeviceContainer(&deviceContainer);
+            if (FAILED(hr)) {
+                qCDebug(lcCoreCon, "Failed to obtain the device container.. 0x%x", hr);
+                continue;
+            }
+
+            ComPtr<CollectionType> deviceCollection;
+            hr = collectionFor<ObjectContainerType>(deviceContainer, deviceCollection);
+            if (FAILED(hr)) {
+                qCDebug(lcCoreCon, "Failed to obtain the device object collection.. 0x%x", hr);
+                continue;
+            }
+
+            long deviceCount;
+            hr = deviceCollection->get_Count(&deviceCount);
+            if (FAILED(hr)) {
+                qCDebug(lcCoreCon, "Failed to obtain the device object count.. 0x%x", hr);
+                continue;
+            }
+            for (long deviceIndex = 0; deviceIndex < deviceCount; ++deviceIndex) {
+                QScopedPointer<CoreConDevice> device(new CoreConDevice(version));
+
+                ComPtr<ObjectType> deviceObject;
+                hr = deviceCollection->get_Item(deviceIndex, &deviceObject);
+                if (FAILED(hr)) {
+                    qCDebug(lcCoreCon, "Failed to obtain the device object at index: %d", deviceIndex);
+                    continue;
+                }
+
+                hr = deviceObject.As(&deviceHandle<DeviceType>(device.data())->handle);
+                if (FAILED(hr)) {
+                    qCDebug(lcCoreCon, "Failed to confirm a device from the object at index: %d", deviceIndex);
+                    continue;
+                }
+
+                _bstr_t deviceId;
+                hr = deviceObject->get_ID(deviceId.GetAddress());
+                if (FAILED(hr)) {
+                    qCDebug(lcCoreCon, "Failed to obtain device id at index: %d", deviceIndex);
+                    continue;
+                }
+                deviceHandle<DeviceType>(device.data())->id = QString::fromWCharArray(deviceId);
+                _bstr_t deviceName;
+                hr = deviceObject->get_Name(deviceName.GetAddress());
+                if (FAILED(hr)) {
+                    qCDebug(lcCoreCon, "Failed to obtain device name at index: %d", deviceIndex);
+                    continue;
+                }
+                deviceHandle<DeviceType>(device.data())->name = QString::fromWCharArray(deviceName);
+
+                ComPtr<PropertyContainerType> propertyContainer;
+                hr = deviceObject->get_PropertyContainer(&propertyContainer);
+                if (FAILED(hr)) {
+                    qCDebug(lcCoreCon, "Failed to obtain a property container at index: %d", deviceIndex);
+                    continue;
+                }
+
+                ComPtr<CollectionType> propertyCollection;
+                hr = collectionFor<ObjectContainerType>(propertyContainer, propertyCollection);
+                if (FAILED(hr)) {
+                    qCDebug(lcCoreCon, "Failed to obtain property collection of device at index: %d", deviceIndex);
+                    continue;
+                }
+
+                bool isPseudoDevice = false;
+                long propertyCount;
+                hr = propertyCollection->get_Count(&propertyCount);
+                if (FAILED(hr)) {
+                    qCDebug(lcCoreCon, "Failed to obtain property count of device at index: %d", deviceIndex);
+                    continue;
+                }
+
+                for (long propertyIndex = 0; propertyIndex < propertyCount; ++propertyIndex) {
+                    ComPtr<ObjectType> propertyObject;
+                    hr = propertyCollection->get_Item(propertyIndex, &propertyObject);
+                    if (FAILED(hr)) {
+                        qCDebug(lcCoreCon, "Failed to obtain property at index: %d", propertyIndex);
+                        continue;
+                    }
+
+                    _bstr_t id;
+                    hr = propertyObject->get_ID(id.GetAddress());
+                    if (FAILED(hr)) {
+                        qCDebug(lcCoreCon, "Failed to obtain property id at index: %d", propertyIndex);
+                        continue;
+                    }
+
+                    ComPtr<PropertyType> property;
+                    hr = propertyObject.As(&property);
+                    if (FAILED(hr)) {
+                        qCDebug(lcCoreCon, "Failed to cast the property object at index: %d", propertyIndex);
+                        continue;
+                    }
+
+                    if (id == _bstr_t(L"IsPseudoDevice")) {
+                        _bstr_t value;
+                        hr = property->get_Value(value.GetAddress());
+                        if (FAILED(hr)) {
+                            qCDebug(lcCoreCon, "Failed to cast the property value at index: %d", propertyIndex);
+                            continue;
+                        }
+                        if (value == _bstr_t(L"true")) {
+                            isPseudoDevice = true;
+                            break; // No need to look at this device further
+                        }
+                    }
+
+                    if (id == _bstr_t(L"Emulator")) {
+                        _bstr_t value;
+                        hr = property->get_Value(value.GetAddress());
+                        if (FAILED(hr)) {
+                            qCDebug(lcCoreCon, "Failed to cast the property value at index: %d", propertyIndex);
+                            continue;
+                        }
+                        deviceHandle<DeviceType>(device.data())->isEmulator = value == _bstr_t(L"true");
+                    }
+                }
+
+                if (!isPseudoDevice)
+                    devices.append(device.take());
+            }
+        }
+        return true;
+    }
+
+    ComPtr<ServerType> handle;
+};
+
+typedef CoreConServerPrivateVersioned<ICcServer_11, ICcDatastore_11, ICcPlatform_11,
+            ICcPlatformContainer_11, ICcCollection_11, ICcDevice_11, ICcDeviceContainer_11,
+            ICcObject_11, ICcObjectContainer_11,
+            ICcProperty_11, ICcPropertyContainer_11> CoreConServerPrivate_11;
+
+typedef CoreConServerPrivateVersioned<ICcServer_12, ICcDatastore_12, ICcPlatform_12,
+            ICcPlatformContainer_12, ICcCollection_12, ICcDevice_12, ICcDeviceContainer_12,
+            ICcObject_12, ICcObjectContainer_12,
+            ICcProperty_12, ICcPropertyContainer_12> CoreConServerPrivate_12;
+
+CoreConServer::CoreConServer(int version)
+{
+    if (version == 11)
+        d_ptr.reset(new CoreConServerPrivate_11(this, version));
+    else if (version == 12)
+        d_ptr.reset(new CoreConServerPrivate_12(this, version));
+    else
+        qCCritical(lcCoreCon) << "Invalid CoreCon version specified:" << version;
+
     initialize();
 }
 
@@ -158,10 +411,14 @@ CoreConServer::~CoreConServer()
 {
 }
 
-ICcServer *CoreConServer::handle() const
+Qt::HANDLE CoreConServer::handle() const
 {
     Q_D(const CoreConServer);
-    return d->handle.Get();
+    if (d->version == 11)
+        return static_cast<const CoreConServerPrivate_11 *>(d)->handle.Get();
+    if (d->version == 12)
+        return static_cast<const CoreConServerPrivate_12 *>(d)->handle.Get();
+    return 0;
 }
 
 QList<CoreConDevice *> CoreConServer::devices() const
@@ -173,178 +430,13 @@ QList<CoreConDevice *> CoreConServer::devices() const
 bool CoreConServer::initialize()
 {
     Q_D(CoreConServer);
-    if (!d || !d->handle)
+    if (!d || !handle())
         return false;
 
     if (!d->devices.isEmpty())
         return true;
 
-    ComPtr<ICcDatastore> dataStore;
-    HRESULT hr = d->handle->GetDatastore(GetUserDefaultLCID(), &dataStore);
-    if (FAILED(hr)) {
-        qCDebug(lcCoreCon, "Failed to obtain the data store. HRESULT: 0x%x", hr);
-        return false;
-    }
-
-    ComPtr<ICcPlatformContainer> platformContainer;
-    hr = dataStore->get_PlatformContainer(&platformContainer);
-    if (FAILED(hr)) {
-        qCDebug(lcCoreCon, "Failed to obtain the platform container. HRESULT: 0x%x", hr);
-        return false;
-    }
-
-    ComPtr<ICcCollection> platformCollection;
-    hr = collectionFor(platformContainer, platformCollection);
-    if (FAILED(hr)) {
-        qCDebug(lcCoreCon, "Failed to obtain the platform collection. HRESULT: 0x%x", hr);
-        return false;
-    }
-
-    long platformCount;
-    hr = platformCollection->get_Count(&platformCount);
-    if (FAILED(hr)) {
-        qCDebug(lcCoreCon, "Failed to obtain the platform object count. HRESULT: 0x%x", hr);
-        return false;
-    }
-    for (long platformIndex = 0; platformIndex < platformCount; ++platformIndex) {
-        ComPtr<ICcObject> platformObject;
-        hr = platformCollection->get_Item(platformIndex, &platformObject);
-        if (FAILED(hr)) {
-            qCDebug(lcCoreCon, "\1: %d", platformIndex);
-            continue;
-        }
-
-        ComPtr<ICcPlatform> platform;
-        hr = platformObject.As(&platform);
-        if (FAILED(hr)) {
-            qCDebug(lcCoreCon, "\1: %d", platformIndex);
-            continue;
-        }
-
-        ComPtr<ICcDeviceContainer> deviceContainer;
-        hr = platform->get_DeviceContainer(&deviceContainer);
-        if (FAILED(hr)) {
-            qCDebug(lcCoreCon, "Failed to obtain the device container.. 0x%x", hr);
-            continue;
-        }
-
-        ComPtr<ICcCollection> deviceCollection;
-        hr = collectionFor(deviceContainer, deviceCollection);
-        if (FAILED(hr)) {
-            qCDebug(lcCoreCon, "Failed to obtain the device object collection.. 0x%x", hr);
-            continue;
-        }
-
-        long deviceCount;
-        hr = deviceCollection->get_Count(&deviceCount);
-        if (FAILED(hr)) {
-            qCDebug(lcCoreCon, "Failed to obtain the device object count.. 0x%x", hr);
-            continue;
-        }
-        for (long deviceIndex = 0; deviceIndex < deviceCount; ++deviceIndex) {
-            QScopedPointer<CoreConDevice> device(new CoreConDevice);
-
-            ComPtr<ICcObject> deviceObject;
-            hr = deviceCollection->get_Item(deviceIndex, &deviceObject);
-            if (FAILED(hr)) {
-                qCDebug(lcCoreCon, "Failed to obtain the device object at index: %d", deviceIndex);
-                continue;
-            }
-
-            hr = deviceObject.As(&device->d_ptr->handle);
-            if (FAILED(hr)) {
-                qCDebug(lcCoreCon, "Failed to confirm a device from the object at index: %d", deviceIndex);
-                continue;
-            }
-
-            _bstr_t deviceId;
-            hr = deviceObject->get_ID(deviceId.GetAddress());
-            if (FAILED(hr)) {
-                qCDebug(lcCoreCon, "Failed to obtain device id at index: %d", deviceIndex);
-                continue;
-            }
-            device->d_ptr->id = QString::fromWCharArray(deviceId);
-            _bstr_t deviceName;
-            hr = deviceObject->get_Name(deviceName.GetAddress());
-            if (FAILED(hr)) {
-                qCDebug(lcCoreCon, "Failed to obtain device name at index: %d", deviceIndex);
-                continue;
-            }
-            device->d_ptr->name = QString::fromWCharArray(deviceName);
-
-            ComPtr<ICcPropertyContainer> propertyContainer;
-            hr = deviceObject->get_PropertyContainer(&propertyContainer);
-            if (FAILED(hr)) {
-                qCDebug(lcCoreCon, "Failed to obtain a property container at index: %d", deviceIndex);
-                continue;
-            }
-
-            ComPtr<ICcCollection> propertyCollection;
-            hr = collectionFor(propertyContainer, propertyCollection);
-            if (FAILED(hr)) {
-                qCDebug(lcCoreCon, "Failed to obtain property collection of device at index: %d", deviceIndex);
-                continue;
-            }
-
-            bool isPseudoDevice = false;
-            long propertyCount;
-            hr = propertyCollection->get_Count(&propertyCount);
-            if (FAILED(hr)) {
-                qCDebug(lcCoreCon, "Failed to obtain property count of device at index: %d", deviceIndex);
-                continue;
-            }
-
-            for (long propertyIndex = 0; propertyIndex < propertyCount; ++propertyIndex) {
-                ComPtr<ICcObject> propertyObject;
-                hr = propertyCollection->get_Item(propertyIndex, &propertyObject);
-                if (FAILED(hr)) {
-                    qCDebug(lcCoreCon, "Failed to obtain property at index: %d", propertyIndex);
-                    continue;
-                }
-
-                _bstr_t id;
-                hr = propertyObject->get_ID(id.GetAddress());
-                if (FAILED(hr)) {
-                    qCDebug(lcCoreCon, "Failed to obtain property id at index: %d", propertyIndex);
-                    continue;
-                }
-
-                ComPtr<ICcProperty> property;
-                hr = propertyObject.As(&property);
-                if (FAILED(hr)) {
-                    qCDebug(lcCoreCon, "Failed to cast the property object at index: %d", propertyIndex);
-                    continue;
-                }
-
-                if (id == _bstr_t(L"IsPseudoDevice")) {
-                    _bstr_t value;
-                    hr = property->get_Value(value.GetAddress());
-                    if (FAILED(hr)) {
-                        qCDebug(lcCoreCon, "Failed to cast the property value at index: %d", propertyIndex);
-                        continue;
-                    }
-                    if (value == _bstr_t(L"true")) {
-                        isPseudoDevice = true;
-                        break; // No need to look at this device further
-                    }
-                }
-
-                if (id == _bstr_t(L"Emulator")) {
-                    _bstr_t value;
-                    hr = property->get_Value(value.GetAddress());
-                    if (FAILED(hr)) {
-                        qCDebug(lcCoreCon, "Failed to cast the property value at index: %d", propertyIndex);
-                        continue;
-                    }
-                    device->d_ptr->isEmulator = value == _bstr_t(L"true");
-                }
-            }
-
-            if (!isPseudoDevice)
-                d->devices.append(device.take());
-        }
-    }
-    return true;
+    return d->initialize();
 }
 
 QString CoreConServer::formatError(HRESULT hr) const

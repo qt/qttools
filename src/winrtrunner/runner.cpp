@@ -43,8 +43,11 @@
 
 #include "runnerengine.h"
 
-#ifndef RTRUNNER_NO_APPX
-#include "appxengine.h"
+#ifndef RTRUNNER_NO_APPXPHONE
+#include "appxphoneengine.h"
+#endif
+#ifndef RTRUNNER_NO_APPXLOCAL
+#include "appxlocalengine.h"
 #endif
 #ifndef RTRUNNER_NO_XAP
 #include "xapengine.h"
@@ -77,8 +80,11 @@ public:
 QMap<QString, QStringList> Runner::deviceNames()
 {
     QMap<QString, QStringList> deviceNames;
-#ifndef RTRUNNER_NO_APPX
-    deviceNames.insert(QStringLiteral("Appx"), AppxEngine::deviceNames());
+#ifndef RTRUNNER_NO_APPXLOCAL
+    deviceNames.insert(QStringLiteral("Appx"), AppxLocalEngine::deviceNames());
+#endif
+#ifndef RTRUNNER_NO_APPXPHONE
+    deviceNames.insert(QStringLiteral("Phone"), AppxPhoneEngine::deviceNames());
 #endif
 #ifndef RTRUNNER_NO_XAP
     deviceNames.insert(QStringLiteral("Xap"), XapEngine::deviceNames());
@@ -98,15 +104,31 @@ Runner::Runner(const QString &app, const QStringList &arguments,
 
     bool deviceIndexKnown;
     d->deviceIndex = deviceName.toInt(&deviceIndexKnown);
-#ifndef RTRUNNER_NO_APPX
+#ifndef RTRUNNER_NO_APPXPHONE
     if (!deviceIndexKnown) {
-        d->deviceIndex = AppxEngine::deviceNames().indexOf(deviceName);
+        d->deviceIndex = AppxPhoneEngine::deviceNames().indexOf(deviceName);
+        if (d->deviceIndex < 0)
+            d->deviceIndex = 0;
+    }
+    if ((d->profile.isEmpty() || d->profile.toLower() == QStringLiteral("appxphone"))
+            && AppxPhoneEngine::canHandle(this)) {
+        if (RunnerEngine *engine = AppxPhoneEngine::create(this)) {
+            d->engine.reset(engine);
+            d->isValid = true;
+            qCWarning(lcWinRtRunner) << "Using the AppxPhone profile.";
+            return;
+        }
+    }
+#endif
+#ifndef RTRUNNER_NO_APPXLOCAL
+    if (!deviceIndexKnown) {
+        d->deviceIndex = AppxLocalEngine::deviceNames().indexOf(deviceName);
         if (d->deviceIndex < 0)
             d->deviceIndex = 0;
     }
     if ((d->profile.isEmpty() || d->profile.toLower() == QStringLiteral("appx"))
-            && AppxEngine::canHandle(this)) {
-        if (RunnerEngine *engine = AppxEngine::create(this)) {
+            && AppxLocalEngine::canHandle(this)) {
+        if (RunnerEngine *engine = AppxLocalEngine::create(this)) {
             d->engine.reset(engine);
             d->isValid = true;
             qCWarning(lcWinRtRunner) << "Using the Appx profile.";

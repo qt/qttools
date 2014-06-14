@@ -38,47 +38,26 @@
 **
 ****************************************************************************/
 
-#ifndef CORECON_H
-#define CORECON_H
+#ifndef CCAPI_11_H
+#define CCAPI_11_H
 
-#include <QtCore/qt_windows.h>
-#include <QtCore/QList>
-#include <QtCore/QScopedPointer>
-#include <QtCore/QLoggingCategory>
+#define CORECON_VER 11
+#include "ccapi.h"
 
-QT_USE_NAMESPACE
+#define CLSID_ConMan CLSID_ConMan_11;
+typedef ICcCollection_11 ICcCollection;
+typedef ICcConnection_11 ICcConnection;
+typedef ICcConnection3_11 ICcConnection3;
+typedef ICcConnection4_11 ICcConnection4;
+typedef ICcDatastore_11 ICcDatastore;
+typedef ICcDevice_11 ICcDevice;
+typedef ICcDeviceContainer_11 ICcDeviceContainer;
+typedef ICcObject_11 ICcObject;
+typedef ICcObjectContainer_11 ICcObjectContainer;
+typedef ICcPlatform_11 ICcPlatform;
+typedef ICcPlatformContainer_11 ICcPlatformContainer;
+typedef ICcProperty_11 ICcProperty;
+typedef ICcPropertyContainer_11 ICcPropertyContainer;
+typedef ICcServer_11 ICcServer;
 
-class CoreConDevicePrivate;
-class CoreConDevice
-{
-public:
-    explicit CoreConDevice(int version);
-    ~CoreConDevice();
-    QString name() const;
-    QString id() const;
-    bool isEmulator() const;
-    Qt::HANDLE handle() const;
-private:
-    QScopedPointer<CoreConDevicePrivate> d_ptr;
-    Q_DECLARE_PRIVATE(CoreConDevice)
-friend class CoreConServerPrivate;
-};
-
-class CoreConServerPrivate;
-class CoreConServer
-{
-public:
-    explicit CoreConServer(int version);
-    ~CoreConServer();
-    bool initialize();
-    Qt::HANDLE handle() const;
-    QList<CoreConDevice *> devices() const;
-    QString formatError(HRESULT hr) const;
-private:
-    QScopedPointer<CoreConServerPrivate> d_ptr;
-    Q_DECLARE_PRIVATE(CoreConServer)
-};
-
-Q_DECLARE_LOGGING_CATEGORY(lcCoreCon)
-
-#endif // CORECON_H
+#endif // CCAPI_11_H
