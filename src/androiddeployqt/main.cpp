@@ -149,6 +149,8 @@ struct Options
     QString outputDirectory;
     QString inputFileName;
     QString applicationBinary;
+    QString rootPath;
+    QStringList qmlImportPaths;
 
     // Build information
     QString androidPlatform;
@@ -761,6 +763,18 @@ bool readInputFile(Options *options)
         if (!extraPlugins.isUndefined())
             options->extraPlugins = extraPlugins.toString().split(QLatin1Char(','));
     }
+
+    {
+        QJsonValue qmlRootPath = jsonObject.value("qml-root-path");
+        if (!qmlRootPath.isUndefined())
+            options->rootPath = qmlRootPath.toString();
+    }
+
+    {
+        QJsonValue qmlImportPaths = jsonObject.value("qml-import-paths");
+        if (!qmlImportPaths.isUndefined())
+            options->qmlImportPaths = qmlImportPaths.toString().split(QLatin1Char(','));
+    }
     return true;
 }
 
@@ -1285,6 +1299,11 @@ bool readAndroidDependencyXml(Options *options,
                     }
 
                     QString file = reader.attributes().value(QLatin1String("file")).toString();
+
+                    // Special case, since this is handled by qmlimportscanner instead
+                    if (!options->rootPath.isEmpty() && (file == QLatin1String("qml") || file == QLatin1String("qml/")))
+                        continue;
+
                     QList<QtDependency> fileNames = findFilesRecursively(*options, file);
                     foreach (QtDependency fileName, fileNames) {
                         if (usedDependencies->contains(fileName.absolutePath))
@@ -1441,6 +1460,123 @@ bool readDependenciesFromElf(Options *options,
 
 bool goodToCopy(const Options *options, const QString &file, QStringList *unmetDependencies);
 
+bool scanImports(Options *options, QSet<QString> *usedDependencies)
+{
+    if (options->verbose)
+        fprintf(stdout, "Scanning for QML imports.\n");
+
+    QString qmlImportScanner = options->qtInstallDirectory + QLatin1String("/bin/qmlimportscanner");
+#if defined(Q_OS_WIN32)
+    qmlImportScanner += QLatin1String(".exe");
+#endif
+
+    if (!QFile::exists(qmlImportScanner)) {
+        fprintf(stderr, "qmlimportscanner not found: %s\n", qPrintable(qmlImportScanner));
+        return false;
+    }
+
+    QString rootPath = options->rootPath;
+    if (rootPath.isEmpty())
+        rootPath = QFileInfo(options->inputFileName).path();
+
+    QStringList importPaths;
+    importPaths += shellQuote(options->qtInstallDirectory + QLatin1String("/qml"));
+    importPaths += QFileInfo(rootPath).absoluteFilePath();
+    foreach (QString qmlImportPath, options->qmlImportPaths)
+        importPaths += shellQuote(qmlImportPath);
+
+    qmlImportScanner += QString::fromLatin1(" -rootPath %1 -importPath %2")
+            .arg(shellQuote(rootPath))
+            .arg(importPaths.join(QLatin1Char(' ')));
+
+    FILE *qmlImportScannerCommand = popen(qmlImportScanner.toLocal8Bit().constData(), "r");
+    if (qmlImportScannerCommand == 0) {
+        fprintf(stderr, "Couldn't run qmlimportscanner.\n");
+        return false;
+    }
+
+    QByteArray output;
+    char buffer[512];
+    while (fgets(buffer, sizeof(buffer), qmlImportScannerCommand) != 0)
+        output += QByteArray(buffer, qstrlen(buffer));
+
+    QJsonDocument jsonDocument = QJsonDocument::fromJson(output);
+    if (jsonDocument.isNull()) {
+        fprintf(stderr, "Invalid json output from qmlimportscanner.\n");
+        return false;
+    }
+
+    QString absoluteOutputPath = QFileInfo(options->outputDirectory).absoluteFilePath();
+
+    QJsonArray jsonArray = jsonDocument.array();
+    for (int i=0; i<jsonArray.count(); ++i) {
+        QJsonValue value = jsonArray.at(i);
+        if (!value.isObject()) {
+            fprintf(stderr, "Invalid format of qmlimportscanner output.\n");
+            return false;
+        }
+
+        QJsonObject object = value.toObject();
+        QString path = object.value(QLatin1String("path")).toString();
+        if (path.isEmpty()) {
+            fprintf(stderr, "Warning: QML import could not be resolved in any of the import paths: %s\n",
+                    qPrintable(object.value(QLatin1String("name")).toString()));
+        } else {
+            if (options->verbose)
+                fprintf(stdout, "  -- Adding '%s' as QML dependency\n", path.toLocal8Bit().constData());
+
+            QFileInfo info(path);
+
+            // The qmlimportscanner sometimes outputs paths that do not exist.
+            if (!info.exists()) {
+                if (options->verbose)
+                    fprintf(stdout, "    -- Skipping because file does not exist.\n");
+                continue;
+            }
+
+            QString importPathOfThisImport;
+            foreach (QString importPath, importPaths) {
+                if (info.absoluteFilePath().startsWith(importPath)) {
+                    importPathOfThisImport = importPath;
+                    break;
+                }
+            }
+
+            if (importPathOfThisImport.isEmpty()) {
+                fprintf(stderr, "Import found outside of import paths: %s.\n", qPrintable(info.absoluteFilePath()));
+                return false;
+            }
+
+            QDir dir(importPathOfThisImport);
+            importPathOfThisImport = dir.absolutePath() + QLatin1Char('/');
+
+            QList<QtDependency> fileNames = findFilesRecursively(*options, info, importPathOfThisImport);
+            foreach (QtDependency fileName, fileNames) {
+                if (usedDependencies->contains(fileName.absolutePath))
+                    continue;
+
+                usedDependencies->insert(fileName.absolutePath);
+
+                if (options->verbose)
+                    fprintf(stdout, "    -- Appending dependency found by qmlimportscanner: %s\n", qPrintable(fileName.absolutePath));
+
+                // Put all imports in default import path in assets
+                fileName.relativePath.prepend("qml/");
+                options->qtDependencies.append(fileName);
+
+                if (fileName.absolutePath.endsWith(QLatin1String(".so"))) {
+                    QSet<QString> remainingDependencies;
+                    if (!readDependenciesFromElf(options, fileName.absolutePath, usedDependencies, &remainingDependencies))
+                        return false;
+
+                }
+            }
+        }
+    }
+
+    return true;
+}
+
 bool readDependencies(Options *options)
 {
     if (options->verbose)
@@ -1493,6 +1629,10 @@ bool readDependencies(Options *options)
             ++it;
         }
     }
+
+    if (!options->rootPath.isEmpty() && !scanImports(options, &usedDependencies))
+        return false;
+
     return true;
 }
 
