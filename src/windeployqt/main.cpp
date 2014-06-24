@@ -94,7 +94,11 @@ enum QtModule
     QtXmlModule = 0x40000000,
     QtXmlPatternsModule = 0x80000000,
     QtWebKitModule = 0x100000000,
-    QtWebKitWidgetsModule = 0x200000000
+    QtWebKitWidgetsModule = 0x200000000,
+    QtQuickCompilerRuntimeModule = 0x400000000,
+    QtQuickWidgetsModule = 0x800000000,
+    QtWebSocketsModule = 0x1000000000,
+    QtEnginioModule = 0x2000000000
 };
 
 struct QtModuleEntry {
@@ -110,10 +114,10 @@ QtModuleEntry qtModuleEntries[] = {
     { QtConcurrentModule, "concurrent", "Qt5Concurrent", "qtbase" },
     { QtCoreModule, "core", "Qt5Core", "qtbase" },
     { QtDeclarativeModule, "declarative", "Qt5Declarative", "qtquick1" },
-    { QtDesignerComponents, "designercomponents", "Qt5DesignerComponents", 0 },
     { QtDesignerModule, "designer", "Qt5Designer", 0 },
+    { QtDesignerComponents, "designercomponents", "Qt5DesignerComponents", 0 },
+    { QtEnginioModule, "enginio", "Enginio", 0 },
     { QtGuiModule, "gui", "Qt5Gui", "qtbase" },
-    { QtCluceneModule, "clucene", "Qt5CLucene", 0 },
     { QtHelpModule, "qthelp", "Qt5Help", "qt_help" },
     { QtMultimediaModule, "multimedia", "Qt5Multimedia", "qtmultimedia" },
     { QtMultimediaWidgetsModule, "multimediawidgets", "Qt5MultimediaWidgets", "qtmultimedia" },
@@ -125,7 +129,9 @@ QtModuleEntry qtModuleEntries[] = {
     { QtPrintSupportModule, "printsupport", "Qt5PrintSupport", 0 },
     { QtQmlModule, "qml", "Qt5Qml", "qtdeclarative" },
     { QtQuickModule, "quick", "Qt5Quick", "qtdeclarative" },
+    { QtQuickCompilerRuntimeModule, "quickcompilerruntime", "Qt5QuickCompilerRuntime", 0 },
     { QtQuickParticlesModule, "quickparticles", "Qt5QuickParticles", 0 },
+    { QtQuickWidgetsModule, "quickwidgets", "Qt5QuickWidgets", 0 },
     { QtScriptModule, "script", "Qt5Script", "qtscript" },
     { QtScriptToolsModule, "scripttools", "Qt5ScriptTools", "qtscript" },
     { QtSensorsModule, "sensors", "Qt5Sensors", 0 },
@@ -133,12 +139,13 @@ QtModuleEntry qtModuleEntries[] = {
     { QtSqlModule, "sql", "Qt5Sql", "qtbase" },
     { QtSvgModule, "svg", "Qt5Svg", 0 },
     { QtTestModule, "test", "Qt5Test", "qtbase" },
+    { QtWebKitModule, "webkit", "Qt5WebKit", 0 },
+    { QtWebKitWidgetsModule, "webkitwidgets", "Qt5WebKitWidgets", 0 },
+    { QtWebSocketsModule, "websockets", "Qt5WebSockets", 0 },
     { QtWidgetsModule, "widgets", "Qt5Widgets", "qtbase" },
     { QtWinExtrasModule, "winextras", "Qt5WinExtras", 0 },
     { QtXmlModule, "xml", "Qt5Xml", "qtbase" },
-    { QtXmlPatternsModule, "xmlpatterns", "Qt5XmlPatterns", "qtxmlpatterns" },
-    { QtWebKitModule, "webkit", "Qt5WebKit", 0 },
-    { QtWebKitWidgetsModule, "webkitwidgets", "Qt5WebKitWidgets", 0 }
+    { QtXmlPatternsModule, "xmlpatterns", "Qt5XmlPatterns", "qtxmlpatterns" }
 };
 
 static const char webProcessC[] = "QtWebProcess";
@@ -149,7 +156,7 @@ static inline QString webProcessBinary(Platform p)
     return (p & WindowsBased) ? webProcess + QStringLiteral(".exe") : webProcess;
 }
 
-static QByteArray formatQtModules(unsigned mask, bool option = false)
+static QByteArray formatQtModules(quint64 mask, bool option = false)
 {
     QByteArray result;
     const size_t qtModulesCount = sizeof(qtModuleEntries)/sizeof(QtModuleEntry);
@@ -201,9 +208,9 @@ struct Options {
     bool systemD3dCompiler;
     bool compilerRunTime;
     Platform platform;
-    unsigned additionalLibraries;
-    unsigned disabledLibraries;
-    unsigned updateFileFlags;
+    quint64 additionalLibraries;
+    quint64 disabledLibraries;
+    quint64 updateFileFlags;
     QStringList qmlDirectories; // Project's QML files.
     QString directory;
     QString libraryDirectory;
@@ -235,7 +242,7 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
                                  Options *options, QString *errorMessage)
 {
     typedef QSharedPointer<QCommandLineOption> CommandLineOptionPtr;
-    typedef QPair<CommandLineOptionPtr, unsigned> OptionMaskPair;
+    typedef QPair<CommandLineOptionPtr, quint64> OptionMaskPair;
     typedef QVector<OptionMaskPair> OptionMaskVector;
 
     parser->setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
@@ -512,7 +519,7 @@ static inline QString helpText(const QCommandLineParser &p)
     QString moduleHelp = QLatin1String(
         "\n\nQt libraries can be added by passing their name (-xml) or removed by passing\n"
         "the name prepended by --no- (--no-xml). Available libraries:\n");
-    moduleHelp += lineBreak(QString::fromLatin1(formatQtModules(0xFFFFFFFF, true)));
+    moduleHelp += lineBreak(QString::fromLatin1(formatQtModules(0xFFFFFFFFFFFFFFFFull, true)));
     moduleHelp += QLatin1Char('\n');
     result.replace(moduleStart, argumentsStart - moduleStart, moduleHelp);
     return result;
@@ -592,7 +599,7 @@ private:
     DllDirectoryFileEntryFunction m_dllFilter;
 };
 
-static inline unsigned qtModuleForPlugin(const QString &subDirName)
+static inline quint64 qtModuleForPlugin(const QString &subDirName)
 {
     if (subDirName == QLatin1String("accessible") || subDirName == QLatin1String("iconengines")
         || subDirName == QLatin1String("imageformats") || subDirName == QLatin1String("platforms")) {
@@ -615,9 +622,9 @@ static inline unsigned qtModuleForPlugin(const QString &subDirName)
     return 0; // "designer"
 }
 
-static unsigned qtModule(const QString &module)
+static quint64 qtModule(const QString &module)
 {
-    unsigned bestMatch = 0;
+    quint64 bestMatch = 0;
     int bestMatchLength = 0;
     const size_t qtModulesCount = sizeof(qtModuleEntries)/sizeof(QtModuleEntry);
     for (size_t i = 0; i < qtModulesCount; ++i) {
@@ -630,7 +637,7 @@ static unsigned qtModule(const QString &module)
     return bestMatch;
 }
 
-QStringList findQtPlugins(unsigned *usedQtModules, unsigned disabledQtModules,
+QStringList findQtPlugins(quint64 *usedQtModules, quint64 disabledQtModules,
                           const QString &qtPluginsDirName, const QString &libraryLocation,
                           bool debug, Platform platform, QString *platformPlugin)
 {
@@ -640,7 +647,7 @@ QStringList findQtPlugins(unsigned *usedQtModules, unsigned disabledQtModules,
     QDir pluginsDir(qtPluginsDirName);
     QStringList result;
     foreach (const QString &subDirName, pluginsDir.entryList(QStringList(QLatin1String("*")), QDir::Dirs | QDir::NoDotAndDotDot)) {
-        const unsigned module = qtModuleForPlugin(subDirName);
+        const quint64 module = qtModuleForPlugin(subDirName);
         if (module & *usedQtModules) {
             const QString subDirPath = qtPluginsDirName + QLatin1Char('/') + subDirName;
             QDir subDir(subDirPath);
@@ -674,7 +681,7 @@ QStringList findQtPlugins(unsigned *usedQtModules, unsigned disabledQtModules,
                 if (isPlatformPlugin)
                     *platformPlugin = pluginPath;
                 QStringList dependentQtLibs;
-                unsigned neededModules = 0;
+                quint64 neededModules = 0;
                 if (findDependentQtLibraries(libraryLocation, pluginPath, platform, &errorMessage, &dependentQtLibs)) {
                     for (int d = 0; d < dependentQtLibs.size(); ++ d)
                         neededModules |= qtModule(dependentQtLibs.at(d));
@@ -686,7 +693,7 @@ QStringList findQtPlugins(unsigned *usedQtModules, unsigned disabledQtModules,
                     if (optVerboseLevel)
                         std::wcout << "Skipping plugin " << plugin << " due to disabled dependencies.\n";
                 } else {
-                    if (const unsigned missingModules = (neededModules & ~*usedQtModules)) {
+                    if (const quint64 missingModules = (neededModules & ~*usedQtModules)) {
                         *usedQtModules |= missingModules;
                         if (optVerboseLevel)
                             std::wcout << "Adding " << formatQtModules(missingModules).constData() << " for " << plugin << '\n';
@@ -699,7 +706,7 @@ QStringList findQtPlugins(unsigned *usedQtModules, unsigned disabledQtModules,
     return result;
 }
 
-static QStringList translationNameFilters(unsigned modules, const QString &prefix)
+static QStringList translationNameFilters(quint64 modules, const QString &prefix)
 {
     QStringList result;
     const size_t qtModulesCount = sizeof(qtModuleEntries)/sizeof(QtModuleEntry);
@@ -714,7 +721,7 @@ static QStringList translationNameFilters(unsigned modules, const QString &prefi
     return result;
 }
 
-static bool deployTranslations(const QString &sourcePath, unsigned usedQtModules,
+static bool deployTranslations(const QString &sourcePath, quint64 usedQtModules,
                                const QString &target, unsigned flags, QString *errorMessage)
 {
     // Find available languages prefixes by checking on qtbase.
@@ -759,9 +766,9 @@ struct DeployResult
     operator bool() const { return success; }
 
     bool success;
-    unsigned directlyUsedQtLibraries;
-    unsigned usedQtLibraries;
-    unsigned deployedQtLibraries;
+    quint64 directlyUsedQtLibraries;
+    quint64 usedQtLibraries;
+    quint64 deployedQtLibraries;
 };
 
 static QString libraryPath(const QString &libraryLocation, const char *name,
@@ -890,7 +897,7 @@ static DeployResult deploy(const Options &options,
     // direct dependencies (do not be fooled by QtWebKit depending on it).
     QString qtLibInfix;
     for (int m = 0; m < directDependencyCount; ++m) {
-        const unsigned module = qtModule(dependentQtLibs.at(m));
+        const quint64 module = qtModule(dependentQtLibs.at(m));
         result.directlyUsedQtLibraries |= module;
         if (module == QtCoreModule)
             qtLibInfix = qtlibInfixFromCoreLibName(dependentQtLibs.at(m), isDebug, options.platform);
@@ -985,7 +992,7 @@ static DeployResult deploy(const Options &options,
     // QtModule enumeration (and thus controlled by flags) and others.
     QStringList deployedQtLibraries;
     for (int i = 0 ; i < dependentQtLibs.size(); ++i)  {
-        if (const unsigned qtm = qtModule(dependentQtLibs.at(i)))
+        if (const quint64 qtm = qtModule(dependentQtLibs.at(i)))
             result.usedQtLibraries |= qtm;
         else
             deployedQtLibraries.push_back(dependentQtLibs.at(i)); // Not represented by flag.
