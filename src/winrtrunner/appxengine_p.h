@@ -68,6 +68,7 @@ public:
 
     virtual ~AppxEnginePrivate()
     {
+        packageFactory.Reset();
         CoUninitialize();
     }
 
