@@ -55,7 +55,7 @@ int main(int argc, char **argv)
 
     QCoreApplication::setApplicationName(QStringLiteral("qtdiag"));
     QCoreApplication::setApplicationVersion(QLatin1String(QT_VERSION_STR));
-    QCoreApplication::setOrganizationName(QStringLiteral("Qt Project"));
+    QCoreApplication::setOrganizationName(QStringLiteral("QtProject"));
     QCoreApplication::setOrganizationDomain(QStringLiteral("qt-project.org"));
 
     QCommandLineParser commandLineParser;

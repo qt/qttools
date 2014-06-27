@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
     QCoreApplication app(argc, argv);
     app.setApplicationName(QStringLiteral("Qt D3D Shader Compilation Service"));
     app.setApplicationVersion(QLatin1String(QT_VERSION_STR));
-    app.setOrganizationName(QStringLiteral("Qt Project"));
+    app.setOrganizationName(QStringLiteral("QtProject"));
     app.setOrganizationDomain(QStringLiteral("qt-project.org"));
 
     QCommandLineParser parser;
