@@ -567,12 +567,6 @@ void deployPlugins(const ApplicationBundleInfo &appBundleInfo, const QString &pl
     // Cocoa print support
     pluginList.append("printsupport/libcocoaprintersupport.dylib");
 
-    // Accessibility
-    if (deploymentInfo.deployedFrameworks.contains(QStringLiteral("QtWidgets.framework")))
-        pluginList.append("accessible/libqtaccessiblewidgets.dylib");
-    if (deploymentInfo.deployedFrameworks.contains(QStringLiteral("QtQuick.framework")))
-        pluginList.append("accessible/libqtaccessiblequick.dylib");
-
     // All image formats (svg if QtSvg.framework is used)
     QStringList imagePlugins = QDir(pluginSourcePath +  QStringLiteral("/imageformats")).entryList(QStringList() << QStringLiteral("*.dylib"));
     foreach (const QString &plugin, imagePlugins) {
