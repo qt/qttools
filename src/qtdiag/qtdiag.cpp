@@ -220,7 +220,7 @@ QString qtDiag(unsigned flags)
         << "OS: " << QSysInfo::prettyProductName()
               << " [kernel version " << QSysInfo::productVersion() << "]\n";
 
-    str << "\nCPU features:";
+    str << "\nArchitecture: " << QSysInfo::currentCpuArchitecture() << "; features:";
     DUMP_CPU_FEATURE(SSE2, "SSE2");
     DUMP_CPU_FEATURE(SSE3, "SSE3");
     DUMP_CPU_FEATURE(SSSE3, "SSSE3");
