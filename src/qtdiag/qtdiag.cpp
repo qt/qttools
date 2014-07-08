@@ -64,6 +64,7 @@
 #include <QtCore/QTextStream>
 #include <QtCore/QStandardPaths>
 #include <QtCore/QDir>
+#include <QtCore/QFileSelector>
 
 #include <private/qsimd_p.h>
 #include <private/qguiapplication_p.h>
@@ -268,7 +269,11 @@ QString qtDiag(unsigned flags)
     DUMP_STANDARDPATH(str, GenericCacheLocation)
     DUMP_STANDARDPATH(str, GenericConfigLocation)
 
-    str << "\nNetwork:\n  ";
+    str << "\nFile selectors (increasing order of precedence):\n ";
+    foreach (const QString &s, QFileSelector().allSelectors())
+        str << ' ' << s;
+
+    str << "\n\nNetwork:\n  ";
 #ifdef NETWORK_DIAG
 #  ifndef QT_NO_SSL
     if (QSslSocket::supportsSsl()) {
