@@ -272,8 +272,8 @@ QString qtDiag(unsigned flags)
 #ifdef NETWORK_DIAG
 #  ifndef QT_NO_SSL
     if (QSslSocket::supportsSsl()) {
-        str << "Using \"" << QSslSocket::sslLibraryVersionString() << "\", version: "
-            << QSslSocket::sslLibraryVersionNumber();
+        str << "Using \"" << QSslSocket::sslLibraryVersionString() << "\", version: 0x"
+            << hex << QSslSocket::sslLibraryVersionNumber() << dec;
     } else {
         str << "\nSSL is not supported.";
     }
