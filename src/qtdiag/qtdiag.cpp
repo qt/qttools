@@ -219,7 +219,7 @@ QString qtDiag(unsigned flags)
     str << QLibraryInfo::build() << " on \"" << QGuiApplication::platformName() << "\" "
               << '\n'
         << "OS: " << QSysInfo::prettyProductName()
-              << " [kernel version " << QSysInfo::productVersion() << "]\n";
+              << " [" << QSysInfo::kernelType() << " version " << QSysInfo::kernelVersion() << "]\n";
 
     str << "\nArchitecture: " << QSysInfo::currentCpuArchitecture() << "; features:";
     DUMP_CPU_FEATURE(SSE2, "SSE2");
