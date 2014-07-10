@@ -337,13 +337,23 @@ bool updateFile(const QString &sourceFileName,
     QFile file(sourceFileName);
     if (optVerboseLevel)
         std::wcout << "Updating " << sourceFileInfo.fileName() << ".\n";
-    if (!(flags & SkipUpdateFile) && !file.copy(targetFileName)) {
-        *errorMessage = QString::fromLatin1("Cannot copy %1 to %2: %3")
+    if (!(flags & SkipUpdateFile)) {
+        if (!file.copy(targetFileName)) {
+            *errorMessage = QString::fromLatin1("Cannot copy %1 to %2: %3")
                 .arg(QDir::toNativeSeparators(sourceFileName),
                      QDir::toNativeSeparators(targetFileName),
                      file.errorString());
-        return false;
-    }
+            return false;
+        }
+        if (!(file.permissions() & QFile::WriteUser)) { // QTBUG-40152, clear inherited read-only attribute
+            QFile targetFile(targetFileName);
+            if (!targetFile.setPermissions(targetFile.permissions() | QFile::WriteUser)) {
+                *errorMessage = QString::fromLatin1("Cannot set write permission on %1: %2")
+                    .arg(QDir::toNativeSeparators(targetFileName), file.errorString());
+                return false;
+            }
+        } // Check permissions
+    } // !SkipUpdateFile
     if (json)
         json->addFile(sourceFileName, targetDirectory);
     return true;
