@@ -84,6 +84,19 @@ FILE *openProcess(const QString &command)
     return popen(processedCommand.toLocal8Bit().constData(), "r");
 }
 
+struct QtDependency
+{
+    QtDependency(QString rpath, QString apath) : relativePath(rpath), absolutePath(apath) {}
+
+    bool operator==(const QtDependency &other) const
+    {
+        return relativePath == other.relativePath && absolutePath == other.absolutePath;
+    }
+
+    QString relativePath;
+    QString absolutePath;
+};
+
 struct Options
 {
     Options()
@@ -178,7 +191,7 @@ struct Options
     // Collected information
     typedef QPair<QString, QString> BundledFile;
     QList<BundledFile> bundledFiles;
-    QStringList qtDependencies;
+    QList<QtDependency> qtDependencies;
     QStringList localLibs;
     QStringList localJars;
     QStringList initClasses;
@@ -672,8 +685,11 @@ bool readInputFile(Options *options)
 
     {
         QJsonValue deploymentDependencies = jsonObject.value("deployment-dependencies");
-        if (!deploymentDependencies.isUndefined())
-            options->qtDependencies = deploymentDependencies.toString().split(QLatin1Char(','));
+        if (!deploymentDependencies.isUndefined()) {
+            QStringList dependencies = deploymentDependencies.toString().split(QLatin1Char(','));
+            foreach (QString dependency, dependencies)
+                options->qtDependencies.append(QtDependency(dependency, options->qtInstallDirectory + QLatin1Char('/') + dependency));
+        }
     }
 
 
@@ -1013,15 +1029,15 @@ bool updateAndroidManifest(Options &options)
     // If .pro file overrides dependency detection, we need to see which platform plugin they picked
     if (localLibs.isEmpty()) {
         QString plugin;
-        foreach (QString qtDependency, options.qtDependencies) {
-            if (qtDependency.endsWith(QLatin1String("libqtforandroid.so"))
-                    || qtDependency.endsWith(QLatin1String("libqtforandroidGL.so"))) {
-                if (!plugin.isEmpty() && plugin != qtDependency) {
+        foreach (QtDependency qtDependency, options.qtDependencies) {
+            if (qtDependency.relativePath.endsWith(QLatin1String("libqtforandroid.so"))
+                    || qtDependency.relativePath.endsWith(QLatin1String("libqtforandroidGL.so"))) {
+                if (!plugin.isEmpty() && plugin != qtDependency.relativePath) {
                     fprintf(stderr, "Both platform plugins libqtforandroid.so and libqtforandroidGL.so included in package. Please include only one.\n");
                     return false;
                 }
 
-                plugin = qtDependency;
+                plugin = qtDependency.relativePath;
             }
         }
 
@@ -1036,9 +1052,9 @@ bool updateAndroidManifest(Options &options)
     }
 
     bool usesGL = false;
-    foreach (QString qtDependency, options.qtDependencies) {
-        if (qtDependency.endsWith(QLatin1String("libQt5OpenGL.so"))
-                || qtDependency.endsWith(QLatin1String("libQt5Quick.so"))) {
+    foreach (QtDependency qtDependency, options.qtDependencies) {
+        if (qtDependency.relativePath.endsWith(QLatin1String("libQt5OpenGL.so"))
+                || qtDependency.relativePath.endsWith(QLatin1String("libQt5Quick.so"))) {
             usesGL = true;
             break;
         }
@@ -1212,27 +1228,32 @@ bool updateAndroidFiles(Options &options)
     return true;
 }
 
-QStringList findFilesRecursively(const Options &options, const QString &fileName)
+QList<QtDependency> findFilesRecursively(const Options &options, const QFileInfo &info, const QString &rootPath)
 {
-    QFileInfo info(options.qtInstallDirectory + QLatin1Char('/') + fileName);
     if (!info.exists())
-        return QStringList();
+        return QList<QtDependency>();
 
     if (info.isDir()) {
-        QStringList ret;
+        QList<QtDependency> ret;
 
         QDir dir(info.filePath());
         QStringList entries = dir.entryList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot);
 
         foreach (QString entry, entries) {
-            QString s = fileName + QLatin1Char('/') + entry;
-            ret += findFilesRecursively(options, s);
+            QString s = info.absoluteFilePath() + QLatin1Char('/') + entry;
+            ret += findFilesRecursively(options, s, rootPath);
         }
 
         return ret;
     } else {
-        return QStringList() << fileName;
+        return QList<QtDependency>() << QtDependency(info.absoluteFilePath().mid(rootPath.length()), info.absoluteFilePath());
     }
+}
+
+QList<QtDependency> findFilesRecursively(const Options &options, const QString &fileName)
+{
+    QFileInfo info(options.qtInstallDirectory + QLatin1Char('/') + fileName);
+    return findFilesRecursively(options, info, options.qtInstallDirectory + QLatin1Char('/'));
 }
 
 bool readAndroidDependencyXml(Options *options,
@@ -1264,15 +1285,15 @@ bool readAndroidDependencyXml(Options *options,
                     }
 
                     QString file = reader.attributes().value(QLatin1String("file")).toString();
-                    QStringList fileNames = findFilesRecursively(*options, file);
-                    foreach (QString fileName, fileNames) {
-                        if (usedDependencies->contains(fileName))
+                    QList<QtDependency> fileNames = findFilesRecursively(*options, file);
+                    foreach (QtDependency fileName, fileNames) {
+                        if (usedDependencies->contains(fileName.absolutePath))
                             continue;
 
-                        usedDependencies->insert(fileName);
+                        usedDependencies->insert(fileName.absolutePath);
 
                         if (options->verbose)
-                            fprintf(stdout, "Appending dependency from xml: %s\n", qPrintable(fileName));
+                            fprintf(stdout, "Appending dependency from xml: %s\n", qPrintable(fileName.relativePath));
 
                         options->qtDependencies.append(fileName);
                     }
@@ -1280,9 +1301,10 @@ bool readAndroidDependencyXml(Options *options,
                     int bundling = reader.attributes().value(QLatin1String("bundling")).toInt();
                     QString fileName = reader.attributes().value(QLatin1String("file")).toString();
                     if (bundling == (options->deploymentMechanism == Options::Bundled)) {
-                        if (!usedDependencies->contains(fileName)) {
-                            options->qtDependencies.append(fileName);
-                            usedDependencies->insert(fileName);
+                        QtDependency dependency(fileName, options->qtInstallDirectory + QLatin1Char('/') + fileName);
+                        if (!usedDependencies->contains(dependency.absolutePath)) {
+                            options->qtDependencies.append(dependency);
+                            usedDependencies->insert(dependency.absolutePath);
                         }
                     }
 
@@ -1396,15 +1418,16 @@ bool readDependenciesFromElf(Options *options,
         if (usedDependencies->contains(dependency))
             continue;
 
+        QString absoluteDependencyPath(options->qtInstallDirectory + QLatin1Char('/') + dependency);
         usedDependencies->insert(dependency);
         if (!readDependenciesFromElf(options,
-                              options->qtInstallDirectory + QLatin1Char('/') + dependency,
+                              absoluteDependencyPath,
                               usedDependencies,
                               remainingDependencies)) {
             return false;
         }
 
-        options->qtDependencies.append(dependency);
+        options->qtDependencies.append(QtDependency(dependency, absoluteDependencyPath));
         if (options->verbose)
             fprintf(stdout, "Appending dependency: %s\n", qPrintable(dependency));
         QString qtBaseName = dependency.mid(sizeof("lib/lib") - 1);
@@ -1657,7 +1680,7 @@ bool goodToCopy(const Options *options, const QString &file, QStringList *unmetD
 
     bool ret = true;
     foreach (const QString &lib, getQtLibsFromElf(*options, file)) {
-        if (!options->qtDependencies.contains(lib)) {
+        if (!options->qtDependencies.contains(QtDependency(lib, options->qtInstallDirectory + QLatin1Char('/') + lib))) {
             ret = false;
             unmetDependencies->append(lib);
         }
@@ -1732,33 +1755,33 @@ bool copyQtFiles(Options *options)
             }
         }
 
-        foreach (QString qtDependency, options->qtDependencies)
-            options->bundledFiles += qMakePair(qtDependency, qtDependency);
+        foreach (QtDependency qtDependency, options->qtDependencies)
+            options->bundledFiles += qMakePair(qtDependency.relativePath, qtDependency.relativePath);
     } else {
         QString libsDirectory = QLatin1String("libs/");
 
         // Copy other Qt dependencies
         QString libDestinationDirectory = libsDirectory + options->architecture + QLatin1Char('/');
         QString assetsDestinationDirectory = QLatin1String("assets/--Added-by-androiddeployqt--/");
-        foreach (QString qtDependency, options->qtDependencies) {
-            QString sourceFileName = options->qtInstallDirectory + QLatin1Char('/') + qtDependency;
+        foreach (QtDependency qtDependency, options->qtDependencies) {
+            QString sourceFileName = qtDependency.absolutePath;
             QString destinationFileName;
 
-            if (qtDependency.endsWith(QLatin1String(".so"))) {
+            if (qtDependency.relativePath.endsWith(QLatin1String(".so"))) {
                 QString garbledFileName;
-                if (qtDependency.startsWith(QLatin1String("lib/"))) {
-                    garbledFileName = qtDependency.mid(sizeof("lib/") - 1);
+                if (qtDependency.relativePath.startsWith(QLatin1String("lib/"))) {
+                    garbledFileName = qtDependency.relativePath.mid(sizeof("lib/") - 1);
                 } else {
                     garbledFileName = QLatin1String("lib")
-                                    + QString(qtDependency).replace(QLatin1Char('/'), QLatin1Char('_'));
+                                    + QString(qtDependency.relativePath).replace(QLatin1Char('/'), QLatin1Char('_'));
 
                 }
                 destinationFileName = libDestinationDirectory + garbledFileName;
 
-            } else if (qtDependency.startsWith(QLatin1String("jar/"))) {
-                destinationFileName = libsDirectory + qtDependency.mid(sizeof("jar/") - 1);
+            } else if (qtDependency.relativePath.startsWith(QLatin1String("jar/"))) {
+                destinationFileName = libsDirectory + qtDependency.relativePath.mid(sizeof("jar/") - 1);
             } else {
-                destinationFileName = assetsDestinationDirectory + qtDependency;
+                destinationFileName = assetsDestinationDirectory + qtDependency.relativePath;
             }
 
             if (!QFile::exists(sourceFileName)) {
@@ -1783,7 +1806,7 @@ bool copyQtFiles(Options *options)
                 return false;
             }
 
-            options->bundledFiles += qMakePair(destinationFileName, qtDependency);
+            options->bundledFiles += qMakePair(destinationFileName, qtDependency.relativePath);
         }
     }
 
