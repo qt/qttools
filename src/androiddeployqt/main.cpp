@@ -104,6 +104,7 @@ struct Options
         , verbose(false)
         , timing(false)
         , generateAssetsFileList(true)
+        , build(true)
         , minimumAndroidVersion(9)
         , targetAndroidVersion(10)
         , deploymentMechanism(Bundled)
@@ -135,6 +136,7 @@ struct Options
     bool verbose;
     bool timing;
     bool generateAssetsFileList;
+    bool build;
     QTime timer;
 
     // External tools
@@ -294,6 +296,8 @@ Options parseOptions()
                 options.helpRequested = true;
             else
                 options.inputFileName = arguments.at(++i);
+        } else if (argument.compare(QLatin1String("--no-build"), Qt::CaseInsensitive) == 0) {
+            options.build = false;
         } else if (argument.compare(QLatin1String("--install"), Qt::CaseInsensitive) == 0) {
             options.installApk = true;
             options.uninstallApk = true;
@@ -435,6 +439,8 @@ void printHelp()
                     "       bundled (default): Include Qt files in stand-alone package.\n"
                     "       ministro: Use the Ministro service to manage Qt files.\n"
                     "       debug: Copy Qt files to device for quick debugging.\n"
+                    "    --no-build: Do not build the package, it is useful to just install\n"
+                    "       a package previously built.\n"
                     "    --install: Installs apk to device/emulator. By default this step is\n"
                     "       not taken. If the application has previously been installed on\n"
                     "       the device, it will be uninstalled first.\n"
@@ -1852,6 +1858,9 @@ bool goodToCopy(const Options *options, const QString &file, QStringList *unmetD
 bool deployToLocalTmp(Options *options,
                       const QString &qtDependency)
 {
+    if (!options->installApk)
+        return true;
+
     if (!options->fetchedRemoteModificationDates)
         fetchRemoteModifications(options, QLatin1String("/data/local/tmp/qt"));
 
@@ -1918,6 +1927,9 @@ bool copyQtFiles(Options *options)
         foreach (QtDependency qtDependency, options->qtDependencies)
             options->bundledFiles += qMakePair(qtDependency.relativePath, qtDependency.relativePath);
     } else {
+        if (!options->build)
+            return true;
+
         QString libsDirectory = QLatin1String("libs/");
 
         // Copy other Qt dependencies
@@ -2209,6 +2221,9 @@ bool installApk(const Options &options)
 
 bool copyGnuStl(Options *options)
 {
+    if (options->deploymentMechanism == Options::Debug && !options->installApk)
+        return true;
+
     if (options->verbose)
         fprintf(stdout, "Copying GNU STL library\n");
 
@@ -2542,11 +2557,13 @@ int main(int argc, char *argv[])
                 : "No"
             );
 
-    if (!copyAndroidTemplate(options))
-        return CannotCopyAndroidTemplate;
+    if (options.build) {
+        if (!copyAndroidTemplate(options))
+            return CannotCopyAndroidTemplate;
 
-    if (Q_UNLIKELY(options.timing))
-        fprintf(stdout, "[TIMING] %d ms: Copied Android template\n", options.timer.elapsed());
+        if (Q_UNLIKELY(options.timing))
+            fprintf(stdout, "[TIMING] %d ms: Copied Android template\n", options.timer.elapsed());
+    }
 
     if (!readDependencies(&options))
         return CannotReadDependencies;
@@ -2563,71 +2580,73 @@ int main(int argc, char *argv[])
     if (!copyQtFiles(&options))
         return CannotCopyQtFiles;
 
-    if (options.deploymentMechanism == Options::Debug && !deployAllToLocalTmp(options))
+    if (options.installApk && options.deploymentMechanism == Options::Debug && !deployAllToLocalTmp(options))
         return CannotDeployAllToLocalTmp;
 
-    if (Q_UNLIKELY(options.timing))
-        fprintf(stdout, "[TIMING] %d ms: Copied Qt files\n", options.timer.elapsed());
+    if (options.build) {
+        if (Q_UNLIKELY(options.timing))
+            fprintf(stdout, "[TIMING] %d ms: Copied Qt files\n", options.timer.elapsed());
 
-    if (!containsApplicationBinary(options))
-        return CannotFindApplicationBinary;
+        if (!containsApplicationBinary(options))
+            return CannotFindApplicationBinary;
 
-    if (Q_UNLIKELY(options.timing))
-        fprintf(stdout, "[TIMING] %d ms: Checked for application binary\n", options.timer.elapsed());
+        if (Q_UNLIKELY(options.timing))
+            fprintf(stdout, "[TIMING] %d ms: Checked for application binary\n", options.timer.elapsed());
 
-    if (!options.releasePackage && !copyGdbServer(options))
-        return CannotCopyGdbServer;
+        if (!options.releasePackage && !copyGdbServer(options))
+            return CannotCopyGdbServer;
 
-    if (Q_UNLIKELY(options.timing))
-        fprintf(stdout, "[TIMING] %d ms: Copied GDB server\n", options.timer.elapsed());
+        if (Q_UNLIKELY(options.timing))
+            fprintf(stdout, "[TIMING] %d ms: Copied GDB server\n", options.timer.elapsed());
 
-    if (!stripLibraries(options))
-        return CannotStripLibraries;
+        if (!stripLibraries(options))
+            return CannotStripLibraries;
 
-    if (Q_UNLIKELY(options.timing))
-        fprintf(stdout, "[TIMING] %d ms: Stripped libraries\n", options.timer.elapsed());
+        if (Q_UNLIKELY(options.timing))
+            fprintf(stdout, "[TIMING] %d ms: Stripped libraries\n", options.timer.elapsed());
 
-    if (!copyAndroidExtraLibs(options))
-        return CannotCopyAndroidExtraLibs;
+        if (!copyAndroidExtraLibs(options))
+            return CannotCopyAndroidExtraLibs;
 
-    if (Q_UNLIKELY(options.timing))
-        fprintf(stdout, "[TIMING] %d ms: Copied extra libs\n", options.timer.elapsed());
+        if (Q_UNLIKELY(options.timing))
+            fprintf(stdout, "[TIMING] %d ms: Copied extra libs\n", options.timer.elapsed());
 
-    if (!copyAndroidExtraResources(options))
-        return CannotCopyAndroidExtraResources;
+        if (!copyAndroidExtraResources(options))
+            return CannotCopyAndroidExtraResources;
 
-    if (!copyAndroidSources(options))
-        return CannotCopyAndroidSources;
+        if (!copyAndroidSources(options))
+            return CannotCopyAndroidSources;
 
-    if (Q_UNLIKELY(options.timing))
-        fprintf(stdout, "[TIMING] %d ms: Copied android sources\n", options.timer.elapsed());
+        if (Q_UNLIKELY(options.timing))
+            fprintf(stdout, "[TIMING] %d ms: Copied android sources\n", options.timer.elapsed());
 
-    if (!updateAndroidFiles(options))
-        return CannotUpdateAndroidFiles;
+        if (!updateAndroidFiles(options))
+            return CannotUpdateAndroidFiles;
 
-    if (options.generateAssetsFileList && !generateAssetsFileList(options))
-        return CannotGenerateAssetsFileList;
+        if (options.generateAssetsFileList && !generateAssetsFileList(options))
+            return CannotGenerateAssetsFileList;
 
-    if (Q_UNLIKELY(options.timing))
-        fprintf(stdout, "[TIMING] %d ms: Updated files\n", options.timer.elapsed());
+        if (Q_UNLIKELY(options.timing))
+            fprintf(stdout, "[TIMING] %d ms: Updated files\n", options.timer.elapsed());
 
-    if (!createAndroidProject(options))
-        return CannotCreateAndroidProject;
+        if (!createAndroidProject(options))
+            return CannotCreateAndroidProject;
 
-    if (Q_UNLIKELY(options.timing))
-        fprintf(stdout, "[TIMING] %d ms: Created project\n", options.timer.elapsed());
+        if (Q_UNLIKELY(options.timing))
+            fprintf(stdout, "[TIMING] %d ms: Created project\n", options.timer.elapsed());
 
-    if (!buildAndroidProject(options))
-        return CannotBuildAndroidProject;
+        if (!buildAndroidProject(options))
+            return CannotBuildAndroidProject;
 
-    if (Q_UNLIKELY(options.timing))
-        fprintf(stdout, "[TIMING] %d ms: Built project\n", options.timer.elapsed());
+        if (Q_UNLIKELY(options.timing))
+            fprintf(stdout, "[TIMING] %d ms: Built project\n", options.timer.elapsed());
 
-    if (!options.keyStore.isEmpty() && !signPackage(options))
-        return CannotSignPackage;
+        if (!options.keyStore.isEmpty() && !signPackage(options))
+            return CannotSignPackage;
 
-    if (Q_UNLIKELY(options.timing))
-        fprintf(stdout, "[TIMING] %d ms: Signed package\n", options.timer.elapsed());
+        if (Q_UNLIKELY(options.timing))
+            fprintf(stdout, "[TIMING] %d ms: Signed package\n", options.timer.elapsed());
+    }
 
     if (options.installApk && !installApk(options))
         return CannotInstallApk;
