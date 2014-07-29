@@ -88,6 +88,7 @@ static const struct StringEnum {
     { "GenericDataLocation", QStandardPaths::GenericDataLocation },
     { "RuntimeLocation", QStandardPaths::RuntimeLocation },
     { "ConfigLocation", QStandardPaths::ConfigLocation },
+    { "GenericConfigLocation", QStandardPaths::GenericConfigLocation },
     { "DownloadLocation", QStandardPaths::DownloadLocation }
 };
 
