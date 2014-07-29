@@ -126,6 +126,7 @@ struct Options
 
     // External tools
     QString sdkPath;
+    QString sdkBuildToolsVersion;
     QString ndkPath;
     QString antTool;
     QString jdkPath;
@@ -634,10 +635,17 @@ bool readInputFile(Options *options)
                 return false;
         } else {
             if (!QDir(options->sdkPath + QLatin1String("/platforms/") + options->androidPlatform).exists()) {
-                fprintf(stderr, "Warning: Android platform '%s' does not exist in NDK.\n",
+                fprintf(stderr, "Warning: Android platform '%s' does not exist in SDK.\n",
                         qPrintable(options->androidPlatform));
             }
         }
+    }
+
+    {
+
+        QJsonValue value = jsonObject.value("sdkBuildToolsRevision");
+        if (!value.isUndefined())
+            options->sdkBuildToolsVersion = value.toString();
     }
 
     {
@@ -2086,8 +2094,14 @@ bool signPackage(const Options &options)
 #endif
 
     if (!QFile::exists(zipAlignTool)) {
-        fprintf(stderr, "zipalign tool not found: %s\n", qPrintable(zipAlignTool));
-        return false;
+        zipAlignTool = options.sdkPath + QLatin1String("/build-tools/") + options.sdkBuildToolsVersion + QLatin1String("/zipalign");
+#if defined(Q_OS_WIN32)
+        zipAlignTool += QLatin1String(".exe");
+#endif
+        if (!QFile::exists(zipAlignTool)) {
+            fprintf(stderr, "zipalign tool not found: %s\n", qPrintable(zipAlignTool));
+            return false;
+        }
     }
 
     zipAlignTool = QString::fromLatin1("%1%2 -f 4 %3 %4")
