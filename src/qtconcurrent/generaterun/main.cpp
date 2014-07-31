@@ -38,7 +38,6 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-#include <QApplication>
 #include <QDebug>
 #include <QFile>
 
