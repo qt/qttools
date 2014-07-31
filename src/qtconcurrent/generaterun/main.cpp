@@ -90,80 +90,81 @@ Item Line(Item item)
     return item + "\n";
 }
 
-Item generateRunFunctions(int repeats)
+Item generateRunFunctions(int repeats, bool withExplicitPoolArg)
 {
     Item functionPointerType = "T (*)(" + parameterTypesNoPrefix + ")";
 
     Item functionPointerParameter = "T (*functionPointer)(" + parameterTypesNoPrefix + ")";
 
-
+    const Item pool = withExplicitPoolArg ? "QThreadPool *pool, " : "";
+    const char * const startArg = withExplicitPoolArg ? "pool" : "";
 
     // plain functions
     Repeater functions = Line ("template <typename T" + typenameTypes + ">") +
-                         Line ("QFuture<T> run(" + functionPointerParameter + functionParameters + ")")  +
+                         Line ("QFuture<T> run(" + pool + functionPointerParameter + functionParameters + ")")  +
                          Line("{") +
                          Line("    return (new QT_TYPENAME SelectStoredFunctorCall" + Counter() + "<T, " +
-                                   functionPointerType + argumentTypes + ">::type(functionPointer" + arguments + "))->start();") +
+                                   functionPointerType + argumentTypes + ">::type(functionPointer" + arguments + "))->start(" + startArg + ");") +
                          Line("}");
     functions.setRepeatCount(repeats);
 
     // function objects by value
     Repeater functionObjects =  Line ("template <typename FunctionObject" + typenameArgumentTypes + ">") +
-                                Line ("QFuture<typename FunctionObject::result_type> run(FunctionObject functionObject" + functionParameters + ")") +
+                                Line ("QFuture<typename FunctionObject::result_type> run(" + pool + "FunctionObject functionObject" + functionParameters + ")") +
                                 Line("{") +
                                 Line("    return (new QT_TYPENAME SelectStoredFunctorCall" + Counter() +
                                      "<QT_TYPENAME FunctionObject::result_type, FunctionObject" +
-                                     argumentTypes + ">::type(functionObject" + arguments + "))->start();") +
+                                     argumentTypes + ">::type(functionObject" + arguments + "))->start(" + startArg + ");") +
                                 Line("}");
     functionObjects.setRepeatCount(repeats);
 
     // function objects by pointer
     Repeater functionObjectsPointer =  Line ("template <typename FunctionObject" + typenameArgumentTypes + ">") +
-                                Line ("QFuture<typename FunctionObject::result_type> run(FunctionObject *functionObject" + functionParameters + ")") +
+                                Line ("QFuture<typename FunctionObject::result_type> run(" + pool + "FunctionObject *functionObject" + functionParameters + ")") +
                                 Line("{") +
                                 Line("    return (new QT_TYPENAME SelectStoredFunctorPointerCall" + Counter() +
                                      "<QT_TYPENAME FunctionObject::result_type, FunctionObject" +
-                                     argumentTypes + ">::type(functionObject" + arguments + "))->start();") +
+                                     argumentTypes + ">::type(functionObject" + arguments + "))->start(" + startArg + ");") +
                                 Line("}");
     functionObjectsPointer.setRepeatCount(repeats);
 
     // member functions by value
     Repeater memberFunction =  Line ("template <typename T, typename Class" + typenameTypes + ">") +
-                                Line ("QFuture<T> run(const Class &object, T (Class::*fn)(" + parameterTypesNoPrefix  + ")" + functionParameters + ")") +
+                                Line ("QFuture<T> run(" + pool + "const Class &object, T (Class::*fn)(" + parameterTypesNoPrefix  + ")" + functionParameters + ")") +
                                 Line("{") +
                                 Line("    return (new QT_TYPENAME SelectStoredMemberFunctionCall" + Counter() +
                                      "<T, Class" +
-                                     types + ">::type(fn, object" + arguments + "))->start();") +
+                                     types + ">::type(fn, object" + arguments + "))->start(" + startArg + ");") +
                                 Line("}");
     memberFunction.setRepeatCount(repeats);
 
     // const member functions by value
     Repeater constMemberFunction =  Line ("template <typename T, typename Class" + typenameTypes + ">") +
-                                Line ("QFuture<T> run(const Class &object, T (Class::*fn)(" + parameterTypesNoPrefix  + ") const" + functionParameters + ")") +
+                                Line ("QFuture<T> run(" + pool + "const Class &object, T (Class::*fn)(" + parameterTypesNoPrefix  + ") const" + functionParameters + ")") +
                                 Line("{") +
                                 Line("    return (new QT_TYPENAME SelectStoredConstMemberFunctionCall" + Counter() +
                                      "<T, Class" +
-                                     types + ">::type(fn, object" + arguments + "))->start();") +
+                                     types + ">::type(fn, object" + arguments + "))->start(" + startArg + ");") +
                                 Line("}");
     constMemberFunction.setRepeatCount(repeats);
 
     // member functions by class pointer
     Repeater memberFunctionPointer =  Line ("template <typename T, typename Class" + typenameTypes + ">") +
-                                Line ("QFuture<T> run(Class *object, T (Class::*fn)(" + parameterTypesNoPrefix  + ")" + functionParameters + ")") +
+                                Line ("QFuture<T> run(" + pool + "Class *object, T (Class::*fn)(" + parameterTypesNoPrefix  + ")" + functionParameters + ")") +
                                 Line("{") +
                                 Line("    return (new QT_TYPENAME SelectStoredMemberFunctionPointerCall" + Counter() +
                                      "<T, Class" +
-                                     types + ">::type(fn, object" + arguments + "))->start();") +
+                                     types + ">::type(fn, object" + arguments + "))->start(" + startArg + ");") +
                                 Line("}");
     memberFunctionPointer.setRepeatCount(repeats);
 
     // const member functions by class pointer
     Repeater constMemberFunctionPointer =  Line ("template <typename T, typename Class" + typenameTypes + ">") +
-                                Line ("QFuture<T> run(const Class *object, T (Class::*fn)(" + parameterTypesNoPrefix  + ") const" + functionParameters + ")") +
+                                Line ("QFuture<T> run(" + pool + "const Class *object, T (Class::*fn)(" + parameterTypesNoPrefix  + ") const" + functionParameters + ")") +
                                 Line("{") +
                                 Line("    return (new QT_TYPENAME SelectStoredConstMemberFunctionPointerCall" + Counter() +
                                      "<T, Class" +
-                                     types + ">::type(fn, object" + arguments + "))->start();") +
+                                     types + ">::type(fn, object" + arguments + "))->start(" + startArg + ");") +
                                 Line("}");
     constMemberFunctionPointer.setRepeatCount(repeats);
 
@@ -173,21 +174,21 @@ Item generateRunFunctions(int repeats)
 /*
     // QFutureInterface functions
     Repeater interfaceFunctions = Line ("template <typename T" + typenameTypes + ">") +
-                         Line ("QFuture<T> run(" + interfaceFunctionPointerParameter + functionParameters + ")")  +
+                         Line ("QFuture<T> run(" + pool + interfaceFunctionPointerParameter + functionParameters + ")")  +
                          Line("{") +
                          Line("    return (new StoredInterfaceFunctionCall" + Counter() + "<T, " +
-                                   interfaceFunctionPointerType + typenameArgumentTypes + ">(functionPointer" + arguments + "))->start();") +
+                                   interfaceFunctionPointerType + typenameArgumentTypes + ">(functionPointer" + arguments + "))->start(" + startArg + ");") +
                          Line("}");
     functions.setRepeatCount(repeats);
     interfaceFunctions.setRepeatCount(repeats);
 
     // member functions by class pointer
     Repeater interfaceMemberFunction =  Line ("template <typename Class, typename T" + typenameTypes + ">") +
-                                Line ("QFuture<T> run(void (Class::*fn)(QFutureInterface<T> &), Class *object" + functionParameters + ")") +
+                                Line ("QFuture<T> run(" + pool + "void (Class::*fn)(QFutureInterface<T> &), Class *object" + functionParameters + ")") +
                                 Line("{") +
                                 Line("    return (new StoredInterfaceMemberFunctionCall" + Counter() +
                                      "<T, void (Class::*)(QFutureInterface<T> &), Class" +
-                                     typenameArgumentTypes + ">(fn, object" + arguments + "))->start();") +
+                                     typenameArgumentTypes + ">(fn, object" + arguments + "))->start(" + startArg + ");") +
                                 Line("}");
     memberFunctionPointer.setRepeatCount(repeats);
 */
@@ -364,13 +365,18 @@ int main(int argc, char *argv[])
                        Line("    template <typename T>") +
                        Line("    QFuture<T> run(Function function, ...);") +
                        Line("") +
+                       Line("    template <typename T>") +
+                       Line("    QFuture<T> run(QThreadPool *pool, Function function, ...);") +
+                       Line("") +
                        Line("} // namespace QtConcurrent") +
                        Line("") +
                        Line("#else") +
                        Line("") +
                        Line("namespace QtConcurrent {") +
                        Line("") +
-                       generateRunFunctions(repeats) +
+                       generateRunFunctions(repeats, false) +
+                       Line("") +
+                       generateRunFunctions(repeats, true) +
                        Line("} //namespace QtConcurrent") +
                        Line("") +
                        Line("#endif // qdoc") +
