@@ -217,8 +217,8 @@ QString qtDiag(unsigned flags)
     const QPlatformIntegration *platformIntegration = QGuiApplicationPrivate::platformIntegration();
     str << QLibraryInfo::build() << " on \"" << QGuiApplication::platformName() << "\" "
               << '\n'
-        << "OS: " << QSysInfo::prettyOsName()
-              << " [kernel version " << QSysInfo::osKernelVersion() << "]\n";
+        << "OS: " << QSysInfo::prettyProductName()
+              << " [kernel version " << QSysInfo::productVersion() << "]\n";
 
     str << "\nCPU features:";
     DUMP_CPU_FEATURE(SSE2, "SSE2");
