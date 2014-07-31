@@ -40,6 +40,7 @@
 ****************************************************************************/
 #include <QDebug>
 #include <QFile>
+#include <QDir>
 
 #include "codegenerator.h"
 using namespace CodeGenerator;
@@ -317,8 +318,19 @@ Item dollarQuote(Item item)
     return Item("$") + item + Item("$");
 }
 
-int main()
+static int usage(const char *executable)
 {
+    qDebug("Usage: %s path/to/qtconcurrent", executable);
+    return EXIT_FAILURE;
+}
+
+int main(int argc, char *argv[])
+{
+    if (argc !=2)
+        return usage(argv[0]);
+
+    const QDir outdir(QFile::decodeName(argv[1]));
+
     const int repeats = 6;
     init();
     Item run =  (
@@ -369,7 +381,7 @@ int main()
                        Line("#endif")
                       );
 
-    writeFile("../../../src/corelib/concurrent/qtconcurrentrun.h", run.generate());
+    writeFile(outdir.filePath("qtconcurrentrun.h"), run.generate());
 
     Item storedFunctionCall = (
                                      Line("/****************************************************************************") +
@@ -411,7 +423,7 @@ int main()
                                      Line("#endif")
                                     );
 
-    writeFile("../../../src/corelib/concurrent/qtconcurrentstoredfunctioncall.h", storedFunctionCall.generate());
+    writeFile(outdir.filePath("qtconcurrentstoredfunctioncall.h"), storedFunctionCall.generate());
 }
 
 
