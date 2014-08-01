@@ -1081,15 +1081,6 @@ static DeployResult deploy(const Options &options,
                     deployedQtLibraries.push_back(d3dCompiler);
                 }
             }
-            // Deploy Qt's D3D compiler starting from 5.3 onwards.
-            if (version >= 0x050300) {
-                QString d3dCompilerQt = qtBinDir + QStringLiteral("/d3dcompiler_qt");
-                if (isDebug)
-                    d3dCompilerQt += QLatin1Char('d');
-                d3dCompilerQt += QLatin1String(windowsSharedLibrarySuffix);
-                if (QFileInfo(d3dCompilerQt).exists())
-                    deployedQtLibraries.push_back(d3dCompilerQt);
-            }
         } // deployAngle
     } // Windows
 
