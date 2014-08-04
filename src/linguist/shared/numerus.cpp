@@ -64,6 +64,10 @@ static const uchar icelandicRules[] =
 static const uchar irishStyleRules[] =
     { Q_EQ, 1, Q_NEWRULE,
       Q_EQ, 2 };
+static const uchar gaelicStyleRules[] =
+    { Q_EQ, 1, Q_OR, Q_EQ, 11, Q_NEWRULE,
+      Q_EQ, 2, Q_OR, Q_EQ, 12, Q_NEWRULE,
+      Q_BETWEEN, 3, 19 };
 static const uchar slovakStyleRules[] =
     { Q_EQ, 1, Q_NEWRULE,
       Q_BETWEEN, 2, 4 };
@@ -114,6 +118,9 @@ static const char * const frenchStyleForms[] = { "Singular", "Plural", 0 };
 static const char * const icelandicForms[] = { "Singular", "Plural", 0 };
 static const char * const latvianForms[] = { "Singular", "Plural", "Nullar", 0 };
 static const char * const irishStyleForms[] = { "Singular", "Dual", "Plural", 0 };
+// Gaelic uses the grammatical Singular for the Plural cardinality,
+// so using the Latin terms is expected to cause confusion.
+static const char * const gaelicStyleForms[] = { "1/11", "2/12", "Few", "Many", 0 };
 static const char * const slovakStyleForms[] = { "Singular", "Paucal", "Plural", 0 };
 static const char * const macedonianForms[] = { "Singular", "Dual", "Plural", 0 };
 static const char * const lithuanianForms[] = { "Singular", "Paucal", "Plural", 0 };
@@ -267,7 +274,6 @@ static const QLocale::Language latvianLanguage[] = { QLocale::Latvian, EOL };
 static const QLocale::Language icelandicLanguage[] = { QLocale::Icelandic, EOL };
 static const QLocale::Language irishStyleLanguages[] = {
     QLocale::Divehi,
-    QLocale::Gaelic,
     QLocale::Inuktitut,
     QLocale::Inupiak,
     QLocale::Irish,
@@ -278,6 +284,7 @@ static const QLocale::Language irishStyleLanguages[] = {
     QLocale::Sanskrit,
     EOL
 };
+static const QLocale::Language gaelicStyleLanguages[] = { QLocale::Gaelic, EOL };
 static const QLocale::Language slovakStyleLanguages[] = { QLocale::Slovak, QLocale::Czech, EOL };
 static const QLocale::Language macedonianLanguage[] = { QLocale::Macedonian, EOL };
 static const QLocale::Language lithuanianLanguage[] = { QLocale::Lithuanian, EOL };
@@ -334,6 +341,8 @@ static const NumerusTableEntry numerusTable[] = {
       "nplurals=2; plural=(n%10==1 && n%100!=11 ? 0 : 1);" },
     { irishStyleRules, sizeof(irishStyleRules), irishStyleForms, irishStyleLanguages, 0,
       "nplurals=3; plural=(n==1 ? 0 : n==2 ? 1 : 2);" },
+    { gaelicStyleRules, sizeof(gaelicStyleRules), gaelicStyleForms, gaelicStyleLanguages, 0,
+      "nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : (n > 2 && n < 20) ? 2 : 3;" },
     { slovakStyleRules, sizeof(slovakStyleRules), slovakStyleForms, slovakStyleLanguages, 0,
       "nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);" },
     { macedonianRules, sizeof(macedonianRules), macedonianForms, macedonianLanguage, 0,
