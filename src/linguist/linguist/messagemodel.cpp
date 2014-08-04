@@ -1229,9 +1229,11 @@ int MessageModel::rowCount(const QModelIndex &parent) const
     return 0;
 }
 
-int MessageModel::columnCount(const QModelIndex &) const
+int MessageModel::columnCount(const QModelIndex &parent) const
 {
-    return m_data->modelCount() + 3;
+    if (!parent.isValid())
+        return m_data->modelCount() + 3;
+    return m_data->modelCount() + 2;
 }
 
 QVariant MessageModel::data(const QModelIndex &index, int role) const
