@@ -710,6 +710,24 @@ void deployQmlImports(const QString &appBundlePath, QStringList &qmlDirs)
         QJsonObject import = importValue.toObject();
         QString name = import["name"].toString();
         QString path = import["path"].toString();
+        QString type = import["type"].toString();
+
+        LogNormal() << "Deploying QML import" << name;
+
+        // Skip imports with missing info - path will be empty if the import is not found.
+        if (name.isEmpty() || path.isEmpty()) {
+            LogNormal() << "  Skip import: name or path is empty";
+            LogNormal() << "";
+            continue;
+        }
+
+        // Deploy module imports only, skip directory (local/remote) and js imports. These
+        // should be deployed as a part of the application build.
+        if (type != QStringLiteral("module")) {
+            LogNormal() << "  Skip non-module import";
+            LogNormal() << "";
+            continue;
+        }
 
         // Create the destination path from the name
         // and version (grabbed from the source path)
