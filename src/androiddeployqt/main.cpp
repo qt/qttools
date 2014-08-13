@@ -2687,12 +2687,14 @@ bool copyGdbServer(const Options &options)
         return false;
     }
 
+    QString gdbServerTarget = options.outputDirectory + QLatin1String("/libs/") + options.architecture;
+
     if (!copyFileIfNewer(gdbServerBinary,
-                         options.outputDirectory
-                            + QLatin1String("/libs/")
-                            + options.architecture
-                            + QLatin1String("/gdbserver.so"),
-                         options.verbose)) {
+                         gdbServerTarget + QLatin1String("/gdbserver"),
+                         options.verbose)
+        || !copyFileIfNewer(gdbServerBinary,
+                            gdbServerTarget + QLatin1String("/libgdbserver.so"),
+                            options.verbose)) {
         return false;
     }
 
