@@ -44,6 +44,7 @@
 #ifndef QT_BOOTSTRAPPED
 #include <QtCore/QCoreApplication>
 #endif
+#include <QtCore/QDataStream>
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
