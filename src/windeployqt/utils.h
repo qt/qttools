@@ -62,6 +62,7 @@ enum Platform {
     WinRtArm = WindowsBased + ArmBased + 2,
     WinPhoneIntel = WindowsBased + IntelBased + 3,
     WinPhoneArm = WindowsBased + ArmBased + 4,
+    WinCE = WindowsBased + ArmBased + 5,
     Unix = UnixBased,
     UnknownPlatform
 };

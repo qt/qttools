@@ -184,6 +184,8 @@ static Platform platformFromMkSpec(const QString &xSpec)
         return WinPhoneIntel;
     if (xSpec.startsWith(QLatin1String("winphone-arm")))
         return WinPhoneArm;
+    if (xSpec.startsWith(QLatin1String("wince")))
+        return WinCE;
     return UnknownPlatform;
 }
 
@@ -1156,7 +1158,7 @@ static DeployResult deploy(const Options &options,
             libGlesName += QLatin1Char('d');
         libGlesName += QLatin1String(windowsSharedLibrarySuffix);
         const QStringList guiLibraries = findDependentLibraries(qtGuiLibrary, options.platform, errorMessage);
-        const bool dependsOnAngle = !guiLibraries.filter(libGlesName, Qt::CaseInsensitive).isEmpty();
+        const bool dependsOnAngle = !guiLibraries.filter(libGlesName, Qt::CaseInsensitive).isEmpty() && !(options.platform & WinCE);
         const bool dependsOnOpenGl = !guiLibraries.filter(QStringLiteral("opengl32"), Qt::CaseInsensitive).isEmpty();
         if (options.angleDetection != Options::AngleDetectionForceOff
             && (dependsOnAngle || !dependsOnOpenGl || options.angleDetection == Options::AngleDetectionForceOn)) {
