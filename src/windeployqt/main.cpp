@@ -959,7 +959,7 @@ static DeployResult deploy(const Options &options,
     }
 
     const bool usesQml2 = !(options.disabledLibraries & QtQmlModule)
-                            && ((result.directlyUsedQtLibraries & QtQmlModule)
+                            && ((result.directlyUsedQtLibraries & (QtQmlModule | QtQuickModule))
                                 || (options.additionalLibraries & QtQmlModule));
 
     if (optVerboseLevel) {
