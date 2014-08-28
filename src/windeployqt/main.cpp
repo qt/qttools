@@ -187,8 +187,32 @@ static Platform platformFromMkSpec(const QString &xSpec)
     return UnknownPlatform;
 }
 
+// Helpers for exclusive options, "-foo", "--no-foo"
+enum ExlusiveOptionValue {
+    OptionAuto,
+    OptionEnabled,
+    OptionDisabled
+};
+
+static ExlusiveOptionValue parseExclusiveOptions(const QCommandLineParser *parser,
+                                                 const QCommandLineOption &enableOption,
+                                                 const QCommandLineOption &disableOption)
+{
+    const bool enabled = parser->isSet(enableOption);
+    const bool disabled = parser->isSet(disableOption);
+    if (enabled) {
+        if (disabled) {
+            std::wcerr << "Warning: both -" << enableOption.names().first()
+                << " and -" << disableOption.names().first() << " were specified, defaulting to -"
+                << enableOption.names().first() << ".\n";
+        }
+        return OptionEnabled;
+    }
+    return disabled ? OptionDisabled : OptionAuto;
+}
+
 bool optHelp = false;
-int optWebKit2 = 0;
+ExlusiveOptionValue optWebKit2 = OptionAuto;
 
 struct Options {
     enum DebugDetection {
@@ -404,23 +428,29 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
         return CommandLineParseError;
     }
 
-    const bool forceDebug = parser->isSet(debugOption);
-    const bool forceRelease = parser->isSet(releaseOption);
-    if (forceDebug && forceRelease)
-        std::wcerr << "Warning: both -debug and -release were specified, defaulting to debug.\n";
-    if (forceDebug)
+    switch (parseExclusiveOptions(parser, debugOption, releaseOption)) {
+    case OptionAuto:
+        break;
+    case OptionEnabled:
         options->debugDetection = Options::DebugDetectionForceDebug;
-    else if (forceRelease)
-        options->debugDetection = Options::DebugDetectionForceRelease;
+        break;
+    case OptionDisabled:
+         options->debugDetection = Options::DebugDetectionForceRelease;
+        break;
+    }
 
-    const bool forceAngle = parser->isSet(angleOption);
-    const bool disableAngle = parser->isSet(noAngleOption);
-    if (forceAngle && disableAngle)
-        std::wcerr << "Warning: both -angle and -no-angle specified, defaulting to on.\n";
-    if (forceAngle)
+    switch (parseExclusiveOptions(parser, angleOption, noAngleOption)) {
+    case OptionAuto:
+        break;
+    case OptionEnabled:
         options->angleDetection = Options::AngleDetectionForceOn;
-    else if (disableAngle)
+        break;
+    case OptionDisabled:
         options->angleDetection = Options::AngleDetectionForceOff;
+        break;
+    }
+
+    optWebKit2 = parseExclusiveOptions(parser, webKitOption, noWebKitOption);
 
     if (parser->isSet(forceOption))
         options->updateFileFlags |= ForceUpdateFile;
@@ -903,6 +933,7 @@ static DeployResult deploy(const Options &options,
     const QString qtBinDir = qmakeVariables.value(QStringLiteral("QT_INSTALL_BINS"));
     const QString libraryLocation = options.platform == Unix ? qmakeVariables.value(QStringLiteral("QT_INSTALL_LIBS")) : qtBinDir;
     const int version = qtVersion(qmakeVariables);
+    Q_UNUSED(version)
 
     if (optVerboseLevel > 1)
         std::wcout << "Qt binaries in " << QDir::toNativeSeparators(qtBinDir) << '\n';
@@ -1241,8 +1272,8 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    if ((optWebKit2 != -1)
-        && (optWebKit2 == 1
+    if ((optWebKit2 != OptionDisabled)
+        && (optWebKit2 == OptionEnabled
             || ((result.deployedQtLibraries & QtWebKitModule)
                 && (result.directlyUsedQtLibraries & QtQuickModule)))) {
         if (optVerboseLevel)

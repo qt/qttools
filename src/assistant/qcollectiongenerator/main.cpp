@@ -45,6 +45,7 @@
 #include <private/qhelpgenerator_p.h>
 #include <private/qhelpprojectdata_p.h>
 
+#include <QtCore/QDataStream>
 #include <QtCore/QDir>
 #include <QtCore/QMap>
 #include <QtCore/QFileInfo>
