@@ -579,6 +579,13 @@ static inline QString helpText(const QCommandLineParser &p)
     return result;
 }
 
+static inline bool isQtModule(const QString &libName)
+{
+    return libName.startsWith(QLatin1String("Qt"), Qt::CaseInsensitive) // Standard modules, Qt5XX.dll, Qt[Commercial]Charts.dll
+        || libName.startsWith(QLatin1String("DataVisualization"), Qt::CaseInsensitive)
+        || libName.startsWith(QLatin1String("Enginio"), Qt::CaseInsensitive);
+}
+
 // Helper for recursively finding all dependent Qt libraries.
 static bool findDependentQtLibraries(const QString &qtBinDir, const QString &binary, Platform platform,
                                      QString *errorMessage, QStringList *result,
@@ -596,11 +603,12 @@ static bool findDependentQtLibraries(const QString &qtBinDir, const QString &bin
     // Filter out the Qt libraries. Note that depends.exe finds libs from optDirectory if we
     // are run the 2nd time (updating). We want to check against the Qt bin dir libraries
     const int start = result->size();
-    const QRegExp filterRegExp(QStringLiteral("Qt5"), Qt::CaseInsensitive, QRegExp::FixedString);
-    foreach (const QString &qtLib, dependentLibs.filter(filterRegExp)) {
-        const QString path = normalizeFileName(qtBinDir + QLatin1Char('/') + QFileInfo(qtLib).fileName());
-        if (!result->contains(path))
-            result->append(path);
+    foreach (const QString &lib, dependentLibs) {
+        if (isQtModule(lib)) {
+            const QString path = normalizeFileName(qtBinDir + QLatin1Char('/') + QFileInfo(lib).fileName());
+            if (!result->contains(path))
+                result->append(path);
+        }
     }
     const int end = result->size();
     if (directDependencyCount)
