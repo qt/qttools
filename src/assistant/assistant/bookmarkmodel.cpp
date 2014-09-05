@@ -97,7 +97,7 @@ BookmarkModel::setBookmarks(const QByteArray &bookmarks)
     stream >> version;
     if (version < VERSION) {
         stream.device()->seek(0);
-        BookmarkItem* toolbar = new BookmarkItem(DataVector() << tr("Toolbar Menu")
+        BookmarkItem* toolbar = new BookmarkItem(DataVector() << tr("Bookmarks Toolbar")
             << QLatin1String("Folder") << true);
         rootItem->addChild(toolbar);
 
