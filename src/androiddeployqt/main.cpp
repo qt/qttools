@@ -1695,7 +1695,13 @@ bool scanImports(Options *options, QSet<QString> *usedDependencies)
 
             QString importPathOfThisImport;
             foreach (QString importPath, importPaths) {
-                if (info.absoluteFilePath().startsWith(importPath)) {
+#if defined(Q_OS_WIN32)
+                Qt::CaseSensitivity caseSensitivity = Qt::CaseInsensitive;
+#else
+                Qt::CaseSensitivity caseSensitivity = Qt::CaseSensitive;
+#endif
+                QString cleanImportPath = QDir::cleanPath(importPath);
+                if (info.absoluteFilePath().startsWith(cleanImportPath, caseSensitivity)) {
                     importPathOfThisImport = importPath;
                     break;
                 }
