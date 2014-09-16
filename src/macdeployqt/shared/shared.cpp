@@ -54,6 +54,10 @@
 #include <QJsonValue>
 #include "shared.h"
 
+#ifdef Q_OS_DARWIN
+#include <CoreFoundation/CoreFoundation.h>
+#endif
+
 bool runStripEnabled = true;
 bool alwaysOwerwriteEnabled = false;
 int logLevel = 1;
@@ -84,7 +88,6 @@ QDebug operator<<(QDebug debug, const FrameworkInfo &info)
 }
 
 const QString bundleFrameworkDirectory = "Contents/Frameworks";
-const QString bundleBinaryDirectory = "Contents/MacOS";
 
 inline QDebug operator<<(QDebug debug, const ApplicationBundleInfo &info)
 {
@@ -230,8 +233,33 @@ FrameworkInfo parseOtoolLibraryLine(const QString &line, bool useDebugLibs)
 
 QString findAppBinary(const QString &appBundlePath)
 {
-    QString appName = QFileInfo(appBundlePath).completeBaseName();
-    QString binaryPath = appBundlePath  + "/Contents/MacOS/" + appName;
+    QString binaryPath;
+
+#ifdef Q_OS_DARWIN
+    CFStringRef bundlePath = appBundlePath.toCFString();
+    CFURLRef bundleURL = CFURLCreateWithFileSystemPath(kCFAllocatorDefault, bundlePath,
+                                                       kCFURLPOSIXPathStyle, true);
+    CFRelease(bundlePath);
+    CFBundleRef bundle = CFBundleCreate(kCFAllocatorDefault, bundleURL);
+    if (bundle) {
+        CFURLRef executableURL = CFBundleCopyExecutableURL(bundle);
+        if (executableURL) {
+            CFURLRef absoluteExecutableURL = CFURLCopyAbsoluteURL(executableURL);
+            if (absoluteExecutableURL) {
+                CFStringRef executablePath = CFURLCopyFileSystemPath(absoluteExecutableURL,
+                                                                     kCFURLPOSIXPathStyle);
+                if (executablePath) {
+                    binaryPath = QString::fromCFString(executablePath);
+                    CFRelease(executablePath);
+                }
+                CFRelease(absoluteExecutableURL);
+            }
+            CFRelease(executableURL);
+        }
+        CFRelease(bundle);
+    }
+    CFRelease(bundleURL);
+#endif
 
     if (QFile::exists(binaryPath))
         return binaryPath;
