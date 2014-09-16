@@ -487,7 +487,7 @@ DeploymentInfo deployQtFrameworks(QList<FrameworkInfo> frameworks,
             deploymentInfo.qtPath.chop(5); // remove "/lib/"
         }
 
-        if (framework.installName.startsWith("/@executable_path/")) {
+        if (framework.installName.startsWith("@executable_path/")) {
             LogError()  << framework.frameworkName << "already deployed, skipping.";
             continue;
         }
