@@ -266,7 +266,7 @@ bool DataModel::load(const QString &fileName, bool *langGuessed, QWidget *parent
             MessageItem tmp(msg);
             if (msg.type() == TranslatorMessage::Finished)
                 c->incrementFinishedCount();
-            if (msg.type() == TranslatorMessage::Unfinished) {
+            if (msg.type() == TranslatorMessage::Finished || msg.type() == TranslatorMessage::Unfinished) {
                 doCharCounting(tmp.text(), m_srcWords, m_srcChars, m_srcCharsSpc);
                 doCharCounting(tmp.pluralText(), m_srcWords, m_srcChars, m_srcCharsSpc);
                 c->incrementNonobsoleteCount();
@@ -1229,9 +1229,11 @@ int MessageModel::rowCount(const QModelIndex &parent) const
     return 0;
 }
 
-int MessageModel::columnCount(const QModelIndex &) const
+int MessageModel::columnCount(const QModelIndex &parent) const
 {
-    return m_data->modelCount() + 3;
+    if (!parent.isValid())
+        return m_data->modelCount() + 3;
+    return m_data->modelCount() + 2;
 }
 
 QVariant MessageModel::data(const QModelIndex &index, int role) const
