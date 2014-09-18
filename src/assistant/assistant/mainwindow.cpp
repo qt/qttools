@@ -206,10 +206,6 @@ MainWindow::MainWindow(CmdLineParser *cmdLine, QWidget *parent)
     toolBar->setObjectName(QLatin1String("Bookmark Toolbar"));
     bookMarkManager->setBookmarksToolbar(toolBar);
 
-    // Show the widget here, otherwise the restore geometry and state won't work
-    // on x11.
-    show();
-
     toolBar->hide();
     toolBarMenu()->addAction(toolBar->toggleViewAction());
 
