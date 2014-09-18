@@ -163,8 +163,7 @@ FrameworkInfo parseOtoolLibraryLine(const QString &line, bool useDebugLibs)
         if (state == QtPath) {
             // Check for library name part
             if (part < parts.count() && parts.at(part).contains(".dylib ")) {
-                state = DylibName;
-                info.installName += "/" + (qtPath + "lib/").simplified();
+                info.installName += "/" + (qtPath + currentPart + "/").simplified();
                 info.frameworkDirectory = info.installName;
                 state = DylibName;
                 continue;
