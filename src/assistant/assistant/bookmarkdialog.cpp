@@ -84,8 +84,7 @@ BookmarkDialog::BookmarkDialog(BookmarkModel *sourceModel, const QString &title,
     connect(ui.treeView->selectionModel(), SIGNAL(currentChanged(QModelIndex,
         QModelIndex)), this, SLOT(currentIndexChanged(QModelIndex)));
 
-    ui.bookmarkFolders->setCurrentIndex(0);
-    ui.treeView->setCurrentIndex(ui.treeView->indexAt(QPoint(2, 2)));
+    ui.bookmarkFolders->setCurrentIndex(ui.bookmarkFolders->count() > 1 ? 1 : 0);
 
     const HelpEngineWrapper &helpEngine = HelpEngineWrapper::instance();
     if (helpEngine.usesAppFont())
