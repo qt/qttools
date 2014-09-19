@@ -495,19 +495,6 @@ void QDBusViewer::refreshChildren()
     model->refresh(tree->currentIndex());
 }
 
-void QDBusViewer::about()
-{
-    QMessageBox box(this);
-
-    box.setText(QString::fromLatin1("<center><img src=\":/qt-project.org/qdbusviewer/images/qdbusviewer-128.png\">"
-                "<h3>%1</h3>"
-                "<p>Version %2</p></center>"
-                "<p>Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).</p>")
-            .arg(tr("D-Bus Viewer")).arg(QLatin1String(QT_VERSION_STR)));
-    box.setWindowTitle(tr("D-Bus Viewer"));
-    box.exec();
-}
-
 void QDBusViewer::anchorClicked(const QUrl &url)
 {
     if (url.scheme() != QLatin1String("qdbus"))

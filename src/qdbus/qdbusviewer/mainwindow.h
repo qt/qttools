@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2014 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -39,30 +39,26 @@
 **
 ****************************************************************************/
 
-#include <QtWidgets/qapplication.h>
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
 
-#include "mainwindow.h"
+#include <QMainWindow>
 
-#include <stdio.h>
+QT_FORWARD_DECLARE_CLASS(QTabWidget)
 
-int main(int argc, char *argv[])
+class MainWindow : public QMainWindow
 {
-    QApplication app(argc, argv);
-    MainWindow mw;
-#ifndef Q_OS_MAC
-    app.setWindowIcon(QIcon(QLatin1String(":/qt-project.org/qdbusviewer/images/qdbusviewer.png")));
-#else
-    mw.setWindowTitle(qApp->translate("QtDBusViewer", "Qt D-Bus Viewer"));
-#endif
+    Q_OBJECT
+public:
+    explicit MainWindow(QWidget *parent = 0);
 
-    QStringList args = app.arguments();
-    while (args.count()) {
-        QString arg = args.takeFirst();
-        if (arg == QLatin1String("--bus"))
-            mw.addCustomBusTab(args.takeFirst());
-    }
+    void addCustomBusTab(const QString &bus);
 
-    mw.show();
+private slots:
+    void about();
 
-    return app.exec();
-}
+private:
+    QTabWidget *tabWidget;
+};
+
+#endif // MAINWINDOW_H
