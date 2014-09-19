@@ -73,6 +73,9 @@ public slots:
     void setPageTitle(QString const &newTitle);
     void setCurrentIndex(int index);
 
+private slots:
+    void pageWindowTitleChanged();
+
 signals:
     void currentIndexChanged(int index);
     void pageTitleChanged(const QString &title);
