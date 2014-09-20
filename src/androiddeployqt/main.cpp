@@ -865,8 +865,6 @@ void cleanTopFolders(const Options &options, const QDir &srcDir, const QString &
 
 void cleanAndroidFiles(const Options &options)
 {
-    deleteRecursively(options.outputDirectory + "assets");
-
     if (!options.androidSourceDirectory.isEmpty())
         cleanTopFolders(options, options.androidSourceDirectory, options.outputDirectory);
 
