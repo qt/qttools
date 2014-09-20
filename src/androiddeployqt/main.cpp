@@ -322,11 +322,8 @@ Options parseOptions()
         if (argument.compare(QLatin1String("--output"), Qt::CaseInsensitive) == 0) {
             if (i + 1 == arguments.size())
                 options.helpRequested = true;
-            else {
+            else
                 options.outputDirectory = arguments.at(++i).trimmed();
-                if (!options.outputDirectory.endsWith(QLatin1Char('/')))
-                    options.outputDirectory += QLatin1Char('/');
-            }
         } else if (argument.compare(QLatin1String("--input"), Qt::CaseInsensitive) == 0) {
             if (i + 1 == arguments.size())
                 options.helpRequested = true;
@@ -459,6 +456,15 @@ Options parseOptions()
         options.inputFileName = QString::fromLatin1("android-lib%1.so-deployment-settings.json").arg(QDir::current().dirName());
 
     options.timing = qEnvironmentVariableIsSet("ANDROIDDEPLOYQT_TIMING_OUTPUT");
+
+    if (!QDir::current().mkpath(options.outputDirectory)) {
+        fprintf(stderr, "Invalid output directory: %s\n", qPrintable(options.outputDirectory));
+        options.outputDirectory.clear();
+    } else {
+        options.outputDirectory = QFileInfo(options.outputDirectory).canonicalFilePath();
+        if (!options.outputDirectory.endsWith(QLatin1Char('/')))
+            options.outputDirectory += QLatin1Char('/');
+    }
 
     return options;
 }
