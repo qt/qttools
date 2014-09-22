@@ -40,6 +40,7 @@
 #include <QtCore/QStringListModel>
 #include <QtCore/QSortFilterProxyModel>
 #include <QtCore/QMetaProperty>
+#include <QtCore/QSettings>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QListView>
 #include <QtWidgets/QAction>
@@ -103,13 +104,13 @@ QDBusViewer::QDBusViewer(const QDBusConnection &connection, QWidget *parent)  :
     connect(refreshShortcut, SIGNAL(activated()), this, SLOT(refreshChildren()));
 
     QVBoxLayout *layout = new QVBoxLayout(this);
-    QSplitter *topSplitter = new QSplitter(Qt::Vertical, this);
+    topSplitter = new QSplitter(Qt::Vertical, this);
     layout->addWidget(topSplitter);
 
     log = new LogViewer;
     connect(log, SIGNAL(anchorClicked(QUrl)), this, SLOT(anchorClicked(QUrl)));
 
-    QSplitter *splitter = new QSplitter(topSplitter);
+    splitter = new QSplitter(topSplitter);
     splitter->addWidget(servicesView);
 
     QWidget *servicesWidget = new QWidget;
@@ -144,6 +145,21 @@ QDBusViewer::QDBusViewer(const QDBusConnection &connection, QWidget *parent)  :
 
     objectPathRegExp.setMinimal(true);
 
+}
+
+static inline QString topSplitterStateKey() { return QStringLiteral("topSplitterState"); }
+static inline QString splitterStateKey() { return QStringLiteral("splitterState"); }
+
+void QDBusViewer::saveState(QSettings *settings) const
+{
+    settings->setValue(topSplitterStateKey(), topSplitter->saveState());
+    settings->setValue(splitterStateKey(), splitter->saveState());
+}
+
+void QDBusViewer::restoreState(const QSettings *settings)
+{
+    topSplitter->restoreState(settings->value(topSplitterStateKey()).toByteArray());
+    splitter->restoreState(settings->value(splitterStateKey()).toByteArray());
 }
 
 void QDBusViewer::logMessage(const QString &msg)

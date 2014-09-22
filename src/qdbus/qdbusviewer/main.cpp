@@ -40,6 +40,10 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+
+    QCoreApplication::setOrganizationName(QStringLiteral("QtProject"));
+    QCoreApplication::setApplicationName(QStringLiteral("QDBusViewer"));
+
     MainWindow mw;
 #ifndef Q_OS_MAC
     app.setWindowIcon(QIcon(QLatin1String(":/qt-project.org/qdbusviewer/images/qdbusviewer.png")));

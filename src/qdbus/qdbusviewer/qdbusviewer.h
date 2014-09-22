@@ -46,6 +46,8 @@ QT_FORWARD_DECLARE_CLASS(QListView)
 QT_FORWARD_DECLARE_CLASS(QTextBrowser)
 QT_FORWARD_DECLARE_CLASS(QDomDocument)
 QT_FORWARD_DECLARE_CLASS(QDomElement)
+QT_FORWARD_DECLARE_CLASS(QSplitter)
+QT_FORWARD_DECLARE_CLASS(QSettings)
 
 struct BusSignature
 {
@@ -58,6 +60,9 @@ class QDBusViewer: public QWidget
     Q_OBJECT
 public:
     QDBusViewer(const QDBusConnection &connection, QWidget *parent = 0);
+
+    void saveState(QSettings *settings) const;
+    void restoreState(const QSettings *settings);
 
 public slots:
     void refresh();
@@ -94,6 +99,8 @@ private:
     QLineEdit *serviceFilterLine;
     QListView *servicesView;
     QTextBrowser *log;
+    QSplitter *topSplitter;
+    QSplitter *splitter;
     QRegExp objectPathRegExp;
 };
 

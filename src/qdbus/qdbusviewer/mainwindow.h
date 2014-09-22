@@ -46,11 +46,14 @@
 
 QT_FORWARD_DECLARE_CLASS(QTabWidget)
 
+class QDBusViewer;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 public:
     explicit MainWindow(QWidget *parent = 0);
+    ~MainWindow();
 
     void addCustomBusTab(const QString &bus);
 
@@ -58,7 +61,12 @@ private slots:
     void about();
 
 private:
+    void saveSettings();
+    void restoreSettings();
+
     QTabWidget *tabWidget;
+    QDBusViewer *sessionBusViewer;
+    QDBusViewer *systemBusViewer;
 };
 
 #endif // MAINWINDOW_H

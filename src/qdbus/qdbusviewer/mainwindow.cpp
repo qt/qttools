@@ -51,6 +51,7 @@
 #include <QtWidgets/QMessageBox>
 
 #include <QtDBus/QDBusConnection>
+#include <QtCore/QSettings>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -72,10 +73,17 @@ MainWindow::MainWindow(QWidget *parent)
     tabWidget = new QTabWidget;
     setCentralWidget(tabWidget);
 
-    QDBusViewer *sessionBusViewer = new QDBusViewer(QDBusConnection::sessionBus());
-    QDBusViewer *systemBusViewer = new QDBusViewer(QDBusConnection::systemBus());
+    sessionBusViewer = new QDBusViewer(QDBusConnection::sessionBus());
+    systemBusViewer = new QDBusViewer(QDBusConnection::systemBus());
     tabWidget->addTab(sessionBusViewer, tr("Session Bus"));
     tabWidget->addTab(systemBusViewer, tr("System Bus"));
+
+    restoreSettings();
+}
+
+MainWindow::~MainWindow()
+{
+    saveSettings();
 }
 
 void MainWindow::addCustomBusTab(const QString &busAddress)
@@ -98,4 +106,38 @@ void MainWindow::about()
             .arg(tr("D-Bus Viewer"), QLatin1String(QT_VERSION_STR), QStringLiteral("2014")));
     box.setWindowTitle(tr("D-Bus Viewer"));
     box.exec();
+}
+
+static inline QString windowGeometryKey() { return QStringLiteral("WindowGeometry"); }
+static inline QString sessionTabGroup() { return QStringLiteral("SessionTab"); }
+static inline QString systemTabGroup() { return QStringLiteral("SystemTab"); }
+
+void MainWindow::saveSettings()
+{
+    QSettings settings;
+
+    settings.setValue(windowGeometryKey(), saveGeometry());
+
+    settings.beginGroup(sessionTabGroup());
+    sessionBusViewer->saveState(&settings);
+    settings.endGroup();
+
+    settings.beginGroup(systemTabGroup());
+    systemBusViewer->saveState(&settings);
+    settings.endGroup();
+}
+
+void MainWindow::restoreSettings()
+{
+    QSettings settings;
+
+    restoreGeometry(settings.value(windowGeometryKey()).toByteArray());
+
+    settings.beginGroup(sessionTabGroup());
+    sessionBusViewer->restoreState(&settings);
+    settings.endGroup();
+
+    settings.beginGroup(systemTabGroup());
+    systemBusViewer->restoreState(&settings);
+    settings.endGroup();
 }
