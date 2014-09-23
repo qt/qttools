@@ -315,7 +315,7 @@ HelpViewer::HelpViewer(qreal zoom, QWidget *parent)
     connect(page(), SIGNAL(printRequested(QWebFrame*)), this, SIGNAL(printRequested()));
 
     setFont(viewerFont());
-    setZoomFactor(zoom == 0.0 ? 1.0 : zoom);
+    setZoomFactor(d->webDpiRatio * (zoom == 0.0 ? 1.0 : zoom));
 }
 
 QFont HelpViewer::viewerFont() const
@@ -352,13 +352,13 @@ void HelpViewer::scaleDown()
 void HelpViewer::resetScale()
 {
     TRACE_OBJ
-    setZoomFactor(1.0);
+    setZoomFactor(d->webDpiRatio);
 }
 
 qreal HelpViewer::scale() const
 {
     TRACE_OBJ
-    return zoomFactor();
+    return zoomFactor() / d->webDpiRatio;
 }
 
 QString HelpViewer::title() const

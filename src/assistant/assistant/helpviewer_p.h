@@ -49,6 +49,9 @@
 #include <QtCore/QObject>
 #ifdef QT_NO_WEBKIT
 #include <QtWidgets/QTextBrowser>
+#else
+#include <QtGui/QGuiApplication>
+#include <QtGui/QScreen>
 #endif
 
 QT_BEGIN_NAMESPACE
@@ -63,12 +66,22 @@ public:
         : zoomCount(zoom)
         , forceFont(false)
         , lastAnchor(QString())
+        , m_loadFinished(false)
+    { }
 #else
     HelpViewerPrivate()
-#endif
+        : m_loadFinished(false)
     {
-        m_loadFinished = false;
+        // The web uses 96dpi by default on the web to preserve the font size across platforms, but
+        // since we control the content for the documentation, we want the system DPI to be used.
+        // - OS X reports 72dpi but doesn't allow changing the DPI, ignore anything below a 1.0 ratio to handle this.
+        // - On Windows and Linux don't zoom the default web 96dpi below a 1.25 ratio to avoid
+        //   filtered images in the doc unless the font readability difference is considerable.
+        webDpiRatio = QGuiApplication::primaryScreen()->logicalDotsPerInch() / 96.;
+        if (webDpiRatio < 1.25)
+            webDpiRatio = 1.0;
     }
+#endif
 
 #ifdef QT_NO_WEBKIT
     bool hasAnchorAt(QTextBrowser *browser, const QPoint& pos)
@@ -112,6 +125,8 @@ public:
     int zoomCount;
     bool forceFont;
     QString lastAnchor;
+#else
+    qreal webDpiRatio;
 #endif // QT_NO_WEBKIT
 
 public:
