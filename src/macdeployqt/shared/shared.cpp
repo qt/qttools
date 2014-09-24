@@ -404,12 +404,37 @@ void recursiveCopyAndDeploy(const QString &appBundlePath, const QString &sourceP
     QStringList files = QDir(sourcePath).entryList(QStringList() << QStringLiteral("*"), QDir::Files | QDir::NoDotAndDotDot);
     foreach (QString file, files) {
         const QString fileSourcePath = sourcePath + QLatin1Char('/') + file;
-        const QString fileDestinationPath = destinationPath + QLatin1Char('/') + file;
 
         if (file.endsWith("_debug.dylib")) {
             continue; // Skip debug versions
         } else if (file.endsWith(QStringLiteral(".dylib"))) {
+            // App store code signing rules forbids code binaries in Contents/Resources/,
+            // which poses a problem for deploying mixed .qml/.dylib Qt Quick imports.
+            // Solve this by placing the dylibs in Contents/PlugIns/quick, and then
+            // creting a symlink to there from the Qt Quick import in Contents/Resources/.
+            //
+            // Example:
+            // MyApp.app/Contents/Resources/qml/QtQuick/Controls/libqtquickcontrolsplugin.dylib ->
+            // ../../../../PlugIns/quick/libqtquickcontrolsplugin.dylib
+            //
+
+            // The .dylib destination path:
+            QString fileDestinationDir = appBundlePath + QStringLiteral("/Contents/PlugIns/quick/");
+            QDir().mkpath(fileDestinationDir);
+            QString fileDestinationPath = fileDestinationDir + file;
+
+            // The .dylib symlink destination path:
+            QString linkDestinationPath = destinationPath + QLatin1Char('/') + file;
+
+            // The (relative) link; with a correct number of "../"'s.
+            QString linkPath = QStringLiteral("PlugIns/quick/") + file;
+            int cdupCount = linkDestinationPath.count(QStringLiteral("/"));
+            for (int i = 0; i < cdupCount - 2; ++i)
+                linkPath.prepend("../");
+
             if (copyFilePrintStatus(fileSourcePath, fileDestinationPath)) {
+                linkFilePrintStatus(linkPath, linkDestinationPath);
+
                 runStrip(fileDestinationPath);
                 bool useDebugLibs = false;
                 bool useLoaderPath = false;
@@ -417,6 +442,7 @@ void recursiveCopyAndDeploy(const QString &appBundlePath, const QString &sourceP
                 deployQtFrameworks(frameworks, appBundlePath, QStringList(fileDestinationPath), useDebugLibs, useLoaderPath);
             }
         } else {
+            QString fileDestinationPath = destinationPath + QLatin1Char('/') + file;
             copyFilePrintStatus(fileSourcePath, fileDestinationPath);
         }
     }
