@@ -56,6 +56,7 @@ extern bool runStripEnabled;
 class FrameworkInfo
 {
 public:
+    bool isDylib;
     QString frameworkDirectory;
     QString frameworkName;
     QString frameworkPath;
@@ -66,7 +67,8 @@ public:
     QString installName;
     QString deployedInstallName;
     QString sourceFilePath;
-    QString destinationDirectory;
+    QString frameworkDestinationDirectory;
+    QString binaryDestinationDirectory;
 };
 
 bool operator==(const FrameworkInfo &a, const FrameworkInfo &b);

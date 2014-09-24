@@ -78,7 +78,8 @@ QDebug operator<<(QDebug debug, const FrameworkInfo &info)
     debug << "Install name" << info.installName << "\n";
     debug << "Deployed install name" << info.deployedInstallName << "\n";
     debug << "Source file Path" << info.sourceFilePath << "\n";
-    debug << "Destination Directory (relative to bundle)" << info.destinationDirectory << "\n";
+    debug << "Framework Destination Directory (relative to bundle)" << info.frameworkDestinationDirectory << "\n";
+    debug << "Binary Destination Directory (relative to bundle)" << info.binaryDestinationDirectory << "\n";
 
     return debug;
 }
@@ -127,6 +128,25 @@ bool copyFilePrintStatus(const QString &from, const QString &to)
     } else {
         LogError() << "file copy failed from" << from;
         LogError() << " to" << to;
+        return false;
+    }
+}
+
+bool linkFilePrintStatus(const QString &file, const QString &link)
+{
+    if (QFile(link).exists()) {
+        if (QFile(link).symLinkTarget().isEmpty())
+            LogError() << link << "exists but it's a file.";
+        else
+            LogNormal() << "Symlink exists, skipping:" << link;
+        return false;
+    } else if (QFile::link(file, link)) {
+        LogNormal() << " symlink" << link;
+        LogNormal() << " points to" << file;
+        return true;
+    } else {
+        LogError() << "failed to symlink" << link;
+        LogError() << " to" << file;
         return false;
     }
 }
@@ -190,19 +210,22 @@ FrameworkInfo parseOtoolLibraryLine(const QString &line, bool useDebugLibs)
             // remove ".framework"
             name = currentPart;
             name.chop(QString(".framework").length());
+            info.isDylib = false;
             info.frameworkName = currentPart;
             state = Version;
             ++part;
             continue;
         } if (state == DylibName) {
             name = currentPart.split(" (compatibility").at(0);
+            info.isDylib = true;
             info.frameworkName = name;
             info.binaryName = name.left(name.indexOf('.')) + suffix + name.mid(name.indexOf('.'));
             info.installName += name;
             info.deployedInstallName = "@executable_path/../Frameworks/" + info.binaryName;
             info.frameworkPath = info.frameworkDirectory + info.binaryName;
             info.sourceFilePath = info.frameworkPath;
-            info.destinationDirectory = bundleFrameworkDirectory + "/";
+            info.frameworkDestinationDirectory = bundleFrameworkDirectory + "/";
+            info.binaryDestinationDirectory = info.frameworkDestinationDirectory;
             info.binaryDirectory = info.frameworkDirectory;
             info.binaryPath = info.frameworkPath;
             state = End;
@@ -217,7 +240,8 @@ FrameworkInfo parseOtoolLibraryLine(const QString &line, bool useDebugLibs)
             info.deployedInstallName = "@executable_path/../Frameworks/" + info.frameworkName + info.binaryPath;
             info.frameworkPath = info.frameworkDirectory + info.frameworkName;
             info.sourceFilePath = info.frameworkPath + info.binaryPath;
-            info.destinationDirectory = bundleFrameworkDirectory + "/" + info.frameworkName + "/" + info.binaryDirectory;
+            info.frameworkDestinationDirectory = bundleFrameworkDirectory + "/" + info.frameworkName;
+            info.binaryDestinationDirectory = info.frameworkDestinationDirectory + "/" + info.binaryDirectory;
             state = End;
         } else if (state == End) {
             break;
@@ -355,56 +379,79 @@ void recursiveCopyAndDeploy(const QString &appBundlePath, const QString &sourceP
     }
 }
 
+QString copyDylib(const FrameworkInfo &framework, const QString path)
+{
+    if (!QFile::exists(framework.sourceFilePath)) {
+        LogError() << "no file at" << framework.sourceFilePath;
+        return QString();
+    }
+
+    // Construct destination paths. The full path typically looks like
+    // MyApp.app/Contents/Frameworks/libfoo.dylib
+    QString dylibDestinationDirectory = path + QLatin1Char('/') + framework.frameworkDestinationDirectory;
+    QString dylibDestinationBinaryPath = dylibDestinationDirectory + QLatin1Char('/') + framework.binaryName;
+
+    // Create destination directory
+    if (!QDir().mkpath(dylibDestinationDirectory)) {
+        LogError() << "could not create destination directory" << dylibDestinationDirectory;
+        return QString();
+    }
+
+    // Retrun if the dylib has aleardy been deployed
+    if (QFileInfo(dylibDestinationBinaryPath).exists() && !alwaysOwerwriteEnabled)
+        return dylibDestinationBinaryPath;
+
+    // Copy dylib binary
+    copyFilePrintStatus(framework.sourceFilePath, dylibDestinationBinaryPath);
+    return dylibDestinationBinaryPath;
+}
 
 QString copyFramework(const FrameworkInfo &framework, const QString path)
 {
-    QString from = framework.sourceFilePath;
-
-    if (!QFile::exists(from)) {
-        LogError() << "no file at" << from;
+    if (!QFile::exists(framework.sourceFilePath)) {
+        LogError() << "no file at" << framework.sourceFilePath;
         return QString();
     }
 
-    QFileInfo fromDirInfo(framework.frameworkPath + QLatin1Char('/')
-                      + framework.binaryDirectory);
-    bool fromDirIsSymLink = fromDirInfo.isSymLink();
-    QString unresolvedToDir = path + QLatin1Char('/') + framework.destinationDirectory;
-    QString resolvedToDir;
-    QString relativeLinkTarget; // will contain the link from Current to e.g. 4 in the Versions directory
-    if (fromDirIsSymLink) {
-        // handle the case where framework is referenced with Versions/Current
-        // which is a symbolic link, so copy to target and recreate as symbolic link
-        relativeLinkTarget = QDir(fromDirInfo.canonicalPath())
-                .relativeFilePath(QFileInfo(fromDirInfo.symLinkTarget()).canonicalFilePath());
-        resolvedToDir = QFileInfo(unresolvedToDir).path() + QLatin1Char('/') + relativeLinkTarget;
-    } else {
-        resolvedToDir = unresolvedToDir;
-    }
+    // Construct destination paths. The full path typically looks like
+    // MyApp.app/Contents/Frameworks/Foo.framework/Versions/5/QtFoo
+    QString frameworkDestinationDirectory = path + QLatin1Char('/') + framework.frameworkDestinationDirectory;
+    QString frameworkBinaryDestinationDirectory = frameworkDestinationDirectory + QLatin1Char('/') + framework.binaryDirectory;
+    QString frameworkDestinationBinaryPath = frameworkBinaryDestinationDirectory + QLatin1Char('/') + framework.binaryName;
 
-    QString to = resolvedToDir + "/" + framework.binaryName;
+    // Return if the framework has aleardy been deployed
+    if (QDir(frameworkDestinationDirectory).exists() && !alwaysOwerwriteEnabled)
+        return QString();
 
-    // create the (non-symlink) dir
-    QDir dir;
-    if (!dir.mkpath(resolvedToDir)) {
-        LogError() << "could not create destination directory" << to;
+    // Create destination directory
+    if (!QDir().mkpath(frameworkBinaryDestinationDirectory)) {
+        LogError() << "could not create destination directory" << frameworkBinaryDestinationDirectory;
         return QString();
     }
 
-    if (!QFile::exists(to) || alwaysOwerwriteEnabled) { // copy the binary and resources if that wasn't done before
-        copyFilePrintStatus(from, to);
+    // Now copy the framework. Some parts should be left out (headers/, .prl files).
+    // Some parts should be included (Resources/, symlink structure). We want this
+    // function to make as few assumtions about the framework as possible while at
+    // the same time producing a codesign-compatible framework.
 
-        const QString resourcesSourcePath = framework.frameworkPath + "/Resources";
-        const QString resourcesDestianationPath = path + "/Contents/Frameworks/" + framework.frameworkName + "/Resources";
-        recursiveCopy(resourcesSourcePath, resourcesDestianationPath);
-    }
+    // Copy framework binary
+    copyFilePrintStatus(framework.sourceFilePath, frameworkDestinationBinaryPath);
 
-    // create the Versions/Current symlink dir if necessary
-    if (fromDirIsSymLink) {
-        QFile::link(relativeLinkTarget, unresolvedToDir);
-        LogNormal() << " linked:" << unresolvedToDir;
-        LogNormal() << " to" << resolvedToDir << "(" << relativeLinkTarget << ")";
-    }
-    return to;
+    // Copy Resouces/
+    const QString resourcesSourcePath = framework.frameworkPath + "/Resources";
+    const QString resourcesDestianationPath = frameworkDestinationDirectory + "/Versions/" + framework.version + "/Resources";
+    recursiveCopy(resourcesSourcePath, resourcesDestianationPath);
+
+    // Create symlink structure. Links at the framework root point to Versions/Current/
+    // which again points to the actual version:
+    // QtFoo.framework/QtFoo -> Versions/Current/QtFoo
+    // QtFoo.framework/Resources -> Versions/Current/Resources
+    // QtFoo.framework/Versions/Current -> 5
+    linkFilePrintStatus("Versions/Current/" + framework.binaryName, frameworkDestinationDirectory + "/" + framework.binaryName);
+    linkFilePrintStatus("Versions/Current/Resources", frameworkDestinationDirectory + "/Resources");
+    linkFilePrintStatus(framework.version, frameworkDestinationDirectory + "/Versions/Current");
+
+    return frameworkDestinationBinaryPath;
 }
 
 void runInstallNameTool(QStringList options)
@@ -433,7 +480,7 @@ void changeInstallName(const QString &bundlePath, const FrameworkInfo &framework
         QString deployedInstallName;
         if (useLoaderPath) {
             deployedInstallName = QLatin1String("@loader_path/")
-                    + QFileInfo(binary).absoluteDir().relativeFilePath(absBundlePath + QLatin1Char('/') + framework.destinationDirectory + QLatin1Char('/') + framework.binaryName);
+                    + QFileInfo(binary).absoluteDir().relativeFilePath(absBundlePath + QLatin1Char('/') + framework.binaryDestinationDirectory + QLatin1Char('/') + framework.binaryName);
         } else {
             deployedInstallName = framework.deployedInstallName;
         }
@@ -503,8 +550,9 @@ DeploymentInfo deployQtFrameworks(QList<FrameworkInfo> frameworks,
         // Install_name_tool the new id into the binaries
         changeInstallName(bundlePath, framework, binaryPaths, useLoaderPath);
 
-        // Copy farmework to app bundle.
-        const QString deployedBinaryPath = copyFramework(framework, bundlePath);
+        // Copy the framework/dylib to the app bundle.
+        const QString deployedBinaryPath = framework.isDylib ? copyDylib(framework, bundlePath)
+                                                             : copyFramework(framework, bundlePath);
         // Skip the rest if already was deployed.
         if (deployedBinaryPath.isNull())
             continue;
