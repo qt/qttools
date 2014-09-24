@@ -154,6 +154,19 @@ bool linkFilePrintStatus(const QString &file, const QString &link)
     }
 }
 
+void patch_debugInInfoPlist(const QString &infoPlistPath)
+{
+    // Older versions of qmake may have the "_debug" binary as
+    // the value for CFBundleExecutable. Remove it.
+    QFile infoPlist(infoPlistPath);
+    infoPlist.open(QIODevice::ReadOnly);
+    QByteArray contents = infoPlist.readAll();
+    infoPlist.close();
+    infoPlist.open(QIODevice::WriteOnly | QIODevice::Truncate);
+    contents.replace("_debug", ""); // surely there are no legit uses of "_debug" in an Info.plist
+    infoPlist.write(contents);
+}
+
 FrameworkInfo parseOtoolLibraryLine(const QString &line, bool useDebugLibs)
 {
     FrameworkInfo info;
@@ -525,6 +538,14 @@ QString copyFramework(const FrameworkInfo &framework, const QString path)
     linkFilePrintStatus("Versions/Current/Resources", frameworkDestinationDirectory + "/Resources");
     linkFilePrintStatus(framework.version, frameworkDestinationDirectory + "/Versions/Current");
 
+    // Correct Info.plist location for frameworks produced by older versions of qmake
+    // Contents/Info.plist should be Versions/5/Resources/Info.plist
+    const QString legacyInfoPlistPath = framework.frameworkPath + "/Contents/Info.plist";
+    const QString correctInfoPlistPath = frameworkDestinationDirectory + "/Resources/Info.plist";
+    if (QFile(legacyInfoPlistPath).exists()) {
+        copyFilePrintStatus(legacyInfoPlistPath, correctInfoPlistPath);
+        patch_debugInInfoPlist(correctInfoPlistPath);
+    }
     return frameworkDestinationBinaryPath;
 }
 
