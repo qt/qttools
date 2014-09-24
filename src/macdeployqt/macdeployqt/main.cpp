@@ -59,6 +59,7 @@ int main(int argc, char **argv)
         qDebug() << "   -executable=<path> : Let the given executable use the deployed frameworks too";
         qDebug() << "   -qmldir=<path>     : Deploy imports used by .qml files in the given path";
         qDebug() << "   -always-overwrite  : Copy files enven if the target file exists";
+        qDebug() << "   -codesign=<ident>  : Run codesing with the given identity on all executables";
         qDebug() << "";
         qDebug() << "macdeployqt takes an application bundle as input and makes it";
         qDebug() << "self-contained by copying in the Qt frameworks and plugins that";
@@ -89,6 +90,8 @@ int main(int argc, char **argv)
     extern bool alwaysOwerwriteEnabled;
     QStringList additionalExecutables;
     QStringList qmlDirs;
+    extern bool runCodesign;
+    extern QString codesignIdentiy;
 
     for (int i = 2; i < argc; ++i) {
         QByteArray argument = QByteArray(argv[i]);
@@ -131,6 +134,15 @@ int main(int argc, char **argv)
         } else if (argument == QByteArray("-always-overwrite")) {
             LogDebug() << "Argument found:" << argument;
             alwaysOwerwriteEnabled = true;
+        } else if (argument.startsWith(QByteArray("-codesign"))) {
+            LogDebug() << "Argument found:" << argument;
+            int index = argument.indexOf("=");
+            if (index < 0 || index >= argument.size()) {
+                LogError() << "Missing code signing identity";
+            } else {
+                runCodesign = true;
+                codesignIdentiy = argument.mid(index+1);
+            }
         } else if (argument.startsWith("-")) {
             LogError() << "Unknown argument" << argument << "\n";
             return 0;
@@ -156,6 +168,9 @@ int main(int argc, char **argv)
 
     if (!qmlDirs.isEmpty())
         deployQmlImports(appBundlePath, qmlDirs);
+
+    if (runCodesign)
+        codesign(codesignIdentiy, appBundlePath);
 
     if (dmg) {
         LogNormal();

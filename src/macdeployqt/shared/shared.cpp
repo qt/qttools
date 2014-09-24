@@ -46,6 +46,7 @@
 #include <QDir>
 #include <QRegExp>
 #include <QSet>
+#include <QStack>
 #include <QDirIterator>
 #include <QLibraryInfo>
 #include <QJsonDocument>
@@ -56,6 +57,8 @@
 
 bool runStripEnabled = true;
 bool alwaysOwerwriteEnabled = false;
+bool runCodesign = false;
+QString codesignIdentiy;
 int logLevel = 1;
 
 using std::cout;
@@ -276,6 +279,22 @@ QStringList findAppLibraries(const QString &appBundlePath)
     return result;
 }
 
+QStringList findAppBundleFiles(const QString &appBundlePath)
+{
+    QStringList result;
+
+    QDirIterator iter(appBundlePath, QStringList() << QString::fromLatin1("*"),
+            QDir::Files, QDirIterator::Subdirectories);
+
+    while (iter.hasNext()) {
+        iter.next();
+        if (iter.fileInfo().isSymLink())
+            continue;
+        result << iter.fileInfo().filePath();
+    }
+
+    return result;
+}
 
 QList<FrameworkInfo> getQtFrameworks(const QStringList &otoolLines, bool useDebugLibs)
 {
@@ -289,7 +308,7 @@ QList<FrameworkInfo> getQtFrameworks(const QStringList &otoolLines, bool useDebu
         }
     }
     return libraries;
-}
+};
 
 QList<FrameworkInfo> getQtFrameworks(const QString &path, bool useDebugLibs)
 {
@@ -325,6 +344,35 @@ QList<FrameworkInfo> getQtFrameworksForPaths(const QStringList &paths, bool useD
         }
     }
     return result;
+}
+
+QStringList getBinaryDependencies(const QString executablePath, const QString &path)
+{
+    QStringList binaries;
+
+    QProcess otool;
+    otool.start("otool", QStringList() << "-L" << path);
+    otool.waitForFinished();
+
+    if (otool.exitCode() != 0) {
+        LogError() << otool.readAllStandardError();
+    }
+
+    QString output = otool.readAllStandardOutput();
+    QStringList outputLines = output.split("\n");
+    outputLines.removeFirst(); // remove line containing the binary path
+
+    // return bundle-local dependencies. (those starting with @executable_path)
+    foreach (const QString &line, outputLines) {
+        QString trimmedLine = line.mid(0, line.indexOf("(")).trimmed(); // remove "(compatibility version ...)" and whitespace
+        if (trimmedLine.startsWith("@executable_path/")) {
+            QString binary = QDir::cleanPath(executablePath + trimmedLine.mid(QStringLiteral("@executable_path/").length()));
+            if (binary != path)
+                binaries.append(binary);
+        }
+    }
+
+    return binaries;
 }
 
 // copies everything _inside_ sourcePath to destinationPath
@@ -561,6 +609,8 @@ DeploymentInfo deployQtFrameworks(QList<FrameworkInfo> frameworks,
 
         // Install_name_tool it a new id.
         changeIdentification(framework.deployedInstallName, deployedBinaryPath);
+
+
         // Check for framework dependencies
         QList<FrameworkInfo> dependencies = getQtFrameworks(deployedBinaryPath, useDebugLibs);
 
@@ -679,8 +729,10 @@ void deployPlugins(const ApplicationBundleInfo &appBundleInfo, const QString &pl
 
         if (copyFilePrintStatus(sourcePath, destinationPath)) {
             runStrip(destinationPath);
+
             QList<FrameworkInfo> frameworks = getQtFrameworks(destinationPath, useDebugLibs);
             deployQtFrameworks(frameworks, appBundleInfo.path, QStringList() << destinationPath, useDebugLibs, deploymentInfo.useLoaderPath);
+
         }
     }
 }
@@ -836,6 +888,85 @@ void changeQtFrameworks(const QString appPath, const QString &qtPath, bool useDe
     }
 }
 
+void codesignFile(const QString &identity, const QString &filePath)
+{
+    if (!runCodesign)
+        return;
+
+    LogNormal() << "codesign" << filePath;
+
+    QProcess codesign;
+    codesign.start("codesign", QStringList() << "--preserve-metadata=identifier,entitlements,resource-rules"
+                                             << "--force" << "-s" << identity << filePath);
+    codesign.waitForFinished(-1);
+
+    QByteArray err = codesign.readAllStandardError();
+    if (codesign.exitCode() > 0) {
+        LogError() << "Codesign signing error:";
+        LogError() << err;
+    } else if (!err.isEmpty()) {
+        LogDebug() << err;
+    }
+}
+
+void codesign(const QString &identity, const QString &appBundlePath)
+{
+    // Code sign all binaries in the app bundle. This needs to
+    // be done inside-out, e.g sign framework dependencies
+    // before the main app binary. The codesign tool itself has
+    // a "--deep" option to do this, but usage when signing is
+    // not recommended: "Signing with --deep is for emergency
+    // repairs and temporary adjustments only."
+
+    LogNormal() << "";
+    LogNormal() << "Signing" << appBundlePath << "with identity" << identity;
+
+    QStack<QString> pendingBinaries;
+    QSet<QString> signedBinaries;
+
+    // Create the root code-binary set. This set consists of the application
+    // executable(s) and the plugins.
+    QString rootBinariesPath = appBundlePath + "/Contents/MacOS/";
+    QStringList foundRootBinaries = QDir(rootBinariesPath).entryList(QStringList() << "*", QDir::Files);
+    foreach (const QString &binary, foundRootBinaries)
+        pendingBinaries.push(rootBinariesPath + binary);
+
+    QStringList foundPluginBinaries = findAppBundleFiles(appBundlePath + "/Contents/PlugIns/");
+    foreach (const QString &binary, foundPluginBinaries)
+         pendingBinaries.push(binary);
+
+
+    // Sign all binares; use otool to find and sign dependencies first.
+    while (!pendingBinaries.isEmpty()) {
+        QString binary = pendingBinaries.pop();
+        if (signedBinaries.contains(binary))
+            continue;
+
+        // Check if there are unsigned dependencies, sign these first
+        QStringList dependencies = getBinaryDependencies(rootBinariesPath, binary).toSet().subtract(signedBinaries).toList();
+        if (!dependencies.isEmpty()) {
+            pendingBinaries.push(binary);
+            foreach (const QString &dependency, dependencies)
+                pendingBinaries.push(dependency);
+            continue;
+        }
+        // All dependencies are signed, now sign this binary
+        codesignFile(identity, binary);
+        signedBinaries.insert(binary);
+    }
+
+    // Verify code signature
+    QProcess codesign;
+    codesign.start("codesign", QStringList() << "--deep" << "-v" << appBundlePath);
+    codesign.waitForFinished(-1);
+    QByteArray err = codesign.readAllStandardError();
+    if (codesign.exitCode() > 0) {
+        LogError() << "codesign verification error:";
+        LogError() << err;
+    } else if (!err.isEmpty()) {
+        LogDebug() << err;
+    }
+}
 
 void createDiskImage(const QString &appBundlePath)
 {
