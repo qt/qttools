@@ -828,6 +828,12 @@ void deployPlugins(const QString &appBundlePath, DeploymentInfo deploymentInfo, 
 void deployQmlImport(const QString &appBundlePath, const QString &importSourcePath, const QString &importName)
 {
     QString importDestinationPath = appBundlePath + "/Contents/Resources/qml/" + importName;
+
+    // Skip already deployed imports. This can happen in cases like "QtQuick.Controls.Styles",
+    // where deploying QtQuick.Controls will also deploy the "Styles" sub-import.
+    if (QDir().exists(importDestinationPath))
+        return;
+
     recursiveCopyAndDeploy(appBundlePath, importSourcePath, importDestinationPath);
 }
 
