@@ -1085,14 +1085,11 @@ static DeployResult deploy(const Options &options,
         if (isDebug)
             libEglName += QLatin1Char('d');
         libEglName += QLatin1String(windowsSharedLibrarySuffix);
-        bool deployAngle = options.angleDetection == Options::AngleDetectionForceOn;
-        if (options.angleDetection == Options::AngleDetectionAuto) {
-            // Deploy ANGLE if direct dependency is there or dynamic build (no dependency to any GL library).
-            const QStringList platformPluginLibraries = findDependentLibraries(platformPlugin, options.platform, errorMessage);
-            deployAngle = !platformPluginLibraries.filter(libEglName, Qt::CaseInsensitive).isEmpty()
-                || platformPluginLibraries.filter(QStringLiteral("opengl32"), Qt::CaseInsensitive).isEmpty();
-        }
-        if (deployAngle) {
+        const QStringList platformPluginLibraries = findDependentLibraries(platformPlugin, options.platform, errorMessage);
+        const bool dependsOnAngle = !platformPluginLibraries.filter(libEglName, Qt::CaseInsensitive).isEmpty();
+        const bool dependsOnOpenGl = !platformPluginLibraries.filter(QStringLiteral("opengl32"), Qt::CaseInsensitive).isEmpty();
+        if (options.angleDetection != Options::AngleDetectionForceOff
+            && (dependsOnAngle || !dependsOnOpenGl || options.angleDetection == Options::AngleDetectionForceOn)) {
             const QString libEglFullPath = qtBinDir + slash + libEglName;
             deployedQtLibraries.push_back(libEglFullPath);
             const QStringList libGLESv2 = findDependentLibraries(libEglFullPath, options.platform, errorMessage).filter(QStringLiteral("libGLESv2"), Qt::CaseInsensitive);
@@ -1111,6 +1108,11 @@ static DeployResult deploy(const Options &options,
                 }
             }
         } // deployAngle
+        if (!dependsOnOpenGl) {
+            const QFileInfo softwareRasterizer(qtBinDir + slash + QStringLiteral("opengl32sw") + QLatin1String(windowsSharedLibrarySuffix));
+            if (softwareRasterizer.isFile())
+                deployedQtLibraries.append(softwareRasterizer.absoluteFilePath());
+        }
     } // Windows
 
     // Update libraries
