@@ -87,10 +87,9 @@ enum QtModule
     QtXmlPatternsModule = 0x80000000,
     QtWebKitModule = 0x100000000,
     QtWebKitWidgetsModule = 0x200000000,
-    QtQuickCompilerRuntimeModule = 0x400000000,
-    QtQuickWidgetsModule = 0x800000000,
-    QtWebSocketsModule = 0x1000000000,
-    QtEnginioModule = 0x2000000000
+    QtQuickWidgetsModule = 0x400000000,
+    QtWebSocketsModule = 0x800000000,
+    QtEnginioModule = 0x1000000000
 };
 
 struct QtModuleEntry {
@@ -121,7 +120,6 @@ QtModuleEntry qtModuleEntries[] = {
     { QtPrintSupportModule, "printsupport", "Qt5PrintSupport", 0 },
     { QtQmlModule, "qml", "Qt5Qml", "qtdeclarative" },
     { QtQuickModule, "quick", "Qt5Quick", "qtdeclarative" },
-    { QtQuickCompilerRuntimeModule, "quickcompilerruntime", "Qt5QuickCompilerRuntime", 0 },
     { QtQuickParticlesModule, "quickparticles", "Qt5QuickParticles", 0 },
     { QtQuickWidgetsModule, "quickwidgets", "Qt5QuickWidgets", 0 },
     { QtScriptModule, "script", "Qt5Script", "qtscript" },
