@@ -89,7 +89,10 @@ enum QtModule
     QtWebKitWidgetsModule = 0x200000000,
     QtQuickWidgetsModule = 0x400000000,
     QtWebSocketsModule = 0x800000000,
-    QtEnginioModule = 0x1000000000
+    QtEnginioModule = 0x1000000000,
+    QtWebEngineCoreModule = 0x2000000000,
+    QtWebEngineModule = 0x4000000000,
+    QtWebEngineWidgetsModule = 0x8000000000
 };
 
 struct QtModuleEntry {
@@ -135,14 +138,18 @@ QtModuleEntry qtModuleEntries[] = {
     { QtWidgetsModule, "widgets", "Qt5Widgets", "qtbase" },
     { QtWinExtrasModule, "winextras", "Qt5WinExtras", 0 },
     { QtXmlModule, "xml", "Qt5Xml", "qtbase" },
-    { QtXmlPatternsModule, "xmlpatterns", "Qt5XmlPatterns", "qtxmlpatterns" }
+    { QtXmlPatternsModule, "xmlpatterns", "Qt5XmlPatterns", "qtxmlpatterns" },
+    { QtWebEngineCoreModule, "webenginecore", "Qt5WebEngineCore", 0 },
+    { QtWebEngineModule, "webengine", "Qt5WebEngine", 0 },
+    { QtWebEngineWidgetsModule, "webenginewidgets", "Qt5WebEngineWidgets", 0 }
 };
 
-static const char webProcessC[] = "QtWebProcess";
+static const char webKitProcessC[] = "QtWebProcess";
+static const char webEngineProcessC[] = "QtWebEngineProcess";
 
-static inline QString webProcessBinary(Platform p)
+static inline QString webProcessBinary(const char *binaryName, Platform p)
 {
-    const QString webProcess = QLatin1String(webProcessC);
+    const QString webProcess = QLatin1String(binaryName);
     return (p & WindowsBased) ? webProcess + QStringLiteral(".exe") : webProcess;
 }
 
@@ -248,9 +255,12 @@ static inline QString findBinary(const QString &directory, Platform platform)
 
     const QStringList nameFilters = (platform & WindowsBased) ?
         QStringList(QStringLiteral("*.exe")) : QStringList();
-    foreach (const QString &binary, dir.entryList(nameFilters, QDir::Files | QDir::Executable))
-        if (!binary.contains(QLatin1String(webProcessC), Qt::CaseInsensitive))
+    foreach (const QString &binary, dir.entryList(nameFilters, QDir::Files | QDir::Executable)) {
+        if (!binary.contains(QLatin1String(webKitProcessC), Qt::CaseInsensitive)
+            && !binary.contains(QLatin1String(webEngineProcessC), Qt::CaseInsensitive)) {
             return dir.filePath(binary);
+        }
+    }
     return QString();
 }
 
@@ -671,6 +681,8 @@ static inline quint64 qtModuleForPlugin(const QString &subDirName)
         return QtPositioningModule;
     if (subDirName == QLatin1String("sensors") || subDirName == QLatin1String("sensorgestures"))
         return QtSensorsModule;
+    if (subDirName == QLatin1String("qtwebengine"))
+        return QtWebEngineModule | QtWebEngineCoreModule | QtWebEngineWidgetsModule;
     return 0; // "designer"
 }
 
@@ -1204,11 +1216,12 @@ static DeployResult deploy(const Options &options,
     return result;
 }
 
-static bool deployWebKit2(const QMap<QString, QString> &qmakeVariables,
-                          const Options &sourceOptions, QString *errorMessage)
+static bool deployWebProcess(const QMap<QString, QString> &qmakeVariables,
+                             const char *binaryName,
+                             const Options &sourceOptions, QString *errorMessage)
 {
     // Copy the web process and its dependencies
-    const QString webProcess = webProcessBinary(sourceOptions.platform);
+    const QString webProcess = webProcessBinary(binaryName, sourceOptions.platform);
     const QString webProcessSource = qmakeVariables.value(QStringLiteral("QT_INSTALL_LIBEXECS")) +
                                      QLatin1Char('/') + webProcess;
     if (!updateFile(webProcessSource, sourceOptions.directory, sourceOptions.updateFileFlags, sourceOptions.json, errorMessage))
@@ -1218,6 +1231,28 @@ static bool deployWebKit2(const QMap<QString, QString> &qmakeVariables,
     options.quickImports = false;
     options.translations = false;
     return deploy(options, qmakeVariables, errorMessage);
+}
+
+static bool deployWebEngine(const QMap<QString, QString> &qmakeVariables,
+                             const Options &options, QString *errorMessage)
+{
+    static const char *installDataFiles[] = {"icudtl.dat", "qtwebengine_resources.pak"};
+
+    std::wcout << "Deploying: " << webEngineProcessC << "...\n";
+    if (!deployWebProcess(qmakeVariables, webEngineProcessC, options, errorMessage)) {
+        std::wcerr << errorMessage << '\n';
+        return false;
+    }
+    const QString installData
+        = qmakeVariables.value(QStringLiteral("QT_INSTALL_DATA")) + QLatin1Char('/');
+    for (size_t i = 0; i < sizeof(installDataFiles)/sizeof(installDataFiles[0]); ++i) {
+        if (!updateFile(installData + QLatin1String(installDataFiles[i]),
+                        options.directory, options.updateFileFlags, options.json, errorMessage)) {
+            std::wcerr << errorMessage << '\n';
+            return false;
+        }
+    }
+    return true;
 }
 
 int main(int argc, char **argv)
@@ -1283,8 +1318,15 @@ int main(int argc, char **argv)
             || ((result.deployedQtLibraries & QtWebKitModule)
                 && (result.directlyUsedQtLibraries & QtQuickModule)))) {
         if (optVerboseLevel)
-            std::wcout << "Deploying: " << webProcessC << "...\n";
-        if (!deployWebKit2(qmakeVariables, options, &errorMessage)) {
+            std::wcout << "Deploying: " << webKitProcessC << "...\n";
+        if (!deployWebProcess(qmakeVariables, webKitProcessC, options, &errorMessage)) {
+            std::wcerr << errorMessage << '\n';
+            return 1;
+        }
+    }
+
+    if (result.deployedQtLibraries & QtWebEngineModule) {
+        if (!deployWebEngine(qmakeVariables, options, &errorMessage)) {
             std::wcerr << errorMessage << '\n';
             return 1;
         }
