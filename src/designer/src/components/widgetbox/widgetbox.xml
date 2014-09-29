@@ -936,5 +936,23 @@
             </ui>
         </categoryentry>
 
+       <categoryentry name="Open GL Widget" icon="widgets/widget.png">
+            <ui>
+                <widget class="QOpenGLWidget">
+                    <property name="geometry">
+                        <rect>
+                            <x>0</x>
+                            <y>0</y>
+                            <width>300</width>
+                            <height>200</height>
+                        </rect>
+                    </property>
+                    <property name="objectName">
+                        <string notr="true">openGLWidget</string>
+                    </property>
+                </widget>
+            </ui>
+        </categoryentry>
+
     </category>
 </widgetbox>
