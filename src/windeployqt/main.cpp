@@ -1060,10 +1060,16 @@ static DeployResult deploy(const Options &options,
                       isDebug, options.platform, &platformPlugin);
 
     // Apply options flags and re-add library names.
+    QString qtGuiLibrary;
     const size_t qtModulesCount = sizeof(qtModuleEntries)/sizeof(QtModuleEntry);
-    for (size_t i = 0; i < qtModulesCount; ++i)
-        if (result.deployedQtLibraries & qtModuleEntries[i].module)
-            deployedQtLibraries.push_back(libraryPath(libraryLocation, qtModuleEntries[i].libraryName, qtLibInfix, options.platform, isDebug));
+    for (size_t i = 0; i < qtModulesCount; ++i) {
+        if (result.deployedQtLibraries & qtModuleEntries[i].module) {
+            const QString library = libraryPath(libraryLocation, qtModuleEntries[i].libraryName, qtLibInfix, options.platform, isDebug);
+            deployedQtLibraries.append(library);
+            if (qtModuleEntries[i].module == QtGuiModule)
+                qtGuiLibrary = library;
+        }
+    }
 
     if (optVerboseLevel >= 1) {
         std::wcout << "Direct dependencies: " << formatQtModules(result.directlyUsedQtLibraries).constData()
@@ -1079,24 +1085,24 @@ static DeployResult deploy(const Options &options,
         return result;
     }
 
-    // Check for ANGLE on the platform plugin.
-    if (options.platform & WindowsBased)  {
-        QString libEglName = QStringLiteral("libEGL");
+    // Check for ANGLE on the Qt5Gui library.
+    if ((options.platform & WindowsBased) && !qtGuiLibrary.isEmpty())  {
+        QString libGlesName = QStringLiteral("libGLESV2");
         if (isDebug)
-            libEglName += QLatin1Char('d');
-        libEglName += QLatin1String(windowsSharedLibrarySuffix);
-        const QStringList platformPluginLibraries = findDependentLibraries(platformPlugin, options.platform, errorMessage);
-        const bool dependsOnAngle = !platformPluginLibraries.filter(libEglName, Qt::CaseInsensitive).isEmpty();
-        const bool dependsOnOpenGl = !platformPluginLibraries.filter(QStringLiteral("opengl32"), Qt::CaseInsensitive).isEmpty();
+            libGlesName += QLatin1Char('d');
+        libGlesName += QLatin1String(windowsSharedLibrarySuffix);
+        const QStringList guiLibraries = findDependentLibraries(qtGuiLibrary, options.platform, errorMessage);
+        const bool dependsOnAngle = !guiLibraries.filter(libGlesName, Qt::CaseInsensitive).isEmpty();
+        const bool dependsOnOpenGl = !guiLibraries.filter(QStringLiteral("opengl32"), Qt::CaseInsensitive).isEmpty();
         if (options.angleDetection != Options::AngleDetectionForceOff
             && (dependsOnAngle || !dependsOnOpenGl || options.angleDetection == Options::AngleDetectionForceOn)) {
-            const QString libEglFullPath = qtBinDir + slash + libEglName;
-            deployedQtLibraries.push_back(libEglFullPath);
-            const QStringList libGLESv2 = findDependentLibraries(libEglFullPath, options.platform, errorMessage).filter(QStringLiteral("libGLESv2"), Qt::CaseInsensitive);
-            if (!libGLESv2.isEmpty()) {
-                const QString libGLESv2FullPath = qtBinDir + slash + QFileInfo(libGLESv2.front()).fileName();
-                deployedQtLibraries.push_back(libGLESv2FullPath);
-            }
+            const QString libGlesFullPath = qtBinDir + slash + libGlesName;
+            deployedQtLibraries.append(libGlesFullPath);
+            QString libEglFullPath = qtBinDir + slash + QStringLiteral("libEGL");
+            if (isDebug)
+                libEglFullPath += QLatin1Char('d');
+            libEglFullPath += QLatin1String(windowsSharedLibrarySuffix);
+            deployedQtLibraries.append(libEglFullPath);
             // Find the system D3d Compiler matching the D3D library.
             if (options.systemD3dCompiler && options.platform != WinPhoneArm && options.platform != WinPhoneIntel
                     && options.platform != WinRtArm && options.platform != WinRtIntel) {
