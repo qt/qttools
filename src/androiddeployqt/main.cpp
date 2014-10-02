@@ -741,8 +741,23 @@ bool readInputFile(Options *options)
         QJsonValue deploymentDependencies = jsonObject.value("deployment-dependencies");
         if (!deploymentDependencies.isUndefined()) {
             QStringList dependencies = deploymentDependencies.toString().split(QLatin1Char(','));
-            foreach (QString dependency, dependencies)
-                options->qtDependencies.append(QtDependency(dependency, options->qtInstallDirectory + QLatin1Char('/') + dependency));
+            foreach (QString dependency, dependencies) {
+                QString path = options->qtInstallDirectory + QLatin1Char('/') + dependency;
+                if (QFileInfo(path).isDir()) {
+                    QDirIterator iterator(path, QDirIterator::Subdirectories);
+                    while (iterator.hasNext()) {
+                        if (iterator.fileInfo().isFile()) {
+                            QString subPath = iterator.filePath();
+                            options->qtDependencies.append(QtDependency(subPath.mid(options->qtInstallDirectory.length() + 1),
+                                                                        subPath));
+                        }
+
+                        iterator.next();
+                    }
+                } else {
+                    options->qtDependencies.append(QtDependency(dependency, path));
+                }
+            }
         }
     }
 
