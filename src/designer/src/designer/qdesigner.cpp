@@ -209,19 +209,14 @@ void QDesigner::initialize()
     QString resourceDir = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
     parseCommandLineArgs(files, resourceDir);
 
-    QTranslator *translator = new QTranslator(this);
-    QTranslator *qtTranslator = new QTranslator(this);
-
     const QString localSysName = QLocale::system().name();
-    QString  translatorFileName = QStringLiteral("designer_");
-    translatorFileName += localSysName;
-    translator->load(translatorFileName, resourceDir);
-
-    translatorFileName = QStringLiteral("qt_");
-    translatorFileName += localSysName;
-    qtTranslator->load(translatorFileName, resourceDir);
-    installTranslator(translator);
-    installTranslator(qtTranslator);
+    QScopedPointer<QTranslator> designerTranslator(new QTranslator(this));
+    if (designerTranslator->load(QStringLiteral("designer_") + localSysName, resourceDir)) {
+        installTranslator(designerTranslator.take());
+        QScopedPointer<QTranslator> qtTranslator(new QTranslator(this));
+        if (qtTranslator->load(QStringLiteral("qt_") + localSysName, resourceDir))
+            installTranslator(qtTranslator.take());
+    }
 
     m_workbench = new QDesignerWorkbench();
 
