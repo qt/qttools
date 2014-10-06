@@ -44,6 +44,14 @@ int main(int argc, char *argv[])
     Q_INIT_RESOURCE(designer);
 
     QDesigner app(argc, argv);
+    switch (app.parseCommandLineArguments()) {
+    case QDesigner::ParseArgumentsSuccess:
+        break;
+    case QDesigner::ParseArgumentsError:
+        return 1;
+    case QDesigner::ParseArgumentsHelpRequested:
+        return 0;
+    }
     app.setQuitOnLastWindowClosed(false);
 
     return app.exec();

@@ -48,13 +48,23 @@ class MainWindowBase;
 class QDesignerServer;
 class QDesignerClient;
 class QErrorMessage;
+class QCommandLineParser;
+struct Options;
 
 class QDesigner: public QApplication
 {
     Q_OBJECT
 public:
+    enum ParseArgumentsResult {
+        ParseArgumentsSuccess,
+        ParseArgumentsError,
+        ParseArgumentsHelpRequested
+    };
+
     QDesigner(int &argc, char **argv);
     virtual ~QDesigner();
+
+    ParseArgumentsResult parseCommandLineArguments();
 
     QDesignerWorkbench *workbench() const;
     QDesignerServer *server() const;
@@ -71,11 +81,9 @@ public slots:
     void showErrorMessage(const char *message);
 
 private slots:
-    void initialize();
     void callCreateForm();
 
 private:
-    bool parseCommandLineArgs(QStringList &fileNames, QString &resourceDir);
     void showErrorMessageBox(const QString &);
 
     QDesignerServer *m_server;

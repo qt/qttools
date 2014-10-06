@@ -54,12 +54,15 @@
 #include <QtCore/QTranslator>
 #include <QtCore/QFileInfo>
 #include <QtCore/qdebug.h>
+#include <QtCore/QCommandLineParser>
+#include <QtCore/QCommandLineOption>
 
 #include <QtDesigner/QDesignerComponents>
 
 QT_BEGIN_NAMESPACE
 
 static const char *designerApplicationName = "Designer";
+static const char designerDisplayName[] = "Qt Designer";
 static const char *designerWarningPrefix = "Designer: ";
 static QtMessageHandler previousMessageHandler = 0;
 
@@ -81,13 +84,13 @@ QDesigner::QDesigner(int &argc, char **argv)
       m_workbench(0), m_suppressNewFormShow(false)
 {
     setOrganizationName(QStringLiteral("QtProject"));
+    QGuiApplication::setApplicationDisplayName(QLatin1String(designerDisplayName));
     setApplicationName(QLatin1String(designerApplicationName));
     QDesignerComponents::initializeResources();
 
 #ifndef Q_OS_MAC
     setWindowIcon(QIcon(QStringLiteral(":/qt-project.org/designer/images/designer.png")));
 #endif
-    initialize();
 }
 
 QDesigner::~QDesigner()
@@ -147,74 +150,110 @@ QDesignerServer *QDesigner::server() const
     return m_server;
 }
 
-bool QDesigner::parseCommandLineArgs(QStringList &fileNames, QString &resourceDir)
+static void showHelp(QCommandLineParser &parser, const QString errorMessage = QString())
 {
-    const QStringList args = arguments();
-    const QStringList::const_iterator acend = args.constEnd();
-    QStringList::const_iterator it = args.constBegin();
-    for (++it; it != acend; ++it) {
-        const QString &argument = *it;
-        do {
-            // Arguments
-            if (!argument.startsWith(QLatin1Char('-'))) {
-                if (!fileNames.contains(argument))
-                    fileNames.append(argument);
-                break;
-            }
-            // Options
-            if (argument == QStringLiteral("-server")) {
-                m_server = new QDesignerServer();
-                printf("%d\n", m_server->serverPort());
-                fflush(stdout);
-                break;
-            }
-            if (argument == QStringLiteral("-client")) {
-                bool ok = true;
-                if (++it == acend) {
-                    qWarning("** WARNING The option -client requires an argument");
-                    return false;
-                }
-                const quint16 port = it->toUShort(&ok);
-                if (ok) {
-                    m_client = new QDesignerClient(port, this);
-                } else {
-                    qWarning("** WARNING Non-numeric argument specified for -client");
-                    return false;
-                }
-                break;
-            }
-            if (argument == QStringLiteral("-resourcedir")) {
-                if (++it == acend) {
-                    qWarning("** WARNING The option -resourcedir requires an argument");
-                    return false;
-                }
-                resourceDir = QFile::decodeName(it->toLocal8Bit());
-                break;
-            }
-            if (argument == QStringLiteral("-enableinternaldynamicproperties")) {
-                QDesignerPropertySheet::setInternalDynamicPropertiesEnabled(true);
-                break;
-            }
-            const QString msg = QString::fromUtf8("** WARNING Unknown option %1").arg(argument);
-            qWarning("%s", qPrintable(msg));
-        } while (false);
-    }
-    return true;
+    QString text;
+    QTextStream str(&text);
+    str << "<html><head/><body>";
+    if (!errorMessage.isEmpty())
+        str << "<p>" << errorMessage << "</p>";
+    str << "<pre>" << parser.helpText().toHtmlEscaped() << "</pre></body></html>";
+    QMessageBox box(errorMessage.isEmpty() ? QMessageBox::Information : QMessageBox::Warning,
+                    QGuiApplication::applicationDisplayName(), text,
+                    QMessageBox::Ok);
+    box.setTextInteractionFlags(Qt::TextBrowserInteraction);
+    box.exec();
 }
 
-void QDesigner::initialize()
+struct Options
 {
-    // initialize the sub components
+    Options()
+        : resourceDir(QLibraryInfo::location(QLibraryInfo::TranslationsPath))
+        , server(false), clientPort(0), enableInternalDynamicProperties(false) {}
+
     QStringList files;
-    QString resourceDir = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
-    parseCommandLineArgs(files, resourceDir);
+    QString resourceDir;
+    bool server;
+    quint16 clientPort;
+    bool enableInternalDynamicProperties;
+};
+
+static inline QDesigner::ParseArgumentsResult
+    parseDesignerCommandLineArguments(QCommandLineParser &parser, Options *options,
+                                      QString *errorMessage)
+{
+    parser.setApplicationDescription(QStringLiteral("Qt Designer ")
+        + QLatin1String(QT_VERSION_STR)
+        + QLatin1String("\n\nUI designer for QWidget-based applications."));
+    const QCommandLineOption helpOption = parser.addHelpOption();
+    parser.setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
+    const QCommandLineOption serverOption(QStringLiteral("server"),
+                                          QStringLiteral("Server mode"));
+    parser.addOption(serverOption);
+    const QCommandLineOption clientOption(QStringLiteral("client"),
+                                          QStringLiteral("Client mode"),
+                                          QStringLiteral("port"));
+    parser.addOption(clientOption);
+    const QCommandLineOption resourceDirOption(QStringLiteral("resourcedir"),
+                                          QStringLiteral("Resource directory"),
+                                          QStringLiteral("directory"));
+    parser.addOption(resourceDirOption);
+    const QCommandLineOption internalDynamicPropertyOption(QStringLiteral("enableinternaldynamicproperties"),
+                                          QStringLiteral("Enable internal dynamic properties"));
+    parser.addOption(internalDynamicPropertyOption);
+    parser.addPositionalArgument(QStringLiteral("files"),
+                                 QStringLiteral("The UI files to open."));
+
+    if (!parser.parse(QCoreApplication::arguments())) {
+        *errorMessage = parser.errorText();
+        return QDesigner::ParseArgumentsError;
+    }
+
+    if (parser.isSet(helpOption))
+        return QDesigner::ParseArgumentsHelpRequested;
+    options->server = parser.isSet(serverOption);
+    if (parser.isSet(clientOption)) {
+        bool ok;
+        options->clientPort = parser.value(clientOption).toUShort(&ok);
+        if (!ok) {
+            *errorMessage = QStringLiteral("Non-numeric argument specified for -client");
+            return QDesigner::ParseArgumentsError;
+        }
+    }
+    if (parser.isSet(resourceDirOption))
+        options->resourceDir = parser.value(resourceDirOption);
+    options->enableInternalDynamicProperties = parser.isSet(internalDynamicPropertyOption);
+    options->files = parser.positionalArguments();
+    return QDesigner::ParseArgumentsSuccess;
+}
+
+QDesigner::ParseArgumentsResult QDesigner::parseCommandLineArguments()
+{
+    QString errorMessage;
+    Options options;
+    QCommandLineParser parser;
+    const ParseArgumentsResult result = parseDesignerCommandLineArguments(parser, &options, &errorMessage);
+    if (result != ParseArgumentsSuccess) {
+        showHelp(parser, errorMessage);
+        return result;
+    }
+    // initialize the sub components
+    if (options.clientPort)
+        m_client = new QDesignerClient(options.clientPort, this);
+    if (options.server) {
+        m_server = new QDesignerServer();
+        printf("%d\n", m_server->serverPort());
+        fflush(stdout);
+    }
+    if (options.enableInternalDynamicProperties)
+        QDesignerPropertySheet::setInternalDynamicPropertiesEnabled(true);
 
     const QString localSysName = QLocale::system().name();
     QScopedPointer<QTranslator> designerTranslator(new QTranslator(this));
-    if (designerTranslator->load(QStringLiteral("designer_") + localSysName, resourceDir)) {
+    if (designerTranslator->load(QStringLiteral("designer_") + localSysName, options.resourceDir)) {
         installTranslator(designerTranslator.take());
         QScopedPointer<QTranslator> qtTranslator(new QTranslator(this));
-        if (qtTranslator->load(QStringLiteral("qt_") + localSysName, resourceDir))
+        if (qtTranslator->load(QStringLiteral("qt_") + localSysName, options.resourceDir))
             installTranslator(qtTranslator.take());
     }
 
@@ -226,9 +265,9 @@ void QDesigner::initialize()
 
     m_suppressNewFormShow = m_workbench->readInBackup();
 
-    if (!files.empty()) {
-        const QStringList::const_iterator cend = files.constEnd();
-        for (QStringList::const_iterator it = files.constBegin(); it != cend; ++it) {
+    if (!options.files.empty()) {
+        const QStringList::const_iterator cend = options.files.constEnd();
+        for (QStringList::const_iterator it = options.files.constBegin(); it != cend; ++it) {
             // Ensure absolute paths for recent file list to be unique
             QString fileName = *it;
             const QFileInfo fi(fileName);
@@ -248,6 +287,7 @@ void QDesigner::initialize()
         showErrorMessageBox(m_initializationErrors);
         m_initializationErrors.clear();
     }
+    return result;
 }
 
 bool QDesigner::event(QEvent *ev)
