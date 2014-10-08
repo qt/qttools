@@ -142,7 +142,7 @@
             </xsl:when>
             <xsl:when test="$xs-type='xs:boolean'">
                 <xsl:value-of select="$val"/>
-                <xsl:text> == QStringLiteral("true")</xsl:text>
+                <xsl:text> == QLatin1String("true")</xsl:text>
             </xsl:when>
             <xsl:when test="$xs-type='xs:long'">
                 <xsl:value-of select="$val"/>
