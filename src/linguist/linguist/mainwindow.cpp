@@ -1337,8 +1337,8 @@ void MainWindow::about()
     box.setText(tr("<center><img src=\":/images/splash.png\"/></img><p>%1</p></center>"
                     "<p>Qt Linguist is a tool for adding translations to Qt "
                     "applications.</p>"
-                    "<p>Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies)."
-                   ).arg(version));
+                    "<p>Copyright (C) %2 Digia Plc and/or its subsidiary(-ies)."
+                   ).arg(version, QStringLiteral("2014")));
 
     box.setWindowTitle(QApplication::translate("AboutDialog", "Qt Linguist"));
     box.setIcon(QMessageBox::NoIcon);

@@ -896,8 +896,8 @@ void MainWindow::showAboutDialog()
         aboutDia.setText(tr("<center>"
             "<h3>%1</h3>"
             "<p>Version %2</p></center>"
-            "<p>Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).</p>")
-            .arg(tr("Qt Assistant")).arg(QLatin1String(QT_VERSION_STR)),
+            "<p>Copyright (C) %3 Digia Plc and/or its subsidiary(-ies).</p>")
+            .arg(tr("Qt Assistant"), QLatin1String(QT_VERSION_STR), QStringLiteral("2014")),
             resources);
         QLatin1String path(":/qt-project.org/assistant/images/assistant-128.png");
         aboutDia.setPixmap(QString(path));

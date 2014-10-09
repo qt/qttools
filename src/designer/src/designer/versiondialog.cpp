@@ -164,8 +164,8 @@ VersionDialog::VersionDialog(QWidget *parent)
     version.append(tr("<br/>Qt Designer is a graphical user interface designer for Qt applications.<br/>"));
 
     lbl->setText(tr("%1"
-                    "<br/>Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies)."
-                    ).arg(version));
+                    "<br/>Copyright (C) %2 Digia Plc and/or its subsidiary(-ies)."
+                    ).arg(version, QStringLiteral("2014")));
 
     lbl->setWordWrap(true);
     lbl->setOpenExternalLinks(true);
