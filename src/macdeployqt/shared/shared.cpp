@@ -1,39 +1,31 @@
 /****************************************************************************
 **
-** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2014 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the tools applications of the Qt Toolkit.
 **
-** $QT_BEGIN_LICENSE:LGPL$
+** $QT_BEGIN_LICENSE:LGPL21$
 ** Commercial License Usage
 ** Licensees holding valid commercial Qt licenses may use this file in
 ** accordance with the commercial license agreement provided with the
 ** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and Digia.  For licensing terms and
-** conditions see http://qt.digia.com/licensing.  For further information
+** a written agreement between you and Digia. For licensing terms and
+** conditions see http://qt.digia.com/licensing. For further information
 ** use the contact form at http://qt.digia.com/contact-us.
 **
 ** GNU Lesser General Public License Usage
 ** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 2.1 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL included in the
-** packaging of this file.  Please review the following information to
-** ensure the GNU Lesser General Public License version 2.1 requirements
-** will be met: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
+** General Public License version 2.1 or version 3 as published by the Free
+** Software Foundation and appearing in the file LICENSE.LGPLv21 and
+** LICENSE.LGPLv3 included in the packaging of this file. Please review the
+** following information to ensure the GNU Lesser General Public License
+** requirements will be met: https://www.gnu.org/licenses/lgpl.html and
+** http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
 **
 ** In addition, as a special exception, Digia gives you certain additional
-** rights.  These rights are described in the Digia Qt LGPL Exception
+** rights. These rights are described in the Digia Qt LGPL Exception
 ** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 3.0 as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL included in the
-** packaging of this file.  Please review the following information to
-** ensure the GNU General Public License version 3.0 requirements will be
-** met: http://www.gnu.org/copyleft/gpl.html.
-**
 **
 ** $QT_END_LICENSE$
 **
@@ -166,8 +158,7 @@ FrameworkInfo parseOtoolLibraryLine(const QString &line, bool useDebugLibs)
         if (state == QtPath) {
             // Check for library name part
             if (part < parts.count() && parts.at(part).contains(".dylib ")) {
-                state = DylibName;
-                info.installName += "/" + (qtPath + "lib/").simplified();
+                info.installName += "/" + (qtPath + currentPart + "/").simplified();
                 info.frameworkDirectory = info.installName;
                 state = DylibName;
                 continue;
@@ -524,7 +515,7 @@ DeploymentInfo deployQtFrameworks(QList<FrameworkInfo> frameworks,
             deploymentInfo.qtPath.chop(5); // remove "/lib/"
         }
 
-        if (framework.installName.startsWith("/@executable_path/")) {
+        if (framework.installName.startsWith("@executable_path/")) {
             LogError()  << framework.frameworkName << "already deployed, skipping.";
             continue;
         }
@@ -710,6 +701,10 @@ void deployQmlImport(const QString &appBundlePath, const QString &importSourcePa
 // Scan qml files in qmldirs for import statements, deploy used imports from Qml2ImportsPath to Contents/Resources/qml.
 void deployQmlImports(const QString &appBundlePath, QStringList &qmlDirs)
 {
+    LogNormal() << "";
+    LogNormal() << "Deploying QML imports ";
+    LogNormal() << "Application QML file search path(s) is" << qmlDirs;
+
     // verify that qmlimportscanner is in BinariesPath
     QString qmlImportScannerPath = QDir::cleanPath(QLibraryInfo::location(QLibraryInfo::BinariesPath) + "/qmlimportscanner");
     if (!QFile(qmlImportScannerPath).exists()) {
@@ -718,20 +713,37 @@ void deployQmlImports(const QString &appBundlePath, QStringList &qmlDirs)
         return;
     }
 
-    // run qmlimportscanner
+    // build argument list for qmlimportsanner: "-rootPath foo/ -rootPath bar/ -importPath path/to/qt/qml"
+    // ("rootPath" points to a directory containing app qml, "importPath" is where the Qt imports are installed)
+    QStringList argumentList;
+    foreach (const QString &qmlDir, qmlDirs) {
+        argumentList.append("-rootPath");
+        argumentList.append(qmlDir);
+    }
     QString qmlImportsPath = QLibraryInfo::location(QLibraryInfo::Qml2ImportsPath);
+    argumentList.append( "-importPath");
+    argumentList.append(qmlImportsPath);
+
+    // run qmlimportscanner
     QProcess qmlImportScanner;
-    qmlImportScanner.setProcessChannelMode(QProcess::MergedChannels);
-    qmlImportScanner.start(qmlImportScannerPath, QStringList() << qmlDirs << "-importPath" << qmlImportsPath);
+    qmlImportScanner.start(qmlImportScannerPath, argumentList);
     if (!qmlImportScanner.waitForStarted()) {
         LogError() << "Could not start qmlimpoortscanner. Process error is" << qmlImportScanner.errorString();
         return;
     }
-
     qmlImportScanner.waitForFinished();
-    QByteArray json = qmlImportScanner.readAll();
+
+    // log qmlimportscanner errors
+    qmlImportScanner.setReadChannel(QProcess::StandardError);
+    QByteArray errors = qmlImportScanner.readAll();
+    if (!errors.isEmpty()) {
+        LogWarning() << "QML file parse error (deployment will continue):";
+        LogWarning() << errors;
+    }
 
     // parse qmlimportscanner json
+    qmlImportScanner.setReadChannel(QProcess::StandardOutput);
+    QByteArray json = qmlImportScanner.readAll();
     QJsonDocument doc = QJsonDocument::fromJson(json);
     if (!doc.isArray()) {
         LogError() << "qmlimportscanner output error. Expected json array, got:";
@@ -776,6 +788,7 @@ void deployQmlImports(const QString &appBundlePath, QStringList &qmlDirs)
             name.append(version);
 
         deployQmlImport(appBundlePath, path, name);
+        LogNormal() << "";
     }
 }
 

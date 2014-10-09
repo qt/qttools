@@ -4,7 +4,7 @@
 <context>
     <name>subsub2</name>
     <message>
-        <location filename="subdir2/subsub2/main.cpp" line="45"/>
+        <location filename="subdir2/subsub2/main.cpp" line="37"/>
         <source>minimal test</source>
         <translation type="unfinished"></translation>
     </message>

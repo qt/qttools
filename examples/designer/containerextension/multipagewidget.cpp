@@ -99,6 +99,8 @@ void MultiPageWidget::insertPage(int index, QWidget *page)
         title = tr("Page %1").arg(comboBox->count() + 1);
         page->setWindowTitle(title);
     }
+    connect(page, &QWidget::windowTitleChanged,
+            this, &MultiPageWidget::pageWindowTitleChanged);
     comboBox->insertItem(index, title);
 }
 
@@ -109,6 +111,13 @@ void MultiPageWidget::setCurrentIndex(int index)
         comboBox->setCurrentIndex(index);
         emit currentIndexChanged(index);
     }
+}
+
+void MultiPageWidget::pageWindowTitleChanged()
+{
+    QWidget *page = qobject_cast<QWidget *>(sender());
+    const int index = stackWidget->indexOf(page);
+    comboBox->setItemText(index, page->windowTitle());
 }
 
 QWidget* MultiPageWidget::widget(int index)
@@ -125,7 +134,6 @@ QString MultiPageWidget::pageTitle() const
 
 void MultiPageWidget::setPageTitle(QString const &newTitle)
 {
-    comboBox->setItemText(currentIndex(), newTitle);
     if (QWidget *currentWidget = stackWidget->currentWidget())
         currentWidget->setWindowTitle(newTitle);
     emit pageTitleChanged(newTitle);

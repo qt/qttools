@@ -1,39 +1,31 @@
 /****************************************************************************
 **
-** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2014 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the tools applications of the Qt Toolkit.
 **
-** $QT_BEGIN_LICENSE:LGPL$
+** $QT_BEGIN_LICENSE:LGPL21$
 ** Commercial License Usage
 ** Licensees holding valid commercial Qt licenses may use this file in
 ** accordance with the commercial license agreement provided with the
 ** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and Digia.  For licensing terms and
-** conditions see http://qt.digia.com/licensing.  For further information
+** a written agreement between you and Digia. For licensing terms and
+** conditions see http://qt.digia.com/licensing. For further information
 ** use the contact form at http://qt.digia.com/contact-us.
 **
 ** GNU Lesser General Public License Usage
 ** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 2.1 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL included in the
-** packaging of this file.  Please review the following information to
-** ensure the GNU Lesser General Public License version 2.1 requirements
-** will be met: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
+** General Public License version 2.1 or version 3 as published by the Free
+** Software Foundation and appearing in the file LICENSE.LGPLv21 and
+** LICENSE.LGPLv3 included in the packaging of this file. Please review the
+** following information to ensure the GNU Lesser General Public License
+** requirements will be met: https://www.gnu.org/licenses/lgpl.html and
+** http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
 **
 ** In addition, as a special exception, Digia gives you certain additional
-** rights.  These rights are described in the Digia Qt LGPL Exception
+** rights. These rights are described in the Digia Qt LGPL Exception
 ** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 3.0 as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL included in the
-** packaging of this file.  Please review the following information to
-** ensure the GNU General Public License version 3.0 requirements will be
-** met: http://www.gnu.org/copyleft/gpl.html.
-**
 **
 ** $QT_END_LICENSE$
 **
@@ -322,11 +314,8 @@ Options parseOptions()
         if (argument.compare(QLatin1String("--output"), Qt::CaseInsensitive) == 0) {
             if (i + 1 == arguments.size())
                 options.helpRequested = true;
-            else {
+            else
                 options.outputDirectory = arguments.at(++i).trimmed();
-                if (!options.outputDirectory.endsWith(QLatin1Char('/')))
-                    options.outputDirectory += QLatin1Char('/');
-            }
         } else if (argument.compare(QLatin1String("--input"), Qt::CaseInsensitive) == 0) {
             if (i + 1 == arguments.size())
                 options.helpRequested = true;
@@ -459,6 +448,15 @@ Options parseOptions()
         options.inputFileName = QString::fromLatin1("android-lib%1.so-deployment-settings.json").arg(QDir::current().dirName());
 
     options.timing = qEnvironmentVariableIsSet("ANDROIDDEPLOYQT_TIMING_OUTPUT");
+
+    if (!QDir::current().mkpath(options.outputDirectory)) {
+        fprintf(stderr, "Invalid output directory: %s\n", qPrintable(options.outputDirectory));
+        options.outputDirectory.clear();
+    } else {
+        options.outputDirectory = QFileInfo(options.outputDirectory).canonicalFilePath();
+        if (!options.outputDirectory.endsWith(QLatin1Char('/')))
+            options.outputDirectory += QLatin1Char('/');
+    }
 
     return options;
 }
@@ -743,8 +741,23 @@ bool readInputFile(Options *options)
         QJsonValue deploymentDependencies = jsonObject.value("deployment-dependencies");
         if (!deploymentDependencies.isUndefined()) {
             QStringList dependencies = deploymentDependencies.toString().split(QLatin1Char(','));
-            foreach (QString dependency, dependencies)
-                options->qtDependencies.append(QtDependency(dependency, options->qtInstallDirectory + QLatin1Char('/') + dependency));
+            foreach (QString dependency, dependencies) {
+                QString path = options->qtInstallDirectory + QLatin1Char('/') + dependency;
+                if (QFileInfo(path).isDir()) {
+                    QDirIterator iterator(path, QDirIterator::Subdirectories);
+                    while (iterator.hasNext()) {
+                        if (iterator.fileInfo().isFile()) {
+                            QString subPath = iterator.filePath();
+                            options->qtDependencies.append(QtDependency(subPath.mid(options->qtInstallDirectory.length() + 1),
+                                                                        subPath));
+                        }
+
+                        iterator.next();
+                    }
+                } else {
+                    options->qtDependencies.append(QtDependency(dependency, path));
+                }
+            }
         }
     }
 
@@ -865,8 +878,6 @@ void cleanTopFolders(const Options &options, const QDir &srcDir, const QString &
 
 void cleanAndroidFiles(const Options &options)
 {
-    deleteRecursively(options.outputDirectory + "assets");
-
     if (!options.androidSourceDirectory.isEmpty())
         cleanTopFolders(options, options.androidSourceDirectory, options.outputDirectory);
 
@@ -1695,7 +1706,13 @@ bool scanImports(Options *options, QSet<QString> *usedDependencies)
 
             QString importPathOfThisImport;
             foreach (QString importPath, importPaths) {
-                if (info.absoluteFilePath().startsWith(importPath)) {
+#if defined(Q_OS_WIN32)
+                Qt::CaseSensitivity caseSensitivity = Qt::CaseInsensitive;
+#else
+                Qt::CaseSensitivity caseSensitivity = Qt::CaseSensitive;
+#endif
+                QString cleanImportPath = QDir::cleanPath(importPath);
+                if (info.absoluteFilePath().startsWith(cleanImportPath, caseSensitivity)) {
                     importPathOfThisImport = importPath;
                     break;
                 }

@@ -5,35 +5,27 @@
 **
 ** This file is part of the tools applications of the Qt Toolkit.
 **
-** $QT_BEGIN_LICENSE:LGPL$
+** $QT_BEGIN_LICENSE:LGPL21$
 ** Commercial License Usage
 ** Licensees holding valid commercial Qt licenses may use this file in
 ** accordance with the commercial license agreement provided with the
 ** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and Digia.  For licensing terms and
-** conditions see http://qt.digia.com/licensing.  For further information
+** a written agreement between you and Digia. For licensing terms and
+** conditions see http://qt.digia.com/licensing. For further information
 ** use the contact form at http://qt.digia.com/contact-us.
 **
 ** GNU Lesser General Public License Usage
 ** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 2.1 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL included in the
-** packaging of this file.  Please review the following information to
-** ensure the GNU Lesser General Public License version 2.1 requirements
-** will be met: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
+** General Public License version 2.1 or version 3 as published by the Free
+** Software Foundation and appearing in the file LICENSE.LGPLv21 and
+** LICENSE.LGPLv3 included in the packaging of this file. Please review the
+** following information to ensure the GNU Lesser General Public License
+** requirements will be met: https://www.gnu.org/licenses/lgpl.html and
+** http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
 **
 ** In addition, as a special exception, Digia gives you certain additional
-** rights.  These rights are described in the Digia Qt LGPL Exception
+** rights. These rights are described in the Digia Qt LGPL Exception
 ** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 3.0 as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL included in the
-** packaging of this file.  Please review the following information to
-** ensure the GNU General Public License version 3.0 requirements will be
-** met: http://www.gnu.org/copyleft/gpl.html.
-**
 **
 ** $QT_END_LICENSE$
 **
@@ -95,10 +87,12 @@ enum QtModule
     QtXmlPatternsModule = 0x80000000,
     QtWebKitModule = 0x100000000,
     QtWebKitWidgetsModule = 0x200000000,
-    QtQuickCompilerRuntimeModule = 0x400000000,
-    QtQuickWidgetsModule = 0x800000000,
-    QtWebSocketsModule = 0x1000000000,
-    QtEnginioModule = 0x2000000000
+    QtQuickWidgetsModule = 0x400000000,
+    QtWebSocketsModule = 0x800000000,
+    QtEnginioModule = 0x1000000000,
+    QtWebEngineCoreModule = 0x2000000000,
+    QtWebEngineModule = 0x4000000000,
+    QtWebEngineWidgetsModule = 0x8000000000
 };
 
 struct QtModuleEntry {
@@ -129,7 +123,6 @@ QtModuleEntry qtModuleEntries[] = {
     { QtPrintSupportModule, "printsupport", "Qt5PrintSupport", 0 },
     { QtQmlModule, "qml", "Qt5Qml", "qtdeclarative" },
     { QtQuickModule, "quick", "Qt5Quick", "qtdeclarative" },
-    { QtQuickCompilerRuntimeModule, "quickcompilerruntime", "Qt5QuickCompilerRuntime", 0 },
     { QtQuickParticlesModule, "quickparticles", "Qt5QuickParticles", 0 },
     { QtQuickWidgetsModule, "quickwidgets", "Qt5QuickWidgets", 0 },
     { QtScriptModule, "script", "Qt5Script", "qtscript" },
@@ -145,14 +138,18 @@ QtModuleEntry qtModuleEntries[] = {
     { QtWidgetsModule, "widgets", "Qt5Widgets", "qtbase" },
     { QtWinExtrasModule, "winextras", "Qt5WinExtras", 0 },
     { QtXmlModule, "xml", "Qt5Xml", "qtbase" },
-    { QtXmlPatternsModule, "xmlpatterns", "Qt5XmlPatterns", "qtxmlpatterns" }
+    { QtXmlPatternsModule, "xmlpatterns", "Qt5XmlPatterns", "qtxmlpatterns" },
+    { QtWebEngineCoreModule, "webenginecore", "Qt5WebEngineCore", 0 },
+    { QtWebEngineModule, "webengine", "Qt5WebEngine", 0 },
+    { QtWebEngineWidgetsModule, "webenginewidgets", "Qt5WebEngineWidgets", 0 }
 };
 
-static const char webProcessC[] = "QtWebProcess";
+static const char webKitProcessC[] = "QtWebProcess";
+static const char webEngineProcessC[] = "QtWebEngineProcess";
 
-static inline QString webProcessBinary(Platform p)
+static inline QString webProcessBinary(const char *binaryName, Platform p)
 {
-    const QString webProcess = QLatin1String(webProcessC);
+    const QString webProcess = QLatin1String(binaryName);
     return (p & WindowsBased) ? webProcess + QStringLiteral(".exe") : webProcess;
 }
 
@@ -258,9 +255,12 @@ static inline QString findBinary(const QString &directory, Platform platform)
 
     const QStringList nameFilters = (platform & WindowsBased) ?
         QStringList(QStringLiteral("*.exe")) : QStringList();
-    foreach (const QString &binary, dir.entryList(nameFilters, QDir::Files | QDir::Executable))
-        if (!binary.contains(QLatin1String(webProcessC), Qt::CaseInsensitive))
+    foreach (const QString &binary, dir.entryList(nameFilters, QDir::Files | QDir::Executable)) {
+        if (!binary.contains(QLatin1String(webKitProcessC), Qt::CaseInsensitive)
+            && !binary.contains(QLatin1String(webEngineProcessC), Qt::CaseInsensitive)) {
             return dir.filePath(binary);
+        }
+    }
     return QString();
 }
 
@@ -579,6 +579,13 @@ static inline QString helpText(const QCommandLineParser &p)
     return result;
 }
 
+static inline bool isQtModule(const QString &libName)
+{
+    return libName.startsWith(QLatin1String("Qt"), Qt::CaseInsensitive) // Standard modules, Qt5XX.dll, Qt[Commercial]Charts.dll
+        || libName.startsWith(QLatin1String("DataVisualization"), Qt::CaseInsensitive)
+        || libName.startsWith(QLatin1String("Enginio"), Qt::CaseInsensitive);
+}
+
 // Helper for recursively finding all dependent Qt libraries.
 static bool findDependentQtLibraries(const QString &qtBinDir, const QString &binary, Platform platform,
                                      QString *errorMessage, QStringList *result,
@@ -596,11 +603,12 @@ static bool findDependentQtLibraries(const QString &qtBinDir, const QString &bin
     // Filter out the Qt libraries. Note that depends.exe finds libs from optDirectory if we
     // are run the 2nd time (updating). We want to check against the Qt bin dir libraries
     const int start = result->size();
-    const QRegExp filterRegExp(QStringLiteral("Qt5"), Qt::CaseInsensitive, QRegExp::FixedString);
-    foreach (const QString &qtLib, dependentLibs.filter(filterRegExp)) {
-        const QString path = normalizeFileName(qtBinDir + QLatin1Char('/') + QFileInfo(qtLib).fileName());
-        if (!result->contains(path))
-            result->append(path);
+    foreach (const QString &lib, dependentLibs) {
+        if (isQtModule(lib)) {
+            const QString path = normalizeFileName(qtBinDir + QLatin1Char('/') + QFileInfo(lib).fileName());
+            if (!result->contains(path))
+                result->append(path);
+        }
     }
     const int end = result->size();
     if (directDependencyCount)
@@ -673,6 +681,8 @@ static inline quint64 qtModuleForPlugin(const QString &subDirName)
         return QtPositioningModule;
     if (subDirName == QLatin1String("sensors") || subDirName == QLatin1String("sensorgestures"))
         return QtSensorsModule;
+    if (subDirName == QLatin1String("qtwebengine"))
+        return QtWebEngineModule | QtWebEngineCoreModule | QtWebEngineWidgetsModule;
     return 0; // "designer"
 }
 
@@ -959,7 +969,7 @@ static DeployResult deploy(const Options &options,
     }
 
     const bool usesQml2 = !(options.disabledLibraries & QtQmlModule)
-                            && ((result.directlyUsedQtLibraries & QtQmlModule)
+                            && ((result.directlyUsedQtLibraries & (QtQmlModule | QtQuickModule))
                                 || (options.additionalLibraries & QtQmlModule));
 
     if (optVerboseLevel) {
@@ -1062,10 +1072,16 @@ static DeployResult deploy(const Options &options,
                       isDebug, options.platform, &platformPlugin);
 
     // Apply options flags and re-add library names.
+    QString qtGuiLibrary;
     const size_t qtModulesCount = sizeof(qtModuleEntries)/sizeof(QtModuleEntry);
-    for (size_t i = 0; i < qtModulesCount; ++i)
-        if (result.deployedQtLibraries & qtModuleEntries[i].module)
-            deployedQtLibraries.push_back(libraryPath(libraryLocation, qtModuleEntries[i].libraryName, qtLibInfix, options.platform, isDebug));
+    for (size_t i = 0; i < qtModulesCount; ++i) {
+        if (result.deployedQtLibraries & qtModuleEntries[i].module) {
+            const QString library = libraryPath(libraryLocation, qtModuleEntries[i].libraryName, qtLibInfix, options.platform, isDebug);
+            deployedQtLibraries.append(library);
+            if (qtModuleEntries[i].module == QtGuiModule)
+                qtGuiLibrary = library;
+        }
+    }
 
     if (optVerboseLevel >= 1) {
         std::wcout << "Direct dependencies: " << formatQtModules(result.directlyUsedQtLibraries).constData()
@@ -1081,27 +1097,24 @@ static DeployResult deploy(const Options &options,
         return result;
     }
 
-    // Check for ANGLE on the platform plugin.
-    if (options.platform & WindowsBased)  {
-        QString libEglName = QStringLiteral("libEGL");
+    // Check for ANGLE on the Qt5Gui library.
+    if ((options.platform & WindowsBased) && !qtGuiLibrary.isEmpty())  {
+        QString libGlesName = QStringLiteral("libGLESV2");
         if (isDebug)
-            libEglName += QLatin1Char('d');
-        libEglName += QLatin1String(windowsSharedLibrarySuffix);
-        bool deployAngle = options.angleDetection == Options::AngleDetectionForceOn;
-        if (options.angleDetection == Options::AngleDetectionAuto) {
-            // Deploy ANGLE if direct dependency is there or dynamic build (no dependency to any GL library).
-            const QStringList platformPluginLibraries = findDependentLibraries(platformPlugin, options.platform, errorMessage);
-            deployAngle = !platformPluginLibraries.filter(libEglName, Qt::CaseInsensitive).isEmpty()
-                || platformPluginLibraries.filter(QStringLiteral("opengl32"), Qt::CaseInsensitive).isEmpty();
-        }
-        if (deployAngle) {
-            const QString libEglFullPath = qtBinDir + slash + libEglName;
-            deployedQtLibraries.push_back(libEglFullPath);
-            const QStringList libGLESv2 = findDependentLibraries(libEglFullPath, options.platform, errorMessage).filter(QStringLiteral("libGLESv2"), Qt::CaseInsensitive);
-            if (!libGLESv2.isEmpty()) {
-                const QString libGLESv2FullPath = qtBinDir + slash + QFileInfo(libGLESv2.front()).fileName();
-                deployedQtLibraries.push_back(libGLESv2FullPath);
-            }
+            libGlesName += QLatin1Char('d');
+        libGlesName += QLatin1String(windowsSharedLibrarySuffix);
+        const QStringList guiLibraries = findDependentLibraries(qtGuiLibrary, options.platform, errorMessage);
+        const bool dependsOnAngle = !guiLibraries.filter(libGlesName, Qt::CaseInsensitive).isEmpty();
+        const bool dependsOnOpenGl = !guiLibraries.filter(QStringLiteral("opengl32"), Qt::CaseInsensitive).isEmpty();
+        if (options.angleDetection != Options::AngleDetectionForceOff
+            && (dependsOnAngle || !dependsOnOpenGl || options.angleDetection == Options::AngleDetectionForceOn)) {
+            const QString libGlesFullPath = qtBinDir + slash + libGlesName;
+            deployedQtLibraries.append(libGlesFullPath);
+            QString libEglFullPath = qtBinDir + slash + QStringLiteral("libEGL");
+            if (isDebug)
+                libEglFullPath += QLatin1Char('d');
+            libEglFullPath += QLatin1String(windowsSharedLibrarySuffix);
+            deployedQtLibraries.append(libEglFullPath);
             // Find the system D3d Compiler matching the D3D library.
             if (options.systemD3dCompiler && options.platform != WinPhoneArm && options.platform != WinPhoneIntel
                     && options.platform != WinRtArm && options.platform != WinRtIntel) {
@@ -1113,6 +1126,11 @@ static DeployResult deploy(const Options &options,
                 }
             }
         } // deployAngle
+        if (!dependsOnOpenGl) {
+            const QFileInfo softwareRasterizer(qtBinDir + slash + QStringLiteral("opengl32sw") + QLatin1String(windowsSharedLibrarySuffix));
+            if (softwareRasterizer.isFile())
+                deployedQtLibraries.append(softwareRasterizer.absoluteFilePath());
+        }
     } // Windows
 
     // Update libraries
@@ -1198,11 +1216,12 @@ static DeployResult deploy(const Options &options,
     return result;
 }
 
-static bool deployWebKit2(const QMap<QString, QString> &qmakeVariables,
-                          const Options &sourceOptions, QString *errorMessage)
+static bool deployWebProcess(const QMap<QString, QString> &qmakeVariables,
+                             const char *binaryName,
+                             const Options &sourceOptions, QString *errorMessage)
 {
     // Copy the web process and its dependencies
-    const QString webProcess = webProcessBinary(sourceOptions.platform);
+    const QString webProcess = webProcessBinary(binaryName, sourceOptions.platform);
     const QString webProcessSource = qmakeVariables.value(QStringLiteral("QT_INSTALL_LIBEXECS")) +
                                      QLatin1Char('/') + webProcess;
     if (!updateFile(webProcessSource, sourceOptions.directory, sourceOptions.updateFileFlags, sourceOptions.json, errorMessage))
@@ -1212,6 +1231,28 @@ static bool deployWebKit2(const QMap<QString, QString> &qmakeVariables,
     options.quickImports = false;
     options.translations = false;
     return deploy(options, qmakeVariables, errorMessage);
+}
+
+static bool deployWebEngine(const QMap<QString, QString> &qmakeVariables,
+                             const Options &options, QString *errorMessage)
+{
+    static const char *installDataFiles[] = {"icudtl.dat", "qtwebengine_resources.pak"};
+
+    std::wcout << "Deploying: " << webEngineProcessC << "...\n";
+    if (!deployWebProcess(qmakeVariables, webEngineProcessC, options, errorMessage)) {
+        std::wcerr << errorMessage << '\n';
+        return false;
+    }
+    const QString installData
+        = qmakeVariables.value(QStringLiteral("QT_INSTALL_DATA")) + QLatin1Char('/');
+    for (size_t i = 0; i < sizeof(installDataFiles)/sizeof(installDataFiles[0]); ++i) {
+        if (!updateFile(installData + QLatin1String(installDataFiles[i]),
+                        options.directory, options.updateFileFlags, options.json, errorMessage)) {
+            std::wcerr << errorMessage << '\n';
+            return false;
+        }
+    }
+    return true;
 }
 
 int main(int argc, char **argv)
@@ -1277,8 +1318,15 @@ int main(int argc, char **argv)
             || ((result.deployedQtLibraries & QtWebKitModule)
                 && (result.directlyUsedQtLibraries & QtQuickModule)))) {
         if (optVerboseLevel)
-            std::wcout << "Deploying: " << webProcessC << "...\n";
-        if (!deployWebKit2(qmakeVariables, options, &errorMessage)) {
+            std::wcout << "Deploying: " << webKitProcessC << "...\n";
+        if (!deployWebProcess(qmakeVariables, webKitProcessC, options, &errorMessage)) {
+            std::wcerr << errorMessage << '\n';
+            return 1;
+        }
+    }
+
+    if (result.deployedQtLibraries & QtWebEngineModule) {
+        if (!deployWebEngine(qmakeVariables, options, &errorMessage)) {
             std::wcerr << errorMessage << '\n';
             return 1;
         }

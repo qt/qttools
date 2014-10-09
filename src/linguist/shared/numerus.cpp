@@ -1,39 +1,31 @@
 /****************************************************************************
 **
-** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2014 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Linguist of the Qt Toolkit.
 **
-** $QT_BEGIN_LICENSE:LGPL$
+** $QT_BEGIN_LICENSE:LGPL21$
 ** Commercial License Usage
 ** Licensees holding valid commercial Qt licenses may use this file in
 ** accordance with the commercial license agreement provided with the
 ** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and Digia.  For licensing terms and
-** conditions see http://qt.digia.com/licensing.  For further information
+** a written agreement between you and Digia. For licensing terms and
+** conditions see http://qt.digia.com/licensing. For further information
 ** use the contact form at http://qt.digia.com/contact-us.
 **
 ** GNU Lesser General Public License Usage
 ** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 2.1 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL included in the
-** packaging of this file.  Please review the following information to
-** ensure the GNU Lesser General Public License version 2.1 requirements
-** will be met: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
+** General Public License version 2.1 or version 3 as published by the Free
+** Software Foundation and appearing in the file LICENSE.LGPLv21 and
+** LICENSE.LGPLv3 included in the packaging of this file. Please review the
+** following information to ensure the GNU Lesser General Public License
+** requirements will be met: https://www.gnu.org/licenses/lgpl.html and
+** http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
 **
 ** In addition, as a special exception, Digia gives you certain additional
-** rights.  These rights are described in the Digia Qt LGPL Exception
+** rights. These rights are described in the Digia Qt LGPL Exception
 ** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 3.0 as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL included in the
-** packaging of this file.  Please review the following information to
-** ensure the GNU General Public License version 3.0 requirements will be
-** met: http://www.gnu.org/copyleft/gpl.html.
-**
 **
 ** $QT_END_LICENSE$
 **
@@ -64,6 +56,10 @@ static const uchar icelandicRules[] =
 static const uchar irishStyleRules[] =
     { Q_EQ, 1, Q_NEWRULE,
       Q_EQ, 2 };
+static const uchar gaelicStyleRules[] =
+    { Q_EQ, 1, Q_OR, Q_EQ, 11, Q_NEWRULE,
+      Q_EQ, 2, Q_OR, Q_EQ, 12, Q_NEWRULE,
+      Q_BETWEEN, 3, 19 };
 static const uchar slovakStyleRules[] =
     { Q_EQ, 1, Q_NEWRULE,
       Q_BETWEEN, 2, 4 };
@@ -114,6 +110,9 @@ static const char * const frenchStyleForms[] = { "Singular", "Plural", 0 };
 static const char * const icelandicForms[] = { "Singular", "Plural", 0 };
 static const char * const latvianForms[] = { "Singular", "Plural", "Nullar", 0 };
 static const char * const irishStyleForms[] = { "Singular", "Dual", "Plural", 0 };
+// Gaelic uses the grammatical Singular for the Plural cardinality,
+// so using the Latin terms is expected to cause confusion.
+static const char * const gaelicStyleForms[] = { "1/11", "2/12", "Few", "Many", 0 };
 static const char * const slovakStyleForms[] = { "Singular", "Paucal", "Plural", 0 };
 static const char * const macedonianForms[] = { "Singular", "Dual", "Plural", 0 };
 static const char * const lithuanianForms[] = { "Singular", "Paucal", "Plural", 0 };
@@ -267,7 +266,6 @@ static const QLocale::Language latvianLanguage[] = { QLocale::Latvian, EOL };
 static const QLocale::Language icelandicLanguage[] = { QLocale::Icelandic, EOL };
 static const QLocale::Language irishStyleLanguages[] = {
     QLocale::Divehi,
-    QLocale::Gaelic,
     QLocale::Inuktitut,
     QLocale::Inupiak,
     QLocale::Irish,
@@ -278,6 +276,7 @@ static const QLocale::Language irishStyleLanguages[] = {
     QLocale::Sanskrit,
     EOL
 };
+static const QLocale::Language gaelicStyleLanguages[] = { QLocale::Gaelic, EOL };
 static const QLocale::Language slovakStyleLanguages[] = { QLocale::Slovak, QLocale::Czech, EOL };
 static const QLocale::Language macedonianLanguage[] = { QLocale::Macedonian, EOL };
 static const QLocale::Language lithuanianLanguage[] = { QLocale::Lithuanian, EOL };
@@ -334,6 +333,8 @@ static const NumerusTableEntry numerusTable[] = {
       "nplurals=2; plural=(n%10==1 && n%100!=11 ? 0 : 1);" },
     { irishStyleRules, sizeof(irishStyleRules), irishStyleForms, irishStyleLanguages, 0,
       "nplurals=3; plural=(n==1 ? 0 : n==2 ? 1 : 2);" },
+    { gaelicStyleRules, sizeof(gaelicStyleRules), gaelicStyleForms, gaelicStyleLanguages, 0,
+      "nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : (n > 2 && n < 20) ? 2 : 3;" },
     { slovakStyleRules, sizeof(slovakStyleRules), slovakStyleForms, slovakStyleLanguages, 0,
       "nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);" },
     { macedonianRules, sizeof(macedonianRules), macedonianForms, macedonianLanguage, 0,

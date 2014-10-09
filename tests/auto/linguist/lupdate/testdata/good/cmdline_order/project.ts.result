@@ -4,7 +4,7 @@
 <context>
     <name>aaa</name>
     <message>
-        <location filename="a.h" line="42"/>
+        <location filename="a.h" line="34"/>
         <source>some text</source>
         <translation type="unfinished"></translation>
     </message>
@@ -12,7 +12,7 @@
 <context>
     <name>bbb</name>
     <message>
-        <location filename="b.h" line="44"/>
+        <location filename="b.h" line="36"/>
         <source>some text</source>
         <translation type="unfinished"></translation>
     </message>
