@@ -48,6 +48,7 @@ extern bool runStripEnabled;
 class FrameworkInfo
 {
 public:
+    bool isDylib;
     QString frameworkDirectory;
     QString frameworkName;
     QString frameworkPath;
@@ -58,7 +59,8 @@ public:
     QString installName;
     QString deployedInstallName;
     QString sourceFilePath;
-    QString destinationDirectory;
+    QString frameworkDestinationDirectory;
+    QString binaryDestinationDirectory;
 };
 
 bool operator==(const FrameworkInfo &a, const FrameworkInfo &b);
@@ -101,6 +103,8 @@ void changeIdentification(const QString &id, const QString &binaryPath);
 void changeInstallName(const QString &oldName, const QString &newName, const QString &binaryPath);
 void runStrip(const QString &binaryPath);
 QString findAppBinary(const QString &appBundlePath);
+void codesignFile(const QString &identity, const QString &filePath);
+void codesign(const QString &identity, const QString &appBundlePath);
 void createDiskImage(const QString &appBundlePath);
 
 
