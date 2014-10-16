@@ -511,7 +511,7 @@ void Main::about()
     "<p><b><font size=\"+2\">Qtopia Core build configuration</font></b></p>"
     "<p></p>"
     "<p>Version 2.0</p>"
-    "<p>Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).</p>"
+    "<p>Copyright (C) 2014 Digia Plc and/or its subsidiary(-ies).</p>"
     "<p></p>"
     );
 }
