@@ -238,8 +238,16 @@
 
     </xsl:template>
 
-    <!-- Format a string constant as QString(QLatin1Char('X')) or QStringLiteral("foo"), respectively -->
-    <xsl:template name="string-constant">
+    <!-- Format a string constant for comparison as QLatin1String("foo") - they're all ascii-only -->
+    <xsl:template name="string-constant-for-comparison">
+        <xsl:param name="literal"/>
+        <xsl:text>QLatin1String("</xsl:text>
+        <xsl:value-of select="$literal"/>
+        <xsl:text>")</xsl:text>
+    </xsl:template>
+
+    <!-- Format a string constant for storage as QString(QLatin1Char('X')) or QLatin1String("foo"), respectively -->
+    <xsl:template name="string-constant-for-storage">
     <xsl:param name="literal"/>
         <xsl:choose>
             <xsl:when test="string-length($literal) &lt; 2">
@@ -286,7 +294,7 @@
                 </xsl:variable>
 
                 <xsl:text>        if (name == </xsl:text>
-                <xsl:call-template name="string-constant">
+                <xsl:call-template name="string-constant-for-comparison">
                     <xsl:with-param name="literal" select="@name"/>
                 </xsl:call-template>
                 <xsl:text>) {&endl;</xsl:text>
@@ -332,7 +340,7 @@
             <xsl:variable name="array" select="@maxOccurs = 'unbounded'"/>
 
             <xsl:text>            if (tag == </xsl:text>
-            <xsl:call-template name="string-constant">
+            <xsl:call-template name="string-constant-for-comparison">
                 <xsl:with-param name="literal" select="$lower-name"/>
             </xsl:call-template>
             <xsl:text>) {&endl;</xsl:text>
@@ -465,7 +473,7 @@
             <xsl:value-of select="$cap-name"/>
             <xsl:text>())&endl;</xsl:text>
             <xsl:text>        writer.writeAttribute(</xsl:text>
-            <xsl:call-template name="string-constant">
+            <xsl:call-template name="string-constant-for-storage">
                 <xsl:with-param name="literal" select="$lower-name"/>
             </xsl:call-template>
 
@@ -521,7 +529,7 @@
                         </xsl:variable>
 
                         <xsl:text>            writer.writeTextElement(</xsl:text>
-                        <xsl:call-template name="string-constant">
+                        <xsl:call-template name="string-constant-for-storage">
                             <xsl:with-param name="literal" select="$camel-case-name"/>
                         </xsl:call-template>
                         <xsl:text>, </xsl:text>
@@ -542,7 +550,7 @@
                         <xsl:text>();&endl;</xsl:text>
                         <xsl:text>            if (v != 0) {&endl;</xsl:text>
                         <xsl:text>                v->write(writer, </xsl:text>
-                        <xsl:call-template name="string-constant">
+                        <xsl:call-template name="string-constant-for-storage">
                             <xsl:with-param name="literal" select="$lower-name"/>
                         </xsl:call-template>
                         <xsl:text>);&endl;</xsl:text>
@@ -601,7 +609,7 @@
                     <xsl:choose>
                         <xsl:when test="$xs-type-cat = 'pointer'">
                             <xsl:text>        v->write(writer, </xsl:text>
-                            <xsl:call-template name="string-constant">
+                            <xsl:call-template name="string-constant-for-storage">
                                 <xsl:with-param name="literal" select="$lower-name"/>
                             </xsl:call-template>
                             <xsl:text>);&endl;</xsl:text>
@@ -615,7 +623,7 @@
                             </xsl:variable>
 
                             <xsl:text>        writer.writeTextElement(</xsl:text>
-                            <xsl:call-template name="string-constant">
+                            <xsl:call-template name="string-constant-for-storage">
                                 <xsl:with-param name="literal" select="$lower-name"/>
                             </xsl:call-template>
                             <xsl:text>, </xsl:text>
@@ -634,7 +642,7 @@
                             <xsl:text>        m_</xsl:text>
                             <xsl:value-of select="$camel-case-name"/>
                             <xsl:text>->write(writer, </xsl:text>
-                            <xsl:call-template name="string-constant">
+                            <xsl:call-template name="string-constant-for-storage">
                                 <xsl:with-param name="literal" select="$lower-name"/>
                             </xsl:call-template>
                             <xsl:text>);&endl;</xsl:text>
@@ -647,7 +655,7 @@
                                 </xsl:call-template>
                             </xsl:variable>
                             <xsl:text>        writer.writeTextElement(</xsl:text>
-                            <xsl:call-template name="string-constant">
+                            <xsl:call-template name="string-constant-for-storage">
                                 <xsl:with-param name="literal" select="$lower-name"/>
                             </xsl:call-template>
                             <xsl:text>, </xsl:text>

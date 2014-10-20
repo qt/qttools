@@ -42,6 +42,7 @@
 #include <QtCore/QJsonArray>
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QCommandLineOption>
+#include <QtCore/QSharedPointer>
 #include <QtCore/QVector>
 
 #include <iostream>

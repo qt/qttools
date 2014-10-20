@@ -206,10 +206,6 @@ MainWindow::MainWindow(CmdLineParser *cmdLine, QWidget *parent)
     toolBar->setObjectName(QLatin1String("Bookmark Toolbar"));
     bookMarkManager->setBookmarksToolbar(toolBar);
 
-    // Show the widget here, otherwise the restore geometry and state won't work
-    // on x11.
-    show();
-
     toolBar->hide();
     toolBarMenu()->addAction(toolBar->toggleViewAction());
 
@@ -484,9 +480,10 @@ void MainWindow::qtDocumentationInstalled()
 void MainWindow::checkInitState()
 {
     TRACE_OBJ
-    HelpEngineWrapper::instance().initialDocSetupDone();
-    if (!m_cmdLine->enableRemoteControl())
+    if (!m_cmdLine->enableRemoteControl()) {
+        HelpEngineWrapper::instance().initialDocSetupDone();
         return;
+    }
 
     HelpEngineWrapper &helpEngine = HelpEngineWrapper::instance();
     if (helpEngine.contentModel()->isCreatingContents()
@@ -503,6 +500,7 @@ void MainWindow::checkInitState()
             disconnect(helpEngine.contentModel(), 0, this, 0);
             disconnect(helpEngine.indexModel(), 0, this, 0);
         }
+        HelpEngineWrapper::instance().initialDocSetupDone();
         emit initDone();
     }
 }
@@ -896,8 +894,8 @@ void MainWindow::showAboutDialog()
         aboutDia.setText(tr("<center>"
             "<h3>%1</h3>"
             "<p>Version %2</p></center>"
-            "<p>Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).</p>")
-            .arg(tr("Qt Assistant")).arg(QLatin1String(QT_VERSION_STR)),
+            "<p>Copyright (C) %3 Digia Plc and/or its subsidiary(-ies).</p>")
+            .arg(tr("Qt Assistant"), QLatin1String(QT_VERSION_STR), QStringLiteral("2014")),
             resources);
         QLatin1String path(":/qt-project.org/assistant/images/assistant-128.png");
         aboutDia.setPixmap(QString(path));

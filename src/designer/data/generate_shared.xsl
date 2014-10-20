@@ -141,9 +141,8 @@
                 <xsl:text>.toDouble()</xsl:text>
             </xsl:when>
             <xsl:when test="$xs-type='xs:boolean'">
-                <xsl:text>(</xsl:text>
                 <xsl:value-of select="$val"/>
-                <xsl:text> == QStringLiteral("true") ? true : false)</xsl:text>
+                <xsl:text> == QLatin1String("true")</xsl:text>
             </xsl:when>
             <xsl:when test="$xs-type='xs:long'">
                 <xsl:value-of select="$val"/>
