@@ -60,7 +60,11 @@ void StdInListener::receivedData()
     QByteArray ba;
     while (true) {
         const int c = getc(stdin);
-        if (c == EOF || c == '\0')
+        if (c == EOF) {
+            setEnabled(false);
+            break;
+        }
+        if (c == '\0')
             break;
         if (c)
             ba.append(char(c));
