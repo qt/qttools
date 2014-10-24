@@ -31,30 +31,43 @@
 **
 ****************************************************************************/
 
-#ifndef REMOTECONTROL_WIN_H
-#define REMOTECONTROL_WIN_H
+#include "stdinlistener.h"
 
-#include <windows.h>
-#include <QtCore/QThread>
+#include "tracer.h"
 
 QT_BEGIN_NAMESPACE
 
-class StdInListenerWin : public QThread
+StdInListener::StdInListener(QObject *parent)
+    : QSocketNotifier(fileno(stdin), QSocketNotifier::Read, parent)
 {
-    Q_OBJECT
+    TRACE_OBJ
+    connect(this, SIGNAL(activated(int)), this, SLOT(receivedData()));
+}
 
-public:
-    StdInListenerWin(QObject *parent);
-    ~StdInListenerWin();
+StdInListener::~StdInListener()
+{
+    TRACE_OBJ
+}
 
-signals:
-    void receivedCommand(const QString &cmd);
+void StdInListener::start()
+{
+    setEnabled(true);
+}
 
-private:
-    void run();
-    bool ok;
-};
+void StdInListener::receivedData()
+{
+    TRACE_OBJ
+    QByteArray ba;
+    while (true) {
+        const int c = getc(stdin);
+        if (c == EOF || c == '\0')
+            break;
+        if (c)
+            ba.append(char(c));
+         if (c == '\n')
+             break;
+    }
+    emit receivedCommand(QString::fromLocal8Bit(ba));
+}
 
 QT_END_NAMESPACE
-
-#endif

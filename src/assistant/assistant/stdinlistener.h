@@ -31,55 +31,29 @@
 **
 ****************************************************************************/
 
-#ifndef REMOTECONTROL_H
-#define REMOTECONTROL_H
+#ifndef STDINLISTENER_H
+#define STDINLISTENER_H
 
-#include <QtCore/QObject>
-#include <QtCore/QString>
-#include <QtCore/QUrl>
+#include <QtCore/QSocketNotifier>
 
 QT_BEGIN_NAMESPACE
 
-class HelpEngineWrapper;
-class MainWindow;
-
-class RemoteControl : public QObject
+class StdInListener : public QSocketNotifier
 {
     Q_OBJECT
 
 public:
-    RemoteControl(MainWindow *mainWindow);
+    StdInListener(QObject *parent);
+    ~StdInListener();
+
+public slots:
+    void start();
+
+signals:
+    void receivedCommand(const QString &cmd);
 
 private slots:
-    void handleCommandString(const QString &cmdString);
-    void applyCache();
-
-private:
-    void clearCache();
-    void splitInputString(const QString &input, QString &cmd, QString &arg);
-    void handleDebugCommand(const QString &arg);
-    void handleShowOrHideCommand(const QString &arg, bool show);
-    void handleSetSourceCommand(const QString &arg);
-    void handleSyncContentsCommand();
-    void handleActivateKeywordCommand(const QString &arg);
-    void handleActivateIdentifierCommand(const QString &arg);
-    void handleExpandTocCommand(const QString &arg);
-    void handleSetCurrentFilterCommand(const QString &arg);
-    void handleRegisterCommand(const QString &arg);
-    void handleUnregisterCommand(const QString &arg);
-
-private:
-    MainWindow *m_mainWindow;
-    bool m_debug;
-
-    bool m_caching;
-    QUrl m_setSource;
-    bool m_syncContents;
-    QString m_activateKeyword;
-    QString m_activateIdentifier;
-    int m_expandTOC;
-    QString m_currentFilter;
-    HelpEngineWrapper &helpEngine;
+    void receivedData();
 };
 
 QT_END_NAMESPACE

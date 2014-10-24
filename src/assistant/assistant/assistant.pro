@@ -41,7 +41,6 @@ HEADERS += aboutdialog.h \
     openpageswidget.h \
     openpagesmanager.h \
     openpagesswitcher.h
-win32:HEADERS += remotecontrol_win.h
 
 SOURCES += aboutdialog.cpp \
     bookmarkdialog.cpp \
@@ -76,6 +75,14 @@ qtHaveModule(webkitwidgets):!contains(QT_CONFIG, static) {
     SOURCES += helpviewer_qwv.cpp
 } else {
     SOURCES += helpviewer_qtb.cpp
+}
+
+win32 {
+    HEADERS += stdinlistener_win.h
+    SOURCES += stdinlistener_win.cpp
+} else {
+    HEADERS += stdinlistener.h
+    SOURCES += stdinlistener.cpp
 }
 
 FORMS += bookmarkdialog.ui \
