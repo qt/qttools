@@ -108,12 +108,14 @@ bool createDirectory(const QString &directory, QString *errorMessage)
 }
 
 // Find shared libraries matching debug/Platform in a directory, return relative names.
-QStringList findSharedLibraries(const QDir &directory, Platform platform, bool debug, const QString &prefix)
+QStringList findSharedLibraries(const QDir &directory, Platform platform,
+                                DebugMatchMode debugMatchMode,
+                                const QString &prefix)
 {
     QString nameFilter = prefix;
     if (nameFilter.isEmpty())
         nameFilter += QLatin1Char('*');
-    if (debug && (platform & WindowsBased))
+    if (debugMatchMode == MatchDebug && (platform & WindowsBased))
         nameFilter += QLatin1Char('d');
     nameFilter += sharedLibrarySuffix(platform);
     QStringList result;
@@ -121,11 +123,11 @@ QStringList findSharedLibraries(const QDir &directory, Platform platform, bool d
     foreach (const QString &dll, directory.entryList(QStringList(nameFilter), QDir::Files)) {
         const QString dllPath = directory.absoluteFilePath(dll);
         bool matches = true;
-        if (platform & WindowsBased) {
+        if (debugMatchMode != MatchDebugOrRelease && (platform & WindowsBased)) {
             bool debugDll;
             if (readPeExecutable(dllPath, &errorMessage, 0, 0, &debugDll,
                                  (platform == WindowsMinGW))) {
-                matches = debugDll == debug;
+                matches = debugDll == (debugMatchMode == MatchDebug);
             } else {
                 std::wcerr << "Warning: Unable to read " << QDir::toNativeSeparators(dllPath)
                            << ": " << errorMessage;

@@ -103,19 +103,21 @@ QString findQmlDirectory(int platform, const QString &startDirectoryName)
     return qmlDirectoryRecursion(Platform(platform), startDirectory.path());
 }
 
-static void findFileRecursion(const QDir &directory, Platform platform, bool debug, QStringList *matches)
+static void findFileRecursion(const QDir &directory, Platform platform,
+                              DebugMatchMode debugMatchMode, QStringList *matches)
 {
-    foreach (const QString &dll, findSharedLibraries(directory, platform, debug))
+    foreach (const QString &dll, findSharedLibraries(directory, platform, debugMatchMode))
         matches->append(directory.filePath(dll));
     foreach (const QString &subDir, directory.entryList(QStringList(), QDir::Dirs | QDir::NoDotAndDotDot | QDir::NoSymLinks)) {
         QDir subDirectory = directory;
         if (subDirectory.cd(subDir))
-            findFileRecursion(subDirectory, platform, debug, matches);
+            findFileRecursion(subDirectory, platform, debugMatchMode, matches);
     }
 }
 
 QmlImportScanResult runQmlImportScanner(const QString &directory, const QString &qmlImportPath,
-                                        int platform, bool debug, QString *errorMessage)
+                                        int platform, DebugMatchMode debugMatchMode,
+                                        QString *errorMessage)
 {
     QmlImportScanResult result;
     QStringList arguments;
@@ -151,7 +153,7 @@ QmlImportScanResult runQmlImportScanner(const QString &directory, const QString 
                 module.className = object.value(QStringLiteral("classname")).toString();
                 module.sourcePath = path;
                 result.modules.append(module);
-                findFileRecursion(QDir(path), Platform(platform), debug, &result.plugins);
+                findFileRecursion(QDir(path), Platform(platform), debugMatchMode, &result.plugins);
             }
         }
     }

@@ -227,7 +227,8 @@ struct Options {
 
     Options() : plugins(true), libraries(true), quickImports(true), translations(true), systemD3dCompiler(true), compilerRunTime(false)
               , angleDetection(AngleDetectionAuto), platform(Windows), additionalLibraries(0), disabledLibraries(0)
-              , updateFileFlags(0), json(0), list(ListNone), debugDetection(DebugDetectionAuto) {}
+              , updateFileFlags(0), json(0), list(ListNone), debugDetection(DebugDetectionAuto)
+              , debugMatchAll(false) {}
 
     bool plugins;
     bool libraries;
@@ -247,6 +248,7 @@ struct Options {
     JsonOutput *json;
     ListOption list;
     DebugDetection debugDetection;
+    bool debugMatchAll;
 };
 
 // Return binary from folder
@@ -302,6 +304,9 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
     QCommandLineOption releaseOption(QStringLiteral("release"),
                                    QStringLiteral("Assume release binaries."));
     parser->addOption(releaseOption);
+    QCommandLineOption releaseWithDebugInfoOption(QStringLiteral("release-with-debug-info"),
+                                                  QStringLiteral("Assume release binaries with debug information."));
+    parser->addOption(releaseWithDebugInfoOption);
 
     QCommandLineOption forceOption(QStringLiteral("force"),
                                     QStringLiteral("Force updating files."));
@@ -429,15 +434,20 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
         return CommandLineParseError;
     }
 
-    switch (parseExclusiveOptions(parser, debugOption, releaseOption)) {
-    case OptionAuto:
-        break;
-    case OptionEnabled:
-        options->debugDetection = Options::DebugDetectionForceDebug;
-        break;
-    case OptionDisabled:
-         options->debugDetection = Options::DebugDetectionForceRelease;
-        break;
+    if (parser->isSet(releaseWithDebugInfoOption)) {
+        options->debugMatchAll = true; // PE analysis will detect "debug", turn off matching.
+        options->debugDetection = Options::DebugDetectionForceRelease;
+    } else {
+        switch (parseExclusiveOptions(parser, debugOption, releaseOption)) {
+        case OptionAuto:
+            break;
+        case OptionEnabled:
+            options->debugDetection = Options::DebugDetectionForceDebug;
+            break;
+        case OptionDisabled:
+            options->debugDetection = Options::DebugDetectionForceRelease;
+            break;
+        }
     }
 
     switch (parseExclusiveOptions(parser, angleOption, noAngleOption)) {
@@ -629,15 +639,16 @@ static bool findDependentQtLibraries(const QString &qtBinDir, const QString &bin
 // Tries to pre-filter by namefilter and does check via PE.
 class DllDirectoryFileEntryFunction {
 public:
-    explicit DllDirectoryFileEntryFunction(Platform platform, bool debug, const QString &prefix = QString()) :
-        m_platform(platform), m_dllDebug(debug), m_prefix(prefix) {}
+    explicit DllDirectoryFileEntryFunction(Platform platform,
+                                           DebugMatchMode debugMatchMode, const QString &prefix = QString()) :
+        m_platform(platform), m_debugMatchMode(debugMatchMode), m_prefix(prefix) {}
 
     QStringList operator()(const QDir &dir) const
-        { return findSharedLibraries(dir, m_platform, m_dllDebug, m_prefix); }
+        { return findSharedLibraries(dir, m_platform, m_debugMatchMode, m_prefix); }
 
 private:
     const Platform m_platform;
-    const bool m_dllDebug;
+    const DebugMatchMode m_debugMatchMode;
     const QString m_prefix;
 };
 
@@ -645,9 +656,9 @@ private:
 // QML import trees: DLLs (matching debgug) and .qml/,js, etc.
 class QmlDirectoryFileEntryFunction {
 public:
-    explicit QmlDirectoryFileEntryFunction(Platform platform, bool debug, bool skipQmlSources = false)
+    explicit QmlDirectoryFileEntryFunction(Platform platform, DebugMatchMode debugMatchMode, bool skipQmlSources = false)
         : m_qmlNameFilter(QmlDirectoryFileEntryFunction::qmlNameFilters(skipQmlSources))
-        , m_dllFilter(platform, debug)
+        , m_dllFilter(platform, debugMatchMode)
     {}
 
     QStringList operator()(const QDir &dir) const { return m_dllFilter(dir) + m_qmlNameFilter(dir);  }
@@ -708,7 +719,7 @@ static quint64 qtModule(const QString &module)
 
 QStringList findQtPlugins(quint64 *usedQtModules, quint64 disabledQtModules,
                           const QString &qtPluginsDirName, const QString &libraryLocation,
-                          bool debug, Platform platform, QString *platformPlugin)
+                          DebugMatchMode debugMatchMode, Platform platform, QString *platformPlugin)
 {
     QString errorMessage;
     if (qtPluginsDirName.isEmpty())
@@ -744,7 +755,7 @@ QStringList findQtPlugins(quint64 *usedQtModules, quint64 disabledQtModules,
             } else {
                 filter  = QLatin1String("*");
             }
-            const QStringList plugins = findSharedLibraries(subDir, platform ,debug, filter);
+            const QStringList plugins = findSharedLibraries(subDir, platform, debugMatchMode, filter);
             foreach (const QString &plugin, plugins) {
                 const QString pluginPath = subDir.absoluteFilePath(plugin);
                 if (isPlatformPlugin)
@@ -962,6 +973,8 @@ static DeployResult deploy(const Options &options,
         return result;
 
     const bool isDebug = options.debugDetection == Options::DebugDetectionAuto ? detectedDebug: options.debugDetection == Options::DebugDetectionForceDebug;
+    const DebugMatchMode debugMatchMode = options.debugMatchAll
+        ? MatchDebugOrRelease : (isDebug ? MatchDebug : MatchRelease);
 
     // Determine application type, check Quick2 is used by looking at the
     // direct dependencies (do not be fooled by QtWebKit depending on it).
@@ -970,7 +983,7 @@ static DeployResult deploy(const Options &options,
         const quint64 module = qtModule(dependentQtLibs.at(m));
         result.directlyUsedQtLibraries |= module;
         if (module == QtCoreModule)
-            qtLibInfix = qtlibInfixFromCoreLibName(dependentQtLibs.at(m), isDebug, options.platform);
+            qtLibInfix = qtlibInfixFromCoreLibName(dependentQtLibs.at(m), detectedDebug, options.platform);
     }
 
     const bool usesQml2 = !(options.disabledLibraries & QtQmlModule)
@@ -1032,7 +1045,8 @@ static DeployResult deploy(const Options &options,
         foreach (const QString &qmlDirectory, qmlDirectories) {
             if (optVerboseLevel >= 1)
                 std::wcout << "Scanning " << QDir::toNativeSeparators(qmlDirectory) << ":\n";
-            const QmlImportScanResult scanResult = runQmlImportScanner(qmlDirectory, qmakeVariables.value(QStringLiteral("QT_INSTALL_QML")), options.platform, isDebug, errorMessage);
+            const QmlImportScanResult scanResult = runQmlImportScanner(qmlDirectory, qmakeVariables.value(QStringLiteral("QT_INSTALL_QML")), options.platform,
+                                                                       debugMatchMode, errorMessage);
             if (!scanResult.ok)
                 return result;
             qmlScanResult.append(scanResult);
@@ -1074,7 +1088,7 @@ static DeployResult deploy(const Options &options,
                       // For non-QML applications, disable QML to prevent it from being pulled in by the qtaccessiblequick plugin.
                       options.disabledLibraries | (usesQml2 ? 0 : (QtQmlModule | QtQuickModule)),
                       qmakeVariables.value(QStringLiteral("QT_INSTALL_PLUGINS")), libraryLocation,
-                      isDebug, options.platform, &platformPlugin);
+                      debugMatchMode, options.platform, &platformPlugin);
 
     // Apply options flags and re-add library names.
     QString qtGuiLibrary;
@@ -1176,7 +1190,7 @@ static DeployResult deploy(const Options &options,
     // Do not be fooled by QtWebKit.dll depending on Quick into always installing Quick imports
     // for WebKit1-applications. Check direct dependency only.
     if (options.quickImports && (usesQuick1 || usesQml2)) {
-        const QmlDirectoryFileEntryFunction qmlFileEntryFunction(options.platform, isDebug);
+        const QmlDirectoryFileEntryFunction qmlFileEntryFunction(options.platform, debugMatchMode);
         if (usesQml2) {
             foreach (const QmlImportScanResult::Module &module, qmlScanResult.modules) {
                 const QString installPath = module.installPath(options.directory);
@@ -1188,7 +1202,7 @@ static DeployResult deploy(const Options &options,
                     return result;
                 const bool updateResult = module.sourcePath.contains(QLatin1String("QtQuick/Controls"))
                     || module.sourcePath.contains(QLatin1String("QtQuick/Dialogs")) ?
-                    updateFile(module.sourcePath, QmlDirectoryFileEntryFunction(options.platform, isDebug, true),
+                    updateFile(module.sourcePath, QmlDirectoryFileEntryFunction(options.platform, debugMatchMode, true),
                                installPath, options.updateFileFlags | RemoveEmptyQmlDirectories,
                                options.json, errorMessage) :
                     updateFile(module.sourcePath, qmlFileEntryFunction, installPath, options.updateFileFlags,

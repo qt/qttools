@@ -34,6 +34,8 @@
 #ifndef QMLUTILS_H
 #define QMLUTILS_H
 
+#include "utils.h"
+
 #include <QStringList>
 
 QT_BEGIN_NAMESPACE
@@ -59,7 +61,8 @@ struct QmlImportScanResult {
 };
 
 QmlImportScanResult runQmlImportScanner(const QString &directory, const QString &qmlImportPath,
-                                        int platform, bool debug, QString *errorMessage);
+                                        int platform, DebugMatchMode debugMatchMode,
+                                        QString *errorMessage);
 
 QT_END_NAMESPACE
 
