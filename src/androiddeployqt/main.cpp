@@ -1603,6 +1603,7 @@ bool readDependenciesFromElf(Options *options,
             fprintf(stdout, "      %s\n", qPrintable(dep));
     }
     // Recursively add dependencies from ELF and supplementary XML information
+    QList<QString> dependenciesToCheck;
     foreach (QString dependency, dependencies) {
         if (usedDependencies->contains(dependency))
             continue;
@@ -1619,12 +1620,17 @@ bool readDependenciesFromElf(Options *options,
         options->qtDependencies.append(QtDependency(dependency, absoluteDependencyPath));
         if (options->verbose)
             fprintf(stdout, "Appending dependency: %s\n", qPrintable(dependency));
+        dependenciesToCheck.append(dependency);
+    }
+
+    foreach (QString dependency, dependenciesToCheck) {
         QString qtBaseName = dependency.mid(sizeof("lib/lib") - 1);
         qtBaseName = qtBaseName.left(qtBaseName.size() - (sizeof(".so") - 1));
         if (!readAndroidDependencyXml(options, qtBaseName, usedDependencies, remainingDependencies)) {
             return false;
         }
     }
+
     return true;
 }
 
