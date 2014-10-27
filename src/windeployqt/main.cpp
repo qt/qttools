@@ -244,7 +244,7 @@ struct Options {
     QStringList qmlDirectories; // Project's QML files.
     QString directory;
     QString libraryDirectory;
-    QString binary;
+    QStringList binaries;
     JsonOutput *json;
     ListOption list;
     DebugDetection debugDetection;
@@ -265,6 +265,12 @@ static inline QString findBinary(const QString &directory, Platform platform)
         }
     }
     return QString();
+}
+
+static QString msgFileDoesNotExist(const QString & file)
+{
+    return QLatin1Char('"') + QDir::toNativeSeparators(file)
+        + QStringLiteral("\" does not exist.");
 }
 
 enum CommandLineParseFlag {
@@ -388,8 +394,8 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
                                      QStringLiteral("level"));
     parser->addOption(verboseOption);
 
-    parser->addPositionalArgument(QStringLiteral("[file]"),
-                                  QStringLiteral("Binary or directory containing the binary."));
+    parser->addPositionalArgument(QStringLiteral("[files]"),
+                                  QStringLiteral("Binaries or directory containing the binary."));
 
     OptionMaskVector enabledModules;
     OptionMaskVector disabledModules;
@@ -519,12 +525,6 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
         *errorMessage = QStringLiteral("Please specify the binary or folder.");
         return CommandLineParseError | CommandLineParseHelpRequested;
     }
-    if (posArgs.size() > 1) {
-        QStringList superfluousArguments = posArgs;
-        superfluousArguments.pop_front();
-        *errorMessage = QStringLiteral("Superfluous arguments specified: ") + superfluousArguments.join(QLatin1Char(','));
-        return CommandLineParseError;
-    }
 
     if (parser->isSet(dirOption))
         options->directory = parser->value(dirOption);
@@ -535,7 +535,7 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
     const QString &file = posArgs.front();
     const QFileInfo fi(QDir::cleanPath(file));
     if (!fi.exists()) {
-        *errorMessage = QLatin1Char('"') + file + QStringLiteral("\" does not exist.");
+        *errorMessage = msgFileDoesNotExist(file);
         return CommandLineParseError;
     }
 
@@ -545,17 +545,36 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
     }
 
     if (fi.isFile()) {
-        options->binary = fi.absoluteFilePath();
+        options->binaries.append(fi.absoluteFilePath());
         if (options->directory.isEmpty())
             options->directory = fi.absolutePath();
     } else {
-        options->binary = findBinary(fi.absoluteFilePath(), options->platform);
-        if (options->binary.isEmpty()) {
+        const QString binary = findBinary(fi.absoluteFilePath(), options->platform);
+        if (binary.isEmpty()) {
             *errorMessage = QStringLiteral("Unable to find binary in \"") + file + QLatin1Char('"');
             return CommandLineParseError;
         }
         options->directory = fi.absoluteFilePath();
+        options->binaries.append(binary);
     } // directory.
+
+    // Remaining files or plugin directories
+    for (int i = 1; i < posArgs.size(); ++i) {
+        const QFileInfo fi(QDir::cleanPath(posArgs.at(i)));
+        const QString path = fi.absoluteFilePath();
+        if (!fi.exists()) {
+            *errorMessage = msgFileDoesNotExist(path);
+            return CommandLineParseError;
+        }
+        if (fi.isDir()) {
+            const QStringList libraries =
+                findSharedLibraries(QDir(path), options->platform, MatchDebugOrRelease, QString());
+            foreach (const QString &library, libraries)
+                options->binaries.append(path + QLatin1Char('/') + library);
+        } else {
+            options->binaries.append(path);
+        }
+    }
     return 0;
 }
 
@@ -967,10 +986,17 @@ static DeployResult deploy(const Options &options,
     QStringList dependentQtLibs;
     bool detectedDebug;
     unsigned wordSize;
-    int directDependencyCount;
-    if (!findDependentQtLibraries(libraryLocation, options.binary, options.platform, errorMessage, &dependentQtLibs, &wordSize,
-                                  &detectedDebug, &directDependencyCount))
+    int directDependencyCount = 0;
+    if (!findDependentQtLibraries(libraryLocation, options.binaries.first(), options.platform, errorMessage, &dependentQtLibs, &wordSize,
+                                  &detectedDebug, &directDependencyCount)) {
         return result;
+    }
+    for (int b = 1; b < options.binaries.size(); ++b) {
+        if (!findDependentQtLibraries(libraryLocation, options.binaries.at(b), options.platform, errorMessage, &dependentQtLibs,
+                                      Q_NULLPTR, Q_NULLPTR, Q_NULLPTR)) {
+            return result;
+        }
+    }
 
     const bool isDebug = options.debugDetection == Options::DebugDetectionAuto ? detectedDebug: options.debugDetection == Options::DebugDetectionForceDebug;
     const DebugMatchMode debugMatchMode = options.debugMatchAll
@@ -991,7 +1017,7 @@ static DeployResult deploy(const Options &options,
                                 || (options.additionalLibraries & QtQmlModule));
 
     if (optVerboseLevel) {
-        std::wcout << QDir::toNativeSeparators(options.binary) << ' '
+        std::wcout << QDir::toNativeSeparators(options.binaries.first()) << ' '
                    << wordSize << " bit, " << (isDebug ? "debug" : "release")
                    << " executable";
         if (usesQml2)
@@ -1000,7 +1026,7 @@ static DeployResult deploy(const Options &options,
     }
 
     if (dependentQtLibs.isEmpty()) {
-        *errorMessage = QDir::toNativeSeparators(options.binary) +  QStringLiteral(" does not seem to be a Qt executable.");
+        *errorMessage = QDir::toNativeSeparators(options.binaries.first()) +  QStringLiteral(" does not seem to be a Qt executable.");
         return result;
     }
 
@@ -1246,7 +1272,7 @@ static bool deployWebProcess(const QMap<QString, QString> &qmakeVariables,
     if (!updateFile(webProcessSource, sourceOptions.directory, sourceOptions.updateFileFlags, sourceOptions.json, errorMessage))
         return false;
     Options options(sourceOptions);
-    options.binary = options.directory + QLatin1Char('/') + webProcess;
+    options.binaries.append(options.directory + QLatin1Char('/') + webProcess);
     options.quickImports = false;
     options.translations = false;
     return deploy(options, qmakeVariables, errorMessage);
