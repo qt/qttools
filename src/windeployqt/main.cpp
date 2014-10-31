@@ -93,7 +93,8 @@ enum QtModule
     QtEnginioModule = 0x1000000000,
     QtWebEngineCoreModule = 0x2000000000,
     QtWebEngineModule = 0x4000000000,
-    QtWebEngineWidgetsModule = 0x8000000000
+    QtWebEngineWidgetsModule = 0x8000000000,
+    QtQmlToolingModule = 0x10000000000
 };
 
 struct QtModuleEntry {
@@ -123,6 +124,7 @@ QtModuleEntry qtModuleEntries[] = {
     { QtPositioningModule, "positioning", "Qt5Positioning", 0 },
     { QtPrintSupportModule, "printsupport", "Qt5PrintSupport", 0 },
     { QtQmlModule, "qml", "Qt5Qml", "qtdeclarative" },
+    { QtQmlToolingModule, "qmltooling", "qmltooling", 0 },
     { QtQuickModule, "quick", "Qt5Quick", "qtdeclarative" },
     { QtQuickParticlesModule, "quickparticles", "Qt5QuickParticles", 0 },
     { QtQuickWidgetsModule, "quickwidgets", "Qt5QuickWidgets", 0 },
@@ -711,7 +713,7 @@ static inline quint64 qtModuleForPlugin(const QString &subDirName)
     if (subDirName == QLatin1String("printsupport"))
         return QtPrintSupportModule;
     if (subDirName == QLatin1String("qmltooling"))
-        return QtDeclarativeModule | QtQuickModule;
+        return QtDeclarativeModule | QtQuickModule | QtQmlToolingModule;
     if (subDirName == QLatin1String("position"))
         return QtPositioningModule;
     if (subDirName == QLatin1String("sensors") || subDirName == QLatin1String("sensorgestures"))
@@ -750,6 +752,9 @@ QStringList findQtPlugins(quint64 *usedQtModules, quint64 disabledQtModules,
         if (module & *usedQtModules) {
             const QString subDirPath = qtPluginsDirName + QLatin1Char('/') + subDirName;
             QDir subDir(subDirPath);
+            // Filter out disabled plugins
+            if (disabledQtModules & QtQmlToolingModule && subDirName == QLatin1String("qmltooling"))
+                continue;
             // Filter for platform or any.
             QString filter;
             const bool isPlatformPlugin = subDirName == QLatin1String("platforms");
