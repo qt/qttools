@@ -516,6 +516,8 @@ void printHelp()
                     "       in combination with the --release argument. By default,\n"
                     "       an attempt is made to detect the tool using the JAVA_HOME and\n"
                     "       PATH environment variables, in that order.\n"
+                    "    --qml-import-paths: Specify additional search paths for QML\n"
+                    "       imports.\n"
                     "    --verbose: Prints out information during processing.\n"
                     "    --no-generated-assets-cache: Do not pregenerate the entry list for\n"
                     "       the assets file engine.\n"
