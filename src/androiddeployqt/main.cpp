@@ -824,7 +824,7 @@ bool readInputFile(Options *options)
     {
         QJsonValue extraLibs = jsonObject.value("android-extra-libs");
         if (!extraLibs.isUndefined())
-            options->extraLibs = extraLibs.toString().split(QLatin1Char(','));
+            options->extraLibs = extraLibs.toString().split(QLatin1Char(','), QString::SkipEmptyParts);
     }
 
     {
