@@ -516,6 +516,8 @@ void printHelp()
                     "       in combination with the --release argument. By default,\n"
                     "       an attempt is made to detect the tool using the JAVA_HOME and\n"
                     "       PATH environment variables, in that order.\n"
+                    "    --qml-import-paths: Specify additional search paths for QML\n"
+                    "       imports.\n"
                     "    --verbose: Prints out information during processing.\n"
                     "    --no-generated-assets-cache: Do not pregenerate the entry list for\n"
                     "       the assets file engine.\n"
@@ -822,7 +824,7 @@ bool readInputFile(Options *options)
     {
         QJsonValue extraLibs = jsonObject.value("android-extra-libs");
         if (!extraLibs.isUndefined())
-            options->extraLibs = extraLibs.toString().split(QLatin1Char(','));
+            options->extraLibs = extraLibs.toString().split(QLatin1Char(','), QString::SkipEmptyParts);
     }
 
     {
@@ -1603,6 +1605,7 @@ bool readDependenciesFromElf(Options *options,
             fprintf(stdout, "      %s\n", qPrintable(dep));
     }
     // Recursively add dependencies from ELF and supplementary XML information
+    QList<QString> dependenciesToCheck;
     foreach (QString dependency, dependencies) {
         if (usedDependencies->contains(dependency))
             continue;
@@ -1619,12 +1622,17 @@ bool readDependenciesFromElf(Options *options,
         options->qtDependencies.append(QtDependency(dependency, absoluteDependencyPath));
         if (options->verbose)
             fprintf(stdout, "Appending dependency: %s\n", qPrintable(dependency));
+        dependenciesToCheck.append(dependency);
+    }
+
+    foreach (QString dependency, dependenciesToCheck) {
         QString qtBaseName = dependency.mid(sizeof("lib/lib") - 1);
         qtBaseName = qtBaseName.left(qtBaseName.size() - (sizeof(".so") - 1));
         if (!readAndroidDependencyXml(options, qtBaseName, usedDependencies, remainingDependencies)) {
             return false;
         }
     }
+
     return true;
 }
 

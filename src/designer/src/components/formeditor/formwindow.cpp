@@ -1255,7 +1255,6 @@ QWidget *FormWindow::createWidget(DomUI *ui, const QRect &rc, QWidget *target)
     return widget;
 }
 
-#if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
 static bool isDescendant(const QWidget *parent, const QWidget *child)
 {
     for (; child != 0; child = child->parentWidget()) {
@@ -1264,7 +1263,6 @@ static bool isDescendant(const QWidget *parent, const QWidget *child)
     }
     return false;
 }
-#endif
 
 void FormWindow::resizeWidget(QWidget *widget, const QRect &geometry)
 {

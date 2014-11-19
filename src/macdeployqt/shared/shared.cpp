@@ -409,8 +409,10 @@ QStringList getBinaryDependencies(const QString executablePath, const QString &p
 }
 
 // copies everything _inside_ sourcePath to destinationPath
-void recursiveCopy(const QString &sourcePath, const QString &destinationPath)
+bool recursiveCopy(const QString &sourcePath, const QString &destinationPath)
 {
+    if (!QDir(sourcePath).exists())
+        return false;
     QDir().mkpath(destinationPath);
 
     LogNormal() << "copy:" << sourcePath << destinationPath;
@@ -426,6 +428,7 @@ void recursiveCopy(const QString &sourcePath, const QString &destinationPath)
     foreach (QString dir, subdirs) {
         recursiveCopy(sourcePath + "/" + dir, destinationPath + "/" + dir);
     }
+    return true;
 }
 
 void recursiveCopyAndDeploy(const QString &appBundlePath, const QString &sourcePath, const QString &destinationPath)
@@ -544,10 +547,16 @@ QString copyFramework(const FrameworkInfo &framework, const QString path)
     // Copy framework binary
     copyFilePrintStatus(framework.sourceFilePath, frameworkDestinationBinaryPath);
 
-    // Copy Resouces/
+    // Copy Resouces/, Libraries/ and Helpers/
     const QString resourcesSourcePath = framework.frameworkPath + "/Resources";
     const QString resourcesDestianationPath = frameworkDestinationDirectory + "/Versions/" + framework.version + "/Resources";
     recursiveCopy(resourcesSourcePath, resourcesDestianationPath);
+    const QString librariesSourcePath = framework.frameworkPath + "/Libraries";
+    const QString librariesDestianationPath = frameworkDestinationDirectory + "/Versions/" + framework.version + "/Libraries";
+    bool createdLibraries = recursiveCopy(librariesSourcePath, librariesDestianationPath);
+    const QString helpersSourcePath = framework.frameworkPath + "/Helpers";
+    const QString helpersDestianationPath = frameworkDestinationDirectory + "/Versions/" + framework.version + "/Helpers";
+    bool createdHelpers = recursiveCopy(helpersSourcePath, helpersDestianationPath);
 
     // Create symlink structure. Links at the framework root point to Versions/Current/
     // which again points to the actual version:
@@ -556,6 +565,10 @@ QString copyFramework(const FrameworkInfo &framework, const QString path)
     // QtFoo.framework/Versions/Current -> 5
     linkFilePrintStatus("Versions/Current/" + framework.binaryName, frameworkDestinationDirectory + "/" + framework.binaryName);
     linkFilePrintStatus("Versions/Current/Resources", frameworkDestinationDirectory + "/Resources");
+    if (createdLibraries)
+        linkFilePrintStatus("Versions/Current/Libraries", frameworkDestinationDirectory + "/Libraries");
+    if (createdHelpers)
+        linkFilePrintStatus("Versions/Current/Helpers", frameworkDestinationDirectory + "/Helpers");
     linkFilePrintStatus(framework.version, frameworkDestinationDirectory + "/Versions/Current");
 
     // Correct Info.plist location for frameworks produced by older versions of qmake

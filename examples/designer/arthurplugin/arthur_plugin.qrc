@@ -1,7 +1,0 @@
-<!DOCTYPE RCC><RCC version="1.0">
-<qresource prefix="/qt-project.org/arthurplugin">
-   <file>bg1.jpg</file>
-   <file>flower.jpg</file>
-   <file>flower_alpha.jpg</file>
-</qresource>
-</RCC>
