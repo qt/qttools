@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/qt-project.org/assistant">
-        <file>images/qt-logo.png</file>
         <file>images/assistant-128.png</file>
         <file>images/assistant.png</file>
         <file>images/wrap.png</file>
