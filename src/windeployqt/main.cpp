@@ -1302,7 +1302,16 @@ static bool deployWebEngine(const QMap<QString, QString> &qmakeVariables,
             return false;
         }
     }
-    return true;
+    const QFileInfo translations(qmakeVariables.value(QStringLiteral("QT_INSTALL_TRANSLATIONS"))
+                                 + QStringLiteral("/qtwebengine_locales"));
+    if (!translations.isDir()) {
+        std::wcerr << "Warning: Cannot find the translation files of the QtWebEngine module at "
+            << QDir::toNativeSeparators(translations.absoluteFilePath()) << '.';
+        return true;
+    }
+    // Missing translations may cause crashes, ignore --no-translations.
+    return updateFile(translations.absoluteFilePath(), options.directory,
+                      options.updateFileFlags, options.json, errorMessage);
 }
 
 int main(int argc, char **argv)

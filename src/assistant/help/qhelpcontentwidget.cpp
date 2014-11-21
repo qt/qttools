@@ -219,6 +219,11 @@ void QHelpContentProvider::stopCollecting()
         m_abort = true;
         m_mutex.unlock();
         wait();
+        // we need to force-set m_abort to false, because the thread might either have
+        // finished between the isRunning() check and the "m_abort = true" above, or the
+        // isRunning() check might already happen after the "m_abort = false" in the run() method,
+        // either way never resetting m_abort to false from within the run() method
+        m_abort = false;
     }
     qDeleteAll(m_rootItems);
     m_rootItems.clear();
