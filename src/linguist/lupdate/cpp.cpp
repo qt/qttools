@@ -306,7 +306,6 @@ private:
     int yyCh;
     bool yyAtNewline;
     QString yyWord;
-    qlonglong yyInteger;
     QStack<IfdefState> yyIfdefStack;
     int yyBracketDepth;
     int yyBraceDepth;
