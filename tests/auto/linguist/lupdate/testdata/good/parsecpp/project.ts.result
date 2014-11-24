@@ -259,6 +259,14 @@ backslashed \ stuff.</source>
 </context>
 <context>
     <name>QTranslator</name>
+    <message numerus="yes">
+        <location filename="finddialog.cpp" line="173"/>
+        <source>Key</source>
+        <comment>disambiguation</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
     <message>
         <location filename="main.cpp" line="85"/>
         <location filename="main.cpp" line="86"/>
