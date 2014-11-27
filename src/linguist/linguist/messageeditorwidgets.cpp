@@ -226,7 +226,7 @@ class ButtonWrapper : public QWidget
     // no Q_OBJECT: no need to, and don't want the useless moc file
 
 public:
-    ButtonWrapper(QWidget *wrapee, QWidget *relator) : m_wrapee(wrapee)
+    ButtonWrapper(QWidget *wrapee, QWidget *relator)
     {
         QBoxLayout *box = new QVBoxLayout;
         box->setMargin(0);
@@ -245,9 +245,6 @@ protected:
         }
         return false;
     }
-
-private:
-    QWidget *m_wrapee;
 };
 
 FormMultiWidget::FormMultiWidget(const QString &label, QWidget *parent)
