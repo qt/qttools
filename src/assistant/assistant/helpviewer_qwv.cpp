@@ -36,6 +36,7 @@
 
 #include "centralwidget.h"
 #include "helpenginewrapper.h"
+#include "helpbrowsersupport.h"
 #include "openpagesmanager.h"
 #include "tracer.h"
 
@@ -47,138 +48,9 @@
 #include <QtWidgets/QApplication>
 #include <QtGui/QWheelEvent>
 
-#include <QtHelp/QHelpEngineCore>
-
-#include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
-#include <QtNetwork/QNetworkRequest>
 
 QT_BEGIN_NAMESPACE
-
-static const char g_htmlPage[] = "<html><head><meta http-equiv=\"content-type\" content=\"text/html; "
-    "charset=UTF-8\"><title>%1</title><style>body{padding: 3em 0em;background: #eeeeee;}"
-    "hr{color: lightgray;width: 100%;}img{float: left;opacity: .8;}#box{background: white;border: 1px solid "
-    "lightgray;width: 600px;padding: 60px;margin: auto;}h1{font-size: 130%;font-weight: bold;border-bottom: "
-    "1px solid lightgray;margin-left: 48px;}h2{font-size: 100%;font-weight: normal;border-bottom: 1px solid "
-    "lightgray;margin-left: 48px;}ul{font-size: 80%;padding-left: 48px;margin: 0;}#reloadButton{padding-left:"
-    "48px;}</style></head><body><div id=\"box\"><h1>%2</h1><h2>%3</h2><h2><b>%4</b></h2></div></body></html>";
-
-// some of the values we will replace %1...4 inside the former html
-const QString g_percent1 = QCoreApplication::translate("HelpViewer", "Error 404...");
-const QString g_percent2 = QCoreApplication::translate("HelpViewer", "The page could not be found!");
-// percent3 will be the url of the page we got the error from
-const QString g_percent4 = QCoreApplication::translate("HelpViewer", "Please make sure that you have all "
-    "documentation sets installed.");
-
-
-// -- HelpNetworkReply
-
-class HelpNetworkReply : public QNetworkReply
-{
-public:
-    HelpNetworkReply(const QNetworkRequest &request, const QByteArray &fileData,
-        const QString &mimeType);
-
-    virtual void abort();
-
-    virtual qint64 bytesAvailable() const
-        { return data.length() + QNetworkReply::bytesAvailable(); }
-
-protected:
-    virtual qint64 readData(char *data, qint64 maxlen);
-
-private:
-    QByteArray data;
-    qint64 origLen;
-};
-
-HelpNetworkReply::HelpNetworkReply(const QNetworkRequest &request,
-        const QByteArray &fileData, const QString& mimeType)
-    : data(fileData), origLen(fileData.length())
-{
-    TRACE_OBJ
-    setRequest(request);
-    setUrl(request.url());
-    setOpenMode(QIODevice::ReadOnly);
-
-    setHeader(QNetworkRequest::ContentTypeHeader, mimeType);
-    setHeader(QNetworkRequest::ContentLengthHeader, QByteArray::number(origLen));
-    QTimer::singleShot(0, this, SIGNAL(metaDataChanged()));
-    QTimer::singleShot(0, this, SIGNAL(readyRead()));
-    QTimer::singleShot(0, this, SIGNAL(finished()));
-}
-
-void HelpNetworkReply::abort()
-{
-    TRACE_OBJ
-}
-
-qint64 HelpNetworkReply::readData(char *buffer, qint64 maxlen)
-{
-    TRACE_OBJ
-    qint64 len = qMin(qint64(data.length()), maxlen);
-    if (len) {
-        memcpy(buffer, data.constData(), len);
-        data.remove(0, len);
-    }
-    if (!data.length())
-        QTimer::singleShot(0, this, SIGNAL(finished()));
-    return len;
-}
-
-// -- HelpRedirectNetworkReply
-
-class HelpRedirectNetworkReply : public QNetworkReply
-{
-public:
-    HelpRedirectNetworkReply(const QNetworkRequest &request, const QUrl &newUrl)
-    {
-        setRequest(request);
-        setAttribute(QNetworkRequest::HttpStatusCodeAttribute, 301);
-        setAttribute(QNetworkRequest::RedirectionTargetAttribute, newUrl);
-
-        QTimer::singleShot(0, this, SIGNAL(finished()));
-    }
-
-protected:
-    void abort() { TRACE_OBJ }
-    qint64 readData(char*, qint64) { TRACE_OBJ return qint64(-1); }
-};
-
-// -- HelpNetworkAccessManager
-
-class HelpNetworkAccessManager : public QNetworkAccessManager
-{
-public:
-    HelpNetworkAccessManager(QObject *parent);
-
-protected:
-    virtual QNetworkReply *createRequest(Operation op,
-        const QNetworkRequest &request, QIODevice *outgoingData = 0);
-};
-
-HelpNetworkAccessManager::HelpNetworkAccessManager(QObject *parent)
-    : QNetworkAccessManager(parent)
-{
-    TRACE_OBJ
-}
-
-QNetworkReply *HelpNetworkAccessManager::createRequest(Operation, const QNetworkRequest &request, QIODevice*)
-{
-    TRACE_OBJ
-    const HelpEngineWrapper &engine = HelpEngineWrapper::instance();
-
-    const QUrl url = engine.findFile(request.url());
-    if (url.isValid() && (url != request.url()))
-        return new HelpRedirectNetworkReply(request, url);
-
-    if (url.isValid())
-        return new HelpNetworkReply(request, engine.fileData(url), HelpViewer::mimeFromUrl(url));
-
-    return new HelpNetworkReply(request, QString::fromLatin1(g_htmlPage).arg(g_percent1, g_percent2,
-        HelpViewer::tr("Error loading: %1").arg(request.url().toString()), g_percent4).toUtf8(),
-        QLatin1String("text/html"));
-}
 
 // -- HelpPage
 
@@ -283,7 +155,7 @@ HelpViewer::HelpViewer(qreal zoom, QWidget *parent)
     settings()->setAttribute(QWebSettings::PluginsEnabled, false);
 
     setPage(new HelpPage(this));
-    page()->setNetworkAccessManager(new HelpNetworkAccessManager(this));
+    page()->setNetworkAccessManager(HelpBrowserSupport::createNetworkAccessManager(this));
 
     QAction* action = pageAction(QWebPage::OpenLinkInNewWindow);
     action->setText(tr("Open Link in New Page"));
