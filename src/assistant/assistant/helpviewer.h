@@ -42,19 +42,19 @@
 #include <QtWidgets/QAction>
 #include <QtGui/QFont>
 
-#if defined(QT_NO_WEBKIT)
-#include <QtWidgets/QTextBrowser>
-#else
-#include <QWebView>
+#if defined(BROWSER_QTWEBKIT)
+#  include <QWebView>
+#elif defined(BROWSER_QTEXTBROWSER)
+#  include <QtWidgets/QTextBrowser>
 #endif
 
 QT_BEGIN_NAMESPACE
 
 class HelpEngineWrapper;
 
-#if !defined(QT_NO_WEBKIT)
+#if defined(BROWSER_QTWEBKIT)
 class HelpViewer : public QWebView
-#else
+#elif defined(BROWSER_QTEXTBROWSER)
 class HelpViewer : public QTextBrowser
 #endif
 {
@@ -114,14 +114,16 @@ public slots:
 
 signals:
     void titleChanged();
-#if !defined(QT_NO_WEBKIT)
+#if !defined(BROWSER_QTEXTBROWSER)
+    // Provide signals present in QTextBrowser, QTextEdit for browsers that do not inherit QTextBrowser
     void copyAvailable(bool yes);
     void sourceChanged(const QUrl &url);
     void forwardAvailable(bool enabled);
     void backwardAvailable(bool enabled);
     void highlighted(const QString &link);
     void printRequested();
-#else
+#elif !defined(BROWSER_QTWEBKIT)
+    // Provide signals present in QWebView for browsers that do not inherit QWebView
     void loadStarted();
     void loadFinished(bool finished);
 #endif

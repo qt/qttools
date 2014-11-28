@@ -39,12 +39,12 @@
 #include "openpagesmanager.h"
 
 #include <QtCore/QObject>
-#ifdef QT_NO_WEBKIT
-#include <QtWidgets/QTextBrowser>
-#else
-#include <QtGui/QGuiApplication>
-#include <QtGui/QScreen>
-#endif
+#if defined(BROWSER_QTEXTBROWSER)
+#  include <QtWidgets/QTextBrowser>
+#elif defined(BROWSER_QTWEBKIT)
+#  include <QtGui/QGuiApplication>
+#  include <QtGui/QScreen>
+#endif // BROWSER_QTWEBKIT
 
 QT_BEGIN_NAMESPACE
 
@@ -53,14 +53,14 @@ class HelpViewer::HelpViewerPrivate : public QObject
     Q_OBJECT
 
 public:
-#ifdef QT_NO_WEBKIT
+#if defined(BROWSER_QTEXTBROWSER)
     HelpViewerPrivate(int zoom)
         : zoomCount(zoom)
         , forceFont(false)
         , lastAnchor(QString())
         , m_loadFinished(false)
     { }
-#else
+#elif defined(BROWSER_QTWEBKIT)
     HelpViewerPrivate()
         : m_loadFinished(false)
     {
@@ -73,9 +73,9 @@ public:
         if (webDpiRatio < 1.25)
             webDpiRatio = 1.0;
     }
-#endif
+#endif // BROWSER_QTWEBKIT
 
-#ifdef QT_NO_WEBKIT
+#if defined(BROWSER_QTEXTBROWSER)
     bool hasAnchorAt(QTextBrowser *browser, const QPoint& pos)
     {
         lastAnchor = browser->anchorAt(pos);
@@ -117,9 +117,9 @@ public:
     int zoomCount;
     bool forceFont;
     QString lastAnchor;
-#else
+#elif defined(BROWSER_QTWEBKIT)
     qreal webDpiRatio;
-#endif // QT_NO_WEBKIT
+#endif // BROWSER_QTWEBKIT
 
 public:
     bool m_loadFinished;

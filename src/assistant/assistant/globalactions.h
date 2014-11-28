@@ -62,12 +62,12 @@ public:
     Q_SLOT void updateActions();
     Q_SLOT void setCopyAvailable(bool available);
 
-#if !defined(QT_NO_WEBKIT)
+#if defined(BROWSER_QTWEBKIT)
 private slots:
     void slotAboutToShowBackMenu();
     void slotAboutToShowNextMenu();
     void slotOpenActionUrl(QAction *action);
-#endif
+#endif // BROWSER_QTWEBKIT
 
 private:
     void setupNavigationMenus(QAction *back, QAction *next, QWidget *parent);

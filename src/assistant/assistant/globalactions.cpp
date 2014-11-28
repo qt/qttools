@@ -40,8 +40,8 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QMenu>
 
-#if !defined(QT_NO_WEBKIT)
-#include <QWebHistory>
+#if defined(BROWSER_QTWEBKIT)
+#  include <QWebHistory>
 #endif
 
 GlobalActions *GlobalActions::instance(QObject *parent)
@@ -160,7 +160,7 @@ void GlobalActions::setCopyAvailable(bool available)
     m_copyAction->setEnabled(available);
 }
 
-#if !defined(QT_NO_WEBKIT)
+#if defined(BROWSER_QTWEBKIT)
 
 void GlobalActions::slotAboutToShowBackMenu()
 {
@@ -209,12 +209,12 @@ void GlobalActions::slotOpenActionUrl(QAction *action)
     }
 }
 
-#endif
+#endif //  BROWSER_QTWEBKIT
 
 void GlobalActions::setupNavigationMenus(QAction *back, QAction *next,
     QWidget *parent)
 {
-#if !defined(QT_NO_WEBKIT)
+#if defined(BROWSER_QTWEBKIT)
     m_backMenu = new QMenu(parent);
     connect(m_backMenu, SIGNAL(aboutToShow()), this,
         SLOT(slotAboutToShowBackMenu()));

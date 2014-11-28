@@ -607,7 +607,7 @@ void CentralWidget::initPrinter()
 void CentralWidget::connectSignals(HelpViewer *page)
 {
     TRACE_OBJ
-#if !defined(QT_NO_WEBKIT)
+#if defined(BROWSER_QTWEBKIT)
     connect(page, SIGNAL(printRequested()), this, SLOT(print()));
 #endif
     connect(page, SIGNAL(copyAvailable(bool)), this,
@@ -631,10 +631,10 @@ bool CentralWidget::eventFilter(QObject *object, QEvent *e)
     QKeyEvent *keyEvent = static_cast<QKeyEvent*> (e);
     if (viewer == object && keyEvent->key() == Qt::Key_Backspace) {
         if (viewer->isBackwardAvailable()) {
-#if !defined(QT_NO_WEBKIT)
+#if defined(BROWSER_QTWEBKIT)
             // this helps in case there is an html <input> field
             if (!viewer->hasFocus())
-#endif
+#endif // BROWSER_QTWEBKIT
                 viewer->backward();
         }
     }

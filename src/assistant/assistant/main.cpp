@@ -51,7 +51,7 @@
 
 #include <QtSql/QSqlDatabase>
 
-#if !defined(QT_NO_WEBKIT)
+#if defined(BROWSER_QTWEBKIT)
 #include <QtGui/QFont>
 #include <QWebSettings>
 #endif
@@ -308,13 +308,13 @@ int main(int argc, char *argv[])
     a->addLibraryPath(a->applicationDirPath() + QLatin1String("/plugins"));
     setupTranslations();
 
-#if !defined(QT_NO_WEBKIT)
+#if defined(BROWSER_QTWEBKIT)
     if (qobject_cast<QApplication *>(a.data())) {
         QFont f;
         f.setStyleHint(QFont::SansSerif);
         QWebSettings::globalSettings()->setFontFamily(QWebSettings::StandardFont, f.defaultFamily());
     }
-#endif
+#endif // BROWSER_QTWEBKIT
 
     // Parse arguments.
     CmdLineParser cmd(a->arguments());
