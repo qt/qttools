@@ -1650,7 +1650,7 @@ bool scanImports(Options *options, QSet<QString> *usedDependencies)
 
     if (!QFile::exists(qmlImportScanner)) {
         fprintf(stderr, "qmlimportscanner not found: %s\n", qPrintable(qmlImportScanner));
-        return false;
+        return true;
     }
 
     QString rootPath = options->rootPath;
