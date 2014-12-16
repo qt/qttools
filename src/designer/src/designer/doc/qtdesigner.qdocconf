@@ -2,6 +2,7 @@ include($QT_INSTALL_DOCS/global/qt-module-defaults.qdocconf)
 
 project                 = QtDesigner
 description             = Qt Designer Manual
+examplesinstallpath     = designer
 
 qhp.projects            = QtDesigner
 

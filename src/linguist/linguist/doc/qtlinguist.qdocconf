@@ -2,6 +2,7 @@ include($QT_INSTALL_DOCS/global/qt-module-defaults.qdocconf)
 
 project                 = QtLinguist
 description             = Qt Linguist Manual
+examplesinstallpath     = linguist
 
 qhp.projects            = QtLinguist
 
