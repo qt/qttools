@@ -2063,8 +2063,9 @@ QtResourceEditorDialog::QtResourceEditorDialog(QDesignerFormEditorInterface *cor
     settings->beginGroup(QLatin1String(QrcDialogC));
 
     d_ptr->m_ui.splitter->restoreState(settings->value(QLatin1String(SplitterPosition)).toByteArray());
-    if (settings->contains(QLatin1String(Geometry)))
-        setGeometry(settings->value(QLatin1String(Geometry)).toRect());
+    const QVariant geometry = settings->value(QLatin1String(Geometry));
+    if (geometry.type() == QVariant::ByteArray) // Used to be a QRect up until 5.4.0, QTBUG-43374
+        restoreGeometry(geometry.toByteArray());
 
     settings->endGroup();
 }
@@ -2075,7 +2076,7 @@ QtResourceEditorDialog::~QtResourceEditorDialog()
     settings->beginGroup(QLatin1String(QrcDialogC));
 
     settings->setValue(QLatin1String(SplitterPosition), d_ptr->m_ui.splitter->saveState());
-    settings->setValue(QLatin1String(Geometry), geometry());
+    settings->setValue(QLatin1String(Geometry), saveGeometry());
     settings->endGroup();
 }
 
