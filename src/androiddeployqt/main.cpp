@@ -1650,7 +1650,7 @@ bool scanImports(Options *options, QSet<QString> *usedDependencies)
 
     if (!QFile::exists(qmlImportScanner)) {
         fprintf(stderr, "qmlimportscanner not found: %s\n", qPrintable(qmlImportScanner));
-        return false;
+        return true;
     }
 
     QString rootPath = options->rootPath;
@@ -2396,6 +2396,11 @@ bool buildGradleProject(const Options &options)
     QString gradlePath(options.outputDirectory + QLatin1String("gradlew.bat"));
 #else
     QString gradlePath(options.outputDirectory + QLatin1String("gradlew"));
+    {
+        QFile f(gradlePath);
+        if (!f.setPermissions(f.permissions() | QFileDevice::ExeUser))
+            fprintf(stderr, "Cannot set permissions  %s\n", qPrintable(gradlePath));
+    }
 #endif
 
     QString oldPath = QDir::currentPath();
