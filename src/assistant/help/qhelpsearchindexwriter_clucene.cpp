@@ -55,8 +55,6 @@
 
 #include <algorithm>
 
-#include "private/qfunctions_p.h"
-
 QT_BEGIN_NAMESPACE
 
 namespace fulltextsearch {
@@ -328,7 +326,7 @@ static const struct QTextHtmlEntity
     { "zwnj", 0x200c }
 };
 
-Q_STATIC_GLOBAL_OPERATOR bool operator<(const QTextHtmlEntity &entity, const QString &entityStr)
+static bool operator<(const QTextHtmlEntity &entity, const QString &entityStr)
 {
     return QLatin1String(entity.name) < entityStr;
 }
