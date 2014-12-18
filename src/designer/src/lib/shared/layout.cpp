@@ -619,6 +619,8 @@ public:
     bool locateWidget(QWidget* w, int& row, int& col, int& rowspan, int& colspan) const;
 
     QDebug debug(QDebug str) const;
+    friend inline QDebug operator<<(QDebug str, const Grid &g)
+    { return g.debug(str); }
 
 private:
     void setCell(int row, int col, QWidget* w) { m_cells[ row * m_ncols + col] = w; }
@@ -691,8 +693,6 @@ QDebug Grid::debug(QDebug str) const
 
     return str;
 }
-
-static inline QDebug operator<<(QDebug str, const Grid &g) { return g.debug(str); }
 
 void Grid::setCells(const QRect &c, QWidget* w)
 {
