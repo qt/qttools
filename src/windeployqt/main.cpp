@@ -245,6 +245,7 @@ struct Options {
     quint64 updateFileFlags;
     QStringList qmlDirectories; // Project's QML files.
     QString directory;
+    QString translationsDirectory; // Translations target directory
     QString libraryDirectory;
     QStringList binaries;
     JsonOutput *json;
@@ -577,6 +578,7 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
             options->binaries.append(path);
         }
     }
+    options->translationsDirectory = options->directory + QLatin1String("/translations");
     return 0;
 }
 
@@ -1255,11 +1257,13 @@ static DeployResult deploy(const Options &options,
         } // Quick 1
     } // optQuickImports
 
-    if (options.translations
-        && !deployTranslations(qmakeVariables.value(QStringLiteral("QT_INSTALL_TRANSLATIONS")),
-                               result.deployedQtLibraries, options.directory,
-                               options.updateFileFlags, errorMessage)) {
-        return result;
+    if (options.translations) {
+        if (!createDirectory(options.translationsDirectory, errorMessage)
+            || !deployTranslations(qmakeVariables.value(QStringLiteral("QT_INSTALL_TRANSLATIONS")),
+                                   result.deployedQtLibraries, options.translationsDirectory,
+                                   options.updateFileFlags, errorMessage)) {
+            return result;
+        }
     }
 
     result.success = true;
@@ -1310,7 +1314,8 @@ static bool deployWebEngine(const QMap<QString, QString> &qmakeVariables,
         return true;
     }
     // Missing translations may cause crashes, ignore --no-translations.
-    return updateFile(translations.absoluteFilePath(), options.directory,
+    return createDirectory(options.translationsDirectory, errorMessage)
+        && updateFile(translations.absoluteFilePath(), options.translationsDirectory,
                       options.updateFileFlags, options.json, errorMessage);
 }
 
