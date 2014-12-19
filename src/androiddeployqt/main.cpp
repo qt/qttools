@@ -44,6 +44,7 @@
 #include <QStandardPaths>
 #include <QUuid>
 #include <QDirIterator>
+#include <QRegExp>
 
 #include <algorithm>
 static const bool mustReadOutputAnyway = true; // pclose seems to return the wrong error code unless we read the output
@@ -2373,6 +2374,18 @@ static bool mergeGradleProperties(const QString &path, GradleProperties properti
     return true;
 }
 
+bool updateGradleDistributionUrl(const QString &path) {
+    // check if we are using gradle 2.x
+    GradleProperties gradleProperties = readGradleProperties(path);
+    QString distributionUrl = QString::fromLocal8Bit(gradleProperties["distributionUrl"]);
+    QRegExp re(QLatin1String(".*services.gradle.org/distributions/gradle-2..*.zip"));
+    if (!re.exactMatch(distributionUrl)) {
+        gradleProperties["distributionUrl"] = "https\\://services.gradle.org/distributions/gradle-2.2.1-all.zip";
+        return mergeGradleProperties(path, gradleProperties);
+    }
+    return true;
+}
+
 bool buildGradleProject(const Options &options)
 {
     GradleProperties localProperties;
@@ -2390,6 +2403,9 @@ bool buildGradleProject(const Options &options)
         gradleProperties["androidBuildToolsVersion"] = options.sdkBuildToolsVersion.toLocal8Bit();
 
     if (!mergeGradleProperties(gradlePropertiesPath, gradleProperties))
+        return false;
+
+    if (!updateGradleDistributionUrl(options.outputDirectory + QLatin1String("gradle/wrapper/gradle-wrapper.properties")))
         return false;
 
 #if defined(Q_OS_WIN32)
