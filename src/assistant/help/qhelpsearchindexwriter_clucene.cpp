@@ -52,6 +52,8 @@
 #include <QtNetwork/QLocalSocket>
 #include <QtNetwork/QLocalServer>
 
+#include <algorithm>
+
 #include "private/qfunctions_p.h"
 
 QT_BEGIN_NAMESPACE
@@ -325,11 +327,6 @@ static const struct QTextHtmlEntity
     { "zwnj", 0x200c }
 };
 
-Q_STATIC_GLOBAL_OPERATOR bool operator<(const QString &entityStr, const QTextHtmlEntity &entity)
-{
-    return entityStr < QLatin1String(entity.name);
-}
-
 Q_STATIC_GLOBAL_OPERATOR bool operator<(const QTextHtmlEntity &entity, const QString &entityStr)
 {
     return QLatin1String(entity.name) < entityStr;
@@ -339,7 +336,7 @@ static QChar resolveEntity(const QString &entity)
 {
     const QTextHtmlEntity *start = &entities[0];
     const QTextHtmlEntity *end = &entities[(sizeof(entities) / sizeof(entities[0]))];
-    const QTextHtmlEntity *e = qBinaryFind(start, end, entity);
+    const QTextHtmlEntity *e = std::lower_bound(start, end, entity);
     if (e == end)
         return QChar();
     return e->code;
