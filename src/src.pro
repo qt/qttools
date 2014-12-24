@@ -8,7 +8,6 @@ qtHaveModule(widgets) {
                   pixeltool \
                   qtestlib \
                   designer
-#    unix:!mac:!embedded:!qpa:SUBDIRS += qtconfig
 
         linguist.depends = designer
     }
@@ -33,6 +32,5 @@ qtHaveModule(gui):!android:!ios:!qnx:!wince*:!winrt*:SUBDIRS += qtdiag
 
 qtNomakeTools( \
     pixeltool \
-    qtconfig \
     macdeployqt \
 )

@@ -78,7 +78,6 @@ bin/qcollectiongenerator*
 bin/qdbus*
 bin/qhelpconverter*
 bin/qhelpgenerator*
-bin/qtconfig*
 bin/xmlpatterns*
 bin/cetest*
 bin/collectiongenerator
