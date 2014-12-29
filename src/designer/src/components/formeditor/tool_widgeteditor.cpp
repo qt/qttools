@@ -130,6 +130,10 @@ bool WidgetEditorTool::handleEvent(QWidget *widget, QWidget *managedWidget, QEve
         return !(passive || widget == m_formWindow || widget == m_formWindow->mainContainer());
 
     case QEvent::Wheel: // Prevent spinboxes and combos from reacting
+        if (widget == m_formWindow->formContainer() || widget == m_formWindow
+            || widget == m_formWindow->mainContainer()) { // Allow scrolling the form with wheel.
+            return false;
+        }
         return !passive;
 
     case QEvent::KeyPress:

@@ -870,8 +870,9 @@ QtResourceViewDialog::QtResourceViewDialog(QDesignerFormEditorInterface *core, Q
     QDesignerSettingsInterface *settings = core->settingsManager();
     settings->beginGroup(QLatin1String(ResourceViewDialogC));
 
-    if (settings->contains(QLatin1String(Geometry)))
-        setGeometry(settings->value(QLatin1String(Geometry)).toRect());
+    const QVariant geometry = settings->value(QLatin1String(Geometry));
+    if (geometry.type() == QVariant::ByteArray) // Used to be a QRect up until 5.4.0, QTBUG-43374.
+        restoreGeometry(geometry.toByteArray());
 
     settings->endGroup();
 }
@@ -881,7 +882,7 @@ QtResourceViewDialog::~QtResourceViewDialog()
     QDesignerSettingsInterface *settings = d_ptr->m_core->settingsManager();
     settings->beginGroup(QLatin1String(ResourceViewDialogC));
 
-    settings->setValue(QLatin1String(Geometry), geometry());
+    settings->setValue(QLatin1String(Geometry), saveGeometry());
 
     settings->endGroup();
 }
