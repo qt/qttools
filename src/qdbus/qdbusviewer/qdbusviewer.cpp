@@ -507,19 +507,3 @@ void QDBusViewer::anchorClicked(const QUrl &url)
     tree->scrollTo(idx);
     tree->setCurrentIndex(idx);
 }
-
-/*!
-  \page qdbusviewer.html
-  \title D-Bus Viewer
-  \keyword qdbusviewer
-
-  The Qt D-Bus Viewer is a tool that lets you introspect D-Bus objects and messages. You can
-  choose between the system bus and the session bus. Click on any service on the list
-  on the left side to see all the exported objects.
-
-  You can invoke methods by double-clicking on them. If a method takes one or more IN parameters,
-  a property editor opens.
-
-  Right-click on a signal to connect to it. All emitted signals including their parameters
-  are output in the message view on the lower side of the window.
-*/
