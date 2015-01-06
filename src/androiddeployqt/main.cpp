@@ -1656,11 +1656,16 @@ bool scanImports(Options *options, QSet<QString> *usedDependencies)
 
     QString rootPath = options->rootPath;
     if (rootPath.isEmpty())
-        rootPath = QFileInfo(options->inputFileName).path();
+        rootPath = QFileInfo(options->inputFileName).absolutePath();
+    else
+        rootPath = QFileInfo(rootPath).absoluteFilePath();
+
+    if (!rootPath.endsWith(QLatin1Char('/')))
+        rootPath += QLatin1Char('/');
 
     QStringList importPaths;
     importPaths += shellQuote(options->qtInstallDirectory + QLatin1String("/qml"));
-    importPaths += QFileInfo(rootPath).absoluteFilePath();
+    importPaths += rootPath;
     foreach (QString qmlImportPath, options->qmlImportPaths)
         importPaths += shellQuote(qmlImportPath);
 
@@ -1710,6 +1715,16 @@ bool scanImports(Options *options, QSet<QString> *usedDependencies)
             if (!info.exists()) {
                 if (options->verbose)
                     fprintf(stdout, "    -- Skipping because file does not exist.\n");
+                continue;
+            }
+
+            QString absolutePath = info.absolutePath();
+            if (!absolutePath.endsWith(QLatin1Char('/')))
+                absolutePath += QLatin1Char('/');
+
+            if (absolutePath.startsWith(rootPath)) {
+                if (options->verbose)
+                    fprintf(stdout, "    -- Skipping because file is in QML root path.\n");
                 continue;
             }
 
