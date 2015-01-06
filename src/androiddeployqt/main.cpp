@@ -1690,8 +1690,6 @@ bool scanImports(Options *options, QSet<QString> *usedDependencies)
         return false;
     }
 
-    QString absoluteOutputPath = QFileInfo(options->outputDirectory).absoluteFilePath();
-
     QJsonArray jsonArray = jsonDocument.array();
     for (int i=0; i<jsonArray.count(); ++i) {
         QJsonValue value = jsonArray.at(i);
