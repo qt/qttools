@@ -712,8 +712,12 @@ static inline quint64 qtModuleForPlugin(const QString &subDirName)
         return QtMultimediaModule;
     if (subDirName == QLatin1String("printsupport"))
         return QtPrintSupportModule;
+    if (subDirName == QLatin1String("scenegraph"))
+        return QtQuickModule;
     if (subDirName == QLatin1String("qmltooling"))
-        return QtDeclarativeModule | QtQuickModule | QtQmlToolingModule;
+        return QtQuickModule | QtQmlToolingModule;
+    if (subDirName == QLatin1String("qml1tooling"))
+        return QtDeclarativeModule;
     if (subDirName == QLatin1String("position"))
         return QtPositioningModule;
     if (subDirName == QLatin1String("sensors") || subDirName == QLatin1String("sensorgestures"))
