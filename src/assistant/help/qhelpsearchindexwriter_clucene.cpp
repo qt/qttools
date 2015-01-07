@@ -48,6 +48,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QTextCodec>
 #include <QtCore/QTextStream>
+#include <QtCore/QDataStream>
 
 #include <QtNetwork/QLocalSocket>
 #include <QtNetwork/QLocalServer>

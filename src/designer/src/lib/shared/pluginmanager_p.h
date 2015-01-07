@@ -51,6 +51,7 @@
 #include <QtCore/QSharedDataPointer>
 #include <QtCore/QMap>
 #include <QtCore/QPair>
+#include <QtCore/QObject>
 #include <QtCore/QStringList>
 
 QT_BEGIN_NAMESPACE

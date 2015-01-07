@@ -47,6 +47,8 @@
 
 #include <QtCore/QString>
 #include <QtCore/QStringList>
+#include <QtCore/QMap>
+#include <QtCore/QObject>
 
 QT_BEGIN_NAMESPACE
 

@@ -39,6 +39,7 @@
 #include <QJsonArray>
 #include <QJsonValue>
 #include <QDebug>
+#include <QDataStream>
 #include <QXmlStreamReader>
 #include <QDateTime>
 #include <QStandardPaths>

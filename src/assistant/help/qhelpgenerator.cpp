@@ -43,6 +43,7 @@
 #include <QtCore/QVariant>
 #include <QtCore/QDateTime>
 #include <QtCore/QTextCodec>
+#include <QtCore/QDataStream>
 #include <QtSql/QSqlQuery>
 
 QT_BEGIN_NAMESPACE

@@ -50,6 +50,8 @@
 #include <qshareddata.h>
 #ifndef QT_BOOTSTRAPPED
 # include <qprocess.h>
+#else
+# include <qiodevice.h>
 #endif
 #ifdef PROEVALUATOR_THREAD_SAFE
 # include <qmutex.h>
