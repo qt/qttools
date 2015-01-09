@@ -468,24 +468,6 @@ static bool load(Translator &translator, const QString &filename, ConversionData
         code = ts.readAll();
     }
 
-    if (! qmlMode) {
-        // fetch the optional pragma directives for Javascript files.
-
-        Lexer lex(/*engine=*/ 0);
-        HasDirectives directives(&lex);
-        lex.setCode(code, 1, qmlMode);
-        if (lex.scanDirectives(&directives)) {
-            if (directives()) {
-                // replace directives with white space characters
-                const int tokenOffset = directives.end();
-                for (int i = 0; i < tokenOffset; ++i) {
-                    if (! code.at(i).isSpace())
-                        code[i] = QLatin1Char(' ');
-                }
-            }
-        }
-    }
-
     Engine driver;
     Parser parser(&driver);
 
