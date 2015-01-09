@@ -13,7 +13,8 @@ qtHaveModule(widgets) {
     }
 }
 
-SUBDIRS += linguist
+SUBDIRS += linguist \
+    qtplugininfo
 if(!android|android_app):!ios: SUBDIRS += qtpaths
 
 mac {
