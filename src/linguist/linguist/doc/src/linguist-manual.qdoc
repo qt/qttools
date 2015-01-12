@@ -151,7 +151,7 @@
     \nextpage Qt Linguist Manual: Translators
 
     Two tools are provided for the release manager, lupdate and
-    lrelease. These tools can process \l qmake project files, or operate
+    lrelease. These tools can process \l {qmake Manual}{qmake} project files, or operate
     directly on the file system.
 
     \section1 Creating Translation Files
@@ -972,7 +972,7 @@
 
     However, it is not necessary to always deploy all of Qt 5's \c .qm files.
     We recommend concatenating the \c .qm files of the modules required to
-    one file matching the meta catalog file name using the tool \l lconvert in
+    one file matching the meta catalog file name using the tool \c lconvert in
     the deploy step. For example, to create a German translation file for an
     application using the modules \l{Qt Core}, \l {Qt GUI}, and \l {Qt Quick},
     run:
