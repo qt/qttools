@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2014 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2015 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the Qt Assistant of the Qt Toolkit.
@@ -895,7 +895,7 @@ void MainWindow::showAboutDialog()
             "<h3>%1</h3>"
             "<p>Version %2</p></center>"
             "<p>Copyright (C) %3 Digia Plc and/or its subsidiary(-ies).</p>")
-            .arg(tr("Qt Assistant"), QLatin1String(QT_VERSION_STR), QStringLiteral("2014")),
+            .arg(tr("Qt Assistant"), QLatin1String(QT_VERSION_STR), QStringLiteral("2015")),
             resources);
         QLatin1String path(":/qt-project.org/assistant/images/assistant-128.png");
         aboutDia.setPixmap(QString(path));
