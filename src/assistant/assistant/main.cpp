@@ -93,16 +93,6 @@ updateLastPagesOnUnregister(QHelpEngineCore& helpEngine, const QString& nsName)
     }
 }
 
-bool
-updateUserCollection(QHelpEngineCore& user, const QHelpEngineCore& caller)
-{
-    TRACE_OBJ
-    if (!CollectionConfiguration::isNewer(caller, user))
-        return false;
-    CollectionConfiguration::copyConfiguration(caller, user);
-    return true;
-}
-
 void stripNonexistingDocs(QHelpEngineCore& collection)
 {
     TRACE_OBJ

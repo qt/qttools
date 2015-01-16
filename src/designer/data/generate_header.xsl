@@ -388,12 +388,11 @@
 #ifndef UI4_H
 #define UI4_H
 
-#include &lt;QtCore/QList&gt;
-#include &lt;QtCore/QString&gt;
-#include &lt;QtCore/QStringList&gt;
-#include &lt;QtCore/QXmlStreamReader&gt;
-#include &lt;QtCore/QXmlStreamWriter&gt;
-#include &lt;QtCore/qglobal.h&gt;
+#include &lt;qlist.h&gt;
+#include &lt;qstring.h&gt;
+#include &lt;qstringlist.h&gt;
+#include &lt;qxmlstream.h&gt;
+#include &lt;qglobal.h&gt;
 
 QT_BEGIN_NAMESPACE
 
