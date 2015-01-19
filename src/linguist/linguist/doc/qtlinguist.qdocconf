@@ -34,6 +34,6 @@ imagedirs               = images
 
 outputdir               = $QT_INSTALL_DOCS/qtlinguist
 
-depends                 += qtdoc qtqml qtquick qtcore qtgui
+depends                 += qtdoc qtqml qtquick qtcore qtgui qmake
 
 navigation.landingpage = "Qt Linguist Manual"
