@@ -31,57 +31,47 @@
 **
 ****************************************************************************/
 
-#ifndef REMOTECONTROL_H
-#define REMOTECONTROL_H
+#include "stdinlistener.h"
 
-#include <QtCore/QObject>
-#include <QtCore/QString>
-#include <QtCore/QUrl>
+#include "tracer.h"
 
 QT_BEGIN_NAMESPACE
 
-class HelpEngineWrapper;
-class MainWindow;
-
-class RemoteControl : public QObject
+StdInListener::StdInListener(QObject *parent)
+    : QSocketNotifier(fileno(stdin), QSocketNotifier::Read, parent)
 {
-    Q_OBJECT
+    TRACE_OBJ
+    connect(this, SIGNAL(activated(int)), this, SLOT(receivedData()));
+}
 
-public:
-    RemoteControl(MainWindow *mainWindow);
+StdInListener::~StdInListener()
+{
+    TRACE_OBJ
+}
 
-private slots:
-    void handleCommandString(const QString &cmdString);
-    void applyCache();
+void StdInListener::start()
+{
+    setEnabled(true);
+}
 
-private:
-    void clearCache();
-    void splitInputString(const QString &input, QString &cmd, QString &arg);
-    void handleDebugCommand(const QString &arg);
-    void handleShowOrHideCommand(const QString &arg, bool show);
-    void handleSetSourceCommand(const QString &arg);
-    void handleSyncContentsCommand();
-    void handleActivateKeywordCommand(const QString &arg);
-    void handleActivateIdentifierCommand(const QString &arg);
-    void handleExpandTocCommand(const QString &arg);
-    void handleSetCurrentFilterCommand(const QString &arg);
-    void handleRegisterCommand(const QString &arg);
-    void handleUnregisterCommand(const QString &arg);
-
-private:
-    MainWindow *m_mainWindow;
-    bool m_debug;
-
-    bool m_caching;
-    QUrl m_setSource;
-    bool m_syncContents;
-    QString m_activateKeyword;
-    QString m_activateIdentifier;
-    int m_expandTOC;
-    QString m_currentFilter;
-    HelpEngineWrapper &helpEngine;
-};
+void StdInListener::receivedData()
+{
+    TRACE_OBJ
+    QByteArray ba;
+    while (true) {
+        const int c = getc(stdin);
+        if (c == EOF) {
+            setEnabled(false);
+            break;
+        }
+        if (c == '\0')
+            break;
+        if (c)
+            ba.append(char(c));
+         if (c == '\n')
+             break;
+    }
+    emit receivedCommand(QString::fromLocal8Bit(ba));
+}
 
 QT_END_NAMESPACE
-
-#endif

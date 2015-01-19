@@ -31,57 +31,54 @@
 **
 ****************************************************************************/
 
-#ifndef REMOTECONTROL_H
-#define REMOTECONTROL_H
+#include "stdinlistener_win.h"
 
-#include <QtCore/QObject>
-#include <QtCore/QString>
-#include <QtCore/QUrl>
+#include "tracer.h"
 
 QT_BEGIN_NAMESPACE
 
-class HelpEngineWrapper;
-class MainWindow;
-
-class RemoteControl : public QObject
+StdInListener::StdInListener(QObject *parent)
+    : QThread(parent)
 {
-    Q_OBJECT
+    TRACE_OBJ
+}
 
-public:
-    RemoteControl(MainWindow *mainWindow);
+StdInListener::~StdInListener()
+{
+    TRACE_OBJ
+    terminate();
+    wait();
+}
 
-private slots:
-    void handleCommandString(const QString &cmdString);
-    void applyCache();
+void StdInListener::run()
+{
+    TRACE_OBJ
+    bool ok = true;
+    char chBuf[4096];
+    DWORD dwRead;
 
-private:
-    void clearCache();
-    void splitInputString(const QString &input, QString &cmd, QString &arg);
-    void handleDebugCommand(const QString &arg);
-    void handleShowOrHideCommand(const QString &arg, bool show);
-    void handleSetSourceCommand(const QString &arg);
-    void handleSyncContentsCommand();
-    void handleActivateKeywordCommand(const QString &arg);
-    void handleActivateIdentifierCommand(const QString &arg);
-    void handleExpandTocCommand(const QString &arg);
-    void handleSetCurrentFilterCommand(const QString &arg);
-    void handleRegisterCommand(const QString &arg);
-    void handleUnregisterCommand(const QString &arg);
+#ifndef Q_OS_WINCE
+    HANDLE hStdin, hStdinDup;
 
-private:
-    MainWindow *m_mainWindow;
-    bool m_debug;
+    hStdin = GetStdHandle(STD_INPUT_HANDLE);
+    if (hStdin == INVALID_HANDLE_VALUE)
+        return;
 
-    bool m_caching;
-    QUrl m_setSource;
-    bool m_syncContents;
-    QString m_activateKeyword;
-    QString m_activateIdentifier;
-    int m_expandTOC;
-    QString m_currentFilter;
-    HelpEngineWrapper &helpEngine;
-};
+    DuplicateHandle(GetCurrentProcess(), hStdin,
+        GetCurrentProcess(), &hStdinDup,
+        0, false, DUPLICATE_SAME_ACCESS);
+
+    CloseHandle(hStdin);
+#else
+    HANDLE hStdinDup;
+    hStdinDup = stdin;
+#endif
+
+    while (ok) {
+        ok = ReadFile(hStdinDup, chBuf, sizeof(chBuf), &dwRead, NULL);
+        if (ok && dwRead != 0)
+            emit receivedCommand(QString::fromLocal8Bit(chBuf, dwRead));
+    }
+}
 
 QT_END_NAMESPACE
-
-#endif

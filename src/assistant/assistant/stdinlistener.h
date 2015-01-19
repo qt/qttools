@@ -31,28 +31,29 @@
 **
 ****************************************************************************/
 
-#ifndef REMOTECONTROL_WIN_H
-#define REMOTECONTROL_WIN_H
+#ifndef STDINLISTENER_H
+#define STDINLISTENER_H
 
-#include <windows.h>
-#include <QtCore/QThread>
+#include <QtCore/QSocketNotifier>
 
 QT_BEGIN_NAMESPACE
 
-class StdInListenerWin : public QThread
+class StdInListener : public QSocketNotifier
 {
     Q_OBJECT
 
 public:
-    StdInListenerWin(QObject *parent);
-    ~StdInListenerWin();
+    StdInListener(QObject *parent);
+    ~StdInListener();
+
+public slots:
+    void start();
 
 signals:
     void receivedCommand(const QString &cmd);
 
-private:
-    void run();
-    bool ok;
+private slots:
+    void receivedData();
 };
 
 QT_END_NAMESPACE

@@ -45,6 +45,7 @@
 #include <QStandardPaths>
 #include <QUuid>
 #include <QDirIterator>
+#include <QRegExp>
 
 #include <algorithm>
 static const bool mustReadOutputAnyway = true; // pclose seems to return the wrong error code unless we read the output
@@ -1656,11 +1657,16 @@ bool scanImports(Options *options, QSet<QString> *usedDependencies)
 
     QString rootPath = options->rootPath;
     if (rootPath.isEmpty())
-        rootPath = QFileInfo(options->inputFileName).path();
+        rootPath = QFileInfo(options->inputFileName).absolutePath();
+    else
+        rootPath = QFileInfo(rootPath).absoluteFilePath();
+
+    if (!rootPath.endsWith(QLatin1Char('/')))
+        rootPath += QLatin1Char('/');
 
     QStringList importPaths;
     importPaths += shellQuote(options->qtInstallDirectory + QLatin1String("/qml"));
-    importPaths += QFileInfo(rootPath).absoluteFilePath();
+    importPaths += rootPath;
     foreach (QString qmlImportPath, options->qmlImportPaths)
         importPaths += shellQuote(qmlImportPath);
 
@@ -1685,8 +1691,6 @@ bool scanImports(Options *options, QSet<QString> *usedDependencies)
         return false;
     }
 
-    QString absoluteOutputPath = QFileInfo(options->outputDirectory).absoluteFilePath();
-
     QJsonArray jsonArray = jsonDocument.array();
     for (int i=0; i<jsonArray.count(); ++i) {
         QJsonValue value = jsonArray.at(i);
@@ -1710,6 +1714,16 @@ bool scanImports(Options *options, QSet<QString> *usedDependencies)
             if (!info.exists()) {
                 if (options->verbose)
                     fprintf(stdout, "    -- Skipping because file does not exist.\n");
+                continue;
+            }
+
+            QString absolutePath = info.absolutePath();
+            if (!absolutePath.endsWith(QLatin1Char('/')))
+                absolutePath += QLatin1Char('/');
+
+            if (absolutePath.startsWith(rootPath)) {
+                if (options->verbose)
+                    fprintf(stdout, "    -- Skipping because file is in QML root path.\n");
                 continue;
             }
 
@@ -2374,6 +2388,18 @@ static bool mergeGradleProperties(const QString &path, GradleProperties properti
     return true;
 }
 
+bool updateGradleDistributionUrl(const QString &path) {
+    // check if we are using gradle 2.x
+    GradleProperties gradleProperties = readGradleProperties(path);
+    QString distributionUrl = QString::fromLocal8Bit(gradleProperties["distributionUrl"]);
+    QRegExp re(QLatin1String(".*services.gradle.org/distributions/gradle-2..*.zip"));
+    if (!re.exactMatch(distributionUrl)) {
+        gradleProperties["distributionUrl"] = "https\\://services.gradle.org/distributions/gradle-2.2.1-all.zip";
+        return mergeGradleProperties(path, gradleProperties);
+    }
+    return true;
+}
+
 bool buildGradleProject(const Options &options)
 {
     GradleProperties localProperties;
@@ -2391,6 +2417,9 @@ bool buildGradleProject(const Options &options)
         gradleProperties["androidBuildToolsVersion"] = options.sdkBuildToolsVersion.toLocal8Bit();
 
     if (!mergeGradleProperties(gradlePropertiesPath, gradleProperties))
+        return false;
+
+    if (!updateGradleDistributionUrl(options.outputDirectory + QLatin1String("gradle/wrapper/gradle-wrapper.properties")))
         return false;
 
 #if defined(Q_OS_WIN32)

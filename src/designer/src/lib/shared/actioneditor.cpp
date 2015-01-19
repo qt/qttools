@@ -474,11 +474,6 @@ void ActionEditor::slotNewAction()
     }
 }
 
-static inline bool isSameIcon(const QIcon &i1, const QIcon &i2)
-{
-    return i1.cacheKey() == i2.cacheKey();
-}
-
 // return a FormWindow command to apply an icon or a reset command in case it
 //  is empty.
 

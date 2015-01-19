@@ -55,11 +55,6 @@ enum { debugZoomWidget = 0 };
 
 static const int menuZoomList[] = { 100, 25, 50, 75, 125, 150 , 175, 200 };
 
-static inline QSize qCeiling(const QSizeF &s)
-{
-    return QSize(qCeil(s.width()), qCeil(s.height()));
-}
-
 namespace qdesigner_internal {
 
 // ---------- ZoomMenu

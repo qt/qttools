@@ -41,9 +41,7 @@
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 #include <QtCore/QFileSystemWatcher>
-#include <QtCore/QThread>
 #include <QtCore/QTextStream>
-#include <QtCore/QSocketNotifier>
 
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QApplication>
@@ -53,57 +51,12 @@
 #include <QtHelp/QHelpSearchQueryWidget>
 
 #ifdef Q_OS_WIN
-#   include "remotecontrol_win.h"
+#   include "stdinlistener_win.h"
+#else
+#   include "stdinlistener.h"
 #endif
 
 QT_BEGIN_NAMESPACE
-
-#ifdef Q_OS_WIN
-
-StdInListenerWin::StdInListenerWin(QObject *parent)
-    : QThread(parent)
-{
-    TRACE_OBJ
-}
-
-StdInListenerWin::~StdInListenerWin()
-{
-    TRACE_OBJ
-    terminate();
-    wait();
-}
-
-void StdInListenerWin::run()
-{
-    TRACE_OBJ
-    bool ok = true;
-    char chBuf[4096];
-    DWORD dwRead;
-
-#ifndef Q_OS_WINCE
-    HANDLE hStdin, hStdinDup;
-
-    hStdin = GetStdHandle(STD_INPUT_HANDLE);
-    if (hStdin == INVALID_HANDLE_VALUE)
-        return;
-
-    DuplicateHandle(GetCurrentProcess(), hStdin,
-        GetCurrentProcess(), &hStdinDup,
-        0, false, DUPLICATE_SAME_ACCESS);
-
-    CloseHandle(hStdin);
-#else
-    HANDLE hStdinDup;
-    hStdinDup = stdin;
-#endif
-
-    while (ok) {
-        ok = ReadFile(hStdinDup, chBuf, sizeof(chBuf), &dwRead, NULL);
-        if (ok && dwRead != 0)
-            emit receivedCommand(QString::fromLocal8Bit(chBuf, dwRead));
-    }
-}
-#endif
 
 RemoteControl::RemoteControl(MainWindow *mainWindow)
     : QObject(mainWindow)
@@ -117,33 +70,11 @@ RemoteControl::RemoteControl(MainWindow *mainWindow)
 {
     TRACE_OBJ
     connect(m_mainWindow, SIGNAL(initDone()), this, SLOT(applyCache()));
-#ifdef Q_OS_WIN
-    StdInListenerWin *l = new StdInListenerWin(this);
+
+    StdInListener *l = new StdInListener(this);
     connect(l, SIGNAL(receivedCommand(QString)),
         this, SLOT(handleCommandString(QString)));
     l->start();
-#else
-    QSocketNotifier *notifier = new QSocketNotifier(fileno(stdin),
-        QSocketNotifier::Read, this);
-    connect(notifier, SIGNAL(activated(int)), this, SLOT(receivedData()));
-    notifier->setEnabled(true);
-#endif
-}
-
-void RemoteControl::receivedData()
-{
-    TRACE_OBJ
-    QByteArray ba;
-    while (true) {
-        const int c = getc(stdin);
-        if (c == EOF || c == '\0')
-            break;
-        if (c)
-            ba.append(char(c));
-         if (c == '\n')
-             break;
-    }
-    handleCommandString(QString::fromLocal8Bit(ba));
 }
 
 void RemoteControl::handleCommandString(const QString &cmdString)
