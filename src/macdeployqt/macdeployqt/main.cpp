@@ -50,8 +50,8 @@ int main(int argc, char **argv)
         qDebug() << "   -use-debug-libs    : Deploy with debug versions of frameworks and plugins (implies -no-strip)";
         qDebug() << "   -executable=<path> : Let the given executable use the deployed frameworks too";
         qDebug() << "   -qmldir=<path>     : Deploy imports used by .qml files in the given path";
-        qDebug() << "   -always-overwrite  : Copy files enven if the target file exists";
-        qDebug() << "   -codesign=<ident>  : Run codesing with the given identity on all executables";
+        qDebug() << "   -always-overwrite  : Copy files even if the target file exists";
+        qDebug() << "   -codesign=<ident>  : Run codesign with the given identity on all executables";
         qDebug() << "";
         qDebug() << "macdeployqt takes an application bundle as input and makes it";
         qDebug() << "self-contained by copying in the Qt frameworks and plugins that";
