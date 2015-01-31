@@ -77,6 +77,7 @@ static const struct StringEnum {
     const char *stringvalue;
     QStandardPaths::StandardLocation enumvalue;
 } lookupTableData[] = {
+    { "ApplicationsLocation", QStandardPaths::ApplicationsLocation },
     { "DesktopLocation", QStandardPaths::DesktopLocation },
     { "DocumentsLocation", QStandardPaths::DocumentsLocation },
     { "FontsLocation", QStandardPaths::FontsLocation },
