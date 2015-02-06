@@ -55,3 +55,12 @@ msgstr ""
 #: gettxt.c:8
 msgid "one two three four five six\n"
 msgstr ""
+
+#: gettxt.c:10 gettxt.c:100 gettxt.c:101 gettxt.c:102 gettxt.c:103 gettxt.c:104
+msgid "foo"
+msgstr ""
+
+#: gettxt.c:100 gettxt.c:101 gettxt.c:102 gettxt.c:103 gettxt.c:104
+#: gettxt.c:105
+msgid "bar"
+msgstr ""
