@@ -1795,17 +1795,9 @@ bool readDependencies(Options *options)
     if (!readDependenciesFromElf(options, options->applicationBinary, &usedDependencies, &remainingDependencies))
         return false;
 
-    // Until we have support non-gui applications on Android, always add Qt Gui
-    // as a dependency (otherwise the platform plugin cannot be deployed, and
-    // the application will not run).
-    QLatin1String guiLib("lib/libQt5Gui.so");
-    if (!usedDependencies.contains(guiLib)) {
-        QtDependency dep(guiLib, options->qtInstallDirectory + QLatin1Char('/') + guiLib);
-        options->qtDependencies.append(dep);
-        usedDependencies.insert(guiLib);
-        if (!readAndroidDependencyXml(options, QLatin1String("Qt5Gui"), &usedDependencies, &remainingDependencies))
-            return false;
-    }
+    // Jam in the dependencies of the platform plugin, since the application will crash without it
+    if (!readDependenciesFromElf(options, options->qtInstallDirectory + QLatin1String("/plugins/platforms/android/libqtforandroid.so"), &usedDependencies, &remainingDependencies))
+        return false;
 
     QString qtDir = options->qtInstallDirectory + QLatin1Char('/');
 
