@@ -62,6 +62,7 @@
 #include <private/qguiapplication_p.h>
 #include <qpa/qplatformintegration.h>
 #include <qpa/qplatformtheme.h>
+#include <qpa/qplatformnativeinterface.h>
 
 #include <algorithm>
 
@@ -376,6 +377,14 @@ QString qtDiag(unsigned flags)
 #else
     Q_UNUSED(flags)
 #endif // !QT_NO_OPENGL
+
+    // On Windows, this will provide addition GPU info similar to the output of dxdiag.
+    const QVariant gpuInfoV = QGuiApplication::platformNativeInterface()->property("gpu");
+    if (gpuInfoV.type() == QVariant::Map) {
+        const QString description = gpuInfoV.toMap().value(QStringLiteral("printable")).toString();
+        if (!description.isEmpty())
+            str << "\nGPU:\n" << description;
+    }
     return result;
 }
 
