@@ -2098,7 +2098,6 @@ bool copyQtFiles(Options *options)
                     relativePath.remove(0, 1);
                 if ((relativePath.startsWith("lib/") && relativePath.endsWith(".so"))
                         || relativePath.startsWith("jar/")
-                        || relativePath.startsWith("plugins/")
                         || relativePath.startsWith("imports/")
                         || relativePath.startsWith("qml/")
                         || relativePath.startsWith("plugins/")) {
