@@ -4,7 +4,7 @@
  * Distributable under the terms of either the Apache License (Version 2.0) or 
  * the GNU Lesser General Public License, as specified in the COPYING file.
  *
- * Changes are Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
+ * Changes are Copyright (C) 2015 The Qt Company Ltd.
 */
 #include "CLucene/StdHeader.h"
 #include "BitSet.h"
