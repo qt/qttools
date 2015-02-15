@@ -369,9 +369,7 @@ bool QHelpGenerator::createTables()
 
     d->query->exec(QLatin1String("INSERT INTO MetaDataTable VALUES('qchVersion', '1.0')"));
 
-    d->query->prepare(QLatin1String("INSERT INTO MetaDataTable VALUES('CreationDate', ?)"));
-    d->query->bindValue(0, QDateTime::currentDateTime().toString(Qt::ISODate));
-    d->query->exec();
+    d->query->exec(QLatin1String("INSERT INTO MetaDataTable VALUES('CreationDate', '2012-12-20T12:00:00')"));
 
     return true;
 }
