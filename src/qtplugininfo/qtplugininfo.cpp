@@ -33,6 +33,7 @@
 
 #include <QCommandLineParser>
 #include <QCoreApplication>
+#include <QDir>
 #include <QFile>
 #include <QJsonDocument>
 #include <QLibrary>
@@ -57,17 +58,19 @@ int main(int argc, char** argv)
         parser.showHelp(1);
 
     foreach (const QString &plugin, parser.positionalArguments()) {
+        QByteArray pluginNativeName = QFile::encodeName(QDir::toNativeSeparators(plugin));
         if (!QFile::exists(plugin)) {
-            std::cerr << "File " << qPrintable(plugin) << " does not exist." << std::endl;
+            std::cerr << "qtplugininfo: " << pluginNativeName.constData() << ": No such file or directory." << std::endl;
             return 1;
         }
         if (!QLibrary::isLibrary(plugin)) {
-            std::cerr << "File " << qPrintable(plugin) << " is not a plug-in." << std::endl;
+            std::cerr << "qtplugininfo: " << pluginNativeName.constData() << ": Not a plug-in." << std::endl;
             return 1;
         }
         QPluginLoader loader(plugin);
         if (loader.metaData().isEmpty()) {
-            std::cerr << "No plug-in meta-data found: " << qPrintable(loader.errorString()) << std::endl;
+            std::cerr << "qtplugininfo: " << pluginNativeName.constData() << ": No plug-in meta-data found: "
+                      << qPrintable(loader.errorString()) << std::endl;
             return 1;
         }
         const QJsonDocument doc(loader.metaData());
