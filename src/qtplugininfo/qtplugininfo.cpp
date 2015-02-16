@@ -74,6 +74,8 @@ int main(int argc, char** argv)
             return 1;
         }
         const QJsonDocument doc(loader.metaData());
+        if (parser.positionalArguments().size() != 1)
+            std::cout << pluginNativeName.constData() << ": ";
         std::cout << doc.toJson().constData();
     }
 
