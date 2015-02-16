@@ -558,7 +558,6 @@ void QDesignerFormWindowInterface::activateResourceFilePaths(const QStringList &
     Returns the form the widget containing the main container widget.
 
     \since 5.0
-    \sa mainContainer()
 */
 
 /*!
@@ -567,7 +566,7 @@ void QDesignerFormWindowInterface::activateResourceFilePaths(const QStringList &
     Sets the main container widget on the form to the specified \a
     mainContainer.
 
-    \sa mainContainer(), mainContainerChanged()
+    \sa mainContainerChanged()
 */
 
 /*!
