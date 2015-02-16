@@ -1,6 +1,7 @@
 /****************************************************************************
 **
 ** Copyright (C) 2015 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com, author Volker Krause <volker.krause@kdab.com>
+** Copyright (C) 2015 Intel Corporation.
 ** Contact: http://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit
@@ -36,6 +37,7 @@
 #include <QDir>
 #include <QFile>
 #include <QJsonDocument>
+#include <QJsonObject>
 #include <QLibrary>
 #include <QPluginLoader>
 
@@ -67,16 +69,46 @@ int main(int argc, char** argv)
             std::cerr << "qtplugininfo: " << pluginNativeName.constData() << ": Not a plug-in." << std::endl;
             return 1;
         }
+
         QPluginLoader loader(plugin);
-        if (loader.metaData().isEmpty()) {
+        QJsonObject metaData = loader.metaData();
+        if (metaData.isEmpty()) {
             std::cerr << "qtplugininfo: " << pluginNativeName.constData() << ": No plug-in meta-data found: "
                       << qPrintable(loader.errorString()) << std::endl;
             return 1;
         }
-        const QJsonDocument doc(loader.metaData());
+
+        QString iid = metaData.value("IID").toString();
+        QString className = metaData.value("className").toString();
+        QJsonValue debug = metaData.value("debug");
+        int version = metaData.value("version").toInt();
+        QJsonValue userData = metaData.value("MetaData");
+
+        if ((version >> 16) != (QT_VERSION >> 16)) {
+            std::cerr << "qtplugininfo: " << pluginNativeName.constData()
+                      << ": Qt version mismatch - got major version " << (version >> 16)
+                      << ", expected " << (QT_VERSION >> 16) << std::endl;
+            return 1;
+        }
+        if (iid.isEmpty() || className.isEmpty() || debug.isNull()) {
+            std::cerr << "qtplugininfo: " << pluginNativeName.constData() << ": invalid metadata, missing required fields:";
+            if (iid.isEmpty())
+                std::cerr << " iid";
+            if (className.isEmpty())
+                std::cerr << " className";
+            if (debug.isNull())
+                std::cerr << " debug";
+            std::cerr << std::endl;
+            return 1;
+        }
+        if (!userData.isNull() && !userData.isObject()) {
+            std::cerr << "qtplugininfo: " << pluginNativeName.constData() << ": invalid metadata, user data is not a JSON object" << std::endl;
+            return 1;
+        }
+
         if (parser.positionalArguments().size() != 1)
             std::cout << pluginNativeName.constData() << ": ";
-        std::cout << doc.toJson().constData();
+        std::cout << QJsonDocument(metaData).toJson().constData();
     }
 
     return 0;
