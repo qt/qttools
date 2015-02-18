@@ -770,6 +770,7 @@ QStringList findQtPlugins(quint64 *usedQtModules, quint64 disabledQtModules,
                 switch (platform) {
                 case Windows:
                 case WindowsMinGW:
+                case WinCE:
                     filter = QStringLiteral("qwindows");
                     break;
                 case WinRtIntel:
