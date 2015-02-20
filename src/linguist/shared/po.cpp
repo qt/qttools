@@ -162,7 +162,7 @@ static QString poEscapedLines(const QString &prefix, bool addSpace, const QStrin
 
 static QString poWrappedEscapedLines(const QString &prefix, bool addSpace, const QString &line)
 {
-    const int maxlen = MAX_LEN - prefix.length();
+    const int maxlen = MAX_LEN - prefix.length() - addSpace;
     QStringList lines;
     int off = 0;
     while (off + maxlen < line.length()) {

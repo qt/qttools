@@ -464,7 +464,7 @@ void recursiveCopyAndDeploy(const QString &appBundlePath, const QString &sourceP
 
             // The (relative) link; with a correct number of "../"'s.
             QString linkPath = QStringLiteral("PlugIns/quick/") + file;
-            int cdupCount = linkDestinationPath.count(QStringLiteral("/"));
+            int cdupCount = linkDestinationPath.count(QStringLiteral("/")) - appBundlePath.count(QStringLiteral("/"));
             for (int i = 0; i < cdupCount - 2; ++i)
                 linkPath.prepend("../");
 

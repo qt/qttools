@@ -165,7 +165,7 @@ VersionDialog::VersionDialog(QWidget *parent)
 
     lbl->setText(tr("%1"
                     "<br/>Copyright (C) %2 Digia Plc and/or its subsidiary(-ies)."
-                    ).arg(version, QStringLiteral("2014")));
+                    ).arg(version, QStringLiteral("2015")));
 
     lbl->setWordWrap(true);
     lbl->setOpenExternalLinks(true);
