@@ -46,7 +46,7 @@ class HelpGenerator : public QObject
     Q_OBJECT
 
 public:
-    HelpGenerator();
+    HelpGenerator(bool silent = false);
     bool generate(QHelpDataInterface *helpData,
         const QString &outputFileName);
     bool checkLinks(const QHelpDataInterface &helpData);

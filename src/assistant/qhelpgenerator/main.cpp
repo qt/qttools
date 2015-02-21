@@ -58,6 +58,7 @@ int main(int argc, char *argv[])
     bool showHelp = false;
     bool showVersion = false;
     bool checkLinks = false;
+    bool silent = false;
 
     // don't require a window manager even though we're a QGuiApplication
     qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("minimal"));
@@ -93,6 +94,8 @@ int main(int argc, char *argv[])
             showHelp = true;
         } else if (arg == QLatin1String("-c")) {
             checkLinks = true;
+        } else if (arg == QLatin1String("-s")) {
+            silent = true;
         } else {
             QFileInfo fi(arg);
             projectFile = fi.absoluteFilePath();
@@ -117,6 +120,7 @@ int main(int argc, char *argv[])
         "                         a default name will be used.\n"
         "  -c                     Checks whether all links in HTML files\n"
         "                         point to files in this help project.\n"
+        "  -s                     Suppresses status messages.\n"
         "  -v                     Displays the version of \n"
         "                         qhelpgenerator.\n\n");
 
@@ -158,7 +162,7 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    HelpGenerator generator;
+    HelpGenerator generator(silent);
     bool success = true;
     if (checkLinks)
         success = generator.checkLinks(*helpData);

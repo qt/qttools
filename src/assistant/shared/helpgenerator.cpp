@@ -38,11 +38,13 @@
 
 QT_BEGIN_NAMESPACE
 
-HelpGenerator::HelpGenerator()
+HelpGenerator::HelpGenerator(bool silent)
 {
     generator = new QHelpGenerator(this);
-    connect(generator, SIGNAL(statusChanged(QString)),
-        this, SLOT(printStatus(QString)));
+    if (!silent) {
+        connect(generator, SIGNAL(statusChanged(QString)),
+            this, SLOT(printStatus(QString)));
+    }
     connect(generator, SIGNAL(warning(QString)),
         this, SLOT(printWarning(QString)));
 }
