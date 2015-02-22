@@ -179,7 +179,7 @@ static void printUsage()
         "Options:\n"
         "    -help  Display this information and exit.\n"
         "    -no-obsolete\n"
-        "           Drop all obsolete strings.\n"
+        "           Drop all obsolete and vanished strings.\n"
         "    -extensions <ext>[,<ext>]...\n"
         "           Process files with the given extensions only.\n"
         "           The extension list must be separated with commas, not with whitespace.\n"

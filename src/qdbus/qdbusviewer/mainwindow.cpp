@@ -95,7 +95,7 @@ void MainWindow::about()
                 "<h3>%1</h3>"
                 "<p>Version %2</p></center>"
                 "<p>Copyright (C) %3 Digia Plc and/or its subsidiary(-ies).</p>")
-            .arg(tr("D-Bus Viewer"), QLatin1String(QT_VERSION_STR), QStringLiteral("2014")));
+            .arg(tr("D-Bus Viewer"), QLatin1String(QT_VERSION_STR), QStringLiteral("2015")));
     box.setWindowTitle(tr("D-Bus Viewer"));
     box.exec();
 }
