@@ -94,7 +94,7 @@ void MainWindow::about()
     box.setText(QString::fromLatin1("<center><img src=\":/qt-project.org/qdbusviewer/images/qdbusviewer-128.png\">"
                 "<h3>%1</h3>"
                 "<p>Version %2</p></center>"
-                "<p>Copyright (C) %3 Digia Plc and/or its subsidiary(-ies).</p>")
+                "<p>Copyright (C) %3 The Qt Company Ltd.</p>")
             .arg(tr("D-Bus Viewer"), QLatin1String(QT_VERSION_STR), QStringLiteral("2015")));
     box.setWindowTitle(tr("D-Bus Viewer"));
     box.exec();
