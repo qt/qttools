@@ -78,7 +78,8 @@ unsigned ActionData::compare(const ActionData &rhs) const
 NewActionDialog::NewActionDialog(ActionEditor *parent) :
     QDialog(parent, Qt::Sheet),
     m_ui(new Ui::NewActionDialog),
-    m_actionEditor(parent)
+    m_actionEditor(parent),
+    m_autoUpdateObjectName(true)
 {
     m_ui->setupUi(this);
 
@@ -90,7 +91,6 @@ NewActionDialog::NewActionDialog(ActionEditor *parent) :
 
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     m_ui->editActionText->setFocus();
-    m_auto_update_object_name = true;
     updateButtons();
 
     QDesignerFormWindowInterface *form = parent->formWindow();
@@ -141,16 +141,14 @@ void NewActionDialog::setActionData(const ActionData &d)
     m_ui->keySequenceEdit->setKeySequence(d.keysequence.value());
     m_ui->checkableCheckBox->setCheckState(d.checkable ? Qt::Checked : Qt::Unchecked);
 
-    m_auto_update_object_name = false;
+    // Suppress updating of the object name from the text for existing actions.
+    m_autoUpdateObjectName = d.name.isEmpty();
     updateButtons();
 }
 
 void NewActionDialog::on_editActionText_textEdited(const QString &text)
 {
-    if (text.isEmpty())
-        m_auto_update_object_name = true;
-
-    if (m_auto_update_object_name)
+    if (m_autoUpdateObjectName)
         m_ui->editObjectName->setText(ActionEditor::actionTextToName(text));
 
     updateButtons();
@@ -159,7 +157,7 @@ void NewActionDialog::on_editActionText_textEdited(const QString &text)
 void NewActionDialog::on_editObjectName_textEdited(const QString&)
 {
     updateButtons();
-    m_auto_update_object_name = false;
+    m_autoUpdateObjectName = false;
 }
 
 void NewActionDialog::slotEditToolTip()

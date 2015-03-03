@@ -104,7 +104,7 @@ private slots:
 private:
     Ui::NewActionDialog *m_ui;
     ActionEditor *m_actionEditor;
-    bool m_auto_update_object_name;
+    bool m_autoUpdateObjectName;
 
     void updateButtons();
 };
