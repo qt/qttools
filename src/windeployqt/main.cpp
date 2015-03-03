@@ -748,7 +748,7 @@ static quint64 qtModule(const QString &module)
 
 QStringList findQtPlugins(quint64 *usedQtModules, quint64 disabledQtModules,
                           const QString &qtPluginsDirName, const QString &libraryLocation,
-                          DebugMatchMode debugMatchMode, Platform platform, QString *platformPlugin)
+                          DebugMatchMode debugMatchModeIn, Platform platform, QString *platformPlugin)
 {
     QString errorMessage;
     if (qtPluginsDirName.isEmpty())
@@ -758,6 +758,9 @@ QStringList findQtPlugins(quint64 *usedQtModules, quint64 disabledQtModules,
     foreach (const QString &subDirName, pluginsDir.entryList(QStringList(QLatin1String("*")), QDir::Dirs | QDir::NoDotAndDotDot)) {
         const quint64 module = qtModuleForPlugin(subDirName);
         if (module & *usedQtModules) {
+            const DebugMatchMode debugMatchMode = (module & QtWebEngineCoreModule)
+                ? MatchDebugOrRelease // QTBUG-44331: Debug detection does not work for webengine, deploy all.
+                : debugMatchModeIn;
             const QString subDirPath = qtPluginsDirName + QLatin1Char('/') + subDirName;
             QDir subDir(subDirPath);
             // Filter out disabled plugins
@@ -770,6 +773,7 @@ QStringList findQtPlugins(quint64 *usedQtModules, quint64 disabledQtModules,
                 switch (platform) {
                 case Windows:
                 case WindowsMinGW:
+                case WinCE:
                     filter = QStringLiteral("qwindows");
                     break;
                 case WinRtIntel:

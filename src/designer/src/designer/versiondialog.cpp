@@ -164,7 +164,7 @@ VersionDialog::VersionDialog(QWidget *parent)
     version.append(tr("<br/>Qt Designer is a graphical user interface designer for Qt applications.<br/>"));
 
     lbl->setText(tr("%1"
-                    "<br/>Copyright (C) %2 Digia Plc and/or its subsidiary(-ies)."
+                    "<br/>Copyright (C) %2 The Qt Company Ltd."
                     ).arg(version, QStringLiteral("2015")));
 
     lbl->setWordWrap(true);
