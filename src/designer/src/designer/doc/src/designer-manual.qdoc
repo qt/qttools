@@ -117,7 +117,7 @@
 
     Generally, the integrated \QD contains the same functions as the standalone
     \QD. For more information about the differences, see the
-    \l{http://qt-project.org/doc/qtcreator/index.html}{Qt Creator Manual}.
+    \l{http://doc.qt.io/qtcreator/index.html}{Qt Creator Manual}.
 
     If you have large forms that do not fit in the Qt Creator \gui Design mode,
     you can open them in the stand-alone \QD.
