@@ -395,9 +395,11 @@ static const int symbol_synonyms_size = sizeof(symbol_synonyms)/sizeof(symbol_sy
 
 // makes the generated array in --header mode a bit more human readable
 QT_BEGIN_NAMESPACE
-static bool operator<(const QEvdevKeyboardMap::Mapping &m1, const QEvdevKeyboardMap::Mapping &m2)
-{
-    return m1.keycode != m2.keycode ? m1.keycode < m2.keycode : m1.modifiers < m2.modifiers;
+namespace QEvdevKeyboardMap {
+    static bool operator<(const Mapping &m1, const Mapping &m2)
+    {
+        return m1.keycode != m2.keycode ? m1.keycode < m2.keycode : m1.modifiers < m2.modifiers;
+    }
 }
 QT_END_NAMESPACE
 
