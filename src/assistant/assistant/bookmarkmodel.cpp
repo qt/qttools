@@ -330,7 +330,7 @@ BookmarkModel::indexListFor(const QString &label) const
 bool
 BookmarkModel::insertRows(int position, int rows, const QModelIndex &parent)
 {
-    if (!parent.data(UserRoleFolder).toBool())
+    if (parent.isValid() && !parent.data(UserRoleFolder).toBool())
         return false;
 
     bool success = false;

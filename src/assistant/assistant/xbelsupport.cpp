@@ -66,7 +66,7 @@ void XbelWriter::writeToFile(QIODevice *device)
     writeStartElement(QLatin1String("xbel"));
     writeAttribute(QLatin1String("version"), QLatin1String("1.0"));
 
-    const QModelIndex &root = bookmarkModel->index(0,0, QModelIndex());
+    const QModelIndex root;
     for (int i = 0; i < bookmarkModel->rowCount(root); ++i)
         writeData(bookmarkModel->index(i, 0, root));
     writeEndDocument();
@@ -120,7 +120,7 @@ bool XbelReader::readFromFile(QIODevice *device)
             if (name() == QLatin1String("xbel")
                 && attributes().value(QLatin1String("version"))
                     == QLatin1String("1.0")) {
-                const QModelIndex &root = bookmarkModel->index(0,0, QModelIndex());
+                const QModelIndex root;
                 parents.append(bookmarkModel->addItem(root, true));
                 readXBEL();
                 bookmarkModel->setData(parents.first(),
