@@ -79,7 +79,7 @@ public:
         m_todo = engine->comments();
         m_translator = translator;
         m_fileName = fileName;
-        m_component = QFileInfo(fileName).baseName();
+        m_component = QFileInfo(fileName).completeBaseName();
         accept(node);
 
         // process the trailing comments
