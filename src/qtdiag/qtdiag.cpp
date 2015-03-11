@@ -57,6 +57,7 @@
 #include <QtCore/QStandardPaths>
 #include <QtCore/QDir>
 #include <QtCore/QFileSelector>
+#include <QtCore/QDebug>
 
 #include <private/qsimd_p.h>
 #include <private/qguiapplication_p.h>
@@ -202,6 +203,14 @@ static void dumpStandardLocation(QTextStream &str, QStandardPaths::StandardLocat
 #define DUMP_LIBRARYPATH(str, loc) \
     str << "  " << #loc << ": " << QDir::toNativeSeparators(QLibraryInfo::location(QLibraryInfo::loc)) << '\n';
 
+// Helper to format a type via QDebug to be used for QFlags/Q_ENUM.
+template <class T>
+static QString formatQDebug(T t)
+{
+    QString result;
+    QDebug(&result) << t;
+    return result;
+}
 
 QString qtDiag(unsigned flags)
 {
@@ -225,6 +234,8 @@ QString qtDiag(unsigned flags)
     DUMP_CPU_FEATURE(RTM, "RTM");
     DUMP_CPU_FEATURE(HLE, "HLE");
     DUMP_CPU_FEATURE(ARM_NEON, "Neon");
+    DUMP_CPU_FEATURE(DSP, "DSP");
+    DUMP_CPU_FEATURE(DSPR2, "DSPR2");
     str << '\n';
 
     str << "\nLibrary info:\n";
@@ -242,6 +253,7 @@ QString qtDiag(unsigned flags)
     DUMP_LIBRARYPATH(str, TranslationsPath)
     DUMP_LIBRARYPATH(str, ExamplesPath)
     DUMP_LIBRARYPATH(str, TestsPath)
+    DUMP_LIBRARYPATH(str, SettingsPath)
 
     str << "\nStandard paths [*...* denote writable entry]:\n";
     DUMP_STANDARDPATH(str, DesktopLocation)
@@ -253,7 +265,7 @@ QString qtDiag(unsigned flags)
     DUMP_STANDARDPATH(str, PicturesLocation)
     DUMP_STANDARDPATH(str, TempLocation)
     DUMP_STANDARDPATH(str, HomeLocation)
-    DUMP_STANDARDPATH(str, DataLocation)
+    DUMP_STANDARDPATH(str, AppLocalDataLocation)
     DUMP_STANDARDPATH(str, CacheLocation)
     DUMP_STANDARDPATH(str, GenericDataLocation)
     DUMP_STANDARDPATH(str, RuntimeLocation)
@@ -261,6 +273,7 @@ QString qtDiag(unsigned flags)
     DUMP_STANDARDPATH(str, DownloadLocation)
     DUMP_STANDARDPATH(str, GenericCacheLocation)
     DUMP_STANDARDPATH(str, GenericConfigLocation)
+    DUMP_STANDARDPATH(str, AppConfigLocation)
 
     str << "\nFile selectors (increasing order of precedence):\n ";
     foreach (const QString &s, QFileSelector().allSelectors())
@@ -320,7 +333,8 @@ QString qtDiag(unsigned flags)
     str << '\n'
         << "  fontSmoothingGamma: " << styleHints->fontSmoothingGamma() << '\n'
         << "  useRtlExtensions: " << styleHints->useRtlExtensions() << '\n'
-        << "  setFocusOnTouchRelease: " << styleHints->setFocusOnTouchRelease() << '\n';
+        << "  setFocusOnTouchRelease: " << styleHints->setFocusOnTouchRelease() << '\n'
+        << "  tabFocusBehavior: " << formatQDebug(styleHints->tabFocusBehavior()) << '\n';
 
     const QPlatformTheme *platformTheme = QGuiApplicationPrivate::platformTheme();
     str << "\nTheme:\n  Styles: " << platformTheme->themeHint(QPlatformTheme::StyleNames).toStringList();
