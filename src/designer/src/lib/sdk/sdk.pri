@@ -21,6 +21,7 @@ HEADERS += $$PWD/abstractformeditor.h \
     $$PWD/abstractlanguage.h \
     $$PWD/abstractoptionspage.h \
     $$PWD/propertysheet.h \
+    $$PWD/container.h \
     $$PWD/dynamicpropertysheet.h \
     $$PWD/membersheet.h \
     $$PWD/taskmenu.h \

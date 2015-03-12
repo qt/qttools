@@ -10,7 +10,6 @@ HEADERS += \
     $$PWD/ui4_p.h \
     $$PWD/abstractformbuilder.h \
     $$PWD/formbuilder.h \
-    $$PWD/container.h \
     $$PWD/customwidget.h \
     $$PWD/properties_p.h \
     $$PWD/formbuilderextra_p.h \
