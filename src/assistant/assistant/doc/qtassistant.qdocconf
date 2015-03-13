@@ -36,4 +36,7 @@ outputdir               = $QT_INSTALL_DOCS/qtassistant
 
 depends                 += qtdoc qmake
 
+# Use a generic thumbnail image for examples that have no images in their docs
+manifestmeta.thumbnail.names += "QtAssistant/Remote Control Example"
+
 navigation.landingpage = "Qt Assistant Manual"
