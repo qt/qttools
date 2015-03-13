@@ -38,8 +38,6 @@ sourcedirs              = .. \
 exampledirs             = ../../../../../examples/designer \
                           snippets
 
-excludefiles           += ../../lib/uilib/extension.h
-
 imagedirs               = images
 
 outputdir               = $QT_INSTALL_DOCS/qtdesigner
