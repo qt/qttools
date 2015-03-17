@@ -170,7 +170,7 @@ void FindDialog::reset()
     QString s = QApplication::translate("QCoreApplication", "encoding, using QApplication", 0, QApplication::UnicodeUTF8);
 
     QString s = QApplication::translate("Kåntekst", "encoding, using QApplication", 0, QApplication::UnicodeUTF8);
-
+    QString s = QApplication::translate("QTranslator", "Key", "disambiguation", QCoreApplication::Latin1);
 }
 
 

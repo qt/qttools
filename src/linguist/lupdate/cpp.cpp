@@ -1397,6 +1397,7 @@ STRING(QCoreApplication);
 STRING(UnicodeUTF8);
 STRING(DefaultCodec);
 STRING(CodecForTr);
+STRING(Latin1);
 
 bool CppParser::matchEncoding()
 {
@@ -1411,7 +1412,8 @@ bool CppParser::matchEncoding()
         yyTok = getToken();
         return true;
     }
-    yyMsg() << qPrintable(LU::tr("Unsupported encoding Latin1\n"));
+    if (yyWord == strLatin1)
+        yyMsg() << qPrintable(LU::tr("Unsupported encoding Latin1\n"));
     return false;
 }
 
