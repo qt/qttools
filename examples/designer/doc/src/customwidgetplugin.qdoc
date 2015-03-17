@@ -57,27 +57,18 @@
     recognized as a plugin by Qt by using the Q_PLUGIN_METADATA() macro
     to export the relevant widget information.
 
-    The \c CONFIG variable contains two values, \c designer and \c
-    plugin:
 
-    \list
+    The \c CONFIG variable is set to \c plugin, which ensures that \c qmake
+    considers the custom widget a plugin library.
 
-    \li \c designer: Since custom widgets plugins rely on components
-    supplied with \QD, this value ensures that our plugin links
-    against \QD's library (\c libQtDesigner.so).
-
-    \li \c plugin: We also need to ensure that \c qmake considers the
-    custom widget a plugin library.
-
-    \endlist
-
-    When Qt is configured to build in both debug and release modes,
-    \QD will be built in release mode. When this occurs, it is
-    necessary to ensure that plugins are also built in release
-    mode. For that reason we add the \c debug_and_release value to the
-    \c CONFIG variable. Otherwise, if a plugin is built in a mode that
-    is incompatible with \QD, it won't be loaded and
-    installed.
+    The \c QT variable contains the keyword \c uiplugin. This plugin type
+    provides a factory function for custom widget creation by implementing
+    the abstract interfaces QDesignerCustomWidgetInterface or
+    QDesignerCustomWidgetCollectionInterface, suitable for use with
+    QUiLoader. It does not have a dependency on the \QD libraries.
+    Plugins accessing other interfaces of \QD to implement container extensions
+    or other \QD specific functionality follow different rules and are covered
+    by other examples.
 
     The header and source files for the widget are declared in the usual way,
     and we provide an implementation of the plugin interface so that \QD can
