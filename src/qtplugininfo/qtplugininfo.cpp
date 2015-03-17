@@ -40,8 +40,18 @@
 #include <QJsonObject>
 #include <QLibrary>
 #include <QPluginLoader>
+#include <QStringList>
 
 #include <iostream>
+
+enum PrintOption {
+    PrintIID = 0x01,
+    PrintClassName = 0x02,
+    PrintQtInfo = 0x04,
+    PrintUserData = 0x08
+};
+Q_DECLARE_FLAGS(PrintOptions, PrintOption)
+Q_DECLARE_OPERATORS_FOR_FLAGS(PrintOptions)
 
 int main(int argc, char** argv)
 {
@@ -51,6 +61,18 @@ int main(int argc, char** argv)
 
     QCommandLineParser parser;
     parser.setApplicationDescription(QStringLiteral("Qt5 plugin meta-data dumper"));
+    QCommandLineOption jsonFormatOption(QStringList() << "f" << "json-format",
+                                        QStringLiteral("Print JSON data as: indented, compact"), QStringLiteral("format"));
+    QCommandLineOption fullJsonOption("full-json",
+                                      QStringLiteral("Print the plugin metadata in JSON format"));
+    QCommandLineOption printOption(QStringList() << "p" << QStringLiteral("print"),
+                                   QStringLiteral("Print detail (iid, classname, qtinfo, userdata)"), QStringLiteral("detail"));
+    jsonFormatOption.setDefaultValue(QStringLiteral("indented"));
+    printOption.setDefaultValues(QStringList() << QStringLiteral("iid") << QStringLiteral("qtinfo") << QStringLiteral("userdata"));
+
+    parser.addOption(fullJsonOption);
+    parser.addOption(jsonFormatOption);
+    parser.addOption(printOption);
     parser.addHelpOption();
     parser.addVersionOption();
     parser.addPositionalArgument(QStringLiteral("plugin"), QStringLiteral("Plug-in of which to read the meta data."), QStringLiteral("<plugin>"));
@@ -58,6 +80,19 @@ int main(int argc, char** argv)
 
     if (parser.positionalArguments().isEmpty())
         parser.showHelp(1);
+
+    bool fullJson = parser.isSet(fullJsonOption);
+    QJsonDocument::JsonFormat jsonFormat = parser.value(jsonFormatOption) == "indented" ? QJsonDocument::Indented : QJsonDocument::Compact;
+    QStringList printOptionList = parser.values(printOption);
+    PrintOptions print;
+    if (printOptionList.contains("iid"))
+        print |= PrintIID;
+    if (printOptionList.contains("classname"))
+        print |= PrintClassName;
+    if (printOptionList.contains("qtinfo"))
+        print |= PrintQtInfo;
+    if (printOptionList.contains("userdata"))
+        print |= PrintUserData;
 
     foreach (const QString &plugin, parser.positionalArguments()) {
         QByteArray pluginNativeName = QFile::encodeName(QDir::toNativeSeparators(plugin));
@@ -108,7 +143,22 @@ int main(int argc, char** argv)
 
         if (parser.positionalArguments().size() != 1)
             std::cout << pluginNativeName.constData() << ": ";
-        std::cout << QJsonDocument(metaData).toJson().constData();
+        if (fullJson) {
+            std::cout << QJsonDocument(metaData).toJson(jsonFormat).constData();
+            if (jsonFormat == QJsonDocument::Compact)
+                std::cout << std::endl;
+        } else {
+            if (print & PrintIID)
+                std::cout << "IID \"" << qPrintable(iid) << "\" ";
+            if (print & PrintClassName)
+                std::cout << "class " << qPrintable(className) << ' ';
+            if (print & PrintQtInfo)
+                std::cout << "Qt " << (version >> 16) << '.' << ((version >> 8) & 0xFF) << '.' << (version & 0xFF)
+                          << (debug.toBool() ? " (debug)" : " (release)");
+            std::cout << std::endl;
+            if (print & PrintUserData && userData.isObject())
+                std::cout << "User Data: " << QJsonDocument(userData.toObject()).toJson().constData();
+        }
     }
 
     return 0;
