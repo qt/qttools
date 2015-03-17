@@ -40,8 +40,6 @@
 
 QT_BEGIN_NAMESPACE
 
-#include "../../src/gui/text/qpfutil.cpp"
-
 int QPF::debugVerbosity = 0;
 
 // ### copied from qfontdatabase.cpp
@@ -116,6 +114,30 @@ static int requiredUnicodeBits[QFontDatabase::WritingSystemsCount][2] = {
 #define TraditionalChineseCsbBit 20
 #define JapaneseCsbBit 17
 #define KoreanCsbBit 21
+
+static const QFontEngineQPF2::TagType tagTypes[QFontEngineQPF2::NumTags] = {
+    QFontEngineQPF2::StringType, // FontName
+    QFontEngineQPF2::StringType, // FileName
+    QFontEngineQPF2::UInt32Type, // FileIndex
+    QFontEngineQPF2::UInt32Type, // FontRevision
+    QFontEngineQPF2::StringType, // FreeText
+    QFontEngineQPF2::FixedType,  // Ascent
+    QFontEngineQPF2::FixedType,  // Descent
+    QFontEngineQPF2::FixedType,  // Leading
+    QFontEngineQPF2::FixedType,  // XHeight
+    QFontEngineQPF2::FixedType,  // AverageCharWidth
+    QFontEngineQPF2::FixedType,  // MaxCharWidth
+    QFontEngineQPF2::FixedType,  // LineThickness
+    QFontEngineQPF2::FixedType,  // MinLeftBearing
+    QFontEngineQPF2::FixedType,  // MinRightBearing
+    QFontEngineQPF2::FixedType,  // UnderlinePosition
+    QFontEngineQPF2::UInt8Type,  // GlyphFormat
+    QFontEngineQPF2::UInt8Type,  // PixelSize
+    QFontEngineQPF2::UInt8Type,  // Weight
+    QFontEngineQPF2::UInt8Type,  // Style
+    QFontEngineQPF2::StringType, // EndOfHeader
+    QFontEngineQPF2::BitFieldType// WritingSystems
+};
 
 static QList<QFontDatabase::WritingSystem> determineWritingSystemsFromTrueTypeBits(quint32 unicodeRange[4], quint32 codePageRange[2])
 {
@@ -221,7 +243,7 @@ static void dumpWritingSystems(const QByteArray &bits)
     qDebug() << "Supported writing systems:" << writingSystems;
 }
 
-static const char *headerTagNames[QFontEngineQPF::NumTags] = {
+static const char *headerTagNames[QFontEngineQPF2::NumTags] = {
     "FontName",
     "FileName",
     "FileIndex",
@@ -285,7 +307,7 @@ QByteArray QPF::generate(QFontEngine *fontEngine, int options, const QList<Chara
 
 void QPF::addHeader(QFontEngine *fontEngine)
 {
-    QFontEngineQPF::Header *header = reinterpret_cast<QFontEngineQPF::Header *>(addBytes(sizeof(QFontEngineQPF::Header)));
+    QFontEngineQPF2::Header *header = reinterpret_cast<QFontEngineQPF2::Header *>(addBytes(sizeof(QFontEngineQPF2::Header)));
 
     header->magic[0] = 'Q';
     header->magic[1] = 'P';
@@ -295,46 +317,46 @@ void QPF::addHeader(QFontEngine *fontEngine)
         header->lock = 0xffffffff;
     else
         header->lock = 0;
-    header->majorVersion = QFontEngineQPF::CurrentMajorVersion;
-    header->minorVersion = QFontEngineQPF::CurrentMinorVersion;
+    header->majorVersion = QFontEngineQPF2::CurrentMajorVersion;
+    header->minorVersion = QFontEngineQPF2::CurrentMinorVersion;
     header->dataSize = 0;
     int oldSize = qpf.size();
 
-    addTaggedString(QFontEngineQPF::Tag_FontName, fontEngine->fontDef.family.toUtf8());
+    addTaggedString(QFontEngineQPF2::Tag_FontName, fontEngine->fontDef.family.toUtf8());
 
     QFontEngine::FaceId face = fontEngine->faceId();
-    addTaggedString(QFontEngineQPF::Tag_FileName, face.filename);
-    addTaggedUInt32(QFontEngineQPF::Tag_FileIndex, face.index);
+    addTaggedString(QFontEngineQPF2::Tag_FileName, face.filename);
+    addTaggedUInt32(QFontEngineQPF2::Tag_FileIndex, face.index);
 
     {
         const QByteArray head = fontEngine->getSfntTable(MAKE_TAG('h', 'e', 'a', 'd'));
         const quint32 revision = qFromBigEndian<quint32>(reinterpret_cast<const uchar *>(head.constData()) + 4);
-        addTaggedUInt32(QFontEngineQPF::Tag_FontRevision, revision);
+        addTaggedUInt32(QFontEngineQPF2::Tag_FontRevision, revision);
     }
 
-    addTaggedQFixed(QFontEngineQPF::Tag_Ascent, fontEngine->ascent());
-    addTaggedQFixed(QFontEngineQPF::Tag_Descent, fontEngine->descent());
-    addTaggedQFixed(QFontEngineQPF::Tag_Leading, fontEngine->leading());
-    addTaggedQFixed(QFontEngineQPF::Tag_XHeight, fontEngine->xHeight());
-    addTaggedQFixed(QFontEngineQPF::Tag_AverageCharWidth, fontEngine->averageCharWidth());
-    addTaggedQFixed(QFontEngineQPF::Tag_MaxCharWidth, QFixed::fromReal(fontEngine->maxCharWidth()));
-    addTaggedQFixed(QFontEngineQPF::Tag_LineThickness, fontEngine->lineThickness());
-    addTaggedQFixed(QFontEngineQPF::Tag_MinLeftBearing, QFixed::fromReal(fontEngine->minLeftBearing()));
-    addTaggedQFixed(QFontEngineQPF::Tag_MinRightBearing, QFixed::fromReal(fontEngine->minRightBearing()));
-    addTaggedQFixed(QFontEngineQPF::Tag_UnderlinePosition, fontEngine->underlinePosition());
-    addTaggedUInt8(QFontEngineQPF::Tag_PixelSize, fontEngine->fontDef.pixelSize);
-    addTaggedUInt8(QFontEngineQPF::Tag_Weight, fontEngine->fontDef.weight);
-    addTaggedUInt8(QFontEngineQPF::Tag_Style, fontEngine->fontDef.style);
+    addTaggedQFixed(QFontEngineQPF2::Tag_Ascent, fontEngine->ascent());
+    addTaggedQFixed(QFontEngineQPF2::Tag_Descent, fontEngine->descent());
+    addTaggedQFixed(QFontEngineQPF2::Tag_Leading, fontEngine->leading());
+    addTaggedQFixed(QFontEngineQPF2::Tag_XHeight, fontEngine->xHeight());
+    addTaggedQFixed(QFontEngineQPF2::Tag_AverageCharWidth, fontEngine->averageCharWidth());
+    addTaggedQFixed(QFontEngineQPF2::Tag_MaxCharWidth, QFixed::fromReal(fontEngine->maxCharWidth()));
+    addTaggedQFixed(QFontEngineQPF2::Tag_LineThickness, fontEngine->lineThickness());
+    addTaggedQFixed(QFontEngineQPF2::Tag_MinLeftBearing, QFixed::fromReal(fontEngine->minLeftBearing()));
+    addTaggedQFixed(QFontEngineQPF2::Tag_MinRightBearing, QFixed::fromReal(fontEngine->minRightBearing()));
+    addTaggedQFixed(QFontEngineQPF2::Tag_UnderlinePosition, fontEngine->underlinePosition());
+    addTaggedUInt8(QFontEngineQPF2::Tag_PixelSize, fontEngine->fontDef.pixelSize);
+    addTaggedUInt8(QFontEngineQPF2::Tag_Weight, fontEngine->fontDef.weight);
+    addTaggedUInt8(QFontEngineQPF2::Tag_Style, fontEngine->fontDef.style);
 
     QByteArray writingSystemBitField = getWritingSystems(fontEngine);
     if (!writingSystemBitField.isEmpty())
-        addTaggedString(QFontEngineQPF::Tag_WritingSystems, writingSystemBitField);
+        addTaggedString(QFontEngineQPF2::Tag_WritingSystems, writingSystemBitField);
 
-    addTaggedUInt8(QFontEngineQPF::Tag_GlyphFormat, QFontEngineQPF::AlphamapGlyphs);
+    addTaggedUInt8(QFontEngineQPF2::Tag_GlyphFormat, QFontEngineQPF2::AlphamapGlyphs);
 
-    addTaggedString(QFontEngineQPF::Tag_EndOfHeader, QByteArray());
+    addTaggedString(QFontEngineQPF2::Tag_EndOfHeader, QByteArray());
     align4();
-    header = reinterpret_cast<QFontEngineQPF::Header *>(qpf.data());
+    header = reinterpret_cast<QFontEngineQPF2::Header *>(qpf.data());
     header->dataSize = qToBigEndian<quint16>(qpf.size() - oldSize);
 }
 
@@ -467,7 +489,7 @@ void QPF::addCMap(QFontEngine *fontEngine)
     QByteArray cmapTable = fontEngine->getSfntTable(MAKE_TAG('c', 'm', 'a', 'p'));
     if (cmapTable.isEmpty())
         cmapTable = generateTrueTypeCMap(fontEngine);
-    addBlock(QFontEngineQPF::CMapBlock, cmapTable);
+    addBlock(QFontEngineQPF2::CMapBlock, cmapTable);
 }
 
 void QPF::addGlyphs(QFontEngine *fe, const QList<CharacterRange> &ranges)
@@ -483,7 +505,7 @@ void QPF::addGlyphs(QFontEngine *fe, const QList<CharacterRange> &ranges)
     if (options & RenderGlyphs) {
         // this is only a rough estimation
         glyphs.reserve(glyphCount
-                * (sizeof(QFontEngineQPF::Glyph)
+                * (sizeof(QFontEngineQPF2::Glyph)
                     + qRound(fe->maxCharWidth() * (fe->ascent() + fe->descent()).toReal())));
 
         QGlyphLayoutArray<10> layout;
@@ -511,22 +533,22 @@ void QPF::addGlyphs(QFontEngine *fe, const QList<CharacterRange> &ranges)
                 glyph_metrics_t metrics = fe->boundingBox(glyphIndex);
 
                 const quint32 oldSize = glyphs.size();
-                glyphs.resize(glyphs.size() + sizeof(QFontEngineQPF::Glyph) + img.byteCount());
+                glyphs.resize(glyphs.size() + sizeof(QFontEngineQPF2::Glyph) + img.byteCount());
                 uchar *data = reinterpret_cast<uchar *>(glyphs.data() + oldSize);
 
                 uchar *gmapPtr = reinterpret_cast<uchar *>(gmap.data() + glyphIndex * sizeof(quint32));
                 qToBigEndian(oldSize, gmapPtr);
 
-                QFontEngineQPF::Glyph *glyph = reinterpret_cast<QFontEngineQPF::Glyph *>(data);
+                QFontEngineQPF2::Glyph *glyph = reinterpret_cast<QFontEngineQPF2::Glyph *>(data);
                 glyph->width = img.width();
                 glyph->height = img.height();
                 glyph->bytesPerLine = img.bytesPerLine();
                 glyph->x = qRound(metrics.x);
                 glyph->y = qRound(metrics.y);
                 glyph->advance = qRound(metrics.xoff);
-                data += sizeof(QFontEngineQPF::Glyph);
+                data += sizeof(QFontEngineQPF2::Glyph);
 
-                if (debugVerbosity && uc >= 'A' && uc <= 'z' || debugVerbosity > 1) {
+                if ((debugVerbosity && (uc >= 'A') && (uc <= 'z')) || debugVerbosity > 1) {
                     qDebug() << "adding glyph with index" << glyphIndex << " uc =" << char(uc) << ":\n"
                         << "    glyph->x =" << glyph->x << "rounded from" << metrics.x << "\n"
                         << "    glyph->y =" << glyph->y << "rounded from" << metrics.y << "\n"
@@ -540,11 +562,11 @@ void QPF::addGlyphs(QFontEngine *fe, const QList<CharacterRange> &ranges)
         }
     }
 
-    addBlock(QFontEngineQPF::GMapBlock, gmap);
-    addBlock(QFontEngineQPF::GlyphBlock, glyphs);
+    addBlock(QFontEngineQPF2::GMapBlock, gmap);
+    addBlock(QFontEngineQPF2::GlyphBlock, glyphs);
 }
 
-void QPF::addBlock(QFontEngineQPF::BlockTag tag, const QByteArray &blockData)
+void QPF::addBlock(QFontEngineQPF2::BlockTag tag, const QByteArray &blockData)
 {
     addUInt16(tag);
     addUInt16(0); // padding
@@ -560,34 +582,34 @@ void QPF::addBlock(QFontEngineQPF::BlockTag tag, const QByteArray &blockData)
     addUInt16(sizeof(qtype)); \
     add##type(value)
 
-void QPF::addTaggedString(QFontEngineQPF::HeaderTag tag, const QByteArray &string)
+void QPF::addTaggedString(QFontEngineQPF2::HeaderTag tag, const QByteArray &string)
 {
     addUInt16(tag);
     addUInt16(string.length());
     addByteArray(string);
 }
 
-void QPF::addTaggedQFixed(QFontEngineQPF::HeaderTag tag, QFixed value)
+void QPF::addTaggedQFixed(QFontEngineQPF2::HeaderTag tag, QFixed value)
 {
     ADD_TAGGED_DATA(tag, quint32, UInt32, value.value());
 }
 
-void QPF::addTaggedUInt8(QFontEngineQPF::HeaderTag tag, quint8 value)
+void QPF::addTaggedUInt8(QFontEngineQPF2::HeaderTag tag, quint8 value)
 {
     ADD_TAGGED_DATA(tag, quint8, UInt8, value);
 }
 
-void QPF::addTaggedInt8(QFontEngineQPF::HeaderTag tag, qint8 value)
+void QPF::addTaggedInt8(QFontEngineQPF2::HeaderTag tag, qint8 value)
 {
     ADD_TAGGED_DATA(tag, qint8, Int8, value);
 }
 
-void QPF::addTaggedUInt16(QFontEngineQPF::HeaderTag tag, quint16 value)
+void QPF::addTaggedUInt16(QFontEngineQPF2::HeaderTag tag, quint16 value)
 {
     ADD_TAGGED_DATA(tag, quint16, UInt16, value);
 }
 
-void QPF::addTaggedUInt32(QFontEngineQPF::HeaderTag tag, quint32 value)
+void QPF::addTaggedUInt32(QFontEngineQPF2::HeaderTag tag, quint32 value)
 {
     ADD_TAGGED_DATA(tag, quint32, UInt32, value);
 }
@@ -605,18 +627,18 @@ void QPF::dump(const QByteArray &qpf)
     quint32 glyphCount = 0;
 
     while (data < endPtr) {
-        const QFontEngineQPF::Block *block = reinterpret_cast<const QFontEngineQPF::Block *>(data);
+        const QFontEngineQPF2::Block *block = reinterpret_cast<const QFontEngineQPF2::Block *>(data);
         quint32 tag = qFromBigEndian(block->tag);
         quint32 blockSize = qFromBigEndian(block->dataSize);
         qDebug() << "Block: Tag =" << qFromBigEndian(block->tag) << "; Size =" << blockSize << "; Offset =" << hex << data - reinterpret_cast<const uchar *>(qpf.constData());
-        data += sizeof(QFontEngineQPF::Block);
+        data += sizeof(QFontEngineQPF2::Block);
 
         if (debugVerbosity) {
-            if (tag == QFontEngineQPF::GMapBlock) {
+            if (tag == QFontEngineQPF2::GMapBlock) {
                 gmap = reinterpret_cast<const quint32 *>(data);
                 glyphCount = blockSize / 4;
                 font.dumpGMapBlock(gmap, glyphCount);
-            } else if (tag == QFontEngineQPF::GlyphBlock
+            } else if (tag == QFontEngineQPF2::GlyphBlock
                        && gmap && debugVerbosity > 1) {
                 font.dumpGlyphBlock(gmap, glyphCount, data, data + blockSize);
             }
@@ -628,7 +650,7 @@ void QPF::dump(const QByteArray &qpf)
 
 const uchar *QPF::dumpHeader(const uchar *data)
 {
-    const QFontEngineQPF::Header *header = reinterpret_cast<const QFontEngineQPF::Header *>(data);
+    const QFontEngineQPF2::Header *header = reinterpret_cast<const QFontEngineQPF2::Header *>(data);
     qDebug() << "Header:";
     qDebug() << "magic ="
              << header->magic[0]
@@ -640,7 +662,7 @@ const uchar *QPF::dumpHeader(const uchar *data)
     qDebug() << "minorVersion =" << header->minorVersion;
     qDebug() << "dataSize =" << qFromBigEndian(header->dataSize);
 
-    data += sizeof(QFontEngineQPF::Header);
+    data += sizeof(QFontEngineQPF2::Header);
 
     const uchar *endPtr = data + qFromBigEndian(header->dataSize);
 
@@ -653,40 +675,40 @@ const uchar *QPF::dumpHeader(const uchar *data)
 
 const uchar *QPF::dumpHeaderTag(const uchar *data)
 {
-    const QFontEngineQPF::Tag *tagPtr = reinterpret_cast<const QFontEngineQPF::Tag *>(data);
+    const QFontEngineQPF2::Tag *tagPtr = reinterpret_cast<const QFontEngineQPF2::Tag *>(data);
     quint16 tag = qFromBigEndian(tagPtr->tag);
     quint16 size = qFromBigEndian(tagPtr->size);
 
     qDebug() << "Tag =" << tag << headerTagNames[tag];
     qDebug() << "Size =" << size;
 
-    if (tag == QFontEngineQPF::Tag_EndOfHeader)
+    if (tag == QFontEngineQPF2::Tag_EndOfHeader)
         return 0;
 
-    data += sizeof(QFontEngineQPF::Tag);
+    data += sizeof(QFontEngineQPF2::Tag);
 
-    Q_ASSERT(tag < QFontEngineQPF::NumTags);
+    Q_ASSERT(tag < QFontEngineQPF2::NumTags);
 
     switch (tagTypes[tag]) {
-        case QFontEngineQPF::StringType:
+        case QFontEngineQPF2::StringType:
             qDebug() << "Payload =" << QString::fromUtf8(QByteArray(reinterpret_cast<const char *>(data), size));
             break;
-        case QFontEngineQPF::FixedType:
+        case QFontEngineQPF2::FixedType:
             Q_ASSERT(size == sizeof(quint32));
             qDebug() << "Payload =" << QFixed::fromFixed(qFromBigEndian<quint32>(data)).toReal();
             break;
-        case QFontEngineQPF::UInt8Type:
+        case QFontEngineQPF2::UInt8Type:
             Q_ASSERT(size == sizeof(quint8));
             qDebug() << "Payload =" << *data;
             break;
-        case QFontEngineQPF::UInt32Type:
+        case QFontEngineQPF2::UInt32Type:
             Q_ASSERT(size == sizeof(quint32));
             qDebug() << "Payload =" << qFromBigEndian<quint32>(data);
             break;
-        case QFontEngineQPF::BitFieldType: {
+        case QFontEngineQPF2::BitFieldType: {
             QByteArray bits(reinterpret_cast<const char *>(data), size);
             qDebug() << "Payload =" << stringify(bits);
-            if (QPF::debugVerbosity > 2 && tag == QFontEngineQPF::Tag_WritingSystems)
+            if (QPF::debugVerbosity > 2 && tag == QFontEngineQPF2::Tag_WritingSystems)
                 dumpWritingSystems(bits);
             } break;
     }
@@ -722,7 +744,7 @@ void QPF::dumpGlyphBlock(const quint32 *gmap, int glyphCount, const uchar *data,
 
     const uchar *glyphBlockBegin = data;
     while (data < endPtr) {
-        const QFontEngineQPF::Glyph *g = reinterpret_cast<const QFontEngineQPF::Glyph *>(data);
+        const QFontEngineQPF2::Glyph *g = reinterpret_cast<const QFontEngineQPF2::Glyph *>(data);
 
         const quint64 glyphOffset = data - glyphBlockBegin;
         const quint32 glyphIndex = reverseGlyphMap.value(glyphOffset, 0xffffffff);
@@ -742,7 +764,7 @@ void QPF::dumpGlyphBlock(const quint32 *gmap, int glyphCount, const uchar *data,
     }
 }
 
-void QPF::dumpGlyph(const uchar *data, const QFontEngineQPF::Glyph *glyph)
+void QPF::dumpGlyph(const uchar *data, const QFontEngineQPF2::Glyph *glyph)
 {
     fprintf(stderr, "---- glyph data:\n");
     const char *alphas = " .o#";

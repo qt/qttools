@@ -54,47 +54,52 @@ enum QtModule
     : quint64
 #endif
 {
-    QtBluetoothModule = 0x1,
-    QtCLuceneModule = 0x2,
-    QtConcurrentModule = 0x4,
-    QtCoreModule = 0x8,
-    QtDeclarativeModule = 0x10,
-    QtDesignerComponents = 0x20,
-    QtDesignerModule = 0x40,
-    QtGuiModule = 0x80,
-    QtCluceneModule = 0x100,
-    QtHelpModule = 0x200,
-    QtMultimediaModule = 0x400,
-    QtMultimediaWidgetsModule = 0x800,
-    QtMultimediaQuickModule = 0x1000,
-    QtNetworkModule = 0x2000,
-    QtNfcModule = 0x4000,
-    QtOpenGLModule = 0x8000,
-    QtPositioningModule = 0x10000,
-    QtPrintSupportModule = 0x20000,
-    QtQmlModule = 0x40000,
-    QtQuickModule = 0x80000,
-    QtQuickParticlesModule = 0x100000,
-    QtScriptModule = 0x200000,
-    QtScriptToolsModule = 0x400000,
-    QtSensorsModule = 0x800000,
-    QtSerialPortModule = 0x1000000,
-    QtSqlModule = 0x2000000,
-    QtSvgModule = 0x4000000,
-    QtTestModule = 0x8000000,
-    QtWidgetsModule = 0x10000000,
-    QtWinExtrasModule = 0x20000000,
-    QtXmlModule = 0x40000000,
-    QtXmlPatternsModule = 0x80000000,
-    QtWebKitModule = 0x100000000,
-    QtWebKitWidgetsModule = 0x200000000,
-    QtQuickWidgetsModule = 0x400000000,
-    QtWebSocketsModule = 0x800000000,
-    QtEnginioModule = 0x1000000000,
-    QtWebEngineCoreModule = 0x2000000000,
-    QtWebEngineModule = 0x4000000000,
-    QtWebEngineWidgetsModule = 0x8000000000,
-    QtQmlToolingModule = 0x10000000000
+    QtBluetoothModule         = 0x000000000001,
+    QtCLuceneModule           = 0x000000000002,
+    QtConcurrentModule        = 0x000000000004,
+    QtCoreModule              = 0x000000000008,
+    QtDeclarativeModule       = 0x000000000010,
+    QtDesignerComponents      = 0x000000000020,
+    QtDesignerModule          = 0x000000000040,
+    QtGuiModule               = 0x000000000080,
+    QtCluceneModule           = 0x000000000100,
+    QtHelpModule              = 0x000000000200,
+    QtMultimediaModule        = 0x000000000400,
+    QtMultimediaWidgetsModule = 0x000000000800,
+    QtMultimediaQuickModule   = 0x000000001000,
+    QtNetworkModule           = 0x000000002000,
+    QtNfcModule               = 0x000000004000,
+    QtOpenGLModule            = 0x000000008000,
+    QtPositioningModule       = 0x000000010000,
+    QtPrintSupportModule      = 0x000000020000,
+    QtQmlModule               = 0x000000040000,
+    QtQuickModule             = 0x000000080000,
+    QtQuickParticlesModule    = 0x000000100000,
+    QtScriptModule            = 0x000000200000,
+    QtScriptToolsModule       = 0x000000400000,
+    QtSensorsModule           = 0x000000800000,
+    QtSerialPortModule        = 0x000001000000,
+    QtSqlModule               = 0x000002000000,
+    QtSvgModule               = 0x000004000000,
+    QtTestModule              = 0x000008000000,
+    QtWidgetsModule           = 0x000010000000,
+    QtWinExtrasModule         = 0x000020000000,
+    QtXmlModule               = 0x000040000000,
+    QtXmlPatternsModule       = 0x000080000000,
+    QtWebKitModule            = 0x000100000000,
+    QtWebKitWidgetsModule     = 0x000200000000,
+    QtQuickWidgetsModule      = 0x000400000000,
+    QtWebSocketsModule        = 0x000800000000,
+    QtEnginioModule           = 0x001000000000,
+    QtWebEngineCoreModule     = 0x002000000000,
+    QtWebEngineModule         = 0x004000000000,
+    QtWebEngineWidgetsModule  = 0x008000000000,
+    QtQmlToolingModule        = 0x010000000000,
+    Qt3DCoreModule            = 0x020000000000,
+    Qt3DRendererModule        = 0x040000000000,
+    Qt3DQuickModule           = 0x080000000000,
+    Qt3DQuickRendererModule   = 0x100000000000,
+    Qt3DInputModule           = 0x200000000000
 };
 
 struct QtModuleEntry {
@@ -144,7 +149,12 @@ QtModuleEntry qtModuleEntries[] = {
     { QtXmlPatternsModule, "xmlpatterns", "Qt5XmlPatterns", "qtxmlpatterns" },
     { QtWebEngineCoreModule, "webenginecore", "Qt5WebEngineCore", 0 },
     { QtWebEngineModule, "webengine", "Qt5WebEngine", 0 },
-    { QtWebEngineWidgetsModule, "webenginewidgets", "Qt5WebEngineWidgets", 0 }
+    { QtWebEngineWidgetsModule, "webenginewidgets", "Qt5WebEngineWidgets", 0 },
+    { Qt3DCoreModule, "3dcore", "Qt53DCore", 0 },
+    { Qt3DRendererModule, "3drenderer", "Qt53DRenderer", 0 },
+    { Qt3DQuickModule, "3dquick", "Qt53DQuick", 0 },
+    { Qt3DQuickRendererModule, "3dquickrenderer", "Qt53DQuickRenderer", 0 },
+    { Qt3DInputModule, "3dinput", "Qt35DInput", 0 }
 };
 
 static const char webKitProcessC[] = "QtWebProcess";
@@ -728,6 +738,8 @@ static inline quint64 qtModuleForPlugin(const QString &subDirName)
         return QtSensorsModule;
     if (subDirName == QLatin1String("qtwebengine"))
         return QtWebEngineModule | QtWebEngineCoreModule | QtWebEngineWidgetsModule;
+    if (subDirName == QLatin1String("sceneparsers"))
+        return Qt3DRendererModule;
     return 0; // "designer"
 }
 
@@ -1030,7 +1042,7 @@ static DeployResult deploy(const Options &options,
     }
 
     const bool usesQml2 = !(options.disabledLibraries & QtQmlModule)
-                            && ((result.directlyUsedQtLibraries & (QtQmlModule | QtQuickModule))
+        && ((result.directlyUsedQtLibraries & (QtQmlModule | QtQuickModule | Qt3DQuickModule))
                                 || (options.additionalLibraries & QtQmlModule));
 
     if (optVerboseLevel) {

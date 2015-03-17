@@ -34,7 +34,7 @@
 #ifndef QPF2_H
 #define QPF2_H
 
-#include <private/qfontengine_qpf_p.h>
+#include <private/qfontengine_qpf2_p.h>
 #include <qmetatype.h>
 
 QT_BEGIN_NAMESPACE
@@ -67,21 +67,21 @@ public:
     void addHeader(QFontEngine *fontEngine);
     void addCMap(QFontEngine *fontEngine);
     void addGlyphs(QFontEngine *fontEngine, const QList<CharacterRange> &ranges);
-    void addBlock(QFontEngineQPF::BlockTag tag, const QByteArray &data);
+    void addBlock(QFontEngineQPF2::BlockTag tag, const QByteArray &data);
 
-    void addTaggedString(QFontEngineQPF::HeaderTag tag, const QByteArray &string);
-    void addTaggedQFixed(QFontEngineQPF::HeaderTag tag, QFixed value);
-    void addTaggedUInt8(QFontEngineQPF::HeaderTag tag, quint8 value);
-    void addTaggedInt8(QFontEngineQPF::HeaderTag tag, qint8 value);
-    void addTaggedUInt16(QFontEngineQPF::HeaderTag tag, quint16 value);
-    void addTaggedUInt32(QFontEngineQPF::HeaderTag tag, quint32 value);
+    void addTaggedString(QFontEngineQPF2::HeaderTag tag, const QByteArray &string);
+    void addTaggedQFixed(QFontEngineQPF2::HeaderTag tag, QFixed value);
+    void addTaggedUInt8(QFontEngineQPF2::HeaderTag tag, quint8 value);
+    void addTaggedInt8(QFontEngineQPF2::HeaderTag tag, qint8 value);
+    void addTaggedUInt16(QFontEngineQPF2::HeaderTag tag, quint16 value);
+    void addTaggedUInt32(QFontEngineQPF2::HeaderTag tag, quint32 value);
 
     static void dump(const QByteArray &qpf);
     const uchar *dumpHeader(const uchar *data);
     const uchar *dumpHeaderTag(const uchar *data);
     void dumpGMapBlock(const quint32 *gmap, int glyphCount);
     void dumpGlyphBlock(const quint32 *gmap, int glyphCount, const uchar *data, const uchar *endPtr);
-    void dumpGlyph(const uchar *data, const QFontEngineQPF::Glyph *glyph);
+    void dumpGlyph(const uchar *data, const QFontEngineQPF2::Glyph *glyph);
 
     void addUInt16(quint16 value) { qToBigEndian(value, addBytes(sizeof(value))); }
     void addUInt32(quint32 value) { qToBigEndian(value, addBytes(sizeof(value))); }

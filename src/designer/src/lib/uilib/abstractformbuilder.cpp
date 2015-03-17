@@ -1178,20 +1178,20 @@ DomBrush *QAbstractFormBuilder::saveBrush(const QBrush &br)
         }
         gradient->setElementGradientStop(stops);
         if (type == QGradient::LinearGradient) {
-            QLinearGradient *lgr = (QLinearGradient *)(gr);
+            const QLinearGradient *lgr = (const QLinearGradient *)(gr);
             gradient->setAttributeStartX(lgr->start().x());
             gradient->setAttributeStartY(lgr->start().y());
             gradient->setAttributeEndX(lgr->finalStop().x());
             gradient->setAttributeEndY(lgr->finalStop().y());
         } else if (type == QGradient::RadialGradient) {
-            QRadialGradient *rgr = (QRadialGradient *)(gr);
+            const QRadialGradient *rgr = (const QRadialGradient *)(gr);
             gradient->setAttributeCentralX(rgr->center().x());
             gradient->setAttributeCentralY(rgr->center().y());
             gradient->setAttributeFocalX(rgr->focalPoint().x());
             gradient->setAttributeFocalY(rgr->focalPoint().y());
             gradient->setAttributeRadius(rgr->radius());
         } else if (type == QGradient::ConicalGradient) {
-            QConicalGradient *cgr = (QConicalGradient *)(gr);
+            const QConicalGradient *cgr = (const QConicalGradient *)(gr);
             gradient->setAttributeCentralX(cgr->center().x());
             gradient->setAttributeCentralY(cgr->center().y());
             gradient->setAttributeAngle(cgr->angle());

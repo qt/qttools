@@ -109,10 +109,8 @@ protected:
                 }
 
                 QString source;
-                if (!createString(node->arguments->expression, &source)) {
-                    yyMsg(identLineNo) << qPrintable(LU::tr("%1(): text to translate must be a literal string.\n").arg(name));
+                if (!createString(node->arguments->expression, &source))
                     return;
-                }
 
                 QString comment;
                 bool plural = false;
@@ -145,18 +143,14 @@ protected:
                 }
 
                 QString context;
-                if (!createString(node->arguments->expression, &context)) {
-                    yyMsg(identLineNo) << qPrintable(LU::tr("%1(): both arguments must be literal strings.\n").arg(name));
+                if (!createString(node->arguments->expression, &context))
                     return;
-                }
 
                 AST::ArgumentList *sourceNode = node->arguments->next; // we know that it is a valid pointer.
 
                 QString source;
-                if (!createString(sourceNode->expression, &source)) {
-                    yyMsg(identLineNo) << qPrintable(LU::tr("%1(): both arguments must be literal strings.\n").arg(name));
+                if (!createString(sourceNode->expression, &source))
                     return;
-                }
 
                 if (!sourcetext.isEmpty())
                     yyMsg(identLineNo) << qPrintable(LU::tr("//% cannot be used with %1(). Ignoring\n").arg(name));
@@ -190,10 +184,8 @@ protected:
                 }
 
                 QString id;
-                if (!createString(node->arguments->expression, &id)) {
-                    yyMsg(identLineNo) << qPrintable(LU::tr("%1(): identifier must be a literal string.\n").arg(name));
+                if (!createString(node->arguments->expression, &id))
                     return;
-                }
 
                 if (!msgid.isEmpty()) {
                     yyMsg(identLineNo) << qPrintable(LU::tr("//= cannot be used with %1(). Ignoring\n").arg(name));
