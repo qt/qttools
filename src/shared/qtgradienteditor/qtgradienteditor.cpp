@@ -854,13 +854,13 @@ void QtGradientEditor::setGradient(const QGradient &grad)
     d_ptr->m_spreadGroup->button(idx)->setChecked(true);
 
     if (type == QGradient::LinearGradient) {
-        QLinearGradient *gr = (QLinearGradient *)(&grad);
+        const QLinearGradient *gr = static_cast<const QLinearGradient *>(&grad);
         d_ptr->setStartLinear(gr->start());
         d_ptr->setEndLinear(gr->finalStop());
         d_ptr->m_ui.gradientWidget->setStartLinear(gr->start());
         d_ptr->m_ui.gradientWidget->setEndLinear(gr->finalStop());
     } else if (type == QGradient::RadialGradient) {
-        QRadialGradient *gr = (QRadialGradient *)(&grad);
+        const QRadialGradient *gr = static_cast<const QRadialGradient *>(&grad);
         d_ptr->setCentralRadial(gr->center());
         d_ptr->setFocalRadial(gr->focalPoint());
         d_ptr->setRadiusRadial(gr->radius());
@@ -868,7 +868,7 @@ void QtGradientEditor::setGradient(const QGradient &grad)
         d_ptr->m_ui.gradientWidget->setFocalRadial(gr->focalPoint());
         d_ptr->m_ui.gradientWidget->setRadiusRadial(gr->radius());
     } else if (type == QGradient::ConicalGradient) {
-        QConicalGradient *gr = (QConicalGradient *)(&grad);
+        const QConicalGradient *gr = static_cast<const QConicalGradient *>(&grad);
         d_ptr->setCentralConical(gr->center());
         d_ptr->setAngleConical(gr->angle());
         d_ptr->m_ui.gradientWidget->setCentralConical(gr->center());
