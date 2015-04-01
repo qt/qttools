@@ -274,6 +274,7 @@ QString qtDiag(unsigned flags)
     DUMP_STANDARDPATH(str, DownloadLocation)
     DUMP_STANDARDPATH(str, GenericCacheLocation)
     DUMP_STANDARDPATH(str, GenericConfigLocation)
+    DUMP_STANDARDPATH(str, AppDataLocation)
     DUMP_STANDARDPATH(str, AppConfigLocation)
 
     str << "\nFile selectors (increasing order of precedence):\n ";
