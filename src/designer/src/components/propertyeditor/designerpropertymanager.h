@@ -71,7 +71,7 @@ class ResetDecorator : public QObject
 {
     Q_OBJECT
 public:
-    ResetDecorator(QObject *parent = 0) : QObject(parent), m_spacing(-1) {}
+    explicit ResetDecorator(const QDesignerFormEditorInterface *core, QObject *parent = Q_NULLPTR);
     ~ResetDecorator();
 
     void connectPropertyManager(QtAbstractPropertyManager *manager);
@@ -88,6 +88,7 @@ private:
     QMap<QtProperty *, QList<ResetWidget *> > m_createdResetWidgets;
     QMap<ResetWidget *, QtProperty *> m_resetWidgetToProperty;
     int m_spacing;
+    const QDesignerFormEditorInterface *m_core;
 };
 
 // Helper for handling sub-properties of properties inheriting PropertySheetTranslatableData

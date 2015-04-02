@@ -40,6 +40,11 @@
 #include "qtpropertybrowserutils_p.h"
 
 #include <formwindowbase_p.h>
+#include <formwindowmanager.h>
+#include <formwindow.h>
+#include <propertysheet.h>
+#include <qextensionmanager.h>
+#include <formwindowcursor.h>
 #include <textpropertyeditor_p.h>
 #include <stylesheeteditor_p.h>
 #include <richtexteditor_p.h>
@@ -2181,7 +2186,7 @@ bool DesignerPropertyManager::resetIconSubProperty(QtProperty *property)
 // -------- DesignerEditorFactory
 DesignerEditorFactory::DesignerEditorFactory(QDesignerFormEditorInterface *core, QObject *parent) :
     QtVariantEditorFactory(parent),
-    m_resetDecorator(new ResetDecorator(this)),
+    m_resetDecorator(new ResetDecorator(core, this)),
     m_changingPropertyValue(false),
     m_core(core),
     m_spacing(-1)
@@ -2718,6 +2723,13 @@ void DesignerEditorFactory::slotStringListChanged(const QStringList &value)
     }
 }
 
+ResetDecorator::ResetDecorator(const QDesignerFormEditorInterface *core, QObject *parent)
+    : QObject(parent)
+    , m_spacing(-1)
+    , m_core(core)
+{
+}
+
 ResetDecorator::~ResetDecorator()
 {
     QList<ResetWidget *> editors = m_resetWidgetToProperty.keys();
@@ -2743,6 +2755,27 @@ void ResetDecorator::setSpacing(int spacing)
     m_spacing = spacing;
 }
 
+static inline bool isModifiedInMultiSelection(const QDesignerFormEditorInterface *core,
+                                              const QString &propertyName)
+{
+    const QDesignerFormWindowInterface *form = core->formWindowManager()->activeFormWindow();
+    if (!form)
+        return false;
+    const QDesignerFormWindowCursorInterface *cursor = form->cursor();
+    const int selectionSize = cursor->selectedWidgetCount();
+    if (selectionSize < 2)
+        return false;
+    for (int i = 0; i < selectionSize; ++i) {
+        const QDesignerPropertySheetExtension *sheet =
+            qt_extension<QDesignerPropertySheetExtension*>(core->extensionManager(),
+                                                           cursor->selectedWidget(i));
+        const int index = sheet->indexOf(propertyName);
+        if (index >= 0 && sheet->isChanged(index))
+            return true;
+    }
+    return false;
+}
+
 QWidget *ResetDecorator::editor(QWidget *subEditor, bool resettable, QtAbstractPropertyManager *manager, QtProperty *property,
             QWidget *parent)
 {
@@ -2752,7 +2785,7 @@ QWidget *ResetDecorator::editor(QWidget *subEditor, bool resettable, QtAbstractP
     if (resettable) {
         resetWidget = new ResetWidget(property, parent);
         resetWidget->setSpacing(m_spacing);
-        resetWidget->setResetEnabled(property->isModified());
+        resetWidget->setResetEnabled(property->isModified() || isModifiedInMultiSelection(m_core, property->propertyName()));
         resetWidget->setValueText(property->valueText());
         resetWidget->setValueIcon(property->valueIcon());
         resetWidget->setAutoFillBackground(true);
@@ -2782,7 +2815,7 @@ void ResetDecorator::slotPropertyChanged(QtProperty *property)
     const QList<ResetWidget *>::ConstIterator cend = editors.constEnd();
     for (QList<ResetWidget *>::ConstIterator itEditor = editors.constBegin(); itEditor != cend; ++itEditor) {
         ResetWidget *widget = *itEditor;
-        widget->setResetEnabled(property->isModified());
+        widget->setResetEnabled(property->isModified() || isModifiedInMultiSelection(m_core, property->propertyName()));
         widget->setValueText(property->valueText());
         widget->setValueIcon(property->valueIcon());
     }
