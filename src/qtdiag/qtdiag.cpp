@@ -43,6 +43,7 @@
 #  include <QtGui/QOpenGLFunctions>
 #endif // QT_NO_OPENGL
 #include <QtGui/QWindow>
+#include <QtGui/QTouchDevice>
 
 #ifdef NETWORK_DIAG
 #  include <QSslSocket>
@@ -273,6 +274,7 @@ QString qtDiag(unsigned flags)
     DUMP_STANDARDPATH(str, DownloadLocation)
     DUMP_STANDARDPATH(str, GenericCacheLocation)
     DUMP_STANDARDPATH(str, GenericConfigLocation)
+    DUMP_STANDARDPATH(str, AppDataLocation)
     DUMP_STANDARDPATH(str, AppConfigLocation)
 
     str << "\nFile selectors (increasing order of precedence):\n ";
@@ -383,6 +385,33 @@ QString qtDiag(unsigned flags)
             << " Native orientation: " << screen->nativeOrientation()
             << " OrientationUpdateMask: " << screen->orientationUpdateMask()
             << "\n\n";
+    }
+
+    const QList<const QTouchDevice *> touchDevices = QTouchDevice::devices();
+    if (!touchDevices.isEmpty()) {
+        str << "Touch devices: " << touchDevices.size() << '\n';
+        foreach (const QTouchDevice *device, touchDevices) {
+            str << "  " << (device->type() == QTouchDevice::TouchScreen ? "TouchScreen" : "TouchPad")
+                << " \"" << device->name() << "\", max " << device->maximumTouchPoints()
+                << " touch points, capabilities:";
+            const QTouchDevice::Capabilities capabilities = device->capabilities();
+            if (capabilities & QTouchDevice::Position)
+                str << " Position";
+            if (capabilities & QTouchDevice::Area)
+                str << " Area";
+            if (capabilities & QTouchDevice::Pressure)
+                str << " Pressure";
+            if (capabilities & QTouchDevice::Velocity)
+                str << " Velocity";
+            if (capabilities & QTouchDevice::RawPositions)
+                str << " RawPositions";
+            if (capabilities & QTouchDevice::NormalizedPosition)
+                str << " NormalizedPosition";
+            if (capabilities & QTouchDevice::MouseEmulation)
+                str << " MouseEmulation";
+            str << '\n';
+        }
+        str << "\n\n";
     }
 
 #ifndef QT_NO_OPENGL

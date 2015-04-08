@@ -1317,7 +1317,19 @@ bool ResetPropertyCommand::init(QObject *object, const QString &apropertyName)
 
 bool ResetPropertyCommand::init(const ObjectList &list, const QString &apropertyName, QObject *referenceObject)
 {
-    if (!initList(list, apropertyName, referenceObject))
+    ObjectList modifiedList = list; // filter out modified properties
+    for (ObjectList::iterator it = modifiedList.begin(); it != modifiedList.end() ; ) {
+        QDesignerPropertySheetExtension* sheet = propertySheet(*it);
+        Q_ASSERT(sheet);
+        const int index = sheet->indexOf(apropertyName);
+        if (index == -1 || !sheet->isChanged(index))
+            it = modifiedList.erase(it);
+        else
+            ++it;
+    }
+    if (!modifiedList.contains(referenceObject))
+        referenceObject = Q_NULLPTR;
+    if (modifiedList.isEmpty() || !initList(modifiedList, apropertyName, referenceObject))
         return false;
 
     if(debugPropertyCommands)

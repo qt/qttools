@@ -239,7 +239,7 @@ void BookmarkManagerWidget::removeItem(const QModelIndex &index)
 {
     TRACE_OBJ
     QModelIndex current = index.isValid() ? index : ui.treeView->currentIndex();
-    if (!bookmarkModel->parent(current).isValid())
+    if (!current.parent().isValid() && current.row() < 2)
         return;  // check if we should delete the "Bookmarks Menu", bail
 
     if (bookmarkModel->hasChildren(current)) {
