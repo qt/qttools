@@ -38,9 +38,11 @@
 **
 ****************************************************************************/
 
-#include <QtGui>
-
 #include "worldtimeclock.h"
+
+#include <QMouseEvent>
+#include <QPainter>
+#include <QTimer>
 
 WorldTimeClock::WorldTimeClock(QWidget *parent)
     : QWidget(parent)

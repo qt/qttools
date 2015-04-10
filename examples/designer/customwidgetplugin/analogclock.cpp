@@ -38,9 +38,12 @@
 **
 ****************************************************************************/
 
-#include <QtGui>
-
 #include "analogclock.h"
+
+#include <QMouseEvent>
+#include <QPainter>
+#include <QTime>
+#include <QTimer>
 
 AnalogClock::AnalogClock(QWidget *parent)
     : QWidget(parent)

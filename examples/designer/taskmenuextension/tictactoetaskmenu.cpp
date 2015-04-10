@@ -38,12 +38,12 @@
 **
 ****************************************************************************/
 
-#include <QtDesigner>
-#include <QtWidgets>
-
 #include "tictactoe.h"
 #include "tictactoedialog.h"
 #include "tictactoetaskmenu.h"
+
+#include <QtDesigner/QDesignerFormEditorInterface>
+#include <QAction>
 
 //! [0]
 TicTacToeTaskMenu::TicTacToeTaskMenu(TicTacToe *tic, QObject *parent)

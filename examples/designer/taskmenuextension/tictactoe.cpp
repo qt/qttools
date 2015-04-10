@@ -38,9 +38,10 @@
 **
 ****************************************************************************/
 
-#include <QtGui>
-
 #include "tictactoe.h"
+
+#include <QMouseEvent>
+#include <QPainter>
 
 TicTacToe::TicTacToe(QWidget *parent)
     : QWidget(parent)

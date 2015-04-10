@@ -38,13 +38,15 @@
 **
 ****************************************************************************/
 
+#include "tictactoe.h"
+#include "tictactoedialog.h"
+
+#include <QtDesigner/QDesignerFormWindowInterface>
+#include <QtDesigner/QDesignerFormWindowCursorInterface>
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QVBoxLayout>
-#include <QtDesigner>
-
-#include "tictactoe.h"
-#include "tictactoedialog.h"
+#include <QVariant>
 
 //! [0]
 TicTacToeDialog::TicTacToeDialog(TicTacToe *tic, QWidget *parent)
