@@ -56,7 +56,7 @@ class TicTacToeDialog : public QDialog
 public:
     explicit TicTacToeDialog(TicTacToe *plugin = 0, QWidget *parent = 0);
 
-    QSize sizeHint() const;
+    QSize sizeHint() const Q_DECL_OVERRIDE;
 
 private slots:
     void resetState();

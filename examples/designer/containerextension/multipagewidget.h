@@ -59,7 +59,7 @@ class MultiPageWidget : public QWidget
 public:
     MultiPageWidget(QWidget *parent = 0);
 
-    QSize sizeHint() const;
+    QSize sizeHint() const Q_DECL_OVERRIDE;
 
     int count() const;
     int currentIndex() const;
