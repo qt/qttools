@@ -46,7 +46,6 @@
 QT_BEGIN_NAMESPACE
 class QComboBox;
 class QStackedWidget;
-class QVBoxLayout;
 QT_END_NAMESPACE
 
 //! [0]
@@ -57,7 +56,7 @@ class MultiPageWidget : public QWidget
     Q_PROPERTY(QString pageTitle READ pageTitle WRITE setPageTitle STORED false)
 
 public:
-    MultiPageWidget(QWidget *parent = 0);
+    explicit MultiPageWidget(QWidget *parent = 0);
 
     QSize sizeHint() const Q_DECL_OVERRIDE;
 
@@ -83,7 +82,6 @@ signals:
 private:
     QStackedWidget *stackWidget;
     QComboBox *comboBox;
-    QVBoxLayout *layout;
 };
 //! [0]
 

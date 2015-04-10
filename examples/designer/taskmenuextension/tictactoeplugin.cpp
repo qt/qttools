@@ -49,8 +49,8 @@
 //! [0]
 TicTacToePlugin::TicTacToePlugin(QObject *parent)
     : QObject(parent)
+    , initialized(false)
 {
-    initialized = false;
 }
 
 QString TicTacToePlugin::name() const

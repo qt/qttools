@@ -48,10 +48,9 @@
 //! [0]
 TicTacToeTaskMenu::TicTacToeTaskMenu(TicTacToe *tic, QObject *parent)
     : QObject(parent)
+    , editStateAction(new QAction(tr("Edit State..."), this))
+    , ticTacToe(tic)
 {
-    ticTacToe = tic;
-
-    editStateAction = new QAction(tr("Edit State..."), this);
     connect(editStateAction, &QAction::triggered, this, &TicTacToeTaskMenu::editState);
 }
 //! [0]

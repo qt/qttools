@@ -57,7 +57,7 @@ class MultiPageWidgetPlugin: public QObject, public QDesignerCustomWidgetInterfa
 //! [1]
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 public:
-    MultiPageWidgetPlugin(QObject *parent = 0);
+    explicit MultiPageWidgetPlugin(QObject *parent = 0);
 
     QString name() const Q_DECL_OVERRIDE;
     QString group() const Q_DECL_OVERRIDE;

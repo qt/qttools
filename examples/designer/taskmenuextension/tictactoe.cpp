@@ -45,6 +45,7 @@
 
 TicTacToe::TicTacToe(QWidget *parent)
     : QWidget(parent)
+    , turnNumber(0)
 {
 }
 

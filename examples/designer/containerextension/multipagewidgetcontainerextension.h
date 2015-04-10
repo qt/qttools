@@ -56,7 +56,7 @@ class MultiPageWidgetContainerExtension: public QObject,
     Q_INTERFACES(QDesignerContainerExtension)
 
 public:
-    MultiPageWidgetContainerExtension(MultiPageWidget *widget, QObject *parent);
+    explicit MultiPageWidgetContainerExtension(MultiPageWidget *widget, QObject *parent);
 
     void addWidget(QWidget *widget) Q_DECL_OVERRIDE;
     int count() const Q_DECL_OVERRIDE;

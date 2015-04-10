@@ -50,7 +50,7 @@ class AnalogClockPlugin : public QObject, public QDesignerCustomWidgetInterface
     Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QDesignerCustomWidgetInterface" FILE "analogclock.json")
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 public:
-    AnalogClockPlugin(QObject *parent = 0);
+    explicit AnalogClockPlugin(QObject *parent = 0);
 
     bool isContainer() const Q_DECL_OVERRIDE;
     bool isInitialized() const Q_DECL_OVERRIDE;

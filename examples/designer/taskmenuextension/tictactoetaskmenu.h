@@ -57,7 +57,7 @@ class TicTacToeTaskMenu : public QObject, public QDesignerTaskMenuExtension
     Q_INTERFACES(QDesignerTaskMenuExtension)
 
 public:
-    TicTacToeTaskMenu(TicTacToe *tic, QObject *parent);
+    explicit TicTacToeTaskMenu(TicTacToe *tic, QObject *parent);
 
     QAction *preferredEditAction() const Q_DECL_OVERRIDE;
     QList<QAction *> taskActions() const Q_DECL_OVERRIDE;
@@ -77,7 +77,7 @@ class TicTacToeTaskMenuFactory : public QExtensionFactory
     Q_OBJECT
 
 public:
-    TicTacToeTaskMenuFactory(QExtensionManager *parent = 0);
+    explicit TicTacToeTaskMenuFactory(QExtensionManager *parent = 0);
 
 protected:
     QObject *createExtension(QObject *object, const QString &iid, QObject *parent) const Q_DECL_OVERRIDE;

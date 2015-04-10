@@ -51,14 +51,13 @@
 //! [0]
 TicTacToeDialog::TicTacToeDialog(TicTacToe *tic, QWidget *parent)
     : QDialog(parent)
-{
-    ticTacToe = tic;
-    editor = new TicTacToe;
-    editor->setState(ticTacToe->state());
-
-    buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok
+    , editor(new TicTacToe)
+    , ticTacToe(tic)
+    , buttonBox(new QDialogButtonBox(QDialogButtonBox::Ok
                                      | QDialogButtonBox::Cancel
-                                     | QDialogButtonBox::Reset);
+                                     | QDialogButtonBox::Reset))
+{
+    editor->setState(ticTacToe->state());
 
     connect(buttonBox->button(QDialogButtonBox::Reset), &QAbstractButton::clicked,
             this, &TicTacToeDialog::resetState);

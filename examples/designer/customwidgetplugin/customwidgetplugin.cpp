@@ -46,8 +46,8 @@
 //! [0]
 AnalogClockPlugin::AnalogClockPlugin(QObject *parent)
     : QObject(parent)
+    , initialized(false)
 {
-    initialized = false;
 }
 //! [0]
 

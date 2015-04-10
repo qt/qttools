@@ -55,7 +55,7 @@ class TicTacToe : public QWidget
     Q_PROPERTY(QString state READ state WRITE setState)
 
 public:
-    TicTacToe(QWidget *parent = 0);
+    explicit TicTacToe(QWidget *parent = 0);
 
     QSize minimumSizeHint() const Q_DECL_OVERRIDE;
     QSize sizeHint() const Q_DECL_OVERRIDE;

@@ -44,9 +44,9 @@
 //! [0]
 MultiPageWidgetContainerExtension::MultiPageWidgetContainerExtension(MultiPageWidget *widget,
                                                                      QObject *parent)
-    :QObject(parent)
+    : QObject(parent)
+    , myWidget(widget)
 {
-    myWidget = widget;
 }
 //! [0]
 

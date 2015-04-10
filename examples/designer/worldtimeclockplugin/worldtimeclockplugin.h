@@ -54,7 +54,7 @@ class WorldTimeClockPlugin : public QObject,
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 
 public:
-    WorldTimeClockPlugin(QObject *parent = 0);
+    explicit WorldTimeClockPlugin(QObject *parent = 0);
 
     bool isContainer() const Q_DECL_OVERRIDE;
     bool isInitialized() const Q_DECL_OVERRIDE;
