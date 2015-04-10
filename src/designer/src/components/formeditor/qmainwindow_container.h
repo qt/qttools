@@ -52,13 +52,13 @@ class QMainWindowContainer: public QObject, public QDesignerContainerExtension
 public:
     explicit QMainWindowContainer(QMainWindow *widget, QObject *parent = 0);
 
-    virtual int count() const;
-    virtual QWidget *widget(int index) const;
-    virtual int currentIndex() const;
-    virtual void setCurrentIndex(int index);
-    virtual void addWidget(QWidget *widget);
-    virtual void insertWidget(int index, QWidget *widget);
-    virtual void remove(int index);
+    int count() const Q_DECL_OVERRIDE;
+    QWidget *widget(int index) const Q_DECL_OVERRIDE;
+    int currentIndex() const Q_DECL_OVERRIDE;
+    void setCurrentIndex(int index) Q_DECL_OVERRIDE;
+    void addWidget(QWidget *widget) Q_DECL_OVERRIDE;
+    void insertWidget(int index, QWidget *widget) Q_DECL_OVERRIDE;
+    void remove(int index) Q_DECL_OVERRIDE;
 
 private:
     QMainWindow *m_mainWindow;

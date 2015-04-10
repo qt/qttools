@@ -205,14 +205,14 @@ public slots:
     void enableUpdateBackground(bool enable);
 
 protected:
-    virtual void paintEvent(QPaintEvent *e);
-    virtual void mouseMoveEvent(QMouseEvent *e);
-    virtual void mousePressEvent(QMouseEvent *e);
-    virtual void mouseReleaseEvent(QMouseEvent *e);
-    virtual void keyPressEvent(QKeyEvent *e);
-    virtual void mouseDoubleClickEvent(QMouseEvent *e);
-    virtual void resizeEvent(QResizeEvent *e);
-    virtual void contextMenuEvent(QContextMenuEvent * event);
+    void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
+    void mouseMoveEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
+    void mousePressEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
+    void mouseReleaseEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
+    void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
+    void mouseDoubleClickEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
+    void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
+    void contextMenuEvent(QContextMenuEvent * event) Q_DECL_OVERRIDE;
 
     virtual Connection *createConnection(QWidget *source, QWidget *target);
     virtual void modifyConnection(Connection *con);

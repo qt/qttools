@@ -68,13 +68,13 @@ private slots:
     void showTabOrderDialog();
 
 protected:
-    virtual void paintEvent(QPaintEvent *e);
-    virtual void mouseMoveEvent(QMouseEvent *e);
-    virtual void mousePressEvent(QMouseEvent *e);
-    virtual void mouseDoubleClickEvent(QMouseEvent *e);
-    virtual void contextMenuEvent(QContextMenuEvent *e);
-    virtual void resizeEvent(QResizeEvent *e);
-    virtual void showEvent(QShowEvent *e);
+    void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
+    void mouseMoveEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
+    void mousePressEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
+    void mouseDoubleClickEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
+    void contextMenuEvent(QContextMenuEvent *e) Q_DECL_OVERRIDE;
+    void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
+    void showEvent(QShowEvent *e) Q_DECL_OVERRIDE;
 
 private:
     QRect indicatorRect(int index) const;

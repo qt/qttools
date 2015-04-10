@@ -60,11 +60,11 @@ public:
     virtual QWidget *widget(int index) const { return m_widget->widget(index); }
 
     virtual int currentIndex() const { return m_widget->currentIndex(); }
-    virtual void setCurrentIndex(int index);
+    void setCurrentIndex(int index) Q_DECL_OVERRIDE;
 
-    virtual void addWidget(QWidget *widget);
-    virtual void insertWidget(int index, QWidget *widget);
-    virtual void remove(int index);
+    void addWidget(QWidget *widget) Q_DECL_OVERRIDE;
+    void insertWidget(int index, QWidget *widget) Q_DECL_OVERRIDE;
+    void remove(int index) Q_DECL_OVERRIDE;
 
 private:
     QStackedWidget *m_widget;
@@ -82,11 +82,11 @@ public:
     virtual QWidget *widget(int index) const { return m_widget->widget(index); }
 
     virtual int currentIndex() const { return m_widget->currentIndex(); }
-    virtual void setCurrentIndex(int index);
+    void setCurrentIndex(int index) Q_DECL_OVERRIDE;
 
-    virtual void addWidget(QWidget *widget);
-    virtual void insertWidget(int index, QWidget *widget);
-    virtual void remove(int index);
+    void addWidget(QWidget *widget) Q_DECL_OVERRIDE;
+    void insertWidget(int index, QWidget *widget) Q_DECL_OVERRIDE;
+    void remove(int index) Q_DECL_OVERRIDE;
 
 private:
     QTabWidget *m_widget;
@@ -104,11 +104,11 @@ public:
     virtual QWidget *widget(int index) const { return m_widget->widget(index); }
 
     virtual int currentIndex() const { return m_widget->currentIndex(); }
-    virtual void setCurrentIndex(int index);
+    void setCurrentIndex(int index) Q_DECL_OVERRIDE;
 
-    virtual void addWidget(QWidget *widget);
-    virtual void insertWidget(int index, QWidget *widget);
-    virtual void remove(int index);
+    void addWidget(QWidget *widget) Q_DECL_OVERRIDE;
+    void insertWidget(int index, QWidget *widget) Q_DECL_OVERRIDE;
+    void remove(int index) Q_DECL_OVERRIDE;
 
 private:
     QToolBox *m_widget;
@@ -123,12 +123,12 @@ class SingleChildContainer: public QDesignerContainerExtension
 protected:
     explicit SingleChildContainer(Container *widget, bool active = true);
 public:
-    virtual int count() const;
-    virtual QWidget *widget(int index) const;
-    virtual int currentIndex() const;
+    int count() const Q_DECL_OVERRIDE;
+    QWidget *widget(int index) const Q_DECL_OVERRIDE;
+    int currentIndex() const Q_DECL_OVERRIDE;
     virtual void setCurrentIndex(int /*index*/) {}
-    virtual void addWidget(QWidget *widget);
-    virtual void insertWidget(int index, QWidget *widget);
+    void addWidget(QWidget *widget) Q_DECL_OVERRIDE;
+    void insertWidget(int index, QWidget *widget) Q_DECL_OVERRIDE;
     virtual void remove(int /*index*/) {}
 
     virtual bool canAddWidget() const { return false; }

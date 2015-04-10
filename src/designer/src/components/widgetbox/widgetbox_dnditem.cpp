@@ -75,9 +75,9 @@ public:
 
 protected:
 
-    virtual QWidget *create(DomWidget *ui_widget, QWidget *parents);
-    virtual QWidget *createWidget(const QString &widgetName, QWidget *parentWidget, const QString &name);
-    virtual void createCustomWidgets(DomCustomWidgets *);
+    QWidget *create(DomWidget *ui_widget, QWidget *parents) Q_DECL_OVERRIDE;
+    QWidget *createWidget(const QString &widgetName, QWidget *parentWidget, const QString &name) Q_DECL_OVERRIDE;
+    void createCustomWidgets(DomCustomWidgets *) Q_DECL_OVERRIDE;
 };
 
 WidgetBoxResource::WidgetBoxResource(QDesignerFormEditorInterface *core) :

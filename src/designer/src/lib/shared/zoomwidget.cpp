@@ -274,7 +274,7 @@ class ZoomedEventFilterRedirector : public QObject {
 
 public:
     explicit ZoomedEventFilterRedirector(ZoomWidget *zw, QObject *parent);
-    virtual bool eventFilter(QObject *watched, QEvent *event);
+    bool eventFilter(QObject *watched, QEvent *event) Q_DECL_OVERRIDE;
 
 private:
     ZoomWidget *m_zw;

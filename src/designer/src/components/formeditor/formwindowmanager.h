@@ -65,10 +65,10 @@ public:
     explicit FormWindowManager(QDesignerFormEditorInterface *core, QObject *parent = 0);
     virtual ~FormWindowManager();
 
-    virtual QDesignerFormEditorInterface *core() const;
+    QDesignerFormEditorInterface *core() const Q_DECL_OVERRIDE;
 
-    virtual QAction *action(Action action) const;
-    virtual QActionGroup *actionGroup(ActionGroup actionGroup) const;
+    QAction *action(Action action) const Q_DECL_OVERRIDE;
+    QActionGroup *actionGroup(ActionGroup actionGroup) const Q_DECL_OVERRIDE;
 
     QDesignerFormWindowInterface *activeFormWindow() const;
 

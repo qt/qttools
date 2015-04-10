@@ -102,8 +102,8 @@ public:
     explicit QDesignerAxPluginWidget(QWidget *parent);
     virtual ~QDesignerAxPluginWidget();
 
-    virtual const QMetaObject *metaObject() const;
-    virtual int qt_metacall(QMetaObject::Call, int, void **);
+    const QMetaObject *metaObject() const Q_DECL_OVERRIDE;
+    int qt_metacall(QMetaObject::Call, int, void **) Q_DECL_OVERRIDE;
 
 private:
     QMap<int, bool> m_propValues;

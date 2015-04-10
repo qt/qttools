@@ -48,7 +48,7 @@ class QAxWidgetTaskMenu: public QObject, public QDesignerTaskMenuExtension
 public:
     explicit QAxWidgetTaskMenu(QDesignerAxWidget *object, QObject *parent = 0);
     virtual ~QAxWidgetTaskMenu();
-    virtual QList<QAction*> taskActions() const;
+    QList<QAction*> taskActions() const Q_DECL_OVERRIDE;
 
 private slots:
     void setActiveXControl();

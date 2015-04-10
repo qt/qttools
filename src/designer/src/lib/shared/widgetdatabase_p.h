@@ -153,9 +153,9 @@ public:
     explicit WidgetDataBase(QDesignerFormEditorInterface *core, QObject *parent = 0);
     virtual ~WidgetDataBase();
 
-    virtual QDesignerFormEditorInterface *core() const;
+    QDesignerFormEditorInterface *core() const Q_DECL_OVERRIDE;
 
-    virtual int indexOfObject(QObject *o, bool resolveName = true) const;
+    int indexOfObject(QObject *o, bool resolveName = true) const Q_DECL_OVERRIDE;
 
     void remove(int index);
 

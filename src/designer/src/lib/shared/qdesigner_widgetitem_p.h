@@ -81,8 +81,8 @@ public:
 
     inline QWidget *constWidget() const { return const_cast<QDesignerWidgetItem*>(this)->widget(); }
 
-    virtual QSize minimumSize() const;
-    virtual QSize sizeHint()    const;
+    QSize minimumSize() const Q_DECL_OVERRIDE;
+    QSize sizeHint()    const Q_DECL_OVERRIDE;
 
     // Resize: Takes effect if the contained widget does not have a layout
     QSize nonLaidOutMinSize() const;
@@ -103,7 +103,7 @@ public:
 
     static bool subjectToStretch(const QLayout *layout, QWidget *w);
 
-    virtual bool eventFilter(QObject * watched, QEvent * event);
+    bool eventFilter(QObject * watched, QEvent * event) Q_DECL_OVERRIDE;
 
 private slots:
     void layoutChanged();

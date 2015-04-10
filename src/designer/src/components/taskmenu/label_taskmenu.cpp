@@ -54,7 +54,7 @@ public:
     LabelTaskMenuInlineEditor(QLabel *button, QObject *parent);
 
 protected:
-    virtual QRect editRectangle() const;
+    QRect editRectangle() const Q_DECL_OVERRIDE;
 };
 
 LabelTaskMenuInlineEditor::LabelTaskMenuInlineEditor(QLabel *w, QObject *parent) :

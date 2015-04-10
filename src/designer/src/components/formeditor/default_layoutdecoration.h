@@ -51,7 +51,7 @@ public:
     explicit QDesignerLayoutDecorationFactory(QExtensionManager *parent = 0);
 
 protected:
-    virtual QObject *createExtension(QObject *object, const QString &iid, QObject *parent) const;
+    QObject *createExtension(QObject *object, const QString &iid, QObject *parent) const Q_DECL_OVERRIDE;
 };
 
 }  // namespace qdesigner_internal

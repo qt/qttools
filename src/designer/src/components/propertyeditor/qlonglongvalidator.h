@@ -55,7 +55,7 @@ public:
 
     void setBottom(qlonglong);
     void setTop(qlonglong);
-    virtual void setRange(qlonglong bottom, qlonglong top);
+    void setRange(qlonglong bottom, qlonglong top);
 
     qlonglong bottom() const { return b; }
     qlonglong top() const { return t; }
@@ -83,7 +83,7 @@ public:
 
     void setBottom(qulonglong);
     void setTop(qulonglong);
-    virtual void setRange(qulonglong bottom, qulonglong top);
+    void setRange(qulonglong bottom, qulonglong top);
 
     qulonglong bottom() const { return b; }
     qulonglong top() const { return t; }

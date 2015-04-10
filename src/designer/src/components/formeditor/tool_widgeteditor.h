@@ -56,15 +56,15 @@ public:
     explicit WidgetEditorTool(FormWindow *formWindow);
     virtual ~WidgetEditorTool();
 
-    virtual QDesignerFormEditorInterface *core() const;
-    virtual QDesignerFormWindowInterface *formWindow() const;
-    virtual QWidget *editor() const;
-    virtual QAction *action() const;
+    QDesignerFormEditorInterface *core() const Q_DECL_OVERRIDE;
+    QDesignerFormWindowInterface *formWindow() const Q_DECL_OVERRIDE;
+    QWidget *editor() const Q_DECL_OVERRIDE;
+    QAction *action() const Q_DECL_OVERRIDE;
 
     virtual void activated();
     virtual void deactivated();
 
-    virtual bool handleEvent(QWidget *widget, QWidget *managedWidget, QEvent *event);
+    bool handleEvent(QWidget *widget, QWidget *managedWidget, QEvent *event) Q_DECL_OVERRIDE;
 
     bool handleContextMenu(QWidget *widget, QWidget *managedWidget, QContextMenuEvent *e);
     bool handleMouseButtonDblClickEvent(QWidget *widget, QWidget *managedWidget, QMouseEvent *e);

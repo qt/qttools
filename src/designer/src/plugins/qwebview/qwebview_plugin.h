@@ -46,17 +46,17 @@ class QWebViewPlugin: public QObject, public QDesignerCustomWidgetInterface
 public:
     QWebViewPlugin(QObject *parent = 0);
 
-    virtual QString name() const;
-    virtual QString group() const;
-    virtual QString toolTip() const;
-    virtual QString whatsThis() const;
-    virtual QString includeFile() const;
-    virtual QIcon icon() const;
-    virtual bool isContainer() const;
-    virtual QWidget *createWidget(QWidget *parent);
-    virtual bool isInitialized() const;
-    virtual void initialize(QDesignerFormEditorInterface *core);
-    virtual QString domXml() const;
+    QString name() const Q_DECL_OVERRIDE;
+    QString group() const Q_DECL_OVERRIDE;
+    QString toolTip() const Q_DECL_OVERRIDE;
+    QString whatsThis() const Q_DECL_OVERRIDE;
+    QString includeFile() const Q_DECL_OVERRIDE;
+    QIcon icon() const Q_DECL_OVERRIDE;
+    bool isContainer() const Q_DECL_OVERRIDE;
+    QWidget *createWidget(QWidget *parent) Q_DECL_OVERRIDE;
+    bool isInitialized() const Q_DECL_OVERRIDE;
+    void initialize(QDesignerFormEditorInterface *core) Q_DECL_OVERRIDE;
+    QString domXml() const Q_DECL_OVERRIDE;
 
 private:
     bool m_initialized;

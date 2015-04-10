@@ -84,8 +84,8 @@ class TemplateOptionsPage : public QDesignerOptionsPageInterface
 public:
     explicit TemplateOptionsPage(QDesignerFormEditorInterface *core);
 
-    virtual QString name() const;
-    virtual QWidget *createPage(QWidget *parent);
+    QString name() const Q_DECL_OVERRIDE;
+    QWidget *createPage(QWidget *parent) Q_DECL_OVERRIDE;
     virtual void apply();
     virtual void finish();
 

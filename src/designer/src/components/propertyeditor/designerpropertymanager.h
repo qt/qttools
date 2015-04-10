@@ -128,15 +128,15 @@ public:
     explicit DesignerPropertyManager(QDesignerFormEditorInterface *core, QObject *parent = 0);
     ~DesignerPropertyManager();
 
-    virtual QStringList attributes(int propertyType) const;
-    virtual int attributeType(int propertyType, const QString &attribute) const;
+    QStringList attributes(int propertyType) const Q_DECL_OVERRIDE;
+    int attributeType(int propertyType, const QString &attribute) const Q_DECL_OVERRIDE;
 
-    virtual QVariant attributeValue(const QtProperty *property, const QString &attribute) const;
-    virtual bool isPropertyTypeSupported(int propertyType) const;
-    virtual QVariant value(const QtProperty *property) const;
-    virtual int valueType(int propertyType) const;
-    virtual QString valueText(const QtProperty *property) const;
-    virtual QIcon valueIcon(const QtProperty *property) const;
+    QVariant attributeValue(const QtProperty *property, const QString &attribute) const Q_DECL_OVERRIDE;
+    bool isPropertyTypeSupported(int propertyType) const Q_DECL_OVERRIDE;
+    QVariant value(const QtProperty *property) const Q_DECL_OVERRIDE;
+    int valueType(int propertyType) const Q_DECL_OVERRIDE;
+    QString valueText(const QtProperty *property) const Q_DECL_OVERRIDE;
+    QIcon valueIcon(const QtProperty *property) const Q_DECL_OVERRIDE;
 
     bool resetFontSubProperty(QtProperty *property);
     bool resetIconSubProperty(QtProperty *subProperty);
@@ -157,14 +157,14 @@ public:
 public Q_SLOTS:
     virtual void setAttribute(QtProperty *property,
                 const QString &attribute, const QVariant &value);
-    virtual void setValue(QtProperty *property, const QVariant &value);
+    void setValue(QtProperty *property, const QVariant &value) Q_DECL_OVERRIDE;
 Q_SIGNALS:
     // sourceOfChange - a subproperty (or just property) which caused a change
     //void valueChanged(QtProperty *property, const QVariant &value, QtProperty *sourceOfChange);
     void valueChanged(QtProperty *property, const QVariant &value, bool enableSubPropertyHandling);
 protected:
-    virtual void initializeProperty(QtProperty *property);
-    virtual void uninitializeProperty(QtProperty *property);
+    void initializeProperty(QtProperty *property) Q_DECL_OVERRIDE;
+    void uninitializeProperty(QtProperty *property) Q_DECL_OVERRIDE;
 private Q_SLOTS:
     void slotValueChanged(QtProperty *property, const QVariant &value);
     void slotPropertyDestroyed(QtProperty *property);

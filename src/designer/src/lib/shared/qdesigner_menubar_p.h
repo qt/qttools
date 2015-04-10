@@ -104,15 +104,15 @@ private slots:
     void slotRemoveMenuBar();
 
 protected:
-    virtual void actionEvent(QActionEvent *event);
-    virtual void dragEnterEvent(QDragEnterEvent *event);
-    virtual void dragMoveEvent(QDragMoveEvent *event);
-    virtual void dragLeaveEvent(QDragLeaveEvent *event);
-    virtual void dropEvent(QDropEvent *event);
-    virtual void paintEvent(QPaintEvent *event);
-    virtual void focusOutEvent(QFocusEvent *event);
-    virtual void keyPressEvent(QKeyEvent *event);
-    virtual void keyReleaseEvent(QKeyEvent *event);
+    void actionEvent(QActionEvent *event) Q_DECL_OVERRIDE;
+    void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
+    void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;
+    void dragLeaveEvent(QDragLeaveEvent *event) Q_DECL_OVERRIDE;
+    void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
+    void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
+    void focusOutEvent(QFocusEvent *event) Q_DECL_OVERRIDE;
+    void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
+    void keyReleaseEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
 
     bool handleEvent(QWidget *widget, QEvent *event);
     bool handleMouseDoubleClickEvent(QWidget *widget, QMouseEvent *event);

@@ -54,7 +54,7 @@ protected:
     explicit ActionProviderBase(QWidget *widget);
 
 public:
-    virtual void adjustIndicator(const QPoint &pos);
+    void adjustIndicator(const QPoint &pos) Q_DECL_OVERRIDE;
     virtual Qt::Orientation orientation() const = 0;
 
 protected:
@@ -71,12 +71,12 @@ class QT_FORMEDITOR_EXPORT QToolBarActionProvider: public QObject, public Action
 public:
     explicit QToolBarActionProvider(QToolBar *widget, QObject *parent = 0);
 
-    virtual QRect actionGeometry(QAction *action) const;
-    virtual QAction *actionAt(const QPoint &pos) const;
+    QRect actionGeometry(QAction *action) const Q_DECL_OVERRIDE;
+    QAction *actionAt(const QPoint &pos) const Q_DECL_OVERRIDE;
     Qt::Orientation orientation() const;
 
 protected:
-    virtual QRect indicatorGeometry(const QPoint &pos, Qt::LayoutDirection layoutDirection) const;
+    QRect indicatorGeometry(const QPoint &pos, Qt::LayoutDirection layoutDirection) const Q_DECL_OVERRIDE;
 
 private:
     QToolBar *m_widget;
@@ -89,8 +89,8 @@ class QT_FORMEDITOR_EXPORT QMenuBarActionProvider: public QObject, public Action
 public:
     explicit QMenuBarActionProvider(QMenuBar *widget, QObject *parent = 0);
 
-    virtual QRect actionGeometry(QAction *action) const;
-    virtual QAction *actionAt(const QPoint &pos) const;
+    QRect actionGeometry(QAction *action) const Q_DECL_OVERRIDE;
+    QAction *actionAt(const QPoint &pos) const Q_DECL_OVERRIDE;
     Qt::Orientation orientation() const;
 
 private:
@@ -104,8 +104,8 @@ class QT_FORMEDITOR_EXPORT QMenuActionProvider: public QObject, public ActionPro
 public:
     explicit QMenuActionProvider(QMenu *widget, QObject *parent = 0);
 
-    virtual QRect actionGeometry(QAction *action) const;
-    virtual QAction *actionAt(const QPoint &pos) const;
+    QRect actionGeometry(QAction *action) const Q_DECL_OVERRIDE;
+    QAction *actionAt(const QPoint &pos) const Q_DECL_OVERRIDE;
     Qt::Orientation orientation() const;
 
 private:

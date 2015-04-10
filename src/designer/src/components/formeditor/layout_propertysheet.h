@@ -54,9 +54,9 @@ public:
     explicit LayoutPropertySheet(QLayout *object, QObject *parent = 0);
     virtual ~LayoutPropertySheet();
 
-    virtual void setProperty(int index, const QVariant &value);
-    virtual QVariant property(int index) const;
-    virtual bool reset(int index);
+    void setProperty(int index, const QVariant &value) Q_DECL_OVERRIDE;
+    QVariant property(int index) const Q_DECL_OVERRIDE;
+    bool reset(int index) Q_DECL_OVERRIDE;
     void setChanged(int index, bool changed);
 
     static void stretchAttributesToDom(QDesignerFormEditorInterface *core, QLayout *lt, DomLayout *domLayout);

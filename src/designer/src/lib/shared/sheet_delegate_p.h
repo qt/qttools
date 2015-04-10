@@ -63,8 +63,8 @@ class QDESIGNER_SHARED_EXPORT SheetDelegate: public QItemDelegate
 public:
     SheetDelegate(QTreeView *view, QWidget *parent);
 
-    virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-    virtual QSize sizeHint(const QStyleOptionViewItem &opt, const QModelIndex &index) const;
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
+    QSize sizeHint(const QStyleOptionViewItem &opt, const QModelIndex &index) const Q_DECL_OVERRIDE;
 
 private:
     QTreeView *m_view;

@@ -55,8 +55,8 @@ public:
 
     virtual ~TextEditTaskMenu();
 
-    virtual QAction *preferredEditAction() const;
-    virtual QList<QAction*> taskActions() const;
+    QAction *preferredEditAction() const Q_DECL_OVERRIDE;
+    QList<QAction*> taskActions() const Q_DECL_OVERRIDE;
 
 private slots:
     void editText();

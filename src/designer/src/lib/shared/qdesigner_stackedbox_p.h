@@ -119,7 +119,7 @@ private slots:
     void changeOrder();
 
 protected:
-    virtual void gotoPage(int page);
+    void gotoPage(int page) Q_DECL_OVERRIDE;
 
 private:
     QAction *m_actionPreviousPage;
@@ -136,10 +136,10 @@ class QDESIGNER_SHARED_EXPORT QStackedWidgetPropertySheet : public QDesignerProp
 public:
     explicit QStackedWidgetPropertySheet(QStackedWidget *object, QObject *parent = 0);
 
-    virtual void setProperty(int index, const QVariant &value);
-    virtual QVariant property(int index) const;
-    virtual bool reset(int index);
-    virtual bool isEnabled(int index) const;
+    void setProperty(int index, const QVariant &value) Q_DECL_OVERRIDE;
+    QVariant property(int index) const Q_DECL_OVERRIDE;
+    bool reset(int index) Q_DECL_OVERRIDE;
+    bool isEnabled(int index) const Q_DECL_OVERRIDE;
 
     // Check whether the property is to be saved. Returns false for the page
     // properties (as the property sheet has no concept of 'stored')

@@ -78,54 +78,54 @@ public:
     explicit FormWindow(FormEditor *core, QWidget *parent = 0, Qt::WindowFlags flags = 0);
     virtual ~FormWindow();
 
-    virtual QDesignerFormEditorInterface *core() const;
+    QDesignerFormEditorInterface *core() const Q_DECL_OVERRIDE;
 
-    virtual QDesignerFormWindowCursorInterface *cursor() const;
+    QDesignerFormWindowCursorInterface *cursor() const Q_DECL_OVERRIDE;
 
     // Overwritten: FormWindowBase
-    virtual QWidget *formContainer() const;
+    QWidget *formContainer() const Q_DECL_OVERRIDE;
 
-    virtual int toolCount() const;
-    virtual int currentTool() const;
-    virtual void setCurrentTool(int index);
-    virtual QDesignerFormWindowToolInterface *tool(int index) const;
-    virtual void registerTool(QDesignerFormWindowToolInterface *tool);
+    int toolCount() const Q_DECL_OVERRIDE;
+    int currentTool() const Q_DECL_OVERRIDE;
+    void setCurrentTool(int index) Q_DECL_OVERRIDE;
+    QDesignerFormWindowToolInterface *tool(int index) const Q_DECL_OVERRIDE;
+    void registerTool(QDesignerFormWindowToolInterface *tool) Q_DECL_OVERRIDE;
 
-    virtual QString author() const;
-    virtual void setAuthor(const QString &author);
+    QString author() const Q_DECL_OVERRIDE;
+    void setAuthor(const QString &author) Q_DECL_OVERRIDE;
 
-    virtual QString comment() const;
-    virtual void setComment(const QString &comment);
+    QString comment() const Q_DECL_OVERRIDE;
+    void setComment(const QString &comment) Q_DECL_OVERRIDE;
 
-    virtual void layoutDefault(int *margin, int *spacing);
-    virtual void setLayoutDefault(int margin, int spacing);
+    void layoutDefault(int *margin, int *spacing) Q_DECL_OVERRIDE;
+    void setLayoutDefault(int margin, int spacing) Q_DECL_OVERRIDE;
 
-    virtual void layoutFunction(QString *margin, QString *spacing);
-    virtual void setLayoutFunction(const QString &margin, const QString &spacing);
+    void layoutFunction(QString *margin, QString *spacing) Q_DECL_OVERRIDE;
+    void setLayoutFunction(const QString &margin, const QString &spacing) Q_DECL_OVERRIDE;
 
-    virtual QString pixmapFunction() const;
-    virtual void setPixmapFunction(const QString &pixmapFunction);
+    QString pixmapFunction() const Q_DECL_OVERRIDE;
+    void setPixmapFunction(const QString &pixmapFunction) Q_DECL_OVERRIDE;
 
-    virtual QString exportMacro() const;
-    virtual void setExportMacro(const QString &exportMacro);
+    QString exportMacro() const Q_DECL_OVERRIDE;
+    void setExportMacro(const QString &exportMacro) Q_DECL_OVERRIDE;
 
-    virtual QStringList includeHints() const;
-    virtual void setIncludeHints(const QStringList &includeHints);
+    QStringList includeHints() const Q_DECL_OVERRIDE;
+    void setIncludeHints(const QStringList &includeHints) Q_DECL_OVERRIDE;
 
-    virtual QString fileName() const;
-    virtual void setFileName(const QString &fileName);
+    QString fileName() const Q_DECL_OVERRIDE;
+    void setFileName(const QString &fileName) Q_DECL_OVERRIDE;
 
-    virtual QString contents() const;
-    virtual bool setContents(QIODevice *dev, QString *errorMessage = 0);
-    virtual bool setContents(const QString &);
+    QString contents() const Q_DECL_OVERRIDE;
+    bool setContents(QIODevice *dev, QString *errorMessage = 0) Q_DECL_OVERRIDE;
+    bool setContents(const QString &) Q_DECL_OVERRIDE;
 
-    virtual QDir absoluteDir() const;
+    QDir absoluteDir() const Q_DECL_OVERRIDE;
 
-    virtual void simplifySelection(QWidgetList *sel) const;
+    void simplifySelection(QWidgetList *sel) const Q_DECL_OVERRIDE;
 
-    virtual void ensureUniqueObjectName(QObject *object);
+    void ensureUniqueObjectName(QObject *object) Q_DECL_OVERRIDE;
 
-    virtual QWidget *mainContainer() const;
+    QWidget *mainContainer() const Q_DECL_OVERRIDE;
     void setMainContainer(QWidget *mainContainer);
     bool isMainContainer(const QWidget *w) const;
 
@@ -158,11 +158,11 @@ public:
     void manageWidget(QWidget *w);
     void unmanageWidget(QWidget *w);
 
-    virtual QUndoStack *commandHistory() const;
+    QUndoStack *commandHistory() const Q_DECL_OVERRIDE;
     void beginCommand(const QString &description);
     void endCommand();
 
-    virtual bool blockSelectionChanged(bool blocked);
+    bool blockSelectionChanged(bool blocked) Q_DECL_OVERRIDE;
     virtual void emitSelectionChanged();
 
     bool unify(QObject *w, QString &s, bool changeIt);
@@ -173,7 +173,7 @@ public:
     static FormWindow *findFormWindow(QWidget *w);
 
     virtual QWidget *containerAt(const QPoint &pos);
-    virtual QWidget *widgetAt(const QPoint &pos);
+    QWidget *widgetAt(const QPoint &pos) Q_DECL_OVERRIDE;
     virtual void highlightWidget(QWidget *w, const QPoint &pos,
                                     HighlightMode mode = Highlight);
 
@@ -191,7 +191,7 @@ public:
     bool dropWidgets(const QList<QDesignerDnDItemInterface*> &item_list, QWidget *target,
                         const QPoint &global_mouse_pos);
 
-    virtual QWidget *findContainer(QWidget *w, bool excludeLayout) const;
+    QWidget *findContainer(QWidget *w, bool excludeLayout) const Q_DECL_OVERRIDE;
     // for WidgetSelection only.
     QWidget *designerWidget(QWidget *w) const;
 
@@ -199,7 +199,7 @@ public:
     QMenu *initializePopupMenu(QWidget *managedWidget);
 
 #ifndef QT_NO_CLIPBOARD
-    virtual void paste(PasteMode pasteMode);
+    void paste(PasteMode pasteMode) Q_DECL_OVERRIDE;
 #endif
     virtual QEditorFormBuilder *createFormBuilder();
 
@@ -227,7 +227,7 @@ public slots:
 
 protected:
     virtual QMenu *createPopupMenu(QWidget *w);
-    virtual void resizeEvent(QResizeEvent *e);
+    void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
 
     void insertWidget(QWidget *w, const QRect &rect, QWidget *target, bool already_in_form = false);
 

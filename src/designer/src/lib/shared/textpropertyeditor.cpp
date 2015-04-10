@@ -57,8 +57,8 @@ namespace {
         ReplacementValidator (QObject * parent,
                               const QString &offending,
                               const QString &replacement);
-        virtual void fixup ( QString & input ) const;
-        virtual State validate ( QString & input, int &pos) const;
+        void fixup ( QString & input ) const Q_DECL_OVERRIDE;
+        State validate ( QString & input, int &pos) const Q_DECL_OVERRIDE;
     private:
         const QString m_offending;
         const QString m_replacement;
@@ -86,7 +86,7 @@ namespace {
     class StyleSheetValidator : public ReplacementValidator {
     public:
         StyleSheetValidator (QObject * parent);
-        virtual State validate(QString & input, int &pos) const;
+        State validate(QString & input, int &pos) const Q_DECL_OVERRIDE;
     };
 
     StyleSheetValidator::StyleSheetValidator (QObject * parent) :
@@ -112,8 +112,8 @@ namespace {
     public:
         UrlValidator(QCompleter *completer, QObject *parent);
 
-        virtual State validate(QString &input, int &pos) const;
-        virtual void fixup(QString &input) const;
+        State validate(QString &input, int &pos) const Q_DECL_OVERRIDE;
+        void fixup(QString &input) const Q_DECL_OVERRIDE;
     private:
         QUrl guessUrlFromString(const QString &string) const;
         QCompleter *m_completer;

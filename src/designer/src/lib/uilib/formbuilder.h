@@ -66,23 +66,23 @@ public:
     QList<QDesignerCustomWidgetInterface*> customWidgets() const;
 
 protected:
-    virtual QWidget *create(DomUI *ui, QWidget *parentWidget);
-    virtual QWidget *create(DomWidget *ui_widget, QWidget *parentWidget);
-    virtual QLayout *create(DomLayout *ui_layout, QLayout *layout, QWidget *parentWidget);
-    virtual QLayoutItem *create(DomLayoutItem *ui_layoutItem, QLayout *layout, QWidget *parentWidget);
-    virtual QAction *create(DomAction *ui_action, QObject *parent);
-    virtual QActionGroup *create(DomActionGroup *ui_action_group, QObject *parent);
+    QWidget *create(DomUI *ui, QWidget *parentWidget) Q_DECL_OVERRIDE;
+    QWidget *create(DomWidget *ui_widget, QWidget *parentWidget) Q_DECL_OVERRIDE;
+    QLayout *create(DomLayout *ui_layout, QLayout *layout, QWidget *parentWidget) Q_DECL_OVERRIDE;
+    QLayoutItem *create(DomLayoutItem *ui_layoutItem, QLayout *layout, QWidget *parentWidget) Q_DECL_OVERRIDE;
+    QAction *create(DomAction *ui_action, QObject *parent) Q_DECL_OVERRIDE;
+    QActionGroup *create(DomActionGroup *ui_action_group, QObject *parent) Q_DECL_OVERRIDE;
 
-    virtual QWidget *createWidget(const QString &widgetName, QWidget *parentWidget, const QString &name);
-    virtual QLayout *createLayout(const QString &layoutName, QObject *parent, const QString &name);
+    QWidget *createWidget(const QString &widgetName, QWidget *parentWidget, const QString &name) Q_DECL_OVERRIDE;
+    QLayout *createLayout(const QString &layoutName, QObject *parent, const QString &name) Q_DECL_OVERRIDE;
 
-    virtual void createConnections(DomConnections *connections, QWidget *widget);
+    void createConnections(DomConnections *connections, QWidget *widget) Q_DECL_OVERRIDE;
 
-    virtual bool addItem(DomLayoutItem *ui_item, QLayoutItem *item, QLayout *layout);
-    virtual bool addItem(DomWidget *ui_widget, QWidget *widget, QWidget *parentWidget);
+    bool addItem(DomLayoutItem *ui_item, QLayoutItem *item, QLayout *layout) Q_DECL_OVERRIDE;
+    bool addItem(DomWidget *ui_widget, QWidget *widget, QWidget *parentWidget) Q_DECL_OVERRIDE;
 
     virtual void updateCustomWidgets();
-    virtual void applyProperties(QObject *o, const QList<DomProperty*> &properties);
+    void applyProperties(QObject *o, const QList<DomProperty*> &properties) Q_DECL_OVERRIDE;
 
     static QWidget *widgetByName(QWidget *topLevel, const QString &name);
 

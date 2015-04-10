@@ -76,17 +76,17 @@ public:
     virtual ~ActionEditor();
 
     QDesignerFormWindowInterface *formWindow() const;
-    virtual void setFormWindow(QDesignerFormWindowInterface *formWindow);
+    void setFormWindow(QDesignerFormWindowInterface *formWindow) Q_DECL_OVERRIDE;
 
-    virtual QDesignerFormEditorInterface *core() const;
+    QDesignerFormEditorInterface *core() const Q_DECL_OVERRIDE;
 
     QAction *actionNew() const;
     QAction *actionDelete() const;
 
     QString filter() const;
 
-    virtual void manageAction(QAction *action);
-    virtual void unmanageAction(QAction *action);
+    void manageAction(QAction *action) Q_DECL_OVERRIDE;
+    void unmanageAction(QAction *action) Q_DECL_OVERRIDE;
 
     static QString actionTextToName(const QString &text, const QString &prefix = QLatin1String("action"));
 

@@ -126,8 +126,8 @@ namespace {
     class SignatureDelegate : public QItemDelegate {
     public:
         SignatureDelegate(QObject * parent = 0);
-        virtual QWidget * createEditor (QWidget * parent, const QStyleOptionViewItem &option, const QModelIndex &index ) const;
-        virtual void setModelData (QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
+        QWidget * createEditor (QWidget * parent, const QStyleOptionViewItem &option, const QModelIndex &index ) const Q_DECL_OVERRIDE;
+        void setModelData (QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const Q_DECL_OVERRIDE;
 
     private:
         QRegExp m_signatureRegexp;

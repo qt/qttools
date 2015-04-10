@@ -64,8 +64,8 @@ public:
     explicit ContainerWidgetTaskMenu(QWidget *widget, ContainerType type, QObject *parent = 0);
     virtual ~ContainerWidgetTaskMenu();
 
-    virtual QAction *preferredEditAction() const;
-    virtual QList<QAction*> taskActions() const;
+    QAction *preferredEditAction() const Q_DECL_OVERRIDE;
+    QList<QAction*> taskActions() const Q_DECL_OVERRIDE;
 
 private slots:
     void removeCurrentPage();
@@ -104,7 +104,7 @@ class WizardContainerWidgetTaskMenu : public ContainerWidgetTaskMenu {
 public:
     explicit WizardContainerWidgetTaskMenu(QWizard *w, QObject *parent = 0);
 
-    virtual QList<QAction*> taskActions() const;
+    QList<QAction*> taskActions() const Q_DECL_OVERRIDE;
 
 private:
     QAction *m_nextAction;
@@ -119,7 +119,7 @@ class MdiContainerWidgetTaskMenu : public ContainerWidgetTaskMenu {
 public:
     explicit MdiContainerWidgetTaskMenu(QMdiArea *m, QObject *parent = 0);
 
-    virtual QList<QAction*> taskActions() const;
+    QList<QAction*> taskActions() const Q_DECL_OVERRIDE;
 private:
     void initializeActions();
 
@@ -136,7 +136,7 @@ public:
     explicit ContainerWidgetTaskMenuFactory(QDesignerFormEditorInterface *core, QExtensionManager *extensionManager = 0);
 
 protected:
-    virtual QObject *createExtension(QObject *object, const QString &iid, QObject *parent) const;
+    QObject *createExtension(QObject *object, const QString &iid, QObject *parent) const Q_DECL_OVERRIDE;
 
 private:
     QDesignerFormEditorInterface *m_core;
