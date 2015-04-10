@@ -99,10 +99,10 @@ bool MultiPageWidgetPlugin::isContainer() const
 QWidget *MultiPageWidgetPlugin::createWidget(QWidget *parent)
 {
     MultiPageWidget *widget = new MultiPageWidget(parent);
-    connect(widget, SIGNAL(currentIndexChanged(int)),
-            this, SLOT(currentIndexChanged(int)));
-    connect(widget, SIGNAL(pageTitleChanged(QString)),
-            this, SLOT(pageTitleChanged(QString)));
+    connect(widget, &MultiPageWidget::currentIndexChanged,
+            this, &MultiPageWidgetPlugin::currentIndexChanged);
+    connect(widget, &MultiPageWidget::pageTitleChanged,
+            this, &MultiPageWidgetPlugin::pageTitleChanged);
     return widget;
 }
 

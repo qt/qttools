@@ -58,10 +58,10 @@ TicTacToeDialog::TicTacToeDialog(TicTacToe *tic, QWidget *parent)
                                      | QDialogButtonBox::Cancel
                                      | QDialogButtonBox::Reset);
 
-    connect(buttonBox->button(QDialogButtonBox::Reset), SIGNAL(clicked()),
-            this, SLOT(resetState()));
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(saveState()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox->button(QDialogButtonBox::Reset), &QAbstractButton::clicked,
+            this, &TicTacToeDialog::resetState);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &TicTacToeDialog::saveState);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->addWidget(editor);
