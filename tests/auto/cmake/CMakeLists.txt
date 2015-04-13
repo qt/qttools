@@ -40,4 +40,8 @@ if (NOT NO_WIDGETS)
       UiTools QUiLoader
     )
 
+    expect_pass(test_uiplugin_via_designer)
+    if (NOT CMAKE_VERSION VERSION_LESS 3.0)
+        expect_pass(test_uiplugin_module)
+    endif()
 endif()
