@@ -99,7 +99,8 @@ enum QtModule
     Qt3DRendererModule        = 0x040000000000,
     Qt3DQuickModule           = 0x080000000000,
     Qt3DQuickRendererModule   = 0x100000000000,
-    Qt3DInputModule           = 0x200000000000
+    Qt3DInputModule           = 0x200000000000,
+    QtLocationModule          = 0x400000000000
 };
 
 struct QtModuleEntry {
@@ -154,7 +155,8 @@ QtModuleEntry qtModuleEntries[] = {
     { Qt3DRendererModule, "3drenderer", "Qt53DRenderer", 0 },
     { Qt3DQuickModule, "3dquick", "Qt53DQuick", 0 },
     { Qt3DQuickRendererModule, "3dquickrenderer", "Qt53DQuickRenderer", 0 },
-    { Qt3DInputModule, "3dinput", "Qt35DInput", 0 }
+    { Qt3DInputModule, "3dinput", "Qt35DInput", 0 },
+    { QtLocationModule, "geoservices", "Qt5Location", 0 }
 };
 
 static const char webKitProcessC[] = "QtWebProcess";
@@ -734,6 +736,8 @@ static inline quint64 qtModuleForPlugin(const QString &subDirName)
         return QtDeclarativeModule;
     if (subDirName == QLatin1String("position"))
         return QtPositioningModule;
+    if (subDirName == QLatin1String("geoservices"))
+        return QtLocationModule;
     if (subDirName == QLatin1String("sensors") || subDirName == QLatin1String("sensorgestures"))
         return QtSensorsModule;
     if (subDirName == QLatin1String("qtwebengine"))
