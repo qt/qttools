@@ -502,7 +502,8 @@ MessageItem *DataModelIterator::current() const
  *****************************************************************************/
 
 MultiMessageItem::MultiMessageItem(const MessageItem *m)
-    : m_text(m->text()),
+    : m_id(m->id()),
+      m_text(m->text()),
       m_pluralText(m->pluralText()),
       m_comment(m->comment()),
       m_nonnullCount(0),
@@ -618,6 +619,16 @@ int MultiContextItem::findMessage(const QString &sourcetext, const QString &comm
     return -1;
 }
 
+int MultiContextItem::findMessageById(const QString &id) const
+{
+    for (int i = 0, cnt = messageCount(); i < cnt; ++i) {
+        MultiMessageItem *m = multiMessageItem(i);
+        if (m->id() == id)
+            return i;
+    }
+    return -1;
+}
+
 /******************************************************************************
  *
  * MultiDataModel
@@ -721,7 +732,14 @@ void MultiDataModel::append(DataModel *dm, bool readWrite)
             QList<MessageItem *> appendItems;
             for (int j = 0; j < c->messageCount(); ++j) {
                 MessageItem *m = c->messageItem(j);
-                int msgIdx = mc->findMessage(m->text(), m->comment());
+
+                int msgIdx = -1;
+                if (!m->id().isEmpty()) // id based translation
+                    msgIdx = mc->findMessageById(m->id());
+
+                if (msgIdx == -1)
+                    msgIdx = mc->findMessage(m->text(), m->comment());
+
                 if (msgIdx >= 0)
                     mc->putMessageItem(msgIdx, m);
                 else
