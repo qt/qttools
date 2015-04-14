@@ -36,9 +36,10 @@
 #include "qdesigner_qsettings_p.h"
 
 #include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerCustomWidgetInterface>
 #include <QtDesigner/QExtensionManager>
 #include <QtDesigner/QDesignerLanguageExtension>
+
+#include <QtUiPlugin/QDesignerCustomWidgetInterface>
 
 #include <QtCore/QDir>
 #include <QtCore/QFile>

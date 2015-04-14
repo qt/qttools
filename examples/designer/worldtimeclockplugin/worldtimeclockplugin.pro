@@ -1,5 +1,5 @@
 #! [0]
-QT          += widgets designer
+QT          += widgets uiplugin
 #! [0]
 
 QTDIR_build {

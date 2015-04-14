@@ -34,7 +34,8 @@
 
 #include "quiloader.h"
 #include "quiloader_p.h"
-#include "customwidget.h"
+
+#include <QtUiPlugin/customwidget.h>
 
 #include <formbuilder.h>
 #include <formbuilderextra_p.h>

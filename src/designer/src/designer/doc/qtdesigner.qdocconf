@@ -30,9 +30,11 @@ qhp.QtDesigner.subprojects.classes.sortPages = true
 language                = Cpp
 
 headerdirs             += .. \
+                          ../../uiplugin \
                           ../../lib
 
 sourcedirs              = .. \
+                          ../../uiplugin \
                           ../../lib
 
 exampledirs             = ../../../../../examples/designer \

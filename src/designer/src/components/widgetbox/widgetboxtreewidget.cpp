@@ -44,8 +44,9 @@
 // sdk
 #include <QtDesigner/QDesignerFormEditorInterface>
 #include <QtDesigner/QDesignerDnDItemInterface>
-#include <QtDesigner/QDesignerCustomWidgetInterface>
 #include <QtDesigner/QDesignerSettingsInterface>
+
+#include <QtUiPlugin/QDesignerCustomWidgetInterface>
 
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QApplication>

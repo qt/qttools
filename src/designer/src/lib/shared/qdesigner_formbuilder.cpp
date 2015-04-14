@@ -41,14 +41,14 @@
 #include <QtDesigner/private/formbuilderextra_p.h>
 // sdk
 #include <QtDesigner/container.h>
-#include <QtDesigner/customwidget.h>
 #include <QtDesigner/propertysheet.h>
 #include <QtDesigner/QExtensionManager>
 #include <QtDesigner/QDesignerFormEditorInterface>
 #include <QtDesigner/QDesignerFormWindowInterface>
 #include <QtDesigner/QDesignerWidgetFactoryInterface>
-#include <QtDesigner/QDesignerCustomWidgetInterface>
 #include <abstractdialoggui_p.h>
+
+#include <QtUiPlugin/QDesignerCustomWidgetInterface>
 
 // shared
 #include <qdesigner_propertysheet_p.h>

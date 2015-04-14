@@ -34,7 +34,7 @@
 #ifndef QWEBPAGE_PLUGIN_H
 #define QWEBPAGE_PLUGIN_H
 
-#include <QtDesigner/QDesignerCustomWidgetInterface>
+#include <QtUiPlugin/QDesignerCustomWidgetInterface>
 
 QT_BEGIN_NAMESPACE
 

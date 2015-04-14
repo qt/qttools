@@ -37,8 +37,9 @@
 
 #include <QtDesigner/QDesignerFormEditorInterface>
 #include <QtDesigner/QDesignerIntegrationInterface>
-#include <QtDesigner/QDesignerCustomWidgetCollectionInterface>
 #include <QtDesigner/QDesignerWidgetDataBaseInterface>
+
+#include <QtUiPlugin/QDesignerCustomWidgetCollectionInterface>
 
 #include <QtWidgets/QStyle>
 #include <QtWidgets/QHeaderView>
