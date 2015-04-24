@@ -1350,6 +1350,14 @@ int main(int argc, char **argv)
     QCoreApplication a(argc, argv);
     QCoreApplication::setApplicationVersion(QLatin1String(QT_VERSION_STR));
 
+    const QByteArray qtBinPath = QFile::encodeName(QDir::toNativeSeparators(QCoreApplication::applicationDirPath()));
+    QByteArray path = qgetenv("PATH");
+    if (!path.contains(qtBinPath)) { // QTBUG-39177, ensure Qt is in the path so that qt.conf is taken into account.
+        path += ';';
+        path += qtBinPath;
+        qputenv("PATH", path);
+    }
+
     Options options;
     QString errorMessage;
     const QMap<QString, QString> qmakeVariables = queryQMakeAll(&errorMessage);
