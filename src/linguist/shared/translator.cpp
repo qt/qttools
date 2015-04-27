@@ -187,7 +187,12 @@ void Translator::extend(const TranslatorMessage &msg, ConversionData &cd)
 
 void Translator::insert(int idx, const TranslatorMessage &msg)
 {
-    addIndex(idx, msg);
+    if (m_indexOk) {
+        if (idx == m_messages.count())
+            addIndex(idx, msg);
+        else
+            m_indexOk = false;
+    }
     m_messages.insert(idx, msg);
 }
 

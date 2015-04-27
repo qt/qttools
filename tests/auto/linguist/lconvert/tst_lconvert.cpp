@@ -53,6 +53,7 @@ private slots:
     void chains_data();
     void chains();
 #endif
+    void merge();
 
 private:
     void doWait(QProcess *cvt, int stage);
@@ -325,6 +326,17 @@ void tst_lconvert::roundtrips()
     QFETCH(QList<QStringList>, args);
 
     convertRoundtrip(fileName, stations, args);
+}
+
+void tst_lconvert::merge()
+{
+    QProcess cvt;
+    QStringList args;
+    args << (dataDir + "idxmerge.ts") << (dataDir + "idxmerge-add.ts");
+    cvt.start(binDir + "/lconvert", args, QIODevice::ReadWrite | QIODevice::Text);
+    doWait(&cvt, 1);
+    if (!QTest::currentTestFailed())
+        doCompare(&cvt, dataDir + "idxmerge.ts.out");
 }
 
 QTEST_APPLESS_MAIN(tst_lconvert)
