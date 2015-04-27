@@ -394,3 +394,19 @@ Class42::hello(int something /*= 17 */, QString str = Class42::tr("eyo"))
 
 // test TR_EXCLUDE
 #include "notincluded.cpp"
+
+
+
+// failure to update index on insertion messes up subsequent de-duplication
+int dupeFail()
+{
+    // First just the Id.
+    qtTrId("dupe_id");
+
+    // Then with source
+    //% "This is the source"
+    qtTrId("dupe_id");
+
+    // Finally, same source, but without ID.
+    QCoreApplication::translate("", "This is the source");
+}
