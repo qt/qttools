@@ -1063,11 +1063,13 @@ static DeployResult deploy(const Options &options,
         return result;
     }
 
-    // Some Windows-specific checks in QtCore: ICU
+    // Some Windows-specific checks: Qt5Core depends on ICU when configured with "-icu". Other than
+    // that, Qt5WebKit has a hard dependency on ICU.
     if (options.platform & WindowsBased)  {
-        const QStringList qt5Core = dependentQtLibs.filter(QStringLiteral("Qt5Core"), Qt::CaseInsensitive);
-        if (!qt5Core.isEmpty()) {
-            QStringList icuLibs = findDependentLibraries(qt5Core.front(), options.platform, errorMessage).filter(QStringLiteral("ICU"), Qt::CaseInsensitive);
+        const QStringList qtLibs = dependentQtLibs.filter(QStringLiteral("Qt5Core"), Qt::CaseInsensitive)
+            + dependentQtLibs.filter(QStringLiteral("Qt5WebKit"), Qt::CaseInsensitive);
+        foreach (const QString &qtLib, qtLibs) {
+            QStringList icuLibs = findDependentLibraries(qtLib, options.platform, errorMessage).filter(QStringLiteral("ICU"), Qt::CaseInsensitive);
             if (!icuLibs.isEmpty()) {
                 // Find out the ICU version to add the data library icudtXX.dll, which does not show
                 // as a dependency.
@@ -1088,8 +1090,9 @@ static DeployResult deploy(const Options &options,
                     }
                     dependentQtLibs.push_back(icuPath);
                 } // foreach icuLib
+                break;
             } // !icuLibs.isEmpty()
-        } // Qt5Core
+        } // Qt5Core/Qt5WebKit
     } // Windows
 
     // Scan Quick2 imports
