@@ -1076,6 +1076,9 @@ bool updateFile(const QString &fileName, const QHash<QString, QString> &replacem
     bool hasReplacements = false;
     QHash<QString, QString>::const_iterator it;
     for (it = replacements.constBegin(); it != replacements.constEnd(); ++it) {
+        if (it.key() == it.value())
+            continue; // Nothing to actually replace
+
         forever {
             int index = contents.indexOf(it.key().toUtf8());
             if (index >= 0) {
