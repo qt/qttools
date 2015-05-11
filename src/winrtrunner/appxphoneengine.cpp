@@ -491,6 +491,7 @@ bool AppxPhoneEngine::stop()
     if (!connect())
         return false;
 
+#if 0 // This does not actually stop the app - QTBUG-41946
     ComPtr<ICcConnection3> connection;
     HRESULT hr = d->connection.As(&connection);
     RETURN_FALSE_IF_FAILED("Failed to cast connection object");
@@ -500,6 +501,9 @@ bool AppxPhoneEngine::stop()
     RETURN_FALSE_IF_FAILED("Failed to stop the package");
 
     return true;
+#else
+    return remove();
+#endif
 }
 
 QString AppxPhoneEngine::devicePath(const QString &relativePath) const

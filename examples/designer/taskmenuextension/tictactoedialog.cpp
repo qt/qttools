@@ -38,30 +38,31 @@
 **
 ****************************************************************************/
 
+#include "tictactoe.h"
+#include "tictactoedialog.h"
+
+#include <QtDesigner/QDesignerFormWindowInterface>
+#include <QtDesigner/QDesignerFormWindowCursorInterface>
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QVBoxLayout>
-#include <QtDesigner>
-
-#include "tictactoe.h"
-#include "tictactoedialog.h"
+#include <QVariant>
 
 //! [0]
 TicTacToeDialog::TicTacToeDialog(TicTacToe *tic, QWidget *parent)
     : QDialog(parent)
+    , editor(new TicTacToe)
+    , ticTacToe(tic)
+    , buttonBox(new QDialogButtonBox(QDialogButtonBox::Ok
+                                     | QDialogButtonBox::Cancel
+                                     | QDialogButtonBox::Reset))
 {
-    ticTacToe = tic;
-    editor = new TicTacToe;
     editor->setState(ticTacToe->state());
 
-    buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok
-                                     | QDialogButtonBox::Cancel
-                                     | QDialogButtonBox::Reset);
-
-    connect(buttonBox->button(QDialogButtonBox::Reset), SIGNAL(clicked()),
-            this, SLOT(resetState()));
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(saveState()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox->button(QDialogButtonBox::Reset), &QAbstractButton::clicked,
+            this, &TicTacToeDialog::resetState);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &TicTacToeDialog::saveState);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->addWidget(editor);

@@ -41,9 +41,6 @@
 #ifndef RTRUNNER_NO_APPXLOCAL
 #include "appxlocalengine.h"
 #endif
-#ifndef RTRUNNER_NO_XAP
-#include "xapengine.h"
-#endif
 
 #include <QtCore/QDir>
 #include <QtCore/QStandardPaths>
@@ -77,9 +74,6 @@ QMap<QString, QStringList> Runner::deviceNames()
 #endif
 #ifndef RTRUNNER_NO_APPXPHONE
     deviceNames.insert(QStringLiteral("Phone"), AppxPhoneEngine::deviceNames());
-#endif
-#ifndef RTRUNNER_NO_XAP
-    deviceNames.insert(QStringLiteral("Xap"), XapEngine::deviceNames());
 #endif
     return deviceNames;
 }
@@ -124,22 +118,6 @@ Runner::Runner(const QString &app, const QStringList &arguments,
             d->engine.reset(engine);
             d->isValid = true;
             qCWarning(lcWinRtRunner) << "Using the Appx profile.";
-            return;
-        }
-    }
-#endif
-#ifndef RTRUNNER_NO_XAP
-    if (!deviceIndexKnown) {
-        d->deviceIndex = XapEngine::deviceNames().indexOf(deviceName);
-        if (d->deviceIndex < 0)
-            d->deviceIndex = 0;
-    }
-    if ((d->profile.isEmpty() || d->profile.toLower() == QStringLiteral("xap"))
-            && XapEngine::canHandle(this)) {
-        if (RunnerEngine *engine = XapEngine::create(this)) {
-            d->engine.reset(engine);
-            d->isValid = true;
-            qCWarning(lcWinRtRunner) << "Using the Xap profile.";
             return;
         }
     }

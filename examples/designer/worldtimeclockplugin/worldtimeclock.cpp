@@ -38,17 +38,21 @@
 **
 ****************************************************************************/
 
-#include <QtGui>
-
 #include "worldtimeclock.h"
+
+#include <QMouseEvent>
+#include <QPainter>
+#include <QTimer>
 
 WorldTimeClock::WorldTimeClock(QWidget *parent)
     : QWidget(parent)
+    , timeZoneOffset(0)
+
 {
-    timeZoneOffset = 0;
+    typedef void (QWidget::*WidgetUpdateSlot)();
 
     QTimer *timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(update()));
+    connect(timer, &QTimer::timeout, this, static_cast<WidgetUpdateSlot>(&QWidget::update));
     timer->start(1000);
 
     setWindowTitle(tr("World Time Clock"));

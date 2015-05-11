@@ -38,21 +38,20 @@
 **
 ****************************************************************************/
 
-#include <QtDesigner>
-#include <QtWidgets>
-
 #include "tictactoe.h"
 #include "tictactoedialog.h"
 #include "tictactoetaskmenu.h"
 
+#include <QtDesigner/QDesignerFormEditorInterface>
+#include <QAction>
+
 //! [0]
 TicTacToeTaskMenu::TicTacToeTaskMenu(TicTacToe *tic, QObject *parent)
     : QObject(parent)
+    , editStateAction(new QAction(tr("Edit State..."), this))
+    , ticTacToe(tic)
 {
-    ticTacToe = tic;
-
-    editStateAction = new QAction(tr("Edit State..."), this);
-    connect(editStateAction, SIGNAL(triggered()), this, SLOT(editState()));
+    connect(editStateAction, &QAction::triggered, this, &TicTacToeTaskMenu::editState);
 }
 //! [0]
 

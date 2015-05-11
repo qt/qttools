@@ -45,8 +45,8 @@
 
 WorldTimeClockPlugin::WorldTimeClockPlugin(QObject *parent)
     : QObject(parent)
+    , initialized(false)
 {
-    initialized = false;
 }
 
 void WorldTimeClockPlugin::initialize(QDesignerFormEditorInterface * /* core */)

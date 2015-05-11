@@ -54,19 +54,19 @@ class WorldTimeClockPlugin : public QObject,
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 
 public:
-    WorldTimeClockPlugin(QObject *parent = 0);
+    explicit WorldTimeClockPlugin(QObject *parent = 0);
 
-    bool isContainer() const;
-    bool isInitialized() const;
-    QIcon icon() const;
-    QString domXml() const;
-    QString group() const;
-    QString includeFile() const;
-    QString name() const;
-    QString toolTip() const;
-    QString whatsThis() const;
-    QWidget *createWidget(QWidget *parent);
-    void initialize(QDesignerFormEditorInterface *core);
+    bool isContainer() const Q_DECL_OVERRIDE;
+    bool isInitialized() const Q_DECL_OVERRIDE;
+    QIcon icon() const Q_DECL_OVERRIDE;
+    QString domXml() const Q_DECL_OVERRIDE;
+    QString group() const Q_DECL_OVERRIDE;
+    QString includeFile() const Q_DECL_OVERRIDE;
+    QString name() const Q_DECL_OVERRIDE;
+    QString toolTip() const Q_DECL_OVERRIDE;
+    QString whatsThis() const Q_DECL_OVERRIDE;
+    QWidget *createWidget(QWidget *parent) Q_DECL_OVERRIDE;
+    void initialize(QDesignerFormEditorInterface *core) Q_DECL_OVERRIDE;
 
 private:
     bool initialized;

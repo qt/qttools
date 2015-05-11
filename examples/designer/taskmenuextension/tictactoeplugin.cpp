@@ -38,19 +38,19 @@
 **
 ****************************************************************************/
 
-#include <QtDesigner>
-#include <QtGui>
-#include <QtPlugin>
-
 #include "tictactoe.h"
 #include "tictactoeplugin.h"
 #include "tictactoetaskmenu.h"
 
+#include <QtDesigner/QDesignerFormEditorInterface>
+#include <QtDesigner/QExtensionManager>
+#include <QtPlugin>
+
 //! [0]
 TicTacToePlugin::TicTacToePlugin(QObject *parent)
     : QObject(parent)
+    , initialized(false)
 {
-    initialized = false;
 }
 
 QString TicTacToePlugin::name() const

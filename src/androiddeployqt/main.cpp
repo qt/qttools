@@ -668,6 +668,26 @@ QString detectLatestAndroidPlatform(const QString &sdkPath)
     return latestPlatform.baseName();
 }
 
+QString androidManifestPathFromOptions(const Options &options)
+{
+    return options.androidSourceDirectory + QLatin1String("/AndroidManifest.xml");
+}
+
+QString packageNameFromAndroidManifest(const QString &androidManifestPath)
+{
+    QFile androidManifestXml(androidManifestPath);
+    if (androidManifestXml.open(QIODevice::ReadOnly)) {
+        QXmlStreamReader reader(&androidManifestXml);
+        while (!reader.atEnd()) {
+            reader.readNext();
+            if (reader.isStartElement() && reader.name() == QLatin1String("manifest"))
+                return cleanPackageName(
+                            reader.attributes().value(QLatin1String("package")).toString());
+        }
+    }
+    return QString();
+}
+
 bool readInputFile(Options *options)
 {
     QFile file(options->inputFileName);
@@ -821,7 +841,9 @@ bool readInputFile(Options *options)
         options->ndkHost = ndkHost.toString();
     }
 
-    options->packageName = cleanPackageName(QString::fromLatin1("org.qtproject.example.%1").arg(QFileInfo(options->applicationBinary).baseName().mid(sizeof("lib") - 1)));
+    options->packageName = packageNameFromAndroidManifest(androidManifestPathFromOptions(*options));
+    if (options->packageName.isEmpty())
+        options->packageName = cleanPackageName(QString::fromLatin1("org.qtproject.example.%1").arg(QFileInfo(options->applicationBinary).baseName().mid(sizeof("lib") - 1)));
 
     {
         QJsonValue extraLibs = jsonObject.value("android-extra-libs");
@@ -1281,7 +1303,7 @@ bool updateAndroidManifest(Options &options)
 
     replacements[QLatin1String("<!-- %%INSERT_FEATURES -->")] = features;
 
-    QString androidManifestPath = options.outputDirectory + QLatin1String("/AndroidManifest.xml");
+    QString androidManifestPath = androidManifestPathFromOptions(options);
     if (!updateFile(androidManifestPath, replacements))
         return false;
 

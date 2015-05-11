@@ -61,6 +61,7 @@ public:
     void setTranslation(const QString &translation)
         { m_message.setTranslation(translation); }
 
+    QString id() const { return m_message.id(); }
     QString context() const { return m_message.context(); }
     QString text() const { return m_message.sourceText(); }
     QString pluralText() const { return m_message.extra(QLatin1String("po-msgid_plural")); }
@@ -263,6 +264,7 @@ struct MultiMessageItem
 {
 public:
     MultiMessageItem(const MessageItem *m);
+    QString id() const { return m_id; }
     QString text() const { return m_text; }
     QString pluralText() const { return m_pluralText; }
     QString comment() const { return m_comment; }
@@ -286,6 +288,7 @@ private:
     void incrementUnfinishedCount() { ++m_unfinishedCount; }
     void decrementUnfinishedCount() { --m_unfinishedCount; }
 
+    QString m_id;
     QString m_text;
     QString m_pluralText;
     QString m_comment;
@@ -307,6 +310,7 @@ public:
     MessageItem *messageItem(int model, int msgIdx) const { return m_messageLists[model][msgIdx]; }
     int firstNonobsoleteMessageIndex(int msgIdx) const;
     int findMessage(const QString &sourcetext, const QString &comment) const;
+    int findMessageById(const QString &id) const;
 
     QString context() const { return m_context; }
     QString comment() const { return m_comment; }

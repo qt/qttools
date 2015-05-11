@@ -99,7 +99,8 @@ enum QtModule
     Qt3DRendererModule        = 0x040000000000,
     Qt3DQuickModule           = 0x080000000000,
     Qt3DQuickRendererModule   = 0x100000000000,
-    Qt3DInputModule           = 0x200000000000
+    Qt3DInputModule           = 0x200000000000,
+    QtLocationModule          = 0x400000000000
 };
 
 struct QtModuleEntry {
@@ -154,7 +155,8 @@ QtModuleEntry qtModuleEntries[] = {
     { Qt3DRendererModule, "3drenderer", "Qt53DRenderer", 0 },
     { Qt3DQuickModule, "3dquick", "Qt53DQuick", 0 },
     { Qt3DQuickRendererModule, "3dquickrenderer", "Qt53DQuickRenderer", 0 },
-    { Qt3DInputModule, "3dinput", "Qt35DInput", 0 }
+    { Qt3DInputModule, "3dinput", "Qt35DInput", 0 },
+    { QtLocationModule, "geoservices", "Qt5Location", 0 }
 };
 
 static const char webKitProcessC[] = "QtWebProcess";
@@ -734,6 +736,8 @@ static inline quint64 qtModuleForPlugin(const QString &subDirName)
         return QtDeclarativeModule;
     if (subDirName == QLatin1String("position"))
         return QtPositioningModule;
+    if (subDirName == QLatin1String("geoservices"))
+        return QtLocationModule;
     if (subDirName == QLatin1String("sensors") || subDirName == QLatin1String("sensorgestures"))
         return QtSensorsModule;
     if (subDirName == QLatin1String("qtwebengine"))
@@ -1059,11 +1063,13 @@ static DeployResult deploy(const Options &options,
         return result;
     }
 
-    // Some Windows-specific checks in QtCore: ICU
+    // Some Windows-specific checks: Qt5Core depends on ICU when configured with "-icu". Other than
+    // that, Qt5WebKit has a hard dependency on ICU.
     if (options.platform & WindowsBased)  {
-        const QStringList qt5Core = dependentQtLibs.filter(QStringLiteral("Qt5Core"), Qt::CaseInsensitive);
-        if (!qt5Core.isEmpty()) {
-            QStringList icuLibs = findDependentLibraries(qt5Core.front(), options.platform, errorMessage).filter(QStringLiteral("ICU"), Qt::CaseInsensitive);
+        const QStringList qtLibs = dependentQtLibs.filter(QStringLiteral("Qt5Core"), Qt::CaseInsensitive)
+            + dependentQtLibs.filter(QStringLiteral("Qt5WebKit"), Qt::CaseInsensitive);
+        foreach (const QString &qtLib, qtLibs) {
+            QStringList icuLibs = findDependentLibraries(qtLib, options.platform, errorMessage).filter(QStringLiteral("ICU"), Qt::CaseInsensitive);
             if (!icuLibs.isEmpty()) {
                 // Find out the ICU version to add the data library icudtXX.dll, which does not show
                 // as a dependency.
@@ -1084,8 +1090,9 @@ static DeployResult deploy(const Options &options,
                     }
                     dependentQtLibs.push_back(icuPath);
                 } // foreach icuLib
+                break;
             } // !icuLibs.isEmpty()
-        } // Qt5Core
+        } // Qt5Core/Qt5WebKit
     } // Windows
 
     // Scan Quick2 imports
@@ -1345,6 +1352,14 @@ int main(int argc, char **argv)
 {
     QCoreApplication a(argc, argv);
     QCoreApplication::setApplicationVersion(QLatin1String(QT_VERSION_STR));
+
+    const QByteArray qtBinPath = QFile::encodeName(QDir::toNativeSeparators(QCoreApplication::applicationDirPath()));
+    QByteArray path = qgetenv("PATH");
+    if (!path.contains(qtBinPath)) { // QTBUG-39177, ensure Qt is in the path so that qt.conf is taken into account.
+        path += ';';
+        path += qtBinPath;
+        qputenv("PATH", path);
+    }
 
     Options options;
     QString errorMessage;

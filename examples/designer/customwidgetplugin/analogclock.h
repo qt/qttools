@@ -49,10 +49,10 @@ class QDESIGNER_WIDGET_EXPORT AnalogClock : public QWidget
     Q_OBJECT
 
 public:
-    AnalogClock(QWidget *parent = 0);
+    explicit AnalogClock(QWidget *parent = 0);
 
 protected:
-    void paintEvent(QPaintEvent *event);
+    void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 };
 
 #endif

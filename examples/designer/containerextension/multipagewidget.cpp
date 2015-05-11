@@ -46,18 +46,19 @@
 
 MultiPageWidget::MultiPageWidget(QWidget *parent)
     : QWidget(parent)
+    , stackWidget(new QStackedWidget)
+    , comboBox(new QComboBox)
 {
-    comboBox = new QComboBox();
+    typedef void (QComboBox::*ComboBoxActivatedIntSignal)(int);
+
     comboBox->setObjectName("__qt__passive_comboBox");
-    stackWidget = new QStackedWidget();
 
-    connect(comboBox, SIGNAL(activated(int)),
-            this, SLOT(setCurrentIndex(int)));
+    connect(comboBox, static_cast<ComboBoxActivatedIntSignal>(&QComboBox::activated),
+            this, &MultiPageWidget::setCurrentIndex);
 
-    layout = new QVBoxLayout();
+    QVBoxLayout *layout = new QVBoxLayout(this);
     layout->addWidget(comboBox);
     layout->addWidget(stackWidget);
-    setLayout(layout);
 }
 
 QSize MultiPageWidget::sizeHint() const
