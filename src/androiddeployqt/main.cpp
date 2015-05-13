@@ -668,11 +668,6 @@ QString detectLatestAndroidPlatform(const QString &sdkPath)
     return latestPlatform.baseName();
 }
 
-QString androidManifestPathFromOptions(const Options &options)
-{
-    return options.androidSourceDirectory + QLatin1String("/AndroidManifest.xml");
-}
-
 QString packageNameFromAndroidManifest(const QString &androidManifestPath)
 {
     QFile androidManifestXml(androidManifestPath);
@@ -841,7 +836,7 @@ bool readInputFile(Options *options)
         options->ndkHost = ndkHost.toString();
     }
 
-    options->packageName = packageNameFromAndroidManifest(androidManifestPathFromOptions(*options));
+    options->packageName = packageNameFromAndroidManifest(options->androidSourceDirectory + QLatin1String("/AndroidManifest.xml"));
     if (options->packageName.isEmpty())
         options->packageName = cleanPackageName(QString::fromLatin1("org.qtproject.example.%1").arg(QFileInfo(options->applicationBinary).baseName().mid(sizeof("lib") - 1)));
 
@@ -1306,7 +1301,7 @@ bool updateAndroidManifest(Options &options)
 
     replacements[QLatin1String("<!-- %%INSERT_FEATURES -->")] = features;
 
-    QString androidManifestPath = androidManifestPathFromOptions(options);
+    QString androidManifestPath = options.outputDirectory + QLatin1String("/AndroidManifest.xml");
     if (!updateFile(androidManifestPath, replacements))
         return false;
 
