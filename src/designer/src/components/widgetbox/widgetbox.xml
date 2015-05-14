@@ -225,7 +225,7 @@
             </ui>
         </categoryentry>
 
-        <categoryentry name="Button Box" icon="widgets/dialogbuttonbox.png">
+        <categoryentry name="Dialog Button Box" icon="widgets/dialogbuttonbox.png">
             <ui>
                 <widget class="QDialogButtonBox">
                     <property name="standardButtons" >
@@ -476,7 +476,7 @@
             </ui>
         </categoryentry>
 
-        <categoryentry name="MdiArea" icon="widgets/mdiarea.png">
+        <categoryentry name="MDI Area" icon="widgets/mdiarea.png">
         <ui>
             <widget class="QMdiArea">
                 <property name="geometry">
@@ -798,7 +798,7 @@
                 </widget>
             </ui>
         </categoryentry>
-        <categoryentry name="Key sequence Edit" icon="widgets/lineedit.png">
+        <categoryentry name="Key Sequence Edit" icon="widgets/lineedit.png">
             <ui>
                 <widget class="QKeySequenceEdit">
                     <property name="geometry" >
@@ -853,7 +853,7 @@
             </ui>
         </categoryentry>
 
-        <categoryentry name="Calendar" icon="widgets/calendarwidget.png">
+        <categoryentry name="Calendar Widget" icon="widgets/calendarwidget.png">
             <ui>
                 <widget class="QCalendarWidget">
                     <property name="objectName">
@@ -936,7 +936,7 @@
             </ui>
         </categoryentry>
 
-       <categoryentry name="Open GL Widget" icon="widgets/widget.png">
+       <categoryentry name="OpenGL Widget" icon="widgets/widget.png">
             <ui>
                 <widget class="QOpenGLWidget">
                     <property name="geometry">
