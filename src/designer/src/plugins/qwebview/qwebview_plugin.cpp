@@ -39,7 +39,7 @@
 #include <QtCore/qplugin.h>
 #include <QWebView>
 
-static const char *toolTipC = "QtWebKit Web widget";
+static const char *toolTipC = "A widget for displaying a web page, from the Qt WebKit Widgets module.";
 
 QT_BEGIN_NAMESPACE
 
