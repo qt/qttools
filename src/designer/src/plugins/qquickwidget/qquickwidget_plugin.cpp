@@ -70,7 +70,7 @@ QString QQuickWidgetPlugin::whatsThis() const
 
 QString QQuickWidgetPlugin::includeFile() const
 {
-    return QStringLiteral("QQuickWidget");
+    return QStringLiteral("QtQuickWidgets/QQuickWidget");
 }
 
 QIcon QQuickWidgetPlugin::icon() const
