@@ -24,6 +24,13 @@ backslashed \ stuff.</source>
         <extracomment>This is a message without a source string</extracomment>
         <translation type="unfinished"></translation>
     </message>
+    <message id="dupe_id">
+        <location filename="main.cpp" line="404"/>
+        <location filename="main.cpp" line="408"/>
+        <location filename="main.cpp" line="411"/>
+        <source>This is the source</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Bogus</name>
