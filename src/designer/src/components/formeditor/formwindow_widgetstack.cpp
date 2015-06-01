@@ -177,7 +177,8 @@ void FormWindowWidgetStack::addTool(QDesignerFormWindowToolInterface *tool)
 
     m_tools.append(tool);
 
-    connect(tool->action(), SIGNAL(triggered()), this, SLOT(setSenderAsCurrentTool()));
+    connect(tool->action(), &QAction::triggered,
+            this, &FormWindowWidgetStack::setSenderAsCurrentTool);
 }
 
 QDesignerFormWindowToolInterface *FormWindowWidgetStack::tool(int index) const

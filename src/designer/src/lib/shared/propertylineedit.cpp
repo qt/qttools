@@ -77,8 +77,7 @@ namespace qdesigner_internal {
 
         if (m_wantNewLine) {
             menu->addSeparator();
-            QAction* nlAction = menu->addAction(tr("Insert line break"));
-            connect(nlAction, SIGNAL(triggered()), this, SLOT(insertNewLine()));
+            menu->addAction(tr("Insert line break"), this, &PropertyLineEdit::insertNewLine);
         }
 
         menu->exec(event->globalPos());

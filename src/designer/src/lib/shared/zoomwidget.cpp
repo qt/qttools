@@ -63,7 +63,7 @@ ZoomMenu::ZoomMenu(QObject *parent) :
    QObject(parent),
    m_menuActions(new QActionGroup(this))
 {
-    connect(m_menuActions, SIGNAL(triggered(QAction*)), this, SLOT(slotZoomMenu(QAction*)));
+    connect(m_menuActions, &QActionGroup::triggered, this, &ZoomMenu::slotZoomMenu);
     const int nz = sizeof(menuZoomList)/sizeof(int);
     for (int i = 0; i < nz; i++) {
         const int zoom = menuZoomList[i];
@@ -201,7 +201,7 @@ ZoomMenu *ZoomView::zoomMenu()
     if (!m_zoomMenu) {
         m_zoomMenu = new ZoomMenu(this);
         m_zoomMenu->setZoom(m_zoom);
-        connect(m_zoomMenu, SIGNAL(zoomChanged(int)), this, SLOT(setZoom(int)));
+        connect(m_zoomMenu, &ZoomMenu::zoomChanged, this, &ZoomView::setZoom);
     }
     return m_zoomMenu;
 }
@@ -222,11 +222,6 @@ void ZoomView::showContextMenu(const QPoint &globalPos)
 {
     QMenu menu;
     zoomMenu()->addActions(&menu);
-    if (debugZoomWidget) {
-        menu.addSeparator();
-        QAction *da = menu.addAction(QStringLiteral("Dump"));
-        connect(da, SIGNAL(triggered()), this, SLOT(dump()));
-    }
     menu.exec(globalPos);
 }
 

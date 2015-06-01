@@ -45,7 +45,7 @@ GridPanel::GridPanel(QWidget *parentWidget) :
     m_ui = new Ui::GridPanel;
     m_ui->setupUi(this);
 
-    connect(m_ui->m_resetButton, SIGNAL(clicked()), this, SLOT(reset()));
+    connect(m_ui->m_resetButton, &QAbstractButton::clicked, this, &GridPanel::reset);
 }
 
 GridPanel::~GridPanel()

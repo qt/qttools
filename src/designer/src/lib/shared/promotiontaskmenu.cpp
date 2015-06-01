@@ -80,9 +80,9 @@ PromotionTaskMenu::PromotionTaskMenu(QWidget *widget,Mode mode, QObject *parent)
     m_promoteLabel(tr("Promote to")),
     m_demoteLabel(tr("Demote to %1"))
 {
-    connect(m_globalEditAction, SIGNAL(triggered()), this, SLOT(slotEditPromotedWidgets()));
-    connect(m_EditPromoteToAction, SIGNAL(triggered()), this, SLOT(slotEditPromoteTo()));
-    connect(m_EditSignalsSlotsAction, SIGNAL(triggered()), this, SLOT(slotEditSignalsSlots()));
+    connect(m_globalEditAction, &QAction::triggered, this, &PromotionTaskMenu::slotEditPromotedWidgets);
+    connect(m_EditPromoteToAction, &QAction::triggered, this, &PromotionTaskMenu::slotEditPromoteTo);
+    connect(m_EditSignalsSlotsAction, &QAction::triggered, this, &PromotionTaskMenu::slotEditSignalsSlots);
 }
 
 PromotionTaskMenu::Mode PromotionTaskMenu::mode() const
@@ -117,6 +117,9 @@ void PromotionTaskMenu::setDemoteLabel(const QString &demoteLabel)
 
 PromotionTaskMenu::PromotionState  PromotionTaskMenu::createPromotionActions(QDesignerFormWindowInterface *formWindow)
 {
+    typedef void (QSignalMapper::*MapperVoidSlot)();
+    typedef void (QSignalMapper::*MapperStringSignal)(const QString &);
+
     // clear out old
     if (!m_promotionActions.empty()) {
         qDeleteAll(m_promotionActions);
@@ -137,7 +140,7 @@ PromotionTaskMenu::PromotionState  PromotionTaskMenu::createPromotionActions(QDe
     if (isPromoted(formWindow->core(), m_widget)) {
         const QString label = m_demoteLabel.arg( promotedExtends(core , m_widget));
         QAction *demoteAction = new QAction(label, this);
-        connect(demoteAction, SIGNAL(triggered()), this, SLOT(slotDemoteFromCustomWidget()));
+        connect(demoteAction, &QAction::triggered, this, &PromotionTaskMenu::slotDemoteFromCustomWidget);
         m_promotionActions.push_back(demoteAction);
         return CanDemote;
     }
@@ -151,7 +154,8 @@ PromotionTaskMenu::PromotionState  PromotionTaskMenu::createPromotionActions(QDe
     // Set up a signal mapper to associate class names
     if (!m_promotionMapper) {
         m_promotionMapper = new QSignalMapper(this);
-        connect(m_promotionMapper, SIGNAL(mapped(QString)), this, SLOT(slotPromoteToCustomWidget(QString)));
+        connect(m_promotionMapper, static_cast<MapperStringSignal>(&QSignalMapper::mapped),
+                this, &PromotionTaskMenu::slotPromoteToCustomWidget);
     }
 
     QMenu *candidatesMenu = new QMenu();
@@ -161,7 +165,8 @@ PromotionTaskMenu::PromotionState  PromotionTaskMenu::createPromotionActions(QDe
     for (WidgetDataBaseItemList::const_iterator it = candidates.constBegin(); it != cend; ++it) {
         const QString customClassName = (*it)->name();
         QAction *action = new QAction((*it)->name(), this);
-        connect(action, SIGNAL(triggered()), m_promotionMapper, SLOT(map()));
+        connect(action, &QAction::triggered,
+                m_promotionMapper, static_cast<MapperVoidSlot>(&QSignalMapper::map));
         m_promotionMapper->setMapping(action, customClassName);
         candidatesMenu->addAction(action);
     }

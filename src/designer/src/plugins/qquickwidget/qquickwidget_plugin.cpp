@@ -86,8 +86,8 @@ bool QQuickWidgetPlugin::isContainer() const
 QWidget *QQuickWidgetPlugin::createWidget(QWidget *parent)
 {
     QQuickWidget *result = new QQuickWidget(parent);
-    connect(result, SIGNAL(sceneGraphError(QQuickWindow::SceneGraphError,QString)),
-            this, SLOT(sceneGraphError(QQuickWindow::SceneGraphError,QString)));
+    connect(result, &QQuickWidget::sceneGraphError,
+            this, &QQuickWidgetPlugin::sceneGraphError);
     return result;
 }
 

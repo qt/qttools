@@ -55,8 +55,8 @@ QDesignerServer::QDesignerServer(QObject *parent)
     m_server->listen(QHostAddress::LocalHost, 0);
     if (m_server->isListening())
     {
-        connect(m_server, SIGNAL(newConnection()),
-                this, SLOT(handleNewConnection()));
+        connect(m_server, &QTcpServer::newConnection,
+                this, &QDesignerServer::handleNewConnection);
     }
 }
 
@@ -108,10 +108,10 @@ void QDesignerServer::handleNewConnection()
     // no need for more than one connection
     if (m_socket == 0) {
         m_socket = m_server->nextPendingConnection();
-        connect(m_socket, SIGNAL(readyRead()),
-                this, SLOT(readFromClient()));
-        connect(m_socket, SIGNAL(disconnected()),
-                this, SLOT(socketClosed()));
+        connect(m_socket, &QTcpSocket::readyRead,
+                this, &QDesignerServer::readFromClient);
+        connect(m_socket, &QTcpSocket::disconnected,
+                this, &QDesignerServer::socketClosed);
     }
 }
 
@@ -121,8 +121,8 @@ QDesignerClient::QDesignerClient(quint16 port, QObject *parent)
 {
     m_socket = new QTcpSocket(this);
     m_socket->connectToHost(QHostAddress::LocalHost, port);
-    connect(m_socket, SIGNAL(readyRead()),
-                this, SLOT(readFromSocket()));
+    connect(m_socket, &QTcpSocket::readyRead,
+                this, &QDesignerClient::readFromSocket);
 
 }
 

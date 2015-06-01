@@ -141,7 +141,7 @@ ActionList ToolBarEventFilter::contextMenuActions(const QPoint &globalPos)
         QAction *newSeperatorAct = new QAction(tr("Insert Separator before '%1'").arg(action->objectName()), 0);
         itemData.setValue(action);
         newSeperatorAct->setData(itemData);
-        connect(newSeperatorAct, SIGNAL(triggered()), this, SLOT(slotInsertSeparator()));
+        connect(newSeperatorAct, &QAction::triggered, this, &ToolBarEventFilter::slotInsertSeparator);
         rc.push_back(newSeperatorAct);
     }
 
@@ -150,7 +150,7 @@ ActionList ToolBarEventFilter::contextMenuActions(const QPoint &globalPos)
         QAction *newSeperatorAct = new QAction(tr("Append Separator"), 0);
         itemData.setValue(static_cast<QAction*>(0));
         newSeperatorAct->setData(itemData);
-        connect(newSeperatorAct, SIGNAL(triggered()), this, SLOT(slotInsertSeparator()));
+        connect(newSeperatorAct, &QAction::triggered, this, &ToolBarEventFilter::slotInsertSeparator);
         rc.push_back(newSeperatorAct);
     }
     // Promotion
@@ -162,12 +162,12 @@ ActionList ToolBarEventFilter::contextMenuActions(const QPoint &globalPos)
         QAction *a = new QAction(tr("Remove action '%1'").arg(action->objectName()), 0);
         itemData.setValue(action);
         a->setData(itemData);
-        connect(a, SIGNAL(triggered()), this, SLOT(slotRemoveSelectedAction()));
+        connect(a, &QAction::triggered, this, &ToolBarEventFilter::slotRemoveSelectedAction);
         rc.push_back(a);
     }
 
     QAction *remove_toolbar = new QAction(tr("Remove Toolbar '%1'").arg(m_toolBar->objectName()), 0);
-    connect(remove_toolbar, SIGNAL(triggered()), this, SLOT(slotRemoveToolBar()));
+    connect(remove_toolbar, &QAction::triggered, this, &ToolBarEventFilter::slotRemoveToolBar);
     rc.push_back(remove_toolbar);
     return rc;
 }

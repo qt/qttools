@@ -428,7 +428,7 @@ QWidget *BuddyEditor::findBuddy(QLabel *l, const QWidgetList &existingBuddies) c
 void BuddyEditor::createContextMenu(QMenu &menu)
 {
     QAction *autoAction = menu.addAction(tr("Set automatically"));
-    connect(autoAction, SIGNAL(triggered()), this, SLOT(autoBuddy()));
+    connect(autoAction, &QAction::triggered, this, &BuddyEditor::autoBuddy);
     menu.addSeparator();
     ConnectionEdit::createContextMenu(menu);
 }

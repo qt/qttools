@@ -88,12 +88,15 @@ DeviceProfileDialog::DeviceProfileDialog(QDesignerDialogGuiInterface *dlgGui, QW
     for (QStringList::const_iterator it = styles.constBegin(); it != cend; ++it)
          m_ui->m_styleCombo->addItem(*it, *it);
 
-    connect(m_ui->m_nameLineEdit, SIGNAL(textChanged(QString)), this, SLOT(nameChanged(QString)));
-    connect(m_ui->buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
-    connect(m_ui->buttonBox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), this, SLOT(accept()));
+    connect(m_ui->m_nameLineEdit, &QLineEdit::textChanged, this, &DeviceProfileDialog::nameChanged);
+    connect(m_ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+    connect(m_ui->buttonBox->button(QDialogButtonBox::Ok), &QAbstractButton::clicked,
+            this, &QDialog::accept);
     // Note that Load/Save emit accepted() of the button box..
-    connect(m_ui->buttonBox->button(QDialogButtonBox::Save), SIGNAL(clicked()), this, SLOT(save()));
-    connect(m_ui->buttonBox->button(QDialogButtonBox::Open), SIGNAL(clicked()), this, SLOT(open()));
+    connect(m_ui->buttonBox->button(QDialogButtonBox::Save), &QAbstractButton::clicked,
+            this, &DeviceProfileDialog::save);
+    connect(m_ui->buttonBox->button(QDialogButtonBox::Open), &QAbstractButton::clicked,
+            this, &DeviceProfileDialog::open);
 }
 
 DeviceProfileDialog::~DeviceProfileDialog()

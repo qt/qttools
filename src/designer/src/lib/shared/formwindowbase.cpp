@@ -112,7 +112,7 @@ FormWindowBase::FormWindowBase(QDesignerFormEditorInterface *core, QWidget *pare
     m_d->m_pixmapCache = new DesignerPixmapCache(this);
     m_d->m_iconCache = new DesignerIconCache(m_d->m_pixmapCache, this);
     if (core->integration()->hasFeature(QDesignerIntegrationInterface::DefaultWidgetActionFeature))
-        connect(this, SIGNAL(activated(QWidget*)), this, SLOT(triggerDefaultAction(QWidget*)));
+        connect(this, &QDesignerFormWindowInterface::activated, this, &FormWindowBase::triggerDefaultAction);
 }
 
 FormWindowBase::~FormWindowBase()
@@ -475,7 +475,7 @@ FormWindowBase::LineTerminatorMode FormWindowBase::lineTerminatorMode() const
 void FormWindowBase::triggerDefaultAction(QWidget *widget)
 {
     if (QAction *action = qdesigner_internal::preferredEditAction(core(), widget))
-        QTimer::singleShot(0, action, SIGNAL(triggered()));
+        QTimer::singleShot(0, action, &QAction::trigger);
 }
 
 QStringList FormWindowBase::checkContents() const

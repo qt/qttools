@@ -82,7 +82,7 @@ PluginDialog::PluginDialog(QDesignerFormEditorInterface *core, QWidget *parent)
     const QString tooltip = tr("Scan for newly installed custom widget plugins.");
     updateButton->setToolTip(tooltip);
     updateButton->setWhatsThis(tooltip);
-    connect(updateButton, SIGNAL(clicked()), this, SLOT(updateCustomWidgetPlugins()));
+    connect(updateButton, &QAbstractButton::clicked, this, &PluginDialog::updateCustomWidgetPlugins);
     ui.buttonBox->addButton(updateButton, QDialogButtonBox::ActionRole);
 
 }

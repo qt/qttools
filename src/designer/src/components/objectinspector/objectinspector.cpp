@@ -727,13 +727,14 @@ ObjectInspector::ObjectInspector(QDesignerFormEditorInterface *core, QWidget *pa
     QTreeView *treeView = m_impl->treeView();
     vbox->addWidget(treeView);
 
-    connect(treeView, SIGNAL(customContextMenuRequested(QPoint)),
-            this, SLOT(slotPopupContextMenu(QPoint)));
+    connect(treeView, &QWidget::customContextMenuRequested,
+            this, &ObjectInspector::slotPopupContextMenu);
 
-    connect(treeView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            this, SLOT(slotSelectionChanged(QItemSelection,QItemSelection)));
+    connect(treeView->selectionModel(), &QItemSelectionModel::selectionChanged,
+            this, &ObjectInspector::slotSelectionChanged);
 
-    connect(treeView->header(), SIGNAL(sectionDoubleClicked(int)), this, SLOT(slotHeaderDoubleClicked(int)));
+    connect(treeView->header(), &QHeaderView::sectionDoubleClicked,
+            this, &ObjectInspector::slotHeaderDoubleClicked);
     setAcceptDrops(true);
 
     ItemViewFindWidget *findWidget = m_impl->findWidget();
@@ -747,7 +748,7 @@ ObjectInspector::ObjectInspector(QDesignerFormEditorInterface *core, QWidget *pa
     findAction->setShortcut(QKeySequence::Find);
     findAction->setShortcutContext(Qt::WidgetWithChildrenShortcut);
     addAction(findAction);
-    connect(findAction, SIGNAL(triggered(bool)), findWidget, SLOT(activate()));
+    connect(findAction, &QAction::triggered, findWidget, &AbstractFindWidget::activate);
 }
 
 ObjectInspector::~ObjectInspector()

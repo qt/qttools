@@ -54,7 +54,7 @@ TreeWidgetTaskMenu::TreeWidgetTaskMenu(QTreeWidget *button, QObject *parent)
       m_treeWidget(button),
       m_editItemsAction(new QAction(tr("Edit Items..."), this))
 {
-    connect(m_editItemsAction, SIGNAL(triggered()), this, SLOT(editItems()));
+    connect(m_editItemsAction, &QAction::triggered, this, &TreeWidgetTaskMenu::editItems);
     m_taskActions.append(m_editItemsAction);
 
     QAction *sep = new QAction(this);

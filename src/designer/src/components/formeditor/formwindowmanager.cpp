@@ -258,14 +258,20 @@ void FormWindowManager::addFormWindow(QDesignerFormWindowInterface *w)
     if (!formWindow || m_formWindows.contains(formWindow))
         return;
 
-    connect(formWindow, SIGNAL(selectionChanged()), this, SLOT(slotUpdateActions()));
-    connect(formWindow->commandHistory(), SIGNAL(indexChanged(int)), this, SLOT(slotUpdateActions()));
-    connect(formWindow, SIGNAL(toolChanged(int)), this, SLOT(slotUpdateActions()));
+    connect(formWindow, &QDesignerFormWindowInterface::selectionChanged,
+            this, &FormWindowManager::slotUpdateActions);
+    connect(formWindow->commandHistory(), &QUndoStack::indexChanged,
+            this, &FormWindowManager::slotUpdateActions);
+    connect(formWindow, &QDesignerFormWindowInterface::toolChanged,
+            this, &FormWindowManager::slotUpdateActions);
 
-    if (ActionEditor *ae = qobject_cast<ActionEditor *>(m_core->actionEditor()))
-        connect(w, SIGNAL(mainContainerChanged(QWidget*)), ae, SLOT(mainContainerChanged()));
+    if (ActionEditor *ae = qobject_cast<ActionEditor *>(m_core->actionEditor())) {
+        connect(w, &QDesignerFormWindowInterface::mainContainerChanged,
+                ae, &ActionEditor::mainContainerChanged);
+    }
     if (QDesignerObjectInspector *oi = qobject_cast<QDesignerObjectInspector *>(m_core->objectInspector()))
-        connect(w, SIGNAL(mainContainerChanged(QWidget*)), oi, SLOT(mainContainerChanged()));
+        connect(w, &QDesignerFormWindowInterface::mainContainerChanged,
+                oi, &QDesignerObjectInspector::mainContainerChanged);
 
     m_formWindows.append(formWindow);
     emit formWindowAdded(formWindow);
@@ -362,7 +368,7 @@ void FormWindowManager::setupActions()
     m_actionCut->setShortcut(QKeySequence::Cut);
     m_actionCut->setStatusTip(tr("Cuts the selected widgets and puts them on the clipboard"));
     m_actionCut->setWhatsThis(whatsThisFrom(QStringLiteral("Edit|Cut")));
-    connect(m_actionCut, SIGNAL(triggered()), this, SLOT(slotActionCutActivated()));
+    connect(m_actionCut, &QAction::triggered, this, &FormWindowManager::slotActionCutActivated);
     m_actionCut->setEnabled(false);
 
     m_actionCopy = new QAction(createIconSet(QStringLiteral("editcopy.png")), tr("&Copy"), this);
@@ -370,7 +376,7 @@ void FormWindowManager::setupActions()
     m_actionCopy->setShortcut(QKeySequence::Copy);
     m_actionCopy->setStatusTip(tr("Copies the selected widgets to the clipboard"));
     m_actionCopy->setWhatsThis(whatsThisFrom(QStringLiteral("Edit|Copy")));
-    connect(m_actionCopy, SIGNAL(triggered()), this, SLOT(slotActionCopyActivated()));
+    connect(m_actionCopy, &QAction::triggered, this, &FormWindowManager::slotActionCopyActivated);
     m_actionCopy->setEnabled(false);
 
     m_actionPaste = new QAction(createIconSet(QStringLiteral("editpaste.png")), tr("&Paste"), this);
@@ -378,7 +384,7 @@ void FormWindowManager::setupActions()
     m_actionPaste->setShortcut(QKeySequence::Paste);
     m_actionPaste->setStatusTip(tr("Pastes the clipboard's contents"));
     m_actionPaste->setWhatsThis(whatsThisFrom(QStringLiteral("Edit|Paste")));
-    connect(m_actionPaste, SIGNAL(triggered()), this, SLOT(slotActionPasteActivated()));
+    connect(m_actionPaste, &QAction::triggered, this, &FormWindowManager::slotActionPasteActivated);
     m_actionPaste->setEnabled(false);
 #endif
 
@@ -386,7 +392,7 @@ void FormWindowManager::setupActions()
     m_actionDelete->setObjectName(QStringLiteral("__qt_delete_action"));
     m_actionDelete->setStatusTip(tr("Deletes the selected widgets"));
     m_actionDelete->setWhatsThis(whatsThisFrom(QStringLiteral("Edit|Delete")));
-    connect(m_actionDelete, SIGNAL(triggered()), this, SLOT(slotActionDeleteActivated()));
+    connect(m_actionDelete, &QAction::triggered, this, &FormWindowManager::slotActionDeleteActivated);
     m_actionDelete->setEnabled(false);
 
     m_actionSelectAll = new QAction(tr("Select &All"), this);
@@ -394,7 +400,7 @@ void FormWindowManager::setupActions()
     m_actionSelectAll->setShortcut(QKeySequence::SelectAll);
     m_actionSelectAll->setStatusTip(tr("Selects all widgets"));
     m_actionSelectAll->setWhatsThis(whatsThisFrom(QStringLiteral("Edit|Select All")));
-    connect(m_actionSelectAll, SIGNAL(triggered()), this, SLOT(slotActionSelectAllActivated()));
+    connect(m_actionSelectAll, &QAction::triggered, this, &FormWindowManager::slotActionSelectAllActivated);
     m_actionSelectAll->setEnabled(false);
 
     m_actionRaise = new QAction(createIconSet(QStringLiteral("editraise.png")), tr("Bring to &Front"), this);
@@ -402,7 +408,7 @@ void FormWindowManager::setupActions()
     m_actionRaise->setShortcut(Qt::CTRL + Qt::Key_L);
     m_actionRaise->setStatusTip(tr("Raises the selected widgets"));
     m_actionRaise->setWhatsThis(tr("Raises the selected widgets"));
-    connect(m_actionRaise, SIGNAL(triggered()), this, SLOT(slotActionRaiseActivated()));
+    connect(m_actionRaise, &QAction::triggered, this, &FormWindowManager::slotActionRaiseActivated);
     m_actionRaise->setEnabled(false);
 
     m_actionLower = new QAction(createIconSet(QStringLiteral("editlower.png")), tr("Send to &Back"), this);
@@ -410,7 +416,7 @@ void FormWindowManager::setupActions()
     m_actionLower->setShortcut(Qt::CTRL + Qt::Key_K);
     m_actionLower->setStatusTip(tr("Lowers the selected widgets"));
     m_actionLower->setWhatsThis(tr("Lowers the selected widgets"));
-    connect(m_actionLower, SIGNAL(triggered()), this, SLOT(slotActionLowerActivated()));
+    connect(m_actionLower, &QAction::triggered, this, &FormWindowManager::slotActionLowerActivated);
     m_actionLower->setEnabled(false);
 
     m_actionAdjustSize = new QAction(createIconSet(QStringLiteral("adjustsize.png")), tr("Adjust &Size"), this);
@@ -418,7 +424,7 @@ void FormWindowManager::setupActions()
     m_actionAdjustSize->setShortcut(Qt::CTRL + Qt::Key_J);
     m_actionAdjustSize->setStatusTip(tr("Adjusts the size of the selected widget"));
     m_actionAdjustSize->setWhatsThis(whatsThisFrom(QStringLiteral("Layout|Adjust Size")));
-    connect(m_actionAdjustSize, SIGNAL(triggered()), this, SLOT(slotActionAdjustSizeActivated()));
+    connect(m_actionAdjustSize, &QAction::triggered, this, &FormWindowManager::slotActionAdjustSizeActivated);
     m_actionAdjustSize->setEnabled(false);
 
 
@@ -429,7 +435,7 @@ void FormWindowManager::setupActions()
     m_actionHorizontalLayout->setWhatsThis(whatsThisFrom(QStringLiteral("Layout|Lay Out Horizontally")));
     m_actionHorizontalLayout->setData(LayoutInfo::HBox);
     m_actionHorizontalLayout->setEnabled(false);
-    connect(m_actionHorizontalLayout, SIGNAL(triggered()), this, SLOT(createLayout()));
+    connect(m_actionHorizontalLayout, &QAction::triggered, this, &FormWindowManager::createLayout);
 
     m_actionVerticalLayout = new QAction(createIconSet(QStringLiteral("editvlayout.png")), tr("Lay Out &Vertically"), this);
     m_actionVerticalLayout->setObjectName(QStringLiteral("__qt_vertical_layout_action"));
@@ -438,7 +444,7 @@ void FormWindowManager::setupActions()
     m_actionVerticalLayout->setWhatsThis(whatsThisFrom(QStringLiteral("Layout|Lay Out Vertically")));
     m_actionVerticalLayout->setData(LayoutInfo::VBox);
     m_actionVerticalLayout->setEnabled(false);
-    connect(m_actionVerticalLayout, SIGNAL(triggered()), this, SLOT(createLayout()));
+    connect(m_actionVerticalLayout, &QAction::triggered, this, &FormWindowManager::createLayout);
 
     QIcon formIcon = QIcon::fromTheme(QStringLiteral("designer-form-layout"), createIconSet(QStringLiteral("editform.png")));
     m_actionFormLayout = new QAction(formIcon, tr("Lay Out in a &Form Layout"), this);
@@ -448,7 +454,7 @@ void FormWindowManager::setupActions()
     m_actionFormLayout->setWhatsThis(whatsThisFrom(QStringLiteral("Layout|Lay Out in a Form")));
     m_actionFormLayout->setData(LayoutInfo::Form);
     m_actionFormLayout->setEnabled(false);
-    connect(m_actionFormLayout, SIGNAL(triggered()), this, SLOT(createLayout()));
+    connect(m_actionFormLayout, &QAction::triggered, this, &FormWindowManager::createLayout);
 
     m_actionGridLayout = new QAction(createIconSet(QStringLiteral("editgrid.png")), tr("Lay Out in a &Grid"), this);
     m_actionGridLayout->setObjectName(QStringLiteral("__qt_grid_layout_action"));
@@ -457,7 +463,7 @@ void FormWindowManager::setupActions()
     m_actionGridLayout->setWhatsThis(whatsThisFrom(QStringLiteral("Layout|Lay Out in a Grid")));
     m_actionGridLayout->setData(LayoutInfo::Grid);
     m_actionGridLayout->setEnabled(false);
-    connect(m_actionGridLayout, SIGNAL(triggered()), this, SLOT(createLayout()));
+    connect(m_actionGridLayout, &QAction::triggered, this, &FormWindowManager::createLayout);
 
     m_actionSplitHorizontal = new QAction(createIconSet(QStringLiteral("edithlayoutsplit.png")),
                                           tr("Lay Out Horizontally in S&plitter"), this);
@@ -467,7 +473,7 @@ void FormWindowManager::setupActions()
     m_actionSplitHorizontal->setWhatsThis(whatsThisFrom(QStringLiteral("Layout|Lay Out Horizontally in Splitter")));
     m_actionSplitHorizontal->setData(LayoutInfo::HSplitter);
     m_actionSplitHorizontal->setEnabled(false);
-    connect(m_actionSplitHorizontal, SIGNAL(triggered()), this, SLOT(createLayout()));
+    connect(m_actionSplitHorizontal, &QAction::triggered, this, &FormWindowManager::createLayout);
 
     m_actionSplitVertical = new QAction(createIconSet(QStringLiteral("editvlayoutsplit.png")),
                                         tr("Lay Out Vertically in Sp&litter"), this);
@@ -475,7 +481,7 @@ void FormWindowManager::setupActions()
     m_actionSplitVertical->setShortcut(Qt::CTRL + Qt::Key_4);
     m_actionSplitVertical->setStatusTip(tr("Lays out the selected widgets vertically in a splitter"));
     m_actionSplitVertical->setWhatsThis(whatsThisFrom(QStringLiteral("Layout|Lay Out Vertically in Splitter")));
-    connect(m_actionSplitVertical, SIGNAL(triggered()), this, SLOT(createLayout()));
+    connect(m_actionSplitVertical, &QAction::triggered, this, &FormWindowManager::createLayout);
     m_actionSplitVertical->setData(LayoutInfo::VSplitter);
 
     m_actionSplitVertical->setEnabled(false);
@@ -485,22 +491,22 @@ void FormWindowManager::setupActions()
     m_actionBreakLayout->setShortcut(Qt::CTRL + Qt::Key_0);
     m_actionBreakLayout->setStatusTip(tr("Breaks the selected layout"));
     m_actionBreakLayout->setWhatsThis(whatsThisFrom(QStringLiteral("Layout|Break Layout")));
-    connect(m_actionBreakLayout, SIGNAL(triggered()), this, SLOT(slotActionBreakLayoutActivated()));
+    connect(m_actionBreakLayout, &QAction::triggered, this, &FormWindowManager::slotActionBreakLayoutActivated);
     m_actionBreakLayout->setEnabled(false);
 
     m_actionSimplifyLayout = new QAction(tr("Si&mplify Grid Layout"), this);
     m_actionSimplifyLayout->setObjectName(QStringLiteral("__qt_simplify_layout_action"));
     m_actionSimplifyLayout->setStatusTip(tr("Removes empty columns and rows"));
     m_actionSimplifyLayout->setWhatsThis(whatsThisFrom(QStringLiteral("Layout|Simplify Layout")));
-    connect(m_actionSimplifyLayout, SIGNAL(triggered()), this, SLOT(slotActionSimplifyLayoutActivated()));
+    connect(m_actionSimplifyLayout, &QAction::triggered, this, &FormWindowManager::slotActionSimplifyLayoutActivated);
     m_actionSimplifyLayout->setEnabled(false);
 
     m_actionDefaultPreview = new QAction(tr("&Preview..."), this);
     m_actionDefaultPreview->setObjectName(QStringLiteral("__qt_default_preview_action"));
     m_actionDefaultPreview->setStatusTip(tr("Preview current form"));
     m_actionDefaultPreview->setWhatsThis(whatsThisFrom(QStringLiteral("Form|Preview")));
-    connect(m_actionDefaultPreview, SIGNAL(triggered()),
-            this, SLOT(showPreview()));
+    connect(m_actionDefaultPreview, &QAction::triggered,
+            this, &FormWindowManager::showPreview);
 
     m_undoGroup = new QUndoGroup(this);
 
@@ -514,7 +520,8 @@ void FormWindowManager::setupActions()
 
     m_actionShowFormWindowSettingsDialog = new QAction(tr("Form &Settings..."), this);
     m_actionShowFormWindowSettingsDialog->setObjectName(QStringLiteral("__qt_form_settings_action"));
-    connect(m_actionShowFormWindowSettingsDialog, SIGNAL(triggered()), this, SLOT(slotActionShowFormWindowSettingsDialog()));
+    connect(m_actionShowFormWindowSettingsDialog, &QAction::triggered,
+            this, &FormWindowManager::slotActionShowFormWindowSettingsDialog);
     m_actionShowFormWindowSettingsDialog->setEnabled(false);
 
 #if defined (Q_OS_UNIX) && !defined(Q_OS_MAC)
@@ -1066,8 +1073,8 @@ QActionGroup *FormWindowManager::actionGroup(ActionGroup actionGroup) const
             // Wish we could make the 'this' pointer mutable ;-)
             QObject *parent = const_cast<FormWindowManager*>(this);
             m_actionGroupPreviewInStyle = new PreviewActionGroup(m_core, parent);
-            connect(m_actionGroupPreviewInStyle, SIGNAL(preview(QString,int)),
-                    this, SLOT(slotActionGroupPreviewInStyle(QString,int)));
+            connect(m_actionGroupPreviewInStyle, &PreviewActionGroup::preview,
+                    this, &FormWindowManager::slotActionGroupPreviewInStyle);
         }
         return m_actionGroupPreviewInStyle;
     }

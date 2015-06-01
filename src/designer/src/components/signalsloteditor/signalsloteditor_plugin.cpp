@@ -73,14 +73,14 @@ void SignalSlotEditorPlugin::initialize(QDesignerFormEditorInterface *core)
     m_core = core;
     m_initialized = true;
 
-    connect(core->formWindowManager(), SIGNAL(formWindowAdded(QDesignerFormWindowInterface*)),
-            this, SLOT(addFormWindow(QDesignerFormWindowInterface*)));
+    connect(core->formWindowManager(), &QDesignerFormWindowManagerInterface::formWindowAdded,
+            this, &SignalSlotEditorPlugin::addFormWindow);
 
-    connect(core->formWindowManager(), SIGNAL(formWindowRemoved(QDesignerFormWindowInterface*)),
-            this, SLOT(removeFormWindow(QDesignerFormWindowInterface*)));
+    connect(core->formWindowManager(), &QDesignerFormWindowManagerInterface::formWindowRemoved,
+            this, &SignalSlotEditorPlugin::removeFormWindow);
 
-    connect(core->formWindowManager(), SIGNAL(activeFormWindowChanged(QDesignerFormWindowInterface*)),
-                this, SLOT(activeFormWindowChanged(QDesignerFormWindowInterface*)));
+    connect(core->formWindowManager(), &QDesignerFormWindowManagerInterface::activeFormWindowChanged,
+            this, &SignalSlotEditorPlugin::activeFormWindowChanged);
 }
 
 QDesignerFormEditorInterface *SignalSlotEditorPlugin::core() const
@@ -94,7 +94,7 @@ void SignalSlotEditorPlugin::addFormWindow(QDesignerFormWindowInterface *formWin
     Q_ASSERT(m_tools.contains(formWindow) == false);
 
     SignalSlotEditorTool *tool = new SignalSlotEditorTool(formWindow, this);
-    connect(m_action, SIGNAL(triggered()), tool->action(), SLOT(trigger()));
+    connect(m_action, &QAction::triggered, tool->action(), &QAction::trigger);
     m_tools[formWindow] = tool;
     formWindow->registerTool(tool);
 }
@@ -106,7 +106,7 @@ void SignalSlotEditorPlugin::removeFormWindow(QDesignerFormWindowInterface *form
 
     SignalSlotEditorTool *tool = m_tools.value(formWindow);
     m_tools.remove(formWindow);
-    disconnect(m_action, SIGNAL(triggered()), tool->action(), SLOT(trigger()));
+    disconnect(m_action, &QAction::triggered, tool->action(), &QAction::trigger);
     // ### FIXME disable the tool
 
     delete tool;

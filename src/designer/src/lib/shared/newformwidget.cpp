@@ -132,6 +132,7 @@ NewFormWidget::NewFormWidget(QDesignerFormEditorInterface *core, QWidget *parent
     m_currentItem(0),
     m_acceptedItem(0)
 {
+    typedef void (QComboBox::*QComboIntSignal)(int);
     typedef QList<qdesigner_internal::DeviceProfile> DeviceProfileList;
 
     m_ui->setupUi(this);
@@ -183,7 +184,8 @@ NewFormWidget::NewFormWidget(QDesignerFormEditorInterface *core, QWidget *parent
     // Fill profile combo
     m_deviceProfiles = settings.deviceProfiles();
     m_ui->profileComboBox->addItem(tr("None"));
-    connect(m_ui->profileComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(slotDeviceProfileIndexChanged(int)));
+    connect(m_ui->profileComboBox, static_cast<QComboIntSignal>(&QComboBox::currentIndexChanged),
+            this, &NewFormWidget::slotDeviceProfileIndexChanged);
     if (m_deviceProfiles.empty()) {
         m_ui->profileComboBox->setEnabled(false);
     } else {

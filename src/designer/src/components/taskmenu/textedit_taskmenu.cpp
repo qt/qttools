@@ -66,7 +66,7 @@ TextEditTaskMenu::TextEditTaskMenu(QPlainTextEdit *textEdit, QObject *parent) :
 
 void TextEditTaskMenu::initialize()
 {
-    connect(m_editTextAction, SIGNAL(triggered()), this, SLOT(editText()));
+    connect(m_editTextAction, &QAction::triggered, this, &TextEditTaskMenu::editText);
     m_taskActions.append(m_editTextAction);
 
     QAction *sep = new QAction(this);

@@ -227,10 +227,10 @@ namespace qdesigner_internal {
 
         setFocusProxy(m_lineEdit);
 
-        connect(m_lineEdit,SIGNAL(editingFinished()), this, SIGNAL(editingFinished()));
-        connect(m_lineEdit,SIGNAL(returnPressed()), this, SLOT(slotEditingFinished()));
-        connect(m_lineEdit,SIGNAL(textChanged(QString)), this, SLOT(slotTextChanged(QString)));
-        connect(m_lineEdit,SIGNAL(textEdited(QString)), this, SLOT(slotTextEdited()));
+        connect(m_lineEdit,&QLineEdit::editingFinished, this, &TextPropertyEditor::editingFinished);
+        connect(m_lineEdit,&QLineEdit::returnPressed, this, &TextPropertyEditor::slotEditingFinished);
+        connect(m_lineEdit,&QLineEdit::textChanged, this, &TextPropertyEditor::slotTextChanged);
+        connect(m_lineEdit,&QLineEdit::textEdited, this, &TextPropertyEditor::slotTextEdited);
 
         setTextPropertyValidationMode(validationMode);
     }

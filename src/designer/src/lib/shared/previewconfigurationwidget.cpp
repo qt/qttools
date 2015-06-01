@@ -140,7 +140,8 @@ PreviewConfigurationWidget::PreviewConfigurationWidgetPrivate::PreviewConfigurat
     // sheet
     m_ui.m_appStyleSheetLineEdit->setTextPropertyValidationMode(qdesigner_internal::ValidationStyleSheet);
     m_ui.m_appStyleSheetClearButton->setIcon(qdesigner_internal::createIconSet(QString::fromUtf8("resetproperty.png")));
-    QObject::connect(m_ui.m_appStyleSheetClearButton, SIGNAL(clicked()), m_ui.m_appStyleSheetLineEdit, SLOT(clear()));
+    QObject::connect(m_ui.m_appStyleSheetClearButton, &QAbstractButton::clicked,
+                     m_ui.m_appStyleSheetLineEdit, &qdesigner_internal::TextPropertyEditor::clear);
 
     m_ui.m_skinRemoveButton->setIcon(qdesigner_internal::createIconSet(QString::fromUtf8("editdelete.png")));
     // skins: find default skins (resources)
@@ -317,9 +318,14 @@ PreviewConfigurationWidget::PreviewConfigurationWidget(QDesignerFormEditorInterf
     QGroupBox(parent),
     m_impl(new PreviewConfigurationWidgetPrivate(core, this))
 {
-    connect(m_impl->appStyleSheetChangeButton(), SIGNAL(clicked()), this, SLOT(slotEditAppStyleSheet()));
-    connect(m_impl->skinRemoveButton(), SIGNAL(clicked()), this, SLOT(slotDeleteSkinEntry()));
-    connect(m_impl->skinCombo(), SIGNAL(currentIndexChanged(int)), this, SLOT(slotSkinChanged(int)));
+    typedef void (QComboBox::*QComboIntSignal)(int);
+
+    connect(m_impl->appStyleSheetChangeButton(), &QAbstractButton::clicked,
+            this, &PreviewConfigurationWidget::slotEditAppStyleSheet);
+    connect(m_impl->skinRemoveButton(), &QAbstractButton::clicked,
+            this, &PreviewConfigurationWidget::slotDeleteSkinEntry);
+    connect(m_impl->skinCombo(), static_cast<QComboIntSignal>(&QComboBox::currentIndexChanged),
+            this, &PreviewConfigurationWidget::slotSkinChanged);
 
     m_impl->retrieveSettings();
 }

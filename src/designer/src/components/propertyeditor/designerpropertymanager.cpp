@@ -316,11 +316,11 @@ TextEditor::TextEditor(QDesignerFormEditorInterface *core, QWidget *parent) :
     m_layout->setMargin(0);
     m_layout->setSpacing(0);
 
-    connect(m_resourceAction, SIGNAL(triggered()), this, SLOT(resourceActionActivated()));
-    connect(m_fileAction, SIGNAL(triggered()), this, SLOT(fileActionActivated()));
-    connect(m_editor, SIGNAL(textChanged(QString)), this, SIGNAL(textChanged(QString)));
-    connect(m_themeEditor, SIGNAL(edited(QString)), this, SIGNAL(textChanged(QString)));
-    connect(m_button, SIGNAL(clicked()), this, SLOT(buttonClicked()));
+    connect(m_resourceAction, &QAction::triggered, this, &TextEditor::resourceActionActivated);
+    connect(m_fileAction, &QAction::triggered, this, &TextEditor::fileActionActivated);
+    connect(m_editor, &TextPropertyEditor::textChanged, this, &TextEditor::textChanged);
+    connect(m_themeEditor, &IconThemeEditor::edited, this, &TextEditor::textChanged);
+    connect(m_button, &QAbstractButton::clicked, this, &TextEditor::buttonClicked);
 
     setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed));
     setFocusProxy(m_editor);
@@ -482,8 +482,8 @@ IconThemeDialog::IconThemeDialog(QWidget *parent)
     layout->addWidget(m_editor);
     layout->addWidget(buttons);
 
-    connect(buttons, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttons, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttons, &QDialogButtonBox::accepted, this, &QDialog::accept);
+    connect(buttons, &QDialogButtonBox::rejected, this, &QDialog::reject);
 }
 
 QString IconThemeDialog::getTheme(QWidget *parent, const QString &theme, bool *ok)
@@ -586,19 +586,20 @@ PixmapEditor::PixmapEditor(QDesignerFormEditorInterface *core, QWidget *parent) 
     m_button->setMenu(menu);
     m_button->setText(tr("..."));
 
-    connect(m_button, SIGNAL(clicked()), this, SLOT(defaultActionActivated()));
-    connect(m_resourceAction, SIGNAL(triggered()), this, SLOT(resourceActionActivated()));
-    connect(m_fileAction, SIGNAL(triggered()), this, SLOT(fileActionActivated()));
-    connect(m_themeAction, SIGNAL(triggered()), this, SLOT(themeActionActivated()));
+    connect(m_button, &QAbstractButton::clicked, this, &PixmapEditor::defaultActionActivated);
+    connect(m_resourceAction, &QAction::triggered, this, &PixmapEditor::resourceActionActivated);
+    connect(m_fileAction, &QAction::triggered, this, &PixmapEditor::fileActionActivated);
+    connect(m_themeAction, &QAction::triggered, this, &PixmapEditor::themeActionActivated);
 #ifndef QT_NO_CLIPBOARD
-    connect(m_copyAction, SIGNAL(triggered()), this, SLOT(copyActionActivated()));
-    connect(m_pasteAction, SIGNAL(triggered()), this, SLOT(pasteActionActivated()));
+    connect(m_copyAction, &QAction::triggered, this, &PixmapEditor::copyActionActivated);
+    connect(m_pasteAction, &QAction::triggered, this, &PixmapEditor::pasteActionActivated);
 #endif
     setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Ignored));
     setFocusProxy(m_button);
 
 #ifndef QT_NO_CLIPBOARD
-    connect(QApplication::clipboard(), SIGNAL(dataChanged()), this, SLOT(clipboardDataChanged()));
+    connect(QApplication::clipboard(), &QClipboard::dataChanged,
+            this, &PixmapEditor::clipboardDataChanged);
     clipboardDataChanged();
 #endif
 }
@@ -800,7 +801,7 @@ ResetWidget::ResetWidget(QtProperty *property, QWidget *parent) :
     m_button->setIcon(createIconSet(QStringLiteral("resetproperty.png")));
     m_button->setIconSize(QSize(8,8));
     m_button->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::MinimumExpanding));
-    connect(m_button, SIGNAL(clicked()), this, SLOT(slotClicked()));
+    connect(m_button, &QAbstractButton::clicked, this, &ResetWidget::slotClicked);
     QLayout *layout = new QHBoxLayout(this);
     layout->setMargin(0);
     layout->setSpacing(m_spacing);
@@ -870,8 +871,10 @@ DesignerPropertyManager::DesignerPropertyManager(QDesignerFormEditorInterface *c
     m_core(core),
     m_sourceOfChange(0)
 {
-    connect(this, SIGNAL(valueChanged(QtProperty*,QVariant)), this, SLOT(slotValueChanged(QtProperty*,QVariant)));
-    connect(this, SIGNAL(propertyDestroyed(QtProperty*)), this, SLOT(slotPropertyDestroyed(QtProperty*)));
+    connect(this, &QtVariantPropertyManager::valueChanged,
+            this, &DesignerPropertyManager::slotValueChanged);
+    connect(this, & QtAbstractPropertyManager::propertyDestroyed,
+            this, &DesignerPropertyManager::slotPropertyDestroyed);
 }
 
 DesignerPropertyManager::~DesignerPropertyManager()
@@ -2191,7 +2194,8 @@ DesignerEditorFactory::DesignerEditorFactory(QDesignerFormEditorInterface *core,
     m_core(core),
     m_spacing(-1)
 {
-    connect(m_resetDecorator, SIGNAL(resetProperty(QtProperty*)), this, SIGNAL(resetProperty(QtProperty*)));
+    connect(m_resetDecorator, &ResetDecorator::resetProperty,
+            this, &DesignerEditorFactory::resetProperty);
 }
 
 DesignerEditorFactory::~DesignerEditorFactory()
@@ -2225,24 +2229,24 @@ void DesignerEditorFactory::setFormWindowBase(qdesigner_internal::FormWindowBase
 void DesignerEditorFactory::connectPropertyManager(QtVariantPropertyManager *manager)
 {
     m_resetDecorator->connectPropertyManager(manager);
-    connect(manager, SIGNAL(attributeChanged(QtProperty*,QString,QVariant)),
-                this, SLOT(slotAttributeChanged(QtProperty*,QString,QVariant)));
-    connect(manager, SIGNAL(valueChanged(QtProperty*,QVariant)),
-                this, SLOT(slotValueChanged(QtProperty*,QVariant)));
-    connect(manager, SIGNAL(propertyChanged(QtProperty*)),
-                this, SLOT(slotPropertyChanged(QtProperty*)));
+    connect(manager, &QtVariantPropertyManager::attributeChanged,
+                this, &DesignerEditorFactory::slotAttributeChanged);
+    connect(manager, &QtVariantPropertyManager::valueChanged,
+                this, &DesignerEditorFactory::slotValueChanged);
+    connect(manager, &QtVariantPropertyManager::propertyChanged,
+                this, &DesignerEditorFactory::slotPropertyChanged);
     QtVariantEditorFactory::connectPropertyManager(manager);
 }
 
 void DesignerEditorFactory::disconnectPropertyManager(QtVariantPropertyManager *manager)
 {
     m_resetDecorator->disconnectPropertyManager(manager);
-    disconnect(manager, SIGNAL(attributeChanged(QtProperty*,QString,QVariant)),
-                this, SLOT(slotAttributeChanged(QtProperty*,QString,QVariant)));
-    disconnect(manager, SIGNAL(valueChanged(QtProperty*,QVariant)),
-                this, SLOT(slotValueChanged(QtProperty*,QVariant)));
-    disconnect(manager, SIGNAL(propertyChanged(QtProperty*)),
-                this, SLOT(slotPropertyChanged(QtProperty*)));
+    disconnect(manager, &QtVariantPropertyManager::attributeChanged,
+                this, &DesignerEditorFactory::slotAttributeChanged);
+    disconnect(manager, &QtVariantPropertyManager::valueChanged,
+                this, &DesignerEditorFactory::slotValueChanged);
+    disconnect(manager, &QtVariantPropertyManager::propertyChanged,
+                this, &DesignerEditorFactory::slotPropertyChanged);
     QtVariantEditorFactory::disconnectPropertyManager(manager);
 }
 
@@ -2363,7 +2367,7 @@ TextEditor *DesignerEditorFactory::createTextEditor(QWidget *parent, TextPropert
     rc->setText(value);
     rc->setSpacing(m_spacing);
     rc->setTextPropertyValidationMode(vm);
-    connect(rc, SIGNAL(destroyed(QObject*)), this, SLOT(slotEditorDestroyed(QObject*)));
+    connect(rc, &QObject::destroyed, this, &DesignerEditorFactory::slotEditorDestroyed);
     return rc;
 }
 
@@ -2390,8 +2394,8 @@ QWidget *DesignerEditorFactory::createEditor(QtVariantPropertyManager *manager, 
         ed->setIconThemeModeEnabled(themeEnabled);
         m_stringPropertyToEditors[property].append(ed);
         m_editorToStringProperty[ed] = property;
-        connect(ed, SIGNAL(destroyed(QObject*)), this, SLOT(slotEditorDestroyed(QObject*)));
-        connect(ed, SIGNAL(textChanged(QString)), this, SLOT(slotStringTextChanged(QString)));
+        connect(ed, &QObject::destroyed, this, &DesignerEditorFactory::slotEditorDestroyed);
+        connect(ed, &TextEditor::textChanged, this, &DesignerEditorFactory::slotStringTextChanged);
         editor = ed;
     }
         break;
@@ -2400,8 +2404,8 @@ QWidget *DesignerEditorFactory::createEditor(QtVariantPropertyManager *manager, 
         ed->setSuperPalette(qvariant_cast<QPalette>(manager->attributeValue(property, QLatin1String(superPaletteAttributeC))));
         m_palettePropertyToEditors[property].append(ed);
         m_editorToPaletteProperty[ed] = property;
-        connect(ed, SIGNAL(destroyed(QObject*)), this, SLOT(slotEditorDestroyed(QObject*)));
-        connect(ed, SIGNAL(paletteChanged(QPalette)), this, SLOT(slotPaletteChanged(QPalette)));
+        connect(ed, &QObject::destroyed, this, &DesignerEditorFactory::slotEditorDestroyed);
+        connect(ed, &PaletteEditorButton::paletteChanged, this, &DesignerEditorFactory::slotPaletteChanged);
         editor = ed;
     }
         break;
@@ -2411,8 +2415,8 @@ QWidget *DesignerEditorFactory::createEditor(QtVariantPropertyManager *manager, 
         ed->setText(QString::number(manager->value(property).toUInt()));
         m_uintPropertyToEditors[property].append(ed);
         m_editorToUintProperty[ed] = property;
-        connect(ed, SIGNAL(destroyed(QObject*)), this, SLOT(slotEditorDestroyed(QObject*)));
-        connect(ed, SIGNAL(textChanged(QString)), this, SLOT(slotUintChanged(QString)));
+        connect(ed, &QObject::destroyed, this, &DesignerEditorFactory::slotEditorDestroyed);
+        connect(ed, &QLineEdit::textChanged, this, &DesignerEditorFactory::slotUintChanged);
         editor = ed;
     }
         break;
@@ -2422,8 +2426,8 @@ QWidget *DesignerEditorFactory::createEditor(QtVariantPropertyManager *manager, 
         ed->setText(QString::number(manager->value(property).toLongLong()));
         m_longLongPropertyToEditors[property].append(ed);
         m_editorToLongLongProperty[ed] = property;
-        connect(ed, SIGNAL(destroyed(QObject*)), this, SLOT(slotEditorDestroyed(QObject*)));
-        connect(ed, SIGNAL(textChanged(QString)), this, SLOT(slotLongLongChanged(QString)));
+        connect(ed, &QObject::destroyed, this, &DesignerEditorFactory::slotEditorDestroyed);
+        connect(ed, &QLineEdit::textChanged, this, &DesignerEditorFactory::slotLongLongChanged);
         editor = ed;
     }
         break;
@@ -2433,8 +2437,8 @@ QWidget *DesignerEditorFactory::createEditor(QtVariantPropertyManager *manager, 
         ed->setText(QString::number(manager->value(property).toULongLong()));
         m_uLongLongPropertyToEditors[property].append(ed);
         m_editorToULongLongProperty[ed] = property;
-        connect(ed, SIGNAL(destroyed(QObject*)), this, SLOT(slotEditorDestroyed(QObject*)));
-        connect(ed, SIGNAL(textChanged(QString)), this, SLOT(slotULongLongChanged(QString)));
+        connect(ed, &QObject::destroyed, this, &DesignerEditorFactory::slotEditorDestroyed);
+        connect(ed, &QLineEdit::textChanged, this, &DesignerEditorFactory::slotULongLongChanged);
         editor = ed;
     }
         break;
@@ -2443,8 +2447,8 @@ QWidget *DesignerEditorFactory::createEditor(QtVariantPropertyManager *manager, 
         ed->setUpdateMode(TextPropertyEditor::UpdateOnFinished);
         m_urlPropertyToEditors[property].append(ed);
         m_editorToUrlProperty[ed] = property;
-        connect(ed, SIGNAL(destroyed(QObject*)), this, SLOT(slotEditorDestroyed(QObject*)));
-        connect(ed, SIGNAL(textChanged(QString)), this, SLOT(slotUrlChanged(QString)));
+        connect(ed, &QObject::destroyed, this, &DesignerEditorFactory::slotEditorDestroyed);
+        connect(ed, &TextEditor::textChanged, this, &DesignerEditorFactory::slotUrlChanged);
         editor = ed;
     }
         break;
@@ -2452,8 +2456,8 @@ QWidget *DesignerEditorFactory::createEditor(QtVariantPropertyManager *manager, 
         TextEditor *ed = createTextEditor(parent, ValidationMultiLine, QString::fromUtf8(manager->value(property).toByteArray()));
         m_byteArrayPropertyToEditors[property].append(ed);
         m_editorToByteArrayProperty[ed] = property;
-        connect(ed, SIGNAL(destroyed(QObject*)), this, SLOT(slotEditorDestroyed(QObject*)));
-        connect(ed, SIGNAL(textChanged(QString)), this, SLOT(slotByteArrayChanged(QString)));
+        connect(ed, &QObject::destroyed, this, &DesignerEditorFactory::slotEditorDestroyed);
+        connect(ed, &TextEditor::textChanged, this, &DesignerEditorFactory::slotByteArrayChanged);
         editor = ed;
     }
         break;
@@ -2466,8 +2470,8 @@ QWidget *DesignerEditorFactory::createEditor(QtVariantPropertyManager *manager, 
             ed->setSpacing(m_spacing);
             m_pixmapPropertyToEditors[property].append(ed);
             m_editorToPixmapProperty[ed] = property;
-            connect(ed, SIGNAL(destroyed(QObject*)), this, SLOT(slotEditorDestroyed(QObject*)));
-            connect(ed, SIGNAL(pathChanged(QString)), this, SLOT(slotPixmapChanged(QString)));
+            connect(ed, &QObject::destroyed, this, &DesignerEditorFactory::slotEditorDestroyed);
+            connect(ed, &PixmapEditor::pathChanged, this, &DesignerEditorFactory::slotPixmapChanged);
             editor = ed;
         } else if (type == DesignerPropertyManager::designerIconTypeId()) {
             PixmapEditor *ed = new PixmapEditor(m_core, parent);
@@ -2485,9 +2489,9 @@ QWidget *DesignerEditorFactory::createEditor(QtVariantPropertyManager *manager, 
             ed->setSpacing(m_spacing);
             m_iconPropertyToEditors[property].append(ed);
             m_editorToIconProperty[ed] = property;
-            connect(ed, SIGNAL(destroyed(QObject*)), this, SLOT(slotEditorDestroyed(QObject*)));
-            connect(ed, SIGNAL(pathChanged(QString)), this, SLOT(slotIconChanged(QString)));
-            connect(ed, SIGNAL(themeChanged(QString)), this, SLOT(slotIconThemeChanged(QString)));
+            connect(ed, &QObject::destroyed, this, &DesignerEditorFactory::slotEditorDestroyed);
+            connect(ed, &PixmapEditor::pathChanged, this, &DesignerEditorFactory::slotIconChanged);
+            connect(ed, &PixmapEditor::themeChanged, this, &DesignerEditorFactory::slotIconThemeChanged);
             editor = ed;
         } else if (type == DesignerPropertyManager::designerStringTypeId()) {
             const TextPropertyValidationMode tvm = static_cast<TextPropertyValidationMode>(manager->attributeValue(property, QLatin1String(validationModesAttributeC)).toInt());
@@ -2497,8 +2501,8 @@ QWidget *DesignerEditorFactory::createEditor(QtVariantPropertyManager *manager, 
                 ed->setRichTextDefaultFont(qvariant_cast<QFont>(richTextDefaultFont));
             m_stringPropertyToEditors[property].append(ed);
             m_editorToStringProperty[ed] = property;
-            connect(ed, SIGNAL(destroyed(QObject*)), this, SLOT(slotEditorDestroyed(QObject*)));
-            connect(ed, SIGNAL(textChanged(QString)), this, SLOT(slotStringTextChanged(QString)));
+            connect(ed, &QObject::destroyed, this, &DesignerEditorFactory::slotEditorDestroyed);
+            connect(ed, &TextEditor::textChanged, this, &DesignerEditorFactory::slotStringTextChanged);
             editor = ed;
         } else if (type == DesignerPropertyManager::designerStringListTypeId() || type == QVariant::StringList) {
             const QVariant variantValue = manager->value(property);
@@ -2507,16 +2511,16 @@ QWidget *DesignerEditorFactory::createEditor(QtVariantPropertyManager *manager, 
             StringListEditorButton *ed = new StringListEditorButton(value, parent);
             m_stringListPropertyToEditors[property].append(ed);
             m_editorToStringListProperty.insert(ed, property);
-            connect(ed, SIGNAL(destroyed(QObject*)), this, SLOT(slotEditorDestroyed(QObject*)));
-            connect(ed, SIGNAL(stringListChanged(QStringList)), this, SLOT(slotStringListChanged(QStringList)));
+            connect(ed, &QObject::destroyed, this, &DesignerEditorFactory::slotEditorDestroyed);
+            connect(ed, &StringListEditorButton::stringListChanged, this, &DesignerEditorFactory::slotStringListChanged);
             editor = ed;
         } else if (type == DesignerPropertyManager::designerKeySequenceTypeId()) {
             QKeySequenceEdit *ed = new QKeySequenceEdit(parent);
             ed->setKeySequence(qvariant_cast<PropertySheetKeySequenceValue>(manager->value(property)).value());
             m_keySequencePropertyToEditors[property].append(ed);
             m_editorToKeySequenceProperty[ed] = property;
-            connect(ed, SIGNAL(destroyed(QObject*)), this, SLOT(slotEditorDestroyed(QObject*)));
-            connect(ed, SIGNAL(keySequenceChanged(QKeySequence)), this, SLOT(slotKeySequenceChanged(QKeySequence)));
+            connect(ed, &QObject::destroyed, this, &DesignerEditorFactory::slotEditorDestroyed);
+            connect(ed, &QKeySequenceEdit::keySequenceChanged, this, &DesignerEditorFactory::slotKeySequenceChanged);
             editor = ed;
         } else {
             editor = QtVariantEditorFactory::createEditor(manager, property, parent);
@@ -2740,14 +2744,14 @@ ResetDecorator::~ResetDecorator()
 
 void ResetDecorator::connectPropertyManager(QtAbstractPropertyManager *manager)
 {
-    connect(manager, SIGNAL(propertyChanged(QtProperty*)),
-            this, SLOT(slotPropertyChanged(QtProperty*)));
+    connect(manager, &QtAbstractPropertyManager::propertyChanged,
+            this, &ResetDecorator::slotPropertyChanged);
 }
 
 void ResetDecorator::disconnectPropertyManager(QtAbstractPropertyManager *manager)
 {
-    disconnect(manager, SIGNAL(propertyChanged(QtProperty*)),
-            this, SLOT(slotPropertyChanged(QtProperty*)));
+    disconnect(manager, &QtAbstractPropertyManager::propertyChanged,
+            this, &ResetDecorator::slotPropertyChanged);
 }
 
 void ResetDecorator::setSpacing(int spacing)
@@ -2789,8 +2793,8 @@ QWidget *ResetDecorator::editor(QWidget *subEditor, bool resettable, QtAbstractP
         resetWidget->setValueText(property->valueText());
         resetWidget->setValueIcon(property->valueIcon());
         resetWidget->setAutoFillBackground(true);
-        connect(resetWidget, SIGNAL(destroyed(QObject*)), this, SLOT(slotEditorDestroyed(QObject*)));
-        connect(resetWidget, SIGNAL(resetProperty(QtProperty*)), this, SIGNAL(resetProperty(QtProperty*)));
+        connect(resetWidget, &QObject::destroyed, this, &ResetDecorator::slotEditorDestroyed);
+        connect(resetWidget, &ResetWidget::resetProperty, this, &ResetDecorator::resetProperty);
         m_createdResetWidgets[property].append(resetWidget);
         m_resetWidgetToProperty[resetWidget] = property;
     }

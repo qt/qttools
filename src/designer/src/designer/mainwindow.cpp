@@ -223,7 +223,7 @@ ToolBarManager::ToolBarManager(QMainWindow *configureableMainWindow,
 {
     m_configureAction->setMenuRole(QAction::NoRole);
     m_configureAction->setObjectName(QStringLiteral("__qt_configure_tool_bars_action"));
-    connect(m_configureAction, SIGNAL(triggered()), this, SLOT(configureToolBars()));
+    connect(m_configureAction, &QAction::triggered, this, &ToolBarManager::configureToolBars);
 
     m_manager->setMainWindow(configureableMainWindow);
 
@@ -320,10 +320,10 @@ DockedMainWindow::DockedMainWindow(QDesignerWorkbench *wb,
     foreach (QToolBar *tb, toolbars)
         addToolBar(tb);
     DockedMdiArea *dma = new DockedMdiArea(wb->actionManager()->uiExtension());
-    connect(dma, SIGNAL(fileDropped(QString)),
-            this, SIGNAL(fileDropped(QString)));
-    connect(dma, SIGNAL(subWindowActivated(QMdiSubWindow*)),
-            this, SLOT(slotSubWindowActivated(QMdiSubWindow*)));
+    connect(dma, &DockedMdiArea::fileDropped,
+            this, &DockedMainWindow::fileDropped);
+    connect(dma, &QMdiArea::subWindowActivated,
+            this, &DockedMainWindow::slotSubWindowActivated);
     setCentralWidget(dma);
 
     QStatusBar *sb = statusBar();

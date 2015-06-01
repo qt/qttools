@@ -63,8 +63,8 @@ PlainTextEditorDialog::PlainTextEditorDialog(QDesignerFormEditorInterface *core,
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal);
     QPushButton *ok_button = buttonBox->button(QDialogButtonBox::Ok);
     ok_button->setDefault(true);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
     vlayout->addWidget(buttonBox);
 
     QDesignerSettingsInterface *settings = core->settingsManager();

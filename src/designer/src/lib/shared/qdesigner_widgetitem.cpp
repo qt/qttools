@@ -121,7 +121,7 @@ QDesignerWidgetItem::QDesignerWidgetItem(const QLayout *containingLayout, QWidge
     expand(&m_nonLaidOutMinSize);
     expand(&m_nonLaidOutSizeHint);
     w->installEventFilter(this);
-    connect(containingLayout, SIGNAL(destroyed()), this, SLOT(layoutChanged()));
+    connect(containingLayout, &QObject::destroyed, this, &QDesignerWidgetItem::layoutChanged);
     if (DebugWidgetItem )
         qDebug() << "QDesignerWidgetItem"  << w <<  sizePolicyToString(w->sizePolicy()) << m_nonLaidOutMinSize << m_nonLaidOutSizeHint;
 }
@@ -287,8 +287,10 @@ const QLayout *QDesignerWidgetItem::containingLayout() const
         if (QWidget *parentWidget = constWidget()->parentWidget())
             if (QLayout *parentLayout = parentWidget->layout()) {
                 m_cachedContainingLayout = findLayoutOfItem(parentLayout, this);
-                if (m_cachedContainingLayout)
-                    connect(m_cachedContainingLayout, SIGNAL(destroyed()), this, SLOT(layoutChanged()));
+                if (m_cachedContainingLayout) {
+                    connect(m_cachedContainingLayout, &QObject::destroyed,
+                            this, &QDesignerWidgetItem::layoutChanged);
+                }
             }
         if (DebugWidgetItem)
             qDebug() << Q_FUNC_INFO << " found " << m_cachedContainingLayout << " after reparenting " << constWidget();

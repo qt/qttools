@@ -67,7 +67,7 @@ InPlaceEditor::InPlaceEditor(QWidget *widget,
     setFocus();
     show();
 
-    connect(this, SIGNAL(editingFinished()),this, SLOT(close()));
+    connect(this, &TextPropertyEditor::editingFinished,this, &QWidget::close);
 }
 
 
@@ -90,7 +90,8 @@ void TaskMenuInlineEditor::editText()
         return;
     m_managed = m_formWindow->isManaged(m_widget);
     // Close as soon as a different widget is selected
-    connect(m_formWindow, SIGNAL(selectionChanged()), this, SLOT(updateSelection()));
+    connect(m_formWindow.data(), &QDesignerFormWindowInterface::selectionChanged,
+            this, &TaskMenuInlineEditor::updateSelection);
 
     // get old value
     QDesignerFormEditorInterface *core = m_formWindow->core();
@@ -102,7 +103,7 @@ void TaskMenuInlineEditor::editText()
     const QString oldValue = m_value.value();
 
     m_editor = new InPlaceEditor(m_widget, m_vm, m_formWindow, oldValue, editRectangle());
-    connect(m_editor, SIGNAL(textChanged(QString)), this, SLOT(updateText(QString)));
+    connect(m_editor.data(), &InPlaceEditor::textChanged, this, &TaskMenuInlineEditor::updateText);
 }
 
 void TaskMenuInlineEditor::updateText(const QString &text)

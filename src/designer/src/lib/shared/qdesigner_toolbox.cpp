@@ -59,10 +59,10 @@ QToolBoxHelper::QToolBoxHelper(QToolBox *toolbox) :
     m_actionChangePageOrder(new QAction(tr("Change Page Order..."), this)),
     m_pagePromotionTaskMenu(new qdesigner_internal::PromotionTaskMenu(0, qdesigner_internal::PromotionTaskMenu::ModeSingleWidget, this))
 {
-    connect(m_actionDeletePage, SIGNAL(triggered()), this, SLOT(removeCurrentPage()));
-    connect(m_actionInsertPage, SIGNAL(triggered()), this, SLOT(addPage()));
-    connect(m_actionInsertPageAfter, SIGNAL(triggered()), this, SLOT(addPageAfter()));
-    connect(m_actionChangePageOrder, SIGNAL(triggered()), this, SLOT(changeOrder()));
+    connect(m_actionDeletePage, &QAction::triggered, this, &QToolBoxHelper::removeCurrentPage);
+    connect(m_actionInsertPage, &QAction::triggered, this, &QToolBoxHelper::addPage);
+    connect(m_actionInsertPageAfter, &QAction::triggered, this, &QToolBoxHelper::addPageAfter);
+    connect(m_actionChangePageOrder, &QAction::triggered, this, &QToolBoxHelper::changeOrder);
 
     m_toolbox->installEventFilter(this);
 }

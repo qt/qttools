@@ -195,7 +195,7 @@ void Layout::setup()
     // widgets to get informed if one gets deleted to be able to
     // handle that and do not crash in this case
     foreach (QWidget *w, m_widgets) {
-        connect(w, SIGNAL(destroyed()), this, SLOT(widgetDestroyed()));
+        connect(w, &QObject::destroyed, this, &Layout::widgetDestroyed);
         m_startPoint = QPoint(qMin(m_startPoint.x(), w->x()), qMin(m_startPoint.y(), w->y()));
         const QRect rc(w->geometry());
 

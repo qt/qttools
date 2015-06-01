@@ -285,20 +285,20 @@ AppFontWidget::AppFontWidget(QWidget *parent) :
     m_view->setModel(m_model);
     m_view->setSelectionMode(QAbstractItemView::ExtendedSelection);
     m_view->expandAll();
-    connect(m_view->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(selectionChanged(QItemSelection,QItemSelection)));
+    connect(m_view->selectionModel(), &QItemSelectionModel::selectionChanged, this, &AppFontWidget::selectionChanged);
 
     m_addButton->setToolTip(tr("Add font files"));
     m_addButton->setIcon(qdesigner_internal::createIconSet(QString::fromUtf8("plus.png")));
-    connect(m_addButton, SIGNAL(clicked()), this, SLOT(addFiles()));
+    connect(m_addButton, &QAbstractButton::clicked, this, &AppFontWidget::addFiles);
 
     m_removeButton->setEnabled(false);
     m_removeButton->setToolTip(tr("Remove current font file"));
     m_removeButton->setIcon(qdesigner_internal::createIconSet(QString::fromUtf8("minus.png")));
-    connect(m_removeButton, SIGNAL(clicked()), this, SLOT(slotRemoveFiles()));
+    connect(m_removeButton, &QAbstractButton::clicked, this, &AppFontWidget::slotRemoveFiles);
 
     m_removeAllButton->setToolTip(tr("Remove all font files"));
     m_removeAllButton->setIcon(qdesigner_internal::createIconSet(QString::fromUtf8("editdelete.png")));
-    connect(m_removeAllButton, SIGNAL(clicked()), this, SLOT(slotRemoveAll()));
+    connect(m_removeAllButton, &QAbstractButton::clicked, this, &AppFontWidget::slotRemoveAll);
 
     QHBoxLayout *hLayout = new QHBoxLayout;
     hLayout->addWidget(m_addButton);
@@ -414,7 +414,7 @@ AppFontDialog::AppFontDialog(QWidget *parent) :
     vl->addWidget(m_appFontWidget);
 
     QDialogButtonBox *bb = new QDialogButtonBox(QDialogButtonBox::Close);
-    QDialog::connect(bb, SIGNAL(rejected()), this, SLOT(reject()));
+    QDialog::connect(bb, &QDialogButtonBox::rejected, this, &AppFontDialog::reject);
     vl->addWidget(bb);
     setLayout(vl);
 }

@@ -73,8 +73,10 @@ NewForm::NewForm(QDesignerWorkbench *workbench, QWidget *parentWidget, const QSt
 
     QVBoxLayout *vBoxLayout = new QVBoxLayout;
 
-    connect(m_newFormWidget, SIGNAL(templateActivated()), this, SLOT(slotTemplateActivated()));
-    connect(m_newFormWidget, SIGNAL(currentTemplateChanged(bool)), this, SLOT(slotCurrentTemplateChanged(bool)));
+    connect(m_newFormWidget, &QDesignerNewFormWidgetInterface::templateActivated,
+            this, &NewForm::slotTemplateActivated);
+    connect(m_newFormWidget, &QDesignerNewFormWidgetInterface::currentTemplateChanged,
+            this, &NewForm::slotCurrentTemplateChanged);
     vBoxLayout->addWidget(m_newFormWidget);
 
     QFrame *horizontalLine = new QFrame;
@@ -111,11 +113,11 @@ QDialogButtonBox *NewForm::createButtonBox()
         const QList<QAction *>::const_iterator acend = recentActions.constEnd();
         for (QList<QAction *>::const_iterator it = recentActions.constBegin(); it != acend; ++it) {
             recentFilesMenu->addAction(*it);
-            connect(*it, SIGNAL(triggered()), this, SLOT(recentFileChosen()));
+            connect(*it, &QAction::triggered, this, &NewForm::recentFileChosen);
         }
     }
     m_recentButton->setMenu(recentFilesMenu);
-    connect(buttonBox, SIGNAL(clicked(QAbstractButton*)), this, SLOT(slotButtonBoxClicked(QAbstractButton*)));
+    connect(buttonBox, &QDialogButtonBox::clicked, this, &NewForm::slotButtonBoxClicked);
     return buttonBox;
 }
 

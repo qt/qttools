@@ -337,6 +337,8 @@ QDesignerIntegrationPrivate::QDesignerIntegrationPrivate(QDesignerIntegration *q
 
 void QDesignerIntegrationPrivate::initialize()
 {
+    typedef void (QDesignerIntegration::*QDesignerIntegrationUpdatePropertySlot3)(const QString &, const QVariant &, bool);
+
     //
     // integrate the `Form Editor component'
     //
@@ -344,22 +346,24 @@ void QDesignerIntegrationPrivate::initialize()
     // Extensions
     QDesignerFormEditorInterface *core = q->core();
     if (QDesignerPropertyEditor *designerPropertyEditor= qobject_cast<QDesignerPropertyEditor *>(core->propertyEditor())) {
-        QObject::connect(designerPropertyEditor, SIGNAL(propertyValueChanged(QString,QVariant,bool)), q, SLOT(updateProperty(QString,QVariant,bool)));
-        QObject::connect(designerPropertyEditor, SIGNAL(resetProperty(QString)), q, SLOT(resetProperty(QString)));
-        QObject::connect(designerPropertyEditor, SIGNAL(addDynamicProperty(QString,QVariant)),
-                q, SLOT(addDynamicProperty(QString,QVariant)));
-        QObject::connect(designerPropertyEditor, SIGNAL(removeDynamicProperty(QString)),
-                q, SLOT(removeDynamicProperty(QString)));
+        QObject::connect(designerPropertyEditor, &QDesignerPropertyEditor::propertyValueChanged,
+                         q, static_cast<QDesignerIntegrationUpdatePropertySlot3>(&QDesignerIntegration::updateProperty));
+        QObject::connect(designerPropertyEditor, &QDesignerPropertyEditor::resetProperty,
+                         q, &QDesignerIntegration::resetProperty);
+        QObject::connect(designerPropertyEditor, &QDesignerPropertyEditor::addDynamicProperty,
+                q, &QDesignerIntegration::addDynamicProperty);
+        QObject::connect(designerPropertyEditor, &QDesignerPropertyEditor::removeDynamicProperty,
+                q, &QDesignerIntegration::removeDynamicProperty);
     } else {
         QObject::connect(core->propertyEditor(), SIGNAL(propertyChanged(QString,QVariant)),
-                q, SLOT(updatePropertyPrivate(QString,QVariant)));
+                q, SLOT(updatePropertyPrivate(QString,QVariant))); // ### fixme: VS Integration leftover?
     }
 
-    QObject::connect(core->formWindowManager(), SIGNAL(formWindowAdded(QDesignerFormWindowInterface*)),
-            q, SLOT(setupFormWindow(QDesignerFormWindowInterface*)));
+    QObject::connect(core->formWindowManager(), &QDesignerFormWindowManagerInterface::formWindowAdded,
+            q, &QDesignerIntegrationInterface::setupFormWindow);
 
-    QObject::connect(core->formWindowManager(), SIGNAL(activeFormWindowChanged(QDesignerFormWindowInterface*)),
-            q, SLOT(updateActiveFormWindow(QDesignerFormWindowInterface*)));
+    QObject::connect(core->formWindowManager(), &QDesignerFormWindowManagerInterface::activeFormWindowChanged,
+            q, &QDesignerIntegrationInterface::updateActiveFormWindow);
 
     m_gradientManager = new QtGradientManager(q);
     core->setGradientManager(m_gradientManager);
@@ -472,7 +476,8 @@ void QDesignerIntegrationPrivate::removeDynamicProperty(const QString &name)
 
 void QDesignerIntegrationPrivate::setupFormWindow(QDesignerFormWindowInterface *formWindow)
 {
-    QObject::connect(formWindow, SIGNAL(selectionChanged()), q, SLOT(updateSelection()));
+    QObject::connect(formWindow, &QDesignerFormWindowInterface::selectionChanged,
+                     q, &QDesignerIntegrationInterface::updateSelection);
 }
 
 void QDesignerIntegrationPrivate::updateSelection()
@@ -734,7 +739,8 @@ void QDesignerIntegration::updateActiveFormWindow(QDesignerFormWindowInterface *
 void QDesignerIntegration::setupFormWindow(QDesignerFormWindowInterface *formWindow)
 {
     d->setupFormWindow(formWindow);
-    connect(formWindow, SIGNAL(selectionChanged()), this, SLOT(updateSelection()));
+    connect(formWindow, &QDesignerFormWindowInterface::selectionChanged,
+            this, &QDesignerIntegrationInterface::updateSelection);
 }
 
 void QDesignerIntegration::updateSelection()

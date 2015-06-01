@@ -74,9 +74,9 @@ ContainerWidgetTaskMenu::ContainerWidgetTaskMenu(QWidget *widget, ContainerType 
     Q_ASSERT(m_core);
     m_taskActions.append(createSeparator());
 
-    connect(m_actionDeletePage, SIGNAL(triggered()), this, SLOT(removeCurrentPage()));
+    connect(m_actionDeletePage, &QAction::triggered, this, &ContainerWidgetTaskMenu::removeCurrentPage);
 
-    connect(m_actionInsertPageAfter, SIGNAL(triggered()), this, SLOT(addPageAfter()));
+    connect(m_actionInsertPageAfter, &QAction::triggered, this, &ContainerWidgetTaskMenu::addPageAfter);
     // Empty Per-Page submenu, deletion and promotion. Updated on demand due to promotion state
     switch (m_type) {
     case WizardContainer:
@@ -97,7 +97,7 @@ ContainerWidgetTaskMenu::ContainerWidgetTaskMenu(QWidget *widget, ContainerType 
         QMenu *insertMenu = new QMenu;
         // before
         m_actionInsertPage = new QAction(tr("Insert Page Before Current Page"), this);
-        connect(m_actionInsertPage, SIGNAL(triggered()), this, SLOT(addPage()));
+        connect(m_actionInsertPage, &QAction::triggered, this, &ContainerWidgetTaskMenu::addPage);
         insertMenu->addAction(m_actionInsertPage);
         // after
         m_actionInsertPageAfter->setText(tr("Insert Page After Current Page"));
@@ -229,8 +229,8 @@ WizardContainerWidgetTaskMenu::WizardContainerWidgetTaskMenu(QWizard *w, QObject
     m_nextAction(new QAction(tr("Next"), this)),
     m_previousAction(new QAction(tr("Back"), this))
 {
-    connect(m_nextAction, SIGNAL(triggered()), w, SLOT(next()));
-    connect(m_previousAction, SIGNAL(triggered()), w, SLOT(back()));
+    connect(m_nextAction, &QAction::triggered, w, &QWizard::next);
+    connect(m_previousAction, &QAction::triggered, w, &QWizard::back);
     QList<QAction*> &l = containerActions();
     l.push_front(createSeparator());
     l.push_front(m_nextAction);
@@ -254,10 +254,10 @@ MdiContainerWidgetTaskMenu::MdiContainerWidgetTaskMenu(QMdiArea *m, QObject *par
     ContainerWidgetTaskMenu(m, MdiContainer, parent)
 {
     initializeActions();
-    connect(m_nextAction, SIGNAL(triggered()), m, SLOT(activateNextSubWindow()));
-    connect(m_previousAction, SIGNAL(triggered()), m , SLOT(activatePreviousSubWindow()));
-    connect(m_tileAction, SIGNAL(triggered()), m, SLOT(tileSubWindows()));
-    connect(m_cascadeAction, SIGNAL(triggered()), m, SLOT(cascadeSubWindows()));
+    connect(m_nextAction, &QAction::triggered, m, &QMdiArea::activateNextSubWindow);
+    connect(m_previousAction, &QAction::triggered, m , &QMdiArea::activatePreviousSubWindow);
+    connect(m_tileAction, &QAction::triggered, m, &QMdiArea::tileSubWindows);
+    connect(m_cascadeAction, &QAction::triggered, m, &QMdiArea::cascadeSubWindows);
 }
 
 void MdiContainerWidgetTaskMenu::initializeActions()

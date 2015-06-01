@@ -91,7 +91,8 @@ QDesignerPropertyEditor::QDesignerPropertyEditor(QWidget *parent, Qt::WindowFlag
     m_propertyChangedForwardingBlocked(false)
 {
     // Make old signal work for  compatibility
-    connect(this, SIGNAL(propertyChanged(QString,QVariant)), this, SLOT(slotPropertyChanged(QString,QVariant)));
+    connect(this, &QDesignerPropertyEditorInterface::propertyChanged,
+            this, &QDesignerPropertyEditor::slotPropertyChanged);
 }
 
 static inline bool isDynamicProperty(QDesignerFormEditorInterface *core, QObject *object,

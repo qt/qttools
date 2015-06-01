@@ -84,10 +84,11 @@ NewActionDialog::NewActionDialog(ActionEditor *parent) :
     m_ui->setupUi(this);
 
     m_ui->tooltipEditor->setTextPropertyValidationMode(ValidationRichText);
-    connect(m_ui->toolTipToolButton, SIGNAL(clicked()), this, SLOT(slotEditToolTip()));
+    connect(m_ui->toolTipToolButton, &QAbstractButton::clicked, this, &NewActionDialog::slotEditToolTip);
 
     m_ui->keysequenceResetToolButton->setIcon(createIconSet(QStringLiteral("resetproperty.png")));
-    connect(m_ui->keysequenceResetToolButton, SIGNAL(clicked()), this, SLOT(slotResetKeySequence()));
+    connect(m_ui->keysequenceResetToolButton, &QAbstractButton::clicked,
+            this, &NewActionDialog::slotResetKeySequence);
 
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     m_ui->editActionText->setFocus();

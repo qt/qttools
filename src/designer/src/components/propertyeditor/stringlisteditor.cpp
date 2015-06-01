@@ -47,11 +47,11 @@ StringListEditor::StringListEditor(QWidget *parent)
     listView->setModel(m_model);
 
     connect(listView->selectionModel(),
-            SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-            this, SLOT(currentIndexChanged(QModelIndex,QModelIndex)));
+            &QItemSelectionModel::currentChanged,
+            this, &StringListEditor::currentIndexChanged);
     connect(listView->itemDelegate(),
-            SIGNAL(closeEditor(QWidget*,QAbstractItemDelegate::EndEditHint)),
-            this, SLOT(currentValueChanged()));
+            &QAbstractItemDelegate::closeEditor,
+            this, &StringListEditor::currentValueChanged);
 
     QIcon upIcon = createIconSet(QString::fromUtf8("up.png"));
     QIcon downIcon = createIconSet(QString::fromUtf8("down.png"));

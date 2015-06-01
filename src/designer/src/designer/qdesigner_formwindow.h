@@ -64,7 +64,7 @@ public slots:
 
 private slots:
     void updateWindowTitle(const QString &fileName);
-    void geometryChanged();
+    void slotGeometryChanged();
 
 signals:
     void minimizationStateChanged(QDesignerFormWindowInterface *formWindow, bool minimized);

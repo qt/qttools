@@ -313,8 +313,8 @@ ButtonGroupMenu::ButtonGroupMenu(QObject *parent) :
     m_buttonGroup(0),
     m_currentButton(0)
 {
-    connect(m_breakGroupAction, SIGNAL(triggered()), this, SLOT(breakGroup()));
-    connect(m_selectGroupAction, SIGNAL(triggered()), this, SLOT(selectGroup()));
+    connect(m_breakGroupAction, &QAction::triggered, this, &ButtonGroupMenu::breakGroup);
+    connect(m_selectGroupAction, &QAction::triggered, this, &ButtonGroupMenu::selectGroup);
 }
 
 void ButtonGroupMenu::initialize(QDesignerFormWindowInterface *formWindow, QButtonGroup *buttonGroup, QAbstractButton *currentButton)
@@ -436,10 +436,10 @@ ButtonTaskMenu::ButtonTaskMenu(QAbstractButton *button, QObject *parent)  :
     m_preferredEditAction(new QAction(tr("Change text..."), this)),
     m_removeFromGroupAction(new QAction(tr("None"), this))
 {
-    connect(m_createGroupAction, SIGNAL(triggered()), this, SLOT(createGroup()));
+    connect(m_createGroupAction, &QAction::triggered, this, &ButtonTaskMenu::createGroup);
     TaskMenuInlineEditor *textEditor = new ButtonTextTaskMenuInlineEditor(button, this);
-    connect(m_preferredEditAction, SIGNAL(triggered()), textEditor, SLOT(editText()));
-    connect(m_removeFromGroupAction, SIGNAL(triggered()), this, SLOT(removeFromGroup()));
+    connect(m_preferredEditAction, &QAction::triggered, textEditor, &TaskMenuInlineEditor::editText);
+    connect(m_removeFromGroupAction, &QAction::triggered, this, &ButtonTaskMenu::removeFromGroup);
 
     m_assignToGroupSubMenuAction->setMenu(m_assignGroupSubMenu);
 
@@ -493,7 +493,7 @@ bool ButtonTaskMenu::refreshAssignMenu(const QDesignerFormWindowInterface *fw, i
             m_assignGroupSubMenu->addSeparator();
         // Create a new action group
         m_assignActionGroup = new QActionGroup(this);
-        connect(m_assignActionGroup, SIGNAL(triggered(QAction*)), this, SLOT(addToGroup(QAction*)));
+        connect(m_assignActionGroup, &QActionGroup::triggered, this, &ButtonTaskMenu::addToGroup);
 
         const ButtonGroupList::const_iterator cend = bl.constEnd();
         for (ButtonGroupList::const_iterator it = bl.constBegin(); it != cend; ++it) {
@@ -692,7 +692,7 @@ CommandLinkButtonTaskMenu::CommandLinkButtonTaskMenu(QCommandLinkButton *button,
 {
     TaskMenuInlineEditor *descriptonEditor = new LinkDescriptionTaskMenuInlineEditor(button, this);
     QAction *descriptionAction = new QAction(tr("Change description..."), this);
-    connect(descriptionAction, SIGNAL(triggered()), descriptonEditor, SLOT(editText()));
+    connect(descriptionAction, &QAction::triggered, descriptonEditor, &TaskMenuInlineEditor::editText);
     insertAction(1, descriptionAction);
 }
 

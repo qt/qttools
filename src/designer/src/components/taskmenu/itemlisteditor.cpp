@@ -84,11 +84,11 @@ AbstractItemEditor::AbstractItemEditor(QDesignerFormWindowInterface *form, QWidg
     m_propertyBrowser->setFactoryForManager((QtVariantPropertyManager *)m_propertyManager,
                                             m_editorFactory);
 
-    connect(m_editorFactory, SIGNAL(resetProperty(QtProperty*)),
-            SLOT(resetProperty(QtProperty*)));
-    connect(m_propertyManager, SIGNAL(valueChanged(QtProperty*,QVariant,bool)),
-            SLOT(propertyChanged(QtProperty*)));
-    connect(iconCache(), SIGNAL(reloaded()), this, SLOT(cacheReloaded()));
+    connect(m_editorFactory, &DesignerEditorFactory::resetProperty,
+            this, &AbstractItemEditor::resetProperty);
+    connect(m_propertyManager, &DesignerPropertyManager::valueChanged,
+            this, &AbstractItemEditor::propertyChanged);
+    connect(iconCache(), &DesignerIconCache::reloaded, this, &AbstractItemEditor::cacheReloaded);
 }
 
 AbstractItemEditor::~AbstractItemEditor()
@@ -285,8 +285,8 @@ ItemListEditor::ItemListEditor(QDesignerFormWindowInterface *form, QWidget *pare
     ui.setupUi(this);
 
     injectPropertyBrowser(this, ui.widget);
-    connect(ui.showPropertiesButton, SIGNAL(clicked()),
-            this, SLOT(togglePropertyBrowser()));
+    connect(ui.showPropertiesButton, &QAbstractButton::clicked,
+            this, &ItemListEditor::togglePropertyBrowser);
     setPropertyBrowserVisible(false);
 
     QIcon upIcon = createIconSet(QString::fromUtf8("up.png"));
@@ -298,7 +298,7 @@ ItemListEditor::ItemListEditor(QDesignerFormWindowInterface *form, QWidget *pare
     ui.newListItemButton->setIcon(plusIcon);
     ui.deleteListItemButton->setIcon(minusIcon);
 
-    connect(iconCache(), SIGNAL(reloaded()), this, SLOT(cacheReloaded()));
+    connect(iconCache(), &DesignerIconCache::reloaded, this, &AbstractItemEditor::cacheReloaded);
 }
 
 void ItemListEditor::setupEditor(QWidget *object, PropertyDefinition *propList)

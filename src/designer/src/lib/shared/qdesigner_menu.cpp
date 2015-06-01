@@ -97,16 +97,16 @@ QDesignerMenu::QDesignerMenu(QWidget *parent) :
     setAcceptDrops(true); // ### fake
     setSeparatorsCollapsible(false);
 
-    connect(m_adjustSizeTimer, SIGNAL(timeout()), this, SLOT(slotAdjustSizeNow()));
+    connect(m_adjustSizeTimer, &QTimer::timeout, this, &QDesignerMenu::slotAdjustSizeNow);
     m_addItem->setText(tr("Type Here"));
     addAction(m_addItem);
 
     m_addSeparator->setText(tr("Add Separator"));
     addAction(m_addSeparator);
 
-    connect(m_showSubMenuTimer, SIGNAL(timeout()), this, SLOT(slotShowSubMenuNow()));
+    connect(m_showSubMenuTimer, &QTimer::timeout, this, &QDesignerMenu::slotShowSubMenuNow);
 
-    connect(m_deactivateWindowTimer, SIGNAL(timeout()), this, SLOT(slotDeactivateNow()));
+    connect(m_deactivateWindowTimer, &QTimer::timeout, this, &QDesignerMenu::slotDeactivateNow);
 
     m_editor->setObjectName(QStringLiteral("__qt__passive_editor"));
     m_editor->hide();
@@ -482,8 +482,8 @@ bool QDesignerMenu::handleContextMenuEvent(QWidget *, QContextMenuEvent *event)
         removeAction = menu.addAction(tr("Remove action '%1'").arg(action->objectName()));
     removeAction->setData(itemData);
 
-    connect(addSeparatorAction, SIGNAL(triggered(bool)), this, SLOT(slotAddSeparator()));
-    connect(removeAction, SIGNAL(triggered(bool)), this, SLOT(slotRemoveSelectedAction()));
+    connect(addSeparatorAction, &QAction::triggered, this, &QDesignerMenu::slotAddSeparator);
+    connect(removeAction, &QAction::triggered, this, &QDesignerMenu::slotRemoveSelectedAction);
     menu.exec(event->globalPos());
 
     return true;

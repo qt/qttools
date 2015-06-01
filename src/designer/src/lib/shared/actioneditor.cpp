@@ -144,38 +144,38 @@ ActionEditor::ActionEditor(QDesignerFormEditorInterface *core, QWidget *parent, 
     QIcon documentNewIcon = QIcon::fromTheme(QStringLiteral("document-new"), createIconSet(QStringLiteral("filenew.png")));
     m_actionNew->setIcon(documentNewIcon);
     m_actionNew->setEnabled(false);
-    connect(m_actionNew, SIGNAL(triggered()), this, SLOT(slotNewAction()));
+    connect(m_actionNew, &QAction::triggered, this, &ActionEditor::slotNewAction);
     toolbar->addAction(m_actionNew);
 
-    connect(m_actionSelectAll, SIGNAL(triggered()), m_actionView, SLOT(selectAll()));
+    connect(m_actionSelectAll, &QAction::triggered, m_actionView, &ActionView::selectAll);
 
 #ifndef QT_NO_CLIPBOARD
     m_actionCut->setEnabled(false);
-    connect(m_actionCut, SIGNAL(triggered()), this, SLOT(slotCut()));
+    connect(m_actionCut, &QAction::triggered, this, &ActionEditor::slotCut);
     QIcon editCutIcon = QIcon::fromTheme(QStringLiteral("edit-cut"), createIconSet(QStringLiteral("editcut.png")));
     m_actionCut->setIcon(editCutIcon);
 
     m_actionCopy->setEnabled(false);
-    connect(m_actionCopy, SIGNAL(triggered()), this, SLOT(slotCopy()));
+    connect(m_actionCopy, &QAction::triggered, this, &ActionEditor::slotCopy);
     QIcon editCopyIcon = QIcon::fromTheme(QStringLiteral("edit-copy"), createIconSet(QStringLiteral("editcopy.png")));
     m_actionCopy->setIcon(editCopyIcon);
     toolbar->addAction(m_actionCopy);
 
-    connect(m_actionPaste, SIGNAL(triggered()), this, SLOT(slotPaste()));
+    connect(m_actionPaste, &QAction::triggered, this, &ActionEditor::slotPaste);
     QIcon editPasteIcon = QIcon::fromTheme(QStringLiteral("edit-paste"), createIconSet(QStringLiteral("editpaste.png")));
     m_actionPaste->setIcon(editPasteIcon);
     toolbar->addAction(m_actionPaste);
 #endif
 
     m_actionEdit->setEnabled(false);
-    connect(m_actionEdit, SIGNAL(triggered()), this, SLOT(editCurrentAction()));
+    connect(m_actionEdit, &QAction::triggered, this, &ActionEditor::editCurrentAction);
 
-    connect(m_actionNavigateToSlot, SIGNAL(triggered()), this, SLOT(navigateToSlotCurrentAction()));
+    connect(m_actionNavigateToSlot, &QAction::triggered, this, &ActionEditor::navigateToSlotCurrentAction);
 
     QIcon editDeleteIcon = QIcon::fromTheme(QStringLiteral("edit-delete"), createIconSet(QStringLiteral("editdelete.png")));
     m_actionDelete->setIcon(editDeleteIcon);
     m_actionDelete->setEnabled(false);
-    connect(m_actionDelete, SIGNAL(triggered()), this, SLOT(slotDelete()));
+    connect(m_actionDelete, &QAction::triggered, this, &ActionEditor::slotDelete);
     toolbar->addAction(m_actionDelete);
 
     // Toolbutton with menu containing action group for detailed/icon view. Steal the icons from the file dialog.
@@ -183,7 +183,7 @@ ActionEditor::ActionEditor(QDesignerFormEditorInterface *core, QWidget *parent, 
     QMenu *configureMenu;
     toolbar->addWidget(createConfigureMenuButton(tr("Configure Action Editor"), &configureMenu));
 
-    connect(m_viewModeGroup, SIGNAL(triggered(QAction*)), this, SLOT(slotViewMode(QAction*)));
+    connect(m_viewModeGroup, &QActionGroup::triggered, this, &ActionEditor::slotViewMode);
     m_iconViewAction = m_viewModeGroup->addAction(tr("Icon View"));
     m_iconViewAction->setData(QVariant(ActionView::IconView));
     m_iconViewAction->setCheckable(true);
@@ -199,7 +199,7 @@ ActionEditor::ActionEditor(QDesignerFormEditorInterface *core, QWidget *parent, 
     m_filterWidget = new QWidget(toolbar);
     QHBoxLayout *filterLayout = new QHBoxLayout(m_filterWidget);
     QLineEdit *filterLineEdit = new QLineEdit(m_filterWidget);
-    connect(filterLineEdit, SIGNAL(textChanged(QString)), this, SLOT(setFilter(QString)));
+    connect(filterLineEdit, &QLineEdit::textChanged, this, &ActionEditor::setFilter);
     filterLineEdit->setPlaceholderText(tr("Filter"));
     filterLineEdit->setClearButtonEnabled(true);
     filterLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::MinimumExpanding, QSizePolicy::Ignored));
@@ -226,20 +226,20 @@ ActionEditor::ActionEditor(QDesignerFormEditorInterface *core, QWidget *parent, 
     m_actionGroups->setWrapping(false);
 #endif
 
-    connect(m_actionView, SIGNAL(resourceImageDropped(QString,QAction*)),
-            this, SLOT(resourceImageDropped(QString,QAction*)));
+    connect(m_actionView, &ActionView::resourceImageDropped,
+            this, &ActionEditor::resourceImageDropped);
 
-    connect(m_actionView, SIGNAL(currentChanged(QAction*)),this, SLOT(slotCurrentItemChanged(QAction*)));
+    connect(m_actionView, &ActionView::currentChanged,this, &ActionEditor::slotCurrentItemChanged);
     // make it possible for vs integration to reimplement edit action dialog
-    connect(m_actionView, SIGNAL(activated(QAction*)), this, SIGNAL(itemActivated(QAction*)));
+    connect(m_actionView, &ActionView::activated, this, &ActionEditor::itemActivated);
 
-    connect(m_actionView,SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            this, SLOT(slotSelectionChanged(QItemSelection,QItemSelection)));
+    connect(m_actionView, &ActionView::selectionChanged,
+            this, &ActionEditor::slotSelectionChanged);
 
-    connect(m_actionView, SIGNAL(contextMenuRequested(QContextMenuEvent*,QAction*)),
-            this, SLOT(slotContextMenuRequested(QContextMenuEvent*,QAction*)));
+    connect(m_actionView, &ActionView::contextMenuRequested,
+            this, &ActionEditor::slotContextMenuRequested);
 
-    connect(this, SIGNAL(itemActivated(QAction*)), this, SLOT(editAction(QAction*)));
+    connect(this, &ActionEditor::itemActivated, this, &ActionEditor::editAction);
 
     restoreSettings();
     updateViewModeActions();
@@ -292,7 +292,7 @@ void ActionEditor::setFormWindow(QDesignerFormWindowInterface *formWindow)
     if (m_formWindow != 0) {
         const ActionList actionList = m_formWindow->mainContainer()->findChildren<QAction*>();
         foreach (QAction *action, actionList)
-            disconnect(action, SIGNAL(changed()), this, SLOT(slotActionChanged()));
+            disconnect(action, &QAction::changed, this, &ActionEditor::slotActionChanged);
     }
 
     m_formWindow = formWindow;
@@ -321,7 +321,7 @@ void ActionEditor::setFormWindow(QDesignerFormWindowInterface *formWindow)
             // Show unless it has a menu. However, listen for change on menu actions also as it might be removed
             if (!action->menu())
                 m_actionView->model()->addAction(action);
-            connect(action, SIGNAL(changed()), this, SLOT(slotActionChanged()));
+            connect(action, &QAction::changed, this, &ActionEditor::slotActionChanged);
         }
 
     setFilter(m_filter);
@@ -419,7 +419,7 @@ void ActionEditor::manageAction(QAction *action)
     refreshIconPropertyChanged(action, sheet);
 
     m_actionView->setCurrentIndex(m_actionView->model()->addAction(action));
-    connect(action, SIGNAL(changed()), this, SLOT(slotActionChanged()));
+    connect(action, &QAction::changed, this, &ActionEditor::slotActionChanged);
 }
 
 void ActionEditor::unmanageAction(QAction *action)
@@ -427,7 +427,7 @@ void ActionEditor::unmanageAction(QAction *action)
     core()->metaDataBase()->remove(action);
     action->setParent(0);
 
-    disconnect(action, SIGNAL(changed()), this, SLOT(slotActionChanged()));
+    disconnect(action, &QAction::changed, this, &ActionEditor::slotActionChanged);
 
     const int row = m_actionView->model()->findAction(action);
     if (row != -1)
@@ -780,10 +780,14 @@ void ActionEditor::slotPaste()
 
 void ActionEditor::slotContextMenuRequested(QContextMenuEvent *e, QAction *item)
 {
+    typedef void (QSignalMapper::*MapperQWidgetSignal)(QWidget *);
+    typedef void (QSignalMapper::*MapperVoidSlot)();
+
     // set up signal mapper
     if (!m_selectAssociatedWidgetsMapper) {
         m_selectAssociatedWidgetsMapper = new QSignalMapper(this);
-        connect(m_selectAssociatedWidgetsMapper, SIGNAL(mapped(QWidget*)), this, SLOT(slotSelectAssociatedWidget(QWidget*)));
+        connect(m_selectAssociatedWidgetsMapper, static_cast<MapperQWidgetSignal>(&QSignalMapper::mapped),
+                this, &ActionEditor::slotSelectAssociatedWidget);
     }
 
     QMenu menu(this);
@@ -801,7 +805,8 @@ void ActionEditor::slotContextMenuRequested(QContextMenuEvent *e, QAction *item)
             foreach (QWidget *w, associatedWidgets) {
                 QAction *action = associatedWidgetsSubMenu->addAction(w->objectName());
                 m_selectAssociatedWidgetsMapper->setMapping(action, w);
-                connect(action, SIGNAL(triggered()), m_selectAssociatedWidgetsMapper, SLOT(map()));
+                connect(action, &QAction::triggered,
+                        m_selectAssociatedWidgetsMapper, static_cast<MapperVoidSlot>(&QSignalMapper::map));
             }
         }
     }

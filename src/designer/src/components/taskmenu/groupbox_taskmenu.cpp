@@ -75,7 +75,7 @@ GroupBoxTaskMenu::GroupBoxTaskMenu(QGroupBox *groupbox, QObject *parent)
 
 {
     TaskMenuInlineEditor *editor = new GroupBoxTaskMenuInlineEditor(groupbox, this);
-    connect(m_editTitleAction, SIGNAL(triggered()), editor, SLOT(editText()));
+    connect(m_editTitleAction, &QAction::triggered, editor, &TaskMenuInlineEditor::editText);
     m_taskActions.append(m_editTitleAction);
 
     QAction *sep = new QAction(this);

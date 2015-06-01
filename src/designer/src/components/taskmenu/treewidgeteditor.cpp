@@ -61,8 +61,8 @@ TreeWidgetEditor::TreeWidgetEditor(QDesignerFormWindowInterface *form, QDialog *
     ui.setupUi(dialog);
 
     injectPropertyBrowser(ui.itemsTab, ui.widget);
-    connect(ui.showPropertiesButton, SIGNAL(clicked()),
-            this, SLOT(togglePropertyBrowser()));
+    connect(ui.showPropertiesButton, &QAbstractButton::clicked,
+            this, &TreeWidgetEditor::togglePropertyBrowser);
     setPropertyBrowserVisible(false);
 
     ui.tabWidget->insertTab(0, m_columnEditor, tr("&Columns"));
@@ -79,32 +79,32 @@ TreeWidgetEditor::TreeWidgetEditor(QDesignerFormWindowInterface *form, QDialog *
 
     ui.treeWidget->header()->setSectionsMovable(false);
 
-    connect(ui.newItemButton, SIGNAL(clicked()), this, SLOT(on_newItemButton_clicked()));
-    connect(ui.newSubItemButton, SIGNAL(clicked()), this, SLOT(on_newSubItemButton_clicked()));
-    connect(ui.moveItemUpButton, SIGNAL(clicked()), this, SLOT(on_moveItemUpButton_clicked()));
-    connect(ui.moveItemDownButton, SIGNAL(clicked()), this, SLOT(on_moveItemDownButton_clicked()));
-    connect(ui.moveItemRightButton, SIGNAL(clicked()), this, SLOT(on_moveItemRightButton_clicked()));
-    connect(ui.moveItemLeftButton, SIGNAL(clicked()), this, SLOT(on_moveItemLeftButton_clicked()));
-    connect(ui.deleteItemButton, SIGNAL(clicked()), this, SLOT(on_deleteItemButton_clicked()));
-    connect(ui.treeWidget, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
-            this, SLOT(on_treeWidget_currentItemChanged()));
-    connect(ui.treeWidget, SIGNAL(itemChanged(QTreeWidgetItem*,int)),
-            this, SLOT(on_treeWidget_itemChanged(QTreeWidgetItem*,int)));
+    connect(ui.newItemButton, &QAbstractButton::clicked, this, &TreeWidgetEditor::on_newItemButton_clicked);
+    connect(ui.newSubItemButton, &QAbstractButton::clicked, this, &TreeWidgetEditor::on_newSubItemButton_clicked);
+    connect(ui.moveItemUpButton, &QAbstractButton::clicked, this, &TreeWidgetEditor::on_moveItemUpButton_clicked);
+    connect(ui.moveItemDownButton, &QAbstractButton::clicked, this, &TreeWidgetEditor::on_moveItemDownButton_clicked);
+    connect(ui.moveItemRightButton, &QAbstractButton::clicked, this, &TreeWidgetEditor::on_moveItemRightButton_clicked);
+    connect(ui.moveItemLeftButton, &QAbstractButton::clicked, this, &TreeWidgetEditor::on_moveItemLeftButton_clicked);
+    connect(ui.deleteItemButton, &QAbstractButton::clicked, this, &TreeWidgetEditor::on_deleteItemButton_clicked);
+    connect(ui.treeWidget, &QTreeWidget::currentItemChanged,
+            this, &TreeWidgetEditor::on_treeWidget_currentItemChanged);
+    connect(ui.treeWidget, &QTreeWidget::itemChanged,
+            this, &TreeWidgetEditor::on_treeWidget_itemChanged);
 
-    connect(m_columnEditor, SIGNAL(indexChanged(int)),
-            this, SLOT(on_columnEditor_indexChanged(int)));
-    connect(m_columnEditor, SIGNAL(itemChanged(int,int,QVariant)),
-            this, SLOT(on_columnEditor_itemChanged(int,int,QVariant)));
-    connect(m_columnEditor, SIGNAL(itemInserted(int)),
-            this, SLOT(on_columnEditor_itemInserted(int)));
-    connect(m_columnEditor, SIGNAL(itemDeleted(int)),
-            this, SLOT(on_columnEditor_itemDeleted(int)));
-    connect(m_columnEditor, SIGNAL(itemMovedUp(int)),
-            this, SLOT(on_columnEditor_itemMovedUp(int)));
-    connect(m_columnEditor, SIGNAL(itemMovedDown(int)),
-            this, SLOT(on_columnEditor_itemMovedDown(int)));
+    connect(m_columnEditor, &ItemListEditor::indexChanged,
+            this, &TreeWidgetEditor::on_columnEditor_indexChanged);
+    connect(m_columnEditor, &ItemListEditor::itemChanged,
+            this, &TreeWidgetEditor::on_columnEditor_itemChanged);
+    connect(m_columnEditor, &ItemListEditor::itemInserted,
+            this, &TreeWidgetEditor::on_columnEditor_itemInserted);
+    connect(m_columnEditor, &ItemListEditor::itemDeleted,
+            this, &TreeWidgetEditor::on_columnEditor_itemDeleted);
+    connect(m_columnEditor, &ItemListEditor::itemMovedUp,
+            this, &TreeWidgetEditor::on_columnEditor_itemMovedUp);
+    connect(m_columnEditor, &ItemListEditor::itemMovedDown,
+            this, &TreeWidgetEditor::on_columnEditor_itemMovedDown);
 
-    connect(iconCache(), SIGNAL(reloaded()), this, SLOT(cacheReloaded()));
+    connect(iconCache(), &DesignerIconCache::reloaded, this, &TreeWidgetEditor::cacheReloaded);
 }
 
 static AbstractItemEditor::PropertyDefinition treeHeaderPropList[] = {

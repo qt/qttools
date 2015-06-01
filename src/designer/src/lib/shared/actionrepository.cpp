@@ -340,8 +340,9 @@ ActionTreeView::ActionTreeView(ActionModel *model, QWidget *parent) :
     setTextElideMode(Qt::ElideMiddle);
 
     setModel(model);
-    connect(this, SIGNAL(activated(QModelIndex)), this, SLOT(slotActivated(QModelIndex)));
-    connect(header(), SIGNAL(sectionDoubleClicked(int)), this, SLOT(resizeColumnToContents(int)));
+    connect(this, &QTreeView::activated, this, &ActionTreeView::slotActivated);
+    connect(header(), &QHeaderView::sectionDoubleClicked,
+            this, &QTreeView::resizeColumnToContents);
 
     setIconSize(QSize(listModeIconSize, listModeIconSize));
 
@@ -416,7 +417,7 @@ ActionListView::ActionListView(ActionModel *model, QWidget *parent) :
     setDragDropMode(DragDrop);
     setModel(model);
     setTextElideMode(Qt::ElideMiddle);
-    connect(this, SIGNAL(activated(QModelIndex)), this, SLOT(slotActivated(QModelIndex)));
+    connect(this, &QListView::activated, this, &ActionListView::slotActivated);
 
     // We actually want 'Static' as the user should be able to
     // drag away actions only (not to rearrange icons).
@@ -504,16 +505,16 @@ ActionView::ActionView(QWidget *parent) :
 
     // make it possible for vs integration to reimplement edit action dialog
     // [which it shouldn't do actually]
-    connect(m_actionListView, SIGNAL(actionActivated(QAction*)), this, SIGNAL(activated(QAction*)));
-    connect(m_actionTreeView, SIGNAL(actionActivated(QAction*)), this, SIGNAL(activated(QAction*)));
+    connect(m_actionListView, &ActionListView::actionActivated, this, &ActionView::activated);
+    connect(m_actionTreeView, &ActionTreeView::actionActivated, this, &ActionView::activated);
 
-    connect(m_actionListView, SIGNAL(currentActionChanged(QAction*)),
-            this, SLOT(slotCurrentChanged(QAction*)));
-    connect(m_actionTreeView, SIGNAL(currentActionChanged(QAction*)),
-            this, SLOT(slotCurrentChanged(QAction*)));
+    connect(m_actionListView, &ActionListView::currentActionChanged,
+            this, &ActionView::slotCurrentChanged);
+    connect(m_actionTreeView, &ActionTreeView::currentActionChanged,
+            this, &ActionView::slotCurrentChanged);
 
-    connect(m_model, SIGNAL(resourceImageDropped(QString,QAction*)),
-            this, SIGNAL(resourceImageDropped(QString,QAction*)));
+    connect(m_model, &ActionModel::resourceImageDropped,
+            this, &ActionView::resourceImageDropped);
 
     // sync selection models
     QItemSelectionModel *selectionModel = m_actionTreeView->selectionModel();

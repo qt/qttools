@@ -53,8 +53,8 @@ ListWidgetEditor::ListWidgetEditor(QDesignerFormWindowInterface *form,
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     QDialogButtonBox *buttonBox = new QDialogButtonBox;
     buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
-    connect(buttonBox, SIGNAL(accepted()), SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 
     m_itemsEditor = new ItemListEditor(form, 0);
     m_itemsEditor->layout()->setMargin(0);

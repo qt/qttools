@@ -193,11 +193,11 @@ PreviewDeviceSkin::PreviewDeviceSkin(const DeviceSkinParameters &parameters, QWi
     m_directionRightAction(0),
     m_closeAction(0)
 {
-    connect(this, SIGNAL(skinKeyPressEvent(int,QString,bool)),
-            this, SLOT(slotSkinKeyPressEvent(int,QString,bool)));
-    connect(this, SIGNAL(skinKeyReleaseEvent(int,QString,bool)),
-            this, SLOT(slotSkinKeyReleaseEvent(int,QString,bool)));
-    connect(this, SIGNAL(popupMenu()), this, SLOT(slotPopupMenu()));
+    connect(this, &PreviewDeviceSkin::skinKeyPressEvent,
+            this, &PreviewDeviceSkin::slotSkinKeyPressEvent);
+    connect(this, &PreviewDeviceSkin::skinKeyReleaseEvent,
+            this, &PreviewDeviceSkin::slotSkinKeyReleaseEvent);
+    connect(this, &PreviewDeviceSkin::popupMenu, this, &PreviewDeviceSkin::slotPopupMenu);
 }
 
 void PreviewDeviceSkin::setPreview(QWidget *formWidget)
@@ -246,7 +246,7 @@ void PreviewDeviceSkin::slotPopupMenu()
     // Create actions
     if (!m_directionUpAction) {
         QActionGroup *directionGroup = new QActionGroup(this);
-        connect(directionGroup, SIGNAL(triggered(QAction*)), this, SLOT(slotDirection(QAction*)));
+        connect(directionGroup, &QActionGroup::triggered, this, &PreviewDeviceSkin::slotDirection);
         directionGroup->setExclusive(true);
         m_directionUpAction = createCheckableActionIntData(tr("&Portrait"), DirectionUp, m_direction, directionGroup, this);
         //: Rotate form preview counter-clockwise
@@ -254,7 +254,7 @@ void PreviewDeviceSkin::slotPopupMenu()
         //: Rotate form preview clockwise
         m_directionRightAction = createCheckableActionIntData(tr("&Landscape (CW)"), DirectionRight, m_direction, directionGroup, this);
         m_closeAction = new QAction(tr("&Close"), this);
-        connect(m_closeAction, SIGNAL(triggered()), parentWidget(), SLOT(close()));
+        connect(m_closeAction, &QAction::triggered, parentWidget(), &QWidget::close);
     }
     menu.addAction(m_directionUpAction);
     menu.addAction(m_directionLeftAction);
@@ -360,8 +360,8 @@ ZoomablePreviewDeviceSkin::ZoomablePreviewDeviceSkin(const DeviceSkinParameters 
     m_zoomSubMenuAction(0),
     m_zoomWidget(new DesignerZoomWidget)
 {
-    connect(m_zoomMenu, SIGNAL(zoomChanged(int)), this, SLOT(setZoomPercent(int)));
-    connect(m_zoomMenu, SIGNAL(zoomChanged(int)), this, SIGNAL(zoomPercentChanged(int)));
+    connect(m_zoomMenu, &ZoomMenu::zoomChanged, this, &ZoomablePreviewDeviceSkin::setZoomPercent);
+    connect(m_zoomMenu, &ZoomMenu::zoomChanged, this, &ZoomablePreviewDeviceSkin::zoomPercentChanged);
     m_zoomWidget->setZoomContextMenuEnabled(false);
     m_zoomWidget->setWidgetZoomContextMenuEnabled(false);
     m_zoomWidget->resize(screenSize());
@@ -692,7 +692,7 @@ QWidget *PreviewManager::createPreview(const QDesignerFormWindowInterface *fw,
     if (deviceSkin.isEmpty()) {
         if (zoomable) { // Embed into ZoomWidget
             ZoomWidget *zw = new DesignerZoomWidget;
-            connect(zw->zoomMenu(), SIGNAL(zoomChanged(int)), this, SLOT(slotZoomChanged(int)));
+            connect(zw->zoomMenu(), &ZoomMenu::zoomChanged, this, &PreviewManager::slotZoomChanged);
             zw->setWindowTitle(title);
             zw->setWidget(formWidget);
             // Keep any widgets' context menus working, do not use global menu
@@ -700,7 +700,7 @@ QWidget *PreviewManager::createPreview(const QDesignerFormWindowInterface *fw,
             zw->setParent(fw->window(), previewWindowFlags(formWidget));
             // Make preview close when Widget closes (Dialog/accept, etc)
             formWidget->setAttribute(Qt::WA_DeleteOnClose, true);
-            connect(formWidget, SIGNAL(destroyed()), zw, SLOT(close()));
+            connect(formWidget, &QObject::destroyed, zw, &QWidget::close);
             zw->setZoom(initialZoom);
             zw->setProperty(WidgetFactory::disableStyleCustomPaintingPropertyC, QVariant(true));
             return zw;
@@ -725,7 +725,8 @@ QWidget *PreviewManager::createPreview(const QDesignerFormWindowInterface *fw,
     if (zoomable) {
         ZoomablePreviewDeviceSkin *zds = new ZoomablePreviewDeviceSkin(it.value(), skinContainer);
         zds->setZoomPercent(initialZoom);
-        connect(zds, SIGNAL(zoomPercentChanged(int)), this, SLOT(slotZoomChanged(int)));
+        connect(zds, &ZoomablePreviewDeviceSkin::zoomPercentChanged,
+                this, &PreviewManager::slotZoomChanged);
         skin = zds;
     }  else {
         skin = new PreviewDeviceSkin(it.value(), skinContainer);
@@ -733,7 +734,7 @@ QWidget *PreviewManager::createPreview(const QDesignerFormWindowInterface *fw,
     skin->setPreview(formWidget);
     // Make preview close when Widget closes (Dialog/accept, etc)
     formWidget->setAttribute(Qt::WA_DeleteOnClose, true);
-    connect(formWidget, SIGNAL(destroyed()), skinContainer, SLOT(close()));
+    connect(formWidget, &QObject::destroyed, skinContainer, &QWidget::close);
     skinContainer->setWindowTitle(title);
     skinContainer->setProperty(WidgetFactory::disableStyleCustomPaintingPropertyC, QVariant(true));
     return skinContainer;
@@ -766,10 +767,12 @@ QWidget *PreviewManager::showPreview(const QDesignerFormWindowInterface *fw,
     case SingleFormNonModalPreview:
     case MultipleFormNonModalPreview:
         widget->setWindowModality(Qt::NonModal);
-        connect(fw, SIGNAL(changed()), widget, SLOT(close()));
-        connect(fw, SIGNAL(destroyed()), widget, SLOT(close()));
-        if (d->m_mode == SingleFormNonModalPreview)
-            connect(fw->core()->formWindowManager(), SIGNAL(activeFormWindowChanged(QDesignerFormWindowInterface*)), widget, SLOT(close()));
+        connect(fw, &QDesignerFormWindowInterface::changed, widget, &QWidget::close);
+        connect(fw, &QObject::destroyed, widget, &QWidget::close);
+        if (d->m_mode == SingleFormNonModalPreview) {
+            connect(fw->core()->formWindowManager(), &QDesignerFormWindowManagerInterface::activeFormWindowChanged,
+                    widget, &QWidget::close);
+        }
         break;
     }
     // Semi-smart algorithm to position previews:

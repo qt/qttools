@@ -87,18 +87,18 @@ CodeDialog::CodeDialog(QWidget *parent) :
 
     const QIcon saveIcon = createIconSet(QStringLiteral("filesave.png"));
     QAction *saveAction = toolBar->addAction(saveIcon, tr("Save..."));
-    connect(saveAction, SIGNAL(triggered()), this, SLOT(slotSaveAs()));
+    connect(saveAction, &QAction::triggered, this, &CodeDialog::slotSaveAs);
 
 #ifndef QT_NO_CLIPBOARD
     const QIcon copyIcon = createIconSet(QStringLiteral("editcopy.png"));
     QAction *copyAction = toolBar->addAction(copyIcon, tr("Copy All"));
-    connect(copyAction, SIGNAL(triggered()), this, SLOT(copyAll()));
+    connect(copyAction, &QAction::triggered, this, &CodeDialog::copyAll);
 #endif
 
     QAction *findAction = toolBar->addAction(
             TextEditFindWidget::findIconSet(),
             tr("&Find in Text..."),
-            m_impl->m_findWidget, SLOT(activate()));
+            m_impl->m_findWidget, &AbstractFindWidget::activate);
     findAction->setShortcut(QKeySequence::Find);
 
     vBoxLayout->addWidget(toolBar);
@@ -116,7 +116,7 @@ CodeDialog::CodeDialog(QWidget *parent) :
 
     // Button box
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 
     // Disable auto default
     QPushButton *closeButton = buttonBox->button(QDialogButtonBox::Close);

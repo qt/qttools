@@ -57,7 +57,7 @@ ListWidgetTaskMenu::ListWidgetTaskMenu(QListWidget *button, QObject *parent)
 {
     m_editItemsAction = new QAction(this);
     m_editItemsAction->setText(tr("Edit Items..."));
-    connect(m_editItemsAction, SIGNAL(triggered()), this, SLOT(editItems()));
+    connect(m_editItemsAction, &QAction::triggered, this, &ListWidgetTaskMenu::editItems);
     m_taskActions.append(m_editItemsAction);
 
     QAction *sep = new QAction(this);

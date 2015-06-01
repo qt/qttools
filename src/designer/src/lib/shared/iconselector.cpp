@@ -106,7 +106,7 @@ void LanguageResourceDialogPrivate::init(LanguageResourceDialog *p)
     layout->addWidget(m_browser);
     layout->addWidget(m_dialogButtonBox);
     QObject::connect(m_dialogButtonBox, SIGNAL(accepted()), p, SLOT(slotAccepted()));
-    QObject::connect(m_dialogButtonBox, SIGNAL(rejected()), p, SLOT(reject()));
+    QObject::connect(m_dialogButtonBox, &QDialogButtonBox::rejected, p, &QDialog::reject);
     QObject::connect(m_browser, SIGNAL(currentPathChanged(QString)), p, SLOT(slotPathChanged(QString)));
     QObject::connect(m_browser, SIGNAL(pathActivated(QString)), p, SLOT(slotAccepted()));
     p->setModal(true);

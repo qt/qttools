@@ -49,7 +49,7 @@ NewDynamicPropertyDialog::NewDynamicPropertyDialog(QDesignerDialogGuiInterface *
     m_ui(new Ui::NewDynamicPropertyDialog)
 {
     m_ui->setupUi(this);
-    connect(m_ui->m_lineEdit, SIGNAL(textChanged(QString)), this, SLOT(nameChanged(QString)));
+    connect(m_ui->m_lineEdit, &QLineEdit::textChanged, this, &NewDynamicPropertyDialog::nameChanged);
 
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 

@@ -73,14 +73,14 @@ void BuddyEditorPlugin::initialize(QDesignerFormEditorInterface *core)
     m_core = core;
     m_initialized = true;
 
-    connect(core->formWindowManager(), SIGNAL(formWindowAdded(QDesignerFormWindowInterface*)),
-            this, SLOT(addFormWindow(QDesignerFormWindowInterface*)));
+    connect(core->formWindowManager(), &QDesignerFormWindowManagerInterface::formWindowAdded,
+            this, &BuddyEditorPlugin::addFormWindow);
 
-    connect(core->formWindowManager(), SIGNAL(formWindowRemoved(QDesignerFormWindowInterface*)),
-            this, SLOT(removeFormWindow(QDesignerFormWindowInterface*)));
+    connect(core->formWindowManager(), &QDesignerFormWindowManagerInterface::formWindowRemoved,
+            this, &BuddyEditorPlugin::removeFormWindow);
 
-    connect(core->formWindowManager(), SIGNAL(activeFormWindowChanged(QDesignerFormWindowInterface*)),
-                this, SLOT(activeFormWindowChanged(QDesignerFormWindowInterface*)));
+    connect(core->formWindowManager(), &QDesignerFormWindowManagerInterface::activeFormWindowChanged,
+                this, &BuddyEditorPlugin::activeFormWindowChanged);
 }
 
 QDesignerFormEditorInterface *BuddyEditorPlugin::core() const
@@ -95,7 +95,7 @@ void BuddyEditorPlugin::addFormWindow(QDesignerFormWindowInterface *formWindow)
 
     BuddyEditorTool *tool = new BuddyEditorTool(formWindow, this);
     m_tools[formWindow] = tool;
-    connect(m_action, SIGNAL(triggered()), tool->action(), SLOT(trigger()));
+    connect(m_action, &QAction::triggered, tool->action(), &QAction::trigger);
     formWindow->registerTool(tool);
 }
 
@@ -106,7 +106,7 @@ void BuddyEditorPlugin::removeFormWindow(QDesignerFormWindowInterface *formWindo
 
     BuddyEditorTool *tool = m_tools.value(formWindow);
     m_tools.remove(formWindow);
-    disconnect(m_action, SIGNAL(triggered()), tool->action(), SLOT(trigger()));
+    disconnect(m_action, &QAction::triggered, tool->action(), &QAction::trigger);
     // ### FIXME disable the tool
 
     delete tool;

@@ -87,15 +87,19 @@ StyleSheetEditorDialog::StyleSheetEditorDialog(QDesignerFormEditorInterface *cor
     m_addColorAction(new QAction(tr("Add Color..."), this)),
     m_addFontAction(new QAction(tr("Add Font..."), this))
 {
+    typedef void (QSignalMapper::*MapperVoidSlot)();
+    typedef void (QSignalMapper::*MapperQStringSignal)(const QString &);
+
     setWindowTitle(tr("Edit Style Sheet"));
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
-    connect(m_buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(m_buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
-    connect(m_buttonBox, SIGNAL(helpRequested()), this, SLOT(slotRequestHelp()));
+    connect(m_buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
+    connect(m_buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+    connect(m_buttonBox, &QDialogButtonBox::helpRequested,
+            this, &StyleSheetEditorDialog::slotRequestHelp);
     m_buttonBox->button(QDialogButtonBox::Help)->setShortcut(QKeySequence::HelpContents);
 
-    connect(m_editor, SIGNAL(textChanged()), this, SLOT(validateStyleSheet()));
+    connect(m_editor, &QTextEdit::textChanged, this, &StyleSheetEditorDialog::validateStyleSheet);
 
     QToolBar *toolBar = new QToolBar;
 
@@ -107,8 +111,8 @@ StyleSheetEditorDialog::StyleSheetEditorDialog(QDesignerFormEditorInterface *cor
     setLayout(layout);
 
     m_editor->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(m_editor, SIGNAL(customContextMenuRequested(QPoint)),
-                this, SLOT(slotContextMenuRequested(QPoint)));
+    connect(m_editor, &QWidget::customContextMenuRequested,
+            this, &StyleSheetEditorDialog::slotContextMenuRequested);
 
     QSignalMapper *resourceActionMapper = new QSignalMapper(this);
     QSignalMapper *gradientActionMapper = new QSignalMapper(this);
@@ -118,10 +122,13 @@ StyleSheetEditorDialog::StyleSheetEditorDialog(QDesignerFormEditorInterface *cor
     gradientActionMapper->setMapping(m_addGradientAction, QString());
     colorActionMapper->setMapping(m_addColorAction, QString());
 
-    connect(m_addResourceAction, SIGNAL(triggered()), resourceActionMapper, SLOT(map()));
-    connect(m_addGradientAction, SIGNAL(triggered()), gradientActionMapper, SLOT(map()));
-    connect(m_addColorAction, SIGNAL(triggered()), colorActionMapper, SLOT(map()));
-    connect(m_addFontAction, SIGNAL(triggered()), this, SLOT(slotAddFont()));
+    connect(m_addResourceAction, &QAction::triggered,
+            resourceActionMapper, static_cast<MapperVoidSlot>(&QSignalMapper::map));
+    connect(m_addGradientAction, &QAction::triggered,
+            gradientActionMapper, static_cast<MapperVoidSlot>(&QSignalMapper::map));
+    connect(m_addColorAction, &QAction::triggered,
+            colorActionMapper, static_cast<MapperVoidSlot>(&QSignalMapper::map));
+    connect(m_addFontAction, &QAction::triggered, this, &StyleSheetEditorDialog::slotAddFont);
 
     m_addResourceAction->setEnabled(mode == ModePerForm);
 
@@ -153,22 +160,28 @@ StyleSheetEditorDialog::StyleSheetEditorDialog(QDesignerFormEditorInterface *cor
 
     for (int resourceProperty = 0; resourceProperties[resourceProperty]; ++resourceProperty) {
         QAction *action = resourceActionMenu->addAction(QLatin1String(resourceProperties[resourceProperty]));
-        connect(action, SIGNAL(triggered()), resourceActionMapper, SLOT(map()));
+        connect(action, &QAction::triggered,
+                resourceActionMapper, static_cast<MapperVoidSlot>(&QSignalMapper::map));
         resourceActionMapper->setMapping(action, QLatin1String(resourceProperties[resourceProperty]));
     }
 
     for (int colorProperty = 0; colorProperties[colorProperty]; ++colorProperty) {
         QAction *gradientAction = gradientActionMenu->addAction(QLatin1String(colorProperties[colorProperty]));
         QAction *colorAction = colorActionMenu->addAction(QLatin1String(colorProperties[colorProperty]));
-        connect(gradientAction, SIGNAL(triggered()), gradientActionMapper, SLOT(map()));
-        connect(colorAction, SIGNAL(triggered()), colorActionMapper, SLOT(map()));
+        connect(gradientAction, &QAction::triggered,
+                gradientActionMapper, static_cast<MapperVoidSlot>(&QSignalMapper::map));
+        connect(colorAction, &QAction::triggered,
+                colorActionMapper, static_cast<MapperVoidSlot>(&QSignalMapper::map));
         gradientActionMapper->setMapping(gradientAction, QLatin1String(colorProperties[colorProperty]));
         colorActionMapper->setMapping(colorAction, QLatin1String(colorProperties[colorProperty]));
     }
 
-    connect(resourceActionMapper, SIGNAL(mapped(QString)), this, SLOT(slotAddResource(QString)));
-    connect(gradientActionMapper, SIGNAL(mapped(QString)), this, SLOT(slotAddGradient(QString)));
-    connect(colorActionMapper, SIGNAL(mapped(QString)), this, SLOT(slotAddColor(QString)));
+    connect(resourceActionMapper, static_cast<MapperQStringSignal>(&QSignalMapper::mapped),
+            this, &StyleSheetEditorDialog::slotAddResource);
+    connect(gradientActionMapper, static_cast<MapperQStringSignal>(&QSignalMapper::mapped),
+            this, &StyleSheetEditorDialog::slotAddGradient);
+    connect(colorActionMapper, static_cast<MapperQStringSignal>(&QSignalMapper::mapped),
+            this, &StyleSheetEditorDialog::slotAddColor);
 
     m_addResourceAction->setMenu(resourceActionMenu);
     m_addGradientAction->setMenu(gradientActionMenu);
@@ -379,8 +392,10 @@ StyleSheetPropertyEditorDialog::StyleSheetPropertyEditorDialog(QWidget *parent,
     Q_ASSERT(m_fw != 0);
 
     QPushButton *apply = buttonBox()->addButton(QDialogButtonBox::Apply);
-    QObject::connect(apply, SIGNAL(clicked()), this, SLOT(applyStyleSheet()));
-    QObject::connect(buttonBox(), SIGNAL(accepted()), this, SLOT(applyStyleSheet()));
+    QObject::connect(apply, &QAbstractButton::clicked,
+                     this, &StyleSheetPropertyEditorDialog::applyStyleSheet);
+    QObject::connect(buttonBox(), &QDialogButtonBox::accepted,
+                     this, &StyleSheetPropertyEditorDialog::applyStyleSheet);
 
     QDesignerPropertySheetExtension *sheet =
             qt_extension<QDesignerPropertySheetExtension*>(m_fw->core()->extensionManager(), m_widget);

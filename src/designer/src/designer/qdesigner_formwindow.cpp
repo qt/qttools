@@ -83,8 +83,9 @@ QDesignerFormWindow::QDesignerFormWindow(QDesignerFormWindowInterface *editor, Q
 
     m_action->setCheckable(true);
 
-    connect(m_editor->commandHistory(), SIGNAL(indexChanged(int)), this, SLOT(updateChanged()));
-    connect(m_editor, SIGNAL(geometryChanged()), this, SLOT(geometryChanged()));
+    connect(m_editor->commandHistory(), &QUndoStack::indexChanged, this, &QDesignerFormWindow::updateChanged);
+    connect(m_editor.data(), &QDesignerFormWindowInterface::geometryChanged,
+            this, &QDesignerFormWindow::slotGeometryChanged);
 }
 
 QDesignerFormWindow::~QDesignerFormWindow()
@@ -148,7 +149,8 @@ void QDesignerFormWindow::firstShow()
     if (!m_windowTitleInitialized) {
         m_windowTitleInitialized = true;
         if (m_editor) {
-            connect(m_editor, SIGNAL(fileNameChanged(QString)), this, SLOT(updateWindowTitle(QString)));
+            connect(m_editor.data(), &QDesignerFormWindowInterface::fileNameChanged,
+                    this, &QDesignerFormWindow::updateWindowTitle);
             updateWindowTitle(m_editor->fileName());
             updateChanged();
         }
@@ -190,7 +192,8 @@ void QDesignerFormWindow::updateWindowTitle(const QString &fileName)
     if (!m_windowTitleInitialized) {
         m_windowTitleInitialized = true;
         if (m_editor)
-            connect(m_editor, SIGNAL(fileNameChanged(QString)), this, SLOT(updateWindowTitle(QString)));
+            connect(m_editor.data(), &QDesignerFormWindowInterface::fileNameChanged,
+                    this, &QDesignerFormWindow::updateWindowTitle);
     }
 
     QString fileNameTitle;
@@ -261,7 +264,7 @@ void QDesignerFormWindow::resizeEvent(QResizeEvent *rev)
     QWidget::resizeEvent(rev);
 }
 
-void QDesignerFormWindow::geometryChanged()
+void QDesignerFormWindow::slotGeometryChanged()
 {
     // If the form window changes, re-update the geometry of the current widget in the property editor.
     // Note that in the case of layouts, non-maincontainer widgets must also be updated,

@@ -73,7 +73,7 @@ namespace qdesigner_internal {
         m_removeAction(new QAction(tr("Remove"), this)),
         m_promotionTaskMenu(new PromotionTaskMenu(sb, PromotionTaskMenu::ModeSingleWidget, this))
     {
-        connect(m_removeAction, SIGNAL(triggered()), this, SLOT(removeStatusBar()));
+        connect(m_removeAction, &QAction::triggered, this, &StatusBarTaskMenu::removeStatusBar);
     }
 
     QAction *StatusBarTaskMenu::preferredEditAction() const

@@ -158,8 +158,7 @@ void MetaDataBase::add(QObject *object)
     if (debugMetaDatabase) {
         qDebug() << "MetaDataBase::add: New item " << object->metaObject()->className() << item->name();
     }
-    connect(object, SIGNAL(destroyed(QObject*)),
-        this, SLOT(slotDestroyed(QObject*)));
+    connect(object, &QObject::destroyed, this, &MetaDataBase::slotDestroyed);
 
     emit changed();
 }

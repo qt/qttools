@@ -186,7 +186,8 @@ QDesignerWorkbench::QDesignerWorkbench()  :
     m_actionManager = new QDesignerActions(this); // accesses plugin components
 
     m_windowActions->setExclusive(true);
-    connect(m_windowActions, SIGNAL(triggered(QAction*)), this, SLOT(formWindowActionTriggered(QAction*)));
+    connect(m_windowActions, &QActionGroup::triggered,
+            this, &QDesignerWorkbench::formWindowActionTriggered);
 
     // Build main menu bar
     addMenu(m_globalMenuBar, tr("&File"), m_actionManager->fileActions()->actions());
@@ -220,12 +221,15 @@ QDesignerWorkbench::QDesignerWorkbench()  :
             viewActions->addAction(action);
         }
         // The widget box becomes the main window in top level mode
-        if (i == QDesignerToolWindow::WidgetBox)
-            connect(toolWindow, SIGNAL(closeEventReceived(QCloseEvent*)), this, SLOT(handleCloseEvent(QCloseEvent*)));
+        if (i == QDesignerToolWindow::WidgetBox) {
+            connect(toolWindow, &QDesignerToolWindow::closeEventReceived,
+                    this, &QDesignerWorkbench::handleCloseEvent);
+        }
     }
     // Integration
     m_integration = new QDesignerIntegration(m_core, this);
-    connect(m_integration, SIGNAL(helpRequested(QString,QString)), m_actionManager, SLOT(helpRequested(QString,QString)));
+    connect(m_integration, &QDesignerIntegration::helpRequested,
+            m_actionManager, &QDesignerActions::helpRequested);
 
     // remaining view options (config toolbars)
     viewMenu->addSeparator();
@@ -233,13 +237,13 @@ QDesignerWorkbench::QDesignerWorkbench()  :
 
     emit initialized();
 
-    connect(m_core->formWindowManager(), SIGNAL(activeFormWindowChanged(QDesignerFormWindowInterface*)),
-                this, SLOT(updateWindowMenu(QDesignerFormWindowInterface*)));
+    connect(m_core->formWindowManager(), &QDesignerFormWindowManagerInterface::activeFormWindowChanged,
+            this, &QDesignerWorkbench::updateWindowMenu);
 
 
     { // Add application specific options pages
         QDesignerAppearanceOptionsPage *appearanceOptions = new QDesignerAppearanceOptionsPage(m_core);
-        connect(appearanceOptions, SIGNAL(settingsChanged()), this, SLOT(notifyUISettingsChanged()));
+        connect(appearanceOptions, &QDesignerAppearanceOptionsPage::settingsChanged, this, &QDesignerWorkbench::notifyUISettingsChanged);
         QList<QDesignerOptionsPageInterface*> optionsPages = m_core->optionsPages();
         optionsPages.push_front(appearanceOptions);
         m_core->setOptionsPages(optionsPages);
@@ -313,8 +317,8 @@ void QDesignerWorkbench::addFormWindow(QDesignerFormWindow *formWindow)
 
     m_actionManager->minimizeAction()->setEnabled(true);
     m_actionManager->minimizeAction()->setChecked(false);
-    connect(formWindow, SIGNAL(minimizationStateChanged(QDesignerFormWindowInterface*,bool)),
-            this, SLOT(minimizationStateChanged(QDesignerFormWindowInterface*,bool)));
+    connect(formWindow, &QDesignerFormWindow::minimizationStateChanged,
+            this, &QDesignerWorkbench::minimizationStateChanged);
 
     m_actionManager->editWidgets()->trigger();
 }
@@ -417,9 +421,12 @@ void QDesignerWorkbench::switchToDockedMode()
     m_dockedMainWindow = new DockedMainWindow(this, m_toolbarMenu, m_toolWindows);
     m_dockedMainWindow->setUnifiedTitleAndToolBarOnMac(true);
     m_dockedMainWindow->setCloseEventPolicy(MainWindowBase::EmitCloseEventSignal);
-    connect(m_dockedMainWindow, SIGNAL(closeEventReceived(QCloseEvent*)), this, SLOT(handleCloseEvent(QCloseEvent*)));
-    connect(m_dockedMainWindow, SIGNAL(fileDropped(QString)), this, SLOT(slotFileDropped(QString)));
-    connect(m_dockedMainWindow, SIGNAL(formWindowActivated(QDesignerFormWindow*)), this, SLOT(slotFormWindowActivated(QDesignerFormWindow*)));
+    connect(m_dockedMainWindow, &DockedMainWindow::closeEventReceived,
+            this, &QDesignerWorkbench::handleCloseEvent);
+    connect(m_dockedMainWindow, &DockedMainWindow::fileDropped,
+            this, &QDesignerWorkbench::slotFileDropped);
+    connect(m_dockedMainWindow, &DockedMainWindow::formWindowActivated,
+            this, &QDesignerWorkbench::slotFormWindowActivated);
     m_dockedMainWindow->restoreSettings(settings, m_dockedMainWindow->addToolWindows(m_toolWindows), desktopGeometry());
 
     m_core->setTopLevel(m_dockedMainWindow);
@@ -616,7 +623,7 @@ void QDesignerWorkbench::removeFormWindow(QDesignerFormWindow *formWindow)
         // Show up new form dialog unless closing
         if (loadOk && m_state == StateUp
             && QDesignerSettings(m_core).showNewFormOnStartup()) {
-            QTimer::singleShot(200, m_actionManager, SLOT(createForm()));
+            QTimer::singleShot(200, m_actionManager, &QDesignerActions::createForm);
         }
     }
 }
@@ -1064,7 +1071,7 @@ void QDesignerWorkbench::applyUiSettings()
 {
     if (m_uiSettingsChanged) {
         m_uiSettingsChanged = false;
-        QTimer::singleShot(0, this, SLOT(restoreUISettings()));
+        QTimer::singleShot(0, this, &QDesignerWorkbench::restoreUISettings);
     }
 }
 

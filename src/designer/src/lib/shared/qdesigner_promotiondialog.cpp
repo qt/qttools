@@ -89,8 +89,10 @@ namespace qdesigner_internal {
         QHBoxLayout *hboxLayout = new QHBoxLayout(this);
 
         m_classNameEdit->setValidator(new QRegExpValidator(QRegExp(QStringLiteral("[_a-zA-Z:][:_a-zA-Z0-9]*")), m_classNameEdit));
-        connect(m_classNameEdit,   SIGNAL(textChanged(QString)), this, SLOT(slotNameChanged(QString)));
-        connect(m_includeFileEdit, SIGNAL(textChanged(QString)), this, SLOT(slotIncludeFileChanged(QString)));
+        connect(m_classNameEdit,   &QLineEdit::textChanged,
+                this, &NewPromotedClassPanel::slotNameChanged);
+        connect(m_includeFileEdit, &QLineEdit::textChanged,
+                this, &NewPromotedClassPanel::slotIncludeFileChanged);
 
         m_baseClassCombo->setEditable(false);
         m_baseClassCombo->addItems(baseClasses);
@@ -110,13 +112,13 @@ namespace qdesigner_internal {
         QVBoxLayout *buttonLayout = new QVBoxLayout();
 
         m_addButton->setAutoDefault(false);
-        connect(m_addButton, SIGNAL(clicked()), this, SLOT(slotAdd()));
+        connect(m_addButton, &QAbstractButton::clicked, this, &NewPromotedClassPanel::slotAdd);
         m_addButton->setEnabled(false);
         buttonLayout->addWidget(m_addButton);
 
         QPushButton *resetButton = new QPushButton(tr("Reset"));
         resetButton->setAutoDefault(false);
-        connect(resetButton, SIGNAL(clicked()), this, SLOT(slotReset()));
+        connect(resetButton, &QAbstractButton::clicked, this, &NewPromotedClassPanel::slotReset);
 
         buttonLayout->addWidget(resetButton);
         buttonLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Ignored, QSizePolicy::Expanding));
@@ -218,11 +220,11 @@ namespace qdesigner_internal {
         m_treeView->setMinimumWidth(450);
         m_treeView->setContextMenuPolicy(Qt::CustomContextMenu);
 
-        connect(m_treeView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-                this, SLOT(slotSelectionChanged(QItemSelection,QItemSelection)));
+        connect(m_treeView->selectionModel(), &QItemSelectionModel::selectionChanged,
+                this, &QDesignerPromotionDialog::slotSelectionChanged);
 
-        connect(m_treeView, SIGNAL(customContextMenuRequested(QPoint)),
-                this, SLOT(slotTreeViewContextMenu(QPoint)));
+        connect(m_treeView, &QWidget::customContextMenuRequested,
+                this, &QDesignerPromotionDialog::slotTreeViewContextMenu);
 
         QHeaderView *headerView = m_treeView->header();
         headerView->setSectionResizeMode(QHeaderView::ResizeToContents);
@@ -232,7 +234,7 @@ namespace qdesigner_internal {
         hboxLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Ignored));
 
         m_removeButton->setAutoDefault(false);
-        connect(m_removeButton, SIGNAL(clicked()), this, SLOT(slotRemove()));
+        connect(m_removeButton, &QAbstractButton::clicked, this, &QDesignerPromotionDialog::slotRemove);
         m_removeButton->setEnabled(false);
         hboxLayout->addWidget(m_removeButton);
         treeViewVBoxLayout->addLayout(hboxLayout);
@@ -249,18 +251,19 @@ namespace qdesigner_internal {
         NewPromotedClassPanel *newPromotedClassPanel = new NewPromotedClassPanel(baseClassNameList, preselectedBaseClass);
         newPromotedClassPanel->setPromotedHeaderSuffix(core->integration()->headerSuffix());
         newPromotedClassPanel->setPromotedHeaderLowerCase(core->integration()->isHeaderLowercase());
-        connect(newPromotedClassPanel, SIGNAL(newPromotedClass(PromotionParameters,bool*)), this, SLOT(slotNewPromotedClass(PromotionParameters,bool*)));
-        connect(this, SIGNAL(selectedBaseClassChanged(QString)),
-                newPromotedClassPanel, SLOT(chooseBaseClass(QString)));
+        connect(newPromotedClassPanel, &NewPromotedClassPanel::newPromotedClass,
+                this, &QDesignerPromotionDialog::slotNewPromotedClass);
+        connect(this, &QDesignerPromotionDialog::selectedBaseClassChanged,
+                newPromotedClassPanel, &NewPromotedClassPanel::chooseBaseClass);
         vboxLayout->addWidget(newPromotedClassPanel);
         // button box
         vboxLayout->addWidget(m_buttonBox);
         // connect model
-        connect(m_model, SIGNAL(includeFileChanged(QDesignerWidgetDataBaseItemInterface*,QString)),
-                this, SLOT(slotIncludeFileChanged(QDesignerWidgetDataBaseItemInterface*,QString)));
+        connect(m_model, &PromotionModel::includeFileChanged,
+                this, &QDesignerPromotionDialog::slotIncludeFileChanged);
 
-        connect(m_model, SIGNAL(classNameChanged(QDesignerWidgetDataBaseItemInterface*,QString)),
-                this, SLOT(slotClassNameChanged(QDesignerWidgetDataBaseItemInterface*,QString)));
+        connect(m_model, &PromotionModel::classNameChanged,
+                this, &QDesignerPromotionDialog::slotClassNameChanged);
 
         // focus
         if (m_mode == ModeEditChooseClass)
@@ -272,11 +275,12 @@ namespace qdesigner_internal {
     QDialogButtonBox *QDesignerPromotionDialog::createButtonBox() {
         QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Close);
 
-        connect(buttonBox , SIGNAL(accepted()), this, SLOT(slotAcceptPromoteTo()));
+        connect(buttonBox, &QDialogButtonBox::accepted,
+                this, &QDesignerPromotionDialog::slotAcceptPromoteTo);
         buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Promote"));
         buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
 
-        connect(buttonBox , SIGNAL(rejected()), this, SLOT(reject()));
+        connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
         return buttonBox;
     }
 
@@ -287,7 +291,7 @@ namespace qdesigner_internal {
     }
 
     void QDesignerPromotionDialog::delayedUpdateFromWidgetDatabase() {
-        QTimer::singleShot(0, this, SLOT(slotUpdateFromWidgetDatabase()));
+        QTimer::singleShot(0, this, &QDesignerPromotionDialog::slotUpdateFromWidgetDatabase);
     }
 
     const QStringList &QDesignerPromotionDialog::baseClassNames(const QDesignerPromotionInterface *promotion) {
@@ -426,7 +430,8 @@ namespace qdesigner_internal {
 
         QMenu menu;
         QAction *signalSlotAction = menu.addAction(tr("Change signals/slots..."));
-        connect(signalSlotAction, SIGNAL(triggered()), this, SLOT(slotEditSignalsSlots()));
+        connect(signalSlotAction, &QAction::triggered,
+                this, &QDesignerPromotionDialog::slotEditSignalsSlots);
 
         menu.exec(m_treeView->viewport()->mapToGlobal(pos));
     }

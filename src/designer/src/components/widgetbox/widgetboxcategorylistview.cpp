@@ -382,13 +382,15 @@ WidgetBoxCategoryListView::WidgetBoxCategoryListView(QDesignerFormEditorInterfac
 
     setItemDelegate(new WidgetBoxCategoryEntryDelegate(this));
 
-    connect(this, SIGNAL(pressed(QModelIndex)), this, SLOT(slotPressed(QModelIndex)));
+    connect(this, &QListView::pressed, this,
+            &WidgetBoxCategoryListView::slotPressed);
     setEditTriggers(QAbstractItemView::AnyKeyPressed);
 
     m_proxyModel->setSourceModel(m_model);
     m_proxyModel->setFilterRole(FilterRole);
     setModel(m_proxyModel);
-    connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SIGNAL(scratchPadChanged()));
+    connect(m_model, &QAbstractItemModel::dataChanged,
+            this, &WidgetBoxCategoryListView::scratchPadChanged);
 }
 
 void WidgetBoxCategoryListView::setViewMode(ViewMode vm)

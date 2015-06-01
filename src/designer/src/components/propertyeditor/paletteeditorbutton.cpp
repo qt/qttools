@@ -49,7 +49,7 @@ PaletteEditorButton::PaletteEditorButton(QDesignerFormEditorInterface *core, con
     setText(tr("Change Palette"));
     setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed));
 
-    connect(this, SIGNAL(clicked()), this, SLOT(showPaletteEditor()));
+    connect(this, &QAbstractButton::clicked, this, &PaletteEditorButton::showPaletteEditor);
 }
 
 PaletteEditorButton::~PaletteEditorButton()

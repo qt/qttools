@@ -76,7 +76,7 @@ TabOrderEditor::TabOrderEditor(QDesignerFormWindowInterface *form, QWidget *pare
     m_current_index(0),
     m_beginning(true)
 {
-    connect(form, SIGNAL(widgetRemoved(QWidget*)), this, SLOT(widgetRemoved(QWidget*)));
+    connect(form, &QDesignerFormWindowInterface::widgetRemoved, this, &TabOrderEditor::widgetRemoved);
 
     QFont tabFont = font();
     tabFont.setPointSize(tabFont.pointSize()*2);

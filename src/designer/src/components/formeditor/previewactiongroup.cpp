@@ -52,7 +52,7 @@ PreviewActionGroup::PreviewActionGroup(QDesignerFormEditorInterface *core, QObje
     /* Create a list of up to MaxDeviceActions invisible actions to be
      * populated with device profiles (actiondata: index) followed by the
      * standard style actions (actiondata: style name). */
-    connect(this, SIGNAL(triggered(QAction*)), this, SLOT(slotTriggered(QAction*)));
+    connect(this, &PreviewActionGroup::triggered, this, &PreviewActionGroup::slotTriggered);
     setExclusive(true);
 
     const QString objNamePostfix = QStringLiteral("_action");

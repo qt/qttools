@@ -70,6 +70,8 @@
 
 QT_BEGIN_NAMESPACE
 
+typedef void (QComboBox::*QComboIntSignal)(int);
+
 // Add suitable form widgets to a list of objects for the  signal slot
 // editor. Prevent special widgets from showing up there.
 static void addWidgetToObjectList(const QWidget *w, QStringList &r)
@@ -155,29 +157,29 @@ void ConnectionModel::setEditor(SignalSlotEditor *editor)
     beginResetModel();
 
     if (m_editor) {
-        disconnect(m_editor, SIGNAL(connectionAdded(Connection*)),
-                   this, SLOT(connectionAdded(Connection*)));
-        disconnect(m_editor, SIGNAL(connectionRemoved(int)),
-                   this, SLOT(connectionRemoved(int)));
-        disconnect(m_editor, SIGNAL(aboutToRemoveConnection(Connection*)),
-                   this, SLOT(aboutToRemoveConnection(Connection*)));
-        disconnect(m_editor, SIGNAL(aboutToAddConnection(int)),
-                this, SLOT(aboutToAddConnection(int)));
-        disconnect(m_editor, SIGNAL(connectionChanged(Connection*)),
-                   this, SLOT(connectionChanged(Connection*)));
+        disconnect(m_editor.data(), &SignalSlotEditor::connectionAdded,
+                   this, &ConnectionModel::connectionAdded);
+        disconnect(m_editor.data(), &SignalSlotEditor::connectionRemoved,
+                   this, &ConnectionModel::connectionRemoved);
+        disconnect(m_editor.data(), &SignalSlotEditor::aboutToRemoveConnection,
+                   this, &ConnectionModel::aboutToRemoveConnection);
+        disconnect(m_editor.data(), &SignalSlotEditor::aboutToAddConnection,
+                this, &ConnectionModel::aboutToAddConnection);
+        disconnect(m_editor.data(), &SignalSlotEditor::connectionChanged,
+                   this, &ConnectionModel::connectionChanged);
     }
     m_editor = editor;
     if (m_editor) {
-        connect(m_editor, SIGNAL(connectionAdded(Connection*)),
-                this, SLOT(connectionAdded(Connection*)));
-        connect(m_editor, SIGNAL(connectionRemoved(int)),
-                this, SLOT(connectionRemoved(int)));
-        connect(m_editor, SIGNAL(aboutToRemoveConnection(Connection*)),
-                this, SLOT(aboutToRemoveConnection(Connection*)));
-        connect(m_editor, SIGNAL(aboutToAddConnection(int)),
-                this, SLOT(aboutToAddConnection(int)));
-        connect(m_editor, SIGNAL(connectionChanged(Connection*)),
-                this, SLOT(connectionChanged(Connection*)));
+        connect(m_editor.data(), &SignalSlotEditor::connectionAdded,
+                this, &ConnectionModel::connectionAdded);
+        connect(m_editor.data(), &SignalSlotEditor::connectionRemoved,
+                this, &ConnectionModel::connectionRemoved);
+        connect(m_editor.data(), &SignalSlotEditor::aboutToRemoveConnection,
+                this, &ConnectionModel::aboutToRemoveConnection);
+        connect(m_editor.data(), &SignalSlotEditor::aboutToAddConnection,
+                this, &ConnectionModel::aboutToAddConnection);
+        connect(m_editor.data(), &SignalSlotEditor::connectionChanged,
+                this, &ConnectionModel::connectionChanged);
     }
     endResetModel();
 }
@@ -524,7 +526,8 @@ InlineEditor::InlineEditor(QWidget *parent) :
     setModel(m_model = new InlineEditorModel(0, 4, this));
     setFrame(false);
     m_idx = -1;
-    connect(this, SIGNAL(activated(int)), this, SLOT(checkSelection(int)));
+    connect(this, static_cast<QComboIntSignal>(&QComboBox::activated),
+            this, &InlineEditor::checkSelection);
 }
 
 void InlineEditor::checkSelection(int idx)
@@ -661,7 +664,8 @@ QWidget *ConnectionDelegate::createEditor(QWidget *parent,
         break;
     }
 
-    connect(inline_editor, SIGNAL(activated(int)), this, SLOT(emitCommitData()));
+    connect(inline_editor, static_cast<QComboIntSignal>(&QComboBox::activated),
+            this, &ConnectionDelegate::emitCommitData);
 
     return inline_editor;
 }
@@ -700,8 +704,10 @@ SignalSlotEditorWindow::SignalSlotEditorWindow(QDesignerFormEditorInterface *cor
                                 | QAbstractItemView::EditKeyPressed);
     m_view->setRootIsDecorated(false);
     m_view->setTextElideMode (Qt::ElideMiddle);
-    connect(m_view->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), this, SLOT(updateUi()));
-    connect(m_view->header(), SIGNAL(sectionDoubleClicked(int)), m_view, SLOT(resizeColumnToContents(int)));
+    connect(m_view->selectionModel(), &QItemSelectionModel::currentChanged,
+            this, &SignalSlotEditorWindow::updateUi);
+    connect(m_view->header(), &QHeaderView::sectionDoubleClicked,
+            m_view, &QTreeView::resizeColumnToContents);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->setMargin(0);
@@ -710,19 +716,19 @@ SignalSlotEditorWindow::SignalSlotEditorWindow(QDesignerFormEditorInterface *cor
     QToolBar *toolBar = new QToolBar;
     toolBar->setIconSize(QSize(22, 22));
     m_add_button->setIcon(createIconSet(QStringLiteral("plus.png")));
-    connect(m_add_button, SIGNAL(clicked()), this, SLOT(addConnection()));
+    connect(m_add_button, &QAbstractButton::clicked, this, &SignalSlotEditorWindow::addConnection);
     toolBar->addWidget(m_add_button);
 
     m_remove_button->setIcon(createIconSet(QStringLiteral("minus.png")));
-    connect(m_remove_button, SIGNAL(clicked()), this, SLOT(removeConnection()));
+    connect(m_remove_button, &QAbstractButton::clicked, this, &SignalSlotEditorWindow::removeConnection);
     toolBar->addWidget(m_remove_button);
 
     layout->addWidget(toolBar);
     layout->addWidget(m_view);
 
     connect(core->formWindowManager(),
-            SIGNAL(activeFormWindowChanged(QDesignerFormWindowInterface*)),
-                this, SLOT(setActiveFormWindow(QDesignerFormWindowInterface*)));
+            &QDesignerFormWindowManagerInterface::activeFormWindowChanged,
+            this, &SignalSlotEditorWindow::setActiveFormWindow);
 
     updateUi();
 }
@@ -733,13 +739,13 @@ void SignalSlotEditorWindow::setActiveFormWindow(QDesignerFormWindowInterface *f
 
     if (!m_editor.isNull()) {
         disconnect(m_view->selectionModel(),
-                    SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-                    this, SLOT(updateEditorSelection(QModelIndex)));
-        disconnect(m_editor, SIGNAL(connectionSelected(Connection*)),
-                    this, SLOT(updateDialogSelection(Connection*)));
+                    &QItemSelectionModel::currentChanged,
+                    this, &SignalSlotEditorWindow::updateEditorSelection);
+        disconnect(m_editor.data(), &SignalSlotEditor::connectionSelected,
+                   this, &SignalSlotEditorWindow::updateDialogSelection);
         if (integration) {
-            disconnect(integration, SIGNAL(objectNameChanged(QDesignerFormWindowInterface*,QObject*,QString,QString)),
-                    this, SLOT(objectNameChanged(QDesignerFormWindowInterface*,QObject*,QString,QString)));
+            disconnect(integration, &QDesignerIntegrationInterface::objectNameChanged,
+                       this, &SignalSlotEditorWindow::objectNameChanged);
         }
     }
 
@@ -752,13 +758,13 @@ void SignalSlotEditorWindow::setActiveFormWindow(QDesignerFormWindowInterface *f
             delegate->setForm(form);
 
         connect(m_view->selectionModel(),
-                SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-                this, SLOT(updateEditorSelection(QModelIndex)));
-        connect(m_editor, SIGNAL(connectionSelected(Connection*)),
-                this, SLOT(updateDialogSelection(Connection*)));
+                &QItemSelectionModel::currentChanged,
+                this, &SignalSlotEditorWindow::updateEditorSelection);
+        connect(m_editor.data(), &SignalSlotEditor::connectionSelected,
+                this, &SignalSlotEditorWindow::updateDialogSelection);
         if (integration) {
-            connect(integration, SIGNAL(objectNameChanged(QDesignerFormWindowInterface*,QObject*,QString,QString)),
-                    this, SLOT(objectNameChanged(QDesignerFormWindowInterface*,QObject*,QString,QString)));
+            connect(integration, &QDesignerIntegrationInterface::objectNameChanged,
+                    this, &SignalSlotEditorWindow::objectNameChanged);
         }
     }
 

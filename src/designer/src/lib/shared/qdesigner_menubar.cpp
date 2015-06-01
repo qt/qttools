@@ -399,7 +399,7 @@ ActionList QDesignerMenuBar::contextMenuActions()
 
             QAction *remove_action = new QAction(tr("Remove Menu '%1'").arg(action->menu()->objectName()), 0);
             remove_action->setData(itemData);
-            connect(remove_action, SIGNAL(triggered()), this, SLOT(deleteMenu()));
+            connect(remove_action, &QAction::triggered, this, &QDesignerMenuBar::deleteMenu);
             rc.push_back(remove_action);
             QAction *sep = new QAction(0);
             sep->setSeparator(true);
@@ -410,7 +410,7 @@ ActionList QDesignerMenuBar::contextMenuActions()
     m_promotionTaskMenu->addActions(formWindow(), PromotionTaskMenu::TrailingSeparator, rc);
 
     QAction *remove_menubar = new QAction(tr("Remove Menu Bar"), 0);
-    connect(remove_menubar, SIGNAL(triggered()), this, SLOT(slotRemoveMenuBar()));
+    connect(remove_menubar, &QAction::triggered, this, &QDesignerMenuBar::slotRemoveMenuBar);
     rc.push_back(remove_menubar);
     return rc;
 }

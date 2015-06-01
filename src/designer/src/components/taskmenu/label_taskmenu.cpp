@@ -78,10 +78,10 @@ LabelTaskMenu::LabelTaskMenu(QLabel *label, QObject *parent)
       m_editPlainTextAction(new QAction(tr("Change plain text..."), this))
 {
     LabelTaskMenuInlineEditor *editor = new LabelTaskMenuInlineEditor(label, this);
-    connect(m_editPlainTextAction, SIGNAL(triggered()), editor, SLOT(editText()));
+    connect(m_editPlainTextAction, &QAction::triggered, editor, &LabelTaskMenuInlineEditor::editText);
     m_taskActions.append(m_editPlainTextAction);
 
-    connect(m_editRichTextAction, SIGNAL(triggered()), this, SLOT(editRichText()));
+    connect(m_editRichTextAction, &QAction::triggered, this, &LabelTaskMenu::editRichText);
     m_taskActions.append(m_editRichTextAction);
 
     QAction *sep = new QAction(this);

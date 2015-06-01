@@ -63,8 +63,8 @@ TableWidgetEditor::TableWidgetEditor(QDesignerFormWindowInterface *form, QDialog
     ui.setupUi(dialog);
 
     injectPropertyBrowser(ui.itemsTab, ui.widget);
-    connect(ui.showPropertiesButton, SIGNAL(clicked()),
-            this, SLOT(togglePropertyBrowser()));
+    connect(ui.showPropertiesButton, &QAbstractButton::clicked,
+            this, &TableWidgetEditor::togglePropertyBrowser);
     setPropertyBrowserVisible(false);
 
     ui.tabWidget->insertTab(0, m_columnEditor, tr("&Columns"));
@@ -74,37 +74,37 @@ TableWidgetEditor::TableWidgetEditor(QDesignerFormWindowInterface *form, QDialog
 
     ui.tableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
 
-    connect(iconCache(), SIGNAL(reloaded()), this, SLOT(cacheReloaded()));
+    connect(iconCache(), &DesignerIconCache::reloaded, this, &TableWidgetEditor::cacheReloaded);
 
-    connect(ui.tableWidget, SIGNAL(currentCellChanged(int,int,int,int)),
-            this, SLOT(on_tableWidget_currentCellChanged(int,int,int,int)));
-    connect(ui.tableWidget, SIGNAL(itemChanged(QTableWidgetItem*)),
-            this, SLOT(on_tableWidget_itemChanged(QTableWidgetItem*)));
-    connect(m_columnEditor, SIGNAL(indexChanged(int)),
-            this, SLOT(on_columnEditor_indexChanged(int)));
-    connect(m_columnEditor, SIGNAL(itemChanged(int,int,QVariant)),
-            this, SLOT(on_columnEditor_itemChanged(int,int,QVariant)));
-    connect(m_columnEditor, SIGNAL(itemInserted(int)),
-            this, SLOT(on_columnEditor_itemInserted(int)));
-    connect(m_columnEditor, SIGNAL(itemDeleted(int)),
-            this, SLOT(on_columnEditor_itemDeleted(int)));
-    connect(m_columnEditor, SIGNAL(itemMovedUp(int)),
-            this, SLOT(on_columnEditor_itemMovedUp(int)));
-    connect(m_columnEditor, SIGNAL(itemMovedDown(int)),
-            this, SLOT(on_columnEditor_itemMovedDown(int)));
+    connect(ui.tableWidget, &QTableWidget::currentCellChanged,
+            this, &TableWidgetEditor::on_tableWidget_currentCellChanged);
+    connect(ui.tableWidget, &QTableWidget::itemChanged,
+            this, &TableWidgetEditor::on_tableWidget_itemChanged);
+    connect(m_columnEditor, &ItemListEditor::indexChanged,
+            this, &TableWidgetEditor::on_columnEditor_indexChanged);
+    connect(m_columnEditor, &ItemListEditor::itemChanged,
+            this, &TableWidgetEditor::on_columnEditor_itemChanged);
+    connect(m_columnEditor, &ItemListEditor::itemInserted,
+            this, &TableWidgetEditor::on_columnEditor_itemInserted);
+    connect(m_columnEditor, &ItemListEditor::itemDeleted,
+            this, &TableWidgetEditor::on_columnEditor_itemDeleted);
+    connect(m_columnEditor, &ItemListEditor::itemMovedUp,
+            this, &TableWidgetEditor::on_columnEditor_itemMovedUp);
+    connect(m_columnEditor, &ItemListEditor::itemMovedDown,
+            this, &TableWidgetEditor::on_columnEditor_itemMovedDown);
 
-    connect(m_rowEditor, SIGNAL(indexChanged(int)),
-            this, SLOT(on_rowEditor_indexChanged(int)));
-    connect(m_rowEditor, SIGNAL(itemChanged(int,int,QVariant)),
-            this, SLOT(on_rowEditor_itemChanged(int,int,QVariant)));
-    connect(m_rowEditor, SIGNAL(itemInserted(int)),
-            this, SLOT(on_rowEditor_itemInserted(int)));
-    connect(m_rowEditor, SIGNAL(itemDeleted(int)),
-            this, SLOT(on_rowEditor_itemDeleted(int)));
-    connect(m_rowEditor, SIGNAL(itemMovedUp(int)),
-            this, SLOT(on_rowEditor_itemMovedUp(int)));
-    connect(m_rowEditor, SIGNAL(itemMovedDown(int)),
-            this, SLOT(on_rowEditor_itemMovedDown(int)));
+    connect(m_rowEditor, &ItemListEditor::indexChanged,
+            this, &TableWidgetEditor::on_rowEditor_indexChanged);
+    connect(m_rowEditor, &ItemListEditor::itemChanged,
+            this, &TableWidgetEditor::on_rowEditor_itemChanged);
+    connect(m_rowEditor, &ItemListEditor::itemInserted,
+            this, &TableWidgetEditor::on_rowEditor_itemInserted);
+    connect(m_rowEditor, &ItemListEditor::itemDeleted,
+            this, &TableWidgetEditor::on_rowEditor_itemDeleted);
+    connect(m_rowEditor, &ItemListEditor::itemMovedUp,
+            this, &TableWidgetEditor::on_rowEditor_itemMovedUp);
+    connect(m_rowEditor, &ItemListEditor::itemMovedDown,
+            this, &TableWidgetEditor::on_rowEditor_itemMovedDown);
 }
 
 static AbstractItemEditor::PropertyDefinition tableHeaderPropList[] = {

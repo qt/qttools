@@ -947,8 +947,8 @@ ConnectionEdit::ConnectionEdit(QWidget *parent, QDesignerFormWindowInterface *fo
     setAttribute(Qt::WA_MouseTracking, true);
     setFocusPolicy(Qt::ClickFocus);
 
-    connect(form, SIGNAL(widgetRemoved(QWidget*)), this, SLOT(widgetRemoved(QWidget*)));
-    connect(form, SIGNAL(objectRemoved(QObject*)), this, SLOT(objectRemoved(QObject*)));
+    connect(form, &QDesignerFormWindowInterface::widgetRemoved, this, &ConnectionEdit::widgetRemoved);
+    connect(form, &QDesignerFormWindowInterface::objectRemoved, this, &ConnectionEdit::objectRemoved);
 }
 
 ConnectionEdit::~ConnectionEdit()
@@ -1578,16 +1578,16 @@ void ConnectionEdit::createContextMenu(QMenu &menu)
     // Select
     QAction *selectAllAction = menu.addAction(tr("Select All"));
     selectAllAction->setEnabled(connectionList().size());
-    connect(selectAllAction, SIGNAL(triggered()), this, SLOT(selectAll()));
+    connect(selectAllAction, &QAction::triggered, this, &ConnectionEdit::selectAll);
     QAction *deselectAllAction = menu.addAction(tr("Deselect All"));
     deselectAllAction->setEnabled(selection().size());
-    connect(deselectAllAction, SIGNAL(triggered()), this, SLOT(selectNone()));
+    connect(deselectAllAction, &QAction::triggered, this, &ConnectionEdit::selectNone);
     menu.addSeparator();
     // Delete
     QAction *deleteAction = menu.addAction(tr("Delete"));
     deleteAction->setShortcut(QKeySequence::Delete);
     deleteAction->setEnabled(!selection().isEmpty());
-    connect(deleteAction, SIGNAL(triggered()), this, SLOT(deleteSelected()));
+    connect(deleteAction, &QAction::triggered, this, &ConnectionEdit::deleteSelected);
 }
 
 void ConnectionEdit::contextMenuEvent(QContextMenuEvent * event)

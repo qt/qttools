@@ -69,8 +69,8 @@ QStackedWidgetPreviewEventFilter::QStackedWidgetPreviewEventFilter(QStackedWidge
     m_prev(createToolButton(m_stackedWidget, Qt::LeftArrow,  QStringLiteral("__qt__passive_prev"))),
     m_next(createToolButton(m_stackedWidget, Qt::RightArrow, QStringLiteral("__qt__passive_next")))
 {
-    connect(m_prev, SIGNAL(clicked()), this, SLOT(prevPage()));
-    connect(m_next, SIGNAL(clicked()), this, SLOT(nextPage()));
+    connect(m_prev, &QAbstractButton::clicked, this, &QStackedWidgetPreviewEventFilter::prevPage);
+    connect(m_next, &QAbstractButton::clicked, this, &QStackedWidgetPreviewEventFilter::nextPage);
 
     updateButtons();
     m_stackedWidget->installEventFilter(this);
@@ -189,12 +189,12 @@ QStackedWidgetEventFilter::QStackedWidgetEventFilter(QStackedWidget *parent) :
     m_pagePromotionTaskMenu(new qdesigner_internal::PromotionTaskMenu(0, qdesigner_internal::PromotionTaskMenu::ModeSingleWidget, this))
 {
     setButtonToolTipEnabled(true);
-    connect(m_actionPreviousPage, SIGNAL(triggered()), this, SLOT(prevPage()));
-    connect(m_actionNextPage, SIGNAL(triggered()), this, SLOT(nextPage()));
-    connect(m_actionDeletePage, SIGNAL(triggered()), this, SLOT(removeCurrentPage()));
-    connect(m_actionInsertPage, SIGNAL(triggered()), this, SLOT(addPage()));
-    connect(m_actionInsertPageAfter, SIGNAL(triggered()), this, SLOT(addPageAfter()));
-    connect(m_actionChangePageOrder, SIGNAL(triggered()), this, SLOT(changeOrder()));
+    connect(m_actionPreviousPage, &QAction::triggered, this, &QStackedWidgetEventFilter::prevPage);
+    connect(m_actionNextPage, &QAction::triggered, this, &QStackedWidgetEventFilter::nextPage);
+    connect(m_actionDeletePage, &QAction::triggered, this, &QStackedWidgetEventFilter::removeCurrentPage);
+    connect(m_actionInsertPage, &QAction::triggered, this, &QStackedWidgetEventFilter::addPage);
+    connect(m_actionInsertPageAfter, &QAction::triggered, this, &QStackedWidgetEventFilter::addPageAfter);
+    connect(m_actionChangePageOrder, &QAction::triggered, this, &QStackedWidgetEventFilter::changeOrder);
 }
 
 void QStackedWidgetEventFilter::install(QStackedWidget *stackedWidget)
@@ -321,7 +321,7 @@ QMenu *QStackedWidgetEventFilter::addContextMenuActions(QMenu *popup)
         insertPageMenu->addAction(m_actionInsertPage);
     } else {
         QAction *insertPageAction = popup->addAction(tr("Insert Page"));
-        connect(insertPageAction, SIGNAL(triggered()), this, SLOT(addPage()));
+        connect(insertPageAction, &QAction::triggered, this, &QStackedWidgetEventFilter::addPage);
     }
     popup->addAction(m_actionNextPage);
     m_actionNextPage->setEnabled(hasSeveralPages);

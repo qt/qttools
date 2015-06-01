@@ -159,8 +159,8 @@ ObjectNameDialog::ObjectNameDialog(QWidget *parent, const QString &oldName)
     okButton->setDefault(true);
     vboxLayout->addWidget(buttonBox);
 
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 }
 
 QString ObjectNameDialog::newObjectName() const
@@ -386,17 +386,17 @@ QDesignerTaskMenu::QDesignerTaskMenu(QWidget *widget, QObject *parent) :
     d->m_q = this;
     Q_ASSERT(qobject_cast<QDesignerFormWindowInterface*>(widget) == 0);
 
-    connect(d->m_changeObjectNameAction, SIGNAL(triggered()), this, SLOT(changeObjectName()));
-    connect(d->m_changeToolTip, SIGNAL(triggered()), this, SLOT(changeToolTip()));
-    connect(d->m_changeWhatsThis, SIGNAL(triggered()), this, SLOT(changeWhatsThis()));
-    connect(d->m_changeStyleSheet, SIGNAL(triggered()), this,  SLOT(changeStyleSheet()));
-    connect(d->m_addMenuBar, SIGNAL(triggered()), this, SLOT(createMenuBar()));
-    connect(d->m_addToolBar, SIGNAL(triggered()), this, SLOT(addToolBar()));
-    connect(d->m_addStatusBar, SIGNAL(triggered()), this, SLOT(createStatusBar()));
-    connect(d->m_removeStatusBar, SIGNAL(triggered()), this, SLOT(removeStatusBar()));
-    connect(d->m_containerFakeMethods, SIGNAL(triggered()), this, SLOT(containerFakeMethods()));
-    connect(d->m_navigateToSlot, SIGNAL(triggered()), this, SLOT(slotNavigateToSlot()));
-    connect(d->m_sizeActionGroup, SIGNAL(triggered(QAction*)), this,  SLOT(applySize(QAction*)));
+    connect(d->m_changeObjectNameAction, &QAction::triggered, this, &QDesignerTaskMenu::changeObjectName);
+    connect(d->m_changeToolTip, &QAction::triggered, this, &QDesignerTaskMenu::changeToolTip);
+    connect(d->m_changeWhatsThis, &QAction::triggered, this, &QDesignerTaskMenu::changeWhatsThis);
+    connect(d->m_changeStyleSheet, &QAction::triggered, this, &QDesignerTaskMenu::changeStyleSheet);
+    connect(d->m_addMenuBar, &QAction::triggered, this, &QDesignerTaskMenu::createMenuBar);
+    connect(d->m_addToolBar, &QAction::triggered, this, &QDesignerTaskMenu::addToolBar);
+    connect(d->m_addStatusBar, &QAction::triggered, this, &QDesignerTaskMenu::createStatusBar);
+    connect(d->m_removeStatusBar, &QAction::triggered, this, &QDesignerTaskMenu::removeStatusBar);
+    connect(d->m_containerFakeMethods, &QAction::triggered, this, &QDesignerTaskMenu::containerFakeMethods);
+    connect(d->m_navigateToSlot, &QAction::triggered, this, &QDesignerTaskMenu::slotNavigateToSlot);
+    connect(d->m_sizeActionGroup, &QActionGroup::triggered, this, &QDesignerTaskMenu::applySize);
     d->m_layoutAlignmentMenu.connect(this, SLOT(slotLayoutAlignment()));
 }
 
@@ -723,8 +723,8 @@ void QDesignerTaskMenu::navigateToSlot(QDesignerFormEditorInterface *core,
         dialogUi.signalList->addTopLevelItem(row);
         dialogUi.buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
     } else {
-        connect(dialogUi.signalList, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
-                &selectSignalDialog, SLOT(accept()));
+        connect(dialogUi.signalList, &QTreeWidget::itemDoubleClicked,
+                &selectSignalDialog, &QDialog::accept);
     }
 
     if (defaultSignal.isEmpty()) {

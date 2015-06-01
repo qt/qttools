@@ -84,27 +84,29 @@ ConnectDialog::ConnectDialog(QDesignerFormWindowInterface *formWindow,
 
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
-    connect(m_ui.signalList, SIGNAL(itemClicked(QListWidgetItem*)),
-            this, SLOT(selectSignal(QListWidgetItem*)));
-    connect(m_ui.slotList, SIGNAL(itemClicked(QListWidgetItem*)),
-            this,  SLOT(selectSlot(QListWidgetItem*)));
+    connect(m_ui.signalList, &QListWidget::itemClicked,
+            this, &ConnectDialog::selectSignal);
+    connect(m_ui.slotList, &QListWidget::itemClicked,
+            this, &ConnectDialog::selectSlot);
     m_ui.slotList->setEnabled(false);
 
     QPushButton *ok_button = okButton();
     ok_button->setDefault(true);
     ok_button->setEnabled(false);
 
-    connect(m_ui.showAllCheckBox, SIGNAL(toggled(bool)), this, SLOT(populateLists()));
+    connect(m_ui.showAllCheckBox, &QCheckBox::toggled, this, &ConnectDialog::populateLists);
 
     QDesignerFormEditorInterface *core = m_formWindow->core();
     m_ui.signalGroupBox->setTitle(widgetLabel(core, source));
     m_ui.slotGroupBox->setTitle(widgetLabel(core, destination));
 
     m_ui.editSignalsButton->setEnabled(m_sourceMode != NormalWidget);
-    connect(m_ui.editSignalsButton, SIGNAL(clicked()), this, SLOT(editSignals()));
+    connect(m_ui.editSignalsButton, &QAbstractButton::clicked,
+            this, &ConnectDialog::editSignals);
 
     m_ui.editSlotsButton->setEnabled(m_destinationMode != NormalWidget);
-    connect(m_ui.editSlotsButton,   SIGNAL(clicked()), this, SLOT(editSlots()));
+    connect(m_ui.editSlotsButton, &QAbstractButton::clicked,
+            this, &ConnectDialog::editSlots);
 
     populateLists();
 }

@@ -587,6 +587,9 @@ void MorphMenu::slotMorph(const QString &newClassName)
 
 bool MorphMenu::populateMenu(QWidget *w, QDesignerFormWindowInterface *fw)
 {
+    typedef void (QSignalMapper::*MapperVoidSlot)();
+    typedef void (QSignalMapper::*MapperStringSignal)(const QString &);
+
     m_widget = 0;
     m_formWindow = 0;
 
@@ -614,7 +617,8 @@ bool MorphMenu::populateMenu(QWidget *w, QDesignerFormWindowInterface *fw)
         m_menu = new QMenu;
         m_subMenuAction->setMenu(m_menu);
         m_mapper = new QSignalMapper(this);
-        connect(m_mapper , SIGNAL(mapped(QString)), this, SLOT(slotMorph(QString)));
+        connect(m_mapper, static_cast<MapperStringSignal>(&QSignalMapper::mapped),
+                this, &MorphMenu::slotMorph);
     }
 
     // Add actions
@@ -623,7 +627,8 @@ bool MorphMenu::populateMenu(QWidget *w, QDesignerFormWindowInterface *fw)
         if (*it != oldClassName) {
             QAction *a = m_menu->addAction(*it);
             m_mapper->setMapping (a, *it);
-            connect(a, SIGNAL(triggered()), m_mapper, SLOT(map()));
+            connect(a, &QAction::triggered,
+                    m_mapper, static_cast<MapperVoidSlot>(&QSignalMapper::map));
         }
     }
     m_subMenuAction->setVisible(true);

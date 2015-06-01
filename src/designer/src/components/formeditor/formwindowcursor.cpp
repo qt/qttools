@@ -50,7 +50,7 @@ FormWindowCursor::FormWindowCursor(FormWindow *fw, QObject *parent)
       m_formWindow(fw)
 {
     update();
-    connect(fw, SIGNAL(changed()), this, SLOT(update()));
+    connect(fw, &QDesignerFormWindowInterface::changed, this, &FormWindowCursor::update);
 }
 
 FormWindowCursor::~FormWindowCursor()

@@ -113,8 +113,8 @@ QAxWidgetTaskMenu::QAxWidgetTaskMenu(QDesignerAxWidget *object, QObject *parent)
     m_setAction(new QAction(tr("Set Control"), this)),
     m_resetAction(new QAction(tr("Reset Control"), this))
 {
-    connect(m_setAction, SIGNAL(triggered()), this, SLOT(setActiveXControl()));
-    connect(m_resetAction, SIGNAL(triggered()), this, SLOT(resetActiveXControl()));
+    connect(m_setAction, &QAction::triggered, this, &QAxWidgetTaskMenu::setActiveXControl);
+    connect(m_resetAction, &QAction::triggered, this, &QAxWidgetTaskMenu::resetActiveXControl);
     m_taskActions.push_back(m_setAction);
     m_taskActions.push_back(m_resetAction);
 }

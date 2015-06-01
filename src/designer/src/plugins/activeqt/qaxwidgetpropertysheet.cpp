@@ -95,7 +95,7 @@ bool QAxWidgetPropertySheet::reset(int index)
     if (name != m_controlProperty)
         return QDesignerPropertySheet::reset(index);
     axWidget()->resetControl();
-    QTimer::singleShot(0, this, SLOT(updatePropertySheet()));
+    QTimer::singleShot(0, this, &QAxWidgetPropertySheet::updatePropertySheet);
     return true;
 }
 
@@ -124,7 +124,7 @@ void QAxWidgetPropertySheet::setProperty(int index, const QVariant &value)
         if (clsid.isEmpty() || !axWidget()->loadControl(clsid))
             reset(index);
         else
-            QTimer::singleShot(100, this, SLOT(updatePropertySheet()));
+            QTimer::singleShot(100, this, &QAxWidgetPropertySheet::updatePropertySheet);
     }
 }
 

@@ -58,12 +58,13 @@ PreferencesDialog::PreferencesDialog(QDesignerFormEditorInterface *core, QWidget
         QWidget *page = optionsPage->createPage(this);
         m_ui->m_optionTabWidget->addTab(page, optionsPage->name());
         if (QDesignerAppearanceOptionsWidget *appearanceWidget = qobject_cast<QDesignerAppearanceOptionsWidget *>(page))
-            connect(appearanceWidget, SIGNAL(uiModeChanged(bool)), this, SLOT(slotUiModeChanged(bool)));
+            connect(appearanceWidget, &QDesignerAppearanceOptionsWidget::uiModeChanged,
+                    this, &PreferencesDialog::slotUiModeChanged);
     }
 
-    connect(m_ui->m_dialogButtonBox, SIGNAL(rejected()), this, SLOT(slotRejected()));
-    connect(m_ui->m_dialogButtonBox, SIGNAL(accepted()), this, SLOT(slotAccepted()));
-    connect(applyButton(), SIGNAL(clicked()), this, SLOT(slotApply()));
+    connect(m_ui->m_dialogButtonBox, &QDialogButtonBox::rejected, this, &PreferencesDialog::slotRejected);
+    connect(m_ui->m_dialogButtonBox, &QDialogButtonBox::accepted, this, &PreferencesDialog::slotAccepted);
+    connect(applyButton(), &QAbstractButton::clicked, this, &PreferencesDialog::slotApply);
 }
 
 PreferencesDialog::~PreferencesDialog()

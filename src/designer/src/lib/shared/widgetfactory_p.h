@@ -121,8 +121,6 @@ public:
 
 public slots:
     void loadPlugins();
-
-private slots:
     void activeFormWindowChanged(QDesignerFormWindowInterface *formWindow);
     void formWindowAdded(QDesignerFormWindowInterface *formWindow);
 

@@ -108,8 +108,8 @@ WidgetBoxTreeWidget::WidgetBoxTreeWidget(QDesignerFormEditorInterface *core, QWi
 
     setItemDelegate(new SheetDelegate(this, this));
 
-    connect(this, SIGNAL(itemPressed(QTreeWidgetItem*,int)),
-            this, SLOT(handleMousePress(QTreeWidgetItem*)));
+    connect(this, &QTreeWidget::itemPressed,
+            this, &WidgetBoxTreeWidget::handleMousePress);
 }
 
 QIcon WidgetBoxTreeWidget::iconForWidget(QString iconName) const
@@ -254,10 +254,14 @@ WidgetBoxCategoryListView *WidgetBoxTreeWidget::addCategoryView(QTreeWidgetItem 
     embed_item->setFlags(Qt::ItemIsEnabled);
     WidgetBoxCategoryListView *categoryView = new WidgetBoxCategoryListView(m_core, this);
     categoryView->setViewMode(iconMode ? QListView::IconMode : QListView::ListMode);
-    connect(categoryView, SIGNAL(scratchPadChanged()), this, SLOT(slotSave()));
-    connect(categoryView, SIGNAL(pressed(QString,QString,QPoint)), this, SIGNAL(pressed(QString,QString,QPoint)));
-    connect(categoryView, SIGNAL(itemRemoved()), this, SLOT(slotScratchPadItemDeleted()));
-    connect(categoryView, SIGNAL(lastItemRemoved()), this, SLOT(slotLastScratchPadItemDeleted()));
+    connect(categoryView, &WidgetBoxCategoryListView::scratchPadChanged,
+            this, &WidgetBoxTreeWidget::slotSave);
+    connect(categoryView, &WidgetBoxCategoryListView::pressed,
+            this, &WidgetBoxTreeWidget::pressed);
+    connect(categoryView, &WidgetBoxCategoryListView::itemRemoved,
+            this, &WidgetBoxTreeWidget::slotScratchPadItemDeleted);
+    connect(categoryView, &WidgetBoxCategoryListView::lastItemRemoved,
+            this, &WidgetBoxTreeWidget::slotLastScratchPadItemDeleted);
     setItemWidget(embed_item, 0, categoryView);
     return categoryView;
 }
@@ -811,7 +815,8 @@ void WidgetBoxTreeWidget::slotLastScratchPadItemDeleted()
         m_scratchPadDeleteTimer = new QTimer(this);
         m_scratchPadDeleteTimer->setSingleShot(true);
         m_scratchPadDeleteTimer->setInterval(0);
-        connect(m_scratchPadDeleteTimer, SIGNAL(timeout()), this, SLOT(deleteScratchpad()));
+        connect(m_scratchPadDeleteTimer, &QTimer::timeout,
+                this, &WidgetBoxTreeWidget::deleteScratchpad);
     }
     if (!m_scratchPadDeleteTimer->isActive())
         m_scratchPadDeleteTimer->start();
@@ -875,8 +880,8 @@ void WidgetBoxTreeWidget::contextMenuEvent(QContextMenuEvent *e)
                             && topLevelRole(item->parent()) ==  SCRATCHPAD_ITEM;
 
     QMenu menu;
-    menu.addAction(tr("Expand all"), this, SLOT(expandAll()));
-    menu.addAction(tr("Collapse all"), this, SLOT(collapseAll()));
+    menu.addAction(tr("Expand all"), this, &WidgetBoxTreeWidget::expandAll);
+    menu.addAction(tr("Collapse all"), this, &WidgetBoxTreeWidget::collapseAll);
     menu.addSeparator();
 
     QAction *listModeAction = menu.addAction(tr("List View"));
@@ -890,14 +895,16 @@ void WidgetBoxTreeWidget::contextMenuEvent(QContextMenuEvent *e)
         iconModeAction->setChecked(true);
     else
         listModeAction->setChecked(true);
-    connect(listModeAction, SIGNAL(triggered()), SLOT(slotListMode()));
-    connect(iconModeAction, SIGNAL(triggered()), SLOT(slotIconMode()));
+    connect(listModeAction, &QAction::triggered, this, &WidgetBoxTreeWidget::slotListMode);
+    connect(iconModeAction, &QAction::triggered, this, &WidgetBoxTreeWidget::slotIconMode);
 
     if (scratchpad_menu) {
         menu.addSeparator();
-        menu.addAction(tr("Remove"), itemWidget(item, 0), SLOT(removeCurrentItem()));
+        WidgetBoxCategoryListView *listView = qobject_cast<WidgetBoxCategoryListView *>(itemWidget(item, 0));
+        Q_ASSERT(listView);
+        menu.addAction(tr("Remove"), listView, &WidgetBoxCategoryListView::removeCurrentItem);
         if (!m_iconMode)
-            menu.addAction(tr("Edit name"), itemWidget(item, 0), SLOT(editCurrentItem()));
+            menu.addAction(tr("Edit name"), listView, &WidgetBoxCategoryListView::editCurrentItem);
     }
     e->accept();
     menu.exec(mapToGlobal(e->pos()));

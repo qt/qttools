@@ -73,14 +73,14 @@ void TabOrderEditorPlugin::initialize(QDesignerFormEditorInterface *core)
     m_core = core;
     m_initialized = true;
 
-    connect(core->formWindowManager(), SIGNAL(formWindowAdded(QDesignerFormWindowInterface*)),
-            this, SLOT(addFormWindow(QDesignerFormWindowInterface*)));
+    connect(core->formWindowManager(), &QDesignerFormWindowManagerInterface::formWindowAdded,
+            this, &TabOrderEditorPlugin::addFormWindow);
 
-    connect(core->formWindowManager(), SIGNAL(formWindowRemoved(QDesignerFormWindowInterface*)),
-            this, SLOT(removeFormWindow(QDesignerFormWindowInterface*)));
+    connect(core->formWindowManager(), &QDesignerFormWindowManagerInterface::formWindowRemoved,
+            this, &TabOrderEditorPlugin::removeFormWindow);
 
-    connect(core->formWindowManager(), SIGNAL(activeFormWindowChanged(QDesignerFormWindowInterface*)),
-                this, SLOT(activeFormWindowChanged(QDesignerFormWindowInterface*)));
+    connect(core->formWindowManager(), &QDesignerFormWindowManagerInterface::activeFormWindowChanged,
+                this, &TabOrderEditorPlugin::activeFormWindowChanged);
 }
 
 void TabOrderEditorPlugin::activeFormWindowChanged(QDesignerFormWindowInterface *formWindow)
@@ -100,7 +100,7 @@ void TabOrderEditorPlugin::addFormWindow(QDesignerFormWindowInterface *formWindo
 
     TabOrderEditorTool *tool = new TabOrderEditorTool(formWindow, this);
     m_tools[formWindow] = tool;
-    connect(m_action, SIGNAL(triggered()), tool->action(), SLOT(trigger()));
+    connect(m_action, &QAction::triggered, tool->action(), &QAction::trigger);
     formWindow->registerTool(tool);
 }
 
@@ -111,7 +111,7 @@ void TabOrderEditorPlugin::removeFormWindow(QDesignerFormWindowInterface *formWi
 
     TabOrderEditorTool *tool = m_tools.value(formWindow);
     m_tools.remove(formWindow);
-    disconnect(m_action, SIGNAL(triggered()), tool->action(), SLOT(trigger()));
+    disconnect(m_action, &QAction::triggered, tool->action(), &QAction::trigger);
     // ### FIXME disable the tool
 
     delete tool;

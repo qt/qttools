@@ -58,10 +58,12 @@ OrderDialog::OrderDialog(QWidget *parent) :
     m_ui->upButton->setIcon(createIconSet(QString::fromUtf8("up.png")));
     m_ui->downButton->setIcon(createIconSet(QString::fromUtf8("down.png")));
     m_ui->buttonBox->button(QDialogButtonBox::Ok)->setDefault(true);
-    connect(m_ui->buttonBox->button(QDialogButtonBox::Reset), SIGNAL(clicked()), this, SLOT(slotReset()));
+    connect(m_ui->buttonBox->button(QDialogButtonBox::Reset), &QAbstractButton::clicked,
+            this, &OrderDialog::slotReset);
     // Catch the remove operation of a DnD operation in QAbstractItemView::InternalMove mode to enable buttons
     // Selection mode is 'contiguous' to enable DnD of groups
-    connect(m_ui->pageList->model(), SIGNAL(rowsRemoved(QModelIndex,int,int)), this, SLOT(slotEnableButtonsAfterDnD()));
+    connect(m_ui->pageList->model(), &QAbstractItemModel::rowsRemoved,
+            this, &OrderDialog::slotEnableButtonsAfterDnD);
 
     m_ui->upButton->setEnabled(false);
     m_ui->downButton->setEnabled(false);

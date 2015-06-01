@@ -90,8 +90,10 @@ FormEditor::FormEditor(QObject *parent)
 
     FormWindowManager *formWindowManager = new FormWindowManager(this, this);
     setFormManager(formWindowManager);
-    connect(formWindowManager, SIGNAL(formWindowAdded(QDesignerFormWindowInterface*)), widgetFactory, SLOT(formWindowAdded(QDesignerFormWindowInterface*)));
-    connect(formWindowManager, SIGNAL(activeFormWindowChanged(QDesignerFormWindowInterface*)), widgetFactory, SLOT(activeFormWindowChanged(QDesignerFormWindowInterface*)));
+    connect(formWindowManager, &QDesignerFormWindowManagerInterface::formWindowAdded,
+            widgetFactory, &WidgetFactory::formWindowAdded);
+    connect(formWindowManager, &QDesignerFormWindowManagerInterface::activeFormWindowChanged,
+            widgetFactory, &WidgetFactory::activeFormWindowChanged);
 
     QExtensionManager *mgr = new QExtensionManager(this);
     const QString containerExtensionId = Q_TYPEID(QDesignerContainerExtension);
@@ -140,8 +142,8 @@ FormEditor::FormEditor(QObject *parent)
 
     QtResourceModel *resourceModel = new QtResourceModel(this);
     setResourceModel(resourceModel);
-    connect(resourceModel, SIGNAL(qrcFileModifiedExternally(QString)),
-            this, SLOT(slotQrcFileChangedExternally(QString)));
+    connect(resourceModel, &QtResourceModel::qrcFileModifiedExternally,
+            this, &FormEditor::slotQrcFileChangedExternally);
 
     QList<QDesignerOptionsPageInterface*> optionsPages;
     optionsPages << new TemplateOptionsPage(this) << new FormEditorOptionsPage(this) << new EmbeddedOptionsPage(this);

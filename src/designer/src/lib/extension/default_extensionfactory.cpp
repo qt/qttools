@@ -112,13 +112,13 @@ QObject *QExtensionFactory::extension(QObject *object, const QString &iid) const
     ExtensionMap::iterator it = m_extensions.find(key);
     if (it == m_extensions.end()) {
         if (QObject *ext = createExtension(object, iid, const_cast<QExtensionFactory*>(this))) {
-            connect(ext, SIGNAL(destroyed(QObject*)), this, SLOT(objectDestroyed(QObject*)));
+            connect(ext, &QObject::destroyed, this, &QExtensionFactory::objectDestroyed);
             it = m_extensions.insert(key, ext);
         }
     }
 
     if (!m_extended.contains(object)) {
-        connect(object, SIGNAL(destroyed(QObject*)), this, SLOT(objectDestroyed(QObject*)));
+        connect(object, &QObject::destroyed, this, &QExtensionFactory::objectDestroyed);
         m_extended.insert(object, true);
     }
 

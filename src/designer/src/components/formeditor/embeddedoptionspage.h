@@ -68,6 +68,8 @@ private slots:
     void slotProfileIndexChanged(int);
 
 private:
+    friend class EmbeddedOptionsControlPrivate;
+
     EmbeddedOptionsControlPrivate *m_d;
 };
 

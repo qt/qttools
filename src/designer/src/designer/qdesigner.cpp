@@ -282,7 +282,7 @@ QDesigner::ParseArgumentsResult QDesigner::parseCommandLineArguments()
     // Show up error box with parent now if something went wrong
     if (m_initializationErrors.isEmpty()) {
         if (!m_suppressNewFormShow && QDesignerSettings(m_workbench->core()).showNewFormOnStartup())
-            QTimer::singleShot(100, this, SLOT(callCreateForm())); // won't show anything if suppressed
+            QTimer::singleShot(100, this, &QDesigner::callCreateForm); // won't show anything if suppressed
     } else {
         showErrorMessageBox(m_initializationErrors);
         m_initializationErrors.clear();

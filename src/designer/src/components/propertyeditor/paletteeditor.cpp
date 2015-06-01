@@ -68,8 +68,8 @@ PaletteEditor::PaletteEditor(QDesignerFormEditorInterface *core, QWidget *parent
     ColorDelegate *delegate = new ColorDelegate(core, this);
     ui.paletteView->setItemDelegate(delegate);
     ui.paletteView->setEditTriggers(QAbstractItemView::AllEditTriggers);
-    connect(m_paletteModel, SIGNAL(paletteChanged(QPalette)),
-                this, SLOT(paletteChanged(QPalette)));
+    connect(m_paletteModel, &PaletteModel::paletteChanged,
+                this, &PaletteEditor::paletteChanged);
     ui.paletteView->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui.paletteView->setDragEnabled(true);
     ui.paletteView->setDropIndicatorShown(true);
@@ -416,7 +416,7 @@ BrushEditor::BrushEditor(QDesignerFormEditorInterface *core, QWidget *parent) :
     QLayout *layout = new QHBoxLayout(this);
     layout->setMargin(0);
     layout->addWidget(m_button);
-    connect(m_button, SIGNAL(colorChanged(QColor)), this, SLOT(brushChanged()));
+    connect(m_button, &QtColorButton::colorChanged, this, &BrushEditor::brushChanged);
     setFocusProxy(m_button);
 }
 
@@ -464,7 +464,7 @@ RoleEditor::RoleEditor(QWidget *parent) :
     button->setIconSize(QSize(8,8));
     button->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::MinimumExpanding));
     layout->addWidget(button);
-    connect(button, SIGNAL(clicked()), this, SLOT(emitResetProperty()));
+    connect(button, &QAbstractButton::clicked, this, &RoleEditor::emitResetProperty);
 }
 
 void RoleEditor::setLabel(const QString &label)
@@ -506,13 +506,16 @@ QWidget *ColorDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem
     QWidget *ed = 0;
     if (index.column() == 0) {
         RoleEditor *editor = new RoleEditor(parent);
-        connect(editor, SIGNAL(changed(QWidget*)), this, SIGNAL(commitData(QWidget*)));
+        connect(editor, &RoleEditor::changed, this, &ColorDelegate::commitData);
         //editor->setFocusPolicy(Qt::NoFocus);
         //editor->installEventFilter(const_cast<ColorDelegate *>(this));
         ed = editor;
     } else {
+        typedef void (BrushEditor::*BrushEditorWidgetSignal)(QWidget *);
+
         BrushEditor *editor = new BrushEditor(m_core, parent);
-        connect(editor, SIGNAL(changed(QWidget*)), this, SIGNAL(commitData(QWidget*)));
+        connect(editor, static_cast<BrushEditorWidgetSignal>(&BrushEditor::changed),
+                this, &ColorDelegate::commitData);
         editor->setFocusPolicy(Qt::NoFocus);
         editor->installEventFilter(const_cast<ColorDelegate *>(this));
         ed = editor;

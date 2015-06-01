@@ -145,6 +145,8 @@ EmbeddedOptionsControlPrivate::EmbeddedOptionsControlPrivate(QDesignerFormEditor
 
 void EmbeddedOptionsControlPrivate::init(EmbeddedOptionsControl *q)
 {
+    typedef void (QComboBox::*QComboIntSignal)(int);
+
     m_q = q;
     QVBoxLayout *vLayout = new QVBoxLayout;
     QHBoxLayout *hLayout = new QHBoxLayout;
@@ -152,21 +154,25 @@ void EmbeddedOptionsControlPrivate::init(EmbeddedOptionsControl *q)
     m_profileCombo->setEditable(false);
     hLayout->addWidget(m_profileCombo);
     m_profileCombo->addItem(EmbeddedOptionsControl::tr("None"));
-    EmbeddedOptionsControl::connect(m_profileCombo, SIGNAL(currentIndexChanged(int)), m_q, SLOT(slotProfileIndexChanged(int)));
+    EmbeddedOptionsControl::connect(m_profileCombo, static_cast<QComboIntSignal>(&QComboBox::currentIndexChanged),
+                                    m_q, &EmbeddedOptionsControl::slotProfileIndexChanged);
 
     m_addButton->setIcon(createIconSet(QString::fromUtf8("plus.png")));
     m_addButton->setToolTip(EmbeddedOptionsControl::tr("Add a profile"));
-    EmbeddedOptionsControl::connect(m_addButton, SIGNAL(clicked()), m_q, SLOT(slotAdd()));
+    EmbeddedOptionsControl::connect(m_addButton, &QAbstractButton::clicked,
+                                    m_q, &EmbeddedOptionsControl::slotAdd);
     hLayout->addWidget(m_addButton);
 
-    EmbeddedOptionsControl::connect(m_editButton, SIGNAL(clicked()), m_q, SLOT(slotEdit()));
+    EmbeddedOptionsControl::connect(m_editButton, &QAbstractButton::clicked,
+                                    m_q, &EmbeddedOptionsControl::slotEdit);
     m_editButton->setIcon(createIconSet(QString::fromUtf8("edit.png")));
     m_editButton->setToolTip(EmbeddedOptionsControl::tr("Edit the selected profile"));
     hLayout->addWidget(m_editButton);
 
     m_deleteButton->setIcon(createIconSet(QString::fromUtf8("minus.png")));
     m_deleteButton->setToolTip(EmbeddedOptionsControl::tr("Delete the selected profile"));
-    EmbeddedOptionsControl::connect(m_deleteButton, SIGNAL(clicked()), m_q, SLOT(slotDelete()));
+    EmbeddedOptionsControl::connect(m_deleteButton, &QAbstractButton::clicked,
+                                    m_q, &EmbeddedOptionsControl::slotDelete);
     hLayout->addWidget(m_deleteButton);
 
     hLayout->addStretch();

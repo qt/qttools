@@ -55,7 +55,7 @@ TableWidgetTaskMenu::TableWidgetTaskMenu(QTableWidget *button, QObject *parent)
       m_tableWidget(button),
       m_editItemsAction(new QAction(tr("Edit Items..."), this))
 {
-    connect(m_editItemsAction, SIGNAL(triggered()), this, SLOT(editItems()));
+    connect(m_editItemsAction, &QAction::triggered, this, &TableWidgetTaskMenu::editItems);
     m_taskActions.append(m_editItemsAction);
 
     QAction *sep = new QAction(this);

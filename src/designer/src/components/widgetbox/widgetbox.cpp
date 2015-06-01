@@ -110,13 +110,13 @@ WidgetBox::WidgetBox(QDesignerFormEditorInterface *core, QWidget *parent, Qt::Wi
     QLineEdit *filterWidget = new WidgetBoxFilterLineEdit(toolBar);
     filterWidget->setPlaceholderText(tr("Filter"));
     filterWidget->setClearButtonEnabled(true);
-    connect(filterWidget, SIGNAL(textChanged(QString)), m_view, SLOT(filter(QString)));
+    connect(filterWidget, &QLineEdit::textChanged, m_view, &WidgetBoxTreeWidget::filter);
     toolBar->addWidget(filterWidget);
     l->addWidget(toolBar);
 
     // View
-    connect(m_view, SIGNAL(pressed(QString,QString,QPoint)),
-            this, SLOT(handleMousePress(QString,QString,QPoint)));
+    connect(m_view, &WidgetBoxTreeWidget::pressed,
+            this, &WidgetBox::handleMousePress);
     l->addWidget(m_view);
 
     setAcceptDrops (true);

@@ -1668,13 +1668,13 @@ QObject *QDesignerAbstractPropertySheetFactory::extension(QObject *object, const
     ExtensionMap::iterator it = m_impl->m_extensions.find(object);
     if (it == m_impl->m_extensions.end()) {
         if (QObject *ext = createPropertySheet(object, const_cast<QDesignerAbstractPropertySheetFactory*>(this))) {
-            connect(ext, SIGNAL(destroyed(QObject*)), this, SLOT(objectDestroyed(QObject*)));
+            connect(ext, &QObject::destroyed, this, &QDesignerAbstractPropertySheetFactory::objectDestroyed);
             it = m_impl->m_extensions.insert(object, ext);
         }
     }
 
     if (!m_impl->m_extended.contains(object)) {
-        connect(object, SIGNAL(destroyed(QObject*)), this, SLOT(objectDestroyed(QObject*)));
+        connect(object, &QObject::destroyed, this, &QDesignerAbstractPropertySheetFactory::objectDestroyed);
         m_impl->m_extended.insert(object, true);
     }
 

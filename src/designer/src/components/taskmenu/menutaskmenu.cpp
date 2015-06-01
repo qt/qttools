@@ -48,7 +48,7 @@ namespace qdesigner_internal {
        m_removeAction(new QAction(tr("Remove"), this)),
        m_promotionTaskMenu(new PromotionTaskMenu(menu, PromotionTaskMenu::ModeSingleWidget, this))
     {
-        connect(m_removeAction, SIGNAL(triggered()), this, SLOT(removeMenu()));
+        connect(m_removeAction, &QAction::triggered, this, &MenuTaskMenu::removeMenu);
     }
 
     QAction *MenuTaskMenu::preferredEditAction() const

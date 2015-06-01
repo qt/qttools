@@ -138,7 +138,7 @@ public slots:
 WizardPageChangeWatcher::WizardPageChangeWatcher(QWizard *parent) :
     QObject(parent)
 {
-    connect(parent, SIGNAL(currentIdChanged(int)), this, SLOT(pageChanged()));
+    connect(parent, &QWizard::currentIdChanged, this, &WizardPageChangeWatcher::pageChanged);
 }
 
 void WizardPageChangeWatcher::pageChanged()

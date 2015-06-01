@@ -138,30 +138,32 @@ FormLayoutRowDialog::FormLayoutRowDialog(QDesignerFormEditorInterface *core,
     m_fieldNameEdited(false),
     m_buddyClicked(false)
 {
+    typedef void (QComboBox::*QComboIntSignal)(int);
+
     Q_ASSERT(m_buddyMarkerRegexp.isValid());
 
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     setModal(true);
     m_ui.setupUi(this);
-    connect(m_ui.labelTextLineEdit, SIGNAL(textEdited(QString)), this, SLOT(labelTextEdited(QString)));
+    connect(m_ui.labelTextLineEdit, &QLineEdit::textEdited, this, &FormLayoutRowDialog::labelTextEdited);
 
     QRegExpValidator *nameValidator = new QRegExpValidator(QRegExp(QStringLiteral("^[a-zA-Z0-9_]+$")), this);
     Q_ASSERT(nameValidator->regExp().isValid());
 
     m_ui.labelNameLineEdit->setValidator(nameValidator);
-    connect(m_ui.labelNameLineEdit, SIGNAL(textEdited(QString)),
-            this, SLOT(labelNameEdited(QString)));
+    connect(m_ui.labelNameLineEdit, &QLineEdit::textEdited,
+            this, &FormLayoutRowDialog::labelNameEdited);
 
     m_ui.fieldNameLineEdit->setValidator(nameValidator);
-    connect(m_ui.fieldNameLineEdit, SIGNAL(textEdited(QString)),
-            this, SLOT(fieldNameEdited(QString)));
+    connect(m_ui.fieldNameLineEdit, &QLineEdit::textEdited,
+            this, &FormLayoutRowDialog::fieldNameEdited);
 
-    connect(m_ui.buddyCheckBox, SIGNAL(clicked()), this, SLOT(buddyClicked()));
+    connect(m_ui.buddyCheckBox, &QAbstractButton::clicked, this, &FormLayoutRowDialog::buddyClicked);
 
     m_ui.fieldClassComboBox->addItems(fieldWidgetClasses(core));
     m_ui.fieldClassComboBox->setCurrentIndex(0);
-    connect(m_ui.fieldClassComboBox, SIGNAL(currentIndexChanged(int)),
-            this, SLOT(fieldClassChanged(int)));
+    connect(m_ui.fieldClassComboBox, static_cast<QComboIntSignal>(&QComboBox::currentIndexChanged),
+            this, &FormLayoutRowDialog::fieldClassChanged);
 
     updateOkButton();
 }
@@ -475,7 +477,7 @@ FormLayoutMenu::FormLayoutMenu(QObject *parent) :
     m_separator2(new QAction(this))
 {
     m_separator1->setSeparator(true);
-    connect(m_populateFormAction, SIGNAL(triggered()), this, SLOT(slotAddRow()));
+    connect(m_populateFormAction, &QAction::triggered, this, &FormLayoutMenu::slotAddRow);
     m_separator2->setSeparator(true);
 }
 

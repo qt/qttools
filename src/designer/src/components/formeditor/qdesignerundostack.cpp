@@ -45,7 +45,7 @@ QDesignerUndoStack::QDesignerUndoStack(QObject *parent) :
     m_undoStack(new QUndoStack),
     m_fakeDirty(false)
 {
-    connect(m_undoStack, SIGNAL(indexChanged(int)), this, SIGNAL(changed()));
+    connect(m_undoStack, &QUndoStack::indexChanged, this, &QDesignerUndoStack::changed);
 }
 
 QDesignerUndoStack::~QDesignerUndoStack()

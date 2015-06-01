@@ -254,16 +254,16 @@ SignaturePanel::SignaturePanel(QObject *parent, QListView *listView, QToolButton
 {
     m_removeButton->setEnabled(false);
 
-    connect(addButton, SIGNAL(clicked()), this, SLOT(slotAdd()));
-    connect(m_removeButton, SIGNAL(clicked()), this, SLOT(slotRemove()));
+    connect(addButton, &QAbstractButton::clicked, this, &SignaturePanel::slotAdd);
+    connect(m_removeButton, &QAbstractButton::clicked, this, &SignaturePanel::slotRemove);
 
     m_listView->setModel(m_model);
     SignatureDelegate *delegate = new SignatureDelegate(this);
     m_listView->setItemDelegate(delegate);
-    connect(m_model, SIGNAL(checkSignature(QString,bool*)), this, SIGNAL(checkSignature(QString,bool*)));
-
-    connect(m_listView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            this, SLOT(slotSelectionChanged(QItemSelection,QItemSelection)));
+    connect(m_model, &SignatureModel::checkSignature,
+            this, &SignaturePanel::checkSignature);
+    connect(m_listView->selectionModel(), &QItemSelectionModel::selectionChanged,
+            this, &SignaturePanel::slotSelectionChanged);
 }
 
 void SignaturePanel::slotAdd()
@@ -366,11 +366,13 @@ SignalSlotDialog::SignalSlotDialog(QDesignerDialogGuiInterface *dialogGui, QWidg
 
     m_slotPanel = new SignaturePanel(this, m_ui->slotListView, m_ui->addSlotButton, m_ui->removeSlotButton, QStringLiteral("slot"));
     m_signalPanel = new SignaturePanel(this, m_ui->signalListView, m_ui->addSignalButton, m_ui->removeSignalButton, QStringLiteral("signal"));
-    connect(m_slotPanel,   SIGNAL(checkSignature(QString,bool*)), this, SLOT(slotCheckSignature(QString,bool*)));
-    connect(m_signalPanel, SIGNAL(checkSignature(QString,bool*)), this, SLOT(slotCheckSignature(QString,bool*)));
+    connect(m_slotPanel, &SignaturePanel::checkSignature,
+            this, &SignalSlotDialog::slotCheckSignature);
+    connect(m_signalPanel, &SignaturePanel::checkSignature,
+            this, &SignalSlotDialog::slotCheckSignature);
 
-    connect(m_ui->buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(m_ui->buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(m_ui->buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
+    connect(m_ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 
     switch(m_focusMode) {
     case FocusSlots:

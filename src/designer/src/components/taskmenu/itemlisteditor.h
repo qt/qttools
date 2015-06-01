@@ -82,10 +82,12 @@ public:
         const char *name;
     };
 
+public slots:
+    void cacheReloaded();
+
 private slots:
     void propertyChanged(QtProperty *property);
     void resetProperty(QtProperty *property);
-    void cacheReloaded();
 
 protected:
     void setupProperties(PropertyDefinition *propDefs);

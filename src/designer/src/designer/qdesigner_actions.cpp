@@ -195,6 +195,8 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
 #endif
       m_previewManager(0)
 {
+    typedef void (QDesignerActions::*VoidSlot)();
+
 #if defined (Q_OS_UNIX) && !defined(Q_OS_MAC)
     m_newFormAction->setIcon(QIcon::fromTheme(QStringLiteral("document-new"), m_newFormAction->icon()));
     m_openFormAction->setIcon(QIcon::fromTheme(QStringLiteral("document-open"), m_openFormAction->icon()));
@@ -211,8 +213,8 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
     m_previewManager = ifwm->previewManager();
     m_previewFormAction = ifwm->action(QDesignerFormWindowManagerInterface::DefaultPreviewAction);
     m_styleActions = ifwm->actionGroup(QDesignerFormWindowManagerInterface::StyledPreviewActionGroup);
-    connect(ifwm, SIGNAL(formWindowSettingsChanged(QDesignerFormWindowInterface*)),
-            this, SLOT(formWindowSettingsChanged(QDesignerFormWindowInterface*)));
+    connect(ifwm, &QDesignerFormWindowManagerInterface::formWindowSettingsChanged,
+            this, &QDesignerActions::formWindowSettingsChanged);
 
     m_editWidgetsAction->setObjectName(QStringLiteral("__qt_edit_widgets_action"));
     m_newFormAction->setObjectName(QStringLiteral("__qt_new_form_action"));
@@ -242,21 +244,21 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
 // file actions
 //
     m_newFormAction->setShortcut(QKeySequence::New);
-    connect(m_newFormAction, SIGNAL(triggered()), this, SLOT(createForm()));
+    connect(m_newFormAction, &QAction::triggered, this, &QDesignerActions::createForm);
     m_fileActions->addAction(m_newFormAction);
 
     m_openFormAction->setShortcut(QKeySequence::Open);
-    connect(m_openFormAction, SIGNAL(triggered()), this, SLOT(slotOpenForm()));
+    connect(m_openFormAction, &QAction::triggered, this, &QDesignerActions::slotOpenForm);
     m_fileActions->addAction(m_openFormAction);
 
     m_fileActions->addAction(createRecentFilesMenu());
     m_fileActions->addAction(createSeparator(this));
 
     m_saveFormAction->setShortcut(QKeySequence::Save);
-    connect(m_saveFormAction, SIGNAL(triggered()), this, SLOT(saveForm()));
+    connect(m_saveFormAction, &QAction::triggered, this, static_cast<VoidSlot>(&QDesignerActions::saveForm));
     m_fileActions->addAction(m_saveFormAction);
 
-    connect(m_saveFormAsAction, SIGNAL(triggered()), this, SLOT(saveFormAs()));
+    connect(m_saveFormAsAction, &QAction::triggered, this, static_cast<VoidSlot>(&QDesignerActions::saveFormAs));
     m_fileActions->addAction(m_saveFormAsAction);
 
 #ifdef Q_OS_MAC
@@ -264,26 +266,26 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
 #else
     m_saveAllFormsAction->setShortcut(tr("CTRL+SHIFT+S")); // Commonly "Save As" on Mac
 #endif
-    connect(m_saveAllFormsAction, SIGNAL(triggered()), this, SLOT(saveAllForms()));
+    connect(m_saveAllFormsAction, &QAction::triggered, this, &QDesignerActions::saveAllForms);
     m_fileActions->addAction(m_saveAllFormsAction);
 
-    connect(m_saveFormAsTemplateAction, SIGNAL(triggered()), this, SLOT(saveFormAsTemplate()));
+    connect(m_saveFormAsTemplateAction, &QAction::triggered, this, &QDesignerActions::saveFormAsTemplate);
     m_fileActions->addAction(m_saveFormAsTemplateAction);
 
     m_fileActions->addAction(createSeparator(this));
 
     m_printPreviewAction->setShortcut(QKeySequence::Print);
-    connect(m_printPreviewAction,  SIGNAL(triggered()), this, SLOT(printPreviewImage()));
+    connect(m_printPreviewAction,  &QAction::triggered, this, &QDesignerActions::printPreviewImage);
     m_fileActions->addAction(m_printPreviewAction);
     m_printPreviewAction->setObjectName(QStringLiteral("__qt_print_action"));
 
-    connect(m_savePreviewImageAction,  SIGNAL(triggered()), this, SLOT(savePreviewImage()));
+    connect(m_savePreviewImageAction,  &QAction::triggered, this, &QDesignerActions::savePreviewImage);
     m_savePreviewImageAction->setObjectName(QStringLiteral("__qt_saveimage_action"));
     m_fileActions->addAction(m_savePreviewImageAction);
     m_fileActions->addAction(createSeparator(this));
 
     m_closeFormAction->setShortcut(QKeySequence::Close);
-    connect(m_closeFormAction, SIGNAL(triggered()), this, SLOT(closeForm()));
+    connect(m_closeFormAction, &QAction::triggered, this, &QDesignerActions::closeForm);
     m_fileActions->addAction(m_closeFormAction);
     updateCloseAction();
 
@@ -291,7 +293,7 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
 
     m_quitAction->setShortcuts(QKeySequence::Quit);
     m_quitAction->setMenuRole(QAction::QuitRole);
-    connect(m_quitAction, SIGNAL(triggered()), this, SLOT(shutdown()));
+    connect(m_quitAction, &QAction::triggered, this, &QDesignerActions::shutdown);
     m_fileActions->addAction(m_quitAction);
 
 //
@@ -337,14 +339,14 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
     m_editWidgetsAction->setShortcuts(shortcuts);
     QIcon fallback(m_core->resourceLocation() + QStringLiteral("/widgettool.png"));
     m_editWidgetsAction->setIcon(QIcon::fromTheme("designer-edit-widget", fallback));
-    connect(m_editWidgetsAction, SIGNAL(triggered()), this, SLOT(editWidgetsSlot()));
+    connect(m_editWidgetsAction, &QAction::triggered, this, &QDesignerActions::editWidgetsSlot);
     m_editWidgetsAction->setChecked(true);
     m_editWidgetsAction->setEnabled(false);
     m_editWidgetsAction->setProperty(QDesignerActions::defaultToolbarPropertyName, true);
     m_toolActions->addAction(m_editWidgetsAction);
 
-    connect(formWindowManager, SIGNAL(activeFormWindowChanged(QDesignerFormWindowInterface*)),
-                this, SLOT(activeFormWindowChanged(QDesignerFormWindowInterface*)));
+    connect(formWindowManager, &QDesignerFormWindowManager::activeFormWindowChanged,
+                this, &QDesignerActions::activeFormWindowChanged);
 
     QList<QObject*> builtinPlugins = QPluginLoader::staticInstances();
     builtinPlugins += m_core->pluginManager()->instances();
@@ -358,11 +360,11 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
         }
     }
 
-    connect(m_preferencesAction, SIGNAL(triggered()),  this, SLOT(showPreferencesDialog()));
+    connect(m_preferencesAction, &QAction::triggered,  this, &QDesignerActions::showPreferencesDialog);
     m_preferencesAction->setMenuRole(QAction::PreferencesRole);
     m_settingsActions->addAction(m_preferencesAction);
 
-    connect(m_appFontAction, SIGNAL(triggered()),  this, SLOT(showAppFontDialog()));
+    connect(m_appFontAction, &QAction::triggered,  this, &QDesignerActions::showAppFontDialog);
     m_settingsActions->addAction(m_appFontAction);
 //
 // form actions
@@ -390,10 +392,12 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
 
     m_previewFormAction->setShortcut(tr("CTRL+R"));
     m_formActions->addAction(m_previewFormAction);
-    connect(m_previewManager, SIGNAL(firstPreviewOpened()), this, SLOT(updateCloseAction()));
-    connect(m_previewManager, SIGNAL(lastPreviewClosed()), this, SLOT(updateCloseAction()));
+    connect(m_previewManager, &qdesigner_internal::PreviewManager::firstPreviewOpened,
+            this, &QDesignerActions::updateCloseAction);
+    connect(m_previewManager, &qdesigner_internal::PreviewManager::lastPreviewClosed,
+            this, &QDesignerActions::updateCloseAction);
 
-    connect(m_viewCodeAction, SIGNAL(triggered()), this, SLOT(viewCode()));
+    connect(m_viewCodeAction, &QAction::triggered, this, &QDesignerActions::viewCode);
     // Preview code only in Cpp
     if (qt_extension<QDesignerLanguageExtension *>(m_core->extensionManager(), m_core) == 0)
         m_formActions->addAction(m_viewCodeAction);
@@ -407,11 +411,11 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
     m_minimizeAction->setEnabled(false);
     m_minimizeAction->setCheckable(true);
     m_minimizeAction->setShortcut(tr("CTRL+M"));
-    connect(m_minimizeAction, SIGNAL(triggered()), m_workbench, SLOT(toggleFormMinimizationState()));
+    connect(m_minimizeAction, &QAction::triggered, m_workbench, &QDesignerWorkbench::toggleFormMinimizationState);
     m_windowActions->addAction(m_minimizeAction);
 
     m_windowActions->addAction(m_bringAllToFrontSeparator);
-    connect(m_bringAllToFrontAction, SIGNAL(triggered()), m_workbench, SLOT(bringAllToFront()));
+    connect(m_bringAllToFrontAction, &QAction::triggered, m_workbench, &QDesignerWorkbench::bringAllToFront);
     m_windowActions->addAction(m_bringAllToFrontAction);
     m_windowActions->addAction(m_windowListSeparatorAction);
 
@@ -424,11 +428,13 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
     activeFormWindowChanged(core()->formWindowManager()->activeFormWindow());
 
     m_backupTimer->start(180000); // 3min
-    connect(m_backupTimer, SIGNAL(timeout()), this, SLOT(backupForms()));
+    connect(m_backupTimer, &QTimer::timeout, this, &QDesignerActions::backupForms);
 
     // Enable application font action
-    connect(formWindowManager, SIGNAL(formWindowAdded(QDesignerFormWindowInterface*)), this, SLOT(formWindowCountChanged()));
-    connect(formWindowManager, SIGNAL(formWindowRemoved(QDesignerFormWindowInterface*)), this, SLOT(formWindowCountChanged()));
+    connect(formWindowManager, &QDesignerFormWindowManagerInterface::formWindowAdded,
+            this, &QDesignerActions::formWindowCountChanged);
+    connect(formWindowManager, &QDesignerFormWindowManagerInterface::formWindowRemoved,
+            this, &QDesignerActions::formWindowCountChanged);
     formWindowCountChanged();
 }
 
@@ -439,7 +445,7 @@ QActionGroup *QDesignerActions::createHelpActions()
 #ifndef QT_JAMBI_BUILD
     QAction *mainHelpAction = new QAction(tr("Qt Designer &Help"), this);
     mainHelpAction->setObjectName(QStringLiteral("__qt_designer_help_action"));
-    connect(mainHelpAction, SIGNAL(triggered()), this, SLOT(showDesignerHelp()));
+    connect(mainHelpAction, &QAction::triggered, this, &QDesignerActions::showDesignerHelp);
     mainHelpAction->setShortcut(Qt::CTRL + Qt::Key_Question);
     helpActions->addAction(mainHelpAction);
 
@@ -447,7 +453,7 @@ QActionGroup *QDesignerActions::createHelpActions()
     QAction *widgetHelp = new QAction(tr("Current Widget Help"), this);
     widgetHelp->setObjectName(QStringLiteral("__qt_current_widget_help_action"));
     widgetHelp->setShortcut(Qt::Key_F1);
-    connect(widgetHelp, SIGNAL(triggered()), this, SLOT(showWidgetSpecificHelp()));
+    connect(widgetHelp, &QAction::triggered, this, &QDesignerActions::showWidgetSpecificHelp);
     helpActions->addAction(widgetHelp);
 
 #endif
@@ -456,19 +462,20 @@ QActionGroup *QDesignerActions::createHelpActions()
     QAction *aboutPluginsAction = new QAction(tr("About Plugins"), this);
     aboutPluginsAction->setObjectName(QStringLiteral("__qt_about_plugins_action"));
     aboutPluginsAction->setMenuRole(QAction::ApplicationSpecificRole);
-    connect(aboutPluginsAction, SIGNAL(triggered()), m_core->formWindowManager(), SLOT(showPluginDialog()));
+    connect(aboutPluginsAction, &QAction::triggered,
+            m_core->formWindowManager(), &QDesignerFormWindowManagerInterface::showPluginDialog);
     helpActions->addAction(aboutPluginsAction);
 
     QAction *aboutDesignerAction = new QAction(tr("About Qt Designer"), this);
     aboutDesignerAction->setMenuRole(QAction::AboutRole);
     aboutDesignerAction->setObjectName(QStringLiteral("__qt_about_designer_action"));
-    connect(aboutDesignerAction, SIGNAL(triggered()), this, SLOT(aboutDesigner()));
+    connect(aboutDesignerAction, &QAction::triggered, this, &QDesignerActions::aboutDesigner);
     helpActions->addAction(aboutDesignerAction);
 
     QAction *aboutQtAction = new QAction(tr("About Qt"), this);
     aboutQtAction->setMenuRole(QAction::AboutQtRole);
     aboutQtAction->setObjectName(QStringLiteral("__qt_about_qt_action"));
-    connect(aboutQtAction, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+    connect(aboutQtAction, &QAction::triggered, qApp, &QApplication::aboutQt);
     helpActions->addAction(aboutQtAction);
     return helpActions;
 }
@@ -497,7 +504,7 @@ QAction *QDesignerActions::createRecentFilesMenu()
     for (int i = 0; i < MaxRecentFiles; ++i) {
         act = new QAction(this);
         act->setVisible(false);
-        connect(act, SIGNAL(triggered()), this, SLOT(openRecentForm()));
+        connect(act, &QAction::triggered, this, &QDesignerActions::openRecentForm);
         m_recentFilesActions->addAction(act);
         menu->addAction(act);
     }
@@ -505,7 +512,7 @@ QAction *QDesignerActions::createRecentFilesMenu()
     menu->addSeparator();
     act = new QAction(QIcon::fromTheme("edit-clear"), tr("Clear &Menu"), this);
     act->setObjectName(QStringLiteral("__qt_action_clear_menu_"));
-    connect(act, SIGNAL(triggered()), this, SLOT(clearRecentFiles()));
+    connect(act, &QAction::triggered, this, &QDesignerActions::clearRecentFiles);
     m_recentFilesActions->addAction(act);
     menu->addAction(act);
 

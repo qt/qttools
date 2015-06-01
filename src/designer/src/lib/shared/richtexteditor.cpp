@@ -305,8 +305,7 @@ void HtmlTextEdit::contextMenuEvent(QContextMenuEvent *event)
     }
 
     menu->addMenu(htmlMenu);
-    connect(htmlMenu, SIGNAL(triggered(QAction*)),
-                      SLOT(actionTriggered(QAction*)));
+    connect(htmlMenu, &QMenu::triggered, this, &HtmlTextEdit::actionTriggered);
     menu->exec(event->globalPos());
     delete menu;
 }
@@ -434,14 +433,16 @@ RichTextEditorToolBar::RichTextEditorToolBar(QDesignerFormEditorInterface *core,
     m_core(core),
     m_editor(editor)
 {
+    typedef void (QComboBox::*QComboStringSignal)(const QString &);
+
     // Font size combo box
     m_font_size_input->setEditable(false);
     const QList<int> font_sizes = QFontDatabase::standardSizes();
     foreach (int font_size, font_sizes)
         m_font_size_input->addItem(QString::number(font_size));
 
-    connect(m_font_size_input, SIGNAL(activated(QString)),
-            this, SLOT(sizeInputActivated(QString)));
+    connect(m_font_size_input, static_cast<QComboStringSignal>(&QComboBox::activated),
+            this, &RichTextEditorToolBar::sizeInputActivated);
     addWidget(m_font_size_input);
 
     addSeparator();
@@ -471,8 +472,8 @@ RichTextEditorToolBar::RichTextEditorToolBar(QDesignerFormEditorInterface *core,
     // Left, center, right and justified alignment buttons
 
     QActionGroup *alignment_group = new QActionGroup(this);
-    connect(alignment_group, SIGNAL(triggered(QAction*)),
-                             SLOT(alignmentActionTriggered(QAction*)));
+    connect(alignment_group, &QActionGroup::triggered,
+            this, &RichTextEditorToolBar::alignmentActionTriggered);
 
     m_align_left_action = createCheckableAction(
             createIconSet(QStringLiteral("textleft.png")),
@@ -521,19 +522,19 @@ RichTextEditorToolBar::RichTextEditorToolBar(QDesignerFormEditorInterface *core,
 
     m_link_action->setIcon(createIconSet(QStringLiteral("textanchor.png")));
     m_link_action->setText(tr("Insert &Link"));
-    connect(m_link_action, SIGNAL(triggered()), SLOT(insertLink()));
+    connect(m_link_action, &QAction::triggered, this, &RichTextEditorToolBar::insertLink);
     addAction(m_link_action);
 
     m_image_action->setIcon(createIconSet(QStringLiteral("insertimage.png")));
     m_image_action->setText(tr("Insert &Image"));
-    connect(m_image_action, SIGNAL(triggered()), SLOT(insertImage()));
+    connect(m_image_action, &QAction::triggered, this, &RichTextEditorToolBar::insertImage);
     addAction(m_image_action);
 
     addSeparator();
 
     // Text color button
-    connect(m_color_action, SIGNAL(colorChanged(QColor)),
-            this, SLOT(colorChanged(QColor)));
+    connect(m_color_action, &ColorAction::colorChanged,
+            this, &RichTextEditorToolBar::colorChanged);
     addAction(m_color_action);
 
     addSeparator();
@@ -543,12 +544,12 @@ RichTextEditorToolBar::RichTextEditorToolBar(QDesignerFormEditorInterface *core,
         = createCheckableAction(createIconSet(QStringLiteral("simplifyrichtext.png")),
                                 tr("Simplify Rich Text"), m_editor, SLOT(setSimplifyRichText(bool)));
     m_simplify_richtext_action->setChecked(m_editor->simplifyRichText());
-    connect(m_editor, SIGNAL(simplifyRichTextChanged(bool)),
-            m_simplify_richtext_action, SLOT(setChecked(bool)));
+    connect(m_editor.data(), &RichTextEditor::simplifyRichTextChanged,
+            m_simplify_richtext_action, &QAction::setChecked);
     addAction(m_simplify_richtext_action);
 
-    connect(editor, SIGNAL(textChanged()), this, SLOT(updateActions()));
-    connect(editor, SIGNAL(stateChanged()), this, SLOT(updateActions()));
+    connect(editor, &QTextEdit::textChanged, this, &RichTextEditorToolBar::updateActions);
+    connect(editor, &RichTextEditor::stateChanged, this, &RichTextEditorToolBar::updateActions);
 
     updateActions();
 }
@@ -683,10 +684,10 @@ void RichTextEditorToolBar::updateActions()
 RichTextEditor::RichTextEditor(QWidget *parent)
     : QTextEdit(parent), m_simplifyRichText(simplifyRichTextDefault)
 {
-    connect(this, SIGNAL(currentCharFormatChanged(QTextCharFormat)),
-            this, SIGNAL(stateChanged()));
-    connect(this, SIGNAL(cursorPositionChanged()),
-            this, SIGNAL(stateChanged()));
+    connect(this, &RichTextEditor::currentCharFormatChanged,
+            this, &RichTextEditor::stateChanged);
+    connect(this, &RichTextEditor::cursorPositionChanged,
+            this, &RichTextEditor::stateChanged);
 }
 
 QToolBar *RichTextEditor::createToolBar(QDesignerFormEditorInterface *core, QWidget *parent)
@@ -783,9 +784,10 @@ RichTextEditorDialog::RichTextEditorDialog(QDesignerFormEditorInterface *core, Q
     m_text_edit->setAcceptRichText(false);
     new HtmlHighlighter(m_text_edit);
 
-    connect(m_editor, SIGNAL(textChanged()), this, SLOT(richTextChanged()));
-    connect(m_editor, SIGNAL(simplifyRichTextChanged(bool)), this, SLOT(richTextChanged()));
-    connect(m_text_edit, SIGNAL(textChanged()), this, SLOT(sourceChanged()));
+    connect(m_editor, &QTextEdit::textChanged, this, &RichTextEditorDialog::richTextChanged);
+    connect(m_editor, &RichTextEditor::simplifyRichTextChanged,
+            this, &RichTextEditorDialog::richTextChanged);
+    connect(m_text_edit, &QTextEdit::textChanged, this, &RichTextEditorDialog::sourceChanged);
 
     // The toolbar needs to be created after the RichTextEditor
     QToolBar *tool_bar = m_editor->createToolBar(core);
@@ -803,16 +805,16 @@ RichTextEditorDialog::RichTextEditorDialog(QDesignerFormEditorInterface *core, Q
     m_tab_widget->setTabPosition(QTabWidget::South);
     m_tab_widget->addTab(rich_edit, tr("Rich Text"));
     m_tab_widget->addTab(plain_edit, tr("Source"));
-    connect(m_tab_widget, SIGNAL(currentChanged(int)),
-                          SLOT(tabIndexChanged(int)));
+    connect(m_tab_widget, &QTabWidget::currentChanged,
+            this, &RichTextEditorDialog::tabIndexChanged);
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal);
     QPushButton *ok_button = buttonBox->button(QDialogButtonBox::Ok);
     ok_button->setText(tr("&OK"));
     ok_button->setDefault(true);
     buttonBox->button(QDialogButtonBox::Cancel)->setText(tr("&Cancel"));
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->addWidget(m_tab_widget);

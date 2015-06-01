@@ -91,11 +91,11 @@ signals:
 
 public slots:
     void filter(const QRegExp &re);
+    void removeCurrentItem();
+    void editCurrentItem();
 
 private slots:
     void slotPressed(const QModelIndex &index);
-    void removeCurrentItem();
-    void editCurrentItem();
 
 private:
     int mapRowToSource(int filterRow) const;
