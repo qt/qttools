@@ -196,8 +196,12 @@ static Platform platformFromMkSpec(const QString &xSpec)
         return WinPhoneIntel;
     if (xSpec.startsWith(QLatin1String("winphone-arm")))
         return WinPhoneArm;
-    if (xSpec.startsWith(QLatin1String("wince")))
-        return WinCE;
+    if (xSpec.startsWith(QLatin1String("wince"))) {
+        if (xSpec.contains(QLatin1String("-x86-")))
+            return WinCEIntel;
+        if (xSpec.contains(QLatin1String("-arm")))
+            return WinCEArm;
+    }
     return UnknownPlatform;
 }
 
@@ -789,7 +793,8 @@ QStringList findQtPlugins(quint64 *usedQtModules, quint64 disabledQtModules,
                 switch (platform) {
                 case Windows:
                 case WindowsMinGW:
-                case WinCE:
+                case WinCEIntel:
+                case WinCEArm:
                     filter = QStringLiteral("qwindows");
                     break;
                 case WinRtIntel:
@@ -1179,13 +1184,13 @@ static DeployResult deploy(const Options &options,
     }
 
     // Check for ANGLE on the Qt5Gui library.
-    if ((options.platform & WindowsBased) && !qtGuiLibrary.isEmpty())  {
+    if ((options.platform & WindowsBased) && !(options.platform & WinCEIntel) && !(options.platform & WinCEArm) && !qtGuiLibrary.isEmpty())  {
         QString libGlesName = QStringLiteral("libGLESV2");
         if (isDebug)
             libGlesName += QLatin1Char('d');
         libGlesName += QLatin1String(windowsSharedLibrarySuffix);
         const QStringList guiLibraries = findDependentLibraries(qtGuiLibrary, options.platform, errorMessage);
-        const bool dependsOnAngle = !guiLibraries.filter(libGlesName, Qt::CaseInsensitive).isEmpty() && !(options.platform & WinCE);
+        const bool dependsOnAngle = !guiLibraries.filter(libGlesName, Qt::CaseInsensitive).isEmpty();
         const bool dependsOnOpenGl = !guiLibraries.filter(QStringLiteral("opengl32"), Qt::CaseInsensitive).isEmpty();
         if (options.angleDetection != Options::AngleDetectionForceOff
             && (dependsOnAngle || !dependsOnOpenGl || options.angleDetection == Options::AngleDetectionForceOn)) {
