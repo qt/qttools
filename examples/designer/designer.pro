@@ -14,8 +14,5 @@ solaris-cc*:SUBDIRS -= calculatorbuilder \
 
 qtNomakeTools( \
     containerextension \
-    customwidgetplugin \
     taskmenuextension \
-    worldtimeclockbuilder \
-    worldtimeclockplugin \
 )

@@ -64,8 +64,8 @@ public:
         { setFocusPolicy(Qt::NoFocus); }
 
 protected:
-    virtual void mousePressEvent(QMouseEvent *event);
-    virtual void focusInEvent(QFocusEvent *e);
+    void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+    void focusInEvent(QFocusEvent *e) Q_DECL_OVERRIDE;
 
 private:
     const Qt::FocusPolicy m_defaultFocusPolicy;

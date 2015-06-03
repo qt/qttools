@@ -75,21 +75,21 @@ public:
     explicit WidgetFactory(QDesignerFormEditorInterface *core, QObject *parent = 0);
     ~WidgetFactory();
 
-    virtual QWidget* containerOfWidget(QWidget *widget) const;
-    virtual QWidget* widgetOfContainer(QWidget *widget) const;
+    QWidget* containerOfWidget(QWidget *widget) const Q_DECL_OVERRIDE;
+    QWidget* widgetOfContainer(QWidget *widget) const Q_DECL_OVERRIDE;
 
     QObject* createObject(const QString &className, QObject* parent) const;
 
-    virtual QWidget *createWidget(const QString &className, QWidget *parentWidget) const;
-    virtual QLayout *createLayout(QWidget *widget, QLayout *layout, int type) const;
+    QWidget *createWidget(const QString &className, QWidget *parentWidget) const Q_DECL_OVERRIDE;
+    QLayout *createLayout(QWidget *widget, QLayout *layout, int type) const Q_DECL_OVERRIDE;
 
-    virtual bool isPassiveInteractor(QWidget *widget);
-    virtual void initialize(QObject *object) const;
+    bool isPassiveInteractor(QWidget *widget) Q_DECL_OVERRIDE;
+    void initialize(QObject *object) const Q_DECL_OVERRIDE;
     void initializeCommon(QWidget *object) const;
     void initializePreview(QWidget *object) const;
 
 
-    virtual QDesignerFormEditorInterface *core() const;
+    QDesignerFormEditorInterface *core() const Q_DECL_OVERRIDE;
 
     static QString classNameOf(QDesignerFormEditorInterface *core, const QObject* o);
 

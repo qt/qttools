@@ -53,8 +53,8 @@ class GroupBoxTaskMenu: public QDesignerTaskMenu
 public:
     explicit GroupBoxTaskMenu(QGroupBox *groupbox, QObject *parent = 0);
 
-    virtual QAction *preferredEditAction() const;
-    virtual QList<QAction*> taskActions() const;
+    QAction *preferredEditAction() const Q_DECL_OVERRIDE;
+    QList<QAction*> taskActions() const Q_DECL_OVERRIDE;
 
 private:
     QAction *m_editTitleAction;

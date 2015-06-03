@@ -312,9 +312,6 @@
    <property name="shortcut">
     <string>Ctrl+X</string>
    </property>
-   <property name="menuRole">
-    <enum>QAction::NoRole</enum>
-   </property>
   </action>
   <action name="actionCopy">
    <property name="enabled">
@@ -328,9 +325,6 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+C</string>
-   </property>
-   <property name="menuRole">
-    <enum>QAction::NoRole</enum>
    </property>
   </action>
   <action name="actionPaste">
@@ -346,9 +340,6 @@
    <property name="shortcut">
     <string>Ctrl+V</string>
    </property>
-   <property name="menuRole">
-    <enum>QAction::NoRole</enum>
-   </property>
   </action>
   <action name="actionSelectAll">
    <property name="enabled">
@@ -362,9 +353,6 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+A</string>
-   </property>
-   <property name="menuRole">
-    <enum>QAction::NoRole</enum>
    </property>
   </action>
   <action name="actionFind">

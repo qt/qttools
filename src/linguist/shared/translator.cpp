@@ -151,7 +151,9 @@ void Translator::extend(const TranslatorMessage &msg, ConversionData &cd)
     } else {
         TranslatorMessage &emsg = m_messages[index];
         if (emsg.sourceText().isEmpty()) {
+            delIndex(index);
             emsg.setSourceText(msg.sourceText());
+            addIndex(index, msg);
         } else if (!msg.sourceText().isEmpty() && emsg.sourceText() != msg.sourceText()) {
             cd.appendError(QString::fromLatin1("Contradicting source strings for message with id '%1'.")
                            .arg(emsg.id()));
@@ -185,7 +187,12 @@ void Translator::extend(const TranslatorMessage &msg, ConversionData &cd)
 
 void Translator::insert(int idx, const TranslatorMessage &msg)
 {
-    addIndex(idx, msg);
+    if (m_indexOk) {
+        if (idx == m_messages.count())
+            addIndex(idx, msg);
+        else
+            m_indexOk = false;
+    }
     m_messages.insert(idx, msg);
 }
 

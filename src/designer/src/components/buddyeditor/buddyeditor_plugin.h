@@ -59,11 +59,11 @@ public:
     BuddyEditorPlugin();
     virtual ~BuddyEditorPlugin();
 
-    virtual bool isInitialized() const;
-    virtual void initialize(QDesignerFormEditorInterface *core);
+    bool isInitialized() const Q_DECL_OVERRIDE;
+    void initialize(QDesignerFormEditorInterface *core) Q_DECL_OVERRIDE;
     QAction *action() const;
 
-    virtual QDesignerFormEditorInterface *core() const;
+    QDesignerFormEditorInterface *core() const Q_DECL_OVERRIDE;
 
 public slots:
     void activeFormWindowChanged(QDesignerFormWindowInterface *formWindow);

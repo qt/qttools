@@ -74,7 +74,7 @@ public:
 
     QWidget *widget() const;
 
-    virtual QList<QAction*> taskActions() const;
+    QList<QAction*> taskActions() const Q_DECL_OVERRIDE;
 
     enum PropertyMode { CurrentWidgetMode, MultiSelectionMode };
 

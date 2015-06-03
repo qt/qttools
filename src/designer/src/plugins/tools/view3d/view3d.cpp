@@ -57,7 +57,7 @@ class QView3DWidget : public QGLWidget
 public:
     QView3DWidget(QWidget *parent);
     virtual void initializeGL();
-    virtual void resizeGL(int w, int h);
+    void resizeGL(int w, int h) Q_DECL_OVERRIDE;
     virtual void paintGL();
     void clear();
 

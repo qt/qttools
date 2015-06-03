@@ -187,13 +187,13 @@ public:
 
     virtual QPair<int, int> currentCell() const               { return m_currentCell; }
 
-    virtual int findItemAt(const QPoint &pos) const;
-    virtual int indexOf(QWidget *widget) const;
-    virtual int indexOf(QLayoutItem *item) const;
+    int findItemAt(const QPoint &pos) const Q_DECL_OVERRIDE;
+    int indexOf(QWidget *widget) const Q_DECL_OVERRIDE;
+    int indexOf(QLayoutItem *item) const Q_DECL_OVERRIDE;
 
-    virtual void adjustIndicator(const QPoint &pos, int index);
+    void adjustIndicator(const QPoint &pos, int index) Q_DECL_OVERRIDE;
 
-    virtual QList<QWidget*> widgets(QLayout *layout) const;
+    QList<QWidget*> widgets(QLayout *layout) const Q_DECL_OVERRIDE;
 
     // Pad empty cells with dummy spacers. Called by layouting commands.
     static void createEmptyCells(QGridLayout *gridLayout);
@@ -268,8 +268,8 @@ public:
     inline QDesignerFormWindowInterface *formWindow() const    { return m_formWindow; }
 
 protected:
-    virtual bool event(QEvent *e);
-    virtual void paintEvent(QPaintEvent *e);
+    bool event(QEvent *e) Q_DECL_OVERRIDE;
+    void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
 
 private:
     QDesignerFormWindowInterface *m_formWindow;

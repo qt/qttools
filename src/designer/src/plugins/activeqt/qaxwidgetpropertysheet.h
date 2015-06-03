@@ -57,10 +57,10 @@ class QAxWidgetPropertySheet: public QDesignerPropertySheet
 public:
     explicit QAxWidgetPropertySheet(QDesignerAxWidget *object, QObject *parent = 0);
 
-    virtual bool isEnabled(int index) const;
-    virtual QVariant property(int index) const;
-    virtual void setProperty(int index, const QVariant &value);
-    virtual bool reset(int index);
+    bool isEnabled(int index) const Q_DECL_OVERRIDE;
+    QVariant property(int index) const Q_DECL_OVERRIDE;
+    void setProperty(int index, const QVariant &value) Q_DECL_OVERRIDE;
+    bool reset(int index) Q_DECL_OVERRIDE;
     int indexOf(const QString &name) const;
     bool dynamicPropertiesAllowed() const;
 

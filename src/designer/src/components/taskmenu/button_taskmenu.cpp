@@ -384,7 +384,7 @@ public:
     ButtonTextTaskMenuInlineEditor(QAbstractButton *button, QObject *parent);
 
 protected:
-    virtual QRect editRectangle() const;
+    QRect editRectangle() const Q_DECL_OVERRIDE;
 };
 
 ButtonTextTaskMenuInlineEditor::ButtonTextTaskMenuInlineEditor(QAbstractButton *button, QObject *parent) :
@@ -407,7 +407,7 @@ public:
     LinkDescriptionTaskMenuInlineEditor(QAbstractButton *button, QObject *parent);
 
 protected:
-    virtual QRect editRectangle() const;
+    QRect editRectangle() const Q_DECL_OVERRIDE;
 };
 
 LinkDescriptionTaskMenuInlineEditor::LinkDescriptionTaskMenuInlineEditor(QAbstractButton *button, QObject *parent) :

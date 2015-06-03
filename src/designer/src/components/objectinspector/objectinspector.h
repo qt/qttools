@@ -53,10 +53,10 @@ public:
     explicit ObjectInspector(QDesignerFormEditorInterface *core, QWidget *parent = 0);
     virtual ~ObjectInspector();
 
-    virtual QDesignerFormEditorInterface *core() const;
+    QDesignerFormEditorInterface *core() const Q_DECL_OVERRIDE;
 
-    virtual void getSelection(Selection &s) const;
-    virtual bool selectObject(QObject *o);
+    void getSelection(Selection &s) const Q_DECL_OVERRIDE;
+    bool selectObject(QObject *o) Q_DECL_OVERRIDE;
     virtual void clearSelection();
 
     void setFormWindow(QDesignerFormWindowInterface *formWindow);
@@ -70,10 +70,10 @@ private slots:
     void slotHeaderDoubleClicked(int column);
 
 protected:
-    virtual void dragEnterEvent (QDragEnterEvent * event);
-    virtual void dragMoveEvent(QDragMoveEvent * event);
-    virtual void dragLeaveEvent(QDragLeaveEvent * event);
-    virtual void dropEvent (QDropEvent * event);
+    void dragEnterEvent (QDragEnterEvent * event) Q_DECL_OVERRIDE;
+    void dragMoveEvent(QDragMoveEvent * event) Q_DECL_OVERRIDE;
+    void dragLeaveEvent(QDragLeaveEvent * event) Q_DECL_OVERRIDE;
+    void dropEvent (QDropEvent * event) Q_DECL_OVERRIDE;
 
 private:
     class ObjectInspectorPrivate;

@@ -2534,14 +2534,16 @@ pixmap property in the property editor.
     with specific plugin support for \QD. This is done with the following
     declarations:
 
-    \snippet customwidgetplugin/customwidgetplugin.pro 3
+    \snippet customwidgetplugin/customwidgetplugin.pro 0
+    \snippet customwidgetplugin/customwidgetplugin.pro 2
 
-    If Qt is configured to build in both debug and release modes, \QD will be
-    built in release mode. When this occurs, it is necessary to ensure that
-    plugins are also built in release mode. To do this, include the following
-    declaration in the plugin's \c{.pro} file:
-
-    \snippet manual/doc_src_designer-manual.pro 3
+    The \c QT variable contains the keyword \c uiplugin. It indicates that
+    the plugin uses the abstract interfaces QDesignerCustomWidgetInterface
+    and QDesignerCustomWidgetCollectionInterface only and has no linkage
+    to the \QD libraries. When accessing other interfaces of \QD that have
+    linkage, \c designer should be used instead; this ensures that the plugin
+    dynamically links to the \QD libraries and has a run-time dependency on
+    them.
 
     If plugins are built in a mode that is incompatible with \QD, they will
     not be loaded and installed. For more information about plugins, see the
@@ -2568,36 +2570,45 @@ pixmap property in the property editor.
     application making use of the custom widgets to the \QD headers and
     libraries as introduced by the simple approach explained above.
 
-    There are two ways to resolve this:
+    The following sections describe how to resolve this.
 
-    \list
-        \li Create a \c{.pri} file that contains the headers sources and sources
-           of the custom widget:
+    \section3 Linking the Widget into the Application
 
-           \code
-           INCLUDEPATH += $$PWD
-           HEADERS += $$PWD/analogclock.h
-           SOURCES += $$PWD/analogclock.cpp
-           \endcode
+     The source and header file of the custom widget can be shared
+     between the application and \QD by creating a \c{.pri} file for
+     inclusion:
 
-           This file would then be included by the \c{.pro} file of the plugin and
-           the application:
+     \code
+     INCLUDEPATH += $$PWD
+     HEADERS += $$PWD/analogclock.h
+     SOURCES += $$PWD/analogclock.cpp
+     \endcode
 
-           \code
-           include(customwidget.pri)
-           \endcode
+     This file would then be included by the \c{.pro} file of the plugin and
+     the application:
 
-           Running \c{qmake -Wall} on the \c{.pro} files causes a warning to be
-           printed if an included \c{.pri} file cannot be found.
+     \code
+     include(customwidget.pri)
+     \endcode
 
-        \li Create a standalone shared library containing the custom widgets only
-           as described in
-           \l{sharedlibrary.html}{Creating Shared Libraries}.
+    \section3 Sharing the Widget Using a Library
 
-           This library would then be used by the application as well as by the
-           \QD plugin. Care must be taken to ensure that the plugin can locate
-          the library at run-time.
-    \endlist
+    Another approach is to put the widget into a library that is linked to
+    the \QD plugin as well as to the application. It is recommended to
+    use static libraries to avoid problems locating the library at run-time.
+
+    For shared libraries, see \l{sharedlibrary.html}{Creating Shared Libraries}.
+
+    \section3 Using the Plugin with QUiLoader
+
+    The preferred way of adding custom widgets to QUiLoader is to subclass it
+    reimplementing QUiLoader::createWidget().
+
+    However, it is also possible to use \QD custom widget plugins
+    (see QUiLoader::pluginPaths() and related functions). To avoid having
+    to deploy the \QD libraries onto the target device, those plugins should
+    have no linkage to the \QD libraries (\c {QT = uiplugin}, see
+    \l{Creating Custom Widgets for Qt Designer#BuildingandInstallingthePlugin}).
 
     \section1 Related Examples
 

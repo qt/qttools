@@ -44,8 +44,9 @@
 // sdk
 #include <QtDesigner/QDesignerFormEditorInterface>
 #include <QtDesigner/QDesignerDnDItemInterface>
-#include <QtDesigner/QDesignerCustomWidgetInterface>
 #include <QtDesigner/QDesignerSettingsInterface>
+
+#include <QtUiPlugin/QDesignerCustomWidgetInterface>
 
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QApplication>
@@ -134,6 +135,10 @@ WidgetBoxCategoryListView *WidgetBoxTreeWidget::categoryViewAt(int idx) const
     return rc;
 }
 
+static const char widgetBoxSettingsGroupC[] = "WidgetBox";
+static const char widgetBoxExpandedKeyC[] = "Closed categories";
+static const char widgetBoxViewModeKeyC[] = "View mode";
+
 void WidgetBoxTreeWidget::saveExpandedState() const
 {
     QStringList closedCategories;
@@ -145,9 +150,9 @@ void WidgetBoxTreeWidget::saveExpandedState() const
         }
     }
     QDesignerSettingsInterface *settings = m_core->settingsManager();
-    settings->beginGroup(QLatin1String(widgetBoxRootElementC));
-    settings->setValue(QStringLiteral("Closed categories"), closedCategories);
-    settings->setValue(QStringLiteral("View mode"), m_iconMode);
+    settings->beginGroup(QLatin1String(widgetBoxSettingsGroupC));
+    settings->setValue(QLatin1String(widgetBoxExpandedKeyC), closedCategories);
+    settings->setValue(QLatin1String(widgetBoxViewModeKeyC), m_iconMode);
     settings->endGroup();
 }
 
@@ -155,9 +160,10 @@ void  WidgetBoxTreeWidget::restoreExpandedState()
 {
     typedef QSet<QString> StringSet;
     QDesignerSettingsInterface *settings = m_core->settingsManager();
-    m_iconMode = settings->value(QStringLiteral("WidgetBox/View mode")).toBool();
+    const QString groupKey = QLatin1String(widgetBoxSettingsGroupC) + QLatin1Char('/');
+    m_iconMode = settings->value(groupKey + QLatin1String(widgetBoxViewModeKeyC)).toBool();
     updateViewMode();
-    const StringSet closedCategories = settings->value(QStringLiteral("WidgetBox/Closed categories"), QStringList()).toStringList().toSet();
+    const StringSet closedCategories = settings->value(groupKey + QLatin1String(widgetBoxExpandedKeyC), QStringList()).toStringList().toSet();
     expandAll();
     if (closedCategories.empty())
         return;

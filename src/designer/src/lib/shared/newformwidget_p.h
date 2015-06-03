@@ -81,8 +81,8 @@ public:
     explicit NewFormWidget(QDesignerFormEditorInterface *core, QWidget *parentWidget);
     virtual ~NewFormWidget();
 
-    virtual bool hasCurrentTemplate() const;
-    virtual QString currentTemplate(QString *errorMessage = 0);
+    bool hasCurrentTemplate() const Q_DECL_OVERRIDE;
+    QString currentTemplate(QString *errorMessage = 0) Q_DECL_OVERRIDE;
 
     // Convenience for implementing file dialogs with preview
     static QImage grabForm(QDesignerFormEditorInterface *core,

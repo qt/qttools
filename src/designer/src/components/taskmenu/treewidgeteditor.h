@@ -83,8 +83,8 @@ private slots:
     void cacheReloaded();
 
 protected:
-    virtual void setItemData(int role, const QVariant &v);
-    virtual QVariant getItemData(int role) const;
+    void setItemData(int role, const QVariant &v) Q_DECL_OVERRIDE;
+    QVariant getItemData(int role) const Q_DECL_OVERRIDE;
 
 private:
     void setPropertyBrowserVisible(bool v);

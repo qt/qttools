@@ -83,7 +83,7 @@ public:
     void setOrientation(Qt::Orientation o);
     void setInteractiveMode(bool b) { m_interactive = b; };
 
-    virtual bool event(QEvent *e);
+    bool event(QEvent *e) Q_DECL_OVERRIDE;
 
 protected:
     void paintEvent(QPaintEvent *e);

@@ -149,7 +149,7 @@ public:
     explicit ZoomProxyWidget(QGraphicsItem *parent = 0, Qt::WindowFlags wFlags = 0);
 
 protected:
-    virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value) Q_DECL_OVERRIDE;
 };
 
 /* Zoom widget: A QGraphicsView-based container for a widget that allows for
@@ -183,8 +183,8 @@ public:
     void setItemAcceptDrops(bool);
     bool itemAcceptDrops() const;
 
-    virtual QSize minimumSizeHint() const;
-    virtual QSize sizeHint() const;
+    QSize minimumSizeHint() const Q_DECL_OVERRIDE;
+    QSize sizeHint() const Q_DECL_OVERRIDE;
 
     bool zoomedEventFilter(QObject *watched, QEvent *event);
 

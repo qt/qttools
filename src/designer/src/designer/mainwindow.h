@@ -85,7 +85,7 @@ signals:
     void closeEventReceived(QCloseEvent *e);
 
 protected:
-    virtual void closeEvent(QCloseEvent *e);
+    void closeEvent(QCloseEvent *e) Q_DECL_OVERRIDE;
 private:
     CloseEventPolicy m_policy;
 };

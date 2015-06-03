@@ -41,8 +41,9 @@
 #include <QtDesigner/QDesignerFormEditorInterface>
 #include <QtDesigner/QDesignerLanguageExtension>
 #include <QtDesigner/QExtensionManager>
-#include <QtDesigner/QDesignerCustomWidgetInterface>
 #include <QtDesigner/extrainfo.h>
+
+#include <QtUiPlugin/QDesignerCustomWidgetInterface>
 
 #include <QtGui/QIcon>
 #include <QtWidgets/QWidget>

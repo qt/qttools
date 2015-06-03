@@ -98,9 +98,9 @@ private slots:
     void showMe(bool);
 
 protected:
-    virtual void showEvent(QShowEvent *e);
-    virtual void hideEvent(QHideEvent *e);
-    virtual void changeEvent(QEvent *e);
+    void showEvent(QShowEvent *e) Q_DECL_OVERRIDE;
+    void hideEvent(QHideEvent *e) Q_DECL_OVERRIDE;
+    void changeEvent(QEvent *e) Q_DECL_OVERRIDE;
 
     QRect availableToolWindowGeometry() const;
 

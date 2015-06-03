@@ -84,7 +84,7 @@ public:
     QDesignerMenu *parentMenu() const;
     QDesignerMenuBar *parentMenuBar() const;
 
-    virtual void setVisible(bool visible);
+    void setVisible(bool visible) Q_DECL_OVERRIDE;
 
     void adjustSpecialActions();
 
@@ -114,15 +114,15 @@ private slots:
     void slotAdjustSizeNow();
 
 protected:
-    virtual void actionEvent(QActionEvent *event);
-    virtual void dragEnterEvent(QDragEnterEvent *event);
-    virtual void dragMoveEvent(QDragMoveEvent *event);
-    virtual void dragLeaveEvent(QDragLeaveEvent *event);
-    virtual void dropEvent(QDropEvent *event);
-    virtual void paintEvent(QPaintEvent *event);
-    virtual void keyPressEvent(QKeyEvent *event);
-    virtual void keyReleaseEvent(QKeyEvent *event);
-    virtual void showEvent(QShowEvent *event);
+    void actionEvent(QActionEvent *event) Q_DECL_OVERRIDE;
+    void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
+    void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;
+    void dragLeaveEvent(QDragLeaveEvent *event) Q_DECL_OVERRIDE;
+    void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
+    void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
+    void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
+    void keyReleaseEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
+    void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
 
     bool handleEvent(QWidget *widget, QEvent *event);
     bool handleMouseDoubleClickEvent(QWidget *widget, QMouseEvent *event);

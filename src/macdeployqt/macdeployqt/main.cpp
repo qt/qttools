@@ -67,8 +67,7 @@ int main(int argc, char **argv)
         return 0;
     }
 
-    if (appBundlePath.endsWith("/"))
-        appBundlePath.chop(1);
+    appBundlePath = QDir::cleanPath(appBundlePath);
 
     if (QDir().exists(appBundlePath) == false) {
         qDebug() << "Error: Could not find app bundle" << appBundlePath;

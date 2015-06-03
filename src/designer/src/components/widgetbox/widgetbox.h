@@ -55,30 +55,30 @@ public:
 
     QDesignerFormEditorInterface *core() const;
 
-    virtual int categoryCount() const;
-    virtual Category category(int cat_idx) const;
-    virtual void addCategory(const Category &cat);
-    virtual void removeCategory(int cat_idx);
+    int categoryCount() const Q_DECL_OVERRIDE;
+    Category category(int cat_idx) const Q_DECL_OVERRIDE;
+    void addCategory(const Category &cat) Q_DECL_OVERRIDE;
+    void removeCategory(int cat_idx) Q_DECL_OVERRIDE;
 
-    virtual int widgetCount(int cat_idx) const;
-    virtual Widget widget(int cat_idx, int wgt_idx) const;
-    virtual void addWidget(int cat_idx, const Widget &wgt);
-    virtual void removeWidget(int cat_idx, int wgt_idx);
+    int widgetCount(int cat_idx) const Q_DECL_OVERRIDE;
+    Widget widget(int cat_idx, int wgt_idx) const Q_DECL_OVERRIDE;
+    void addWidget(int cat_idx, const Widget &wgt) Q_DECL_OVERRIDE;
+    void removeWidget(int cat_idx, int wgt_idx) Q_DECL_OVERRIDE;
 
     void dropWidgets(const QList<QDesignerDnDItemInterface*> &item_list, const QPoint &global_mouse_pos);
 
-    virtual void setFileName(const QString &file_name);
-    virtual QString fileName() const;
+    void setFileName(const QString &file_name) Q_DECL_OVERRIDE;
+    QString fileName() const Q_DECL_OVERRIDE;
     virtual bool load();
     virtual bool save();
 
-    virtual bool loadContents(const QString &contents);
-    virtual QIcon iconForWidget(const QString &className, const QString &category = QString()) const;
+    bool loadContents(const QString &contents) Q_DECL_OVERRIDE;
+    QIcon iconForWidget(const QString &className, const QString &category = QString()) const Q_DECL_OVERRIDE;
 
 protected:
-    virtual void dragEnterEvent (QDragEnterEvent * event);
-    virtual void dragMoveEvent(QDragMoveEvent * event);
-    virtual void dropEvent (QDropEvent * event);
+    void dragEnterEvent (QDragEnterEvent * event) Q_DECL_OVERRIDE;
+    void dragMoveEvent(QDragMoveEvent * event) Q_DECL_OVERRIDE;
+    void dropEvent (QDropEvent * event) Q_DECL_OVERRIDE;
 
 private slots:
     void handleMousePress(const QString &name, const QString &xml, const QPoint &global_mouse_pos);

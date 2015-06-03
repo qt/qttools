@@ -51,7 +51,7 @@ public:
     LineEditTaskMenuInlineEditor(QLineEdit *button, QObject *parent);
 
 protected:
-    virtual QRect editRectangle() const;
+    QRect editRectangle() const Q_DECL_OVERRIDE;
 };
 
 LineEditTaskMenuInlineEditor::LineEditTaskMenuInlineEditor(QLineEdit *w, QObject *parent) :

@@ -51,7 +51,7 @@ public:
     GroupBoxTaskMenuInlineEditor(QGroupBox *button, QObject *parent);
 
 protected:
-    virtual QRect editRectangle() const;
+    QRect editRectangle() const Q_DECL_OVERRIDE;
 };
 
 GroupBoxTaskMenuInlineEditor::GroupBoxTaskMenuInlineEditor(QGroupBox *w, QObject *parent) :

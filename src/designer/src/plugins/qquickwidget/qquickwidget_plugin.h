@@ -35,7 +35,7 @@
 #define QQUICKWIDGET_PLUGIN_H
 
 #include <QtQuick/QQuickWindow>
-#include <QtDesigner/QDesignerCustomWidgetInterface>
+#include <QtUiPlugin/QDesignerCustomWidgetInterface>
 
 QT_BEGIN_NAMESPACE
 

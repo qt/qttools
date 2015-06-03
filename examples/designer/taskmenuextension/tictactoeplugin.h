@@ -42,7 +42,7 @@
 #ifndef TICTACTOEPLUGIN_H
 #define TICTACTOEPLUGIN_H
 
-#include <QDesignerCustomWidgetInterface>
+#include <QtUiPlugin/QDesignerCustomWidgetInterface>
 
 QT_BEGIN_NAMESPACE
 class QIcon;

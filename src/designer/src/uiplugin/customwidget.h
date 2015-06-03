@@ -34,7 +34,6 @@
 #ifndef CUSTOMWIDGET_H
 #define CUSTOMWIDGET_H
 
-#include "extension.h"
 #include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtGui/QIcon>

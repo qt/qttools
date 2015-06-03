@@ -1475,7 +1475,7 @@ public:
                        QDesignerPropertySheetExtension *s, int i) :
                        PropertyHelper(o, sp, s, i) {}
 
-    virtual Value setValue(QDesignerFormWindowInterface *fw, const QVariant &value, bool changed, unsigned subPropertyMask);
+    Value setValue(QDesignerFormWindowInterface *fw, const QVariant &value, bool changed, unsigned subPropertyMask) Q_DECL_OVERRIDE;
 };
 
 PropertyHelper::Value ArrowKeyPropertyHelper::setValue(QDesignerFormWindowInterface *fw, const QVariant &value, bool changed, unsigned subPropertyMask)
@@ -1501,7 +1501,7 @@ protected:
     virtual PropertyHelper *createPropertyHelper(QObject *o, SpecialProperty sp,
                                                  QDesignerPropertySheetExtension *s, int i) const
         { return new ArrowKeyPropertyHelper(o, sp, s, i); }
-    virtual QVariant mergeValue(const QVariant &newValue);
+    QVariant mergeValue(const QVariant &newValue) Q_DECL_OVERRIDE;
 };
 
 ArrowKeyPropertyCommand::ArrowKeyPropertyCommand(QDesignerFormWindowInterface *fw,

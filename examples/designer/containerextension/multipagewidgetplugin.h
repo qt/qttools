@@ -42,7 +42,7 @@
 #ifndef MULTIPAGEWIDGETPLUGIN_H
 #define MULTIPAGEWIDGETPLUGIN_H
 
-#include <QtDesigner/QDesignerCustomWidgetInterface>
+#include <QtUiPlugin/QDesignerCustomWidgetInterface>
 
 QT_BEGIN_NAMESPACE
 class QIcon;

@@ -63,15 +63,15 @@ public:
     explicit MetaDataBaseItem(QObject *object);
     virtual ~MetaDataBaseItem();
 
-    virtual QString name() const;
-    virtual void setName(const QString &name);
+    QString name() const Q_DECL_OVERRIDE;
+    void setName(const QString &name) Q_DECL_OVERRIDE;
 
     typedef QList<QWidget*> TabOrder;
-    virtual TabOrder tabOrder() const;
-    virtual void setTabOrder(const TabOrder &tabOrder);
+    TabOrder tabOrder() const Q_DECL_OVERRIDE;
+    void setTabOrder(const TabOrder &tabOrder) Q_DECL_OVERRIDE;
 
-    virtual bool enabled() const;
-    virtual void setEnabled(bool b);
+    bool enabled() const Q_DECL_OVERRIDE;
+    void setEnabled(bool b) Q_DECL_OVERRIDE;
 
     QString customClassName() const;
     void setCustomClassName(const QString &customClassName);
@@ -98,14 +98,14 @@ public:
     explicit MetaDataBase(QDesignerFormEditorInterface *core, QObject *parent = 0);
     virtual ~MetaDataBase();
 
-    virtual QDesignerFormEditorInterface *core() const;
+    QDesignerFormEditorInterface *core() const Q_DECL_OVERRIDE;
 
     virtual QDesignerMetaDataBaseItemInterface *item(QObject *object) const { return metaDataBaseItem(object); }
     virtual MetaDataBaseItem *metaDataBaseItem(QObject *object) const;
-    virtual void add(QObject *object);
-    virtual void remove(QObject *object);
+    void add(QObject *object) Q_DECL_OVERRIDE;
+    void remove(QObject *object) Q_DECL_OVERRIDE;
 
-    virtual QList<QObject*> objects() const;
+    QList<QObject*> objects() const Q_DECL_OVERRIDE;
 
 private slots:
     void slotDestroyed(QObject *object);

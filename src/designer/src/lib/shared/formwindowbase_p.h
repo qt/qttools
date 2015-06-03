@@ -81,17 +81,17 @@ public:
     QVariantMap formData();
     void setFormData(const QVariantMap &vm);
 
-    virtual QStringList checkContents() const;
+    QStringList checkContents() const Q_DECL_OVERRIDE;
 
     // Deprecated
-    virtual QPoint grid() const;
+    QPoint grid() const Q_DECL_OVERRIDE;
 
     // Deprecated
-    virtual void setGrid(const QPoint &grid);
+    void setGrid(const QPoint &grid) Q_DECL_OVERRIDE;
 
-    virtual bool hasFeature(Feature f) const;
-    virtual Feature features() const;
-    virtual void setFeatures(Feature f);
+    bool hasFeature(Feature f) const Q_DECL_OVERRIDE;
+    Feature features() const Q_DECL_OVERRIDE;
+    void setFeatures(Feature f) Q_DECL_OVERRIDE;
 
     const Grid &designerGrid() const;
     void setDesignerGrid(const  Grid& grid);
@@ -101,8 +101,8 @@ public:
 
     bool gridVisible() const;
 
-    virtual ResourceFileSaveMode resourceFileSaveMode() const;
-    virtual void setResourceFileSaveMode(ResourceFileSaveMode behaviour);
+    ResourceFileSaveMode resourceFileSaveMode() const Q_DECL_OVERRIDE;
+    void setResourceFileSaveMode(ResourceFileSaveMode behavior) Q_DECL_OVERRIDE;
 
     static const Grid &defaultDesignerGrid();
     static void setDefaultDesignerGrid(const Grid& grid);
@@ -139,8 +139,8 @@ public:
 
     DesignerPixmapCache *pixmapCache() const;
     DesignerIconCache *iconCache() const;
-    virtual QtResourceSet *resourceSet() const;
-    virtual void setResourceSet(QtResourceSet *resourceSet);
+    QtResourceSet *resourceSet() const Q_DECL_OVERRIDE;
+    void setResourceSet(QtResourceSet *resourceSet) Q_DECL_OVERRIDE;
     void addReloadableProperty(QDesignerPropertySheet *sheet, int index);
     void removeReloadableProperty(QDesignerPropertySheet *sheet, int index);
     void addReloadablePropertySheet(QDesignerPropertySheet *sheet, QObject *object);

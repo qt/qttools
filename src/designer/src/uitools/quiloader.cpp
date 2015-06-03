@@ -34,7 +34,8 @@
 
 #include "quiloader.h"
 #include "quiloader_p.h"
-#include "customwidget.h"
+
+#include <QtUiPlugin/customwidget.h>
 
 #include <formbuilder.h>
 #include <formbuilderextra_p.h>
@@ -94,9 +95,9 @@ public:
     TranslatingTextBuilder(bool trEnabled, const QByteArray &className) :
         m_trEnabled(trEnabled), m_className(className) {}
 
-    virtual QVariant loadText(const DomProperty *icon) const;
+    QVariant loadText(const DomProperty *icon) const Q_DECL_OVERRIDE;
 
-    virtual QVariant toNativeValue(const QVariant &value) const;
+    QVariant toNativeValue(const QVariant &value) const Q_DECL_OVERRIDE;
 
 private:
     bool m_trEnabled;
@@ -378,10 +379,10 @@ public:
         return 0;
     }
 
-    virtual void applyProperties(QObject *o, const QList<DomProperty*> &properties);
-    virtual QWidget *create(DomUI *ui, QWidget *parentWidget);
-    virtual QWidget *create(DomWidget *ui_widget, QWidget *parentWidget);
-    virtual bool addItem(DomWidget *ui_widget, QWidget *widget, QWidget *parentWidget);
+    void applyProperties(QObject *o, const QList<DomProperty*> &properties) Q_DECL_OVERRIDE;
+    QWidget *create(DomUI *ui, QWidget *parentWidget) Q_DECL_OVERRIDE;
+    QWidget *create(DomWidget *ui_widget, QWidget *parentWidget) Q_DECL_OVERRIDE;
+    bool addItem(DomWidget *ui_widget, QWidget *widget, QWidget *parentWidget) Q_DECL_OVERRIDE;
 
 private:
     QByteArray m_class;

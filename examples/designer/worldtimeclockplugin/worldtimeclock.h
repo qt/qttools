@@ -43,7 +43,7 @@
 
 #include <QTime>
 #include <QWidget>
-#include <QtDesigner/QDesignerExportWidget>
+#include <QtUiPlugin/QDesignerExportWidget>
 
 //! [0] //! [1]
 class QDESIGNER_WIDGET_EXPORT WorldTimeClock : public QWidget

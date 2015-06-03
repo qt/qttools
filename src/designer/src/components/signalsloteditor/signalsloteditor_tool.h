@@ -57,20 +57,20 @@ public:
     explicit SignalSlotEditorTool(QDesignerFormWindowInterface *formWindow, QObject *parent = 0);
     virtual ~SignalSlotEditorTool();
 
-    virtual QDesignerFormEditorInterface *core() const;
-    virtual QDesignerFormWindowInterface *formWindow() const;
+    QDesignerFormEditorInterface *core() const Q_DECL_OVERRIDE;
+    QDesignerFormWindowInterface *formWindow() const Q_DECL_OVERRIDE;
 
-    virtual QWidget *editor() const;
+    QWidget *editor() const Q_DECL_OVERRIDE;
 
     QAction *action() const;
 
     virtual void activated();
     virtual void deactivated();
 
-    virtual bool handleEvent(QWidget *widget, QWidget *managedWidget, QEvent *event);
+    bool handleEvent(QWidget *widget, QWidget *managedWidget, QEvent *event) Q_DECL_OVERRIDE;
 
-    virtual void saveToDom(DomUI *ui, QWidget *mainContainer);
-    virtual void loadFromDom(DomUI *ui, QWidget *mainContainer);
+    void saveToDom(DomUI *ui, QWidget *mainContainer) Q_DECL_OVERRIDE;
+    void loadFromDom(DomUI *ui, QWidget *mainContainer) Q_DECL_OVERRIDE;
 
 private:
     QDesignerFormWindowInterface *m_formWindow;

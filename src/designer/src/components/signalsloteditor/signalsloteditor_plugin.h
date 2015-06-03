@@ -58,11 +58,11 @@ public:
     SignalSlotEditorPlugin();
     virtual ~SignalSlotEditorPlugin();
 
-    virtual bool isInitialized() const;
-    virtual void initialize(QDesignerFormEditorInterface *core);
-    virtual QAction *action() const;
+    bool isInitialized() const Q_DECL_OVERRIDE;
+    void initialize(QDesignerFormEditorInterface *core) Q_DECL_OVERRIDE;
+    QAction *action() const Q_DECL_OVERRIDE;
 
-    virtual QDesignerFormEditorInterface *core() const;
+    QDesignerFormEditorInterface *core() const Q_DECL_OVERRIDE;
 
 public slots:
     void activeFormWindowChanged(QDesignerFormWindowInterface *formWindow);

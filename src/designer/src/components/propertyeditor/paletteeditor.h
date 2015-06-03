@@ -184,7 +184,7 @@ public:
 
     virtual void paint(QPainter *painter, const QStyleOptionViewItem &opt,
                        const QModelIndex &index) const;
-    virtual QSize sizeHint(const QStyleOptionViewItem &opt, const QModelIndex &index) const;
+    QSize sizeHint(const QStyleOptionViewItem &opt, const QModelIndex &index) const Q_DECL_OVERRIDE;
 private:
     QDesignerFormEditorInterface *m_core;
 };

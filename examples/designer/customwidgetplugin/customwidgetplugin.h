@@ -41,7 +41,7 @@
 #ifndef CUSTOMWIDGETPLUGIN_H
 #define CUSTOMWIDGETPLUGIN_H
 
-#include <QDesignerCustomWidgetInterface>
+#include <QtUiPlugin/QDesignerCustomWidgetInterface>
 
 //! [0]
 class AnalogClockPlugin : public QObject, public QDesignerCustomWidgetInterface

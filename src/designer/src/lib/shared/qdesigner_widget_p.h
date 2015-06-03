@@ -72,7 +72,7 @@ public:
     { return QWidget::minimumSizeHint().expandedTo(QSize(16, 16)); }
 
 protected:
-    virtual void paintEvent(QPaintEvent *e);
+    void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
 
 private:
     qdesigner_internal::FormWindowBase* m_formWindow;

@@ -48,16 +48,16 @@ class VIEW3D_EXPORT QView3DTool : public QDesignerFormWindowToolInterface
 
 public:
     explicit QView3DTool(QDesignerFormWindowInterface *formWindow, QObject *parent = 0);
-    virtual QDesignerFormEditorInterface *core() const;
-    virtual QDesignerFormWindowInterface *formWindow() const;
-    virtual QWidget *editor() const;
+    QDesignerFormEditorInterface *core() const Q_DECL_OVERRIDE;
+    QDesignerFormWindowInterface *formWindow() const Q_DECL_OVERRIDE;
+    QWidget *editor() const Q_DECL_OVERRIDE;
 
-    virtual QAction *action() const;
+    QAction *action() const Q_DECL_OVERRIDE;
 
     virtual void activated();
     virtual void deactivated();
 
-    virtual bool handleEvent(QWidget *widget, QWidget *managedWidget, QEvent *event);
+    bool handleEvent(QWidget *widget, QWidget *managedWidget, QEvent *event) Q_DECL_OVERRIDE;
 
 private:
     QDesignerFormWindowInterface *m_formWindow;

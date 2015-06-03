@@ -40,10 +40,11 @@
 #include "qdesigner_utils_p.h"
 #include <QtDesigner/private/ui4_p.h>
 
-#include <QtDesigner/customwidget.h>
 #include <QtDesigner/propertysheet.h>
 #include <QtDesigner/QExtensionManager>
 #include <QtDesigner/QDesignerFormEditorInterface>
+
+#include <QtUiPlugin/customwidget.h>
 
 #include <QtCore/QXmlStreamWriter>
 

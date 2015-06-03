@@ -61,11 +61,11 @@ public:
     QVariant property(int index) const;
     void setProperty(int index, const QVariant &value);
 
-    virtual void setChanged(int index, bool changed);
-    virtual bool isChanged(int index) const;
+    void setChanged(int index, bool changed) Q_DECL_OVERRIDE;
+    bool isChanged(int index) const Q_DECL_OVERRIDE;
 
-    virtual bool hasReset(int index) const;
-    virtual bool reset(int index);
+    bool hasReset(int index) const Q_DECL_OVERRIDE;
+    bool reset(int index) Q_DECL_OVERRIDE;
 
 private:
     void initHeaderProperties(QHeaderView *hv, const QString &prefix);

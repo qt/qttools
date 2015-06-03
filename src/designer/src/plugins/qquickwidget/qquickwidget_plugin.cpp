@@ -60,7 +60,7 @@ QString QQuickWidgetPlugin::group() const
 
 QString QQuickWidgetPlugin::toolTip() const
 {
-    return QStringLiteral("A widget for displaying a Qt Quick user interface.");
+    return QStringLiteral("A widget for displaying a Qt Quick 2 user interface.");
 }
 
 QString QQuickWidgetPlugin::whatsThis() const
@@ -70,7 +70,7 @@ QString QQuickWidgetPlugin::whatsThis() const
 
 QString QQuickWidgetPlugin::includeFile() const
 {
-    return QStringLiteral("QQuickWidget");
+    return QStringLiteral("QtQuickWidgets/QQuickWidget");
 }
 
 QIcon QQuickWidgetPlugin::icon() const

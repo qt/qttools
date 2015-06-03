@@ -50,10 +50,10 @@ public:
     explicit SpacerPropertySheet(Spacer *object, QObject *parent = 0);
     virtual ~SpacerPropertySheet();
 
-    virtual void setProperty(int index, const QVariant &value);
-    virtual bool isVisible(int index) const;
+    void setProperty(int index, const QVariant &value) Q_DECL_OVERRIDE;
+    bool isVisible(int index) const Q_DECL_OVERRIDE;
 
-    virtual bool dynamicPropertiesAllowed() const;
+    bool dynamicPropertiesAllowed() const Q_DECL_OVERRIDE;
 };
 
 typedef QDesignerPropertySheetFactory<Spacer, SpacerPropertySheet> SpacerPropertySheetFactory;

@@ -71,7 +71,7 @@ namespace  {
         virtual int keysToValue(const QString &keys) const { return m_enum.keysToValue(keys.toUtf8()); }
         virtual QString name() const                       { return m_name; }
         virtual QString scope() const                      { return m_scope; }
-        virtual QString separator() const;
+        QString separator() const Q_DECL_OVERRIDE;
         virtual int value(int index) const                 { return m_enum.value(index); }
         virtual QString valueToKey(int value) const        { return charToQString(m_enum.valueToKey(value)); }
         virtual QString valueToKeys(int value) const       { return charToQString(m_enum.valueToKeys(value)); }
@@ -106,7 +106,7 @@ namespace  {
         virtual Kind kind() const { return m_kind; }
 
         virtual AccessFlags accessFlags() const { return m_access; }
-        virtual Attributes attributes(const QObject *object = 0) const;
+        Attributes attributes(const QObject *object = 0) const Q_DECL_OVERRIDE;
 
         virtual QVariant::Type type() const { return m_property.type(); }
         virtual QString name() const        { return m_name; }

@@ -123,7 +123,7 @@ class ObjectInspectorDelegate : public QItemDelegate {
 public:
     explicit ObjectInspectorDelegate(QObject *parent = 0);
 
-    virtual QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
 };
 
 ObjectInspectorDelegate::ObjectInspectorDelegate(QObject *parent) :
@@ -151,8 +151,8 @@ public:
     ObjectInspectorTreeView(QWidget *parent = 0) :  QTreeView(parent) {}
 
 protected:
-    virtual void mouseMoveEvent (QMouseEvent * event);
-    virtual void keyPressEvent(QKeyEvent *event);
+    void mouseMoveEvent (QMouseEvent * event) Q_DECL_OVERRIDE;
+    void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
 
 };
 

@@ -31,11 +31,11 @@
 **
 ****************************************************************************/
 
-#include "customwidget.h"
 #include "formbuilder.h"
 #include "formbuilderextra_p.h"
 #include "ui4_p.h"
 
+#include <QtUiPlugin/customwidget.h>
 #include <QtWidgets/QtWidgets>
 
 QT_BEGIN_NAMESPACE

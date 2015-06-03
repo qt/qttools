@@ -55,12 +55,13 @@
 // sdk
 #include <QtDesigner/QDesignerFormEditorInterface>
 #include <QtDesigner/QDesignerContainerExtension>
-#include <QtDesigner/QDesignerCustomWidgetInterface>
 #include <QtDesigner/QExtensionManager>
 #include <QtDesigner/QDesignerPropertySheetExtension>
 #include <QtDesigner/QDesignerLanguageExtension>
 #include <QtDesigner/QDesignerFormWindowManagerInterface>
 #include <QtDesigner/QDesignerFormWindowCursorInterface>
+
+#include <QtUiPlugin/QDesignerCustomWidgetInterface>
 
 #include <QtWidgets/QtWidgets>
 #include <QtWidgets/QScrollBar>
@@ -107,7 +108,7 @@ public:
 class ComboEventFilter : public QObject {
 public:
     explicit ComboEventFilter(QComboBox *parent) : QObject(parent) {}
-    virtual bool eventFilter(QObject *watched, QEvent *event);
+    bool eventFilter(QObject *watched, QEvent *event) Q_DECL_OVERRIDE;
 };
 
 bool ComboEventFilter::eventFilter(QObject *watched, QEvent *event)

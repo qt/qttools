@@ -71,21 +71,21 @@ public:
     explicit PropertyEditor(QDesignerFormEditorInterface *core, QWidget *parent = 0, Qt::WindowFlags flags = 0);
     virtual ~PropertyEditor();
 
-    virtual QDesignerFormEditorInterface *core() const;
+    QDesignerFormEditorInterface *core() const Q_DECL_OVERRIDE;
 
-    virtual bool isReadOnly() const;
-    virtual void setReadOnly(bool readOnly);
-    virtual void setPropertyValue(const QString &name, const QVariant &value, bool changed = true);
+    bool isReadOnly() const Q_DECL_OVERRIDE;
+    void setReadOnly(bool readOnly) Q_DECL_OVERRIDE;
+    void setPropertyValue(const QString &name, const QVariant &value, bool changed = true) Q_DECL_OVERRIDE;
     virtual void updatePropertySheet();
 
-    virtual void setObject(QObject *object);
+    void setObject(QObject *object) Q_DECL_OVERRIDE;
 
     void reloadResourceProperties();
 
     virtual QObject *object() const
     { return m_object; }
 
-    virtual QString currentPropertyName() const;
+    QString currentPropertyName() const Q_DECL_OVERRIDE;
 
 protected:
 

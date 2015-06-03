@@ -59,8 +59,8 @@ class MenuTaskMenu : public QObject, public QDesignerTaskMenuExtension
 public:
     explicit MenuTaskMenu(QDesignerMenu *menu, QObject *parent = 0);
 
-    virtual QAction *preferredEditAction() const;
-    virtual QList<QAction*> taskActions() const;
+    QAction *preferredEditAction() const Q_DECL_OVERRIDE;
+    QList<QAction*> taskActions() const Q_DECL_OVERRIDE;
 
 private slots:
     void removeMenu();
@@ -81,8 +81,8 @@ class MenuBarTaskMenu : public QObject, public QDesignerTaskMenuExtension
 public:
     explicit MenuBarTaskMenu(QDesignerMenuBar *bar, QObject *parent = 0);
 
-    virtual QAction *preferredEditAction() const;
-    virtual QList<QAction*> taskActions() const;
+    QAction *preferredEditAction() const Q_DECL_OVERRIDE;
+    QList<QAction*> taskActions() const Q_DECL_OVERRIDE;
 
 private:
     QDesignerMenuBar *m_bar;
