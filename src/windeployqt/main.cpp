@@ -933,8 +933,10 @@ static QStringList compilerRunTimeLibs(Platform platform, unsigned wordSize)
     case WindowsMinGW: { // MinGW: Add runtime libraries
         static const char *minGwRuntimes[] = {"*gcc_", "*stdc++", "*winpthread"};
         const QString gcc = findInPath(QStringLiteral("g++.exe"));
-        if (gcc.isEmpty())
+        if (gcc.isEmpty()) {
+            std::wcerr << "Warning: Cannot find GCC installation directory. g++.exe must be in the path.\n";
             break;
+        }
         const QString binPath = QFileInfo(gcc).absolutePath();
         QDir dir(binPath);
         QStringList filters;
