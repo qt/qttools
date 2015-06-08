@@ -873,6 +873,7 @@ DeploymentInfo deployQtFrameworks(QList<FrameworkInfo> frameworks,
             }
         }
     }
+    deploymentInfo.deployedFrameworks = copiedFrameworks;
     deployRPaths(rpathsUsed, binaryPaths, useLoaderPath);
     deploymentInfo.rpathsUsed += rpathsUsed;
     return deploymentInfo;
