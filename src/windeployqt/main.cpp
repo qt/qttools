@@ -1186,7 +1186,8 @@ static DeployResult deploy(const Options &options,
     }
 
     // Check for ANGLE on the Qt5Gui library.
-    if ((options.platform & WindowsBased) && !(options.platform & WinCEIntel) && !(options.platform & WinCEArm) && !qtGuiLibrary.isEmpty())  {
+    if ((options.platform & WindowsBased) && options.platform != WinCEIntel
+        && options.platform != WinCEArm && !qtGuiLibrary.isEmpty())  {
         QString libGlesName = QStringLiteral("libGLESV2");
         if (isDebug)
             libGlesName += QLatin1Char('d');
