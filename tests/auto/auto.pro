@@ -8,7 +8,8 @@ SUBDIRS=\
     qhelpprojectdata \
     cmake \
     installed_cmake \
-    qtdiag
+    qtdiag \
+    windeployqt
 
 installed_cmake.depends = cmake
 
@@ -24,3 +25,4 @@ cross_compile:SUBDIRS -= linguist
     qhelpprojectdata \
 
 android|ios|qnx|wince*|winrt*:SUBDIRS -= qtdiag
+!win32|wince*|winrt*:SUBDIRS -= windeployqt
