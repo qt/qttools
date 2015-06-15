@@ -48,6 +48,8 @@
 #include <QtWidgets/QMdiArea>
 #include <QtWidgets/QMdiSubWindow>
 #include <QtWidgets/QMenu>
+#include <QtWidgets/QStackedLayout>
+#include <QtWidgets/QStackedWidget>
 #include <QtWidgets/QTableWidget>
 #include <QtWidgets/QTabWidget>
 #include <QtWidgets/QToolBox>
@@ -392,8 +394,26 @@ static void highlightWidget(QWidget *w, bool on)
             highlightAction(m->menuAction(), on);
 }
 
+static void bringToFront(const TranslatableEntry &target)
+{
+    for (QObject *obj = target.target.object; obj != 0; obj = obj->parent()) {
+        if (QWidget *w = qobject_cast<QWidget *>(obj)) {
+            if (QStackedLayout *lay = qobject_cast<QStackedLayout *>(w->layout()))
+                lay->setCurrentWidget(w);
+#ifndef QT_NO_STACKEDWIDGET
+            if (QStackedWidget *stack = qobject_cast<QStackedWidget *>(obj->parent()))
+                stack->setCurrentWidget(w);
+#endif
+#ifndef QT_NO_TABWIDGET
+            if (QTabWidget *tab = qobject_cast<QTabWidget *>(obj->parent()))
+                tab->setCurrentWidget(w);
+#endif
+        }
+    }
+}
 static void highlightTarget(const TranslatableEntry &target, bool on)
 {
+    bringToFront(target);
     switch (target.type) {
     case TranslatableProperty:
         if (QAction *a = qobject_cast<QAction *>(target.target.object)) {
