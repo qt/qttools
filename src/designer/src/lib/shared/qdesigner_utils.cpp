@@ -177,11 +177,9 @@ namespace qdesigner_internal
 
     QStringList DesignerMetaFlags::flags(int ivalue) const
     {
-        typedef MetaEnum<uint>::KeyToValueMap::const_iterator KeyToValueMapIterator;
         QStringList rc;
         const uint v = static_cast<uint>(ivalue);
-        const KeyToValueMapIterator cend = keyToValueMap().constEnd();
-        for (KeyToValueMapIterator it = keyToValueMap().constBegin();it != cend; ++it )  {
+        for (auto it = keyToValueMap().constBegin(), cend = keyToValueMap().constEnd(); it != cend; ++it )  {
             const uint itemValue = it.value();
             // Check for equality first as flag values can be 0 or -1, too. Takes preference over a bitwise flag
             if (v == itemValue) {
@@ -229,8 +227,7 @@ namespace qdesigner_internal
         uint flags = 0;
         bool valueOk = true;
         QStringList keys = s.split(QString(QLatin1Char('|')));
-        const QStringList::iterator cend = keys.end();
-        for (QStringList::iterator it = keys.begin(); it != cend; ++it) {
+        for (auto it = keys.constBegin(), cend = keys.constEnd(); it != cend; ++it) {
             const uint flagValue = keyToValue(*it, &valueOk);
             if (!valueOk) {
                 flags = 0;
@@ -422,9 +419,7 @@ namespace qdesigner_internal
 
     QIcon DesignerIconCache::icon(const PropertySheetIconValue &value) const
     {
-        typedef PropertySheetIconValue::ModeStateToPixmapMap::const_iterator ModeStateToPixmapMapConstIt;
-
-        QMap<PropertySheetIconValue, QIcon>::const_iterator it = m_cache.constFind(value);
+        const auto it = m_cache.constFind(value);
         if (it != m_cache.constEnd())
             return it.value();
 
@@ -440,9 +435,8 @@ namespace qdesigner_internal
 
         QIcon icon;
         const PropertySheetIconValue::ModeStateToPixmapMap &paths = value.paths();
-        const ModeStateToPixmapMapConstIt cend = paths.constEnd();
-        for (ModeStateToPixmapMapConstIt it = paths.constBegin(); it != cend; ++it) {
-            const QPair<QIcon::Mode, QIcon::State> pair = it.key();
+        for (auto it = paths.constBegin(), cend = paths.constEnd(); it != cend; ++it) {
+            const auto pair = it.key();
             icon.addFile(it.value().path(), QSize(), pair.first, pair.second);
         }
         m_cache.insert(value, icon);
@@ -619,11 +613,8 @@ namespace qdesigner_internal
 
     uint PropertySheetIconValue::mask() const
     {
-        typedef ModeStateToPixmapMap::const_iterator ModeStateToPixmapMapConstIt;
-
         uint flags = 0;
-        const ModeStateToPixmapMapConstIt cend = m_data->m_paths.constEnd();
-        for (ModeStateToPixmapMapConstIt it = m_data->m_paths.constBegin(); it != cend; ++it)
+        for (auto it = m_data->m_paths.constBegin(), cend = m_data->m_paths.constEnd(); it != cend; ++it)
             flags |= iconStateToSubPropertyFlag(it.key().first, it.key().second);
         if (!m_data->m_theme.isEmpty())
             flags |= ThemeIconMask;
@@ -680,14 +671,11 @@ namespace qdesigner_internal
 
     QDESIGNER_SHARED_EXPORT QDebug operator<<(QDebug d, const PropertySheetIconValue &p)
     {
-        typedef PropertySheetIconValue::ModeStateToPixmapMap::const_iterator ModeStateToPixmapMapConstIt;
-
         QDebug nospace = d.nospace();
         nospace << "PropertySheetIconValue theme='" << p.theme() << "' ";
 
         const PropertySheetIconValue::ModeStateToPixmapMap &paths = p.paths();
-        const ModeStateToPixmapMapConstIt cend = paths.constEnd();
-        for (ModeStateToPixmapMapConstIt it = paths.constBegin(); it != cend; ++it)
+        for (auto it = paths.constBegin(), cend = paths.constEnd(); it != cend; ++it)
             nospace << " mode=" << it.key().first << ",state=" << it.key().second
                        << ",'" << it.value().path() << '\'';
         nospace << " mask=0x" << QString::number(p.mask(), 16);

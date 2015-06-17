@@ -88,8 +88,6 @@ static inline void filterAttributes(const QStringRef &name,
                                     QXmlStreamAttributes *atts,
                                     bool *paragraphAlignmentFound)
 {
-    typedef QXmlStreamAttributes::iterator AttributeIt;
-
     if (atts->isEmpty())
         return;
 
@@ -101,7 +99,7 @@ static inline void filterAttributes(const QStringRef &name,
 
     // Clean out everything except 'align' for 'p'
     if (name == QStringLiteral("p")) {
-        for (AttributeIt it = atts->begin(); it != atts->end(); ) {
+        for (auto it = atts->begin(); it != atts->end(); ) {
             if (it->name() == QStringLiteral("align")) {
                 ++it;
                 *paragraphAlignmentFound = true;

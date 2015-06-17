@@ -685,10 +685,8 @@ QStringList RCCResourceLibrary::dataFiles() const
 // Determine map of resource identifier (':/newPrefix/images/p1.png') to file via recursion
 static void resourceDataFileMapRecursion(const RCCFileInfo *m_root, const QString &path, RCCResourceLibrary::ResourceDataFileMap &m)
 {
-    typedef QHash<QString, RCCFileInfo*>::const_iterator ChildConstIterator;
     const QChar slash = QLatin1Char('/');
-    const ChildConstIterator cend = m_root->m_children.constEnd();
-    for (ChildConstIterator it = m_root->m_children.constBegin(); it != cend; ++it) {
+    for (auto  it = m_root->m_children.constBegin(), cend = m_root->m_children.constEnd(); it != cend; ++it) {
         const RCCFileInfo *child = it.value();
         QString childName = path;
         childName += slash;

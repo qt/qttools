@@ -184,10 +184,8 @@ FormWindow::Selection::~Selection()
 void FormWindow::Selection::clear()
 {
     if (!m_usedSelections.empty()) {
-        const SelectionHash::iterator mend = m_usedSelections.end();
-        for (SelectionHash::iterator it = m_usedSelections.begin(); it != mend; ++it) {
+        for (auto it = m_usedSelections.begin(), mend = m_usedSelections.end(); it != mend; ++it)
             it.value()->setWidget(0);
-        }
         m_usedSelections.clear();
     }
 }
@@ -208,8 +206,7 @@ WidgetSelection *FormWindow::Selection::addWidget(FormWindow* fw, QWidget *w)
         return rc;
     }
     // find a free one in the pool
-    const SelectionPool::iterator pend = m_selectionPool.end();
-    for (SelectionPool::iterator it = m_selectionPool.begin(); it != pend; ++it) {
+    for (auto it = m_selectionPool.constBegin(), pend = m_selectionPool.constEnd(); it != pend; ++it) {
         if (! (*it)->isUsed()) {
             rc = *it;
             break;
@@ -249,10 +246,8 @@ void FormWindow::Selection::repaintSelection(QWidget *w)
 
 void FormWindow::Selection::repaintSelection()
 {
-    const SelectionHash::iterator mend = m_usedSelections.end();
-    for (SelectionHash::iterator it = m_usedSelections.begin(); it != mend; ++it) {
+    for (auto it = m_usedSelections.begin(), mend = m_usedSelections.end(); it != mend; ++it)
         it.value()->update();
-    }
 }
 
 bool FormWindow::Selection::isWidgetSelected(QWidget *w) const{
@@ -266,8 +261,7 @@ QWidgetList FormWindow::Selection::selectedWidgets() const
 
 void FormWindow::Selection::raiseList(const QWidgetList& l)
 {
-    const SelectionHash::iterator mend = m_usedSelections.end();
-    for (SelectionHash::iterator it = m_usedSelections.begin(); it != mend; ++it) {
+    for (auto it = m_usedSelections.constBegin(), mend = m_usedSelections.constEnd(); it != mend; ++it) {
         WidgetSelection *w = it.value();
         if (l.contains(w->widget()))
             w->show();

@@ -762,8 +762,7 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
     void GridLayoutState::insertRow(int row)
     {
         rowCount++;
-        const WidgetItemMap::iterator iend = widgetItemMap.end();
-        for (WidgetItemMap::iterator it = widgetItemMap.begin(); it != iend; ++it) {
+        for (auto it = widgetItemMap.begin(), iend = widgetItemMap.end(); it != iend; ++it) {
             const int topRow = it.value().y();
             if (topRow >= row) {
                 it.value().translate(0, 1);
@@ -778,8 +777,7 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
     void GridLayoutState::insertColumn(int column)
     {
         colCount++;
-        const WidgetItemMap::iterator iend = widgetItemMap.end();
-        for (WidgetItemMap::iterator it = widgetItemMap.begin(); it != iend; ++it) {
+        for (auto it = widgetItemMap.begin(), iend = widgetItemMap.end(); it != iend; ++it) {
             const int leftColumn = it.value().x();
             if (leftColumn >= column) {
                 it.value().translate(1, 0);
@@ -843,8 +841,7 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
 
     void GridLayoutState::removeFreeRow(int removeRow)
     {
-        const WidgetItemMap::iterator iend = widgetItemMap.end();
-        for (WidgetItemMap::iterator it = widgetItemMap.begin(); it != iend; ++it) {
+        for (auto it = widgetItemMap.begin(), iend = widgetItemMap.end(); it != iend; ++it) {
             const int r = it.value().y();
             Q_ASSERT(r != removeRow); // Free rows only
             if (r < removeRow) { // Does the item span it? - shrink it
@@ -863,8 +860,7 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
 
     void GridLayoutState::removeFreeColumn(int removeColumn)
     {
-        const WidgetItemMap::iterator iend = widgetItemMap.end();
-        for (WidgetItemMap::iterator it = widgetItemMap.begin(); it != iend; ++it) {
+        for (auto it = widgetItemMap.begin(), iend = widgetItemMap.end(); it != iend; ++it) {
             const int c = it.value().x();
             Q_ASSERT(c != removeColumn); // Free columns only
             if (c < removeColumn) { // Does the item span it? - shrink it

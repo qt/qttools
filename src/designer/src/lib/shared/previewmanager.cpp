@@ -823,12 +823,10 @@ QWidget *PreviewManager::raise(const QDesignerFormWindowInterface *fw, const Pre
 
 void PreviewManager::closeAllPreviews()
 {
-    typedef PreviewManagerPrivate::PreviewDataList PreviewDataList;
     if (!d->m_previews.empty()) {
         d->m_updateBlocked = true;
         d->m_activePreview = 0;
-        const PreviewDataList::iterator cend =  d->m_previews.end();
-        for (PreviewDataList::iterator it = d->m_previews.begin(); it !=  cend ;++it) {
+        for (auto it = d->m_previews.constBegin(), cend = d->m_previews.constEnd(); it != cend ;++it) {
             if (it->m_widget)
                 it->m_widget->close();
         }

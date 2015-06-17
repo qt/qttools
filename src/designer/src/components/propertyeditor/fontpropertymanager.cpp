@@ -95,10 +95,9 @@ namespace qdesigner_internal {
         if (nm.empty())
             return families;
 
-        const FontPropertyManager::NameMap::const_iterator ncend = nm.constEnd();
-        const QStringList::iterator end = families.end();
-        for (QStringList::iterator it = families.begin(); it != end; ++it) {
-            const FontPropertyManager::NameMap::const_iterator nit = nm.constFind(*it);
+        const auto ncend = nm.constEnd();
+        for (auto it = families.begin(), end = families.end(); it != end; ++it) {
+            const auto nit = nm.constFind(*it);
             if (nit != ncend)
                 *it = nit.value();
         }

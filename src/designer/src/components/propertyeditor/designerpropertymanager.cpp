@@ -216,9 +216,7 @@ int TranslatablePropertyManager<PropertySheetValue>::setValue(QtVariantPropertyM
                                                               int expectedTypeId,
                                                               const QVariant &variantValue)
 {
-    typedef typename QMap<QtProperty *, PropertySheetValue>::iterator Iterator;
-
-    const Iterator it = m_values.find(property);
+    const auto it = m_values.find(property);
     if (it == m_values.end())
         return DesignerPropertyManager::NoMatch;
     if (variantValue.userType() != expectedTypeId)
@@ -239,9 +237,7 @@ int TranslatablePropertyManager<PropertySheetValue>::setValue(QtVariantPropertyM
 template <class PropertySheetValue>
 bool TranslatablePropertyManager<PropertySheetValue>::value(const QtProperty *property, QVariant *rc) const
 {
-    typedef typename QMap<QtProperty *, PropertySheetValue>::const_iterator ConstIterator;
-
-    ConstIterator it = m_values.constFind(const_cast<QtProperty *>(property));
+    const auto it = m_values.constFind(const_cast<QtProperty *>(property));
     if (it == m_values.constEnd())
         return false;
     *rc = QVariant::fromValue(it.value());
@@ -2251,12 +2247,10 @@ void DesignerEditorFactory::disconnectPropertyManager(QtVariantPropertyManager *
 template <class EditorContainer, class Editor, class SetterParameter, class Value>
 static inline void applyToEditors(const EditorContainer &list, void (Editor::*setter)(SetterParameter), const Value &value)
 {
-    typedef typename EditorContainer::const_iterator ListIterator;
     if (list.empty()) {
         return;
     }
-    const ListIterator end = list.constEnd();
-    for (ListIterator it = list.constBegin(); it != end; ++it) {
+    for (auto it = list.constBegin(), end = list.constEnd(); it != end; ++it) {
         Editor &editor = *(*it);
         (editor.*setter)(value);
     }
@@ -2627,9 +2621,7 @@ template <class Editor>
 QtProperty *findPropertyForEditor(const QMap<Editor *, QtProperty *> &editorMap,
                                   const QObject *sender)
 {
-    typedef typename QMap<Editor *, QtProperty *>::const_iterator Iterator;
-    const Iterator cend = editorMap.constEnd();
-    for (Iterator it = editorMap.constBegin(); it != cend; ++it)
+    for (auto it = editorMap.constBegin(), cend = editorMap.constEnd(); it != cend; ++it)
         if (it.key() == sender)
             return it.value();
     return 0;
