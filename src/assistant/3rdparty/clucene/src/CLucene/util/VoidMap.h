@@ -153,16 +153,16 @@ public:
 
  //a CLSet with CLHashMap traits
 template<typename _kt, typename _vt, 
-	typename _Compare,
+	typename CL_Compare,
 	typename _EqualDummy,
 	typename _KeyDeletor=CL_NS(util)::Deletor::Dummy,
 	typename _ValueDeletor=CL_NS(util)::Deletor::Dummy>
 class CLHashMap:public __CLMap<_kt,_vt,
-	CL_NS_STD(map)<_kt,_vt, _Compare>,
+	CL_NS_STD(map)<_kt,_vt, CL_Compare>,
 	_KeyDeletor,_ValueDeletor>
 {
-	typedef typename CL_NS_STD(map)<_kt,_vt,_Compare> _base;
-	typedef __CLMap<_kt, _vt, CL_NS_STD(map)<_kt,_vt, _Compare>,
+	typedef typename CL_NS_STD(map)<_kt,_vt,CL_Compare> _base;
+	typedef __CLMap<_kt, _vt, CL_NS_STD(map)<_kt,_vt, CL_Compare>,
 		_KeyDeletor,_ValueDeletor> _this;
 public:
 	CLHashMap ( const bool deleteKey=false, const bool deleteValue=false )
@@ -180,10 +180,10 @@ template<typename _kt, typename _vt,
 	typename _KeyDeletor=CL_NS(util)::Deletor::Dummy,
 	typename _ValueDeletor=CL_NS(util)::Deletor::Dummy>
 class CLHashMap:public __CLMap<_kt,_vt,
-	CL_NS_HASHING(hash_map)<_kt,_vt, _Hasher,_Equals>,
+	CL_NS_HASHING(CL_HASH_MAP)<_kt,_vt, _Hasher,_Equals>,
 	_KeyDeletor,_ValueDeletor>
 {
-	typedef __CLMap<_kt,_vt, CL_NS_HASHING(hash_map)<_kt,_vt, _Hasher,_Equals>,
+	typedef __CLMap<_kt,_vt, CL_NS_HASHING(CL_HASH_MAP)<_kt,_vt, _Hasher,_Equals>,
 		_KeyDeletor,_ValueDeletor> _this;
 public:
 	CLHashMap ( const bool deleteKey=false, const bool deleteValue=false )
@@ -201,10 +201,10 @@ template<typename _kt, typename _vt,
 	typename _KeyDeletor=CL_NS(util)::Deletor::Dummy,
 	typename _ValueDeletor=CL_NS(util)::Deletor::Dummy>
 class CLHashMap:public __CLMap<_kt,_vt,
-	CL_NS_HASHING(hash_map)<_kt,_vt, _Hasher>,
+	CL_NS_HASHING(CL_HASH_MAP)<_kt,_vt, _Hasher>,
 	_KeyDeletor,_ValueDeletor>
 {
-	typedef __CLMap<_kt,_vt, CL_NS_HASHING(hash_map)<_kt,_vt, _Hasher>,
+	typedef __CLMap<_kt,_vt, CL_NS_HASHING(CL_HASH_MAP)<_kt,_vt, _Hasher>,
 		_KeyDeletor,_ValueDeletor> _this;
 public:
 	CLHashMap ( const bool deleteKey=false, const bool deleteValue=false )
@@ -218,15 +218,15 @@ public:
 //A collection that contains no duplicates
 //does not guarantee that the order will remain constant over time
 template<typename _kt, typename _vt, 
-	typename _Compare,
+	typename CL_Compare,
 	typename _KeyDeletor=CL_NS(util)::Deletor::Dummy,
 	typename _ValueDeletor=CL_NS(util)::Deletor::Dummy>
 class CLSet:public __CLMap<_kt,_vt,
-	CL_NS_STD(map)<_kt,_vt, _Compare>,
+	CL_NS_STD(map)<_kt,_vt, CL_Compare>,
 	_KeyDeletor,_ValueDeletor>
 {
-	typedef typename CL_NS_STD(map)<_kt,_vt,_Compare> _base;
-	typedef __CLMap<_kt, _vt, CL_NS_STD(map)<_kt,_vt, _Compare>,
+	typedef typename CL_NS_STD(map)<_kt,_vt,CL_Compare> _base;
+	typedef __CLMap<_kt, _vt, CL_NS_STD(map)<_kt,_vt, CL_Compare>,
 		_KeyDeletor,_ValueDeletor> _this;
 public:
 	CLSet ( const bool deleteKey=false, const bool deleteValue=false )

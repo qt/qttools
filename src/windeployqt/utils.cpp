@@ -35,6 +35,8 @@
 #include "elfreader.h"
 
 #include <QtCore/QString>
+#include <QtCore/QDebug>
+#include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 #include <QtCore/QTemporaryFile>
@@ -723,6 +725,52 @@ inline QStringList readImportSections(const ImageNtHeader *ntHeaders, const void
     return result;
 }
 
+// Check for MSCV runtime (MSVCP90D.dll/MSVCP90.dll, MSVCP120D.dll/MSVCP120.dll
+// or msvcp120d_app.dll/msvcp120_app.dll).
+enum MsvcDebugRuntimeResult { MsvcDebugRuntime, MsvcReleaseRuntime, NoMsvcRuntime };
+
+static inline MsvcDebugRuntimeResult checkMsvcDebugRuntime(const QStringList &dependentLibraries)
+{
+    foreach (const QString &lib, dependentLibraries) {
+        if (lib.startsWith(QLatin1String("MSVCR"), Qt::CaseInsensitive)
+            || lib.startsWith(QLatin1String("MSVCP"), Qt::CaseInsensitive)) {
+            int pos = 5;
+            if (lib.at(pos).isDigit()) {
+                for (++pos; lib.at(pos).isDigit(); ++pos)
+                    ;
+                return lib.at(pos).toLower() == QLatin1Char('d')
+                    ? MsvcDebugRuntime : MsvcReleaseRuntime;
+            }
+        }
+    }
+    return NoMsvcRuntime;
+}
+
+template <class ImageNtHeader>
+inline void determineDebugAndDependentLibs(const ImageNtHeader *nth, const void *fileMemory,
+                                           bool isMinGW,
+                                           QStringList *dependentLibrariesIn,
+                                           bool *isDebugIn, QString *errorMessage)
+{
+    const bool hasDebugEntry = nth->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_DEBUG].Size;
+    QStringList dependentLibraries;
+    if (dependentLibrariesIn || (isDebugIn && hasDebugEntry && !isMinGW))
+        dependentLibraries = readImportSections(nth, fileMemory, errorMessage);
+
+    if (dependentLibrariesIn)
+        *dependentLibrariesIn = dependentLibraries;
+    if (isDebugIn) {
+        if (isMinGW) {
+            // Use logic that's used e.g. in objdump / pfd library
+            *isDebugIn = !(nth->FileHeader.Characteristics & IMAGE_FILE_DEBUG_STRIPPED);
+        } else {
+            // When an MSVC debug entry is present, check whether the debug runtime
+            // is actually used to detect -release / -force-debug-info builds.
+            *isDebugIn = hasDebugEntry && checkMsvcDebugRuntime(dependentLibraries) != MsvcReleaseRuntime;
+        }
+    }
+}
+
 // Read a PE executable and determine dependent libraries, word size
 // and debug flags.
 bool readPeExecutable(const QString &peExecutableFileName, QString *errorMessage,
@@ -769,40 +817,31 @@ bool readPeExecutable(const QString &peExecutableFileName, QString *errorMessage
         const unsigned wordSize = ntHeaderWordSize(ntHeaders);
         if (wordSizeIn)
             *wordSizeIn = wordSize;
-        bool debug = false;
         if (wordSize == 32) {
-            const IMAGE_NT_HEADERS32 *ntHeaders32 = reinterpret_cast<const IMAGE_NT_HEADERS32 *>(ntHeaders);
-
-            if (!isMinGW) {
-                debug = ntHeaders32->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_DEBUG].Size;
-            } else {
-                // Use logic that's used e.g. in objdump / pfd library
-                debug = !(ntHeaders32->FileHeader.Characteristics & IMAGE_FILE_DEBUG_STRIPPED);
-            }
-
-            if (dependentLibrariesIn)
-                *dependentLibrariesIn = readImportSections(ntHeaders32, fileMemory, errorMessage);
-
+            determineDebugAndDependentLibs(reinterpret_cast<const IMAGE_NT_HEADERS32 *>(ntHeaders),
+                                           fileMemory, isMinGW, dependentLibrariesIn, isDebugIn, errorMessage);
         } else {
-            const IMAGE_NT_HEADERS64 *ntHeaders64 = reinterpret_cast<const IMAGE_NT_HEADERS64 *>(ntHeaders);
-
-            if (!isMinGW) {
-                debug = ntHeaders64->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_DEBUG].Size;
-            } else {
-                // Use logic that's used e.g. in objdump / pfd library
-                debug = !(ntHeaders64->FileHeader.Characteristics & IMAGE_FILE_DEBUG_STRIPPED);
-            }
-
-            if (dependentLibrariesIn)
-                *dependentLibrariesIn = readImportSections(ntHeaders64, fileMemory, errorMessage);
+            determineDebugAndDependentLibs(reinterpret_cast<const IMAGE_NT_HEADERS64 *>(ntHeaders),
+                                           fileMemory, isMinGW, dependentLibrariesIn, isDebugIn, errorMessage);
         }
 
-        if (isDebugIn)
-            *isDebugIn = debug;
         result = true;
-        if (optVerboseLevel > 1)
-            std::wcout << __FUNCTION__ << ": " << peExecutableFileName
-                       << ' ' << wordSize << " bit, debug: " << debug << '\n';
+        if (optVerboseLevel > 1) {
+            std::wcout << __FUNCTION__ << ": " << QDir::toNativeSeparators(peExecutableFileName)
+                << ' ' << wordSize << " bit";
+            if (isMinGW)
+                std::wcout << ", MinGW";
+            if (dependentLibrariesIn) {
+                std::wcout << ", dependent libraries: ";
+                if (optVerboseLevel > 2)
+                    std::wcout << dependentLibrariesIn->join(QLatin1Char(' '));
+                else
+                    std::wcout << dependentLibrariesIn->size();
+            }
+            if (isDebugIn)
+                std::wcout << (*isDebugIn ? ", debug" : ", release");
+            std::wcout << '\n';
+        }
     } while (false);
 
     if (fileMemory)
