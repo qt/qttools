@@ -313,6 +313,7 @@ QString qtDiag(unsigned flags)
     DUMP_CAPABILITY(str, platformIntegration, SyncState)
     DUMP_CAPABILITY(str, platformIntegration, RasterGLSurface)
     DUMP_CAPABILITY(str, platformIntegration, AllGLFunctionsQueryable)
+    DUMP_CAPABILITY(str, platformIntegration, ApplicationIcon)
     str << '\n';
 
     const QStyleHints *styleHints = QGuiApplication::styleHints();
@@ -336,7 +337,13 @@ QString qtDiag(unsigned flags)
         << "  fontSmoothingGamma: " << styleHints->fontSmoothingGamma() << '\n'
         << "  useRtlExtensions: " << styleHints->useRtlExtensions() << '\n'
         << "  setFocusOnTouchRelease: " << styleHints->setFocusOnTouchRelease() << '\n'
-        << "  tabFocusBehavior: " << formatQDebug(styleHints->tabFocusBehavior()) << '\n';
+        << "  tabFocusBehavior: " << formatQDebug(styleHints->tabFocusBehavior()) << '\n'
+        << "  singleClickActivation: " << styleHints->singleClickActivation() << '\n';
+    str << "\nAdditional style hints (QPlatformIntegration):\n"
+        << "  ShowIsMaximized: "
+        << platformIntegration->styleHint(QPlatformIntegration::ShowIsMaximized).toBool() << '\n'
+        << "  ReplayMousePressOutsidePopup: "
+        << platformIntegration->styleHint(QPlatformIntegration::ReplayMousePressOutsidePopup).toBool() << '\n';
 
     const QPlatformTheme *platformTheme = QGuiApplicationPrivate::platformTheme();
     str << "\nTheme:\n  Styles: " << platformTheme->themeHint(QPlatformTheme::StyleNames).toStringList();

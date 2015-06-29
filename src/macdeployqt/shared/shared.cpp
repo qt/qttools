@@ -739,13 +739,17 @@ void changeInstallName(const QString &bundlePath, const FrameworkInfo &framework
     }
 }
 
-void deployRPaths(const QSet<QString> &rpaths, const QString &binaryPath, bool useLoaderPath)
+void deployRPaths(const QString &bundlePath, const QSet<QString> &rpaths, const QString &binaryPath, bool useLoaderPath)
 {
+    const QString absFrameworksPath = QFileInfo(bundlePath).absoluteFilePath()
+            + QLatin1String("/Contents/Frameworks");
+    const QString relativeFrameworkPath = QFileInfo(binaryPath).absoluteDir().relativeFilePath(absFrameworksPath);
+    const QString loaderPathToFrameworks = QLatin1String("@loader_path/") + relativeFrameworkPath;
     bool rpathToFrameworksFound = false;
     QStringList args;
     foreach (const QString &rpath, getBinaryRPaths(binaryPath, false)) {
         if (rpath == "@executable_path/../Frameworks" ||
-            rpath == "@loader_path/../Frameworks") {
+                rpath == loaderPathToFrameworks) {
             rpathToFrameworksFound = true;
             continue;
         }
@@ -760,7 +764,7 @@ void deployRPaths(const QSet<QString> &rpaths, const QString &binaryPath, bool u
         if (!useLoaderPath) {
             args << "-add_rpath" << "@executable_path/../Frameworks";
         } else {
-            args << "-add_rpath" << "@loader_path/../Frameworks";
+            args << "-add_rpath" << loaderPathToFrameworks;
         }
     }
     LogDebug() << "Using install_name_tool:";
@@ -769,10 +773,10 @@ void deployRPaths(const QSet<QString> &rpaths, const QString &binaryPath, bool u
     runInstallNameTool(QStringList() << args << binaryPath);
 }
 
-void deployRPaths(const QSet<QString> &rpaths, const QStringList &binaryPaths, bool useLoaderPath)
+void deployRPaths(const QString &bundlePath, const QSet<QString> &rpaths, const QStringList &binaryPaths, bool useLoaderPath)
 {
     foreach (const QString &binary, binaryPaths) {
-        deployRPaths(rpaths, binary, useLoaderPath);
+        deployRPaths(bundlePath, rpaths, binary, useLoaderPath);
     }
 }
 
@@ -873,7 +877,8 @@ DeploymentInfo deployQtFrameworks(QList<FrameworkInfo> frameworks,
             }
         }
     }
-    deployRPaths(rpathsUsed, binaryPaths, useLoaderPath);
+    deploymentInfo.deployedFrameworks = copiedFrameworks;
+    deployRPaths(bundlePath, rpathsUsed, binaryPaths, useLoaderPath);
     deploymentInfo.rpathsUsed += rpathsUsed;
     return deploymentInfo;
 }

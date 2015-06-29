@@ -3,7 +3,7 @@
 ** Copyright (C) 2015 The Qt Company Ltd.
 ** Contact: http://www.qt.io/licensing/
 **
-** This file is part of the Qt Assistant of the Qt Toolkit.
+** This file is part of the test suite of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL21$
 ** Commercial License Usage
@@ -31,36 +31,21 @@
 **
 ****************************************************************************/
 
-#ifndef QCLUCENEFIELDNAMES_P_H
-#define QCLUCENEFIELDNAMES_P_H
+#include <QGuiApplication>
+#include <QRasterWindow>
+#include <QScreen>
+#include <QTimer>
 
-//
-//  W A R N I N G
-//  -------------
-//
-// This file is not part of the Qt API.  It exists purely as an
-// implementation detail.  This header file may change from version to
-// version without notice, or even be removed.
-//
-// We mean it.
-//
+// Simple test application just to verify that it comes up properly
 
-#include <QtCore/QtGlobal>
-#include <QtCore/QString>
-
-QT_BEGIN_NAMESPACE
-
-namespace fulltextsearch {
-namespace clucene {
-    extern const QString AttributeField;
-    extern const QString ContentField;
-    extern const QString NamespaceField;
-    extern const QString PathField;
-    extern const QString TitleField;
-    extern const QString TitleTokenizedField;
-} // namespace clucene
-} // namespace fulltextsearch
-
-QT_END_NAMESPACE
-
-#endif // QCLUCENEFIELDNAMES_P_H
+int main(int argc, char ** argv)
+{
+   QGuiApplication app(argc, argv);
+   QRasterWindow w;
+   w.setTitle("windeployqt test application");
+   const QRect availableGeometry = QGuiApplication::primaryScreen()->availableGeometry();
+   w.resize(availableGeometry.size() / 4);
+   w.show();
+   QTimer::singleShot(200, &w, &QCoreApplication::quit);
+   return app.exec();
+}
