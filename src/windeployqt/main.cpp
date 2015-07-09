@@ -155,7 +155,7 @@ QtModuleEntry qtModuleEntries[] = {
     { Qt3DRendererModule, "3drenderer", "Qt53DRenderer", 0 },
     { Qt3DQuickModule, "3dquick", "Qt53DQuick", 0 },
     { Qt3DQuickRendererModule, "3dquickrenderer", "Qt53DQuickRenderer", 0 },
-    { Qt3DInputModule, "3dinput", "Qt35DInput", 0 },
+    { Qt3DInputModule, "3dinput", "Qt53DInput", 0 },
     { QtLocationModule, "geoservices", "Qt5Location", 0 }
 };
 
