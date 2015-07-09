@@ -474,7 +474,7 @@ bool QHelpGenerator::insertFiles(const QStringList &files, const QString &rootPa
     if (filterSetId < 0)
         return false;
     ++filterSetId;
-    foreach (const int &attId, filterAtts) {
+    foreach (int attId, filterAtts) {
         d->query->prepare(QLatin1String("INSERT INTO FileAttributeSetTable "
             "VALUES(?, ?)"));
         d->query->bindValue(0, filterSetId);
@@ -541,7 +541,7 @@ bool QHelpGenerator::insertFiles(const QStringList &files, const QString &rootPa
             fileId = fileMapIt.value();
             QSet<int> &fileFilterSet = d->fileFilterMap[fileId];
             QSet<int> &tmpFileFilterSet = tmpFileFilterMap[fileId];
-            foreach (const int &filter, filterAtts) {
+            foreach (int filter, filterAtts) {
                 if (!fileFilterSet.contains(filter)
                     && !tmpFileFilterSet.contains(filter)) {
                     fileFilterSet.insert(filter);
