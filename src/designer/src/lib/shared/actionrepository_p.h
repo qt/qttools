@@ -127,9 +127,9 @@ public slots:
     void filter(const QString &text);
 
 signals:
-    void contextMenuRequested(QContextMenuEvent *event, QAction *);
-    void currentChanged(QAction *action);
-    void activated(QAction *action);
+    void actionContextMenuRequested(QContextMenuEvent *event, QAction *);
+    void currentActionChanged(QAction *action);
+    void actionActivated(QAction *action);
 
 protected slots:
     void currentChanged(const QModelIndex &current, const QModelIndex &previous) Q_DECL_OVERRIDE;
@@ -161,9 +161,9 @@ public slots:
     void filter(const QString &text);
 
 signals:
-    void contextMenuRequested(QContextMenuEvent *event, QAction *);
-    void currentChanged(QAction *action);
-    void activated(QAction *action);
+    void actionContextMenuRequested(QContextMenuEvent *event, QAction *);
+    void currentActionChanged(QAction *action);
+    void actionActivated(QAction *action);
 
 protected slots:
     void currentChanged(const QModelIndex &current, const QModelIndex &previous) Q_DECL_OVERRIDE;

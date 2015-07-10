@@ -381,23 +381,23 @@ void ActionTreeView::focusInEvent(QFocusEvent *event)
     QTreeView::focusInEvent(event);
     // Make property editor display current action
     if (QAction *a = currentAction())
-       emit currentChanged(a);
+       emit currentActionChanged(a);
 }
 
 void ActionTreeView::contextMenuEvent(QContextMenuEvent *event)
 {
-    emit contextMenuRequested(event, m_model->actionAt(indexAt(event->pos())));
+    emit actionContextMenuRequested(event, m_model->actionAt(indexAt(event->pos())));
 }
 
 void ActionTreeView::currentChanged(const QModelIndex &current, const QModelIndex &previous)
 {
-    emit currentChanged(m_model->actionAt(current));
+    emit currentActionChanged(m_model->actionAt(current));
     QTreeView::currentChanged(current, previous);
 }
 
 void ActionTreeView::slotActivated(const QModelIndex &index)
 {
-    emit activated(m_model->actionAt(index));
+    emit actionActivated(m_model->actionAt(index));
 }
 
 void ActionTreeView::startDrag(Qt::DropActions supportedActions)
@@ -463,23 +463,23 @@ void ActionListView::focusInEvent(QFocusEvent *event)
     QListView::focusInEvent(event);
     // Make property editor display current action
     if (QAction *a = currentAction())
-       emit currentChanged(a);
+       emit currentActionChanged(a);
 }
 
 void ActionListView::contextMenuEvent(QContextMenuEvent *event)
 {
-    emit contextMenuRequested(event, m_model->actionAt(indexAt(event->pos())));
+    emit actionContextMenuRequested(event, m_model->actionAt(indexAt(event->pos())));
 }
 
 void ActionListView::currentChanged(const QModelIndex &current, const QModelIndex &previous)
 {
-    emit currentChanged(m_model->actionAt(current));
+    emit currentActionChanged(m_model->actionAt(current));
     QListView::currentChanged(current, previous);
 }
 
 void ActionListView::slotActivated(const QModelIndex &index)
 {
-    emit activated(m_model->actionAt(index));
+    emit actionActivated(m_model->actionAt(index));
 }
 
 void ActionListView::startDrag(Qt::DropActions supportedActions)
@@ -497,18 +497,20 @@ ActionView::ActionView(QWidget *parent) :
     addWidget(m_actionListView);
     addWidget(m_actionTreeView);
     // Wire signals
-    connect(m_actionTreeView, SIGNAL(contextMenuRequested(QContextMenuEvent*,QAction*)),
+    connect(m_actionTreeView, SIGNAL(actionContextMenuRequested(QContextMenuEvent*,QAction*)),
             this, SIGNAL(contextMenuRequested(QContextMenuEvent*,QAction*)));
-    connect(m_actionListView, SIGNAL(contextMenuRequested(QContextMenuEvent*,QAction*)),
+    connect(m_actionListView, SIGNAL(actionContextMenuRequested(QContextMenuEvent*,QAction*)),
             this, SIGNAL(contextMenuRequested(QContextMenuEvent*,QAction*)));
 
     // make it possible for vs integration to reimplement edit action dialog
     // [which it shouldn't do actually]
-    connect(m_actionListView, SIGNAL(activated(QAction*)), this, SIGNAL(activated(QAction*)));
-    connect(m_actionTreeView, SIGNAL(activated(QAction*)), this, SIGNAL(activated(QAction*)));
+    connect(m_actionListView, SIGNAL(actionActivated(QAction*)), this, SIGNAL(activated(QAction*)));
+    connect(m_actionTreeView, SIGNAL(actionActivated(QAction*)), this, SIGNAL(activated(QAction*)));
 
-    connect(m_actionListView, SIGNAL(currentChanged(QAction*)),this, SLOT(slotCurrentChanged(QAction*)));
-    connect(m_actionTreeView, SIGNAL(currentChanged(QAction*)),this, SLOT(slotCurrentChanged(QAction*)));
+    connect(m_actionListView, SIGNAL(currentActionChanged(QAction*)),
+            this, SLOT(slotCurrentChanged(QAction*)));
+    connect(m_actionTreeView, SIGNAL(currentActionChanged(QAction*)),
+            this, SLOT(slotCurrentChanged(QAction*)));
 
     connect(m_model, SIGNAL(resourceImageDropped(QString,QAction*)),
             this, SIGNAL(resourceImageDropped(QString,QAction*)));
