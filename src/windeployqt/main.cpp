@@ -721,7 +721,8 @@ private:
 static inline quint64 qtModuleForPlugin(const QString &subDirName)
 {
     if (subDirName == QLatin1String("accessible") || subDirName == QLatin1String("iconengines")
-        || subDirName == QLatin1String("imageformats") || subDirName == QLatin1String("platforms")) {
+        || subDirName == QLatin1String("imageformats") || subDirName == QLatin1String("platforms")
+        || subDirName == QLatin1String("platforminputcontexts")) {
         return QtGuiModule;
     }
     if (subDirName == QLatin1String("bearer"))
