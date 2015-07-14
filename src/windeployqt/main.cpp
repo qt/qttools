@@ -1328,7 +1328,10 @@ static bool deployWebProcess(const QMap<QString, QString> &qmakeVariables,
 static bool deployWebEngine(const QMap<QString, QString> &qmakeVariables,
                              const Options &options, QString *errorMessage)
 {
-    static const char *installDataFiles[] = {"icudtl.dat", "qtwebengine_resources.pak"};
+    static const char *installDataFiles[] = {"icudtl.dat",
+                                             "qtwebengine_resources.pak",
+                                             "qtwebengine_resources_100p.pak",
+                                             "qtwebengine_resources_200p.pak"};
 
     std::wcout << "Deploying: " << webEngineProcessC << "...\n";
     if (!deployWebProcess(qmakeVariables, webEngineProcessC, options, errorMessage)) {
