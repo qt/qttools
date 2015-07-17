@@ -1866,7 +1866,8 @@ void DesignerPropertyManager::setValue(QtProperty *property, const QVariant &val
                     iconPaths.constFind(qMakePair(QIcon::Normal, QIcon::Off));
         if (itNormalOff != iconPaths.constEnd())
             toolTip = itNormalOff.value().path();
-        property->setToolTip(toolTip);
+        // valueText() only show the file name; show full path as ToolTip.
+        property->setToolTip(QDir::toNativeSeparators(toolTip));
 
         return;
     } else if (m_pixmapValues.contains(property)) {
@@ -1884,7 +1885,8 @@ void DesignerPropertyManager::setValue(QtProperty *property, const QVariant &val
         emit QtVariantPropertyManager::valueChanged(property, QVariant::fromValue(pixmap));
         emit propertyChanged(property);
 
-        property->setToolTip(pixmap.path());
+        // valueText() only show the file name; show full path as ToolTip.
+        property->setToolTip(QDir::toNativeSeparators(pixmap.path()));
 
         return;
     } else if (m_uintValues.contains(property)) {
@@ -1970,13 +1972,7 @@ void DesignerPropertyManager::setValue(QtProperty *property, const QVariant &val
     }
     m_fontManager.setValue(this, property, value);
     QtVariantPropertyManager::setValue(property, value);
-    if (QtVariantPropertyManager::valueType(property) == QVariant::String)
-        property->setToolTip(DesignerPropertyManager::value(property).toString());
-    else if (QtVariantPropertyManager::valueType(property) == designerStringTypeId())
-        property->setToolTip(qvariant_cast<PropertySheetStringValue>(DesignerPropertyManager::value(property)).value());
-    else if (QtVariantPropertyManager::valueType(property) == designerKeySequenceTypeId())
-        property->setToolTip(qvariant_cast<PropertySheetKeySequenceValue>(DesignerPropertyManager::value(property)).value().toString(QKeySequence::NativeText));
-    else if (QtVariantPropertyManager::valueType(property) == QVariant::Bool)
+    if (QtVariantPropertyManager::valueType(property) == QVariant::Bool)
         property->setToolTip(QtVariantPropertyManager::valueText(property));
 }
 
