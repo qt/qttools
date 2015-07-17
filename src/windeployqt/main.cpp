@@ -1248,6 +1248,12 @@ static DeployResult deploy(const Options &options,
             if (!updateFile(qtLib, targetPath, options.updateFileFlags, options.json, errorMessage))
                 return result;
         }
+
+        const QString qt5CoreName = QFileInfo(libraryPath(libraryLocation, "Qt5Core", qtLibInfix,
+                                                          options.platform, isDebug)).fileName();
+
+        if (!patchQtCore(targetPath + QLatin1Char('/') + qt5CoreName, errorMessage))
+            return result;
     } // optLibraries
 
     // Update plugins
