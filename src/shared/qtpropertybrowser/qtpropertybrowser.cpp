@@ -51,7 +51,8 @@ public:
     QSet<QtProperty *> m_parentItems;
     QList<QtProperty *> m_subItems;
 
-    QString m_toolTip;
+    QString m_valueToolTip;
+    QString m_descriptionToolTip;
     QString m_statusTip;
     QString m_whatsThis;
     QString m_name;
@@ -100,7 +101,11 @@ public:
     \row
     \li statusTip() \li setStatusTip()
     \row
-    \li toolTip() \li setToolTip()
+    \li descriptionToolTip() \li setDescriptionToolTip()
+    \row
+    \li valueToolTip() \li setValueToolTip()
+    \row
+    \li toolTip() \deprecated in 5.6 \li setToolTip() \deprecated in 5.6
     \row
     \li whatsThis() \li setWhatsThis()
     \row
@@ -192,14 +197,35 @@ QtAbstractPropertyManager *QtProperty::propertyManager() const
     return d_ptr->m_manager;
 }
 
-/*!
-    Returns the property's  tool tip.
+/* Note: As of 17.7.2015 for Qt 5.6, the existing 'toolTip' of the Property
+ * Browser solution was split into valueToolTip() and descriptionToolTip()
+ * to be able to implement custom tool tip for QTBUG-45442. This could
+ * be back-ported to the solution. */
 
-    \sa setToolTip()
+/*!
+    Returns the property value's  tool tip.
+
+    This is suitable for tool tips over the value (item delegate).
+
+    \since 5.6
+    \sa setValueToolTip()
 */
-QString QtProperty::toolTip() const
+QString QtProperty::valueToolTip() const
 {
-    return d_ptr->m_toolTip;
+    return d_ptr->m_valueToolTip;
+}
+
+/*!
+    Returns the property description's  tool tip.
+
+    This is suitable for tool tips over the description (label).
+
+    \since 5.6
+    \sa setDescriptionToolTip()
+*/
+QString QtProperty::descriptionToolTip() const
+{
+    return d_ptr->m_descriptionToolTip;
 }
 
 /*!
@@ -289,16 +315,32 @@ QString QtProperty::valueText() const
 }
 
 /*!
-    Sets the property's tool tip to the given \a text.
+    Sets the property value's tool tip to the given \a text.
 
-    \sa toolTip()
+    \since 5.6
+    \sa valueToolTip()
 */
-void QtProperty::setToolTip(const QString &text)
+void QtProperty::setValueToolTip(const QString &text)
 {
-    if (d_ptr->m_toolTip == text)
+    if (d_ptr->m_valueToolTip == text)
         return;
 
-    d_ptr->m_toolTip = text;
+    d_ptr->m_valueToolTip = text;
+    propertyChanged();
+}
+
+/*!
+    Sets the property description's tool tip to the given \a text.
+
+    \since 5.6
+    \sa descriptionToolTip()
+*/
+void QtProperty::setDescriptionToolTip(const QString &text)
+{
+    if (d_ptr->m_descriptionToolTip == text)
+        return;
+
+    d_ptr->m_descriptionToolTip = text;
     propertyChanged();
 }
 

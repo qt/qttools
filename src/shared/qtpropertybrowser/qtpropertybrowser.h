@@ -51,7 +51,9 @@ public:
 
     QtAbstractPropertyManager *propertyManager() const;
 
-    QString toolTip() const;
+    QString toolTip() const { return valueToolTip(); } // Compatibility
+    QString valueToolTip() const;
+    QString descriptionToolTip() const;
     QString statusTip() const;
     QString whatsThis() const;
     QString propertyName() const;
@@ -62,7 +64,9 @@ public:
     QIcon valueIcon() const;
     QString valueText() const;
 
-    void setToolTip(const QString &text);
+    void setToolTip(const QString &text) { setValueToolTip(text); }  // Compatibility
+    void setValueToolTip(const QString &text);
+    void setDescriptionToolTip(const QString &text);
     void setStatusTip(const QString &text);
     void setWhatsThis(const QString &text);
     void setPropertyName(const QString &text);

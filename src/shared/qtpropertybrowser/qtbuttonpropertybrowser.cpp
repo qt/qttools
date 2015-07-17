@@ -453,7 +453,7 @@ void QtButtonPropertyBrowserPrivate::updateItem(WidgetItem *item)
         font.setUnderline(property->isModified());
         item->button->setFont(font);
         item->button->setText(property->propertyName());
-        item->button->setToolTip(property->toolTip());
+        item->button->setToolTip(property->descriptionToolTip());
         item->button->setStatusTip(property->statusTip());
         item->button->setWhatsThis(property->whatsThis());
         item->button->setEnabled(property->isEnabled());
@@ -463,7 +463,7 @@ void QtButtonPropertyBrowserPrivate::updateItem(WidgetItem *item)
         font.setUnderline(property->isModified());
         item->label->setFont(font);
         item->label->setText(property->propertyName());
-        item->label->setToolTip(property->toolTip());
+        item->label->setToolTip(property->descriptionToolTip());
         item->label->setStatusTip(property->statusTip());
         item->label->setWhatsThis(property->whatsThis());
         item->label->setEnabled(property->isEnabled());
@@ -481,7 +481,8 @@ void QtButtonPropertyBrowserPrivate::updateItem(WidgetItem *item)
         font.setUnderline(false);
         item->widget->setFont(font);
         item->widget->setEnabled(property->isEnabled());
-        item->widget->setToolTip(property->valueText());
+        const QString valueToolTip = property->valueToolTip();
+        item->widget->setToolTip(valueToolTip.isEmpty() ? property->valueText() : valueToolTip);
     }
 }
 

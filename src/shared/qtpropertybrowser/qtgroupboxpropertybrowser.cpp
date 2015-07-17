@@ -398,7 +398,7 @@ void QtGroupBoxPropertyBrowserPrivate::updateItem(WidgetItem *item)
         font.setUnderline(property->isModified());
         item->groupBox->setFont(font);
         item->groupBox->setTitle(property->propertyName());
-        item->groupBox->setToolTip(property->toolTip());
+        item->groupBox->setToolTip(property->descriptionToolTip());
         item->groupBox->setStatusTip(property->statusTip());
         item->groupBox->setWhatsThis(property->whatsThis());
         item->groupBox->setEnabled(property->isEnabled());
@@ -408,7 +408,7 @@ void QtGroupBoxPropertyBrowserPrivate::updateItem(WidgetItem *item)
         font.setUnderline(property->isModified());
         item->label->setFont(font);
         item->label->setText(property->propertyName());
-        item->label->setToolTip(property->toolTip());
+        item->label->setToolTip(property->descriptionToolTip());
         item->label->setStatusTip(property->statusTip());
         item->label->setWhatsThis(property->whatsThis());
         item->label->setEnabled(property->isEnabled());
@@ -425,7 +425,8 @@ void QtGroupBoxPropertyBrowserPrivate::updateItem(WidgetItem *item)
         font.setUnderline(false);
         item->widget->setFont(font);
         item->widget->setEnabled(property->isEnabled());
-        item->widget->setToolTip(property->valueText());
+        const QString valueToolTip = property->valueToolTip();
+        item->widget->setToolTip(valueToolTip.isEmpty() ? property->valueText() : valueToolTip);
     }
     //item->setIcon(1, property->valueIcon());
 }
