@@ -93,6 +93,8 @@ public:
     QString xmlDisplayName() const;
     // Type of a string property
     bool xmlStringPropertyType(const QString &name, StringPropertyType *type) const;
+    // Custom tool tip of property
+    QString propertyToolTip(const QString &name) const;
 
 private:
     QSharedDataPointer<QDesignerCustomWidgetSharedData> m_d;

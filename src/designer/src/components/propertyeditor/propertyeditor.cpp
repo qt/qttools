@@ -56,9 +56,8 @@
 #include <qdesigner_propertycommand_p.h>
 #include <metadatabase_p.h>
 #include <iconloader_p.h>
-#ifdef Q_OS_WIN
-#  include <widgetfactory_p.h>
-#endif
+#include <widgetfactory_p.h>
+
 #include <QtWidgets/QAction>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMenu>
@@ -909,22 +908,36 @@ QString PropertyEditor::realClassName(QObject *object) const
     return className;
 }
 
-static QString msgUnsupportedType(const QString &propertyName, unsigned type)
+static const char *typeName(int type)
+{
+    if (type == qMetaTypeId<PropertySheetStringValue>())
+        type = QVariant::String;
+    if (type < int(QVariant::UserType))
+        return QVariant::typeToName(static_cast<QVariant::Type>(type));
+    if (type == qMetaTypeId<PropertySheetIconValue>())
+        return "QIcon";
+    if (type == qMetaTypeId<PropertySheetPixmapValue>())
+        return "QPixmap";
+    if (type == qMetaTypeId<PropertySheetKeySequenceValue>())
+        return "QKeySequence";
+    if (type == qMetaTypeId<PropertySheetFlagValue>())
+        return "QFlags";
+    if (type == qMetaTypeId<PropertySheetEnumValue>())
+        return "enum";
+    if (type == QVariant::Invalid)
+        return "invalid";
+    if (type == QVariant::UserType)
+        return "user type";
+    return Q_NULLPTR;
+}
+
+static QString msgUnsupportedType(const QString &propertyName, int type)
 {
     QString rc;
     QTextStream str(&rc);
-    str << "The property \"" << propertyName << "\" of type " << type;
-    if (type == QVariant::Invalid) {
-        str << " (invalid) ";
-    } else {
-        if (type < QVariant::UserType) {
-            if (const char *typeName = QVariant::typeToName(static_cast<QVariant::Type>(type)))
-                str << " (" << typeName << ") ";
-        } else {
-            str << " (user type) ";
-        }
-    }
-    str << " is not supported yet!";
+    const char *typeS = typeName(type);
+    str << "The property \"" << propertyName << "\" of type ("
+        << (typeS ? typeS : "unknown") << ") is not supported yet!";
     return rc;
 }
 
@@ -998,6 +1011,9 @@ void PropertyEditor::setObject(QObject *object)
     m_groups.clear();
 
     if (m_propertySheet) {
+        const QString className = WidgetFactory::classNameOf(formWindow->core(), m_object);
+        const QDesignerCustomWidgetData customData = formWindow->core()->pluginManager()->customWidgetData(className);
+
         QtProperty *lastProperty = 0;
         QtProperty *lastGroup = 0;
         const int propertyCount = m_propertySheet->count();
@@ -1048,6 +1064,17 @@ void PropertyEditor::setObject(QObject *object)
             if (property != 0) {
                 const bool dynamicProperty = (dynamicSheet && dynamicSheet->isDynamicProperty(i))
                             || (sheet && sheet->isDefaultDynamicProperty(i));
+                QString descriptionToolTip;
+                if (!dynamicProperty && !customData.isNull())
+                    descriptionToolTip = customData.propertyToolTip(propertyName);
+                if (descriptionToolTip.isEmpty()) {
+                    if (const char *typeS = typeName(type)) {
+                        descriptionToolTip = propertyName + QLatin1String(" (")
+                            + QLatin1String(typeS) + QLatin1Char(')');
+                    }
+                }
+                if (!descriptionToolTip.isEmpty())
+                    property->setDescriptionToolTip(descriptionToolTip);
                 switch (type) {
                 case QVariant::Palette:
                     setupPaletteProperty(property);

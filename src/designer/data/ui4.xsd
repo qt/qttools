@@ -579,8 +579,13 @@
 
          <xs:complexType name="PropertySpecifications">
             <xs:sequence maxOccurs="unbounded">
+                <xs:element name="tooltip" type="PropertyToolTip" minOccurs="0" maxOccurs="unbounded" />
                 <xs:element name="stringpropertyspecification" type="StringPropertySpecification" minOccurs="0" maxOccurs="unbounded" />
             </xs:sequence>
+        </xs:complexType>
+
+         <xs:complexType name="PropertyToolTip">
+                <xs:attribute name="name" type="xs:string" use="required" />
         </xs:complexType>
 
          <xs:complexType name="StringPropertySpecification">

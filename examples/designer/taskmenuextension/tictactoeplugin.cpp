@@ -127,6 +127,7 @@ QString TicTacToePlugin::domXml() const
         <customwidget>\
             <class>TicTacToe</class>\
             <propertyspecifications>\
+            <tooltip name=\"state\">Tic Tac Toe state</tooltip>\
             <stringpropertyspecification name=\"state\" notr=\"true\" type=\"singleline\"/>\
             </propertyspecifications>\
         </customwidget>\

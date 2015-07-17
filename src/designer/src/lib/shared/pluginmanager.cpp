@@ -67,6 +67,7 @@ static const char *extendsElementC = "extends";
 static const char *addPageMethodC = "addpagemethod";
 static const char *propertySpecsC = "propertyspecifications";
 static const char *stringPropertySpecC = "stringpropertyspecification";
+static const char propertyToolTipC[] = "tooltip";
 static const char *stringPropertyNameAttrC = "name";
 static const char *stringPropertyTypeAttrC = "type";
 static const char *stringPropertyNoTrAttrC = "notr";
@@ -142,6 +143,7 @@ public:
     // Type of a string property
     typedef QPair<qdesigner_internal::TextPropertyValidationMode, bool> StringPropertyType;
     typedef QHash<QString, StringPropertyType> StringPropertyTypeMap;
+    typedef QHash<QString, QString> PropertyToolTipMap;
 
     explicit QDesignerCustomWidgetSharedData(const QString &thePluginPath) : pluginPath(thePluginPath) {}
     void clearXML();
@@ -155,6 +157,7 @@ public:
     QString xmlExtends;
 
     StringPropertyTypeMap xmlStringPropertyTypeMap;
+    PropertyToolTipMap propertyToolTipMap;
 };
 
 void QDesignerCustomWidgetSharedData::clearXML()
@@ -235,6 +238,11 @@ bool QDesignerCustomWidgetData::xmlStringPropertyType(const QString &name, Strin
     return true;
 }
 
+QString QDesignerCustomWidgetData::propertyToolTip(const QString &name) const
+{
+    return m_d->propertyToolTipMap.value(name);
+}
+
 // Wind a QXmlStreamReader  until it finds an element. Returns index or one of FindResult
 enum FindResult { FindError = -2, ElementNotFound = -1 };
 
@@ -290,12 +298,13 @@ static qdesigner_internal::TextPropertyValidationMode typeStringToType(const QSt
     return qdesigner_internal::ValidationRichText;
 }
 
-static  bool parsePropertySpecs(QXmlStreamReader &sr,
-                                   QDesignerCustomWidgetSharedData::StringPropertyTypeMap *rc,
-                                   QString *errorMessage)
+static bool parsePropertySpecs(QXmlStreamReader &sr,
+                               QDesignerCustomWidgetSharedData *data,
+                               QString *errorMessage)
 {
     const QString propertySpecs = QLatin1String(propertySpecsC);
     const QString stringPropertySpec = QLatin1String(stringPropertySpecC);
+    const QString propertyToolTip = QLatin1String(propertyToolTipC);
     const QString stringPropertyTypeAttr = QLatin1String(stringPropertyTypeAttrC);
     const QString stringPropertyNoTrAttr = QLatin1String(stringPropertyNoTrAttrC);
     const QString stringPropertyNameAttr = QLatin1String(stringPropertyNameAttrC);
@@ -303,31 +312,39 @@ static  bool parsePropertySpecs(QXmlStreamReader &sr,
     while (!sr.atEnd()) {
         switch(sr.readNext()) {
         case QXmlStreamReader::StartElement: {
-            if (sr.name() != stringPropertySpec) {
+            if (sr.name() == stringPropertySpec) {
+                const QXmlStreamAttributes atts = sr.attributes();
+                const QString name = atts.value(stringPropertyNameAttr).toString();
+                const QString type = atts.value(stringPropertyTypeAttr).toString();
+                const QString notrS = atts.value(stringPropertyNoTrAttr).toString(); //Optional
+
+                if (type.isEmpty()) {
+                    *errorMessage = msgAttributeMissing(stringPropertyTypeAttr);
+                    return false;
+                }
+                if (name.isEmpty()) {
+                    *errorMessage = msgAttributeMissing(stringPropertyNameAttr);
+                    return false;
+                }
+                bool typeOk;
+                const bool noTr = notrS == QStringLiteral("true") || notrS == QStringLiteral("1");
+                QDesignerCustomWidgetSharedData::StringPropertyType v(typeStringToType(type, &typeOk), !noTr);
+                if (!typeOk) {
+                    *errorMessage = QDesignerPluginManager::tr("'%1' is not a valid string property specification.").arg(type);
+                    return false;
+                }
+                data->xmlStringPropertyTypeMap.insert(name, v);
+            } else if (sr.name() == propertyToolTip) {
+                const QString name = sr.attributes().value(stringPropertyNameAttr).toString();
+                if (name.isEmpty()) {
+                    *errorMessage = msgAttributeMissing(stringPropertyNameAttr);
+                    return false;
+                }
+                data->propertyToolTipMap.insert(name, sr.readElementText().trimmed());
+            } else {
                 *errorMessage = QDesignerPluginManager::tr("An invalid property specification ('%1') was encountered. Supported types: %2").arg(sr.name().toString(), stringPropertySpec);
                 return false;
             }
-            const QXmlStreamAttributes atts = sr.attributes();
-            const QString name = atts.value(stringPropertyNameAttr).toString();
-            const QString type = atts.value(stringPropertyTypeAttr).toString();
-            const QString notrS = atts.value(stringPropertyNoTrAttr).toString(); //Optional
-
-            if (type.isEmpty()) {
-                *errorMessage = msgAttributeMissing(stringPropertyTypeAttr);
-                return false;
-            }
-            if (name.isEmpty()) {
-                *errorMessage = msgAttributeMissing(stringPropertyNameAttr);
-                return false;
-            }
-            bool typeOk;
-            const bool noTr = notrS == QStringLiteral("true") || notrS == QStringLiteral("1");
-            QDesignerCustomWidgetSharedData::StringPropertyType v(typeStringToType(type, &typeOk), !noTr);
-            if (!typeOk) {
-                *errorMessage = QDesignerPluginManager::tr("'%1' is not a valid string property specification.").arg(type);
-                return false;
-            }
-            rc->insert(name, v);
         }
             break;
         case QXmlStreamReader::EndElement: // Outer </stringproperties>
@@ -429,7 +446,7 @@ QDesignerCustomWidgetData::ParseResult
             }
             break;
         case 2: // <stringproperties>
-            if (!parsePropertySpecs(sr, &m_d->xmlStringPropertyTypeMap, errorMessage)) {
+            if (!parsePropertySpecs(sr, m_d.data(), errorMessage)) {
                 *errorMessage = msgXmlError(name, *errorMessage);
                 return ParseError;
             }

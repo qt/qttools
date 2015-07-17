@@ -2405,8 +2405,9 @@ pixmap property in the property editor.
             <class>widgets::MyWidget</class>
             <addpagemethod>addPage</addpagemethod>
             <propertyspecifications>
-                <stringpropertyspecification name="fileName" notr="true" type="singleline"
-                <stringpropertyspecification name="text" type="richtext"
+                <stringpropertyspecification name="fileName" notr="true" type="singleline"/>
+                <stringpropertyspecification name="text" type="richtext"/>
+                <tooltip name="text">Explanatory text to be shown in Property Editor</tooltip>
             </propertyspecifications>
         </customwidget>
     </customwidgets>
@@ -2443,9 +2444,13 @@ pixmap property in the property editor.
     for them.
 
     The \c{<propertyspecifications>} element can contain a list of property meta information.
-    Currently, properties of type string are supported. For these properties, the
-    \c{<stringpropertyspecification>} tag can be used. This tag has the following attributes:
 
+    The tag \c{<tooltip>} may be used to specify a tool tip to be shown in Property Editor
+    when hovering over the property. The property name is given in the attribute \c name and
+    the element text is the tooltip. This functionality was added in Qt 5.6.
+
+    For properties of type string, the \c{<stringpropertyspecification>} tag can be used.
+    This tag has the following attributes:
 
     \table
         \header
