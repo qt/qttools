@@ -725,22 +725,25 @@ inline QStringList readImportSections(const ImageNtHeader *ntHeaders, const void
     return result;
 }
 
-// Check for MSCV runtime (MSVCP90D.dll/MSVCP90.dll, MSVCP120D.dll/MSVCP120.dll
-// or msvcp120d_app.dll/msvcp120_app.dll).
+// Check for MSCV runtime (MSVCP90D.dll/MSVCP90.dll, MSVCP120D.dll/MSVCP120.dll,
+// VCRUNTIME140D.DLL/VCRUNTIME140.DLL (VS2015) or msvcp120d_app.dll/msvcp120_app.dll).
 enum MsvcDebugRuntimeResult { MsvcDebugRuntime, MsvcReleaseRuntime, NoMsvcRuntime };
 
 static inline MsvcDebugRuntimeResult checkMsvcDebugRuntime(const QStringList &dependentLibraries)
 {
     foreach (const QString &lib, dependentLibraries) {
+        int pos = 0;
         if (lib.startsWith(QLatin1String("MSVCR"), Qt::CaseInsensitive)
             || lib.startsWith(QLatin1String("MSVCP"), Qt::CaseInsensitive)) {
-            int pos = 5;
-            if (lib.at(pos).isDigit()) {
-                for (++pos; lib.at(pos).isDigit(); ++pos)
-                    ;
-                return lib.at(pos).toLower() == QLatin1Char('d')
-                    ? MsvcDebugRuntime : MsvcReleaseRuntime;
-            }
+            pos = 5;
+        } else if (lib.startsWith(QLatin1String("VCRUNTIME"), Qt::CaseInsensitive)) {
+            pos = 9;
+        }
+        if (pos && lib.at(pos).isDigit()) {
+            for (++pos; lib.at(pos).isDigit(); ++pos)
+                ;
+            return lib.at(pos).toLower() == QLatin1Char('d')
+                ? MsvcDebugRuntime : MsvcReleaseRuntime;
         }
     }
     return NoMsvcRuntime;
