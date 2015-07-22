@@ -58,7 +58,7 @@ int main(int argc, char **argv)
         qDebug() << "the application uses.";
         qDebug() << "";
         qDebug() << "Plugins related to a framework are copied in with the";
-        qDebug() << "framework. The accessibilty, image formats, and text codec";
+        qDebug() << "framework. The accessibility, image formats, and text codec";
         qDebug() << "plugins are always copied, unless \"-no-plugins\" is specified.";
         qDebug() << "";
         qDebug() << "See the \"Deploying an Application on Qt/Mac\" topic in the";
