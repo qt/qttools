@@ -8,7 +8,7 @@ HEADERS += runner.h runnerengine.h
 
 DEFINES += RTRUNNER_NO_APPXLOCAL RTRUNNER_NO_APPXPHONE
 
-win32-msvc2013 {
+win32-msvc2013|win32-msvc2015 {
     SOURCES += appxengine.cpp appxlocalengine.cpp appxphoneengine.cpp
     HEADERS += appxengine.h appxengine_p.h appxlocalengine.h appxphoneengine.h
     LIBS += -lruntimeobject -lwsclient -lShlwapi -lurlmon -lxmllite
