@@ -927,7 +927,7 @@ static QString libraryPath(const QString &libraryLocation, const char *name,
     return result;
 }
 
-static QStringList compilerRunTimeLibs(Platform platform, unsigned wordSize)
+static QStringList compilerRunTimeLibs(Platform platform, bool isDebug, unsigned wordSize)
 {
     QStringList result;
     switch (platform) {
@@ -966,21 +966,33 @@ static QStringList compilerRunTimeLibs(Platform platform, unsigned wordSize)
                        << QDir::toNativeSeparators(vcRedistDirName).toStdWString() << ".\n";
             break;
         }
-        const QStringList countryCodes = vcRedistDir.entryList(QStringList(QStringLiteral("[0-9]*")), QDir::Dirs);
-        QString redist;
-        if (!countryCodes.isEmpty()) {
-            const QFileInfo fi(vcRedistDirName + slash + countryCodes.first() + slash
-                               + QStringLiteral("vcredist_x") + QLatin1String(wordSize > 32 ? "64" : "86")
-                               + QStringLiteral(".exe"));
-            if (fi.isFile())
-                redist = fi.absoluteFilePath();
+        QStringList redistFiles;
+        const QString wordSizeString(QLatin1String(wordSize > 32 ? "x64" : "x86"));
+        if (isDebug) {
+            // Append DLLs from Debug_NonRedist\x??\Microsoft.VC<version>.DebugCRT.
+            if (vcRedistDir.cd(QLatin1String("Debug_NonRedist")) && vcRedistDir.cd(wordSizeString)) {
+                const QStringList names = vcRedistDir.entryList(QStringList(QStringLiteral("Microsoft.VC*.DebugCRT")), QDir::Dirs);
+                if (!names.isEmpty() && vcRedistDir.cd(names.first())) {
+                    foreach (const QFileInfo &dll, vcRedistDir.entryInfoList(QStringList(QLatin1String("*.dll"))))
+                        redistFiles.append(dll.absoluteFilePath());
+                }
+            }
+        } else { // release: Bundle vcredist<>.exe
+            const QStringList countryCodes = vcRedistDir.entryList(QStringList(QStringLiteral("[0-9]*")), QDir::Dirs);
+            if (!countryCodes.isEmpty()) {
+                const QFileInfo fi(vcRedistDirName + slash + countryCodes.first() + slash
+                                   + QStringLiteral("vcredist_") + wordSizeString
+                                   + QStringLiteral(".exe"));
+                if (fi.isFile())
+                    redistFiles.append(fi.absoluteFilePath());
+            }
         }
-        if (redist.isEmpty()) {
-            std::wcerr << "Warning: Cannot find Visual Studio redistributable in "
-                       << QDir::toNativeSeparators(vcRedistDirName).toStdWString() << ".\n";
+        if (redistFiles.isEmpty()) {
+            std::wcerr << "Warning: Cannot find Visual Studio " << (isDebug ? "debug" : "release")
+                       << " redistributable files in " << QDir::toNativeSeparators(vcRedistDirName).toStdWString() << ".\n";
             break;
         }
-        result.append(redist);
+        result.append(redistFiles);
     }
     default:
         break;
@@ -1229,7 +1241,7 @@ static DeployResult deploy(const Options &options,
             options.directory : options.libraryDirectory;
         QStringList libraries = deployedQtLibraries;
         if (options.compilerRunTime)
-            libraries.append(compilerRunTimeLibs(options.platform, wordSize));
+            libraries.append(compilerRunTimeLibs(options.platform, isDebug, wordSize));
         foreach (const QString &qtLib, libraries) {
             if (!updateFile(qtLib, targetPath, options.updateFileFlags, options.json, errorMessage))
                 return result;
