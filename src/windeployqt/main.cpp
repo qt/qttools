@@ -248,8 +248,10 @@ struct Options {
         AngleDetectionForceOff
     };
 
-    Options() : plugins(true), libraries(true), quickImports(true), translations(true), systemD3dCompiler(true), compilerRunTime(false)
-              , angleDetection(AngleDetectionAuto), platform(Windows), additionalLibraries(0), disabledLibraries(0)
+    Options() : plugins(true), libraries(true), quickImports(true), translations(true)
+              , systemD3dCompiler(true), compilerRunTime(false)
+              , angleDetection(AngleDetectionAuto), softwareRasterizer(true), platform(Windows)
+              , additionalLibraries(0), disabledLibraries(0)
               , updateFileFlags(0), json(0), list(ListNone), debugDetection(DebugDetectionAuto)
               , debugMatchAll(false) {}
 
@@ -260,6 +262,7 @@ struct Options {
     bool systemD3dCompiler;
     bool compilerRunTime;
     AngleDetection angleDetection;
+    bool softwareRasterizer;
     Platform platform;
     quint64 additionalLibraries;
     quint64 disabledLibraries;
@@ -400,6 +403,10 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
                                      QStringLiteral("Disable deployment of ANGLE."));
     parser->addOption(noAngleOption);
 
+    QCommandLineOption suppressSoftwareRasterizerOption(QStringLiteral("no-opengl-sw"),
+                                                        QStringLiteral("Do not deploy the software rasterizer library."));
+    parser->addOption(suppressSoftwareRasterizerOption);
+
     QCommandLineOption listOption(QStringLiteral("list"),
                                   QLatin1String("Print only the names of the files copied.\n"
                                                 "Available options:\n"
@@ -490,6 +497,9 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
         options->angleDetection = Options::AngleDetectionForceOff;
         break;
     }
+
+    if (parser->isSet(suppressSoftwareRasterizerOption))
+        options->softwareRasterizer = false;
 
     optWebKit2 = parseExclusiveOptions(parser, webKitOption, noWebKitOption);
 
@@ -1231,7 +1241,7 @@ static DeployResult deploy(const Options &options,
                 }
             }
         } // deployAngle
-        if (!dependsOnOpenGl) {
+        if (options.softwareRasterizer && !dependsOnOpenGl) {
             const QFileInfo softwareRasterizer(qtBinDir + slash + QStringLiteral("opengl32sw") + QLatin1String(windowsSharedLibrarySuffix));
             if (softwareRasterizer.isFile())
                 deployedQtLibraries.append(softwareRasterizer.absoluteFilePath());
