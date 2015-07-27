@@ -60,7 +60,7 @@ private:
     QString m_cmdLupdate;
     QString m_basePath;
 
-    void doCompare(const QStringList &actual, const QString &expectedFn, bool err);
+    void doCompare(QStringList actual, const QString &expectedFn, bool err);
     void doCompare(const QString &actualFn, const QString &expectedFn, bool err);
 };
 
@@ -114,11 +114,16 @@ static bool prepareMatch(const QString &expect, QString *tmpl, int *require, int
     return true;
 }
 
-void tst_lupdate::doCompare(const QStringList &actual, const QString &expectedFn, bool err)
+void tst_lupdate::doCompare(QStringList actual, const QString &expectedFn, bool err)
 {
     QFile file(expectedFn);
     QVERIFY2(file.open(QIODevice::ReadOnly | QIODevice::Text), qPrintable(expectedFn));
     QStringList expected = QString(file.readAll()).split('\n');
+
+    for (int i = actual.size() - 1; i >= 0; --i) {
+        if (actual.at(i).startsWith(QLatin1String("Info: creating stash file ")))
+            actual.removeAt(i);
+    }
 
     int ei = 0, ai = 0, em = expected.size(), am = actual.size();
     int oei = 0, oai = 0, oem = em, oam = am;
