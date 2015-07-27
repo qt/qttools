@@ -100,7 +100,8 @@ enum QtModule
     Qt3DQuickModule           = 0x080000000000,
     Qt3DQuickRendererModule   = 0x100000000000,
     Qt3DInputModule           = 0x200000000000,
-    QtLocationModule          = 0x400000000000
+    QtLocationModule          = 0x400000000000,
+    QtWebChannelModule        = 0x800000000000
 };
 
 struct QtModuleEntry {
@@ -156,7 +157,8 @@ QtModuleEntry qtModuleEntries[] = {
     { Qt3DQuickModule, "3dquick", "Qt53DQuick", 0 },
     { Qt3DQuickRendererModule, "3dquickrenderer", "Qt53DQuickRenderer", 0 },
     { Qt3DInputModule, "3dinput", "Qt53DInput", 0 },
-    { QtLocationModule, "geoservices", "Qt5Location", 0 }
+    { QtLocationModule, "geoservices", "Qt5Location", 0 },
+    { QtWebChannelModule, "webchannel", "Qt5WebChannel", 0 }
 };
 
 static const char webKitProcessC[] = "QtWebProcess";
