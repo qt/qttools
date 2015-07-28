@@ -46,6 +46,7 @@
 #include <QtCore/QVector>
 
 #include <iostream>
+#include <cstdio>
 
 QT_BEGIN_NAMESPACE
 
