@@ -100,7 +100,8 @@ enum QtModule
     Qt3DQuickModule           = 0x080000000000,
     Qt3DQuickRendererModule   = 0x100000000000,
     Qt3DInputModule           = 0x200000000000,
-    QtLocationModule          = 0x400000000000
+    QtLocationModule          = 0x400000000000,
+    QtWebChannelModule        = 0x800000000000
 };
 
 struct QtModuleEntry {
@@ -155,8 +156,9 @@ QtModuleEntry qtModuleEntries[] = {
     { Qt3DRendererModule, "3drenderer", "Qt53DRenderer", 0 },
     { Qt3DQuickModule, "3dquick", "Qt53DQuick", 0 },
     { Qt3DQuickRendererModule, "3dquickrenderer", "Qt53DQuickRenderer", 0 },
-    { Qt3DInputModule, "3dinput", "Qt35DInput", 0 },
-    { QtLocationModule, "geoservices", "Qt5Location", 0 }
+    { Qt3DInputModule, "3dinput", "Qt53DInput", 0 },
+    { QtLocationModule, "geoservices", "Qt5Location", 0 },
+    { QtWebChannelModule, "webchannel", "Qt5WebChannel", 0 }
 };
 
 static const char webKitProcessC[] = "QtWebProcess";
@@ -721,7 +723,8 @@ private:
 static inline quint64 qtModuleForPlugin(const QString &subDirName)
 {
     if (subDirName == QLatin1String("accessible") || subDirName == QLatin1String("iconengines")
-        || subDirName == QLatin1String("imageformats") || subDirName == QLatin1String("platforms")) {
+        || subDirName == QLatin1String("imageformats") || subDirName == QLatin1String("platforms")
+        || subDirName == QLatin1String("platforminputcontexts")) {
         return QtGuiModule;
     }
     if (subDirName == QLatin1String("bearer"))
@@ -926,7 +929,7 @@ static QString libraryPath(const QString &libraryLocation, const char *name,
     return result;
 }
 
-static QStringList compilerRunTimeLibs(Platform platform, unsigned wordSize)
+static QStringList compilerRunTimeLibs(Platform platform, bool isDebug, unsigned wordSize)
 {
     QStringList result;
     switch (platform) {
@@ -965,21 +968,33 @@ static QStringList compilerRunTimeLibs(Platform platform, unsigned wordSize)
                        << QDir::toNativeSeparators(vcRedistDirName).toStdWString() << ".\n";
             break;
         }
-        const QStringList countryCodes = vcRedistDir.entryList(QStringList(QStringLiteral("[0-9]*")), QDir::Dirs);
-        QString redist;
-        if (!countryCodes.isEmpty()) {
-            const QFileInfo fi(vcRedistDirName + slash + countryCodes.first() + slash
-                               + QStringLiteral("vcredist_x") + QLatin1String(wordSize > 32 ? "64" : "86")
-                               + QStringLiteral(".exe"));
-            if (fi.isFile())
-                redist = fi.absoluteFilePath();
+        QStringList redistFiles;
+        const QString wordSizeString(QLatin1String(wordSize > 32 ? "x64" : "x86"));
+        if (isDebug) {
+            // Append DLLs from Debug_NonRedist\x??\Microsoft.VC<version>.DebugCRT.
+            if (vcRedistDir.cd(QLatin1String("Debug_NonRedist")) && vcRedistDir.cd(wordSizeString)) {
+                const QStringList names = vcRedistDir.entryList(QStringList(QStringLiteral("Microsoft.VC*.DebugCRT")), QDir::Dirs);
+                if (!names.isEmpty() && vcRedistDir.cd(names.first())) {
+                    foreach (const QFileInfo &dll, vcRedistDir.entryInfoList(QStringList(QLatin1String("*.dll"))))
+                        redistFiles.append(dll.absoluteFilePath());
+                }
+            }
+        } else { // release: Bundle vcredist<>.exe
+            const QStringList countryCodes = vcRedistDir.entryList(QStringList(QStringLiteral("[0-9]*")), QDir::Dirs);
+            if (!countryCodes.isEmpty()) {
+                const QFileInfo fi(vcRedistDirName + slash + countryCodes.first() + slash
+                                   + QStringLiteral("vcredist_") + wordSizeString
+                                   + QStringLiteral(".exe"));
+                if (fi.isFile())
+                    redistFiles.append(fi.absoluteFilePath());
+            }
         }
-        if (redist.isEmpty()) {
-            std::wcerr << "Warning: Cannot find Visual Studio redistributable in "
-                       << QDir::toNativeSeparators(vcRedistDirName).toStdWString() << ".\n";
+        if (redistFiles.isEmpty()) {
+            std::wcerr << "Warning: Cannot find Visual Studio " << (isDebug ? "debug" : "release")
+                       << " redistributable files in " << QDir::toNativeSeparators(vcRedistDirName).toStdWString() << ".\n";
             break;
         }
-        result.append(redist);
+        result.append(redistFiles);
     }
     default:
         break;
@@ -1228,7 +1243,7 @@ static DeployResult deploy(const Options &options,
             options.directory : options.libraryDirectory;
         QStringList libraries = deployedQtLibraries;
         if (options.compilerRunTime)
-            libraries.append(compilerRunTimeLibs(options.platform, wordSize));
+            libraries.append(compilerRunTimeLibs(options.platform, isDebug, wordSize));
         foreach (const QString &qtLib, libraries) {
             if (!updateFile(qtLib, targetPath, options.updateFileFlags, options.json, errorMessage))
                 return result;
@@ -1327,7 +1342,10 @@ static bool deployWebProcess(const QMap<QString, QString> &qmakeVariables,
 static bool deployWebEngine(const QMap<QString, QString> &qmakeVariables,
                              const Options &options, QString *errorMessage)
 {
-    static const char *installDataFiles[] = {"icudtl.dat", "qtwebengine_resources.pak"};
+    static const char *installDataFiles[] = {"icudtl.dat",
+                                             "qtwebengine_resources.pak",
+                                             "qtwebengine_resources_100p.pak",
+                                             "qtwebengine_resources_200p.pak"};
 
     std::wcout << "Deploying: " << webEngineProcessC << "...\n";
     if (!deployWebProcess(qmakeVariables, webEngineProcessC, options, errorMessage)) {
