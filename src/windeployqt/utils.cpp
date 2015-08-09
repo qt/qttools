@@ -921,4 +921,53 @@ QString findD3dCompiler(Platform, const QString &, unsigned)
 
 #endif // !Q_OS_WIN
 
+// Search for "qt_prfxpath=xxxx" in \a path, and replace it with "qt_prfxpath=."
+bool patchQtCore(const QString &path, QString *errorMessage)
+{
+    if (optVerboseLevel)
+        std::wcout << "Patching " << QFileInfo(path).fileName() << "...\n";
+
+    QFile file(path);
+    if (!file.open(QIODevice::ReadWrite)) {
+        *errorMessage = QString::fromLatin1("Unable to patch %1: %2").arg(
+                    QDir::toNativeSeparators(path), file.errorString());
+        return false;
+    }
+    QByteArray content = file.readAll();
+
+    if (content.isEmpty()) {
+        *errorMessage = QString::fromLatin1("Unable to patch %1: Could not read file content").arg(
+                    QDir::toNativeSeparators(path));
+        return false;
+    }
+
+    QByteArray prfxpath("qt_prfxpath=");
+    int startPos = content.indexOf(prfxpath);
+    if (startPos == -1) {
+        *errorMessage = QString::fromLatin1(
+                    "Unable to patch %1: Could not locate pattern \"qt_prfxpath=\"").arg(
+                    QDir::toNativeSeparators(path));
+        return false;
+    }
+    startPos += prfxpath.length();
+    int endPos = content.indexOf(char(0), startPos);
+    if (endPos == -1) {
+        *errorMessage = QString::fromLatin1("Unable to patch %1: Internal error").arg(
+                    QDir::toNativeSeparators(path));
+        return false;
+    }
+
+    QByteArray replacement = QByteArray(endPos - startPos, char(0));
+    replacement[0] = '.';
+    content.replace(startPos, endPos - startPos, replacement);
+
+    if (!file.seek(0)
+            || (file.write(content) != content.size())) {
+        *errorMessage = QString::fromLatin1("Unable to patch %1: Could not write to file").arg(
+                    QDir::toNativeSeparators(path));
+        return false;
+    }
+    return true;
+}
+
 QT_END_NAMESPACE

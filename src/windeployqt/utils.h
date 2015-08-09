@@ -214,6 +214,8 @@ inline QStringList findDependentLibraries(const QString &executableFileName, Pla
 
 QString findD3dCompiler(Platform platform, const QString &qtBinDir, unsigned wordSize);
 
+bool patchQtCore(const QString &path, QString *errorMessage);
+
 extern int optVerboseLevel;
 
 // Recursively update a file or directory, matching DirectoryFileEntryFunction against the QDir
