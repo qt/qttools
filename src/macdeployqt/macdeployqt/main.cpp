@@ -158,7 +158,7 @@ int main(int argc, char **argv)
     }
 
     if (!qmlDirs.isEmpty())
-        deployQmlImports(appBundlePath, qmlDirs);
+        deployQmlImports(appBundlePath, deploymentInfo, qmlDirs);
 
     if (runCodesign)
         codesign(codesignIdentiy, appBundlePath);

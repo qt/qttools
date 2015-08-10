@@ -553,13 +553,12 @@ bool recursiveCopy(const QString &sourcePath, const QString &destinationPath)
     return true;
 }
 
-void recursiveCopyAndDeploy(const QString &appBundlePath, const QString &sourcePath, const QString &destinationPath)
+void recursiveCopyAndDeploy(const QString &appBundlePath, const QSet<QString> &rpaths, const QString &sourcePath, const QString &destinationPath)
 {
     QDir().mkpath(destinationPath);
 
     LogNormal() << "copy:" << sourcePath << destinationPath;
 
-    QSet<QString> rpaths = getBinaryRPaths(findAppBinary(appBundlePath), true);
     QStringList files = QDir(sourcePath).entryList(QStringList() << QStringLiteral("*"), QDir::Files | QDir::NoDotAndDotDot);
     foreach (QString file, files) {
         const QString fileSourcePath = sourcePath + QLatin1Char('/') + file;
@@ -608,7 +607,7 @@ void recursiveCopyAndDeploy(const QString &appBundlePath, const QString &sourceP
 
     QStringList subdirs = QDir(sourcePath).entryList(QStringList() << QStringLiteral("*"), QDir::Dirs | QDir::NoDotAndDotDot);
     foreach (QString dir, subdirs) {
-        recursiveCopyAndDeploy(appBundlePath, sourcePath + QLatin1Char('/') + dir, destinationPath + QLatin1Char('/') + dir);
+        recursiveCopyAndDeploy(appBundlePath, rpaths, sourcePath + QLatin1Char('/') + dir, destinationPath + QLatin1Char('/') + dir);
     }
 }
 
@@ -1028,7 +1027,7 @@ void deployPlugins(const QString &appBundlePath, DeploymentInfo deploymentInfo, 
     deployPlugins(applicationBundle, deploymentInfo.pluginPath, pluginDestinationPath, deploymentInfo, useDebugLibs);
 }
 
-void deployQmlImport(const QString &appBundlePath, const QString &importSourcePath, const QString &importName)
+void deployQmlImport(const QString &appBundlePath, const QSet<QString> &rpaths, const QString &importSourcePath, const QString &importName)
 {
     QString importDestinationPath = appBundlePath + "/Contents/Resources/qml/" + importName;
 
@@ -1037,11 +1036,11 @@ void deployQmlImport(const QString &appBundlePath, const QString &importSourcePa
     if (QDir().exists(importDestinationPath))
         return;
 
-    recursiveCopyAndDeploy(appBundlePath, importSourcePath, importDestinationPath);
+    recursiveCopyAndDeploy(appBundlePath, rpaths, importSourcePath, importDestinationPath);
 }
 
 // Scan qml files in qmldirs for import statements, deploy used imports from Qml2ImportsPath to Contents/Resources/qml.
-void deployQmlImports(const QString &appBundlePath, QStringList &qmlDirs)
+void deployQmlImports(const QString &appBundlePath, DeploymentInfo deploymentInfo, QStringList &qmlDirs)
 {
     LogNormal() << "";
     LogNormal() << "Deploying QML imports ";
@@ -1129,7 +1128,7 @@ void deployQmlImports(const QString &appBundlePath, QStringList &qmlDirs)
         if (version.startsWith(QLatin1Char('.')))
             name.append(version);
 
-        deployQmlImport(appBundlePath, path, name);
+        deployQmlImport(appBundlePath, deploymentInfo.rpathsUsed, path, name);
         LogNormal() << "";
     }
 }
