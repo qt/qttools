@@ -1108,6 +1108,8 @@ void deployQmlImports(const QString &appBundlePath, DeploymentInfo deploymentInf
         return;
     }
 
+    bool qtQuickContolsInUse = false; // condition for QtQuick.PrivateWidgets below
+
     // deploy each import
     foreach (const QJsonValue &importValue, doc.array()) {
         if (!importValue.isObject())
@@ -1117,6 +1119,9 @@ void deployQmlImports(const QString &appBundlePath, DeploymentInfo deploymentInf
         QString name = import["name"].toString();
         QString path = import["path"].toString();
         QString type = import["type"].toString();
+
+        if (import["name"] == "QtQuick.Controls")
+            qtQuickContolsInUse = true;
 
         LogNormal() << "Deploying QML import" << name;
 
@@ -1144,6 +1149,21 @@ void deployQmlImports(const QString &appBundlePath, DeploymentInfo deploymentInf
         if (version.startsWith(QLatin1Char('.')))
             name.append(version);
 
+        deployQmlImport(appBundlePath, deploymentInfo.rpathsUsed, path, name);
+        LogNormal() << "";
+    }
+
+    // Special case:
+    // Use of QtQuick.PrivateWidgets is not discoverable at deploy-time.
+    // Recreate the run-time logic here as best as we can - deploy it iff
+    //      1) QtWidgets.framework is used
+    //      2) QtQuick.Controls is used
+    // The intended failure mode is that libwidgetsplugin.dylib will be present
+    // in the app bundle but not used at run-time.
+    if (deploymentInfo.deployedFrameworks.contains("QtWidgets.framework") && qtQuickContolsInUse) {
+        LogNormal() << "Deploying QML import QtQuick.PrivateWidgets";
+        QString name = "QtQuick/PrivateWidgets";
+        QString path = qmlImportsPath + QLatin1Char('/') + name;
         deployQmlImport(appBundlePath, deploymentInfo.rpathsUsed, path, name);
         LogNormal() << "";
     }
