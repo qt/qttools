@@ -332,6 +332,22 @@ QString findAppBinary(const QString &appBundlePath)
     return QString();
 }
 
+QStringList findAppFrameworkNames(const QString &appBundlePath)
+{
+    QStringList frameworks;
+
+    // populate the frameworks list with QtFoo.framework etc,
+    // as found in /Contents/Frameworks/
+    QString searchPath = appBundlePath + "/Contents/Frameworks/";
+    QDirIterator iter(searchPath, QStringList() << QString::fromLatin1("*.framework"), QDir::Dirs);
+    while (iter.hasNext()) {
+        iter.next();
+        frameworks << iter.fileInfo().fileName();
+    }
+
+    return frameworks;
+}
+
 QStringList findAppLibraries(const QString &appBundlePath)
 {
     QStringList result;

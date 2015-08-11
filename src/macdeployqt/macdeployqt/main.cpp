@@ -142,13 +142,6 @@ int main(int argc, char **argv)
 
     DeploymentInfo deploymentInfo  = deployQtFrameworks(appBundlePath, additionalExecutables, useDebugLibs);
 
-    if (plugins && !deploymentInfo.qtPath.isEmpty()) {
-        deploymentInfo.pluginPath = deploymentInfo.qtPath + "/plugins";
-        LogNormal();
-        deployPlugins(appBundlePath, deploymentInfo, useDebugLibs);
-        createQtConf(appBundlePath);
-    }
-
     // Convenience: Look for .qml files in the current directoty if no -qmldir specified.
     if (qmlDirs.isEmpty()) {
         QDir dir;
@@ -157,8 +150,21 @@ int main(int argc, char **argv)
         }
     }
 
-    if (!qmlDirs.isEmpty())
+    if (!qmlDirs.isEmpty()) {
         deployQmlImports(appBundlePath, deploymentInfo, qmlDirs);
+
+        // Update deploymentInfo.deployedFrameworks - the QML imports
+        // may have brought in extra frameworks as dependencies.
+        deploymentInfo.deployedFrameworks += findAppFrameworkNames(appBundlePath);
+        deploymentInfo.deployedFrameworks = deploymentInfo.deployedFrameworks.toSet().toList();
+    }
+
+    if (plugins && !deploymentInfo.qtPath.isEmpty()) {
+        deploymentInfo.pluginPath = deploymentInfo.qtPath + "/plugins";
+        LogNormal();
+        deployPlugins(appBundlePath, deploymentInfo, useDebugLibs);
+        createQtConf(appBundlePath);
+    }
 
     if (runCodesign)
         codesign(codesignIdentiy, appBundlePath);
