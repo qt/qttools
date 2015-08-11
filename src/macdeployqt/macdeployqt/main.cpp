@@ -64,14 +64,14 @@ int main(int argc, char **argv)
         qDebug() << "See the \"Deploying an Application on Qt/Mac\" topic in the";
         qDebug() << "documentation for more information about deployment on Mac OS X.";
 
-        return 0;
+        return 1;
     }
 
     appBundlePath = QDir::cleanPath(appBundlePath);
 
     if (QDir().exists(appBundlePath) == false) {
         qDebug() << "Error: Could not find app bundle" << appBundlePath;
-        return 0;
+        return 1;
     }
 
     bool plugins = true;
@@ -136,7 +136,7 @@ int main(int argc, char **argv)
             }
         } else if (argument.startsWith("-")) {
             LogError() << "Unknown argument" << argument << "\n";
-            return 0;
+            return 1;
         }
      }
 
@@ -173,5 +173,7 @@ int main(int argc, char **argv)
         LogNormal();
         createDiskImage(appBundlePath);
     }
+
+    return 0;
 }
 
