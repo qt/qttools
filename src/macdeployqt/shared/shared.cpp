@@ -1073,7 +1073,7 @@ void deployQmlImport(const QString &appBundlePath, const QSet<QString> &rpaths, 
 }
 
 // Scan qml files in qmldirs for import statements, deploy used imports from Qml2ImportsPath to Contents/Resources/qml.
-void deployQmlImports(const QString &appBundlePath, DeploymentInfo deploymentInfo, QStringList &qmlDirs)
+bool deployQmlImports(const QString &appBundlePath, DeploymentInfo deploymentInfo, QStringList &qmlDirs)
 {
     LogNormal() << "";
     LogNormal() << "Deploying QML imports ";
@@ -1084,7 +1084,7 @@ void deployQmlImports(const QString &appBundlePath, DeploymentInfo deploymentInf
     if (!QFile(qmlImportScannerPath).exists()) {
         LogError() << "qmlimportscanner not found at" << qmlImportScannerPath;
         LogError() << "Rebuild qtdeclarative/tools/qmlimportscanner";
-        return;
+        return false;
     }
 
     // build argument list for qmlimportsanner: "-rootPath foo/ -rootPath bar/ -importPath path/to/qt/qml"
@@ -1103,7 +1103,7 @@ void deployQmlImports(const QString &appBundlePath, DeploymentInfo deploymentInf
     qmlImportScanner.start(qmlImportScannerPath, argumentList);
     if (!qmlImportScanner.waitForStarted()) {
         LogError() << "Could not start qmlimpoortscanner. Process error is" << qmlImportScanner.errorString();
-        return;
+        return false;
     }
     qmlImportScanner.waitForFinished();
 
@@ -1122,7 +1122,7 @@ void deployQmlImports(const QString &appBundlePath, DeploymentInfo deploymentInf
     if (!doc.isArray()) {
         LogError() << "qmlimportscanner output error. Expected json array, got:";
         LogError() << json;
-        return;
+        return false;
     }
 
     bool qtQuickContolsInUse = false; // condition for QtQuick.PrivateWidgets below
@@ -1184,6 +1184,7 @@ void deployQmlImports(const QString &appBundlePath, DeploymentInfo deploymentInf
         deployQmlImport(appBundlePath, deploymentInfo.rpathsUsed, path, name);
         LogNormal() << "";
     }
+    return true;
 }
 
 void changeQtFrameworks(const QList<FrameworkInfo> frameworks, const QStringList &binaryPaths, const QString &absoluteQtPath)

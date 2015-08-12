@@ -87,6 +87,7 @@ int main(int argc, char **argv)
     extern bool runStripEnabled;
     extern bool alwaysOwerwriteEnabled;
     QStringList additionalExecutables;
+    bool qmldirArgumentUsed = false;
     QStringList qmlDirs;
     extern bool runCodesign;
     extern QString codesignIdentiy;
@@ -125,6 +126,7 @@ int main(int argc, char **argv)
                 additionalExecutables << argument.mid(index+1);
         } else if (argument.startsWith(QByteArray("-qmldir"))) {
             LogDebug() << "Argument found:" << argument;
+            qmldirArgumentUsed = true;
             int index = argument.indexOf('=');
             if (index == -1)
                 LogError() << "Missing qml directory path";
@@ -162,7 +164,9 @@ int main(int argc, char **argv)
     }
 
     if (!qmlDirs.isEmpty()) {
-        deployQmlImports(appBundlePath, deploymentInfo, qmlDirs);
+        bool ok = deployQmlImports(appBundlePath, deploymentInfo, qmlDirs);
+        if (!ok && qmldirArgumentUsed)
+            return 1; // exit if the user explicitly asked for qml import deployment
 
         // Update deploymentInfo.deployedFrameworks - the QML imports
         // may have brought in extra frameworks as dependencies.
