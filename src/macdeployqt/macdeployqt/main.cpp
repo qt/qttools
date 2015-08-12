@@ -30,11 +30,15 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
+#include <QCoreApplication>
+#include <QDir>
+
 #include "../shared/shared.h"
-#include <qdir.h>
 
 int main(int argc, char **argv)
 {
+    QCoreApplication app(argc, argv);
+
     QString appBundlePath;
     if (argc > 1)
         appBundlePath = QString::fromLocal8Bit(argv[1]);

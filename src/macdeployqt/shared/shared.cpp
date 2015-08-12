@@ -30,6 +30,7 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
+#include <QCoreApplication>
 #include <QString>
 #include <QStringList>
 #include <QDebug>
@@ -1079,8 +1080,14 @@ bool deployQmlImports(const QString &appBundlePath, DeploymentInfo deploymentInf
     LogNormal() << "Deploying QML imports ";
     LogNormal() << "Application QML file search path(s) is" << qmlDirs;
 
-    // verify that qmlimportscanner is in BinariesPath
+    // Use qmlimportscanner from QLibraryInfo::BinariesPath
     QString qmlImportScannerPath = QDir::cleanPath(QLibraryInfo::location(QLibraryInfo::BinariesPath) + "/qmlimportscanner");
+
+    // Fallback: Look relative to the macdeployqt binary
+    if (!QFile(qmlImportScannerPath).exists())
+        qmlImportScannerPath = QCoreApplication::applicationDirPath() + "/qmlimportscanner";
+
+    // Verify that we found a qmlimportscanner binary
     if (!QFile(qmlImportScannerPath).exists()) {
         LogError() << "qmlimportscanner not found at" << qmlImportScannerPath;
         LogError() << "Rebuild qtdeclarative/tools/qmlimportscanner";
