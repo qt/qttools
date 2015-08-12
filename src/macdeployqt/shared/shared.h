@@ -38,7 +38,7 @@
 #include <QDebug>
 
 extern int logLevel;
-#define LogError()      if (logLevel < 1) {} else qDebug() << "ERROR:"
+#define LogError()      if (logLevel < 0) {} else qDebug() << "ERROR:"
 #define LogWarning()    if (logLevel < 1) {} else qDebug() << "WARNING:"
 #define LogNormal()     if (logLevel < 2) {} else qDebug() << "Log:"
 #define LogDebug()      if (logLevel < 3) {} else qDebug() << "Log:"
