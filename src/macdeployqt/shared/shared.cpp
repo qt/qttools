@@ -821,6 +821,11 @@ void runStrip(const QString &binaryPath)
     }
 }
 
+void stripAppBinary(const QString &bundlePath)
+{
+    runStrip(findAppBinary(bundlePath));
+}
+
 /*
     Deploys the the listed frameworks listed into an app bundle.
     The frameworks are searched for dependencies, which are also deployed.

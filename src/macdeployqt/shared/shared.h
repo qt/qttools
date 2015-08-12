@@ -104,6 +104,7 @@ void deployQmlImports(const QString &appBundlePath, DeploymentInfo deploymentInf
 void changeIdentification(const QString &id, const QString &binaryPath);
 void changeInstallName(const QString &oldName, const QString &newName, const QString &binaryPath);
 void runStrip(const QString &binaryPath);
+void stripAppBinary(const QString &bundlePath);
 QString findAppBinary(const QString &appBundlePath);
 QStringList findAppFrameworkNames(const QString &appBundlePath);
 void codesignFile(const QString &identity, const QString &filePath);

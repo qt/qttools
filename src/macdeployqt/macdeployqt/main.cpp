@@ -177,6 +177,9 @@ int main(int argc, char **argv)
         createQtConf(appBundlePath);
     }
 
+    if (runStripEnabled)
+        stripAppBinary(appBundlePath);
+
     if (runCodesign)
         codesign(codesignIdentiy, appBundlePath);
 
