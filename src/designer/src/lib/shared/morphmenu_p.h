@@ -51,7 +51,6 @@
 QT_BEGIN_NAMESPACE
 
 class QAction;
-class QSignalMapper;
 class QMenu;
 
 namespace qdesigner_internal {
@@ -76,8 +75,6 @@ private:
 
     QAction *m_subMenuAction;
     QMenu *m_menu;
-    QSignalMapper *m_mapper;
-
     QWidget *m_widget;
     QDesignerFormWindowInterface *m_formWindow;
 };

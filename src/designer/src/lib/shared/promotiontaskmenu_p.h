@@ -59,7 +59,6 @@ class QDesignerFormEditorInterface;
 class QAction;
 class QMenu;
 class QWidget;
-class QSignalMapper;
 
 namespace qdesigner_internal {
 
@@ -124,7 +123,6 @@ private:
 
     QPointer<QWidget> m_widget;
 
-    QSignalMapper *m_promotionMapper;
     // Per-Widget actions
     QList<QAction *> m_promotionActions;
 

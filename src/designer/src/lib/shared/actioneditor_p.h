@@ -56,7 +56,6 @@ class QDesignerPropertyEditorInterface;
 class QDesignerSettingsInterface;
 class QMenu;
 class QActionGroup;
-class QSignalMapper;
 class QItemSelection;
 class QListWidget;
 class QPushButton;
@@ -156,7 +155,6 @@ private:
 
     QString m_filter;
     QWidget *m_filterWidget;
-    QSignalMapper *m_selectAssociatedWidgetsMapper;
 };
 
 } // namespace qdesigner_internal

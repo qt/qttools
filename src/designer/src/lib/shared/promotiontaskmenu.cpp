@@ -50,7 +50,6 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QWidget>
 #include <QtWidgets/QMenu>
-#include <QtCore/QSignalMapper>
 #include <QtCore/qdebug.h>
 
 QT_BEGIN_NAMESPACE
@@ -73,7 +72,6 @@ PromotionTaskMenu::PromotionTaskMenu(QWidget *widget,Mode mode, QObject *parent)
     QObject(parent),
     m_mode(mode),
     m_widget(widget),
-    m_promotionMapper(0),
     m_globalEditAction(new QAction(tr("Promoted widgets..."), this)),
     m_EditPromoteToAction(new QAction(tr("Promote to ..."), this)),
     m_EditSignalsSlotsAction(new QAction(tr("Change signals/slots..."), this)),
@@ -117,9 +115,6 @@ void PromotionTaskMenu::setDemoteLabel(const QString &demoteLabel)
 
 PromotionTaskMenu::PromotionState  PromotionTaskMenu::createPromotionActions(QDesignerFormWindowInterface *formWindow)
 {
-    typedef void (QSignalMapper::*MapperVoidSlot)();
-    typedef void (QSignalMapper::*MapperStringSignal)(const QString &);
-
     // clear out old
     if (!m_promotionActions.empty()) {
         qDeleteAll(m_promotionActions);
@@ -151,12 +146,6 @@ PromotionTaskMenu::PromotionState  PromotionTaskMenu::createPromotionActions(QDe
         // Is this thing promotable at all?
         return QDesignerPromotionDialog::baseClassNames(core->promotion()).contains(baseClassName) ?  CanPromote : NotApplicable;
     }
-    // Set up a signal mapper to associate class names
-    if (!m_promotionMapper) {
-        m_promotionMapper = new QSignalMapper(this);
-        connect(m_promotionMapper, static_cast<MapperStringSignal>(&QSignalMapper::mapped),
-                this, &PromotionTaskMenu::slotPromoteToCustomWidget);
-    }
 
     QMenu *candidatesMenu = new QMenu();
     // Create a sub menu
@@ -164,11 +153,8 @@ PromotionTaskMenu::PromotionState  PromotionTaskMenu::createPromotionActions(QDe
     // Set up actions and map class names
     for (WidgetDataBaseItemList::const_iterator it = candidates.constBegin(); it != cend; ++it) {
         const QString customClassName = (*it)->name();
-        QAction *action = new QAction((*it)->name(), this);
-        connect(action, &QAction::triggered,
-                m_promotionMapper, static_cast<MapperVoidSlot>(&QSignalMapper::map));
-        m_promotionMapper->setMapping(action, customClassName);
-        candidatesMenu->addAction(action);
+        candidatesMenu->addAction(customClassName,
+                                  this, [this, customClassName] { this->slotPromoteToCustomWidget(customClassName); });
     }
     // Sub menu action
     QAction *subMenuAction = new QAction(m_promoteLabel, this);

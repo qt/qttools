@@ -71,7 +71,6 @@
 #include <QtCore/QStringList>
 #include <QtCore/QMap>
 #include <QtCore/QVariant>
-#include <QtCore/QSignalMapper>
 #include <QtCore/QDebug>
 
 Q_DECLARE_METATYPE(QWidgetList)
@@ -562,7 +561,6 @@ MorphMenu::MorphMenu(QObject *parent) :
     QObject(parent),
     m_subMenuAction(0),
     m_menu(0),
-    m_mapper(0),
     m_widget(0),
     m_formWindow(0)
 {
@@ -587,9 +585,6 @@ void MorphMenu::slotMorph(const QString &newClassName)
 
 bool MorphMenu::populateMenu(QWidget *w, QDesignerFormWindowInterface *fw)
 {
-    typedef void (QSignalMapper::*MapperVoidSlot)();
-    typedef void (QSignalMapper::*MapperStringSignal)(const QString &);
-
     m_widget = 0;
     m_formWindow = 0;
 
@@ -616,19 +611,15 @@ bool MorphMenu::populateMenu(QWidget *w, QDesignerFormWindowInterface *fw)
         m_subMenuAction = new QAction(tr("Morph into"), this);
         m_menu = new QMenu;
         m_subMenuAction->setMenu(m_menu);
-        m_mapper = new QSignalMapper(this);
-        connect(m_mapper, static_cast<MapperStringSignal>(&QSignalMapper::mapped),
-                this, &MorphMenu::slotMorph);
     }
 
     // Add actions
     const QStringList::const_iterator cend = c.constEnd();
     for (QStringList::const_iterator it = c.constBegin(); it != cend; ++it) {
         if (*it != oldClassName) {
-            QAction *a = m_menu->addAction(*it);
-            m_mapper->setMapping (a, *it);
-            connect(a, &QAction::triggered,
-                    m_mapper, static_cast<MapperVoidSlot>(&QSignalMapper::map));
+            const QString className = *it;
+            m_menu->addAction(className,
+                              this, [this, className] { this->slotMorph(className); });
         }
     }
     m_subMenuAction->setVisible(true);

@@ -46,7 +46,6 @@
 #include <QtDesigner/QExtensionManager>
 
 #include <QtWidgets/QToolButton>
-#include <QtCore/QSignalMapper>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QDialogButtonBox>

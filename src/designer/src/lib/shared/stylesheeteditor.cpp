@@ -47,7 +47,6 @@
 #include <QtDesigner/QDesignerSettingsInterface>
 #include <QtDesigner/QExtensionManager>
 
-#include <QtCore/QSignalMapper>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QColorDialog>
 #include <QtWidgets/QDialogButtonBox>
@@ -87,9 +86,6 @@ StyleSheetEditorDialog::StyleSheetEditorDialog(QDesignerFormEditorInterface *cor
     m_addColorAction(new QAction(tr("Add Color..."), this)),
     m_addFontAction(new QAction(tr("Add Font..."), this))
 {
-    typedef void (QSignalMapper::*MapperVoidSlot)();
-    typedef void (QSignalMapper::*MapperQStringSignal)(const QString &);
-
     setWindowTitle(tr("Edit Style Sheet"));
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
@@ -114,20 +110,12 @@ StyleSheetEditorDialog::StyleSheetEditorDialog(QDesignerFormEditorInterface *cor
     connect(m_editor, &QWidget::customContextMenuRequested,
             this, &StyleSheetEditorDialog::slotContextMenuRequested);
 
-    QSignalMapper *resourceActionMapper = new QSignalMapper(this);
-    QSignalMapper *gradientActionMapper = new QSignalMapper(this);
-    QSignalMapper *colorActionMapper = new QSignalMapper(this);
-
-    resourceActionMapper->setMapping(m_addResourceAction, QString());
-    gradientActionMapper->setMapping(m_addGradientAction, QString());
-    colorActionMapper->setMapping(m_addColorAction, QString());
-
     connect(m_addResourceAction, &QAction::triggered,
-            resourceActionMapper, static_cast<MapperVoidSlot>(&QSignalMapper::map));
+            this, [this] { this->slotAddResource(QString()); });
     connect(m_addGradientAction, &QAction::triggered,
-            gradientActionMapper, static_cast<MapperVoidSlot>(&QSignalMapper::map));
+            this, [this] { this->slotAddGradient(QString()); });
     connect(m_addColorAction, &QAction::triggered,
-            colorActionMapper, static_cast<MapperVoidSlot>(&QSignalMapper::map));
+            this, [this] { this->slotAddColor(QString()); });
     connect(m_addFontAction, &QAction::triggered, this, &StyleSheetEditorDialog::slotAddFont);
 
     m_addResourceAction->setEnabled(mode == ModePerForm);
@@ -159,29 +147,18 @@ StyleSheetEditorDialog::StyleSheetEditorDialog(QDesignerFormEditorInterface *cor
     QMenu *colorActionMenu = new QMenu(this);
 
     for (int resourceProperty = 0; resourceProperties[resourceProperty]; ++resourceProperty) {
-        QAction *action = resourceActionMenu->addAction(QLatin1String(resourceProperties[resourceProperty]));
-        connect(action, &QAction::triggered,
-                resourceActionMapper, static_cast<MapperVoidSlot>(&QSignalMapper::map));
-        resourceActionMapper->setMapping(action, QLatin1String(resourceProperties[resourceProperty]));
+        const QString resourcePropertyName = QLatin1String(resourceProperties[resourceProperty]);
+        resourceActionMenu->addAction(resourcePropertyName,
+                                      this, [this, resourcePropertyName] { this->slotAddResource(resourcePropertyName); });
     }
 
     for (int colorProperty = 0; colorProperties[colorProperty]; ++colorProperty) {
-        QAction *gradientAction = gradientActionMenu->addAction(QLatin1String(colorProperties[colorProperty]));
-        QAction *colorAction = colorActionMenu->addAction(QLatin1String(colorProperties[colorProperty]));
-        connect(gradientAction, &QAction::triggered,
-                gradientActionMapper, static_cast<MapperVoidSlot>(&QSignalMapper::map));
-        connect(colorAction, &QAction::triggered,
-                colorActionMapper, static_cast<MapperVoidSlot>(&QSignalMapper::map));
-        gradientActionMapper->setMapping(gradientAction, QLatin1String(colorProperties[colorProperty]));
-        colorActionMapper->setMapping(colorAction, QLatin1String(colorProperties[colorProperty]));
+        const QString colorPropertyName = QLatin1String(colorProperties[colorProperty]);
+        colorActionMenu->addAction(colorPropertyName,
+                                   this, [this, colorPropertyName] { this->slotAddColor(colorPropertyName); });
+        gradientActionMenu->addAction(colorPropertyName,
+                                      this, [this, colorPropertyName] { this->slotAddGradient(colorPropertyName); } );
     }
-
-    connect(resourceActionMapper, static_cast<MapperQStringSignal>(&QSignalMapper::mapped),
-            this, &StyleSheetEditorDialog::slotAddResource);
-    connect(gradientActionMapper, static_cast<MapperQStringSignal>(&QSignalMapper::mapped),
-            this, &StyleSheetEditorDialog::slotAddGradient);
-    connect(colorActionMapper, static_cast<MapperQStringSignal>(&QSignalMapper::mapped),
-            this, &StyleSheetEditorDialog::slotAddColor);
 
     m_addResourceAction->setMenu(resourceActionMenu);
     m_addGradientAction->setMenu(gradientActionMenu);

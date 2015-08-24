@@ -76,7 +76,6 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QUndoStack>
 #include <QtCore/QDebug>
-#include <QtCore/QSignalMapper>
 #include <QtCore/QCoreApplication>
 
 QT_BEGIN_NAMESPACE

@@ -59,7 +59,6 @@ class QDesignerFormWindowInterface;
 class QDesignerFormEditorInterface;
 
 class QWidget;
-class QSignalMapper;
 
 namespace qdesigner_internal {
 class QDesignerTaskMenuPrivate;

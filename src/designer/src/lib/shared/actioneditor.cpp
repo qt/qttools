@@ -71,7 +71,6 @@
 
 #include <QtCore/QRegExp>
 #include <QtCore/QDebug>
-#include <QtCore/QSignalMapper>
 #include <QtCore/QBuffer>
 
 Q_DECLARE_METATYPE(QAction*)
@@ -125,8 +124,7 @@ ActionEditor::ActionEditor(QDesignerFormEditorInterface *core, QWidget *parent, 
     m_viewModeGroup(new  QActionGroup(this)),
     m_iconViewAction(0),
     m_listViewAction(0),
-    m_filterWidget(0),
-    m_selectAssociatedWidgetsMapper(0)
+    m_filterWidget(0)
 {
     m_actionView->initialize(m_core);
     m_actionView->setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -780,16 +778,6 @@ void ActionEditor::slotPaste()
 
 void ActionEditor::slotContextMenuRequested(QContextMenuEvent *e, QAction *item)
 {
-    typedef void (QSignalMapper::*MapperQWidgetSignal)(QWidget *);
-    typedef void (QSignalMapper::*MapperVoidSlot)();
-
-    // set up signal mapper
-    if (!m_selectAssociatedWidgetsMapper) {
-        m_selectAssociatedWidgetsMapper = new QSignalMapper(this);
-        connect(m_selectAssociatedWidgetsMapper, static_cast<MapperQWidgetSignal>(&QSignalMapper::mapped),
-                this, &ActionEditor::slotSelectAssociatedWidget);
-    }
-
     QMenu menu(this);
     menu.addAction(m_actionNew);
     menu.addSeparator();
@@ -803,10 +791,8 @@ void ActionEditor::slotContextMenuRequested(QContextMenuEvent *e, QAction *item)
         if (!associatedWidgets.empty()) {
             QMenu *associatedWidgetsSubMenu =  menu.addMenu(tr("Used In"));
             foreach (QWidget *w, associatedWidgets) {
-                QAction *action = associatedWidgetsSubMenu->addAction(w->objectName());
-                m_selectAssociatedWidgetsMapper->setMapping(action, w);
-                connect(action, &QAction::triggered,
-                        m_selectAssociatedWidgetsMapper, static_cast<MapperVoidSlot>(&QSignalMapper::map));
+                associatedWidgetsSubMenu->addAction(w->objectName(),
+                                                    this, [this, w] { this->slotSelectAssociatedWidget(w); });
             }
         }
     }
