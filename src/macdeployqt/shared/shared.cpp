@@ -58,6 +58,7 @@ bool runCodesign = false;
 QString codesignIdentiy;
 bool appstoreCompliant = false;
 int logLevel = 1;
+bool deployFramework = false;
 
 using std::cout;
 using std::endl;
@@ -756,6 +757,11 @@ void changeInstallName(const QString &bundlePath, const FrameworkInfo &framework
     }
 }
 
+void addRPath(const QString &rpath, const QString &binaryPath)
+{
+    runInstallNameTool(QStringList() << "-add_rpath" << rpath << binaryPath);
+}
+
 void deployRPaths(const QString &bundlePath, const QSet<QString> &rpaths, const QString &binaryPath, bool useLoaderPath)
 {
     const QString absFrameworksPath = QFileInfo(bundlePath).absoluteFilePath()
@@ -843,6 +849,7 @@ DeploymentInfo deployQtFrameworks(QList<FrameworkInfo> frameworks,
     QStringList copiedFrameworks;
     DeploymentInfo deploymentInfo;
     deploymentInfo.useLoaderPath = useLoaderPath;
+    deploymentInfo.isFramework = bundlePath.contains(".framework");
     QSet<QString> rpathsUsed;
 
     while (frameworks.isEmpty() == false) {
@@ -1338,4 +1345,26 @@ void createDiskImage(const QString &appBundlePath)
     QProcess hdutil;
     hdutil.start("hdiutil", options);
     hdutil.waitForFinished(-1);
+}
+
+void fixupFramework(const QString &frameworkName)
+{
+    // Expected framework name looks like "Foo.framework"
+    QStringList parts = frameworkName.split(".");
+    if (parts.count() < 2) {
+        LogError() << "fixupFramework: Unexpected framework name" << frameworkName;
+        return;
+    }
+
+    // Assume framework binary path is Foo.framework/Foo
+    QString frameworkBinary = frameworkName + QStringLiteral("/") + parts[0];
+
+    // Xcode expects to find Foo.framework/Versions/A when code
+    // signing, while qmake typically generates numeric versions.
+    // Create symlink to the actual version in the framework.
+    linkFilePrintStatus("Current", frameworkName + "/Versions/A");
+
+    // Set up @rpath structure.
+    changeIdentification("@rpath/" + frameworkBinary, frameworkBinary);
+    addRPath("@loader_path/../../Contents/Frameworks/", frameworkBinary);
 }

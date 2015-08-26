@@ -96,6 +96,7 @@ int main(int argc, char **argv)
     extern bool runCodesign;
     extern QString codesignIdentiy;
     extern bool appstoreCompliant;
+    extern bool deployFramework;
 
     for (int i = 2; i < argc; ++i) {
         QByteArray argument = QByteArray(argv[i]);
@@ -151,13 +152,22 @@ int main(int argc, char **argv)
         } else if (argument == QByteArray("-appstore-compliant")) {
             LogDebug() << "Argument found:" << argument;
             appstoreCompliant = true;
+
+        // Undocumented option, may not work as intented
+        } else if (argument == QByteArray("-deploy-framework")) {
+            LogDebug() << "Argument found:" << argument;
+            deployFramework = true;
+
         } else if (argument.startsWith("-")) {
             LogError() << "Unknown argument" << argument << "\n";
             return 1;
         }
      }
 
-    DeploymentInfo deploymentInfo  = deployQtFrameworks(appBundlePath, additionalExecutables, useDebugLibs);
+    DeploymentInfo deploymentInfo = deployQtFrameworks(appBundlePath, additionalExecutables, useDebugLibs);
+
+    if (deployFramework && deploymentInfo.isFramework)
+        fixupFramework(appBundlePath);
 
     // Convenience: Look for .qml files in the current directoty if no -qmldir specified.
     if (qmlDirs.isEmpty()) {

@@ -83,6 +83,7 @@ public:
     QStringList deployedFrameworks;
     QSet<QString> rpathsUsed;
     bool useLoaderPath;
+    bool isFramework;
 };
 
 
@@ -110,6 +111,7 @@ QStringList findAppFrameworkNames(const QString &appBundlePath);
 void codesignFile(const QString &identity, const QString &filePath);
 void codesign(const QString &identity, const QString &appBundlePath);
 void createDiskImage(const QString &appBundlePath);
+void fixupFramework(const QString &appBundlePath);
 
 
 #endif
