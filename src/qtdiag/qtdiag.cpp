@@ -63,6 +63,7 @@
 #include <private/qsimd_p.h>
 #include <private/qguiapplication_p.h>
 #include <qpa/qplatformintegration.h>
+#include <qpa/qplatformscreen.h>
 #include <qpa/qplatformtheme.h>
 #include <qpa/qplatformnativeinterface.h>
 
@@ -370,12 +371,15 @@ QString qtDiag(unsigned flags)
         str << "  Native color dialog\n";
     if (platformTheme->usePlatformNativeDialog(QPlatformTheme::FontDialog))
         str << "  Native font dialog\n";
+    if (platformTheme->usePlatformNativeDialog(QPlatformTheme::MessageDialog))
+        str << "  Native message dialog\n";
 
     const QList<QScreen*> screens = QGuiApplication::screens();
     const int screenCount = screens.size();
     str << "\nScreens: " << screenCount << '\n';
     for (int s = 0; s < screenCount; ++s) {
         const QScreen *screen = screens.at(s);
+        const QPlatformScreen *platformScreen = screen->handle();
         str << '#' << ' ' << s << " \"" << screen->name() << '"'
                   << " Depth: " << screen->depth()
                   << " Primary: " <<  (screen == QGuiApplication::primaryScreen() ? "yes" : "no")
@@ -385,13 +389,17 @@ QString qtDiag(unsigned flags)
         if (screen->virtualSiblings().size() > 1)
             str << "\n  " << screen->virtualSiblings().size() << " virtual siblings";
         str << "\n  Physical size: " << screen->physicalSize() << " mm"
-                  << "  Refresh: " << screen->refreshRate() << " Hz"
-            << "\n  Physical DPI: " << screen->physicalDotsPerInchX()
+                  << "  Refresh: " << screen->refreshRate() << " Hz";
+        if (platformScreen)
+            str << " Power state: " << platformScreen->powerState();
+        str << "\n  Physical DPI: " << screen->physicalDotsPerInchX()
             << ',' << screen->physicalDotsPerInchY()
             << " Logical DPI: " << screen->logicalDotsPerInchX()
             << ',' << screen->logicalDotsPerInchY()
-            << "\n  DevicePixelRatio: " << screen->devicePixelRatio()
-            << " Primary orientation: " << screen->primaryOrientation()
+            << "\n  DevicePixelRatio: " << screen->devicePixelRatio();
+        if (platformScreen)
+            str << " Pixel density: " << platformScreen->pixelDensity();
+        str << " Primary orientation: " << screen->primaryOrientation()
             << "\n  Orientation: " << screen->orientation()
             << " Native orientation: " << screen->nativeOrientation()
             << " OrientationUpdateMask: " << screen->orientationUpdateMask()
