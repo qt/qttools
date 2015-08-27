@@ -54,6 +54,7 @@
 #include <QtCore/QVariant>
 #include <QtCore/QSysInfo>
 #include <QtCore/QLibraryInfo>
+#include <QtCore/QProcessEnvironment>
 #include <QtCore/QTextStream>
 #include <QtCore/QStandardPaths>
 #include <QtCore/QDir>
@@ -244,6 +245,13 @@ QString qtDiag(unsigned flags)
     DUMP_CPU_FEATURE(DSPR2, "DSPR2");
 #endif
     str << '\n';
+
+    const QProcessEnvironment systemEnvironment = QProcessEnvironment::systemEnvironment();
+    str << "\nEnvironment:\n";
+    foreach (const QString &key, systemEnvironment.keys()) {
+        if (key.startsWith(QLatin1Char('Q')))
+           str << "  " << key << "=\"" << systemEnvironment.value(key) << "\"\n";
+    }
 
     str << "\nLibrary info:\n";
     DUMP_LIBRARYPATH(str, PrefixPath)
