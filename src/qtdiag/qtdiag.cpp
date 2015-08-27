@@ -66,6 +66,7 @@
 #include <qpa/qplatformscreen.h>
 #include <qpa/qplatformtheme.h>
 #include <qpa/qplatformnativeinterface.h>
+#include <private/qhighdpiscaling_p.h>
 
 #include <algorithm>
 
@@ -376,7 +377,8 @@ QString qtDiag(unsigned flags)
 
     const QList<QScreen*> screens = QGuiApplication::screens();
     const int screenCount = screens.size();
-    str << "\nScreens: " << screenCount << '\n';
+    str << "\nScreens: " << screenCount << ", High DPI scaling: "
+        << (QHighDpiScaling::isActive() ? "active" : "inactive") << '\n';
     for (int s = 0; s < screenCount; ++s) {
         const QScreen *screen = screens.at(s);
         const QPlatformScreen *platformScreen = screen->handle();
@@ -396,11 +398,12 @@ QString qtDiag(unsigned flags)
             << ',' << screen->physicalDotsPerInchY()
             << " Logical DPI: " << screen->logicalDotsPerInchX()
             << ',' << screen->logicalDotsPerInchY()
-            << "\n  DevicePixelRatio: " << screen->devicePixelRatio();
+            << "\n  Factor: " << QHighDpiScaling::factor(screen)
+            << " DevicePixelRatio: " << screen->devicePixelRatio();
         if (platformScreen)
             str << " Pixel density: " << platformScreen->pixelDensity();
-        str << " Primary orientation: " << screen->primaryOrientation()
-            << "\n  Orientation: " << screen->orientation()
+        str << "\n  Primary orientation: " << screen->primaryOrientation()
+            << " Orientation: " << screen->orientation()
             << " Native orientation: " << screen->nativeOrientation()
             << " OrientationUpdateMask: " << screen->orientationUpdateMask()
             << "\n\n";
