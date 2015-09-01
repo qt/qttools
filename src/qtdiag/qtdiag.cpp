@@ -85,6 +85,12 @@ QTextStream &operator<<(QTextStream &str, const QSizeF &s)
     return str;
 }
 
+QTextStream &operator<<(QTextStream &str, const QDpi &d)
+{
+    str << d.first << ',' << d.second;
+    return str;
+}
+
 QTextStream &operator<<(QTextStream &str, const QRect &r)
 {
     str << r.size() << '+' << r.x() << '+' << r.y();
@@ -390,26 +396,34 @@ QString qtDiag(unsigned flags)
     for (int s = 0; s < screenCount; ++s) {
         const QScreen *screen = screens.at(s);
         const QPlatformScreen *platformScreen = screen->handle();
+        const QRect geometry = screen->geometry();
+        const QDpi dpi(screen->logicalDotsPerInchX(), screen->logicalDotsPerInchY());
+        const QDpi nativeDpi = platformScreen->logicalDpi();
+        const QRect nativeGeometry = platformScreen->geometry();
         str << '#' << ' ' << s << " \"" << screen->name() << '"'
                   << " Depth: " << screen->depth()
                   << " Primary: " <<  (screen == QGuiApplication::primaryScreen() ? "yes" : "no")
-            << "\n  Geometry: " << screen->geometry() << " Available: " << screen->availableGeometry();
-        if (screen->geometry() != screen->virtualGeometry())
+            << "\n  Geometry: " << geometry;
+        if (geometry != nativeGeometry)
+            str << " (native: " << nativeGeometry << ')';
+        str << " Available: " << screen->availableGeometry();
+        if (geometry != screen->virtualGeometry())
             str << "\n  Virtual geometry: " << screen->virtualGeometry() << " Available: " << screen->availableVirtualGeometry();
         if (screen->virtualSiblings().size() > 1)
             str << "\n  " << screen->virtualSiblings().size() << " virtual siblings";
         str << "\n  Physical size: " << screen->physicalSize() << " mm"
-                  << "  Refresh: " << screen->refreshRate() << " Hz";
-        if (platformScreen)
-            str << " Power state: " << platformScreen->powerState();
+            << "  Refresh: " << screen->refreshRate() << " Hz"
+            << " Power state: " << platformScreen->powerState();
         str << "\n  Physical DPI: " << screen->physicalDotsPerInchX()
             << ',' << screen->physicalDotsPerInchY()
-            << " Logical DPI: " << screen->logicalDotsPerInchX()
-            << ',' << screen->logicalDotsPerInchY()
-            << "\n  Factor: " << QHighDpiScaling::factor(screen)
-            << " DevicePixelRatio: " << screen->devicePixelRatio();
-        if (platformScreen)
-            str << " Pixel density: " << platformScreen->pixelDensity();
+            << " Logical DPI: " << dpi;
+        if (dpi != nativeDpi)
+            str << " (native: " << nativeDpi << ')';
+        str << "\n  ";
+        if (QHighDpiScaling::isActive())
+            str << "High DPI scaling factor: " << QHighDpiScaling::factor(screen) << ' ';
+        str << "DevicePixelRatio: " << screen->devicePixelRatio()
+            << " Pixel density: " << platformScreen->pixelDensity();
         str << "\n  Primary orientation: " << screen->primaryOrientation()
             << " Orientation: " << screen->orientation()
             << " Native orientation: " << screen->nativeOrientation()
