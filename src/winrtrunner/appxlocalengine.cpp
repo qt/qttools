@@ -350,7 +350,8 @@ AppxLocalEngine::~AppxLocalEngine()
 bool AppxLocalEngine::installPackage(IAppxManifestReader *reader, const QString &filePath)
 {
     Q_D(const AppxLocalEngine);
-    qCDebug(lcWinRtRunner) << __FUNCTION__ << filePath;
+    qCDebug(lcWinRtRunner).nospace().noquote()
+        << __FUNCTION__ << " \"" << QDir::toNativeSeparators(filePath) << '"';
 
     HRESULT hr;
     if (reader) {
@@ -594,8 +595,10 @@ bool AppxLocalEngine::sendFile(const QString &localFile, const QString &deviceFi
         QFile::remove(deviceFile);
 
     bool result = source.copy(deviceFile);
-    if (!result)
-        qCWarning(lcWinRtRunner) << "Unable to sendFile:" << source.errorString();
+    if (!result) {
+        qCWarning(lcWinRtRunner).nospace().noquote()
+            << "Unable to sendFile: " << source.errorString();
+    }
 
     return result;
 }
