@@ -2525,7 +2525,7 @@ QString apkPath(const Options &options, PackageType pt)
 {
     QString path(options.outputDirectory);
     if (options.gradle)
-        path += QLatin1String("/build/outputs/apk/android-build-");
+        path += QLatin1String("/build/outputs/apk/") + QDir(options.outputDirectory).dirName() + QLatin1Char('-');
     else
         path += QLatin1String("/bin/QtApp-");
     if (options.releasePackage) {
