@@ -168,6 +168,7 @@ bool QTabWidgetEventFilter::eventFilter(QObject *o, QEvent *e)
     if (!fw)
         return false;
 
+    bool handled = true;
     switch (type) {
     case QEvent::MouseButtonDblClick:
         break;
@@ -294,10 +295,11 @@ bool QTabWidgetEventFilter::eventFilter(QObject *o, QEvent *e)
     } break;
 
     default:
+        handled = false;
         break;
     }
 
-    return false;
+    return handled;
 }
 
 void QTabWidgetEventFilter::removeCurrentPage()
