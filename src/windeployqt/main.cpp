@@ -272,6 +272,11 @@ struct Options {
     ListOption list;
     DebugDetection debugDetection;
     bool debugMatchAll;
+
+    inline bool isWinRtOrWinPhone() const {
+        return (platform == WinPhoneArm || platform == WinPhoneIntel
+                || platform == WinRtArm || platform == WinRtIntel);
+    }
 };
 
 // Return binary from folder
@@ -1220,8 +1225,7 @@ static DeployResult deploy(const Options &options,
             libEglFullPath += QLatin1String(windowsSharedLibrarySuffix);
             deployedQtLibraries.append(libEglFullPath);
             // Find the system D3d Compiler matching the D3D library.
-            if (options.systemD3dCompiler && options.platform != WinPhoneArm && options.platform != WinPhoneIntel
-                    && options.platform != WinRtArm && options.platform != WinRtIntel) {
+            if (options.systemD3dCompiler && !options.isWinRtOrWinPhone()) {
                 const QString d3dCompiler = findD3dCompiler(options.platform, qtBinDir, wordSize);
                 if (d3dCompiler.isEmpty()) {
                     std::wcerr << "Warning: Cannot find any version of the d3dcompiler DLL.\n";
@@ -1249,11 +1253,13 @@ static DeployResult deploy(const Options &options,
                 return result;
         }
 
-        const QString qt5CoreName = QFileInfo(libraryPath(libraryLocation, "Qt5Core", qtLibInfix,
-                                                          options.platform, isDebug)).fileName();
+        if (!options.isWinRtOrWinPhone()) {
+            const QString qt5CoreName = QFileInfo(libraryPath(libraryLocation, "Qt5Core", qtLibInfix,
+                                                              options.platform, isDebug)).fileName();
 
-        if (!patchQtCore(targetPath + QLatin1Char('/') + qt5CoreName, errorMessage))
-            return result;
+            if (!patchQtCore(targetPath + QLatin1Char('/') + qt5CoreName, errorMessage))
+                return result;
+        }
     } // optLibraries
 
     // Update plugins
