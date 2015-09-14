@@ -45,8 +45,6 @@
 
 #define CL_NS_HASHING(func) __gnu_cxx::func
 #define LUCENE_DISABLE_HASHING //we could enable this, but so far test show that the hashing is slower :(
-#define CL_HASH_MAP hash_map
-#define CL_HASH_SET hash_set
 
 //define the file functions
 #define fileSeek lseek

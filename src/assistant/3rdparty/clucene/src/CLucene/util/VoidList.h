@@ -139,11 +139,11 @@ public:
 template<typename _kt,
 	typename _Comparator=CL_NS(util)::Compare::TChar,
 	typename _valueDeletor=CL_NS(util)::Deletor::Dummy> 
-class CLHashList:public __CLList<_kt, CL_NS_HASHING(CL_HASH_SET)<_kt,_Comparator> , _valueDeletor>
+class CLHashList:public __CLList<_kt, CL_NS_HASHING(hash_set)<_kt,_Comparator> , _valueDeletor>
 {
 public:
 	CLHashList ( const bool deleteValue=true ):
-	  __CLList<_kt, CL_NS_HASHING(CL_HASH_SET)<_kt,_Comparator> , _valueDeletor>(deleteValue)
+	  __CLList<_kt, CL_NS_HASHING(hash_set)<_kt,_Comparator> , _valueDeletor>(deleteValue)
 	{
 	}
 };
