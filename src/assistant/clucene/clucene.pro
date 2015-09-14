@@ -24,6 +24,7 @@ win32-g++*:QMAKE_CXXFLAGS_CXX11 = -std=gnu++0x
 win32-msvc.net | win32-msvc2* {
     QMAKE_CFLAGS_RELEASE        -= -O2
     QMAKE_CXXFLAGS_RELEASE      -= -O2
+    DEFINES += _SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS
 }
 
 # the following define could be set globally in case we need it elsewhere
