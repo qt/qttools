@@ -109,6 +109,7 @@ struct Options
         , internalSf(false)
         , sectionsOnly(false)
         , protectedAuthenticationPath(false)
+        , gdbServer(Auto)
         , installApk(false)
         , uninstallApk(false)
         , fetchedRemoteModificationDates(false)
@@ -125,6 +126,12 @@ struct Options
         Bundled,
         Ministro,
         Debug
+    };
+
+    enum TriState {
+        Auto,
+        False,
+        True
     };
 
     bool helpRequested;
@@ -183,6 +190,9 @@ struct Options
     bool internalSf;
     bool sectionsOnly;
     bool protectedAuthenticationPath;
+
+    // Gdbserver
+    TriState gdbServer;
 
     // Installation information
     bool installApk;
@@ -382,6 +392,10 @@ Options parseOptions()
                 options.installLocation = arguments.at(++i);
         } else if (argument.compare(QLatin1String("--release"), Qt::CaseInsensitive) == 0) {
             options.releasePackage = true;
+        } else if (argument.compare(QLatin1String("--gdbserver"), Qt::CaseInsensitive) == 0) {
+            options.gdbServer = Options::True;
+        } else if (argument.compare(QLatin1String("--no-gdbserver"), Qt::CaseInsensitive) == 0) {
+            options.gdbServer = Options::False;
         } else if (argument.compare(QLatin1String("--jdk"), Qt::CaseInsensitive) == 0) {
             if (i + 1 == arguments.size())
                 options.helpRequested = true;
@@ -514,6 +528,10 @@ void printHelp()
                     "         --internalsf: Include the .SF file inside the signature block.\n"
                     "         --sectionsonly: Don't compute hash of entire manifest.\n"
                     "         --protected: Keystore has protected authentication path.\n"
+                    "    --gdbserver: Adds the gdbserver to the package. By default the gdbserver\n"
+                    "       is bundled for debug pacakges.\n"
+                    "    --no-gdbserver: Prevents the gdbserver from being added to the package\n"
+                    "       By default the gdbserver is bundled for debug pacakges.\n"
                     "    --jdk <path/to/jdk>: Used to find the jarsigner tool when used\n"
                     "       in combination with the --release argument. By default,\n"
                     "       an attempt is made to detect the tool using the JAVA_HOME and\n"
@@ -2948,7 +2966,9 @@ int main(int argc, char *argv[])
         if (Q_UNLIKELY(options.timing))
             fprintf(stdout, "[TIMING] %d ms: Checked for application binary\n", options.timer.elapsed());
 
-        if (!options.releasePackage && !copyGdbServer(options))
+        bool needToCopyGdbServer = options.gdbServer == Options::True
+                || (options.gdbServer == Options::Auto && !options.releasePackage);
+        if (needToCopyGdbServer && !copyGdbServer(options))
             return CannotCopyGdbServer;
 
         if (Q_UNLIKELY(options.timing))
