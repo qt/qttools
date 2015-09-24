@@ -455,6 +455,10 @@ QString findInPath(const QString &file)
 #endif // !Q_OS_WIN
 }
 
+const char *qmakeInfixKey = "QT_INFIX";
+
+QMap<QString, QString> queryQMakeAll(QString *errorMessage);
+
 QMap<QString, QString> queryQMakeAll(QString *errorMessage)
 {
     QByteArray stdOut;
@@ -482,6 +486,26 @@ QMap<QString, QString> queryQMakeAll(QString *errorMessage)
         const QString value = output.mid(colonPos + 1, endPos - colonPos - 1);
         result.insert(key, value);
         pos = endPos + 1;
+    }
+    QFile qconfigPriFile(result.value(QStringLiteral("QT_HOST_DATA")) + QStringLiteral("/mkspecs/qconfig.pri"));
+    if (qconfigPriFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        while (true) {
+            const QByteArray line = qconfigPriFile.readLine();
+            if (line.isEmpty())
+                break;
+            if (line.startsWith("QT_LIBINFIX")) {
+                const int pos = line.indexOf('=');
+                if (pos >= 0) {
+                    const QString infix = QString::fromUtf8(line.right(line.size() - pos - 1).trimmed());
+                    if (!infix.isEmpty())
+                        result.insert(QLatin1String(qmakeInfixKey), infix);
+                }
+                break;
+            }
+        }
+    } else {
+        std::wcerr << "Warning: Unable to read " << QDir::toNativeSeparators(qconfigPriFile.fileName())
+            << ": " << qconfigPriFile.errorString()<< '\n';
     }
     return result;
 }

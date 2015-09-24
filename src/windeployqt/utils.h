@@ -166,6 +166,9 @@ bool isBuildDirectory(Platform platform, const QString &dirName);
 bool createSymbolicLink(const QFileInfo &source, const QString &target, QString *errorMessage);
 bool createDirectory(const QString &directory, QString *errorMessage);
 QString findInPath(const QString &file);
+
+extern const char *qmakeInfixKey; // Fake key containing the libinfix
+
 QMap<QString, QString> queryQMakeAll(QString *errorMessage);
 QString queryQMake(const QString &variable, QString *errorMessage);
 
