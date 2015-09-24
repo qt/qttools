@@ -1104,6 +1104,27 @@ static bool updateLibrary(const QString &sourceFileName, const QString &targetDi
     return true;
 }
 
+// Check for a Qt Quick Controls import path and return the version.
+// 'QtQuick/Controls' ==> 1, or 'QtQuick/Controls.2' ==> 2.
+static inline int quickControlsImportPath(const QString &ip)
+{
+    if (ip.endsWith(QLatin1String("QtQuick/Dialogs")) || ip.contains(QLatin1String("QtQuick/Dialogs/")))
+        return 1; // Dialogs only in v1, so far.
+    const QString controlsPattern = QStringLiteral("QtQuick/Controls");
+    const int pos = ip.indexOf(controlsPattern);
+    if (pos < 0)
+        return 0;
+    const int endPos = pos + controlsPattern.size();
+    if (endPos == ip.size() || ip.at(endPos) == QLatin1Char('/'))
+        return 1; // No version: v1
+    if (ip.at(endPos) != QLatin1Char('.'))
+        return 0;
+    const int versionPos = endPos + 1;
+    int versionEndPos = versionPos;
+    for ( ; versionEndPos < ip.size() && ip.at(versionEndPos).isDigit(); ++versionEndPos) {}
+    return ip.midRef(versionPos, versionEndPos - versionPos).toInt();
+}
+
 static DeployResult deploy(const Options &options,
                            const QMap<QString, QString> &qmakeVariables,
                            QString *errorMessage)
@@ -1374,9 +1395,9 @@ static DeployResult deploy(const Options &options,
                                << QDir::toNativeSeparators(installPath) << '\n';
                 if (installPath != options.directory && !createDirectory(installPath, errorMessage))
                     return result;
-                quint64 updateFileFlags = options.updateFileFlags;
+                quint64 updateFileFlags = options.updateFileFlags | SkipQmlDesignerSpecificsDirectories;
                 unsigned qmlDirectoryFileFlags = 0;
-                if (module.sourcePath.contains(QLatin1String("QtQuick/Controls")) || module.sourcePath.contains(QLatin1String("QtQuick/Dialogs"))) {
+                if (quickControlsImportPath(module.sourcePath) == 1) { // QML files of Controls 1 not needed
                     updateFileFlags |=  RemoveEmptyQmlDirectories;
                     qmlDirectoryFileFlags |= QmlDirectoryFileEntryFunction::SkipSources;
                 }

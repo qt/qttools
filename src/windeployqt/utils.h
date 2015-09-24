@@ -226,7 +226,8 @@ extern int optVerboseLevel;
 enum UpdateFileFlag  {
     ForceUpdateFile = 0x1,
     SkipUpdateFile = 0x2,
-    RemoveEmptyQmlDirectories = 0x4
+    RemoveEmptyQmlDirectories = 0x4,
+    SkipQmlDesignerSpecificsDirectories = 0x8
 };
 
 template <class DirectoryFileEntryFunction>
@@ -282,6 +283,11 @@ bool updateFile(const QString &sourceFileName,
     } // Source is symbolic link
 
     if (sourceFileInfo.isDir()) {
+        if ((flags & SkipQmlDesignerSpecificsDirectories) && sourceFileInfo.fileName() == QLatin1String("designer")) {
+            if (optVerboseLevel)
+                std::wcout << "Skipping " << QDir::toNativeSeparators(sourceFileName) << ".\n";
+            return true;
+        }
         bool created = false;
         if (targetFileInfo.exists()) {
             if (!targetFileInfo.isDir()) {
