@@ -30,6 +30,7 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
+#include <QCoreApplication>
 #include <QString>
 #include <QStringList>
 #include <QDebug>
@@ -55,6 +56,7 @@ bool runStripEnabled = true;
 bool alwaysOwerwriteEnabled = false;
 bool runCodesign = false;
 QString codesignIdentiy;
+bool appstoreCompliant = false;
 int logLevel = 1;
 
 using std::cout;
@@ -332,6 +334,22 @@ QString findAppBinary(const QString &appBundlePath)
     return QString();
 }
 
+QStringList findAppFrameworkNames(const QString &appBundlePath)
+{
+    QStringList frameworks;
+
+    // populate the frameworks list with QtFoo.framework etc,
+    // as found in /Contents/Frameworks/
+    QString searchPath = appBundlePath + "/Contents/Frameworks/";
+    QDirIterator iter(searchPath, QStringList() << QString::fromLatin1("*.framework"), QDir::Dirs);
+    while (iter.hasNext()) {
+        iter.next();
+        frameworks << iter.fileInfo().fileName();
+    }
+
+    return frameworks;
+}
+
 QStringList findAppLibraries(const QString &appBundlePath)
 {
     QStringList result;
@@ -553,13 +571,12 @@ bool recursiveCopy(const QString &sourcePath, const QString &destinationPath)
     return true;
 }
 
-void recursiveCopyAndDeploy(const QString &appBundlePath, const QString &sourcePath, const QString &destinationPath)
+void recursiveCopyAndDeploy(const QString &appBundlePath, const QSet<QString> &rpaths, const QString &sourcePath, const QString &destinationPath)
 {
     QDir().mkpath(destinationPath);
 
     LogNormal() << "copy:" << sourcePath << destinationPath;
 
-    QSet<QString> rpaths = getBinaryRPaths(findAppBinary(appBundlePath), true);
     QStringList files = QDir(sourcePath).entryList(QStringList() << QStringLiteral("*"), QDir::Files | QDir::NoDotAndDotDot);
     foreach (QString file, files) {
         const QString fileSourcePath = sourcePath + QLatin1Char('/') + file;
@@ -608,7 +625,7 @@ void recursiveCopyAndDeploy(const QString &appBundlePath, const QString &sourceP
 
     QStringList subdirs = QDir(sourcePath).entryList(QStringList() << QStringLiteral("*"), QDir::Dirs | QDir::NoDotAndDotDot);
     foreach (QString dir, subdirs) {
-        recursiveCopyAndDeploy(appBundlePath, sourcePath + QLatin1Char('/') + dir, destinationPath + QLatin1Char('/') + dir);
+        recursiveCopyAndDeploy(appBundlePath, rpaths, sourcePath + QLatin1Char('/') + dir, destinationPath + QLatin1Char('/') + dir);
     }
 }
 
@@ -805,6 +822,11 @@ void runStrip(const QString &binaryPath)
     }
 }
 
+void stripAppBinary(const QString &bundlePath)
+{
+    runStrip(findAppBinary(bundlePath));
+}
+
 /*
     Deploys the the listed frameworks listed into an app bundle.
     The frameworks are searched for dependencies, which are also deployed.
@@ -944,8 +966,19 @@ void deployPlugins(const ApplicationBundleInfo &appBundleInfo, const QString &pl
     if (deploymentInfo.deployedFrameworks.contains(QStringLiteral("QtSql.framework"))) {
         QStringList sqlPlugins = QDir(pluginSourcePath +  QStringLiteral("/sqldrivers")).entryList(QStringList() << QStringLiteral("*.dylib"));
         foreach (const QString &plugin, sqlPlugins) {
-            if (!plugin.endsWith(QStringLiteral("_debug.dylib")))
-                pluginList.append(QStringLiteral("sqldrivers/") + plugin);
+            if (plugin.endsWith(QStringLiteral("_debug.dylib")))
+                continue;
+
+            // Some sql plugins are known to cause app store rejections. Skip or warn for these plugins.
+            if (plugin.startsWith(QStringLiteral("libqsqlodbc")) || plugin.startsWith(QStringLiteral("libqsqlpsql"))) {
+                LogWarning() << "Plugin" << plugin << "uses private API and is not Mac App store compliant.";
+                if (appstoreCompliant) {
+                    LogWarning() << "Skip plugin" << plugin;
+                    continue;
+                }
+            }
+
+            pluginList.append(QStringLiteral("sqldrivers/") + plugin);
         }
     }
 
@@ -1028,7 +1061,7 @@ void deployPlugins(const QString &appBundlePath, DeploymentInfo deploymentInfo, 
     deployPlugins(applicationBundle, deploymentInfo.pluginPath, pluginDestinationPath, deploymentInfo, useDebugLibs);
 }
 
-void deployQmlImport(const QString &appBundlePath, const QString &importSourcePath, const QString &importName)
+void deployQmlImport(const QString &appBundlePath, const QSet<QString> &rpaths, const QString &importSourcePath, const QString &importName)
 {
     QString importDestinationPath = appBundlePath + "/Contents/Resources/qml/" + importName;
 
@@ -1037,22 +1070,28 @@ void deployQmlImport(const QString &appBundlePath, const QString &importSourcePa
     if (QDir().exists(importDestinationPath))
         return;
 
-    recursiveCopyAndDeploy(appBundlePath, importSourcePath, importDestinationPath);
+    recursiveCopyAndDeploy(appBundlePath, rpaths, importSourcePath, importDestinationPath);
 }
 
 // Scan qml files in qmldirs for import statements, deploy used imports from Qml2ImportsPath to Contents/Resources/qml.
-void deployQmlImports(const QString &appBundlePath, QStringList &qmlDirs)
+bool deployQmlImports(const QString &appBundlePath, DeploymentInfo deploymentInfo, QStringList &qmlDirs)
 {
     LogNormal() << "";
     LogNormal() << "Deploying QML imports ";
     LogNormal() << "Application QML file search path(s) is" << qmlDirs;
 
-    // verify that qmlimportscanner is in BinariesPath
+    // Use qmlimportscanner from QLibraryInfo::BinariesPath
     QString qmlImportScannerPath = QDir::cleanPath(QLibraryInfo::location(QLibraryInfo::BinariesPath) + "/qmlimportscanner");
+
+    // Fallback: Look relative to the macdeployqt binary
+    if (!QFile(qmlImportScannerPath).exists())
+        qmlImportScannerPath = QCoreApplication::applicationDirPath() + "/qmlimportscanner";
+
+    // Verify that we found a qmlimportscanner binary
     if (!QFile(qmlImportScannerPath).exists()) {
         LogError() << "qmlimportscanner not found at" << qmlImportScannerPath;
         LogError() << "Rebuild qtdeclarative/tools/qmlimportscanner";
-        return;
+        return false;
     }
 
     // build argument list for qmlimportsanner: "-rootPath foo/ -rootPath bar/ -importPath path/to/qt/qml"
@@ -1071,7 +1110,7 @@ void deployQmlImports(const QString &appBundlePath, QStringList &qmlDirs)
     qmlImportScanner.start(qmlImportScannerPath, argumentList);
     if (!qmlImportScanner.waitForStarted()) {
         LogError() << "Could not start qmlimpoortscanner. Process error is" << qmlImportScanner.errorString();
-        return;
+        return false;
     }
     qmlImportScanner.waitForFinished();
 
@@ -1090,8 +1129,10 @@ void deployQmlImports(const QString &appBundlePath, QStringList &qmlDirs)
     if (!doc.isArray()) {
         LogError() << "qmlimportscanner output error. Expected json array, got:";
         LogError() << json;
-        return;
+        return false;
     }
+
+    bool qtQuickContolsInUse = false; // condition for QtQuick.PrivateWidgets below
 
     // deploy each import
     foreach (const QJsonValue &importValue, doc.array()) {
@@ -1102,6 +1143,9 @@ void deployQmlImports(const QString &appBundlePath, QStringList &qmlDirs)
         QString name = import["name"].toString();
         QString path = import["path"].toString();
         QString type = import["type"].toString();
+
+        if (import["name"] == "QtQuick.Controls")
+            qtQuickContolsInUse = true;
 
         LogNormal() << "Deploying QML import" << name;
 
@@ -1129,9 +1173,25 @@ void deployQmlImports(const QString &appBundlePath, QStringList &qmlDirs)
         if (version.startsWith(QLatin1Char('.')))
             name.append(version);
 
-        deployQmlImport(appBundlePath, path, name);
+        deployQmlImport(appBundlePath, deploymentInfo.rpathsUsed, path, name);
         LogNormal() << "";
     }
+
+    // Special case:
+    // Use of QtQuick.PrivateWidgets is not discoverable at deploy-time.
+    // Recreate the run-time logic here as best as we can - deploy it iff
+    //      1) QtWidgets.framework is used
+    //      2) QtQuick.Controls is used
+    // The intended failure mode is that libwidgetsplugin.dylib will be present
+    // in the app bundle but not used at run-time.
+    if (deploymentInfo.deployedFrameworks.contains("QtWidgets.framework") && qtQuickContolsInUse) {
+        LogNormal() << "Deploying QML import QtQuick.PrivateWidgets";
+        QString name = "QtQuick/PrivateWidgets";
+        QString path = qmlImportsPath + QLatin1Char('/') + name;
+        deployQmlImport(appBundlePath, deploymentInfo.rpathsUsed, path, name);
+        LogNormal() << "";
+    }
+    return true;
 }
 
 void changeQtFrameworks(const QList<FrameworkInfo> frameworks, const QStringList &binaryPaths, const QString &absoluteQtPath)

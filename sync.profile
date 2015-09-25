@@ -31,5 +31,4 @@
     "qtxmlpatterns" => "",
     "qtdeclarative" => "",
     "qtactiveqt" => "",
-    "qtwebkit" => "",
 );

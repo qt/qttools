@@ -27,22 +27,8 @@
 	#if (_MSC_VER < 1310) || defined(_STLPORT_VERSION)
 		#define CL_NS_HASHING(func) std::func //the namespace is different on VC 7.0
 	#else
-        #if _MSC_VER >= 1900
-            #undef _CL_HAVE_EXT_HASH_MAP
-            #undef _CL_HAVE_EXT_HASH_SET
-
-            #define CL_HASH_MAP unordered_map
-            #define CL_HASH_SET unordered_set
-            #define _CL_HAVE_STD_UNORDERED_MAP 1
-            #define _CL_HAVE_STD_UNORDERED_SET 1
-            #define CL_NS_HASHING(func) std::func
-        #else
-            #define CL_HASH_MAP hash_map
-            #define CL_HASH_SET hash_set
-            #define CL_NS_HASHING(func) stdext::func
-        #endif
+		#define CL_NS_HASHING(func) stdext::func
 	#endif
-
 	#define LUCENE_STATIC_CONSTANT_SYNTAX 1
 
     #if _MSC_FULL_VER >= 140050320

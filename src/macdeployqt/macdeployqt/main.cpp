@@ -30,11 +30,15 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
+#include <QCoreApplication>
+#include <QDir>
+
 #include "../shared/shared.h"
-#include <qdir.h>
 
 int main(int argc, char **argv)
 {
+    QCoreApplication app(argc, argv);
+
     QString appBundlePath;
     if (argc > 1)
         appBundlePath = QString::fromLocal8Bit(argv[1]);
@@ -52,6 +56,7 @@ int main(int argc, char **argv)
         qDebug() << "   -qmldir=<path>     : Deploy imports used by .qml files in the given path";
         qDebug() << "   -always-overwrite  : Copy files even if the target file exists";
         qDebug() << "   -codesign=<ident>  : Run codesign with the given identity on all executables";
+        qDebug() << "   -appstore-compliant: Skip deployment of components that use private API";
         qDebug() << "";
         qDebug() << "macdeployqt takes an application bundle as input and makes it";
         qDebug() << "self-contained by copying in the Qt frameworks and plugins that";
@@ -61,17 +66,23 @@ int main(int argc, char **argv)
         qDebug() << "framework. The accessibility, image formats, and text codec";
         qDebug() << "plugins are always copied, unless \"-no-plugins\" is specified.";
         qDebug() << "";
-        qDebug() << "See the \"Deploying an Application on Qt/Mac\" topic in the";
-        qDebug() << "documentation for more information about deployment on Mac OS X.";
+        qDebug() << "Qt plugins may use private API and will cause the app to be";
+        qDebug() << "rejected from the Mac App store. MacDeployQt will print a warning";
+        qDebug() << "when known incompatible plugins are deployed. Use -appstore-compliant ";
+        qDebug() << "to skip these plugins. Currently two SQL plugins are known to";
+        qDebug() << "be incompatible: qsqlodbc and qsqlpsql.";
+        qDebug() << "";
+        qDebug() << "See the \"Deploying Applications on OS X\" topic in the";
+        qDebug() << "documentation for more information about deployment on OS X.";
 
-        return 0;
+        return 1;
     }
 
     appBundlePath = QDir::cleanPath(appBundlePath);
 
     if (QDir().exists(appBundlePath) == false) {
         qDebug() << "Error: Could not find app bundle" << appBundlePath;
-        return 0;
+        return 1;
     }
 
     bool plugins = true;
@@ -80,9 +91,11 @@ int main(int argc, char **argv)
     extern bool runStripEnabled;
     extern bool alwaysOwerwriteEnabled;
     QStringList additionalExecutables;
+    bool qmldirArgumentUsed = false;
     QStringList qmlDirs;
     extern bool runCodesign;
     extern QString codesignIdentiy;
+    extern bool appstoreCompliant;
 
     for (int i = 2; i < argc; ++i) {
         QByteArray argument = QByteArray(argv[i]);
@@ -117,6 +130,7 @@ int main(int argc, char **argv)
                 additionalExecutables << argument.mid(index+1);
         } else if (argument.startsWith(QByteArray("-qmldir"))) {
             LogDebug() << "Argument found:" << argument;
+            qmldirArgumentUsed = true;
             int index = argument.indexOf('=');
             if (index == -1)
                 LogError() << "Missing qml directory path";
@@ -134,20 +148,16 @@ int main(int argc, char **argv)
                 runCodesign = true;
                 codesignIdentiy = argument.mid(index+1);
             }
+        } else if (argument == QByteArray("-appstore-compliant")) {
+            LogDebug() << "Argument found:" << argument;
+            appstoreCompliant = true;
         } else if (argument.startsWith("-")) {
             LogError() << "Unknown argument" << argument << "\n";
-            return 0;
+            return 1;
         }
      }
 
     DeploymentInfo deploymentInfo  = deployQtFrameworks(appBundlePath, additionalExecutables, useDebugLibs);
-
-    if (plugins && !deploymentInfo.qtPath.isEmpty()) {
-        deploymentInfo.pluginPath = deploymentInfo.qtPath + "/plugins";
-        LogNormal();
-        deployPlugins(appBundlePath, deploymentInfo, useDebugLibs);
-        createQtConf(appBundlePath);
-    }
 
     // Convenience: Look for .qml files in the current directoty if no -qmldir specified.
     if (qmlDirs.isEmpty()) {
@@ -157,8 +167,26 @@ int main(int argc, char **argv)
         }
     }
 
-    if (!qmlDirs.isEmpty())
-        deployQmlImports(appBundlePath, qmlDirs);
+    if (!qmlDirs.isEmpty()) {
+        bool ok = deployQmlImports(appBundlePath, deploymentInfo, qmlDirs);
+        if (!ok && qmldirArgumentUsed)
+            return 1; // exit if the user explicitly asked for qml import deployment
+
+        // Update deploymentInfo.deployedFrameworks - the QML imports
+        // may have brought in extra frameworks as dependencies.
+        deploymentInfo.deployedFrameworks += findAppFrameworkNames(appBundlePath);
+        deploymentInfo.deployedFrameworks = deploymentInfo.deployedFrameworks.toSet().toList();
+    }
+
+    if (plugins && !deploymentInfo.qtPath.isEmpty()) {
+        deploymentInfo.pluginPath = deploymentInfo.qtPath + "/plugins";
+        LogNormal();
+        deployPlugins(appBundlePath, deploymentInfo, useDebugLibs);
+        createQtConf(appBundlePath);
+    }
+
+    if (runStripEnabled)
+        stripAppBinary(appBundlePath);
 
     if (runCodesign)
         codesign(codesignIdentiy, appBundlePath);
@@ -167,5 +195,7 @@ int main(int argc, char **argv)
         LogNormal();
         createDiskImage(appBundlePath);
     }
+
+    return 0;
 }
 

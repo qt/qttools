@@ -38,7 +38,7 @@
 #include <QDebug>
 
 extern int logLevel;
-#define LogError()      if (logLevel < 1) {} else qDebug() << "ERROR:"
+#define LogError()      if (logLevel < 0) {} else qDebug() << "ERROR:"
 #define LogWarning()    if (logLevel < 1) {} else qDebug() << "WARNING:"
 #define LogNormal()     if (logLevel < 2) {} else qDebug() << "Log:"
 #define LogDebug()      if (logLevel < 3) {} else qDebug() << "Log:"
@@ -100,11 +100,13 @@ DeploymentInfo deployQtFrameworks(const QString &appBundlePath, const QStringLis
 DeploymentInfo deployQtFrameworks(QList<FrameworkInfo> frameworks,const QString &bundlePath, const QStringList &binaryPaths, bool useDebugLibs, bool useLoaderPath);
 void createQtConf(const QString &appBundlePath);
 void deployPlugins(const QString &appBundlePath, DeploymentInfo deploymentInfo, bool useDebugLibs);
-void deployQmlImports(const QString &appBundlePath, QStringList &qmlDirs);
+bool deployQmlImports(const QString &appBundlePath, DeploymentInfo deploymentInfo, QStringList &qmlDirs);
 void changeIdentification(const QString &id, const QString &binaryPath);
 void changeInstallName(const QString &oldName, const QString &newName, const QString &binaryPath);
 void runStrip(const QString &binaryPath);
+void stripAppBinary(const QString &bundlePath);
 QString findAppBinary(const QString &appBundlePath);
+QStringList findAppFrameworkNames(const QString &appBundlePath);
 void codesignFile(const QString &identity, const QString &filePath);
 void codesign(const QString &identity, const QString &appBundlePath);
 void createDiskImage(const QString &appBundlePath);

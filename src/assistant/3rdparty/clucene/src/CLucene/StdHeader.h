@@ -122,10 +122,7 @@ extern int _lucene_counter_break; //can set a watch on this
  #error "CLucene can't compile without the vector header"
 #endif
 
-#if !defined(LUCENE_DISABLE_HASHING) && defined(_CL_HAVE_STD_UNORDERED_MAP) && defined(_CL_HAVE_STD_UNORDERED_SET)
-    #include <unordered_map>
-    #include <unordered_set>
-#elif !defined(LUCENE_DISABLE_HASHING) && defined(_CL_HAVE_HASH_MAP) && defined(_CL_HAVE_HASH_SET)
+#if !defined(LUCENE_DISABLE_HASHING) && defined(_CL_HAVE_HASH_MAP) && defined(_CL_HAVE_HASH_SET)
 	//hashing is all or nothing!
 	#include <hash_map>
 	#include <hash_set>

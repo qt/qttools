@@ -253,7 +253,7 @@ struct Options {
               , angleDetection(AngleDetectionAuto), softwareRasterizer(true), platform(Windows)
               , additionalLibraries(0), disabledLibraries(0)
               , updateFileFlags(0), json(0), list(ListNone), debugDetection(DebugDetectionAuto)
-              , debugMatchAll(false) {}
+              , debugMatchAll(false), deployPdb(false) {}
 
     bool plugins;
     bool libraries;
@@ -276,6 +276,12 @@ struct Options {
     ListOption list;
     DebugDetection debugDetection;
     bool debugMatchAll;
+    bool deployPdb;
+
+    inline bool isWinRtOrWinPhone() const {
+        return (platform == WinPhoneArm || platform == WinPhoneIntel
+                || platform == WinRtArm || platform == WinRtIntel);
+    }
 };
 
 // Return binary from folder
@@ -340,6 +346,10 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
     QCommandLineOption releaseWithDebugInfoOption(QStringLiteral("release-with-debug-info"),
                                                   QStringLiteral("Assume release binaries with debug information."));
     parser->addOption(releaseWithDebugInfoOption);
+
+    QCommandLineOption deployPdbOption(QStringLiteral("pdb"),
+                                       QStringLiteral("Deploy .pdb files (MSVC)."));
+    parser->addOption(deployPdbOption);
 
     QCommandLineOption forceOption(QStringLiteral("force"),
                                     QStringLiteral("Force updating files."));
@@ -485,6 +495,13 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
             options->debugDetection = Options::DebugDetectionForceRelease;
             break;
         }
+    }
+
+    if (parser->isSet(deployPdbOption)) {
+        if ((options->platform & WindowsBased) && !(options->platform & MinGW))
+            options->deployPdb = true;
+        else
+            std::wcerr << "Warning: --" << deployPdbOption.names().first() << " is not supported on this platform.\n";
     }
 
     switch (parseExclusiveOptions(parser, angleOption, noAngleOption)) {
@@ -706,27 +723,55 @@ private:
     const QString m_prefix;
 };
 
+static QString pdbFileName(QString libraryFileName)
+{
+    const int lastDot = libraryFileName.lastIndexOf(QLatin1Char('.')) + 1;
+    if (lastDot <= 0)
+        return QString();
+    libraryFileName.replace(lastDot, libraryFileName.size() - lastDot, QLatin1String("pdb"));
+    return libraryFileName;
+}
+
 // File entry filter function for updateFile() that returns a list of files for
 // QML import trees: DLLs (matching debgug) and .qml/,js, etc.
 class QmlDirectoryFileEntryFunction {
 public:
-    explicit QmlDirectoryFileEntryFunction(Platform platform, DebugMatchMode debugMatchMode, bool skipQmlSources = false)
-        : m_qmlNameFilter(QmlDirectoryFileEntryFunction::qmlNameFilters(skipQmlSources))
+    enum Flags {
+        DeployPdb = 0x1,
+        SkipSources = 0x2
+    };
+
+    explicit QmlDirectoryFileEntryFunction(Platform platform, DebugMatchMode debugMatchMode, unsigned flags)
+        : m_flags(flags), m_qmlNameFilter(QmlDirectoryFileEntryFunction::qmlNameFilters(flags))
         , m_dllFilter(platform, debugMatchMode)
     {}
 
-    QStringList operator()(const QDir &dir) const { return m_dllFilter(dir) + m_qmlNameFilter(dir);  }
+    QStringList operator()(const QDir &dir) const
+    {
+        QStringList result;
+        foreach (const QString &library, m_dllFilter(dir)) {
+            result.append(library);
+            if (m_flags & DeployPdb) {
+                const QString pdb = pdbFileName(library);
+                if (QFileInfo(dir.absoluteFilePath(pdb)).isFile())
+                    result.append(pdb);
+            }
+        }
+        result.append(m_qmlNameFilter(dir));
+        return result;
+    }
 
 private:
-    static inline QStringList qmlNameFilters(bool skipQmlSources)
+    static inline QStringList qmlNameFilters(unsigned flags)
     {
         QStringList result;
         result << QStringLiteral("qmldir") << QStringLiteral("*.qmltypes");
-        if (!skipQmlSources)
+        if (!(flags & SkipSources))
             result << QStringLiteral("*.js") <<  QStringLiteral("*.qml") << QStringLiteral("*.png");
         return result;
     }
 
+    const unsigned m_flags;
     NameFilterFileEntryFunction m_qmlNameFilter;
     DllDirectoryFileEntryFunction m_dllFilter;
 };
@@ -1033,6 +1078,21 @@ static inline QString qtlibInfixFromCoreLibName(const QString &path, bool isDebu
     return endPos > startPos ? path.mid(startPos, endPos - startPos) : QString();
 }
 
+// Deploy a library along with its .pdb debug info file (MSVC) should it exist.
+static bool updateLibrary(const QString &sourceFileName, const QString &targetDirectory,
+                          const Options &options, QString *errorMessage)
+{
+
+    if (!updateFile(sourceFileName, targetDirectory, options.updateFileFlags, options.json, errorMessage))
+        return false;
+    if (options.deployPdb) {
+        const QFileInfo pdb(pdbFileName(sourceFileName));
+        if (pdb.isFile())
+            return updateFile(pdb.absoluteFilePath(), targetDirectory, options.updateFileFlags, Q_NULLPTR, errorMessage);
+    }
+    return true;
+}
+
 static DeployResult deploy(const Options &options,
                            const QMap<QString, QString> &qmakeVariables,
                            QString *errorMessage)
@@ -1231,8 +1291,7 @@ static DeployResult deploy(const Options &options,
             libEglFullPath += QLatin1String(windowsSharedLibrarySuffix);
             deployedQtLibraries.append(libEglFullPath);
             // Find the system D3d Compiler matching the D3D library.
-            if (options.systemD3dCompiler && options.platform != WinPhoneArm && options.platform != WinPhoneIntel
-                    && options.platform != WinRtArm && options.platform != WinRtIntel) {
+            if (options.systemD3dCompiler && !options.isWinRtOrWinPhone()) {
                 const QString d3dCompiler = findD3dCompiler(options.platform, qtBinDir, wordSize);
                 if (d3dCompiler.isEmpty()) {
                     std::wcerr << "Warning: Cannot find any version of the d3dcompiler DLL.\n";
@@ -1256,15 +1315,17 @@ static DeployResult deploy(const Options &options,
         if (options.compilerRunTime)
             libraries.append(compilerRunTimeLibs(options.platform, isDebug, wordSize));
         foreach (const QString &qtLib, libraries) {
-            if (!updateFile(qtLib, targetPath, options.updateFileFlags, options.json, errorMessage))
+            if (!updateLibrary(qtLib, targetPath, options, errorMessage))
                 return result;
         }
 
-        const QString qt5CoreName = QFileInfo(libraryPath(libraryLocation, "Qt5Core", qtLibInfix,
-                                                          options.platform, isDebug)).fileName();
+        if (!options.isWinRtOrWinPhone()) {
+            const QString qt5CoreName = QFileInfo(libraryPath(libraryLocation, "Qt5Core", qtLibInfix,
+                                                              options.platform, isDebug)).fileName();
 
-        if (!patchQtCore(targetPath + QLatin1Char('/') + qt5CoreName, errorMessage))
-            return result;
+            if (!patchQtCore(targetPath + QLatin1Char('/') + qt5CoreName, errorMessage))
+                return result;
+        }
     } // optLibraries
 
     // Update plugins
@@ -1282,7 +1343,7 @@ static DeployResult deploy(const Options &options,
                 }
             }
             const QString targetPath = options.directory + slash + targetDirName;
-            if (!updateFile(plugin, targetPath, options.updateFileFlags, options.json, errorMessage))
+            if (!updateLibrary(plugin, targetPath, options, errorMessage))
                 return result;
         }
     } // optPlugins
@@ -1292,7 +1353,6 @@ static DeployResult deploy(const Options &options,
     // Do not be fooled by QtWebKit.dll depending on Quick into always installing Quick imports
     // for WebKit1-applications. Check direct dependency only.
     if (options.quickImports && (usesQuick1 || usesQml2)) {
-        const QmlDirectoryFileEntryFunction qmlFileEntryFunction(options.platform, debugMatchMode);
         if (usesQml2) {
             foreach (const QmlImportScanResult::Module &module, qmlScanResult.modules) {
                 const QString installPath = module.installPath(options.directory);
@@ -1302,19 +1362,23 @@ static DeployResult deploy(const Options &options,
                                << QDir::toNativeSeparators(installPath) << '\n';
                 if (installPath != options.directory && !createDirectory(installPath, errorMessage))
                     return result;
-                const bool updateResult = module.sourcePath.contains(QLatin1String("QtQuick/Controls"))
-                    || module.sourcePath.contains(QLatin1String("QtQuick/Dialogs")) ?
-                    updateFile(module.sourcePath, QmlDirectoryFileEntryFunction(options.platform, debugMatchMode, true),
-                               installPath, options.updateFileFlags | RemoveEmptyQmlDirectories,
-                               options.json, errorMessage) :
-                    updateFile(module.sourcePath, qmlFileEntryFunction, installPath, options.updateFileFlags,
-                               options.json, errorMessage);
-                if (!updateResult)
+                quint64 updateFileFlags = options.updateFileFlags;
+                unsigned qmlDirectoryFileFlags = 0;
+                if (module.sourcePath.contains(QLatin1String("QtQuick/Controls")) || module.sourcePath.contains(QLatin1String("QtQuick/Dialogs"))) {
+                    updateFileFlags |=  RemoveEmptyQmlDirectories;
+                    qmlDirectoryFileFlags |= QmlDirectoryFileEntryFunction::SkipSources;
+                }
+                if (options.deployPdb)
+                    qmlDirectoryFileFlags |= QmlDirectoryFileEntryFunction::DeployPdb;
+                if (!updateFile(module.sourcePath, QmlDirectoryFileEntryFunction(options.platform, debugMatchMode, qmlDirectoryFileFlags),
+                                installPath, updateFileFlags, options.json, errorMessage)) {
                     return result;
+                }
             }
         } // Quick 2
         if (usesQuick1) {
             const QString quick1ImportPath = qmakeVariables.value(QStringLiteral("QT_INSTALL_IMPORTS"));
+            const QmlDirectoryFileEntryFunction qmlFileEntryFunction(options.platform, debugMatchMode, options.deployPdb ? QmlDirectoryFileEntryFunction::DeployPdb : 0);
             QStringList quick1Imports(QStringLiteral("Qt"));
             if (result.deployedQtLibraries & QtWebKitModule)
                 quick1Imports << QStringLiteral("QtWebKit");

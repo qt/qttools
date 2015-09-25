@@ -263,9 +263,10 @@ bool Runner::collectTest()
 
     // Fetch test output
     if (!d->engine->receiveFile(d->deviceOutputFile, d->localOutputFile)) {
-        qCWarning(lcWinRtRunner).nospace()
-                << "Unable to copy test output file \"" << d->deviceOutputFile
-                << "\" to local file \"" << d->localOutputFile << "\".";
+        qCWarning(lcWinRtRunner).nospace().noquote()
+                << "Unable to copy test output file \""
+                << QDir::toNativeSeparators(d->deviceOutputFile)
+                << "\" to local file \"" << QDir::toNativeSeparators(d->localOutputFile) << "\".";
         return false;
     }
 

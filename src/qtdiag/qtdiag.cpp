@@ -54,6 +54,7 @@
 #include <QtCore/QVariant>
 #include <QtCore/QSysInfo>
 #include <QtCore/QLibraryInfo>
+#include <QtCore/QProcessEnvironment>
 #include <QtCore/QTextStream>
 #include <QtCore/QStandardPaths>
 #include <QtCore/QDir>
@@ -63,8 +64,10 @@
 #include <private/qsimd_p.h>
 #include <private/qguiapplication_p.h>
 #include <qpa/qplatformintegration.h>
+#include <qpa/qplatformscreen.h>
 #include <qpa/qplatformtheme.h>
 #include <qpa/qplatformnativeinterface.h>
+#include <private/qhighdpiscaling_p.h>
 
 #include <algorithm>
 
@@ -79,6 +82,12 @@ QTextStream &operator<<(QTextStream &str, const QSize &s)
 QTextStream &operator<<(QTextStream &str, const QSizeF &s)
 {
     str << s.width() << 'x' << s.height();
+    return str;
+}
+
+QTextStream &operator<<(QTextStream &str, const QDpi &d)
+{
+    str << d.first << ',' << d.second;
     return str;
 }
 
@@ -243,6 +252,13 @@ QString qtDiag(unsigned flags)
 #endif
     str << '\n';
 
+    const QProcessEnvironment systemEnvironment = QProcessEnvironment::systemEnvironment();
+    str << "\nEnvironment:\n";
+    foreach (const QString &key, systemEnvironment.keys()) {
+        if (key.startsWith(QLatin1Char('Q')))
+           str << "  " << key << "=\"" << systemEnvironment.value(key) << "\"\n";
+    }
+
     str << "\nLibrary info:\n";
     DUMP_LIBRARYPATH(str, PrefixPath)
     DUMP_LIBRARYPATH(str, DocumentationPath)
@@ -370,29 +386,46 @@ QString qtDiag(unsigned flags)
         str << "  Native color dialog\n";
     if (platformTheme->usePlatformNativeDialog(QPlatformTheme::FontDialog))
         str << "  Native font dialog\n";
+    if (platformTheme->usePlatformNativeDialog(QPlatformTheme::MessageDialog))
+        str << "  Native message dialog\n";
 
     const QList<QScreen*> screens = QGuiApplication::screens();
     const int screenCount = screens.size();
-    str << "\nScreens: " << screenCount << '\n';
+    str << "\nScreens: " << screenCount << ", High DPI scaling: "
+        << (QHighDpiScaling::isActive() ? "active" : "inactive") << '\n';
     for (int s = 0; s < screenCount; ++s) {
         const QScreen *screen = screens.at(s);
+        const QPlatformScreen *platformScreen = screen->handle();
+        const QRect geometry = screen->geometry();
+        const QDpi dpi(screen->logicalDotsPerInchX(), screen->logicalDotsPerInchY());
+        const QDpi nativeDpi = platformScreen->logicalDpi();
+        const QRect nativeGeometry = platformScreen->geometry();
         str << '#' << ' ' << s << " \"" << screen->name() << '"'
                   << " Depth: " << screen->depth()
                   << " Primary: " <<  (screen == QGuiApplication::primaryScreen() ? "yes" : "no")
-            << "\n  Geometry: " << screen->geometry() << " Available: " << screen->availableGeometry();
-        if (screen->geometry() != screen->virtualGeometry())
+            << "\n  Geometry: " << geometry;
+        if (geometry != nativeGeometry)
+            str << " (native: " << nativeGeometry << ')';
+        str << " Available: " << screen->availableGeometry();
+        if (geometry != screen->virtualGeometry())
             str << "\n  Virtual geometry: " << screen->virtualGeometry() << " Available: " << screen->availableVirtualGeometry();
         if (screen->virtualSiblings().size() > 1)
             str << "\n  " << screen->virtualSiblings().size() << " virtual siblings";
         str << "\n  Physical size: " << screen->physicalSize() << " mm"
-                  << "  Refresh: " << screen->refreshRate() << " Hz"
-            << "\n  Physical DPI: " << screen->physicalDotsPerInchX()
+            << "  Refresh: " << screen->refreshRate() << " Hz"
+            << " Power state: " << platformScreen->powerState();
+        str << "\n  Physical DPI: " << screen->physicalDotsPerInchX()
             << ',' << screen->physicalDotsPerInchY()
-            << " Logical DPI: " << screen->logicalDotsPerInchX()
-            << ',' << screen->logicalDotsPerInchY()
-            << "\n  DevicePixelRatio: " << screen->devicePixelRatio()
-            << " Primary orientation: " << screen->primaryOrientation()
-            << "\n  Orientation: " << screen->orientation()
+            << " Logical DPI: " << dpi;
+        if (dpi != nativeDpi)
+            str << " (native: " << nativeDpi << ')';
+        str << "\n  ";
+        if (QHighDpiScaling::isActive())
+            str << "High DPI scaling factor: " << QHighDpiScaling::factor(screen) << ' ';
+        str << "DevicePixelRatio: " << screen->devicePixelRatio()
+            << " Pixel density: " << platformScreen->pixelDensity();
+        str << "\n  Primary orientation: " << screen->primaryOrientation()
+            << " Orientation: " << screen->orientation()
             << " Native orientation: " << screen->nativeOrientation()
             << " OrientationUpdateMask: " << screen->orientationUpdateMask()
             << "\n\n";
