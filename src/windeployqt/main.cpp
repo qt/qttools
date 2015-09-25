@@ -1233,8 +1233,10 @@ static DeployResult deploy(const Options &options,
         foreach (const QString &qmlDirectory, qmlDirectories) {
             if (optVerboseLevel >= 1)
                 std::wcout << "Scanning " << QDir::toNativeSeparators(qmlDirectory) << ":\n";
-            const QmlImportScanResult scanResult = runQmlImportScanner(qmlDirectory, qmakeVariables.value(QStringLiteral("QT_INSTALL_QML")), options.platform,
-                                                                       debugMatchMode, errorMessage);
+            const QmlImportScanResult scanResult =
+                runQmlImportScanner(qmlDirectory, qmakeVariables.value(QStringLiteral("QT_INSTALL_QML")),
+                                    result.directlyUsedQtLibraries & QtWidgetsModule,
+                                    options.platform, debugMatchMode, errorMessage);
             if (!scanResult.ok)
                 return result;
             qmlScanResult.append(scanResult);
