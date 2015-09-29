@@ -273,6 +273,7 @@ struct Options {
     QString directory;
     QString translationsDirectory; // Translations target directory
     QString libraryDirectory;
+    QString pluginDirectory;
     QStringList binaries;
     JsonOutput *json;
     ListOption list;
@@ -337,6 +338,11 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
                                     QStringLiteral("Copy libraries to path."),
                                     QStringLiteral("path"));
     parser->addOption(libDirOption);
+
+    QCommandLineOption pluginDirOption(QStringLiteral("plugindir"),
+                                       QStringLiteral("Copy plugins to path."),
+                                       QStringLiteral("path"));
+    parser->addOption(pluginDirOption);
 
     QCommandLineOption debugOption(QStringLiteral("debug"),
                                    QStringLiteral("Assume debug binaries."));
@@ -467,6 +473,7 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
     }
 
     options->libraryDirectory = parser->value(libDirOption);
+    options->pluginDirectory = parser->value(pluginDirOption);
     options->plugins = !parser->isSet(noPluginsOption);
     options->libraries = !parser->isSet(noLibraryOption);
     options->translations = !parser->isSet(noTranslationOption);
@@ -1364,18 +1371,25 @@ static DeployResult deploy(const Options &options,
 
     // Update plugins
     if (options.plugins) {
-        QDir dir(options.directory);
+        const QString targetPath = options.pluginDirectory.isEmpty() ?
+            options.directory : options.pluginDirectory;
+        QDir dir(targetPath);
+        if (!dir.exists() && !dir.mkpath(QStringLiteral("."))) {
+            *errorMessage = QLatin1String("Cannot create ") +
+                            QDir::toNativeSeparators(dir.absolutePath()) +  QLatin1Char('.');
+            return result;
+        }
         foreach (const QString &plugin, plugins) {
             const QString targetDirName = plugin.section(slash, -2, -2);
+            const QString targetPath = dir.absoluteFilePath(targetDirName);
             if (!dir.exists(targetDirName)) {
                 if (optVerboseLevel)
-                    std::wcout << "Creating directory " << targetDirName << ".\n";
+                    std::wcout << "Creating directory " << targetPath << ".\n";
                 if (!(options.updateFileFlags & SkipUpdateFile) && !dir.mkdir(targetDirName)) {
                     *errorMessage = QStringLiteral("Cannot create ") + targetDirName +  QLatin1Char('.');
                     return result;
                 }
             }
-            const QString targetPath = options.directory + slash + targetDirName;
             if (!updateLibrary(plugin, targetPath, options, errorMessage))
                 return result;
         }
