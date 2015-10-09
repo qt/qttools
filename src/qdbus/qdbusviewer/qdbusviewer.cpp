@@ -37,12 +37,11 @@
 #include "propertydialog.h"
 #include "logviewer.h"
 
-#include <QtWidgets/QTreeWidget>
+
 #include <QtCore/QStringListModel>
 #include <QtCore/QMetaProperty>
 #include <QtCore/QSettings>
 #include <QtWidgets/QLineEdit>
-#include <QtWidgets/QListView>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QShortcut>
 #include <QtWidgets/QVBoxLayout>
@@ -50,6 +49,9 @@
 #include <QtWidgets/QInputDialog>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QMenu>
+#include <QtWidgets/QTableWidget>
+#include <QtWidgets/QTreeWidget>
+#include <QtWidgets/QHeaderView>
 #include <QtDBus/QDBusConnectionInterface>
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusMetaType>
@@ -79,17 +81,27 @@ QDBusViewer::QDBusViewer(const QDBusConnection &connection, QWidget *parent)  :
     c(connection),
     objectPathRegExp(QLatin1String("\\[ObjectPath: (.*)\\]"))
 {
-    servicesModel = new QStringListModel(this);
-    servicesFilterModel = new ServicesProxyModel(this);
-    servicesFilterModel->setSourceModel(servicesModel);
-    servicesFilterModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
-    servicesFilterModel->sort(0, Qt::AscendingOrder);
     serviceFilterLine = new QLineEdit(this);
     serviceFilterLine->setPlaceholderText(tr("Search..."));
-    servicesView = new QListView(this);
-    servicesView->setModel(servicesFilterModel);
 
-    connect(serviceFilterLine, SIGNAL(textChanged(QString)), servicesFilterModel, SLOT(setFilterFixedString(QString)));
+    // Create model for services list
+    servicesModel = new QStringListModel(this);
+    // Wrap service list model in proxy for easy filtering and interactive sorting
+    servicesProxyModel = new ServicesProxyModel(this);
+    servicesProxyModel->setSourceModel(servicesModel);
+    servicesProxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+
+    servicesView = new QTableView(this);
+    servicesView->setModel(servicesProxyModel);
+    // Make services grid view behave like a list view with headers
+    servicesView->verticalHeader()->hide();
+    servicesView->horizontalHeader()->setStretchLastSection(true);
+    servicesView->setShowGrid(false);
+    // Sort service list by default
+    servicesView->setSortingEnabled(true);
+    servicesView->sortByColumn(0, Qt::AscendingOrder);
+
+    connect(serviceFilterLine, SIGNAL(textChanged(QString)), servicesProxyModel, SLOT(setFilterFixedString(QString)));
 
     tree = new QTreeView;
     tree->setContextMenuPolicy(Qt::CustomContextMenu);

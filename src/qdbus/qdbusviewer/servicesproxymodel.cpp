@@ -38,6 +38,15 @@ ServicesProxyModel::ServicesProxyModel(QObject *parent)
 {
 }
 
+QVariant ServicesProxyModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if (role != Qt::DisplayRole || orientation != Qt::Horizontal || section != 0)
+        return QVariant();
+
+    return tr("Services");
+}
+
+
 bool ServicesProxyModel::lessThan(const QModelIndex &left,
                                   const QModelIndex &right) const
 {
