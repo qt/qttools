@@ -33,12 +33,12 @@
 
 #include "qdbusviewer.h"
 #include "qdbusmodel.h"
+#include "servicesproxymodel.h"
 #include "propertydialog.h"
 #include "logviewer.h"
 
 #include <QtWidgets/QTreeWidget>
 #include <QtCore/QStringListModel>
-#include <QtCore/QSortFilterProxyModel>
 #include <QtCore/QMetaProperty>
 #include <QtCore/QSettings>
 #include <QtWidgets/QLineEdit>
@@ -80,9 +80,10 @@ QDBusViewer::QDBusViewer(const QDBusConnection &connection, QWidget *parent)  :
     objectPathRegExp(QLatin1String("\\[ObjectPath: (.*)\\]"))
 {
     servicesModel = new QStringListModel(this);
-    servicesFilterModel = new QSortFilterProxyModel(this);
+    servicesFilterModel = new ServicesProxyModel(this);
     servicesFilterModel->setSourceModel(servicesModel);
     servicesFilterModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    servicesFilterModel->sort(0, Qt::AscendingOrder);
     serviceFilterLine = new QLineEdit(this);
     serviceFilterLine->setPlaceholderText(tr("Search..."));
     servicesView = new QListView(this);

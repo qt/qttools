@@ -1,11 +1,13 @@
 HEADERS         = qdbusviewer.h \
                   qdbusmodel.h \
+                  servicesproxymodel.h \
                   propertydialog.h \
                   logviewer.h \
                   mainwindow.h
 
 SOURCES         = qdbusviewer.cpp \
                   qdbusmodel.cpp \
+                  servicesproxymodel.cpp \
                   propertydialog.cpp \
                   logviewer.cpp \
                   mainwindow.cpp \
