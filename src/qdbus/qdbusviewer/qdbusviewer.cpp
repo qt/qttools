@@ -445,6 +445,8 @@ void QDBusViewer::dumpMessage(const QDBusMessage &message)
             QString str = QDBusUtil::argumentToString(arg).toHtmlEscaped();
             // turn object paths into clickable links
             str.replace(objectPathRegExp, QLatin1String("[ObjectPath: <a href=\"qdbus://bus\\1\">\\1</a>]"));
+            // convert new lines from command to proper HTML line breaks
+            str.replace(QStringLiteral("\n"), QStringLiteral("<br/>"));
             out += str;
             out += QLatin1String(", ");
         }
