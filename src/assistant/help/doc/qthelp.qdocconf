@@ -4,7 +4,7 @@ project                 = QtHelp
 description             = Qt Help Reference Documentation
 version                 = $QT_VERSION
 
-examplesinstallpath     = help
+examplesinstallpath     = qttools/help
 
 qhp.projects            = QtHelp
 
