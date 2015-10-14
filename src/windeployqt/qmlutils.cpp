@@ -116,9 +116,10 @@ static void findFileRecursion(const QDir &directory, Platform platform,
 }
 
 QmlImportScanResult runQmlImportScanner(const QString &directory, const QString &qmlImportPath,
-                                        int platform, DebugMatchMode debugMatchMode,
+                                        bool usesWidgets, int platform, DebugMatchMode debugMatchMode,
                                         QString *errorMessage)
 {
+    bool quickControlsHandled = false;
     QmlImportScanResult result;
     QStringList arguments;
     arguments << QStringLiteral("-importPath") << qmlImportPath << QStringLiteral("-rootPath") << directory;
@@ -154,6 +155,20 @@ QmlImportScanResult runQmlImportScanner(const QString &directory, const QString 
                 module.sourcePath = path;
                 result.modules.append(module);
                 findFileRecursion(QDir(path), Platform(platform), debugMatchMode, &result.plugins);
+                // QTBUG-48424, QTBUG-45977: In release mode, qmlimportscanner does not report
+                // the dependency of QtQuick.Controls on QtQuick.PrivateWidgets due to missing files.
+                // Recreate the run-time logic here as best as we can - deploy it if
+                //      1) QtWidgets is used
+                //      2) QtQuick.Controls is used
+                if (!quickControlsHandled && usesWidgets && module.name == QLatin1String("QtQuick.Controls")) {
+                    quickControlsHandled = true;
+                    QmlImportScanResult::Module privateWidgetsModule;
+                    privateWidgetsModule.name = QStringLiteral("QtQuick.PrivateWidgets");
+                    privateWidgetsModule.className = QStringLiteral("QtQuick2PrivateWidgetsPlugin");
+                    privateWidgetsModule.sourcePath = QFileInfo(path).absolutePath() + QStringLiteral("/PrivateWidgets");
+                    result.modules.append(privateWidgetsModule);
+                    findFileRecursion(QDir(privateWidgetsModule.sourcePath), Platform(platform), debugMatchMode, &result.plugins);
+                }
             }
         }
     }

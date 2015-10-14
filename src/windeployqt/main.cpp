@@ -810,23 +810,34 @@ static inline quint64 qtModuleForPlugin(const QString &subDirName)
     return 0; // "designer"
 }
 
-static quint64 qtModule(const QString &module)
+static quint64 qtModule(QString module, const QString &infix)
 {
-    quint64 bestMatch = 0;
-    int bestMatchLength = 0;
+    // Match needle 'path/Qt5Core<infix><d>.dll' or 'path/libQt5Core<infix>.so.5.0'
+    const int lastSlashPos = module.lastIndexOf(QLatin1Char('/'));
+    if (lastSlashPos > 0)
+        module.remove(0, lastSlashPos + 1);
+    if (module.startsWith(QLatin1String("lib")))
+        module.remove(0, 3);
+    int endPos = infix.isEmpty() ? -1 : module.lastIndexOf(infix);
+    if (endPos == -1)
+        endPos = module.indexOf(QLatin1Char('.')); // strip suffixes '.so.5.0'.
+    if (endPos > 0)
+        module.truncate(endPos);
+    // That should leave us with 'Qt5Core<d>'.
     const size_t qtModulesCount = sizeof(qtModuleEntries)/sizeof(QtModuleEntry);
     for (size_t i = 0; i < qtModulesCount; ++i) {
-        const QString libraryName = QLatin1String(qtModuleEntries[i].libraryName);
-        if (libraryName.size() > bestMatchLength && module.contains(libraryName, Qt::CaseInsensitive)) {
-            bestMatch = qtModuleEntries[i].module;
-            bestMatchLength = libraryName.size();
+        const QLatin1String libraryName(qtModuleEntries[i].libraryName);
+        if (module == libraryName
+            || (module.size() == libraryName.size() + 1 && module.startsWith(libraryName))) {
+            return qtModuleEntries[i].module;
         }
     }
-    return bestMatch;
+    return 0;
 }
 
 QStringList findQtPlugins(quint64 *usedQtModules, quint64 disabledQtModules,
                           const QString &qtPluginsDirName, const QString &libraryLocation,
+                          const QString &infix,
                           DebugMatchMode debugMatchModeIn, Platform platform, QString *platformPlugin)
 {
     QString errorMessage;
@@ -880,7 +891,7 @@ QStringList findQtPlugins(quint64 *usedQtModules, quint64 disabledQtModules,
                 quint64 neededModules = 0;
                 if (findDependentQtLibraries(libraryLocation, pluginPath, platform, &errorMessage, &dependentQtLibs)) {
                     for (int d = 0; d < dependentQtLibs.size(); ++ d)
-                        neededModules |= qtModule(dependentQtLibs.at(d));
+                        neededModules |= qtModule(dependentQtLibs.at(d), infix);
                 } else {
                     std::wcerr << "Warning: Cannot determine dependencies of "
                         << QDir::toNativeSeparators(pluginPath) << ": " << errorMessage << '\n';
@@ -1093,6 +1104,27 @@ static bool updateLibrary(const QString &sourceFileName, const QString &targetDi
     return true;
 }
 
+// Check for a Qt Quick Controls import path and return the version.
+// 'QtQuick/Controls' ==> 1, or 'QtQuick/Controls.2' ==> 2.
+static inline int quickControlsImportPath(const QString &ip)
+{
+    if (ip.endsWith(QLatin1String("QtQuick/Dialogs")) || ip.contains(QLatin1String("QtQuick/Dialogs/")))
+        return 1; // Dialogs only in v1, so far.
+    const QString controlsPattern = QStringLiteral("QtQuick/Controls");
+    const int pos = ip.indexOf(controlsPattern);
+    if (pos < 0)
+        return 0;
+    const int endPos = pos + controlsPattern.size();
+    if (endPos == ip.size() || ip.at(endPos) == QLatin1Char('/'))
+        return 1; // No version: v1
+    if (ip.at(endPos) != QLatin1Char('.'))
+        return 0;
+    const int versionPos = endPos + 1;
+    int versionEndPos = versionPos;
+    for ( ; versionEndPos < ip.size() && ip.at(versionEndPos).isDigit(); ++versionEndPos) {}
+    return ip.midRef(versionPos, versionEndPos - versionPos).toInt();
+}
+
 static DeployResult deploy(const Options &options,
                            const QMap<QString, QString> &qmakeVariables,
                            QString *errorMessage)
@@ -1103,6 +1135,7 @@ static DeployResult deploy(const Options &options,
 
     const QString qtBinDir = qmakeVariables.value(QStringLiteral("QT_INSTALL_BINS"));
     const QString libraryLocation = options.platform == Unix ? qmakeVariables.value(QStringLiteral("QT_INSTALL_LIBS")) : qtBinDir;
+    const QString infix = qmakeVariables.value(QLatin1String(qmakeInfixKey));
     const int version = qtVersion(qmakeVariables);
     Q_UNUSED(version)
 
@@ -1132,7 +1165,7 @@ static DeployResult deploy(const Options &options,
     // direct dependencies (do not be fooled by QtWebKit depending on it).
     QString qtLibInfix;
     for (int m = 0; m < directDependencyCount; ++m) {
-        const quint64 module = qtModule(dependentQtLibs.at(m));
+        const quint64 module = qtModule(dependentQtLibs.at(m), infix);
         result.directlyUsedQtLibraries |= module;
         if (module == QtCoreModule)
             qtLibInfix = qtlibInfixFromCoreLibName(dependentQtLibs.at(m), detectedDebug, options.platform);
@@ -1200,8 +1233,10 @@ static DeployResult deploy(const Options &options,
         foreach (const QString &qmlDirectory, qmlDirectories) {
             if (optVerboseLevel >= 1)
                 std::wcout << "Scanning " << QDir::toNativeSeparators(qmlDirectory) << ":\n";
-            const QmlImportScanResult scanResult = runQmlImportScanner(qmlDirectory, qmakeVariables.value(QStringLiteral("QT_INSTALL_QML")), options.platform,
-                                                                       debugMatchMode, errorMessage);
+            const QmlImportScanResult scanResult =
+                runQmlImportScanner(qmlDirectory, qmakeVariables.value(QStringLiteral("QT_INSTALL_QML")),
+                                    result.directlyUsedQtLibraries & QtWidgetsModule,
+                                    options.platform, debugMatchMode, errorMessage);
             if (!scanResult.ok)
                 return result;
             qmlScanResult.append(scanResult);
@@ -1231,7 +1266,7 @@ static DeployResult deploy(const Options &options,
     // QtModule enumeration (and thus controlled by flags) and others.
     QStringList deployedQtLibraries;
     for (int i = 0 ; i < dependentQtLibs.size(); ++i)  {
-        if (const quint64 qtm = qtModule(dependentQtLibs.at(i)))
+        if (const quint64 qtm = qtModule(dependentQtLibs.at(i), infix))
             result.usedQtLibraries |= qtm;
         else
             deployedQtLibraries.push_back(dependentQtLibs.at(i)); // Not represented by flag.
@@ -1242,7 +1277,7 @@ static DeployResult deploy(const Options &options,
         findQtPlugins(&result.deployedQtLibraries,
                       // For non-QML applications, disable QML to prevent it from being pulled in by the qtaccessiblequick plugin.
                       options.disabledLibraries | (usesQml2 ? 0 : (QtQmlModule | QtQuickModule)),
-                      qmakeVariables.value(QStringLiteral("QT_INSTALL_PLUGINS")), libraryLocation,
+                      qmakeVariables.value(QStringLiteral("QT_INSTALL_PLUGINS")), libraryLocation, infix,
                       debugMatchMode, options.platform, &platformPlugin);
 
     // Apply options flags and re-add library names.
@@ -1362,9 +1397,9 @@ static DeployResult deploy(const Options &options,
                                << QDir::toNativeSeparators(installPath) << '\n';
                 if (installPath != options.directory && !createDirectory(installPath, errorMessage))
                     return result;
-                quint64 updateFileFlags = options.updateFileFlags;
+                quint64 updateFileFlags = options.updateFileFlags | SkipQmlDesignerSpecificsDirectories;
                 unsigned qmlDirectoryFileFlags = 0;
-                if (module.sourcePath.contains(QLatin1String("QtQuick/Controls")) || module.sourcePath.contains(QLatin1String("QtQuick/Dialogs"))) {
+                if (quickControlsImportPath(module.sourcePath) == 1) { // QML files of Controls 1 not needed
                     updateFileFlags |=  RemoveEmptyQmlDirectories;
                     qmlDirectoryFileFlags |= QmlDirectoryFileEntryFunction::SkipSources;
                 }

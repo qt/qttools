@@ -61,7 +61,7 @@ struct QmlImportScanResult {
 };
 
 QmlImportScanResult runQmlImportScanner(const QString &directory, const QString &qmlImportPath,
-                                        int platform, DebugMatchMode debugMatchMode,
+                                        bool usesWidgets, int platform, DebugMatchMode debugMatchMode,
                                         QString *errorMessage);
 
 QT_END_NAMESPACE
