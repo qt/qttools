@@ -285,10 +285,10 @@
                     </xsl:call-template>
                 </xsl:variable>
                 <xsl:variable name="qstring-func">
-                    <xsl:call-template name="xs-type-from-qstring-func">
+                    <xsl:call-template name="xs-type-from-qstringref-func">
                         <xsl:with-param name="xs-type" select="@type"/>
                         <xsl:with-param name="val">
-                           <xsl:text>attribute.value().toString()</xsl:text>
+                           <xsl:text>attribute.value()</xsl:text>
                         </xsl:with-param>
                     </xsl:call-template>
                 </xsl:variable>

@@ -160,6 +160,23 @@
         </xsl:choose>
     </xsl:template>
 
+    <xsl:template name="xs-type-from-qstringref-func">
+        <xsl:param name="xs-type"/>
+        <xsl:param name="val"/>
+        <xsl:choose>
+            <xsl:when test="$xs-type='xs:string'">
+                <xsl:value-of select="$val"/>
+                <xsl:text>.toString()</xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:call-template name="xs-type-from-qstring-func">
+                    <xsl:with-param name="xs-type" select="$xs-type"/>
+                    <xsl:with-param name="val" select="$val"/>
+                </xsl:call-template>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
     <xsl:template name="xs-type-to-qstring-func">
         <xsl:param name="xs-type"/>
         <xsl:param name="val"/>
