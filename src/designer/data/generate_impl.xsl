@@ -307,7 +307,7 @@
                 <xsl:text>        }&endl;</xsl:text>
             </xsl:for-each>
 
-            <xsl:text>        reader.raiseError(QStringLiteral("Unexpected attribute ") + name.toString());&endl;</xsl:text>
+            <xsl:text>        reader.raiseError(QLatin1String("Unexpected attribute ") + name);&endl;</xsl:text>
             <xsl:text>    }&endl;</xsl:text>
         </xsl:if>
     </xsl:template>
@@ -429,7 +429,7 @@
             </xsl:call-template>
         </xsl:for-each>
 
-        <xsl:text>            reader.raiseError(QStringLiteral("Unexpected element ") + tag);&endl;</xsl:text>
+        <xsl:text>            reader.raiseError(QLatin1String("Unexpected element ") + tag);&endl;</xsl:text>
         <xsl:text>        }&endl;</xsl:text>
         <xsl:text>            break;&endl;</xsl:text>
         <xsl:text>        case QXmlStreamReader::EndElement :&endl;</xsl:text>
