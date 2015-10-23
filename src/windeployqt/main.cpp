@@ -889,6 +889,7 @@ static bool deployTranslations(const QString &sourcePath, quint64 usedQtModules,
     const QString binary = QStringLiteral("lconvert");
     QStringList arguments;
     foreach (const QString &prefix, prefixes) {
+        arguments.clear();
         const QString targetFile = QStringLiteral("qt_") + prefix + QStringLiteral(".qm");
         arguments.append(QStringLiteral("-o"));
         arguments.append(QDir::toNativeSeparators(absoluteTarget + QLatin1Char('/') + targetFile));
