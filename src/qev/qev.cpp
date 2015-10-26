@@ -34,6 +34,7 @@
 #include <QWidget>
 #include <QApplication>
 #include <QDebug>
+#include <qevent.h>
 
 QT_USE_NAMESPACE
 
