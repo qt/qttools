@@ -173,6 +173,9 @@ void HtmlGenerator::initializeGenerator(const Config &config)
     noNavigationBar = config.getBool(HtmlGenerator::format() +
                                    Config::dot +
                                    HTMLGENERATOR_NONAVIGATIONBAR);
+    navigationSeparator = config.getString(HtmlGenerator::format() +
+                                           Config::dot +
+                                           HTMLGENERATOR_NAVIGATIONSEPARATOR);
     tocDepth = config.getInt(HtmlGenerator::format() +
                               Config::dot +
                               HTMLGENERATOR_TOCDEPTH);
@@ -2017,6 +2020,7 @@ void HtmlGenerator::generateHeader(const QString& title,
         QPair<QString,QString> linkPair;
         QPair<QString,QString> anchorPair;
         const Node *linkNode;
+        bool useSeparator = false;
 
         if (node->links().contains(Node::PreviousLink)) {
             linkPair = node->links()[Node::PreviousLink];
@@ -2037,6 +2041,7 @@ void HtmlGenerator::generateHeader(const QString& title,
             else
                 navigationLinks += protect(linkPair.second);
             navigationLinks += "</a>\n";
+            useSeparator = !navigationSeparator.isEmpty();
         }
         if (node->links().contains(Node::NextLink)) {
             linkPair = node->links()[Node::NextLink];
@@ -2050,6 +2055,9 @@ void HtmlGenerator::generateHeader(const QString& title,
 
             out() << "  <link rel=\"next\" href=\""
                   << anchorPair.first << "\" />\n";
+
+            if (useSeparator)
+                navigationLinks += navigationSeparator;
 
             navigationLinks += "<a class=\"nextPage\" href=\"" + anchorPair.first + "\">";
             if (linkPair.first == linkPair.second && !anchorPair.second.isEmpty())

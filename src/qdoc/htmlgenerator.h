@@ -255,6 +255,7 @@ private:
     QString projectDescription;
     QString projectUrl;
     QString navigationLinks;
+    QString navigationSeparator;
     QString manifestDir;
     QString examplesPath;
     QStringList stylesheets;
@@ -283,6 +284,7 @@ public:
 #define HTMLGENERATOR_POSTPOSTHEADER    "postpostheader"
 #define HTMLGENERATOR_PROLOGUE          "prologue"
 #define HTMLGENERATOR_NONAVIGATIONBAR   "nonavigationbar"
+#define HTMLGENERATOR_NAVIGATIONSEPARATOR "navigationseparator"
 #define HTMLGENERATOR_NOSUBDIRS         "nosubdirs"
 #define HTMLGENERATOR_TOCDEPTH          "tocdepth"
 
