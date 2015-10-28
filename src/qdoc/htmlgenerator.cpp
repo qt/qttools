@@ -2215,16 +2215,18 @@ void HtmlGenerator::generateRequisites(Aggregate *inner, CodeMarker *marker)
                 ++r;
             }
             text << Atom::ParaRight;
-            requisites.insert(inheritsText, text);
+            if (index > 0)
+                requisites.insert(inheritsText, text);
         }
 
         //add the inherited-by to the map
         if (!classe->derivedClasses().isEmpty()) {
             text.clear();
             text << Atom::ParaLeft;
-            appendSortedNames(text, classe, classe->derivedClasses());
+            int count = appendSortedNames(text, classe, classe->derivedClasses());
             text << Atom::ParaRight;
-            requisites.insert(inheritedBytext, text);
+            if (count > 0)
+                requisites.insert(inheritedBytext, text);
         }
     }
 
@@ -2339,9 +2341,10 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
     if (!subs.isEmpty()) {
         text.clear();
         text << Atom::ParaLeft;
-        appendSortedQmlNames(text, qcn, subs);
+        int count = appendSortedQmlNames(text, qcn, subs);
         text << Atom::ParaRight;
-        requisites.insert(inheritedBytext, text);
+        if (count > 0)
+            requisites.insert(inheritedBytext, text);
     }
 
     if (!requisites.isEmpty()) {
