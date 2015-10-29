@@ -37,12 +37,13 @@
 #include <QtWidgets/QWidget>
 #include <QtDBus/QDBusConnection>
 
+class ServicesProxyModel;
+
+QT_FORWARD_DECLARE_CLASS(QTableView)
 QT_FORWARD_DECLARE_CLASS(QTreeView)
 QT_FORWARD_DECLARE_CLASS(QTreeWidget)
 QT_FORWARD_DECLARE_CLASS(QStringListModel)
-QT_FORWARD_DECLARE_CLASS(QSortFilterProxyModel)
 QT_FORWARD_DECLARE_CLASS(QLineEdit)
-QT_FORWARD_DECLARE_CLASS(QListView)
 QT_FORWARD_DECLARE_CLASS(QTextBrowser)
 QT_FORWARD_DECLARE_CLASS(QDomDocument)
 QT_FORWARD_DECLARE_CLASS(QDomElement)
@@ -95,9 +96,9 @@ private:
     QAction *refreshAction;
     QTreeWidget *services;
     QStringListModel *servicesModel;
-    QSortFilterProxyModel *servicesFilterModel;
+    ServicesProxyModel *servicesProxyModel;
     QLineEdit *serviceFilterLine;
-    QListView *servicesView;
+    QTableView *servicesView;
     QTextBrowser *log;
     QSplitter *topSplitter;
     QSplitter *splitter;
