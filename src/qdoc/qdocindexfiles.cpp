@@ -977,6 +977,8 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter& writer,
         }
         if (!logicalModuleName.isEmpty())
             writer.writeAttribute(moduleNameAttr, logicalModuleName);
+        else
+            writer.writeAttribute(moduleNameAttr, node->name());
         if (!logicalModuleVersion.isEmpty())
             writer.writeAttribute(moduleVerAttr, logicalModuleVersion);
         if (!qmlFullBaseName.isEmpty())
