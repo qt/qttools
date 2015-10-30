@@ -1263,7 +1263,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter& writer,
               Note: The "signature" attribute is written to the
               index file, but it is not read back in. Is that ok?
             */
-            QString signature = functionNode->signature();
+            QString signature = functionNode->signature(false);
             if (functionNode->isConst())
                 signature += " const";
             writer.writeAttribute("signature", signature);
@@ -1479,9 +1479,9 @@ bool compareNodes(const Node* n1, const Node* n2)
         else if (f1->isConst() > f2->isConst())
             return false;
 
-        if (f1->signature() < f2->signature())
+        if (f1->signature(false) < f2->signature(false))
             return true;
-        else if (f1->signature() > f2->signature())
+        else if (f1->signature(false) > f2->signature(false))
             return false;
     }
 

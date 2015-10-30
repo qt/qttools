@@ -301,10 +301,10 @@ class QDocDatabase
     /*******************************************************************
       The functions declared below are called for the current tree only.
     ********************************************************************/
-    FunctionNode* findFunctionNode(const QStringList& parentPath, const FunctionNode* clone) {
-        return primaryTree()->findFunctionNode(parentPath, clone);
+    FunctionNode* findFunctionNode(const QStringList& parentPath, const Declaration& declData) {
+        return primaryTree()->findFunctionNode(parentPath, declData);
     }
-    FunctionNode* findNodeInOpenNamespace(const QStringList& parentPath, const FunctionNode* clone);
+    FunctionNode* findNodeInOpenNamespace(const QStringList& parentPath, const Declaration& declData);
     Node* findNodeInOpenNamespace(QStringList& path, Node::NodeType type);
     const Node* checkForCollision(const QString& name) {
         return primaryTree()->checkForCollision(name);

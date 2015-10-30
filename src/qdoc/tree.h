@@ -106,7 +106,7 @@ class Tree
     Node* findNodeForInclude(const QStringList& path) const;
     ClassNode* findClassNode(const QStringList& path, const Node* start = 0) const;
     NamespaceNode* findNamespaceNode(const QStringList& path) const;
-    FunctionNode* findFunctionNode(const QStringList& parentPath, const FunctionNode* clone);
+    FunctionNode* findFunctionNode(const QStringList& parentPath, const Declaration& declData);
     const Node* findFunctionNode(const QString& target,
                                  const QString& params,
                                  const Node* relative,
@@ -173,7 +173,7 @@ class Tree
     const NamespaceNode *root() const { return &root_; }
 
     FunctionNode *findVirtualFunctionInBaseClasses(ClassNode *classe,
-                                                   FunctionNode *clone);
+                                                   FunctionNode *virtualFunc);
     NodeList allBaseClasses(const ClassNode *classe) const;
     QString refForAtom(const Atom* atom);
 

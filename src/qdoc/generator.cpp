@@ -751,7 +751,7 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
     }
     if (node->doc().isEmpty()) {
         if (!node->isWrapper() && !quiet && !node->isReimplemented()) { // ### might be unnecessary
-            node->location().warning(tr("No documentation for '%1'").arg(node->plainFullName()));
+            node->location().warning(tr("No documentation for '%1'").arg(node->plainSignature()));
         }
     }
     else {

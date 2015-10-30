@@ -51,16 +51,6 @@ class CppCodeParser : public CodeParser
 {
     Q_DECLARE_TR_FUNCTIONS(QDoc::CppCodeParser)
 
-    struct ExtraFuncData {
-        Aggregate* root; // Used as the parent.
-        Node::NodeType type; // The node type: Function, etc.
-        bool isAttached; // If true, the method is attached.
-        bool isMacro;    // If true, we are parsing a macro signature.
-        ExtraFuncData() : root(0), type(Node::Function), isAttached(false), isMacro(false) { }
-        ExtraFuncData(Aggregate* r, Node::NodeType t, bool a)
-          : root(r), type(t), isAttached(a), isMacro(false) { }
-    };
-
 public:
     CppCodeParser();
     ~CppCodeParser();
@@ -119,11 +109,7 @@ protected:
     bool matchTemplateHeader();
     bool matchDataType(CodeChunk *type, QString *var = 0);
     bool matchParameter(QVector<Parameter>& pvect, bool& isQPrivateSignal);
-    bool matchFunctionDecl(Aggregate *parent,
-                           QStringList *parentPathPtr,
-                           FunctionNode **funcPtr,
-                           const QString &templateStuff,
-                           ExtraFuncData& extra);
+    bool matchDeclaration(Declaration& declData);
     bool matchBaseSpecifier(ClassNode *classe, bool isClass);
     bool matchBaseList(ClassNode *classe, bool isClass);
     bool matchClassDecl(Aggregate *parent,
@@ -136,28 +122,22 @@ protected:
     bool matchProperty(Aggregate *parent);
     bool matchDeclList(Aggregate *parent);
     bool matchDocsAndStuff();
-    bool makeFunctionNode(const QString &synopsis,
-                          QStringList *parentPathPtr,
-                          FunctionNode **funcPtr,
-                          ExtraFuncData& params);
-    FunctionNode* makeFunctionNode(const Doc& doc,
-                                   const QString& sig,
-                                   Aggregate* parent,
-                                   Node::NodeType type,
-                                   bool attached,
-                                   QString qdoctag);
+    bool parseDeclaration(const QString &synopsis, Declaration& declData);
     void parseQiteratorDotH(const Location &location, const QString &filePath);
     void instantiateIteratorMacro(const QString &container,
                                   const QString &includeFile,
                                   const QString &macroDef);
     void createExampleFileNodes(DocumentNode *dn);
+    FunctionNode* createFunctionNode(Declaration& declData);
+    VariableNode* createVariableNode(Declaration& declData);
     int matchFunctionModifier();
+    void matchVariableDecl(Declaration& declData);
 
  protected:
     QMap<QString, Node::NodeType> nodeTypeMap;
     Tokenizer *tokenizer;
     int tok;
-    Node::Access access;
+    Node::Access access_;
     FunctionNode::Metaness metaness_;
     QString physicalModuleName;
     QStringList lastPath_;
