@@ -253,7 +253,7 @@ struct Options {
               , angleDetection(AngleDetectionAuto), softwareRasterizer(true), platform(Windows)
               , additionalLibraries(0), disabledLibraries(0)
               , updateFileFlags(0), json(0), list(ListNone), debugDetection(DebugDetectionAuto)
-              , debugMatchAll(false), deployPdb(false) {}
+              , deployPdb(false) {}
 
     bool plugins;
     bool libraries;
@@ -275,7 +275,6 @@ struct Options {
     JsonOutput *json;
     ListOption list;
     DebugDetection debugDetection;
-    bool debugMatchAll;
     bool deployPdb;
 
     inline bool isWinRtOrWinPhone() const {
@@ -345,6 +344,7 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
     parser->addOption(releaseOption);
     QCommandLineOption releaseWithDebugInfoOption(QStringLiteral("release-with-debug-info"),
                                                   QStringLiteral("Assume release binaries with debug information."));
+    releaseWithDebugInfoOption.setHidden(true); // Deprecated by improved debug detection.
     parser->addOption(releaseWithDebugInfoOption);
 
     QCommandLineOption deployPdbOption(QStringLiteral("pdb"),
@@ -481,20 +481,18 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
         return CommandLineParseError;
     }
 
-    if (parser->isSet(releaseWithDebugInfoOption)) {
-        options->debugMatchAll = true; // PE analysis will detect "debug", turn off matching.
+    if (parser->isSet(releaseWithDebugInfoOption))
+        std::wcerr << "Warning: " << releaseWithDebugInfoOption.names().first() << " is obsolete.";
+
+    switch (parseExclusiveOptions(parser, debugOption, releaseOption)) {
+    case OptionAuto:
+        break;
+    case OptionEnabled:
+        options->debugDetection = Options::DebugDetectionForceDebug;
+        break;
+    case OptionDisabled:
         options->debugDetection = Options::DebugDetectionForceRelease;
-    } else {
-        switch (parseExclusiveOptions(parser, debugOption, releaseOption)) {
-        case OptionAuto:
-            break;
-        case OptionEnabled:
-            options->debugDetection = Options::DebugDetectionForceDebug;
-            break;
-        case OptionDisabled:
-            options->debugDetection = Options::DebugDetectionForceRelease;
-            break;
-        }
+        break;
     }
 
     if (parser->isSet(deployPdbOption)) {
@@ -1159,8 +1157,7 @@ static DeployResult deploy(const Options &options,
     }
 
     const bool isDebug = options.debugDetection == Options::DebugDetectionAuto ? detectedDebug: options.debugDetection == Options::DebugDetectionForceDebug;
-    const DebugMatchMode debugMatchMode = options.debugMatchAll
-        ? MatchDebugOrRelease : (isDebug ? MatchDebug : MatchRelease);
+    const DebugMatchMode debugMatchMode = isDebug ? MatchDebug : MatchRelease;
 
     // Determine application type, check Quick2 is used by looking at the
     // direct dependencies (do not be fooled by QtWebKit depending on it).
