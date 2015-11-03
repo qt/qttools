@@ -3,7 +3,8 @@ INCLUDEPATH += $$PWD
 
 DEFINES += QT_DESIGNER QT_USE_QSTRINGBUILDER
 
-QT += widgets uiplugin
+QT += widgets
+QT_PRIVATE += uiplugin
 
 # Input
 HEADERS += \
