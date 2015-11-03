@@ -7,7 +7,7 @@ examplesinstallpath     = qttools/linguist
 qhp.projects            = QtLinguist
 
 qhp.QtLinguist.file                = qtlinguist.qhp
-qhp.QtLinguist.namespace           = org.qt-project.linguist.$QT_VERSION_TAG
+qhp.QtLinguist.namespace           = org.qt-project.qtlinguist.$QT_VERSION_TAG
 qhp.QtLinguist.virtualFolder       = qtlinguist
 qhp.QtLinguist.indexTitle          = Qt Linguist Manual
 
@@ -31,8 +31,6 @@ exampledirs             = ../../../../examples/linguist \
                           snippets
 
 imagedirs               = images
-
-outputdir               = $QT_INSTALL_DOCS/qtlinguist
 
 depends                 += qtdoc qtqml qtquick qtcore qtgui qmake
 

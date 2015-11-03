@@ -7,8 +7,8 @@ examplesinstallpath     = qttools/assistant
 qhp.projects            = QtAssistant
 
 qhp.QtAssistant.file                = qtassistant.qhp
-qhp.QtAssistant.namespace           = org.qt-project.assistant.$QT_VERSION_TAG
-qhp.QtAssistant.virtualFolder       = assistant
+qhp.QtAssistant.namespace           = org.qt-project.qtassistant.$QT_VERSION_TAG
+qhp.QtAssistant.virtualFolder       = qtassistant
 qhp.QtAssistant.indexTitle          = Qt Assistant Manual
 
 qhp.QtAssistant.filterAttributes    = qt $QT_VERSION tools assistant
@@ -31,8 +31,6 @@ exampledirs             = ../../../../examples/assistant \
                           snippets
 
 imagedirs               = images
-
-outputdir               = $QT_INSTALL_DOCS/qtassistant
 
 depends                 += qtdoc qmake
 
