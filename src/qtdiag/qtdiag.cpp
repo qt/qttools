@@ -459,18 +459,22 @@ QString qtDiag(unsigned flags)
     }
 
 #ifndef QT_NO_OPENGL
-    dumpGlInfo(str, flags & QtDiagGlExtensions);
-    str << "\n\n";
+    if (flags & QtDiagGl) {
+        dumpGlInfo(str, flags & QtDiagGlExtensions);
+        str << "\n\n";
+    }
 #else
     Q_UNUSED(flags)
 #endif // !QT_NO_OPENGL
 
     // On Windows, this will provide addition GPU info similar to the output of dxdiag.
-    const QVariant gpuInfoV = QGuiApplication::platformNativeInterface()->property("gpu");
-    if (gpuInfoV.type() == QVariant::Map) {
-        const QString description = gpuInfoV.toMap().value(QStringLiteral("printable")).toString();
-        if (!description.isEmpty())
-            str << "\nGPU:\n" << description;
+    if (const QPlatformNativeInterface *ni = QGuiApplication::platformNativeInterface()) {
+        const QVariant gpuInfoV = ni->property("gpu");
+        if (gpuInfoV.type() == QVariant::Map) {
+            const QString description = gpuInfoV.toMap().value(QStringLiteral("printable")).toString();
+            if (!description.isEmpty())
+                str << "\nGPU:\n" << description;
+        }
     }
     return result;
 }
