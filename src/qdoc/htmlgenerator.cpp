@@ -2956,10 +2956,7 @@ void HtmlGenerator::generateCompactList(ListType listType,
         int idx = commonPrefixLen;
         if (idx > 0 && !pieces.last().startsWith(commonPrefix))
             idx = 0;
-        if (pieces.size() == 1)
-            key = pieces.last().mid(idx).toLower();
-        else
-            key = pieces.last().toLower();
+        key = pieces.last().mid(idx).toLower();
 
         int paragraphNr = NumParagraphs - 1;
 
