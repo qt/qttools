@@ -153,12 +153,12 @@ CodeMarker *CodeMarker::markerForLanguage(const QString& lang)
 
 const Node *CodeMarker::nodeForString(const QString& string)
 {
-    if (sizeof(const Node *) == sizeof(uint)) {
-        return reinterpret_cast<const Node *>(string.toUInt());
-    }
-    else {
-        return reinterpret_cast<const Node *>(string.toULongLong());
-    }
+#if QT_POINTER_SIZE == 4
+    const quintptr n = string.toUInt();
+#else
+    const quintptr n = string.toULongLong();
+#endif
+    return reinterpret_cast<const Node *>(n);
 }
 
 QString CodeMarker::stringForNode(const Node *node)
