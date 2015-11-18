@@ -1066,25 +1066,29 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
             }
         }
         else {
-            out() << "<ol class=";
+            QString olType;
             if (atom->string() == ATOM_LIST_UPPERALPHA) {
-                out() << "\"A\"";
-            } /* why type? changed to */
+                olType = "A";
+            }
             else if (atom->string() == ATOM_LIST_LOWERALPHA) {
-                out() << "\"a\"";
+                olType = "a";
             }
             else if (atom->string() == ATOM_LIST_UPPERROMAN) {
-                out() << "\"I\"";
+                olType = "I";
             }
             else if (atom->string() == ATOM_LIST_LOWERROMAN) {
-                out() << "\"i\"";
+                olType = "i";
             }
             else { // (atom->string() == ATOM_LIST_NUMERIC)
-                out() << "\"1\"";
+                olType = "1";
             }
-            if (atom->next() != 0 && atom->next()->string().toInt() != 1)
-                out() << " start=\"" << atom->next()->string() << '"';
-            out() << ">\n";
+
+            if (atom->next() != 0 && atom->next()->string().toInt() > 1) {
+                out() << QString("<ol class=\"%1\" type=\"%1\" start=\"%2\">").arg(olType)
+                         .arg(atom->next()->string());
+            }
+            else
+                out() << QString("<ol class=\"%1\" type=\"%1\">").arg(olType);
         }
         break;
     case Atom::ListItemNumber:
