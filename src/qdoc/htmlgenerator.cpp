@@ -1100,7 +1100,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
             out() << "<tr><td class=\"topAlign\"><code>" << t << "</code>";
 
             if (relative->type() == Node::Enum) {
-                out() << "</td><td class=\"topAlign\">";
+                out() << "</td><td class=\"topAlign tblval\">";
                 const EnumNode *enume = static_cast<const EnumNode *>(relative);
                 QString itemValue = enume->itemValue(atom->next()->string());
 
