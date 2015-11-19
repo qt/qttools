@@ -4212,9 +4212,9 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node,
                 out() << "<a name=\"" + nodeRef + "\"></a>";
 
                 if (!qpn->isWritable())
-                    out() << "<span class=\"qmlreadonly\">read-only</span>";
+                    out() << "<span class=\"qmlreadonly\">[read-only] </span>";
                 if (qpn->isDefault())
-                    out() << "<span class=\"qmldefault\">default</span>";
+                    out() << "<span class=\"qmldefault\">[default] </span>";
                 generateQmlItem(qpn, relative, marker, false);
                 out() << "</p></td></tr>";
             }
@@ -4231,9 +4231,9 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node,
                 qpn->setReadOnly(!qpn->isWritable());
         }
         if (qpn->isReadOnly())
-            out() << "<span class=\"qmlreadonly\">read-only</span>";
+            out() << "<span class=\"qmlreadonly\">[read-only] </span>";
         if (qpn->isDefault())
-            out() << "<span class=\"qmldefault\">default</span>";
+            out() << "<span class=\"qmldefault\">[default] </span>";
         generateQmlItem(qpn, relative, marker, false);
         out() << qmlItemFooter;
     }
