@@ -975,7 +975,7 @@ void QDocDatabase::findAllClasses(Aggregate* node)
                     qmlTypes_.insert(qmlTypeName,*c);
 
                 //also add to the QML basic type map
-                if ((*c)->isQmlBasicType() || (*c)->isJsType())
+                if ((*c)->isQmlBasicType() || (*c)->isJsBasicType())
                     qmlBasicTypes_.insert(qmlTypeName,*c);
             }
             else if ((*c)->isAggregate()) {
