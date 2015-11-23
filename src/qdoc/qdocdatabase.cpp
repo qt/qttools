@@ -964,12 +964,12 @@ void QDocDatabase::findAllClasses(Aggregate* node)
                         !(*c)->parent()->name().isEmpty())
                     className = (*c)->parent()->name()+"::"+className;
 
-                cppClasses_.insert(className, *c);
+                cppClasses_.insert(className.toLower(), *c);
             }
             else if (((*c)->isQmlType() || (*c)->isQmlBasicType() ||
                       (*c)->isJsType() || (*c)->isJsBasicType()) && !(*c)->doc().isEmpty()) {
-                QString qmlTypeName = (*c)->name();
-                if (qmlTypeName.startsWith(QLatin1String("QML:")))
+                QString qmlTypeName = (*c)->name().toLower();
+                if (qmlTypeName.startsWith(QLatin1String("QML:"), Qt::CaseInsensitive))
                     qmlTypes_.insert(qmlTypeName.mid(4),*c);
                 else
                     qmlTypes_.insert(qmlTypeName,*c);

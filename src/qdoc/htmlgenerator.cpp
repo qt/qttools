@@ -2958,7 +2958,7 @@ void HtmlGenerator::generateCompactList(ListType listType,
         QStringList pieces = c.key().split("::");
         QString key;
         int idx = commonPrefixLen;
-        if (idx > 0 && !pieces.last().startsWith(commonPrefix))
+        if (idx > 0 && !pieces.last().startsWith(commonPrefix, Qt::CaseInsensitive))
             idx = 0;
         key = pieces.last().mid(idx).toLower();
 
