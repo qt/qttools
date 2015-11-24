@@ -2162,6 +2162,7 @@ void DocParser::expandMacro(const QString &name,
                 location().warning(tr("Macro '\\%1' invoked with too few"
                                       " arguments (expected %2, got %3)")
                                    .arg(name).arg(numParams).arg(i));
+                numParams = i;
                 break;
             }
         }
@@ -2204,6 +2205,7 @@ QString DocParser::expandMacroToString(const QString &name, const QString &def, 
                 location().warning(tr("Macro '\\%1' invoked with too few"
                                       " arguments (expected %2, got %3)")
                                    .arg(name).arg(numParams).arg(i));
+                numParams = i;
                 break;
             }
         }
