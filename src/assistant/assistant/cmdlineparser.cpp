@@ -60,7 +60,9 @@ static const char helpMessage[] = QT_TRANSLATE_NOOP("CmdLineParser",
         "                           file.\n"
         "-setCurrentFilter filter   Set the filter as the active filter.\n"
         "-remove-search-index       Removes the full text search index.\n"
-        "-rebuild-search-index      Re-builds the full text search index (potentially slow).\n"
+        "-rebuild-search-index      Obsolete. Use -remove-search-index instead.\n"
+        "                           Removes the full text search index.\n"
+        "                           It will be rebuilt on next Assistant run.\n"
         "-quiet                     Does not display any error or\n"
         "                           status message.\n"
         "-help                      Displays this help.\n"
@@ -76,7 +78,6 @@ CmdLineParser::CmdLineParser(const QStringList &arguments)
     m_search(Untouched),
     m_register(None),
     m_removeSearchIndex(false),
-    m_rebuildSearchIndex(false),
     m_quiet(false)
 {
     TRACE_OBJ
@@ -117,7 +118,7 @@ CmdLineParser::Result CmdLineParser::parse()
         else if (arg == QLatin1String("-remove-search-index"))
             m_removeSearchIndex = true;
         else if (arg == QLatin1String("-rebuild-search-index"))
-            m_rebuildSearchIndex = true;
+            m_removeSearchIndex = true;
         else if (arg == QLatin1String("-help"))
             showHelp = true;
         else
@@ -340,12 +341,6 @@ bool CmdLineParser::removeSearchIndex() const
 {
     TRACE_OBJ
     return m_removeSearchIndex;
-}
-
-bool CmdLineParser::rebuildSearchIndex() const
-{
-    TRACE_OBJ
-    return m_rebuildSearchIndex;
 }
 
 CmdLineParser::RegisterState CmdLineParser::registerRequest() const

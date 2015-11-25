@@ -43,27 +43,16 @@ QT_BEGIN_NAMESPACE
 
 namespace fulltextsearch {
 
-QHelpSearchIndexReader::QHelpSearchIndexReader()
-    : QThread()
-    , m_cancel(false)
-{
-    // nothing todo
-}
-
 QHelpSearchIndexReader::~QHelpSearchIndexReader()
 {
-    mutex.lock();
-    this->m_cancel = true;
-    mutex.unlock();
-
+    cancelSearching();
     wait();
 }
 
 void QHelpSearchIndexReader::cancelSearching()
 {
-    mutex.lock();
-    this->m_cancel = true;
-    mutex.unlock();
+    QMutexLocker lock(&m_mutex);
+    m_cancel = true;
 }
 
 void QHelpSearchIndexReader::search(const QString &collectionFile, const QString &indexFilesFolder,
@@ -71,29 +60,26 @@ void QHelpSearchIndexReader::search(const QString &collectionFile, const QString
 {
     wait();
 
-    this->hitList.clear();
-    this->m_cancel = false;
-    this->m_query = queryList;
-    this->m_collectionFile = collectionFile;
-    this->m_indexFilesFolder = indexFilesFolder;
+    m_hitList.clear();
+    m_cancel = false;
+    m_query = queryList;
+    m_collectionFile = collectionFile;
+    m_indexFilesFolder = indexFilesFolder;
 
     start(QThread::NormalPriority);
 }
 
 int QHelpSearchIndexReader::hitCount() const
 {
-    QMutexLocker lock(&mutex);
-    return hitList.count();
+    QMutexLocker lock(&m_mutex);
+    return m_hitList.count();
 }
 
 QList<QHelpSearchEngine::SearchHit> QHelpSearchIndexReader::hits(int start,
                                                                  int end) const
 {
-    QList<QHelpSearchEngine::SearchHit> hits;
-    QMutexLocker lock(&mutex);
-    for (int i = start; i < end && i < hitList.count(); ++i)
-        hits.append(hitList.at(i));
-    return hits;
+    QMutexLocker lock(&m_mutex);
+    return m_hitList.mid(start, end - start);
 }
 
 

@@ -154,13 +154,8 @@ private slots:
     void setResults(int hitsCount)
     {
         if (!searchEngine.isNull()) {
-#if defined(QT_CLUCENE_SUPPORT)
             showFirstResultPage();
             updateNextButtonState(((hitsCount > 20) ? true : false));
-#else
-            resultTreeWidget->clear();
-            resultTreeWidget->showResultPage(searchEngine->hits(0, hitsCount));
-#endif
         }
     }
 
@@ -351,7 +346,6 @@ QHelpSearchResultWidget::QHelpSearchResultWidget(QHelpSearchEngine *engine)
     vLayout->setMargin(0);
     vLayout->setSpacing(0);
 
-#if defined(QT_CLUCENE_SUPPORT)
     QHBoxLayout *hBoxLayout = new QHBoxLayout();
 #ifndef Q_OS_MAC
     hBoxLayout->setMargin(0);
@@ -396,13 +390,6 @@ QHelpSearchResultWidget::QHelpSearchResultWidget(QHelpSearchEngine *engine)
     connect(d->nextResultPage, SIGNAL(clicked()), d, SLOT(updatePrevButtonState()));
     connect(d->lastResultPage, SIGNAL(clicked()), d, SLOT(updatePrevButtonState()));
 
-#else
-    d->resultTreeWidget = new QDefaultResultWidget(this);
-    vLayout->addWidget(d->resultTreeWidget);
-    connect(d->resultTreeWidget, SIGNAL(requestShowLink(QUrl)), this,
-        SIGNAL(requestShowLink(QUrl)));
-#endif
-
     connect(engine, SIGNAL(searchingFinished(int)), d, SLOT(setResults(int)));
 }
 
@@ -429,16 +416,8 @@ QHelpSearchResultWidget::~QHelpSearchResultWidget()
 QUrl QHelpSearchResultWidget::linkAt(const QPoint &point)
 {
     QUrl url;
-#if defined(QT_CLUCENE_SUPPORT)
     if (d->resultTextBrowser)
         url = d->resultTextBrowser->anchorAt(point);
-#else
-    if (d->resultTreeWidget) {
-        QTreeWidgetItem *item = d->resultTreeWidget->itemAt(point);
-        if (item)
-            url = item->data(1, Qt::DisplayRole).toString();
-    }
-#endif
     return url;
 }
 

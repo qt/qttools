@@ -43,13 +43,8 @@
 #include "qhelpsearchresultwidget.h"
 
 #include "qhelpsearchindexreader_p.h"
-#if defined(QT_CLUCENE_SUPPORT)
-#   include "qhelpsearchindexreader_clucene_p.h"
-#   include "qhelpsearchindexwriter_clucene_p.h"
-#else
-#   include "qhelpsearchindexreader_default_p.h"
-#   include "qhelpsearchindexwriter_default_p.h"
-#endif
+#include "qhelpsearchindexreader_default_p.h"
+#include "qhelpsearchindexwriter_default_p.h"
 
 #include <QtCore/QDir>
 #include <QtCore/QFile>
@@ -57,14 +52,11 @@
 #include <QtCore/QVariant>
 #include <QtCore/QThread>
 #include <QtCore/QPointer>
+#include <QtCore/QTimer>
 
 QT_BEGIN_NAMESPACE
 
-#if defined(QT_CLUCENE_SUPPORT)
-    using namespace fulltextsearch::clucene;
-#else
-    using namespace fulltextsearch::qt;
-#endif
+using namespace fulltextsearch::qt;
 
 class QHelpSearchEnginePrivate : public QObject
 {
@@ -122,7 +114,6 @@ private:
 
             connect(indexWriter, SIGNAL(indexingStarted()), this, SIGNAL(indexingStarted()));
             connect(indexWriter, SIGNAL(indexingFinished()), this, SIGNAL(indexingFinished()));
-            connect(indexWriter, SIGNAL(indexingFinished()), this, SLOT(optimizeIndex()));
         }
 
         indexWriter->cancelIndexing();
@@ -145,11 +136,7 @@ private:
             return;
 
         if (!indexReader) {
-#if defined(QT_CLUCENE_SUPPORT)
-            indexReader = new QHelpSearchIndexReaderClucene();
-#else
             indexReader = new QHelpSearchIndexReaderDefault();
-#endif // QT_CLUCENE_SUPPORT
             connect(indexReader, SIGNAL(searchingStarted()), this, SIGNAL(searchingStarted()));
             connect(indexReader, SIGNAL(searchingFinished(int)), this, SIGNAL(searchingFinished(int)));
         }
@@ -177,18 +164,10 @@ private:
         return indexFilesFolder;
     }
 
-private slots:
-    void optimizeIndex()
-    {
-#if defined(QT_CLUCENE_SUPPORT)
-        if (indexWriter && !helpEngine.isNull()) {
-            indexWriter->optimizeIndex();
-        }
-#endif
-    }
-
 private:
     friend class QHelpSearchEngine;
+
+    bool m_isIndexingScheduled = false;
 
     QHelpSearchQueryWidget *queryWidget;
     QHelpSearchResultWidget *resultWidget;
@@ -323,7 +302,7 @@ QHelpSearchEngine::QHelpSearchEngine(QHelpEngineCore *helpEngine, QObject *paren
 {
     d = new QHelpSearchEnginePrivate(helpEngine);
 
-    connect(helpEngine, SIGNAL(setupFinished()), this, SLOT(indexDocumentation()));
+    connect(helpEngine, SIGNAL(setupFinished()), this, SLOT(scheduleIndexDocumentation()));
 
     connect(d, SIGNAL(indexingStarted()), this, SIGNAL(indexingStarted()));
     connect(d, SIGNAL(indexingFinished()), this, SIGNAL(indexingFinished()));
@@ -440,8 +419,18 @@ void QHelpSearchEngine::search(const QList<QHelpSearchQuery> &queryList)
     d->search(queryList);
 }
 
+void QHelpSearchEngine::scheduleIndexDocumentation()
+{
+    if (d->m_isIndexingScheduled)
+        return;
+
+    d->m_isIndexingScheduled = true;
+    QTimer::singleShot(0, this, &QHelpSearchEngine::indexDocumentation);
+}
+
 void QHelpSearchEngine::indexDocumentation()
 {
+    d->m_isIndexingScheduled = false;
     d->updateIndex();
 }
 

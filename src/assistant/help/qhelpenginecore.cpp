@@ -499,12 +499,15 @@ void QHelpEngineCore::setCurrentFilter(const QString &filterName)
 */
 QList<QStringList> QHelpEngineCore::filterAttributeSets(const QString &namespaceName) const
 {
+    QList<QStringList> ret;
     if (d->setup()) {
         QHelpDBReader *reader = d->readerMap.value(namespaceName);
         if (reader)
-            return reader->filterAttributeSets();
+            ret = reader->filterAttributeSets();
     }
-    return QList<QStringList>();
+    if (ret.isEmpty())
+        ret.append(QStringList());
+    return ret;
 }
 
 /*!

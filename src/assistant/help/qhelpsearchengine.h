@@ -106,6 +106,7 @@ Q_SIGNALS:
     void searchingFinished(int hits);
 
 private Q_SLOTS:
+    void scheduleIndexDocumentation();
     void indexDocumentation();
 
 private:

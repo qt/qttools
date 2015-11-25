@@ -40,461 +40,169 @@
 #include "qhelpenginecore.h"
 #include "qhelpsearchindexreader_default_p.h"
 
-#include <QtCore/QDir>
-#include <QtCore/QUrl>
-#include <QtCore/QFile>
-#include <QtCore/QVariant>
-#include <QtCore/QFileInfo>
-#include <QtCore/QDataStream>
-#include <QtCore/QTextStream>
-
-#include <algorithm>
+#include <QtCore/QSet>
+#include <QtSql/QSqlDatabase>
+#include <QtSql/QSqlQuery>
 
 QT_BEGIN_NAMESPACE
 
 namespace fulltextsearch {
 namespace qt {
 
-namespace {
-    QStringList split( const QString &str )
-    {
-        QStringList lst;
-        int j = 0;
-        int i = str.indexOf(QLatin1Char('*'), j );
-
-        if (str.startsWith(QLatin1Char('*')))
-            lst << QLatin1String("*");
-
-        while ( i != -1 ) {
-            if ( i > j && i <= (int)str.length() ) {
-                lst << str.mid( j, i - j );
-                lst << QLatin1String("*");
-            }
-            j = i + 1;
-            i = str.indexOf(QLatin1Char('*'), j );
-        }
-
-        const int l = str.length() - 1;
-        if ( str.mid( j, l - j + 1 ).length() > 0 )
-            lst << str.mid( j, l - j + 1 );
-
-        return lst;
-    }
-}
-
-
-Reader::Reader()
-    : indexPath(QString())
-    , indexFile(QString())
-    , documentFile(QString())
-{
-    termList.clear();
-    indexTable.clear();
-    searchIndexTable.clear();
-}
-
-Reader::~Reader()
-{
-    reset();
-    searchIndexTable.clear();
-}
-
-bool Reader::readIndex()
-{
-    if (indexTable.contains(indexFile))
-        return true;
-
-    QFile idxFile(indexFile);
-    if (!idxFile.open(QFile::ReadOnly))
-        return false;
-
-    QString key;
-    int numOfDocs;
-    EntryTable entryTable;
-    QVector<Document> docs;
-    QDataStream dictStream(&idxFile);
-    while (!dictStream.atEnd()) {
-        dictStream >> key;
-        dictStream >> numOfDocs;
-        docs.resize(numOfDocs);
-        dictStream >> docs;
-        entryTable.insert(key, new Entry(docs));
-    }
-    idxFile.close();
-
-    if (entryTable.isEmpty())
-        return false;
-
-    QFile docFile(documentFile);
-    if (!docFile.open(QFile::ReadOnly))
-        return false;
-
-    QString title, url;
-    DocumentList documentList;
-    QDataStream docStream(&docFile);
-    while (!docStream.atEnd()) {
-        docStream >> title;
-        docStream >> url;
-        documentList.append(QStringList(title) << url);
-    }
-    docFile.close();
-
-    if (documentList.isEmpty()) {
-        cleanupIndex(entryTable);
-        return false;
-    }
-
-    indexTable.insert(indexFile, Index(entryTable, documentList));
-    return true;
-}
-
-bool Reader::initCheck() const
-{
-    return !searchIndexTable.isEmpty();
-}
-
 void Reader::setIndexPath(const QString &path)
 {
-    indexPath = path;
+    m_indexPath = path;
+    m_namespaces.clear();
 }
 
-void Reader::filterFilesForAttributes(const QStringList &attributes)
+void Reader::addNamespace(const QString &namespaceName, const QStringList &attributes)
 {
-    searchIndexTable.clear();
-    for (auto it = indexTable.cbegin(), end = indexTable.cend(); it != end; ++it) {
-        const QString fileName = it.key();
-        bool containsAll = true;
-        const QStringList split = fileName.split(QLatin1Char('@'));
-        for (const QString &attribute : attributes) {
-            if (!split.contains(attribute, Qt::CaseInsensitive)) {
-                containsAll = false;
-                break;
-            }
-        }
-
-        if (containsAll)
-            searchIndexTable.insert(fileName, it.value());
-    }
+    m_namespaces.insert(namespaceName, attributes);
 }
 
-void Reader::setIndexFile(const QString &namespaceName, const QString &attributes)
+static QString namespacePlaceholders(const QMultiMap<QString, QStringList> &namespaces)
 {
-    const QString extension = namespaceName + QLatin1Char('@') + attributes;
-    indexFile = indexPath + QLatin1String("/indexdb40.") + extension;
-    documentFile = indexPath + QLatin1String("/indexdoc40.") + extension;
-}
+    QString placeholders;
+    const auto namespaceList = namespaces.uniqueKeys();
+    bool firstNS = true;
+    for (const QString &ns : namespaceList) {
+        if (firstNS)
+            firstNS = false;
+        else
+            placeholders += QLatin1String(" OR ");
+        placeholders += QLatin1String("(namespace = ?");
 
-bool Reader::splitSearchTerm(const QString &searchTerm, QStringList *terms,
-                                  QStringList *termSeq, QStringList *seqWords)
-{
-    QString term = searchTerm;
-
-    term = term.simplified();
-    term = term.replace(QLatin1Char('\''), QLatin1Char('"'));
-    term = term.replace(QLatin1Char('`'), QLatin1Char('"'));
-    term.remove(QLatin1Char('-'));
-    term = term.replace(QRegExp(QLatin1String("\\s[\\S]?\\s")), QString(QChar::Space));
-
-    *terms = term.split(QLatin1Char(' '));
-    for (QString &str : *terms) {
-        str = str.simplified();
-        str = str.toLower();
-        str.remove(QLatin1Char('"'));
-    }
-
-    if (term.contains(QLatin1Char('"'))) {
-        if ((term.count(QLatin1Char('"')))%2 == 0) {
-            int beg = 0;
-            int end = 0;
-            QString s;
-            beg = term.indexOf(QLatin1Char('"'), beg);
-            while (beg != -1) {
-                beg++;
-                end = term.indexOf(QLatin1Char('"'), beg);
-                s = term.mid(beg, end - beg);
-                s = s.toLower();
-                s = s.simplified();
-                if (s.contains(QLatin1Char('*'))) {
-                    qWarning("Full Text Search, using a wildcard within phrases is not allowed.");
-                    return false;
+        const QList<QStringList> &attributeSets = namespaces.values(ns);
+        bool firstAS = true;
+        for (const QStringList &attributeSet : attributeSets) {
+            if (!attributeSet.isEmpty()) {
+                if (firstAS) {
+                    firstAS = false;
+                    placeholders += QLatin1String(" AND (");
+                } else {
+                    placeholders += QLatin1String(" OR ");
                 }
-                *seqWords += s.split(QLatin1Char(' '));
-                *termSeq << s;
-                beg = term.indexOf(QLatin1Char('"'), end + 1);
+                placeholders += QLatin1String("attributes = ?");
             }
-        } else {
-            qWarning("Full Text Search, the closing quotation mark is missing.");
-            return false;
         }
+        if (!firstAS)
+            placeholders += QLatin1Char(')'); // close "AND ("
+        placeholders += QLatin1Char(')');
+    }
+    return placeholders;
+}
+
+static void bindNamespacesAndAttributes(QSqlQuery *query, const QMultiMap<QString, QStringList> &namespaces)
+{
+    QString placeholders;
+    const auto namespaceList = namespaces.uniqueKeys();
+    for (const QString &ns : namespaceList) {
+        query->addBindValue(ns);
+
+        const QList<QStringList> &attributeSets = namespaces.values(ns);
+        for (const QStringList &attributeSet : attributeSets) {
+            if (!attributeSet.isEmpty())
+                query->addBindValue(attributeSet.join(QLatin1Char('|')));
+        }
+    }
+}
+
+QVector<DocumentInfo> Reader::queryTable(const QSqlDatabase &db,
+                                         const QString &tableName,
+                                         const QString &term) const
+{
+    const QString nsPlaceholders = namespacePlaceholders(m_namespaces);
+    QSqlQuery query(db);
+    query.prepare(QLatin1String("SELECT url, title FROM ") + tableName +
+                  QLatin1String(" WHERE (") + nsPlaceholders +
+                  QLatin1String(") AND ") + tableName +
+                  QLatin1String(" MATCH ? ORDER BY rank"));
+    bindNamespacesAndAttributes(&query, m_namespaces);
+    query.addBindValue(term);
+    query.exec();
+
+    QVector<DocumentInfo> documentsInfo;
+
+    while (query.next()) {
+        const QString url = query.value(QLatin1String("url")).toString();
+        const QString title = query.value(QLatin1String("title")).toString();
+        documentsInfo.append(DocumentInfo(title, url));
+    }
+
+    return documentsInfo;
+}
+
+void Reader::searchInDB(const QString &term)
+{
+    const QString &uniqueId = QHelpGlobal::uniquifyConnectionName(QLatin1String("QHelpReader"), this);
+    {
+        QSqlDatabase db = QSqlDatabase::addDatabase(QLatin1String("QSQLITE"), uniqueId);
+        db.setConnectOptions(QLatin1String("QSQLITE_OPEN_READONLY"));
+        db.setDatabaseName(m_indexPath + QLatin1String("/fts"));
+        if (db.open()) {
+            const QVector<DocumentInfo> titlesInfo = queryTable(db,
+                                        QLatin1String("titles"), term);
+            const QVector<DocumentInfo> contentsInfo = queryTable(db,
+                                        QLatin1String("contents"), term);
+
+            // merge results form title and contents searches
+            m_hits = QVector<DocumentInfo>();
+
+            QSet<QString> urls;
+            for (const DocumentInfo &info : titlesInfo) {
+                const QString url = info.m_url;
+                if (!urls.contains(url)) {
+                    m_hits.append(info);
+                    urls.insert(url);
+                }
+            }
+
+            for (const DocumentInfo &info : contentsInfo) {
+                const QString url = info.m_url;
+                if (!urls.contains(url)) {
+                    m_hits.append(info);
+                    urls.insert(url);
+                }
+            }
+        }
+    }
+    QSqlDatabase::removeDatabase(uniqueId);
+}
+
+QVector<DocumentInfo> Reader::hits() const
+{
+    return m_hits;
+}
+
+static bool attributesMatchFilter(const QStringList &attributes,
+                                  const QStringList &filter)
+{
+    for (const QString &attribute : filter) {
+        if (!attributes.contains(attribute, Qt::CaseInsensitive))
+            return false;
     }
 
     return true;
-}
-
-void Reader::searchInIndex(const QStringList &terms)
-{
-    for (const QString &term : terms) {
-        QVector<Document> documents;
-
-        for (const Index &index : qAsConst(searchIndexTable)) {
-            const EntryTable &entryTable = index.first;
-            const DocumentList &documentList = index.second;
-
-            if (term.contains(QLatin1Char('*')))
-                documents = setupDummyTerm(getWildcardTerms(term, entryTable), entryTable);
-            else if (entryTable.value(term))
-                documents = entryTable.value(term)->documents;
-            else
-                continue;
-
-            if (!documents.isEmpty()) {
-                DocumentInfo info;
-                QVector<DocumentInfo> documentsInfo;
-                for (const Document &doc : qAsConst(documents)) {
-                    info.docNumber = doc.docNumber;
-                    info.frequency = doc.frequency;
-                    info.documentUrl = documentList.at(doc.docNumber).at(1);
-                    info.documentTitle = documentList.at(doc.docNumber).at(0);
-                    documentsInfo.append(info);
-                }
-
-                const auto tit = std::find_if(termList.begin(), termList.end(),
-                                              [term] (TermInfo &info) { return info.term == term; } );
-                if (tit != termList.end()) {
-                    tit->documents += documentsInfo;
-                    tit->frequency += documentsInfo.count();
-                } else {
-                    termList.append(TermInfo(term, documentsInfo.count(), documentsInfo));
-                }
-            }
-        }
-    }
-    ::std::sort(termList.begin(), termList.end());
-}
-
-QVector<DocumentInfo> Reader::hits()
-{
-    QVector<DocumentInfo> documents;
-    if (!termList.count())
-        return documents;
-
-    documents = termList.takeFirst().documents;
-    for (const TermInfo &info : qAsConst(termList)) {
-        const QVector<DocumentInfo> &docs = info.documents;
-
-        for (auto minDoc_it = documents.begin(); minDoc_it != documents.end(); ) {
-            const int docNumber = minDoc_it->docNumber;
-            const auto doc_it = std::find_if(docs.cbegin(), docs.cend(),
-                                             [docNumber] (const DocumentInfo &docInfo)
-                                        { return docInfo.docNumber == docNumber; });
-            if (doc_it == docs.cend()) {
-                minDoc_it = documents.erase(minDoc_it);
-            } else {
-                minDoc_it->frequency = doc_it->frequency;
-                ++minDoc_it;
-            }
-        }
-    }
-
-    ::std::sort(documents.begin(), documents.end());
-    return documents;
-}
-
-bool Reader::searchForPattern(const QStringList &patterns, const QStringList &words,
-                                   const QByteArray &data)
-{
-    if (data.isEmpty())
-        return false;
-
-    for (const PosEntry *entry : qAsConst(miniIndex))
-        delete entry;
-
-    miniIndex.clear();
-
-    wordNum = 3;
-    for (const QString &word : words)
-        miniIndex.insert(word, new PosEntry(0));
-
-    QTextStream s(data);
-    const QString text = s.readAll();
-    bool valid = true;
-    const QChar *buf = text.unicode();
-    QChar str[64];
-    QChar c = buf[0];
-    int j = 0;
-    int i = 0;
-    while ( j < text.length() ) {
-        if ( c == QLatin1Char('<') || c == QLatin1Char('&') ) {
-            valid = false;
-            if ( i > 1 )
-                buildMiniIndex( QString(str,i) );
-            i = 0;
-            c = buf[++j];
-            continue;
-        }
-        if ( ( c == QLatin1Char('>') || c == QLatin1Char(';') ) && !valid ) {
-            valid = true;
-            c = buf[++j];
-            continue;
-        }
-        if ( !valid ) {
-            c = buf[++j];
-            continue;
-        }
-        if ( ( c.isLetterOrNumber() || c == QLatin1Char('_') ) && i < 63 ) {
-            str[i] = c.toLower();
-            ++i;
-        } else {
-            if ( i > 1 )
-                buildMiniIndex( QString(str,i) );
-            i = 0;
-        }
-        c = buf[++j];
-    }
-    if ( i > 1 )
-        buildMiniIndex( QString(str,i) );
-
-    QList<uint> a;
-    for (const QString &pat : patterns) {
-        const QStringList wordList = pat.split(QLatin1Char(' '));
-        a = miniIndex.value(wordList.at(0))->positions;
-        for (int j = 1; j < wordList.count(); ++j) {
-            const QList<uint> &b = miniIndex.value(wordList.at(j))->positions;
-
-            for (auto aIt = a.begin(); aIt != a.end(); ) {
-                if (b.contains(*aIt + 1)) {
-                    (*aIt)++;
-                    ++aIt;
-                } else {
-                    aIt = a.erase(aIt);
-                }
-            }
-        }
-    }
-    if ( a.count() )
-        return true;
-    return false;
-}
-
-QVector<Document> Reader::setupDummyTerm(const QStringList &terms,
-                                         const EntryTable &entryTable)
-{
-    QList<Term> termList;
-    for (const QString &term : terms) {
-        Entry *e = entryTable.value(term);
-        if (e)
-            termList.append(Term(term, e->documents.count(), e->documents ) );
-    }
-    QVector<Document> maxList(0);
-    if ( !termList.count() )
-        return maxList;
-    ::std::sort(termList.begin(), termList.end());
-
-    maxList = termList.takeLast().documents;
-    for (const Term &term : qAsConst(termList)) {
-        for (const Document &doc : term.documents) {
-            if (maxList.indexOf(doc) == -1)
-                maxList.append(doc);
-        }
-    }
-    return maxList;
-}
-
-QStringList Reader::getWildcardTerms(const QString &termStr,
-                                     const EntryTable &entryTable)
-{
-    QStringList list;
-    const QStringList terms = split(termStr);
-
-    for (auto it = entryTable.cbegin(), end = entryTable.cend(); it != end; ++it) {
-        int index = 0;
-        bool found = false;
-        const QString text(it.key());
-        for (auto termIt = terms.cbegin(), termItEnd = terms.cend(); termIt != termItEnd; ++termIt) {
-            const QString &term = *termIt;
-            if (term == QLatin1String("*")) {
-                found = true;
-                continue;
-            }
-            if (termIt == terms.cbegin() && term.at(0) != text.at(0)) {
-                found = false;
-                break;
-            }
-            index = text.indexOf(term, index);
-            if (term == terms.last() && index != text.length() - 1) {
-                index = text.lastIndexOf(term);
-                if (index != text.length() - term.length()) {
-                    found = false;
-                    break;
-                }
-            }
-            if (index != -1) {
-                found = true;
-                index += term.length();
-                continue;
-            } else {
-                found = false;
-                break;
-            }
-        }
-        if (found)
-            list << text;
-    }
-
-    return list;
-}
-
-void Reader::buildMiniIndex(const QString &string)
-{
-    if (miniIndex[string])
-        miniIndex[string]->positions.append(wordNum);
-    ++wordNum;
-}
-
-void Reader::reset()
-{
-    for (Index &index : indexTable) {
-        cleanupIndex(index.first);
-        index.second.clear();
-    }
-}
-
-void Reader::cleanupIndex(EntryTable &entryTable)
-{
-    for (const Entry *entry : qAsConst(entryTable))
-        delete entry;
-
-    entryTable.clear();
-}
-
-
-QHelpSearchIndexReaderDefault::QHelpSearchIndexReaderDefault()
-    : QHelpSearchIndexReader()
-{
-    // nothing todo
-}
-
-QHelpSearchIndexReaderDefault::~QHelpSearchIndexReaderDefault()
-{
 }
 
 void QHelpSearchIndexReaderDefault::run()
 {
-    mutex.lock();
+    QMutexLocker lock(&m_mutex);
 
-    if (m_cancel) {
-        mutex.unlock();
+    if (m_cancel)
         return;
-    }
 
-    const QList<QHelpSearchQuery> &queryList = this->m_query;
-    const QLatin1String key("DefaultSearchNamespaces");
-    const QString collectionFile(this->m_collectionFile);
+    const QList<QHelpSearchQuery> queryList = m_query;
+    const QString collectionFile = m_collectionFile;
     const QString indexPath = m_indexFilesFolder;
 
-    mutex.unlock();
+    lock.unlock();
 
     QString queryTerm;
+
+    // TODO: we may want to translate the QHelpSearchQuery list into
+    // simple phrase using AND, OR, NOT or quotes in order to
+    // keep working the public interface of QHelpSearchQuery
     for (const QHelpSearchQuery &query : queryList) {
         if (query.fieldName == QHelpSearchQuery::DEFAULT) {
             queryTerm = query.wordList.at(0);
@@ -510,77 +218,39 @@ void QHelpSearchIndexReaderDefault::run()
         return;
 
     const QStringList &registeredDocs = engine.registeredDocumentations();
-    const QStringList &indexedNamespaces = engine.customValue(key).toString().
-        split(QLatin1Char('|'), QString::SkipEmptyParts);
 
     emit searchingStarted();
+
+    const QStringList &currentFilter = engine.filterAttributes(engine.currentFilter());
 
     // setup the reader
     m_reader.setIndexPath(indexPath);
     for (const QString &namespaceName : registeredDocs) {
-        mutex.lock();
-        if (m_cancel) {
-            mutex.unlock();
-            searchingFinished(0);   // TODO: check this ???
-            return;
-        }
-        mutex.unlock();
-
         const QList<QStringList> &attributeSets =
             engine.filterAttributeSets(namespaceName);
 
         for (const QStringList &attributes : attributeSets) {
-            // read all index files
-            m_reader.setIndexFile(namespaceName, attributes.join(QLatin1Char('@')));
-            if (!m_reader.readIndex()) {
-                qWarning("Full Text Search, could not read file for namespace: %s.",
-                    namespaceName.toUtf8().constData());
+            if (attributesMatchFilter(attributes, currentFilter)) {
+                m_reader.addNamespace(namespaceName, attributes);
             }
         }
     }
 
-    // get the current filter attributes and minimize the index files table
-    m_reader.filterFilesForAttributes(engine.filterAttributes(engine.currentFilter()));
 
-    hitList.clear();
-    QStringList terms, termSeq, seqWords;
-    if (m_reader.initCheck() && // check if we could read anything
-        m_reader.splitSearchTerm(queryTerm, &terms, &termSeq, &seqWords) ) {
-
-        // search for term(s)
-        m_reader.searchInIndex(terms);    // TODO: should this be interruptible as well ???
-
-        const QVector<DocumentInfo> &hits = m_reader.hits();
-        if (!hits.isEmpty()) {
-            if (termSeq.isEmpty()) {
-                for (const DocumentInfo &docInfo : hits) {
-                    mutex.lock();
-                    if (m_cancel) {
-                        mutex.unlock();
-                        searchingFinished(0);   // TODO: check this, speed issue while locking???
-                        return;
-                    }
-                    mutex.unlock();
-                    hitList.append(qMakePair(docInfo.documentTitle, docInfo.documentUrl));
-                }
-            } else {
-                for (const DocumentInfo &docInfo : hits) {
-                    mutex.lock();
-                    if (m_cancel) {
-                        mutex.unlock();
-                        searchingFinished(0);   // TODO: check this, speed issue while locking???
-                        return;
-                    }
-                    mutex.unlock();
-
-                    if (m_reader.searchForPattern(termSeq, seqWords, engine.fileData(docInfo.documentUrl))) // TODO: should this be interruptible as well ???
-                        hitList.append(qMakePair(docInfo.documentTitle, docInfo.documentUrl));
-                }
-            }
-        }
+    lock.relock();
+    if (m_cancel) {
+        emit searchingFinished(0);   // TODO: check this, speed issue while locking???
+        return;
     }
+    lock.unlock();
 
-    emit searchingFinished(hitList.count());
+    m_hitList.clear();
+    m_reader.searchInDB(queryTerm);    // TODO: should this be interruptible as well ???
+
+    for (const DocumentInfo &docInfo : m_reader.hits())
+        m_hitList.append(qMakePair(docInfo.m_url, docInfo.m_title));
+
+    emit searchingFinished(m_hitList.count());
 }
 
 }   // namespace std

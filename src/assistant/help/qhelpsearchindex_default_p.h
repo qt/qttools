@@ -59,88 +59,19 @@ QT_BEGIN_NAMESPACE
 
 namespace QtHelpInternal {
 
-struct Document {
-    Document(qint16 d, qint16 f)
-        : docNumber(d), frequency(f) {}
+struct DocumentInfo {
 
-    Document()
-        : docNumber(-1), frequency(0) {}
+    DocumentInfo() = default;
+    DocumentInfo(const QString &title, const QString &url)
+        : m_title(title), m_url(url) {}
 
-    bool operator==(const Document &doc) const {
-        return docNumber == doc.docNumber;
-    }
-    bool operator<(const Document &doc) const {
-        return frequency > doc.frequency;
-    }
-    bool operator<=(const Document &doc) const {
-        return frequency >= doc.frequency;
-    }
-    bool operator>(const Document &doc) const {
-        return frequency < doc.frequency;
-    }
-
-    qint16 docNumber;
-    qint16 frequency;
-};
-
-struct DocumentInfo : public Document {
-    DocumentInfo()
-        : Document(-1, 0), documentTitle(QString()), documentUrl(QString()) {}
-
-    DocumentInfo(qint16 d, qint16 f, const QString &title, const QString &url)
-        : Document(d, f), documentTitle(title), documentUrl(url) {}
-
-    DocumentInfo(const Document &document, const QString &title, const QString &url)
-        : Document(document.docNumber, document.frequency), documentTitle(title), documentUrl(url) {}
-
-    QString documentTitle;
-    QString documentUrl;
-};
-
-struct Entry {
-    Entry(qint16 d) { documents.append(Document(d, 1)); }
-    Entry(QVector<Document> l) : documents(l) {}
-
-    QVector<Document> documents;
-};
-
-struct PosEntry {
-    PosEntry(int p) { positions.append(p); }
-    QList<uint> positions;
-};
-
-struct Term {
-    Term() : frequency(-1) {}
-    Term(const QString &t, int f, QVector<Document> l) : term(t), frequency(f), documents(l) {}
-    QString term;
-    int frequency;
-    QVector<Document>documents;
-    bool operator<(const Term &i2) const { return frequency < i2.frequency; }
-};
-
-struct TermInfo {
-    TermInfo() : frequency(-1) {}
-    TermInfo(const QString &t, int f, QVector<DocumentInfo> l)
-        : term(t), frequency(f), documents(l) {}
-
-    bool operator<(const TermInfo &i2) const { return frequency < i2.frequency; }
-
-    QString term;
-    int frequency;
-    QVector<DocumentInfo>documents;
+    QString m_title;
+    QString m_url;
 };
 
 } // namespace QtHelpInternal
 
-using QtHelpInternal::Document;
 using QtHelpInternal::DocumentInfo;
-using QtHelpInternal::Entry;
-using QtHelpInternal::PosEntry;
-using QtHelpInternal::Term;
-using QtHelpInternal::TermInfo;
-
-QDataStream &operator>>(QDataStream &s, Document &l);
-QDataStream &operator<<(QDataStream &s, const Document &l);
 
 QT_END_NAMESPACE
 

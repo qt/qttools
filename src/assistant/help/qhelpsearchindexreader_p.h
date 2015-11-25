@@ -71,7 +71,7 @@ class QHelpSearchIndexReader : public QThread
     Q_OBJECT
 
 public:
-    QHelpSearchIndexReader();
+    QHelpSearchIndexReader() = default;
     ~QHelpSearchIndexReader();
 
     void cancelSearching();
@@ -86,9 +86,9 @@ signals:
     void searchingFinished(int hits);
 
 protected:
-    mutable QMutex mutex;
-    QList<QHelpSearchEngine::SearchHit> hitList;
-    bool m_cancel;
+    mutable QMutex m_mutex;
+    QList<QHelpSearchEngine::SearchHit> m_hitList;
+    bool m_cancel = false;
     QString m_collectionFile;
     QList<QHelpSearchQuery> m_query;
     QString m_indexFilesFolder;
