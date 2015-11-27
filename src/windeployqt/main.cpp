@@ -103,7 +103,7 @@ enum QtModule
     Qt3DInputModule           = 0x0000200000000000,
     QtLocationModule          = 0x0000400000000000,
     QtWebChannelModule        = 0x0000800000000000,
-    QtTextToSpeechModule      = 0x0000800000000000
+    QtTextToSpeechModule      = 0x0001000000000000
 };
 
 struct QtModuleEntry {
