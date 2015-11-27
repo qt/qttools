@@ -102,7 +102,8 @@ enum QtModule
     Qt3DQuickRendererModule   = 0x0000100000000000,
     Qt3DInputModule           = 0x0000200000000000,
     QtLocationModule          = 0x0000400000000000,
-    QtWebChannelModule        = 0x0000800000000000
+    QtWebChannelModule        = 0x0000800000000000,
+    QtTextToSpeechModule      = 0x0000800000000000
 };
 
 struct QtModuleEntry {
@@ -159,7 +160,8 @@ QtModuleEntry qtModuleEntries[] = {
     { Qt3DQuickRendererModule, "3dquickrenderer", "Qt53DQuickRenderer", 0 },
     { Qt3DInputModule, "3dinput", "Qt53DInput", 0 },
     { QtLocationModule, "geoservices", "Qt5Location", 0 },
-    { QtWebChannelModule, "webchannel", "Qt5WebChannel", 0 }
+    { QtWebChannelModule, "webchannel", "Qt5WebChannel", 0 },
+    { QtTextToSpeechModule, "texttospeech", "Qt5TextToSpeech", 0 }
 };
 
 static const char webKitProcessC[] = "QtWebProcess";
@@ -805,6 +807,8 @@ static inline quint64 qtModuleForPlugin(const QString &subDirName)
         return QtWebEngineModule | QtWebEngineCoreModule | QtWebEngineWidgetsModule;
     if (subDirName == QLatin1String("sceneparsers"))
         return Qt3DRendererModule;
+    if (subDirName == QLatin1String("texttospeech"))
+        return QtTextToSpeechModule;
     return 0; // "designer"
 }
 
