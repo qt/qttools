@@ -116,10 +116,10 @@ bool HelpViewer::isLocalUrl(const QUrl &url)
         || scheme == QLatin1String("about");
 }
 
-bool HelpViewer::canOpenPage(const QString &url)
+bool HelpViewer::canOpenPage(const QString &path)
 {
     TRACE_OBJ
-    return !mimeFromUrl(url).isEmpty();
+    return !mimeFromUrl(QUrl::fromLocalFile(path)).isEmpty();
 }
 
 QString HelpViewer::mimeFromUrl(const QUrl &url)
@@ -147,7 +147,7 @@ bool HelpViewer::launchWithExternalApp(const QUrl &url)
         if (!resolvedUrl.isValid())
             return false;
 
-        const QString& path = resolvedUrl.path();
+        const QString& path = resolvedUrl.toLocalFile();
         if (!canOpenPage(path)) {
             QTemporaryFile tmpTmpFile;
             if (!tmpTmpFile.open())
