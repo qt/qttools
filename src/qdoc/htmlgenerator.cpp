@@ -2422,7 +2422,7 @@ void HtmlGenerator::generateTableOfContents(const Node *node,
         return;
     }
 
-    QStringList sectionNumber;
+    int sectionNumber = 1;
     int detailsBase = 0;
 
     // disable nested links in table of contents
@@ -2432,26 +2432,25 @@ void HtmlGenerator::generateTableOfContents(const Node *node,
     out() << "<div class=\"sidebar\">\n";
     out() << "<div class=\"toc\">\n";
     out() << "<h3><a name=\"toc\">Contents</a></h3>\n";
-    sectionNumber.append("1");
     out() << "<ul>\n";
 
     if (node->isModule()) {
         if (node->hasNamespaces()) {
             out() << "<li class=\"level"
-                  << sectionNumber.size()
+                  << sectionNumber
                   << "\"><a href=\"#"
                   << registerRef("namespaces")
                   << "\">Namespaces</a></li>\n";
         }
         if (node->hasClasses()) {
             out() << "<li class=\"level"
-                  << sectionNumber.size()
+                  << sectionNumber
                   << "\"><a href=\"#"
                   << registerRef("classes")
                   << "\">Classes</a></li>\n";
         }
         out() << "<li class=\"level"
-              << sectionNumber.size()
+              << sectionNumber
               << "\"><a href=\"#"
               << registerRef("details")
               << "\">Detailed Description</a></li>\n";
@@ -2470,7 +2469,7 @@ void HtmlGenerator::generateTableOfContents(const Node *node,
         while (s != sections->constEnd()) {
             if (!s->members.isEmpty()) {
                 out() << "<li class=\"level"
-                      << sectionNumber.size()
+                      << sectionNumber
                       << "\"><a href=\"#"
                       << registerRef((*s).pluralMember)
                       << "\">" << (*s).name
@@ -2479,7 +2478,7 @@ void HtmlGenerator::generateTableOfContents(const Node *node,
             if (!s->reimpMembers.isEmpty()) {
                 QString ref = QString("Reimplemented ") + (*s).pluralMember;
                 out() << "<li class=\"level"
-                      << sectionNumber.size()
+                      << sectionNumber
                       << "\"><a href=\"#"
                       << registerRef(ref.toLower())
                       << "\">" << QString("Reimplemented ") + (*s).name
@@ -2488,7 +2487,7 @@ void HtmlGenerator::generateTableOfContents(const Node *node,
             ++s;
         }
         out() << "<li class=\"level"
-              << sectionNumber.size()
+              << sectionNumber
               << "\"><a href=\"#"
               << registerRef("details")
               << "\">Detailed Description</a></li>\n";
@@ -2501,30 +2500,16 @@ void HtmlGenerator::generateTableOfContents(const Node *node,
     }
 
     for (int i = 0; i < toc.size(); ++i) {
-        Atom *atom = toc.at(i);
-        int nextLevel = atom->string().toInt() + detailsBase;
-        if (nextLevel >= 0) {
-            if (sectionNumber.size() < nextLevel) {
-                do {
-                    sectionNumber.append("1");
-                } while (sectionNumber.size() < nextLevel);
-            }
-            else {
-                while (sectionNumber.size() > nextLevel) {
-                    sectionNumber.removeLast();
-                }
-                sectionNumber.last() = QString::number(sectionNumber.last().toInt() + 1);
-            }
-        }
-
+        const Atom *atom = toc.at(i);
+        sectionNumber = atom->string().toInt() + detailsBase;
         //restrict the ToC depth to the one set by the HTML.tocdepth variable or
         //print all levels if tocDepth is not set.
-        if (sectionNumber.size() <= tocDepth || tocDepth < 0) {
+        if (sectionNumber <= tocDepth || tocDepth < 0) {
             int numAtoms;
             Text headingText = Text::sectionHeading(atom);
             QString s = headingText.toString();
             out() << "<li class=\"level"
-                  << sectionNumber.size()
+                  << sectionNumber
                   << "\">";
             out() << "<a href=\""
                   << '#'
@@ -2533,9 +2518,6 @@ void HtmlGenerator::generateTableOfContents(const Node *node,
             generateAtomList(headingText.firstAtom(), node, marker, true, numAtoms);
             out() << "</a></li>\n";
         }
-    }
-    while (!sectionNumber.isEmpty()) {
-        sectionNumber.removeLast();
     }
     out() << "</ul>\n";
     out() << "</div>\n";
@@ -4016,7 +3998,9 @@ int HtmlGenerator::hOffset(const Node *node)
     switch (node->type()) {
     case Node::Namespace:
     case Node::Class:
+    case Node::Module:
         return 2;
+    case Node::QmlModule:
     case Node::QmlBasicType:
     case Node::QmlType:
     case Node::Document:
