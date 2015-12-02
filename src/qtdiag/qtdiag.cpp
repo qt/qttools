@@ -188,7 +188,7 @@ static void dumpStandardLocation(QTextStream &str, QStandardPaths::StandardLocat
     str << '"' << QStandardPaths::displayName(location) << '"';
     const QStringList directories = QStandardPaths::standardLocations(location);
     const QString writableDirectory = QStandardPaths::writableLocation(location);
-    const int writableIndex = directories.indexOf(writableDirectory);
+    const int writableIndex = writableDirectory.isEmpty() ? -1 : directories.indexOf(writableDirectory);
     for (int i = 0; i < directories.size(); ++i) {
         str << ' ';
         if (i == writableIndex)
@@ -252,12 +252,14 @@ QString qtDiag(unsigned flags)
 #endif
     str << '\n';
 
+#ifndef QT_NO_PROCESS
     const QProcessEnvironment systemEnvironment = QProcessEnvironment::systemEnvironment();
     str << "\nEnvironment:\n";
     foreach (const QString &key, systemEnvironment.keys()) {
         if (key.startsWith(QLatin1Char('Q')))
            str << "  " << key << "=\"" << systemEnvironment.value(key) << "\"\n";
     }
+#endif // !QT_NO_PROCESS
 
     str << "\nLibrary info:\n";
     DUMP_LIBRARYPATH(str, PrefixPath)
