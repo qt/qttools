@@ -188,7 +188,7 @@ static void dumpStandardLocation(QTextStream &str, QStandardPaths::StandardLocat
     str << '"' << QStandardPaths::displayName(location) << '"';
     const QStringList directories = QStandardPaths::standardLocations(location);
     const QString writableDirectory = QStandardPaths::writableLocation(location);
-    const int writableIndex = directories.indexOf(writableDirectory);
+    const int writableIndex = writableDirectory.isEmpty() ? -1 : directories.indexOf(writableDirectory);
     for (int i = 0; i < directories.size(); ++i) {
         str << ' ';
         if (i == writableIndex)
@@ -222,6 +222,69 @@ static QString formatQDebug(T t)
     return result;
 }
 
+static inline QByteArrayList qtFeatures()
+{
+    QByteArrayList result;
+#ifdef QT_NO_CLIPBOARD
+    result.append("QT_NO_CLIPBOARD");
+#endif
+#ifdef QT_NO_CONTEXTMENU
+    result.append("QT_NO_CONTEXTMENU");
+#endif
+#ifdef QT_NO_CURSOR
+    result.append("QT_NO_CURSOR");
+#endif
+#ifdef QT_NO_DRAGANDDROP
+    result.append("QT_NO_DRAGANDDROP");
+#endif
+#ifdef QT_NO_EXCEPTIONS
+    result.append("QT_NO_EXCEPTIONS");
+#endif
+#ifdef QT_NO_LIBRARY
+    result.append("QT_NO_LIBRARY");
+#endif
+#ifdef QT_NO_NETWORK
+    result.append("QT_NO_NETWORK");
+#endif
+#ifdef QT_NO_OPENGL
+    result.append("QT_NO_OPENGL");
+#endif
+#ifdef QT_NO_OPENSSL
+    result.append("QT_NO_OPENSSL");
+#endif
+#ifdef QT_NO_PROCESS
+    result.append("QT_NO_PROCESS");
+#endif
+#ifdef QT_NO_PRINTER
+    result.append("QT_NO_PRINTER");
+#endif
+#ifdef QT_NO_SESSIONMANAGER
+    result.append("QT_NO_SESSIONMANAGER");
+#endif
+#ifdef QT_NO_SETTINGS
+    result.append("QT_NO_SETTINGS");
+#endif
+#ifdef QT_NO_SHORTCUT
+    result.append("QT_NO_SHORTCUT");
+#endif
+#ifdef QT_NO_SYSTEMTRAYICON
+    result.append("QT_NO_SYSTEMTRAYICON");
+#endif
+#ifdef QT_NO_QTHREAD
+    result.append("QT_NO_QTHREAD");
+#endif
+#ifdef QT_NO_WHATSTHIS
+    result.append("QT_NO_WHATSTHIS");
+#endif
+#ifdef QT_NO_WIDGETS
+    result.append("QT_NO_WIDGETS");
+#endif
+#ifdef QT_NO_ZLIB
+    result.append("QT_NO_ZLIB");
+#endif
+    return result;
+}
+
 QString qtDiag(unsigned flags)
 {
     QString result;
@@ -252,12 +315,18 @@ QString qtDiag(unsigned flags)
 #endif
     str << '\n';
 
+#ifndef QT_NO_PROCESS
     const QProcessEnvironment systemEnvironment = QProcessEnvironment::systemEnvironment();
     str << "\nEnvironment:\n";
     foreach (const QString &key, systemEnvironment.keys()) {
         if (key.startsWith(QLatin1Char('Q')))
            str << "  " << key << "=\"" << systemEnvironment.value(key) << "\"\n";
     }
+#endif // !QT_NO_PROCESS
+
+    const QByteArrayList features = qtFeatures();
+    if (!features.isEmpty())
+        str << "\nFeatures: " << features.join(' ') << '\n';
 
     str << "\nLibrary info:\n";
     DUMP_LIBRARYPATH(str, PrefixPath)
@@ -459,18 +528,22 @@ QString qtDiag(unsigned flags)
     }
 
 #ifndef QT_NO_OPENGL
-    dumpGlInfo(str, flags & QtDiagGlExtensions);
-    str << "\n\n";
+    if (flags & QtDiagGl) {
+        dumpGlInfo(str, flags & QtDiagGlExtensions);
+        str << "\n\n";
+    }
 #else
     Q_UNUSED(flags)
 #endif // !QT_NO_OPENGL
 
     // On Windows, this will provide addition GPU info similar to the output of dxdiag.
-    const QVariant gpuInfoV = QGuiApplication::platformNativeInterface()->property("gpu");
-    if (gpuInfoV.type() == QVariant::Map) {
-        const QString description = gpuInfoV.toMap().value(QStringLiteral("printable")).toString();
-        if (!description.isEmpty())
-            str << "\nGPU:\n" << description;
+    if (const QPlatformNativeInterface *ni = QGuiApplication::platformNativeInterface()) {
+        const QVariant gpuInfoV = ni->property("gpu");
+        if (gpuInfoV.type() == QVariant::Map) {
+            const QString description = gpuInfoV.toMap().value(QStringLiteral("printable")).toString();
+            if (!description.isEmpty())
+                str << "\nGPU:\n" << description;
+        }
     }
     return result;
 }

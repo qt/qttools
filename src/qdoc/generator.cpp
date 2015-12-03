@@ -190,7 +190,7 @@ void Generator::appendFullNames(Text& text, const NodeList& nodes, const Node* r
     }
 }
 
-void Generator::appendSortedNames(Text& text, const ClassNode* cn, const QList<RelatedClass>& rc)
+int Generator::appendSortedNames(Text& text, const ClassNode* cn, const QList<RelatedClass>& rc)
 {
     QList<RelatedClass>::ConstIterator r;
     QMap<QString,Text> classMap;
@@ -216,9 +216,10 @@ void Generator::appendSortedNames(Text& text, const ClassNode* cn, const QList<R
         text << classMap[className];
         text << comma(index++, classNames.count());
     }
+    return index;
 }
 
-void Generator::appendSortedQmlNames(Text& text, const Node* base, const NodeList& subs)
+int Generator::appendSortedQmlNames(Text& text, const Node* base, const NodeList& subs)
 {
     QMap<QString,Text> classMap;
     int index = 0;
@@ -239,6 +240,7 @@ void Generator::appendSortedQmlNames(Text& text, const Node* base, const NodeLis
         text << classMap[name];
         text << comma(index++, names.count());
     }
+    return index;
 }
 
 /*!

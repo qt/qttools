@@ -1066,25 +1066,29 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
             }
         }
         else {
-            out() << "<ol class=";
+            QString olType;
             if (atom->string() == ATOM_LIST_UPPERALPHA) {
-                out() << "\"A\"";
-            } /* why type? changed to */
+                olType = "A";
+            }
             else if (atom->string() == ATOM_LIST_LOWERALPHA) {
-                out() << "\"a\"";
+                olType = "a";
             }
             else if (atom->string() == ATOM_LIST_UPPERROMAN) {
-                out() << "\"I\"";
+                olType = "I";
             }
             else if (atom->string() == ATOM_LIST_LOWERROMAN) {
-                out() << "\"i\"";
+                olType = "i";
             }
             else { // (atom->string() == ATOM_LIST_NUMERIC)
-                out() << "\"1\"";
+                olType = "1";
             }
-            if (atom->next() != 0 && atom->next()->string().toInt() != 1)
-                out() << " start=\"" << atom->next()->string() << '"';
-            out() << ">\n";
+
+            if (atom->next() != 0 && atom->next()->string().toInt() > 1) {
+                out() << QString("<ol class=\"%1\" type=\"%1\" start=\"%2\">").arg(olType)
+                         .arg(atom->next()->string());
+            }
+            else
+                out() << QString("<ol class=\"%1\" type=\"%1\">").arg(olType);
         }
         break;
     case Atom::ListItemNumber:
@@ -1100,7 +1104,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
             out() << "<tr><td class=\"topAlign\"><code>" << t << "</code>";
 
             if (relative->type() == Node::Enum) {
-                out() << "</td><td class=\"topAlign\">";
+                out() << "</td><td class=\"topAlign tblval\">";
                 const EnumNode *enume = static_cast<const EnumNode *>(relative);
                 QString itemValue = enume->itemValue(atom->next()->string());
 
@@ -2215,16 +2219,18 @@ void HtmlGenerator::generateRequisites(Aggregate *inner, CodeMarker *marker)
                 ++r;
             }
             text << Atom::ParaRight;
-            requisites.insert(inheritsText, text);
+            if (index > 0)
+                requisites.insert(inheritsText, text);
         }
 
         //add the inherited-by to the map
         if (!classe->derivedClasses().isEmpty()) {
             text.clear();
             text << Atom::ParaLeft;
-            appendSortedNames(text, classe, classe->derivedClasses());
+            int count = appendSortedNames(text, classe, classe->derivedClasses());
             text << Atom::ParaRight;
-            requisites.insert(inheritedBytext, text);
+            if (count > 0)
+                requisites.insert(inheritedBytext, text);
         }
     }
 
@@ -2339,9 +2345,10 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
     if (!subs.isEmpty()) {
         text.clear();
         text << Atom::ParaLeft;
-        appendSortedQmlNames(text, qcn, subs);
+        int count = appendSortedQmlNames(text, qcn, subs);
         text << Atom::ParaRight;
-        requisites.insert(inheritedBytext, text);
+        if (count > 0)
+            requisites.insert(inheritedBytext, text);
     }
 
     if (!requisites.isEmpty()) {
@@ -2415,7 +2422,7 @@ void HtmlGenerator::generateTableOfContents(const Node *node,
         return;
     }
 
-    QStringList sectionNumber;
+    int sectionNumber = 1;
     int detailsBase = 0;
 
     // disable nested links in table of contents
@@ -2425,26 +2432,25 @@ void HtmlGenerator::generateTableOfContents(const Node *node,
     out() << "<div class=\"sidebar\">\n";
     out() << "<div class=\"toc\">\n";
     out() << "<h3><a name=\"toc\">Contents</a></h3>\n";
-    sectionNumber.append("1");
     out() << "<ul>\n";
 
     if (node->isModule()) {
         if (node->hasNamespaces()) {
             out() << "<li class=\"level"
-                  << sectionNumber.size()
+                  << sectionNumber
                   << "\"><a href=\"#"
                   << registerRef("namespaces")
                   << "\">Namespaces</a></li>\n";
         }
         if (node->hasClasses()) {
             out() << "<li class=\"level"
-                  << sectionNumber.size()
+                  << sectionNumber
                   << "\"><a href=\"#"
                   << registerRef("classes")
                   << "\">Classes</a></li>\n";
         }
         out() << "<li class=\"level"
-              << sectionNumber.size()
+              << sectionNumber
               << "\"><a href=\"#"
               << registerRef("details")
               << "\">Detailed Description</a></li>\n";
@@ -2463,7 +2469,7 @@ void HtmlGenerator::generateTableOfContents(const Node *node,
         while (s != sections->constEnd()) {
             if (!s->members.isEmpty()) {
                 out() << "<li class=\"level"
-                      << sectionNumber.size()
+                      << sectionNumber
                       << "\"><a href=\"#"
                       << registerRef((*s).pluralMember)
                       << "\">" << (*s).name
@@ -2472,7 +2478,7 @@ void HtmlGenerator::generateTableOfContents(const Node *node,
             if (!s->reimpMembers.isEmpty()) {
                 QString ref = QString("Reimplemented ") + (*s).pluralMember;
                 out() << "<li class=\"level"
-                      << sectionNumber.size()
+                      << sectionNumber
                       << "\"><a href=\"#"
                       << registerRef(ref.toLower())
                       << "\">" << QString("Reimplemented ") + (*s).name
@@ -2481,7 +2487,7 @@ void HtmlGenerator::generateTableOfContents(const Node *node,
             ++s;
         }
         out() << "<li class=\"level"
-              << sectionNumber.size()
+              << sectionNumber
               << "\"><a href=\"#"
               << registerRef("details")
               << "\">Detailed Description</a></li>\n";
@@ -2494,30 +2500,16 @@ void HtmlGenerator::generateTableOfContents(const Node *node,
     }
 
     for (int i = 0; i < toc.size(); ++i) {
-        Atom *atom = toc.at(i);
-        int nextLevel = atom->string().toInt() + detailsBase;
-        if (nextLevel >= 0) {
-            if (sectionNumber.size() < nextLevel) {
-                do {
-                    sectionNumber.append("1");
-                } while (sectionNumber.size() < nextLevel);
-            }
-            else {
-                while (sectionNumber.size() > nextLevel) {
-                    sectionNumber.removeLast();
-                }
-                sectionNumber.last() = QString::number(sectionNumber.last().toInt() + 1);
-            }
-        }
-
+        const Atom *atom = toc.at(i);
+        sectionNumber = atom->string().toInt() + detailsBase;
         //restrict the ToC depth to the one set by the HTML.tocdepth variable or
         //print all levels if tocDepth is not set.
-        if (sectionNumber.size() <= tocDepth || tocDepth < 0) {
+        if (sectionNumber <= tocDepth || tocDepth < 0) {
             int numAtoms;
             Text headingText = Text::sectionHeading(atom);
             QString s = headingText.toString();
             out() << "<li class=\"level"
-                  << sectionNumber.size()
+                  << sectionNumber
                   << "\">";
             out() << "<a href=\""
                   << '#'
@@ -2526,9 +2518,6 @@ void HtmlGenerator::generateTableOfContents(const Node *node,
             generateAtomList(headingText.firstAtom(), node, marker, true, numAtoms);
             out() << "</a></li>\n";
         }
-    }
-    while (!sectionNumber.isEmpty()) {
-        sectionNumber.removeLast();
     }
     out() << "</ul>\n";
     out() << "</div>\n";
@@ -2951,12 +2940,9 @@ void HtmlGenerator::generateCompactList(ListType listType,
         QStringList pieces = c.key().split("::");
         QString key;
         int idx = commonPrefixLen;
-        if (idx > 0 && !pieces.last().startsWith(commonPrefix))
+        if (idx > 0 && !pieces.last().startsWith(commonPrefix, Qt::CaseInsensitive))
             idx = 0;
-        if (pieces.size() == 1)
-            key = pieces.last().mid(idx).toLower();
-        else
-            key = pieces.last().toLower();
+        key = pieces.last().mid(idx).toLower();
 
         int paragraphNr = NumParagraphs - 1;
 
@@ -4012,7 +3998,9 @@ int HtmlGenerator::hOffset(const Node *node)
     switch (node->type()) {
     case Node::Namespace:
     case Node::Class:
+    case Node::Module:
         return 2;
+    case Node::QmlModule:
     case Node::QmlBasicType:
     case Node::QmlType:
     case Node::Document:
@@ -4212,9 +4200,9 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node,
                 out() << "<a name=\"" + nodeRef + "\"></a>";
 
                 if (!qpn->isWritable())
-                    out() << "<span class=\"qmlreadonly\">read-only</span>";
+                    out() << "<span class=\"qmlreadonly\">[read-only] </span>";
                 if (qpn->isDefault())
-                    out() << "<span class=\"qmldefault\">default</span>";
+                    out() << "<span class=\"qmldefault\">[default] </span>";
                 generateQmlItem(qpn, relative, marker, false);
                 out() << "</p></td></tr>";
             }
@@ -4231,9 +4219,9 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node,
                 qpn->setReadOnly(!qpn->isWritable());
         }
         if (qpn->isReadOnly())
-            out() << "<span class=\"qmlreadonly\">read-only</span>";
+            out() << "<span class=\"qmlreadonly\">[read-only] </span>";
         if (qpn->isDefault())
-            out() << "<span class=\"qmldefault\">default</span>";
+            out() << "<span class=\"qmldefault\">[default] </span>";
         generateQmlItem(qpn, relative, marker, false);
         out() << qmlItemFooter;
     }

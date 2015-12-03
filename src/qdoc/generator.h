@@ -178,7 +178,7 @@ protected:
     QString plainCode(const QString& markedCode);
     void setImageFileExtensions(const QStringList& extensions);
     void unknownAtom(const Atom *atom);
-    void appendSortedQmlNames(Text& text, const Node* base, const NodeList& subs);
+    int appendSortedQmlNames(Text& text, const Node* base, const NodeList& subs);
 
     QMap<QString, QStringList> editionGroupMap;
     QMap<QString, QStringList> editionModuleMap;
@@ -199,7 +199,7 @@ protected:
                         const QString& fullName,
                         const Node *actualNode);
     void appendFullNames(Text& text, const NodeList& nodes, const Node* relative);
-    void appendSortedNames(Text& text, const ClassNode *classe, const QList<RelatedClass> &classes);
+    int appendSortedNames(Text& text, const ClassNode *classe, const QList<RelatedClass> &classes);
 
 private:
     static Generator* currentGenerator_;

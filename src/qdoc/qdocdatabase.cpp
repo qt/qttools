@@ -965,18 +965,18 @@ void QDocDatabase::findAllClasses(Aggregate* node)
                         !(*c)->parent()->name().isEmpty())
                     className = (*c)->parent()->name()+"::"+className;
 
-                cppClasses_.insert(className, *c);
+                cppClasses_.insert(className.toLower(), *c);
             }
             else if (((*c)->isQmlType() || (*c)->isQmlBasicType() ||
                       (*c)->isJsType() || (*c)->isJsBasicType()) && !(*c)->doc().isEmpty()) {
-                QString qmlTypeName = (*c)->name();
-                if (qmlTypeName.startsWith(QLatin1String("QML:")))
+                QString qmlTypeName = (*c)->name().toLower();
+                if (qmlTypeName.startsWith(QLatin1String("QML:"), Qt::CaseInsensitive))
                     qmlTypes_.insert(qmlTypeName.mid(4),*c);
                 else
                     qmlTypes_.insert(qmlTypeName,*c);
 
                 //also add to the QML basic type map
-                if ((*c)->isQmlBasicType() || (*c)->isJsType())
+                if ((*c)->isQmlBasicType() || (*c)->isJsBasicType())
                     qmlBasicTypes_.insert(qmlTypeName,*c);
             }
             else if ((*c)->isAggregate()) {
@@ -1668,8 +1668,6 @@ const Node* QDocDatabase::findNodeForAtom(const Atom* a, const Node* relative, Q
     Atom* atom = const_cast<Atom*>(a);
     QStringList targetPath = atom->string().split(QLatin1Char('#'));
     QString first = targetPath.first().trimmed();
-    if (Generator::debugging())
-        qDebug() << "  first:" << first;
 
     Tree* domain = 0;
     Node::Genus genus = Node::DontCare;
@@ -1713,8 +1711,6 @@ const Node* QDocDatabase::findNodeForAtom(const Atom* a, const Node* relative, Q
             node = findNodeByNameAndType(QStringList(first), Node::Document);
         else if (first.endsWith(QChar(')'))) {
             node = findFunctionNode(first, relative, genus);
-            if (Generator::debugging())
-                qDebug() << "  node:" << node;
         }
         if (!node)
             return findNodeForTarget(targetPath, relative, genus, ref);

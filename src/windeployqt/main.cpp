@@ -55,54 +55,55 @@ enum QtModule
     : quint64
 #endif
 {
-    QtBluetoothModule         = 0x000000000001,
-    QtCLuceneModule           = 0x000000000002,
-    QtConcurrentModule        = 0x000000000004,
-    QtCoreModule              = 0x000000000008,
-    QtDeclarativeModule       = 0x000000000010,
-    QtDesignerComponents      = 0x000000000020,
-    QtDesignerModule          = 0x000000000040,
-    QtGuiModule               = 0x000000000080,
-    QtCluceneModule           = 0x000000000100,
-    QtHelpModule              = 0x000000000200,
-    QtMultimediaModule        = 0x000000000400,
-    QtMultimediaWidgetsModule = 0x000000000800,
-    QtMultimediaQuickModule   = 0x000000001000,
-    QtNetworkModule           = 0x000000002000,
-    QtNfcModule               = 0x000000004000,
-    QtOpenGLModule            = 0x000000008000,
-    QtPositioningModule       = 0x000000010000,
-    QtPrintSupportModule      = 0x000000020000,
-    QtQmlModule               = 0x000000040000,
-    QtQuickModule             = 0x000000080000,
-    QtQuickParticlesModule    = 0x000000100000,
-    QtScriptModule            = 0x000000200000,
-    QtScriptToolsModule       = 0x000000400000,
-    QtSensorsModule           = 0x000000800000,
-    QtSerialPortModule        = 0x000001000000,
-    QtSqlModule               = 0x000002000000,
-    QtSvgModule               = 0x000004000000,
-    QtTestModule              = 0x000008000000,
-    QtWidgetsModule           = 0x000010000000,
-    QtWinExtrasModule         = 0x000020000000,
-    QtXmlModule               = 0x000040000000,
-    QtXmlPatternsModule       = 0x000080000000,
-    QtWebKitModule            = 0x000100000000,
-    QtWebKitWidgetsModule     = 0x000200000000,
-    QtQuickWidgetsModule      = 0x000400000000,
-    QtWebSocketsModule        = 0x000800000000,
-    QtEnginioModule           = 0x001000000000,
-    QtWebEngineCoreModule     = 0x002000000000,
-    QtWebEngineModule         = 0x004000000000,
-    QtWebEngineWidgetsModule  = 0x008000000000,
-    QtQmlToolingModule        = 0x010000000000,
-    Qt3DCoreModule            = 0x020000000000,
-    Qt3DRendererModule        = 0x040000000000,
-    Qt3DQuickModule           = 0x080000000000,
-    Qt3DQuickRendererModule   = 0x100000000000,
-    Qt3DInputModule           = 0x200000000000,
-    QtLocationModule          = 0x400000000000,
-    QtWebChannelModule        = 0x800000000000
+    QtBluetoothModule         = 0x0000000000000001,
+    QtCLuceneModule           = 0x0000000000000002,
+    QtConcurrentModule        = 0x0000000000000004,
+    QtCoreModule              = 0x0000000000000008,
+    QtDeclarativeModule       = 0x0000000000000010,
+    QtDesignerComponents      = 0x0000000000000020,
+    QtDesignerModule          = 0x0000000000000040,
+    QtGuiModule               = 0x0000000000000080,
+    QtCluceneModule           = 0x0000000000000100,
+    QtHelpModule              = 0x0000000000000200,
+    QtMultimediaModule        = 0x0000000000000400,
+    QtMultimediaWidgetsModule = 0x0000000000000800,
+    QtMultimediaQuickModule   = 0x0000000000001000,
+    QtNetworkModule           = 0x0000000000002000,
+    QtNfcModule               = 0x0000000000004000,
+    QtOpenGLModule            = 0x0000000000008000,
+    QtPositioningModule       = 0x0000000000010000,
+    QtPrintSupportModule      = 0x0000000000020000,
+    QtQmlModule               = 0x0000000000040000,
+    QtQuickModule             = 0x0000000000080000,
+    QtQuickParticlesModule    = 0x0000000000100000,
+    QtScriptModule            = 0x0000000000200000,
+    QtScriptToolsModule       = 0x0000000000400000,
+    QtSensorsModule           = 0x0000000000800000,
+    QtSerialPortModule        = 0x0000000001000000,
+    QtSqlModule               = 0x0000000002000000,
+    QtSvgModule               = 0x0000000004000000,
+    QtTestModule              = 0x0000000008000000,
+    QtWidgetsModule           = 0x0000000010000000,
+    QtWinExtrasModule         = 0x0000000020000000,
+    QtXmlModule               = 0x0000000040000000,
+    QtXmlPatternsModule       = 0x0000000080000000,
+    QtWebKitModule            = 0x0000000100000000,
+    QtWebKitWidgetsModule     = 0x0000000200000000,
+    QtQuickWidgetsModule      = 0x0000000400000000,
+    QtWebSocketsModule        = 0x0000000800000000,
+    QtEnginioModule           = 0x0000001000000000,
+    QtWebEngineCoreModule     = 0x0000002000000000,
+    QtWebEngineModule         = 0x0000004000000000,
+    QtWebEngineWidgetsModule  = 0x0000008000000000,
+    QtQmlToolingModule        = 0x0000010000000000,
+    Qt3DCoreModule            = 0x0000020000000000,
+    Qt3DRendererModule        = 0x0000040000000000,
+    Qt3DQuickModule           = 0x0000080000000000,
+    Qt3DQuickRendererModule   = 0x0000100000000000,
+    Qt3DInputModule           = 0x0000200000000000,
+    QtLocationModule          = 0x0000400000000000,
+    QtWebChannelModule        = 0x0000800000000000,
+    QtTextToSpeechModule      = 0x0001000000000000
 };
 
 struct QtModuleEntry {
@@ -139,7 +140,7 @@ QtModuleEntry qtModuleEntries[] = {
     { QtScriptModule, "script", "Qt5Script", "qtscript" },
     { QtScriptToolsModule, "scripttools", "Qt5ScriptTools", "qtscript" },
     { QtSensorsModule, "sensors", "Qt5Sensors", 0 },
-    { QtSerialPortModule, "serialport", "Qt5SerialPort", 0 },
+    { QtSerialPortModule, "serialport", "Qt5SerialPort", "qtserialport" },
     { QtSqlModule, "sql", "Qt5Sql", "qtbase" },
     { QtSvgModule, "svg", "Qt5Svg", 0 },
     { QtTestModule, "test", "Qt5Test", "qtbase" },
@@ -151,7 +152,7 @@ QtModuleEntry qtModuleEntries[] = {
     { QtXmlModule, "xml", "Qt5Xml", "qtbase" },
     { QtXmlPatternsModule, "xmlpatterns", "Qt5XmlPatterns", "qtxmlpatterns" },
     { QtWebEngineCoreModule, "webenginecore", "Qt5WebEngineCore", 0 },
-    { QtWebEngineModule, "webengine", "Qt5WebEngine", 0 },
+    { QtWebEngineModule, "webengine", "Qt5WebEngine", "qtwebengine" },
     { QtWebEngineWidgetsModule, "webenginewidgets", "Qt5WebEngineWidgets", 0 },
     { Qt3DCoreModule, "3dcore", "Qt53DCore", 0 },
     { Qt3DRendererModule, "3drenderer", "Qt53DRenderer", 0 },
@@ -159,7 +160,8 @@ QtModuleEntry qtModuleEntries[] = {
     { Qt3DQuickRendererModule, "3dquickrenderer", "Qt53DQuickRenderer", 0 },
     { Qt3DInputModule, "3dinput", "Qt53DInput", 0 },
     { QtLocationModule, "geoservices", "Qt5Location", 0 },
-    { QtWebChannelModule, "webchannel", "Qt5WebChannel", 0 }
+    { QtWebChannelModule, "webchannel", "Qt5WebChannel", 0 },
+    { QtTextToSpeechModule, "texttospeech", "Qt5TextToSpeech", 0 }
 };
 
 static const char webKitProcessC[] = "QtWebProcess";
@@ -253,7 +255,7 @@ struct Options {
               , angleDetection(AngleDetectionAuto), softwareRasterizer(true), platform(Windows)
               , additionalLibraries(0), disabledLibraries(0)
               , updateFileFlags(0), json(0), list(ListNone), debugDetection(DebugDetectionAuto)
-              , debugMatchAll(false), deployPdb(false) {}
+              , deployPdb(false) {}
 
     bool plugins;
     bool libraries;
@@ -275,7 +277,6 @@ struct Options {
     JsonOutput *json;
     ListOption list;
     DebugDetection debugDetection;
-    bool debugMatchAll;
     bool deployPdb;
 
     inline bool isWinRtOrWinPhone() const {
@@ -345,6 +346,7 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
     parser->addOption(releaseOption);
     QCommandLineOption releaseWithDebugInfoOption(QStringLiteral("release-with-debug-info"),
                                                   QStringLiteral("Assume release binaries with debug information."));
+    releaseWithDebugInfoOption.setHidden(true); // Deprecated by improved debug detection.
     parser->addOption(releaseWithDebugInfoOption);
 
     QCommandLineOption deployPdbOption(QStringLiteral("pdb"),
@@ -481,20 +483,18 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
         return CommandLineParseError;
     }
 
-    if (parser->isSet(releaseWithDebugInfoOption)) {
-        options->debugMatchAll = true; // PE analysis will detect "debug", turn off matching.
+    if (parser->isSet(releaseWithDebugInfoOption))
+        std::wcerr << "Warning: " << releaseWithDebugInfoOption.names().first() << " is obsolete.";
+
+    switch (parseExclusiveOptions(parser, debugOption, releaseOption)) {
+    case OptionAuto:
+        break;
+    case OptionEnabled:
+        options->debugDetection = Options::DebugDetectionForceDebug;
+        break;
+    case OptionDisabled:
         options->debugDetection = Options::DebugDetectionForceRelease;
-    } else {
-        switch (parseExclusiveOptions(parser, debugOption, releaseOption)) {
-        case OptionAuto:
-            break;
-        case OptionEnabled:
-            options->debugDetection = Options::DebugDetectionForceDebug;
-            break;
-        case OptionDisabled:
-            options->debugDetection = Options::DebugDetectionForceRelease;
-            break;
-        }
+        break;
     }
 
     if (parser->isSet(deployPdbOption)) {
@@ -807,6 +807,8 @@ static inline quint64 qtModuleForPlugin(const QString &subDirName)
         return QtWebEngineModule | QtWebEngineCoreModule | QtWebEngineWidgetsModule;
     if (subDirName == QLatin1String("sceneparsers"))
         return Qt3DRendererModule;
+    if (subDirName == QLatin1String("texttospeech"))
+        return QtTextToSpeechModule;
     return 0; // "designer"
 }
 
@@ -1159,8 +1161,7 @@ static DeployResult deploy(const Options &options,
     }
 
     const bool isDebug = options.debugDetection == Options::DebugDetectionAuto ? detectedDebug: options.debugDetection == Options::DebugDetectionForceDebug;
-    const DebugMatchMode debugMatchMode = options.debugMatchAll
-        ? MatchDebugOrRelease : (isDebug ? MatchDebug : MatchRelease);
+    const DebugMatchMode debugMatchMode = isDebug ? MatchDebug : MatchRelease;
 
     // Determine application type, check Quick2 is used by looking at the
     // direct dependencies (do not be fooled by QtWebKit depending on it).

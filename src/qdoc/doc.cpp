@@ -526,7 +526,6 @@ private:
     QString pendingParaString;
 
     int braceDepth;
-    int minIndent;
     Doc::Sections currentSection;
     QMap<QString, Location> targetMap_;
     QMap<int, QString> pendingFormats;
@@ -575,7 +574,6 @@ void DocParser::parse(const QString& source,
     pendingParaRightType = Atom::Nop;
 
     braceDepth = 0;
-    minIndent = INT_MAX;
     currentSection = Doc::NoSection;
     openedCommands.push(CMD_OMIT);
     quoter.reset();
@@ -2162,6 +2160,7 @@ void DocParser::expandMacro(const QString &name,
                 location().warning(tr("Macro '\\%1' invoked with too few"
                                       " arguments (expected %2, got %3)")
                                    .arg(name).arg(numParams).arg(i));
+                numParams = i;
                 break;
             }
         }
@@ -2204,6 +2203,7 @@ QString DocParser::expandMacroToString(const QString &name, const QString &def, 
                 location().warning(tr("Macro '\\%1' invoked with too few"
                                       " arguments (expected %2, got %3)")
                                    .arg(name).arg(numParams).arg(i));
+                numParams = i;
                 break;
             }
         }
@@ -2542,9 +2542,7 @@ QString DocParser::getCode(int cmd, CodeMarker *marker)
 {
     QString code = untabifyEtc(getUntilEnd(cmd));
     int indent = indentLevel(code);
-    if (indent < minIndent)
-        minIndent = indent;
-    code = unindent(minIndent, code);
+    code = unindent(indent, code);
     if (!marker)
         marker = CodeMarker::markerForCode(code);
     return marker->markedUpCode(code, 0, location());

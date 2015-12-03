@@ -750,7 +750,11 @@ void HelpProjectWriter::generateProject(HelpProject &project)
                             writer.writeStartElement("section");
                             QString indexPath = gen_->fullDocumentLocation(page, false);
                             writer.writeAttribute("ref", indexPath);
-                            writer.writeAttribute("title", atom->string());
+                            QString title = atom->string();
+                            if (atom->next() && atom->next()->string() == ATOM_FORMATTING_LINK)
+                                if (atom->next()->next())
+                                    title = atom->next()->next()->string();
+                            writer.writeAttribute("title", title);
 
                             sectionStack.top() += 1;
                         }

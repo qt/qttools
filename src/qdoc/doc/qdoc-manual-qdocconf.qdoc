@@ -737,13 +737,24 @@
     A macro can also take up to seven parameters:
 
     \badcode
-        macro.hello            = "Hello \1!"
+    macro.hello            = "Hello \1!"
     \endcode
 
     Parameters are passed to macros the same way as to other commands:
 
     \badcode
     \hello World
+    \endcode
+
+    When using more than one parameter, or when an argument
+    contains whitespace, enclose each argument in braces:
+
+    \badcode
+    macro.verinfo          = "\1 (version \2)"
+    \endcode
+
+    \badcode
+    \verinfo {QFooBar} {1.0 beta}
     \endcode
 
     See also \l {alias-variable} {alias}.

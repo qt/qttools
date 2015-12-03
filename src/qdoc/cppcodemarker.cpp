@@ -1112,8 +1112,8 @@ QList<Section> CppCodeMarker::qmlSections(QmlTypeNode* qmlTypeNode, SynopsisStyl
             FastSection qmlattachedproperties(qmlTypeNode,
                                               "Attached Properties",
                                               QString(),
-                                              "property",
-                                              "properties");
+                                              "attached property",
+                                              "attached properties");
             FastSection qmlsignals(qmlTypeNode,
                                    "Signals",
                                    QString(),
@@ -1127,8 +1127,8 @@ QList<Section> CppCodeMarker::qmlSections(QmlTypeNode* qmlTypeNode, SynopsisStyl
             FastSection qmlattachedsignals(qmlTypeNode,
                                            "Attached Signals",
                                            QString(),
-                                           "signal",
-                                           "signals");
+                                           "attached signal",
+                                           "attached signals");
             FastSection qmlmethods(qmlTypeNode,
                                    "Methods",
                                    QString(),
@@ -1137,8 +1137,8 @@ QList<Section> CppCodeMarker::qmlSections(QmlTypeNode* qmlTypeNode, SynopsisStyl
             FastSection qmlattachedmethods(qmlTypeNode,
                                            "Attached Methods",
                                            QString(),
-                                           "method",
-                                           "methods");
+                                           "attached method",
+                                           "attached methods");
 
             QmlTypeNode* qcn = qmlTypeNode;
             while (qcn != 0) {

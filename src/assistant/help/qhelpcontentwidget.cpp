@@ -72,7 +72,6 @@ public:
     void collectContents(const QString &customFilterName);
     void stopCollecting();
     QHelpContentItem *rootItem();
-    int nextChildCount() const;
 
 signals:
     void finishedSuccessFully();
@@ -237,13 +236,6 @@ QHelpContentItem *QHelpContentProvider::rootItem()
     return m_rootItems.dequeue();
 }
 
-int QHelpContentProvider::nextChildCount() const
-{
-    if (m_rootItems.isEmpty())
-        return 0;
-    return m_rootItems.head()->childCount();
-}
-
 void QHelpContentProvider::run()
 {
     QString title;
@@ -399,19 +391,11 @@ void QHelpContentModel::insertContents()
     QHelpContentItem * const newRootItem = d->qhelpContentProvider->rootItem();
     if (!newRootItem)
         return;
-    int count;
-    if (d->rootItem) {
-        count = d->rootItem->childCount() - 1;
-        beginRemoveRows(QModelIndex(), 0, count > 0 ? count : 0);
+    beginResetModel();
+    if (d->rootItem)
         delete d->rootItem;
-        d->rootItem = 0;
-        endRemoveRows();
-    }
-
-    count = d->qhelpContentProvider->nextChildCount() - 1;
-    beginInsertRows(QModelIndex(), 0, count > 0 ? count : 0);
     d->rootItem = newRootItem;
-    endInsertRows();
+    endResetModel();
     emit contentsCreated();
 }
 
