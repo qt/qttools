@@ -222,6 +222,69 @@ static QString formatQDebug(T t)
     return result;
 }
 
+static inline QByteArrayList qtFeatures()
+{
+    QByteArrayList result;
+#ifdef QT_NO_CLIPBOARD
+    result.append("QT_NO_CLIPBOARD");
+#endif
+#ifdef QT_NO_CONTEXTMENU
+    result.append("QT_NO_CONTEXTMENU");
+#endif
+#ifdef QT_NO_CURSOR
+    result.append("QT_NO_CURSOR");
+#endif
+#ifdef QT_NO_DRAGANDDROP
+    result.append("QT_NO_DRAGANDDROP");
+#endif
+#ifdef QT_NO_EXCEPTIONS
+    result.append("QT_NO_EXCEPTIONS");
+#endif
+#ifdef QT_NO_LIBRARY
+    result.append("QT_NO_LIBRARY");
+#endif
+#ifdef QT_NO_NETWORK
+    result.append("QT_NO_NETWORK");
+#endif
+#ifdef QT_NO_OPENGL
+    result.append("QT_NO_OPENGL");
+#endif
+#ifdef QT_NO_OPENSSL
+    result.append("QT_NO_OPENSSL");
+#endif
+#ifdef QT_NO_PROCESS
+    result.append("QT_NO_PROCESS");
+#endif
+#ifdef QT_NO_PRINTER
+    result.append("QT_NO_PRINTER");
+#endif
+#ifdef QT_NO_SESSIONMANAGER
+    result.append("QT_NO_SESSIONMANAGER");
+#endif
+#ifdef QT_NO_SETTINGS
+    result.append("QT_NO_SETTINGS");
+#endif
+#ifdef QT_NO_SHORTCUT
+    result.append("QT_NO_SHORTCUT");
+#endif
+#ifdef QT_NO_SYSTEMTRAYICON
+    result.append("QT_NO_SYSTEMTRAYICON");
+#endif
+#ifdef QT_NO_QTHREAD
+    result.append("QT_NO_QTHREAD");
+#endif
+#ifdef QT_NO_WHATSTHIS
+    result.append("QT_NO_WHATSTHIS");
+#endif
+#ifdef QT_NO_WIDGETS
+    result.append("QT_NO_WIDGETS");
+#endif
+#ifdef QT_NO_ZLIB
+    result.append("QT_NO_ZLIB");
+#endif
+    return result;
+}
+
 QString qtDiag(unsigned flags)
 {
     QString result;
@@ -260,6 +323,10 @@ QString qtDiag(unsigned flags)
            str << "  " << key << "=\"" << systemEnvironment.value(key) << "\"\n";
     }
 #endif // !QT_NO_PROCESS
+
+    const QByteArrayList features = qtFeatures();
+    if (!features.isEmpty())
+        str << "\nFeatures: " << features.join(' ') << '\n';
 
     str << "\nLibrary info:\n";
     DUMP_LIBRARYPATH(str, PrefixPath)
