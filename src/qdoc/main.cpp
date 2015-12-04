@@ -358,6 +358,13 @@ static void processQdocconfFile(const QString &fileName)
     dependModules.removeDuplicates();
     qdb->setSearchOrder(dependModules);
 
+    // Store the title of the index (landing) page
+    NamespaceNode* root = qdb->primaryTreeRoot();
+    if (root)
+        root->tree()->setIndexTitle(config.getString(CONFIG_NAVIGATION
+                                                     + Config::dot
+                                                     + CONFIG_LANDINGPAGE));
+
     QSet<QString> excludedDirs;
     QSet<QString> excludedFiles;
     QStringList excludedDirsList;

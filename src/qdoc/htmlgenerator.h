@@ -162,6 +162,7 @@ private:
                                   CodeMarker::Status status);
     void generateClassHierarchy(const Node *relative, NodeMap &classMap);
     void generateAnnotatedList(const Node* relative, CodeMarker* marker, const NodeMultiMap& nodeMap);
+    void generateAnnotatedLists(const Node* relative, CodeMarker* marker, const NodeMultiMap& nodeMap);
     void generateAnnotatedList(const Node* relative, CodeMarker* marker, const NodeList& nodes);
     void generateCompactList(ListType listType,
                              const Node *relative,

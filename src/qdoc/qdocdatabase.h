@@ -274,6 +274,7 @@ class QDocDatabase
     NodeMultiMap& getNamespaces() { resolveNamespaces(); return namespaceIndex_; }
     NodeMultiMap& getQmlBasicTypes();
     NodeMultiMap& getQmlTypes();
+    NodeMultiMap& getExamples();
     NodeMapMap& getFunctionIndex();
     TextToNodeMap& getLegaleseTexts();
     const NodeMap& getClassMap(const QString& key);
@@ -442,6 +443,7 @@ class QDocDatabase
     NodeMultiMap            nmm_;
     NodeMultiMap            qmlBasicTypes_;
     NodeMultiMap            qmlTypes_;
+    NodeMultiMap            examples_;
     NodeMapMap              newClassMaps_;
     NodeMapMap              newQmlTypeMaps_;
     NodeMultiMapMap         newSinceMaps_;
