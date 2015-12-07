@@ -100,8 +100,6 @@ struct Options
         , generateAssetsFileList(true)
         , build(true)
         , gradle(false)
-        , minimumAndroidVersion(9)
-        , targetAndroidVersion(10)
         , deploymentMechanism(Bundled)
         , releasePackage(false)
         , digestAlg(QLatin1String("SHA1"))
@@ -167,8 +165,6 @@ struct Options
     QString ndkHost;
 
     // Package information
-    int minimumAndroidVersion;
-    int targetAndroidVersion;
     DeploymentMechanism deploymentMechanism;
     QString packageName;
     QStringList extraLibs;
@@ -921,7 +917,6 @@ void cleanAndroidFiles(const Options &options)
         cleanTopFolders(options, options.androidSourceDirectory, options.outputDirectory);
 
     cleanTopFolders(options, options.qtInstallDirectory + QLatin1String("/src/android/templates"), options.outputDirectory);
-    cleanTopFolders(options, options.qtInstallDirectory + QLatin1String("/src/android/java"), options.outputDirectory + QLatin1String("__qt5__android__files__"));
 }
 
 bool copyAndroidTemplate(const Options &options, const QString &androidTemplate, const QString &outDirPrefix = QString())
@@ -970,8 +965,10 @@ bool copyAndroidTemplate(const Options &options)
     if (!copyAndroidTemplate(options, QLatin1String("/src/android/templates")))
         return false;
 
-    return copyAndroidTemplate(options, QLatin1String("/src/android/java"),
-                             options.gradle ? QLatin1String("/__qt5__android__files__/") : QString());
+    if (options.gradle)
+        return true;
+
+    return copyAndroidTemplate(options, QLatin1String("/src/android/java"));
 }
 
 bool copyAndroidSources(const Options &options)
@@ -1345,10 +1342,10 @@ bool updateAndroidManifest(Options &options)
                     options.packageName = reader.attributes().value(QLatin1String("package")).toString();
                 } else if (reader.name() == QLatin1String("uses-sdk")) {
                     if (reader.attributes().hasAttribute(QLatin1String("android:minSdkVersion")))
-                        options.minimumAndroidVersion = reader.attributes().value(QLatin1String("android:minSdkVersion")).toInt();
-
-                    if (reader.attributes().hasAttribute(QLatin1String("android:targetSdkVersion")))
-                        options.targetAndroidVersion = reader.attributes().value(QLatin1String("android:targetSdkVersion")).toInt();
+                        if (reader.attributes().value(QLatin1String("android:minSdkVersion")).toInt() < 16) {
+                            fprintf(stderr, "Invalid minSdkVersion version, minSdkVersion must be >= 16\n");
+                            return false;
+                        }
                 } else if ((reader.name() == QLatin1String("application") ||
                             reader.name() == QLatin1String("activity")) &&
                            reader.attributes().hasAttribute(QLatin1String("android:label")) &&
@@ -1373,70 +1370,6 @@ bool updateAndroidManifest(Options &options)
     return true;
 }
 
-bool updateJavaFiles(const Options &options)
-{
-    if (options.verbose)
-        fprintf(stdout, "  -- /src/org/qtproject/qt5/android/bindings/QtActivity.java\n");
-
-
-    QString fileName(options.outputDirectory +
-                     (options.gradle ? QLatin1String("/__qt5__android__files__")
-                                    : QString()) +
-                     QLatin1String("/src/org/qtproject/qt5/android/bindings/QtActivity.java"));
-
-    QFile file(fileName);
-    if (!file.open(QIODevice::ReadOnly)) {
-        fprintf(stderr, "Cannot open %s.\n", qPrintable(fileName));
-        return false;
-    }
-
-    QByteArray contents;
-
-    while (!file.atEnd()) {
-        QByteArray line = file.readLine();
-        if (line.startsWith("//@ANDROID-")) {
-            bool ok;
-            int requiredSdkVersion = line.mid(sizeof("//@ANDROID-") - 1).trimmed().toInt(&ok);
-            if (requiredSdkVersion <= options.minimumAndroidVersion)
-                contents += line;
-
-            if (ok) {
-                while (!file.atEnd()) {
-                    line = file.readLine();
-                    if (requiredSdkVersion <= options.minimumAndroidVersion)
-                        contents += line;
-
-                    if (line.startsWith(QByteArray("//@ANDROID-") + QByteArray::number(requiredSdkVersion)))
-                        break;
-                }
-
-                if (!line.startsWith(QByteArray("//@ANDROID-") + QByteArray::number(requiredSdkVersion))) {
-                    fprintf(stderr, "Mismatched tag ANDROID-%d in %s\n", requiredSdkVersion, qPrintable(fileName));
-                    return false;
-                }
-            } else {
-                fprintf(stderr, "Warning: Misformatted tag in %s: %s\n", qPrintable(fileName), line.constData());
-            }
-        } else {
-            contents += line;
-        }
-    }
-
-    file.close();
-
-    if (!file.open(QIODevice::WriteOnly)) {
-        fprintf(stderr, "Can't open %s for writing.\n", qPrintable(fileName));
-        return false;
-    }
-
-    if (file.write(contents) < contents.size()) {
-        fprintf(stderr, "Failed to write contents to %s.\n", qPrintable(fileName));
-        return false;
-    }
-
-    return true;
-}
-
 bool updateAndroidFiles(Options &options)
 {
     if (options.verbose)
@@ -1446,9 +1379,6 @@ bool updateAndroidFiles(Options &options)
         return false;
 
     if (!updateAndroidManifest(options))
-        return false;
-
-    if (!updateJavaFiles(options))
         return false;
 
     return true;
@@ -2440,7 +2370,7 @@ bool buildGradleProject(const Options &options)
     QString gradlePropertiesPath = options.outputDirectory + QLatin1String("gradle.properties");
     GradleProperties gradleProperties = readGradleProperties(gradlePropertiesPath);
     gradleProperties["buildDir"] = "build";
-    gradleProperties["qt5AndroidDir"] = "__qt5__android__files__";
+    gradleProperties["qt5AndroidDir"] = (options.qtInstallDirectory + QLatin1String("/src/android/java")).toUtf8();
     gradleProperties["androidCompileSdkVersion"] = options.androidPlatform.split(QLatin1Char('-')).last().toLocal8Bit();
     if (gradleProperties["androidBuildToolsVersion"].isEmpty())
         gradleProperties["androidBuildToolsVersion"] = options.sdkBuildToolsVersion.toLocal8Bit();
