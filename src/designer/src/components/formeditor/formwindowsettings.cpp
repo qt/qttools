@@ -116,7 +116,7 @@ void FormWindowData::fromFormWindow(FormWindowBase* fw)
     fw->layoutDefault(&defaultMargin, &defaultSpacing);
 
     QStyle *style = fw->formContainer()->style();
-    layoutDefaultEnabled = defaultMargin != INT_MIN || defaultMargin != INT_MIN;
+    layoutDefaultEnabled = defaultMargin != INT_MIN || defaultSpacing != INT_MIN;
     if (defaultMargin == INT_MIN)
         defaultMargin = style->pixelMetric(QStyle::PM_DefaultChildMargin, 0);
     if (defaultSpacing == INT_MIN)
