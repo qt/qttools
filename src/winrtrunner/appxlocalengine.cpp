@@ -417,6 +417,26 @@ bool AppxLocalEngine::installPackage(IAppxManifestReader *reader, const QString 
     return SUCCEEDED(hr);
 }
 
+bool AppxLocalEngine::parseExitCode()
+{
+    Q_D(AppxLocalEngine);
+    const QString exitFileName(QStringLiteral("exitCode.tmp"));
+    bool ok = false;
+    QFile exitCodeFile(devicePath(QString::number(pid()).append(QStringLiteral(".pid"))));
+    if (exitCodeFile.open(QIODevice::ReadOnly)) {
+        d->exitCode = exitCodeFile.readAll().toInt(&ok);
+        exitCodeFile.close();
+        exitCodeFile.remove();
+    }
+    if (!ok && !GetExitCodeProcess(d->processHandle, &d->exitCode)) {
+        d->exitCode = UINT_MAX;
+        qCWarning(lcWinRtRunner).nospace() << "Failed to obtain process exit code.";
+        qCDebug(lcWinRtRunner, "GetLastError: 0x%x", GetLastError());
+        return false;
+    }
+    return true;
+}
+
 bool AppxLocalEngine::install(bool removeFirst)
 {
     Q_D(const AppxLocalEngine);
@@ -552,10 +572,7 @@ bool AppxLocalEngine::stop()
     if (!d->processHandle)
         qCDebug(lcWinRtRunner) << "No handle to the process; the exit code won't be available.";
 
-    if (d->processHandle && !GetExitCodeProcess(d->processHandle, &d->exitCode)) {
-        d->exitCode = UINT_MAX;
-        qCWarning(lcWinRtRunner).nospace() << "Failed to obtain process exit code.";
-        qCDebug(lcWinRtRunner, "GetLastError: 0x%x", GetLastError());
+    if (d->processHandle && !parseExitCode()) {
         return false;
     }
 
