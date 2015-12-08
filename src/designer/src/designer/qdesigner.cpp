@@ -150,7 +150,7 @@ QDesignerServer *QDesigner::server() const
     return m_server;
 }
 
-static void showHelp(QCommandLineParser &parser, const QString errorMessage = QString())
+static void showHelp(QCommandLineParser &parser, const QString &errorMessage = QString())
 {
     QString text;
     QTextStream str(&text);
