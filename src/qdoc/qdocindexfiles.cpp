@@ -147,9 +147,11 @@ void QDocIndexFiles::readIndexFile(const QString& path)
         indexUrl = installDir.relativeFilePath(path).section('/', 0, -2);
     }
     project_ = attrs.value(QLatin1String("project")).toString();
+    QString indexTitle = attrs.value(QLatin1String("indexTitle")).toString();
     basesList_.clear();
 
     NamespaceNode* root = qdb_->newIndexTree(project_);
+    root->tree()->setIndexTitle(indexTitle);
 
     // Scan all elements in the XML file, constructing a map that contains
     // base classes for each class found.
@@ -1619,6 +1621,9 @@ void QDocIndexFiles::generateIndex(const QString& fileName,
     writer.writeAttribute("project", g->config()->getString(CONFIG_PROJECT));
 
     top = qdb_->primaryTreeRoot();
+    if (!top->tree()->indexTitle().isEmpty())
+        writer.writeAttribute("indexTitle", top->tree()->indexTitle());
+
     generateIndexSections(writer, top, generateInternalNodes);
 
     writer.writeEndElement(); // INDEX

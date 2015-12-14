@@ -227,6 +227,8 @@ class Tree
     long incrementLinkCount() { return --linkCount_; }
     void clearLinkCount() { linkCount_ = 0; }
     long linkCount() const { return linkCount_; }
+    const QString& indexTitle() const { return indexTitle_; }
+    void setIndexTitle(const QString &t) { indexTitle_ = t; }
 
 private:
     bool treeHasBeenAnalyzed_;
@@ -235,6 +237,7 @@ private:
     QString camelCaseModuleName_;
     QString physicalModuleName_;
     QString indexFileName_;
+    QString indexTitle_;
     QDocDatabase* qdb_;
     NamespaceNode root_;
     PropertyMap unresolvedPropertyMap;

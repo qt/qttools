@@ -913,7 +913,7 @@ NodeMultiMap& QDocDatabase::getQmlBasicTypes()
 }
 
 /*!
-  Construct the data structures for obsolete things, if they
+  Construct the data structures for QML types, if they
   have not already been constructed. Returns a reference to
   the multimap of QML types.
  */
@@ -922,6 +922,18 @@ NodeMultiMap& QDocDatabase::getQmlTypes()
     if (cppClasses_.isEmpty() && qmlTypes_.isEmpty())
         processForest(&QDocDatabase::findAllClasses);
     return qmlTypes_;
+}
+
+/*!
+  Construct the data structures for examples, if they
+  have not already been constructed. Returns a reference to
+  the multimap of example nodes.
+ */
+NodeMultiMap& QDocDatabase::getExamples()
+{
+    if (cppClasses_.isEmpty() && examples_.isEmpty())
+        processForest(&QDocDatabase::findAllClasses);
+    return examples_;
 }
 
 /*!
@@ -978,6 +990,10 @@ void QDocDatabase::findAllClasses(Aggregate* node)
                 //also add to the QML basic type map
                 if ((*c)->isQmlBasicType() || (*c)->isJsBasicType())
                     qmlBasicTypes_.insert(qmlTypeName,*c);
+            }
+            else if ((*c)->isExample()) {
+                // use the module index title as key for the example map
+                examples_.insert((*c)->tree()->indexTitle(), *c);
             }
             else if ((*c)->isAggregate()) {
                 findAllClasses(static_cast<Aggregate*>(*c));

@@ -3396,6 +3396,18 @@
     command. The annotation for the class is taken from the argument
     of the class comment's \l {brief-command} {\\brief} command.
 
+    \section2 \c annotatedexamples
+
+    The \c annotatedexamples argument provides a complete list of all
+    examples as a set of tables containing the titles of all the
+    examples, and a description of each example. Each title is a
+    link to the example's documentation.
+
+    A separate table for each module (that has documented examples)
+    is generated, provided that the module has defined a
+    navigation.landingpage configuration variable. The \e landingpage
+    variable is used as a title for a header that precedes each table.
+
     \target list example
     \section2 \c {classes <prefix>}
 

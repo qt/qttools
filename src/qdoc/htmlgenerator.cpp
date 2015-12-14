@@ -679,6 +679,9 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
         if (atom->string() == QLatin1String("annotatedclasses")) {
             generateAnnotatedList(relative, marker, qdb_->getCppClasses());
         }
+        else if (atom->string() == QLatin1String("annotatedexamples")) {
+            generateAnnotatedLists(relative, marker, qdb_->getExamples());
+        }
         else if (atom->string() == QLatin1String("classes")) {
             generateCompactList(Generic, relative, qdb_->getCppClasses(), true, QStringLiteral(""));
         }
@@ -2901,6 +2904,23 @@ void HtmlGenerator::generateAnnotatedList(const Node *relative,
         out() << "</tr>\n";
     }
     out() << "</table></div>\n";
+}
+
+/*!
+  Outputs a series of annotated lists from the nodes in \a nmm,
+  divided into sections based by the key names in the multimap.
+ */
+void HtmlGenerator::generateAnnotatedLists(const Node* relative,
+                                          CodeMarker* marker,
+                                          const NodeMultiMap& nmm)
+{
+    foreach (const QString &name, nmm.uniqueKeys()) {
+        if (!name.isEmpty()) {
+            out() << "<h2 id=\"" << registerRef(name.toLower())
+                  << "\">" << protectEnc(name) << "</h2>\n";
+        }
+        generateAnnotatedList(relative, marker, nmm.values(name));
+    }
 }
 
 /*!

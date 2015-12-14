@@ -72,6 +72,6 @@ mac {
     QMAKE_BUNDLE_DATA += FILETYPES
 }
 
-unix:!mac:LIBS += -lm
+unix:!osx:!haiku:LIBS += -lm
 
 load(qt_app)
