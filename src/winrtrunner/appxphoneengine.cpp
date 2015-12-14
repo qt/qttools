@@ -488,13 +488,13 @@ bool AppxPhoneEngine::waitForFinished(int secs)
 
 bool AppxPhoneEngine::stop()
 {
-    Q_D(AppxPhoneEngine);
     qCDebug(lcWinRtRunner) << __FUNCTION__;
 
     if (!connect())
         return false;
 
 #if 0 // This does not actually stop the app - QTBUG-41946
+    Q_D(AppxPhoneEngine);
     ComPtr<ICcConnection3> connection;
     HRESULT hr = d->connection.As(&connection);
     RETURN_FALSE_IF_FAILED("Failed to cast connection object");
