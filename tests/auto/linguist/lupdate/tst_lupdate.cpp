@@ -288,8 +288,10 @@ void tst_lupdate::good()
     QProcess proc;
     proc.setWorkingDirectory(workDir);
     proc.setProcessChannelMode(QProcess::MergedChannels);
-    proc.start(m_cmdLupdate + ' ' + lupdatecmd, QIODevice::ReadWrite | QIODevice::Text);
-    QVERIFY2(proc.waitForFinished(30000), qPrintable(lupdatecmd));
+    const QString command = m_cmdLupdate + QLatin1Char(' ') + lupdatecmd;
+    proc.start(command, QIODevice::ReadWrite | QIODevice::Text);
+    QVERIFY2(proc.waitForStarted(), qPrintable(command + QLatin1String(" :") + proc.errorString()));
+    QVERIFY2(proc.waitForFinished(30000), qPrintable(command));
     QByteArray output = proc.readAll();
     QVERIFY2(proc.exitStatus() == QProcess::NormalExit,
              "\"lupdate " + lupdatecmd.toLatin1() + "\" crashed\n" + output);
