@@ -847,7 +847,8 @@
     The \c lupdate tool extracts user interface strings from your application.
     It reads the application .pro file to identify which source files
     contain text to be translated. This means your source files must be listed
-    in the \c SOURCES or \c HEADERS entry in the .pro file. If your files are
+    in the \c SOURCES or \c HEADERS entry in the .pro file, or in resource
+    files listed in the \c RESOURCE entry. If your files are
     not listed, the text in them will not be found.
 
     An example of a complete \c .pro file with four translation source
@@ -869,37 +870,6 @@
     portably using escape sequences, for example:
 
     \snippet doc_src_linguist-manual.cpp 3
-
-    \section2 Use a Conditional to Hide QML Source From the Compiler
-
-    The SOURCES variable is intended for C++ source files. If you list QML
-    or JavaScript source files there, the compiler tries to build them as though
-    they are C++ files. As a workaround, you can use an \c lupdate_only{...}
-    conditional statement so the \c lupdate tool sees the .qml files but the C++
-    compiler ignores them.
-
-    For example, the following .pro file snippet specifies two .qml files in
-    the application:
-
-    \code
-    lupdate_only {
-    SOURCES = main.qml \
-              MainPage.qml
-    }
-    \endcode
-
-    You can also specify the .qml source files with a wildcard match. The
-    search is not recursive so you need to specify each directory where there
-    are user interface strings in the source code:
-
-    \code
-    lupdate_only {
-    SOURCES = *.qml \
-              *.js \
-              content/*.qml \
-              content/*.js
-    }
-    \endcode
 
     \section1 Internationalizing Applications
 

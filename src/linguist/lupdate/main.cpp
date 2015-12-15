@@ -49,6 +49,7 @@
 #include <QtCore/QStringList>
 #include <QtCore/QTranslator>
 #include <QtCore/QLibraryInfo>
+#include <QtCore/QXmlStreamReader>
 
 #include <iostream>
 
@@ -395,6 +396,73 @@ public:
 
 static EvalHandler evalHandler;
 
+static bool isSupportedExtension(const QString &ext)
+{
+    return ext == QLatin1String("qml")
+        || ext == QLatin1String("js") || ext == QLatin1String("qs")
+        || ext == QLatin1String("ui") || ext == QLatin1String("jui");
+}
+
+static QStringList getResources(const QString &resourceFile, QMakeVfs *vfs)
+{
+    Q_ASSERT(vfs);
+    if (!vfs->exists(resourceFile))
+        return QStringList();
+    QString content;
+    QString errStr;
+    if (!vfs->readFile(resourceFile, &content, &errStr)) {
+        printErr(LU::tr("lupdate error: Can not read %1: %2\n").arg(resourceFile, errStr));
+        return QStringList();
+    }
+    QStringList fileList;
+    QString dirPath = QFileInfo(resourceFile).path();
+    QXmlStreamReader reader(content);
+    bool isFileTag = false;
+    QStringList tagStack;
+    tagStack << QLatin1String("RCC") << QLatin1String("qresource") << QLatin1String("file");
+    int curDepth = 0;
+    while (!reader.atEnd()) {
+        QXmlStreamReader::TokenType t = reader.readNext();
+        switch (t) {
+        case QXmlStreamReader::StartElement:
+            if (curDepth >= tagStack.count() || reader.name() != tagStack.at(curDepth)) {
+                printErr(LU::tr("unexpected <%1> tag\n").arg(reader.name().toString()));
+                continue;
+            }
+            if (++curDepth == tagStack.count())
+                isFileTag = true;
+            break;
+
+        case QXmlStreamReader::EndElement:
+            isFileTag = false;
+            if (curDepth == 0 || reader.name() != tagStack.at(curDepth - 1)) {
+                printErr(LU::tr("unexpected closing <%1> tag\n").arg(reader.name().toString()));
+                continue;
+            }
+            --curDepth;
+            break;
+
+        case QXmlStreamReader::Characters:
+            if (isFileTag) {
+                QString fn = reader.text().toString();
+                if (!QFileInfo(fn).isAbsolute())
+                    fn = dirPath + QLatin1Char('/') + fn;
+                QFileInfo cfi(fn);
+                if (isSupportedExtension(cfi.suffix()))
+                    fileList << cfi.filePath();
+            }
+            break;
+
+        default:
+            break;
+        }
+    }
+    if (reader.error() != QXmlStreamReader::NoError)
+        printErr(LU::tr("lupdate error: %1:%2: %3\n")
+                 .arg(resourceFile, QString::number(reader.lineNumber()), reader.errorString()));
+    return fileList;
+}
+
 static QStringList getSources(const char *var, const char *vvar, const QStringList &baseVPaths,
                               const QString &projectDir, const ProFileEvaluator &visitor)
 {
@@ -405,7 +473,7 @@ static QStringList getSources(const char *var, const char *vvar, const QStringLi
 }
 
 static QStringList getSources(const ProFileEvaluator &visitor, const QString &projectDir,
-                              const QStringList &excludes)
+                              const QStringList &excludes, QMakeVfs *vfs)
 {
     QStringList baseVPaths;
     baseVPaths += visitor.absolutePathValues(QLatin1String("VPATH"), projectDir);
@@ -419,6 +487,10 @@ static QStringList getSources(const ProFileEvaluator &visitor, const QString &pr
     sourceFiles += getSources("HEADERS", "VPATH_HEADERS", baseVPaths, projectDir, visitor);
 
     sourceFiles += getSources("FORMS", "VPATH_FORMS", baseVPaths, projectDir, visitor);
+
+    QStringList resourceFiles = getSources("RESOURCES", "VPATH_RESOURCES", baseVPaths, projectDir, visitor);
+    foreach (const QString &resource, resourceFiles)
+        sourceFiles += getResources(resource, vfs);
 
     QStringList installs = visitor.values(QLatin1String("INSTALLS"))
                          + visitor.values(QLatin1String("DEPLOYMENT"));
@@ -445,12 +517,8 @@ static QStringList getSources(const ProFileEvaluator &visitor, const QString &pr
             while (iterator.hasNext()) {
                 iterator.next();
                 QFileInfo cfi = iterator.fileInfo();
-                QString ext = cfi.suffix();
-                if (ext == QLatin1String("qml")
-                    || ext == QLatin1String("js") || ext == QLatin1String("qs")
-                    || ext == QLatin1String("ui") || ext == QLatin1String("jui")) {
+                if (isSupportedExtension(cfi.suffix()))
                     sourceFiles << cfi.filePath();
-                }
             }
         }
     }
@@ -612,7 +680,7 @@ static void processProject(
         cd.m_sourceIsUtf16 = options & SourceIsUtf16;
         cd.m_includePath = visitor.absolutePathValues(QLatin1String("INCLUDEPATH"), proPath);
         cd.m_excludes = getExcludes(visitor, proPath);
-        QStringList sourceFiles = getSources(visitor, proPath, cd.m_excludes);
+        QStringList sourceFiles = getSources(visitor, proPath, cd.m_excludes, vfs);
         QSet<QString> sourceDirs;
         sourceDirs.insert(proPath + QLatin1Char('/'));
         foreach (const QString &sf, sourceFiles)
@@ -723,7 +791,7 @@ int main(int argc, char **argv)
 #endif // Q_OS_WIN32
 #endif
 
-    m_defaultExtensions = QLatin1String("java,jui,ui,c,c++,cc,cpp,cxx,ch,h,h++,hh,hpp,hxx,js,qs,qml");
+    m_defaultExtensions = QLatin1String("java,jui,ui,c,c++,cc,cpp,cxx,ch,h,h++,hh,hpp,hxx,js,qs,qml,qrc");
 
     QStringList args = app.arguments();
     QStringList tsFileNames;
@@ -733,6 +801,7 @@ int main(int argc, char **argv)
     QMultiHash<QString, QString> allCSources;
     QSet<QString> projectRoots;
     QStringList sourceFiles;
+    QStringList resourceFiles;
     QStringList includePath;
     QStringList alienFiles;
     QString targetLanguage;
@@ -986,25 +1055,33 @@ int main(int argc, char **argv)
                     int scanRootLen = dir.absolutePath().length();
                     foreach (const QFileInfo &fi, fileinfolist) {
                         QString fn = QDir::cleanPath(fi.absoluteFilePath());
-                        sourceFiles << fn;
+                        if (fn.endsWith(QLatin1String(".qrc"), Qt::CaseInsensitive)) {
+                            resourceFiles << fn;
+                        } else {
+                            sourceFiles << fn;
 
-                        if (!fn.endsWith(QLatin1String(".java"))
-                            && !fn.endsWith(QLatin1String(".jui"))
-                            && !fn.endsWith(QLatin1String(".ui"))
-                            && !fn.endsWith(QLatin1String(".js"))
-                            && !fn.endsWith(QLatin1String(".qs"))
-                            && !fn.endsWith(QLatin1String(".qml"))) {
-                            int offset = 0;
-                            int depth = 0;
-                            do {
-                                offset = fn.lastIndexOf(QLatin1Char('/'), offset - 1);
-                                QString ffn = fn.mid(offset + 1);
-                                allCSources.insert(ffn, fn);
-                            } while (++depth < 3 && offset > scanRootLen);
+                            if (!fn.endsWith(QLatin1String(".java"))
+                                    && !fn.endsWith(QLatin1String(".jui"))
+                                    && !fn.endsWith(QLatin1String(".ui"))
+                                    && !fn.endsWith(QLatin1String(".js"))
+                                    && !fn.endsWith(QLatin1String(".qs"))
+                                    && !fn.endsWith(QLatin1String(".qml"))) {
+                                int offset = 0;
+                                int depth = 0;
+                                do {
+                                    offset = fn.lastIndexOf(QLatin1Char('/'), offset - 1);
+                                    QString ffn = fn.mid(offset + 1);
+                                    allCSources.insert(ffn, fn);
+                                } while (++depth < 3 && offset > scanRootLen);
+                            }
                         }
                     }
                 } else {
-                    sourceFiles << QDir::cleanPath(fi.absoluteFilePath());;
+                    QString fn = QDir::cleanPath(fi.absoluteFilePath());
+                    if (fn.endsWith(QLatin1String(".qrc"), Qt::CaseInsensitive))
+                        resourceFiles << fn;
+                    else
+                        sourceFiles << fn;
                     projectRoots.insert(fi.absolutePath() + QLatin1Char('/'));
                 }
             }
@@ -1034,11 +1111,16 @@ int main(int argc, char **argv)
         cd.m_projectRoots = projectRoots;
         cd.m_includePath = includePath;
         cd.m_allCSources = allCSources;
+        if (!resourceFiles.isEmpty()) {
+            QMakeVfs vfs;
+            foreach (const QString &resource, resourceFiles)
+                sourceFiles << getResources(resource, &vfs);
+        }
         processSources(fetchedTor, sourceFiles, cd);
         updateTsFiles(fetchedTor, tsFileNames, alienFiles,
                       sourceLanguage, targetLanguage, options, &fail);
     } else {
-        if (!sourceFiles.isEmpty() || !includePath.isEmpty()) {
+        if (!sourceFiles.isEmpty() || !resourceFiles.isEmpty() || !includePath.isEmpty()) {
             printErr(LU::tr("lupdate error:"
                             " Both project and source files / include paths specified.\n"));
             return 1;
