@@ -1729,18 +1729,14 @@
     The text following the file name is the unique identifier for the
     snippet. This is used to delimit the quoted code in the relevant
     snippet file, as shown in the following example that corresponds to
-    the above \c{\\snippet} command:
+    the above \c{\snippet} command:
 
+           \quotefromfile snippets/textdocument-resources/main.cpp
+           \skipto QImage::Format_RGB32
            \dots
-           \code
-               QImage image(64, 64, QImage::Format_RGB32);
-               image.fill(qRgb(255, 160, 128));
-
-           //! [Adding a resource]
-               document->addResource(QTextDocument::ImageResource,
-                   QUrl("mydata://image.png"), QVariant(image));
-           //! [Adding a resource]
-           \endcode
+           \codeline
+           \printuntil QTextDocument::ImageResource
+           \printuntil Adding a resource
            \dots
 
     \target codeline-command
