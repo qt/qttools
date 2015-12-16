@@ -240,7 +240,7 @@
     But now QDoc doesn't need to re-parse each module's source files,
     because the module's syntax tree is still in memory. Nor does QDoc
     need to re-read the index files for the dependent modules, again
-    because it still has the syntax trees for those modules in memry.
+    because it still has the syntax trees for those modules in memory.
     It remains only to traverse each module's syntax tree to generate
     the documentation pages.
 
