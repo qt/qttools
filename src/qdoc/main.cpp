@@ -149,10 +149,10 @@ static void loadIndexFiles(Config& config)
                 for (int j = 0; j < indexDirs.size(); j++) {
                     QString fileToLookFor = indexDirs[j] + QLatin1Char('/');
                     if (noOutputSubdirs)
-                        fileToLookFor += singleOutputSubdir + QLatin1Char('/');
+                        fileToLookFor += singleOutputSubdir;
                     else
-                        fileToLookFor += dependModules[i] + QLatin1Char('/');
-                    fileToLookFor += dependModules[i] + QLatin1String(".index");
+                        fileToLookFor += dependModules[i];
+                    fileToLookFor += QLatin1Char('/') + dependModules[i] + QLatin1String(".index");
                     if (QFile::exists(fileToLookFor)) {
                         QFileInfo tempFileInfo(fileToLookFor);
                         if (!foundIndices.contains(tempFileInfo))
