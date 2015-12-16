@@ -619,8 +619,8 @@ class QmlTypeNode : public Aggregate
 public:
     QmlTypeNode(Aggregate* parent, const QString& name);
     virtual ~QmlTypeNode();
-    virtual bool isQmlType() const Q_DECL_OVERRIDE { return genus() == Node::QML; }
-    virtual bool isJsType() const Q_DECL_OVERRIDE { return genus() == Node::JS; }
+    virtual bool isQmlType() const Q_DECL_OVERRIDE { return isQmlNode(); }
+    virtual bool isJsType() const Q_DECL_OVERRIDE { return isJsNode(); }
     virtual bool isQtQuickNode() const Q_DECL_OVERRIDE {
         return (logicalModuleName() == QLatin1String("QtQuick"));
     }
