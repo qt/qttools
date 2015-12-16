@@ -954,7 +954,7 @@
     formatting. The source code begins on a new line, rendered in the
     code.
 
-    \b{Note:} Although all these commands are for rendering C++
+    \b{Note:} Although most of these commands are for rendering C++
     code, the
     \l{07-0-qdoc-commands-includingexternalcode.html#snippet-command}
     {\\snippet} and
@@ -1144,7 +1144,7 @@
     others. The typical use of the latter is to quote a file chunk by
     chunk.
 
-    \b{Note:} Although all these commands are for rendering C++
+    \b{Note:} Although all these commands can be used for rendering C++
     code, the
     \l{07-0-qdoc-commands-includingexternalcode.html#snippet-command}
     {\\snippet} and
