@@ -753,12 +753,14 @@ int main(int argc, char **argv)
 {
     QT_USE_NAMESPACE
 
+    // Initialize Qt:
 #ifndef QT_BOOTSTRAPPED
     qt_qhash_seed.testAndSetRelaxed(-1, 0); // set the hash seed to 0 if it wasn't set yet
 #endif
     QCoreApplication app(argc, argv);
     app.setApplicationVersion(QLatin1String(QT_VERSION_STR));
 
+    // Instantiate various singletons (used via static methods):
     /*
       Create code parsers for the languages to be parsed,
       and create a tree for C++.
@@ -782,6 +784,7 @@ int main(int argc, char **argv)
     QDocCommandLineParser parser;
     parser.process(app);
 
+    // Get the list of files to act on:
     QStringList qdocFiles = parser.positionalArguments();
     if (qdocFiles.isEmpty())
         parser.showHelp();
@@ -789,9 +792,7 @@ int main(int argc, char **argv)
     if (singleExec)
         qdocFiles = Config::loadMaster(qdocFiles.at(0));
 
-    /*
-      Main loop is now modified to handle single exec mode.
-     */
+    // Main loop (adapted, when needed, to handle single exec mode):
     if (Generator::singleExec())
         Generator::setQDocPass(Generator::Prepare);
     foreach (const QString &qf, qdocFiles) {
@@ -808,6 +809,7 @@ int main(int argc, char **argv)
         }
     }
 
+    // Tidy everything away:
 #ifndef QT_NO_TRANSLATION
     if (!translators.isEmpty()) {
         for (int i=0; i<translators.size(); ++i) {
