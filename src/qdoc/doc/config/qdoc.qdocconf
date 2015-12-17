@@ -7,10 +7,12 @@ version          = $QT_VERSION
 sourcedirs = ..
 
 exampledirs = .. \
-              ../examples
+              ../examples \
+              ../../../../../qtbase/src/gui/doc/
 
 imagedirs = ../images \
-            ../../../../widgets/doc/images
+            ../../../../widgets/doc/images \
+            ../../../../../qtbase/src/widgets/doc/images/
 #            ../../../doc/src/templates/images
 
 tagfile = ../html/qdoc.tags
