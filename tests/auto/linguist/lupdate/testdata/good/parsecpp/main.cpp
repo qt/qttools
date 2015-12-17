@@ -410,3 +410,40 @@ int dupeFail()
     // Finally, same source, but without ID.
     QCoreApplication::translate("", "This is the source");
 }
+
+
+
+// QTBUG-42735: lupdate confused by `final` specifier (C++11)
+namespace Abc {
+
+class NamespacedFinalClass;
+
+}
+
+class FinalClass final : public QObject
+{
+    Q_OBJECT
+
+    class SubClass final
+    {
+        void f()
+        {
+            tr("nested class context with final");
+        }
+    };
+
+    void f()
+    {
+        tr("class context with final");
+    }
+};
+
+class Abc::NamespacedFinalClass final : public QObject
+{
+    Q_OBJECT
+
+    void f()
+    {
+        tr("namespaced class with final");
+    }
+};

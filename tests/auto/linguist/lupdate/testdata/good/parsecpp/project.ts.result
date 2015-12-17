@@ -33,6 +33,14 @@ backslashed \ stuff.</source>
     </message>
 </context>
 <context>
+    <name>Abc::NamespacedFinalClass</name>
+    <message>
+        <location filename="main.cpp" line="447"/>
+        <source>namespaced class with final</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>Bogus</name>
     <message>
         <location filename="main.cpp" line="258"/>
@@ -113,6 +121,19 @@ backslashed \ stuff.</source>
     <message>
         <location filename="main.cpp" line="135"/>
         <source>func3</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>FinalClass</name>
+    <message>
+        <location filename="main.cpp" line="431"/>
+        <source>nested class context with final</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="437"/>
+        <source>class context with final</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

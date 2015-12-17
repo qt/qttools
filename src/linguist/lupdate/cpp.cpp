@@ -456,6 +456,7 @@ int CppParser::getChar()
 
 STRING(Q_OBJECT);
 STRING(class);
+STRING(final);
 STRING(friend);
 STRING(namespace);
 STRING(operator);
@@ -1817,6 +1818,12 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                         quali << fct;
                         yyTok = getToken();
                     } else if (yyTok == Tok_Ident) {
+                        if (yyWord == strfinal) {
+                            // C++11: final may appear immediately after the name of the class
+                            yyTok = getToken();
+                            break;
+                        }
+
                         // Handle impure definitions such as 'class Q_EXPORT QMessageBox', in
                         // which case 'QMessageBox' is the class name, not 'Q_EXPORT', by
                         // abandoning any qualification collected so far.
