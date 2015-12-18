@@ -186,18 +186,18 @@ static bool releaseTsFile(const QString& tsFileName,
 static void print(const QString &fileName, int lineNo, const QString &msg)
 {
     if (lineNo > 0)
-        printErr(QString::fromLatin1("%1:%2: %3\n").arg(fileName, QString::number(lineNo), msg));
+        printErr(QString::fromLatin1("WARNING: %1:%2: %3\n").arg(fileName, QString::number(lineNo), msg));
     else if (lineNo)
-        printErr(QString::fromLatin1("%1: %2\n").arg(fileName, msg));
+        printErr(QString::fromLatin1("WARNING: %1: %2\n").arg(fileName, msg));
     else
-        printErr(QString::fromLatin1("%1\n").arg(msg));
+        printErr(QString::fromLatin1("WARNING: %1\n").arg(msg));
 }
 
 class EvalHandler : public QMakeHandler {
 public:
     virtual void message(int type, const QString &msg, const QString &fileName, int lineNo)
     {
-        if (verbose && (type & CategoryMask) == ErrorMessage)
+        if (verbose && !(type & CumulativeEvalMessage) && (type & CategoryMask) == ErrorMessage)
             print(fileName, lineNo, msg);
     }
 

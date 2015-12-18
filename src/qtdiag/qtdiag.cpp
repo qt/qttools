@@ -403,6 +403,7 @@ QString qtDiag(unsigned flags)
     DUMP_CAPABILITY(str, platformIntegration, RasterGLSurface)
     DUMP_CAPABILITY(str, platformIntegration, AllGLFunctionsQueryable)
     DUMP_CAPABILITY(str, platformIntegration, ApplicationIcon)
+    DUMP_CAPABILITY(str, platformIntegration, SwitchableWidgetComposition)
     str << '\n';
 
     const QStyleHints *styleHints = QGuiApplication::styleHints();
@@ -416,6 +417,7 @@ QString qtDiag(unsigned flags)
         << "  keyboardAutoRepeatRate: " << styleHints->keyboardAutoRepeatRate() << '\n'
         << "  cursorFlashTime: " << styleHints->cursorFlashTime() << '\n'
         << "  showIsFullScreen: " << styleHints->showIsFullScreen() << '\n'
+        << "  showIsMaximized: " << styleHints->showIsMaximized() << '\n'
         << "  passwordMaskDelay: " << styleHints->passwordMaskDelay() << '\n'
         << "  passwordMaskCharacter: ";
     if (passwordMaskCharacter.unicode() >= 32 && passwordMaskCharacter.unicode() < 128)
@@ -429,8 +431,6 @@ QString qtDiag(unsigned flags)
         << "  tabFocusBehavior: " << formatQDebug(styleHints->tabFocusBehavior()) << '\n'
         << "  singleClickActivation: " << styleHints->singleClickActivation() << '\n';
     str << "\nAdditional style hints (QPlatformIntegration):\n"
-        << "  ShowIsMaximized: "
-        << platformIntegration->styleHint(QPlatformIntegration::ShowIsMaximized).toBool() << '\n'
         << "  ReplayMousePressOutsidePopup: "
         << platformIntegration->styleHint(QPlatformIntegration::ReplayMousePressOutsidePopup).toBool() << '\n';
 

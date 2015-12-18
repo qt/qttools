@@ -199,7 +199,8 @@ static void printUsage()
         "           May be specified multiple times.\n"
         "    -locations {absolute|relative|none}\n"
         "           Specify/override how source code references are saved in TS files.\n"
-        "           Default is absolute.\n"
+        "           Guessed from existing TS files if not specified.\n"
+        "           Default is absolute for new files.\n"
         "    -no-ui-lines\n"
         "           Do not record line numbers in references to UI files.\n"
         "    -disable-heuristic {sametext|similartext|number}\n"
@@ -363,19 +364,18 @@ static void updateTsFiles(const Translator &fetchedTor, const QStringList &tsFil
 static void print(const QString &fileName, int lineNo, const QString &msg)
 {
     if (lineNo > 0)
-        printErr(QString::fromLatin1("%1:%2: %3\n").arg(fileName, QString::number(lineNo), msg));
+        printErr(QString::fromLatin1("WARNING: %1:%2: %3\n").arg(fileName, QString::number(lineNo), msg));
     else if (lineNo)
-        printErr(QString::fromLatin1("%1: %2\n").arg(fileName, msg));
+        printErr(QString::fromLatin1("WARNING: %1: %2\n").arg(fileName, msg));
     else
-        printErr(QString::fromLatin1("%1\n").arg(msg));
+        printErr(QString::fromLatin1("WARNING: %1\n").arg(msg));
 }
-
 
 class EvalHandler : public QMakeHandler {
 public:
     virtual void message(int type, const QString &msg, const QString &fileName, int lineNo)
     {
-        if (verbose && (type & CategoryMask) == ErrorMessage)
+        if (verbose && !(type & CumulativeEvalMessage) && (type & CategoryMask) == ErrorMessage)
             print(fileName, lineNo, msg);
     }
 
