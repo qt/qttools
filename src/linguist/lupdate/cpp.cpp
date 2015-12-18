@@ -1805,28 +1805,27 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
             if (yyBraceDepth == namespaceDepths.count() && yyParenDepth == 0) {
                 NamespaceList quali;
                 HashString fct;
-                do {
-                    /*
-                      This code should execute only once, but we play
-                      safe with impure definitions such as
-                      'class Q_EXPORT QMessageBox', in which case
-                      'QMessageBox' is the class name, not 'Q_EXPORT'.
-                    */
+
+                // Find class name including qualification
+                forever {
                     text = yyWord;
                     text.detach();
                     fct.setValue(text);
                     yyTok = getToken();
-                } while (yyTok == Tok_Ident);
-                while (yyTok == Tok_ColonColon) {
-                    yyTok = getToken();
-                    if (yyTok != Tok_Ident)
-                        break; // Oops ...
-                    quali << fct;
-                    text = yyWord;
-                    text.detach();
-                    fct.setValue(text);
-                    yyTok = getToken();
+
+                    if (yyTok == Tok_ColonColon) {
+                        quali << fct;
+                        yyTok = getToken();
+                    } else if (yyTok == Tok_Ident) {
+                        // Handle impure definitions such as 'class Q_EXPORT QMessageBox', in
+                        // which case 'QMessageBox' is the class name, not 'Q_EXPORT', by
+                        // abandoning any qualification collected so far.
+                        quali.clear();
+                    } else {
+                        break;
+                    }
                 }
+
                 if (yyTok == Tok_Colon) {
                     // Skip any token until '{' since we might do things wrong if we find
                     // a '::' token here.
