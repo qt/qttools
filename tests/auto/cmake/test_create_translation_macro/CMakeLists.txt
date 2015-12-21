@@ -17,7 +17,7 @@ set(my_srcs myi18nobject.cpp)
 
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/some_dir")
 
-qt5_create_translation(qm_files ${my_srcs} myobject_de.ts)
+qt5_create_translation(qm_files ${my_srcs} myobject_de.ts OPTIONS -pro-debug) # play around with OPTIONS
 
 add_executable(myobject ${my_srcs} ${qm_files})
 target_link_libraries(myobject ${Qt5Core_LIBRARIES})
