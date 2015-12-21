@@ -1,7 +1,6 @@
-
 cmake_minimum_required(VERSION 2.8)
 
-project(test_translation_macros)
+project(test_create_translation_macros)
 
 find_package(Qt5Core 5.0.0 REQUIRED)
 find_package(Qt5LinguistTools 5.0.0 REQUIRED)

@@ -30,7 +30,8 @@ find_package(Qt5Core REQUIRED)
 include("${_Qt5CTestMacros}")
 
 if(NOT CMAKE_CROSSCOMPILING)
-    expect_pass(test_translation_macros)
+    expect_pass(test_create_translation_macro)
+    expect_pass(test_add_translation_macro)
 endif()
 
 if (NOT NO_WIDGETS)
