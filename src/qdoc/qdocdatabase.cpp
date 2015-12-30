@@ -1460,21 +1460,21 @@ void QDocDatabase::resolveQmlInheritance(Aggregate* root)
             QmlTypeNode* qcn = static_cast<QmlTypeNode*>(child);
             if (qcn->qmlBaseNodeNotSet() && !qcn->qmlBaseName().isEmpty()) {
                 QmlTypeNode* bqcn = static_cast<QmlTypeNode*>(previousSearches.value(qcn->qmlBaseName()));
-                if (bqcn)
+                if (bqcn && (bqcn != qcn))
                     qcn->setQmlBaseNode(bqcn);
                 else {
                     if (!qcn->importList().isEmpty()) {
                         const ImportList& imports = qcn->importList();
                         for (int i=0; i<imports.size(); ++i) {
                             bqcn = findQmlType(imports[i], qcn->qmlBaseName());
-                            if (bqcn)
+                            if (bqcn && (bqcn != qcn))
                                 break;
                         }
                     }
                     if (bqcn == 0) {
                         bqcn = findQmlType(QString(), qcn->qmlBaseName());
                     }
-                    if (bqcn) {
+                    if (bqcn && (bqcn != qcn)) {
                         qcn->setQmlBaseNode(bqcn);
                         previousSearches.insert(qcn->qmlBaseName(), bqcn);
                     }

@@ -1306,6 +1306,12 @@ QList<Section> CppCodeMarker::qmlSections(QmlTypeNode* qmlTypeNode, SynopsisStyl
                     }
                     ++c;
                 }
+                if (current->qmlBaseNode() == current) {
+                    qDebug() << "qdoc internal error: circular type definition."
+                             << "QML type" << current->name()
+                             << "can't be its own base type";
+                    break;
+                }
                 current = current->qmlBaseNode();
                 while (current) {
                     if (current->isAbstract())
