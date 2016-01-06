@@ -1311,15 +1311,14 @@
 
     \code
     / *!
-    \qmlsignal UIComponents::Button::clicked()
-    This signal is emitted when the user clicks the button. A click is defined
-    as a press followed by a release. The corresponding handler is
-    \c onClicked.
+    \qmlsignal QtQuick::MouseArea::clicked(MouseEvent mouse)
+    This signal is emitted when there is a click. A click is defined as a
+    press followed by a release, both inside the MouseArea.
     * /
     \endcode
 
     QDoc includes this documentation on the QML reference page for the
-    \l{http://qt-project.org/doc/qt-4.7/qml-mousearea.html#onEntered-signal}
+    \l{http://doc.qt.io/qt-5/qml-qtquick-mousearea.html#clicked-signal}
     {MouseArea} element.
 
     \target qmlmodule-command
