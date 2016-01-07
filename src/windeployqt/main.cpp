@@ -1371,7 +1371,6 @@ static DeployResult deploy(const Options &options,
                 if (optVerboseLevel)
                     std::wcout << "Creating directory " << targetDirName << ".\n";
                 if (!(options.updateFileFlags & SkipUpdateFile) && !dir.mkdir(targetDirName)) {
-                    std::wcerr << "Cannot create " << targetDirName << ".\n";
                     *errorMessage = QStringLiteral("Cannot create ") + targetDirName +  QLatin1Char('.');
                     return result;
                 }
