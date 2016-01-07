@@ -398,8 +398,6 @@ static void bringToFront(const TranslatableEntry &target)
 {
     for (QObject *obj = target.target.object; obj != 0; obj = obj->parent()) {
         if (QWidget *w = qobject_cast<QWidget *>(obj)) {
-            if (QStackedLayout *lay = qobject_cast<QStackedLayout *>(w->layout()))
-                lay->setCurrentWidget(w);
 #ifndef QT_NO_STACKEDWIDGET
             if (QStackedWidget *stack = qobject_cast<QStackedWidget *>(obj->parent()))
                 stack->setCurrentWidget(w);
