@@ -1062,7 +1062,7 @@
 
     The \\qmlattachedproperty command is for documenting a QML
     property that will be attached to some QML type. See
-    \l{http://qt-project.org/doc/qt-4.7/qdeclarativeintroduction.html#attached-properties}
+    \l{http://doc.qt.io/qt-5/qtqml-syntax-objectattributes.html#attached-properties-and-attached-signal-handlers}
     {Attached Properties}. The argument is the rest of the line. The
     argument text should be the property type, followed by the QML
     element name where the property is being declared, the \c{::}
@@ -1087,7 +1087,7 @@
     \endcode
 
     QDoc includes this attached property on the QML reference page for the
-    \l{http://qt-project.org/doc/qt-4.7/qml-listview.html#isCurrentItem-prop}
+    \l{http://doc.qt.io/qt-5/qml-qtquick-listview.html#isCurrentItem-attached-prop}
     {ListView} element.
 
     \target qmlattachedsignal-command
@@ -1121,10 +1121,10 @@
     QML basic types group using the \l{ingroup-command}{\\ingroup}
     command as shown below. This will cause QDoc to include the
     documentation for the type on the
-    \l{http://qt-project.org/doc/qt-4.7/qdeclarativebasictypes.html}
+    \l{http://doc.qt.io/qt-5/qtqml-typesystem-basictypes.html}
     {QML Basic Types} page. The \l{brief-command} {\\brief} command
     is also required, because it appears on the
-    \l{http://qt-project.org/doc/qt-4.7/qdeclarativebasictypes.html}
+    \l{http://doc.qt.io/qt-5/qtqml-typesystem-basictypes.html}
     {QML Basic Types} page as well.
 
     \code
@@ -1148,7 +1148,7 @@
     * /
     \endcode
 
-    QDoc outputs this as \l{http://qt-project.org/doc/qt-4.7/qml-int.html}
+    QDoc outputs this as \l{http://doc.qt.io/qt-5/qml-int.html}
     {qml-int.html}.
 
     \target qmlclass-command
@@ -1221,7 +1221,7 @@
     \endcode
 
     QDoc includes this documentation on the element reference page for the
-    \l{http://qt-project.org/doc/qt-4.7/qml-textinput.html#select-method}
+    \l{http://doc.qt.io/qt-5/qml-qtquick-textinput.html#select-method}
     {TextInput} element.
 
     \target qmltype-command
@@ -1293,7 +1293,7 @@
     \endcode
 
     QDoc includes this QML property on the QML reference page for the
-    \l {http://qt-project.org/doc/qt-4.7/qml-translate.html} {Translate}
+    \l {http://doc.qt.io/qt-5/qml-qtquick-translate.html} {Translate}
     element.
 
     If the QML property is of enumeration type, or it holds a bit-wise
