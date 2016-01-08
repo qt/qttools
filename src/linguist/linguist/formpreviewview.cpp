@@ -400,12 +400,16 @@ static void bringToFront(const TranslatableEntry &target)
     for (QObject *obj = target.target.object; obj != 0; obj = obj->parent()) {
         if (QWidget *w = qobject_cast<QWidget *>(obj)) {
 #ifndef QT_NO_STACKEDWIDGET
-            if (QStackedWidget *stack = qobject_cast<QStackedWidget *>(obj->parent()))
-                stack->setCurrentWidget(w);
-#endif
+            if (QStackedWidget *stack = qobject_cast<QStackedWidget *>(obj->parent())) {
 #ifndef QT_NO_TABWIDGET
-            if (QTabWidget *tab = qobject_cast<QTabWidget *>(obj->parent()))
-                tab->setCurrentWidget(w);
+                // Updating QTabWidget's embedded QStackedWidget does not update its
+                // QTabBar, so handle tab widgets explicitly.
+                if (QTabWidget *tab = qobject_cast<QTabWidget *>(stack->parent()))
+                    tab->setCurrentWidget(w);
+                else
+#endif
+                    stack->setCurrentWidget(w);
+            }
 #endif
 #ifndef QT_NO_TOOLBOX
             if (QScrollArea *sv = qobject_cast<QScrollArea *>(obj->parent()))
