@@ -1176,8 +1176,10 @@
     \row    \li \c class             \li Classes
     \row    \li \c qmltype           \li QML Types
     \row    \li \c qmlclass          \li Alias for \c qmltype.
-    \row    \li \c module            \li C++ Modules
-    \row    \li \c qmlmodule         \li QML Modules
+    \row    \li \c module[:name]     \li C++ modules or members of the module
+                                         with a specified name.
+    \row    \li \c qmlmodule[:name]  \li QML modules or members of the module
+                                         with a specified name.
     \row    \li \c doc[:subtype]     \li Documentation pages with a specified
                                          \c subtype. Multiple subtypes can be
                                          listed as a comma-separated list.
