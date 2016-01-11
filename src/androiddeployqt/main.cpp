@@ -2762,7 +2762,9 @@ bool copyGdbServer(const Options &options)
         fprintf(stdout, "Copying gdbserver into package.\n");
 
     QString architectureSubDirectory;
-    if (options.architecture.startsWith(QLatin1String("arm")))
+    if (options.architecture == QLatin1String("arm64-v8a"))
+        architectureSubDirectory = QLatin1String("android-arm64");
+    else if (options.architecture.startsWith(QLatin1String("arm")))
         architectureSubDirectory = QLatin1String("android-arm");
     else
         architectureSubDirectory = QLatin1String("android-") + options.architecture;
