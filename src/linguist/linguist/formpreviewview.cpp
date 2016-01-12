@@ -54,6 +54,7 @@
 #include <QtWidgets/QTabWidget>
 #include <QtWidgets/QToolBox>
 #include <QtWidgets/QTreeWidget>
+#include <QtWidgets/QScrollArea>
 
 QT_BEGIN_NAMESPACE
 
@@ -405,6 +406,11 @@ static void bringToFront(const TranslatableEntry &target)
 #ifndef QT_NO_TABWIDGET
             if (QTabWidget *tab = qobject_cast<QTabWidget *>(obj->parent()))
                 tab->setCurrentWidget(w);
+#endif
+#ifndef QT_NO_TOOLBOX
+            if (QScrollArea *sv = qobject_cast<QScrollArea *>(obj->parent()))
+                if (QToolBox *tb = qobject_cast<QToolBox *>(sv->parent()))
+                    tb->setCurrentWidget(w);
 #endif
         }
     }
