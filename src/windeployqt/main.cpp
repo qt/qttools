@@ -1476,10 +1476,8 @@ static bool deployWebEngineCore(const QMap<QString, QString> &qmakeVariables,
                                              "qtwebengine_resources_200p.pak"};
 
     std::wcout << "Deploying: " << webEngineProcessC << "...\n";
-    if (!deployWebProcess(qmakeVariables, webEngineProcessC, options, errorMessage)) {
-        std::wcerr << errorMessage << '\n';
+    if (!deployWebProcess(qmakeVariables, webEngineProcessC, options, errorMessage))
         return false;
-    }
     const QString resourcesSubDir = QStringLiteral("/resources");
     const QString resourcesSourceDir
         = qmakeVariables.value(QStringLiteral("QT_INSTALL_DATA")) + resourcesSubDir
@@ -1490,7 +1488,6 @@ static bool deployWebEngineCore(const QMap<QString, QString> &qmakeVariables,
     for (size_t i = 0; i < sizeof(installDataFiles)/sizeof(installDataFiles[0]); ++i) {
         if (!updateFile(resourcesSourceDir + QLatin1String(installDataFiles[i]),
                         resourcesTargetDir, options.updateFileFlags, options.json, errorMessage)) {
-            std::wcerr << errorMessage << '\n';
             return false;
         }
     }
