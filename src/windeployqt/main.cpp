@@ -1480,11 +1480,16 @@ static bool deployWebEngineCore(const QMap<QString, QString> &qmakeVariables,
         std::wcerr << errorMessage << '\n';
         return false;
     }
-    const QString installData
-        = qmakeVariables.value(QStringLiteral("QT_INSTALL_DATA")) + QLatin1Char('/');
+    const QString resourcesSubDir = QStringLiteral("/resources");
+    const QString resourcesSourceDir
+        = qmakeVariables.value(QStringLiteral("QT_INSTALL_DATA")) + resourcesSubDir
+            + QLatin1Char('/');
+    const QString resourcesTargetDir(options.directory + resourcesSubDir);
+    if (!createDirectory(resourcesTargetDir, errorMessage))
+        return false;
     for (size_t i = 0; i < sizeof(installDataFiles)/sizeof(installDataFiles[0]); ++i) {
-        if (!updateFile(installData + QLatin1String(installDataFiles[i]),
-                        options.directory, options.updateFileFlags, options.json, errorMessage)) {
+        if (!updateFile(resourcesSourceDir + QLatin1String(installDataFiles[i]),
+                        resourcesTargetDir, options.updateFileFlags, options.json, errorMessage)) {
             std::wcerr << errorMessage << '\n';
             return false;
         }
