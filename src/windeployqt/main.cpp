@@ -1467,8 +1467,8 @@ static bool deployWebProcess(const QMap<QString, QString> &qmakeVariables,
     return deploy(options, qmakeVariables, errorMessage);
 }
 
-static bool deployWebEngine(const QMap<QString, QString> &qmakeVariables,
-                             const Options &options, QString *errorMessage)
+static bool deployWebEngineCore(const QMap<QString, QString> &qmakeVariables,
+                                const Options &options, QString *errorMessage)
 {
     static const char *installDataFiles[] = {"icudtl.dat",
                                              "qtwebengine_resources.pak",
@@ -1580,8 +1580,8 @@ int main(int argc, char **argv)
         }
     }
 
-    if (result.deployedQtLibraries & QtWebEngineModule) {
-        if (!deployWebEngine(qmakeVariables, options, &errorMessage)) {
+    if (result.deployedQtLibraries & QtWebEngineCoreModule) {
+        if (!deployWebEngineCore(qmakeVariables, options, &errorMessage)) {
             std::wcerr << errorMessage << '\n';
             return 1;
         }
