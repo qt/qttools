@@ -426,9 +426,10 @@ static void highlightTarget(const TranslatableEntry &target, bool on)
     case TranslatableProperty:
         if (QAction *a = qobject_cast<QAction *>(target.target.object)) {
             highlightAction(a, on);
-            break;
+        } else if (QWidget *w = qobject_cast<QWidget *>(target.target.object)) {
+            highlightWidget(w, on);
         }
-        // fallthrough
+        break;
 #ifndef QT_NO_TABWIDGET
     case TranslatableTabPageText:
 # ifndef QT_NO_TOOLTIP
@@ -447,8 +448,7 @@ static void highlightTarget(const TranslatableEntry &target, bool on)
 #ifndef QT_NO_COMBOBOX
     case TranslatableComboBoxItem:
 #endif
-        if (QWidget *w = qobject_cast<QWidget *>(target.target.object))
-            highlightWidget(w, on);
+        highlightWidget(static_cast<QWidget *>(target.target.object), on);
         break;
 #ifndef QT_NO_LISTWIDGET
     case TranslatableListWidgetItem:
