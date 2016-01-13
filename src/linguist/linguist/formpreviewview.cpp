@@ -187,9 +187,9 @@ static void buildTargets(QObject *o, TargetsHash *targets)
         const int row_cnt = tablew->rowCount();
         const int col_cnt = tablew->columnCount();
         for (int j = 0; j < col_cnt; ++j)
-            registerTableItem(tablew->verticalHeaderItem(j), targets);
+            registerTableItem(tablew->horizontalHeaderItem(j), targets);
         for (int i = 0; i < row_cnt; ++i) {
-            registerTableItem(tablew->horizontalHeaderItem(i), targets);
+            registerTableItem(tablew->verticalHeaderItem(i), targets);
             for (int j = 0; j < col_cnt; ++j)
                 registerTableItem(tablew->item(i, j), targets);
         }
