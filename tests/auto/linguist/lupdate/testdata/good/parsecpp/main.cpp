@@ -447,3 +447,44 @@ class Abc::NamespacedFinalClass final : public QObject
         tr("namespaced class with final");
     }
 };
+
+
+
+// QTBUG-48776: lupdate fails to recognize translator comment in ternary
+// operator construct
+void ternary()
+{
+    const auto aaa =
+        obj.condition ?
+        //: comment, aaa, true
+        QObject::tr("ternary, true, aaa") :
+        QObject::tr("ternary, failure, aaa");
+
+    const auto bbb =
+        obj.condition ?
+        //: comment, bbb, true
+        QObject::tr("ternary, bbb, true") :
+        //: comment, bbb, false
+        QObject::tr("ternary, bbb, false");
+}
+
+class TernaryClass : public QObject
+{
+    Q_OBJECT
+
+    void f()
+    {
+        const auto ccc =
+            obj.condition ?
+            //: comment, ccc, true
+            tr("ternary, ccc, true") :
+            tr("ternary, ccc, false");
+
+        const auto ddd =
+            obj.condition ?
+            //: comment, ddd, true
+            tr("ternary, ddd, true") :
+            //: comment, ddd, false
+            tr("ternary, ddd, false");
+    }
+};

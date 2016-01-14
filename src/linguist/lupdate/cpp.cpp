@@ -233,7 +233,7 @@ private:
         Tok_Eof, Tok_class, Tok_friend, Tok_namespace, Tok_using, Tok_return,
         Tok_Q_OBJECT, Tok_Access, Tok_Cancel,
         Tok_Ident, Tok_String, Tok_Arrow, Tok_Colon, Tok_ColonColon,
-        Tok_Equals, Tok_LeftBracket, Tok_RightBracket,
+        Tok_Equals, Tok_LeftBracket, Tok_RightBracket, Tok_QuestionMark,
         Tok_LeftBrace, Tok_RightBrace, Tok_LeftParen, Tok_RightParen, Tok_Comma, Tok_Semicolon,
         Tok_Null, Tok_Integer,
         Tok_QuotedInclude, Tok_AngledInclude,
@@ -904,6 +904,9 @@ CppParser::TokenType CppParser::getToken()
             case ';':
                 yyCh = getChar();
                 return Tok_Semicolon;
+            case '?':
+                yyCh = getChar();
+                return Tok_QuestionMark;
             case '0':
                 yyCh = getChar();
                 if (yyCh == 'x') {
@@ -2089,6 +2092,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
             // fallthrough
         case Tok_Comma:
         case Tok_LeftParen:
+        case Tok_QuestionMark:
             metaExpected = true;
             yyTok = getToken();
             break;
