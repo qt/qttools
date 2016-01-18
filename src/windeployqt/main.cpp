@@ -113,7 +113,7 @@ struct QtModuleEntry {
     const char *translation;
 };
 
-QtModuleEntry qtModuleEntries[] = {
+static QtModuleEntry qtModuleEntries[] = {
     { QtBluetoothModule, "bluetooth", "Qt5Bluetooth", 0 },
     { QtCLuceneModule, "clucene", "Qt5CLucene", "qt_help" },
     { QtConcurrentModule, "concurrent", "Qt5Concurrent", "qtbase" },
@@ -234,8 +234,7 @@ static ExlusiveOptionValue parseExclusiveOptions(const QCommandLineParser *parse
     return disabled ? OptionDisabled : OptionAuto;
 }
 
-bool optHelp = false;
-ExlusiveOptionValue optWebKit2 = OptionAuto;
+static ExlusiveOptionValue optWebKit2 = OptionAuto;
 
 struct Options {
     enum DebugDetection {
@@ -268,7 +267,7 @@ struct Options {
     Platform platform;
     quint64 additionalLibraries;
     quint64 disabledLibraries;
-    quint64 updateFileFlags;
+    unsigned updateFileFlags;
     QStringList qmlDirectories; // Project's QML files.
     QString directory;
     QString translationsDirectory; // Translations target directory
@@ -1409,7 +1408,7 @@ static DeployResult deploy(const Options &options,
                                << QDir::toNativeSeparators(installPath) << '\n';
                 if (installPath != options.directory && !createDirectory(installPath, errorMessage))
                     return result;
-                quint64 updateFileFlags = options.updateFileFlags | SkipQmlDesignerSpecificsDirectories;
+                unsigned updateFileFlags = options.updateFileFlags | SkipQmlDesignerSpecificsDirectories;
                 unsigned qmlDirectoryFileFlags = 0;
                 if (quickControlsImportPath(module.sourcePath) == 1) { // QML files of Controls 1 not needed
                     updateFileFlags |=  RemoveEmptyQmlDirectories;

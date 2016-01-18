@@ -90,7 +90,7 @@ static void parseSectionHeader(const uchar *s, ElfSectionHeader *sh, const ElfDa
 {
     sh->index = getWord(s, context);
     sh->type = getWord(s, context);
-    sh->flags = getOffset(s, context);
+    sh->flags = quint32(getOffset(s, context));
     sh->addr = getAddress(s, context);
     sh->offset = getOffset(s, context);
     sh->size = getOffset(s, context);
@@ -116,13 +116,13 @@ public:
         if (!file.open(QIODevice::ReadOnly))
             return false;
 
-        fdlen = file.size();
-        ustart = file.map(0, fdlen);
+        fdlen = quint64(file.size());
+        ustart = file.map(0, qint64(fdlen));
         if (ustart == 0) {
             // Try reading the data into memory instead.
             raw = file.readAll();
             start = raw.constData();
-            fdlen = raw.size();
+            fdlen = quint64(raw.size());
         }
         return true;
     }
@@ -290,7 +290,7 @@ ElfReader::Result ElfReader::readIt()
                 m_elfData.symbolsType = BuildIdSymbols;
                 if (sh.size > 16)
                     m_elfData.buildId = QByteArray(mapper.start + sh.offset + 16,
-                                                   sh.size - 16).toHex();
+                                                   int(sh.size) - 16).toHex();
             }
             m_elfData.sectionHeaders.append(sh);
         }
@@ -319,7 +319,7 @@ QByteArray ElfReader::readSection(const QByteArray &name)
         return QByteArray();
 
     const ElfSectionHeader &section = m_elfData.sectionHeaders.at(i);
-    return QByteArray(mapper.start + section.offset, section.size);
+    return QByteArray(mapper.start + section.offset, int(section.size));
 }
 
 static QByteArray cutout(const char *s)
