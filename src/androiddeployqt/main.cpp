@@ -2976,12 +2976,6 @@ int main(int argc, char *argv[])
         if (Q_UNLIKELY(options.timing))
             fprintf(stdout, "[TIMING] %d ms: Copied GDB server\n", options.timer.elapsed());
 
-        if (!stripLibraries(options))
-            return CannotStripLibraries;
-
-        if (Q_UNLIKELY(options.timing))
-            fprintf(stdout, "[TIMING] %d ms: Stripped libraries\n", options.timer.elapsed());
-
         if (!copyAndroidExtraLibs(options))
             return CannotCopyAndroidExtraLibs;
 
@@ -2996,6 +2990,12 @@ int main(int argc, char *argv[])
 
         if (Q_UNLIKELY(options.timing))
             fprintf(stdout, "[TIMING] %d ms: Copied android sources\n", options.timer.elapsed());
+
+        if (!stripLibraries(options))
+            return CannotStripLibraries;
+
+        if (Q_UNLIKELY(options.timing))
+            fprintf(stdout, "[TIMING] %d ms: Stripped libraries\n", options.timer.elapsed());
 
         if (!updateAndroidFiles(options))
             return CannotUpdateAndroidFiles;
