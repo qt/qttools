@@ -1731,13 +1731,17 @@
     snippet file, as shown in the following example that corresponds to
     the above \c{\snippet} command:
 
-           \quotefromfile snippets/textdocument-resources/main.cpp
-           \skipto QImage::Format_RGB32
-           \dots
-           \codeline
-           \printuntil QTextDocument::ImageResource
-           \printuntil Adding a resource
-           \dots
+    \code
+    ...
+    QImage image(64, 64, QImage::Format_RGB32);
+    image.fill(qRgb(255, 160, 128));
+
+//! [Adding a resource]
+    document->addResource(QTextDocument::ImageResource,
+        QUrl("mydata://image.png"), QVariant(image));
+//! [Adding a resource]
+    ...
+    \endcode
 
     \target codeline-command
     \section1 \\codeline
