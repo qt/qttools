@@ -435,15 +435,17 @@ QString qtDiag(unsigned flags)
         << platformIntegration->styleHint(QPlatformIntegration::ReplayMousePressOutsidePopup).toBool() << '\n';
 
     const QPlatformTheme *platformTheme = QGuiApplicationPrivate::platformTheme();
-    str << "\nTheme:\n  Styles: " << platformTheme->themeHint(QPlatformTheme::StyleNames).toStringList();
+    str << "\nTheme:"
+           "\n  Available    : " << platformIntegration->themeNames()
+        << "\n  Styles       : " << platformTheme->themeHint(QPlatformTheme::StyleNames).toStringList();
     const QString iconTheme = platformTheme->themeHint(QPlatformTheme::SystemIconThemeName).toString();
     if (!iconTheme.isEmpty()) {
-        str << "\n  Icon theme: " << iconTheme
+        str << "\n  Icon theme   : " << iconTheme
             << ", " << platformTheme->themeHint(QPlatformTheme::SystemIconFallbackThemeName).toString()
             << " from " << platformTheme->themeHint(QPlatformTheme::IconThemeSearchPaths).toStringList() << '\n';
     }
     if (const QFont *systemFont = platformTheme->font())
-        str << "  System font: " << *systemFont<< '\n';
+        str << "  System font  : " << *systemFont<< '\n';
     str << "  General font : " << QFontDatabase::systemFont(QFontDatabase::GeneralFont) << '\n'
               << "  Fixed font   : " << QFontDatabase::systemFont(QFontDatabase::FixedFont) << '\n'
               << "  Title font   : " << QFontDatabase::systemFont(QFontDatabase::TitleFont) << '\n'
