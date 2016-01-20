@@ -496,8 +496,13 @@ QStringList Config::getCanonicalPathList(const QString& var, bool validate) cons
                         dir.setPath(d + QLatin1Char('/') + path);
                     if (validate && !QFileInfo::exists(dir.path()))
                         lastLocation_.warning(tr("Cannot find file or directory: %1").arg(path));
-                    else
-                        t.append(dir.canonicalPath());
+                    else {
+                        QString canonicalPath = dir.canonicalPath();
+                        if (!canonicalPath.isEmpty())
+                            t.append(canonicalPath);
+                        else if (path.contains(QLatin1Char('*')) || path.contains(QLatin1Char('?')))
+                            t.append(path);
+                    }
                 }
             }
             --i;
@@ -1156,6 +1161,18 @@ void Config::load(Location location, const QString& fileName)
         QDir::setCurrent(workingDirs_.top());
 }
 
+bool Config::isFileExcluded(const QString &fileName, const QSet<QString> &excludedFiles)
+{
+    foreach (const QString &entry, excludedFiles) {
+        if (entry.contains(QLatin1Char('*')) || entry.contains(QLatin1Char('?'))) {
+            QRegExp re(entry, Qt::CaseSensitive, QRegExp::Wildcard);
+            if (re.exactMatch(fileName))
+                return true;
+        }
+    }
+    return excludedFiles.contains(fileName);
+}
+
 QStringList Config::getFilesHere(const QString& uncleanDir,
                                  const QString& nameFilter,
                                  const Location &location,
@@ -1180,7 +1197,7 @@ QStringList Config::getFilesHere(const QString& uncleanDir,
         if (!fn->startsWith(QLatin1Char('~'))) {
             QString s = dirInfo.filePath(*fn);
             QString c = QDir::cleanPath(s);
-            if (!excludedFiles.contains(c))
+            if (!isFileExcluded(c, excludedFiles))
                 result.append(c);
         }
         ++fn;
