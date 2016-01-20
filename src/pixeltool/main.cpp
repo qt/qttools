@@ -34,24 +34,57 @@
 #include "qpixeltool.h"
 
 #include <qapplication.h>
+#include <qcommandlineparser.h>
+#include <qcommandlineoption.h>
 #include <qfileinfo.h>
 
 QT_USE_NAMESPACE
 
+static bool isOptionSet(int argc, char *argv[], const char *option)
+{
+    for (int i = 1; i < argc; ++i) {
+        if (!qstrcmp(argv[i], option))
+            return true;
+    }
+    return false;
+}
+
 int main(int argc, char **argv)
 {
+    if (isOptionSet(argc, argv, "--no-scaling"))
+        QCoreApplication::setAttribute(Qt::AA_DisableHighDpiScaling);
+
     QApplication app(argc, argv);
+    QCoreApplication::setApplicationName(QLatin1String("PixelTool"));
+    QCoreApplication::setApplicationVersion(QLatin1String(QT_VERSION_STR));
+    QCoreApplication::setOrganizationName(QLatin1String("QtProject"));
 
-    QPixelTool pt;
+    QCommandLineParser parser;
+    parser.addHelpOption();
+    parser.addVersionOption();
+    QCommandLineOption noScalingDummy(QStringLiteral("no-scaling"),
+                                      QStringLiteral("Set Qt::AA_DisableHighDpiScaling."));
+    parser.addOption(noScalingDummy);
+    parser.addPositionalArgument(QLatin1String("preview"),
+                                 QLatin1String("The preview image to show."));
 
-    if (app.arguments().size() > 1 && QFileInfo(app.arguments().at(1)).exists()) {
-        pt.setPreviewImage(QImage(app.arguments().at(1)));
+    parser.process(app);
+
+    QPixelTool pixelTool;
+
+    if (!parser.positionalArguments().isEmpty()) {
+        const QString previewImageFileName = parser.positionalArguments().first();
+        if (QFileInfo(previewImageFileName).exists()) {
+            QImage previewImage(previewImageFileName);
+            if (!previewImage.size().isEmpty())
+                pixelTool.setPreviewImage(previewImage);
+        }
     }
 
-    pt.show();
+    pixelTool.show();
 
-    QObject::connect(&app, SIGNAL(lastWindowClosed()), &app, SLOT(quit()));
+    QObject::connect(&app, &QApplication::lastWindowClosed,
+                     &app, &QCoreApplication::quit);
 
-    int ret = app.exec();
-    return ret;
+    return app.exec();
 }

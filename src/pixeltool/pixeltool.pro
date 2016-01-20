@@ -1,4 +1,4 @@
-QT += widgets
+QT += core-private gui-private widgets
 
 mac {
     QMAKE_INFO_PLIST=Info_mac.plist
