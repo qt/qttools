@@ -4,12 +4,12 @@
 <context>
     <name>QApplication</name>
     <message>
-        <location filename="src/main.cpp" line="41"/>
+        <location filename="src/main.cpp" line="36"/>
         <source>string in main.cpp</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/main.h" line="37"/>
+        <location filename="src/main.h" line="32"/>
         <source>string in main.h</source>
         <translation type="unfinished"></translation>
     </message>
