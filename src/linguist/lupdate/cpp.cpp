@@ -233,7 +233,7 @@ private:
         Tok_Eof, Tok_class, Tok_friend, Tok_namespace, Tok_using, Tok_return,
         Tok_Q_OBJECT, Tok_Access, Tok_Cancel,
         Tok_Ident, Tok_String, Tok_Arrow, Tok_Colon, Tok_ColonColon,
-        Tok_Equals, Tok_LeftBracket, Tok_RightBracket,
+        Tok_Equals, Tok_LeftBracket, Tok_RightBracket, Tok_QuestionMark,
         Tok_LeftBrace, Tok_RightBrace, Tok_LeftParen, Tok_RightParen, Tok_Comma, Tok_Semicolon,
         Tok_Null, Tok_Integer,
         Tok_QuotedInclude, Tok_AngledInclude,
@@ -456,6 +456,7 @@ int CppParser::getChar()
 
 STRING(Q_OBJECT);
 STRING(class);
+STRING(final);
 STRING(friend);
 STRING(namespace);
 STRING(operator);
@@ -903,6 +904,9 @@ CppParser::TokenType CppParser::getToken()
             case ';':
                 yyCh = getChar();
                 return Tok_Semicolon;
+            case '?':
+                yyCh = getChar();
+                return Tok_QuestionMark;
             case '0':
                 yyCh = getChar();
                 if (yyCh == 'x') {
@@ -1805,28 +1809,33 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
             if (yyBraceDepth == namespaceDepths.count() && yyParenDepth == 0) {
                 NamespaceList quali;
                 HashString fct;
-                do {
-                    /*
-                      This code should execute only once, but we play
-                      safe with impure definitions such as
-                      'class Q_EXPORT QMessageBox', in which case
-                      'QMessageBox' is the class name, not 'Q_EXPORT'.
-                    */
+
+                // Find class name including qualification
+                forever {
                     text = yyWord;
                     text.detach();
                     fct.setValue(text);
                     yyTok = getToken();
-                } while (yyTok == Tok_Ident);
-                while (yyTok == Tok_ColonColon) {
-                    yyTok = getToken();
-                    if (yyTok != Tok_Ident)
-                        break; // Oops ...
-                    quali << fct;
-                    text = yyWord;
-                    text.detach();
-                    fct.setValue(text);
-                    yyTok = getToken();
+
+                    if (yyTok == Tok_ColonColon) {
+                        quali << fct;
+                        yyTok = getToken();
+                    } else if (yyTok == Tok_Ident) {
+                        if (yyWord == strfinal) {
+                            // C++11: final may appear immediately after the name of the class
+                            yyTok = getToken();
+                            break;
+                        }
+
+                        // Handle impure definitions such as 'class Q_EXPORT QMessageBox', in
+                        // which case 'QMessageBox' is the class name, not 'Q_EXPORT', by
+                        // abandoning any qualification collected so far.
+                        quali.clear();
+                    } else {
+                        break;
+                    }
                 }
+
                 if (yyTok == Tok_Colon) {
                     // Skip any token until '{' since we might do things wrong if we find
                     // a '::' token here.
@@ -2083,6 +2092,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
             // fallthrough
         case Tok_Comma:
         case Tok_LeftParen:
+        case Tok_QuestionMark:
             metaExpected = true;
             yyTok = getToken();
             break;

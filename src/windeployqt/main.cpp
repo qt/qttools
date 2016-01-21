@@ -113,7 +113,7 @@ struct QtModuleEntry {
     const char *translation;
 };
 
-QtModuleEntry qtModuleEntries[] = {
+static QtModuleEntry qtModuleEntries[] = {
     { QtBluetoothModule, "bluetooth", "Qt5Bluetooth", 0 },
     { QtCLuceneModule, "clucene", "Qt5CLucene", "qt_help" },
     { QtConcurrentModule, "concurrent", "Qt5Concurrent", "qtbase" },
@@ -234,8 +234,7 @@ static ExlusiveOptionValue parseExclusiveOptions(const QCommandLineParser *parse
     return disabled ? OptionDisabled : OptionAuto;
 }
 
-bool optHelp = false;
-ExlusiveOptionValue optWebKit2 = OptionAuto;
+static ExlusiveOptionValue optWebKit2 = OptionAuto;
 
 struct Options {
     enum DebugDetection {
@@ -268,11 +267,12 @@ struct Options {
     Platform platform;
     quint64 additionalLibraries;
     quint64 disabledLibraries;
-    quint64 updateFileFlags;
+    unsigned updateFileFlags;
     QStringList qmlDirectories; // Project's QML files.
     QString directory;
     QString translationsDirectory; // Translations target directory
     QString libraryDirectory;
+    QString pluginDirectory;
     QStringList binaries;
     JsonOutput *json;
     ListOption list;
@@ -337,6 +337,11 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
                                     QStringLiteral("Copy libraries to path."),
                                     QStringLiteral("path"));
     parser->addOption(libDirOption);
+
+    QCommandLineOption pluginDirOption(QStringLiteral("plugindir"),
+                                       QStringLiteral("Copy plugins to path."),
+                                       QStringLiteral("path"));
+    parser->addOption(pluginDirOption);
 
     QCommandLineOption debugOption(QStringLiteral("debug"),
                                    QStringLiteral("Assume debug binaries."));
@@ -467,6 +472,7 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
     }
 
     options->libraryDirectory = parser->value(libDirOption);
+    options->pluginDirectory = parser->value(pluginDirOption);
     options->plugins = !parser->isSet(noPluginsOption);
     options->libraries = !parser->isSet(noLibraryOption);
     options->translations = !parser->isSet(noTranslationOption);
@@ -1111,21 +1117,18 @@ static bool updateLibrary(const QString &sourceFileName, const QString &targetDi
 // 'QtQuick/Controls' ==> 1, or 'QtQuick/Controls.2' ==> 2.
 static inline int quickControlsImportPath(const QString &ip)
 {
-    if (ip.endsWith(QLatin1String("QtQuick/Dialogs")) || ip.contains(QLatin1String("QtQuick/Dialogs/")))
-        return 1; // Dialogs only in v1, so far.
-    const QString controlsPattern = QStringLiteral("QtQuick/Controls");
-    const int pos = ip.indexOf(controlsPattern);
-    if (pos < 0)
-        return 0;
-    const int endPos = pos + controlsPattern.size();
-    if (endPos == ip.size() || ip.at(endPos) == QLatin1Char('/'))
-        return 1; // No version: v1
-    if (ip.at(endPos) != QLatin1Char('.'))
-        return 0;
-    const int versionPos = endPos + 1;
-    int versionEndPos = versionPos;
-    for ( ; versionEndPos < ip.size() && ip.at(versionEndPos).isDigit(); ++versionEndPos) {}
-    return ip.midRef(versionPos, versionEndPos - versionPos).toInt();
+    if (ip.endsWith(QLatin1String("QtQuick/Dialogs")) || ip.contains(QLatin1String("QtQuick/Dialogs/"))
+        || ip.contains(QLatin1String("QtQuick/Controls"))) {
+        return 1; // Dialogs only in v1, so far; no version number on directory: v1.
+    }
+    if (ip.contains(QLatin1String("Qt/labs/calendar"))
+        || ip.contains(QLatin1String("Qt/labs/controls"))
+        || ip.contains(QLatin1String("Qt/labs/folderlistmodel"))
+        || ip.contains(QLatin1String("Qt/labs/settings"))
+        || ip.contains(QLatin1String("Qt/labs/templates"))) {
+        return 2;
+    }
+    return 0; // Non-controls import
 }
 
 static DeployResult deploy(const Options &options,
@@ -1367,19 +1370,25 @@ static DeployResult deploy(const Options &options,
 
     // Update plugins
     if (options.plugins) {
-        QDir dir(options.directory);
+        const QString targetPath = options.pluginDirectory.isEmpty() ?
+            options.directory : options.pluginDirectory;
+        QDir dir(targetPath);
+        if (!dir.exists() && !dir.mkpath(QStringLiteral("."))) {
+            *errorMessage = QLatin1String("Cannot create ") +
+                            QDir::toNativeSeparators(dir.absolutePath()) +  QLatin1Char('.');
+            return result;
+        }
         foreach (const QString &plugin, plugins) {
             const QString targetDirName = plugin.section(slash, -2, -2);
+            const QString targetPath = dir.absoluteFilePath(targetDirName);
             if (!dir.exists(targetDirName)) {
                 if (optVerboseLevel)
-                    std::wcout << "Creating directory " << targetDirName << ".\n";
+                    std::wcout << "Creating directory " << targetPath << ".\n";
                 if (!(options.updateFileFlags & SkipUpdateFile) && !dir.mkdir(targetDirName)) {
-                    std::wcerr << "Cannot create " << targetDirName << ".\n";
                     *errorMessage = QStringLiteral("Cannot create ") + targetDirName +  QLatin1Char('.');
                     return result;
                 }
             }
-            const QString targetPath = options.directory + slash + targetDirName;
             if (!updateLibrary(plugin, targetPath, options, errorMessage))
                 return result;
         }
@@ -1399,7 +1408,7 @@ static DeployResult deploy(const Options &options,
                                << QDir::toNativeSeparators(installPath) << '\n';
                 if (installPath != options.directory && !createDirectory(installPath, errorMessage))
                     return result;
-                quint64 updateFileFlags = options.updateFileFlags | SkipQmlDesignerSpecificsDirectories;
+                unsigned updateFileFlags = options.updateFileFlags | SkipQmlDesignerSpecificsDirectories;
                 unsigned qmlDirectoryFileFlags = 0;
                 if (quickControlsImportPath(module.sourcePath) == 1) { // QML files of Controls 1 not needed
                     updateFileFlags |=  RemoveEmptyQmlDirectories;
@@ -1457,8 +1466,8 @@ static bool deployWebProcess(const QMap<QString, QString> &qmakeVariables,
     return deploy(options, qmakeVariables, errorMessage);
 }
 
-static bool deployWebEngine(const QMap<QString, QString> &qmakeVariables,
-                             const Options &options, QString *errorMessage)
+static bool deployWebEngineCore(const QMap<QString, QString> &qmakeVariables,
+                                const Options &options, QString *errorMessage)
 {
     static const char *installDataFiles[] = {"icudtl.dat",
                                              "qtwebengine_resources.pak",
@@ -1466,16 +1475,18 @@ static bool deployWebEngine(const QMap<QString, QString> &qmakeVariables,
                                              "qtwebengine_resources_200p.pak"};
 
     std::wcout << "Deploying: " << webEngineProcessC << "...\n";
-    if (!deployWebProcess(qmakeVariables, webEngineProcessC, options, errorMessage)) {
-        std::wcerr << errorMessage << '\n';
+    if (!deployWebProcess(qmakeVariables, webEngineProcessC, options, errorMessage))
         return false;
-    }
-    const QString installData
-        = qmakeVariables.value(QStringLiteral("QT_INSTALL_DATA")) + QLatin1Char('/');
+    const QString resourcesSubDir = QStringLiteral("/resources");
+    const QString resourcesSourceDir
+        = qmakeVariables.value(QStringLiteral("QT_INSTALL_DATA")) + resourcesSubDir
+            + QLatin1Char('/');
+    const QString resourcesTargetDir(options.directory + resourcesSubDir);
+    if (!createDirectory(resourcesTargetDir, errorMessage))
+        return false;
     for (size_t i = 0; i < sizeof(installDataFiles)/sizeof(installDataFiles[0]); ++i) {
-        if (!updateFile(installData + QLatin1String(installDataFiles[i]),
-                        options.directory, options.updateFileFlags, options.json, errorMessage)) {
-            std::wcerr << errorMessage << '\n';
+        if (!updateFile(resourcesSourceDir + QLatin1String(installDataFiles[i]),
+                        resourcesTargetDir, options.updateFileFlags, options.json, errorMessage)) {
             return false;
         }
     }
@@ -1570,8 +1581,8 @@ int main(int argc, char **argv)
         }
     }
 
-    if (result.deployedQtLibraries & QtWebEngineModule) {
-        if (!deployWebEngine(qmakeVariables, options, &errorMessage)) {
+    if (result.deployedQtLibraries & QtWebEngineCoreModule) {
+        if (!deployWebEngineCore(qmakeVariables, options, &errorMessage)) {
             std::wcerr << errorMessage << '\n';
             return 1;
         }

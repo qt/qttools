@@ -954,7 +954,7 @@
     formatting. The source code begins on a new line, rendered in the
     code.
 
-    \b{Note:} Although all these commands are for rendering C++
+    \b{Note:} Although most of these commands are for rendering C++
     code, the
     \l{07-0-qdoc-commands-includingexternalcode.html#snippet-command}
     {\\snippet} and
@@ -1144,7 +1144,7 @@
     others. The typical use of the latter is to quote a file chunk by
     chunk.
 
-    \b{Note:} Although all these commands are for rendering C++
+    \b{Note:} Although all these commands can be used for rendering C++
     code, the
     \l{07-0-qdoc-commands-includingexternalcode.html#snippet-command}
     {\\snippet} and
@@ -1729,19 +1729,19 @@
     The text following the file name is the unique identifier for the
     snippet. This is used to delimit the quoted code in the relevant
     snippet file, as shown in the following example that corresponds to
-    the above \c{\\snippet} command:
+    the above \c{\snippet} command:
 
-           \dots
-           \code
-               QImage image(64, 64, QImage::Format_RGB32);
-               image.fill(qRgb(255, 160, 128));
+    \code
+    ...
+    QImage image(64, 64, QImage::Format_RGB32);
+    image.fill(qRgb(255, 160, 128));
 
-           //! [Adding a resource]
-               document->addResource(QTextDocument::ImageResource,
-                   QUrl("mydata://image.png"), QVariant(image));
-           //! [Adding a resource]
-           \endcode
-           \dots
+//! [Adding a resource]
+    document->addResource(QTextDocument::ImageResource,
+        QUrl("mydata://image.png"), QVariant(image));
+//! [Adding a resource]
+    ...
+    \endcode
 
     \target codeline-command
     \section1 \\codeline

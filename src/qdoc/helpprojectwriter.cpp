@@ -166,7 +166,9 @@ void HelpProjectWriter::readSelectors(SubProject &subproject, const QStringList 
                 QSet<Node::DocSubtype> docSubtypes;
                 for (int i = 0; i < pieces.size(); ++i) {
                     QString piece = pieces[i].toLower();
-                    if (typeHash[docType] == Node::Group) {
+                    if (typeHash[docType] == Node::Group
+                        || typeHash[docType] == Node::Module
+                        || typeHash[docType] == Node::QmlModule) {
                         subproject.groups << piece;
                         continue;
                     }
@@ -260,9 +262,9 @@ bool HelpProjectWriter::generateSection(HelpProject &project,
             project.subprojects[i].nodes[objName] = node;
         }
         else if (subproject.selectors.contains(node->type())) {
-            // Add all group members for 'group:name' selector
-            if (node->isGroup()) {
-                if (project.subprojects[i].groups.contains(node->name())) {
+            // Add all group members for '[group|module|qmlmodule]:name' selector
+            if (node->isGroup() || node->isModule() || node->isQmlModule()) {
+                if (project.subprojects[i].groups.contains(node->name().toLower())) {
                     const CollectionNode* cn = static_cast<const CollectionNode*>(node);
                     foreach (const Node* m, cn->members()) {
                         QString memberName = m->isDocumentNode()

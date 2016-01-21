@@ -586,11 +586,6 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
             in_para = false;
         }
         break;
-    case Atom::Code:
-        out() << "<pre class=\"cpp\">"
-              << trimmedTrailing(highlightedCode(indent(codeIndent,atom->string()),relative), codePrefix, codeSuffix)
-              << "</pre>\n";
-        break;
     case Atom::Qml:
         out() << "<pre class=\"qml\">"
               << trimmedTrailing(highlightedCode(indent(codeIndent,atom->string()),relative), codePrefix, codeSuffix)
@@ -602,8 +597,10 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
               << "</pre>\n";
         break;
     case Atom::CodeNew:
-        out() << "<p>you can rewrite it as</p>\n"
-              << "<pre class=\"cpp\">"
+        out() << "<p>you can rewrite it as</p>\n";
+        // fallthrough
+    case Atom::Code:
+        out() << "<pre class=\"cpp\">"
               << trimmedTrailing(highlightedCode(indent(codeIndent,atom->string()),relative), codePrefix, codeSuffix)
               << "</pre>\n";
         break;

@@ -2692,7 +2692,9 @@ bool copyGdbServer(const Options &options)
         fprintf(stdout, "Copying gdbserver into package.\n");
 
     QString architectureSubDirectory;
-    if (options.architecture.startsWith(QLatin1String("arm")))
+    if (options.architecture == QLatin1String("arm64-v8a"))
+        architectureSubDirectory = QLatin1String("android-arm64");
+    else if (options.architecture.startsWith(QLatin1String("arm")))
         architectureSubDirectory = QLatin1String("android-arm");
     else
         architectureSubDirectory = QLatin1String("android-") + options.architecture;
@@ -2904,12 +2906,6 @@ int main(int argc, char *argv[])
         if (Q_UNLIKELY(options.timing))
             fprintf(stdout, "[TIMING] %d ms: Copied GDB server\n", options.timer.elapsed());
 
-        if (!stripLibraries(options))
-            return CannotStripLibraries;
-
-        if (Q_UNLIKELY(options.timing))
-            fprintf(stdout, "[TIMING] %d ms: Stripped libraries\n", options.timer.elapsed());
-
         if (!copyAndroidExtraLibs(options))
             return CannotCopyAndroidExtraLibs;
 
@@ -2924,6 +2920,12 @@ int main(int argc, char *argv[])
 
         if (Q_UNLIKELY(options.timing))
             fprintf(stdout, "[TIMING] %d ms: Copied android sources\n", options.timer.elapsed());
+
+        if (!stripLibraries(options))
+            return CannotStripLibraries;
+
+        if (Q_UNLIKELY(options.timing))
+            fprintf(stdout, "[TIMING] %d ms: Stripped libraries\n", options.timer.elapsed());
 
         if (!updateAndroidFiles(options))
             return CannotUpdateAndroidFiles;

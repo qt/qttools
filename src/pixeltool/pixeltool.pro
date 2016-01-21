@@ -1,4 +1,4 @@
-QT += widgets network
+QT += widgets
 
 mac {
     QMAKE_INFO_PLIST=Info_mac.plist

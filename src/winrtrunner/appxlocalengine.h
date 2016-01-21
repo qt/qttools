@@ -74,6 +74,7 @@ private:
     QString extensionSdkPath() const Q_DECL_OVERRIDE;
     bool installPackage(IAppxManifestReader *reader, const QString &filePath) Q_DECL_OVERRIDE;
 
+    bool parseExitCode();
     friend struct QScopedPointerDeleter<AppxLocalEngine>;
     Q_DECLARE_PRIVATE(AppxLocalEngine)
 };

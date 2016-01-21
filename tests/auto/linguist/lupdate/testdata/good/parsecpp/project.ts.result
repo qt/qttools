@@ -33,6 +33,14 @@ backslashed \ stuff.</source>
     </message>
 </context>
 <context>
+    <name>Abc::NamespacedFinalClass</name>
+    <message>
+        <location filename="main.cpp" line="447"/>
+        <source>namespaced class with final</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>Bogus</name>
     <message>
         <location filename="main.cpp" line="258"/>
@@ -113,6 +121,19 @@ backslashed \ stuff.</source>
     <message>
         <location filename="main.cpp" line="135"/>
         <source>func3</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>FinalClass</name>
+    <message>
+        <location filename="main.cpp" line="431"/>
+        <source>nested class context with final</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="437"/>
+        <source>class context with final</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -259,6 +280,29 @@ backslashed \ stuff.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="main.cpp" line="460"/>
+        <source>ternary, true, aaa</source>
+        <extracomment>comment, aaa, true</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="461"/>
+        <source>ternary, failure, aaa</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="466"/>
+        <source>ternary, bbb, true</source>
+        <extracomment>comment, bbb, true</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="468"/>
+        <source>ternary, bbb, false</source>
+        <extracomment>comment, bbb, false</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="included.cpp" line="34"/>
         <source>message from #included .cpp file</source>
         <translation type="unfinished"></translation>
@@ -308,6 +352,32 @@ backslashed \ stuff.</source>
         <translation type="unfinished">
             <numerusform></numerusform>
         </translation>
+    </message>
+</context>
+<context>
+    <name>TernaryClass</name>
+    <message>
+        <location filename="main.cpp" line="480"/>
+        <source>ternary, ccc, true</source>
+        <extracomment>comment, ccc, true</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="481"/>
+        <source>ternary, ccc, false</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="486"/>
+        <source>ternary, ddd, true</source>
+        <extracomment>comment, ddd, true</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="488"/>
+        <source>ternary, ddd, false</source>
+        <extracomment>comment, ddd, false</extracomment>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

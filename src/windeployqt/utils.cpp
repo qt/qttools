@@ -147,11 +147,11 @@ QString winErrorMessage(unsigned long error)
     QString rc = QString::fromLatin1("#%1: ").arg(error);
     ushort *lpMsgBuf;
 
-    const int len = FormatMessage(
+    const DWORD len = FormatMessage(
             FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-            NULL, error, 0, (LPTSTR)&lpMsgBuf, 0, NULL);
+            NULL, error, 0, reinterpret_cast<LPTSTR>(&lpMsgBuf), 0, NULL);
     if (len) {
-        rc = QString::fromUtf16(lpMsgBuf, len);
+        rc = QString::fromUtf16(lpMsgBuf, int(len));
         LocalFree(lpMsgBuf);
     } else {
         rc += QString::fromLatin1("<unknown error>");
@@ -164,7 +164,7 @@ QString normalizeFileName(const QString &name)
 {
     wchar_t shortBuffer[MAX_PATH];
     const QString nativeFileName = QDir::toNativeSeparators(name);
-    if (!GetShortPathNameW((wchar_t *)nativeFileName.utf16(), shortBuffer, MAX_PATH))
+    if (!GetShortPathNameW(reinterpret_cast<LPCWSTR>(nativeFileName.utf16()), shortBuffer, MAX_PATH))
         return name;
     wchar_t result[MAX_PATH];
     if (!GetLongPathNameW(shortBuffer, result, MAX_PATH))
@@ -208,7 +208,7 @@ static inline void readTemporaryProcessFile(HANDLE handle, QByteArray *result)
     char buf[1024];
     DWORD bytesRead;
     while (ReadFile(handle, buf, sizeof(buf), &bytesRead, NULL) && bytesRead)
-        result->append(buf, bytesRead);
+        result->append(buf, int(bytesRead));
     CloseHandle(handle);
 }
 
@@ -283,7 +283,7 @@ bool runProcess(const QString &binary, const QStringList &args,
     commandLine.toWCharArray(commandLineW.data());
     commandLineW[commandLine.size()] = 0;
     if (!CreateProcessW(0, commandLineW.data(), 0, 0, /* InheritHandles */ TRUE, 0, 0,
-                        (wchar_t *)nativeWorkingDir.utf16(), &si, &pi)) {
+                        reinterpret_cast<LPCWSTR>(nativeWorkingDir.utf16()), &si, &pi)) {
         if (stdOut)
             CloseHandle(si.hStdOutput);
         if (stdErr)
@@ -642,7 +642,7 @@ bool readElfExecutable(const QString &elfExecutableFileName, QString *errorMessa
 
 static inline QString stringFromRvaPtr(const void *rvaPtr)
 {
-    return QString::fromLocal8Bit((const char *)rvaPtr);
+    return QString::fromLocal8Bit(static_cast<const char *>(rvaPtr));
 }
 
 // Helper for reading out PE executable files: Find a section header for an RVA
@@ -729,7 +729,7 @@ inline QStringList readImportSections(const ImageNtHeader *ntHeaders, const void
         *errorMessage = QString::fromLatin1("Failed to find IMAGE_DIRECTORY_ENTRY_IMPORT entry.");
         return QStringList();
     }
-    const IMAGE_IMPORT_DESCRIPTOR *importDesc = (const IMAGE_IMPORT_DESCRIPTOR *)rvaToPtr(importsStartRVA, ntHeaders, base);
+    const IMAGE_IMPORT_DESCRIPTOR *importDesc = static_cast<const IMAGE_IMPORT_DESCRIPTOR *>(rvaToPtr(importsStartRVA, ntHeaders, base));
     if (!importDesc) {
         *errorMessage = QString::fromLatin1("Failed to find IMAGE_IMPORT_DESCRIPTOR entry.");
         return QStringList();
@@ -741,7 +741,7 @@ inline QStringList readImportSections(const ImageNtHeader *ntHeaders, const void
     // Read delay-loaded DLLs, see http://msdn.microsoft.com/en-us/magazine/cc301808.aspx .
     // Check on grAttr bit 1 whether this is the format using RVA's > VS 6
     if (const DWORD delayedImportsStartRVA = ntHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT].VirtualAddress) {
-        const ImgDelayDescr *delayedImportDesc = (const ImgDelayDescr *)rvaToPtr(delayedImportsStartRVA, ntHeaders, base);
+        const ImgDelayDescr *delayedImportDesc = static_cast<const ImgDelayDescr *>(rvaToPtr(delayedImportsStartRVA, ntHeaders, base));
         for ( ; delayedImportDesc->rvaDLLName && (delayedImportDesc->grAttrs & 1); ++delayedImportDesc)
             result.push_back(stringFromRvaPtr(rvaToPtr(delayedImportDesc->rvaDLLName, ntHeaders, base)));
     }
