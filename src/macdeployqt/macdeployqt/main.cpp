@@ -53,7 +53,7 @@ int main(int argc, char **argv)
         qDebug() << "   -no-strip          : Don't run 'strip' on the binaries";
         qDebug() << "   -use-debug-libs    : Deploy with debug versions of frameworks and plugins (implies -no-strip)";
         qDebug() << "   -executable=<path> : Let the given executable use the deployed frameworks too";
-        qDebug() << "   -qmldir=<path>     : Deploy imports used by .qml files in the given path";
+        qDebug() << "   -qmldir=<path>     : Scan for QML imports in the given path";
         qDebug() << "   -always-overwrite  : Copy files even if the target file exists";
         qDebug() << "   -codesign=<ident>  : Run codesign with the given identity on all executables";
         qDebug() << "   -appstore-compliant: Skip deployment of components that use private API";
