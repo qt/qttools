@@ -36,6 +36,7 @@
 #include <QString>
 #include <QStringList>
 #include <QDebug>
+#include <QSet>
 
 extern int logLevel;
 #define LogError()      if (logLevel < 0) {} else qDebug() << "ERROR:"
@@ -85,7 +86,6 @@ public:
     bool useLoaderPath;
 };
 
-
 inline QDebug operator<<(QDebug debug, const ApplicationBundleInfo &info);
 
 void changeQtFrameworks(const QString appPath, const QString &qtPath, bool useDebugLibs);
@@ -107,7 +107,9 @@ void runStrip(const QString &binaryPath);
 void stripAppBinary(const QString &bundlePath);
 QString findAppBinary(const QString &appBundlePath);
 QStringList findAppFrameworkNames(const QString &appBundlePath);
+QStringList findAppFrameworkPaths(const QString &appBundlePath);
 void codesignFile(const QString &identity, const QString &filePath);
+QSet<QString> codesignBundle(const QString &identity, const QString &appBundlePath);
 void codesign(const QString &identity, const QString &appBundlePath);
 void createDiskImage(const QString &appBundlePath);
 
