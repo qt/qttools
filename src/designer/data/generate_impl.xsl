@@ -270,7 +270,8 @@
 
         <xsl:if test="$node/xs:attribute">
             <xsl:text>&endl;</xsl:text>
-            <xsl:text>    foreach (const QXmlStreamAttribute &amp;attribute, reader.attributes()) {&endl;</xsl:text>
+            <xsl:text>    const QXmlStreamAttributes attributes = reader.attributes();&endl;</xsl:text>
+            <xsl:text>    for (const QXmlStreamAttribute &amp;attribute : attributes) {&endl;</xsl:text>
             <xsl:text>        QStringRef name = attribute.name();&endl;</xsl:text>
 
             <xsl:for-each select="$node/xs:attribute">

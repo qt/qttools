@@ -129,7 +129,8 @@ DomUI::~DomUI()
 void DomUI::read(QXmlStreamReader &reader)
 {
 
-    foreach (const QXmlStreamAttribute &attribute, reader.attributes()) {
+    const QXmlStreamAttributes attributes = reader.attributes();
+    for (const QXmlStreamAttribute &attribute : attributes) {
         QStringRef name = attribute.name();
         if (name == QLatin1String("version")) {
             setAttributeVersion(attribute.value().toString());
@@ -777,7 +778,8 @@ DomInclude::~DomInclude()
 void DomInclude::read(QXmlStreamReader &reader)
 {
 
-    foreach (const QXmlStreamAttribute &attribute, reader.attributes()) {
+    const QXmlStreamAttributes attributes = reader.attributes();
+    for (const QXmlStreamAttribute &attribute : attributes) {
         QStringRef name = attribute.name();
         if (name == QLatin1String("location")) {
             setAttributeLocation(attribute.value().toString());
@@ -854,7 +856,8 @@ DomResources::~DomResources()
 void DomResources::read(QXmlStreamReader &reader)
 {
 
-    foreach (const QXmlStreamAttribute &attribute, reader.attributes()) {
+    const QXmlStreamAttributes attributes = reader.attributes();
+    for (const QXmlStreamAttribute &attribute : attributes) {
         QStringRef name = attribute.name();
         if (name == QLatin1String("name")) {
             setAttributeName(attribute.value().toString());
@@ -936,7 +939,8 @@ DomResource::~DomResource()
 void DomResource::read(QXmlStreamReader &reader)
 {
 
-    foreach (const QXmlStreamAttribute &attribute, reader.attributes()) {
+    const QXmlStreamAttributes attributes = reader.attributes();
+    for (const QXmlStreamAttribute &attribute : attributes) {
         QStringRef name = attribute.name();
         if (name == QLatin1String("location")) {
             setAttributeLocation(attribute.value().toString());
@@ -1018,7 +1022,8 @@ DomActionGroup::~DomActionGroup()
 void DomActionGroup::read(QXmlStreamReader &reader)
 {
 
-    foreach (const QXmlStreamAttribute &attribute, reader.attributes()) {
+    const QXmlStreamAttributes attributes = reader.attributes();
+    for (const QXmlStreamAttribute &attribute : attributes) {
         QStringRef name = attribute.name();
         if (name == QLatin1String("name")) {
             setAttributeName(attribute.value().toString());
@@ -1158,7 +1163,8 @@ DomAction::~DomAction()
 void DomAction::read(QXmlStreamReader &reader)
 {
 
-    foreach (const QXmlStreamAttribute &attribute, reader.attributes()) {
+    const QXmlStreamAttributes attributes = reader.attributes();
+    for (const QXmlStreamAttribute &attribute : attributes) {
         QStringRef name = attribute.name();
         if (name == QLatin1String("name")) {
             setAttributeName(attribute.value().toString());
@@ -1263,7 +1269,8 @@ DomActionRef::~DomActionRef()
 void DomActionRef::read(QXmlStreamReader &reader)
 {
 
-    foreach (const QXmlStreamAttribute &attribute, reader.attributes()) {
+    const QXmlStreamAttributes attributes = reader.attributes();
+    for (const QXmlStreamAttribute &attribute : attributes) {
         QStringRef name = attribute.name();
         if (name == QLatin1String("name")) {
             setAttributeName(attribute.value().toString());
@@ -1337,7 +1344,8 @@ DomButtonGroup::~DomButtonGroup()
 void DomButtonGroup::read(QXmlStreamReader &reader)
 {
 
-    foreach (const QXmlStreamAttribute &attribute, reader.attributes()) {
+    const QXmlStreamAttributes attributes = reader.attributes();
+    for (const QXmlStreamAttribute &attribute : attributes) {
         QStringRef name = attribute.name();
         if (name == QLatin1String("name")) {
             setAttributeName(attribute.value().toString());
@@ -1583,7 +1591,8 @@ DomImage::~DomImage()
 void DomImage::read(QXmlStreamReader &reader)
 {
 
-    foreach (const QXmlStreamAttribute &attribute, reader.attributes()) {
+    const QXmlStreamAttributes attributes = reader.attributes();
+    for (const QXmlStreamAttribute &attribute : attributes) {
         QStringRef name = attribute.name();
         if (name == QLatin1String("name")) {
             setAttributeName(attribute.value().toString());
@@ -1686,7 +1695,8 @@ DomImageData::~DomImageData()
 void DomImageData::read(QXmlStreamReader &reader)
 {
 
-    foreach (const QXmlStreamAttribute &attribute, reader.attributes()) {
+    const QXmlStreamAttributes attributes = reader.attributes();
+    for (const QXmlStreamAttribute &attribute : attributes) {
         QStringRef name = attribute.name();
         if (name == QLatin1String("format")) {
             setAttributeFormat(attribute.value().toString());
@@ -1832,7 +1842,8 @@ DomHeader::~DomHeader()
 void DomHeader::read(QXmlStreamReader &reader)
 {
 
-    foreach (const QXmlStreamAttribute &attribute, reader.attributes()) {
+    const QXmlStreamAttributes attributes = reader.attributes();
+    for (const QXmlStreamAttribute &attribute : attributes) {
         QStringRef name = attribute.name();
         if (name == QLatin1String("location")) {
             setAttributeLocation(attribute.value().toString());
@@ -2371,7 +2382,8 @@ DomPropertyData::~DomPropertyData()
 void DomPropertyData::read(QXmlStreamReader &reader)
 {
 
-    foreach (const QXmlStreamAttribute &attribute, reader.attributes()) {
+    const QXmlStreamAttributes attributes = reader.attributes();
+    for (const QXmlStreamAttribute &attribute : attributes) {
         QStringRef name = attribute.name();
         if (name == QLatin1String("type")) {
             setAttributeType(attribute.value().toString());
@@ -2537,7 +2549,8 @@ DomLayoutDefault::~DomLayoutDefault()
 void DomLayoutDefault::read(QXmlStreamReader &reader)
 {
 
-    foreach (const QXmlStreamAttribute &attribute, reader.attributes()) {
+    const QXmlStreamAttributes attributes = reader.attributes();
+    for (const QXmlStreamAttribute &attribute : attributes) {
         QStringRef name = attribute.name();
         if (name == QLatin1String("spacing")) {
             setAttributeSpacing(attribute.value().toInt());
@@ -2612,7 +2625,8 @@ DomLayoutFunction::~DomLayoutFunction()
 void DomLayoutFunction::read(QXmlStreamReader &reader)
 {
 
-    foreach (const QXmlStreamAttribute &attribute, reader.attributes()) {
+    const QXmlStreamAttributes attributes = reader.attributes();
+    for (const QXmlStreamAttribute &attribute : attributes) {
         QStringRef name = attribute.name();
         if (name == QLatin1String("spacing")) {
             setAttributeSpacing(attribute.value().toString());
@@ -2777,7 +2791,8 @@ DomLayout::~DomLayout()
 void DomLayout::read(QXmlStreamReader &reader)
 {
 
-    foreach (const QXmlStreamAttribute &attribute, reader.attributes()) {
+    const QXmlStreamAttributes attributes = reader.attributes();
+    for (const QXmlStreamAttribute &attribute : attributes) {
         QStringRef name = attribute.name();
         if (name == QLatin1String("class")) {
             setAttributeClass(attribute.value().toString());
@@ -2963,7 +2978,8 @@ DomLayoutItem::~DomLayoutItem()
 void DomLayoutItem::read(QXmlStreamReader &reader)
 {
 
-    foreach (const QXmlStreamAttribute &attribute, reader.attributes()) {
+    const QXmlStreamAttributes attributes = reader.attributes();
+    for (const QXmlStreamAttribute &attribute : attributes) {
         QStringRef name = attribute.name();
         if (name == QLatin1String("row")) {
             setAttributeRow(attribute.value().toInt());
@@ -3300,7 +3316,8 @@ DomItem::~DomItem()
 void DomItem::read(QXmlStreamReader &reader)
 {
 
-    foreach (const QXmlStreamAttribute &attribute, reader.attributes()) {
+    const QXmlStreamAttributes attributes = reader.attributes();
+    for (const QXmlStreamAttribute &attribute : attributes) {
         QStringRef name = attribute.name();
         if (name == QLatin1String("row")) {
             setAttributeRow(attribute.value().toInt());
@@ -3463,7 +3480,8 @@ DomWidget::~DomWidget()
 void DomWidget::read(QXmlStreamReader &reader)
 {
 
-    foreach (const QXmlStreamAttribute &attribute, reader.attributes()) {
+    const QXmlStreamAttributes attributes = reader.attributes();
+    for (const QXmlStreamAttribute &attribute : attributes) {
         QStringRef name = attribute.name();
         if (name == QLatin1String("class")) {
             setAttributeClass(attribute.value().toString());
@@ -3767,7 +3785,8 @@ DomSpacer::~DomSpacer()
 void DomSpacer::read(QXmlStreamReader &reader)
 {
 
-    foreach (const QXmlStreamAttribute &attribute, reader.attributes()) {
+    const QXmlStreamAttributes attributes = reader.attributes();
+    for (const QXmlStreamAttribute &attribute : attributes) {
         QStringRef name = attribute.name();
         if (name == QLatin1String("name")) {
             setAttributeName(attribute.value().toString());
@@ -3857,7 +3876,8 @@ DomColor::~DomColor()
 void DomColor::read(QXmlStreamReader &reader)
 {
 
-    foreach (const QXmlStreamAttribute &attribute, reader.attributes()) {
+    const QXmlStreamAttributes attributes = reader.attributes();
+    for (const QXmlStreamAttribute &attribute : attributes) {
         QStringRef name = attribute.name();
         if (name == QLatin1String("alpha")) {
             setAttributeAlpha(attribute.value().toInt());
@@ -3986,7 +4006,8 @@ DomGradientStop::~DomGradientStop()
 void DomGradientStop::read(QXmlStreamReader &reader)
 {
 
-    foreach (const QXmlStreamAttribute &attribute, reader.attributes()) {
+    const QXmlStreamAttributes attributes = reader.attributes();
+    for (const QXmlStreamAttribute &attribute : attributes) {
         QStringRef name = attribute.name();
         if (name == QLatin1String("position")) {
             setAttributePosition(attribute.value().toDouble());
@@ -4132,7 +4153,8 @@ DomGradient::~DomGradient()
 void DomGradient::read(QXmlStreamReader &reader)
 {
 
-    foreach (const QXmlStreamAttribute &attribute, reader.attributes()) {
+    const QXmlStreamAttributes attributes = reader.attributes();
+    for (const QXmlStreamAttribute &attribute : attributes) {
         QStringRef name = attribute.name();
         if (name == QLatin1String("startx")) {
             setAttributeStartX(attribute.value().toDouble());
@@ -4312,7 +4334,8 @@ DomBrush::~DomBrush()
 void DomBrush::read(QXmlStreamReader &reader)
 {
 
-    foreach (const QXmlStreamAttribute &attribute, reader.attributes()) {
+    const QXmlStreamAttributes attributes = reader.attributes();
+    for (const QXmlStreamAttribute &attribute : attributes) {
         QStringRef name = attribute.name();
         if (name == QLatin1String("brushstyle")) {
             setAttributeBrushStyle(attribute.value().toString());
@@ -4467,7 +4490,8 @@ DomColorRole::~DomColorRole()
 void DomColorRole::read(QXmlStreamReader &reader)
 {
 
-    foreach (const QXmlStreamAttribute &attribute, reader.attributes()) {
+    const QXmlStreamAttributes attributes = reader.attributes();
+    for (const QXmlStreamAttribute &attribute : attributes) {
         QStringRef name = attribute.name();
         if (name == QLatin1String("role")) {
             setAttributeRole(attribute.value().toString());
@@ -5307,7 +5331,8 @@ DomLocale::~DomLocale()
 void DomLocale::read(QXmlStreamReader &reader)
 {
 
-    foreach (const QXmlStreamAttribute &attribute, reader.attributes()) {
+    const QXmlStreamAttributes attributes = reader.attributes();
+    for (const QXmlStreamAttribute &attribute : attributes) {
         QStringRef name = attribute.name();
         if (name == QLatin1String("language")) {
             setAttributeLanguage(attribute.value().toString());
@@ -5390,7 +5415,8 @@ DomSizePolicy::~DomSizePolicy()
 void DomSizePolicy::read(QXmlStreamReader &reader)
 {
 
-    foreach (const QXmlStreamAttribute &attribute, reader.attributes()) {
+    const QXmlStreamAttributes attributes = reader.attributes();
+    for (const QXmlStreamAttribute &attribute : attributes) {
         QStringRef name = attribute.name();
         if (name == QLatin1String("hsizetype")) {
             setAttributeHSizeType(attribute.value().toString());
@@ -6047,7 +6073,8 @@ DomStringList::~DomStringList()
 void DomStringList::read(QXmlStreamReader &reader)
 {
 
-    foreach (const QXmlStreamAttribute &attribute, reader.attributes()) {
+    const QXmlStreamAttributes attributes = reader.attributes();
+    for (const QXmlStreamAttribute &attribute : attributes) {
         QStringRef name = attribute.name();
         if (name == QLatin1String("notr")) {
             setAttributeNotr(attribute.value().toString());
@@ -6144,7 +6171,8 @@ DomResourcePixmap::~DomResourcePixmap()
 void DomResourcePixmap::read(QXmlStreamReader &reader)
 {
 
-    foreach (const QXmlStreamAttribute &attribute, reader.attributes()) {
+    const QXmlStreamAttributes attributes = reader.attributes();
+    for (const QXmlStreamAttribute &attribute : attributes) {
         QStringRef name = attribute.name();
         if (name == QLatin1String("resource")) {
             setAttributeResource(attribute.value().toString());
@@ -6252,7 +6280,8 @@ DomResourceIcon::~DomResourceIcon()
 void DomResourceIcon::read(QXmlStreamReader &reader)
 {
 
-    foreach (const QXmlStreamAttribute &attribute, reader.attributes()) {
+    const QXmlStreamAttributes attributes = reader.attributes();
+    for (const QXmlStreamAttribute &attribute : attributes) {
         QStringRef name = attribute.name();
         if (name == QLatin1String("theme")) {
             setAttributeTheme(attribute.value().toString());
@@ -6586,7 +6615,8 @@ DomString::~DomString()
 void DomString::read(QXmlStreamReader &reader)
 {
 
-    foreach (const QXmlStreamAttribute &attribute, reader.attributes()) {
+    const QXmlStreamAttributes attributes = reader.attributes();
+    for (const QXmlStreamAttribute &attribute : attributes) {
         QStringRef name = attribute.name();
         if (name == QLatin1String("notr")) {
             setAttributeNotr(attribute.value().toString());
@@ -7255,7 +7285,8 @@ DomProperty::~DomProperty()
 void DomProperty::read(QXmlStreamReader &reader)
 {
 
-    foreach (const QXmlStreamAttribute &attribute, reader.attributes()) {
+    const QXmlStreamAttributes attributes = reader.attributes();
+    for (const QXmlStreamAttribute &attribute : attributes) {
         QStringRef name = attribute.name();
         if (name == QLatin1String("name")) {
             setAttributeName(attribute.value().toString());
@@ -8391,7 +8422,8 @@ DomConnectionHint::~DomConnectionHint()
 void DomConnectionHint::read(QXmlStreamReader &reader)
 {
 
-    foreach (const QXmlStreamAttribute &attribute, reader.attributes()) {
+    const QXmlStreamAttributes attributes = reader.attributes();
+    for (const QXmlStreamAttribute &attribute : attributes) {
         QStringRef name = attribute.name();
         if (name == QLatin1String("type")) {
             setAttributeType(attribute.value().toString());
@@ -8497,7 +8529,8 @@ DomScript::~DomScript()
 void DomScript::read(QXmlStreamReader &reader)
 {
 
-    foreach (const QXmlStreamAttribute &attribute, reader.attributes()) {
+    const QXmlStreamAttributes attributes = reader.attributes();
+    for (const QXmlStreamAttribute &attribute : attributes) {
         QStringRef name = attribute.name();
         if (name == QLatin1String("source")) {
             setAttributeSource(attribute.value().toString());
@@ -8890,7 +8923,8 @@ DomPropertyToolTip::~DomPropertyToolTip()
 void DomPropertyToolTip::read(QXmlStreamReader &reader)
 {
 
-    foreach (const QXmlStreamAttribute &attribute, reader.attributes()) {
+    const QXmlStreamAttributes attributes = reader.attributes();
+    for (const QXmlStreamAttribute &attribute : attributes) {
         QStringRef name = attribute.name();
         if (name == QLatin1String("name")) {
             setAttributeName(attribute.value().toString());
@@ -8960,7 +8994,8 @@ DomStringPropertySpecification::~DomStringPropertySpecification()
 void DomStringPropertySpecification::read(QXmlStreamReader &reader)
 {
 
-    foreach (const QXmlStreamAttribute &attribute, reader.attributes()) {
+    const QXmlStreamAttributes attributes = reader.attributes();
+    for (const QXmlStreamAttribute &attribute : attributes) {
         QStringRef name = attribute.name();
         if (name == QLatin1String("name")) {
             setAttributeName(attribute.value().toString());
