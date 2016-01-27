@@ -1247,7 +1247,7 @@ void codesignFile(const QString &identity, const QString &filePath)
     LogNormal() << "codesign" << filePath;
 
     QProcess codesign;
-    codesign.start("codesign", QStringList() << "--preserve-metadata=identifier,entitlements,resource-rules"
+    codesign.start("codesign", QStringList() << "--preserve-metadata=identifier,entitlements"
                                              << "--force" << "-s" << identity << filePath);
     codesign.waitForFinished(-1);
 
