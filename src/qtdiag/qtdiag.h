@@ -40,7 +40,8 @@ QT_BEGIN_NAMESPACE
 
 enum QtDiagFlags {
     QtDiagGl = 0x1,
-    QtDiagGlExtensions = 0x2
+    QtDiagGlExtensions = 0x2,
+    QtDiagFonts = 0x4
 };
 
 QString qtDiag(unsigned flags = 0);
