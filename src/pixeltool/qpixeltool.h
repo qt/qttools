@@ -43,22 +43,12 @@ class QPixelTool : public QWidget
 {
     Q_OBJECT
 public:
-    QPixelTool(QWidget *parent = 0);
+    explicit QPixelTool(QWidget *parent = Q_NULLPTR);
     ~QPixelTool();
 
-    void timerEvent(QTimerEvent *event);
-    void paintEvent(QPaintEvent *event);
-    void keyPressEvent(QKeyEvent *event);
-    void keyReleaseEvent(QKeyEvent *event);
-    void resizeEvent(QResizeEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
-    void mousePressEvent(QMouseEvent *event);
-    void mouseReleaseEvent(QMouseEvent *event);
-    void contextMenuEvent(QContextMenuEvent *event);
-
-    QSize sizeHint() const;
-
     void setPreviewImage(const QImage &image);
+
+    QSize sizeHint() const Q_DECL_OVERRIDE;
 
 public slots:
     void setZoom(int zoom);
@@ -74,6 +64,17 @@ public slots:
     void decreaseGridSize() { setGridSize(m_gridSize - 1); }
     void increaseZoom() { setZoom(m_zoom + 1); }
     void decreaseZoom() { setZoom(m_zoom - 1); }
+
+protected:
+    void timerEvent(QTimerEvent *event) Q_DECL_OVERRIDE;
+    void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
+    void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
+    void keyReleaseEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
+    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+    void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+    void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+    void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+    void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
 
 private:
     void grabScreen();

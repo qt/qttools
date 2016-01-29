@@ -109,6 +109,7 @@ public:
     QStringList getExampleImageFiles(const QSet<QString> &excludedDirs, const QSet<QString> &excludedFiles);
 
     static QStringList loadMaster(const QString& fileName);
+    static bool isFileExcluded(const QString &fileName, const QSet<QString> &excludedFiles);
     static QStringList getFilesHere(const QString& dir,
                                     const QString& nameFilter,
                                     const Location &location = Location(),

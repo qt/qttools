@@ -54,6 +54,7 @@
 #include <QtWidgets/QTabWidget>
 #include <QtWidgets/QToolBox>
 #include <QtWidgets/QTreeWidget>
+#include <QtWidgets/QScrollArea>
 
 QT_BEGIN_NAMESPACE
 
@@ -187,9 +188,9 @@ static void buildTargets(QObject *o, TargetsHash *targets)
         const int row_cnt = tablew->rowCount();
         const int col_cnt = tablew->columnCount();
         for (int j = 0; j < col_cnt; ++j)
-            registerTableItem(tablew->verticalHeaderItem(j), targets);
+            registerTableItem(tablew->horizontalHeaderItem(j), targets);
         for (int i = 0; i < row_cnt; ++i) {
-            registerTableItem(tablew->horizontalHeaderItem(i), targets);
+            registerTableItem(tablew->verticalHeaderItem(i), targets);
             for (int j = 0; j < col_cnt; ++j)
                 registerTableItem(tablew->item(i, j), targets);
         }
@@ -284,6 +285,31 @@ static void retranslateTargets(
 
     foreach (const TranslatableEntry &target, targets)
         retranslateTarget(target, text);
+}
+
+static void bringToFront(QWidget *w)
+{
+    for (; QWidget *pw = w->parentWidget(); w = pw) {
+#ifndef QT_NO_STACKEDWIDGET
+        if (QStackedWidget *stack = qobject_cast<QStackedWidget *>(pw)) {
+#ifndef QT_NO_TABWIDGET
+            // Updating QTabWidget's embedded QStackedWidget does not update its
+            // QTabBar, so handle tab widgets explicitly.
+            if (QTabWidget *tab = qobject_cast<QTabWidget *>(stack->parent()))
+                tab->setCurrentWidget(w);
+            else
+#endif
+                stack->setCurrentWidget(w);
+            continue;
+        }
+#endif
+#ifndef QT_NO_TOOLBOX
+        if (QScrollArea *sv = qobject_cast<QScrollArea *>(pw)) {
+            if (QToolBox *tb = qobject_cast<QToolBox *>(sv->parent()))
+                tb->setCurrentWidget(w);
+        }
+#endif
+    }
 }
 
 static void highlightTreeWidgetItem(QTreeWidgetItem *item, int col, bool on)
@@ -394,35 +420,26 @@ static void highlightWidget(QWidget *w, bool on)
             highlightAction(m->menuAction(), on);
 }
 
-static void bringToFront(const TranslatableEntry &target)
-{
-    for (QObject *obj = target.target.object; obj != 0; obj = obj->parent()) {
-        if (QWidget *w = qobject_cast<QWidget *>(obj)) {
-            if (QStackedLayout *lay = qobject_cast<QStackedLayout *>(w->layout()))
-                lay->setCurrentWidget(w);
-#ifndef QT_NO_STACKEDWIDGET
-            if (QStackedWidget *stack = qobject_cast<QStackedWidget *>(obj->parent()))
-                stack->setCurrentWidget(w);
-#endif
-#ifndef QT_NO_TABWIDGET
-            if (QTabWidget *tab = qobject_cast<QTabWidget *>(obj->parent()))
-                tab->setCurrentWidget(w);
-#endif
-        }
-    }
-}
 static void highlightTarget(const TranslatableEntry &target, bool on)
 {
-    bringToFront(target);
     switch (target.type) {
     case TranslatableProperty:
         if (QAction *a = qobject_cast<QAction *>(target.target.object)) {
             highlightAction(a, on);
-            break;
+        } else if (QWidget *w = qobject_cast<QWidget *>(target.target.object)) {
+            bringToFront(w);
+            highlightWidget(w, on);
         }
-        // fallthrough
+        break;
+#ifndef QT_NO_COMBOBOX
+    case TranslatableComboBoxItem:
+        static_cast<QComboBox *>(target.target.object)->setCurrentIndex(target.prop.index);
+        goto frontAndHighlight;
+#endif
 #ifndef QT_NO_TABWIDGET
     case TranslatableTabPageText:
+        static_cast<QTabWidget *>(target.target.object)->setCurrentIndex(target.prop.index);
+        goto frontAndHighlight;
 # ifndef QT_NO_TOOLTIP
     case TranslatableTabPageToolTip:
 # endif
@@ -436,24 +453,27 @@ static void highlightTarget(const TranslatableEntry &target, bool on)
     case TranslatableToolItemToolTip:
 # endif
 #endif // QT_NO_TOOLBOX
-#ifndef QT_NO_COMBOBOX
-    case TranslatableComboBoxItem:
+#if !defined(QT_NO_COMBOBOX) || !defined(QT_NO_TABWIDGET)
+      frontAndHighlight:
 #endif
-        if (QWidget *w = qobject_cast<QWidget *>(target.target.object))
-            highlightWidget(w, on);
+        bringToFront(static_cast<QWidget *>(target.target.object));
+        highlightWidget(static_cast<QWidget *>(target.target.object), on);
         break;
 #ifndef QT_NO_LISTWIDGET
     case TranslatableListWidgetItem:
+        bringToFront(target.target.listWidgetItem->listWidget());
         highlightWidgetItem(target.target.listWidgetItem, on);
         break;
 #endif
 #ifndef QT_NO_TABLEWIDGET
     case TranslatableTableWidgetItem:
+        bringToFront(target.target.tableWidgetItem->tableWidget());
         highlightWidgetItem(target.target.tableWidgetItem, on);
         break;
 #endif
 #ifndef QT_NO_TREEWIDGET
     case TranslatableTreeWidgetItem:
+        bringToFront(target.target.treeWidgetItem->treeWidget());
         highlightTreeWidgetItem(target.target.treeWidgetItem, target.prop.treeIndex.column, on);
         break;
 #endif

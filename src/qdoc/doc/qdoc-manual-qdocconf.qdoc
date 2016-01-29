@@ -410,8 +410,15 @@
     \endcode
 
     If you include the above in your qdocconf file for qtbase, there
-    will be no qwidget.html generated for html and no qwidget.xml
-    generated for DITA XML.
+    will be no class documentation generated for QWidget.
+
+    Since Qt 5.6, also simple wildcards ('*' and '?') are recognized by
+    \c excludefiles. For example, to exclude all private Qt header files
+    from being parsed, define the following:
+
+    \badcode
+    excludefiles += "*_p.h"
+    \endcode
 
     See also \l {excludedirs-variable} {excludedirs}.
 
@@ -1693,7 +1700,7 @@
     dita.metadata.default.author      = Qt Development Frameworks
     dita.metadata.default.permissions = all
     dita.metadata.default.publisher   = Qt Project
-    dita.metadata.default.copyryear = 2015
+    dita.metadata.default.copyryear = 2016
     dita.metadata.default.copyrholder = Qt Project
     dita.metadata.default.audience = programmer
     \endcode
