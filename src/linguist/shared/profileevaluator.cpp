@@ -35,6 +35,7 @@
 
 #include "qmakeglobals.h"
 #include "ioutils.h"
+#include "qmakevfs.h"
 
 #include <QDir>
 
@@ -130,29 +131,28 @@ QStringList ProFileEvaluator::absoluteFileValues(
     foreach (const QString &el, pro ? values(variable, pro) : values(variable)) {
         QString absEl;
         if (IoUtils::isAbsolutePath(el)) {
-            const QString elWithSysroot = sysrootify(el, baseDirectory);
-            if (IoUtils::exists(elWithSysroot)) {
-                result << QDir::cleanPath(elWithSysroot);
+            const QString elWithSysroot = QDir::cleanPath(sysrootify(el, baseDirectory));
+            if (d->m_vfs->exists(elWithSysroot)) {
+                result << elWithSysroot;
                 goto next;
             }
             absEl = elWithSysroot;
         } else {
             foreach (const QString &dir, searchDirs) {
-                QString fn = dir + QLatin1Char('/') + el;
-                if (IoUtils::exists(fn)) {
-                    result << QDir::cleanPath(fn);
+                QString fn = QDir::cleanPath(dir + QLatin1Char('/') + el);
+                if (d->m_vfs->exists(fn)) {
+                    result << fn;
                     goto next;
                 }
             }
             if (baseDirectory.isEmpty())
                 goto next;
-            absEl = baseDirectory + QLatin1Char('/') + el;
+            absEl = QDir::cleanPath(baseDirectory + QLatin1Char('/') + el);
         }
         {
-            absEl = QDir::cleanPath(absEl);
             int nameOff = absEl.lastIndexOf(QLatin1Char('/'));
             QString absDir = d->m_tmp1.setRawData(absEl.constData(), nameOff);
-            if (IoUtils::exists(absDir)) {
+            if (d->m_vfs->exists(absDir)) {
                 QString wildcard = d->m_tmp2.setRawData(absEl.constData() + nameOff + 1,
                                                         absEl.length() - nameOff - 1);
                 if (wildcard.contains(QLatin1Char('*')) || wildcard.contains(QLatin1Char('?'))) {

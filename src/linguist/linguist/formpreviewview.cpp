@@ -434,10 +434,12 @@ static void highlightTarget(const TranslatableEntry &target, bool on)
 #ifndef QT_NO_COMBOBOX
     case TranslatableComboBoxItem:
         static_cast<QComboBox *>(target.target.object)->setCurrentIndex(target.prop.index);
-        // fallthrough
+        goto frontAndHighlight;
 #endif
 #ifndef QT_NO_TABWIDGET
     case TranslatableTabPageText:
+        static_cast<QTabWidget *>(target.target.object)->setCurrentIndex(target.prop.index);
+        goto frontAndHighlight;
 # ifndef QT_NO_TOOLTIP
     case TranslatableTabPageToolTip:
 # endif
@@ -451,6 +453,9 @@ static void highlightTarget(const TranslatableEntry &target, bool on)
     case TranslatableToolItemToolTip:
 # endif
 #endif // QT_NO_TOOLBOX
+#if !defined(QT_NO_COMBOBOX) || !defined(QT_NO_TABWIDGET)
+      frontAndHighlight:
+#endif
         bringToFront(static_cast<QWidget *>(target.target.object));
         highlightWidget(static_cast<QWidget *>(target.target.object), on);
         break;

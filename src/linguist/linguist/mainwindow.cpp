@@ -1338,7 +1338,7 @@ void MainWindow::about()
                     "<p>Qt Linguist is a tool for adding translations to Qt "
                     "applications.</p>"
                     "<p>Copyright (C) %2 The Qt Company Ltd."
-                   ).arg(version, QStringLiteral("2015")));
+                   ).arg(version, QStringLiteral("2016")));
 
     box.setWindowTitle(QApplication::translate("AboutDialog", "Qt Linguist"));
     box.setIcon(QMessageBox::NoIcon);
