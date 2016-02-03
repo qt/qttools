@@ -165,6 +165,29 @@ QString Node::plainFullName(const Node* relative) const
 }
 
 /*!
+  Constructs and returns the node's fully qualified signature
+  by recursively ascending the parent links and prepending each
+  parent name + "::" to the plain signature. The return type is
+  not included.
+ */
+QString Node::plainSignature() const
+{
+    if (name_.isEmpty())
+        return QLatin1String("global");
+
+    QString fullName;
+    const Node* node = this;
+    while (node) {
+        fullName.prepend(node->signature(false, true));
+        if (node->parent()->name().isEmpty())
+            break;
+        fullName.prepend(QLatin1String("::"));
+        node = node->parent();
+    }
+    return fullName;
+}
+
+/*!
   Constructs and returns this node's full name.
  */
 QString Node::fullName(const Node* relative) const
@@ -2139,10 +2162,10 @@ QStringList FunctionNode::reconstructParameters(bool values) const
   is true, the default values of the parameters are included, if
   present.
  */
-QString FunctionNode::signature(bool values) const
+QString FunctionNode::signature(bool values, bool noReturnType) const
 {
     QString s;
-    if (!returnType().isEmpty())
+    if (!noReturnType && !returnType().isEmpty())
         s = returnType() + QLatin1Char(' ');
     s += name() + QLatin1Char('(');
     QStringList reconstructedParameters = reconstructParameters(values);

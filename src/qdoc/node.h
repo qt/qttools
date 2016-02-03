@@ -159,7 +159,9 @@ public:
 
     QString plainName() const;
     QString plainFullName(const Node* relative = 0) const;
+    QString plainSignature() const;
     QString fullName(const Node* relative=0) const;
+    virtual QString signature(bool ,  bool ) const { return plainName(); }
 
     const QString& fileNameBase() const { return fileNameBase_; }
     bool hasFileNameBase() const { return !fileNameBase_.isEmpty(); }
@@ -894,6 +896,8 @@ public:
     bool isOverload() const { return overload_; }
     bool isReimplemented() const Q_DECL_OVERRIDE { return reimplemented_; }
     bool isFunction() const Q_DECL_OVERRIDE { return true; }
+    bool isDtor() const { return (metaness_ == Dtor); }
+    bool isVirtual() const { return (virtualness_ == NormalVirtual); }
     virtual bool isQmlSignal() const Q_DECL_OVERRIDE {
         return (type() == Node::QmlSignal) && (genus() == Node::QML);
     }
@@ -926,7 +930,7 @@ public:
     bool hasActiveAssociatedProperty() const;
 
     QStringList reconstructParameters(bool values = false) const;
-    QString signature(bool values = false) const;
+    virtual QString signature(bool values, bool noReturnType = false) const;
     virtual QString element() const Q_DECL_OVERRIDE { return parent()->name(); }
     virtual bool isAttached() const Q_DECL_OVERRIDE { return attached_; }
     virtual bool isQtQuickNode() const Q_DECL_OVERRIDE { return parent()->isQtQuickNode(); }
