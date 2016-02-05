@@ -258,6 +258,14 @@ AppxPhoneEngine::~AppxPhoneEngine()
 
 QString AppxPhoneEngine::extensionSdkPath() const
 {
+#if _MSC_VER >= 1900
+    const QByteArray extensionSdkDirRaw = qgetenv("ExtensionSdkDir");
+    if (extensionSdkDirRaw.isEmpty()) {
+        qCWarning(lcWinRtRunner) << "The environment variable ExtensionSdkDir is not set.";
+        return QString();
+    }
+    return QString::fromLocal8Bit(extensionSdkDirRaw);
+#else // _MSC_VER < 1900
     HKEY regKey;
     LONG hr = RegOpenKeyEx(
                 HKEY_LOCAL_MACHINE,
@@ -278,6 +286,7 @@ QString AppxPhoneEngine::extensionSdkPath() const
 
     return QString::fromWCharArray(pathData, (pathLength - 1) / sizeof(wchar_t))
             + QLatin1String("ExtensionSDKs");
+#endif // _MSC_VER < 1900
 }
 
 bool AppxPhoneEngine::installPackage(IAppxManifestReader *reader, const QString &filePath)
