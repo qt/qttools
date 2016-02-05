@@ -52,6 +52,9 @@
 #include <wrl.h>
 #include <windows.applicationmodel.h>
 #include <windows.management.deployment.h>
+#if _MSC_VER >= 1900
+#include <wincrypt.h>
+#endif
 
 using namespace Microsoft::WRL;
 using namespace Microsoft::WRL::Wrappers;
@@ -61,6 +64,240 @@ using namespace ABI::Windows::ApplicationModel;
 using namespace ABI::Windows::System;
 
 QT_USE_NAMESPACE
+
+#if _MSC_VER >= 1900
+// *********** Taken from MSDN Example code
+// https://msdn.microsoft.com/en-us/library/windows/desktop/jj835834%28v=vs.85%29.aspx?f=255&MSPPError=-2147217396
+
+#define SIGNER_SUBJECT_FILE    0x01
+#define SIGNER_NO_ATTR          0x00
+#define SIGNER_CERT_POLICY_CHAIN_NO_ROOT    0x08
+#define SIGNER_CERT_STORE        0x02
+
+typedef struct _SIGNER_FILE_INFO
+{
+    DWORD cbSize;
+    LPCWSTR pwszFileName;
+    HANDLE hFile;
+} SIGNER_FILE_INFO;
+
+typedef struct _SIGNER_BLOB_INFO
+{
+    DWORD cbSize;
+    GUID *pGuidSubject;
+    DWORD cbBlob;
+    BYTE *pbBlob;
+    LPCWSTR pwszDisplayName;
+} SIGNER_BLOB_INFO;
+
+typedef struct _SIGNER_SUBJECT_INFO
+{
+    DWORD cbSize;
+    DWORD *pdwIndex;
+    DWORD dwSubjectChoice;
+    union
+    {
+        SIGNER_FILE_INFO *pSignerFileInfo;
+        SIGNER_BLOB_INFO *pSignerBlobInfo;
+    };
+} SIGNER_SUBJECT_INFO, *PSIGNER_SUBJECT_INFO;
+
+typedef struct _SIGNER_ATTR_AUTHCODE
+{
+    DWORD cbSize;
+    BOOL fCommercial;
+    BOOL fIndividual;
+    LPCWSTR pwszName;
+    LPCWSTR pwszInfo;
+} SIGNER_ATTR_AUTHCODE;
+
+typedef struct _SIGNER_SIGNATURE_INFO
+{
+    DWORD cbSize;
+    ALG_ID algidHash;
+    DWORD dwAttrChoice;
+    union
+    {
+        SIGNER_ATTR_AUTHCODE *pAttrAuthcode;
+    };
+    PCRYPT_ATTRIBUTES psAuthenticated;
+    PCRYPT_ATTRIBUTES psUnauthenticated;
+} SIGNER_SIGNATURE_INFO, *PSIGNER_SIGNATURE_INFO;
+
+typedef struct _SIGNER_PROVIDER_INFO
+{
+    DWORD cbSize;
+    LPCWSTR pwszProviderName;
+    DWORD dwProviderType;
+    DWORD dwKeySpec;
+    DWORD dwPvkChoice;
+    union
+    {
+        LPWSTR pwszPvkFileName;
+        LPWSTR pwszKeyContainer;
+    };
+} SIGNER_PROVIDER_INFO, *PSIGNER_PROVIDER_INFO;
+
+typedef struct _SIGNER_SPC_CHAIN_INFO
+{
+    DWORD cbSize;
+    LPCWSTR pwszSpcFile;
+    DWORD dwCertPolicy;
+    HCERTSTORE hCertStore;
+} SIGNER_SPC_CHAIN_INFO;
+
+typedef struct _SIGNER_CERT_STORE_INFO
+{
+    DWORD cbSize;
+    PCCERT_CONTEXT pSigningCert;
+    DWORD dwCertPolicy;
+    HCERTSTORE hCertStore;
+} SIGNER_CERT_STORE_INFO;
+
+typedef struct _SIGNER_CERT
+{
+    DWORD cbSize;
+    DWORD dwCertChoice;
+    union
+    {
+        LPCWSTR pwszSpcFile;
+        SIGNER_CERT_STORE_INFO *pCertStoreInfo;
+        SIGNER_SPC_CHAIN_INFO *pSpcChainInfo;
+    };
+    HWND hwnd;
+} SIGNER_CERT, *PSIGNER_CERT;
+
+typedef struct _SIGNER_CONTEXT
+{
+    DWORD cbSize;
+    DWORD cbBlob;
+    BYTE *pbBlob;
+} SIGNER_CONTEXT, *PSIGNER_CONTEXT;
+
+typedef struct _SIGNER_SIGN_EX2_PARAMS
+{
+    DWORD dwFlags;
+    PSIGNER_SUBJECT_INFO pSubjectInfo;
+    PSIGNER_CERT pSigningCert;
+    PSIGNER_SIGNATURE_INFO pSignatureInfo;
+    PSIGNER_PROVIDER_INFO pProviderInfo;
+    DWORD dwTimestampFlags;
+    PCSTR pszAlgorithmOid;
+    PCWSTR pwszTimestampURL;
+    PCRYPT_ATTRIBUTES pCryptAttrs;
+    PVOID pSipData;
+    PSIGNER_CONTEXT *pSignerContext;
+    PVOID pCryptoPolicy;
+    PVOID pReserved;
+} SIGNER_SIGN_EX2_PARAMS, *PSIGNER_SIGN_EX2_PARAMS;
+
+typedef struct _APPX_SIP_CLIENT_DATA
+{
+    PSIGNER_SIGN_EX2_PARAMS pSignerParams;
+    IUnknown* pAppxSipState;
+} APPX_SIP_CLIENT_DATA, *PAPPX_SIP_CLIENT_DATA;
+
+bool signAppxPackage(PCCERT_CONTEXT signingCertContext, LPCWSTR packageFilePath)
+{
+    HRESULT hr = S_OK;
+
+    DWORD signerIndex = 0;
+
+    SIGNER_FILE_INFO fileInfo = {};
+    fileInfo.cbSize = sizeof(SIGNER_FILE_INFO);
+    fileInfo.pwszFileName = packageFilePath;
+
+    SIGNER_SUBJECT_INFO subjectInfo = {};
+    subjectInfo.cbSize = sizeof(SIGNER_SUBJECT_INFO);
+    subjectInfo.pdwIndex = &signerIndex;
+    subjectInfo.dwSubjectChoice = SIGNER_SUBJECT_FILE;
+    subjectInfo.pSignerFileInfo = &fileInfo;
+
+    SIGNER_CERT_STORE_INFO certStoreInfo = {};
+    certStoreInfo.cbSize = sizeof(SIGNER_CERT_STORE_INFO);
+    certStoreInfo.dwCertPolicy = SIGNER_CERT_POLICY_CHAIN_NO_ROOT;
+    certStoreInfo.pSigningCert = signingCertContext;
+
+    SIGNER_CERT cert = {};
+    cert.cbSize = sizeof(SIGNER_CERT);
+    cert.dwCertChoice = SIGNER_CERT_STORE;
+    cert.pCertStoreInfo = &certStoreInfo;
+
+    // The algidHash of the signature to be created must match the
+    // hash algorithm used to create the app package
+    SIGNER_SIGNATURE_INFO signatureInfo = {};
+    signatureInfo.cbSize = sizeof(SIGNER_SIGNATURE_INFO);
+    signatureInfo.algidHash = CALG_SHA_512;
+    signatureInfo.dwAttrChoice = SIGNER_NO_ATTR;
+
+    SIGNER_SIGN_EX2_PARAMS signerParams = {};
+    signerParams.pSubjectInfo = &subjectInfo;
+    signerParams.pSigningCert = &cert;
+    signerParams.pSignatureInfo = &signatureInfo;
+
+    APPX_SIP_CLIENT_DATA sipClientData = {};
+    sipClientData.pSignerParams = &signerParams;
+    signerParams.pSipData = &sipClientData;
+
+    // Type definition for invoking SignerSignEx2 via GetProcAddress
+    typedef HRESULT (WINAPI *SignerSignEx2Function)(
+        DWORD,
+        PSIGNER_SUBJECT_INFO,
+        PSIGNER_CERT,
+        PSIGNER_SIGNATURE_INFO,
+        PSIGNER_PROVIDER_INFO,
+        DWORD,
+        PCSTR,
+        PCWSTR,
+        PCRYPT_ATTRIBUTES,
+        PVOID,
+        PSIGNER_CONTEXT *,
+        PVOID,
+        PVOID);
+
+    // Load the SignerSignEx2 function from MSSign32.dll
+    HMODULE msSignModule = LoadLibraryEx(
+        L"MSSign32.dll",
+        NULL,
+        LOAD_LIBRARY_SEARCH_SYSTEM32);
+
+    if (!msSignModule) {
+        qCWarning(lcWinRtRunner) << "LoadLibraryEx failed to load MSSign32.dll.";
+        return false;
+    }
+
+    SignerSignEx2Function SignerSignEx2 = reinterpret_cast<SignerSignEx2Function>(
+                                          GetProcAddress(msSignModule, "SignerSignEx2"));
+    if (!SignerSignEx2) {
+        qCWarning(lcWinRtRunner) << "Could not resolve SignerSignEx2";
+        FreeLibrary(msSignModule);
+        return false;
+    }
+    hr = SignerSignEx2(signerParams.dwFlags,
+                       signerParams.pSubjectInfo,
+                       signerParams.pSigningCert,
+                       signerParams.pSignatureInfo,
+                       signerParams.pProviderInfo,
+                       signerParams.dwTimestampFlags,
+                       signerParams.pszAlgorithmOid,
+                       signerParams.pwszTimestampURL,
+                       signerParams.pCryptAttrs,
+                       signerParams.pSipData,
+                       signerParams.pSignerContext,
+                       signerParams.pCryptoPolicy,
+                       signerParams.pReserved);
+
+    FreeLibrary(msSignModule);
+
+    RETURN_FALSE_IF_FAILED("Could not sign package.");
+
+    if (sipClientData.pAppxSipState)
+        sipClientData.pAppxSipState->Release();
+
+    return true;
+}
+// ************ MSDN
+#endif // MSC_VER >= 1900
 
 bool AppxEngine::getManifestFile(const QString &fileName, QString *manifest)
 {
@@ -193,6 +430,14 @@ AppxEngine::AppxEngine(Runner *runner, AppxEnginePrivate *dd)
     CHECK_RESULT_FATAL("Unable to obtain the package full family name from the manifest.", return);
     d->packageFamilyName = QString::fromWCharArray(packageFamilyName);
     CoTaskMemFree(packageFamilyName);
+
+#if _MSC_VER >= 1900
+    LPWSTR publisher;
+    packageId->GetPublisher(&publisher);
+    CHECK_RESULT_FATAL("Failed to retrieve publisher name from package.", return);
+    d->publisherName = QString::fromWCharArray(publisher);
+    CoTaskMemFree(publisher);
+#endif // _MSC_VER >= 1900
 
     ComPtr<IAppxManifestApplicationsEnumerator> applications;
     hr = manifestReader->GetApplications(&applications);
@@ -440,4 +685,91 @@ bool AppxEngine::createPackage(const QString &packageFileName)
     RETURN_FALSE_IF_FAILED("Failed to finalize package.");
 
     return true;
+}
+
+bool AppxEngine::sign(const QString &fileName)
+{
+#if _MSC_VER >= 1900
+    Q_D(const AppxEngine);
+    BYTE buffer[256];
+    DWORD bufferSize = 256;
+
+    if (!CertStrToName(X509_ASN_ENCODING, wchar(d->publisherName), CERT_X500_NAME_STR, 0, buffer, &bufferSize, 0)) {
+        qCWarning(lcWinRtRunner) << "CertStrToName failed";
+        return false;
+    }
+    CERT_NAME_BLOB certBlob;
+    certBlob.cbData = bufferSize;
+    certBlob.pbData = buffer;
+
+    CRYPT_ALGORITHM_IDENTIFIER identifier;
+    identifier.pszObjId = strdup(szOID_RSA_SHA256RSA);
+    identifier.Parameters.cbData = 0;
+    identifier.Parameters.pbData = NULL;
+
+    CERT_EXTENSIONS extensions;
+    extensions.cExtension = 2;
+    extensions.rgExtension = new CERT_EXTENSION[2];
+
+    // Basic Constraints
+    CERT_BASIC_CONSTRAINTS2_INFO constraintsInfo;
+    constraintsInfo.fCA = FALSE;
+    constraintsInfo.fPathLenConstraint = FALSE;
+    constraintsInfo.dwPathLenConstraint = 0;
+
+    BYTE *constraintsEncoded = NULL;
+    DWORD encodedSize = 0;
+    CryptEncodeObject(X509_ASN_ENCODING, X509_BASIC_CONSTRAINTS2, &constraintsInfo,
+                      constraintsEncoded, &encodedSize);
+    constraintsEncoded = new BYTE[encodedSize];
+    if (!CryptEncodeObject(X509_ASN_ENCODING, X509_BASIC_CONSTRAINTS2, &constraintsInfo,
+                           constraintsEncoded, &encodedSize)) {
+        qCWarning(lcWinRtRunner) << "Could not encode basic constraints.";
+        delete [] constraintsEncoded;
+        return false;
+    }
+
+    extensions.rgExtension[0].pszObjId = strdup(szOID_BASIC_CONSTRAINTS2);
+    extensions.rgExtension[0].fCritical = TRUE;
+    extensions.rgExtension[0].Value.cbData = encodedSize;
+    extensions.rgExtension[0].Value.pbData = constraintsEncoded;
+
+    // Code Signing
+    char *codeSign = strdup(szOID_PKIX_KP_CODE_SIGNING);
+    CERT_ENHKEY_USAGE enhancedUsage;
+    enhancedUsage.cUsageIdentifier = 1;
+    enhancedUsage.rgpszUsageIdentifier = &codeSign;
+
+    BYTE *enhancedKeyEncoded = 0;
+    encodedSize = 0;
+    CryptEncodeObject(X509_ASN_ENCODING, X509_ENHANCED_KEY_USAGE, &enhancedUsage,
+                      enhancedKeyEncoded, &encodedSize);
+    enhancedKeyEncoded = new BYTE[encodedSize];
+    if (!CryptEncodeObject(X509_ASN_ENCODING, X509_ENHANCED_KEY_USAGE, &enhancedUsage,
+                           enhancedKeyEncoded, &encodedSize)) {
+        qCWarning(lcWinRtRunner) << "Could not encode enhanced key usage.";
+        delete [] constraintsEncoded;
+        return false;
+    }
+
+    extensions.rgExtension[1].pszObjId = strdup(szOID_ENHANCED_KEY_USAGE);
+    extensions.rgExtension[1].fCritical = TRUE;
+    extensions.rgExtension[1].Value.cbData = encodedSize;
+    extensions.rgExtension[1].Value.pbData = enhancedKeyEncoded;
+
+    PCCERT_CONTEXT context = CertCreateSelfSignCertificate(NULL, &certBlob, NULL, NULL,
+                                                           &identifier, NULL, NULL, &extensions);
+
+    delete [] constraintsEncoded;
+
+    if (!context) {
+        qCWarning(lcWinRtRunner) << "Failed to create self sign certificate:" << GetLastError();
+        return false;
+    }
+
+    return signAppxPackage(context, wchar(fileName));
+#else // _MSC_VER < 1900
+    Q_UNUSED(fileName);
+    return true;
+#endif // _MSC_VER < 1900
 }

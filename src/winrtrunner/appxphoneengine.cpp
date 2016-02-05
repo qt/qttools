@@ -393,6 +393,9 @@ bool AppxPhoneEngine::install(bool removeFirst)
     if (!createPackage(packageFileName))
         return false;
 
+    if (!sign(packageFileName))
+        return false;
+
     ComPtr<IStream> manifestStream;
     hr = SHCreateStreamOnFile(wchar(d->manifest), STGM_READ, &manifestStream);
     RETURN_FALSE_IF_FAILED("Failed to open manifest stream");

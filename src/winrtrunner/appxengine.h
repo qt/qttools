@@ -63,6 +63,7 @@ protected:
 
     bool installDependencies();
     bool createPackage(const QString &packageFileName);
+    bool sign(const QString &fileName);
     static bool getManifestFile(const QString &fileName, QString *manifest = 0);
 
     QScopedPointer<AppxEnginePrivate> d_ptr;
