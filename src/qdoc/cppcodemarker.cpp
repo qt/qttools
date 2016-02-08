@@ -179,6 +179,8 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
         if (style == Summary || style == Accessors) {
             if (func->virtualness() != FunctionNode::NonVirtual)
                 synopsis.prepend("virtual ");
+            if (func->isFinal())
+                synopsis.append(" final");
             if (func->virtualness() == FunctionNode::PureVirtual)
                 synopsis.append(" = 0");
             else if (func->isDeleted())
@@ -199,6 +201,8 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
             } else if (func->isDefaulted()) {
                 bracketed += "default";
             } else if (func->virtualness() != FunctionNode::NonVirtual) {
+                if (func->isFinal())
+                    bracketed += "final";
                 if (func->virtualness() == FunctionNode::PureVirtual)
                     bracketed += "pure";
                 bracketed += "virtual";

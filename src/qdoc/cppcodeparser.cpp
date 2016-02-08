@@ -1570,6 +1570,7 @@ bool CppCodeParser::matchFunctionDecl(Aggregate *parent,
 
     // look for const
     bool matchedConst = match(Tok_const);
+    bool matchFinal = match(Tok_final);
 
     bool isDeleted = false;
     bool isDefaulted = false;
@@ -1652,6 +1653,7 @@ bool CppCodeParser::matchFunctionDecl(Aggregate *parent,
         func->setVirtualness(virtuality);
         func->setIsDeleted(isDeleted);
         func->setIsDefaulted(isDefaulted);
+        func->setFinal(matchFinal);
         if (isQPrivateSignal)
             func->setPrivateSignal();
         if (!pvect.isEmpty()) {
@@ -1740,6 +1742,9 @@ bool CppCodeParser::matchClassDecl(Aggregate *parent,
             }
         }
     }
+
+    const QString className = previousLexeme();
+    match(Tok_final); // ignore C++11 final class-virt-specifier
     if (tok != Tok_Colon && tok != Tok_LeftBrace)
         return false;
 
@@ -1747,7 +1752,7 @@ bool CppCodeParser::matchClassDecl(Aggregate *parent,
       So far, so good. We have 'class Foo {' or 'class Foo :'.
       This is enough to recognize a class definition.
     */
-    ClassNode *classe = new ClassNode(parent, previousLexeme());
+    ClassNode *classe = new ClassNode(parent, className);
     classe->setAccess(access);
     classe->setLocation(location());
     if (compat)

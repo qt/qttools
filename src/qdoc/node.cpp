@@ -1953,7 +1953,8 @@ FunctionNode::FunctionNode(Aggregate *parent, const QString& name)
       overload_(false),
       reimplementedFrom_(0),
       isDeleted_(false),
-      isDefaulted_(false)
+      isDefaulted_(false),
+      isFinal_(false)
 {
     setGenus(Node::CPP);
 }
@@ -1978,7 +1979,8 @@ FunctionNode::FunctionNode(NodeType type, Aggregate *parent, const QString& name
       overload_(false),
       reimplementedFrom_(0),
       isDeleted_(false),
-      isDefaulted_(false)
+      isDefaulted_(false),
+      isFinal_(false)
 {
     setGenus(Node::QML);
     if (type == QmlMethod || type == QmlSignal) {

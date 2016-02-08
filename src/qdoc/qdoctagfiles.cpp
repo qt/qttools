@@ -291,6 +291,8 @@ void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter& writer, const Aggreg
                 signature = signature.mid(signature.indexOf(QChar('('))).trimmed();
                 if (functionNode->isConst())
                     signature += " const";
+                if (functionNode->isFinal())
+                    signature += " final";
                 if (functionNode->virtualness() == FunctionNode::PureVirtual)
                     signature += " = 0";
                 else if (functionNode->isDeleted())
