@@ -1512,7 +1512,7 @@ bool CppCodeParser::matchFunctionDecl(Aggregate *parent,
         }
         if (parent && (tok == Tok_Semicolon ||
                        tok == Tok_LeftBracket ||
-                       tok == Tok_Colon)
+                       tok == Tok_Colon || tok == Tok_Equal)
                 && access != Node::Private) {
             if (tok == Tok_LeftBracket) {
                 returnType.appendHotspot();
@@ -1528,7 +1528,7 @@ bool CppCodeParser::matchFunctionDecl(Aggregate *parent,
                     return false;
                 }
             }
-            else if (tok == Tok_Colon) {
+            else if (tok == Tok_Colon || tok == Tok_Equal) {
                 returnType.appendHotspot();
 
                 while (tok != Tok_Semicolon && tok != Tok_Eoi) {
