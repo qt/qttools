@@ -1931,8 +1931,15 @@ bool CppCodeParser::matchEnumDecl(Aggregate *parent)
 
     if (!match(Tok_enum))
         return false;
+    if (tok == Tok_struct || tok == Tok_class)
+        readToken(); // ignore C++11 struct or class attribute
     if (match(Tok_Ident))
         name = previousLexeme();
+    if (match(Tok_Colon)) { // ignore C++11 enum-base
+        CodeChunk dataType;
+        if (!matchDataType(&dataType))
+            return false;
+    }
     if (tok != Tok_LeftBrace)
         return false;
 
