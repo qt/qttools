@@ -523,6 +523,8 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader& reader,
         functionNode->setMetaness(meta);
         functionNode->setConst(attributes.value(QLatin1String("const")) == QLatin1String("true"));
         functionNode->setStatic(attributes.value(QLatin1String("static")) == QLatin1String("true"));
+        functionNode->setIsDeleted(attributes.value(QLatin1String("delete")) == QLatin1String("true"));
+        functionNode->setIsDefaulted(attributes.value(QLatin1String("default")) == QLatin1String("true"));
         if (attributes.value(QLatin1String("overload")) == QLatin1String("true")) {
             functionNode->setOverloadFlag(true);
             functionNode->setOverloadNumber(attributes.value(QLatin1String("overload-number")).toUInt());
@@ -1245,6 +1247,8 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter& writer,
             writer.writeAttribute("const", functionNode->isConst()?"true":"false");
             writer.writeAttribute("static", functionNode->isStatic()?"true":"false");
             writer.writeAttribute("overload", functionNode->isOverload()?"true":"false");
+            writer.writeAttribute("delete", functionNode->isDeleted() ? "true" : "false");
+            writer.writeAttribute("default", functionNode->isDefaulted() ? "true" : "false");
             if (functionNode->isOverload())
                 writer.writeAttribute("overload-number", QString::number(functionNode->overloadNumber()));
             if (functionNode->relates()) {
@@ -1270,6 +1274,12 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter& writer,
             QString signature = functionNode->signature();
             if (functionNode->isConst())
                 signature += " const";
+            if (functionNode->virtualness() == FunctionNode::PureVirtual)
+                signature += " = 0";
+            else if (functionNode->isDeleted())
+                signature += " = delete";
+            else if (functionNode->isDefaulted())
+                signature += " = default";
             writer.writeAttribute("signature", signature);
 
             for (int i = 0; i < functionNode->parameters().size(); ++i) {

@@ -945,6 +945,12 @@ public:
 
     void debug() const;
 
+    bool isDeleted() const { return isDeleted_; }
+    void setIsDeleted(bool b) { isDeleted_ = b; }
+
+    bool isDefaulted() const { return isDefaulted_; }
+    void setIsDefaulted(bool b) { isDefaulted_ = b; }
+
 private:
     void addAssociatedProperty(PropertyNode* property);
 
@@ -961,6 +967,8 @@ private:
     bool attached_: 1;
     bool privateSignal_: 1;
     bool overload_ : 1;
+    bool isDeleted_ : 1;
+    bool isDefaulted_ : 1;
     unsigned char overloadNumber_;
     QVector<Parameter> parameters_;
     const FunctionNode* reimplementedFrom_;

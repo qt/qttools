@@ -293,6 +293,10 @@ void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter& writer, const Aggreg
                     signature += " const";
                 if (functionNode->virtualness() == FunctionNode::PureVirtual)
                     signature += " = 0";
+                else if (functionNode->isDeleted())
+                    signature += " = delete";
+                else if (functionNode->isDefaulted())
+                    signature += " = default";
                 writer.writeTextElement("arglist", signature);
             }
             writer.writeEndElement(); // member

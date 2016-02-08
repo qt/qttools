@@ -1571,10 +1571,16 @@ bool CppCodeParser::matchFunctionDecl(Aggregate *parent,
     // look for const
     bool matchedConst = match(Tok_const);
 
-    // look for 0 indicating pure virtual
-    if (match(Tok_Equal) && match(Tok_Number))
-        virtuality = FunctionNode::PureVirtual;
-
+    bool isDeleted = false;
+    bool isDefaulted = false;
+    if (match(Tok_Equal)) {
+        if (match(Tok_Number)) // look for 0 indicating pure virtual
+            virtuality = FunctionNode::PureVirtual;
+        else if (match(Tok_delete))
+            isDeleted = true;
+        else if (match(Tok_default))
+            isDefaulted = true;
+    }
     // look for colon indicating ctors which must be skipped
     if (match(Tok_Colon)) {
         while (tok != Tok_LeftBrace && tok != Tok_Eoi)
@@ -1644,6 +1650,8 @@ bool CppCodeParser::matchFunctionDecl(Aggregate *parent,
         func->setStatic(matched_static);
         func->setConst(matchedConst);
         func->setVirtualness(virtuality);
+        func->setIsDeleted(isDeleted);
+        func->setIsDefaulted(isDefaulted);
         if (isQPrivateSignal)
             func->setPrivateSignal();
         if (!pvect.isEmpty()) {
