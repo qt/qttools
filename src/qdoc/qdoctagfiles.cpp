@@ -271,7 +271,7 @@ void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter& writer, const Aggreg
                     writer.writeAttribute("virtualness", "virtual");
                     break;
                 case FunctionNode::PureVirtual:
-                    writer.writeAttribute("virtual", "pure");
+                    writer.writeAttribute("virtualness", "pure");
                     break;
                 default:
                     break;
