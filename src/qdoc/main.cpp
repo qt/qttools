@@ -728,8 +728,11 @@ int main(int argc, char **argv)
         Generator::setQDocPass(Generator::Prepare);
     if (parser.isSet(generateOption))
         Generator::setQDocPass(Generator::Generate);
-    if (parser.isSet(singleExecOption))
+    if (parser.isSet(singleExecOption)) {
         Generator::setSingleExec();
+        if (parser.isSet(indexDirOption))
+            qDebug() << "WARNING: -indexdir option ignored: Index files are not used in -single-exec mode.";
+    }
     if (parser.isSet(writeQaPagesOption))
         Generator::setWriteQaPages();
     if (parser.isSet(logProgressOption))
