@@ -1951,10 +1951,10 @@ FunctionNode::FunctionNode(Aggregate *parent, const QString& name)
       attached_(false),
       privateSignal_(false),
       overload_(false),
-      reimplementedFrom_(0),
       isDeleted_(false),
       isDefaulted_(false),
-      isFinal_(false)
+      isFinal_(false),
+      reimplementedFrom_(0)
 {
     setGenus(Node::CPP);
 }
@@ -1977,10 +1977,10 @@ FunctionNode::FunctionNode(NodeType type, Aggregate *parent, const QString& name
       attached_(attached),
       privateSignal_(false),
       overload_(false),
-      reimplementedFrom_(0),
       isDeleted_(false),
       isDefaulted_(false),
-      isFinal_(false)
+      isFinal_(false),
+      reimplementedFrom_(0)
 {
     setGenus(Node::QML);
     if (type == QmlMethod || type == QmlSignal) {
