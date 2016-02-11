@@ -2024,7 +2024,7 @@ bool CppCodeParser::matchProperty(Aggregate *parent)
     property->setDataType(dataType.toString());
 
     while (tok != Tok_RightParen && tok != Tok_Eoi) {
-        if (!match(Tok_Ident))
+        if (!match(Tok_Ident) && !match(Tok_default) && !match(Tok_final))
             return false;
         QString key = previousLexeme();
         QString value;
