@@ -4,8 +4,6 @@ QT = core gui-private widgets-private designer-private
 QT_PRIVATE = xml
 CONFIG += internal_module
 
-load(qt_module)
-
 # QtDesignerComponents uses
 DEFINES += QT_STATICPLUGIN
 DEFINES += QDESIGNER_COMPONENTS_LIBRARY
@@ -43,3 +41,5 @@ PRECOMPILED_HEADER= lib_pch.h
 # * MinGW-builds GCC 4.7.1 64-bit
 # * MinGW-w64 GCC 4.7.1 64-bit (rubenvb)
 mingw:CONFIG -= precompile_header
+
+load(qt_module)

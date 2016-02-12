@@ -2,9 +2,6 @@ MODULE = clucene
 
 TARGET = QtCLucene
 QT = core
-CONFIG += internal_module
-
-load(qt_module)
 
 include(fulltextsearch.pri)
 
@@ -31,3 +28,6 @@ win32-msvc.net | win32-msvc2* | winrt-* | winphone-* {
 solaris* {
     DEFINES += Q_SOLARIS_VERSION=$$system(uname -r | sed -e 's/5\\.//')
 }
+
+CONFIG += internal_module
+load(qt_module)
