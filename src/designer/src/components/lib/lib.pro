@@ -1,5 +1,6 @@
-MODULE = designercomponents
 TARGET = QtDesignerComponents
+MODULE = designercomponents
+
 QT = core gui-private widgets-private designer-private
 QT_PRIVATE = xml
 CONFIG += internal_module

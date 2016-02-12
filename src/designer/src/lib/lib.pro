@@ -1,6 +1,6 @@
+TARGET = QtDesigner
 MODULE = designer
 
-TARGET = QtDesigner
 QT = core-private gui-private widgets-private xml uiplugin
 
 DEFINES += \
