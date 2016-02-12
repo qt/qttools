@@ -381,7 +381,7 @@ bool HelpProjectWriter::generateSection(HelpProject &project,
         // Only insert keywords for non-constructors. Constructors are covered
         // by the classes themselves.
 
-        if (funcNode->metaness() != FunctionNode::Ctor)
+        if (!funcNode->isSomeCtor())
             project.keywords.append(keywordDetails(node));
 
         // Insert member status flags into the entries for the parent

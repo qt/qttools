@@ -1498,9 +1498,7 @@ void HtmlGenerator::generateClassLikeNode(Aggregate* inner, CodeMarker* marker)
                 names << (*m)->name();
                 if ((*m)->type() == Node::Function) {
                     const FunctionNode *func = reinterpret_cast<const FunctionNode *>(*m);
-                    if (func->metaness() == FunctionNode::Ctor ||
-                            func->metaness() == FunctionNode::Dtor ||
-                            func->overloadNumber() != 0)
+                    if (func->isSomeCtor() || func->isDtor() || func->overloadNumber() != 0)
                         names.clear();
                 }
                 else if ((*m)->type() == Node::Property) {

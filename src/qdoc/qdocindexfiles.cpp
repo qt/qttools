@@ -497,23 +497,27 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader& reader,
             goto done;
 
         t = attributes.value(QLatin1String("meta")).toString();
-        FunctionNode::Metaness meta;
+        Node::Metaness meta;
         if (t == QLatin1String("plain"))
-            meta = FunctionNode::Plain;
+            meta = Node::Plain;
         else if (t == QLatin1String("signal"))
-            meta = FunctionNode::Signal;
+            meta = Node::Signal;
         else if (t == QLatin1String("slot"))
-            meta = FunctionNode::Slot;
+            meta = Node::Slot;
         else if (t == QLatin1String("constructor"))
-            meta = FunctionNode::Ctor;
+            meta = Node::Ctor;
+        else if (t == QLatin1String("copy-constructor"))
+            meta = Node::CCtor;
+        else if (t == QLatin1String("move-constructor"))
+            meta = Node::MCtor;
         else if (t == QLatin1String("destructor"))
-            meta = FunctionNode::Dtor;
+            meta = Node::Dtor;
         else if (t == QLatin1String("macro"))
-            meta = FunctionNode::MacroWithParams;
+            meta = Node::MacroWithParams;
         else if (t == QLatin1String("macrowithparams"))
-            meta = FunctionNode::MacroWithParams;
+            meta = Node::MacroWithParams;
         else if (t == QLatin1String("macrowithoutparams"))
-            meta = FunctionNode::MacroWithoutParams;
+            meta = Node::MacroWithoutParams;
         else
             goto done;
 
@@ -1221,25 +1225,31 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter& writer,
             }
 
             switch (functionNode->metaness()) {
-            case FunctionNode::Plain:
+            case Node::Plain:
                 writer.writeAttribute("meta", "plain");
                 break;
-            case FunctionNode::Signal:
+            case Node::Signal:
                 writer.writeAttribute("meta", "signal");
                 break;
-            case FunctionNode::Slot:
+            case Node::Slot:
                 writer.writeAttribute("meta", "slot");
                 break;
-            case FunctionNode::Ctor:
+            case Node::Ctor:
                 writer.writeAttribute("meta", "constructor");
                 break;
-            case FunctionNode::Dtor:
+            case Node::CCtor:
+                writer.writeAttribute("meta", "copy-constructor");
+                break;
+            case Node::MCtor:
+                writer.writeAttribute("meta", "move-constructor");
+                break;
+            case Node::Dtor:
                 writer.writeAttribute("meta", "destructor");
                 break;
-            case FunctionNode::MacroWithParams:
+            case Node::MacroWithParams:
                 writer.writeAttribute("meta", "macrowithparams");
                 break;
-            case FunctionNode::MacroWithoutParams:
+            case Node::MacroWithoutParams:
                 writer.writeAttribute("meta", "macrowithoutparams");
                 break;
             default:

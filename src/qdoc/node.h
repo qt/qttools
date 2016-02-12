@@ -155,6 +155,19 @@ public:
         FlagValueTrue = 1
     };
 
+    enum Metaness {
+        Plain,
+        Signal,
+        Slot,
+        Ctor,
+        Dtor,
+        CCtor,
+        MCtor,
+        MacroWithParams,
+        MacroWithoutParams,
+        Native
+    };
+
     virtual ~Node();
 
     QString plainName() const;
@@ -207,6 +220,7 @@ public:
     virtual bool isQmlBasicType() const { return false; }
     virtual bool isJsBasicType() const { return false; }
     virtual bool isEnumType() const { return false; }
+    virtual bool isTypedef() const { return false; }
     virtual bool isExample() const { return false; }
     virtual bool isExampleFile() const { return false; }
     virtual bool isHeaderFile() const { return false; }
@@ -805,6 +819,7 @@ public:
     TypedefNode(Aggregate* parent, const QString& name);
     virtual ~TypedefNode() { }
 
+    virtual bool isTypedef() const { return true; }
     const EnumNode* associatedEnum() const { return associatedEnum_; }
 
 private:
@@ -836,6 +851,7 @@ public:
     void setName(const QString& name) { name_ = name; }
 
     bool hasType() const { return dataType_.length() + rightType_.length() > 0; }
+    Node::Metaness metaness(const QString& name) const;
     const QString& dataType() const { return dataType_; }
     const QString& rightType() const { return rightType_; }
     const QString& name() const { return name_; }
@@ -856,15 +872,6 @@ public:
 class FunctionNode : public LeafNode
 {
 public:
-    enum Metaness {
-        Plain,
-        Signal,
-        Slot,
-        Ctor,
-        Dtor,
-        MacroWithParams,
-        MacroWithoutParams,
-        Native };
     enum Virtualness { NonVirtual, NormalVirtual, PureVirtual };
 
     FunctionNode(Aggregate* parent, const QString &name);
@@ -897,7 +904,11 @@ public:
     bool isOverload() const { return overload_; }
     bool isReimplemented() const Q_DECL_OVERRIDE { return reimplemented_; }
     bool isFunction() const Q_DECL_OVERRIDE { return true; }
+    bool isSomeCtor() const { return isCtor() || isCCtor() || isMCtor(); }
+    bool isCtor() const { return (metaness_ == Ctor); }
+    bool isCCtor() const { return (metaness_ == CCtor); }
     bool isDtor() const { return (metaness_ == Dtor); }
+    bool isMCtor() const { return (metaness_ == MCtor); }
     bool isVirtual() const { return (virtualness_ == NormalVirtual); }
     virtual bool isQmlSignal() const Q_DECL_OVERRIDE {
         return (type() == Node::QmlSignal) && (genus() == Node::QML);

@@ -766,6 +766,22 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
                     text << " The destructor is virtual.";
                 generateText(text, node, marker);
             }
+            else if (func->isCtor()) {
+                Text text;
+                text << "Default constructs an instance of ";
+                text << func->parent()->name() << ".";
+                generateText(text, node, marker);
+            }
+            else if (func->isCCtor()) {
+                Text text;
+                text << "Copy constructor.";
+                generateText(text, node, marker);
+            }
+            else if (func->isMCtor()) {
+                Text text;
+                text << "Move-copy constructor.";
+                generateText(text, node, marker);
+            }
             else if (!node->isWrapper() && !quiet && !node->isReimplemented()) {
                 node->location().warning(tr("No documentation for '%1'").arg(node->plainSignature()));
             }

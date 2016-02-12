@@ -1049,10 +1049,8 @@ void QDocDatabase::findAllFunctions(Aggregate* node)
             }
             else if ((*c)->type() == Node::Function) {
                 const FunctionNode* func = static_cast<const FunctionNode*>(*c);
-                if ((func->status() > Node::Obsolete) &&
-                        !func->isInternal() &&
-                        (func->metaness() != FunctionNode::Ctor) &&
-                        (func->metaness() != FunctionNode::Dtor)) {
+                if ((func->status() > Node::Obsolete) && !func->isInternal() &&
+                    !func->isSomeCtor() && !func->isDtor()) {
                     funcIndex_[(*c)->name()].insert((*c)->parent()->fullDocumentName(), *c);
                 }
             }
@@ -1226,9 +1224,7 @@ void QDocDatabase::findAllSince(Aggregate* node)
             if ((*child)->type() == Node::Function) {
                 // Insert functions into the general since map.
                 FunctionNode *func = static_cast<FunctionNode *>(*child);
-                if ((func->status() > Node::Obsolete) &&
-                    (func->metaness() != FunctionNode::Ctor) &&
-                    (func->metaness() != FunctionNode::Dtor)) {
+                if ((func->status() > Node::Obsolete) && !func->isSomeCtor() && !func->isDtor()) {
                     nsmap.value().insert(func->name(),(*child));
                 }
             }

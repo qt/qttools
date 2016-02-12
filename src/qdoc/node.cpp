@@ -1952,6 +1952,21 @@ QString Parameter::reconstruct(bool value) const
     return p;
 }
 
+/*!
+  Returns the appropriate metaness value based on the parameter
+  type. The parameter type must contain the \a name and must end
+  with either \c{&&} or \c{&}.
+ */
+Node::Metaness Parameter::metaness(const QString& name) const
+{
+    if (dataType_.contains(name)) {
+        if (dataType_.endsWith(QLatin1String("&&")))
+            return FunctionNode::MCtor;
+        if (dataType_.endsWith(QLatin1String("&")))
+            return FunctionNode::CCtor;
+    }
+    return FunctionNode::Ctor;
+}
 
 /*!
   \class FunctionNode
