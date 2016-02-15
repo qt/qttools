@@ -350,6 +350,19 @@ QStringList findAppFrameworkNames(const QString &appBundlePath)
     return frameworks;
 }
 
+QStringList findAppFrameworkPaths(const QString &appBundlePath)
+{
+    QStringList frameworks;
+    QString searchPath = appBundlePath + "/Contents/Frameworks/";
+    QDirIterator iter(searchPath, QStringList() << QString::fromLatin1("*.framework"), QDir::Dirs);
+    while (iter.hasNext()) {
+        iter.next();
+        frameworks << iter.fileInfo().filePath();
+    }
+
+    return frameworks;
+}
+
 QStringList findAppLibraries(const QString &appBundlePath)
 {
     QStringList result;
@@ -1234,7 +1247,7 @@ void codesignFile(const QString &identity, const QString &filePath)
     LogNormal() << "codesign" << filePath;
 
     QProcess codesign;
-    codesign.start("codesign", QStringList() << "--preserve-metadata=identifier,entitlements,resource-rules"
+    codesign.start("codesign", QStringList() << "--preserve-metadata=identifier,entitlements"
                                              << "--force" << "-s" << identity << filePath);
     codesign.waitForFinished(-1);
 
@@ -1247,7 +1260,7 @@ void codesignFile(const QString &identity, const QString &filePath)
     }
 }
 
-void codesign(const QString &identity, const QString &appBundlePath)
+QSet<QString> codesignBundle(const QString &identity, const QString &appBundlePath)
 {
     // Code sign all binaries in the app bundle. This needs to
     // be done inside-out, e.g sign framework dependencies
@@ -1273,10 +1286,37 @@ void codesign(const QString &identity, const QString &appBundlePath)
     foreach (const QString &binary, foundPluginBinaries)
          pendingBinaries.push(binary);
 
-    QStringList foundLibraries = findAppBundleFiles(appBundlePath + "/Contents/Frameworks/");
-    foreach (const QString &binary, foundLibraries)
-        pendingBinaries.push(binary);
+    // Add frameworks for processing.
+    QStringList frameworkPaths = findAppFrameworkPaths(appBundlePath);
+    foreach (const QString &frameworkPath, frameworkPaths) {
 
+        // Add all files for a framework as a catch all.
+        QStringList bundleFiles = findAppBundleFiles(frameworkPath);
+        foreach (const QString &binary, bundleFiles)
+            pendingBinaries.push(binary);
+
+        // Prioritise first to sign any additional inner bundles found in the Helpers folder (e.g
+        // used by QtWebEngine).
+        QDirIterator helpersIterator(frameworkPath, QStringList() << QString::fromLatin1("Helpers"), QDir::Dirs | QDir::NoSymLinks, QDirIterator::Subdirectories);
+        while (helpersIterator.hasNext()) {
+            helpersIterator.next();
+            QString helpersPath = helpersIterator.filePath();
+            QStringList innerBundleNames = QDir(helpersPath).entryList(QStringList() << "*.app", QDir::Dirs);
+            foreach (const QString &innerBundleName, innerBundleNames)
+                signedBinaries += codesignBundle(identity, helpersPath + "/" + innerBundleName);
+        }
+
+        // Also make sure to sign any libraries that will not be found by otool because they
+        // are not linked and won't be seen as a dependency.
+        QDirIterator librariesIterator(frameworkPath, QStringList() << QString::fromLatin1("Libraries"), QDir::Dirs | QDir::NoSymLinks, QDirIterator::Subdirectories);
+        while (librariesIterator.hasNext()) {
+            librariesIterator.next();
+            QString librariesPath = librariesIterator.filePath();
+            bundleFiles = findAppBundleFiles(librariesPath);
+            foreach (const QString &binary, bundleFiles)
+                pendingBinaries.push(binary);
+        }
+    }
 
     // Sign all binares; use otool to find and sign dependencies first.
     while (!pendingBinaries.isEmpty()) {
@@ -1286,16 +1326,38 @@ void codesign(const QString &identity, const QString &appBundlePath)
 
         // Check if there are unsigned dependencies, sign these first
         QStringList dependencies = getBinaryDependencies(rootBinariesPath, binary).toSet().subtract(signedBinaries).toList();
+
         if (!dependencies.isEmpty()) {
             pendingBinaries.push(binary);
-            foreach (const QString &dependency, dependencies)
+            int dependenciesSkipped = 0;
+            foreach (const QString &dependency, dependencies) {
+                // Skip dependencies that are outside the current app bundle, because this might
+                // cause a codesign error if the current bundle is part of the dependency (e.g.
+                // a bundle is part of a framework helper, and depends on that framework).
+                // The dependencies will be taken care of after the current bundle is signed.
+                if (!dependency.startsWith(appBundlePath)) {
+                    ++dependenciesSkipped;
+                    LogNormal() << "Skipping outside dependency: " << dependency;
+                    continue;
+                }
                 pendingBinaries.push(dependency);
-            continue;
+            }
+
+            // If all dependencies were skipped, make sure the binary is actually signed, instead
+            // of going into an infinite loop.
+            if (dependenciesSkipped == dependencies.size()) {
+                pendingBinaries.pop();
+            } else {
+                continue;
+            }
         }
+
         // All dependencies are signed, now sign this binary
         codesignFile(identity, binary);
         signedBinaries.insert(binary);
     }
+
+    LogNormal() << "Finished codesigning " << appBundlePath << "with identity" << identity;
 
     // Verify code signature
     QProcess codesign;
@@ -1308,6 +1370,12 @@ void codesign(const QString &identity, const QString &appBundlePath)
     } else if (!err.isEmpty()) {
         LogDebug() << err;
     }
+
+    return signedBinaries;
+}
+
+void codesign(const QString &identity, const QString &appBundlePath) {
+    codesignBundle(identity, appBundlePath);
 }
 
 void createDiskImage(const QString &appBundlePath)
