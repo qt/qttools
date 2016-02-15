@@ -41,6 +41,8 @@
 
 #include <QtCore/QtAlgorithms>
 #include <QtCore/QFileSystemWatcher>
+#include <QtCore/QSortFilterProxyModel>
+#include <QtCore/QStringListModel>
 
 #include <QtWidgets/QDesktopWidget>
 #include <QtWidgets/QFileDialog>
@@ -61,6 +63,13 @@ PreferencesDialog::PreferencesDialog(QWidget *parent)
 {
     TRACE_OBJ
     m_ui.setupUi(this);
+
+    m_registeredDocsModel = new QStringListModel(m_ui.registeredDocsListView);
+    m_registereredDocsFilterModel = new QSortFilterProxyModel(m_ui.registeredDocsListView);
+    m_registereredDocsFilterModel->setSourceModel(m_registeredDocsModel);
+    m_ui.registeredDocsListView->setModel(m_registereredDocsFilterModel);
+    connect(m_ui.registeredDocsFilterLineEdit, &QLineEdit::textChanged,
+            m_registereredDocsFilterModel, &QSortFilterProxyModel::setFilterFixedString);
 
     connect(m_ui.buttonBox->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
         this, SLOT(applyChanges()));
@@ -98,7 +107,7 @@ PreferencesDialog::PreferencesDialog(QWidget *parent)
             SLOT(removeDocumentation()));
 
         m_docsBackup = helpEngine.registeredDocumentations();
-        m_ui.registeredDocsListWidget->addItems(m_docsBackup);
+        m_registeredDocsModel->setStringList(m_docsBackup);
     } else {
         m_ui.tabWidget->removeTab(m_ui.tabWidget->indexOf(m_ui.docsTab));
     }
@@ -254,14 +263,15 @@ void PreferencesDialog::addDocumentationLocal()
             continue;
         }
 
-        if (m_ui.registeredDocsListWidget->findItems(nameSpace,
-            Qt::MatchFixedString).count()) {
+        QStringList registeredDocs = m_registeredDocsModel->stringList();
+        if (registeredDocs.contains(nameSpace)) {
                 alreadyRegistered.append(nameSpace);
                 continue;
         }
 
         if (helpEngine.registerDocumentation(fileName)) {
-            m_ui.registeredDocsListWidget->addItem(nameSpace);
+            registeredDocs.append(nameSpace);
+            m_registeredDocsModel->setStringList(registeredDocs);
             m_regDocs.append(nameSpace);
             m_unregDocs.removeAll(nameSpace);
         }
@@ -291,14 +301,27 @@ void PreferencesDialog::addDocumentationLocal()
     updateFilterPage();
 }
 
+QList<int> PreferencesDialog::currentRegisteredDocsSelection() const
+{
+    QList<int> result;
+    foreach (const QModelIndex &index, m_ui.registeredDocsListView->selectionModel()->selectedRows())
+        result.append(m_registereredDocsFilterModel->mapToSource(index).row());
+    return result;
+}
+
 void PreferencesDialog::removeDocumentation()
 {
     TRACE_OBJ
 
+    const QList<int> currentSelection = currentRegisteredDocsSelection();
+    if (currentSelection.isEmpty())
+        return;
+
+    QStringList namespaces = m_registeredDocsModel->stringList();
+
     bool foundBefore = false;
-    QList<QListWidgetItem*> l = m_ui.registeredDocsListWidget->selectedItems();
-    foreach (QListWidgetItem* item, l) {
-        const QString& ns = item->text();
+    for (int i = currentSelection.size() - 1; i >= 0; --i) {
+        const QString& ns = namespaces.at(i);
         if (!foundBefore && OpenPagesManager::instance()->pagesOpenForNamespace(ns)) {
             if (0 == QMessageBox::information(this, tr("Remove Documentation"),
                 tr("Some documents currently opened in Assistant reference the "
@@ -309,13 +332,15 @@ void PreferencesDialog::removeDocumentation()
         }
 
         m_unregDocs.append(ns);
-        delete m_ui.registeredDocsListWidget->takeItem(
-            m_ui.registeredDocsListWidget->row(item));
+        namespaces.removeAt(i);
     }
 
-    if (m_ui.registeredDocsListWidget->count()) {
-        m_ui.registeredDocsListWidget->setCurrentRow(0,
-            QItemSelectionModel::ClearAndSelect);
+    m_registeredDocsModel->setStringList(namespaces);
+
+    if (m_registereredDocsFilterModel->rowCount()) {
+        const QModelIndex first = m_registereredDocsFilterModel->index(0, 0);
+        m_ui.registeredDocsListView->selectionModel()->setCurrentIndex(first,
+                                                                       QItemSelectionModel::ClearAndSelect);
     }
 }
 

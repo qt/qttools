@@ -42,6 +42,8 @@ QT_BEGIN_NAMESPACE
 class FontPanel;
 class HelpEngineWrapper;
 class QFileSystemWatcher;
+class QSortFilterProxyModel;
+class QStringListModel;
 
 class PreferencesDialog : public QDialog
 {
@@ -79,6 +81,7 @@ private:
     void updateFilterPage();
     void updateFontSettingsPage();
     void updateOptionsPage();
+    QList<int> currentRegisteredDocsSelection() const;
 
     Ui::PreferencesDialogClass m_ui;
     bool m_hideFiltersTab;
@@ -87,6 +90,8 @@ private:
     QMap<QString, QStringList> m_filterMap;
     QStringList m_removedFilters;
     QStringList m_docsBackup;
+    QStringListModel *m_registeredDocsModel;
+    QSortFilterProxyModel *m_registereredDocsFilterModel;
     QStringList m_regDocs;
     QStringList m_unregDocs;
     FontPanel *m_appFontPanel;
