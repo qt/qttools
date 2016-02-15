@@ -1179,7 +1179,7 @@ bool CppCodeParser::matchTemplateHeader()
     return matchTemplateAngles();
 }
 
-bool CppCodeParser::matchDataType(CodeChunk *dataType, QString *var)
+bool CppCodeParser::matchDataType(CodeChunk *dataType, QString *var, bool qProp)
 {
     /*
       This code is really hard to follow... sorry. The loop is there to match
@@ -1304,6 +1304,10 @@ bool CppCodeParser::matchDataType(CodeChunk *dataType, QString *var)
                 */
                 if (varComment.exactMatch(previousLexeme()))
                     *var = varComment.cap(1);
+            }
+            else if (qProp && (match(Tok_default) || match(Tok_final))) {
+                // Hack to make 'default' and 'final' work again in Q_PROPERTY
+                *var = previousLexeme();
             }
         }
 
@@ -2015,7 +2019,7 @@ bool CppCodeParser::matchProperty(Aggregate *parent)
 
     QString name;
     CodeChunk dataType;
-    if (!matchDataType(&dataType, &name))
+    if (!matchDataType(&dataType, &name, true))
         return false;
 
     PropertyNode *property = new PropertyNode(parent, name);
