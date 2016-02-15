@@ -1255,7 +1255,7 @@ bool CppCodeParser::matchDataType(CodeChunk *dataType, QString *var)
     }
 
     while (match(Tok_Ampersand) || match(Tok_Aster) || match(Tok_const) ||
-           match(Tok_Caret))
+           match(Tok_Caret) || match(Tok_Ellipsis))
         dataType->append(previousLexeme());
 
     if (match(Tok_LeftParenAster)) {
