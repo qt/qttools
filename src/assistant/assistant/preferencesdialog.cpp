@@ -39,10 +39,11 @@
 #include "openpagesmanager.h"
 #include "tracer.h"
 
+#include <QtCore/QAbstractListModel>
 #include <QtCore/QtAlgorithms>
 #include <QtCore/QFileSystemWatcher>
 #include <QtCore/QSortFilterProxyModel>
-#include <QtCore/QStringListModel>
+#include <QtCore/QVector>
 
 #include <QtWidgets/QDesktopWidget>
 #include <QtWidgets/QFileDialog>
@@ -53,18 +54,103 @@
 
 #include <QtHelp/QHelpEngineCore>
 
+#include <algorithm>
+
 QT_BEGIN_NAMESPACE
+
+struct RegisteredDocEntry
+{
+    QString nameSpace;
+    QString fileName;
+};
+
+typedef QVector<RegisteredDocEntry> RegisteredDocEntries;
+
+class RegisteredDocsModel : public QAbstractListModel {
+public:
+
+    explicit RegisteredDocsModel(const RegisteredDocEntries &e = RegisteredDocEntries(), QObject *parent = nullptr)
+        : QAbstractListModel(parent), m_docEntries(e) {}
+
+    int rowCount(const QModelIndex & = QModelIndex()) const override { return m_docEntries.size(); }
+    QVariant data(const QModelIndex &index, int role) const override;
+
+    bool contains(const QString &nameSpace) const
+    {
+        return m_docEntries.cend() !=
+            std::find_if(m_docEntries.cbegin(), m_docEntries.cend(),
+                         [nameSpace] (const RegisteredDocEntry &e) { return e.nameSpace == nameSpace; });
+    }
+
+    void append(const RegisteredDocEntry &e);
+
+    const RegisteredDocEntries &docEntries() const { return m_docEntries; }
+    void setDocEntries(const RegisteredDocEntries &);
+
+private:
+    RegisteredDocEntries m_docEntries;
+};
+
+QVariant RegisteredDocsModel::data(const QModelIndex &index, int role) const
+{
+    QVariant result;
+    const int row = index.row();
+    if (index.isValid() && row < m_docEntries.size()) {
+        switch (role) {
+        case Qt::DisplayRole:
+            result = QVariant(m_docEntries.at(row).nameSpace);
+            break;
+        case Qt::ToolTipRole:
+            result = QVariant(QDir::toNativeSeparators(m_docEntries.at(row).fileName));
+            break;
+        default:
+            break;
+        }
+    }
+    return result;
+}
+
+void RegisteredDocsModel::append(const RegisteredDocEntry &e)
+{
+    beginInsertRows(QModelIndex(), m_docEntries.size(), m_docEntries.size());
+    m_docEntries.append(e);
+    endInsertRows();
+}
+
+void RegisteredDocsModel::setDocEntries(const RegisteredDocEntries &e)
+{
+    beginResetModel();
+    m_docEntries = e;
+    endResetModel();
+}
+
+static RegisteredDocEntries registeredDocEntries(const HelpEngineWrapper &wrapper)
+{
+    RegisteredDocEntries result;
+    const QStringList nameSpaces = wrapper.registeredDocumentations();
+    result.reserve(nameSpaces.size());
+    foreach (const QString &nameSpace, nameSpaces) {
+        RegisteredDocEntry entry;
+        entry.nameSpace = nameSpace;
+        entry.fileName = wrapper.documentationFileName(nameSpace);
+        result.append(entry);
+    }
+    return result;
+}
 
 PreferencesDialog::PreferencesDialog(QWidget *parent)
     : QDialog(parent)
     , m_appFontChanged(false)
     , m_browserFontChanged(false)
     , helpEngine(HelpEngineWrapper::instance())
+    , m_hideFiltersTab(!helpEngine.filterFunctionalityEnabled())
+    , m_hideDocsTab(!helpEngine.documentationManagerEnabled())
 {
     TRACE_OBJ
     m_ui.setupUi(this);
 
-    m_registeredDocsModel = new QStringListModel(m_ui.registeredDocsListView);
+    m_registeredDocsModel =
+        new RegisteredDocsModel(m_hideDocsTab ? RegisteredDocEntries() : registeredDocEntries(helpEngine));
     m_registereredDocsFilterModel = new QSortFilterProxyModel(m_ui.registeredDocsListView);
     m_registereredDocsFilterModel->setSourceModel(m_registeredDocsModel);
     m_ui.registeredDocsListView->setModel(m_registereredDocsFilterModel);
@@ -75,9 +161,6 @@ PreferencesDialog::PreferencesDialog(QWidget *parent)
         this, SLOT(applyChanges()));
     connect(m_ui.buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
         this, SLOT(reject()));
-
-    m_hideFiltersTab = !helpEngine.filterFunctionalityEnabled();
-    m_hideDocsTab = !helpEngine.documentationManagerEnabled();
 
     if (!m_hideFiltersTab) {
         m_ui.attributeWidget->header()->hide();
@@ -106,8 +189,9 @@ PreferencesDialog::PreferencesDialog(QWidget *parent)
         connect(m_ui.docRemoveButton, SIGNAL(clicked()), this,
             SLOT(removeDocumentation()));
 
-        m_docsBackup = helpEngine.registeredDocumentations();
-        m_registeredDocsModel->setStringList(m_docsBackup);
+        m_docsBackup.reserve(m_registeredDocsModel->rowCount());
+        foreach (const RegisteredDocEntry &e, m_registeredDocsModel->docEntries())
+            m_docsBackup.append(e.nameSpace);
     } else {
         m_ui.tabWidget->removeTab(m_ui.tabWidget->indexOf(m_ui.docsTab));
     }
@@ -263,15 +347,16 @@ void PreferencesDialog::addDocumentationLocal()
             continue;
         }
 
-        QStringList registeredDocs = m_registeredDocsModel->stringList();
-        if (registeredDocs.contains(nameSpace)) {
+        if (m_registeredDocsModel->contains(nameSpace)) {
                 alreadyRegistered.append(nameSpace);
                 continue;
         }
 
         if (helpEngine.registerDocumentation(fileName)) {
-            registeredDocs.append(nameSpace);
-            m_registeredDocsModel->setStringList(registeredDocs);
+            RegisteredDocEntry entry;
+            entry.nameSpace = nameSpace;
+            entry.fileName = fileName;
+            m_registeredDocsModel->append(entry);
             m_regDocs.append(nameSpace);
             m_unregDocs.removeAll(nameSpace);
         }
@@ -317,12 +402,12 @@ void PreferencesDialog::removeDocumentation()
     if (currentSelection.isEmpty())
         return;
 
-    QStringList namespaces = m_registeredDocsModel->stringList();
+    RegisteredDocEntries entries = m_registeredDocsModel->docEntries();
 
     bool foundBefore = false;
     for (int i = currentSelection.size() - 1; i >= 0; --i) {
         const int row = currentSelection.at(i);
-        const QString& ns = namespaces.at(row);
+        const QString& ns = entries.at(row).nameSpace;
         if (!foundBefore && OpenPagesManager::instance()->pagesOpenForNamespace(ns)) {
             if (0 == QMessageBox::information(this, tr("Remove Documentation"),
                 tr("Some documents currently opened in Assistant reference the "
@@ -333,10 +418,10 @@ void PreferencesDialog::removeDocumentation()
         }
 
         m_unregDocs.append(ns);
-        namespaces.removeAt(row);
+        entries.removeAt(row);
     }
 
-    m_registeredDocsModel->setStringList(namespaces);
+    m_registeredDocsModel->setDocEntries(entries);
 
     if (m_registereredDocsFilterModel->rowCount()) {
         const QModelIndex first = m_registereredDocsFilterModel->index(0, 0);

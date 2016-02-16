@@ -221,6 +221,12 @@ const QStringList HelpEngineWrapper::registeredDocumentations() const
     return d->m_helpEngine->registeredDocumentations();
 }
 
+QString HelpEngineWrapper::documentationFileName(const QString &namespaceName) const
+{
+    TRACE_OBJ
+    return d->m_helpEngine->documentationFileName(namespaceName);
+}
+
 const QString HelpEngineWrapper::collectionFile() const
 {
     TRACE_OBJ

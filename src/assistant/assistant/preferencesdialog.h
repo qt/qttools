@@ -41,9 +41,9 @@ QT_BEGIN_NAMESPACE
 
 class FontPanel;
 class HelpEngineWrapper;
+class RegisteredDocsModel;
 class QFileSystemWatcher;
 class QSortFilterProxyModel;
-class QStringListModel;
 
 class PreferencesDialog : public QDialog
 {
@@ -84,13 +84,11 @@ private:
     QList<int> currentRegisteredDocsSelection() const;
 
     Ui::PreferencesDialogClass m_ui;
-    bool m_hideFiltersTab;
-    bool m_hideDocsTab;
     QMap<QString, QStringList> m_filterMapBackup;
     QMap<QString, QStringList> m_filterMap;
     QStringList m_removedFilters;
     QStringList m_docsBackup;
-    QStringListModel *m_registeredDocsModel;
+    RegisteredDocsModel *m_registeredDocsModel;
     QSortFilterProxyModel *m_registereredDocsFilterModel;
     QStringList m_regDocs;
     QStringList m_unregDocs;
@@ -99,6 +97,8 @@ private:
     bool m_appFontChanged;
     bool m_browserFontChanged;
     HelpEngineWrapper &helpEngine;
+    const bool m_hideFiltersTab;
+    const bool m_hideDocsTab;
     bool m_showTabs;
 };
 

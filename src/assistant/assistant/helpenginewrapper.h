@@ -77,6 +77,7 @@ public:
     QHelpIndexWidget *indexWidget();
     bool setupData();
     const QStringList registeredDocumentations() const;
+    QString documentationFileName(const QString &namespaceName) const;
     const QString collectionFile() const;
     bool registerDocumentation(const QString &docFile);
     bool unregisterDocumentation(const QString &namespaceName);
