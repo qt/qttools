@@ -321,7 +321,8 @@ void PreferencesDialog::removeDocumentation()
 
     bool foundBefore = false;
     for (int i = currentSelection.size() - 1; i >= 0; --i) {
-        const QString& ns = namespaces.at(i);
+        const int row = currentSelection.at(i);
+        const QString& ns = namespaces.at(row);
         if (!foundBefore && OpenPagesManager::instance()->pagesOpenForNamespace(ns)) {
             if (0 == QMessageBox::information(this, tr("Remove Documentation"),
                 tr("Some documents currently opened in Assistant reference the "
@@ -332,7 +333,7 @@ void PreferencesDialog::removeDocumentation()
         }
 
         m_unregDocs.append(ns);
-        namespaces.removeAt(i);
+        namespaces.removeAt(row);
     }
 
     m_registeredDocsModel->setStringList(namespaces);
