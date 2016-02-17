@@ -1630,7 +1630,7 @@ void HtmlGenerator::generateQmlBasicTypePage(QmlBasicTypeNode* qbtn, CodeMarker*
     marker = CodeMarker::markerForLanguage(QLatin1String("QML"));
 
     generateHeader(htmlTitle, qbtn, marker);
-    QList<Section> sections = marker->sections(qbtn, CodeMarker::Summary, CodeMarker::Okay);
+    QList<Section> sections = marker->qmlSections(qbtn, CodeMarker::Summary);
     generateTableOfContents(qbtn,marker,&sections);
     generateKeywordAnchors(qbtn);
     generateTitle(htmlTitle,
@@ -1638,6 +1638,17 @@ void HtmlGenerator::generateQmlBasicTypePage(QmlBasicTypeNode* qbtn, CodeMarker*
                   subTitleSize,
                   qbtn,
                   marker);
+
+    s = sections.constBegin();
+    while (s != sections.constEnd()) {
+        QString ref = registerRef((*s).name.toLower());
+        out() << "<a name=\"" << ref
+              << "\"></a>" << divNavTop << '\n';
+        out() << "<h2 id=\"" << ref << "\">" << protectEnc((*s).name) << "</h2>\n";
+        generateQmlSummary(*s, qbtn, marker);
+        ++s;
+    }
+
     generateExtractionMark(qbtn, DetailedDescriptionMark);
     out() << "<div class=\"descr\"> <a name=\"" << registerRef("details") << "\"></a>\n"; // QTBUG-9504
 
@@ -1645,6 +1656,19 @@ void HtmlGenerator::generateQmlBasicTypePage(QmlBasicTypeNode* qbtn, CodeMarker*
     out() << "</div>\n"; // QTBUG-9504
     generateAlsoList(qbtn, marker);
     generateExtractionMark(qbtn, EndMark);
+
+    sections = marker->qmlSections(qbtn, CodeMarker::Detailed);
+    s = sections.constBegin();
+    while (s != sections.constEnd()) {
+        out() << "<h2>" << protectEnc((*s).name) << "</h2>\n";
+        NodeList::ConstIterator m = (*s).members.constBegin();
+        while (m != (*s).members.constEnd()) {
+            generateDetailedQmlMember(*m, qbtn, marker);
+            out() << "<br/>\n";
+            ++m;
+        }
+        ++s;
+    }
     generateFooter(qbtn);
 }
 

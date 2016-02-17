@@ -189,6 +189,16 @@ class QDocForest
         }
         return 0;
     }
+
+    Aggregate* lookupQmlBasicType(const QString& name)
+    {
+        foreach (Tree* t, searchOrder()) {
+            Aggregate* a = t->lookupQmlBasicType(name);
+            if (a)
+                return a;
+        }
+        return 0;
+    }
     void clearSearchOrder() { searchOrder_.clear(); }
     void clearLinkCounts()
     {
@@ -253,6 +263,7 @@ class QDocDatabase
     QmlTypeNode* findQmlType(const QString& name);
     QmlTypeNode* findQmlType(const QString& qmid, const QString& name);
     QmlTypeNode* findQmlType(const ImportRec& import, const QString& name);
+    Aggregate* findQmlBasicType(const QString& qmid, const QString& name);
 
  private:
     void findAllClasses(Aggregate *node);

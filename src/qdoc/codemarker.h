@@ -146,7 +146,7 @@ public:
     virtual QList<Section> sections(const Aggregate *inner,
                                     SynopsisStyle style,
                                     Status status) = 0;
-    virtual QList<Section> qmlSections(QmlTypeNode* qmlTypeNode,
+    virtual QList<Section> qmlSections(Aggregate* aggregate,
                                        SynopsisStyle style,
                                        Status status = Okay);
     virtual QStringList macRefsForNode(Node* node);

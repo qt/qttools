@@ -1108,50 +1108,50 @@ QString CppCodeMarker::addMarkUp(const QString &in,
 /*!
   This function is for documenting QML properties. It returns
   the list of documentation sections for the children of the
-  \a qmlTypeNode.
+  \a aggregate.
  */
-QList<Section> CppCodeMarker::qmlSections(QmlTypeNode* qmlTypeNode, SynopsisStyle style, Status status)
+QList<Section> CppCodeMarker::qmlSections(Aggregate* aggregate, SynopsisStyle style, Status status)
 {
     QList<Section> sections;
-    if (qmlTypeNode) {
+    if (aggregate) {
         if (style == Summary) {
-            FastSection qmlproperties(qmlTypeNode,
+            FastSection qmlproperties(aggregate,
                                       "Properties",
                                       QString(),
                                       "property",
                                       "properties");
-            FastSection qmlattachedproperties(qmlTypeNode,
+            FastSection qmlattachedproperties(aggregate,
                                               "Attached Properties",
                                               QString(),
                                               "attached property",
                                               "attached properties");
-            FastSection qmlsignals(qmlTypeNode,
+            FastSection qmlsignals(aggregate,
                                    "Signals",
                                    QString(),
                                    "signal",
                                    "signals");
-            FastSection qmlsignalhandlers(qmlTypeNode,
+            FastSection qmlsignalhandlers(aggregate,
                                           "Signal Handlers",
                                           QString(),
                                           "signal handler",
                                           "signal handlers");
-            FastSection qmlattachedsignals(qmlTypeNode,
+            FastSection qmlattachedsignals(aggregate,
                                            "Attached Signals",
                                            QString(),
                                            "attached signal",
                                            "attached signals");
-            FastSection qmlmethods(qmlTypeNode,
+            FastSection qmlmethods(aggregate,
                                    "Methods",
                                    QString(),
                                    "method",
                                    "methods");
-            FastSection qmlattachedmethods(qmlTypeNode,
+            FastSection qmlattachedmethods(aggregate,
                                            "Attached Methods",
                                            QString(),
                                            "attached method",
                                            "attached methods");
 
-            QmlTypeNode* qcn = qmlTypeNode;
+            Aggregate* qcn = aggregate;
             while (qcn != 0) {
                 NodeList::ConstIterator c = qcn->childNodes().constBegin();
                 while (c != qcn->childNodes().constEnd()) {
@@ -1206,17 +1206,17 @@ QList<Section> CppCodeMarker::qmlSections(QmlTypeNode* qmlTypeNode, SynopsisStyl
             append(sections,qmlattachedmethods);
         }
         else if (style == Detailed) {
-            FastSection qmlproperties(qmlTypeNode, "Property Documentation","qmlprop","member","members");
-            FastSection qmlattachedproperties(qmlTypeNode,"Attached Property Documentation","qmlattprop",
+            FastSection qmlproperties(aggregate, "Property Documentation","qmlprop","member","members");
+            FastSection qmlattachedproperties(aggregate,"Attached Property Documentation","qmlattprop",
                                               "member","members");
-            FastSection qmlsignals(qmlTypeNode,"Signal Documentation","qmlsig","signal","signals");
-            FastSection qmlsignalhandlers(qmlTypeNode,"Signal Handler Documentation","qmlsighan","signal handler","signal handlers");
-            FastSection qmlattachedsignals(qmlTypeNode,"Attached Signal Documentation","qmlattsig",
+            FastSection qmlsignals(aggregate,"Signal Documentation","qmlsig","signal","signals");
+            FastSection qmlsignalhandlers(aggregate,"Signal Handler Documentation","qmlsighan","signal handler","signal handlers");
+            FastSection qmlattachedsignals(aggregate,"Attached Signal Documentation","qmlattsig",
                                            "signal","signals");
-            FastSection qmlmethods(qmlTypeNode,"Method Documentation","qmlmeth","member","members");
-            FastSection qmlattachedmethods(qmlTypeNode,"Attached Method Documentation","qmlattmeth",
+            FastSection qmlmethods(aggregate,"Method Documentation","qmlmeth","member","members");
+            FastSection qmlattachedmethods(aggregate,"Attached Method Documentation","qmlattmeth",
                                            "member","members");
-            QmlTypeNode* qcn = qmlTypeNode;
+            Aggregate* qcn = aggregate;
             while (qcn != 0) {
                 NodeList::ConstIterator c = qcn->childNodes().constBegin();
                 while (c != qcn->childNodes().constEnd()) {
@@ -1275,8 +1275,8 @@ QList<Section> CppCodeMarker::qmlSections(QmlTypeNode* qmlTypeNode, SynopsisStyl
               members is prepared.
              */
             ClassMap* classMap = 0;
-            FastSection all(qmlTypeNode,QString(),QString(),"member","members");
-            QmlTypeNode* current = qmlTypeNode;
+            FastSection all(aggregate,QString(),QString(),"member","members");
+            Aggregate* current = aggregate;
             while (current != 0) {
                 /*
                   If the QML type is abstract, do not create
@@ -1291,7 +1291,7 @@ QList<Section> CppCodeMarker::qmlSections(QmlTypeNode* qmlTypeNode, SynopsisStyl
                  */
                 if (!current->isAbstract() || !classMap) {
                     classMap = new ClassMap;
-                    classMap->first = current;
+                    classMap->first = static_cast<const QmlTypeNode*>(current);
                     all.classMapList_.append(classMap);
                 }
                 NodeList::ConstIterator c = current->childNodes().constBegin();

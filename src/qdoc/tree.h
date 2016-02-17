@@ -202,6 +202,7 @@ class Tree
     CollectionNode* addToJsModule(const QString& name, Node* node);
 
     QmlTypeNode* lookupQmlType(const QString& name) const { return qmlTypeMap_.value(name); }
+    Aggregate* lookupQmlBasicType(const QString& name) const { return qmlTypeMap_.value(name); }
     void insertQmlType(const QString& key, QmlTypeNode* n);
     void addExampleNode(ExampleNode* n) { exampleNodeMap_.insert(n->title(), n); }
     ExampleNodeMap& exampleNodeMap() { return exampleNodeMap_; }

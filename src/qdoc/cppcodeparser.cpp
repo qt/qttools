@@ -556,11 +556,13 @@ Node* CppCodeParser::processTopicCommand(const Doc& doc,
              (command == COMMAND_JSATTACHEDSIGNAL) ||
              (command == COMMAND_JSATTACHEDMETHOD)) {
         QString module;
-        QString qmlTypeName;
+        QString name;
         QString type;
-        if (splitQmlMethodArg(arg.first, type, module, qmlTypeName)) {
-            QmlTypeNode* qmlType = qdb_->findQmlType(module, qmlTypeName);
-            if (qmlType) {
+        if (splitQmlMethodArg(arg.first, type, module, name)) {
+            Aggregate* aggregate = qdb_->findQmlType(module, name);
+            if (!aggregate)
+                aggregate = qdb_->findQmlBasicType(module, name);
+            if (aggregate) {
                 bool attached = false;
                 Node::NodeType nodeType = Node::QmlMethod;
                 if ((command == COMMAND_QMLSIGNAL) ||
@@ -582,7 +584,7 @@ Node* CppCodeParser::processTopicCommand(const Doc& doc,
                     return 0; // never get here.
                 FunctionNode* fn = makeFunctionNode(doc,
                                                     arg.first,
-                                                    qmlType,
+                                                    aggregate,
                                                     nodeType,
                                                     attached,
                                                     command);
