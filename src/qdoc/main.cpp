@@ -788,13 +788,13 @@ int main(int argc, char **argv)
     translators.clear();
 #endif
     QmlTypeNode::terminate();
-    //#define DEBUG_SHUTDOWN_CRASH
+
 #ifdef DEBUG_SHUTDOWN_CRASH
-    Generator::startDebugging("main(): Delete qdoc database");
+    qDebug() << "main(): Delete qdoc database";
 #endif
     QDocDatabase::destroyQdocDB();
 #ifdef DEBUG_SHUTDOWN_CRASH
-    Generator::stopDebugging("main(): qdoc database deleted");
+    qDebug() << "main(): qdoc database deleted";
 #endif
 
     return EXIT_SUCCESS;

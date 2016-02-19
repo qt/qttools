@@ -165,29 +165,6 @@ QString Node::plainFullName(const Node* relative) const
 }
 
 /*!
-  Constructs and returns the node's fully qualified signature
-  by recursively ascending the parent links and prepending each
-  parent name + "::" to the plain signature. The return type is
-  not included.
- */
-QString Node::plainSignature() const
-{
-    if (name_.isEmpty())
-        return QLatin1String("global");
-
-    QString fullName;
-    const Node* node = this;
-    while (node) {
-        fullName.prepend(node->signature(false, true));
-        if (node->parent()->name().isEmpty())
-            break;
-        fullName.prepend(QLatin1String("::"));
-        node = node->parent();
-    }
-    return fullName;
-}
-
-/*!
   Constructs and returns this node's full name.
  */
 QString Node::fullName(const Node* relative) const
@@ -861,7 +838,7 @@ Node* Aggregate::findChildNode(const QString& name, NodeType type)
 }
 
 /*!
-  Find a function node that is a child of this node, such
+  Find a function node that is a child of this nose, such
   that the function node has the specified \a name.
  */
 FunctionNode *Aggregate::findFunctionNode(const QString& name, const QString& params) const
@@ -930,58 +907,21 @@ FunctionNode *Aggregate::findFunctionNode(const QString& name, const QString& pa
 /*!
   Find the function node that is a child of this node, such
   that the function has the same name and signature as the
-  function described in \a f1.
+  \a clone node.
  */
-FunctionNode *Aggregate::findFunctionNode(const Declaration& f1) const
+FunctionNode *Aggregate::findFunctionNode(const FunctionNode *clone) const
 {
-    QMap<QString,Node*>::ConstIterator c = primaryFunctionMap_.constFind(f1.name_);
+    QMap<QString,Node*>::ConstIterator c = primaryFunctionMap_.constFind(clone->name());
     if (c != primaryFunctionMap_.constEnd()) {
-        FunctionNode* f2 = (FunctionNode*) *c;
-        if (f1.isConst_ == f2->isConst()) {
-            if (isSameSignature(f1.pvect_, f2)) {
-                return f2;
-            }
+        if (isSameSignature(clone, (FunctionNode *) *c)) {
+            return (FunctionNode *) *c;
         }
-        if (secondaryFunctionMap_.contains(f1.name_)) {
-            const NodeList& secs = secondaryFunctionMap_[f1.name_];
+        else if (secondaryFunctionMap_.contains(clone->name())) {
+            const NodeList& secs = secondaryFunctionMap_[clone->name()];
             NodeList::ConstIterator s = secs.constBegin();
             while (s != secs.constEnd()) {
-                f2 = (FunctionNode*) *s;
-                if (f1.isConst_ == f2->isConst()) {
-                    if (isSameSignature(f1.pvect_, f2))
-                        return f2;
-                }
-                ++s;
-            }
-        }
-    }
-    return 0;
-}
-
-/*!
-  Find the function node that is a child of this node, such
-  that the function has the same name and signature as the
-  function node \a f1.
- */
-FunctionNode *Aggregate::findFunctionNode(const FunctionNode* f1) const
-{
-    QMap<QString,Node*>::ConstIterator c = primaryFunctionMap_.constFind(f1->name());
-    if (c != primaryFunctionMap_.constEnd()) {
-        FunctionNode* f2 = (FunctionNode*) *c;
-        if (f1->isConst() == f2->isConst()) {
-            if (isSameSignature(f1->parameters(), f2)) {
-                return f2;
-            }
-        }
-        if (secondaryFunctionMap_.contains(f1->name())) {
-            const NodeList& secs = secondaryFunctionMap_[f1->name()];
-            NodeList::ConstIterator s = secs.constBegin();
-            while (s != secs.constEnd()) {
-                f2 = (FunctionNode*) *s;
-                if (f1->isConst() == f2->isConst()) {
-                    if (isSameSignature(f1->parameters(), f2))
-                        return f2;
-                }
+                if (isSameSignature(clone, (FunctionNode *) *s))
+                    return (FunctionNode *) *s;
                 ++s;
             }
         }
@@ -1225,19 +1165,18 @@ void Aggregate::setIncludes(const QStringList& includes)
 }
 
 /*!
-  Compare the function signature contained parameter vector
-  \a pv1 with the signature of the function node \a f2, and
-  return \c true if they are the same.
+  f1 is always the clone
  */
-bool Aggregate::isSameSignature(const QVector<Parameter>& pv1, const FunctionNode* f2)
+bool Aggregate::isSameSignature(const FunctionNode *f1, const FunctionNode *f2)
 {
-    const QVector<Parameter>& pv2 = f2->parameters();
-    if (pv1.size() != pv2.size())
+    if (f1->parameters().size() != f2->parameters().size())
+        return false;
+    if (f1->isConst() != f2->isConst())
         return false;
 
-    QVector<Parameter>::ConstIterator p1 = pv1.constBegin();
-    QVector<Parameter>::ConstIterator p2 = pv2.constBegin();
-    while (p2 != pv2.constEnd()) {
+    QVector<Parameter>::ConstIterator p1 = f1->parameters().constBegin();
+    QVector<Parameter>::ConstIterator p2 = f2->parameters().constBegin();
+    while (p2 != f2->parameters().constEnd()) {
         if ((*p1).hasType() && (*p2).hasType()) {
             if ((*p1).rightType() != (*p2).rightType())
                 return false;
@@ -2090,11 +2029,11 @@ void FunctionNode::addParameter(const Parameter& parameter)
 
 /*!
  */
-void FunctionNode::borrowParameterNames(const Declaration& declData)
+void FunctionNode::borrowParameterNames(const FunctionNode *source)
 {
     QVector<Parameter>::Iterator t = parameters_.begin();
-    QVector<Parameter>::ConstIterator s = declData.pvect_.constBegin();
-    while (s != declData.pvect_.constEnd() && t != parameters_.end()) {
+    QVector<Parameter>::ConstIterator s = source->parameters_.constBegin();
+    while (s != source->parameters_.constEnd() && t != parameters_.end()) {
         if (!(*s).name().isEmpty())
             (*t).setName((*s).name());
         ++s;
@@ -2194,10 +2133,10 @@ QStringList FunctionNode::reconstructParameters(bool values) const
   is true, the default values of the parameters are included, if
   present.
  */
-QString FunctionNode::signature(bool values, bool noReturnType) const
+QString FunctionNode::signature(bool values) const
 {
     QString s;
-    if (!noReturnType && !returnType().isEmpty())
+    if (!returnType().isEmpty())
         s = returnType() + QLatin1Char(' ');
     s += name() + QLatin1Char('(');
     QStringList reconstructedParameters = reconstructParameters(values);

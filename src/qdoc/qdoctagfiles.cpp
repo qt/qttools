@@ -287,7 +287,7 @@ void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter& writer, const Aggreg
                 QStringList pieces = gen_->fullDocumentLocation(node, false).split(QLatin1Char('#'));
                 writer.writeTextElement("anchorfile", pieces[0]);
                 writer.writeTextElement("anchor", pieces[1]);
-                QString signature = functionNode->signature(false);
+                QString signature = functionNode->signature();
                 signature = signature.mid(signature.indexOf(QChar('('))).trimmed();
                 if (functionNode->isConst())
                     signature += " const";

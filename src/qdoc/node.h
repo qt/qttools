@@ -53,7 +53,6 @@ class ExampleNode;
 class TypedefNode;
 class QmlTypeNode;
 class QDocDatabase;
-class Declaration;
 class FunctionNode;
 class PropertyNode;
 class CollectionNode;
@@ -160,9 +159,7 @@ public:
 
     QString plainName() const;
     QString plainFullName(const Node* relative = 0) const;
-    QString plainSignature() const;
     QString fullName(const Node* relative=0) const;
-    virtual QString signature(bool ,  bool ) const { return plainName(); }
 
     const QString& fileNameBase() const { return fileNameBase_; }
     bool hasFileNameBase() const { return !fileNameBase_.isEmpty(); }
@@ -373,37 +370,6 @@ private:
 };
 Q_DECLARE_TYPEINFO(Node::DocSubtype, Q_PRIMITIVE_TYPE);
 
-class Parameter
-{
-public:
-    Parameter() {}
-    Parameter(const QString& dataType,
-              const QString& rightType = QString(),
-              const QString& name = QString(),
-              const QString& defaultValue = QString());
-    Parameter(const Parameter& p);
-
-    Parameter& operator=(const Parameter& p);
-
-    void setName(const QString& name) { name_ = name; }
-
-    bool hasType() const { return dataType_.length() + rightType_.length() > 0; }
-    const QString& dataType() const { return dataType_; }
-    const QString& rightType() const { return rightType_; }
-    const QString& name() const { return name_; }
-    const QString& defaultValue() const { return defaultValue_; }
-
-    QString reconstruct(bool value = false) const;
-
- public:
-    QString dataType_;
-    QString rightType_;  // mws says remove this 04/08/2015
-    QString name_;
-    QString defaultValue_;
-};
-//friend class QTypeInfo<Parameter>;
-//Q_DECLARE_TYPEINFO(Parameter, Q_MOVABLE_TYPE);
-
 class Aggregate : public Node
 {
 public:
@@ -413,8 +379,7 @@ public:
     Node* findChildNode(const QString& name, NodeType type);
     virtual void findChildren(const QString& name, NodeList& nodes) const Q_DECL_OVERRIDE;
     FunctionNode* findFunctionNode(const QString& name, const QString& params) const;
-    FunctionNode* findFunctionNode(const Declaration& declData) const;
-    FunctionNode* findFunctionNode(const FunctionNode* f1) const;
+    FunctionNode* findFunctionNode(const FunctionNode* clone) const;
     void addInclude(const QString &include);
     void setIncludes(const QStringList &includes);
     void normalizeOverloads();
@@ -456,7 +421,7 @@ protected:
 private:
     friend class Node;
 
-    static bool isSameSignature(const QVector<Parameter>& pv1, const FunctionNode* f2);
+    static bool isSameSignature(const FunctionNode* f1, const FunctionNode* f2);
     void removeRelated(Node* pseudoChild);
     void addRelated(Node* pseudoChild);
 
@@ -853,6 +818,38 @@ inline void EnumNode::setFlagsType(TypedefNode* t)
     t->setAssociatedEnum(this);
 }
 
+class Parameter
+{
+public:
+    Parameter() {}
+    Parameter(const QString& dataType,
+              const QString& rightType = QString(),
+              const QString& name = QString(),
+              const QString& defaultValue = QString());
+    Parameter(const Parameter& p);
+
+    Parameter& operator=(const Parameter& p);
+
+    void setName(const QString& name) { name_ = name; }
+
+    bool hasType() const { return dataType_.length() + rightType_.length() > 0; }
+    const QString& dataType() const { return dataType_; }
+    const QString& rightType() const { return rightType_; }
+    const QString& name() const { return name_; }
+    const QString& defaultValue() const { return defaultValue_; }
+
+    QString reconstruct(bool value = false) const;
+
+ public:
+    QString dataType_;
+    QString rightType_;  // mws says remove this 04/08/2015
+    QString name_;
+    QString defaultValue_;
+};
+
+//friend class QTypeInfo<Parameter>;
+//Q_DECLARE_TYPEINFO(Parameter, Q_MOVABLE_TYPE);
+
 class FunctionNode : public LeafNode
 {
 public:
@@ -883,7 +880,7 @@ public:
     void setReimplemented(bool b);
     void addParameter(const Parameter& parameter);
     inline void setParameters(const QVector<Parameter>& parameters);
-    void borrowParameterNames(const Declaration& declData);
+    void borrowParameterNames(const FunctionNode* source);
     void setReimplementedFrom(FunctionNode* from);
 
     const QString& returnType() const { return returnType_; }
@@ -929,7 +926,7 @@ public:
     bool hasActiveAssociatedProperty() const;
 
     QStringList reconstructParameters(bool values = false) const;
-    virtual QString signature(bool values, bool noReturnType = false) const;
+    QString signature(bool values = false) const;
     virtual QString element() const Q_DECL_OVERRIDE { return parent()->name(); }
     virtual bool isAttached() const Q_DECL_OVERRIDE { return attached_; }
     virtual bool isQtQuickNode() const Q_DECL_OVERRIDE { return parent()->isQtQuickNode(); }
@@ -969,97 +966,6 @@ private:
     const FunctionNode* reimplementedFrom_;
     PropNodeList        associatedProperties_;
     QList<FunctionNode*> reimplementedBy_;
-};
-
-enum ParseResult { Ignore, SyntaxError, Function, Variable };
-
-class Declaration
-{
- public:
- Declaration()
-     : result_(Ignore), parent_(0), type_(Node::Function), access_(Node::Public),
-       metaness_(FunctionNode::Plain), bodyExpected_(false), bodyPresent_(false),
-       isAttached_(false), isMacro_(false), isQPrivateSignal_(false), isQT_DEPRECATED_(false),
-       isFriend_(false), isStatic_(false), isInline_(false), isExplicit_(false), isCompat_(false),
-       isConst_(false), virtuality_(FunctionNode::NonVirtual) { }
-
-    Declaration(Aggregate* p)
-     : result_(Ignore), parent_(p), type_(Node::Function), access_(Node::Public),
-       metaness_(FunctionNode::Plain), bodyExpected_(false), bodyPresent_(false),
-       isAttached_(false), isMacro_(false), isQPrivateSignal_(false), isQT_DEPRECATED_(false),
-       isFriend_(false), isStatic_(false), isInline_(false), isExplicit_(false), isCompat_(false),
-       isConst_(false), virtuality_(FunctionNode::NonVirtual) { }
-
-    Declaration(Aggregate* p, Node::NodeType t, bool isAttached)
-     : result_(Ignore), parent_(p), type_(t), access_(Node::Public),
-       metaness_(FunctionNode::Plain), bodyExpected_(false), bodyPresent_(false),
-       isAttached_(isAttached), isMacro_(false), isQPrivateSignal_(false), isQT_DEPRECATED_(false),
-       isFriend_(false), isStatic_(false), isInline_(false), isExplicit_(false), isCompat_(false),
-       isConst_(false), virtuality_(FunctionNode::NonVirtual) { }
-
-    Declaration(Aggregate* p, const QString& t)
-    : result_(Ignore), parent_(p), templateStuff_(t), type_(Node::Function), access_(Node::Public),
-       metaness_(FunctionNode::Plain), bodyExpected_(false), bodyPresent_(false),
-       isAttached_(false), isMacro_(false), isQPrivateSignal_(false), isQT_DEPRECATED_(false),
-       isFriend_(false), isStatic_(false), isInline_(false), isExplicit_(false), isCompat_(false),
-       isConst_(false), virtuality_(FunctionNode::NonVirtual) { }
-
-    Declaration(Aggregate* p, bool isMacro)
-     : result_(Ignore), parent_(p), type_(Node::Function), access_(Node::Public),
-       metaness_(FunctionNode::Plain), bodyExpected_(false), bodyPresent_(false),
-       isAttached_(false), isMacro_(isMacro), isQPrivateSignal_(false), isQT_DEPRECATED_(false),
-       isFriend_(false), isStatic_(false), isInline_(false), isExplicit_(false), isCompat_(false),
-       isConst_(false), virtuality_(FunctionNode::NonVirtual) { }
-
-    void clear() {
-        parent_ = 0;
-        type_ = Node::Function;
-        access_ = Node::Public;
-        metaness_ = FunctionNode::Plain;
-        bodyExpected_ = false;
-        bodyPresent_ = false;
-        isAttached_ = false;
-        isMacro_ = false;
-        isQPrivateSignal_ = false;
-        isQT_DEPRECATED_ = false;
-        isFriend_ = false;
-        isStatic_ = false;
-        isInline_ = false;
-        isExplicit_ = false;
-        isCompat_ = false;
-        isConst_ = false;
-        virtuality_ = FunctionNode::NonVirtual;
-    }
-
-    bool ignoreThisDecl() const { return (isFriend_ && !bodyPresent_); }
-    bool isFunction() const { return (result_ == Function); }
-    bool isVariable() const { return (result_ == Variable); }
-
- public:
-    ParseResult result_;
-    Aggregate* parent_;
-    QStringList parentPath_;
-    QString name_;
-    QString templateStuff_;
-    Node::NodeType type_;
-    Node::Access access_;
-    FunctionNode::Metaness metaness_;
-    bool bodyExpected_;
-    bool bodyPresent_;
-    bool isAttached_;
-    bool isMacro_;
-    bool isQPrivateSignal_;
-    bool isQT_DEPRECATED_;
-    bool isFriend_;
-    bool isStatic_;
-    bool isInline_;
-    bool isExplicit_;
-    bool isCompat_;
-    bool isConst_;
-    FunctionNode::Virtualness virtuality_;
-    CodeChunk returnType_;
-    Location location_;
-    QVector<Parameter> pvect_;
 };
 
 class PropertyNode : public LeafNode
