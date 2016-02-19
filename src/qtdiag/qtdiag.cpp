@@ -113,6 +113,16 @@ QTextStream &operator<<(QTextStream &str, const QFont &f)
     return str;
 }
 
+QTextStream &operator<<(QTextStream &str, QPlatformScreen::SubpixelAntialiasingType st)
+{
+    static const char *enumValues[] = {
+        "Subpixel_None", "Subpixel_RGB", "Subpixel_BGR", "Subpixel_VRGB", "Subpixel_VBGR"
+    };
+    str << (size_t(st) < sizeof(enumValues) / sizeof(enumValues[0])
+            ? enumValues[st] : "<Unknown>");
+    return str;
+}
+
 #ifndef QT_NO_OPENGL
 
 QTextStream &operator<<(QTextStream &str, const QSurfaceFormat &format)
@@ -219,6 +229,18 @@ static QString formatQDebug(T t)
 {
     QString result;
     QDebug(&result) << t;
+    return result;
+}
+
+// Helper to format a type via QDebug, stripping the class name.
+template <class T>
+static QString formatValueQDebug(T t)
+{
+    QString result = formatQDebug(t).trimmed();
+    if (result.endsWith(QLatin1Char(')'))) {
+        result.chop(1);
+        result.remove(0, result.indexOf(QLatin1Char('(')) + 1);
+    }
     return result;
 }
 
@@ -445,11 +467,7 @@ QString qtDiag(unsigned flags)
             << " from " << platformTheme->themeHint(QPlatformTheme::IconThemeSearchPaths).toStringList() << '\n';
     }
     if (const QFont *systemFont = platformTheme->font())
-        str << "  System font  : " << *systemFont<< '\n';
-    str << "  General font : " << QFontDatabase::systemFont(QFontDatabase::GeneralFont) << '\n'
-              << "  Fixed font   : " << QFontDatabase::systemFont(QFontDatabase::FixedFont) << '\n'
-              << "  Title font   : " << QFontDatabase::systemFont(QFontDatabase::TitleFont) << '\n'
-              << "  Smallest font: " << QFontDatabase::systemFont(QFontDatabase::SmallestReadableFont) << '\n';
+        str << "\n  System font  : " << *systemFont<< '\n';
 
     if (platformTheme->usePlatformNativeDialog(QPlatformTheme::FileDialog))
         str << "  Native file dialog\n";
@@ -459,6 +477,27 @@ QString qtDiag(unsigned flags)
         str << "  Native font dialog\n";
     if (platformTheme->usePlatformNativeDialog(QPlatformTheme::MessageDialog))
         str << "  Native message dialog\n";
+
+    str << "\nFonts:\n  General font : " << QFontDatabase::systemFont(QFontDatabase::GeneralFont) << '\n'
+              << "  Fixed font   : " << QFontDatabase::systemFont(QFontDatabase::FixedFont) << '\n'
+              << "  Title font   : " << QFontDatabase::systemFont(QFontDatabase::TitleFont) << '\n'
+              << "  Smallest font: " << QFontDatabase::systemFont(QFontDatabase::SmallestReadableFont) << '\n';
+    if (flags & QtDiagFonts) {
+        QFontDatabase fontDatabase;
+        const QStringList families = fontDatabase.families();
+        str << "\n  Families (" << families.size() << "):\n";
+        for (int i = 0, count = families.size(); i < count; ++i)
+            str << "    " << families.at(i) << '\n';
+
+        const QList<int> standardSizes = QFontDatabase::standardSizes();
+        str << "\n  Standard Sizes:";
+        for (int i = 0, count = standardSizes.size(); i < count; ++i)
+            str << ' ' << standardSizes.at(i);
+        QList<QFontDatabase::WritingSystem> writingSystems = fontDatabase.writingSystems();
+        str << "\n\n  Writing systems:\n";
+        for (int i = 0, count = writingSystems.size(); i < count; ++i)
+            str << "    " << formatValueQDebug(writingSystems.at(i)) << '\n';
+    }
 
     const QList<QScreen*> screens = QGuiApplication::screens();
     const int screenCount = screens.size();
@@ -490,7 +529,7 @@ QString qtDiag(unsigned flags)
             << " Logical DPI: " << dpi;
         if (dpi != nativeDpi)
             str << " (native: " << nativeDpi << ')';
-        str << "\n  ";
+        str << ' ' << platformScreen->subpixelAntialiasingTypeHint() << "\n  ";
         if (QHighDpiScaling::isActive())
             str << "High DPI scaling factor: " << QHighDpiScaling::factor(screen) << ' ';
         str << "DevicePixelRatio: " << screen->devicePixelRatio()

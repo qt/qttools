@@ -117,7 +117,7 @@ protected:
     bool matchModuleQualifier(QString& name);
     bool matchTemplateAngles(CodeChunk *type = 0);
     bool matchTemplateHeader();
-    bool matchDataType(CodeChunk *type, QString *var = 0);
+    bool matchDataType(CodeChunk *type, QString *var = 0, bool qProp = false);
     bool matchParameter(QVector<Parameter>& pvect, bool& isQPrivateSignal);
     bool matchFunctionDecl(Aggregate *parent,
                            QStringList *parentPathPtr,

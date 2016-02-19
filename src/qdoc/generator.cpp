@@ -752,8 +752,26 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
         }
     }
     if (node->doc().isEmpty()) {
-        if (!node->isWrapper() && !quiet && !node->isReimplemented()) { // ### might be unnecessary
-            node->location().warning(tr("No documentation for '%1'").arg(node->plainFullName()));
+        /*
+          Test for special function, like a destructor or copy constructor,
+          that has no documentation.
+        */
+        if (node->type() == Node::Function) {
+            const FunctionNode* func = static_cast<const FunctionNode*>(node);
+            if (func->isDtor()) {
+                Text text;
+                text << "Destroys the instance of ";
+                text << func->parent()->name() << ".";
+                if (func->isVirtual())
+                    text << " The destructor is virtual.";
+                generateText(text, node, marker);
+            }
+            else if (!node->isWrapper() && !quiet && !node->isReimplemented()) {
+                node->location().warning(tr("No documentation for '%1'").arg(node->plainSignature()));
+            }
+        }
+        else if (!node->isWrapper() && !quiet && !node->isReimplemented()) {
+            node->location().warning(tr("No documentation for '%1'").arg(node->plainSignature()));
         }
     }
     else {

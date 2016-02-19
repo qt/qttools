@@ -1179,7 +1179,7 @@ bool CppCodeParser::matchTemplateHeader()
     return matchTemplateAngles();
 }
 
-bool CppCodeParser::matchDataType(CodeChunk *dataType, QString *var)
+bool CppCodeParser::matchDataType(CodeChunk *dataType, QString *var, bool qProp)
 {
     /*
       This code is really hard to follow... sorry. The loop is there to match
@@ -1255,7 +1255,7 @@ bool CppCodeParser::matchDataType(CodeChunk *dataType, QString *var)
     }
 
     while (match(Tok_Ampersand) || match(Tok_Aster) || match(Tok_const) ||
-           match(Tok_Caret))
+           match(Tok_Caret) || match(Tok_Ellipsis))
         dataType->append(previousLexeme());
 
     if (match(Tok_LeftParenAster)) {
@@ -1304,6 +1304,10 @@ bool CppCodeParser::matchDataType(CodeChunk *dataType, QString *var)
                 */
                 if (varComment.exactMatch(previousLexeme()))
                     *var = varComment.cap(1);
+            }
+            else if (qProp && (match(Tok_default) || match(Tok_final))) {
+                // Hack to make 'default' and 'final' work again in Q_PROPERTY
+                *var = previousLexeme();
             }
         }
 
@@ -1512,7 +1516,7 @@ bool CppCodeParser::matchFunctionDecl(Aggregate *parent,
         }
         if (parent && (tok == Tok_Semicolon ||
                        tok == Tok_LeftBracket ||
-                       tok == Tok_Colon)
+                       tok == Tok_Colon || tok == Tok_Equal)
                 && access != Node::Private) {
             if (tok == Tok_LeftBracket) {
                 returnType.appendHotspot();
@@ -1528,7 +1532,7 @@ bool CppCodeParser::matchFunctionDecl(Aggregate *parent,
                     return false;
                 }
             }
-            else if (tok == Tok_Colon) {
+            else if (tok == Tok_Colon || tok == Tok_Equal) {
                 returnType.appendHotspot();
 
                 while (tok != Tok_Semicolon && tok != Tok_Eoi) {
@@ -1570,11 +1574,18 @@ bool CppCodeParser::matchFunctionDecl(Aggregate *parent,
 
     // look for const
     bool matchedConst = match(Tok_const);
+    bool matchFinal = match(Tok_final);
 
-    // look for 0 indicating pure virtual
-    if (match(Tok_Equal) && match(Tok_Number))
-        virtuality = FunctionNode::PureVirtual;
-
+    bool isDeleted = false;
+    bool isDefaulted = false;
+    if (match(Tok_Equal)) {
+        if (match(Tok_Number)) // look for 0 indicating pure virtual
+            virtuality = FunctionNode::PureVirtual;
+        else if (match(Tok_delete))
+            isDeleted = true;
+        else if (match(Tok_default))
+            isDefaulted = true;
+    }
     // look for colon indicating ctors which must be skipped
     if (match(Tok_Colon)) {
         while (tok != Tok_LeftBrace && tok != Tok_Eoi)
@@ -1644,6 +1655,9 @@ bool CppCodeParser::matchFunctionDecl(Aggregate *parent,
         func->setStatic(matched_static);
         func->setConst(matchedConst);
         func->setVirtualness(virtuality);
+        func->setIsDeleted(isDeleted);
+        func->setIsDefaulted(isDefaulted);
+        func->setFinal(matchFinal);
         if (isQPrivateSignal)
             func->setPrivateSignal();
         if (!pvect.isEmpty()) {
@@ -1732,6 +1746,9 @@ bool CppCodeParser::matchClassDecl(Aggregate *parent,
             }
         }
     }
+
+    const QString className = previousLexeme();
+    match(Tok_final); // ignore C++11 final class-virt-specifier
     if (tok != Tok_Colon && tok != Tok_LeftBrace)
         return false;
 
@@ -1739,7 +1756,7 @@ bool CppCodeParser::matchClassDecl(Aggregate *parent,
       So far, so good. We have 'class Foo {' or 'class Foo :'.
       This is enough to recognize a class definition.
     */
-    ClassNode *classe = new ClassNode(parent, previousLexeme());
+    ClassNode *classe = new ClassNode(parent, className);
     classe->setAccess(access);
     classe->setLocation(location());
     if (compat)
@@ -1931,8 +1948,15 @@ bool CppCodeParser::matchEnumDecl(Aggregate *parent)
 
     if (!match(Tok_enum))
         return false;
+    if (tok == Tok_struct || tok == Tok_class)
+        readToken(); // ignore C++11 struct or class attribute
     if (match(Tok_Ident))
         name = previousLexeme();
+    if (match(Tok_Colon)) { // ignore C++11 enum-base
+        CodeChunk dataType;
+        if (!matchDataType(&dataType))
+            return false;
+    }
     if (tok != Tok_LeftBrace)
         return false;
 
@@ -1995,7 +2019,7 @@ bool CppCodeParser::matchProperty(Aggregate *parent)
 
     QString name;
     CodeChunk dataType;
-    if (!matchDataType(&dataType, &name))
+    if (!matchDataType(&dataType, &name, true))
         return false;
 
     PropertyNode *property = new PropertyNode(parent, name);
@@ -2004,7 +2028,7 @@ bool CppCodeParser::matchProperty(Aggregate *parent)
     property->setDataType(dataType.toString());
 
     while (tok != Tok_RightParen && tok != Tok_Eoi) {
-        if (!match(Tok_Ident))
+        if (!match(Tok_Ident) && !match(Tok_default) && !match(Tok_final))
             return false;
         QString key = previousLexeme();
         QString value;

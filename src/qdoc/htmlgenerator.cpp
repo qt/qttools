@@ -3218,7 +3218,7 @@ void HtmlGenerator::generateList(const Node* relative, CodeMarker* marker, const
           comment where the topic is \group, \module,
           \qmlmodule, or \jsmodule
         */
-        if (!relative || !relative->isCollectionNode()) {
+        if (relative && !relative->isCollectionNode()) {
             relative->doc().location().warning(tr("\\generatelist {%1} is only allowed in \\group, "
                                                   "\\module, \\qmlmodule, and \\jsmodule comments.").arg(selector));
             return;

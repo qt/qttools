@@ -523,6 +523,9 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader& reader,
         functionNode->setMetaness(meta);
         functionNode->setConst(attributes.value(QLatin1String("const")) == QLatin1String("true"));
         functionNode->setStatic(attributes.value(QLatin1String("static")) == QLatin1String("true"));
+        functionNode->setIsDeleted(attributes.value(QLatin1String("delete")) == QLatin1String("true"));
+        functionNode->setIsDefaulted(attributes.value(QLatin1String("default")) == QLatin1String("true"));
+        functionNode->setFinal(attributes.value(QLatin1String("final")) == QLatin1String("true"));
         if (attributes.value(QLatin1String("overload")) == QLatin1String("true")) {
             functionNode->setOverloadFlag(true);
             functionNode->setOverloadNumber(attributes.value(QLatin1String("overload-number")).toUInt());
@@ -1245,6 +1248,9 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter& writer,
             writer.writeAttribute("const", functionNode->isConst()?"true":"false");
             writer.writeAttribute("static", functionNode->isStatic()?"true":"false");
             writer.writeAttribute("overload", functionNode->isOverload()?"true":"false");
+            writer.writeAttribute("delete", functionNode->isDeleted() ? "true" : "false");
+            writer.writeAttribute("default", functionNode->isDefaulted() ? "true" : "false");
+            writer.writeAttribute("final", functionNode->isFinal() ? "true" : "false");
             if (functionNode->isOverload())
                 writer.writeAttribute("overload-number", QString::number(functionNode->overloadNumber()));
             if (functionNode->relates()) {
@@ -1267,9 +1273,17 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter& writer,
               Note: The "signature" attribute is written to the
               index file, but it is not read back in. Is that ok?
             */
-            QString signature = functionNode->signature();
+            QString signature = functionNode->signature(false);
             if (functionNode->isConst())
                 signature += " const";
+            if (functionNode->isFinal())
+                signature += " final";
+            if (functionNode->virtualness() == FunctionNode::PureVirtual)
+                signature += " = 0";
+            else if (functionNode->isDeleted())
+                signature += " = delete";
+            else if (functionNode->isDefaulted())
+                signature += " = default";
             writer.writeAttribute("signature", signature);
 
             for (int i = 0; i < functionNode->parameters().size(); ++i) {
@@ -1483,9 +1497,9 @@ bool compareNodes(const Node* n1, const Node* n2)
         else if (f1->isConst() > f2->isConst())
             return false;
 
-        if (f1->signature() < f2->signature())
+        if (f1->signature(false) < f2->signature(false))
             return true;
-        else if (f1->signature() > f2->signature())
+        else if (f1->signature(false) > f2->signature(false))
             return false;
     }
 

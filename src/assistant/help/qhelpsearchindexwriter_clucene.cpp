@@ -331,6 +331,16 @@ static bool operator<(const QTextHtmlEntity &entity, const QString &entityStr)
     return QLatin1String(entity.name) < entityStr;
 }
 
+static bool operator<(const QString &entityStr, const QTextHtmlEntity &entity)
+{
+    return entityStr < QLatin1String(entity.name);
+}
+
+static bool operator<(const QTextHtmlEntity &entity, const QTextHtmlEntity &entity2)
+{
+    return QLatin1String(entity.name) < QLatin1String(entity2.name);
+}
+
 static QChar resolveEntity(const QString &entity)
 {
     const QTextHtmlEntity *start = &entities[0];

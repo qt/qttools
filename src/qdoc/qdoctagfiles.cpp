@@ -271,7 +271,7 @@ void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter& writer, const Aggreg
                     writer.writeAttribute("virtualness", "virtual");
                     break;
                 case FunctionNode::PureVirtual:
-                    writer.writeAttribute("virtual", "pure");
+                    writer.writeAttribute("virtualness", "pure");
                     break;
                 default:
                     break;
@@ -287,12 +287,18 @@ void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter& writer, const Aggreg
                 QStringList pieces = gen_->fullDocumentLocation(node, false).split(QLatin1Char('#'));
                 writer.writeTextElement("anchorfile", pieces[0]);
                 writer.writeTextElement("anchor", pieces[1]);
-                QString signature = functionNode->signature();
+                QString signature = functionNode->signature(false);
                 signature = signature.mid(signature.indexOf(QChar('('))).trimmed();
                 if (functionNode->isConst())
                     signature += " const";
+                if (functionNode->isFinal())
+                    signature += " final";
                 if (functionNode->virtualness() == FunctionNode::PureVirtual)
                     signature += " = 0";
+                else if (functionNode->isDeleted())
+                    signature += " = delete";
+                else if (functionNode->isDefaulted())
+                    signature += " = default";
                 writer.writeTextElement("arglist", signature);
             }
             writer.writeEndElement(); // member
