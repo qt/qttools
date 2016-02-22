@@ -375,7 +375,7 @@ Node* CppCodeParser::processTopicCommand(const Doc& doc,
                 func = 0;
             }
             else {
-                func->setMetaness(Node::MacroWithParams);
+                func->setMetaness(FunctionNode::MacroWithParams);
                 QVector<Parameter> params = func->parameters();
                 for (int i = 0; i < params.size(); ++i) {
                     Parameter &param = params[i];
@@ -391,7 +391,7 @@ Node* CppCodeParser::processTopicCommand(const Doc& doc,
             func = new FunctionNode(qdb_->primaryTreeRoot(), arg.first);
             func->setAccess(Node::Public);
             func->setLocation(doc.startLocation());
-            func->setMetaness(Node::MacroWithoutParams);
+            func->setMetaness(FunctionNode::MacroWithoutParams);
         }
         else {
             doc.location().warning(tr("Invalid syntax in '\\%1'").arg(COMMAND_MACRO));
@@ -1050,7 +1050,7 @@ void CppCodeParser::reset()
     tokenizer = 0;
     tok = 0;
     access = Node::Public;
-    metaness_ = Node::Plain;
+    metaness_ = FunctionNode::Plain;
     lastPath_.clear();
     physicalModuleName.clear();
 }
@@ -1651,20 +1651,41 @@ bool CppCodeParser::matchFunctionDecl(Aggregate *parent,
             func->setParameters(pvect);
         }
         func->setMetaness(metaness_);
-        if (parent) {
-            if (name == parent->name()) {
-                Node::Metaness m = Node::Ctor;
-                if (!pvect.isEmpty()) {
-                    for (int i=0; i<pvect.size(); i++) {
-                        m = pvect.at(i).metaness(name);
-                        if (m != Node::Ctor)
+        if (parent && (name == parent->name())) {
+            FunctionNode::Metaness m = FunctionNode::Ctor;
+            if (!pvect.isEmpty()) {
+                for (int i=0; i<pvect.size(); i++) {
+                    const Parameter& p = pvect.at(i);
+                    if (p.dataType().contains(name)) {
+                        if (p.dataType().endsWith(QLatin1String("&&"))) {
+                            m = FunctionNode::MCtor;
                             break;
+                        }
+                        if (p.dataType().endsWith(QLatin1String("&"))) {
+                            m = FunctionNode::CCtor;
+                            break;
+                        }
                     }
                 }
-                func->setMetaness(m);
             }
-            else if (name.startsWith(QLatin1Char('~')))
-                func->setMetaness(Node::Dtor);
+            func->setMetaness(m);
+        }
+        else if (name.startsWith(QLatin1Char('~')))
+            func->setMetaness(FunctionNode::Dtor);
+        else if (name == QLatin1String("operator=")) {
+            FunctionNode::Metaness m = FunctionNode::Plain;
+            if (parent && pvect.size() == 1) {
+                const Parameter& p = pvect.at(0);
+                if (p.dataType().contains(parent->name())) {
+                    if (p.dataType().endsWith(QLatin1String("&&"))) {
+                        m = FunctionNode::MAssign;
+                    }
+                    else if (p.dataType().endsWith(QLatin1String("&"))) {
+                        m = FunctionNode::CAssign;
+                    }
+                }
+            }
+            func->setMetaness(m);
         }
         func->setStatic(matched_static);
         func->setConst(matchedConst);
@@ -1783,8 +1804,8 @@ bool CppCodeParser::matchClassDecl(Aggregate *parent,
 
     Node::Access outerAccess = access;
     access = isClass ? Node::Private : Node::Public;
-    Node::Metaness outerMetaness = metaness_;
-    metaness_ = Node::Plain;
+    FunctionNode::Metaness outerMetaness = metaness_;
+    metaness_ = FunctionNode::Plain;
 
     bool matches = (matchDeclList(classe) && match(Tok_RightBrace) &&
                     match(Tok_Semicolon));
@@ -2165,28 +2186,28 @@ bool CppCodeParser::matchDeclList(Aggregate *parent)
         case Tok_private:
             readToken();
             access = Node::Private;
-            metaness_ = Node::Plain;
+            metaness_ = FunctionNode::Plain;
             break;
         case Tok_protected:
             readToken();
             access = Node::Protected;
-            metaness_ = Node::Plain;
+            metaness_ = FunctionNode::Plain;
             break;
         case Tok_public:
             readToken();
             access = Node::Public;
-            metaness_ = Node::Plain;
+            metaness_ = FunctionNode::Plain;
             break;
         case Tok_signals:
         case Tok_Q_SIGNALS:
             readToken();
             access = Node::Public;
-            metaness_ = Node::Signal;
+            metaness_ = FunctionNode::Signal;
             break;
         case Tok_slots:
         case Tok_Q_SLOTS:
             readToken();
-            metaness_ = Node::Slot;
+            metaness_ = FunctionNode::Slot;
             break;
         case Tok_Q_OBJECT:
             readToken();
@@ -2407,7 +2428,7 @@ bool CppCodeParser::matchDocsAndStuff()
         else {
             QStringList parentPath;
             FunctionNode *clone;
-            FunctionNode *node = 0;
+            FunctionNode *fnode = 0;
 
             if (matchFunctionDecl(0, &parentPath, &clone, QString(), extra)) {
                 /*
@@ -2419,9 +2440,9 @@ bool CppCodeParser::matchDocsAndStuff()
                   Signals are implemented in uninteresting files
                   generated by moc.
                 */
-                node = qdb_->findFunctionNode(parentPath, clone);
-                if (node != 0 && node->metaness() != Node::Signal)
-                    node->setLocation(clone->location());
+                fnode = qdb_->findFunctionNode(parentPath, clone);
+                if (fnode != 0 && !fnode->isSignal())
+                    fnode->setLocation(clone->location());
                 delete clone;
             }
             else {

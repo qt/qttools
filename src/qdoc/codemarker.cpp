@@ -597,8 +597,7 @@ QStringList CodeMarker::macRefsForNode(Node *node)
         if (func->isOverload())
             return QStringList();
 
-        if (func->metaness() == FunctionNode::MacroWithParams
-                || func->metaness() == FunctionNode::MacroWithoutParams) {
+        if (func->isMacro()) {
             result += QLatin1String("macro/");
         }
         else if (func->isStatic()) {

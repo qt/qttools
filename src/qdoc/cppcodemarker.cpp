@@ -154,7 +154,7 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
         if (style != Subpage && !func->returnType().isEmpty())
             synopsis = typified(func->returnType(), true);
         synopsis += name;
-        if (func->metaness() != FunctionNode::MacroWithoutParams) {
+        if (!func->isMacroWithoutParams()) {
             synopsis += QLatin1Char('(');
             if (!func->parameters().isEmpty()) {
                 QVector<Parameter>::ConstIterator p = func->parameters().constBegin();
@@ -177,11 +177,11 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
             synopsis += " const";
 
         if (style == Summary || style == Accessors) {
-            if (func->virtualness() != FunctionNode::NonVirtual)
+            if (!func->isNonvirtual())
                 synopsis.prepend("virtual ");
             if (func->isFinal())
                 synopsis.append(" final");
-            if (func->virtualness() == FunctionNode::PureVirtual)
+            if (func->isPureVirtual())
                 synopsis.append(" = 0");
             else if (func->isDeleted())
                 synopsis.append(" = delete");
@@ -200,10 +200,10 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
                 bracketed += "delete";
             } else if (func->isDefaulted()) {
                 bracketed += "default";
-            } else if (func->virtualness() != FunctionNode::NonVirtual) {
+            } else if (!func->isNonvirtual()) {
                 if (func->isFinal())
                     bracketed += "final";
-                if (func->virtualness() == FunctionNode::PureVirtual)
+                if (func->isPureVirtual())
                     bracketed += "pure";
                 bracketed += "virtual";
             }
@@ -215,10 +215,10 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
                 bracketed += "private";
             }
 
-            if (func->metaness() == FunctionNode::Signal) {
+            if (func->isSignal()) {
                 bracketed += "signal";
             }
-            else if (func->metaness() == FunctionNode::Slot) {
+            else if (func->isSlot()) {
                 bracketed += "slot";
             }
             if (!bracketed.isEmpty())
@@ -541,8 +541,8 @@ QList<Section> CppCodeMarker::sections(const Aggregate *inner,
                     bool isStatic = false;
                     if ((*c)->type() == Node::Function) {
                         const FunctionNode *func = (const FunctionNode *) *c;
-                        isSlot = (func->metaness() == FunctionNode::Slot);
-                        isSignal = (func->metaness() == FunctionNode::Signal);
+                        isSlot = (func->isSlot());
+                        isSignal = (func->isSignal());
                         isStatic = func->isStatic();
                         if (func->hasAssociatedProperties() && !func->hasActiveAssociatedProperty()) {
                             ++c;

@@ -485,46 +485,10 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader& reader,
 
     }
     else if (elementName == QLatin1String("function")) {
-        FunctionNode::Virtualness virt;
-        QString t = attributes.value(QLatin1String("virtual")).toString();
-        if (t == QLatin1String("non"))
-            virt = FunctionNode::NonVirtual;
-        else if (t == QLatin1String("virtual"))
-            virt = FunctionNode::NormalVirtual;
-        else if (t == QLatin1String("pure"))
-            virt = FunctionNode::PureVirtual;
-        else
-            goto done;
-
-        t = attributes.value(QLatin1String("meta")).toString();
-        Node::Metaness meta;
-        if (t == QLatin1String("plain"))
-            meta = Node::Plain;
-        else if (t == QLatin1String("signal"))
-            meta = Node::Signal;
-        else if (t == QLatin1String("slot"))
-            meta = Node::Slot;
-        else if (t == QLatin1String("constructor"))
-            meta = Node::Ctor;
-        else if (t == QLatin1String("copy-constructor"))
-            meta = Node::CCtor;
-        else if (t == QLatin1String("move-constructor"))
-            meta = Node::MCtor;
-        else if (t == QLatin1String("destructor"))
-            meta = Node::Dtor;
-        else if (t == QLatin1String("macro"))
-            meta = Node::MacroWithParams;
-        else if (t == QLatin1String("macrowithparams"))
-            meta = Node::MacroWithParams;
-        else if (t == QLatin1String("macrowithoutparams"))
-            meta = Node::MacroWithoutParams;
-        else
-            goto done;
-
         FunctionNode* functionNode = new FunctionNode(parent, name);
         functionNode->setReturnType(attributes.value(QLatin1String("return")).toString());
-        functionNode->setVirtualness(virt);
-        functionNode->setMetaness(meta);
+        functionNode->setVirtualness(attributes.value(QLatin1String("virtual")).toString());
+        functionNode->setMetaness(attributes.value(QLatin1String("meta")).toString());
         functionNode->setConst(attributes.value(QLatin1String("const")) == QLatin1String("true"));
         functionNode->setStatic(attributes.value(QLatin1String("static")) == QLatin1String("true"));
         functionNode->setIsDeleted(attributes.value(QLatin1String("delete")) == QLatin1String("true"));
@@ -1210,51 +1174,8 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter& writer,
               function being described.
             */
             const FunctionNode* functionNode = static_cast<const FunctionNode*>(node);
-            switch (functionNode->virtualness()) {
-            case FunctionNode::NonVirtual:
-                writer.writeAttribute("virtual", "non");
-                break;
-            case FunctionNode::NormalVirtual:
-                writer.writeAttribute("virtual", "virtual");
-                break;
-            case FunctionNode::PureVirtual:
-                writer.writeAttribute("virtual", "pure");
-                break;
-            default:
-                break;
-            }
-
-            switch (functionNode->metaness()) {
-            case Node::Plain:
-                writer.writeAttribute("meta", "plain");
-                break;
-            case Node::Signal:
-                writer.writeAttribute("meta", "signal");
-                break;
-            case Node::Slot:
-                writer.writeAttribute("meta", "slot");
-                break;
-            case Node::Ctor:
-                writer.writeAttribute("meta", "constructor");
-                break;
-            case Node::CCtor:
-                writer.writeAttribute("meta", "copy-constructor");
-                break;
-            case Node::MCtor:
-                writer.writeAttribute("meta", "move-constructor");
-                break;
-            case Node::Dtor:
-                writer.writeAttribute("meta", "destructor");
-                break;
-            case Node::MacroWithParams:
-                writer.writeAttribute("meta", "macrowithparams");
-                break;
-            case Node::MacroWithoutParams:
-                writer.writeAttribute("meta", "macrowithoutparams");
-                break;
-            default:
-                break;
-            }
+            writer.writeAttribute("virtual", functionNode->virtualness());
+            writer.writeAttribute("meta", functionNode->metaness());
             writer.writeAttribute("const", functionNode->isConst()?"true":"false");
             writer.writeAttribute("static", functionNode->isStatic()?"true":"false");
             writer.writeAttribute("overload", functionNode->isOverload()?"true":"false");
@@ -1288,7 +1209,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter& writer,
                 signature += " const";
             if (functionNode->isFinal())
                 signature += " final";
-            if (functionNode->virtualness() == FunctionNode::PureVirtual)
+            if (functionNode->isPureVirtual())
                 signature += " = 0";
             else if (functionNode->isDeleted())
                 signature += " = delete";

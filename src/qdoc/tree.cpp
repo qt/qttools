@@ -424,8 +424,8 @@ void Tree::resolveInheritanceHelper(int pass, ClassNode* cn)
                 FunctionNode* func = (FunctionNode*)* c;
                 FunctionNode* from = findVirtualFunctionInBaseClasses(cn, func);
                 if (from != 0) {
-                    if (func->virtualness() == FunctionNode::NonVirtual)
-                        func->setVirtualness(FunctionNode::NormalVirtual);
+                    if (func->isNonvirtual())
+                        func->setVirtual();
                     func->setReimplementedFrom(from);
                 }
             }
@@ -560,7 +560,7 @@ FunctionNode* Tree::findVirtualFunctionInBaseClasses(ClassNode* cn, FunctionNode
         if ((*r).node_) {
             if (((func = findVirtualFunctionInBaseClasses((*r).node_, clone)) != 0 ||
                  (func = (*r).node_->findFunctionNode(clone)) != 0)) {
-                if (func->virtualness() != FunctionNode::NonVirtual)
+                if (!func->isNonvirtual())
                     return func;
             }
         }
@@ -1461,7 +1461,7 @@ const Node* Tree::findFunctionNode(const QString& target,
     }
     QStringList path = t.split("::");
     const FunctionNode* fn = findFunctionNode(path, params, relative, SearchBaseClasses, genus);
-    if (fn && fn->metaness() != FunctionNode::MacroWithoutParams)
+    if (fn && !fn->isMacroWithoutParams())
         return fn;
     return 0;
 }
