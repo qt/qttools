@@ -813,9 +813,11 @@ void CppCodeParser::processQmlProperties(const Doc& doc,
             bool attached = ((topic == COMMAND_QMLATTACHEDPROPERTY) ||
                              (topic == COMMAND_JSATTACHEDPROPERTY));
             if (splitQmlPropertyArg(arg, type, module, qmlTypeName, property)) {
-                qmlType = qdb_->findQmlType(module, qmlTypeName);
-                if (qmlType) {
-                    if (qmlType->hasQmlProperty(property, attached) != 0) {
+                Aggregate* aggregate = qdb_->findQmlType(module, qmlTypeName);
+                if (!aggregate)
+                    aggregate = qdb_->findQmlBasicType(module, qmlTypeName);
+                if (aggregate) {
+                    if (aggregate->hasQmlProperty(property, attached) != 0) {
                         QString msg = tr("QML property documented multiple times: '%1'").arg(arg);
                         doc.startLocation().warning(msg);
                     }
@@ -826,7 +828,7 @@ void CppCodeParser::processQmlProperties(const Doc& doc,
                             qpn->setGenus(Node::JS);
                     }
                     else {
-                        qpn = new QmlPropertyNode(qmlType, property, type, attached);
+                        qpn = new QmlPropertyNode(aggregate, property, type, attached);
                         qpn->setLocation(doc.startLocation());
                         if (jsProps)
                             qpn->setGenus(Node::JS);
