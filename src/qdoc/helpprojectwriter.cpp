@@ -479,7 +479,7 @@ void HelpProjectWriter::generateSections(HelpProject &project,
         const Aggregate *inner = static_cast<const Aggregate *>(node);
 
         // Ensure that we don't visit nodes more than once.
-        QMap<QString, const Node*> childMap;
+        QSet<const Node*> childSet;
         foreach (const Node *childNode, inner->childNodes()) {
             if (childNode->isIndexNode())
                 continue;
@@ -488,7 +488,7 @@ void HelpProjectWriter::generateSections(HelpProject &project,
                 continue;
 
             if (childNode->type() == Node::Document) {
-                childMap[static_cast<const DocumentNode *>(childNode)->fullTitle()] = childNode;
+                childSet << childNode;
             }
             else if (childNode->isQmlPropertyGroup() || childNode->isJsPropertyGroup()) {
                 /*
@@ -504,7 +504,7 @@ void HelpProjectWriter::generateSections(HelpProject &project,
                 foreach (const Node* n, inner->childNodes()) {
                     if (n->access() == Node::Private)
                         continue;
-                    childMap[n->fullDocumentName()] = n;
+                    childSet << n;
                 }
             }
             else {
@@ -519,10 +519,10 @@ void HelpProjectWriter::generateSections(HelpProject &project,
                     if (funcNode->isOverload())
                         continue;
                 }
-                childMap[childNode->fullDocumentName()] = childNode;
+                childSet << childNode;
             }
         }
-        foreach (const Node *child, childMap)
+        foreach (const Node *child, childSet)
             generateSections(project, writer, child);
     }
 }
