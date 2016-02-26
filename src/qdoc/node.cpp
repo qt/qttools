@@ -1254,6 +1254,8 @@ void Aggregate::addChild(Node *child)
     if (child->parent() == 0) {
         child->setParent(this);
         child->setOutputSubdirectory(this->outputSubdirectory());
+        child->setUrl(QString());
+        child->setIndexNodeFlag(isIndexNode());
     }
 }
 

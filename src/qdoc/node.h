@@ -188,7 +188,7 @@ public:
     void setPageType(PageType t) { pageType_ = (unsigned char) t; }
     void setPageType(const QString& t);
     void setParent(Aggregate* n) { parent_ = n; }
-    void setIndexNodeFlag() { indexNodeFlag_ = true; }
+    void setIndexNodeFlag(bool isIndexNode = true) { indexNodeFlag_ = isIndexNode; }
     virtual void setOutputFileName(const QString& ) { }
 
     bool isQmlNode() const { return genus() == QML; }
