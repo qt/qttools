@@ -44,10 +44,12 @@
 #include "tree.h"
 #include "generator.h"
 
+#ifndef QT_NO_DECLARATIVE
 #include <private/qqmljsast_p.h>
 #include <private/qqmljsengine_p.h>
 #include <private/qqmljslexer_p.h>
 #include <private/qqmljsparser_p.h>
+#endif
 
 QT_BEGIN_NAMESPACE
 
@@ -64,6 +66,7 @@ JsCodeMarker::~JsCodeMarker()
  */
 bool JsCodeMarker::recognizeCode(const QString &code)
 {
+#ifndef QT_NO_DECLARATIVE
     QQmlJS::Engine engine;
     QQmlJS::Lexer lexer(&engine);
     QQmlJS::Parser parser(&engine);
@@ -73,6 +76,9 @@ bool JsCodeMarker::recognizeCode(const QString &code)
     lexer.setCode(newCode, 1);
 
     return parser.parseProgram();
+#else
+    return false;
+#endif
 }
 
 /*!
@@ -112,6 +118,7 @@ QString JsCodeMarker::addMarkUp(const QString &code,
                                 const Node * /* relative */,
                                 const Location &location)
 {
+#ifndef QT_NO_DECLARATIVE
     QQmlJS::Engine engine;
     QQmlJS::Lexer lexer(&engine);
 
@@ -137,6 +144,10 @@ QString JsCodeMarker::addMarkUp(const QString &code,
         output = protect(code);
     }
     return output;
+#else
+    location.warning("QtDeclarative not installed; cannot parse QML or JS.");
+    return QString();
+#endif
 }
 
 QT_END_NAMESPACE
