@@ -64,6 +64,7 @@ struct TargetRec
     }
 
     bool isEmpty() const { return ref_.isEmpty(); }
+    Node::Genus genus() { return (node_ ? node_->genus() : Node::DontCare); }
 
     Node* node_;
     QString ref_;
@@ -151,7 +152,7 @@ class Tree
                       Node* node,
                       int priority);
     void resolveTargets(Aggregate* root);
-    const Node* findUnambiguousTarget(const QString& target, QString& ref) const;
+    const Node* findUnambiguousTarget(const QString& target, Node::Genus genus, QString& ref) const;
     const DocumentNode* findDocumentNodeByTitle(const QString& title) const;
 
     void addPropertyFunction(PropertyNode *property,
