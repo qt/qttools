@@ -188,6 +188,7 @@ struct ConfigStrings
     static QString IGNORETOKENS;
     static QString IMAGEDIRS;
     static QString IMAGES;
+    static QString INCLUDEPATHS;
     static QString INDEXES;
     static QString LANDINGPAGE;
     static QString LANGUAGE;
@@ -268,6 +269,7 @@ struct ConfigStrings
 #define CONFIG_IGNORETOKENS ConfigStrings::IGNORETOKENS
 #define CONFIG_IMAGEDIRS ConfigStrings::IMAGEDIRS
 #define CONFIG_IMAGES ConfigStrings::IMAGES
+#define CONFIG_INCLUDEPATHS ConfigStrings::INCLUDEPATHS
 #define CONFIG_INDEXES ConfigStrings::INDEXES
 #define CONFIG_LANDINGPAGE ConfigStrings::LANDINGPAGE
 #define CONFIG_LANGUAGE ConfigStrings::LANGUAGE

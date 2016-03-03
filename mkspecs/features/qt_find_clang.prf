@@ -1,0 +1,100 @@
+config_clang_done: return()
+
+defineReplace(extractVersion)      { return($$replace(1, ^(\\d+\\.\\d+\\.\\d+)(svn)?$, \\1)) }
+defineReplace(extractMajorVersion) { return($$replace(1, ^(\\d+)\\.\\d+\\.\\d+(svn)?$, \\1)) }
+defineReplace(extractMinorVersion) { return($$replace(1, ^\\d+\\.(\\d+)\\.\\d+(svn)?$, \\1)) }
+defineReplace(extractPatchVersion) { return($$replace(1, ^\\d+\\.\\d+\\.(\\d+)(svn)?$, \\1)) }
+
+defineTest(versionIsAtLeast) {
+    actual_major_version = $$extractMajorVersion($$1)
+    actual_minor_version = $$extractMinorVersion($$1)
+    actual_patch_version = $$extractPatchVersion($$1)
+    required_min_major_version = $$extractMajorVersion($$2)
+    required_min_minor_version = $$extractMinorVersion($$2)
+    required_min_patch_version = $$extractPatchVersion($$2)
+
+    isEqual(actual_major_version, $$required_min_major_version) {
+        isEqual(actual_minor_version, $$required_min_minor_version) {
+            isEqual(actual_patch_version, $$required_min_patch_version): return(true)
+            greaterThan(actual_patch_version, $$required_min_patch_version): return(true)
+        }
+        greaterThan(actual_minor_version, $$required_min_minor_version): return(true)
+    }
+    greaterThan(actual_major_version, $$required_min_major_version): return(true)
+
+    return(false)
+}
+
+defineReplace(findLLVMVersionFromLibDir) {
+    libdir = $$1
+    version_dirs = $$files($$libdir/clang/*)
+    for (version_dir, version_dirs) {
+        fileName = $$basename(version_dir)
+        version = $$find(fileName, ^(\\d+\\.\\d+\\.\\d+)$)
+        !isEmpty(version) {
+            isEmpty(candidateVersion): candidateVersion = $$version
+            else: versionIsAtLeast($$version, $$candidateVersion): candidateVersion = $$version
+        }
+    }
+    return($$candidateVersion)
+}
+
+for(_, $$list(_)) { # just a way to break easily
+    isEmpty(CLANG_INSTALL_DIR): CLANG_INSTALL_DIR = $$(CLANG_INSTALL_DIR)
+    CLANG_INSTALL_DIR = $$clean_path($$CLANG_INSTALL_DIR)
+    clangInstallDir = $$CLANG_INSTALL_DIR
+    isEmpty(CLANG_INSTALL_DIR) {
+        win32 {
+            log("Set the CLANG_INSTALL_DIR environment variable to configure clang location.$$escape_expand(\\n)")
+            break()
+        }
+        clangInstallDir = /usr
+    }
+
+    # note: llvm_config only exits on unix
+    llvm_config = $$clangInstallDir/bin/llvm-config
+    exists($$llvm_config) {
+        CLANG_LIBDIR = $$system("$$llvm_config --libdir 2>/dev/null")
+        CLANG_INCLUDEPATH = $$system("$$llvm_config --includedir 2>/dev/null")
+        output = $$system("$$llvm_config --version 2>/dev/null")
+        CLANG_VERSION = $$extractVersion($$output)
+    } else {
+        CLANG_LIBDIR = $$clangInstallDir/lib
+        CLANG_INCLUDEPATH = $$clangInstallDir/include
+        CLANG_VERSION = $$findLLVMVersionFromLibDir($$CLANG_LIBDIR)
+    }
+    isEmpty(CLANG_VERSION) {
+        !isEmpty(CLANG_INSTALL_DIR): \
+            error("Cannot determine clang version at $${CLANG_INSTALL_DIR}.")
+        log("Set the CLANG_INSTALL_DIR environment variable to configure clang location.$$escape_expand(\\n)")
+        break()
+    }
+
+    LIBCLANG_MAIN_HEADER = $$CLANG_INCLUDEPATH/clang-c/Index.h
+    !exists($$LIBCLANG_MAIN_HEADER) {
+        !isEmpty(CLANG_INSTALL_DIR): \
+            error("Cannot find libclang's main header file, candidate: $${LIBCLANG_MAIN_HEADER}.")
+        log("Set the CLANG_INSTALL_DIR environment variable to configure clang location.$$escape_expand(\\n)")
+        break()
+    }
+
+    !contains(QMAKE_DEFAULT_LIBDIRS, $$CLANG_LIBDIR): CLANG_LIBS = -L$${CLANG_LIBDIR}
+    win32: \
+        CLANG_LIBS += -llibclang -ladvapi32 -lshell32
+    else: \
+        CLANG_LIBS += -lclang
+
+    !versionIsAtLeast($$CLANG_VERSION, "3.6.2") {
+        log("LLVM/Clang version >= 3.6.2 required, version provided: $$CLANG_VERSION.$$escape_expand(\\n)")
+        log("Clang was found in $$CLANG_INSTALL_DIR. Set the CLANG_INSTALL_DIR environment variable to override.$$escape_expand(\\n)")
+        break()
+    }
+
+    cache(CLANG_LIBS)
+    cache(CLANG_INCLUDEPATH)
+    cache(CLANG_LIBDIR)
+    cache(CLANG_VERSION)
+    cache(CONFIG, add, $$list(config_clang))
+}
+
+cache(CONFIG, add, $$list(config_clang_done))

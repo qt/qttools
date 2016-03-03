@@ -53,8 +53,6 @@ public:
     virtual QStringList sourceFileNameFilter() = 0;
     virtual void parseHeaderFile(const Location& location, const QString& filePath);
     virtual void parseSourceFile(const Location& location, const QString& filePath) = 0;
-    virtual void doneParsingHeaderFiles();
-    virtual void doneParsingSourceFiles() = 0;
 
     bool isParsingH() const;
     bool isParsingCpp() const;

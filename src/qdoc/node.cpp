@@ -35,6 +35,7 @@
 #include <qdebug.h>
 #include "generator.h"
 #include "tokenizer.h"
+#include "puredocparser.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -930,7 +931,7 @@ FunctionNode *Aggregate::findFunctionNode(const QString& name, const QString& pa
         bool isQPrivateSignal = false; // Not used in the search
         QVector<Parameter> testParams;
         if (!params.isEmpty()) {
-            CppCodeParser* cppParser = CppCodeParser::cppParser();
+            CppCodeParser* cppParser = PureDocParser::pureDocParser();
             cppParser->parseParameters(params, testParams, isQPrivateSignal);
         }
         NodeList funcs = secondaryFunctionMap_.value(name);

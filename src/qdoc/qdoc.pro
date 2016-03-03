@@ -1,3 +1,4 @@
+
 !force_bootstrap {
     requires(qtConfig(xmlstreamwriter))
 }
@@ -9,6 +10,11 @@ qtHaveModule(qmldevtools-private) {
 } else {
     DEFINES += QT_NO_DECLARATIVE
 }
+
+LIBS += $$CLANG_LIBS
+INCLUDEPATH += $$CLANG_INCLUDEPATH
+!disable_external_rpath: QMAKE_RPATHDIR += $$CLANG_LIBDIR
+DEFINES += $$shell_quote(CLANG_RESOURCE_DIR=\"$${CLANG_LIBDIR}/clang/$${CLANG_VERSION}/include\")
 
 DEFINES += \
     QDOC2_COMPAT
@@ -22,6 +28,7 @@ win32-msvc*:{
 }
 
 HEADERS += atom.h \
+           clangcodeparser.h \
            codechunk.h \
            codemarker.h \
            codeparser.h \
@@ -47,6 +54,7 @@ HEADERS += atom.h \
            tokenizer.h \
            tree.h
 SOURCES += atom.cpp \
+           clangcodeparser.cpp \
            codechunk.cpp \
            codemarker.cpp \
            codeparser.cpp \

@@ -61,7 +61,6 @@ public:
     virtual QString language() Q_DECL_OVERRIDE;
     virtual QStringList sourceFileNameFilter() Q_DECL_OVERRIDE;
     virtual void parseSourceFile(const Location& location, const QString& filePath) Q_DECL_OVERRIDE;
-    virtual void doneParsingSourceFiles() Q_DECL_OVERRIDE;
 
 #ifndef QT_NO_DECLARATIVE
     /* Copied from src/declarative/qml/qdeclarativescriptparser.cpp */

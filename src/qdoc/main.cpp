@@ -45,6 +45,7 @@
 #include "jscodemarker.h"
 #include "qmlcodemarker.h"
 #include "qmlcodeparser.h"
+#include "clangcodeparser.h"
 #include <qdatetime.h>
 #include <qdebug.h>
 #include "qtranslator.h"
@@ -72,6 +73,7 @@ static bool noLinkErrors = false;
 static bool autolinkErrors = false;
 static bool obsoleteLinks = false;
 static QStringList defines;
+static QStringList includesPaths;
 static QStringList dependModules;
 static QStringList indexDirs;
 static QString currentDir;
@@ -243,6 +245,8 @@ static void processQdocconfFile(const QString &fileName)
      */
     QStringList defs = defines + config.getStringList(CONFIG_DEFINES);
     config.setStringList(CONFIG_DEFINES,defs);
+    QStringList incs = includesPaths + config.getStringList(CONFIG_INCLUDEPATHS);
+    config.setStringList(CONFIG_INCLUDEPATHS, incs);
     Location::terminate();
 
     currentDir = QFileInfo(fileName).path();
@@ -425,7 +429,6 @@ static void processQdocconfFile(const QString &fileName)
           Parse each header file in the set using the appropriate parser and add it
           to the big tree.
         */
-        QSet<CodeParser *> usedParsers;
 
         Generator::debug("Parsing header files");
         int parsed = 0;
@@ -436,15 +439,10 @@ static void processQdocconfFile(const QString &fileName)
                 ++parsed;
                 Generator::debug(QString("Parsing " + h.key()));
                 codeParser->parseHeaderFile(config.location(), h.key());
-                usedParsers.insert(codeParser);
             }
             ++h;
         }
 
-        foreach (CodeParser *codeParser, usedParsers)
-            codeParser->doneParsingHeaderFiles();
-
-        usedParsers.clear();
         qdb->resolveInheritance();
 
         /*
@@ -460,17 +458,10 @@ static void processQdocconfFile(const QString &fileName)
                 ++parsed;
                 Generator::debug(QString("Parsing " + s.key()));
                 codeParser->parseSourceFile(config.location(), s.key());
-                usedParsers.insert(codeParser);
             }
             ++s;
         }
         Generator::debug(QString("Parsing done."));
-
-        /*
-          Currently these doneParsingSourceFiles() calls do nothing.
-         */
-        foreach (CodeParser *codeParser, usedParsers)
-            codeParser->doneParsingSourceFiles();
 
         /*
           Now the primary tree has been built from all the header and
@@ -537,6 +528,7 @@ private:
     QCommandLineOption noLinkErrorsOption, autoLinkErrorsOption, debugOption;
     QCommandLineOption prepareOption, generateOption, logProgressOption;
     QCommandLineOption singleExecOption, writeQaPagesOption;
+    QCommandLineOption includePathOption, includePathSystemOption, frameworkOption;
 };
 
 QDocCommandLineParser::QDocCommandLineParser()
@@ -559,7 +551,10 @@ QDocCommandLineParser::QDocCommandLineParser()
       generateOption(QStringList() << QStringLiteral("generate")),
       logProgressOption(QStringList() << QStringLiteral("log-progress")),
       singleExecOption(QStringList() << QStringLiteral("single-exec")),
-      writeQaPagesOption(QStringList() << QStringLiteral("write-qa-pages"))
+      writeQaPagesOption(QStringList() << QStringLiteral("write-qa-pages")),
+      includePathOption("I", "Add dir to the include path for header files.", "path"),
+      includePathSystemOption("isystem", "Add dir to the system include path for header files.", "path"),
+      frameworkOption("F", "Add macOS framework to the include path for header files.", "framework")
 {
     setApplicationDescription(QCoreApplication::translate("qdoc", "Qt documentation generator"));
     addHelpOption();
@@ -631,6 +626,14 @@ QDocCommandLineParser::QDocCommandLineParser()
 
     writeQaPagesOption.setDescription(QCoreApplication::translate("qdoc", "Write QA pages."));
     addOption(writeQaPagesOption);
+
+    includePathOption.setFlags(QCommandLineOption::ShortOptionStyle);
+    addOption(includePathOption);
+
+    addOption(includePathSystemOption);
+
+    frameworkOption.setFlags(QCommandLineOption::ShortOptionStyle);
+    addOption(frameworkOption);
 }
 
 void QDocCommandLineParser::process(const QCoreApplication &app)
@@ -676,6 +679,17 @@ void QDocCommandLineParser::process(const QCoreApplication &app)
     if (isSet(logProgressOption))
         Location::startLoggingProgress();
 
+    QDir currentDir = QDir::current();
+    const auto paths = values(includePathOption);
+    for (const auto &i : paths)
+        includesPaths << "-I" << currentDir.absoluteFilePath(i);
+    const auto paths2 = values(includePathSystemOption);
+    for (const auto &i : paths2)
+        includesPaths << "-isystem" << currentDir.absoluteFilePath(i);
+    const auto paths3 = values(frameworkOption);
+    for (const auto &i : paths3)
+        includesPaths << "-F" << currentDir.absoluteFilePath(i);
+
     /*
       The default indent for code is 0.
       The default value for false is 0.
@@ -713,7 +727,7 @@ int main(int argc, char **argv)
       Create code parsers for the languages to be parsed,
       and create a tree for C++.
      */
-    CppCodeParser cppParser;
+    ClangCodeParser clangParser;
     QmlCodeParser qmlParser;
     PureDocParser docParser;
 

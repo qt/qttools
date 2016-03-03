@@ -112,11 +112,6 @@ void CodeParser::parseHeaderFile(const Location& location, const QString& filePa
     parseSourceFile(location, filePath);
 }
 
-void CodeParser::doneParsingHeaderFiles()
-{
-    doneParsingSourceFiles();
-}
-
 /*!
   All the code parsers in the static list are initialized here,
   after the qdoc configuration variables have been set.

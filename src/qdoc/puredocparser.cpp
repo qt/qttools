@@ -42,11 +42,14 @@
 
 QT_BEGIN_NAMESPACE
 
+PureDocParser *PureDocParser::pureParser_ = 0;
+
 /*!
   Constructs the pure doc parser.
 */
 PureDocParser::PureDocParser()
 {
+    pureParser_ = this;
 }
 
 /*!
@@ -54,6 +57,7 @@ PureDocParser::PureDocParser()
  */
 PureDocParser::~PureDocParser()
 {
+    pureParser_ = 0;
 }
 
 /*!

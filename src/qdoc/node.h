@@ -849,6 +849,7 @@ public:
     const QString& rightType() const { return rightType_; }
     const QString& name() const { return name_; }
     const QString& defaultValue() const { return defaultValue_; }
+    void setDefaultValue(const QString& defaultValue) { defaultValue_ = defaultValue; }
 
     QString reconstruct(bool value = false) const;
 
