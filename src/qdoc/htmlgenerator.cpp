@@ -2203,10 +2203,7 @@ void HtmlGenerator::generateRequisites(Aggregate *inner, CodeMarker *marker)
             index = 0;
             while (r != classe->baseClasses().constEnd()) {
                 if ((*r).node_) {
-                    text << Atom(Atom::LinkNode, CodeMarker::stringForNode((*r).node_))
-                         << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
-                         << Atom(Atom::String, (*r).signature_)
-                         << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
+                    appendFullName(text, (*r).node_, classe);
 
                     if ((*r).access_ == Node::Protected) {
                         text << " (protected)";
