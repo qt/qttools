@@ -47,13 +47,13 @@ class QDESIGNER_SDK_EXPORT QDesignerNewFormWidgetInterface : public QWidget
     Q_DISABLE_COPY(QDesignerNewFormWidgetInterface)
     Q_OBJECT
 public:
-    explicit QDesignerNewFormWidgetInterface(QWidget *parent = 0);
+    explicit QDesignerNewFormWidgetInterface(QWidget *parent = Q_NULLPTR);
     virtual ~QDesignerNewFormWidgetInterface();
 
     virtual bool hasCurrentTemplate() const = 0;
-    virtual QString currentTemplate(QString *errorMessage = 0) = 0;
+    virtual QString currentTemplate(QString *errorMessage = Q_NULLPTR) = 0;
 
-    static QDesignerNewFormWidgetInterface *createNewFormWidget(QDesignerFormEditorInterface *core, QWidget *parent = 0);
+    static QDesignerNewFormWidgetInterface *createNewFormWidget(QDesignerFormEditorInterface *core, QWidget *parent = Q_NULLPTR);
 
 Q_SIGNALS:
     void templateActivated();
