@@ -68,7 +68,7 @@ public:
     };
 
 public:
-    QDesignerFormWindowInterface(QWidget *parent = Q_NULLPTR, Qt::WindowFlags flags = Qt::WindowFlags());
+    explicit QDesignerFormWindowInterface(QWidget *parent = Q_NULLPTR, Qt::WindowFlags flags = Qt::WindowFlags());
     virtual ~QDesignerFormWindowInterface();
 
     virtual QString fileName() const = 0;

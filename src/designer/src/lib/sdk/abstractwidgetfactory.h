@@ -47,7 +47,7 @@ class QDESIGNER_SDK_EXPORT QDesignerWidgetFactoryInterface: public QObject
 {
     Q_OBJECT
 public:
-    QDesignerWidgetFactoryInterface(QObject *parent = Q_NULLPTR);
+    explicit QDesignerWidgetFactoryInterface(QObject *parent = Q_NULLPTR);
     virtual ~QDesignerWidgetFactoryInterface();
 
     virtual QDesignerFormEditorInterface *core() const = 0;

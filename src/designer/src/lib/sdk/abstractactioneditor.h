@@ -47,7 +47,7 @@ class QDESIGNER_SDK_EXPORT QDesignerActionEditorInterface: public QWidget
 {
     Q_OBJECT
 public:
-    QDesignerActionEditorInterface(QWidget *parent, Qt::WindowFlags flags = Qt::WindowFlags());
+    explicit QDesignerActionEditorInterface(QWidget *parent, Qt::WindowFlags flags = Qt::WindowFlags());
     virtual ~QDesignerActionEditorInterface();
 
     virtual QDesignerFormEditorInterface *core() const;

@@ -70,7 +70,7 @@ class QDESIGNER_SDK_EXPORT QDesignerFormEditorInterface : public QObject
 {
     Q_OBJECT
 public:
-    QDesignerFormEditorInterface(QObject *parent = Q_NULLPTR);
+    explicit QDesignerFormEditorInterface(QObject *parent = Q_NULLPTR);
     virtual ~QDesignerFormEditorInterface();
 
     QExtensionManager *extensionManager() const;

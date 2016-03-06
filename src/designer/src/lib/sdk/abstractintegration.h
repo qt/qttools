@@ -77,7 +77,7 @@ public:
     };
     Q_DECLARE_FLAGS(Feature, FeatureFlag)
 
-    QDesignerIntegrationInterface(QDesignerFormEditorInterface *core, QObject *parent = Q_NULLPTR);
+    explicit QDesignerIntegrationInterface(QDesignerFormEditorInterface *core, QObject *parent = Q_NULLPTR);
     virtual ~QDesignerIntegrationInterface();
 
     QDesignerFormEditorInterface *core() const;

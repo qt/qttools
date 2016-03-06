@@ -52,7 +52,7 @@ class QUiLoader : public QObject
 {
     Q_OBJECT
 public:
-    QUiLoader(QObject *parent = Q_NULLPTR);
+    explicit QUiLoader(QObject *parent = Q_NULLPTR);
     virtual ~QUiLoader();
 
     QStringList pluginPaths() const;
