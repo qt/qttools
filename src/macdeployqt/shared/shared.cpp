@@ -857,7 +857,7 @@ DeploymentInfo deployQtFrameworks(QList<FrameworkInfo> frameworks,
         copiedFrameworks.append(framework.frameworkName);
 
         // Get the qt path from one of the Qt frameworks;
-        if (deploymentInfo.qtPath.isNull() && framework.frameworkName.contains("Qt")
+        if (deploymentInfo.qtPath.isNull() && framework.frameworkName.contains("Qt") && framework.frameworkName.contains(".framework")
             && framework.frameworkDirectory.contains("/lib"))
         {
             deploymentInfo.qtPath = framework.frameworkDirectory;
