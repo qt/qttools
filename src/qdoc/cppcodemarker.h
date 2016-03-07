@@ -70,7 +70,7 @@ public:
     virtual QList<Section> sections(const Aggregate *innerNode,
                                     SynopsisStyle style,
                                     Status status) Q_DECL_OVERRIDE;
-    virtual QList<Section> qmlSections(QmlTypeNode* qmlTypeNode,
+    virtual QList<Section> qmlSections(Aggregate* aggregate,
                                        SynopsisStyle style,
                                        Status status = Okay) Q_DECL_OVERRIDE;
 

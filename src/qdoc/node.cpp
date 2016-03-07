@@ -1254,6 +1254,8 @@ void Aggregate::addChild(Node *child)
     if (child->parent() == 0) {
         child->setParent(this);
         child->setOutputSubdirectory(this->outputSubdirectory());
+        child->setUrl(QString());
+        child->setIndexNodeFlag(isIndexNode());
     }
 }
 
@@ -1952,7 +1954,6 @@ QString Parameter::reconstruct(bool value) const
     return p;
 }
 
-
 /*!
   \class FunctionNode
  */
@@ -2015,15 +2016,78 @@ FunctionNode::FunctionNode(NodeType type, Aggregate *parent, const QString& name
 }
 
 /*!
-  Sets the \a virtualness of this function. If the \a virtualness
-  is PureVirtual, and if the parent() is a ClassNode, set the parent's
-  \e abstract flag to true.
+  Returns this function's virtualness value as a string
+  for use as an attribute value in index files.
  */
-void FunctionNode::setVirtualness(Virtualness v)
+QString FunctionNode::virtualness() const
 {
-    virtualness_ = v;
-    if ((v == PureVirtual) && parent() && (parent()->type() == Node::Class))
-        parent()->setAbstract(true);
+    switch (virtualness_) {
+    case FunctionNode::NormalVirtual:
+        return "virtual";
+    case FunctionNode::PureVirtual:
+        return "pure";
+    case FunctionNode::NonVirtual:
+    default:
+        break;
+    }
+    return "non";
+}
+
+/*!
+  Sets the function node's virtualness value based on the value
+  of string \a t, which is the value of the function's \e{virtual}
+  attribute in an index file. If \a t is \e{pure}, and if the
+  parent() is a C++ class, set the parent's \e abstract flag to
+  \c {true}.
+ */
+void FunctionNode::setVirtualness(const QString& t)
+{
+    if (t == QLatin1String("non"))
+        virtualness_ = NonVirtual;
+    else if (t == QLatin1String("virtual"))
+        virtualness_ = NormalVirtual;
+    else if (t == QLatin1String("pure")) {
+        virtualness_ = PureVirtual;
+        if (parent() && parent()->isClass())
+            parent()->setAbstract(true);
+    }
+}
+
+/*!
+  Sets the function node's Metaness value based on the value
+  of string \a t, which is the value of the function's "meta"
+  attribute in an index file.
+ */
+void FunctionNode::setMetaness(const QString& t)
+{
+    if (t == QLatin1String("plain"))
+        metaness_ = Plain;
+    else if (t == QLatin1String("signal"))
+        metaness_ = Signal;
+    else if (t == QLatin1String("slot"))
+        metaness_ = Slot;
+    else if (t == QLatin1String("constructor"))
+        metaness_ = Ctor;
+    else if (t == QLatin1String("copy-constructor"))
+        metaness_ = CCtor;
+    else if (t == QLatin1String("move-constructor"))
+        metaness_ = MCtor;
+    else if (t == QLatin1String("destructor"))
+        metaness_ = Dtor;
+    else if (t == QLatin1String("macro"))
+        metaness_ = MacroWithParams;
+    else if (t == QLatin1String("macrowithparams"))
+        metaness_ = MacroWithParams;
+    else if (t == QLatin1String("macrowithoutparams"))
+        metaness_ = MacroWithoutParams;
+    else if (t == QLatin1String("copy-assign"))
+        metaness_ = CAssign;
+    else if (t == QLatin1String("move-assign"))
+        metaness_ = MAssign;
+    else if (t == QLatin1String("native"))
+        metaness_ = Native;
+    else
+        metaness_ = Plain;
 }
 
 /*! \fn void FunctionNode::setOverloadFlag(bool b)
@@ -2046,6 +2110,43 @@ void FunctionNode::setVirtualness(Virtualness v)
 void FunctionNode::setReimplemented(bool b)
 {
     reimplemented_ = b;
+}
+
+/*!
+  Returns a string representing the Metaness enum value for
+  this function. It is used in index files.
+ */
+QString FunctionNode::metaness() const
+{
+    switch (metaness_) {
+    case FunctionNode::Plain:
+        return "plain";
+    case FunctionNode::Signal:
+        return "signal";
+    case FunctionNode::Slot:
+        return "slot";
+    case FunctionNode::Ctor:
+        return "constructor";
+    case FunctionNode::CCtor:
+        return "copy-constructor";
+    case FunctionNode::MCtor:
+        return "move-constructor";
+    case FunctionNode::Dtor:
+        return "destructor";
+    case FunctionNode::MacroWithParams:
+        return "macrowithparams";
+    case FunctionNode::MacroWithoutParams:
+        return "macrowithoutparams";
+    case FunctionNode::Native:
+        return "native";
+    case FunctionNode::CAssign:
+        return "copy-assign";
+    case FunctionNode::MAssign:
+        return "move-assign";
+    default:
+        return "plain";
+    }
+    return QString();
 }
 
 /*!

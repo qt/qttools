@@ -1,10 +1,7 @@
+TARGET = QtDesigner
 MODULE = designer
 
-TARGET = QtDesigner
 QT = core-private gui-private widgets-private xml uiplugin
-
-MODULE_PLUGIN_TYPES = designer
-load(qt_module)
 
 DEFINES += \
     QDESIGNER_SDK_LIBRARY \
@@ -19,3 +16,6 @@ include(sdk/sdk.pri)
 include(shared/shared.pri)
 include(uilib/uilib.pri)
 PRECOMPILED_HEADER=lib_pch.h
+
+MODULE_PLUGIN_TYPES = designer
+load(qt_module)

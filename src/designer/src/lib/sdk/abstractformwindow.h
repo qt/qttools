@@ -68,7 +68,7 @@ public:
     };
 
 public:
-    QDesignerFormWindowInterface(QWidget *parent = 0, Qt::WindowFlags flags = 0);
+    explicit QDesignerFormWindowInterface(QWidget *parent = Q_NULLPTR, Qt::WindowFlags flags = Qt::WindowFlags());
     virtual ~QDesignerFormWindowInterface();
 
     virtual QString fileName() const = 0;
@@ -76,7 +76,7 @@ public:
 
     virtual QString contents() const = 0;
     virtual QStringList checkContents() const = 0;
-    virtual bool setContents(QIODevice *dev, QString *errorMessage = 0) = 0;
+    virtual bool setContents(QIODevice *dev, QString *errorMessage = Q_NULLPTR) = 0;
 
     virtual Feature features() const = 0;
     virtual bool hasFeature(Feature f) const = 0;
@@ -162,7 +162,7 @@ public Q_SLOTS:
     virtual bool setContents(const QString &contents) = 0;
 
     virtual void editWidgets() = 0;
-    void activateResourceFilePaths(const QStringList &paths, int *errorCount = 0, QString *errorMessages = 0);
+    void activateResourceFilePaths(const QStringList &paths, int *errorCount = Q_NULLPTR, QString *errorMessages = Q_NULLPTR);
 
 Q_SIGNALS:
     void mainContainerChanged(QWidget *mainContainer);

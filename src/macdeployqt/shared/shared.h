@@ -110,7 +110,9 @@ QString findAppBinary(const QString &appBundlePath);
 QStringList findAppFrameworkNames(const QString &appBundlePath);
 QStringList findAppFrameworkPaths(const QString &appBundlePath);
 void codesignFile(const QString &identity, const QString &filePath);
-QSet<QString> codesignBundle(const QString &identity, const QString &appBundlePath);
+QSet<QString> codesignBundle(const QString &identity,
+                             const QString &appBundlePath,
+                             QList<QString> additionalBinariesContainingRpaths);
 void codesign(const QString &identity, const QString &appBundlePath);
 void createDiskImage(const QString &appBundlePath);
 void fixupFramework(const QString &appBundlePath);

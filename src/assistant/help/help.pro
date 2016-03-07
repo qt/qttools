@@ -1,12 +1,11 @@
 TARGET = QtHelp
+
 QT = core-private gui widgets
 QT_PRIVATE = network sql clucene-private
 
 DEFINES += QHELP_LIB QT_CLUCENE_SUPPORT
 
 QMAKE_DOCS = $$PWD/doc/qthelp.qdocconf
-
-load(qt_module)
 
 DEFINES -= QT_ASCII_CAST_WARNINGS
 
@@ -59,3 +58,5 @@ HEADERS += qhelpenginecore.h \
 # access to clucene
 HEADERS += qhelpsearchindexwriter_clucene_p.h \
     qhelpsearchindexreader_clucene_p.h
+
+load(qt_module)

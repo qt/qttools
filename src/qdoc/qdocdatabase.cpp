@@ -782,6 +782,30 @@ QmlTypeNode* QDocDatabase::findQmlType(const QString& qmid, const QString& name)
 }
 
 /*!
+  Looks up the QML basic type node identified by the Qml module id
+  \a qmid and QML basic type \a name and returns a pointer to the
+  QML basic type node. The key is \a qmid + "::" + \a name.
+
+  If the QML module id is empty, it looks up the QML basic type by
+  \a name only.
+ */
+Aggregate* QDocDatabase::findQmlBasicType(const QString& qmid, const QString& name)
+{
+    if (!qmid.isEmpty()) {
+        QString t = qmid + "::" + name;
+        Aggregate* a = forest_.lookupQmlBasicType(t);
+        if (a)
+            return a;
+    }
+
+    QStringList path(name);
+    Node* n = forest_.findNodeByNameAndType(path, Node::QmlBasicType);
+    if (n && n->isQmlBasicType())
+        return static_cast<Aggregate*>(n);
+    return 0;
+}
+
+/*!
   Looks up the QML type node identified by the Qml module id
   constructed from the strings in the \a import record and the
   QML type \a name and returns a pointer to the QML type node.
@@ -1025,10 +1049,8 @@ void QDocDatabase::findAllFunctions(Aggregate* node)
             }
             else if ((*c)->type() == Node::Function) {
                 const FunctionNode* func = static_cast<const FunctionNode*>(*c);
-                if ((func->status() > Node::Obsolete) &&
-                        !func->isInternal() &&
-                        (func->metaness() != FunctionNode::Ctor) &&
-                        (func->metaness() != FunctionNode::Dtor)) {
+                if ((func->status() > Node::Obsolete) && !func->isInternal() &&
+                    !func->isSomeCtor() && !func->isDtor()) {
                     funcIndex_[(*c)->name()].insert((*c)->parent()->fullDocumentName(), *c);
                 }
             }
@@ -1202,9 +1224,7 @@ void QDocDatabase::findAllSince(Aggregate* node)
             if ((*child)->type() == Node::Function) {
                 // Insert functions into the general since map.
                 FunctionNode *func = static_cast<FunctionNode *>(*child);
-                if ((func->status() > Node::Obsolete) &&
-                    (func->metaness() != FunctionNode::Ctor) &&
-                    (func->metaness() != FunctionNode::Dtor)) {
+                if ((func->status() > Node::Obsolete) && !func->isSomeCtor() && !func->isDtor()) {
                     nsmap.value().insert(func->name(),(*child));
                 }
             }

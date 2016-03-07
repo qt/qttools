@@ -71,12 +71,12 @@ public:
     virtual QDialog *createFormWindowSettingsDialog(QDesignerFormWindowInterface *formWindow, QWidget *parentWidget) = 0;
     virtual QDesignerResourceBrowserInterface *createResourceBrowser(QWidget *parentWidget) = 0;
 
-    virtual QDialog *createPromotionDialog(QDesignerFormEditorInterface *formEditor, QWidget *parentWidget = 0) = 0;
+    virtual QDialog *createPromotionDialog(QDesignerFormEditorInterface *formEditor, QWidget *parentWidget = Q_NULLPTR) = 0;
 
     virtual QDialog *createPromotionDialog(QDesignerFormEditorInterface *formEditor,
                                            const QString &promotableWidgetClassName,
                                            QString *promoteToClassName,
-                                           QWidget *parentWidget = 0) = 0;
+                                           QWidget *parentWidget = Q_NULLPTR) = 0;
 
     virtual bool isLanguageResource(const QString &path) const = 0;
 

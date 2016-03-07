@@ -47,7 +47,7 @@ class QDESIGNER_EXTENSION_EXPORT QExtensionManager: public QObject, public QAbst
     Q_OBJECT
     Q_INTERFACES(QAbstractExtensionManager)
 public:
-    QExtensionManager(QObject *parent = 0);
+    explicit QExtensionManager(QObject *parent = Q_NULLPTR);
     ~QExtensionManager();
 
     void registerExtensions(QAbstractExtensionFactory *factory, const QString &iid = QString()) Q_DECL_OVERRIDE;

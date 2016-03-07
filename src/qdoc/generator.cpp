@@ -564,7 +564,7 @@ QString Generator::fullDocumentLocation(const Node *node, bool useSubdir)
     {
         const FunctionNode *fn = static_cast<const FunctionNode *>(node);
 
-        if (fn->metaness() == FunctionNode::Dtor)
+        if (fn->isDtor())
             anchorRef = "#dtor." + fn->name().mid(1);
 
         else if (fn->hasOneAssociatedProperty() && fn->doc().isEmpty())
@@ -764,7 +764,45 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
                 text << func->parent()->name() << ".";
                 if (func->isVirtual())
                     text << " The destructor is virtual.";
+                out() << "<p>";
                 generateText(text, node, marker);
+                out() << "</p>";
+            }
+            else if (func->isCtor()) {
+                Text text;
+                text << "Default constructs an instance of ";
+                text << func->parent()->name() << ".";
+                out() << "<p>";
+                generateText(text, node, marker);
+                out() << "</p>";
+            }
+            else if (func->isCCtor()) {
+                Text text;
+                text << "Copy constructor.";
+                out() << "<p>";
+                generateText(text, node, marker);
+                out() << "</p>";
+            }
+            else if (func->isMCtor()) {
+                Text text;
+                text << "Move-copy constructor.";
+                out() << "<p>";
+                generateText(text, node, marker);
+                out() << "</p>";
+            }
+            else if (func->isCAssign()) {
+                Text text;
+                text << "Copy-assignment operator.";
+                out() << "<p>";
+                generateText(text, node, marker);
+                out() << "</p>";
+            }
+            else if (func->isMAssign()) {
+                Text text;
+                text << "Move-assignment operator.";
+                out() << "<p>";
+                generateText(text, node, marker);
+                out() << "</p>";
             }
             else if (!node->isWrapper() && !quiet && !node->isReimplemented()) {
                 node->location().warning(tr("No documentation for '%1'").arg(node->plainSignature()));
@@ -1502,7 +1540,7 @@ void Generator::generateOverloadedSignal(const Node* node, CodeMarker* marker)
     if (node->type() != Node::Function)
         return;
     const FunctionNode *func = static_cast<const FunctionNode *>(node);
-    if (func->metaness() != FunctionNode::Signal)
+    if (!func->isSignal())
         return;
     if (node->parent()->overloads(node->name()).count() <= 1)
         return;

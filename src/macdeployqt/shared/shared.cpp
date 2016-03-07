@@ -378,7 +378,7 @@ QStringList findAppLibraries(const QString &appBundlePath)
     return result;
 }
 
-QStringList findAppBundleFiles(const QString &appBundlePath)
+QStringList findAppBundleFiles(const QString &appBundlePath, bool absolutePath = false)
 {
     QStringList result;
 
@@ -389,7 +389,7 @@ QStringList findAppBundleFiles(const QString &appBundlePath)
         iter.next();
         if (iter.fileInfo().isSymLink())
             continue;
-        result << iter.fileInfo().filePath();
+        result << (absolutePath ? iter.fileInfo().absoluteFilePath() : iter.fileInfo().filePath());
     }
 
     return result;
@@ -511,7 +511,9 @@ QList<FrameworkInfo> getQtFrameworksForPaths(const QStringList &paths, const QSt
     return result;
 }
 
-QStringList getBinaryDependencies(const QString executablePath, const QString &path)
+QStringList getBinaryDependencies(const QString executablePath,
+                                  const QString &path,
+                                  const QList<QString> &additionalBinariesContainingRpaths)
 {
     QStringList binaries;
 
@@ -540,6 +542,10 @@ QStringList getBinaryDependencies(const QString executablePath, const QString &p
         } else if (trimmedLine.startsWith("@rpath/")) {
             if (!rpathsLoaded) {
                 rpaths = getBinaryRPaths(path, true, executablePath);
+                foreach (const QString &binaryPath, additionalBinariesContainingRpaths) {
+                    QSet<QString> binaryRpaths = getBinaryRPaths(binaryPath, true);
+                    rpaths += binaryRpaths;
+                }
                 rpathsLoaded = true;
             }
             bool resolved = false;
@@ -1017,7 +1023,6 @@ void deployPlugins(const ApplicationBundleInfo &appBundleInfo, const QString &pl
     }
 
     foreach (const QString &plugin, pluginList) {
-
         QString sourcePath = pluginSourcePath + "/" + plugin;
         if (useDebugLibs) {
             // Use debug plugins if found.
@@ -1032,10 +1037,8 @@ void deployPlugins(const ApplicationBundleInfo &appBundleInfo, const QString &pl
 
         if (copyFilePrintStatus(sourcePath, destinationPath)) {
             runStrip(destinationPath);
-
             QList<FrameworkInfo> frameworks = getQtFrameworks(destinationPath, appBundleInfo.path, deploymentInfo.rpathsUsed, useDebugLibs);
             deployQtFrameworks(frameworks, appBundleInfo.path, QStringList() << destinationPath, useDebugLibs, deploymentInfo.useLoaderPath);
-
         }
     }
 }
@@ -1267,7 +1270,9 @@ void codesignFile(const QString &identity, const QString &filePath)
     }
 }
 
-QSet<QString> codesignBundle(const QString &identity, const QString &appBundlePath)
+QSet<QString> codesignBundle(const QString &identity,
+                             const QString &appBundlePath,
+                             QList<QString> additionalBinariesContainingRpaths)
 {
     // Code sign all binaries in the app bundle. This needs to
     // be done inside-out, e.g sign framework dependencies
@@ -1280,27 +1285,38 @@ QSet<QString> codesignBundle(const QString &identity, const QString &appBundlePa
     LogNormal() << "Signing" << appBundlePath << "with identity" << identity;
 
     QStack<QString> pendingBinaries;
+    QSet<QString> pendingBinariesSet;
     QSet<QString> signedBinaries;
 
     // Create the root code-binary set. This set consists of the application
     // executable(s) and the plugins.
-    QString rootBinariesPath = appBundlePath + "/Contents/MacOS/";
+    QString appBundleAbsolutePath = QFileInfo(appBundlePath).absoluteFilePath();
+    QString rootBinariesPath = appBundleAbsolutePath + "/Contents/MacOS/";
     QStringList foundRootBinaries = QDir(rootBinariesPath).entryList(QStringList() << "*", QDir::Files);
-    foreach (const QString &binary, foundRootBinaries)
-        pendingBinaries.push(rootBinariesPath + binary);
+    foreach (const QString &binary, foundRootBinaries) {
+        QString binaryPath = rootBinariesPath + binary;
+        pendingBinaries.push(binaryPath);
+        pendingBinariesSet.insert(binaryPath);
+        additionalBinariesContainingRpaths.append(binaryPath);
+    }
 
-    QStringList foundPluginBinaries = findAppBundleFiles(appBundlePath + "/Contents/PlugIns/");
-    foreach (const QString &binary, foundPluginBinaries)
+    bool getAbsoltuePath = true;
+    QStringList foundPluginBinaries = findAppBundleFiles(appBundlePath + "/Contents/PlugIns/", getAbsoltuePath);
+    foreach (const QString &binary, foundPluginBinaries) {
          pendingBinaries.push(binary);
+         pendingBinariesSet.insert(binary);
+    }
 
     // Add frameworks for processing.
     QStringList frameworkPaths = findAppFrameworkPaths(appBundlePath);
     foreach (const QString &frameworkPath, frameworkPaths) {
 
         // Add all files for a framework as a catch all.
-        QStringList bundleFiles = findAppBundleFiles(frameworkPath);
-        foreach (const QString &binary, bundleFiles)
+        QStringList bundleFiles = findAppBundleFiles(frameworkPath, getAbsoltuePath);
+        foreach (const QString &binary, bundleFiles) {
             pendingBinaries.push(binary);
+            pendingBinariesSet.insert(binary);
+        }
 
         // Prioritise first to sign any additional inner bundles found in the Helpers folder (e.g
         // used by QtWebEngine).
@@ -1310,7 +1326,9 @@ QSet<QString> codesignBundle(const QString &identity, const QString &appBundlePa
             QString helpersPath = helpersIterator.filePath();
             QStringList innerBundleNames = QDir(helpersPath).entryList(QStringList() << "*.app", QDir::Dirs);
             foreach (const QString &innerBundleName, innerBundleNames)
-                signedBinaries += codesignBundle(identity, helpersPath + "/" + innerBundleName);
+                signedBinaries += codesignBundle(identity,
+                                                 helpersPath + "/" + innerBundleName,
+                                                 additionalBinariesContainingRpaths);
         }
 
         // Also make sure to sign any libraries that will not be found by otool because they
@@ -1319,35 +1337,43 @@ QSet<QString> codesignBundle(const QString &identity, const QString &appBundlePa
         while (librariesIterator.hasNext()) {
             librariesIterator.next();
             QString librariesPath = librariesIterator.filePath();
-            bundleFiles = findAppBundleFiles(librariesPath);
-            foreach (const QString &binary, bundleFiles)
+            bundleFiles = findAppBundleFiles(librariesPath, getAbsoltuePath);
+            foreach (const QString &binary, bundleFiles) {
                 pendingBinaries.push(binary);
+                pendingBinariesSet.insert(binary);
+            }
         }
     }
 
-    // Sign all binares; use otool to find and sign dependencies first.
+    // Sign all binaries; use otool to find and sign dependencies first.
     while (!pendingBinaries.isEmpty()) {
         QString binary = pendingBinaries.pop();
         if (signedBinaries.contains(binary))
             continue;
 
-        // Check if there are unsigned dependencies, sign these first
-        QStringList dependencies = getBinaryDependencies(rootBinariesPath, binary).toSet().subtract(signedBinaries).toList();
+        // Check if there are unsigned dependencies, sign these first.
+        QStringList dependencies =
+                getBinaryDependencies(rootBinariesPath, binary, additionalBinariesContainingRpaths).toSet()
+                .subtract(signedBinaries)
+                .subtract(pendingBinariesSet)
+                .toList();
 
         if (!dependencies.isEmpty()) {
             pendingBinaries.push(binary);
+            pendingBinariesSet.insert(binary);
             int dependenciesSkipped = 0;
             foreach (const QString &dependency, dependencies) {
                 // Skip dependencies that are outside the current app bundle, because this might
                 // cause a codesign error if the current bundle is part of the dependency (e.g.
                 // a bundle is part of a framework helper, and depends on that framework).
                 // The dependencies will be taken care of after the current bundle is signed.
-                if (!dependency.startsWith(appBundlePath)) {
+                if (!dependency.startsWith(appBundleAbsolutePath)) {
                     ++dependenciesSkipped;
                     LogNormal() << "Skipping outside dependency: " << dependency;
                     continue;
                 }
                 pendingBinaries.push(dependency);
+                pendingBinariesSet.insert(dependency);
             }
 
             // If all dependencies were skipped, make sure the binary is actually signed, instead
@@ -1359,9 +1385,10 @@ QSet<QString> codesignBundle(const QString &identity, const QString &appBundlePa
             }
         }
 
-        // All dependencies are signed, now sign this binary
+        // All dependencies are signed, now sign this binary.
         codesignFile(identity, binary);
         signedBinaries.insert(binary);
+        pendingBinariesSet.remove(binary);
     }
 
     LogNormal() << "Finished codesigning " << appBundlePath << "with identity" << identity;
@@ -1382,7 +1409,7 @@ QSet<QString> codesignBundle(const QString &identity, const QString &appBundlePa
 }
 
 void codesign(const QString &identity, const QString &appBundlePath) {
-    codesignBundle(identity, appBundlePath);
+    codesignBundle(identity, appBundlePath, QList<QString>());
 }
 
 void createDiskImage(const QString &appBundlePath)

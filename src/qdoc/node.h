@@ -188,7 +188,7 @@ public:
     void setPageType(PageType t) { pageType_ = (unsigned char) t; }
     void setPageType(const QString& t);
     void setParent(Aggregate* n) { parent_ = n; }
-    void setIndexNodeFlag() { indexNodeFlag_ = true; }
+    void setIndexNodeFlag(bool isIndexNode = true) { indexNodeFlag_ = isIndexNode; }
     virtual void setOutputFileName(const QString& ) { }
 
     bool isQmlNode() const { return genus() == QML; }
@@ -207,6 +207,7 @@ public:
     virtual bool isQmlBasicType() const { return false; }
     virtual bool isJsBasicType() const { return false; }
     virtual bool isEnumType() const { return false; }
+    virtual bool isTypedef() const { return false; }
     virtual bool isExample() const { return false; }
     virtual bool isExampleFile() const { return false; }
     virtual bool isHeaderFile() const { return false; }
@@ -407,6 +408,7 @@ public:
     virtual QString outputFileName() const Q_DECL_OVERRIDE { return outputFileName_; }
     virtual QmlPropertyNode* hasQmlProperty(const QString& ) const Q_DECL_OVERRIDE;
     virtual QmlPropertyNode* hasQmlProperty(const QString&, bool attached) const Q_DECL_OVERRIDE;
+    virtual QmlTypeNode* qmlBaseNode() { return 0; }
     void addChild(Node* child, const QString& title);
     const QStringList& groupNames() const { return groupNames_; }
     virtual void appendGroupName(const QString& t) Q_DECL_OVERRIDE { groupNames_.append(t); }
@@ -647,7 +649,7 @@ public:
     const QString& qmlBaseName() const { return qmlBaseName_; }
     void setQmlBaseName(const QString& name) { qmlBaseName_ = name; }
     bool qmlBaseNodeNotSet() const { return (qmlBaseNode_ == 0); }
-    QmlTypeNode* qmlBaseNode();
+    virtual QmlTypeNode* qmlBaseNode() Q_DECL_OVERRIDE;
     void setQmlBaseNode(QmlTypeNode* b) { qmlBaseNode_ = b; }
     void requireCppClass() { cnodeRequired_ = true; }
     bool cppClassRequired() const { return cnodeRequired_; }
@@ -804,6 +806,7 @@ public:
     TypedefNode(Aggregate* parent, const QString& name);
     virtual ~TypedefNode() { }
 
+    virtual bool isTypedef() const { return true; }
     const EnumNode* associatedEnum() const { return associatedEnum_; }
 
 private:
@@ -855,16 +858,22 @@ public:
 class FunctionNode : public LeafNode
 {
 public:
+    enum Virtualness { NonVirtual, NormalVirtual, PureVirtual };
+
     enum Metaness {
         Plain,
         Signal,
         Slot,
         Ctor,
         Dtor,
+        CCtor,                  // copy constructor
+        MCtor,                  // move-copy constructor
         MacroWithParams,
         MacroWithoutParams,
-        Native };
-    enum Virtualness { NonVirtual, NormalVirtual, PureVirtual };
+        Native,
+        CAssign,                // copy-assignment operator
+        MAssign                 // move-assignment operator
+    };
 
     FunctionNode(Aggregate* parent, const QString &name);
     FunctionNode(NodeType type, Aggregate* parent, const QString &name, bool attached);
@@ -873,7 +882,10 @@ public:
     void setReturnType(const QString& t) { returnType_ = t; }
     void setParentPath(const QStringList& p) { parentPath_ = p; }
     void setMetaness(Metaness t) { metaness_ = t; }
-    void setVirtualness(Virtualness v);
+    void setMetaness(const QString& t);
+    void setVirtualness(const QString& t);
+    void setVirtualness(Virtualness v) { virtualness_ = v; }
+    void setVirtual() { virtualness_ = NormalVirtual; }
     void setConst(bool b) { const_ = b; }
     void setStatic(bool b) { static_ = b; }
     unsigned char overloadNumber() const { return overloadNumber_; }
@@ -886,18 +898,28 @@ public:
     void setReimplementedFrom(FunctionNode* from);
 
     const QString& returnType() const { return returnType_; }
-    Metaness metaness() const { return metaness_; }
-    bool isMacro() const {
-        return metaness_ == MacroWithParams || metaness_ == MacroWithoutParams;
-    }
-    Virtualness virtualness() const { return virtualness_; }
+    QString metaness() const;
+    QString virtualness() const;
     bool isConst() const { return const_; }
     bool isStatic() const { return static_; }
     bool isOverload() const { return overload_; }
     bool isReimplemented() const Q_DECL_OVERRIDE { return reimplemented_; }
     bool isFunction() const Q_DECL_OVERRIDE { return true; }
+    bool isSomeCtor() const { return isCtor() || isCCtor() || isMCtor(); }
+    bool isMacroWithParams() const { return (metaness_ == MacroWithParams); }
+    bool isMacroWithoutParams() const { return (metaness_ == MacroWithoutParams); }
+    bool isMacro() const { return (isMacroWithParams() || isMacroWithoutParams()); }
+    bool isSignal() const { return (metaness_ == Signal); }
+    bool isSlot() const { return (metaness_ == Slot); }
+    bool isCtor() const { return (metaness_ == Ctor); }
     bool isDtor() const { return (metaness_ == Dtor); }
+    bool isCCtor() const { return (metaness_ == CCtor); }
+    bool isMCtor() const { return (metaness_ == MCtor); }
+    bool isCAssign() const { return (metaness_ == CAssign); }
+    bool isMAssign() const { return (metaness_ == MAssign); }
+    bool isNonvirtual() const { return (virtualness_ == NonVirtual); }
     bool isVirtual() const { return (virtualness_ == NormalVirtual); }
+    bool isPureVirtual() const { return (virtualness_ == PureVirtual); }
     virtual bool isQmlSignal() const Q_DECL_OVERRIDE {
         return (type() == Node::QmlSignal) && (genus() == Node::QML);
     }
