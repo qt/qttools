@@ -1252,8 +1252,17 @@ bool Aggregate::isSameSignature(const QVector<Parameter>& pv1, const FunctionNod
               ### hack for C++ to handle superfluous
               "Foo::" prefixes gracefully
             */
-            if (t1 != t2 && t1 != (f2->parent()->name() + "::" + t2))
-                return false;
+            if (t1 != t2 && t1 != (f2->parent()->name() + "::" + t2)) {
+                // Accept a difference in the template parametters of the type if one
+                // is omited (eg. "QAtomicInteger" == "QAtomicInteger<T>")
+                auto ltLoc = t1.indexOf('<');
+                auto gtLoc = t1.indexOf('>', ltLoc);
+                if (ltLoc < 0 || gtLoc < ltLoc)
+                    return false;
+                t1.remove(ltLoc, gtLoc - ltLoc + 1);
+                if (t1 != t2)
+                    return false;
+            }
         }
         ++p1;
         ++p2;
