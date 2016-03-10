@@ -103,7 +103,7 @@ RESOURCES += assistant.qrc \
     assistant_images.qrc
 
 win32 {
-    !wince*:LIBS += -lshell32
+    LIBS += -lshell32
     RC_FILE = assistant.rc
 }
 

@@ -56,11 +56,9 @@ void StdInListener::run()
     bool ok = true;
     char chBuf[4096];
     DWORD dwRead;
+    HANDLE hStdinDup;
 
-#ifndef Q_OS_WINCE
-    HANDLE hStdin, hStdinDup;
-
-    hStdin = GetStdHandle(STD_INPUT_HANDLE);
+    const HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
     if (hStdin == INVALID_HANDLE_VALUE)
         return;
 
@@ -69,10 +67,6 @@ void StdInListener::run()
         0, false, DUPLICATE_SAME_ACCESS);
 
     CloseHandle(hStdin);
-#else
-    HANDLE hStdinDup;
-    hStdinDup = stdin;
-#endif
 
     while (ok) {
         ok = ReadFile(hStdinDup, chBuf, sizeof(chBuf), &dwRead, NULL);

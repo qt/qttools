@@ -6,7 +6,6 @@ qtHaveModule(widgets) {
     } else {
         SUBDIRS = assistant \
                   pixeltool \
-                  qtestlib \
                   designer
 
         linguist.depends = designer
@@ -30,7 +29,7 @@ qtHaveModule(dbus): SUBDIRS += qdbus
 
 win32|winrt:SUBDIRS += windeployqt
 winrt:SUBDIRS += winrtrunner
-qtHaveModule(gui):!android:!ios:!qnx:!wince*:!winrt*:SUBDIRS += qtdiag
+qtHaveModule(gui):!android:!ios:!qnx:!winrt: SUBDIRS += qtdiag
 
 qtNomakeTools( \
     pixeltool \
