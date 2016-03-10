@@ -1383,7 +1383,6 @@ void HtmlGenerator::generateClassLikeNode(Aggregate* inner, CodeMarker* marker)
     generateBrief(inner, marker);
     generateRequisites(inner, marker);
     generateStatus(inner, marker);
-    generateThreadSafeness(inner, marker);
 
     out() << "<ul>\n";
 
@@ -1408,6 +1407,7 @@ void HtmlGenerator::generateClassLikeNode(Aggregate* inner, CodeMarker* marker)
               << "Compatibility members</a></li>\n";
 
     out() << "</ul>\n";
+    generateThreadSafeness(inner, marker);
 
     bool needOtherSection = false;
 

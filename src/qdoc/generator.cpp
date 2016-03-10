@@ -190,6 +190,41 @@ void Generator::appendFullNames(Text& text, const NodeList& nodes, const Node* r
     }
 }
 
+/*!
+  Append the signature for the function named in \a node to
+  \a text, so that is is a link to the documentation for that
+  function.
+ */
+void Generator::appendSignature(Text& text, const Node* node)
+{
+    text << Atom(Atom::LinkNode, CodeMarker::stringForNode(node))
+         << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
+         << Atom(Atom::String, node->signature(false, true))
+         << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
+}
+
+/*!
+  Generate a bullet list of function signatures. The function
+  nodes are in \a nodes. It uses the \a relative node and the
+  \a marker for the generation.
+ */
+void Generator::signatureList(const NodeList& nodes, const Node* relative, CodeMarker* marker)
+{
+    Text text;
+    int count = 0;
+    text << Atom(Atom::ListLeft, QString("bullet"));
+    NodeList::ConstIterator n = nodes.constBegin();
+    while (n != nodes.constEnd()) {
+        text << Atom(Atom::ListItemNumber, QString::number(++count));
+        text << Atom(Atom::ListItemLeft, QString("bullet"));
+        appendSignature(text, *n);
+        text << Atom(Atom::ListItemRight, QString("bullet"));
+        ++n;
+    }
+    text << Atom(Atom::ListRight, QString("bullet"));
+    generateText(text, relative, marker);
+}
+
 int Generator::appendSortedNames(Text& text, const ClassNode* cn, const QList<RelatedClass>& rc)
 {
     QList<RelatedClass>::ConstIterator r;
@@ -1392,24 +1427,83 @@ bool Generator::generateText(const Text& text,
     return result;
 }
 
+/*
+  The node is an aggregate, typically a class node, which has
+  a threadsafeness level. This function checks all the children
+  of the node to see if they are exceptions to the node's
+  threadsafeness. If there are any exceptions, the exceptions
+  are added to the appropriate set (reentrant, threadsafe, and
+  nonreentrant, and true is returned. If there are no exceptions,
+  the three node lists remain empty and false is returned.
+ */
+static bool hasExceptions(const Node* node,
+                          NodeList& reentrant,
+                          NodeList& threadsafe,
+                          NodeList& nonreentrant)
+{
+    bool result = false;
+    Node::ThreadSafeness ts = node->threadSafeness();
+    const Aggregate* a = static_cast<const Aggregate*>(node);
+    NodeList::ConstIterator c = a->childNodes().constBegin();
+    while (c != a->childNodes().constEnd()) {
+        if (!(*c)->isObsolete()){
+            switch ((*c)->threadSafeness()) {
+            case Node::Reentrant:
+                reentrant.append(*c);
+                if (ts == Node::ThreadSafe)
+                    result = true;
+                break;
+            case Node::ThreadSafe:
+                threadsafe.append(*c);
+                if (ts == Node::Reentrant)
+                    result = true;
+                break;
+            case Node::NonReentrant:
+                nonreentrant.append(*c);
+                result = true;
+                break;
+            default:
+                break;
+            }
+        }
+        ++c;
+    }
+    return result;
+}
+
+static void startNote(Text& text)
+{
+    text << Atom::ParaLeft
+         << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD)
+         << "Note:"
+         << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD)
+         << " ";
+}
+
+/*!
+  Generates text that explains how threadsafe and/or reentrant
+  \a node is.
+ */
 void Generator::generateThreadSafeness(const Node *node, CodeMarker *marker)
 {
-    Text text;
-    Node::ThreadSafeness threadSafeness = node->threadSafeness();
+    Text text, rlink, tlink;
+    NodeList reentrant;
+    NodeList threadsafe;
+    NodeList nonreentrant;
+    Node::ThreadSafeness ts = node->threadSafeness();
+    bool exceptions = false;
 
-    Text rlink;
     rlink << Atom(Atom::Link,"reentrant")
           << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
           << "reentrant"
           << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
 
-    Text tlink;
     tlink << Atom(Atom::Link,"thread-safe")
           << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
           << "thread-safe"
           << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
 
-    switch (threadSafeness) {
+    switch (ts) {
     case Node::UnspecifiedSafeness:
         break;
     case Node::NonReentrant:
@@ -1426,110 +1520,76 @@ void Generator::generateThreadSafeness(const Node *node, CodeMarker *marker)
         break;
     case Node::Reentrant:
     case Node::ThreadSafe:
-        text << Atom::ParaLeft
-             << Atom(Atom::FormattingLeft,ATOM_FORMATTING_BOLD)
-             << "Note:"
-             << Atom(Atom::FormattingRight,ATOM_FORMATTING_BOLD)
-             << " ";
-
+        startNote(text);
         if (node->isAggregate()) {
-            const Aggregate* innerNode = static_cast<const Aggregate*>(node);
-            text << "All functions in this "
-                 << typeString(node)
-                 << " are ";
-            if (threadSafeness == Node::ThreadSafe)
+            exceptions = hasExceptions(node, reentrant, threadsafe, nonreentrant);
+            text << "All functions in this " << typeString(node) << " are ";
+            if (ts == Node::ThreadSafe)
                 text << tlink;
             else
                 text << rlink;
 
-            bool exceptions = false;
-            NodeList reentrant;
-            NodeList threadsafe;
-            NodeList nonreentrant;
-            NodeList::ConstIterator c = innerNode->childNodes().constBegin();
-            while (c != innerNode->childNodes().constEnd()) {
-
-                if ((*c)->status() != Node::Obsolete){
-                    switch ((*c)->threadSafeness()) {
-                    case Node::Reentrant:
-                        reentrant.append(*c);
-                        if (threadSafeness == Node::ThreadSafe)
-                            exceptions = true;
-                        break;
-                    case Node::ThreadSafe:
-                        threadsafe.append(*c);
-                        if (threadSafeness == Node::Reentrant)
-                            exceptions = true;
-                        break;
-                    case Node::NonReentrant:
-                        nonreentrant.append(*c);
-                        exceptions = true;
-                        break;
-                    default:
-                        break;
-                    }
-                }
-                ++c;
-            }
-            if (!exceptions)
+            if (!exceptions || (ts == Node::Reentrant && !threadsafe.isEmpty()))
                 text << ".";
-            else if (threadSafeness == Node::Reentrant) {
-                if (nonreentrant.isEmpty()) {
-                    if (!threadsafe.isEmpty()) {
-                        text << ", but ";
-                        appendFullNames(text,threadsafe,innerNode);
-                        singularPlural(text,threadsafe);
-                        text << " also " << tlink << ".";
-                    }
-                    else
-                        text << ".";
-                }
-                else {
-                    text << ", except for ";
-                    appendFullNames(text,nonreentrant,innerNode);
-                    text << ", which";
-                    singularPlural(text,nonreentrant);
-                    text << " nonreentrant.";
-                    if (!threadsafe.isEmpty()) {
-                        text << " ";
-                        appendFullNames(text,threadsafe,innerNode);
-                        singularPlural(text,threadsafe);
-                        text << " " << tlink << ".";
-                    }
-                }
-            }
-            else { // thread-safe
-                if (!nonreentrant.isEmpty() || !reentrant.isEmpty()) {
-                    text << ", except for ";
-                    if (!reentrant.isEmpty()) {
-                        appendFullNames(text,reentrant,innerNode);
-                        text << ", which";
-                        singularPlural(text,reentrant);
-                        text << " only " << rlink;
-                        if (!nonreentrant.isEmpty())
-                            text << ", and ";
-                    }
-                    if (!nonreentrant.isEmpty()) {
-                        appendFullNames(text,nonreentrant,innerNode);
-                        text << ", which";
-                        singularPlural(text,nonreentrant);
-                        text << " nonreentrant.";
-                    }
-                    text << ".";
-                }
-            }
+            else
+                text << " with the following exceptions:";
         }
         else {
             text << "This " << typeString(node) << " is ";
-            if (threadSafeness == Node::ThreadSafe)
+            if (ts == Node::ThreadSafe)
                 text << tlink;
             else
                 text << rlink;
-            text << ".";
         }
         text << Atom::ParaRight;
+        break;
+    default:
+        break;
     }
     generateText(text,node,marker);
+
+    if (exceptions) {
+        text.clear();
+        if (ts == Node::Reentrant) {
+            if (!nonreentrant.isEmpty()) {
+                startNote(text);
+                text << "These functions are not "
+                     << rlink
+                     << ":"
+                     << Atom::ParaRight;
+                signatureList(nonreentrant, node, marker);
+            }
+            if (!threadsafe.isEmpty()) {
+                text.clear();
+                startNote(text);
+                text << "These functions are also "
+                     << tlink
+                     << ":"
+                     << Atom::ParaRight;
+                generateText(text, node, marker);
+                signatureList(threadsafe, node, marker);
+            }
+        }
+        else { // thread-safe
+            if (!reentrant.isEmpty()) {
+                startNote(text);
+                text << "These functions are only "
+                     << rlink
+                     << ":"
+                     << Atom::ParaRight;
+                signatureList(reentrant, node, marker);
+            }
+            if (!nonreentrant.isEmpty()) {
+                text.clear();
+                startNote(text);
+                text << "These functions are not "
+                     << rlink
+                     << ":"
+                     << Atom::ParaRight;
+                signatureList(nonreentrant, node, marker);
+            }
+        }
+    }
 }
 
 /*!
