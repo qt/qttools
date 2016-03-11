@@ -37,7 +37,7 @@
 
 QT_BEGIN_NAMESPACE
 
-enum { Other, Alnum, Gizmo, Comma, LParen, RParen, RAngle, Colon };
+enum { Other, Alnum, Gizmo, Comma, LBrace, RBrace, RAngle, Colon, Paren };
 
 // entries 128 and above are Other
 static const int charCategory[256] = {
@@ -48,7 +48,7 @@ static const int charCategory[256] = {
     //          !       "       #       $       %       &       '
     Other,  Other,  Other,  Other,  Other,  Gizmo,  Gizmo,  Other,
     //  (       )       *       +       ,       -       .       /
-    LParen, RParen, Gizmo,  Gizmo,  Comma,  Other,  Other,  Gizmo,
+    Paren,  Paren, Gizmo,  Gizmo,  Comma,  Other,  Other,  Gizmo,
     //  0       1       2       3       4       5       6       7
     Alnum,  Alnum,  Alnum,  Alnum,  Alnum,  Alnum,  Alnum,  Alnum,
     //  8       9       :       ;       <       =       >       ?
@@ -68,19 +68,20 @@ static const int charCategory[256] = {
     //  p       q       r       s       t       u       v       w
     Alnum,  Alnum,  Alnum,  Alnum,  Alnum,  Alnum,  Alnum,  Alnum,
     //  x       y       z       {       |       }       ~
-    Alnum,  Alnum,  Alnum,  LParen, Gizmo,  RParen, Other,  Other
+    Alnum,  Alnum,  Alnum,  LBrace, Gizmo,  RBrace, Other,  Other
 };
 
-static const bool needSpace[8][8] = {
-    /*        [      a      +      ,      (       )     >      :  */
-    /* [ */ { false, false, false, false, false, true,  false, false },
-    /* a */ { false, true,  true,  false, false, true,  false, false },
-    /* + */ { false, true,  false, false, false, true,  false, true },
-    /* , */ { true,  true,  true,  true,  true,  true,  true,  true },
-    /* ( */ { true,  true,  true,  false, true,  false, true,  true },
-    /* ) */ { true,  true,  true,  false, true,  true,  true,  true },
-    /* > */ { true,  true,  true,  false, true,  true,  true,  false },
-    /* : */ { false, false, true,  true,  true,  true,  true,  false }
+static const bool needSpace[9][9] = {
+    /*        [      a      +      ,      {       }     >      :      )    */
+    /* [ */ { false, false, false, false, false, true,  false, false, false },
+    /* a */ { false, true,  true,  false, false, true,  false, false, false },
+    /* + */ { false, true,  false, false, false, true,  false, true,  false },
+    /* , */ { true,  true,  true,  true,  true,  true,  true,  true,  false },
+    /* { */ { false, false, false, false, false, false, false, false, false },
+    /* } */ { false, false, false, false, false, false, false, false, false },
+    /* > */ { true,  true,  true,  false, true,  true,  true,  false, false },
+    /* : */ { false, false, true,  true,  true,  true,  true,  false, false },
+    /* ( */ { false, false, false, false, false, false, false, false, false },
 };
 
 static int category( QChar ch )

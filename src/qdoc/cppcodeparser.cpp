@@ -1154,22 +1154,29 @@ bool CppCodeParser::matchDataType(CodeChunk *dataType, QString *var, bool qProp)
           in some cases (e.g., 'operator int()'). The tokenizer recognizes '(*'
           as a single token.
         */
+        dataType->append(" "); // force a space after the type
         dataType->append(previousLexeme());
         dataType->appendHotspot();
         if (var != 0 && match(Tok_Ident))
             *var = previousLexeme();
-        if (!match(Tok_RightParen) || tok != Tok_LeftParen) {
+        if (!match(Tok_RightParen))
             return false;
-        }
+        dataType->append(previousLexeme());
+        if (!match(Tok_LeftParen))
+            return false;
         dataType->append(previousLexeme());
 
-        int parenDepth0 = tokenizer->parenDepth();
-        while (tokenizer->parenDepth() >= parenDepth0 && tok != Tok_Eoi) {
-            dataType->append(lexeme());
-            readToken();
+        /* parse the parameters. Ignore the parameter name from the type */
+        while (tok != Tok_RightParen && tok != Tok_Eoi) {
+            QString dummy;
+            if (!matchDataType(dataType, &dummy))
+                return false;
+            if (match(Tok_Comma))
+                dataType->append(previousLexeme());
         }
-        if (match(Tok_RightParen))
-            dataType->append(previousLexeme());
+        if (!match(Tok_RightParen))
+            return false;
+        dataType->append(previousLexeme());
     }
     else {
         /*
