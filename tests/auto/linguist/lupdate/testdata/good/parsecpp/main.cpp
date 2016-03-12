@@ -488,3 +488,22 @@ class TernaryClass : public QObject
             tr("ternary, ddd, false");
     }
 };
+
+
+
+// QTBUG-47467: lupdate confused by nullptr in case of plural forms
+void nullptrInPlural()
+{
+    QObject::tr("%n nullptr(s)", nullptr, 3);
+    QCoreApplication::translate("Plurals, nullptr", "%n car(s)", nullptr, QCoreApplication::UnicodeUTF8, 1);
+}
+
+class nullptrClass : public QObject
+{
+    Q_OBJECT
+
+    void f()
+    {
+        tr("%n car(s)", nullptr, 2);
+    }
+};
