@@ -526,17 +526,6 @@ void FormWindowManager::setupActions()
     connect(m_actionShowFormWindowSettingsDialog, &QAction::triggered,
             this, &FormWindowManager::slotActionShowFormWindowSettingsDialog);
     m_actionShowFormWindowSettingsDialog->setEnabled(false);
-
-#if defined (Q_OS_UNIX) && !defined(Q_OS_MAC)
-    // These do not currently exist, but will allow theme authors to fill in the gaps
-    m_actionBreakLayout->setIcon(QIcon::fromTheme(QStringLiteral("designer-break-layout"), m_actionBreakLayout->icon()));
-    m_actionGridLayout->setIcon(QIcon::fromTheme(QStringLiteral("designer-grid-layout"), m_actionGridLayout->icon()));
-    m_actionHorizontalLayout->setIcon(QIcon::fromTheme(QStringLiteral("designer-horizontal-layout"), m_actionHorizontalLayout->icon()));
-    m_actionVerticalLayout->setIcon(QIcon::fromTheme(QStringLiteral("designer-vertical-layout"), m_actionVerticalLayout->icon()));
-    m_actionSplitHorizontal->setIcon(QIcon::fromTheme(QStringLiteral("designer-split-horizontal"), m_actionSplitHorizontal->icon()));
-    m_actionSplitVertical->setIcon(QIcon::fromTheme(QStringLiteral("designer-split-vertical"), m_actionSplitVertical->icon()));
-    m_actionAdjustSize->setIcon(QIcon::fromTheme(QStringLiteral("designer-adjust-size"), m_actionAdjustSize->icon()));
-#endif
 }
 
 #ifndef QT_NO_CLIPBOARD
