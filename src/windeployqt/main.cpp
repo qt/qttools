@@ -351,7 +351,7 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
     parser->addOption(releaseOption);
     QCommandLineOption releaseWithDebugInfoOption(QStringLiteral("release-with-debug-info"),
                                                   QStringLiteral("Assume release binaries with debug information."));
-    releaseWithDebugInfoOption.setHidden(true); // Deprecated by improved debug detection.
+    releaseWithDebugInfoOption.setFlags(QCommandLineOption::HiddenFromHelp); // Deprecated by improved debug detection.
     parser->addOption(releaseWithDebugInfoOption);
 
     QCommandLineOption deployPdbOption(QStringLiteral("pdb"),
