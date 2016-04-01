@@ -3872,7 +3872,6 @@
 
         \meta {technology} {User Interface}
         \meta {platform} {OS X 10.6}
-        \meta {platform} {Symbian}
         \meta {platform} {MeeGo}
         \meta {audience} {user}
         \meta {audience} {programmer}
@@ -3912,7 +3911,6 @@
                    <component>QtGui</component>
                </prodinfo>
                <othermeta name="platform" content="MeeGo"/>
-               <othermeta name="platform" content="Symbian"/>
                <othermeta name="platform" content="OS X 10.6"/>
                <othermeta name="technology" content="User Interface"/>
            </metadata>

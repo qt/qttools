@@ -46,11 +46,7 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     CalculatorForm calculator;
-#if defined(Q_OS_SYMBIAN)
-    calculator.showMaximized();
-#else
     calculator.show();
-#endif
     return app.exec();
 }
 //! [0]
