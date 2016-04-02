@@ -194,6 +194,7 @@ QtResourceViewPrivate::QtResourceViewPrivate(QDesignerFormEditorInterface *core)
     m_ignoreGuiSignals(false),
     m_resourceEditingEnabled(true)
 {
+    m_toolBar->setIconSize(QSize(22, 22));
 }
 
 void QtResourceViewPrivate::restoreSettings()
@@ -603,6 +604,7 @@ QtResourceView::QtResourceView(QDesignerFormEditorInterface *core, QWidget *pare
 
     d_ptr->m_filterWidget = new QWidget(d_ptr->m_toolBar);
     QHBoxLayout *filterLayout = new QHBoxLayout(d_ptr->m_filterWidget);
+    filterLayout->setContentsMargins(0, 0, 0, 0);
     QLineEdit *filterLineEdit = new QLineEdit(d_ptr->m_filterWidget);
     connect(filterLineEdit, SIGNAL(textChanged(QString)), this, SLOT(slotFilterChanged(QString)));
     filterLineEdit->setPlaceholderText(tr("Filter"));
