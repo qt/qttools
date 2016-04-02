@@ -460,6 +460,8 @@ STRING(final);
 STRING(friend);
 STRING(namespace);
 STRING(nullptr);
+STRING(Q_NULLPTR);
+STRING(NULL);
 STRING(operator);
 STRING(return);
 STRING(struct);
@@ -682,7 +684,13 @@ CppParser::TokenType CppParser::getToken()
             //qDebug() << "IDENT: " << yyWord;
 
             switch (yyWord.unicode()[0].unicode()) {
+            case 'N':
+                if (yyWord == strNULL)
+                    return Tok_Null;
+                break;
             case 'Q':
+                if (yyWord == strQ_NULLPTR)
+                    return Tok_Null;
                 if (yyWord == strQ_OBJECT)
                     return Tok_Q_OBJECT;
                 if (yyWord == strQ_SLOTS || yyWord == strQ_SIGNALS)
