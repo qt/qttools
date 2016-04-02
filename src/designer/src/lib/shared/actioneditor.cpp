@@ -198,6 +198,7 @@ ActionEditor::ActionEditor(QDesignerFormEditorInterface *core, QWidget *parent, 
     // filter
     m_filterWidget = new QWidget(toolbar);
     QHBoxLayout *filterLayout = new QHBoxLayout(m_filterWidget);
+    filterLayout->setContentsMargins(0, 0, 0, 0);
     QLineEdit *filterLineEdit = new QLineEdit(m_filterWidget);
     connect(filterLineEdit, &QLineEdit::textChanged, this, &ActionEditor::setFilter);
     filterLineEdit->setPlaceholderText(tr("Filter"));
