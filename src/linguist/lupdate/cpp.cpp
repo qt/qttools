@@ -1757,6 +1757,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
     QString functionName;
 #endif
     bool yyTokColonSeen = false; // Start of c'tor's initializer list
+    bool yyTokIdentSeen = false; // Start of initializer (member or base class)
     metaExpected = true;
 
     prospectiveContext.clear();
@@ -1978,6 +1979,11 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
             yyTok = getToken();
             break;
         case Tok_Ident:
+            if (yyTokColonSeen &&
+                yyBraceDepth == namespaceDepths.count() && yyParenDepth == 0) {
+                // member or base class identifier
+                yyTokIdentSeen = true;
+            }
             yyTok = getToken();
             if (yyTok == Tok_LeftParen) {
                 switch (trFunctionAliasManager.trFunctionByName(yyWord)) {
@@ -2034,6 +2040,11 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
             }
             break;
         case Tok_ColonColon:
+            if (yyTokIdentSeen) {
+                // member or base class identifier
+                yyTok = getToken();
+                break;
+            }
             if (yyBraceDepth == namespaceDepths.count() && yyParenDepth == 0 && !yyTokColonSeen)
                 prospectiveContext = prefix;
             prefix += strColons;
@@ -2046,16 +2057,20 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
 #endif
             break;
         case Tok_RightBrace:
-            if (yyBraceDepth + 1 == namespaceDepths.count()) // class or namespace
-                truncateNamespaces(&namespaces, namespaceDepths.pop());
-            if (yyBraceDepth == namespaceDepths.count()) {
-                // function, class or namespace
-                if (!yyBraceDepth && !directInclude)
-                    truncateNamespaces(&functionContext, 1);
-                else
-                    functionContext = namespaces;
-                functionContextUnresolved.clear();
-                pendingContext.clear();
+            if (!yyTokColonSeen) {
+                if (yyBraceDepth + 1 == namespaceDepths.count()) {
+                    // class or namespace
+                    truncateNamespaces(&namespaces, namespaceDepths.pop());
+                }
+                if (yyBraceDepth == namespaceDepths.count()) {
+                    // function, class or namespace
+                    if (!yyBraceDepth && !directInclude)
+                        truncateNamespaces(&functionContext, 1);
+                    else
+                        functionContext = namespaces;
+                    functionContextUnresolved.clear();
+                    pendingContext.clear();
+                }
             }
             // fallthrough
         case Tok_Semicolon:
@@ -2094,15 +2109,21 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
             yyTok = getToken();
             break;
         case Tok_LeftBrace:
-            if (!prospectiveContext.isEmpty()
-                && yyBraceDepth == namespaceDepths.count() + 1 && yyParenDepth == 0) {
-                pendingContext = prospectiveContext;
-                prospectiveContext.clear();
+            if (yyBraceDepth == namespaceDepths.count() + 1 && yyParenDepth == 0) {
+                if (!prospectiveContext.isEmpty()) {
+                    pendingContext = prospectiveContext;
+                    prospectiveContext.clear();
+                }
+                if (!yyTokIdentSeen) {
+                    // Function body
+                    yyTokColonSeen = false;
+                }
             }
-            yyTokColonSeen = false;
+            // fallthrough
+        case Tok_LeftParen:
+            yyTokIdentSeen = false;
             // fallthrough
         case Tok_Comma:
-        case Tok_LeftParen:
         case Tok_QuestionMark:
             metaExpected = true;
             yyTok = getToken();
