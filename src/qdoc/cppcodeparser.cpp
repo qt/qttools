@@ -1550,7 +1550,10 @@ bool CppCodeParser::matchFunctionDecl(Aggregate *parent,
 
             VariableNode *var = new VariableNode(parent, name);
             var->setAccess(access);
-            var->setLocation(location());
+            if (parsingHeaderFile_)
+                var->setLocation(declLoc());
+            else
+                var->setLocation(location());
             var->setLeftType(returnType.left());
             var->setRightType(returnType.right());
             if (matched_compat)
@@ -1640,7 +1643,10 @@ bool CppCodeParser::matchFunctionDecl(Aggregate *parent,
         if (matched_friend)
             access = Node::Public;
         func->setAccess(access);
-        func->setLocation(location());
+        if (parsingHeaderFile_)
+            func->setLocation(declLoc());
+        else
+            func->setLocation(location());
         func->setReturnType(returnType.toString());
         func->setParentPath(parentPath);
         func->setTemplateStuff(templateStuff);
@@ -1792,7 +1798,7 @@ bool CppCodeParser::matchClassDecl(Aggregate *parent,
     */
     ClassNode *classe = new ClassNode(parent, className);
     classe->setAccess(access);
-    classe->setLocation(location());
+    classe->setLocation(declLoc());
     if (compat)
         classe->setStatus(Node::Compat);
     if (!physicalModuleName.isEmpty())
@@ -1836,7 +1842,7 @@ bool CppCodeParser::matchNamespaceDecl(Aggregate *parent)
     if (!ns) {
         ns = new NamespaceNode(parent, namespaceName);
         ns->setAccess(access);
-        ns->setLocation(location());
+        ns->setLocation(declLoc());
     }
 
     readToken(); // skip '{'
@@ -1999,7 +2005,7 @@ bool CppCodeParser::matchEnumDecl(Aggregate *parent)
     if (!name.isEmpty()) {
         enume = new EnumNode(parent, name);
         enume->setAccess(access);
-        enume->setLocation(location());
+        enume->setLocation(declLoc());
     }
 
     readToken();
@@ -2029,7 +2035,7 @@ bool CppCodeParser::matchTypedefDecl(Aggregate *parent)
     if (parent && !parent->findChildNode(name, Node::Typedef)) {
         TypedefNode* td = new TypedefNode(parent, name);
         td->setAccess(access);
-        td->setLocation(location());
+        td->setLocation(declLoc());
     }
     return true;
 }
@@ -2058,7 +2064,7 @@ bool CppCodeParser::matchProperty(Aggregate *parent)
 
     PropertyNode *property = new PropertyNode(parent, name);
     property->setAccess(Node::Public);
-    property->setLocation(location());
+    property->setLocation(declLoc());
     property->setDataType(dataType.toString());
 
     while (tok != Tok_RightParen && tok != Tok_Eoi) {
@@ -2163,12 +2169,15 @@ bool CppCodeParser::matchDeclList(Aggregate *parent)
         case Tok_class:
         case Tok_struct:
         case Tok_union:
+            setDeclLoc();
             matchClassDecl(parent, templateStuff);
             break;
         case Tok_namespace:
+            setDeclLoc();
             matchNamespaceDecl(parent);
             break;
         case Tok_using:
+            setDeclLoc();
             matchUsingDecl(parent);
             break;
         case Tok_template:
@@ -2180,9 +2189,11 @@ bool CppCodeParser::matchDeclList(Aggregate *parent)
             }
             continue;
         case Tok_enum:
+            setDeclLoc();
             matchEnumDecl(parent);
             break;
         case Tok_typedef:
+            setDeclLoc();
             matchTypedefDecl(parent);
             break;
         case Tok_private:
@@ -2218,6 +2229,7 @@ bool CppCodeParser::matchDeclList(Aggregate *parent)
         case Tok_Q_PROPERTY:
         case Tok_Q_PRIVATE_PROPERTY:
         case Tok_QDOC_PROPERTY:
+            setDeclLoc();
             if (!matchProperty(parent)) {
                 location().warning(tr("Failed to parse token %1 in property declaration").arg(lexeme()));
                 skipTo(Tok_RightParen);
@@ -2250,13 +2262,14 @@ bool CppCodeParser::matchDeclList(Aggregate *parent)
             break;
         case Tok_Q_DECLARE_FLAGS:
             readToken();
+            setDeclLoc();
             if (match(Tok_LeftParen) && match(Tok_Ident)) {
                 QString flagsType = previousLexeme();
                 if (match(Tok_Comma) && match(Tok_Ident)) {
                     QString name = previousLexeme();
                     TypedefNode *flagsNode = new TypedefNode(parent, flagsType);
                     flagsNode->setAccess(access);
-                    flagsNode->setLocation(location());
+                    flagsNode->setLocation(declLoc());
                     EnumNode* en = static_cast<EnumNode*>(parent->findChildNode(name, Node::Enum));
                     if (en)
                         en->setFlagsType(flagsNode);
@@ -2266,6 +2279,7 @@ bool CppCodeParser::matchDeclList(Aggregate *parent)
             break;
         case Tok_QT_MODULE:
             readToken();
+            setDeclLoc();
             if (match(Tok_LeftParen) && match(Tok_Ident))
                 physicalModuleName = previousLexeme();
             if (!physicalModuleName.startsWith("Qt"))
@@ -2273,6 +2287,8 @@ bool CppCodeParser::matchDeclList(Aggregate *parent)
             match(Tok_RightParen);
             break;
         default:
+            if (parsingHeaderFile_)
+                setDeclLoc();
             if (!matchFunctionDecl(parent, 0, 0, templateStuff, extra)) {
                 while (tok != Tok_Eoi &&
                        (tokenizer->braceDepth() > braceDepth0 ||

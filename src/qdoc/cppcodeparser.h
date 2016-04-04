@@ -76,6 +76,8 @@ public:
     virtual void doneParsingHeaderFiles() Q_DECL_OVERRIDE;
     virtual void doneParsingSourceFiles() Q_DECL_OVERRIDE;
     bool parseParameters(const QString& parameters, QVector<Parameter>& pvect, bool& isQPrivateSignal);
+    const Location& declLoc() const { return declLoc_; }
+    void setDeclLoc() { declLoc_ = location(); }
 
 protected:
     const QSet<QString>& topicCommands();
@@ -163,6 +165,7 @@ protected:
     QStringList lastPath_;
     QRegExp varComment;
     QRegExp sep;
+    Location declLoc_;
 
  private:
     QString sequentialIteratorDefinition;
