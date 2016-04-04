@@ -1487,6 +1487,18 @@ void DocParser::parse(const QString& source,
             }
         }
             break;
+        // Do not parse content after '//!' comments
+        case '/':
+        {
+            if (pos + 2 < len)
+                if (in.at(pos + 1) == '/')
+                    if (in.at(pos + 2) == '!') {
+                        pos += 2;
+                        getRestOfLine();
+                        break;
+                    }
+        // fall through
+        }
         default:
         {
             bool newWord;

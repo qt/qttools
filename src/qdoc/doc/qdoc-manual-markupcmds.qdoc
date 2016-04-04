@@ -3775,17 +3775,20 @@
 
     The \\include command sends all or part of the file specified by
     its first argument to the QDoc input stream to be processed as a
-    QDoc comment snippet. This command is often assigned the alias,
-    \e {input}, in the QDoc configuration file, for example \e {alias.include
-    = input}.
+    QDoc comment snippet.
 
-    The command is useful when some snippet of commands and text is to
-    be used in multiple places in the documentation. In that case,
-    move the snippet into a separate file and use the \\include
-    command wherever you want to insert the snippet into the
-    documentation. To prevent QDoc from reading the file as a
-    stand-alone page of documentation, we recommend that you use the
-    \c .qdocinc extension for these \e {include} files.
+    The command is useful when some snippet of commands or text is to
+    be used in multiple places in the documentation. Use the \\include
+    command wherever you want to insert a snippet into the documentation.
+    The file containing the snippet to include must be located under the
+    path(s) listed in the \l{sourcedirs-variable}{sourcedirs} QDoc
+    configuration variable. It can be either any source file parsed
+    by QDoc (or even the same one where \\include command is used), or
+    any other text file. To store snippets in a separate file that is
+    not meant to be parsed by QDoc, use a file extension that is not
+    listed in \l {sources.fileextensions-variable}{sources.fileextensions};
+    for example, \c .qdocinc.
+
 
     The command can have either one or two arguments. The first
     argument is always a file name. The contents of the file must be
@@ -3809,7 +3812,7 @@
 
     QDoc renders this page \l{corefeatures.html} {as shown here}.
 
-    \target 2-argument-form}
+    \target 2-argument-form
     \section2 \\include filename snippet-identifier
 
     It is a waste of time to make a separate \c .qdocinc file for every
@@ -3841,8 +3844,12 @@
 
     It works as expected. The sequence of QDoc commands and text found
     between the two tags with the same name as the second argument is
-    sent to the QDoc input stream. You can even nest these snippets,
-    although it's not clear why you would want to do that.
+    sent to the QDoc input stream. You can even have nested snippets.
+
+    \note Snippet identifiers work also within documentation comment
+    (\beginqdoc .. \endqdoc) blocks, so it's not necessary to use a
+    separate \c .qdocinc file. When processing a comment block, QDoc
+    removes any \c {//!} comment lines from the generated output.
 
     \target meta-command
     \section1 \\meta
