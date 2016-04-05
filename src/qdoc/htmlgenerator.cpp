@@ -2016,10 +2016,12 @@ void HtmlGenerator::generateHeader(const QString& title,
     out() << "  <title>"
           << protectEnc(title)
           << divider
-          << titleSuffix
-          << QLatin1Char(' ')
-          << shortVersion
-          << "</title>\n";
+          << titleSuffix;
+
+    if (!shortVersion.isEmpty())
+        out() << QLatin1Char(' ') << shortVersion;
+
+    out() << "</title>\n";
 
     // Include style sheet and script links.
     out() << headerStyles;
