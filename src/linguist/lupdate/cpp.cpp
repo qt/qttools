@@ -459,6 +459,7 @@ STRING(class);
 STRING(final);
 STRING(friend);
 STRING(namespace);
+STRING(nullptr);
 STRING(operator);
 STRING(return);
 STRING(struct);
@@ -698,6 +699,8 @@ CppParser::TokenType CppParser::getToken()
             case 'n':
                 if (yyWord == strnamespace)
                     return Tok_namespace;
+                if (yyWord == strnullptr)
+                    return Tok_Null;
                 break;
             case 'o':
                 if (yyWord == stroperator) {

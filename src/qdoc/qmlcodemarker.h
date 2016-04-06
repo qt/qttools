@@ -40,7 +40,9 @@
 
 #include "cppcodemarker.h"
 
+#ifndef QT_NO_DECLARATIVE
 #include <private/qqmljsastfwd_p.h>
+#endif
 
 QT_BEGIN_NAMESPACE
 
@@ -67,7 +69,9 @@ public:
     virtual QString functionEndRegExp(const QString &funcName) Q_DECL_OVERRIDE;
 
     /* Copied from src/declarative/qml/qdeclarativescriptparser.cpp */
+#ifndef QT_NO_DECLARATIVE
     QList<QQmlJS::AST::SourceLocation> extractPragmas(QString &script);
+#endif
 
 private:
     QString addMarkUp(const QString &code, const Node *relative,

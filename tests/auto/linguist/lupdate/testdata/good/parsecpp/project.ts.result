@@ -235,6 +235,16 @@ backslashed \ stuff.</source>
     </message>
 </context>
 <context>
+    <name>Plurals, nullptr</name>
+    <message numerus="yes">
+        <location filename="main.cpp" line="498"/>
+        <source>%n car(s)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+</context>
+<context>
     <name>QApplication</name>
     <message>
         <location filename="main.cpp" line="43"/>
@@ -301,6 +311,13 @@ backslashed \ stuff.</source>
         <source>ternary, bbb, false</source>
         <extracomment>comment, bbb, false</extracomment>
         <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="497"/>
+        <source>%n nullptr(s)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
     </message>
     <message>
         <location filename="included.cpp" line="34"/>
@@ -453,6 +470,16 @@ backslashed \ stuff.</source>
         <location filename="main.cpp" line="239"/>
         <source>nothing</source>
         <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>nullptrClass</name>
+    <message numerus="yes">
+        <location filename="main.cpp" line="507"/>
+        <source>%n car(s)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
     </message>
 </context>
 <context>

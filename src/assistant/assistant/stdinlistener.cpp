@@ -35,6 +35,8 @@
 
 #include "tracer.h"
 
+#include <stdio.h>
+
 QT_BEGIN_NAMESPACE
 
 StdInListener::StdInListener(QObject *parent)

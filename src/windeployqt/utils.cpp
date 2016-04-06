@@ -45,7 +45,7 @@
 #include <QtCore/QStandardPaths>
 #if defined(Q_OS_WIN)
 #  include <QtCore/qt_windows.h>
-#  include <Shlwapi.h>
+#  include <shlwapi.h>
 #  include <delayimp.h>
 #else // Q_OS_WIN
 #  include <sys/wait.h>

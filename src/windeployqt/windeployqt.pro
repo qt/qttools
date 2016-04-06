@@ -7,6 +7,6 @@ HEADERS += utils.h qmlutils.h elfreader.h
 
 CONFIG += force_bootstrap
 
-win32: LIBS += -lShlwapi
+win32: LIBS += -lshlwapi
 
 load(qt_tool)

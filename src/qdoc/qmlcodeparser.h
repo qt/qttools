@@ -41,9 +41,11 @@
 #include "codeparser.h"
 
 #include <qset.h>
+#ifndef QT_NO_DECLARATIVE
 #include <private/qqmljsengine_p.h>
 #include <private/qqmljslexer_p.h>
 #include <private/qqmljsparser_p.h>
+#endif
 
 QT_BEGIN_NAMESPACE
 
@@ -66,17 +68,21 @@ public:
     virtual void parseSourceFile(const Location& location, const QString& filePath) Q_DECL_OVERRIDE;
     virtual void doneParsingSourceFiles() Q_DECL_OVERRIDE;
 
+#ifndef QT_NO_DECLARATIVE
     /* Copied from src/declarative/qml/qdeclarativescriptparser.cpp */
     void extractPragmas(QString &script);
+#endif
 
 protected:
     const QSet<QString>& topicCommands();
     const QSet<QString>& otherMetaCommands();
 
 private:
+#ifndef QT_NO_DECLARATIVE
     QQmlJS::Engine engine;
     QQmlJS::Lexer *lexer;
     QQmlJS::Parser *parser;
+#endif
 };
 
 QT_END_NAMESPACE

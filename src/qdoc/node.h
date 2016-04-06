@@ -952,7 +952,7 @@ public:
     bool hasActiveAssociatedProperty() const;
 
     QStringList reconstructParameters(bool values = false) const;
-    virtual QString signature(bool values, bool noReturnType = false) const;
+    virtual QString signature(bool values, bool noReturnType = false) const Q_DECL_OVERRIDE;
     virtual QString element() const Q_DECL_OVERRIDE { return parent()->name(); }
     virtual bool isAttached() const Q_DECL_OVERRIDE { return attached_; }
     virtual bool isQtQuickNode() const Q_DECL_OVERRIDE { return parent()->isQtQuickNode(); }

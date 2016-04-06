@@ -35,12 +35,15 @@
 
 #include <qstringlist.h>
 #include <qglobal.h>
+#ifndef QT_NO_DECLARATIVE
 #include <private/qqmljsast_p.h>
 #include <private/qqmljsastfwd_p.h>
 #include <private/qqmljsengine_p.h>
+#endif
 
 QT_BEGIN_NAMESPACE
 
+#ifndef QT_NO_DECLARATIVE
 QmlMarkupVisitor::QmlMarkupVisitor(const QString &source,
                                    const QList<QQmlJS::AST::SourceLocation> &pragmas,
                                    QQmlJS::Engine *engine)
@@ -840,5 +843,6 @@ bool QmlMarkupVisitor::visit(QQmlJS::AST::UiObjectDefinition *definition)
     QQmlJS::AST::Node::accept(definition->initializer, this);
     return false;
 }
+#endif
 
 QT_END_NAMESPACE

@@ -4,7 +4,12 @@
 }
 
 option(host_build)
-QT = core qmldevtools-private
+QT = core
+qtHaveModule(qmldevtools-private) {
+    QT += qmldevtools-private
+} else {
+    DEFINES += QT_NO_DECLARATIVE
+}
 
 DEFINES += \
     QDOC2_COMPAT
