@@ -41,8 +41,10 @@
 #include "config.h"
 #include "qmlvisitor.h"
 
+#ifndef QT_NO_DECLARATIVE
 #include <private/qqmljsast_p.h>
 #include <private/qqmljsastvisitor_p.h>
+#endif
 #include <qdebug.h>
 
 QT_BEGIN_NAMESPACE
@@ -97,8 +99,10 @@ QT_BEGIN_NAMESPACE
   Constructs the QML code parser.
  */
 QmlCodeParser::QmlCodeParser()
+#ifndef QT_NO_DECLARATIVE
     : lexer( 0 ),
       parser( 0 )
+#endif
 {
 }
 
@@ -119,8 +123,10 @@ void QmlCodeParser::initializeParser(const Config &config)
 {
     CodeParser::initializeParser(config);
 
+#ifndef QT_NO_DECLARATIVE
     lexer = new QQmlJS::Lexer(&engine);
     parser = new QQmlJS::Parser(&engine);
+#endif
 }
 
 /*!
@@ -129,8 +135,10 @@ void QmlCodeParser::initializeParser(const Config &config)
  */
 void QmlCodeParser::terminateParser()
 {
+#ifndef QT_NO_DECLARATIVE
     delete lexer;
     delete parser;
+#endif
 }
 
 /*!
@@ -167,6 +175,7 @@ void QmlCodeParser::parseSourceFile(const Location& location, const QString& fil
         return;
     }
 
+#ifndef QT_NO_DECLARATIVE
     QString document = in.readAll();
     in.close();
 
@@ -195,6 +204,9 @@ void QmlCodeParser::parseSourceFile(const Location& location, const QString& fil
                            << ": " << qPrintable(msg.message);
     }
     currentFile_.clear();
+#else
+    location.warning("QtDeclarative not installed; cannot parse QML or JS.");
+#endif
 }
 
 /*!
@@ -265,6 +277,7 @@ const QSet<QString>& QmlCodeParser::otherMetaCommands()
     return otherMetaCommands_;
 }
 
+#ifndef QT_NO_DECLARATIVE
 /*!
   Copy and paste from src/declarative/qml/qdeclarativescriptparser.cpp.
   This function blanks out the section of the \a str beginning at \a idx
@@ -329,5 +342,6 @@ void QmlCodeParser::extractPragmas(QString &script)
     }
     return;
 }
+#endif
 
 QT_END_NAMESPACE

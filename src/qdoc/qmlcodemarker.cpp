@@ -44,11 +44,13 @@
 #include "tree.h"
 #include "generator.h"
 
+#ifndef QT_NO_DECLARATIVE
 #include <private/qqmljsast_p.h>
 #include <private/qqmljsastfwd_p.h>
 #include <private/qqmljsengine_p.h>
 #include <private/qqmljslexer_p.h>
 #include <private/qqmljsparser_p.h>
+#endif
 
 QT_BEGIN_NAMESPACE
 
@@ -65,6 +67,7 @@ QmlCodeMarker::~QmlCodeMarker()
  */
 bool QmlCodeMarker::recognizeCode(const QString &code)
 {
+#ifndef QT_NO_DECLARATIVE
     QQmlJS::Engine engine;
     QQmlJS::Lexer lexer(&engine);
     QQmlJS::Parser parser(&engine);
@@ -74,6 +77,9 @@ bool QmlCodeMarker::recognizeCode(const QString &code)
     lexer.setCode(newCode, 1);
 
     return parser.parse();
+#else
+    return false;
+#endif
 }
 
 /*!
@@ -163,6 +169,7 @@ QString QmlCodeMarker::addMarkUp(const QString &code,
                                  const Node * /* relative */,
                                  const Location &location)
 {
+#ifndef QT_NO_DECLARATIVE
     QQmlJS::Engine engine;
     QQmlJS::Lexer lexer(&engine);
 
@@ -188,8 +195,13 @@ QString QmlCodeMarker::addMarkUp(const QString &code,
     }
 
     return output;
+#else
+    location.warning("QtDeclarative not installed; cannot parse QML or JS.");
+    return QString();
+#endif
 }
 
+#ifndef QT_NO_DECLARATIVE
 /*
   Copied and pasted from
   src/declarative/qml/qqmlscriptparser.cpp.
@@ -270,5 +282,6 @@ QList<QQmlJS::AST::SourceLocation> QmlCodeMarker::extractPragmas(QString &script
     }
     return removed;
 }
+#endif
 
 QT_END_NAMESPACE

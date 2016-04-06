@@ -161,10 +161,12 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
                 while (p != func->parameters().constEnd()) {
                     if (p != func->parameters().constBegin())
                         synopsis += ", ";
-                    synopsis += typified((*p).dataType(), true);
-                    if (style != Subpage && !(*p).name().isEmpty())
-                        synopsis +=
-                                "<@param>" + protect((*p).name()) + "</@param>";
+                    bool hasName = !(*p).name().isEmpty();
+                    if (hasName)
+                        synopsis += typified((*p).dataType(), true);
+                    const QString &paramName = hasName ? (*p).name() : (*p).dataType();
+                    if (style != Subpage || !hasName)
+                        synopsis += "<@param>" + protect(paramName) + "</@param>";
                     synopsis += protect((*p).rightType());
                     if (style != Subpage && !(*p).defaultValue().isEmpty())
                         synopsis += " = " + protect((*p).defaultValue());
@@ -342,9 +344,11 @@ QString CppCodeMarker::markedUpQmlItem(const Node* node, bool summary)
             while (p != func->parameters().constEnd()) {
                 if (p != func->parameters().constBegin())
                     synopsis += ", ";
-                synopsis += typified((*p).dataType(), true);
-                if (!(*p).name().isEmpty())
-                    synopsis += "<@param>" + protect((*p).name()) + "</@param>";
+                bool hasName = !(*p).name().isEmpty();
+                if (hasName)
+                    synopsis += typified((*p).dataType(), true);
+                const QString &paramName = hasName ? (*p).name() : (*p).dataType();
+                synopsis += "<@param>" + protect(paramName) + "</@param>";
                 synopsis += protect((*p).rightType());
                 ++p;
             }

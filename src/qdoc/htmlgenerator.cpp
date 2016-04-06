@@ -1383,7 +1383,6 @@ void HtmlGenerator::generateClassLikeNode(Aggregate* inner, CodeMarker* marker)
     generateBrief(inner, marker);
     generateRequisites(inner, marker);
     generateStatus(inner, marker);
-    generateThreadSafeness(inner, marker);
 
     out() << "<ul>\n";
 
@@ -1408,6 +1407,7 @@ void HtmlGenerator::generateClassLikeNode(Aggregate* inner, CodeMarker* marker)
               << "Compatibility members</a></li>\n";
 
     out() << "</ul>\n";
+    generateThreadSafeness(inner, marker);
 
     bool needOtherSection = false;
 
@@ -2016,10 +2016,12 @@ void HtmlGenerator::generateHeader(const QString& title,
     out() << "  <title>"
           << protectEnc(title)
           << divider
-          << titleSuffix
-          << QLatin1Char(' ')
-          << shortVersion
-          << "</title>\n";
+          << titleSuffix;
+
+    if (!shortVersion.isEmpty())
+        out() << QLatin1Char(' ') << shortVersion;
+
+    out() << "</title>\n";
 
     // Include style sheet and script links.
     out() << headerStyles;

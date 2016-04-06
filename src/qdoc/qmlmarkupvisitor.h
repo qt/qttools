@@ -38,11 +38,14 @@
 #include "tree.h"
 
 #include <qstring.h>
+#ifndef QT_NO_DECLARATIVE
 #include <private/qqmljsastvisitor_p.h>
 #include <private/qqmljsengine_p.h>
+#endif
 
 QT_BEGIN_NAMESPACE
 
+#ifndef QT_NO_DECLARATIVE
 class QmlMarkupVisitor : public QQmlJS::AST::Visitor
 {
 public:
@@ -167,6 +170,7 @@ private:
     int extraIndex;
 };
 Q_DECLARE_TYPEINFO(QmlMarkupVisitor::ExtraType, Q_PRIMITIVE_TYPE);
+#endif
 
 QT_END_NAMESPACE
 

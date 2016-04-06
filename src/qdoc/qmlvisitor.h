@@ -37,8 +37,10 @@
 #include "node.h"
 
 #include <qstring.h>
+#ifndef QT_NO_DECLARATIVE
 #include <private/qqmljsastvisitor_p.h>
 #include <private/qqmljsengine_p.h>
+#endif
 
 QT_BEGIN_NAMESPACE
 
@@ -57,6 +59,7 @@ struct QmlPropArgs
     }
 };
 
+#ifndef QT_NO_DECLARATIVE
 class QmlDocVisitor : public QQmlJS::AST::Visitor
 {
     Q_DECLARE_TR_FUNCTIONS(QDoc::QmlDocVisitor)
@@ -115,6 +118,7 @@ private:
     QSet<quint32> usedComments;
     Aggregate *current;
 };
+#endif
 
 QT_END_NAMESPACE
 

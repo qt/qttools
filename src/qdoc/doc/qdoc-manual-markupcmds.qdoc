@@ -1934,7 +1934,7 @@
     \c {\l [QML|CPP|DOC|QtModuleName] {link target} {link text}}
     \endlist
 
-    The \e {square bracket} argument is only allowed in the \c {\\l
+    The \e {square bracket} argument is only allowed in the \c {\l
     (link)} command. The example above shows how \c QML is used as the
     \e {square brackets} argument to force qdoc to match a QML target.
     Most often, this will be a QML type, but it can also be a QML
