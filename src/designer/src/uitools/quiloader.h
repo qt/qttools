@@ -52,21 +52,21 @@ class QUiLoader : public QObject
 {
     Q_OBJECT
 public:
-    QUiLoader(QObject *parent = 0);
+    explicit QUiLoader(QObject *parent = Q_NULLPTR);
     virtual ~QUiLoader();
 
     QStringList pluginPaths() const;
     void clearPluginPaths();
     void addPluginPath(const QString &path);
 
-    QWidget *load(QIODevice *device, QWidget *parentWidget = 0);
+    QWidget *load(QIODevice *device, QWidget *parentWidget = Q_NULLPTR);
     QStringList availableWidgets() const;
     QStringList availableLayouts() const;
 
-    virtual QWidget *createWidget(const QString &className, QWidget *parent = 0, const QString &name = QString());
-    virtual QLayout *createLayout(const QString &className, QObject *parent = 0, const QString &name = QString());
-    virtual QActionGroup *createActionGroup(QObject *parent = 0, const QString &name = QString());
-    virtual QAction *createAction(QObject *parent = 0, const QString &name = QString());
+    virtual QWidget *createWidget(const QString &className, QWidget *parent = Q_NULLPTR, const QString &name = QString());
+    virtual QLayout *createLayout(const QString &className, QObject *parent = Q_NULLPTR, const QString &name = QString());
+    virtual QActionGroup *createActionGroup(QObject *parent = Q_NULLPTR, const QString &name = QString());
+    virtual QAction *createAction(QObject *parent = Q_NULLPTR, const QString &name = QString());
 
     void setWorkingDirectory(const QDir &dir);
     QDir workingDirectory() const;

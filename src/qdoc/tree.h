@@ -64,6 +64,7 @@ struct TargetRec
     }
 
     bool isEmpty() const { return ref_.isEmpty(); }
+    Node::Genus genus() { return (node_ ? node_->genus() : Node::DontCare); }
 
     Node* node_;
     QString ref_;
@@ -106,7 +107,7 @@ class Tree
     Node* findNodeForInclude(const QStringList& path) const;
     ClassNode* findClassNode(const QStringList& path, const Node* start = 0) const;
     NamespaceNode* findNamespaceNode(const QStringList& path) const;
-    FunctionNode* findFunctionNode(const QStringList& parentPath, const Declaration& declData);
+    FunctionNode* findFunctionNode(const QStringList& parentPath, const FunctionNode* clone);
     const Node* findFunctionNode(const QString& target,
                                  const QString& params,
                                  const Node* relative,
@@ -151,7 +152,7 @@ class Tree
                       Node* node,
                       int priority);
     void resolveTargets(Aggregate* root);
-    const Node* findUnambiguousTarget(const QString& target, QString& ref) const;
+    const Node* findUnambiguousTarget(const QString& target, Node::Genus genus, QString& ref) const;
     const DocumentNode* findDocumentNodeByTitle(const QString& title) const;
 
     void addPropertyFunction(PropertyNode *property,
@@ -173,7 +174,7 @@ class Tree
     const NamespaceNode *root() const { return &root_; }
 
     FunctionNode *findVirtualFunctionInBaseClasses(ClassNode *classe,
-                                                   FunctionNode *virtualFunc);
+                                                   FunctionNode *clone);
     NodeList allBaseClasses(const ClassNode *classe) const;
     QString refForAtom(const Atom* atom);
 
@@ -202,6 +203,7 @@ class Tree
     CollectionNode* addToJsModule(const QString& name, Node* node);
 
     QmlTypeNode* lookupQmlType(const QString& name) const { return qmlTypeMap_.value(name); }
+    Aggregate* lookupQmlBasicType(const QString& name) const { return qmlTypeMap_.value(name); }
     void insertQmlType(const QString& key, QmlTypeNode* n);
     void addExampleNode(ExampleNode* n) { exampleNodeMap_.insert(n->title(), n); }
     ExampleNodeMap& exampleNodeMap() { return exampleNodeMap_; }

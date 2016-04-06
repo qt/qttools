@@ -275,13 +275,13 @@ void QHelpProjectDataPrivate::addMatchingFiles(const QString &pattern)
 {
     // The pattern matching is expensive, so we skip it if no
     // wildcard symbols occur in the string.
-    if (!pattern.contains('?') && !pattern.contains('*')
-        && !pattern.contains('[') && !pattern.contains(']')) {
+    if (!pattern.contains(QLatin1Char('?')) && !pattern.contains(QLatin1Char('*'))
+        && !pattern.contains(QLatin1Char('[')) && !pattern.contains(QLatin1Char(']'))) {
         filterSectionList.last().addFile(pattern);
         return;
     }
 
-    QFileInfo fileInfo(rootPath + '/' + pattern);
+    QFileInfo fileInfo(rootPath + QLatin1Char('/') + pattern);
     const QDir &dir = fileInfo.dir();
     const QString &path = dir.canonicalPath();
 
@@ -303,7 +303,7 @@ void QHelpProjectDataPrivate::addMatchingFiles(const QString &pattern)
         if (regExp.exactMatch(file)) {
             matchFound = true;
             filterSectionList.last().
-                addFile(QFileInfo(pattern).dir().path() + '/' + file);
+                addFile(QFileInfo(pattern).dir().path() + QLatin1Char('/') + file);
         }
     }
     if (!matchFound)

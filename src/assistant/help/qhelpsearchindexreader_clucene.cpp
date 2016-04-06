@@ -270,8 +270,8 @@ bool QHelpSearchIndexReaderClucene::buildTryHarderQuery(
 
 bool QHelpSearchIndexReaderClucene::isNegativeQuery(const QHelpSearchQuery &query) const
 {
-    const QString &search = query.wordList.join(" ");
-    return search.contains('!') || search.contains('-')
+    const QString &search = query.wordList.join(QLatin1Char(' '));
+    return search.contains(QLatin1Char('!')) || search.contains(QLatin1Char('-'))
             || search.contains(QLatin1String(" NOT "));
 }
 

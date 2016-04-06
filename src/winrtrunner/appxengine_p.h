@@ -73,6 +73,7 @@ public:
     QString manifest;
     QString packageFullName;
     QString packageFamilyName;
+    QString publisherName;
     ABI::Windows::System::ProcessorArchitecture packageArchitecture;
     QString executable;
     qint64 pid;

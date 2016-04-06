@@ -267,9 +267,13 @@
 
     \section1 QDoc Comments
 
-    Documentation is contained within qdoc \e comments, delimited by
+    Documentation is contained within QDoc \e comments, delimited by
     \beginqdoc and \endqdoc comments. Note that these are valid comments
     in C++, QML, and JavaScript.
+
+    Within a QDoc comment, \c {//!} is used as a single-line documentation
+    comment; the comment itself and anything after it, until a newline,
+    is omitted from the generated output.
 
     QDoc will parse C++ and QML files to look for qdoc comments. To explicitly
     omit a certain file type, omit it from the

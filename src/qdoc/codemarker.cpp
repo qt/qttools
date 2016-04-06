@@ -368,10 +368,10 @@ QString CodeMarker::sortName(const Node *node, const QString* name)
     if (node->type() == Node::Function) {
         const FunctionNode *func = static_cast<const FunctionNode *>(node);
         QString sortNo;
-        if (func->metaness() == FunctionNode::Ctor) {
+        if (func->isSomeCtor()) {
             sortNo = QLatin1String("C");
         }
-        else if (func->metaness() == FunctionNode::Dtor) {
+        else if (func->isDtor()) {
             sortNo = QLatin1String("D");
         }
         else {
@@ -424,16 +424,13 @@ void CodeMarker::insert(FastSection &fastSection,
     }
     else if (node->type() == Node::Function) {
         FunctionNode *func = (FunctionNode *) node;
-        irrelevant = (inheritedMember
-                      && (func->metaness() == FunctionNode::Ctor ||
-                          func->metaness() == FunctionNode::Dtor));
+        irrelevant = (inheritedMember && (func->isSomeCtor() || func->isDtor()));
     }
-    else if (node->type() == Node::Class || node->type() == Node::Enum
-             || node->type() == Node::Typedef) {
+    else if (node->isClass() || node->isEnumType() || node->isTypedef()) {
         irrelevant = (inheritedMember && style != Subpage);
-        if (!irrelevant && style == Detailed && node->type() == Node::Typedef) {
-            const TypedefNode* typedeffe = static_cast<const TypedefNode*>(node);
-            if (typedeffe->associatedEnum())
+        if (!irrelevant && style == Detailed && node->isTypedef()) {
+            const TypedefNode* tdn = static_cast<const TypedefNode*>(node);
+            if (tdn->associatedEnum())
                 irrelevant = true;
         }
     }
@@ -600,8 +597,7 @@ QStringList CodeMarker::macRefsForNode(Node *node)
         if (func->isOverload())
             return QStringList();
 
-        if (func->metaness() == FunctionNode::MacroWithParams
-                || func->metaness() == FunctionNode::MacroWithoutParams) {
+        if (func->isMacro()) {
             result += QLatin1String("macro/");
         }
         else if (func->isStatic()) {
@@ -660,7 +656,7 @@ QString CodeMarker::macName(const Node *node, const QString &name)
 /*!
   Returns an empty list of documentation sections.
  */
-QList<Section> CodeMarker::qmlSections(QmlTypeNode* , SynopsisStyle , Status )
+QList<Section> CodeMarker::qmlSections(Aggregate* , SynopsisStyle , Status )
 {
     return QList<Section>();
 }

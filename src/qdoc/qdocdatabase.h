@@ -189,6 +189,16 @@ class QDocForest
         }
         return 0;
     }
+
+    Aggregate* lookupQmlBasicType(const QString& name)
+    {
+        foreach (Tree* t, searchOrder()) {
+            Aggregate* a = t->lookupQmlBasicType(name);
+            if (a)
+                return a;
+        }
+        return 0;
+    }
     void clearSearchOrder() { searchOrder_.clear(); }
     void clearLinkCounts()
     {
@@ -253,6 +263,7 @@ class QDocDatabase
     QmlTypeNode* findQmlType(const QString& name);
     QmlTypeNode* findQmlType(const QString& qmid, const QString& name);
     QmlTypeNode* findQmlType(const ImportRec& import, const QString& name);
+    Aggregate* findQmlBasicType(const QString& qmid, const QString& name);
 
  private:
     void findAllClasses(Aggregate *node);
@@ -302,10 +313,10 @@ class QDocDatabase
     /*******************************************************************
       The functions declared below are called for the current tree only.
     ********************************************************************/
-    FunctionNode* findFunctionNode(const QStringList& parentPath, const Declaration& declData) {
-        return primaryTree()->findFunctionNode(parentPath, declData);
+    FunctionNode* findFunctionNode(const QStringList& parentPath, const FunctionNode* clone) {
+        return primaryTree()->findFunctionNode(parentPath, clone);
     }
-    FunctionNode* findNodeInOpenNamespace(const QStringList& parentPath, const Declaration& declData);
+    FunctionNode* findNodeInOpenNamespace(const QStringList& parentPath, const FunctionNode* clone);
     Node* findNodeInOpenNamespace(QStringList& path, Node::NodeType type);
     const Node* checkForCollision(const QString& name) {
         return primaryTree()->checkForCollision(name);

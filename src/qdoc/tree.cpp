@@ -102,8 +102,6 @@ Tree::Tree(const QString& camelCaseModuleName, QDocDatabase* qdb)
  */
 Tree::~Tree()
 {
-    if (Generator::debugging())
-        qDebug() << "    Deleting tree:" << physicalModuleName_;
     TargetMap::iterator i = nodesByTargetRef_.begin();
     while (i != nodesByTargetRef_.end()) {
         delete i.value();
@@ -123,8 +121,6 @@ Tree::~Tree()
             ++i;
         }
     }
-    if (Generator::debugging())
-        qDebug() << "    Deleted tree:" << physicalModuleName_;
 }
 
 /* API members */
@@ -168,18 +164,17 @@ NamespaceNode* Tree::findNamespaceNode(const QStringList& path) const
 }
 
 /*!
-  This function first ignores the \a declData parameter and
-  searches for the parent node with \a parentPath. If that
-  search is successful, it searches for a child node of the
-  parent that matches the function described in \a declData.
-  If it finds a match, it returns a pointer to the matching
-  node.
+  This function first ignores the \a clone node and searches
+  for the parent node with \a parentPath. If that search is
+  successful, it searches for a child node of the parent that
+  matches the \a clone node. If it finds a node that is just
+  like the \a clone, it returns a pointer to the found node.
 
   Apparently the search order is important here. Don't change
   it unless you know what you are doing, or you will introduce
   qdoc warnings.
  */
-FunctionNode* Tree::findFunctionNode(const QStringList& parentPath, const Declaration& declData)
+FunctionNode* Tree::findFunctionNode(const QStringList& parentPath, const FunctionNode* clone)
 {
     const Node* parent = findNamespaceNode(parentPath);
     if (parent == 0)
@@ -188,7 +183,7 @@ FunctionNode* Tree::findFunctionNode(const QStringList& parentPath, const Declar
         parent = findNode(parentPath, 0, 0, Node::DontCare);
     if (parent == 0 || !parent->isAggregate())
         return 0;
-    return ((const Aggregate*)parent)->findFunctionNode(declData);
+    return ((const Aggregate*)parent)->findFunctionNode(clone);
 }
 
 
@@ -429,8 +424,8 @@ void Tree::resolveInheritanceHelper(int pass, ClassNode* cn)
                 FunctionNode* func = (FunctionNode*)* c;
                 FunctionNode* from = findVirtualFunctionInBaseClasses(cn, func);
                 if (from != 0) {
-                    if (func->virtualness() == FunctionNode::NonVirtual)
-                        func->setVirtualness(FunctionNode::NormalVirtual);
+                    if (func->isNonvirtual())
+                        func->setVirtual();
                     func->setReimplementedFrom(from);
                 }
             }
@@ -556,16 +551,16 @@ void Tree::fixInheritance(NamespaceNode* rootNode)
 
 /*!
  */
-FunctionNode* Tree::findVirtualFunctionInBaseClasses(ClassNode* cn, FunctionNode* virtualFunc)
+FunctionNode* Tree::findVirtualFunctionInBaseClasses(ClassNode* cn, FunctionNode* clone)
 {
     const QList<RelatedClass>& rc = cn->baseClasses();
     QList<RelatedClass>::ConstIterator r = rc.constBegin();
     while (r != rc.constEnd()) {
         FunctionNode* func;
         if ((*r).node_) {
-            if (((func = findVirtualFunctionInBaseClasses((*r).node_, virtualFunc)) != 0 ||
-                 (func = (*r).node_->findFunctionNode(virtualFunc)) != 0)) {
-                if (func->virtualness() != FunctionNode::NonVirtual)
+            if (((func = findVirtualFunctionInBaseClasses((*r).node_, clone)) != 0 ||
+                 (func = (*r).node_->findFunctionNode(clone)) != 0)) {
+                if (!func->isNonvirtual())
                     return func;
             }
         }
@@ -739,7 +734,7 @@ const Node* Tree::findNodeForTarget(const QStringList& path,
         }
     }
 
-    node = findUnambiguousTarget(path.join(QStringLiteral("::")), ref);
+    node = findUnambiguousTarget(path.join(QStringLiteral("::")), genus, ref);
     if (node) {
         if (!target.isEmpty()) {
             ref = getRef(target, node);
@@ -1070,7 +1065,7 @@ void Tree::resolveTargets(Aggregate* root)
   finds one, it sets \a ref and returns the found node.
  */
 const Node*
-Tree::findUnambiguousTarget(const QString& target, QString& ref) const
+Tree::findUnambiguousTarget(const QString& target, Node::Genus genus, QString& ref) const
 {
     int numBestTargets = 0;
     TargetRec* bestTarget = 0;
@@ -1082,14 +1077,17 @@ Tree::findUnambiguousTarget(const QString& target, QString& ref) const
         if (i.key() != key)
             break;
         TargetRec* candidate = i.value();
-        if (!bestTarget || (candidate->priority_ < bestTarget->priority_)) {
-            bestTarget = candidate;
-            bestTargetList.clear();
-            bestTargetList.append(candidate);
-            numBestTargets = 1;
-        } else if (candidate->priority_ == bestTarget->priority_) {
-            bestTargetList.append(candidate);
-            ++numBestTargets;
+        if ((genus == Node::DontCare) || (genus == candidate->genus())) {
+            if (!bestTarget || (candidate->priority_ < bestTarget->priority_)) {
+                bestTarget = candidate;
+                bestTargetList.clear();
+                bestTargetList.append(candidate);
+                numBestTargets = 1;
+            }
+            else if (candidate->priority_ == bestTarget->priority_) {
+                bestTargetList.append(candidate);
+                ++numBestTargets;
+            }
         }
         ++i;
     }
@@ -1106,14 +1104,17 @@ Tree::findUnambiguousTarget(const QString& target, QString& ref) const
         if (i.key() != key)
             break;
         TargetRec* candidate = i.value();
-        if (!bestTarget || (candidate->priority_ < bestTarget->priority_)) {
-            bestTarget = candidate;
-            bestTargetList.clear();
-            bestTargetList.append(candidate);
-            numBestTargets = 1;
-        } else if (candidate->priority_ == bestTarget->priority_) {
-            bestTargetList.append(candidate);
-            ++numBestTargets;
+        if ((genus == Node::DontCare) || (genus == candidate->genus())) {
+            if (!bestTarget || (candidate->priority_ < bestTarget->priority_)) {
+                bestTarget = candidate;
+                bestTargetList.clear();
+                bestTargetList.append(candidate);
+                numBestTargets = 1;
+            }
+            else if (candidate->priority_ == bestTarget->priority_) {
+                bestTargetList.append(candidate);
+                ++numBestTargets;
+            }
         }
         ++i;
     }
@@ -1466,7 +1467,7 @@ const Node* Tree::findFunctionNode(const QString& target,
     }
     QStringList path = t.split("::");
     const FunctionNode* fn = findFunctionNode(path, params, relative, SearchBaseClasses, genus);
-    if (fn && fn->metaness() != FunctionNode::MacroWithoutParams)
+    if (fn && !fn->isMacroWithoutParams())
         return fn;
     return 0;
 }

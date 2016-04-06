@@ -2182,8 +2182,6 @@ void FormWindow::layoutContainer(QWidget *w, int type)
     w = core()->widgetFactory()->containerOfWidget(w);
 
     const QObjectList l = w->children();
-    if (l.isEmpty())
-        return;
     // find managed widget children
     QWidgetList widgets;
     const QObjectList::const_iterator ocend = l.constEnd();
@@ -2193,6 +2191,9 @@ void FormWindow::layoutContainer(QWidget *w, int type)
             if (widget->isVisibleTo(this) && isManaged(widget))
                 widgets.append(widget);
         }
+
+    if (widgets.isEmpty()) // QTBUG-50563, observed when using hand-edited forms.
+        return;
 
     LayoutCommand *cmd = new LayoutCommand(this);
     cmd->init(mainContainer(), widgets, static_cast<LayoutInfo::Type>(type), w);

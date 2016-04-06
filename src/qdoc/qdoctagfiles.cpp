@@ -262,23 +262,10 @@ void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter& writer, const Aggreg
 
                 const FunctionNode* functionNode = static_cast<const FunctionNode*>(node);
                 writer.writeAttribute("protection", access);
-
-                switch (functionNode->virtualness()) {
-                case FunctionNode::NonVirtual:
-                    writer.writeAttribute("virtualness", "non");
-                    break;
-                case FunctionNode::NormalVirtual:
-                    writer.writeAttribute("virtualness", "virtual");
-                    break;
-                case FunctionNode::PureVirtual:
-                    writer.writeAttribute("virtual", "pure");
-                    break;
-                default:
-                    break;
-                }
+                writer.writeAttribute("virtualness", functionNode->virtualness());
                 writer.writeAttribute("static", functionNode->isStatic() ? "yes" : "no");
 
-                if (functionNode->virtualness() == FunctionNode::NonVirtual)
+                if (functionNode->isNonvirtual())
                     writer.writeTextElement("type", functionNode->returnType());
                 else
                     writer.writeTextElement("type", "virtual " + functionNode->returnType());
@@ -291,8 +278,14 @@ void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter& writer, const Aggreg
                 signature = signature.mid(signature.indexOf(QChar('('))).trimmed();
                 if (functionNode->isConst())
                     signature += " const";
-                if (functionNode->virtualness() == FunctionNode::PureVirtual)
+                if (functionNode->isFinal())
+                    signature += " final";
+                if (functionNode->isPureVirtual())
                     signature += " = 0";
+                else if (functionNode->isDeleted())
+                    signature += " = delete";
+                else if (functionNode->isDefaulted())
+                    signature += " = default";
                 writer.writeTextElement("arglist", signature);
             }
             writer.writeEndElement(); // member

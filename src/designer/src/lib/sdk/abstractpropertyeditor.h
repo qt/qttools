@@ -48,7 +48,7 @@ class QDESIGNER_SDK_EXPORT QDesignerPropertyEditorInterface: public QWidget
 {
     Q_OBJECT
 public:
-    QDesignerPropertyEditorInterface(QWidget *parent, Qt::WindowFlags flags = 0);
+    explicit QDesignerPropertyEditorInterface(QWidget *parent, Qt::WindowFlags flags = Qt::WindowFlags());
     virtual ~QDesignerPropertyEditorInterface();
 
     virtual QDesignerFormEditorInterface *core() const;

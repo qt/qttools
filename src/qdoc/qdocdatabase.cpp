@@ -68,9 +68,8 @@ bool QDocDatabase::debug = false;
  */
 QDocForest::~QDocForest()
 {
-    for (int i=0; i<searchOrder_.size(); ++i) {
+    for (int i=0; i<searchOrder_.size(); ++i)
         delete searchOrder_.at(i);
-    }
     forest_.clear();
     searchOrder_.clear();
     indexSearchOrder_.clear();
@@ -783,6 +782,30 @@ QmlTypeNode* QDocDatabase::findQmlType(const QString& qmid, const QString& name)
 }
 
 /*!
+  Looks up the QML basic type node identified by the Qml module id
+  \a qmid and QML basic type \a name and returns a pointer to the
+  QML basic type node. The key is \a qmid + "::" + \a name.
+
+  If the QML module id is empty, it looks up the QML basic type by
+  \a name only.
+ */
+Aggregate* QDocDatabase::findQmlBasicType(const QString& qmid, const QString& name)
+{
+    if (!qmid.isEmpty()) {
+        QString t = qmid + "::" + name;
+        Aggregate* a = forest_.lookupQmlBasicType(t);
+        if (a)
+            return a;
+    }
+
+    QStringList path(name);
+    Node* n = forest_.findNodeByNameAndType(path, Node::QmlBasicType);
+    if (n && n->isQmlBasicType())
+        return static_cast<Aggregate*>(n);
+    return 0;
+}
+
+/*!
   Looks up the QML type node identified by the Qml module id
   constructed from the strings in the \a import record and the
   QML type \a name and returns a pointer to the QML type node.
@@ -1026,10 +1049,8 @@ void QDocDatabase::findAllFunctions(Aggregate* node)
             }
             else if ((*c)->type() == Node::Function) {
                 const FunctionNode* func = static_cast<const FunctionNode*>(*c);
-                if ((func->status() > Node::Obsolete) &&
-                        !func->isInternal() &&
-                        (func->metaness() != FunctionNode::Ctor) &&
-                        (func->metaness() != FunctionNode::Dtor)) {
+                if ((func->status() > Node::Obsolete) && !func->isInternal() &&
+                    !func->isSomeCtor() && !func->isDtor()) {
                     funcIndex_[(*c)->name()].insert((*c)->parent()->fullDocumentName(), *c);
                 }
             }
@@ -1203,9 +1224,7 @@ void QDocDatabase::findAllSince(Aggregate* node)
             if ((*child)->type() == Node::Function) {
                 // Insert functions into the general since map.
                 FunctionNode *func = static_cast<FunctionNode *>(*child);
-                if ((func->status() > Node::Obsolete) &&
-                    (func->metaness() != FunctionNode::Ctor) &&
-                    (func->metaness() != FunctionNode::Dtor)) {
+                if ((func->status() > Node::Obsolete) && !func->isSomeCtor() && !func->isDtor()) {
                     nsmap.value().insert(func->name(),(*child));
                 }
             }
@@ -1387,7 +1406,16 @@ void QDocDatabase::resolveNamespaces()
         }
     }
 }
-
+#if 0
+/*!
+ */
+const Node* QDocDatabase::findFunctionNode(const QString& target,
+                                           const Node* relative,
+                                           Node::Genus genus)
+{
+    return forest_.findFunctionNode(target, relative, genus);
+}
+#endif
 /*!
   This function is called for autolinking to a \a type,
   which could be a function return type or a parameter
@@ -1527,9 +1555,9 @@ void QDocDatabase::generateIndex(const QString& fileName,
 }
 
 /*!
-  If there are open namespaces, search each one for a function
-  node having the same function name as the function described
-  in \a declData. The \a parentPath is a portion of the path
+  If there are open namespaces, search for the function node
+  having the same function name as the \a clone node in each
+  open namespace. The \a parentPath is a portion of the path
   name provided with the function name at the point of
   reference. \a parentPath is usually a class name. Return
   the pointer to the function node if one is found in an
@@ -1539,13 +1567,13 @@ void QDocDatabase::generateIndex(const QString& fileName,
   be removed.
  */
 FunctionNode* QDocDatabase::findNodeInOpenNamespace(const QStringList& parentPath,
-                                                    const Declaration& declData)
+                                                    const FunctionNode* clone)
 {
     FunctionNode* fn = 0;
     if (!openNamespaces_.isEmpty()) {
         foreach (const QString& t, openNamespaces_) {
             QStringList path = t.split("::") + parentPath;
-            fn = findFunctionNode(path, declData);
+            fn = findFunctionNode(path, clone);
             if (fn)
                 break;
         }

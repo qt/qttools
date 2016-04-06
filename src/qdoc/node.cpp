@@ -861,7 +861,7 @@ Node* Aggregate::findChildNode(const QString& name, NodeType type)
 }
 
 /*!
-  Find a function node that is a child of this node, such
+  Find a function node that is a child of this nose, such
   that the function node has the specified \a name.
  */
 FunctionNode *Aggregate::findFunctionNode(const QString& name, const QString& params) const
@@ -930,58 +930,21 @@ FunctionNode *Aggregate::findFunctionNode(const QString& name, const QString& pa
 /*!
   Find the function node that is a child of this node, such
   that the function has the same name and signature as the
-  function described in \a f1.
+  \a clone node.
  */
-FunctionNode *Aggregate::findFunctionNode(const Declaration& f1) const
+FunctionNode *Aggregate::findFunctionNode(const FunctionNode *clone) const
 {
-    QMap<QString,Node*>::ConstIterator c = primaryFunctionMap_.constFind(f1.name_);
+    QMap<QString,Node*>::ConstIterator c = primaryFunctionMap_.constFind(clone->name());
     if (c != primaryFunctionMap_.constEnd()) {
-        FunctionNode* f2 = (FunctionNode*) *c;
-        if (f1.isConst_ == f2->isConst()) {
-            if (isSameSignature(f1.pvect_, f2)) {
-                return f2;
-            }
+        if (isSameSignature(clone, (FunctionNode *) *c)) {
+            return (FunctionNode *) *c;
         }
-        if (secondaryFunctionMap_.contains(f1.name_)) {
-            const NodeList& secs = secondaryFunctionMap_[f1.name_];
+        else if (secondaryFunctionMap_.contains(clone->name())) {
+            const NodeList& secs = secondaryFunctionMap_[clone->name()];
             NodeList::ConstIterator s = secs.constBegin();
             while (s != secs.constEnd()) {
-                f2 = (FunctionNode*) *s;
-                if (f1.isConst_ == f2->isConst()) {
-                    if (isSameSignature(f1.pvect_, f2))
-                        return f2;
-                }
-                ++s;
-            }
-        }
-    }
-    return 0;
-}
-
-/*!
-  Find the function node that is a child of this node, such
-  that the function has the same name and signature as the
-  function node \a f1.
- */
-FunctionNode *Aggregate::findFunctionNode(const FunctionNode* f1) const
-{
-    QMap<QString,Node*>::ConstIterator c = primaryFunctionMap_.constFind(f1->name());
-    if (c != primaryFunctionMap_.constEnd()) {
-        FunctionNode* f2 = (FunctionNode*) *c;
-        if (f1->isConst() == f2->isConst()) {
-            if (isSameSignature(f1->parameters(), f2)) {
-                return f2;
-            }
-        }
-        if (secondaryFunctionMap_.contains(f1->name())) {
-            const NodeList& secs = secondaryFunctionMap_[f1->name()];
-            NodeList::ConstIterator s = secs.constBegin();
-            while (s != secs.constEnd()) {
-                f2 = (FunctionNode*) *s;
-                if (f1->isConst() == f2->isConst()) {
-                    if (isSameSignature(f1->parameters(), f2))
-                        return f2;
-                }
+                if (isSameSignature(clone, (FunctionNode *) *s))
+                    return (FunctionNode *) *s;
                 ++s;
             }
         }
@@ -1225,19 +1188,18 @@ void Aggregate::setIncludes(const QStringList& includes)
 }
 
 /*!
-  Compare the function signature contained parameter vector
-  \a pv1 with the signature of the function node \a f2, and
-  return \c true if they are the same.
+  f1 is always the clone
  */
-bool Aggregate::isSameSignature(const QVector<Parameter>& pv1, const FunctionNode* f2)
+bool Aggregate::isSameSignature(const FunctionNode *f1, const FunctionNode *f2)
 {
-    const QVector<Parameter>& pv2 = f2->parameters();
-    if (pv1.size() != pv2.size())
+    if (f1->parameters().size() != f2->parameters().size())
+        return false;
+    if (f1->isConst() != f2->isConst())
         return false;
 
-    QVector<Parameter>::ConstIterator p1 = pv1.constBegin();
-    QVector<Parameter>::ConstIterator p2 = pv2.constBegin();
-    while (p2 != pv2.constEnd()) {
+    QVector<Parameter>::ConstIterator p1 = f1->parameters().constBegin();
+    QVector<Parameter>::ConstIterator p2 = f2->parameters().constBegin();
+    while (p2 != f2->parameters().constEnd()) {
         if ((*p1).hasType() && (*p2).hasType()) {
             if ((*p1).rightType() != (*p2).rightType())
                 return false;
@@ -1301,6 +1263,8 @@ void Aggregate::addChild(Node *child)
     if (child->parent() == 0) {
         child->setParent(this);
         child->setOutputSubdirectory(this->outputSubdirectory());
+        child->setUrl(QString());
+        child->setIndexNodeFlag(isIndexNode());
     }
 }
 
@@ -1999,7 +1963,6 @@ QString Parameter::reconstruct(bool value) const
     return p;
 }
 
-
 /*!
   \class FunctionNode
  */
@@ -2021,6 +1984,9 @@ FunctionNode::FunctionNode(Aggregate *parent, const QString& name)
       attached_(false),
       privateSignal_(false),
       overload_(false),
+      isDeleted_(false),
+      isDefaulted_(false),
+      isFinal_(false),
       reimplementedFrom_(0)
 {
     setGenus(Node::CPP);
@@ -2044,6 +2010,9 @@ FunctionNode::FunctionNode(NodeType type, Aggregate *parent, const QString& name
       attached_(attached),
       privateSignal_(false),
       overload_(false),
+      isDeleted_(false),
+      isDefaulted_(false),
+      isFinal_(false),
       reimplementedFrom_(0)
 {
     setGenus(Node::QML);
@@ -2056,15 +2025,78 @@ FunctionNode::FunctionNode(NodeType type, Aggregate *parent, const QString& name
 }
 
 /*!
-  Sets the \a virtualness of this function. If the \a virtualness
-  is PureVirtual, and if the parent() is a ClassNode, set the parent's
-  \e abstract flag to true.
+  Returns this function's virtualness value as a string
+  for use as an attribute value in index files.
  */
-void FunctionNode::setVirtualness(Virtualness v)
+QString FunctionNode::virtualness() const
 {
-    virtualness_ = v;
-    if ((v == PureVirtual) && parent() && (parent()->type() == Node::Class))
-        parent()->setAbstract(true);
+    switch (virtualness_) {
+    case FunctionNode::NormalVirtual:
+        return "virtual";
+    case FunctionNode::PureVirtual:
+        return "pure";
+    case FunctionNode::NonVirtual:
+    default:
+        break;
+    }
+    return "non";
+}
+
+/*!
+  Sets the function node's virtualness value based on the value
+  of string \a t, which is the value of the function's \e{virtual}
+  attribute in an index file. If \a t is \e{pure}, and if the
+  parent() is a C++ class, set the parent's \e abstract flag to
+  \c {true}.
+ */
+void FunctionNode::setVirtualness(const QString& t)
+{
+    if (t == QLatin1String("non"))
+        virtualness_ = NonVirtual;
+    else if (t == QLatin1String("virtual"))
+        virtualness_ = NormalVirtual;
+    else if (t == QLatin1String("pure")) {
+        virtualness_ = PureVirtual;
+        if (parent() && parent()->isClass())
+            parent()->setAbstract(true);
+    }
+}
+
+/*!
+  Sets the function node's Metaness value based on the value
+  of string \a t, which is the value of the function's "meta"
+  attribute in an index file.
+ */
+void FunctionNode::setMetaness(const QString& t)
+{
+    if (t == QLatin1String("plain"))
+        metaness_ = Plain;
+    else if (t == QLatin1String("signal"))
+        metaness_ = Signal;
+    else if (t == QLatin1String("slot"))
+        metaness_ = Slot;
+    else if (t == QLatin1String("constructor"))
+        metaness_ = Ctor;
+    else if (t == QLatin1String("copy-constructor"))
+        metaness_ = CCtor;
+    else if (t == QLatin1String("move-constructor"))
+        metaness_ = MCtor;
+    else if (t == QLatin1String("destructor"))
+        metaness_ = Dtor;
+    else if (t == QLatin1String("macro"))
+        metaness_ = MacroWithParams;
+    else if (t == QLatin1String("macrowithparams"))
+        metaness_ = MacroWithParams;
+    else if (t == QLatin1String("macrowithoutparams"))
+        metaness_ = MacroWithoutParams;
+    else if (t == QLatin1String("copy-assign"))
+        metaness_ = CAssign;
+    else if (t == QLatin1String("move-assign"))
+        metaness_ = MAssign;
+    else if (t == QLatin1String("native"))
+        metaness_ = Native;
+    else
+        metaness_ = Plain;
 }
 
 /*! \fn void FunctionNode::setOverloadFlag(bool b)
@@ -2090,6 +2122,43 @@ void FunctionNode::setReimplemented(bool b)
 }
 
 /*!
+  Returns a string representing the Metaness enum value for
+  this function. It is used in index files.
+ */
+QString FunctionNode::metaness() const
+{
+    switch (metaness_) {
+    case FunctionNode::Plain:
+        return "plain";
+    case FunctionNode::Signal:
+        return "signal";
+    case FunctionNode::Slot:
+        return "slot";
+    case FunctionNode::Ctor:
+        return "constructor";
+    case FunctionNode::CCtor:
+        return "copy-constructor";
+    case FunctionNode::MCtor:
+        return "move-constructor";
+    case FunctionNode::Dtor:
+        return "destructor";
+    case FunctionNode::MacroWithParams:
+        return "macrowithparams";
+    case FunctionNode::MacroWithoutParams:
+        return "macrowithoutparams";
+    case FunctionNode::Native:
+        return "native";
+    case FunctionNode::CAssign:
+        return "copy-assign";
+    case FunctionNode::MAssign:
+        return "move-assign";
+    default:
+        return "plain";
+    }
+    return QString();
+}
+
+/*!
   Append \a parameter to the parameter list.
  */
 void FunctionNode::addParameter(const Parameter& parameter)
@@ -2099,11 +2168,11 @@ void FunctionNode::addParameter(const Parameter& parameter)
 
 /*!
  */
-void FunctionNode::borrowParameterNames(const Declaration& declData)
+void FunctionNode::borrowParameterNames(const FunctionNode *source)
 {
     QVector<Parameter>::Iterator t = parameters_.begin();
-    QVector<Parameter>::ConstIterator s = declData.pvect_.constBegin();
-    while (s != declData.pvect_.constEnd() && t != parameters_.end()) {
+    QVector<Parameter>::ConstIterator s = source->parameters_.constBegin();
+    while (s != source->parameters_.constEnd() && t != parameters_.end()) {
         if (!(*s).name().isEmpty())
             (*t).setName((*s).name());
         ++s;

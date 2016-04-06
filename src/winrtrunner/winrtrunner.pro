@@ -17,4 +17,7 @@ win32-msvc2013|win32-msvc2015 {
     include(../shared/corecon/corecon.pri)
 }
 
+# Windows 10 requires signing
+*msvc2015: LIBS += -lcrypt32
+
 load(qt_tool)

@@ -53,7 +53,6 @@ class ExampleNode;
 class TypedefNode;
 class QmlTypeNode;
 class QDocDatabase;
-class Declaration;
 class FunctionNode;
 class PropertyNode;
 class CollectionNode;
@@ -189,7 +188,7 @@ public:
     void setPageType(PageType t) { pageType_ = (unsigned char) t; }
     void setPageType(const QString& t);
     void setParent(Aggregate* n) { parent_ = n; }
-    void setIndexNodeFlag() { indexNodeFlag_ = true; }
+    void setIndexNodeFlag(bool isIndexNode = true) { indexNodeFlag_ = isIndexNode; }
     virtual void setOutputFileName(const QString& ) { }
 
     bool isQmlNode() const { return genus() == QML; }
@@ -208,6 +207,7 @@ public:
     virtual bool isQmlBasicType() const { return false; }
     virtual bool isJsBasicType() const { return false; }
     virtual bool isEnumType() const { return false; }
+    virtual bool isTypedef() const { return false; }
     virtual bool isExample() const { return false; }
     virtual bool isExampleFile() const { return false; }
     virtual bool isHeaderFile() const { return false; }
@@ -373,37 +373,6 @@ private:
 };
 Q_DECLARE_TYPEINFO(Node::DocSubtype, Q_PRIMITIVE_TYPE);
 
-class Parameter
-{
-public:
-    Parameter() {}
-    Parameter(const QString& dataType,
-              const QString& rightType = QString(),
-              const QString& name = QString(),
-              const QString& defaultValue = QString());
-    Parameter(const Parameter& p);
-
-    Parameter& operator=(const Parameter& p);
-
-    void setName(const QString& name) { name_ = name; }
-
-    bool hasType() const { return dataType_.length() + rightType_.length() > 0; }
-    const QString& dataType() const { return dataType_; }
-    const QString& rightType() const { return rightType_; }
-    const QString& name() const { return name_; }
-    const QString& defaultValue() const { return defaultValue_; }
-
-    QString reconstruct(bool value = false) const;
-
- public:
-    QString dataType_;
-    QString rightType_;  // mws says remove this 04/08/2015
-    QString name_;
-    QString defaultValue_;
-};
-//friend class QTypeInfo<Parameter>;
-//Q_DECLARE_TYPEINFO(Parameter, Q_MOVABLE_TYPE);
-
 class Aggregate : public Node
 {
 public:
@@ -413,8 +382,7 @@ public:
     Node* findChildNode(const QString& name, NodeType type);
     virtual void findChildren(const QString& name, NodeList& nodes) const Q_DECL_OVERRIDE;
     FunctionNode* findFunctionNode(const QString& name, const QString& params) const;
-    FunctionNode* findFunctionNode(const Declaration& declData) const;
-    FunctionNode* findFunctionNode(const FunctionNode* f1) const;
+    FunctionNode* findFunctionNode(const FunctionNode* clone) const;
     void addInclude(const QString &include);
     void setIncludes(const QStringList &includes);
     void normalizeOverloads();
@@ -440,6 +408,7 @@ public:
     virtual QString outputFileName() const Q_DECL_OVERRIDE { return outputFileName_; }
     virtual QmlPropertyNode* hasQmlProperty(const QString& ) const Q_DECL_OVERRIDE;
     virtual QmlPropertyNode* hasQmlProperty(const QString&, bool attached) const Q_DECL_OVERRIDE;
+    virtual QmlTypeNode* qmlBaseNode() { return 0; }
     void addChild(Node* child, const QString& title);
     const QStringList& groupNames() const { return groupNames_; }
     virtual void appendGroupName(const QString& t) Q_DECL_OVERRIDE { groupNames_.append(t); }
@@ -456,7 +425,7 @@ protected:
 private:
     friend class Node;
 
-    static bool isSameSignature(const QVector<Parameter>& pv1, const FunctionNode* f2);
+    static bool isSameSignature(const FunctionNode* f1, const FunctionNode* f2);
     void removeRelated(Node* pseudoChild);
     void addRelated(Node* pseudoChild);
 
@@ -680,7 +649,7 @@ public:
     const QString& qmlBaseName() const { return qmlBaseName_; }
     void setQmlBaseName(const QString& name) { qmlBaseName_ = name; }
     bool qmlBaseNodeNotSet() const { return (qmlBaseNode_ == 0); }
-    QmlTypeNode* qmlBaseNode();
+    virtual QmlTypeNode* qmlBaseNode() Q_DECL_OVERRIDE;
     void setQmlBaseNode(QmlTypeNode* b) { qmlBaseNode_ = b; }
     void requireCppClass() { cnodeRequired_ = true; }
     bool cppClassRequired() const { return cnodeRequired_; }
@@ -837,6 +806,7 @@ public:
     TypedefNode(Aggregate* parent, const QString& name);
     virtual ~TypedefNode() { }
 
+    virtual bool isTypedef() const { return true; }
     const EnumNode* associatedEnum() const { return associatedEnum_; }
 
 private:
@@ -853,19 +823,57 @@ inline void EnumNode::setFlagsType(TypedefNode* t)
     t->setAssociatedEnum(this);
 }
 
+class Parameter
+{
+public:
+    Parameter() {}
+    Parameter(const QString& dataType,
+              const QString& rightType = QString(),
+              const QString& name = QString(),
+              const QString& defaultValue = QString());
+    Parameter(const Parameter& p);
+
+    Parameter& operator=(const Parameter& p);
+
+    void setName(const QString& name) { name_ = name; }
+
+    bool hasType() const { return dataType_.length() + rightType_.length() > 0; }
+    const QString& dataType() const { return dataType_; }
+    const QString& rightType() const { return rightType_; }
+    const QString& name() const { return name_; }
+    const QString& defaultValue() const { return defaultValue_; }
+
+    QString reconstruct(bool value = false) const;
+
+ public:
+    QString dataType_;
+    QString rightType_;  // mws says remove this 04/08/2015
+    QString name_;
+    QString defaultValue_;
+};
+
+//friend class QTypeInfo<Parameter>;
+//Q_DECLARE_TYPEINFO(Parameter, Q_MOVABLE_TYPE);
+
 class FunctionNode : public LeafNode
 {
 public:
+    enum Virtualness { NonVirtual, NormalVirtual, PureVirtual };
+
     enum Metaness {
         Plain,
         Signal,
         Slot,
         Ctor,
         Dtor,
+        CCtor,                  // copy constructor
+        MCtor,                  // move-copy constructor
         MacroWithParams,
         MacroWithoutParams,
-        Native };
-    enum Virtualness { NonVirtual, NormalVirtual, PureVirtual };
+        Native,
+        CAssign,                // copy-assignment operator
+        MAssign                 // move-assignment operator
+    };
 
     FunctionNode(Aggregate* parent, const QString &name);
     FunctionNode(NodeType type, Aggregate* parent, const QString &name, bool attached);
@@ -874,7 +882,10 @@ public:
     void setReturnType(const QString& t) { returnType_ = t; }
     void setParentPath(const QStringList& p) { parentPath_ = p; }
     void setMetaness(Metaness t) { metaness_ = t; }
-    void setVirtualness(Virtualness v);
+    void setMetaness(const QString& t);
+    void setVirtualness(const QString& t);
+    void setVirtualness(Virtualness v) { virtualness_ = v; }
+    void setVirtual() { virtualness_ = NormalVirtual; }
     void setConst(bool b) { const_ = b; }
     void setStatic(bool b) { static_ = b; }
     unsigned char overloadNumber() const { return overloadNumber_; }
@@ -883,20 +894,32 @@ public:
     void setReimplemented(bool b);
     void addParameter(const Parameter& parameter);
     inline void setParameters(const QVector<Parameter>& parameters);
-    void borrowParameterNames(const Declaration& declData);
+    void borrowParameterNames(const FunctionNode* source);
     void setReimplementedFrom(FunctionNode* from);
 
     const QString& returnType() const { return returnType_; }
-    Metaness metaness() const { return metaness_; }
-    bool isMacro() const {
-        return metaness_ == MacroWithParams || metaness_ == MacroWithoutParams;
-    }
-    Virtualness virtualness() const { return virtualness_; }
+    QString metaness() const;
+    QString virtualness() const;
     bool isConst() const { return const_; }
     bool isStatic() const { return static_; }
     bool isOverload() const { return overload_; }
     bool isReimplemented() const Q_DECL_OVERRIDE { return reimplemented_; }
     bool isFunction() const Q_DECL_OVERRIDE { return true; }
+    bool isSomeCtor() const { return isCtor() || isCCtor() || isMCtor(); }
+    bool isMacroWithParams() const { return (metaness_ == MacroWithParams); }
+    bool isMacroWithoutParams() const { return (metaness_ == MacroWithoutParams); }
+    bool isMacro() const { return (isMacroWithParams() || isMacroWithoutParams()); }
+    bool isSignal() const { return (metaness_ == Signal); }
+    bool isSlot() const { return (metaness_ == Slot); }
+    bool isCtor() const { return (metaness_ == Ctor); }
+    bool isDtor() const { return (metaness_ == Dtor); }
+    bool isCCtor() const { return (metaness_ == CCtor); }
+    bool isMCtor() const { return (metaness_ == MCtor); }
+    bool isCAssign() const { return (metaness_ == CAssign); }
+    bool isMAssign() const { return (metaness_ == MAssign); }
+    bool isNonvirtual() const { return (virtualness_ == NonVirtual); }
+    bool isVirtual() const { return (virtualness_ == NormalVirtual); }
+    bool isPureVirtual() const { return (virtualness_ == PureVirtual); }
     virtual bool isQmlSignal() const Q_DECL_OVERRIDE {
         return (type() == Node::QmlSignal) && (genus() == Node::QML);
     }
@@ -929,7 +952,7 @@ public:
     bool hasActiveAssociatedProperty() const;
 
     QStringList reconstructParameters(bool values = false) const;
-    virtual QString signature(bool values, bool noReturnType = false) const;
+    virtual QString signature(bool values, bool noReturnType = false) const Q_DECL_OVERRIDE;
     virtual QString element() const Q_DECL_OVERRIDE { return parent()->name(); }
     virtual bool isAttached() const Q_DECL_OVERRIDE { return attached_; }
     virtual bool isQtQuickNode() const Q_DECL_OVERRIDE { return parent()->isQtQuickNode(); }
@@ -948,6 +971,15 @@ public:
 
     void debug() const;
 
+    bool isDeleted() const { return isDeleted_; }
+    void setIsDeleted(bool b) { isDeleted_ = b; }
+
+    bool isDefaulted() const { return isDefaulted_; }
+    void setIsDefaulted(bool b) { isDefaulted_ = b; }
+
+    void setFinal(bool b) { isFinal_ = b; }
+    bool isFinal() const { return isFinal_; }
+
 private:
     void addAssociatedProperty(PropertyNode* property);
 
@@ -964,102 +996,14 @@ private:
     bool attached_: 1;
     bool privateSignal_: 1;
     bool overload_ : 1;
+    bool isDeleted_ : 1;
+    bool isDefaulted_ : 1;
+    bool isFinal_ : 1;
     unsigned char overloadNumber_;
     QVector<Parameter> parameters_;
     const FunctionNode* reimplementedFrom_;
     PropNodeList        associatedProperties_;
     QList<FunctionNode*> reimplementedBy_;
-};
-
-enum ParseResult { Ignore, SyntaxError, Function, Variable };
-
-class Declaration
-{
- public:
- Declaration()
-     : result_(Ignore), parent_(0), type_(Node::Function), access_(Node::Public),
-       metaness_(FunctionNode::Plain), bodyExpected_(false), bodyPresent_(false),
-       isAttached_(false), isMacro_(false), isQPrivateSignal_(false), isQT_DEPRECATED_(false),
-       isFriend_(false), isStatic_(false), isInline_(false), isExplicit_(false), isCompat_(false),
-       isConst_(false), virtuality_(FunctionNode::NonVirtual) { }
-
-    Declaration(Aggregate* p)
-     : result_(Ignore), parent_(p), type_(Node::Function), access_(Node::Public),
-       metaness_(FunctionNode::Plain), bodyExpected_(false), bodyPresent_(false),
-       isAttached_(false), isMacro_(false), isQPrivateSignal_(false), isQT_DEPRECATED_(false),
-       isFriend_(false), isStatic_(false), isInline_(false), isExplicit_(false), isCompat_(false),
-       isConst_(false), virtuality_(FunctionNode::NonVirtual) { }
-
-    Declaration(Aggregate* p, Node::NodeType t, bool isAttached)
-     : result_(Ignore), parent_(p), type_(t), access_(Node::Public),
-       metaness_(FunctionNode::Plain), bodyExpected_(false), bodyPresent_(false),
-       isAttached_(isAttached), isMacro_(false), isQPrivateSignal_(false), isQT_DEPRECATED_(false),
-       isFriend_(false), isStatic_(false), isInline_(false), isExplicit_(false), isCompat_(false),
-       isConst_(false), virtuality_(FunctionNode::NonVirtual) { }
-
-    Declaration(Aggregate* p, const QString& t)
-    : result_(Ignore), parent_(p), templateStuff_(t), type_(Node::Function), access_(Node::Public),
-       metaness_(FunctionNode::Plain), bodyExpected_(false), bodyPresent_(false),
-       isAttached_(false), isMacro_(false), isQPrivateSignal_(false), isQT_DEPRECATED_(false),
-       isFriend_(false), isStatic_(false), isInline_(false), isExplicit_(false), isCompat_(false),
-       isConst_(false), virtuality_(FunctionNode::NonVirtual) { }
-
-    Declaration(Aggregate* p, bool isMacro)
-     : result_(Ignore), parent_(p), type_(Node::Function), access_(Node::Public),
-       metaness_(FunctionNode::Plain), bodyExpected_(false), bodyPresent_(false),
-       isAttached_(false), isMacro_(isMacro), isQPrivateSignal_(false), isQT_DEPRECATED_(false),
-       isFriend_(false), isStatic_(false), isInline_(false), isExplicit_(false), isCompat_(false),
-       isConst_(false), virtuality_(FunctionNode::NonVirtual) { }
-
-    void clear() {
-        parent_ = 0;
-        type_ = Node::Function;
-        access_ = Node::Public;
-        metaness_ = FunctionNode::Plain;
-        bodyExpected_ = false;
-        bodyPresent_ = false;
-        isAttached_ = false;
-        isMacro_ = false;
-        isQPrivateSignal_ = false;
-        isQT_DEPRECATED_ = false;
-        isFriend_ = false;
-        isStatic_ = false;
-        isInline_ = false;
-        isExplicit_ = false;
-        isCompat_ = false;
-        isConst_ = false;
-        virtuality_ = FunctionNode::NonVirtual;
-    }
-
-    bool ignoreThisDecl() const { return (isFriend_ && !bodyPresent_); }
-    bool isFunction() const { return (result_ == Function); }
-    bool isVariable() const { return (result_ == Variable); }
-
- public:
-    ParseResult result_;
-    Aggregate* parent_;
-    QStringList parentPath_;
-    QString name_;
-    QString templateStuff_;
-    Node::NodeType type_;
-    Node::Access access_;
-    FunctionNode::Metaness metaness_;
-    bool bodyExpected_;
-    bool bodyPresent_;
-    bool isAttached_;
-    bool isMacro_;
-    bool isQPrivateSignal_;
-    bool isQT_DEPRECATED_;
-    bool isFriend_;
-    bool isStatic_;
-    bool isInline_;
-    bool isExplicit_;
-    bool isCompat_;
-    bool isConst_;
-    FunctionNode::Virtualness virtuality_;
-    CodeChunk returnType_;
-    Location location_;
-    QVector<Parameter> pvect_;
 };
 
 class PropertyNode : public LeafNode

@@ -1474,7 +1474,8 @@ static bool deployWebEngineCore(const QMap<QString, QString> &qmakeVariables,
                                              "qtwebengine_resources_100p.pak",
                                              "qtwebengine_resources_200p.pak"};
 
-    std::wcout << "Deploying: " << webEngineProcessC << "...\n";
+    if (optVerboseLevel)
+        std::wcout << "Deploying: " << webEngineProcessC << "...\n";
     if (!deployWebProcess(qmakeVariables, webEngineProcessC, options, errorMessage))
         return false;
     const QString resourcesSubDir = QStringLiteral("/resources");

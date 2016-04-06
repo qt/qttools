@@ -38,10 +38,6 @@
 #include <QApplication>
 #include <QDir>
 
-#ifdef Q_OS_SYMBIAN
-#define SRCDIR ""
-#endif
-
 class uiLoaderAutotest: public QObject
 {
 

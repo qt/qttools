@@ -154,17 +154,19 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
         if (style != Subpage && !func->returnType().isEmpty())
             synopsis = typified(func->returnType(), true);
         synopsis += name;
-        if (func->metaness() != FunctionNode::MacroWithoutParams) {
+        if (!func->isMacroWithoutParams()) {
             synopsis += QLatin1Char('(');
             if (!func->parameters().isEmpty()) {
                 QVector<Parameter>::ConstIterator p = func->parameters().constBegin();
                 while (p != func->parameters().constEnd()) {
                     if (p != func->parameters().constBegin())
                         synopsis += ", ";
-                    synopsis += typified((*p).dataType(), true);
-                    if (style != Subpage && !(*p).name().isEmpty())
-                        synopsis +=
-                                "<@param>" + protect((*p).name()) + "</@param>";
+                    bool hasName = !(*p).name().isEmpty();
+                    if (hasName)
+                        synopsis += typified((*p).dataType(), true);
+                    const QString &paramName = hasName ? (*p).name() : (*p).dataType();
+                    if (style != Subpage || !hasName)
+                        synopsis += "<@param>" + protect(paramName) + "</@param>";
                     synopsis += protect((*p).rightType());
                     if (style != Subpage && !(*p).defaultValue().isEmpty())
                         synopsis += " = " + protect((*p).defaultValue());
@@ -177,10 +179,16 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
             synopsis += " const";
 
         if (style == Summary || style == Accessors) {
-            if (func->virtualness() != FunctionNode::NonVirtual)
+            if (!func->isNonvirtual())
                 synopsis.prepend("virtual ");
-            if (func->virtualness() == FunctionNode::PureVirtual)
+            if (func->isFinal())
+                synopsis.append(" final");
+            if (func->isPureVirtual())
                 synopsis.append(" = 0");
+            else if (func->isDeleted())
+                synopsis.append(" = delete");
+            else if (func->isDefaulted())
+               synopsis.append(" = default");
         }
         else if (style == Subpage) {
             if (!func->returnType().isEmpty() && func->returnType() != "void")
@@ -190,9 +198,14 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
             QStringList bracketed;
             if (func->isStatic()) {
                 bracketed += "static";
-            }
-            else if (func->virtualness() != FunctionNode::NonVirtual) {
-                if (func->virtualness() == FunctionNode::PureVirtual)
+            } else if (func->isDeleted()) {
+                bracketed += "delete";
+            } else if (func->isDefaulted()) {
+                bracketed += "default";
+            } else if (!func->isNonvirtual()) {
+                if (func->isFinal())
+                    bracketed += "final";
+                if (func->isPureVirtual())
                     bracketed += "pure";
                 bracketed += "virtual";
             }
@@ -204,10 +217,10 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
                 bracketed += "private";
             }
 
-            if (func->metaness() == FunctionNode::Signal) {
+            if (func->isSignal()) {
                 bracketed += "signal";
             }
-            else if (func->metaness() == FunctionNode::Slot) {
+            else if (func->isSlot()) {
                 bracketed += "slot";
             }
             if (!bracketed.isEmpty())
@@ -331,9 +344,11 @@ QString CppCodeMarker::markedUpQmlItem(const Node* node, bool summary)
             while (p != func->parameters().constEnd()) {
                 if (p != func->parameters().constBegin())
                     synopsis += ", ";
-                synopsis += typified((*p).dataType(), true);
-                if (!(*p).name().isEmpty())
-                    synopsis += "<@param>" + protect((*p).name()) + "</@param>";
+                bool hasName = !(*p).name().isEmpty();
+                if (hasName)
+                    synopsis += typified((*p).dataType(), true);
+                const QString &paramName = hasName ? (*p).name() : (*p).dataType();
+                synopsis += "<@param>" + protect(paramName) + "</@param>";
                 synopsis += protect((*p).rightType());
                 ++p;
             }
@@ -530,8 +545,8 @@ QList<Section> CppCodeMarker::sections(const Aggregate *inner,
                     bool isStatic = false;
                     if ((*c)->type() == Node::Function) {
                         const FunctionNode *func = (const FunctionNode *) *c;
-                        isSlot = (func->metaness() == FunctionNode::Slot);
-                        isSignal = (func->metaness() == FunctionNode::Signal);
+                        isSlot = (func->isSlot());
+                        isSignal = (func->isSignal());
                         isStatic = func->isStatic();
                         if (func->hasAssociatedProperties() && !func->hasActiveAssociatedProperty()) {
                             ++c;
@@ -1097,50 +1112,50 @@ QString CppCodeMarker::addMarkUp(const QString &in,
 /*!
   This function is for documenting QML properties. It returns
   the list of documentation sections for the children of the
-  \a qmlTypeNode.
+  \a aggregate.
  */
-QList<Section> CppCodeMarker::qmlSections(QmlTypeNode* qmlTypeNode, SynopsisStyle style, Status status)
+QList<Section> CppCodeMarker::qmlSections(Aggregate* aggregate, SynopsisStyle style, Status status)
 {
     QList<Section> sections;
-    if (qmlTypeNode) {
+    if (aggregate) {
         if (style == Summary) {
-            FastSection qmlproperties(qmlTypeNode,
+            FastSection qmlproperties(aggregate,
                                       "Properties",
                                       QString(),
                                       "property",
                                       "properties");
-            FastSection qmlattachedproperties(qmlTypeNode,
+            FastSection qmlattachedproperties(aggregate,
                                               "Attached Properties",
                                               QString(),
                                               "attached property",
                                               "attached properties");
-            FastSection qmlsignals(qmlTypeNode,
+            FastSection qmlsignals(aggregate,
                                    "Signals",
                                    QString(),
                                    "signal",
                                    "signals");
-            FastSection qmlsignalhandlers(qmlTypeNode,
+            FastSection qmlsignalhandlers(aggregate,
                                           "Signal Handlers",
                                           QString(),
                                           "signal handler",
                                           "signal handlers");
-            FastSection qmlattachedsignals(qmlTypeNode,
+            FastSection qmlattachedsignals(aggregate,
                                            "Attached Signals",
                                            QString(),
                                            "attached signal",
                                            "attached signals");
-            FastSection qmlmethods(qmlTypeNode,
+            FastSection qmlmethods(aggregate,
                                    "Methods",
                                    QString(),
                                    "method",
                                    "methods");
-            FastSection qmlattachedmethods(qmlTypeNode,
+            FastSection qmlattachedmethods(aggregate,
                                            "Attached Methods",
                                            QString(),
                                            "attached method",
                                            "attached methods");
 
-            QmlTypeNode* qcn = qmlTypeNode;
+            Aggregate* qcn = aggregate;
             while (qcn != 0) {
                 NodeList::ConstIterator c = qcn->childNodes().constBegin();
                 while (c != qcn->childNodes().constEnd()) {
@@ -1195,17 +1210,17 @@ QList<Section> CppCodeMarker::qmlSections(QmlTypeNode* qmlTypeNode, SynopsisStyl
             append(sections,qmlattachedmethods);
         }
         else if (style == Detailed) {
-            FastSection qmlproperties(qmlTypeNode, "Property Documentation","qmlprop","member","members");
-            FastSection qmlattachedproperties(qmlTypeNode,"Attached Property Documentation","qmlattprop",
+            FastSection qmlproperties(aggregate, "Property Documentation","qmlprop","member","members");
+            FastSection qmlattachedproperties(aggregate,"Attached Property Documentation","qmlattprop",
                                               "member","members");
-            FastSection qmlsignals(qmlTypeNode,"Signal Documentation","qmlsig","signal","signals");
-            FastSection qmlsignalhandlers(qmlTypeNode,"Signal Handler Documentation","qmlsighan","signal handler","signal handlers");
-            FastSection qmlattachedsignals(qmlTypeNode,"Attached Signal Documentation","qmlattsig",
+            FastSection qmlsignals(aggregate,"Signal Documentation","qmlsig","signal","signals");
+            FastSection qmlsignalhandlers(aggregate,"Signal Handler Documentation","qmlsighan","signal handler","signal handlers");
+            FastSection qmlattachedsignals(aggregate,"Attached Signal Documentation","qmlattsig",
                                            "signal","signals");
-            FastSection qmlmethods(qmlTypeNode,"Method Documentation","qmlmeth","member","members");
-            FastSection qmlattachedmethods(qmlTypeNode,"Attached Method Documentation","qmlattmeth",
+            FastSection qmlmethods(aggregate,"Method Documentation","qmlmeth","member","members");
+            FastSection qmlattachedmethods(aggregate,"Attached Method Documentation","qmlattmeth",
                                            "member","members");
-            QmlTypeNode* qcn = qmlTypeNode;
+            Aggregate* qcn = aggregate;
             while (qcn != 0) {
                 NodeList::ConstIterator c = qcn->childNodes().constBegin();
                 while (c != qcn->childNodes().constEnd()) {
@@ -1264,8 +1279,8 @@ QList<Section> CppCodeMarker::qmlSections(QmlTypeNode* qmlTypeNode, SynopsisStyl
               members is prepared.
              */
             ClassMap* classMap = 0;
-            FastSection all(qmlTypeNode,QString(),QString(),"member","members");
-            QmlTypeNode* current = qmlTypeNode;
+            FastSection all(aggregate,QString(),QString(),"member","members");
+            Aggregate* current = aggregate;
             while (current != 0) {
                 /*
                   If the QML type is abstract, do not create
@@ -1280,7 +1295,7 @@ QList<Section> CppCodeMarker::qmlSections(QmlTypeNode* qmlTypeNode, SynopsisStyl
                  */
                 if (!current->isAbstract() || !classMap) {
                     classMap = new ClassMap;
-                    classMap->first = current;
+                    classMap->first = static_cast<const QmlTypeNode*>(current);
                     all.classMapList_.append(classMap);
                 }
                 NodeList::ConstIterator c = current->childNodes().constBegin();

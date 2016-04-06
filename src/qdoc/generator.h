@@ -200,6 +200,8 @@ protected:
                         const Node *actualNode);
     void appendFullNames(Text& text, const NodeList& nodes, const Node* relative);
     int appendSortedNames(Text& text, const ClassNode *classe, const QList<RelatedClass> &classes);
+    void appendSignature(Text& text, const Node* node);
+    void signatureList(const NodeList& nodes, const Node* relative, CodeMarker* marker);
 
 private:
     static Generator* currentGenerator_;

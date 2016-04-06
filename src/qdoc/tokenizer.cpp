@@ -55,12 +55,11 @@ QT_BEGIN_NAMESPACE
 */
 static const char *kwords[] = {
     "char", "class", "const", "double", "enum", "explicit",
-    "friend", "inline", "int", "long", "namespace", "noexcept",
-    "operator", "private", "protected", "public", "short",
-    "signals", "signed", "slots", "static", "struct", "template",
-    "throw", "typedef", "typename", "union", "unsigned", "using",
-    "virtual", "void", "volatile",
-    "__int64",
+    "friend", "inline", "int", "long", "namespace", "operator",
+    "private", "protected", "public", "short", "signals", "signed",
+    "slots", "static", "struct", "template", "typedef", "typename",
+    "union", "unsigned", "using", "virtual", "void", "volatile",
+    "__int64", "default", "delete", "final",
     "Q_OBJECT",
     "Q_OVERRIDE",
     "Q_PROPERTY",

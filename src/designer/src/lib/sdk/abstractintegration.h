@@ -77,7 +77,7 @@ public:
     };
     Q_DECLARE_FLAGS(Feature, FeatureFlag)
 
-    QDesignerIntegrationInterface(QDesignerFormEditorInterface *core, QObject *parent = 0);
+    explicit QDesignerIntegrationInterface(QDesignerFormEditorInterface *core, QObject *parent = Q_NULLPTR);
     virtual ~QDesignerIntegrationInterface();
 
     QDesignerFormEditorInterface *core() const;
@@ -85,7 +85,7 @@ public:
     virtual QWidget *containerWindow(QWidget *widget) const = 0;
 
     // Create a resource browser specific to integration. Language integration takes precedence
-    virtual QDesignerResourceBrowserInterface *createResourceBrowser(QWidget *parent = 0) = 0;
+    virtual QDesignerResourceBrowserInterface *createResourceBrowser(QWidget *parent = Q_NULLPTR) = 0;
     virtual QString headerSuffix() const = 0;
     virtual void setHeaderSuffix(const QString &headerSuffix) = 0;
 
@@ -136,7 +136,7 @@ class QDESIGNER_SDK_EXPORT QDesignerIntegration: public QDesignerIntegrationInte
 {
     Q_OBJECT
 public:
-    explicit QDesignerIntegration(QDesignerFormEditorInterface *core, QObject *parent = 0);
+    explicit QDesignerIntegration(QDesignerFormEditorInterface *core, QObject *parent = Q_NULLPTR);
     virtual ~QDesignerIntegration();
 
     QString headerSuffix() const;
@@ -157,7 +157,7 @@ public:
     static void initializePlugins(QDesignerFormEditorInterface *formEditor);
 
     // Create a resource browser specific to integration. Language integration takes precedence
-    virtual QDesignerResourceBrowserInterface *createResourceBrowser(QWidget *parent = 0);
+    virtual QDesignerResourceBrowserInterface *createResourceBrowser(QWidget *parent = Q_NULLPTR);
 
     virtual QString contextHelpId() const;
 

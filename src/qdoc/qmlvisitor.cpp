@@ -42,9 +42,11 @@
 #include <qstringlist.h>
 #include <qglobal.h>
 #include <qdebug.h>
+#ifndef QT_NO_DECLARATIVE
 #include <private/qqmljsast_p.h>
 #include <private/qqmljsastfwd_p.h>
 #include <private/qqmljsengine_p.h>
+#endif
 
 QT_BEGIN_NAMESPACE
 
@@ -89,6 +91,7 @@ QT_BEGIN_NAMESPACE
 #define COMMAND_JSATTACHEDMETHOD       Doc::alias(QLatin1String("jsattachedmethod"))
 #define COMMAND_JSBASICTYPE            Doc::alias(QLatin1String("jsbasictype"))
 
+#ifndef QT_NO_DECLARATIVE
 /*!
   The constructor stores all the parameters in local data members.
  */
@@ -823,5 +826,6 @@ void QmlDocVisitor::endVisit(QQmlJS::AST::UiQualifiedId* )
 {
     // nothing.
 }
+#endif
 
 QT_END_NAMESPACE

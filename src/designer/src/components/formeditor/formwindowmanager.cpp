@@ -363,7 +363,8 @@ QWidget *FormWindowManager::findManagedWidget(FormWindow *fw, QWidget *w)
 void FormWindowManager::setupActions()
 {
 #ifndef QT_NO_CLIPBOARD
-    m_actionCut = new QAction(createIconSet(QStringLiteral("editcut.png")), tr("Cu&t"), this);
+    const QIcon cutIcon = QIcon::fromTheme(QStringLiteral("edit-cut"), createIconSet(QStringLiteral("editcut.png")));
+    m_actionCut = new QAction(cutIcon, tr("Cu&t"), this);
     m_actionCut->setObjectName(QStringLiteral("__qt_cut_action"));
     m_actionCut->setShortcut(QKeySequence::Cut);
     m_actionCut->setStatusTip(tr("Cuts the selected widgets and puts them on the clipboard"));
@@ -371,7 +372,8 @@ void FormWindowManager::setupActions()
     connect(m_actionCut, &QAction::triggered, this, &FormWindowManager::slotActionCutActivated);
     m_actionCut->setEnabled(false);
 
-    m_actionCopy = new QAction(createIconSet(QStringLiteral("editcopy.png")), tr("&Copy"), this);
+    const QIcon copyIcon = QIcon::fromTheme(QStringLiteral("edit-copy"), createIconSet(QStringLiteral("editcopy.png")));
+    m_actionCopy = new QAction(copyIcon, tr("&Copy"), this);
     m_actionCopy->setObjectName(QStringLiteral("__qt_copy_action"));
     m_actionCopy->setShortcut(QKeySequence::Copy);
     m_actionCopy->setStatusTip(tr("Copies the selected widgets to the clipboard"));
@@ -379,7 +381,8 @@ void FormWindowManager::setupActions()
     connect(m_actionCopy, &QAction::triggered, this, &FormWindowManager::slotActionCopyActivated);
     m_actionCopy->setEnabled(false);
 
-    m_actionPaste = new QAction(createIconSet(QStringLiteral("editpaste.png")), tr("&Paste"), this);
+    const QIcon pasteIcon = QIcon::fromTheme(QStringLiteral("edit-paste"), createIconSet(QStringLiteral("editpaste.png")));
+    m_actionPaste = new QAction(pasteIcon, tr("&Paste"), this);
     m_actionPaste->setObjectName(QStringLiteral("__qt_paste_action"));
     m_actionPaste->setShortcut(QKeySequence::Paste);
     m_actionPaste->setStatusTip(tr("Pastes the clipboard's contents"));
@@ -388,7 +391,7 @@ void FormWindowManager::setupActions()
     m_actionPaste->setEnabled(false);
 #endif
 
-    m_actionDelete = new QAction(tr("&Delete"), this);
+    m_actionDelete = new QAction(QIcon::fromTheme(QStringLiteral("edit-delete")), tr("&Delete"), this);
     m_actionDelete->setObjectName(QStringLiteral("__qt_delete_action"));
     m_actionDelete->setStatusTip(tr("Deletes the selected widgets"));
     m_actionDelete->setWhatsThis(whatsThisFrom(QStringLiteral("Edit|Delete")));
@@ -523,24 +526,6 @@ void FormWindowManager::setupActions()
     connect(m_actionShowFormWindowSettingsDialog, &QAction::triggered,
             this, &FormWindowManager::slotActionShowFormWindowSettingsDialog);
     m_actionShowFormWindowSettingsDialog->setEnabled(false);
-
-#if defined (Q_OS_UNIX) && !defined(Q_OS_MAC)
-#ifndef QT_NO_CLIPBOARD
-    m_actionCopy->setIcon(QIcon::fromTheme(QStringLiteral("edit-copy"), m_actionCopy->icon()));
-    m_actionCut->setIcon(QIcon::fromTheme(QStringLiteral("edit-cut"), m_actionCut->icon()));
-    m_actionPaste->setIcon(QIcon::fromTheme(QStringLiteral("edit-paste"), m_actionPaste->icon()));
-#endif
-    m_actionDelete->setIcon(QIcon::fromTheme(QStringLiteral("edit-delete"), m_actionDelete->icon()));
-
-    // These do not currently exist, but will allow theme authors to fill in the gaps
-    m_actionBreakLayout->setIcon(QIcon::fromTheme(QStringLiteral("designer-break-layout"), m_actionBreakLayout->icon()));
-    m_actionGridLayout->setIcon(QIcon::fromTheme(QStringLiteral("designer-grid-layout"), m_actionGridLayout->icon()));
-    m_actionHorizontalLayout->setIcon(QIcon::fromTheme(QStringLiteral("designer-horizontal-layout"), m_actionHorizontalLayout->icon()));
-    m_actionVerticalLayout->setIcon(QIcon::fromTheme(QStringLiteral("designer-vertical-layout"), m_actionVerticalLayout->icon()));
-    m_actionSplitHorizontal->setIcon(QIcon::fromTheme(QStringLiteral("designer-split-horizontal"), m_actionSplitHorizontal->icon()));
-    m_actionSplitVertical->setIcon(QIcon::fromTheme(QStringLiteral("designer-split-vertical"), m_actionSplitVertical->icon()));
-    m_actionAdjustSize->setIcon(QIcon::fromTheme(QStringLiteral("designer-adjust-size"), m_actionAdjustSize->icon()));
-#endif
 }
 
 #ifndef QT_NO_CLIPBOARD
