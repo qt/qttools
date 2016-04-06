@@ -643,8 +643,8 @@ QStringList Config::getAllFiles(const QString &filesVar,
                                 const QSet<QString> &excludedDirs,
                                 const QSet<QString> &excludedFiles)
 {
-    QStringList result = getCanonicalPathList(filesVar);
-    QStringList dirs = getCanonicalPathList(dirsVar);
+    QStringList result = getCanonicalPathList(filesVar, true);
+    QStringList dirs = getCanonicalPathList(dirsVar, true);
 
     QString nameFilter = getString(filesVar + dot + CONFIG_FILEEXTENSIONS);
 
