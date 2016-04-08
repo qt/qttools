@@ -1648,7 +1648,7 @@ void Generator::generateOverloadedSignal(const Node* node, CodeMarker* marker)
          << Atom(Atom::FormattingLeft,ATOM_FORMATTING_BOLD)
          << "Note:"
          << Atom(Atom::FormattingRight,ATOM_FORMATTING_BOLD)
-         << "Signal "
+         << " Signal "
          << Atom(Atom::FormattingLeft,ATOM_FORMATTING_ITALIC)
          << node->name()
          << Atom(Atom::FormattingRight,ATOM_FORMATTING_ITALIC)

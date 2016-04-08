@@ -1551,6 +1551,8 @@ void FormWindow::handleArrowKeyEvent(int key, Qt::KeyboardModifiers modifiers)
             selection.append(w);
     }
 
+    simplifySelection(&selection);
+
     if (selection.isEmpty())
         return;
 

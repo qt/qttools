@@ -140,7 +140,7 @@ QString QDesignerDialogGuiInterface::getOpenImageFileName(QWidget *parent, const
 
 QStringList QDesignerDialogGuiInterface::getOpenImageFileNames(QWidget *parent, const QString &caption, const QString &dir, const QString &filter, QString *selectedFilter, QFileDialog::Options options)
 {
-    return getOpenImageFileNames(parent, caption, dir, filter, selectedFilter, options);
+    return getOpenFileNames(parent, caption, dir, filter, selectedFilter, options);
 }
 
 /*!

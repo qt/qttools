@@ -842,7 +842,7 @@ CppParser::TokenType CppParser::getToken()
 
                 forever {
                     if (yyCh == EOF || yyCh == '\n') {
-                        yyMsg() << "Unterminated C++ character\n";
+                        yyMsg() << qPrintable(LU::tr("Unterminated C++ character\n"));
                         break;
                     }
                     yyCh = getChar();
@@ -1861,7 +1861,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                     // Forward-declared class definitions can be namespaced.
                     NamespaceList nsl;
                     if (!fullyQualify(namespaces, quali, true, &nsl, 0)) {
-                        yyMsg() << "Ignoring definition of undeclared qualified class\n";
+                        yyMsg() << qPrintable(LU::tr("Ignoring definition of undeclared qualified class\n"));
                         break;
                     }
                     namespaceDepths.push(namespaces.count());
