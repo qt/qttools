@@ -474,8 +474,8 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
         void pushState(const QDesignerFormEditorInterface *, const QWidget *) Q_DECL_OVERRIDE;
         void popState(const QDesignerFormEditorInterface *, QWidget *) Q_DECL_OVERRIDE;
 
-        virtual bool canSimplify(const QDesignerFormEditorInterface *, const QWidget *, const QRect &) const { return  false; }
-        virtual void simplify(const QDesignerFormEditorInterface *, QWidget *, const QRect &) {}
+        bool canSimplify(const QDesignerFormEditorInterface *, const QWidget *, const QRect &) const Q_DECL_OVERRIDE { return  false; }
+        void simplify(const QDesignerFormEditorInterface *, QWidget *, const QRect &) Q_DECL_OVERRIDE {}
 
         // Helper for restoring layout states
         typedef QVector <QLayoutItem *> LayoutItemVector;
@@ -1567,11 +1567,11 @@ public:
 
     void insertWidget(QWidget *widget, const QPair<int, int> &cell) Q_DECL_OVERRIDE;
     void removeWidget(QWidget *widget) Q_DECL_OVERRIDE;
-    virtual void simplify() {}
-    virtual void insertRow(int /*row*/) {}
-    virtual void insertColumn(int /*column*/) {}
+    void simplify() Q_DECL_OVERRIDE {}
+    void insertRow(int /*row*/) Q_DECL_OVERRIDE {}
+    void insertColumn(int /*column*/) Q_DECL_OVERRIDE {}
 
-    virtual int findItemAt(int /*at_row*/, int /*at_column*/) const {    return -1; }
+    int findItemAt(int /*at_row*/, int /*at_column*/) const Q_DECL_OVERRIDE {    return -1; }
     using QLayoutSupport::findItemAt;
 
 private:
@@ -1697,8 +1697,8 @@ public:
     GridLikeLayoutSupportBase(QDesignerFormWindowInterface *formWindow, QWidget *widget, LayoutHelper *helper, QObject *parent = 0) :
         QLayoutSupport(formWindow, widget, helper, parent) {}
 
-    void insertWidget(QWidget *widget, const QPair<int, int> &cell);
-    virtual void removeWidget(QWidget *widget) { helper()->removeWidget(layout(), widget); }
+    void insertWidget(QWidget *widget, const QPair<int, int> &cell) Q_DECL_OVERRIDE;
+    void removeWidget(QWidget *widget) Q_DECL_OVERRIDE { helper()->removeWidget(layout(), widget); }
     int findItemAt(int row, int column) const Q_DECL_OVERRIDE;
     using QLayoutSupport::findItemAt;
 
@@ -1711,7 +1711,7 @@ private:
 
     void setCurrentCellFromIndicatorOnEmptyCell(int index) Q_DECL_OVERRIDE;
     void setCurrentCellFromIndicator(Qt::Orientation indicatorOrientation, int index, int increment) Q_DECL_OVERRIDE;
-    virtual bool supportsIndicatorOrientation(Qt::Orientation) const { return true; }
+    bool supportsIndicatorOrientation(Qt::Orientation) const Q_DECL_OVERRIDE { return true; }
 
     QRect extendedGeometry(int index) const Q_DECL_OVERRIDE;
 
@@ -1811,7 +1811,7 @@ public:
 
     QGridLayoutSupport(QDesignerFormWindowInterface *formWindow, QWidget *widget, QObject *parent = 0);
 
-    virtual void simplify();
+    void simplify() Q_DECL_OVERRIDE;
     void insertRow(int row) Q_DECL_OVERRIDE;
     void insertColumn(int column) Q_DECL_OVERRIDE;
 
@@ -1858,9 +1858,9 @@ class QFormLayoutSupport: public GridLikeLayoutSupportBase<QFormLayout>
 public:
     QFormLayoutSupport(QDesignerFormWindowInterface *formWindow, QWidget *widget, QObject *parent = 0);
 
-    virtual void simplify() {}
-    virtual void insertRow(int /*row*/) {}
-    virtual void insertColumn(int /*column*/) {}
+    void simplify() Q_DECL_OVERRIDE {}
+    void insertRow(int /*row*/) Q_DECL_OVERRIDE {}
+    void insertColumn(int /*column*/) Q_DECL_OVERRIDE {}
 
 private:
     void checkCellForInsertion(int * row, int *col) const Q_DECL_OVERRIDE;

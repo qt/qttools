@@ -58,8 +58,8 @@ public:
     QHash<QString,QString> propertyNameMap() const;
 
     // QDesignerPropertySheet
-    QVariant property(int index) const;
-    void setProperty(int index, const QVariant &value);
+    QVariant property(int index) const Q_DECL_OVERRIDE;
+    void setProperty(int index, const QVariant &value) Q_DECL_OVERRIDE;
 
     void setChanged(int index, bool changed) Q_DECL_OVERRIDE;
     bool isChanged(int index) const Q_DECL_OVERRIDE;

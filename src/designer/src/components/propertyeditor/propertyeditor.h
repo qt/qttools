@@ -76,20 +76,20 @@ public:
     bool isReadOnly() const Q_DECL_OVERRIDE;
     void setReadOnly(bool readOnly) Q_DECL_OVERRIDE;
     void setPropertyValue(const QString &name, const QVariant &value, bool changed = true) Q_DECL_OVERRIDE;
-    virtual void updatePropertySheet();
+    void updatePropertySheet() Q_DECL_OVERRIDE;
 
     void setObject(QObject *object) Q_DECL_OVERRIDE;
 
-    void reloadResourceProperties();
+    void reloadResourceProperties() Q_DECL_OVERRIDE;
 
-    virtual QObject *object() const
+    QObject *object() const Q_DECL_OVERRIDE
     { return m_object; }
 
     QString currentPropertyName() const Q_DECL_OVERRIDE;
 
 protected:
 
-    bool event(QEvent *event);
+    bool event(QEvent *event) Q_DECL_OVERRIDE;
 
 private slots:
     void slotResetProperty(QtProperty *property);

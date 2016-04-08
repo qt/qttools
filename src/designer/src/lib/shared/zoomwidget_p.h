@@ -193,10 +193,10 @@ public slots:
     void dump() const;
 
 protected:
-    void resizeEvent(QResizeEvent * event);
+    void resizeEvent(QResizeEvent * event) Q_DECL_OVERRIDE;
 
     // Overwritten from ZoomView
-    virtual void applyZoom();
+    void applyZoom() Q_DECL_OVERRIDE;
     // Overwrite to actually perform a resize. This is required if we are in a layout. Default does resize().
     virtual void doResize(const QSize &s);
 

@@ -126,7 +126,7 @@ public:
     void ensureUniqueObjectName(QObject *object) Q_DECL_OVERRIDE;
 
     QWidget *mainContainer() const Q_DECL_OVERRIDE;
-    void setMainContainer(QWidget *mainContainer);
+    void setMainContainer(QWidget *mainContainer) Q_DECL_OVERRIDE;
     bool isMainContainer(const QWidget *w) const;
 
     QWidget *currentWidget() const;
@@ -134,9 +134,9 @@ public:
     bool hasInsertedChildren(QWidget *w) const;
 
     QList<QWidget *> selectedWidgets() const;
-    void clearSelection(bool changePropertyDisplay=true);
+    void clearSelection(bool changePropertyDisplay = true) Q_DECL_OVERRIDE;
     bool isWidgetSelected(QWidget *w) const;
-    void selectWidget(QWidget *w, bool select=true);
+    void selectWidget(QWidget *w, bool select = true) Q_DECL_OVERRIDE;
 
     void selectWidgets();
     void repaintSelection();
@@ -153,57 +153,56 @@ public:
 
     QWidget *createWidget(DomUI *ui, const QRect &rect, QWidget *target);
 
-    bool isManaged(QWidget *w) const;
+    bool isManaged(QWidget *w) const Q_DECL_OVERRIDE;
 
-    void manageWidget(QWidget *w);
-    void unmanageWidget(QWidget *w);
+    void manageWidget(QWidget *w) Q_DECL_OVERRIDE;
+    void unmanageWidget(QWidget *w) Q_DECL_OVERRIDE;
 
     QUndoStack *commandHistory() const Q_DECL_OVERRIDE;
-    void beginCommand(const QString &description);
-    void endCommand();
+    void beginCommand(const QString &description) Q_DECL_OVERRIDE;
+    void endCommand() Q_DECL_OVERRIDE;
 
     bool blockSelectionChanged(bool blocked) Q_DECL_OVERRIDE;
-    virtual void emitSelectionChanged();
+    void emitSelectionChanged() Q_DECL_OVERRIDE;
 
     bool unify(QObject *w, QString &s, bool changeIt);
 
-    bool isDirty() const;
-    void setDirty(bool dirty);
+    bool isDirty() const Q_DECL_OVERRIDE;
+    void setDirty(bool dirty) Q_DECL_OVERRIDE;
 
     static FormWindow *findFormWindow(QWidget *w);
 
     virtual QWidget *containerAt(const QPoint &pos);
     QWidget *widgetAt(const QPoint &pos) Q_DECL_OVERRIDE;
-    virtual void highlightWidget(QWidget *w, const QPoint &pos,
-                                    HighlightMode mode = Highlight);
+    void highlightWidget(QWidget *w, const QPoint &pos, HighlightMode mode = Highlight) Q_DECL_OVERRIDE;
 
     void updateOrderIndicators();
 
     bool handleEvent(QWidget *widget, QWidget *managedWidget, QEvent *event);
 
-    QStringList resourceFiles() const;
-    void addResourceFile(const QString &path);
-    void removeResourceFile(const QString &path);
+    QStringList resourceFiles() const Q_DECL_OVERRIDE;
+    void addResourceFile(const QString &path) Q_DECL_OVERRIDE;
+    void removeResourceFile(const QString &path) Q_DECL_OVERRIDE;
 
     void resizeWidget(QWidget *widget, const QRect &geometry);
 
     bool dropDockWidget(QDesignerDnDItemInterface *item, const QPoint &global_mouse_pos);
     bool dropWidgets(const QList<QDesignerDnDItemInterface*> &item_list, QWidget *target,
-                        const QPoint &global_mouse_pos);
+                     const QPoint &global_mouse_pos) Q_DECL_OVERRIDE;
 
     QWidget *findContainer(QWidget *w, bool excludeLayout) const Q_DECL_OVERRIDE;
     // for WidgetSelection only.
     QWidget *designerWidget(QWidget *w) const;
 
     //  Initialize and return a popup menu for a managed widget
-    QMenu *initializePopupMenu(QWidget *managedWidget);
+    QMenu *initializePopupMenu(QWidget *managedWidget) Q_DECL_OVERRIDE;
 
 #ifndef QT_NO_CLIPBOARD
     void paste(PasteMode pasteMode) Q_DECL_OVERRIDE;
 #endif
-    virtual QEditorFormBuilder *createFormBuilder();
+    virtual QEditorFormBuilder *createFormBuilder() Q_DECL_OVERRIDE;
 
-    bool eventFilter(QObject *watched, QEvent *event);
+    bool eventFilter(QObject *watched, QEvent *event) Q_DECL_OVERRIDE;
 
 signals:
     void contextMenuRequested(QMenu *menu, QWidget *widget);
@@ -298,7 +297,7 @@ private:
     static int widgetDepth(const QWidget *w);
     static bool isChildOf(const QWidget *c, const QWidget *p);
 
-    void editWidgets();
+    void editWidgets() Q_DECL_OVERRIDE;
 
     void updateWidgets();
 

@@ -86,8 +86,8 @@ public:
 
     QString name() const Q_DECL_OVERRIDE;
     QWidget *createPage(QWidget *parent) Q_DECL_OVERRIDE;
-    virtual void apply();
-    virtual void finish();
+    void apply() Q_DECL_OVERRIDE;
+    void finish() Q_DECL_OVERRIDE;
 
 private:
     QDesignerFormEditorInterface *m_core;

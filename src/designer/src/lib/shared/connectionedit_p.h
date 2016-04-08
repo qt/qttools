@@ -178,7 +178,7 @@ public:
 
     void clear();
 
-    void showEvent(QShowEvent * /*e*/)
+    void showEvent(QShowEvent * /*e*/) Q_DECL_OVERRIDE
     {
         updateBackground();
     }
