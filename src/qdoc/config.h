@@ -92,7 +92,7 @@ public:
     int getInt(const QString& var) const;
     QString getOutputDir() const;
     QSet<QString> getOutputFormats() const;
-    QString getString(const QString& var) const;
+    QString getString(const QString& var, const QString& defaultString = QString()) const;
     QSet<QString> getStringSet(const QString& var) const;
     QStringList getStringList(const QString& var) const;
     QStringList getCanonicalPathList(const QString& var, bool validate = false) const;
@@ -169,6 +169,7 @@ struct ConfigStrings
     static QString CODEPREFIX;
     static QString CODESUFFIX;
     static QString CPPCLASSESPAGE;
+    static QString CPPCLASSESTITLE;
     static QString DEFINES;
     static QString DEPENDS;
     static QString DESCRIPTION;
@@ -235,6 +236,7 @@ struct ConfigStrings
     static QString IMAGEEXTENSIONS;
     static QString QMLONLY;
     static QString QMLTYPESPAGE;
+    static QString QMLTYPESTITLE;
     static QString WRITEQAPAGES;
 };
 
@@ -247,6 +249,7 @@ struct ConfigStrings
 #define CONFIG_CODEPREFIX ConfigStrings::CODEPREFIX
 #define CONFIG_CODESUFFIX ConfigStrings::CODESUFFIX
 #define CONFIG_CPPCLASSESPAGE ConfigStrings::CPPCLASSESPAGE
+#define CONFIG_CPPCLASSESTITLE ConfigStrings::CPPCLASSESTITLE
 #define CONFIG_DEFINES ConfigStrings::DEFINES
 #define CONFIG_DEPENDS ConfigStrings::DEPENDS
 #define CONFIG_DESCRIPTION ConfigStrings::DESCRIPTION
@@ -313,6 +316,7 @@ struct ConfigStrings
 #define CONFIG_IMAGEEXTENSIONS ConfigStrings::IMAGEEXTENSIONS
 #define CONFIG_QMLONLY ConfigStrings::QMLONLY
 #define CONFIG_QMLTYPESPAGE ConfigStrings::QMLTYPESPAGE
+#define CONFIG_QMLTYPESTITLE ConfigStrings::QMLTYPESTITLE
 #define CONFIG_WRITEQAPAGES ConfigStrings::WRITEQAPAGES
 
 QT_END_NAMESPACE

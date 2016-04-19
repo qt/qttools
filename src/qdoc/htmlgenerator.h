@@ -268,7 +268,9 @@ private:
     QString homepage;
     QString landingpage;
     QString cppclassespage;
+    QString cppclassestitle;
     QString qmltypespage;
+    QString qmltypestitle;
     QString buildversion;
     QString qflagsHref_;
     int tocDepth;

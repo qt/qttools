@@ -261,9 +261,19 @@ void HtmlGenerator::initializeGenerator(const Config &config)
                                     + Config::dot
                                     + CONFIG_CPPCLASSESPAGE);
 
+    cppclassestitle = config.getString(CONFIG_NAVIGATION
+                                       + Config::dot
+                                       + CONFIG_CPPCLASSESTITLE,
+                                       QLatin1String("C++ Classes"));
+
     qmltypespage = config.getString(CONFIG_NAVIGATION
                                     + Config::dot
                                     + CONFIG_QMLTYPESPAGE);
+
+    qmltypestitle = config.getString(CONFIG_NAVIGATION
+                                     + Config::dot
+                                     + CONFIG_QMLTYPESTITLE,
+                                     QLatin1String("QML Types"));
 
     buildversion = config.getString(CONFIG_BUILDVERSION);
 }
@@ -1904,11 +1914,11 @@ void HtmlGenerator::generateNavigationBar(const QString &title,
                     << Atom(itemRight);
 
     if (node->isClass()) {
-        if (!cppclassespage.isEmpty())
+        if (!cppclassespage.isEmpty() && !cppclassestitle.isEmpty())
             navigationbar << Atom(itemLeft)
                         << Atom(Atom::NavLink, cppclassespage)
                         << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
-                        << Atom(Atom::String, QLatin1String("C++ Classes"))
+                        << Atom(Atom::String, cppclassestitle)
                         << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK)
                         << Atom(itemRight);
 
@@ -1919,11 +1929,11 @@ void HtmlGenerator::generateNavigationBar(const QString &title,
     }
     else if (node->isQmlType() || node->isQmlBasicType() ||
              node->isJsType() || node->isJsBasicType()) {
-        if (!qmltypespage.isEmpty())
+        if (!qmltypespage.isEmpty() && !qmltypestitle.isEmpty())
             navigationbar << Atom(itemLeft)
                           << Atom(Atom::NavLink, qmltypespage)
                           << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
-                          << Atom(Atom::String, QLatin1String("QML Types"))
+                          << Atom(Atom::String, qmltypestitle)
                           << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK)
                           << Atom(itemRight)
                           << Atom(itemLeft)

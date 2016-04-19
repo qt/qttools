@@ -56,6 +56,7 @@ QString ConfigStrings::CODEINDENT = QStringLiteral("codeindent");
 QString ConfigStrings::CODEPREFIX = QStringLiteral("codeprefix");
 QString ConfigStrings::CODESUFFIX = QStringLiteral("codesuffix");
 QString ConfigStrings::CPPCLASSESPAGE = QStringLiteral("cppclassespage");
+QString ConfigStrings::CPPCLASSESTITLE = QStringLiteral("cppclassestitle");
 QString ConfigStrings::DEFINES = QStringLiteral("defines");
 QString ConfigStrings::DEPENDS = QStringLiteral("depends");
 QString ConfigStrings::DESCRIPTION = QStringLiteral("description");
@@ -122,6 +123,7 @@ QString ConfigStrings::FILEEXTENSIONS = QStringLiteral("fileextensions");
 QString ConfigStrings::IMAGEEXTENSIONS = QStringLiteral("imageextensions");
 QString ConfigStrings::QMLONLY = QStringLiteral("qmlonly");
 QString ConfigStrings::QMLTYPESPAGE = QStringLiteral("qmltypespage");
+QString ConfigStrings::QMLTYPESTITLE = QStringLiteral("qmltypestitle");
 QString ConfigStrings::WRITEQAPAGES = QStringLiteral("writeqapages");
 
 /*!
@@ -390,12 +392,15 @@ QSet<QString> Config::getOutputFormats() const
 
   Then it looks up the configuration variable \a var in the string
   map and returns the string that \a var maps to.
+
+  If \a var is not contained in the location map it returns
+  \a defaultString.
  */
-QString Config::getString(const QString& var) const
+QString Config::getString(const QString& var, const QString& defaultString) const
 {
     QList<ConfigVar> configVars = configVars_.values(var);
-    QString value;
     if (!configVars.empty()) {
+        QString value;
         int i = configVars.size() - 1;
         while (i >= 0) {
             const ConfigVar& cv = configVars[i];
@@ -412,8 +417,9 @@ QString Config::getString(const QString& var) const
             }
             --i;
         }
+        return value;
     }
-    return value;
+    return defaultString;
 }
 
 /*!
