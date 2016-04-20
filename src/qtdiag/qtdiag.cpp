@@ -38,6 +38,7 @@
 #include <QtGui/QScreen>
 #include <QtGui/QFont>
 #include <QtGui/QFontDatabase>
+#include <QtGui/QPalette>
 #ifndef QT_NO_OPENGL
 #  include <QtGui/QOpenGLContext>
 #  include <QtGui/QOpenGLFunctions>
@@ -242,6 +243,17 @@ static QString formatValueQDebug(T t)
         result.remove(0, result.indexOf(QLatin1Char('(')) + 1);
     }
     return result;
+}
+
+QTextStream &operator<<(QTextStream &str, const QPalette &palette)
+{
+    for (int r = 0; r < int(QPalette::NColorRoles); ++r) {
+        const QPalette::ColorRole role = static_cast< QPalette::ColorRole>(r);
+        const QColor color = palette.color(QPalette::Active, role);
+        if (color.isValid())
+            str << "  " << formatValueQDebug(role) << ": " << color.name(QColor::HexArgb) << '\n';
+    }
+    return str;
 }
 
 static inline QByteArrayList qtFeatures()
@@ -498,6 +510,8 @@ QString qtDiag(unsigned flags)
         for (int i = 0, count = writingSystems.size(); i < count; ++i)
             str << "    " << formatValueQDebug(writingSystems.at(i)) << '\n';
     }
+
+    str << "\nPalette:\n" << QGuiApplication::palette();
 
     const QList<QScreen*> screens = QGuiApplication::screens();
     const int screenCount = screens.size();
