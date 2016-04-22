@@ -53,7 +53,7 @@ class TicTacToePlugin : public QObject, public QDesignerCustomWidgetInterface
 {
     Q_OBJECT
 //! [1]
-    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QDesignerCustomWidgetInterface" FILE "tictactoe.json")
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QDesignerCustomWidgetInterface")
 //! [1]
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 

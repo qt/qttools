@@ -53,7 +53,7 @@ class MultiPageWidgetPlugin: public QObject, public QDesignerCustomWidgetInterfa
 {
     Q_OBJECT
 //! [1]
-    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QDesignerCustomWidget" FILE "multipagewidget.json")
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QDesignerCustomWidget")
 //! [1]
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 public:
