@@ -155,8 +155,7 @@ public:
     void setObject(QObject *object) { m_object = object; }
 
 public Q_SLOTS:
-    virtual void setAttribute(QtProperty *property,
-                const QString &attribute, const QVariant &value);
+    void setAttribute(QtProperty *property, const QString &attribute, const QVariant &value) Q_DECL_OVERRIDE;
     void setValue(QtProperty *property, const QVariant &value) Q_DECL_OVERRIDE;
 Q_SIGNALS:
     // sourceOfChange - a subproperty (or just property) which caused a change

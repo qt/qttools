@@ -60,7 +60,7 @@ public:
     QDesignerQSettings();
 
     void beginGroup(const QString &prefix) Q_DECL_OVERRIDE;
-    virtual void endGroup();
+    void endGroup() Q_DECL_OVERRIDE;
 
     bool contains(const QString &key) const Q_DECL_OVERRIDE;
     void setValue(const QString &key, const QVariant &value) Q_DECL_OVERRIDE;

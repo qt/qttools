@@ -61,8 +61,8 @@ public:
     QVariant property(int index) const Q_DECL_OVERRIDE;
     void setProperty(int index, const QVariant &value) Q_DECL_OVERRIDE;
     bool reset(int index) Q_DECL_OVERRIDE;
-    int indexOf(const QString &name) const;
-    bool dynamicPropertiesAllowed() const;
+    int indexOf(const QString &name) const Q_DECL_OVERRIDE;
+    bool dynamicPropertiesAllowed() const Q_DECL_OVERRIDE;
 
     static const char *controlPropertyName;
 

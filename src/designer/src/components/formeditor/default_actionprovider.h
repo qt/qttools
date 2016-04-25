@@ -73,7 +73,7 @@ public:
 
     QRect actionGeometry(QAction *action) const Q_DECL_OVERRIDE;
     QAction *actionAt(const QPoint &pos) const Q_DECL_OVERRIDE;
-    Qt::Orientation orientation() const;
+    Qt::Orientation orientation() const Q_DECL_OVERRIDE;
 
 protected:
     QRect indicatorGeometry(const QPoint &pos, Qt::LayoutDirection layoutDirection) const Q_DECL_OVERRIDE;
@@ -91,7 +91,7 @@ public:
 
     QRect actionGeometry(QAction *action) const Q_DECL_OVERRIDE;
     QAction *actionAt(const QPoint &pos) const Q_DECL_OVERRIDE;
-    Qt::Orientation orientation() const;
+    Qt::Orientation orientation() const Q_DECL_OVERRIDE;
 
 private:
     QMenuBar *m_widget;
@@ -106,7 +106,7 @@ public:
 
     QRect actionGeometry(QAction *action) const Q_DECL_OVERRIDE;
     QAction *actionAt(const QPoint &pos) const Q_DECL_OVERRIDE;
-    Qt::Orientation orientation() const;
+    Qt::Orientation orientation() const Q_DECL_OVERRIDE;
 
 private:
     QMenu *m_widget;

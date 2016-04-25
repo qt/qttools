@@ -507,3 +507,12 @@ class nullptrClass : public QObject
         tr("%n car(s)", nullptr, 2);
     }
 };
+
+
+
+// QTBUG-34265: lupdate does not detect NULL and Q_NULLPTR as 0 when being passed as context
+void nullMacroInPlural()
+{
+    QObject::tr("%n NULL(s)", NULL, 3);
+    QObject::tr("%n Q_NULLPTR(s)", Q_NULLPTR, 3);
+}

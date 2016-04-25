@@ -130,9 +130,9 @@ protected:
     DomWidget *saveWidget(QDesignerDockWidget *dockWidget, DomWidget *ui_parentWidget);
     DomWidget *saveWidget(QWizardPage *wizardPage, DomWidget *ui_parentWidget);
 
-    virtual DomCustomWidgets *saveCustomWidgets();
-    virtual DomTabStops *saveTabStops();
-    virtual DomResources *saveResources();
+    DomCustomWidgets *saveCustomWidgets() Q_DECL_OVERRIDE;
+    DomTabStops *saveTabStops() Q_DECL_OVERRIDE;
+    DomResources *saveResources() Q_DECL_OVERRIDE;
 
     void layoutInfo(DomLayout *layout, QObject *parent, int *margin, int *spacing) Q_DECL_OVERRIDE;
 

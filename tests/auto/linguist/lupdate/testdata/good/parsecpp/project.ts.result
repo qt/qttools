@@ -319,6 +319,20 @@ backslashed \ stuff.</source>
             <numerusform></numerusform>
         </translation>
     </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="516"/>
+        <source>%n NULL(s)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="517"/>
+        <source>%n Q_NULLPTR(s)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
     <message>
         <location filename="included.cpp" line="34"/>
         <source>message from #included .cpp file</source>

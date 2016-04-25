@@ -293,7 +293,9 @@ void setupTranslations()
 
 int main(int argc, char *argv[])
 {
+#ifdef Q_OS_WIN
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+#endif
     TRACE_OBJ
     QScopedPointer<QCoreApplication> a(createApplication(argc, argv));
     a->addLibraryPath(a->applicationDirPath() + QLatin1String("/plugins"));

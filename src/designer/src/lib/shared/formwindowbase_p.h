@@ -135,7 +135,6 @@ public:
     virtual QEditorFormBuilder *createFormBuilder() = 0;
 
     virtual bool blockSelectionChanged(bool blocked) = 0;
-    virtual void emitSelectionChanged() = 0;
 
     DesignerPixmapCache *pixmapCache() const;
     DesignerIconCache *iconCache() const;

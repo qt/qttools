@@ -122,7 +122,7 @@ namespace qdesigner_internal {
         void clear();
 
     protected:
-        void resizeEvent(QResizeEvent * event );
+        void resizeEvent(QResizeEvent * event ) Q_DECL_OVERRIDE;
 
     private slots:
         void slotTextChanged(const QString &text);

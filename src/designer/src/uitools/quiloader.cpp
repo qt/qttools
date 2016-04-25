@@ -339,7 +339,7 @@ public:
         return ParentClass::createActionGroup(parent, name);
     }
 
-    virtual QWidget *createWidget(const QString &className, QWidget *parent, const QString &name)
+    QWidget *createWidget(const QString &className, QWidget *parent, const QString &name) Q_DECL_OVERRIDE
     {
         if (QWidget *widget = loader->createWidget(className, parent, name)) {
             widget->setObjectName(name);
@@ -349,7 +349,7 @@ public:
         return 0;
     }
 
-    virtual QLayout *createLayout(const QString &className, QObject *parent, const QString &name)
+    QLayout *createLayout(const QString &className, QObject *parent, const QString &name) Q_DECL_OVERRIDE
     {
         if (QLayout *layout = loader->createLayout(className, parent, name)) {
             layout->setObjectName(name);
@@ -359,7 +359,7 @@ public:
         return 0;
     }
 
-    virtual QActionGroup *createActionGroup(QObject *parent, const QString &name)
+    QActionGroup *createActionGroup(QObject *parent, const QString &name) Q_DECL_OVERRIDE
     {
         if (QActionGroup *actionGroup = loader->createActionGroup(parent, name)) {
             actionGroup->setObjectName(name);
@@ -369,7 +369,7 @@ public:
         return 0;
     }
 
-    virtual QAction *createAction(QObject *parent, const QString &name)
+    QAction *createAction(QObject *parent, const QString &name)  Q_DECL_OVERRIDE
     {
         if (QAction *action = loader->createAction(parent, name)) {
             action->setObjectName(name);

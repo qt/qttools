@@ -68,7 +68,7 @@ public:
 
     void updatePixmap();
 
-    virtual QSize minimumSizeHint() const
+    QSize minimumSizeHint() const Q_DECL_OVERRIDE
     { return QWidget::minimumSizeHint().expandedTo(QSize(16, 16)); }
 
 protected:
