@@ -1,0 +1,30 @@
+[
+    {
+        "Copyright": "Copyright",
+        "Description": "Multi\nLine\nDescription",
+        "Homepage": "www.qt.io",
+        "Id": "complete",
+        "License": "License",
+        "LicenseFile": "%{PWD}/complete/LICENSE",
+        "LicenseId": "xxx",
+        "Name": "Complete",
+        "Path": "%{PWD}/complete",
+        "QtUsage": "Multi\nLine\nUsage",
+        "Version": "1.0",
+        "DownloadLocation": "www.qt.io/1.0"
+    },
+    {
+        "Copyright": "Copyright",
+        "Description": "",
+        "Homepage": "",
+        "Id": "minimal",
+        "License": "License",
+        "LicenseFile": "",
+        "LicenseId": "",
+        "Name": "Minimal",
+        "Path": "%{PWD}/minimal",
+        "QtUsage": "Usage",
+        "Version": "",
+        "DownloadLocation": ""
+    }
+]

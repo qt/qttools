@@ -1,0 +1,16 @@
+[
+    {
+        "Copyright": "Copyright",
+        "Description": "",
+        "Homepage": "",
+        "Id": "unknown",
+        "License": "License",
+        "LicenseFile": "",
+        "LicenseId": "",
+        "Name": "Unknown",
+        "Path": "%{PWD}",
+        "QtUsage": "Usage",
+        "Version": "",
+        "DownloadLocation": ""
+    }
+]
