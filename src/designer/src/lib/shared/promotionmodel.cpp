@@ -70,17 +70,16 @@ namespace {
     }
 
     // Create an editable model row for a promoted class.
-    StandardItemList promotedModelRow(const QDesignerWidgetDataBaseInterface *widgetDataBase,
+    StandardItemList promotedModelRow(QDesignerWidgetDataBaseItemInterface *baseItem,
                                       QDesignerWidgetDataBaseItemInterface *dbItem,
-                                      bool referenced = false) {
+                                      bool referenced)
+    {
+        qdesigner_internal::PromotionModel::ModelData data;
+        data.baseItem = baseItem;
+        data.promotedItem = dbItem;
+        data.referenced = referenced;
 
-        const int index = widgetDataBase->indexOf(dbItem);
-
-        // Associate user data: database index and enabled flag
-        QVariantList userDataList;
-        userDataList.push_back(QVariant(index));
-        userDataList.push_back(QVariant(referenced));
-        const QVariant userData(userDataList);
+        const QVariant userData = qVariantFromValue(data);
 
         StandardItemList rc =  modelRow();
         // name
@@ -140,7 +139,6 @@ namespace qdesigner_internal {
 
         const QSet<QString> usedPromotedClasses = m_core->promotion()->referencedPromotedClassNames();
 
-        QDesignerWidgetDataBaseInterface *widgetDataBase = m_core->widgetDataBase();
         QDesignerWidgetDataBaseItemInterface *baseClass = 0;
         QStandardItem *baseItem = 0;
 
@@ -155,15 +153,15 @@ namespace qdesigner_internal {
             }
             Q_ASSERT(baseItem);
             // Append derived
-            baseItem->appendRow(promotedModelRow(widgetDataBase, it->promotedItem, usedPromotedClasses.contains(it->promotedItem->name())));
+            baseItem->appendRow(promotedModelRow(it->baseItem, it->promotedItem, usedPromotedClasses.contains(it->promotedItem->name())));
         }
     }
 
     void PromotionModel::slotItemChanged(QStandardItem * changedItem) {
         // Retrieve DB item
-        bool referenced;
-        QDesignerWidgetDataBaseItemInterface *dbItem = databaseItem(changedItem, &referenced);
-        Q_ASSERT(dbItem);
+        const ModelData data = modelData(changedItem);
+        Q_ASSERT(data.isValid());
+        QDesignerWidgetDataBaseItemInterface *dbItem = data.promotedItem;
         // Change header or type
         switch (changedItem->column()) {
         case ClassNameColumn:
@@ -181,26 +179,15 @@ namespace qdesigner_internal {
         }
     }
 
-    QDesignerWidgetDataBaseItemInterface *PromotionModel::databaseItemAt(const QModelIndex &index, bool *referenced) const {
-        if (const QStandardItem *item = itemFromIndex (index))
-            return databaseItem(item, referenced);
-
-        *referenced = false;
-        return 0;
+    PromotionModel::ModelData PromotionModel::modelData(const QStandardItem *item) const
+    {
+        const QVariant userData = item->data();
+        return userData.canConvert<ModelData>() ? userData.value<ModelData>() : ModelData();
     }
 
-    QDesignerWidgetDataBaseItemInterface *PromotionModel::databaseItem(const QStandardItem * item, bool *referenced) const {
-        // Decode user data associated with item.
-        const QVariant data =  item->data();
-        if (data.type() != QVariant::List) {
-            *referenced = false;
-            return 0;
-        }
-
-        const QVariantList dataList = data.toList();
-        const int index = dataList[0].toInt();
-        *referenced     = dataList[1].toBool();
-        return  m_core->widgetDataBase()->item(index);
+    PromotionModel::ModelData PromotionModel::modelData(const QModelIndex &index) const
+    {
+        return index.isValid() ? modelData(itemFromIndex(index)) : ModelData();
     }
 
     QModelIndex PromotionModel::indexOfClass(const QString &className) const {

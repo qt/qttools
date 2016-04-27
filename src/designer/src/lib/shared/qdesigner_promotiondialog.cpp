@@ -360,12 +360,11 @@ namespace qdesigner_internal {
         const QModelIndexList indexes = selected.indexes();
         if (indexes.empty())
             return 0;
-
-        bool referenced;
-        QDesignerWidgetDataBaseItemInterface *dbItem = m_model->databaseItemAt(indexes.front(), &referenced);
+        const PromotionModel::ModelData data = m_model->modelData(indexes.constFirst());
+        QDesignerWidgetDataBaseItemInterface *dbItem = data.promotedItem;
 
         if (dbItem) {
-            if (referenced)
+            if (data.referenced)
                 flags |= Referenced;
             // In choose mode, can we promote to the class?
             if (m_mode == ModeEditChooseClass &&  dbItem && dbItem->isPromoted() && dbItem->extends() ==  m_promotableWidgetClassName)

@@ -46,6 +46,7 @@
 #define PROMOTIONMODEL_H
 
 #include <QtGui/QStandardItemModel>
+#include <QtCore/QMetaType>
 #include <QtCore/QSet>
 
 QT_BEGIN_NAMESPACE
@@ -60,12 +61,20 @@ namespace qdesigner_internal {
         Q_OBJECT
 
     public:
+        struct ModelData {
+            bool isValid() const { return promotedItem != nullptr; }
+
+            QDesignerWidgetDataBaseItemInterface *baseItem{nullptr};
+            QDesignerWidgetDataBaseItemInterface *promotedItem{nullptr};
+            bool referenced{false};
+        };
+
         explicit PromotionModel(QDesignerFormEditorInterface *core);
 
         void updateFromWidgetDatabase();
 
-        // Return item at model index or 0.
-        QDesignerWidgetDataBaseItemInterface *databaseItemAt(const QModelIndex &, bool *referenced) const;
+        ModelData modelData(const QModelIndex &index) const;
+        ModelData modelData(const QStandardItem *item) const;
 
         QModelIndex indexOfClass(const QString &className) const;
 
@@ -78,13 +87,13 @@ namespace qdesigner_internal {
 
     private:
         void initializeHeaders();
-        // Retrieve data base item of item or return 0.
-        QDesignerWidgetDataBaseItemInterface *databaseItem(const QStandardItem * item, bool *referenced) const;
 
         QDesignerFormEditorInterface *m_core;
     };
 } // namespace qdesigner_internal
 
 QT_END_NAMESPACE
+
+Q_DECLARE_METATYPE(qdesigner_internal::PromotionModel::ModelData)
 
 #endif // PROMOTIONMODEL_H
