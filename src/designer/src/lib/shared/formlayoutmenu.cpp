@@ -73,13 +73,11 @@ namespace qdesigner_internal {
 // Struct that describes a row of controls (descriptive label and control) to
 // be added to a form layout.
 struct FormLayoutRow {
-    FormLayoutRow() : buddy(false) {}
-
     QString labelName;
     QString labelText;
     QString fieldClassName;
     QString fieldName;
-    bool buddy;
+    bool buddy{false};
 };
 
 // A Dialog to edit a FormLayoutRow. Lets the user input a label text, label

@@ -44,11 +44,6 @@
 QT_BEGIN_NAMESPACE
 
 // ---------------- AppearanceOptions
-AppearanceOptions::AppearanceOptions() :
-     uiMode(DockedMode)
-{
-}
-
 bool AppearanceOptions::equals(const AppearanceOptions &rhs) const
 {
     return uiMode == rhs.uiMode && toolWindowFontSettings == rhs.toolWindowFontSettings;

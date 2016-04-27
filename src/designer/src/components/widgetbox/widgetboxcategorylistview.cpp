@@ -79,7 +79,7 @@ namespace qdesigner_internal {
 // Entry of the model list
 
 struct WidgetBoxCategoryEntry {
-    WidgetBoxCategoryEntry();
+    WidgetBoxCategoryEntry() = default;
     explicit WidgetBoxCategoryEntry(const QDesignerWidgetBoxInterface::Widget &widget,
                                     const QString &filter,
                                     const QIcon &icon,
@@ -90,14 +90,8 @@ struct WidgetBoxCategoryEntry {
     QString whatsThis;
     QString filter;
     QIcon icon;
-    bool editable;
+    bool editable{false};
 };
-
-
-WidgetBoxCategoryEntry::WidgetBoxCategoryEntry() :
-    editable(false)
-{
-}
 
 WidgetBoxCategoryEntry::WidgetBoxCategoryEntry(const QDesignerWidgetBoxInterface::Widget &w,
                                                const QString &filterIn,

@@ -67,7 +67,6 @@ struct ActionData {
         IconChanged = 0x8, CheckableChanged = 0x10, KeysequenceChanged = 0x20
     };
 
-    ActionData();
     // Returns a combination of ChangeMask flags
     unsigned compare(const  ActionData &rhs) const;
 
@@ -75,7 +74,7 @@ struct ActionData {
     QString name;
     QString toolTip;
     PropertySheetIconValue icon;
-    bool checkable;
+    bool checkable{false};
     PropertySheetKeySequenceValue keysequence;
 };
 

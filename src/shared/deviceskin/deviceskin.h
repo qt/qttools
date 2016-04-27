@@ -50,14 +50,13 @@ class QTextStream;
 
 // ------- Button Area
 struct DeviceSkinButtonArea {
-    DeviceSkinButtonArea();
     QString name;
-    int keyCode;
+    int keyCode{0};
     QPolygon area;
     QString text;
-    bool activeWhenClosed;
-    bool toggleArea;
-    bool toggleActiveArea;
+    bool activeWhenClosed{false};
+    bool toggleArea{false};
+    bool toggleActiveArea{false};
 };
 
 // -------- Parameters

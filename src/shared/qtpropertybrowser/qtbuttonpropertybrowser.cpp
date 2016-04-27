@@ -62,17 +62,15 @@ public:
 
     struct WidgetItem
     {
-        WidgetItem() : widget(0), label(0), widgetLabel(0),
-                button(0), container(0), layout(0), /*line(0), */parent(0), expanded(false) { }
-        QWidget *widget; // can be null
-        QLabel *label; // main label with property name
-        QLabel *widgetLabel; // label substitute showing the current value if there is no widget
-        QToolButton *button; // expandable button for items with children
-        QWidget *container; // container which is expanded when the button is clicked
-        QGridLayout *layout; // layout in container
-        WidgetItem *parent;
+        QWidget *widget{nullptr}; // can be null
+        QLabel *label{nullptr}; // main label with property name
+        QLabel *widgetLabel{nullptr}; // label substitute showing the current value if there is no widget
+        QToolButton *button{nullptr}; // expandable button for items with children
+        QWidget *container{nullptr}; // container which is expanded when the button is clicked
+        QGridLayout *layout{nullptr}; // layout in container
+        WidgetItem *parent{nullptr};
         QList<WidgetItem *> children;
-        bool expanded;
+        bool expanded{false};
     };
 private:
     void updateLater();

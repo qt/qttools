@@ -72,12 +72,6 @@ static QString msgImageNotLoaded(const QString &f)        {
 }
 
 // ------------ DeviceSkinButtonArea
-DeviceSkinButtonArea::DeviceSkinButtonArea() :
-    keyCode(0),
-    activeWhenClosed(0)
-{
-}
-
 QDebug &operator<<(QDebug &str, const DeviceSkinButtonArea &a)
 {
 

@@ -48,18 +48,16 @@ namespace qdesigner_internal {
 
 // Data structure containing form dialog data providing comparison
 struct FormWindowData {
-    FormWindowData();
-
     bool equals(const FormWindowData&) const;
 
     void fromFormWindow(FormWindowBase* fw);
     void applyToFormWindow(FormWindowBase* fw) const;
 
-    bool layoutDefaultEnabled;
-    int defaultMargin;
-    int defaultSpacing;
+    bool layoutDefaultEnabled{false};
+    int defaultMargin{0};
+    int defaultSpacing{0};
 
-    bool layoutFunctionsEnabled;
+    bool layoutFunctionsEnabled{false};
     QString marginFunction;
     QString spacingFunction;
 
@@ -69,7 +67,7 @@ struct FormWindowData {
 
     QStringList includeHints;
 
-    bool hasFormGrid;
+    bool hasFormGrid{false};
     Grid grid;
 };
 
@@ -84,15 +82,6 @@ QDebug operator<<(QDebug str, const  FormWindowData &d)
         << d.pixFunction << " Author=" << d.author << " Hints=" << d.includeHints
         << " Grid=" << d.hasFormGrid << d.grid.deltaX() << d.grid.deltaY() << '\n';
     return str;
-}
-
-FormWindowData::FormWindowData() :
-    layoutDefaultEnabled(false),
-    defaultMargin(0),
-    defaultSpacing(0),
-    layoutFunctionsEnabled(false),
-    hasFormGrid(false)
-{
 }
 
 bool FormWindowData::equals(const FormWindowData &rhs) const

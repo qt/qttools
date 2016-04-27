@@ -60,15 +60,13 @@ public:
 
     struct WidgetItem
     {
-        WidgetItem() : widget(0), label(0), widgetLabel(0),
-                groupBox(0), layout(0), line(0), parent(0) { }
-        QWidget *widget; // can be null
-        QLabel *label;
-        QLabel *widgetLabel;
-        QGroupBox *groupBox;
-        QGridLayout *layout;
-        QFrame *line;
-        WidgetItem *parent;
+        QWidget *widget{nullptr}; // can be null
+        QLabel *label{nullptr};
+        QLabel *widgetLabel{nullptr};
+        QGroupBox *groupBox{nullptr};
+        QGridLayout *layout{nullptr};
+        QFrame *line{nullptr};
+        WidgetItem *parent{nullptr};
         QList<WidgetItem *> children;
     };
 private:

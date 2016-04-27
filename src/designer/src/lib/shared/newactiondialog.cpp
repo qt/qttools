@@ -48,13 +48,6 @@
 QT_BEGIN_NAMESPACE
 
 namespace qdesigner_internal {
-// -------------------- ActionData
-
-ActionData::ActionData() :
-    checkable(false)
-{
-}
-
 // Returns a combination of ChangeMask flags
 unsigned ActionData::compare(const ActionData &rhs) const
 {

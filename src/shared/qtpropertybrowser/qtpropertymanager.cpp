@@ -583,11 +583,10 @@ public:
 
     struct Data
     {
-        Data() : val(0), minVal(-INT_MAX), maxVal(INT_MAX), singleStep(1) {}
-        int val;
-        int minVal;
-        int maxVal;
-        int singleStep;
+        int val{0};
+        int minVal{-INT_MAX};
+        int maxVal{INT_MAX};
+        int singleStep{1};
         int minimumValue() const { return minVal; }
         int maximumValue() const { return maxVal; }
         void setMinimumValue(int newMinVal) { setSimpleMinimumData(this, newMinVal); }
@@ -860,12 +859,11 @@ public:
 
     struct Data
     {
-        Data() : val(0), minVal(-DBL_MAX), maxVal(DBL_MAX), singleStep(1), decimals(2) {}
-        double val;
-        double minVal;
-        double maxVal;
-        double singleStep;
-        int decimals;
+        double val{0};
+        double minVal{-DBL_MAX};
+        double maxVal{DBL_MAX};
+        double singleStep{1};
+        int decimals{2};
         double minimumValue() const { return minVal; }
         double maximumValue() const { return maxVal; }
         void setMinimumValue(double newMinVal) { setSimpleMinimumData(this, newMinVal); }
@@ -1543,11 +1541,9 @@ public:
 
     struct Data
     {
-        Data() : val(QDate::currentDate()), minVal(QDate(1752, 9, 14)),
-                maxVal(QDate(7999, 12, 31)) {}
-        QDate val;
-        QDate minVal;
-        QDate maxVal;
+        QDate val{QDate::currentDate()};
+        QDate minVal{QDate(1752, 9, 14)};
+        QDate maxVal{QDate(7999, 12, 31)};
         QDate minimumValue() const { return minVal; }
         QDate maximumValue() const { return maxVal; }
         void setMinimumValue(const QDate &newMinVal) { setSimpleMinimumData(this, newMinVal); }
@@ -2706,9 +2702,8 @@ public:
 
     struct Data
     {
-        Data() : decimals(2) {}
         QPointF val;
-        int decimals;
+        int decimals{2};
     };
 
     void slotDoubleChanged(QtProperty *property, double value);
@@ -2989,10 +2984,9 @@ public:
 
     struct Data
     {
-        Data() : val(QSize(0, 0)), minVal(QSize(0, 0)), maxVal(QSize(INT_MAX, INT_MAX)) {}
-        QSize val;
-        QSize minVal;
-        QSize maxVal;
+        QSize val{0, 0};
+        QSize minVal{0, 0};
+        QSize maxVal{INT_MAX, INT_MAX};
         QSize minimumValue() const { return minVal; }
         QSize maximumValue() const { return maxVal; }
         void setMinimumValue(const QSize &newMinVal) { setSizeMinimumData(this, newMinVal); }
@@ -3334,11 +3328,10 @@ public:
 
     struct Data
     {
-        Data() : val(QSizeF(0, 0)), minVal(QSizeF(0, 0)), maxVal(QSizeF(INT_MAX, INT_MAX)), decimals(2) {}
-        QSizeF val;
-        QSizeF minVal;
-        QSizeF maxVal;
-        int decimals;
+        QSizeF val{0, 0};
+        QSizeF minVal{0, 0};
+        QSizeF maxVal{INT_MAX, INT_MAX};
+        int decimals{2};
         QSizeF minimumValue() const { return minVal; }
         QSizeF maximumValue() const { return maxVal; }
         void setMinimumValue(const QSizeF &newMinVal) { setSizeMinimumData(this, newMinVal); }
@@ -3733,8 +3726,7 @@ public:
 
     struct Data
     {
-        Data() : val(0, 0, 0, 0) {}
-        QRect val;
+        QRect val{0, 0, 0, 0};
         QRect constraint;
     };
 
@@ -4142,10 +4134,9 @@ public:
 
     struct Data
     {
-        Data() : val(0, 0, 0, 0), decimals(2) {}
-        QRectF val;
+        QRectF val{0, 0, 0, 0};
         QRectF constraint;
-        int decimals;
+        int decimals{2};
     };
 
     typedef QMap<const QtProperty *, Data> PropertyValueMap;
@@ -4609,8 +4600,7 @@ public:
 
     struct Data
     {
-        Data() : val(-1) {}
-        int val;
+        int val{-1};
         QStringList enumNames;
         QMap<int, QIcon> enumIcons;
     };
@@ -4882,8 +4872,7 @@ public:
 
     struct Data
     {
-        Data() : val(-1) {}
-        int val;
+        int val{-1};
         QStringList flagNames;
     };
 

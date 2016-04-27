@@ -54,12 +54,11 @@ namespace Ui {
 
 /* AppearanceOptions data */
 struct AppearanceOptions {
-    AppearanceOptions();
     bool equals(const AppearanceOptions&) const;
     void toSettings(QDesignerSettings &) const;
     void fromSettings(const QDesignerSettings &);
 
-    UIMode uiMode;
+    UIMode uiMode{DockedMode};
     ToolWindowFontSettings toolWindowFontSettings;
 };
 

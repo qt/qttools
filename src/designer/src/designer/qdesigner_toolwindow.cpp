@@ -53,12 +53,6 @@ enum { debugToolWindow = 0 };
 QT_BEGIN_NAMESPACE
 
 // ---------------- QDesignerToolWindowFontSettings
-ToolWindowFontSettings::ToolWindowFontSettings() :
-    m_writingSystem(QFontDatabase::Any),
-    m_useFont(false)
-{
-}
-
 bool ToolWindowFontSettings::equals(const ToolWindowFontSettings &rhs) const
 {
     return m_useFont == rhs.m_useFont &&

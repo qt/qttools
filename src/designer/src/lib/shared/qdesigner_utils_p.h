@@ -204,7 +204,7 @@ struct QDESIGNER_SHARED_EXPORT PropertySheetEnumValue
     PropertySheetEnumValue(int v, const DesignerMetaEnum &me);
     PropertySheetEnumValue();
 
-    int value;
+    int value{0};
     DesignerMetaEnum metaEnum;
 };
 
@@ -215,7 +215,7 @@ struct QDESIGNER_SHARED_EXPORT PropertySheetFlagValue
     PropertySheetFlagValue(int v, const DesignerMetaFlags &mf);
     PropertySheetFlagValue();
 
-    int value;
+    int value{0};
     DesignerMetaFlags metaFlags;
 };
 

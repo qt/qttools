@@ -139,8 +139,6 @@ public:
 
     QToolBar *toolBarByName(const QString &toolBarName) const;
 
-    QtFullToolBarManagerPrivate();
-
     QMap<QString, QList<QAction *> > categoryToActions;
     QMap<QAction *, QString>         actionToCategory;
 
@@ -154,16 +152,8 @@ public:
     QMap<QToolBar *, QList<QAction *> > defaultToolBars;
     QList<QToolBar *> customToolBars;
 
-    QMainWindow *theMainWindow;
+    QMainWindow *theMainWindow{nullptr};
 };
-
-
-
-
-QtFullToolBarManagerPrivate::QtFullToolBarManagerPrivate()
-    : theMainWindow(0)
-{
-}
 
 QToolBar *QtFullToolBarManagerPrivate::toolBarWidgetAction(QAction *action) const
 {

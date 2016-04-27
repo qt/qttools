@@ -43,12 +43,11 @@
 QT_BEGIN_NAMESPACE
 
 struct ToolWindowFontSettings {
-    ToolWindowFontSettings();
     bool equals(const ToolWindowFontSettings &) const;
 
     QFont m_font;
-    QFontDatabase::WritingSystem m_writingSystem;
-    bool m_useFont;
+    QFontDatabase::WritingSystem m_writingSystem{QFontDatabase::Any};
+    bool m_useFont{false};
 };
 
 inline bool operator==(const ToolWindowFontSettings &tw1, const ToolWindowFontSettings &tw2)

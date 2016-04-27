@@ -177,8 +177,7 @@ private:
     int bitCount(int mask) const;
     struct FlagData
     {
-        FlagData() : val(0) {}
-        uint val;
+        uint val{0};
         DesignerFlagList flags;
         QList<uint> values;
     };

@@ -252,10 +252,8 @@ namespace qdesigner_internal
        metaEnum(me)
     {
     }
-    PropertySheetEnumValue::PropertySheetEnumValue() :
-       value(0)
-    {
-    }
+
+    PropertySheetEnumValue::PropertySheetEnumValue() = default;
 
     // ---------------- PropertySheetFlagValue
     PropertySheetFlagValue::PropertySheetFlagValue(int v, const DesignerMetaFlags &mf) :
@@ -264,10 +262,7 @@ namespace qdesigner_internal
     {
     }
 
-    PropertySheetFlagValue::PropertySheetFlagValue() :
-        value(0)
-    {
-    }
+    PropertySheetFlagValue::PropertySheetFlagValue() = default;
 
     // ---------------- PropertySheetPixmapValue
     PropertySheetPixmapValue::PropertySheetPixmapValue(const QString &path) : m_path(path)

@@ -44,12 +44,12 @@ QT_BEGIN_NAMESPACE
 namespace qdesigner_internal {
 
 struct Property {
-    Property() : m_sheet(0),m_id(-1) {}
+    Property() = default;
     Property(QDesignerPropertySheetExtension *sheet, int id)
         : m_sheet(sheet), m_id(id) {}
 
-    QDesignerPropertySheetExtension *m_sheet;
-    int m_id;
+    QDesignerPropertySheetExtension *m_sheet{nullptr};
+    int m_id{-1};
 };
 
 typedef QMap<int, Property> FakePropertyMap;

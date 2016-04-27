@@ -167,15 +167,11 @@ static void showHelp(QCommandLineParser &parser, const QString &errorMessage = Q
 
 struct Options
 {
-    Options()
-        : resourceDir(QLibraryInfo::location(QLibraryInfo::TranslationsPath))
-        , server(false), clientPort(0), enableInternalDynamicProperties(false) {}
-
     QStringList files;
-    QString resourceDir;
-    bool server;
-    quint16 clientPort;
-    bool enableInternalDynamicProperties;
+    QString resourceDir{QLibraryInfo::location(QLibraryInfo::TranslationsPath)};
+    bool server{false};
+    quint16 clientPort{0};
+    bool enableInternalDynamicProperties{false};
 };
 
 static inline QDesigner::ParseArgumentsResult

@@ -74,10 +74,8 @@ public:
 
     class Info {
     public:
-        inline Info() : visible(true) {}
-
         QString group;
-        bool visible;
+        bool visible{true};
     };
 
     typedef QHash<int, Info> InfoHash;
