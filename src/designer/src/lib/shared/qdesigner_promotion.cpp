@@ -290,6 +290,23 @@ namespace qdesigner_internal {
             *errorMessage = QCoreApplication::tr("The class %1 cannot be removed because it is still referenced.").arg(className);
             return false;
         }
+        // QTBUG-52963: Check for classes that specify the to-be-removed class as
+        // base class of a promoted class. This should not happen in the normal case
+        // as promoted classes cannot serve as base for further promotion. It is possible
+        // though if a class provided by a plugin (say Qt WebKit's QWebView) is used as
+        // a base class for a promoted widget B and the plugin is removed in the next
+        // launch. QWebView will then appear as promoted class itself and the promoted
+        // class B will depend on it. When removing QWebView, the base class of B will
+        // be changed to that of QWebView by the below code.
+        const PromotedClasses promotedList = promotedClasses();
+        for (PromotedClasses::const_iterator it = promotedList.constBegin(), end = promotedList.constEnd(); it != end; ++it) {
+            if (it->baseItem->name() == className) {
+                const QString extends = widgetDataBase->item(index)->extends();
+                qWarning().nospace() << "Warning: Promoted class " << it->promotedItem->name()
+                    << " extends " << className << ", changing its base class to " <<  extends << '.';
+                it->promotedItem->setExtends(extends);
+            }
+        }
         widgetDataBase->remove(index);
         return true;
     }
