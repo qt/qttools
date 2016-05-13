@@ -57,10 +57,10 @@ public:
 
     QDesignerFormWindowInterface *formWindow() const;
     void setBackground(QWidget *background) Q_DECL_OVERRIDE;
-    virtual void deleteSelected();
+    void deleteSelected() Q_DECL_OVERRIDE;
 
 public slots:
-    virtual void updateBackground();
+    void updateBackground() Q_DECL_OVERRIDE;
     void widgetRemoved(QWidget *w) Q_DECL_OVERRIDE;
     void autoBuddy();
 

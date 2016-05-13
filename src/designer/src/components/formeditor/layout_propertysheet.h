@@ -57,7 +57,7 @@ public:
     void setProperty(int index, const QVariant &value) Q_DECL_OVERRIDE;
     QVariant property(int index) const Q_DECL_OVERRIDE;
     bool reset(int index) Q_DECL_OVERRIDE;
-    void setChanged(int index, bool changed);
+    void setChanged(int index, bool changed) Q_DECL_OVERRIDE;
 
     static void stretchAttributesToDom(QDesignerFormEditorInterface *core, QLayout *lt, DomLayout *domLayout);
     static void markChangedStretchProperties(QDesignerFormEditorInterface *core, QLayout *lt, const DomLayout *domLayout);

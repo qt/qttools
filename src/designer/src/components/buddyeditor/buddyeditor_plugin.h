@@ -61,7 +61,7 @@ public:
 
     bool isInitialized() const Q_DECL_OVERRIDE;
     void initialize(QDesignerFormEditorInterface *core) Q_DECL_OVERRIDE;
-    QAction *action() const;
+    QAction *action() const Q_DECL_OVERRIDE;
 
     QDesignerFormEditorInterface *core() const Q_DECL_OVERRIDE;
 

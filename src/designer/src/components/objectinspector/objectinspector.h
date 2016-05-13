@@ -57,12 +57,12 @@ public:
 
     void getSelection(Selection &s) const Q_DECL_OVERRIDE;
     bool selectObject(QObject *o) Q_DECL_OVERRIDE;
-    virtual void clearSelection();
+    void clearSelection() Q_DECL_OVERRIDE;
 
-    void setFormWindow(QDesignerFormWindowInterface *formWindow);
+    void setFormWindow(QDesignerFormWindowInterface *formWindow) Q_DECL_OVERRIDE;
 
 public slots:
-    virtual void mainContainerChanged();
+    void mainContainerChanged() Q_DECL_OVERRIDE;
 
 private slots:
     void slotSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected);

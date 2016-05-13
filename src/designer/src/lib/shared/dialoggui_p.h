@@ -60,22 +60,22 @@ public:
     DialogGui();
     virtual ~DialogGui();
 
-    virtual QMessageBox::StandardButton
+    QMessageBox::StandardButton
         message(QWidget *parent, Message context, QMessageBox::Icon icon,
                 const QString &title, const QString &text, QMessageBox::StandardButtons buttons = QMessageBox::Ok,
-                QMessageBox::StandardButton defaultButton = QMessageBox::NoButton);
+                QMessageBox::StandardButton defaultButton = QMessageBox::NoButton) Q_DECL_OVERRIDE;
 
-    virtual QMessageBox::StandardButton
+    QMessageBox::StandardButton
         message(QWidget *parent, Message context, QMessageBox::Icon icon,
                 const QString &title, const QString &text, const QString &informativeText,
                 QMessageBox::StandardButtons buttons = QMessageBox::Ok,
-                QMessageBox::StandardButton defaultButton = QMessageBox::NoButton);
+                QMessageBox::StandardButton defaultButton = QMessageBox::NoButton) Q_DECL_OVERRIDE;
 
-    virtual QMessageBox::StandardButton
+    QMessageBox::StandardButton
         message(QWidget *parent, Message context, QMessageBox::Icon icon,
                 const QString &title, const QString &text, const QString &informativeText, const QString &detailedText,
                 QMessageBox::StandardButtons buttons = QMessageBox::Ok,
-                QMessageBox::StandardButton defaultButton = QMessageBox::NoButton);
+                QMessageBox::StandardButton defaultButton = QMessageBox::NoButton) Q_DECL_OVERRIDE;
 
     QString getExistingDirectory(QWidget *parent = 0, const QString &caption = QString(), const QString &dir = QString(), QFileDialog::Options options = QFileDialog::ShowDirsOnly) Q_DECL_OVERRIDE;
     QString getOpenFileName(QWidget *parent = 0, const QString &caption = QString(), const QString &dir = QString(), const QString &filter = QString(), QString *selectedFilter = 0, QFileDialog::Options options = 0) Q_DECL_OVERRIDE;

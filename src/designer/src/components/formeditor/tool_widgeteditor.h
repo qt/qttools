@@ -61,8 +61,8 @@ public:
     QWidget *editor() const Q_DECL_OVERRIDE;
     QAction *action() const Q_DECL_OVERRIDE;
 
-    virtual void activated();
-    virtual void deactivated();
+    void activated() Q_DECL_OVERRIDE;
+    void deactivated() Q_DECL_OVERRIDE;
 
     bool handleEvent(QWidget *widget, QWidget *managedWidget, QEvent *event) Q_DECL_OVERRIDE;
 

@@ -173,17 +173,17 @@ public:
     explicit ColorDelegate(QDesignerFormEditorInterface *core, QObject *parent = 0);
 
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
-                const QModelIndex &index) const;
+                          const QModelIndex &index) const Q_DECL_OVERRIDE;
 
-    void setEditorData(QWidget *ed, const QModelIndex &index) const;
+    void setEditorData(QWidget *ed, const QModelIndex &index) const Q_DECL_OVERRIDE;
     void setModelData(QWidget *ed, QAbstractItemModel *model,
-                const QModelIndex &index) const;
+                      const QModelIndex &index) const Q_DECL_OVERRIDE;
 
-    void updateEditorGeometry(QWidget *ed,
-                const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    void updateEditorGeometry(QWidget *ed, const QStyleOptionViewItem &option,
+                              const QModelIndex &index) const Q_DECL_OVERRIDE;
 
-    virtual void paint(QPainter *painter, const QStyleOptionViewItem &opt,
-                       const QModelIndex &index) const;
+    void paint(QPainter *painter, const QStyleOptionViewItem &opt,
+               const QModelIndex &index) const Q_DECL_OVERRIDE;
     QSize sizeHint(const QStyleOptionViewItem &opt, const QModelIndex &index) const Q_DECL_OVERRIDE;
 private:
     QDesignerFormEditorInterface *m_core;

@@ -100,7 +100,7 @@ public:
 
     QDesignerFormEditorInterface *core() const Q_DECL_OVERRIDE;
 
-    virtual QDesignerMetaDataBaseItemInterface *item(QObject *object) const { return metaDataBaseItem(object); }
+    QDesignerMetaDataBaseItemInterface *item(QObject *object) const Q_DECL_OVERRIDE { return metaDataBaseItem(object); }
     virtual MetaDataBaseItem *metaDataBaseItem(QObject *object) const;
     void add(QObject *object) Q_DECL_OVERRIDE;
     void remove(QObject *object) Q_DECL_OVERRIDE;

@@ -67,7 +67,7 @@ namespace qdesigner_internal {
         virtual bool addPromotedClass(const QString &baseClass,
                                       const QString &className,
                                       const QString &includeFile,
-                                      QString *errorMessage);
+                                      QString *errorMessage) Q_DECL_OVERRIDE;
 
         bool removePromotedClass(const QString &className, QString *errorMessage) Q_DECL_OVERRIDE;
 

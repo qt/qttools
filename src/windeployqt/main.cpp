@@ -978,10 +978,12 @@ static bool deployTranslations(const QString &sourcePath, quint64 usedQtModules,
 
 struct DeployResult
 {
-    DeployResult() : success(false), directlyUsedQtLibraries(0), usedQtLibraries(0), deployedQtLibraries(0) {}
+    DeployResult() : success(false), isDebug(false), directlyUsedQtLibraries(0), usedQtLibraries(0),
+        deployedQtLibraries(0) {}
     operator bool() const { return success; }
 
     bool success;
+    bool isDebug;
     quint64 directlyUsedQtLibraries;
     quint64 usedQtLibraries;
     quint64 deployedQtLibraries;
@@ -1117,16 +1119,16 @@ static bool updateLibrary(const QString &sourceFileName, const QString &targetDi
 // 'QtQuick/Controls' ==> 1, or 'QtQuick/Controls.2' ==> 2.
 static inline int quickControlsImportPath(const QString &ip)
 {
+    if (ip.contains(QLatin1String("Qt/labs/calendar"))
+        || ip.contains(QLatin1String("Qt/labs/folderlistmodel"))
+        || ip.contains(QLatin1String("Qt/labs/settings"))
+        || ip.contains(QLatin1String("QtQuick/Templates.2"))
+        || ip.contains(QLatin1String("QtQuick/Controls.2"))) {
+        return 2;
+    }
     if (ip.endsWith(QLatin1String("QtQuick/Dialogs")) || ip.contains(QLatin1String("QtQuick/Dialogs/"))
         || ip.contains(QLatin1String("QtQuick/Controls"))) {
         return 1; // Dialogs only in v1, so far; no version number on directory: v1.
-    }
-    if (ip.contains(QLatin1String("Qt/labs/calendar"))
-        || ip.contains(QLatin1String("Qt/labs/controls"))
-        || ip.contains(QLatin1String("Qt/labs/folderlistmodel"))
-        || ip.contains(QLatin1String("Qt/labs/settings"))
-        || ip.contains(QLatin1String("Qt/labs/templates"))) {
-        return 2;
     }
     return 0; // Non-controls import
 }
@@ -1164,6 +1166,7 @@ static DeployResult deploy(const Options &options,
     }
 
     const bool isDebug = options.debugDetection == Options::DebugDetectionAuto ? detectedDebug: options.debugDetection == Options::DebugDetectionForceDebug;
+    result.isDebug = isDebug;
     const DebugMatchMode debugMatchMode = isDebug ? MatchDebug : MatchRelease;
 
     // Determine application type, check Quick2 is used by looking at the
@@ -1467,16 +1470,18 @@ static bool deployWebProcess(const QMap<QString, QString> &qmakeVariables,
 }
 
 static bool deployWebEngineCore(const QMap<QString, QString> &qmakeVariables,
-                                const Options &options, QString *errorMessage)
+                                const Options &options, bool isDebug, QString *errorMessage)
 {
     static const char *installDataFiles[] = {"icudtl.dat",
                                              "qtwebengine_resources.pak",
                                              "qtwebengine_resources_100p.pak",
                                              "qtwebengine_resources_200p.pak"};
-
+    QByteArray webEngineProcessName(webEngineProcessC);
+    if (isDebug)
+        webEngineProcessName.append('d');
     if (optVerboseLevel)
-        std::wcout << "Deploying: " << webEngineProcessC << "...\n";
-    if (!deployWebProcess(qmakeVariables, webEngineProcessC, options, errorMessage))
+        std::wcout << "Deploying: " << webEngineProcessName.constData() << "...\n";
+    if (!deployWebProcess(qmakeVariables, webEngineProcessName, options, errorMessage))
         return false;
     const QString resourcesSubDir = QStringLiteral("/resources");
     const QString resourcesSourceDir
@@ -1583,7 +1588,7 @@ int main(int argc, char **argv)
     }
 
     if (result.deployedQtLibraries & QtWebEngineCoreModule) {
-        if (!deployWebEngineCore(qmakeVariables, options, &errorMessage)) {
+        if (!deployWebEngineCore(qmakeVariables, options, result.isDebug, &errorMessage)) {
             std::wcerr << errorMessage << '\n';
             return 1;
         }

@@ -181,11 +181,11 @@ public:
     LayoutHelper* helper() const                              { return m_helper; }
 
     // DecorationExtension
-    virtual int currentIndex() const                          { return m_currentIndex; }
+    int currentIndex() const Q_DECL_OVERRIDE                  { return m_currentIndex; }
 
-    virtual InsertMode currentInsertMode() const              { return m_currentInsertMode; }
+    InsertMode currentInsertMode() const Q_DECL_OVERRIDE      { return m_currentInsertMode; }
 
-    virtual QPair<int, int> currentCell() const               { return m_currentCell; }
+    QPair<int, int> currentCell() const  Q_DECL_OVERRIDE      { return m_currentCell; }
 
     int findItemAt(const QPoint &pos) const Q_DECL_OVERRIDE;
     int indexOf(QWidget *widget) const Q_DECL_OVERRIDE;
@@ -221,7 +221,7 @@ protected:
     virtual QRect extendedGeometry(int index) const = 0;
     virtual bool supportsIndicatorOrientation(Qt::Orientation indicatorOrientation) const = 0;
 
-    QRect itemInfo(int index) const;
+    QRect itemInfo(int index) const Q_DECL_OVERRIDE;
     QLayout *layout() const;
     QGridLayout *gridLayout() const;
     QWidget *widget() const              { return m_widget; }

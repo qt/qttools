@@ -81,7 +81,7 @@ public:
     QDesignerMenuBar(QWidget *parent = 0);
     virtual ~QDesignerMenuBar();
 
-    bool eventFilter(QObject *object, QEvent *event);
+    bool eventFilter(QObject *object, QEvent *event) Q_DECL_OVERRIDE;
 
     QDesignerFormWindowInterface *formWindow() const;
     QDesignerActionProviderExtension *actionProvider();

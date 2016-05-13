@@ -65,12 +65,12 @@ public:
     void addWidget(int cat_idx, const Widget &wgt) Q_DECL_OVERRIDE;
     void removeWidget(int cat_idx, int wgt_idx) Q_DECL_OVERRIDE;
 
-    void dropWidgets(const QList<QDesignerDnDItemInterface*> &item_list, const QPoint &global_mouse_pos);
+    void dropWidgets(const QList<QDesignerDnDItemInterface*> &item_list, const QPoint &global_mouse_pos) Q_DECL_OVERRIDE;
 
     void setFileName(const QString &file_name) Q_DECL_OVERRIDE;
     QString fileName() const Q_DECL_OVERRIDE;
-    virtual bool load();
-    virtual bool save();
+    bool load() Q_DECL_OVERRIDE;
+    bool save() Q_DECL_OVERRIDE;
 
     bool loadContents(const QString &contents) Q_DECL_OVERRIDE;
     QIcon iconForWidget(const QString &className, const QString &category = QString()) const Q_DECL_OVERRIDE;

@@ -460,6 +460,8 @@ STRING(final);
 STRING(friend);
 STRING(namespace);
 STRING(nullptr);
+STRING(Q_NULLPTR);
+STRING(NULL);
 STRING(operator);
 STRING(return);
 STRING(struct);
@@ -682,7 +684,13 @@ CppParser::TokenType CppParser::getToken()
             //qDebug() << "IDENT: " << yyWord;
 
             switch (yyWord.unicode()[0].unicode()) {
+            case 'N':
+                if (yyWord == strNULL)
+                    return Tok_Null;
+                break;
             case 'Q':
+                if (yyWord == strQ_NULLPTR)
+                    return Tok_Null;
                 if (yyWord == strQ_OBJECT)
                     return Tok_Q_OBJECT;
                 if (yyWord == strQ_SLOTS || yyWord == strQ_SIGNALS)
@@ -842,7 +850,7 @@ CppParser::TokenType CppParser::getToken()
 
                 forever {
                     if (yyCh == EOF || yyCh == '\n') {
-                        yyMsg() << "Unterminated C++ character\n";
+                        yyMsg() << qPrintable(LU::tr("Unterminated C++ character\n"));
                         break;
                     }
                     yyCh = getChar();
@@ -1861,7 +1869,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                     // Forward-declared class definitions can be namespaced.
                     NamespaceList nsl;
                     if (!fullyQualify(namespaces, quali, true, &nsl, 0)) {
-                        yyMsg() << "Ignoring definition of undeclared qualified class\n";
+                        yyMsg() << qPrintable(LU::tr("Ignoring definition of undeclared qualified class\n"));
                         break;
                     }
                     namespaceDepths.push(namespaces.count());

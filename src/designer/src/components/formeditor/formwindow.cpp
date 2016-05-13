@@ -1498,8 +1498,8 @@ public:
     void init(QWidgetList &l, const ArrowKeyOperation &op);
 
 protected:
-    virtual PropertyHelper *createPropertyHelper(QObject *o, SpecialProperty sp,
-                                                 QDesignerPropertySheetExtension *s, int i) const
+    PropertyHelper *createPropertyHelper(QObject *o, SpecialProperty sp,
+                                         QDesignerPropertySheetExtension *s, int i) const Q_DECL_OVERRIDE
         { return new ArrowKeyPropertyHelper(o, sp, s, i); }
     QVariant mergeValue(const QVariant &newValue) Q_DECL_OVERRIDE;
 };
@@ -1550,6 +1550,8 @@ void FormWindow::handleArrowKeyEvent(int key, Qt::KeyboardModifiers modifiers)
         if (!LayoutInfo::isWidgetLaidout(m_core, w))
             selection.append(w);
     }
+
+    simplifySelection(&selection);
 
     if (selection.isEmpty())
         return;
