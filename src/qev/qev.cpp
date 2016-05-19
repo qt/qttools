@@ -38,6 +38,8 @@
 
 QT_USE_NAMESPACE
 
+QIODevice *qout;
+
 class Widget : public QWidget
 {
 public:
@@ -46,7 +48,7 @@ public:
     bool event(QEvent *e) {
         if (e->type() == QEvent::ContextMenu)
             return false;
-        qDebug() << e;
+        QDebug(qout) << e << endl;
         return QWidget::event(e);
     }
 };
@@ -55,6 +57,11 @@ public:
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
+
+    QFile fout;
+    fout.open(stdout, QIODevice::WriteOnly);
+    qout = &fout;
+
     Widget w;
     w.show();
     return app.exec();

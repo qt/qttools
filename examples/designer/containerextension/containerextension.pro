@@ -3,6 +3,7 @@ QTDIR_build {
 PLUGIN_TYPE = designer
 PLUGIN_CLASS_NAME = MultiPageWidgetPlugin
 load(qt_plugin)
+CONFIG += install_ok
 } else {
 # Public example:
 

@@ -4,7 +4,7 @@ project                 = QtUiTools
 description             = Qt UI Tools Reference Documentation
 version                 = $QT_VERSION
 
-examplesinstallpath     = qttools/uitools
+examplesinstallpath     = uitools
 
 qhp.projects            = QtUiTools
 

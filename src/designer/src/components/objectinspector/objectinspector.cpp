@@ -63,7 +63,7 @@
 #include <QtCore/QItemSelectionModel>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QTreeView>
-#include <QtWidgets/QItemDelegate>
+#include <QtWidgets/QStyledItemDelegate>
 #include <QtGui/qevent.h>
 
 #include <QtCore/QVector>
@@ -119,7 +119,7 @@ static inline QPoint dropPointOffset(const qdesigner_internal::FormWindowBase *f
 
 namespace qdesigner_internal {
 // Delegate with object name validator for the object name column
-class ObjectInspectorDelegate : public QItemDelegate {
+class ObjectInspectorDelegate : public QStyledItemDelegate {
 public:
     explicit ObjectInspectorDelegate(QObject *parent = 0);
 
@@ -127,14 +127,14 @@ public:
 };
 
 ObjectInspectorDelegate::ObjectInspectorDelegate(QObject *parent) :
-    QItemDelegate(parent)
+    QStyledItemDelegate(parent)
 {
 }
 
 QWidget *ObjectInspectorDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem & option, const QModelIndex &index) const
 {
     if (index.column() != ObjectInspectorModel::ObjectNameColumn)
-        return QItemDelegate::createEditor(parent, option, index);
+        return QStyledItemDelegate::createEditor(parent, option, index);
     // Object name editor
     const bool isMainContainer = !index.parent().isValid();
     return new TextPropertyEditor(parent, TextPropertyEditor::EmbeddingTreeView,
@@ -249,6 +249,7 @@ ObjectInspector::ObjectInspectorPrivate::ObjectInspectorPrivate(QDesignerFormEdi
     m_treeView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     m_treeView->header()->setSectionResizeMode(1, QHeaderView::Stretch);
     m_treeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    m_treeView->setSelectionBehavior(QAbstractItemView::SelectRows);
     m_treeView->setAlternatingRowColors(true);
     m_treeView->setTextElideMode (Qt::ElideMiddle);
 
