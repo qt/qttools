@@ -102,6 +102,28 @@ static bool hasFormPreview(const QString &fileName)
       || fileName.endsWith(QLatin1String(".jui"));
 }
 
+static QString leadingWhitespace(const QString &str)
+{
+    int i = 0;
+    for (; i < str.size(); i++) {
+        if (!str[i].isSpace()) {
+            break;
+        }
+    }
+    return str.left(i);
+}
+
+static QString trailingWhitespace(const QString &str)
+{
+    int i = str.size();
+    while (--i >= 0) {
+        if (!str[i].isSpace()) {
+            break;
+        }
+    }
+    return str.mid(i + 1);
+}
+
 static Ending ending(QString str, QLocale::Language lang)
 {
     str = str.simplified();
@@ -1422,6 +1444,7 @@ void MainWindow::updateCaption()
     m_ui.actionCloseAll->setEnabled(enable);
     m_ui.actionPrint->setEnabled(enable);
     m_ui.actionAccelerators->setEnabled(enable);
+    m_ui.actionSurroundingWhitespace->setEnabled(enable);
     m_ui.actionEndingPunctuation->setEnabled(enable);
     m_ui.actionPhraseMatches->setEnabled(enable);
     m_ui.actionPlaceMarkerMatches->setEnabled(enable);
@@ -1815,6 +1838,7 @@ void MainWindow::setupMenuBar()
     m_ui.actionNext->setIcon(QIcon(prefix + QStringLiteral("/next.png")));
     m_ui.actionNextUnfinished->setIcon(QIcon(prefix + QStringLiteral("/nextunfinished.png")));
     m_ui.actionPhraseMatches->setIcon(QIcon(prefix + QStringLiteral("/phrase.png")));
+    m_ui.actionSurroundingWhitespace->setIcon(QIcon(prefix + QStringLiteral("/surroundingwhitespace.png")));
     m_ui.actionEndingPunctuation->setIcon(QIcon(prefix + QStringLiteral("/punctuation.png")));
     m_ui.actionPrev->setIcon(QIcon(prefix + QStringLiteral("/prev.png")));
     m_ui.actionPrevUnfinished->setIcon(QIcon(prefix + QStringLiteral("/prevunfinished.png")));
@@ -1886,6 +1910,7 @@ void MainWindow::setupMenuBar()
 
     // Validation menu
     connect(m_ui.actionAccelerators, SIGNAL(triggered()), this, SLOT(revalidate()));
+    connect(m_ui.actionSurroundingWhitespace, SIGNAL(triggered()), this, SLOT(revalidate()));
     connect(m_ui.actionEndingPunctuation, SIGNAL(triggered()), this, SLOT(revalidate()));
     connect(m_ui.actionPhraseMatches, SIGNAL(triggered()), this, SLOT(revalidate()));
     connect(m_ui.actionPlaceMarkerMatches, SIGNAL(triggered()), this, SLOT(revalidate()));
@@ -2159,6 +2184,7 @@ void MainWindow::setupToolBars()
     translationst->addAction(m_ui.actionDoneAndNext);
 
     validationt->addAction(m_ui.actionAccelerators);
+    validationt->addAction(m_ui.actionSurroundingWhitespace);
     validationt->addAction(m_ui.actionEndingPunctuation);
     validationt->addAction(m_ui.actionPhraseMatches);
     validationt->addAction(m_ui.actionPlaceMarkerMatches);
@@ -2437,6 +2463,19 @@ void MainWindow::updateDanger(const MultiDataIndex &index, bool verbose)
                     danger = true;
                 }
             }
+            if (m_ui.actionSurroundingWhitespace->isChecked()) {
+                bool whitespaceok = true;
+                for (int i = 0; i < translations.count() && whitespaceok; ++i) {
+                    whitespaceok &= (leadingWhitespace(source) == leadingWhitespace(translations[i]));
+                    whitespaceok &= (trailingWhitespace(source) == trailingWhitespace(translations[i]));
+                }
+
+                if (!whitespaceok) {
+                    if (verbose)
+                        m_errorsView->addError(mi, ErrorsView::SurroundingWhitespaceDiffers);
+                    danger = true;
+                }
+            }
             if (m_ui.actionEndingPunctuation->isChecked()) {
                 bool endingok = true;
                 for (int i = 0; i < translations.count() && endingok; ++i) {
@@ -2557,6 +2596,8 @@ void MainWindow::readConfig()
 
     m_ui.actionAccelerators->setChecked(
         config.value(settingPath("Validators/Accelerator"), true).toBool());
+    m_ui.actionSurroundingWhitespace->setChecked(
+        config.value(settingPath("Validators/SurroundingWhitespace"), true).toBool());
     m_ui.actionEndingPunctuation->setChecked(
         config.value(settingPath("Validators/EndingPunctuation"), true).toBool());
     m_ui.actionPhraseMatches->setChecked(
@@ -2588,6 +2629,8 @@ void MainWindow::writeConfig()
         saveGeometry());
     config.setValue(settingPath("Validators/Accelerator"),
         m_ui.actionAccelerators->isChecked());
+    config.setValue(settingPath("Validators/SurroundingWhitespace"),
+        m_ui.actionSurroundingWhitespace->isChecked());
     config.setValue(settingPath("Validators/EndingPunctuation"),
         m_ui.actionEndingPunctuation->isChecked());
     config.setValue(settingPath("Validators/PhraseMatch"),

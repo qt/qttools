@@ -82,6 +82,7 @@
      <string>V&amp;alidation</string>
     </property>
     <addaction name="actionAccelerators"/>
+    <addaction name="actionSurroundingWhitespace"/>
     <addaction name="actionEndingPunctuation"/>
     <addaction name="actionPhraseMatches"/>
     <addaction name="actionPlaceMarkerMatches"/>
@@ -504,6 +505,23 @@
    </property>
    <property name="whatsThis">
     <string>Toggle the validity check of accelerators, i.e. whether the number of ampersands in the source and translation text is the same. If the check fails, a message is shown in the warnings window.</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionSurroundingWhitespace">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Surrounding &amp;Whitespace.</string>
+   </property>
+   <property name="toolTip">
+    <string>Toggle the validity check of surrounding whitespace.</string>
+   </property>
+   <property name="whatsThis">
+    <string>Toggle the validity check of surrounding whitespace. If the check fails, a message is shown in the warnings window.</string>
    </property>
    <property name="menuRole">
     <enum>QAction::NoRole</enum>
