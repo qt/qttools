@@ -339,17 +339,18 @@ void FormMultiWidget::updateLayout()
         layoutForPlusButtons->setMargin(0);
         for (int i = 0; i < m_plusButtons.count(); ++i)
             layoutForPlusButtons->addWidget(m_plusButtons.at(i), Qt::AlignTop);
-        layout->addLayout(layoutForPlusButtons, 1, 0);
+        layout->addLayout(layoutForPlusButtons, 1, 0, Qt::AlignTop);
 
+        const int minimumRowHeight = m_plusButtons.at(0)->sizeHint().height() / 2.0;
         QGridLayout *layoutForLabels = new QGridLayout;
         layoutForLabels->setMargin(0);
-        layoutForLabels->setRowMinimumHeight(0, m_plusButtons.at(0)->height()/2.0);
+        layoutForLabels->setRowMinimumHeight(0, minimumRowHeight);
         for (int j = 0; j < m_editors.count(); ++j) {
             layoutForLabels->addWidget(m_editors.at(j), 1 + j, 0, Qt::AlignVCenter);
             layoutForLabels->addWidget(m_minusButtons.at(j), 1 + j, 1, Qt::AlignVCenter);
         }
-        layoutForLabels->setRowMinimumHeight(m_editors.count() + 1, m_plusButtons.at(0)->height()/2.0);
-        layout->addLayout(layoutForLabels, 1, 1);
+        layoutForLabels->setRowMinimumHeight(m_editors.count() + 1, minimumRowHeight);
+        layout->addLayout(layoutForLabels, 1, 1, Qt::AlignTop);
     } else {
         for (int k = 0; k < m_editors.count(); ++k)
             layout->addWidget(m_editors.at(k), 1 + k, 0, Qt::AlignVCenter);
