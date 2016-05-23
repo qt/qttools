@@ -777,7 +777,7 @@ void ClangCodeParser::parseHeaderFile(const Location & /*location*/, const QStri
     allHeaders_.insert(fi.canonicalFilePath());
 }
 
-
+#define INCLUDE_PRIVATE_HEADERS
 /*!
   Get ready to parse the C++ cpp file identified by \a filePath
   and add its parsed contents to the database. \a location is
@@ -832,6 +832,9 @@ void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QStrin
         if (pchFileDir_->isValid()) {
             const QByteArray module = qdb_->primaryTreeRoot()->tree()->camelCaseModuleName().toUtf8();
             QByteArray header;
+#ifdef INCLUDE_PRIVATE_HEADERS
+            QByteArray privateHeaderDir;
+#endif
             // Find the path to the module's header (e.g. QtGui/QtGui) to be used
             // as pre-compiled header
             for (const auto &p : qAsConst(includePaths_)) {
@@ -843,6 +846,20 @@ void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QStrin
                     }
                 }
             }
+#ifdef INCLUDE_PRIVATE_HEADERS
+            // Find the path to the module's private header directory (e.g.
+            // include/QtGui/5.8.0/QtGui/private) to use for including all
+            // the private headers in the PCH.
+            for (const auto &p : qAsConst(includePaths_)) {
+                if (p.endsWith(module)) {
+                    QByteArray candidate = p + "/private";
+                    if (QFile::exists(QString::fromUtf8(candidate))) {
+                        privateHeaderDir = candidate;
+                        break;
+                    }
+                }
+            }
+#endif
             if (header.isEmpty()) {
                 QByteArray installDocDir = Config::installDir.toUtf8();
                 const QByteArray candidate = installDocDir + "/../include/" + module + "/" + module;
@@ -855,8 +872,35 @@ void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QStrin
             } else {
                 args.push_back("-xc++");
                 CXTranslationUnit tu;
-                CXErrorCode err = clang_parseTranslationUnit2(
-                    index, header.constData(), args.data(), args.size(), nullptr, 0,
+#ifdef INCLUDE_PRIVATE_HEADERS
+                QString tmpHeader = pchFileDir_->path() + "/" + module;
+                if (QFile::copy(header, tmpHeader) && !privateHeaderDir.isEmpty()) {
+                    privateHeaderDir = QDir::cleanPath(privateHeaderDir.constData()).toLatin1();
+                    const char *const headerPath = privateHeaderDir.constData();
+                    const QStringList pheaders = QDir(headerPath).entryList();
+                    QFile tmpHeaderFile(tmpHeader);
+                    if (tmpHeaderFile.open(QIODevice::Text | QIODevice::Append)) {
+                        for (const QString &phead : pheaders) {
+                            if (phead.endsWith("_p.h")) {
+                                QByteArray entry;
+                                entry = "#include \"";
+                                entry += headerPath;
+                                entry += QChar('/');
+                                entry += phead;
+                                entry += "\"\n";
+                                tmpHeaderFile.write(entry);
+                            }
+                        }
+                    }
+                }
+#endif
+                CXErrorCode err = clang_parseTranslationUnit2(index,
+#ifdef INCLUDE_PRIVATE_HEADERS
+                    tmpHeader.toLatin1().data(),
+#else
+                    header.constData(),
+#endif
+                    args.data(), args.size(), nullptr, 0,
                     flags | CXTranslationUnit_ForSerialization, &tu);
                 if (!err && tu) {
                     pchName_ = pchFileDir_->path().toUtf8() + "/" + module + ".pch";
@@ -874,7 +918,13 @@ void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QStrin
                     clang_disposeTranslationUnit(tu);
                 } else {
                     pchFileDir_->remove();
-                    qWarning() << "Could not create PCH file for " << header << " error code:" << err;
+                    qWarning() << "Could not create PCH file for "
+#ifdef INCLUDE_PRIVATE_HEADERS
+                               << tmpHeader
+#else
+                               << header
+#endif
+                               << " error code:" << err;
                 }
                 args.pop_back(); // remove the "-xc++";
             }
