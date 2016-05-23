@@ -2533,7 +2533,8 @@ void MainWindow::updateDanger(const MultiDataIndex &index, bool verbose)
                 if (m->message().isPlural()) {
                     for (int i = 0; i < numTranslations; ++i)
                         if (m_dataModel->model(mi)->countRefNeeds().at(i)
-                            && !translations[i].contains(QLatin1String("%n"))) {
+                            && !(translations[i].contains(QLatin1String("%n"))
+                            || translations[i].contains(QLatin1String("%Ln")))) {
                             if (verbose)
                                 m_errorsView->addError(mi, ErrorsView::NumerusMarkerMissing);
                             danger = true;

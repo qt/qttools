@@ -80,7 +80,7 @@ void ErrorsView::addError(int model, const ErrorType type, const QString &arg)
         addError(model, tr("Translation does not refer to the same place markers as in the source text."));
         break;
       case NumerusMarkerMissing:
-        addError(model, tr("Translation does not contain the necessary %n place marker."));
+        addError(model, tr("Translation does not contain the necessary %n/%Ln place marker."));
         break;
       default:
         addError(model, tr("Unknown error"));
