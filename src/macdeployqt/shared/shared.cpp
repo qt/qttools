@@ -281,7 +281,7 @@ FrameworkInfo parseOtoolLibraryLine(const QString &line, const QString &appBundl
 
         if (state == QtPath) {
             // Check for library name part
-            if (part < parts.count() && parts.at(part).contains(".dylib ")) {
+            if (part < parts.count() && parts.at(part).contains(".dylib")) {
                 info.frameworkDirectory += "/" + (qtPath + currentPart + "/").simplified();
                 state = DylibName;
                 continue;
@@ -290,16 +290,23 @@ FrameworkInfo parseOtoolLibraryLine(const QString &line, const QString &appBundl
                 state = FrameworkName;
                 continue;
             } else if (trimmed.startsWith("/") == false) {      // If the line does not contain a full path, the app is using a binary Qt package.
+                QStringList partsCopy = parts;
+                partsCopy.removeLast();
                 if (currentPart.contains(".framework")) {
-                    info.frameworkDirectory = "/Library/Frameworks/";
+                    info.frameworkDirectory = "/Library/Frameworks/" + partsCopy.join("/");
+                    if (!info.frameworkDirectory.endsWith("/"))
+                        info.frameworkDirectory += "/";
                     state = FrameworkName;
-                } else {
-                    info.frameworkDirectory = "/usr/lib/";
+                    --part;
+                    continue;
+                } else if (currentPart.contains(".dylib")) {
+                    info.frameworkDirectory = "/usr/lib/" + partsCopy.join("/");
+                    if (!info.frameworkDirectory.endsWith("/"))
+                        info.frameworkDirectory += "/";
                     state = DylibName;
+                    --part;
+                    continue;
                 }
-
-                --part;
-                continue;
             }
             qtPath += (currentPart + "/");
 
@@ -343,9 +350,12 @@ FrameworkInfo parseOtoolLibraryLine(const QString &line, const QString &appBundl
         }
     }
 
-    info.installName = findDependencyInfo(info.sourceFilePath).installName;
-    if (info.installName.startsWith("@rpath/"))
-        info.deployedInstallName = info.installName;
+    if (!info.sourceFilePath.isEmpty() && QFile::exists(info.sourceFilePath)) {
+        info.installName = findDependencyInfo(info.sourceFilePath).installName;
+        if (info.installName.startsWith("@rpath/"))
+            info.deployedInstallName = info.installName;
+    }
+
     return info;
 }
 
