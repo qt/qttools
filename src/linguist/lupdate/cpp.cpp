@@ -1848,16 +1848,16 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                     }
                 }
 
-                if (yyTok == Tok_Colon) {
-                    // Skip any token until '{' since we might do things wrong if we find
-                    // a '::' token here.
+                if (yyTok == Tok_Colon || yyTok == Tok_Other) {
+                    // Skip any token until '{' or ';' since we might do things wrong if we find
+                    // a '::' or ':' token here.
                     do {
                         yyTok = getToken();
                         if (yyTok == Tok_Eof)
                             goto goteof;
                         if (yyTok == Tok_Cancel)
                             goto case_default;
-                    } while (yyTok != Tok_LeftBrace);
+                    } while (yyTok != Tok_LeftBrace && yyTok != Tok_Semicolon);
                 } else {
                     if (yyTok != Tok_LeftBrace) {
                         // Obviously a forward declaration. We skip those, as they

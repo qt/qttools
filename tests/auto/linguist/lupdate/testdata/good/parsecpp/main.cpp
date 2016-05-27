@@ -627,3 +627,20 @@ TemplateClass::TemplateClass(int) :
     tr("[unsupported] TemplateClass(int) out-of-class body");
 }
 
+
+
+// Related to QTBUG-53644, adapted from qglobal.h.
+// Namespace Private must be parsed correctly for TranslatedAfterPrivate to work.
+namespace Private {
+    template <class T> struct Class1 { T t; };
+    template <class T> struct Class1<T &> : Class1<T> {};
+    template <class T> struct Class2 { enum { Value = sizeof(T) }; };
+}  // namespace Private
+class TranslatedAfterPrivate
+{
+    Q_OBJECT
+    TranslatedAfterPrivate()
+    {
+        tr("Must be in context TranslatedAfterPrivate");
+    }
+};
