@@ -161,7 +161,7 @@ int main(int argc, char **argv)
                                     QCoreApplication::translate("qtpaths", "Find writable path for <type>."), QStringLiteral("type"));
     parser.addOption(writablePath);
 
-    QCommandLineOption locateDir(QStringList() << QStringLiteral("locate-dir") << QStringLiteral("locate-directory."),
+    QCommandLineOption locateDir(QStringList() << QStringLiteral("locate-dir") << QStringLiteral("locate-directory"),
                                  QCoreApplication::translate("qtpaths", "Locate directory [name] in <type>."), QStringLiteral("type"));
     parser.addOption(locateDir);
 

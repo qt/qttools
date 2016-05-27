@@ -179,6 +179,8 @@ protected:
 
     static QStringList exampleFiles;
     static QStringList exampleDirs;
+    static QSet<QString> excludeDirs;
+    static QSet<QString> excludeFiles;
     static CppCodeParser* cppParser_;
     QString exampleNameFilter;
     QString exampleImageFilter;

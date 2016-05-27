@@ -516,3 +516,131 @@ void nullMacroInPlural()
     QObject::tr("%n NULL(s)", NULL, 3);
     QObject::tr("%n Q_NULLPTR(s)", Q_NULLPTR, 3);
 }
+
+
+
+// QTBUG-34128: lupdate ignores tr() calls in constructor if a member is
+// initialized with C++11 initializer list
+class ListInitializationClass : public NameSchpase::YetMoreFun, Gui::BaseClass
+{
+    Q_OBJECT
+
+    ListInitializationClass() :
+        NameSchpase::YetMoreFun(),
+        Gui::BaseClass{ },
+        a{ 0 },
+        b(1),
+        c(tr("Hello World"))
+    {
+        tr("ListInitializationClass in-class constructor");
+    }
+
+    ListInitializationClass(int a);
+
+    ListInitializationClass(int a, int b, int c);
+
+    int a;
+    int b;
+    QString c;
+};
+
+ListInitializationClass::ListInitializationClass(int a) :
+    b{ { 2, 3 }[a] }
+{
+    tr("ListInitializationClass out-of-class single member initializer");
+}
+
+ListInitializationClass::ListInitializationClass(int a, int b, int c) :
+    NameSchpase::YetMoreFun{ },
+    Gui::BaseClass(),
+    a{ 2 + (a/3) },
+    b(b),
+    c{ tr("%n item(s)", Q_NULLPTR, c) }
+{
+    tr("ListInitializationClass out-of-class multi member initializer");
+}
+
+
+
+// QTBUG-42166: lupdate is confused by C++11 lambdas in constructor initializer lists
+class LambdaMemberClass : public Gui::BaseClass
+{
+    Q_OBJECT
+
+    LambdaMemberClass() :
+        Gui::BaseClass(),
+        a{ [](){ std::cout << QObject::tr("Hello"); } },
+        b([](){ std::cout << "World\n"; })
+    {
+        tr("LambdaMemberClass in-class constructor");
+    }
+
+    LambdaMemberClass(void *);
+
+    std::function<void()> a;
+    std::function<void()> b;
+};
+
+LambdaMemberClass::LambdaMemberClass(void *) :
+    Gui::BaseClass{ },
+    a([](){ std::cout << QObject::tr("Hallo "); }),
+    b{ [](){ std::cout << "Welt\n"; } }
+{
+    tr("LambdaMemberClass out-of-class constructor");
+}
+
+
+
+// Template parameters in base class initialization
+class TemplateClass : QVarLengthArray<char, sizeof(std::size_t)>, std::vector<int>
+{
+    Q_DECLARE_TR_FUNCTIONS(TemplateClass)
+    QString member;
+
+public:
+    TemplateClass() :
+        QVarLengthArray<char, sizeof(std::size_t)>(),
+        std::vector<int>(3),
+        member(tr("TemplateClass() in-class member initialization"))
+    {
+        tr("TemplateClass() in-class body");
+    }
+
+    TemplateClass(void *);
+    TemplateClass(int);
+};
+
+// supported: combination of parens in base class template parameter with direct initialization (parens)
+TemplateClass::TemplateClass(void *) :
+    QVarLengthArray<char, sizeof(std::size_t)>(),
+    std::vector<int>{ 1, 2 },
+    member{ tr("TemplateClass(void *) out-of-class member initialization") }
+{
+    tr("TemplateClass(void *) out-of-class body");
+}
+
+// not supported: combination of parens in base class template parameter with list initialization (braces)
+TemplateClass::TemplateClass(int) :
+    QVarLengthArray<char, sizeof(std::size_t)>{ 3, 4, 5 },
+    member(tr("[unsupported] TemplateClass(int) out-of-class member initialization"))
+{
+    tr("[unsupported] TemplateClass(int) out-of-class body");
+}
+
+
+
+// Related to QTBUG-53644, adapted from qglobal.h.
+// Namespace Private must be parsed correctly for TranslatedAfterPrivate to work.
+namespace Private {
+    template <class T> struct Class1 { T t; };
+    template <class T> struct Class1<T &> : Class1<T> {};
+    template <class T> struct Class2 { enum { Value = sizeof(T) }; };
+}  // namespace Private
+class TranslatedAfterPrivate
+{
+    Q_OBJECT
+    TranslatedAfterPrivate()
+    {
+        tr("Must be in context TranslatedAfterPrivate");
+    }
+};

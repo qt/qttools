@@ -88,7 +88,7 @@ QDesigner::QDesigner(int &argc, char **argv)
     setApplicationName(QLatin1String(designerApplicationName));
     QDesignerComponents::initializeResources();
 
-#ifndef Q_OS_MAC
+#if !defined(Q_OS_OSX) && !defined(Q_OS_WIN)
     setWindowIcon(QIcon(QStringLiteral(":/qt-project.org/designer/images/designer.png")));
 #endif
 }

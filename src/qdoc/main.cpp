@@ -365,30 +365,25 @@ static void processQdocconfFile(const QString &fileName)
                                                      + Config::dot
                                                      + CONFIG_LANDINGPAGE));
 
-    QSet<QString> excludedDirs;
-    QSet<QString> excludedFiles;
-    QStringList excludedDirsList;
-    QStringList excludedFilesList;
+    QSet<QString> excludedDirs = QSet<QString>::fromList(config.getCanonicalPathList(CONFIG_EXCLUDEDIRS));
+    QSet<QString> excludedFiles = QSet<QString>::fromList(config.getCanonicalPathList(CONFIG_EXCLUDEFILES));
+
+    Generator::debug("Adding doc/image dirs found in exampledirs to imagedirs");
+    QSet<QString> exampleImageDirs;
+    QStringList exampleImageList = config.getExampleImageFiles(excludedDirs, excludedFiles);
+    for (int i = 0; i < exampleImageList.size(); ++i) {
+        if (exampleImageList[i].contains("doc/images")) {
+            QString t = exampleImageList[i].left(exampleImageList[i].lastIndexOf("doc/images") + 10);
+            if (!exampleImageDirs.contains(t)) {
+                exampleImageDirs.insert(t);
+            }
+        }
+    }
+    Generator::augmentImageDirs(exampleImageDirs);
 
     if (!Generator::singleExec() || !Generator::generating()) {
         QStringList headerList;
         QStringList sourceList;
-
-        Generator::debug("Reading excludedirs");
-        excludedDirsList = config.getCanonicalPathList(CONFIG_EXCLUDEDIRS);
-        foreach (const QString &excludeDir, excludedDirsList) {
-            QString p = QDir::fromNativeSeparators(excludeDir);
-            QDir tmp(p);
-            if (tmp.exists())
-                excludedDirs.insert(p);
-        }
-
-        Generator::debug("Reading excludefiles");
-        excludedFilesList = config.getCanonicalPathList(CONFIG_EXCLUDEFILES);
-        foreach (const QString& excludeFile, excludedFilesList) {
-            QString p = QDir::fromNativeSeparators(excludeFile);
-            excludedFiles.insert(p);
-        }
 
         Generator::debug("Reading headerdirs");
         headerList = config.getAllFiles(CONFIG_HEADERS,CONFIG_HEADERDIRS,excludedDirs,excludedFiles);
@@ -430,20 +425,6 @@ static void processQdocconfFile(const QString &fileName)
                 sourceFileNames.insert(t,t);
             }
         }
-
-        Generator::debug("Adding doc/image dirs found in exampledirs to imagedirs");
-        QSet<QString> exampleImageDirs;
-        QStringList exampleImageList = config.getExampleImageFiles(excludedDirs, excludedFiles);
-        for (int i=0; i<exampleImageList.size(); ++i) {
-            if (exampleImageList[i].contains("doc/images")) {
-                QString t = exampleImageList[i].left(exampleImageList[i].lastIndexOf("doc/images")+10);
-                if (!exampleImageDirs.contains(t)) {
-                    exampleImageDirs.insert(t);
-                }
-            }
-        }
-        Generator::augmentImageDirs(exampleImageDirs);
-
         /*
           Parse each header file in the set using the appropriate parser and add it
           to the big tree.
@@ -504,34 +485,6 @@ static void processQdocconfFile(const QString &fileName)
         qdb->resolveIssues();
     }
     else {
-        Generator::debug("Reading excludedirs");
-        excludedDirsList = config.getCanonicalPathList(CONFIG_EXCLUDEDIRS);
-        foreach (const QString &excludeDir, excludedDirsList) {
-            QString p = QDir::fromNativeSeparators(excludeDir);
-            QDir tmp(p);
-            if (tmp.exists())
-                excludedDirs.insert(p);
-        }
-
-        Generator::debug("Reading excludefiles");
-        excludedFilesList = config.getCanonicalPathList(CONFIG_EXCLUDEFILES);
-        foreach (const QString& excludeFile, excludedFilesList) {
-            QString p = QDir::fromNativeSeparators(excludeFile);
-            excludedFiles.insert(p);
-        }
-
-        Generator::debug("Adding doc/image dirs found in exampledirs to imagedirs");
-        QSet<QString> exampleImageDirs;
-        QStringList exampleImageList = config.getExampleImageFiles(excludedDirs, excludedFiles);
-        for (int i=0; i<exampleImageList.size(); ++i) {
-            if (exampleImageList[i].contains("doc/images")) {
-                QString t = exampleImageList[i].left(exampleImageList[i].lastIndexOf("doc/images")+10);
-                if (!exampleImageDirs.contains(t)) {
-                    exampleImageDirs.insert(t);
-                }
-            }
-        }
-        Generator::augmentImageDirs(exampleImageDirs);
         qdb->resolveStuff();
     }
 

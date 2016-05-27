@@ -270,7 +270,7 @@ MainWindow::MainWindow()
     setUnifiedTitleAndToolBarOnMac(true);
     m_ui.setupUi(this);
 
-#ifndef Q_OS_MAC
+#if !defined(Q_OS_OSX) && !defined(Q_OS_WIN)
     setWindowIcon(QPixmap(QLatin1String(":/images/appicon.png") ));
 #endif
 

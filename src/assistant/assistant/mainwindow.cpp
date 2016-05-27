@@ -197,10 +197,13 @@ MainWindow::MainWindow(CmdLineParser *cmdLine, QWidget *parent)
             appIcon.addPixmap(pix);
         } while (reader.jumpToNextImage());
         qApp->setWindowIcon(appIcon);
-    } else {
+    }
+#if !defined(Q_OS_OSX) && !defined(Q_OS_WIN)
+    else {
         QIcon appIcon(QLatin1String(":/qt-project.org/assistant/images/assistant-128.png"));
         qApp->setWindowIcon(appIcon);
     }
+#endif
 
     QToolBar *toolBar = addToolBar(tr("Bookmark Toolbar"));
     toolBar->setObjectName(QLatin1String("Bookmark Toolbar"));

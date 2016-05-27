@@ -54,6 +54,8 @@ static bool inMacroCommand_ = false;
 static bool parsingHeaderFile_ = false;
 QStringList CppCodeParser::exampleFiles;
 QStringList CppCodeParser::exampleDirs;
+QSet<QString> CppCodeParser::excludeDirs;
+QSet<QString> CppCodeParser::excludeFiles;
 CppCodeParser* CppCodeParser::cppParser_ = 0;
 
 /*!
@@ -78,7 +80,7 @@ CppCodeParser::~CppCodeParser()
 /*!
   The constructor initializes a map of special node types
   for identifying important nodes. And it initializes
-  some filters for identifying certain kinds of files.
+  some filters for identifying and excluding certain kinds of files.
  */
 void CppCodeParser::initializeParser(const Config &config)
 {
@@ -99,6 +101,10 @@ void CppCodeParser::initializeParser(const Config &config)
     exampleDirs = config.getCanonicalPathList(CONFIG_EXAMPLEDIRS);
     QStringList exampleFilePatterns = config.getStringList(
                 CONFIG_EXAMPLES + Config::dot + CONFIG_FILEEXTENSIONS);
+
+    // Used for excluding dirs and files from the list of example files
+    excludeDirs = QSet<QString>::fromList(config.getCanonicalPathList(CONFIG_EXCLUDEDIRS));
+    excludeFiles = QSet<QString>::fromList(config.getCanonicalPathList(CONFIG_EXCLUDEFILES));
 
     if (!exampleFilePatterns.isEmpty())
         exampleNameFilter = exampleFilePatterns.join(' ');
@@ -121,6 +127,8 @@ void CppCodeParser::initializeParser(const Config &config)
 void CppCodeParser::terminateParser()
 {
     nodeTypeMap.clear();
+    excludeDirs.clear();
+    excludeFiles.clear();
     CodeParser::terminateParser();
 }
 
@@ -2643,9 +2651,9 @@ void CppCodeParser::createExampleFileNodes(DocumentNode *dn)
         sizeOfBoringPartOfName = sizeOfBoringPartOfName - 2;
     fullPath.truncate(fullPath.lastIndexOf('/'));
 
-    QStringList exampleFiles = Config::getFilesHere(fullPath,exampleNameFilter);
+    QStringList exampleFiles = Config::getFilesHere(fullPath, exampleNameFilter, Location(), excludeDirs, excludeFiles);
     QString imagesPath = fullPath + "/images";
-    QStringList imageFiles = Config::getFilesHere(imagesPath,exampleImageFilter);
+    QStringList imageFiles = Config::getFilesHere(imagesPath, exampleImageFilter, Location(), excludeDirs, excludeFiles);
     if (!exampleFiles.isEmpty()) {
         // move main.cpp and to the end, if it exists
         QString mainCpp;

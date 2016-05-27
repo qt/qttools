@@ -2,7 +2,7 @@ include($QT_INSTALL_DOCS/global/qt-module-defaults.qdocconf)
 
 project                 = QtAssistant
 description             = Qt Assistant Manual
-examplesinstallpath     = qttools/assistant
+examplesinstallpath     = assistant
 
 qhp.projects            = QtAssistant
 
