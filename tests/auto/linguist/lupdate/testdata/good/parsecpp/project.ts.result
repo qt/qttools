@@ -555,6 +555,14 @@ backslashed \ stuff.</source>
     </message>
 </context>
 <context>
+    <name>TranslatedAfterPrivate</name>
+    <message>
+        <location filename="main.cpp" line="644"/>
+        <source>Must be in context TranslatedAfterPrivate</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>YetAnotherTest</name>
     <message>
         <location filename="main.cpp" line="239"/>
