@@ -176,8 +176,9 @@ OtoolInfo findDependencyInfo(const QString &binaryPath)
     otool.start("otool", QStringList() << "-L" << binaryPath);
     otool.waitForFinished();
 
-    if (otool.exitCode() != 0) {
+    if (otool.exitStatus() != QProcess::NormalExit || otool.exitCode() != 0) {
         LogError() << otool.readAllStandardError();
+        return info;
     }
 
     static const QRegularExpression regexp(QStringLiteral(
