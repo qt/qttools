@@ -137,6 +137,7 @@ QDesignerMimeData::QDesignerMimeData(const QDesignerDnDItems &items, QDrag *drag
         const QPixmap widgetPixmap = deco->grab(QRect(0, 0, -1, -1));
 #ifdef TRANSPARENT_DRAG_PIXMAP
         QImage image(widgetPixmap.size(), QImage::Format_ARGB32);
+        image.setDevicePixelRatio(widgetPixmap.devicePixelRatio());
         image.fill(QColor(Qt::transparent).rgba());
         QPainter painter(&image);
         painter.drawPixmap(QPoint(0, 0), widgetPixmap);
@@ -153,13 +154,17 @@ QDesignerMimeData::QDesignerMimeData(const QDesignerDnDItems &items, QDrag *drag
         const QDesignerDnDItems::const_iterator cend = m_items.constEnd();
         QDesignerDnDItems::const_iterator it =m_items.constBegin();
         QRect unitedGeometry = (*it)->decoration()->geometry();
+        const qreal devicePixelRatio = (*it)->decoration()->devicePixelRatioF();
         for (++it; it != cend; ++it )
             unitedGeometry  = unitedGeometry .united((*it)->decoration()->geometry());
 
         // paint with offset. At the same time, create a mask bitmap, containing widget rectangles.
-        QImage image(unitedGeometry.size(), QImage::Format_ARGB32);
+        const QSize imageSize = (QSizeF(unitedGeometry.size()) * devicePixelRatio).toSize();
+        QImage image(imageSize, QImage::Format_ARGB32);
+        image.setDevicePixelRatio(devicePixelRatio);
         image.fill(QColor(Qt::transparent).rgba());
-        QBitmap mask(unitedGeometry.size());
+        QBitmap mask(imageSize);
+        mask.setDevicePixelRatio(devicePixelRatio);
         mask.clear();
         // paint with offset, determine action
         QPainter painter(&image);
@@ -170,7 +175,7 @@ QDesignerMimeData::QDesignerMimeData(const QDesignerDnDItems &items, QDrag *drag
             const QPixmap wp = w->grab(QRect(0, 0, -1, -1));
             const QPoint pos = w->pos() - decorationTopLeft;
             painter.drawPixmap(pos, wp);
-            maskPainter.fillRect(QRect(pos, wp.size()), Qt::color1);
+            maskPainter.fillRect(QRect(pos, w->size()), Qt::color1);
         }
         painter.end();
         maskPainter.end();
