@@ -57,6 +57,7 @@ int main(int argc, char **argv)
         qDebug() << "   -always-overwrite  : Copy files even if the target file exists";
         qDebug() << "   -codesign=<ident>  : Run codesign with the given identity on all executables";
         qDebug() << "   -appstore-compliant: Skip deployment of components that use private API";
+        qDebug() << "   -libpath=<path>    : Add the given path to the library search path";
         qDebug() << "";
         qDebug() << "macdeployqt takes an application bundle as input and makes it";
         qDebug() << "self-contained by copying in the Qt frameworks and plugins that";
@@ -90,6 +91,7 @@ int main(int argc, char **argv)
     bool useDebugLibs = false;
     extern bool runStripEnabled;
     extern bool alwaysOwerwriteEnabled;
+    extern QStringList librarySearchPath;
     QStringList additionalExecutables;
     bool qmldirArgumentUsed = false;
     QStringList qmlDirs;
@@ -136,6 +138,13 @@ int main(int argc, char **argv)
                 LogError() << "Missing qml directory path";
             else
                 qmlDirs << argument.mid(index+1);
+        } else if (argument.startsWith(QByteArray("-libpath"))) {
+            LogDebug() << "Argument found:" << argument;
+            int index = argument.indexOf('=');
+            if (index == -1)
+                LogError() << "Missing library search path";
+            else
+                librarySearchPath << argument.mid(index+1);
         } else if (argument == QByteArray("-always-overwrite")) {
             LogDebug() << "Argument found:" << argument;
             alwaysOwerwriteEnabled = true;

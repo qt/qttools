@@ -56,6 +56,7 @@
 bool runStripEnabled = true;
 bool alwaysOwerwriteEnabled = false;
 bool runCodesign = false;
+QStringList librarySearchPath;
 QString codesignIdentiy;
 bool appstoreCompliant = false;
 int logLevel = 1;
@@ -297,15 +298,26 @@ FrameworkInfo parseOtoolLibraryLine(const QString &line, const QString &appBundl
             } else if (trimmed.startsWith("/") == false) {      // If the line does not contain a full path, the app is using a binary Qt package.
                 QStringList partsCopy = parts;
                 partsCopy.removeLast();
+                foreach (QString path, librarySearchPath) {
+                    if (!path.endsWith("/"))
+                        path += '/';
+                    QString nameInPath = path + parts.join("/");
+                    if (QFile::exists(nameInPath)) {
+                        info.frameworkDirectory = path + partsCopy.join("/");
+                        break;
+                    }
+                }
                 if (currentPart.contains(".framework")) {
-                    info.frameworkDirectory = "/Library/Frameworks/" + partsCopy.join("/");
+                    if (info.frameworkDirectory.isEmpty())
+                        info.frameworkDirectory = "/Library/Frameworks/" + partsCopy.join("/");
                     if (!info.frameworkDirectory.endsWith("/"))
                         info.frameworkDirectory += "/";
                     state = FrameworkName;
                     --part;
                     continue;
                 } else if (currentPart.contains(".dylib")) {
-                    info.frameworkDirectory = "/usr/lib/" + partsCopy.join("/");
+                    if (info.frameworkDirectory.isEmpty())
+                        info.frameworkDirectory = "/usr/lib/" + partsCopy.join("/");
                     if (!info.frameworkDirectory.endsWith("/"))
                         info.frameworkDirectory += "/";
                     state = DylibName;
