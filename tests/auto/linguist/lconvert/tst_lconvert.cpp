@@ -313,6 +313,7 @@ void tst_lconvert::roundtrips_data()
     QTest::newRow("ts-xliff-ts (msgid)") << "msgid.ts" << tsXlfTs << noArgs;
 
     QTest::newRow("ts-po-ts (endless loop)") << "endless-po-loop.ts" << tsPoTs << noArgs;
+    QTest::newRow("ts-qm-ts (whitespace)") << "whitespace.ts" << tsQmTs << noArgs;
 }
 
 void tst_lconvert::roundtrips()

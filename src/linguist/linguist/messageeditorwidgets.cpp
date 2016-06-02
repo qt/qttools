@@ -45,6 +45,7 @@
 #include <QTextDocumentFragment>
 #include <QToolButton>
 #include <QVBoxLayout>
+#include <QtGui/private/qtextdocument_p.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -390,13 +391,34 @@ void FormMultiWidget::setTranslation(const QString &text, bool userAction)
         setHidden(text.isEmpty());
 }
 
+// Copied from QTextDocument::toPlainText() and modified to
+// not replace QChar::Nbsp with QLatin1Char(' ')
+QString toPlainText(const QString &text)
+{
+    QString txt = text;
+    QChar *uc = txt.data();
+    QChar *e = uc + txt.size();
+
+    for (; uc != e; ++uc) {
+        switch (uc->unicode()) {
+        case 0xfdd0: // QTextBeginningOfFrame
+        case 0xfdd1: // QTextEndOfFrame
+        case QChar::ParagraphSeparator:
+        case QChar::LineSeparator:
+            *uc = QLatin1Char('\n');
+            break;
+        }
+    }
+    return txt;
+}
+
 QString FormMultiWidget::getTranslation() const
 {
     QString ret;
     for (int i = 0; i < m_editors.count(); ++i) {
         if (i)
             ret += QChar(Translator::BinaryVariantSeparator);
-        ret += m_editors.at(i)->toPlainText();
+        ret += toPlainText(m_editors.at(i)->document()->docHandle()->plainText());
     }
     return ret;
 }

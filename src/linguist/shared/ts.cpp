@@ -445,7 +445,8 @@ static QString protect(const QString &str)
     QString result;
     result.reserve(str.length() * 12 / 10);
     for (int i = 0; i != str.size(); ++i) {
-        uint c = str.at(i).unicode();
+        const QChar ch = str[i];
+        uint c = ch.unicode();
         switch (c) {
         case '\"':
             result += QLatin1String("&quot;");
@@ -463,7 +464,7 @@ static QString protect(const QString &str)
             result += QLatin1String("&apos;");
             break;
         default:
-            if (c < 0x20 && c != '\r' && c != '\n' && c != '\t')
+            if ((c < 0x20 || (ch > 0x7f && ch.isSpace())) && c != '\r' && c != '\n' && c != '\t')
                 result += numericEntity(c);
             else // this also covers surrogates
                 result += QChar(c);
