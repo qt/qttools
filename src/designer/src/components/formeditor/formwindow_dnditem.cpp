@@ -53,7 +53,7 @@ static QWidget *decorationFromWidget(QWidget *w)
     QLabel *label = new QLabel(0, Qt::ToolTip);
     QPixmap pm = w->grab(QRect(0, 0, -1, -1));
     label->setPixmap(pm);
-    label->resize(pm.size());
+    label->resize((QSizeF(pm.size()) / pm.devicePixelRatio()).toSize());
 
     return label;
 }
