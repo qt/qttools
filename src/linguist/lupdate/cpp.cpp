@@ -255,9 +255,9 @@ private:
         const QString &extracomment, const QString &msgid, const TranslatorMessage::ExtraData &extra,
         bool plural);
 
-    void handleTr(QString &prefix);
-    void handleTranslate();
-    void handleTrId();
+    void handleTr(QString &prefix, bool plural);
+    void handleTranslate(bool plural);
+    void handleTrId(bool plural);
     void handleDeclareTrFunctions();
 
     void processInclude(const QString &file, ConversionData &cd,
@@ -1539,7 +1539,7 @@ void CppParser::recordMessage(int line, const QString &context, const QString &t
     tor->append(msg);
 }
 
-void CppParser::handleTr(QString &prefix)
+void CppParser::handleTr(QString &prefix, bool plural)
 {
     if (!sourcetext.isEmpty())
         yyMsg() << qPrintable(LU::tr("//% cannot be used with tr() / QT_TR_NOOP(). Ignoring\n"));
@@ -1547,7 +1547,6 @@ void CppParser::handleTr(QString &prefix)
     yyTok = getToken();
     if (matchString(&text) && !text.isEmpty()) {
         comment.clear();
-        bool plural = false;
 
         if (yyTok == Tok_RightParen) {
             // no comment
@@ -1643,7 +1642,7 @@ void CppParser::handleTr(QString &prefix)
     metaExpected = false;
 }
 
-void CppParser::handleTranslate()
+void CppParser::handleTranslate(bool plural)
 {
     if (!sourcetext.isEmpty())
         yyMsg() << qPrintable(LU::tr("//% cannot be used with translate() / QT_TRANSLATE_NOOP(). Ignoring\n"));
@@ -1654,7 +1653,6 @@ void CppParser::handleTranslate()
         && matchString(&text) && !text.isEmpty())
     {
         comment.clear();
-        bool plural = false;
         if (yyTok != Tok_RightParen) {
             // look for comment
             if (match(Tok_Comma) && matchStringOrNull(&comment)) {
@@ -1669,7 +1667,7 @@ void CppParser::handleTranslate()
                                 // so for simplicity we mark it as plural if
                                 // we know we have a comma instead of an
                                 // right parentheses.
-                                plural = match(Tok_Comma);
+                                plural |= match(Tok_Comma);
                             }
                         } else {
                             // This can be a QTranslator::translate("context",
@@ -1697,14 +1695,14 @@ void CppParser::handleTranslate()
     metaExpected = false;
 }
 
-void CppParser::handleTrId()
+void CppParser::handleTrId(bool plural)
 {
     if (!msgid.isEmpty())
         yyMsg() << qPrintable(LU::tr("//= cannot be used with qtTrId() / QT_TRID_NOOP(). Ignoring\n"));
     int line = yyLineNo;
     yyTok = getToken();
     if (matchString(&msgid) && !msgid.isEmpty()) {
-        bool plural = match(Tok_Comma);
+        plural |= match(Tok_Comma);
         recordMessage(line, QString(), sourcetext, QString(), extracomment,
                       msgid, extra, plural);
     }
@@ -2000,17 +1998,25 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
             }
             yyTok = getToken();
             if (yyTok == Tok_LeftParen) {
+                bool forcePlural = false;
                 switch (trFunctionAliasManager.trFunctionByName(yyWord)) {
                 case TrFunctionAliasManager::Function_Q_DECLARE_TR_FUNCTIONS:
                     handleDeclareTrFunctions();
                     break;
+                case TrFunctionAliasManager::Function_QT_TR_N_NOOP:
+                    forcePlural = true;
+                    Q_FALLTHROUGH();
                 case TrFunctionAliasManager::Function_tr:
                 case TrFunctionAliasManager::Function_trUtf8:
                 case TrFunctionAliasManager::Function_QT_TR_NOOP:
                 case TrFunctionAliasManager::Function_QT_TR_NOOP_UTF8:
                     if (tor)
-                        handleTr(prefix);
+                        handleTr(prefix, forcePlural);
                     break;
+                case TrFunctionAliasManager::Function_QT_TRANSLATE_N_NOOP:
+                case TrFunctionAliasManager::Function_QT_TRANSLATE_N_NOOP3:
+                    forcePlural = true;
+                    Q_FALLTHROUGH();
                 case TrFunctionAliasManager::Function_translate:
                 case TrFunctionAliasManager::Function_findMessage:
                 case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP:
@@ -2018,12 +2024,15 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                 case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP3:
                 case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP3_UTF8:
                     if (tor)
-                        handleTranslate();
+                        handleTranslate(forcePlural);
                     break;
+                case TrFunctionAliasManager::Function_QT_TRID_N_NOOP:
+                    forcePlural = true;
+                    Q_FALLTHROUGH();
                 case TrFunctionAliasManager::Function_qtTrId:
                 case TrFunctionAliasManager::Function_QT_TRID_NOOP:
                     if (tor)
-                        handleTrId();
+                        handleTrId(forcePlural);
                     break;
                 default:
                     goto notrfunc;

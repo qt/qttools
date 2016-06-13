@@ -671,3 +671,20 @@ class Class
 };
 
 }
+
+
+
+// test of translation for _N_ family
+static const char * const test_string_n1[] = {
+    QT_TRANSLATE_N_NOOP("scope", "string %n")
+};
+
+static const char * const test_string_n2[] = {
+    QT_TRANSLATE_N_NOOP3("scope", "string %n", "comment");
+};
+class testing {
+    Q_OBJECT
+    static const char * const test_string_n3[] = {
+        QT_TR_N_NOOP("%n test");
+    };
+};

@@ -633,5 +633,30 @@ backslashed \ stuff.</source>
         <source>string continuation on next line</source>
         <translation type="unfinished"></translation>
     </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="679"/>
+        <source>string %n</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.cpp" line="683"/>
+        <source>string %n</source>
+        <comment>comment</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+</context>
+<context>
+    <name>testing</name>
+    <message numerus="yes">
+        <location filename="main.cpp" line="688"/>
+        <source>%n test</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
 </context>
 </TS>

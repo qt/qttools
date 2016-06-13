@@ -77,6 +77,10 @@ bool loadQml(Translator &translator, const QString &filename, ConversionData &cd
 #define LUPDATE_FOR_EACH_TR_FUNCTION(UNARY_MACRO) \
     /* from cpp.cpp */ \
     UNARY_MACRO(Q_DECLARE_TR_FUNCTIONS) \
+    UNARY_MACRO(QT_TR_N_NOOP) \
+    UNARY_MACRO(QT_TRID_N_NOOP) \
+    UNARY_MACRO(QT_TRANSLATE_N_NOOP) \
+    UNARY_MACRO(QT_TRANSLATE_N_NOOP3) \
     UNARY_MACRO(QT_TR_NOOP) \
     UNARY_MACRO(QT_TRID_NOOP) \
     UNARY_MACRO(QT_TRANSLATE_NOOP) \
