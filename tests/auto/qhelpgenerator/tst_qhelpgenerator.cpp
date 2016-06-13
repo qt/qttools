@@ -46,6 +46,8 @@ class tst_QHelpGenerator : public QObject
 private slots:
     void initTestCase();
     void generateHelp();
+    // Check that two runs of the generator creates the same file twice
+    void generateTwice();
 
 private:
     void checkNamespace();
@@ -197,6 +199,37 @@ void tst_QHelpGenerator::checkMetaData()
     if (!m_query->next())
         QFAIL("Meta Data Error");
     QCOMPARE(m_query->value(0).toString(), QString("Digia Plc and/or its subsidiary(-ies)"));
+
+}
+
+void tst_QHelpGenerator::generateTwice()
+{
+    // defined in profile
+    QString path = QLatin1String(SRCDIR);
+
+    QString inputFile(path + "/data/test.qhp");
+    QHelpProjectData data;
+    if (!data.readData(inputFile))
+        QFAIL("Cannot read qhp file!");
+
+    QHelpGenerator generator1;
+    QHelpGenerator generator2;
+    QString outputFile1 = path + QLatin1String("/data/test1.qch");
+    QString outputFile2 = path + QLatin1String("/data/test2.qch");
+    QCOMPARE(generator1.generate(&data, outputFile1), true);
+    QCOMPARE(generator2.generate(&data, outputFile2), true);
+
+    QFile f1(outputFile1);
+    QFile f2(outputFile2);
+    QVERIFY(f1.open(QIODevice::ReadOnly));
+    QVERIFY(f2.open(QIODevice::ReadOnly));
+
+    QByteArray arr1 = f1.readAll();
+    QByteArray arr2 = f2.readAll();
+
+    QFile::remove(outputFile1);
+    QFile::remove(outputFile2);
+    QCOMPARE(arr1, arr2);
 }
 
 QTEST_MAIN(tst_QHelpGenerator)
