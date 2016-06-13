@@ -4604,7 +4604,9 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
         if (!tags.isEmpty()) {
             writer.writeStartElement("tags");
             bool wrote_one = false;
-            foreach (const QString &tag, tags) {
+            QStringList sortedTags = tags.toList();
+            sortedTags.sort();
+            foreach (const QString &tag, sortedTags) {
                 if (wrote_one)
                     writer.writeCharacters(",");
                 writer.writeCharacters(tag);

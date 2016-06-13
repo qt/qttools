@@ -46,6 +46,14 @@
 
 QT_BEGIN_NAMESPACE
 
+// helper for sorting Node's based on their name
+// once we can use C++11, this function can be moved
+// to where it is actually used inside as a lambda function.
+static bool nodeNameLessThan(const Node *first, const Node *second)
+{
+    return first->name() < second->name();
+}
+
 HelpProjectWriter::HelpProjectWriter(const Config &config,
                                      const QString &defaultFileName,
                                      Generator* g)
@@ -689,7 +697,9 @@ void HelpProjectWriter::generateProject(HelpProject &project)
     for (it = project.customFilters.constBegin(); it != project.customFilters.constEnd(); ++it) {
         writer.writeStartElement("customFilter");
         writer.writeAttribute("name", it.key());
-        foreach (const QString &filter, it.value())
+        QStringList sortedAttributes = it.value().toList();
+        sortedAttributes.sort();
+        foreach (const QString &filter, sortedAttributes)
             writer.writeTextElement("filterAttribute", filter);
         writer.writeEndElement(); // customFilter
     }
@@ -698,7 +708,9 @@ void HelpProjectWriter::generateProject(HelpProject &project)
     writer.writeStartElement("filterSection");
 
     // Write filterAttribute elements.
-    foreach (const QString &filterName, project.filterAttributes)
+    QStringList sortedFilterAttributes = project.filterAttributes.toList();
+    sortedFilterAttributes.sort();
+    foreach (const QString &filterName, sortedFilterAttributes)
         writer.writeTextElement("filterAttribute", filterName);
 
     writer.writeStartElement("toc");
@@ -816,7 +828,11 @@ void HelpProjectWriter::generateProject(HelpProject &project)
                 }
                 // No contents/nextpage links found, write all nodes unsorted
                 if (!contentsFound) {
-                    foreach (const Node *node, subproject.nodes)
+                    QList<const Node*> subnodes = subproject.nodes.values();
+
+                    std::sort(subnodes.begin(), subnodes.end(), nodeNameLessThan);
+
+                    foreach (const Node *node, subnodes)
                         writeNode(project, writer, node);
                 }
             }
@@ -832,6 +848,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
     writer.writeEndElement(); // toc
 
     writer.writeStartElement("keywords");
+    std::sort(project.keywords.begin(), project.keywords.end());
     foreach (const QStringList &details, project.keywords) {
         writer.writeStartElement("keyword");
         writer.writeAttribute("name", details[0]);
@@ -848,7 +865,9 @@ void HelpProjectWriter::generateProject(HelpProject &project)
     QSet<QString> files = QSet<QString>::fromList(gen_->outputFileNames());
     files.unite(project.files);
     files.unite(project.extraFiles);
-    foreach (const QString &usedFile, files) {
+    QStringList sortedFiles = files.toList();
+    sortedFiles.sort();
+    foreach (const QString &usedFile, sortedFiles) {
         if (!usedFile.isEmpty())
             writer.writeTextElement("file", usedFile);
     }

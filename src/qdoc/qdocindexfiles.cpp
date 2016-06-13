@@ -1018,7 +1018,11 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter& writer,
                     baseStrings.insert(n->fullName());
             }
             if (!baseStrings.isEmpty())
-                writer.writeAttribute("bases", QStringList(baseStrings.toList()).join(QLatin1Char(',')));
+            {
+                QStringList baseStringsAsList = baseStrings.toList();
+                baseStringsAsList.sort();
+                writer.writeAttribute("bases", baseStringsAsList.join(QLatin1Char(',')));
+            }
             if (!node->physicalModuleName().isEmpty())
                 writer.writeAttribute("module", node->physicalModuleName());
             if (!classNode->groupNames().isEmpty())
