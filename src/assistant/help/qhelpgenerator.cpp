@@ -555,8 +555,10 @@ bool QHelpGenerator::insertFiles(const QStringList &files, const QString &rootPa
         d->query->exec(QLatin1String("BEGIN"));
         QMap<int, QSet<int> >::const_iterator it = tmpFileFilterMap.constBegin();
         while (it != tmpFileFilterMap.constEnd()) {
-            QSet<int>::const_iterator si = it.value().constBegin();
-            while (si != it.value().constEnd()) {
+            QList<int> filterValues = it.value().toList();
+            std::sort(filterValues.begin(), filterValues.end());
+            QList<int>::const_iterator si = filterValues.constBegin();
+            while (si != filterValues.constEnd()) {
                 d->query->prepare(QLatin1String("INSERT INTO FileFilterTable "
                     "VALUES(?, ?)"));
                 d->query->bindValue(0, *si);
