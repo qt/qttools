@@ -338,6 +338,14 @@ public:
     static void initialize();
     static NodeType goal(const QString& t) { return goals_.value(t); }
 
+/*!
+  Returns \c true if the node \a n1 is less than node \a n2. The
+  comparison is performed by comparing properties of the nodes
+  in order of increasing complexity.
+*/
+    static bool nodeNameLessThan(const Node *first, const Node *second);
+
+
 protected:
     Node(NodeType type, Aggregate* parent, const QString& name);
     void removeRelates();

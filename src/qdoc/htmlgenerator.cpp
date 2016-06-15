@@ -2891,6 +2891,8 @@ void HtmlGenerator::generateAnnotatedList(const Node *relative,
     out() << "<div class=\"table\"><table class=\"annotated\">\n";
     int row = 0;
     NodeList nodes = nmm.values();
+    std::sort(nodes.begin(), nodes.end(), Node::nodeNameLessThan);
+
     foreach (const Node* node, nodes) {
         if (++row % 2 == 1)
             out() << "<tr class=\"odd topAlign\">";
@@ -4909,7 +4911,9 @@ void HtmlGenerator::generateAssociatedPropertyNotes(const FunctionNode* fn)
 {
     if (fn->hasAssociatedProperties()) {
         out() << "<p><b>Note:</b> ";
-        foreach (const PropertyNode* pn, fn->associatedProperties()) {
+        PropNodeList propertyNodes = fn->associatedProperties();
+        std::sort(propertyNodes.begin(), propertyNodes.end(), Node::nodeNameLessThan);
+        foreach (const PropertyNode* pn, propertyNodes) {
             QString msg;
             switch (pn->role(fn)) {
             case PropertyNode::Getter:

@@ -46,14 +46,6 @@
 
 QT_BEGIN_NAMESPACE
 
-// helper for sorting Node's based on their name
-// once we can use C++11, this function can be moved
-// to where it is actually used inside as a lambda function.
-static bool nodeNameLessThan(const Node *first, const Node *second)
-{
-    return first->name() < second->name();
-}
-
 HelpProjectWriter::HelpProjectWriter(const Config &config,
                                      const QString &defaultFileName,
                                      Generator* g)
@@ -830,7 +822,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
                 if (!contentsFound) {
                     QList<const Node*> subnodes = subproject.nodes.values();
 
-                    std::sort(subnodes.begin(), subnodes.end(), nodeNameLessThan);
+                    std::sort(subnodes.begin(), subnodes.end(), Node::nodeNameLessThan);
 
                     foreach (const Node *node, subnodes)
                         writeNode(project, writer, node);
