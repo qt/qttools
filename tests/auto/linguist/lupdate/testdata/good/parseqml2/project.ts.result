@@ -4,12 +4,12 @@
 <context>
     <name>FooContext</name>
     <message>
-        <location filename="main.qml" line="66"/>
+        <location filename="main.qml" line="61"/>
         <source>Hello</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main.qml" line="68"/>
+        <location filename="main.qml" line="63"/>
         <source>World</source>
         <translation type="unfinished"></translation>
     </message>
@@ -17,12 +17,12 @@
 <context>
     <name>main</name>
     <message>
-        <location filename="main.qml" line="70"/>
+        <location filename="main.qml" line="65"/>
         <source>Hello</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main.qml" line="72"/>
+        <location filename="main.qml" line="67"/>
         <source>World</source>
         <translation type="unfinished"></translation>
     </message>
