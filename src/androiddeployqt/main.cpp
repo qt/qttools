@@ -783,13 +783,12 @@ bool readInputFile(Options *options)
                 if (QFileInfo(path).isDir()) {
                     QDirIterator iterator(path, QDirIterator::Subdirectories);
                     while (iterator.hasNext()) {
+                        iterator.next();
                         if (iterator.fileInfo().isFile()) {
                             QString subPath = iterator.filePath();
                             options->qtDependencies.append(QtDependency(subPath.mid(options->qtInstallDirectory.length() + 1),
                                                                         subPath));
                         }
-
-                        iterator.next();
                     }
                 } else {
                     options->qtDependencies.append(QtDependency(dependency, path));
