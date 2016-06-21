@@ -1232,11 +1232,11 @@ void Generator::generateQmlInheritedBy(const QmlTypeNode* qcn,
 {
     if (qcn) {
         NodeList subs;
-        QmlTypeNode::subclasses(qcn->name(),subs);
+        QmlTypeNode::subclasses(qcn, subs);
         if (!subs.isEmpty()) {
             Text text;
             text << Atom::ParaLeft << "Inherited by ";
-            appendSortedQmlNames(text,qcn,subs);
+            appendSortedQmlNames(text, qcn, subs);
             text << Atom::ParaRight;
             generateText(text, qcn, marker);
         }

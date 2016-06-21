@@ -1475,15 +1475,20 @@ void QDocDatabase::resolveQmlInheritance(Aggregate* root)
             QmlTypeNode* qcn = static_cast<QmlTypeNode*>(child);
             if (qcn->qmlBaseNodeNotSet() && !qcn->qmlBaseName().isEmpty()) {
                 QmlTypeNode* bqcn = static_cast<QmlTypeNode*>(previousSearches.value(qcn->qmlBaseName()));
-                if (bqcn && (bqcn != qcn))
+                if (bqcn && (bqcn != qcn)) {
                     qcn->setQmlBaseNode(bqcn);
+                    QmlTypeNode::addInheritedBy(bqcn, qcn);
+                }
                 else {
                     if (!qcn->importList().isEmpty()) {
                         const ImportList& imports = qcn->importList();
                         for (int i=0; i<imports.size(); ++i) {
                             bqcn = findQmlType(imports[i], qcn->qmlBaseName());
-                            if (bqcn && (bqcn != qcn))
+                            if (bqcn && (bqcn != qcn)) {
+                                if (bqcn->logicalModuleVersion()[0] != imports[i].version_[0])
+                                    bqcn = 0; // Safeguard for QTBUG-53529
                                 break;
+                            }
                         }
                     }
                     if (bqcn == 0) {
@@ -1491,6 +1496,7 @@ void QDocDatabase::resolveQmlInheritance(Aggregate* root)
                     }
                     if (bqcn && (bqcn != qcn)) {
                         qcn->setQmlBaseNode(bqcn);
+                        QmlTypeNode::addInheritedBy(bqcn, qcn);
                         previousSearches.insert(qcn->qmlBaseName(), bqcn);
                     }
 #if 0
