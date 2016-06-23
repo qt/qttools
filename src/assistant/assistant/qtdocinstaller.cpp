@@ -104,7 +104,7 @@ bool QtDocInstaller::installDoc(const DocInfo &docInfo)
     foreach (const QString &f, m_qchFiles) {
         if (f.startsWith(component)) {
             QFileInfo fi(m_qchDir.absolutePath() + QDir::separator() + f);
-            if (dt.isValid() && fi.lastModified().toTime_t() == dt.toTime_t()
+            if (dt.isValid() && fi.lastModified().toSecsSinceEpoch() == dt.toSecsSinceEpoch()
                 && qchFile == fi.absoluteFilePath())
                 return false;
             emit registerDocumentation(component, fi.absoluteFilePath());

@@ -511,14 +511,14 @@ int64_t FSDirectory::fileModified(const QString& name) const
     CND_PRECONDITION(!directory.isEmpty(), "directory is not open");
 
     QFileInfo fInfo(directory + QDir::separator() + name);
-    return fInfo.lastModified().toTime_t();
+    return fInfo.lastModified().toSecsSinceEpoch();
 }
 
 //static
 int64_t FSDirectory::fileModified(const QString& dir, const QString& name)
 {
     QFileInfo fInfo(dir + QDir::separator() + name);
-    return fInfo.lastModified().toTime_t();
+    return fInfo.lastModified().toSecsSinceEpoch();
 }
 
 void FSDirectory::touchFile(const QString& name)

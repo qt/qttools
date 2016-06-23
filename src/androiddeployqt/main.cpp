@@ -1966,7 +1966,7 @@ bool fetchRemoteModifications(Options *options, const QString &directory)
         if (!ok)
             continue;
 
-        options->remoteModificationDate = QDateTime::fromTime_t(time);
+        options->remoteModificationDate = QDateTime::fromSecsSinceEpoch(time);
         break;
     }
 
@@ -2012,7 +2012,7 @@ bool deployToLocalTmp(Options *options,
     QFileInfo fileInfo(options->qtInstallDirectory + QLatin1Char('/') + qtDependency);
 
     // Make sure precision is the same as what we get from Android
-    QDateTime sourceModified = QDateTime::fromTime_t(fileInfo.lastModified().toTime_t());
+    QDateTime sourceModified = QDateTime::fromSecsSinceEpoch(fileInfo.lastModified().toSecsSinceEpoch());
 
     if (options->remoteModificationDate.isNull() || options->remoteModificationDate < sourceModified) {
         if (!copyFileIfNewer(options->qtInstallDirectory + QLatin1Char('/') + qtDependency,
