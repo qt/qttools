@@ -619,7 +619,6 @@ public:
 
 private:
     void setCell(int row, int col, QWidget* w) { m_cells[ row * m_ncols + col] = w; }
-    void swapCells(int r1, int c1, int r2, int c2);
     void shrink();
     void reallocFormLayout();
     int countRow(int r, int c) const;
@@ -698,14 +697,6 @@ void Grid::setCells(const QRect &c, QWidget* w)
         QWidget **pos = m_cells + r * m_ncols + c.left();
         std::fill(pos, pos + width, w);
     }
-}
-
-
-void Grid::swapCells(int r1, int c1, int r2, int c2)
-{
-    QWidget *w1 = cell(r1, c1);
-    setCell(r1, c1, cell(r2, c2));
-    setCell(r2, c2, w1);
 }
 
 int Grid::countRow(int r, int c) const
