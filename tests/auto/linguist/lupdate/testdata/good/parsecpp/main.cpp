@@ -644,3 +644,11 @@ class TranslatedAfterPrivate
         tr("Must be in context TranslatedAfterPrivate");
     }
 };
+
+#include<QObject>
+
+QObject::tr("message after system include without space");
+
+#include"qobject.h"
+
+QObject::tr("message after local include without space");

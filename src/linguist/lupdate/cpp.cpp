@@ -566,10 +566,9 @@ CppParser::TokenType CppParser::getToken()
                     // include
                     do {
                         yyCh = getChar();
-                    } while (yyCh != EOF && !isspace(yyCh));
-                    do {
+                    } while (yyCh != EOF && !isspace(yyCh) && yyCh != '"' && yyCh != '<' );
+                    while (isspace(yyCh))
                         yyCh = getChar();
-                    } while (isspace(yyCh));
                     int tChar;
                     if (yyCh == '"')
                         tChar = '"';

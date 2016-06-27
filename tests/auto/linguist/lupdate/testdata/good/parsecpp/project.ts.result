@@ -387,6 +387,16 @@ backslashed \ stuff.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="main.cpp" line="650"/>
+        <source>message after system include without space</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="654"/>
+        <source>message after local include without space</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="included.cpp" line="34"/>
         <source>message from #included .cpp file</source>
         <translation type="unfinished"></translation>
