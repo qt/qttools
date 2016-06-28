@@ -171,10 +171,10 @@ QmlImportScanResult runQmlImportScanner(const QString &directory, const QString 
     return result;
 }
 
-static inline bool contains(const QList<QmlImportScanResult::Module> &modules, const QString &name)
+static inline bool contains(const QList<QmlImportScanResult::Module> &modules, const QString &className)
 {
     foreach (const QmlImportScanResult::Module &m, modules) {
-        if (m.name == name)
+        if (m.className == className)
             return true;
     }
     return false;
@@ -183,7 +183,7 @@ static inline bool contains(const QList<QmlImportScanResult::Module> &modules, c
 void QmlImportScanResult::append(const QmlImportScanResult &other)
 {
     foreach (const QmlImportScanResult::Module &module, other.modules) {
-        if (!contains(modules, module.name))
+        if (!contains(modules, module.className))
             modules.append(module);
     }
     foreach (const QString &plugin, other.plugins) {
