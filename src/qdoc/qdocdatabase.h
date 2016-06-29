@@ -263,6 +263,7 @@ class QDocDatabase
  private:
     void findAllClasses(Aggregate *node);
     void findAllFunctions(Aggregate *node);
+    void findAllAttributions(Aggregate *node);
     void findAllLegaleseTexts(Aggregate *node);
     void findAllNamespaces(Aggregate *node);
     void findAllObsoleteThings(Aggregate* node);
@@ -281,6 +282,7 @@ class QDocDatabase
     NodeMultiMap& getQmlBasicTypes();
     NodeMultiMap& getQmlTypes();
     NodeMultiMap& getExamples();
+    NodeMultiMap& getAttributions();
     NodeMapMap& getFunctionIndex();
     TextToNodeMap& getLegaleseTexts();
     const NodeMap& getClassMap(const QString& key);
@@ -450,6 +452,7 @@ class QDocDatabase
     NodeMultiMap            qmlBasicTypes_;
     NodeMultiMap            qmlTypes_;
     NodeMultiMap            examples_;
+    NodeMultiMap            attributions_;
     NodeMapMap              newClassMaps_;
     NodeMapMap              newQmlTypeMaps_;
     NodeMultiMapMap         newSinceMaps_;

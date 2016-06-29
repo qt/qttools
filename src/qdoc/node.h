@@ -92,6 +92,7 @@ public:
 
     enum DocSubtype {
         NoSubtype,
+        Attribution,
         Example,
         HeaderFile,
         File,
@@ -133,6 +134,7 @@ public:
 
     enum PageType {
         NoPageType,
+        AttributionPage,
         ApiPage,
         ArticlePage,
         ExamplePage,

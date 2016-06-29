@@ -379,6 +379,8 @@ QString Node::pageTypeString() const
 QString Node::pageTypeString(unsigned char t)
 {
     switch ((PageType)t) {
+    case Node::AttributionPage:
+        return "attribution";
     case Node::ApiPage:
         return "api";
     case Node::ArticlePage:

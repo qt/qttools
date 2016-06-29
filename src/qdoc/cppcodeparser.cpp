@@ -522,6 +522,8 @@ Node* CppCodeParser::processTopicCommand(const Doc& doc,
                 ptype = Node::FAQPage;
             else if (t == "ditamap")
                 ptype = Node::DitaMapPage;
+            else if (t == "attribution")
+                ptype = Node::AttributionPage;
         }
         DocumentNode* dn = 0;
         if (ptype == Node::DitaMapPage)

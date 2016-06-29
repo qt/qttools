@@ -3408,6 +3408,18 @@
     navigation.landingpage configuration variable. The \e landingpage
     variable is used as a title for a header that precedes each table.
 
+    \section2 \c annotatedattributions
+
+    The \c annotatedattributions argument provides a complete list of all
+    attributions as a set of tables containing the titles of all the
+    attributions, and a description of each attribution. Each title is a
+    link to the attribution's page.
+
+    A separate table for each module (that has attributions)
+    is generated, provided that the module has defined a
+    navigation.landingpage configuration variable. The \e landingpage
+    variable is used as a title for a header that precedes each table.
+
     \target list example
     \section2 \c {classes <prefix>}
 
@@ -3585,6 +3597,11 @@
         \generatelist overviews
     * /
     \endcode
+
+    \section2 \c attributions
+
+    The \c attributions argument is used to tell QDoc to generate a list
+    of attributions in the documentation.
 
     \section2 \c related
 

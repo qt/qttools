@@ -684,6 +684,9 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
         else if (atom->string() == QLatin1String("annotatedexamples")) {
             generateAnnotatedLists(relative, marker, qdb_->getExamples());
         }
+        else if (atom->string() == QLatin1String("annotatedattributions")) {
+            generateAnnotatedLists(relative, marker, qdb_->getAttributions());
+        }
         else if (atom->string() == QLatin1String("classes")) {
             generateCompactList(Generic, relative, qdb_->getCppClasses(), true, QStringLiteral(""));
         }
@@ -704,6 +707,8 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
                 genus = Node::QML;
             else if (atom->string().startsWith(QLatin1String("js")))
                 genus = Node::JS;
+            else if (atom->string().startsWith(QLatin1String("groups")))
+                genus = Node::DOC;
             QDocDatabase* qdb = QDocDatabase::qdocDB();
             const CollectionNode* cn = qdb->getCollectionNode(moduleName, genus);
             if (cn) {
@@ -735,6 +740,9 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
         }
         else if (atom->string() == QLatin1String("functionindex")) {
             generateFunctionIndex(relative);
+        }
+        else if (atom->string() == QLatin1String("attributions")) {
+            generateAnnotatedList(relative, marker, qdb_->getAttributions());
         }
         else if (atom->string() == QLatin1String("legalese")) {
             generateLegaleseList(relative, marker);

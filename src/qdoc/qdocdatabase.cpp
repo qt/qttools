@@ -955,6 +955,18 @@ NodeMultiMap& QDocDatabase::getExamples()
 }
 
 /*!
+  Construct the data structures for attributions, if they
+  have not already been constructed. Returns a reference to
+  the multimap of attribution nodes.
+ */
+NodeMultiMap& QDocDatabase::getAttributions()
+{
+    if (attributions_.isEmpty())
+        processForest(&QDocDatabase::findAllAttributions);
+    return attributions_;
+}
+
+/*!
   Construct the data structures for obsolete things, if they
   have not already been constructed. Returns a reference to
   the map of obsolete C++ clases.
@@ -1048,6 +1060,25 @@ void QDocDatabase::findAllFunctions(Aggregate* node)
                     !func->isSomeCtor() && !func->isDtor()) {
                     funcIndex_[(*c)->name()].insert((*c)->parent()->fullDocumentName(), *c);
                 }
+            }
+        }
+        ++c;
+    }
+}
+
+/*!
+  Finds all the attribution pages and collects them per module
+ */
+void QDocDatabase::findAllAttributions(Aggregate* node)
+{
+    NodeList::ConstIterator c = node->childNodes().constBegin();
+    while (c != node->childNodes().constEnd()) {
+        if ((*c)->access() != Node::Private) {
+            if ((*c)->docSubtype() == Node::Page
+                     && (*c)->pageType() == Node::AttributionPage) {
+                attributions_.insertMulti((*c)->tree()->indexTitle(), *c);
+            } else if ((*c)->isAggregate()) {
+                findAllAttributions(static_cast<Aggregate*>(*c));
             }
         }
         ++c;
