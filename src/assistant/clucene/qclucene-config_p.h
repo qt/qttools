@@ -328,8 +328,10 @@ configure.
 #endif
 
 /* Define to 1 if you have the <sys/timeb.h> header file. */
-#ifndef _CL_HAVE_SYS_TIMEB_H
-#define _CL_HAVE_SYS_TIMEB_H  1
+#if !defined(__OpenBSD__)
+#   ifndef _CL_HAVE_SYS_TIMEB_H
+#   define _CL_HAVE_SYS_TIMEB_H  1
+#   endif
 #endif
 
 /* Define to 1 if you have the <sys/types.h> header file. */

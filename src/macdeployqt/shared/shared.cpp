@@ -172,8 +172,9 @@ OtoolInfo findDependencyInfo(const QString &binaryPath)
     otool.start("otool", QStringList() << "-L" << binaryPath);
     otool.waitForFinished();
 
-    if (otool.exitCode() != 0) {
+    if (otool.exitStatus() != QProcess::NormalExit || otool.exitCode() != 0) {
         LogError() << otool.readAllStandardError();
+        return info;
     }
 
     static const QRegularExpression regexp(QStringLiteral(
@@ -182,6 +183,11 @@ OtoolInfo findDependencyInfo(const QString &binaryPath)
 
     QString output = otool.readAllStandardOutput();
     QStringList outputLines = output.split("\n", QString::SkipEmptyParts);
+    if (outputLines.size() < 2) {
+        LogError() << "Could not parse otool output:" << output;
+        return info;
+    }
+
     outputLines.removeFirst(); // remove line containing the binary path
     if (binaryPath.contains(".framework/") || binaryPath.endsWith(".dylib")) {
         const auto match = regexp.match(outputLines.first());
