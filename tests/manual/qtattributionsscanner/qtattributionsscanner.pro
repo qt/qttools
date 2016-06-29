@@ -1,11 +1,13 @@
 TEMPLATE = aux
 
-DISTFILES += data/qt_attribution.json data/LICENSE
+DISTFILES += test.qdocconf overview.qdoc data/qt_attribution.json data/LICENSE
 
 run_qtattributionsscanner.commands = $$[QT_HOST_BINS]/qtattributionsscanner -o generated.qdoc $$PWD
 
-check.depends = run_qtattributionsscanner
+run_docs.commands = BUILDDIR=$$OUT_PWD $$[QT_HOST_BINS]/qdoc $$PWD/test.qdocconf
 
-QMAKE_EXTRA_TARGETS += run_qtattributionsscanner check
+check.depends = run_qtattributionsscanner run_docs
+
+QMAKE_EXTRA_TARGETS += run_qtattributionsscanner run_docs check
 
 QMAKE_CLEAN += generated.qdoc
