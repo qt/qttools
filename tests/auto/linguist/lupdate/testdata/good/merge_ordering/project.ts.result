@@ -4,7 +4,7 @@
 <context>
     <name>Foo</name>
     <message>
-        <location filename="foo.cpp" line="+46"/>
+        <location filename="foo.cpp" line="+41"/>
         <source>This is the first entry.</source>
         <translation type="unfinished"></translation>
     </message>

@@ -1,31 +1,26 @@
 /****************************************************************************
 **
-** Copyright (C) 2015 The Qt Company Ltd.
-** Contact: http://www.qt.io/licensing/
+** Copyright (C) 2016 The Qt Company Ltd.
+** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Designer of the Qt Toolkit.
 **
-** $QT_BEGIN_LICENSE:LGPL21$
+** $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ** Commercial License Usage
 ** Licensees holding valid commercial Qt licenses may use this file in
 ** accordance with the commercial license agreement provided with the
 ** Software or, alternatively, in accordance with the terms contained in
 ** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see http://www.qt.io/terms-conditions. For further
-** information use the contact form at http://www.qt.io/contact-us.
+** and conditions see https://www.qt.io/terms-conditions. For further
+** information use the contact form at https://www.qt.io/contact-us.
 **
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 2.1 or version 3 as published by the Free
-** Software Foundation and appearing in the file LICENSE.LGPLv21 and
-** LICENSE.LGPLv3 included in the packaging of this file. Please review the
-** following information to ensure the GNU Lesser General Public License
-** requirements will be met: https://www.gnu.org/licenses/lgpl.html and
-** http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
-**
-** As a special exception, The Qt Company gives you certain additional
-** rights. These rights are described in The Qt Company LGPL Exception
-** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
+** GNU General Public License Usage
+** Alternatively, this file may be used under the terms of the GNU
+** General Public License version 3 as published by the Free Software
+** Foundation with exceptions as appearing in the file LICENSE.GPL3-EXCEPT
+** included in the packaging of this file. Please review the following
+** information to ensure the GNU General Public License requirements will
+** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 **
 ** $QT_END_LICENSE$
 **
@@ -53,6 +48,8 @@
 #include <QtCore/QDir>
 #include <QtCore/QTextStream>
 
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QDesktopWidget>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QTreeWidgetItem>
 #include <QtGui/QPainter>
@@ -320,18 +317,23 @@ QImage NewFormWidget::grabForm(QDesignerFormEditorInterface *core,
 
 QPixmap NewFormWidget::formPreviewPixmap(QIODevice &file, const QString &workingDir) const
 {
-    const int margin = 7;
-    const int shadow = 7;
-    const int previewSize = 256;
+    const QSizeF screenSize(QApplication::desktop()->screenGeometry(this).size());
+    const int previewSize = qRound(screenSize.width() / 7.5); // 256 on 1920px screens.
+    const int margin = previewSize / 32 - 1; // 7 on 1920px screens.
+    const int shadow = margin;
 
     const QImage wimage = grabForm(m_core, file, workingDir,  currentDeviceProfile());
     if (wimage.isNull())
         return QPixmap();
-    const QImage image =  wimage.scaled(previewSize - margin * 2, previewSize - margin * 2,
-                                        Qt::KeepAspectRatio,
-                                        Qt::SmoothTransformation);
+    const qreal devicePixelRatio = wimage.devicePixelRatioF();
+    const QSize imageSize(previewSize - margin * 2, previewSize - margin * 2);
+    QImage image = wimage.scaled((QSizeF(imageSize) * devicePixelRatio).toSize(),
+                                 Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    image.setDevicePixelRatio(devicePixelRatio);
 
-    QImage dest(previewSize, previewSize, QImage::Format_ARGB32_Premultiplied);
+    QImage dest((QSizeF(previewSize, previewSize) * devicePixelRatio).toSize(),
+                QImage::Format_ARGB32_Premultiplied);
+    dest.setDevicePixelRatio(devicePixelRatio);
     dest.fill(0);
 
     QPainter p(&dest);
@@ -339,14 +341,14 @@ QPixmap NewFormWidget::formPreviewPixmap(QIODevice &file, const QString &working
 
     p.setPen(QPen(palette().brush(QPalette::WindowText), 0));
 
-    p.drawRect(margin-1, margin-1, image.width() + 1, image.height() + 1);
+    p.drawRect(QRectF(margin - 1, margin - 1, imageSize.width() + 1.5, imageSize.height() + 1.5));
 
     const QColor dark(Qt::darkGray);
     const QColor light(Qt::transparent);
 
     // right shadow
     {
-        const QRect rect(margin + image.width() + 1, margin + shadow, shadow, image.height() - shadow + 1);
+        const QRect rect(margin + imageSize.width() + 1, margin + shadow, shadow, imageSize.height() - shadow + 1);
         QLinearGradient lg(rect.topLeft(), rect.topRight());
         lg.setColorAt(0, dark);
         lg.setColorAt(1, light);
@@ -355,7 +357,7 @@ QPixmap NewFormWidget::formPreviewPixmap(QIODevice &file, const QString &working
 
     // bottom shadow
     {
-        const QRect rect(margin + shadow, margin + image.height() + 1, image.width() - shadow + 1, shadow);
+        const QRect rect(margin + shadow, margin + imageSize.height() + 1, imageSize.width() - shadow + 1, shadow);
         QLinearGradient lg(rect.topLeft(), rect.bottomLeft());
         lg.setColorAt(0, dark);
         lg.setColorAt(1, light);
@@ -364,8 +366,8 @@ QPixmap NewFormWidget::formPreviewPixmap(QIODevice &file, const QString &working
 
     // bottom/right corner shadow
     {
-        const QRect rect(margin + image.width() + 1, margin + image.height() + 1, shadow, shadow);
-        QRadialGradient g(rect.topLeft(), shadow);
+        const QRect rect(margin + imageSize.width() + 1, margin + imageSize.height() + 1, shadow, shadow);
+        QRadialGradient g(rect.topLeft(), shadow - 1);
         g.setColorAt(0, dark);
         g.setColorAt(1, light);
         p.fillRect(rect, g);
@@ -373,8 +375,8 @@ QPixmap NewFormWidget::formPreviewPixmap(QIODevice &file, const QString &working
 
     // top/right corner
     {
-        const QRect rect(margin + image.width() + 1, margin, shadow, shadow);
-        QRadialGradient g(rect.bottomLeft(), shadow);
+        const QRect rect(margin + imageSize.width() + 1, margin, shadow, shadow);
+        QRadialGradient g(rect.bottomLeft(), shadow - 1);
         g.setColorAt(0, dark);
         g.setColorAt(1, light);
         p.fillRect(rect, g);
@@ -382,8 +384,8 @@ QPixmap NewFormWidget::formPreviewPixmap(QIODevice &file, const QString &working
 
     // bottom/left corner
     {
-        const QRect rect(margin, margin + image.height() + 1, shadow, shadow);
-        QRadialGradient g(rect.topRight(), shadow);
+        const QRect rect(margin, margin + imageSize.height() + 1, shadow, shadow);
+        QRadialGradient g(rect.topRight(), shadow - 1);
         g.setColorAt(0, dark);
         g.setColorAt(1, light);
         p.fillRect(rect, g);

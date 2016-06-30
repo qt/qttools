@@ -1,31 +1,26 @@
 /****************************************************************************
 **
-** Copyright (C) 2015 The Qt Company Ltd.
-** Contact: http://www.qt.io/licensing/
+** Copyright (C) 2016 The Qt Company Ltd.
+** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
 **
-** $QT_BEGIN_LICENSE:LGPL21$
+** $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ** Commercial License Usage
 ** Licensees holding valid commercial Qt licenses may use this file in
 ** accordance with the commercial license agreement provided with the
 ** Software or, alternatively, in accordance with the terms contained in
 ** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see http://www.qt.io/terms-conditions. For further
-** information use the contact form at http://www.qt.io/contact-us.
+** and conditions see https://www.qt.io/terms-conditions. For further
+** information use the contact form at https://www.qt.io/contact-us.
 **
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 2.1 or version 3 as published by the Free
-** Software Foundation and appearing in the file LICENSE.LGPLv21 and
-** LICENSE.LGPLv3 included in the packaging of this file. Please review the
-** following information to ensure the GNU Lesser General Public License
-** requirements will be met: https://www.gnu.org/licenses/lgpl.html and
-** http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
-**
-** As a special exception, The Qt Company gives you certain additional
-** rights. These rights are described in The Qt Company LGPL Exception
-** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
+** GNU General Public License Usage
+** Alternatively, this file may be used under the terms of the GNU
+** General Public License version 3 as published by the Free Software
+** Foundation with exceptions as appearing in the file LICENSE.GPL3-EXCEPT
+** included in the packaging of this file. Please review the following
+** information to ensure the GNU General Public License requirements will
+** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 **
 ** $QT_END_LICENSE$
 **
@@ -76,6 +71,63 @@ void Node::initialize()
     goals_.insert("enum", Node::Enum);
     goals_.insert("typedef", Node::Typedef);
     goals_.insert("namespace", Node::Namespace);
+}
+
+bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
+{
+    if (n1->location().filePath() < n2->location().filePath())
+        return true;
+    else if (n1->location().filePath() > n2->location().filePath())
+        return false;
+
+    if (n1->type() < n2->type())
+        return true;
+    else if (n1->type() > n2->type())
+        return false;
+
+    if (n1->name() < n2->name())
+        return true;
+    else if (n1->name() > n2->name())
+        return false;
+
+    if (n1->access() < n2->access())
+        return true;
+    else if (n1->access() > n2->access())
+        return false;
+
+    if (n1->type() == Node::Function && n2->type() == Node::Function) {
+        const FunctionNode* f1 = static_cast<const FunctionNode*>(n1);
+        const FunctionNode* f2 = static_cast<const FunctionNode*>(n2);
+
+        if (f1->isConst() < f2->isConst())
+            return true;
+        else if (f1->isConst() > f2->isConst())
+            return false;
+
+        if (f1->signature(false) < f2->signature(false))
+            return true;
+        else if (f1->signature(false) > f2->signature(false))
+            return false;
+    }
+
+    if (n1->isDocumentNode() && n2->isDocumentNode()) {
+        const DocumentNode* f1 = static_cast<const DocumentNode*>(n1);
+        const DocumentNode* f2 = static_cast<const DocumentNode*>(n2);
+        if (f1->fullTitle() < f2->fullTitle())
+            return true;
+        else if (f1->fullTitle() > f2->fullTitle())
+            return false;
+    }
+    else if (n1->isCollectionNode() && n2->isCollectionNode()) {
+        const CollectionNode* f1 = static_cast<const CollectionNode*>(n1);
+        const CollectionNode* f2 = static_cast<const CollectionNode*>(n2);
+        if (f1->fullTitle() < f2->fullTitle())
+            return true;
+        else if (f1->fullTitle() > f2->fullTitle())
+            return false;
+    }
+
+    return false;
 }
 
 /*!

@@ -4,12 +4,12 @@
 <context>
     <name>FooContext</name>
     <message>
-        <location filename="main.js" line="67"/>
+        <location filename="main.js" line="62"/>
         <source>Hello</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main.js" line="69"/>
+        <location filename="main.js" line="64"/>
         <source>World</source>
         <translation type="unfinished"></translation>
     </message>
@@ -17,12 +17,12 @@
 <context>
     <name>main</name>
     <message>
-        <location filename="main.js" line="71"/>
+        <location filename="main.js" line="66"/>
         <source>Hello</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main.js" line="73"/>
+        <location filename="main.js" line="68"/>
         <source>World</source>
         <translation type="unfinished"></translation>
     </message>

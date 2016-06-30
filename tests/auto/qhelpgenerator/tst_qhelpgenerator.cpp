@@ -1,31 +1,26 @@
 /****************************************************************************
 **
-** Copyright (C) 2015 The Qt Company Ltd.
-** Contact: http://www.qt.io/licensing/
+** Copyright (C) 2016 The Qt Company Ltd.
+** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the test suite of the Qt Toolkit.
 **
-** $QT_BEGIN_LICENSE:LGPL21$
+** $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ** Commercial License Usage
 ** Licensees holding valid commercial Qt licenses may use this file in
 ** accordance with the commercial license agreement provided with the
 ** Software or, alternatively, in accordance with the terms contained in
 ** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see http://www.qt.io/terms-conditions. For further
-** information use the contact form at http://www.qt.io/contact-us.
+** and conditions see https://www.qt.io/terms-conditions. For further
+** information use the contact form at https://www.qt.io/contact-us.
 **
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 2.1 or version 3 as published by the Free
-** Software Foundation and appearing in the file LICENSE.LGPLv21 and
-** LICENSE.LGPLv3 included in the packaging of this file. Please review the
-** following information to ensure the GNU Lesser General Public License
-** requirements will be met: https://www.gnu.org/licenses/lgpl.html and
-** http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
-**
-** As a special exception, The Qt Company gives you certain additional
-** rights. These rights are described in The Qt Company LGPL Exception
-** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
+** GNU General Public License Usage
+** Alternatively, this file may be used under the terms of the GNU
+** General Public License version 3 as published by the Free Software
+** Foundation with exceptions as appearing in the file LICENSE.GPL3-EXCEPT
+** included in the packaging of this file. Please review the following
+** information to ensure the GNU General Public License requirements will
+** be met: https://www.gnu.org/licenses/gpl-3.0.html.
 **
 ** $QT_END_LICENSE$
 **
@@ -46,6 +41,8 @@ class tst_QHelpGenerator : public QObject
 private slots:
     void initTestCase();
     void generateHelp();
+    // Check that two runs of the generator creates the same file twice
+    void generateTwice();
 
 private:
     void checkNamespace();
@@ -197,6 +194,37 @@ void tst_QHelpGenerator::checkMetaData()
     if (!m_query->next())
         QFAIL("Meta Data Error");
     QCOMPARE(m_query->value(0).toString(), QString("Digia Plc and/or its subsidiary(-ies)"));
+
+}
+
+void tst_QHelpGenerator::generateTwice()
+{
+    // defined in profile
+    QString path = QLatin1String(SRCDIR);
+
+    QString inputFile(path + "/data/test.qhp");
+    QHelpProjectData data;
+    if (!data.readData(inputFile))
+        QFAIL("Cannot read qhp file!");
+
+    QHelpGenerator generator1;
+    QHelpGenerator generator2;
+    QString outputFile1 = path + QLatin1String("/data/test1.qch");
+    QString outputFile2 = path + QLatin1String("/data/test2.qch");
+    QCOMPARE(generator1.generate(&data, outputFile1), true);
+    QCOMPARE(generator2.generate(&data, outputFile2), true);
+
+    QFile f1(outputFile1);
+    QFile f2(outputFile2);
+    QVERIFY(f1.open(QIODevice::ReadOnly));
+    QVERIFY(f2.open(QIODevice::ReadOnly));
+
+    QByteArray arr1 = f1.readAll();
+    QByteArray arr2 = f2.readAll();
+
+    QFile::remove(outputFile1);
+    QFile::remove(outputFile2);
+    QCOMPARE(arr1, arr2);
 }
 
 QTEST_MAIN(tst_QHelpGenerator)
