@@ -53,7 +53,7 @@ namespace qdesigner_internal {
 
 PluginDialog::PluginDialog(QDesignerFormEditorInterface *core, QWidget *parent)
     : QDialog(parent
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
             , Qt::Tool
 #endif
             ), m_core(core)

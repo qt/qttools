@@ -44,7 +44,7 @@
 #include <QtCore/QSet>
 
 // QFileDialog on X11 does not provide an image preview. Display icons.
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MAC)
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
 #  define IMAGE_PREVIEW
 #endif
 

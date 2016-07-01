@@ -102,7 +102,7 @@ using namespace qdesigner_internal;
 
 const char *QDesignerActions::defaultToolbarPropertyName = "__qt_defaultToolBarAction";
 
-//#ifdef Q_OS_MAC
+//#ifdef Q_OS_MACOS
 #  define NONMODAL_PREVIEW
 //#endif
 
@@ -197,7 +197,7 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
 {
     typedef void (QDesignerActions::*VoidSlot)();
 
-#if defined (Q_OS_UNIX) && !defined(Q_OS_MAC)
+#if defined (Q_OS_UNIX) && !defined(Q_OS_MACOS)
     m_newFormAction->setIcon(QIcon::fromTheme(QStringLiteral("document-new"), m_newFormAction->icon()));
     m_openFormAction->setIcon(QIcon::fromTheme(QStringLiteral("document-open"), m_openFormAction->icon()));
     m_saveFormAction->setIcon(QIcon::fromTheme(QStringLiteral("document-save"), m_saveFormAction->icon()));
@@ -261,7 +261,7 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
     connect(m_saveFormAsAction, &QAction::triggered, this, static_cast<VoidSlot>(&QDesignerActions::saveFormAs));
     m_fileActions->addAction(m_saveFormAsAction);
 
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
     m_saveAllFormsAction->setShortcut(tr("ALT+CTRL+S"));
 #else
     m_saveAllFormsAction->setShortcut(tr("CTRL+SHIFT+S")); // Commonly "Save As" on Mac

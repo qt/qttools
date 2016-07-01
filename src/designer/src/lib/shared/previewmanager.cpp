@@ -872,7 +872,7 @@ bool PreviewManager::eventFilter(QObject *watched, QEvent *event)
             const  QKeyEvent *keyEvent = static_cast<const QKeyEvent *>(event);
             const int key = keyEvent->key();
             if ((key == Qt::Key_Escape
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
                  || (keyEvent->modifiers() == Qt::ControlModifier && key == Qt::Key_Period)
 #endif
                  )) {

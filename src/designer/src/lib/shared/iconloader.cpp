@@ -45,7 +45,7 @@ QDESIGNER_SHARED_EXPORT QIcon createIconSet(const QString &name)
 {
     QStringList candidates = QStringList()
         << (QString::fromUtf8(":/qt-project.org/formeditor/images/") + name)
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
         << (QString::fromUtf8(":/qt-project.org/formeditor/images/mac/") + name)
 #else
         << (QString::fromUtf8(":/qt-project.org/formeditor/images/win/") + name)

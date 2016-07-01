@@ -58,7 +58,7 @@ void SheetDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
         QStyleOptionButton buttonOption;
 
         buttonOption.state = option.state;
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
         buttonOption.state |= QStyle::State_Raised;
 #endif
         buttonOption.state &= ~QStyle::State_HasFocus;

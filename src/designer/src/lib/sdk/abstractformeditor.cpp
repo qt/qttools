@@ -551,7 +551,7 @@ void QDesignerFormEditorInterface::setIntrospection(QDesignerIntrospectionInterf
 */
 QString QDesignerFormEditorInterface::resourceLocation() const
 {
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
     return QStringLiteral(":/qt-project.org/formeditor/images/mac");
 #else
     return QStringLiteral(":/qt-project.org/formeditor/images/win");

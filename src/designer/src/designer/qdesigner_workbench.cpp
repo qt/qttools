@@ -327,7 +327,7 @@ Qt::WindowFlags QDesignerWorkbench::magicalWindowFlags(const QWidget *widgetForF
 {
     switch (m_mode) {
         case TopLevelMode: {
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
             if (qobject_cast<const QDesignerToolWindow *>(widgetForFlags))
                 return Qt::Tool;
 #else
@@ -389,7 +389,7 @@ void QDesignerWorkbench::switchToNeutralMode()
         fw->setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
     }
 
-#ifndef Q_OS_MAC
+#ifndef Q_OS_MACOS
     m_globalMenuBar->setParent(0);
 #endif
 
@@ -407,14 +407,14 @@ void QDesignerWorkbench::switchToDockedMode()
 
     switchToNeutralMode();
 
-#if !defined(Q_OS_MAC)
+#if !defined(Q_OS_MACOS)
 #    if defined(Q_OS_UNIX)
     QApplication::setAttribute(Qt::AA_DontUseNativeMenuBar, false);
 #    endif // Q_OS_UNIX
     QDesignerToolWindow *widgetBoxWrapper = widgetBoxToolWindow();
     widgetBoxWrapper->action()->setVisible(true);
     widgetBoxWrapper->setWindowTitle(tr("Widget Box"));
-#endif // !Q_OS_MAC
+#endif // !Q_OS_MACOS
 
     m_mode = DockedMode;
     const QDesignerSettings settings(m_core);
@@ -431,7 +431,7 @@ void QDesignerWorkbench::switchToDockedMode()
 
     m_core->setTopLevel(m_dockedMainWindow);
 
-#ifndef Q_OS_MAC
+#ifndef Q_OS_MACOS
     m_dockedMainWindow->setMenuBar(m_globalMenuBar);
     m_globalMenuBar->show();
 #endif
@@ -480,7 +480,7 @@ void QDesignerWorkbench::switchToTopLevelMode()
     // The widget box is special, it gets the menubar and gets to be the main widget.
 
     m_core->setTopLevel(widgetBoxWrapper);
-#if !defined(Q_OS_MAC)
+#if !defined(Q_OS_MACOS)
 #    if defined(Q_OS_UNIX)
     // For now the appmenu protocol does not make it possible to associate a
     // menubar with all application windows. This means in top level mode you
@@ -494,7 +494,7 @@ void QDesignerWorkbench::switchToTopLevelMode()
     widgetBoxWrapper->setCloseEventPolicy(MainWindowBase::EmitCloseEventSignal);
     qDesigner->setMainWindow(widgetBoxWrapper);
     widgetBoxWrapper->setWindowTitle(MainWindowBase::mainWindowTitle());
-#endif // !Q_OS_MAC
+#endif // !Q_OS_MACOS
 
     const QDesignerSettings settings(m_core);
     m_topLevelData.toolbars = MainWindowBase::createToolBars(m_actionManager, false);

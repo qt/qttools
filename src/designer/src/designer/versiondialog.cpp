@@ -150,7 +150,7 @@ void VersionLabel::paintEvent(QPaintEvent *pe)
 
 VersionDialog::VersionDialog(QWidget *parent)
     : QDialog(parent
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
             , Qt::Tool
 #endif
             )
