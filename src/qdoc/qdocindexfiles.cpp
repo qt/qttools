@@ -398,7 +398,11 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader& reader,
         Node::DocSubtype subtype;
         Node::PageType ptype = Node::NoPageType;
         QString attr = attributes.value(QLatin1String("subtype")).toString();
-        if (attr == QLatin1String("example")) {
+        if (attr == QLatin1String("attribution")) {
+            subtype = Node::Page;
+            ptype = Node::AttributionPage;
+        }
+        else if (attr == QLatin1String("example")) {
             subtype = Node::Example;
             ptype = Node::ExamplePage;
         }
@@ -1070,7 +1074,11 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter& writer,
                 writer.writeAttribute("subtype", "file");
                 break;
             case Node::Page:
-                writer.writeAttribute("subtype", "page");
+                if (docNode->pageType() == Node::AttributionPage)
+                    writer.writeAttribute("subtype", "attribution");
+                else
+                    writer.writeAttribute("subtype", "page");
+
                 writeModuleName = true;
                 break;
             case Node::ExternalPage:
