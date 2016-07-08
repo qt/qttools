@@ -332,7 +332,12 @@ bool AppxPhoneEngine::installPackage(IAppxManifestReader *reader, const QString 
     _bstr_t packagePath(wchar(QDir::toNativeSeparators(filePath)));
     hr = connection->InstallApplication(productId, productId, deploymentFlagsAsGenre,
                                         packageTypeAsIconPath, packagePath);
-    RETURN_FALSE_IF_FAILED("Failed to install the package");
+    if (hr == 0x80073d06) { // No public E_* macro available
+        qCWarning(lcWinRtRunner) << "Found a newer version of " << filePath
+                                 << " on the target device, skipping...";
+    } else {
+        RETURN_FALSE_IF_FAILED("Failed to install the package");
+    }
 
     return true;
 }
