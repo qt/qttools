@@ -41,6 +41,7 @@
 #define ACTIONEDITOR_H
 
 #include "shared_global_p.h"
+#include "shared_enums_p.h"
 #include <QtDesigner/QDesignerActionEditorInterface>
 
 #include <QtCore/QPointer>
@@ -82,7 +83,11 @@ public:
     void manageAction(QAction *action) Q_DECL_OVERRIDE;
     void unmanageAction(QAction *action) Q_DECL_OVERRIDE;
 
-    static QString actionTextToName(const QString &text, const QString &prefix = QLatin1String("action"));
+    static ObjectNamingMode objectNamingMode() { return m_objectNamingMode; }
+    static void setObjectNamingMode(ObjectNamingMode n) { m_objectNamingMode = n; }
+
+    static QString actionTextToName(const QString &text,
+                                    const QString &prefix = QLatin1String("action"));
 
     // Utility to create a configure button with menu for usage on toolbars
     static QToolButton *createConfigureMenuButton(const QString &t, QMenu **ptrToMenu);
@@ -126,6 +131,8 @@ private:
     void saveSettings();
 
     void updateViewModeActions();
+
+    static ObjectNamingMode m_objectNamingMode;
 
     QDesignerFormEditorInterface *m_core;
     QPointer<QDesignerFormWindowInterface> m_formWindow;

@@ -79,6 +79,7 @@ namespace qdesigner_internal {
         ItemFlagsShadowRole = 0x13370551
     };
 
+    enum ObjectNamingMode { CamelCase, Underscore };
 }
 
 QT_END_NAMESPACE

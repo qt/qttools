@@ -35,6 +35,7 @@
 #include "previewconfigurationwidget_p.h"
 #include "shared_settings_p.h"
 #include "zoomwidget_p.h"
+#include <private/actioneditor_p.h>
 
 // SDK
 #include <QtDesigner/QDesignerFormEditorInterface>
@@ -128,10 +129,28 @@ QWidget *FormEditorOptionsPage::createPage(QWidget *parent)
     m_defaultGridConf->setTitle(QCoreApplication::translate("FormEditorOptionsPage", "Default Grid"));
     m_defaultGridConf->setGrid(settings.defaultGrid());
 
+    const QString namingTitle =
+        QCoreApplication::translate("FormEditorOptionsPage", "Object Naming Convention");
+    QGroupBox *namingGroupBox = new QGroupBox(namingTitle);
+    const QString namingToolTip =
+        QCoreApplication::translate("FormEditorOptionsPage",
+                                    "Naming convention used for generating action object names from their text");
+    namingGroupBox->setToolTip(namingToolTip);
+    QHBoxLayout *namingHLayout = new QHBoxLayout(namingGroupBox);
+    m_namingComboBox = new QComboBox;
+    m_namingComboBox->setToolTip(namingToolTip);
+    QStringList items; // matching ActionEditor::NamingMode
+    items << QCoreApplication::translate("FormEditorOptionsPage", "Camel Case")
+        << QCoreApplication::translate("FormEditorOptionsPage", "Underscore");
+    m_namingComboBox->addItems(items);
+    m_namingComboBox->setCurrentIndex(settings.objectNamingMode());
+    namingHLayout->addWidget(m_namingComboBox.data());
+
     QVBoxLayout *optionsVLayout = new QVBoxLayout();
     optionsVLayout->addWidget(m_defaultGridConf);
     optionsVLayout->addWidget(m_previewConf);
     optionsVLayout->addWidget(m_zoomSettingsWidget);
+    optionsVLayout->addWidget(namingGroupBox);
     optionsVLayout->addStretch(1);
 
     // Outer layout to give it horizontal stretch
@@ -167,6 +186,13 @@ void FormEditorOptionsPage::apply()
 
     if (m_zoomSettingsWidget)
         m_zoomSettingsWidget->toSettings(settings);
+
+    if (m_namingComboBox) {
+        const ObjectNamingMode namingMode
+            = static_cast<ObjectNamingMode>(m_namingComboBox->currentIndex());
+        settings.setObjectNamingMode(namingMode);
+        ActionEditor::setObjectNamingMode(namingMode);
+    }
 }
 
 void FormEditorOptionsPage::finish()

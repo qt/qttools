@@ -64,7 +64,7 @@
 #include <QtGui/QContextMenuEvent>
 #include <QtCore/QItemSelection>
 
-#include <QtCore/QRegExp>
+#include <QtCore/QRegularExpression>
 #include <QtCore/QDebug>
 #include <QtCore/QBuffer>
 
@@ -101,6 +101,8 @@ public:
 };
 
 //--------  ActionEditor
+ObjectNamingMode ActionEditor::m_objectNamingMode = Underscore; // fixme Qt 6: CamelCase
+
 ActionEditor::ActionEditor(QDesignerFormEditorInterface *core, QWidget *parent, Qt::WindowFlags flags) :
     QDesignerActionEditorInterface(parent, flags),
     m_core(core),
@@ -648,21 +650,61 @@ void ActionEditor::slotDelete()
     deleteActions(fw,  selection);
 }
 
+// UnderScore: "Open file" -> actionOpen_file
+static QString underscore(QString text)
+{
+    const QString underscore = QString(QLatin1Char('_'));
+    static const QRegularExpression nonAsciiPattern(QStringLiteral("[^a-zA-Z_0-9]"));
+    Q_ASSERT(nonAsciiPattern.isValid());
+    text.replace(nonAsciiPattern, underscore);
+    static const QRegularExpression multipleSpacePattern(QStringLiteral("__*"));
+    Q_ASSERT(multipleSpacePattern.isValid());
+    text.replace(multipleSpacePattern, underscore);
+    if (text.endsWith(underscore.at(0)))
+        text.chop(1);
+    return text;
+}
+
+// CamelCase: "Open file" -> actionOpenFile, ignoring non-ASCII letters.
+
+enum CharacterCategory { OtherCharacter, DigitOrAsciiLetter, NonAsciiLetter };
+
+static inline CharacterCategory category(QChar c)
+{
+    if (c.isDigit())
+        return DigitOrAsciiLetter;
+    if (c.isLetter()) {
+        const ushort uc = c.unicode();
+        return (uc >= 'a' && uc <= 'z') || (uc >= 'A' && uc <= 'Z')
+            ? DigitOrAsciiLetter : NonAsciiLetter;
+    }
+    return OtherCharacter;
+}
+
+static QString camelCase(const QString &text)
+{
+    QString result;
+    result.reserve(text.size());
+    bool lastCharAccepted = false;
+    for (QChar c : text) {
+        const CharacterCategory cat = category(c);
+        if (cat != NonAsciiLetter) {
+            const bool acceptable = cat == DigitOrAsciiLetter;
+            if (acceptable)
+                result.append(lastCharAccepted ? c : c.toUpper()); // New word starts
+            lastCharAccepted = acceptable;
+        }
+    }
+    return result;
+}
+
 QString ActionEditor::actionTextToName(const QString &text, const QString &prefix)
 {
     QString name = text;
     if (name.isEmpty())
         return QString();
+    return prefix + (m_objectNamingMode == CamelCase ? camelCase(text) : underscore(text));
 
-    name[0] = name.at(0).toUpper();
-    name.prepend(prefix);
-    const QString underscore = QString(QLatin1Char('_'));
-    name.replace(QRegExp(QString(QStringLiteral("[^a-zA-Z_0-9]"))), underscore);
-    name.replace(QRegExp(QStringLiteral("__*")), underscore);
-    if (name.endsWith(underscore.at(0)))
-        name.truncate(name.size() - 1);
-
-    return name;
 }
 
 void  ActionEditor::resourceImageDropped(const QString &path, QAction *action)

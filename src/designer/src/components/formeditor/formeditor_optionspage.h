@@ -34,6 +34,7 @@
 
 QT_BEGIN_NAMESPACE
 
+class QComboBox;
 class QDesignerFormEditorInterface;
 
 namespace qdesigner_internal {
@@ -57,6 +58,7 @@ private:
     QPointer<PreviewConfigurationWidget> m_previewConf;
     QPointer<GridPanel> m_defaultGridConf;
     QPointer<ZoomSettingsWidget> m_zoomSettingsWidget;
+    QPointer<QComboBox> m_namingComboBox;
 };
 
 } // namespace qdesigner_internal

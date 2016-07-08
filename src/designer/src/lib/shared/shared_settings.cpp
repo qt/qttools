@@ -31,6 +31,8 @@
 #include "previewmanager_p.h"
 #include "qdesigner_utils_p.h"
 
+#include <actioneditor_p.h>
+
 #include <QtDesigner/QDesignerFormEditorInterface>
 #include <QtDesigner/QDesignerSettingsInterface>
 
@@ -54,6 +56,9 @@ static const char *deviceProfilesKey = "DeviceProfiles";
 static const char *formTemplatePathsKey = "FormTemplatePaths";
 static const char *formTemplateKey = "FormTemplate";
 static const char *newFormSizeKey = "NewFormSize";
+static inline QString namingModeKey() { return QStringLiteral("naming"); }
+static inline QString underScoreNamingMode() { return QStringLiteral("underscore"); }
+static inline QString camelCaseNamingMode() { return QStringLiteral("camelcase"); }
 
 using namespace qdesigner_internal;
 
@@ -224,6 +229,20 @@ int QDesignerSharedSettings::zoom() const
 void QDesignerSharedSettings::setZoom(int z)
 {
     m_settings->setValue(QLatin1String(zoomKey), QVariant(z));
+}
+
+ObjectNamingMode QDesignerSharedSettings::objectNamingMode() const
+{
+    const QString value = m_settings->value(namingModeKey()).toString();
+    return value == camelCaseNamingMode()
+        ? qdesigner_internal::CamelCase : qdesigner_internal::Underscore;
+}
+
+void QDesignerSharedSettings::setObjectNamingMode(ObjectNamingMode n)
+{
+    const QString value = n == qdesigner_internal::CamelCase
+        ? camelCaseNamingMode() : underScoreNamingMode();
+    m_settings->setValue(namingModeKey(), QVariant(value));
 }
 
 bool QDesignerSharedSettings::zoomEnabled() const

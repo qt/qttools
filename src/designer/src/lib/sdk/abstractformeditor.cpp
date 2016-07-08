@@ -43,6 +43,7 @@
 #include <QtDesigner/QDesignerActionEditorInterface>
 #include <QtDesigner/QDesignerWidgetBoxInterface>
 
+#include <actioneditor_p.h>
 #include <pluginmanager_p.h>
 #include <qtresourcemodel_p.h>
 #include <qtgradientmanager.h>
@@ -514,6 +515,7 @@ void QDesignerFormEditorInterface::setSettingsManager(QDesignerSettingsInterface
     // initializations.
     const qdesigner_internal::QDesignerSharedSettings settings(this);
     qdesigner_internal::FormWindowBase::setDefaultDesignerGrid(settings.defaultGrid());
+    qdesigner_internal::ActionEditor::setObjectNamingMode(settings.objectNamingMode());
 }
 
 /*!

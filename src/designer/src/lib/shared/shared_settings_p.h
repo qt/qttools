@@ -41,6 +41,7 @@
 #define SHARED_SETTINGS_H
 
 #include "shared_global_p.h"
+#include "shared_enums_p.h"
 #include "deviceprofile_p.h"
 
 #include <QtCore/qglobal.h>
@@ -102,6 +103,10 @@ public:
     // Zoom in percent
     int zoom() const;
     void setZoom(int z);
+
+    // Object naming convention (ActionEditor)
+    ObjectNamingMode objectNamingMode() const;
+    void setObjectNamingMode(ObjectNamingMode n);
 
     // Embedded Design
     DeviceProfile currentDeviceProfile() const;
