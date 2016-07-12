@@ -31,6 +31,10 @@
 
 #include <QtCore/qglobal.h>
 
+#ifdef Q_OS_ANDROID
+#  include <android/api-level.h>
+#endif
+
 #ifndef _SRC_CLUCENE_CLUCENE_CONFIG_H
 #define _SRC_CLUCENE_CLUCENE_CONFIG_H 1
 
@@ -305,7 +309,7 @@ configure.
 #endif
 
 /* Define to 1 if you have the <sys/timeb.h> header file. */
-#if !defined(__OpenBSD__)
+#if !defined(__OpenBSD__) && !defined(__ANDROID_API__) || __ANDROID_API__ < 21
 #   ifndef _CL_HAVE_SYS_TIMEB_H
 #   define _CL_HAVE_SYS_TIMEB_H  1
 #   endif
