@@ -254,7 +254,7 @@ struct Options {
               , angleDetection(AngleDetectionAuto), softwareRasterizer(true), platform(Windows)
               , additionalLibraries(0), disabledLibraries(0)
               , updateFileFlags(0), json(0), list(ListNone), debugDetection(DebugDetectionAuto)
-              , deployPdb(false) {}
+              , deployPdb(false), dryRun(false) {}
 
     bool plugins;
     bool libraries;
@@ -278,6 +278,7 @@ struct Options {
     ListOption list;
     DebugDetection debugDetection;
     bool deployPdb;
+    bool dryRun;
 
     inline bool isWinRtOrWinPhone() const {
         return (platform == WinPhoneArm || platform == WinPhoneIntel
@@ -528,8 +529,10 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
 
     if (parser->isSet(forceOption))
         options->updateFileFlags |= ForceUpdateFile;
-    if (parser->isSet(dryRunOption))
+    if (parser->isSet(dryRunOption)) {
+        options->dryRun = true;
         options->updateFileFlags |= SkipUpdateFile;
+    }
 
     for (size_t i = 0; i < qtModulesCount; ++i) {
         if (parser->isSet(*enabledModules.at(int(i)).first.data()))
@@ -1359,7 +1362,7 @@ static DeployResult deploy(const Options &options,
                 return result;
         }
 
-        if (!options.isWinRtOrWinPhone()) {
+        if (!options.isWinRtOrWinPhone() && !options.dryRun) {
             const QString qt5CoreName = QFileInfo(libraryPath(libraryLocation, "Qt5Core", qtLibInfix,
                                                               options.platform, isDebug)).fileName();
 
@@ -1437,10 +1440,11 @@ static DeployResult deploy(const Options &options,
     } // optQuickImports
 
     if (options.translations) {
-        if (!createDirectory(options.translationsDirectory, errorMessage)
-            || !deployTranslations(qmakeVariables.value(QStringLiteral("QT_INSTALL_TRANSLATIONS")),
-                                   result.deployedQtLibraries, options.translationsDirectory,
-                                   options.updateFileFlags, errorMessage)) {
+        if (!options.dryRun && !createDirectory(options.translationsDirectory, errorMessage))
+            return result;
+        if (!deployTranslations(qmakeVariables.value(QStringLiteral("QT_INSTALL_TRANSLATIONS")),
+                                result.deployedQtLibraries, options.translationsDirectory,
+                                options.updateFileFlags, errorMessage)) {
             return result;
         }
     }
