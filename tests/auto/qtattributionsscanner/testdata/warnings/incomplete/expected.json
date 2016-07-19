@@ -9,6 +9,7 @@
         "LicenseId": "",
         "Name": "",
         "Path": "%{PWD}",
+        "QDocModule": "",
         "QtUsage": "",
         "Version": "",
         "DownloadLocation": ""

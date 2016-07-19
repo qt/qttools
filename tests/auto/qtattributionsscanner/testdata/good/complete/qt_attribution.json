@@ -1,6 +1,7 @@
 {
   "Id": "complete",
   "Name": "Complete",
+  "QDocModule": "qtest",
 
   "License": "License",
   "Copyright": "Copyright",

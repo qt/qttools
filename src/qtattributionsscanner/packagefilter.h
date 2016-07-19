@@ -26,30 +26,22 @@
 **
 ****************************************************************************/
 
-#ifndef PACKAGE_H
-#define PACKAGE_H
+#ifndef PACKAGEFILTER_H
+#define PACKAGEFILTER_H
 
-#include <QtCore/qstring.h>
-#include <QtCore/qstringlist.h>
+#include "package.h"
 
-struct Package {
-    QString id; // Usually a lowercase, no-spaces version of the name. Mandatory.
-    QString path; // Source directory. Optional.
-                  // Default is the directory of the qt_attribution.json ile.
-    QString name; // Descriptive name of the package. Will be used as the title. Mandatory.
-    QString qdocModule; // QDoc module where the documentation should be included. Mandatory.
-    QString qtUsage; // How the package is used in Qt. Any way to disable? Mandatory.
+struct PackageFilter
+{
+    PackageFilter(const QString &expression);
 
-    QString description; // A short description of what the package is and is used for. Optional.
-    QString homepage; // Homepage of the upstream project. Optional.
-    QString version; // Version used from the upstream project. Optional.
-    QString downloadLocation; // Link to exact upstream version. Optional.
+    bool operator()(const Package &p);
 
-    QString license; // The license under which the package is distributed. Mandatory.
-    QString licenseId; // see https://spdx.org/licenses/. Optional.
-    QString licenseFile; // path to file containing the license text. Optional.
-
-    QString copyright; // A list of copyright owners. Mandatory.
+    enum {
+        InvalidFilter,
+        QDocModuleFilter
+    } type;
+    QString expression;
 };
 
-#endif // PACKAGE_H
+#endif // PACKAGEFILTER_H

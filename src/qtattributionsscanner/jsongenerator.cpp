@@ -42,6 +42,7 @@ static QJsonObject generate(Package package)
 
     obj.insert(QStringLiteral("Id"), package.id);
     obj.insert(QStringLiteral("Path"), package.path);
+    obj.insert(QStringLiteral("QDocModule"), package.qdocModule);
     obj.insert(QStringLiteral("Name"), package.name);
     obj.insert(QStringLiteral("QtUsage"), package.qtUsage);
 

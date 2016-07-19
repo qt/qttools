@@ -9,6 +9,7 @@
         "LicenseId": "xxx",
         "Name": "Complete",
         "Path": "%{PWD}/complete",
+        "QDocModule": "qtest",
         "QtUsage": "Multi\nLine\nUsage",
         "Version": "1.0",
         "DownloadLocation": "www.qt.io/1.0"
@@ -23,6 +24,7 @@
         "LicenseId": "",
         "Name": "Minimal",
         "Path": "%{PWD}/minimal",
+        "QDocModule": "qtest",
         "QtUsage": "Usage",
         "Version": "",
         "DownloadLocation": ""

@@ -1,6 +1,7 @@
 {
   "Id": "unknown",
   "Name": "Unknown",
+  "QDocModule": "qtest",
 
   "QtUsage": "Usage",
   "License": "License",

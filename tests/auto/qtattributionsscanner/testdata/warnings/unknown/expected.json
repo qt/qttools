@@ -9,6 +9,7 @@
         "LicenseId": "",
         "Name": "Unknown",
         "Path": "%{PWD}",
+        "QDocModule": "qtest",
         "QtUsage": "Usage",
         "Version": "",
         "DownloadLocation": ""

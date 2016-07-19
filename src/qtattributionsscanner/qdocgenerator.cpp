@@ -39,6 +39,7 @@ static void generate(QTextStream &out, const Package &package, const QDir &baseD
 {
     out << "/*!\n\n";
     out << "\\contentspage attributions.html\n";
+    out << "\\ingroup attributions-" << package.qdocModule << "\n";
     out << "\\page attribution-" << package.id << ".html attribution\n";
     out << "\\target "<< package.id << "\n\n";
     out << "\\title " << package.name << "\n";

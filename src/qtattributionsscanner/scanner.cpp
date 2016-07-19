@@ -81,6 +81,8 @@ static Package readPackage(const QJsonObject &object, const QString &filePath, L
             p.licenseFile = QDir(directory).absoluteFilePath(value);
         } else if (key == QLatin1String("Copyright")) {
             p.copyright = value;
+        } else if (key == QLatin1String("QDocModule")) {
+            p.qdocModule = value;
         } else if (key == QLatin1String("Description")) {
             p.description = value;
         } else if (key == QLatin1String("QtUsage")) {
@@ -98,6 +100,8 @@ static Package readPackage(const QJsonObject &object, const QString &filePath, L
             missingPropertyWarning(filePath, QStringLiteral("Name"));
         if (p.id.isEmpty())
             missingPropertyWarning(filePath, QStringLiteral("Id"));
+        if (p.qdocModule.isEmpty())
+            missingPropertyWarning(filePath, QStringLiteral("QDocModule"));
         if (p.qtUsage.isEmpty())
             missingPropertyWarning(filePath, QStringLiteral("QtUsage"));
         if (p.license.isEmpty())

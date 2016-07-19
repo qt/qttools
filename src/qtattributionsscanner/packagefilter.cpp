@@ -26,30 +26,29 @@
 **
 ****************************************************************************/
 
-#ifndef PACKAGE_H
-#define PACKAGE_H
+#include "logging.h"
+#include "packagefilter.h"
+#include <iostream>
 
-#include <QtCore/qstring.h>
-#include <QtCore/qstringlist.h>
+PackageFilter::PackageFilter(const QString &expression)
+    : type(InvalidFilter)
+{
+    if (expression.startsWith(QLatin1String("QDocModule="))) {
+        type = QDocModuleFilter;
+        this->expression = expression.mid(strlen("QDocModule="));
+    } else {
+        std::cerr << qPrintable(tr("Invalid filter expression \"%1\"").arg(expression)) << std::endl;
+        std::cerr << qPrintable(tr("Currently only \"QDocModule=*\" is supported.")) << std::endl;
+    }
+}
 
-struct Package {
-    QString id; // Usually a lowercase, no-spaces version of the name. Mandatory.
-    QString path; // Source directory. Optional.
-                  // Default is the directory of the qt_attribution.json ile.
-    QString name; // Descriptive name of the package. Will be used as the title. Mandatory.
-    QString qdocModule; // QDoc module where the documentation should be included. Mandatory.
-    QString qtUsage; // How the package is used in Qt. Any way to disable? Mandatory.
-
-    QString description; // A short description of what the package is and is used for. Optional.
-    QString homepage; // Homepage of the upstream project. Optional.
-    QString version; // Version used from the upstream project. Optional.
-    QString downloadLocation; // Link to exact upstream version. Optional.
-
-    QString license; // The license under which the package is distributed. Mandatory.
-    QString licenseId; // see https://spdx.org/licenses/. Optional.
-    QString licenseFile; // path to file containing the license text. Optional.
-
-    QString copyright; // A list of copyright owners. Mandatory.
-};
-
-#endif // PACKAGE_H
+bool PackageFilter::operator()(const Package &p)
+{
+    switch (type) {
+    case InvalidFilter:
+        return true;
+    case QDocModuleFilter:
+        return p.qdocModule == expression;
+    }
+    return false;
+}

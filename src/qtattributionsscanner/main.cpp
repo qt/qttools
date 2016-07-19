@@ -28,6 +28,7 @@
 
 #include "jsongenerator.h"
 #include "logging.h"
+#include "packagefilter.h"
 #include "qdocgenerator.h"
 #include "scanner.h"
 
@@ -56,6 +57,9 @@ int main(int argc, char *argv[])
                                        tr("Output format (\"qdoc\", \"json\")."),
                                        QStringLiteral("generator"),
                                        QStringLiteral("qdoc"));
+    QCommandLineOption filterOption(QStringLiteral("filter"),
+                                    tr("Filter packages according to <filter> (e.g. QDocModule=qtcore)"),
+                                    QStringLiteral("expression"));
     QCommandLineOption outputOption({ QStringLiteral("o"), QStringLiteral("output") },
                                     tr("Write generated data to <file>."),
                                     QStringLiteral("file"));
@@ -65,6 +69,7 @@ int main(int argc, char *argv[])
                                     tr("Minimal output."));
 
     parser.addOption(generatorOption);
+    parser.addOption(filterOption);
     parser.addOption(outputOption);
     parser.addOption(verboseOption);
     parser.addOption(silentOption);
@@ -93,6 +98,15 @@ int main(int argc, char *argv[])
 
     QVector<Package> packages = Scanner::scanDirectory(directory, logLevel);
 
+    if (parser.isSet(filterOption)) {
+        PackageFilter filter(parser.value(filterOption));
+        if (filter.type == PackageFilter::InvalidFilter)
+            return 4;
+        packages.erase(std::remove_if(packages.begin(), packages.end(),
+                                      [&filter](const Package &p) { return !filter(p); }),
+                       packages.end());
+    }
+
     if (logLevel == VerboseLog)
         std::cerr << qPrintable(tr("%1 packages found.").arg(packages.size())) << std::endl;
 
@@ -103,7 +117,7 @@ int main(int argc, char *argv[])
             std::cerr << qPrintable(tr("Cannot open %1 for writing.").arg(
                                         QDir::toNativeSeparators(outFile.fileName())))
                       << std::endl;
-            return 4;
+            return 5;
         }
         out.setDevice(&outFile);
     }
@@ -117,7 +131,7 @@ int main(int argc, char *argv[])
         JsonGenerator::generate(out, packages, logLevel);
     } else {
         std::cerr << qPrintable(tr("Unknown output-format %1.").arg(generator)) << std::endl;
-        return 5;
+        return 6;
     }
 
     if (logLevel == VerboseLog)

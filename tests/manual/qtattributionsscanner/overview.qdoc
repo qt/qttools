@@ -4,3 +4,10 @@
 
     \generatelist{annotatedattributions}
 */
+
+/*!
+    \module SomeModule
+    \title Some Module
+
+    \generatelist{groupsbymodule attributions-somemodule}
+ */
