@@ -1350,6 +1350,33 @@ static DeployResult deploy(const Options &options,
         }
     } // Windows
 
+    // We need to copy ucrtbased.dll on WinRT as this library is not part of
+    // the c runtime package. VS 2015 does the same when deploying to a device
+    // or creating an appx.
+    if (isDebug && options.platform == WinRtArm
+             && qmakeVariables.value(QStringLiteral("QMAKE_XSPEC")).endsWith(QLatin1String("msvc2015"))) {
+        const QString extensionPath = QString::fromLocal8Bit(qgetenv("ExtensionSdkDir"));
+        const QString ucrtVersion = QString::fromLocal8Bit(qgetenv("UCRTVersion"));
+        if (extensionPath.isEmpty() || ucrtVersion.isEmpty()) {
+            std::wcerr << "Warning: Cannot find ucrtbased.dll as either "
+                << "ExtensionSdkDir or UCRTVersion is not set in "
+                << "your environment.\n";
+        } else {
+            const QString ucrtbasedLib = extensionPath
+                    + QStringLiteral("/Microsoft.UniversalCRT.Debug/")
+                    + ucrtVersion
+                    + QStringLiteral("/Redist/Debug/arm/ucrtbased.dll");
+            const QFileInfo ucrtPath(ucrtbasedLib);
+            if (ucrtPath.exists() && ucrtPath.isFile()) {
+                deployedQtLibraries.append(ucrtPath.absoluteFilePath());
+            } else {
+                std::wcerr << "Warning: Cannot find ucrtbased.dll at "
+                           << QDir::toNativeSeparators(ucrtbasedLib)
+                           << " or it is not a file.\n";
+            }
+        }
+    }
+
     // Update libraries
     if (options.libraries) {
         const QString targetPath = options.libraryDirectory.isEmpty() ?
