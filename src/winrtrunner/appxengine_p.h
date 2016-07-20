@@ -84,6 +84,7 @@ public:
 
     Microsoft::WRL::ComPtr<ABI::Windows::Foundation::IUriRuntimeClassFactory> uriFactory;
     Microsoft::WRL::ComPtr<IAppxFactory> packageFactory;
+    Microsoft::WRL::ComPtr<IAppxManifestReader> manifestReader;
 };
 
 #define wchar(str) reinterpret_cast<LPCWSTR>(str.utf16())
