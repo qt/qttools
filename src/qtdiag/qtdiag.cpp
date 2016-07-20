@@ -94,7 +94,7 @@ QTextStream &operator<<(QTextStream &str, const QDpi &d)
 
 QTextStream &operator<<(QTextStream &str, const QRect &r)
 {
-    str << r.size() << '+' << r.x() << '+' << r.y();
+    str << r.size() << forcesign << r.x() << r.y() << noforcesign;
     return str;
 }
 
