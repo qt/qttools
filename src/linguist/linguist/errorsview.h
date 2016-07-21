@@ -44,7 +44,7 @@ public:
     enum ErrorType {
         SuperfluousAccelerator,
         MissingAccelerator,
-        PunctuationDiffer,
+        PunctuationDiffers,
         IgnoredPhrasebook,
         PlaceMarkersDiffer,
         NumerusMarkerMissing

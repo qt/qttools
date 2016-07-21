@@ -2446,7 +2446,7 @@ void MainWindow::updateDanger(const MultiDataIndex &index, bool verbose)
 
                 if (!endingok) {
                     if (verbose)
-                        m_errorsView->addError(mi, ErrorsView::PunctuationDiffer);
+                        m_errorsView->addError(mi, ErrorsView::PunctuationDiffers);
                     danger = true;
                 }
             }

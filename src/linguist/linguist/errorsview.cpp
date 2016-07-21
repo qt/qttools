@@ -65,7 +65,7 @@ void ErrorsView::addError(int model, const ErrorType type, const QString &arg)
       case MissingAccelerator:
         addError(model, tr("Accelerator possibly missing in translation."));
         break;
-      case PunctuationDiffer:
+      case PunctuationDiffers:
         addError(model, tr("Translation does not end with the same punctuation as the source text."));
         break;
       case IgnoredPhrasebook:
