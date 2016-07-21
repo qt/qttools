@@ -668,14 +668,19 @@ bool AppxEngine::createPackage(const QString &packageFileName)
         qCWarning(lcWinRtRunner) << "No mapping file exists. Only recognized files will be packaged.";
         // Add executable
         files.insert(QDir::toNativeSeparators(d->executable), QFileInfo(d->executable).fileName());
-        // Add potential Qt files
-        const QStringList fileTypes = QStringList()
-                << QStringLiteral("*.dll") << QStringLiteral("*.png") << QStringLiteral("*.qm")
-                << QStringLiteral("*.qml") << QStringLiteral("*.qmldir");
-        QDirIterator dirIterator(base.absolutePath(), fileTypes, QDir::Files, QDirIterator::Subdirectories);
+        // Add all files but filtered artifacts
+        const QStringList excludeFileTypes = QStringList()
+                << QStringLiteral("ilk") << QStringLiteral("pdb") << QStringLiteral("obj")
+                << QStringLiteral("appx");
+
+        QDirIterator dirIterator(base.absolutePath(), QDir::Files, QDirIterator::Subdirectories);
         while (dirIterator.hasNext()) {
             const QString filePath = dirIterator.next();
-            files.insert(QDir::toNativeSeparators(filePath), QDir::toNativeSeparators(base.relativeFilePath(filePath)));
+            if (filePath.endsWith(QLatin1String("AppxManifest.xml"), Qt::CaseInsensitive))
+                continue;
+            const QFileInfo fileInfo(filePath);
+            if (!excludeFileTypes.contains(fileInfo.suffix()))
+                files.insert(QDir::toNativeSeparators(filePath), QDir::toNativeSeparators(base.relativeFilePath(filePath)));
         }
     }
 
