@@ -145,9 +145,12 @@ class QDocForest
 
     const Node* findTypeNode(const QStringList& path, const Node* relative)
     {
+        int flags = SearchBaseClasses | SearchEnumValues | NonFunction;
+        Node::Genus genus = Node::DontCare;
+        if (relative)
+            genus = relative->genus();
         foreach (Tree* t, searchOrder()) {
-            int flags = SearchBaseClasses | SearchEnumValues | NonFunction;
-            const Node* n = t->findNode(path, relative, flags, Node::DontCare);
+            const Node* n = t->findNode(path, relative, flags, genus);
             if (n)
                 return n;
             relative = 0;
