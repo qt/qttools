@@ -82,7 +82,7 @@ MainWindowBase::MainWindowBase(QWidget *parent, Qt::WindowFlags flags) :
     QMainWindow(parent, flags),
     m_policy(AcceptCloseEvents)
 {
-#ifndef Q_OS_MAC
+#ifndef Q_OS_MACOS
     setWindowIcon(qDesigner->windowIcon());
 #endif
 }
