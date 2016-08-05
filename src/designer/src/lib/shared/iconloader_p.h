@@ -56,6 +56,7 @@ namespace qdesigner_internal {
 
 QDESIGNER_SHARED_EXPORT QIcon createIconSet(const QString &name);
 QDESIGNER_SHARED_EXPORT QIcon emptyIcon();
+QDESIGNER_SHARED_EXPORT QIcon qtLogoIcon();
 
 } // namespace qdesigner_internal
 

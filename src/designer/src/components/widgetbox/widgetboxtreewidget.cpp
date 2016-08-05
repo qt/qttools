@@ -115,7 +115,7 @@ WidgetBoxTreeWidget::WidgetBoxTreeWidget(QDesignerFormEditorInterface *core, QWi
 QIcon WidgetBoxTreeWidget::iconForWidget(QString iconName) const
 {
     if (iconName.isEmpty())
-        iconName = QLatin1String(qtLogoC);
+        return qdesigner_internal::qtLogoIcon();
 
     if (iconName.startsWith(QLatin1String(iconPrefixC))) {
         const IconCache::const_iterator it = m_pluginIcons.constFind(iconName);
@@ -652,8 +652,6 @@ WidgetBoxTreeWidget::CategoryList WidgetBoxTreeWidget::loadCustomCategoryList() 
             icon_name = iconPrefix;
             icon_name += pluginName;
             m_pluginIcons.insert(icon_name, icon);
-        } else {
-            icon_name = QLatin1String(qtLogoC);
         }
 
         cat.addWidget(Widget(displayName, dom_xml, icon_name, Widget::Custom));

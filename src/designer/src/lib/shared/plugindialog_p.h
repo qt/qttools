@@ -64,7 +64,6 @@ private slots:
 
 private:
     void populateTreeWidget();
-    QIcon pluginIcon(const QIcon &icon);
     QTreeWidgetItem* setTopLevelItem(const QString &itemName);
     QTreeWidgetItem* setPluginItem(QTreeWidgetItem *topLevelItem,
                                    const QString &itemName, const QFont &font);

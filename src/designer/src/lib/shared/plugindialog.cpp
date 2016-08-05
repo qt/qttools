@@ -34,6 +34,7 @@
 
 #include "plugindialog_p.h"
 #include "pluginmanager_p.h"
+#include "iconloader_p.h"
 
 #include <QtDesigner/QDesignerFormEditorInterface>
 #include <QtDesigner/QDesignerIntegrationInterface>
@@ -134,14 +135,6 @@ void PluginDialog::populateTreeWidget()
     }
 }
 
-QIcon PluginDialog::pluginIcon(const QIcon &icon)
-{
-    if (icon.isNull())
-        return QIcon(QStringLiteral(":/qt-project.org/formeditor/images/qtlogo.png"));
-
-    return icon;
-}
-
 QTreeWidgetItem* PluginDialog::setTopLevelItem(const QString &itemName)
 {
     QTreeWidgetItem *topLevelItem = new QTreeWidgetItem(ui.treeWidget);
@@ -175,7 +168,7 @@ void PluginDialog::setItem(QTreeWidgetItem *pluginItem, const QString &name,
     item->setText(0, name);
     item->setToolTip(0, toolTip);
     item->setWhatsThis(0, whatsThis);
-    item->setIcon(0, pluginIcon(icon));
+    item->setIcon(0, icon.isNull() ? qtLogoIcon() : icon);
 }
 
 void  PluginDialog::updateCustomWidgetPlugins()

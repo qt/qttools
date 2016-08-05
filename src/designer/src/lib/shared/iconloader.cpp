@@ -65,6 +65,27 @@ QDESIGNER_SHARED_EXPORT QIcon emptyIcon()
     return QIcon(QStringLiteral(":/qt-project.org/formeditor/images/emptyicon.png"));
 }
 
+static QIcon buildIcon(const QString &prefix, const int *sizes, size_t sizeCount)
+{
+    QIcon result;
+    for (size_t i = 0; i < sizeCount; ++i) {
+        const QString size = QString::number(sizes[i]);
+        const QPixmap pixmap(prefix + size + QLatin1Char('x') + size + QStringLiteral(".png"));
+        Q_ASSERT(!pixmap.size().isEmpty());
+        result.addPixmap(pixmap);
+    }
+    return result;
+}
+
+QDESIGNER_SHARED_EXPORT QIcon qtLogoIcon()
+{
+    static const int sizes[] = {16, 24, 32, 64};
+    static const QIcon result =
+        buildIcon(QStringLiteral(":/qt-project.org/formeditor/images/qtlogo"),
+                  sizes, sizeof(sizes) / sizeof(sizes[0]));
+    return result;
+}
+
 } // namespace qdesigner_internal
 
 QT_END_NAMESPACE
