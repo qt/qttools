@@ -60,7 +60,7 @@
 QT_BEGIN_NAMESPACE
 
 namespace fulltextsearch {
-namespace std {
+namespace qt {
 
 class Reader
 {

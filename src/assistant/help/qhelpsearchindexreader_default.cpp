@@ -53,7 +53,7 @@
 QT_BEGIN_NAMESPACE
 
 namespace fulltextsearch {
-namespace std {
+namespace qt {
 
 namespace {
     QStringList split( const QString &str )

@@ -54,7 +54,7 @@
 QT_BEGIN_NAMESPACE
 
 namespace fulltextsearch {
-namespace std {
+namespace qt {
 
 Writer::Writer(const QString &path)
     : indexPath(path)

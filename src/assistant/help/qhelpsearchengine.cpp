@@ -63,7 +63,7 @@ QT_BEGIN_NAMESPACE
 #if defined(QT_CLUCENE_SUPPORT)
     using namespace fulltextsearch::clucene;
 #else
-    using namespace fulltextsearch::std;
+    using namespace fulltextsearch::qt;
 #endif
 
 class QHelpSearchEnginePrivate : public QObject
