@@ -315,7 +315,7 @@ bool AppxEngine::getManifestFile(const QString &fileName, QString *manifest)
     }
 
     // If it looks like an executable, check that manifest is next to it
-    if (fileName.endsWith(QStringLiteral(".exe"))) {
+    if (fileName.endsWith(QLatin1String(".exe"))) {
         QDir appDir = QFileInfo(fileName).absoluteDir();
         QString manifestFileName = appDir.absoluteFilePath(QStringLiteral("AppxManifest.xml"));
         if (!QFile::exists(manifestFileName)) {
@@ -328,7 +328,11 @@ bool AppxEngine::getManifestFile(const QString &fileName, QString *manifest)
         return true;
     }
 
-    // TODO: handle already-built package as well
+    if (fileName.endsWith(QLatin1String(".appx"))) {
+        // For existing appx packages the manifest reader will be
+        // instantiated later.
+        return true;
+    }
 
     qCWarning(lcWinRtRunner) << "Appx: unable to determine manifest for" << fileName << ".";
     return false;
@@ -375,12 +379,6 @@ AppxEngine::AppxEngine(Runner *runner, AppxEnginePrivate *dd)
     d->pid = -1;
     d->exitCode = UINT_MAX;
 
-    if (!getManifestFile(runner->app(), &d->manifest)) {
-        qCWarning(lcWinRtRunner) << "Unable to determine manifest file from" << runner->app();
-        d->hasFatalError = true;
-        return;
-    }
-
     HRESULT hr;
     hr = RoGetActivationFactory(HString::MakeReference(RuntimeClass_Windows_Foundation_Uri).Get(),
                                 IID_PPV_ARGS(&d->uriFactory));
@@ -390,28 +388,57 @@ AppxEngine::AppxEngine(Runner *runner, AppxEnginePrivate *dd)
                           IID_IAppxFactory, &d->packageFactory);
     CHECK_RESULT_FATAL("Failed to instantiate package factory.", return);
 
-    ComPtr<IStream> manifestStream;
-    hr = SHCreateStreamOnFile(wchar(d->manifest), STGM_READ, &manifestStream);
-    CHECK_RESULT_FATAL("Failed to open manifest stream.", return);
+    bool existingPackage = runner->app().endsWith(QLatin1String(".appx"));
 
-    ComPtr<IAppxManifestReader> manifestReader;
-    hr = d->packageFactory->CreateManifestReader(manifestStream.Get(), &manifestReader);
-    if (FAILED(hr)) {
-        qCWarning(lcWinRtRunner).nospace() << "Failed to instantiate manifest reader. (0x"
-                                           << QByteArray::number(hr, 16).constData()
-                                           << ' ' << qt_error_string(hr) << ')';
-        // ### TODO: read detailed error from event log directly
-        if (hr == APPX_E_INVALID_MANIFEST) {
-            qCWarning(lcWinRtRunner) << "More information on the error can "
-                                      "be found in the event log under "
-                                      "Microsoft\\Windows\\AppxPackagingOM";
+    if (existingPackage) {
+        ComPtr<IStream> appxStream;
+        hr = SHCreateStreamOnFile(wchar(runner->app()), STGM_READ, &appxStream);
+        CHECK_RESULT_FATAL("Failed to open appx stream.", return);
+
+        ComPtr<IAppxPackageReader> packageReader;
+        hr = d->packageFactory->CreatePackageReader(appxStream.Get(), &packageReader);
+        if (FAILED(hr)) {
+            qCWarning(lcWinRtRunner).nospace() << "Failed to instantiate package reader. (0x"
+                                               << QByteArray::number(hr, 16).constData()
+                                               << ' ' << qt_error_string(hr) << ')';
+            d->hasFatalError = true;
+            return;
         }
-        d->hasFatalError = true;
-        return;
-    }
 
+        hr = packageReader->GetManifest(&d->manifestReader);
+        if (FAILED(hr)) {
+            qCWarning(lcWinRtRunner).nospace() << "Failed to query manifext reader from package";
+            d->hasFatalError = true;
+            return;
+        }
+    } else {
+        if (!getManifestFile(runner->app(), &d->manifest)) {
+            qCWarning(lcWinRtRunner) << "Unable to determine manifest file from" << runner->app();
+            d->hasFatalError = true;
+            return;
+        }
+
+        ComPtr<IStream> manifestStream;
+        hr = SHCreateStreamOnFile(wchar(d->manifest), STGM_READ, &manifestStream);
+        CHECK_RESULT_FATAL("Failed to open manifest stream.", return);
+
+        hr = d->packageFactory->CreateManifestReader(manifestStream.Get(), &d->manifestReader);
+        if (FAILED(hr)) {
+            qCWarning(lcWinRtRunner).nospace() << "Failed to instantiate manifest reader. (0x"
+                                               << QByteArray::number(hr, 16).constData()
+                                               << ' ' << qt_error_string(hr) << ')';
+            // ### TODO: read detailed error from event log directly
+            if (hr == APPX_E_INVALID_MANIFEST) {
+                qCWarning(lcWinRtRunner) << "More information on the error can "
+                                            "be found in the event log under "
+                                            "Microsoft\\Windows\\AppxPackagingOM";
+            }
+            d->hasFatalError = true;
+            return;
+        }
+    }
     ComPtr<IAppxManifestPackageId> packageId;
-    hr = manifestReader->GetPackageId(&packageId);
+    hr = d->manifestReader->GetPackageId(&packageId);
     CHECK_RESULT_FATAL("Unable to obtain the package ID from the manifest.", return);
 
     APPX_PACKAGE_ARCHITECTURE arch;
@@ -440,7 +467,7 @@ AppxEngine::AppxEngine(Runner *runner, AppxEnginePrivate *dd)
 #endif // _MSC_VER >= 1900
 
     ComPtr<IAppxManifestApplicationsEnumerator> applications;
-    hr = manifestReader->GetApplications(&applications);
+    hr = d->manifestReader->GetApplications(&applications);
     CHECK_RESULT_FATAL("Failed to get a list of applications from the manifest.", return);
 
     BOOL hasCurrent;
@@ -455,12 +482,12 @@ AppxEngine::AppxEngine(Runner *runner, AppxEnginePrivate *dd)
     LPWSTR executable;
     application->GetStringValue(L"Executable", &executable);
     CHECK_RESULT_FATAL("Failed to retrieve the application executable from the manifest.", return);
-    d->executable = QFileInfo(d->manifest).absoluteDir()
+    d->executable = QFileInfo(runner->app()).absoluteDir()
             .absoluteFilePath(QString::fromWCharArray(executable));
     CoTaskMemFree(executable);
 
     ComPtr<IAppxManifestPackageDependenciesEnumerator> dependencies;
-    hr = manifestReader->GetPackageDependencies(&dependencies);
+    hr = d->manifestReader->GetPackageDependencies(&dependencies);
     CHECK_RESULT_FATAL("Failed to retrieve the package dependencies from the manifest.", return);
 
     hr = dependencies->GetHasCurrent(&hasCurrent);

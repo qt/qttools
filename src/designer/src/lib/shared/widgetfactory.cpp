@@ -110,8 +110,10 @@ bool ComboEventFilter::eventFilter(QObject *watched, QEvent *event)
 {
     if (event->type() == QEvent::ChildPolished) {
         QComboBox *cb = static_cast<QComboBox*>(watched);
-        if (QLineEdit *le = cb->lineEdit())
+        if (QLineEdit *le = cb->lineEdit()) {
             le->setFocusPolicy(Qt::NoFocus);
+            le->setCursor(Qt::ArrowCursor);
+        }
     }
     return QObject::eventFilter(watched, event);
 }

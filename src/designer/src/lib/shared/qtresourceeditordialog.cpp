@@ -285,13 +285,11 @@ public:
     // helpers
     QtQrcFile *qrcFileOf(const QString &path) const;
     QtQrcFile *qrcFileOf(QtResourcePrefix *resourcePrefix) const;
-    QtQrcFile *qrcFileOf(QtResourceFile *resourceFile) const;
     QtResourcePrefix *resourcePrefixOf(QtResourceFile *resourceFile) const;
 
     QtQrcFile *importQrcFile(const QtQrcFileData &qrcFileData, QtQrcFile *beforeQrcFile = 0);
     void exportQrcFile(QtQrcFile *qrcFile, QtQrcFileData *qrcFileData) const;
 
-    QList<QtResourceFile *> resourceFilesOf(const QString &resourceFullPath) const;
     QIcon icon(const QString &resourceFullPath) const;
     bool exists(const QString &resourceFullPath) const;
     bool exists(QtQrcFile *qrcFile) const;
@@ -378,11 +376,6 @@ QtQrcFile *QtQrcManager::qrcFileOf(QtResourcePrefix *resourcePrefix) const
     return m_prefixToQrc.value(resourcePrefix);
 }
 
-QtQrcFile *QtQrcManager::qrcFileOf(QtResourceFile *resourceFile) const
-{
-    return qrcFileOf(resourcePrefixOf(resourceFile));
-}
-
 QtResourcePrefix *QtQrcManager::resourcePrefixOf(QtResourceFile *resourceFile) const
 {
     return m_fileToPrefix.value(resourceFile);
@@ -445,11 +438,6 @@ void QtQrcManager::exportQrcFile(QtQrcFile *qrcFile, QtQrcFileData *qrcFileData)
     data = QtQrcFileData();
     data.qrcPath = qrcFile->path();
     data.resourceList = resourceList;
-}
-
-QList<QtResourceFile *> QtQrcManager::resourceFilesOf(const QString &resourcePath) const
-{
-    return m_fullPathToResourceFiles.value(resourcePath);
 }
 
 QIcon QtQrcManager::icon(const QString &resourceFullPath) const
