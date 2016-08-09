@@ -224,8 +224,14 @@ AppxPhoneEngine::AppxPhoneEngine(Runner *runner)
     d->hasFatalError = true;
 
     ComPtr<IStream> manifestStream;
-    HRESULT hr = SHCreateStreamOnFile(wchar(d->manifest), STGM_READ, &manifestStream);
-    RETURN_VOID_IF_FAILED("Failed to open manifest stream");
+    HRESULT hr;
+    if (d->manifestReader) {
+        hr = d->manifestReader->GetStream(&manifestStream);
+        RETURN_VOID_IF_FAILED("Failed to query manifest stream from manifest reader.");
+    } else {
+        hr = SHCreateStreamOnFile(wchar(d->manifest), STGM_READ, &manifestStream);
+        RETURN_VOID_IF_FAILED("Failed to open manifest stream");
+    }
 
     if (!getPhoneProductId(manifestStream.Get(), &d->productId)) {
         qCWarning(lcWinRtRunner) << "Failed to read phone product ID from the manifest.";
@@ -332,7 +338,12 @@ bool AppxPhoneEngine::installPackage(IAppxManifestReader *reader, const QString 
     _bstr_t packagePath(wchar(QDir::toNativeSeparators(filePath)));
     hr = connection->InstallApplication(productId, productId, deploymentFlagsAsGenre,
                                         packageTypeAsIconPath, packagePath);
-    RETURN_FALSE_IF_FAILED("Failed to install the package");
+    if (hr == 0x80073d06) { // No public E_* macro available
+        qCWarning(lcWinRtRunner) << "Found a newer version of " << filePath
+                                 << " on the target device, skipping...";
+    } else {
+        RETURN_FALSE_IF_FAILED("Failed to install the package");
+    }
 
     return true;
 }
@@ -388,23 +399,22 @@ bool AppxPhoneEngine::install(bool removeFirst)
     if (!installDependencies())
         return false;
 
-    const QDir base = QFileInfo(d->manifest).absoluteDir();
-    const QString packageFileName = base.absoluteFilePath(d->packageFamilyName + QStringLiteral(".appx"));
-    if (!createPackage(packageFileName))
-        return false;
+    const QDir base = QFileInfo(d->executable).absoluteDir();
+    const bool existingPackage = d->runner->app().endsWith(QLatin1String(".appx"));
+    const QString packageFileName = existingPackage
+                                      ? d->runner->app()
+                                      : base.absoluteFilePath(d->packageFamilyName + QStringLiteral(".appx"));
+    if (!existingPackage) {
+        if (!createPackage(packageFileName))
+            return false;
 
-    if (!sign(packageFileName))
-        return false;
+        if (!sign(packageFileName))
+            return false;
+    } else {
+        qCDebug(lcWinRtRunner) << "Installing existing package.";
+    }
 
-    ComPtr<IStream> manifestStream;
-    hr = SHCreateStreamOnFile(wchar(d->manifest), STGM_READ, &manifestStream);
-    RETURN_FALSE_IF_FAILED("Failed to open manifest stream");
-
-    ComPtr<IAppxManifestReader> manifestReader;
-    hr = d->packageFactory->CreateManifestReader(manifestStream.Get(), &manifestReader);
-    RETURN_FALSE_IF_FAILED("Failed to create manifest reader for installation");
-
-    return installPackage(manifestReader.Get(), packageFileName);
+    return installPackage(d->manifestReader.Get(), packageFileName);
 }
 
 bool AppxPhoneEngine::remove()
