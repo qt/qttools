@@ -800,7 +800,7 @@
     \table
         \header
             \li  Windows XP
-            \li  OS X
+            \li  \macos
             \li  Cleanlooks
         \row
             \li  \inlineimage designer-form-layout-windowsXP.png
