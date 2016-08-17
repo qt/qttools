@@ -270,7 +270,7 @@ namespace qdesigner_internal {
                 urlCompletions.push_back(QStringLiteral("about:blank"));
                 urlCompletions.push_back(QStringLiteral("http://"));
                 urlCompletions.push_back(QStringLiteral("http://www."));
-                urlCompletions.push_back(QStringLiteral("http://qt-project.org/"));
+                urlCompletions.push_back(QStringLiteral("http://qt.io"));
                 urlCompletions.push_back(QStringLiteral("file://"));
                 urlCompletions.push_back(QStringLiteral("ftp://"));
                 urlCompletions.push_back(QStringLiteral("data:"));
