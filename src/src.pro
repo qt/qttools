@@ -17,7 +17,7 @@ SUBDIRS += linguist \
     qtplugininfo \
     qtattributionsscanner
 
-if(!android|android_app):!ios: SUBDIRS += qtpaths
+if(!android|android_app):!uikit: SUBDIRS += qtpaths
 
 mac {
     SUBDIRS += macdeployqt
@@ -31,7 +31,7 @@ qtHaveModule(dbus): SUBDIRS += qdbus
 
 win32|winrt:SUBDIRS += windeployqt
 winrt:SUBDIRS += winrtrunner
-qtHaveModule(gui):!android:!ios:!qnx:!winrt: SUBDIRS += qtdiag
+qtHaveModule(gui):!android:!uikit:!qnx:!winrt: SUBDIRS += qtdiag
 
 qtNomakeTools( \
     pixeltool \
