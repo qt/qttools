@@ -208,9 +208,9 @@ inline QString operator+(const QString &one, const ProString &two)
     { return ProString(one) + two; }
 
 inline QString operator+(const ProString &one, const char *two)
-    { return one + ProString(two); } // XXX optimize
+    { QString ret = one.toQStringRef() + QLatin1String(two); ret.detach(); return ret; }
 inline QString operator+(const char *one, const ProString &two)
-    { return ProString(one) + two; } // XXX optimize
+    { QString ret = QLatin1String(one) + two.toQStringRef(); ret.detach(); return ret;  }
 
 inline QString &operator+=(QString &that, const ProString &other)
     { return that += other.toQStringRef(); }
