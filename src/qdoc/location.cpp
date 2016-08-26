@@ -380,10 +380,17 @@ void Location::emitMessage(MessageType type,
     if (!details.isEmpty())
         result += "\n[" + details + QLatin1Char(']');
     result.replace("\n", "\n    ");
-    if (type == Error)
-        result.prepend(tr(": error: "));
-    else if (type == Warning)
-        result.prepend(tr(": warning: "));
+    if (isEmpty()) {
+        if (type == Error)
+            result.prepend(tr(": error: "));
+        else if (type == Warning)
+            result.prepend(tr(": warning: "));
+    } else {
+        if (type == Error)
+            result.prepend(tr(": (qdoc) error: "));
+        else if (type == Warning)
+            result.prepend(tr(": (qdoc) warning: "));
+    }
     if (type != Report)
         result.prepend(toString());
     fprintf(stderr, "%s\n", result.toLatin1().data());
