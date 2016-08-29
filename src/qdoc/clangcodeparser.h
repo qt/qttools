@@ -59,6 +59,7 @@ private:
     QVector<QByteArray> includePaths_;
     QScopedPointer<QTemporaryDir> pchFileDir_;
     QByteArray pchName_;
+    QVector<QByteArray> defines_;
 };
 
 QT_END_NAMESPACE

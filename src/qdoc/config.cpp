@@ -47,6 +47,7 @@ QString ConfigStrings::AUTOLINKERRORS = QStringLiteral("autolinkerrors");
 QString ConfigStrings::BASE = QStringLiteral("base");
 QString ConfigStrings::BASEDIR = QStringLiteral("basedir");
 QString ConfigStrings::BUILDVERSION = QStringLiteral("buildversion");
+QString ConfigStrings::CLANGDEFINES = QStringLiteral("clangdefines");
 QString ConfigStrings::CODEINDENT = QStringLiteral("codeindent");
 QString ConfigStrings::CODEPREFIX = QStringLiteral("codeprefix");
 QString ConfigStrings::CODESUFFIX = QStringLiteral("codesuffix");

@@ -721,7 +721,9 @@ ClangCodeParser::~ClangCodeParser()
 }
 
 /*!
-
+  Get the include paths from the qdoc configuration database
+  \a config. Call the initializeParser() in the base class.
+  Get the defines list from the qdocconf database.
  */
 void ClangCodeParser::initializeParser(const Config &config)
 {
@@ -733,6 +735,30 @@ void ClangCodeParser::initializeParser(const Config &config)
     pchFileDir_.reset(nullptr);
     allHeaders_.clear();
     pchName_.clear();
+    defines_.clear();
+    QSet<QString> accepted;
+    {
+        const QStringList tmpDefines = config.getStringList(CONFIG_CLANGDEFINES);
+        for (const QString &def : tmpDefines) {
+            if (!accepted.contains(def)) {
+                QByteArray tmp("-D");
+                tmp.append(def.toUtf8());
+                defines_.append(tmp.constData());
+                accepted.insert(def);
+            }
+        }
+    }
+    {
+        const QStringList tmpDefines = config.getStringList(CONFIG_DEFINES);
+        for (const QString &def : tmpDefines) {
+            if (!accepted.contains(def) && !def.contains(QChar('*'))) {
+                QByteArray tmp("-D");
+                tmp.append(def.toUtf8());
+                defines_.append(tmp.constData());
+                accepted.insert(def);
+            }
+        }
+    }
 }
 
 /*!
@@ -803,6 +829,9 @@ void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QStrin
         "-I" CLANG_RESOURCE_DIR
     };
     std::vector<const char *> args(std::begin(defaultArgs), std::end(defaultArgs));
+    // Add the defines from the qdocconf file.
+    for (const auto &p : qAsConst(defines_))
+        args.push_back(p.constData());
 
     auto moreArgs = includePaths_;
     if (moreArgs.isEmpty()) {
@@ -824,8 +853,9 @@ void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QStrin
     for (const auto &p : qAsConst(moreArgs))
         args.push_back(p.constData());
 
-    auto flags = CXTranslationUnit_Incomplete | CXTranslationUnit_SkipFunctionBodies;
-    CXIndex index = clang_createIndex(1, 1);
+    auto flags = CXTranslationUnit_Incomplete | CXTranslationUnit_SkipFunctionBodies |
+        CXTranslationUnit_KeepGoing;
+    CXIndex index = clang_createIndex(1, 0);
 
     if (!pchFileDir_) {
         pchFileDir_.reset(new QTemporaryDir(QDir::tempPath() + QLatin1String("/qdoc_pch")));
@@ -930,10 +960,18 @@ void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QStrin
             }
         }
     }
+    args.clear();
+    args.insert(args.begin(), std::begin(defaultArgs), std::end(defaultArgs));
+    // Add the defines from the qdocconf file.
+    for (const auto &p : qAsConst(defines_))
+        args.push_back(p.constData());
     if (!pchName_.isEmpty() && !filePath.endsWith(".mm")) {
+        args.push_back("-w");
         args.push_back("-include-pch");
         args.push_back(pchName_.constData());
     }
+    for (const auto &p : qAsConst(moreArgs))
+        args.push_back(p.constData());
 
     CXTranslationUnit tu;
     CXErrorCode err = clang_parseTranslationUnit2(index, filePath.toLocal8Bit(), args.data(),

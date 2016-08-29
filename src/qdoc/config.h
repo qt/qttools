@@ -160,6 +160,7 @@ struct ConfigStrings
     static QString BASE;
     static QString BASEDIR;
     static QString BUILDVERSION;
+    static QString CLANGDEFINES;
     static QString CODEINDENT;
     static QString CODEPREFIX;
     static QString CODESUFFIX;
@@ -241,6 +242,7 @@ struct ConfigStrings
 #define CONFIG_BASE ConfigStrings::BASE
 #define CONFIG_BASEDIR ConfigStrings::BASEDIR
 #define CONFIG_BUILDVERSION ConfigStrings::BUILDVERSION
+#define CONFIG_CLANGDEFINES ConfigStrings::CLANGDEFINES
 #define CONFIG_CODEINDENT ConfigStrings::CODEINDENT
 #define CONFIG_CODEPREFIX ConfigStrings::CODEPREFIX
 #define CONFIG_CODESUFFIX ConfigStrings::CODESUFFIX
