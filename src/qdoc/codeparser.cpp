@@ -354,6 +354,21 @@ void CodeParser::setLink(Node* node, Node::LinkType linkType, const QString& arg
 }
 
 /*!
+  \brief Test for whether a doc comment warrants warnings.
+
+  Returns true if qdoc should report that it has found something
+  wrong with the qdoc comment in \a doc. Sometimes, qdoc should
+  not report the warning, for example, when the comment contains
+  the \c internal command, which normally means qdoc will not use
+  the comment in the documentation anyway, so there is no point
+  in reporting warnings about it.
+ */
+bool CodeParser::isWorthWarningAbout(const Doc &doc)
+{
+    return (showInternal_ || !doc.metaCommandsUsed().contains(QStringLiteral("internal")));
+}
+
+/*!
   Returns \c true if the file being parsed is a .h file.
  */
 bool CodeParser::isParsingH() const

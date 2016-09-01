@@ -66,6 +66,7 @@ public:
     static CodeParser *parserForHeaderFile(const QString &filePath);
     static CodeParser *parserForSourceFile(const QString &filePath);
     static void setLink(Node* node, Node::LinkType linkType, const QString& arg);
+    static bool isWorthWarningAbout(const Doc &doc);
 
 protected:
     const QSet<QString>& commonMetaCommands();

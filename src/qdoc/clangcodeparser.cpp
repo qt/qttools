@@ -1050,7 +1050,7 @@ void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QStrin
             if (n) {
                 nodes.append(n);
                 docs.append(doc);
-            } else {
+            } else if (CodeParser::isWorthWarningAbout(doc)) {
                 doc.location().warning(tr("Cannot tie this documentation to anything"),
                                        tr("I found a /*! ... */ comment, but there was no "
                                        "topic command (e.g., '\\%1', '\\%2') in the "

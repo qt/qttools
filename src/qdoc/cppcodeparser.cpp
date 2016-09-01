@@ -231,7 +231,9 @@ Node* CppCodeParser::processTopicCommand(const Doc& doc,
             if (func == 0)
                 func = qdb_->findNodeInOpenNamespace(parentPath, clone);
 
-            if (func == 0) {
+            if (func) {
+                lastPath_ = parentPath;
+            } else if (isWorthWarningAbout(doc)) {
                 doc.location().warning(tr("Cannot find '%1' in '\\%2' %3")
                                        .arg(clone->name() + "(...)")
                                        .arg(COMMAND_FN)
@@ -241,8 +243,6 @@ Node* CppCodeParser::processTopicCommand(const Doc& doc,
                                           "is identical to the declaration, including 'const' "
                                           "qualifiers."));
             }
-            else
-                lastPath_ = parentPath;
             if (func) {
                 func->borrowParameterNames(clone);
                 func->setParentPath(clone->parentPath());
@@ -306,8 +306,10 @@ Node* CppCodeParser::processTopicCommand(const Doc& doc,
         if (node == 0)
             node = qdb_->findNodeByNameAndType(path, type);
         if (node == 0) {
-            doc.location().warning(tr("Cannot find '%1' specified with '\\%2' in any header file")
-                                   .arg(arg.first).arg(command));
+            if (isWorthWarningAbout(doc)) {
+                doc.location().warning(tr("Cannot find '%1' specified with '\\%2' in any header file")
+                                       .arg(arg.first).arg(command));
+            }
             lastPath_ = path;
 
         }
@@ -798,11 +800,13 @@ void CppCodeParser::processOtherMetaCommand(const Doc& doc,
                 FunctionNode *func = (FunctionNode *) node;
                 const FunctionNode *from = func->reimplementedFrom();
                 if (from == 0) {
-                    doc.location().warning(tr("Cannot find base function for '\\%1' in %2()")
-                                           .arg(COMMAND_REIMP).arg(node->name()),
-                                           tr("The function either doesn't exist in any "
-                                              "base class with the same signature or it "
-                                              "exists but isn't virtual."));
+                    if (isWorthWarningAbout(doc)) {
+                        doc.location().warning(tr("Cannot find base function for '\\%1' in %2()")
+                                               .arg(COMMAND_REIMP).arg(node->name()),
+                                               tr("The function either doesn't exist in any "
+                                                  "base class with the same signature or it "
+                                                  "exists but isn't virtual."));
+                    }
                 }
                 /*
                   Ideally, we would enable this check to warn whenever
@@ -810,8 +814,9 @@ void CppCodeParser::processOtherMetaCommand(const Doc& doc,
                   internal if the function is a reimplementation of
                   another function in a base class.
                 */
-                else if (from->access() == Node::Private
-                         || from->parent()->access() == Node::Private) {
+                else if ((from->access() == Node::Private
+                          || from->parent()->access() == Node::Private)
+                         && isWorthWarningAbout(doc)) {
                     doc.location().warning(tr("'\\%1' in %2() should be '\\internal' "
                                               "because its base function is private "
                                               "or internal").arg(COMMAND_REIMP).arg(node->name()));
