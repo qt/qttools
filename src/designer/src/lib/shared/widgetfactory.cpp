@@ -237,6 +237,25 @@ QObject* WidgetFactory::createObject(const QString &className, QObject* parent) 
     return 0;
 }
 
+// Check for mismatched class names in plugins, which is hard to track.
+static bool classNameMatches(const QObject *created, const QString &className)
+{
+#ifdef Q_OS_WIN
+    // Perform literal comparison first for QAxWidget, for which a meta object hack is in effect.
+    if (isAxWidget(created))
+       return true;
+#endif
+    const char *createdClassNameC = created->metaObject()->className();
+    const QByteArray classNameB = className.toUtf8();
+    const char *classNameC = classNameB.constData();
+    if (qstrcmp(createdClassNameC, classNameC) == 0 || created->inherits(classNameC))
+        return true;
+    // QTBUG-53984: QWebEngineView property dummy
+    if (classNameB == "QWebEngineView" && qstrcmp(createdClassNameC, "fake::QWebEngineView") == 0)
+        return true;
+    return false;
+}
+
 QWidget*  WidgetFactory::createCustomWidget(const QString &className, QWidget *parentWidget, bool *creationError) const
 {
     *creationError = false;
@@ -282,19 +301,12 @@ QWidget*  WidgetFactory::createCustomWidget(const QString &className, QWidget *p
     if (lang)
         return rc;
 
-#ifdef Q_OS_WIN
-    if (isAxWidget(rc))
-       return rc;
-#endif
     // Check for mismatched class names which is hard to track.
-    // Perform literal comparison first for QAxWidget, for which a meta object hack is in effect.
-    const char *createdClassNameC = rc->metaObject()->className();
-    const QByteArray classNameB = className.toUtf8();
-    const char *classNameC = classNameB.constData();
-
-    if (qstrcmp(createdClassNameC, classNameC) && !rc->inherits(classNameC))
+    if (!classNameMatches(rc, className)) {
         designerWarning(tr("A class name mismatch occurred when creating a widget using the custom widget factory registered for widgets of class %1."
-                           " It returned a widget of class %2.").arg(className).arg(QString::fromUtf8(createdClassNameC)));
+                           " It returned a widget of class %2.")
+                        .arg(className, QString::fromUtf8(rc->metaObject()->className())));
+    }
     return rc;
 }
 

@@ -2187,7 +2187,7 @@
         \image happyguy.jpg "Happy guy"
 
         Qt provides single-source portability across Microsoft
-        Windows, OS X, Linux, and all major commercial Unix
+        Windows, macOS, Linux, and all major commercial Unix
         variants. It is also available for embedded devices.
     * /
     \endcode
@@ -2200,7 +2200,7 @@
         \image happyguy.jpg image "Happy guy"
 
         Qt provides single-source portability across Microsoft
-        Windows, OS X, Linux, and all major commercial Unix
+        Windows, macOS, Linux, and all major commercial Unix
         variants. It is also available for embedded devices.
         \endquotation
 
@@ -3291,7 +3291,7 @@
            / *!
                Qt::HANDLE is a platform-specific handle type
                for system objects. This is  equivalent to
-               \c{void *} on Windows and OS X, and to
+               \c{void *} on Windows and macOS, and to
                \c{unsigned long} on X11.
 
                \warning Using this type is not portable.
@@ -3303,7 +3303,7 @@
            \quotation
                Qt::HANDLE is a platform-specific handle type
                for system objects. This is  equivalent to
-               \c{void *} on Windows and OS X, and to
+               \c{void *} on Windows and macOS, and to
                \c{unsigned long} on X11.
 
                \warning Using this type is not portable.
@@ -3888,7 +3888,7 @@
         \ingroup basicwidgets
 
         \meta {technology} {User Interface}
-        \meta {platform} {OS X 10.6}
+        \meta {platform} {macOS 10.6}
         \meta {platform} {MeeGo}
         \meta {audience} {user}
         \meta {audience} {programmer}
@@ -3928,7 +3928,7 @@
                    <component>QtGui</component>
                </prodinfo>
                <othermeta name="platform" content="MeeGo"/>
-               <othermeta name="platform" content="OS X 10.6"/>
+               <othermeta name="platform" content="macOS 10.6"/>
                <othermeta name="technology" content="User Interface"/>
            </metadata>
        </prolog>

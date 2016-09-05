@@ -2375,7 +2375,7 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
 
     //add the inherited-by to the map
     NodeList subs;
-    QmlTypeNode::subclasses(qcn->name(), subs);
+    QmlTypeNode::subclasses(qcn, subs);
     if (!subs.isEmpty()) {
         text.clear();
         text << Atom::ParaLeft;

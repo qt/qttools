@@ -2444,7 +2444,7 @@ QString PropertyNode::qualifiedDataType() const
 }
 
 bool QmlTypeNode::qmlOnly = false;
-QMultiMap<QString,Node*> QmlTypeNode::inheritedBy;
+QMultiMap<const Node*, Node*> QmlTypeNode::inheritedBy;
 
 /*!
   Constructs a Qml class node. The new node has the given
@@ -2490,18 +2490,18 @@ void QmlTypeNode::terminate()
   Record the fact that QML class \a base is inherited by
   QML class \a sub.
  */
-void QmlTypeNode::addInheritedBy(const QString& base, Node* sub)
+void QmlTypeNode::addInheritedBy(const Node *base, Node* sub)
 {
     if (sub->isInternal())
         return;
-    if (inheritedBy.constFind(base,sub) == inheritedBy.constEnd())
-        inheritedBy.insert(base,sub);
+    if (!inheritedBy.contains(base, sub))
+        inheritedBy.insert(base, sub);
 }
 
 /*!
   Loads the list \a subs with the nodes of all the subclasses of \a base.
  */
-void QmlTypeNode::subclasses(const QString& base, NodeList& subs)
+void QmlTypeNode::subclasses(const Node *base, NodeList &subs)
 {
     subs.clear();
     if (inheritedBy.count(base) > 0) {
@@ -2509,13 +2509,6 @@ void QmlTypeNode::subclasses(const QString& base, NodeList& subs)
     }
 }
 
-QmlTypeNode* QmlTypeNode::qmlBaseNode()
-{
-    if (!qmlBaseNode_ && !qmlBaseName_.isEmpty()) {
-        qmlBaseNode_ = QDocDatabase::qdocDB()->findQmlType(qmlBaseName_);
-    }
-    return qmlBaseNode_;
-}
 
 /*!
   If this QML type node has a base type node,
