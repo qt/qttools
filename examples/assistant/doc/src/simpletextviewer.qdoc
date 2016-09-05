@@ -330,7 +330,7 @@
     To start the process we need the executable name of \QA as well as the
     command line arguments for running \QA in a customized mode. The
     executable name is a little bit tricky since it depends on the
-    platform, but fortunately it is only different on OS X.
+    platform, but fortunately it is only different on \macos.
 
     The displayed documentation can be altered using the \c -collectionFile
     command line argument when launching \QA. When started without any options,

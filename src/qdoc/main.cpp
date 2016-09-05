@@ -522,168 +522,157 @@ static void processQdocconfFile(const QString &fileName)
     Generator::debug("qdoc classes terminated");
 }
 
-extern Q_CORE_EXPORT QBasicAtomicInt qt_qhash_seed;
-QT_END_NAMESPACE
-
-int main(int argc, char **argv)
+class QDocCommandLineParser : public QCommandLineParser
 {
-    QT_USE_NAMESPACE
+public:
+    QDocCommandLineParser();
+    void process(const QCoreApplication &app);
 
-#ifndef QT_BOOTSTRAPPED
-    qt_qhash_seed.testAndSetRelaxed(-1, 0); // set the hash seed to 0 if it wasn't set yet
-#endif
-    QCoreApplication app(argc, argv);
-    app.setApplicationVersion(QStringLiteral(QT_VERSION_STR));
+private:
+    QCommandLineOption defineOption, dependsOption, highlightingOption;
+    QCommandLineOption showInternalOption, redirectDocumentationToDevNullOption;
+    QCommandLineOption noExamplesOption, indexDirOption, installDirOption;
+    QCommandLineOption obsoleteLinksOption, outputDirOption, outputFormatOption;
+    QCommandLineOption noLinkErrorsOption, autoLinkErrorsOption, debugOption;
+    QCommandLineOption prepareOption, generateOption, logProgressOption;
+    QCommandLineOption singleExecOption, writeQaPagesOption;
+};
 
-    /*
-      Create code parsers for the languages to be parsed,
-      and create a tree for C++.
-     */
-    CppCodeParser cppParser;
-    QmlCodeParser qmlParser;
-    PureDocParser docParser;
+QDocCommandLineParser::QDocCommandLineParser()
+    : QCommandLineParser(),
+      defineOption(QStringList() << QStringLiteral("D")),
+      dependsOption(QStringList() << QStringLiteral("depends")),
+      highlightingOption(QStringList() << QStringLiteral("highlighting")),
+      showInternalOption(QStringList() << QStringLiteral("showinternal")),
+      redirectDocumentationToDevNullOption(QStringList() << QStringLiteral("redirect-documentation-to-dev-null")),
+      noExamplesOption(QStringList() << QStringLiteral("no-examples")),
+      indexDirOption(QStringList() << QStringLiteral("indexdir")),
+      installDirOption(QStringList() << QStringLiteral("installdir")),
+      obsoleteLinksOption(QStringList() << QStringLiteral("obsoletelinks")),
+      outputDirOption(QStringList() << QStringLiteral("outputdir")),
+      outputFormatOption(QStringList() << QStringLiteral("outputformat")),
+      noLinkErrorsOption(QStringList() << QStringLiteral("no-link-errors")),
+      autoLinkErrorsOption(QStringList() << QStringLiteral("autolink-errors")),
+      debugOption(QStringList() << QStringLiteral("debug")),
+      prepareOption(QStringList() << QStringLiteral("prepare")),
+      generateOption(QStringList() << QStringLiteral("generate")),
+      logProgressOption(QStringList() << QStringLiteral("log-progress")),
+      singleExecOption(QStringList() << QStringLiteral("single-exec")),
+      writeQaPagesOption(QStringList() << QStringLiteral("write-qa-pages"))
+{
+    setApplicationDescription(QCoreApplication::translate("qdoc", "Qt documentation generator"));
+    addHelpOption();
+    addVersionOption();
 
-    /*
-      Create code markers for plain text, C++,
-      javascript, and QML.
-     */
-    PlainCodeMarker plainMarker;
-    CppCodeMarker cppMarker;
-    JsCodeMarker jsMarker;
-    QmlCodeMarker qmlMarker;
+    setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
 
-    HtmlGenerator htmlGenerator;
+    addPositionalArgument("file1.qdocconf ...", QCoreApplication::translate("qdoc", "Input files"));
 
-    QCommandLineParser parser;
-    parser.setApplicationDescription(QCoreApplication::translate("qdoc", "Qt documentation generator"));
-    parser.addHelpOption();
-    parser.addVersionOption();
-
-    parser.setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
-
-    parser.addPositionalArgument("file1.qdocconf ...", QCoreApplication::translate("qdoc", "Input files"));
-
-    QCommandLineOption defineOption(QStringList() << QStringLiteral("D"));
     defineOption.setDescription(QCoreApplication::translate("qdoc", "Define the argument as a macro while parsing sources"));
     defineOption.setValueName(QStringLiteral("macro[=def]"));
-    parser.addOption(defineOption);
+    addOption(defineOption);
 
-    QCommandLineOption dependsOption(QStringList() << QStringLiteral("depends"));
     dependsOption.setDescription(QCoreApplication::translate("qdoc", "Specify dependent modules"));
     dependsOption.setValueName(QStringLiteral("module"));
-    parser.addOption(dependsOption);
+    addOption(dependsOption);
 
-    QCommandLineOption highlightingOption(QStringList() << QStringLiteral("highlighting"));
     highlightingOption.setDescription(QCoreApplication::translate("qdoc", "Turn on syntax highlighting (makes qdoc run slower)"));
-    parser.addOption(highlightingOption);
+    addOption(highlightingOption);
 
-    QCommandLineOption showInternalOption(QStringList() << QStringLiteral("showinternal"));
     showInternalOption.setDescription(QCoreApplication::translate("qdoc", "Include content marked internal"));
-    parser.addOption(showInternalOption);
+    addOption(showInternalOption);
 
-    QCommandLineOption redirectDocumentationToDevNullOption(QStringList() << QStringLiteral("redirect-documentation-to-dev-null"));
     redirectDocumentationToDevNullOption.setDescription(QCoreApplication::translate("qdoc", "Save all documentation content to /dev/null. Useful if someone is interested in qdoc errors only."));
-    parser.addOption(redirectDocumentationToDevNullOption);
+    addOption(redirectDocumentationToDevNullOption);
 
-    QCommandLineOption noExamplesOption(QStringList() << QStringLiteral("no-examples"));
     noExamplesOption.setDescription(QCoreApplication::translate("qdoc", "Do not generate documentation for examples"));
-    parser.addOption(noExamplesOption);
+    addOption(noExamplesOption);
 
-    QCommandLineOption indexDirOption(QStringList() << QStringLiteral("indexdir"));
     indexDirOption.setDescription(QCoreApplication::translate("qdoc", "Specify a directory where QDoc should search for index files to load"));
     indexDirOption.setValueName(QStringLiteral("dir"));
-    parser.addOption(indexDirOption);
+    addOption(indexDirOption);
 
-    QCommandLineOption installDirOption(QStringList() << QStringLiteral("installdir"));
     installDirOption.setDescription(QCoreApplication::translate("qdoc", "Specify the directory where the output will be after running \"make install\""));
     installDirOption.setValueName(QStringLiteral("dir"));
-    parser.addOption(installDirOption);
+    addOption(installDirOption);
 
-    QCommandLineOption obsoleteLinksOption(QStringList() << QStringLiteral("obsoletelinks"));
     obsoleteLinksOption.setDescription(QCoreApplication::translate("qdoc", "Report links from obsolete items to non-obsolete items"));
-    parser.addOption(obsoleteLinksOption);
+    addOption(obsoleteLinksOption);
 
-    QCommandLineOption outputDirOption(QStringList() << QStringLiteral("outputdir"));
     outputDirOption.setDescription(QCoreApplication::translate("qdoc", "Specify output directory, overrides setting in qdocconf file"));
     outputDirOption.setValueName(QStringLiteral("dir"));
-    parser.addOption(outputDirOption);
+    addOption(outputDirOption);
 
-    QCommandLineOption outputFormatOption(QStringList() << QStringLiteral("outputformat"));
     outputFormatOption.setDescription(QCoreApplication::translate("qdoc", "Specify output format, overrides setting in qdocconf file"));
     outputFormatOption.setValueName(QStringLiteral("format"));
-    parser.addOption(outputFormatOption);
+    addOption(outputFormatOption);
 
-    QCommandLineOption noLinkErrorsOption(QStringList() << QStringLiteral("no-link-errors"));
     noLinkErrorsOption.setDescription(QCoreApplication::translate("qdoc", "Do not print link errors (i.e. missing targets)"));
-    parser.addOption(noLinkErrorsOption);
+    addOption(noLinkErrorsOption);
 
-    QCommandLineOption autoLinkErrorsOption(QStringList() << QStringLiteral("autolink-errors"));
     autoLinkErrorsOption.setDescription(QCoreApplication::translate("qdoc", "Show errors when automatic linking fails"));
-    parser.addOption(autoLinkErrorsOption);
+    addOption(autoLinkErrorsOption);
 
-    QCommandLineOption debugOption(QStringList() << QStringLiteral("debug"));
     debugOption.setDescription(QCoreApplication::translate("qdoc", "Enable debug output"));
-    parser.addOption(debugOption);
+    addOption(debugOption);
 
-    QCommandLineOption prepareOption(QStringList() << QStringLiteral("prepare"));
     prepareOption.setDescription(QCoreApplication::translate("qdoc", "Run qdoc only to generate an index file, not the docs"));
-    parser.addOption(prepareOption);
+    addOption(prepareOption);
 
-    QCommandLineOption generateOption(QStringList() << QStringLiteral("generate"));
     generateOption.setDescription(QCoreApplication::translate("qdoc", "Run qdoc to read the index files and generate the docs"));
-    parser.addOption(generateOption);
+    addOption(generateOption);
 
-    QCommandLineOption logProgressOption(QStringList() << QStringLiteral("log-progress"));
     logProgressOption.setDescription(QCoreApplication::translate("qdoc", "Log progress on stderr."));
-    parser.addOption(logProgressOption);
+    addOption(logProgressOption);
 
-    QCommandLineOption singleExecOption(QStringList() << QStringLiteral("single-exec"));
     singleExecOption.setDescription(QCoreApplication::translate("qdoc", "Run qdoc once over all the qdoc conf files."));
-    parser.addOption(singleExecOption);
+    addOption(singleExecOption);
 
-    QCommandLineOption writeQaPagesOption(QStringList() << QStringLiteral("write-qa-pages"));
     writeQaPagesOption.setDescription(QCoreApplication::translate("qdoc", "Write QA pages."));
-    parser.addOption(writeQaPagesOption);
+    addOption(writeQaPagesOption);
+}
 
-    parser.process(app);
+void QDocCommandLineParser::process(const QCoreApplication &app)
+{
+    QCommandLineParser::process(app);
 
-    defines += parser.values(defineOption);
-    dependModules += parser.values(dependsOption);
-    highlighting = parser.isSet(highlightingOption);
-    showInternal = parser.isSet(showInternalOption);
-    singleExec = parser.isSet(singleExecOption);
-    writeQaPages = parser.isSet(writeQaPagesOption);
-    redirectDocumentationToDevNull = parser.isSet(redirectDocumentationToDevNullOption);
-    Config::generateExamples = !parser.isSet(noExamplesOption);
-    foreach (const QString &indexDir, parser.values(indexDirOption)) {
+    defines += values(defineOption);
+    dependModules += values(dependsOption);
+    highlighting = isSet(highlightingOption);
+    showInternal = isSet(showInternalOption);
+    singleExec = isSet(singleExecOption);
+    writeQaPages = isSet(writeQaPagesOption);
+    redirectDocumentationToDevNull = isSet(redirectDocumentationToDevNullOption);
+    Config::generateExamples = !isSet(noExamplesOption);
+    foreach (const QString &indexDir, values(indexDirOption)) {
         if (QFile::exists(indexDir))
             indexDirs += indexDir;
         else
             qDebug() << "Cannot find index directory" << indexDir;
     }
-    if (parser.isSet(installDirOption))
-        Config::installDir = parser.value(installDirOption);
-    obsoleteLinks = parser.isSet(obsoleteLinksOption);
-    if (parser.isSet(outputDirOption))
-        Config::overrideOutputDir = parser.value(outputDirOption);
-    foreach (const QString &format, parser.values(outputFormatOption))
+    if (isSet(installDirOption))
+        Config::installDir = value(installDirOption);
+    obsoleteLinks = isSet(obsoleteLinksOption);
+    if (isSet(outputDirOption))
+        Config::overrideOutputDir = value(outputDirOption);
+    foreach (const QString &format, values(outputFormatOption))
         Config::overrideOutputFormats.insert(format);
-    noLinkErrors = parser.isSet(noLinkErrorsOption);
-    autolinkErrors = parser.isSet(autoLinkErrorsOption);
-    if (parser.isSet(debugOption))
+    noLinkErrors = isSet(noLinkErrorsOption);
+    autolinkErrors = isSet(autoLinkErrorsOption);
+    if (isSet(debugOption))
         Generator::startDebugging(QString("command line"));
-    if (parser.isSet(prepareOption))
+    if (isSet(prepareOption))
         Generator::setQDocPass(Generator::Prepare);
-    if (parser.isSet(generateOption))
+    if (isSet(generateOption))
         Generator::setQDocPass(Generator::Generate);
-    if (parser.isSet(singleExecOption)) {
+    if (isSet(singleExecOption)) {
         Generator::setSingleExec();
-        if (parser.isSet(indexDirOption))
+        if (isSet(indexDirOption))
             qDebug() << "WARNING: -indexdir option ignored: Index files are not used in -single-exec mode.";
     }
-    if (parser.isSet(writeQaPagesOption))
+    if (isSet(writeQaPagesOption))
         Generator::setWriteQaPages();
-    if (parser.isSet(logProgressOption))
+    if (isSet(logProgressOption))
         Location::startLoggingProgress();
 
     /*
@@ -703,7 +692,47 @@ int main(int argc, char **argv)
         defaults.insert(CONFIG_OUTPUTFORMATS, QLatin1String("HTML"));
         defaults.insert(CONFIG_TABSIZE, QLatin1String("8"));
     }
+}
 
+extern Q_CORE_EXPORT QBasicAtomicInt qt_qhash_seed;
+QT_END_NAMESPACE
+
+int main(int argc, char **argv)
+{
+    QT_USE_NAMESPACE
+
+    // Initialize Qt:
+#ifndef QT_BOOTSTRAPPED
+    qt_qhash_seed.testAndSetRelaxed(-1, 0); // set the hash seed to 0 if it wasn't set yet
+#endif
+    QCoreApplication app(argc, argv);
+    app.setApplicationVersion(QLatin1String(QT_VERSION_STR));
+
+    // Instantiate various singletons (used via static methods):
+    /*
+      Create code parsers for the languages to be parsed,
+      and create a tree for C++.
+     */
+    CppCodeParser cppParser;
+    QmlCodeParser qmlParser;
+    PureDocParser docParser;
+
+    /*
+      Create code markers for plain text, C++,
+      javascript, and QML.
+     */
+    PlainCodeMarker plainMarker;
+    CppCodeMarker cppMarker;
+    JsCodeMarker jsMarker;
+    QmlCodeMarker qmlMarker;
+
+    HtmlGenerator htmlGenerator;
+
+    // Set the globals declared at the top of this file:
+    QDocCommandLineParser parser;
+    parser.process(app);
+
+    // Get the list of files to act on:
     QStringList qdocFiles = parser.positionalArguments();
     if (qdocFiles.isEmpty())
         parser.showHelp();
@@ -711,9 +740,7 @@ int main(int argc, char **argv)
     if (singleExec)
         qdocFiles = Config::loadMaster(qdocFiles.at(0));
 
-    /*
-      Main loop is now modified to handle single exec mode.
-     */
+    // Main loop (adapted, when needed, to handle single exec mode):
     if (Generator::singleExec())
         Generator::setQDocPass(Generator::Prepare);
     foreach (const QString &qf, qdocFiles) {
@@ -730,6 +757,7 @@ int main(int argc, char **argv)
         }
     }
 
+    // Tidy everything away:
 #ifndef QT_NO_TRANSLATION
     if (!translators.isEmpty()) {
         for (int i=0; i<translators.size(); ++i) {
