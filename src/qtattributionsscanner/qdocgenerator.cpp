@@ -52,7 +52,7 @@ static void generate(QTextStream &out, const Package &package, const QDir &baseD
         out << package.qtUsage << "\n\n";
 
     out << "The sources can be found in "
-        << QDir::toNativeSeparators(baseDir.relativeFilePath(package.path)) << ".\n\n";
+        << baseDir.relativeFilePath(package.path) << ".\n\n";
 
     if (!package.homepage.isEmpty())
         out << "\\l{" << package.homepage << "}{Project Homepage}\n\n";
