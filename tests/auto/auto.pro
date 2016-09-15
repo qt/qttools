@@ -11,7 +11,8 @@ SUBDIRS=\
     cmake \
     installed_cmake \
     qtdiag \
-    windeployqt
+    windeployqt \
+    macdeployqt
 
 installed_cmake.depends = cmake
 
@@ -29,5 +30,6 @@ cross_compile:SUBDIRS -= qhelpcontentmodel qhelpenginecore qhelpindexmodel qhelp
     qhelpindexmodel \
     qhelpprojectdata \
 
-!qtConfig(process): SUBDIRS -= qtattributionsscanner linguist qtdiag windeployqt
+!qtConfig(process): SUBDIRS -= qtattributionsscanner linguist qtdiag windeployqt macdeployqt
 !win32|winrt: SUBDIRS -= windeployqt
+!macos: SUBDIRS -= macdeployqt
