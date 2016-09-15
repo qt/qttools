@@ -462,8 +462,21 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         QVector<Parameter> pvect;
         pvect.reserve(numArg);
         for (int i = 0; i < numArg; ++i) {
-            auto typeName = fromCXString(clang_getTypeSpelling(clang_getArgType(funcType, i)));
-            pvect.append(Parameter(adjustTypeName(typeName)));
+            CXType argType = clang_getArgType(funcType, i);
+            if (fn->isCtor()) {
+                if (fromCXString(clang_getTypeSpelling(clang_getPointeeType(argType))) == name) {
+                    if (argType.kind == CXType_RValueReference)
+                        fn->setMetaness(FunctionNode::MCtor);
+                    else if (argType.kind == CXType_LValueReference)
+                        fn->setMetaness(FunctionNode::CCtor);
+                }
+            } else if ((kind == CXCursor_CXXMethod) && (name == QLatin1String("operator="))) {
+                if (argType.kind == CXType_RValueReference)
+                    fn->setMetaness(FunctionNode::MAssign);
+                else if (argType.kind == CXType_LValueReference)
+                    fn->setMetaness(FunctionNode::CAssign);
+            }
+            pvect.append(Parameter(adjustTypeName(fromCXString(clang_getTypeSpelling(argType)))));
         }
         if (pvect.size() > 0 && pvect.last().dataType().endsWith(QLatin1String("::QPrivateSignal"))) {
             pvect.pop_back(); // remove the QPrivateSignal argument
