@@ -603,7 +603,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
         out() << "<p>For example, if you have code like</p>\n";
         // fallthrough
     case Atom::CodeBad:
-        out() << "<pre class=\"cpp\">"
+        out() << "<pre class=\"cpp plain\">"
               << trimmedTrailing(protectEnc(plainCode(indent(codeIndent,atom->string()))), codePrefix, codeSuffix)
               << "</pre>\n";
         break;
