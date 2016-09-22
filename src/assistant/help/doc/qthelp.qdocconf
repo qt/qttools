@@ -29,7 +29,7 @@ depends                 += qtdoc qtcore qtassistant qtwidgets qmake
 
 headerdirs += ..
 
-sourcedirs              = ..
+sourcedirs              += ..
 
 exampledirs             = ../../../../examples/help \
                           snippets

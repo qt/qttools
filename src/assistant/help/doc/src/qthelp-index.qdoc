@@ -58,36 +58,15 @@
 
     \section1 License Information
 
+    Qt Core is available under commercial licenses from \l{The Qt Company}.
+    In addition, it is available under the
+    \l{GNU Lesser General Public License, version 3}, or
+    the \l{GNU General Public License, version 2}.
+    See \l{Qt Licensing} for further details.
+
     Qt Help uses the CLucene indexing library to provide full-text searching
     capabilities for Qt Assistant and applications that use Qt Help features.
+    CLucene is available under GPL v2.1 \e{or} Apache License, Version 2.0.
 
-    Developers using the \l{Qt Commercial License} who wish to distribute
-    applications that use the Qt Help features need to be aware of their
-    obligations under the GNU Lesser General Public License (LGPL).
-
-    Developers using the Open Source Edition can choose to redistribute
-    the module under the appropriate version of the GNU LGPL; version 2.1
-    for applications and libraries licensed under the GNU GPL version 2,
-    or version 3 for applications and libraries licensed under the GNU
-    GPL version 3.
-
-    \legalese
-    Copyright (C) 2003-2006 Ben van Klinken and the CLucene Team \BR
-    Changes are Copyright (C) 2016 The Qt Company Ltd.
-
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
-
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-    \endlegalese
-
+    \generatelist{groupsbymodule attributions-qthelp}
 */
