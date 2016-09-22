@@ -34,6 +34,21 @@
 
 namespace QDocGenerator {
 
+// See definition of idstring and licenseid in https://spdx.org/spdx-specification-21-web-version
+static bool isSpdxLicenseId(const QString &str) {
+    if (str.isEmpty())
+        return false;
+    for (auto iter(str.cbegin()); iter != str.cend(); ++iter) {
+        const QChar c = *iter;
+        if (!((c >= QLatin1Char('A') && c <= QLatin1Char('Z'))
+              || (c >= QLatin1Char('a') && c <= QLatin1Char('z'))
+              || (c >= QLatin1Char('0') && c <= QLatin1Char('9'))
+              || (c == QLatin1Char('-')) || (c == QLatin1Char('.'))))
+            return false;
+    }
+    return true;
+}
+
 static void generate(QTextStream &out, const Package &package, const QDir &baseDir,
                      LogLevel logLevel)
 {
@@ -60,7 +75,7 @@ static void generate(QTextStream &out, const Package &package, const QDir &baseD
     if (!package.copyright.isEmpty())
         out << "\n\\badcode\n" << package.copyright << "\n\\endcode\n\n";
 
-    if (!package.licenseId.isEmpty() && package.licenseId != QLatin1String("NONE"))
+    if (isSpdxLicenseId(package.licenseId) && package.licenseId != QLatin1String("NONE"))
         out << "\\l{https://spdx.org/licenses/" << package.licenseId << ".html}"
             << "{" << package.license << "}.\n\n";
     else
