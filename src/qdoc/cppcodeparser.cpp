@@ -972,7 +972,6 @@ void CppCodeParser::processOtherMetaCommand(const Doc& doc,
         else if (node->isQmlType() || node->isJsType()) {
             QmlTypeNode* qmlType = static_cast<QmlTypeNode*>(node);
             qmlType->setQmlBaseName(arg);
-            QmlTypeNode::addInheritedBy(arg,node);
         }
     }
     else if (command == COMMAND_QMLINSTANTIATES) {

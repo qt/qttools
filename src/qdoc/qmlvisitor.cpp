@@ -509,7 +509,6 @@ void QmlDocVisitor::applyMetacommands(QQmlJS::AST::SourceLocation,
                 else if (node->isQmlType() || node->isJsType()) {
                     QmlTypeNode *qmlType = static_cast<QmlTypeNode*>(node);
                     qmlType->setQmlBaseName(args[0].first);
-                    QmlTypeNode::addInheritedBy(args[0].first,node);
                 }
             }
             else if (command == COMMAND_QMLDEFAULT) {
@@ -592,10 +591,8 @@ bool QmlDocVisitor::visit(QQmlJS::AST::UiObjectDefinition *definition)
         component->setTitle(name);
         component->setImportList(importList);
         importList.clear();
-        if (applyDocumentation(definition->firstSourceLocation(), component)) {
-            QmlTypeNode::addInheritedBy(type, component);
+        if (applyDocumentation(definition->firstSourceLocation(), component))
             component->setQmlBaseName(type);
-        }
         current = component;
     }
 
