@@ -26,6 +26,15 @@
 **
 ****************************************************************************/
 
+// There must be no #include before this !
+#define setlocale locale_file_name_for_clang_qdoc() { \
+        static char data[] = __FILE__;           \
+        return data;                             \
+    }                                            \
+    extern char *setlocale
+#include <locale.h>
+#undef setlocale
+
 #include <qglobal.h>
 #include <qhashfunctions.h>
 #include <stdlib.h>
@@ -636,6 +645,20 @@ QDocCommandLineParser::QDocCommandLineParser()
     addOption(frameworkOption);
 }
 
+/*!
+  Return the system include directory used when compiling this file.
+ */
+static QByteArray getSystemIncludePath()
+{
+    const char *raw = locale_file_name_for_clang_qdoc();
+    const char *slash = strrchr(raw, '/');
+    if (slash == NULL)
+        slash = strrchr(raw, '\\');
+    if (slash == NULL)
+        return QByteArray();
+    return QByteArray(raw, slash - raw);
+}
+
 void QDocCommandLineParser::process(const QCoreApplication &app)
 {
     QCommandLineParser::process(app);
@@ -683,7 +706,9 @@ void QDocCommandLineParser::process(const QCoreApplication &app)
     const auto paths = values(includePathOption);
     for (const auto &i : paths)
         includesPaths << "-I" << currentDir.absoluteFilePath(i);
-    const auto paths2 = values(includePathSystemOption);
+    auto paths2 = values(includePathSystemOption);
+    if (paths2.isEmpty())
+        paths2 << QString(getSystemIncludePath());
     for (const auto &i : paths2)
         includesPaths << "-isystem" << currentDir.absoluteFilePath(i);
     const auto paths3 = values(frameworkOption);
