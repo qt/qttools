@@ -57,6 +57,8 @@
 #include <utime.h>
 #include <errno.h>
 #include <unistd.h>
+#include <signal.h>
+#include <sys/wait.h>
 #include <sys/stat.h>
 #include <sys/utsname.h>
 #else
@@ -67,9 +69,11 @@
 
 #ifdef Q_OS_WIN32
 #define QT_POPEN _popen
+#define QT_POPEN_READ "rb"
 #define QT_PCLOSE _pclose
 #else
 #define QT_POPEN popen
+#define QT_POPEN_READ "r"
 #define QT_PCLOSE pclose
 #endif
 
@@ -353,10 +357,10 @@ static QMakeEvaluator::VisitReturn parseJsonInto(const QByteArray &json, const Q
 
 QMakeEvaluator::VisitReturn
 QMakeEvaluator::writeFile(const QString &ctx, const QString &fn, QIODevice::OpenMode mode,
-                          const QString &contents)
+                          bool exe, const QString &contents)
 {
     QString errStr;
-    if (!m_vfs->writeFile(fn, mode, contents, &errStr)) {
+    if (!m_vfs->writeFile(fn, mode, exe, contents, &errStr)) {
         evalError(fL1S("Cannot write %1file %2: %3")
                   .arg(ctx, QDir::toNativeSeparators(fn), errStr));
         return ReturnFalse;
@@ -410,7 +414,7 @@ QByteArray QMakeEvaluator::getCommandOutput(const QString &args) const
 #else
     if (FILE *proc = QT_POPEN(QString(QLatin1String("cd ")
                                + IoUtils::shellQuote(QDir::toNativeSeparators(currentDirectory()))
-                               + QLatin1String(" && ") + args).toLocal8Bit().constData(), "r")) {
+                               + QLatin1String(" && ") + args).toLocal8Bit().constData(), QT_POPEN_READ)) {
         while (!feof(proc)) {
             char buff[10 * 1024];
             int read_in = int(fread(buff, 1, sizeof(buff), proc));
@@ -420,6 +424,9 @@ QByteArray QMakeEvaluator::getCommandOutput(const QString &args) const
         }
         QT_PCLOSE(proc);
     }
+# ifdef Q_OS_WIN
+    out.replace("\r\n", "\n");
+# endif
 #endif
     return out;
 }
@@ -1019,7 +1026,11 @@ ProStringList QMakeEvaluator::evaluateBuiltinExpand(
             QString rstr = QDir::cleanPath(
                     QDir(args.count() > 1 ? args.at(1).toQString(m_tmp2) : currentDirectory())
                     .absoluteFilePath(args.at(0).toQString(m_tmp1)));
-            ret << (rstr.isSharedWith(m_tmp1) ? args.at(0) : ProString(rstr).setSource(args.at(0)));
+            ret << (rstr.isSharedWith(m_tmp1)
+                        ? args.at(0)
+                        : args.count() > 1 && rstr.isSharedWith(m_tmp2)
+                            ? args.at(1)
+                            : ProString(rstr).setSource(args.at(0)));
         }
         break;
     case E_RELATIVE_PATH:
@@ -1192,7 +1203,8 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::evaluateBuiltinConditional(
         return ReturnFalse;
     case T_REQUIRES:
 #ifdef PROEVALUATOR_FULL
-        checkRequirements(args);
+        if (checkRequirements(args) == ReturnError)
+            return ReturnError;
 #endif
         return ReturnFalse; // Another qmake breakage
     case T_EVAL: {
@@ -1213,8 +1225,8 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::evaluateBuiltinConditional(
             evalError(fL1S("if(condition) requires one argument."));
             return ReturnFalse;
         }
-        return returnBool(evaluateConditional(args.at(0).toQString(),
-                                              m_current.pro->fileName(), m_current.line));
+        return evaluateConditional(args.at(0).toQString(),
+                                   m_current.pro->fileName(), m_current.line);
     }
     case T_CONFIG: {
         if (args.count() < 1 || args.count() > 2) {
@@ -1491,9 +1503,14 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::evaluateBuiltinConditional(
         runProcess(&proc, args.at(0).toQString(m_tmp2));
         return returnBool(proc.exitStatus() == QProcess::NormalExit && proc.exitCode() == 0);
 #else
-        return returnBool(system((QLatin1String("cd ")
-                                  + IoUtils::shellQuote(QDir::toNativeSeparators(currentDirectory()))
-                                  + QLatin1String(" && ") + args.at(0)).toLocal8Bit().constData()) == 0);
+        int ec = system((QLatin1String("cd ")
+                         + IoUtils::shellQuote(QDir::toNativeSeparators(currentDirectory()))
+                         + QLatin1String(" && ") + args.at(0)).toLocal8Bit().constData());
+#  ifdef Q_OS_UNIX
+        if (ec != -1 && WIFSIGNALED(ec) && (WTERMSIG(ec) == SIGQUIT || WTERMSIG(ec) == SIGINT))
+            raise(WTERMSIG(ec));
+#  endif
+        return returnBool(ec == 0);
 #endif
 #else
         return ReturnTrue;
@@ -1544,22 +1561,33 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::evaluateBuiltinConditional(
     }
     case T_WRITE_FILE: {
         if (args.count() > 3) {
-            evalError(fL1S("write_file(name, [content var, [append]]) requires one to three arguments."));
+            evalError(fL1S("write_file(name, [content var, [append] [exe]]) requires one to three arguments."));
             return ReturnFalse;
         }
         QIODevice::OpenMode mode = QIODevice::Truncate;
+        bool exe = false;
         QString contents;
         if (args.count() >= 2) {
             const ProStringList &vals = values(args.at(1).toKey());
             if (!vals.isEmpty())
                 contents = vals.join(QLatin1Char('\n')) + QLatin1Char('\n');
-            if (args.count() >= 3)
-                if (!args.at(2).toQString(m_tmp1).compare(fL1S("append"), Qt::CaseInsensitive))
-                    mode = QIODevice::Append;
+            if (args.count() >= 3) {
+                foreach (const ProString &opt, split_value_list(args.at(2).toQString(m_tmp2))) {
+                    opt.toQString(m_tmp3);
+                    if (m_tmp3 == QLatin1String("append")) {
+                        mode = QIODevice::Append;
+                    } else if (m_tmp3 == QLatin1String("exe")) {
+                        exe = true;
+                    } else {
+                        evalError(fL1S("write_file(): invalid flag %1.").arg(m_tmp3));
+                        return ReturnFalse;
+                    }
+                }
+            }
         }
         QString path = resolvePath(args.at(0).toQString(m_tmp1));
         path.detach(); // make sure to not leak m_tmp1 into the map of written files.
-        return writeFile(QString(), path, mode, contents);
+        return writeFile(QString(), path, mode, exe, contents);
     }
     case T_TOUCH: {
         if (args.count() != 2) {
@@ -1770,7 +1798,7 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::evaluateBuiltinConditional(
                 valuesRef(ProKey("_QMAKE_STASH_")) << ProString(fn);
             }
         }
-        return writeFile(fL1S("cache "), fn, QIODevice::Append, varstr);
+        return writeFile(fL1S("cache "), fn, QIODevice::Append, false, varstr);
     }
     default:
         evalError(fL1S("Function '%1' is not implemented.").arg(function.toQString(m_tmp1)));
