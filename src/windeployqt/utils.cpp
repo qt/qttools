@@ -197,7 +197,8 @@ static HANDLE createInheritableTemporaryFile()
     securityAttributes.bInheritHandle = TRUE;
     return CreateFile(name, GENERIC_READ | GENERIC_WRITE,
                       FILE_SHARE_READ | FILE_SHARE_WRITE, &securityAttributes,
-                      TRUNCATE_EXISTING, FILE_ATTRIBUTE_TEMPORARY, NULL);
+                      TRUNCATE_EXISTING,
+                      FILE_ATTRIBUTE_TEMPORARY | FILE_FLAG_DELETE_ON_CLOSE, NULL);
 }
 
 // runProcess helper: Rewind and read out a temporary file for stdout/stderr.
