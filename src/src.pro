@@ -14,8 +14,9 @@ qtHaveModule(widgets) {
 
 SUBDIRS += linguist \
     qdoc \
-    qtplugininfo \
     qtattributionsscanner
+
+!android|android_app: SUBDIRS += qtplugininfo
 
 if(!android|android_app):!uikit: SUBDIRS += qtpaths
 
