@@ -743,7 +743,7 @@ static QString fileFilters(bool allFirst)
     QString filter;
     foreach (const Translator::FileFormat &format, Translator::registeredFileFormats()) {
         if (format.fileType == Translator::FileFormat::TranslationSource && format.priority >= 0) {
-            filter.append(pattern.arg(format.description).arg(format.extension));
+            filter.append(pattern.arg(format.description(), format.extension));
             allExtensions.append(QLatin1String("*.") + format.extension);
         }
     }
