@@ -39,7 +39,9 @@ class tst_lconvert : public QObject
     Q_OBJECT
 
 public:
-    tst_lconvert() : dataDir(QFINDTESTDATA("data/")), binDir(QLibraryInfo::location(QLibraryInfo::BinariesPath)) {}
+    tst_lconvert()
+      : dataDir(QFINDTESTDATA("data/"))
+      , lconvert(QLibraryInfo::location(QLibraryInfo::BinariesPath) + "/lconvert") {}
 
 private slots:
     void initTestCase();
@@ -66,7 +68,7 @@ private:
             const QList<QStringList> &args);
 
     QString dataDir;
-    QString binDir;
+    QString lconvert;
 };
 
 void tst_lconvert::initTestCase()
@@ -145,7 +147,7 @@ void tst_lconvert::doCompare(QIODevice *actualDev, const QString &expectedFn)
 void tst_lconvert::verifyReadFail(const QString &fn)
 {
     QProcess cvt;
-    cvt.start(binDir + "/lconvert", QStringList() << (dataDir + fn));
+    cvt.start(lconvert, QStringList() << (dataDir + fn));
     QVERIFY(cvt.waitForFinished(10000));
     QVERIFY(cvt.exitStatus() == QProcess::NormalExit);
     QVERIFY2(cvt.exitCode() == 2, "Accepted invalid input");
@@ -172,7 +174,7 @@ void tst_lconvert::convertChain(const QString &_inFileName, const QString &_outF
         if (!argList.isEmpty())
             args += argList[i];
         args << "-if" << stations[i] << "-i" << "-" << "-of" << stations[i + 1];
-        cvts.at(i)->start(binDir + "/lconvert", args, QIODevice::ReadWrite | QIODevice::Text);
+        cvts.at(i)->start(lconvert, args, QIODevice::ReadWrite | QIODevice::Text);
     }
     int st = 0;
     foreach (QProcess *cvt, cvts)
@@ -238,7 +240,7 @@ void tst_lconvert::converts()
     QString outFileNameFq = dataDir + outFileName;
 
     QProcess cvt;
-    cvt.start(binDir + "/lconvert",
+    cvt.start(lconvert,
               QStringList() << "-i" << (dataDir + inFileName) << "-of" << format,
               QIODevice::ReadWrite | QIODevice::Text);
     doWait(&cvt, 0);
@@ -333,7 +335,7 @@ void tst_lconvert::merge()
     QProcess cvt;
     QStringList args;
     args << (dataDir + "idxmerge.ts") << (dataDir + "idxmerge-add.ts");
-    cvt.start(binDir + "/lconvert", args, QIODevice::ReadWrite | QIODevice::Text);
+    cvt.start(lconvert, args, QIODevice::ReadWrite | QIODevice::Text);
     doWait(&cvt, 1);
     if (!QTest::currentTestFailed())
         doCompare(&cvt, dataDir + "idxmerge.ts.out");
