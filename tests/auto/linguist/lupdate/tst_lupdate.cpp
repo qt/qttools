@@ -288,7 +288,7 @@ void tst_lupdate::good()
     QProcess proc;
     proc.setWorkingDirectory(workDir);
     proc.setProcessChannelMode(QProcess::MergedChannels);
-    const QString command = m_cmdLupdate + QLatin1Char(' ') + lupdatecmd;
+    const QString command = QLatin1Char('"') + m_cmdLupdate + QLatin1String("\" ") + lupdatecmd;
     proc.start(command, QIODevice::ReadWrite | QIODevice::Text);
     QVERIFY2(proc.waitForStarted(), qPrintable(command + QLatin1String(" :") + proc.errorString()));
     QVERIFY2(proc.waitForFinished(30000), qPrintable(command));

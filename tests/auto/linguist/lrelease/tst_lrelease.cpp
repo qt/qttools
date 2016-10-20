@@ -114,7 +114,7 @@ void tst_lrelease::doCompare(const QStringList &actual, const QString &expectedF
 
 void tst_lrelease::translate()
 {
-    QVERIFY(!QProcess::execute(lrelease + " " + dataDir + "translate.ts"));
+    QVERIFY(!QProcess::execute(lrelease, QStringList() << (dataDir + "translate.ts")));
 
     QTranslator translator;
     QVERIFY(translator.load(dataDir + "translate.qm"));
@@ -164,7 +164,7 @@ void tst_lrelease::translate()
 
 void tst_lrelease::compressed()
 {
-    QVERIFY(!QProcess::execute(lrelease + " -compress " + dataDir + "compressed.ts"));
+    QVERIFY(!QProcess::execute(lrelease, QStringList() << "-compress" << (dataDir + "compressed.ts")));
 
     QTranslator translator;
     QVERIFY(translator.load(dataDir + "compressed.qm"));
@@ -181,7 +181,7 @@ void tst_lrelease::compressed()
 
 void tst_lrelease::idbased()
 {
-    QVERIFY(!QProcess::execute(lrelease + " -idbased " + dataDir + "idbased.ts"));
+    QVERIFY(!QProcess::execute(lrelease, QStringList() << "-idbased" << (dataDir + "idbased.ts")));
 
     QTranslator translator;
     QVERIFY(translator.load(dataDir + "idbased.qm"));
@@ -193,7 +193,7 @@ void tst_lrelease::idbased()
 
 void tst_lrelease::markuntranslated()
 {
-    QVERIFY(!QProcess::execute(lrelease + " -markuntranslated # -idbased " + dataDir + "idbased.ts"));
+    QVERIFY(!QProcess::execute(lrelease, QStringList() << "-markuntranslated" << "#" << "-idbased" << (dataDir + "idbased.ts")));
 
     QTranslator translator;
     QVERIFY(translator.load(dataDir + "idbased.qm"));
@@ -206,7 +206,7 @@ void tst_lrelease::markuntranslated()
 void tst_lrelease::dupes()
 {
     QProcess proc;
-    proc.start(lrelease + " " + dataDir + "dupes.ts", QIODevice::ReadWrite | QIODevice::Text);
+    proc.start(lrelease, QStringList() << (dataDir + "dupes.ts"), QIODevice::ReadWrite | QIODevice::Text);
     QVERIFY(proc.waitForFinished());
     QVERIFY(proc.exitStatus() == QProcess::NormalExit);
     doCompare(QString(proc.readAllStandardError()).trimmed().split('\n'), dataDir + "dupes.errors");
