@@ -699,8 +699,6 @@ QDesignerPropertySheet::QDesignerPropertySheet(QObject *object, QObject *parent)
 
 QDesignerPropertySheet::~QDesignerPropertySheet()
 {
-    if (d->m_fwb)
-        d->m_fwb->removeReloadablePropertySheet(this);
     delete d;
 }
 
@@ -1672,8 +1670,14 @@ void QDesignerAbstractPropertySheetFactory::objectDestroyed(QObject *object)
     QMutableMapIterator<QObject*, QObject*> it(m_impl->m_extensions);
     while (it.hasNext()) {
         it.next();
-        if (it.key() == object || it.value() == object)
+        if (it.key() == object || it.value() == object) {
+            if (it.key() == object) {
+                QObject *ext = it.value();
+                disconnect(ext, &QObject::destroyed, this, &QDesignerAbstractPropertySheetFactory::objectDestroyed);
+                delete ext;
+            }
             it.remove();
+        }
     }
 }
 
