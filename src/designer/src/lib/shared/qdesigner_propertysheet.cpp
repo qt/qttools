@@ -1627,8 +1627,6 @@ struct QDesignerAbstractPropertySheetFactory::PropertySheetFactoryPrivate {
 
     typedef QMap<QObject*, QObject*> ExtensionMap;
     ExtensionMap m_extensions;
-    typedef QHash<QObject*, bool> ExtendedSet;
-    ExtendedSet m_extended;
 };
 
 QDesignerAbstractPropertySheetFactory::PropertySheetFactoryPrivate::PropertySheetFactoryPrivate() :
@@ -1653,30 +1651,20 @@ QDesignerAbstractPropertySheetFactory::~QDesignerAbstractPropertySheetFactory()
 
 QObject *QDesignerAbstractPropertySheetFactory::extension(QObject *object, const QString &iid) const
 {
-    typedef PropertySheetFactoryPrivate::ExtensionMap ExtensionMap;
     if (!object)
         return 0;
 
     if (iid != m_impl->m_propertySheetId && iid != m_impl->m_dynamicPropertySheetId)
         return 0;
 
-    ExtensionMap::iterator it = m_impl->m_extensions.find(object);
-    if (it == m_impl->m_extensions.end()) {
-        if (QObject *ext = createPropertySheet(object, const_cast<QDesignerAbstractPropertySheetFactory*>(this))) {
-            connect(ext, &QObject::destroyed, this, &QDesignerAbstractPropertySheetFactory::objectDestroyed);
-            it = m_impl->m_extensions.insert(object, ext);
-        }
-    }
-
-    if (!m_impl->m_extended.contains(object)) {
+    QObject *ext = m_impl->m_extensions.value(object, 0);
+    if (!ext && (ext = createPropertySheet(object, const_cast<QDesignerAbstractPropertySheetFactory*>(this)))) {
+        connect(ext, &QObject::destroyed, this, &QDesignerAbstractPropertySheetFactory::objectDestroyed);
         connect(object, &QObject::destroyed, this, &QDesignerAbstractPropertySheetFactory::objectDestroyed);
-        m_impl->m_extended.insert(object, true);
+        m_impl->m_extensions.insert(object, ext);
     }
 
-    if (it == m_impl->m_extensions.end())
-        return 0;
-
-    return it.value();
+    return ext;
 }
 
 void QDesignerAbstractPropertySheetFactory::objectDestroyed(QObject *object)
@@ -1684,14 +1672,9 @@ void QDesignerAbstractPropertySheetFactory::objectDestroyed(QObject *object)
     QMutableMapIterator<QObject*, QObject*> it(m_impl->m_extensions);
     while (it.hasNext()) {
         it.next();
-
-        QObject *o = it.key();
-        if (o == object || object == it.value()) {
+        if (it.key() == object || it.value() == object)
             it.remove();
-        }
     }
-
-    m_impl->m_extended.remove(object);
 }
 
 QT_END_NAMESPACE
