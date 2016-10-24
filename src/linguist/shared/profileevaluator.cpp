@@ -147,7 +147,9 @@ QStringList ProFileEvaluator::absoluteFileValues(
         {
             int nameOff = absEl.lastIndexOf(QLatin1Char('/'));
             QString absDir = d->m_tmp1.setRawData(absEl.constData(), nameOff);
-            if (d->m_vfs->exists(absDir)) {
+            // NOTE: This does not support virtual files. That shouldn't be a problem,
+            // because no sane project would add generated files by wildcard.
+            if (IoUtils::fileType(absDir) == IoUtils::FileIsDir) {
                 QString wildcard = d->m_tmp2.setRawData(absEl.constData() + nameOff + 1,
                                                         absEl.length() - nameOff - 1);
                 if (wildcard.contains(QLatin1Char('*')) || wildcard.contains(QLatin1Char('?'))) {
