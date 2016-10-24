@@ -127,7 +127,7 @@ QStringList ProFileEvaluator::absoluteFileValues(
         QString absEl;
         if (IoUtils::isAbsolutePath(el)) {
             const QString elWithSysroot = QDir::cleanPath(sysrootify(el, baseDirectory));
-            if (d->m_vfs->exists(elWithSysroot)) {
+            if (d->m_vfs->exists(elWithSysroot, QMakeVfs::VfsCumulative)) {
                 result << elWithSysroot;
                 goto next;
             }
@@ -135,7 +135,7 @@ QStringList ProFileEvaluator::absoluteFileValues(
         } else {
             foreach (const QString &dir, searchDirs) {
                 QString fn = QDir::cleanPath(dir + QLatin1Char('/') + el);
-                if (d->m_vfs->exists(fn)) {
+                if (d->m_vfs->exists(fn, QMakeVfs::VfsCumulative)) {
                     result << fn;
                     goto next;
                 }
