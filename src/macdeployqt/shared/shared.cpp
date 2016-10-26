@@ -994,6 +994,22 @@ DeploymentInfo deployQtFrameworks(const QString &appBundlePath, const QStringLis
    }
 }
 
+QString getLibInfix(const QStringList &deployedFrameworks)
+{
+    QString libInfix;
+    foreach (const QString &framework, deployedFrameworks) {
+        if (framework.startsWith(QStringLiteral("QtCore"))) {
+            Q_ASSERT(framework.length() >= 16);
+            // 16 == "QtCore" + ".framework"
+            const int lengthOfLibInfix = framework.length() - 16;
+            if (lengthOfLibInfix)
+                libInfix = framework.mid(6, lengthOfLibInfix);
+            break;
+        }
+    }
+    return libInfix;
+}
+
 void deployPlugins(const ApplicationBundleInfo &appBundleInfo, const QString &pluginSourcePath,
         const QString pluginDestinationPath, DeploymentInfo deploymentInfo, bool useDebugLibs)
 {
@@ -1011,8 +1027,11 @@ void deployPlugins(const ApplicationBundleInfo &appBundleInfo, const QString &pl
     // Cocoa print support
     pluginList.append("printsupport/libcocoaprintersupport.dylib");
 
+    // Check if Qt was configured with -libinfix
+    const QString libInfixWithFramework = getLibInfix(deploymentInfo.deployedFrameworks) + QStringLiteral(".framework");
+
     // Network
-    if (deploymentInfo.deployedFrameworks.contains(QStringLiteral("QtNetwork.framework"))) {
+    if (deploymentInfo.deployedFrameworks.contains(QStringLiteral("QtNetwork") + libInfixWithFramework)) {
         QStringList bearerPlugins = QDir(pluginSourcePath +  QStringLiteral("/bearer")).entryList(QStringList() << QStringLiteral("*.dylib"));
         foreach (const QString &plugin, bearerPlugins) {
             if (!plugin.endsWith(QStringLiteral("_debug.dylib")))
@@ -1024,7 +1043,7 @@ void deployPlugins(const ApplicationBundleInfo &appBundleInfo, const QString &pl
     QStringList imagePlugins = QDir(pluginSourcePath +  QStringLiteral("/imageformats")).entryList(QStringList() << QStringLiteral("*.dylib"));
     foreach (const QString &plugin, imagePlugins) {
         if (plugin.contains(QStringLiteral("qsvg"))) {
-            if (deploymentInfo.deployedFrameworks.contains(QStringLiteral("QtSvg.framework")))
+            if (deploymentInfo.deployedFrameworks.contains(QStringLiteral("QtSvg") + libInfixWithFramework))
                 pluginList.append(QStringLiteral("imageformats/") + plugin);
         } else if (!plugin.endsWith(QStringLiteral("_debug.dylib"))) {
             pluginList.append(QStringLiteral("imageformats/") + plugin);
@@ -1032,7 +1051,7 @@ void deployPlugins(const ApplicationBundleInfo &appBundleInfo, const QString &pl
     }
 
     // Sql plugins if QtSql.framework is in use
-    if (deploymentInfo.deployedFrameworks.contains(QStringLiteral("QtSql.framework"))) {
+    if (deploymentInfo.deployedFrameworks.contains(QStringLiteral("QtSql") + libInfixWithFramework)) {
         QStringList sqlPlugins = QDir(pluginSourcePath +  QStringLiteral("/sqldrivers")).entryList(QStringList() << QStringLiteral("*.dylib"));
         foreach (const QString &plugin, sqlPlugins) {
             if (plugin.endsWith(QStringLiteral("_debug.dylib")))
@@ -1052,7 +1071,7 @@ void deployPlugins(const ApplicationBundleInfo &appBundleInfo, const QString &pl
     }
 
     // multimedia plugins if QtMultimedia.framework is in use
-    if (deploymentInfo.deployedFrameworks.contains(QStringLiteral("QtMultimedia.framework"))) {
+    if (deploymentInfo.deployedFrameworks.contains(QStringLiteral("QtMultimedia") + libInfixWithFramework)) {
         QStringList plugins = QDir(pluginSourcePath + QStringLiteral("/mediaservice")).entryList(QStringList() << QStringLiteral("*.dylib"));
         foreach (const QString &plugin, plugins) {
             if (!plugin.endsWith(QStringLiteral("_debug.dylib")))
@@ -1250,7 +1269,12 @@ bool deployQmlImports(const QString &appBundlePath, DeploymentInfo deploymentInf
     //      2) QtQuick.Controls is used
     // The intended failure mode is that libwidgetsplugin.dylib will be present
     // in the app bundle but not used at run-time.
-    if (deploymentInfo.deployedFrameworks.contains("QtWidgets.framework") && qtQuickContolsInUse) {
+
+    // Check if Qt was configured with -libinfix
+    const QString libInfixWithFramework = getLibInfix(deploymentInfo.deployedFrameworks) + QStringLiteral(".framework");
+
+    if (deploymentInfo.deployedFrameworks.contains(QStringLiteral("QtWidgets") + libInfixWithFramework)
+            && qtQuickContolsInUse) {
         LogNormal() << "Deploying QML import QtQuick.PrivateWidgets";
         QString name = "QtQuick/PrivateWidgets";
         QString path = qmlImportsPath + QLatin1Char('/') + name;
