@@ -841,9 +841,9 @@ QtResourceViewDialog::QtResourceViewDialog(QDesignerFormEditorInterface *core, Q
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->addWidget(d_ptr->m_view);
     layout->addWidget(d_ptr->m_box);
-    connect(d_ptr->m_box, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(d_ptr->m_box, SIGNAL(rejected()), this, SLOT(reject()));
-    connect(d_ptr->m_view, SIGNAL(resourceActivated(QString)), this, SLOT(accept()));
+    connect(d_ptr->m_box, &QDialogButtonBox::accepted, this, &QDialog::accept);
+    connect(d_ptr->m_box, &QDialogButtonBox::rejected, this, &QDialog::reject);
+    connect(d_ptr->m_view, &QtResourceView::resourceActivated, this, &QDialog::accept);
     connect(d_ptr->m_view, SIGNAL(resourceSelected(QString)), this, SLOT(slotResourceSelected(QString)));
     d_ptr->setOkButtonEnabled(false);
     d_ptr->m_view->setResourceModel(core->resourceModel());

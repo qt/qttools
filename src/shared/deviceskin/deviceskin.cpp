@@ -385,9 +385,9 @@ DeviceSkin::DeviceSkin(const DeviceSkinParameters &parameters,  QWidget *p ) :
     setAttribute(Qt::WA_NoSystemBackground);
 
     setZoom(1.0);
-    connect( t_skinkey, SIGNAL(timeout()), this, SLOT(skinKeyRepeat()) );
+    connect(t_skinkey, &QTimer::timeout, this, &DeviceSkin::skinKeyRepeat );
     t_parentmove->setSingleShot( true );
-    connect( t_parentmove, SIGNAL(timeout()), this, SLOT(moveParent()) );
+    connect(t_parentmove, &QTimer::timeout, this, &DeviceSkin::moveParent );
 }
 
 void DeviceSkin::skinKeyRepeat()

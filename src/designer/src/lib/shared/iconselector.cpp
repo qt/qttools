@@ -573,14 +573,14 @@ IconThemeEditor::IconThemeEditor(QWidget *parent, bool wantResetButton) :
 
     d->m_themeLineEdit = new QLineEdit;
     d->m_themeLineEdit->setValidator(new BlankSuppressingValidator(d->m_themeLineEdit));
-    connect(d->m_themeLineEdit, SIGNAL(textChanged(QString)), this, SLOT(slotChanged(QString)));
-    connect(d->m_themeLineEdit, SIGNAL(textEdited(QString)), this, SIGNAL(edited(QString)));
+    connect(d->m_themeLineEdit, &QLineEdit::textChanged, this, &IconThemeEditor::slotChanged);
+    connect(d->m_themeLineEdit, &QLineEdit::textEdited, this, &IconThemeEditor::edited);
     mainHLayout->addWidget(d->m_themeLineEdit);
 
     if (wantResetButton) {
         QToolButton *themeResetButton = new QToolButton;
         themeResetButton->setIcon(createIconSet(QStringLiteral("resetproperty.png")));
-        connect(themeResetButton, SIGNAL(clicked()), this, SLOT(reset()));
+        connect(themeResetButton, &QAbstractButton::clicked, this, &IconThemeEditor::reset);
         mainHLayout->addWidget(themeResetButton);
     }
 

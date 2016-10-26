@@ -333,7 +333,7 @@ ColorAction::ColorAction(QObject *parent):
 {
     setText(tr("Text Color"));
     setColor(Qt::black);
-    connect(this, SIGNAL(triggered()), this, SLOT(chooseColor()));
+    connect(this, &QAction::triggered, this, &ColorAction::chooseColor);
 }
 
 void ColorAction::setColor(const QColor &color)

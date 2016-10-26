@@ -493,10 +493,10 @@ ActionView::ActionView(QWidget *parent) :
     addWidget(m_actionListView);
     addWidget(m_actionTreeView);
     // Wire signals
-    connect(m_actionTreeView, SIGNAL(actionContextMenuRequested(QContextMenuEvent*,QAction*)),
-            this, SIGNAL(contextMenuRequested(QContextMenuEvent*,QAction*)));
-    connect(m_actionListView, SIGNAL(actionContextMenuRequested(QContextMenuEvent*,QAction*)),
-            this, SIGNAL(contextMenuRequested(QContextMenuEvent*,QAction*)));
+    connect(m_actionTreeView, &ActionTreeView::actionContextMenuRequested,
+            this, &ActionView::contextMenuRequested);
+    connect(m_actionListView, &ActionListView::actionContextMenuRequested,
+            this, &ActionView::contextMenuRequested);
 
     // make it possible for vs integration to reimplement edit action dialog
     // [which it shouldn't do actually]
@@ -514,8 +514,8 @@ ActionView::ActionView(QWidget *parent) :
     // sync selection models
     QItemSelectionModel *selectionModel = m_actionTreeView->selectionModel();
     m_actionListView->setSelectionModel(selectionModel);
-    connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            this, SIGNAL(selectionChanged(QItemSelection,QItemSelection)));
+    connect(selectionModel, &QItemSelectionModel::selectionChanged,
+            this, &ActionView::selectionChanged);
 }
 
 int ActionView::viewMode() const

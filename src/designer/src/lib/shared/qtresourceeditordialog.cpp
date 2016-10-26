@@ -2000,7 +2000,8 @@ QtResourceEditorDialog::QtResourceEditorDialog(QDesignerFormEditorInterface *cor
     d_ptr->m_ui.resourceTreeView->setModel(d_ptr->m_treeModel);
     d_ptr->m_ui.resourceTreeView->setContextMenuPolicy(Qt::CustomContextMenu);
     d_ptr->m_treeSelection = d_ptr->m_ui.resourceTreeView->selectionModel();
-    connect(d_ptr->m_ui.resourceTreeView->header(), SIGNAL(sectionDoubleClicked(int)), d_ptr->m_ui.resourceTreeView, SLOT(resizeColumnToContents(int)));
+    connect(d_ptr->m_ui.resourceTreeView->header(), &QHeaderView::sectionDoubleClicked,
+            d_ptr->m_ui.resourceTreeView, &QTreeView::resizeColumnToContents);
     d_ptr->m_ui.resourceTreeView->setTextElideMode(Qt::ElideLeft);
 
     connect(d_ptr->m_ui.resourceTreeView, SIGNAL(customContextMenuRequested(QPoint)),
