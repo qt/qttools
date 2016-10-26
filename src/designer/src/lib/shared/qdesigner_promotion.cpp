@@ -116,6 +116,13 @@ namespace {
     }
 }
 
+static void markFormsDirty(const QDesignerFormEditorInterface *core)
+{
+    const QDesignerFormWindowManagerInterface *fwm = core->formWindowManager();
+    for (int f = 0, count = fwm->formWindowCount(); f < count; ++f)
+        fwm->formWindow(f)->setDirty(true);
+}
+
 namespace qdesigner_internal {
 
     QDesignerPromotion::QDesignerPromotion(QDesignerFormEditorInterface *core) :
@@ -153,6 +160,7 @@ namespace qdesigner_internal {
         promotedItem->setExtends(baseClass);
         promotedItem->setIncludeFile(includeFile);
         widgetDataBase->append(promotedItem);
+        markFormsDirty(m_core);
         return true;
     }
 
@@ -303,6 +311,7 @@ namespace qdesigner_internal {
             }
         }
         widgetDataBase->remove(index);
+        markFormsDirty(m_core);
         return true;
     }
 
@@ -344,6 +353,7 @@ namespace qdesigner_internal {
         if (foundReferences)
             refreshObjectInspector();
 
+        markFormsDirty(m_core);
         return true;
     }
 
@@ -358,8 +368,10 @@ namespace qdesigner_internal {
         QDesignerWidgetDataBaseItemInterface *dbItem = promotedWidgetDataBaseItem(widgetDataBase, className, errorMessage);
         if (!dbItem)
             return false;
-
-        dbItem->setIncludeFile(includeFile);
+        if (dbItem->includeFile() != includeFile) {
+            dbItem->setIncludeFile(includeFile);
+            markFormsDirty(m_core);
+        }
         return true;
     }
 
