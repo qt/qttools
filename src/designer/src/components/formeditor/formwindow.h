@@ -30,10 +30,10 @@
 #define FORMWINDOW_H
 
 #include "formeditor_global.h"
-#include "qdesignerundostack.h"
 #include <formwindowbase_p.h>
 
 // Qt
+#include <QtWidgets/QUndoStack>
 #include <QtCore/QHash>
 #include <QtCore/QList>
 #include <QtCore/QMap>
@@ -325,7 +325,7 @@ private:
 
     QPoint m_startPos;
 
-    QDesignerUndoStack m_undoStack;
+    QUndoStack m_undoStack;
 
     QString m_fileName;
 
