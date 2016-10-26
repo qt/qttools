@@ -455,9 +455,7 @@ bool PropertyEditor::isItemVisible(QtBrowserItem *item) const
 void PropertyEditor::storePropertiesExpansionState(const QList<QtBrowserItem *> &items)
 {
     const QChar bar = QLatin1Char('|');
-    QListIterator<QtBrowserItem *> itProperty(items);
-    while (itProperty.hasNext()) {
-        QtBrowserItem *propertyItem = itProperty.next();
+    for (QtBrowserItem *propertyItem : items) {
         if (!propertyItem->children().empty()) {
             QtProperty *property = propertyItem->property();
             const QString propertyName = property->propertyName();
@@ -478,9 +476,7 @@ void PropertyEditor::storeExpansionState()
     if (m_sorting) {
         storePropertiesExpansionState(items);
     } else {
-        QListIterator<QtBrowserItem *> itGroup(items);
-        while (itGroup.hasNext()) {
-            QtBrowserItem *item = itGroup.next();
+        for (QtBrowserItem *item : items) {
             const QString groupName = item->property()->propertyName();
             QList<QtBrowserItem *> propertyItems = item->children();
             if (!propertyItems.empty())
@@ -494,19 +490,16 @@ void PropertyEditor::storeExpansionState()
 
 void PropertyEditor::collapseAll()
 {
-    QList<QtBrowserItem *> items = m_currentBrowser->topLevelItems();
-    QListIterator<QtBrowserItem *> itGroup(items);
-    while (itGroup.hasNext())
-        setExpanded(itGroup.next(), false);
+    const QList<QtBrowserItem *> items = m_currentBrowser->topLevelItems();
+    for (QtBrowserItem *group : items)
+        setExpanded(group, false);
 }
 
 void PropertyEditor::applyPropertiesExpansionState(const QList<QtBrowserItem *> &items)
 {
     const QChar bar = QLatin1Char('|');
-    QListIterator<QtBrowserItem *> itProperty(items);
-    while (itProperty.hasNext()) {
+    for (QtBrowserItem *propertyItem : items) {
         const QMap<QString, bool>::const_iterator excend = m_expansionState.constEnd();
-        QtBrowserItem *propertyItem = itProperty.next();
         QtProperty *property = propertyItem->property();
         const QString propertyName = property->propertyName();
         const QMap<QtProperty *, QString>::const_iterator itGroup = m_propertyToGroup.constFind(property);
@@ -529,10 +522,8 @@ void PropertyEditor::applyExpansionState()
     if (m_sorting) {
         applyPropertiesExpansionState(items);
     } else {
-        QListIterator<QtBrowserItem *> itTopLevel(items);
         const QMap<QString, bool>::const_iterator excend = m_expansionState.constEnd();
-        while (itTopLevel.hasNext()) {
-            QtBrowserItem *item = itTopLevel.next();
+        for (QtBrowserItem *item : items) {
             const QString groupName = item->property()->propertyName();
             const QMap<QString, bool>::const_iterator git = m_expansionState.constFind(groupName);
             if (git != excend)
@@ -549,9 +540,7 @@ int PropertyEditor::applyPropertiesFilter(const QList<QtBrowserItem *> &items)
 {
     int showCount = 0;
     const bool matchAll = m_filterPattern.isEmpty();
-    QListIterator<QtBrowserItem *> itProperty(items);
-    while (itProperty.hasNext()) {
-        QtBrowserItem *propertyItem = itProperty.next();
+    for (QtBrowserItem *propertyItem : items) {
         QtProperty *property = propertyItem->property();
         const QString propertyName = property->propertyName();
         const bool showProperty = matchAll || propertyName.contains(m_filterPattern, Qt::CaseInsensitive);
@@ -568,11 +557,8 @@ void PropertyEditor::applyFilter()
     if (m_sorting) {
         applyPropertiesFilter(items);
     } else {
-        QListIterator<QtBrowserItem *> itTopLevel(items);
-        while (itTopLevel.hasNext()) {
-            QtBrowserItem *item = itTopLevel.next();
+        for (QtBrowserItem *item : items)
             setItemVisible(item, applyPropertiesFilter(item->children()));
-        }
     }
 }
 
@@ -637,9 +623,7 @@ void PropertyEditor::fillView()
             m_currentBrowser->addProperty(property);
         }
     } else {
-        QListIterator<QtProperty *> itGroup(m_groups);
-        while (itGroup.hasNext()) {
-            QtProperty *group = itGroup.next();
+        for (QtProperty *group : qAsConst(m_groups)) {
             QtBrowserItem *item = m_currentBrowser->addProperty(group);
             if (m_currentBrowser == m_treeBrowser)
                 m_treeBrowser->setBackgroundColor(item, propertyColor(group));
@@ -703,12 +687,9 @@ void PropertyEditor::slotSorting(bool sort)
 void PropertyEditor::updateColors()
 {
     if (m_treeBrowser && m_currentBrowser == m_treeBrowser) {
-        QList<QtBrowserItem *> items = m_treeBrowser->topLevelItems();
-        QListIterator<QtBrowserItem *> itItem(items);
-        while (itItem.hasNext()) {
-            QtBrowserItem *item = itItem.next();
+        const QList<QtBrowserItem *> items = m_treeBrowser->topLevelItems();
+        for (QtBrowserItem *item : items)
             m_treeBrowser->setBackgroundColor(item, propertyColor(item->property()));
-        }
     }
 }
 
@@ -1031,19 +1012,13 @@ void PropertyEditor::setObject(QObject *object)
                     newProperty = true;
                     if (type == DesignerPropertyManager::enumTypeId()) {
                         const PropertySheetEnumValue e = qvariant_cast<PropertySheetEnumValue>(value);
-                        QStringList names;
-                        QStringListIterator it(e.metaEnum.keys());
-                        while (it.hasNext())
-                            names.append(it.next());
                         m_updatingBrowser = true;
-                        property->setAttribute(m_strings.m_enumNamesAttribute, names);
+                        property->setAttribute(m_strings.m_enumNamesAttribute, e.metaEnum.keys());
                         m_updatingBrowser = false;
                     } else if (type == DesignerPropertyManager::designerFlagTypeId()) {
                         const PropertySheetFlagValue f = qvariant_cast<PropertySheetFlagValue>(value);
                         QList<QPair<QString, uint> > flags;
-                        QStringListIterator it(f.metaFlags.keys());
-                        while (it.hasNext()) {
-                            const QString name = it.next();
+                        for (const QString &name : f.metaFlags.keys()) {
                             const uint val = f.metaFlags.keyToValue(name);
                             flags.append(qMakePair(name, val));
                         }

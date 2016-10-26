@@ -1288,9 +1288,7 @@ QWidget *FormWindow::containerAt(const QPoint &pos, QWidget *notParentOf)
         depth = widgetDepth(container);
     }
 
-    QListIterator<QWidget*> it(m_widgets);
-    while (it.hasNext()) {
-        QWidget *wit = it.next();
+    for (QWidget *wit : qAsConst(m_widgets)) {
         if (qobject_cast<QLayoutWidget*>(wit) || qobject_cast<QSplitter*>(wit))
             continue;
         if (!wit->isVisibleTo(this))
@@ -1334,10 +1332,8 @@ void FormWindow::selectWidgets()
 {
     bool selectionChanged = false;
     const QWidgetList l = mainContainer()->findChildren<QWidget*>();
-    QListIterator <QWidget*> it(l);
     const QRect selRect(mapToGlobal(m_currRect.topLeft()), m_currRect.size());
-    while (it.hasNext()) {
-        QWidget *w = it.next();
+    for (QWidget *w : l) {
         if (w->isVisibleTo(this) && isManaged(w)) {
             const QPoint p = w->mapToGlobal(QPoint(0,0));
             const QRect r(p, w->size());

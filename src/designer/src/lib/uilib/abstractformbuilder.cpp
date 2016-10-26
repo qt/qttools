@@ -88,6 +88,9 @@
 
 #include <limits.h>
 
+#include <algorithm>
+#include <iterator>
+
 Q_DECLARE_METATYPE(QWidgetList)
 
 static const char *buttonGroupPropertyC = "buttonGroup";
@@ -672,13 +675,14 @@ void QAbstractFormBuilder::layoutInfo(DomLayout *ui_layout, QObject *parent, int
 
         if (mar == INT_MIN || spac == INT_MIN) {
             QList<DomProperty *> properties = ui_layout->elementProperty();
-            QMutableListIterator<DomProperty *> it(properties);
-            while (it.hasNext()) {
-                DomProperty *prop = it.next();
-                if ((mar == INT_MIN && prop->attributeName() == strings.marginProperty) ||
-                        (spac == INT_MIN && prop->attributeName() == strings.spacingProperty)) {
-                    it.remove();
+            for (auto it = properties.begin(); it != properties.end(); ) {
+                DomProperty *prop = *it;
+                if ((mar == INT_MIN && prop->attributeName() == strings.marginProperty)
+                    || (spac == INT_MIN && prop->attributeName() == strings.spacingProperty)) {
                     delete prop;
+                    it = properties.erase(it);
+                } else {
+                    ++it;
                 }
             }
             ui_layout->setElementProperty(properties);
@@ -1121,9 +1125,7 @@ QBrush QAbstractFormBuilder::setupBrush(DomBrush *brush)
         gr->setCoordinateMode(coord);
 
         const QList<DomGradientStop *> stops = gradient->elementGradientStop();
-        QListIterator<DomGradientStop *> it(stops);
-        while (it.hasNext()) {
-            const DomGradientStop *stop = it.next();
+        for (const DomGradientStop *stop : stops) {
             const DomColor *color = stop->elementColor();
             gr->setColorAt(stop->attributePosition(), QColor::fromRgb(color->elementRed(),
                             color->elementGreen(), color->elementBlue(), color->attributeAlpha()));
@@ -1168,10 +1170,8 @@ DomBrush *QAbstractFormBuilder::saveBrush(const QBrush &br)
         gradient->setAttributeSpread(QLatin1String(gradientSpread_enum.valueToKey(gr->spread())));
         gradient->setAttributeCoordinateMode(QLatin1String(gradientCoordinate_enum.valueToKey(gr->coordinateMode())));
         QList<DomGradientStop *> stops;
-        QGradientStops st = gr->stops();
-        QVectorIterator<QPair<qreal, QColor> > it(st);
-        while (it.hasNext()) {
-            const QPair<qreal, QColor> pair = it.next();
+        const QGradientStops st = gr->stops();
+        for (const QGradientStop &pair : st) {
             DomGradientStop *stop = new DomGradientStop();
             stop->setAttributePosition(pair.first);
             DomColor *color = new DomColor();
@@ -1382,9 +1382,10 @@ DomWidget *QAbstractFormBuilder::createDom(QWidget *widget, DomWidget *ui_parent
         const QList<QWidget *> zOrder = qvariant_cast<QWidgetList>(widget->property("_q_zOrder"));
         if (list != zOrder) {
             QStringList zOrderList;
-            QListIterator<QWidget* > itZOrder(zOrder);
-            while (itZOrder.hasNext())
-                zOrderList.append(itZOrder.next()->objectName());
+            zOrderList.reserve(zOrder.size());
+            std::transform(zOrder.cbegin(), zOrder.cend(),
+                           std::back_inserter(zOrderList),
+                           [] (const QWidget *w) { return w->objectName(); });
             ui_widget->setElementZOrder(zOrderList);
         }
     }
@@ -1395,13 +1396,10 @@ DomWidget *QAbstractFormBuilder::createDom(QWidget *widget, DomWidget *ui_parent
                 continue;
 
             if (QMenu *menu = qobject_cast<QMenu *>(childWidget)) {
-                QList<QAction *> actions = menu->parentWidget()->actions();
-                QListIterator<QAction *> it(actions);
-                bool found = false;
-                while (it.hasNext()) {
-                    if (it.next()->menu() == menu)
-                        found = true;
-                }
+                const QList<QAction *> actions = menu->parentWidget()->actions();
+                const bool found =
+                    std::any_of(actions.cbegin(), actions.cend(),
+                                [menu] (const QAction *a) { return a->menu() == menu; });
                 if (!found)
                     continue;
             }

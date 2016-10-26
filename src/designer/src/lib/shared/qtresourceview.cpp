@@ -59,6 +59,8 @@
 #include <QtCore/QMimeData>
 #include <QtXml/QDomDocument>
 
+#include <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 static const char *elementResourceData = "resource";
@@ -396,10 +398,9 @@ void QtResourceViewPrivate::createPaths()
         QPair<QString, QTreeWidgetItem *> pathToParentItem = pathToParentItemQueue.dequeue();
         const QString path = pathToParentItem.first;
         QTreeWidgetItem *item = createPath(path, pathToParentItem.second);
-        QStringList subPaths = m_pathToSubPaths.value(path);
-        QStringListIterator itSubPaths(subPaths);
-        while (itSubPaths.hasNext())
-            pathToParentItemQueue.enqueue(qMakePair(itSubPaths.next(), item));
+        const QStringList subPaths = m_pathToSubPaths.value(path);
+        for (const QString &subPath : subPaths)
+            pathToParentItemQueue.enqueue(qMakePair(subPath, item));
     }
 }
 
@@ -422,16 +423,13 @@ void QtResourceViewPrivate::filterOutResources()
     while (!pathQueue.isEmpty()) {
         const QString path = pathQueue.dequeue();
 
-        QStringList fileNames = m_pathToContents.value(path);
-        QStringListIterator it(fileNames);
         bool hasContents = matchAll;
         if (!matchAll) { // the case filter is not empty - we check if the path contains anything
-            while (it.hasNext()) {
-                QString fileName = it.next();
-                hasContents = fileName.contains(m_filterPattern, Qt::CaseInsensitive);
-                if (hasContents) // the path contains at least one resource which matches the filter
-                    break;
-            }
+            // the path contains at least one resource which matches the filter
+            const QStringList fileNames = m_pathToContents.value(path);
+            hasContents =
+                std::any_of(fileNames.cbegin(), fileNames.cend(),
+                            [this] (const QString &f) { return f.contains(this->m_filterPattern, Qt::CaseInsensitive); });
         }
 
         pathToMatchingContents[path] = hasContents;
@@ -448,10 +446,9 @@ void QtResourceViewPrivate::filterOutResources()
             }
         }
 
-        QStringList subPaths = m_pathToSubPaths.value(path); // we do the same for children paths
-        QStringListIterator itSubPaths(subPaths);
-        while (itSubPaths.hasNext())
-            pathQueue.enqueue(itSubPaths.next());
+        const QStringList subPaths = m_pathToSubPaths.value(path); // we do the same for children paths
+        for (const QString &subPath : subPaths)
+            pathQueue.enqueue(subPath);
     }
 
     // we setup here new path and resource to be activated
@@ -483,9 +480,8 @@ void QtResourceViewPrivate::filterOutResources()
         QFileInfo fi(currentResource);
         if (!fi.fileName().contains(m_filterPattern, Qt::CaseInsensitive)) { // the case when the current resource is filtered out
             const QStringList fileNames = m_pathToContents.value(newCurrentPath);
-            QStringListIterator it(fileNames);
-            while (it.hasNext()) { // we try to select the first matching resource from the newCurrentPath
-                QString fileName = it.next();
+            // we try to select the first matching resource from the newCurrentPath
+            for (const QString &fileName : fileNames) {
                 if (fileName.contains(m_filterPattern, Qt::CaseInsensitive)) {
                     QDir dirPath(newCurrentPath);
                     currentResource = dirPath.absoluteFilePath(fileName); // the new resource inside newCurrentPath will be activated
@@ -542,10 +538,8 @@ void QtResourceViewPrivate::createResources(const QString &path)
     const bool matchAll = m_filterPattern.isEmpty();
 
     QDir dir(path);
-    QStringList fileNames = m_pathToContents.value(path);
-    QStringListIterator it(fileNames);
-    while (it.hasNext()) {
-        QString fileName = it.next();
+    const QStringList fileNames = m_pathToContents.value(path);
+    for (const QString &fileName : fileNames) {
         const bool showProperty = matchAll || fileName.contains(m_filterPattern, Qt::CaseInsensitive);
         if (showProperty) {
             QString filePath = dir.absoluteFilePath(fileName);

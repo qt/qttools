@@ -461,9 +461,7 @@ IconSelector::IconSelector(QWidget *parent) :
 
     int index = 0;
     QStringList items;
-    QListIterator<QPair<QPair<QIcon::Mode, QIcon::State>, QString> > itName(d_ptr->m_stateToName);
-    while (itName.hasNext()) {
-        QPair<QPair<QIcon::Mode, QIcon::State>, QString> item = itName.next();
+    for (const auto &item : qAsConst(d_ptr->m_stateToName)) {
         const QPair<QIcon::Mode, QIcon::State> state = item.first;
         const QString name = item.second;
 

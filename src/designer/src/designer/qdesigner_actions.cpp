@@ -1142,15 +1142,10 @@ void QDesignerActions::backupForms()
     }
     if(!tmpFiles.isEmpty()) {
         const QStringList backupFiles = backupDir.entryList(QDir::Files);
-        if(!backupFiles.isEmpty()) {
-            QStringListIterator it(backupFiles);
-            while (it.hasNext())
-                backupDir.remove(it.next());
-        }
+        for (const QString &backupFile : backupFiles)
+            backupDir.remove(backupFile);
 
-        QStringListIterator it(tmpFiles);
-        while (it.hasNext()) {
-            const QString tmpName = it.next();
+        for (const QString &tmpName : qAsConst(tmpFiles)) {
             QString name(tmpName);
             name.replace(m_backupTmpPath, m_backupPath);
             QFile tmpFile(tmpName);

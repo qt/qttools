@@ -1380,9 +1380,7 @@ bool AddDynamicPropertyCommand::init(const QList<QObject *> &selection, QObject 
 
     m_value = value;
 
-    QListIterator<QObject *> it(selection);
-    while (it.hasNext()) {
-        QObject *obj = it.next();
+    for (QObject *obj : selection) {
         if (m_selection.contains(obj))
             continue;
         dynamicSheet = qt_extension<QDesignerDynamicPropertySheetExtension*>(core->extensionManager(), obj);
@@ -1398,9 +1396,7 @@ bool AddDynamicPropertyCommand::init(const QList<QObject *> &selection, QObject 
 void AddDynamicPropertyCommand::redo()
 {
     QDesignerFormEditorInterface *core = formWindow()->core();
-    QListIterator<QObject *> it(m_selection);
-    while (it.hasNext()) {
-        QObject *obj = it.next();
+    for (QObject *obj : qAsConst(m_selection)) {
         QDesignerDynamicPropertySheetExtension *dynamicSheet = qt_extension<QDesignerDynamicPropertySheetExtension*>(core->extensionManager(), obj);
         dynamicSheet->addDynamicProperty(m_propertyName, m_value);
         if (QDesignerPropertyEditorInterface *propertyEditor = formWindow()->core()->propertyEditor()) {
@@ -1413,9 +1409,7 @@ void AddDynamicPropertyCommand::redo()
 void AddDynamicPropertyCommand::undo()
 {
     QDesignerFormEditorInterface *core = formWindow()->core();
-    QListIterator<QObject *> it(m_selection);
-    while (it.hasNext()) {
-        QObject *obj = it.next();
+    for (QObject *obj : qAsConst(m_selection)) {
         QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(core->extensionManager(), obj);
         QDesignerDynamicPropertySheetExtension *dynamicSheet = qt_extension<QDesignerDynamicPropertySheetExtension*>(core->extensionManager(), obj);
         dynamicSheet->removeDynamicProperty(sheet->indexOf(m_propertyName));
@@ -1463,9 +1457,7 @@ bool RemoveDynamicPropertyCommand::init(const QList<QObject *> &selection, QObje
 
     m_objectToValueAndChanged[current] = qMakePair(propertySheet->property(index), propertySheet->isChanged(index));
 
-    QListIterator<QObject *> it(selection);
-    while (it.hasNext()) {
-        QObject *obj = it.next();
+    for (QObject *obj : selection) {
         if (m_objectToValueAndChanged.contains(obj))
             continue;
 

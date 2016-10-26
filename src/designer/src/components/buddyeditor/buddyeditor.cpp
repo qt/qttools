@@ -46,6 +46,8 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 
+#include <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 static const char *buddyPropertyC = "buddy";
@@ -148,27 +150,18 @@ void BuddyEditor::updateBackground()
         if (buddy_name.isEmpty())
             continue;
 
-        const QList<QWidget *> targets = background()->findChildren<QWidget*>(buddy_name);
+        const QWidgetList targets = background()->findChildren<QWidget*>(buddy_name);
         if (targets.isEmpty())
             continue;
 
-        QWidget *target = 0;
-
-        QListIterator<QWidget *> it(targets);
-        while (it.hasNext()) {
-            QWidget *widget = it.next();
-            if (widget && !widget->isHidden()) {
-                target = widget;
-                break;
-            }
-        }
-
-        if (target == 0)
+        const auto wit = std::find_if(targets.cbegin(), targets.cend(),
+                                      [] (const QWidget *w) { return !w->isHidden(); });
+        if (wit == targets.cend())
             continue;
 
         Connection *con = new Connection(this);
         con->setEndPoint(EndPoint::Source, label, widgetRect(label).center());
-        con->setEndPoint(EndPoint::Target, target, widgetRect(target).center());
+        con->setEndPoint(EndPoint::Target, *wit, widgetRect(*wit).center());
         newList.append(con);
     }
 
@@ -179,15 +172,10 @@ void BuddyEditor::updateBackground()
         Connection *con = connection(i);
         QObject *source = con->object(EndPoint::Source);
         QObject *target = con->object(EndPoint::Target);
-        bool found = false;
-        QListIterator<Connection *> it(newList);
-        while (it.hasNext()) {
-            Connection *newConn = it.next();
-            if (newConn->object(EndPoint::Source) == source && newConn->object(EndPoint::Target) == target) {
-                found = true;
-                break;
-            }
-        }
+        const bool found =
+            std::any_of(newList.cbegin(), newList.cend(),
+                        [source, target] (const Connection *nc)
+                        { return nc->object(EndPoint::Source) == source && nc->object(EndPoint::Target) == target; });
         if (found == false)
             toRemove.append(con);
     }
@@ -198,10 +186,7 @@ void BuddyEditor::updateBackground()
             delete takeConnection(con);
     }
 
-    QListIterator<Connection *> it(newList);
-    while (it.hasNext()) {
-        Connection *newConn = it.next();
-
+    for (Connection *newConn : qAsConst(newList)) {
         bool found = false;
         const int c = connectionCount();
         for (int i = 0; i < c; i++) {

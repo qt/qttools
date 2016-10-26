@@ -1244,9 +1244,8 @@ void DesignerPropertyManager::setAttribute(QtProperty *property,
             return;
 
         PropertyToPropertyListMap::iterator pfit = m_propertyToFlags.find(property);
-        QListIterator<QtProperty *> itProp(pfit.value());
-        while (itProp.hasNext()) {
-            if (QtProperty *prop = itProp.next()) {
+        for (QtProperty *prop : qAsConst(pfit.value())) {
+            if (prop) {
                 delete prop;
                 m_flagToProperty.remove(prop);
             }
@@ -1255,9 +1254,7 @@ void DesignerPropertyManager::setAttribute(QtProperty *property,
 
         QList<uint> values;
 
-        QListIterator<QPair<QString, uint> > itFlag(flags);
-        while (itFlag.hasNext()) {
-            const QPair<QString, uint> pair = itFlag.next();
+        for (const QPair<QString, uint> &pair : flags) {
             const QString flagName = pair.first;
             QtProperty *prop = addProperty(QVariant::Bool);
             prop->setPropertyName(flagName);
@@ -2080,9 +2077,8 @@ void DesignerPropertyManager::uninitializeProperty(QtProperty *property)
 {
     m_resetMap.remove(property);
 
-    QListIterator<QtProperty *> itProp(m_propertyToFlags[property]);
-    while (itProp.hasNext()) {
-        QtProperty *prop = itProp.next();
+    const auto propList = m_propertyToFlags.value(property);
+    for (QtProperty *prop : propList) {
         if (prop) {
             delete prop;
             m_flagToProperty.remove(prop);
@@ -2287,12 +2283,9 @@ void DesignerEditorFactory::slotPropertyChanged(QtProperty *property)
             defaultPixmap = qvariant_cast<QIcon>(manager->attributeValue(property, QLatin1String(defaultResourceAttributeC))).pixmap(16, 16);
         else if (m_fwb)
             defaultPixmap = m_fwb->iconCache()->icon(qvariant_cast<PropertySheetIconValue>(manager->value(property))).pixmap(16, 16);
-        QList<PixmapEditor *> editors = m_iconPropertyToEditors.value(property);
-        QListIterator<PixmapEditor *> it(editors);
-        while (it.hasNext()) {
-            PixmapEditor *editor = it.next();
+        const QList<PixmapEditor *> editors = m_iconPropertyToEditors.value(property);
+        for (PixmapEditor *editor : editors)
             editor->setDefaultPixmap(defaultPixmap);
-        }
     }
 }
 
@@ -2719,10 +2712,8 @@ ResetDecorator::ResetDecorator(const QDesignerFormEditorInterface *core, QObject
 
 ResetDecorator::~ResetDecorator()
 {
-    QList<ResetWidget *> editors = m_resetWidgetToProperty.keys();
-    QListIterator<ResetWidget *> it(editors);
-    while (it.hasNext())
-        delete it.next();
+    const QList<ResetWidget *> editors = m_resetWidgetToProperty.keys();
+    qDeleteAll(editors);
 }
 
 void ResetDecorator::connectPropertyManager(QtAbstractPropertyManager *manager)

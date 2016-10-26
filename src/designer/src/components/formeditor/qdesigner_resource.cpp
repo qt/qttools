@@ -100,6 +100,9 @@
 #include <QtCore/qdebug.h>
 #include <QtCore/QXmlStreamWriter>
 
+#include <algorithm>
+#include <iterator>
+
 Q_DECLARE_METATYPE(QWidgetList)
 
 QT_BEGIN_NAMESPACE
@@ -2001,13 +2004,10 @@ QStringList QDesignerResource::mergeWithLoadedPaths(const QStringList &paths) co
 {
     QStringList newPaths = paths;
 #ifdef OLD_RESOURCE_FORMAT
-    QStringList loadedPaths = m_resourceBuilder->loadedQrcFiles();
-    QStringListIterator it(loadedPaths);
-    while (it.hasNext()) {
-        const QString path = it.next();
-        if (!newPaths.contains(path))
-            newPaths << path;
-    }
+    const QStringList loadedPaths = m_resourceBuilder->loadedQrcFiles();
+    std::remove_copy_if(loadedPaths.cbegin(), loadedPaths.cend(),
+                        std::back_inserter(newPaths),
+                        [&newPaths] (const QString &path) { return newPaths.contains(path); });
 #endif
     return newPaths;
 }
@@ -2052,14 +2052,10 @@ void QDesignerResource::createResources(DomResources *resources)
 
     QtResourceSet *resourceSet = m_formWindow->resourceSet();
     if (resourceSet) {
-        QStringList oldPaths = resourceSet->activeResourceFilePaths();
-        QStringList newPaths = oldPaths;
-        QStringListIterator it(paths);
-        while (it.hasNext()) {
-            const QString path = it.next();
-            if (!newPaths.contains(path))
-                newPaths << path;
-        }
+        QStringList newPaths = resourceSet->activeResourceFilePaths();
+        std::remove_copy_if(paths.cbegin(), paths.cend(),
+                            std::back_inserter(newPaths),
+                            [&newPaths] (const QString &path) { return newPaths.contains(path); });
         resourceSet->activateResourceFilePaths(newPaths);
     } else {
         resourceSet = m_formWindow->core()->resourceModel()->addResourceSet(paths);
