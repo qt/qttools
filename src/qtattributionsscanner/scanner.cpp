@@ -54,7 +54,7 @@ static Package readPackage(const QJsonObject &object, const QString &filePath, L
     for (auto iter = object.constBegin(); iter != object.constEnd(); ++iter) {
         const QString key = iter.key();
 
-        if (!iter.value().isString()) {
+        if (!iter.value().isString() && key != QLatin1String("files")) {
             if (logLevel != SilentLog)
                 std::cerr << qPrintable(tr("File %1: Expected JSON string as value of %2.").arg(
                                             QDir::toNativeSeparators(filePath), key)) << std::endl;
@@ -65,6 +65,8 @@ static Package readPackage(const QJsonObject &object, const QString &filePath, L
             p.name = value;
         } else if (key == QLatin1String("Path")) {
             p.path = QDir(directory).absoluteFilePath(value);
+        } else if (key == QLatin1String("Files")) {
+            p.files = value.split(QRegExp(QStringLiteral("\\s")), QString::SkipEmptyParts);
         } else if (key == QLatin1String("Id")) {
             p.id = value;
         } else if (key == QLatin1String("Homepage")) {
