@@ -1379,9 +1379,8 @@ void DesignerPropertyManager::setAttribute(QtProperty *property,
         qdesigner_internal::PropertySheetIconValue icon = m_iconValues.value(property);
         if (icon.paths().isEmpty()) {
             QMap<QPair<QIcon::Mode, QIcon::State>, QtProperty *> subIconProperties = m_propertyToIconSubProperties.value(property);
-            QMapIterator<QPair<QIcon::Mode, QIcon::State>, QtProperty *> itSub(subIconProperties);
-            while (itSub.hasNext()) {
-                QPair<QIcon::Mode, QIcon::State> pair = itSub.next().key();
+            for (auto itSub = subIconProperties.cbegin(), end = subIconProperties.cend(); itSub != end; ++itSub) {
+                QPair<QIcon::Mode, QIcon::State> pair = itSub.key();
                 QtProperty *subProp = itSub.value();
                 setAttribute(subProp, QLatin1String(defaultResourceAttributeC),
                              defaultIcon.pixmap(16, 16, pair.first, pair.second));
@@ -1562,9 +1561,8 @@ QString DesignerPropertyManager::valueText(const QtProperty *property) const
 void DesignerPropertyManager::reloadResourceProperties()
 {
     DesignerIconCache *iconCache = 0;
-    QMapIterator<QtProperty *, qdesigner_internal::PropertySheetIconValue> itIcon(m_iconValues);
-    while (itIcon.hasNext()) {
-        QtProperty *property = itIcon.next().key();
+    for (auto itIcon = m_iconValues.cbegin(), end = m_iconValues.cend(); itIcon!= end; ++itIcon) {
+        QtProperty *property = itIcon.key();
         PropertySheetIconValue icon = itIcon.value();
 
         QIcon defaultIcon = m_defaultIcons.value(property);
@@ -1581,9 +1579,8 @@ void DesignerPropertyManager::reloadResourceProperties()
         QMap<QPair<QIcon::Mode, QIcon::State>, PropertySheetPixmapValue> iconPaths = icon.paths();
 
         QMap<QPair<QIcon::Mode, QIcon::State>, QtProperty *> subProperties = m_propertyToIconSubProperties.value(property);
-        QMapIterator<QPair<QIcon::Mode, QIcon::State>, QtProperty *> itSub(subProperties);
-        while (itSub.hasNext()) {
-            const QPair<QIcon::Mode, QIcon::State> pair = itSub.next().key();
+        for (auto itSub = subProperties.cbegin(), end = subProperties.cend(); itSub != end; ++itSub) {
+            const QPair<QIcon::Mode, QIcon::State> pair = itSub.key();
             QtVariantProperty *subProperty = variantProperty(itSub.value());
             subProperty->setAttribute(QLatin1String(defaultResourceAttributeC),
                                       defaultIcon.pixmap(16, 16, pair.first, pair.second));
@@ -1592,9 +1589,8 @@ void DesignerPropertyManager::reloadResourceProperties()
         emit propertyChanged(property);
         emit QtVariantPropertyManager::valueChanged(property, QVariant::fromValue(itIcon.value()));
     }
-    QMapIterator<QtProperty *, qdesigner_internal::PropertySheetPixmapValue> itPix(m_pixmapValues);
-    while (itPix.hasNext()) {
-        QtProperty *property = itPix.next().key();
+    for (auto itPix = m_pixmapValues.cbegin(), end = m_pixmapValues.cend(); itPix != end; ++itPix) {
+        QtProperty *property = itPix.key();
         emit propertyChanged(property);
         emit QtVariantPropertyManager::valueChanged(property, QVariant::fromValue(itPix.value()));
     }
@@ -1829,9 +1825,8 @@ void DesignerPropertyManager::setValue(QtProperty *property, const QVariant &val
         QMap<QPair<QIcon::Mode, QIcon::State>, PropertySheetPixmapValue> iconPaths = icon.paths();
 
         QMap<QPair<QIcon::Mode, QIcon::State>, QtProperty *> subProperties = m_propertyToIconSubProperties.value(property);
-        QMapIterator<QPair<QIcon::Mode, QIcon::State>, QtProperty *> itSub(subProperties);
-        while (itSub.hasNext()) {
-            const QPair<QIcon::Mode, QIcon::State> pair = itSub.next().key();
+        for (auto itSub = subProperties.cbegin(), end = subProperties.cend(); itSub != end; ++itSub) {
+            const QPair<QIcon::Mode, QIcon::State> pair = itSub.key();
             QtVariantProperty *subProperty = variantProperty(itSub.value());
             bool hasPath = iconPaths.contains(pair);
             subProperty->setModified(hasPath);
@@ -2122,9 +2117,8 @@ void DesignerPropertyManager::uninitializeProperty(QtProperty *property)
     m_defaultPixmaps.remove(property);
 
     QMap<QPair<QIcon::Mode, QIcon::State>, QtProperty *> iconSubProperties = m_propertyToIconSubProperties.value(property);
-    QMapIterator<QPair<QIcon::Mode, QIcon::State>, QtProperty *> itIcon(iconSubProperties);
-    while (itIcon.hasNext()) {
-        QtProperty *subIcon = itIcon.next().value();
+    for (auto itIcon = iconSubProperties.cbegin(), end = iconSubProperties.cend(); itIcon != end; ++itIcon) {
+        QtProperty *subIcon = itIcon.value();
         delete subIcon;
         m_iconSubPropertyToState.remove(subIcon);
         m_iconSubPropertyToProperty.remove(subIcon);
@@ -2197,16 +2191,10 @@ void DesignerEditorFactory::setFormWindowBase(qdesigner_internal::FormWindowBase
     DesignerPixmapCache *cache = 0;
     if (fwb)
         cache = fwb->pixmapCache();
-    QMapIterator<PixmapEditor *, QtProperty *> itPixmapEditor(m_editorToPixmapProperty);
-    while (itPixmapEditor.hasNext()) {
-        PixmapEditor *pe = itPixmapEditor.next().key();
-        pe->setPixmapCache(cache);
-    }
-    QMapIterator<PixmapEditor *, QtProperty *> itIconEditor(m_editorToIconProperty);
-    while (itIconEditor.hasNext()) {
-        PixmapEditor *pe = itIconEditor.next().key();
-        pe->setPixmapCache(cache);
-    }
+    for (auto it = m_editorToPixmapProperty.cbegin(), end = m_editorToPixmapProperty.cend(); it != end; ++it)
+        it.key()->setPixmapCache(cache);
+    for (auto it = m_editorToIconProperty.cbegin(), end = m_editorToIconProperty.cend(); it != end; ++it)
+        it.key()->setPixmapCache(cache);
 }
 
 void DesignerEditorFactory::connectPropertyManager(QtVariantPropertyManager *manager)
@@ -2519,15 +2507,16 @@ bool removeEditor(QObject *object,
         return false;
     if (!editorToProperty)
         return false;
-    QMapIterator<Editor, QtProperty *> it(*editorToProperty);
-    while (it.hasNext()) {
-        Editor editor = it.next().key();
+    for (auto e2pIt = editorToProperty->begin(), end = editorToProperty->end(); e2pIt != end; ++e2pIt) {
+        Editor editor = e2pIt.key();
         if (editor == object) {
-            QtProperty *prop = it.value();
-            (*propertyToEditors)[prop].removeAll(editor);
-            if ((*propertyToEditors)[prop].count() == 0)
-                propertyToEditors->remove(prop);
-            editorToProperty->remove(editor);
+            const auto p2eIt = propertyToEditors->find(e2pIt.value());
+            if (p2eIt != propertyToEditors->end()) {
+                p2eIt.value().removeAll(editor);
+                if (p2eIt.value().isEmpty())
+                    propertyToEditors->erase(p2eIt);
+            }
+            editorToProperty->erase(e2pIt);
             return true;
         }
     }
@@ -2566,9 +2555,8 @@ bool updateManager(QtVariantEditorFactory *factory, bool *changingPropertyValue,
 {
     if (!editor)
         return false;
-    QMapIterator<Editor, QtProperty *> it(editorToProperty);
-    while (it.hasNext()) {
-        if (it.next().key() == editor) {
+    for (auto it = editorToProperty.cbegin(), end = editorToProperty.cend(); it != end; ++it) {
+        if (it.key() == editor) {
             QtProperty *prop = it.value();
             QtVariantPropertyManager *manager = factory->propertyManager(prop);
             *changingPropertyValue = true;

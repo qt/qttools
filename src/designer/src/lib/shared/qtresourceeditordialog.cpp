@@ -1221,9 +1221,8 @@ void QtResourceEditorDialogPrivate::slotCurrentQrcFileChanged(QListWidgetItem *i
 
     if (m_currentQrcFile) {
         QMap<QtResourcePrefix *, QStandardItem *> currentPrefixList = m_resourcePrefixToPrefixItem;
-        QMapIterator<QtResourcePrefix *, QStandardItem *> itPrefix(currentPrefixList);
-        while (itPrefix.hasNext()) {
-            QtResourcePrefix *resourcePrefix = itPrefix.next().key();
+        for (auto it = currentPrefixList.cbegin(), end = currentPrefixList.cend(); it != end; ++it) {
+            QtResourcePrefix *resourcePrefix = it.key();
             const QList<QtResourceFile *> currentResourceFiles = resourcePrefix->resourceFiles();
             for (QtResourceFile *rf : currentResourceFiles)
                 slotResourceFileRemoved(rf);

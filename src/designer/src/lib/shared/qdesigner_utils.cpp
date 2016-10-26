@@ -336,11 +336,13 @@ namespace qdesigner_internal
     {
         if (const int themeCmp = m_data->m_theme.compare(other.m_data->m_theme))
             return themeCmp < 0;
-        QMapIterator<ModeStateKey, PropertySheetPixmapValue> itThis(m_data->m_paths);
-        QMapIterator<ModeStateKey, PropertySheetPixmapValue> itOther(other.m_data->m_paths);
-        while (itThis.hasNext() && itOther.hasNext()) {
-            const ModeStateKey thisPair = itThis.next().key();
-            const ModeStateKey otherPair = itOther.next().key();
+        auto itThis = m_data->m_paths.cbegin();
+        auto itThisEnd = m_data->m_paths.cend();
+        auto itOther = other.m_data->m_paths.cbegin();
+        auto itOtherEnd = other.m_data->m_paths.cend();
+        while (itThis != itThisEnd && itOther != itOtherEnd) {
+            const ModeStateKey thisPair = itThis.key();
+            const ModeStateKey otherPair = itOther.key();
             if (thisPair < otherPair)
                 return true;
             else if (otherPair < thisPair)
@@ -351,7 +353,7 @@ namespace qdesigner_internal
             if (crc > 0)
                 return false;
         }
-        if (itOther.hasNext())
+        if (itOther != itOtherEnd)
             return true;
         return false;
     }

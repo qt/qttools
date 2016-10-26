@@ -262,20 +262,14 @@ void QtResourceViewPrivate::slotFilterChanged(const QString &pattern)
 
 void QtResourceViewPrivate::storeExpansionState()
 {
-    QMapIterator<QString, QTreeWidgetItem *> it(m_pathToItem);
-    while (it.hasNext()) {
-        it.next();
-        m_expansionState[it.key()] = it.value()->isExpanded();
-    }
+    for (auto it = m_pathToItem.cbegin(), end = m_pathToItem.cend(); it != end; ++it)
+        m_expansionState.insert(it.key(), it.value()->isExpanded());
 }
 
 void QtResourceViewPrivate::applyExpansionState()
 {
-    QMapIterator<QString, QTreeWidgetItem *> it(m_pathToItem);
-    while (it.hasNext()) {
-        it.next();
+    for (auto it = m_pathToItem.cbegin(), end = m_pathToItem.cend(); it != end; ++it)
         it.value()->setExpanded(m_expansionState.value(it.key(), true));
-    }
 }
 
 QPixmap QtResourceViewPrivate::makeThumbnail(const QPixmap &pix) const
@@ -377,10 +371,8 @@ void QtResourceViewPrivate::createPaths()
     const QString root(QStringLiteral(":/"));
 
     QMap<QString, QString> contents = m_resourceModel->contents();
-    QMapIterator<QString, QString> itContents(contents);
-    while (itContents.hasNext()) {
-        const QString filePath = itContents.next().key();
-        const QFileInfo fi(filePath);
+    for (auto it = contents.cbegin(), end = contents.cend(); it != end; ++it) {
+        const QFileInfo fi(it.key());
         QString dirPath = fi.absolutePath();
         m_pathToContents[dirPath].append(fi.fileName());
         while (!m_pathToParentPath.contains(dirPath) && dirPath != root) { // create all parent paths
@@ -503,11 +495,9 @@ void QtResourceViewPrivate::filterOutResources()
         m_listWidget->scrollToItem(currentResourceItem);
     }
 
-    QMapIterator<QString, bool> it(pathToVisible); // hide all paths filtered out
-    while (it.hasNext()) {
-        const QString path = it.next().key();
-        QTreeWidgetItem *item = m_pathToItem.value(path);
-        if (item)
+    // hide all paths filtered out
+    for (auto it = pathToVisible.cbegin(), end = pathToVisible.cend(); it != end; ++it) {
+        if (QTreeWidgetItem *item = m_pathToItem.value(it.key()))
             item->setHidden(!it.value());
     }
 }

@@ -229,9 +229,8 @@ void IconSelectorPrivate::slotUpdate()
         icon = m_iconCache->icon(m_icon);
 
     QMap<QPair<QIcon::Mode, QIcon::State>, PropertySheetPixmapValue> paths = m_icon.paths();
-    QMapIterator<QPair<QIcon::Mode, QIcon::State>, int> itIndex(m_stateToIndex);
-    while (itIndex.hasNext()) {
-        const QPair<QIcon::Mode, QIcon::State> state = itIndex.next().key();
+    for (auto itIndex = m_stateToIndex.cbegin(), end = m_stateToIndex.cend(); itIndex != end; ++itIndex) {
+        const QPair<QIcon::Mode, QIcon::State> state = itIndex.key();
         const PropertySheetPixmapValue pixmap = paths.value(state);
         const int index = itIndex.value();
 

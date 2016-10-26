@@ -581,9 +581,8 @@ void QtResourceModel::setWatcherEnabled(bool enable)
 
     d_ptr->m_fileWatcherEnabled = enable;
 
-    QMapIterator<QString, bool> it(d_ptr->m_fileWatchedMap);
-    if (it.hasNext())
-        d_ptr->setWatcherEnabled(it.next().key(), d_ptr->m_fileWatcherEnabled);
+    if (!d_ptr->m_fileWatchedMap.isEmpty())
+        d_ptr->setWatcherEnabled(d_ptr->m_fileWatchedMap.firstKey(), d_ptr->m_fileWatcherEnabled);
 }
 
 bool QtResourceModel::isWatcherEnabled() const

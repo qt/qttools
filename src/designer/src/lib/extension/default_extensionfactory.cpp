@@ -125,14 +125,11 @@ QObject *QExtensionFactory::extension(QObject *object, const QString &iid) const
 
 void QExtensionFactory::objectDestroyed(QObject *object)
 {
-    QMutableMapIterator< IdObjectKey, QObject*> it(m_extensions);
-    while (it.hasNext()) {
-        it.next();
-
-        QObject *o = it.key().second;
-        if (o == object || object == it.value()) {
-            it.remove();
-        }
+    for (auto it = m_extensions.begin(); it != m_extensions.end(); ) {
+        if (it.key().second == object || object == it.value())
+            it = m_extensions.erase(it);
+        else
+            ++it;
     }
 
     m_extended.remove(object);

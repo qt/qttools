@@ -818,10 +818,7 @@ bool QDesignerWorkbench::readInBackup()
         return false;
 
     const QString modifiedPlaceHolder = QStringLiteral("[*]");
-    QMapIterator<QString, QString> it(backupFileMap);
-    while(it.hasNext()) {
-        it.next();
-
+    for (auto it = backupFileMap.cbegin(), end = backupFileMap.cend(); it != end; ++it) {
         QString fileName = it.key();
         fileName.remove(modifiedPlaceHolder);
 

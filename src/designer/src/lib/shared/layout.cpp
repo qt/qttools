@@ -328,10 +328,7 @@ void Layout::undoLayout()
     m_formWindow->selectWidget(m_layoutBase, false);
 
     QDesignerWidgetFactoryInterface *widgetFactory = m_formWindow->core()->widgetFactory();
-    QHashIterator<QWidget *, QRect> it(m_geometries);
-    while (it.hasNext()) {
-        it.next();
-
+    for (auto it = m_geometries.cbegin(), end = m_geometries.cend(); it != end; ++it) {
         if (!it.key())
             continue;
 
@@ -395,10 +392,7 @@ void Layout::breakLayout()
                           m_layoutBase != m_formWindow->mainContainer());
     const bool add = m_geometries.isEmpty();
 
-    QMapIterator<QWidget*, QRect> it(rects);
-    while (it.hasNext()) {
-        it.next();
-
+    for (auto it = rects.cbegin(), end = rects.cend(); it != end; ++it) {
         QWidget *w = it.key();
         if (needReparent) {
             w->setParent(m_layoutBase->parentWidget(), 0);

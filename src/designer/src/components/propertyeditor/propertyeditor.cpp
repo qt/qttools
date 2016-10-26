@@ -617,11 +617,8 @@ QColor PropertyEditor::propertyColor(QtProperty *property) const
 void PropertyEditor::fillView()
 {
     if (m_sorting) {
-        QMapIterator<QString, QtVariantProperty *> itProperty(m_nameToProperty);
-        while (itProperty.hasNext()) {
-            QtVariantProperty *property = itProperty.next().value();
-            m_currentBrowser->addProperty(property);
-        }
+        for (auto itProperty = m_nameToProperty.cbegin(), end = m_nameToProperty.cend(); itProperty != end; ++itProperty)
+            m_currentBrowser->addProperty(itProperty.value());
     } else {
         for (QtProperty *group : qAsConst(m_groups)) {
             QtBrowserItem *item = m_currentBrowser->addProperty(group);
@@ -965,10 +962,7 @@ void PropertyEditor::setObject(QObject *object)
         }
     }
 
-    QMapIterator<QString, QtVariantProperty *> itRemove(toRemove);
-    while (itRemove.hasNext()) {
-        itRemove.next();
-
+    for (auto itRemove = toRemove.cbegin(), end = toRemove.cend(); itRemove != end; ++itRemove) {
         QtVariantProperty *property = itRemove.value();
         m_nameToProperty.remove(itRemove.key());
         m_propertyToGroup.remove(property);
@@ -1127,9 +1121,8 @@ void PropertyEditor::setObject(QObject *object)
         }
     }
     QMap<QString, QtVariantProperty *> groups = m_nameToGroup;
-    QMapIterator<QString, QtVariantProperty *> itGroup(groups);
-    while (itGroup.hasNext()) {
-        QtVariantProperty *groupProperty = itGroup.next().value();
+    for (auto itGroup = groups.cbegin(), end = groups.cend(); itGroup != end; ++itGroup) {
+        QtVariantProperty *groupProperty = itGroup.value();
         if (groupProperty->subProperties().empty()) {
             if (groupProperty == m_dynamicGroup)
                 m_dynamicGroup = 0;

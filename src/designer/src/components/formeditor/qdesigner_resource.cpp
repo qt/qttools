@@ -273,9 +273,8 @@ DomProperty *QDesignerResourceBuilder::saveResource(const QDir &workingDirectory
             DomResourceIcon *ri = new DomResourceIcon;
             if (!theme.isEmpty())
                 ri->setAttributeTheme(theme);
-            QMapIterator<QPair<QIcon::Mode, QIcon::State>, PropertySheetPixmapValue> itPix(pixmaps);
-            while (itPix.hasNext()) {
-                const QIcon::Mode mode = itPix.next().key().first;
+            for (auto itPix = pixmaps.cbegin(), end = pixmaps.cend(); itPix != end; ++itPix) {
+                const QIcon::Mode mode = itPix.key().first;
                 const QIcon::State state = itPix.key().second;
                 DomResourcePixmap *rp = new DomResourcePixmap;
                 const PropertySheetPixmapValue pix = itPix.value();
