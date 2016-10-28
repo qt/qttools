@@ -406,7 +406,7 @@ static QStringList getResources(const QString &resourceFile, QMakeVfs *vfs)
         return QStringList();
     QString content;
     QString errStr;
-    if (!vfs->readFile(resourceFile, &content, &errStr)) {
+    if (vfs->readFile(resourceFile, &content, &errStr) != QMakeVfs::ReadOk) {
         printErr(LU::tr("lupdate error: Can not read %1: %2\n").arg(resourceFile, errStr));
         return QStringList();
     }
