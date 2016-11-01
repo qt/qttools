@@ -102,6 +102,7 @@ struct Options
         , internalSf(false)
         , sectionsOnly(false)
         , protectedAuthenticationPath(false)
+        , jarSigner(false)
         , gdbServer(Auto)
         , installApk(false)
         , uninstallApk(false)
@@ -181,6 +182,7 @@ struct Options
     bool internalSf;
     bool sectionsOnly;
     bool protectedAuthenticationPath;
+    bool jarSigner;
 
     // Gdbserver
     TriState gdbServer;
@@ -446,6 +448,8 @@ Options parseOptions()
             options.sectionsOnly = true;
         } else if (argument.compare(QLatin1String("--protected"), Qt::CaseInsensitive) == 0) {
             options.protectedAuthenticationPath = true;
+        } else if (argument.compare(QLatin1String("--jarsigner"), Qt::CaseInsensitive) == 0) {
+            options.jarSigner = true;
         } else if (argument.compare(QLatin1String("--no-generated-assets-cache"), Qt::CaseInsensitive) == 0) {
             options.generateAssetsFileList = false;
         }
@@ -519,6 +523,8 @@ void printHelp()
                     "         --internalsf: Include the .SF file inside the signature block.\n"
                     "         --sectionsonly: Don't compute hash of entire manifest.\n"
                     "         --protected: Keystore has protected authentication path.\n"
+                    "         --jarsigner: Force jarsigner usage, otherwise apksigner will be\n"
+                    "           used if available.\n"
                     "    --gdbserver: Adds the gdbserver to the package. By default the gdbserver\n"
                     "       is bundled for debug pacakges.\n"
                     "    --no-gdbserver: Prevents the gdbserver from being added to the package\n"
@@ -2554,7 +2560,7 @@ bool copyGnuStl(Options *options)
     return true;
 }
 
-bool signPackage(const Options &options)
+bool jarSignerSignPackage(const Options &options)
 {
     if (options.verbose)
         fprintf(stdout, "Signing Android package.\n");
@@ -2678,6 +2684,108 @@ bool signPackage(const Options &options)
     }
 
     return QFile::remove(apkPath(options, UnsignedAPK));
+}
+
+bool signPackage(const Options &options)
+{
+    QString apksignerTool = options.sdkPath + QLatin1String("/build-tools/") + options.sdkBuildToolsVersion + QLatin1String("/apksigner");
+#if defined(Q_OS_WIN32)
+    apksignerTool += QLatin1String(".bat");
+#endif
+
+    if (options.jarSigner || !QFile::exists(apksignerTool))
+        return jarSignerSignPackage(options);
+
+    // APKs signed with apksigner must not be changed after they're signed, therefore we need to zipalign it before we sign it.
+
+    QString zipAlignTool = options.sdkPath + QLatin1String("/tools/zipalign");
+#if defined(Q_OS_WIN32)
+    zipAlignTool += QLatin1String(".exe");
+#endif
+
+    if (!QFile::exists(zipAlignTool)) {
+        zipAlignTool = options.sdkPath + QLatin1String("/build-tools/") + options.sdkBuildToolsVersion + QLatin1String("/zipalign");
+#if defined(Q_OS_WIN32)
+        zipAlignTool += QLatin1String(".exe");
+#endif
+        if (!QFile::exists(zipAlignTool)) {
+            fprintf(stderr, "zipalign tool not found: %s\n", qPrintable(zipAlignTool));
+            return false;
+        }
+    }
+
+    zipAlignTool = QString::fromLatin1("%1%2 -f 4 %3 %4")
+            .arg(shellQuote(zipAlignTool))
+            .arg(options.verbose ? QString::fromLatin1(" -v") : QString())
+            .arg(apkPath(options, UnsignedAPK))
+            .arg(apkPath(options, SignedAPK));
+
+    FILE *zipAlignCommand = openProcess(zipAlignTool);
+    if (zipAlignCommand == 0) {
+        fprintf(stderr, "Couldn't run zipalign.\n");
+        return false;
+    }
+
+    char buffer[512];
+    while (fgets(buffer, sizeof(buffer), zipAlignCommand) != 0)
+        fprintf(stdout, "%s", buffer);
+
+    int errorCode = pclose(zipAlignCommand);
+    if (errorCode != 0) {
+        fprintf(stderr, "zipalign command failed.\n");
+        if (!options.verbose)
+            fprintf(stderr, "  -- Run with --verbose for more information.\n");
+        return false;
+    }
+
+    QString apkSignerCommandLine = QString::fromLatin1("%1 sign --ks %2")
+            .arg(shellQuote(apksignerTool)).arg(shellQuote(options.keyStore));
+
+    if (!options.keyStorePassword.isEmpty())
+        apkSignerCommandLine += QString::fromLatin1(" --ks-pass pass:%1").arg(shellQuote(options.keyStorePassword));
+
+    if (!options.keyStoreAlias.isEmpty())
+        apkSignerCommandLine += QString::fromLatin1(" --ks-key-alias %1").arg(shellQuote(options.keyStoreAlias));
+
+    if (!options.keyPass.isEmpty())
+        apkSignerCommandLine += QString::fromLatin1(" --key-pass pass:%1").arg(shellQuote(options.keyPass));
+
+    if (options.verbose)
+        apkSignerCommandLine += QLatin1String(" --verbose");
+
+    apkSignerCommandLine += QString::fromLatin1(" %1")
+            .arg(apkPath(options, SignedAPK));
+
+    auto apkSignerRunner = [&] {
+        FILE *apkSignerCommand = openProcess(apkSignerCommandLine);
+        if (apkSignerCommand == 0) {
+            fprintf(stderr, "Couldn't run apksigner.\n");
+            return false;
+        }
+
+        char buffer[512];
+        while (fgets(buffer, sizeof(buffer), apkSignerCommand) != 0)
+            fprintf(stdout, "%s", buffer);
+
+        errorCode = pclose(apkSignerCommand);
+        if (errorCode != 0) {
+            fprintf(stderr, "apksigner command failed.\n");
+            if (!options.verbose)
+                fprintf(stderr, "  -- Run with --verbose for more information.\n");
+            return false;
+        }
+        return true;
+    };
+
+    // Sign the package
+    if (!apkSignerRunner())
+        return false;
+
+    apkSignerCommandLine = QString::fromLatin1("%1 verify --verbose %2")
+        .arg(shellQuote(apksignerTool)).arg(apkPath(options, SignedAPK));
+
+    // Verify the package and remove the unsigned apk
+    return apkSignerRunner() && QFile::remove(apkPath(options, UnsignedAPK));
 }
 
 bool copyGdbServer(const Options &options)
