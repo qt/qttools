@@ -56,6 +56,18 @@
 
 QT_BEGIN_NAMESPACE
 
+static QPoint initialPos(const QSettings &settings, const QSize &initialSize)
+{
+    const QDesktopWidget *desktopWidget = QApplication::desktop();
+    const QPoint defaultPos = desktopWidget->availableGeometry().topLeft();
+    const QPoint savedPos =
+        settings.value(QLatin1String("position"), QVariant(defaultPos)).toPoint();
+    const int savedScreen = desktopWidget->screenNumber(savedPos);
+    return savedScreen >= 0
+        && desktopWidget->availableGeometry(savedScreen).intersects(QRect(savedPos, initialSize))
+        ? savedPos : defaultPos;
+}
+
 QPixelTool::QPixelTool(QWidget *parent)
     : QWidget(parent)
     , m_freeze(false)
@@ -75,7 +87,7 @@ QPixelTool::QPixelTool(QWidget *parent)
     m_zoom = settings.value(QLatin1String("zoom"), 4).toInt();
     m_initialSize = settings.value(QLatin1String("initialSize"), QSize(250, 200)).toSize();
 
-    move(settings.value(QLatin1String("position")).toPoint());
+    move(initialPos(settings, m_initialSize));
 
     setMouseTracking(true);
     setAttribute(Qt::WA_NoBackground);
@@ -431,11 +443,14 @@ void QPixelTool::grabScreen()
     int x = mousePos.x() - w/2;
     int y = mousePos.y() - h/2;
 
+    const QBrush darkBrush = palette().color(QPalette::Dark);
     const QDesktopWidget *desktopWidget = QApplication::desktop();
-
-    QScreen *screen = QGuiApplication::screens().at(desktopWidget->screenNumber(this));
-    m_buffer = screen->grabWindow(desktopWidget->winId(), x, y, w, h);
-
+    if (QScreen *screen = QGuiApplication::screens().value(desktopWidget->screenNumber(this), Q_NULLPTR)) {
+        m_buffer = screen->grabWindow(desktopWidget->winId(), x, y, w, h);
+    } else {
+        m_buffer = QPixmap(w, h);
+        m_buffer.fill(darkBrush.color());
+    }
     QRegion geom(x, y, w, h);
     QRect screenRect;
     for (int i = 0; i < desktopWidget->numScreens(); ++i)
@@ -446,7 +461,7 @@ void QPixelTool::grabScreen()
         QPainter p(&m_buffer);
         p.translate(-x, -y);
         p.setPen(Qt::NoPen);
-        p.setBrush(palette().color(QPalette::Dark));
+        p.setBrush(darkBrush);
         p.drawRects(rects);
     }
 
