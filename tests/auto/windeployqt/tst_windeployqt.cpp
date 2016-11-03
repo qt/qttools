@@ -38,11 +38,18 @@
 #include <QtTest/QtTest>
 
 #ifndef QT_NO_PROCESS
-static const QString msgProcessError(const QProcess &process, const QString &what)
+static const QString msgProcessError(const QProcess &process, const QString &what,
+                                     const QByteArray &stdOut = QByteArray(),
+                                     const QByteArray &stdErr = QByteArray())
 {
     QString result;
-    QTextStream(&result) << what << ": \"" << process.program() << ' '
+    QTextStream str(&result);
+    str << what << ": \"" << process.program() << ' '
         << process.arguments().join(QLatin1Char(' ')) << "\": " << process.errorString();
+    if (!stdOut.isEmpty())
+        str << "\nStandard output:\n" << stdOut;
+    if (!stdErr.isEmpty())
+        str << "\nStandard error:\n" << stdErr;
     return result;
 }
 
@@ -52,7 +59,7 @@ static bool runProcess(const QString &binary,
                        const QString &workingDir = QString(),
                        const QProcessEnvironment &env = QProcessEnvironment(),
                        int timeOut = 5000,
-                       QByteArray *stdOut = Q_NULLPTR, QByteArray *stdErr = Q_NULLPTR)
+                       QByteArray *stdOutIn = nullptr, QByteArray *stdErrIn = nullptr)
 {
     QProcess process;
     if (!env.isEmpty())
@@ -73,16 +80,19 @@ static bool runProcess(const QString &binary,
             process.kill();
         return false;
     }
-    if (stdOut)
-        *stdOut = process.readAllStandardOutput();
-    if (stdErr)
-        *stdErr= process.readAllStandardError();
+    const QByteArray stdOut = process.readAllStandardOutput();
+    const QByteArray stdErr = process.readAllStandardError();
+    if (stdOutIn)
+        *stdOutIn = stdOut;
+    if (stdErrIn)
+        *stdErrIn = stdErr;
     if (process.exitStatus() != QProcess::NormalExit) {
-        *errorMessage = msgProcessError(process, "Crashed");
+        *errorMessage = msgProcessError(process, "Crashed", stdOut, stdErr);
         return false;
     }
     if (process.exitCode() != QProcess::NormalExit) {
-        *errorMessage = msgProcessError(process, "Exit code " + QString::number(process.exitCode()));
+        *errorMessage = msgProcessError(process, "Exit code " + QString::number(process.exitCode()),
+                                        stdOut, stdErr);
         return false;
     }
     return true;
