@@ -488,6 +488,17 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         readParameterNamesAndAttributes(fn, cursor);
         return CXChildVisit_Continue;
     }
+#if CINDEX_VERSION >= 36
+    case CXCursor_FriendDecl: {
+        // Friend functions are declared in the enclosing namespace
+        Aggregate *ns = parent_;
+        while (ns && ns->isClass())
+            ns = ns->parent();
+        QScopedValueRollback<Aggregate *> setParent(parent_, ns);
+        // Visit the friend functions
+        return visitChildren(cursor);
+    }
+#endif
     case CXCursor_EnumDecl: {
         if (findNodeForCursor(qdb_, cursor)) // Was already parsed, propably in another translation unit
             return CXChildVisit_Continue;
