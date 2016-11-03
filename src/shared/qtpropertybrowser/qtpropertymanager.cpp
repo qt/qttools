@@ -408,11 +408,8 @@ private:
 static QList<QLocale::Country> sortCountries(const QList<QLocale::Country> &countries)
 {
     QMultiMap<QString, QLocale::Country> nameToCountry;
-    QListIterator<QLocale::Country> itCountry(countries);
-    while (itCountry.hasNext()) {
-        QLocale::Country country = itCountry.next();
+    for (QLocale::Country country : countries)
         nameToCountry.insert(QLocale::countryToString(country), country);
-    }
     return nameToCountry.values();
 }
 
@@ -431,10 +428,8 @@ void QtMetaEnumProvider::initLocale()
     if (!nameToLanguage.contains(QLocale::languageToString(system.language())))
         nameToLanguage.insert(QLocale::languageToString(system.language()), system.language());
 
-    QList<QLocale::Language> languages = nameToLanguage.values();
-    QListIterator<QLocale::Language> itLang(languages);
-    while (itLang.hasNext()) {
-        QLocale::Language language = itLang.next();
+    const QList<QLocale::Language> languages = nameToLanguage.values();
+    for (QLocale::Language language : languages) {
         QList<QLocale::Country> countries;
         countries = QLocale::countriesForLanguage(language);
         if (countries.isEmpty() && language == system.language())
@@ -446,10 +441,8 @@ void QtMetaEnumProvider::initLocale()
             m_indexToLanguage[langIdx] = language;
             m_languageToIndex[language] = langIdx;
             QStringList countryNames;
-            QListIterator<QLocale::Country> it(countries);
             int countryIdx = 0;
-            while (it.hasNext()) {
-                QLocale::Country country = it.next();
+            for (QLocale::Country country : qAsConst(countries)) {
                 countryNames << QLocale::countryToString(country);
                 m_indexToCountry[langIdx][countryIdx] = country;
                 m_countryToIndex[language][country] = countryIdx;
@@ -4898,10 +4891,11 @@ void QtFlagPropertyManagerPrivate::slotBoolChanged(QtProperty *property, bool va
     if (prop == 0)
         return;
 
-    QListIterator<QtProperty *> itProp(m_propertyToFlags[prop]);
+    const auto pfit = m_propertyToFlags.constFind(prop);
+    if (pfit == m_propertyToFlags.constEnd())
+            return;
     int level = 0;
-    while (itProp.hasNext()) {
-        QtProperty *p = itProp.next();
+    for (QtProperty *p : pfit.value()) {
         if (p == property) {
             int v = m_values[prop].val;
             if (value) {
@@ -5102,13 +5096,14 @@ void QtFlagPropertyManager::setValue(QtProperty *property, int val)
 
     it.value() = data;
 
-    QListIterator<QtProperty *> itProp(d_ptr->m_propertyToFlags[property]);
+    const auto pfit = d_ptr->m_propertyToFlags.constFind(property);
     int level = 0;
-    while (itProp.hasNext()) {
-        QtProperty *prop = itProp.next();
-        if (prop)
-            d_ptr->m_boolPropertyManager->setValue(prop, val & (1 << level));
-        level++;
+    if (pfit != d_ptr->m_propertyToFlags.constEnd()) {
+        for (QtProperty *prop : pfit.value()) {
+            if (prop)
+                d_ptr->m_boolPropertyManager->setValue(prop, val & (1 << level));
+            level++;
+        }
     }
 
     emit propertyChanged(property);
@@ -5138,19 +5133,18 @@ void QtFlagPropertyManager::setFlagNames(QtProperty *property, const QStringList
 
     it.value() = data;
 
-    QListIterator<QtProperty *> itProp(d_ptr->m_propertyToFlags[property]);
-    while (itProp.hasNext()) {
-        QtProperty *prop = itProp.next();
-        if (prop) {
-            delete prop;
-            d_ptr->m_flagToProperty.remove(prop);
+    const auto pfit = d_ptr->m_propertyToFlags.find(property);
+    if (pfit != d_ptr->m_propertyToFlags.end()) {
+        for (QtProperty *prop : qAsConst(pfit.value())) {
+            if (prop) {
+                delete prop;
+                d_ptr->m_flagToProperty.remove(prop);
+            }
         }
+        pfit.value().clear();
     }
-    d_ptr->m_propertyToFlags[property].clear();
 
-    QStringListIterator itFlag(flagNames);
-    while (itFlag.hasNext()) {
-        const QString flagName = itFlag.next();
+    for (const QString &flagName : flagNames) {
         QtProperty *prop = d_ptr->m_boolPropertyManager->addProperty();
         prop->setPropertyName(flagName);
         property->addSubProperty(prop);
@@ -5179,15 +5173,16 @@ void QtFlagPropertyManager::initializeProperty(QtProperty *property)
 */
 void QtFlagPropertyManager::uninitializeProperty(QtProperty *property)
 {
-    QListIterator<QtProperty *> itProp(d_ptr->m_propertyToFlags[property]);
-    while (itProp.hasNext()) {
-        QtProperty *prop = itProp.next();
-        if (prop) {
-            delete prop;
-            d_ptr->m_flagToProperty.remove(prop);
+    const auto it = d_ptr->m_propertyToFlags.find(property);
+    if (it != d_ptr->m_propertyToFlags.end()) {
+        for (QtProperty *prop : qAsConst(it.value()))  {
+            if (prop) {
+                delete prop;
+                d_ptr->m_flagToProperty.remove(prop);
+            }
         }
     }
-    d_ptr->m_propertyToFlags.remove(property);
+    d_ptr->m_propertyToFlags.erase(it);
 
     d_ptr->m_values.remove(property);
 }

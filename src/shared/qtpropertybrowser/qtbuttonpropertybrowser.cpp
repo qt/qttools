@@ -123,9 +123,7 @@ int QtButtonPropertyBrowserPrivate::gridRow(WidgetItem *item) const
         siblings = m_children;
 
     int row = 0;
-    QListIterator<WidgetItem *> it(siblings);
-    while (it.hasNext()) {
-        WidgetItem *sibling = it.next();
+    for (WidgetItem *sibling : qAsConst(siblings)) {
         if (sibling == item)
             return row;
         row += gridSpan(sibling);
@@ -162,10 +160,7 @@ void QtButtonPropertyBrowserPrivate::slotEditorDestroyed()
 
 void QtButtonPropertyBrowserPrivate::slotUpdate()
 {
-    QListIterator<WidgetItem *> itItem(m_recreateQueue);
-    while (itItem.hasNext()) {
-        WidgetItem *item = itItem.next();
-
+    for (WidgetItem *item : qAsConst(m_recreateQueue)) {
         WidgetItem *parent = item->parent;
         QWidget *w = 0;
         QGridLayout *l = 0;

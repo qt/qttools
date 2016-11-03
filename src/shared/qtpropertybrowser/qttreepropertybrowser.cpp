@@ -773,9 +773,8 @@ bool QtTreePropertyBrowser::rootIsDecorated() const
 void QtTreePropertyBrowser::setRootIsDecorated(bool show)
 {
     d_ptr->m_treeWidget->setRootIsDecorated(show);
-    QMapIterator<QTreeWidgetItem *, QtBrowserItem *> it(d_ptr->m_itemToIndex);
-    while (it.hasNext()) {
-        QtProperty *property = it.next().value()->property();
+    for (auto it = d_ptr->m_itemToIndex.cbegin(), end = d_ptr->m_itemToIndex.cend(); it != end; ++it) {
+        QtProperty *property = it.value()->property();
         if (!property->hasValue())
             d_ptr->updateItem(it.key());
     }
@@ -794,7 +793,6 @@ bool QtTreePropertyBrowser::alternatingRowColors() const
 void QtTreePropertyBrowser::setAlternatingRowColors(bool enable)
 {
     d_ptr->m_treeWidget->setAlternatingRowColors(enable);
-    QMapIterator<QTreeWidgetItem *, QtBrowserItem *> it(d_ptr->m_itemToIndex);
 }
 
 /*!
@@ -989,9 +987,8 @@ void QtTreePropertyBrowser::setPropertiesWithoutValueMarked(bool mark)
         return;
 
     d_ptr->m_markPropertiesWithoutValue = mark;
-    QMapIterator<QTreeWidgetItem *, QtBrowserItem *> it(d_ptr->m_itemToIndex);
-    while (it.hasNext()) {
-        QtProperty *property = it.next().value()->property();
+    for (auto it = d_ptr->m_itemToIndex.cbegin(), end = d_ptr->m_itemToIndex.cend(); it != end; ++it) {
+        QtProperty *property = it.value()->property();
         if (!property->hasValue())
             d_ptr->updateItem(it.key());
     }

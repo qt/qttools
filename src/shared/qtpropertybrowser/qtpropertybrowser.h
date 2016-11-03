@@ -148,9 +148,7 @@ public:
     explicit QtAbstractEditorFactory(QObject *parent) : QtAbstractEditorFactoryBase(parent) {}
     QWidget *createEditor(QtProperty *property, QWidget *parent)
     {
-        QSetIterator<PropertyManager *> it(m_managers);
-        while (it.hasNext()) {
-            PropertyManager *manager = it.next();
+        for (PropertyManager *manager : qAsConst(m_managers)) {
             if (manager == property->propertyManager()) {
                 return createEditor(manager, property, parent);
             }
@@ -182,9 +180,7 @@ public:
     PropertyManager *propertyManager(QtProperty *property) const
     {
         QtAbstractPropertyManager *manager = property->propertyManager();
-        QSetIterator<PropertyManager *> itManager(m_managers);
-        while (itManager.hasNext()) {
-            PropertyManager *m = itManager.next();
+        for (PropertyManager *m : qAsConst(m_managers)) {
             if (m == manager) {
                 return m;
             }
@@ -198,9 +194,7 @@ protected:
     virtual void disconnectPropertyManager(PropertyManager *manager) = 0;
     void managerDestroyed(QObject *manager)
     {
-        QSetIterator<PropertyManager *> it(m_managers);
-        while (it.hasNext()) {
-            PropertyManager *m = it.next();
+        for (PropertyManager *m : qAsConst(m_managers)) {
             if (m == manager) {
                 m_managers.remove(m);
                 return;
@@ -210,9 +204,7 @@ protected:
 private:
     void breakConnection(QtAbstractPropertyManager *manager)
     {
-        QSetIterator<PropertyManager *> it(m_managers);
-        while (it.hasNext()) {
-            PropertyManager *m = it.next();
+        for (PropertyManager *m : qAsConst(m_managers)) {
             if (m == manager) {
                 removePropertyManager(m);
                 return;
