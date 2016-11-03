@@ -252,11 +252,8 @@ void QtGradientView::setGradientManager(QtGradientManager *manager)
         return;
 
     QMap<QString, QGradient> gradients = m_manager->gradients();
-    QMapIterator<QString, QGradient> itGrad(gradients);
-    while (itGrad.hasNext()) {
-        itGrad.next();
+    for (auto itGrad = gradients.cbegin(), end = gradients.cend(); itGrad != end; ++itGrad)
         slotGradientAdded(itGrad.key(), itGrad.value());
-    }
 
     connect(m_manager, SIGNAL(gradientAdded(QString,QGradient)),
             this, SLOT(slotGradientAdded(QString,QGradient)));

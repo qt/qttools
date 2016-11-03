@@ -330,11 +330,8 @@ QtGradientStopsModel *QtGradientStopsModel::clone() const
     QtGradientStopsModel *model = new QtGradientStopsModel();
 
     QMap<qreal, QtGradientStop *> stopsToClone = stops();
-    QMapIterator<qreal, QtGradientStop *> it(stopsToClone);
-    while (it.hasNext()) {
-        it.next();
+    for (auto it = stopsToClone.cbegin(), end = stopsToClone.cend(); it != end; ++it)
         model->addStop(it.key(), it.value()->color());
-    }
     // clone selection and current also
     return model;
 }
@@ -378,12 +375,9 @@ void QtGradientStopsModel::moveStops(double newPosition)
 
     PositionStopMap stopList;
 
-    QList<QtGradientStop *> selected = selectedStops();
-    QListIterator<QtGradientStop *> it(selected);
-    while (it.hasNext()) {
-        QtGradientStop *stop = it.next();
+    const QList<QtGradientStop *> selected = selectedStops();
+    for (QtGradientStop *stop : selected)
         stopList[stop->position()] = stop;
-    }
     stopList[current->position()] = current;
 
     PositionStopMap::ConstIterator itStop = forward ? stopList.constBegin() : stopList.constEnd();
@@ -412,18 +406,16 @@ void QtGradientStopsModel::moveStops(double newPosition)
 
 void QtGradientStopsModel::clear()
 {
-    QList<QtGradientStop *> stopsList = stops().values();
-    QListIterator<QtGradientStop *> it(stopsList);
-    while (it.hasNext())
-        removeStop(it.next());
+    const QList<QtGradientStop *> stopsList = stops().values();
+    for (QtGradientStop *stop : stopsList)
+        removeStop(stop);
 }
 
 void QtGradientStopsModel::clearSelection()
 {
-    QList<QtGradientStop *> stopsList = selectedStops();
-    QListIterator<QtGradientStop *> it(stopsList);
-    while (it.hasNext())
-        selectStop(it.next(), false);
+    const QList<QtGradientStop *> stopsList = selectedStops();
+    for (QtGradientStop *stop : stopsList)
+        selectStop(stop, false);
 }
 
 void QtGradientStopsModel::flipAll()
@@ -453,20 +445,16 @@ void QtGradientStopsModel::flipAll()
 
 void QtGradientStopsModel::selectAll()
 {
-    QList<QtGradientStop *> stopsList = stops().values();
-    QListIterator<QtGradientStop *> it(stopsList);
-    while (it.hasNext())
-        selectStop(it.next(), true);
+    const auto stopsMap = stops();
+    for (auto it = stopsMap.cbegin(), end = stopsMap.cend(); it != end; ++it)
+        selectStop(it.value(), true);
 }
 
 void QtGradientStopsModel::deleteStops()
 {
-    QList<QtGradientStop *> selected = selectedStops();
-    QListIterator<QtGradientStop *> itSel(selected);
-    while (itSel.hasNext()) {
-        QtGradientStop *stop = itSel.next();
+    const QList<QtGradientStop *> selected = selectedStops();
+    for (QtGradientStop *stop : selected)
         removeStop(stop);
-    }
     QtGradientStop *current = currentStop();
     if (current)
         removeStop(current);

@@ -123,11 +123,9 @@ void QtGradientManager::changeGradient(const QString &id, const QGradient &newGr
 
 void QtGradientManager::clear()
 {
-    QMap<QString, QGradient> grads = gradients();
-    QMapIterator<QString, QGradient> itGrad(grads);
-    while (itGrad.hasNext()) {
-        removeGradient(itGrad.next().key());
-    }
+    const QMap<QString, QGradient> grads = gradients();
+    for (auto it = grads.cbegin(), end = grads.cend(); it != end; ++it)
+        removeGradient(it.key());
 }
 
 QT_END_NAMESPACE

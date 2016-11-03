@@ -402,10 +402,8 @@ void QtGradientStopsControllerPrivate::slotChangeColor(const QColor &color)
     if (!stop)
         return;
     m_model->changeStop(stop, color);
-    QList<QtGradientStop *> stops = m_model->selectedStops();
-    QListIterator<QtGradientStop *> itStop(stops);
-    while (itStop.hasNext()) {
-        QtGradientStop *s = itStop.next();
+    const QList<QtGradientStop *> stops = m_model->selectedStops();
+    for (QtGradientStop *s : stops) {
         if (s != stop)
             m_model->changeStop(s, color);
     }
@@ -417,10 +415,8 @@ void QtGradientStopsControllerPrivate::slotChangeHue(const QColor &color)
     if (!stop)
         return;
     m_model->changeStop(stop, color);
-    QList<QtGradientStop *> stops = m_model->selectedStops();
-    QListIterator<QtGradientStop *> itStop(stops);
-    while (itStop.hasNext()) {
-        QtGradientStop *s = itStop.next();
+    const QList<QtGradientStop *> stops = m_model->selectedStops();
+    for (QtGradientStop *s : stops) {
         if (s != stop) {
             QColor c = s->color();
             if (m_ui->hsvRadioButton->isChecked())
@@ -448,10 +444,8 @@ void QtGradientStopsControllerPrivate::slotChangeSaturation(const QColor &color)
     if (!stop)
         return;
     m_model->changeStop(stop, color);
-    QList<QtGradientStop *> stops = m_model->selectedStops();
-    QListIterator<QtGradientStop *> itStop(stops);
-    while (itStop.hasNext()) {
-        QtGradientStop *s = itStop.next();
+    const QList<QtGradientStop *> stops = m_model->selectedStops();
+    for (QtGradientStop *s : stops) {
         if (s != stop) {
             QColor c = s->color();
             if (m_ui->hsvRadioButton->isChecked()) {
@@ -483,10 +477,8 @@ void QtGradientStopsControllerPrivate::slotChangeValue(const QColor &color)
     if (!stop)
         return;
     m_model->changeStop(stop, color);
-    QList<QtGradientStop *> stops = m_model->selectedStops();
-    QListIterator<QtGradientStop *> itStop(stops);
-    while (itStop.hasNext()) {
-        QtGradientStop *s = itStop.next();
+    const QList<QtGradientStop *> stops = m_model->selectedStops();
+    for (QtGradientStop *s : stops) {
         if (s != stop) {
             QColor c = s->color();
             if (m_ui->hsvRadioButton->isChecked()) {
@@ -518,10 +510,8 @@ void QtGradientStopsControllerPrivate::slotChangeAlpha(const QColor &color)
     if (!stop)
         return;
     m_model->changeStop(stop, color);
-    QList<QtGradientStop *> stops = m_model->selectedStops();
-    QListIterator<QtGradientStop *> itStop(stops);
-    while (itStop.hasNext()) {
-        QtGradientStop *s = itStop.next();
+    const QList<QtGradientStop *> stops = m_model->selectedStops();
+    for (QtGradientStop *s : stops) {
         if (s != stop) {
             QColor c = s->color();
             if (m_ui->hsvRadioButton->isChecked()) {
@@ -673,10 +663,8 @@ QtGradientStopsController::~QtGradientStopsController()
 void QtGradientStopsController::setGradientStops(const QGradientStops &stops)
 {
     d_ptr->m_model->clear();
-    QVectorIterator<QPair<qreal, QColor> > it(stops);
     QtGradientStop *first = 0;
-    while (it.hasNext()) {
-        QPair<qreal, QColor> pair = it.next();
+    for (const QPair<qreal, QColor> &pair : stops) {
         QtGradientStop *stop = d_ptr->m_model->addStop(pair.first, pair.second);
         if (!first)
             first = stop;
@@ -688,12 +676,9 @@ void QtGradientStopsController::setGradientStops(const QGradientStops &stops)
 QGradientStops QtGradientStopsController::gradientStops() const
 {
     QGradientStops stops;
-    QList<QtGradientStop *> stopsList = d_ptr->m_model->stops().values();
-    QListIterator<QtGradientStop *> itStop(stopsList);
-    while (itStop.hasNext()) {
-        QtGradientStop *stop = itStop.next();
+    const QList<QtGradientStop *> stopsList = d_ptr->m_model->stops().values();
+    for (const QtGradientStop *stop : stopsList)
         stops << QPair<qreal, QColor>(stop->position(), stop->color());
-    }
     return stops;
 }
 

@@ -146,10 +146,9 @@ static QDomElement saveGradient(QDomDocument &doc, const QGradient &gradient)
     gradElem.setAttribute(QLatin1String("spread"), gradientSpreadToString(gradient.spread()));
     gradElem.setAttribute(QLatin1String("coordinateMode"), gradientCoordinateModeToString(gradient.coordinateMode()));
 
-    QGradientStops stops = gradient.stops();
-    QVectorIterator<QGradientStop > it(stops);
-    while (it.hasNext())
-        gradElem.appendChild(saveGradientStop(doc, it.next()));
+    const QGradientStops stops = gradient.stops();
+    for (const QGradientStop &stop : stops)
+        gradElem.appendChild(saveGradientStop(doc, stop));
 
     if (type == QGradient::LinearGradient) {
         const QLinearGradient &g = *static_cast<const QLinearGradient *>(&gradient);
@@ -245,9 +244,7 @@ QString QtGradientUtils::saveState(const QtGradientManager *manager)
     QDomElement rootElem = doc.createElement(QLatin1String("gradients"));
 
     QMap<QString, QGradient> grads = manager->gradients();
-    QMapIterator<QString, QGradient> itGrad(grads);
-    while (itGrad.hasNext()) {
-        itGrad.next();
+    for (auto itGrad = grads.cbegin(), end = grads.cend(); itGrad != end; ++itGrad) {
         QDomElement idElem = doc.createElement(QLatin1String("gradient"));
         idElem.setAttribute(QLatin1String("name"), itGrad.key());
         QDomElement gradElem = saveGradient(doc, itGrad.value());

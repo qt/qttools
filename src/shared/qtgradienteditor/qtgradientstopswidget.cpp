@@ -135,10 +135,7 @@ double QtGradientStopsWidgetPrivate::toViewport(double x) const
 QtGradientStop *QtGradientStopsWidgetPrivate::stopAt(const QPoint &viewportPos) const
 {
     double posY = m_handleSize / 2;
-    QListIterator<QtGradientStop *> itStop(m_stops);
-    while (itStop.hasNext()) {
-        QtGradientStop *stop = itStop.next();
-
+    for (QtGradientStop *stop : m_stops) {
         double posX = toViewport(stop->position());
 
         double x = viewportPos.x() - posX;
@@ -154,10 +151,7 @@ QList<QtGradientStop *> QtGradientStopsWidgetPrivate::stopsAt(const QPoint &view
 {
     QList<QtGradientStop *> stops;
     double posY = m_handleSize / 2;
-    QListIterator<QtGradientStop *> itStop(m_stops);
-    while (itStop.hasNext()) {
-        QtGradientStop *stop = itStop.next();
-
+    for (QtGradientStop *stop : m_stops) {
         double posX = toViewport(stop->position());
 
         double x = viewportPos.x() - posX;
@@ -176,11 +170,9 @@ void QtGradientStopsWidgetPrivate::setupMove(QtGradientStop *stop, int x)
     int viewportX = qRound(toViewport(stop->position()));
     m_moveOffset = x - viewportX;
 
-    QList<QtGradientStop *> stops = m_stops;
+    const QList<QtGradientStop *> stops = m_stops;
     m_stops.clear();
-    QListIterator<QtGradientStop *> itStop(stops);
-    while (itStop.hasNext()) {
-        QtGradientStop *s = itStop.next();
+    for (QtGradientStop *s : stops) {
         if (m_model->isSelected(s) || s == stop) {
             m_moveStops[s] = s->position() - stop->position();
             m_stops.append(s);
@@ -188,9 +180,7 @@ void QtGradientStopsWidgetPrivate::setupMove(QtGradientStop *stop, int x)
             m_moveOriginal[s->position()] = s->color();
         }
     }
-    itStop.toFront();
-    while (itStop.hasNext()) {
-        QtGradientStop *s = itStop.next();
+    for (QtGradientStop *s : stops) {
         if (!m_model->isSelected(s))
             m_stops.append(s);
     }
@@ -456,15 +446,13 @@ void QtGradientStopsWidget::setGradientStopsModel(QtGradientStopsModel *model)
         connect(d_ptr->m_model, SIGNAL(currentStopChanged(QtGradientStop*)),
                     this, SLOT(slotCurrentStopChanged(QtGradientStop*)));
 
-        QList<QtGradientStop *> stops = d_ptr->m_model->stops().values();
-        QListIterator<QtGradientStop *> itStop(stops);
-        while (itStop.hasNext())
-            d_ptr->slotStopAdded(itStop.next());
+        const QtGradientStopsModel::PositionStopMap stopsMap = d_ptr->m_model->stops();
+        for (auto it = stopsMap.cbegin(), end = stopsMap.cend(); it != end; ++it)
+            d_ptr->slotStopAdded(it.value());
 
-        QList<QtGradientStop *> selected = d_ptr->m_model->selectedStops();
-        QListIterator<QtGradientStop *> itSelect(selected);
-        while (itSelect.hasNext())
-            d_ptr->slotStopSelected(itSelect.next(), true);
+        const QList<QtGradientStop *> selected = d_ptr->m_model->selectedStops();
+        for (QtGradientStop *stop : selected)
+            d_ptr->slotStopSelected(stop, true);
 
         d_ptr->slotCurrentStopChanged(d_ptr->m_model->currentStop());
     }
@@ -670,9 +658,7 @@ void QtGradientStopsWidget::mouseMoveEvent(QMouseEvent *e)
         double x1 = d_ptr->fromViewport(xv1);
         double x2 = d_ptr->fromViewport(xv2);
 
-        QListIterator<QtGradientStop *> itStop(d_ptr->m_stops);
-        while (itStop.hasNext()) {
-            QtGradientStop *stop = itStop.next();
+        for (QtGradientStop *stop : qAsConst(d_ptr->m_stops)) {
             if ((stop->position() >= x1 && stop->position() <= x2) ||
                         beginList.contains(stop) || endList.contains(stop))
                 d_ptr->m_model->selectStop(stop, true);
@@ -801,9 +787,8 @@ void QtGradientStopsWidget::paintEvent(QPaintEvent *e)
     if (h > 0) {
         QLinearGradient lg(0, 0, w, 0);
         QMap<qreal, QtGradientStop *> stops = model->stops();
-        QMapIterator<qreal, QtGradientStop *> itStop(stops);
-        while (itStop.hasNext()) {
-            QtGradientStop *stop = itStop.next().value();
+        for (auto itStop = stops.cbegin(), send = stops.cend(); itStop != send; ++itStop) {
+            QtGradientStop *stop = itStop.value();
             double pos = stop->position();
             if (pos >= begin && pos <= end) {
                 double gradPos = (pos - begin) / width;
@@ -842,10 +827,8 @@ void QtGradientStopsWidget::paintEvent(QPaintEvent *e)
 
     QPen pen;
     p.setRenderHint(QPainter::Antialiasing);
-    QListIterator<QtGradientStop *> itStop(d_ptr->m_stops);
-    itStop.toBack();
-    while (itStop.hasPrevious()) {
-        QtGradientStop *stop = itStop.previous();
+    for (auto rit = d_ptr->m_stops.crbegin(), rend = d_ptr->m_stops.crend(); rit != rend; ++rit) {
+        QtGradientStop *stop = *rit;
         double x = stop->position();
         if (x >= begin - handleWidth / 2 && x <= end + handleWidth / 2) {
             double viewX = x * w * (d_ptr->m_scaleFactor + max) / d_ptr->m_scaleFactor - viewBegin;
