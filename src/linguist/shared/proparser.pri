@@ -23,3 +23,6 @@ SOURCES += \
     $$PWD/qmakeevaluator.cpp \
     $$PWD/qmakebuiltins.cpp \
     $$PWD/profileevaluator.cpp
+
+RESOURCES += $$PWD/proparser.qrc
+DEFINES += QMAKE_BUILTIN_PRFS QMAKE_OVERRIDE_PRFS

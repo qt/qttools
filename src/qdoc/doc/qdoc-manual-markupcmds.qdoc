@@ -3277,9 +3277,14 @@
 
    Elsewhere, the documentation identified as \e{\\legalese} command
    can be accumulated using \l {generatelist-command} {\\generatelist}
-   with \c {legalese-command} as the argument. This is useful for
-   generating an overview of the license agreements associated with
-   the source code.
+   with \c {legalese} as the argument. This is useful for generating
+   an overview of the license agreements associated with the source
+   code.
+
+   \note The output of the \c {\generatelist legalese} command includes
+   the \\legalese texts in the current documentation project only. If
+   the current documentation project depends on other modules, their
+   license texts will not be listed.
 
     \target warning-command
     \section1 \\warning
@@ -3548,38 +3553,9 @@
 
     \section2 \c legalese
 
-    The \c legalese argument tells QDoc to generate a complete list of
-    licenses in the documentation. Each license is identified using
-    the \l {legalese-command} {\\legalese} command. This command is
-    used to generate the \e {Qt license information}
-    page this way:
-
-    \code
-    / *!
-        \page licenses.html
-        \title Other Licenses Used in Qt
-        \ingroup licensing
-        \brief Information about other licenses used for Qt components and third-party code.
-
-        Qt contains some code that is not provided under the
-        \l{GNU General Public License (GPL)},
-        \l{GNU Lesser General Public License (LGPL)} or the
-        \l{Qt Commercial Edition}{Qt Commercial License Agreement}, but rather under
-        specific licenses from the original authors. Some pieces of code were developed
-        by The Qt Company and others originated from third parties.
-        This page lists the licenses used, names the authors, and links
-        to the places where it is used.
-
-        The Qt Company gratefully acknowledges these and other contributions
-        to Qt. We recommend that programs that use Qt also acknowledge
-        these contributions, and quote these license statements in an
-        appendix to the documentation.
-
-        See also: \l{Licenses for Fonts Used in Qt for Embedded Linux}
-
-        \generatelist legalese
-    * /
-    \endcode
+    The \c legalese argument tells QDoc to generate a list of licenses in
+    the current documentation project. Each license is identified using
+    the \l {legalese-command} {\\legalese} command.
 
     \section2 \c overviews
 
