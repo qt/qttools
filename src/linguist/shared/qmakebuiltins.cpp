@@ -1368,6 +1368,18 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::evaluateBuiltinConditional(
             }
             ++vit;
         }
+        for (auto fit = m_functionDefs.testFunctions.begin(); fit != m_functionDefs.testFunctions.end(); ) {
+            if (fit->pro() == pro)
+                fit = m_functionDefs.testFunctions.erase(fit);
+            else
+                ++fit;
+        }
+        for (auto fit = m_functionDefs.replaceFunctions.begin(); fit != m_functionDefs.replaceFunctions.end(); ) {
+            if (fit->pro() == pro)
+                fit = m_functionDefs.replaceFunctions.erase(fit);
+            else
+                ++fit;
+        }
         pro->deref();
         return ReturnTrue;
     }
