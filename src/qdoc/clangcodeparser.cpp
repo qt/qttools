@@ -333,6 +333,7 @@ private:
     CXChildVisitResult visitHeader(CXCursor cursor, CXSourceLocation loc);
     void parseProperty(const QString &spelling, const Location &loc);
     void readParameterNamesAndAttributes(FunctionNode* fn, CXCursor cursor);
+    Aggregate *getSemanticParent(CXCursor cursor);
 };
 
 /*!
@@ -349,6 +350,24 @@ CXChildVisitResult ClangVisitor::visitSource(CXCursor cursor, CXSourceLocation l
         return CXChildVisit_Recurse;
     }
     return CXChildVisit_Continue;
+}
+
+/*!
+  If the semantic and lexical parent cursors of \a cursor are
+  not the same, find the Aggregate node for the semantic parent
+  cursor and return it. Otherwise return the current parent.
+ */
+Aggregate *ClangVisitor::getSemanticParent(CXCursor cursor)
+{
+    CXCursor sp = clang_getCursorSemanticParent(cursor);
+    CXCursor lp = clang_getCursorLexicalParent(cursor);
+    if (!clang_equalCursors(sp, lp) && clang_isDeclaration(clang_getCursorKind(sp))) {
+        Node* spn = findNodeForCursor(qdb_, sp);
+        if (spn && spn->isAggregate()) {
+            return static_cast<Aggregate*>(spn);
+        }
+    }
+    return parent_;
 }
 
 CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation loc)
@@ -368,11 +387,12 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
 
         QString className = fromCXString(clang_getCursorSpelling(cursor));
 
-        if (parent_ && parent_->findChildNode(className, Node::Class)) {
+        Aggregate* semanticParent = getSemanticParent(cursor);
+        if (semanticParent && semanticParent->findChildNode(className, Node::Class)) {
             return CXChildVisit_Continue;
         }
 
-        ClassNode *classe = new ClassNode(parent_, className);
+        ClassNode *classe = new ClassNode(semanticParent, className);
         classe->setAccess(fromCX_CXXAccessSpecifier(clang_getCXXAccessSpecifier(cursor)));
         classe->setLocation(fromCXSourceLocation(clang_getCursorLocation(cursor)));
 
