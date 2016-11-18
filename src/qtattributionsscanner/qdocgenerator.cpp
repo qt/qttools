@@ -96,8 +96,23 @@ static void generate(QTextStream &out, const Package &package, const QDir &baseD
 
     out << "The sources can be found in " << languageJoin(sourcePaths) << ".\n\n";
 
-    if (!package.homepage.isEmpty())
-        out << "\\l{" << package.homepage << "}{Project Homepage}\n\n";
+    const bool hasPackageVersion = !package.version.isEmpty();
+    const bool hasPackageDownloadLocation = !package.downloadLocation.isEmpty();
+    if (!package.homepage.isEmpty()) {
+        out << "\\l{" << package.homepage << "}{Project Homepage}";
+        if (hasPackageVersion)
+            out << ", ";
+    }
+    if (hasPackageVersion) {
+        out << "upstream version: ";
+        if (hasPackageDownloadLocation)
+            out << "\\l{" << package.downloadLocation << "}{";
+        out << package.version;
+        if (hasPackageDownloadLocation)
+            out << "}";
+    }
+
+    out << "\n\n";
 
     if (!package.copyright.isEmpty())
         out << "\n\\badcode\n" << package.copyright << "\n\\endcode\n\n";
