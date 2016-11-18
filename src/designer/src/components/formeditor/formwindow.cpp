@@ -329,6 +329,10 @@ FormWindow::~FormWindow()
     if (resourceSet())
         core()->resourceModel()->removeResourceSet(resourceSet());
     delete m_selection;
+
+    if (FormWindowManager *manager = qobject_cast<FormWindowManager*> (core()->formWindowManager()))
+        manager->undoGroup()->removeStack(&m_undoStack);
+    m_undoStack.disconnect();
 }
 
 QDesignerFormEditorInterface *FormWindow::core() const
