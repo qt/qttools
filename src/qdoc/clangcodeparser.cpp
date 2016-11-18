@@ -208,12 +208,16 @@ static Node *findNodeForCursor(QDocDatabase* qdb, CXCursor cur) {
                     args.append(fromCXString(clang_getTypeSpelling(clang_getArgType(funcType, i))));
                 QString t1 = funcParams.at(i).dataType();
                 QString t2 = args.at(i);
+                auto p2 = parent;
+                while (p2 && t1 != t2) {
+                    QString parentScope = p2->name() + QLatin1String("::");
+                    t1 = t1.remove(parentScope);
+                    t2 = t2.remove(parentScope);
+                    p2 = p2->parent();
+                }
                 if (t1 != t2) {
-                    QString parentScope = parent->name() + QLatin1String("::");
-                    if (t1.remove(parentScope) != t2.remove(parentScope)) {
-                        different = true;
-                        break;
-                    }
+                    different = true;
+                    break;
                 }
             }
             if (!different)
