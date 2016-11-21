@@ -11,6 +11,7 @@
         "Path": "%{PWD}",
         "Files": "",
         "QDocModule": "qtest",
+        "QtParts": [ "libs" ],
         "QtUsage": "Usage",
         "Version": "",
         "DownloadLocation": ""

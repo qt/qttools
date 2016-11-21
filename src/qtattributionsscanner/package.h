@@ -40,6 +40,8 @@ struct Package {
     QString name; // Descriptive name of the package. Will be used as the title. Mandatory.
     QString qdocModule; // QDoc module where the documentation should be included. Mandatory.
     QString qtUsage; // How the package is used in Qt. Any way to disable? Mandatory.
+    QStringList qtParts; // Possible values are "examples", "tests", "tools", or "libs".
+                         // "libs" is the default.
 
     QString description; // A short description of what the package is and is used for. Optional.
     QString homepage; // Homepage of the upstream project. Optional.

@@ -34,7 +34,6 @@
 #include <QtCore/qjsondocument.h>
 #include <QtCore/qjsonobject.h>
 #include <QtCore/qvariant.h>
-
 #include <iostream>
 
 namespace Scanner {
@@ -54,7 +53,7 @@ static Package readPackage(const QJsonObject &object, const QString &filePath, L
     for (auto iter = object.constBegin(); iter != object.constEnd(); ++iter) {
         const QString key = iter.key();
 
-        if (!iter.value().isString() && key != QLatin1String("files")) {
+        if (!iter.value().isString() && key != QLatin1String("QtParts")) {
             if (logLevel != SilentLog)
                 std::cerr << qPrintable(tr("File %1: Expected JSON string as value of %2.").arg(
                                             QDir::toNativeSeparators(filePath), key)) << std::endl;
@@ -89,6 +88,16 @@ static Package readPackage(const QJsonObject &object, const QString &filePath, L
             p.description = value;
         } else if (key == QLatin1String("QtUsage")) {
             p.qtUsage = value;
+        } else if (key == QLatin1String("QtParts")) {
+            const QVariantList variantList = iter.value().toArray().toVariantList();
+            for (const QVariant &v: variantList) {
+                if (v.type() != QMetaType::QString && logLevel != SilentLog) {
+                    std::cerr << qPrintable(tr("File %1: Expected JSON string in array of %2.").arg(
+                                                QDir::toNativeSeparators(filePath), key))
+                              << std::endl;
+                }
+                p.qtParts.append(v.toString());
+            }
         } else {
             if (logLevel != SilentLog)
                 std::cerr << qPrintable(tr("File %1: Unknown key %2.").arg(
@@ -110,6 +119,22 @@ static Package readPackage(const QJsonObject &object, const QString &filePath, L
             missingPropertyWarning(filePath, QStringLiteral("License"));
         if (p.copyright.isEmpty())
             missingPropertyWarning(filePath, QStringLiteral("Copyright"));
+        if (p.qtParts.isEmpty())
+            p.qtParts << QStringLiteral("libs");
+
+        foreach (const QString &part, p.qtParts) {
+            if (part != QLatin1String("examples")
+                    && part != QLatin1String("tests")
+                    && part != QLatin1String("tools")
+                    && part != QLatin1String("libs")
+                    && logLevel != SilentLog) {
+                std::cerr << qPrintable(tr("File %1: Property 'QtPart' contains unknown element "
+                                           "'%2'. Valid entries are 'examples', 'tests', 'tools' "
+                                           "and 'libs'.").arg(
+                                            QDir::toNativeSeparators(filePath), part))
+                          << std::endl;
+            }
+        }
     }
     return p;
 }

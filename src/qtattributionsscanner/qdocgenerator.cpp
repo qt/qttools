@@ -71,8 +71,20 @@ static void generate(QTextStream &out, const Package &package, const QDir &baseD
 {
     out << "/*!\n\n";
     out << "\\contentspage attributions.html\n";
-    out << "\\ingroup attributions-" << package.qdocModule << "\n";
-    out << "\\page " << package.qdocModule << "-attribution-" << package.id << ".html attribution\n";
+    for (const QString &part: package.qtParts)
+        out << "\\ingroup attributions-" << part << "\n";
+
+    if (package.qtParts.contains(QLatin1String("libs"))) {
+        // show up in xxx-index.html page of module
+        out << "\\ingroup attributions-" << package.qdocModule << "\n";
+        // include in '\generatelist annotatedattributions'
+        out << "\\page " << package.qdocModule << "-attribution-" << package.id
+            << ".html attribution\n";
+    } else {
+        out << "\\page " << package.qdocModule << "-attribution-" << package.id
+            << ".html \n";
+    }
+
     out << "\\target " << package.id << "\n\n";
     out << "\\title " << package.name << "\n";
     out << "\\brief " << package.license << "\n\n";

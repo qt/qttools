@@ -11,6 +11,7 @@
         "Path": "%{PWD}",
         "Files": "",
         "QDocModule": "",
+        "QtParts": [ "libs" ],
         "QtUsage": "",
         "Version": "",
         "DownloadLocation": ""

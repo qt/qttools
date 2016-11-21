@@ -11,6 +11,7 @@
         "Path": "%{PWD}/complete",
         "Files": "",
         "QDocModule": "qtest",
+        "QtParts": [ "examples" ],
         "QtUsage": "Multi\nLine\nUsage",
         "Version": "1.0",
         "DownloadLocation": "www.qt.io/1.0"
@@ -27,6 +28,9 @@
         "Path": "%{PWD}/minimal",
         "Files": "",
         "QDocModule": "qtest",
+        "QtParts": [
+            "libs"
+        ],
         "QtUsage": "Usage",
         "Version": "",
         "DownloadLocation": ""
