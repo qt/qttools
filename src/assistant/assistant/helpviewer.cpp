@@ -72,7 +72,7 @@ struct ExtensionMap {
     { ".mng", "video/x-mng" },
     { ".pbm", "image/x-portable-bitmap" },
     { ".pgm", "image/x-portable-graymap" },
-    { ".pdf", "application/pdf" },
+    { ".pdf", 0 },
     { ".png", "image/png" },
     { ".ppm", "image/x-portable-pixmap" },
     { ".rss", "application/rss+xml" },
@@ -156,7 +156,7 @@ bool HelpViewer::launchWithExternalApp(const QUrl &url)
 
             actualTmpFile.write(helpEngine.fileData(resolvedUrl));
             actualTmpFile.close();
-            return QDesktopServices::openUrl(QUrl(actualTmpFile.fileName()));
+            return QDesktopServices::openUrl(QUrl::fromLocalFile(actualTmpFile.fileName()));
         }
         return false;
     }
