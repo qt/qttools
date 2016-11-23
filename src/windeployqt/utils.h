@@ -55,8 +55,8 @@ enum Platform {
     WindowsMinGW = WindowsBased + IntelBased + MinGW,
     WinRtIntel = WindowsBased + IntelBased + 1,
     WinRtArm = WindowsBased + ArmBased + 2,
-    WinPhoneIntel = WindowsBased + IntelBased + 3,
-    WinPhoneArm = WindowsBased + ArmBased + 4,
+    WinPhoneIntel = WindowsBased + IntelBased + 3, // deprecated
+    WinPhoneArm = WindowsBased + ArmBased + 4, // deprecated
     WinCEIntel = WindowsBased + IntelBased + 5,
     WinCEArm = WindowsBased + ArmBased + 6,
     Unix = UnixBased,

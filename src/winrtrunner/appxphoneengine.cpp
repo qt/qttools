@@ -266,35 +266,12 @@ AppxPhoneEngine::~AppxPhoneEngine()
 
 QString AppxPhoneEngine::extensionSdkPath() const
 {
-#if _MSC_VER >= 1900
     const QByteArray extensionSdkDirRaw = qgetenv("ExtensionSdkDir");
     if (extensionSdkDirRaw.isEmpty()) {
         qCWarning(lcWinRtRunner) << "The environment variable ExtensionSdkDir is not set.";
         return QString();
     }
     return QString::fromLocal8Bit(extensionSdkDirRaw);
-#else // _MSC_VER < 1900
-    HKEY regKey;
-    LONG hr = RegOpenKeyEx(
-                HKEY_LOCAL_MACHINE,
-                L"SOFTWARE\\Wow6432Node\\Microsoft\\Microsoft SDKs\\WindowsPhoneApp\\v8.1",
-                0, KEY_READ, &regKey);
-    if (hr != ERROR_SUCCESS) {
-        qCWarning(lcWinRtRunner) << "Failed to open registry key:" << qt_error_string(hr);
-        return QString();
-    }
-
-    wchar_t pathData[MAX_PATH];
-    DWORD pathLength = MAX_PATH;
-    hr = RegGetValue(regKey, L"Install Path", L"Install Path", RRF_RT_REG_SZ, NULL, pathData, &pathLength);
-    if (hr != ERROR_SUCCESS) {
-        qCWarning(lcWinRtRunner) << "Failed to get installation path value:" << qt_error_string(hr);
-        return QString();
-    }
-
-    return QString::fromWCharArray(pathData, (pathLength - 1) / sizeof(wchar_t))
-            + QLatin1String("ExtensionSDKs");
-#endif // _MSC_VER < 1900
 }
 
 bool AppxPhoneEngine::installPackage(IAppxManifestReader *reader, const QString &filePath)

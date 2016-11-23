@@ -52,9 +52,7 @@
 #include <wrl.h>
 #include <windows.applicationmodel.h>
 #include <windows.management.deployment.h>
-#if _MSC_VER >= 1900
 #include <wincrypt.h>
-#endif
 
 using namespace Microsoft::WRL;
 using namespace Microsoft::WRL::Wrappers;
@@ -65,7 +63,6 @@ using namespace ABI::Windows::System;
 
 QT_USE_NAMESPACE
 
-#if _MSC_VER >= 1900
 // *********** Taken from MSDN Example code
 // https://msdn.microsoft.com/en-us/library/windows/desktop/jj835834%28v=vs.85%29.aspx?f=255&MSPPError=-2147217396
 
@@ -297,7 +294,6 @@ bool signAppxPackage(PCCERT_CONTEXT signingCertContext, LPCWSTR packageFilePath)
     return true;
 }
 // ************ MSDN
-#endif // MSC_VER >= 1900
 
 bool AppxEngine::getManifestFile(const QString &fileName, QString *manifest)
 {
@@ -458,13 +454,11 @@ AppxEngine::AppxEngine(Runner *runner, AppxEnginePrivate *dd)
     d->packageFamilyName = QString::fromWCharArray(packageFamilyName);
     CoTaskMemFree(packageFamilyName);
 
-#if _MSC_VER >= 1900
     LPWSTR publisher;
     packageId->GetPublisher(&publisher);
     CHECK_RESULT_FATAL("Failed to retrieve publisher name from package.", return);
     d->publisherName = QString::fromWCharArray(publisher);
     CoTaskMemFree(publisher);
-#endif // _MSC_VER >= 1900
 
     ComPtr<IAppxManifestApplicationsEnumerator> applications;
     hr = d->manifestReader->GetApplications(&applications);
@@ -721,7 +715,6 @@ bool AppxEngine::createPackage(const QString &packageFileName)
 
 bool AppxEngine::sign(const QString &fileName)
 {
-#if _MSC_VER >= 1900
     Q_D(const AppxEngine);
     BYTE buffer[256];
     DWORD bufferSize = 256;
@@ -800,8 +793,4 @@ bool AppxEngine::sign(const QString &fileName)
     }
 
     return signAppxPackage(context, wchar(fileName));
-#else // _MSC_VER < 1900
-    Q_UNUSED(fileName);
-    return true;
-#endif // _MSC_VER < 1900
 }

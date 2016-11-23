@@ -194,10 +194,6 @@ static Platform platformFromMkSpec(const QString &xSpec)
         return WinRtIntel;
     if (xSpec.startsWith(QLatin1String("winrt-arm")))
         return WinRtArm;
-    if (xSpec.startsWith(QLatin1String("winphone-x")))
-        return WinPhoneIntel;
-    if (xSpec.startsWith(QLatin1String("winphone-arm")))
-        return WinPhoneArm;
     if (xSpec.startsWith(QLatin1String("wince"))) {
         if (xSpec.contains(QLatin1String("-x86-")))
             return WinCEIntel;
@@ -270,9 +266,8 @@ struct Options {
     bool deployPdb = false;
     bool dryRun = false;
 
-    inline bool isWinRtOrWinPhone() const {
-        return (platform == WinPhoneArm || platform == WinPhoneIntel
-                || platform == WinRtArm || platform == WinRtIntel);
+    inline bool isWinRt() const {
+        return platform == WinRtArm || platform == WinRtIntel;
     }
 };
 
@@ -875,8 +870,6 @@ QStringList findQtPlugins(quint64 *usedQtModules, quint64 disabledQtModules,
                     break;
                 case WinRtIntel:
                 case WinRtArm:
-                case WinPhoneIntel:
-                case WinPhoneArm:
                     filter = QStringLiteral("qwinrt");
                     break;
                 case Unix:
@@ -1328,7 +1321,7 @@ static DeployResult deploy(const Options &options,
             const QString libQtAngleFullPath = qtBinDir + slash + libQtAngleName;
             deployedQtLibraries.append(libQtAngleFullPath);
             // Find the system D3d Compiler matching the D3D library.
-            if (options.systemD3dCompiler && !options.isWinRtOrWinPhone()) {
+            if (options.systemD3dCompiler && !options.isWinRt()) {
                 const QString d3dCompiler = findD3dCompiler(options.platform, qtBinDir, wordSize);
                 if (d3dCompiler.isEmpty()) {
                     std::wcerr << "Warning: Cannot find any version of the d3dcompiler DLL.\n";
@@ -1383,7 +1376,7 @@ static DeployResult deploy(const Options &options,
                 return result;
         }
 
-        if (!options.isWinRtOrWinPhone() && !options.dryRun) {
+        if (!options.isWinRt() && !options.dryRun) {
             const QString qt5CoreName = QFileInfo(libraryPath(libraryLocation, "Qt5Core", qtLibInfix,
                                                               options.platform, isDebug)).fileName();
 
