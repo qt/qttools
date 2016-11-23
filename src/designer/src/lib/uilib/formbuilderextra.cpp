@@ -300,7 +300,7 @@ inline bool parsePerCellProperty(Layout *l, int count, void (Layout::*setter)(in
         clearPerCellValue(l, count, setter, defaultValue);
         return true;
     }
-    const QStringList list = s.split(QLatin1Char(','));
+    const QVector<QStringRef> list = s.splitRef(QLatin1Char(','));
     if (list.empty()) {
         clearPerCellValue(l, count, setter, defaultValue);
         return true;

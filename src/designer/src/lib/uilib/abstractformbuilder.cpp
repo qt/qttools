@@ -170,7 +170,7 @@ QAbstractFormBuilder::~QAbstractFormBuilder()
 // Return UI file version from attribute 'version="4.0"'
 static QPair<int, int> uiVersion(const QString &attr)
 {
-    const QStringList versions = attr.split(QLatin1Char('.'), QString::SkipEmptyParts);
+    const QVector<QStringRef> versions = attr.splitRef(QLatin1Char('.'), QString::SkipEmptyParts);
     if (versions.size() >= 2) {
         bool okMajor, okMinor;
         const int majorVersion = versions.at(0).toInt(&okMajor);
@@ -860,7 +860,8 @@ static inline Qt::Alignment alignmentFromDom(const QString &in)
 {
     Qt::Alignment rc = 0;
     if (!in.isEmpty()) {
-        foreach (const QString &f, in.split(QLatin1Char('|'))) {
+        const QVector<QStringRef> flags = in.splitRef(QLatin1Char('|'));
+        for (const QStringRef &f : flags) {
             if (f == QStringLiteral("Qt::AlignLeft")) {
                 rc |= Qt::AlignLeft;
             } else if (f == QStringLiteral("Qt::AlignRight")) {
