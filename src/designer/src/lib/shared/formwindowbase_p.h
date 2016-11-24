@@ -138,7 +138,6 @@ public:
     void addReloadableProperty(QDesignerPropertySheet *sheet, int index);
     void removeReloadableProperty(QDesignerPropertySheet *sheet, int index);
     void addReloadablePropertySheet(QDesignerPropertySheet *sheet, QObject *object);
-    void removeReloadablePropertySheet(QDesignerPropertySheet *sheet);
     void reloadProperties();
 
     void emitWidgetRemoved(QWidget *w);
@@ -167,9 +166,12 @@ public slots:
 
 private slots:
     void triggerDefaultAction(QWidget *w);
+    void sheetDestroyed(QObject *object);
 
 private:
     void syncGridFeature();
+    void connectSheet(QDesignerPropertySheet *sheet);
+    void disconnectSheet(QDesignerPropertySheet *sheet);
 
     FormWindowBasePrivate *m_d;
 };

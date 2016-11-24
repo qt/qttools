@@ -47,6 +47,7 @@
 
 #include <QtCore/qdebug.h>
 #include <QtCore/QList>
+#include <QtCore/QSet>
 #include <QtCore/QTimer>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QListWidget>
@@ -112,6 +113,15 @@ FormWindowBase::FormWindowBase(QDesignerFormEditorInterface *core, QWidget *pare
 
 FormWindowBase::~FormWindowBase()
 {
+    QSet<QDesignerPropertySheet *> sheets = m_d->m_reloadableResources.keys().toSet();
+    sheets |= m_d->m_reloadablePropertySheets.keys().toSet();
+
+    m_d->m_reloadableResources.clear();
+    m_d->m_reloadablePropertySheets.clear();
+
+    for (QDesignerPropertySheet *sheet : sheets)
+        disconnectSheet(sheet);
+
     delete m_d;
 }
 
@@ -137,14 +147,17 @@ void FormWindowBase::setResourceSet(QtResourceSet *resourceSet)
 
 void FormWindowBase::addReloadableProperty(QDesignerPropertySheet *sheet, int index)
 {
+    connectSheet(sheet);
     m_d->m_reloadableResources[sheet][index] = true;
 }
 
 void FormWindowBase::removeReloadableProperty(QDesignerPropertySheet *sheet, int index)
 {
     m_d->m_reloadableResources[sheet].remove(index);
-    if (m_d->m_reloadableResources[sheet].count() == 0)
+    if (!m_d->m_reloadableResources[sheet].count()) {
         m_d->m_reloadableResources.remove(sheet);
+        disconnectSheet(sheet);
+    }
 }
 
 void FormWindowBase::addReloadablePropertySheet(QDesignerPropertySheet *sheet, QObject *object)
@@ -152,13 +165,53 @@ void FormWindowBase::addReloadablePropertySheet(QDesignerPropertySheet *sheet, Q
     if (qobject_cast<QTreeWidget *>(object) ||
             qobject_cast<QTableWidget *>(object) ||
             qobject_cast<QListWidget *>(object) ||
-            qobject_cast<QComboBox *>(object))
+            qobject_cast<QComboBox *>(object)) {
+        connectSheet(sheet);
         m_d->m_reloadablePropertySheets[sheet] = object;
+    }
 }
 
-void FormWindowBase::removeReloadablePropertySheet(QDesignerPropertySheet *sheet)
+void FormWindowBase::connectSheet(QDesignerPropertySheet *sheet)
 {
-    m_d->m_reloadablePropertySheets.remove(sheet);
+    if (m_d->m_reloadableResources.contains(sheet)
+            || m_d->m_reloadablePropertySheets.contains(sheet)) {
+        // already connected
+        return;
+    }
+    connect(sheet, &QObject::destroyed, this, &FormWindowBase::sheetDestroyed);
+}
+
+void FormWindowBase::disconnectSheet(QDesignerPropertySheet *sheet)
+{
+    if (m_d->m_reloadableResources.contains(sheet)
+            || m_d->m_reloadablePropertySheets.contains(sheet)) {
+        // still need to be connected
+        return;
+    }
+    disconnect(sheet, &QObject::destroyed, this, &FormWindowBase::sheetDestroyed);
+}
+
+void FormWindowBase::sheetDestroyed(QObject *object)
+{
+    // qobject_cast<QDesignerPropertySheet *>(object)
+    // will fail since the destructor of QDesignerPropertySheet
+    // has already finished
+
+    for (auto it = m_d->m_reloadableResources.begin();
+         it != m_d->m_reloadableResources.end(); ++it) {
+        if (it.key() == object) {
+            m_d->m_reloadableResources.erase(it);
+            break;
+        }
+    }
+
+    for (auto it = m_d->m_reloadablePropertySheets.begin();
+         it != m_d->m_reloadablePropertySheets.end(); ++it) {
+        if (it.key() == object) {
+            m_d->m_reloadablePropertySheets.erase(it);
+            break;
+        }
+    }
 }
 
 void FormWindowBase::reloadProperties()
