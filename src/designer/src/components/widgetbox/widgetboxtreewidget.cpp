@@ -67,7 +67,6 @@ static const char *defaultTypeValueC = "default";
 static const char *customValueC = "custom";
 static const char *iconPrefixC = "__qt_icon__";
 static const char *scratchPadValueC = "scratchpad";
-static const char *qtLogoC = "qtlogo.png";
 static const char *invisibleNameC = "[invisible]";
 
 enum TopLevelRole  { NORMAL_ITEM, SCRATCHPAD_ITEM, CUSTOM_ITEM };
