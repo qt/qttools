@@ -63,7 +63,9 @@ public:
 
     virtual ~AppxEnginePrivate()
     {
+        uriFactory.Reset();
         packageFactory.Reset();
+        manifestReader.Reset();
         CoUninitialize();
     }
 
