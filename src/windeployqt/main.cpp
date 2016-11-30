@@ -246,36 +246,29 @@ struct Options {
         AngleDetectionForceOff
     };
 
-    Options() : plugins(true), libraries(true), quickImports(true), translations(true)
-              , systemD3dCompiler(true), compilerRunTime(false)
-              , angleDetection(AngleDetectionAuto), softwareRasterizer(true), platform(Windows)
-              , additionalLibraries(0), disabledLibraries(0)
-              , updateFileFlags(0), json(0), list(ListNone), debugDetection(DebugDetectionAuto)
-              , deployPdb(false), dryRun(false) {}
-
-    bool plugins;
-    bool libraries;
-    bool quickImports;
-    bool translations;
-    bool systemD3dCompiler;
-    bool compilerRunTime;
-    AngleDetection angleDetection;
-    bool softwareRasterizer;
-    Platform platform;
-    quint64 additionalLibraries;
-    quint64 disabledLibraries;
-    unsigned updateFileFlags;
+    bool plugins = true;
+    bool libraries = true;
+    bool quickImports = true;
+    bool translations = true;
+    bool systemD3dCompiler = true;
+    bool compilerRunTime = false;
+    AngleDetection angleDetection = AngleDetectionAuto;
+    bool softwareRasterizer = true;
+    Platform platform = Windows;
+    quint64 additionalLibraries = 0;
+    quint64 disabledLibraries = 0;
+    unsigned updateFileFlags = 0;
     QStringList qmlDirectories; // Project's QML files.
     QString directory;
     QString translationsDirectory; // Translations target directory
     QString libraryDirectory;
     QString pluginDirectory;
     QStringList binaries;
-    JsonOutput *json;
-    ListOption list;
-    DebugDetection debugDetection;
-    bool deployPdb;
-    bool dryRun;
+    JsonOutput *json = nullptr;
+    ListOption list = ListNone;
+    DebugDetection debugDetection = DebugDetectionAuto;
+    bool deployPdb = false;
+    bool dryRun = false;
 
     inline bool isWinRtOrWinPhone() const {
         return (platform == WinPhoneArm || platform == WinPhoneIntel
@@ -980,15 +973,13 @@ static bool deployTranslations(const QString &sourcePath, quint64 usedQtModules,
 
 struct DeployResult
 {
-    DeployResult() : success(false), isDebug(false), directlyUsedQtLibraries(0), usedQtLibraries(0),
-        deployedQtLibraries(0) {}
     operator bool() const { return success; }
 
-    bool success;
-    bool isDebug;
-    quint64 directlyUsedQtLibraries;
-    quint64 usedQtLibraries;
-    quint64 deployedQtLibraries;
+    bool success = false;
+    bool isDebug = false;
+    quint64 directlyUsedQtLibraries = 0;
+    quint64 usedQtLibraries = 0;
+    quint64 deployedQtLibraries = 0;
 };
 
 static QString libraryPath(const QString &libraryLocation, const char *name,
