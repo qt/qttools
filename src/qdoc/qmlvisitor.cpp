@@ -652,6 +652,30 @@ void QmlDocVisitor::endVisit(QQmlJS::AST::UiArrayBinding *)
 {
 }
 
+template <typename T>
+QString qualifiedIdToString(T node);
+
+template <>
+QString qualifiedIdToString(QStringRef node)
+{
+    return node.toString();
+}
+
+template <>
+QString qualifiedIdToString(QQmlJS::AST::UiQualifiedId *node)
+{
+    QString s;
+
+    for (QQmlJS::AST::UiQualifiedId *it = node; it; it = it->next) {
+        s.append(it->name);
+
+        if (it->next)
+            s.append(QLatin1Char('.'));
+    }
+
+    return s;
+}
+
 /*!
     Visits the public \a member declaration, which can be a
     signal or a property. It is a custom signal or property.
@@ -674,8 +698,9 @@ bool QmlDocVisitor::visit(QQmlJS::AST::UiPublicMember *member)
 
                 QVector<Parameter> parameters;
                 for (QQmlJS::AST::UiParameterList *it = member->parameters; it; it = it->next) {
-                    if (!it->type.isEmpty() && !it->name.isEmpty())
-                        parameters.append(Parameter(it->type.toString(), QString(), it->name.toString()));
+                    const QString type = qualifiedIdToString(it->type);
+                    if (!type.isEmpty() && !it->name.isEmpty())
+                        parameters.append(Parameter(type, QString(), it->name.toString()));
                 }
 
                 qmlSignal->setParameters(parameters);
@@ -686,7 +711,7 @@ bool QmlDocVisitor::visit(QQmlJS::AST::UiPublicMember *member)
     }
     case QQmlJS::AST::UiPublicMember::Property:
     {
-        QString type = member->memberType.toString();
+        QString type = qualifiedIdToString(member->memberType);
         QString name = member->name.toString();
         if (current->isQmlType() || current->isJsType()) {
             QmlTypeNode *qmlType = static_cast<QmlTypeNode *>(current);
