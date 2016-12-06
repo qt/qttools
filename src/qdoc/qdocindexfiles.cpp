@@ -1016,6 +1016,8 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter& writer,
                 ClassNode* n = related.node_;
                 if (n)
                     baseStrings.insert(n->fullName());
+                else if (!related.path_.isEmpty())
+                    baseStrings.insert(related.path_.join(QLatin1String("::")));
             }
             if (!baseStrings.isEmpty())
             {

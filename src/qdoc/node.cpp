@@ -1680,6 +1680,8 @@ void ClassNode::fixBaseClasses()
     // Remove private and duplicate base classes.
     while (i < bases_.size()) {
         ClassNode* bc = bases_.at(i).node_;
+        if (!bc)
+            bc = QDocDatabase::qdocDB()->findClassNode(bases_.at(i).path_);
         if (bc && (bc->access() == Node::Private || found.contains(bc))) {
             RelatedClass rc = bases_.at(i);
             bases_.removeAt(i);

@@ -452,7 +452,8 @@ static void processQdocconfFile(const QString &fileName)
             ++h;
         }
 
-        qdb->resolveInheritance();
+        // Moved into ClangCodeParser after building PCH
+        //qdb->resolveInheritance();
 
         /*
           Parse each source text file in the set using the appropriate parser and

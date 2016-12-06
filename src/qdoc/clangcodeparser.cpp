@@ -416,9 +416,12 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         auto type = clang_getCursorType(cursor);
         auto baseCursor = clang_getTypeDeclaration(type);
         auto baseNode = findNodeForCursor(qdb_, baseCursor);
-        if (!baseNode || !baseNode->isClass())
-            return CXChildVisit_Continue;
         auto classe = static_cast<ClassNode*>(parent_);
+        if (!baseNode || !baseNode->isClass()) {
+            QString bcName = fromCXString(clang_getCursorSpelling(baseCursor));
+            classe->addUnresolvedBaseClass(access, QStringList(bcName), bcName);
+            return CXChildVisit_Continue;
+        }
         auto baseClasse = static_cast<ClassNode*>(baseNode);
         classe->addResolvedBaseClass(access, baseClasse);
         return CXChildVisit_Continue;
@@ -1007,6 +1010,7 @@ void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QStrin
                 args.pop_back(); // remove the "-xc++";
             }
         }
+        qdb_->resolveInheritance();
     }
     args.clear();
     args.insert(args.begin(), std::begin(defaultArgs), std::end(defaultArgs));
