@@ -186,7 +186,7 @@ QStringList QCLuceneDocument::getValues(const QString &name) const
             retValue.append(TCharToQString((const TCHAR*)values[i]));
             delete [] values[i]; values[i] = 0;
         }
-        delete values;
+        delete [] values;
     }
 
     delete [] fieldName;
