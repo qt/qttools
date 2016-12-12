@@ -180,9 +180,11 @@ public:
     typedef bool (*SaveFunction)(const Translator &, QIODevice &out, ConversionData &data);
     typedef bool (*LoadFunction)(Translator &, QIODevice &in, ConversionData &data);
     struct FileFormat {
-        FileFormat() : loader(0), saver(0), priority(-1) {}
+        FileFormat() : untranslatedDescription(nullptr), loader(0), saver(0), priority(-1) {}
         QString extension; // such as "ts", "xlf", ...
-        QString description; // human-readable description
+        const char *untranslatedDescription;
+        // human-readable description
+        QString description() const { return FMT::tr(untranslatedDescription); }
         LoadFunction loader;
         SaveFunction saver;
         enum FileType { TranslationSource, TranslationBinary } fileType;

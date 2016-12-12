@@ -61,7 +61,10 @@
     <file>images/mac/forward.png</file>
     <file>images/mac/down.png</file>
     <file>images/mac/up.png</file>
-    <file>images/qtlogo.png</file>
+    <file>images/qtlogo16x16.png</file>
+    <file>images/qtlogo24x24.png</file>
+    <file>images/qtlogo32x32.png</file>
+    <file>images/qtlogo64x64.png</file>
     <file>images/qt3logo.png</file>
     <file>images/resetproperty.png</file>
     <file>images/cleartext.png</file>

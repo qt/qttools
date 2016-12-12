@@ -842,6 +842,7 @@ void QDocDatabase::processForest()
         findAllObsoleteThings(t->root());
         findAllLegaleseTexts(t->root());
         findAllSince(t->root());
+        findAllAttributions(t->root());
         t->setTreeHasBeenAnalyzed();
         t = forest_.nextTree();
     }

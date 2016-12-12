@@ -329,6 +329,10 @@ FormWindow::~FormWindow()
     if (resourceSet())
         core()->resourceModel()->removeResourceSet(resourceSet());
     delete m_selection;
+
+    if (FormWindowManager *manager = qobject_cast<FormWindowManager*> (core()->formWindowManager()))
+        manager->undoGroup()->removeStack(&m_undoStack);
+    m_undoStack.disconnect();
 }
 
 QDesignerFormEditorInterface *FormWindow::core() const
@@ -384,7 +388,7 @@ void FormWindow::setCursorToAll(const QCursor &c, QWidget *start)
 void FormWindow::init()
 {
     if (FormWindowManager *manager = qobject_cast<FormWindowManager*> (core()->formWindowManager())) {
-        manager->undoGroup()->addStack(m_undoStack.qundoStack());
+        manager->undoGroup()->addStack(&m_undoStack);
     }
 
     m_blockSelectionChanged = false;
@@ -417,9 +421,9 @@ void FormWindow::init()
     m_mainContainer = 0;
     m_currentWidget = 0;
 
-    connect(&m_undoStack, &QDesignerUndoStack::changed,
+    connect(&m_undoStack, &QUndoStack::cleanChanged,
             this, &QDesignerFormWindowInterface::changed);
-    connect(&m_undoStack, &QDesignerUndoStack::changed,
+    connect(&m_undoStack, &QUndoStack::cleanChanged,
             this, &FormWindow::checkSelection);
 
     core()->metaDataBase()->add(this);
@@ -2435,12 +2439,15 @@ FormWindow *FormWindow::findFormWindow(QWidget *w)
 
 bool FormWindow::isDirty() const
 {
-    return m_undoStack.isDirty();
+    return !m_undoStack.isClean();
 }
 
 void FormWindow::setDirty(bool dirty)
 {
-    m_undoStack.setDirty(dirty);
+    if (dirty)
+        m_undoStack.resetClean();
+    else
+        m_undoStack.setClean();
 }
 
 QWidget *FormWindow::containerAt(const QPoint &pos)
@@ -2975,7 +2982,7 @@ QWidget *FormWindow::formContainer() const
 
 QUndoStack *FormWindow::commandHistory() const
 {
-    return const_cast<QDesignerUndoStack &>(m_undoStack).qundoStack();
+    return &const_cast<QUndoStack &>(m_undoStack);
 }
 
 } // namespace

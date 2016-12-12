@@ -724,7 +724,7 @@ QByteArray QtFullToolBarManager::saveState(int version) const
 {
     QByteArray data;
     QDataStream stream(&data, QIODevice::WriteOnly);
-    stream << QtFullToolBarManagerPrivate::VersionMarker;
+    stream << int(QtFullToolBarManagerPrivate::VersionMarker);
     stream << version;
     d_ptr->saveState(stream);
     return data;

@@ -38,7 +38,7 @@
 #include <QStringList>
 #include <QTextStream>
 
-#include <QtPlatformSupport/private/qevdevkeyboardhandler_p.h>
+#include <QtInputSupport/private/qevdevkeyboardhandler_p.h>
 
 using namespace std;
 

@@ -34,14 +34,58 @@
 
 namespace QDocGenerator {
 
+// See definition of idstring and licenseid in https://spdx.org/spdx-specification-21-web-version
+static bool isSpdxLicenseId(const QString &str) {
+    if (str.isEmpty())
+        return false;
+    for (auto iter(str.cbegin()); iter != str.cend(); ++iter) {
+        const QChar c = *iter;
+        if (!((c >= QLatin1Char('A') && c <= QLatin1Char('Z'))
+              || (c >= QLatin1Char('a') && c <= QLatin1Char('z'))
+              || (c >= QLatin1Char('0') && c <= QLatin1Char('9'))
+              || (c == QLatin1Char('-')) || (c == QLatin1Char('.'))))
+            return false;
+    }
+    return true;
+}
+
+static QString languageJoin(const QStringList &list)
+{
+    QString result;
+    for (int i = 0; i < list.size(); ++i) {
+        QString delimiter = QStringLiteral(", ");
+        if (i == list.size() - 1) // last item
+            delimiter.clear();
+        else if (list.size() == 2)
+            delimiter = QStringLiteral(" and ");
+        else if (list.size() > 2 && i == list.size() - 2)
+            delimiter = QStringLiteral(", and "); // oxford comma
+        result += list[i] + delimiter;
+    }
+
+    return result;
+}
+
 static void generate(QTextStream &out, const Package &package, const QDir &baseDir,
                      LogLevel logLevel)
 {
     out << "/*!\n\n";
     out << "\\contentspage attributions.html\n";
-    out << "\\ingroup attributions-" << package.qdocModule << "\n";
-    out << "\\page attribution-" << package.id << ".html attribution\n";
-    out << "\\target "<< package.id << "\n\n";
+    for (const QString &part: package.qtParts)
+        out << "\\ingroup attributions-" << part << "\n";
+
+    if (package.qtParts.contains(QLatin1String("libs"))) {
+        // show up in xxx-index.html page of module
+        out << "\\ingroup attributions-" << package.qdocModule << "\n";
+        // include in '\generatelist annotatedattributions'
+        out << "\\page " << package.qdocModule << "-attribution-" << package.id
+            << ".html attribution\n";
+    } else {
+        out << "\\page " << package.qdocModule << "-attribution-" << package.id
+            << ".html \n";
+    }
+
+    out << "\\target " << package.id << "\n\n";
     out << "\\title " << package.name << "\n";
     out << "\\brief " << package.license << "\n\n";
 
@@ -51,16 +95,41 @@ static void generate(QTextStream &out, const Package &package, const QDir &baseD
     if (!package.qtUsage.isEmpty())
         out << package.qtUsage << "\n\n";
 
-    out << "The sources can be found in "
-        << baseDir.relativeFilePath(package.path) << ".\n\n";
+    QStringList sourcePaths;
+    if (package.files.isEmpty()) {
+        sourcePaths << baseDir.relativeFilePath(package.path);
+    } else {
+        const QDir packageDir(package.path);
+        for (const QString &filePath: package.files) {
+            const QString absolutePath = packageDir.absoluteFilePath(filePath);
+            sourcePaths << baseDir.relativeFilePath(absolutePath);
+        }
+    }
 
-    if (!package.homepage.isEmpty())
-        out << "\\l{" << package.homepage << "}{Project Homepage}\n\n";
+    out << "The sources can be found in " << languageJoin(sourcePaths) << ".\n\n";
+
+    const bool hasPackageVersion = !package.version.isEmpty();
+    const bool hasPackageDownloadLocation = !package.downloadLocation.isEmpty();
+    if (!package.homepage.isEmpty()) {
+        out << "\\l{" << package.homepage << "}{Project Homepage}";
+        if (hasPackageVersion)
+            out << ", ";
+    }
+    if (hasPackageVersion) {
+        out << "upstream version: ";
+        if (hasPackageDownloadLocation)
+            out << "\\l{" << package.downloadLocation << "}{";
+        out << package.version;
+        if (hasPackageDownloadLocation)
+            out << "}";
+    }
+
+    out << "\n\n";
 
     if (!package.copyright.isEmpty())
         out << "\n\\badcode\n" << package.copyright << "\n\\endcode\n\n";
 
-    if (!package.licenseId.isEmpty() && package.licenseId != QLatin1String("NONE"))
+    if (isSpdxLicenseId(package.licenseId) && package.licenseId != QLatin1String("NONE"))
         out << "\\l{https://spdx.org/licenses/" << package.licenseId << ".html}"
             << "{" << package.license << "}.\n\n";
     else

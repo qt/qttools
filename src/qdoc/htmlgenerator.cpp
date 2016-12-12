@@ -3548,7 +3548,7 @@ QString HtmlGenerator::highlightedCode(const QString& markedCode,
             }
             else if (parseArg(src, headerTag, &i, srcSize, &arg, &par1)) {
                 par1 = QStringRef();
-                if (arg.at(0) == QChar('&'))
+                if (arg.startsWith(QLatin1Char('&')))
                     html += arg;
                 else {
                     const Node* n = qdb_->findNodeForInclude(QStringList(arg.toString()));

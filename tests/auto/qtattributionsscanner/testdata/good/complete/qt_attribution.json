@@ -2,6 +2,7 @@
   "Id": "complete",
   "Name": "Complete",
   "QDocModule": "qtest",
+  "QtParts": ["examples"],
 
   "License": "License",
   "Copyright": "Copyright",

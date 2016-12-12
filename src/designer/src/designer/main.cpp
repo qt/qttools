@@ -38,6 +38,9 @@ int main(int argc, char *argv[])
 {
     Q_INIT_RESOURCE(designer);
 
+    // required for QWebEngineView
+    QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
+
     QDesigner app(argc, argv);
     switch (app.parseCommandLineArguments()) {
     case QDesigner::ParseArgumentsSuccess:

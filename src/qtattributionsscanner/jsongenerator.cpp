@@ -42,9 +42,11 @@ static QJsonObject generate(Package package)
 
     obj.insert(QStringLiteral("Id"), package.id);
     obj.insert(QStringLiteral("Path"), package.path);
+    obj.insert(QStringLiteral("Files"), package.files.join(QLatin1Char(' ')));
     obj.insert(QStringLiteral("QDocModule"), package.qdocModule);
     obj.insert(QStringLiteral("Name"), package.name);
     obj.insert(QStringLiteral("QtUsage"), package.qtUsage);
+    obj.insert(QStringLiteral("QtParts"), QJsonArray::fromStringList(package.qtParts));
 
     obj.insert(QStringLiteral("Description"), package.description);
     obj.insert(QStringLiteral("Homepage"), package.homepage);

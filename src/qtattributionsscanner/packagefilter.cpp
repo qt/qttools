@@ -33,9 +33,10 @@
 PackageFilter::PackageFilter(const QString &expression)
     : type(InvalidFilter)
 {
-    if (expression.startsWith(QLatin1String("QDocModule="))) {
+    const QLatin1String filter("QDocModule=");
+    if (expression.startsWith(filter)) {
         type = QDocModuleFilter;
-        this->expression = expression.mid(strlen("QDocModule="));
+        this->expression = expression.mid(filter.size());
     } else {
         std::cerr << qPrintable(tr("Invalid filter expression \"%1\"").arg(expression)) << std::endl;
         std::cerr << qPrintable(tr("Currently only \"QDocModule=*\" is supported.")) << std::endl;
