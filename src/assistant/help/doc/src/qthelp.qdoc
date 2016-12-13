@@ -59,37 +59,37 @@
 
     \section1 Overview
     The Qt help system includes tools for generating and viewing
-    Qt help files. In addition it provides classes for accessing
-    help contents programatically to be able to integrate online
+    Qt help files. In addition, it provides classes for accessing
+    help contents programmatically to be able to integrate online
     help into Qt applications.
 
     The actual help data, meaning the table of contents, index
-    keywords or HTML documents, is contained in Qt compressed help
+    keywords, or HTML documents, is contained in Qt compressed help
     files. So, one such a help file represents usually one manual
     or documentation set. Since most products are more comprehensive
     and consist of a number of tools, one manual is rarely enough.
-    Instead, more manuals which should be accessible at the same
+    Instead, more manuals, which should be accessible at the same
     time, exist. Ideally, it should also be possible to reference
     certain points of interest of one manual to another.
-    Therefore, the Qt help system operates on help collection files
+    Therefore, the Qt help system operates on help collection files,
     which include any number of compressed help files.
 
     However, having collection files to merge many documentation
     sets may lead to some problems. For example, one index keyword
-    may be defined in different documentations. So, when only seeing
-    it in the index and activating it, you cannot be sure that
+    may be defined in different documentation sets. So, when only seeing
+    a keyword in the index and activating it, you cannot be sure that
     the expected documentation will be shown. Therefore, the Qt
-    help system offers the possibiltiy to filter the help contents
-    after certain attributes. This requires however, that the
+    help system offers the possibility to filter the help contents
+    after certain attributes. This requires, however, that the
     attributes have been assigned to the help contents before the
     generation of the compressed help file.
 
     As already mentioned, the Qt compressed help file contains all
-    data, so there is no need any longer to ship all single HTML
-    files. Instead, only the compressed help file and optionally the
-    collection file has to be distributed. The collection file is
-    optional since any existing collection file, e.g. from an older
-    release could be used.
+    data, so there is no need any longer to ship all the single HTML
+    files. Instead, only the compressed help file and, optionally, the
+    collection file have to be distributed. The collection file is
+    optional since any existing collection file, for example from an older
+    release, could be used.
 
     So, in general, there are four files interacting with the help
     system, two used for generating Qt help and two meant for
@@ -104,22 +104,22 @@
             \li \l {Qt Help Project}
             \li .qhp
             \li The input file for the help generator consisting of the table
-               of contents, indices and references to the actual documentation
-               files (*.html); it also defines a unique namespace for the
+               of contents, indices, and references to the actual documentation
+               files (*.html). It also defines a unique namespace for the
                documentation.
 
         \row
             \li Qt Compressed Help
             \li .qch
             \li The output file of the help generator. This binary file contains
-               all information specified in the help project file along with all
-               compressed documentation files.
+               all the information specified in the help project file along with
+               all the compressed documentation files.
 
         \row
             \li \l {Qt Help Collection Project}
             \li .qhcp
             \li The input file for the help collection generator. It contains
-               references to compressed help files which should be included in
+               references to the compressed help files that should be included in
                the collection; it also may contain other information for
                customizing Qt Assistant.
 
@@ -138,15 +138,15 @@
     documentation files already exist.
 
     Once the HTML documents are in place, a \l {Qt Help Project} file, with
-    an extension of \c .qhp, has to be created. After specifying all relevant
+    an extension of \c .qhp, has to be created. After specifying all the relevant
     information in this file, it needs to be compiled by calling:
 
     \snippet doc_src_qthelp.qdoc 2
 
-    The file 'doc.qch' contains then all HTML files in compressed
+    The file \e doc.qch contains all the HTML files in compressed
     form along with the table of contents and index keywords. To
     test if the generated file is correct, open Qt Assistant and
-    install the file via the Settings|Documentation page.
+    install the file in \uicontrol Settings > \uicontrol Documentation.
 
     For the standard Qt source build, the .qhp file is generated and placed
     in the same directory as the HTML pages.
@@ -156,7 +156,7 @@
 
     The first step is to create a Qt Help Collection Project file.
     Since a Qt help collection stores primarily references to
-    compressed help files, the project 'mycollection.qhcp' file
+    compressed help files, the project \e mycollection.qhcp file
     looks unsurprisingly simple:
 
     \snippet doc_src_qthelp.qdoc 3
@@ -166,7 +166,7 @@
     \snippet doc_src_qthelp.qdoc 4
 
     Instead of running two tools, one for generating the compressed
-    help and one for generating the collection file, it is also
+    help and another for generating the collection file, it is also
     possible to just run the qcollectiongenerator tool with a
     slightly modified project file instructing the generator to
     create the compressed help first.
@@ -174,7 +174,7 @@
     \snippet doc_src_qthelp.qdoc 5
 
     Of course, it is possible to specify more than one file in the
-    'generate' or 'register' section, so any number of compressed
+    \c generate or \c register section, so any number of compressed
     help files can be generated and registered in one go.
 
     \section1 Using Qt Help
@@ -186,16 +186,16 @@
     \section2 Using Qt Assistant
 
     \QA operates on a collection file which can be specified
-    before start up. If no collection file is given, a default one
+    before startup. If no collection file is given, a default one
     will be created and used. In either case, it is possible to
     register any Qt compressed help file and access the help contents.
 
     When using Qt Assistant as the help browser for an application, it
-    would be desirable that it can be customized to fit better to the
-    application and doesn't look like an independent, standalone
+    should be possible to customize it to fit the application
+    better, so that it does not look like an independent, standalone
     help browser. To achieve this, several additional properties can
-    be set in an Qt help collection file, to change e.g. the title
-    or application icon of Qt Assistant. For more information,see the
+    be set in a Qt help collection file, to change for example the title
+    or application icon of Qt Assistant. For more information, see the
     \l{Qt Assistant Manual}.
 
     \section2 Using QHelpEngine API
@@ -204,16 +204,16 @@
     Qt Assistant, it is also possible to embed the online help in
     the application. The contents can then be retrieved via the
     QHelpEngine class and can be displayed in nearly any form.
-    Showing it in a QTextBrowser is probably the most common way, but
+    Showing the help in a QTextBrowser is probably the most common way, but
     embedding it in What's This help is also perfectly possible.
 
     Retrieving help data from the file engine does not involve a
     lot of code. The first step is to create an instance of the
     help engine. Then we ask the engine for the links assigned to
-    the identifier, in this case "MyDialog::ChangeButton". If a link
-    was found, meaning at least one help document exists to this topic,
-    we get the actual help contents by calling fileData() and display
-    the document to the user.
+    the identifier, in this case \c MyDialog::ChangeButton. If a link
+    was found, meaning at least one help document exists on this topic,
+    we get the actual help contents by calling QHelpEngineCore::fileData() and
+    display the document to the user.
 
     \snippet doc_src_qthelp.cpp 6
 
