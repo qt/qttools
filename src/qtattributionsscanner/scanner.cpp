@@ -91,7 +91,7 @@ static Package readPackage(const QJsonObject &object, const QString &filePath, L
         } else if (key == QLatin1String("QtParts")) {
             const QVariantList variantList = iter.value().toArray().toVariantList();
             for (const QVariant &v: variantList) {
-                if (v.type() != QMetaType::QString && logLevel != SilentLog) {
+                if (v.type() != QVariant::String && logLevel != SilentLog) {
                     std::cerr << qPrintable(tr("File %1: Expected JSON string in array of %2.").arg(
                                                 QDir::toNativeSeparators(filePath), key))
                               << std::endl;
