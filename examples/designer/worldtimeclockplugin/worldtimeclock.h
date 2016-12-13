@@ -71,7 +71,7 @@ signals:
     void updated(QTime currentTime);
 
 protected:
-    void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
+    void paintEvent(QPaintEvent *event) override;
 
 private:
     int timeZoneOffset;

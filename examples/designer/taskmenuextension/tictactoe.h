@@ -67,15 +67,15 @@ class TicTacToe : public QWidget
 public:
     explicit TicTacToe(QWidget *parent = 0);
 
-    QSize minimumSizeHint() const Q_DECL_OVERRIDE;
-    QSize sizeHint() const Q_DECL_OVERRIDE;
+    QSize minimumSizeHint() const override;
+    QSize sizeHint() const override;
     void setState(const QString &newState);
     QString state() const;
     void clearBoard();
 
 protected:
-    void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
-    void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
+    void mousePressEvent(QMouseEvent *event) override;
+    void paintEvent(QPaintEvent *event) override;
 
 private:
     enum { Empty = '-', Cross = 'X', Nought = 'O' };

@@ -68,13 +68,13 @@ class MultiPageWidgetContainerExtension: public QObject,
 public:
     explicit MultiPageWidgetContainerExtension(MultiPageWidget *widget, QObject *parent);
 
-    void addWidget(QWidget *widget) Q_DECL_OVERRIDE;
-    int count() const Q_DECL_OVERRIDE;
-    int currentIndex() const Q_DECL_OVERRIDE;
-    void insertWidget(int index, QWidget *widget) Q_DECL_OVERRIDE;
-    void remove(int index) Q_DECL_OVERRIDE;
-    void setCurrentIndex(int index) Q_DECL_OVERRIDE;
-    QWidget *widget(int index) const Q_DECL_OVERRIDE;
+    void addWidget(QWidget *widget) override;
+    int count() const override;
+    int currentIndex() const override;
+    void insertWidget(int index, QWidget *widget) override;
+    void remove(int index) override;
+    void setCurrentIndex(int index) override;
+    QWidget *widget(int index) const override;
 
 private:
     MultiPageWidget *myWidget;

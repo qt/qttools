@@ -69,8 +69,8 @@ class TicTacToeTaskMenu : public QObject, public QDesignerTaskMenuExtension
 public:
     explicit TicTacToeTaskMenu(TicTacToe *tic, QObject *parent);
 
-    QAction *preferredEditAction() const Q_DECL_OVERRIDE;
-    QList<QAction *> taskActions() const Q_DECL_OVERRIDE;
+    QAction *preferredEditAction() const override;
+    QList<QAction *> taskActions() const override;
 
 private slots:
     void editState();
@@ -90,7 +90,7 @@ public:
     explicit TicTacToeTaskMenuFactory(QExtensionManager *parent = 0);
 
 protected:
-    QObject *createExtension(QObject *object, const QString &iid, QObject *parent) const Q_DECL_OVERRIDE;
+    QObject *createExtension(QObject *object, const QString &iid, QObject *parent) const override;
 };
 //! [1]
 
