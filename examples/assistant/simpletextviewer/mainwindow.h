@@ -70,7 +70,7 @@ private slots:
     void open();
 
 protected:
-    void closeEvent(QCloseEvent *event);
+    void closeEvent(QCloseEvent *event) override;
 
 private:
     void createActions();

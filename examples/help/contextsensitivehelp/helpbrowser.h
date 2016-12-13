@@ -66,7 +66,7 @@ public:
     void showHelpForKeyword(const QString &id);
 
 private:
-    QVariant loadResource(int type, const QUrl &name);
+    QVariant loadResource(int type, const QUrl &name) override;
 
     QHelpEngineCore *m_helpEngine;
 };

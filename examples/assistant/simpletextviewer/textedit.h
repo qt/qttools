@@ -63,7 +63,7 @@ public:
     void setContents(const QString &fileName);
 
 private:
-    QVariant loadResource(int type, const QUrl &name);
+    QVariant loadResource(int type, const QUrl &name) override;
     QUrl srcUrl;
 };
 
