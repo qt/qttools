@@ -83,7 +83,7 @@ signals:
     void finishedSuccessFully();
 
 private:
-    void run();
+    void run() override;
 
     QHelpEnginePrivate *m_helpEngine;
     QStringList m_filterAttributes;

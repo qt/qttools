@@ -94,7 +94,7 @@ protected:
     QString m_indexFilesFolder;
 
 private:
-    virtual void run()=0;
+    void run() override = 0;
 };
 
 }   // namespace fulltextsearch

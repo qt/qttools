@@ -135,8 +135,8 @@ signals:
     void addBookmark(const QString &title, const QString &url);
 
 protected:
-    void keyPressEvent(QKeyEvent *);
-    void focusInEvent(QFocusEvent *event);
+    void keyPressEvent(QKeyEvent *) override;
+    void focusInEvent(QFocusEvent *event) override;
 
 private slots:
     void highlightSearchTerms();
@@ -147,7 +147,7 @@ private slots:
 private:
     void initPrinter();
     void connectSignals(HelpViewer *page);
-    bool eventFilter(QObject *object, QEvent *e);
+    bool eventFilter(QObject *object, QEvent *e) override;
 
     void removePage(int index);
     void setCurrentPage(HelpViewer *page);

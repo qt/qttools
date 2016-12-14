@@ -76,8 +76,8 @@ Q_SIGNALS:
     void search();
 
 private:
-    virtual void focusInEvent(QFocusEvent *focusEvent);
-    virtual void changeEvent(QEvent *event);
+    void focusInEvent(QFocusEvent *focusEvent) override;
+    void changeEvent(QEvent *event) override;
 
 private:
     QHelpSearchQueryWidgetPrivate *d;

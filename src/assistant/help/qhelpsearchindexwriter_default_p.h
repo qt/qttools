@@ -106,7 +106,7 @@ signals:
     void indexingFinished();
 
 private:
-    void run();
+    void run() override;
     QString addNamespace(const QString namespaces, const QString &namespaceName);
     QString removeNamespace(const QString namespaces, const QString &namespaceName);
 

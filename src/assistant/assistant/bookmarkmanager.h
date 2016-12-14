@@ -71,7 +71,7 @@ private:
     ~BookmarkManager();
 
     void removeItem(const QModelIndex &index);
-    bool eventFilter(QObject *object, QEvent *event);
+    bool eventFilter(QObject *object, QEvent *event) override;
     void buildBookmarksMenu(const QModelIndex &index, QMenu *menu);
     void showBookmarkDialog(const QString &name, const QString &url);
 
@@ -126,7 +126,7 @@ signals:
     void focusInEvent();
 
 private:
-    void focusInEvent(QFocusEvent *event);
+    void focusInEvent(QFocusEvent *event) override;
 };
 
 class BookmarkManager::BookmarkTreeView : public QTreeView

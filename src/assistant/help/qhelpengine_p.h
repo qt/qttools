@@ -111,7 +111,7 @@ public:
     ~QHelpEnginePrivate();
 
     void init(const QString &collectionFile,
-        QHelpEngineCore *helpEngineCore);
+        QHelpEngineCore *helpEngineCore) override;
 
     QHelpContentModel *contentModel;
     QHelpContentWidget *contentWidget;

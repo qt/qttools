@@ -73,7 +73,7 @@ public:
     ~QHelpSearchIndexReaderClucene();
 
 private:
-    void run();
+    void run() override;
     void boostSearchHits(const QHelpEngineCore &engine, QList<QHelpSearchEngine::SearchHit> &hitList,
         const QList<QHelpSearchQuery> &queryList);
     bool buildQuery(const QList<QHelpSearchQuery> &queries,

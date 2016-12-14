@@ -44,9 +44,9 @@ class OpenPagesModel : public QAbstractTableModel
     Q_OBJECT
     friend class OpenPagesManager;
 public:
-    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
-    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
     void addPage(const QUrl &url, qreal zoom = 0);
     void removePage(int index);

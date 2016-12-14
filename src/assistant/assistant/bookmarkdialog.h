@@ -46,7 +46,7 @@ public:
 
 private:
     bool isRootItem(const QModelIndex &index) const;
-    bool eventFilter(QObject *object, QEvent *event);
+    bool eventFilter(QObject *object, QEvent *event) override;
 
 private slots:
     void currentIndexChanged(int index);

@@ -56,31 +56,31 @@ public:
     QModelIndex addItem(const QModelIndex &parent, bool isFolder = false);
     bool removeItem(const QModelIndex &index);
 
-    int rowCount(const QModelIndex &index = QModelIndex()) const;
-    int columnCount(const QModelIndex &index = QModelIndex()) const;
+    int rowCount(const QModelIndex &index = QModelIndex()) const override;
+    int columnCount(const QModelIndex &index = QModelIndex()) const override;
 
-    QModelIndex parent(const QModelIndex &index) const;
-    QModelIndex index(int row, int column, const QModelIndex &index) const;
+    QModelIndex parent(const QModelIndex &index) const override;
+    QModelIndex index(int row, int column, const QModelIndex &index) const override;
 
-    Qt::DropActions supportedDropActions () const;
-    Qt::ItemFlags flags(const QModelIndex &index) const;
+    Qt::DropActions supportedDropActions () const override;
+    Qt::ItemFlags flags(const QModelIndex &index) const override;
 
-    QVariant data(const QModelIndex &index, int role) const;
+    QVariant data(const QModelIndex &index, int role) const override;
     void setData(const QModelIndex &index, const QVector<QVariant> &data);
-    bool setData(const QModelIndex &index, const QVariant &value, int role);
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+    bool setData(const QModelIndex &index, const QVariant &value, int role) override;
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 
     QModelIndex indexFromItem(BookmarkItem *item) const;
     BookmarkItem *itemFromIndex(const QModelIndex &index) const;
     QList<QPersistentModelIndex> indexListFor(const QString &label) const;
 
-    bool insertRows(int position, int rows, const QModelIndex &parent);
-    bool removeRows(int position, int rows, const QModelIndex &parent);
+    bool insertRows(int position, int rows, const QModelIndex &parent) override;
+    bool removeRows(int position, int rows, const QModelIndex &parent) override;
 
-    QStringList mimeTypes() const;
-    QMimeData* mimeData(const QModelIndexList &indexes) const;
+    QStringList mimeTypes() const override;
+    QMimeData* mimeData(const QModelIndexList &indexes) const override;
     bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row,
-        int column, const QModelIndex &parent);
+        int column, const QModelIndex &parent) override;
 
 private:
     void setupCache(const QModelIndex &parent);

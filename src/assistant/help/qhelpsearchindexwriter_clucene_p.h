@@ -88,7 +88,7 @@ signals:
     void indexingFinished();
 
 private:
-    void run();
+    void run() override;
 
     bool addDocuments(const QList<QUrl> docFiles, const QHelpEngineCore &engine,
         const QStringList &attributes, const QString &namespaceName,

@@ -54,7 +54,7 @@ private slots:
     void removeFilter();
 
 private:
-    bool validatePage();
+    bool validatePage() override;
 
     Ui::FilterPage m_ui;
     QStringList m_filterAttributes;

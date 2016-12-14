@@ -51,9 +51,9 @@ public:
     void selectAndHide();
     void selectCurrentPage();
 
-    void setVisible(bool visible);
-    void focusInEvent(QFocusEvent *event);
-    bool eventFilter(QObject *object, QEvent *event);
+    void setVisible(bool visible) override;
+    void focusInEvent(QFocusEvent *event) override;
+    bool eventFilter(QObject *object, QEvent *event) override;
 
 signals:
     void closePage(const QModelIndex &index);

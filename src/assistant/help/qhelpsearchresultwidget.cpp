@@ -142,7 +142,7 @@ signals:
     void requestShowLink(const QUrl &url);
 
 private slots:
-    void setSource(const QUrl & /* name */) {}
+    void setSource(const QUrl & /* name */) override {}
 };
 
 

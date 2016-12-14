@@ -42,8 +42,8 @@ public:
     GeneralPage(QWidget *parent = 0);
 
 private:
-    bool validatePage();
-    bool isComplete() const;
+    bool validatePage() override;
+    bool isComplete() const override;
 
     Ui::GeneralPage m_ui;
 };

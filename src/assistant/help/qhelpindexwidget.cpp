@@ -63,7 +63,7 @@ public:
     QSet<int> indexIds(QHelpDBReader *reader) const;
 
 private:
-    void run();
+    void run() override;
 
     QHelpEnginePrivate *m_helpEngine;
     QStringList m_indices;

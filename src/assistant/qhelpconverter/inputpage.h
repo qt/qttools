@@ -47,7 +47,7 @@ private slots:
     void getFileName();
 
 private:
-    bool validatePage();
+    bool validatePage() override;
 
     Ui::InputPage m_ui;
     AdpReader *m_adpReader;

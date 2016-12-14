@@ -67,12 +67,12 @@ public:
     bool readData(const QString &fileName);
     QString errorMessage() const;
 
-    QString namespaceName() const;
-    QString virtualFolder() const;
-    QList<QHelpDataCustomFilter> customFilters() const;
-    QList<QHelpDataFilterSection> filterSections() const;
-    QMap<QString, QVariant> metaData() const;
-    QString rootPath() const;
+    QString namespaceName() const override;
+    QString virtualFolder() const override;
+    QList<QHelpDataCustomFilter> customFilters() const override;
+    QList<QHelpDataFilterSection> filterSections() const override;
+    QMap<QString, QVariant> metaData() const override;
+    QString rootPath() const override;
 
 private:
     QHelpProjectDataPrivate *d;

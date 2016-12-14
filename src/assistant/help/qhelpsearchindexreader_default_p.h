@@ -115,7 +115,7 @@ public:
     ~QHelpSearchIndexReaderDefault();
 
 private:
-    void run();
+    void run() override;
 
 private:
     Reader m_reader;

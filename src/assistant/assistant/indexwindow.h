@@ -64,8 +64,8 @@ private slots:
     void disableSearchLineEdit();
 
 private:
-    bool eventFilter(QObject *obj, QEvent *e);
-    void focusInEvent(QFocusEvent *e);
+    bool eventFilter(QObject *obj, QEvent *e) override;
+    void focusInEvent(QFocusEvent *e) override;
     void open(QHelpIndexWidget *indexWidget, const QModelIndex &index);
 
     QLineEdit *m_searchLineEdit;

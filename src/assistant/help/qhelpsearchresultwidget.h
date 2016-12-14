@@ -70,7 +70,7 @@ private:
 
     QHelpSearchResultWidgetPrivate *d;
     QHelpSearchResultWidget(QHelpSearchEngine *engine);
-    virtual void changeEvent(QEvent *event);
+    void changeEvent(QEvent *event) override;
 };
 
 QT_END_NAMESPACE

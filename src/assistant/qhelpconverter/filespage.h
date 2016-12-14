@@ -48,7 +48,7 @@ private slots:
     void removeAllFiles();
 
 private:
-    bool eventFilter(QObject *obj, QEvent *event);
+    bool eventFilter(QObject *obj, QEvent *event) override;
 
     Ui::FilesPage m_ui;
     QStringList m_files;

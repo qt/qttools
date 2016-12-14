@@ -44,8 +44,8 @@ public:
     void setCollectionComponentEnabled(bool enabled);
 
 private:
-    bool isComplete() const;
-    bool validatePage();
+    bool isComplete() const override;
+    bool validatePage() override;
     bool checkFile(const QString &fileName,
         const QString &title);
 

@@ -60,15 +60,15 @@ signals:
     void find(const QString &text, bool forward, bool incremental);
 
 protected:
-    void hideEvent(QHideEvent* event);
-    void showEvent(QShowEvent * event);
+    void hideEvent(QHideEvent* event) override;
+    void showEvent(QShowEvent * event) override;
 
 private slots:
     void updateButtons();
     void textChanged(const QString &text);
 
 private:
-    bool eventFilter(QObject *object, QEvent *e);
+    bool eventFilter(QObject *object, QEvent *e) override;
     QToolButton* setupToolButton(const QString &text, const QString &icon);
 
 private:

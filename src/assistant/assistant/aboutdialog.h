@@ -45,11 +45,11 @@ class AboutLabel : public QTextBrowser
 public:
     AboutLabel(QWidget *parent = 0);
     void setText(const QString &text, const QByteArray &resources);
-    QSize minimumSizeHint() const;
+    QSize minimumSizeHint() const override;
 
 private:
-    QVariant loadResource(int type, const QUrl &name);
-    void setSource(const QUrl &url);
+    QVariant loadResource(int type, const QUrl &name) override;
+    void setSource(const QUrl &url) override;
 
     QMap<QString, QByteArray> m_resourceMap;
 };

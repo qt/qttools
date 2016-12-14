@@ -61,9 +61,9 @@ private:
     enum Pages {Input_Page, General_Page, Filter_Page,
         Identifier_Page, Path_Page, Files_Page, Output_Page,
         Finish_Page};
-    void initializePage(int id);
+    void initializePage(int id) override;
     QStringList getUnreferencedFiles(const QStringList &files);
-    bool eventFilter(QObject *obj, QEvent *e);
+    bool eventFilter(QObject *obj, QEvent *e) override;
 
     AdpReader m_adpReader;
     InputPage *m_inputPage;

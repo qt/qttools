@@ -53,7 +53,7 @@ private slots:
     void activated(const QModelIndex &index);
 
 private:
-    bool eventFilter(QObject *object, QEvent *event);
+    bool eventFilter(QObject *object, QEvent *event) override;
 
 private:
     Ui::TopicChooser ui;

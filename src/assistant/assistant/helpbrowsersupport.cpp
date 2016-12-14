@@ -93,13 +93,13 @@ public:
     HelpNetworkReply(const QNetworkRequest &request, const QByteArray &fileData,
         const QString &mimeType);
 
-    virtual void abort();
+    void abort() override;
 
-    virtual qint64 bytesAvailable() const
+    qint64 bytesAvailable() const override
         { return data.length() + QNetworkReply::bytesAvailable(); }
 
 protected:
-    virtual qint64 readData(char *data, qint64 maxlen);
+    qint64 readData(char *data, qint64 maxlen) override;
 
 private:
     QByteArray data;
@@ -155,8 +155,8 @@ public:
     }
 
 protected:
-    void abort() { TRACE_OBJ }
-    qint64 readData(char*, qint64) { TRACE_OBJ return qint64(-1); }
+    void abort() override { TRACE_OBJ }
+    qint64 readData(char*, qint64) override { TRACE_OBJ return qint64(-1); }
 };
 
 // -- HelpNetworkAccessManager
@@ -167,8 +167,8 @@ public:
     HelpNetworkAccessManager(QObject *parent);
 
 protected:
-    virtual QNetworkReply *createRequest(Operation op,
-        const QNetworkRequest &request, QIODevice *outgoingData = 0);
+    QNetworkReply *createRequest(Operation op,
+        const QNetworkRequest &request, QIODevice *outgoingData = 0) override;
 };
 
 HelpNetworkAccessManager::HelpNetworkAccessManager(QObject *parent)

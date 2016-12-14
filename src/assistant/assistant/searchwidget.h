@@ -62,9 +62,9 @@ private slots:
     void searchingFinished(int hits);
 
 private:
-    bool eventFilter(QObject* o, QEvent *e);
-    void keyPressEvent(QKeyEvent *keyEvent);
-    void contextMenuEvent(QContextMenuEvent *contextMenuEvent);
+    bool eventFilter(QObject* o, QEvent *e) override;
+    void keyPressEvent(QKeyEvent *keyEvent) override;
+    void contextMenuEvent(QContextMenuEvent *contextMenuEvent) override;
 
 private:
     int zoomCount;

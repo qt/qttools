@@ -110,7 +110,7 @@ private slots:
 private:
     bool initHelpDB(bool registerInternalDoc);
     void setupActions();
-    void closeEvent(QCloseEvent *e);
+    void closeEvent(QCloseEvent *e) override;
     void activateDockWidget(QWidget *w);
     void updateAboutMenuText();
     void setupFilterToolbar();
