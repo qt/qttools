@@ -524,6 +524,9 @@ QString qtDiag(unsigned flags)
         str << '#' << ' ' << s << " \"" << screen->name() << '"'
                   << " Depth: " << screen->depth()
                   << " Primary: " <<  (screen == QGuiApplication::primaryScreen() ? "yes" : "no")
+            << "\n  Manufacturer: " << screen->manufacturer()
+            << "\n  Model: " << screen->model()
+            << "\n  Serial number: " << screen->serialNumber()
             << "\n  Geometry: " << geometry;
         if (geometry != nativeGeometry)
             str << " (native: " << nativeGeometry << ')';
