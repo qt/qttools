@@ -71,10 +71,8 @@ Writer::~Writer()
 
 void Writer::reset()
 {
-    for(QHash<QString, Entry*>::ConstIterator it =
-        index.begin(); it != index.end(); ++it) {
-            delete it.value();
-    }
+    for (auto it = index.cbegin(), end = index.cend(); it != end; ++it)
+        delete it.value();
 
     index.clear();
     documentList.clear();
@@ -88,8 +86,7 @@ bool Writer::writeIndex() const
         return status;
 
     QDataStream indexStream(&idxFile);
-    for(QHash<QString, Entry*>::ConstIterator it =
-        index.begin(); it != index.end(); ++it) {
+    for (auto it = index.cbegin(), end = index.cend(); it != end; ++it) {
         indexStream << it.key();
         indexStream << it.value()->documents.count();
         indexStream << it.value()->documents;
@@ -101,10 +98,9 @@ bool Writer::writeIndex() const
         return status;
 
     QDataStream docStream(&docFile);
-    foreach(const QStringList &list, documentList) {
-        docStream << list.at(0);
-        docStream << list.at(1);
-    }
+    for (const QStringList &list : qAsConst(documentList))
+        docStream << list.at(0) << list.at(1);
+
     docFile.close();
 
     return status;
@@ -123,7 +119,7 @@ void Writer::removeIndex() const
 
 void Writer::setIndexFile(const QString &namespaceName, const QString &attributes)
 {
-    QString extension = namespaceName + QLatin1String("@") + attributes;
+    const QString extension = namespaceName + QLatin1String("@") + attributes;
     indexFile = indexPath + QLatin1String("/indexdb40.") + extension;
     documentFile = indexPath + QLatin1String("/indexdoc40.") + extension;
 }
@@ -223,7 +219,7 @@ void QHelpSearchIndexWriter::run()
 
     QStringList namespaces;
     Writer writer(indexPath);
-    foreach(const QString &namespaceName, registeredDocs) {
+    for (const QString &namespaceName : registeredDocs) {
         mutex.lock();
         if (m_cancel) {
             mutex.unlock();
@@ -239,14 +235,14 @@ void QHelpSearchIndexWriter::run()
         const QList<QStringList> attributeSets =
             engine.filterAttributeSets(namespaceName);
 
-        foreach (const QStringList &attributes, attributeSets) {
+        for (const QStringList &attributes : attributeSets) {
             // cleanup maybe old or unfinished files
             writer.setIndexFile(namespaceName, attributes.join(QLatin1String("@")));
             writer.removeIndex();
 
             QSet<QString> documentsSet;
             const QList<QUrl> docFiles = engine.files(namespaceName, attributes);
-            foreach(QUrl url, docFiles) {
+            for (QUrl url : docFiles) {
                 if (m_cancel)
                     return;
 
@@ -254,7 +250,7 @@ void QHelpSearchIndexWriter::run()
                 if (url.hasFragment())
                     url.setFragment(QString());
 
-                QString s = url.toString();
+                const QString s = url.toString();
                 if (s.endsWith(QLatin1String(".html"))
                     || s.endsWith(QLatin1String(".htm"))
                     || s.endsWith(QLatin1String(".txt")))
@@ -263,7 +259,7 @@ void QHelpSearchIndexWriter::run()
 
             int docNum = 0;
             const QStringList documentsList(documentsSet.toList());
-            foreach(const QString &url, documentsList) {
+            for (const QString &url : documentsList) {
                 if (m_cancel)
                     return;
 
@@ -335,16 +331,14 @@ void QHelpSearchIndexWriter::run()
         }
     }
 
-    QStringListIterator qsli(indexedNamespaces);
-    while (qsli.hasNext()) {
-        const QString namespaceName = qsli.next();
+    for (const QString &namespaceName : indexedNamespaces) {
         if (namespaces.contains(namespaceName))
             continue;
 
         const QList<QStringList> attributeSets =
             engine.filterAttributeSets(namespaceName);
 
-        foreach (const QStringList &attributes, attributeSets) {
+        for (const QStringList &attributes : attributeSets) {
             writer.setIndexFile(namespaceName, attributes.join(QLatin1String("@")));
             writer.removeIndex();
         }

@@ -93,10 +93,10 @@ void QhpWriter::writeCustomFilters()
     if (!m_customFilters.count())
         return;
 
-    foreach (const CustomFilter &f, m_customFilters) {
+    for (const CustomFilter &f : qAsConst(m_customFilters)) {
         writeStartElement(QLatin1String("customFilter"));
         writeAttribute(QLatin1String("name"), f.name);
-        foreach (const QString &a, f.filterAttributes)
+        for (const QString &a : f.filterAttributes)
             writeTextElement(QLatin1String("filterAttribute"), a);
         writeEndElement();
     }
@@ -105,7 +105,7 @@ void QhpWriter::writeCustomFilters()
 void QhpWriter::writeFilterSection()
 {
     writeStartElement(QLatin1String("filterSection"));
-    foreach (const QString &a, m_filterAttributes)
+    for (const QString &a : qAsConst(m_filterAttributes))
         writeTextElement(QLatin1String("filterAttribute"), a);
 
     writeToc();
@@ -116,13 +116,13 @@ void QhpWriter::writeFilterSection()
 
 void QhpWriter::writeToc()
 {
-    QList<ContentItem> lst = m_adpReader->contents();
-    if (lst.isEmpty())
+    const QList<ContentItem> list = m_adpReader->contents();
+    if (list.isEmpty())
         return;
 
     int depth = -1;
     writeStartElement(QLatin1String("toc"));
-    foreach (const ContentItem &i, lst) {
+    for (const ContentItem &i : list) {
         while (depth-- >= i.depth)
             writeEndElement();
         writeStartElement(QLatin1String("section"));
@@ -136,12 +136,12 @@ void QhpWriter::writeToc()
 
 void QhpWriter::writeKeywords()
 {
-    QList<KeywordItem> lst = m_adpReader->keywords();
-    if (lst.isEmpty())
+    const QList<KeywordItem> list = m_adpReader->keywords();
+    if (list.isEmpty())
         return;
 
     writeStartElement(QLatin1String("keywords"));
-    foreach (const KeywordItem &i, lst) {
+    for (const KeywordItem &i : list) {
         writeEmptyElement(QLatin1String("keyword"));
         writeAttribute(QLatin1String("name"), i.keyword);
         writeAttribute(QLatin1String("ref"), i.reference);
@@ -163,7 +163,7 @@ void QhpWriter::writeFiles()
         return;
 
     writeStartElement(QLatin1String("files"));
-    foreach (const QString &f, m_files)
+    for (const QString &f : qAsConst(m_files))
         writeTextElement(QLatin1String("file"), f);
     writeEndElement();
 }

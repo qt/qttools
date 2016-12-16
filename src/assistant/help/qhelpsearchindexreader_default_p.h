@@ -88,7 +88,7 @@ public:
 
 private:
     QVector<Document> setupDummyTerm(const QStringList &terms, const EntryTable &entryTable);
-    QStringList getWildcardTerms(const QString &term, const EntryTable &entryTable);
+    QStringList getWildcardTerms(const QString &termStr, const EntryTable &entryTable);
     void buildMiniIndex(const QString &string);
     void reset();
     void cleanupIndex(EntryTable &entryTable);

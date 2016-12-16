@@ -164,7 +164,7 @@ BookmarkItem::dumpTree(int indent) const
         << "Label:" << data(0).toString() << "parent:" << m_parent << "this:"
         << this;
 
-    foreach (BookmarkItem *item, m_children)
+    for (BookmarkItem *item : m_children)
         item->dumpTree(indent + 4);
 }
 

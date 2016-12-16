@@ -67,7 +67,7 @@ void QtDocInstaller::run()
     m_qchFiles = m_qchDir.entryList(QStringList() << QLatin1String("*.qch"));
 
     bool changes = false;
-    foreach (const DocInfo &docInfo, m_docInfos) {
+    for (const DocInfo &docInfo : qAsConst(m_docInfos)) {
         changes |= installDoc(docInfo);
         m_mutex.lock();
         if (m_abort) {
@@ -96,7 +96,7 @@ bool QtDocInstaller::installDoc(const DocInfo &docInfo)
         emit qchFileNotFound(component);
         return false;
     }
-    foreach (const QString &f, m_qchFiles) {
+    for (const QString &f : qAsConst(m_qchFiles)) {
         if (f.startsWith(component)) {
             QFileInfo fi(m_qchDir.absolutePath() + QDir::separator() + f);
             if (dt.isValid() && fi.lastModified().toSecsSinceEpoch() == dt.toSecsSinceEpoch()

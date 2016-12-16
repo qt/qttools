@@ -73,7 +73,7 @@ QStringList PathPage::paths() const
 QStringList PathPage::filters() const
 {
     QStringList lst;
-    foreach (const QString &s, m_ui.filterLineEdit->text().split(QLatin1Char(','))) {
+    for (const QString &s : m_ui.filterLineEdit->text().split(QLatin1Char(','))) {
         lst.append(s.trimmed());
     }
     return lst;

@@ -436,8 +436,8 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    QMap<QString, QString>::const_iterator it = config.filesToGenerate().constBegin();
-    while (it != config.filesToGenerate().constEnd()) {
+    const auto filesToGenerate = config.filesToGenerate();
+    for (auto it = filesToGenerate.cbegin(), end = filesToGenerate.cend(); it != end; ++it) {
         fputs(qPrintable(QCG::tr("Generating help for %1...\n").arg(it.key())), stdout);
         QHelpProjectData helpData;
         if (!helpData.readData(absoluteFileName(basePath, it.key()))) {
@@ -450,7 +450,6 @@ int main(int argc, char *argv[])
             fprintf(stderr, "%s\n", qPrintable(helpGenerator.error()));
             return -1;
         }
-        ++it;
     }
 
     fputs(qPrintable(QCG::tr("Creating collection file...\n")), stdout);
@@ -470,7 +469,7 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    foreach (const QString &file, config.filesToRegister()) {
+    for (const QString &file : config.filesToRegister()) {
         if (!helpEngine.registerDocumentation(absoluteFileName(basePath, file))) {
             fprintf(stderr, "%s\n", qPrintable(helpEngine.error()));
             return -1;
@@ -528,12 +527,9 @@ int main(int argc, char *argv[])
     if (config.aboutMenuTexts().count()) {
         QByteArray ba;
         QDataStream s(&ba, QIODevice::WriteOnly);
-        QMap<QString, QString>::const_iterator it = config.aboutMenuTexts().constBegin();
-        while (it != config.aboutMenuTexts().constEnd()) {
-            s << it.key();
-            s << it.value();
-            ++it;
-        }
+        const auto aboutMenuTexts = config.aboutMenuTexts();
+        for (auto it = aboutMenuTexts.cbegin(), end = aboutMenuTexts.cend(); it != end; ++it)
+            s << it.key() << it.value();
         CollectionConfiguration::setAboutMenuTexts(helpEngine, ba);
     }
 
@@ -549,7 +545,6 @@ int main(int argc, char *argv[])
     if (config.aboutTextFiles().count()) {
         QByteArray ba;
         QDataStream s(&ba, QIODevice::WriteOnly);
-        QMap<QString, QString>::const_iterator it = config.aboutTextFiles().constBegin();
         QMap<QString, QByteArray> imgData;
 
         QRegExp srcRegExp(QLatin1String("src=(\"(.+)\"|([^\"\\s]+)).*>"));
@@ -557,7 +552,8 @@ int main(int argc, char *argv[])
         QRegExp imgRegExp(QLatin1String("(<img[^>]+>)"));
         imgRegExp.setMinimal(true);
 
-        while (it != config.aboutTextFiles().constEnd()) {
+        const auto aboutMenuTexts = config.aboutTextFiles();
+        for (auto it = aboutMenuTexts.cbegin(), end = aboutMenuTexts.cend(); it != end; ++it) {
             s << it.key();
             QFileInfo fi(absoluteFileName(basePath, it.value()));
             QFile f(fi.absoluteFilePath());
@@ -589,7 +585,6 @@ int main(int argc, char *argv[])
                     }
                 }
             }
-            ++it;
         }
         CollectionConfiguration::setAboutTexts(helpEngine, ba);
         if (imgData.count()) {

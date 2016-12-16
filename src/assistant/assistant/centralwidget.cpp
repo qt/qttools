@@ -539,24 +539,24 @@ void CentralWidget::highlightSearchTerms()
     TRACE_OBJ
     QHelpSearchEngine *searchEngine =
         HelpEngineWrapper::instance().searchEngine();
-    QList<QHelpSearchQuery> queryList = searchEngine->query();
+    const QList<QHelpSearchQuery> queryList = searchEngine->query();
 
     QStringList terms;
-    foreach (const QHelpSearchQuery &query, queryList) {
+    for (const QHelpSearchQuery &query : queryList) {
         switch (query.fieldName) {
             default: break;
             case QHelpSearchQuery::ALL: {
             case QHelpSearchQuery::PHRASE:
             case QHelpSearchQuery::DEFAULT:
             case QHelpSearchQuery::ATLEAST:
-                foreach (QString term, query.wordList)
+                for (QString term : query.wordList)
                     terms.append(term.remove(QLatin1Char('"')));
             }
         }
     }
 
     HelpViewer *viewer = currentHelpViewer();
-    foreach (const QString& term, terms)
+    for (const QString & term : qAsConst(terms))
         viewer->findText(term, 0, false, true);
     disconnect(viewer, SIGNAL(loadFinished(bool)), this,
         SLOT(highlightSearchTerms()));

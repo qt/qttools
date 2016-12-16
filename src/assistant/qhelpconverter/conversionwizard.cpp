@@ -129,12 +129,12 @@ void ConversionWizard::pageChanged(int id)
         m_files.clear();
         QFileInfo fi(field(QLatin1String("adpFileName")).toString());
         QDir rootDir = fi.absolutePath();
-        foreach (const QString &p, m_pathPage->paths()) {
+        for (const QString &p : m_pathPage->paths()) {
             QDir dir(p);
             QString rel = rootDir.relativeFilePath(dir.absolutePath());
             if (!rel.isEmpty())
                 rel.append(QLatin1Char('/'));
-            foreach (const QString &f, dir.entryList(m_pathPage->filters()))
+            for (const QString &f : dir.entryList(m_pathPage->filters()))
                 m_files.append(rel + f);
         }
         m_filesPage->setFilesToRemove(getUnreferencedFiles(m_files));
@@ -194,7 +194,7 @@ QStringList ConversionWizard::getUnreferencedFiles(const QStringList &files)
 {
     QStringList lst;
     QSet<QString> adpFiles = m_adpReader.files();
-    foreach (const QString &s, files) {
+    for (const QString &s : files) {
         if (!adpFiles.contains(s))
             lst.append(s);
     }
@@ -214,7 +214,7 @@ void ConversionWizard::convert()
     qhpWriter.setFilterAttributes(m_filterPage->filterAttributes());
     qhpWriter.setCustomFilters(m_filterPage->customFilters());
 
-    foreach (const QString &f, m_filesPage->filesToRemove())
+    for (const QString &f : m_filesPage->filesToRemove())
         m_files.removeAll(f);
     qhpWriter.setFiles(m_files);
 

@@ -91,13 +91,12 @@ void QCLuceneDocument::add(QCLuceneField *field)
 
 QCLuceneField* QCLuceneDocument::getField(const QString &name) const
 {
-    QCLuceneField* field = 0;
-    foreach (field, fieldList) {
+    for (QCLuceneField *field : qAsConst(fieldList)) {
         if (field->name() == name && field->d->field != 0)
             return field;
     }
 
-    field = 0;
+    QCLuceneField *field = 0;
     TCHAR *fieldName = QStringToTChar(name);
     lucene::document::Field *f = d->document->getField(fieldName);
     if (f) {
@@ -151,7 +150,7 @@ void QCLuceneDocument::removeField(const QString &name)
     lucene::document::DocumentFieldEnumeration *dfe = d->document->fields();
     while (dfe->hasMoreElements()) {
         const lucene::document::Field* f = dfe->nextElement();
-        foreach (QCLuceneField* field, fieldList) {
+        for (QCLuceneField *field : qAsConst(fieldList)) {
             if (f == field->d->field) {
                 tmp.append(field);
                 break;

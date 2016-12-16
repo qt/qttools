@@ -328,7 +328,7 @@ bool MainWindow::initHelpDB(bool registerInternalDoc)
     }
     bool assistantInternalDocRegistered = false;
     QString intern(QLatin1String("org.qt-project.assistantinternal-"));
-    foreach (const QString &ns, helpEngineWrapper.registeredDocumentations()) {
+    for (const QString &ns : helpEngineWrapper.registeredDocumentations()) {
         if (ns.startsWith(intern)) {
             intern = ns;
             assistantInternalDocRegistered = true;
@@ -426,7 +426,7 @@ static QStringList newQtDocumentation()
                                                              QDir::Files, QDir::Name);
     if (!entries.isEmpty()) {
         result.reserve(entries.size());
-        foreach (const QFileInfo &fi, entries)
+        for (const QFileInfo &fi : entries)
             result.append(fi.baseName());
         return result;
     }
@@ -1033,8 +1033,8 @@ void MainWindow::updateApplicationFont()
     if (helpEngine.usesAppFont())
         font = helpEngine.appFont();
 
-    QWidgetList widgets = qApp->allWidgets();
-    foreach (QWidget* widget, widgets)
+    const QWidgetList widgets = QApplication::allWidgets();
+    for (QWidget *widget : widgets)
         widget->setFont(font);
 }
 

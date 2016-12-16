@@ -629,7 +629,7 @@ void QHelpSearchIndexWriter::run()
             const QStringList indexedNamespaces
                 = engine.customValue(oldKey).toString()
                   .split(QLatin1String("|"), QString::SkipEmptyParts);
-            foreach (const QString &nameSpace, indexedNamespaces)
+            for (const QString &nameSpace : indexedNamespaces)
                 indexMap.insert(nameSpace, QDateTime());
             engine.removeCustomValue(oldKey);
         } else {
@@ -682,7 +682,7 @@ void QHelpSearchIndexWriter::run()
         }
 
         if (QCLuceneIndexReader::indexExists(indexPath) && !reindex) {
-            foreach(const QString &namespaceName, registeredDocs) {
+            for (const QString &namespaceName : registeredDocs) {
                 mutexLocker.relock();
                 if (m_cancel) {
                     emit indexingFinished();
@@ -723,7 +723,7 @@ void QHelpSearchIndexWriter::run()
         writer->setMaxFieldLength(QCLuceneIndexWriter::DEFAULT_MAX_FIELD_LENGTH);
 
         QStringList namespaces;
-        foreach(const QString &namespaceName, registeredDocs) {
+        for (const QString &namespaceName : registeredDocs) {
             mutexLocker.relock();
             if (m_cancel) {
                 closeIndexWriter(writer);
@@ -747,7 +747,7 @@ void QHelpSearchIndexWriter::run()
                     break;
             } else {
                 bool bail = false;
-                foreach (const QStringList &attributes, attributeSets) {
+                for (const QStringList &attributes : attributeSets) {
                     const QList<QUrl> docFiles = indexableFiles(&engine,
                                                                 namespaceName, attributes);
                     if (!addDocuments(docFiles, engine, attributes, namespaceName,
@@ -775,8 +775,8 @@ void QHelpSearchIndexWriter::run()
         if (!m_cancel) {
             mutexLocker.unlock();
 
-            QStringList indexedNamespaces = indexMap.keys();
-            foreach(const QString &namespaceName, indexedNamespaces) {
+            const QStringList indexedNamespaces = indexMap.keys();
+            for (const QString &namespaceName : indexedNamespaces) {
                 mutexLocker.relock();
                 if (m_cancel)
                     break;
@@ -804,7 +804,7 @@ bool QHelpSearchIndexWriter::addDocuments(const QList<QUrl> docFiles,
     const QString attrList = attributes.join(QLatin1String(" "));
 
     locker.unlock();
-    foreach(const QUrl &url, docFiles) {
+    for (const QUrl &url : docFiles) {
         QCLuceneDocument document;
         DocumentHelper helper(url.toString(), engine.fileData(url));
         if (helper.addFieldsToDocument(&document, namespaceName, attrList)) {

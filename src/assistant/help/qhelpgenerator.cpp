@@ -206,7 +206,7 @@ bool QHelpGenerator::generate(QHelpDataInterface *helpData,
     addProgress(1.0);
 
     emit statusChanged(tr("Insert custom filters..."));
-    foreach (const QHelpDataCustomFilter &f, helpData->customFilters()) {
+    for (const QHelpDataCustomFilter &f : helpData->customFilters()) {
         if (!registerCustomFilter(f.name, f.filterAttributes, true)) {
             cleanupDB();
             return false;
@@ -215,22 +215,20 @@ bool QHelpGenerator::generate(QHelpDataInterface *helpData,
     addProgress(1.0);
 
     int i = 1;
-    QList<QHelpDataFilterSection>::const_iterator it = helpData->filterSections().constBegin();
-    while (it != helpData->filterSections().constEnd()) {
+    for (const QHelpDataFilterSection &fs : helpData->filterSections()) {
         emit statusChanged(tr("Insert help data for filter section (%1 of %2)...")
             .arg(i++).arg(helpData->filterSections().count()));
-        insertFilterAttributes((*it).filterAttributes());
+        insertFilterAttributes(fs.filterAttributes());
         QByteArray ba;
         QDataStream s(&ba, QIODevice::WriteOnly);
-        foreach (QHelpDataContentItem *itm, (*it).contents())
+        for (QHelpDataContentItem *itm : fs.contents())
             writeTree(s, itm, 0);
-        if (!insertFiles((*it).files(), helpData->rootPath(), (*it).filterAttributes())
-            || !insertContents(ba, (*it).filterAttributes())
-            || !insertKeywords((*it).indices(), (*it).filterAttributes())) {
+        if (!insertFiles(fs.files(), helpData->rootPath(), fs.filterAttributes())
+            || !insertContents(ba, fs.filterAttributes())
+            || !insertKeywords(fs.indices(), fs.filterAttributes())) {
             cleanupDB();
             return false;
         }
-        ++it;
     }
 
     cleanupDB();
@@ -246,11 +244,9 @@ void QHelpGenerator::setupProgress(QHelpDataInterface *helpData)
 
     int numberOfFiles = 0;
     int numberOfIndices = 0;
-    QList<QHelpDataFilterSection>::const_iterator it = helpData->filterSections().constBegin();
-    while (it != helpData->filterSections().constEnd()) {
-        numberOfFiles += (*it).files().count();
-        numberOfIndices += (*it).indices().count();
-        ++it;
+    for (const QHelpDataFilterSection &fs : helpData->filterSections()) {
+        numberOfFiles += fs.files().count();
+        numberOfIndices += fs.indices().count();
     }
     // init      2%
     // filters   1%
@@ -286,7 +282,7 @@ void QHelpGenerator::writeTree(QDataStream &s, QHelpDataContentItem *item, int d
     s << depth;
     s << item->reference();
     s << item->title();
-    foreach (QHelpDataContentItem *i, item->children())
+    for (QHelpDataContentItem *i : item->children())
         writeTree(s, i, depth+1);
 }
 
@@ -366,7 +362,7 @@ bool QHelpGenerator::createTables()
             "Name Text, "
             "Value BLOB )");
 
-    foreach (const QString &q, tables) {
+    for (const QString &q : qAsConst(tables)) {
         if (!d->query->exec(q)) {
             d->error = tr("Cannot create tables.");
             return false;
@@ -464,7 +460,7 @@ bool QHelpGenerator::insertFiles(const QStringList &files, const QString &rootPa
 
     emit statusChanged(tr("Insert files..."));
     QList<int> filterAtts;
-    foreach (const QString &filterAtt, filterAttributes) {
+    for (const QString &filterAtt : filterAttributes) {
         d->query->prepare(QLatin1String("SELECT Id FROM FilterAttributeTable "
             "WHERE Name=?"));
         d->query->bindValue(0, filterAtt);
@@ -480,7 +476,7 @@ bool QHelpGenerator::insertFiles(const QStringList &files, const QString &rootPa
     if (filterSetId < 0)
         return false;
     ++filterSetId;
-    foreach (int attId, filterAtts) {
+    for (int attId : qAsConst(filterAtts)) {
         d->query->prepare(QLatin1String("INSERT INTO FileAttributeSetTable "
             "VALUES(?, ?)"));
         d->query->bindValue(0, filterSetId);
@@ -501,7 +497,7 @@ bool QHelpGenerator::insertFiles(const QStringList &files, const QString &rootPa
     QList<FileNameTableData> fileNameDataList;
 
     int i = 0;
-    foreach (const QString &file, files) {
+    for (const QString &file : files) {
         const QString fileName = QDir::cleanPath(file);
 
         QFile fi(rootPath + QDir::separator() + fileName);
@@ -529,8 +525,8 @@ bool QHelpGenerator::insertFiles(const QStringList &files, const QString &rootPa
         }
 
         int fileId = -1;
-        QMap<QString, int>::Iterator fileMapIt = d->fileMap.find(fileName);
-        if (fileMapIt == d->fileMap.end()) {
+        const auto it = d->fileMap.constFind(fileName);
+        if (it == d->fileMap.cend()) {
             fileDataList.append(qCompress(data));
 
             fileNameData.name = fileName;
@@ -544,10 +540,10 @@ bool QHelpGenerator::insertFiles(const QStringList &files, const QString &rootPa
 
             ++tableFileId;
         } else {
-            fileId = fileMapIt.value();
+            fileId = it.value();
             QSet<int> &fileFilterSet = d->fileFilterMap[fileId];
             QSet<int> &tmpFileFilterSet = tmpFileFilterMap[fileId];
-            foreach (int filter, filterAtts) {
+            for (int filter : qAsConst(filterAtts)) {
                 if (!fileFilterSet.contains(filter)
                     && !tmpFileFilterSet.contains(filter)) {
                     fileFilterSet.insert(filter);
@@ -559,44 +555,35 @@ bool QHelpGenerator::insertFiles(const QStringList &files, const QString &rootPa
 
     if (!tmpFileFilterMap.isEmpty()) {
         d->query->exec(QLatin1String("BEGIN"));
-        QMap<int, QSet<int> >::const_iterator it = tmpFileFilterMap.constBegin();
-        while (it != tmpFileFilterMap.constEnd()) {
+        for (auto it = tmpFileFilterMap.cbegin(), end = tmpFileFilterMap.cend(); it != end; ++it) {
             QList<int> filterValues = it.value().toList();
             std::sort(filterValues.begin(), filterValues.end());
-            QList<int>::const_iterator si = filterValues.constBegin();
-            while (si != filterValues.constEnd()) {
+            for (int fv : qAsConst(filterValues)) {
                 d->query->prepare(QLatin1String("INSERT INTO FileFilterTable "
                     "VALUES(?, ?)"));
-                d->query->bindValue(0, *si);
+                d->query->bindValue(0, fv);
                 d->query->bindValue(1, it.key());
                 d->query->exec();
-                ++si;
             }
-            ++it;
         }
 
-        QList<QByteArray>::const_iterator fileIt = fileDataList.constBegin();
-        while (fileIt != fileDataList.constEnd()) {
+        for (const QByteArray &fileData : qAsConst(fileDataList)) {
             d->query->prepare(QLatin1String("INSERT INTO FileDataTable VALUES "
                 "(Null, ?)"));
-            d->query->bindValue(0, *fileIt);
+            d->query->bindValue(0, fileData);
             d->query->exec();
-            ++fileIt;
-            if (++i%20 == 0)
-                addProgress(d->fileStep*20.0);
+            if (++i % 20 == 0)
+                addProgress(d->fileStep * 20.0);
         }
 
-        QList<FileNameTableData>::const_iterator fileNameIt =
-                                                  fileNameDataList.constBegin();
-        while (fileNameIt != fileNameDataList.constEnd()) {
+        for (const FileNameTableData &fnd : qAsConst(fileNameDataList)) {
             d->query->prepare(QLatin1String("INSERT INTO FileNameTable "
                 "(FolderId, Name, FileId, Title) VALUES (?, ?, ?, ?)"));
             d->query->bindValue(0, 1);
-            d->query->bindValue(1, (*fileNameIt).name);
-            d->query->bindValue(2, (*fileNameIt).fileId);
-            d->query->bindValue(3, (*fileNameIt).title);
+            d->query->bindValue(1, fnd.name);
+            d->query->bindValue(2, fnd.fileId);
+            d->query->bindValue(3, fnd.title);
             d->query->exec();
-            ++fileNameIt;
         }
         d->query->exec(QLatin1String("COMMIT"));
     }
@@ -625,7 +612,7 @@ bool QHelpGenerator::registerCustomFilter(const QString &filterName,
         idsToInsert.removeAll(d->query->value(1).toString());
     }
 
-    foreach (const QString &id, idsToInsert) {
+    for (const QString &id : qAsConst(idsToInsert)) {
         d->query->prepare(QLatin1String("INSERT INTO FilterAttributeTable VALUES(NULL, ?)"));
         d->query->bindValue(0, id);
         d->query->exec();
@@ -660,7 +647,7 @@ bool QHelpGenerator::registerCustomFilter(const QString &filterName,
     d->query->bindValue(0, nameId);
     d->query->exec();
 
-    foreach (const QString &att, filterAttribs) {
+    for (const QString &att : filterAttribs) {
         d->query->prepare(QLatin1String("INSERT INTO FilterTable VALUES(?, ?)"));
         d->query->bindValue(0, nameId);
         d->query->bindValue(1, attributeMap[att]);
@@ -683,7 +670,7 @@ bool QHelpGenerator::insertKeywords(const QList<QHelpDataIndexItem> &keywords,
         indexId = d->query->value(0).toInt() + 1;
 
     QList<int> filterAtts;
-    foreach (const QString &filterAtt, filterAttributes) {
+    for (const QString &filterAtt : filterAttributes) {
         d->query->prepare(QLatin1String("SELECT Id FROM FilterAttributeTable WHERE Name=?"));
         d->query->bindValue(0, filterAtt);
         d->query->exec();
@@ -695,13 +682,12 @@ bool QHelpGenerator::insertKeywords(const QList<QHelpDataIndexItem> &keywords,
     QString fileName;
     QString anchor;
     QString fName;
-    int fileId = 1;
     QList<int> indexFilterTable;
 
     int i = 0;
     d->query->exec(QLatin1String("BEGIN"));
     QSet<QString> indices;
-    foreach (const QHelpDataIndexItem &itm, keywords) {
+    for (const QHelpDataIndexItem &itm : keywords) {
          // Identical ids make no sense and just confuse the Assistant user,
          // so we ignore all repetitions.
         if (indices.contains(itm.identifier))
@@ -723,11 +709,8 @@ bool QHelpGenerator::insertKeywords(const QList<QHelpDataIndexItem> &keywords,
         if (fName.startsWith(QLatin1String("./")))
             fName = fName.mid(2);
 
-        QMap<QString, int>::ConstIterator it = d->fileMap.find(fName);
-        if (it != d->fileMap.end())
-            fileId = it.value();
-        else
-            fileId = 1;
+        auto it = d->fileMap.constFind(fName);
+        const int fileId = it == d->fileMap.cend() ? 1 : it.value();
 
         d->query->prepare(QLatin1String("INSERT INTO IndexTable (Name, Identifier, NamespaceId, FileId, Anchor) "
             "VALUES(?, ?, ?, ?, ?)"));
@@ -745,8 +728,8 @@ bool QHelpGenerator::insertKeywords(const QList<QHelpDataIndexItem> &keywords,
     d->query->exec(QLatin1String("COMMIT"));
 
     d->query->exec(QLatin1String("BEGIN"));
-    foreach (int idx, indexFilterTable) {
-        foreach (int a, filterAtts) {
+    for (int idx : qAsConst(indexFilterTable)) {
+        for (int a : qAsConst(filterAtts)) {
             d->query->prepare(QLatin1String("INSERT INTO IndexFilterTable (FilterAttributeId, IndexId) "
                 "VALUES(?, ?)"));
             d->query->bindValue(0, a);
@@ -781,7 +764,7 @@ bool QHelpGenerator::insertContents(const QByteArray &ba,
     }
 
     // associate the filter attributes
-    foreach (const QString &filterAtt, filterAttributes) {
+    for (const QString &filterAtt : filterAttributes) {
         d->query->prepare(QLatin1String("INSERT INTO ContentsFilterTable (FilterAttributeId, ContentsId) "
             "SELECT Id, ? FROM FilterAttributeTable WHERE Name=?"));
         d->query->bindValue(0, contentId);
@@ -806,7 +789,7 @@ bool QHelpGenerator::insertFilterAttributes(const QStringList &attributes)
     while (d->query->next())
         atts.insert(d->query->value(0).toString());
 
-    foreach (const QString &s, attributes) {
+    for (const QString &s : attributes) {
         if (!atts.contains(s)) {
             d->query->prepare(QLatin1String("INSERT INTO FilterAttributeTable VALUES(NULL, ?)"));
             d->query->bindValue(0, s);
@@ -821,13 +804,11 @@ bool QHelpGenerator::insertMetaData(const QMap<QString, QVariant> &metaData)
     if (!d->query)
         return false;
 
-    QMap<QString, QVariant>::const_iterator it = metaData.constBegin();
-    while (it != metaData.constEnd()) {
+    for (auto it = metaData.cbegin(), end = metaData.cend(); it != end; ++it) {
         d->query->prepare(QLatin1String("INSERT INTO MetaDataTable VALUES(?, ?)"));
         d->query->bindValue(0, it.key());
         d->query->bindValue(1, it.value());
         d->query->exec();
-        ++it;
     }
     return true;
 }
@@ -839,8 +820,8 @@ bool QHelpGenerator::checkLinks(const QHelpDataInterface &helpData)
      *         We use a set, because there will be a lot of look-ups.
      */
     QSet<QString> files;
-    foreach (const QHelpDataFilterSection &filterSection, helpData.filterSections()) {
-        foreach (const QString &file, filterSection.files()) {
+    for (const QHelpDataFilterSection &filterSection : helpData.filterSections()) {
+        for (const QString &file : filterSection.files()) {
             QFileInfo fileInfo(helpData.rootPath() + QDir::separator() + file);
             const QString &canonicalFileName = fileInfo.canonicalFilePath();
             if (!fileInfo.exists())
@@ -857,7 +838,7 @@ bool QHelpGenerator::checkLinks(const QHelpDataInterface &helpData)
      *         commented out can cause false warning.
      */
     bool allLinksOk = true;
-    foreach (const QString &fileName, files) {
+    for (const QString &fileName : qAsConst(files)) {
         if (!fileName.endsWith(QLatin1String("html"))
             && !fileName.endsWith(QLatin1String("htm")))
             continue;

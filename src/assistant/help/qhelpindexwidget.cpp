@@ -162,7 +162,7 @@ void QHelpIndexProvider::run()
     QSet<QString> indicesSet;
     m_mutex.unlock();
 
-    foreach (const QString &dbFileName, m_helpEngine->fileNameReaderMap.keys()) {
+    for (const QString &dbFileName : m_helpEngine->fileNameReaderMap.keys()) {
         m_mutex.lock();
         if (m_abort) {
             m_mutex.unlock();
@@ -175,10 +175,10 @@ void QHelpIndexProvider::run()
             QThread::currentThread()), 0);
         if (!reader.init())
             continue;
-        QStringList lst = reader.indicesForFilter(atts);
-        if (!lst.isEmpty()) {
+        const QStringList list = reader.indicesForFilter(atts);
+        if (!list.isEmpty()) {
             m_mutex.lock();
-            foreach (const QString &s, lst)
+            for (const QString &s : list)
                 indicesSet.insert(s);
             if (m_abort) {
                 m_mutex.unlock();
@@ -265,7 +265,7 @@ void QHelpIndexModel::insertIndices()
     d->activeReaders = d->indexProvider->activeReaders();
     QStringList attributes = d->helpEngine->q->filterAttributes(d->currentFilter);
     if (attributes.count() > 1) {
-        foreach (QHelpDBReader *r, d->activeReaders)
+        for (QHelpDBReader *r : qAsConst(d->activeReaders))
             r->createAttributesCache(attributes, d->indexProvider->indexIds(r));
     }
     filter(QString());
@@ -289,7 +289,7 @@ QMap<QString, QUrl> QHelpIndexModel::linksForKeyword(const QString &keyword) con
 {
     QMap<QString, QUrl> linkMap;
     QStringList filterAttributes = d->helpEngine->q->filterAttributes(d->currentFilter);
-    foreach (QHelpDBReader *reader, d->activeReaders)
+    for (QHelpDBReader *reader : d->activeReaders)
         reader->linksForKeyword(keyword, filterAttributes, linkMap);
     return linkMap;
 }
@@ -318,7 +318,7 @@ QModelIndex QHelpIndexModel::filter(const QString &filter, const QString &wildca
     if (!wildcard.isEmpty()) {
         QRegExp regExp(wildcard, Qt::CaseInsensitive);
         regExp.setPatternSyntax(QRegExp::Wildcard);
-        foreach (const QString &index, d->indices) {
+        for (const QString &index : qAsConst(d->indices)) {
             if (index.contains(regExp)) {
                 lst.append(index);
                 if (perfectMatch == -1 && index.startsWith(filter, Qt::CaseInsensitive)) {
@@ -333,7 +333,7 @@ QModelIndex QHelpIndexModel::filter(const QString &filter, const QString &wildca
             }
         }
     } else {
-        foreach (const QString &index, d->indices) {
+        for (const QString &index : qAsConst(d->indices)) {
             if (index.contains(filter, Qt::CaseInsensitive)) {
                 lst.append(index);
                 if (perfectMatch == -1 && index.startsWith(filter, Qt::CaseInsensitive)) {
@@ -402,16 +402,17 @@ void QHelpIndexWidget::showLink(const QModelIndex &index)
     QHelpIndexModel *indexModel = qobject_cast<QHelpIndexModel*>(model());
     if (!indexModel)
         return;
-    QVariant v = indexModel->data(index, Qt::DisplayRole);
+
+    const QVariant v = indexModel->data(index, Qt::DisplayRole);
     QString name;
     if (v.isValid())
         name = v.toString();
 
-    QMap<QString, QUrl> links = indexModel->linksForKeyword(name);
-    if (links.count() == 1) {
-        emit linkActivated(links.constBegin().value(), name);
-    } else if (links.count() > 1) {
+    const QMap<QString, QUrl> links = indexModel->linksForKeyword(name);
+    if (links.count() > 1) {
         emit linksActivated(links, name);
+    } else if (!links.isEmpty()) {
+        emit linkActivated(links.first(), name);
     }
 }
 

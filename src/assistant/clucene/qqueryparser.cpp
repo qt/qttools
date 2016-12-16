@@ -149,7 +149,7 @@ QCLuceneQuery* QCLuceneMultiFieldQueryParser::parse(const QString &query,
                                                     QCLuceneAnalyzer &analyzer)
 {
     QCLuceneBooleanQuery *retValue = new QCLuceneBooleanQuery();
-    foreach (const QString &field, fieldList) {
+    for (const QString &field : fieldList) {
         QCLuceneQuery *q = QCLuceneQueryParser::parse(query, field, analyzer);
         if (!q) {
             delete retValue;
@@ -169,7 +169,7 @@ QCLuceneQuery* QCLuceneMultiFieldQueryParser::parse(const QString &query,
 {
     QCLuceneBooleanQuery *retValue = new QCLuceneBooleanQuery();
     qint32 i = 0;
-    foreach (const QString &field, fieldList) {
+    for (const QString &field : fieldList) {
         QCLuceneQuery *q = QCLuceneQueryParser::parse(query, field, analyzer);
         if (q) {
             qint32 flag = flags.at(i);

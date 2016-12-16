@@ -75,11 +75,10 @@ RemoteControl::RemoteControl(MainWindow *mainWindow)
 void RemoteControl::handleCommandString(const QString &cmdString)
 {
     TRACE_OBJ
-    QStringList cmds = cmdString.split(QLatin1Char(';'));
-    QStringList::const_iterator it = cmds.constBegin();
-    while (it != cmds.constEnd()) {
+    const QStringList commands = cmdString.split(QLatin1Char(';'));
+    for (const QString &command : commands) {
         QString cmd, arg;
-        splitInputString(*it, cmd, arg);
+        splitInputString(command, cmd, arg);
 
         if (m_debug)
             QMessageBox::information(0, tr("Debugging Remote Control"),
@@ -109,8 +108,6 @@ void RemoteControl::handleCommandString(const QString &cmdString)
             handleUnregisterCommand(arg);
          else
             break;
-
-        ++it;
     }
     m_mainWindow->raise();
     m_mainWindow->activateWindow();
@@ -208,9 +205,9 @@ void RemoteControl::handleActivateIdentifierCommand(const QString &arg)
         clearCache();
         m_activateIdentifier = arg;
     } else {
-        const QMap<QString, QUrl> &links = helpEngine.linksForIdentifier(arg);
+        const QMap<QString, QUrl> links = helpEngine.linksForIdentifier(arg);
         if (!links.isEmpty())
-            CentralWidget::instance()->setSource(links.constBegin().value());
+            CentralWidget::instance()->setSource(links.first());
     }
 }
 
@@ -275,10 +272,10 @@ void RemoteControl::applyCache()
         m_mainWindow->setIndexString(m_activateKeyword);
         helpEngine.indexWidget()->activateCurrentItem();
     } else if (!m_activateIdentifier.isEmpty()) {
-        QMap<QString, QUrl> links =
+        const QMap<QString, QUrl> links =
             helpEngine.linksForIdentifier(m_activateIdentifier);
         if (!links.isEmpty())
-            CentralWidget::instance()->setSource(links.constBegin().value());
+            CentralWidget::instance()->setSource(links.first());
     } else if (!m_currentFilter.isEmpty()) {
         helpEngine.setCurrentFilter(m_currentFilter);
     }

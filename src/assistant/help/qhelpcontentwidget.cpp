@@ -255,7 +255,7 @@ void QHelpContentProvider::run()
     const QStringList fileNames = m_helpEngine->orderedFileNameList;
     m_mutex.unlock();
 
-    foreach (const QString &dbFileName, fileNames) {
+    for (const QString &dbFileName : fileNames) {
         m_mutex.lock();
         if (m_abort) {
             delete rootItem;
@@ -270,7 +270,7 @@ void QHelpContentProvider::run()
             QThread::currentThread()), 0);
         if (!reader.init())
             continue;
-        foreach (const QByteArray& ba, reader.contentsForFilter(atts)) {
+        for (const QByteArray& ba : reader.contentsForFilter(atts)) {
             if (ba.size() < 1)
                 continue;
 

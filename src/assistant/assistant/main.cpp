@@ -92,7 +92,7 @@ void stripNonexistingDocs(QHelpEngineCore& collection)
 {
     TRACE_OBJ
     const QStringList &namespaces = collection.registeredDocumentations();
-    foreach (const QString &ns, namespaces) {
+    for (const QString &ns : namespaces) {
         QFileInfo fi(collection.documentationFileName(ns));
         if (!fi.exists() || !fi.isFile())
             collection.unregisterDocumentation(ns);
@@ -148,7 +148,7 @@ bool synchronizeDocs(QHelpEngineCore &collection,
      * Ensure that the cached collection contains all docs that
      * the collection contains.
      */
-    foreach (const QString &doc, docs) {
+    for (const QString &doc : docs) {
         if (!cachedDocs.contains(doc)) {
             const QString &docFile = collection.documentationFileName(doc);
             if (!cachedCollection.registerDocumentation(docFile)) {
@@ -179,8 +179,8 @@ bool removeSearchIndex(const QString &collectionFile)
     if (!dir.exists() || localSocket.waitForConnected())
         return false;
 
-    QStringList lst = dir.entryList(QDir::Files | QDir::Hidden);
-    foreach (const QString &item, lst)
+    const QStringList list = dir.entryList(QDir::Files | QDir::Hidden);
+    for (const QString &item : list)
         dir.remove(item);
     return true;
 }

@@ -66,7 +66,7 @@ FontPanel::FontPanel(QWidget *parentWidget) :
 
     QList<QFontDatabase::WritingSystem> writingSystems = m_fontDatabase.writingSystems();
     writingSystems.push_front(QFontDatabase::Any);
-    foreach (QFontDatabase::WritingSystem ws, writingSystems)
+    for (QFontDatabase::WritingSystem ws : qAsConst(writingSystems))
         m_writingSystemComboBox->addItem(QFontDatabase::writingSystemName(ws), QVariant(ws));
     connect(m_writingSystemComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(slotWritingSystemChanged(int)));
     formLayout->addRow(tr("&Writing system"), m_writingSystemComboBox);
@@ -219,7 +219,7 @@ void FontPanel::updateFamily(const QString &family)
     const QString normalStyle = QLatin1String("Normal");
 
     if (hasStyles) {
-        foreach (const QString &style, styles) {
+        for (const QString &style : styles) {
             // try to maintain selection or select 'normal' preferably
             const int newIndex = m_styleComboBox->count();
             m_styleComboBox->addItem(style);
@@ -277,7 +277,7 @@ void FontPanel::updatePointSizes(const QString &family, const QString &styleStri
     //  try to maintain selection or select closest.
     if (hasSizes) {
         QString n;
-        foreach (int pointSize, pointSizes)
+        for (int pointSize : qAsConst(pointSizes))
             m_pointSizeComboBox->addItem(n.setNum(pointSize), QVariant(pointSize));
         const int closestIndex = closestPointSizeIndex(oldPointSize);
         if (closestIndex != -1)

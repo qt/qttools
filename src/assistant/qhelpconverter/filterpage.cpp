@@ -55,7 +55,7 @@ FilterPage::FilterPage(QWidget *parent)
 bool FilterPage::validatePage()
 {
     m_filterAttributes.clear();
-    foreach (const QString &f, m_ui.filterLineEdit->text().split(QLatin1Char(','))) {
+    for (const QString &f : m_ui.filterLineEdit->text().split(QLatin1Char(','))) {
         if (!f.trimmed().isEmpty())
             m_filterAttributes.append(f.trimmed());
     }
@@ -80,7 +80,7 @@ bool FilterPage::validatePage()
 
         str.clear();
         QStringList lst;
-        foreach (const QString &s, item->text(1).split(QLatin1Char(','))) {
+        for (const QString &s : item->text(1).split(QLatin1Char(','))) {
             const QString st = s.trimmed();
             if (!st.isEmpty()) {
                 str += QLatin1Char(',') + st;

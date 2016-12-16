@@ -256,7 +256,7 @@ bool QHelpCollectionHandler::createTables(QSqlQuery *query)
         "Key TEXT PRIMARY KEY, "
         "Value BLOB )");
 
-    foreach (const QString &q, tables) {
+    for (const QString &q : qAsConst(tables)) {
         if (!query->exec(q))
             return false;
     }
@@ -325,7 +325,7 @@ bool QHelpCollectionHandler::addCustomFilter(const QString &filterName,
             idsToInsert.removeAll(m_query.value(1).toString());
     }
 
-    foreach (const QString &id, idsToInsert) {
+    for (const QString &id : qAsConst(idsToInsert)) {
         m_query.prepare(QLatin1String("INSERT INTO FilterAttributeTable VALUES(NULL, ?)"));
         m_query.bindValue(0, id);
         m_query.exec();
@@ -348,7 +348,7 @@ bool QHelpCollectionHandler::addCustomFilter(const QString &filterName,
     m_query.bindValue(0, nameId);
     m_query.exec();
 
-    foreach (const QString &att, attributes) {
+    for (const QString &att : attributes) {
         m_query.prepare(QLatin1String("INSERT INTO FilterTable VALUES(?, ?)"));
         m_query.bindValue(0, nameId);
         m_query.bindValue(1, attributeMap[att]);
@@ -402,7 +402,7 @@ bool QHelpCollectionHandler::registerDocumentation(const QString &fileName)
         return false;
 
     addFilterAttributes(reader.filterAttributes());
-    foreach (const QString &filterName, reader.customFilters())
+    for (const QString &filterName : reader.customFilters())
         addCustomFilter(filterName, reader.filterAttributes(filterName));
 
     optimizeDatabase(fileName);
@@ -501,7 +501,7 @@ bool QHelpCollectionHandler::addFilterAttributes(const QStringList &attributes)
     while (m_query.next())
         atts.insert(m_query.value(0).toString());
 
-    foreach (const QString &s, attributes) {
+    for (const QString &s : attributes) {
         if (!atts.contains(s)) {
             m_query.prepare(QLatin1String("INSERT INTO FilterAttributeTable VALUES(NULL, ?)"));
             m_query.bindValue(0, s);

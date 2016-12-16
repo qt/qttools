@@ -169,7 +169,7 @@ void QHelpSearchIndexReaderClucene::run()
             QCLuceneDocument document;
             const QStringList namespaceList = engine.registeredDocumentations();
 
-            foreach (const QSharedPointer<QCLuceneHits> &hits, cluceneHitsList) {
+            for (const QSharedPointer<QCLuceneHits> &hits : qAsConst(cluceneHitsList)) {
                 for (qint32 i = 0; i < hits->length(); i++) {
                     document = hits->document(i);
                     const QString path = document.get(PathField);
@@ -210,7 +210,7 @@ bool QHelpSearchIndexReaderClucene::buildQuery(
     QCLuceneAnalyzer &analyzer)
 {
     bool queryIsValid = false;
-    foreach (const QHelpSearchQuery &query, queries) {
+    for (const QHelpSearchQuery &query : queries) {
         if (fieldName != ContentField && isNegativeQuery(query)) {
             queryIsValid = false;
             break;
@@ -287,7 +287,7 @@ bool QHelpSearchIndexReaderClucene::addFuzzyQuery(const QHelpSearchQuery &query,
 {
     bool queryIsValid = false;
     const QLatin1String fuzzy("~");
-    foreach (const QString &term, query.wordList) {
+    for (const QString &term : query.wordList) {
         if (!term.isEmpty()) {
             QCLuceneQuery *lQuery =
                     QCLuceneQueryParser::parse(term + fuzzy, fieldName, analyzer);
@@ -305,7 +305,7 @@ bool QHelpSearchIndexReaderClucene::addWithoutQuery(const QHelpSearchQuery &quer
 {
     bool queryIsValid = false;
     const QStringList &stopWords = QCLuceneStopAnalyzer().englishStopWords();
-    foreach (const QString &term, query.wordList) {
+    for (const QString &term : query.wordList) {
         if (stopWords.contains(term, Qt::CaseInsensitive))
             continue;
         QCLuceneQuery *lQuery = new QCLuceneTermQuery(QCLuceneTerm(
@@ -321,7 +321,7 @@ bool QHelpSearchIndexReaderClucene::addPhraseQuery(const QHelpSearchQuery &query
 {
     const QString phrase = query.wordList.at(0).toLower();
     QStringList terms = phrase.split(QLatin1String(" "));
-    foreach (const QString &word, QCLuceneStopAnalyzer().englishStopWords())
+    for (const QString &word : QCLuceneStopAnalyzer().englishStopWords())
         terms.removeAll(word);
 
     if (terms.isEmpty())
@@ -334,7 +334,7 @@ bool QHelpSearchIndexReaderClucene::addPhraseQuery(const QHelpSearchQuery &query
     }
 
     QCLucenePhraseQuery *phraseQuery = new QCLucenePhraseQuery();
-    foreach (const QString &term, terms)
+    for (const QString &term : qAsConst(terms))
         phraseQuery->addTerm(QCLuceneTerm(fieldName, term.toLower()));
     booleanQuery.add(phraseQuery, true, true, false);
     return true;
@@ -345,7 +345,7 @@ bool QHelpSearchIndexReaderClucene::addAllQuery(const QHelpSearchQuery &query,
 {
     bool queryIsValid = false;
     const QStringList &stopWords = QCLuceneStopAnalyzer().englishStopWords();
-    foreach (const QString &term, query.wordList) {
+    for (const QString &term : query.wordList) {
         if (stopWords.contains(term, Qt::CaseInsensitive))
             continue;
         QCLuceneQuery *lQuery = new QCLuceneTermQuery(QCLuceneTerm(
@@ -362,7 +362,7 @@ bool QHelpSearchIndexReaderClucene::addDefaultQuery(const QHelpSearchQuery &quer
     QCLuceneAnalyzer &analyzer)
 {
     bool queryIsValid = false;
-    foreach (const QString &term, query.wordList) {
+    for (const QString &term : query.wordList) {
         QCLuceneQuery *lQuery =
             QCLuceneQueryParser::parse(term.toLower(), fieldName, analyzer);
         if (lQuery) {
@@ -378,7 +378,7 @@ bool QHelpSearchIndexReaderClucene::addAtLeastQuery(
     QCLuceneBooleanQuery &booleanQuery, QCLuceneAnalyzer &analyzer)
 {
     bool queryIsValid = false;
-    foreach (const QString &term, query.wordList) {
+    for (const QString &term : query.wordList) {
         if (!term.isEmpty()) {
             QCLuceneQuery *lQuery =
                 QCLuceneQueryParser::parse(term, fieldName, analyzer);
@@ -406,7 +406,7 @@ bool QHelpSearchIndexReaderClucene::addAttributesQuery(
 void QHelpSearchIndexReaderClucene::boostSearchHits(const QHelpEngineCore &engine,
     QList<QHelpSearchEngine::SearchHit> &hitList, const QList<QHelpSearchQuery> &queryList)
 {
-    foreach (const QHelpSearchQuery &query, queryList) {
+    for (const QHelpSearchQuery &query : queryList) {
         if (query.fieldName != QHelpSearchQuery::DEFAULT)
             continue;
 
@@ -448,17 +448,18 @@ void QHelpSearchIndexReaderClucene::boostSearchHits(const QHelpEngineCore &engin
             QString data = QString::fromUtf8(engine.fileData(hit.first));
 
             int counter = 0;
-            foreach (const QString &term, searchTerms)
+            for (const QString &term : qAsConst(searchTerms))
                 counter += data.count(term, Qt::CaseInsensitive);
             hitMap.insertMulti(counter, hit);
         }
 
         QList<QHelpSearchEngine::SearchHit> boostedList;
-        QMap<int, QHelpSearchEngine::SearchHit>::const_iterator it = hitMap.constEnd();
-        do {
+
+        for (auto it = hitMap.cend(), begin = hitMap.cbegin(); it != begin; ) {
             --it;
             boostedList.append(it.value());
-        } while (it != hitMap.constBegin());
+        }
+
         boostedList += hitList.mid(count, hitList.count());
         mutex.lock();
         hitList = boostedList;

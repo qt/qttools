@@ -292,10 +292,10 @@ void QHelpProjectDataPrivate::addMatchingFiles(const QString &pattern)
     const QString &path = dir.canonicalPath();
 
     // QDir::entryList() is expensive, so we cache the results.
-    QMap<QString, QStringList>::ConstIterator it = dirEntriesCache.find(path);
-    const QStringList &entries = it != dirEntriesCache.constEnd() ?
+    auto it = dirEntriesCache.constFind(path);
+    const QStringList &entries = it != dirEntriesCache.cend() ?
                                  it.value() : dir.entryList(QDir::Files);
-    if (it == dirEntriesCache.constEnd())
+    if (it == dirEntriesCache.cend())
         dirEntriesCache.insert(path, entries);
 
     bool matchFound = false;
@@ -305,7 +305,7 @@ void QHelpProjectDataPrivate::addMatchingFiles(const QString &pattern)
     Qt::CaseSensitivity cs = Qt::CaseSensitive;
 #endif
     QRegExp regExp(fileInfo.fileName(), cs, QRegExp::Wildcard);
-    foreach (const QString &file, entries) {
+    for (const QString &file : entries) {
         if (regExp.exactMatch(file)) {
             matchFound = true;
             filterSectionList.last().

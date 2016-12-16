@@ -194,16 +194,16 @@ void IndexWindow::open(QHelpIndexWidget* indexWidget, const QModelIndex &index)
     TRACE_OBJ
     QHelpIndexModel *model = qobject_cast<QHelpIndexModel*>(indexWidget->model());
     if (model) {
-        QString keyword = model->data(index, Qt::DisplayRole).toString();
-        QMap<QString, QUrl> links = model->linksForKeyword(keyword);
+        const QString keyword = model->data(index, Qt::DisplayRole).toString();
+        const QMap<QString, QUrl> links = model->linksForKeyword(keyword);
 
         QUrl url;
         if (links.count() > 1) {
             TopicChooser tc(this, keyword, links);
             if (tc.exec() == QDialog::Accepted)
                 url = tc.link();
-        } else if (links.count() == 1) {
-            url = links.constBegin().value();
+        } else if (!links.isEmpty()) {
+            url = links.first();
         } else {
             return;
         }

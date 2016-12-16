@@ -149,12 +149,12 @@ private:
         static QRegExp regExp(QLatin1String("[\\+\\-\\!\\(\\)\\^\\[\\]\\{\\}~:]"));
 
         QList<QHelpSearchQuery> escapedQueries;
-        foreach (const QHelpSearchQuery &query, queries) {
+        for (const QHelpSearchQuery &query : queries) {
             QHelpSearchQuery escapedQuery;
             escapedQuery.fieldName = query.fieldName;
-            foreach (QString word, query.wordList) {
+            for (QString word : query.wordList) {
                 if (word.contains(regExp)) {
-                    foreach (const QString &charToEscape, charsToEscapeList)
+                    for (const QString &charToEscape : qAsConst(charsToEscapeList))
                         word.replace(charToEscape, escapeChar + charToEscape);
                 }
                 escapedQuery.wordList.append(word);
@@ -216,7 +216,7 @@ private:
         }
         if (insert) {
             queryHist.queries.append(query);
-            foreach (const QHelpSearchQuery &queryPart, query) {
+            for (const QHelpSearchQuery &queryPart : query) {
                 static_cast<CompleterModel *>(searchCompleter.model())->
                         addTerm(queryPart.wordList.join(QLatin1Char(' ')));
             }
@@ -236,7 +236,7 @@ private:
             lineEdits << allQuery << atLeastQuery << similarQuery
                 << withoutQuery << exactQuery;
         }
-        foreach (QLineEdit *lineEdit, lineEdits)
+        for (QLineEdit *lineEdit : qAsConst(lineEdits))
             lineEdit->clear();
 
         // Otherwise, the respective button would be disabled.
@@ -245,7 +245,7 @@ private:
         queryHist->curQuery += addend;
         const QList<QHelpSearchQuery> &query =
             queryHist->queries.at(queryHist->curQuery);
-        foreach (const QHelpSearchQuery &queryPart, query) {
+        for (const QHelpSearchQuery &queryPart : query) {
             if (QLineEdit *lineEdit = lineEditFor(queryPart.fieldName))
                 lineEdit->setText(queryPart.wordList.join(QLatin1Char(' ')));
         }
@@ -332,20 +332,20 @@ private slots:
                 buildTermList(defaultQuery->text())));
         } else {
             QRegExp exp(QLatin1String("\\s+"));
-            QStringList lst = similarQuery->text().split(exp,
+            QStringList list = similarQuery->text().split(exp,
                 QString::SkipEmptyParts);
-            if (!lst.isEmpty()) {
+            if (!list.isEmpty()) {
                 QStringList fuzzy;
-                foreach (const QString &term, lst)
+                for (const QString &term : qAsConst(list))
                     fuzzy += buildTermList(term);
                 queryList.append(QHelpSearchQuery(QHelpSearchQuery::FUZZY,
                     fuzzy));
             }
 
-            lst = withoutQuery->text().split(exp, QString::SkipEmptyParts);
-            if (!lst.isEmpty()) {
+            list = withoutQuery->text().split(exp, QString::SkipEmptyParts);
+            if (!list.isEmpty()) {
                 QStringList without;
-                foreach (const QString &term, lst)
+                for (const QString &term : qAsConst(list))
                     without.append(term);
                 queryList.append(QHelpSearchQuery(QHelpSearchQuery::WITHOUT,
                     without));
@@ -358,18 +358,18 @@ private slots:
                     QStringList(phrase)));
             }
 
-            lst = allQuery->text().split(exp, QString::SkipEmptyParts);
-            if (!lst.isEmpty()) {
+            list = allQuery->text().split(exp, QString::SkipEmptyParts);
+            if (!list.isEmpty()) {
                 QStringList all;
-                foreach (const QString &term, lst)
+                for (const QString &term : qAsConst(list))
                     all.append(term);
                 queryList.append(QHelpSearchQuery(QHelpSearchQuery::ALL, all));
             }
 
-            lst = atLeastQuery->text().split(exp, QString::SkipEmptyParts);
-            if (!lst.isEmpty()) {
+            list = atLeastQuery->text().split(exp, QString::SkipEmptyParts);
+            if (!list.isEmpty()) {
                 QStringList atLeast;
-                foreach (const QString &term, lst)
+                for (const QString &term : qAsConst(list))
                     atLeast += buildTermList(term);
                 queryList.append(QHelpSearchQuery(QHelpSearchQuery::ATLEAST,
                     atLeast));
@@ -603,11 +603,11 @@ void QHelpSearchQueryWidget::setQuery(const QList<QHelpSearchQuery> &queryList)
     QList<QLineEdit *> lineEdits;
     lineEdits << d->defaultQuery << d->allQuery << d->atLeastQuery
         << d->similarQuery << d->withoutQuery << d->exactQuery;
-    foreach (QLineEdit *lineEdit, lineEdits)
+    for (QLineEdit *lineEdit : qAsConst(lineEdits))
         lineEdit->clear();
 
     const QLatin1String space(" ");
-    foreach (const QHelpSearchQuery &q, queryList) {
+    for (const QHelpSearchQuery &q : queryList) {
         if (QLineEdit *lineEdit = d->lineEditFor(q.fieldName))
             lineEdit->setText(lineEdit->text() + q.wordList.join(space) + space);
     }

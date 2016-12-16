@@ -124,7 +124,7 @@ static RegisteredDocEntries registeredDocEntries(const HelpEngineWrapper &wrappe
     RegisteredDocEntries result;
     const QStringList nameSpaces = wrapper.registeredDocumentations();
     result.reserve(nameSpaces.size());
-    foreach (const QString &nameSpace, nameSpaces) {
+    for (const QString &nameSpace : nameSpaces) {
         RegisteredDocEntry entry;
         entry.nameSpace = nameSpace;
         entry.fileName = wrapper.documentationFileName(nameSpace);
@@ -185,7 +185,7 @@ PreferencesDialog::PreferencesDialog(QWidget *parent)
             SLOT(removeDocumentation()));
 
         m_docsBackup.reserve(m_registeredDocsModel->rowCount());
-        foreach (const RegisteredDocEntry &e, m_registeredDocsModel->docEntries())
+        for (const RegisteredDocEntry &e : m_registeredDocsModel->docEntries())
             m_docsBackup.append(e.nameSpace);
     } else {
         m_ui.tabWidget->removeTab(m_ui.tabWidget->indexOf(m_ui.docsTab));
@@ -239,7 +239,7 @@ void PreferencesDialog::updateFilterPage()
 
     m_filterMapBackup.clear();
     const QStringList &filters = helpEngine.customFilters();
-    foreach (const QString &filter, filters) {
+    for (const QString &filter : filters) {
         if (filter == HelpEngineWrapper::TrUnfiltered())
             continue;
         QStringList atts = helpEngine.filterAttributes(filter);
@@ -250,7 +250,7 @@ void PreferencesDialog::updateFilterPage()
 
     m_ui.filterWidget->addItems(m_filterMap.keys());
 
-    foreach (const QString &a, helpEngine.filterAttributes())
+    for (const QString &a : helpEngine.filterAttributes())
         new QTreeWidgetItem(m_ui.attributeWidget, QStringList() << a);
 
     if (!m_filterMap.keys().isEmpty())
@@ -335,7 +335,7 @@ void PreferencesDialog::addDocumentationLocal()
 
     QStringList invalidFiles;
     QStringList alreadyRegistered;
-    foreach (const QString &fileName, fileNames) {
+    for (const QString &fileName : fileNames) {
         const QString nameSpace = QHelpEngineCore::namespaceName(fileName);
         if (nameSpace.isEmpty()) {
             invalidFiles.append(fileName);
@@ -360,7 +360,7 @@ void PreferencesDialog::addDocumentationLocal()
     if (!invalidFiles.isEmpty() || !alreadyRegistered.isEmpty()) {
         QString message;
         if (!alreadyRegistered.isEmpty()) {
-            foreach (const QString &ns, alreadyRegistered) {
+            for (const QString &ns : qAsConst(alreadyRegistered)) {
                 message += tr("The namespace %1 is already registered!")
                     .arg(QString("<b>%1</b>").arg(ns)) + QLatin1String("<br>");
             }
@@ -371,7 +371,7 @@ void PreferencesDialog::addDocumentationLocal()
         if (!invalidFiles.isEmpty()) {
             message += tr("The specified file is not a valid Qt Help File!");
             message.append(QLatin1String("<ul>"));
-            foreach (const QString &file, invalidFiles)
+            for (const QString &file : qAsConst(invalidFiles))
                 message += QLatin1String("<li>") + file + QLatin1String("</li>");
             message.append(QLatin1String("</ul>"));
         }
@@ -384,7 +384,7 @@ void PreferencesDialog::addDocumentationLocal()
 QList<int> PreferencesDialog::currentRegisteredDocsSelection() const
 {
     QList<int> result;
-    foreach (const QModelIndex &index, m_ui.registeredDocsListView->selectionModel()->selectedRows())
+    for (const QModelIndex &index : m_ui.registeredDocsListView->selectionModel()->selectedRows())
         result.append(m_registereredDocsFilterModel->mapToSource(index).row());
     return result;
 }
@@ -433,24 +433,20 @@ void PreferencesDialog::applyChanges()
         if (m_filterMap.count() != m_filterMapBackup.count()) {
             filtersWereChanged = true;
         } else {
-            QMapIterator<QString, QStringList> it(m_filterMapBackup);
-            while (it.hasNext() && !filtersWereChanged) {
-                it.next();
+            for (auto it = m_filterMapBackup.cbegin(), end = m_filterMapBackup.cend(); it != end && !filtersWereChanged; ++it) {
                 if (!m_filterMap.contains(it.key())) {
                     filtersWereChanged = true;
                 } else {
-                    QStringList a = it.value();
-                    QStringList b = m_filterMap.value(it.key());
+                    const QStringList a = it.value();
+                    const QStringList b = m_filterMap.value(it.key());
                     if (a.count() != b.count()) {
                         filtersWereChanged = true;
                     } else {
-                        QStringList::const_iterator i(a.constBegin());
-                        while (i != a.constEnd()) {
-                            if (!b.contains(*i)) {
+                        for (const QString &aStr : a) {
+                            if (!b.contains(aStr)) {
                                 filtersWereChanged = true;
                                 break;
                             }
-                            ++i;
                         }
                     }
                 }
@@ -459,16 +455,13 @@ void PreferencesDialog::applyChanges()
     }
 
     if (filtersWereChanged) {
-        foreach (const QString &filter, m_removedFilters)
+        for (const QString &filter : qAsConst(m_removedFilters))
             helpEngine.removeCustomFilter(filter);
-        QMapIterator<QString, QStringList> it(m_filterMap);
-        while (it.hasNext()) {
-            it.next();
+        for (auto it = m_filterMap.cbegin(), end = m_filterMap.cend(); it != end; ++it)
             helpEngine.addCustomFilter(it.key(), it.value());
-        }
     }
 
-    foreach (const QString &doc, m_unregDocs) {
+    for (const QString &doc : qAsConst(m_unregDocs)) {
         OpenPagesManager::instance()->closePages(doc);
         helpEngine.unregisterDocumentation(doc);
     }
@@ -522,14 +515,14 @@ void PreferencesDialog::updateFontSettingsPage()
     connect(m_browserFontPanel, SIGNAL(toggled(bool)), this,
         SLOT(browserFontSettingToggled(bool)));
 
-    QList<QComboBox*> allCombos = m_appFontPanel->findChildren<QComboBox*>();
-    foreach (QComboBox* box, allCombos) {
+    const QList<QComboBox*> appCombos = m_appFontPanel->findChildren<QComboBox*>();
+    for (QComboBox* box : appCombos) {
         connect(box, SIGNAL(currentIndexChanged(int)), this,
             SLOT(appFontSettingChanged(int)));
     }
 
-    allCombos = m_browserFontPanel->findChildren<QComboBox*>();
-    foreach (QComboBox* box, allCombos) {
+    const QList<QComboBox*> browserCombos = m_browserFontPanel->findChildren<QComboBox*>();
+    for (QComboBox* box : browserCombos) {
         connect(box, SIGNAL(currentIndexChanged(int)), this,
             SLOT(browserFontSettingChanged(int)));
     }

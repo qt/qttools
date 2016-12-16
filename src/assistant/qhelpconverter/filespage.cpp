@@ -68,7 +68,7 @@ void FilesPage::removeFile()
 {
     int row = m_ui.fileListWidget->currentRow()
         - m_ui.fileListWidget->selectedItems().count() + 1;
-    foreach (const QListWidgetItem *item, m_ui.fileListWidget->selectedItems()) {
+    for (const QListWidgetItem *item : m_ui.fileListWidget->selectedItems()) {
         m_filesToRemove.append(item->text());
         delete item;
     }

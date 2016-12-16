@@ -74,7 +74,7 @@ namespace {
             i = str.indexOf(QLatin1Char('*'), j );
         }
 
-        int l = str.length() - 1;
+        const int l = str.length() - 1;
         if ( str.mid( j, l - j + 1 ).length() > 0 )
             lst << str.mid( j, l - j + 1 );
 
@@ -161,11 +161,11 @@ void Reader::setIndexPath(const QString &path)
 void Reader::filterFilesForAttributes(const QStringList &attributes)
 {
     searchIndexTable.clear();
-    for(IndexTable::ConstIterator it = indexTable.begin(); it != indexTable.end(); ++it) {
+    for (auto it = indexTable.cbegin(), end = indexTable.cend(); it != end; ++it) {
         const QString fileName = it.key();
         bool containsAll = true;
-        QStringList split = fileName.split(QLatin1String("@"));
-        foreach (const QString &attribute, attributes) {
+        const QStringList split = fileName.split(QLatin1String("@"));
+        for (const QString &attribute : attributes) {
             if (!split.contains(attribute, Qt::CaseInsensitive)) {
                 containsAll = false;
                 break;
@@ -179,7 +179,7 @@ void Reader::filterFilesForAttributes(const QStringList &attributes)
 
 void Reader::setIndexFile(const QString &namespaceName, const QString &attributes)
 {
-    QString extension = namespaceName + QLatin1String("@") + attributes;
+    const QString extension = namespaceName + QLatin1String("@") + attributes;
     indexFile = indexPath + QLatin1String("/indexdb40.") + extension;
     documentFile = indexPath + QLatin1String("/indexdoc40.") + extension;
 }
@@ -190,28 +190,27 @@ bool Reader::splitSearchTerm(const QString &searchTerm, QStringList *terms,
     QString term = searchTerm;
 
     term = term.simplified();
-    term = term.replace(QLatin1String("\'"), QLatin1String("\""));
-    term = term.replace(QLatin1String("`"), QLatin1String("\""));
-    term = term.replace(QLatin1String("-"), QLatin1String(" "));
+    term = term.replace(QLatin1Char('\''), QLatin1Char('"'));
+    term = term.replace(QLatin1Char('`'), QLatin1Char('"'));
+    term.remove(QLatin1Char('-'));
     term = term.replace(QRegExp(QLatin1String("\\s[\\S]?\\s")), QLatin1String(" "));
 
     *terms = term.split(QLatin1Char(' '));
-    QStringList::iterator it = terms->begin();
-    for (; it != terms->end(); ++it) {
-        (*it) = (*it).simplified();
-        (*it) = (*it).toLower();
-        (*it) = (*it).replace(QLatin1String("\""), QLatin1String(""));
+    for (QString &str : *terms) {
+        str = str.simplified();
+        str = str.toLower();
+        str.remove(QLatin1Char('"'));
     }
 
-    if (term.contains(QLatin1Char('\"'))) {
-        if ((term.count(QLatin1Char('\"')))%2 == 0) {
+    if (term.contains(QLatin1Char('"'))) {
+        if ((term.count(QLatin1Char('"')))%2 == 0) {
             int beg = 0;
             int end = 0;
             QString s;
-            beg = term.indexOf(QLatin1Char('\"'), beg);
+            beg = term.indexOf(QLatin1Char('"'), beg);
             while (beg != -1) {
                 beg++;
-                end = term.indexOf(QLatin1Char('\"'), beg);
+                end = term.indexOf(QLatin1Char('"'), beg);
                 s = term.mid(beg, end - beg);
                 s = s.toLower();
                 s = s.simplified();
@@ -234,13 +233,12 @@ bool Reader::splitSearchTerm(const QString &searchTerm, QStringList *terms,
 
 void Reader::searchInIndex(const QStringList &terms)
 {
-    foreach (const QString &term, terms) {
+    for (const QString &term : terms) {
         QVector<Document> documents;
 
-        for(IndexTable::ConstIterator it = searchIndexTable.begin();
-            it != searchIndexTable.end(); ++it) {
-            EntryTable entryTable = it.value().first;
-            DocumentList documentList = it.value().second;
+        for (auto it = searchIndexTable.cbegin(), end = searchIndexTable.cend(); it != end; ++it) {
+            const EntryTable &entryTable = it.value().first;
+            const DocumentList &documentList = it.value().second;
 
             if (term.contains(QLatin1Char('*')))
                 documents = setupDummyTerm(getWildcardTerms(term, entryTable), entryTable);
@@ -251,9 +249,8 @@ void Reader::searchInIndex(const QStringList &terms)
 
             if (!documents.isEmpty()) {
                 DocumentInfo info;
-                QString title, url;
                 QVector<DocumentInfo> documentsInfo;
-                foreach(const Document &doc, documents) {
+                for (const Document &doc : qAsConst(documents)) {
                     info.docNumber = doc.docNumber;
                     info.frequency = doc.frequency;
                     info.documentUrl = documentList.at(doc.docNumber).at(1);
@@ -261,18 +258,14 @@ void Reader::searchInIndex(const QStringList &terms)
                     documentsInfo.append(info);
                 }
 
-                bool found = false;
-                for(QList<TermInfo>::Iterator tit = termList.begin();
-                    tit != termList.end(); ++tit) {
-                    TermInfo *t = &(*tit);
-                    if(t->term == term) {
-                        t->documents += documentsInfo;
-                        t->frequency += documentsInfo.count();
-                        found = true; break;
-                    }
-                }
-                if (!found)
+                const auto tit = std::find_if(termList.begin(), termList.end(),
+                                              [term] (TermInfo &info) { return info.term == term; } );
+                if (tit != termList.end()) {
+                    tit->documents += documentsInfo;
+                    tit->frequency += documentsInfo.count();
+                } else {
                     termList.append(TermInfo(term, documentsInfo.count(), documentsInfo));
+                }
             }
         }
     }
@@ -286,24 +279,20 @@ QVector<DocumentInfo> Reader::hits()
         return documents;
 
     documents = termList.takeFirst().documents;
-    for(QList<TermInfo>::Iterator it = termList.begin(); it != termList.end(); ++it) {
-        TermInfo *t = &(*it);
-        QVector<DocumentInfo> docs = t->documents;
-        for(QVector<DocumentInfo>::Iterator minDoc_it = documents.begin();
-            minDoc_it != documents.end(); ) {
-            bool found = false;
-            for (QVector<DocumentInfo>::ConstIterator doc_it = docs.constBegin();
-                doc_it != docs.constEnd(); ++doc_it ) {
-                if ( (*minDoc_it).docNumber == (*doc_it).docNumber ) {
-                    (*minDoc_it).frequency += (*doc_it).frequency;
-                    found = true;
-                    break;
-                }
-            }
-            if (!found)
+    for (const TermInfo &info : qAsConst(termList)) {
+        const QVector<DocumentInfo> &docs = info.documents;
+
+        for (auto minDoc_it = documents.begin(); minDoc_it != documents.end(); ) {
+            const int docNumber = minDoc_it->docNumber;
+            const auto doc_it = std::find_if(docs.cbegin(), docs.cend(),
+                                             [docNumber] (const DocumentInfo &docInfo)
+                                        { return docInfo.docNumber == docNumber; });
+            if (doc_it == docs.cend()) {
                 minDoc_it = documents.erase(minDoc_it);
-            else
+            } else {
+                minDoc_it->frequency = doc_it->frequency;
                 ++minDoc_it;
+            }
         }
     }
 
@@ -317,19 +306,17 @@ bool Reader::searchForPattern(const QStringList &patterns, const QStringList &wo
     if (data.isEmpty())
         return false;
 
-    for(QHash<QString, PosEntry*>::ConstIterator mit =
-        miniIndex.begin(); mit != miniIndex.end(); ++mit) {
-            delete mit.value();
-    }
+    for (auto mit = miniIndex.cbegin(); mit != miniIndex.cend(); ++mit)
+        delete mit.value();
+
     miniIndex.clear();
 
     wordNum = 3;
-    QStringList::ConstIterator cIt = words.begin();
-    for ( ; cIt != words.end(); ++cIt )
-        miniIndex.insert(*cIt, new PosEntry(0));
+    for (const QString &word : words)
+        miniIndex.insert(word, new PosEntry(0));
 
     QTextStream s(data);
-    QString text = s.readAll();
+    const QString text = s.readAll();
     bool valid = true;
     const QChar *buf = text.unicode();
     QChar str[64];
@@ -367,22 +354,19 @@ bool Reader::searchForPattern(const QStringList &patterns, const QStringList &wo
     if ( i > 1 )
         buildMiniIndex( QString(str,i) );
 
-    QStringList::ConstIterator patIt = patterns.begin();
-    QStringList wordLst;
-    QList<uint> a, b;
-    QList<uint>::iterator aIt;
-    for ( ; patIt != patterns.end(); ++patIt ) {
-        wordLst = (*patIt).split(QLatin1Char(' '));
-        a = miniIndex[ wordLst[0] ]->positions;
-        for ( int j = 1; j < (int)wordLst.count(); ++j ) {
-            b = miniIndex[ wordLst[j] ]->positions;
-            aIt = a.begin();
-            while ( aIt != a.end() ) {
-                if ( b.contains( *aIt + 1 )) {
+    QList<uint> a;
+    for (const QString &pat : patterns) {
+        const QStringList wordList = pat.split(QLatin1Char(' '));
+        a = miniIndex.value(wordList.at(0))->positions;
+        for (int j = 1; j < wordList.count(); ++j) {
+            const QList<uint> &b = miniIndex.value(wordList.at(j))->positions;
+
+            for (auto aIt = a.begin(); aIt != a.end(); ) {
+                if (b.contains(*aIt + 1)) {
                     (*aIt)++;
                     ++aIt;
                 } else {
-                    aIt = a.erase( aIt );
+                    aIt = a.erase(aIt);
                 }
             }
         }
@@ -396,11 +380,10 @@ QVector<Document> Reader::setupDummyTerm(const QStringList &terms,
                                               const EntryTable &entryTable)
 {
     QList<Term> termList;
-    for (QStringList::ConstIterator it = terms.begin(); it != terms.end(); ++it) {
-        if (entryTable.value(*it)) {
-            Entry *e = entryTable.value(*it);
-            termList.append(Term(*it, e->documents.count(), e->documents ) );
-        }
+    for (const QString &term : terms) {
+        Entry *e = entryTable.value(term);
+        if (e)
+            termList.append(Term(term, e->documents.count(), e->documents ) );
     }
     QVector<Document> maxList(0);
     if ( !termList.count() )
@@ -408,49 +391,46 @@ QVector<Document> Reader::setupDummyTerm(const QStringList &terms,
     ::std::sort(termList.begin(), termList.end());
 
     maxList = termList.takeLast().documents;
-    for(QList<Term>::Iterator it = termList.begin(); it != termList.end(); ++it) {
-        Term *t = &(*it);
-        QVector<Document> docs = t->documents;
-        for (QVector<Document>::iterator docIt = docs.begin(); docIt != docs.end(); ++docIt ) {
-            if ( maxList.indexOf( *docIt ) == -1 )
-                maxList.append( *docIt );
+    for (const Term &term : qAsConst(termList)) {
+        for (const Document &doc : term.documents) {
+            if (maxList.indexOf(doc) == -1)
+                maxList.append(doc);
         }
     }
     return maxList;
 }
 
-QStringList Reader::getWildcardTerms(const QString &term,
-                                          const EntryTable &entryTable)
+QStringList Reader::getWildcardTerms(const QString &termStr,
+                                     const EntryTable &entryTable)
 {
-    QStringList lst;
-    QStringList terms = split(term);
-    QStringList::Iterator iter;
+    QStringList list;
+    const QStringList terms = split(termStr);
 
-    for(EntryTable::ConstIterator it = entryTable.begin();
-        it != entryTable.end(); ++it) {
+    for (auto it = entryTable.cbegin(), end = entryTable.cend(); it != end; ++it) {
         int index = 0;
         bool found = false;
-        QString text( it.key() );
-        for ( iter = terms.begin(); iter != terms.end(); ++iter ) {
-            if ( *iter == QLatin1String("*") ) {
+        const QString text(it.key());
+        for (auto termIt = terms.cbegin(), termItEnd = terms.cend(); termIt != termItEnd; ++termIt) {
+            const QString &term = *termIt;
+            if (term == QLatin1String("*")) {
                 found = true;
                 continue;
             }
-            if ( iter == terms.begin() && (*iter)[0] != text[0] ) {
+            if (termIt == terms.cbegin() && term.at(0) != text.at(0)) {
                 found = false;
                 break;
             }
-            index = text.indexOf( *iter, index );
-            if ( *iter == terms.last() && index != (int)text.length()-1 ) {
-                index = text.lastIndexOf( *iter );
-                if ( index != (int)text.length() - (int)(*iter).length() ) {
+            index = text.indexOf(term, index);
+            if (term == terms.last() && index != text.length() - 1) {
+                index = text.lastIndexOf(term);
+                if (index != text.length() - term.length()) {
                     found = false;
                     break;
                 }
             }
-            if ( index != -1 ) {
+            if (index != -1) {
                 found = true;
-                index += (*iter).length();
+                index += term.length();
                 continue;
             } else {
                 found = false;
@@ -458,10 +438,10 @@ QStringList Reader::getWildcardTerms(const QString &term,
             }
         }
         if (found)
-            lst << text;
+            list << text;
     }
 
-    return lst;
+    return list;
 }
 
 void Reader::buildMiniIndex(const QString &string)
@@ -473,8 +453,7 @@ void Reader::buildMiniIndex(const QString &string)
 
 void Reader::reset()
 {
-    for(IndexTable::Iterator it = indexTable.begin();
-        it != indexTable.end(); ++it) {
+    for (auto it = indexTable.begin(), end = indexTable.end(); it != end; ++it) {
         cleanupIndex(it.value().first);
         it.value().second.clear();
     }
@@ -482,10 +461,8 @@ void Reader::reset()
 
 void Reader::cleanupIndex(EntryTable &entryTable)
 {
-    for(EntryTable::ConstIterator it =
-        entryTable.begin(); it != entryTable.end(); ++it) {
+    for (auto it = entryTable.cbegin(), end = entryTable.cend(); it != end; ++it)
             delete it.value();
-    }
 
     entryTable.clear();
 }
@@ -518,7 +495,7 @@ void QHelpSearchIndexReaderDefault::run()
     mutex.unlock();
 
     QString queryTerm;
-    foreach (const QHelpSearchQuery &query, queryList) {
+    for (const QHelpSearchQuery &query : queryList) {
         if (query.fieldName == QHelpSearchQuery::DEFAULT) {
             queryTerm = query.wordList.at(0);
             break;
@@ -540,7 +517,7 @@ void QHelpSearchIndexReaderDefault::run()
 
     // setup the reader
     m_reader.setIndexPath(indexPath);
-    foreach(const QString &namespaceName, registeredDocs) {
+    for (const QString &namespaceName : registeredDocs) {
         mutex.lock();
         if (m_cancel) {
             mutex.unlock();
@@ -552,7 +529,7 @@ void QHelpSearchIndexReaderDefault::run()
         const QList<QStringList> attributeSets =
             engine.filterAttributeSets(namespaceName);
 
-        foreach (const QStringList &attributes, attributeSets) {
+        for (const QStringList &attributes : attributeSets) {
             // read all index files
             m_reader.setIndexFile(namespaceName, attributes.join(QLatin1String("@")));
             if (!m_reader.readIndex()) {
@@ -573,10 +550,10 @@ void QHelpSearchIndexReaderDefault::run()
         // search for term(s)
         m_reader.searchInIndex(terms);    // TODO: should this be interruptible as well ???
 
-        QVector<DocumentInfo> hits = m_reader.hits();
+        const QVector<DocumentInfo> hits = m_reader.hits();
         if (!hits.isEmpty()) {
             if (termSeq.isEmpty()) {
-                foreach (const DocumentInfo &docInfo, hits) {
+                for (const DocumentInfo &docInfo : hits) {
                     mutex.lock();
                     if (m_cancel) {
                         mutex.unlock();
@@ -587,7 +564,7 @@ void QHelpSearchIndexReaderDefault::run()
                     hitList.append(qMakePair(docInfo.documentTitle, docInfo.documentUrl));
                 }
             } else {
-                foreach (const DocumentInfo &docInfo, hits) {
+                for (const DocumentInfo &docInfo : hits) {
                     mutex.lock();
                     if (m_cancel) {
                         mutex.unlock();

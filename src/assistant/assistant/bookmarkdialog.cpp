@@ -156,7 +156,7 @@ void BookmarkDialog::accepted()
 void BookmarkDialog::rejected()
 {
     TRACE_OBJ
-    foreach (const QPersistentModelIndex &index, cache)
+    for (const QPersistentModelIndex &index : qAsConst(cache))
         bookmarkModel->removeItem(index);
     reject();
 }

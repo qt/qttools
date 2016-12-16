@@ -163,7 +163,7 @@ HelpEngineWrapper::~HelpEngineWrapper()
 {
     TRACE_OBJ
     const QStringList &namespaces = d->m_helpEngine->registeredDocumentations();
-    foreach (const QString &nameSpace, namespaces) {
+    for (const QString &nameSpace : namespaces) {
         const QString &docFile
             = d->m_helpEngine->documentationFileName(nameSpace);
         d->m_qchWatcher->removePath(docFile);
@@ -759,7 +759,7 @@ HelpEngineWrapperPrivate::HelpEngineWrapperPrivate(const QString &collectionFile
 void HelpEngineWrapperPrivate::initFileSystemWatchers()
 {
     TRACE_OBJ
-    foreach(const QString &ns, m_helpEngine->registeredDocumentations()) {
+    for (const QString &ns : m_helpEngine->registeredDocumentations()) {
         const QString &docFile = m_helpEngine->documentationFileName(ns);
         m_qchWatcher->addPath(docFile);
         connect(m_qchWatcher, SIGNAL(fileChanged(QString)),
@@ -795,7 +795,7 @@ void HelpEngineWrapperPrivate::qchFileChanged(const QString &fileName,
      * may not exist anymore or contain a different namespace.
      */
     QString ns;
-    foreach (const QString &curNs, m_helpEngine->registeredDocumentations()) {
+    for (const QString &curNs : m_helpEngine->registeredDocumentations()) {
         if (m_helpEngine->documentationFileName(curNs) == fileName) {
             ns = curNs;
             break;
@@ -817,7 +817,7 @@ void HelpEngineWrapperPrivate::qchFileChanged(const QString &fileName,
      * was sent.
      */
 
-    QMap<QString, RecentSignal>::Iterator it = m_recentQchUpdates.find(fileName);
+    const auto it = m_recentQchUpdates.find(fileName);
     const QDateTime &now = QDateTime::currentDateTime();
 
      // Case 1: This is the first recent signal for the file.

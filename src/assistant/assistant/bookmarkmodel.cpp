@@ -127,7 +127,7 @@ BookmarkModel::setItemsEditable(bool editable)
 void
 BookmarkModel::expandFoldersIfNeeeded(QTreeView *treeView)
 {
-    foreach (const QModelIndex &index, cache)
+    for (const QModelIndex &index : qAsConst(cache))
         treeView->setExpanded(index, index.data(UserRoleExpanded).toBool());
 }
 
@@ -154,7 +154,7 @@ BookmarkModel::removeItem(const QModelIndex &index)
         indexes = collectItems(index);
     indexes.append(index);
 
-    foreach (const QModelIndex &itemToRemove, indexes) {
+    for (const QModelIndex &itemToRemove : qAsConst(indexes)) {
         if (!removeRow(itemToRemove.row(), itemToRemove.parent()))
             return false;
         cache.remove(itemFromIndex(itemToRemove));
@@ -315,7 +315,7 @@ BookmarkModel::indexListFor(const QString &label) const
 {
     QList<QPersistentModelIndex> hits;
     const QModelIndexList &list = collectItems(QModelIndex());
-    foreach(const QModelIndex &index, list) {
+    for (const QModelIndex &index : list) {
         if (index.data().toString().contains(label, Qt::CaseInsensitive))
             hits.prepend(index);    // list is reverse sorted
     }
@@ -368,7 +368,7 @@ BookmarkModel::mimeData(const QModelIndexList &indexes) const
     QByteArray data;
     QDataStream stream(&data, QIODevice::WriteOnly);
 
-    foreach (const QModelIndex &index, indexes) {
+    for (const QModelIndex &index : indexes) {
         if (index.column() == 0)
             collectItems(index, 0, &stream);
     }
@@ -413,7 +413,7 @@ void
 BookmarkModel::setupCache(const QModelIndex &parent)
 {
     const QModelIndexList &list = collectItems(parent);
-    foreach (const QModelIndex &index, list)
+    for (const QModelIndex &index : list)
         cache.insert(itemFromIndex(index), index);
 }
 
