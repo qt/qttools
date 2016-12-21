@@ -143,7 +143,6 @@ private slots:
 private:
     QAction *createRecentFilesMenu();
     bool saveFormAs(QDesignerFormWindowInterface *fw);
-    void fixActionContext();
     void updateRecentFileActions();
     void addRecentFile(const QString &fileName);
     void showHelp(const QString &help);

@@ -113,6 +113,12 @@ static QActionGroup *createActionGroup(QObject *parent, bool exclusive = false) 
     return rc;
 }
 
+static void fixActionContext(const QList<QAction *> &actions)
+{
+    for (QAction *a : actions)
+        a->setShortcutContext(Qt::ApplicationShortcut);
+}
+
 static inline QString savedMessage(const QString &fileName)
 {
     return QDesignerActions::tr("Saved %1.").arg(fileName);
@@ -419,7 +425,13 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
 //
 // connections
 //
-    fixActionContext();
+    fixActionContext(m_fileActions->actions());
+    fixActionContext(m_editActions->actions());
+    fixActionContext(m_toolActions->actions());
+    fixActionContext(m_formActions->actions());
+    fixActionContext(m_windowActions->actions());
+    fixActionContext(m_helpActions->actions());
+
     activeFormWindowChanged(core()->formWindowManager()->activeFormWindow());
 
     m_backupTimer->start(180000); // 3min
@@ -729,21 +741,6 @@ void  QDesignerActions::viewCode()
     QString errorMessage;
     if (!qdesigner_internal::CodeDialog::showCodeDialog(fw, fw, &errorMessage))
         QMessageBox::warning(fw, tr("Code generation failed"), errorMessage);
-}
-
-void QDesignerActions::fixActionContext()
-{
-    QList<QAction*> actions;
-    actions += m_fileActions->actions();
-    actions += m_editActions->actions();
-    actions += m_toolActions->actions();
-    actions += m_formActions->actions();
-    actions += m_windowActions->actions();
-    actions += m_helpActions->actions();
-
-    foreach (QAction *a, actions) {
-        a->setShortcutContext(Qt::ApplicationShortcut);
-    }
 }
 
 bool QDesignerActions::readInForm(const QString &fileName)
