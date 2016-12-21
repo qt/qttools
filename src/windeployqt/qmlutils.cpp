@@ -79,9 +79,10 @@ static QString qmlDirectoryRecursion(Platform platform, const QString &path)
     QDir dir(path);
     if (!dir.entryList(QStringList(QStringLiteral("*.qml")), QDir::Files, QDir::NoSort).isEmpty())
         return dir.path();
-    foreach (const QString &subDir, dir.entryList(QStringList(), QDir::Dirs | QDir::NoDotAndDotDot, QDir::NoSort)) {
-        if (!isBuildDirectory(platform, subDir)) {
-            const QString subPath = qmlDirectoryRecursion(platform, dir.path() +  QLatin1Char('/') + subDir);
+    const QFileInfoList &subDirs = dir.entryInfoList(QStringList(), QDir::Dirs | QDir::NoDotAndDotDot, QDir::NoSort);
+    for (const QFileInfo &subDirFi : subDirs) {
+        if (!isBuildDirectory(platform, subDirFi.fileName())) {
+            const QString subPath = qmlDirectoryRecursion(platform, subDirFi.absoluteFilePath());
             if (!subPath.isEmpty())
                 return subPath;
         }
@@ -101,11 +102,13 @@ QString findQmlDirectory(int platform, const QString &startDirectoryName)
 static void findFileRecursion(const QDir &directory, Platform platform,
                               DebugMatchMode debugMatchMode, QStringList *matches)
 {
-    foreach (const QString &dll, findSharedLibraries(directory, platform, debugMatchMode))
+    const QStringList &dlls = findSharedLibraries(directory, platform, debugMatchMode);
+    for (const QString &dll : dlls)
         matches->append(directory.filePath(dll));
-    foreach (const QString &subDir, directory.entryList(QStringList(), QDir::Dirs | QDir::NoDotAndDotDot | QDir::NoSymLinks)) {
-        QDir subDirectory = directory;
-        if (subDirectory.cd(subDir))
+    const QFileInfoList &subDirs = directory.entryInfoList(QStringList(), QDir::Dirs | QDir::NoDotAndDotDot | QDir::NoSymLinks);
+    for (const QFileInfo &subDirFi : subDirs) {
+        QDir subDirectory(subDirFi.absoluteFilePath());
+        if (subDirectory.isReadable())
             findFileRecursion(subDirectory, platform, debugMatchMode, matches);
     }
 }
@@ -173,7 +176,7 @@ QmlImportScanResult runQmlImportScanner(const QString &directory, const QString 
 
 static inline bool contains(const QList<QmlImportScanResult::Module> &modules, const QString &className)
 {
-    foreach (const QmlImportScanResult::Module &m, modules) {
+    for (const QmlImportScanResult::Module &m : modules) {
         if (m.className == className)
             return true;
     }
@@ -182,11 +185,11 @@ static inline bool contains(const QList<QmlImportScanResult::Module> &modules, c
 
 void QmlImportScanResult::append(const QmlImportScanResult &other)
 {
-    foreach (const QmlImportScanResult::Module &module, other.modules) {
+    for (const QmlImportScanResult::Module &module : other.modules) {
         if (!contains(modules, module.className))
             modules.append(module);
     }
-    foreach (const QString &plugin, other.plugins) {
+    for (const QString &plugin : other.plugins) {
         if (!plugins.contains(plugin))
             plugins.append(plugin);
     }

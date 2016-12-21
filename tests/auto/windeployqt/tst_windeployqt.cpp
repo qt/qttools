@@ -167,7 +167,8 @@ void tst_windeployqt::deploy()
     const QChar pathSeparator(QLatin1Char(';')); // ### fixme: Qt 5.6: QDir::listSeparator()
     const QString origPath = env.value(pathKey);
     QString newPath;
-    foreach (const QString &pathElement, origPath.split(pathSeparator, QString::SkipEmptyParts)) {
+    const QStringList pathElements = origPath.split(pathSeparator, QString::SkipEmptyParts);
+    for (const QString &pathElement : pathElements) {
         if (pathElement.compare(qtBinDir, Qt::CaseInsensitive)
             && !pathElement.contains(QLatin1String("\\lib"), Qt::CaseInsensitive)) {
             if (!newPath.isEmpty())

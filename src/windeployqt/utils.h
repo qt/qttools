@@ -105,7 +105,7 @@ public:
     {
         QJsonObject document;
         QJsonArray files;
-        foreach (const SourceTargetMapping &mapping, m_files) {
+        for (const SourceTargetMapping &mapping : m_files) {
             QJsonObject object;
             object.insert(QStringLiteral("source"), QDir::toNativeSeparators(mapping.first));
             object.insert(QStringLiteral("target"), QDir::toNativeSeparators(mapping.second));
@@ -117,7 +117,7 @@ public:
     QByteArray toList(ListOption option, const QDir &base) const
     {
         QByteArray list;
-        foreach (const SourceTargetMapping &mapping, m_files) {
+        for (const SourceTargetMapping &mapping : m_files) {
             const QString source = QDir::toNativeSeparators(mapping.first);
             const QString fileName = QFileInfo(mapping.first).fileName();
             const QString target = QDir::toNativeSeparators(mapping.second) + QDir::separator() + fileName;
@@ -307,7 +307,7 @@ bool updateFile(const QString &sourceFileName,
         QDir dir(sourceFileName);
 
         const QStringList allEntries = directoryFileEntryFunction(dir) + dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
-        foreach (const QString &entry, allEntries)
+        for (const QString &entry : allEntries)
             if (!updateFile(sourceFileName + QLatin1Char('/') + entry, directoryFileEntryFunction, targetFileName, flags, json, errorMessage))
                 return false;
         // Remove empty directories, for example QML import folders for which the filter did not match.

@@ -279,14 +279,15 @@ struct Options {
 // Return binary from folder
 static inline QString findBinary(const QString &directory, Platform platform)
 {
-    QDir dir(QDir::cleanPath(directory));
-
     const QStringList nameFilters = (platform & WindowsBased) ?
         QStringList(QStringLiteral("*.exe")) : QStringList();
-    foreach (const QString &binary, dir.entryList(nameFilters, QDir::Files | QDir::Executable)) {
+    const QFileInfoList &binaries =
+        QDir(QDir::cleanPath(directory)).entryInfoList(nameFilters, QDir::Files | QDir::Executable);
+    for (const QFileInfo &binaryFi : binaries) {
+        const QString binary = binaryFi.fileName();
         if (!binary.contains(QLatin1String(webKitProcessC), Qt::CaseInsensitive)
             && !binary.contains(QLatin1String(webEngineProcessC), Qt::CaseInsensitive)) {
-            return dir.filePath(binary);
+            return binaryFi.absoluteFilePath();
         }
     }
     return QString();
@@ -619,7 +620,7 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
         if (fi.isDir()) {
             const QStringList libraries =
                 findSharedLibraries(QDir(path), options->platform, MatchDebugOrRelease, QString());
-            foreach (const QString &library, libraries)
+            for (const QString &library : libraries)
                 options->binaries.append(path + QLatin1Char('/') + library);
         } else {
             options->binaries.append(path);
@@ -688,7 +689,7 @@ static bool findDependentQtLibraries(const QString &qtBinDir, const QString &bin
     // Filter out the Qt libraries. Note that depends.exe finds libs from optDirectory if we
     // are run the 2nd time (updating). We want to check against the Qt bin dir libraries
     const int start = result->size();
-    foreach (const QString &lib, dependentLibs) {
+    for (const QString &lib : qAsConst(dependentLibs)) {
         if (isQtModule(lib)) {
             const QString path = normalizeFileName(qtBinDir + QLatin1Char('/') + QFileInfo(lib).fileName());
             if (!result->contains(path))
@@ -748,7 +749,8 @@ public:
     QStringList operator()(const QDir &dir) const
     {
         QStringList result;
-        foreach (const QString &library, m_dllFilter(dir)) {
+        const QStringList &libraries = m_dllFilter(dir);
+        for (const QString &library : libraries) {
             result.append(library);
             if (m_flags & DeployPdb) {
                 const QString pdb = pdbFileName(library);
@@ -848,14 +850,15 @@ QStringList findQtPlugins(quint64 *usedQtModules, quint64 disabledQtModules,
         return QStringList();
     QDir pluginsDir(qtPluginsDirName);
     QStringList result;
-    foreach (const QString &subDirName, pluginsDir.entryList(QStringList(QLatin1String("*")), QDir::Dirs | QDir::NoDotAndDotDot)) {
+    const QFileInfoList &pluginDirs = pluginsDir.entryInfoList(QStringList(QLatin1String("*")), QDir::Dirs | QDir::NoDotAndDotDot);
+    for (const QFileInfo &subDirFi : pluginDirs) {
+        const QString subDirName = subDirFi.fileName();
         const quint64 module = qtModuleForPlugin(subDirName);
         if (module & *usedQtModules) {
             const DebugMatchMode debugMatchMode = (module & QtWebEngineCoreModule)
                 ? MatchDebugOrRelease // QTBUG-44331: Debug detection does not work for webengine, deploy all.
                 : debugMatchModeIn;
-            const QString subDirPath = qtPluginsDirName + QLatin1Char('/') + subDirName;
-            QDir subDir(subDirPath);
+            QDir subDir(subDirFi.absoluteFilePath());
             // Filter out disabled plugins
             if (disabledQtModules & QtQmlToolingModule && subDirName == QLatin1String("qmltooling"))
                 continue;
@@ -886,7 +889,7 @@ QStringList findQtPlugins(quint64 *usedQtModules, quint64 disabledQtModules,
                 filter  = QLatin1String("*");
             }
             const QStringList plugins = findSharedLibraries(subDir, platform, debugMatchMode, filter);
-            foreach (const QString &plugin, plugins) {
+            for (const QString &plugin : plugins) {
                 const QString pluginPath = subDir.absoluteFilePath(plugin);
                 if (isPlatformPlugin)
                     *platformPlugin = pluginPath;
@@ -938,10 +941,11 @@ static bool deployTranslations(const QString &sourcePath, quint64 usedQtModules,
     QStringList prefixes;
     QDir sourceDir(sourcePath);
     const QStringList qmFilter = QStringList(QStringLiteral("qtbase_*.qm"));
-    foreach (QString qmFile, sourceDir.entryList(qmFilter)) {
-       qmFile.chop(3);
-       qmFile.remove(0, 7);
-       prefixes.push_back(qmFile);
+    const QFileInfoList &qmFiles = sourceDir.entryInfoList(qmFilter);
+    for (const QFileInfo &qmFi : qmFiles) {
+        QString qmFile = qmFi.baseName();
+        qmFile.remove(0, 7);
+        prefixes.push_back(qmFile);
     }
     if (prefixes.isEmpty()) {
         std::wcerr << "Warning: Could not find any translations in "
@@ -953,13 +957,14 @@ static bool deployTranslations(const QString &sourcePath, quint64 usedQtModules,
     const QString absoluteTarget = QFileInfo(target).absoluteFilePath();
     const QString binary = QStringLiteral("lconvert");
     QStringList arguments;
-    foreach (const QString &prefix, prefixes) {
+    for (const QString &prefix : qAsConst(prefixes)) {
         arguments.clear();
         const QString targetFile = QStringLiteral("qt_") + prefix + QStringLiteral(".qm");
         arguments.append(QStringLiteral("-o"));
         arguments.append(QDir::toNativeSeparators(absoluteTarget + QLatin1Char('/') + targetFile));
-        foreach (const QString &qmFile, sourceDir.entryList(translationNameFilters(usedQtModules, prefix)))
-            arguments.append(qmFile);
+        const QFileInfoList &langQmFiles = sourceDir.entryInfoList(translationNameFilters(usedQtModules, prefix));
+        for (const QFileInfo &langQmFileFi : langQmFiles)
+            arguments.append(langQmFileFi.fileName());
         if (optVerboseLevel)
             std::wcout << "Creating " << targetFile << "...\n";
         unsigned long exitCode;
@@ -1012,14 +1017,14 @@ static QStringList compilerRunTimeLibs(Platform platform, bool isDebug, unsigned
             break;
         }
         const QString binPath = QFileInfo(gcc).absolutePath();
-        QDir dir(binPath);
         QStringList filters;
         const QString suffix = QLatin1Char('*') + sharedLibrarySuffix(platform);
         const size_t count = sizeof(minGwRuntimes) / sizeof(minGwRuntimes[0]);
         for (size_t i = 0; i < count; ++i)
             filters.append(QLatin1String(minGwRuntimes[i]) + suffix);
-        foreach (const QString &dll, dir.entryList(filters, QDir::Files))
-                result.append(binPath + QLatin1Char('/') + dll);
+        const QFileInfoList &dlls = QDir(binPath).entryInfoList(filters, QDir::Files);
+        for (const QFileInfo &dllFi : dlls)
+                result.append(dllFi.absoluteFilePath());
     }
         break;
     case Windows: { // MSVC/Desktop: Add redistributable packages.
@@ -1046,7 +1051,8 @@ static QStringList compilerRunTimeLibs(Platform platform, bool isDebug, unsigned
             if (vcRedistDir.cd(QLatin1String("Debug_NonRedist")) && vcRedistDir.cd(wordSizeString)) {
                 const QStringList names = vcRedistDir.entryList(QStringList(QStringLiteral("Microsoft.VC*.DebugCRT")), QDir::Dirs);
                 if (!names.isEmpty() && vcRedistDir.cd(names.first())) {
-                    foreach (const QFileInfo &dll, vcRedistDir.entryInfoList(QStringList(QLatin1String("*.dll"))))
+                    const QFileInfoList &dlls = vcRedistDir.entryInfoList(QStringList(QLatin1String("*.dll")));
+                    for (const QFileInfo &dll : dlls)
                         redistFiles.append(dll.absoluteFilePath());
                 }
             }
@@ -1195,7 +1201,7 @@ static DeployResult deploy(const Options &options,
     if (options.platform & WindowsBased)  {
         const QStringList qtLibs = dependentQtLibs.filter(QStringLiteral("Qt5Core"), Qt::CaseInsensitive)
             + dependentQtLibs.filter(QStringLiteral("Qt5WebKit"), Qt::CaseInsensitive);
-        foreach (const QString &qtLib, qtLibs) {
+        for (const QString &qtLib : qtLibs) {
             QStringList icuLibs = findDependentLibraries(qtLib, options.platform, errorMessage).filter(QStringLiteral("ICU"), Qt::CaseInsensitive);
             if (!icuLibs.isEmpty()) {
                 // Find out the ICU version to add the data library icudtXX.dll, which does not show
@@ -1209,14 +1215,14 @@ static DeployResult deploy(const Options &options,
                         std::wcout << "Adding ICU version " << icuVersion << '\n';
                     icuLibs.push_back(QStringLiteral("icudt") + icuVersion + QLatin1String(windowsSharedLibrarySuffix));
                 }
-                foreach (const QString &icuLib, icuLibs) {
+                for (const QString &icuLib : qAsConst(icuLibs)) {
                     const QString icuPath = findInPath(icuLib);
                     if (icuPath.isEmpty()) {
                         *errorMessage = QStringLiteral("Unable to locate ICU library ") + icuLib;
                         return result;
                     }
                     dependentQtLibs.push_back(icuPath);
-                } // foreach icuLib
+                } // for each icuLib
                 break;
             } // !icuLibs.isEmpty()
         } // Qt5Core/Qt5WebKit
@@ -1231,7 +1237,7 @@ static DeployResult deploy(const Options &options,
             if (!qmlDirectory.isEmpty())
                 qmlDirectories.append(qmlDirectory);
         }
-        foreach (const QString &qmlDirectory, qmlDirectories) {
+        for (const QString &qmlDirectory : qAsConst(qmlDirectories)) {
             if (optVerboseLevel >= 1)
                 std::wcout << "Scanning " << QDir::toNativeSeparators(qmlDirectory) << ":\n";
             const QmlImportScanResult scanResult =
@@ -1242,19 +1248,19 @@ static DeployResult deploy(const Options &options,
                 return result;
             qmlScanResult.append(scanResult);
             // Additional dependencies of QML plugins.
-            foreach (const QString &plugin, qmlScanResult.plugins) {
+            for (const QString &plugin : qAsConst(qmlScanResult.plugins)) {
                 if (!findDependentQtLibraries(libraryLocation, plugin, options.platform, errorMessage, &dependentQtLibs, &wordSize, &detectedDebug))
                     return result;
             }
             if (optVerboseLevel >= 1) {
                 std::wcout << "QML imports:\n";
-                foreach (const QmlImportScanResult::Module &mod, qmlScanResult.modules) {
+                for (const QmlImportScanResult::Module &mod : qAsConst(qmlScanResult.modules)) {
                     std::wcout << "  '" << mod.name << "' "
                                << QDir::toNativeSeparators(mod.sourcePath) << '\n';
                 }
                 if (optVerboseLevel >= 2) {
                     std::wcout << "QML plugins:\n";
-                    foreach (const QString &p, qmlScanResult.plugins)
+                    for (const QString &p : qAsConst(qmlScanResult.plugins))
                         std::wcout << "  " << QDir::toNativeSeparators(p) << '\n';
                 }
             }
@@ -1372,7 +1378,7 @@ static DeployResult deploy(const Options &options,
         QStringList libraries = deployedQtLibraries;
         if (options.compilerRunTime)
             libraries.append(compilerRunTimeLibs(options.platform, isDebug, wordSize));
-        foreach (const QString &qtLib, libraries) {
+        for (const QString &qtLib : qAsConst(libraries)) {
             if (!updateLibrary(qtLib, targetPath, options, errorMessage))
                 return result;
         }
@@ -1396,7 +1402,7 @@ static DeployResult deploy(const Options &options,
                             QDir::toNativeSeparators(dir.absolutePath()) +  QLatin1Char('.');
             return result;
         }
-        foreach (const QString &plugin, plugins) {
+        for (const QString &plugin : plugins) {
             const QString targetDirName = plugin.section(slash, -2, -2);
             const QString targetPath = dir.absoluteFilePath(targetDirName);
             if (!dir.exists(targetDirName)) {
@@ -1418,7 +1424,7 @@ static DeployResult deploy(const Options &options,
     // for WebKit1-applications. Check direct dependency only.
     if (options.quickImports && (usesQuick1 || usesQml2)) {
         if (usesQml2) {
-            foreach (const QmlImportScanResult::Module &module, qmlScanResult.modules) {
+            for (const QmlImportScanResult::Module &module : qAsConst(qmlScanResult.modules)) {
                 const QString installPath = module.installPath(options.directory);
                 if (optVerboseLevel > 1)
                     std::wcout << "Installing: '" << module.name
@@ -1446,7 +1452,7 @@ static DeployResult deploy(const Options &options,
             QStringList quick1Imports(QStringLiteral("Qt"));
             if (result.deployedQtLibraries & QtWebKitModule)
                 quick1Imports << QStringLiteral("QtWebKit");
-            foreach (const QString &quick1Import, quick1Imports) {
+            for (const QString &quick1Import : qAsConst(quick1Imports)) {
                 const QString sourceFile = quick1ImportPath + slash + quick1Import;
                 if (!updateFile(sourceFile, qmlFileEntryFunction, options.directory, options.updateFileFlags, options.json, errorMessage))
                     return result;

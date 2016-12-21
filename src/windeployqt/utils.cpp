@@ -117,8 +117,9 @@ QStringList findSharedLibraries(const QDir &directory, Platform platform,
     nameFilter += sharedLibrarySuffix(platform);
     QStringList result;
     QString errorMessage;
-    foreach (const QString &dll, directory.entryList(QStringList(nameFilter), QDir::Files)) {
-        const QString dllPath = directory.absoluteFilePath(dll);
+    const QFileInfoList &dlls = directory.entryInfoList(QStringList(nameFilter), QDir::Files);
+    for (const QFileInfo &dllFi : dlls) {
+        const QString dllPath = dllFi.absoluteFilePath();
         bool matches = true;
         if (debugMatchMode != MatchDebugOrRelease && (platform & WindowsBased)) {
             bool debugDll;
@@ -131,7 +132,7 @@ QStringList findSharedLibraries(const QDir &directory, Platform platform,
             }
         } // Windows
         if (matches)
-            result += dll;
+            result += dllFi.fileName();
     } // for
     return result;
 }
@@ -270,7 +271,7 @@ bool runProcess(const QString &binary, const QStringList &args,
     // Create a copy of the command line which CreateProcessW can modify.
     QString commandLine;
     appendToCommandLine(binary, &commandLine);
-    foreach (const QString &a, args)
+    for (const QString &a : args)
         appendToCommandLine(a, &commandLine);
     if (optVerboseLevel > 1)
         std::wcout << "Running: " << commandLine << '\n';
@@ -394,7 +395,7 @@ bool runProcess(const QString &binary, const QStringList &args,
         char **argv  = new char *[args.size() + 2]; // Create argv.
         char **ap = argv;
         *ap++ = encodeFileName(binary);
-        foreach (const QString &a, args)
+        for (const QString &a : qAsConst(args))
             *ap++ = encodeFileName(a);
         *ap = 0;
 
@@ -565,10 +566,12 @@ bool updateFile(const QString &sourceFileName, const QStringList &nameFilters,
         }
         // Recurse into directory
         QDir dir(sourceFileName);
-        const QStringList allEntries = dir.entryList(nameFilters, QDir::Files) + dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
-        foreach (const QString &entry, allEntries)
-            if (!updateFile(sourceFileName + QLatin1Char('/') + entry, nameFilters, targetFileName, flags, json, errorMessage))
+        const QFileInfoList allEntries = dir.entryInfoList(nameFilters, QDir::Files)
+            + dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
+        for (const QFileInfo &entryFi : allEntries) {
+            if (!updateFile(entryFi.absoluteFilePath(), nameFilters, targetFileName, flags, json, errorMessage))
                 return false;
+        }
         return true;
     } // Source is directory.
 
@@ -626,7 +629,7 @@ bool readElfExecutable(const QString &elfExecutableFileName, QString *errorMessa
                 + elfReader.errorString();
                 return false;
         }
-        foreach (const QByteArray &l, libs)
+        for (const QByteArray &l : libs)
             dependentLibraries->push_back(QString::fromLocal8Bit(l));
     }
     if (isDebug)
@@ -751,7 +754,7 @@ enum MsvcDebugRuntimeResult { MsvcDebugRuntime, MsvcReleaseRuntime, NoMsvcRuntim
 
 static inline MsvcDebugRuntimeResult checkMsvcDebugRuntime(const QStringList &dependentLibraries)
 {
-    foreach (const QString &lib, dependentLibraries) {
+    for (const QString &lib : dependentLibraries) {
         int pos = 0;
         if (lib.startsWith(QLatin1String("MSVCR"), Qt::CaseInsensitive)
             || lib.startsWith(QLatin1String("MSVCP"), Qt::CaseInsensitive)) {
@@ -904,7 +907,7 @@ QString findD3dCompiler(Platform platform, const QString &qtBinDir, unsigned wor
         candidateVersions.append(prefix + QString::number(i) + suffix);
     // Check the bin directory of the Qt SDK (in case it is shadowed by the
     // Windows system directory in PATH).
-    foreach (const QString &candidate, candidateVersions) {
+    for (const QString &candidate : qAsConst(candidateVersions)) {
         const QFileInfo fi(qtBinDir + QLatin1Char('/') + candidate);
         if (fi.isFile())
             return fi.absoluteFilePath();
@@ -913,7 +916,7 @@ QString findD3dCompiler(Platform platform, const QString &qtBinDir, unsigned wor
     if (platform & IntelBased) {
         QString errorMessage;
         unsigned detectedWordSize;
-        foreach (const QString &candidate, candidateVersions) {
+        for (const QString &candidate : qAsConst(candidateVersions)) {
             const QString dll = findInPath(candidate);
             if (!dll.isEmpty()
                 && readPeExecutable(dll, &errorMessage, 0, &detectedWordSize, 0)
