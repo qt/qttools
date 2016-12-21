@@ -616,13 +616,9 @@ QDesignerMenu *QDesignerMenu::findRootMenu() const
 
 QDesignerMenu *QDesignerMenu::findActivatedMenu() const
 {
-    QList<QDesignerMenu*> candidates;
-    candidates.append(const_cast<QDesignerMenu*>(this));
-    candidates += findChildren<QDesignerMenu*>();
-
-    foreach (QDesignerMenu *m, candidates) {
-        if (m == qApp->activeWindow())
-            return m;
+    if (QDesignerMenu *activeDesignerMenu = qobject_cast<QDesignerMenu *>(QApplication::activeWindow())) {
+        if (activeDesignerMenu == this || findChildren<QDesignerMenu *>().contains(activeDesignerMenu))
+            return activeDesignerMenu;
     }
 
     return 0;

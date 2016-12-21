@@ -75,30 +75,6 @@
 
 QT_BEGIN_NAMESPACE
 
-static QMenuBar *findMenuBar(const QWidget *widget)
-{
-    const QList<QObject*> children = widget->children();
-    foreach (QObject *obj, widget->children()) {
-        if (QMenuBar *mb = qobject_cast<QMenuBar*>(obj)) {
-            return mb;
-        }
-    }
-
-    return 0;
-}
-
-static QStatusBar *findStatusBar(const QWidget *widget)
-{
-    const QList<QObject*> children = widget->children();
-    foreach (QObject *obj, widget->children()) {
-        if (QStatusBar *sb = qobject_cast<QStatusBar*>(obj)) {
-            return sb;
-        }
-    }
-
-    return 0;
-}
-
 static inline QAction *createSeparatorHelper(QObject *parent) {
     QAction *rc = new QAction(parent);
     rc->setSeparator(true);
@@ -471,7 +447,7 @@ void QDesignerTaskMenu::removeStatusBar()
         }
 
         DeleteStatusBarCommand *cmd = new DeleteStatusBarCommand(fw);
-        cmd->init(findStatusBar(mw));
+        cmd->init(mw->findChild<QStatusBar *>(QString(), Qt::FindDirectChildrenOnly));
         fw->commandHistory()->push(cmd);
     }
 }
@@ -487,16 +463,16 @@ QList<QAction*> QDesignerTaskMenu::taskActions() const
 
     if (const QMainWindow *mw = qobject_cast<const QMainWindow*>(formWindow->mainContainer()))  {
         if (isMainContainer || mw->centralWidget() == widget()) {
-            if (!findMenuBar(mw)) {
+            if (mw->findChild<QMenuBar *>(QString(), Qt::FindDirectChildrenOnly) == nullptr)
                 actions.append(d->m_addMenuBar);
-            }
 
             actions.append(d->m_addToolBar);
             // ### create the status bar
-            if (!findStatusBar(mw))
-                actions.append(d->m_addStatusBar);
-            else
+            if (mw->findChild<QStatusBar *>(QString(), Qt::FindDirectChildrenOnly))
                 actions.append(d->m_removeStatusBar);
+            else
+                actions.append(d->m_addStatusBar);
+
             actions.append(d->m_separator);
         }
     }
