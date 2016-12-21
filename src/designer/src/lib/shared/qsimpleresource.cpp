@@ -157,13 +157,15 @@ bool QSimpleResource::addFakeMethods(const DomSlots *domSlots, QStringList &fake
         return false;
 
     bool rc = false;
-    foreach (const QString &fakeSlot, domSlots->elementSlot())
+    const QStringList &elementSlots = domSlots->elementSlot();
+    for (const QString &fakeSlot : elementSlots)
         if (fakeSlots.indexOf(fakeSlot) == -1) {
             fakeSlots += fakeSlot;
             rc = true;
         }
 
-    foreach (const QString &fakeSignal, domSlots->elementSignal())
+    const QStringList &elementSignals = domSlots->elementSignal();
+    for (const QString &fakeSignal : elementSignals)
         if (fakeSignals.indexOf(fakeSignal) == -1) {
             fakeSignals += fakeSignal;
             rc = true;

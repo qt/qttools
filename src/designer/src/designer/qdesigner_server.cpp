@@ -70,8 +70,7 @@ void QDesignerServer::sendOpenRequest(int port, const QStringList &files)
     sSocket->connectToHost(QHostAddress::LocalHost, port);
     if(sSocket->waitForConnected(3000))
     {
-        foreach(const QString &file, files)
-        {
+        for (const QString &file : files) {
             QFileInfo fi(file);
             sSocket->write(fi.absoluteFilePath().toUtf8() + '\n');
         }

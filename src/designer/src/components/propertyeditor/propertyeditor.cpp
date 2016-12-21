@@ -1108,8 +1108,8 @@ void PropertyEditor::setObject(QObject *object)
 
                 property->setModified(m_propertySheet->isChanged(i));
                 if (propertyName == QStringLiteral("geometry") && type == QVariant::Rect) {
-                    QList<QtProperty *> subProperties = property->subProperties();
-                    foreach (QtProperty *subProperty, subProperties) {
+                    const QList<QtProperty *> &subProperties = property->subProperties();
+                    for (QtProperty *subProperty : subProperties) {
                         const QString subPropertyName = subProperty->propertyName();
                         if (subPropertyName == QStringLiteral("X") || subPropertyName == QStringLiteral("Y"))
                             subProperty->setEnabled(!isMainContainer);

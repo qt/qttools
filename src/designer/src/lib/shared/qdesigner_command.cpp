@@ -630,7 +630,7 @@ void PromoteToCustomWidgetCommand::init(const WidgetList &widgets,const QString 
 
 void PromoteToCustomWidgetCommand::redo()
 {
-    foreach (QWidget *w, m_widgets) {
+    for (QWidget *w : qAsConst(m_widgets)) {
         if (w)
             promoteWidget(core(), w, m_customClassName);
     }
@@ -649,7 +649,7 @@ void PromoteToCustomWidgetCommand::updateSelection()
 
 void PromoteToCustomWidgetCommand::undo()
 {
-    foreach (QWidget *w, m_widgets) {
+    for (QWidget *w : qAsConst(m_widgets)) {
         if (w)
             demoteWidget(core(), w);
     }
@@ -864,7 +864,7 @@ void BreakLayoutCommand::redo()
     m_layout->breakLayout();
     delete deco; // release the extension
 
-    foreach (QWidget *widget, m_widgets) {
+    for (QWidget *widget : qAsConst(m_widgets)) {
         widget->resize(widget->size().expandedTo(QSize(16, 16)));
     }
     // Update unless we are in an intermediate state of morphing layout
@@ -2297,7 +2297,7 @@ QTreeWidgetItem *ListContents::createTreeItem(DesignerIconCache *iconCache) cons
 {
     QTreeWidgetItem *item = new QTreeWidgetItem;
     int i = 0;
-    foreach (const ItemData &id, m_items)
+    for (const ItemData &id : m_items)
         id.fillTreeItemColumn(item, i++, iconCache);
     return item;
 }
@@ -2315,7 +2315,7 @@ void ListContents::applyToListWidget(QListWidget *listWidget, DesignerIconCache 
     listWidget->clear();
 
     int i = 0;
-    foreach (const ItemData &entry, m_items) {
+    for (const ItemData &entry : m_items) {
         if (!entry.isValid())
             new QListWidgetItem(TableWidgetContents::defaultHeaderText(i), listWidget);
         else
@@ -2348,7 +2348,7 @@ void ListContents::applyToComboBox(QComboBox *comboBox, DesignerIconCache *iconC
 {
     comboBox->clear();
 
-    foreach (const ItemData &hash, m_items) {
+    for (const ItemData &hash : m_items) {
         QIcon icon;
         if (iconCache)
             icon = iconCache->icon(qvariant_cast<PropertySheetIconValue>(
@@ -2448,14 +2448,14 @@ void TableWidgetContents::applyToTableWidget(QTableWidget *tableWidget, Designer
 
     // horiz header
     int col = 0;
-    foreach (const ItemData &id, m_horizontalHeader.m_items) {
+    for (const ItemData &id : m_horizontalHeader.m_items) {
         if (id.isValid())
             tableWidget->setHorizontalHeaderItem(col, id.createTableItem(iconCache, editor));
         col++;
     }
     // vertical header
     int row = 0;
-    foreach (const ItemData &id, m_verticalHeader.m_items) {
+    for (const ItemData &id : m_verticalHeader.m_items) {
         if (id.isValid())
             tableWidget->setVerticalHeaderItem(row, id.createTableItem(iconCache, editor));
         row++;
@@ -2537,7 +2537,7 @@ QTreeWidgetItem *TreeWidgetContents::ItemContents::createTreeItem(DesignerIconCa
             item->setFlags((Qt::ItemFlags)m_itemFlags);
     }
 
-    foreach (const ItemContents &ic, m_children)
+    for (const ItemContents &ic : m_children)
         item->addChild(ic.createTreeItem(iconCache, editor));
 
     return item;
@@ -2571,7 +2571,7 @@ void TreeWidgetContents::applyToTreeWidget(QTreeWidget *treeWidget, DesignerIcon
 
     treeWidget->setColumnCount(m_headerItem.m_items.count());
     treeWidget->setHeaderItem(m_headerItem.createTreeItem(iconCache));
-    foreach (const ItemContents &ic, m_rootItems)
+    for (const ItemContents &ic : m_rootItems)
         treeWidget->addTopLevelItem(ic.createTreeItem(iconCache, editor));
     treeWidget->expandAll();
 }
@@ -2694,7 +2694,8 @@ static RemoveActionCommand::ActionData findActionIn(QAction *action)
 {
     RemoveActionCommand::ActionData result;
     // We only want menus and toolbars, no toolbuttons.
-    foreach (QWidget *widget, action->associatedWidgets())
+    const QWidgetList &associatedWidgets = action->associatedWidgets();
+    for (QWidget *widget : associatedWidgets) {
         if (qobject_cast<const QMenu *>(widget) || qobject_cast<const QToolBar *>(widget)) {
             const QList<QAction*> actionList = widget->actions();
             const int size = actionList.size();
@@ -2708,6 +2709,7 @@ static RemoveActionCommand::ActionData findActionIn(QAction *action)
                 }
             }
         }
+    }
     return result;
 }
 
@@ -2722,7 +2724,7 @@ void RemoveActionCommand::init(QAction *action)
 void RemoveActionCommand::redo()
 {
     QDesignerFormWindowInterface *fw = formWindow();
-    foreach (const ActionDataItem &item, m_actionData) {
+    for (const ActionDataItem &item : qAsConst(m_actionData)) {
         item.widget->removeAction(m_action);
     }
     // Notify components (for example, signal slot editor)
@@ -2739,9 +2741,8 @@ void RemoveActionCommand::undo()
 {
     core()->actionEditor()->setFormWindow(formWindow());
     core()->actionEditor()->manageAction(m_action);
-    foreach (const ActionDataItem &item, m_actionData) {
+    for (const ActionDataItem &item : qAsConst(m_actionData))
         item.widget->insertAction(item.before, m_action);
-    }
     if (!m_actionData.empty())
         core()->objectInspector()->setFormWindow(formWindow());
 }

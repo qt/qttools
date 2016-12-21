@@ -56,9 +56,9 @@ bool Selection::empty() const
 QObjectList Selection::selection() const
 {
     QObjectList rc(objects);
-    foreach (QObject* o, managed)
+    for (QObject *o : managed)
         rc.push_back(o);
-    foreach (QObject* o, unmanaged)
+    for (QObject *o : unmanaged)
         rc.push_back(o);
     return rc;
 }

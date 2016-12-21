@@ -155,7 +155,7 @@ QStringList QDesignerSharedSettings::additionalFormTemplatePaths() const
 {
     // get template paths excluding internal ones
     QStringList rc = formTemplatePaths();
-    foreach (const QString &internalTemplatePath, defaultFormTemplatePaths()) {
+    for (const QString &internalTemplatePath : defaultFormTemplatePaths()) {
         const int index = rc.indexOf(internalTemplatePath);
         if (index != -1)
             rc.removeAt(index);

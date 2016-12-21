@@ -466,7 +466,7 @@ namespace qdesigner_internal {
                 if (!changedObjects.contains(o)) {
                     changedObjects.insert(o);
                     const QModelIndexList indexes =  m_objectIndexMultiMap.values(o);
-                    foreach (const QModelIndex &index, indexes)
+                    for (const QModelIndex &index : indexes)
                         entry.setItemsDisplayData(rowAt(index), m_icons, changedMask);
                 }
             }

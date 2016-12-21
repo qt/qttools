@@ -113,7 +113,7 @@ void FormWindowWidgetStack::setSenderAsCurrentTool()
         return;
     }
 
-    foreach (QDesignerFormWindowToolInterface *t, m_tools) {
+    for (QDesignerFormWindowToolInterface *t : qAsConst(m_tools)) {
         if (action == t->action()) {
             tool = t;
             break;

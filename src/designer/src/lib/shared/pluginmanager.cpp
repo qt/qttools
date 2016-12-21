@@ -101,7 +101,7 @@ QStringList QDesignerPluginManager::defaultPluginPaths()
     const QStringList path_list = QCoreApplication::libraryPaths();
 
     const QString designer = QStringLiteral("designer");
-    foreach (const QString &path, path_list) {
+    for (const QString &path : path_list) {
         QString libPath = path;
         libPath += QDir::separator();
         libPath += designer;
@@ -546,7 +546,8 @@ void QDesignerPluginManagerPrivate::addCustomWidgets(const QObject *o,
         return;
     }
     if (const QDesignerCustomWidgetCollectionInterface *coll = qobject_cast<QDesignerCustomWidgetCollectionInterface*>(o)) {
-        foreach(QDesignerCustomWidgetInterface *c, coll->customWidgets())
+        const QList<QDesignerCustomWidgetInterface *> &collCustomWidgets = coll->customWidgets();
+        for (QDesignerCustomWidgetInterface *c : collCustomWidgets)
             addCustomWidget(c, pluginPath, designerLanguage);
     }
 }
@@ -663,7 +664,7 @@ void QDesignerPluginManager::updateRegisteredPlugins()
     if (debugPluginManager)
         qDebug() << Q_FUNC_INFO;
     m_d->m_registeredPlugins.clear();
-    foreach (const QString &path,  m_d->m_pluginPaths)
+    for (const QString &path : qAsConst(m_d->m_pluginPaths))
         registerPath(path);
 }
 
@@ -673,7 +674,7 @@ bool QDesignerPluginManager::registerNewPlugins()
         qDebug() << Q_FUNC_INFO;
 
     const int before = m_d->m_registeredPlugins.size();
-    foreach (const QString &path, m_d->m_pluginPaths)
+    for (const QString &path : qAsConst(m_d->m_pluginPaths))
         registerPath(path);
     const bool newPluginsFound = m_d->m_registeredPlugins.size() > before;
     // We force a re-initialize as Jambi collection might return
@@ -688,9 +689,8 @@ void QDesignerPluginManager::registerPath(const QString &path)
 {
     if (debugPluginManager)
         qDebug() << Q_FUNC_INFO << path;
-    QStringList candidates = findPlugins(path);
-
-    foreach (const QString &plugin, candidates)
+    const QStringList &candidates = findPlugins(path);
+    for (const QString &plugin : candidates)
         registerPlugin(plugin);
 }
 
@@ -742,12 +742,13 @@ void QDesignerPluginManager::ensureInitialized()
     const QObjectList staticPluginObjects = QPluginLoader::staticInstances();
     if (!staticPluginObjects.empty()) {
         const QString staticPluginPath = QCoreApplication::applicationFilePath();
-        foreach(QObject *o, staticPluginObjects)
+        for (QObject *o : staticPluginObjects)
             m_d->addCustomWidgets(o, staticPluginPath, designerLanguage);
     }
-    foreach (const QString &plugin, m_d->m_registeredPlugins)
+    for (const QString &plugin : qAsConst(m_d->m_registeredPlugins)) {
         if (QObject *o = instance(plugin))
             m_d->addCustomWidgets(o, plugin, designerLanguage);
+    }
 
     m_d->m_initialized = true;
 }
@@ -777,10 +778,10 @@ QDesignerCustomWidgetData QDesignerPluginManager::customWidgetData(const QString
 
 QObjectList QDesignerPluginManager::instances() const
 {
-    QStringList plugins = registeredPlugins();
+    const QStringList &plugins = registeredPlugins();
 
     QObjectList lst;
-    foreach (const QString &plugin, plugins) {
+    for (const QString &plugin : plugins) {
         if (QObject *o = instance(plugin))
             lst.append(o);
     }

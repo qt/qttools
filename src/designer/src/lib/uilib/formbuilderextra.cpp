@@ -477,7 +477,7 @@ QFormBuilderStrings::QFormBuilderStrings() :
     itemRoles.append(qMakePair(Qt::ForegroundRole, QString::fromLatin1("foreground")));
     itemRoles.append(qMakePair(Qt::CheckStateRole, QString::fromLatin1("checkState")));
 
-    foreach (const RoleNName &it, itemRoles)
+    for (const RoleNName &it : qAsConst(itemRoles))
         treeItemRoleHash.insert(it.second, it.first);
 
     itemTextRoles.append(qMakePair(qMakePair(Qt::EditRole, Qt::DisplayPropertyRole),

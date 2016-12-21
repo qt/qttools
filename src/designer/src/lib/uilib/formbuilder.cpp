@@ -459,7 +459,8 @@ static void insertPlugins(QObject *o, QMap<QString, QDesignerCustomWidgetInterfa
     }
     // step 2) try with a collection of plugins
     if (QDesignerCustomWidgetCollectionInterface *c = qobject_cast<QDesignerCustomWidgetCollectionInterface *>(o)) {
-        foreach (QDesignerCustomWidgetInterface *iface, c->customWidgets())
+        const auto &collectionCustomWidgets = c->customWidgets();
+        for (QDesignerCustomWidgetInterface *iface : collectionCustomWidgets)
             customWidgets->insert(iface->name(), iface);
     }
 }
@@ -471,11 +472,11 @@ void QFormBuilder::updateCustomWidgets()
 {
     d->m_customWidgets.clear();
 
-    foreach (const QString &path, d->m_pluginPaths) {
+    for (const QString &path : qAsConst(d->m_pluginPaths)) {
         const QDir dir(path);
         const QStringList candidates = dir.entryList(QDir::Files);
 
-        foreach (const QString &plugin, candidates) {
+        for (const QString &plugin : candidates) {
             if (!QLibrary::isLibrary(plugin))
                 continue;
 
@@ -490,9 +491,8 @@ void QFormBuilder::updateCustomWidgets()
     }
     // Check statically linked plugins
     const QObjectList staticPlugins = QPluginLoader::staticInstances();
-    if (!staticPlugins.empty())
-        foreach (QObject *o, staticPlugins)
-            insertPlugins(o, &d->m_customWidgets);
+    for (QObject *o : staticPlugins)
+        insertPlugins(o, &d->m_customWidgets);
 }
 
 /*!

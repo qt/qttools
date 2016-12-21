@@ -312,11 +312,11 @@ void SignaturePanel::setData(const SignalSlotDialogData &d)
     m_model->clear();
 
     QStandardItem *lastExisting = 0;
-    foreach(const QString &s, d.m_existingMethods) {
+    for (const QString &s : d.m_existingMethods) {
         lastExisting = createDisabledItem(s);
         m_model->appendRow(lastExisting);
     }
-    foreach(const QString &s, d.m_fakeMethods)
+    for (const QString &s : d.m_fakeMethods)
         m_model->appendRow(createEditableItem(s));
     if (lastExisting)
         m_listView->scrollTo(m_model->indexFromItem(lastExisting));

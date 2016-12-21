@@ -287,7 +287,7 @@ void ActionEditor::setFormWindow(QDesignerFormWindowInterface *formWindow)
 
     if (m_formWindow != 0) {
         const ActionList actionList = m_formWindow->mainContainer()->findChildren<QAction*>();
-        foreach (QAction *action, actionList)
+        for (QAction *action : actionList)
             disconnect(action, &QAction::changed, this, &ActionEditor::slotActionChanged);
     }
 
@@ -312,7 +312,7 @@ void ActionEditor::setFormWindow(QDesignerFormWindowInterface *formWindow)
     m_filterWidget->setEnabled(true);
 
     const ActionList actionList = formWindow->mainContainer()->findChildren<QAction*>();
-    foreach (QAction *action, actionList)
+    for (QAction *action : actionList)
         if (!action->isSeparator() && core()->metaDataBase()->item(action) != 0) {
             // Show unless it has a menu. However, listen for change on menu actions also as it might be removed
             if (!action->menu())
@@ -605,7 +605,7 @@ void ActionEditor::deleteActions(QDesignerFormWindowInterface *fw, const ActionL
     const QString description = actions.size() == 1 ?
         tr("Remove action '%1'").arg(actions.front()->objectName()) : tr("Remove actions");
     fw->beginCommand(description);
-    foreach(QAction *action, actions) {
+    for (QAction *action : actions) {
         RemoveActionCommand *cmd = new RemoveActionCommand(fw);
         cmd->init(action);
         fw->commandHistory()->push(cmd);
@@ -828,7 +828,7 @@ void ActionEditor::slotContextMenuRequested(QContextMenuEvent *e, QAction *item)
         const QWidgetList associatedWidgets = ActionModel::associatedWidgets(action);
         if (!associatedWidgets.empty()) {
             QMenu *associatedWidgetsSubMenu =  menu.addMenu(tr("Used In"));
-            foreach (QWidget *w, associatedWidgets) {
+            for (QWidget *w : associatedWidgets) {
                 associatedWidgetsSubMenu->addAction(w->objectName(),
                                                     this, [this, w] { this->slotSelectAssociatedWidget(w); });
             }

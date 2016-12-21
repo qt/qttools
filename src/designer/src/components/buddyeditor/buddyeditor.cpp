@@ -145,7 +145,7 @@ void BuddyEditor::updateBackground()
     m_updating = true;
     QList<Connection *> newList;
     const LabelList label_list = background()->findChildren<QLabel*>();
-    foreach (QLabel *label, label_list) {
+    for (QLabel *label : label_list) {
         const QString buddy_name = buddy(label, m_formWindow->core());
         if (buddy_name.isEmpty())
             continue;
@@ -182,7 +182,7 @@ void BuddyEditor::updateBackground()
     if (!toRemove.isEmpty()) {
         DeleteConnectionsCommand command(this, toRemove);
         command.redo();
-        foreach (Connection *con, toRemove)
+        for (Connection *con : qAsConst(toRemove))
             delete takeConnection(con);
     }
 
@@ -213,7 +213,7 @@ void BuddyEditor::setBackground(QWidget *background)
     ConnectionEdit::setBackground(background);
 
     const LabelList label_list = background->findChildren<QLabel*>();
-    foreach (QLabel *label, label_list) {
+    for (QLabel *label : label_list) {
         const QString buddy_name = buddy(label, m_formWindow->core());
         if (buddy_name.isEmpty())
             continue;
@@ -275,9 +275,9 @@ void BuddyEditor::widgetRemoved(QWidget *widget)
     child_list.prepend(widget);
 
     ConnectionSet remove_set;
-    foreach (QWidget *w, child_list) {
+    for (QWidget *w : qAsConst(child_list)) {
         const ConnectionList &cl = connectionList();
-        foreach (Connection *con, cl) {
+        for (Connection *con : cl) {
             if (con->widget(EndPoint::Source) == w || con->widget(EndPoint::Target) == w)
                 remove_set.insert(con, con);
         }
@@ -285,7 +285,7 @@ void BuddyEditor::widgetRemoved(QWidget *widget)
 
     if (!remove_set.isEmpty()) {
         undoStack()->beginMacro(tr("Remove buddies"));
-        foreach (Connection *con, remove_set) {
+        for (Connection *con : qAsConst(remove_set)) {
             setSelected(con, false);
             con->update();
             QWidget *source = con->widget(EndPoint::Source);
@@ -309,7 +309,7 @@ void BuddyEditor::deleteSelected()
         return;
 
     undoStack()->beginMacro(tr("Remove %n buddies", 0, selectedConnections.size()));
-    foreach (Connection *con, selectedConnections) {
+    for (Connection *con : selectedConnections) {
         setSelected(con, false);
         con->update();
         QWidget *source = con->widget(EndPoint::Source);
@@ -334,7 +334,7 @@ void BuddyEditor::autoBuddy()
     // Find already used buddies
     QWidgetList usedBuddies;
     const ConnectionList &beforeConnections = connectionList();
-    foreach (const Connection *c, beforeConnections)
+    for (const Connection *c : beforeConnections)
         usedBuddies.push_back(c->widget(EndPoint::Target));
     // Find potential new buddies, keep lists in sync
     QWidgetList buddies;
@@ -365,7 +365,7 @@ void BuddyEditor::autoBuddy()
     undoStack()->endMacro();
     // Now select all new ones
     const ConnectionList &connections = connectionList();
-    foreach (Connection *con, connections)
+    for (Connection *con : connections)
         setSelected(con, buddies.contains(con->widget(EndPoint::Target)));
 }
 

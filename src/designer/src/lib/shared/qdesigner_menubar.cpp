@@ -117,7 +117,8 @@ void QDesignerMenuBar::paintEvent(QPaintEvent *event)
 
     QPainter p(this);
 
-    foreach (QAction *a, actions()) {
+    const auto &actionList = actions();
+    for (QAction *a : actionList) {
         if (qobject_cast<SpecialMenuAction*>(a)) {
             const QRect g = actionGeometry(a);
             QLinearGradient lg(g.left(), g.top(), g.left(), g.bottom());

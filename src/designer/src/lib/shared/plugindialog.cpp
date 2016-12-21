@@ -93,7 +93,7 @@ void PluginDialog::populateTreeWidget()
         QTreeWidgetItem *topLevelItem = setTopLevelItem(tr("Loaded Plugins"));
         QFont boldFont = topLevelItem->font(0);
 
-        foreach (const QString &fileName, fileNames) {
+        for (const QString &fileName : fileNames) {
             QPluginLoader loader(fileName);
             const QFileInfo fileInfo(fileName);
 
@@ -101,7 +101,8 @@ void PluginDialog::populateTreeWidget()
 
             if (QObject *plugin = loader.instance()) {
                 if (const QDesignerCustomWidgetCollectionInterface *c = qobject_cast<QDesignerCustomWidgetCollectionInterface*>(plugin)) {
-                    foreach (const QDesignerCustomWidgetInterface *p, c->customWidgets())
+                    const QList<QDesignerCustomWidgetInterface *> &collCustomWidgets = c->customWidgets();
+                    for (const QDesignerCustomWidgetInterface *p : collCustomWidgets)
                         setItem(pluginItem, p->name(), p->toolTip(), p->whatsThis(), p->icon());
                 } else {
                     if (const QDesignerCustomWidgetInterface *p = qobject_cast<QDesignerCustomWidgetInterface*>(plugin))
@@ -115,7 +116,7 @@ void PluginDialog::populateTreeWidget()
     if (!notLoadedPlugins.isEmpty()) {
         QTreeWidgetItem *topLevelItem = setTopLevelItem(tr("Failed Plugins"));
         const QFont boldFont = topLevelItem->font(0);
-        foreach (const QString &plugin, notLoadedPlugins) {
+        for (const QString &plugin : notLoadedPlugins) {
             const QString failureReason = pluginManager->failureReason(plugin);
             QTreeWidgetItem *pluginItem = setPluginItem(topLevelItem, plugin, boldFont);
             setItem(pluginItem, failureReason, failureReason, QString(), QIcon());

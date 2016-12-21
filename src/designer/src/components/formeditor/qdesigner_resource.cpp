@@ -521,7 +521,8 @@ void QDesignerResource::saveDom(DomUI *ui, QWidget *widget)
         const QString local = QStringLiteral("local");
         const QString global = QStringLiteral("global");
         QList<DomInclude*> ui_includes;
-        foreach (QString includeHint, m_formWindow->includeHints()) {
+        const QStringList &includeHints = m_formWindow->includeHints();
+        for (QString includeHint : includeHints) {
             if (includeHint.isEmpty())
                 continue;
             DomInclude *incl = new DomInclude;
@@ -655,7 +656,8 @@ QWidget *QDesignerResource::create(DomUI *ui, QWidget *parentWidget)
         if (DomIncludes *includes = ui->elementIncludes()) {
             const QString global = QStringLiteral("global");
             QStringList includeHints;
-            foreach (DomInclude *incl, includes->elementInclude()) {
+            const QList<DomInclude *> &elementInclude = includes->elementInclude();
+            for (DomInclude *incl : elementInclude) {
                 QString text = incl->text();
 
                 if (text.isEmpty())
@@ -710,11 +712,12 @@ QWidget *QDesignerResource::create(DomUI *ui, QWidget *parentWidget)
         const QList<DomProperty *> properties = ui->elementWidget()->elementProperty();
         if (!properties.empty()) {
             const QString geometry = QStringLiteral("geometry");
-            foreach (const DomProperty *p, properties)
+            for (const DomProperty *p : properties) {
                 if (p->attributeName() == geometry) {
                     hasExplicitGeometry = true;
                     break;
                 }
+            }
         }
         if (hasExplicitGeometry) {
             // Geometry was specified explicitly: Verify that smartMinSize is respected
@@ -787,7 +790,7 @@ QWidget *QDesignerResource::create(DomWidget *ui_widget, QWidget *parentWidget)
         menuBar->interactive(false);
     }
 
-    foreach (DomActionRef *ui_action_ref, actionRefs) {
+    for (DomActionRef *ui_action_ref : actionRefs) {
         const QString name = ui_action_ref->attributeName();
         if (name == QStringLiteral("separator")) {
             QAction *sep = new QAction(w);
@@ -1128,8 +1131,8 @@ DomWidget *QDesignerResource::createDom(QWidget *widget, DomWidget *ui_parentWid
         w->setAttributeName(widget->objectName());
         w->setAttributeClass(widgetInfo->name());
 
-        QList<DomProperty*> prop_list = w->elementProperty();
-        foreach (DomProperty *prop, prop_list) {
+        const QList<DomProperty*> &prop_list = w->elementProperty();
+        for (DomProperty *prop : prop_list) {
             if (prop->attributeName() == QStringLiteral("geometry")) {
                 if (DomRect *rect = prop->elementRect()) {
                     rect->setElementX(widget->x());
@@ -1222,7 +1225,8 @@ DomTabStops *QDesignerResource::saveTabStops()
     Q_ASSERT(item);
 
     QStringList tabStops;
-    foreach (QWidget *widget, item->tabOrder()) {
+    const QWidgetList &tabOrder = item->tabOrder();
+    for (QWidget *widget : tabOrder) {
         if (m_formWindow->mainContainer()->isAncestorOf(widget))
             tabStops.append(widget->objectName());
     }
@@ -1242,7 +1246,8 @@ void QDesignerResource::applyTabStops(QWidget *widget, DomTabStops *tabStops)
         return;
 
     QList<QWidget*> tabOrder;
-    foreach (const QString &widgetName, tabStops->elementTabStop()) {
+    const QStringList &elementTabStop = tabStops->elementTabStop();
+    for (const QString &widgetName : elementTabStop) {
         if (QWidget *w = widget->findChild<QWidget*>(widgetName)) {
             tabOrder.append(w);
         }
@@ -1686,9 +1691,10 @@ DomUI *QDesignerResource::copy(const FormBuilderClipboard &selection)
     // actions
     if (!selection.m_actions.empty()) {
         QList<DomAction*> domActions;
-        foreach(QAction* action, selection.m_actions)
+        for (QAction* action : qAsConst(selection.m_actions)) {
             if (DomAction *domAction = createDom(action))
                 domActions += domAction;
+        }
         if (!domActions.empty()) {
             ui_widget-> setElementAction(domActions);
             hasItems = true;
@@ -1726,7 +1732,7 @@ FormBuilderClipboard QDesignerResource::paste(DomUI *ui, QWidget *widgetParent, 
     const QList<DomWidget*> domWidgets = topLevel->elementWidget();
     if (!domWidgets.empty()) {
         const QPoint offset = m_formWindow->grid();
-        foreach (DomWidget* domWidget, domWidgets) {
+        for (DomWidget* domWidget : domWidgets) {
             if (QWidget *w = create(domWidget, widgetParent)) {
                 w->move(w->pos() + offset);
                 // ### change the init properties of w
@@ -1735,10 +1741,10 @@ FormBuilderClipboard QDesignerResource::paste(DomUI *ui, QWidget *widgetParent, 
         }
     }
     const QList<DomAction*> domActions = topLevel->elementAction();
-    if (!domActions.empty())
-        foreach (DomAction *domAction, domActions)
-            if (QAction *a = create(domAction, actionParent))
-                rc.m_actions .append(a);
+    for (DomAction *domAction : domActions) {
+        if (QAction *a = create(domAction, actionParent))
+            rc.m_actions .append(a);
+    }
 
     m_isMainWidget = saved;
 
@@ -1806,7 +1812,9 @@ DomCustomWidgets *QDesignerResource::saveCustomWidgets()
     OrderedDBIndexDomCustomWidgetMap orderedMap;
 
     const QString global = QStringLiteral("global");
-    foreach (QDesignerWidgetDataBaseItemInterface *item, m_usedCustomWidgets.keys()) {
+
+    for (auto it = m_usedCustomWidgets.cbegin(), end = m_usedCustomWidgets.cend(); it != end; ++it) {
+        QDesignerWidgetDataBaseItemInterface *item = it.key();
         const QString name = item->name();
         DomCustomWidget *custom_widget = new DomCustomWidget;
 
@@ -2017,7 +2025,7 @@ void QDesignerResource::createResources(DomResources *resources)
     QStringList paths;
     if (resources != 0) {
         const QList<DomResource*> dom_include = resources->elementInclude();
-        foreach (DomResource *res, dom_include) {
+        for (DomResource *res : dom_include) {
             QString path = QDir::cleanPath(m_formWindow->absoluteDir().absoluteFilePath(res->attributeLocation()));
             while (!QFile::exists(path)) {
                 QWidget *dialogParent = m_formWindow->core()->topLevel();
@@ -2086,7 +2094,7 @@ DomResources *QDesignerResource::saveResources(const QStringList &qrcPaths)
     QList<DomResource*> dom_include;
     if (resourceSet) {
         const QStringList activePaths = resourceSet->activeResourceFilePaths();
-        foreach (const QString &path, activePaths) {
+        for (const QString &path : activePaths) {
             if (qrcPaths.contains(path)) {
                 DomResource *dom_res = new DomResource;
                 QString conv_path = path;

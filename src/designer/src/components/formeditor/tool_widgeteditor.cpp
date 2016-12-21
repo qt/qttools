@@ -226,7 +226,7 @@ void WidgetEditorTool::detectDockDrag(const QDesignerMimeData *mimeData)
 
     const QList<QDesignerDnDItemInterface*> item_list = mimeData->items();
 
-    foreach (QDesignerDnDItemInterface *item, item_list) {
+    for (QDesignerDnDItemInterface *item : item_list) {
         if (item->decoration() && item->decoration()->property("_q_dockDrag").toBool())
             m_specialDockDrag = true;
 
@@ -335,8 +335,8 @@ void WidgetEditorTool::activated()
     if (m_formWindow == 0)
         return;
 
-    QList<QWidget*> sel = m_formWindow->selectedWidgets();
-    foreach (QWidget *w, sel)
+    const QList<QWidget*> &sel = m_formWindow->selectedWidgets();
+    for (QWidget *w : sel)
         m_formWindow->raiseSelection(w);
 }
 

@@ -60,9 +60,7 @@ typedef QList<QAction *> ActionList;
 
 static void addActionsToToolBar(const ActionList &actions, QToolBar *t)
 {
-    const ActionList::const_iterator cend = actions.constEnd();
-    for (ActionList::const_iterator it = actions.constBegin(); it != cend; ++it) {
-        QAction *action = *it;
+    for (QAction *action : actions) {
         if (action->property(QDesignerActions::defaultToolbarPropertyName).toBool())
             t->addAction(action);
     }
@@ -197,9 +195,8 @@ bool DockedMdiArea::event(QEvent *event)
 
 static void addActionsToToolBarManager(const ActionList &al, const QString &title, QtToolBarManager *tbm)
 {
-    const ActionList::const_iterator cend = al.constEnd();
-    for (ActionList::const_iterator it = al.constBegin(); it != cend; ++it)
-        tbm->addAction(*it, title);
+    for (QAction *action : al)
+        tbm->addAction(action, title);
 }
 
 ToolBarManager::ToolBarManager(QMainWindow *configureableMainWindow,
@@ -222,7 +219,7 @@ ToolBarManager::ToolBarManager(QMainWindow *configureableMainWindow,
 
     m_manager->setMainWindow(configureableMainWindow);
 
-    foreach(QToolBar *tb, m_toolbars) {
+    for (QToolBar *tb : qAsConst(m_toolbars)) {
         const QString title = tb->windowTitle();
         m_manager->addToolBar(tb, title);
         addActionsToToolBarManager(tb->actions(), title, m_manager);
@@ -239,26 +236,15 @@ ToolBarManager::ToolBarManager(QMainWindow *configureableMainWindow,
     addActionsToToolBarManager(previewActions, tr("Style"), m_manager);
 
     const QString dockTitle = tr("Dock views");
-    foreach (QDesignerToolWindow *tw, toolWindows) {
+    for (QDesignerToolWindow *tw : toolWindows) {
         if (QAction *action = tw->action())
             m_manager->addAction(action, dockTitle);
     }
 
-    QString category(tr("File"));
-    foreach(QAction *action, actions->fileActions()->actions())
-        m_manager->addAction(action, category);
-
-    category = tr("Edit");
-    foreach(QAction *action, actions->editActions()->actions())
-        m_manager->addAction(action, category);
-
-    category = tr("Tools");
-    foreach(QAction *action, actions->toolActions()->actions())
-        m_manager->addAction(action, category);
-
-    category = tr("Form");
-    foreach(QAction *action, actions->formActions()->actions())
-        m_manager->addAction(action, category);
+    addActionsToToolBarManager(actions->fileActions()->actions(), tr("File"), m_manager);
+    addActionsToToolBarManager(actions->editActions()->actions(), tr("Edit"), m_manager);
+    addActionsToToolBarManager(actions->toolActions()->actions(), tr("Tools"), m_manager);
+    addActionsToToolBarManager(actions->formActions()->actions(), tr("Form"), m_manager);
 
     m_manager->addAction(m_configureAction, tr("Toolbars"));
     updateToolBarMenu();
@@ -277,7 +263,7 @@ void ToolBarManager::updateToolBarMenu()
     qStableSort(m_toolbars.begin(), m_toolbars.end(), toolBarTitleLessThan);
     // add to menu
     m_toolBarMenu->clear();
-    foreach (QToolBar *tb,  m_toolbars)
+    for (QToolBar *tb : qAsConst(m_toolbars))
         m_toolBarMenu->addAction(tb->toggleViewAction());
     m_toolBarMenu->addAction(m_configureAction);
 }
@@ -312,7 +298,7 @@ DockedMainWindow::DockedMainWindow(QDesignerWorkbench *wb,
     setWindowTitle(mainWindowTitle());
 
     const QList<QToolBar *> toolbars = createToolBars(wb->actionManager(), false);
-    foreach (QToolBar *tb, toolbars)
+    for (QToolBar *tb : toolbars)
         addToolBar(tb);
     DockedMdiArea *dma = new DockedMdiArea(wb->actionManager()->uiExtension());
     connect(dma, &DockedMdiArea::fileDropped,
@@ -367,7 +353,7 @@ QMdiSubWindow *DockedMainWindow::createMdiSubWindow(QWidget *fw, Qt::WindowFlags
 DockedMainWindow::DockWidgetList DockedMainWindow::addToolWindows(const DesignerToolWindowList &tls)
 {
     DockWidgetList rc;
-    foreach (QDesignerToolWindow *tw, tls) {
+    for (QDesignerToolWindow *tw : tls) {
         QDockWidget *dockWidget = new QDockWidget;
         dockWidget->setObjectName(tw->objectName() + QStringLiteral("_dock"));
         dockWidget->setWindowTitle(tw->windowTitle());

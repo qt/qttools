@@ -241,7 +241,7 @@ void AbstractItemEditor::cacheReloaded()
 void AbstractItemEditor::updateBrowser()
 {
     BoolBlocker block(m_updatingBrowser);
-    foreach (QtVariantProperty *prop, m_properties) {
+    for (QtVariantProperty *prop : qAsConst(m_properties)) {
         int role = m_propertyToRole.value(prop);
         QVariant val = getItemData(role);
         if (!val.isValid()) {
@@ -256,9 +256,10 @@ void AbstractItemEditor::updateBrowser()
         prop->setValue(val);
     }
 
-    if (m_propertyBrowser->topLevelItems().isEmpty())
-        foreach (QtVariantProperty *prop, m_rootProperties)
+    if (m_propertyBrowser->topLevelItems().isEmpty()) {
+        for (QtVariantProperty *prop : qAsConst(m_rootProperties))
             m_propertyBrowser->addProperty(prop);
+    }
 }
 
 void AbstractItemEditor::injectPropertyBrowser(QWidget *parent, QWidget *widget)

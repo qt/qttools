@@ -138,7 +138,7 @@ QtVariantProperty *TreeWidgetEditor::setupPropertyGroup(const QString &title, Pr
 {
     setupProperties(propDefs);
     QtVariantProperty *groupProp = m_propertyManager->addProperty(QtVariantPropertyManager::groupTypeId(), title);
-    foreach (QtVariantProperty *prop, m_rootProperties)
+    for (QtVariantProperty *prop : qAsConst(m_rootProperties))
         groupProp->addSubProperty(prop);
     m_rootProperties.clear();
     return groupProp;

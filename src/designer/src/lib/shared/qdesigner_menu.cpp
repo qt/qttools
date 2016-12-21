@@ -569,7 +569,8 @@ void QDesignerMenu::paintEvent(QPaintEvent *event)
 
     QAction *current = currentAction();
 
-    foreach (QAction *a, actions()) {
+    const QList<QAction *> &actionList = actions();
+    for (QAction *a : actionList) {
         const QRect g = actionGeometry(a);
 
         if (qobject_cast<SpecialMenuAction*>(a)) {
@@ -851,9 +852,9 @@ void QDesignerMenu::closeMenuChain()
         w = w->parentWidget();
 
     if (w) {
-        foreach (QMenu *subMenu, w->findChildren<QMenu*>()) {
+        const QList<QMenu *> &menus = w->findChildren<QMenu *>();
+        for (QMenu *subMenu : menus)
             subMenu->hide();
-        }
     }
 
     m_lastSubMenuIndex = -1;
@@ -1027,7 +1028,8 @@ QDesignerMenu *QDesignerMenu::findOrCreateSubMenu(QAction *action)
 
 bool QDesignerMenu::canCreateSubMenu(QAction *action) const // ### improve it's a bit too slow
 {
-    foreach (const QWidget *aw, action->associatedWidgets())
+    const QWidgetList &associatedWidgets = action->associatedWidgets();
+    for (const QWidget *aw : associatedWidgets) {
         if (aw != this) {
             if (const QMenu *m = qobject_cast<const QMenu *>(aw)) {
                 if (m->actions().contains(action))
@@ -1038,6 +1040,7 @@ bool QDesignerMenu::canCreateSubMenu(QAction *action) const // ### improve it's 
                         return false; // sorry
             }
         }
+    }
     return true;
 }
 
@@ -1306,9 +1309,9 @@ QAction *QDesignerMenu::safeActionAt(int index) const
 void QDesignerMenu::hideSubMenu()
 {
     m_lastSubMenuIndex = -1;
-    foreach (QMenu *subMenu, findChildren<QMenu*>()) {
+    const QList<QMenu *> &menus = findChildren<QMenu *>();
+    for (QMenu *subMenu : menus)
         subMenu->hide();
-    }
 }
 
 void QDesignerMenu::deleteAction()

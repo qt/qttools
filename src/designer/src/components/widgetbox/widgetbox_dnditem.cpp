@@ -125,7 +125,7 @@ static QSize geometryProp(const DomWidget *dw)
 {
     const QList<DomProperty*> prop_list = dw->elementProperty();
     const QString geometry = QStringLiteral("geometry");
-    foreach (DomProperty *prop, prop_list) {
+    for (DomProperty *prop : prop_list) {
         if (prop->attributeName() !=  geometry)
             continue;
         DomRect *dr = prop->elementRect();
@@ -142,14 +142,17 @@ static QSize domWidgetSize(const DomWidget *dw)
     if (size.isValid())
         return size;
 
-    foreach (const DomWidget *child, dw->elementWidget()) {
+    const QList<DomWidget*> &elementWidgets = dw->elementWidget();
+    for (const DomWidget *child : elementWidgets) {
         size = geometryProp(child);
         if (size.isValid())
             return size;
     }
 
-    foreach (const DomLayout *dl, dw->elementLayout()) {
-        foreach (DomLayoutItem *item, dl->elementItem()) {
+    const QList<DomLayout *> elementLayouts = dw->elementLayout();
+    for (const DomLayout *dl : elementLayouts) {
+        const QList<DomLayoutItem *> &elementItems = dl->elementItem();
+        for (DomLayoutItem *item : elementItems) {
             const DomWidget *child = item->elementWidget();
             if (child == 0)
                 continue;

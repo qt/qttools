@@ -664,7 +664,7 @@ void ObjectInspector::ObjectInspectorPrivate::getSelection(Selection &s) const
         return;
 
     // sort objects
-    foreach (const QModelIndex &index, currentSelectedIndexes)
+    for (const QModelIndex &index : currentSelectedIndexes)
         if (QObject *object = m_model->objectAt(index))
             switch (selectionType(m_formWindow, object)) {
             case NoSelection:

@@ -38,7 +38,7 @@ namespace qdesigner_internal {
 
 QDESIGNER_SHARED_EXPORT QIcon createIconSet(const QString &name)
 {
-    QStringList candidates = QStringList()
+    const QStringList candidates = QStringList()
         << (QString::fromUtf8(":/qt-project.org/formeditor/images/") + name)
 #ifdef Q_OS_MACOS
         << (QString::fromUtf8(":/qt-project.org/formeditor/images/mac/") + name)
@@ -47,7 +47,7 @@ QDESIGNER_SHARED_EXPORT QIcon createIconSet(const QString &name)
 #endif
         << (QString::fromUtf8(":/qt-project.org/formeditor/images/designer_") + name);
 
-    foreach (const QString &f, candidates) {
+    for (const QString &f : candidates) {
         if (QFile::exists(f))
             return QIcon(f);
     }

@@ -349,9 +349,9 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
     connect(formWindowManager, &QDesignerFormWindowManager::activeFormWindowChanged,
                 this, &QDesignerActions::activeFormWindowChanged);
 
-    QList<QObject*> builtinPlugins = QPluginLoader::staticInstances();
-    builtinPlugins += m_core->pluginManager()->instances();
-    foreach (QObject *plugin, builtinPlugins) {
+    const QObjectList builtinPlugins = QPluginLoader::staticInstances()
+        + m_core->pluginManager()->instances();
+    for (QObject *plugin : builtinPlugins) {
         if (QDesignerFormEditorPluginInterface *formEditorPlugin = qobject_cast<QDesignerFormEditorPluginInterface*>(plugin)) {
             if (QAction *action = formEditorPlugin->action()) {
                 m_toolActions->addAction(action);
@@ -607,7 +607,7 @@ bool QDesignerActions::openForm(QWidget *parent)
         return false;
 
     bool atLeastOne = false;
-    foreach (const QString &fileName, fileNames) {
+    for (const QString &fileName : fileNames) {
         if (readInForm(fileName) && !atLeastOne)
             atLeastOne = true;
     }

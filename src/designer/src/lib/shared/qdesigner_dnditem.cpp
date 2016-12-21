@@ -222,9 +222,10 @@ Qt::DropAction QDesignerMimeData::execDrag(const QDesignerDnDItems &items, QWidg
 
     const Qt::DropAction executedAction = drag->exec(Qt::CopyAction|Qt::MoveAction, mimeData->proposedDropAction());
 
-    if (executedAction == Qt::IgnoreAction && !reshowWidgets.empty())
-        foreach (QWidget *w, reshowWidgets)
+    if (executedAction == Qt::IgnoreAction) {
+        for (QWidget *w : qAsConst(reshowWidgets))
             w->show();
+    }
 
     return executedAction;
 }
@@ -251,10 +252,9 @@ void QDesignerMimeData::removeMovedWidgetsFromSourceForm(const QDesignerDnDItems
             if (QWidget *w = (*it)->widget())
                 if (FormWindowBase *fb = qobject_cast<FormWindowBase *>((*it)->source()))
                     formWidgetMap.insert(fb, w);
-    if (formWidgetMap.empty())
-        return;
 
-    foreach (FormWindowBase * fb, formWidgetMap.keys())
+    const QList<FormWindowBase *> &formWindows = formWidgetMap.uniqueKeys();
+    for (FormWindowBase *fb : formWindows)
         fb->deleteWidgetList(formWidgetMap.values(fb));
 }
 

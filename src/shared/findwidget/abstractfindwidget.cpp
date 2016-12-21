@@ -77,7 +77,7 @@ static QIcon createIconSet(const QString &name)
         << (QString::fromUtf8(":/qt-project.org/shared/images/win/") + name);
 #endif
 
-    foreach (const QString &f, candidates) {
+    for (const QString &f : qAsConst(candidates)) {
         if (QFile::exists(f))
             return QIcon(f);
     }

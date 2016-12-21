@@ -1005,7 +1005,7 @@ bool PropertyListCommand::initList(const ObjectList &list, const QString &aprope
         if (!add(referenceObject, apropertyName))
             return false;
     }
-    foreach (QObject *o, list) {
+    for (QObject *o : list) {
         if (o != referenceObject)
             add(o, apropertyName);
     }

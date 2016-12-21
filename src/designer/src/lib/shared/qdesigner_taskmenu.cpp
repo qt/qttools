@@ -653,7 +653,7 @@ void QDesignerTaskMenu::navigateToSlot(QDesignerFormEditorInterface *core,
         qdesigner_internal::MetaDataBaseItem *item = metaDataBase->metaDataBaseItem(object);
         Q_ASSERT(item);
         const QStringList fakeSignals = item->fakeSignals();
-        foreach (const QString &fakeSignal, fakeSignals)
+        for (const QString &fakeSignal : fakeSignals)
             classToSignalList[item->customClassName()][fakeSignal] = QStringList();
     }
 
@@ -665,7 +665,7 @@ void QDesignerTaskMenu::navigateToSlot(QDesignerFormEditorInterface *core,
             if (index >= 0) {
                 WidgetDataBaseItem* item = static_cast<WidgetDataBaseItem*>(db->item(index));
                 const QStringList fakeSignals = item->fakeSignals();
-                foreach (const QString &fakeSignal, fakeSignals)
+                for (const QString &fakeSignal : fakeSignals)
                     classToSignalList[promotedClassName][fakeSignal] = QStringList();
             }
         }

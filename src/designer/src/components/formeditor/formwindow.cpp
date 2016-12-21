@@ -320,8 +320,8 @@ FormWindow::~FormWindow()
     core()->formWindowManager()->removeFormWindow(this);
     core()->metaDataBase()->remove(this);
 
-    QWidgetList l = widgets();
-    foreach (QWidget *w, l)
+    const QWidgetList &l = widgets();
+    for (QWidget *w : l)
         core()->metaDataBase()->remove(w);
 
     m_widgetStack = 0;
@@ -377,7 +377,7 @@ void FormWindow::setCursorToAll(const QCursor &c, QWidget *start)
 #ifndef QT_NO_CURSOR
     start->setCursor(c);
     const QWidgetList widgets = start->findChildren<QWidget*>();
-    foreach (QWidget *widget, widgets) {
+    for (QWidget *widget : widgets) {
         if (!qobject_cast<WidgetHandle*>(widget)) {
             widget->setCursor(c);
         }
@@ -688,7 +688,7 @@ bool FormWindow::handleMouseMoveEvent(QWidget *, QWidget *, QMouseEvent *e)
 
     QSet<QWidget*> widget_set;
 
-    foreach (QWidget *child, sel) { // Move parent layout or container?
+    for (QWidget *child : qAsConst(sel)) { // Move parent layout or container?
         QWidget *current = child;
 
         bool done = false;
@@ -724,7 +724,7 @@ bool FormWindow::handleMouseMoveEvent(QWidget *, QWidget *, QMouseEvent *e)
     const QPoint globalPos = mapToGlobal(m_startPos);
     const QDesignerDnDItemInterface::DropType dropType = (mouseFlags(e->modifiers()) & CopyDragModifier) ?
                             QDesignerDnDItemInterface::CopyDrop : QDesignerDnDItemInterface::MoveDrop;
-    foreach (QWidget *widget, sel) {
+    for (QWidget *widget : qAsConst(sel)) {
         item_list.append(new FormWindowDnDItem(dropType,  this, widget, globalPos));
         if (dropType == QDesignerDnDItemInterface::MoveDrop) {
             m_selection->hide(widget);
@@ -736,7 +736,7 @@ bool FormWindow::handleMouseMoveEvent(QWidget *, QWidget *, QMouseEvent *e)
 
     if (!sel.empty()) // reshow selection?
         if (QDesignerMimeData::execDrag(item_list, core()->topLevel()) == Qt::IgnoreAction && dropType == QDesignerDnDItemInterface::MoveDrop)
-            foreach (QWidget *widget, sel)
+            for (QWidget *widget : qAsConst(sel))
                 m_selection->show(widget);
 
     m_startPos = QPoint();
@@ -1510,7 +1510,7 @@ ArrowKeyPropertyCommand::ArrowKeyPropertyCommand(QDesignerFormWindowInterface *f
 void ArrowKeyPropertyCommand::init(QWidgetList &l, const ArrowKeyOperation &op)
 {
     QObjectList ol;
-    foreach(QWidget *w, l)
+    for (QWidget *w : qAsConst(l))
         ol.push_back(w);
     SetPropertyCommand::init(ol, QStringLiteral("geometry"), QVariant::fromValue(op));
 
@@ -1585,7 +1585,7 @@ bool FormWindow::handleKeyReleaseEvent(QWidget *, QWidget *, QKeyEvent *e)
 void FormWindow::selectAll()
 {
     bool selectionChanged = false;
-    foreach (QWidget *widget, m_widgets) {
+    for (QWidget *widget : qAsConst(m_widgets)) {
         if (widget->isVisibleTo(this) && trySelectWidget(widget, true))
             selectionChanged = true;
     }
@@ -1861,7 +1861,7 @@ void FormWindow::paste(PasteMode pasteMode)
 
         if (widgetCount) {
             positionPastedWidgetsAtMousePosition(this,  m_contextMenuPosition, pasteContainer, clipboard.m_widgets);
-            foreach (QWidget *w, clipboard.m_widgets) {
+            for (QWidget *w : clipboard.m_widgets) {
                 InsertWidgetCommand *cmd = new InsertWidgetCommand(this);
                 cmd->init(w);
                 m_undoStack.push(cmd);
@@ -1870,7 +1870,7 @@ void FormWindow::paste(PasteMode pasteMode)
         }
 
         if (actionCount)
-            foreach (QAction *a, clipboard.m_actions) {
+            for (QAction *a : clipboard.m_actions) {
                 ensureUniqueObjectName(a);
                 AddActionCommand *cmd = new AddActionCommand(this);
                 cmd->init(a);
@@ -2028,7 +2028,7 @@ void FormWindow::raiseWidgets()
         return;
 
     beginCommand(tr("Raise widgets"));
-    foreach (QWidget *widget, widgets) {
+    for (QWidget *widget : qAsConst(widgets)) {
         RaiseWidgetCommand *cmd = new RaiseWidgetCommand(this);
         cmd->init(widget);
         m_undoStack.push(cmd);
@@ -2045,7 +2045,7 @@ void FormWindow::lowerWidgets()
         return;
 
     beginCommand(tr("Lower widgets"));
-    foreach (QWidget *widget, widgets) {
+    for (QWidget *widget : qAsConst(widgets)) {
         LowerWidgetCommand *cmd = new LowerWidgetCommand(this);
         cmd->init(widget);
         m_undoStack.push(cmd);
@@ -2209,7 +2209,7 @@ bool FormWindow::hasInsertedChildren(QWidget *widget) const // ### move
 
     const QWidgetList l = widgets(widget);
 
-    foreach (QWidget *child, l) {
+    for (QWidget *child : l) {
         if (isManaged(child) && !LayoutInfo::isWidgetLaidout(core(), child) && child->isVisibleTo(const_cast<FormWindow*>(this)))
             return true;
     }
@@ -2616,7 +2616,8 @@ void FormWindow::checkSelectionNow()
 {
     m_checkSelectionTimer->stop();
 
-    foreach (QWidget *widget, selectedWidgets()) {
+    const QWidgetList &sel = selectedWidgets();
+    for (QWidget *widget : sel) {
         updateSelection(widget);
 
         if (LayoutInfo::layoutType(core(), widget) != LayoutInfo::NoLayout)
@@ -2855,7 +2856,7 @@ bool FormWindow::dropWidgets(const QList<QDesignerDnDItemInterface*> &item_list,
     QPoint offset;
     QDesignerDnDItemInterface *current = 0;
     QDesignerFormWindowCursorInterface *c = cursor();
-    foreach (QDesignerDnDItemInterface *item, item_list) {
+    for (QDesignerDnDItemInterface *item : qAsConst(item_list)) {
         QWidget *w = item->widget();
         if (!current)
             current = item;
@@ -2870,7 +2871,7 @@ bool FormWindow::dropWidgets(const QList<QDesignerDnDItemInterface*> &item_list,
         offset = designerGrid().snapPoint(topLeft) - topLeft;
     }
 
-    foreach (QDesignerDnDItemInterface *item, item_list) {
+    for (QDesignerDnDItemInterface *item : qAsConst(item_list)) {
         DomUI *dom_ui = item->domUi();
         QRect geometry = item->decoration()->geometry();
         Q_ASSERT(dom_ui != 0);

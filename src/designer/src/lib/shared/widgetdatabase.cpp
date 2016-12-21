@@ -367,7 +367,8 @@ void WidgetDataBase::loadPlugins()
     // 2) create a list plugins
     ItemList pluginList;
     const QDesignerPluginManager *pm = m_core->pluginManager();
-    foreach(QDesignerCustomWidgetInterface* c, pm->registeredCustomWidgets())
+    const auto &customWidgets = pm->registeredCustomWidgets();
+    for (QDesignerCustomWidgetInterface* c : customWidgets)
         pluginList += createCustomWidgetItem(c, pm->customWidgetData(c));
 
     // 3) replace custom classes or add new ones, remove them from existingCustomClasses,

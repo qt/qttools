@@ -301,7 +301,7 @@ void QDesignerFormBuilder::createResources(DomResources *resources)
     QStringList paths;
     if (resources != 0) {
         const QList<DomResource*> dom_include = resources->elementInclude();
-        foreach (DomResource *res, dom_include) {
+        for (DomResource *res : dom_include) {
             QString path = QDir::cleanPath(workingDirectory().absoluteFilePath(res->attributeLocation()));
             paths << path;
         }

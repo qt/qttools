@@ -590,15 +590,13 @@ void FormWindowManager::slotActionBreakLayoutActivated()
 
     if (debugFWM) {
         qDebug() << "slotActionBreakLayoutActivated: " << layouts.size();
-        foreach (QWidget *w, layouts) {
+        for (const QWidget *w : layouts)
             qDebug() << w;
-        }
     }
 
     m_activeFormWindow->beginCommand(tr("Break Layout"));
-    foreach (QWidget *layout, layouts) {
+    for (QWidget *layout : layouts)
         m_activeFormWindow->breakLayout(layout);
-    }
     m_activeFormWindow->endCommand();
 }
 
@@ -632,7 +630,7 @@ void FormWindowManager::slotActionAdjustSizeActivated()
     }
 
     // Always count the main container as unlaid-out
-    foreach (QWidget *widget, selectedWidgets) {
+    for (QWidget *widget : qAsConst(selectedWidgets)) {
         bool unlaidout = LayoutInfo::layoutType(core(), widget->parentWidget()) == LayoutInfo::NoLayout;
         bool isMainContainer = m_activeFormWindow->isMainContainer(widget);
 

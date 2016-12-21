@@ -374,7 +374,7 @@ void SignalSlotEditor::fromUi(const DomConnections *connections, QWidget *parent
     setBackground(parent);
     clear();
     const QList<DomConnection*> list = connections->elementConnection();
-    foreach (const DomConnection *dom_con, list) {
+    for (const DomConnection *dom_con : list) {
         QObject *source = objectByName(parent, dom_con->elementSender());
         if (source == 0) {
             qDebug("SignalSlotEditor::fromUi(): no source widget called \"%s\"",
@@ -391,8 +391,8 @@ void SignalSlotEditor::fromUi(const DomConnections *connections, QWidget *parent
         QPoint sp = QPoint(20, 20), tp = QPoint(20, 20);
         const DomConnectionHints *dom_hints = dom_con->elementHints();
         if (dom_hints != 0) {
-            QList<DomConnectionHint*> list = dom_hints->elementHint();
-            foreach (DomConnectionHint *hint, list) {
+            const QList<DomConnectionHint*> &hints = dom_hints->elementHint();
+            for (DomConnectionHint *hint : hints) {
                 QString attr_type = hint->attributeType();
                 QPoint p = QPoint(hint->elementX(), hint->elementY());
                 if (attr_type == QStringLiteral("sourcelabel"))

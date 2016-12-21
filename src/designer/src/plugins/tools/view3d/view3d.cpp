@@ -188,8 +188,8 @@ void QView3DWidget::clear()
 {
     makeCurrent();
     glDeleteLists(m_form_list_id, 1);
-    foreach (GLuint id, m_texture_map)
-        glDeleteTextures(1, &id);
+    for (TextureMap::iterator it = m_texture_map.begin(), end = m_texture_map.end(); it != end; ++it)
+        glDeleteTextures(1, &(it.value()));
     m_texture_map.clear();
     m_widget_name_map.clear();
     m_next_widget_name = 0;
@@ -378,8 +378,8 @@ static void walkWidgetTree(QDesignerFormEditorInterface *core, int depth, QWidge
     if (!skipWidget(core, widget))
         func(depth++, widget);
 
-    QObjectList child_obj_list = widget->children();
-    foreach (QObject *child_obj, child_obj_list) {
+    const QObjectList child_obj_list = widget->children();
+    for (QObject *child_obj : child_obj_list) {
         QWidget *child = qobject_cast<QWidget*>(child_obj);
         if (child != 0)
             walkWidgetTree(core, depth, child, func);

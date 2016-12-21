@@ -446,7 +446,7 @@ void FormWindowBase::deleteWidgetList(const QWidgetList &widget_list)
         tr("Delete '%1'").arg(widget_list.front()->objectName()) : tr("Delete");
 
     commandHistory()->beginMacro(description);
-    foreach (QWidget *w, widget_list) {
+    for (QWidget *w : qAsConst(widget_list)) {
         emit widgetRemoved(w);
         DeleteWidgetCommand *cmd = new DeleteWidgetCommand(this);
         cmd->init(w);
@@ -533,7 +533,8 @@ QStringList FormWindowBase::checkContents() const
     // Test for non-laid toplevel spacers, which will not be saved
     // as not to throw off uic.
     QStringList problems;
-    foreach (const Spacer *spacer, mainContainer()->findChildren<Spacer *>()) {
+    const auto &spacers = mainContainer()->findChildren<Spacer *>();
+    for (const Spacer *spacer : spacers) {
         if (spacer->parentWidget() && !spacer->parentWidget()->layout()) {
             problems.push_back(tr("<p>This file contains top level spacers.<br/>"
                                   "They will <b>not</b> be saved.</p><p>"

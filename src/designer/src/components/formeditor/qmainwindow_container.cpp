@@ -93,10 +93,9 @@ Qt::DockWidgetArea dockWidgetArea(QDockWidget *me)
             candidates.append(mw->layout());
             candidates += mw->layout()->findChildren<QLayout*>();
         }
-        foreach (QLayout *l, candidates) {
-            if (l->indexOf(me) != -1) {
+        for (QLayout *l : qAsConst(candidates)) {
+            if (l->indexOf(me) != -1)
                 return mw->dockWidgetArea(me);
-            }
         }
     }
     return Qt::LeftDockWidgetArea;

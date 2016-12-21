@@ -624,12 +624,12 @@ QWidget *ConnectionDelegate::createEditor(QWidget *parent,
     switch (index.column()) {
     case 0:
     case 2:  { // object names
-        QStringList obj_name_list = objectNameList(m_form);
+        const QStringList &obj_name_list = objectNameList(m_form);
         QMap<QString, bool> markedNameList;
         markedNameList.insert(tr("<object>"), false);
         inline_editor->addTextList(markedNameList);
         markedNameList.clear();
-        foreach (const QString &name, obj_name_list)
+        for (const QString &name : obj_name_list)
             markedNameList.insert(name, false);
         inline_editor->addTextList(markedNameList);
     }
@@ -643,12 +643,12 @@ QWidget *ConnectionDelegate::createEditor(QWidget *parent,
         const qdesigner_internal::ClassesMemberFunctions class_list = qdesigner_internal::reverseClassesMemberFunctions(obj_name, type, peer, m_form);
 
         inline_editor->addText(type == qdesigner_internal::SignalMember ? tr("<signal>") : tr("<slot>"));
-        foreach (const qdesigner_internal::ClassMemberFunctions &classInfo, class_list) {
+        for (const qdesigner_internal::ClassMemberFunctions &classInfo : class_list) {
             if (classInfo.m_className.isEmpty() || classInfo.m_memberList.isEmpty())
                 continue;
             // Mark deprecated members by passing bool=true.
             QMap<QString, bool> markedMemberList;
-            foreach (const QString &member, classInfo.m_memberList)
+            for (const QString &member : qAsConst(classInfo.m_memberList))
                 markedMemberList.insert(member, false);
             inline_editor->addTitle(classInfo.m_className);
             inline_editor->addTextList(markedMemberList);

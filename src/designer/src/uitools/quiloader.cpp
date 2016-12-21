@@ -214,7 +214,8 @@ public:
     virtual bool eventFilter(QObject *o, QEvent *event)
     {
         if (event->type() == QEvent::LanguageChange) {
-            foreach (const QByteArray &prop, o->dynamicPropertyNames()) {
+            const QList<QByteArray> &dynamicPropertyNames = o->dynamicPropertyNames();
+            for (const QByteArray &prop : dynamicPropertyNames) {
                 if (prop.startsWith(PROP_GENERIC_PREFIX)) {
                     const QByteArray propName = prop.mid(sizeof(PROP_GENERIC_PREFIX) - 1);
                     const QUiTranslatableStringValue tsv =
@@ -418,7 +419,7 @@ void FormBuilderPrivate::applyProperties(QObject *o, const QList<DomProperty*> &
     // (as they are "shadowed" by the property sheets in designer). So do the initial
     // translation here.
     bool anyTrs = false;
-    foreach (const DomProperty *p, properties) {
+    for (const DomProperty *p : properties) {
         QUiTranslatableStringValue strVal;
         const QString text = convertTranslatable(p, m_class, &strVal);
         if (text.isEmpty())
@@ -635,7 +636,8 @@ QUiLoader::QUiLoader(QObject *parent)
     d->builder.loader = this;
 
     QStringList paths;
-    foreach (const QString &path, QApplication::libraryPaths()) {
+    const QStringList &libraryPaths = QApplication::libraryPaths();
+    for (const QString &path : libraryPaths) {
         QString libPath = path;
         libPath  += QDir::separator();
         libPath  += QStringLiteral("designer");
@@ -789,9 +791,9 @@ QStringList QUiLoader::availableWidgets() const
     d->setupWidgetMap();
     widget_map available = *g_widgets();
 
-    foreach (QDesignerCustomWidgetInterface *plugin, d->builder.customWidgets()) {
+    const auto &customWidgets = d->builder.customWidgets();
+    for (QDesignerCustomWidgetInterface *plugin : customWidgets)
         available.insert(plugin->name(), true);
-    }
 
     return available.keys();
 }

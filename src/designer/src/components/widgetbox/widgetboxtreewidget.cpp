@@ -314,7 +314,7 @@ bool WidgetBoxTreeWidget::loadContents(const QString &contents)
         return false;
     }
 
-    foreach(const Category &cat, cat_list)
+    for (const Category &cat : qAsConst(cat_list))
         addCategory(cat);
 
     addCustomCategories(false);
@@ -548,7 +548,7 @@ void WidgetBoxTreeWidget::writeCategories(QXmlStreamWriter &writer, const Catego
 
     writer.writeStartElement(widgetbox);
 
-    foreach (const Category &cat, cat_list) {
+    for (const Category &cat : cat_list) {
         writer.writeStartElement(category);
         writer.writeAttribute(name, cat.name());
         if (cat.type() == Category::Scratchpad)
@@ -583,7 +583,7 @@ void WidgetBoxTreeWidget::writeCategories(QXmlStreamWriter &writer, const Catego
 static int findCategory(const QString &name, const WidgetBoxTreeWidget::CategoryList &list)
 {
     int idx = 0;
-    foreach (const WidgetBoxTreeWidget::Category &cat, list) {
+    for (const WidgetBoxTreeWidget::Category &cat : list) {
         if (cat.name() == name)
             return idx;
         ++idx;
@@ -615,7 +615,7 @@ WidgetBoxTreeWidget::CategoryList WidgetBoxTreeWidget::loadCustomCategoryList() 
     const QString invisible = QLatin1String(invisibleNameC);
     const QString iconPrefix = QLatin1String(iconPrefixC);
 
-    foreach(QDesignerCustomWidgetInterface *c, customWidgets) {
+    for (QDesignerCustomWidgetInterface *c : customWidgets) {
         const QString dom_xml = c->domXml();
         if (dom_xml.isEmpty())
             continue;
@@ -908,7 +908,7 @@ void WidgetBoxTreeWidget::dropWidgets(const QList<QDesignerDnDItemInterface*> &i
     WidgetBoxCategoryListView *categoryView = 0;
     bool added = false;
 
-    foreach (QDesignerDnDItemInterface *item, item_list) {
+    for (QDesignerDnDItemInterface *item : item_list) {
         QWidget *w = item->widget();
         if (w == 0)
             continue;

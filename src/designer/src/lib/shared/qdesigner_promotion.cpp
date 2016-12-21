@@ -341,7 +341,8 @@ namespace qdesigner_internal {
         // Change the name in the data base and change all referencing objects in the meta database
         dbItem->setName(newClassName);
         bool foundReferences = false;
-        foreach (QObject* object, metaDataBase->objects()) {
+        const QObjectList &dbObjects = metaDataBase->objects();
+        for (QObject* object : dbObjects) {
             MetaDataBaseItem *item =  metaDataBase->metaDataBaseItem(object);
             Q_ASSERT(item);
             if (item->customClassName() == oldclassName) {

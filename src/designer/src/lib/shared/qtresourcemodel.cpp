@@ -343,7 +343,7 @@ void QtResourceModelPrivate::activate(QtResourceSet *resourceSet, const QStringL
     }
 
     if (!newResourceSetChanged && !needReregister && (m_currentResourceSet == resourceSet)) {
-        foreach (const QByteArray *data, toDelete)
+        for (const QByteArray *data : qAsConst(toDelete))
             deleteResource(data);
 
         return; // nothing changed
@@ -352,7 +352,7 @@ void QtResourceModelPrivate::activate(QtResourceSet *resourceSet, const QStringL
     if (needReregister)
         unregisterResourceSet(m_currentResourceSet);
 
-    foreach (const QByteArray *data, toDelete)
+    for (const QByteArray *data : qAsConst(toDelete))
         deleteResource(data);
 
     m_pathToData = newPathToData;

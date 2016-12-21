@@ -215,12 +215,10 @@ void WidgetFactory::loadPlugins()
 {
     m_customFactory.clear();
 
-    QDesignerPluginManager *pluginManager = m_core->pluginManager();
-
-    QList<QDesignerCustomWidgetInterface*> lst = pluginManager->registeredCustomWidgets();
-    foreach (QDesignerCustomWidgetInterface *c, lst) {
+    const QList<QDesignerCustomWidgetInterface*> &lst =
+        m_core->pluginManager()->registeredCustomWidgets();
+    for (QDesignerCustomWidgetInterface *c : lst)
         m_customFactory.insert(c->name(), c);
-    }
 }
 
 // Convencience to create non-widget objects. Returns 0 if unknown

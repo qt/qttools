@@ -270,21 +270,18 @@ void QDesignerWorkbench::saveGeometriesForModeChange()
         break;
     case TopLevelMode: {
         const QPoint desktopOffset = QApplication::desktop()->availableGeometry().topLeft();
-        foreach (QDesignerToolWindow *tw, m_toolWindows)
+        for (QDesignerToolWindow *tw : qAsConst(m_toolWindows))
             m_Positions.insert(tw, Position(tw, desktopOffset));
-        foreach (QDesignerFormWindow *fw, m_formWindows) {
+        for (QDesignerFormWindow *fw : qAsConst(m_formWindows))
             m_Positions.insert(fw,  Position(fw, desktopOffset));
-        }
     }
         break;
     case DockedMode: {
         const QPoint mdiAreaOffset = m_dockedMainWindow->mdiArea()->pos();
-        foreach (QDesignerToolWindow *tw, m_toolWindows) {
+        for (QDesignerToolWindow *tw : qAsConst(m_toolWindows))
             m_Positions.insert(tw, Position(dockWidgetOf(tw)));
-        }
-        foreach (QDesignerFormWindow *fw, m_formWindows) {
+        for (QDesignerFormWindow *fw : qAsConst(m_formWindows))
             m_Positions.insert(fw, Position(mdiSubWindowOf(fw), mdiAreaOffset));
-        }
     }
         break;
     }
@@ -374,12 +371,12 @@ void QDesignerWorkbench::switchToNeutralMode()
 
     m_mode = NeutralMode;
 
-    foreach (QDesignerToolWindow *tw, m_toolWindows) {
+    for (QDesignerToolWindow *tw : qAsConst(m_toolWindows)) {
         tw->setCloseEventPolicy(MainWindowBase::AcceptCloseEvents);
         tw->setParent(0);
     }
 
-    foreach (QDesignerFormWindow *fw, m_formWindows) {
+    for (QDesignerFormWindow *fw : qAsConst(m_formWindows)) {
         fw->setParent(0);
         fw->setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
     }
@@ -432,7 +429,7 @@ void QDesignerWorkbench::switchToDockedMode()
 #endif
     qDesigner->setMainWindow(m_dockedMainWindow);
 
-    foreach (QDesignerFormWindow *fw, m_formWindows) {
+    for (QDesignerFormWindow *fw : qAsConst(m_formWindows)) {
         QMdiSubWindow *subwin = m_dockedMainWindow->createMdiSubWindow(fw, magicalWindowFlags(fw),
                                                                        m_actionManager->closeFormAction()->shortcut());
         subwin->hide();
@@ -452,7 +449,7 @@ void QDesignerWorkbench::adjustMDIFormPositions()
 {
     const QPoint mdiAreaOffset = m_dockedMainWindow->mdiArea()->pos();
 
-    foreach (QDesignerFormWindow *fw, m_formWindows) {
+    for (QDesignerFormWindow *fw : qAsConst(m_formWindows)) {
         const PositionMap::const_iterator pit = m_Positions.constFind(fw);
         if (pit != m_Positions.constEnd())
             pit->applyTo(mdiSubWindowOf(fw), mdiAreaOffset);
@@ -506,7 +503,7 @@ void QDesignerWorkbench::switchToTopLevelMode()
     widgetBoxWrapper->restoreState(settings.mainWindowState(m_mode), MainWindowBase::settingsVersion());
 
     bool found_visible_window = false;
-    foreach (QDesignerToolWindow *tw, m_toolWindows) {
+    for (QDesignerToolWindow *tw : qAsConst(m_toolWindows)) {
         tw->setParent(magicalParent(tw), magicalWindowFlags(tw));
         settings.restoreGeometry(tw, tw->geometryHint());
         tw->action()->setChecked(tw->isVisible());
@@ -518,7 +515,7 @@ void QDesignerWorkbench::switchToTopLevelMode()
 
     m_actionManager->setBringAllToFrontVisible(true);
 
-    foreach (QDesignerFormWindow *fw, m_formWindows) {
+    for (QDesignerFormWindow *fw : qAsConst(m_formWindows)) {
         fw->setParent(magicalParent(fw), magicalWindowFlags(fw));
         fw->setAttribute(Qt::WA_DeleteOnClose, true);
         const PositionMap::const_iterator pit = m_Positions.constFind(fw);
@@ -628,7 +625,7 @@ void QDesignerWorkbench::initializeCorePlugins()
     QList<QObject*> plugins = QPluginLoader::staticInstances();
     plugins += core()->pluginManager()->instances();
 
-    foreach (QObject *plugin, plugins) {
+    for (QObject *plugin : qAsConst(plugins)) {
         if (QDesignerFormEditorPluginInterface *formEditorPlugin = qobject_cast<QDesignerFormEditorPluginInterface*>(plugin)) {
             if (!formEditorPlugin->isInitialized())
                 formEditorPlugin->initialize(core());
@@ -653,7 +650,7 @@ void QDesignerWorkbench::saveGeometries(QDesignerSettings &settings) const
     case TopLevelMode:
         settings.setToolBarsState(m_mode, m_topLevelData.toolbarManager->saveState(MainWindowBase::settingsVersion()));
         settings.setMainWindowState(m_mode, widgetBoxToolWindow()->saveState(MainWindowBase::settingsVersion()));
-        foreach (const QDesignerToolWindow *tw, m_toolWindows)
+        for (const QDesignerToolWindow *tw : m_toolWindows)
             settings.saveGeometryFor(tw);
         break;
     case NeutralMode:
@@ -683,7 +680,7 @@ bool QDesignerWorkbench::saveForm(QDesignerFormWindowInterface *frm)
 
 QDesignerFormWindow *QDesignerWorkbench::findFormWindow(QWidget *widget) const
 {
-    foreach (QDesignerFormWindow *formWindow, m_formWindows) {
+    for (QDesignerFormWindow *formWindow : m_formWindows) {
         if (formWindow->editor() == widget)
             return formWindow;
     }
@@ -695,7 +692,7 @@ bool QDesignerWorkbench::handleClose()
 {
     m_state = StateClosing;
     QList<QDesignerFormWindow *> dirtyForms;
-    foreach (QDesignerFormWindow *w, m_formWindows) {
+    for (QDesignerFormWindow *w : qAsConst(m_formWindows)) {
         if (w->editor()->isDirty())
             dirtyForms << w;
     }
@@ -722,7 +719,7 @@ bool QDesignerWorkbench::handleClose()
                 m_state = StateUp;
                 return false;
             case QMessageBox::Save:
-               foreach (QDesignerFormWindow *fw, dirtyForms) {
+               for (QDesignerFormWindow *fw : qAsConst(dirtyForms)) {
                    fw->show();
                    fw->raise();
                    if (!fw->close()) {
@@ -732,7 +729,7 @@ bool QDesignerWorkbench::handleClose()
                }
                break;
             case QMessageBox::Discard:
-              foreach (QDesignerFormWindow *fw, dirtyForms) {
+              for (QDesignerFormWindow *fw : qAsConst(dirtyForms)) {
                   fw->editor()->setDirty(false);
                   fw->setWindowModified(false);
               }
@@ -741,7 +738,7 @@ bool QDesignerWorkbench::handleClose()
         }
     }
 
-    foreach (QDesignerFormWindow *fw, m_formWindows)
+    for (QDesignerFormWindow *fw : qAsConst(m_formWindows))
         fw->close();
 
     saveSettings();
@@ -799,7 +796,7 @@ void QDesignerWorkbench::formWindowActionTriggered(QAction *a)
 
 void QDesignerWorkbench::closeAllToolWindows()
 {
-    foreach (QDesignerToolWindow *tw, m_toolWindows)
+    for (QDesignerToolWindow *tw : qAsConst(m_toolWindows))
         tw->hide();
 }
 
@@ -853,9 +850,9 @@ void QDesignerWorkbench::bringAllToFront()
 {
     if (m_mode !=  TopLevelMode)
         return;
-    foreach(QDesignerToolWindow *tw, m_toolWindows)
+    for (QDesignerToolWindow *tw : qAsConst(m_toolWindows))
         raiseWindow(tw);
-    foreach(QDesignerFormWindow *dfw, m_formWindows)
+    for (QDesignerFormWindow *dfw : qAsConst(m_formWindows))
         raiseWindow(dfw);
 }
 
@@ -1092,7 +1089,7 @@ void QDesignerWorkbench::restoreUISettings()
     if (font == m_toolWindows.front()->font())
         return;
 
-    foreach(QDesignerToolWindow *tw, m_toolWindows)
+    for (QDesignerToolWindow *tw : qAsConst(m_toolWindows))
         tw->setFont(font);
 }
 

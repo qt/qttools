@@ -230,7 +230,7 @@ QMimeData *ActionModel::mimeData(const QModelIndexList &indexes ) const
     ActionRepositoryMimeData::ActionList actionList;
 
     QSet<QAction*> actions;
-    foreach (const QModelIndex &index, indexes)
+    for (const QModelIndex &index : indexes)
         if (QStandardItem *item = itemFromIndex(index))
             if (QAction *action = actionOfItem(item))
                 actions.insert(action);
@@ -592,9 +592,11 @@ QItemSelection ActionView::selection() const
 ActionView::ActionList ActionView::selectedActions() const
 {
     ActionList rc;
-    foreach (const QModelIndex &index, selection().indexes())
+    const QModelIndexList &indexes = selection().indexes();
+    for (const QModelIndex &index : indexes) {
         if (index.column() == 0)
             rc += actionOfItem(m_model->itemFromIndex(index));
+    }
     return rc;
 }
 // ----------  ActionRepositoryMimeData
@@ -623,9 +625,11 @@ QPixmap  ActionRepositoryMimeData::actionDragPixmap(const QAction *action)
     if (!icon.isNull())
         return icon.pixmap(QSize(22, 22));
 
-    foreach (QWidget *w, action->associatedWidgets())
+    const QWidgetList &associatedWidgets = action->associatedWidgets();
+    for (QWidget *w : associatedWidgets) {
         if (QToolButton *tb = qobject_cast<QToolButton *>(w))
             return tb->grab(QRect(0, 0, -1, -1));
+    }
 
     // Create a QToolButton
     QToolButton *tb = new QToolButton;

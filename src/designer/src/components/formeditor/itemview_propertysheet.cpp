@@ -168,7 +168,8 @@ void ItemViewPropertySheet::initHeaderProperties(QHeaderView *hv, const QString 
     QDesignerPropertySheetExtension *headerSheet = d->m_propertySheet.value(hv);
     Q_ASSERT(headerSheet);
     const QString headerGroupS = QLatin1String(headerGroup);
-    foreach (const QString &realPropertyName, d->realPropertyNames()) {
+    const QStringList &realPropertyNames = d->realPropertyNames();
+    for (const QString &realPropertyName : realPropertyNames) {
         const int headerIndex = headerSheet->indexOf(realPropertyName);
         Q_ASSERT(headerIndex != -1);
         const QVariant defaultValue = realPropertyName == QLatin1String(visibleProperty) ?
