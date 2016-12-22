@@ -122,7 +122,7 @@ static Package readPackage(const QJsonObject &object, const QString &filePath, L
         if (p.qtParts.isEmpty())
             p.qtParts << QStringLiteral("libs");
 
-        foreach (const QString &part, p.qtParts) {
+        for (const QString &part : qAsConst(p.qtParts)) {
             if (part != QLatin1String("examples")
                     && part != QLatin1String("tests")
                     && part != QLatin1String("tools")
@@ -197,7 +197,8 @@ QVector<Package> scanDirectory(const QString &directory, LogLevel logLevel)
     dir.setNameFilters(QStringList() << QStringLiteral("qt_attribution.json"));
     dir.setFilter(QDir::AllDirs | QDir::NoDotAndDotDot | QDir::Files);
 
-    foreach (const QFileInfo &info, dir.entryInfoList()) {
+    const QFileInfoList entries = dir.entryInfoList();
+    for (const QFileInfo &info : entries) {
         if (info.isDir()) {
             packages += scanDirectory(info.filePath(), logLevel);
         } else {

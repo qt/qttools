@@ -210,7 +210,9 @@ RunnerEngine *AppxPhoneEngine::create(Runner *runner)
 QStringList AppxPhoneEngine::deviceNames()
 {
     QStringList deviceNames;
-    foreach (const CoreConDevice *device, coreConServer->devices())
+
+    const QList<CoreConDevice *> devices = coreConServer->devices();
+    for (const CoreConDevice *device : devices)
         deviceNames.append(device->name());
     return deviceNames;
 }

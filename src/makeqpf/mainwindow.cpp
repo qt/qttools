@@ -220,7 +220,7 @@ void MainWindow::on_sampleFile_editingFinished()
     QList<QChar> sortedCoverage = QList<QChar>::fromSet(coverage);
     qSort(sortedCoverage);
     // play simple :)
-    foreach (QChar ch, sortedCoverage) {
+    for (QChar ch : qAsConst(sortedCoverage)) {
         QPF::CharacterRange r;
         r.start = ch.unicode();
         r.end = r.start + 1;

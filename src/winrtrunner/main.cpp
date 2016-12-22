@@ -176,10 +176,10 @@ int main(int argc, char *argv[])
     if (parser.isSet(listDevicesOption)) {
         std::wcout << "Available devices:\n";
         const QMap<QString, QStringList> deviceNames = Runner::deviceNames();
-        foreach (const QString &profile, deviceNames.keys()) {
-            std::wcout << reinterpret_cast<const wchar_t *>(profile.utf16()) << ":\n";
+        for (auto it = deviceNames.cbegin(), end = deviceNames.cend(); it != end; ++it) {
+            std::wcout << reinterpret_cast<const wchar_t *>(it.key().utf16()) << ":\n";
             int index = 0;
-            foreach (const QString &device, deviceNames.value(profile)) {
+            for (const QString &device : it.value()) {
                 std::wcout << "  " << index++ << ' '
                            << reinterpret_cast<const wchar_t *>(device.utf16()) << '\n';
             }

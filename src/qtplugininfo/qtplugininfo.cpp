@@ -90,7 +90,8 @@ int main(int argc, char** argv)
         print |= PrintUserData;
 
     int retval = 0;
-    foreach (const QString &plugin, parser.positionalArguments()) {
+    const QStringList positionalArguments = parser.positionalArguments();
+    for (const QString &plugin : positionalArguments) {
         QByteArray pluginNativeName = QFile::encodeName(QDir::toNativeSeparators(plugin));
         if (!QFile::exists(plugin)) {
             std::cerr << "qtplugininfo: " << pluginNativeName.constData() << ": No such file or directory." << std::endl;

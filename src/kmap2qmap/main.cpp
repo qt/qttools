@@ -603,7 +603,8 @@ bool KeymapParser::parseKmap(QFile *f)
             keymaps.clear();
 
             if (tokens.count() > 1) {
-                foreach (const QByteArray &section, tokens[1].split(',')) {
+                const QByteArrayList tokenList = tokens[1].split(',');
+                for (const QByteArray &section : tokenList) {
                     int dashpos = section.indexOf('-');
 
                     //qWarning("Section %s", section.constData());
@@ -645,7 +646,7 @@ bool KeymapParser::parseKmap(QFile *f)
                     searchpath << d;
                 searchpath << QDir::current();
 
-                foreach (const QDir &path, searchpath) {
+                for (const QDir &path : qAsConst(searchpath)) {
                     QFile f2(path.filePath(incname));
                     //qWarning("  -- trying to include %s", qPrintable(f2.fileName()));
                     if (f2.open(QIODevice::ReadOnly)) {

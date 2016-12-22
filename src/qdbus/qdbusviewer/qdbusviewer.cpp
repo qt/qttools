@@ -436,7 +436,7 @@ void QDBusViewer::dumpMessage(const QDBusMessage &message)
         out += QLatin1String("&nbsp;&nbsp;(no arguments)");
     } else {
         out += QLatin1String("&nbsp;&nbsp;Arguments: ");
-        foreach (QVariant arg, args) {
+        for (const QVariant &arg : qAsConst(args)) {
             QString str = QDBusUtil::argumentToString(arg).toHtmlEscaped();
             // turn object paths into clickable links
             str.replace(objectPathRegExp, QLatin1String("[ObjectPath: <a href=\"qdbus://bus\\1\">\\1</a>]"));

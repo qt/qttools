@@ -544,7 +544,8 @@ void QPixelTool::saveToFile()
     fileDialog.setAcceptMode(QFileDialog::AcceptSave);
     fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::PicturesLocation));
     QStringList mimeTypes;
-    foreach (const QByteArray &mimeTypeB, QImageWriter::supportedMimeTypes())
+    const QByteArrayList supportedMimeTypes = QImageWriter::supportedMimeTypes();
+    for (const QByteArray &mimeTypeB : supportedMimeTypes)
         mimeTypes.append(QString::fromLatin1(mimeTypeB));
     fileDialog.setMimeTypeFilters(mimeTypes);
     const QString pngType = QLatin1String("image/png");

@@ -134,10 +134,10 @@ void FindFileDialog::findFiles()
 
     QDir directory(directoryComboBox->currentText());
 
-    QStringList allFiles = directory.entryList(QDir::Files | QDir::NoSymLinks);
+    const QStringList allFiles = directory.entryList(QDir::Files | QDir::NoSymLinks);
     QStringList matchingFiles;
 
-    foreach (QString file, allFiles) {
+    for (const QString &file : allFiles) {
         if (filePattern.exactMatch(file))
             matchingFiles << file;
     }

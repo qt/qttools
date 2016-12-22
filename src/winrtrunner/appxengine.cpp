@@ -542,7 +542,7 @@ bool AppxEngine::installDependencies()
     qCDebug(lcWinRtRunner) << __FUNCTION__;
 
     QSet<QString> toInstall;
-    foreach (const QString &dependencyName, d->dependencies) {
+    for (const QString &dependencyName : qAsConst(d->dependencies)) {
         toInstall.insert(dependencyName);
         qCDebug(lcWinRtRunner).nospace()
             << "dependency to be installed: " << dependencyName;

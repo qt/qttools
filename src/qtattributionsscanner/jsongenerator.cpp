@@ -69,7 +69,7 @@ void generate(QTextStream &out, const QVector<Package> &packages, LogLevel logLe
 
     QJsonDocument document;
     QJsonArray array;
-    foreach (const Package &package, packages)
+    for (const Package &package : packages)
         array.append(generate(package));
     document.setArray(array);
 

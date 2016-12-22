@@ -505,7 +505,7 @@ void QPF::addGlyphs(QFontEngine *fe, const QList<CharacterRange> &ranges)
 
         QGlyphLayoutArray<10> layout;
 
-        foreach (CharacterRange range, ranges) {
+        for (CharacterRange range : ranges) {
             if (debugVerbosity > 2)
                 qDebug() << "rendering range from" << range.start << "to" << range.end;
             for (uint uc = range.start; uc < range.end; ++uc) {

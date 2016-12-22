@@ -174,7 +174,7 @@ void dumpGlInfo(QTextStream &str, bool listExtensions)
             QList<QByteArray> extensionList = context.extensions().toList();
             std::sort(extensionList.begin(), extensionList.end());
             str << " \nFound " << extensionList.size() << " extensions:\n";
-            foreach (const QByteArray &extension, extensionList)
+            for (const QByteArray &extension : qAsConst(extensionList))
                 str << "  " << extension << '\n';
         }
     } else {
@@ -347,7 +347,8 @@ QString qtDiag(unsigned flags)
 #ifndef QT_NO_PROCESS
     const QProcessEnvironment systemEnvironment = QProcessEnvironment::systemEnvironment();
     str << "\nEnvironment:\n";
-    foreach (const QString &key, systemEnvironment.keys()) {
+    const QStringList keys = systemEnvironment.keys();
+    for (const QString &key : keys) {
         if (key.startsWith(QLatin1Char('Q')))
            str << "  " << key << "=\"" << systemEnvironment.value(key) << "\"\n";
     }
@@ -396,7 +397,8 @@ QString qtDiag(unsigned flags)
     DUMP_STANDARDPATH(str, AppConfigLocation)
 
     str << "\nFile selectors (increasing order of precedence):\n ";
-    foreach (const QString &s, QFileSelector().allSelectors())
+    const QStringList allSelectors = QFileSelector().allSelectors();
+    for (const QString &s : allSelectors)
         str << ' ' << s;
 
     str << "\n\nNetwork:\n  ";
@@ -553,7 +555,7 @@ QString qtDiag(unsigned flags)
     const QList<const QTouchDevice *> touchDevices = QTouchDevice::devices();
     if (!touchDevices.isEmpty()) {
         str << "Touch devices: " << touchDevices.size() << '\n';
-        foreach (const QTouchDevice *device, touchDevices) {
+        for (const QTouchDevice *device : touchDevices) {
             str << "  " << (device->type() == QTouchDevice::TouchScreen ? "TouchScreen" : "TouchPad")
                 << " \"" << device->name() << "\", max " << device->maximumTouchPoints()
                 << " touch points, capabilities:";

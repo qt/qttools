@@ -77,10 +77,12 @@ static void printArg(const QVariant &v)
     }
 
     if (v.userType() == QVariant::StringList) {
-        foreach (QString s, v.toStringList())
+        const QStringList sl = v.toStringList();
+        for (const QString &s : sl)
             printf("%s\n", qPrintable(s));
     } else if (v.userType() == QVariant::List) {
-        foreach (const QVariant &var, v.toList())
+        const QVariantList vl = v.toList();
+        for (const QVariant &var : vl)
             printArg(var);
     } else if (v.userType() == QVariant::Map) {
         const QVariantMap map = v.toMap();
@@ -394,7 +396,8 @@ static int placeCall(const QString &service, const QString &path, const QString 
         return 1;
     }
 
-    foreach (QVariant v, reply.arguments())
+    const QVariantList replyArguments = reply.arguments();
+    for (const QVariant &v : replyArguments)
         printArg(v);
 
     return 0;
@@ -408,7 +411,7 @@ static bool globServices(QDBusConnectionInterface *bus, const QString &glob)
 
     QStringList names = bus->registeredServiceNames();
     names.sort();
-    foreach (const QString &name, names)
+    for (const QString &name : qAsConst(names))
         if (pattern.exactMatch(name))
             printf("%s\n", qPrintable(name));
 
@@ -420,7 +423,7 @@ static void printAllServices(QDBusConnectionInterface *bus)
     const QStringList services = bus->registeredServiceNames();
     QMap<QString, QStringList> servicesWithAliases;
 
-    foreach (QString serviceName, services) {
+    for (const QString &serviceName : services) {
         QDBusReply<QString> reply = bus->serviceOwner(serviceName);
         QString owner = reply;
         if (owner.isEmpty())
