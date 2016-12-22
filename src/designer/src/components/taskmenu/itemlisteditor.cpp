@@ -76,7 +76,7 @@ AbstractItemEditor::AbstractItemEditor(QDesignerFormWindowInterface *form, QWidg
     m_editorFactory = new DesignerEditorFactory(form->core(), this);
     m_editorFactory->setSpacing(0);
     m_propertyBrowser = new ItemPropertyBrowser;
-    m_propertyBrowser->setFactoryForManager((QtVariantPropertyManager *)m_propertyManager,
+    m_propertyBrowser->setFactoryForManager(static_cast<QtVariantPropertyManager *>(m_propertyManager),
                                             m_editorFactory);
 
     connect(m_editorFactory, &DesignerEditorFactory::resetProperty,
@@ -216,7 +216,7 @@ void AbstractItemEditor::resetProperty(QtProperty *property)
     if (role == ItemFlagsShadowRole)
         prop->setValue(QVariant::fromValue((int)QListWidgetItem().flags()));
     else
-        prop->setValue(QVariant(prop->valueType(), (void *)0));
+        prop->setValue(QVariant(prop->valueType(), nullptr));
     prop->setModified(false);
 
     setItemData(role, QVariant());
@@ -248,7 +248,7 @@ void AbstractItemEditor::updateBrowser()
             if (role == ItemFlagsShadowRole)
                 val = QVariant::fromValue((int)QListWidgetItem().flags());
             else
-                val = QVariant((int)prop->value().userType(), (void *)0);
+                val = QVariant(int(prop->value().userType()), nullptr);
             prop->setModified(false);
         } else {
             prop->setModified(true);

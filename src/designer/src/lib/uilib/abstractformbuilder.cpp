@@ -1999,7 +1999,7 @@ void QAbstractFormBuilder::saveTreeWidgetExtraInfo(QTreeWidget *treeWidget, DomW
 
     QQueue<QPair<QTreeWidgetItem *, DomItem *> > pendingQueue;
     for (int i = 0; i < treeWidget->topLevelItemCount(); i++)
-        pendingQueue.enqueue(qMakePair(treeWidget->topLevelItem(i), (DomItem *)0));
+        pendingQueue.enqueue(qMakePair(treeWidget->topLevelItem(i), nullptr));
 
     while (!pendingQueue.isEmpty()) {
         const QPair<QTreeWidgetItem *, DomItem *> pair = pendingQueue.dequeue();
@@ -2353,7 +2353,7 @@ void QAbstractFormBuilder::loadTreeWidgetExtraInfo(DomWidget *ui_widget, QTreeWi
     QQueue<QPair<DomItem *, QTreeWidgetItem *> > pendingQueue;
     const QList<DomItem *> &widgetElementItem = ui_widget->elementItem();
     for (DomItem *ui_item : widgetElementItem)
-        pendingQueue.enqueue(qMakePair(ui_item, (QTreeWidgetItem *)0));
+        pendingQueue.enqueue(qMakePair(ui_item, nullptr));
 
     while (!pendingQueue.isEmpty()) {
         const QPair<DomItem *, QTreeWidgetItem *> pair = pendingQueue.dequeue();
