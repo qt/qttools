@@ -1,5 +1,4 @@
-QT += core-private widgets xml uitools-private
-qtHaveModule(printsupport): QT += printsupport
+QT += core-private widgets xml uitools-private printsupport
 
 DEFINES += QT_NO_CAST_FROM_ASCII QT_NO_CAST_TO_ASCII
 
