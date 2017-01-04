@@ -40,6 +40,7 @@
     \li \l {a-command} {\\a}
     \li \l {annotatedlist-command} {\\annotatedlist}
     \li \l {b-command} {\\b}
+    \li \l {badcode-command} {\\badcode}
     \li \l {b-command} {\\bold} (deprecated, use \\b)
     \li \l {brief-command} {\\brief}
     \li \l {c-command} {\\c}
@@ -973,14 +974,18 @@
     \note The \l {c-command} {\\c} command can be used for short code
     fragments within a sentence. The \\code command is for longer code
     snippets. It renders the code verbatim in a separate paragraph in
-    the code font.
+    a html <pre> element, and parses the enclosed snippet, creating links
+    to any known types in the code.
+
+    For documenting command-line instructions, shell scripts, or any
+    content that is not in a Qt language recognized by QDoc, use
+    \l {badcode-command}{\\badcode} instead.
 
     When processing any of the \\code, \l {newcode-command} {\\newcode} or \l
     {oldcode-command} {\\oldcode} commands, QDoc removes all
     indentation that is common for the verbatim code blocks within a
     \c{/}\c{*!} ... \c{*}\c{/} comment before it adds the standard
-    indentation. For that reason the recommended style is to use 8
-    spaces for the verbatim code contained within these commands
+    indentation.
 
     \note This doesn't apply to externally quoted code using the \l
     {quotefromfile-command} {\\quotefromfile} or \l
@@ -1022,10 +1027,22 @@
     \l{07-0-qdoc-commands-includingexternalcode.html#codeline-command}
     {\\codeline} commands.
 
-    See also \l {c-command} {\\c}, \l
+    See also \l {c-command} {\\c}, \l {badcode-command} {\\badcode}, \l
     {07-0-qdoc-commands-includingexternalcode.html#quotefromfile-command}
     {\\quotefromfile}, \l{newcode-command} {\\newcode}, and \l {oldcode-command}
     {\\oldcode}.
+
+    \target badcode-command
+    \section1 \\badcode
+
+    Similar to \l {code-command}{\\code}, \\badcode and \\endcode commands
+    enclose content that is rendered verbatim in a separate paragraph, but no
+    parsing or automatic link creation is performed. Instead, the content is
+    treated as plain text.
+
+    Substitute \\code with this command when documenting command-line
+    instructions, shell scripts or any other content that is not in a Qt
+    language, but should still be styled similarly to a \\code paragraph.
 
     \target newcode-command
     \section1 \\newcode

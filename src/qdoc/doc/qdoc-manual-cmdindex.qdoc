@@ -41,6 +41,7 @@
     \li \l {abstract-command} {\\abstract}
     \li \l {annotatedlist-command} {\\annotatedlist}
     \li \l {b-command} {\\b}
+    \li \l {badcode-command} {\\badcode}
     \li \l {b-command} {\\bold} (deprecated, use \\b)
     \li \l {brief-command} {\\brief}
     \li \l {c-command} {\\c}
