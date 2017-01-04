@@ -319,7 +319,7 @@
 
     The \\default command is for marking a QML property as the
     \l {default-properties}
-    {default property}. The word \span {class="newStuff"} {default} is shown in red in
+    {default property}. The word \c default is displayed in
     the documentation of the property.
 
     \code

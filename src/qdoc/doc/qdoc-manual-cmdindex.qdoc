@@ -41,14 +41,14 @@
     \li \l {abstract-command} {\\abstract}
     \li \l {annotatedlist-command} {\\annotatedlist}
     \li \l {b-command} {\\b}
-    \li \l {b-command} {\\bold} \span {class="newStuff"} {(deprecated, use \\b)}
+    \li \l {b-command} {\\bold} (deprecated, use \\b)
     \li \l {brief-command} {\\brief}
     \li \l {c-command} {\\c}
     \li \l {caption-command} {\\caption}
     \li \l {chapter-command} {\\chapter}
     \li \l {class-command} {\\class}
     \li \l {code-command} {\\code}
-    \li \l {codeline-command} {\\codeline},
+    \li \l {codeline-command} {\\codeline}
     \li \l {compat-command} {\\compat}
     \li \l {contentspage-command} {\\contentspage}
     \li \l {default-command} {\\default}
@@ -66,7 +66,7 @@
     \li \l {group-command} {\\group}
     \li \l {header-command} {\\header}
     \li \l {headerfile-command} {\\headerfile}
-    \li \l {e-command} {\\i} \span {class="newStuff"} {(deprecated, use \\e)}
+    \li \l {e-command} {\\i} (deprecated, use \\e)
     \li \l {if-command} {\\if}
     \li \l {image-command} {\\image}
     \li \l {include-command} {\\include}
@@ -92,7 +92,7 @@
     \li \l {noautolist-command} {\\noautolist}
     \li \l {nonreentrant-command} {\\nonreentrant}
     \li \l {note-command} {\\note}
-    \li \l {li-command} {\\o} \span {class="newStuff"} {(deprecated, use \\li)}
+    \li \l {li-command} {\\o} (deprecated, use \\li)
 
     \li \l {obsolete-command} {\\obsolete}
     \li \l {oldcode-command} {\\oldcode}
@@ -107,11 +107,12 @@
     \li \l {printto-command} {\\printto}
     \li \l {printuntil-command} {\\printuntil}
     \li \l {property-command} {\\property}
+    \li \l {qml-command} {\\qml}
     \li \l {qmlabstract-command} {\\qmlabstract}
     \li \l {qmlattachedproperty-command} {\\qmlattachedproperty}
     \li \l {qmlattachedsignal-command} {\\qmlattachedsignal}
     \li \l {qmlbasictype-command} {\\qmlbasictype}
-    \li \l {qmlclass-command} {\\qmlclass} \span {class="newStuff"} {(deprecated, use \\qmltype)}
+    \li \l {qmlclass-command} {\\qmlclass} (deprecated, use \\qmltype)
     \li \l {qmltype-command} {\\qmltype}
     \li \l {qmlmethod-command} {\\qmlmethod}
     \li \l {qmlproperty-command} {\\qmlproperty}
@@ -134,7 +135,7 @@
     \li \l {skipline-command} {\\skipline}
     \li \l {skipto-command} {\\skipto}
     \li \l {skipuntil-command} {\\skipuntil}
-    \li \l {snippet-command} {\\snippet},
+    \li \l {snippet-command} {\\snippet}
     \li \l {span-command} {\\span}
     \li \l {startpage-command} {\\startpage}
     \li \l {sub-command} {\\sub}
