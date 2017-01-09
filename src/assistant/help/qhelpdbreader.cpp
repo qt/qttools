@@ -177,7 +177,7 @@ bool QHelpDBReader::fileExists(const QString &virtualFolder,
             "c.FilterAttributeId=d.Id AND d.Name=\'%3\'"))
             .arg(quote(virtualFolder)).arg(quote(filePath))
             .arg(quote(filterAttributes.first()));
-        for (int i=1; i<filterAttributes.count(); ++i) {
+        for (int i = 1; i < filterAttributes.count(); ++i) {
             query.append(QString(QLatin1String(" INTERSECT SELECT COUNT(a.Name) FROM FileNameTable a, "
                 "FolderTable b, FileFilterTable c, FilterAttributeTable d WHERE a.FolderId=b.Id "
                 "AND b.Name=\'%1\' AND a.Name=\'%2\' AND a.FileId=c.FileId AND "
@@ -258,7 +258,7 @@ QStringList QHelpDBReader::indicesForFilter(const QStringList &filterAttributes)
         query = QString(QLatin1String("SELECT DISTINCT a.Name FROM IndexTable a, "
         "IndexFilterTable b, FilterAttributeTable c WHERE a.Id=b.IndexId "
         "AND b.FilterAttributeId=c.Id AND c.Name='%1'")).arg(quote(filterAttributes.first()));
-        for (int i=1; i<filterAttributes.count(); ++i) {
+        for (int i = 1; i < filterAttributes.count(); ++i) {
             query.append(QString(QLatin1String(" INTERSECT SELECT DISTINCT a.Name FROM IndexTable a, "
                 "IndexFilterTable b, FilterAttributeTable c WHERE a.Id=b.IndexId "
                 "AND b.FilterAttributeId=c.Id AND c.Name='%1'"))
@@ -311,7 +311,7 @@ void QHelpDBReader::linksForKeyword(const QString &keyword, const QStringList &f
             "AND a.NamespaceId=f.Id AND b.IndexId=a.Id AND b.FilterAttributeId=c.Id "
             "AND a.Name='%1' AND c.Name='%2'")).arg(quote(keyword))
             .arg(quote(filterAttributes.first()));
-        for (int i=1; i<filterAttributes.count(); ++i) {
+        for (int i = 1; i < filterAttributes.count(); ++i) {
             query.append(QString(QLatin1String(" INTERSECT SELECT d.Title, f.Name, e.Name, d.Name, a.Anchor "
                 "FROM IndexTable a, IndexFilterTable b, FilterAttributeTable c, "
                 "FileNameTable d, FolderTable e, NamespaceTable f "
@@ -372,7 +372,7 @@ void QHelpDBReader::linksForIdentifier(const QString &id,
             "AND a.NamespaceId=f.Id AND b.IndexId=a.Id AND b.FilterAttributeId=c.Id "
             "AND a.Identifier='%1' AND c.Name='%2'")).arg(quote(id))
             .arg(quote(filterAttributes.first()));
-        for (int i=0; i<filterAttributes.count(); ++i) {
+        for (int i = 0; i < filterAttributes.count(); ++i) {
             query.append(QString(QLatin1String(" INTERSECT SELECT d.Title, f.Name, e.Name, "
                 "d.Name, a.Anchor FROM IndexTable a, IndexFilterTable b, "
                 "FilterAttributeTable c, FileNameTable d, "
@@ -419,7 +419,7 @@ QList<QByteArray> QHelpDBReader::contentsForFilter(const QStringList &filterAttr
             "ContentsFilterTable b, FilterAttributeTable c "
             "WHERE a.Id=b.ContentsId AND b.FilterAttributeId=c.Id "
             "AND c.Name='%1'")).arg(quote(filterAttributes.first()));
-        for (int i=1; i<filterAttributes.count(); ++i) {
+        for (int i = 1; i < filterAttributes.count(); ++i) {
             query.append(QString(QLatin1String(" INTERSECT SELECT a.Data FROM ContentsTable a, "
             "ContentsFilterTable b, FilterAttributeTable c "
             "WHERE a.Id=b.ContentsId AND b.FilterAttributeId=c.Id "
@@ -478,7 +478,7 @@ QStringList QHelpDBReader::files(const QStringList &filterAttributes,
             "WHERE b.FolderId=a.Id AND b.FileId=c.FileId "
             "AND c.FilterAttributeId=d.Id AND d.Name=\'%1\' %2"))
             .arg(quote(filterAttributes.first())).arg(extension);
-        for (int i=1; i<filterAttributes.count(); ++i) {
+        for (int i = 1; i < filterAttributes.count(); ++i) {
             query.append(QString(QLatin1String(" INTERSECT SELECT a.Name, b.Name FROM "
                 "FolderTable a, FileNameTable b, FileFilterTable c, "
                 "FilterAttributeTable d WHERE b.FolderId=a.Id AND "
@@ -538,11 +538,11 @@ QSet<int> QHelpDBReader::indexIds(const QStringList &attributes) const
     QString query = QString(QLatin1String("SELECT a.IndexId FROM IndexFilterTable a, "
         "FilterAttributeTable b WHERE a.FilterAttributeId=b.Id "
         "AND b.Name='%1'")).arg(attributes.first());
-    for (int i=0; i<attributes.count(); ++i) {
+    for (const QString &attribute : attributes) {
         query.append(QString(QLatin1String(" INTERSECT SELECT a.IndexId FROM "
             "IndexFilterTable a, FilterAttributeTable b WHERE "
             "a.FilterAttributeId=b.Id AND b.Name='%1'"))
-            .arg(attributes.at(i)));
+            .arg(attribute));
     }
 
     if (!m_query->exec(query))

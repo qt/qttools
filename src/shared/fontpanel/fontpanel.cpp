@@ -206,9 +206,9 @@ void FontPanel::updateFamily(const QString &family)
 {
     // Update styles and trigger update of point sizes.
     // Try to maintain selection or select normal
-    const QString oldStyleString = styleString();
+    const QString &oldStyleString = styleString();
 
-    const QStringList styles = m_fontDatabase.styles(family);
+    const QStringList &styles = m_fontDatabase.styles(family);
     const bool hasStyles = !styles.empty();
 
     m_styleComboBox->setCurrentIndex(-1);

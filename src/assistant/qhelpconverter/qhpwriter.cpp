@@ -116,7 +116,7 @@ void QhpWriter::writeFilterSection()
 
 void QhpWriter::writeToc()
 {
-    const QList<ContentItem> list = m_adpReader->contents();
+    const QList<ContentItem> &list = m_adpReader->contents();
     if (list.isEmpty())
         return;
 
@@ -136,7 +136,7 @@ void QhpWriter::writeToc()
 
 void QhpWriter::writeKeywords()
 {
-    const QList<KeywordItem> list = m_adpReader->keywords();
+    const QList<KeywordItem> &list = m_adpReader->keywords();
     if (list.isEmpty())
         return;
 

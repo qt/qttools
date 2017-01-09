@@ -165,14 +165,14 @@ private:
         QString searchTerm = query;
 
         for (int i = 0; i < searchTerm.length(); ++i) {
-            if (searchTerm[i] == QLatin1Char('\"') && !s) {
+            if (searchTerm[i] == QLatin1Char('"') && !s) {
                 s = true;
                 phrase = searchTerm[i];
                 continue;
             }
-            if (searchTerm[i] != QLatin1Char('\"') && s)
+            if (searchTerm[i] != QLatin1Char('"') && s)
                 phrase += searchTerm[i];
-            if (searchTerm[i] == QLatin1Char('\"') && s) {
+            if (searchTerm[i] == QLatin1Char('"') && s) {
                 s = false;
                 phrase += searchTerm[i];
                 wordList.append(phrase);
@@ -345,7 +345,7 @@ private slots:
             }
 
             if (!exactQuery->text().isEmpty()) {
-                QString phrase = exactQuery->text().remove(QLatin1Char('\"'));
+                QString phrase = exactQuery->text().remove(QLatin1Char('"'));
                 phrase = phrase.simplified();
                 queryList.append(QHelpSearchQuery(QHelpSearchQuery::PHRASE,
                     QStringList(phrase)));

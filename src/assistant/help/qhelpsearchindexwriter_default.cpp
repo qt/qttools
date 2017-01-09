@@ -71,8 +71,8 @@ Writer::~Writer()
 
 void Writer::reset()
 {
-    for (auto it = index.cbegin(), end = index.cend(); it != end; ++it)
-        delete it.value();
+    for (const Entry *entry : qAsConst(index))
+        delete entry;
 
     index.clear();
     documentList.clear();
@@ -211,8 +211,8 @@ void QHelpSearchIndexWriter::run()
     if (reindex)
         engine.setCustomValue(key, QString());
 
-    const QStringList registeredDocs = engine.registeredDocumentations();
-    const QStringList indexedNamespaces = engine.customValue(key).toString().
+    const QStringList &registeredDocs = engine.registeredDocumentations();
+    const QStringList &indexedNamespaces = engine.customValue(key).toString().
         split(QLatin1Char('|'), QString::SkipEmptyParts);
 
     emit indexingStarted();
@@ -232,7 +232,7 @@ void QHelpSearchIndexWriter::run()
         if (indexedNamespaces.contains(namespaceName))
             continue;
 
-        const QList<QStringList> attributeSets =
+        const QList<QStringList> &attributeSets =
             engine.filterAttributeSets(namespaceName);
 
         for (const QStringList &attributes : attributeSets) {
@@ -241,7 +241,7 @@ void QHelpSearchIndexWriter::run()
             writer.removeIndex();
 
             QSet<QString> documentsSet;
-            const QList<QUrl> docFiles = engine.files(namespaceName, attributes);
+            const QList<QUrl> &docFiles = engine.files(namespaceName, attributes);
             for (QUrl url : docFiles) {
                 if (m_cancel)
                     return;
@@ -335,7 +335,7 @@ void QHelpSearchIndexWriter::run()
         if (namespaces.contains(namespaceName))
             continue;
 
-        const QList<QStringList> attributeSets =
+        const QList<QStringList> &attributeSets =
             engine.filterAttributeSets(namespaceName);
 
         for (const QStringList &attributes : attributeSets) {

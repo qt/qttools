@@ -220,7 +220,7 @@ bool Reader::splitSearchTerm(const QString &searchTerm, QStringList *terms,
                 }
                 *seqWords += s.split(QLatin1Char(' '));
                 *termSeq << s;
-                beg = term.indexOf(QLatin1Char('\"'), end + 1);
+                beg = term.indexOf(QLatin1Char('"'), end + 1);
             }
         } else {
             qWarning("Full Text Search, the closing quotation mark is missing.");
@@ -236,9 +236,9 @@ void Reader::searchInIndex(const QStringList &terms)
     for (const QString &term : terms) {
         QVector<Document> documents;
 
-        for (auto it = searchIndexTable.cbegin(), end = searchIndexTable.cend(); it != end; ++it) {
-            const EntryTable &entryTable = it.value().first;
-            const DocumentList &documentList = it.value().second;
+        for (const Index &index : qAsConst(searchIndexTable)) {
+            const EntryTable &entryTable = index.first;
+            const DocumentList &documentList = index.second;
 
             if (term.contains(QLatin1Char('*')))
                 documents = setupDummyTerm(getWildcardTerms(term, entryTable), entryTable);
@@ -306,8 +306,8 @@ bool Reader::searchForPattern(const QStringList &patterns, const QStringList &wo
     if (data.isEmpty())
         return false;
 
-    for (auto mit = miniIndex.cbegin(); mit != miniIndex.cend(); ++mit)
-        delete mit.value();
+    for (const PosEntry *entry : qAsConst(miniIndex))
+        delete entry;
 
     miniIndex.clear();
 
@@ -377,7 +377,7 @@ bool Reader::searchForPattern(const QStringList &patterns, const QStringList &wo
 }
 
 QVector<Document> Reader::setupDummyTerm(const QStringList &terms,
-                                              const EntryTable &entryTable)
+                                         const EntryTable &entryTable)
 {
     QList<Term> termList;
     for (const QString &term : terms) {
@@ -453,16 +453,16 @@ void Reader::buildMiniIndex(const QString &string)
 
 void Reader::reset()
 {
-    for (auto it = indexTable.begin(), end = indexTable.end(); it != end; ++it) {
-        cleanupIndex(it.value().first);
-        it.value().second.clear();
+    for (Index &index : indexTable) {
+        cleanupIndex(index.first);
+        index.second.clear();
     }
 }
 
 void Reader::cleanupIndex(EntryTable &entryTable)
 {
-    for (auto it = entryTable.cbegin(), end = entryTable.cend(); it != end; ++it)
-            delete it.value();
+    for (const Entry *entry : qAsConst(entryTable))
+        delete entry;
 
     entryTable.clear();
 }
@@ -509,8 +509,8 @@ void QHelpSearchIndexReaderDefault::run()
     if (!engine.setupData())
         return;
 
-    const QStringList registeredDocs = engine.registeredDocumentations();
-    const QStringList indexedNamespaces = engine.customValue(key).toString().
+    const QStringList &registeredDocs = engine.registeredDocumentations();
+    const QStringList &indexedNamespaces = engine.customValue(key).toString().
         split(QLatin1Char('|'), QString::SkipEmptyParts);
 
     emit searchingStarted();
@@ -526,7 +526,7 @@ void QHelpSearchIndexReaderDefault::run()
         }
         mutex.unlock();
 
-        const QList<QStringList> attributeSets =
+        const QList<QStringList> &attributeSets =
             engine.filterAttributeSets(namespaceName);
 
         for (const QStringList &attributes : attributeSets) {
@@ -550,7 +550,7 @@ void QHelpSearchIndexReaderDefault::run()
         // search for term(s)
         m_reader.searchInIndex(terms);    // TODO: should this be interruptible as well ???
 
-        const QVector<DocumentInfo> hits = m_reader.hits();
+        const QVector<DocumentInfo> &hits = m_reader.hits();
         if (!hits.isEmpty()) {
             if (termSeq.isEmpty()) {
                 for (const DocumentInfo &docInfo : hits) {

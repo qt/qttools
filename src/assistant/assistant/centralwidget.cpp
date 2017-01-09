@@ -539,7 +539,7 @@ void CentralWidget::highlightSearchTerms()
     TRACE_OBJ
     QHelpSearchEngine *searchEngine =
         HelpEngineWrapper::instance().searchEngine();
-    const QList<QHelpSearchQuery> queryList = searchEngine->query();
+    const QList<QHelpSearchQuery> &queryList = searchEngine->query();
 
     QStringList terms;
     for (const QHelpSearchQuery &query : queryList) {

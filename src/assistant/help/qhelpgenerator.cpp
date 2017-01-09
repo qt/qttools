@@ -283,7 +283,7 @@ void QHelpGenerator::writeTree(QDataStream &s, QHelpDataContentItem *item, int d
     s << item->reference();
     s << item->title();
     for (QHelpDataContentItem *i : item->children())
-        writeTree(s, i, depth+1);
+        writeTree(s, i, depth + 1);
 }
 
 /*!

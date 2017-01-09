@@ -66,7 +66,7 @@ bool FilterPage::validatePage()
     QString str;
     CustomFilter customFilter;
     QTreeWidgetItem *item = 0;
-    for (int i=0; i<m_ui.customFilterWidget->topLevelItemCount(); ++i) {
+    for (int i = 0; i < m_ui.customFilterWidget->topLevelItemCount(); ++i) {
         item = m_ui.customFilterWidget->topLevelItem(i);
         str = item->text(0);
         if (str.isEmpty() || names.contains(str)) {

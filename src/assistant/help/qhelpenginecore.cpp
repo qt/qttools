@@ -79,8 +79,8 @@ void QHelpEngineCorePrivate::clearMaps()
 {
     emit q->readersAboutToBeInvalidated();
 
-    for (auto it = readerMap.cbegin(), end = readerMap.cend(); it != end; ++it)
-        delete it.value();
+    for (const QHelpDBReader *reader : qAsConst(readerMap))
+        delete reader;
 
     readerMap.clear();
     fileNameReaderMap.clear();
@@ -103,7 +103,7 @@ bool QHelpEngineCorePrivate::setup()
         return false;
     }
 
-    const QHelpCollectionHandler::DocInfoList docList =
+    const QHelpCollectionHandler::DocInfoList &docList =
         collectionHandler->registeredDocumentations();
     QFileInfo fi(collectionHandler->collectionFile());
     QString absFileName;
@@ -358,7 +358,7 @@ bool QHelpEngineCore::unregisterDocumentation(const QString &namespaceName)
 QString QHelpEngineCore::documentationFileName(const QString &namespaceName)
 {
     if (d->setup()) {
-        const QHelpCollectionHandler::DocInfoList docList =
+        const QHelpCollectionHandler::DocInfoList &docList =
             d->collectionHandler->registeredDocumentations();
         for (const QHelpCollectionHandler::DocInfo &info : docList) {
             if (info.namespaceName == namespaceName) {
@@ -383,7 +383,7 @@ QStringList QHelpEngineCore::registeredDocumentations() const
     QStringList list;
     if (!d->setup())
         return list;
-    const QHelpCollectionHandler::DocInfoList docList = d->collectionHandler->registeredDocumentations();
+    const QHelpCollectionHandler::DocInfoList &docList = d->collectionHandler->registeredDocumentations();
     for (const QHelpCollectionHandler::DocInfo &info : docList) {
         list.append(info.namespaceName);
     }
@@ -529,7 +529,7 @@ QList<QUrl> QHelpEngineCore::files(const QString namespaceName,
     url.setScheme(QLatin1String("qthelp"));
     url.setAuthority(namespaceName);
 
-    const QStringList files = reader->files(filterAttributes, extensionFilter);
+    const QStringList &files = reader->files(filterAttributes, extensionFilter);
     for (const QString &file : files) {
         url.setPath(QLatin1String("/") + file);
         res.append(url);
@@ -565,7 +565,7 @@ QUrl QHelpEngineCore::findFile(const QUrl &url) const
     }
 
     QStringList filterAtts = filterAttributes(currentFilter());
-    for (QHelpDBReader *reader : d->virtualFolderMap.values(virtualFolder)) {
+    for (const QHelpDBReader *reader : d->virtualFolderMap.values(virtualFolder)) {
         if (reader == defaultReader)
             continue;
         if (reader->fileExists(virtualFolder, filePath, filterAtts)) {
@@ -575,7 +575,7 @@ QUrl QHelpEngineCore::findFile(const QUrl &url) const
         }
     }
 
-    for (QHelpDBReader *reader : d->virtualFolderMap.values(virtualFolder)) {
+    for (const QHelpDBReader *reader : d->virtualFolderMap.values(virtualFolder)) {
         if (reader == defaultReader)
             continue;
         if (reader->fileExists(virtualFolder, filePath)) {
@@ -615,7 +615,7 @@ QByteArray QHelpEngineCore::fileData(const QUrl &url) const
     }
 
     if (ba.isEmpty()) {
-        for (QHelpDBReader *reader : d->virtualFolderMap.values(virtualFolder)) {
+        for (const QHelpDBReader *reader : d->virtualFolderMap.values(virtualFolder)) {
             if (reader == defaultReader)
                 continue;
             ba = reader->fileData(virtualFolder, filePath);
@@ -639,7 +639,7 @@ QMap<QString, QUrl> QHelpEngineCore::linksForIdentifier(const QString &id) const
         return linkMap;
 
     QStringList atts = filterAttributes(d->currentFilter);
-    for (QHelpDBReader *reader : qAsConst(d->readerMap))
+    for (const QHelpDBReader *reader : qAsConst(d->readerMap))
         reader->linksForIdentifier(id, atts, linkMap);
 
     return linkMap;

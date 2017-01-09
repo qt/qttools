@@ -270,7 +270,7 @@ void QHelpContentProvider::run()
             QThread::currentThread()), 0);
         if (!reader.init())
             continue;
-        for (const QByteArray& ba : reader.contentsForFilter(atts)) {
+        for (const QByteArray &ba : reader.contentsForFilter(atts)) {
             if (ba.size() < 1)
                 continue;
 
@@ -558,7 +558,7 @@ bool QHelpContentWidget::searchContentItem(QHelpContentModel *model, const QMode
         return true;
     }
 
-    for (int i=0; i<parentItem->childCount(); ++i) {
+    for (int i = 0; i < parentItem->childCount(); ++i) {
         if (searchContentItem(model, model->index(i, 0, parent), cleanPath))
             return true;
     }

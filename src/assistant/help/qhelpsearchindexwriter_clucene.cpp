@@ -622,7 +622,7 @@ void QHelpSearchIndexWriter::run()
         const QLatin1String oldKey("CluceneSearchNamespaces");
         if (!engine.customValue(oldKey, QString()).isNull()) {
             // old style qhc file < 4.4.2, need to convert...
-            const QStringList indexedNamespaces
+            const QStringList &indexedNamespaces
                 = engine.customValue(oldKey).toString()
                   .split(QLatin1Char('|'), QString::SkipEmptyParts);
             for (const QString &nameSpace : indexedNamespaces)
@@ -646,7 +646,7 @@ void QHelpSearchIndexWriter::run()
 
         QCLuceneIndexWriter *writer = 0;
         QCLuceneStandardAnalyzer analyzer;
-        const QStringList registeredDocs = engine.registeredDocumentations();
+        const QStringList &registeredDocs = engine.registeredDocumentations();
 
         QLocalSocket localSocket;
         localSocket.connectToServer(QString(QLatin1String("QtAssistant%1"))
@@ -732,7 +732,7 @@ void QHelpSearchIndexWriter::run()
             if (indexMap.contains(namespaceName))
                 continue;
 
-            const QList<QStringList> attributeSets =
+            const QList<QStringList> &attributeSets =
                     engine.filterAttributeSets(namespaceName);
 
             if (attributeSets.isEmpty()) {
@@ -771,7 +771,7 @@ void QHelpSearchIndexWriter::run()
         if (!m_cancel) {
             mutexLocker.unlock();
 
-            const QStringList indexedNamespaces = indexMap.keys();
+            const QStringList &indexedNamespaces = indexMap.keys();
             for (const QString &namespaceName : indexedNamespaces) {
                 mutexLocker.relock();
                 if (m_cancel)

@@ -175,7 +175,7 @@ void QHelpIndexProvider::run()
             QThread::currentThread()), 0);
         if (!reader.init())
             continue;
-        const QStringList list = reader.indicesForFilter(atts);
+        const QStringList &list = reader.indicesForFilter(atts);
         if (!list.isEmpty()) {
             m_mutex.lock();
             for (const QString &s : list)
@@ -289,7 +289,7 @@ QMap<QString, QUrl> QHelpIndexModel::linksForKeyword(const QString &keyword) con
 {
     QMap<QString, QUrl> linkMap;
     QStringList filterAttributes = d->helpEngine->q->filterAttributes(d->currentFilter);
-    for (QHelpDBReader *reader : d->activeReaders)
+    for (const QHelpDBReader *reader : qAsConst(d->activeReaders))
         reader->linksForKeyword(keyword, filterAttributes, linkMap);
     return linkMap;
 }

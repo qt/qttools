@@ -193,7 +193,7 @@ bool ConversionWizard::eventFilter(QObject *obj, QEvent *e)
 QStringList ConversionWizard::getUnreferencedFiles(const QStringList &files)
 {
     QStringList lst;
-    QSet<QString> adpFiles = m_adpReader.files();
+    const QSet<QString> &adpFiles = m_adpReader.files();
     for (const QString &s : files) {
         if (!adpFiles.contains(s))
             lst.append(s);

@@ -65,7 +65,7 @@ void PathPage::setPath(const QString &path)
 QStringList PathPage::paths() const
 {
     QStringList lst;
-    for (int i = 0; i<m_ui.pathListWidget->count(); ++i)
+    for (int i = 0; i < m_ui.pathListWidget->count(); ++i)
         lst.append(m_ui.pathListWidget->item(i)->text());
     return lst;
 }

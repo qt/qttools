@@ -444,12 +444,11 @@ void MainWindow::lookForNewQtDocumentation()
     TRACE_OBJ
     HelpEngineWrapper &helpEngine = HelpEngineWrapper::instance();
 
-    const QStringList docs = newQtDocumentation();
+    const QStringList &docs = newQtDocumentation();
     const int docCount = docs.size();
     QList<QtDocInstaller::DocInfo> qtDocInfos;
     qtDocInfos.reserve(docCount);
-    for (int d = 0; d < docCount; ++d) {
-        const QString &doc = docs.at(d);
+    for (const QString &doc : docs) {
         const QtDocInstaller::DocInfo docInfo(doc, helpEngine.qtDocInfo(doc));
         qtDocInfos.append(docInfo);
         if (warnAboutMissingModules && (docInfo.second.isEmpty() || docInfo.second.first().isEmpty()))
@@ -1033,7 +1032,7 @@ void MainWindow::updateApplicationFont()
     if (helpEngine.usesAppFont())
         font = helpEngine.appFont();
 
-    const QWidgetList widgets = QApplication::allWidgets();
+    const QWidgetList &widgets = QApplication::allWidgets();
     for (QWidget *widget : widgets)
         widget->setFont(font);
 }

@@ -75,7 +75,7 @@ RemoteControl::RemoteControl(MainWindow *mainWindow)
 void RemoteControl::handleCommandString(const QString &cmdString)
 {
     TRACE_OBJ
-    const QStringList commands = cmdString.split(QLatin1Char(';'));
+    const QStringList &commands = cmdString.split(QLatin1Char(';'));
     for (const QString &command : commands) {
         QString cmd, arg;
         splitInputString(command, cmd, arg);

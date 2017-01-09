@@ -122,7 +122,7 @@ void RegisteredDocsModel::setDocEntries(const RegisteredDocEntries &e)
 static RegisteredDocEntries registeredDocEntries(const HelpEngineWrapper &wrapper)
 {
     RegisteredDocEntries result;
-    const QStringList nameSpaces = wrapper.registeredDocumentations();
+    const QStringList &nameSpaces = wrapper.registeredDocumentations();
     result.reserve(nameSpaces.size());
     for (const QString &nameSpace : nameSpaces) {
         RegisteredDocEntry entry;
@@ -260,12 +260,10 @@ void PreferencesDialog::updateFilterPage()
 void PreferencesDialog::updateAttributes(QListWidgetItem *item)
 {
     TRACE_OBJ
-    QStringList checkedList;
-    if (item)
-        checkedList = m_filterMap.value(item->text());
-    QTreeWidgetItem *itm;
+    const QStringList &checkedList = item ? m_filterMap.value(item->text()) : QStringList();
+
     for (int i = 0; i < m_ui.attributeWidget->topLevelItemCount(); ++i) {
-        itm = m_ui.attributeWidget->topLevelItem(i);
+        QTreeWidgetItem *itm = m_ui.attributeWidget->topLevelItem(i);
         if (checkedList.contains(itm->text(0)))
             itm->setCheckState(0, Qt::Checked);
         else
@@ -328,7 +326,7 @@ void PreferencesDialog::removeFilter()
 void PreferencesDialog::addDocumentationLocal()
 {
     TRACE_OBJ
-    const QStringList fileNames = QFileDialog::getOpenFileNames(this,
+    const QStringList &fileNames = QFileDialog::getOpenFileNames(this,
         tr("Add Documentation"), QString(), tr("Qt Compressed Help Files (*.qch)"));
     if (fileNames.isEmpty())
         return;
@@ -402,7 +400,7 @@ void PreferencesDialog::removeDocumentation()
     bool foundBefore = false;
     for (int i = currentSelection.size() - 1; i >= 0; --i) {
         const int row = currentSelection.at(i);
-        const QString& ns = entries.at(row).nameSpace;
+        const QString &ns = entries.at(row).nameSpace;
         if (!foundBefore && OpenPagesManager::instance()->pagesOpenForNamespace(ns)) {
             if (0 == QMessageBox::information(this, tr("Remove Documentation"),
                 tr("Some documents currently opened in Assistant reference the "
@@ -419,7 +417,7 @@ void PreferencesDialog::removeDocumentation()
     m_registeredDocsModel->setDocEntries(entries);
 
     if (m_registereredDocsFilterModel->rowCount()) {
-        const QModelIndex first = m_registereredDocsFilterModel->index(0, 0);
+        const QModelIndex &first = m_registereredDocsFilterModel->index(0, 0);
         m_ui.registeredDocsListView->selectionModel()->setCurrentIndex(first,
                                                                        QItemSelectionModel::ClearAndSelect);
     }
@@ -437,8 +435,8 @@ void PreferencesDialog::applyChanges()
                 if (!m_filterMap.contains(it.key())) {
                     filtersWereChanged = true;
                 } else {
-                    const QStringList a = it.value();
-                    const QStringList b = m_filterMap.value(it.key());
+                    const QStringList &a = it.value();
+                    const QStringList &b = m_filterMap.value(it.key());
                     if (a.count() != b.count()) {
                         filtersWereChanged = true;
                     } else {
@@ -515,13 +513,13 @@ void PreferencesDialog::updateFontSettingsPage()
     connect(m_browserFontPanel, SIGNAL(toggled(bool)), this,
         SLOT(browserFontSettingToggled(bool)));
 
-    const QList<QComboBox*> appCombos = m_appFontPanel->findChildren<QComboBox*>();
+    const QList<QComboBox*> &appCombos = m_appFontPanel->findChildren<QComboBox*>();
     for (QComboBox* box : appCombos) {
         connect(box, SIGNAL(currentIndexChanged(int)), this,
             SLOT(appFontSettingChanged(int)));
     }
 
-    const QList<QComboBox*> browserCombos = m_browserFontPanel->findChildren<QComboBox*>();
+    const QList<QComboBox*> &browserCombos = m_browserFontPanel->findChildren<QComboBox*>();
     for (QComboBox* box : browserCombos) {
         connect(box, SIGNAL(currentIndexChanged(int)), this,
             SLOT(browserFontSettingChanged(int)));

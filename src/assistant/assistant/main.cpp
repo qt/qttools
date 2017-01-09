@@ -179,7 +179,7 @@ bool removeSearchIndex(const QString &collectionFile)
     if (!dir.exists() || localSocket.waitForConnected())
         return false;
 
-    const QStringList list = dir.entryList(QDir::Files | QDir::Hidden);
+    const QStringList &list = dir.entryList(QDir::Files | QDir::Hidden);
     for (const QString &item : list)
         dir.remove(item);
     return true;
