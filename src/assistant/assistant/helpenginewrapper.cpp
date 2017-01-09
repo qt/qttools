@@ -107,7 +107,7 @@ private:
 const QString HelpEngineWrapper::TrUnfiltered()
 {
     static QString s;
-    if (s.isNull())
+    if (s.isEmpty())
         s = HelpEngineWrapper::tr("Unfiltered");
     return s;
 }

@@ -186,7 +186,7 @@ void SearchWidget::contextMenuEvent(QContextMenuEvent *contextMenuEvent)
     QKeySequence keySeq;
 #ifndef QT_NO_CLIPBOARD
     keySeq = QKeySequence::Copy;
-    QAction *copyAction = menu.addAction(tr("&Copy") + QLatin1String("\t") +
+    QAction *copyAction = menu.addAction(tr("&Copy") + QLatin1Char('\t') +
         keySeq.toString(QKeySequence::NativeText));
     copyAction->setEnabled(QTextCursor(browser->textCursor()).hasSelection());
 #endif
@@ -196,7 +196,7 @@ void SearchWidget::contextMenuEvent(QContextMenuEvent *contextMenuEvent)
 
     keySeq = QKeySequence(Qt::CTRL);
     QAction *newTabAction = menu.addAction(tr("Open Link in New Tab") +
-        QLatin1String("\t") + keySeq.toString(QKeySequence::NativeText) +
+        QLatin1Char('\t') + keySeq.toString(QKeySequence::NativeText) +
         QLatin1String("LMB"));
     newTabAction->setEnabled(!link.isEmpty() && link.isValid());
 
@@ -204,7 +204,7 @@ void SearchWidget::contextMenuEvent(QContextMenuEvent *contextMenuEvent)
 
     keySeq = QKeySequence::SelectAll;
     QAction *selectAllAction = menu.addAction(tr("Select All") +
-        QLatin1String("\t") + keySeq.toString(QKeySequence::NativeText));
+        QLatin1Char('\t') + keySeq.toString(QKeySequence::NativeText));
 
     QAction *usedAction = menu.exec(mapToGlobal(contextMenuEvent->pos()));
 #ifndef QT_NO_CLIPBOARD

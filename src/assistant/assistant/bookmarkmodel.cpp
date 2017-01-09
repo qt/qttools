@@ -239,7 +239,7 @@ BookmarkModel::data(const QModelIndex &index, int role) const
                 case Qt::EditRole: {
                 case Qt::DisplayRole:
                     if (index.data(UserRoleFolder).toBool() && index.column() == 1)
-                        return QLatin1String("");
+                        return QString();
                     return item->data(index.column());
                 }   break;
 

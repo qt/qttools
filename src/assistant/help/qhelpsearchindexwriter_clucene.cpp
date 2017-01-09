@@ -427,11 +427,7 @@ private:
         const QByteArray &codec = QHelpGlobal::codecFromData(data).toLatin1();
         textStream.setCodec(QTextCodec::codecForName(codec.constData()));
 
-        QString stream = textStream.readAll();
-        if (stream.isNull() || stream.isEmpty())
-            return QString();
-
-        return stream;
+        return textStream.readAll();
     }
 
     QString parseData() const
@@ -535,7 +531,7 @@ private:
         }
     error:
         pos = recover;
-        return QLatin1String(" ");
+        return QString(QChar::Space);
     }
     // end taken from qtexthtmlparser
 
@@ -620,7 +616,7 @@ void QHelpSearchIndexWriter::run()
 
         const QLatin1String key("CluceneIndexedNamespaces");
         if (reindex)
-            engine.setCustomValue(key, QLatin1String(""));
+            engine.setCustomValue(key, QString());
 
         QMap<QString, QDateTime> indexMap;
         const QLatin1String oldKey("CluceneSearchNamespaces");
@@ -628,7 +624,7 @@ void QHelpSearchIndexWriter::run()
             // old style qhc file < 4.4.2, need to convert...
             const QStringList indexedNamespaces
                 = engine.customValue(oldKey).toString()
-                  .split(QLatin1String("|"), QString::SkipEmptyParts);
+                  .split(QLatin1Char('|'), QString::SkipEmptyParts);
             for (const QString &nameSpace : indexedNamespaces)
                 indexMap.insert(nameSpace, QDateTime());
             engine.removeCustomValue(oldKey);
@@ -801,7 +797,7 @@ bool QHelpSearchIndexWriter::addDocuments(const QList<QUrl> docFiles,
     QCLuceneAnalyzer &analyzer)
 {
     QMutexLocker locker(&mutex);
-    const QString attrList = attributes.join(QLatin1String(" "));
+    const QString attrList = attributes.join(QChar::Space);
 
     locker.unlock();
     for (const QUrl &url : docFiles) {

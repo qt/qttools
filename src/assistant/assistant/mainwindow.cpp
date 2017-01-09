@@ -751,7 +751,7 @@ void MainWindow::setupAddressToolbar()
     addressToolBar->setObjectName(QLatin1String("AddressToolBar"));
     insertToolBarBreak(addressToolBar);
 
-    addressToolBar->addWidget(new QLabel(tr("Address:").append(QLatin1String(" ")),
+    addressToolBar->addWidget(new QLabel(tr("Address:").append(QChar::Space),
         this));
     addressToolBar->addWidget(m_addressLineEdit);
 

@@ -209,7 +209,7 @@ void BookmarkDialog::customContextMenuRequested(const QPoint &point)
     if (isRootItem(index))
         return; // check if we go to rename the "Bookmarks Menu", bail
 
-    QMenu menu(QLatin1String(""), this);
+    QMenu menu(QString(), this);
     QAction *renameItem = menu.addAction(tr("Rename Folder"));
 
     QAction *picked = menu.exec(ui.treeView->mapToGlobal(point));

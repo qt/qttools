@@ -62,7 +62,7 @@ namespace {
         int j = 0;
         int i = str.indexOf(QLatin1Char('*'), j );
 
-        if (str.startsWith(QLatin1String("*")))
+        if (str.startsWith(QLatin1Char('*')))
             lst << QLatin1String("*");
 
         while ( i != -1 ) {
@@ -164,7 +164,7 @@ void Reader::filterFilesForAttributes(const QStringList &attributes)
     for (auto it = indexTable.cbegin(), end = indexTable.cend(); it != end; ++it) {
         const QString fileName = it.key();
         bool containsAll = true;
-        const QStringList split = fileName.split(QLatin1String("@"));
+        const QStringList split = fileName.split(QLatin1Char('@'));
         for (const QString &attribute : attributes) {
             if (!split.contains(attribute, Qt::CaseInsensitive)) {
                 containsAll = false;
@@ -179,7 +179,7 @@ void Reader::filterFilesForAttributes(const QStringList &attributes)
 
 void Reader::setIndexFile(const QString &namespaceName, const QString &attributes)
 {
-    const QString extension = namespaceName + QLatin1String("@") + attributes;
+    const QString extension = namespaceName + QLatin1Char('@') + attributes;
     indexFile = indexPath + QLatin1String("/indexdb40.") + extension;
     documentFile = indexPath + QLatin1String("/indexdoc40.") + extension;
 }
@@ -193,7 +193,7 @@ bool Reader::splitSearchTerm(const QString &searchTerm, QStringList *terms,
     term = term.replace(QLatin1Char('\''), QLatin1Char('"'));
     term = term.replace(QLatin1Char('`'), QLatin1Char('"'));
     term.remove(QLatin1Char('-'));
-    term = term.replace(QRegExp(QLatin1String("\\s[\\S]?\\s")), QLatin1String(" "));
+    term = term.replace(QRegExp(QLatin1String("\\s[\\S]?\\s")), QString(QChar::Space));
 
     *terms = term.split(QLatin1Char(' '));
     for (QString &str : *terms) {
@@ -511,7 +511,7 @@ void QHelpSearchIndexReaderDefault::run()
 
     const QStringList registeredDocs = engine.registeredDocumentations();
     const QStringList indexedNamespaces = engine.customValue(key).toString().
-        split(QLatin1String("|"), QString::SkipEmptyParts);
+        split(QLatin1Char('|'), QString::SkipEmptyParts);
 
     emit searchingStarted();
 
@@ -531,7 +531,7 @@ void QHelpSearchIndexReaderDefault::run()
 
         for (const QStringList &attributes : attributeSets) {
             // read all index files
-            m_reader.setIndexFile(namespaceName, attributes.join(QLatin1String("@")));
+            m_reader.setIndexFile(namespaceName, attributes.join(QLatin1Char('@')));
             if (!m_reader.readIndex()) {
                 qWarning("Full Text Search, could not read file for namespace: %s.",
                     namespaceName.toUtf8().constData());

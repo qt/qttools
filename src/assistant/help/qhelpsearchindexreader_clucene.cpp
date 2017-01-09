@@ -320,7 +320,7 @@ bool QHelpSearchIndexReaderClucene::addPhraseQuery(const QHelpSearchQuery &query
     const QString &fieldName, QCLuceneBooleanQuery &booleanQuery)
 {
     const QString phrase = query.wordList.at(0).toLower();
-    QStringList terms = phrase.split(QLatin1String(" "));
+    QStringList terms = phrase.split(QChar::Space);
     for (const QString &word : QCLuceneStopAnalyzer().englishStopWords())
         terms.removeAll(word);
 
@@ -410,7 +410,7 @@ void QHelpSearchIndexReaderClucene::boostSearchHits(const QHelpEngineCore &engin
         if (query.fieldName != QHelpSearchQuery::DEFAULT)
             continue;
 
-        QString joinedQuery = query.wordList.join(QLatin1String(" "));
+        QString joinedQuery = query.wordList.join(QChar::Space);
 
         QCLuceneStandardAnalyzer analyzer;
         QCLuceneQuery *parsedQuery = QCLuceneQueryParser::parse(
@@ -431,11 +431,11 @@ void QHelpSearchIndexReaderClucene::boostSearchHits(const QHelpEngineCore &engin
         while (index != -1) {
             nextIndex = joinedQuery.indexOf(contentString, index + 1);
             term = joinedQuery.mid(index + length, nextIndex - (length + index)).simplified();
-            if (term.startsWith(QLatin1String("\""))
-                && term.endsWith(QLatin1String("\""))) {
-                searchTerms.append(term.remove(QLatin1String("\"")));
+            if (term.startsWith(QLatin1Char('"'))
+                && term.endsWith(QLatin1Char('"'))) {
+                searchTerms.append(term.remove(QLatin1Char('"')));
             } else {
-                searchTerms += term.split(QLatin1Char(' '));
+                searchTerms += term.split(QChar::Space);
             }
             index = nextIndex;
         }

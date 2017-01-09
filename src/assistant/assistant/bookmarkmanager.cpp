@@ -488,7 +488,7 @@ void BookmarkManager::customContextMenuRequested(const QPoint &point)
     QAction *showItem = 0;
     QAction *showItemInNewTab = 0;
 
-    QMenu menu(QLatin1String(""));
+    QMenu menu;
     if (!typeAndSearch && bookmarkModel->data(index, UserRoleFolder).toBool()) {
         remove = menu.addAction(tr("Delete Folder"));
         rename = menu.addAction(tr("Rename Folder"));

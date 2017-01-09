@@ -239,8 +239,8 @@ void ConversionWizard::convert()
         qhcpWriter.setProperties(m_adpReader.properties());
         qhcpWriter.setTitlePath(QLatin1String("qthelp://")
             + field(QLatin1String("namespaceName")).toString()
-            + QLatin1String("/")
-            +field(QLatin1String("virtualFolder")).toString());
+            + QLatin1Char('/')
+            + field(QLatin1String("virtualFolder")).toString());
         qhcpWriter.writeFile(fi.absolutePath() + QDir::separator()
             + field(QLatin1String("CollectionFileName")).toString());
     }

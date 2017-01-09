@@ -134,7 +134,7 @@ QString QCLuceneQueryParser::getField()
 
 QCLuceneMultiFieldQueryParser::QCLuceneMultiFieldQueryParser(
     const QStringList &fieldList, QCLuceneAnalyzer &analyzer)
-    : QCLuceneQueryParser(QLatin1String(""), analyzer)
+    : QCLuceneQueryParser(QString(), analyzer)
 {
     Q_UNUSED(fieldList)
 }

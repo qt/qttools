@@ -56,7 +56,7 @@ FindWidget::FindWidget(QWidget *parent)
     resourcePath.append(QLatin1String("mac"));
 #endif
 
-    toolClose = setupToolButton(QLatin1String(""),
+    toolClose = setupToolButton(QString(),
         resourcePath + QLatin1String("/closetab.png"));
     hboxLayout->addWidget(toolClose);
     connect(toolClose, SIGNAL(clicked()), SLOT(hide()));

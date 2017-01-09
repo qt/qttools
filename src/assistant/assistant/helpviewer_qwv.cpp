@@ -280,7 +280,7 @@ bool HelpViewer::findText(const QString &text, FindFlags flags, bool incremental
 
     bool found = QWebView::findText(text, options);
     options = QWebPage::HighlightAllOccurrences;
-    QWebView::findText(QLatin1String(""), options); // clear first
+    QWebView::findText(QString(), options); // clear first
     QWebView::findText(text, options); // force highlighting of all other matches
     return found;
 }

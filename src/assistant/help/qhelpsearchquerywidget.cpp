@@ -137,16 +137,9 @@ private:
 
     QList<QHelpSearchQuery> escapeQueries(const QList<QHelpSearchQuery> &queries)
     {
-        static QStringList charsToEscapeList;
-        if (charsToEscapeList.isEmpty()) {
-            charsToEscapeList << QLatin1String("\\") << QLatin1String("+") << QLatin1String("-")
-                << QLatin1String("!") << QLatin1String("(") << QLatin1String(")") << QLatin1String(":")
-                << QLatin1String("^") << QLatin1String("[") << QLatin1String("]") << QLatin1String("{")
-                << QLatin1String("}") << QLatin1String("~");
-        }
-
-        static QString escapeChar(QLatin1String("\\"));
-        static QRegExp regExp(QLatin1String("[\\+\\-\\!\\(\\)\\^\\[\\]\\{\\}~:]"));
+        static const char charsToEscapeList[] = "\\+-!():^[]{}~";
+        static const QString escapeChar(QLatin1Char('\\'));
+        static const QRegExp regExp(QLatin1String("[\\+\\-\\!\\(\\)\\^\\[\\]\\{\\}~:]"));
 
         QList<QHelpSearchQuery> escapedQueries;
         for (const QHelpSearchQuery &query : queries) {
@@ -154,8 +147,8 @@ private:
             escapedQuery.fieldName = query.fieldName;
             for (QString word : query.wordList) {
                 if (word.contains(regExp)) {
-                    for (const QString &charToEscape : qAsConst(charsToEscapeList))
-                        word.replace(charToEscape, escapeChar + charToEscape);
+                    for (const char &charToEscape : charsToEscapeList)
+                        word.replace(charToEscape, escapeChar + QLatin1Char(charToEscape));
                 }
                 escapedQuery.wordList.append(word);
             }
@@ -606,10 +599,9 @@ void QHelpSearchQueryWidget::setQuery(const QList<QHelpSearchQuery> &queryList)
     for (QLineEdit *lineEdit : qAsConst(lineEdits))
         lineEdit->clear();
 
-    const QLatin1String space(" ");
     for (const QHelpSearchQuery &q : queryList) {
         if (QLineEdit *lineEdit = d->lineEditFor(q.fieldName))
-            lineEdit->setText(lineEdit->text() + q.wordList.join(space) + space);
+            lineEdit->setText(lineEdit->text() + q.wordList.join(QChar::Space) + QChar::Space);
     }
     d->searchRequested();
 }

@@ -145,7 +145,7 @@ void TabBar::slotCustomContextMenuRequested(const QPoint &pos)
     if (tab < 0)
         return;
 
-    QMenu menu(QLatin1String(""), this);
+    QMenu menu(QString(), this);
     menu.addAction(tr("New &Tab"), OpenPagesManager::instance(), SLOT(createPage()));
 
     const bool enableAction = count() > 1;

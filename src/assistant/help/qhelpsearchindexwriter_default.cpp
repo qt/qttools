@@ -119,7 +119,7 @@ void Writer::removeIndex() const
 
 void Writer::setIndexFile(const QString &namespaceName, const QString &attributes)
 {
-    const QString extension = namespaceName + QLatin1String("@") + attributes;
+    const QString extension = namespaceName + QLatin1Char('@') + attributes;
     indexFile = indexPath + QLatin1String("/indexdb40.") + extension;
     documentFile = indexPath + QLatin1String("/indexdoc40.") + extension;
 }
@@ -209,11 +209,11 @@ void QHelpSearchIndexWriter::run()
         return;
 
     if (reindex)
-        engine.setCustomValue(key, QLatin1String(""));
+        engine.setCustomValue(key, QString());
 
     const QStringList registeredDocs = engine.registeredDocumentations();
     const QStringList indexedNamespaces = engine.customValue(key).toString().
-        split(QLatin1String("|"), QString::SkipEmptyParts);
+        split(QLatin1Char('|'), QString::SkipEmptyParts);
 
     emit indexingStarted();
 
@@ -237,7 +237,7 @@ void QHelpSearchIndexWriter::run()
 
         for (const QStringList &attributes : attributeSets) {
             // cleanup maybe old or unfinished files
-            writer.setIndexFile(namespaceName, attributes.join(QLatin1String("@")));
+            writer.setIndexFile(namespaceName, attributes.join(QLatin1Char('@')));
             writer.removeIndex();
 
             QSet<QString> documentsSet;
@@ -272,7 +272,7 @@ void QHelpSearchIndexWriter::run()
                 s.setCodec(QTextCodec::codecForName(en.toLatin1().constData()));
 
                 QString text = s.readAll();
-                if (text.isNull())
+                if (text.isEmpty())
                     continue;
 
                 QString title = QHelpGlobal::documentTitle(text);
@@ -339,7 +339,7 @@ void QHelpSearchIndexWriter::run()
             engine.filterAttributeSets(namespaceName);
 
         for (const QStringList &attributes : attributeSets) {
-            writer.setIndexFile(namespaceName, attributes.join(QLatin1String("@")));
+            writer.setIndexFile(namespaceName, attributes.join(QLatin1Char('@')));
             writer.removeIndex();
         }
 
@@ -355,7 +355,7 @@ QString QHelpSearchIndexWriter::addNamespace(const QString namespaces,
 {
     QString value = namespaces;
     if (!value.contains(namespaceName))
-        value.append(namespaceName).append(QLatin1String("|"));
+        value.append(namespaceName).append(QLatin1Char('|'));
 
     return value;
 }
@@ -365,7 +365,7 @@ QString QHelpSearchIndexWriter::removeNamespace(const QString namespaces,
 {
     QString value = namespaces;
     if (value.contains(namespaceName))
-        value.remove(namespaceName + QLatin1String("|"));
+        value.remove(namespaceName + QLatin1Char('|'));
 
     return value;
 }
