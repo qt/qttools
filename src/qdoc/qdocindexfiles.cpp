@@ -493,6 +493,7 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader& reader,
         functionNode->setIsDeleted(attributes.value(QLatin1String("delete")) == QLatin1String("true"));
         functionNode->setIsDefaulted(attributes.value(QLatin1String("default")) == QLatin1String("true"));
         functionNode->setFinal(attributes.value(QLatin1String("final")) == QLatin1String("true"));
+        functionNode->setOverride(attributes.value(QLatin1String("override")) == QLatin1String("true"));
         if (attributes.value(QLatin1String("overload")) == QLatin1String("true")) {
             functionNode->setOverloadFlag(true);
             functionNode->setOverloadNumber(attributes.value(QLatin1String("overload-number")).toUInt());
@@ -1189,6 +1190,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter& writer,
             writer.writeAttribute("delete", functionNode->isDeleted() ? "true" : "false");
             writer.writeAttribute("default", functionNode->isDefaulted() ? "true" : "false");
             writer.writeAttribute("final", functionNode->isFinal() ? "true" : "false");
+            writer.writeAttribute("override", functionNode->isOverride() ? "true" : "false");
             if (functionNode->isOverload())
                 writer.writeAttribute("overload-number", QString::number(functionNode->overloadNumber()));
             if (functionNode->relates()) {
@@ -1215,6 +1217,8 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter& writer,
                 signature += " const";
             if (functionNode->isFinal())
                 signature += " final";
+            if (functionNode->isOverride())
+                signature += " override";
             if (functionNode->isPureVirtual())
                 signature += " = 0";
             else if (functionNode->isDeleted())

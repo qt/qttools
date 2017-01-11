@@ -1314,8 +1314,8 @@ bool CppCodeParser::matchDataType(CodeChunk *dataType, QString *var, bool qProp)
                 if (varComment.exactMatch(previousLexeme()))
                     *var = varComment.cap(1);
             }
-            else if (qProp && (match(Tok_default) || match(Tok_final))) {
-                // Hack to make 'default' and 'final' work again in Q_PROPERTY
+            else if (qProp && (match(Tok_default) || match(Tok_final) || match(Tok_override))) {
+                // Hack to make 'default', 'final' and 'override'  work again in Q_PROPERTY
                 *var = previousLexeme();
             }
         }
@@ -1587,6 +1587,7 @@ bool CppCodeParser::matchFunctionDecl(Aggregate *parent,
     // look for const
     bool matchedConst = match(Tok_const);
     bool matchFinal = match(Tok_final);
+    bool matchOverride = match(Tok_override);
 
     bool isDeleted = false;
     bool isDefaulted = false;
@@ -1706,6 +1707,7 @@ bool CppCodeParser::matchFunctionDecl(Aggregate *parent,
         func->setIsDeleted(isDeleted);
         func->setIsDefaulted(isDefaulted);
         func->setFinal(matchFinal);
+        func->setOverride(matchOverride);
         if (isQPrivateSignal)
             func->setPrivateSignal();
     }
@@ -2073,7 +2075,7 @@ bool CppCodeParser::matchProperty(Aggregate *parent)
     property->setDataType(dataType.toString());
 
     while (tok != Tok_RightParen && tok != Tok_Eoi) {
-        if (!match(Tok_Ident) && !match(Tok_default) && !match(Tok_final))
+        if (!match(Tok_Ident) && !match(Tok_default) && !match(Tok_final) && !match(Tok_override))
             return false;
         QString key = previousLexeme();
         QString value;
