@@ -382,15 +382,7 @@ void QtGradientWidget::mousePressEvent(QMouseEvent *e)
             y = current.y() - central.y();
             x /= size().width() / 2;
             y /= size().height() / 2;
-            double r = sqrt(x * x + y * y);
-
-            double arcSin = asin(y / r);
-            double arcCos = acos(x / r);
-
-            double angle = arcCos * 180 / M_PI;
-            if (arcSin > 0) {
-                angle = -angle;
-            }
+            double angle = atan2(-y, x) * 180 / M_PI;
 
             d_ptr->m_angleOffset = d_ptr->m_angleConical - angle;
             d_ptr->m_dragAngle = d_ptr->m_angleConical;
@@ -480,18 +472,8 @@ void QtGradientWidget::mouseMoveEvent(QMouseEvent *e)
             y = current.y() - central.y();
             x /= size().width() / 2;
             y /= size().height() / 2;
-            double r = sqrt(x * x + y * y);
 
-            double arcSin = asin(y / r);
-            double arcCos = acos(x / r);
-
-            double angle = arcCos * 180 / M_PI;
-            if (arcSin > 0) {
-                angle = -angle;
-            }
-
-            angle += d_ptr->m_angleOffset;
-
+            double angle = atan2(-y, x) * 180 / M_PI + d_ptr->m_angleOffset;
             d_ptr->setAngleConical(angle);
         }
     }
