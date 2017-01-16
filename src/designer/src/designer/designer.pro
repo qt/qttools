@@ -59,8 +59,14 @@ FORMS += saveformastemplate.ui \
     preferencesdialog.ui \
     qdesigner_appearanceoptions.ui
 
+QMAKE_TARGET_PRODUCT = Qt Designer
+QMAKE_TARGET_DESCRIPTION = Tool for designing and building graphical user interfaces with Qt Widgets
+
 win32 {
-   RC_FILE      = designer.rc
+   RC_ICONS = designer.ico
+   VERSION = $${QT_VERSION}.0
+} else {
+   VERSION = $${QT_VERSION}
 }
 
 mac {

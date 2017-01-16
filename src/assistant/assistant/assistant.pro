@@ -102,9 +102,15 @@ FORMS += bookmarkdialog.ui \
 RESOURCES += assistant.qrc \
     assistant_images.qrc
 
+QMAKE_TARGET_PRODUCT = Qt Assistant
+QMAKE_TARGET_DESCRIPTION = Tool for viewing on-line documentation in Qt help file format
+
 win32 {
     LIBS += -lshell32
-    RC_FILE = assistant.rc
+    RC_ICONS = assistant.ico
+    VERSION = $${QT_VERSION}.0
+} else {
+    VERSION = $${QT_VERSION}
 }
 
 mac {
