@@ -2172,7 +2172,7 @@ static void copyRoleFromItem(ItemData *id, int role, const T *item)
 template<class T>
 static void copyRolesFromItem(ItemData *id, const T *item, bool editor)
 {
-    static const int defaultFlags = T().flags();
+    static const Qt::ItemFlags defaultFlags = T().flags();
 
     for (int i = 0; itemRoles[i] != -1; i++)
         copyRoleFromItem<T>(id, itemRoles[i], item);
@@ -2389,7 +2389,7 @@ QString TableWidgetContents::defaultHeaderText(int i)
 
 bool TableWidgetContents::nonEmpty(const QTableWidgetItem *item, int headerColumn)
 {
-    static int defaultFlags = QTableWidgetItem().flags();
+    static const Qt::ItemFlags defaultFlags = QTableWidgetItem().flags();
 
     if (item->flags() != defaultFlags)
         return true;
@@ -2510,7 +2510,7 @@ void ChangeTableContentsCommand::undo()
 TreeWidgetContents::ItemContents::ItemContents(const QTreeWidgetItem *item, bool editor) :
     ListContents(item)
 {
-    static const int defaultFlags = QTreeWidgetItem().flags();
+    static const Qt::ItemFlags defaultFlags = QTreeWidgetItem().flags();
 
     if (editor) {
         QVariant v = item->data(0, ItemFlagsShadowRole);
