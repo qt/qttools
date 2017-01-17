@@ -86,6 +86,7 @@ void CppCodeParser::initializeParser(const Config &config)
     nodeTypeMap.insert(COMMAND_NAMESPACE, Node::Namespace);
     nodeTypeMap.insert(COMMAND_CLASS, Node::Class);
     nodeTypeMap.insert(COMMAND_ENUM, Node::Enum);
+    nodeTypeMap.insert(COMMAND_TYPEALIAS, Node::Typedef);
     nodeTypeMap.insert(COMMAND_TYPEDEF, Node::Typedef);
     nodeTypeMap.insert(COMMAND_PROPERTY, Node::Property);
     nodeTypeMap.insert(COMMAND_VARIABLE, Node::Variable);
@@ -172,6 +173,7 @@ const QSet<QString>& CppCodeParser::topicCommands()
                        << COMMAND_NAMESPACE
                        << COMMAND_PAGE
                        << COMMAND_PROPERTY
+                       << COMMAND_TYPEALIAS
                        << COMMAND_TYPEDEF
                        << COMMAND_VARIABLE
                        << COMMAND_QMLTYPE

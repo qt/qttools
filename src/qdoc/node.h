@@ -205,6 +205,7 @@ public:
     virtual bool isJsBasicType() const { return false; }
     virtual bool isEnumType() const { return false; }
     virtual bool isTypedef() const { return false; }
+    virtual bool isTypeAlias() const { return false; }
     virtual bool isExample() const { return false; }
     virtual bool isExampleFile() const { return false; }
     virtual bool isHeaderFile() const { return false; }
@@ -322,7 +323,6 @@ public:
     virtual void setOutputSubdirectory(const QString& t) { outSubDir_ = t; }
     QString fullDocumentName() const;
     static QString cleanId(const QString &str);
-    //QString idForNode() const;
 
     static FlagValue toFlagValue(bool b);
     static bool fromFlagValue(FlagValue fv, bool defaultValue);
@@ -822,6 +822,19 @@ private:
     friend class EnumNode;
 
     const EnumNode* associatedEnum_;
+};
+
+class TypeAliasNode : public TypedefNode
+{
+ public:
+    TypeAliasNode(Aggregate* parent, const QString& name, const QString& aliasedType);
+    virtual ~TypeAliasNode() { }
+
+    virtual bool isTypeAlias() const { return true; }
+    QString aliasedType() { return aliasedType_; }
+
+ private:
+    QString aliasedType_;
 };
 
 inline void EnumNode::setFlagsType(TypedefNode* t)

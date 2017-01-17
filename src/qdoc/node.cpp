@@ -70,6 +70,7 @@ void Node::initialize()
     goals_.insert("qmlmethod", Node::QmlMethod);
     goals_.insert("qmlbasictype", Node::QmlBasicType);
     goals_.insert("enum", Node::Enum);
+    goals_.insert("typealias", Node::Typedef);
     goals_.insert("typedef", Node::Typedef);
     goals_.insert("namespace", Node::Namespace);
 }
@@ -700,33 +701,6 @@ Node::ThreadSafeness Node::inheritedThreadSafeness() const
     return (ThreadSafeness) safeness_;
 }
 
-#if 0
-/*!
-  Returns the sanitized file name without the path.
-  If the file is an html file, the html suffix
-  is removed. Why?
- */
-QString Node::fileBase() const
-{
-    QString base = name();
-    if (base.endsWith(".html"))
-        base.chop(5);
-    base.replace(QRegExp("[^A-Za-z0-9]+"), " ");
-    base = base.trimmed();
-    base.replace(QLatin1Char(' '), QLatin1Char('-'));
-    return base.toLower();
-}
-/*!
-  Returns this node's Universally Unique IDentifier as a
-  QString. Creates the UUID first, if it has not been created.
- */
-QString Node::guid() const
-{
-    if (uuid_.isEmpty())
-        uuid_ = idForNode();
-    return uuid_;
-}
-#endif
 
 /*!
   If this node is a QML or JS type node, return a pointer to
@@ -1956,6 +1930,20 @@ void TypedefNode::setAssociatedEnum(const EnumNode *enume)
 }
 
 /*!
+  \class TypeAliasNode
+ */
+
+/*!
+  Constructs a TypeAliasNode for the \a aliasedType with the
+  specified \a name and \a parent.
+ */
+TypeAliasNode::TypeAliasNode(Aggregate *parent, const QString& name, const QString& aliasedType)
+    : TypedefNode(parent, name), aliasedType_(aliasedType)
+{
+    // nothing.
+}
+
+/*!
   \class Parameter
   \brief The class Parameter contains one parameter.
 
@@ -2841,236 +2829,6 @@ QString Node::cleanId(const QString &str)
     }
     return clean;
 }
-
-#if 0
-/*!
-  Creates a string that can be used as a UUID for the node,
-  depending on the type and subtype of the node. Uniquenss
-  is not guaranteed, but it is expected that strings created
-  here will be unique within an XML document. Hence, the
-  returned string can be used as the value of an \e id
-  attribute.
- */
-QString Node::idForNode() const
-{
-    const FunctionNode* func;
-    const TypedefNode* tdn;
-    QString str;
-
-    switch (type()) {
-    case Node::Namespace:
-        str = "namespace-" + fullDocumentName();
-        break;
-    case Node::Class:
-        str = "class-" + fullDocumentName();
-        break;
-    case Node::Enum:
-        str = "enum-" + name();
-        break;
-    case Node::Typedef:
-        tdn = static_cast<const TypedefNode*>(this);
-        if (tdn->associatedEnum()) {
-            return tdn->associatedEnum()->idForNode();
-        }
-        else {
-            str = "typedef-" + name();
-        }
-        break;
-    case Node::Function:
-        func = static_cast<const FunctionNode*>(this);
-        if (func->associatedProperty()) {
-            return func->associatedProperty()->idForNode();
-        }
-        else {
-            if (func->name().startsWith("operator")) {
-                str.clear();
-                /*
-                  The test below should probably apply to all
-                  functions, but for now, overloaded operators
-                  are the only ones that produce duplicate id
-                  attributes in the DITA XML files.
-                 */
-                if (relatesTo_)
-                    str = "nonmember-";
-                QString op = func->name().mid(8);
-                if (!op.isEmpty()) {
-                    int i = 0;
-                    while (i<op.size() && op.at(i) == ' ')
-                        ++i;
-                    if (i>0 && i<op.size()) {
-                        op = op.mid(i);
-                    }
-                    if (!op.isEmpty()) {
-                        i = 0;
-                        while (i < op.size()) {
-                            const QChar c = op.at(i);
-                            const uint u = c.unicode();
-                            if ((u >= 'a' && u <= 'z') ||
-                                    (u >= 'A' && u <= 'Z') ||
-                                    (u >= '0' && u <= '9'))
-                                break;
-                            ++i;
-                        }
-                        str += "operator-";
-                        if (i>0) {
-                            QString tail = op.mid(i);
-                            op = op.left(i);
-                            if (operators_.contains(op)) {
-                                str += operators_.value(op);
-                                if (!tail.isEmpty())
-                                    str += QLatin1Char('-') + tail;
-                            }
-                            else
-                                qDebug() << "qdoc internal error: Operator missing from operators_ map:" << op;
-                        }
-                        else {
-                            str += op;
-                        }
-                    }
-                }
-            }
-            else if (parent_) {
-                if (parent_->isClass())
-                    str = "class-member-" + func->name();
-                else if (parent_->isNamespace())
-                    str = "namespace-member-" + func->name();
-                else if (parent_->isQmlType())
-                    str = "qml-method-" + parent_->name().toLower() + "-" + func->name();
-                else if (parent_->isJsType())
-                    str = "js-method-" + parent_->name().toLower() + "-" + func->name();
-                else if (parent_->type() == Document) {
-                    qDebug() << "qdoc internal error: Node subtype not handled:"
-                             << parent_->docSubtype() << func->name();
-                }
-                else
-                    qDebug() << "qdoc internal error: Node type not handled:"
-                             << parent_->type() << func->name();
-
-            }
-            if (func->overloadNumber() != 0)
-                str += QLatin1Char('-') + QString::number(func->overloadNumber());
-        }
-        break;
-    case Node::QmlType:
-        if (genus() == QML)
-            str = "qml-class-" + name();
-        else
-            str = "js-type-" + name();
-        break;
-    case Node::QmlBasicType:
-        if (genus() == QML)
-            str = "qml-basic-type-" + name();
-        else
-            str = "js-basic-type-" + name();
-        break;
-    case Node::Document:
-        {
-            switch (docSubtype()) {
-            case Node::Page:
-            case Node::HeaderFile:
-                str = title();
-                if (str.isEmpty()) {
-                    str = name();
-                    if (str.endsWith(".html"))
-                        str.remove(str.size()-5,5);
-                }
-                str.replace(QLatin1Char('/'), QLatin1Char('-'));
-                break;
-            case Node::File:
-                str = name();
-                str.replace(QLatin1Char('/'), QLatin1Char('-'));
-                break;
-            case Node::Example:
-                str = name();
-                str.replace(QLatin1Char('/'), QLatin1Char('-'));
-                break;
-            default:
-                qDebug() << "ERROR: A case was not handled in Node::idForNode():"
-                         << "docSubtype():" << docSubtype() << "type():" << type();
-                break;
-            }
-        }
-        break;
-    case Node::Group:
-    case Node::Module:
-        str = title();
-        if (str.isEmpty()) {
-            str = name();
-            if (str.endsWith(".html"))
-                str.remove(str.size()-5,5);
-        }
-        str.replace(QLatin1Char('/'), QLatin1Char('-'));
-        break;
-    case Node::QmlModule:
-        if (genus() == QML)
-            str = "qml-module-" + name();
-        else
-            str = "js-module-" + name();
-        break;
-    case Node::QmlProperty:
-        if (genus() == QML)
-            str = "qml-";
-        else
-            str = "js-";
-        if (isAttached())
-            str += "attached-property-" + name();
-        else
-            str += "property-" + name();
-        break;
-    case Node::QmlPropertyGroup:
-        {
-            Node* n = const_cast<Node*>(this);
-            if (genus() == QML)
-                str = "qml-propertygroup-" + n->name();
-            else
-                str = "js-propertygroup-" + n->name();
-        }
-        break;
-    case Node::Property:
-        str = "property-" + name();
-        break;
-    case Node::QmlSignal:
-        if (genus() == QML)
-            str = "qml-signal-" + name();
-        else
-            str = "js-signal-" + name();
-        break;
-    case Node::QmlSignalHandler:
-        if (genus() == QML)
-            str = "qml-signal-handler-" + name();
-        else
-            str = "js-signal-handler-" + name();
-        break;
-    case Node::QmlMethod:
-        func = static_cast<const FunctionNode*>(this);
-        if (genus() == QML)
-            str = "qml-method-";
-        else
-            str = "js-method-";
-        str += parent_->name().toLower() + "-" + func->name();
-        if (func->overloadNumber() != 0)
-            str += QLatin1Char('-') + QString::number(func->overloadNumber());
-        break;
-    case Node::Variable:
-        str = "var-" + name();
-        break;
-    default:
-        qDebug() << "ERROR: A case was not handled in Node::idForNode():"
-                 << "type():" << type() << "docSubtype():" << docSubtype();
-        break;
-    }
-    if (str.isEmpty()) {
-        qDebug() << "ERROR: A link text was empty in Node::idForNode():"
-                 << "type():" << type() << "docSubtype():" << docSubtype()
-                 << "name():" << name()
-                 << "title():" << title();
-    }
-    else {
-        str = cleanId(str);
-    }
-    return str;
-}
-#endif
 
 /*!
   Prints the inner node's list of children.

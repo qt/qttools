@@ -177,6 +177,7 @@ protected:
 #define COMMAND_REIMP                   Doc::alias("reimp")
 #define COMMAND_RELATES                 Doc::alias("relates")
 #define COMMAND_STARTPAGE               Doc::alias("startpage")
+#define COMMAND_TYPEALIAS               Doc::alias("typealias")
 #define COMMAND_TYPEDEF                 Doc::alias("typedef")
 #define COMMAND_VARIABLE                Doc::alias("variable")
 #define COMMAND_QMLABSTRACT             Doc::alias("qmlabstract")
