@@ -38,3 +38,13 @@ qtNomakeTools( \
     pixeltool \
     macdeployqt \
 )
+
+# This is necessary to avoid a race condition between toolchain.prf
+# invocations in a module-by-module cross-build.
+cross_compile:isEmpty(QMAKE_HOST_CXX.INCDIRS) {
+    androiddeployqt.depends += qtattributionsscanner
+    qdoc.depends += qtattributionsscanner
+    windeployqt.depends += qtattributionsscanner
+    winrtrunner.depends += qtattributionsscanner
+    linguist.depends += qtattributionsscanner
+}
