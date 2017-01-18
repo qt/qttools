@@ -1099,10 +1099,23 @@ bool CppCodeParser::matchDataType(CodeChunk *dataType, QString *var, bool qProp)
             */
             while (match(Tok_const) || match(Tok_volatile))
                 dataType->append(previousLexeme());
-            while (match(Tok_signed) || match(Tok_unsigned) ||
-                   match(Tok_short) || match(Tok_long) || match(Tok_int64)) {
-                dataType->append(previousLexeme());
+            QString pending;
+            while (tok == Tok_signed || tok == Tok_int || tok == Tok_unsigned ||
+                   tok == Tok_short || tok == Tok_long || tok == Tok_int64) {
+                if (tok == Tok_signed)
+                    pending = lexeme();
+                else {
+                    if (tok == Tok_unsigned && !pending.isEmpty())
+                        dataType->append(pending);
+                    pending.clear();
+                    dataType->append(lexeme());
+                }
+                readToken();
                 virgin = false;
+            }
+            if (!pending.isEmpty()) {
+                dataType->append(pending);
+                pending.clear();
             }
             while (match(Tok_const) || match(Tok_volatile))
                 dataType->append(previousLexeme());
