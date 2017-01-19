@@ -1,3 +1,4 @@
+option(host_build)
 CONFIG += console
 
 SOURCES += \
@@ -17,5 +18,4 @@ HEADERS += \
 
 DEFINES += QT_NO_CAST_FROM_ASCII QT_NO_CAST_TO_ASCII
 
-option(host_build)
 load(qt_tool)
