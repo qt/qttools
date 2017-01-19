@@ -163,7 +163,6 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
                     const QString &paramName = hasName ? (*p).name() : (*p).dataType();
                     if (style != Subpage || !hasName)
                         synopsis += "<@param>" + protect(paramName) + "</@param>";
-                    synopsis += protect((*p).rightType());
                     if (style != Subpage && !(*p).defaultValue().isEmpty())
                         synopsis += " = " + protect((*p).defaultValue());
                     ++p;
@@ -349,7 +348,6 @@ QString CppCodeMarker::markedUpQmlItem(const Node* node, bool summary)
                     synopsis += typified((*p).dataType(), true);
                 const QString &paramName = hasName ? (*p).name() : (*p).dataType();
                 synopsis += "<@param>" + protect(paramName) + "</@param>";
-                synopsis += protect((*p).rightType());
                 ++p;
             }
         }

@@ -272,7 +272,7 @@ Node* CppCodeParser::processTopicCommand(const Doc& doc,
                     Parameter &param = params[i];
                     if (param.name().isEmpty() && !param.dataType().isEmpty()
                             && param.dataType() != "...")
-                        param = Parameter("", "", param.dataType());
+                        param = Parameter("", param.dataType());
                 }
                 func->setParameters(params);
             }

@@ -518,8 +518,7 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader& reader,
             if (reader.name() == QLatin1String("parameter")) {
                 // Do not use the default value for the parameter; it is not
                 // required, and has been known to cause problems.
-                Parameter parameter(childAttributes.value(QLatin1String("left")).toString(),
-                                    childAttributes.value(QLatin1String("right")).toString(),
+                Parameter parameter(childAttributes.value(QLatin1String("type")).toString(),
                                     childAttributes.value(QLatin1String("name")).toString(),
                                     QString()); // childAttributes.value(QLatin1String("default"))
                 functionNode->addParameter(parameter);
@@ -1232,8 +1231,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter& writer,
             for (int i = 0; i < functionNode->parameters().size(); ++i) {
                 Parameter parameter = functionNode->parameters()[i];
                 writer.writeStartElement("parameter");
-                writer.writeAttribute("left", parameter.dataType());
-                writer.writeAttribute("right", parameter.rightType());
+                writer.writeAttribute("type", parameter.dataType());
                 writer.writeAttribute("name", parameter.name());
                 writer.writeAttribute("default", parameter.defaultValue());
                 writer.writeEndElement(); // parameter

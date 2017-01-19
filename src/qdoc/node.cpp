@@ -1231,9 +1231,6 @@ bool Aggregate::isSameSignature(const FunctionNode *f1, const FunctionNode *f2)
     QVector<Parameter>::ConstIterator p2 = f2->parameters().constBegin();
     while (p2 != f2->parameters().constEnd()) {
         if ((*p1).hasType() && (*p2).hasType()) {
-            if ((*p1).rightType() != (*p2).rightType())
-                return false;
-
             QString t1 = p1->dataType();
             QString t2 = p2->dataType();
 
@@ -1952,17 +1949,11 @@ TypeAliasNode::TypeAliasNode(Aggregate *parent, const QString& name, const QStri
  */
 
 /*!
-  Constructs this parameter from the left and right types
-  \a dataType and rightType, the parameter \a name, and the
-  \a defaultValue. In practice, \a rightType is not used,
-  and I don't know what is was meant for.
+  Constructs this parameter from the \a dataType, the \a name,
+  and the \a defaultValue.
  */
-Parameter::Parameter(const QString& dataType,
-                     const QString& rightType,
-                     const QString& name,
-                     const QString& defaultValue)
+Parameter::Parameter(const QString& dataType, const QString& name, const QString& defaultValue)
     : dataType_(dataType),
-      rightType_(rightType),
       name_(name),
       defaultValue_(defaultValue)
 {
@@ -1974,7 +1965,6 @@ Parameter::Parameter(const QString& dataType,
  */
 Parameter::Parameter(const Parameter& p)
     : dataType_(p.dataType_),
-      rightType_(p.rightType_),
       name_(p.name_),
       defaultValue_(p.defaultValue_)
 {
@@ -1987,7 +1977,6 @@ Parameter::Parameter(const Parameter& p)
 Parameter& Parameter::operator=(const Parameter& p)
 {
     dataType_ = p.dataType_;
-    rightType_ = p.rightType_;
     name_ = p.name_;
     defaultValue_ = p.defaultValue_;
     return *this;
@@ -2000,7 +1989,7 @@ Parameter& Parameter::operator=(const Parameter& p)
  */
 QString Parameter::reconstruct(bool value) const
 {
-    QString p = dataType_ + rightType_;
+    QString p = dataType_;
     if (!p.endsWith(QChar('*')) && !p.endsWith(QChar('&')) && !p.endsWith(QChar(' ')))
         p += QLatin1Char(' ');
     p += name_;
@@ -2291,7 +2280,7 @@ QString FunctionNode::rawParameters(bool names, bool values) const
 {
     QString raw;
     foreach (const Parameter &parameter, parameters()) {
-        raw += parameter.dataType() + parameter.rightType();
+        raw += parameter.dataType();
         if (names)
             raw += parameter.name();
         if (values)

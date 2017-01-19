@@ -1639,8 +1639,7 @@ void Generator::generateOverloadedSignal(const Node* node, CodeMarker* marker)
     for (int i = 0; i < func->parameters().size(); ++i) {
         if (i != 0)
             code += ", ";
-        const Parameter &p = func->parameters().at(i);
-        code += p.dataType() + p.rightType();
+        code += func->parameters().at(i).dataType();
     }
 
     code += QLatin1Char(')');
@@ -1655,7 +1654,7 @@ void Generator::generateOverloadedSignal(const Node* node, CodeMarker* marker)
         code += p.dataType();
         if (code[code.size()-1].isLetterOrNumber())
             code += QLatin1Char(' ');
-        code += p.name()  + p.rightType();
+        code += p.name();
     }
 
     code += "){ /* ... */ });";

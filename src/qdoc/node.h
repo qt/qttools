@@ -848,7 +848,6 @@ class Parameter
 public:
     Parameter() {}
     Parameter(const QString& dataType,
-              const QString& rightType = QString(),
               const QString& name = QString(),
               const QString& defaultValue = QString());
     Parameter(const Parameter& p);
@@ -857,9 +856,8 @@ public:
 
     void setName(const QString& name) { name_ = name; }
 
-    bool hasType() const { return dataType_.length() + rightType_.length() > 0; }
+    bool hasType() const { return dataType_.length() > 0; }
     const QString& dataType() const { return dataType_; }
-    const QString& rightType() const { return rightType_; }
     const QString& name() const { return name_; }
     const QString& defaultValue() const { return defaultValue_; }
     void setDefaultValue(const QString& defaultValue) { defaultValue_ = defaultValue; }
@@ -868,7 +866,6 @@ public:
 
  public:
     QString dataType_;
-    QString rightType_;  // mws says remove this 04/08/2015
     QString name_;
     QString defaultValue_;
 };
@@ -1129,17 +1126,17 @@ public:
     VariableNode(Aggregate* parent, const QString &name);
     virtual ~VariableNode() { }
 
-    void setLeftType(const QString &leftType) { lrftType_ = leftType; }
+    void setLeftType(const QString &leftType) { leftType_ = leftType; }
     void setRightType(const QString &rightType) { rightType_ = rightType; }
     void setStatic(bool b) { static_ = b; }
 
-    const QString &leftType() const { return lrftType_; }
+    const QString &leftType() const { return leftType_; }
     const QString &rightType() const { return rightType_; }
-    QString dataType() const { return lrftType_ + rightType_; }
+    QString dataType() const { return leftType_ + rightType_; }
     bool isStatic() const { return static_; }
 
 private:
-    QString lrftType_;
+    QString leftType_;
     QString rightType_;
     bool static_;
 };
