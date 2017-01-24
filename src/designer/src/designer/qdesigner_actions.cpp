@@ -334,9 +334,7 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
     m_editWidgetsAction->setCheckable(true);
     QList<QKeySequence> shortcuts;
     shortcuts.append(QKeySequence(Qt::Key_F3));
-#if QT_VERSION >= 0x040900 // "ESC" switching to edit mode: Activate once item delegates handle shortcut overrides for ESC.
     shortcuts.append(QKeySequence(Qt::Key_Escape));
-#endif
     m_editWidgetsAction->setShortcuts(shortcuts);
     QIcon fallback(m_core->resourceLocation() + QStringLiteral("/widgettool.png"));
     m_editWidgetsAction->setIcon(QIcon::fromTheme("designer-edit-widget", fallback));
