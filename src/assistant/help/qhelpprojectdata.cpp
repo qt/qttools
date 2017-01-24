@@ -45,6 +45,7 @@
 #include <QtCore/QStack>
 #include <QtCore/QMap>
 #include <QtCore/QRegExp>
+#include <QtCore/QTextStream>
 #include <QtCore/QUrl>
 #include <QtCore/QVariant>
 #include <QtCore/QXmlStreamReader>
@@ -223,23 +224,33 @@ void QHelpProjectDataPrivate::readTOC()
     }
 }
 
+static inline QString msgMissingAttribute(const QString &fileName, qint64 lineNumber, const QString &name)
+{
+    QString result;
+    QTextStream str(&result);
+    str << QDir::toNativeSeparators(fileName) << ':' << lineNumber
+        << ": Missing attribute in <keyword";
+    if (!name.isEmpty())
+        str << " name=\"" << name << '"';
+    str << ">.";
+    return result;
+}
+
 void QHelpProjectDataPrivate::readKeywords()
 {
     while (!atEnd()) {
         readNext();
         if (isStartElement()) {
             if (name() == QLatin1String("keyword")) {
-                if (attributes().value(QLatin1String("ref")).toString().isEmpty()
-                    || (attributes().value(QLatin1String("name")).toString().isEmpty()
-                    && attributes().value(QLatin1String("id")).toString().isEmpty())) {
-                    qWarning("Missing attribute in keyword at line %d.", (int)lineNumber());
+                const QString &refAttribute = attributes().value(QStringLiteral("ref")).toString();
+                const QString &nameAttribute = attributes().value(QStringLiteral("name")).toString();
+                const QString &idAttribute = attributes().value(QStringLiteral("id")).toString();
+                if (refAttribute.isEmpty() || (nameAttribute.isEmpty() && idAttribute.isEmpty())) {
+                    qWarning("%s", qPrintable(msgMissingAttribute(fileName, lineNumber(), nameAttribute)));
                     continue;
                 }
                 filterSectionList.last()
-                    .addIndex(QHelpDataIndexItem(attributes().
-                                  value(QLatin1String("name")).toString(),
-                              attributes().value(QLatin1String("id")).toString(),
-                              attributes().value(QLatin1String("ref")).toString()));
+                    .addIndex(QHelpDataIndexItem(nameAttribute, idAttribute, refAttribute));
             } else {
                 raiseUnknownTokenError();
             }
