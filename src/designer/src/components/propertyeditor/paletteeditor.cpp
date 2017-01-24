@@ -86,7 +86,7 @@ void PaletteEditor::setPalette(const QPalette &palette)
 {
     m_editPalette = palette;
     const uint mask = palette.resolve();
-    for (int i = 0; i < (int)QPalette::NColorRoles; i++) {
+    for (int i = 0; i < static_cast<int>(QPalette::NColorRoles); ++i) {
         if (!(mask & (1 << i))) {
             m_editPalette.setBrush(QPalette::Active, static_cast<QPalette::ColorRole>(i),
                         m_parentPalette.brush(QPalette::Active, static_cast<QPalette::ColorRole>(i)));
@@ -205,7 +205,7 @@ QPalette PaletteEditor::getPalette(QDesignerFormEditorInterface *core, QWidget* 
     PaletteEditor dlg(core, parent);
     QPalette parentPalette(parentPal);
     uint mask = init.resolve();
-    for (int i = 0; i < (int)QPalette::NColorRoles; i++) {
+    for (int i = 0; i < static_cast<int>(QPalette::NColorRoles); ++i) {
         if (!(mask & (1 << i))) {
             parentPalette.setBrush(QPalette::Active, static_cast<QPalette::ColorRole>(i),
                         init.brush(QPalette::Active, static_cast<QPalette::ColorRole>(i)));

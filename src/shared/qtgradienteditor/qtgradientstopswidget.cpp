@@ -120,7 +120,7 @@ double QtGradientStopsWidgetPrivate::fromViewport(int x) const
     int w = size.width();
     int max = q_ptr->horizontalScrollBar()->maximum();
     int val = q_ptr->horizontalScrollBar()->value();
-    return ((double)x * m_scaleFactor + w * val) / (w * (m_scaleFactor + max));
+    return (double(x) * m_scaleFactor + w * val) / (w * (m_scaleFactor + max));
 }
 
 double QtGradientStopsWidgetPrivate::toViewport(double x) const
@@ -775,13 +775,13 @@ void QtGradientStopsWidget::paintEvent(QPaintEvent *e)
         p.begin(viewport());
     }
 
-    double viewBegin = (double)w * horizontalScrollBar()->value() / d_ptr->m_scaleFactor;
+    const double viewBegin = double(w) * horizontalScrollBar()->value() / d_ptr->m_scaleFactor;
 
     int val = horizontalScrollBar()->value();
     int max = horizontalScrollBar()->maximum();
 
-    double begin = (double)val / (d_ptr->m_scaleFactor + max);
-    double end = (double)(val + d_ptr->m_scaleFactor) / (d_ptr->m_scaleFactor + max);
+    const double begin = double(val) / (d_ptr->m_scaleFactor + max);
+    const double end = double(val + d_ptr->m_scaleFactor) / (d_ptr->m_scaleFactor + max);
     double width = end - begin;
 
     if (h > 0) {
@@ -1119,8 +1119,8 @@ void QtGradientStopsWidget::setZoom(double zoom)
     int oldVal = horizontalScrollBar()->value();
     horizontalScrollBar()->setRange(0, qRound(d_ptr->m_scaleFactor * (d_ptr->m_zoom - 1)));
     int newMax = horizontalScrollBar()->maximum();
-    double newVal = (oldVal + (double)d_ptr->m_scaleFactor / 2) * (newMax + d_ptr->m_scaleFactor)
-                / (oldMax + d_ptr->m_scaleFactor) - (double)d_ptr->m_scaleFactor / 2;
+    const double newVal = (oldVal + double(d_ptr->m_scaleFactor) / 2) * (newMax + d_ptr->m_scaleFactor)
+        / (oldMax + d_ptr->m_scaleFactor) - double(d_ptr->m_scaleFactor) / 2;
     horizontalScrollBar()->setValue(qRound(newVal));
     viewport()->update();
 }

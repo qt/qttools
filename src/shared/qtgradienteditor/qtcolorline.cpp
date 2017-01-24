@@ -431,7 +431,7 @@ QPixmap QtColorLinePrivate::hueGradientPixmap(int size, Qt::Orientation orientat
     colorList << QColor::fromHsv(0, saturation, value, alpha);
     QLinearGradient lg(0, 0, gradW, gradH);
     for (int i = 0; i <= 6; i++)
-        lg.setColorAt((double)i / 6.0, flipped ? colorList.at(6 - i) : colorList.at(i));
+        lg.setColorAt(double(i) / 6.0, flipped ? colorList.at(6 - i) : colorList.at(i));
     QImage img(w, h, QImage::Format_ARGB32);
     QPainter p(&img);
     p.setCompositionMode(QPainter::CompositionMode_Source);
@@ -945,8 +945,8 @@ void QtColorLinePrivate::mouseMoveEvent(QMouseEvent *event)
     else if (newPosOnField.y() > fieldSize.height())
         newPosOnField.setY(fieldSize.height());
 
-    double x = (double)newPosOnField.x() / fieldSize.width();
-    double y = (double)newPosOnField.y() / fieldSize.height();
+    const double x = double(newPosOnField.x()) / fieldSize.width();
+    const double y = double(newPosOnField.y()) / fieldSize.height();
     m_point = QPointF(x, y);
     QColor color = colorFromPoint(m_point);
     if (m_color == color)
@@ -979,8 +979,8 @@ void QtColorLinePrivate::mouseDoubleClickEvent(QMouseEvent *event)
     QSize fieldSize = q_ptr->geometry().size() -
             QSize(m_indicatorSize + 2 * m_indicatorSpace - 1, m_indicatorSize + 2 * m_indicatorSpace - 1);
 
-    double x = (double)newPosOnField.x() / fieldSize.width();
-    double y = (double)newPosOnField.y() / fieldSize.height();
+    const double x = double(newPosOnField.x()) / fieldSize.width();
+    const double y = double(newPosOnField.y()) / fieldSize.height();
     m_point = QPointF(x, y);
     QColor color = colorFromPoint(m_point);
     if (m_color == color)

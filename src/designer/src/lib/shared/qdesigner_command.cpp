@@ -2180,7 +2180,7 @@ static void copyRolesFromItem(ItemData *id, const T *item, bool editor)
     if (editor)
         copyRoleFromItem<T>(id, ItemFlagsShadowRole, item);
     else if (item->flags() != defaultFlags)
-        id->m_properties.insert(ItemFlagsShadowRole, QVariant::fromValue((int)item->flags()));
+        id->m_properties.insert(ItemFlagsShadowRole, QVariant::fromValue(int(item->flags())));
 }
 
 template<class T>
@@ -2516,7 +2516,7 @@ TreeWidgetContents::ItemContents::ItemContents(const QTreeWidgetItem *item, bool
         QVariant v = item->data(0, ItemFlagsShadowRole);
         m_itemFlags = v.isValid() ? v.toInt() : -1;
     } else  {
-        m_itemFlags = (item->flags() != defaultFlags) ? (int)item->flags() : -1;
+        m_itemFlags = (item->flags() != defaultFlags) ? int(item->flags()) : -1;
     }
 
     for (int i = 0; i < item->childCount(); i++)

@@ -416,12 +416,11 @@ static QList<QLocale::Country> sortCountries(const QList<QLocale::Country> &coun
 void QtMetaEnumProvider::initLocale()
 {
     QMultiMap<QString, QLocale::Language> nameToLanguage;
-    QLocale::Language language = QLocale::C;
-    while (language <= QLocale::LastLanguage) {
+    for (int l = QLocale::C, last = QLocale::LastLanguage; l <= last; ++l) {
+        const QLocale::Language language = static_cast<QLocale::Language>(l);
         QLocale locale(language);
         if (locale.language() == language)
             nameToLanguage.insert(QLocale::languageToString(language), language);
-        language = (QLocale::Language)((uint)language + 1); // ++language
     }
 
     const QLocale system = QLocale::system();

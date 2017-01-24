@@ -389,7 +389,7 @@ void QtGradientStopsControllerPrivate::slotUpdatePositionSpinBox()
 
     m_ui->positionSpinBox->blockSignals(true);
     if (spinMin != newMin || spinMax != newMax) {
-        m_ui->positionSpinBox->setRange((double)newMin / 1000, (double)newMax / 1000);
+        m_ui->positionSpinBox->setRange(double(newMin) / 1000, double(newMax) / 1000);
     }
     if (m_ui->positionSpinBox->value() != pos)
         m_ui->positionSpinBox->setValue(pos);
@@ -432,7 +432,7 @@ void QtGradientStopsControllerPrivate::slotChangeHue(int color)
 {
     QColor c = m_ui->hueColorLine->color();
     if (m_ui->hsvRadioButton->isChecked())
-        c.setHsvF((qreal)color / 360.0, c.saturationF(), c.valueF(), c.alphaF());
+        c.setHsvF(qreal(color) / 360.0, c.saturationF(), c.valueF(), c.alphaF());
     else
         c.setRed(color);
     slotChangeHue(c);
@@ -465,7 +465,7 @@ void QtGradientStopsControllerPrivate::slotChangeSaturation(int color)
 {
     QColor c = m_ui->saturationColorLine->color();
     if (m_ui->hsvRadioButton->isChecked())
-        c.setHsvF(c.hueF(), (qreal)color / 255, c.valueF(), c.alphaF());
+        c.setHsvF(c.hueF(), qreal(color) / 255, c.valueF(), c.alphaF());
     else
         c.setGreen(color);
     slotChangeSaturation(c);
@@ -498,7 +498,7 @@ void QtGradientStopsControllerPrivate::slotChangeValue(int color)
 {
     QColor c = m_ui->valueColorLine->color();
     if (m_ui->hsvRadioButton->isChecked())
-        c.setHsvF(c.hueF(), c.saturationF(), (qreal)color / 255, c.alphaF());
+        c.setHsvF(c.hueF(), c.saturationF(), qreal(color) / 255, c.alphaF());
     else
         c.setBlue(color);
     slotChangeValue(c);
@@ -531,7 +531,7 @@ void QtGradientStopsControllerPrivate::slotChangeAlpha(int color)
 {
     QColor c = m_ui->alphaColorLine->color();
     if (m_ui->hsvRadioButton->isChecked())
-        c.setHsvF(c.hueF(), c.saturationF(), c.valueF(), (qreal)color / 255);
+        c.setHsvF(c.hueF(), c.saturationF(), c.valueF(), qreal(color) / 255);
     else
         c.setAlpha(color);
     slotChangeAlpha(c);
