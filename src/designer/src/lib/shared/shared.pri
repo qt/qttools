@@ -186,3 +186,5 @@ SOURCES += \
     $$PWD/rcc.cpp
 
 RESOURCES += $$PWD/shared.qrc
+
+TR_EXCLUDE += $$PWD/templates/*
