@@ -39,38 +39,15 @@
 
 QT_BEGIN_NAMESPACE
 
-// Return the relative install path, that is, for example for
-// module "QtQuick.Controls.Styles" in "path/qtbase/qml/QtQuick/Controls/Styles.3"
-// --> "QtQuick/Controls" suitable for updateFile() (cp -r semantics).
-QString QmlImportScanResult::Module::relativeInstallPath() const
-{
-    const QChar dot = QLatin1Char('.');
-    const QChar slash = QLatin1Char('/');
-
-    // Find relative path by module name.
-    if (!name.contains(dot))
-        return QString(); // "QtQuick.2" -> flat folder.
-    QString result = sourcePath;
-    QString pathComponent = name;
-    pathComponent.replace(dot, slash);
-    const int pos = result.lastIndexOf(pathComponent);
-    if (pos < 0)
-        return QString();
-    result.remove(0, pos);
-    // return base name.
-    const int lastSlash = result.lastIndexOf(slash);
-    if (lastSlash >= 0)
-        result.truncate(lastSlash);
-    return result;
-}
-
+// Return install path (cp -r semantics)
 QString QmlImportScanResult::Module::installPath(const QString &root) const
 {
     QString result = root;
-    const QString relPath = relativeInstallPath();
-    if (!relPath.isEmpty())
+    const int lastSlashPos = relativePath.lastIndexOf(QLatin1Char('/'));
+    if (lastSlashPos != -1) {
         result += QLatin1Char('/');
-    result += relPath;
+        result += relativePath.left(lastSlashPos);
+    }
     return result;
 }
 
@@ -151,6 +128,7 @@ QmlImportScanResult runQmlImportScanner(const QString &directory, const QString 
                 module.name = object.value(QStringLiteral("name")).toString();
                 module.className = object.value(QStringLiteral("classname")).toString();
                 module.sourcePath = path;
+                module.relativePath = object.value(QStringLiteral("relativePath")).toString();
                 result.modules.append(module);
                 findFileRecursion(QDir(path), Platform(platform), debugMatchMode, &result.plugins);
                 // QTBUG-48424, QTBUG-45977: In release mode, qmlimportscanner does not report
@@ -164,6 +142,7 @@ QmlImportScanResult runQmlImportScanner(const QString &directory, const QString 
                     privateWidgetsModule.name = QStringLiteral("QtQuick.PrivateWidgets");
                     privateWidgetsModule.className = QStringLiteral("QtQuick2PrivateWidgetsPlugin");
                     privateWidgetsModule.sourcePath = QFileInfo(path).absolutePath() + QStringLiteral("/PrivateWidgets");
+                    privateWidgetsModule.relativePath = QStringLiteral("QtQuick/PrivateWidgets");
                     result.modules.append(privateWidgetsModule);
                     findFileRecursion(QDir(privateWidgetsModule.sourcePath), Platform(platform), debugMatchMode, &result.plugins);
                 }

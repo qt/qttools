@@ -1,5 +1,4 @@
-QT += core-private widgets xml uitools-private
-qtHaveModule(printsupport): QT += printsupport
+QT += core-private widgets xml uitools-private printsupport
 
 DEFINES += QT_NO_CAST_FROM_ASCII QT_NO_CAST_TO_ASCII
 
@@ -59,7 +58,16 @@ HEADERS += \
 contains(QT_PRODUCT, OpenSource.*):DEFINES *= QT_OPENSOURCE
 DEFINES += QT_KEYWORDS
 TARGET = linguist
-win32:RC_FILE = linguist.rc
+
+QMAKE_TARGET_PRODUCT = Qt Linguist
+QMAKE_TARGET_DESCRIPTION = Tool for adding translations to Qt applications
+
+win32 {
+   RC_ICONS = linguist.ico
+   VERSION = $${QT_VERSION}.0
+} else {
+   VERSION = $${QT_VERSION}
+}
 mac {
     static:CONFIG -= global_init_link_order
     ICON = linguist.icns

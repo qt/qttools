@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist SYSTEM "file://localhost/System/Library/DTDs/PropertyList.dtd">
-<plist version="0.9">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
 <dict>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
@@ -8,10 +8,8 @@
 	<string>@ICON@</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
-        <key>CFBundleGetInfoString</key>
-	<string>Created by Qt/QMake</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.trolltech.Designer</string>
+	<string>org.qt-project.Designer</string>
 	<key>CFBundleSignature</key>
 	<string>ttxt</string>
 	<key>CFBundleExecutable</key>
@@ -31,7 +29,7 @@
                         <true/>
                 </dict>
         </array>
-	<key>NOTE</key>
-        <string>Qt/Designer by Digia Plc and/or its subsidiary(-ies)</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>(C) 2017 The Qt Company Ltd</string>
 </dict>
 </plist>

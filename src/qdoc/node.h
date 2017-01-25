@@ -985,6 +985,9 @@ public:
     void setFinal(bool b) { isFinal_ = b; }
     bool isFinal() const { return isFinal_; }
 
+    void setOverride(bool b) { isOverride_ = b; }
+    bool isOverride() const { return isOverride_; }
+
 private:
     void addAssociatedProperty(PropertyNode* property);
 
@@ -1004,6 +1007,7 @@ private:
     bool isDeleted_ : 1;
     bool isDefaulted_ : 1;
     bool isFinal_ : 1;
+    bool isOverride_ : 1;
     unsigned char overloadNumber_;
     QVector<Parameter> parameters_;
     const FunctionNode* reimplementedFrom_;

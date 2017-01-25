@@ -54,7 +54,7 @@ static const char *kwords[] = {
     "private", "protected", "public", "short", "signals", "signed",
     "slots", "static", "struct", "template", "typedef", "typename",
     "union", "unsigned", "using", "virtual", "void", "volatile",
-    "__int64", "default", "delete", "final",
+    "__int64", "default", "delete", "final", "override",
     "Q_OBJECT",
     "Q_OVERRIDE",
     "Q_PROPERTY",
