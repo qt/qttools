@@ -84,18 +84,6 @@
         \li  \l{Qt Designer's UI File Format}
     \endlist
     \endlist
-
-    \section1 Legal Notices
-
-    Some source code in \QD is licensed under specific highly permissive
-    licenses from the original authors. The Qt team gratefully acknowledges
-    these contributions to \QD and all users of \QD should also acknowledge
-    these contributions and quote the following license statements in an
-    appendix to the documentation.
-
-    \list
-    \li \l{Qt Designer License Information}
-    \endlist
 */
 
 
@@ -2810,32 +2798,4 @@ pixmap property in the property editor.
     may change in future Qt releases.
 
     \quotefile ../../../../data/ui4.xsd
-*/
-
-
-/*!
-    \page designer-license-information.html
-    \title Qt Designer License Information
-    \contentspage {Qt Designer Manual}{Contents}
-
-    \brief License information for contributions to specific parts of the Qt
-    Designer source code.
-
-    \section1 Implementation of the Recursive Shadow Casting Algorithm in Qt Designer
-
-    \legalese
-    Copyright (C) 2015 The Qt Company Ltd. \BR
-    Copyright (C) 2005 Bjoern Bergstroem
-
-    Permission is hereby granted, free of charge, to any person obtaining
-    a copy of this software and associated documentation files (the
-    "Software"), to deal in the Software without restriction, including
-    without limitation the rights to use, modify, market, reproduce,
-    grant sublicenses and distribute subject to the following conditions:
-    The above copyright notice and this permission notice shall be
-    included in all copies or substantial portions of the Software. These
-    files are provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
-    WARRANTY OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR
-    PURPOSE.
-    \endlegalese
 */
