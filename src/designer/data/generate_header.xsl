@@ -238,7 +238,9 @@
 
         <xsl:text>class QDESIGNER_UILIB_EXPORT </xsl:text>
         <xsl:value-of select="$name"/>
-        <xsl:text> {&endl;</xsl:text>
+        <xsl:text> {&endl;    Q_DISABLE_COPY(</xsl:text>
+        <xsl:value-of select="$name"/>
+        <xsl:text>)&endl;</xsl:text>
         <xsl:text>public:&endl;</xsl:text>
         <xsl:text>    </xsl:text>
         <xsl:value-of select="$name"/>
@@ -313,16 +315,6 @@
                 <xsl:with-param name="node" select="."/>
             </xsl:call-template>
         </xsl:for-each>
-
-        <xsl:text>&endl;</xsl:text>
-        <xsl:text>    </xsl:text>
-        <xsl:value-of select="$name"/>
-        <xsl:text>(const </xsl:text>
-        <xsl:value-of select="$name"/>
-        <xsl:text> &amp;other);&endl;</xsl:text>
-        <xsl:text>    void operator = (const </xsl:text>
-        <xsl:value-of select="$name"/>
-        <xsl:text>&amp;other);&endl;</xsl:text>
 
         <xsl:text>};&endl;&endl;</xsl:text>
     </xsl:template>
