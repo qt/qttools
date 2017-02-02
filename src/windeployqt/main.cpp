@@ -265,6 +265,7 @@ struct Options {
     DebugDetection debugDetection = DebugDetectionAuto;
     bool deployPdb = false;
     bool dryRun = false;
+    bool patchQt = true;
 
     inline bool isWinRt() const {
         return platform == WinRtArm || platform == WinRtIntel;
@@ -352,6 +353,10 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
     QCommandLineOption dryRunOption(QStringLiteral("dry-run"),
                                     QStringLiteral("Simulation mode. Behave normally, but do not copy/update any files."));
     parser->addOption(dryRunOption);
+
+    QCommandLineOption noPatchQtOption(QStringLiteral("no-patchqt"),
+                                       QStringLiteral("Do not patch the Qt5Core library."));
+    parser->addOption(noPatchQtOption);
 
     QCommandLineOption noPluginsOption(QStringLiteral("no-plugins"),
                                        QStringLiteral("Skip plugin deployment."));
@@ -519,6 +524,8 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
         options->dryRun = true;
         options->updateFileFlags |= SkipUpdateFile;
     }
+
+    options->patchQt = !parser->isSet(noPatchQtOption);
 
     for (size_t i = 0; i < qtModulesCount; ++i) {
         if (parser->isSet(*enabledModules.at(int(i)).first.data()))
@@ -1376,7 +1383,7 @@ static DeployResult deploy(const Options &options,
                 return result;
         }
 
-        if (!options.isWinRt() && !options.dryRun) {
+        if (options.patchQt  && !options.dryRun && !options.isWinRt()) {
             const QString qt5CoreName = QFileInfo(libraryPath(libraryLocation, "Qt5Core", qtLibInfix,
                                                               options.platform, isDebug)).fileName();
 
