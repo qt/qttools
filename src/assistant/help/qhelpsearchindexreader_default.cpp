@@ -107,13 +107,14 @@ static void bindNamespacesAndAttributes(QSqlQuery *query, const QMultiMap<QStrin
     }
 }
 
-QVector<DocumentInfo> Reader::queryTable(const QSqlDatabase &db,
+QVector<QHelpSearchResult> Reader::queryTable(const QSqlDatabase &db,
                                          const QString &tableName,
                                          const QString &term) const
 {
     const QString nsPlaceholders = namespacePlaceholders(m_namespaces);
     QSqlQuery query(db);
-    query.prepare(QLatin1String("SELECT url, title FROM ") + tableName +
+    query.prepare(QLatin1String("SELECT url, title, snippet(") + tableName +
+                  QLatin1String(", -1, '<b>', '</b>', '...', '10') FROM ") + tableName +
                   QLatin1String(" WHERE (") + nsPlaceholders +
                   QLatin1String(") AND ") + tableName +
                   QLatin1String(" MATCH ? ORDER BY rank"));
@@ -121,15 +122,16 @@ QVector<DocumentInfo> Reader::queryTable(const QSqlDatabase &db,
     query.addBindValue(term);
     query.exec();
 
-    QVector<DocumentInfo> documentsInfo;
+    QVector<QHelpSearchResult> results;
 
     while (query.next()) {
         const QString url = query.value(QLatin1String("url")).toString();
         const QString title = query.value(QLatin1String("title")).toString();
-        documentsInfo.append(DocumentInfo(title, url));
+        const QString snippet = query.value(2).toString();
+        results.append(QHelpSearchResult(url, title, snippet));
     }
 
-    return documentsInfo;
+    return results;
 }
 
 void Reader::searchInDB(const QString &term)
@@ -140,28 +142,29 @@ void Reader::searchInDB(const QString &term)
         db.setConnectOptions(QLatin1String("QSQLITE_OPEN_READONLY"));
         db.setDatabaseName(m_indexPath + QLatin1String("/fts"));
         if (db.open()) {
-            const QVector<DocumentInfo> titlesInfo = queryTable(db,
-                                        QLatin1String("titles"), term);
-            const QVector<DocumentInfo> contentsInfo = queryTable(db,
-                                        QLatin1String("contents"), term);
+            const QVector<QHelpSearchResult> titleResults = queryTable(db,
+                                             QLatin1String("titles"), term);
+            const QVector<QHelpSearchResult> contentResults = queryTable(db,
+                                             QLatin1String("contents"), term);
 
             // merge results form title and contents searches
-            m_hits = QVector<DocumentInfo>();
+            m_searchResults = QVector<QHelpSearchResult>();
 
-            QSet<QString> urls;
-            for (const DocumentInfo &info : titlesInfo) {
-                const QString url = info.m_url;
+            QSet<QUrl> urls;
+
+            for (const QHelpSearchResult &result : titleResults) {
+                const QUrl &url = result.url();
                 if (!urls.contains(url)) {
-                    m_hits.append(info);
                     urls.insert(url);
+                    m_searchResults.append(result);
                 }
             }
 
-            for (const DocumentInfo &info : contentsInfo) {
-                const QString url = info.m_url;
+            for (const QHelpSearchResult &result : contentResults) {
+                const QUrl &url = result.url();
                 if (!urls.contains(url)) {
-                    m_hits.append(info);
                     urls.insert(url);
+                    m_searchResults.append(result);
                 }
             }
         }
@@ -169,9 +172,9 @@ void Reader::searchInDB(const QString &term)
     QSqlDatabase::removeDatabase(uniqueId);
 }
 
-QVector<DocumentInfo> Reader::hits() const
+QVector<QHelpSearchResult> Reader::searchResults() const
 {
-    return m_hits;
+    return m_searchResults;
 }
 
 static bool attributesMatchFilter(const QStringList &attributes,
@@ -244,13 +247,14 @@ void QHelpSearchIndexReaderDefault::run()
     }
     lock.unlock();
 
-    m_hitList.clear();
+    m_searchResults.clear();
     m_reader.searchInDB(queryTerm);    // TODO: should this be interruptible as well ???
 
-    for (const DocumentInfo &docInfo : m_reader.hits())
-        m_hitList.append(qMakePair(docInfo.m_url, docInfo.m_title));
+    lock.relock();
+    m_searchResults = m_reader.searchResults();
+    lock.unlock();
 
-    emit searchingFinished(m_hitList.count());
+    emit searchingFinished(m_searchResults.count());
 }
 
 }   // namespace std

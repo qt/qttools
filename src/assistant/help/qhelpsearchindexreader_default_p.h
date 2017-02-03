@@ -51,7 +51,6 @@
 // We mean it.
 //
 
-#include "qhelpsearchindex_default_p.h"
 #include "qhelpsearchindexreader_p.h"
 
 QT_FORWARD_DECLARE_CLASS(QSqlDatabase)
@@ -68,16 +67,16 @@ public:
     void addNamespace(const QString &namespaceName, const QStringList &attributes);
 
     void searchInDB(const QString &term);
-    QVector<DocumentInfo> hits() const;
+    QVector<QHelpSearchResult> searchResults() const;
 
 private:
-    QVector<DocumentInfo> queryTable(const QSqlDatabase &db,
-                                     const QString &tableName,
-                                     const QString &term) const;
+    QVector<QHelpSearchResult> queryTable(const QSqlDatabase &db,
+                                          const QString &tableName,
+                                          const QString &term) const;
 
     QString m_indexPath;
     QMultiMap<QString, QStringList> m_namespaces;
-    QVector<DocumentInfo> m_hits;
+    QVector<QHelpSearchResult> m_searchResults;
 };
 
 

@@ -58,6 +58,60 @@ QT_BEGIN_NAMESPACE
 
 using namespace fulltextsearch::qt;
 
+class QHelpSearchResultData : public QSharedData
+{
+public:
+    QUrl m_url;
+    QString m_title;
+    QString m_snippet;
+};
+
+QHelpSearchResult::QHelpSearchResult()
+    : d(new QHelpSearchResultData)
+{
+}
+
+
+QHelpSearchResult::QHelpSearchResult(const QHelpSearchResult &other)
+    : d(other.d)
+{
+}
+
+QHelpSearchResult::QHelpSearchResult(const QUrl &url, const QString &title, const QString &snippet)
+    : d(new QHelpSearchResultData)
+{
+    d->m_url = url;
+    d->m_title = title;
+    d->m_snippet = snippet;
+}
+
+QHelpSearchResult::~QHelpSearchResult()
+{
+}
+
+QHelpSearchResult &QHelpSearchResult::operator=(const QHelpSearchResult &other)
+{
+    d = other.d;
+    return *this;
+}
+
+QString QHelpSearchResult::title() const
+{
+    return d->m_title;
+}
+
+QUrl QHelpSearchResult::url() const
+{
+    return d->m_url;
+}
+
+QString QHelpSearchResult::snippet() const
+{
+    return d->m_snippet;
+}
+
+
+
 class QHelpSearchEnginePrivate : public QObject
 {
     Q_OBJECT
@@ -67,7 +121,7 @@ signals:
     void indexingFinished();
 
     void searchingStarted();
-    void searchingFinished(int hits);
+    void searchingFinished(int searchResults);
 
 private:
     QHelpSearchEnginePrivate(QHelpEngineCore *helpEngine)
@@ -94,11 +148,11 @@ private:
         return count;
     }
 
-    QList<QHelpSearchEngine::SearchHit> hits(int start, int end) const
+    QVector<QHelpSearchResult> searchResults(int start, int end) const
     {
         return indexReader ?
-                indexReader->hits(start, end) :
-                QList<QHelpSearchEngine::SearchHit>();
+                indexReader->searchResults(start, end) :
+                QVector<QHelpSearchResult>();
     }
 
     void updateIndex(bool reindex = false)
@@ -360,6 +414,7 @@ int QHelpSearchEngine::hitCount() const
     return d->hitCount();
 }
 
+// TODO: obsolete the SearchHit typedef and hits methods
 /*!
     \typedef QHelpSearchEngine::SearchHit
 
@@ -374,7 +429,16 @@ int QHelpSearchEngine::hitCount() const
 */
 QList<QHelpSearchEngine::SearchHit> QHelpSearchEngine::hits(int start, int end) const
 {
-   return d->hits(start, end);
+    QList<QHelpSearchEngine::SearchHit> hits;
+    for (const QHelpSearchResult &result : searchResults(start, end))
+        hits.append(qMakePair(result.url().toString(), result.title()));
+    return hits;
+}
+
+// TODO: add a doc for searchResults() and for QHelpSearchResult class
+QVector<QHelpSearchResult> QHelpSearchEngine::searchResults(int start, int end) const
+{
+    return d->searchResults(start, end);
 }
 
 /*!

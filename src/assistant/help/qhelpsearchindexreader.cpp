@@ -60,7 +60,7 @@ void QHelpSearchIndexReader::search(const QString &collectionFile, const QString
 {
     wait();
 
-    m_hitList.clear();
+    m_searchResults.clear();
     m_cancel = false;
     m_query = queryList;
     m_collectionFile = collectionFile;
@@ -72,14 +72,14 @@ void QHelpSearchIndexReader::search(const QString &collectionFile, const QString
 int QHelpSearchIndexReader::hitCount() const
 {
     QMutexLocker lock(&m_mutex);
-    return m_hitList.count();
+    return m_searchResults.count();
 }
 
-QList<QHelpSearchEngine::SearchHit> QHelpSearchIndexReader::hits(int start,
+QVector<QHelpSearchResult> QHelpSearchIndexReader::searchResults(int start,
                                                                  int end) const
 {
     QMutexLocker lock(&m_mutex);
-    return m_hitList.mid(start, end - start);
+    return m_searchResults.mid(start, end - start);
 }
 
 

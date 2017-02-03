@@ -41,7 +41,6 @@ HEADERS += qhelpenginecore.h \
     qhelpsearchengine.h \
     qhelpsearchquerywidget.h \
     qhelpsearchresultwidget.h \
-    qhelpsearchindex_default_p.h \
     qhelpsearchindexwriter_default_p.h \
     qhelpsearchindexreader_default_p.h \
     qhelpsearchindexreader_p.h
