@@ -523,48 +523,34 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
     case Atom::BaseName:
         break;
     case Atom::BriefLeft:
-        // Do not output the brief for QML nodes, doc nodes or collections
-        // (groups, modules, qml module nodes)
-        if (relative->isQmlType() ||
-            relative->isDocumentNode() ||
-            relative->isCollectionNode() ||
-            relative->isJsType()) {
+        if (!hasBrief(relative)) {
             skipAhead = skipAtoms(atom, Atom::BriefRight);
             break;
         }
-
         out() << "<p>";
         if (relative->type() == Node::Property ||
                 relative->type() == Node::Variable) {
-            QString str;
             atom = atom->next();
-            while (atom != 0 && atom->type() != Atom::BriefRight) {
-                if (atom->type() == Atom::String ||
-                        atom->type() == Atom::AutoLink)
-                    str += atom->string();
-                skipAhead++;
-                atom = atom->next();
+            if (atom != 0 && atom->type() == Atom::String) {
+                QString firstWord = atom->string().toLower().section(' ', 0, 0, QString::SectionSkipEmpty);
+                if (firstWord == QLatin1String("the")
+                      || firstWord == QLatin1String("a")
+                      || firstWord == QLatin1String("an")
+                      || firstWord == QLatin1String("whether")
+                      || firstWord == QLatin1String("which")) {
+                    QString str = "This ";
+                    if (relative->type() == Node::Property)
+                        str += "property holds ";
+                    else
+                        str += "variable holds ";
+                    str += atom->string().left(1).toLower() + atom->string().mid(1);
+                    const_cast<Atom *>(atom)->setString(str);
+                }
             }
-            str[0] = str[0].toLower();
-            if (str.endsWith(QLatin1Char('.')))
-                str.truncate(str.length() - 1);
-            out() << "This ";
-            if (relative->type() == Node::Property)
-                out() << "property";
-            else
-                out() << "variable";
-            QStringList words = str.split(QLatin1Char(' '));
-            if (!(words.first() == QLatin1String("contains") || words.first() == QLatin1String("specifies")
-                  || words.first() == QLatin1String("describes") || words.first() == QLatin1String("defines")
-                  || words.first() == QLatin1String("holds") || words.first() == QLatin1String("determines")))
-                out() << " holds ";
-            else
-                out() << ' ';
-            out() << str << '.';
         }
         break;
     case Atom::BriefRight:
-        if (!relative->isDocumentNode())
+        if (hasBrief(relative))
             out() << "</p>\n";
         break;
     case Atom::C:
