@@ -54,12 +54,21 @@ public:
     virtual QStringList sourceFileNameFilter() Q_DECL_OVERRIDE;
     virtual void parseHeaderFile(const Location& location, const QString& filePath) Q_DECL_OVERRIDE;
     virtual void parseSourceFile(const Location& location, const QString& filePath) Q_DECL_OVERRIDE;
+    virtual void precompileHeaders() Q_DECL_OVERRIDE;
+
+ private:
+    void getDefaultArgs();
+    void getMoreArgs();
+    void buildPCH();
+
 private:
     QSet<QString> allHeaders_;
     QVector<QByteArray> includePaths_;
     QScopedPointer<QTemporaryDir> pchFileDir_;
     QByteArray pchName_;
     QVector<QByteArray> defines_;
+    std::vector<const char *> args_;
+    QVector<QByteArray> moreArgs_;
 };
 
 QT_END_NAMESPACE

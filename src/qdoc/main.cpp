@@ -92,6 +92,7 @@ static QHash<QString,QString> defaults;
 typedef QPair<QString, QTranslator*> Translator;
 static QList<Translator> translators;
 #endif
+static ClangCodeParser* clangParser_ = 0;
 
 /*!
   Read some XML indexes containing definitions from other
@@ -452,6 +453,7 @@ static void processQdocconfFile(const QString &fileName)
             ++h;
         }
 
+        clangParser_->precompileHeaders();
         // Moved into ClangCodeParser after building PCH
         //qdb->resolveInheritance();
 
@@ -754,6 +756,7 @@ int main(int argc, char **argv)
       and create a tree for C++.
      */
     ClangCodeParser clangParser;
+    clangParser_ = &clangParser;
     QmlCodeParser qmlParser;
     PureDocParser docParser;
 

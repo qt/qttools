@@ -53,14 +53,17 @@
 
 QT_BEGIN_NAMESPACE
 
+static CXTranslationUnit_Flags flags_ = (CXTranslationUnit_Flags)0;
+static CXIndex index_ = 0;
+
 /*!
    Call clang_visitChildren on the given cursor with the lambda as a callback
-   T can be any functor that is callable with a CXCursor parametter and returns a CXChildVisitResult
+   T can be any functor that is callable with a CXCursor parameter and returns a CXChildVisitResult
    (in other word compatible with function<CXChildVisitResult(CXCursor)>
  */
 template <typename T> bool visitChildrenLambda(CXCursor cursor, T &&lambda)
 {
-    auto visitor = [](CXCursor c, CXCursor , CXClientData client_data) -> CXChildVisitResult
+    CXCursorVisitor visitor = [](CXCursor c, CXCursor , CXClientData client_data) -> CXChildVisitResult
     { return (*static_cast<T*>(client_data))(c); };
     return clang_visitChildren(cursor, visitor, &lambda);
 }
@@ -261,8 +264,9 @@ public:
                 isInterestingCache_[file] = isInteresting;
             }
 
-            if (isInteresting)
+            if (isInteresting) {
                 return visitHeader(cur, loc);
+            }
 
             return CXChildVisit_Continue;
         });
@@ -870,68 +874,87 @@ void ClangCodeParser::parseHeaderFile(const Location & /*location*/, const QStri
     allHeaders_.insert(fi.canonicalFilePath());
 }
 
-#define INCLUDE_PRIVATE_HEADERS
-/*!
-  Get ready to parse the C++ cpp file identified by \a filePath
-  and add its parsed contents to the database. \a location is
-  used for reporting errors.
-
-  Call matchDocsAndStuff() to do all the parsing and tree building.
- */
-void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QString& filePath)
-{
-    const char *defaultArgs[] = { "-std=c++14",
-        "-fPIC",
-        "-fno-exceptions", // Workaround for clang bug http://reviews.llvm.org/D17988
-        "-DQ_QDOC",
-        "-DQT_DISABLE_DEPRECATED_BEFORE=0",
-        "-DQT_ANNOTATE_CLASS(type,...)=static_assert(sizeof(#__VA_ARGS__), #type);",
-        "-DQT_ANNOTATE_CLASS2(type,a1,a2)=static_assert(sizeof(#a1, #a2), #type);",
-        "-DQT_ANNOTATE_FUNCTION(a)=__attribute__((annotate(#a)))",
-        "-DQT_ANNOTATE_ACCESS_SPECIFIER(a)=__attribute__((annotate(#a)))",
-        "-Wno-constant-logical-operand",
+static const char *defaultArgs_[] = {
+    "-std=c++14",
+    "-fPIC",
+    "-fno-exceptions", // Workaround for clang bug http://reviews.llvm.org/D17988
+    "-DQ_QDOC",
+    "-DQT_DISABLE_DEPRECATED_BEFORE=0",
+    "-DQT_ANNOTATE_CLASS(type,...)=static_assert(sizeof(#__VA_ARGS__), #type);",
+    "-DQT_ANNOTATE_CLASS2(type,a1,a2)=static_assert(sizeof(#a1, #a2), #type);",
+    "-DQT_ANNOTATE_FUNCTION(a)=__attribute__((annotate(#a)))",
+    "-DQT_ANNOTATE_ACCESS_SPECIFIER(a)=__attribute__((annotate(#a)))",
+    "-Wno-constant-logical-operand",
 #ifdef Q_OS_WIN
-        "-fms-compatibility-version=19",
+    "-fms-compatibility-version=19",
 #endif
-        "-I" CLANG_RESOURCE_DIR
-    };
-    std::vector<const char *> args(std::begin(defaultArgs), std::end(defaultArgs));
+    "-I" CLANG_RESOURCE_DIR
+};
+
+/*!
+  Load the default arguments and the defines into \a args.
+  Clear \a args first.
+ */
+void ClangCodeParser::getDefaultArgs()
+{
+    args_.clear();
+    args_.insert(args_.begin(), std::begin(defaultArgs_), std::end(defaultArgs_));
     // Add the defines from the qdocconf file.
     for (const auto &p : qAsConst(defines_))
-        args.push_back(p.constData());
+        args_.push_back(p.constData());
+}
 
-    auto moreArgs = includePaths_;
-    if (moreArgs.isEmpty()) {
-        // Try to guess the include paths if none were given.
+/*!
+  Load the include paths into \a moreArgs.
+ */
+void ClangCodeParser::getMoreArgs()
+{
+    if (includePaths_.isEmpty() || includePaths_.at(0) != QByteArray("-I")) {
+        /*
+          The include paths provided are inadequate. Make a list
+          of reasonable places to look for include files and use
+          that list instead.
+         */
+        QList<QString> headers = allHeaders_.values();
+        QString filePath = headers.at(0);
         auto forest = qdb_->searchOrder();
-        QByteArray installDocDir = Config::installDir.toUtf8();
+
         QByteArray version = qdb_->version().toUtf8();
-        moreArgs += "-I" + installDocDir + "/../include";
-        moreArgs += "-I" + filePath.toUtf8() + "/../";
-        moreArgs += "-I" + filePath.toUtf8() + "/../../";
+        QString basicIncludeDir = QDir::cleanPath(QString(Config::installDir + "/../include"));
+        moreArgs_ += "-I" + basicIncludeDir.toLatin1();
+        moreArgs_ += "-I" + QDir::cleanPath(QString(filePath + "/../")).toLatin1();
+        moreArgs_ += "-I" + QDir::cleanPath(QString(filePath + "/../../")).toLatin1();
         for (const auto &s : forest) {
-            QByteArray module = s->camelCaseModuleName().toUtf8();
-            moreArgs += "-I" + installDocDir + "/../include/" + module;
-            moreArgs += "-I" + installDocDir + "/../include/" + module + "/" + version;
-            moreArgs += "-I" + installDocDir + "/../include/" + module + "/" + version + "/" + module;
+            QString module = basicIncludeDir +"/" + s->camelCaseModuleName();
+            moreArgs_ += QString("-I" + module).toLatin1();
+            moreArgs_ += QString("-I" + module + "/" + qdb_->version()).toLatin1();
+            moreArgs_ += QString("-I" + module + "/" + qdb_->version() + "/" + module).toLatin1();
+        }
+        for (int i=0; i<includePaths_.size(); ++i) {
+            if (!includePaths_.at(i).startsWith("-"))
+                moreArgs_ += "-I" + includePaths_.at(i);
+            else
+                moreArgs_ += includePaths_.at(i);
         }
     }
+    else {
+        moreArgs_ = includePaths_;
+    }
+}
 
-    for (const auto &p : qAsConst(moreArgs))
-        args.push_back(p.constData());
-
-    auto flags = CXTranslationUnit_Incomplete | CXTranslationUnit_SkipFunctionBodies |
-        CXTranslationUnit_KeepGoing;
-    CXIndex index = clang_createIndex(1, 0);
-
+/*!
+  Building the PCH must be possible when there are no .cpp
+  files, so it is moved here to its own member function, and
+  it is called after the list of header files is complete.
+ */
+void ClangCodeParser::buildPCH()
+{
     if (!pchFileDir_) {
         pchFileDir_.reset(new QTemporaryDir(QDir::tempPath() + QLatin1String("/qdoc_pch")));
         if (pchFileDir_->isValid()) {
             const QByteArray module = qdb_->primaryTreeRoot()->tree()->camelCaseModuleName().toUtf8();
             QByteArray header;
-#ifdef INCLUDE_PRIVATE_HEADERS
             QByteArray privateHeaderDir;
-#endif
             // Find the path to the module's header (e.g. QtGui/QtGui) to be used
             // as pre-compiled header
             for (const auto &p : qAsConst(includePaths_)) {
@@ -943,7 +966,6 @@ void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QStrin
                     }
                 }
             }
-#ifdef INCLUDE_PRIVATE_HEADERS
             // Find the path to the module's private header directory (e.g.
             // include/QtGui/5.8.0/QtGui/private) to use for including all
             // the private headers in the PCH.
@@ -956,7 +978,6 @@ void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QStrin
                     }
                 }
             }
-#endif
             if (header.isEmpty()) {
                 QByteArray installDocDir = Config::installDir.toUtf8();
                 const QByteArray candidate = installDocDir + "/../include/" + module + "/" + module;
@@ -967,9 +988,8 @@ void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QStrin
                 qWarning() << "Could not find the module header in the include path for module"
                     << module << "  (include paths: "<< includePaths_ << ")";
             } else {
-                args.push_back("-xc++");
+                args_.push_back("-xc++");
                 CXTranslationUnit tu;
-#ifdef INCLUDE_PRIVATE_HEADERS
                 QString tmpHeader = pchFileDir_->path() + "/" + module;
                 if (QFile::copy(header, tmpHeader) && !privateHeaderDir.isEmpty()) {
                     privateHeaderDir = QDir::cleanPath(privateHeaderDir.constData()).toLatin1();
@@ -990,19 +1010,13 @@ void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QStrin
                         }
                     }
                 }
-#endif
-                CXErrorCode err = clang_parseTranslationUnit2(index,
-#ifdef INCLUDE_PRIVATE_HEADERS
+                CXErrorCode err = clang_parseTranslationUnit2(index_,
                     tmpHeader.toLatin1().data(),
-#else
-                    header.constData(),
-#endif
-                    args.data(), args.size(), nullptr, 0,
-                    flags | CXTranslationUnit_ForSerialization, &tu);
+                    args_.data(), args_.size(), nullptr, 0,
+                    flags_ | CXTranslationUnit_ForSerialization, &tu);
                 if (!err && tu) {
                     pchName_ = pchFileDir_->path().toUtf8() + "/" + module + ".pch";
-                    auto error = clang_saveTranslationUnit(tu, pchName_.constData(),
-                                                           clang_defaultSaveOptions(tu));
+                    auto error = clang_saveTranslationUnit(tu, pchName_.constData(), clang_defaultSaveOptions(tu));
                     if (error) {
                         qWarning() << "Could not save PCH file for " << module << error;
                         pchName_.clear();
@@ -1016,37 +1030,59 @@ void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QStrin
                 } else {
                     pchFileDir_->remove();
                     qWarning() << "Could not create PCH file for "
-#ifdef INCLUDE_PRIVATE_HEADERS
                                << tmpHeader
-#else
-                               << header
-#endif
                                << " error code:" << err;
                 }
-                args.pop_back(); // remove the "-xc++";
+                args_.pop_back(); // remove the "-xc++";
             }
         }
         qdb_->resolveInheritance();
     }
-    args.clear();
-    args.insert(args.begin(), std::begin(defaultArgs), std::end(defaultArgs));
-    // Add the defines from the qdocconf file.
-    for (const auto &p : qAsConst(defines_))
-        args.push_back(p.constData());
+}
+
+/*!
+  Precompile the header files for the current module.
+ */
+void ClangCodeParser::precompileHeaders()
+{
+    getDefaultArgs();
+    getMoreArgs();
+    for (const auto &p : qAsConst(moreArgs_))
+        args_.push_back(p.constData());
+
+    flags_ = (CXTranslationUnit_Flags) (CXTranslationUnit_Incomplete | CXTranslationUnit_SkipFunctionBodies | CXTranslationUnit_KeepGoing);
+    index_ = clang_createIndex(1, 0);
+    buildPCH();
+    clang_disposeIndex(index_);
+}
+
+/*!
+  Get ready to parse the C++ cpp file identified by \a filePath
+  and add its parsed contents to the database. \a location is
+  used for reporting errors.
+
+  Call matchDocsAndStuff() to do all the parsing and tree building.
+ */
+void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QString& filePath)
+{
+    flags_ = (CXTranslationUnit_Flags) (CXTranslationUnit_Incomplete | CXTranslationUnit_SkipFunctionBodies | CXTranslationUnit_KeepGoing);
+    index_ = clang_createIndex(1, 0);
+
+    getDefaultArgs();
     if (!pchName_.isEmpty() && !filePath.endsWith(".mm")) {
-        args.push_back("-w");
-        args.push_back("-include-pch");
-        args.push_back(pchName_.constData());
+        args_.push_back("-w");
+        args_.push_back("-include-pch");
+        args_.push_back(pchName_.constData());
     }
-    for (const auto &p : qAsConst(moreArgs))
-        args.push_back(p.constData());
+    for (const auto &p : qAsConst(moreArgs_))
+        args_.push_back(p.constData());
 
     CXTranslationUnit tu;
-    CXErrorCode err = clang_parseTranslationUnit2(index, filePath.toLocal8Bit(), args.data(),
-                                                  args.size(), nullptr, 0, flags, &tu);
+    CXErrorCode err = clang_parseTranslationUnit2(index_, filePath.toLocal8Bit(), args_.data(),
+                                                  args_.size(), nullptr, 0, flags_, &tu);
     if (err || !tu) {
         qWarning() << "Could not parse " << filePath << " error code:" << err;
-        clang_disposeIndex(index);
+        clang_disposeIndex(index_);
         return;
     }
 
@@ -1184,7 +1220,7 @@ void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QStrin
 
     clang_disposeTokens(tu, tokens, numTokens);
     clang_disposeTranslationUnit(tu);
-    clang_disposeIndex(index);
+    clang_disposeIndex(index_);
 }
 
 QT_END_NAMESPACE
