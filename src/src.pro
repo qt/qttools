@@ -37,7 +37,6 @@ qtHaveModule(gui):!android:!uikit:!qnx:!winrt: SUBDIRS += qtdiag
 
 qtNomakeTools( \
     pixeltool \
-    macdeployqt \
 )
 
 # This is necessary to avoid a race condition between toolchain.prf
