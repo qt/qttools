@@ -59,6 +59,7 @@ public slots:
     void decreaseGridSize() { setGridSize(m_gridSize - 1); }
     void increaseZoom() { setZoom(m_zoom + 1); }
     void decreaseZoom() { setZoom(m_zoom - 1); }
+    void aboutPixelTool();
 
 protected:
     void timerEvent(QTimerEvent *event) Q_DECL_OVERRIDE;
@@ -75,6 +76,7 @@ private:
     void grabScreen();
     void startZoomVisibleTimer();
     void startGridSizeVisibleTimer();
+    QString aboutText() const;
 
     bool m_freeze;
     bool m_displayZoom;

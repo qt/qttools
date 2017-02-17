@@ -44,7 +44,10 @@
 #include <qmenu.h>
 #include <qactiongroup.h>
 #include <qimagewriter.h>
+#include <qscreen.h>
 #include <qstandardpaths.h>
+#include <qtextstream.h>
+#include <qwindow.h>
 #include <private/qhighdpiscaling_p.h>
 
 #include <qdebug.h>
@@ -263,6 +266,9 @@ void QPixelTool::keyPressEvent(QKeyEvent *e)
     case Qt::Key_Control:
         grabKeyboard();
         break;
+    case Qt::Key_F1:
+        aboutPixelTool();
+        break;
     }
 }
 
@@ -379,6 +385,7 @@ void QPixelTool::contextMenuEvent(QContextMenuEvent *e)
 
     menu.addSeparator();
     menu.addAction(QLatin1String("About Qt"), qApp, &QApplication::aboutQt);
+    menu.addAction(QLatin1String("About Qt Pixeltool"), this, &QPixelTool::aboutPixelTool);
 
     menu.exec(mapToGlobal(e->pos()));
 
@@ -561,6 +568,43 @@ void QPixelTool::saveToFile()
                              + QDir::toNativeSeparators(fileDialog.selectedFiles().first()));
     }
     m_freeze = oldFreeze;
+}
+
+QTextStream &operator<<(QTextStream &str, const QScreen *screen)
+{
+    const QRect geometry = screen->geometry();
+    str << '"' << screen->name() << "\" " << geometry.width()
+        << 'x' << geometry.height() << forcesign << geometry.x() << geometry.y()
+        << noforcesign << ", " << qRound(screen->logicalDotsPerInch()) << "DPI"
+        << ", Depth: " << screen->depth() << ", " << screen->refreshRate() << "Hz";
+    const qreal dpr = screen->devicePixelRatio();
+    if (!qFuzzyCompare(dpr, qreal(1)))
+        str << ", DPR: " << dpr;
+    return str;
+}
+
+QString QPixelTool::aboutText() const
+{
+    const QList<QScreen *> screens = QGuiApplication::screens();
+    const QScreen *windowScreen = windowHandle()->screen();
+
+    QString result;
+    QTextStream str(&result);
+    str << "<html></head><body><h2>Qt Pixeltool</h2><p>Qt " << QT_VERSION_STR
+        << "</p><p>Copyright (C) 2017 The Qt Company Ltd.</p><h3>Screens</h3><ul>";
+    for (const QScreen *screen : screens)
+        str << "<li>" << (screen == windowScreen ? "* " : "  ") << screen << "</li>";
+    str << "<ul></body></html>";
+    return result;
+}
+
+void QPixelTool::aboutPixelTool()
+{
+    QMessageBox aboutBox(QMessageBox::Information, tr("About Qt Pixeltool"), aboutText(),
+                         QMessageBox::Close, this);
+    aboutBox.setWindowFlags(aboutBox.windowFlags() & ~Qt::WindowContextHelpButtonHint);
+    aboutBox.setTextInteractionFlags(Qt::TextBrowserInteraction);
+    aboutBox.exec();
 }
 
 QT_END_NAMESPACE
