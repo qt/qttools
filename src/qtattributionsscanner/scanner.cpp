@@ -33,6 +33,7 @@
 #include <QtCore/qjsonarray.h>
 #include <QtCore/qjsondocument.h>
 #include <QtCore/qjsonobject.h>
+#include <QtCore/qregexp.h>
 #include <QtCore/qvariant.h>
 #include <iostream>
 

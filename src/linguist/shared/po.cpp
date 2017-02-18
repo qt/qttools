@@ -31,6 +31,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QIODevice>
 #include <QtCore/QHash>
+#include <QtCore/QRegExp>
 #include <QtCore/QString>
 #include <QtCore/QTextCodec>
 #include <QtCore/QTextStream>

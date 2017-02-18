@@ -30,6 +30,7 @@
 
 #include <QtCore/QByteArray>
 #include <QtCore/QDebug>
+#include <QtCore/QRegExp>
 #include <QtCore/QTextCodec>
 #include <QtCore/QTextStream>
 

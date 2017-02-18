@@ -30,6 +30,7 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QMap>
+#include <QtCore/QRegExp>
 #include <QtCore/QStack>
 #include <QtCore/QString>
 #include <QtCore/QTextCodec>

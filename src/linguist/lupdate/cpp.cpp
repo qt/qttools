@@ -33,6 +33,7 @@
 #include <QtCore/QBitArray>
 #include <QtCore/QDebug>
 #include <QtCore/QFileInfo>
+#include <QtCore/QRegExp>
 #include <QtCore/QStack>
 #include <QtCore/QString>
 #include <QtCore/QTextCodec>

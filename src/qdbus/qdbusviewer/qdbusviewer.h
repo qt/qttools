@@ -31,6 +31,7 @@
 
 #include <QtWidgets/QWidget>
 #include <QtDBus/QDBusConnection>
+#include <QtCore/QRegExp>
 
 class ServicesProxyModel;
 

@@ -43,6 +43,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
+#include <QtCore/QRegExp>
 #include <QtCore/QTextStream>
 
 #include <private/qlocale_p.h>

@@ -36,6 +36,7 @@
 #include "text.h"
 #include "tree.h"
 #include <qdebug.h>
+#include <qregexp.h>
 #include <ctype.h>
 
 QT_BEGIN_NAMESPACE
