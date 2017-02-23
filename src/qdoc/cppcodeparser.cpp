@@ -236,6 +236,14 @@ Node* CppCodeParser::processTopicCommand(const Doc& doc,
             if (func) {
                 lastPath_ = parentPath;
             } else if (isWorthWarningAbout(doc)) {
+                if (clone && clone->isSpecialMemberFunction()) {
+                    ClassNode* cn = qdb_->findClassNode(parentPath);
+                    if (cn) {
+                        cn->addChild(clone);
+                        clone->setImplicit(true);
+                        return clone;
+                    }
+                }
                 doc.location().warning(tr("Cannot find '%1' in '\\%2' %3")
                                        .arg(clone->name() + "(...)")
                                        .arg(COMMAND_FN)
@@ -1572,7 +1580,8 @@ bool CppCodeParser::matchFunctionDecl(Aggregate *parent,
             func->setParameters(pvect);
         }
         func->setMetaness(metaness_);
-        if (parent && (name == parent->name())) {
+        if ((parent && (name == parent->name())) ||
+            (!parentPath.isEmpty() && name == parentPath.at(parentPath.size()-1))) {
             FunctionNode::Metaness m = FunctionNode::Ctor;
             if (!pvect.isEmpty()) {
                 for (int i=0; i<pvect.size(); i++) {
@@ -1595,14 +1604,25 @@ bool CppCodeParser::matchFunctionDecl(Aggregate *parent,
             func->setMetaness(FunctionNode::Dtor);
         else if (name == QLatin1String("operator=")) {
             FunctionNode::Metaness m = FunctionNode::Plain;
-            if (parent && pvect.size() == 1) {
-                const Parameter& p = pvect.at(0);
-                if (p.dataType().contains(parent->name())) {
-                    if (p.dataType().endsWith(QLatin1String("&&"))) {
-                        m = FunctionNode::MAssign;
+            if (pvect.size() == 1) {
+                if (parent) {
+                    if (pvect.at(0).dataType().contains(parent->name())) {
+                        if (pvect.at(0).dataType().endsWith(QLatin1String("&&"))) {
+                            m = FunctionNode::MAssign;
+                        }
+                        else if (pvect.at(0).dataType().endsWith(QLatin1String("&"))) {
+                            m = FunctionNode::CAssign;
+                        }
                     }
-                    else if (p.dataType().endsWith(QLatin1String("&"))) {
-                        m = FunctionNode::CAssign;
+                }
+                else if (!parentPath.isEmpty()) {
+                    if (pvect.at(0).dataType().contains(parentPath.at(parentPath.size()-1))) {
+                        if (pvect.at(0).dataType().endsWith(QLatin1String("&&"))) {
+                            m = FunctionNode::MAssign;
+                        }
+                        else if (pvect.at(0).dataType().endsWith(QLatin1String("&"))) {
+                            m = FunctionNode::CAssign;
+                        }
                     }
                 }
             }

@@ -184,7 +184,7 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
                 synopsis.append(" = 0");
             else if (func->isDeleted())
                 synopsis.append(" = delete");
-            else if (func->isDefaulted())
+            else if (func->isImplicit() || func->isDefaulted())
                synopsis.append(" = default");
         }
         else if (style == Subpage) {
@@ -192,6 +192,8 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
                 synopsis += " : " + typified(func->returnType());
         }
         else {
+            if (func->isImplicit() || func->isDefaulted())
+               synopsis.append(" = default");
             QStringList bracketed;
             if (func->isStatic()) {
                 bracketed += "static";

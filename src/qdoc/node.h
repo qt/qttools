@@ -233,6 +233,7 @@ public:
     virtual bool isReadOnly() const { return false; }
     virtual bool isDefault() const { return false; }
     virtual bool isExternalPage() const { return false; }
+    virtual bool isImplicit() const { return false; }
     virtual void addMember(Node* ) { }
     virtual bool hasMembers() const { return false; }
     virtual bool hasNamespaces() const { return false; }
@@ -935,6 +936,9 @@ public:
     bool isMCtor() const { return (metaness_ == MCtor); }
     bool isCAssign() const { return (metaness_ == CAssign); }
     bool isMAssign() const { return (metaness_ == MAssign); }
+    bool isSpecialMemberFunction() const {
+        return (isDtor() || isCCtor() || isMCtor() || isCAssign() || isMAssign());
+    }
     bool isNonvirtual() const { return (virtualness_ == NonVirtual); }
     bool isVirtual() const { return (virtualness_ == NormalVirtual); }
     bool isPureVirtual() const { return (virtualness_ == PureVirtual); }
@@ -1001,6 +1005,9 @@ public:
     void setOverride(bool b) { isOverride_ = b; }
     bool isOverride() const { return isOverride_; }
 
+    void setImplicit(bool b) { isImplicit_ = b; }
+    bool isImplicit() const Q_DECL_OVERRIDE { return isImplicit_; }
+
 private:
     void addAssociatedProperty(PropertyNode* property);
 
@@ -1021,6 +1028,7 @@ private:
     bool isDefaulted_ : 1;
     bool isFinal_ : 1;
     bool isOverride_ : 1;
+    bool isImplicit_ : 1;
     unsigned char overloadNumber_;
     QVector<Parameter> parameters_;
     const FunctionNode* reimplementedFrom_;

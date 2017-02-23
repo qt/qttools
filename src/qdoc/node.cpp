@@ -2023,6 +2023,7 @@ FunctionNode::FunctionNode(Aggregate *parent, const QString& name)
       isDefaulted_(false),
       isFinal_(false),
       isOverride_(false),
+      isImplicit_(false),
       reimplementedFrom_(0)
 {
     setGenus(Node::CPP);
@@ -2050,6 +2051,7 @@ FunctionNode::FunctionNode(NodeType type, Aggregate *parent, const QString& name
       isDefaulted_(false),
       isFinal_(false),
       isOverride_(false),
+      isImplicit_(false),
       reimplementedFrom_(0)
 {
     setGenus(Node::QML);
@@ -2325,6 +2327,8 @@ QString FunctionNode::signature(bool values, bool noReturnType) const
         }
     }
     s += QLatin1Char(')');
+    if (isImplicit())
+        s += " = default";
     return s;
 }
 
