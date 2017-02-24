@@ -619,28 +619,28 @@ void QtGradientWidget::paintEvent(QPaintEvent *e)
         p.setBrush(Qt::NoBrush);
         int pointCount = 2;
         for (int i = 0; i < pointCount; i++) {
-            QPointF ang(cos(M_PI * (i * 180.0 / pointCount + d_ptr->m_angleConical) / 180) * size().width() / 2,
+            const QPointF ray(cos(M_PI * (i * 180.0 / pointCount + d_ptr->m_angleConical) / 180) * size().width() / 2,
                     -sin(M_PI * (i * 180.0 / pointCount + d_ptr->m_angleConical) / 180) * size().height() / 2);
             const double mod = hypot(ray.x(), ray.y());
-            p.drawLine(QPointF(central.x() + ang.x() * (radius - corr) / mod,
-                        central.y() + ang.y() * (radius - corr) / mod),
-                    QPointF(central.x() + ang.x() * (radius + corr) / mod,
-                        central.y() + ang.y() * (radius + corr) / mod));
-            p.drawLine(QPointF(central.x() - ang.x() * (radius - corr) / mod,
-                        central.y() - ang.y() * (radius - corr) / mod),
-                    QPointF(central.x() - ang.x() * (radius + corr) / mod,
-                        central.y() - ang.y() * (radius + corr) / mod));
+            p.drawLine(QPointF(central.x() + ray.x() * (radius - corr) / mod,
+                        central.y() + ray.y() * (radius - corr) / mod),
+                    QPointF(central.x() + ray.x() * (radius + corr) / mod,
+                        central.y() + ray.y() * (radius + corr) / mod));
+            p.drawLine(QPointF(central.x() - ray.x() * (radius - corr) / mod,
+                        central.y() - ray.y() * (radius - corr) / mod),
+                    QPointF(central.x() - ray.x() * (radius + corr) / mod,
+                        central.y() - ray.y() * (radius + corr) / mod));
         }
         if (d_ptr->m_dragHandle == QtGradientWidgetPrivate::AngleConicalHandle) {
             p.save();
             p.setPen(dragPen);
-            QPointF ang(cos(M_PI * (d_ptr->m_angleConical - d_ptr->m_angleOffset) / 180) * size().width() / 2,
+            const QPointF ray(cos(M_PI * (d_ptr->m_angleConical - d_ptr->m_angleOffset) / 180) * size().width() / 2,
                     -sin(M_PI * (d_ptr->m_angleConical - d_ptr->m_angleOffset) / 180) * size().height() / 2);
             const double mod = hypot(ray.x(), ray.y());
-            p.drawLine(QPointF(central.x() + ang.x() * (radius - corr) / mod,
-                        central.y() + ang.y() * (radius - corr) / mod),
-                    QPointF(central.x() + ang.x() * (radius + corr) / mod,
-                        central.y() + ang.y() * (radius + corr) / mod));
+            p.drawLine(QPointF(central.x() + ray.x() * (radius - corr) / mod,
+                        central.y() + ray.y() * (radius - corr) / mod),
+                    QPointF(central.x() + ray.x() * (radius + corr) / mod,
+                        central.y() + ray.y() * (radius + corr) / mod));
             p.restore();
         }
 
