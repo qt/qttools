@@ -343,7 +343,7 @@ void QtGradientWidget::mousePressEvent(QMouseEvent *e)
         if (r1.contains(pF) || r2.contains(pF) || r3.contains(pF)) {
             x = pF.x() / size().width() - d_ptr->m_centralRadial.x();
             y = pF.y() / size().height() - d_ptr->m_centralRadial.y();
-            double clickRadius = sqrt(x * x + y * y);
+            const double clickRadius = hypot(x, y);
             //d_ptr->m_radiusOffset = d_ptr->m_radiusRadial - clickRadius;
             d_ptr->m_radiusFactor = d_ptr->m_radiusRadial / clickRadius;
             if (d_ptr->m_radiusFactor == 0)
@@ -442,7 +442,7 @@ void QtGradientWidget::mouseMoveEvent(QMouseEvent *e)
         } else {
             x = pF.x() / size().width() - d_ptr->m_centralRadial.x();
             y = pF.y() / size().height() - d_ptr->m_centralRadial.y();
-            double moveRadius = sqrt(x * x + y * y);
+            const double moveRadius = hypot(x, y);
             //double newRadius = moveRadius + d_ptr->m_radiusOffset;
             double newRadius = moveRadius * d_ptr->m_radiusFactor;
             if (newRadius > 2)
@@ -621,7 +621,7 @@ void QtGradientWidget::paintEvent(QPaintEvent *e)
         for (int i = 0; i < pointCount; i++) {
             QPointF ang(cos(M_PI * (i * 180.0 / pointCount + d_ptr->m_angleConical) / 180) * size().width() / 2,
                     -sin(M_PI * (i * 180.0 / pointCount + d_ptr->m_angleConical) / 180) * size().height() / 2);
-            double mod = sqrt(ang.x() * ang.x() + ang.y() * ang.y());
+            const double mod = hypot(ray.x(), ray.y());
             p.drawLine(QPointF(central.x() + ang.x() * (radius - corr) / mod,
                         central.y() + ang.y() * (radius - corr) / mod),
                     QPointF(central.x() + ang.x() * (radius + corr) / mod,
@@ -636,7 +636,7 @@ void QtGradientWidget::paintEvent(QPaintEvent *e)
             p.setPen(dragPen);
             QPointF ang(cos(M_PI * (d_ptr->m_angleConical - d_ptr->m_angleOffset) / 180) * size().width() / 2,
                     -sin(M_PI * (d_ptr->m_angleConical - d_ptr->m_angleOffset) / 180) * size().height() / 2);
-            double mod = sqrt(ang.x() * ang.x() + ang.y() * ang.y());
+            const double mod = hypot(ray.x(), ray.y());
             p.drawLine(QPointF(central.x() + ang.x() * (radius - corr) / mod,
                         central.y() + ang.y() * (radius - corr) / mod),
                     QPointF(central.x() + ang.x() * (radius + corr) / mod,
