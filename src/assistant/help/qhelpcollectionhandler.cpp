@@ -218,7 +218,7 @@ bool QHelpCollectionHandler::copyCollectionFile(const QString &fileName)
 
     m_query.exec(QLatin1String("SELECT Key, Value FROM SettingsTable"));
     while (m_query.next()) {
-        if (m_query.value(0).toString() == QLatin1String("CluceneSearchNamespaces"))
+        if (m_query.value(0).toString() == QLatin1String("FTS5IndexedNamespaces"))
             continue;
         copyQuery->prepare(QLatin1String("INSERT INTO SettingsTable VALUES(?, ?)"));
         copyQuery->bindValue(0, m_query.value(0).toString());

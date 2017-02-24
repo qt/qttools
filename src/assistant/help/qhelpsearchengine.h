@@ -58,6 +58,8 @@ class QHelpSearchEnginePrivate;
 class QHelpSearchResultData;
 class QHelpSearchResultWidget;
 
+// TODO: obsolete it and use just QString for input
+
 class QHELP_EXPORT QHelpSearchQuery
 {
 public:
