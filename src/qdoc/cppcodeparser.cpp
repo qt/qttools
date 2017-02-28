@@ -1229,6 +1229,24 @@ bool CppCodeParser::matchDataType(CodeChunk *dataType, QString *var, bool qProp)
                 if (varComment.exactMatch(previousLexeme()))
                     *var = varComment.cap(1);
             }
+            else if (match(Tok_LeftParen)) {
+                *var = "(";
+                while (tok != Tok_RightParen && tok != Tok_Eoi) {
+                    (*var).append(lexeme());
+                    readToken();
+                }
+                (*var).append(")");
+                readToken();
+                if (match(Tok_LeftBracket)) {
+                    (*var).append("[");
+                    while (tok != Tok_RightBracket && tok != Tok_Eoi) {
+                        (*var).append(lexeme());
+                        readToken();
+                    }
+                    (*var).append("]");
+                    readToken();
+                }
+            }
             else if (qProp && (match(Tok_default) || match(Tok_final) || match(Tok_override))) {
                 // Hack to make 'default', 'final' and 'override'  work again in Q_PROPERTY
                 *var = previousLexeme();
