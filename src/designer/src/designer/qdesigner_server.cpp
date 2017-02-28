@@ -47,9 +47,7 @@ QDesignerServer::QDesignerServer(QObject *parent)
 {
     m_socket = 0;
     m_server = new QTcpServer(this);
-    m_server->listen(QHostAddress::LocalHost, 0);
-    if (m_server->isListening())
-    {
+    if (m_server->listen(QHostAddress::LocalHost, 0)) {
         connect(m_server, &QTcpServer::newConnection,
                 this, &QDesignerServer::handleNewConnection);
     }
