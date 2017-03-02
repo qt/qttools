@@ -418,7 +418,7 @@ QString qtDiag(unsigned flags)
 #endif
     str << '\n';
 
-#ifndef QT_NO_PROCESS
+#if QT_CONFIG(process)
     const QProcessEnvironment systemEnvironment = QProcessEnvironment::systemEnvironment();
     str << "\nEnvironment:\n";
     const QStringList keys = systemEnvironment.keys();
@@ -426,7 +426,7 @@ QString qtDiag(unsigned flags)
         if (key.startsWith(QLatin1Char('Q')))
            str << "  " << key << "=\"" << systemEnvironment.value(key) << "\"\n";
     }
-#endif // !QT_NO_PROCESS
+#endif // QT_CONFIG(process)
 
     const QByteArrayList features = qtFeatures();
     if (!features.isEmpty())

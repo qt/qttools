@@ -25,5 +25,6 @@ cross_compile:SUBDIRS -= linguist
     qhelpindexmodel \
     qhelpprojectdata \
 
-android|ios|qnx|winrt: SUBDIRS -= qtdiag
+!qtConfig(process): SUBDIRS -= qtattributionsscanner linguist qtdiag windeployqt
+android|qnx: SUBDIRS -= qtdiag
 !win32|winrt: SUBDIRS -= windeployqt
