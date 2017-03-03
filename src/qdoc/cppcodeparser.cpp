@@ -1519,6 +1519,12 @@ bool CppCodeParser::matchFunctionDecl(Aggregate *parent,
 
     // look for const
     bool matchedConst = match(Tok_const);
+    bool matchedRef = match(Tok_Ampersand);
+    bool matchedRefRef = false;
+    if (match(Tok_Ampersand)) {
+        matchedRef = false;
+        matchedRefRef = true;
+    }
     bool matchFinal = match(Tok_final);
     bool matchOverride = match(Tok_override);
 
@@ -1655,6 +1661,8 @@ bool CppCodeParser::matchFunctionDecl(Aggregate *parent,
         func->setOverride(matchOverride);
         if (isQPrivateSignal)
             func->setPrivateSignal();
+        func->setRef(matchedRef);
+        func->setRefRef(matchedRefRef);
     }
     if (parentPathPtr != 0)
         *parentPathPtr = parentPath;

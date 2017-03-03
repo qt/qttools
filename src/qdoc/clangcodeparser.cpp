@@ -491,6 +491,11 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         fn->setVirtualness(!clang_CXXMethod_isVirtual(cursor) ? FunctionNode::NonVirtual
                         : clang_CXXMethod_isPureVirtual(cursor) ? FunctionNode::PureVirtual
                                                                 : FunctionNode::NormalVirtual);
+        CXRefQualifierKind refQualKind = clang_Type_getCXXRefQualifier(funcType);
+        if (refQualKind == CXRefQualifier_LValue)
+            fn->setRef(true);
+        else if (refQualKind == CXRefQualifier_RValue)
+            fn->setRefRef(true);
         // For virtual functions, determine what it overrides
         // (except for destructor for which we do not want to classify as overridden)
         if (!fn->isNonvirtual() && kind != CXCursor_Destructor) {

@@ -494,6 +494,11 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader& reader,
         functionNode->setIsDefaulted(attributes.value(QLatin1String("default")) == QLatin1String("true"));
         functionNode->setFinal(attributes.value(QLatin1String("final")) == QLatin1String("true"));
         functionNode->setOverride(attributes.value(QLatin1String("override")) == QLatin1String("true"));
+        int refness = attributes.value(QLatin1String("refness")).toUInt();
+        if (refness == 1)
+            functionNode->setRef(true);
+        else if (refness == 2)
+            functionNode->setRefRef(true);
         if (attributes.value(QLatin1String("overload")) == QLatin1String("true")) {
             functionNode->setOverloadFlag(true);
             functionNode->setOverloadNumber(attributes.value(QLatin1String("overload-number")).toUInt());
@@ -1192,6 +1197,10 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter& writer,
             writer.writeAttribute("default", functionNode->isDefaulted() ? "true" : "false");
             writer.writeAttribute("final", functionNode->isFinal() ? "true" : "false");
             writer.writeAttribute("override", functionNode->isOverride() ? "true" : "false");
+            if (functionNode->isRef())
+                writer.writeAttribute("refness", QString::number(1));
+            else if (functionNode->isRefRef())
+                writer.writeAttribute("refness", QString::number(2));
             if (functionNode->isOverload())
                 writer.writeAttribute("overload-number", QString::number(functionNode->overloadNumber()));
             if (functionNode->relates()) {

@@ -186,12 +186,20 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
                 synopsis.append(" = delete");
             else if (func->isImplicit() || func->isDefaulted())
                synopsis.append(" = default");
+            if (func->isRef())
+               synopsis.append(" &");
+            else if (func->isRefRef())
+               synopsis.append(" &&");
         }
         else if (style == Subpage) {
             if (!func->returnType().isEmpty() && func->returnType() != "void")
                 synopsis += " : " + typified(func->returnType());
         }
         else {
+            if (func->isRef())
+               synopsis.append(" &");
+            else if (func->isRefRef())
+               synopsis.append(" &&");
             if (func->isImplicit() || func->isDefaulted())
                synopsis.append(" = default");
             QStringList bracketed;

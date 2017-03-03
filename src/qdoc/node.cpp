@@ -1226,6 +1226,10 @@ bool Aggregate::isSameSignature(const FunctionNode *f1, const FunctionNode *f2)
         return false;
     if (f1->isConst() != f2->isConst())
         return false;
+    if (f1->isRef() != f2->isRef())
+        return false;
+    if (f1->isRefRef() != f2->isRefRef())
+        return false;
 
     QVector<Parameter>::ConstIterator p1 = f1->parameters().constBegin();
     QVector<Parameter>::ConstIterator p2 = f2->parameters().constBegin();
@@ -2024,6 +2028,8 @@ FunctionNode::FunctionNode(Aggregate *parent, const QString& name)
       isFinal_(false),
       isOverride_(false),
       isImplicit_(false),
+      isRef_(false),
+      isRefRef_(false),
       reimplementedFrom_(0)
 {
     setGenus(Node::CPP);
@@ -2052,6 +2058,8 @@ FunctionNode::FunctionNode(NodeType type, Aggregate *parent, const QString& name
       isFinal_(false),
       isOverride_(false),
       isImplicit_(false),
+      isRef_(false),
+      isRefRef_(false),
       reimplementedFrom_(0)
 {
     setGenus(Node::QML);
@@ -2327,6 +2335,12 @@ QString FunctionNode::signature(bool values, bool noReturnType) const
         }
     }
     s += QLatin1Char(')');
+    if (isConst())
+        s += " const";
+    if (isRef())
+        s += " &";
+    else if (isRefRef())
+        s += " &&";
     if (isImplicit())
         s += " = default";
     return s;

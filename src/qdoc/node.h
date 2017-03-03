@@ -1008,6 +1008,12 @@ public:
     void setImplicit(bool b) { isImplicit_ = b; }
     bool isImplicit() const Q_DECL_OVERRIDE { return isImplicit_; }
 
+    void setRef(bool b) { isRef_ = b; }
+    bool isRef() const { return isRef_; }
+
+    void setRefRef(bool b) { isRefRef_ = b; }
+    bool isRefRef() const { return isRefRef_; }
+
 private:
     void addAssociatedProperty(PropertyNode* property);
 
@@ -1029,6 +1035,8 @@ private:
     bool isFinal_ : 1;
     bool isOverride_ : 1;
     bool isImplicit_ : 1;
+    bool isRef_ : 1;
+    bool isRefRef_ : 1;
     unsigned char overloadNumber_;
     QVector<Parameter> parameters_;
     const FunctionNode* reimplementedFrom_;
