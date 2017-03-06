@@ -295,6 +295,12 @@ backslashed \ stuff.</source>
         <comment>Translate this string to the string &apos;LTR&apos; in left-to-right languages or to &apos;RTL&apos; in right-to-left languages (such as Hebrew and Arabic) to get proper widget layout.</comment>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="main.cpp" line="661"/>
+        <source>Context</source>
+        <comment>soft­hyphen</comment>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QCoreApplication</name>

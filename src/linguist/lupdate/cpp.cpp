@@ -1498,13 +1498,17 @@ QString CppParser::transcode(const QString &str)
             if (c == '\n')
                 continue;
 
-            if (c == 'x') {
+            if (c == 'x' || c == 'u' || c == 'U') {
+                const bool unicode = (c != 'x');
                 QByteArray hex;
                 while (i < in.length() && isxdigit((c = in[i]))) {
                     hex += c;
                     i++;
                 }
-                out += hex.toUInt(0, 16);
+                if (unicode)
+                    out += QString(QChar(hex.toUInt(Q_NULLPTR, 16))).toUtf8();
+                else
+                    out += hex.toUInt(Q_NULLPTR, 16);
             } else if (c >= '0' && c < '8') {
                 QByteArray oct;
                 int n = 0;

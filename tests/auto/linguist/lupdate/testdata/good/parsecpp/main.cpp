@@ -652,3 +652,11 @@ QObject::tr("message after system include without space");
 #include"qobject.h"
 
 QObject::tr("message after local include without space");
+
+
+
+// QTBUG-35164: handling of \uNNNN escapes
+QString unicodeEscape()
+{
+    return QApplication::tr("Context", "soft\u00ADhyphen");
+}
