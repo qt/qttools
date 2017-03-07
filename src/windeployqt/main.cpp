@@ -151,9 +151,9 @@ static QtModuleEntry qtModuleEntries[] = {
     { QtWebEngineModule, "webengine", "Qt5WebEngine", "qtwebengine" },
     { QtWebEngineWidgetsModule, "webenginewidgets", "Qt5WebEngineWidgets", 0 },
     { Qt3DCoreModule, "3dcore", "Qt53DCore", 0 },
-    { Qt3DRendererModule, "3drenderer", "Qt53DRenderer", 0 },
+    { Qt3DRendererModule, "3drenderer", "Qt53DRender", 0 },
     { Qt3DQuickModule, "3dquick", "Qt53DQuick", 0 },
-    { Qt3DQuickRendererModule, "3dquickrenderer", "Qt53DQuickRenderer", 0 },
+    { Qt3DQuickRendererModule, "3dquickrenderer", "Qt53DQuickRender", 0 },
     { Qt3DInputModule, "3dinput", "Qt53DInput", 0 },
     { QtLocationModule, "geoservices", "Qt5Location", 0 },
     { QtWebChannelModule, "webchannel", "Qt5WebChannel", 0 },
@@ -808,7 +808,7 @@ static inline quint64 qtModuleForPlugin(const QString &subDirName)
         return QtSensorsModule;
     if (subDirName == QLatin1String("qtwebengine"))
         return QtWebEngineModule | QtWebEngineCoreModule | QtWebEngineWidgetsModule;
-    if (subDirName == QLatin1String("sceneparsers"))
+    if (subDirName == QLatin1String("sceneparsers") || subDirName == QLatin1String("renderplugins"))
         return Qt3DRendererModule;
     if (subDirName == QLatin1String("texttospeech"))
         return QtTextToSpeechModule;
