@@ -552,6 +552,7 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
     }
 #endif
     case CXCursor_EnumDecl: {
+        QString t = fromCXString(clang_getCursorSpelling(cursor));
         if (findNodeForCursor(qdb_, cursor)) // Was already parsed, propably in another translation unit
             return CXChildVisit_Continue;
         auto en = new EnumNode(parent_, fromCXString(clang_getCursorSpelling(cursor)));
@@ -683,7 +684,7 @@ void ClangVisitor::parseProperty(const QString& spelling, const Location& loc)
         + metaKeyword + QLatin1String(")\\s"));
     auto match = typeNameRx.match(spelling);
     if (!match.hasMatch()) {
-        qWarning() << "ERROR PARSING " << spelling;
+        qWarning() << "(qdoc) ERROR PARSING " << spelling;
         return;
     }
     auto type = match.captured(QStringLiteral("type"));
@@ -990,7 +991,7 @@ void ClangCodeParser::buildPCH()
                     header = candidate;
             }
             if (header.isEmpty()) {
-                qWarning() << "Could not find the module header in the include path for module"
+                qWarning() << "(qdoc) Could not find the module header in the include path for module"
                     << module << "  (include paths: "<< includePaths_ << ")";
             } else {
                 args_.push_back("-xc++");
@@ -1023,7 +1024,7 @@ void ClangCodeParser::buildPCH()
                     pchName_ = pchFileDir_->path().toUtf8() + "/" + module + ".pch";
                     auto error = clang_saveTranslationUnit(tu, pchName_.constData(), clang_defaultSaveOptions(tu));
                     if (error) {
-                        qWarning() << "Could not save PCH file for " << module << error;
+                        qWarning() << "(qdoc) Could not save PCH file for " << module << error;
                         pchName_.clear();
                     }
 
@@ -1034,7 +1035,7 @@ void ClangCodeParser::buildPCH()
                     clang_disposeTranslationUnit(tu);
                 } else {
                     pchFileDir_->remove();
-                    qWarning() << "Could not create PCH file for "
+                    qWarning() << "(qdoc) Could not create PCH file for "
                                << tmpHeader
                                << " error code:" << err;
                 }
@@ -1086,7 +1087,7 @@ void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QStrin
     CXErrorCode err = clang_parseTranslationUnit2(index_, filePath.toLocal8Bit(), args_.data(),
                                                   args_.size(), nullptr, 0, flags_, &tu);
     if (err || !tu) {
-        qWarning() << "Could not parse " << filePath << " error code:" << err;
+        qWarning() << "(qdoc) Could not parse " << filePath << " error code:" << err;
         clang_disposeIndex(index_);
         return;
     }
