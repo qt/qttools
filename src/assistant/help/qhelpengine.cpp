@@ -47,7 +47,6 @@
 
 #include <QtCore/QDir>
 #include <QtCore/QFile>
-#include <QtCore/QLibrary>
 #include <QtCore/QPluginLoader>
 #include <QtWidgets/QApplication>
 #include <QtSql/QSqlQuery>

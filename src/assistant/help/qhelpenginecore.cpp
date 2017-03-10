@@ -44,7 +44,6 @@
 
 #include <QtCore/QDir>
 #include <QtCore/QFile>
-#include <QtCore/QLibrary>
 #include <QtCore/QPluginLoader>
 #include <QtCore/QFileInfo>
 #include <QtCore/QThread>

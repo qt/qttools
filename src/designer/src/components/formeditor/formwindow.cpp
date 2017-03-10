@@ -421,9 +421,11 @@ void FormWindow::init()
     m_mainContainer = 0;
     m_currentWidget = 0;
 
-    connect(&m_undoStack, &QUndoStack::cleanChanged,
+    connect(&m_undoStack, &QUndoStack::indexChanged,
             this, &QDesignerFormWindowInterface::changed);
     connect(&m_undoStack, &QUndoStack::cleanChanged,
+            this, &FormWindow::slotCleanChanged);
+    connect(this, &QDesignerFormWindowInterface::changed,
             this, &FormWindow::checkSelection);
 
     core()->metaDataBase()->add(this);
@@ -2222,6 +2224,12 @@ void FormWindow::slotSelectWidget(QAction *a)
 {
     if (QWidget *w = qvariant_cast<QWidget*>(a->data()))
         selectSingleWidget(w);
+}
+
+void FormWindow::slotCleanChanged(bool clean)
+{
+    if (!clean)
+        emit changed();
 }
 
 static inline QString objectNameOf(const QWidget *w)

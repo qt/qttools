@@ -230,6 +230,7 @@ private slots:
     void checkSelection();
     void checkSelectionNow();
     void slotSelectWidget(QAction *);
+    void slotCleanChanged(bool);
 
 private:
     enum MouseState {

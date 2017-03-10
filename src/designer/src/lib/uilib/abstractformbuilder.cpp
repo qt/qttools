@@ -34,7 +34,7 @@
 ** https://www.gnu.org/licenses/gpl-3.0.html.
 **
 ** $QT_END_LICENSE$
-**sw
+**
 ****************************************************************************/
 
 #include "abstractformbuilder.h"
