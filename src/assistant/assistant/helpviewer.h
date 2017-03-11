@@ -48,8 +48,10 @@ QT_BEGIN_NAMESPACE
 class HelpEngineWrapper;
 
 #if defined(BROWSER_QTWEBKIT)
+#define TEXTBROWSER_OVERRIDE
 class HelpViewer : public QWebView
 #elif defined(BROWSER_QTEXTBROWSER)
+#define TEXTBROWSER_OVERRIDE override
 class HelpViewer : public QTextBrowser
 #endif
 {
@@ -80,7 +82,7 @@ public:
     void setTitle(const QString &title);
 
     QUrl source() const;
-    void setSource(const QUrl &url) override;
+    void setSource(const QUrl &url) TEXTBROWSER_OVERRIDE;
 
     QString selectedText() const;
     bool isForwardAvailable() const;
@@ -102,10 +104,10 @@ public slots:
 #ifndef QT_NO_CLIPBOARD
     void copy();
 #endif
-    void home() override;
+    void home() TEXTBROWSER_OVERRIDE;
 
-    void forward() override;
-    void backward() override;
+    void forward() TEXTBROWSER_OVERRIDE;
+    void backward() TEXTBROWSER_OVERRIDE;
 
 signals:
     void titleChanged();
@@ -137,7 +139,7 @@ private slots:
 private:
     bool eventFilter(QObject *obj, QEvent *event) override;
     void contextMenuEvent(QContextMenuEvent *event) override;
-    QVariant loadResource(int type, const QUrl &name) override;
+    QVariant loadResource(int type, const QUrl &name) TEXTBROWSER_OVERRIDE;
     bool handleForwardBackwardMouseButtons(QMouseEvent *e);
 
 private:
