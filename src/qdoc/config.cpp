@@ -82,6 +82,7 @@ QString ConfigStrings::LANDINGPAGE = QStringLiteral("landingpage");
 QString ConfigStrings::LANGUAGE = QStringLiteral("language");
 QString ConfigStrings::MACRO = QStringLiteral("macro");
 QString ConfigStrings::MANIFESTMETA = QStringLiteral("manifestmeta");
+QString ConfigStrings::MODULEHEADER = QStringLiteral("moduleheader");
 QString ConfigStrings::NATURALLANGUAGE = QStringLiteral("naturallanguage");
 QString ConfigStrings::NAVIGATION = QStringLiteral("navigation");
 QString ConfigStrings::NOLINKERRORS = QStringLiteral("nolinkerrors");

@@ -195,6 +195,7 @@ struct ConfigStrings
     static QString LANGUAGE;
     static QString MACRO;
     static QString MANIFESTMETA;
+    static QString MODULEHEADER;
     static QString NATURALLANGUAGE;
     static QString NAVIGATION;
     static QString NOLINKERRORS;
@@ -277,6 +278,7 @@ struct ConfigStrings
 #define CONFIG_LANGUAGE ConfigStrings::LANGUAGE
 #define CONFIG_MACRO ConfigStrings::MACRO
 #define CONFIG_MANIFESTMETA ConfigStrings::MANIFESTMETA
+#define CONFIG_MODULEHEADER ConfigStrings::MODULEHEADER
 #define CONFIG_NATURALLANGUAGE ConfigStrings::NATURALLANGUAGE
 #define CONFIG_NAVIGATION ConfigStrings::NAVIGATION
 #define CONFIG_NOLINKERRORS ConfigStrings::NOLINKERRORS

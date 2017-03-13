@@ -958,13 +958,23 @@ void ClangCodeParser::buildPCH()
     if (!pchFileDir_) {
         pchFileDir_.reset(new QTemporaryDir(QDir::tempPath() + QLatin1String("/qdoc_pch")));
         if (pchFileDir_->isValid()) {
-            const QByteArray module = qdb_->primaryTreeRoot()->tree()->camelCaseModuleName().toUtf8();
+            //const QByteArray module = qdb_->primaryTreeRoot()->tree()->camelCaseModuleName().toUtf8();
+            const QByteArray module = moduleHeader().toUtf8();
             QByteArray header;
             QByteArray privateHeaderDir;
             // Find the path to the module's header (e.g. QtGui/QtGui) to be used
             // as pre-compiled header
             for (const auto &p : qAsConst(includePaths_)) {
                 if (p.endsWith(module)) {
+                    QByteArray candidate = p + "/" + module;
+                    if (QFile::exists(QString::fromUtf8(candidate))) {
+                        header = candidate;
+                        break;
+                    }
+                }
+            }
+            if (header.isEmpty()) {
+                for (const auto &p : qAsConst(includePaths_)) {
                     QByteArray candidate = p + "/" + module;
                     if (QFile::exists(QString::fromUtf8(candidate))) {
                         header = candidate;

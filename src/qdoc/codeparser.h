@@ -59,6 +59,8 @@ public:
     bool isParsingCpp() const;
     bool isParsingQdoc() const;
     const QString& currentFile() const { return currentFile_; }
+    const QString& moduleHeader() const { return moduleHeader_; }
+    void setModuleHeader(const QString& t) { moduleHeader_ = t; }
     void checkModuleInclusion(Node* n);
 
     static void initialize(const Config& config);
@@ -78,6 +80,7 @@ protected:
     static void extractPageLinkAndDesc(const QString& arg,
                                        QString* link,
                                        QString* desc);
+    QString moduleHeader_;
     QString currentFile_;
     QDocDatabase* qdb_;
 

@@ -249,6 +249,7 @@ static void processQdocconfFile(const QString &fileName)
     Location::initialize(config);
     config.load(fileName);
     QString project = config.getString(CONFIG_PROJECT);
+    QString moduleHeader = config.getString(CONFIG_MODULEHEADER);
     //qDebug() << "Start project:" << project;
     /*
       Add the defines to the configuration variables.
@@ -363,6 +364,10 @@ static void processQdocconfFile(const QString &fileName)
         qdb->newPrimaryTree(project);
     else
         qdb->setPrimaryTree(project);
+    if (!moduleHeader.isEmpty())
+        clangParser_->setModuleHeader(moduleHeader);
+    else
+        clangParser_->setModuleHeader(project);
 
     dependModules = config.getStringList(CONFIG_DEPENDS);
     dependModules.removeDuplicates();
