@@ -236,7 +236,7 @@ void FormWindowSettings::setData(const FormWindowData &data)
     if (data.includeHints.empty()) {
         m_ui->includeHintsTextEdit->clear();
     } else {
-        m_ui->includeHintsTextEdit->setText(data.includeHints.join(QStringLiteral("\n")));
+        m_ui->includeHintsTextEdit->setText(data.includeHints.join(QLatin1Char('\n')));
     }
 
     m_ui->gridPanel->setChecked(data.hasFormGrid);

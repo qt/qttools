@@ -792,7 +792,7 @@ bool savePO(const Translator &translator, QIODevice &dev, ConversionData &)
                                     .arg(ref.lineNumber()).arg(ref.fileName()));
             if (!xrefs.isEmpty())
                 refs << xrefs;
-            out << poWrappedEscapedLines(QLatin1String("#:"), true, refs.join(QLatin1String(" ")));
+            out << poWrappedEscapedLines(QLatin1String("#:"), true, refs.join(QLatin1Char(' ')));
         }
 
         bool noWrap = false;

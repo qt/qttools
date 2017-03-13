@@ -729,7 +729,7 @@ const Node* Tree::findNodeForTarget(const QStringList& path,
         }
     }
 
-    node = findUnambiguousTarget(path.join(QStringLiteral("::")), genus, ref);
+    node = findUnambiguousTarget(path.join(QLatin1String("::")), genus, ref);
     if (node) {
         if (!target.isEmpty()) {
             ref = getRef(target, node);

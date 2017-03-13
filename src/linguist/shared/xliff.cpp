@@ -760,7 +760,7 @@ bool saveXLIFF(const Translator &translator, QIODevice &dev, ConversionData &cd)
 
     QStringList dtgs = cd.dropTags();
     dtgs << QLatin1String("po-(old_)?msgid_plural");
-    QRegExp drops(dtgs.join(QLatin1String("|")));
+    QRegExp drops(dtgs.join(QLatin1Char('|')));
 
     QHash<QString, QHash<QString, QList<TranslatorMessage> > > messageOrder;
     QHash<QString, QList<QString> > contextOrder;

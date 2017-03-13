@@ -769,7 +769,7 @@ static QString fileFilters(bool allFirst)
             allExtensions.append(QLatin1String("*.") + format.extension);
         }
     }
-    QString allFilter = QObject::tr("Translation files (%1);;").arg(allExtensions.join(QLatin1String(" ")));
+    QString allFilter = QObject::tr("Translation files (%1);;").arg(allExtensions.join(QLatin1Char(' ')));
     if (allFirst)
         filter.prepend(allFilter);
     else
@@ -932,7 +932,7 @@ void MainWindow::print()
                         }
                         if (m->message().isPlural() && m_dataModel->language(k) != QLocale::C) {
                             QStringList transls = m->translations();
-                            pout.addBox(40, transls.join(QLatin1String("\n")));
+                            pout.addBox(40, transls.join(QLatin1Char('\n')));
                         } else {
                             pout.addBox(40, m->translation());
                         }

@@ -229,7 +229,7 @@ static void printUsage()
         "           line, and prefixed with -I) from lst-file.\n"
     ).arg(m_defaultExtensions,
           trFunctionAliasManager.availableFunctionsWithAliases()
-                                .join(QStringLiteral("\n             "))));
+                                .join(QLatin1String("\n             "))));
 }
 
 static bool handleTrFunctionAliases(const QString &arg)

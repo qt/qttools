@@ -297,15 +297,15 @@ FrameworkInfo parseOtoolLibraryLine(const QString &line, const QString &appBundl
                 foreach (QString path, librarySearchPath) {
                     if (!path.endsWith("/"))
                         path += '/';
-                    QString nameInPath = path + parts.join("/");
+                    QString nameInPath = path + parts.join(QLatin1Char('/'));
                     if (QFile::exists(nameInPath)) {
-                        info.frameworkDirectory = path + partsCopy.join("/");
+                        info.frameworkDirectory = path + partsCopy.join(QLatin1Char('/'));
                         break;
                     }
                 }
                 if (currentPart.contains(".framework")) {
                     if (info.frameworkDirectory.isEmpty())
-                        info.frameworkDirectory = "/Library/Frameworks/" + partsCopy.join("/");
+                        info.frameworkDirectory = "/Library/Frameworks/" + partsCopy.join(QLatin1Char('/'));
                     if (!info.frameworkDirectory.endsWith("/"))
                         info.frameworkDirectory += "/";
                     state = FrameworkName;
@@ -313,7 +313,7 @@ FrameworkInfo parseOtoolLibraryLine(const QString &line, const QString &appBundl
                     continue;
                 } else if (currentPart.contains(".dylib")) {
                     if (info.frameworkDirectory.isEmpty())
-                        info.frameworkDirectory = "/usr/lib/" + partsCopy.join("/");
+                        info.frameworkDirectory = "/usr/lib/" + partsCopy.join(QLatin1Char('/'));
                     if (!info.frameworkDirectory.endsWith("/"))
                         info.frameworkDirectory += "/";
                     state = DylibName;

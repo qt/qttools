@@ -542,7 +542,7 @@ bool saveTS(const Translator &translator, QIODevice &dev, ConversionData &cd)
         t << "</dependencies>\n";
     }
 
-    QRegExp drops(cd.dropTags().join(QLatin1String("|")));
+    QRegExp drops(cd.dropTags().join(QLatin1Char('|')));
 
     writeExtras(t, "    ", translator.extras(), drops);
 
