@@ -60,32 +60,32 @@ void BookmarkFilterModel::setSourceModel(QAbstractItemModel *_sourceModel)
         disconnect(sourceModel, SIGNAL(modelReset()), this, SLOT(modelReset()));
     }
 
-    QAbstractProxyModel::setSourceModel(sourceModel);
     sourceModel = qobject_cast<BookmarkModel*> (_sourceModel);
+    QAbstractProxyModel::setSourceModel(sourceModel);
 
-    connect(sourceModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this,
-        SLOT(changed(QModelIndex,QModelIndex)));
+    if (sourceModel) {
+        connect(sourceModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this,
+                SLOT(changed(QModelIndex,QModelIndex)));
 
-    connect(sourceModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
-        this, SLOT(rowsInserted(QModelIndex,int,int)));
+        connect(sourceModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
+                this, SLOT(rowsInserted(QModelIndex,int,int)));
 
-    connect(sourceModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
-        this, SLOT(rowsAboutToBeRemoved(QModelIndex,int,int)));
-    connect(sourceModel, SIGNAL(rowsRemoved(QModelIndex,int,int)), this,
-        SLOT(rowsRemoved(QModelIndex,int,int)));
+        connect(sourceModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
+                this, SLOT(rowsAboutToBeRemoved(QModelIndex,int,int)));
+        connect(sourceModel, SIGNAL(rowsRemoved(QModelIndex,int,int)), this,
+                SLOT(rowsRemoved(QModelIndex,int,int)));
 
-    connect(sourceModel, SIGNAL(layoutAboutToBeChanged()), this,
-        SLOT(layoutAboutToBeChanged()));
-    connect(sourceModel, SIGNAL(layoutChanged()), this,
-        SLOT(layoutChanged()));
+        connect(sourceModel, SIGNAL(layoutAboutToBeChanged()), this,
+                SLOT(layoutAboutToBeChanged()));
+        connect(sourceModel, SIGNAL(layoutChanged()), this,
+                SLOT(layoutChanged()));
 
-    connect(sourceModel, SIGNAL(modelAboutToBeReset()), this,
-        SLOT(modelAboutToBeReset()));
-    connect(sourceModel, SIGNAL(modelReset()), this, SLOT(modelReset()));
+        connect(sourceModel, SIGNAL(modelAboutToBeReset()), this,
+                SLOT(modelAboutToBeReset()));
+        connect(sourceModel, SIGNAL(modelReset()), this, SLOT(modelReset()));
 
-    if (sourceModel)
         setupCache(sourceModel->index(0, 0, QModelIndex()).parent());
-
+    }
     endResetModel();
 }
 
