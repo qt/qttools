@@ -112,10 +112,6 @@ translations/*.qm
 translations/*_untranslated.ts
 qrc_*.cpp
 
-src/assistant/lib/fulltextsearch/qtcluceneversion.h
-src/assistant/lib/qthelpversion.h
-src/designer/src/lib/qtdesignerversion.h
-
 # Test generated files
 QObject.log
 tst_*
