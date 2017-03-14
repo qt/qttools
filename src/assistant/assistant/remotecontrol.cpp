@@ -183,11 +183,8 @@ void RemoteControl::handleActivateKeywordCommand(const QString &arg)
                     m_mainWindow->setSearchVisible(true);
                     if (QHelpSearchQueryWidget *w = se->queryWidget()) {
                         w->collapseExtendedSearch();
-                        QList<QHelpSearchQuery> queryList;
-                        queryList << QHelpSearchQuery(QHelpSearchQuery::DEFAULT,
-                            QStringList(arg));
-                        w->setQuery(queryList);
-                        se->search(queryList);
+                        w->setSearchInput(arg);
+                        se->search(arg);
                     }
                 }
             } else {

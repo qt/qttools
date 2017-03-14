@@ -76,7 +76,7 @@ SearchWidget::SearchWidget(QHelpSearchEngine *engine, QWidget *parent)
         SLOT(searchingFinished(int)));
 
     QTextBrowser* browser = resultWidget->findChild<QTextBrowser*>();
-    if (browser) // Will be null if lib was configured not to use CLucene.
+    if (browser)
         browser->viewport()->installEventFilter(this);
 }
 
@@ -122,8 +122,7 @@ void SearchWidget::resetZoom()
 void SearchWidget::search() const
 {
     TRACE_OBJ
-    QList<QHelpSearchQuery> query = searchEngine->queryWidget()->query();
-    searchEngine->search(query);
+    searchEngine->search(searchEngine->queryWidget()->searchInput());
 }
 
 void SearchWidget::searchingStarted()
@@ -132,10 +131,10 @@ void SearchWidget::searchingStarted()
     qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
 }
 
-void SearchWidget::searchingFinished(int hits)
+void SearchWidget::searchingFinished(int searchResultCount)
 {
     TRACE_OBJ
-    Q_UNUSED(hits)
+    Q_UNUSED(searchResultCount)
     qApp->restoreOverrideCursor();
 }
 

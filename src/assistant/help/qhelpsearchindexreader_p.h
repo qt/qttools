@@ -75,20 +75,20 @@ public:
     void cancelSearching();
     void search(const QString &collectionFile,
         const QString &indexFilesFolder,
-        const QList<QHelpSearchQuery> &queryList);
-    int hitCount() const;
+        const QString &searchInput);
+    int searchResultCount() const;
     QVector<QHelpSearchResult> searchResults(int start, int end) const;
 
 signals:
     void searchingStarted();
-    void searchingFinished(int searchResults);
+    void searchingFinished(int searchResultCount);
 
 protected:
     mutable QMutex m_mutex;
     QVector<QHelpSearchResult> m_searchResults;
     bool m_cancel = false;
     QString m_collectionFile;
-    QList<QHelpSearchQuery> m_query;
+    QString m_searchInput;
     QString m_indexFilesFolder;
 
 private:

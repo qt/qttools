@@ -282,8 +282,8 @@ bool QHelpIndexModel::isCreatingIndex() const
 }
 
 /*!
-    Returns all hits found for the \a keyword. A hit consists of
-    the URL and the document title.
+    Returns all documents found for the \a keyword. The returned map consists of the
+    document titles and their URLs.
 */
 QMap<QString, QUrl> QHelpIndexModel::linksForKeyword(const QString &keyword) const
 {
@@ -382,7 +382,7 @@ QModelIndex QHelpIndexModel::filter(const QString &filter, const QString &wildca
 
     This signal is emitted when the item representing the \a keyword
     is activated and the item has more than one link associated.
-    The \a links consist of the document title and their URL.
+    The \a links consist of the document titles and their URLs.
 */
 
 QHelpIndexWidget::QHelpIndexWidget()

@@ -66,17 +66,41 @@ public:
     QString m_snippet;
 };
 
+/*!
+    \class QHelpSearchResult
+    \since 5.9
+    \inmodule QtHelp
+    \brief The QHelpSearchResult class provides the data associated with the
+    search result.
+
+    The QHelpSearchResult object is a data object that describes a single search result.
+    The vector of search result objects is returned by QHelpSearchEngine::searchResults().
+    The description of the search result contains the document title and URL
+    that the search input matched. It also contains the snippet from
+    the document content containing the best match of the search input.
+    \sa QHelpSearchEngine
+*/
+
+/*!
+    Constructs a new empty QHelpSearchResult.
+*/
 QHelpSearchResult::QHelpSearchResult()
     : d(new QHelpSearchResultData)
 {
 }
 
-
+/*!
+    Constructs a copy of \a other.
+*/
 QHelpSearchResult::QHelpSearchResult(const QHelpSearchResult &other)
     : d(other.d)
 {
 }
 
+/*!
+    Constructs the search result containing \a url, \a title and \a snippet
+    as the description of the result.
+*/
 QHelpSearchResult::QHelpSearchResult(const QUrl &url, const QString &title, const QString &snippet)
     : d(new QHelpSearchResultData)
 {
@@ -85,26 +109,41 @@ QHelpSearchResult::QHelpSearchResult(const QUrl &url, const QString &title, cons
     d->m_snippet = snippet;
 }
 
+/*!
+    Destroys the search result.
+*/
 QHelpSearchResult::~QHelpSearchResult()
 {
 }
 
+/*!
+    Assigns \a other to this search result and returns a reference to this search result.
+*/
 QHelpSearchResult &QHelpSearchResult::operator=(const QHelpSearchResult &other)
 {
     d = other.d;
     return *this;
 }
 
+/*!
+    Returns the document title of the search result.
+*/
 QString QHelpSearchResult::title() const
 {
     return d->m_title;
 }
 
+/*!
+    Returns the document URL of the search result.
+*/
 QUrl QHelpSearchResult::url() const
 {
     return d->m_url;
 }
 
+/*!
+    Returns the document snippet containing the search phrase of the search result.
+*/
 QString QHelpSearchResult::snippet() const
 {
     return d->m_snippet;
@@ -121,7 +160,7 @@ signals:
     void indexingFinished();
 
     void searchingStarted();
-    void searchingFinished(int searchResults);
+    void searchingFinished(int searchResultCount);
 
 private:
     QHelpSearchEnginePrivate(QHelpEngineCore *helpEngine)
@@ -139,20 +178,16 @@ private:
         delete indexWriter;
     }
 
-    int hitCount() const
+    int searchResultCount() const
     {
-        int count = 0;
-        if (indexReader)
-            count = indexReader->hitCount();
-
-        return count;
+        return indexReader ? indexReader->searchResultCount() : 0;
     }
 
     QVector<QHelpSearchResult> searchResults(int start, int end) const
     {
         return indexReader ?
-                indexReader->searchResults(start, end) :
-                QVector<QHelpSearchResult>();
+               indexReader->searchResults(start, end) :
+               QVector<QHelpSearchResult>();
     }
 
     void updateIndex(bool reindex = false)
@@ -181,7 +216,7 @@ private:
             indexWriter->cancelIndexing();
     }
 
-    void search(const QList<QHelpSearchQuery> &queryList)
+    void search(const QString &searchInput)
     {
         if (helpEngine.isNull())
             return;
@@ -195,9 +230,9 @@ private:
             connect(indexReader, SIGNAL(searchingFinished(int)), this, SIGNAL(searchingFinished(int)));
         }
 
-        m_queryList = queryList;
+        m_searchInput = searchInput;
         indexReader->cancelSearching();
-        indexReader->search(helpEngine->collectionFile(), indexFilesFolder(), queryList);
+        indexReader->search(helpEngine->collectionFile(), indexFilesFolder(), searchInput);
     }
 
     void cancelSearching()
@@ -231,14 +266,14 @@ private:
 
     QPointer<QHelpEngineCore> helpEngine;
 
-    QList<QHelpSearchQuery> m_queryList;
+    QString m_searchInput;
 };
 
 #include "qhelpsearchengine.moc"
 
-
 /*!
     \class QHelpSearchQuery
+    \obsolete
     \since 4.4
     \inmodule QtHelp
     \brief The QHelpSearchQuery class contains the field name and the associated
@@ -247,6 +282,8 @@ private:
     The QHelpSearchQuery class contains the field name and the associated search
     term. Depending on the field the search term might get split up into separate
     terms to be parsed differently by the search engine.
+
+    \note This class has been deprecated in favor of QString.
 
     \sa QHelpSearchQueryWidget
 */
@@ -269,15 +306,14 @@ private:
 
     \value DEFAULT  the default field provided by the search widget, several terms should be
                     split and stored in the word list except search terms enclosed in quotes.
-    \value FUZZY    a field only provided in use with clucene. Terms should be split in separate
+    \value FUZZY    \obsolete Terms should be split in separate
                     words and passed to the search engine.
-    \value WITHOUT  a field only provided in use with clucene. Terms should be split in separate
+    \value WITHOUT  \obsolete  Terms should be split in separate
                     words and passed to the search engine.
-    \value PHRASE   a field only provided in use with clucene. Terms should not be split in separate
-                    words.
-    \value ALL      a field only provided in use with clucene. Terms should be split in separate
+    \value PHRASE   \obsolete  Terms should not be split in separate words.
+    \value ALL      \obsolete  Terms should be split in separate
                     words and passed to the search engine
-    \value ATLEAST  a field only provided in use with clucene. Terms should be split in separate
+    \value ATLEAST  \obsolete  Terms should be split in separate
                     words and passed to the search engine
 */
 
@@ -297,23 +333,20 @@ private:
     on the end of the indexing process the indexingFinished() is emitted. To stop
     the indexing one can call cancelIndexing().
 
-    While the indexing process has finished, the search engine can now be used to search
-    thru its index for a given term. To do this one may use the possibility of creating the
-    QHelpSearchQuery list by self or reuse the QHelpSearchQueryWidget which has the inbuild
-    functionality to set up a proper search queries list that get's passed to the search engines
-    search() function.
+    When the indexing process has finished, the search engine can be used to
+    search through the index for a given term using the search() function. When
+    the search input is passed to the search engine, the searchingStarted()
+    signal is emitted. When the search finishes, the searchingFinished() signal
+    is emitted. The search process can be stopped by calling cancelSearching().
 
-    After the list of querys has been passed to the search engine, the signal searchingStarted()
-    is emitted and after the search has finished the searchingFinished() signal is emitted. The
-    search process can be stopped by calling cancelSearching().
+    If the search succeeds, searchingFinished() is called with the search result
+    count to fetch the search results from the search engine. Calling the
+    searchResults() function with a range returns a list of QHelpSearchResult
+    objects within the range. The results consist of the document title and URL,
+    as well as a snippet from the document that contains the best match for the
+    search input.
 
-    If the search succeeds, the searchingFinished() will be called with the search hits count,
-    which can be reused to fetch the search hits from the search engine. Calling the hits()
-    function with the range of hits you would like to get will return a list of the requested
-    SearchHits. They basically constist at the moment of a pair of strings where the values
-    of that pair are the documentation file path and the page title.
-
-    To display the given hits use the QHelpSearchResultWidget or build up your own one if you need
+    To display the given search results use the QHelpSearchResultWidget or build up your own one if you need
     more advanced functionality. Note that the QHelpSearchResultWidget can not be instantiated
     directly, you must retrieve the widget from the search engine in use as all connections will be
     established for you by the widget itself.
@@ -338,10 +371,10 @@ private:
 */
 
 /*!
-    \fn void QHelpSearchEngine::searchingFinished(int hits)
+    \fn void QHelpSearchEngine::searchingFinished(int searchResultCount)
 
     This signal is emitted when the search process is complete.
-    The hit count is stored in \a hits.
+    The search result count is stored in \a searchResultCount.
 */
 
 /*!
@@ -397,26 +430,37 @@ QHelpSearchResultWidget* QHelpSearchEngine::resultWidget()
 
 /*!
     \obsolete
-    Returns the amount of hits the search engine found.
-    \sa hitCount()
+    Use searchResultCount() instead.
 */
 int QHelpSearchEngine::hitsCount() const
 {
-    return d->hitCount();
+    return d->searchResultCount();
 }
 
 /*!
     \since 4.6
-    Returns the amount of hits the search engine found.
+    \obsolete
+    Use searchResultCount() instead.
 */
 int QHelpSearchEngine::hitCount() const
 {
-    return d->hitCount();
+    return d->searchResultCount();
 }
 
-// TODO: obsolete the SearchHit typedef and hits methods
+/*!
+    \since 5.9
+    Returns the number of results the search engine found.
+*/
+int QHelpSearchEngine::searchResultCount() const
+{
+    return d->searchResultCount();
+}
+
 /*!
     \typedef QHelpSearchEngine::SearchHit
+    \obsolete
+
+    Use QHelpSearchResult instead.
 
     Typedef for QPair<QString, QString>.
     The values of that pair are the documentation file path and the page title.
@@ -425,7 +469,8 @@ int QHelpSearchEngine::hitCount() const
 */
 
 /*!
-    Returns a list of search hits within the range of \a start \a end.
+    \obsolete
+    Use searchResults() instead.
 */
 QList<QHelpSearchEngine::SearchHit> QHelpSearchEngine::hits(int start, int end) const
 {
@@ -435,19 +480,34 @@ QList<QHelpSearchEngine::SearchHit> QHelpSearchEngine::hits(int start, int end) 
     return hits;
 }
 
-// TODO: add a doc for searchResults() and for QHelpSearchResult class
+/*!
+    \since 5.9
+    Returns a list of search results within the range from the index
+    specified by \a start to the index specified by \a end.
+*/
 QVector<QHelpSearchResult> QHelpSearchEngine::searchResults(int start, int end) const
 {
     return d->searchResults(start, end);
 }
 
 /*!
-    Returns the list of queries last searched for.
+    \since 5.9
+    Returns the phrase that was last searched for.
+*/
+QString QHelpSearchEngine::searchInput() const
+{
+    return d->m_searchInput;
+}
+
+/*!
+    \obsolete
     \since 4.5
+    Use searchInput() instead.
 */
 QList<QHelpSearchQuery> QHelpSearchEngine::query() const
 {
-    return d->m_queryList;
+    return QList<QHelpSearchQuery>() << QHelpSearchQuery(QHelpSearchQuery::DEFAULT,
+           d->m_searchInput.split(QChar::Space));
 }
 
 /*!
@@ -474,13 +534,39 @@ void QHelpSearchEngine::cancelSearching()
     d->cancelSearching();
 }
 
+
 /*!
-    Starts the search process using the given list of queries \a queryList
-    build by the search field name and the values to search for.
+    \since 5.9
+    Starts the search process using the given search phrase \a searchInput.
+
+    The phrase may consist of several words. By default, the search engine returns
+    the list of documents that contain all the specified words.
+    The phrase may contain any combination of the logical operators AND, OR, and
+    NOT. The operator must be written in all capital letters, otherwise it will
+    be considered a part of the search phrase.
+
+    If double quotation marks are used to group the words,
+    the search engine will search for an exact match of the quoted phrase.
+
+    For more information about the text query syntax,
+    see \l {https://sqlite.org/fts5.html#full_text_query_syntax}
+    {SQLite FTS5 Extension}.
+*/
+void QHelpSearchEngine::search(const QString &searchInput)
+{
+    d->search(searchInput);
+}
+
+/*!
+    \obsolete
+    Use search(const QString &searchInput) instead.
 */
 void QHelpSearchEngine::search(const QList<QHelpSearchQuery> &queryList)
 {
-    d->search(queryList);
+    if (queryList.isEmpty())
+        return;
+
+    d->search(queryList.first().wordList.join(QChar::Space));
 }
 
 void QHelpSearchEngine::scheduleIndexDocumentation()

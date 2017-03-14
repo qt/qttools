@@ -153,11 +153,11 @@ void QHelpEngineCorePrivate::errorReceived(const QString &msg)
 
     The core help engine can be used to perform different tasks.
     By calling linksForIdentifier() the engine returns
-    urls specifying the file locations inside the help system. The
+    URLs specifying the file locations inside the help system. The
     actual file data can then be retrived by calling fileData(). In
     contrast to all other functions in this class, linksForIdentifier()
     depends on the currently set custom filter. Depending on the filter,
-    the function may return different hits.
+    the function may return different results.
 
     Every help engine can contain any number of custom filters. A custom
     filter is defined by a name and set of filter attributes and can be
@@ -629,9 +629,9 @@ QByteArray QHelpEngineCore::fileData(const QUrl &url) const
 }
 
 /*!
-    Returns a map of hits found for the \a id. A hit contains the
-    title of the document and the url where the keyword is located.
-    The result depends on the current filter, meaning only the keywords
+    Returns documents found for the \a id. The map contains the
+    document titles and their URLs.
+    The returned map contents depends on the current filter, meaning only the keywords
     registered for the current filter will be returned.
 */
 QMap<QString, QUrl> QHelpEngineCore::linksForIdentifier(const QString &id) const

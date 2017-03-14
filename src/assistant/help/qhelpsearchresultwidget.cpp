@@ -132,13 +132,13 @@ private slots:
     void showNextResultPage()
     {
         if (!searchEngine.isNull()
-            && resultLastToShow < searchEngine->hitCount()) {
+            && resultLastToShow < searchEngine->searchResultCount()) {
             resultLastToShow += 20;
             resultFirstToShow += 20;
 
             resultTextBrowser->showResultPage(searchEngine->searchResults(resultFirstToShow,
                 resultLastToShow), isIndexing);
-            if (resultLastToShow >= searchEngine->hitCount())
+            if (resultLastToShow >= searchEngine->searchResultCount())
                 updateNextButtonState(false);
         }
         updateHitRange();
@@ -147,7 +147,7 @@ private slots:
     void showLastResultPage()
     {
         if (!searchEngine.isNull()) {
-            resultLastToShow = searchEngine->hitCount();
+            resultLastToShow = searchEngine->searchResultCount();
             resultFirstToShow = resultLastToShow - (resultLastToShow % 20);
 
             if (resultFirstToShow == resultLastToShow)
@@ -177,7 +177,7 @@ private slots:
     {
         if (!searchEngine.isNull()) {
             int count = resultLastToShow % 20;
-            if (count == 0 || resultLastToShow != searchEngine->hitCount())
+            if (count == 0 || resultLastToShow != searchEngine->searchResultCount())
                 count = 20;
 
             resultLastToShow -= count;
@@ -260,9 +260,9 @@ private:
         int count = 0;
 
         if (!searchEngine.isNull()) {
-            count = searchEngine->hitCount();
+            count = searchEngine->searchResultCount();
             if (count > 0) {
-                first = resultFirstToShow +1;
+                first = resultFirstToShow + 1;
                 last = resultLastToShow > count ? count : resultLastToShow;
             }
         }
@@ -294,9 +294,8 @@ private:
     \class QHelpSearchResultWidget
     \since 4.4
     \inmodule QtHelp
-    \brief The QHelpSearchResultWidget class provides either a tree
-    widget or a text browser depending on the used search engine to display
-    the hits found by the search.
+    \brief The QHelpSearchResultWidget class provides a text browser to display
+    search results.
 */
 
 /*!
@@ -366,7 +365,7 @@ QHelpSearchResultWidget::QHelpSearchResultWidget(QHelpSearchEngine *engine)
 void QHelpSearchResultWidget::changeEvent(QEvent *event)
 {
     if (event->type() == QEvent::LanguageChange)
-        d->setResults(d->searchEngine->hitCount());
+        d->setResults(d->searchEngine->searchResultCount());
 }
 
 /*!

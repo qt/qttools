@@ -61,7 +61,7 @@ class QHelpSearchQueryWidgetPrivate : public QObject
 private:
     struct QueryHistory {
         explicit QueryHistory() : curQuery(-1) {}
-        QList<QList<QHelpSearchQuery> > queries;
+        QStringList queries;
         int curQuery;
     };
 
@@ -119,52 +119,29 @@ private:
         m_searchButton->setText(QHelpSearchQueryWidget::tr("Search"));
     }
 
-    void saveQuery(const QList<QHelpSearchQuery> &query, QueryHistory &queryHist)
+    void saveQuery(const QString &query)
     {
         // We only add the query to the list if it is different from the last one.
-        bool insert = false;
-        if (queryHist.queries.empty())
-            insert = true;
-        else {
-            const QList<QHelpSearchQuery> &lastQuery = queryHist.queries.last();
-            if (lastQuery.size() != query.size()) {
-                insert = true;
-            } else {
-                for (int i = 0; i < query.size(); ++i) {
-                    if (query.at(i).fieldName != lastQuery.at(i).fieldName
-                        || query.at(i).wordList != lastQuery.at(i).wordList) {
-                        insert = true;
-                        break;
-                    }
-                }
-            }
-        }
-        if (insert) {
-            queryHist.queries.append(query);
-            for (const QHelpSearchQuery &queryPart : query) {
-                static_cast<CompleterModel *>(m_searchCompleter.model())->
-                        addTerm(queryPart.wordList.join(QLatin1Char(' ')));
-            }
-        }
+        if (!m_queries.queries.isEmpty() && m_queries.queries.last() == query)
+            return;
+
+        m_queries.queries.append(query);
+        static_cast<CompleterModel *>(m_searchCompleter.model())->addTerm(query);
     }
 
     void nextOrPrevQuery(int maxOrMinIndex, int addend, QToolButton *thisButton,
         QToolButton *otherButton)
     {
-        QueryHistory *queryHist;
-        queryHist = &m_queries;
         m_lineEdit->clear();
 
         // Otherwise, the respective button would be disabled.
-        Q_ASSERT(queryHist->curQuery != maxOrMinIndex);
+        Q_ASSERT(m_queries.curQuery != maxOrMinIndex);
 
-        queryHist->curQuery += addend;
-        const QList<QHelpSearchQuery> &query =
-            queryHist->queries.at(queryHist->curQuery);
-        for (const QHelpSearchQuery &queryPart : query)
-            m_lineEdit->setText(queryPart.wordList.join(QLatin1Char(' ')));
+        m_queries.curQuery = qBound(0, m_queries.curQuery + addend, m_queries.queries.count() - 1);
+        const QString &query = m_queries.queries.at(m_queries.curQuery);
+        m_lineEdit->setText(query);
 
-        if (queryHist->curQuery == maxOrMinIndex)
+        if (m_queries.curQuery == maxOrMinIndex)
             thisButton->setEnabled(false);
         otherButton->setEnabled(true);
     }
@@ -198,13 +175,9 @@ private slots:
 
     void searchRequested()
     {
-        QList<QHelpSearchQuery> queryList;
-        queryList.append(QHelpSearchQuery(QHelpSearchQuery::DEFAULT,
-            QStringList(m_lineEdit->text())));
-        QueryHistory &queryHist = m_queries;
-        saveQuery(queryList, queryHist);
-        queryHist.curQuery = queryHist.queries.size() - 1;
-        if (queryHist.curQuery > 0)
+        saveQuery(m_lineEdit->text());
+        m_queries.curQuery = m_queries.queries.size() - 1;
+        if (m_queries.curQuery > 0)
             m_prevQueryButton->setEnabled(true);
         m_nextQueryButton->setEnabled(false);
     }
@@ -250,8 +223,7 @@ private:
 
     This signal is emitted when a the user has the search button invoked.
     After receiving the signal you can ask the QHelpSearchQueryWidget for the
-    build list of QHelpSearchQuery's that you may pass to the QHelpSearchEngine's
-    search() function.
+    search input that you may pass to the QHelpSearchEngine::search() function.
 */
 
 /*!
@@ -321,28 +293,56 @@ void QHelpSearchQueryWidget::collapseExtendedSearch()
 }
 
 /*!
-    Returns a list of queries to use in combination with the search engines
-    search(QList<QHelpSearchQuery> &queryList) function.
+    \obsolete
+
+    Use searchInput() instead.
 */
 QList<QHelpSearchQuery> QHelpSearchQueryWidget::query() const
 {
+    return QList<QHelpSearchQuery>() << QHelpSearchQuery(QHelpSearchQuery::DEFAULT,
+           searchInput().split(QChar::Space, QString::SkipEmptyParts));
+}
+
+/*!
+    \obsolete
+
+    Use setSearchInput() instead.
+*/
+void QHelpSearchQueryWidget::setQuery(const QList<QHelpSearchQuery> &queryList)
+{
+    if (queryList.isEmpty())
+        return;
+
+    setSearchInput(queryList.first().wordList.join(QChar::Space));
+}
+
+/*!
+    \since 5.9
+
+    Returns a search phrase to use in combination with the
+    QHelpSearchEngine::search(const QString &searchInput) function.
+*/
+QString QHelpSearchQueryWidget::searchInput() const
+{
     if (d->m_queries.queries.isEmpty())
-        return QList<QHelpSearchQuery>();
+        return QString();
     return d->m_queries.queries.last();
 }
 
 /*!
-    Sets the QHelpSearchQueryWidget input fields to the values specified by
-    \a queryList search field name. Please note that one has to call the search
-    engine's search(QList<QHelpSearchQuery> &queryList) function to perform the
-    actual search.
+    \since 5.9
+
+    Sets the QHelpSearchQueryWidget input field to the value specified by
+    \a searchInput.
+
+    \note The QHelpSearchEngine::search(const QString &searchInput) function has
+    to be called to perform the actual search.
 */
-void QHelpSearchQueryWidget::setQuery(const QList<QHelpSearchQuery> &queryList)
+void QHelpSearchQueryWidget::setSearchInput(const QString &searchInput)
 {
     d->m_lineEdit->clear();
 
-    for (const QHelpSearchQuery &q : queryList)
-        d->m_lineEdit->setText(d->m_lineEdit->text() + q.wordList.join(QChar::Space) + QChar::Space);
+    d->m_lineEdit->setText(searchInput);
 
     d->searchRequested();
 }
