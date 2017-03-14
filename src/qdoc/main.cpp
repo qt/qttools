@@ -27,6 +27,7 @@
 ****************************************************************************/
 
 #include <qglobal.h>
+#include <qhashfunctions.h>
 #include <stdlib.h>
 #include "codemarker.h"
 #include "codeparser.h"
@@ -694,7 +695,6 @@ void QDocCommandLineParser::process(const QCoreApplication &app)
     }
 }
 
-extern Q_CORE_EXPORT QBasicAtomicInt qt_qhash_seed;
 QT_END_NAMESPACE
 
 int main(int argc, char **argv)
@@ -703,7 +703,7 @@ int main(int argc, char **argv)
 
     // Initialize Qt:
 #ifndef QT_BOOTSTRAPPED
-    qt_qhash_seed.testAndSetRelaxed(-1, 0); // set the hash seed to 0 if it wasn't set yet
+    qSetGlobalQHashSeed(0); // set the hash seed to 0 if it wasn't set yet
 #endif
     QCoreApplication app(argc, argv);
     app.setApplicationVersion(QLatin1String(QT_VERSION_STR));
