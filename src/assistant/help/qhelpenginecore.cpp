@@ -63,8 +63,8 @@ void QHelpEngineCorePrivate::init(const QString &collectionFile,
 {
     q = helpEngineCore;
     collectionHandler = new QHelpCollectionHandler(collectionFile, helpEngineCore);
-    connect(collectionHandler, SIGNAL(error(QString)),
-        this, SLOT(errorReceived(QString)));
+    connect(collectionHandler, &QHelpCollectionHandler::error,
+            this, &QHelpEngineCorePrivate::errorReceived);
     needsSetup = true;
 }
 

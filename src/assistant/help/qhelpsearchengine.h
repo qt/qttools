@@ -125,6 +125,8 @@ public Q_SLOTS:
     void search(const QString &searchInput);
     void cancelSearching();
 
+    void scheduleIndexDocumentation();
+
 Q_SIGNALS:
     void indexingStarted();
     void indexingFinished();
@@ -133,7 +135,6 @@ Q_SIGNALS:
     void searchingFinished(int searchResultCount);
 
 private Q_SLOTS:
-    void scheduleIndexDocumentation();
     void indexDocumentation();
 
 private:

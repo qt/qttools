@@ -62,7 +62,7 @@ public:
 public slots:
     HelpViewer *createPage(const QUrl &url, bool fromSearch = false);
     HelpViewer *createNewPageFromSearch(const QUrl &url);
-    HelpViewer *createPage();
+    HelpViewer *createBlankPage();
     void closeCurrentPage();
 
     void nextPage();

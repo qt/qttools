@@ -146,17 +146,17 @@ HelpEngineWrapper::HelpEngineWrapper(const QString &collectionFile)
      * This call is reverted by initialDocSetupDone(), which must be
      * called after the new docs have been installed.
      */
-    disconnect(d->m_helpEngine, SIGNAL(setupFinished()),
-            searchEngine(), SLOT(scheduleIndexDocumentation()));
+    disconnect(d->m_helpEngine, &QHelpEngineCore::setupFinished,
+            searchEngine(), &QHelpSearchEngine::scheduleIndexDocumentation);
 
-    connect(d, SIGNAL(documentationRemoved(QString)),
-            this, SIGNAL(documentationRemoved(QString)));
-    connect(d, SIGNAL(documentationUpdated(QString)),
-            this, SIGNAL(documentationUpdated(QString)));
-    connect(d->m_helpEngine, SIGNAL(currentFilterChanged(QString)),
-            this, SLOT(handleCurrentFilterChanged(QString)));
-    connect(d->m_helpEngine, SIGNAL(setupFinished()),
-            this, SIGNAL(setupFinished()));
+    connect(d, &HelpEngineWrapperPrivate::documentationRemoved,
+            this, &HelpEngineWrapper::documentationRemoved);
+    connect(d, &HelpEngineWrapperPrivate::documentationUpdated,
+            this, &HelpEngineWrapper::documentationUpdated);
+    connect(d->m_helpEngine, &QHelpEngineCore::currentFilterChanged,
+            this, &HelpEngineWrapper::handleCurrentFilterChanged);
+    connect(d->m_helpEngine, &QHelpEngineCore::setupFinished,
+            this, &HelpEngineWrapper::setupFinished);
 }
 
 HelpEngineWrapper::~HelpEngineWrapper()
@@ -175,8 +175,8 @@ HelpEngineWrapper::~HelpEngineWrapper()
 void HelpEngineWrapper::initialDocSetupDone()
 {
     TRACE_OBJ
-    connect(d->m_helpEngine, SIGNAL(setupFinished()),
-            searchEngine(), SLOT(scheduleIndexDocumentation()));
+    connect(d->m_helpEngine, &QHelpEngineCore::setupFinished,
+            searchEngine(), &QHelpSearchEngine::scheduleIndexDocumentation);
     setupData();
 }
 
@@ -762,8 +762,8 @@ void HelpEngineWrapperPrivate::initFileSystemWatchers()
     for (const QString &ns : m_helpEngine->registeredDocumentations()) {
         const QString &docFile = m_helpEngine->documentationFileName(ns);
         m_qchWatcher->addPath(docFile);
-        connect(m_qchWatcher, SIGNAL(fileChanged(QString)),
-                this, SLOT(qchFileChanged(QString)));
+        connect(m_qchWatcher, &QFileSystemWatcher::fileChanged, this,
+                QOverload<const QString &>::of(&HelpEngineWrapperPrivate::qchFileChanged));
     }
     checkDocFilesWatched();
 }
@@ -824,7 +824,8 @@ void HelpEngineWrapperPrivate::qchFileChanged(const QString &fileName,
     if (it == m_recentQchUpdates.end()) {
         QSharedPointer<TimeoutForwarder> forwarder(new TimeoutForwarder(fileName));
         m_recentQchUpdates.insert(fileName, RecentSignal(now, forwarder));
-        QTimer::singleShot(UpdateGracePeriod, forwarder.data(), SLOT(forward()));
+        QTimer::singleShot(UpdateGracePeriod, forwarder.data(),
+                           &TimeoutForwarder::forward);
         return;
     }
 
@@ -834,7 +835,7 @@ void HelpEngineWrapperPrivate::qchFileChanged(const QString &fileName,
             it.value().first = now;
         else
             QTimer::singleShot(UpdateGracePeriod, it.value().second.data(),
-                               SLOT(forward()));
+                               &TimeoutForwarder::forward);
         return;
     }
 

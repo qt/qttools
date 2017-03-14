@@ -229,8 +229,10 @@ QHelpIndexModel::QHelpIndexModel(QHelpEnginePrivate *helpEngine)
 {
     d = new QHelpIndexModelPrivate(helpEngine);
 
-    connect(d->indexProvider, SIGNAL(finished()), this, SLOT(insertIndices()));
-    connect(helpEngine->q, SIGNAL(readersAboutToBeInvalidated()), this, SLOT(invalidateIndex()));
+    connect(d->indexProvider, &QThread::finished,
+            this, &QHelpIndexModel::insertIndices);
+    connect(helpEngine->q, &QHelpEngineCore::readersAboutToBeInvalidated,
+            [this]() { invalidateIndex(); });
 }
 
 QHelpIndexModel::~QHelpIndexModel()
@@ -240,8 +242,10 @@ QHelpIndexModel::~QHelpIndexModel()
 
 void QHelpIndexModel::invalidateIndex(bool onShutDown)
 {
-    if (onShutDown)
-        disconnect(this, SLOT(insertIndices()));
+    if (onShutDown) {
+        disconnect(d->indexProvider, &QThread::finished,
+                   this, &QHelpIndexModel::insertIndices);
+    }
     d->indexProvider->stopCollecting();
     d->indices.clear();
     if (!onShutDown)
@@ -390,8 +394,8 @@ QHelpIndexWidget::QHelpIndexWidget()
 {
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     setUniformItemSizes(true);
-    connect(this, SIGNAL(activated(QModelIndex)),
-        this, SLOT(showLink(QModelIndex)));
+    connect(this, &QAbstractItemView::activated,
+            this, &QHelpIndexWidget::showLink);
 }
 
 void QHelpIndexWidget::showLink(const QModelIndex &index)

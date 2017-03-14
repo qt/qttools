@@ -257,13 +257,18 @@ QHelpSearchQueryWidget::QHelpSearchQueryWidget(QWidget *parent)
 
     vLayout->addLayout(hBoxLayout);
 
-    connect(d->m_prevQueryButton, SIGNAL(clicked()), d, SLOT(prevQuery()));
-    connect(d->m_nextQueryButton, SIGNAL(clicked()), d, SLOT(nextQuery()));
-    connect(d->m_searchButton, SIGNAL(clicked()), this, SIGNAL(search()));
-    connect(d->m_lineEdit, SIGNAL(returnPressed()), this, SIGNAL(search()));
+    connect(d->m_prevQueryButton, &QAbstractButton::clicked,
+            d, &QHelpSearchQueryWidgetPrivate::prevQuery);
+    connect(d->m_nextQueryButton, &QAbstractButton::clicked,
+            d, &QHelpSearchQueryWidgetPrivate::nextQuery);
+    connect(d->m_searchButton, &QAbstractButton::clicked,
+            this, &QHelpSearchQueryWidget::search);
+    connect(d->m_lineEdit, &QLineEdit::returnPressed,
+            this, &QHelpSearchQueryWidget::search);
 
     d->retranslate();
-    connect(this, SIGNAL(search()), d, SLOT(searchRequested()));
+    connect(this, &QHelpSearchQueryWidget::search,
+            d, &QHelpSearchQueryWidgetPrivate::searchRequested);
     setCompactMode(true);
 }
 

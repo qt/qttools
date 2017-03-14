@@ -86,26 +86,15 @@ public:
         return true;
     }
 
-    void openLink(bool newPage)
-    {
-        if(lastAnchor.isEmpty())
-            return;
-        if (newPage)
-            OpenPagesManager::instance()->createPage(lastAnchor);
-        else
-            CentralWidget::instance()->setSource(lastAnchor);
-        lastAnchor.clear();
-    }
-
 public slots:
     void openLink()
     {
-        openLink(false);
+        doOpenLink(false);
     }
 
     void openLinkInNewPage()
     {
-        openLink(true);
+        doOpenLink(true);
     }
 
 public:
@@ -118,6 +107,20 @@ public:
 
 public:
     bool m_loadFinished;
+
+private:
+
+    void doOpenLink(bool newPage)
+    {
+        if (lastAnchor.isEmpty())
+            return;
+        if (newPage)
+            OpenPagesManager::instance()->createPage(lastAnchor);
+        else
+            CentralWidget::instance()->setSource(lastAnchor);
+        lastAnchor.clear();
+    }
+
 };
 
 QT_END_NAMESPACE

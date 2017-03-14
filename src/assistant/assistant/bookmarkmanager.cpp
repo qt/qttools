@@ -54,7 +54,7 @@ void BookmarkManager::BookmarkWidget::focusInEvent(QFocusEvent *event)
         ui.lineEdit->setFocus();
 
         // force the focus in event on bookmark manager
-        emit focusInEvent();
+        emit focusInEventOccurred();
     }
 }
 
@@ -71,11 +71,8 @@ BookmarkManager::BookmarkTreeView::BookmarkTreeView(QWidget *parent)
     setDropIndicatorShown(true);
     setExpandsOnDoubleClick(true);
 
-    connect(this, SIGNAL(expanded(QModelIndex)), this,
-        SLOT(setExpandedData(QModelIndex)));
-    connect(this, SIGNAL(collapsed(QModelIndex)), this,
-        SLOT(setExpandedData(QModelIndex)));
-
+    connect(this, &QTreeView::expanded, this, &BookmarkTreeView::setExpandedData);
+    connect(this, &QTreeView::collapsed, this, &BookmarkTreeView::setExpandedData);
 }
 
 void BookmarkManager::BookmarkTreeView::subclassKeyPressEvent(QKeyEvent *event)
@@ -162,13 +159,14 @@ BookmarkManager::BookmarkManager()
 {
     TRACE_OBJ
     bookmarkWidget->installEventFilter(this);
-    connect(bookmarkWidget->ui.add, SIGNAL(clicked()), this,
-        SLOT(addBookmark()));
-    connect(bookmarkWidget->ui.remove, SIGNAL(clicked()), this,
-        SLOT(removeBookmark()));
-    connect(bookmarkWidget->ui.lineEdit, SIGNAL(textChanged(QString)), this,
-        SLOT(textChanged(QString)));
-    connect(bookmarkWidget, SIGNAL(focusInEvent()), this, SLOT(focusInEvent()));
+    connect(bookmarkWidget->ui.add, &QAbstractButton::clicked,
+            this, &BookmarkManager::addBookmarkActivated);
+    connect(bookmarkWidget->ui.remove, &QAbstractButton::clicked,
+            this, &BookmarkManager::removeBookmarkActivated);
+    connect(bookmarkWidget->ui.lineEdit, &QLineEdit::textChanged,
+            this, &BookmarkManager::textChanged);
+    connect(bookmarkWidget, &BookmarkWidget::focusInEventOccurred,
+            this, &BookmarkManager::focusInEventOccurred);
 
     bookmarkTreeView->setModel(bookmarkModel);
     bookmarkTreeView->installEventFilter(this);
@@ -176,26 +174,27 @@ BookmarkManager::BookmarkManager()
     bookmarkTreeView->setContextMenuPolicy(Qt::CustomContextMenu);
     bookmarkWidget->ui.stackedWidget->addWidget(bookmarkTreeView);
 
-    connect(bookmarkTreeView, SIGNAL(activated(QModelIndex)), this,
-        SLOT(setSourceFromIndex(QModelIndex)));
-    connect(bookmarkTreeView, SIGNAL(customContextMenuRequested(QPoint)), this,
-        SLOT(customContextMenuRequested(QPoint)));
+    connect(bookmarkTreeView, &QAbstractItemView::activated,
+            [this](const QModelIndex &index) { setSourceFromIndex(index, false); });
+    connect(bookmarkTreeView, &QWidget::customContextMenuRequested,
+            this, &BookmarkManager::customContextMenuRequested);
 
-    connect(&HelpEngineWrapper::instance(), SIGNAL(setupFinished()), this,
-        SLOT(setupFinished()));
-    connect(bookmarkModel, SIGNAL(rowsRemoved(QModelIndex,int,int)), this,
-        SLOT(refreshBookmarkMenu()));
-    connect(bookmarkModel, SIGNAL(rowsInserted(QModelIndex,int,int)), this,
-        SLOT(refreshBookmarkMenu()));
-    connect(bookmarkModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this,
-        SLOT(refreshBookmarkMenu()));
+    connect(&HelpEngineWrapper::instance(), &HelpEngineWrapper::setupFinished,
+            this, &BookmarkManager::setupFinished);
 
-    connect(bookmarkModel, SIGNAL(rowsRemoved(QModelIndex,int,int)), this,
-        SLOT(refreshBookmarkToolBar()));
-    connect(bookmarkModel, SIGNAL(rowsInserted(QModelIndex,int,int)), this,
-        SLOT(refreshBookmarkToolBar()));
-    connect(bookmarkModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this,
-        SLOT(refreshBookmarkToolBar()));
+    connect(bookmarkModel, &QAbstractItemModel::rowsRemoved,
+            this, &BookmarkManager::refreshBookmarkMenu);
+    connect(bookmarkModel, &QAbstractItemModel::rowsInserted,
+            this, &BookmarkManager::refreshBookmarkMenu);
+    connect(bookmarkModel, &QAbstractItemModel::dataChanged,
+            this, &BookmarkManager::refreshBookmarkMenu);
+
+    connect(bookmarkModel, &QAbstractItemModel::rowsRemoved,
+            this, &BookmarkManager::refreshBookmarkToolBar);
+    connect(bookmarkModel, &QAbstractItemModel::rowsInserted,
+            this, &BookmarkManager::refreshBookmarkToolBar);
+    connect(bookmarkModel, &QAbstractItemModel::dataChanged,
+            this, &BookmarkManager::refreshBookmarkToolBar);
 }
 
 BookmarkManager::~BookmarkManager()
@@ -333,14 +332,14 @@ void BookmarkManager::setupFinished()
     typeAndSearchModel->setSourceModel(bookmarkFilterModel);
 }
 
-void BookmarkManager::addBookmark()
+void BookmarkManager::addBookmarkActivated()
 {
     TRACE_OBJ
     if (CentralWidget *widget = CentralWidget::instance())
         addBookmark(widget->currentTitle(), widget->currentSource().toString());
 }
 
-void BookmarkManager::removeBookmark()
+void BookmarkManager::removeBookmarkActivated()
 {
     TRACE_OBJ
     removeItem(bookmarkTreeView->currentIndex());
@@ -351,12 +350,12 @@ void BookmarkManager::manageBookmarks()
     TRACE_OBJ
     if (bookmarkManagerWidget == 0) {
         bookmarkManagerWidget = new BookmarkManagerWidget(bookmarkModel);
-        connect(bookmarkManagerWidget, SIGNAL(setSource(QUrl)), this,
-            SIGNAL(setSource(QUrl)));
-        connect(bookmarkManagerWidget, SIGNAL(setSourceInNewTab(QUrl))
-            , this, SIGNAL(setSourceInNewTab(QUrl)));
-        connect(bookmarkManagerWidget, SIGNAL(managerWidgetAboutToClose())
-            , this, SLOT(managerWidgetAboutToClose()));
+        connect(bookmarkManagerWidget, &BookmarkManagerWidget::setSource,
+                this, &BookmarkManager::setSource);
+        connect(bookmarkManagerWidget, &BookmarkManagerWidget::setSourceInNewTab,
+                this, &BookmarkManager::setSourceInNewTab);
+        connect(bookmarkManagerWidget, &BookmarkManagerWidget::managerWidgetAboutToClose,
+                this, &BookmarkManager::managerWidgetAboutToClose);
     }
     bookmarkManagerWidget->show();
     bookmarkManagerWidget->raise();
@@ -371,9 +370,10 @@ void BookmarkManager::refreshBookmarkMenu()
     bookmarkMenu->clear();
 
     bookmarkMenu->addAction(tr("Manage Bookmarks..."), this,
-        SLOT(manageBookmarks()));
-    bookmarkMenu->addAction(QIcon::fromTheme("bookmark-new"),
-        tr("Add Bookmark..."), this, SLOT(addBookmark()), QKeySequence(tr("Ctrl+D")));
+                            &BookmarkManager::manageBookmarks);
+    bookmarkMenu->addAction(QIcon::fromTheme("bookmark-new"), tr("Add Bookmark..."),
+                            this, &BookmarkManager::addBookmarkActivated,
+                            QKeySequence(tr("Ctrl+D")));
 
     bookmarkMenu->addSeparator();
 
@@ -386,8 +386,8 @@ void BookmarkManager::refreshBookmarkMenu()
     for (int i = 0; i < bookmarkModel->rowCount(root); ++i)
         buildBookmarksMenu(bookmarkModel->index(i, 0, root), bookmarkMenu);
 
-    connect(bookmarkMenu, SIGNAL(triggered(QAction*)), this,
-        SLOT(setSourceFromAction(QAction*)));
+    connect(bookmarkMenu, &QMenu::triggered,
+            this, &BookmarkManager::setSourceFromAction);
 }
 
 void BookmarkManager::refreshBookmarkToolBar()
@@ -409,8 +409,8 @@ void BookmarkManager::refreshBookmarkToolBar()
             QMenu *menu = new QMenu(button);
             for (int j = 0; j < bookmarkModel->rowCount(index); ++j)
                 buildBookmarksMenu(bookmarkModel->index(j, 0, index), menu);
-            connect(menu, SIGNAL(triggered(QAction*)), this,
-                SLOT(setSourceFromAction(QAction*)));
+            connect(menu, &QMenu::triggered,
+                    this, &BookmarkManager::setSourceFromAction);
             button->setMenu(menu);
             button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
             button->setIcon(qvariant_cast<QIcon>(index.data(Qt::DecorationRole)));
@@ -419,7 +419,7 @@ void BookmarkManager::refreshBookmarkToolBar()
         } else {
             QAction *action = m_toolBar->addAction(
                 qvariant_cast<QIcon>(index.data(Qt::DecorationRole)),
-                index.data().toString(), this, SLOT(setSourceFromAction()));
+                index.data().toString(), this, &BookmarkManager::setSourceFromAction);
             action->setData(index.data(UserRoleUrl).toString());
         }
     }
@@ -440,17 +440,13 @@ void BookmarkManager::renameBookmark(const QModelIndex &index)
 void BookmarkManager::setSourceFromAction()
 {
     TRACE_OBJ
-    setSourceFromAction(qobject_cast<QAction*> (sender()));
-}
+    const QAction *action = qobject_cast<QAction*>(sender());
+    if (!action)
+        return;
 
-void BookmarkManager::setSourceFromAction(QAction *action)
-{
-    TRACE_OBJ
-    if (action) {
-        const QVariant &data = action->data();
-        if (data.canConvert<QUrl>())
-            emit setSource(data.toUrl());
-    }
+    const QVariant &data = action->data();
+    if (data.canConvert<QUrl>())
+        emit setSource(data.toUrl());
 }
 
 void BookmarkManager::setSourceFromIndex(const QModelIndex &index, bool newTab)
@@ -509,7 +505,7 @@ void BookmarkManager::customContextMenuRequested(const QPoint &point)
         setSourceFromIndex(index, pickedAction == showItemInNewTab);
 }
 
-void BookmarkManager::focusInEvent()
+void BookmarkManager::focusInEventOccurred()
 {
     TRACE_OBJ
     const QModelIndex &index = bookmarkTreeView->indexAt(QPoint(2, 2));

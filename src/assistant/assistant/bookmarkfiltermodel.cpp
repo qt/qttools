@@ -42,47 +42,44 @@ void BookmarkFilterModel::setSourceModel(QAbstractItemModel *_sourceModel)
     beginResetModel();
 
     if (sourceModel) {
-        disconnect(sourceModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-            this, SLOT(changed(QModelIndex,QModelIndex)));
-        disconnect(sourceModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
-            this, SLOT(rowsInserted(QModelIndex,int,int)));
-        disconnect(sourceModel,
-            SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)), this,
-            SLOT(rowsAboutToBeRemoved(QModelIndex,int,int)));
-        disconnect(sourceModel, SIGNAL(rowsRemoved(QModelIndex,int,int)),
-            this, SLOT(rowsRemoved(QModelIndex,int,int)));
-        disconnect(sourceModel, SIGNAL(layoutAboutToBeChanged()), this,
-            SLOT(layoutAboutToBeChanged()));
-        disconnect(sourceModel, SIGNAL(layoutChanged()), this,
-            SLOT(layoutChanged()));
-        disconnect(sourceModel, SIGNAL(modelAboutToBeReset()), this,
-            SLOT(modelAboutToBeReset()));
-        disconnect(sourceModel, SIGNAL(modelReset()), this, SLOT(modelReset()));
+        disconnect(sourceModel, &QAbstractItemModel::dataChanged,
+                this, &BookmarkFilterModel::changed);
+        disconnect(sourceModel, &QAbstractItemModel::rowsInserted,
+                this, &BookmarkFilterModel::rowsInserted);
+        disconnect(sourceModel, &QAbstractItemModel::rowsAboutToBeRemoved,
+                this, &BookmarkFilterModel::rowsAboutToBeRemoved);
+        disconnect(sourceModel, &QAbstractItemModel::rowsRemoved,
+                this, &BookmarkFilterModel::rowsRemoved);
+        disconnect(sourceModel, &QAbstractItemModel::layoutAboutToBeChanged,
+                this, &BookmarkFilterModel::layoutAboutToBeChanged);
+        disconnect(sourceModel, &QAbstractItemModel::layoutChanged,
+                this, &BookmarkFilterModel::layoutChanged);
+        disconnect(sourceModel, &QAbstractItemModel::modelAboutToBeReset,
+                this, &BookmarkFilterModel::modelAboutToBeReset);
+        disconnect(sourceModel, &QAbstractItemModel::modelReset,
+                this, &BookmarkFilterModel::modelReset);
     }
 
     sourceModel = qobject_cast<BookmarkModel*> (_sourceModel);
     QAbstractProxyModel::setSourceModel(sourceModel);
 
     if (sourceModel) {
-        connect(sourceModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this,
-                SLOT(changed(QModelIndex,QModelIndex)));
-
-        connect(sourceModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
-                this, SLOT(rowsInserted(QModelIndex,int,int)));
-
-        connect(sourceModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
-                this, SLOT(rowsAboutToBeRemoved(QModelIndex,int,int)));
-        connect(sourceModel, SIGNAL(rowsRemoved(QModelIndex,int,int)), this,
-                SLOT(rowsRemoved(QModelIndex,int,int)));
-
-        connect(sourceModel, SIGNAL(layoutAboutToBeChanged()), this,
-                SLOT(layoutAboutToBeChanged()));
-        connect(sourceModel, SIGNAL(layoutChanged()), this,
-                SLOT(layoutChanged()));
-
-        connect(sourceModel, SIGNAL(modelAboutToBeReset()), this,
-                SLOT(modelAboutToBeReset()));
-        connect(sourceModel, SIGNAL(modelReset()), this, SLOT(modelReset()));
+        connect(sourceModel, &QAbstractItemModel::dataChanged,
+                this, &BookmarkFilterModel::changed);
+        connect(sourceModel, &QAbstractItemModel::rowsInserted,
+                this, &BookmarkFilterModel::rowsInserted);
+        connect(sourceModel, &QAbstractItemModel::rowsAboutToBeRemoved,
+                this, &BookmarkFilterModel::rowsAboutToBeRemoved);
+        connect(sourceModel, &QAbstractItemModel::rowsRemoved,
+                this, &BookmarkFilterModel::rowsRemoved);
+        connect(sourceModel, &QAbstractItemModel::layoutAboutToBeChanged,
+                this, &BookmarkFilterModel::layoutAboutToBeChanged);
+        connect(sourceModel, &QAbstractItemModel::layoutChanged,
+                this, &BookmarkFilterModel::layoutChanged);
+        connect(sourceModel, &QAbstractItemModel::modelAboutToBeReset,
+                this, &BookmarkFilterModel::modelAboutToBeReset);
+        connect(sourceModel, &QAbstractItemModel::modelReset,
+                this, &BookmarkFilterModel::modelReset);
 
         setupCache(sourceModel->index(0, 0, QModelIndex()).parent());
     }

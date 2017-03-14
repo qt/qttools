@@ -52,8 +52,8 @@ InputPage::InputPage(AdpReader *reader, QWidget *parent)
         "collection format."));
 
     m_ui.setupUi(this);
-    connect(m_ui.browseButton, SIGNAL(clicked()),
-        this, SLOT(getFileName()));
+    connect(m_ui.browseButton, &QAbstractButton::clicked,
+            this, &InputPage::getFileName);
 
     registerField(QLatin1String("adpFileName"), m_ui.fileLineEdit);
 }

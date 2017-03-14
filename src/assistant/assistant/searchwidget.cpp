@@ -66,14 +66,15 @@ SearchWidget::SearchWidget(QHelpSearchEngine *engine, QWidget *parent)
 
     setFocusProxy(queryWidget);
 
-    connect(queryWidget, SIGNAL(search()), this, SLOT(search()));
-    connect(resultWidget, SIGNAL(requestShowLink(QUrl)), this,
-        SIGNAL(requestShowLink(QUrl)));
+    connect(queryWidget, &QHelpSearchQueryWidget::search,
+            this, &SearchWidget::search);
+    connect(resultWidget, &QHelpSearchResultWidget::requestShowLink,
+            this, &SearchWidget::requestShowLink);
 
-    connect(searchEngine, SIGNAL(searchingStarted()), this,
-        SLOT(searchingStarted()));
-    connect(searchEngine, SIGNAL(searchingFinished(int)), this,
-        SLOT(searchingFinished(int)));
+    connect(searchEngine, &QHelpSearchEngine::searchingStarted,
+            this, &SearchWidget::searchingStarted);
+    connect(searchEngine, &QHelpSearchEngine::searchingFinished,
+            this, &SearchWidget::searchingFinished);
 
     QTextBrowser* browser = resultWidget->findChild<QTextBrowser*>();
     if (browser)

@@ -103,7 +103,7 @@ AboutDialog::AboutDialog(QWidget *parent)
 
     m_closeButton = new QPushButton();
     m_closeButton->setText(tr("&Close"));
-    connect(m_closeButton, SIGNAL(clicked()), this, SLOT(close()));
+    connect(m_closeButton, &QAbstractButton::clicked, this, &QWidget::close);
 
     m_layout = new QGridLayout(this);
     m_layout->addWidget(m_aboutLabel, 1, 0, 1, -1);

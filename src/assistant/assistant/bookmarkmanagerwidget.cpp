@@ -58,27 +58,36 @@ BookmarkManagerWidget::BookmarkManagerWidget(BookmarkModel *sourceModel,
     ui.treeView->viewport()->installEventFilter(this);
     ui.treeView->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    connect(ui.treeView, SIGNAL(customContextMenuRequested(QPoint)), this,
-        SLOT(customContextMenuRequested(QPoint)));
+    connect(ui.treeView, &QWidget::customContextMenuRequested,
+            this, &BookmarkManagerWidget::customContextMenuRequested);
 
-    connect(ui.remove, SIGNAL(clicked()), this, SLOT(removeItem()));
-    connect(ui.lineEdit, SIGNAL(textChanged(QString)), this,
-        SLOT(textChanged(QString)));
-    new QShortcut(QKeySequence::Find, ui.lineEdit, SLOT(setFocus()));
+    connect(ui.remove, &QAbstractButton::clicked,
+            [this]() { removeItem(); });
+    connect(ui.lineEdit, &QLineEdit::textChanged,
+            this, &BookmarkManagerWidget::textChanged);
+    QShortcut *shortcut = new QShortcut(QKeySequence::Find, ui.lineEdit);
+    connect(shortcut, &QShortcut::activated,
+            ui.lineEdit, QOverload<>::of(&QWidget::setFocus));
 
-    importExportMenu.addAction(tr("Import..."), this, SLOT(importBookmarks()));
-    importExportMenu.addAction(tr("Export..."), this, SLOT(exportBookmarks()));
+    importExportMenu.addAction(tr("Import..."), this,
+                               &BookmarkManagerWidget::importBookmarks);
+    importExportMenu.addAction(tr("Export..."), this,
+                               &BookmarkManagerWidget::exportBookmarks);
     ui.importExport->setMenu(&importExportMenu);
 
-    new QShortcut(QKeySequence::FindNext, this, SLOT(findNext()));
-    new QShortcut(QKeySequence::FindPrevious, this, SLOT(findPrevious()));
+    shortcut = new QShortcut(QKeySequence::FindNext, this);
+    connect(shortcut, &QShortcut::activated,
+            this, &BookmarkManagerWidget::findNext);
+    shortcut = new QShortcut(QKeySequence::FindPrevious, this);
+    connect(shortcut, &QShortcut::activated,
+            this, &BookmarkManagerWidget::findPrevious);
 
-    connect(bookmarkModel, SIGNAL(rowsRemoved(QModelIndex,int,int)), this,
-        SLOT(refeshBookmarkCache()));
-    connect(bookmarkModel, SIGNAL(rowsInserted(QModelIndex,int,int)), this,
-        SLOT(refeshBookmarkCache()));
-    connect(bookmarkModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this,
-        SLOT(refeshBookmarkCache()));
+    connect(bookmarkModel, &QAbstractItemModel::rowsRemoved,
+            this, &BookmarkManagerWidget::refeshBookmarkCache);
+    connect(bookmarkModel, &QAbstractItemModel::rowsInserted,
+            this, &BookmarkManagerWidget::refeshBookmarkCache);
+    connect(bookmarkModel, &QAbstractItemModel::dataChanged,
+            this, &BookmarkManagerWidget::refeshBookmarkCache);
 
     ui.treeView->setCurrentIndex(ui.treeView->indexAt(QPoint(2, 2)));
 }

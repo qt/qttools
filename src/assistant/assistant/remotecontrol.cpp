@@ -64,11 +64,12 @@ RemoteControl::RemoteControl(MainWindow *mainWindow)
 
 {
     TRACE_OBJ
-    connect(m_mainWindow, SIGNAL(initDone()), this, SLOT(applyCache()));
+    connect(m_mainWindow, &MainWindow::initDone,
+            this, &RemoteControl::applyCache);
 
     StdInListener *l = new StdInListener(this);
-    connect(l, SIGNAL(receivedCommand(QString)),
-        this, SLOT(handleCommandString(QString)));
+    connect(l, &StdInListener::receivedCommand,
+            this, &RemoteControl::handleCommandString);
     l->start();
 }
 

@@ -352,9 +352,10 @@ QHelpContentModel::QHelpContentModel(QHelpEnginePrivate *helpEngine)
     d->rootItem = 0;
     d->qhelpContentProvider = new QHelpContentProvider(helpEngine);
 
-    connect(d->qhelpContentProvider, SIGNAL(finishedSuccessFully()),
-        this, SLOT(insertContents()), Qt::QueuedConnection);
-    connect(helpEngine->q, SIGNAL(readersAboutToBeInvalidated()), this, SLOT(invalidateContents()));
+    connect(d->qhelpContentProvider, &QHelpContentProvider::finishedSuccessFully,
+            this, &QHelpContentModel::insertContents, Qt::QueuedConnection);
+    connect(helpEngine->q, &QHelpEngineCore::readersAboutToBeInvalidated,
+            [this]() { invalidateContents(); });
 }
 
 /*!
@@ -369,7 +370,8 @@ QHelpContentModel::~QHelpContentModel()
 void QHelpContentModel::invalidateContents(bool onShutDown)
 {
     if (onShutDown) {
-        disconnect(this, SLOT(insertContents()));
+        disconnect(d->qhelpContentProvider, &QHelpContentProvider::finishedSuccessFully,
+                   this, &QHelpContentModel::insertContents);
     } else {
         beginResetModel();
     }
@@ -521,8 +523,8 @@ QHelpContentWidget::QHelpContentWidget()
 {
     header()->hide();
     setUniformRowHeights(true);
-    connect(this, SIGNAL(activated(QModelIndex)),
-        this, SLOT(showLink(QModelIndex)));
+    connect(this, &QAbstractItemView::activated,
+            this, &QHelpContentWidget::showLink);
 }
 
 /*!

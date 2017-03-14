@@ -39,8 +39,8 @@ IdentifierPage::IdentifierPage(QWidget *parent)
 
     m_ui.setupUi(this);
 
-    connect(m_ui.identifierCheckBox, SIGNAL(toggled(bool)),
-        this, SLOT(setupButtons(bool)));
+    connect(m_ui.identifierCheckBox, &QAbstractButton::toggled,
+            this, &IdentifierPage::setupButtons);
 
     registerField(QLatin1String("createIdentifier"), m_ui.identifierCheckBox);
     registerField(QLatin1String("globalPrefix"), m_ui.prefixLineEdit);

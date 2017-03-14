@@ -152,26 +152,24 @@ PreferencesDialog::PreferencesDialog(QWidget *parent)
     connect(m_ui.registeredDocsFilterLineEdit, &QLineEdit::textChanged,
             m_registereredDocsFilterModel, &QSortFilterProxyModel::setFilterFixedString);
 
-    connect(m_ui.buttonBox->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
-        this, SLOT(applyChanges()));
-    connect(m_ui.buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
-        this, SLOT(reject()));
+    connect(m_ui.buttonBox->button(QDialogButtonBox::Ok), &QAbstractButton::clicked,
+            this, &PreferencesDialog::applyChanges);
+    connect(m_ui.buttonBox->button(QDialogButtonBox::Cancel), &QAbstractButton::clicked,
+            this, &QDialog::reject);
 
     if (!m_hideFiltersTab) {
         m_ui.attributeWidget->header()->hide();
         m_ui.attributeWidget->setRootIsDecorated(false);
 
-        connect(m_ui.attributeWidget, SIGNAL(itemChanged(QTreeWidgetItem*,int)),
-            this, SLOT(updateFilterMap()));
+        connect(m_ui.attributeWidget, &QTreeWidget::itemChanged,
+                this, &PreferencesDialog::updateFilterMap);
+        connect(m_ui.filterWidget, &QListWidget::currentItemChanged,
+                this, &PreferencesDialog::updateAttributes);
 
-        connect(m_ui.filterWidget,
-            SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)), this,
-            SLOT(updateAttributes(QListWidgetItem*)));
-
-        connect(m_ui.filterAddButton, SIGNAL(clicked()), this,
-            SLOT(addFilter()));
-        connect(m_ui.filterRemoveButton, SIGNAL(clicked()), this,
-            SLOT(removeFilter()));
+        connect(m_ui.filterAddButton, &QAbstractButton::clicked,
+                this, &PreferencesDialog::addFilter);
+        connect(m_ui.filterRemoveButton, &QAbstractButton::clicked,
+                this, &PreferencesDialog::removeFilter);
 
         updateFilterPage();
     } else {
@@ -179,10 +177,10 @@ PreferencesDialog::PreferencesDialog(QWidget *parent)
     }
 
     if (!m_hideDocsTab) {
-        connect(m_ui.docAddButton, SIGNAL(clicked()), this,
-            SLOT(addDocumentationLocal()));
-        connect(m_ui.docRemoveButton, SIGNAL(clicked()), this,
-            SLOT(removeDocumentation()));
+        connect(m_ui.docAddButton, &QAbstractButton::clicked,
+                this, &PreferencesDialog::addDocumentationLocal);
+        connect(m_ui.docRemoveButton, &QAbstractButton::clicked,
+                this, &PreferencesDialog::removeDocumentation);
 
         m_docsBackup.reserve(m_registeredDocsModel->rowCount());
         for (const RegisteredDocEntry &e : m_registeredDocsModel->docEntries())
@@ -508,21 +506,21 @@ void PreferencesDialog::updateFontSettingsPage()
 
     m_browserFontPanel->setChecked(helpEngine.usesBrowserFont());
 
-    connect(m_appFontPanel, SIGNAL(toggled(bool)), this,
-        SLOT(appFontSettingToggled(bool)));
-    connect(m_browserFontPanel, SIGNAL(toggled(bool)), this,
-        SLOT(browserFontSettingToggled(bool)));
+    connect(m_appFontPanel, &QGroupBox::toggled,
+            this, &PreferencesDialog::appFontSettingToggled);
+    connect(m_browserFontPanel, &QGroupBox::toggled,
+            this, &PreferencesDialog::browserFontSettingToggled);
 
     const QList<QComboBox*> &appCombos = m_appFontPanel->findChildren<QComboBox*>();
     for (QComboBox* box : appCombos) {
-        connect(box, SIGNAL(currentIndexChanged(int)), this,
-            SLOT(appFontSettingChanged(int)));
+        connect(box, QOverload<int>::of(&QComboBox::currentIndexChanged),
+                this, &PreferencesDialog::appFontSettingChanged);
     }
 
     const QList<QComboBox*> &browserCombos = m_browserFontPanel->findChildren<QComboBox*>();
     for (QComboBox* box : browserCombos) {
-        connect(box, SIGNAL(currentIndexChanged(int)), this,
-            SLOT(browserFontSettingChanged(int)));
+        connect(box, QOverload<int>::of(&QComboBox::currentIndexChanged),
+                this, &PreferencesDialog::browserFontSettingChanged);
     }
 }
 
@@ -565,9 +563,12 @@ void PreferencesDialog::updateOptionsPage()
     m_showTabs = helpEngine.showTabs();
     m_ui.showTabs->setChecked(m_showTabs);
 
-    connect(m_ui.blankPageButton, SIGNAL(clicked()), this, SLOT(setBlankPage()));
-    connect(m_ui.currentPageButton, SIGNAL(clicked()), this, SLOT(setCurrentPage()));
-    connect(m_ui.defaultPageButton, SIGNAL(clicked()), this, SLOT(setDefaultPage()));
+    connect(m_ui.blankPageButton, &QAbstractButton::clicked,
+            this, &PreferencesDialog::setBlankPage);
+    connect(m_ui.currentPageButton, &QAbstractButton::clicked,
+            this, &PreferencesDialog::setCurrentPage);
+    connect(m_ui.defaultPageButton, &QAbstractButton::clicked,
+            this, &PreferencesDialog::setDefaultPage);
 }
 
 void PreferencesDialog::setBlankPage()

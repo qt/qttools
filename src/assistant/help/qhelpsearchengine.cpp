@@ -201,8 +201,10 @@ private:
         if (!indexWriter) {
             indexWriter = new QHelpSearchIndexWriter();
 
-            connect(indexWriter, SIGNAL(indexingStarted()), this, SIGNAL(indexingStarted()));
-            connect(indexWriter, SIGNAL(indexingFinished()), this, SIGNAL(indexingFinished()));
+            connect(indexWriter, &QHelpSearchIndexWriter::indexingStarted,
+                    this, &QHelpSearchEnginePrivate::indexingStarted);
+            connect(indexWriter, &QHelpSearchIndexWriter::indexingFinished,
+                    this, &QHelpSearchEnginePrivate::indexingFinished);
         }
 
         indexWriter->cancelIndexing();
@@ -226,8 +228,10 @@ private:
 
         if (!indexReader) {
             indexReader = new QHelpSearchIndexReaderDefault();
-            connect(indexReader, SIGNAL(searchingStarted()), this, SIGNAL(searchingStarted()));
-            connect(indexReader, SIGNAL(searchingFinished(int)), this, SIGNAL(searchingFinished(int)));
+            connect(indexReader, &fulltextsearch::QHelpSearchIndexReader::searchingStarted,
+                    this, &QHelpSearchEnginePrivate::searchingStarted);
+            connect(indexReader, &fulltextsearch::QHelpSearchIndexReader::searchingFinished,
+                    this, &QHelpSearchEnginePrivate::searchingFinished);
         }
 
         m_searchInput = searchInput;
@@ -389,12 +393,17 @@ QHelpSearchEngine::QHelpSearchEngine(QHelpEngineCore *helpEngine, QObject *paren
 {
     d = new QHelpSearchEnginePrivate(helpEngine);
 
-    connect(helpEngine, SIGNAL(setupFinished()), this, SLOT(scheduleIndexDocumentation()));
+    connect(helpEngine, &QHelpEngineCore::setupFinished,
+            this, &QHelpSearchEngine::scheduleIndexDocumentation);
 
-    connect(d, SIGNAL(indexingStarted()), this, SIGNAL(indexingStarted()));
-    connect(d, SIGNAL(indexingFinished()), this, SIGNAL(indexingFinished()));
-    connect(d, SIGNAL(searchingStarted()), this, SIGNAL(searchingStarted()));
-    connect(d, SIGNAL(searchingFinished(int)), this, SIGNAL(searchingFinished(int)));
+    connect(d, &QHelpSearchEnginePrivate::indexingStarted,
+            this, &QHelpSearchEngine::indexingStarted);
+    connect(d, &QHelpSearchEnginePrivate::indexingFinished,
+            this, &QHelpSearchEngine::indexingFinished);
+    connect(d, &QHelpSearchEnginePrivate::searchingStarted,
+            this, &QHelpSearchEngine::searchingStarted);
+    connect(d, &QHelpSearchEnginePrivate::searchingFinished,
+            this, &QHelpSearchEngine::searchingFinished);
 }
 
 /*!

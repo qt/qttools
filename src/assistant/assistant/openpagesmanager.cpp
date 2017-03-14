@@ -70,18 +70,18 @@ OpenPagesManager::OpenPagesManager(QObject *parent, bool defaultCollection,
     TRACE_OBJ
     m_openPagesWidget = new OpenPagesWidget(m_model);
     m_openPagesWidget->setFrameStyle(QFrame::NoFrame);
-    connect(m_openPagesWidget, SIGNAL(setCurrentPage(QModelIndex)), this,
-            SLOT(setCurrentPage(QModelIndex)));
-    connect(m_openPagesWidget, SIGNAL(closePage(QModelIndex)), this,
-            SLOT(closePage(QModelIndex)));
-    connect(m_openPagesWidget, SIGNAL(closePagesExcept(QModelIndex)), this,
-            SLOT(closePagesExcept(QModelIndex)));
+    connect(m_openPagesWidget, &OpenPagesWidget::setCurrentPage,
+            this, QOverload<const QModelIndex &>::of(&OpenPagesManager::setCurrentPage));
+    connect(m_openPagesWidget, &OpenPagesWidget::closePage,
+            this, QOverload<const QModelIndex &>::of(&OpenPagesManager::closePage));
+    connect(m_openPagesWidget, &OpenPagesWidget::closePagesExcept,
+            this, &OpenPagesManager::closePagesExcept);
 
     m_openPagesSwitcher = new OpenPagesSwitcher(m_model);
-    connect(m_openPagesSwitcher, SIGNAL(closePage(QModelIndex)), this,
-        SLOT(closePage(QModelIndex)));
-    connect(m_openPagesSwitcher, SIGNAL(setCurrentPage(QModelIndex)), this,
-        SLOT(setCurrentPage(QModelIndex)));
+    connect(m_openPagesSwitcher, &OpenPagesSwitcher::closePage,
+            this, QOverload<const QModelIndex &>::of(&OpenPagesManager::closePage));
+    connect(m_openPagesSwitcher, &OpenPagesSwitcher::setCurrentPage,
+            this, QOverload<const QModelIndex &>::of(&OpenPagesManager::setCurrentPage));
 
     setupInitialPages(defaultCollection, cmdLineUrl);
 }
@@ -159,7 +159,7 @@ void OpenPagesManager::setupInitialPages(bool defaultCollection,
     m_openPagesSwitcher->selectCurrentPage();
 }
 
-HelpViewer *OpenPagesManager::createPage()
+HelpViewer *OpenPagesManager::createBlankPage()
 {
     TRACE_OBJ
     return createPage(QUrl(QLatin1String("about:blank")));

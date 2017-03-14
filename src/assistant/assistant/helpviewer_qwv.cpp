@@ -82,8 +82,8 @@ HelpPage::HelpPage(QObject *parent)
 QWebPage *HelpPage::createWindow(QWebPage::WebWindowType)
 {
     TRACE_OBJ
-    HelpPage* newPage = static_cast<HelpPage*>(OpenPagesManager::instance()
-        ->createPage()->page());
+    HelpPage *newPage = static_cast<HelpPage *>(OpenPagesManager::instance()
+        ->createBlankPage()->page());
     newPage->closeNewTabIfNeeded = closeNewTabIfNeeded;
     closeNewTabIfNeeded = false;
     return newPage;

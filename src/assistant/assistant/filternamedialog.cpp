@@ -38,14 +38,13 @@ FilterNameDialog::FilterNameDialog(QWidget *parent)
 {
     TRACE_OBJ
     m_ui.setupUi(this);
-    connect(m_ui.buttonBox->button(QDialogButtonBox::Ok),
-        SIGNAL(clicked()), this, SLOT(accept()));
-    connect(m_ui.buttonBox->button(QDialogButtonBox::Cancel),
-        SIGNAL(clicked()), this, SLOT(reject()));
-    connect(m_ui.lineEdit, SIGNAL(textChanged(QString)),
-        this, SLOT(updateOkButton()));
+    connect(m_ui.buttonBox->button(QDialogButtonBox::Ok), &QAbstractButton::clicked,
+            this, &QDialog::accept);
+    connect(m_ui.buttonBox->button(QDialogButtonBox::Cancel), &QAbstractButton::clicked,
+            this, &QDialog::reject);
+    connect(m_ui.lineEdit, &QLineEdit::textChanged,
+            this, &FilterNameDialog::updateOkButton);
     m_ui.buttonBox->button(QDialogButtonBox::Ok)->setDisabled(true);
-
 }
 
 QString FilterNameDialog::filterName() const

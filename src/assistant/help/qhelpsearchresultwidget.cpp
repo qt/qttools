@@ -64,8 +64,8 @@ public:
     QResultWidget(QWidget *parent = 0)
         : QTextBrowser(parent)
     {
-        connect(this, SIGNAL(anchorClicked(QUrl)),
-            this, SIGNAL(requestShowLink(QUrl)));
+        connect(this, &QTextBrowser::anchorClicked,
+                this, &QResultWidget::requestShowLink);
         setContextMenuPolicy(Qt::NoContextMenu);
     }
 
@@ -230,10 +230,10 @@ private:
         nextResultPage = 0;
         lastResultPage = 0;
 
-        connect(searchEngine, SIGNAL(indexingStarted()),
-            this, SLOT(indexingStarted()));
-        connect(searchEngine, SIGNAL(indexingFinished()),
-            this, SLOT(indexingFinished()));
+        connect(searchEngine.data(), &QHelpSearchEngine::indexingStarted,
+                this, &QHelpSearchResultWidgetPrivate::indexingStarted);
+        connect(searchEngine.data(), &QHelpSearchEngine::indexingFinished,
+                this, &QHelpSearchResultWidgetPrivate::indexingFinished);
     }
 
     ~QHelpSearchResultWidgetPrivate()
@@ -344,20 +344,29 @@ QHelpSearchResultWidget::QHelpSearchResultWidget(QHelpSearchEngine *engine)
     d->resultTextBrowser = new QResultWidget(this);
     vLayout->addWidget(d->resultTextBrowser);
 
-    connect(d->resultTextBrowser, SIGNAL(requestShowLink(QUrl)), this,
-        SIGNAL(requestShowLink(QUrl)));
+    connect(d->resultTextBrowser, &QResultWidget::requestShowLink,
+            this, &QHelpSearchResultWidget::requestShowLink);
 
-    connect(d->nextResultPage, SIGNAL(clicked()), d, SLOT(showNextResultPage()));
-    connect(d->lastResultPage, SIGNAL(clicked()), d, SLOT(showLastResultPage()));
-    connect(d->firstResultPage, SIGNAL(clicked()), d, SLOT(showFirstResultPage()));
-    connect(d->previousResultPage, SIGNAL(clicked()), d, SLOT(showPreviousResultPage()));
+    connect(d->nextResultPage, &QAbstractButton::clicked,
+            d, &QHelpSearchResultWidgetPrivate::showNextResultPage);
+    connect(d->lastResultPage, &QAbstractButton::clicked,
+            d, &QHelpSearchResultWidgetPrivate::showLastResultPage);
+    connect(d->firstResultPage, &QAbstractButton::clicked,
+            d, &QHelpSearchResultWidgetPrivate::showFirstResultPage);
+    connect(d->previousResultPage, &QAbstractButton::clicked,
+            d, &QHelpSearchResultWidgetPrivate::showPreviousResultPage);
 
-    connect(d->firstResultPage, SIGNAL(clicked()), d, SLOT(updateNextButtonState()));
-    connect(d->previousResultPage, SIGNAL(clicked()), d, SLOT(updateNextButtonState()));
-    connect(d->nextResultPage, SIGNAL(clicked()), d, SLOT(updatePrevButtonState()));
-    connect(d->lastResultPage, SIGNAL(clicked()), d, SLOT(updatePrevButtonState()));
+    connect(d->firstResultPage, &QAbstractButton::clicked,
+            d, &QHelpSearchResultWidgetPrivate::updateNextButtonState);
+    connect(d->previousResultPage, &QAbstractButton::clicked,
+            d, &QHelpSearchResultWidgetPrivate::updateNextButtonState);
+    connect(d->nextResultPage, &QAbstractButton::clicked,
+            d, &QHelpSearchResultWidgetPrivate::updatePrevButtonState);
+    connect(d->lastResultPage, &QAbstractButton::clicked,
+            d, &QHelpSearchResultWidgetPrivate::updatePrevButtonState);
 
-    connect(engine, SIGNAL(searchingFinished(int)), d, SLOT(setResults(int)));
+    connect(engine, &QHelpSearchEngine::searchingFinished,
+            d, &QHelpSearchResultWidgetPrivate::setResults);
 }
 
 /*! \reimp

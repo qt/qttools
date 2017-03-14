@@ -101,12 +101,12 @@ OpenPagesWidget::OpenPagesWidget(OpenPagesModel *model)
     setUniformRowHeights(true);
     setContextMenuPolicy(Qt::CustomContextMenu);
 
-    connect(this, SIGNAL(clicked(QModelIndex)), this,
-        SLOT(handleClicked(QModelIndex)));
-    connect(this, SIGNAL(pressed(QModelIndex)), this,
-        SLOT(handlePressed(QModelIndex)));
-    connect(this, SIGNAL(customContextMenuRequested(QPoint)), this,
-        SLOT(contextMenuRequested(QPoint)));
+    connect(this, &QAbstractItemView::clicked,
+            this, &OpenPagesWidget::handleClicked);
+    connect(this, &QAbstractItemView::pressed,
+            this, &OpenPagesWidget::handlePressed);
+    connect(this, &QWidget::customContextMenuRequested,
+            this, &OpenPagesWidget::contextMenuRequested);
 }
 
 OpenPagesWidget::~OpenPagesWidget()

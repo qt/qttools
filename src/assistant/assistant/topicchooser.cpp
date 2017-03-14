@@ -67,10 +67,14 @@ TopicChooser::TopicChooser(QWidget *parent, const QString &keyword, const QMap<Q
     if (m_filterModel->rowCount() != 0)
         ui.listWidget->setCurrentIndex(m_filterModel->index(0, 0));
 
-    connect(ui.buttonCancel, SIGNAL(clicked()), this, SLOT(reject()));
-    connect(ui.buttonDisplay, SIGNAL(clicked()), this, SLOT(acceptDialog()));
-    connect(ui.lineEdit, SIGNAL(textChanged(QString)), this, SLOT(setFilter(QString)));
-    connect(ui.listWidget, SIGNAL(activated(QModelIndex)), this, SLOT(activated(QModelIndex)));
+    connect(ui.buttonCancel, &QAbstractButton::clicked,
+            this, &QDialog::reject);
+    connect(ui.buttonDisplay, &QAbstractButton::clicked,
+            this, &TopicChooser::acceptDialog);
+    connect(ui.lineEdit, &QLineEdit::textChanged,
+            this, &TopicChooser::setFilter);
+    connect(ui.listWidget, &QAbstractItemView::activated,
+            this, &TopicChooser::activated);
 
     const QByteArray ba = HelpEngineWrapper::instance().topicChooserGeometry();
     if (!ba.isEmpty())

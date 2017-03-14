@@ -54,14 +54,15 @@ ContentWindow::ContentWindow()
     layout->setMargin(4);
     layout->addWidget(m_contentWidget);
 
-    connect(m_contentWidget, SIGNAL(customContextMenuRequested(QPoint)), this,
-        SLOT(showContextMenu(QPoint)));
-    connect(m_contentWidget, SIGNAL(linkActivated(QUrl)), this,
-        SIGNAL(linkActivated(QUrl)));
+    connect(m_contentWidget, &QWidget::customContextMenuRequested,
+            this, &ContentWindow::showContextMenu);
+    connect(m_contentWidget, &QHelpContentWidget::linkActivated,
+            this, &ContentWindow::linkActivated);
 
     QHelpContentModel *contentModel =
         qobject_cast<QHelpContentModel*>(m_contentWidget->model());
-    connect(contentModel, SIGNAL(contentsCreated()), this, SLOT(expandTOC()));
+    connect(contentModel, &QHelpContentModel::contentsCreated,
+            this, &ContentWindow::expandTOC);
 }
 
 ContentWindow::~ContentWindow()

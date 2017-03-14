@@ -38,7 +38,8 @@ StdInListener::StdInListener(QObject *parent)
     : QSocketNotifier(fileno(stdin), QSocketNotifier::Read, parent)
 {
     TRACE_OBJ
-    connect(this, SIGNAL(activated(int)), this, SLOT(receivedData()));
+    connect(this, &QSocketNotifier::activated,
+            this, &StdInListener::receivedData);
 }
 
 StdInListener::~StdInListener()
