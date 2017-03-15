@@ -926,7 +926,7 @@ QString CppCodeMarker::addMarkUp(const QString &in,
 
     readChar();
 
-    while (ch != EOF) {
+    while (ch != QChar(EOF)) {
         QString tag;
         bool target = false;
 
@@ -985,7 +985,7 @@ QString CppCodeMarker::addMarkUp(const QString &in,
                 finish = i;
                 readChar();
 
-                while (ch != EOF && ch != '"') {
+                while (ch != QChar(EOF) && ch != '"') {
                     if (ch == '\\')
                         readChar();
                     readChar();
@@ -997,7 +997,7 @@ QString CppCodeMarker::addMarkUp(const QString &in,
             case '#':
                 finish = i;
                 readChar();
-                while (ch != EOF && ch != '\n') {
+                while (ch != QChar(EOF) && ch != '\n') {
                     if (ch == '\\')
                         readChar();
                     finish = i;
@@ -1009,7 +1009,7 @@ QString CppCodeMarker::addMarkUp(const QString &in,
                 finish = i;
                 readChar();
 
-                while (ch != EOF && ch != '\'') {
+                while (ch != QChar(EOF) && ch != '\'') {
                     if (ch == '\\')
                         readChar();
                     readChar();
@@ -1044,7 +1044,7 @@ QString CppCodeMarker::addMarkUp(const QString &in,
                     do {
                         finish = i;
                         readChar();
-                    } while (ch != EOF && ch != '\n');
+                    } while (ch != QChar(EOF) && ch != '\n');
                     tag = QStringLiteral("comment");
                 } else if (ch == '*') {
                     bool metAster = false;
@@ -1054,7 +1054,7 @@ QString CppCodeMarker::addMarkUp(const QString &in,
                     readChar();
 
                     while (!metAsterSlash) {
-                        if (ch == EOF)
+                        if (ch == QChar(EOF))
                             break;
 
                         if (ch == '*')
