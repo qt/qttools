@@ -552,10 +552,12 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
     }
 #endif
     case CXCursor_EnumDecl: {
-        QString t = fromCXString(clang_getCursorSpelling(cursor));
-        if (findNodeForCursor(qdb_, cursor)) // Was already parsed, propably in another translation unit
+        if (findNodeForCursor(qdb_, cursor)) // Was already parsed, propably in another tu
             return CXChildVisit_Continue;
-        auto en = new EnumNode(parent_, fromCXString(clang_getCursorSpelling(cursor)));
+        QString enumTypeName = fromCXString(clang_getCursorSpelling(cursor));
+        if (enumTypeName.isEmpty())
+            enumTypeName = "anonymous";
+        auto en = new EnumNode(parent_, enumTypeName);
         en->setAccess(fromCX_CXXAccessSpecifier(clang_getCXXAccessSpecifier(cursor)));
         en->setLocation(fromCXSourceLocation(clang_getCursorLocation(cursor)));
         // Enum values
@@ -1081,6 +1083,7 @@ void ClangCodeParser::precompileHeaders()
  */
 void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QString& filePath)
 {
+    currentFile_ = filePath;
     flags_ = (CXTranslationUnit_Flags) (CXTranslationUnit_Incomplete | CXTranslationUnit_SkipFunctionBodies | CXTranslationUnit_KeepGoing);
     index_ = clang_createIndex(1, 0);
 
