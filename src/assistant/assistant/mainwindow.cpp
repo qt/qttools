@@ -297,8 +297,7 @@ MainWindow::MainWindow(CmdLineParser *cmdLine, QWidget *parent)
 MainWindow::~MainWindow()
 {
     TRACE_OBJ
-    if (m_qtDocInstaller)
-        delete m_qtDocInstaller;
+    delete m_qtDocInstaller;
 }
 
 bool MainWindow::usesDefaultCollection() const

@@ -121,7 +121,7 @@ void RemoteControl::splitInputString(const QString &input, QString &cmd,
     QString cmdLine = input.trimmed();
     int i = cmdLine.indexOf(QLatin1Char(' '));
     cmd = cmdLine.left(i);
-    arg = cmdLine.mid(i+1);
+    arg = cmdLine.mid(i + 1);
     cmd = cmd.toLower();
 }
 

@@ -90,10 +90,10 @@ public:
     QStringList filterAttributes(const QString &filterName = QString()) const;
     QStringList indicesForFilter(const QStringList &filterAttributes) const;
     void linksForKeyword(const QString &keyword, const QStringList &filterAttributes,
-        QMap<QString, QUrl> &linkMap) const;
+        QMap<QString, QUrl> *linkMap) const;
 
     void linksForIdentifier(const QString &id, const QStringList &filterAttributes,
-        QMap<QString, QUrl> &linkMap) const;
+        QMap<QString, QUrl> *linkMap) const;
 
     QList<QByteArray> contentsForFilter(const QStringList &filterAttributes) const;
     QUrl urlOfPath(const QString &relativePath) const;
@@ -104,20 +104,19 @@ public:
     QVariant metaData(const QString &name) const;
 
 private:
-    void initObject(const QString &dbName, const QString &uniqueId);
     QUrl buildQUrl(const QString &ns, const QString &folder,
         const QString &relFileName, const QString &anchor) const;
     QString mergeList(const QStringList &list) const;
     QString quote(const QString &string) const;
 
-    bool m_initDone;
+    bool m_initDone = false;
     QString m_dbName;
     QString m_uniqueId;
     QString m_error;
-    QSqlQuery *m_query;
+    QSqlQuery *m_query = nullptr;
     mutable QString m_namespace;
     QSet<QString> m_viewAttributes;
-    bool m_useAttributesCache;
+    bool m_useAttributesCache = false;
     QSet<int> m_indicesCache;
 };
 

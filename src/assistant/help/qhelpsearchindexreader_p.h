@@ -69,13 +69,12 @@ class QHelpSearchIndexReader : public QThread
     Q_OBJECT
 
 public:
-    QHelpSearchIndexReader() = default;
     ~QHelpSearchIndexReader();
 
     void cancelSearching();
     void search(const QString &collectionFile,
-        const QString &indexFilesFolder,
-        const QString &searchInput);
+                const QString &indexFilesFolder,
+                const QString &searchInput);
     int searchResultCount() const;
     QVector<QHelpSearchResult> searchResults(int start, int end) const;
 

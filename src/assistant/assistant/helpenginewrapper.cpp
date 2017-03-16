@@ -121,7 +121,7 @@ HelpEngineWrapper &HelpEngineWrapper::instance(const QString &collectionFile)
      * Note that this Singleton cannot be static, because it has to be
      * deleted before the QApplication.
      */
-    if (helpEngineWrapper == 0)
+    if (!helpEngineWrapper)
         helpEngineWrapper = new HelpEngineWrapper(collectionFile);
     return *helpEngineWrapper;
 }
@@ -817,7 +817,7 @@ void HelpEngineWrapperPrivate::qchFileChanged(const QString &fileName,
      * was sent.
      */
 
-    const auto it = m_recentQchUpdates.find(fileName);
+    const auto &it = m_recentQchUpdates.find(fileName);
     const QDateTime &now = QDateTime::currentDateTime();
 
      // Case 1: This is the first recent signal for the file.

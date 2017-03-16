@@ -111,7 +111,7 @@ bool IndexWindow::eventFilter(QObject *obj, QEvent *e)
             }
             break;
         case Qt::Key_Down:
-            idx = m_indexWidget->model()->index(idx.row()+1,
+            idx = m_indexWidget->model()->index(idx.row() + 1,
                 idx.column(), idx.parent());
             if (idx.isValid()) {
                 m_indexWidget->setCurrentIndex(idx);

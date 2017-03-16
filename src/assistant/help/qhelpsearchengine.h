@@ -51,7 +51,6 @@
 
 QT_BEGIN_NAMESPACE
 
-
 class QHelpEngineCore;
 class QHelpSearchQueryWidget;
 class QHelpSearchEnginePrivate;

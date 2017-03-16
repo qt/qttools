@@ -99,11 +99,8 @@ private:
 
     QHelpSearchQueryWidgetPrivate()
         : QObject()
-        , m_compactMode(false)
         , m_searchCompleter(new CompleterModel(this), this)
     {
-        m_searchButton = 0;
-        m_lineEdit = 0;
     }
 
     ~QHelpSearchQueryWidgetPrivate()
@@ -196,12 +193,12 @@ private slots:
 private:
     friend class QHelpSearchQueryWidget;
 
-    bool m_compactMode;
-    QLabel *m_searchLabel;
-    QPushButton *m_searchButton;
-    QLineEdit *m_lineEdit;
-    QToolButton *m_nextQueryButton;
-    QToolButton *m_prevQueryButton;
+    bool m_compactMode = false;
+    QLabel *m_searchLabel = nullptr;
+    QPushButton *m_searchButton = nullptr;
+    QLineEdit *m_lineEdit = nullptr;
+    QToolButton *m_nextQueryButton = nullptr;
+    QToolButton *m_prevQueryButton = nullptr;
     QueryHistory m_queries;
     QCompleter m_searchCompleter;
 };

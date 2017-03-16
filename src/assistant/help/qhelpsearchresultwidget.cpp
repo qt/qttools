@@ -74,7 +74,7 @@ public:
         QString htmlFile = QString(QLatin1String("<html><head><title>%1"
             "</title></head><body>")).arg(tr("Search Results"));
 
-        int count = results.count();
+        const int count = results.count();
         if (count != 0) {
             if (isIndexing)
                 htmlFile += QString(QLatin1String("<div style=\"text-align:left;"
@@ -125,7 +125,7 @@ private slots:
     {
         if (!searchEngine.isNull()) {
             showFirstResultPage();
-            updateNextButtonState(((hitsCount > 20) ? true : false));
+            updateNextButtonState((hitsCount > 20) ? true : false);
         }
     }
 
@@ -181,7 +181,7 @@ private slots:
                 count = 20;
 
             resultLastToShow -= count;
-            resultFirstToShow = resultLastToShow -20;
+            resultFirstToShow = resultLastToShow - 20;
 
             resultTextBrowser->showResultPage(searchEngine->searchResults(resultFirstToShow,
                 resultLastToShow), isIndexing);
@@ -217,19 +217,7 @@ private:
     QHelpSearchResultWidgetPrivate(QHelpSearchEngine *engine)
         : QObject()
         , searchEngine(engine)
-        , isIndexing(false)
     {
-        resultTextBrowser = 0;
-
-        resultLastToShow = 20;
-        resultFirstToShow = 0;
-
-        firstResultPage = 0;
-        previousResultPage = 0;
-        hitsLabel = 0;
-        nextResultPage = 0;
-        lastResultPage = 0;
-
         connect(searchEngine.data(), &QHelpSearchEngine::indexingStarted,
                 this, &QHelpSearchResultWidgetPrivate::indexingStarted);
         connect(searchEngine.data(), &QHelpSearchEngine::indexingFinished,
@@ -274,17 +262,17 @@ private:
 
     QPointer<QHelpSearchEngine> searchEngine;
 
-    QResultWidget *resultTextBrowser;
+    QResultWidget *resultTextBrowser = nullptr;
 
-    int resultLastToShow;
-    int resultFirstToShow;
-    bool isIndexing;
+    int resultLastToShow = 20;
+    int resultFirstToShow = 0;
+    bool isIndexing = false;
 
-    QToolButton *firstResultPage;
-    QToolButton *previousResultPage;
-    QLabel *hitsLabel;
-    QToolButton *nextResultPage;
-    QToolButton *lastResultPage;
+    QToolButton *firstResultPage = nullptr;
+    QToolButton *previousResultPage = nullptr;
+    QLabel *hitsLabel = nullptr;
+    QToolButton *nextResultPage = nullptr;
+    QToolButton *lastResultPage = nullptr;
 };
 
 #include "qhelpsearchresultwidget.moc"
@@ -391,10 +379,9 @@ QHelpSearchResultWidget::~QHelpSearchResultWidget()
 */
 QUrl QHelpSearchResultWidget::linkAt(const QPoint &point)
 {
-    QUrl url;
     if (d->resultTextBrowser)
-        url = d->resultTextBrowser->anchorAt(point);
-    return url;
+        return d->resultTextBrowser->anchorAt(point);
+    return QUrl();
 }
 
 QT_END_NAMESPACE

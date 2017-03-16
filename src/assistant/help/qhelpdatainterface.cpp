@@ -99,13 +99,10 @@ QList<QHelpDataContentItem*> QHelpDataContentItem::children() const
     return m_children;
 }
 
-bool QHelpDataIndexItem::operator==(const QHelpDataIndexItem & other) const
+bool QHelpDataIndexItem::operator==(const QHelpDataIndexItem &other) const
 {
-    return (other.name == name)
-            && (other.reference == reference);
+    return (other.name == name) && (other.reference == reference);
 }
-
-
 
 /*!
     \internal

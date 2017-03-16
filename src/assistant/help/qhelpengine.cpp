@@ -53,20 +53,6 @@
 
 QT_BEGIN_NAMESPACE
 
-QHelpEnginePrivate::QHelpEnginePrivate()
-    : QHelpEngineCorePrivate()
-    , contentModel(0)
-    , contentWidget(0)
-    , indexModel(0)
-    , indexWidget(0)
-    , searchEngine(0)
-{
-}
-
-QHelpEnginePrivate::~QHelpEnginePrivate()
-{
-}
-
 void QHelpEnginePrivate::init(const QString &collectionFile,
                               QHelpEngineCore *helpEngineCore)
 {

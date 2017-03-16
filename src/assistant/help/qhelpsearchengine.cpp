@@ -150,7 +150,6 @@ QString QHelpSearchResult::snippet() const
 }
 
 
-
 class QHelpSearchEnginePrivate : public QObject
 {
     Q_OBJECT
@@ -164,12 +163,8 @@ signals:
 
 private:
     QHelpSearchEnginePrivate(QHelpEngineCore *helpEngine)
-        : queryWidget(0)
-        , resultWidget(0)
-        , helpEngine(helpEngine)
+        : helpEngine(helpEngine)
     {
-        indexReader = 0;
-        indexWriter = 0;
     }
 
     ~QHelpSearchEnginePrivate()
@@ -262,11 +257,11 @@ private:
 
     bool m_isIndexingScheduled = false;
 
-    QHelpSearchQueryWidget *queryWidget;
-    QHelpSearchResultWidget *resultWidget;
+    QHelpSearchQueryWidget *queryWidget = nullptr;
+    QHelpSearchResultWidget *resultWidget = nullptr;
 
-    fulltextsearch::QHelpSearchIndexReader *indexReader;
-    QHelpSearchIndexWriter *indexWriter;
+    fulltextsearch::QHelpSearchIndexReader *indexReader = nullptr;
+    QHelpSearchIndexWriter *indexWriter = nullptr;
 
     QPointer<QHelpEngineCore> helpEngine;
 
@@ -543,7 +538,6 @@ void QHelpSearchEngine::cancelSearching()
     d->cancelSearching();
 }
 
-
 /*!
     \since 5.9
     Starts the search process using the given search phrase \a searchInput.
@@ -578,6 +572,9 @@ void QHelpSearchEngine::search(const QList<QHelpSearchQuery> &queryList)
     d->search(queryList.first().wordList.join(QChar::Space));
 }
 
+/*!
+    \internal
+*/
 void QHelpSearchEngine::scheduleIndexDocumentation()
 {
     if (d->m_isIndexingScheduled)

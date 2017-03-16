@@ -63,7 +63,7 @@ void Reader::addNamespace(const QString &namespaceName, const QStringList &attri
 static QString namespacePlaceholders(const QMultiMap<QString, QStringList> &namespaces)
 {
     QString placeholders;
-    const auto namespaceList = namespaces.uniqueKeys();
+    const auto &namespaceList = namespaces.uniqueKeys();
     bool firstNS = true;
     for (const QString &ns : namespaceList) {
         if (firstNS)
@@ -95,7 +95,7 @@ static QString namespacePlaceholders(const QMultiMap<QString, QStringList> &name
 static void bindNamespacesAndAttributes(QSqlQuery *query, const QMultiMap<QString, QStringList> &namespaces)
 {
     QString placeholders;
-    const auto namespaceList = namespaces.uniqueKeys();
+    const auto &namespaceList = namespaces.uniqueKeys();
     for (const QString &ns : namespaceList) {
         query->addBindValue(ns);
 
@@ -111,7 +111,7 @@ QVector<QHelpSearchResult> Reader::queryTable(const QSqlDatabase &db,
                                          const QString &tableName,
                                          const QString &searchInput) const
 {
-    const QString nsPlaceholders = namespacePlaceholders(m_namespaces);
+    const QString &nsPlaceholders = namespacePlaceholders(m_namespaces);
     QSqlQuery query(db);
     query.prepare(QLatin1String("SELECT url, title, snippet(") + tableName +
                   QLatin1String(", -1, '<b>', '</b>', '...', '10') FROM ") + tableName +
@@ -125,9 +125,9 @@ QVector<QHelpSearchResult> Reader::queryTable(const QSqlDatabase &db,
     QVector<QHelpSearchResult> results;
 
     while (query.next()) {
-        const QString url = query.value(QLatin1String("url")).toString();
-        const QString title = query.value(QLatin1String("title")).toString();
-        const QString snippet = query.value(2).toString();
+        const QString &url = query.value(QLatin1String("url")).toString();
+        const QString &title = query.value(QLatin1String("title")).toString();
+        const QString &snippet = query.value(2).toString();
         results.append(QHelpSearchResult(url, title, snippet));
     }
 

@@ -147,7 +147,7 @@ void QhpWriter::writeKeywords()
         writeAttribute(QLatin1String("ref"), i.reference);
         if (m_prefix == FilePrefix) {
             QString str = i.reference.mid(
-                i.reference.lastIndexOf(QLatin1Char('/'))+1);
+                i.reference.lastIndexOf(QLatin1Char('/')) + 1);
             str = str.left(str.lastIndexOf(QLatin1Char('.')));
             writeAttribute(QLatin1String("id"), str + QLatin1String("::") + i.keyword);
         } else if (m_prefix == GlobalPrefix) {
