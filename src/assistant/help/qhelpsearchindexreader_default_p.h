@@ -51,11 +51,9 @@
 // We mean it.
 //
 
-#include "qhelpsearchindex_default_p.h"
 #include "qhelpsearchindexreader_p.h"
 
-#include <QtCore/QHash>
-#include <QtCore/QPair>
+QT_FORWARD_DECLARE_CLASS(QSqlDatabase)
 
 QT_BEGIN_NAMESPACE
 
@@ -64,55 +62,27 @@ namespace qt {
 
 class Reader
 {
-    typedef QList<QStringList> DocumentList;
-    typedef QHash<QString, Entry*> EntryTable;
-    typedef QPair<EntryTable, DocumentList> Index;
-    typedef QHash<QString, Index> IndexTable;
-
 public:
-    Reader();
-    ~Reader();
-
-    bool readIndex();
-    bool initCheck() const;
     void setIndexPath(const QString &path);
-    void filterFilesForAttributes(const QStringList &attributes);
-    void setIndexFile(const QString &namespaceName, const QString &attributes);
-    bool splitSearchTerm(const QString &searchTerm, QStringList *terms,
-        QStringList *termSeq, QStringList *seqWords);
+    void addNamespace(const QString &namespaceName, const QStringList &attributes);
 
-    void searchInIndex(const QStringList &terms);
-    QVector<DocumentInfo> hits();
-    bool searchForPattern(const QStringList &patterns,
-        const QStringList &words, const QByteArray &data);
+    void searchInDB(const QString &term);
+    QVector<QHelpSearchResult> searchResults() const;
 
 private:
-    QVector<Document> setupDummyTerm(const QStringList &terms, const EntryTable &entryTable);
-    QStringList getWildcardTerms(const QString &termStr, const EntryTable &entryTable);
-    void buildMiniIndex(const QString &string);
-    void reset();
-    void cleanupIndex(EntryTable &entryTable);
+    QVector<QHelpSearchResult> queryTable(const QSqlDatabase &db,
+                                          const QString &tableName,
+                                          const QString &term) const;
 
-private:
-    uint wordNum;
-    QString indexPath;
-    QString indexFile;
-    QString documentFile;
-
-    IndexTable indexTable;
-    QList<TermInfo> termList;
-    IndexTable searchIndexTable;
-    QHash<QString, PosEntry*> miniIndex;
+    QString m_indexPath;
+    QMultiMap<QString, QStringList> m_namespaces;
+    QVector<QHelpSearchResult> m_searchResults;
 };
 
 
 class QHelpSearchIndexReaderDefault : public QHelpSearchIndexReader
 {
     Q_OBJECT
-
-public:
-    QHelpSearchIndexReaderDefault();
-    ~QHelpSearchIndexReaderDefault();
 
 private:
     void run() override;

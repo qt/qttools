@@ -55,10 +55,8 @@
 
 #include <QtCore/QList>
 #include <QtCore/QMutex>
-#include <QtCore/QObject>
-#include <QtCore/QString>
 #include <QtCore/QThread>
-#include <QtCore/QWaitCondition>
+#include <QtCore/QVector>
 
 QT_BEGIN_NAMESPACE
 
@@ -71,7 +69,7 @@ class QHelpSearchIndexReader : public QThread
     Q_OBJECT
 
 public:
-    QHelpSearchIndexReader();
+    QHelpSearchIndexReader() = default;
     ~QHelpSearchIndexReader();
 
     void cancelSearching();
@@ -79,16 +77,16 @@ public:
         const QString &indexFilesFolder,
         const QList<QHelpSearchQuery> &queryList);
     int hitCount() const;
-    QList<QHelpSearchEngine::SearchHit> hits(int start, int end) const;
+    QVector<QHelpSearchResult> searchResults(int start, int end) const;
 
 signals:
     void searchingStarted();
-    void searchingFinished(int hits);
+    void searchingFinished(int searchResults);
 
 protected:
-    mutable QMutex mutex;
-    QList<QHelpSearchEngine::SearchHit> hitList;
-    bool m_cancel;
+    mutable QMutex m_mutex;
+    QVector<QHelpSearchResult> m_searchResults;
+    bool m_cancel = false;
     QString m_collectionFile;
     QList<QHelpSearchQuery> m_query;
     QString m_indexFilesFolder;

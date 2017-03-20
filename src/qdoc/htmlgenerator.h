@@ -210,6 +210,7 @@ private:
     QString getLink(const Atom *atom, const Node *relative, const Node** node);
     QString getAutoLink(const Atom *atom, const Node *relative, const Node** node);
 
+    inline bool hasBrief(const Node *node);
     QString registerRef(const QString& ref);
     virtual QString fileBase(const Node *node) const Q_DECL_OVERRIDE;
     QString fileName(const Node *node);
@@ -274,6 +275,15 @@ public:
     static bool debugging_on;
     static QString divNavTop;
 };
+
+// Do not display \brief for QML/JS types, document and collection nodes
+inline bool HtmlGenerator::hasBrief(const Node *node)
+{
+    return !(node->isQmlType()
+             || node->isDocumentNode()
+             || node->isCollectionNode()
+             || node->isJsType());
+}
 
 #define HTMLGENERATOR_ADDRESS           "address"
 #define HTMLGENERATOR_FOOTER            "footer"

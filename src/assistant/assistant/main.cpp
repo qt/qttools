@@ -42,8 +42,6 @@
 #include <QtHelp/QHelpEngine>
 #include <QtHelp/QHelpSearchEngine>
 
-#include <QtNetwork/QLocalSocket>
-
 #include <QtSql/QSqlDatabase>
 
 #if defined(BROWSER_QTWEBKIT)
@@ -171,36 +169,14 @@ bool removeSearchIndex(const QString &collectionFile)
     QString path = QFileInfo(collectionFile).path();
     path += QLatin1Char('/') + indexFilesFolder(collectionFile);
 
-    QLocalSocket localSocket;
-    localSocket.connectToServer(QString(QLatin1String("QtAssistant%1"))
-                                .arg(QLatin1String(QT_VERSION_STR)));
-
-    QDir dir(path); // check if there is no other instance ruinning
-    if (!dir.exists() || localSocket.waitForConnected())
+    QDir dir(path);
+    if (!dir.exists())
         return false;
 
     const QStringList &list = dir.entryList(QDir::Files | QDir::Hidden);
     for (const QString &item : list)
         dir.remove(item);
     return true;
-}
-
-bool rebuildSearchIndex(QCoreApplication *app, const QString &collectionFile,
-                        CmdLineParser &cmd)
-{
-    TRACE_OBJ
-    QHelpEngine engine(collectionFile);
-    if (!engine.setupData()) {
-        cmd.showMessage(QCoreApplication::translate("Assistant", "Error: %1")
-                        .arg(engine.error()), true);
-        return false;
-    }
-
-    QHelpSearchEngine * const searchEngine = engine.searchEngine();
-    QObject::connect(searchEngine, SIGNAL(indexingFinished()), app,
-                     SLOT(quit()));
-    searchEngine->reindexDocumentation();
-    return app->exec() == 0;
 }
 
 QCoreApplication* createApplication(int &argc, char *argv[])
@@ -385,11 +361,6 @@ int main(int argc, char *argv[])
 
     if (cmd.removeSearchIndex()) {
         return removeSearchIndex(cachedCollectionFile)
-            ? EXIT_SUCCESS : EXIT_FAILURE;
-    }
-
-    if (cmd.rebuildSearchIndex()) {
-        return rebuildSearchIndex(a.data(), cachedCollectionFile, cmd)
             ? EXIT_SUCCESS : EXIT_FAILURE;
     }
 

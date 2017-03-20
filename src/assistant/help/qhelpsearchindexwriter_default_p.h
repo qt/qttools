@@ -51,15 +51,10 @@
 // We mean it.
 //
 
-#include "qhelpsearchindex_default_p.h"
-
-#include <QtCore/QHash>
 #include <QtCore/QMutex>
-#include <QtCore/QObject>
-#include <QtCore/QString>
 #include <QtCore/QThread>
-#include <QtCore/QStringList>
-#include <QtCore/QWaitCondition>
+
+QT_FORWARD_DECLARE_CLASS(QSqlDatabase)
 
 QT_BEGIN_NAMESPACE
 
@@ -72,20 +67,33 @@ public:
     Writer(const QString &path);
     ~Writer();
 
-    void reset();
-    bool writeIndex() const;
-    void removeIndex() const;
-    void setIndexFile(const QString &namespaceName, const QString &attributes);
-    void insertInIndex(const QString &string, int docNum);
-    void insertInDocumentList(const QString &title, const QString &url);
+    bool tryInit(bool reindex);
+    void flush();
 
+    void removeNamespace(const QString &namespaceName);
+    bool hasNamespace(const QString &namespaceName);
+    void insertDoc(const QString &namespaceName,
+                   const QString &attributes,
+                   const QString &url,
+                   const QString &title,
+                   const QString &contents);
+    void startTransaction();
+    void endTransaction();
 private:
-    QString indexPath;
-    QString indexFile;
-    QString documentFile;
+    void init(bool reindex);
+    bool hasDB();
+    void clearLegacyIndex();
 
-    QHash<QString, Entry*> index;
-    QList<QStringList> documentList;
+    const QString m_dbDir;
+    QString m_uniqueId;
+
+    bool m_needOptimize = false;
+    QSqlDatabase *m_db = nullptr;
+    QVariantList m_namespaces;
+    QVariantList m_attributes;
+    QVariantList m_urls;
+    QVariantList m_titles;
+    QVariantList m_contents;
 };
 
 
@@ -107,12 +115,9 @@ signals:
 
 private:
     void run() override;
-    QString addNamespace(const QString namespaces, const QString &namespaceName);
-    QString removeNamespace(const QString namespaces, const QString &namespaceName);
 
 private:
-    QMutex mutex;
-    QWaitCondition waitCondition;
+    QMutex m_mutex;
 
     bool m_cancel;
     bool m_reindex;

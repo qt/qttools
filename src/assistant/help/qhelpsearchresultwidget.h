@@ -51,7 +51,6 @@
 
 QT_BEGIN_NAMESPACE
 
-
 class QHelpSearchResultWidgetPrivate;
 
 class QHELP_EXPORT QHelpSearchResultWidget : public QWidget

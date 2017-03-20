@@ -43,13 +43,8 @@
 #include "qhelpsearchresultwidget.h"
 
 #include "qhelpsearchindexreader_p.h"
-#if defined(QT_CLUCENE_SUPPORT)
-#   include "qhelpsearchindexreader_clucene_p.h"
-#   include "qhelpsearchindexwriter_clucene_p.h"
-#else
-#   include "qhelpsearchindexreader_default_p.h"
-#   include "qhelpsearchindexwriter_default_p.h"
-#endif
+#include "qhelpsearchindexreader_default_p.h"
+#include "qhelpsearchindexwriter_default_p.h"
 
 #include <QtCore/QDir>
 #include <QtCore/QFile>
@@ -57,14 +52,65 @@
 #include <QtCore/QVariant>
 #include <QtCore/QThread>
 #include <QtCore/QPointer>
+#include <QtCore/QTimer>
 
 QT_BEGIN_NAMESPACE
 
-#if defined(QT_CLUCENE_SUPPORT)
-    using namespace fulltextsearch::clucene;
-#else
-    using namespace fulltextsearch::qt;
-#endif
+using namespace fulltextsearch::qt;
+
+class QHelpSearchResultData : public QSharedData
+{
+public:
+    QUrl m_url;
+    QString m_title;
+    QString m_snippet;
+};
+
+QHelpSearchResult::QHelpSearchResult()
+    : d(new QHelpSearchResultData)
+{
+}
+
+
+QHelpSearchResult::QHelpSearchResult(const QHelpSearchResult &other)
+    : d(other.d)
+{
+}
+
+QHelpSearchResult::QHelpSearchResult(const QUrl &url, const QString &title, const QString &snippet)
+    : d(new QHelpSearchResultData)
+{
+    d->m_url = url;
+    d->m_title = title;
+    d->m_snippet = snippet;
+}
+
+QHelpSearchResult::~QHelpSearchResult()
+{
+}
+
+QHelpSearchResult &QHelpSearchResult::operator=(const QHelpSearchResult &other)
+{
+    d = other.d;
+    return *this;
+}
+
+QString QHelpSearchResult::title() const
+{
+    return d->m_title;
+}
+
+QUrl QHelpSearchResult::url() const
+{
+    return d->m_url;
+}
+
+QString QHelpSearchResult::snippet() const
+{
+    return d->m_snippet;
+}
+
+
 
 class QHelpSearchEnginePrivate : public QObject
 {
@@ -75,7 +121,7 @@ signals:
     void indexingFinished();
 
     void searchingStarted();
-    void searchingFinished(int hits);
+    void searchingFinished(int searchResults);
 
 private:
     QHelpSearchEnginePrivate(QHelpEngineCore *helpEngine)
@@ -102,11 +148,11 @@ private:
         return count;
     }
 
-    QList<QHelpSearchEngine::SearchHit> hits(int start, int end) const
+    QVector<QHelpSearchResult> searchResults(int start, int end) const
     {
         return indexReader ?
-                indexReader->hits(start, end) :
-                QList<QHelpSearchEngine::SearchHit>();
+                indexReader->searchResults(start, end) :
+                QVector<QHelpSearchResult>();
     }
 
     void updateIndex(bool reindex = false)
@@ -122,7 +168,6 @@ private:
 
             connect(indexWriter, SIGNAL(indexingStarted()), this, SIGNAL(indexingStarted()));
             connect(indexWriter, SIGNAL(indexingFinished()), this, SIGNAL(indexingFinished()));
-            connect(indexWriter, SIGNAL(indexingFinished()), this, SLOT(optimizeIndex()));
         }
 
         indexWriter->cancelIndexing();
@@ -145,11 +190,7 @@ private:
             return;
 
         if (!indexReader) {
-#if defined(QT_CLUCENE_SUPPORT)
-            indexReader = new QHelpSearchIndexReaderClucene();
-#else
             indexReader = new QHelpSearchIndexReaderDefault();
-#endif // QT_CLUCENE_SUPPORT
             connect(indexReader, SIGNAL(searchingStarted()), this, SIGNAL(searchingStarted()));
             connect(indexReader, SIGNAL(searchingFinished(int)), this, SIGNAL(searchingFinished(int)));
         }
@@ -177,18 +218,10 @@ private:
         return indexFilesFolder;
     }
 
-private slots:
-    void optimizeIndex()
-    {
-#if defined(QT_CLUCENE_SUPPORT)
-        if (indexWriter && !helpEngine.isNull()) {
-            indexWriter->optimizeIndex();
-        }
-#endif
-    }
-
 private:
     friend class QHelpSearchEngine;
+
+    bool m_isIndexingScheduled = false;
 
     QHelpSearchQueryWidget *queryWidget;
     QHelpSearchResultWidget *resultWidget;
@@ -323,7 +356,7 @@ QHelpSearchEngine::QHelpSearchEngine(QHelpEngineCore *helpEngine, QObject *paren
 {
     d = new QHelpSearchEnginePrivate(helpEngine);
 
-    connect(helpEngine, SIGNAL(setupFinished()), this, SLOT(indexDocumentation()));
+    connect(helpEngine, SIGNAL(setupFinished()), this, SLOT(scheduleIndexDocumentation()));
 
     connect(d, SIGNAL(indexingStarted()), this, SIGNAL(indexingStarted()));
     connect(d, SIGNAL(indexingFinished()), this, SIGNAL(indexingFinished()));
@@ -381,6 +414,7 @@ int QHelpSearchEngine::hitCount() const
     return d->hitCount();
 }
 
+// TODO: obsolete the SearchHit typedef and hits methods
 /*!
     \typedef QHelpSearchEngine::SearchHit
 
@@ -395,7 +429,16 @@ int QHelpSearchEngine::hitCount() const
 */
 QList<QHelpSearchEngine::SearchHit> QHelpSearchEngine::hits(int start, int end) const
 {
-   return d->hits(start, end);
+    QList<QHelpSearchEngine::SearchHit> hits;
+    for (const QHelpSearchResult &result : searchResults(start, end))
+        hits.append(qMakePair(result.url().toString(), result.title()));
+    return hits;
+}
+
+// TODO: add a doc for searchResults() and for QHelpSearchResult class
+QVector<QHelpSearchResult> QHelpSearchEngine::searchResults(int start, int end) const
+{
+    return d->searchResults(start, end);
 }
 
 /*!
@@ -440,8 +483,18 @@ void QHelpSearchEngine::search(const QList<QHelpSearchQuery> &queryList)
     d->search(queryList);
 }
 
+void QHelpSearchEngine::scheduleIndexDocumentation()
+{
+    if (d->m_isIndexingScheduled)
+        return;
+
+    d->m_isIndexingScheduled = true;
+    QTimer::singleShot(0, this, &QHelpSearchEngine::indexDocumentation);
+}
+
 void QHelpSearchEngine::indexDocumentation()
 {
+    d->m_isIndexingScheduled = false;
     d->updateIndex();
 }
 

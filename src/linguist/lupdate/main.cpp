@@ -40,6 +40,7 @@
 #include <QtCore/QDirIterator>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
+#include <QtCore/QRegExp>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 #include <QtCore/QTranslator>

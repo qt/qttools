@@ -94,7 +94,6 @@ private:
     RegisterState m_register;
     QString m_currentFilter;
     bool m_removeSearchIndex;
-    bool m_rebuildSearchIndex;
     bool m_quiet;
     QString m_error;
 };

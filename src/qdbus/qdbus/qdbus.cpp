@@ -30,6 +30,7 @@
 #include <stdlib.h>
 
 #include <QtCore/QCoreApplication>
+#include <QtCore/QRegExp>
 #include <QtCore/QStringList>
 #include <QtCore/qmetaobject.h>
 #include <QtXml/QDomDocument>

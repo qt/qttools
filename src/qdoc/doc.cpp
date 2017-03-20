@@ -2968,8 +2968,11 @@ Text Doc::trimmedBriefText(const QString &className) const
           should be rethought.
         */
         while (atom) {
-            if (atom->type() == Atom::AutoLink || atom->type() == Atom::String) {
+            if (atom->type() == Atom::AutoLink
+                || atom->type() == Atom::String) {
                 briefStr += atom->string();
+            } else if (atom->type() == Atom::C) {
+                briefStr += Generator::plainCode(atom->string());
             }
             atom = atom->next();
         }

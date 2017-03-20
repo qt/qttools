@@ -64,9 +64,5 @@
     the \l{GNU General Public License, version 2}.
     See \l{Qt Licensing} for further details.
 
-    Qt Help uses the CLucene indexing library to provide full-text searching
-    capabilities for Qt Assistant and applications that use Qt Help features.
-    CLucene is available under GPL v2.1 \e{or} Apache License, Version 2.0.
-
     \generatelist{groupsbymodule attributions-qthelp}
 */

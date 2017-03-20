@@ -15,20 +15,20 @@
 	<key>CFBundleExecutable</key>
 	<string>@EXECUTABLE@</string>
 	<key>CFBundleDocumentTypes</key>
-        <array>
-                <dict>
-                        <key>CFBundleTypeExtensions</key>
-                        <array>
-                                <string>ui</string>
-                        </array>
+	<array>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>ui</string>
+			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>uifile.icns</string>
-                        <key>CFBundleTypeRole</key>
-                        <string>Editor</string>
-                        <key>LSIsAppleDefaultForType</key>
-                        <true/>
-                </dict>
-        </array>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSIsAppleDefaultForType</key>
+			<true/>
+		</dict>
+	</array>
 	<key>NSHumanReadableCopyright</key>
 	<string>(C) 2017 The Qt Company Ltd</string>
 </dict>

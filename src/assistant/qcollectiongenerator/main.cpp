@@ -42,6 +42,7 @@
 #include <QtCore/QLocale>
 #include <QtCore/QLibraryInfo>
 #include <QtHelp/QHelpEngineCore>
+#include <QtCore/QRegExp>
 #include <QtCore/QXmlStreamReader>
 
 #include <QtGui/QGuiApplication>

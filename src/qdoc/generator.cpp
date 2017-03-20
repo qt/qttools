@@ -93,6 +93,12 @@ bool Generator::qdocWriteQaPages_ = false;
 bool Generator::useOutputSubdirs_ = true;
 QmlTypeNode* Generator::qmlTypeContext_ = 0;
 
+static QRegExp tag("</?@[^>]*>");
+static QLatin1String amp("&amp;");
+static QLatin1String gt("&gt;");
+static QLatin1String lt("&lt;");
+static QLatin1String quot("&quot;");
+
 void Generator::startDebugging(const QString& message)
 {
     debugging_ = true;
@@ -121,12 +127,7 @@ void Generator::debug(const QString& message)
   available to the generator subclasses.
  */
 Generator::Generator()
-    : amp("&amp;"),
-      gt("&gt;"),
-      lt("&lt;"),
-      quot("&quot;"),
-      tag("</?@[^>]*>"),
-      inLink_(false),
+    : inLink_(false),
       inContents_(false),
       inSectionHeading_(false),
       inTableHeader_(false),

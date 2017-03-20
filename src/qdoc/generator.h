@@ -99,6 +99,7 @@ public:
     static void setQmlTypeContext(QmlTypeNode* t) { qmlTypeContext_ = t; }
     static QmlTypeNode* qmlTypeContext() { return qmlTypeContext_; }
     static QString cleanRef(const QString& ref);
+    static QString plainCode(const QString& markedCode);
 
 protected:
     virtual void beginSubPage(const Aggregate* node, const QString& fileName);
@@ -170,7 +171,6 @@ protected:
                   QStringRef* contents,
                   QStringRef* par1 = 0,
                   bool debug = false);
-    QString plainCode(const QString& markedCode);
     void setImageFileExtensions(const QStringList& extensions);
     void unknownAtom(const Atom *atom);
     int appendSortedQmlNames(Text& text, const Node* base, const NodeList& subs);
@@ -230,12 +230,6 @@ private:
     static QmlTypeNode* qmlTypeContext_;
 
     void generateReimplementedFrom(const FunctionNode *func, CodeMarker *marker);
-
-    QString amp;
-    QString gt;
-    QString lt;
-    QString quot;
-    QRegExp tag;
 
  protected:
     const Config* config_;

@@ -45,6 +45,7 @@
 #include <QtCore/QMap>
 #include <QtCore/QUrl>
 #include <QtCore/QObject>
+#include <QtCore/QSharedDataPointer>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 
@@ -53,8 +54,11 @@ QT_BEGIN_NAMESPACE
 
 class QHelpEngineCore;
 class QHelpSearchQueryWidget;
-class QHelpSearchResultWidget;
 class QHelpSearchEnginePrivate;
+class QHelpSearchResultData;
+class QHelpSearchResultWidget;
+
+// TODO: obsolete it and use just QString for input
 
 class QHELP_EXPORT QHelpSearchQuery
 {
@@ -68,6 +72,26 @@ public:
 
     FieldName fieldName;
     QStringList wordList;
+};
+
+// TODO: Add doc for it
+
+class QHELP_EXPORT QHelpSearchResult
+{
+public:
+    QHelpSearchResult();
+    QHelpSearchResult(const QHelpSearchResult &other);
+    QHelpSearchResult(const QUrl &url, const QString &title, const QString &snippet);
+    ~QHelpSearchResult();
+
+    QHelpSearchResult &operator=(const QHelpSearchResult &other);
+
+    QString title() const;
+    QUrl url() const;
+    QString snippet() const;
+
+private:
+    QSharedDataPointer<QHelpSearchResultData> d;
 };
 
 class QHELP_EXPORT QHelpSearchEngine : public QObject
@@ -89,6 +113,8 @@ public:
     typedef QPair<QString, QString> SearchHit;
     QList<SearchHit> hits(int start, int end) const;
 
+    QVector<QHelpSearchResult> searchResults(int start, int end) const;
+
     QList<QHelpSearchQuery> query() const;
 
 public Q_SLOTS:
@@ -106,6 +132,7 @@ Q_SIGNALS:
     void searchingFinished(int hits);
 
 private Q_SLOTS:
+    void scheduleIndexDocumentation();
     void indexDocumentation();
 
 private:

@@ -147,7 +147,7 @@ HelpEngineWrapper::HelpEngineWrapper(const QString &collectionFile)
      * called after the new docs have been installed.
      */
     disconnect(d->m_helpEngine, SIGNAL(setupFinished()),
-            searchEngine(), SLOT(indexDocumentation()));
+            searchEngine(), SLOT(scheduleIndexDocumentation()));
 
     connect(d, SIGNAL(documentationRemoved(QString)),
             this, SIGNAL(documentationRemoved(QString)));
@@ -176,7 +176,7 @@ void HelpEngineWrapper::initialDocSetupDone()
 {
     TRACE_OBJ
     connect(d->m_helpEngine, SIGNAL(setupFinished()),
-            searchEngine(), SLOT(indexDocumentation()));
+            searchEngine(), SLOT(scheduleIndexDocumentation()));
     setupData();
 }
 
