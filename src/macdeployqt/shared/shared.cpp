@@ -1380,13 +1380,6 @@ QSet<QString> codesignBundle(const QString &identity,
     QStringList frameworkPaths = findAppFrameworkPaths(appBundlePath);
     foreach (const QString &frameworkPath, frameworkPaths) {
 
-        // Add all files for a framework as a catch all.
-        QStringList bundleFiles = findAppBundleFiles(frameworkPath, getAbsoltuePath);
-        foreach (const QString &binary, bundleFiles) {
-            pendingBinaries.push(binary);
-            pendingBinariesSet.insert(binary);
-        }
-
         // Prioritise first to sign any additional inner bundles found in the Helpers folder (e.g
         // used by QtWebEngine).
         QDirIterator helpersIterator(frameworkPath, QStringList() << QString::fromLatin1("Helpers"), QDir::Dirs | QDir::NoSymLinks, QDirIterator::Subdirectories);
@@ -1406,7 +1399,7 @@ QSet<QString> codesignBundle(const QString &identity,
         while (librariesIterator.hasNext()) {
             librariesIterator.next();
             QString librariesPath = librariesIterator.filePath();
-            bundleFiles = findAppBundleFiles(librariesPath, getAbsoltuePath);
+            QStringList bundleFiles = findAppBundleFiles(librariesPath, getAbsoltuePath);
             foreach (const QString &binary, bundleFiles) {
                 pendingBinaries.push(binary);
                 pendingBinariesSet.insert(binary);
