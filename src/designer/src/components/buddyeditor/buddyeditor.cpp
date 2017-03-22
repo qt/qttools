@@ -271,7 +271,7 @@ void BuddyEditor::endConnection(QWidget *target, const QPoint &pos)
 
 void BuddyEditor::widgetRemoved(QWidget *widget)
 {
-    QList<QWidget*> child_list = widget->findChildren<QWidget*>();
+    QWidgetList child_list = widget->findChildren<QWidget*>();
     child_list.prepend(widget);
 
     ConnectionSet remove_set;

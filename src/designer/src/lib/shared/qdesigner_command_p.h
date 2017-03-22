@@ -127,7 +127,7 @@ protected:
 private:
     QPointer<QWidget> m_widget;
     QPointer<QWidget> m_oldPreceding;
-    QList<QWidget *> m_oldParentZOrder;
+    QWidgetList m_oldParentZOrder;
 };
 
 class QDESIGNER_SHARED_EXPORT RaiseWidgetCommand: public ChangeZOrderCommand
@@ -242,8 +242,8 @@ private:
     QPoint m_newPos;
     QPointer<QWidget> m_oldParentWidget;
     QPointer<QWidget> m_newParentWidget;
-    QList<QWidget *> m_oldParentList;
-    QList<QWidget *> m_oldParentZOrder;
+    QWidgetList m_oldParentList;
+    QWidgetList m_oldParentZOrder;
 };
 
 class QDESIGNER_SHARED_EXPORT ChangeFormLayoutItemRoleCommand : public QDesignerFormWindowCommand
@@ -296,12 +296,12 @@ class QDESIGNER_SHARED_EXPORT TabOrderCommand: public QDesignerFormWindowCommand
 public:
     explicit TabOrderCommand(QDesignerFormWindowInterface *formWindow);
 
-    void init(const QList<QWidget*> &newTabOrder);
+    void init(const QWidgetList &newTabOrder);
 
-    inline QList<QWidget*> oldTabOrder() const
+    inline QWidgetList oldTabOrder() const
     { return m_oldTabOrder; }
 
-    inline QList<QWidget*> newTabOrder() const
+    inline QWidgetList newTabOrder() const
     { return m_newTabOrder; }
 
     virtual void redo();
@@ -309,8 +309,8 @@ public:
 
 private:
     QDesignerMetaDataBaseItemInterface *m_widgetItem;
-    QList<QWidget*> m_oldTabOrder;
-    QList<QWidget*> m_newTabOrder;
+    QWidgetList m_oldTabOrder;
+    QWidgetList m_newTabOrder;
 };
 
 class QDESIGNER_SHARED_EXPORT PromoteToCustomWidgetCommand : public QDesignerFormWindowCommand

@@ -622,7 +622,7 @@ void QDesignerWorkbench::removeFormWindow(QDesignerFormWindow *formWindow)
 
 void QDesignerWorkbench::initializeCorePlugins()
 {
-    QList<QObject*> plugins = QPluginLoader::staticInstances();
+    QObjectList plugins = QPluginLoader::staticInstances();
     plugins += core()->pluginManager()->instances();
 
     for (QObject *plugin : qAsConst(plugins)) {

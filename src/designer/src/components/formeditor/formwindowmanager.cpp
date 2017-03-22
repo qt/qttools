@@ -556,7 +556,7 @@ void FormWindowManager::slotActionRaiseActivated()
 
 static inline QWidget *findLayoutContainer(const FormWindow *fw)
 {
-    QList<QWidget*> l(fw->selectedWidgets());
+    QWidgetList l(fw->selectedWidgets());
     fw->simplifySelection(&l);
     return l.empty() ? fw->mainContainer() : l.front();
 }
@@ -584,7 +584,7 @@ void FormWindowManager::createLayout()
 
 void FormWindowManager::slotActionBreakLayoutActivated()
 {
-    const QList<QWidget *> layouts = layoutsToBeBroken();
+    const QWidgetList layouts = layoutsToBeBroken();
     if (layouts.isEmpty())
         return;
 
@@ -621,7 +621,7 @@ void FormWindowManager::slotActionAdjustSizeActivated()
 
     m_activeFormWindow->beginCommand(tr("Adjust Size"));
 
-    QList<QWidget*> selectedWidgets = m_activeFormWindow->selectedWidgets();
+    QWidgetList selectedWidgets = m_activeFormWindow->selectedWidgets();
     m_activeFormWindow->simplifySelection(&selectedWidgets);
 
     if (selectedWidgets.isEmpty()) {
@@ -672,7 +672,7 @@ void FormWindowManager::slotActionGroupPreviewInStyle(const QString &style, int 
 QWidgetList FormWindowManager::layoutsToBeBroken(QWidget *w) const
 {
     if (!w)
-        return QList<QWidget *>();
+        return QWidgetList();
 
     if (debugFWM)
         qDebug() << "layoutsToBeBroken: " << w;
@@ -706,17 +706,17 @@ QWidgetList FormWindowManager::layoutsToBeBroken(QWidget *w) const
         if (qobject_cast<const QSplitter *>(widget)) {
             if (debugFWM)
                 qDebug() << "layoutsToBeBroken: Splitter special";
-            QList<QWidget *> list = layoutsToBeBroken(parent);
+            QWidgetList list = layoutsToBeBroken(parent);
             list.append(widget);
             return list;
         }
         if (debugFWM)
             qDebug() << "layoutsToBeBroken: Is a container but doesn't have a managed layout (has an internal layout), returning 0";
-        return QList<QWidget *>();
+        return QWidgetList();
     }
 
     if (managedLayout) {
-        QList<QWidget *> list;
+        QWidgetList list;
         if (debugFWM)
             qDebug() << "layoutsToBeBroken: Is a container and has a layout";
         if (qobject_cast<const QLayoutWidget *>(widget)) {
@@ -729,7 +729,7 @@ QWidgetList FormWindowManager::layoutsToBeBroken(QWidget *w) const
     }
     if (debugFWM)
         qDebug() << "layoutsToBeBroken: Is a container but doesn't have a layout at all, returning 0";
-    return QList<QWidget *>();
+    return QWidgetList();
 
 }
 
@@ -738,19 +738,16 @@ QMap<QWidget *, bool> FormWindowManager::getUnsortedLayoutsToBeBroken(bool first
     // Return a set of layouts to be broken.
     QMap<QWidget *, bool> layouts;
 
-    QList<QWidget *> selection = m_activeFormWindow->selectedWidgets();
+    QWidgetList selection = m_activeFormWindow->selectedWidgets();
     if (selection.isEmpty() && m_activeFormWindow->mainContainer())
         selection.append(m_activeFormWindow->mainContainer());
 
-    const QList<QWidget *>::const_iterator scend = selection.constEnd();
-    for (QList<QWidget *>::const_iterator sit = selection.constBegin(); sit != scend; ++sit) {
+    for (QWidget *selectedWidget : qAsConst(selection)) {
         // find all layouts
-        const QList<QWidget *> list = layoutsToBeBroken(*sit);
+        const QWidgetList &list = layoutsToBeBroken(selectedWidget);
         if (!list.empty()) {
-            const QList<QWidget *>::const_iterator lbcend = list.constEnd();
-            for (QList<QWidget *>::const_iterator lbit = list.constBegin(); lbit != lbcend; ++lbit) {
-                layouts.insert(*lbit, true);
-            }
+            for (QWidget *widget : list)
+                layouts.insert(widget, true);
             if (firstOnly)
                 return layouts;
         }
@@ -770,13 +767,13 @@ QWidgetList FormWindowManager::layoutsToBeBroken() const
     // up to the first 'real' widget with a layout in hierarchy order.
     QMap<QWidget *, bool> unsortedLayouts = getUnsortedLayoutsToBeBroken(false);
     // Sort in order of hierarchy
-    QList<QWidget *> orderedLayoutList;
+    QWidgetList orderedLayoutList;
     const QMap<QWidget *, bool>::const_iterator lscend  = unsortedLayouts.constEnd();
     for (QMap<QWidget *, bool>::const_iterator itLay = unsortedLayouts.constBegin(); itLay != lscend; ++itLay) {
         QWidget *wToBeInserted = itLay.key();
         if (!orderedLayoutList.contains(wToBeInserted)) {
             // try to find first child, use as insertion position, else append
-            const QList<QWidget *>::iterator firstChildPos = findFirstChildOf(orderedLayoutList.begin(), orderedLayoutList.end(), wToBeInserted);
+            const QWidgetList::iterator firstChildPos = findFirstChildOf(orderedLayoutList.begin(), orderedLayoutList.end(), wToBeInserted);
             if (firstChildPos == orderedLayoutList.end()) {
                 orderedLayoutList.push_back(wToBeInserted);
             } else {

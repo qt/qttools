@@ -77,12 +77,12 @@ void MetaDataBaseItem::setCustomClassName(const QString &customClassName)
 }
 
 
-MetaDataBaseItem::TabOrder  MetaDataBaseItem::tabOrder() const
+QWidgetList MetaDataBaseItem::tabOrder() const
 {
     return m_tabOrder;
 }
 
-void MetaDataBaseItem::setTabOrder(const TabOrder &tabOrder)
+void MetaDataBaseItem::setTabOrder(const QWidgetList &tabOrder)
 {
     m_tabOrder = tabOrder;
 }
@@ -168,9 +168,9 @@ void MetaDataBase::remove(QObject *object)
     }
 }
 
-QList<QObject*> MetaDataBase::objects() const
+QObjectList MetaDataBase::objects() const
 {
-    QList<QObject*> result;
+    QObjectList result;
 
     ItemMap::const_iterator it = m_items.begin();
     for (; it != m_items.end(); ++it) {

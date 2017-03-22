@@ -1023,10 +1023,10 @@ QWidget *QDesignerResource::createWidget(const QString &widgetName, QWidget *par
     if (!qobject_cast<QMenu*>(w) && (!parentWidget || !container)) {
         m_formWindow->manageWidget(w);
         if (parentWidget) {
-            QList<QWidget *> list = qvariant_cast<QWidgetList>(parentWidget->property("_q_widgetOrder"));
+            QWidgetList list = qvariant_cast<QWidgetList>(parentWidget->property("_q_widgetOrder"));
             list.append(w);
             parentWidget->setProperty("_q_widgetOrder", QVariant::fromValue(list));
-            QList<QWidget *> zOrder = qvariant_cast<QWidgetList>(parentWidget->property("_q_zOrder"));
+            QWidgetList zOrder = qvariant_cast<QWidgetList>(parentWidget->property("_q_zOrder"));
             zOrder.append(w);
             parentWidget->setProperty("_q_zOrder", QVariant::fromValue(zOrder));
         }
@@ -1245,7 +1245,7 @@ void QDesignerResource::applyTabStops(QWidget *widget, DomTabStops *tabStops)
     if (!tabStops)
         return;
 
-    QList<QWidget*> tabOrder;
+    QWidgetList tabOrder;
     const QStringList &elementTabStop = tabStops->elementTabStop();
     for (const QString &widgetName : elementTabStop) {
         if (QWidget *w = widget->findChild<QWidget*>(widgetName)) {

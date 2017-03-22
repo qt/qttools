@@ -57,7 +57,7 @@ public:
 
 private:
     QMainWindow *m_mainWindow;
-    QList<QWidget*> m_widgets;
+    QWidgetList m_widgets;
 };
 
 typedef ExtensionFactory<QDesignerContainerExtension, QMainWindow, QMainWindowContainer> QMainWindowContainerFactory;

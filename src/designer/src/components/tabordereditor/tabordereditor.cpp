@@ -222,7 +222,7 @@ void TabOrderEditor::initTabOrder()
     }
 
     // Append any widgets that are in the form but are not in the tab order
-    QList<QWidget *> childQueue;
+    QWidgetList childQueue;
     childQueue.append(formWindow()->mainContainer());
     while (!childQueue.isEmpty()) {
         QWidget *child = childQueue.takeFirst();

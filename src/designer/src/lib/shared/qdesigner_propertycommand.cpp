@@ -1358,7 +1358,7 @@ AddDynamicPropertyCommand::AddDynamicPropertyCommand(QDesignerFormWindowInterfac
 
 }
 
-bool AddDynamicPropertyCommand::init(const QList<QObject *> &selection, QObject *current,
+bool AddDynamicPropertyCommand::init(const QObjectList &selection, QObject *current,
             const QString &propertyName, const QVariant &value)
 {
     Q_ASSERT(current);
@@ -1437,7 +1437,7 @@ RemoveDynamicPropertyCommand::RemoveDynamicPropertyCommand(QDesignerFormWindowIn
 
 }
 
-bool RemoveDynamicPropertyCommand::init(const QList<QObject *> &selection, QObject *current,
+bool RemoveDynamicPropertyCommand::init(const QObjectList &selection, QObject *current,
             const QString &propertyName)
 {
     Q_ASSERT(current);

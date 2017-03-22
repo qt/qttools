@@ -188,7 +188,7 @@ public:
 
     void adjustIndicator(const QPoint &pos, int index) Q_DECL_OVERRIDE;
 
-    QList<QWidget*> widgets(QLayout *layout) const Q_DECL_OVERRIDE;
+    QWidgetList widgets(QLayout *layout) const Q_DECL_OVERRIDE;
 
     // Pad empty cells with dummy spacers. Called by layouting commands.
     static void createEmptyCells(QGridLayout *gridLayout);

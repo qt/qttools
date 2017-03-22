@@ -1965,7 +1965,7 @@ public:
 
     QMap<QtProperty *, QtProperty *> m_propertyToEnum;
     QMap<QtProperty *, QtProperty *> m_enumToProperty;
-    QMap<QtProperty *, QList<QWidget *> > m_enumToEditors;
+    QMap<QtProperty *, QWidgetList > m_enumToEditors;
     QMap<QWidget *, QtProperty *> m_editorToEnum;
     bool m_updatingEnum;
 };

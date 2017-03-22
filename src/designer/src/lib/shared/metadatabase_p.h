@@ -61,9 +61,8 @@ public:
     QString name() const Q_DECL_OVERRIDE;
     void setName(const QString &name) Q_DECL_OVERRIDE;
 
-    typedef QList<QWidget*> TabOrder;
-    TabOrder tabOrder() const Q_DECL_OVERRIDE;
-    void setTabOrder(const TabOrder &tabOrder) Q_DECL_OVERRIDE;
+    QWidgetList tabOrder() const Q_DECL_OVERRIDE;
+    void setTabOrder(const QWidgetList &tabOrder) Q_DECL_OVERRIDE;
 
     bool enabled() const Q_DECL_OVERRIDE;
     void setEnabled(bool b) Q_DECL_OVERRIDE;
@@ -79,7 +78,7 @@ public:
 
 private:
     QObject *m_object;
-    TabOrder m_tabOrder;
+    QWidgetList m_tabOrder;
     bool m_enabled;
     QString m_customClassName;
     QStringList m_fakeSlots;
@@ -100,7 +99,7 @@ public:
     void add(QObject *object) Q_DECL_OVERRIDE;
     void remove(QObject *object) Q_DECL_OVERRIDE;
 
-    QList<QObject*> objects() const Q_DECL_OVERRIDE;
+    QObjectList objects() const Q_DECL_OVERRIDE;
 
 private slots:
     void slotDestroyed(QObject *object);

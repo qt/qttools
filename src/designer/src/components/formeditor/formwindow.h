@@ -128,7 +128,7 @@ public:
 
     bool hasInsertedChildren(QWidget *w) const;
 
-    QList<QWidget *> selectedWidgets() const;
+    QWidgetList selectedWidgets() const;
     void clearSelection(bool changePropertyDisplay = true) Q_DECL_OVERRIDE;
     bool isWidgetSelected(QWidget *w) const;
     void selectWidget(QWidget *w, bool select = true) Q_DECL_OVERRIDE;
@@ -140,11 +140,11 @@ public:
     void raiseChildSelections(QWidget *w);
     void raiseSelection(QWidget *w);
 
-    inline const QList<QWidget *>& widgets() const { return m_widgets; }
+    inline const QWidgetList& widgets() const { return m_widgets; }
     inline int widgetCount() const { return m_widgets.count(); }
     inline QWidget *widgetAt(int index) const { return m_widgets.at(index); }
 
-    QList<QWidget *> widgets(QWidget *widget) const;
+    QWidgetList widgets(QWidget *widget) const;
 
     QWidget *createWidget(DomUI *ui, const QRect &rect, QWidget *target);
 

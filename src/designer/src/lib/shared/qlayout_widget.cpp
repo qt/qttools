@@ -1432,12 +1432,12 @@ int QLayoutSupport::indexOf(QWidget *widget) const
     return -1;
 }
 
-QList<QWidget*> QLayoutSupport::widgets(QLayout *layout) const
+QWidgetList QLayoutSupport::widgets(QLayout *layout) const
 {
     if (!layout)
-        return QList<QWidget*>();
+        return QWidgetList();
 
-    QList<QWidget*> lst;
+    QWidgetList lst;
     int index = 0;
     while (QLayoutItem *item = layout->itemAt(index)) {
         ++index;

@@ -252,10 +252,9 @@ namespace qdesigner_internal {
         if (!metaDataBase)
             return rc;
 
-        const QList<QObject*> objs = metaDataBase->objects();
-        const QList<QObject*>::const_iterator cend = objs.constEnd();
-        for ( QList<QObject*>::const_iterator it = objs.constBegin(); it != cend; ++it) {
-            const QString customClass = metaDataBase->metaDataBaseItem(*it)->customClassName();
+        const QObjectList &objects = metaDataBase->objects();
+        for (QObject *object : objects) {
+            const QString customClass = metaDataBase->metaDataBaseItem(object)->customClassName();
             if (!customClass.isEmpty())
                 rc.insert(customClass);
 

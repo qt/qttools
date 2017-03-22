@@ -397,7 +397,7 @@ QWidget *QAbstractFormBuilder::create(DomWidget *ui_widget, QWidget *parentWidge
 
     const QStringList zOrderNames = ui_widget->elementZOrder();
     if (!zOrderNames.isEmpty()) {
-        QList<QWidget *> zOrder = qvariant_cast<QWidgetList>(w->property("_q_zOrder"));
+        QWidgetList zOrder = qvariant_cast<QWidgetList>(w->property("_q_zOrder"));
         for (const QString &widgetName : zOrderNames) {
             if (QWidget *child = w->findChild<QWidget*>(widgetName)) {
                 if (child->parentWidget() == w) {
@@ -1364,7 +1364,7 @@ DomWidget *QAbstractFormBuilder::createDom(QWidget *widget, DomWidget *ui_parent
     QList<DomAction*> ui_actions;
     QList<DomActionGroup*> ui_action_groups;
 
-    QList<QObject*> children;
+    QObjectList children;
 
     // splitters need to store their children in the order specified by child indexes,
     // not the order of the child list.
@@ -1376,9 +1376,9 @@ DomWidget *QAbstractFormBuilder::createDom(QWidget *widget, DomWidget *ui_parent
     } else
 #endif
     {
-        QList<QObject *> childObjects = widget->children();
+        QObjectList childObjects = widget->children();
 
-        const QList<QWidget *> list = qvariant_cast<QWidgetList>(widget->property("_q_widgetOrder"));
+        const QWidgetList list = qvariant_cast<QWidgetList>(widget->property("_q_widgetOrder"));
         for (QWidget *w : list) {
             if (childObjects.contains(w)) {
                 children.append(w);
@@ -1387,7 +1387,7 @@ DomWidget *QAbstractFormBuilder::createDom(QWidget *widget, DomWidget *ui_parent
         }
         children += childObjects;
 
-        const QList<QWidget *> zOrder = qvariant_cast<QWidgetList>(widget->property("_q_zOrder"));
+        const QWidgetList zOrder = qvariant_cast<QWidgetList>(widget->property("_q_zOrder"));
         if (list != zOrder) {
             QStringList zOrderList;
             zOrderList.reserve(zOrder.size());

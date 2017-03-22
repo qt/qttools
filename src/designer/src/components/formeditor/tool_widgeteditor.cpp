@@ -335,7 +335,7 @@ void WidgetEditorTool::activated()
     if (m_formWindow == 0)
         return;
 
-    const QList<QWidget*> &sel = m_formWindow->selectedWidgets();
+    const QWidgetList &sel = m_formWindow->selectedWidgets();
     for (QWidget *w : sel)
         m_formWindow->raiseSelection(w);
 }

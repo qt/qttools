@@ -44,6 +44,8 @@
 #include "extensionfactory_p.h"
 #include <QtDesigner/QDesignerTaskMenuExtension>
 
+#include <QtGui/qwindowdefs.h>
+
 #include <QtCore/QObject>
 #include <QtCore/QPointer>
 #include <QtCore/QList>
@@ -52,8 +54,6 @@ QT_BEGIN_NAMESPACE
 
 class QDesignerFormWindowInterface;
 class QDesignerFormEditorInterface;
-
-class QWidget;
 
 namespace qdesigner_internal {
 class QDesignerTaskMenuPrivate;
@@ -87,7 +87,7 @@ protected:
      * an unmanaged widget [as of 4.5], in which case it must not use the cursor selection,
      * but the unmanaged selection of the object inspector. */
     QObjectList applicableObjects(const QDesignerFormWindowInterface *fw, PropertyMode pm) const;
-    QList<QWidget *> applicableWidgets(const QDesignerFormWindowInterface *fw, PropertyMode pm) const;
+    QWidgetList applicableWidgets(const QDesignerFormWindowInterface *fw, PropertyMode pm) const;
 
     void setProperty(QDesignerFormWindowInterface *fw, PropertyMode pm, const QString &name, const QVariant &newValue);
 

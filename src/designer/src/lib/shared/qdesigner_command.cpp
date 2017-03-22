@@ -493,7 +493,7 @@ void DeleteWidgetCommand::redo()
     m_widget->hide();
 
     if (m_tabOrderIndex != -1) {
-        QList<QWidget*> tab_order = m_formItem->tabOrder();
+        QWidgetList tab_order = m_formItem->tabOrder();
         tab_order.removeAt(m_tabOrderIndex);
         m_formItem->setTabOrder(tab_order);
     }
@@ -542,7 +542,7 @@ void DeleteWidgetCommand::undo()
     m_widget->show();
 
     if (m_tabOrderIndex != -1) {
-        QList<QWidget*> tab_order = m_formItem->tabOrder();
+        QWidgetList tab_order = m_formItem->tabOrder();
         tab_order.insert(m_tabOrderIndex, m_widget);
         m_formItem->setTabOrder(tab_order);
     }
@@ -1437,7 +1437,7 @@ TabOrderCommand::TabOrderCommand(QDesignerFormWindowInterface *formWindow)
 {
 }
 
-void TabOrderCommand::init(const QList<QWidget*> &newTabOrder)
+void TabOrderCommand::init(const QWidgetList &newTabOrder)
 {
     QDesignerFormEditorInterface *core = formWindow()->core();
     Q_ASSERT(core);
