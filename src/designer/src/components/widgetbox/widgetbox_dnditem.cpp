@@ -123,7 +123,7 @@ void WidgetBoxResource::createCustomWidgets(DomCustomWidgets *dc)
 
 static QSize geometryProp(const DomWidget *dw)
 {
-    const QList<DomProperty*> prop_list = dw->elementProperty();
+    const auto &prop_list = dw->elementProperty();
     const QString geometry = QStringLiteral("geometry");
     for (DomProperty *prop : prop_list) {
         if (prop->attributeName() !=  geometry)
@@ -142,16 +142,16 @@ static QSize domWidgetSize(const DomWidget *dw)
     if (size.isValid())
         return size;
 
-    const QList<DomWidget*> &elementWidgets = dw->elementWidget();
+    const auto &elementWidgets = dw->elementWidget();
     for (const DomWidget *child : elementWidgets) {
         size = geometryProp(child);
         if (size.isValid())
             return size;
     }
 
-    const QList<DomLayout *> elementLayouts = dw->elementLayout();
+    const auto &elementLayouts = dw->elementLayout();
     for (const DomLayout *dl : elementLayouts) {
-        const QList<DomLayoutItem *> &elementItems = dl->elementItem();
+        const auto &elementItems = dl->elementItem();
         for (DomLayoutItem *item : elementItems) {
             const DomWidget *child = item->elementWidget();
             if (child == 0)

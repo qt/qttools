@@ -250,13 +250,9 @@ void QFormBuilderExtra::clearTextBuilder()
 
 void QFormBuilderExtra::registerButtonGroups(const DomButtonGroups *domGroups)
 {
-    typedef QList<DomButtonGroup*> DomButtonGroupList;
-    const DomButtonGroupList domGroupList = domGroups->elementButtonGroup();
-    const DomButtonGroupList::const_iterator cend = domGroupList.constEnd();
-    for (DomButtonGroupList::const_iterator it = domGroupList.constBegin(); it != cend; ++it) {
-        DomButtonGroup *domGroup = *it;
-        m_buttonGroups.insert(domGroup->attributeName(), ButtonGroupEntry(domGroup, 0));
-    }
+    const auto &domGroupList = domGroups->elementButtonGroup();
+    for (DomButtonGroup *domGroup : domGroupList)
+        m_buttonGroups.insert(domGroup->attributeName(), ButtonGroupEntry(domGroup, nullptr));
 }
 
 // Utilities for parsing per-cell integer properties that have setters and

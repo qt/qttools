@@ -233,7 +233,7 @@ DomUI *QDesignerWidgetBox::xmlToUi(const QString &name, const QString &xml, bool
     if (insertFakeTopLevel)  {
         DomWidget *fakeTopLevel = new DomWidget;
         fakeTopLevel->setAttributeClass(QStringLiteral("QWidget"));
-        QList<DomWidget *> children;
+        QVector<DomWidget *> children;
         children.push_back(ui->takeElementWidget());
         fakeTopLevel->setElementWidget(children);
         ui->setElementWidget(fakeTopLevel);

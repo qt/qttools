@@ -381,6 +381,7 @@
 #include &lt;qlist.h&gt;
 #include &lt;qstring.h&gt;
 #include &lt;qstringlist.h&gt;
+#include &lt;qvector.h&gt;
 #include &lt;qxmlstream.h&gt;
 #include &lt;qglobal.h&gt;
 

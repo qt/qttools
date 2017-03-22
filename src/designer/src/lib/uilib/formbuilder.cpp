@@ -314,28 +314,23 @@ static QObject *objectByName(QWidget *topLevel, const QString &name)
 */
 void QFormBuilder::createConnections(DomConnections *ui_connections, QWidget *widget)
 {
-    typedef QList<DomConnection*> DomConnectionList;
     Q_ASSERT(widget != 0);
 
     if (ui_connections == 0)
         return;
 
-    const DomConnectionList connections = ui_connections->elementConnection();
-    if (!connections.empty()) {
-        const DomConnectionList::const_iterator cend = connections.constEnd();
-        for (DomConnectionList::const_iterator it = connections.constBegin(); it != cend; ++it) {
+    const auto &connections = ui_connections->elementConnection();
+    for (const DomConnection *c : connections) {
+        QObject *sender = objectByName(widget, c->elementSender());
+        QObject *receiver = objectByName(widget, c->elementReceiver());
+        if (!sender || !receiver)
+            continue;
 
-            QObject *sender = objectByName(widget, (*it)->elementSender());
-            QObject *receiver = objectByName(widget, (*it)->elementReceiver());
-            if (!sender || !receiver)
-                continue;
-
-            QByteArray sig = (*it)->elementSignal().toUtf8();
-            sig.prepend("2");
-            QByteArray sl = (*it)->elementSlot().toUtf8();
-            sl.prepend("1");
-            QObject::connect(sender, sig, receiver, sl);
-        }
+        QByteArray sig = c->elementSignal().toUtf8();
+        sig.prepend("2");
+        QByteArray sl = c->elementSlot().toUtf8();
+        sl.prepend("1");
+        QObject::connect(sender, sig, receiver, sl);
     }
 }
 
@@ -514,20 +509,18 @@ QList<QDesignerCustomWidgetInterface*> QFormBuilder::customWidgets() const
 
 void QFormBuilder::applyProperties(QObject *o, const QList<DomProperty*> &properties)
 {
-    typedef QList<DomProperty*> DomPropertyList;
 
     if (properties.empty())
         return;
 
     const QFormBuilderStrings &strings = QFormBuilderStrings::instance();
 
-    const DomPropertyList::const_iterator cend = properties.constEnd();
-    for (DomPropertyList::const_iterator it = properties.constBegin(); it != cend; ++it) {
-        const QVariant v = toVariant(o->metaObject(), *it);
+    for (DomProperty *p : properties) {
+        const QVariant v = toVariant(o->metaObject(), p);
         if (!v.isValid()) // QTBUG-33130, do not fall for QVariant(QString()).isNull() == true.
             continue;
 
-        const QString attributeName = (*it)->attributeName();
+        const QString attributeName = p->attributeName();
         const bool isWidget = o->isWidgetType();
         if (isWidget && o->parent() == d->parentWidget() && attributeName == strings.geometryProperty) {
             // apply only the size part of a geometry for the root widget

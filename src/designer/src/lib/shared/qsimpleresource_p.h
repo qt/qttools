@@ -43,6 +43,7 @@
 #include "shared_global_p.h"
 #include "abstractformbuilder.h"
 #include <QtCore/QStringList>
+#include <QtCore/QVector>
 
 QT_BEGIN_NAMESPACE
 
@@ -96,7 +97,7 @@ protected:
 
 private:
     static void addCustomWidgetsToWidgetDatabase(const QDesignerFormEditorInterface *core,
-                                                 QList<DomCustomWidget*>& custom_widget_list);
+                                                 QVector<DomCustomWidget *> &custom_widget_list);
     static void addFakeMethodsToWidgetDataBase(const DomCustomWidget *domCustomWidget, WidgetDataBaseItem *item);
 
     static bool m_warningsEnabled;

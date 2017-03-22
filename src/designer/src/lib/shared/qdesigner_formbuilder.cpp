@@ -226,8 +226,6 @@ static bool readDomEnumerationValue(const DomProperty *p,
 
 void QDesignerFormBuilder::applyProperties(QObject *o, const QList<DomProperty*> &properties)
 {
-    typedef QList<DomProperty*> DomPropertyList;
-
     if (properties.empty())
         return;
 
@@ -247,9 +245,7 @@ void QDesignerFormBuilder::applyProperties(QObject *o, const QList<DomProperty*>
             designerPropertySheet->setIconCache(m_iconCache);
     }
 
-    const DomPropertyList::const_iterator cend = properties.constEnd();
-    for (DomPropertyList::const_iterator it = properties.constBegin(); it != cend; ++it) {
-        DomProperty *p = *it;
+    for (DomProperty *p : properties) {
         QVariant v;
         if (!readDomEnumerationValue(p, sheet, v))
             v = toVariant(o->metaObject(), p);
@@ -300,7 +296,7 @@ void QDesignerFormBuilder::createResources(DomResources *resources)
         return;
     QStringList paths;
     if (resources != 0) {
-        const QList<DomResource*> dom_include = resources->elementInclude();
+        const auto &dom_include = resources->elementInclude();
         for (DomResource *res : dom_include) {
             QString path = QDir::cleanPath(workingDirectory().absoluteFilePath(res->attributeLocation()));
             paths << path;
