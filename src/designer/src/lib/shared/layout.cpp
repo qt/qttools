@@ -606,7 +606,7 @@ public:
 
     void setCells(const QRect &c, QWidget* w);
 
-    bool empty() const  { return m_nrows * m_ncols; }
+    bool empty() const  { return !m_nrows || !m_ncols; }
     int numRows() const { return m_nrows; }
     int numCols() const { return m_ncols; }
 
@@ -1120,7 +1120,7 @@ void GridLayout<GridLikeLayout, LayoutType, GridMode>::doLayout()
 
     GridLikeLayout *layout =  static_cast<GridLikeLayout *>(createLayout(LayoutType));
 
-    if (m_grid.empty())
+    if (!m_grid.empty())
         sort();
 
     QDesignerWidgetItemInstaller wii; // Make sure we use QDesignerWidgetItem.
