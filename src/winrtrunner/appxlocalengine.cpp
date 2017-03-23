@@ -60,6 +60,9 @@ using namespace ABI::Windows::Management::Deployment;
 using namespace ABI::Windows::ApplicationModel;
 using namespace ABI::Windows::System;
 
+typedef IAsyncOperationWithProgressCompletedHandler<DeploymentResult *, DeploymentProgress> DeploymentResultHandler;
+typedef IAsyncOperationWithProgress<DeploymentResult *, DeploymentProgress> DeploymentOperation;
+
 QT_USE_NAMESPACE
 
 // Set a break handler for gracefully breaking long-running ops
@@ -378,7 +381,7 @@ bool AppxLocalEngine::installPackage(IAppxManifestReader *reader, const QString 
     hr = d->uriFactory->CreateUri(hStringFromQString(nativeFilePath), &uri);
     RETURN_FALSE_IF_FAILED("Failed to create an URI for the package");
 
-    ComPtr<IAsyncOperationWithProgress<DeploymentResult *, DeploymentProgress>> deploymentOperation;
+    ComPtr<DeploymentOperation> deploymentOperation;
     if (addInsteadOfRegister) {
         hr = d->packageManager->AddPackageAsync(uri.Get(), NULL, DeploymentOptions_None,
                                                 &deploymentOperation);
@@ -390,13 +393,41 @@ bool AppxLocalEngine::installPackage(IAppxManifestReader *reader, const QString 
         RETURN_FALSE_IF_FAILED("Failed to start package registration");
     }
 
+    HANDLE ev = CreateEvent(NULL, FALSE, FALSE, NULL);
+    hr = deploymentOperation->put_Completed(Callback<DeploymentResultHandler>([ev](DeploymentOperation *, AsyncStatus) {
+                                        SetEvent(ev);
+                                        return S_OK;
+                                    }).Get());
+    RETURN_FALSE_IF_FAILED("Could not register deployment completed callback.");
+    DWORD ret = WaitForSingleObjectEx(ev, 15000, FALSE);
+    CloseHandle(ev);
+    if (ret != WAIT_OBJECT_0) {
+        if (ret == WAIT_TIMEOUT)
+            qCWarning(lcWinRtRunner) << "Deployment did not finish within 15 seconds.";
+        else
+            qCWarning(lcWinRtRunner) << "Deployment finished event was not triggered.";
+        return false;
+    }
+
+    ComPtr<IAsyncInfo> asyncInfo;
+    hr = deploymentOperation.As(&asyncInfo);
+    RETURN_FALSE_IF_FAILED("Failed to cast deployment operation to info.");
+    AsyncStatus status;
+    hr = asyncInfo->get_Status(&status);
+    RETURN_FALSE_IF_FAILED("Failed to retrieve deployment operation's status.");
+
+    if (status != Completed) {
+        qCWarning(lcWinRtRunner) << "Deployment operation did not succeed.";
+        return false;
+    }
+
     ComPtr<IDeploymentResult> results;
-    while ((hr = deploymentOperation->GetResults(&results)) == E_ILLEGAL_METHOD_CALL)
-        Sleep(1);
+    hr = deploymentOperation->GetResults(&results);
+    RETURN_FALSE_IF_FAILED("Failed to retrieve package registration results.");
 
     HRESULT errorCode;
     hr = results->get_ExtendedErrorCode(&errorCode);
-    RETURN_FALSE_IF_FAILED("Failed to retrieve package registration results.");
+    RETURN_FALSE_IF_FAILED("Failed to retrieve extended error code.");
 
     if (FAILED(errorCode)) {
         HString errorText;
@@ -462,17 +493,40 @@ bool AppxLocalEngine::remove()
     qCDebug(lcWinRtRunner) << __FUNCTION__;
 
     // ### TODO: use RemovePackageWithOptions to preserve previous state when re-installing
-    ComPtr<IAsyncOperationWithProgress<DeploymentResult *, DeploymentProgress>> deploymentOperation;
+    ComPtr<DeploymentOperation> deploymentOperation;
     HRESULT hr = d->packageManager->RemovePackageAsync(hStringFromQString(d->packageFullName), &deploymentOperation);
     RETURN_FALSE_IF_FAILED("Unable to start package removal");
 
-    ComPtr<IDeploymentResult> results;
-    while ((hr = deploymentOperation.Get()->GetResults(&results)) == E_ILLEGAL_METHOD_CALL)
-        Sleep(1);
+    HANDLE ev = CreateEvent(NULL, FALSE, FALSE, NULL);
+    hr = deploymentOperation->put_Completed(Callback<DeploymentResultHandler>([ev](DeploymentOperation *, AsyncStatus) {
+                                        SetEvent(ev);
+                                        return S_OK;
+                                    }).Get());
+    RETURN_FALSE_IF_FAILED("Could not register deployment completed callback.");
+    DWORD ret = WaitForSingleObjectEx(ev, 15000, FALSE);
+    CloseHandle(ev);
+    if (ret != WAIT_OBJECT_0) {
+        if (ret == WAIT_TIMEOUT)
+            qCWarning(lcWinRtRunner) << "Deployment did not finish within 15 seconds.";
+        else
+            qCWarning(lcWinRtRunner) << "Deployment finished event was not triggered.";
+        return false;
+    }
 
-    RETURN_FALSE_IF_FAILED("Unable to remove package");
+    ComPtr<IAsyncInfo> asyncInfo;
+    hr = deploymentOperation.As(&asyncInfo);
+    RETURN_FALSE_IF_FAILED("Failed to cast deployment operation.");
 
-    return SUCCEEDED(hr);
+    AsyncStatus status;
+    hr = asyncInfo->get_Status(&status);
+    RETURN_FALSE_IF_FAILED("Failed to retrieve deployment operation's status.");
+
+    if (status != Completed) {
+        qCWarning(lcWinRtRunner) << "Unable to remove package.";
+        return false;
+    }
+
+    return true;
 }
 
 bool AppxLocalEngine::start()
