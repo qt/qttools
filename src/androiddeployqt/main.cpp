@@ -933,7 +933,7 @@ bool copyAndroidTemplate(const Options &options, const QString &androidTemplate,
 
 bool copyGradleTemplate(const Options &options)
 {
-    QDir sourceDirectory(options.qtInstallDirectory + QLatin1String("/src/android/gradle"));
+    QDir sourceDirectory(options.qtInstallDirectory + QLatin1String("/src/3rdparty/gradle"));
     if (!sourceDirectory.exists()) {
         fprintf(stderr, "Cannot find template directory %s\n", qPrintable(sourceDirectory.absolutePath()));
         return false;
