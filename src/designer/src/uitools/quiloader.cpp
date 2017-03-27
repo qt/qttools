@@ -646,6 +646,7 @@ QUiLoader::QUiLoader(QObject *parent)
 #endif // QT_NO_DATASTREAM
     d->builder.loader = this;
 
+#if QT_CONFIG(library)
     QStringList paths;
     const QStringList &libraryPaths = QApplication::libraryPaths();
     for (const QString &path : libraryPaths) {
@@ -656,6 +657,7 @@ QUiLoader::QUiLoader(QObject *parent)
     }
 
     d->builder.setPluginPath(paths);
+#endif // QT_CONFIG(library)
 }
 
 /*!

@@ -50,7 +50,9 @@
 #include <QtCore/QVariant>
 #include <QtCore/QSysInfo>
 #include <QtCore/QLibraryInfo>
-#include <QtCore/QProcessEnvironment>
+#if QT_CONFIG(processenvironment)
+#  include <QtCore/QProcessEnvironment>
+#endif
 #include <QtCore/QTextStream>
 #include <QtCore/QStandardPaths>
 #include <QtCore/QDir>
