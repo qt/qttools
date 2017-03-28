@@ -31,7 +31,7 @@
 
 #include <QtDesigner/private/ui4_p.h>
 
-#include <QtCore/QRegExp>
+#include <QtCore/QRegularExpression>
 #include <QtCore/QDebug>
 #include <QtCore/QXmlStreamReader>
 #include <QtCore/QSharedData>
@@ -157,7 +157,7 @@ bool QDesignerWidgetBox::findWidget(const QDesignerWidgetBoxInterface *wbox,
     QString pattern = QStringLiteral("^<widget\\s+class\\s*=\\s*\"");
     pattern += className;
     pattern += QStringLiteral("\".*$");
-    QRegExp regexp(pattern);
+    const QRegularExpression regexp(pattern);
     Q_ASSERT(regexp.isValid());
     const int catCount = wbox->categoryCount();
     for (int c = 0; c < catCount; c++) {
@@ -170,7 +170,7 @@ bool QDesignerWidgetBox::findWidget(const QDesignerWidgetBoxInterface *wbox,
                 const int widgetTagIndex = xml.indexOf(widgetTag);
                 if (widgetTagIndex != -1) {
                     xml.remove(0, widgetTagIndex);
-                    if (regexp.exactMatch(xml)) {
+                    if (regexp.match(xml).hasMatch()) {
                         *widgetData = widget;
                         return true;
                     }

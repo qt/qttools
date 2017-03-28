@@ -34,6 +34,7 @@
 #include <QtXml/QDomDocument>
 
 #include <QtGui/QIcon>
+#include <QtGui/QRegularExpressionValidator>
 #include <QtWidgets/QListView>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QItemDelegate>
@@ -42,7 +43,7 @@
 #include <QtCore/QAbstractListModel>
 #include <QtCore/QList>
 #include <QtCore/QTextStream>
-#include <QtCore/QRegExp>
+#include <QtCore/QRegularExpression>
 
 static const char *widgetElementC = "widget";
 static const char *nameAttributeC = "name";
@@ -130,7 +131,6 @@ public:
 private:
     typedef QList<WidgetBoxCategoryEntry> WidgetBoxCategoryEntrys;
 
-    QRegExp m_classNameRegExp;
     QDesignerFormEditorInterface *m_core;
     WidgetBoxCategoryEntrys m_items;
     QListView::ViewMode m_viewMode;
@@ -138,11 +138,9 @@ private:
 
 WidgetBoxCategoryModel::WidgetBoxCategoryModel(QDesignerFormEditorInterface *core, QObject *parent) :
     QAbstractListModel(parent),
-    m_classNameRegExp(QStringLiteral("<widget +class *= *\"([^\"]+)\"")),
     m_core(core),
     m_viewMode(QListView::ListMode)
 {
-    Q_ASSERT(m_classNameRegExp.isValid());
 }
 
 QListView::ViewMode WidgetBoxCategoryModel::viewMode() const
@@ -203,10 +201,15 @@ void WidgetBoxCategoryModel::addWidget(const QDesignerWidgetBoxInterface::Widget
 {
     // build item. Filter on name + class name if it is different and not a layout.
     QString filter = widget.name();
-    if (!filter.contains(QStringLiteral("Layout")) && m_classNameRegExp.indexIn(widget.domXml()) != -1) {
-        const QString className = m_classNameRegExp.cap(1);
-        if (!filter.contains(className))
-            filter += className;
+    if (!filter.contains(QStringLiteral("Layout"))) {
+        static const QRegularExpression classNameRegExp(QStringLiteral("<widget +class *= *\"([^\"]+)\""));
+        Q_ASSERT(classNameRegExp.isValid());
+        const QRegularExpressionMatch match = classNameRegExp.match(widget.domXml());
+        if (match.hasMatch()) {
+            const QString className = match.captured(1);
+            if (!filter.contains(className))
+                filter += className;
+        }
     }
     WidgetBoxCategoryEntry item(widget, filter, icon, editable);
     const QDesignerWidgetDataBaseInterface *db = m_core->widgetDataBase();
@@ -345,9 +348,9 @@ QWidget *WidgetBoxCategoryEntryDelegate::createEditor(QWidget *parent,
 {
     QWidget *result = QItemDelegate::createEditor(parent, option, index);
     if (QLineEdit *line_edit = qobject_cast<QLineEdit*>(result)) {
-        QRegExp re = QRegExp(QStringLiteral("[_a-zA-Z][_a-zA-Z0-9]*"));
+        static const QRegularExpression re(QStringLiteral("^[_a-zA-Z][_a-zA-Z0-9]*$"));
         Q_ASSERT(re.isValid());
-        line_edit->setValidator(new QRegExpValidator(re, line_edit));
+        line_edit->setValidator(new QRegularExpressionValidator(re, line_edit));
     }
     return result;
 }

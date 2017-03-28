@@ -31,11 +31,11 @@
 #include "stylesheeteditor_p.h"
 
 #include <QtWidgets/QLineEdit>
-#include <QtGui/QRegExpValidator>
+#include <QtGui/QRegularExpressionValidator>
 #include <QtGui/QResizeEvent>
 #include <QtWidgets/QCompleter>
 #include <QtWidgets/QAbstractItemView>
-#include <QtCore/QRegExp>
+#include <QtCore/QRegularExpression>
 #include <QtCore/QUrl>
 #include <QtCore/QFile>
 #include <QtCore/QDebug>
@@ -155,10 +155,11 @@ namespace {
     QUrl UrlValidator::guessUrlFromString(const QString &string) const
     {
         const QString urlStr = string.trimmed();
-        QRegExp qualifiedUrl(QStringLiteral("^[a-zA-Z]+\\:.*"));
+        const QRegularExpression qualifiedUrl(QStringLiteral("^[a-zA-Z]+\\:.*$"));
+        Q_ASSERT(qualifiedUrl.isValid());
 
         // Check if it looks like a qualified URL. Try parsing it and see.
-        const bool hasSchema = qualifiedUrl.exactMatch(urlStr);
+        const bool hasSchema = qualifiedUrl.match(urlStr).hasMatch();
         if (hasSchema) {
             const QUrl url(urlStr, QUrl::TolerantMode);
             if (url.isValid())
@@ -252,11 +253,11 @@ namespace qdesigner_internal {
              m_lineEdit->setCompleter(0);
             break;
         case ValidationObjectName:
-            setRegExpValidator(QStringLiteral("[_a-zA-Z][_a-zA-Z0-9]{,1023}"));
+            setRegularExpressionValidator(QStringLiteral("^[_a-zA-Z][_a-zA-Z0-9]{1,1023}$"));
              m_lineEdit->setCompleter(0);
              break;
         case ValidationObjectNameScope:
-            setRegExpValidator(QStringLiteral("[_a-zA-Z:][_a-zA-Z0-9:]{,1023}"));
+            setRegularExpressionValidator(QStringLiteral("^[_a-zA-Z:][_a-zA-Z0-9:]{1,1023}$"));
             m_lineEdit->setCompleter(0);
             break;
         case ValidationURL: {
@@ -284,11 +285,11 @@ namespace qdesigner_internal {
         markIntermediateState();
     }
 
-    void TextPropertyEditor::setRegExpValidator(const QString &pattern)
+    void TextPropertyEditor::setRegularExpressionValidator(const QString &pattern)
     {
-        QRegExp regExp(pattern);
+        QRegularExpression regExp(pattern);
         Q_ASSERT(regExp.isValid());
-        m_lineEdit->setValidator(new QRegExpValidator(regExp,m_lineEdit));
+        m_lineEdit->setValidator(new QRegularExpressionValidator(regExp, m_lineEdit));
     }
 
     QString TextPropertyEditor::text() const

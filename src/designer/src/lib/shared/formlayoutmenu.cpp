@@ -47,11 +47,11 @@
 #include <QtWidgets/QUndoStack>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QPushButton>
-#include <QtGui/QRegExpValidator>
+#include <QtGui/QRegularExpressionValidator>
 
 #include <QtCore/QPair>
 #include <QtCore/QCoreApplication>
-#include <QtCore/QRegExp>
+#include <QtCore/QRegularExpression>
 #include <QtCore/QMultiHash>
 #include <QtCore/QDebug>
 
@@ -115,7 +115,7 @@ private:
     void updateOkButton();
 
     // Check for buddy marker in string
-    QRegExp m_buddyMarkerRegexp;
+    const QRegularExpression m_buddyMarkerRegexp;
 
     Ui::FormLayoutRowDialog m_ui;
     bool m_labelNameEdited;
@@ -140,8 +140,8 @@ FormLayoutRowDialog::FormLayoutRowDialog(QDesignerFormEditorInterface *core,
     m_ui.setupUi(this);
     connect(m_ui.labelTextLineEdit, &QLineEdit::textEdited, this, &FormLayoutRowDialog::labelTextEdited);
 
-    QRegExpValidator *nameValidator = new QRegExpValidator(QRegExp(QStringLiteral("^[a-zA-Z0-9_]+$")), this);
-    Q_ASSERT(nameValidator->regExp().isValid());
+    QRegularExpressionValidator *nameValidator = new QRegularExpressionValidator(QRegularExpression(QStringLiteral("^[a-zA-Z0-9_]+$")), this);
+    Q_ASSERT(nameValidator->regularExpression().isValid());
 
     m_ui.labelNameLineEdit->setValidator(nameValidator);
     connect(m_ui.labelNameLineEdit, &QLineEdit::textEdited,

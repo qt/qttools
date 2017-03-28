@@ -52,7 +52,7 @@
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QCheckBox>
-#include <QtGui/QRegExpValidator>
+#include <QtGui/QRegularExpressionValidator>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QMenu>
@@ -83,7 +83,7 @@ namespace qdesigner_internal {
         setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
         QHBoxLayout *hboxLayout = new QHBoxLayout(this);
 
-        m_classNameEdit->setValidator(new QRegExpValidator(QRegExp(QStringLiteral("[_a-zA-Z:][:_a-zA-Z0-9]*")), m_classNameEdit));
+        m_classNameEdit->setValidator(new QRegularExpressionValidator(QRegularExpression(QStringLiteral("^[_a-zA-Z:][:_a-zA-Z0-9]*$")), m_classNameEdit));
         connect(m_classNameEdit,   &QLineEdit::textChanged,
                 this, &NewPromotedClassPanel::slotNameChanged);
         connect(m_includeFileEdit, &QLineEdit::textChanged,

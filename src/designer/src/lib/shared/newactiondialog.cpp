@@ -38,7 +38,6 @@
 #include <QtDesigner/abstractformeditor.h>
 
 #include <QtWidgets/QPushButton>
-#include <QtCore/QRegExp>
 
 QT_BEGIN_NAMESPACE
 

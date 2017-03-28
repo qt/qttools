@@ -50,7 +50,7 @@
 #include <QtGui/QImage>
 #include <QtCore/QTimer>
 #include <QtCore/QDir>
-#include <QtCore/QRegExp>
+#include <QtCore/QRegularExpression>
 #include <QtGui/QMouseEvent>
 #include <QtCore/QDebug>
 
@@ -285,12 +285,14 @@ bool DeviceSkinParameters::read(QTextStream &ts, ReadMode rm, QString *errorMess
     ts.readLine(); // eol
     joystick = -1;
     const QString Joystick = QLatin1String("Joystick");
+    const QRegularExpression splitRe(QLatin1String("[ \t][ \t]*"));
+    Q_ASSERT(splitRe.isValid());
     while (i < nareas && !ts.atEnd() ) {
         buttonAreas.push_back(DeviceSkinButtonArea());
         DeviceSkinButtonArea &area = buttonAreas.back();
         const QString line = ts.readLine();
         if ( !line.isEmpty() && line[0] != QLatin1Char('#') ) {
-            const QStringList tok = line.split(QRegExp(QLatin1String("[ \t][ \t]*")));
+            const QStringList tok = line.split(splitRe);
             if ( tok.count()<6 ) {
                 *errorMessage =  DeviceSkin::tr("Syntax error in area definition: %1").arg(line);
                 return false;

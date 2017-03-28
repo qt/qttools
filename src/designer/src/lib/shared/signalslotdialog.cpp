@@ -42,13 +42,13 @@
 #include <abstractdialoggui_p.h>
 
 #include <QtGui/QStandardItemModel>
-#include <QtGui/QRegExpValidator>
+#include <QtGui/QRegularExpressionValidator>
 #include <QtWidgets/QItemDelegate>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMessageBox>
 
-#include <QtCore/QRegExp>
+#include <QtCore/QRegularExpression>
 #include <QtCore/QDebug>
 
 QT_BEGIN_NAMESPACE
@@ -125,8 +125,8 @@ namespace {
         void setModelData (QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const Q_DECL_OVERRIDE;
 
     private:
-        QRegExp m_signatureRegexp;
-        QRegExp m_methodNameRegexp;
+        const QRegularExpression m_signatureRegexp;
+        const QRegularExpression m_methodNameRegexp;
     };
 
     SignatureDelegate::SignatureDelegate(QObject * parent) :
@@ -143,7 +143,7 @@ namespace {
         QWidget *rc = QItemDelegate::createEditor(parent, option, index);
         QLineEdit *le = qobject_cast<QLineEdit *>(rc);
         Q_ASSERT(le);
-        le->setValidator(new QRegExpValidator(m_signatureRegexp, le));
+        le->setValidator(new QRegularExpressionValidator(m_signatureRegexp, le));
         return rc;
     }
 
@@ -153,10 +153,8 @@ namespace {
         Q_ASSERT(le);
         // Did the user just type a name? .. Add parentheses
         QString signature = le->text();
-        QRegExp signatureRegexp = m_signatureRegexp;
-        QRegExp methodNameRegexp = m_methodNameRegexp;
-        if (!signatureRegexp.exactMatch(signature )) {
-            if (methodNameRegexp.exactMatch(signature )) {
+        if (!m_signatureRegexp.match(signature).hasMatch()) {
+            if (m_methodNameRegexp.match(signature).hasMatch()) {
                 signature += QStringLiteral("()");
                 le->setText(signature);
             } else {

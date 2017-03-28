@@ -125,7 +125,7 @@ namespace qdesigner_internal {
         void slotEditingFinished();
 
     private:
-        void setRegExpValidator(const QString &pattern);
+        void setRegularExpressionValidator(const QString &pattern);
         void markIntermediateState();
 
         TextPropertyValidationMode m_validationMode;

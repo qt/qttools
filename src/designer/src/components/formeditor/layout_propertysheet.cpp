@@ -44,7 +44,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QTextStream>
 #include <QtCore/QByteArray>
-#include <QtCore/QRegExp> // Remove once there is an editor for lists
+#include <QtCore/QRegularExpression> // Remove once there is an editor for lists
 
 QT_BEGIN_NAMESPACE
 
@@ -94,9 +94,9 @@ namespace {
 static bool isIntegerList(const QString &s)
 {
     // Check for empty string or comma-separated list of integers
-    static QRegExp re(QStringLiteral("[0-9]+(,[0-9]+)+"));
+    static const QRegularExpression re(QStringLiteral("^[0-9]+(,[0-9]+)+$"));
     Q_ASSERT(re.isValid());
-    return s.isEmpty() || re.exactMatch(s);
+    return s.isEmpty() || re.match(s).hasMatch();
 }
 
 // Quick lookup by name

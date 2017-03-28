@@ -34,8 +34,10 @@
 
 #include <QtWidgets/QStyle>
 
-#include <QtCore/QRegExp>
+#include <QtCore/QRegularExpression>
 #include <QtCore/QDebug>
+
+#include <algorithm>
 
 QT_BEGIN_NAMESPACE
 
@@ -200,17 +202,13 @@ FormWindowData FormWindowSettings::data() const
 
     const QString hints = m_ui->includeHintsTextEdit->toPlainText();
     if (!hints.isEmpty()) {
-        rc.includeHints = hints.split(QString(QLatin1Char('\n')));
+        rc.includeHints = hints.split(QLatin1Char('\n'));
         // Purge out any lines consisting of blanks only
-        QRegExp blankLine = QRegExp(QStringLiteral("^\\s*$"));
+        const QRegularExpression blankLine(QStringLiteral("^\\s*$"));
         Q_ASSERT(blankLine.isValid());
-        for (QStringList::iterator it = rc.includeHints.begin(); it != rc.includeHints.end(); )
-            if (blankLine.exactMatch(*it)) {
-                it = rc.includeHints.erase(it);
-            } else {
-                ++it;
-            }
-        rc.includeHints.removeAll(QString());
+        rc.includeHints.erase(std::remove_if(rc.includeHints.begin(), rc.includeHints.end(),
+                                             [blankLine](const QString &hint){ return blankLine.match(hint).hasMatch(); }),
+                              rc.includeHints.end());
     }
 
     rc.hasFormGrid = m_ui->gridPanel->isChecked();

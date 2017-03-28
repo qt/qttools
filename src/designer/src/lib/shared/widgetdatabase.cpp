@@ -47,7 +47,6 @@
 #include <QtCore/qdebug.h>
 #include <QtCore/QMetaProperty>
 #include <QtCore/QTextStream>
-#include <QtCore/QRegExp>
 #include <QtCore/QCoreApplication>
 
 QT_BEGIN_NAMESPACE

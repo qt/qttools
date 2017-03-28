@@ -41,6 +41,7 @@
 
 #include <QtCore/QEvent>
 #include <QtCore/QFile>
+#include <QtCore/QRegularExpression>
 
 #include <QtWidgets/QAction>
 #include <QtGui/QCloseEvent>
@@ -163,16 +164,18 @@ int QDesignerFormWindow::getNumberOfUntitledWindows() const
     // Find the number of untitled windows excluding ourselves.
     // Do not fall for 'untitled.ui', match with modified place holder.
     // This will cause some problems with i18n, but for now I need the string to be "static"
-    QRegExp rx(QStringLiteral("untitled( (\\d+))?\\[\\*\\]"));
+    static const QRegularExpression rx(QStringLiteral("untitled( (\\d+))?\\[\\*\\]$"));
+    Q_ASSERT(rx.isValid());
     for (int i = 0; i < totalWindows; ++i) {
         QDesignerFormWindow *fw =  m_workbench->formWindow(i);
         if (fw != this) {
             const QString title = m_workbench->formWindow(i)->windowTitle();
-            if (rx.indexIn(title) != -1) {
+            const QRegularExpressionMatch match = rx.match(title);
+            if (match.hasMatch()) {
                 if (maxUntitled == 0)
                     ++maxUntitled;
-                if (rx.captureCount() > 1) {
-                    const QString numberCapture = rx.cap(2);
+                if (match.lastCapturedIndex() >= 2) {
+                    const QStringRef numberCapture = match.capturedRef(2);
                     if (!numberCapture.isEmpty())
                         maxUntitled = qMax(numberCapture.toInt(), maxUntitled);
                 }
