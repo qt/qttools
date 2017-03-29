@@ -63,7 +63,7 @@
 #endif
 #include "qcommandlineoption.h"
 #include "qcommandlineparser.h"
-
+#include <qhashfunctions.h>
 #include <algorithm>
 
 QT_BEGIN_NAMESPACE
