@@ -352,6 +352,8 @@ namespace qdesigner_internal
                 return true;
             if (crc > 0)
                 return false;
+            ++itThis;
+            ++itOther;
         }
         if (itOther != itOtherEnd)
             return true;
