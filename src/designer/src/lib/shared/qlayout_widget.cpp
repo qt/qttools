@@ -99,15 +99,6 @@ inline void getGridItemPosition(QFormLayout *formLayout, int index, int *row, in
 {
     qdesigner_internal::getFormLayoutItemPosition(formLayout, index, row, column, rowspan, colspan);
 }
-
-QRect gridItemInfo(const QFormLayout *form, int index)
-{
-    int row;
-    int column;
-    int colspan;
-    qdesigner_internal::getFormLayoutItemPosition(form, index, &row, &column, 0, &colspan);
-    return QRect(column, row, colspan, 1);
-}
 } // namespace anonymous
 
 QT_BEGIN_NAMESPACE
@@ -150,7 +141,6 @@ static QDebug debugGridLikeLayout(QDebug str, const GridLikeLayout &gl)
 }
 
 static inline QDebug operator<<(QDebug str, const QGridLayout &gl) { return debugGridLikeLayout(str, gl); }
-static inline QDebug operator<<(QDebug str, const QFormLayout &fl) { return debugGridLikeLayout(str, fl); }
 
 static inline bool isEmptyFormLayoutRow(const QFormLayout *fl, int row)
 {
