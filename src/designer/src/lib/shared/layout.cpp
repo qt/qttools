@@ -943,8 +943,10 @@ bool Grid::shrinkFormLayoutSpans()
     for (WidgetSet::const_iterator it = widgets.constBegin(); it != cend ; ++it) {
         QWidget *w = *it;
         int row, col,  rowspan, colspan;
-        if (!locateWidget(w, row, col, rowspan, colspan))
+        if (!locateWidget(w, row, col, rowspan, colspan)) {
             qDebug("ooops, widget '%s' does not fit in layout", w->objectName().toUtf8().constData());
+            row = col = rowspan = colspan = 0;
+        }
         const int maxColSpan = col == 0 ? 2 : 1;
         const int newColSpan = qMin(colspan, maxColSpan);
         const int newRowSpan = qMin(rowspan, maxRowSpan);
