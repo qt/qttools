@@ -400,6 +400,8 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
     }
     case CXCursor_StructDecl:
     case CXCursor_UnionDecl:
+        if (fromCXString(clang_getCursorSpelling(cursor)).isEmpty()) // anonymous struct or union
+            return CXChildVisit_Continue;
     case CXCursor_ClassDecl:
     case CXCursor_ClassTemplate: {
 
