@@ -724,7 +724,7 @@
     \gui {Edit Phrase Book}.
 
     To add a new phrase, select \gui {New Entry} (or press \key {Alt+N}) and
-    type in a new source phrase, the translation, and an optinal definition.
+    type in a new source phrase, the translation, and an optional definition.
     This is useful to distinguish different translations of the same source
     phrase.
 
@@ -1052,7 +1052,7 @@
         are optional in the plain-text system. However, with the text-ID-based
         system, this extra information becomes essential because without it you only
         have the text ID and the translator might not be able to make a sensible
-        translation from without any other context. You can use long descriptive
+        translation without any other context. You can use long descriptive
         text ID and no comments but comments are often easier to understand.
 
     \endlist
