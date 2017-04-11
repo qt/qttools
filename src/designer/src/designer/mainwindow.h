@@ -30,7 +30,7 @@
 #define MAINWINDOW_H
 
 #include <QtWidgets/QMainWindow>
-#include <QtCore/QList>
+#include <QtCore/QVector>
 #include <QtWidgets/QMdiArea>
 
 QT_BEGIN_NAMESPACE
@@ -70,7 +70,7 @@ public:
     CloseEventPolicy closeEventPolicy() const { return m_policy; }
     void setCloseEventPolicy(CloseEventPolicy pol) { m_policy = pol; }
 
-    static QList<QToolBar *> createToolBars(const QDesignerActions *actions, bool singleToolBar);
+    static QVector<QToolBar *> createToolBars(const QDesignerActions *actions, bool singleToolBar);
     static QString mainWindowTitle();
 
     // Use the minor Qt version as settings versions to avoid conflicts
@@ -117,8 +117,8 @@ public:
                             QWidget *parent,
                             QMenu *toolBarMenu,
                             const QDesignerActions *actions,
-                            const QList<QToolBar *> &toolbars,
-                            const QList<QDesignerToolWindow*> &toolWindows);
+                            const QVector<QToolBar *> &toolbars,
+                            const QVector<QDesignerToolWindow *> &toolWindows);
 
     QByteArray saveState(int version = 0) const;
     bool restoreState(const QByteArray &state, int version = 0);
@@ -133,7 +133,7 @@ private:
     QMenu *m_toolBarMenu;
     QtToolBarManager *m_manager;
     QAction *m_configureAction;
-    QList<QToolBar *> m_toolbars;
+    QVector<QToolBar *> m_toolbars;
 };
 
 /* Main window to be used for docked mode */
@@ -141,8 +141,8 @@ class DockedMainWindow : public MainWindowBase {
     Q_OBJECT
     Q_DISABLE_COPY(DockedMainWindow)
 public:
-    typedef QList<QDesignerToolWindow*> DesignerToolWindowList;
-    typedef QList<QDockWidget *> DockWidgetList;
+    typedef QVector<QDesignerToolWindow *> DesignerToolWindowList;
+    typedef QVector<QDockWidget *> DockWidgetList;
 
     explicit DockedMainWindow(QDesignerWorkbench *wb,
                               QMenu *toolBarMenu,

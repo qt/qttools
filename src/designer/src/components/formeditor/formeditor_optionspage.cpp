@@ -50,8 +50,6 @@
 
 QT_BEGIN_NAMESPACE
 
-typedef QList<int> IntList;
-
 namespace qdesigner_internal {
 
 // Zoom, currently for preview only
@@ -72,12 +70,10 @@ ZoomSettingsWidget::ZoomSettingsWidget(QWidget *parent) :
     m_zoomCombo(new QComboBox)
 {
     m_zoomCombo->setEditable(false);
-    const IntList zoomValues = ZoomMenu::zoomValues();
-    const IntList::const_iterator cend = zoomValues.constEnd();
-
-    for (IntList::const_iterator it = zoomValues.constBegin(); it != cend; ++it) {
+    const QVector<int> &zoomValues = ZoomMenu::zoomValues();
+    for (int z : zoomValues) {
         //: Zoom percentage
-        m_zoomCombo->addItem(QCoreApplication::translate("FormEditorOptionsPage", "%1 %").arg(*it), QVariant(*it));
+        m_zoomCombo->addItem(QCoreApplication::translate("FormEditorOptionsPage", "%1 %").arg(z), QVariant(z));
     }
 
     // Layout

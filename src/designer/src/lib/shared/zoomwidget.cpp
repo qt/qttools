@@ -109,10 +109,11 @@ void ZoomMenu::slotZoomMenu(QAction *a)
     emit zoomChanged(zoomOf(a));
 }
 
-QList<int> ZoomMenu::zoomValues()
+QVector<int> ZoomMenu::zoomValues()
 {
-    QList<int> rc;
+    QVector<int> rc;
     const int nz = sizeof(menuZoomList)/sizeof(int);
+    rc.reserve(nz);
     for (int i = 0; i < nz; i++)
         rc.push_back(menuZoomList[i]);
     return rc;
