@@ -263,8 +263,8 @@
 <!-- ### fixme Qt 6: Change the QList<DomProperty*> to QVector<DomProperty*> by
      removing the below line and change the virtual methods QAbstractFormBuilder::applyProperties()
      and QAbstractFormBuilder::computeProperties(QObject *obj) accordingly (repeats 2 times below). -->
-                    <xsl:when test="$xs-type='Property'">QList&lt;DomProperty*&gt;</xsl:when>
-                    <xsl:otherwise>QVector&lt;Dom<xsl:value-of select="$xs-type"/>*&gt;</xsl:otherwise>
+                    <xsl:when test="$xs-type='Property'">QList&lt;DomProperty *&gt;</xsl:when>
+                    <xsl:otherwise>QVector&lt;Dom<xsl:value-of select="$xs-type"/> *&gt;</xsl:otherwise>
                 </xsl:choose>
             </xsl:when>
             <xsl:otherwise>
@@ -289,29 +289,29 @@
         <xsl:choose>
             <xsl:when test="$array">
                 <xsl:choose>
-                    <xsl:when test="$xs-type='xs:string'">QStringList</xsl:when>
-                    <xsl:when test="$xs-type='xs:integer'">QList&lt;int&gt;</xsl:when>
-                    <xsl:when test="$xs-type='xs:float'">QList&lt;float&gt;</xsl:when>
-                    <xsl:when test="$xs-type='xs:double'">QList&lt;double&gt;</xsl:when>
-                    <xsl:when test="$xs-type='xs:boolean'">QList&lt;bool&gt;</xsl:when>
-                    <xsl:when test="$xs-type='xs:long'">QList&lt;qlonglong&gt;</xsl:when>
-                    <xsl:when test="$xs-type='xs:unsignedInt'">QList&lt;uint&gt;</xsl:when>
-                    <xsl:when test="$xs-type='xs:unsignedLong'">QList&lt;qulonglong&gt;</xsl:when>
-                    <xsl:when test="$xs-type='Property'">QList&lt;DomProperty*&gt;</xsl:when>
-                    <xsl:otherwise>QVector&lt;Dom<xsl:value-of select="$xs-type"/>*&gt;</xsl:otherwise>
+                    <xsl:when test="$xs-type='xs:string'">QStringList </xsl:when>
+                    <xsl:when test="$xs-type='xs:integer'">QList&lt;int&gt; </xsl:when>
+                    <xsl:when test="$xs-type='xs:float'">QList&lt;float&gt; </xsl:when>
+                    <xsl:when test="$xs-type='xs:double'">QList&lt;double&gt; </xsl:when>
+                    <xsl:when test="$xs-type='xs:boolean'">QList&lt;bool&gt; </xsl:when>
+                    <xsl:when test="$xs-type='xs:long'">QList&lt;qlonglong&gt; </xsl:when>
+                    <xsl:when test="$xs-type='xs:unsignedInt'">QList&lt;uint&gt; </xsl:when>
+                    <xsl:when test="$xs-type='xs:unsignedLong'">QList&lt;qulonglong&gt; </xsl:when>
+                    <xsl:when test="$xs-type='Property'">QList&lt;DomProperty*&gt; </xsl:when>
+                    <xsl:otherwise>QVector&lt;Dom<xsl:value-of select="$xs-type"/> *&gt; </xsl:otherwise>
                 </xsl:choose>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:choose>
-                    <xsl:when test="$xs-type='xs:string'">QString</xsl:when>
-                    <xsl:when test="$xs-type='xs:integer'">int</xsl:when>
-                    <xsl:when test="$xs-type='xs:float'">float</xsl:when>
-                    <xsl:when test="$xs-type='xs:double'">double</xsl:when>
-                    <xsl:when test="$xs-type='xs:boolean'">bool</xsl:when>
-                    <xsl:when test="$xs-type='xs:long'">qlonglong</xsl:when>
-                    <xsl:when test="$xs-type='xs:unsignedInt'">uint</xsl:when>
-                    <xsl:when test="$xs-type='xs:unsignedLong'">qulonglong</xsl:when>
-                    <xsl:otherwise>Dom<xsl:value-of select="$xs-type"/>*</xsl:otherwise>
+                    <xsl:when test="$xs-type='xs:string'">QString </xsl:when>
+                    <xsl:when test="$xs-type='xs:integer'">int </xsl:when>
+                    <xsl:when test="$xs-type='xs:float'">float </xsl:when>
+                    <xsl:when test="$xs-type='xs:double'">double </xsl:when>
+                    <xsl:when test="$xs-type='xs:boolean'">bool </xsl:when>
+                    <xsl:when test="$xs-type='xs:long'">qlonglong </xsl:when>
+                    <xsl:when test="$xs-type='xs:unsignedInt'">uint </xsl:when>
+                    <xsl:when test="$xs-type='xs:unsignedLong'">qulonglong </xsl:when>
+                    <xsl:otherwise>Dom<xsl:value-of select="$xs-type"/> *</xsl:otherwise>
                 </xsl:choose>
             </xsl:otherwise>
         </xsl:choose>
@@ -323,29 +323,29 @@
         <xsl:choose>
             <xsl:when test="$array">
                 <xsl:choose>
-                    <xsl:when test="$xs-type='xs:string'">const QStringList&amp;</xsl:when>
-                    <xsl:when test="$xs-type='xs:integer'">const QList&lt;int&gt;&amp;</xsl:when>
-                    <xsl:when test="$xs-type='xs:float'">const QList&lt;float&gt;&amp;</xsl:when>
-                    <xsl:when test="$xs-type='xs:double'">const QList&lt;double&gt;&amp;</xsl:when>
-                    <xsl:when test="$xs-type='xs:boolean'">const QList&lt;bool&gt;&amp;</xsl:when>
-                    <xsl:when test="$xs-type='xs:long'">const QList&lt;qlonglong&gt;&amp;</xsl:when>
-                    <xsl:when test="$xs-type='xs:unsignedInt'">const QList&lt;uint&gt;&amp;</xsl:when>
-                    <xsl:when test="$xs-type='xs:unsignedLong'">const QList&lt;qulonglong&gt;&amp;</xsl:when>
-                    <xsl:when test="$xs-type='Property'">const QList&lt;DomProperty*&gt;&amp;</xsl:when>
-                    <xsl:otherwise>const QVector&lt;Dom<xsl:value-of select="$xs-type"/>*&gt;&amp;</xsl:otherwise>
+                    <xsl:when test="$xs-type='xs:string'">const QStringList &amp;</xsl:when>
+                    <xsl:when test="$xs-type='xs:integer'">const QList&lt;int&gt; &amp;</xsl:when>
+                    <xsl:when test="$xs-type='xs:float'">const QList&lt;float&gt; &amp;</xsl:when>
+                    <xsl:when test="$xs-type='xs:double'">const QList&lt;double&gt; &amp;</xsl:when>
+                    <xsl:when test="$xs-type='xs:boolean'">const QList&lt;bool&gt; &amp;</xsl:when>
+                    <xsl:when test="$xs-type='xs:long'">const QList&lt;qlonglong&gt; &amp;</xsl:when>
+                    <xsl:when test="$xs-type='xs:unsignedInt'">const QList&lt;uint&gt; &amp;</xsl:when>
+                    <xsl:when test="$xs-type='xs:unsignedLong'">const QList&lt;qulonglong&gt; &amp;</xsl:when>
+                    <xsl:when test="$xs-type='Property'">const QList&lt;DomProperty *&gt; &amp;</xsl:when>
+                    <xsl:otherwise>const QVector&lt;Dom<xsl:value-of select="$xs-type"/> *&gt; &amp;</xsl:otherwise>
                 </xsl:choose>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:choose>
-                    <xsl:when test="$xs-type='xs:string'">const QString&amp;</xsl:when>
-                    <xsl:when test="$xs-type='xs:integer'">int</xsl:when>
-                    <xsl:when test="$xs-type='xs:float'">float</xsl:when>
-                    <xsl:when test="$xs-type='xs:double'">double</xsl:when>
-                    <xsl:when test="$xs-type='xs:boolean'">bool</xsl:when>
-                    <xsl:when test="$xs-type='xs:long'">qlonglong</xsl:when>
-                    <xsl:when test="$xs-type='xs:unsignedInt'">uint</xsl:when>
-                    <xsl:when test="$xs-type='xs:unsignedLong'">qulonglong</xsl:when>
-                    <xsl:otherwise>Dom<xsl:value-of select="$xs-type"/>*</xsl:otherwise>
+                    <xsl:when test="$xs-type='xs:string'">const QString &amp;</xsl:when>
+                    <xsl:when test="$xs-type='xs:integer'">int </xsl:when>
+                    <xsl:when test="$xs-type='xs:float'">float </xsl:when>
+                    <xsl:when test="$xs-type='xs:double'">double </xsl:when>
+                    <xsl:when test="$xs-type='xs:boolean'">bool </xsl:when>
+                    <xsl:when test="$xs-type='xs:long'">qlonglong </xsl:when>
+                    <xsl:when test="$xs-type='xs:unsignedInt'">uint </xsl:when>
+                    <xsl:when test="$xs-type='xs:unsignedLong'">qulonglong </xsl:when>
+                    <xsl:otherwise>Dom<xsl:value-of select="$xs-type"/> *</xsl:otherwise>
                 </xsl:choose>
             </xsl:otherwise>
         </xsl:choose>

@@ -172,17 +172,17 @@ public:
     // attribute accessors
     inline bool hasAttributeVersion() const { return m_has_attr_version; }
     inline QString attributeVersion() const { return m_attr_version; }
-    inline void setAttributeVersion(const QString& a) { m_attr_version = a; m_has_attr_version = true; }
+    inline void setAttributeVersion(const QString &a) { m_attr_version = a; m_has_attr_version = true; }
     inline void clearAttributeVersion() { m_has_attr_version = false; }
 
     inline bool hasAttributeLanguage() const { return m_has_attr_language; }
     inline QString attributeLanguage() const { return m_attr_language; }
-    inline void setAttributeLanguage(const QString& a) { m_attr_language = a; m_has_attr_language = true; }
+    inline void setAttributeLanguage(const QString &a) { m_attr_language = a; m_has_attr_language = true; }
     inline void clearAttributeLanguage() { m_has_attr_language = false; }
 
     inline bool hasAttributeDisplayname() const { return m_has_attr_displayname; }
     inline QString attributeDisplayname() const { return m_attr_displayname; }
-    inline void setAttributeDisplayname(const QString& a) { m_attr_displayname = a; m_has_attr_displayname = true; }
+    inline void setAttributeDisplayname(const QString &a) { m_attr_displayname = a; m_has_attr_displayname = true; }
     inline void clearAttributeDisplayname() { m_has_attr_displayname = false; }
 
     inline bool hasAttributeStdsetdef() const { return m_has_attr_stdsetdef; }
@@ -197,99 +197,99 @@ public:
 
     // child element accessors
     inline QString elementAuthor() const { return m_author; }
-    void setElementAuthor(const QString& a);
+    void setElementAuthor(const QString &a);
     inline bool hasElementAuthor() const { return m_children & Author; }
     void clearElementAuthor();
 
     inline QString elementComment() const { return m_comment; }
-    void setElementComment(const QString& a);
+    void setElementComment(const QString &a);
     inline bool hasElementComment() const { return m_children & Comment; }
     void clearElementComment();
 
     inline QString elementExportMacro() const { return m_exportMacro; }
-    void setElementExportMacro(const QString& a);
+    void setElementExportMacro(const QString &a);
     inline bool hasElementExportMacro() const { return m_children & ExportMacro; }
     void clearElementExportMacro();
 
     inline QString elementClass() const { return m_class; }
-    void setElementClass(const QString& a);
+    void setElementClass(const QString &a);
     inline bool hasElementClass() const { return m_children & Class; }
     void clearElementClass();
 
-    inline DomWidget* elementWidget() const { return m_widget; }
-    DomWidget* takeElementWidget();
-    void setElementWidget(DomWidget* a);
+    inline DomWidget *elementWidget() const { return m_widget; }
+    DomWidget *takeElementWidget();
+    void setElementWidget(DomWidget *a);
     inline bool hasElementWidget() const { return m_children & Widget; }
     void clearElementWidget();
 
-    inline DomLayoutDefault* elementLayoutDefault() const { return m_layoutDefault; }
-    DomLayoutDefault* takeElementLayoutDefault();
-    void setElementLayoutDefault(DomLayoutDefault* a);
+    inline DomLayoutDefault *elementLayoutDefault() const { return m_layoutDefault; }
+    DomLayoutDefault *takeElementLayoutDefault();
+    void setElementLayoutDefault(DomLayoutDefault *a);
     inline bool hasElementLayoutDefault() const { return m_children & LayoutDefault; }
     void clearElementLayoutDefault();
 
-    inline DomLayoutFunction* elementLayoutFunction() const { return m_layoutFunction; }
-    DomLayoutFunction* takeElementLayoutFunction();
-    void setElementLayoutFunction(DomLayoutFunction* a);
+    inline DomLayoutFunction *elementLayoutFunction() const { return m_layoutFunction; }
+    DomLayoutFunction *takeElementLayoutFunction();
+    void setElementLayoutFunction(DomLayoutFunction *a);
     inline bool hasElementLayoutFunction() const { return m_children & LayoutFunction; }
     void clearElementLayoutFunction();
 
     inline QString elementPixmapFunction() const { return m_pixmapFunction; }
-    void setElementPixmapFunction(const QString& a);
+    void setElementPixmapFunction(const QString &a);
     inline bool hasElementPixmapFunction() const { return m_children & PixmapFunction; }
     void clearElementPixmapFunction();
 
-    inline DomCustomWidgets* elementCustomWidgets() const { return m_customWidgets; }
-    DomCustomWidgets* takeElementCustomWidgets();
-    void setElementCustomWidgets(DomCustomWidgets* a);
+    inline DomCustomWidgets *elementCustomWidgets() const { return m_customWidgets; }
+    DomCustomWidgets *takeElementCustomWidgets();
+    void setElementCustomWidgets(DomCustomWidgets *a);
     inline bool hasElementCustomWidgets() const { return m_children & CustomWidgets; }
     void clearElementCustomWidgets();
 
-    inline DomTabStops* elementTabStops() const { return m_tabStops; }
-    DomTabStops* takeElementTabStops();
-    void setElementTabStops(DomTabStops* a);
+    inline DomTabStops *elementTabStops() const { return m_tabStops; }
+    DomTabStops *takeElementTabStops();
+    void setElementTabStops(DomTabStops *a);
     inline bool hasElementTabStops() const { return m_children & TabStops; }
     void clearElementTabStops();
 
-    inline DomImages* elementImages() const { return m_images; }
-    DomImages* takeElementImages();
-    void setElementImages(DomImages* a);
+    inline DomImages *elementImages() const { return m_images; }
+    DomImages *takeElementImages();
+    void setElementImages(DomImages *a);
     inline bool hasElementImages() const { return m_children & Images; }
     void clearElementImages();
 
-    inline DomIncludes* elementIncludes() const { return m_includes; }
-    DomIncludes* takeElementIncludes();
-    void setElementIncludes(DomIncludes* a);
+    inline DomIncludes *elementIncludes() const { return m_includes; }
+    DomIncludes *takeElementIncludes();
+    void setElementIncludes(DomIncludes *a);
     inline bool hasElementIncludes() const { return m_children & Includes; }
     void clearElementIncludes();
 
-    inline DomResources* elementResources() const { return m_resources; }
-    DomResources* takeElementResources();
-    void setElementResources(DomResources* a);
+    inline DomResources *elementResources() const { return m_resources; }
+    DomResources *takeElementResources();
+    void setElementResources(DomResources *a);
     inline bool hasElementResources() const { return m_children & Resources; }
     void clearElementResources();
 
-    inline DomConnections* elementConnections() const { return m_connections; }
-    DomConnections* takeElementConnections();
-    void setElementConnections(DomConnections* a);
+    inline DomConnections *elementConnections() const { return m_connections; }
+    DomConnections *takeElementConnections();
+    void setElementConnections(DomConnections *a);
     inline bool hasElementConnections() const { return m_children & Connections; }
     void clearElementConnections();
 
-    inline DomDesignerData* elementDesignerdata() const { return m_designerdata; }
-    DomDesignerData* takeElementDesignerdata();
-    void setElementDesignerdata(DomDesignerData* a);
+    inline DomDesignerData *elementDesignerdata() const { return m_designerdata; }
+    DomDesignerData *takeElementDesignerdata();
+    void setElementDesignerdata(DomDesignerData *a);
     inline bool hasElementDesignerdata() const { return m_children & Designerdata; }
     void clearElementDesignerdata();
 
-    inline DomSlots* elementSlots() const { return m_slots; }
-    DomSlots* takeElementSlots();
-    void setElementSlots(DomSlots* a);
+    inline DomSlots *elementSlots() const { return m_slots; }
+    DomSlots *takeElementSlots();
+    void setElementSlots(DomSlots *a);
     inline bool hasElementSlots() const { return m_children & Slots; }
     void clearElementSlots();
 
-    inline DomButtonGroups* elementButtonGroups() const { return m_buttonGroups; }
-    DomButtonGroups* takeElementButtonGroups();
-    void setElementButtonGroups(DomButtonGroups* a);
+    inline DomButtonGroups *elementButtonGroups() const { return m_buttonGroups; }
+    DomButtonGroups *takeElementButtonGroups();
+    void setElementButtonGroups(DomButtonGroups *a);
     inline bool hasElementButtonGroups() const { return m_children & ButtonGroups; }
     void clearElementButtonGroups();
 
@@ -319,19 +319,19 @@ private:
     QString m_comment;
     QString m_exportMacro;
     QString m_class;
-    DomWidget* m_widget;
-    DomLayoutDefault* m_layoutDefault;
-    DomLayoutFunction* m_layoutFunction;
+    DomWidget *m_widget;
+    DomLayoutDefault *m_layoutDefault;
+    DomLayoutFunction *m_layoutFunction;
     QString m_pixmapFunction;
-    DomCustomWidgets* m_customWidgets;
-    DomTabStops* m_tabStops;
-    DomImages* m_images;
-    DomIncludes* m_includes;
-    DomResources* m_resources;
-    DomConnections* m_connections;
-    DomDesignerData* m_designerdata;
-    DomSlots* m_slots;
-    DomButtonGroups* m_buttonGroups;
+    DomCustomWidgets *m_customWidgets;
+    DomTabStops *m_tabStops;
+    DomImages *m_images;
+    DomIncludes *m_includes;
+    DomResources *m_resources;
+    DomConnections *m_connections;
+    DomDesignerData *m_designerdata;
+    DomSlots *m_slots;
+    DomButtonGroups *m_buttonGroups;
     enum Child {
         Author = 1,
         Comment = 2,
@@ -364,19 +364,17 @@ public:
     inline QString text() const { return m_text; }
     inline void setText(const QString &s) { m_text = s; }
 
-    // attribute accessors
     // child element accessors
-    inline QVector<DomInclude*> elementInclude() const { return m_include; }
-    void setElementInclude(const QVector<DomInclude*>& a);
+    inline QVector<DomInclude *> elementInclude() const { return m_include; }
+    void setElementInclude(const QVector<DomInclude *> &a);
 
 private:
     QString m_text;
     void clear(bool clear_all = true);
 
-    // attribute data
     // child element data
     uint m_children;
-    QVector<DomInclude*> m_include;
+    QVector<DomInclude *> m_include;
     enum Child {
         Include = 1
     };
@@ -396,15 +394,14 @@ public:
     // attribute accessors
     inline bool hasAttributeLocation() const { return m_has_attr_location; }
     inline QString attributeLocation() const { return m_attr_location; }
-    inline void setAttributeLocation(const QString& a) { m_attr_location = a; m_has_attr_location = true; }
+    inline void setAttributeLocation(const QString &a) { m_attr_location = a; m_has_attr_location = true; }
     inline void clearAttributeLocation() { m_has_attr_location = false; }
 
     inline bool hasAttributeImpldecl() const { return m_has_attr_impldecl; }
     inline QString attributeImpldecl() const { return m_attr_impldecl; }
-    inline void setAttributeImpldecl(const QString& a) { m_attr_impldecl = a; m_has_attr_impldecl = true; }
+    inline void setAttributeImpldecl(const QString &a) { m_attr_impldecl = a; m_has_attr_impldecl = true; }
     inline void clearAttributeImpldecl() { m_has_attr_impldecl = false; }
 
-    // child element accessors
 private:
     QString m_text;
     void clear(bool clear_all = true);
@@ -416,8 +413,6 @@ private:
     QString m_attr_impldecl;
     bool m_has_attr_impldecl;
 
-    // child element data
-    uint m_children;
 };
 
 class QDESIGNER_UILIB_EXPORT DomResources {
@@ -434,12 +429,12 @@ public:
     // attribute accessors
     inline bool hasAttributeName() const { return m_has_attr_name; }
     inline QString attributeName() const { return m_attr_name; }
-    inline void setAttributeName(const QString& a) { m_attr_name = a; m_has_attr_name = true; }
+    inline void setAttributeName(const QString &a) { m_attr_name = a; m_has_attr_name = true; }
     inline void clearAttributeName() { m_has_attr_name = false; }
 
     // child element accessors
-    inline QVector<DomResource*> elementInclude() const { return m_include; }
-    void setElementInclude(const QVector<DomResource*>& a);
+    inline QVector<DomResource *> elementInclude() const { return m_include; }
+    void setElementInclude(const QVector<DomResource *> &a);
 
 private:
     QString m_text;
@@ -451,7 +446,7 @@ private:
 
     // child element data
     uint m_children;
-    QVector<DomResource*> m_include;
+    QVector<DomResource *> m_include;
     enum Child {
         Include = 1
     };
@@ -471,10 +466,9 @@ public:
     // attribute accessors
     inline bool hasAttributeLocation() const { return m_has_attr_location; }
     inline QString attributeLocation() const { return m_attr_location; }
-    inline void setAttributeLocation(const QString& a) { m_attr_location = a; m_has_attr_location = true; }
+    inline void setAttributeLocation(const QString &a) { m_attr_location = a; m_has_attr_location = true; }
     inline void clearAttributeLocation() { m_has_attr_location = false; }
 
-    // child element accessors
 private:
     QString m_text;
     void clear(bool clear_all = true);
@@ -483,8 +477,6 @@ private:
     QString m_attr_location;
     bool m_has_attr_location;
 
-    // child element data
-    uint m_children;
 };
 
 class QDESIGNER_UILIB_EXPORT DomActionGroup {
@@ -501,21 +493,21 @@ public:
     // attribute accessors
     inline bool hasAttributeName() const { return m_has_attr_name; }
     inline QString attributeName() const { return m_attr_name; }
-    inline void setAttributeName(const QString& a) { m_attr_name = a; m_has_attr_name = true; }
+    inline void setAttributeName(const QString &a) { m_attr_name = a; m_has_attr_name = true; }
     inline void clearAttributeName() { m_has_attr_name = false; }
 
     // child element accessors
-    inline QVector<DomAction*> elementAction() const { return m_action; }
-    void setElementAction(const QVector<DomAction*>& a);
+    inline QVector<DomAction *> elementAction() const { return m_action; }
+    void setElementAction(const QVector<DomAction *> &a);
 
-    inline QVector<DomActionGroup*> elementActionGroup() const { return m_actionGroup; }
-    void setElementActionGroup(const QVector<DomActionGroup*>& a);
+    inline QVector<DomActionGroup *> elementActionGroup() const { return m_actionGroup; }
+    void setElementActionGroup(const QVector<DomActionGroup *> &a);
 
     inline QList<DomProperty*> elementProperty() const { return m_property; }
-    void setElementProperty(const QList<DomProperty*>& a);
+    void setElementProperty(const QList<DomProperty *> &a);
 
     inline QList<DomProperty*> elementAttribute() const { return m_attribute; }
-    void setElementAttribute(const QList<DomProperty*>& a);
+    void setElementAttribute(const QList<DomProperty *> &a);
 
 private:
     QString m_text;
@@ -527,8 +519,8 @@ private:
 
     // child element data
     uint m_children;
-    QVector<DomAction*> m_action;
-    QVector<DomActionGroup*> m_actionGroup;
+    QVector<DomAction *> m_action;
+    QVector<DomActionGroup *> m_actionGroup;
     QList<DomProperty*> m_property;
     QList<DomProperty*> m_attribute;
     enum Child {
@@ -553,20 +545,20 @@ public:
     // attribute accessors
     inline bool hasAttributeName() const { return m_has_attr_name; }
     inline QString attributeName() const { return m_attr_name; }
-    inline void setAttributeName(const QString& a) { m_attr_name = a; m_has_attr_name = true; }
+    inline void setAttributeName(const QString &a) { m_attr_name = a; m_has_attr_name = true; }
     inline void clearAttributeName() { m_has_attr_name = false; }
 
     inline bool hasAttributeMenu() const { return m_has_attr_menu; }
     inline QString attributeMenu() const { return m_attr_menu; }
-    inline void setAttributeMenu(const QString& a) { m_attr_menu = a; m_has_attr_menu = true; }
+    inline void setAttributeMenu(const QString &a) { m_attr_menu = a; m_has_attr_menu = true; }
     inline void clearAttributeMenu() { m_has_attr_menu = false; }
 
     // child element accessors
     inline QList<DomProperty*> elementProperty() const { return m_property; }
-    void setElementProperty(const QList<DomProperty*>& a);
+    void setElementProperty(const QList<DomProperty *> &a);
 
     inline QList<DomProperty*> elementAttribute() const { return m_attribute; }
-    void setElementAttribute(const QList<DomProperty*>& a);
+    void setElementAttribute(const QList<DomProperty *> &a);
 
 private:
     QString m_text;
@@ -603,10 +595,9 @@ public:
     // attribute accessors
     inline bool hasAttributeName() const { return m_has_attr_name; }
     inline QString attributeName() const { return m_attr_name; }
-    inline void setAttributeName(const QString& a) { m_attr_name = a; m_has_attr_name = true; }
+    inline void setAttributeName(const QString &a) { m_attr_name = a; m_has_attr_name = true; }
     inline void clearAttributeName() { m_has_attr_name = false; }
 
-    // child element accessors
 private:
     QString m_text;
     void clear(bool clear_all = true);
@@ -615,8 +606,6 @@ private:
     QString m_attr_name;
     bool m_has_attr_name;
 
-    // child element data
-    uint m_children;
 };
 
 class QDESIGNER_UILIB_EXPORT DomButtonGroup {
@@ -633,15 +622,15 @@ public:
     // attribute accessors
     inline bool hasAttributeName() const { return m_has_attr_name; }
     inline QString attributeName() const { return m_attr_name; }
-    inline void setAttributeName(const QString& a) { m_attr_name = a; m_has_attr_name = true; }
+    inline void setAttributeName(const QString &a) { m_attr_name = a; m_has_attr_name = true; }
     inline void clearAttributeName() { m_has_attr_name = false; }
 
     // child element accessors
     inline QList<DomProperty*> elementProperty() const { return m_property; }
-    void setElementProperty(const QList<DomProperty*>& a);
+    void setElementProperty(const QList<DomProperty *> &a);
 
     inline QList<DomProperty*> elementAttribute() const { return m_attribute; }
-    void setElementAttribute(const QList<DomProperty*>& a);
+    void setElementAttribute(const QList<DomProperty *> &a);
 
 private:
     QString m_text;
@@ -672,19 +661,17 @@ public:
     inline QString text() const { return m_text; }
     inline void setText(const QString &s) { m_text = s; }
 
-    // attribute accessors
     // child element accessors
-    inline QVector<DomButtonGroup*> elementButtonGroup() const { return m_buttonGroup; }
-    void setElementButtonGroup(const QVector<DomButtonGroup*>& a);
+    inline QVector<DomButtonGroup *> elementButtonGroup() const { return m_buttonGroup; }
+    void setElementButtonGroup(const QVector<DomButtonGroup *> &a);
 
 private:
     QString m_text;
     void clear(bool clear_all = true);
 
-    // attribute data
     // child element data
     uint m_children;
-    QVector<DomButtonGroup*> m_buttonGroup;
+    QVector<DomButtonGroup *> m_buttonGroup;
     enum Child {
         ButtonGroup = 1
     };
@@ -701,19 +688,17 @@ public:
     inline QString text() const { return m_text; }
     inline void setText(const QString &s) { m_text = s; }
 
-    // attribute accessors
     // child element accessors
-    inline QVector<DomImage*> elementImage() const { return m_image; }
-    void setElementImage(const QVector<DomImage*>& a);
+    inline QVector<DomImage *> elementImage() const { return m_image; }
+    void setElementImage(const QVector<DomImage *> &a);
 
 private:
     QString m_text;
     void clear(bool clear_all = true);
 
-    // attribute data
     // child element data
     uint m_children;
-    QVector<DomImage*> m_image;
+    QVector<DomImage *> m_image;
     enum Child {
         Image = 1
     };
@@ -733,13 +718,13 @@ public:
     // attribute accessors
     inline bool hasAttributeName() const { return m_has_attr_name; }
     inline QString attributeName() const { return m_attr_name; }
-    inline void setAttributeName(const QString& a) { m_attr_name = a; m_has_attr_name = true; }
+    inline void setAttributeName(const QString &a) { m_attr_name = a; m_has_attr_name = true; }
     inline void clearAttributeName() { m_has_attr_name = false; }
 
     // child element accessors
-    inline DomImageData* elementData() const { return m_data; }
-    DomImageData* takeElementData();
-    void setElementData(DomImageData* a);
+    inline DomImageData *elementData() const { return m_data; }
+    DomImageData *takeElementData();
+    void setElementData(DomImageData *a);
     inline bool hasElementData() const { return m_children & Data; }
     void clearElementData();
 
@@ -753,7 +738,7 @@ private:
 
     // child element data
     uint m_children;
-    DomImageData* m_data;
+    DomImageData *m_data;
     enum Child {
         Data = 1
     };
@@ -773,7 +758,7 @@ public:
     // attribute accessors
     inline bool hasAttributeFormat() const { return m_has_attr_format; }
     inline QString attributeFormat() const { return m_attr_format; }
-    inline void setAttributeFormat(const QString& a) { m_attr_format = a; m_has_attr_format = true; }
+    inline void setAttributeFormat(const QString &a) { m_attr_format = a; m_has_attr_format = true; }
     inline void clearAttributeFormat() { m_has_attr_format = false; }
 
     inline bool hasAttributeLength() const { return m_has_attr_length; }
@@ -781,7 +766,6 @@ public:
     inline void setAttributeLength(int a) { m_attr_length = a; m_has_attr_length = true; }
     inline void clearAttributeLength() { m_has_attr_length = false; }
 
-    // child element accessors
 private:
     QString m_text;
     void clear(bool clear_all = true);
@@ -793,8 +777,6 @@ private:
     int m_attr_length;
     bool m_has_attr_length;
 
-    // child element data
-    uint m_children;
 };
 
 class QDESIGNER_UILIB_EXPORT DomCustomWidgets {
@@ -808,19 +790,17 @@ public:
     inline QString text() const { return m_text; }
     inline void setText(const QString &s) { m_text = s; }
 
-    // attribute accessors
     // child element accessors
-    inline QVector<DomCustomWidget*> elementCustomWidget() const { return m_customWidget; }
-    void setElementCustomWidget(const QVector<DomCustomWidget*>& a);
+    inline QVector<DomCustomWidget *> elementCustomWidget() const { return m_customWidget; }
+    void setElementCustomWidget(const QVector<DomCustomWidget *> &a);
 
 private:
     QString m_text;
     void clear(bool clear_all = true);
 
-    // attribute data
     // child element data
     uint m_children;
-    QVector<DomCustomWidget*> m_customWidget;
+    QVector<DomCustomWidget *> m_customWidget;
     enum Child {
         CustomWidget = 1
     };
@@ -840,10 +820,9 @@ public:
     // attribute accessors
     inline bool hasAttributeLocation() const { return m_has_attr_location; }
     inline QString attributeLocation() const { return m_attr_location; }
-    inline void setAttributeLocation(const QString& a) { m_attr_location = a; m_has_attr_location = true; }
+    inline void setAttributeLocation(const QString &a) { m_attr_location = a; m_has_attr_location = true; }
     inline void clearAttributeLocation() { m_has_attr_location = false; }
 
-    // child element accessors
 private:
     QString m_text;
     void clear(bool clear_all = true);
@@ -852,8 +831,6 @@ private:
     QString m_attr_location;
     bool m_has_attr_location;
 
-    // child element data
-    uint m_children;
 };
 
 class QDESIGNER_UILIB_EXPORT DomCustomWidget {
@@ -867,32 +844,31 @@ public:
     inline QString text() const { return m_text; }
     inline void setText(const QString &s) { m_text = s; }
 
-    // attribute accessors
     // child element accessors
     inline QString elementClass() const { return m_class; }
-    void setElementClass(const QString& a);
+    void setElementClass(const QString &a);
     inline bool hasElementClass() const { return m_children & Class; }
     void clearElementClass();
 
     inline QString elementExtends() const { return m_extends; }
-    void setElementExtends(const QString& a);
+    void setElementExtends(const QString &a);
     inline bool hasElementExtends() const { return m_children & Extends; }
     void clearElementExtends();
 
-    inline DomHeader* elementHeader() const { return m_header; }
-    DomHeader* takeElementHeader();
-    void setElementHeader(DomHeader* a);
+    inline DomHeader *elementHeader() const { return m_header; }
+    DomHeader *takeElementHeader();
+    void setElementHeader(DomHeader *a);
     inline bool hasElementHeader() const { return m_children & Header; }
     void clearElementHeader();
 
-    inline DomSize* elementSizeHint() const { return m_sizeHint; }
-    DomSize* takeElementSizeHint();
-    void setElementSizeHint(DomSize* a);
+    inline DomSize *elementSizeHint() const { return m_sizeHint; }
+    DomSize *takeElementSizeHint();
+    void setElementSizeHint(DomSize *a);
     inline bool hasElementSizeHint() const { return m_children & SizeHint; }
     void clearElementSizeHint();
 
     inline QString elementAddPageMethod() const { return m_addPageMethod; }
-    void setElementAddPageMethod(const QString& a);
+    void setElementAddPageMethod(const QString &a);
     inline bool hasElementAddPageMethod() const { return m_children & AddPageMethod; }
     void clearElementAddPageMethod();
 
@@ -901,38 +877,38 @@ public:
     inline bool hasElementContainer() const { return m_children & Container; }
     void clearElementContainer();
 
-    inline DomSizePolicyData* elementSizePolicy() const { return m_sizePolicy; }
-    DomSizePolicyData* takeElementSizePolicy();
-    void setElementSizePolicy(DomSizePolicyData* a);
+    inline DomSizePolicyData *elementSizePolicy() const { return m_sizePolicy; }
+    DomSizePolicyData *takeElementSizePolicy();
+    void setElementSizePolicy(DomSizePolicyData *a);
     inline bool hasElementSizePolicy() const { return m_children & SizePolicy; }
     void clearElementSizePolicy();
 
     inline QString elementPixmap() const { return m_pixmap; }
-    void setElementPixmap(const QString& a);
+    void setElementPixmap(const QString &a);
     inline bool hasElementPixmap() const { return m_children & Pixmap; }
     void clearElementPixmap();
 
-    inline DomScript* elementScript() const { return m_script; }
-    DomScript* takeElementScript();
-    void setElementScript(DomScript* a);
+    inline DomScript *elementScript() const { return m_script; }
+    DomScript *takeElementScript();
+    void setElementScript(DomScript *a);
     inline bool hasElementScript() const { return m_children & Script; }
     void clearElementScript();
 
-    inline DomProperties* elementProperties() const { return m_properties; }
-    DomProperties* takeElementProperties();
-    void setElementProperties(DomProperties* a);
+    inline DomProperties *elementProperties() const { return m_properties; }
+    DomProperties *takeElementProperties();
+    void setElementProperties(DomProperties *a);
     inline bool hasElementProperties() const { return m_children & Properties; }
     void clearElementProperties();
 
-    inline DomSlots* elementSlots() const { return m_slots; }
-    DomSlots* takeElementSlots();
-    void setElementSlots(DomSlots* a);
+    inline DomSlots *elementSlots() const { return m_slots; }
+    DomSlots *takeElementSlots();
+    void setElementSlots(DomSlots *a);
     inline bool hasElementSlots() const { return m_children & Slots; }
     void clearElementSlots();
 
-    inline DomPropertySpecifications* elementPropertyspecifications() const { return m_propertyspecifications; }
-    DomPropertySpecifications* takeElementPropertyspecifications();
-    void setElementPropertyspecifications(DomPropertySpecifications* a);
+    inline DomPropertySpecifications *elementPropertyspecifications() const { return m_propertyspecifications; }
+    DomPropertySpecifications *takeElementPropertyspecifications();
+    void setElementPropertyspecifications(DomPropertySpecifications *a);
     inline bool hasElementPropertyspecifications() const { return m_children & Propertyspecifications; }
     void clearElementPropertyspecifications();
 
@@ -940,21 +916,20 @@ private:
     QString m_text;
     void clear(bool clear_all = true);
 
-    // attribute data
     // child element data
     uint m_children;
     QString m_class;
     QString m_extends;
-    DomHeader* m_header;
-    DomSize* m_sizeHint;
+    DomHeader *m_header;
+    DomSize *m_sizeHint;
     QString m_addPageMethod;
     int m_container;
-    DomSizePolicyData* m_sizePolicy;
+    DomSizePolicyData *m_sizePolicy;
     QString m_pixmap;
-    DomScript* m_script;
-    DomProperties* m_properties;
-    DomSlots* m_slots;
-    DomPropertySpecifications* m_propertyspecifications;
+    DomScript *m_script;
+    DomProperties *m_properties;
+    DomSlots *m_slots;
+    DomPropertySpecifications *m_propertyspecifications;
     enum Child {
         Class = 1,
         Extends = 2,
@@ -982,19 +957,17 @@ public:
     inline QString text() const { return m_text; }
     inline void setText(const QString &s) { m_text = s; }
 
-    // attribute accessors
     // child element accessors
-    inline QVector<DomPropertyData*> elementProperty() const { return m_property; }
-    void setElementProperty(const QVector<DomPropertyData*>& a);
+    inline QVector<DomPropertyData *> elementProperty() const { return m_property; }
+    void setElementProperty(const QVector<DomPropertyData *> &a);
 
 private:
     QString m_text;
     void clear(bool clear_all = true);
 
-    // attribute data
     // child element data
     uint m_children;
-    QVector<DomPropertyData*> m_property;
+    QVector<DomPropertyData *> m_property;
     enum Child {
         Property = 1
     };
@@ -1014,10 +987,9 @@ public:
     // attribute accessors
     inline bool hasAttributeType() const { return m_has_attr_type; }
     inline QString attributeType() const { return m_attr_type; }
-    inline void setAttributeType(const QString& a) { m_attr_type = a; m_has_attr_type = true; }
+    inline void setAttributeType(const QString &a) { m_attr_type = a; m_has_attr_type = true; }
     inline void clearAttributeType() { m_has_attr_type = false; }
 
-    // child element accessors
 private:
     QString m_text;
     void clear(bool clear_all = true);
@@ -1026,8 +998,6 @@ private:
     QString m_attr_type;
     bool m_has_attr_type;
 
-    // child element data
-    uint m_children;
 };
 
 class QDESIGNER_UILIB_EXPORT DomSizePolicyData {
@@ -1041,7 +1011,6 @@ public:
     inline QString text() const { return m_text; }
     inline void setText(const QString &s) { m_text = s; }
 
-    // attribute accessors
     // child element accessors
     inline int elementHorData() const { return m_horData; }
     void setElementHorData(int a);
@@ -1057,7 +1026,6 @@ private:
     QString m_text;
     void clear(bool clear_all = true);
 
-    // attribute data
     // child element data
     uint m_children;
     int m_horData;
@@ -1090,7 +1058,6 @@ public:
     inline void setAttributeMargin(int a) { m_attr_margin = a; m_has_attr_margin = true; }
     inline void clearAttributeMargin() { m_has_attr_margin = false; }
 
-    // child element accessors
 private:
     QString m_text;
     void clear(bool clear_all = true);
@@ -1102,8 +1069,6 @@ private:
     int m_attr_margin;
     bool m_has_attr_margin;
 
-    // child element data
-    uint m_children;
 };
 
 class QDESIGNER_UILIB_EXPORT DomLayoutFunction {
@@ -1120,15 +1085,14 @@ public:
     // attribute accessors
     inline bool hasAttributeSpacing() const { return m_has_attr_spacing; }
     inline QString attributeSpacing() const { return m_attr_spacing; }
-    inline void setAttributeSpacing(const QString& a) { m_attr_spacing = a; m_has_attr_spacing = true; }
+    inline void setAttributeSpacing(const QString &a) { m_attr_spacing = a; m_has_attr_spacing = true; }
     inline void clearAttributeSpacing() { m_has_attr_spacing = false; }
 
     inline bool hasAttributeMargin() const { return m_has_attr_margin; }
     inline QString attributeMargin() const { return m_attr_margin; }
-    inline void setAttributeMargin(const QString& a) { m_attr_margin = a; m_has_attr_margin = true; }
+    inline void setAttributeMargin(const QString &a) { m_attr_margin = a; m_has_attr_margin = true; }
     inline void clearAttributeMargin() { m_has_attr_margin = false; }
 
-    // child element accessors
 private:
     QString m_text;
     void clear(bool clear_all = true);
@@ -1140,8 +1104,6 @@ private:
     QString m_attr_margin;
     bool m_has_attr_margin;
 
-    // child element data
-    uint m_children;
 };
 
 class QDESIGNER_UILIB_EXPORT DomTabStops {
@@ -1155,16 +1117,14 @@ public:
     inline QString text() const { return m_text; }
     inline void setText(const QString &s) { m_text = s; }
 
-    // attribute accessors
     // child element accessors
     inline QStringList elementTabStop() const { return m_tabStop; }
-    void setElementTabStop(const QStringList& a);
+    void setElementTabStop(const QStringList &a);
 
 private:
     QString m_text;
     void clear(bool clear_all = true);
 
-    // attribute data
     // child element data
     uint m_children;
     QStringList m_tabStop;
@@ -1187,48 +1147,48 @@ public:
     // attribute accessors
     inline bool hasAttributeClass() const { return m_has_attr_class; }
     inline QString attributeClass() const { return m_attr_class; }
-    inline void setAttributeClass(const QString& a) { m_attr_class = a; m_has_attr_class = true; }
+    inline void setAttributeClass(const QString &a) { m_attr_class = a; m_has_attr_class = true; }
     inline void clearAttributeClass() { m_has_attr_class = false; }
 
     inline bool hasAttributeName() const { return m_has_attr_name; }
     inline QString attributeName() const { return m_attr_name; }
-    inline void setAttributeName(const QString& a) { m_attr_name = a; m_has_attr_name = true; }
+    inline void setAttributeName(const QString &a) { m_attr_name = a; m_has_attr_name = true; }
     inline void clearAttributeName() { m_has_attr_name = false; }
 
     inline bool hasAttributeStretch() const { return m_has_attr_stretch; }
     inline QString attributeStretch() const { return m_attr_stretch; }
-    inline void setAttributeStretch(const QString& a) { m_attr_stretch = a; m_has_attr_stretch = true; }
+    inline void setAttributeStretch(const QString &a) { m_attr_stretch = a; m_has_attr_stretch = true; }
     inline void clearAttributeStretch() { m_has_attr_stretch = false; }
 
     inline bool hasAttributeRowStretch() const { return m_has_attr_rowStretch; }
     inline QString attributeRowStretch() const { return m_attr_rowStretch; }
-    inline void setAttributeRowStretch(const QString& a) { m_attr_rowStretch = a; m_has_attr_rowStretch = true; }
+    inline void setAttributeRowStretch(const QString &a) { m_attr_rowStretch = a; m_has_attr_rowStretch = true; }
     inline void clearAttributeRowStretch() { m_has_attr_rowStretch = false; }
 
     inline bool hasAttributeColumnStretch() const { return m_has_attr_columnStretch; }
     inline QString attributeColumnStretch() const { return m_attr_columnStretch; }
-    inline void setAttributeColumnStretch(const QString& a) { m_attr_columnStretch = a; m_has_attr_columnStretch = true; }
+    inline void setAttributeColumnStretch(const QString &a) { m_attr_columnStretch = a; m_has_attr_columnStretch = true; }
     inline void clearAttributeColumnStretch() { m_has_attr_columnStretch = false; }
 
     inline bool hasAttributeRowMinimumHeight() const { return m_has_attr_rowMinimumHeight; }
     inline QString attributeRowMinimumHeight() const { return m_attr_rowMinimumHeight; }
-    inline void setAttributeRowMinimumHeight(const QString& a) { m_attr_rowMinimumHeight = a; m_has_attr_rowMinimumHeight = true; }
+    inline void setAttributeRowMinimumHeight(const QString &a) { m_attr_rowMinimumHeight = a; m_has_attr_rowMinimumHeight = true; }
     inline void clearAttributeRowMinimumHeight() { m_has_attr_rowMinimumHeight = false; }
 
     inline bool hasAttributeColumnMinimumWidth() const { return m_has_attr_columnMinimumWidth; }
     inline QString attributeColumnMinimumWidth() const { return m_attr_columnMinimumWidth; }
-    inline void setAttributeColumnMinimumWidth(const QString& a) { m_attr_columnMinimumWidth = a; m_has_attr_columnMinimumWidth = true; }
+    inline void setAttributeColumnMinimumWidth(const QString &a) { m_attr_columnMinimumWidth = a; m_has_attr_columnMinimumWidth = true; }
     inline void clearAttributeColumnMinimumWidth() { m_has_attr_columnMinimumWidth = false; }
 
     // child element accessors
     inline QList<DomProperty*> elementProperty() const { return m_property; }
-    void setElementProperty(const QList<DomProperty*>& a);
+    void setElementProperty(const QList<DomProperty *> &a);
 
     inline QList<DomProperty*> elementAttribute() const { return m_attribute; }
-    void setElementAttribute(const QList<DomProperty*>& a);
+    void setElementAttribute(const QList<DomProperty *> &a);
 
-    inline QVector<DomLayoutItem*> elementItem() const { return m_item; }
-    void setElementItem(const QVector<DomLayoutItem*>& a);
+    inline QVector<DomLayoutItem *> elementItem() const { return m_item; }
+    void setElementItem(const QVector<DomLayoutItem *> &a);
 
 private:
     QString m_text;
@@ -1260,7 +1220,7 @@ private:
     uint m_children;
     QList<DomProperty*> m_property;
     QList<DomProperty*> m_attribute;
-    QVector<DomLayoutItem*> m_item;
+    QVector<DomLayoutItem *> m_item;
     enum Child {
         Property = 1,
         Attribute = 2,
@@ -1302,24 +1262,24 @@ public:
 
     inline bool hasAttributeAlignment() const { return m_has_attr_alignment; }
     inline QString attributeAlignment() const { return m_attr_alignment; }
-    inline void setAttributeAlignment(const QString& a) { m_attr_alignment = a; m_has_attr_alignment = true; }
+    inline void setAttributeAlignment(const QString &a) { m_attr_alignment = a; m_has_attr_alignment = true; }
     inline void clearAttributeAlignment() { m_has_attr_alignment = false; }
 
     // child element accessors
     enum Kind { Unknown = 0, Widget, Layout, Spacer };
     inline Kind kind() const { return m_kind; }
 
-    inline DomWidget* elementWidget() const { return m_widget; }
-    DomWidget* takeElementWidget();
-    void setElementWidget(DomWidget* a);
+    inline DomWidget *elementWidget() const { return m_widget; }
+    DomWidget *takeElementWidget();
+    void setElementWidget(DomWidget *a);
 
-    inline DomLayout* elementLayout() const { return m_layout; }
-    DomLayout* takeElementLayout();
-    void setElementLayout(DomLayout* a);
+    inline DomLayout *elementLayout() const { return m_layout; }
+    DomLayout *takeElementLayout();
+    void setElementLayout(DomLayout *a);
 
-    inline DomSpacer* elementSpacer() const { return m_spacer; }
-    DomSpacer* takeElementSpacer();
-    void setElementSpacer(DomSpacer* a);
+    inline DomSpacer *elementSpacer() const { return m_spacer; }
+    DomSpacer *takeElementSpacer();
+    void setElementSpacer(DomSpacer *a);
 
 private:
     QString m_text;
@@ -1343,9 +1303,9 @@ private:
 
     // child element data
     Kind m_kind;
-    DomWidget* m_widget;
-    DomLayout* m_layout;
-    DomSpacer* m_spacer;
+    DomWidget *m_widget;
+    DomLayout *m_layout;
+    DomSpacer *m_spacer;
 };
 
 class QDESIGNER_UILIB_EXPORT DomRow {
@@ -1359,16 +1319,14 @@ public:
     inline QString text() const { return m_text; }
     inline void setText(const QString &s) { m_text = s; }
 
-    // attribute accessors
     // child element accessors
     inline QList<DomProperty*> elementProperty() const { return m_property; }
-    void setElementProperty(const QList<DomProperty*>& a);
+    void setElementProperty(const QList<DomProperty *> &a);
 
 private:
     QString m_text;
     void clear(bool clear_all = true);
 
-    // attribute data
     // child element data
     uint m_children;
     QList<DomProperty*> m_property;
@@ -1388,16 +1346,14 @@ public:
     inline QString text() const { return m_text; }
     inline void setText(const QString &s) { m_text = s; }
 
-    // attribute accessors
     // child element accessors
     inline QList<DomProperty*> elementProperty() const { return m_property; }
-    void setElementProperty(const QList<DomProperty*>& a);
+    void setElementProperty(const QList<DomProperty *> &a);
 
 private:
     QString m_text;
     void clear(bool clear_all = true);
 
-    // attribute data
     // child element data
     uint m_children;
     QList<DomProperty*> m_property;
@@ -1430,10 +1386,10 @@ public:
 
     // child element accessors
     inline QList<DomProperty*> elementProperty() const { return m_property; }
-    void setElementProperty(const QList<DomProperty*>& a);
+    void setElementProperty(const QList<DomProperty *> &a);
 
-    inline QVector<DomItem*> elementItem() const { return m_item; }
-    void setElementItem(const QVector<DomItem*>& a);
+    inline QVector<DomItem *> elementItem() const { return m_item; }
+    void setElementItem(const QVector<DomItem *> &a);
 
 private:
     QString m_text;
@@ -1449,7 +1405,7 @@ private:
     // child element data
     uint m_children;
     QList<DomProperty*> m_property;
-    QVector<DomItem*> m_item;
+    QVector<DomItem *> m_item;
     enum Child {
         Property = 1,
         Item = 2
@@ -1470,12 +1426,12 @@ public:
     // attribute accessors
     inline bool hasAttributeClass() const { return m_has_attr_class; }
     inline QString attributeClass() const { return m_attr_class; }
-    inline void setAttributeClass(const QString& a) { m_attr_class = a; m_has_attr_class = true; }
+    inline void setAttributeClass(const QString &a) { m_attr_class = a; m_has_attr_class = true; }
     inline void clearAttributeClass() { m_has_attr_class = false; }
 
     inline bool hasAttributeName() const { return m_has_attr_name; }
     inline QString attributeName() const { return m_attr_name; }
-    inline void setAttributeName(const QString& a) { m_attr_name = a; m_has_attr_name = true; }
+    inline void setAttributeName(const QString &a) { m_attr_name = a; m_has_attr_name = true; }
     inline void clearAttributeName() { m_has_attr_name = false; }
 
     inline bool hasAttributeNative() const { return m_has_attr_native; }
@@ -1485,46 +1441,46 @@ public:
 
     // child element accessors
     inline QStringList elementClass() const { return m_class; }
-    void setElementClass(const QStringList& a);
+    void setElementClass(const QStringList &a);
 
     inline QList<DomProperty*> elementProperty() const { return m_property; }
-    void setElementProperty(const QList<DomProperty*>& a);
+    void setElementProperty(const QList<DomProperty *> &a);
 
-    inline QVector<DomScript*> elementScript() const { return m_script; }
-    void setElementScript(const QVector<DomScript*>& a);
+    inline QVector<DomScript *> elementScript() const { return m_script; }
+    void setElementScript(const QVector<DomScript *> &a);
 
-    inline QVector<DomWidgetData*> elementWidgetData() const { return m_widgetData; }
-    void setElementWidgetData(const QVector<DomWidgetData*>& a);
+    inline QVector<DomWidgetData *> elementWidgetData() const { return m_widgetData; }
+    void setElementWidgetData(const QVector<DomWidgetData *> &a);
 
     inline QList<DomProperty*> elementAttribute() const { return m_attribute; }
-    void setElementAttribute(const QList<DomProperty*>& a);
+    void setElementAttribute(const QList<DomProperty *> &a);
 
-    inline QVector<DomRow*> elementRow() const { return m_row; }
-    void setElementRow(const QVector<DomRow*>& a);
+    inline QVector<DomRow *> elementRow() const { return m_row; }
+    void setElementRow(const QVector<DomRow *> &a);
 
-    inline QVector<DomColumn*> elementColumn() const { return m_column; }
-    void setElementColumn(const QVector<DomColumn*>& a);
+    inline QVector<DomColumn *> elementColumn() const { return m_column; }
+    void setElementColumn(const QVector<DomColumn *> &a);
 
-    inline QVector<DomItem*> elementItem() const { return m_item; }
-    void setElementItem(const QVector<DomItem*>& a);
+    inline QVector<DomItem *> elementItem() const { return m_item; }
+    void setElementItem(const QVector<DomItem *> &a);
 
-    inline QVector<DomLayout*> elementLayout() const { return m_layout; }
-    void setElementLayout(const QVector<DomLayout*>& a);
+    inline QVector<DomLayout *> elementLayout() const { return m_layout; }
+    void setElementLayout(const QVector<DomLayout *> &a);
 
-    inline QVector<DomWidget*> elementWidget() const { return m_widget; }
-    void setElementWidget(const QVector<DomWidget*>& a);
+    inline QVector<DomWidget *> elementWidget() const { return m_widget; }
+    void setElementWidget(const QVector<DomWidget *> &a);
 
-    inline QVector<DomAction*> elementAction() const { return m_action; }
-    void setElementAction(const QVector<DomAction*>& a);
+    inline QVector<DomAction *> elementAction() const { return m_action; }
+    void setElementAction(const QVector<DomAction *> &a);
 
-    inline QVector<DomActionGroup*> elementActionGroup() const { return m_actionGroup; }
-    void setElementActionGroup(const QVector<DomActionGroup*>& a);
+    inline QVector<DomActionGroup *> elementActionGroup() const { return m_actionGroup; }
+    void setElementActionGroup(const QVector<DomActionGroup *> &a);
 
-    inline QVector<DomActionRef*> elementAddAction() const { return m_addAction; }
-    void setElementAddAction(const QVector<DomActionRef*>& a);
+    inline QVector<DomActionRef *> elementAddAction() const { return m_addAction; }
+    void setElementAddAction(const QVector<DomActionRef *> &a);
 
     inline QStringList elementZOrder() const { return m_zOrder; }
-    void setElementZOrder(const QStringList& a);
+    void setElementZOrder(const QStringList &a);
 
 private:
     QString m_text;
@@ -1544,17 +1500,17 @@ private:
     uint m_children;
     QStringList m_class;
     QList<DomProperty*> m_property;
-    QVector<DomScript*> m_script;
-    QVector<DomWidgetData*> m_widgetData;
+    QVector<DomScript *> m_script;
+    QVector<DomWidgetData *> m_widgetData;
     QList<DomProperty*> m_attribute;
-    QVector<DomRow*> m_row;
-    QVector<DomColumn*> m_column;
-    QVector<DomItem*> m_item;
-    QVector<DomLayout*> m_layout;
-    QVector<DomWidget*> m_widget;
-    QVector<DomAction*> m_action;
-    QVector<DomActionGroup*> m_actionGroup;
-    QVector<DomActionRef*> m_addAction;
+    QVector<DomRow *> m_row;
+    QVector<DomColumn *> m_column;
+    QVector<DomItem *> m_item;
+    QVector<DomLayout *> m_layout;
+    QVector<DomWidget *> m_widget;
+    QVector<DomAction *> m_action;
+    QVector<DomActionGroup *> m_actionGroup;
+    QVector<DomActionRef *> m_addAction;
     QStringList m_zOrder;
     enum Child {
         Class = 1,
@@ -1588,12 +1544,12 @@ public:
     // attribute accessors
     inline bool hasAttributeName() const { return m_has_attr_name; }
     inline QString attributeName() const { return m_attr_name; }
-    inline void setAttributeName(const QString& a) { m_attr_name = a; m_has_attr_name = true; }
+    inline void setAttributeName(const QString &a) { m_attr_name = a; m_has_attr_name = true; }
     inline void clearAttributeName() { m_has_attr_name = false; }
 
     // child element accessors
     inline QList<DomProperty*> elementProperty() const { return m_property; }
-    void setElementProperty(const QList<DomProperty*>& a);
+    void setElementProperty(const QList<DomProperty *> &a);
 
 private:
     QString m_text;
@@ -1682,9 +1638,9 @@ public:
     inline void clearAttributePosition() { m_has_attr_position = false; }
 
     // child element accessors
-    inline DomColor* elementColor() const { return m_color; }
-    DomColor* takeElementColor();
-    void setElementColor(DomColor* a);
+    inline DomColor *elementColor() const { return m_color; }
+    DomColor *takeElementColor();
+    void setElementColor(DomColor *a);
     inline bool hasElementColor() const { return m_children & Color; }
     void clearElementColor();
 
@@ -1698,7 +1654,7 @@ private:
 
     // child element data
     uint m_children;
-    DomColor* m_color;
+    DomColor *m_color;
     enum Child {
         Color = 1
     };
@@ -1768,22 +1724,22 @@ public:
 
     inline bool hasAttributeType() const { return m_has_attr_type; }
     inline QString attributeType() const { return m_attr_type; }
-    inline void setAttributeType(const QString& a) { m_attr_type = a; m_has_attr_type = true; }
+    inline void setAttributeType(const QString &a) { m_attr_type = a; m_has_attr_type = true; }
     inline void clearAttributeType() { m_has_attr_type = false; }
 
     inline bool hasAttributeSpread() const { return m_has_attr_spread; }
     inline QString attributeSpread() const { return m_attr_spread; }
-    inline void setAttributeSpread(const QString& a) { m_attr_spread = a; m_has_attr_spread = true; }
+    inline void setAttributeSpread(const QString &a) { m_attr_spread = a; m_has_attr_spread = true; }
     inline void clearAttributeSpread() { m_has_attr_spread = false; }
 
     inline bool hasAttributeCoordinateMode() const { return m_has_attr_coordinateMode; }
     inline QString attributeCoordinateMode() const { return m_attr_coordinateMode; }
-    inline void setAttributeCoordinateMode(const QString& a) { m_attr_coordinateMode = a; m_has_attr_coordinateMode = true; }
+    inline void setAttributeCoordinateMode(const QString &a) { m_attr_coordinateMode = a; m_has_attr_coordinateMode = true; }
     inline void clearAttributeCoordinateMode() { m_has_attr_coordinateMode = false; }
 
     // child element accessors
-    inline QVector<DomGradientStop*> elementGradientStop() const { return m_gradientStop; }
-    void setElementGradientStop(const QVector<DomGradientStop*>& a);
+    inline QVector<DomGradientStop *> elementGradientStop() const { return m_gradientStop; }
+    void setElementGradientStop(const QVector<DomGradientStop *> &a);
 
 private:
     QString m_text;
@@ -1831,7 +1787,7 @@ private:
 
     // child element data
     uint m_children;
-    QVector<DomGradientStop*> m_gradientStop;
+    QVector<DomGradientStop *> m_gradientStop;
     enum Child {
         GradientStop = 1
     };
@@ -1851,24 +1807,24 @@ public:
     // attribute accessors
     inline bool hasAttributeBrushStyle() const { return m_has_attr_brushStyle; }
     inline QString attributeBrushStyle() const { return m_attr_brushStyle; }
-    inline void setAttributeBrushStyle(const QString& a) { m_attr_brushStyle = a; m_has_attr_brushStyle = true; }
+    inline void setAttributeBrushStyle(const QString &a) { m_attr_brushStyle = a; m_has_attr_brushStyle = true; }
     inline void clearAttributeBrushStyle() { m_has_attr_brushStyle = false; }
 
     // child element accessors
     enum Kind { Unknown = 0, Color, Texture, Gradient };
     inline Kind kind() const { return m_kind; }
 
-    inline DomColor* elementColor() const { return m_color; }
-    DomColor* takeElementColor();
-    void setElementColor(DomColor* a);
+    inline DomColor *elementColor() const { return m_color; }
+    DomColor *takeElementColor();
+    void setElementColor(DomColor *a);
 
-    inline DomProperty* elementTexture() const { return m_texture; }
-    DomProperty* takeElementTexture();
-    void setElementTexture(DomProperty* a);
+    inline DomProperty *elementTexture() const { return m_texture; }
+    DomProperty *takeElementTexture();
+    void setElementTexture(DomProperty *a);
 
-    inline DomGradient* elementGradient() const { return m_gradient; }
-    DomGradient* takeElementGradient();
-    void setElementGradient(DomGradient* a);
+    inline DomGradient *elementGradient() const { return m_gradient; }
+    DomGradient *takeElementGradient();
+    void setElementGradient(DomGradient *a);
 
 private:
     QString m_text;
@@ -1880,9 +1836,9 @@ private:
 
     // child element data
     Kind m_kind;
-    DomColor* m_color;
-    DomProperty* m_texture;
-    DomGradient* m_gradient;
+    DomColor *m_color;
+    DomProperty *m_texture;
+    DomGradient *m_gradient;
 };
 
 class QDESIGNER_UILIB_EXPORT DomColorRole {
@@ -1899,13 +1855,13 @@ public:
     // attribute accessors
     inline bool hasAttributeRole() const { return m_has_attr_role; }
     inline QString attributeRole() const { return m_attr_role; }
-    inline void setAttributeRole(const QString& a) { m_attr_role = a; m_has_attr_role = true; }
+    inline void setAttributeRole(const QString &a) { m_attr_role = a; m_has_attr_role = true; }
     inline void clearAttributeRole() { m_has_attr_role = false; }
 
     // child element accessors
-    inline DomBrush* elementBrush() const { return m_brush; }
-    DomBrush* takeElementBrush();
-    void setElementBrush(DomBrush* a);
+    inline DomBrush *elementBrush() const { return m_brush; }
+    DomBrush *takeElementBrush();
+    void setElementBrush(DomBrush *a);
     inline bool hasElementBrush() const { return m_children & Brush; }
     void clearElementBrush();
 
@@ -1919,7 +1875,7 @@ private:
 
     // child element data
     uint m_children;
-    DomBrush* m_brush;
+    DomBrush *m_brush;
     enum Child {
         Brush = 1
     };
@@ -1936,23 +1892,21 @@ public:
     inline QString text() const { return m_text; }
     inline void setText(const QString &s) { m_text = s; }
 
-    // attribute accessors
     // child element accessors
-    inline QVector<DomColorRole*> elementColorRole() const { return m_colorRole; }
-    void setElementColorRole(const QVector<DomColorRole*>& a);
+    inline QVector<DomColorRole *> elementColorRole() const { return m_colorRole; }
+    void setElementColorRole(const QVector<DomColorRole *> &a);
 
-    inline QVector<DomColor*> elementColor() const { return m_color; }
-    void setElementColor(const QVector<DomColor*>& a);
+    inline QVector<DomColor *> elementColor() const { return m_color; }
+    void setElementColor(const QVector<DomColor *> &a);
 
 private:
     QString m_text;
     void clear(bool clear_all = true);
 
-    // attribute data
     // child element data
     uint m_children;
-    QVector<DomColorRole*> m_colorRole;
-    QVector<DomColor*> m_color;
+    QVector<DomColorRole *> m_colorRole;
+    QVector<DomColor *> m_color;
     enum Child {
         ColorRole = 1,
         Color = 2
@@ -1970,23 +1924,22 @@ public:
     inline QString text() const { return m_text; }
     inline void setText(const QString &s) { m_text = s; }
 
-    // attribute accessors
     // child element accessors
-    inline DomColorGroup* elementActive() const { return m_active; }
-    DomColorGroup* takeElementActive();
-    void setElementActive(DomColorGroup* a);
+    inline DomColorGroup *elementActive() const { return m_active; }
+    DomColorGroup *takeElementActive();
+    void setElementActive(DomColorGroup *a);
     inline bool hasElementActive() const { return m_children & Active; }
     void clearElementActive();
 
-    inline DomColorGroup* elementInactive() const { return m_inactive; }
-    DomColorGroup* takeElementInactive();
-    void setElementInactive(DomColorGroup* a);
+    inline DomColorGroup *elementInactive() const { return m_inactive; }
+    DomColorGroup *takeElementInactive();
+    void setElementInactive(DomColorGroup *a);
     inline bool hasElementInactive() const { return m_children & Inactive; }
     void clearElementInactive();
 
-    inline DomColorGroup* elementDisabled() const { return m_disabled; }
-    DomColorGroup* takeElementDisabled();
-    void setElementDisabled(DomColorGroup* a);
+    inline DomColorGroup *elementDisabled() const { return m_disabled; }
+    DomColorGroup *takeElementDisabled();
+    void setElementDisabled(DomColorGroup *a);
     inline bool hasElementDisabled() const { return m_children & Disabled; }
     void clearElementDisabled();
 
@@ -1994,12 +1947,11 @@ private:
     QString m_text;
     void clear(bool clear_all = true);
 
-    // attribute data
     // child element data
     uint m_children;
-    DomColorGroup* m_active;
-    DomColorGroup* m_inactive;
-    DomColorGroup* m_disabled;
+    DomColorGroup *m_active;
+    DomColorGroup *m_inactive;
+    DomColorGroup *m_disabled;
     enum Child {
         Active = 1,
         Inactive = 2,
@@ -2018,10 +1970,9 @@ public:
     inline QString text() const { return m_text; }
     inline void setText(const QString &s) { m_text = s; }
 
-    // attribute accessors
     // child element accessors
     inline QString elementFamily() const { return m_family; }
-    void setElementFamily(const QString& a);
+    void setElementFamily(const QString &a);
     inline bool hasElementFamily() const { return m_children & Family; }
     void clearElementFamily();
 
@@ -2061,7 +2012,7 @@ public:
     void clearElementAntialiasing();
 
     inline QString elementStyleStrategy() const { return m_styleStrategy; }
-    void setElementStyleStrategy(const QString& a);
+    void setElementStyleStrategy(const QString &a);
     inline bool hasElementStyleStrategy() const { return m_children & StyleStrategy; }
     void clearElementStyleStrategy();
 
@@ -2074,7 +2025,6 @@ private:
     QString m_text;
     void clear(bool clear_all = true);
 
-    // attribute data
     // child element data
     uint m_children;
     QString m_family;
@@ -2112,7 +2062,6 @@ public:
     inline QString text() const { return m_text; }
     inline void setText(const QString &s) { m_text = s; }
 
-    // attribute accessors
     // child element accessors
     inline int elementX() const { return m_x; }
     void setElementX(int a);
@@ -2128,7 +2077,6 @@ private:
     QString m_text;
     void clear(bool clear_all = true);
 
-    // attribute data
     // child element data
     uint m_children;
     int m_x;
@@ -2150,7 +2098,6 @@ public:
     inline QString text() const { return m_text; }
     inline void setText(const QString &s) { m_text = s; }
 
-    // attribute accessors
     // child element accessors
     inline int elementX() const { return m_x; }
     void setElementX(int a);
@@ -2176,7 +2123,6 @@ private:
     QString m_text;
     void clear(bool clear_all = true);
 
-    // attribute data
     // child element data
     uint m_children;
     int m_x;
@@ -2205,15 +2151,14 @@ public:
     // attribute accessors
     inline bool hasAttributeLanguage() const { return m_has_attr_language; }
     inline QString attributeLanguage() const { return m_attr_language; }
-    inline void setAttributeLanguage(const QString& a) { m_attr_language = a; m_has_attr_language = true; }
+    inline void setAttributeLanguage(const QString &a) { m_attr_language = a; m_has_attr_language = true; }
     inline void clearAttributeLanguage() { m_has_attr_language = false; }
 
     inline bool hasAttributeCountry() const { return m_has_attr_country; }
     inline QString attributeCountry() const { return m_attr_country; }
-    inline void setAttributeCountry(const QString& a) { m_attr_country = a; m_has_attr_country = true; }
+    inline void setAttributeCountry(const QString &a) { m_attr_country = a; m_has_attr_country = true; }
     inline void clearAttributeCountry() { m_has_attr_country = false; }
 
-    // child element accessors
 private:
     QString m_text;
     void clear(bool clear_all = true);
@@ -2225,8 +2170,6 @@ private:
     QString m_attr_country;
     bool m_has_attr_country;
 
-    // child element data
-    uint m_children;
 };
 
 class QDESIGNER_UILIB_EXPORT DomSizePolicy {
@@ -2243,12 +2186,12 @@ public:
     // attribute accessors
     inline bool hasAttributeHSizeType() const { return m_has_attr_hSizeType; }
     inline QString attributeHSizeType() const { return m_attr_hSizeType; }
-    inline void setAttributeHSizeType(const QString& a) { m_attr_hSizeType = a; m_has_attr_hSizeType = true; }
+    inline void setAttributeHSizeType(const QString &a) { m_attr_hSizeType = a; m_has_attr_hSizeType = true; }
     inline void clearAttributeHSizeType() { m_has_attr_hSizeType = false; }
 
     inline bool hasAttributeVSizeType() const { return m_has_attr_vSizeType; }
     inline QString attributeVSizeType() const { return m_attr_vSizeType; }
-    inline void setAttributeVSizeType(const QString& a) { m_attr_vSizeType = a; m_has_attr_vSizeType = true; }
+    inline void setAttributeVSizeType(const QString &a) { m_attr_vSizeType = a; m_has_attr_vSizeType = true; }
     inline void clearAttributeVSizeType() { m_has_attr_vSizeType = false; }
 
     // child element accessors
@@ -2308,7 +2251,6 @@ public:
     inline QString text() const { return m_text; }
     inline void setText(const QString &s) { m_text = s; }
 
-    // attribute accessors
     // child element accessors
     inline int elementWidth() const { return m_width; }
     void setElementWidth(int a);
@@ -2324,7 +2266,6 @@ private:
     QString m_text;
     void clear(bool clear_all = true);
 
-    // attribute data
     // child element data
     uint m_children;
     int m_width;
@@ -2346,7 +2287,6 @@ public:
     inline QString text() const { return m_text; }
     inline void setText(const QString &s) { m_text = s; }
 
-    // attribute accessors
     // child element accessors
     inline int elementYear() const { return m_year; }
     void setElementYear(int a);
@@ -2367,7 +2307,6 @@ private:
     QString m_text;
     void clear(bool clear_all = true);
 
-    // attribute data
     // child element data
     uint m_children;
     int m_year;
@@ -2391,7 +2330,6 @@ public:
     inline QString text() const { return m_text; }
     inline void setText(const QString &s) { m_text = s; }
 
-    // attribute accessors
     // child element accessors
     inline int elementHour() const { return m_hour; }
     void setElementHour(int a);
@@ -2412,7 +2350,6 @@ private:
     QString m_text;
     void clear(bool clear_all = true);
 
-    // attribute data
     // child element data
     uint m_children;
     int m_hour;
@@ -2436,7 +2373,6 @@ public:
     inline QString text() const { return m_text; }
     inline void setText(const QString &s) { m_text = s; }
 
-    // attribute accessors
     // child element accessors
     inline int elementHour() const { return m_hour; }
     void setElementHour(int a);
@@ -2472,7 +2408,6 @@ private:
     QString m_text;
     void clear(bool clear_all = true);
 
-    // attribute data
     // child element data
     uint m_children;
     int m_hour;
@@ -2505,22 +2440,22 @@ public:
     // attribute accessors
     inline bool hasAttributeNotr() const { return m_has_attr_notr; }
     inline QString attributeNotr() const { return m_attr_notr; }
-    inline void setAttributeNotr(const QString& a) { m_attr_notr = a; m_has_attr_notr = true; }
+    inline void setAttributeNotr(const QString &a) { m_attr_notr = a; m_has_attr_notr = true; }
     inline void clearAttributeNotr() { m_has_attr_notr = false; }
 
     inline bool hasAttributeComment() const { return m_has_attr_comment; }
     inline QString attributeComment() const { return m_attr_comment; }
-    inline void setAttributeComment(const QString& a) { m_attr_comment = a; m_has_attr_comment = true; }
+    inline void setAttributeComment(const QString &a) { m_attr_comment = a; m_has_attr_comment = true; }
     inline void clearAttributeComment() { m_has_attr_comment = false; }
 
     inline bool hasAttributeExtraComment() const { return m_has_attr_extraComment; }
     inline QString attributeExtraComment() const { return m_attr_extraComment; }
-    inline void setAttributeExtraComment(const QString& a) { m_attr_extraComment = a; m_has_attr_extraComment = true; }
+    inline void setAttributeExtraComment(const QString &a) { m_attr_extraComment = a; m_has_attr_extraComment = true; }
     inline void clearAttributeExtraComment() { m_has_attr_extraComment = false; }
 
     // child element accessors
     inline QStringList elementString() const { return m_string; }
-    void setElementString(const QStringList& a);
+    void setElementString(const QStringList &a);
 
 private:
     QString m_text;
@@ -2558,15 +2493,14 @@ public:
     // attribute accessors
     inline bool hasAttributeResource() const { return m_has_attr_resource; }
     inline QString attributeResource() const { return m_attr_resource; }
-    inline void setAttributeResource(const QString& a) { m_attr_resource = a; m_has_attr_resource = true; }
+    inline void setAttributeResource(const QString &a) { m_attr_resource = a; m_has_attr_resource = true; }
     inline void clearAttributeResource() { m_has_attr_resource = false; }
 
     inline bool hasAttributeAlias() const { return m_has_attr_alias; }
     inline QString attributeAlias() const { return m_attr_alias; }
-    inline void setAttributeAlias(const QString& a) { m_attr_alias = a; m_has_attr_alias = true; }
+    inline void setAttributeAlias(const QString &a) { m_attr_alias = a; m_has_attr_alias = true; }
     inline void clearAttributeAlias() { m_has_attr_alias = false; }
 
-    // child element accessors
 private:
     QString m_text;
     void clear(bool clear_all = true);
@@ -2578,8 +2512,6 @@ private:
     QString m_attr_alias;
     bool m_has_attr_alias;
 
-    // child element data
-    uint m_children;
 };
 
 class QDESIGNER_UILIB_EXPORT DomResourceIcon {
@@ -2596,60 +2528,60 @@ public:
     // attribute accessors
     inline bool hasAttributeTheme() const { return m_has_attr_theme; }
     inline QString attributeTheme() const { return m_attr_theme; }
-    inline void setAttributeTheme(const QString& a) { m_attr_theme = a; m_has_attr_theme = true; }
+    inline void setAttributeTheme(const QString &a) { m_attr_theme = a; m_has_attr_theme = true; }
     inline void clearAttributeTheme() { m_has_attr_theme = false; }
 
     inline bool hasAttributeResource() const { return m_has_attr_resource; }
     inline QString attributeResource() const { return m_attr_resource; }
-    inline void setAttributeResource(const QString& a) { m_attr_resource = a; m_has_attr_resource = true; }
+    inline void setAttributeResource(const QString &a) { m_attr_resource = a; m_has_attr_resource = true; }
     inline void clearAttributeResource() { m_has_attr_resource = false; }
 
     // child element accessors
-    inline DomResourcePixmap* elementNormalOff() const { return m_normalOff; }
-    DomResourcePixmap* takeElementNormalOff();
-    void setElementNormalOff(DomResourcePixmap* a);
+    inline DomResourcePixmap *elementNormalOff() const { return m_normalOff; }
+    DomResourcePixmap *takeElementNormalOff();
+    void setElementNormalOff(DomResourcePixmap *a);
     inline bool hasElementNormalOff() const { return m_children & NormalOff; }
     void clearElementNormalOff();
 
-    inline DomResourcePixmap* elementNormalOn() const { return m_normalOn; }
-    DomResourcePixmap* takeElementNormalOn();
-    void setElementNormalOn(DomResourcePixmap* a);
+    inline DomResourcePixmap *elementNormalOn() const { return m_normalOn; }
+    DomResourcePixmap *takeElementNormalOn();
+    void setElementNormalOn(DomResourcePixmap *a);
     inline bool hasElementNormalOn() const { return m_children & NormalOn; }
     void clearElementNormalOn();
 
-    inline DomResourcePixmap* elementDisabledOff() const { return m_disabledOff; }
-    DomResourcePixmap* takeElementDisabledOff();
-    void setElementDisabledOff(DomResourcePixmap* a);
+    inline DomResourcePixmap *elementDisabledOff() const { return m_disabledOff; }
+    DomResourcePixmap *takeElementDisabledOff();
+    void setElementDisabledOff(DomResourcePixmap *a);
     inline bool hasElementDisabledOff() const { return m_children & DisabledOff; }
     void clearElementDisabledOff();
 
-    inline DomResourcePixmap* elementDisabledOn() const { return m_disabledOn; }
-    DomResourcePixmap* takeElementDisabledOn();
-    void setElementDisabledOn(DomResourcePixmap* a);
+    inline DomResourcePixmap *elementDisabledOn() const { return m_disabledOn; }
+    DomResourcePixmap *takeElementDisabledOn();
+    void setElementDisabledOn(DomResourcePixmap *a);
     inline bool hasElementDisabledOn() const { return m_children & DisabledOn; }
     void clearElementDisabledOn();
 
-    inline DomResourcePixmap* elementActiveOff() const { return m_activeOff; }
-    DomResourcePixmap* takeElementActiveOff();
-    void setElementActiveOff(DomResourcePixmap* a);
+    inline DomResourcePixmap *elementActiveOff() const { return m_activeOff; }
+    DomResourcePixmap *takeElementActiveOff();
+    void setElementActiveOff(DomResourcePixmap *a);
     inline bool hasElementActiveOff() const { return m_children & ActiveOff; }
     void clearElementActiveOff();
 
-    inline DomResourcePixmap* elementActiveOn() const { return m_activeOn; }
-    DomResourcePixmap* takeElementActiveOn();
-    void setElementActiveOn(DomResourcePixmap* a);
+    inline DomResourcePixmap *elementActiveOn() const { return m_activeOn; }
+    DomResourcePixmap *takeElementActiveOn();
+    void setElementActiveOn(DomResourcePixmap *a);
     inline bool hasElementActiveOn() const { return m_children & ActiveOn; }
     void clearElementActiveOn();
 
-    inline DomResourcePixmap* elementSelectedOff() const { return m_selectedOff; }
-    DomResourcePixmap* takeElementSelectedOff();
-    void setElementSelectedOff(DomResourcePixmap* a);
+    inline DomResourcePixmap *elementSelectedOff() const { return m_selectedOff; }
+    DomResourcePixmap *takeElementSelectedOff();
+    void setElementSelectedOff(DomResourcePixmap *a);
     inline bool hasElementSelectedOff() const { return m_children & SelectedOff; }
     void clearElementSelectedOff();
 
-    inline DomResourcePixmap* elementSelectedOn() const { return m_selectedOn; }
-    DomResourcePixmap* takeElementSelectedOn();
-    void setElementSelectedOn(DomResourcePixmap* a);
+    inline DomResourcePixmap *elementSelectedOn() const { return m_selectedOn; }
+    DomResourcePixmap *takeElementSelectedOn();
+    void setElementSelectedOn(DomResourcePixmap *a);
     inline bool hasElementSelectedOn() const { return m_children & SelectedOn; }
     void clearElementSelectedOn();
 
@@ -2666,14 +2598,14 @@ private:
 
     // child element data
     uint m_children;
-    DomResourcePixmap* m_normalOff;
-    DomResourcePixmap* m_normalOn;
-    DomResourcePixmap* m_disabledOff;
-    DomResourcePixmap* m_disabledOn;
-    DomResourcePixmap* m_activeOff;
-    DomResourcePixmap* m_activeOn;
-    DomResourcePixmap* m_selectedOff;
-    DomResourcePixmap* m_selectedOn;
+    DomResourcePixmap *m_normalOff;
+    DomResourcePixmap *m_normalOn;
+    DomResourcePixmap *m_disabledOff;
+    DomResourcePixmap *m_disabledOn;
+    DomResourcePixmap *m_activeOff;
+    DomResourcePixmap *m_activeOn;
+    DomResourcePixmap *m_selectedOff;
+    DomResourcePixmap *m_selectedOn;
     enum Child {
         NormalOff = 1,
         NormalOn = 2,
@@ -2700,20 +2632,19 @@ public:
     // attribute accessors
     inline bool hasAttributeNotr() const { return m_has_attr_notr; }
     inline QString attributeNotr() const { return m_attr_notr; }
-    inline void setAttributeNotr(const QString& a) { m_attr_notr = a; m_has_attr_notr = true; }
+    inline void setAttributeNotr(const QString &a) { m_attr_notr = a; m_has_attr_notr = true; }
     inline void clearAttributeNotr() { m_has_attr_notr = false; }
 
     inline bool hasAttributeComment() const { return m_has_attr_comment; }
     inline QString attributeComment() const { return m_attr_comment; }
-    inline void setAttributeComment(const QString& a) { m_attr_comment = a; m_has_attr_comment = true; }
+    inline void setAttributeComment(const QString &a) { m_attr_comment = a; m_has_attr_comment = true; }
     inline void clearAttributeComment() { m_has_attr_comment = false; }
 
     inline bool hasAttributeExtraComment() const { return m_has_attr_extraComment; }
     inline QString attributeExtraComment() const { return m_attr_extraComment; }
-    inline void setAttributeExtraComment(const QString& a) { m_attr_extraComment = a; m_has_attr_extraComment = true; }
+    inline void setAttributeExtraComment(const QString &a) { m_attr_extraComment = a; m_has_attr_extraComment = true; }
     inline void clearAttributeExtraComment() { m_has_attr_extraComment = false; }
 
-    // child element accessors
 private:
     QString m_text;
     void clear(bool clear_all = true);
@@ -2728,8 +2659,6 @@ private:
     QString m_attr_extraComment;
     bool m_has_attr_extraComment;
 
-    // child element data
-    uint m_children;
 };
 
 class QDESIGNER_UILIB_EXPORT DomPointF {
@@ -2743,7 +2672,6 @@ public:
     inline QString text() const { return m_text; }
     inline void setText(const QString &s) { m_text = s; }
 
-    // attribute accessors
     // child element accessors
     inline double elementX() const { return m_x; }
     void setElementX(double a);
@@ -2759,7 +2687,6 @@ private:
     QString m_text;
     void clear(bool clear_all = true);
 
-    // attribute data
     // child element data
     uint m_children;
     double m_x;
@@ -2781,7 +2708,6 @@ public:
     inline QString text() const { return m_text; }
     inline void setText(const QString &s) { m_text = s; }
 
-    // attribute accessors
     // child element accessors
     inline double elementX() const { return m_x; }
     void setElementX(double a);
@@ -2807,7 +2733,6 @@ private:
     QString m_text;
     void clear(bool clear_all = true);
 
-    // attribute data
     // child element data
     uint m_children;
     double m_x;
@@ -2833,7 +2758,6 @@ public:
     inline QString text() const { return m_text; }
     inline void setText(const QString &s) { m_text = s; }
 
-    // attribute accessors
     // child element accessors
     inline double elementWidth() const { return m_width; }
     void setElementWidth(double a);
@@ -2849,7 +2773,6 @@ private:
     QString m_text;
     void clear(bool clear_all = true);
 
-    // attribute data
     // child element data
     uint m_children;
     double m_width;
@@ -2871,7 +2794,6 @@ public:
     inline QString text() const { return m_text; }
     inline void setText(const QString &s) { m_text = s; }
 
-    // attribute accessors
     // child element accessors
     inline int elementUnicode() const { return m_unicode; }
     void setElementUnicode(int a);
@@ -2882,7 +2804,6 @@ private:
     QString m_text;
     void clear(bool clear_all = true);
 
-    // attribute data
     // child element data
     uint m_children;
     int m_unicode;
@@ -2902,11 +2823,10 @@ public:
     inline QString text() const { return m_text; }
     inline void setText(const QString &s) { m_text = s; }
 
-    // attribute accessors
     // child element accessors
-    inline DomString* elementString() const { return m_string; }
-    DomString* takeElementString();
-    void setElementString(DomString* a);
+    inline DomString *elementString() const { return m_string; }
+    DomString *takeElementString();
+    void setElementString(DomString *a);
     inline bool hasElementString() const { return m_children & String; }
     void clearElementString();
 
@@ -2914,10 +2834,9 @@ private:
     QString m_text;
     void clear(bool clear_all = true);
 
-    // attribute data
     // child element data
     uint m_children;
-    DomString* m_string;
+    DomString *m_string;
     enum Child {
         String = 1
     };
@@ -2937,7 +2856,7 @@ public:
     // attribute accessors
     inline bool hasAttributeName() const { return m_has_attr_name; }
     inline QString attributeName() const { return m_attr_name; }
-    inline void setAttributeName(const QString& a) { m_attr_name = a; m_has_attr_name = true; }
+    inline void setAttributeName(const QString &a) { m_attr_name = a; m_has_attr_name = true; }
     inline void clearAttributeName() { m_has_attr_name = false; }
 
     inline bool hasAttributeStdset() const { return m_has_attr_stdset; }
@@ -2950,70 +2869,70 @@ public:
     inline Kind kind() const { return m_kind; }
 
     inline QString elementBool() const { return m_bool; }
-    void setElementBool(const QString& a);
+    void setElementBool(const QString &a);
 
-    inline DomColor* elementColor() const { return m_color; }
-    DomColor* takeElementColor();
-    void setElementColor(DomColor* a);
+    inline DomColor *elementColor() const { return m_color; }
+    DomColor *takeElementColor();
+    void setElementColor(DomColor *a);
 
     inline QString elementCstring() const { return m_cstring; }
-    void setElementCstring(const QString& a);
+    void setElementCstring(const QString &a);
 
     inline int elementCursor() const { return m_cursor; }
     void setElementCursor(int a);
 
     inline QString elementCursorShape() const { return m_cursorShape; }
-    void setElementCursorShape(const QString& a);
+    void setElementCursorShape(const QString &a);
 
     inline QString elementEnum() const { return m_enum; }
-    void setElementEnum(const QString& a);
+    void setElementEnum(const QString &a);
 
-    inline DomFont* elementFont() const { return m_font; }
-    DomFont* takeElementFont();
-    void setElementFont(DomFont* a);
+    inline DomFont *elementFont() const { return m_font; }
+    DomFont *takeElementFont();
+    void setElementFont(DomFont *a);
 
-    inline DomResourceIcon* elementIconSet() const { return m_iconSet; }
-    DomResourceIcon* takeElementIconSet();
-    void setElementIconSet(DomResourceIcon* a);
+    inline DomResourceIcon *elementIconSet() const { return m_iconSet; }
+    DomResourceIcon *takeElementIconSet();
+    void setElementIconSet(DomResourceIcon *a);
 
-    inline DomResourcePixmap* elementPixmap() const { return m_pixmap; }
-    DomResourcePixmap* takeElementPixmap();
-    void setElementPixmap(DomResourcePixmap* a);
+    inline DomResourcePixmap *elementPixmap() const { return m_pixmap; }
+    DomResourcePixmap *takeElementPixmap();
+    void setElementPixmap(DomResourcePixmap *a);
 
-    inline DomPalette* elementPalette() const { return m_palette; }
-    DomPalette* takeElementPalette();
-    void setElementPalette(DomPalette* a);
+    inline DomPalette *elementPalette() const { return m_palette; }
+    DomPalette *takeElementPalette();
+    void setElementPalette(DomPalette *a);
 
-    inline DomPoint* elementPoint() const { return m_point; }
-    DomPoint* takeElementPoint();
-    void setElementPoint(DomPoint* a);
+    inline DomPoint *elementPoint() const { return m_point; }
+    DomPoint *takeElementPoint();
+    void setElementPoint(DomPoint *a);
 
-    inline DomRect* elementRect() const { return m_rect; }
-    DomRect* takeElementRect();
-    void setElementRect(DomRect* a);
+    inline DomRect *elementRect() const { return m_rect; }
+    DomRect *takeElementRect();
+    void setElementRect(DomRect *a);
 
     inline QString elementSet() const { return m_set; }
-    void setElementSet(const QString& a);
+    void setElementSet(const QString &a);
 
-    inline DomLocale* elementLocale() const { return m_locale; }
-    DomLocale* takeElementLocale();
-    void setElementLocale(DomLocale* a);
+    inline DomLocale *elementLocale() const { return m_locale; }
+    DomLocale *takeElementLocale();
+    void setElementLocale(DomLocale *a);
 
-    inline DomSizePolicy* elementSizePolicy() const { return m_sizePolicy; }
-    DomSizePolicy* takeElementSizePolicy();
-    void setElementSizePolicy(DomSizePolicy* a);
+    inline DomSizePolicy *elementSizePolicy() const { return m_sizePolicy; }
+    DomSizePolicy *takeElementSizePolicy();
+    void setElementSizePolicy(DomSizePolicy *a);
 
-    inline DomSize* elementSize() const { return m_size; }
-    DomSize* takeElementSize();
-    void setElementSize(DomSize* a);
+    inline DomSize *elementSize() const { return m_size; }
+    DomSize *takeElementSize();
+    void setElementSize(DomSize *a);
 
-    inline DomString* elementString() const { return m_string; }
-    DomString* takeElementString();
-    void setElementString(DomString* a);
+    inline DomString *elementString() const { return m_string; }
+    DomString *takeElementString();
+    void setElementString(DomString *a);
 
-    inline DomStringList* elementStringList() const { return m_stringList; }
-    DomStringList* takeElementStringList();
-    void setElementStringList(DomStringList* a);
+    inline DomStringList *elementStringList() const { return m_stringList; }
+    DomStringList *takeElementStringList();
+    void setElementStringList(DomStringList *a);
 
     inline int elementNumber() const { return m_number; }
     void setElementNumber(int a);
@@ -3024,40 +2943,40 @@ public:
     inline double elementDouble() const { return m_double; }
     void setElementDouble(double a);
 
-    inline DomDate* elementDate() const { return m_date; }
-    DomDate* takeElementDate();
-    void setElementDate(DomDate* a);
+    inline DomDate *elementDate() const { return m_date; }
+    DomDate *takeElementDate();
+    void setElementDate(DomDate *a);
 
-    inline DomTime* elementTime() const { return m_time; }
-    DomTime* takeElementTime();
-    void setElementTime(DomTime* a);
+    inline DomTime *elementTime() const { return m_time; }
+    DomTime *takeElementTime();
+    void setElementTime(DomTime *a);
 
-    inline DomDateTime* elementDateTime() const { return m_dateTime; }
-    DomDateTime* takeElementDateTime();
-    void setElementDateTime(DomDateTime* a);
+    inline DomDateTime *elementDateTime() const { return m_dateTime; }
+    DomDateTime *takeElementDateTime();
+    void setElementDateTime(DomDateTime *a);
 
-    inline DomPointF* elementPointF() const { return m_pointF; }
-    DomPointF* takeElementPointF();
-    void setElementPointF(DomPointF* a);
+    inline DomPointF *elementPointF() const { return m_pointF; }
+    DomPointF *takeElementPointF();
+    void setElementPointF(DomPointF *a);
 
-    inline DomRectF* elementRectF() const { return m_rectF; }
-    DomRectF* takeElementRectF();
-    void setElementRectF(DomRectF* a);
+    inline DomRectF *elementRectF() const { return m_rectF; }
+    DomRectF *takeElementRectF();
+    void setElementRectF(DomRectF *a);
 
-    inline DomSizeF* elementSizeF() const { return m_sizeF; }
-    DomSizeF* takeElementSizeF();
-    void setElementSizeF(DomSizeF* a);
+    inline DomSizeF *elementSizeF() const { return m_sizeF; }
+    DomSizeF *takeElementSizeF();
+    void setElementSizeF(DomSizeF *a);
 
     inline qlonglong elementLongLong() const { return m_longLong; }
     void setElementLongLong(qlonglong a);
 
-    inline DomChar* elementChar() const { return m_char; }
-    DomChar* takeElementChar();
-    void setElementChar(DomChar* a);
+    inline DomChar *elementChar() const { return m_char; }
+    DomChar *takeElementChar();
+    void setElementChar(DomChar *a);
 
-    inline DomUrl* elementUrl() const { return m_url; }
-    DomUrl* takeElementUrl();
-    void setElementUrl(DomUrl* a);
+    inline DomUrl *elementUrl() const { return m_url; }
+    DomUrl *takeElementUrl();
+    void setElementUrl(DomUrl *a);
 
     inline uint elementUInt() const { return m_UInt; }
     void setElementUInt(uint a);
@@ -3065,9 +2984,9 @@ public:
     inline qulonglong elementULongLong() const { return m_uLongLong; }
     void setElementULongLong(qulonglong a);
 
-    inline DomBrush* elementBrush() const { return m_brush; }
-    DomBrush* takeElementBrush();
-    void setElementBrush(DomBrush* a);
+    inline DomBrush *elementBrush() const { return m_brush; }
+    DomBrush *takeElementBrush();
+    void setElementBrush(DomBrush *a);
 
 private:
     QString m_text;
@@ -3083,38 +3002,38 @@ private:
     // child element data
     Kind m_kind;
     QString m_bool;
-    DomColor* m_color;
+    DomColor *m_color;
     QString m_cstring;
     int m_cursor;
     QString m_cursorShape;
     QString m_enum;
-    DomFont* m_font;
-    DomResourceIcon* m_iconSet;
-    DomResourcePixmap* m_pixmap;
-    DomPalette* m_palette;
-    DomPoint* m_point;
-    DomRect* m_rect;
+    DomFont *m_font;
+    DomResourceIcon *m_iconSet;
+    DomResourcePixmap *m_pixmap;
+    DomPalette *m_palette;
+    DomPoint *m_point;
+    DomRect *m_rect;
     QString m_set;
-    DomLocale* m_locale;
-    DomSizePolicy* m_sizePolicy;
-    DomSize* m_size;
-    DomString* m_string;
-    DomStringList* m_stringList;
+    DomLocale *m_locale;
+    DomSizePolicy *m_sizePolicy;
+    DomSize *m_size;
+    DomString *m_string;
+    DomStringList *m_stringList;
     int m_number;
     float m_float;
     double m_double;
-    DomDate* m_date;
-    DomTime* m_time;
-    DomDateTime* m_dateTime;
-    DomPointF* m_pointF;
-    DomRectF* m_rectF;
-    DomSizeF* m_sizeF;
+    DomDate *m_date;
+    DomTime *m_time;
+    DomDateTime *m_dateTime;
+    DomPointF *m_pointF;
+    DomRectF *m_rectF;
+    DomSizeF *m_sizeF;
     qlonglong m_longLong;
-    DomChar* m_char;
-    DomUrl* m_url;
+    DomChar *m_char;
+    DomUrl *m_url;
     uint m_UInt;
     qulonglong m_uLongLong;
-    DomBrush* m_brush;
+    DomBrush *m_brush;
 };
 
 class QDESIGNER_UILIB_EXPORT DomConnections {
@@ -3128,19 +3047,17 @@ public:
     inline QString text() const { return m_text; }
     inline void setText(const QString &s) { m_text = s; }
 
-    // attribute accessors
     // child element accessors
-    inline QVector<DomConnection*> elementConnection() const { return m_connection; }
-    void setElementConnection(const QVector<DomConnection*>& a);
+    inline QVector<DomConnection *> elementConnection() const { return m_connection; }
+    void setElementConnection(const QVector<DomConnection *> &a);
 
 private:
     QString m_text;
     void clear(bool clear_all = true);
 
-    // attribute data
     // child element data
     uint m_children;
-    QVector<DomConnection*> m_connection;
+    QVector<DomConnection *> m_connection;
     enum Child {
         Connection = 1
     };
@@ -3157,31 +3074,30 @@ public:
     inline QString text() const { return m_text; }
     inline void setText(const QString &s) { m_text = s; }
 
-    // attribute accessors
     // child element accessors
     inline QString elementSender() const { return m_sender; }
-    void setElementSender(const QString& a);
+    void setElementSender(const QString &a);
     inline bool hasElementSender() const { return m_children & Sender; }
     void clearElementSender();
 
     inline QString elementSignal() const { return m_signal; }
-    void setElementSignal(const QString& a);
+    void setElementSignal(const QString &a);
     inline bool hasElementSignal() const { return m_children & Signal; }
     void clearElementSignal();
 
     inline QString elementReceiver() const { return m_receiver; }
-    void setElementReceiver(const QString& a);
+    void setElementReceiver(const QString &a);
     inline bool hasElementReceiver() const { return m_children & Receiver; }
     void clearElementReceiver();
 
     inline QString elementSlot() const { return m_slot; }
-    void setElementSlot(const QString& a);
+    void setElementSlot(const QString &a);
     inline bool hasElementSlot() const { return m_children & Slot; }
     void clearElementSlot();
 
-    inline DomConnectionHints* elementHints() const { return m_hints; }
-    DomConnectionHints* takeElementHints();
-    void setElementHints(DomConnectionHints* a);
+    inline DomConnectionHints *elementHints() const { return m_hints; }
+    DomConnectionHints *takeElementHints();
+    void setElementHints(DomConnectionHints *a);
     inline bool hasElementHints() const { return m_children & Hints; }
     void clearElementHints();
 
@@ -3189,14 +3105,13 @@ private:
     QString m_text;
     void clear(bool clear_all = true);
 
-    // attribute data
     // child element data
     uint m_children;
     QString m_sender;
     QString m_signal;
     QString m_receiver;
     QString m_slot;
-    DomConnectionHints* m_hints;
+    DomConnectionHints *m_hints;
     enum Child {
         Sender = 1,
         Signal = 2,
@@ -3217,19 +3132,17 @@ public:
     inline QString text() const { return m_text; }
     inline void setText(const QString &s) { m_text = s; }
 
-    // attribute accessors
     // child element accessors
-    inline QVector<DomConnectionHint*> elementHint() const { return m_hint; }
-    void setElementHint(const QVector<DomConnectionHint*>& a);
+    inline QVector<DomConnectionHint *> elementHint() const { return m_hint; }
+    void setElementHint(const QVector<DomConnectionHint *> &a);
 
 private:
     QString m_text;
     void clear(bool clear_all = true);
 
-    // attribute data
     // child element data
     uint m_children;
-    QVector<DomConnectionHint*> m_hint;
+    QVector<DomConnectionHint *> m_hint;
     enum Child {
         Hint = 1
     };
@@ -3249,7 +3162,7 @@ public:
     // attribute accessors
     inline bool hasAttributeType() const { return m_has_attr_type; }
     inline QString attributeType() const { return m_attr_type; }
-    inline void setAttributeType(const QString& a) { m_attr_type = a; m_has_attr_type = true; }
+    inline void setAttributeType(const QString &a) { m_attr_type = a; m_has_attr_type = true; }
     inline void clearAttributeType() { m_has_attr_type = false; }
 
     // child element accessors
@@ -3295,15 +3208,14 @@ public:
     // attribute accessors
     inline bool hasAttributeSource() const { return m_has_attr_source; }
     inline QString attributeSource() const { return m_attr_source; }
-    inline void setAttributeSource(const QString& a) { m_attr_source = a; m_has_attr_source = true; }
+    inline void setAttributeSource(const QString &a) { m_attr_source = a; m_has_attr_source = true; }
     inline void clearAttributeSource() { m_has_attr_source = false; }
 
     inline bool hasAttributeLanguage() const { return m_has_attr_language; }
     inline QString attributeLanguage() const { return m_attr_language; }
-    inline void setAttributeLanguage(const QString& a) { m_attr_language = a; m_has_attr_language = true; }
+    inline void setAttributeLanguage(const QString &a) { m_attr_language = a; m_has_attr_language = true; }
     inline void clearAttributeLanguage() { m_has_attr_language = false; }
 
-    // child element accessors
 private:
     QString m_text;
     void clear(bool clear_all = true);
@@ -3315,8 +3227,6 @@ private:
     QString m_attr_language;
     bool m_has_attr_language;
 
-    // child element data
-    uint m_children;
 };
 
 class QDESIGNER_UILIB_EXPORT DomWidgetData {
@@ -3330,16 +3240,14 @@ public:
     inline QString text() const { return m_text; }
     inline void setText(const QString &s) { m_text = s; }
 
-    // attribute accessors
     // child element accessors
     inline QList<DomProperty*> elementProperty() const { return m_property; }
-    void setElementProperty(const QList<DomProperty*>& a);
+    void setElementProperty(const QList<DomProperty *> &a);
 
 private:
     QString m_text;
     void clear(bool clear_all = true);
 
-    // attribute data
     // child element data
     uint m_children;
     QList<DomProperty*> m_property;
@@ -3359,16 +3267,14 @@ public:
     inline QString text() const { return m_text; }
     inline void setText(const QString &s) { m_text = s; }
 
-    // attribute accessors
     // child element accessors
     inline QList<DomProperty*> elementProperty() const { return m_property; }
-    void setElementProperty(const QList<DomProperty*>& a);
+    void setElementProperty(const QList<DomProperty *> &a);
 
 private:
     QString m_text;
     void clear(bool clear_all = true);
 
-    // attribute data
     // child element data
     uint m_children;
     QList<DomProperty*> m_property;
@@ -3388,19 +3294,17 @@ public:
     inline QString text() const { return m_text; }
     inline void setText(const QString &s) { m_text = s; }
 
-    // attribute accessors
     // child element accessors
     inline QStringList elementSignal() const { return m_signal; }
-    void setElementSignal(const QStringList& a);
+    void setElementSignal(const QStringList &a);
 
     inline QStringList elementSlot() const { return m_slot; }
-    void setElementSlot(const QStringList& a);
+    void setElementSlot(const QStringList &a);
 
 private:
     QString m_text;
     void clear(bool clear_all = true);
 
-    // attribute data
     // child element data
     uint m_children;
     QStringList m_signal;
@@ -3422,23 +3326,21 @@ public:
     inline QString text() const { return m_text; }
     inline void setText(const QString &s) { m_text = s; }
 
-    // attribute accessors
     // child element accessors
-    inline QVector<DomPropertyToolTip*> elementTooltip() const { return m_tooltip; }
-    void setElementTooltip(const QVector<DomPropertyToolTip*>& a);
+    inline QVector<DomPropertyToolTip *> elementTooltip() const { return m_tooltip; }
+    void setElementTooltip(const QVector<DomPropertyToolTip *> &a);
 
-    inline QVector<DomStringPropertySpecification*> elementStringpropertyspecification() const { return m_stringpropertyspecification; }
-    void setElementStringpropertyspecification(const QVector<DomStringPropertySpecification*>& a);
+    inline QVector<DomStringPropertySpecification *> elementStringpropertyspecification() const { return m_stringpropertyspecification; }
+    void setElementStringpropertyspecification(const QVector<DomStringPropertySpecification *> &a);
 
 private:
     QString m_text;
     void clear(bool clear_all = true);
 
-    // attribute data
     // child element data
     uint m_children;
-    QVector<DomPropertyToolTip*> m_tooltip;
-    QVector<DomStringPropertySpecification*> m_stringpropertyspecification;
+    QVector<DomPropertyToolTip *> m_tooltip;
+    QVector<DomStringPropertySpecification *> m_stringpropertyspecification;
     enum Child {
         Tooltip = 1,
         Stringpropertyspecification = 2
@@ -3459,10 +3361,9 @@ public:
     // attribute accessors
     inline bool hasAttributeName() const { return m_has_attr_name; }
     inline QString attributeName() const { return m_attr_name; }
-    inline void setAttributeName(const QString& a) { m_attr_name = a; m_has_attr_name = true; }
+    inline void setAttributeName(const QString &a) { m_attr_name = a; m_has_attr_name = true; }
     inline void clearAttributeName() { m_has_attr_name = false; }
 
-    // child element accessors
 private:
     QString m_text;
     void clear(bool clear_all = true);
@@ -3471,8 +3372,6 @@ private:
     QString m_attr_name;
     bool m_has_attr_name;
 
-    // child element data
-    uint m_children;
 };
 
 class QDESIGNER_UILIB_EXPORT DomStringPropertySpecification {
@@ -3489,20 +3388,19 @@ public:
     // attribute accessors
     inline bool hasAttributeName() const { return m_has_attr_name; }
     inline QString attributeName() const { return m_attr_name; }
-    inline void setAttributeName(const QString& a) { m_attr_name = a; m_has_attr_name = true; }
+    inline void setAttributeName(const QString &a) { m_attr_name = a; m_has_attr_name = true; }
     inline void clearAttributeName() { m_has_attr_name = false; }
 
     inline bool hasAttributeType() const { return m_has_attr_type; }
     inline QString attributeType() const { return m_attr_type; }
-    inline void setAttributeType(const QString& a) { m_attr_type = a; m_has_attr_type = true; }
+    inline void setAttributeType(const QString &a) { m_attr_type = a; m_has_attr_type = true; }
     inline void clearAttributeType() { m_has_attr_type = false; }
 
     inline bool hasAttributeNotr() const { return m_has_attr_notr; }
     inline QString attributeNotr() const { return m_attr_notr; }
-    inline void setAttributeNotr(const QString& a) { m_attr_notr = a; m_has_attr_notr = true; }
+    inline void setAttributeNotr(const QString &a) { m_attr_notr = a; m_has_attr_notr = true; }
     inline void clearAttributeNotr() { m_has_attr_notr = false; }
 
-    // child element accessors
 private:
     QString m_text;
     void clear(bool clear_all = true);
@@ -3517,8 +3415,6 @@ private:
     QString m_attr_notr;
     bool m_has_attr_notr;
 
-    // child element data
-    uint m_children;
 };
 
 
