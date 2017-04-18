@@ -809,6 +809,8 @@ static inline quint64 qtModuleForPlugin(const QString &subDirName)
         return QtTextToSpeechModule;
     if (subDirName == QLatin1String("canbus"))
         return QtSerialBusModule;
+    if (subDirName == QLatin1String("styles"))
+        return QtWidgetsModule;
     return 0; // "designer"
 }
 
