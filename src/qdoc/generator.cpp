@@ -937,7 +937,7 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
                                 }
                             }
                         }
-                        if (needWarning && !func->isReimplemented())
+                        if (needWarning && !func->isReimplemented() && !func->isOverload())
                             node->doc().location().warning(
                                         tr("Undocumented parameter '%1' in %2")
                                         .arg(*a).arg(node->plainFullName()));
