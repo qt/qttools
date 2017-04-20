@@ -729,6 +729,16 @@ static QString pdbFileName(QString libraryFileName)
     return libraryFileName;
 }
 
+static inline QStringList qmlCacheFileFilters()
+{
+    return QStringList() << QStringLiteral("*.jsc") << QStringLiteral("*.qmlc");
+}
+
+static bool hasQmlCacheFiles(const QString &path)
+{
+    return !QDir(path).entryInfoList(qmlCacheFileFilters(), QDir::Files).isEmpty();
+}
+
 // File entry filter function for updateFile() that returns a list of files for
 // QML import trees: DLLs (matching debgug) and .qml/,js, etc.
 class QmlDirectoryFileEntryFunction {
@@ -763,9 +773,13 @@ private:
     static inline QStringList qmlNameFilters(unsigned flags)
     {
         QStringList result;
-        result << QStringLiteral("qmldir") << QStringLiteral("*.qmltypes");
-        if (!(flags & SkipSources))
-            result << QStringLiteral("*.js") <<  QStringLiteral("*.qml") << QStringLiteral("*.png");
+        result << QStringLiteral("qmldir") << QStringLiteral("*.qmltypes")
+           << QStringLiteral("*.frag") << QStringLiteral("*.vert") // Shaders
+           << QStringLiteral("*.ttf");
+        if (!(flags & SkipSources)) {
+            result << QStringLiteral("*.js") << QStringLiteral("*.qml") << QStringLiteral("*.png");
+            result.append(qmlCacheFileFilters());
+        }
         return result;
     }
 
@@ -1429,7 +1443,8 @@ static DeployResult deploy(const Options &options,
                     return result;
                 unsigned updateFileFlags = options.updateFileFlags | SkipQmlDesignerSpecificsDirectories;
                 unsigned qmlDirectoryFileFlags = 0;
-                if (quickControlsImportPath(module.sourcePath) == 1) { // QML files of Controls 1 not needed
+                // QML files of Controls 1 not needed unless cached files are present (5.9)
+                if (quickControlsImportPath(module.sourcePath) == 1 && !hasQmlCacheFiles(module.sourcePath)) {
                     updateFileFlags |=  RemoveEmptyQmlDirectories;
                     qmlDirectoryFileFlags |= QmlDirectoryFileEntryFunction::SkipSources;
                 }
