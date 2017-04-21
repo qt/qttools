@@ -2822,6 +2822,19 @@ bool copyGdbServer(const Options &options)
         return false;
     }
 
+    QString addedByAndroidDeployQtPath = options.outputDirectory + QLatin1String("/assets/--Added-by-androiddeployqt--/");
+    if (!QDir().mkpath(addedByAndroidDeployQtPath)) {
+        fprintf(stderr, "Failed to create directory '%s'", qPrintable(addedByAndroidDeployQtPath));
+        return false;
+    }
+    QFile f(addedByAndroidDeployQtPath + QLatin1String("debugger.command"));
+    if (!f.open(QIODevice::WriteOnly)) {
+        fprintf(stderr, "Failed to create directory '%s'", qPrintable(addedByAndroidDeployQtPath));
+        return false;
+    }
+    f.write("lib/libgdbserver.so --multi +");
+    f.close();
+
     return true;
 }
 
