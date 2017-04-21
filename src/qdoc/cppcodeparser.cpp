@@ -436,7 +436,7 @@ Node* CppCodeParser::processTopicCommand(const Doc& doc,
             if ((type == Node::Class) || (type == Node::Namespace)) {
                 if (path.size() > 1) {
                     path.pop_back();
-                    QString ns = path.join("::");
+                    QString ns = path.join(QLatin1String("::"));
                     qdb_->insertOpenNamespace(ns);
                 }
             }

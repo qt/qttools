@@ -16,7 +16,9 @@ SUBDIRS += linguist \
     qdoc \
     qtattributionsscanner
 
-!android|android_app: SUBDIRS += qtplugininfo
+qtConfig(library) {
+    !android|android_app: SUBDIRS += qtplugininfo
+}
 
 if(!android|android_app):!uikit: SUBDIRS += qtpaths
 

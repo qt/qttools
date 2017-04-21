@@ -1202,7 +1202,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter& writer,
                     associatedProperties << pn->name();
                 }
                 associatedProperties.sort();
-                writer.writeAttribute("associated-property", associatedProperties.join(","));
+                writer.writeAttribute("associated-property", associatedProperties.join(QLatin1Char(',')));
             }
             writer.writeAttribute("type", functionNode->returnType());
             if (!brief.isEmpty())

@@ -597,16 +597,12 @@ public:
 
     void setCells(const QRect &c, QWidget* w);
 
-    bool empty() const  { return m_nrows * m_ncols; }
+    bool empty() const  { return !m_nrows || !m_ncols; }
     int numRows() const { return m_nrows; }
     int numCols() const { return m_ncols; }
 
     void simplify();
     bool locateWidget(QWidget* w, int& row, int& col, int& rowspan, int& colspan) const;
-
-    QDebug debug(QDebug str) const;
-    friend inline QDebug operator<<(QDebug str, const Grid &g)
-    { return g.debug(str); }
 
 private:
     void setCell(int row, int col, QWidget* w) { m_cells[ row * m_ncols + col] = w; }
@@ -657,26 +653,6 @@ void Grid::resize(int nrows, int ncols)
         m_cells = new QWidget*[allocSize];
         std::fill(m_cells, m_cells + allocSize, static_cast<QWidget *>(0));
     }
-}
-
-QDebug Grid::debug(QDebug str) const
-{
-    str << m_nrows << 'x' << m_ncols << '\n';
-    QSet<QWidget *> widgets;
-    const int cellCount = m_nrows * m_ncols;
-    int row, col, rowspan, colspan;
-    for (int c = 0; c < cellCount; c++)
-        if (QWidget *w = m_cells[c])
-            if (!widgets.contains(w)) {
-                widgets.insert(w);
-                locateWidget(w, row, col, rowspan, colspan);
-                str << w << " at " << row <<  col << rowspan << 'x' << colspan << '\n';
-            }
-    for (int r = 0; r < m_nrows; r++)
-        for (int c = 0; c < m_ncols; c++)
-            str << "At " << r << c << cell(r, c) << '\n';
-
-    return str;
 }
 
 void Grid::setCells(const QRect &c, QWidget* w)
@@ -967,8 +943,10 @@ bool Grid::shrinkFormLayoutSpans()
     for (WidgetSet::const_iterator it = widgets.constBegin(); it != cend ; ++it) {
         QWidget *w = *it;
         int row, col,  rowspan, colspan;
-        if (!locateWidget(w, row, col, rowspan, colspan))
+        if (!locateWidget(w, row, col, rowspan, colspan)) {
             qDebug("ooops, widget '%s' does not fit in layout", w->objectName().toUtf8().constData());
+            row = col = rowspan = colspan = 0;
+        }
         const int maxColSpan = col == 0 ? 2 : 1;
         const int newColSpan = qMin(colspan, maxColSpan);
         const int newRowSpan = qMin(rowspan, maxRowSpan);
@@ -1111,7 +1089,7 @@ void GridLayout<GridLikeLayout, LayoutType, GridMode>::doLayout()
 
     GridLikeLayout *layout =  static_cast<GridLikeLayout *>(createLayout(LayoutType));
 
-    if (m_grid.empty())
+    if (!m_grid.empty())
         sort();
 
     QDesignerWidgetItemInstaller wii; // Make sure we use QDesignerWidgetItem.

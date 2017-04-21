@@ -76,7 +76,7 @@ Writer::Writer(const QString &path)
     if (!m_db->open()) {
         const QString error = QHelpSearchIndexWriter::tr("Cannot open database \"%1\" using connection \"%2\": %3")
                 .arg(dbPath, m_uniqueId, m_db->lastError().text());
-        qWarning(qPrintable(error));
+        qWarning("%s", qUtf8Printable(error));
         delete m_db;
         m_db = nullptr;
         QSqlDatabase::removeDatabase(m_uniqueId);

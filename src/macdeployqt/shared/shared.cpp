@@ -297,15 +297,15 @@ FrameworkInfo parseOtoolLibraryLine(const QString &line, const QString &appBundl
                 foreach (QString path, librarySearchPath) {
                     if (!path.endsWith("/"))
                         path += '/';
-                    QString nameInPath = path + parts.join("/");
+                    QString nameInPath = path + parts.join(QLatin1Char('/'));
                     if (QFile::exists(nameInPath)) {
-                        info.frameworkDirectory = path + partsCopy.join("/");
+                        info.frameworkDirectory = path + partsCopy.join(QLatin1Char('/'));
                         break;
                     }
                 }
                 if (currentPart.contains(".framework")) {
                     if (info.frameworkDirectory.isEmpty())
-                        info.frameworkDirectory = "/Library/Frameworks/" + partsCopy.join("/");
+                        info.frameworkDirectory = "/Library/Frameworks/" + partsCopy.join(QLatin1Char('/'));
                     if (!info.frameworkDirectory.endsWith("/"))
                         info.frameworkDirectory += "/";
                     state = FrameworkName;
@@ -313,7 +313,7 @@ FrameworkInfo parseOtoolLibraryLine(const QString &line, const QString &appBundl
                     continue;
                 } else if (currentPart.contains(".dylib")) {
                     if (info.frameworkDirectory.isEmpty())
-                        info.frameworkDirectory = "/usr/lib/" + partsCopy.join("/");
+                        info.frameworkDirectory = "/usr/lib/" + partsCopy.join(QLatin1Char('/'));
                     if (!info.frameworkDirectory.endsWith("/"))
                         info.frameworkDirectory += "/";
                     state = DylibName;
@@ -1386,13 +1386,6 @@ QSet<QString> codesignBundle(const QString &identity,
     QStringList frameworkPaths = findAppFrameworkPaths(appBundlePath);
     foreach (const QString &frameworkPath, frameworkPaths) {
 
-        // Add all files for a framework as a catch all.
-        QStringList bundleFiles = findAppBundleFiles(frameworkPath, getAbsoltuePath);
-        foreach (const QString &binary, bundleFiles) {
-            pendingBinaries.push(binary);
-            pendingBinariesSet.insert(binary);
-        }
-
         // Prioritise first to sign any additional inner bundles found in the Helpers folder (e.g
         // used by QtWebEngine).
         QDirIterator helpersIterator(frameworkPath, QStringList() << QString::fromLatin1("Helpers"), QDir::Dirs | QDir::NoSymLinks, QDirIterator::Subdirectories);
@@ -1412,7 +1405,7 @@ QSet<QString> codesignBundle(const QString &identity,
         while (librariesIterator.hasNext()) {
             librariesIterator.next();
             QString librariesPath = librariesIterator.filePath();
-            bundleFiles = findAppBundleFiles(librariesPath, getAbsoltuePath);
+            QStringList bundleFiles = findAppBundleFiles(librariesPath, getAbsoltuePath);
             foreach (const QString &binary, bundleFiles) {
                 pendingBinaries.push(binary);
                 pendingBinariesSet.insert(binary);

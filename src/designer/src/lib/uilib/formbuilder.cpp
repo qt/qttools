@@ -472,6 +472,7 @@ void QFormBuilder::updateCustomWidgets()
 {
     d->m_customWidgets.clear();
 
+#if QT_CONFIG(library)
     for (const QString &path : qAsConst(d->m_pluginPaths)) {
         const QDir dir(path);
         const QStringList candidates = dir.entryList(QDir::Files);
@@ -489,6 +490,8 @@ void QFormBuilder::updateCustomWidgets()
                 insertPlugins(loader.instance(), &d->m_customWidgets);
         }
     }
+#endif // QT_CONFIG(library)
+
     // Check statically linked plugins
     const QObjectList staticPlugins = QPluginLoader::staticInstances();
     for (QObject *o : staticPlugins)

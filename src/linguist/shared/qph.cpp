@@ -160,7 +160,7 @@ static bool saveQPH(const Translator &translator, QIODevice &dev, ConversionData
     foreach (const TranslatorMessage &msg, translator.messages()) {
         t << "<phrase>\n";
         t << "    <source>" << protect(msg.sourceText()) << "</source>\n";
-        QString str = msg.translations().join(QLatin1String("@"));
+        QString str = msg.translations().join(QLatin1Char('@'));
         str.replace(QChar(Translator::BinaryVariantSeparator),
                     QChar(Translator::TextVariantSeparator));
         t << "    <target>" << protect(str)

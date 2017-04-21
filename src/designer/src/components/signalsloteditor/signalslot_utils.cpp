@@ -166,7 +166,6 @@ namespace {
         ReverseClassesMemberIterator(qdesigner_internal::ClassesMemberFunctions *result);
 
         ReverseClassesMemberIterator &operator*()     { return *this; }
-        ReverseClassesMemberIterator &operator++(int) { return *this; }
         ReverseClassesMemberIterator &operator++()    { return *this; }
         void operator=(const ClassNameSignaturePair &classNameSignature);
 
@@ -200,7 +199,6 @@ namespace {
         SignatureIterator(QMap<QString, QString> *result) : m_result(result) {}
 
         SignatureIterator &operator*()     { return *this; }
-        SignatureIterator &operator++(int) { return *this; }
         SignatureIterator &operator++()    { return *this; }
         void operator=(const ClassNameSignaturePair &classNameSignature) {
             m_result->insert(classNameSignature.second, classNameSignature.first);
