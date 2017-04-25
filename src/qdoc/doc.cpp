@@ -72,14 +72,12 @@ enum {
     CMD_BRIEF,
     CMD_C,
     CMD_CAPTION,
-    CMD_CHAPTER,
     CMD_CODE,
     CMD_CODELINE,
     CMD_DIV,
     CMD_DOTS,
     CMD_E,
     CMD_ELSE,
-    CMD_ENDCHAPTER,
     CMD_ENDCODE,
     CMD_ENDDIV,
     CMD_ENDFOOTNOTE,
@@ -89,7 +87,6 @@ enum {
     CMD_ENDLIST,
     CMD_ENDMAPREF,
     CMD_ENDOMIT,
-    CMD_ENDPART,
     CMD_ENDQUOTATION,
     CMD_ENDRAW,
     CMD_ENDSECTION1,
@@ -127,7 +124,6 @@ enum {
     CMD_OMIT,
     CMD_OMITVALUE,
     CMD_OVERLOAD,
-    CMD_PART,
     CMD_PRINTLINE,
     CMD_PRINTTO,
     CMD_PRINTUNTIL,
@@ -188,14 +184,12 @@ static struct {
     { "brief", CMD_BRIEF, 0 },
     { "c", CMD_C, 0 },
     { "caption", CMD_CAPTION, 0 },
-    { "chapter", CMD_CHAPTER, 0 },
     { "code", CMD_CODE, 0 },
     { "codeline", CMD_CODELINE, 0},
     { "div", CMD_DIV, 0 },
     { "dots", CMD_DOTS, 0 },
     { "e", CMD_E, 0 },
     { "else", CMD_ELSE, 0 },
-    { "endchapter", CMD_ENDCHAPTER, 0 },
     { "endcode", CMD_ENDCODE, 0 },
     { "enddiv", CMD_ENDDIV, 0 },
     { "endfootnote", CMD_ENDFOOTNOTE, 0 },
@@ -205,7 +199,6 @@ static struct {
     { "endlist", CMD_ENDLIST, 0 },
     { "endmapref", CMD_ENDMAPREF, 0 },
     { "endomit", CMD_ENDOMIT, 0 },
-    { "endpart", CMD_ENDPART, 0 },
     { "endquotation", CMD_ENDQUOTATION, 0 },
     { "endraw", CMD_ENDRAW, 0 },
     { "endsection1", CMD_ENDSECTION1, 0 },  // ### don't document for now
@@ -243,7 +236,6 @@ static struct {
     { "omit", CMD_OMIT, 0 },
     { "omitvalue", CMD_OMITVALUE, 0 },
     { "overload", CMD_OVERLOAD, 0 },
-    { "part", CMD_PART, 0 },
     { "printline", CMD_PRINTLINE, 0 },
     { "printto", CMD_PRINTTO, 0 },
     { "printuntil", CMD_PRINTUNTIL, 0 },
@@ -652,9 +644,6 @@ void DocParser::parse(const QString& source,
                     leavePara();
                     enterPara(Atom::CaptionLeft, Atom::CaptionRight);
                     break;
-                case CMD_CHAPTER:
-                    startSection(Doc::Chapter, cmd);
-                    break;
                 case CMD_CODE:
                     leavePara();
                     append(Atom::Code, getCode(CMD_CODE, 0));
@@ -736,9 +725,6 @@ void DocParser::parse(const QString& source,
                         location().warning(tr("Unexpected '\\%1'").arg(cmdName(CMD_ELSE)));
                     }
                     break;
-                case CMD_ENDCHAPTER:
-                    endSection(Doc::Chapter, cmd);
-                    break;
                 case CMD_ENDCODE:
                     closeCommand(cmd);
                     break;
@@ -804,9 +790,6 @@ void DocParser::parse(const QString& source,
                     break;
                 case CMD_ENDOMIT:
                     closeCommand(cmd);
-                    break;
-                case CMD_ENDPART:
-                    endSection(Doc::Part, cmd);
                     break;
                 case CMD_ENDQUOTATION:
                     if (closeCommand(cmd)) {
@@ -1102,9 +1085,6 @@ void DocParser::parse(const QString& source,
                         priv->enumItemList.append(p1);
                     if (!priv->omitEnumItemList.contains(p1))
                         priv->omitEnumItemList.append(p1);
-                    break;
-                case CMD_PART:
-                    startSection(Doc::Part, cmd);
                     break;
                 case CMD_PRINTLINE:
                     leavePara();
@@ -2245,13 +2225,7 @@ Doc::Sections DocParser::getSectioningUnit()
 {
     QString name = getOptionalArgument();
 
-    if (name == "part") {
-        return Doc::Part;
-    }
-    else if (name == "chapter") {
-        return Doc::Chapter;
-    }
-    else if (name == "section1") {
+    if (name == "section1") {
         return Doc::Section1;
     }
     else if (name == "section2") {
@@ -2673,8 +2647,6 @@ int DocParser::endCmdFor(int cmd)
     switch (cmd) {
     case CMD_BADCODE:
         return CMD_ENDCODE;
-    case CMD_CHAPTER:
-        return CMD_ENDCHAPTER;
     case CMD_CODE:
         return CMD_ENDCODE;
     case CMD_DIV:
@@ -2699,8 +2671,6 @@ int DocParser::endCmdFor(int cmd)
         return CMD_NEWCODE;
     case CMD_OMIT:
         return CMD_ENDOMIT;
-    case CMD_PART:
-        return CMD_ENDPART;
     case CMD_QUOTATION:
         return CMD_ENDQUOTATION;
     case CMD_RAW:

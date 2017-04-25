@@ -46,7 +46,6 @@
     \li \l {brief-command} {\\brief}
     \li \l {c-command} {\\c}
     \li \l {caption-command} {\\caption}
-    \li \l {chapter-command} {\\chapter}
     \li \l {class-command} {\\class}
     \li \l {code-command} {\\code}
     \li \l {codeline-command} {\\codeline}
@@ -101,7 +100,6 @@
     \li \l {omitvalue-command} {\\omitvalue}
     \li \l {overload-command} {\\overload}
     \li \l {page-command} {\\page}
-    \li \l {part-command} {\\part}
     \li \l {preliminary-command} {\\preliminary}
     \li \l {previouspage-command} {\\previouspage}
     \li \l {printline-command} {\\printline}
