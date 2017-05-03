@@ -294,9 +294,9 @@
         <xsl:param name="node"/>
 
         <xsl:if test="$node/xs:attribute">
-            <xsl:text>    const QXmlStreamAttributes attributes = reader.attributes();&endl;</xsl:text>
+            <xsl:text>    const QXmlStreamAttributes &amp;attributes = reader.attributes();&endl;</xsl:text>
             <xsl:text>    for (const QXmlStreamAttribute &amp;attribute : attributes) {&endl;</xsl:text>
-            <xsl:text>        QStringRef name = attribute.name();&endl;</xsl:text>
+            <xsl:text>        const QStringRef name = attribute.name();&endl;</xsl:text>
 
             <xsl:for-each select="$node/xs:attribute">
                 <xsl:variable name="camel-case-name">
@@ -365,11 +365,11 @@
             </xsl:variable>
             <xsl:variable name="array" select="@maxOccurs = 'unbounded'"/>
 
-            <xsl:text>            if (tag == </xsl:text>
+            <xsl:text>            if (!tag.compare(</xsl:text>
             <xsl:call-template name="string-constant-for-comparison">
                 <xsl:with-param name="literal" select="$lower-name"/>
             </xsl:call-template>
-            <xsl:text>) {&endl;</xsl:text>
+            <xsl:text>, Qt::CaseInsensitive)) {&endl;</xsl:text>
 
             <xsl:choose>
                 <xsl:when test="not($array) and $xs-type-cat = 'value'">
@@ -442,10 +442,10 @@
             <xsl:with-param name="node" select="$node"/>
         </xsl:call-template>
 
-        <xsl:text>    for (bool finished = false; !finished &amp;&amp; !reader.hasError();) {&endl;</xsl:text>
+        <xsl:text>    while (!reader.hasError()) {&endl;</xsl:text>
         <xsl:text>        switch (reader.readNext()) {&endl;</xsl:text>
         <xsl:text>        case QXmlStreamReader::StartElement : {&endl;</xsl:text>
-        <xsl:text>            const QString tag = reader.name().toString().toLower();&endl;</xsl:text>
+        <xsl:text>            const QStringRef tag = reader.name();&endl;</xsl:text>
 
         <xsl:for-each select="$node//xs:sequence | $node//xs:choice | $node//xs:all">
             <xsl:call-template name="read-impl-load-child-element">
@@ -457,15 +457,13 @@
         <xsl:text>        }&endl;</xsl:text>
         <xsl:text>            break;&endl;</xsl:text>
         <xsl:text>        case QXmlStreamReader::EndElement :&endl;</xsl:text>
-        <xsl:text>            finished = true;&endl;</xsl:text>
-        <xsl:text>            break;&endl;</xsl:text>
+        <xsl:text>            return;&endl;</xsl:text>
         <xsl:text>        case QXmlStreamReader::Characters :&endl;</xsl:text>
         <xsl:text>            if (!reader.isWhitespace())&endl;</xsl:text>
         <xsl:text>                m_text.append(reader.text().toString());&endl;</xsl:text>
         <xsl:text>            break;&endl;</xsl:text>
         <xsl:text>        default :&endl;</xsl:text>
         <xsl:text>            break;&endl;</xsl:text>
-
         <xsl:text>        }&endl;</xsl:text>
         <xsl:text>    }&endl;</xsl:text>
         <xsl:text>}&endl;&endl;</xsl:text>
@@ -703,7 +701,7 @@
         <xsl:text>::write(QXmlStreamWriter &amp;writer, const QString &amp;tagName) const&endl;</xsl:text>
         <xsl:text>{&endl;</xsl:text>
 
-        <xsl:text>    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("</xsl:text>
+        <xsl:text>    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("</xsl:text>
         <xsl:value-of select="$lower-name"/>
         <xsl:text>") : tagName.toLower());&endl;&endl;</xsl:text>
 
@@ -735,7 +733,6 @@
     <xsl:template name="child-setter-impl-helper">
         <xsl:param name="node"/>
         <xsl:param name="name"/>
-        <xsl:variable name="make-kind-enum" select="name($node)='xs:choice'"/>
         <xsl:variable name="isChoice" select="name($node)='xs:choice'"/>
 
         <xsl:for-each select="$node/xs:element">
@@ -801,7 +798,7 @@
             <xsl:text>a)&endl;</xsl:text>
             <xsl:text>{&endl;</xsl:text>
             <xsl:choose>
-                <xsl:when test="$make-kind-enum">
+                <xsl:when test="$isChoice">
                     <xsl:text>    clear(false);&endl;</xsl:text>
                     <xsl:text>    m_kind = </xsl:text>
                     <xsl:value-of select="$cap-name"/>

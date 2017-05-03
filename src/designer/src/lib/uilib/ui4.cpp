@@ -134,9 +134,9 @@ DomUI::~DomUI()
 
 void DomUI::read(QXmlStreamReader &reader)
 {
-    const QXmlStreamAttributes attributes = reader.attributes();
+    const QXmlStreamAttributes &attributes = reader.attributes();
     for (const QXmlStreamAttribute &attribute : attributes) {
-        QStringRef name = attribute.name();
+        const QStringRef name = attribute.name();
         if (name == QLatin1String("version")) {
             setAttributeVersion(attribute.value().toString());
             continue;
@@ -160,97 +160,97 @@ void DomUI::read(QXmlStreamReader &reader)
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("author")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("author"), Qt::CaseInsensitive)) {
                 setElementAuthor(reader.readElementText());
                 continue;
             }
-            if (tag == QLatin1String("comment")) {
+            if (!tag.compare(QLatin1String("comment"), Qt::CaseInsensitive)) {
                 setElementComment(reader.readElementText());
                 continue;
             }
-            if (tag == QLatin1String("exportmacro")) {
+            if (!tag.compare(QLatin1String("exportmacro"), Qt::CaseInsensitive)) {
                 setElementExportMacro(reader.readElementText());
                 continue;
             }
-            if (tag == QLatin1String("class")) {
+            if (!tag.compare(QLatin1String("class"), Qt::CaseInsensitive)) {
                 setElementClass(reader.readElementText());
                 continue;
             }
-            if (tag == QLatin1String("widget")) {
+            if (!tag.compare(QLatin1String("widget"), Qt::CaseInsensitive)) {
                 DomWidget *v = new DomWidget();
                 v->read(reader);
                 setElementWidget(v);
                 continue;
             }
-            if (tag == QLatin1String("layoutdefault")) {
+            if (!tag.compare(QLatin1String("layoutdefault"), Qt::CaseInsensitive)) {
                 DomLayoutDefault *v = new DomLayoutDefault();
                 v->read(reader);
                 setElementLayoutDefault(v);
                 continue;
             }
-            if (tag == QLatin1String("layoutfunction")) {
+            if (!tag.compare(QLatin1String("layoutfunction"), Qt::CaseInsensitive)) {
                 DomLayoutFunction *v = new DomLayoutFunction();
                 v->read(reader);
                 setElementLayoutFunction(v);
                 continue;
             }
-            if (tag == QLatin1String("pixmapfunction")) {
+            if (!tag.compare(QLatin1String("pixmapfunction"), Qt::CaseInsensitive)) {
                 setElementPixmapFunction(reader.readElementText());
                 continue;
             }
-            if (tag == QLatin1String("customwidgets")) {
+            if (!tag.compare(QLatin1String("customwidgets"), Qt::CaseInsensitive)) {
                 DomCustomWidgets *v = new DomCustomWidgets();
                 v->read(reader);
                 setElementCustomWidgets(v);
                 continue;
             }
-            if (tag == QLatin1String("tabstops")) {
+            if (!tag.compare(QLatin1String("tabstops"), Qt::CaseInsensitive)) {
                 DomTabStops *v = new DomTabStops();
                 v->read(reader);
                 setElementTabStops(v);
                 continue;
             }
-            if (tag == QLatin1String("images")) {
+            if (!tag.compare(QLatin1String("images"), Qt::CaseInsensitive)) {
                 DomImages *v = new DomImages();
                 v->read(reader);
                 setElementImages(v);
                 continue;
             }
-            if (tag == QLatin1String("includes")) {
+            if (!tag.compare(QLatin1String("includes"), Qt::CaseInsensitive)) {
                 DomIncludes *v = new DomIncludes();
                 v->read(reader);
                 setElementIncludes(v);
                 continue;
             }
-            if (tag == QLatin1String("resources")) {
+            if (!tag.compare(QLatin1String("resources"), Qt::CaseInsensitive)) {
                 DomResources *v = new DomResources();
                 v->read(reader);
                 setElementResources(v);
                 continue;
             }
-            if (tag == QLatin1String("connections")) {
+            if (!tag.compare(QLatin1String("connections"), Qt::CaseInsensitive)) {
                 DomConnections *v = new DomConnections();
                 v->read(reader);
                 setElementConnections(v);
                 continue;
             }
-            if (tag == QLatin1String("designerdata")) {
+            if (!tag.compare(QLatin1String("designerdata"), Qt::CaseInsensitive)) {
                 DomDesignerData *v = new DomDesignerData();
                 v->read(reader);
                 setElementDesignerdata(v);
                 continue;
             }
-            if (tag == QLatin1String("slots")) {
+            if (!tag.compare(QLatin1String("slots"), Qt::CaseInsensitive)) {
                 DomSlots *v = new DomSlots();
                 v->read(reader);
                 setElementSlots(v);
                 continue;
             }
-            if (tag == QLatin1String("buttongroups")) {
+            if (!tag.compare(QLatin1String("buttongroups"), Qt::CaseInsensitive)) {
                 DomButtonGroups *v = new DomButtonGroups();
                 v->read(reader);
                 setElementButtonGroups(v);
@@ -260,8 +260,7 @@ void DomUI::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -274,7 +273,7 @@ void DomUI::read(QXmlStreamReader &reader)
 
 void DomUI::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("ui") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("ui") : tagName.toLower());
 
     if (hasAttributeVersion())
         writer.writeAttribute(QStringLiteral("version"), attributeVersion());
@@ -692,11 +691,11 @@ DomIncludes::~DomIncludes()
 
 void DomIncludes::read(QXmlStreamReader &reader)
 {
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("include")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("include"), Qt::CaseInsensitive)) {
                 DomInclude *v = new DomInclude();
                 v->read(reader);
                 m_include.append(v);
@@ -706,8 +705,7 @@ void DomIncludes::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -720,7 +718,7 @@ void DomIncludes::read(QXmlStreamReader &reader)
 
 void DomIncludes::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("includes") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("includes") : tagName.toLower());
 
     for (DomInclude *v : m_include)
         v->write(writer, QStringLiteral("include"));
@@ -760,9 +758,9 @@ DomInclude::~DomInclude()
 
 void DomInclude::read(QXmlStreamReader &reader)
 {
-    const QXmlStreamAttributes attributes = reader.attributes();
+    const QXmlStreamAttributes &attributes = reader.attributes();
     for (const QXmlStreamAttribute &attribute : attributes) {
-        QStringRef name = attribute.name();
+        const QStringRef name = attribute.name();
         if (name == QLatin1String("location")) {
             setAttributeLocation(attribute.value().toString());
             continue;
@@ -774,16 +772,15 @@ void DomInclude::read(QXmlStreamReader &reader)
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
+            const QStringRef tag = reader.name();
             reader.raiseError(QLatin1String("Unexpected element ") + tag);
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -796,7 +793,7 @@ void DomInclude::read(QXmlStreamReader &reader)
 
 void DomInclude::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("include") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("include") : tagName.toLower());
 
     if (hasAttributeLocation())
         writer.writeAttribute(QStringLiteral("location"), attributeLocation());
@@ -837,9 +834,9 @@ DomResources::~DomResources()
 
 void DomResources::read(QXmlStreamReader &reader)
 {
-    const QXmlStreamAttributes attributes = reader.attributes();
+    const QXmlStreamAttributes &attributes = reader.attributes();
     for (const QXmlStreamAttribute &attribute : attributes) {
-        QStringRef name = attribute.name();
+        const QStringRef name = attribute.name();
         if (name == QLatin1String("name")) {
             setAttributeName(attribute.value().toString());
             continue;
@@ -847,11 +844,11 @@ void DomResources::read(QXmlStreamReader &reader)
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("include")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("include"), Qt::CaseInsensitive)) {
                 DomResource *v = new DomResource();
                 v->read(reader);
                 m_include.append(v);
@@ -861,8 +858,7 @@ void DomResources::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -875,7 +871,7 @@ void DomResources::read(QXmlStreamReader &reader)
 
 void DomResources::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("resources") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("resources") : tagName.toLower());
 
     if (hasAttributeName())
         writer.writeAttribute(QStringLiteral("name"), attributeName());
@@ -915,9 +911,9 @@ DomResource::~DomResource()
 
 void DomResource::read(QXmlStreamReader &reader)
 {
-    const QXmlStreamAttributes attributes = reader.attributes();
+    const QXmlStreamAttributes &attributes = reader.attributes();
     for (const QXmlStreamAttribute &attribute : attributes) {
-        QStringRef name = attribute.name();
+        const QStringRef name = attribute.name();
         if (name == QLatin1String("location")) {
             setAttributeLocation(attribute.value().toString());
             continue;
@@ -925,16 +921,15 @@ void DomResource::read(QXmlStreamReader &reader)
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
+            const QStringRef tag = reader.name();
             reader.raiseError(QLatin1String("Unexpected element ") + tag);
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -947,7 +942,7 @@ void DomResource::read(QXmlStreamReader &reader)
 
 void DomResource::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("resource") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("resource") : tagName.toLower());
 
     if (hasAttributeLocation())
         writer.writeAttribute(QStringLiteral("location"), attributeLocation());
@@ -997,9 +992,9 @@ DomActionGroup::~DomActionGroup()
 
 void DomActionGroup::read(QXmlStreamReader &reader)
 {
-    const QXmlStreamAttributes attributes = reader.attributes();
+    const QXmlStreamAttributes &attributes = reader.attributes();
     for (const QXmlStreamAttribute &attribute : attributes) {
-        QStringRef name = attribute.name();
+        const QStringRef name = attribute.name();
         if (name == QLatin1String("name")) {
             setAttributeName(attribute.value().toString());
             continue;
@@ -1007,29 +1002,29 @@ void DomActionGroup::read(QXmlStreamReader &reader)
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("action")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("action"), Qt::CaseInsensitive)) {
                 DomAction *v = new DomAction();
                 v->read(reader);
                 m_action.append(v);
                 continue;
             }
-            if (tag == QLatin1String("actiongroup")) {
+            if (!tag.compare(QLatin1String("actiongroup"), Qt::CaseInsensitive)) {
                 DomActionGroup *v = new DomActionGroup();
                 v->read(reader);
                 m_actionGroup.append(v);
                 continue;
             }
-            if (tag == QLatin1String("property")) {
+            if (!tag.compare(QLatin1String("property"), Qt::CaseInsensitive)) {
                 DomProperty *v = new DomProperty();
                 v->read(reader);
                 m_property.append(v);
                 continue;
             }
-            if (tag == QLatin1String("attribute")) {
+            if (!tag.compare(QLatin1String("attribute"), Qt::CaseInsensitive)) {
                 DomProperty *v = new DomProperty();
                 v->read(reader);
                 m_attribute.append(v);
@@ -1039,8 +1034,7 @@ void DomActionGroup::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -1053,7 +1047,7 @@ void DomActionGroup::read(QXmlStreamReader &reader)
 
 void DomActionGroup::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("actiongroup") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("actiongroup") : tagName.toLower());
 
     if (hasAttributeName())
         writer.writeAttribute(QStringLiteral("name"), attributeName());
@@ -1133,9 +1127,9 @@ DomAction::~DomAction()
 
 void DomAction::read(QXmlStreamReader &reader)
 {
-    const QXmlStreamAttributes attributes = reader.attributes();
+    const QXmlStreamAttributes &attributes = reader.attributes();
     for (const QXmlStreamAttribute &attribute : attributes) {
-        QStringRef name = attribute.name();
+        const QStringRef name = attribute.name();
         if (name == QLatin1String("name")) {
             setAttributeName(attribute.value().toString());
             continue;
@@ -1147,17 +1141,17 @@ void DomAction::read(QXmlStreamReader &reader)
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("property")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("property"), Qt::CaseInsensitive)) {
                 DomProperty *v = new DomProperty();
                 v->read(reader);
                 m_property.append(v);
                 continue;
             }
-            if (tag == QLatin1String("attribute")) {
+            if (!tag.compare(QLatin1String("attribute"), Qt::CaseInsensitive)) {
                 DomProperty *v = new DomProperty();
                 v->read(reader);
                 m_attribute.append(v);
@@ -1167,8 +1161,7 @@ void DomAction::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -1181,7 +1174,7 @@ void DomAction::read(QXmlStreamReader &reader)
 
 void DomAction::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("action") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("action") : tagName.toLower());
 
     if (hasAttributeName())
         writer.writeAttribute(QStringLiteral("name"), attributeName());
@@ -1233,9 +1226,9 @@ DomActionRef::~DomActionRef()
 
 void DomActionRef::read(QXmlStreamReader &reader)
 {
-    const QXmlStreamAttributes attributes = reader.attributes();
+    const QXmlStreamAttributes &attributes = reader.attributes();
     for (const QXmlStreamAttribute &attribute : attributes) {
-        QStringRef name = attribute.name();
+        const QStringRef name = attribute.name();
         if (name == QLatin1String("name")) {
             setAttributeName(attribute.value().toString());
             continue;
@@ -1243,16 +1236,15 @@ void DomActionRef::read(QXmlStreamReader &reader)
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
+            const QStringRef tag = reader.name();
             reader.raiseError(QLatin1String("Unexpected element ") + tag);
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -1265,7 +1257,7 @@ void DomActionRef::read(QXmlStreamReader &reader)
 
 void DomActionRef::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("actionref") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("actionref") : tagName.toLower());
 
     if (hasAttributeName())
         writer.writeAttribute(QStringLiteral("name"), attributeName());
@@ -1307,9 +1299,9 @@ DomButtonGroup::~DomButtonGroup()
 
 void DomButtonGroup::read(QXmlStreamReader &reader)
 {
-    const QXmlStreamAttributes attributes = reader.attributes();
+    const QXmlStreamAttributes &attributes = reader.attributes();
     for (const QXmlStreamAttribute &attribute : attributes) {
-        QStringRef name = attribute.name();
+        const QStringRef name = attribute.name();
         if (name == QLatin1String("name")) {
             setAttributeName(attribute.value().toString());
             continue;
@@ -1317,17 +1309,17 @@ void DomButtonGroup::read(QXmlStreamReader &reader)
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("property")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("property"), Qt::CaseInsensitive)) {
                 DomProperty *v = new DomProperty();
                 v->read(reader);
                 m_property.append(v);
                 continue;
             }
-            if (tag == QLatin1String("attribute")) {
+            if (!tag.compare(QLatin1String("attribute"), Qt::CaseInsensitive)) {
                 DomProperty *v = new DomProperty();
                 v->read(reader);
                 m_attribute.append(v);
@@ -1337,8 +1329,7 @@ void DomButtonGroup::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -1351,7 +1342,7 @@ void DomButtonGroup::read(QXmlStreamReader &reader)
 
 void DomButtonGroup::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("buttongroup") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("buttongroup") : tagName.toLower());
 
     if (hasAttributeName())
         writer.writeAttribute(QStringLiteral("name"), attributeName());
@@ -1405,11 +1396,11 @@ DomButtonGroups::~DomButtonGroups()
 
 void DomButtonGroups::read(QXmlStreamReader &reader)
 {
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("buttongroup")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("buttongroup"), Qt::CaseInsensitive)) {
                 DomButtonGroup *v = new DomButtonGroup();
                 v->read(reader);
                 m_buttonGroup.append(v);
@@ -1419,8 +1410,7 @@ void DomButtonGroups::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -1433,7 +1423,7 @@ void DomButtonGroups::read(QXmlStreamReader &reader)
 
 void DomButtonGroups::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("buttongroups") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("buttongroups") : tagName.toLower());
 
     for (DomButtonGroup *v : m_buttonGroup)
         v->write(writer, QStringLiteral("buttongroup"));
@@ -1475,11 +1465,11 @@ DomImages::~DomImages()
 
 void DomImages::read(QXmlStreamReader &reader)
 {
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("image")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("image"), Qt::CaseInsensitive)) {
                 DomImage *v = new DomImage();
                 v->read(reader);
                 m_image.append(v);
@@ -1489,8 +1479,7 @@ void DomImages::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -1503,7 +1492,7 @@ void DomImages::read(QXmlStreamReader &reader)
 
 void DomImages::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("images") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("images") : tagName.toLower());
 
     for (DomImage *v : m_image)
         v->write(writer, QStringLiteral("image"));
@@ -1547,9 +1536,9 @@ DomImage::~DomImage()
 
 void DomImage::read(QXmlStreamReader &reader)
 {
-    const QXmlStreamAttributes attributes = reader.attributes();
+    const QXmlStreamAttributes &attributes = reader.attributes();
     for (const QXmlStreamAttribute &attribute : attributes) {
-        QStringRef name = attribute.name();
+        const QStringRef name = attribute.name();
         if (name == QLatin1String("name")) {
             setAttributeName(attribute.value().toString());
             continue;
@@ -1557,11 +1546,11 @@ void DomImage::read(QXmlStreamReader &reader)
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("data")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("data"), Qt::CaseInsensitive)) {
                 DomImageData *v = new DomImageData();
                 v->read(reader);
                 setElementData(v);
@@ -1571,8 +1560,7 @@ void DomImage::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -1585,7 +1573,7 @@ void DomImage::read(QXmlStreamReader &reader)
 
 void DomImage::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("image") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("image") : tagName.toLower());
 
     if (hasAttributeName())
         writer.writeAttribute(QStringLiteral("name"), attributeName());
@@ -1646,9 +1634,9 @@ DomImageData::~DomImageData()
 
 void DomImageData::read(QXmlStreamReader &reader)
 {
-    const QXmlStreamAttributes attributes = reader.attributes();
+    const QXmlStreamAttributes &attributes = reader.attributes();
     for (const QXmlStreamAttribute &attribute : attributes) {
-        QStringRef name = attribute.name();
+        const QStringRef name = attribute.name();
         if (name == QLatin1String("format")) {
             setAttributeFormat(attribute.value().toString());
             continue;
@@ -1660,16 +1648,15 @@ void DomImageData::read(QXmlStreamReader &reader)
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
+            const QStringRef tag = reader.name();
             reader.raiseError(QLatin1String("Unexpected element ") + tag);
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -1682,7 +1669,7 @@ void DomImageData::read(QXmlStreamReader &reader)
 
 void DomImageData::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("imagedata") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("imagedata") : tagName.toLower());
 
     if (hasAttributeFormat())
         writer.writeAttribute(QStringLiteral("format"), attributeFormat());
@@ -1721,11 +1708,11 @@ DomCustomWidgets::~DomCustomWidgets()
 
 void DomCustomWidgets::read(QXmlStreamReader &reader)
 {
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("customwidget")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("customwidget"), Qt::CaseInsensitive)) {
                 DomCustomWidget *v = new DomCustomWidget();
                 v->read(reader);
                 m_customWidget.append(v);
@@ -1735,8 +1722,7 @@ void DomCustomWidgets::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -1749,7 +1735,7 @@ void DomCustomWidgets::read(QXmlStreamReader &reader)
 
 void DomCustomWidgets::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("customwidgets") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("customwidgets") : tagName.toLower());
 
     for (DomCustomWidget *v : m_customWidget)
         v->write(writer, QStringLiteral("customwidget"));
@@ -1787,9 +1773,9 @@ DomHeader::~DomHeader()
 
 void DomHeader::read(QXmlStreamReader &reader)
 {
-    const QXmlStreamAttributes attributes = reader.attributes();
+    const QXmlStreamAttributes &attributes = reader.attributes();
     for (const QXmlStreamAttribute &attribute : attributes) {
-        QStringRef name = attribute.name();
+        const QStringRef name = attribute.name();
         if (name == QLatin1String("location")) {
             setAttributeLocation(attribute.value().toString());
             continue;
@@ -1797,16 +1783,15 @@ void DomHeader::read(QXmlStreamReader &reader)
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
+            const QStringRef tag = reader.name();
             reader.raiseError(QLatin1String("Unexpected element ") + tag);
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -1819,7 +1804,7 @@ void DomHeader::read(QXmlStreamReader &reader)
 
 void DomHeader::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("header") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("header") : tagName.toLower());
 
     if (hasAttributeLocation())
         writer.writeAttribute(QStringLiteral("location"), attributeLocation());
@@ -1881,67 +1866,67 @@ DomCustomWidget::~DomCustomWidget()
 
 void DomCustomWidget::read(QXmlStreamReader &reader)
 {
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("class")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("class"), Qt::CaseInsensitive)) {
                 setElementClass(reader.readElementText());
                 continue;
             }
-            if (tag == QLatin1String("extends")) {
+            if (!tag.compare(QLatin1String("extends"), Qt::CaseInsensitive)) {
                 setElementExtends(reader.readElementText());
                 continue;
             }
-            if (tag == QLatin1String("header")) {
+            if (!tag.compare(QLatin1String("header"), Qt::CaseInsensitive)) {
                 DomHeader *v = new DomHeader();
                 v->read(reader);
                 setElementHeader(v);
                 continue;
             }
-            if (tag == QLatin1String("sizehint")) {
+            if (!tag.compare(QLatin1String("sizehint"), Qt::CaseInsensitive)) {
                 DomSize *v = new DomSize();
                 v->read(reader);
                 setElementSizeHint(v);
                 continue;
             }
-            if (tag == QLatin1String("addpagemethod")) {
+            if (!tag.compare(QLatin1String("addpagemethod"), Qt::CaseInsensitive)) {
                 setElementAddPageMethod(reader.readElementText());
                 continue;
             }
-            if (tag == QLatin1String("container")) {
+            if (!tag.compare(QLatin1String("container"), Qt::CaseInsensitive)) {
                 setElementContainer(reader.readElementText().toInt());
                 continue;
             }
-            if (tag == QLatin1String("sizepolicy")) {
+            if (!tag.compare(QLatin1String("sizepolicy"), Qt::CaseInsensitive)) {
                 DomSizePolicyData *v = new DomSizePolicyData();
                 v->read(reader);
                 setElementSizePolicy(v);
                 continue;
             }
-            if (tag == QLatin1String("pixmap")) {
+            if (!tag.compare(QLatin1String("pixmap"), Qt::CaseInsensitive)) {
                 setElementPixmap(reader.readElementText());
                 continue;
             }
-            if (tag == QLatin1String("script")) {
+            if (!tag.compare(QLatin1String("script"), Qt::CaseInsensitive)) {
                 DomScript *v = new DomScript();
                 v->read(reader);
                 setElementScript(v);
                 continue;
             }
-            if (tag == QLatin1String("properties")) {
+            if (!tag.compare(QLatin1String("properties"), Qt::CaseInsensitive)) {
                 DomProperties *v = new DomProperties();
                 v->read(reader);
                 setElementProperties(v);
                 continue;
             }
-            if (tag == QLatin1String("slots")) {
+            if (!tag.compare(QLatin1String("slots"), Qt::CaseInsensitive)) {
                 DomSlots *v = new DomSlots();
                 v->read(reader);
                 setElementSlots(v);
                 continue;
             }
-            if (tag == QLatin1String("propertyspecifications")) {
+            if (!tag.compare(QLatin1String("propertyspecifications"), Qt::CaseInsensitive)) {
                 DomPropertySpecifications *v = new DomPropertySpecifications();
                 v->read(reader);
                 setElementPropertyspecifications(v);
@@ -1951,8 +1936,7 @@ void DomCustomWidget::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -1965,7 +1949,7 @@ void DomCustomWidget::read(QXmlStreamReader &reader)
 
 void DomCustomWidget::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("customwidget") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("customwidget") : tagName.toLower());
 
     if (m_children & Class)
         writer.writeTextElement(QStringLiteral("class"), m_class);
@@ -2243,11 +2227,11 @@ DomProperties::~DomProperties()
 
 void DomProperties::read(QXmlStreamReader &reader)
 {
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("property")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("property"), Qt::CaseInsensitive)) {
                 DomPropertyData *v = new DomPropertyData();
                 v->read(reader);
                 m_property.append(v);
@@ -2257,8 +2241,7 @@ void DomProperties::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -2271,7 +2254,7 @@ void DomProperties::read(QXmlStreamReader &reader)
 
 void DomProperties::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("properties") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("properties") : tagName.toLower());
 
     for (DomPropertyData *v : m_property)
         v->write(writer, QStringLiteral("property"));
@@ -2308,9 +2291,9 @@ DomPropertyData::~DomPropertyData()
 
 void DomPropertyData::read(QXmlStreamReader &reader)
 {
-    const QXmlStreamAttributes attributes = reader.attributes();
+    const QXmlStreamAttributes &attributes = reader.attributes();
     for (const QXmlStreamAttribute &attribute : attributes) {
-        QStringRef name = attribute.name();
+        const QStringRef name = attribute.name();
         if (name == QLatin1String("type")) {
             setAttributeType(attribute.value().toString());
             continue;
@@ -2318,16 +2301,15 @@ void DomPropertyData::read(QXmlStreamReader &reader)
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
+            const QStringRef tag = reader.name();
             reader.raiseError(QLatin1String("Unexpected element ") + tag);
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -2340,7 +2322,7 @@ void DomPropertyData::read(QXmlStreamReader &reader)
 
 void DomPropertyData::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("propertydata") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("propertydata") : tagName.toLower());
 
     if (hasAttributeType())
         writer.writeAttribute(QStringLiteral("type"), attributeType());
@@ -2376,15 +2358,15 @@ DomSizePolicyData::~DomSizePolicyData()
 
 void DomSizePolicyData::read(QXmlStreamReader &reader)
 {
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("hordata")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("hordata"), Qt::CaseInsensitive)) {
                 setElementHorData(reader.readElementText().toInt());
                 continue;
             }
-            if (tag == QLatin1String("verdata")) {
+            if (!tag.compare(QLatin1String("verdata"), Qt::CaseInsensitive)) {
                 setElementVerData(reader.readElementText().toInt());
                 continue;
             }
@@ -2392,8 +2374,7 @@ void DomSizePolicyData::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -2406,7 +2387,7 @@ void DomSizePolicyData::read(QXmlStreamReader &reader)
 
 void DomSizePolicyData::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("sizepolicydata") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("sizepolicydata") : tagName.toLower());
 
     if (m_children & HorData)
         writer.writeTextElement(QStringLiteral("hordata"), QString::number(m_horData));
@@ -2468,9 +2449,9 @@ DomLayoutDefault::~DomLayoutDefault()
 
 void DomLayoutDefault::read(QXmlStreamReader &reader)
 {
-    const QXmlStreamAttributes attributes = reader.attributes();
+    const QXmlStreamAttributes &attributes = reader.attributes();
     for (const QXmlStreamAttribute &attribute : attributes) {
-        QStringRef name = attribute.name();
+        const QStringRef name = attribute.name();
         if (name == QLatin1String("spacing")) {
             setAttributeSpacing(attribute.value().toInt());
             continue;
@@ -2482,16 +2463,15 @@ void DomLayoutDefault::read(QXmlStreamReader &reader)
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
+            const QStringRef tag = reader.name();
             reader.raiseError(QLatin1String("Unexpected element ") + tag);
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -2504,7 +2484,7 @@ void DomLayoutDefault::read(QXmlStreamReader &reader)
 
 void DomLayoutDefault::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("layoutdefault") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("layoutdefault") : tagName.toLower());
 
     if (hasAttributeSpacing())
         writer.writeAttribute(QStringLiteral("spacing"), QString::number(attributeSpacing()));
@@ -2540,9 +2520,9 @@ DomLayoutFunction::~DomLayoutFunction()
 
 void DomLayoutFunction::read(QXmlStreamReader &reader)
 {
-    const QXmlStreamAttributes attributes = reader.attributes();
+    const QXmlStreamAttributes &attributes = reader.attributes();
     for (const QXmlStreamAttribute &attribute : attributes) {
-        QStringRef name = attribute.name();
+        const QStringRef name = attribute.name();
         if (name == QLatin1String("spacing")) {
             setAttributeSpacing(attribute.value().toString());
             continue;
@@ -2554,16 +2534,15 @@ void DomLayoutFunction::read(QXmlStreamReader &reader)
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
+            const QStringRef tag = reader.name();
             reader.raiseError(QLatin1String("Unexpected element ") + tag);
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -2576,7 +2555,7 @@ void DomLayoutFunction::read(QXmlStreamReader &reader)
 
 void DomLayoutFunction::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("layoutfunction") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("layoutfunction") : tagName.toLower());
 
     if (hasAttributeSpacing())
         writer.writeAttribute(QStringLiteral("spacing"), attributeSpacing());
@@ -2613,11 +2592,11 @@ DomTabStops::~DomTabStops()
 
 void DomTabStops::read(QXmlStreamReader &reader)
 {
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("tabstop")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("tabstop"), Qt::CaseInsensitive)) {
                 m_tabStop.append(reader.readElementText());
                 continue;
             }
@@ -2625,8 +2604,7 @@ void DomTabStops::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -2639,7 +2617,7 @@ void DomTabStops::read(QXmlStreamReader &reader)
 
 void DomTabStops::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("tabstops") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("tabstops") : tagName.toLower());
 
     for (const QString &v : m_tabStop)
         writer.writeTextElement(QStringLiteral("tabstop"), v);
@@ -2703,9 +2681,9 @@ DomLayout::~DomLayout()
 
 void DomLayout::read(QXmlStreamReader &reader)
 {
-    const QXmlStreamAttributes attributes = reader.attributes();
+    const QXmlStreamAttributes &attributes = reader.attributes();
     for (const QXmlStreamAttribute &attribute : attributes) {
-        QStringRef name = attribute.name();
+        const QStringRef name = attribute.name();
         if (name == QLatin1String("class")) {
             setAttributeClass(attribute.value().toString());
             continue;
@@ -2737,23 +2715,23 @@ void DomLayout::read(QXmlStreamReader &reader)
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("property")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("property"), Qt::CaseInsensitive)) {
                 DomProperty *v = new DomProperty();
                 v->read(reader);
                 m_property.append(v);
                 continue;
             }
-            if (tag == QLatin1String("attribute")) {
+            if (!tag.compare(QLatin1String("attribute"), Qt::CaseInsensitive)) {
                 DomProperty *v = new DomProperty();
                 v->read(reader);
                 m_attribute.append(v);
                 continue;
             }
-            if (tag == QLatin1String("item")) {
+            if (!tag.compare(QLatin1String("item"), Qt::CaseInsensitive)) {
                 DomLayoutItem *v = new DomLayoutItem();
                 v->read(reader);
                 m_item.append(v);
@@ -2763,8 +2741,7 @@ void DomLayout::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -2777,7 +2754,7 @@ void DomLayout::read(QXmlStreamReader &reader)
 
 void DomLayout::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("layout") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("layout") : tagName.toLower());
 
     if (hasAttributeClass())
         writer.writeAttribute(QStringLiteral("class"), attributeClass());
@@ -2886,9 +2863,9 @@ DomLayoutItem::~DomLayoutItem()
 
 void DomLayoutItem::read(QXmlStreamReader &reader)
 {
-    const QXmlStreamAttributes attributes = reader.attributes();
+    const QXmlStreamAttributes &attributes = reader.attributes();
     for (const QXmlStreamAttribute &attribute : attributes) {
-        QStringRef name = attribute.name();
+        const QStringRef name = attribute.name();
         if (name == QLatin1String("row")) {
             setAttributeRow(attribute.value().toInt());
             continue;
@@ -2912,23 +2889,23 @@ void DomLayoutItem::read(QXmlStreamReader &reader)
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("widget")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("widget"), Qt::CaseInsensitive)) {
                 DomWidget *v = new DomWidget();
                 v->read(reader);
                 setElementWidget(v);
                 continue;
             }
-            if (tag == QLatin1String("layout")) {
+            if (!tag.compare(QLatin1String("layout"), Qt::CaseInsensitive)) {
                 DomLayout *v = new DomLayout();
                 v->read(reader);
                 setElementLayout(v);
                 continue;
             }
-            if (tag == QLatin1String("spacer")) {
+            if (!tag.compare(QLatin1String("spacer"), Qt::CaseInsensitive)) {
                 DomSpacer *v = new DomSpacer();
                 v->read(reader);
                 setElementSpacer(v);
@@ -2938,8 +2915,7 @@ void DomLayoutItem::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -2952,7 +2928,7 @@ void DomLayoutItem::read(QXmlStreamReader &reader)
 
 void DomLayoutItem::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("layoutitem") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("layoutitem") : tagName.toLower());
 
     if (hasAttributeRow())
         writer.writeAttribute(QStringLiteral("row"), QString::number(attributeRow()));
@@ -3064,11 +3040,11 @@ DomRow::~DomRow()
 
 void DomRow::read(QXmlStreamReader &reader)
 {
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("property")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("property"), Qt::CaseInsensitive)) {
                 DomProperty *v = new DomProperty();
                 v->read(reader);
                 m_property.append(v);
@@ -3078,8 +3054,7 @@ void DomRow::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -3092,7 +3067,7 @@ void DomRow::read(QXmlStreamReader &reader)
 
 void DomRow::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("row") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("row") : tagName.toLower());
 
     for (DomProperty *v : m_property)
         v->write(writer, QStringLiteral("property"));
@@ -3134,11 +3109,11 @@ DomColumn::~DomColumn()
 
 void DomColumn::read(QXmlStreamReader &reader)
 {
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("property")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("property"), Qt::CaseInsensitive)) {
                 DomProperty *v = new DomProperty();
                 v->read(reader);
                 m_property.append(v);
@@ -3148,8 +3123,7 @@ void DomColumn::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -3162,7 +3136,7 @@ void DomColumn::read(QXmlStreamReader &reader)
 
 void DomColumn::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("column") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("column") : tagName.toLower());
 
     for (DomProperty *v : m_property)
         v->write(writer, QStringLiteral("property"));
@@ -3216,9 +3190,9 @@ DomItem::~DomItem()
 
 void DomItem::read(QXmlStreamReader &reader)
 {
-    const QXmlStreamAttributes attributes = reader.attributes();
+    const QXmlStreamAttributes &attributes = reader.attributes();
     for (const QXmlStreamAttribute &attribute : attributes) {
-        QStringRef name = attribute.name();
+        const QStringRef name = attribute.name();
         if (name == QLatin1String("row")) {
             setAttributeRow(attribute.value().toInt());
             continue;
@@ -3230,17 +3204,17 @@ void DomItem::read(QXmlStreamReader &reader)
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("property")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("property"), Qt::CaseInsensitive)) {
                 DomProperty *v = new DomProperty();
                 v->read(reader);
                 m_property.append(v);
                 continue;
             }
-            if (tag == QLatin1String("item")) {
+            if (!tag.compare(QLatin1String("item"), Qt::CaseInsensitive)) {
                 DomItem *v = new DomItem();
                 v->read(reader);
                 m_item.append(v);
@@ -3250,8 +3224,7 @@ void DomItem::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -3264,7 +3237,7 @@ void DomItem::read(QXmlStreamReader &reader)
 
 void DomItem::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("item") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("item") : tagName.toLower());
 
     if (hasAttributeRow())
         writer.writeAttribute(QStringLiteral("row"), QString::number(attributeRow()));
@@ -3377,9 +3350,9 @@ DomWidget::~DomWidget()
 
 void DomWidget::read(QXmlStreamReader &reader)
 {
-    const QXmlStreamAttributes attributes = reader.attributes();
+    const QXmlStreamAttributes &attributes = reader.attributes();
     for (const QXmlStreamAttribute &attribute : attributes) {
-        QStringRef name = attribute.name();
+        const QStringRef name = attribute.name();
         if (name == QLatin1String("class")) {
             setAttributeClass(attribute.value().toString());
             continue;
@@ -3395,87 +3368,87 @@ void DomWidget::read(QXmlStreamReader &reader)
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("class")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("class"), Qt::CaseInsensitive)) {
                 m_class.append(reader.readElementText());
                 continue;
             }
-            if (tag == QLatin1String("property")) {
+            if (!tag.compare(QLatin1String("property"), Qt::CaseInsensitive)) {
                 DomProperty *v = new DomProperty();
                 v->read(reader);
                 m_property.append(v);
                 continue;
             }
-            if (tag == QLatin1String("script")) {
+            if (!tag.compare(QLatin1String("script"), Qt::CaseInsensitive)) {
                 DomScript *v = new DomScript();
                 v->read(reader);
                 m_script.append(v);
                 continue;
             }
-            if (tag == QLatin1String("widgetdata")) {
+            if (!tag.compare(QLatin1String("widgetdata"), Qt::CaseInsensitive)) {
                 DomWidgetData *v = new DomWidgetData();
                 v->read(reader);
                 m_widgetData.append(v);
                 continue;
             }
-            if (tag == QLatin1String("attribute")) {
+            if (!tag.compare(QLatin1String("attribute"), Qt::CaseInsensitive)) {
                 DomProperty *v = new DomProperty();
                 v->read(reader);
                 m_attribute.append(v);
                 continue;
             }
-            if (tag == QLatin1String("row")) {
+            if (!tag.compare(QLatin1String("row"), Qt::CaseInsensitive)) {
                 DomRow *v = new DomRow();
                 v->read(reader);
                 m_row.append(v);
                 continue;
             }
-            if (tag == QLatin1String("column")) {
+            if (!tag.compare(QLatin1String("column"), Qt::CaseInsensitive)) {
                 DomColumn *v = new DomColumn();
                 v->read(reader);
                 m_column.append(v);
                 continue;
             }
-            if (tag == QLatin1String("item")) {
+            if (!tag.compare(QLatin1String("item"), Qt::CaseInsensitive)) {
                 DomItem *v = new DomItem();
                 v->read(reader);
                 m_item.append(v);
                 continue;
             }
-            if (tag == QLatin1String("layout")) {
+            if (!tag.compare(QLatin1String("layout"), Qt::CaseInsensitive)) {
                 DomLayout *v = new DomLayout();
                 v->read(reader);
                 m_layout.append(v);
                 continue;
             }
-            if (tag == QLatin1String("widget")) {
+            if (!tag.compare(QLatin1String("widget"), Qt::CaseInsensitive)) {
                 DomWidget *v = new DomWidget();
                 v->read(reader);
                 m_widget.append(v);
                 continue;
             }
-            if (tag == QLatin1String("action")) {
+            if (!tag.compare(QLatin1String("action"), Qt::CaseInsensitive)) {
                 DomAction *v = new DomAction();
                 v->read(reader);
                 m_action.append(v);
                 continue;
             }
-            if (tag == QLatin1String("actiongroup")) {
+            if (!tag.compare(QLatin1String("actiongroup"), Qt::CaseInsensitive)) {
                 DomActionGroup *v = new DomActionGroup();
                 v->read(reader);
                 m_actionGroup.append(v);
                 continue;
             }
-            if (tag == QLatin1String("addaction")) {
+            if (!tag.compare(QLatin1String("addaction"), Qt::CaseInsensitive)) {
                 DomActionRef *v = new DomActionRef();
                 v->read(reader);
                 m_addAction.append(v);
                 continue;
             }
-            if (tag == QLatin1String("zorder")) {
+            if (!tag.compare(QLatin1String("zorder"), Qt::CaseInsensitive)) {
                 m_zOrder.append(reader.readElementText());
                 continue;
             }
@@ -3483,8 +3456,7 @@ void DomWidget::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -3497,7 +3469,7 @@ void DomWidget::read(QXmlStreamReader &reader)
 
 void DomWidget::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("widget") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("widget") : tagName.toLower());
 
     if (hasAttributeClass())
         writer.writeAttribute(QStringLiteral("class"), attributeClass());
@@ -3667,9 +3639,9 @@ DomSpacer::~DomSpacer()
 
 void DomSpacer::read(QXmlStreamReader &reader)
 {
-    const QXmlStreamAttributes attributes = reader.attributes();
+    const QXmlStreamAttributes &attributes = reader.attributes();
     for (const QXmlStreamAttribute &attribute : attributes) {
-        QStringRef name = attribute.name();
+        const QStringRef name = attribute.name();
         if (name == QLatin1String("name")) {
             setAttributeName(attribute.value().toString());
             continue;
@@ -3677,11 +3649,11 @@ void DomSpacer::read(QXmlStreamReader &reader)
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("property")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("property"), Qt::CaseInsensitive)) {
                 DomProperty *v = new DomProperty();
                 v->read(reader);
                 m_property.append(v);
@@ -3691,8 +3663,7 @@ void DomSpacer::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -3705,7 +3676,7 @@ void DomSpacer::read(QXmlStreamReader &reader)
 
 void DomSpacer::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("spacer") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("spacer") : tagName.toLower());
 
     if (hasAttributeName())
         writer.writeAttribute(QStringLiteral("name"), attributeName());
@@ -3756,9 +3727,9 @@ DomColor::~DomColor()
 
 void DomColor::read(QXmlStreamReader &reader)
 {
-    const QXmlStreamAttributes attributes = reader.attributes();
+    const QXmlStreamAttributes &attributes = reader.attributes();
     for (const QXmlStreamAttribute &attribute : attributes) {
-        QStringRef name = attribute.name();
+        const QStringRef name = attribute.name();
         if (name == QLatin1String("alpha")) {
             setAttributeAlpha(attribute.value().toInt());
             continue;
@@ -3766,19 +3737,19 @@ void DomColor::read(QXmlStreamReader &reader)
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("red")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("red"), Qt::CaseInsensitive)) {
                 setElementRed(reader.readElementText().toInt());
                 continue;
             }
-            if (tag == QLatin1String("green")) {
+            if (!tag.compare(QLatin1String("green"), Qt::CaseInsensitive)) {
                 setElementGreen(reader.readElementText().toInt());
                 continue;
             }
-            if (tag == QLatin1String("blue")) {
+            if (!tag.compare(QLatin1String("blue"), Qt::CaseInsensitive)) {
                 setElementBlue(reader.readElementText().toInt());
                 continue;
             }
@@ -3786,8 +3757,7 @@ void DomColor::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -3800,7 +3770,7 @@ void DomColor::read(QXmlStreamReader &reader)
 
 void DomColor::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("color") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("color") : tagName.toLower());
 
     if (hasAttributeAlpha())
         writer.writeAttribute(QStringLiteral("alpha"), QString::number(attributeAlpha()));
@@ -3882,9 +3852,9 @@ DomGradientStop::~DomGradientStop()
 
 void DomGradientStop::read(QXmlStreamReader &reader)
 {
-    const QXmlStreamAttributes attributes = reader.attributes();
+    const QXmlStreamAttributes &attributes = reader.attributes();
     for (const QXmlStreamAttribute &attribute : attributes) {
-        QStringRef name = attribute.name();
+        const QStringRef name = attribute.name();
         if (name == QLatin1String("position")) {
             setAttributePosition(attribute.value().toDouble());
             continue;
@@ -3892,11 +3862,11 @@ void DomGradientStop::read(QXmlStreamReader &reader)
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("color")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("color"), Qt::CaseInsensitive)) {
                 DomColor *v = new DomColor();
                 v->read(reader);
                 setElementColor(v);
@@ -3906,8 +3876,7 @@ void DomGradientStop::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -3920,7 +3889,7 @@ void DomGradientStop::read(QXmlStreamReader &reader)
 
 void DomGradientStop::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("gradientstop") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("gradientstop") : tagName.toLower());
 
     if (hasAttributePosition())
         writer.writeAttribute(QStringLiteral("position"), QString::number(attributePosition(), 'f', 15));
@@ -4027,9 +3996,9 @@ DomGradient::~DomGradient()
 
 void DomGradient::read(QXmlStreamReader &reader)
 {
-    const QXmlStreamAttributes attributes = reader.attributes();
+    const QXmlStreamAttributes &attributes = reader.attributes();
     for (const QXmlStreamAttribute &attribute : attributes) {
-        QStringRef name = attribute.name();
+        const QStringRef name = attribute.name();
         if (name == QLatin1String("startx")) {
             setAttributeStartX(attribute.value().toDouble());
             continue;
@@ -4085,11 +4054,11 @@ void DomGradient::read(QXmlStreamReader &reader)
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("gradientstop")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("gradientstop"), Qt::CaseInsensitive)) {
                 DomGradientStop *v = new DomGradientStop();
                 v->read(reader);
                 m_gradientStop.append(v);
@@ -4099,8 +4068,7 @@ void DomGradient::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -4113,7 +4081,7 @@ void DomGradient::read(QXmlStreamReader &reader)
 
 void DomGradient::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("gradient") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("gradient") : tagName.toLower());
 
     if (hasAttributeStartX())
         writer.writeAttribute(QStringLiteral("startx"), QString::number(attributeStartX(), 'f', 15));
@@ -4206,9 +4174,9 @@ DomBrush::~DomBrush()
 
 void DomBrush::read(QXmlStreamReader &reader)
 {
-    const QXmlStreamAttributes attributes = reader.attributes();
+    const QXmlStreamAttributes &attributes = reader.attributes();
     for (const QXmlStreamAttribute &attribute : attributes) {
-        QStringRef name = attribute.name();
+        const QStringRef name = attribute.name();
         if (name == QLatin1String("brushstyle")) {
             setAttributeBrushStyle(attribute.value().toString());
             continue;
@@ -4216,23 +4184,23 @@ void DomBrush::read(QXmlStreamReader &reader)
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("color")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("color"), Qt::CaseInsensitive)) {
                 DomColor *v = new DomColor();
                 v->read(reader);
                 setElementColor(v);
                 continue;
             }
-            if (tag == QLatin1String("texture")) {
+            if (!tag.compare(QLatin1String("texture"), Qt::CaseInsensitive)) {
                 DomProperty *v = new DomProperty();
                 v->read(reader);
                 setElementTexture(v);
                 continue;
             }
-            if (tag == QLatin1String("gradient")) {
+            if (!tag.compare(QLatin1String("gradient"), Qt::CaseInsensitive)) {
                 DomGradient *v = new DomGradient();
                 v->read(reader);
                 setElementGradient(v);
@@ -4242,8 +4210,7 @@ void DomBrush::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -4256,7 +4223,7 @@ void DomBrush::read(QXmlStreamReader &reader)
 
 void DomBrush::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("brush") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("brush") : tagName.toLower());
 
     if (hasAttributeBrushStyle())
         writer.writeAttribute(QStringLiteral("brushstyle"), attributeBrushStyle());
@@ -4358,9 +4325,9 @@ DomColorRole::~DomColorRole()
 
 void DomColorRole::read(QXmlStreamReader &reader)
 {
-    const QXmlStreamAttributes attributes = reader.attributes();
+    const QXmlStreamAttributes &attributes = reader.attributes();
     for (const QXmlStreamAttribute &attribute : attributes) {
-        QStringRef name = attribute.name();
+        const QStringRef name = attribute.name();
         if (name == QLatin1String("role")) {
             setAttributeRole(attribute.value().toString());
             continue;
@@ -4368,11 +4335,11 @@ void DomColorRole::read(QXmlStreamReader &reader)
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("brush")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("brush"), Qt::CaseInsensitive)) {
                 DomBrush *v = new DomBrush();
                 v->read(reader);
                 setElementBrush(v);
@@ -4382,8 +4349,7 @@ void DomColorRole::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -4396,7 +4362,7 @@ void DomColorRole::read(QXmlStreamReader &reader)
 
 void DomColorRole::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("colorrole") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("colorrole") : tagName.toLower());
 
     if (hasAttributeRole())
         writer.writeAttribute(QStringLiteral("role"), attributeRole());
@@ -4461,17 +4427,17 @@ DomColorGroup::~DomColorGroup()
 
 void DomColorGroup::read(QXmlStreamReader &reader)
 {
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("colorrole")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("colorrole"), Qt::CaseInsensitive)) {
                 DomColorRole *v = new DomColorRole();
                 v->read(reader);
                 m_colorRole.append(v);
                 continue;
             }
-            if (tag == QLatin1String("color")) {
+            if (!tag.compare(QLatin1String("color"), Qt::CaseInsensitive)) {
                 DomColor *v = new DomColor();
                 v->read(reader);
                 m_color.append(v);
@@ -4481,8 +4447,7 @@ void DomColorGroup::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -4495,7 +4460,7 @@ void DomColorGroup::read(QXmlStreamReader &reader)
 
 void DomColorGroup::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("colorgroup") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("colorgroup") : tagName.toLower());
 
     for (DomColorRole *v : m_colorRole)
         v->write(writer, QStringLiteral("colorrole"));
@@ -4554,23 +4519,23 @@ DomPalette::~DomPalette()
 
 void DomPalette::read(QXmlStreamReader &reader)
 {
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("active")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("active"), Qt::CaseInsensitive)) {
                 DomColorGroup *v = new DomColorGroup();
                 v->read(reader);
                 setElementActive(v);
                 continue;
             }
-            if (tag == QLatin1String("inactive")) {
+            if (!tag.compare(QLatin1String("inactive"), Qt::CaseInsensitive)) {
                 DomColorGroup *v = new DomColorGroup();
                 v->read(reader);
                 setElementInactive(v);
                 continue;
             }
-            if (tag == QLatin1String("disabled")) {
+            if (!tag.compare(QLatin1String("disabled"), Qt::CaseInsensitive)) {
                 DomColorGroup *v = new DomColorGroup();
                 v->read(reader);
                 setElementDisabled(v);
@@ -4580,8 +4545,7 @@ void DomPalette::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -4594,7 +4558,7 @@ void DomPalette::read(QXmlStreamReader &reader)
 
 void DomPalette::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("palette") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("palette") : tagName.toLower());
 
     if (m_children & Active)
         m_active->write(writer, QStringLiteral("active"));
@@ -4714,47 +4678,47 @@ DomFont::~DomFont()
 
 void DomFont::read(QXmlStreamReader &reader)
 {
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("family")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("family"), Qt::CaseInsensitive)) {
                 setElementFamily(reader.readElementText());
                 continue;
             }
-            if (tag == QLatin1String("pointsize")) {
+            if (!tag.compare(QLatin1String("pointsize"), Qt::CaseInsensitive)) {
                 setElementPointSize(reader.readElementText().toInt());
                 continue;
             }
-            if (tag == QLatin1String("weight")) {
+            if (!tag.compare(QLatin1String("weight"), Qt::CaseInsensitive)) {
                 setElementWeight(reader.readElementText().toInt());
                 continue;
             }
-            if (tag == QLatin1String("italic")) {
+            if (!tag.compare(QLatin1String("italic"), Qt::CaseInsensitive)) {
                 setElementItalic(reader.readElementText() == QLatin1String("true"));
                 continue;
             }
-            if (tag == QLatin1String("bold")) {
+            if (!tag.compare(QLatin1String("bold"), Qt::CaseInsensitive)) {
                 setElementBold(reader.readElementText() == QLatin1String("true"));
                 continue;
             }
-            if (tag == QLatin1String("underline")) {
+            if (!tag.compare(QLatin1String("underline"), Qt::CaseInsensitive)) {
                 setElementUnderline(reader.readElementText() == QLatin1String("true"));
                 continue;
             }
-            if (tag == QLatin1String("strikeout")) {
+            if (!tag.compare(QLatin1String("strikeout"), Qt::CaseInsensitive)) {
                 setElementStrikeOut(reader.readElementText() == QLatin1String("true"));
                 continue;
             }
-            if (tag == QLatin1String("antialiasing")) {
+            if (!tag.compare(QLatin1String("antialiasing"), Qt::CaseInsensitive)) {
                 setElementAntialiasing(reader.readElementText() == QLatin1String("true"));
                 continue;
             }
-            if (tag == QLatin1String("stylestrategy")) {
+            if (!tag.compare(QLatin1String("stylestrategy"), Qt::CaseInsensitive)) {
                 setElementStyleStrategy(reader.readElementText());
                 continue;
             }
-            if (tag == QLatin1String("kerning")) {
+            if (!tag.compare(QLatin1String("kerning"), Qt::CaseInsensitive)) {
                 setElementKerning(reader.readElementText() == QLatin1String("true"));
                 continue;
             }
@@ -4762,8 +4726,7 @@ void DomFont::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -4776,7 +4739,7 @@ void DomFont::read(QXmlStreamReader &reader)
 
 void DomFont::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("font") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("font") : tagName.toLower());
 
     if (m_children & Family)
         writer.writeTextElement(QStringLiteral("family"), m_family);
@@ -4949,15 +4912,15 @@ DomPoint::~DomPoint()
 
 void DomPoint::read(QXmlStreamReader &reader)
 {
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("x")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("x"), Qt::CaseInsensitive)) {
                 setElementX(reader.readElementText().toInt());
                 continue;
             }
-            if (tag == QLatin1String("y")) {
+            if (!tag.compare(QLatin1String("y"), Qt::CaseInsensitive)) {
                 setElementY(reader.readElementText().toInt());
                 continue;
             }
@@ -4965,8 +4928,7 @@ void DomPoint::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -4979,7 +4941,7 @@ void DomPoint::read(QXmlStreamReader &reader)
 
 void DomPoint::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("point") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("point") : tagName.toLower());
 
     if (m_children & X)
         writer.writeTextElement(QString(QLatin1Char('x')), QString::number(m_x));
@@ -5044,23 +5006,23 @@ DomRect::~DomRect()
 
 void DomRect::read(QXmlStreamReader &reader)
 {
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("x")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("x"), Qt::CaseInsensitive)) {
                 setElementX(reader.readElementText().toInt());
                 continue;
             }
-            if (tag == QLatin1String("y")) {
+            if (!tag.compare(QLatin1String("y"), Qt::CaseInsensitive)) {
                 setElementY(reader.readElementText().toInt());
                 continue;
             }
-            if (tag == QLatin1String("width")) {
+            if (!tag.compare(QLatin1String("width"), Qt::CaseInsensitive)) {
                 setElementWidth(reader.readElementText().toInt());
                 continue;
             }
-            if (tag == QLatin1String("height")) {
+            if (!tag.compare(QLatin1String("height"), Qt::CaseInsensitive)) {
                 setElementHeight(reader.readElementText().toInt());
                 continue;
             }
@@ -5068,8 +5030,7 @@ void DomRect::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -5082,7 +5043,7 @@ void DomRect::read(QXmlStreamReader &reader)
 
 void DomRect::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("rect") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("rect") : tagName.toLower());
 
     if (m_children & X)
         writer.writeTextElement(QString(QLatin1Char('x')), QString::number(m_x));
@@ -5168,9 +5129,9 @@ DomLocale::~DomLocale()
 
 void DomLocale::read(QXmlStreamReader &reader)
 {
-    const QXmlStreamAttributes attributes = reader.attributes();
+    const QXmlStreamAttributes &attributes = reader.attributes();
     for (const QXmlStreamAttribute &attribute : attributes) {
-        QStringRef name = attribute.name();
+        const QStringRef name = attribute.name();
         if (name == QLatin1String("language")) {
             setAttributeLanguage(attribute.value().toString());
             continue;
@@ -5182,16 +5143,15 @@ void DomLocale::read(QXmlStreamReader &reader)
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
+            const QStringRef tag = reader.name();
             reader.raiseError(QLatin1String("Unexpected element ") + tag);
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -5204,7 +5164,7 @@ void DomLocale::read(QXmlStreamReader &reader)
 
 void DomLocale::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("locale") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("locale") : tagName.toLower());
 
     if (hasAttributeLanguage())
         writer.writeAttribute(QStringLiteral("language"), attributeLanguage());
@@ -5251,9 +5211,9 @@ DomSizePolicy::~DomSizePolicy()
 
 void DomSizePolicy::read(QXmlStreamReader &reader)
 {
-    const QXmlStreamAttributes attributes = reader.attributes();
+    const QXmlStreamAttributes &attributes = reader.attributes();
     for (const QXmlStreamAttribute &attribute : attributes) {
-        QStringRef name = attribute.name();
+        const QStringRef name = attribute.name();
         if (name == QLatin1String("hsizetype")) {
             setAttributeHSizeType(attribute.value().toString());
             continue;
@@ -5265,23 +5225,23 @@ void DomSizePolicy::read(QXmlStreamReader &reader)
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("hsizetype")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("hsizetype"), Qt::CaseInsensitive)) {
                 setElementHSizeType(reader.readElementText().toInt());
                 continue;
             }
-            if (tag == QLatin1String("vsizetype")) {
+            if (!tag.compare(QLatin1String("vsizetype"), Qt::CaseInsensitive)) {
                 setElementVSizeType(reader.readElementText().toInt());
                 continue;
             }
-            if (tag == QLatin1String("horstretch")) {
+            if (!tag.compare(QLatin1String("horstretch"), Qt::CaseInsensitive)) {
                 setElementHorStretch(reader.readElementText().toInt());
                 continue;
             }
-            if (tag == QLatin1String("verstretch")) {
+            if (!tag.compare(QLatin1String("verstretch"), Qt::CaseInsensitive)) {
                 setElementVerStretch(reader.readElementText().toInt());
                 continue;
             }
@@ -5289,8 +5249,7 @@ void DomSizePolicy::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -5303,7 +5262,7 @@ void DomSizePolicy::read(QXmlStreamReader &reader)
 
 void DomSizePolicy::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("sizepolicy") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("sizepolicy") : tagName.toLower());
 
     if (hasAttributeHSizeType())
         writer.writeAttribute(QStringLiteral("hsizetype"), attributeHSizeType());
@@ -5398,15 +5357,15 @@ DomSize::~DomSize()
 
 void DomSize::read(QXmlStreamReader &reader)
 {
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("width")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("width"), Qt::CaseInsensitive)) {
                 setElementWidth(reader.readElementText().toInt());
                 continue;
             }
-            if (tag == QLatin1String("height")) {
+            if (!tag.compare(QLatin1String("height"), Qt::CaseInsensitive)) {
                 setElementHeight(reader.readElementText().toInt());
                 continue;
             }
@@ -5414,8 +5373,7 @@ void DomSize::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -5428,7 +5386,7 @@ void DomSize::read(QXmlStreamReader &reader)
 
 void DomSize::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("size") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("size") : tagName.toLower());
 
     if (m_children & Width)
         writer.writeTextElement(QStringLiteral("width"), QString::number(m_width));
@@ -5491,19 +5449,19 @@ DomDate::~DomDate()
 
 void DomDate::read(QXmlStreamReader &reader)
 {
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("year")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("year"), Qt::CaseInsensitive)) {
                 setElementYear(reader.readElementText().toInt());
                 continue;
             }
-            if (tag == QLatin1String("month")) {
+            if (!tag.compare(QLatin1String("month"), Qt::CaseInsensitive)) {
                 setElementMonth(reader.readElementText().toInt());
                 continue;
             }
-            if (tag == QLatin1String("day")) {
+            if (!tag.compare(QLatin1String("day"), Qt::CaseInsensitive)) {
                 setElementDay(reader.readElementText().toInt());
                 continue;
             }
@@ -5511,8 +5469,7 @@ void DomDate::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -5525,7 +5482,7 @@ void DomDate::read(QXmlStreamReader &reader)
 
 void DomDate::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("date") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("date") : tagName.toLower());
 
     if (m_children & Year)
         writer.writeTextElement(QStringLiteral("year"), QString::number(m_year));
@@ -5602,19 +5559,19 @@ DomTime::~DomTime()
 
 void DomTime::read(QXmlStreamReader &reader)
 {
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("hour")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("hour"), Qt::CaseInsensitive)) {
                 setElementHour(reader.readElementText().toInt());
                 continue;
             }
-            if (tag == QLatin1String("minute")) {
+            if (!tag.compare(QLatin1String("minute"), Qt::CaseInsensitive)) {
                 setElementMinute(reader.readElementText().toInt());
                 continue;
             }
-            if (tag == QLatin1String("second")) {
+            if (!tag.compare(QLatin1String("second"), Qt::CaseInsensitive)) {
                 setElementSecond(reader.readElementText().toInt());
                 continue;
             }
@@ -5622,8 +5579,7 @@ void DomTime::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -5636,7 +5592,7 @@ void DomTime::read(QXmlStreamReader &reader)
 
 void DomTime::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("time") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("time") : tagName.toLower());
 
     if (m_children & Hour)
         writer.writeTextElement(QStringLiteral("hour"), QString::number(m_hour));
@@ -5719,31 +5675,31 @@ DomDateTime::~DomDateTime()
 
 void DomDateTime::read(QXmlStreamReader &reader)
 {
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("hour")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("hour"), Qt::CaseInsensitive)) {
                 setElementHour(reader.readElementText().toInt());
                 continue;
             }
-            if (tag == QLatin1String("minute")) {
+            if (!tag.compare(QLatin1String("minute"), Qt::CaseInsensitive)) {
                 setElementMinute(reader.readElementText().toInt());
                 continue;
             }
-            if (tag == QLatin1String("second")) {
+            if (!tag.compare(QLatin1String("second"), Qt::CaseInsensitive)) {
                 setElementSecond(reader.readElementText().toInt());
                 continue;
             }
-            if (tag == QLatin1String("year")) {
+            if (!tag.compare(QLatin1String("year"), Qt::CaseInsensitive)) {
                 setElementYear(reader.readElementText().toInt());
                 continue;
             }
-            if (tag == QLatin1String("month")) {
+            if (!tag.compare(QLatin1String("month"), Qt::CaseInsensitive)) {
                 setElementMonth(reader.readElementText().toInt());
                 continue;
             }
-            if (tag == QLatin1String("day")) {
+            if (!tag.compare(QLatin1String("day"), Qt::CaseInsensitive)) {
                 setElementDay(reader.readElementText().toInt());
                 continue;
             }
@@ -5751,8 +5707,7 @@ void DomDateTime::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -5765,7 +5720,7 @@ void DomDateTime::read(QXmlStreamReader &reader)
 
 void DomDateTime::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("datetime") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("datetime") : tagName.toLower());
 
     if (m_children & Hour)
         writer.writeTextElement(QStringLiteral("hour"), QString::number(m_hour));
@@ -5886,9 +5841,9 @@ DomStringList::~DomStringList()
 
 void DomStringList::read(QXmlStreamReader &reader)
 {
-    const QXmlStreamAttributes attributes = reader.attributes();
+    const QXmlStreamAttributes &attributes = reader.attributes();
     for (const QXmlStreamAttribute &attribute : attributes) {
-        QStringRef name = attribute.name();
+        const QStringRef name = attribute.name();
         if (name == QLatin1String("notr")) {
             setAttributeNotr(attribute.value().toString());
             continue;
@@ -5904,11 +5859,11 @@ void DomStringList::read(QXmlStreamReader &reader)
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("string")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("string"), Qt::CaseInsensitive)) {
                 m_string.append(reader.readElementText());
                 continue;
             }
@@ -5916,8 +5871,7 @@ void DomStringList::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -5930,7 +5884,7 @@ void DomStringList::read(QXmlStreamReader &reader)
 
 void DomStringList::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("stringlist") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("stringlist") : tagName.toLower());
 
     if (hasAttributeNotr())
         writer.writeAttribute(QStringLiteral("notr"), attributeNotr());
@@ -5979,9 +5933,9 @@ DomResourcePixmap::~DomResourcePixmap()
 
 void DomResourcePixmap::read(QXmlStreamReader &reader)
 {
-    const QXmlStreamAttributes attributes = reader.attributes();
+    const QXmlStreamAttributes &attributes = reader.attributes();
     for (const QXmlStreamAttribute &attribute : attributes) {
-        QStringRef name = attribute.name();
+        const QStringRef name = attribute.name();
         if (name == QLatin1String("resource")) {
             setAttributeResource(attribute.value().toString());
             continue;
@@ -5993,16 +5947,15 @@ void DomResourcePixmap::read(QXmlStreamReader &reader)
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
+            const QStringRef tag = reader.name();
             reader.raiseError(QLatin1String("Unexpected element ") + tag);
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -6015,7 +5968,7 @@ void DomResourcePixmap::read(QXmlStreamReader &reader)
 
 void DomResourcePixmap::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("resourcepixmap") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("resourcepixmap") : tagName.toLower());
 
     if (hasAttributeResource())
         writer.writeAttribute(QStringLiteral("resource"), attributeResource());
@@ -6087,9 +6040,9 @@ DomResourceIcon::~DomResourceIcon()
 
 void DomResourceIcon::read(QXmlStreamReader &reader)
 {
-    const QXmlStreamAttributes attributes = reader.attributes();
+    const QXmlStreamAttributes &attributes = reader.attributes();
     for (const QXmlStreamAttribute &attribute : attributes) {
-        QStringRef name = attribute.name();
+        const QStringRef name = attribute.name();
         if (name == QLatin1String("theme")) {
             setAttributeTheme(attribute.value().toString());
             continue;
@@ -6101,53 +6054,53 @@ void DomResourceIcon::read(QXmlStreamReader &reader)
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("normaloff")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("normaloff"), Qt::CaseInsensitive)) {
                 DomResourcePixmap *v = new DomResourcePixmap();
                 v->read(reader);
                 setElementNormalOff(v);
                 continue;
             }
-            if (tag == QLatin1String("normalon")) {
+            if (!tag.compare(QLatin1String("normalon"), Qt::CaseInsensitive)) {
                 DomResourcePixmap *v = new DomResourcePixmap();
                 v->read(reader);
                 setElementNormalOn(v);
                 continue;
             }
-            if (tag == QLatin1String("disabledoff")) {
+            if (!tag.compare(QLatin1String("disabledoff"), Qt::CaseInsensitive)) {
                 DomResourcePixmap *v = new DomResourcePixmap();
                 v->read(reader);
                 setElementDisabledOff(v);
                 continue;
             }
-            if (tag == QLatin1String("disabledon")) {
+            if (!tag.compare(QLatin1String("disabledon"), Qt::CaseInsensitive)) {
                 DomResourcePixmap *v = new DomResourcePixmap();
                 v->read(reader);
                 setElementDisabledOn(v);
                 continue;
             }
-            if (tag == QLatin1String("activeoff")) {
+            if (!tag.compare(QLatin1String("activeoff"), Qt::CaseInsensitive)) {
                 DomResourcePixmap *v = new DomResourcePixmap();
                 v->read(reader);
                 setElementActiveOff(v);
                 continue;
             }
-            if (tag == QLatin1String("activeon")) {
+            if (!tag.compare(QLatin1String("activeon"), Qt::CaseInsensitive)) {
                 DomResourcePixmap *v = new DomResourcePixmap();
                 v->read(reader);
                 setElementActiveOn(v);
                 continue;
             }
-            if (tag == QLatin1String("selectedoff")) {
+            if (!tag.compare(QLatin1String("selectedoff"), Qt::CaseInsensitive)) {
                 DomResourcePixmap *v = new DomResourcePixmap();
                 v->read(reader);
                 setElementSelectedOff(v);
                 continue;
             }
-            if (tag == QLatin1String("selectedon")) {
+            if (!tag.compare(QLatin1String("selectedon"), Qt::CaseInsensitive)) {
                 DomResourcePixmap *v = new DomResourcePixmap();
                 v->read(reader);
                 setElementSelectedOn(v);
@@ -6157,8 +6110,7 @@ void DomResourceIcon::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -6171,7 +6123,7 @@ void DomResourceIcon::read(QXmlStreamReader &reader)
 
 void DomResourceIcon::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("resourceicon") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("resourceicon") : tagName.toLower());
 
     if (hasAttributeTheme())
         writer.writeAttribute(QStringLiteral("theme"), attributeTheme());
@@ -6410,9 +6362,9 @@ DomString::~DomString()
 
 void DomString::read(QXmlStreamReader &reader)
 {
-    const QXmlStreamAttributes attributes = reader.attributes();
+    const QXmlStreamAttributes &attributes = reader.attributes();
     for (const QXmlStreamAttribute &attribute : attributes) {
-        QStringRef name = attribute.name();
+        const QStringRef name = attribute.name();
         if (name == QLatin1String("notr")) {
             setAttributeNotr(attribute.value().toString());
             continue;
@@ -6428,16 +6380,15 @@ void DomString::read(QXmlStreamReader &reader)
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
+            const QStringRef tag = reader.name();
             reader.raiseError(QLatin1String("Unexpected element ") + tag);
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -6450,7 +6401,7 @@ void DomString::read(QXmlStreamReader &reader)
 
 void DomString::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("string") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("string") : tagName.toLower());
 
     if (hasAttributeNotr())
         writer.writeAttribute(QStringLiteral("notr"), attributeNotr());
@@ -6492,15 +6443,15 @@ DomPointF::~DomPointF()
 
 void DomPointF::read(QXmlStreamReader &reader)
 {
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("x")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("x"), Qt::CaseInsensitive)) {
                 setElementX(reader.readElementText().toDouble());
                 continue;
             }
-            if (tag == QLatin1String("y")) {
+            if (!tag.compare(QLatin1String("y"), Qt::CaseInsensitive)) {
                 setElementY(reader.readElementText().toDouble());
                 continue;
             }
@@ -6508,8 +6459,7 @@ void DomPointF::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -6522,7 +6472,7 @@ void DomPointF::read(QXmlStreamReader &reader)
 
 void DomPointF::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("pointf") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("pointf") : tagName.toLower());
 
     if (m_children & X)
         writer.writeTextElement(QString(QLatin1Char('x')), QString::number(m_x, 'f', 15));
@@ -6587,23 +6537,23 @@ DomRectF::~DomRectF()
 
 void DomRectF::read(QXmlStreamReader &reader)
 {
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("x")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("x"), Qt::CaseInsensitive)) {
                 setElementX(reader.readElementText().toDouble());
                 continue;
             }
-            if (tag == QLatin1String("y")) {
+            if (!tag.compare(QLatin1String("y"), Qt::CaseInsensitive)) {
                 setElementY(reader.readElementText().toDouble());
                 continue;
             }
-            if (tag == QLatin1String("width")) {
+            if (!tag.compare(QLatin1String("width"), Qt::CaseInsensitive)) {
                 setElementWidth(reader.readElementText().toDouble());
                 continue;
             }
-            if (tag == QLatin1String("height")) {
+            if (!tag.compare(QLatin1String("height"), Qt::CaseInsensitive)) {
                 setElementHeight(reader.readElementText().toDouble());
                 continue;
             }
@@ -6611,8 +6561,7 @@ void DomRectF::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -6625,7 +6574,7 @@ void DomRectF::read(QXmlStreamReader &reader)
 
 void DomRectF::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("rectf") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("rectf") : tagName.toLower());
 
     if (m_children & X)
         writer.writeTextElement(QString(QLatin1Char('x')), QString::number(m_x, 'f', 15));
@@ -6714,15 +6663,15 @@ DomSizeF::~DomSizeF()
 
 void DomSizeF::read(QXmlStreamReader &reader)
 {
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("width")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("width"), Qt::CaseInsensitive)) {
                 setElementWidth(reader.readElementText().toDouble());
                 continue;
             }
-            if (tag == QLatin1String("height")) {
+            if (!tag.compare(QLatin1String("height"), Qt::CaseInsensitive)) {
                 setElementHeight(reader.readElementText().toDouble());
                 continue;
             }
@@ -6730,8 +6679,7 @@ void DomSizeF::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -6744,7 +6692,7 @@ void DomSizeF::read(QXmlStreamReader &reader)
 
 void DomSizeF::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("sizef") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("sizef") : tagName.toLower());
 
     if (m_children & Width)
         writer.writeTextElement(QStringLiteral("width"), QString::number(m_width, 'f', 15));
@@ -6803,11 +6751,11 @@ DomChar::~DomChar()
 
 void DomChar::read(QXmlStreamReader &reader)
 {
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("unicode")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("unicode"), Qt::CaseInsensitive)) {
                 setElementUnicode(reader.readElementText().toInt());
                 continue;
             }
@@ -6815,8 +6763,7 @@ void DomChar::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -6829,7 +6776,7 @@ void DomChar::read(QXmlStreamReader &reader)
 
 void DomChar::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("char") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("char") : tagName.toLower());
 
     if (m_children & Unicode)
         writer.writeTextElement(QStringLiteral("unicode"), QString::number(m_unicode));
@@ -6876,11 +6823,11 @@ DomUrl::~DomUrl()
 
 void DomUrl::read(QXmlStreamReader &reader)
 {
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("string")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("string"), Qt::CaseInsensitive)) {
                 DomString *v = new DomString();
                 v->read(reader);
                 setElementString(v);
@@ -6890,8 +6837,7 @@ void DomUrl::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -6904,7 +6850,7 @@ void DomUrl::read(QXmlStreamReader &reader)
 
 void DomUrl::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("url") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("url") : tagName.toLower());
 
     if (m_children & String)
         m_string->write(writer, QStringLiteral("string"));
@@ -7064,9 +7010,9 @@ DomProperty::~DomProperty()
 
 void DomProperty::read(QXmlStreamReader &reader)
 {
-    const QXmlStreamAttributes attributes = reader.attributes();
+    const QXmlStreamAttributes &attributes = reader.attributes();
     for (const QXmlStreamAttribute &attribute : attributes) {
-        QStringRef name = attribute.name();
+        const QStringRef name = attribute.name();
         if (name == QLatin1String("name")) {
             setAttributeName(attribute.value().toString());
             continue;
@@ -7078,179 +7024,179 @@ void DomProperty::read(QXmlStreamReader &reader)
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("bool")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("bool"), Qt::CaseInsensitive)) {
                 setElementBool(reader.readElementText());
                 continue;
             }
-            if (tag == QLatin1String("color")) {
+            if (!tag.compare(QLatin1String("color"), Qt::CaseInsensitive)) {
                 DomColor *v = new DomColor();
                 v->read(reader);
                 setElementColor(v);
                 continue;
             }
-            if (tag == QLatin1String("cstring")) {
+            if (!tag.compare(QLatin1String("cstring"), Qt::CaseInsensitive)) {
                 setElementCstring(reader.readElementText());
                 continue;
             }
-            if (tag == QLatin1String("cursor")) {
+            if (!tag.compare(QLatin1String("cursor"), Qt::CaseInsensitive)) {
                 setElementCursor(reader.readElementText().toInt());
                 continue;
             }
-            if (tag == QLatin1String("cursorshape")) {
+            if (!tag.compare(QLatin1String("cursorshape"), Qt::CaseInsensitive)) {
                 setElementCursorShape(reader.readElementText());
                 continue;
             }
-            if (tag == QLatin1String("enum")) {
+            if (!tag.compare(QLatin1String("enum"), Qt::CaseInsensitive)) {
                 setElementEnum(reader.readElementText());
                 continue;
             }
-            if (tag == QLatin1String("font")) {
+            if (!tag.compare(QLatin1String("font"), Qt::CaseInsensitive)) {
                 DomFont *v = new DomFont();
                 v->read(reader);
                 setElementFont(v);
                 continue;
             }
-            if (tag == QLatin1String("iconset")) {
+            if (!tag.compare(QLatin1String("iconset"), Qt::CaseInsensitive)) {
                 DomResourceIcon *v = new DomResourceIcon();
                 v->read(reader);
                 setElementIconSet(v);
                 continue;
             }
-            if (tag == QLatin1String("pixmap")) {
+            if (!tag.compare(QLatin1String("pixmap"), Qt::CaseInsensitive)) {
                 DomResourcePixmap *v = new DomResourcePixmap();
                 v->read(reader);
                 setElementPixmap(v);
                 continue;
             }
-            if (tag == QLatin1String("palette")) {
+            if (!tag.compare(QLatin1String("palette"), Qt::CaseInsensitive)) {
                 DomPalette *v = new DomPalette();
                 v->read(reader);
                 setElementPalette(v);
                 continue;
             }
-            if (tag == QLatin1String("point")) {
+            if (!tag.compare(QLatin1String("point"), Qt::CaseInsensitive)) {
                 DomPoint *v = new DomPoint();
                 v->read(reader);
                 setElementPoint(v);
                 continue;
             }
-            if (tag == QLatin1String("rect")) {
+            if (!tag.compare(QLatin1String("rect"), Qt::CaseInsensitive)) {
                 DomRect *v = new DomRect();
                 v->read(reader);
                 setElementRect(v);
                 continue;
             }
-            if (tag == QLatin1String("set")) {
+            if (!tag.compare(QLatin1String("set"), Qt::CaseInsensitive)) {
                 setElementSet(reader.readElementText());
                 continue;
             }
-            if (tag == QLatin1String("locale")) {
+            if (!tag.compare(QLatin1String("locale"), Qt::CaseInsensitive)) {
                 DomLocale *v = new DomLocale();
                 v->read(reader);
                 setElementLocale(v);
                 continue;
             }
-            if (tag == QLatin1String("sizepolicy")) {
+            if (!tag.compare(QLatin1String("sizepolicy"), Qt::CaseInsensitive)) {
                 DomSizePolicy *v = new DomSizePolicy();
                 v->read(reader);
                 setElementSizePolicy(v);
                 continue;
             }
-            if (tag == QLatin1String("size")) {
+            if (!tag.compare(QLatin1String("size"), Qt::CaseInsensitive)) {
                 DomSize *v = new DomSize();
                 v->read(reader);
                 setElementSize(v);
                 continue;
             }
-            if (tag == QLatin1String("string")) {
+            if (!tag.compare(QLatin1String("string"), Qt::CaseInsensitive)) {
                 DomString *v = new DomString();
                 v->read(reader);
                 setElementString(v);
                 continue;
             }
-            if (tag == QLatin1String("stringlist")) {
+            if (!tag.compare(QLatin1String("stringlist"), Qt::CaseInsensitive)) {
                 DomStringList *v = new DomStringList();
                 v->read(reader);
                 setElementStringList(v);
                 continue;
             }
-            if (tag == QLatin1String("number")) {
+            if (!tag.compare(QLatin1String("number"), Qt::CaseInsensitive)) {
                 setElementNumber(reader.readElementText().toInt());
                 continue;
             }
-            if (tag == QLatin1String("float")) {
+            if (!tag.compare(QLatin1String("float"), Qt::CaseInsensitive)) {
                 setElementFloat(reader.readElementText().toFloat());
                 continue;
             }
-            if (tag == QLatin1String("double")) {
+            if (!tag.compare(QLatin1String("double"), Qt::CaseInsensitive)) {
                 setElementDouble(reader.readElementText().toDouble());
                 continue;
             }
-            if (tag == QLatin1String("date")) {
+            if (!tag.compare(QLatin1String("date"), Qt::CaseInsensitive)) {
                 DomDate *v = new DomDate();
                 v->read(reader);
                 setElementDate(v);
                 continue;
             }
-            if (tag == QLatin1String("time")) {
+            if (!tag.compare(QLatin1String("time"), Qt::CaseInsensitive)) {
                 DomTime *v = new DomTime();
                 v->read(reader);
                 setElementTime(v);
                 continue;
             }
-            if (tag == QLatin1String("datetime")) {
+            if (!tag.compare(QLatin1String("datetime"), Qt::CaseInsensitive)) {
                 DomDateTime *v = new DomDateTime();
                 v->read(reader);
                 setElementDateTime(v);
                 continue;
             }
-            if (tag == QLatin1String("pointf")) {
+            if (!tag.compare(QLatin1String("pointf"), Qt::CaseInsensitive)) {
                 DomPointF *v = new DomPointF();
                 v->read(reader);
                 setElementPointF(v);
                 continue;
             }
-            if (tag == QLatin1String("rectf")) {
+            if (!tag.compare(QLatin1String("rectf"), Qt::CaseInsensitive)) {
                 DomRectF *v = new DomRectF();
                 v->read(reader);
                 setElementRectF(v);
                 continue;
             }
-            if (tag == QLatin1String("sizef")) {
+            if (!tag.compare(QLatin1String("sizef"), Qt::CaseInsensitive)) {
                 DomSizeF *v = new DomSizeF();
                 v->read(reader);
                 setElementSizeF(v);
                 continue;
             }
-            if (tag == QLatin1String("longlong")) {
+            if (!tag.compare(QLatin1String("longlong"), Qt::CaseInsensitive)) {
                 setElementLongLong(reader.readElementText().toLongLong());
                 continue;
             }
-            if (tag == QLatin1String("char")) {
+            if (!tag.compare(QLatin1String("char"), Qt::CaseInsensitive)) {
                 DomChar *v = new DomChar();
                 v->read(reader);
                 setElementChar(v);
                 continue;
             }
-            if (tag == QLatin1String("url")) {
+            if (!tag.compare(QLatin1String("url"), Qt::CaseInsensitive)) {
                 DomUrl *v = new DomUrl();
                 v->read(reader);
                 setElementUrl(v);
                 continue;
             }
-            if (tag == QLatin1String("uint")) {
+            if (!tag.compare(QLatin1String("uint"), Qt::CaseInsensitive)) {
                 setElementUInt(reader.readElementText().toUInt());
                 continue;
             }
-            if (tag == QLatin1String("ulonglong")) {
+            if (!tag.compare(QLatin1String("ulonglong"), Qt::CaseInsensitive)) {
                 setElementULongLong(reader.readElementText().toULongLong());
                 continue;
             }
-            if (tag == QLatin1String("brush")) {
+            if (!tag.compare(QLatin1String("brush"), Qt::CaseInsensitive)) {
                 DomBrush *v = new DomBrush();
                 v->read(reader);
                 setElementBrush(v);
@@ -7260,8 +7206,7 @@ void DomProperty::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -7274,7 +7219,7 @@ void DomProperty::read(QXmlStreamReader &reader)
 
 void DomProperty::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("property") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("property") : tagName.toLower());
 
     if (hasAttributeName())
         writer.writeAttribute(QStringLiteral("name"), attributeName());
@@ -7869,11 +7814,11 @@ DomConnections::~DomConnections()
 
 void DomConnections::read(QXmlStreamReader &reader)
 {
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("connection")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("connection"), Qt::CaseInsensitive)) {
                 DomConnection *v = new DomConnection();
                 v->read(reader);
                 m_connection.append(v);
@@ -7883,8 +7828,7 @@ void DomConnections::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -7897,7 +7841,7 @@ void DomConnections::read(QXmlStreamReader &reader)
 
 void DomConnections::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("connections") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("connections") : tagName.toLower());
 
     for (DomConnection *v : m_connection)
         v->write(writer, QStringLiteral("connection"));
@@ -7939,27 +7883,27 @@ DomConnection::~DomConnection()
 
 void DomConnection::read(QXmlStreamReader &reader)
 {
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("sender")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("sender"), Qt::CaseInsensitive)) {
                 setElementSender(reader.readElementText());
                 continue;
             }
-            if (tag == QLatin1String("signal")) {
+            if (!tag.compare(QLatin1String("signal"), Qt::CaseInsensitive)) {
                 setElementSignal(reader.readElementText());
                 continue;
             }
-            if (tag == QLatin1String("receiver")) {
+            if (!tag.compare(QLatin1String("receiver"), Qt::CaseInsensitive)) {
                 setElementReceiver(reader.readElementText());
                 continue;
             }
-            if (tag == QLatin1String("slot")) {
+            if (!tag.compare(QLatin1String("slot"), Qt::CaseInsensitive)) {
                 setElementSlot(reader.readElementText());
                 continue;
             }
-            if (tag == QLatin1String("hints")) {
+            if (!tag.compare(QLatin1String("hints"), Qt::CaseInsensitive)) {
                 DomConnectionHints *v = new DomConnectionHints();
                 v->read(reader);
                 setElementHints(v);
@@ -7969,8 +7913,7 @@ void DomConnection::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -7983,7 +7926,7 @@ void DomConnection::read(QXmlStreamReader &reader)
 
 void DomConnection::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("connection") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("connection") : tagName.toLower());
 
     if (m_children & Sender)
         writer.writeTextElement(QStringLiteral("sender"), m_sender);
@@ -8097,11 +8040,11 @@ DomConnectionHints::~DomConnectionHints()
 
 void DomConnectionHints::read(QXmlStreamReader &reader)
 {
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("hint")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("hint"), Qt::CaseInsensitive)) {
                 DomConnectionHint *v = new DomConnectionHint();
                 v->read(reader);
                 m_hint.append(v);
@@ -8111,8 +8054,7 @@ void DomConnectionHints::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -8125,7 +8067,7 @@ void DomConnectionHints::read(QXmlStreamReader &reader)
 
 void DomConnectionHints::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("connectionhints") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("connectionhints") : tagName.toLower());
 
     for (DomConnectionHint *v : m_hint)
         v->write(writer, QStringLiteral("hint"));
@@ -8169,9 +8111,9 @@ DomConnectionHint::~DomConnectionHint()
 
 void DomConnectionHint::read(QXmlStreamReader &reader)
 {
-    const QXmlStreamAttributes attributes = reader.attributes();
+    const QXmlStreamAttributes &attributes = reader.attributes();
     for (const QXmlStreamAttribute &attribute : attributes) {
-        QStringRef name = attribute.name();
+        const QStringRef name = attribute.name();
         if (name == QLatin1String("type")) {
             setAttributeType(attribute.value().toString());
             continue;
@@ -8179,15 +8121,15 @@ void DomConnectionHint::read(QXmlStreamReader &reader)
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("x")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("x"), Qt::CaseInsensitive)) {
                 setElementX(reader.readElementText().toInt());
                 continue;
             }
-            if (tag == QLatin1String("y")) {
+            if (!tag.compare(QLatin1String("y"), Qt::CaseInsensitive)) {
                 setElementY(reader.readElementText().toInt());
                 continue;
             }
@@ -8195,8 +8137,7 @@ void DomConnectionHint::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -8209,7 +8150,7 @@ void DomConnectionHint::read(QXmlStreamReader &reader)
 
 void DomConnectionHint::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("connectionhint") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("connectionhint") : tagName.toLower());
 
     if (hasAttributeType())
         writer.writeAttribute(QStringLiteral("type"), attributeType());
@@ -8270,9 +8211,9 @@ DomScript::~DomScript()
 
 void DomScript::read(QXmlStreamReader &reader)
 {
-    const QXmlStreamAttributes attributes = reader.attributes();
+    const QXmlStreamAttributes &attributes = reader.attributes();
     for (const QXmlStreamAttribute &attribute : attributes) {
-        QStringRef name = attribute.name();
+        const QStringRef name = attribute.name();
         if (name == QLatin1String("source")) {
             setAttributeSource(attribute.value().toString());
             continue;
@@ -8284,16 +8225,15 @@ void DomScript::read(QXmlStreamReader &reader)
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
+            const QStringRef tag = reader.name();
             reader.raiseError(QLatin1String("Unexpected element ") + tag);
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -8306,7 +8246,7 @@ void DomScript::read(QXmlStreamReader &reader)
 
 void DomScript::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("script") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("script") : tagName.toLower());
 
     if (hasAttributeSource())
         writer.writeAttribute(QStringLiteral("source"), attributeSource());
@@ -8345,11 +8285,11 @@ DomWidgetData::~DomWidgetData()
 
 void DomWidgetData::read(QXmlStreamReader &reader)
 {
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("property")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("property"), Qt::CaseInsensitive)) {
                 DomProperty *v = new DomProperty();
                 v->read(reader);
                 m_property.append(v);
@@ -8359,8 +8299,7 @@ void DomWidgetData::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -8373,7 +8312,7 @@ void DomWidgetData::read(QXmlStreamReader &reader)
 
 void DomWidgetData::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("widgetdata") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("widgetdata") : tagName.toLower());
 
     for (DomProperty *v : m_property)
         v->write(writer, QStringLiteral("property"));
@@ -8415,11 +8354,11 @@ DomDesignerData::~DomDesignerData()
 
 void DomDesignerData::read(QXmlStreamReader &reader)
 {
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("property")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("property"), Qt::CaseInsensitive)) {
                 DomProperty *v = new DomProperty();
                 v->read(reader);
                 m_property.append(v);
@@ -8429,8 +8368,7 @@ void DomDesignerData::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -8443,7 +8381,7 @@ void DomDesignerData::read(QXmlStreamReader &reader)
 
 void DomDesignerData::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("designerdata") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("designerdata") : tagName.toLower());
 
     for (DomProperty *v : m_property)
         v->write(writer, QStringLiteral("property"));
@@ -8485,15 +8423,15 @@ DomSlots::~DomSlots()
 
 void DomSlots::read(QXmlStreamReader &reader)
 {
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("signal")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("signal"), Qt::CaseInsensitive)) {
                 m_signal.append(reader.readElementText());
                 continue;
             }
-            if (tag == QLatin1String("slot")) {
+            if (!tag.compare(QLatin1String("slot"), Qt::CaseInsensitive)) {
                 m_slot.append(reader.readElementText());
                 continue;
             }
@@ -8501,8 +8439,7 @@ void DomSlots::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -8515,7 +8452,7 @@ void DomSlots::read(QXmlStreamReader &reader)
 
 void DomSlots::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("slots") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("slots") : tagName.toLower());
 
     for (const QString &v : m_signal)
         writer.writeTextElement(QStringLiteral("signal"), v);
@@ -8570,17 +8507,17 @@ DomPropertySpecifications::~DomPropertySpecifications()
 
 void DomPropertySpecifications::read(QXmlStreamReader &reader)
 {
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
-            if (tag == QLatin1String("tooltip")) {
+            const QStringRef tag = reader.name();
+            if (!tag.compare(QLatin1String("tooltip"), Qt::CaseInsensitive)) {
                 DomPropertyToolTip *v = new DomPropertyToolTip();
                 v->read(reader);
                 m_tooltip.append(v);
                 continue;
             }
-            if (tag == QLatin1String("stringpropertyspecification")) {
+            if (!tag.compare(QLatin1String("stringpropertyspecification"), Qt::CaseInsensitive)) {
                 DomStringPropertySpecification *v = new DomStringPropertySpecification();
                 v->read(reader);
                 m_stringpropertyspecification.append(v);
@@ -8590,8 +8527,7 @@ void DomPropertySpecifications::read(QXmlStreamReader &reader)
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -8604,7 +8540,7 @@ void DomPropertySpecifications::read(QXmlStreamReader &reader)
 
 void DomPropertySpecifications::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("propertyspecifications") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("propertyspecifications") : tagName.toLower());
 
     for (DomPropertyToolTip *v : m_tooltip)
         v->write(writer, QStringLiteral("tooltip"));
@@ -8650,9 +8586,9 @@ DomPropertyToolTip::~DomPropertyToolTip()
 
 void DomPropertyToolTip::read(QXmlStreamReader &reader)
 {
-    const QXmlStreamAttributes attributes = reader.attributes();
+    const QXmlStreamAttributes &attributes = reader.attributes();
     for (const QXmlStreamAttribute &attribute : attributes) {
-        QStringRef name = attribute.name();
+        const QStringRef name = attribute.name();
         if (name == QLatin1String("name")) {
             setAttributeName(attribute.value().toString());
             continue;
@@ -8660,16 +8596,15 @@ void DomPropertyToolTip::read(QXmlStreamReader &reader)
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
+            const QStringRef tag = reader.name();
             reader.raiseError(QLatin1String("Unexpected element ") + tag);
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -8682,7 +8617,7 @@ void DomPropertyToolTip::read(QXmlStreamReader &reader)
 
 void DomPropertyToolTip::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("propertytooltip") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("propertytooltip") : tagName.toLower());
 
     if (hasAttributeName())
         writer.writeAttribute(QStringLiteral("name"), attributeName());
@@ -8717,9 +8652,9 @@ DomStringPropertySpecification::~DomStringPropertySpecification()
 
 void DomStringPropertySpecification::read(QXmlStreamReader &reader)
 {
-    const QXmlStreamAttributes attributes = reader.attributes();
+    const QXmlStreamAttributes &attributes = reader.attributes();
     for (const QXmlStreamAttribute &attribute : attributes) {
-        QStringRef name = attribute.name();
+        const QStringRef name = attribute.name();
         if (name == QLatin1String("name")) {
             setAttributeName(attribute.value().toString());
             continue;
@@ -8735,16 +8670,15 @@ void DomStringPropertySpecification::read(QXmlStreamReader &reader)
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
-    for (bool finished = false; !finished && !reader.hasError();) {
+    while (!reader.hasError()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement : {
-            const QString tag = reader.name().toString().toLower();
+            const QStringRef tag = reader.name();
             reader.raiseError(QLatin1String("Unexpected element ") + tag);
         }
             break;
         case QXmlStreamReader::EndElement :
-            finished = true;
-            break;
+            return;
         case QXmlStreamReader::Characters :
             if (!reader.isWhitespace())
                 m_text.append(reader.text().toString());
@@ -8757,7 +8691,7 @@ void DomStringPropertySpecification::read(QXmlStreamReader &reader)
 
 void DomStringPropertySpecification::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
-    writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("stringpropertyspecification") : tagName.toLower());
+    writer.writeStartElement(tagName.isEmpty() ? QStringLiteral("stringpropertyspecification") : tagName.toLower());
 
     if (hasAttributeName())
         writer.writeAttribute(QStringLiteral("name"), attributeName());
