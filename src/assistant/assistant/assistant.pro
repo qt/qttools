@@ -1,4 +1,5 @@
-qtHaveModule(webkitwidgets):!contains(QT_CONFIG, static) {
+false:qtHaveModule(webkitwidgets):!contains(QT_CONFIG, static) {
+    # FIXME: currently broken
     BROWSER = qtwebkit
 } else {
     BROWSER = qtextbrowser
