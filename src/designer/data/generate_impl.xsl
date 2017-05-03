@@ -13,39 +13,33 @@
 
     <xsl:template name="ctor-init-attributes">
         <xsl:param name="node"/>
-        <xsl:param name="indent"/>
         <xsl:for-each select="$node/xs:attribute">
             <xsl:variable name="camel-case-name">
                 <xsl:call-template name="camel-case">
                     <xsl:with-param name="text" select="@name"/>
                 </xsl:call-template>
             </xsl:variable>
-            <xsl:value-of select="$indent"/>
-            <xsl:text>m_has_attr_</xsl:text>
+            <xsl:text>    m_has_attr_</xsl:text>
             <xsl:value-of select="$camel-case-name"/>
             <xsl:text> = false;&endl;</xsl:text>
             <xsl:choose>
                 <xsl:when test="@type = 'xs:integer'">
-                    <xsl:value-of select="$indent"/>
-                    <xsl:text>m_attr_</xsl:text>
+                    <xsl:text>    m_attr_</xsl:text>
                     <xsl:value-of select="$camel-case-name"/>
                     <xsl:text> = 0;&endl;</xsl:text>
                 </xsl:when>
                 <xsl:when test="@type = 'xs:double'">
-                    <xsl:value-of select="$indent"/>
-                    <xsl:text>m_attr_</xsl:text>
+                    <xsl:text>    m_attr_</xsl:text>
                     <xsl:value-of select="$camel-case-name"/>
                     <xsl:text> = 0.0;&endl;</xsl:text>
                 </xsl:when>
                 <xsl:when test="@type = 'xs:float'">
-                    <xsl:value-of select="$indent"/>
-                    <xsl:text>m_attr_</xsl:text>
+                    <xsl:text>    m_attr_</xsl:text>
                     <xsl:value-of select="$camel-case-name"/>
                     <xsl:text> = 0.0;&endl;</xsl:text>
                 </xsl:when>
                 <xsl:when test="@type = 'xs:boolean'">
-                    <xsl:value-of select="$indent"/>
-                    <xsl:text>m_attr_</xsl:text>
+                    <xsl:text>    m_attr_</xsl:text>
                     <xsl:value-of select="$camel-case-name"/>
                     <xsl:text> = false;&endl;</xsl:text>
                 </xsl:when>
@@ -114,9 +108,6 @@
 
         <xsl:call-template name="ctor-init-attributes">
             <xsl:with-param name="node" select="."/>
-            <xsl:with-param name="indent">
-                <xsl:text>    </xsl:text>
-            </xsl:with-param>
         </xsl:call-template>
 
         <xsl:if test="$node[@mixed='true']">
@@ -208,58 +199,41 @@
         <xsl:param name="node"/>
         <xsl:variable name="name" select="concat('Dom', $node/@name)"/>
 
-        <xsl:text>void </xsl:text><xsl:value-of select="$name"/>
-        <xsl:text>::clear(bool clear_all)&endl;</xsl:text>
-        <xsl:text>{&endl;</xsl:text>
-
-        <xsl:variable name="set" select="$node//xs:sequence | $node//xs:choice | $node//xs:all"/>
-        <xsl:variable name="count" select="count($set)"/>
-        <xsl:for-each select="$set">
-            <xsl:call-template name="dtor-delete-members">
-                <xsl:with-param name="node" select="."/>
-            </xsl:call-template>
-        </xsl:for-each>
-
-        <xsl:if test="$count &gt; 0">
-            <xsl:text>&endl;</xsl:text>
-        </xsl:if>
-
-        <xsl:text>    if (clear_all) {&endl;</xsl:text>
-
-        <xsl:choose>
-            <xsl:when test="$node[@mixed='true']">
-                <xsl:text>        m_text.clear();&endl;</xsl:text>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:text>        m_text.clear();&endl;</xsl:text>
-            </xsl:otherwise>
-        </xsl:choose>
-
-        <xsl:call-template name="ctor-init-attributes">
-            <xsl:with-param name="node" select="."/>
-            <xsl:with-param name="indent">
-                <xsl:text>        </xsl:text>
-            </xsl:with-param>
-        </xsl:call-template>
-        <xsl:text>    }&endl;&endl;</xsl:text>
-
         <xsl:if test="boolean($node/xs:choice)">
-            <xsl:text>    m_kind = Unknown;&endl;&endl;</xsl:text>
-        </xsl:if>
+            <xsl:text>void </xsl:text><xsl:value-of select="$name"/>
+            <xsl:text>::clear()&endl;</xsl:text>
+            <xsl:text>{&endl;</xsl:text>
 
-        <xsl:if test="not($node/xs:choice)">
+            <xsl:variable name="set" select="$node//xs:sequence | $node//xs:choice | $node//xs:all"/>
+            <xsl:variable name="count" select="count($set)"/>
+            <xsl:for-each select="$set">
+                <xsl:call-template name="dtor-delete-members">
+                    <xsl:with-param name="node" select="."/>
+                </xsl:call-template>
+            </xsl:for-each>
+
             <xsl:if test="$count &gt; 0">
-                <xsl:text>    m_children = 0;&endl;</xsl:text>
+                <xsl:text>&endl;</xsl:text>
             </xsl:if>
+
+            <xsl:if test="boolean($node/xs:choice)">
+                <xsl:text>    m_kind = Unknown;&endl;&endl;</xsl:text>
+            </xsl:if>
+
+            <xsl:if test="not($node/xs:choice)">
+                <xsl:if test="$count &gt; 0">
+                    <xsl:text>    m_children = 0;&endl;</xsl:text>
+                </xsl:if>
+            </xsl:if>
+
+            <xsl:for-each select="$set">
+                <xsl:call-template name="ctor-init-child-elements">
+                    <xsl:with-param name="node" select="."/>
+                </xsl:call-template>
+            </xsl:for-each>
+
+            <xsl:text>}&endl;&endl;</xsl:text>
         </xsl:if>
-
-        <xsl:for-each select="$set">
-            <xsl:call-template name="ctor-init-child-elements">
-                <xsl:with-param name="node" select="."/>
-            </xsl:call-template>
-        </xsl:for-each>
-
-        <xsl:text>}&endl;&endl;</xsl:text>
 
     </xsl:template>
 
@@ -799,7 +773,7 @@
             <xsl:text>{&endl;</xsl:text>
             <xsl:choose>
                 <xsl:when test="$isChoice">
-                    <xsl:text>    clear(false);&endl;</xsl:text>
+                    <xsl:text>    clear();&endl;</xsl:text>
                     <xsl:text>    m_kind = </xsl:text>
                     <xsl:value-of select="$cap-name"/>
                     <xsl:text>;&endl;</xsl:text>

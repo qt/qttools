@@ -324,10 +324,12 @@
         <xsl:text>private:&endl;</xsl:text>
 
         <xsl:if test="$hasText">
-            <xsl:text>    QString m_text;&endl;</xsl:text>
+            <xsl:text>    QString m_text;&endl;&endl;</xsl:text>
         </xsl:if>
 
-        <xsl:text>    void clear(bool clear_all = true);&endl;&endl;</xsl:text>
+        <xsl:if test="boolean($node/xs:choice)">
+            <xsl:text>    void clear();&endl;&endl;</xsl:text>
+        </xsl:if>
 
         <xsl:variable name="set" select="$node//xs:attribute"/>
         <xsl:variable name="count" select="count($set)"/>

@@ -295,7 +295,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // attribute data
     QString m_attr_version;
@@ -370,7 +369,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // child element data
     uint m_children;
@@ -404,7 +402,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // attribute data
     QString m_attr_location;
@@ -438,7 +435,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // attribute data
     QString m_attr_name;
@@ -471,7 +467,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // attribute data
     QString m_attr_location;
@@ -511,7 +506,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // attribute data
     QString m_attr_name;
@@ -562,7 +556,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // attribute data
     QString m_attr_name;
@@ -600,7 +593,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // attribute data
     QString m_attr_name;
@@ -634,7 +626,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // attribute data
     QString m_attr_name;
@@ -667,7 +658,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // child element data
     uint m_children;
@@ -694,7 +684,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // child element data
     uint m_children;
@@ -730,7 +719,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // attribute data
     QString m_attr_name;
@@ -768,7 +756,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // attribute data
     QString m_attr_format;
@@ -796,7 +783,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // child element data
     uint m_children;
@@ -825,7 +811,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // attribute data
     QString m_attr_location;
@@ -914,7 +899,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // child element data
     uint m_children;
@@ -963,7 +947,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // child element data
     uint m_children;
@@ -992,7 +975,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // attribute data
     QString m_attr_type;
@@ -1024,7 +1006,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // child element data
     uint m_children;
@@ -1060,7 +1041,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // attribute data
     int m_attr_spacing;
@@ -1095,7 +1075,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // attribute data
     QString m_attr_spacing;
@@ -1123,7 +1102,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // child element data
     uint m_children;
@@ -1192,7 +1170,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // attribute data
     QString m_attr_class;
@@ -1283,7 +1260,8 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
+
+    void clear();
 
     // attribute data
     int m_attr_row;
@@ -1325,7 +1303,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // child element data
     uint m_children;
@@ -1352,7 +1329,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // child element data
     uint m_children;
@@ -1393,7 +1369,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // attribute data
     int m_attr_row;
@@ -1484,7 +1459,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // attribute data
     QString m_attr_class;
@@ -1553,7 +1527,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // attribute data
     QString m_attr_name;
@@ -1602,7 +1575,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // attribute data
     int m_attr_alpha;
@@ -1646,7 +1618,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // attribute data
     double m_attr_position;
@@ -1743,7 +1714,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // attribute data
     double m_attr_startX;
@@ -1828,7 +1798,8 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
+
+    void clear();
 
     // attribute data
     QString m_attr_brushStyle;
@@ -1867,7 +1838,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // attribute data
     QString m_attr_role;
@@ -1901,7 +1871,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // child element data
     uint m_children;
@@ -1945,7 +1914,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // child element data
     uint m_children;
@@ -2023,7 +1991,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // child element data
     uint m_children;
@@ -2075,7 +2042,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // child element data
     uint m_children;
@@ -2121,7 +2087,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // child element data
     uint m_children;
@@ -2161,7 +2126,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // attribute data
     QString m_attr_language;
@@ -2217,7 +2181,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // attribute data
     QString m_attr_hSizeType;
@@ -2264,7 +2227,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // child element data
     uint m_children;
@@ -2305,7 +2267,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // child element data
     uint m_children;
@@ -2348,7 +2309,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // child element data
     uint m_children;
@@ -2406,7 +2366,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // child element data
     uint m_children;
@@ -2459,7 +2418,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // attribute data
     QString m_attr_notr;
@@ -2503,7 +2461,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // attribute data
     QString m_attr_resource;
@@ -2587,7 +2544,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // attribute data
     QString m_attr_theme;
@@ -2647,7 +2603,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // attribute data
     QString m_attr_notr;
@@ -2685,7 +2640,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // child element data
     uint m_children;
@@ -2731,7 +2685,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // child element data
     uint m_children;
@@ -2771,7 +2724,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // child element data
     uint m_children;
@@ -2802,7 +2754,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // child element data
     uint m_children;
@@ -2832,7 +2783,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // child element data
     uint m_children;
@@ -2990,7 +2940,8 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
+
+    void clear();
 
     // attribute data
     QString m_attr_name;
@@ -3053,7 +3004,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // child element data
     uint m_children;
@@ -3103,7 +3053,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // child element data
     uint m_children;
@@ -3138,7 +3087,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // child element data
     uint m_children;
@@ -3178,7 +3126,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // attribute data
     QString m_attr_type;
@@ -3218,7 +3165,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // attribute data
     QString m_attr_source;
@@ -3246,7 +3192,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // child element data
     uint m_children;
@@ -3273,7 +3218,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // child element data
     uint m_children;
@@ -3303,7 +3247,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // child element data
     uint m_children;
@@ -3335,7 +3278,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // child element data
     uint m_children;
@@ -3366,7 +3308,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // attribute data
     QString m_attr_name;
@@ -3403,7 +3344,6 @@ public:
 
 private:
     QString m_text;
-    void clear(bool clear_all = true);
 
     // attribute data
     QString m_attr_name;
