@@ -640,6 +640,21 @@ QMap<QString, QUrl> QHelpEngineCore::linksForIdentifier(const QString &id) const
 }
 
 /*!
+    \since 4.5
+
+    Returns all documents found for the \a keyword. The returned map consists of the
+    document titles and their URLs.
+*/
+QMap<QString, QUrl> QHelpEngineCore::linksForKeyword(const QString &keyword) const
+{
+    QMap<QString, QUrl> linkMap;
+    const QStringList &attributes = filterAttributes(d->currentFilter);
+    for (const QHelpDBReader *reader : qAsConst(d->readerMap))
+        reader->linksForKeyword(keyword, attributes, &linkMap);
+    return linkMap;
+}
+
+/*!
     Removes the \a key from the settings section in the
     collection file. Returns true if the value was removed
     successfully, otherwise false.
