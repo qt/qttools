@@ -101,12 +101,6 @@ public:
     int zoomCount;
     bool forceFont;
     QString lastAnchor;
-#elif defined(BROWSER_QTWEBKIT)
-    qreal webDpiRatio;
-#endif // BROWSER_QTWEBKIT
-
-public:
-    bool m_loadFinished;
 
 private:
 
@@ -120,6 +114,13 @@ private:
             CentralWidget::instance()->setSource(lastAnchor);
         lastAnchor.clear();
     }
+
+#elif defined(BROWSER_QTWEBKIT)
+    qreal webDpiRatio;
+#endif // BROWSER_QTWEBKIT
+
+public:
+    bool m_loadFinished;
 
 };
 

@@ -594,15 +594,15 @@ void CentralWidget::connectSignals(HelpViewer *page)
     connect(page, &HelpViewer::printRequested,
             this, &CentralWidget::print);
 #endif
-    connect(page, &QTextEdit::copyAvailable,
+    connect(page, &HelpViewer::copyAvailable,
             this, &CentralWidget::copyAvailable);
-    connect(page, &QTextBrowser::forwardAvailable,
+    connect(page, &HelpViewer::forwardAvailable,
             this, &CentralWidget::forwardAvailable);
-    connect(page, &QTextBrowser::backwardAvailable,
+    connect(page, &HelpViewer::backwardAvailable,
             this, &CentralWidget::backwardAvailable);
-    connect(page, &QTextBrowser::sourceChanged,
+    connect(page, &HelpViewer::sourceChanged,
             this, &CentralWidget::handleSourceChanged);
-    connect(page, QOverload<const QString &>::of(&QTextBrowser::highlighted),
+    connect(page, QOverload<const QString &>::of(&HelpViewer::highlighted),
             this, &CentralWidget::slotHighlighted);
 }
 
