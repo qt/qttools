@@ -52,6 +52,7 @@
 #include <QtGui/QPainter>
 #include <QtWidgets/QLabel>
 
+#include <limits>
 #include <limits.h>
 #include <float.h>
 
@@ -3328,7 +3329,7 @@ public:
     {
         QSizeF val{0, 0};
         QSizeF minVal{0, 0};
-        QSizeF maxVal{INT_MAX, INT_MAX};
+        QSizeF maxVal{std::numeric_limits<qreal>::max(), std::numeric_limits<qreal>::max()};
         int decimals{2};
         QSizeF minimumValue() const { return minVal; }
         QSizeF maximumValue() const { return maxVal; }
