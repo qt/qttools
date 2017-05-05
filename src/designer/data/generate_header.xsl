@@ -145,14 +145,12 @@
         <xsl:variable name="count" select="count($set)"/>
 
         <xsl:if test="boolean($node/xs:choice)">
-            <xsl:text>    // child element data&endl;</xsl:text>
-            <xsl:text>    Kind m_kind;&endl;</xsl:text>
+            <xsl:text>&endl;    // child element data&endl;</xsl:text>
+            <xsl:text>    Kind m_kind = Unknown;&endl;</xsl:text>
         </xsl:if>
-        <xsl:if test="not($node/xs:choice)">
-            <xsl:if test="$count &gt; 0">
-                <xsl:text>    // child element data&endl;</xsl:text>
-                <xsl:text>    uint m_children;&endl;</xsl:text>
-            </xsl:if>
+        <xsl:if test="not($node/xs:choice) and $count &gt; 0">
+            <xsl:text>&endl;    // child element data&endl;</xsl:text>
+            <xsl:text>    uint m_children = 0;&endl;</xsl:text>
         </xsl:if>
 
         <xsl:for-each select="$set">
@@ -186,11 +184,32 @@
             <xsl:value-of select="$cpp-type"/>
             <xsl:text>m_</xsl:text>
             <xsl:value-of select="$camel-case-name"/>
+
+            <xsl:variable name="array" select="@maxOccurs='unbounded'"/>
+            <xsl:if test="not($array)">
+                <xsl:choose>
+                    <xsl:when test="@type = 'xs:integer' or @type = 'xs:unsignedInt' or @type = 'xs:long' or @type = 'xs:unsignedLong'">
+                        <xsl:text> = 0</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="@type = 'xs:double' or @type = 'xs:float'">
+                        <xsl:text> = 0.0</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="@type = 'xs:boolean'">
+                        <xsl:text> = false</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="@type = 'xs:string'">
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:text> = nullptr</xsl:text>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:if>
+
             <xsl:text>;&endl;</xsl:text>
         </xsl:for-each>
 
         <xsl:if test="not($isChoice) and not(@macOccurs='unbounded')">
-            <xsl:text>    enum Child {&endl;</xsl:text>
+            <xsl:text>&endl;    enum Child {&endl;</xsl:text>
             <xsl:for-each select="$node/xs:element">
             <xsl:variable name="camel-case-name">
                     <xsl:call-template name="camel-case">
@@ -287,8 +306,7 @@
     <xsl:template name="class-declaration">
         <xsl:param name="node"/>
         <xsl:variable name="name" select="concat('Dom', $node/@name)"/>
-<!--    <xsl:variable name="hasText" select="$node[@mixed='true']"/>-->
-        <xsl:variable name="hasText" select="true()"/>
+        <xsl:variable name="hasText" select="$node[@mixed='true']"/>
 
         <xsl:text>class QDESIGNER_UILIB_EXPORT </xsl:text>
         <xsl:value-of select="$name"/>
@@ -298,20 +316,18 @@
         <xsl:text>public:&endl;</xsl:text>
         <xsl:text>    </xsl:text>
         <xsl:value-of select="$name"/>
-        <xsl:text>();&endl;</xsl:text>
+        <xsl:text>() = default;&endl;</xsl:text>
         <xsl:text>    ~</xsl:text>
         <xsl:value-of select="$name"/>
         <xsl:text>();&endl;&endl;</xsl:text>
 
         <xsl:text>    void read(QXmlStreamReader &amp;reader);&endl;</xsl:text>
-        <xsl:text>    void write(QXmlStreamWriter &amp;writer, const QString &amp;tagName = QString()) const;&endl;</xsl:text>
+        <xsl:text>    void write(QXmlStreamWriter &amp;writer, const QString &amp;tagName = QString()) const;&endl;&endl;</xsl:text>
 
         <xsl:if test="$hasText">
             <xsl:text>    inline QString text() const { return m_text; }&endl;</xsl:text>
-            <xsl:text>    inline void setText(const QString &amp;s) { m_text = s; }&endl;</xsl:text>
+            <xsl:text>    inline void setText(const QString &amp;s) { m_text = s; }&endl;&endl;</xsl:text>
         </xsl:if>
-
-        <xsl:text>&endl;</xsl:text>
 
         <xsl:call-template name="attribute-accessors">
             <xsl:with-param name="node" select="$node"/>
@@ -352,10 +368,26 @@
             <xsl:value-of select="$cpp-type"/>
             <xsl:text> m_attr_</xsl:text>
             <xsl:value-of select="$camel-case-name"/>
+
+            <xsl:choose>
+                <xsl:when test="@type = 'xs:integer'">
+                    <xsl:text> = 0</xsl:text>
+                </xsl:when>
+                <xsl:when test="@type = 'xs:double' or @type = 'xs:float'">
+                    <xsl:text> = 0.0</xsl:text>
+                </xsl:when>
+                <xsl:when test="@type = 'xs:boolean'">
+                    <xsl:text> = false</xsl:text>
+                </xsl:when>
+            </xsl:choose>
+
             <xsl:text>;&endl;</xsl:text>
             <xsl:text>    bool m_has_attr_</xsl:text>
             <xsl:value-of select="$camel-case-name"/>
-            <xsl:text>;&endl;&endl;</xsl:text>
+            <xsl:text> = false;&endl;</xsl:text>
+            <xsl:if test="position()!=last()">
+                <xsl:text>&endl;</xsl:text>
+            </xsl:if>
         </xsl:for-each>
 
         <xsl:call-template name="child-elements-data">

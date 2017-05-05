@@ -11,65 +11,23 @@
 
 <!-- Implementation: constructor -->
 
-    <xsl:template name="ctor-init-attributes">
-        <xsl:param name="node"/>
-        <xsl:for-each select="$node/xs:attribute">
-            <xsl:variable name="camel-case-name">
-                <xsl:call-template name="camel-case">
-                    <xsl:with-param name="text" select="@name"/>
-                </xsl:call-template>
-            </xsl:variable>
-            <xsl:text>    m_has_attr_</xsl:text>
-            <xsl:value-of select="$camel-case-name"/>
-            <xsl:text> = false;&endl;</xsl:text>
-            <xsl:choose>
-                <xsl:when test="@type = 'xs:integer'">
-                    <xsl:text>    m_attr_</xsl:text>
-                    <xsl:value-of select="$camel-case-name"/>
-                    <xsl:text> = 0;&endl;</xsl:text>
-                </xsl:when>
-                <xsl:when test="@type = 'xs:double'">
-                    <xsl:text>    m_attr_</xsl:text>
-                    <xsl:value-of select="$camel-case-name"/>
-                    <xsl:text> = 0.0;&endl;</xsl:text>
-                </xsl:when>
-                <xsl:when test="@type = 'xs:float'">
-                    <xsl:text>    m_attr_</xsl:text>
-                    <xsl:value-of select="$camel-case-name"/>
-                    <xsl:text> = 0.0;&endl;</xsl:text>
-                </xsl:when>
-                <xsl:when test="@type = 'xs:boolean'">
-                    <xsl:text>    m_attr_</xsl:text>
-                    <xsl:value-of select="$camel-case-name"/>
-                    <xsl:text> = false;&endl;</xsl:text>
-                </xsl:when>
-            </xsl:choose>
-        </xsl:for-each>
-    </xsl:template>
-
     <xsl:template name="ctor-init-child-elements">
         <xsl:param name="node"/>
         <xsl:for-each select="$node/xs:element">
             <xsl:variable name="array" select="@maxOccurs='unbounded'"/>
             <xsl:if test="not($array)">
-                <xsl:variable name="cpp-type">
-                    <xsl:call-template name="xs-type-to-cpp-type">
-                        <xsl:with-param name="xs-type" select="@type"/>
-                        <xsl:with-param name="array" select="$array"/>
-                    </xsl:call-template>
-                </xsl:variable>
                 <xsl:variable name="camel-case-name">
                     <xsl:call-template name="camel-case">
                          <xsl:with-param name="text" select="@name"/>
                     </xsl:call-template>
                 </xsl:variable>
                 <xsl:choose>
-                    <xsl:when test="@type = 'xs:integer'">
+                    <xsl:when test="@type = 'xs:integer' or @type = 'xs:unsignedInt' or @type = 'xs:long' or @type = 'xs:unsignedLong'">
                         <xsl:text>    m_</xsl:text>
                         <xsl:value-of select="$camel-case-name"/>
                         <xsl:text> = 0;&endl;</xsl:text>
                     </xsl:when>
-                    <xsl:when test="@type = 'xs:float'">
+                    <xsl:when test="@type = 'xs:double' or @type = 'xs:float'">
                          <xsl:text>    m_</xsl:text>
                          <xsl:value-of select="$camel-case-name"/>
                          <xsl:text> = 0.0;&endl;</xsl:text>
@@ -79,61 +37,16 @@
                         <xsl:value-of select="$camel-case-name"/>
                         <xsl:text> = false;&endl;</xsl:text>
                     </xsl:when>
-                    <xsl:when test="@type = 'xs:string'"></xsl:when>
+                    <xsl:when test="@type = 'xs:string'">
+                    </xsl:when>
                     <xsl:otherwise>
                         <xsl:text>    m_</xsl:text>
                         <xsl:value-of select="$camel-case-name"/>
-                        <xsl:text> = 0;&endl;</xsl:text>
+                        <xsl:text> = nullptr;&endl;</xsl:text>
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:if>
         </xsl:for-each>
-    </xsl:template>
-
-    <xsl:template name="ctor-init-members">
-        <xsl:param name="node"/>
-
-        <xsl:variable name="set" select="$node//xs:sequence | $node//xs:choice | $node//xs:all"/>
-        <xsl:variable name="count" select="count($set)"/>
-
-        <xsl:if test="boolean($node/xs:choice)">
-            <xsl:text>    m_kind = Unknown;&endl;&endl;</xsl:text>
-        </xsl:if>
-
-        <xsl:if test="not($node/xs:choice)">
-            <xsl:if test="$count &gt; 0">
-                <xsl:text>    m_children = 0;&endl;</xsl:text>
-            </xsl:if>
-        </xsl:if>
-
-        <xsl:call-template name="ctor-init-attributes">
-            <xsl:with-param name="node" select="."/>
-        </xsl:call-template>
-
-        <xsl:if test="$node[@mixed='true']">
-            <xsl:text>    m_text.clear();&endl;</xsl:text>
-        </xsl:if>
-
-        <xsl:for-each select="$set">
-            <xsl:call-template name="ctor-init-child-elements">
-                <xsl:with-param name="node" select="."/>
-            </xsl:call-template>
-        </xsl:for-each>
-    </xsl:template>
-
-    <xsl:template name="ctor-impl">
-        <xsl:param name="node"/>
-        <xsl:variable name="name" select="concat('Dom', $node/@name)"/>
-
-        <xsl:value-of select="$name"/>
-        <xsl:text>::</xsl:text>
-        <xsl:value-of select="$name"/>
-        <xsl:text>()&endl;</xsl:text>
-        <xsl:text>{&endl;</xsl:text>
-        <xsl:call-template name="ctor-init-members">
-            <xsl:with-param name="node" select="$node"/>
-        </xsl:call-template>
-        <xsl:text>}&endl;&endl;</xsl:text>
     </xsl:template>
 
 <!-- Implementation: destructor -->
@@ -432,10 +345,15 @@
         <xsl:text>            break;&endl;</xsl:text>
         <xsl:text>        case QXmlStreamReader::EndElement :&endl;</xsl:text>
         <xsl:text>            return;&endl;</xsl:text>
-        <xsl:text>        case QXmlStreamReader::Characters :&endl;</xsl:text>
-        <xsl:text>            if (!reader.isWhitespace())&endl;</xsl:text>
-        <xsl:text>                m_text.append(reader.text().toString());&endl;</xsl:text>
-        <xsl:text>            break;&endl;</xsl:text>
+
+        <xsl:variable name="hasText" select="$node[@mixed='true']"/>
+        <xsl:if test="$hasText">
+            <xsl:text>        case QXmlStreamReader::Characters :&endl;</xsl:text>
+            <xsl:text>            if (!reader.isWhitespace())&endl;</xsl:text>
+            <xsl:text>                m_text.append(reader.text().toString());&endl;</xsl:text>
+            <xsl:text>            break;&endl;</xsl:text>
+        </xsl:if>
+
         <xsl:text>        default :&endl;</xsl:text>
         <xsl:text>            break;&endl;</xsl:text>
         <xsl:text>        }&endl;</xsl:text>
@@ -695,8 +613,11 @@
             </xsl:call-template>
         </xsl:for-each>
 
-        <xsl:text>    if (!m_text.isEmpty())&endl;</xsl:text>
-        <xsl:text>        writer.writeCharacters(m_text);&endl;&endl;</xsl:text>
+        <xsl:variable name="hasText" select="$node[@mixed='true']"/>
+        <xsl:if test="$hasText">
+            <xsl:text>    if (!m_text.isEmpty())&endl;</xsl:text>
+            <xsl:text>        writer.writeCharacters(m_text);&endl;&endl;</xsl:text>
+        </xsl:if>
 
         <xsl:text>    writer.writeEndElement();&endl;</xsl:text>
         <xsl:text>}&endl;&endl;</xsl:text>
@@ -865,15 +786,11 @@
     <xsl:template name="class-implementation">
         <xsl:param name="node"/>
 
-        <xsl:call-template name="clear-impl">
-            <xsl:with-param name="node" select="$node"/>
-        </xsl:call-template>
-
-        <xsl:call-template name="ctor-impl">
-            <xsl:with-param name="node" select="$node"/>
-        </xsl:call-template>
-
         <xsl:call-template name="dtor-impl">
+            <xsl:with-param name="node" select="$node"/>
+        </xsl:call-template>
+
+        <xsl:call-template name="clear-impl">
             <xsl:with-param name="node" select="$node"/>
         </xsl:call-template>
 

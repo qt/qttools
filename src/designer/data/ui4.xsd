@@ -15,7 +15,6 @@
                         <xs:element name="pixmapfunction" type="xs:string" minOccurs="0" />
                         <xs:element name="customwidgets" type="CustomWidgets" minOccurs="0" />
                         <xs:element name="tabstops" type="TabStops" minOccurs="0" />
-                        <xs:element name="images" type="Images" minOccurs="0" />
                         <xs:element name="includes" type="Includes" minOccurs="0" />
                         <xs:element name="resources" type="Resources" minOccurs="0" />
                         <xs:element name="connections" type="Connections" minOccurs="0" />
@@ -99,26 +98,6 @@
         </xs:complexType>
 <!--  button groups end -->
 
-<!-- images begin -->
-        <xs:complexType name="Images">
-            <xs:sequence>
-                        <xs:element name="image" type="Image" maxOccurs="unbounded" />
-        </xs:sequence>
-        </xs:complexType>
-
-        <xs:complexType name="Image">
-            <xs:sequence>
-                        <xs:element name="data" type="ImageData" />
-        </xs:sequence>
-                <xs:attribute name="name" type="xs:string" use="required" />
-        </xs:complexType>
-
-        <xs:complexType name="ImageData" mixed="true" >
-                <xs:attribute name="format" type="xs:string" use="required" />
-                <xs:attribute name="length" type="xs:integer" use="required" />
-        </xs:complexType>
-<!-- images end -->
-
 <!-- custom widget support begin -->
         <xs:complexType name="CustomWidgets">
             <xs:sequence>
@@ -138,29 +117,9 @@
                         <xs:element name="sizehint" type="Size" minOccurs="0" />
                         <xs:element name="addpagemethod" type="xs:string" minOccurs="0" />
                         <xs:element name="container" type="xs:integer" minOccurs="0" />
-                        <xs:element name="sizepolicy" type="SizePolicyData" minOccurs="0" />
                         <xs:element name="pixmap" type="xs:string" minOccurs="0" />
-                        <xs:element name="script" type="Script" minOccurs="0" />
-                        <xs:element name="properties" type="Properties" minOccurs="0" />
                         <xs:element name="slots" type="Slots" minOccurs="0" />
                         <xs:element name="propertyspecifications" type="PropertySpecifications" minOccurs="0" />
-                </xs:all>
-        </xs:complexType>
-
-        <xs:complexType name="Properties">
-            <xs:sequence>
-                        <xs:element name="property" type="PropertyData" maxOccurs="unbounded" />
-                </xs:sequence>
-        </xs:complexType>
-
-        <xs:complexType name="PropertyData">
-                <xs:attribute name="type" type="xs:string" use="required" />
-        </xs:complexType>
-
-        <xs:complexType name="SizePolicyData">
-                <xs:all>
-                        <xs:element name="hordata" type="xs:integer" />
-                        <xs:element name="verdata" type="xs:integer" />
                 </xs:all>
         </xs:complexType>
 
@@ -239,8 +198,6 @@
                 <xs:sequence>
                         <xs:element name="class" type="xs:string" minOccurs="0" maxOccurs="unbounded" /> <!-- unbounded kept for compatibility reasons -->
                         <xs:element name="property" type="Property" minOccurs="0" maxOccurs="unbounded" />
-                        <xs:element name="script" type="Script"  minOccurs="0" maxOccurs="unbounded" /> <!-- unbounded kept for compatibility reasons -->
-                        <xs:element name="widgetdata" type="WidgetData"  minOccurs="0" maxOccurs="unbounded" /> <!-- unbounded kept for compatibility reasons -->
                         <xs:element name="attribute" type="Property" minOccurs="0" maxOccurs="unbounded" />
 <!-- item view begin -->
                         <xs:element name="row" type="Row" minOccurs="0" maxOccurs="unbounded" />
@@ -553,17 +510,6 @@
             <xs:attribute name="type" type="xs:string" use="required" />
         </xs:complexType>
 
-        <xs:complexType name="Script">
-            <xs:attribute name="source"   type="xs:string" use="required" />
-            <xs:attribute name="language" type="xs:string" use="required" />
-        </xs:complexType>
-
-        <xs:complexType name="WidgetData">
-            <xs:sequence>
-                <xs:element name="property" type="Property" maxOccurs="unbounded" />
-        </xs:sequence>
-        </xs:complexType>
-
         <xs:complexType name="DesignerData">
             <xs:sequence>
                 <xs:element name="property" type="Property" maxOccurs="unbounded" />
@@ -577,21 +523,21 @@
             </xs:sequence>
         </xs:complexType>
 
-         <xs:complexType name="PropertySpecifications">
+        <xs:complexType name="PropertySpecifications">
             <xs:sequence maxOccurs="unbounded">
-                <xs:element name="tooltip" type="PropertyToolTip" minOccurs="0" maxOccurs="unbounded" />
-                <xs:element name="stringpropertyspecification" type="StringPropertySpecification" minOccurs="0" maxOccurs="unbounded" />
+               <xs:element name="tooltip" type="PropertyToolTip" minOccurs="0" maxOccurs="unbounded" />
+               <xs:element name="stringpropertyspecification" type="StringPropertySpecification" minOccurs="0" maxOccurs="unbounded" />
             </xs:sequence>
         </xs:complexType>
 
-         <xs:complexType name="PropertyToolTip">
-                <xs:attribute name="name" type="xs:string" use="required" />
+        <xs:complexType name="PropertyToolTip">
+            <xs:attribute name="name" type="xs:string" use="required" />
         </xs:complexType>
 
-         <xs:complexType name="StringPropertySpecification">
-                <xs:attribute name="name" type="xs:string" use="required" />
-                <xs:attribute name="type" type="xs:string" use="required" />
-                <xs:attribute name="notr" type="xs:string"/>
+        <xs:complexType name="StringPropertySpecification">
+            <xs:attribute name="name" type="xs:string" use="required" />
+            <xs:attribute name="type" type="xs:string" use="required" />
+            <xs:attribute name="notr" type="xs:string"/>
         </xs:complexType>
 
 </xs:schema>

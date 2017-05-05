@@ -47,7 +47,6 @@
 
 QT_BEGIN_NAMESPACE
 
-class DomScript;
 class DomCustomWidgets;
 class DomCustomWidget;
 class DomSlots;
@@ -88,11 +87,6 @@ public:
                                        const DomCustomWidgets *dom_custom_widgets);
 
 protected:
-    enum ScriptSource { ScriptDesigner, ScriptExtension, ScriptCustomWidgetPlugin };
-    static DomScript*createScript(const QString &script, ScriptSource source);
-    typedef QList<DomScript*> DomScripts;
-    static void addScript(const QString &script, ScriptSource source, DomScripts &domScripts);
-
     static bool addFakeMethods(const DomSlots *domSlots, QStringList &fakeSlots, QStringList &fakeSignals);
 
 private:

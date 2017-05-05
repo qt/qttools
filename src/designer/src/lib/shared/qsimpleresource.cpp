@@ -78,35 +78,6 @@ DomBrush *QSimpleResource::saveBrush(const QBrush &brush)
     return QAbstractFormBuilder::saveBrush(brush);
 }
 
-DomScript *QSimpleResource::createScript(const QString &script, ScriptSource source)
-{
-    if (script.isEmpty())
-        return 0;
-    DomScript *domScript = new DomScript();
-    switch (source) {
-    case ScriptExtension:
-        domScript->setAttributeSource(QStringLiteral("extension"));
-        break;
-    case ScriptDesigner:
-        domScript->setAttributeSource(QStringLiteral("designer"));
-        break;
-    case ScriptCustomWidgetPlugin:
-        domScript->setAttributeSource(QStringLiteral("customwidgetplugin"));
-        break;
-    }
-    domScript->setAttributeLanguage(QStringLiteral("Qt Script"));
-    domScript->setText(script);
-    return domScript;
-}
-
-// Add a script to a list of DomScripts unless empty
-void QSimpleResource::addScript(const QString &script, ScriptSource source, DomScripts &domScripts)
-{
-    if (DomScript *domScript = createScript(script, source)) {
-        domScripts += domScript;
-    }
-}
-
 void QSimpleResource::addExtensionDataToDOM(QAbstractFormBuilder * /* afb */,
                                             QDesignerFormEditorInterface *core,
                                             DomWidget *ui_widget, QWidget *widget)
