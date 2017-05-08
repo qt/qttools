@@ -201,6 +201,63 @@ const QSet<QString>& CppCodeParser::topicCommands()
 }
 
 /*!
+
+ */
+Node* CppCodeParser::processFnCommand(const ArgLocPair& arg, const Doc& doc)
+{
+    ExtraFuncData extra;
+    QStringList parentPath;
+    FunctionNode *func = 0;
+    FunctionNode *clone = 0;
+
+    if (!makeFunctionNode(arg.first, &parentPath, &clone, extra) &&
+        !makeFunctionNode("void " + arg.first, &parentPath, &clone, extra)) {
+        doc.startLocation().warning(tr("Invalid syntax in '\\%1'").arg(COMMAND_FN));
+    }
+    else {
+        func = qdb_->findFunctionNode(parentPath, clone);
+        if (func == 0) {
+            if (parentPath.isEmpty() && !lastPath_.isEmpty())
+                func = qdb_->findFunctionNode(lastPath_, clone);
+        }
+        /*
+          If the node was not found, then search for it in the
+          open C++ namespaces. We don't expect this search to
+          be necessary often. Nor do we expect it to succeed
+          very often.
+        */
+        if (func == 0)
+            func = qdb_->findNodeInOpenNamespace(parentPath, clone);
+        if (func) {
+            lastPath_ = parentPath;
+        } else if (isWorthWarningAbout(doc)) {
+            if (clone && clone->isSpecialMemberFunction()) {
+                ClassNode* cn = qdb_->findClassNode(parentPath);
+                if (cn) {
+                    cn->addChild(clone);
+                    clone->setImplicit(true);
+                    return clone;
+                }
+            }
+            doc.location().warning(tr("Cannot find '%1' in '\\%2' %3")
+                                   .arg(clone->name() + "(...)")
+                                   .arg(COMMAND_FN)
+                                   .arg(arg.first),
+                                   tr("I cannot find any function of that name with the "
+                                      "specified signature. Make sure that the signature "
+                                      "is identical to the declaration, including 'const' "
+                                      "qualifiers."));
+        }
+        if (func) {
+            func->borrowParameterNames(clone);
+            func->setParentPath(clone->parentPath());
+        }
+        delete clone;
+    }
+    return func;
+}
+
+/*!
   Process the topic \a command found in the \a doc with argument \a arg.
  */
 Node* CppCodeParser::processTopicCommand(const Doc& doc,
@@ -209,57 +266,7 @@ Node* CppCodeParser::processTopicCommand(const Doc& doc,
 {
     ExtraFuncData extra;
     if (command == COMMAND_FN) {
-        QStringList parentPath;
-        FunctionNode *func = 0;
-        FunctionNode *clone = 0;
-
-        if (!makeFunctionNode(arg.first, &parentPath, &clone, extra) &&
-            !makeFunctionNode("void " + arg.first, &parentPath, &clone, extra)) {
-            doc.startLocation().warning(tr("Invalid syntax in '\\%1'").arg(COMMAND_FN));
-        }
-        else {
-            func = qdb_->findFunctionNode(parentPath, clone);
-            if (func == 0) {
-                if (parentPath.isEmpty() && !lastPath_.isEmpty())
-                    func = qdb_->findFunctionNode(lastPath_, clone);
-            }
-
-            /*
-              If the node was not found, then search for it in the
-              open C++ namespaces. We don't expect this search to
-              be necessary often. Nor do we expect it to succeed
-              very often.
-            */
-            if (func == 0)
-                func = qdb_->findNodeInOpenNamespace(parentPath, clone);
-
-            if (func) {
-                lastPath_ = parentPath;
-            } else if (isWorthWarningAbout(doc)) {
-                if (clone && clone->isSpecialMemberFunction()) {
-                    ClassNode* cn = qdb_->findClassNode(parentPath);
-                    if (cn) {
-                        cn->addChild(clone);
-                        clone->setImplicit(true);
-                        return clone;
-                    }
-                }
-                doc.location().warning(tr("Cannot find '%1' in '\\%2' %3")
-                                       .arg(clone->name() + "(...)")
-                                       .arg(COMMAND_FN)
-                                       .arg(arg.first),
-                                       tr("I cannot find any function of that name with the "
-                                          "specified signature. Make sure that the signature "
-                                          "is identical to the declaration, including 'const' "
-                                          "qualifiers."));
-            }
-            if (func) {
-                func->borrowParameterNames(clone);
-                func->setParentPath(clone->parentPath());
-            }
-            delete clone;
-        }
-        return func;
+        return processFnCommand(arg, doc);
     }
     else if (command == COMMAND_MACRO) {
         QStringList parentPath;

@@ -303,7 +303,7 @@ void Generator::beginSubPage(const Aggregate* node, const QString& fileName)
 
     QFile* outFile = new QFile(redirectDocumentationToDevNull_ ? QStringLiteral("/dev/null") : path);
     if (!redirectDocumentationToDevNull_ && outFile->exists())
-        node->location().error(tr("HTML file already exists; overwriting %1").arg(outFile->fileName()));
+        node->location().error(tr("Output file already exists; overwriting %1").arg(outFile->fileName()));
     if (!outFile->open(QFile::WriteOnly))
         node->location().fatal(tr("Cannot open output file '%1'").arg(outFile->fileName()));
     Generator::debug("Writing: " + path);

@@ -590,7 +590,7 @@ QList<Section> CppCodeMarker::sections(const Aggregate *inner,
                                 insert(publicFunctions, *c, style, status);
                             }
                         }
-                        else {
+                        else if ((*c)->type() != Node::SharedComment) {
                             insert(publicTypes, *c, style, status);
                         }
                         break;
@@ -702,8 +702,15 @@ QList<Section> CppCodeMarker::sections(const Aggregate *inner,
                 }
                 else if ((*c)->type() == Node::Function) {
                     FunctionNode *function = static_cast<FunctionNode *>(*c);
-                    if (!function->hasAssociatedProperties() || !function->doc().isEmpty())
-                        insert(memberFunctions, function, style, status);
+                    if (!function->isInCollective()) {
+                        if (!function->hasAssociatedProperties() || !function->doc().isEmpty())
+                            insert(memberFunctions, function, style, status);
+                    }
+                }
+                else if ((*c)->type() == Node::SharedComment) {
+                    SharedCommentNode *scn = static_cast<SharedCommentNode *>(*c);
+                    if (!scn->doc().isEmpty())
+                        insert(memberFunctions, scn, style, status);
                 }
                 ++c;
             }

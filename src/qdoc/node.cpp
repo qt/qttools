@@ -457,6 +457,8 @@ QString Node::nodeTypeString(unsigned char t)
         return "QML signal handler";
     case QmlMethod:
         return "QML method";
+    case SharedComment:
+        return "shared comment";
     default:
         break;
     }
@@ -1533,6 +1535,7 @@ LeafNode::LeafNode(NodeType type, Aggregate *parent, const QString& name)
     case QmlSignalHandler:
     case QmlMethod:
     case QmlBasicType:
+    case SharedComment:
         setPageType(ApiPage);
         break;
     default:
@@ -1560,6 +1563,7 @@ LeafNode::LeafNode(Aggregate* parent, NodeType type, const QString& name)
     case QmlSignal:
     case QmlSignalHandler:
     case QmlMethod:
+    case SharedComment:
         setPageType(ApiPage);
         break;
     default:
@@ -2030,7 +2034,8 @@ FunctionNode::FunctionNode(Aggregate *parent, const QString& name)
       isImplicit_(false),
       isRef_(false),
       isRefRef_(false),
-      reimplementedFrom_(0)
+      reimplementedFrom_(0),
+      collective_(0)
 {
     setGenus(Node::CPP);
 }
@@ -2060,7 +2065,8 @@ FunctionNode::FunctionNode(NodeType type, Aggregate *parent, const QString& name
       isImplicit_(false),
       isRef_(false),
       isRefRef_(false),
-      reimplementedFrom_(0)
+      reimplementedFrom_(0),
+      collective_(0)
 {
     setGenus(Node::QML);
     if (type == QmlMethod || type == QmlSignal) {
@@ -2225,16 +2231,6 @@ void FunctionNode::borrowParameterNames(const FunctionNode *source)
         ++s;
         ++t;
     }
-}
-
-/*!
-  If this function is a reimplementation, \a from points
-  to the FunctionNode of the function being reimplemented.
- */
-void FunctionNode::setReimplementedFrom(FunctionNode *f)
-{
-    reimplementedFrom_ = f;
-    f->reimplementedBy_.append(this);
 }
 
 /*!

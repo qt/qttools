@@ -52,6 +52,7 @@ class FunctionNode;
 class PropertyNode;
 class CollectionNode;
 class QmlPropertyNode;
+class SharedCommentNode;
 
 typedef QList<Node*> NodeList;
 typedef QList<PropertyNode*> PropNodeList;
@@ -87,6 +88,7 @@ public:
         QmlSignalHandler,
         QmlMethod,
         QmlBasicType,
+        SharedComment,
         LastType
     };
 
@@ -217,6 +219,7 @@ public:
     virtual bool isQtQuickNode() const { return false; }
     virtual bool isAbstract() const { return false; }
     virtual bool isProperty() const { return false; }
+    virtual bool isVariable() const { return false; }
     virtual bool isQmlProperty() const { return false; }
     virtual bool isJsProperty() const { return false; }
     virtual bool isQmlPropertyGroup() const { return false; }
@@ -234,6 +237,8 @@ public:
     virtual bool isDefault() const { return false; }
     virtual bool isExternalPage() const { return false; }
     virtual bool isImplicit() const { return false; }
+    virtual bool isInCollective() const { return false; }
+    virtual bool isSharedCommentNode() const { return false; }
     virtual void addMember(Node* ) { }
     virtual bool hasMembers() const { return false; }
     virtual bool hasNamespaces() const { return false; }
@@ -259,6 +264,7 @@ public:
     virtual Tree* tree() const;
     virtual void findChildren(const QString& , NodeList& nodes) const { nodes.clear(); }
     virtual void setNoAutoList(bool ) { }
+    virtual void setCollectiveNode(SharedCommentNode* ) { }
     bool isIndexNode() const { return indexNodeFlag_; }
     NodeType type() const { return (NodeType) nodeType_; }
     virtual DocSubtype docSubtype() const { return NoSubtype; }
@@ -871,6 +877,21 @@ public:
     QString defaultValue_;
 };
 
+class SharedCommentNode : public LeafNode
+{
+ public:
+    SharedCommentNode(Aggregate* parent, int count)
+        : LeafNode(Node::SharedComment, parent, QString()) { collective_.reserve(count); }
+    virtual ~SharedCommentNode() { collective_.clear(); }
+
+    virtual bool isSharedCommentNode() const Q_DECL_OVERRIDE { return true; }
+    void append(Node* n) { collective_.append(n); }
+    const QVector<Node*>& collective() const { return collective_; }
+
+ private:
+    QVector<Node*> collective_;
+};
+
 //friend class QTypeInfo<Parameter>;
 //Q_DECLARE_TYPEINFO(Parameter, Q_MOVABLE_TYPE);
 
@@ -914,7 +935,7 @@ public:
     void addParameter(const Parameter& parameter);
     inline void setParameters(const QVector<Parameter>& parameters);
     void borrowParameterNames(const FunctionNode* source);
-    void setReimplementedFrom(FunctionNode* from);
+    void setReimplementedFrom(FunctionNode* from) { reimplementedFrom_ = from; }
 
     const QString& returnType() const { return returnType_; }
     QString metaness() const;
@@ -965,7 +986,6 @@ public:
     QStringList parameterNames() const;
     QString rawParameters(bool names = false, bool values = false) const;
     const FunctionNode* reimplementedFrom() const { return reimplementedFrom_; }
-    const QList<FunctionNode*> &reimplementedBy() const { return reimplementedBy_; }
     const PropNodeList& associatedProperties() const { return associatedProperties_; }
     const QStringList& parentPath() const { return parentPath_; }
     bool hasAssociatedProperties() const { return !associatedProperties_.isEmpty(); }
@@ -1014,6 +1034,10 @@ public:
     void setRefRef(bool b) { isRefRef_ = b; }
     bool isRefRef() const { return isRefRef_; }
 
+    bool isInCollective() const Q_DECL_OVERRIDE { return (collective_ != 0); }
+    const SharedCommentNode* collective() const { return collective_; }
+    void setCollectiveNode(SharedCommentNode* t) Q_DECL_OVERRIDE { collective_ = t; }
+
 private:
     void addAssociatedProperty(PropertyNode* property);
 
@@ -1041,7 +1065,7 @@ private:
     QVector<Parameter> parameters_;
     const FunctionNode* reimplementedFrom_;
     PropNodeList        associatedProperties_;
-    QList<FunctionNode*> reimplementedBy_;
+    SharedCommentNode*  collective_;
 };
 
 class PropertyNode : public LeafNode
@@ -1150,6 +1174,7 @@ public:
     const QString &rightType() const { return rightType_; }
     QString dataType() const { return leftType_ + rightType_; }
     bool isStatic() const { return static_; }
+    virtual bool isVariable() const { return true; }
 
 private:
     QString leftType_;

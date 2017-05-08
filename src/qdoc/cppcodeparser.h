@@ -72,6 +72,7 @@ public:
 protected:
     const QSet<QString>& topicCommands();
     const QSet<QString>& otherMetaCommands();
+    Node* processFnCommand(const ArgLocPair& arg, const Doc& doc);
     virtual Node* processTopicCommand(const Doc& doc,
                                       const QString& command,
                                       const ArgLocPair& arg);

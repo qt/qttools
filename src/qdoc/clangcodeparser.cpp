@@ -1207,12 +1207,29 @@ void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QStrin
                 doc.location().warning(tr("Multiple topic commands found in comment: %1").arg(topicList));
             }
             ArgList::ConstIterator a = args.constBegin();
+            Node *node = 0;
+            SharedCommentNode* scn = 0;
+            int count = args.size();
             while (a != args.constEnd()) {
                 Doc nodeDoc = doc;
-                Node *node = processTopicCommand(nodeDoc, topic, *a);
-                if (node != 0) {
-                    nodes.append(node);
-                    docs.append(nodeDoc);
+                if ((count > 1) && (topic == COMMAND_FN)) {
+                    node = processFnCommand(*a, doc);
+                    if (node != 0) {
+                        if (scn == 0) {
+                            scn = new SharedCommentNode(node->parent(), count);
+                            nodes.append(scn);
+                            docs.append(nodeDoc);
+                        }
+                        scn->append(node);
+                        node->setCollectiveNode(scn);
+                    }
+                }
+                else {
+                    node = processTopicCommand(nodeDoc, topic, *a);
+                    if (node != 0) {
+                        nodes.append(node);
+                        docs.append(nodeDoc);
+                    }
                 }
                 ++a;
             }
