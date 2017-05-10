@@ -37,6 +37,7 @@
 #ifndef QT_NO_OPENGL
 #  include <QtGui/QOpenGLContext>
 #  include <QtGui/QOpenGLFunctions>
+#  include <QtGui/QOpenGLVersionProfile>
 #endif // QT_NO_OPENGL
 #include <QtGui/QWindow>
 #include <QtGui/QTouchDevice>
@@ -171,7 +172,30 @@ void dumpGlInfo(QTextStream &str, bool listExtensions)
             << "\nVersion: " << reinterpret_cast<const char *>(functions.glGetString(GL_VERSION))
             << "\nShading language: " << reinterpret_cast<const char *>(functions.glGetString(GL_SHADING_LANGUAGE_VERSION))
             <<  "\nFormat: " << context.format();
-
+#  ifndef QT_OPENGL_ES_2
+        GLint majorVersion;
+        functions.glGetIntegerv(GL_MAJOR_VERSION, &majorVersion);
+        GLint minorVersion;
+        functions.glGetIntegerv(GL_MINOR_VERSION, &minorVersion);
+        const QByteArray openGlVersionFunctionsName = "QOpenGLFunctions_"
+            + QByteArray::number(majorVersion) + '_' + QByteArray::number(minorVersion);
+        str << "\nProfile: None (" << openGlVersionFunctionsName << ')';
+        if (majorVersion > 3 || (majorVersion == 3 && minorVersion >= 1)) {
+            QOpenGLVersionProfile profile;
+            profile.setVersion(majorVersion, minorVersion);
+            profile.setProfile(QSurfaceFormat::CoreProfile);
+            if (QAbstractOpenGLFunctions *f = context.versionFunctions(profile)) {
+                if (f->initializeOpenGLFunctions())
+                    str << ", Core (" << openGlVersionFunctionsName << "_Core)";
+            }
+            profile.setProfile(QSurfaceFormat::CompatibilityProfile);
+            if (QAbstractOpenGLFunctions *f = context.versionFunctions(profile)) {
+                if (f->initializeOpenGLFunctions())
+                    str << ", Compatibility (" << openGlVersionFunctionsName << "_Compatibility)";
+            }
+        }
+        str << '\n';
+#  endif // !QT_OPENGL_ES_2
         if (listExtensions) {
             QList<QByteArray> extensionList = context.extensions().toList();
             std::sort(extensionList.begin(), extensionList.end());
