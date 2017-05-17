@@ -61,7 +61,7 @@ QString HelpBrowserSupport::msgError404()
 
 QString HelpBrowserSupport::msgPageNotFound()
 {
-    return QCoreApplication::translate("HelpViewer", "The page could not be found!");
+    return QCoreApplication::translate("HelpViewer", "The page could not be found");
 }
 
 QString HelpBrowserSupport::msgAllDocumentationSets()

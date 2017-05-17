@@ -183,7 +183,7 @@ bool QHelpGenerator::generate(QHelpDataInterface *helpData,
     insertMetaData(helpData->metaData());
 
     if (!registerVirtualFolder(helpData->virtualFolder(), helpData->namespaceName())) {
-        d->error = tr("Cannot register namespace %1.").arg(helpData->namespaceName());
+        d->error = tr("Cannot register namespace \"%1\".").arg(helpData->namespaceName());
         cleanupDB();
         return false;
     }
@@ -483,13 +483,13 @@ bool QHelpGenerator::insertFiles(const QStringList &files, const QString &rootPa
 
         QFile fi(rootPath + QDir::separator() + fileName);
         if (!fi.exists()) {
-            emit warning(tr("The file %1 does not exist! Skipping it.")
+            emit warning(tr("The file %1 does not exist, skipping it...")
                 .arg(QDir::cleanPath(rootPath + QDir::separator() + fileName)));
             continue;
         }
 
         if (!fi.open(QIODevice::ReadOnly)) {
-            emit warning(tr("Cannot open file %1! Skipping it.")
+            emit warning(tr("Cannot open file %1, skipping it...")
                 .arg(QDir::cleanPath(rootPath + QDir::separator() + fileName)));
             continue;
         }
@@ -797,7 +797,7 @@ bool QHelpGenerator::checkLinks(const QHelpDataInterface &helpData)
             const QFileInfo fileInfo(helpData.rootPath() + QDir::separator() + file);
             const QString &canonicalFileName = fileInfo.canonicalFilePath();
             if (!fileInfo.exists())
-                emit warning(tr("File '%1' does not exist.").arg(file));
+                emit warning(tr("File \"%1\" does not exist.").arg(file));
             else
                 files.insert(canonicalFileName);
         }
@@ -816,7 +816,7 @@ bool QHelpGenerator::checkLinks(const QHelpDataInterface &helpData)
             continue;
         QFile htmlFile(fileName);
         if (!htmlFile.open(QIODevice::ReadOnly)) {
-            emit warning(tr("File '%1' cannot be opened.").arg(fileName));
+            emit warning(tr("File \"%1\" cannot be opened.").arg(fileName));
             continue;
         }
         const QRegExp linkPattern(QLatin1String("<(?:a href|img src)=\"?([^#\">]+)[#\">]"));
@@ -835,7 +835,7 @@ bool QHelpGenerator::checkLinks(const QHelpDataInterface &helpData)
                 QFileInfo(curDir + QDir::separator() + linkedFileName).canonicalFilePath();
             if (!files.contains(canonicalLinkedFileName)
                 && !invalidLinks.contains(canonicalLinkedFileName)) {
-                emit warning(tr("File '%1' contains an invalid link to file '%2'").
+                emit warning(tr("File \"%1\" contains an invalid link to file \"%2\"").
                          arg(fileName).arg(linkedFileName));
                 allLinksOk = false;
                 invalidLinks.append(canonicalLinkedFileName);
