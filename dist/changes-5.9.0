@@ -20,3 +20,15 @@ Linguist
 
  - [QTBUG-16368] Added capability of checking that the whitespace
    surrounding the translations' text matches that of the source strings.
+
+Assistant
+---------
+
+ - Removed the clucene dependency, used FTS5 from sqlite instead.
+ - Search results show now the doc excerpt instead of the explicit link.
+ - Made search results more reliable (e.g.: charset, "UTF-8").
+
+QtHelp
+-----------
+
+ - Moved the linksForKeyword() method from QHelpIndexModel into QHelpEngineCore.
