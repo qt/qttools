@@ -542,7 +542,7 @@ bool QDesignerMenuBar::eventFilter(QObject *object, QEvent *event)
         case QEvent::MouseButtonRelease:
         case QEvent::MouseButtonDblClick:
             dispatch = (object != m_editor);
-            // no break
+            Q_FALLTHROUGH(); // no break
 
         case QEvent::Enter:
         case QEvent::Leave:

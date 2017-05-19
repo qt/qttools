@@ -655,12 +655,12 @@ bool QDesignerMenu::eventFilter(QObject *object, QEvent *event)
                 QApplication::activePopupWidget()->close();
             }
 
-        // fall through
+            Q_FALLTHROUGH(); // fall through
         case QEvent::KeyPress:
         case QEvent::KeyRelease:
         case QEvent::MouseMove:
             dispatch = (object != m_editor);
-            // no break
+            Q_FALLTHROUGH(); // no break
 
         case QEvent::Enter:
         case QEvent::Leave:
