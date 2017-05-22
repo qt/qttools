@@ -1332,19 +1332,19 @@ static DeployResult deploy(const Options &options,
         if (isDebug)
             libGlesName += QLatin1Char('d');
         libGlesName += QLatin1String(windowsSharedLibrarySuffix);
-        QString libQtAngleName = QStringLiteral("QtANGLE");
+        QString libCombinedQtAngleName = QStringLiteral("QtANGLE");
         if (isDebug)
-            libQtAngleName += QLatin1Char('d');
-        libQtAngleName += QLatin1String(windowsSharedLibrarySuffix);
+            libCombinedQtAngleName += QLatin1Char('d');
+        libCombinedQtAngleName += QLatin1String(windowsSharedLibrarySuffix);
         const QStringList guiLibraries = findDependentLibraries(qtGuiLibrary, options.platform, errorMessage);
         const bool dependsOnAngle = !guiLibraries.filter(libGlesName, Qt::CaseInsensitive).isEmpty();
-        const bool dependsOnNewAngle = !guiLibraries.filter(libQtAngleName, Qt::CaseInsensitive).isEmpty();
+        const bool dependsOnCombinedAngle = !guiLibraries.filter(libCombinedQtAngleName, Qt::CaseInsensitive).isEmpty();
         const bool dependsOnOpenGl = !guiLibraries.filter(QStringLiteral("opengl32"), Qt::CaseInsensitive).isEmpty();
         if (options.angleDetection != Options::AngleDetectionForceOff
-            && (dependsOnAngle || dependsOnNewAngle || !dependsOnOpenGl || options.angleDetection == Options::AngleDetectionForceOn)) {
-            if (dependsOnNewAngle) {
-                const QString libQtAngleFullPath = qtBinDir + slash + libQtAngleName;
-                deployedQtLibraries.append(libQtAngleFullPath);
+            && (dependsOnAngle || dependsOnCombinedAngle || !dependsOnOpenGl || options.angleDetection == Options::AngleDetectionForceOn)) {
+            const QString combinedAngleFullPath = qtBinDir + slash + libCombinedQtAngleName;
+            if (QFileInfo(combinedAngleFullPath).exists()) {
+                deployedQtLibraries.append(combinedAngleFullPath);
             } else {
                 const QString libGlesFullPath = qtBinDir + slash + libGlesName;
                 deployedQtLibraries.append(libGlesFullPath);
