@@ -1052,6 +1052,13 @@ void deployPlugins(const ApplicationBundleInfo &appBundleInfo, const QString &pl
         }
     }
 
+    QStringList iconEngines = QDir(pluginSourcePath + QStringLiteral("/iconengines")).entryList(QStringList() << QStringLiteral("*.dylib"));
+    foreach (const QString &plugin, iconEngines) {
+        if (!plugin.endsWith(QStringLiteral("_debug.dylib"))) {
+            pluginList.append(QStringLiteral("iconengines/") + plugin);
+        }
+    }
+
     // Sql plugins if QtSql.framework is in use
     if (deploymentInfo.deployedFrameworks.contains(QStringLiteral("QtSql") + libInfixWithFramework)) {
         QStringList sqlPlugins = QDir(pluginSourcePath +  QStringLiteral("/sqldrivers")).entryList(QStringList() << QStringLiteral("*.dylib"));
