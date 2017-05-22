@@ -728,15 +728,9 @@ static QString pdbFileName(QString libraryFileName)
     libraryFileName.replace(lastDot, libraryFileName.size() - lastDot, QLatin1String("pdb"));
     return libraryFileName;
 }
-
 static inline QStringList qmlCacheFileFilters()
 {
     return QStringList() << QStringLiteral("*.jsc") << QStringLiteral("*.qmlc");
-}
-
-static bool hasQmlCacheFiles(const QString &path)
-{
-    return !QDir(path).entryInfoList(qmlCacheFileFilters(), QDir::Files).isEmpty();
 }
 
 // File entry filter function for updateFile() that returns a list of files for
@@ -1458,11 +1452,6 @@ static DeployResult deploy(const Options &options,
                     return result;
                 unsigned updateFileFlags = options.updateFileFlags | SkipQmlDesignerSpecificsDirectories;
                 unsigned qmlDirectoryFileFlags = 0;
-                // QML files of Controls 1 not needed unless cached files are present (5.9)
-                if (quickControlsImportPath(module.sourcePath) == 1 && !hasQmlCacheFiles(module.sourcePath)) {
-                    updateFileFlags |=  RemoveEmptyQmlDirectories;
-                    qmlDirectoryFileFlags |= QmlDirectoryFileEntryFunction::SkipSources;
-                }
                 if (options.deployPdb)
                     qmlDirectoryFileFlags |= QmlDirectoryFileEntryFunction::DeployPdb;
                 if (!updateFile(module.sourcePath, QmlDirectoryFileEntryFunction(options.platform, debugMatchMode, qmlDirectoryFileFlags),
