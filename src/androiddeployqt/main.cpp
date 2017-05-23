@@ -308,11 +308,6 @@ void deleteMissingFiles(const Options &options, const QDir &srcDir, const QDir &
     fflush(stdout);
 }
 
-bool containsModule(const QDir &dir) {
-    QStringList nameFilters = { QLatin1String("qmldir") };
-    QFileInfoList entries = dir.entryInfoList(nameFilters, QDir::Files);
-    return (!entries.isEmpty());
-}
 
 Options parseOptions()
 {
@@ -1729,11 +1724,6 @@ bool scanImports(Options *options, QSet<QString> *usedDependencies)
             const QList<QtDependency> fileNames = findFilesRecursively(*options, info, importPathOfThisImport);
             for (QtDependency fileName : fileNames) {
                 if (usedDependencies->contains(fileName.absolutePath))
-                    continue;
-
-                // Exclude modules in subfolders
-                QDir parentDir = QFileInfo(fileName.absolutePath).absoluteDir();
-                if (parentDir.absolutePath() != path && containsModule(parentDir))
                     continue;
 
                 usedDependencies->insert(fileName.absolutePath);
