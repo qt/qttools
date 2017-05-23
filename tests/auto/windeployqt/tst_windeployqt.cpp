@@ -155,8 +155,7 @@ void tst_windeployqt::deploy()
     QString errorMessage;
     // Deploy application
     QStringList deployArguments;
-    deployArguments << QLatin1String("--no-translations") << QLatin1String("--no-angle")
-        << QDir::toNativeSeparators(m_testAppBinary);
+    deployArguments << QLatin1String("--no-translations") << QDir::toNativeSeparators(m_testAppBinary);
     QVERIFY2(runProcess(m_windeployqtBinary, deployArguments, &errorMessage, QString(), QProcessEnvironment(), 20000),
              qPrintable(errorMessage));
 
