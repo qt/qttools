@@ -92,6 +92,9 @@ int main(int argc, char **argv)
 {
     Q_INIT_RESOURCE(linguist);
 
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+
     QApplication app(argc, argv);
     QApplication::setOverrideCursor(Qt::WaitCursor);
 

@@ -38,6 +38,9 @@ int main(int argc, char *argv[])
 {
     Q_INIT_RESOURCE(designer);
 
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+
     // required for QWebEngineView
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
 
