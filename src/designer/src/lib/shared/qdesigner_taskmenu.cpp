@@ -737,14 +737,17 @@ void QDesignerTaskMenu::navigateToSlot(QDesignerFormEditorInterface *core,
 
     dialogUi.signalList->resizeColumnToContents(0);
 
-    if (selectSignalDialog.exec() == QDialog::Accepted) {
-        QTreeWidgetItem *selectedItem = dialogUi.signalList->selectedItems().first();
-        const QString signalSignature = selectedItem->text(0);
-        const QStringList parameterNames = qvariant_cast<QStringList>(selectedItem->data(0, Qt::UserRole));
+    if (selectSignalDialog.exec() != QDialog::Accepted)
+        return;
+    const QList<QTreeWidgetItem *> &selectedItems = dialogUi.signalList->selectedItems();
+    if (selectedItems.isEmpty())
+        return;
+    const QTreeWidgetItem *selectedItem = selectedItems.constFirst();
+    const QString signalSignature = selectedItem->text(0);
+    const QStringList parameterNames = qvariant_cast<QStringList>(selectedItem->data(0, Qt::UserRole));
 
-        // TODO: Check whether signal is connected to slot
-        core->integration()->emitNavigateToSlot(objectName, signalSignature, parameterNames);
-    }
+    // TODO: Check whether signal is connected to slot
+    core->integration()->emitNavigateToSlot(objectName, signalSignature, parameterNames);
 }
 
 // Add a command that takes over the value of the current geometry as
