@@ -34,6 +34,7 @@
 #include "stylesheeteditor_p.h"
 #include "qlayout_widget_p.h"
 #include "layout_p.h"
+#include "selectsignaldialog_p.h"
 #include "spacer_widget_p.h"
 #include "textpropertyeditor_p.h"
 #include "promotiontaskmenu_p.h"
@@ -45,7 +46,6 @@
 #include "qdesigner_objectinspector_p.h"
 #include "morphmenu_p.h"
 #include "formlayoutmenu_p.h"
-#include "ui_selectsignaldialog.h"
 #include "widgetfactory_p.h"
 #include "abstractintrospection_p.h"
 #include "widgetdatabase_p.h"
@@ -599,22 +599,6 @@ void QDesignerTaskMenu::containerFakeMethods()
     SignalSlotDialog::editMetaDataBase(fw, d->m_widget, fw);
 }
 
-static QString declaredInClass(const QDesignerMetaObjectInterface *metaObject, const QString &member)
-{
-    // Find class whose superclass does not contain the method.
-    const QDesignerMetaObjectInterface *meta = metaObject;
-
-    for (;;) {
-        const QDesignerMetaObjectInterface *tmpMeta = meta->superClass();
-        if (tmpMeta == 0)
-            break;
-        if (tmpMeta->indexOfMethod(member) == -1)
-            break;
-        meta = tmpMeta;
-    }
-    return meta->className();
-}
-
 bool QDesignerTaskMenu::isSlotNavigationEnabled(const QDesignerFormEditorInterface *core)
 {
     return core->integration()->hasFeature(QDesignerIntegration::SlotNavigationFeature);
@@ -631,93 +615,17 @@ void QDesignerTaskMenu::navigateToSlot(QDesignerFormEditorInterface *core,
                                        QObject *object,
                                        const QString &defaultSignal)
 {
-    const QString objectName = objName(core, object);
-    QMap<QString, QMap<QString, QStringList> > classToSignalList;
-
-    // "real" signals
-    if (const QDesignerMetaObjectInterface *metaObject = core->introspection()->metaObject(object)) {
-        const int methodCount = metaObject->methodCount();
-        for (int i = 0; i < methodCount; ++i) {
-            const QDesignerMetaMethodInterface *metaMethod = metaObject->method(i);
-            if (metaMethod->methodType() == QDesignerMetaMethodInterface::Signal) {
-                const QString signature = metaMethod->signature();
-                const QStringList parameterNames = metaMethod->parameterNames();
-                classToSignalList[declaredInClass(metaObject, signature)][signature] = parameterNames;
-            }
-        }
-    }
-
-    // fake signals
-    if (qdesigner_internal::MetaDataBase *metaDataBase
-        = qobject_cast<qdesigner_internal::MetaDataBase *>(core->metaDataBase())) {
-        qdesigner_internal::MetaDataBaseItem *item = metaDataBase->metaDataBaseItem(object);
-        Q_ASSERT(item);
-        const QStringList fakeSignals = item->fakeSignals();
-        for (const QString &fakeSignal : fakeSignals)
-            classToSignalList[item->customClassName()][fakeSignal] = QStringList();
-    }
-
-    if (object->isWidgetType()) {
-        QWidget *widget = static_cast<QWidget *>(object);
-        if (WidgetDataBase *db = qobject_cast<WidgetDataBase *>(core->widgetDataBase())) {
-            const QString promotedClassName = promotedCustomClassName(core, widget);
-            const int index = core->widgetDataBase()->indexOfClassName(promotedClassName);
-            if (index >= 0) {
-                WidgetDataBaseItem* item = static_cast<WidgetDataBaseItem*>(db->item(index));
-                const QStringList fakeSignals = item->fakeSignals();
-                for (const QString &fakeSignal : fakeSignals)
-                    classToSignalList[promotedClassName][fakeSignal] = QStringList();
-            }
-        }
-    }
-
-    Ui::SelectSignalDialog dialogUi;
-    QDialog selectSignalDialog(0, Qt::WindowTitleHint | Qt::WindowSystemMenuHint);
-    dialogUi.setupUi(&selectSignalDialog);
-
-    QMap<QString, QMap<QString, QStringList> >::const_iterator iter(classToSignalList.constBegin());
-    for (; iter != classToSignalList.constEnd(); ++iter) {
-        const QString className = iter.key();
-        QMap<QString, QStringList> signalNames = iter.value();
-
-        QMap<QString, QStringList>::const_iterator itSignal(signalNames.constBegin());
-        for (; itSignal != signalNames.constEnd(); ++itSignal) {
-            const QString signalName = itSignal.key();
-            QTreeWidgetItem *row = new QTreeWidgetItem(QStringList() << signalName << className);
-            row->setData(0, Qt::UserRole, itSignal.value());
-            dialogUi.signalList->addTopLevelItem(row);
-        }
-    }
-    if (dialogUi.signalList->topLevelItemCount() == 0) {
-        QTreeWidgetItem *row = new QTreeWidgetItem(QStringList() << tr("no signals available"));
-        dialogUi.signalList->addTopLevelItem(row);
-        dialogUi.buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
-    } else {
-        connect(dialogUi.signalList, &QTreeWidget::itemDoubleClicked,
-                &selectSignalDialog, &QDialog::accept);
-    }
-
-    if (defaultSignal.isEmpty()) {
-        dialogUi.signalList->setCurrentItem(dialogUi.signalList->topLevelItem(0));
-    } else {
-        const QList<QTreeWidgetItem *> items = dialogUi.signalList->findItems (defaultSignal, Qt::MatchExactly, 0);
-        if (!items.empty())
-            dialogUi.signalList->setCurrentItem(items.front());
-    }
-
-    dialogUi.signalList->resizeColumnToContents(0);
-
-    if (selectSignalDialog.exec() != QDialog::Accepted)
+    SelectSignalDialog dialog;
+    dialog.populate(core, object, defaultSignal);
+    if (dialog.exec() != QDialog::Accepted)
         return;
-    const QList<QTreeWidgetItem *> &selectedItems = dialogUi.signalList->selectedItems();
-    if (selectedItems.isEmpty())
-        return;
-    const QTreeWidgetItem *selectedItem = selectedItems.constFirst();
-    const QString signalSignature = selectedItem->text(0);
-    const QStringList parameterNames = qvariant_cast<QStringList>(selectedItem->data(0, Qt::UserRole));
-
     // TODO: Check whether signal is connected to slot
-    core->integration()->emitNavigateToSlot(objectName, signalSignature, parameterNames);
+    const SelectSignalDialog::Method method = dialog.selectedMethod();
+    if (method.isValid()) {
+        core->integration()->emitNavigateToSlot(objName(core, object),
+                                                method.signature,
+                                                method.parameterNames);
+    }
 }
 
 // Add a command that takes over the value of the current geometry as

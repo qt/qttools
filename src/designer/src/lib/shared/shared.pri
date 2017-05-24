@@ -107,7 +107,8 @@ HEADERS += \
     $$PWD/shared_settings_p.h \
     $$PWD/newformwidget_p.h \
     $$PWD/plugindialog_p.h \
-    $$PWD/rcc_p.h
+    $$PWD/rcc_p.h \
+    $$PWD/selectsignaldialog_p.h
 
 SOURCES += \
     $$PWD/spacer_widget.cpp \
@@ -183,7 +184,8 @@ SOURCES += \
     $$PWD/shared_settings.cpp \
     $$PWD/newformwidget.cpp \
     $$PWD/plugindialog.cpp \
-    $$PWD/rcc.cpp
+    $$PWD/rcc.cpp \
+    $$PWD/selectsignaldialog.cpp
 
 RESOURCES += $$PWD/shared.qrc
 

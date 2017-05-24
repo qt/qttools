@@ -21,7 +21,7 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <widget class="QTreeWidget" name="signalList">
+       <widget class="QTreeView" name="signalList">
         <property name="sortingEnabled">
          <bool>false</bool>
         </property>
