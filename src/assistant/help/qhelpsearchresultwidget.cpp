@@ -121,86 +121,37 @@ class QHelpSearchResultWidgetPrivate : public QObject
     Q_OBJECT
 
 private slots:
-    void setResults(int hitsCount)
+    void showFirstResultPage()
     {
-        if (!searchEngine.isNull()) {
-            showFirstResultPage();
-            updateNextButtonState((hitsCount > 20) ? true : false);
-        }
-    }
-
-    void showNextResultPage()
-    {
-        if (!searchEngine.isNull()
-            && resultLastToShow < searchEngine->searchResultCount()) {
-            resultLastToShow += 20;
-            resultFirstToShow += 20;
-
-            resultTextBrowser->showResultPage(searchEngine->searchResults(resultFirstToShow,
-                resultLastToShow), isIndexing);
-            if (resultLastToShow >= searchEngine->searchResultCount())
-                updateNextButtonState(false);
-        }
+        if (!searchEngine.isNull())
+            resultFirstToShow = 0;
         updateHitRange();
     }
 
     void showLastResultPage()
     {
-        if (!searchEngine.isNull()) {
-            resultLastToShow = searchEngine->searchResultCount();
-            resultFirstToShow = resultLastToShow - (resultLastToShow % 20);
-
-            if (resultFirstToShow == resultLastToShow)
-                resultFirstToShow -= 20;
-
-            resultTextBrowser->showResultPage(searchEngine->searchResults(resultFirstToShow,
-                resultLastToShow), isIndexing);
-            updateNextButtonState(false);
-        }
-        updateHitRange();
-    }
-
-    void showFirstResultPage()
-    {
-        if (!searchEngine.isNull()) {
-            resultLastToShow = 20;
-            resultFirstToShow = 0;
-
-            resultTextBrowser->showResultPage(searchEngine->searchResults(resultFirstToShow,
-                resultLastToShow), isIndexing);
-            updatePrevButtonState(false);
-        }
+        if (!searchEngine.isNull())
+            resultFirstToShow = (searchEngine->searchResultCount() - 1) / ResultsRange * ResultsRange;
         updateHitRange();
     }
 
     void showPreviousResultPage()
     {
         if (!searchEngine.isNull()) {
-            int count = resultLastToShow % 20;
-            if (count == 0 || resultLastToShow != searchEngine->searchResultCount())
-                count = 20;
-
-            resultLastToShow -= count;
-            resultFirstToShow = resultLastToShow - 20;
-
-            resultTextBrowser->showResultPage(searchEngine->searchResults(resultFirstToShow,
-                resultLastToShow), isIndexing);
-            if (resultFirstToShow == 0)
-                updatePrevButtonState(false);
+            resultFirstToShow -= ResultsRange;
+            if (resultFirstToShow < 0)
+                resultFirstToShow = 0;
         }
         updateHitRange();
     }
 
-    void updatePrevButtonState(bool state = true)
+    void showNextResultPage()
     {
-        firstResultPage->setEnabled(state);
-        previousResultPage->setEnabled(state);
-    }
-
-    void updateNextButtonState(bool state = true)
-    {
-        nextResultPage->setEnabled(state);
-        lastResultPage->setEnabled(state);
+        if (!searchEngine.isNull()
+            && resultFirstToShow + ResultsRange < searchEngine->searchResultCount()) {
+            resultFirstToShow += ResultsRange;
+        }
+        updateHitRange();
     }
 
     void indexingStarted()
@@ -250,11 +201,18 @@ private:
         if (!searchEngine.isNull()) {
             count = searchEngine->searchResultCount();
             if (count > 0) {
+                last = qMin(resultFirstToShow + ResultsRange, count);
                 first = resultFirstToShow + 1;
-                last = resultLastToShow > count ? count : resultLastToShow;
             }
+            resultTextBrowser->showResultPage(searchEngine->searchResults(resultFirstToShow,
+                               last), isIndexing);
         }
+
         hitsLabel->setText(QHelpSearchResultWidget::tr("%1 - %2 of %n Hits", 0, count).arg(first).arg(last));
+        firstResultPage->setEnabled(resultFirstToShow);
+        previousResultPage->setEnabled(resultFirstToShow);
+        lastResultPage->setEnabled(count - last);
+        nextResultPage->setEnabled(count - last);
     }
 
 private:
@@ -264,7 +222,8 @@ private:
 
     QResultWidget *resultTextBrowser = nullptr;
 
-    int resultLastToShow = 20;
+    static const int ResultsRange = 20;
+
     int resultFirstToShow = 0;
     bool isIndexing = false;
 
@@ -313,7 +272,6 @@ QHelpSearchResultWidget::QHelpSearchResultWidget(QHelpSearchEngine *engine)
         QString::fromUtf8(":/qt-project.org/assistant/images/1leftarrow.png")));
 
     d->hitsLabel = new QLabel(tr("0 - 0 of 0 Hits"), this);
-    d->hitsLabel->setEnabled(false);
     hBoxLayout->addWidget(d->hitsLabel);
     d->hitsLabel->setAlignment(Qt::AlignCenter);
     d->hitsLabel->setMinimumSize(QSize(150, d->hitsLabel->height()));
@@ -344,17 +302,8 @@ QHelpSearchResultWidget::QHelpSearchResultWidget(QHelpSearchEngine *engine)
     connect(d->previousResultPage, &QAbstractButton::clicked,
             d, &QHelpSearchResultWidgetPrivate::showPreviousResultPage);
 
-    connect(d->firstResultPage, &QAbstractButton::clicked,
-            d, &QHelpSearchResultWidgetPrivate::updateNextButtonState);
-    connect(d->previousResultPage, &QAbstractButton::clicked,
-            d, &QHelpSearchResultWidgetPrivate::updateNextButtonState);
-    connect(d->nextResultPage, &QAbstractButton::clicked,
-            d, &QHelpSearchResultWidgetPrivate::updatePrevButtonState);
-    connect(d->lastResultPage, &QAbstractButton::clicked,
-            d, &QHelpSearchResultWidgetPrivate::updatePrevButtonState);
-
     connect(engine, &QHelpSearchEngine::searchingFinished,
-            d, &QHelpSearchResultWidgetPrivate::setResults);
+            d, &QHelpSearchResultWidgetPrivate::showFirstResultPage);
 }
 
 /*! \reimp
@@ -362,7 +311,7 @@ QHelpSearchResultWidget::QHelpSearchResultWidget(QHelpSearchEngine *engine)
 void QHelpSearchResultWidget::changeEvent(QEvent *event)
 {
     if (event->type() == QEvent::LanguageChange)
-        d->setResults(d->searchEngine->searchResultCount());
+        d->updateHitRange();
 }
 
 /*!
