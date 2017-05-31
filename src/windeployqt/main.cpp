@@ -40,6 +40,7 @@
 #include <QtCore/QSharedPointer>
 #include <QtCore/QVector>
 
+#include <algorithm>
 #include <iostream>
 #include <cstdio>
 
@@ -788,42 +789,47 @@ private:
     DllDirectoryFileEntryFunction m_dllFilter;
 };
 
+struct PluginModuleMapping
+{
+    const char *directoryName;
+    quint64 module;
+};
+
+static const PluginModuleMapping pluginModuleMappings[] =
+{
+    {"qml1tooling", QtDeclarativeModule},
+    {"accessible", QtGuiModule},
+    {"iconengines", QtGuiModule},
+    {"imageformats", QtGuiModule},
+    {"platforms", QtGuiModule},
+    {"platforminputcontexts", QtGuiModule},
+    {"geoservices", QtLocationModule},
+    {"audio", QtMultimediaModule},
+    {"mediaservice", QtMultimediaModule},
+    {"playlistformats", QtMultimediaModule},
+    {"bearer", QtNetworkModule},
+    {"position", QtPositioningModule},
+    {"printsupport", QtPrintSupportModule},
+    {"scenegraph", QtQuickModule},
+    {"qmltooling", QtQuickModule | QtQmlToolingModule},
+    {"sensors", QtSensorsModule},
+    {"sensorgestures", QtSensorsModule},
+    {"canbus", QtSerialBusModule},
+    {"sqldrivers", QtSqlModule},
+    {"texttospeech", QtTextToSpeechModule},
+    {"qtwebengine", QtWebEngineModule | QtWebEngineCoreModule | QtWebEngineWidgetsModule},
+    {"sceneparsers", Qt3DRendererModule},
+    {"renderplugins", Qt3DRendererModule}
+};
+
 static inline quint64 qtModuleForPlugin(const QString &subDirName)
 {
-    if (subDirName == QLatin1String("accessible") || subDirName == QLatin1String("iconengines")
-        || subDirName == QLatin1String("imageformats") || subDirName == QLatin1String("platforms")
-        || subDirName == QLatin1String("platforminputcontexts")) {
-        return QtGuiModule;
-    }
-    if (subDirName == QLatin1String("bearer"))
-        return QtNetworkModule;
-    if (subDirName == QLatin1String("sqldrivers"))
-        return QtSqlModule;
-    if (subDirName == QLatin1String("audio") || subDirName == QLatin1String("mediaservice") || subDirName == QLatin1String("playlistformats"))
-        return QtMultimediaModule;
-    if (subDirName == QLatin1String("printsupport"))
-        return QtPrintSupportModule;
-    if (subDirName == QLatin1String("scenegraph"))
-        return QtQuickModule;
-    if (subDirName == QLatin1String("qmltooling"))
-        return QtQuickModule | QtQmlToolingModule;
-    if (subDirName == QLatin1String("qml1tooling"))
-        return QtDeclarativeModule;
-    if (subDirName == QLatin1String("position"))
-        return QtPositioningModule;
-    if (subDirName == QLatin1String("geoservices"))
-        return QtLocationModule;
-    if (subDirName == QLatin1String("sensors") || subDirName == QLatin1String("sensorgestures"))
-        return QtSensorsModule;
-    if (subDirName == QLatin1String("qtwebengine"))
-        return QtWebEngineModule | QtWebEngineCoreModule | QtWebEngineWidgetsModule;
-    if (subDirName == QLatin1String("sceneparsers") || subDirName == QLatin1String("renderplugins"))
-        return Qt3DRendererModule;
-    if (subDirName == QLatin1String("texttospeech"))
-        return QtTextToSpeechModule;
-    if (subDirName == QLatin1String("canbus"))
-        return QtSerialBusModule;
-    return 0; // "designer"
+    const PluginModuleMapping *end = pluginModuleMappings
+        + sizeof(pluginModuleMappings) / sizeof(pluginModuleMappings[0]);
+    const PluginModuleMapping *result =
+        std::find_if(pluginModuleMappings, end,
+                     [&subDirName] (const PluginModuleMapping &m) { return subDirName == QLatin1String(m.directoryName); });
+    return result != end ? result->module : 0; // "designer"
 }
 
 static quint64 qtModule(QString module, const QString &infix)
