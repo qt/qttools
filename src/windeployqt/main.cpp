@@ -98,7 +98,8 @@ enum QtModule
     QtLocationModule          = 0x0000100000000000,
     QtWebChannelModule        = 0x0000200000000000,
     QtTextToSpeechModule      = 0x0000400000000000,
-    QtSerialBusModule         = 0x0000800000000000
+    QtSerialBusModule         = 0x0000800000000000,
+    QtGamePadModule           = 0x0001000000000000
 };
 
 struct QtModuleEntry {
@@ -116,6 +117,7 @@ static QtModuleEntry qtModuleEntries[] = {
     { QtDesignerModule, "designer", "Qt5Designer", 0 },
     { QtDesignerComponents, "designercomponents", "Qt5DesignerComponents", 0 },
     { QtEnginioModule, "enginio", "Enginio", 0 },
+    { QtGamePadModule, "gamepad", "Qt5Gamepad", 0 },
     { QtGuiModule, "gui", "Qt5Gui", "qtbase" },
     { QtHelpModule, "qthelp", "Qt5Help", "qt_help" },
     { QtMultimediaModule, "multimedia", "Qt5Multimedia", "qtmultimedia" },
@@ -798,6 +800,7 @@ struct PluginModuleMapping
 static const PluginModuleMapping pluginModuleMappings[] =
 {
     {"qml1tooling", QtDeclarativeModule},
+    {"gamepads", QtGamePadModule},
     {"accessible", QtGuiModule},
     {"iconengines", QtGuiModule},
     {"imageformats", QtGuiModule},
