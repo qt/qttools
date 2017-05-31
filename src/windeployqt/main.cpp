@@ -731,15 +731,9 @@ static QString pdbFileName(QString libraryFileName)
     libraryFileName.replace(lastDot, libraryFileName.size() - lastDot, QLatin1String("pdb"));
     return libraryFileName;
 }
-
 static inline QStringList qmlCacheFileFilters()
 {
     return QStringList() << QStringLiteral("*.jsc") << QStringLiteral("*.qmlc");
-}
-
-static bool hasQmlCacheFiles(const QString &path)
-{
-    return !QDir(path).entryInfoList(qmlCacheFileFilters(), QDir::Files).isEmpty();
 }
 
 // File entry filter function for updateFile() that returns a list of files for
@@ -1334,17 +1328,32 @@ static DeployResult deploy(const Options &options,
     // Check for ANGLE on the Qt5Gui library.
     if ((options.platform & WindowsBased) && options.platform != WinCEIntel
         && options.platform != WinCEArm && !qtGuiLibrary.isEmpty())  {
+        QString libGlesName = QStringLiteral("libGLESV2");
+        if (isDebug)
+            libGlesName += QLatin1Char('d');
+        libGlesName += QLatin1String(windowsSharedLibrarySuffix);
         QString libQtAngleName = QStringLiteral("QtANGLE");
         if (isDebug)
             libQtAngleName += QLatin1Char('d');
         libQtAngleName += QLatin1String(windowsSharedLibrarySuffix);
         const QStringList guiLibraries = findDependentLibraries(qtGuiLibrary, options.platform, errorMessage);
-        const bool dependsOnAngle = !guiLibraries.filter(libQtAngleName, Qt::CaseInsensitive).isEmpty();
+        const bool dependsOnAngle = !guiLibraries.filter(libGlesName, Qt::CaseInsensitive).isEmpty();
+        const bool dependsOnNewAngle = !guiLibraries.filter(libQtAngleName, Qt::CaseInsensitive).isEmpty();
         const bool dependsOnOpenGl = !guiLibraries.filter(QStringLiteral("opengl32"), Qt::CaseInsensitive).isEmpty();
         if (options.angleDetection != Options::AngleDetectionForceOff
-            && (dependsOnAngle || !dependsOnOpenGl || options.angleDetection == Options::AngleDetectionForceOn)) {
-            const QString libQtAngleFullPath = qtBinDir + slash + libQtAngleName;
-            deployedQtLibraries.append(libQtAngleFullPath);
+            && (dependsOnAngle || dependsOnNewAngle || !dependsOnOpenGl || options.angleDetection == Options::AngleDetectionForceOn)) {
+            if (dependsOnNewAngle) {
+                const QString libQtAngleFullPath = qtBinDir + slash + libQtAngleName;
+                deployedQtLibraries.append(libQtAngleFullPath);
+            } else {
+                const QString libGlesFullPath = qtBinDir + slash + libGlesName;
+                deployedQtLibraries.append(libGlesFullPath);
+                QString libEglFullPath = qtBinDir + slash + QStringLiteral("libEGL");
+                if (isDebug)
+                    libEglFullPath += QLatin1Char('d');
+                libEglFullPath += QLatin1String(windowsSharedLibrarySuffix);
+                deployedQtLibraries.append(libEglFullPath);
+            }
             // Find the system D3d Compiler matching the D3D library.
             if (options.systemD3dCompiler && !options.isWinRt()) {
                 const QString d3dCompiler = findD3dCompiler(options.platform, qtBinDir, wordSize);
@@ -1452,11 +1461,6 @@ static DeployResult deploy(const Options &options,
                     return result;
                 unsigned updateFileFlags = options.updateFileFlags | SkipQmlDesignerSpecificsDirectories;
                 unsigned qmlDirectoryFileFlags = 0;
-                // QML files of Controls 1 not needed unless cached files are present (5.9)
-                if (quickControlsImportPath(module.sourcePath) == 1 && !hasQmlCacheFiles(module.sourcePath)) {
-                    updateFileFlags |=  RemoveEmptyQmlDirectories;
-                    qmlDirectoryFileFlags |= QmlDirectoryFileEntryFunction::SkipSources;
-                }
                 if (options.deployPdb)
                     qmlDirectoryFileFlags |= QmlDirectoryFileEntryFunction::DeployPdb;
                 if (!updateFile(module.sourcePath, QmlDirectoryFileEntryFunction(options.platform, debugMatchMode, qmlDirectoryFileFlags),

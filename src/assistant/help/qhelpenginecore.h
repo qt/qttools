@@ -95,6 +95,7 @@ public:
     QByteArray fileData(const QUrl &url) const;
 
     QMap<QString, QUrl> linksForIdentifier(const QString &id) const;
+    QMap<QString, QUrl> linksForKeyword(const QString &keyword) const;
 
     bool removeCustomValue(const QString &key);
     QVariant customValue(const QString &key,
