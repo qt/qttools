@@ -277,16 +277,12 @@ bool QHelpIndexModel::isCreatingIndex() const
 }
 
 /*!
-    Returns all documents found for the \a keyword. The returned map consists of the
-    document titles and their URLs.
+    \obsolete
+    Use QHelpEngineCore::linksForKeyword() instead.
 */
 QMap<QString, QUrl> QHelpIndexModel::linksForKeyword(const QString &keyword) const
 {
-    QMap<QString, QUrl> linkMap;
-    const QStringList &attributes = d->helpEngine->q->filterAttributes(d->currentFilter);
-    for (const QHelpDBReader *reader : d->activeReaders)
-        reader->linksForKeyword(keyword, attributes, &linkMap);
-    return linkMap;
+    return d->helpEngine->q->linksForKeyword(keyword);
 }
 
 /*!
