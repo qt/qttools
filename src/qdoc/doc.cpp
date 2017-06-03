@@ -630,6 +630,7 @@ void DocParser::parse(const QString& source,
                     break;
                 case CMD_BOLD:
                     location().warning(tr("'\\bold' is deprecated. Use '\\b'"));
+                    Q_FALLTHROUGH();
                 case CMD_B:
                     startFormat(ATOM_FORMATTING_BOLD, cmd);
                     break;
@@ -883,6 +884,7 @@ void DocParser::parse(const QString& source,
                     break;
                 case CMD_I:
                     location().warning(tr("'\\i' is deprecated. Use '\\e' for italic or '\\li' for list item"));
+                    Q_FALLTHROUGH();
                 case CMD_E:
                     startFormat(ATOM_FORMATTING_ITALIC, cmd);
                     break;
@@ -1030,6 +1032,7 @@ void DocParser::parse(const QString& source,
                     break;
                 case CMD_O:
                     location().warning(tr("'\\o' is deprecated. Use '\\li'"));
+                    Q_FALLTHROUGH();
                 case CMD_LI:
                     leavePara();
                     if (openedCommands.top() == CMD_LIST) {
@@ -1492,7 +1495,7 @@ void DocParser::parse(const QString& source,
                         getRestOfLine();
                         break;
                     }
-        // fall through
+            Q_FALLTHROUGH(); // fall through
         }
         default:
         {
