@@ -95,7 +95,8 @@ void HelpPage::triggerAction(WebAction action, bool checked)
     switch (action) {
         case OpenLinkInNewWindow:
             closeNewTabIfNeeded = true;
-        default:        // fall through
+            Q_FALLTHROUGH();
+        default:
             QWebPage::triggerAction(action, checked);
             break;
     }
