@@ -40,6 +40,7 @@
 #include <QtCore/QSharedPointer>
 #include <QtCore/QVector>
 
+#include <algorithm>
 #include <iostream>
 #include <cstdio>
 
@@ -97,7 +98,8 @@ enum QtModule
     QtLocationModule          = 0x0000100000000000,
     QtWebChannelModule        = 0x0000200000000000,
     QtTextToSpeechModule      = 0x0000400000000000,
-    QtSerialBusModule         = 0x0000800000000000
+    QtSerialBusModule         = 0x0000800000000000,
+    QtGamePadModule           = 0x0001000000000000
 };
 
 struct QtModuleEntry {
@@ -115,6 +117,7 @@ static QtModuleEntry qtModuleEntries[] = {
     { QtDesignerModule, "designer", "Qt5Designer", 0 },
     { QtDesignerComponents, "designercomponents", "Qt5DesignerComponents", 0 },
     { QtEnginioModule, "enginio", "Enginio", 0 },
+    { QtGamePadModule, "gamepad", "Qt5Gamepad", 0 },
     { QtGuiModule, "gui", "Qt5Gui", "qtbase" },
     { QtHelpModule, "qthelp", "Qt5Help", "qt_help" },
     { QtMultimediaModule, "multimedia", "Qt5Multimedia", "qtmultimedia" },
@@ -728,6 +731,10 @@ static QString pdbFileName(QString libraryFileName)
     libraryFileName.replace(lastDot, libraryFileName.size() - lastDot, QLatin1String("pdb"));
     return libraryFileName;
 }
+static inline QStringList qmlCacheFileFilters()
+{
+    return QStringList() << QStringLiteral("*.jsc") << QStringLiteral("*.qmlc");
+}
 
 // File entry filter function for updateFile() that returns a list of files for
 // QML import trees: DLLs (matching debgug) and .qml/,js, etc.
@@ -763,9 +770,13 @@ private:
     static inline QStringList qmlNameFilters(unsigned flags)
     {
         QStringList result;
-        result << QStringLiteral("qmldir") << QStringLiteral("*.qmltypes");
-        if (!(flags & SkipSources))
-            result << QStringLiteral("*.js") <<  QStringLiteral("*.qml") << QStringLiteral("*.png");
+        result << QStringLiteral("qmldir") << QStringLiteral("*.qmltypes")
+           << QStringLiteral("*.frag") << QStringLiteral("*.vert") // Shaders
+           << QStringLiteral("*.ttf");
+        if (!(flags & SkipSources)) {
+            result << QStringLiteral("*.js") << QStringLiteral("*.qml") << QStringLiteral("*.png");
+            result.append(qmlCacheFileFilters());
+        }
         return result;
     }
 
@@ -774,44 +785,49 @@ private:
     DllDirectoryFileEntryFunction m_dllFilter;
 };
 
+struct PluginModuleMapping
+{
+    const char *directoryName;
+    quint64 module;
+};
+
+static const PluginModuleMapping pluginModuleMappings[] =
+{
+    {"qml1tooling", QtDeclarativeModule},
+    {"gamepads", QtGamePadModule},
+    {"accessible", QtGuiModule},
+    {"iconengines", QtGuiModule},
+    {"imageformats", QtGuiModule},
+    {"platforms", QtGuiModule},
+    {"platforminputcontexts", QtGuiModule},
+    {"geoservices", QtLocationModule},
+    {"audio", QtMultimediaModule},
+    {"mediaservice", QtMultimediaModule},
+    {"playlistformats", QtMultimediaModule},
+    {"bearer", QtNetworkModule},
+    {"position", QtPositioningModule},
+    {"printsupport", QtPrintSupportModule},
+    {"scenegraph", QtQuickModule},
+    {"qmltooling", QtQuickModule | QtQmlToolingModule},
+    {"sensors", QtSensorsModule},
+    {"sensorgestures", QtSensorsModule},
+    {"canbus", QtSerialBusModule},
+    {"sqldrivers", QtSqlModule},
+    {"texttospeech", QtTextToSpeechModule},
+    {"qtwebengine", QtWebEngineModule | QtWebEngineCoreModule | QtWebEngineWidgetsModule},
+    {"styles", QtWidgetsModule},
+    {"sceneparsers", Qt3DRendererModule},
+    {"renderplugins", Qt3DRendererModule}
+};
+
 static inline quint64 qtModuleForPlugin(const QString &subDirName)
 {
-    if (subDirName == QLatin1String("accessible") || subDirName == QLatin1String("iconengines")
-        || subDirName == QLatin1String("imageformats") || subDirName == QLatin1String("platforms")
-        || subDirName == QLatin1String("platforminputcontexts")) {
-        return QtGuiModule;
-    }
-    if (subDirName == QLatin1String("bearer"))
-        return QtNetworkModule;
-    if (subDirName == QLatin1String("sqldrivers"))
-        return QtSqlModule;
-    if (subDirName == QLatin1String("audio") || subDirName == QLatin1String("mediaservice") || subDirName == QLatin1String("playlistformats"))
-        return QtMultimediaModule;
-    if (subDirName == QLatin1String("printsupport"))
-        return QtPrintSupportModule;
-    if (subDirName == QLatin1String("scenegraph"))
-        return QtQuickModule;
-    if (subDirName == QLatin1String("qmltooling"))
-        return QtQuickModule | QtQmlToolingModule;
-    if (subDirName == QLatin1String("qml1tooling"))
-        return QtDeclarativeModule;
-    if (subDirName == QLatin1String("position"))
-        return QtPositioningModule;
-    if (subDirName == QLatin1String("geoservices"))
-        return QtLocationModule;
-    if (subDirName == QLatin1String("sensors") || subDirName == QLatin1String("sensorgestures"))
-        return QtSensorsModule;
-    if (subDirName == QLatin1String("qtwebengine"))
-        return QtWebEngineModule | QtWebEngineCoreModule | QtWebEngineWidgetsModule;
-    if (subDirName == QLatin1String("sceneparsers") || subDirName == QLatin1String("renderplugins"))
-        return Qt3DRendererModule;
-    if (subDirName == QLatin1String("texttospeech"))
-        return QtTextToSpeechModule;
-    if (subDirName == QLatin1String("canbus"))
-        return QtSerialBusModule;
-    if (subDirName == QLatin1String("styles"))
-        return QtWidgetsModule;
-    return 0; // "designer"
+    const PluginModuleMapping *end = pluginModuleMappings
+        + sizeof(pluginModuleMappings) / sizeof(pluginModuleMappings[0]);
+    const PluginModuleMapping *result =
+        std::find_if(pluginModuleMappings, end,
+                     [&subDirName] (const PluginModuleMapping &m) { return subDirName == QLatin1String(m.directoryName); });
+    return result != end ? result->module : 0; // "designer"
 }
 
 static quint64 qtModule(QString module, const QString &infix)
@@ -1313,17 +1329,32 @@ static DeployResult deploy(const Options &options,
     // Check for ANGLE on the Qt5Gui library.
     if ((options.platform & WindowsBased) && options.platform != WinCEIntel
         && options.platform != WinCEArm && !qtGuiLibrary.isEmpty())  {
-        QString libQtAngleName = QStringLiteral("QtANGLE");
+        QString libGlesName = QStringLiteral("libGLESV2");
         if (isDebug)
-            libQtAngleName += QLatin1Char('d');
-        libQtAngleName += QLatin1String(windowsSharedLibrarySuffix);
+            libGlesName += QLatin1Char('d');
+        libGlesName += QLatin1String(windowsSharedLibrarySuffix);
+        QString libCombinedQtAngleName = QStringLiteral("QtANGLE");
+        if (isDebug)
+            libCombinedQtAngleName += QLatin1Char('d');
+        libCombinedQtAngleName += QLatin1String(windowsSharedLibrarySuffix);
         const QStringList guiLibraries = findDependentLibraries(qtGuiLibrary, options.platform, errorMessage);
-        const bool dependsOnAngle = !guiLibraries.filter(libQtAngleName, Qt::CaseInsensitive).isEmpty();
+        const bool dependsOnAngle = !guiLibraries.filter(libGlesName, Qt::CaseInsensitive).isEmpty();
+        const bool dependsOnCombinedAngle = !guiLibraries.filter(libCombinedQtAngleName, Qt::CaseInsensitive).isEmpty();
         const bool dependsOnOpenGl = !guiLibraries.filter(QStringLiteral("opengl32"), Qt::CaseInsensitive).isEmpty();
         if (options.angleDetection != Options::AngleDetectionForceOff
-            && (dependsOnAngle || !dependsOnOpenGl || options.angleDetection == Options::AngleDetectionForceOn)) {
-            const QString libQtAngleFullPath = qtBinDir + slash + libQtAngleName;
-            deployedQtLibraries.append(libQtAngleFullPath);
+            && (dependsOnAngle || dependsOnCombinedAngle || !dependsOnOpenGl || options.angleDetection == Options::AngleDetectionForceOn)) {
+            const QString combinedAngleFullPath = qtBinDir + slash + libCombinedQtAngleName;
+            if (QFileInfo(combinedAngleFullPath).exists()) {
+                deployedQtLibraries.append(combinedAngleFullPath);
+            } else {
+                const QString libGlesFullPath = qtBinDir + slash + libGlesName;
+                deployedQtLibraries.append(libGlesFullPath);
+                QString libEglFullPath = qtBinDir + slash + QStringLiteral("libEGL");
+                if (isDebug)
+                    libEglFullPath += QLatin1Char('d');
+                libEglFullPath += QLatin1String(windowsSharedLibrarySuffix);
+                deployedQtLibraries.append(libEglFullPath);
+            }
             // Find the system D3d Compiler matching the D3D library.
             if (options.systemD3dCompiler && !options.isWinRt()) {
                 const QString d3dCompiler = findD3dCompiler(options.platform, qtBinDir, wordSize);
@@ -1431,10 +1462,6 @@ static DeployResult deploy(const Options &options,
                     return result;
                 unsigned updateFileFlags = options.updateFileFlags | SkipQmlDesignerSpecificsDirectories;
                 unsigned qmlDirectoryFileFlags = 0;
-                if (quickControlsImportPath(module.sourcePath) == 1) { // QML files of Controls 1 not needed
-                    updateFileFlags |=  RemoveEmptyQmlDirectories;
-                    qmlDirectoryFileFlags |= QmlDirectoryFileEntryFunction::SkipSources;
-                }
                 if (options.deployPdb)
                     qmlDirectoryFileFlags |= QmlDirectoryFileEntryFunction::DeployPdb;
                 if (!updateFile(module.sourcePath, QmlDirectoryFileEntryFunction(options.platform, debugMatchMode, qmlDirectoryFileFlags),

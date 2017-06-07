@@ -63,7 +63,7 @@ void Reader::addNamespace(const QString &namespaceName, const QStringList &attri
 static QString namespacePlaceholders(const QMultiMap<QString, QStringList> &namespaces)
 {
     QString placeholders;
-    const auto namespaceList = namespaces.uniqueKeys();
+    const auto &namespaceList = namespaces.uniqueKeys();
     bool firstNS = true;
     for (const QString &ns : namespaceList) {
         if (firstNS)
@@ -95,7 +95,7 @@ static QString namespacePlaceholders(const QMultiMap<QString, QStringList> &name
 static void bindNamespacesAndAttributes(QSqlQuery *query, const QMultiMap<QString, QStringList> &namespaces)
 {
     QString placeholders;
-    const auto namespaceList = namespaces.uniqueKeys();
+    const auto &namespaceList = namespaces.uniqueKeys();
     for (const QString &ns : namespaceList) {
         query->addBindValue(ns);
 
@@ -109,9 +109,9 @@ static void bindNamespacesAndAttributes(QSqlQuery *query, const QMultiMap<QStrin
 
 QVector<QHelpSearchResult> Reader::queryTable(const QSqlDatabase &db,
                                          const QString &tableName,
-                                         const QString &term) const
+                                         const QString &searchInput) const
 {
-    const QString nsPlaceholders = namespacePlaceholders(m_namespaces);
+    const QString &nsPlaceholders = namespacePlaceholders(m_namespaces);
     QSqlQuery query(db);
     query.prepare(QLatin1String("SELECT url, title, snippet(") + tableName +
                   QLatin1String(", -1, '<b>', '</b>', '...', '10') FROM ") + tableName +
@@ -119,22 +119,22 @@ QVector<QHelpSearchResult> Reader::queryTable(const QSqlDatabase &db,
                   QLatin1String(") AND ") + tableName +
                   QLatin1String(" MATCH ? ORDER BY rank"));
     bindNamespacesAndAttributes(&query, m_namespaces);
-    query.addBindValue(term);
+    query.addBindValue(searchInput);
     query.exec();
 
     QVector<QHelpSearchResult> results;
 
     while (query.next()) {
-        const QString url = query.value(QLatin1String("url")).toString();
-        const QString title = query.value(QLatin1String("title")).toString();
-        const QString snippet = query.value(2).toString();
+        const QString &url = query.value(QLatin1String("url")).toString();
+        const QString &title = query.value(QLatin1String("title")).toString();
+        const QString &snippet = query.value(2).toString();
         results.append(QHelpSearchResult(url, title, snippet));
     }
 
     return results;
 }
 
-void Reader::searchInDB(const QString &term)
+void Reader::searchInDB(const QString &searchInput)
 {
     const QString &uniqueId = QHelpGlobal::uniquifyConnectionName(QLatin1String("QHelpReader"), this);
     {
@@ -143,9 +143,9 @@ void Reader::searchInDB(const QString &term)
         db.setDatabaseName(m_indexPath + QLatin1String("/fts"));
         if (db.open()) {
             const QVector<QHelpSearchResult> titleResults = queryTable(db,
-                                             QLatin1String("titles"), term);
+                                             QLatin1String("titles"), searchInput);
             const QVector<QHelpSearchResult> contentResults = queryTable(db,
-                                             QLatin1String("contents"), term);
+                                             QLatin1String("contents"), searchInput);
 
             // merge results form title and contents searches
             m_searchResults = QVector<QHelpSearchResult>();
@@ -195,25 +195,13 @@ void QHelpSearchIndexReaderDefault::run()
     if (m_cancel)
         return;
 
-    const QList<QHelpSearchQuery> queryList = m_query;
+    const QString searchInput = m_searchInput;
     const QString collectionFile = m_collectionFile;
     const QString indexPath = m_indexFilesFolder;
 
     lock.unlock();
 
-    QString queryTerm;
-
-    // TODO: we may want to translate the QHelpSearchQuery list into
-    // simple phrase using AND, OR, NOT or quotes in order to
-    // keep working the public interface of QHelpSearchQuery
-    for (const QHelpSearchQuery &query : queryList) {
-        if (query.fieldName == QHelpSearchQuery::DEFAULT) {
-            queryTerm = query.wordList.at(0);
-            break;
-        }
-    }
-
-    if (queryTerm.isEmpty())
+    if (searchInput.isEmpty())
         return;
 
     QHelpEngineCore engine(collectionFile, 0);
@@ -248,7 +236,7 @@ void QHelpSearchIndexReaderDefault::run()
     lock.unlock();
 
     m_searchResults.clear();
-    m_reader.searchInDB(queryTerm);    // TODO: should this be interruptible as well ???
+    m_reader.searchInDB(searchInput);    // TODO: should this be interruptible as well ???
 
     lock.relock();
     m_searchResults = m_reader.searchResults();

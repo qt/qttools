@@ -41,10 +41,10 @@ PathPage::PathPage(QWidget *parent)
         "matched by the file filter will be included."));
 
     m_ui.setupUi(this);
-    connect(m_ui.addButton, SIGNAL(clicked()),
-        this, SLOT(addPath()));
-    connect(m_ui.removeButton, SIGNAL(clicked()),
-        this, SLOT(removePath()));
+    connect(m_ui.addButton, &QAbstractButton::clicked,
+            this, &PathPage::addPath);
+    connect(m_ui.removeButton, &QAbstractButton::clicked,
+            this, &PathPage::removePath);
 
     m_ui.filterLineEdit->setText(QLatin1String("*.html, *.htm, *.png, *.jpg, *.css"));
 

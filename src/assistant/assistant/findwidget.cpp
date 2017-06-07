@@ -59,26 +59,25 @@ FindWidget::FindWidget(QWidget *parent)
     toolClose = setupToolButton(QString(),
         resourcePath + QLatin1String("/closetab.png"));
     hboxLayout->addWidget(toolClose);
-    connect(toolClose, SIGNAL(clicked()), SLOT(hide()));
+    connect(toolClose, &QAbstractButton::clicked, this, &QWidget::hide);
 
     editFind = new QLineEdit(this);
     hboxLayout->addWidget(editFind);
     editFind->setMinimumSize(QSize(150, 0));
-    connect(editFind, SIGNAL(textChanged(QString)), this,
-        SLOT(textChanged(QString)));
-    connect(editFind, SIGNAL(returnPressed()), this, SIGNAL(findNext()));
-    connect(editFind, SIGNAL(textChanged(QString)), this, SLOT(updateButtons()));
+    connect(editFind, &QLineEdit::textChanged, this, &FindWidget::textChanged);
+    connect(editFind, &QLineEdit::returnPressed, this, &FindWidget::findNext);
+    connect(editFind, &QLineEdit::textChanged, this, &FindWidget::updateButtons);
 
     toolPrevious = setupToolButton(tr("Previous"),
         resourcePath + QLatin1String("/previous.png"));
-    connect(toolPrevious, SIGNAL(clicked()), this, SIGNAL(findPrevious()));
+    connect(toolPrevious, &QAbstractButton::clicked, this, &FindWidget::findPrevious);
 
     hboxLayout->addWidget(toolPrevious);
 
     toolNext = setupToolButton(tr("Next"),
         resourcePath + QLatin1String("/next.png"));
     hboxLayout->addWidget(toolNext);
-    connect(toolNext, SIGNAL(clicked()), this, SIGNAL(findNext()));
+    connect(toolNext, &QAbstractButton::clicked, this, &FindWidget::findNext);
 
     checkCase = new QCheckBox(tr("Case Sensitive"), this);
     hboxLayout->addWidget(checkCase);

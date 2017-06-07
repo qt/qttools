@@ -78,18 +78,17 @@ private:
 private slots:
     void setupFinished();
 
-    void addBookmark();
-    void removeBookmark();
+    void addBookmarkActivated();
+    void removeBookmarkActivated();
     void manageBookmarks();
     void refreshBookmarkMenu();
     void refreshBookmarkToolBar();
     void renameBookmark(const QModelIndex &index);
 
     void setSourceFromAction();
-    void setSourceFromAction(QAction *action);
-    void setSourceFromIndex(const QModelIndex &index, bool newTab = false);
+    void setSourceFromIndex(const QModelIndex &index, bool newTab);
 
-    void focusInEvent();
+    void focusInEventOccurred();
     void managerWidgetAboutToClose();
     void textChanged(const QString &text);
     void customContextMenuRequested(const QPoint &point);
@@ -123,7 +122,7 @@ public:
     Ui::BookmarkWidget ui;
 
 signals:
-    void focusInEvent();
+    void focusInEventOccurred();
 
 private:
     void focusInEvent(QFocusEvent *event) override;

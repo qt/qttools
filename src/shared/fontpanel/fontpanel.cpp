@@ -68,18 +68,22 @@ FontPanel::FontPanel(QWidget *parentWidget) :
     writingSystems.push_front(QFontDatabase::Any);
     for (QFontDatabase::WritingSystem ws : qAsConst(writingSystems))
         m_writingSystemComboBox->addItem(QFontDatabase::writingSystemName(ws), QVariant(ws));
-    connect(m_writingSystemComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(slotWritingSystemChanged(int)));
+    connect(m_writingSystemComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this, &FontPanel::slotWritingSystemChanged);
     formLayout->addRow(tr("&Writing system"), m_writingSystemComboBox);
 
-    connect(m_familyComboBox, SIGNAL(currentFontChanged(QFont)), this, SLOT(slotFamilyChanged(QFont)));
+    connect(m_familyComboBox, &QFontComboBox::currentFontChanged,
+            this, &FontPanel::slotFamilyChanged);
     formLayout->addRow(tr("&Family"), m_familyComboBox);
 
     m_styleComboBox->setEditable(false);
-    connect(m_styleComboBox,  SIGNAL(currentIndexChanged(int)),  this, SLOT(slotStyleChanged(int)));
+    connect(m_styleComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this, &FontPanel::slotStyleChanged);
     formLayout->addRow(tr("&Style"), m_styleComboBox);
 
     m_pointSizeComboBox->setEditable(false);
-    connect(m_pointSizeComboBox, SIGNAL(currentIndexChanged(int)),  this, SLOT(slotPointSizeChanged(int)));
+    connect(m_pointSizeComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this, &FontPanel::slotPointSizeChanged);
     formLayout->addRow(tr("&Point size"), m_pointSizeComboBox);
 
     m_previewLineEdit->setReadOnly(true);
@@ -294,7 +298,8 @@ void FontPanel::delayedPreviewFontUpdate()
 {
     if (!m_previewFontUpdateTimer) {
         m_previewFontUpdateTimer = new QTimer(this);
-        connect(m_previewFontUpdateTimer, SIGNAL(timeout()), this, SLOT(slotUpdatePreviewFont()));
+        connect(m_previewFontUpdateTimer, &QTimer::timeout,
+                this, &FontPanel::slotUpdatePreviewFont);
         m_previewFontUpdateTimer->setInterval(0);
         m_previewFontUpdateTimer->setSingleShot(true);
     }

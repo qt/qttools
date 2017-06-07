@@ -64,8 +64,8 @@ public:
     QResultWidget(QWidget *parent = 0)
         : QTextBrowser(parent)
     {
-        connect(this, SIGNAL(anchorClicked(QUrl)),
-            this, SIGNAL(requestShowLink(QUrl)));
+        connect(this, &QTextBrowser::anchorClicked,
+                this, &QResultWidget::requestShowLink);
         setContextMenuPolicy(Qt::NoContextMenu);
     }
 
@@ -74,7 +74,7 @@ public:
         QString htmlFile = QString(QLatin1String("<html><head><title>%1"
             "</title></head><body>")).arg(tr("Search Results"));
 
-        int count = results.count();
+        const int count = results.count();
         if (count != 0) {
             if (isIndexing)
                 htmlFile += QString(QLatin1String("<div style=\"text-align:left;"
@@ -121,86 +121,37 @@ class QHelpSearchResultWidgetPrivate : public QObject
     Q_OBJECT
 
 private slots:
-    void setResults(int hitsCount)
+    void showFirstResultPage()
     {
-        if (!searchEngine.isNull()) {
-            showFirstResultPage();
-            updateNextButtonState(((hitsCount > 20) ? true : false));
-        }
-    }
-
-    void showNextResultPage()
-    {
-        if (!searchEngine.isNull()
-            && resultLastToShow < searchEngine->hitCount()) {
-            resultLastToShow += 20;
-            resultFirstToShow += 20;
-
-            resultTextBrowser->showResultPage(searchEngine->searchResults(resultFirstToShow,
-                resultLastToShow), isIndexing);
-            if (resultLastToShow >= searchEngine->hitCount())
-                updateNextButtonState(false);
-        }
+        if (!searchEngine.isNull())
+            resultFirstToShow = 0;
         updateHitRange();
     }
 
     void showLastResultPage()
     {
-        if (!searchEngine.isNull()) {
-            resultLastToShow = searchEngine->hitCount();
-            resultFirstToShow = resultLastToShow - (resultLastToShow % 20);
-
-            if (resultFirstToShow == resultLastToShow)
-                resultFirstToShow -= 20;
-
-            resultTextBrowser->showResultPage(searchEngine->searchResults(resultFirstToShow,
-                resultLastToShow), isIndexing);
-            updateNextButtonState(false);
-        }
-        updateHitRange();
-    }
-
-    void showFirstResultPage()
-    {
-        if (!searchEngine.isNull()) {
-            resultLastToShow = 20;
-            resultFirstToShow = 0;
-
-            resultTextBrowser->showResultPage(searchEngine->searchResults(resultFirstToShow,
-                resultLastToShow), isIndexing);
-            updatePrevButtonState(false);
-        }
+        if (!searchEngine.isNull())
+            resultFirstToShow = (searchEngine->searchResultCount() - 1) / ResultsRange * ResultsRange;
         updateHitRange();
     }
 
     void showPreviousResultPage()
     {
         if (!searchEngine.isNull()) {
-            int count = resultLastToShow % 20;
-            if (count == 0 || resultLastToShow != searchEngine->hitCount())
-                count = 20;
-
-            resultLastToShow -= count;
-            resultFirstToShow = resultLastToShow -20;
-
-            resultTextBrowser->showResultPage(searchEngine->searchResults(resultFirstToShow,
-                resultLastToShow), isIndexing);
-            if (resultFirstToShow == 0)
-                updatePrevButtonState(false);
+            resultFirstToShow -= ResultsRange;
+            if (resultFirstToShow < 0)
+                resultFirstToShow = 0;
         }
         updateHitRange();
     }
 
-    void updatePrevButtonState(bool state = true)
+    void showNextResultPage()
     {
-        firstResultPage->setEnabled(state);
-        previousResultPage->setEnabled(state);
-    }
-
-    void updateNextButtonState(bool state = true)
-    {
-        nextResultPage->setEnabled(state);
-        lastResultPage->setEnabled(state);
+        if (!searchEngine.isNull()
+            && resultFirstToShow + ResultsRange < searchEngine->searchResultCount()) {
+            resultFirstToShow += ResultsRange;
+        }
+        updateHitRange();
     }
 
     void indexingStarted()
@@ -217,23 +168,11 @@ private:
     QHelpSearchResultWidgetPrivate(QHelpSearchEngine *engine)
         : QObject()
         , searchEngine(engine)
-        , isIndexing(false)
     {
-        resultTextBrowser = 0;
-
-        resultLastToShow = 20;
-        resultFirstToShow = 0;
-
-        firstResultPage = 0;
-        previousResultPage = 0;
-        hitsLabel = 0;
-        nextResultPage = 0;
-        lastResultPage = 0;
-
-        connect(searchEngine, SIGNAL(indexingStarted()),
-            this, SLOT(indexingStarted()));
-        connect(searchEngine, SIGNAL(indexingFinished()),
-            this, SLOT(indexingFinished()));
+        connect(searchEngine.data(), &QHelpSearchEngine::indexingStarted,
+                this, &QHelpSearchResultWidgetPrivate::indexingStarted);
+        connect(searchEngine.data(), &QHelpSearchEngine::indexingFinished,
+                this, &QHelpSearchResultWidgetPrivate::indexingFinished);
     }
 
     ~QHelpSearchResultWidgetPrivate()
@@ -260,13 +199,20 @@ private:
         int count = 0;
 
         if (!searchEngine.isNull()) {
-            count = searchEngine->hitCount();
+            count = searchEngine->searchResultCount();
             if (count > 0) {
-                first = resultFirstToShow +1;
-                last = resultLastToShow > count ? count : resultLastToShow;
+                last = qMin(resultFirstToShow + ResultsRange, count);
+                first = resultFirstToShow + 1;
             }
+            resultTextBrowser->showResultPage(searchEngine->searchResults(resultFirstToShow,
+                               last), isIndexing);
         }
+
         hitsLabel->setText(QHelpSearchResultWidget::tr("%1 - %2 of %n Hits", 0, count).arg(first).arg(last));
+        firstResultPage->setEnabled(resultFirstToShow);
+        previousResultPage->setEnabled(resultFirstToShow);
+        lastResultPage->setEnabled(count - last);
+        nextResultPage->setEnabled(count - last);
     }
 
 private:
@@ -274,17 +220,18 @@ private:
 
     QPointer<QHelpSearchEngine> searchEngine;
 
-    QResultWidget *resultTextBrowser;
+    QResultWidget *resultTextBrowser = nullptr;
 
-    int resultLastToShow;
-    int resultFirstToShow;
-    bool isIndexing;
+    static const int ResultsRange = 20;
 
-    QToolButton *firstResultPage;
-    QToolButton *previousResultPage;
-    QLabel *hitsLabel;
-    QToolButton *nextResultPage;
-    QToolButton *lastResultPage;
+    int resultFirstToShow = 0;
+    bool isIndexing = false;
+
+    QToolButton *firstResultPage = nullptr;
+    QToolButton *previousResultPage = nullptr;
+    QLabel *hitsLabel = nullptr;
+    QToolButton *nextResultPage = nullptr;
+    QToolButton *lastResultPage = nullptr;
 };
 
 #include "qhelpsearchresultwidget.moc"
@@ -294,9 +241,8 @@ private:
     \class QHelpSearchResultWidget
     \since 4.4
     \inmodule QtHelp
-    \brief The QHelpSearchResultWidget class provides either a tree
-    widget or a text browser depending on the used search engine to display
-    the hits found by the search.
+    \brief The QHelpSearchResultWidget class provides a text browser to display
+    search results.
 */
 
 /*!
@@ -326,7 +272,6 @@ QHelpSearchResultWidget::QHelpSearchResultWidget(QHelpSearchEngine *engine)
         QString::fromUtf8(":/qt-project.org/assistant/images/1leftarrow.png")));
 
     d->hitsLabel = new QLabel(tr("0 - 0 of 0 Hits"), this);
-    d->hitsLabel->setEnabled(false);
     hBoxLayout->addWidget(d->hitsLabel);
     d->hitsLabel->setAlignment(Qt::AlignCenter);
     d->hitsLabel->setMinimumSize(QSize(150, d->hitsLabel->height()));
@@ -345,20 +290,20 @@ QHelpSearchResultWidget::QHelpSearchResultWidget(QHelpSearchEngine *engine)
     d->resultTextBrowser = new QResultWidget(this);
     vLayout->addWidget(d->resultTextBrowser);
 
-    connect(d->resultTextBrowser, SIGNAL(requestShowLink(QUrl)), this,
-        SIGNAL(requestShowLink(QUrl)));
+    connect(d->resultTextBrowser, &QResultWidget::requestShowLink,
+            this, &QHelpSearchResultWidget::requestShowLink);
 
-    connect(d->nextResultPage, SIGNAL(clicked()), d, SLOT(showNextResultPage()));
-    connect(d->lastResultPage, SIGNAL(clicked()), d, SLOT(showLastResultPage()));
-    connect(d->firstResultPage, SIGNAL(clicked()), d, SLOT(showFirstResultPage()));
-    connect(d->previousResultPage, SIGNAL(clicked()), d, SLOT(showPreviousResultPage()));
+    connect(d->nextResultPage, &QAbstractButton::clicked,
+            d, &QHelpSearchResultWidgetPrivate::showNextResultPage);
+    connect(d->lastResultPage, &QAbstractButton::clicked,
+            d, &QHelpSearchResultWidgetPrivate::showLastResultPage);
+    connect(d->firstResultPage, &QAbstractButton::clicked,
+            d, &QHelpSearchResultWidgetPrivate::showFirstResultPage);
+    connect(d->previousResultPage, &QAbstractButton::clicked,
+            d, &QHelpSearchResultWidgetPrivate::showPreviousResultPage);
 
-    connect(d->firstResultPage, SIGNAL(clicked()), d, SLOT(updateNextButtonState()));
-    connect(d->previousResultPage, SIGNAL(clicked()), d, SLOT(updateNextButtonState()));
-    connect(d->nextResultPage, SIGNAL(clicked()), d, SLOT(updatePrevButtonState()));
-    connect(d->lastResultPage, SIGNAL(clicked()), d, SLOT(updatePrevButtonState()));
-
-    connect(engine, SIGNAL(searchingFinished(int)), d, SLOT(setResults(int)));
+    connect(engine, &QHelpSearchEngine::searchingFinished,
+            d, &QHelpSearchResultWidgetPrivate::showFirstResultPage);
 }
 
 /*! \reimp
@@ -366,7 +311,7 @@ QHelpSearchResultWidget::QHelpSearchResultWidget(QHelpSearchEngine *engine)
 void QHelpSearchResultWidget::changeEvent(QEvent *event)
 {
     if (event->type() == QEvent::LanguageChange)
-        d->setResults(d->searchEngine->hitCount());
+        d->updateHitRange();
 }
 
 /*!
@@ -383,10 +328,9 @@ QHelpSearchResultWidget::~QHelpSearchResultWidget()
 */
 QUrl QHelpSearchResultWidget::linkAt(const QPoint &point)
 {
-    QUrl url;
     if (d->resultTextBrowser)
-        url = d->resultTextBrowser->anchorAt(point);
-    return url;
+        return d->resultTextBrowser->anchorAt(point);
+    return QUrl();
 }
 
 QT_END_NAMESPACE

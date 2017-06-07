@@ -74,7 +74,7 @@ Writer::Writer(const QString &path)
     const QString dbPath = m_dbDir + QLatin1Char('/') + QLatin1String(FTS_DB_NAME);
     m_db->setDatabaseName(dbPath);
     if (!m_db->open()) {
-        const QString error = QHelpSearchIndexWriter::tr("Cannot open database \"%1\" using connection \"%2\": %3")
+        const QString &error = QHelpSearchIndexWriter::tr("Cannot open database \"%1\" using connection \"%2\": %3")
                 .arg(dbPath, m_uniqueId, m_db->lastError().text());
         qWarning("%s", qUtf8Printable(error));
         delete m_db;

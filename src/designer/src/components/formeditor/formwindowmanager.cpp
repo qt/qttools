@@ -228,13 +228,14 @@ bool FormWindowManager::eventFilter(QObject *o, QEvent *e)
                 return true;
             }
         }
-        // don't break...
+        Q_FALLTHROUGH(); // don't break...
+
         // Embedded Design: Drop on different form: Make sure the right form
         // window/device is active before having the widget created by the factory
         case QEvent::Drop:
             if (activeFormWindow() != fw)
                 setActiveFormWindow(fw);
-        // don't break...
+            Q_FALLTHROUGH(); // don't break...
         default: {
             if (fw->handleEvent(widget, managedWidget, e)) {
                 return true;

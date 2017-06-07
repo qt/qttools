@@ -46,10 +46,10 @@ FilterPage::FilterPage(QWidget *parent)
     m_ui.customFilterWidget->headerItem()->setText(1, tr("Filter Attributes"));
     m_ui.customFilterWidget->setRootIsDecorated(false);
     m_ui.removeButton->setDisabled(true);
-    connect(m_ui.addButton, SIGNAL(clicked()),
-        this, SLOT(addFilter()));
-    connect(m_ui.removeButton, SIGNAL(clicked()),
-        this, SLOT(removeFilter()));
+    connect(m_ui.addButton, &QAbstractButton::clicked,
+            this, &FilterPage::addFilter);
+    connect(m_ui.removeButton, &QAbstractButton::clicked,
+            this, &FilterPage::removeFilter);
 }
 
 bool FilterPage::validatePage()

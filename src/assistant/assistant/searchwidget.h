@@ -59,7 +59,7 @@ signals:
 private slots:
     void search() const;
     void searchingStarted();
-    void searchingFinished(int hits);
+    void searchingFinished(int searchResultCount);
 
 private:
     bool eventFilter(QObject* o, QEvent *e) override;

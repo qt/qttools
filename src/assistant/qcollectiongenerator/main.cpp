@@ -437,7 +437,7 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    const auto filesToGenerate = config.filesToGenerate();
+    const QMap<QString, QString> &filesToGenerate = config.filesToGenerate();
     for (auto it = filesToGenerate.cbegin(), end = filesToGenerate.cend(); it != end; ++it) {
         fputs(qPrintable(QCG::tr("Generating help for %1...\n").arg(it.key())), stdout);
         QHelpProjectData helpData;
@@ -528,7 +528,7 @@ int main(int argc, char *argv[])
     if (config.aboutMenuTexts().count()) {
         QByteArray ba;
         QDataStream s(&ba, QIODevice::WriteOnly);
-        const auto aboutMenuTexts = config.aboutMenuTexts();
+        const QMap<QString, QString> &aboutMenuTexts = config.aboutMenuTexts();
         for (auto it = aboutMenuTexts.cbegin(), end = aboutMenuTexts.cend(); it != end; ++it)
             s << it.key() << it.value();
         CollectionConfiguration::setAboutMenuTexts(helpEngine, ba);
@@ -553,7 +553,7 @@ int main(int argc, char *argv[])
         QRegExp imgRegExp(QLatin1String("(<img[^>]+>)"));
         imgRegExp.setMinimal(true);
 
-        const auto aboutMenuTexts = config.aboutTextFiles();
+        const QMap<QString, QString> &aboutMenuTexts = config.aboutTextFiles();
         for (auto it = aboutMenuTexts.cbegin(), end = aboutMenuTexts.cend(); it != end; ++it) {
             s << it.key();
             QFileInfo fi(absoluteFileName(basePath, it.value()));

@@ -65,8 +65,13 @@
 #include <qpa/qplatformintegration.h>
 #include <qpa/qplatformscreen.h>
 #include <qpa/qplatformtheme.h>
+#include <qpa/qplatformthemefactory_p.h>
 #include <qpa/qplatformnativeinterface.h>
 #include <private/qhighdpiscaling_p.h>
+
+#ifdef QT_WIDGETS_LIB
+#  include <QtWidgets/QStyleFactory>
+#endif
 
 #include <algorithm>
 
@@ -493,16 +498,21 @@ QString qtDiag(unsigned flags)
 
     const QPlatformTheme *platformTheme = QGuiApplicationPrivate::platformTheme();
     str << "\nTheme:"
-           "\n  Available    : " << platformIntegration->themeNames()
-        << "\n  Styles       : " << platformTheme->themeHint(QPlatformTheme::StyleNames).toStringList();
+           "\n  Platforms requested : " << platformIntegration->themeNames()
+        << "\n            available : " << QPlatformThemeFactory::keys()
+#ifdef QT_WIDGETS_LIB
+        << "\n  Styles requested    : " << platformTheme->themeHint(QPlatformTheme::StyleNames).toStringList()
+        << "\n         available    : " << QStyleFactory::keys()
+#endif
+           ;
     const QString iconTheme = platformTheme->themeHint(QPlatformTheme::SystemIconThemeName).toString();
     if (!iconTheme.isEmpty()) {
-        str << "\n  Icon theme   : " << iconTheme
+        str << "\n  Icon theme          : " << iconTheme
             << ", " << platformTheme->themeHint(QPlatformTheme::SystemIconFallbackThemeName).toString()
-            << " from " << platformTheme->themeHint(QPlatformTheme::IconThemeSearchPaths).toStringList() << '\n';
+            << " from " << platformTheme->themeHint(QPlatformTheme::IconThemeSearchPaths).toStringList();
     }
     if (const QFont *systemFont = platformTheme->font())
-        str << "\n  System font  : " << *systemFont<< '\n';
+        str << "\n  System font         : " << *systemFont<< '\n';
 
     if (platformTheme->usePlatformNativeDialog(QPlatformTheme::FileDialog))
         str << "  Native file dialog\n";

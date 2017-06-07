@@ -41,10 +41,10 @@ FilesPage::FilesPage(QWidget *parent)
     m_ui.setupUi(this);
     m_ui.fileListWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
     m_ui.fileListWidget->installEventFilter(this);
-    connect(m_ui.removeButton, SIGNAL(clicked()),
-        this, SLOT(removeFile()));
-    connect(m_ui.removeAllButton, SIGNAL(clicked()),
-        this, SLOT(removeAllFiles()));
+    connect(m_ui.removeButton, &QAbstractButton::clicked,
+            this, &FilesPage::removeFile);
+    connect(m_ui.removeAllButton, &QAbstractButton::clicked,
+            this, &FilesPage::removeAllFiles);
 
     m_ui.fileLabel->setText(tr("<p><b>Warning:</b> "
         "When removing images or stylesheets, be aware that those files "

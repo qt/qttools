@@ -140,7 +140,7 @@ protected:
 
 private slots:
     void highlightSearchTerms();
-    void printPreview(QPrinter *printer);
+    void printPreviewToPrinter(QPrinter *printer);
     void handleSourceChanged(const QUrl &url);
     void slotHighlighted(const QString &link);
 

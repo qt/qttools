@@ -39,10 +39,10 @@ GeneralPage::GeneralPage(QWidget *parent)
         "folder for the documentation."));
 
     m_ui.setupUi(this);
-    connect(m_ui.namespaceLineEdit, SIGNAL(textChanged(QString)),
-        this, SIGNAL(completeChanged()));
-    connect(m_ui.folderLineEdit, SIGNAL(textChanged(QString)),
-        this, SIGNAL(completeChanged()));
+    connect(m_ui.namespaceLineEdit, &QLineEdit::textChanged,
+            this, &QWizardPage::completeChanged);
+    connect(m_ui.folderLineEdit, &QLineEdit::textChanged,
+            this, &QWizardPage::completeChanged);
 
     m_ui.namespaceLineEdit->setText(QLatin1String("mycompany.com"));
     m_ui.folderLineEdit->setText(QLatin1String("product_1.0"));

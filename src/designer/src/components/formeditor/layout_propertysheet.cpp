@@ -374,6 +374,7 @@ QVariant LayoutPropertySheet::property(int index) const
             return grid->verticalSpacing();
         if (const QFormLayout *form = qobject_cast<QFormLayout *>(m_layout))
             return form->verticalSpacing();
+        break;
     case LayoutPropertyBoxStretch:
         if (const QBoxLayout *box = qobject_cast<QBoxLayout *>(m_layout))
             return QVariant(QByteArray(QFormBuilderExtra::boxLayoutStretch(box).toUtf8()));

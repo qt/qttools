@@ -55,12 +55,14 @@ class QHelpContentItemPrivate
 public:
     QHelpContentItemPrivate(const QString &t, const QString &l,
                             QHelpDBReader *r, QHelpContentItem *p)
+        : parent(p),
+          title(t),
+          link(l),
+          helpDBReader(r)
     {
-        parent = p;
-        title = t;
-        link = l;
-        helpDBReader = r;
     }
+
+    void appendChild(QHelpContentItem *item) { childItems.append(item); }
 
     QList<QHelpContentItem*> childItems;
     QHelpContentItem *parent;
@@ -95,7 +97,7 @@ private:
 class QHelpContentModelPrivate
 {
 public:
-    QHelpContentItem *rootItem;
+    QHelpContentItem *rootItem = nullptr;
     QHelpContentProvider *qhelpContentProvider;
 };
 
@@ -123,11 +125,6 @@ QHelpContentItem::~QHelpContentItem()
     delete d;
 }
 
-void QHelpContentItem::appendChild(QHelpContentItem *item)
-{
-    d->childItems.append(item);
-}
-
 /*!
     Returns the child of the content item in the give \a row.
 
@@ -135,8 +132,6 @@ void QHelpContentItem::appendChild(QHelpContentItem *item)
 */
 QHelpContentItem *QHelpContentItem::child(int row) const
 {
-    if (row >= childCount())
-        return 0;
     return d->childItems.value(row);
 }
 
@@ -290,7 +285,7 @@ CHECK_DEPTH:
                     m_mutex.lock();
                     item = new QHelpContentItem(title, link,
                         m_helpEngine->fileNameReaderMap.value(dbFileName), rootItem);
-                    rootItem->appendChild(item);
+                    rootItem->d->appendChild(item);
                     m_mutex.unlock();
                     stack.push(item);
                     _depth = 1;
@@ -303,7 +298,7 @@ CHECK_DEPTH:
                     if (depth == _depth) {
                         item = new QHelpContentItem(title, link,
                             m_helpEngine->fileNameReaderMap.value(dbFileName), stack.top());
-                        stack.top()->appendChild(item);
+                        stack.top()->d->appendChild(item);
                     } else if (depth < _depth) {
                         stack.pop();
                         --_depth;
@@ -349,12 +344,12 @@ QHelpContentModel::QHelpContentModel(QHelpEnginePrivate *helpEngine)
     : QAbstractItemModel(helpEngine)
 {
     d = new QHelpContentModelPrivate();
-    d->rootItem = 0;
     d->qhelpContentProvider = new QHelpContentProvider(helpEngine);
 
-    connect(d->qhelpContentProvider, SIGNAL(finishedSuccessFully()),
-        this, SLOT(insertContents()), Qt::QueuedConnection);
-    connect(helpEngine->q, SIGNAL(readersAboutToBeInvalidated()), this, SLOT(invalidateContents()));
+    connect(d->qhelpContentProvider, &QHelpContentProvider::finishedSuccessFully,
+            this, &QHelpContentModel::insertContents, Qt::QueuedConnection);
+    connect(helpEngine->q, &QHelpEngineCore::readersAboutToBeInvalidated,
+            [this]() { invalidateContents(); });
 }
 
 /*!
@@ -369,7 +364,8 @@ QHelpContentModel::~QHelpContentModel()
 void QHelpContentModel::invalidateContents(bool onShutDown)
 {
     if (onShutDown) {
-        disconnect(this, SLOT(insertContents()));
+        disconnect(d->qhelpContentProvider, &QHelpContentProvider::finishedSuccessFully,
+                   this, &QHelpContentModel::insertContents);
     } else {
         beginResetModel();
     }
@@ -398,8 +394,7 @@ void QHelpContentModel::insertContents()
     if (!newRootItem)
         return;
     beginResetModel();
-    if (d->rootItem)
-        delete d->rootItem;
+    delete d->rootItem;
     d->rootItem = newRootItem;
     endResetModel();
     emit contentsCreated();
@@ -521,8 +516,8 @@ QHelpContentWidget::QHelpContentWidget()
 {
     header()->hide();
     setUniformRowHeights(true);
-    connect(this, SIGNAL(activated(QModelIndex)),
-        this, SLOT(showLink(QModelIndex)));
+    connect(this, &QAbstractItemView::activated,
+            this, &QHelpContentWidget::showLink);
 }
 
 /*!

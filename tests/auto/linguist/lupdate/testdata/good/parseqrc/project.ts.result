@@ -4,7 +4,7 @@
 <context>
     <name>QApplication</name>
     <message>
-        <location filename="main.cpp" line="39"/>
+        <location filename="main.cpp" line="34"/>
         <source>Hello world</source>
         <translation type="unfinished"></translation>
     </message>
@@ -17,7 +17,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main.qml" line="38"/>
+        <location filename="main.qml" line="33"/>
         <source>From QML file in root</source>
         <translation type="unfinished"></translation>
     </message>

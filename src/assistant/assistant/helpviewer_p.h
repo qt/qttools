@@ -86,9 +86,27 @@ public:
         return true;
     }
 
-    void openLink(bool newPage)
+public slots:
+    void openLink()
     {
-        if(lastAnchor.isEmpty())
+        doOpenLink(false);
+    }
+
+    void openLinkInNewPage()
+    {
+        doOpenLink(true);
+    }
+
+public:
+    int zoomCount;
+    bool forceFont;
+    QString lastAnchor;
+
+private:
+
+    void doOpenLink(bool newPage)
+    {
+        if (lastAnchor.isEmpty())
             return;
         if (newPage)
             OpenPagesManager::instance()->createPage(lastAnchor);
@@ -97,27 +115,13 @@ public:
         lastAnchor.clear();
     }
 
-public slots:
-    void openLink()
-    {
-        openLink(false);
-    }
-
-    void openLinkInNewPage()
-    {
-        openLink(true);
-    }
-
-public:
-    int zoomCount;
-    bool forceFont;
-    QString lastAnchor;
 #elif defined(BROWSER_QTWEBKIT)
     qreal webDpiRatio;
 #endif // BROWSER_QTWEBKIT
 
 public:
     bool m_loadFinished;
+
 };
 
 QT_END_NAMESPACE

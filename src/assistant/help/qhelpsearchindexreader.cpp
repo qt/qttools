@@ -56,20 +56,20 @@ void QHelpSearchIndexReader::cancelSearching()
 }
 
 void QHelpSearchIndexReader::search(const QString &collectionFile, const QString &indexFilesFolder,
-    const QList<QHelpSearchQuery> &queryList)
+    const QString &searchInput)
 {
     wait();
 
     m_searchResults.clear();
     m_cancel = false;
-    m_query = queryList;
+    m_searchInput = searchInput;
     m_collectionFile = collectionFile;
     m_indexFilesFolder = indexFilesFolder;
 
     start(QThread::NormalPriority);
 }
 
-int QHelpSearchIndexReader::hitCount() const
+int QHelpSearchIndexReader::searchResultCount() const
 {
     QMutexLocker lock(&m_mutex);
     return m_searchResults.count();

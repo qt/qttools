@@ -51,18 +51,17 @@ BookmarkDialog::BookmarkDialog(BookmarkModel *sourceModel, const QString &title,
     ui.newFolderButton->setVisible(false);
     ui.buttonBox->button(QDialogButtonBox::Ok)->setDefault(true);
 
-    connect(ui.buttonBox, SIGNAL(accepted()), this, SLOT(accepted()));
-    connect(ui.buttonBox, SIGNAL(rejected()), this, SLOT(rejected()));
-    connect(ui.newFolderButton, SIGNAL(clicked()), this, SLOT(addFolder()));
-    connect(ui.toolButton, SIGNAL(clicked()), this, SLOT(toolButtonClicked()));
-    connect(ui.bookmarkEdit, SIGNAL(textChanged(QString)), this,
-        SLOT(textChanged(QString)));
+    connect(ui.buttonBox, &QDialogButtonBox::accepted, this, &BookmarkDialog::accepted);
+    connect(ui.buttonBox, &QDialogButtonBox::rejected, this, &BookmarkDialog::rejected);
+    connect(ui.newFolderButton, &QAbstractButton::clicked, this, &BookmarkDialog::addFolder);
+    connect(ui.toolButton, &QAbstractButton::clicked, this, &BookmarkDialog::toolButtonClicked);
+    connect(ui.bookmarkEdit, &QLineEdit::textChanged, this, &BookmarkDialog::textChanged);
 
     bookmarkProxyModel = new BookmarkFilterModel(this);
     bookmarkProxyModel->setSourceModel(bookmarkModel);
     ui.bookmarkFolders->setModel(bookmarkProxyModel);
-    connect(ui.bookmarkFolders, SIGNAL(currentIndexChanged(int)), this,
-        SLOT(currentIndexChanged(int)));
+    connect(ui.bookmarkFolders, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this, QOverload<int>::of(&BookmarkDialog::currentIndexChanged));
 
     bookmarkTreeModel = new BookmarkTreeModel(this);
     bookmarkTreeModel->setSourceModel(bookmarkModel);
@@ -74,10 +73,10 @@ BookmarkDialog::BookmarkDialog(BookmarkModel *sourceModel, const QString &title,
     ui.treeView->viewport()->installEventFilter(this);
     ui.treeView->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    connect(ui.treeView, SIGNAL(customContextMenuRequested(QPoint)), this,
-        SLOT(customContextMenuRequested(QPoint)));
-    connect(ui.treeView->selectionModel(), SIGNAL(currentChanged(QModelIndex,
-        QModelIndex)), this, SLOT(currentIndexChanged(QModelIndex)));
+    connect(ui.treeView, &QWidget::customContextMenuRequested,
+            this, &BookmarkDialog::customContextMenuRequested);
+    connect(ui.treeView->selectionModel(), &QItemSelectionModel::currentChanged,
+            this, QOverload<const QModelIndex &>::of(&BookmarkDialog::currentIndexChanged));
 
     ui.bookmarkFolders->setCurrentIndex(ui.bookmarkFolders->count() > 1 ? 1 : 0);
 

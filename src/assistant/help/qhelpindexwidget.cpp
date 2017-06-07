@@ -71,37 +71,30 @@ private:
     QMap<QHelpDBReader*, QSet<int> > m_indexIds;
     QStringList m_filterAttributes;
     mutable QMutex m_mutex;
-    bool m_abort;
+    bool m_abort = false;
 };
 
 class QHelpIndexModelPrivate
 {
 public:
     QHelpIndexModelPrivate(QHelpEnginePrivate *hE)
+        : helpEngine(hE),
+          indexProvider(new QHelpIndexProvider(helpEngine))
     {
-        helpEngine = hE;
-        indexProvider = new QHelpIndexProvider(helpEngine);
-        insertedRows = 0;
     }
 
     QHelpEnginePrivate *helpEngine;
     QHelpIndexProvider *indexProvider;
     QStringList indices;
-    int insertedRows;
+    int insertedRows = 0;
     QString currentFilter;
     QList<QHelpDBReader*> activeReaders;
 };
 
-static bool caseInsensitiveLessThan(const QString &as, const QString &bs)
-{
-    return QString::compare(as, bs, Qt::CaseInsensitive) < 0;
-}
-
 QHelpIndexProvider::QHelpIndexProvider(QHelpEnginePrivate *helpEngine)
-    : QThread(helpEngine)
+    : QThread(helpEngine),
+      m_helpEngine(helpEngine)
 {
-    m_helpEngine = helpEngine;
-    m_abort = false;
 }
 
 QHelpIndexProvider::~QHelpIndexProvider()
@@ -148,9 +141,7 @@ QList<QHelpDBReader*> QHelpIndexProvider::activeReaders() const
 QSet<int> QHelpIndexProvider::indexIds(QHelpDBReader *reader) const
 {
     QMutexLocker lck(&m_mutex);
-    if (m_indexIds.contains(reader))
-        return m_indexIds.value(reader);
-    return QSet<int>();
+    return m_indexIds.value(reader);
 }
 
 void QHelpIndexProvider::run()
@@ -192,7 +183,7 @@ void QHelpIndexProvider::run()
     }
     m_mutex.lock();
     m_indices = indicesSet.values();
-    std::sort(m_indices.begin(), m_indices.end(), caseInsensitiveLessThan);
+    m_indices.sort(Qt::CaseInsensitive);
     m_mutex.unlock();
 }
 
@@ -229,8 +220,10 @@ QHelpIndexModel::QHelpIndexModel(QHelpEnginePrivate *helpEngine)
 {
     d = new QHelpIndexModelPrivate(helpEngine);
 
-    connect(d->indexProvider, SIGNAL(finished()), this, SLOT(insertIndices()));
-    connect(helpEngine->q, SIGNAL(readersAboutToBeInvalidated()), this, SLOT(invalidateIndex()));
+    connect(d->indexProvider, &QThread::finished,
+            this, &QHelpIndexModel::insertIndices);
+    connect(helpEngine->q, &QHelpEngineCore::readersAboutToBeInvalidated,
+            [this]() { invalidateIndex(); });
 }
 
 QHelpIndexModel::~QHelpIndexModel()
@@ -240,8 +233,10 @@ QHelpIndexModel::~QHelpIndexModel()
 
 void QHelpIndexModel::invalidateIndex(bool onShutDown)
 {
-    if (onShutDown)
-        disconnect(this, SLOT(insertIndices()));
+    if (onShutDown) {
+        disconnect(d->indexProvider, &QThread::finished,
+                   this, &QHelpIndexModel::insertIndices);
+    }
     d->indexProvider->stopCollecting();
     d->indices.clear();
     if (!onShutDown)
@@ -263,7 +258,7 @@ void QHelpIndexModel::insertIndices()
 {
     d->indices = d->indexProvider->indices();
     d->activeReaders = d->indexProvider->activeReaders();
-    QStringList attributes = d->helpEngine->q->filterAttributes(d->currentFilter);
+    const QStringList &attributes = d->helpEngine->q->filterAttributes(d->currentFilter);
     if (attributes.count() > 1) {
         for (QHelpDBReader *r : qAsConst(d->activeReaders))
             r->createAttributesCache(attributes, d->indexProvider->indexIds(r));
@@ -282,16 +277,12 @@ bool QHelpIndexModel::isCreatingIndex() const
 }
 
 /*!
-    Returns all hits found for the \a keyword. A hit consists of
-    the URL and the document title.
+    \obsolete
+    Use QHelpEngineCore::linksForKeyword() instead.
 */
 QMap<QString, QUrl> QHelpIndexModel::linksForKeyword(const QString &keyword) const
 {
-    QMap<QString, QUrl> linkMap;
-    QStringList filterAttributes = d->helpEngine->q->filterAttributes(d->currentFilter);
-    for (const QHelpDBReader *reader : qAsConst(d->activeReaders))
-        reader->linksForKeyword(keyword, filterAttributes, linkMap);
-    return linkMap;
+    return d->helpEngine->q->linksForKeyword(keyword);
 }
 
 /*!
@@ -316,19 +307,18 @@ QModelIndex QHelpIndexModel::filter(const QString &filter, const QString &wildca
     int perfectMatch = -1;
 
     if (!wildcard.isEmpty()) {
-        QRegExp regExp(wildcard, Qt::CaseInsensitive);
-        regExp.setPatternSyntax(QRegExp::Wildcard);
+        const QRegExp regExp(wildcard, Qt::CaseInsensitive, QRegExp::Wildcard);
         for (const QString &index : qAsConst(d->indices)) {
             if (index.contains(regExp)) {
                 lst.append(index);
                 if (perfectMatch == -1 && index.startsWith(filter, Qt::CaseInsensitive)) {
                     if (goodMatch == -1)
-                        goodMatch = lst.count()-1;
+                        goodMatch = lst.count() - 1;
                     if (filter.length() == index.length()){
-                        perfectMatch = lst.count()-1;
+                        perfectMatch = lst.count() - 1;
                     }
                 } else if (perfectMatch > -1 && index == filter) {
-                    perfectMatch = lst.count()-1;
+                    perfectMatch = lst.count() - 1;
                 }
             }
         }
@@ -338,12 +328,12 @@ QModelIndex QHelpIndexModel::filter(const QString &filter, const QString &wildca
                 lst.append(index);
                 if (perfectMatch == -1 && index.startsWith(filter, Qt::CaseInsensitive)) {
                     if (goodMatch == -1)
-                        goodMatch = lst.count()-1;
+                        goodMatch = lst.count() - 1;
                     if (filter.length() == index.length()){
-                        perfectMatch = lst.count()-1;
+                        perfectMatch = lst.count() - 1;
                     }
                 } else if (perfectMatch > -1 && index == filter) {
-                    perfectMatch = lst.count()-1;
+                    perfectMatch = lst.count() - 1;
                 }
             }
         }
@@ -382,7 +372,7 @@ QModelIndex QHelpIndexModel::filter(const QString &filter, const QString &wildca
 
     This signal is emitted when the item representing the \a keyword
     is activated and the item has more than one link associated.
-    The \a links consist of the document title and their URL.
+    The \a links consist of the document titles and their URLs.
 */
 
 QHelpIndexWidget::QHelpIndexWidget()
@@ -390,8 +380,8 @@ QHelpIndexWidget::QHelpIndexWidget()
 {
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     setUniformItemSizes(true);
-    connect(this, SIGNAL(activated(QModelIndex)),
-        this, SLOT(showLink(QModelIndex)));
+    connect(this, &QAbstractItemView::activated,
+            this, &QHelpIndexWidget::showLink);
 }
 
 void QHelpIndexWidget::showLink(const QModelIndex &index)
@@ -403,17 +393,14 @@ void QHelpIndexWidget::showLink(const QModelIndex &index)
     if (!indexModel)
         return;
 
-    const QVariant v = indexModel->data(index, Qt::DisplayRole);
-    QString name;
-    if (v.isValid())
-        name = v.toString();
+    const QVariant &v = indexModel->data(index, Qt::DisplayRole);
+    const QString name = v.isValid() ? v.toString() : QString();
 
-    const QMap<QString, QUrl> links = indexModel->linksForKeyword(name);
-    if (links.count() > 1) {
+    const QMap<QString, QUrl> &links = indexModel->linksForKeyword(name);
+    if (links.count() > 1)
         emit linksActivated(links, name);
-    } else if (!links.isEmpty()) {
+    else if (!links.isEmpty())
         emit linkActivated(links.first(), name);
-    }
 }
 
 /*!
@@ -437,7 +424,7 @@ void QHelpIndexWidget::filterIndices(const QString &filter, const QString &wildc
     QHelpIndexModel *indexModel = qobject_cast<QHelpIndexModel*>(model());
     if (!indexModel)
         return;
-    QModelIndex idx = indexModel->filter(filter, wildcard);
+    const QModelIndex &idx = indexModel->filter(filter, wildcard);
     if (idx.isValid())
         setCurrentIndex(idx);
 }

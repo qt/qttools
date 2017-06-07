@@ -42,10 +42,10 @@ OutputPage::OutputPage(QWidget *parent)
     setButtonText(QWizard::NextButton, tr("Convert..."));
 
     m_ui.setupUi(this);
-    connect(m_ui.projectLineEdit, SIGNAL(textChanged(QString)),
-        this, SIGNAL(completeChanged()));
-    connect(m_ui.collectionLineEdit, SIGNAL(textChanged(QString)),
-        this, SIGNAL(completeChanged()));
+    connect(m_ui.projectLineEdit, &QLineEdit::textChanged,
+            this, &QWizardPage::completeChanged);
+    connect(m_ui.collectionLineEdit, &QLineEdit::textChanged,
+            this, &QWizardPage::completeChanged);
 
     registerField(QLatin1String("ProjectFileName"),
         m_ui.projectLineEdit);

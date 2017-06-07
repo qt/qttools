@@ -72,7 +72,7 @@ public:
 private:
     QVector<QHelpSearchResult> queryTable(const QSqlDatabase &db,
                                           const QString &tableName,
-                                          const QString &term) const;
+                                          const QString &searchInput) const;
 
     QString m_indexPath;
     QMultiMap<QString, QStringList> m_namespaces;

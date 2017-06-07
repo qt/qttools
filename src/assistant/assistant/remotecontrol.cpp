@@ -64,11 +64,12 @@ RemoteControl::RemoteControl(MainWindow *mainWindow)
 
 {
     TRACE_OBJ
-    connect(m_mainWindow, SIGNAL(initDone()), this, SLOT(applyCache()));
+    connect(m_mainWindow, &MainWindow::initDone,
+            this, &RemoteControl::applyCache);
 
     StdInListener *l = new StdInListener(this);
-    connect(l, SIGNAL(receivedCommand(QString)),
-        this, SLOT(handleCommandString(QString)));
+    connect(l, &StdInListener::receivedCommand,
+            this, &RemoteControl::handleCommandString);
     l->start();
 }
 
@@ -120,7 +121,7 @@ void RemoteControl::splitInputString(const QString &input, QString &cmd,
     QString cmdLine = input.trimmed();
     int i = cmdLine.indexOf(QLatin1Char(' '));
     cmd = cmdLine.left(i);
-    arg = cmdLine.mid(i+1);
+    arg = cmdLine.mid(i + 1);
     cmd = cmd.toLower();
 }
 
@@ -183,11 +184,8 @@ void RemoteControl::handleActivateKeywordCommand(const QString &arg)
                     m_mainWindow->setSearchVisible(true);
                     if (QHelpSearchQueryWidget *w = se->queryWidget()) {
                         w->collapseExtendedSearch();
-                        QList<QHelpSearchQuery> queryList;
-                        queryList << QHelpSearchQuery(QHelpSearchQuery::DEFAULT,
-                            QStringList(arg));
-                        w->setQuery(queryList);
-                        se->search(queryList);
+                        w->setSearchInput(arg);
+                        se->search(arg);
                     }
                 }
             } else {

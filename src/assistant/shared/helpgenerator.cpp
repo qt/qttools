@@ -48,11 +48,11 @@ HelpGenerator::HelpGenerator(bool silent)
 {
     generator = new QHelpGenerator(this);
     if (!silent) {
-        connect(generator, SIGNAL(statusChanged(QString)),
-            this, SLOT(printStatus(QString)));
+        connect(generator, &QHelpGenerator::statusChanged,
+                this, &HelpGenerator::printStatus);
     }
-    connect(generator, SIGNAL(warning(QString)),
-        this, SLOT(printWarning(QString)));
+    connect(generator, &QHelpGenerator::warning,
+            this, &HelpGenerator::printWarning);
 }
 
 bool HelpGenerator::generate(QHelpDataInterface *helpData,

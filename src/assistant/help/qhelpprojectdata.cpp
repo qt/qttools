@@ -94,18 +94,20 @@ void QHelpProjectDataPrivate::readData(const QByteArray &contents)
         readNext();
         if (isStartElement()) {
             if (name() == QLatin1String("QtHelpProject")
-                && attributes().value(QLatin1String("version")) == QLatin1String("1.0"))
+                    && attributes().value(QLatin1String("version"))
+                    == QLatin1String("1.0")) {
                 readProject();
-            else
+            } else {
                 raiseError(QCoreApplication::translate("QHelpProject",
                                "Unknown token. Expected \"QtHelpProject\"."));
+            }
         }
     }
 
     if (hasError()) {
         raiseError(QCoreApplication::translate("QHelpProject",
-                       "Error in line %1: %2").arg(lineNumber())
-            .arg(errorString()));
+                   "Error in line %1: %2").arg(lineNumber())
+                   .arg(errorString()));
     }
 }
 
@@ -199,8 +201,8 @@ void QHelpProjectDataPrivate::readTOC()
         readNext();
         if (isStartElement()) {
             if (name() == QLatin1String("section")) {
-                QString title = attributes().value(QLatin1String("title")).toString();
-                QString ref = attributes().value(QLatin1String("ref")).toString();
+                const QString &title = attributes().value(QLatin1String("title")).toString();
+                const QString &ref = attributes().value(QLatin1String("ref")).toString();
                 if (contentStack.isEmpty()) {
                     itm = new QHelpDataContentItem(0, title, ref);
                     filterSectionList.last().addContent(itm);
@@ -216,7 +218,7 @@ void QHelpProjectDataPrivate::readTOC()
                 contentStack.pop();
                 continue;
             } else if (name() == QLatin1String("toc") && contentStack.isEmpty()) {
-                break;
+                return;
             } else {
                 raiseUnknownTokenError();
             }
@@ -258,7 +260,7 @@ void QHelpProjectDataPrivate::readKeywords()
             if (name() == QLatin1String("keyword"))
                 continue;
             else if (name() == QLatin1String("keywords"))
-                break;
+                return;
             else
                 raiseUnknownTokenError();
         }
@@ -278,7 +280,7 @@ void QHelpProjectDataPrivate::readFiles()
             if (name() == QLatin1String("file"))
                 continue;
             else if (name() == QLatin1String("files"))
-                break;
+                return;
             else
                 raiseUnknownTokenError();
         }
@@ -298,12 +300,12 @@ void QHelpProjectDataPrivate::addMatchingFiles(const QString &pattern)
         return;
     }
 
-    QFileInfo fileInfo(rootPath + QLatin1Char('/') + pattern);
+    const QFileInfo fileInfo(rootPath + QLatin1Char('/') + pattern);
     const QDir &dir = fileInfo.dir();
     const QString &path = dir.canonicalPath();
 
     // QDir::entryList() is expensive, so we cache the results.
-    auto it = dirEntriesCache.constFind(path);
+    const auto &it = dirEntriesCache.constFind(path);
     const QStringList &entries = it != dirEntriesCache.cend() ?
                                  it.value() : dir.entryList(QDir::Files);
     if (it == dirEntriesCache.cend())
@@ -315,7 +317,7 @@ void QHelpProjectDataPrivate::addMatchingFiles(const QString &pattern)
 #else
     Qt::CaseSensitivity cs = Qt::CaseSensitive;
 #endif
-    QRegExp regExp(fileInfo.fileName(), cs, QRegExp::Wildcard);
+    const QRegExp regExp(fileInfo.fileName(), cs, QRegExp::Wildcard);
     for (const QString &file : entries) {
         if (regExp.exactMatch(file)) {
             matchFound = true;
@@ -336,7 +338,7 @@ bool QHelpProjectDataPrivate::hasValidSyntax(const QString &nameSpace,
     QUrl url;
     const QLatin1String scheme("qthelp");
     url.setScheme(scheme);
-    const QString canonicalNamespace = nameSpace.toLower();
+    const QString &canonicalNamespace = nameSpace.toLower();
     url.setHost(canonicalNamespace);
     url.setPath(slash + vFolder);
 

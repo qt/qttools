@@ -48,27 +48,19 @@
 QT_BEGIN_NAMESPACE
 
 QHelpDBReader::QHelpDBReader(const QString &dbName)
-    : QObject(0)
+    : QObject(0),
+      m_dbName(dbName),
+      m_uniqueId(QHelpGlobal::uniquifyConnectionName(QLatin1String("QHelpDBReader"),
+                                                     this))
 {
-    initObject(dbName,
-        QHelpGlobal::uniquifyConnectionName(QLatin1String("QHelpDBReader"),
-        this));
 }
 
 QHelpDBReader::QHelpDBReader(const QString &dbName, const QString &uniqueId,
                            QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      m_dbName(dbName),
+      m_uniqueId(uniqueId)
 {
-    initObject(dbName, uniqueId);
-}
-
-void QHelpDBReader::initObject(const QString &dbName, const QString &uniqueId)
-{
-    m_dbName = dbName;
-    m_uniqueId = uniqueId;
-    m_initDone = false;
-    m_query = 0;
-    m_useAttributesCache = false;
 }
 
 QHelpDBReader::~QHelpDBReader()
@@ -145,7 +137,7 @@ QList<QStringList> QHelpDBReader::filterAttributeSets() const
             "FilterAttributeTable b WHERE a.FilterAttributeId=b.Id ORDER BY a.Id"));
         int oldId = -1;
         while (m_query->next()) {
-            int id = m_query->value(0).toInt();
+            const int id = m_query->value(0).toInt();
             if (id != oldId) {
                 result.append(QStringList());
                 oldId = id;
@@ -274,8 +266,9 @@ QStringList QHelpDBReader::indicesForFilter(const QStringList &filterAttributes)
     return indices;
 }
 
-void QHelpDBReader::linksForKeyword(const QString &keyword, const QStringList &filterAttributes,
-                                    QMap<QString, QUrl> &linkMap) const
+void QHelpDBReader::linksForKeyword(const QString &keyword,
+                                    const QStringList &filterAttributes,
+                                    QMap<QString, QUrl> *linkMap) const
 {
     if (!m_query)
         return;
@@ -297,7 +290,7 @@ void QHelpDBReader::linksForKeyword(const QString &keyword, const QStringList &f
         m_query->exec(query);
         while (m_query->next()) {
             if (m_indicesCache.contains(m_query->value(5).toInt())) {
-                linkMap.insertMulti(m_query->value(0).toString(), buildQUrl(m_query->value(1).toString(),
+                linkMap->insertMulti(m_query->value(0).toString(), buildQUrl(m_query->value(1).toString(),
                     m_query->value(2).toString(), m_query->value(3).toString(),
                     m_query->value(4).toString()));
             }
@@ -328,7 +321,7 @@ void QHelpDBReader::linksForKeyword(const QString &keyword, const QStringList &f
         title = m_query->value(0).toString();
         if (title.isEmpty()) // generate a title + corresponding path
             title = keyword + QLatin1String(" : ") + m_query->value(3).toString();
-        linkMap.insertMulti(title, buildQUrl(m_query->value(1).toString(),
+        linkMap->insertMulti(title, buildQUrl(m_query->value(1).toString(),
             m_query->value(2).toString(), m_query->value(3).toString(),
             m_query->value(4).toString()));
     }
@@ -336,7 +329,7 @@ void QHelpDBReader::linksForKeyword(const QString &keyword, const QStringList &f
 
 void QHelpDBReader::linksForIdentifier(const QString &id,
                                        const QStringList &filterAttributes,
-                                       QMap<QString, QUrl> &linkMap) const
+                                       QMap<QString, QUrl> *linkMap) const
 {
     if (!m_query)
         return;
@@ -358,7 +351,7 @@ void QHelpDBReader::linksForIdentifier(const QString &id,
         m_query->exec(query);
         while (m_query->next()) {
             if (m_indicesCache.contains(m_query->value(5).toInt())) {
-                linkMap.insertMulti(m_query->value(0).toString(), buildQUrl(m_query->value(1).toString(),
+                linkMap->insertMulti(m_query->value(0).toString(), buildQUrl(m_query->value(1).toString(),
                     m_query->value(2).toString(), m_query->value(3).toString(),
                     m_query->value(4).toString()));
             }
@@ -386,7 +379,7 @@ void QHelpDBReader::linksForIdentifier(const QString &id,
 
     m_query->exec(query);
     while (m_query->next()) {
-        linkMap.insertMulti(m_query->value(0).toString(), buildQUrl(m_query->value(1).toString(),
+        linkMap->insertMulti(m_query->value(0).toString(), buildQUrl(m_query->value(1).toString(),
             m_query->value(2).toString(), m_query->value(3).toString(),
             m_query->value(4).toString()));
     }
@@ -428,32 +421,26 @@ QList<QByteArray> QHelpDBReader::contentsForFilter(const QStringList &filterAttr
     }
 
     m_query->exec(query);
-    while (m_query->next()) {
+    while (m_query->next())
         contents.append(m_query->value(0).toByteArray());
-    }
     return contents;
 }
 
 QUrl QHelpDBReader::urlOfPath(const QString &relativePath) const
 {
-    QUrl url;
     if (!m_query)
-        return url;
+        return QUrl();
 
     m_query->exec(QLatin1String("SELECT a.Name, b.Name FROM NamespaceTable a, "
         "FolderTable b WHERE a.id=b.NamespaceId and a.Id=1"));
-    if (m_query->next()) {
-        QString rp = relativePath;
-        QString anchor;
-        int i = rp.indexOf(QLatin1Char('#'));
-        if (i > -1) {
-            rp = relativePath.left(i);
-            anchor = relativePath.mid(i+1);
-        }
-        url = buildQUrl(m_query->value(0).toString(),
-            m_query->value(1).toString(), rp, anchor);
-    }
-    return url;
+    if (!m_query->next())
+        return QUrl();
+
+    const int idx = relativePath.indexOf(QLatin1Char('#'));
+    const QString &rp = idx < 0 ? relativePath : relativePath.left(idx);
+    const QString anchor = idx < 0 ? QString() : relativePath.mid(idx + 1);
+    return buildQUrl(m_query->value(0).toString(),
+                     m_query->value(1).toString(), rp, anchor);
 }
 
 QStringList QHelpDBReader::files(const QStringList &filterAttributes,
@@ -517,7 +504,7 @@ QString QHelpDBReader::mergeList(const QStringList &list) const
     for (const QString &s : list)
         str.append(QLatin1Char('\'') + quote(s) + QLatin1String("\', "));
     if (str.endsWith(QLatin1String(", ")))
-        str = str.left(str.length()-2);
+        str.chop(2);
     return str;
 }
 
@@ -564,7 +551,7 @@ bool QHelpDBReader::createAttributesCache(const QStringList &attributes,
         return true;
     }
 
-    bool needUpdate = !m_viewAttributes.count();
+    const bool needUpdate = !m_viewAttributes.count();
 
     for (const QString &s : attributes)
         m_viewAttributes.remove(s);

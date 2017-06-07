@@ -119,6 +119,4 @@ mac {
     QMAKE_INFO_PLIST = Info_mac.plist
 }
 
-contains(SQLPLUGINS, sqlite):QTPLUGIN += qsqlite
-
 load(qt_app)

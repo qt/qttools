@@ -40,7 +40,7 @@
 #include "qhelpgenerator_p.h"
 #include "qhelpdatainterface_p.h"
 
-#include <math.h>
+#include <QtCore/QtMath>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
@@ -57,14 +57,11 @@ QT_BEGIN_NAMESPACE
 class QHelpGeneratorPrivate
 {
 public:
-    QHelpGeneratorPrivate();
-    ~QHelpGeneratorPrivate();
-
     QString error;
-    QSqlQuery *query;
+    QSqlQuery *query = nullptr;
 
-    int namespaceId;
-    int virtualFolderId;
+    int namespaceId = -1;
+    int virtualFolderId = -1;
 
     QMap<QString, int> fileMap;
     QMap<int, QSet<int> > fileFilterMap;
@@ -75,19 +72,6 @@ public:
     double fileStep;
     double indexStep;
 };
-
-QHelpGeneratorPrivate::QHelpGeneratorPrivate()
-{
-    query = 0;
-    namespaceId = -1;
-    virtualFolderId = -1;
-}
-
-QHelpGeneratorPrivate::~QHelpGeneratorPrivate()
-{
-}
-
-
 
 /*!
     \internal
@@ -261,9 +245,9 @@ void QHelpGenerator::setupProgress(QHelpDataInterface *helpData)
 void QHelpGenerator::addProgress(double step)
 {
     d->progress += step;
-    if ((d->progress-d->oldProgress) >= 1.0 && d->progress <= 100.0) {
+    if ((d->progress - d->oldProgress) >= 1.0 && d->progress <= 100.0) {
         d->oldProgress = d->progress;
-        emit progressChanged(ceil(d->progress));
+        emit progressChanged(qCeil(d->progress));
     }
 }
 
@@ -307,62 +291,62 @@ bool QHelpGenerator::createTables()
         return false;
     }
 
-    QStringList tables;
-    tables << QLatin1String("CREATE TABLE NamespaceTable ("
-            "Id INTEGER PRIMARY KEY,"
-            "Name TEXT )")
-        << QLatin1String("CREATE TABLE FilterAttributeTable ("
-            "Id INTEGER PRIMARY KEY, "
-            "Name TEXT )")
-        << QLatin1String("CREATE TABLE FilterNameTable ("
-            "Id INTEGER PRIMARY KEY, "
-            "Name TEXT )")
-        << QLatin1String("CREATE TABLE FilterTable ("
-            "NameId INTEGER, "
-            "FilterAttributeId INTEGER )")
-        << QLatin1String("CREATE TABLE IndexTable ("
-            "Id INTEGER PRIMARY KEY, "
-            "Name TEXT, "
-            "Identifier TEXT, "
-            "NamespaceId INTEGER, "
-            "FileId INTEGER, "
-            "Anchor TEXT )")
-        << QLatin1String("CREATE TABLE IndexItemTable ("
-            "Id INTEGER, "
-            "IndexId INTEGER )")
-        << QLatin1String("CREATE TABLE IndexFilterTable ("
-            "FilterAttributeId INTEGER, "
-            "IndexId INTEGER )")
-        << QLatin1String("CREATE TABLE ContentsTable ("
-            "Id INTEGER PRIMARY KEY, "
-            "NamespaceId INTEGER, "
-            "Data BLOB )")
-        << QLatin1String("CREATE TABLE ContentsFilterTable ("
-            "FilterAttributeId INTEGER, "
-            "ContentsId INTEGER )")
-        << QLatin1String("CREATE TABLE FileAttributeSetTable ("
-            "Id INTEGER, "
-            "FilterAttributeId INTEGER )")
-        << QLatin1String("CREATE TABLE FileDataTable ("
-            "Id INTEGER PRIMARY KEY, "
-            "Data BLOB )")
-        << QLatin1String("CREATE TABLE FileFilterTable ("
-            "FilterAttributeId INTEGER, "
-            "FileId INTEGER )")
-        << QLatin1String("CREATE TABLE FileNameTable ("
-            "FolderId INTEGER, "
-            "Name TEXT, "
-            "FileId INTEGER, "
-            "Title TEXT )")
-        << QLatin1String("CREATE TABLE FolderTable("
-            "Id INTEGER PRIMARY KEY, "
-            "Name Text, "
-            "NamespaceID INTEGER )")
-        << QLatin1String("CREATE TABLE MetaDataTable("
-            "Name Text, "
-            "Value BLOB )");
+    const QStringList tables = QStringList()
+            << QLatin1String("CREATE TABLE NamespaceTable ("
+                             "Id INTEGER PRIMARY KEY,"
+                             "Name TEXT )")
+            << QLatin1String("CREATE TABLE FilterAttributeTable ("
+                             "Id INTEGER PRIMARY KEY, "
+                             "Name TEXT )")
+            << QLatin1String("CREATE TABLE FilterNameTable ("
+                             "Id INTEGER PRIMARY KEY, "
+                             "Name TEXT )")
+            << QLatin1String("CREATE TABLE FilterTable ("
+                             "NameId INTEGER, "
+                             "FilterAttributeId INTEGER )")
+            << QLatin1String("CREATE TABLE IndexTable ("
+                             "Id INTEGER PRIMARY KEY, "
+                             "Name TEXT, "
+                             "Identifier TEXT, "
+                             "NamespaceId INTEGER, "
+                             "FileId INTEGER, "
+                             "Anchor TEXT )")
+            << QLatin1String("CREATE TABLE IndexItemTable ("
+                             "Id INTEGER, "
+                             "IndexId INTEGER )")
+            << QLatin1String("CREATE TABLE IndexFilterTable ("
+                             "FilterAttributeId INTEGER, "
+                             "IndexId INTEGER )")
+            << QLatin1String("CREATE TABLE ContentsTable ("
+                             "Id INTEGER PRIMARY KEY, "
+                             "NamespaceId INTEGER, "
+                             "Data BLOB )")
+            << QLatin1String("CREATE TABLE ContentsFilterTable ("
+                             "FilterAttributeId INTEGER, "
+                             "ContentsId INTEGER )")
+            << QLatin1String("CREATE TABLE FileAttributeSetTable ("
+                             "Id INTEGER, "
+                             "FilterAttributeId INTEGER )")
+            << QLatin1String("CREATE TABLE FileDataTable ("
+                             "Id INTEGER PRIMARY KEY, "
+                             "Data BLOB )")
+            << QLatin1String("CREATE TABLE FileFilterTable ("
+                             "FilterAttributeId INTEGER, "
+                             "FileId INTEGER )")
+            << QLatin1String("CREATE TABLE FileNameTable ("
+                             "FolderId INTEGER, "
+                             "Name TEXT, "
+                             "FileId INTEGER, "
+                             "Title TEXT )")
+            << QLatin1String("CREATE TABLE FolderTable("
+                             "Id INTEGER PRIMARY KEY, "
+                             "Name Text, "
+                             "NamespaceID INTEGER )")
+            << QLatin1String("CREATE TABLE MetaDataTable("
+                             "Name Text, "
+                             "Value BLOB )");
 
-    for (const QString &q : qAsConst(tables)) {
+    for (const QString &q : tables) {
         if (!d->query->exec(q)) {
             d->error = tr("Cannot create tables.");
             return false;
@@ -390,7 +374,7 @@ bool QHelpGenerator::insertFileNotFoundFile()
     if (!d->query->exec())
         return false;
 
-    int fileId = d->query->lastInsertId().toInt();
+    const int fileId = d->query->lastInsertId().toInt();
     d->query->prepare(QLatin1String("INSERT INTO FileNameTable (FolderId, Name, FileId, Title) "
         " VALUES (0, '', ?, '')"));
     d->query->bindValue(0, fileId);
@@ -525,7 +509,7 @@ bool QHelpGenerator::insertFiles(const QStringList &files, const QString &rootPa
         }
 
         int fileId = -1;
-        const auto it = d->fileMap.constFind(fileName);
+        const auto &it = d->fileMap.constFind(fileName);
         if (it == d->fileMap.cend()) {
             fileDataList.append(qCompress(data));
 
@@ -590,8 +574,8 @@ bool QHelpGenerator::insertFiles(const QStringList &files, const QString &rootPa
 
     d->query->exec(QLatin1String("SELECT MAX(Id) FROM FileDataTable"));
     if (d->query->next()
-        && d->query->value(0).toInt() == tableFileId-1) {
-        addProgress(d->fileStep*(i%20));
+            && d->query->value(0).toInt() == tableFileId - 1) {
+        addProgress(d->fileStep*(i % 20));
         return true;
     }
     return false;
@@ -678,10 +662,6 @@ bool QHelpGenerator::insertKeywords(const QList<QHelpDataIndexItem> &keywords,
             filterAtts.append(d->query->value(0).toInt());
     }
 
-    int pos = -1;
-    QString fileName;
-    QString anchor;
-    QString fName;
     QList<int> indexFilterTable;
 
     int i = 0;
@@ -698,18 +678,13 @@ bool QHelpGenerator::insertKeywords(const QList<QHelpDataIndexItem> &keywords,
         if (!itm.identifier.isEmpty())
             indices.insert(itm.identifier);
 
-        pos = itm.reference.indexOf(QLatin1Char('#'));
-        fileName = itm.reference.left(pos);
-        if (pos > -1)
-            anchor = itm.reference.mid(pos+1);
-        else
-            anchor.clear();
+        const int pos = itm.reference.indexOf(QLatin1Char('#'));
+        const QString &fileName = itm.reference.left(pos);
+        const QString anchor = pos < 0 ? QString() : itm.reference.mid(pos + 1);
 
-        fName = QDir::cleanPath(fileName);
-        if (fName.startsWith(QLatin1String("./")))
-            fName = fName.mid(2);
+        const QString &fName = QDir::cleanPath(fileName);
 
-        auto it = d->fileMap.constFind(fName);
+        const auto &it = d->fileMap.constFind(fName);
         const int fileId = it == d->fileMap.cend() ? 1 : it.value();
 
         d->query->prepare(QLatin1String("INSERT INTO IndexTable (Name, Identifier, NamespaceId, FileId, Anchor) "
@@ -722,8 +697,8 @@ bool QHelpGenerator::insertKeywords(const QList<QHelpDataIndexItem> &keywords,
         d->query->exec();
 
         indexFilterTable.append(indexId++);
-        if (++i%100 == 0)
-            addProgress(d->indexStep*100.0);
+        if (++i % 100 == 0)
+            addProgress(d->indexStep * 100.0);
     }
     d->query->exec(QLatin1String("COMMIT"));
 
@@ -822,7 +797,7 @@ bool QHelpGenerator::checkLinks(const QHelpDataInterface &helpData)
     QSet<QString> files;
     for (const QHelpDataFilterSection &filterSection : helpData.filterSections()) {
         for (const QString &file : filterSection.files()) {
-            QFileInfo fileInfo(helpData.rootPath() + QDir::separator() + file);
+            const QFileInfo fileInfo(helpData.rootPath() + QDir::separator() + file);
             const QString &canonicalFileName = fileInfo.canonicalFilePath();
             if (!fileInfo.exists())
                 emit warning(tr("File '%1' does not exist.").arg(file));
@@ -847,7 +822,7 @@ bool QHelpGenerator::checkLinks(const QHelpDataInterface &helpData)
             emit warning(tr("File '%1' cannot be opened.").arg(fileName));
             continue;
         }
-        QRegExp linkPattern(QLatin1String("<(?:a href|img src)=\"?([^#\">]+)[#\">]"));
+        const QRegExp linkPattern(QLatin1String("<(?:a href|img src)=\"?([^#\">]+)[#\">]"));
         QTextStream stream(&htmlFile);
         const QString codec = QHelpGlobal::codecFromData(htmlFile.read(1000));
         stream.setCodec(QTextCodec::codecForName(codec.toLatin1().constData()));
@@ -855,10 +830,10 @@ bool QHelpGenerator::checkLinks(const QHelpDataInterface &helpData)
         QStringList invalidLinks;
         for (int pos = linkPattern.indexIn(content); pos != -1;
              pos = linkPattern.indexIn(content, pos + 1)) {
-            const QString& linkedFileName = linkPattern.cap(1);
+            const QString &linkedFileName = linkPattern.cap(1);
             if (linkedFileName.contains(QLatin1String("://")))
                 continue;
-            const QString curDir = QFileInfo(fileName).dir().path();
+            const QString &curDir = QFileInfo(fileName).dir().path();
             const QString &canonicalLinkedFileName =
                 QFileInfo(curDir + QDir::separator() + linkedFileName).canonicalFilePath();
             if (!files.contains(canonicalLinkedFileName)

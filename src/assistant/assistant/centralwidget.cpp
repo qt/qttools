@@ -71,10 +71,12 @@ TabBar::TabBar(QWidget *parent)
     setContextMenuPolicy(Qt::CustomContextMenu);
     setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred,
         QSizePolicy::TabWidget));
-    connect(this, SIGNAL(currentChanged(int)), this, SLOT(slotCurrentChanged(int)));
-    connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(slotTabCloseRequested(int)));
-    connect(this, SIGNAL(customContextMenuRequested(QPoint)), this,
-        SLOT(slotCustomContextMenuRequested(QPoint)));
+    connect(this, &QTabBar::currentChanged,
+            this, &TabBar::slotCurrentChanged);
+    connect(this, &QTabBar::tabCloseRequested,
+            this, &TabBar::slotTabCloseRequested);
+    connect(this, &QWidget::customContextMenuRequested,
+            this, &TabBar::slotCustomContextMenuRequested);
 }
 
 TabBar::~TabBar()
@@ -146,7 +148,8 @@ void TabBar::slotCustomContextMenuRequested(const QPoint &pos)
         return;
 
     QMenu menu(QString(), this);
-    menu.addAction(tr("New &Tab"), OpenPagesManager::instance(), SLOT(createPage()));
+    menu.addAction(tr("New &Tab"), OpenPagesManager::instance(),
+                   &OpenPagesManager::createBlankPage);
 
     const bool enableAction = count() > 1;
     QAction *closePage = menu.addAction(tr("&Close Tab"));
@@ -198,13 +201,11 @@ CentralWidget::CentralWidget(QWidget *parent)
     vboxLayout->addWidget(m_findWidget);
     m_findWidget->hide();
 
-    connect(m_findWidget, SIGNAL(findNext()), this, SLOT(findNext()));
-    connect(m_findWidget, SIGNAL(findPrevious()), this, SLOT(findPrevious()));
-    connect(m_findWidget, SIGNAL(find(QString,bool,bool)), this,
-        SLOT(find(QString,bool,bool)));
-    connect(m_findWidget, SIGNAL(escapePressed()), this, SLOT(activateTab()));
-    connect(m_tabBar, SIGNAL(addBookmark(QString,QString)), this,
-        SIGNAL(addBookmark(QString,QString)));
+    connect(m_findWidget, &FindWidget::findNext, this, &CentralWidget::findNext);
+    connect(m_findWidget, &FindWidget::findPrevious, this, &CentralWidget::findPrevious);
+    connect(m_findWidget, &FindWidget::find, this, &CentralWidget::find);
+    connect(m_findWidget, &FindWidget::escapePressed, this, &CentralWidget::activateTab);
+    connect(m_tabBar, &TabBar::addBookmark, this, &CentralWidget::addBookmark);
 }
 
 CentralWidget::~CentralWidget()
@@ -288,11 +289,11 @@ void CentralWidget::addPage(HelpViewer *page, bool fromSearch)
     const int index = m_stackedWidget->addWidget(page);
     m_tabBar->setTabData(m_tabBar->addNewTab(page->title()),
         QVariant::fromValue(viewerAt(index)));
-    connect (page, SIGNAL(titleChanged()), m_tabBar, SLOT(titleChanged()));
+    connect(page, &HelpViewer::titleChanged, m_tabBar, &TabBar::titleChanged);
 
     if (fromSearch) {
-        connect(currentHelpViewer(), SIGNAL(loadFinished(bool)), this,
-            SLOT(highlightSearchTerms()));
+        connect(currentHelpViewer(), &HelpViewer::loadFinished,
+                this, &CentralWidget::highlightSearchTerms);
     }
 }
 
@@ -323,8 +324,8 @@ void CentralWidget::setCurrentPage(HelpViewer *page)
 void CentralWidget::connectTabBar()
 {
     TRACE_OBJ
-    connect(m_tabBar, SIGNAL(currentTabChanged(HelpViewer*)),
-        OpenPagesManager::instance(), SLOT(setCurrentPage(HelpViewer*)));
+    connect(m_tabBar, &TabBar::currentTabChanged, OpenPagesManager::instance(),
+            QOverload<HelpViewer *>::of(&OpenPagesManager::setCurrentPage));
 }
 
 // -- public slots
@@ -420,8 +421,8 @@ void CentralWidget::printPreview()
 #if !defined(QT_NO_PRINTER) && !defined(QT_NO_PRINTDIALOG)
     initPrinter();
     QPrintPreviewDialog preview(m_printer, this);
-    connect(&preview, SIGNAL(paintRequested(QPrinter*)),
-        SLOT(printPreview(QPrinter*)));
+    connect(&preview, &QPrintPreviewDialog::paintRequested,
+            this, &CentralWidget::printPreviewToPrinter);
     preview.exec();
 #endif
 }
@@ -437,8 +438,8 @@ void CentralWidget::setSource(const QUrl &url)
 void CentralWidget::setSourceFromSearch(const QUrl &url)
 {
     TRACE_OBJ
-    connect(currentHelpViewer(), SIGNAL(loadFinished(bool)), this,
-        SLOT(highlightSearchTerms()));
+    connect(currentHelpViewer(), &HelpViewer::loadFinished,
+            this, &CentralWidget::highlightSearchTerms);
     currentHelpViewer()->setSource(url);
     currentHelpViewer()->setFocus(Qt::OtherFocusReason);
 }
@@ -526,10 +527,11 @@ void CentralWidget::focusInEvent(QFocusEvent * /* event */)
     // otherwise it's the central widget. This is needed, so an embedding
     // program can just set the focus to the central widget and it does
     // The Right Thing(TM)
-    QObject *receiver = m_stackedWidget;
+    QWidget *receiver = m_stackedWidget;
     if (HelpViewer *viewer = currentHelpViewer())
         receiver = viewer;
-    QTimer::singleShot(1, receiver, SLOT(setFocus()));
+    QTimer::singleShot(1, receiver,
+                       QOverload<>::of(&QWidget::setFocus));
 }
 
 // -- private slots
@@ -539,30 +541,16 @@ void CentralWidget::highlightSearchTerms()
     TRACE_OBJ
     QHelpSearchEngine *searchEngine =
         HelpEngineWrapper::instance().searchEngine();
-    const QList<QHelpSearchQuery> &queryList = searchEngine->query();
-
-    QStringList terms;
-    for (const QHelpSearchQuery &query : queryList) {
-        switch (query.fieldName) {
-            default: break;
-            case QHelpSearchQuery::ALL: {
-            case QHelpSearchQuery::PHRASE:
-            case QHelpSearchQuery::DEFAULT:
-            case QHelpSearchQuery::ATLEAST:
-                for (QString term : query.wordList)
-                    terms.append(term.remove(QLatin1Char('"')));
-            }
-        }
-    }
+    const QStringList &words = searchEngine->searchInput().split(QRegExp("\\W+"), QString::SkipEmptyParts);
 
     HelpViewer *viewer = currentHelpViewer();
-    for (const QString & term : qAsConst(terms))
-        viewer->findText(term, 0, false, true);
-    disconnect(viewer, SIGNAL(loadFinished(bool)), this,
-        SLOT(highlightSearchTerms()));
+    for (const QString &word : words)
+        viewer->findText(word, 0, false, true);
+    disconnect(viewer, &HelpViewer::loadFinished,
+               this, &CentralWidget::highlightSearchTerms);
 }
 
-void CentralWidget::printPreview(QPrinter *p)
+void CentralWidget::printPreviewToPrinter(QPrinter *p)
 {
     TRACE_OBJ
 #ifndef QT_NO_PRINTER
@@ -603,17 +591,19 @@ void CentralWidget::connectSignals(HelpViewer *page)
 {
     TRACE_OBJ
 #if defined(BROWSER_QTWEBKIT)
-    connect(page, SIGNAL(printRequested()), this, SLOT(print()));
+    connect(page, &HelpViewer::printRequested,
+            this, &CentralWidget::print);
 #endif
-    connect(page, SIGNAL(copyAvailable(bool)), this,
-        SIGNAL(copyAvailable(bool)));
-    connect(page, SIGNAL(forwardAvailable(bool)), this,
-        SIGNAL(forwardAvailable(bool)));
-    connect(page, SIGNAL(backwardAvailable(bool)), this,
-        SIGNAL(backwardAvailable(bool)));
-    connect(page, SIGNAL(sourceChanged(QUrl)), this,
-        SLOT(handleSourceChanged(QUrl)));
-    connect(page, SIGNAL(highlighted(QString)), this, SLOT(slotHighlighted(QString)));
+    connect(page, &HelpViewer::copyAvailable,
+            this, &CentralWidget::copyAvailable);
+    connect(page, &HelpViewer::forwardAvailable,
+            this, &CentralWidget::forwardAvailable);
+    connect(page, &HelpViewer::backwardAvailable,
+            this, &CentralWidget::backwardAvailable);
+    connect(page, &HelpViewer::sourceChanged,
+            this, &CentralWidget::handleSourceChanged);
+    connect(page, QOverload<const QString &>::of(&HelpViewer::highlighted),
+            this, &CentralWidget::slotHighlighted);
 }
 
 bool CentralWidget::eventFilter(QObject *object, QEvent *e)

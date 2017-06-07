@@ -64,8 +64,8 @@ HelpViewer::HelpViewer(qreal zoom, QWidget *parent)
     font.setPointSize(int(font.pointSize() + zoom));
     setViewerFont(font);
 
-    connect(this, SIGNAL(sourceChanged(QUrl)), this, SIGNAL(titleChanged()));
-    connect(this, SIGNAL(loadFinished(bool)), this, SLOT(setLoadFinished(bool)));
+    connect(this, &QTextBrowser::sourceChanged, this, &HelpViewer::titleChanged);
+    connect(this, &HelpViewer::loadFinished, this, &HelpViewer::setLoadFinished);
 }
 
 QFont HelpViewer::viewerFont() const
@@ -341,17 +341,17 @@ void HelpViewer::contextMenuEvent(QContextMenuEvent *event)
         link = anchorAt(event->pos());
         if (link.isRelative())
             link = source().resolved(link);
-        menu.addAction(tr("Open Link"), d, SLOT(openLink()));
-        menu.addAction(tr("Open Link in New Tab\tCtrl+LMB"), d, SLOT(openLinkInNewPage()));
+        menu.addAction(tr("Open Link"), d, &HelpViewerPrivate::openLink);
+        menu.addAction(tr("Open Link in New Tab\tCtrl+LMB"), d, &HelpViewerPrivate::openLinkInNewPage);
 
         if (!link.isEmpty() && link.isValid())
             copyAnchorAction = menu.addAction(tr("Copy &Link Location"));
     } else if (!selectedText().isEmpty()) {
 #ifndef QT_NO_CLIPBOARD
-        menu.addAction(tr("Copy"), this, SLOT(copy()));
+        menu.addAction(tr("Copy"), this, &HelpViewer::copy);
 #endif
     } else {
-        menu.addAction(tr("Reload"), this, SLOT(reload()));
+        menu.addAction(tr("Reload"), this, &HelpViewer::reload);
     }
 
 #ifndef QT_NO_CLIPBOARD

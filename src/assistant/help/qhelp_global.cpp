@@ -59,8 +59,8 @@ QString QHelpGlobal::documentTitle(const QString &content)
 {
     QString title = QCoreApplication::translate("QHelp", "Untitled");
     if (!content.isEmpty()) {
-        int start = content.indexOf(QLatin1String("<title>"), 0, Qt::CaseInsensitive) + 7;
-        int end = content.indexOf(QLatin1String("</title>"), 0, Qt::CaseInsensitive);
+        const int start = content.indexOf(QLatin1String("<title>"), 0, Qt::CaseInsensitive) + 7;
+        const int end = content.indexOf(QLatin1String("</title>"), 0, Qt::CaseInsensitive);
         if ((end - start) > 0) {
             title = content.mid(start, end - start);
             if (Qt::mightBeRichText(title) || title.contains(QLatin1Char('&'))) {
@@ -83,10 +83,10 @@ QString QHelpGlobal::codecFromData(const QByteArray &data)
 
 QString QHelpGlobal::codecFromHtmlData(const QByteArray &data)
 {
-    QString head = QString::fromUtf8(data.constData(), qMin(1000, data.size()));
+    const QString &head = QString::fromUtf8(data.constData(), qMin(1000, data.size()));
     int start = head.indexOf(QLatin1String("<meta"), 0, Qt::CaseInsensitive);
     if (start > 0) {
-        QRegExp r(QLatin1String("charset=([^\"\\s]+)"));
+        const QRegExp r(QLatin1String("charset=([^\"\\s]+)"));
         while (start != -1) {
             const int end = head.indexOf(QLatin1Char('>'), start) + 1;
             if (end <= start)
@@ -103,8 +103,8 @@ QString QHelpGlobal::codecFromHtmlData(const QByteArray &data)
 
 QString QHelpGlobal::codecFromXmlData(const QByteArray &data)
 {
-    QString head = QString::fromUtf8(data.constData(), qMin(1000, data.size()));
-    QRegExp encodingExp(QLatin1String("^\\s*<\\?xml version="
-        "\"\\d\\.\\d\" encoding=\"([^\"]+)\"\\?>.*"));
+    const QString head = QString::fromUtf8(data.constData(), qMin(1000, data.size()));
+    const QRegExp encodingExp(QLatin1String("^\\s*<\\?xml version="
+                  "\"\\d\\.\\d\" encoding=\"([^\"]+)\"\\?>.*"));
     return encodingExp.exactMatch(head) ? encodingExp.cap(1) : QString();
 }

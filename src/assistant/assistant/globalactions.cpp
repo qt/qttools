@@ -64,7 +64,7 @@ GlobalActions::GlobalActions(QObject *parent) : QObject(parent)
     m_backAction->setEnabled(false);
     m_backAction->setShortcuts(QKeySequence::Back);
     m_backAction->setIcon(QIcon(resourcePath + QLatin1String("/previous.png")));
-    connect(m_backAction, SIGNAL(triggered()), centralWidget, SLOT(backward()));
+    connect(m_backAction, &QAction::triggered, centralWidget, &CentralWidget::backward);
     m_actionList << m_backAction;
 
     m_nextAction = new QAction(tr("&Forward"), parent);
@@ -72,7 +72,7 @@ GlobalActions::GlobalActions(QObject *parent) : QObject(parent)
     m_nextAction->setEnabled(false);
     m_nextAction->setShortcuts(QKeySequence::Forward);
     m_nextAction->setIcon(QIcon(resourcePath + QLatin1String("/next.png")));
-    connect(m_nextAction, SIGNAL(triggered()), centralWidget, SLOT(forward()));
+    connect(m_nextAction, &QAction::triggered, centralWidget, &CentralWidget::forward);
     m_actionList << m_nextAction;
 
     setupNavigationMenus(m_backAction, m_nextAction, centralWidget);
@@ -80,7 +80,7 @@ GlobalActions::GlobalActions(QObject *parent) : QObject(parent)
     m_homeAction = new QAction(tr("&Home"), parent);
     m_homeAction->setShortcut(tr("ALT+Home"));
     m_homeAction->setIcon(QIcon(resourcePath + QLatin1String("/home.png")));
-    connect(m_homeAction, SIGNAL(triggered()), centralWidget, SLOT(home()));
+    connect(m_homeAction, &QAction::triggered, centralWidget, &CentralWidget::home);
     m_actionList << m_homeAction;
 
     QAction *separator = new QAction(parent);
@@ -91,14 +91,14 @@ GlobalActions::GlobalActions(QObject *parent) : QObject(parent)
     m_zoomInAction->setPriority(QAction::LowPriority);
     m_zoomInAction->setIcon(QIcon(resourcePath + QLatin1String("/zoomin.png")));
     m_zoomInAction->setShortcut(QKeySequence::ZoomIn);
-    connect(m_zoomInAction, SIGNAL(triggered()), centralWidget, SLOT(zoomIn()));
+    connect(m_zoomInAction, &QAction::triggered, centralWidget, &CentralWidget::zoomIn);
     m_actionList << m_zoomInAction;
 
     m_zoomOutAction = new QAction(tr("Zoom &out"), parent);
     m_zoomOutAction->setPriority(QAction::LowPriority);
     m_zoomOutAction->setIcon(QIcon(resourcePath + QLatin1String("/zoomout.png")));
     m_zoomOutAction->setShortcut(QKeySequence::ZoomOut);
-    connect(m_zoomOutAction, SIGNAL(triggered()), centralWidget, SLOT(zoomOut()));
+    connect(m_zoomOutAction, &QAction::triggered, centralWidget, &CentralWidget::zoomOut);
     m_actionList << m_zoomOutAction;
 
     separator = new QAction(parent);
@@ -111,21 +111,21 @@ GlobalActions::GlobalActions(QObject *parent) : QObject(parent)
     m_copyAction->setIcon(QIcon(resourcePath + QLatin1String("/editcopy.png")));
     m_copyAction->setShortcuts(QKeySequence::Copy);
     m_copyAction->setEnabled(false);
-    connect(m_copyAction, SIGNAL(triggered()), centralWidget, SLOT(copy()));
+    connect(m_copyAction, &QAction::triggered, centralWidget, &CentralWidget::copy);
     m_actionList << m_copyAction;
 
     m_printAction = new QAction(tr("&Print..."), parent);
     m_printAction->setPriority(QAction::LowPriority);
     m_printAction->setIcon(QIcon(resourcePath + QLatin1String("/print.png")));
     m_printAction->setShortcut(QKeySequence::Print);
-    connect(m_printAction, SIGNAL(triggered()), centralWidget, SLOT(print()));
+    connect(m_printAction, &QAction::triggered, centralWidget, &CentralWidget::print);
     m_actionList << m_printAction;
 
     m_findAction = new QAction(tr("&Find in Text..."), parent);
     m_findAction->setIconText(tr("&Find"));
     m_findAction->setIcon(QIcon(resourcePath + QLatin1String("/find.png")));
     m_findAction->setShortcuts(QKeySequence::Find);
-    connect(m_findAction, SIGNAL(triggered()), centralWidget, SLOT(showTextSearch()));
+    connect(m_findAction, &QAction::triggered, centralWidget, &CentralWidget::showTextSearch);
     m_actionList << m_findAction;
 
 #if defined (Q_OS_UNIX) && !defined(Q_OS_MAC)
@@ -211,17 +211,17 @@ void GlobalActions::setupNavigationMenus(QAction *back, QAction *next,
 {
 #if defined(BROWSER_QTWEBKIT)
     m_backMenu = new QMenu(parent);
-    connect(m_backMenu, SIGNAL(aboutToShow()), this,
-        SLOT(slotAboutToShowBackMenu()));
-    connect(m_backMenu, SIGNAL(triggered(QAction*)), this,
-        SLOT(slotOpenActionUrl(QAction*)));
+    connect(m_backMenu, &QMenu::aboutToShow,
+            this, &GlobalActions::slotAboutToShowBackMenu);
+    connect(m_backMenu, &QMenu::triggered,
+            this, &GlobalActions::slotOpenActionUrl);
     back->setMenu(m_backMenu);
 
     m_nextMenu = new QMenu(parent);
-    connect(m_nextMenu, SIGNAL(aboutToShow()), this,
-        SLOT(slotAboutToShowNextMenu()));
-    connect(m_nextMenu, SIGNAL(triggered(QAction*)), this,
-        SLOT(slotOpenActionUrl(QAction*)));
+    connect(m_nextMenu, &QMenu::aboutToShow,
+            this, &GlobalActions::slotAboutToShowNextMenu);
+    connect(m_nextMenu, &QMenu::triggered,
+            this, &GlobalActions::slotOpenActionUrl);
     next->setMenu(m_nextMenu);
 #else
     Q_UNUSED(back)

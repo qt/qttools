@@ -53,20 +53,6 @@
 
 QT_BEGIN_NAMESPACE
 
-QHelpEnginePrivate::QHelpEnginePrivate()
-    : QHelpEngineCorePrivate()
-    , contentModel(0)
-    , contentWidget(0)
-    , indexModel(0)
-    , indexWidget(0)
-    , searchEngine(0)
-{
-}
-
-QHelpEnginePrivate::~QHelpEnginePrivate()
-{
-}
-
 void QHelpEnginePrivate::init(const QString &collectionFile,
                               QHelpEngineCore *helpEngineCore)
 {
@@ -77,10 +63,10 @@ void QHelpEnginePrivate::init(const QString &collectionFile,
     if (!indexModel)
         indexModel = new QHelpIndexModel(this);
 
-    connect(helpEngineCore, SIGNAL(setupFinished()), this,
-        SLOT(applyCurrentFilter()));
-    connect(helpEngineCore, SIGNAL(currentFilterChanged(QString)), this,
-        SLOT(applyCurrentFilter()));
+    connect(helpEngineCore, &QHelpEngineCore::setupFinished,
+            this, &QHelpEnginePrivate::applyCurrentFilter);
+    connect(helpEngineCore, &QHelpEngineCore::currentFilterChanged,
+            this, &QHelpEnginePrivate::applyCurrentFilter);
 }
 
 void QHelpEnginePrivate::applyCurrentFilter()
@@ -181,10 +167,10 @@ QHelpContentWidget *QHelpEngine::contentWidget()
     if (!d->contentWidget) {
         d->contentWidget = new QHelpContentWidget();
         d->contentWidget->setModel(d->contentModel);
-        connect(d->contentModel, SIGNAL(contentsCreationStarted()),
-            d, SLOT(setContentsWidgetBusy()));
-        connect(d->contentModel, SIGNAL(contentsCreated()),
-            d, SLOT(unsetContentsWidgetBusy()));
+        connect(d->contentModel, &QHelpContentModel::contentsCreationStarted,
+                d, &QHelpEnginePrivate::setContentsWidgetBusy);
+        connect(d->contentModel, &QHelpContentModel::contentsCreated,
+                d, &QHelpEnginePrivate::unsetContentsWidgetBusy);
     }
     return d->contentWidget;
 }
@@ -197,10 +183,10 @@ QHelpIndexWidget *QHelpEngine::indexWidget()
     if (!d->indexWidget) {
         d->indexWidget = new QHelpIndexWidget();
         d->indexWidget->setModel(d->indexModel);
-        connect(d->indexModel, SIGNAL(indexCreationStarted()),
-            d, SLOT(setIndexWidgetBusy()));
-        connect(d->indexModel, SIGNAL(indexCreated()),
-            d, SLOT(unsetIndexWidgetBusy()));
+        connect(d->indexModel, &QHelpIndexModel::indexCreationStarted,
+                d, &QHelpEnginePrivate::setIndexWidgetBusy);
+        connect(d->indexModel, &QHelpIndexModel::indexCreated,
+                d, &QHelpEnginePrivate::unsetIndexWidgetBusy);
     }
     return d->indexWidget;
 }

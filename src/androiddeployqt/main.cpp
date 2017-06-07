@@ -308,11 +308,6 @@ void deleteMissingFiles(const Options &options, const QDir &srcDir, const QDir &
     fflush(stdout);
 }
 
-bool containsModule(const QDir &dir) {
-    QStringList nameFilters = { QLatin1String("qmldir") };
-    QFileInfoList entries = dir.entryInfoList(nameFilters, QDir::Files);
-    return (!entries.isEmpty());
-}
 
 Options parseOptions()
 {
@@ -1731,11 +1726,6 @@ bool scanImports(Options *options, QSet<QString> *usedDependencies)
                 if (usedDependencies->contains(fileName.absolutePath))
                     continue;
 
-                // Exclude modules in subfolders
-                QDir parentDir = QFileInfo(fileName.absolutePath).absoluteDir();
-                if (parentDir.absolutePath() != path && containsModule(parentDir))
-                    continue;
-
                 usedDependencies->insert(fileName.absolutePath);
 
                 if (options->verbose)
@@ -2821,6 +2811,19 @@ bool copyGdbServer(const Options &options)
                             options.verbose)) {
         return false;
     }
+
+    QString addedByAndroidDeployQtPath = options.outputDirectory + QLatin1String("/assets/--Added-by-androiddeployqt--/");
+    if (!QDir().mkpath(addedByAndroidDeployQtPath)) {
+        fprintf(stderr, "Failed to create directory '%s'", qPrintable(addedByAndroidDeployQtPath));
+        return false;
+    }
+    QFile f(addedByAndroidDeployQtPath + QLatin1String("debugger.command"));
+    if (!f.open(QIODevice::WriteOnly)) {
+        fprintf(stderr, "Failed to create directory '%s'", qPrintable(addedByAndroidDeployQtPath));
+        return false;
+    }
+    f.write("lib/libgdbserver.so --multi +");
+    f.close();
 
     return true;
 }

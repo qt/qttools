@@ -1431,8 +1431,8 @@ bool CppCodeParser::matchFunctionDecl(Aggregate *parent,
             matched_static = true;
             break;
         case Tok_QT_DEPRECATED:
-            // no break here.
             matched_QT_DEPRECATED = true;
+            Q_FALLTHROUGH(); // no break here.
         case Tok_QT_COMPAT:
             matched_compat = true;
             break;

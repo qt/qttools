@@ -52,19 +52,13 @@
 
 QT_BEGIN_NAMESPACE
 
-QHelpEngineCorePrivate::QHelpEngineCorePrivate()
-{
-    QHelpGlobal::uniquifyConnectionName(QString(), this);
-    autoSaveFilter = true;
-}
-
 void QHelpEngineCorePrivate::init(const QString &collectionFile,
                                   QHelpEngineCore *helpEngineCore)
 {
     q = helpEngineCore;
     collectionHandler = new QHelpCollectionHandler(collectionFile, helpEngineCore);
-    connect(collectionHandler, SIGNAL(error(QString)),
-        this, SLOT(errorReceived(QString)));
+    connect(collectionHandler, &QHelpCollectionHandler::error,
+            this, &QHelpEngineCorePrivate::errorReceived);
     needsSetup = true;
 }
 
@@ -103,21 +97,20 @@ bool QHelpEngineCorePrivate::setup()
     }
 
     const QHelpCollectionHandler::DocInfoList &docList =
-        collectionHandler->registeredDocumentations();
-    QFileInfo fi(collectionHandler->collectionFile());
-    QString absFileName;
+            collectionHandler->registeredDocumentations();
+    const QFileInfo fi(collectionHandler->collectionFile());
+
     for (const QHelpCollectionHandler::DocInfo &info : docList) {
-        if (QDir::isAbsolutePath(info.fileName)) {
-            absFileName = info.fileName;
-        } else {
-            absFileName = QFileInfo(fi.absolutePath() + QDir::separator() + info.fileName)
-                .absoluteFilePath();
-        }
+        const QString &absFileName = QDir::isAbsolutePath(info.fileName)
+                ? info.fileName
+                : QFileInfo(fi.absolutePath() + QDir::separator() + info.fileName)
+                  .absoluteFilePath();
+
         QHelpDBReader *reader = new QHelpDBReader(absFileName,
             QHelpGlobal::uniquifyConnectionName(info.fileName, this), this);
         if (!reader->init()) {
             emit q->warning(QHelpEngineCore::tr("Cannot open documentation file %1: %2.")
-                .arg(absFileName, reader->errorMessage()));
+                            .arg(absFileName, reader->errorMessage()));
             continue;
         }
 
@@ -153,11 +146,11 @@ void QHelpEngineCorePrivate::errorReceived(const QString &msg)
 
     The core help engine can be used to perform different tasks.
     By calling linksForIdentifier() the engine returns
-    urls specifying the file locations inside the help system. The
+    URLs specifying the file locations inside the help system. The
     actual file data can then be retrived by calling fileData(). In
     contrast to all other functions in this class, linksForIdentifier()
     depends on the currently set custom filter. Depending on the filter,
-    the function may return different hits.
+    the function may return different results.
 
     Every help engine can contain any number of custom filters. A custom
     filter is defined by a name and set of filter attributes and can be
@@ -364,9 +357,8 @@ QString QHelpEngineCore::documentationFileName(const QString &namespaceName)
                 if (QDir::isAbsolutePath(info.fileName))
                     return info.fileName;
 
-                QFileInfo fi(d->collectionHandler->collectionFile());
-                fi.setFile(fi.absolutePath() + QDir::separator() + info.fileName);
-                return fi.absoluteFilePath();
+                return QFileInfo(QFileInfo(d->collectionHandler->collectionFile()).absolutePath()
+                                 + QDir::separator() + info.fileName).absoluteFilePath();
             }
         }
     }
@@ -383,9 +375,8 @@ QStringList QHelpEngineCore::registeredDocumentations() const
     if (!d->setup())
         return list;
     const QHelpCollectionHandler::DocInfoList &docList = d->collectionHandler->registeredDocumentations();
-    for (const QHelpCollectionHandler::DocInfo &info : docList) {
+    for (const QHelpCollectionHandler::DocInfo &info : docList)
         list.append(info.namespaceName);
-    }
     return list;
 }
 
@@ -414,8 +405,7 @@ bool QHelpEngineCore::addCustomFilter(const QString &filterName,
 {
     d->error.clear();
     d->needsSetup = true;
-    return d->collectionHandler->addCustomFilter(filterName,
-        attributes);
+    return d->collectionHandler->addCustomFilter(filterName, attributes);
 }
 
 /*!
@@ -469,7 +459,7 @@ QString QHelpEngineCore::currentFilter() const
         return QString();
 
     if (d->currentFilter.isEmpty()) {
-        QString filter =
+        const QString &filter =
             d->collectionHandler->customValue(QLatin1String("CurrentFilter"),
                 QString()).toString();
         if (!filter.isEmpty()
@@ -549,15 +539,16 @@ QUrl QHelpEngineCore::findFile(const QUrl &url) const
 {
     QUrl res;
     if (!d->setup() || !url.isValid() || url.toString().count(QLatin1Char('/')) < 4
-        || url.scheme() != QLatin1String("qthelp"))
+        || url.scheme() != QLatin1String("qthelp")) {
         return res;
+    }
 
-    QString ns = url.authority();
+    const QString &ns = url.authority();
     QString filePath = url.path();
     if (filePath.startsWith(QLatin1Char('/')))
         filePath = filePath.mid(1);
-    QString virtualFolder = filePath.mid(0, filePath.indexOf(QLatin1Char('/'), 1));
-    filePath = filePath.mid(virtualFolder.length()+1);
+    const QString &virtualFolder = filePath.mid(0, filePath.indexOf(QLatin1Char('/'), 1));
+    filePath.remove(0, virtualFolder.length() + 1);
 
     QHelpDBReader *defaultReader = 0;
     if (d->readerMap.contains(ns)) {
@@ -566,11 +557,11 @@ QUrl QHelpEngineCore::findFile(const QUrl &url) const
             return url;
     }
 
-    QStringList filterAtts = filterAttributes(currentFilter());
+    const QStringList &attributes = filterAttributes(currentFilter());
     for (const QHelpDBReader *reader : d->virtualFolderMap.values(virtualFolder)) {
         if (reader == defaultReader)
             continue;
-        if (reader->fileExists(virtualFolder, filePath, filterAtts)) {
+        if (reader->fileExists(virtualFolder, filePath, attributes)) {
             res = url;
             res.setAuthority(reader->namespaceName());
             return res;
@@ -599,15 +590,16 @@ QUrl QHelpEngineCore::findFile(const QUrl &url) const
 QByteArray QHelpEngineCore::fileData(const QUrl &url) const
 {
     if (!d->setup() || !url.isValid() || url.toString().count(QLatin1Char('/')) < 4
-        || url.scheme() != QLatin1String("qthelp"))
+        || url.scheme() != QLatin1String("qthelp")) {
         return QByteArray();
+    }
 
-    QString ns = url.authority();
+    const QString &ns = url.authority();
     QString filePath = url.path();
     if (filePath.startsWith(QLatin1Char('/')))
         filePath = filePath.mid(1);
-    QString virtualFolder = filePath.mid(0, filePath.indexOf(QLatin1Char('/'), 1));
-    filePath = filePath.mid(virtualFolder.length()+1);
+    const QString &virtualFolder = filePath.mid(0, filePath.indexOf(QLatin1Char('/'), 1));
+    filePath.remove(0, virtualFolder.length() + 1);
 
     QByteArray ba;
     QHelpDBReader *defaultReader = 0;
@@ -629,9 +621,9 @@ QByteArray QHelpEngineCore::fileData(const QUrl &url) const
 }
 
 /*!
-    Returns a map of hits found for the \a id. A hit contains the
-    title of the document and the url where the keyword is located.
-    The result depends on the current filter, meaning only the keywords
+    Returns documents found for the \a id. The map contains the
+    document titles and their URLs.
+    The returned map contents depends on the current filter, meaning only the keywords
     registered for the current filter will be returned.
 */
 QMap<QString, QUrl> QHelpEngineCore::linksForIdentifier(const QString &id) const
@@ -640,10 +632,25 @@ QMap<QString, QUrl> QHelpEngineCore::linksForIdentifier(const QString &id) const
     if (!d->setup())
         return linkMap;
 
-    QStringList atts = filterAttributes(d->currentFilter);
+    const QStringList &attributes = filterAttributes(d->currentFilter);
     for (const QHelpDBReader *reader : qAsConst(d->readerMap))
-        reader->linksForIdentifier(id, atts, linkMap);
+        reader->linksForIdentifier(id, attributes, &linkMap);
 
+    return linkMap;
+}
+
+/*!
+    \since 4.5
+
+    Returns all documents found for the \a keyword. The returned map consists of the
+    document titles and their URLs.
+*/
+QMap<QString, QUrl> QHelpEngineCore::linksForKeyword(const QString &keyword) const
+{
+    QMap<QString, QUrl> linkMap;
+    const QStringList &attributes = filterAttributes(d->currentFilter);
+    for (const QHelpDBReader *reader : qAsConst(d->readerMap))
+        reader->linksForKeyword(keyword, attributes, &linkMap);
     return linkMap;
 }
 

@@ -51,14 +51,11 @@
 
 QT_BEGIN_NAMESPACE
 
-
 class QHelpEngineCore;
 class QHelpSearchQueryWidget;
 class QHelpSearchEnginePrivate;
 class QHelpSearchResultData;
 class QHelpSearchResultWidget;
-
-// TODO: obsolete it and use just QString for input
 
 class QHELP_EXPORT QHelpSearchQuery
 {
@@ -73,8 +70,6 @@ public:
     FieldName fieldName;
     QStringList wordList;
 };
-
-// TODO: Add doc for it
 
 class QHELP_EXPORT QHelpSearchResult
 {
@@ -105,34 +100,40 @@ public:
     QHelpSearchQueryWidget* queryWidget();
     QHelpSearchResultWidget* resultWidget();
 
-#ifdef QT_DEPRECATED
-    QT_DEPRECATED int hitsCount() const;
-#endif
-    int hitCount() const;
-
+#if QT_DEPRECATED_SINCE(5, 9)
     typedef QPair<QString, QString> SearchHit;
-    QList<SearchHit> hits(int start, int end) const;
 
+    QT_DEPRECATED int hitsCount() const;
+    QT_DEPRECATED int hitCount() const;
+    QT_DEPRECATED QList<SearchHit> hits(int start, int end) const;
+    QT_DEPRECATED QList<QHelpSearchQuery> query() const;
+#endif
+
+    int searchResultCount() const;
     QVector<QHelpSearchResult> searchResults(int start, int end) const;
-
-    QList<QHelpSearchQuery> query() const;
+    QString searchInput() const;
 
 public Q_SLOTS:
     void reindexDocumentation();
     void cancelIndexing();
 
-    void search(const QList<QHelpSearchQuery> &queryList);
+#if QT_DEPRECATED_SINCE(5, 9)
+    QT_DEPRECATED void search(const QList<QHelpSearchQuery> &queryList);
+#endif
+
+    void search(const QString &searchInput);
     void cancelSearching();
+
+    void scheduleIndexDocumentation();
 
 Q_SIGNALS:
     void indexingStarted();
     void indexingFinished();
 
     void searchingStarted();
-    void searchingFinished(int hits);
+    void searchingFinished(int searchResultCount);
 
 private Q_SLOTS:
-    void scheduleIndexDocumentation();
     void indexDocumentation();
 
 private:

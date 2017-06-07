@@ -195,7 +195,10 @@ QCoreApplication* createApplication(int &argc, char *argv[])
         }
     }
 #endif
-    return new QApplication(argc, argv);
+    QApplication *app = new QApplication(argc, argv);
+    app->connect(app, &QGuiApplication::lastWindowClosed,
+                 &QCoreApplication::quit);
+    return app;
 }
 
 bool registerDocumentation(QHelpEngineCore &collection, CmdLineParser &cmd,
@@ -380,7 +383,6 @@ int main(int argc, char *argv[])
 
     MainWindow *w = new MainWindow(&cmd);
     w->show();
-    a->connect(a.data(), SIGNAL(lastWindowClosed()), a.data(), SLOT(quit()));
 
     /*
      * We need to be careful here: The main window has to be deleted before

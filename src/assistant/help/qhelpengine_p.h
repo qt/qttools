@@ -74,7 +74,6 @@ class QHelpEngineCorePrivate : public QObject
     Q_OBJECT
 
 public:
-    QHelpEngineCorePrivate();
     virtual ~QHelpEngineCorePrivate();
 
     virtual void init(const QString &collectionFile,
@@ -88,11 +87,11 @@ public:
     QMultiMap<QString, QHelpDBReader*> virtualFolderMap;
     QStringList orderedFileNameList;
 
-    QHelpCollectionHandler *collectionHandler;
+    QHelpCollectionHandler *collectionHandler = nullptr;
     QString currentFilter;
     QString error;
-    bool needsSetup;
-    bool autoSaveFilter;
+    bool needsSetup = true;
+    bool autoSaveFilter = true;
 
 protected:
     QHelpEngineCore *q;
@@ -107,19 +106,16 @@ class QHelpEnginePrivate : public QHelpEngineCorePrivate
     Q_OBJECT
 
 public:
-    QHelpEnginePrivate();
-    ~QHelpEnginePrivate();
-
     void init(const QString &collectionFile,
         QHelpEngineCore *helpEngineCore) override;
 
-    QHelpContentModel *contentModel;
-    QHelpContentWidget *contentWidget;
+    QHelpContentModel *contentModel = nullptr;
+    QHelpContentWidget *contentWidget = nullptr;
 
-    QHelpIndexModel *indexModel;
-    QHelpIndexWidget *indexWidget;
+    QHelpIndexModel *indexModel = nullptr;
+    QHelpIndexWidget *indexWidget = nullptr;
 
-    QHelpSearchEngine *searchEngine;
+    QHelpSearchEngine *searchEngine = nullptr;
 
     void stopDataCollection();
 

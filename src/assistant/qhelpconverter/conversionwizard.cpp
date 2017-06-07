@@ -86,15 +86,16 @@ ConversionWizard::ConversionWizard()
     setPage(Finish_Page, m_finishPage);
     m_finishPage->setMaximumHeight(240);
 
-    connect(this, SIGNAL(currentIdChanged(int)),
-        this, SLOT(pageChanged(int)));
+    connect(this, &QWizard::currentIdChanged,
+            this, &ConversionWizard::pageChanged);
 
     m_helpWindow = 0;
     qApp->installEventFilter(this);
 
     QAbstractButton *btn = button(QWizard::HelpButton);
     btn->setCheckable(true);
-    connect(btn, SIGNAL(toggled(bool)), this, SLOT(showHelp(bool)));
+    connect(btn, &QAbstractButton::toggled,
+            this, &ConversionWizard::showHelp);
 }
 
 void ConversionWizard::setAdpFileName(const QString &fileName)
@@ -143,7 +144,7 @@ void ConversionWizard::pageChanged(int id)
         m_outputPage->setCollectionComponentEnabled(
             !m_adpReader.properties().isEmpty());
     } else if (id == Finish_Page) {
-        QTimer::singleShot(300, this, SLOT(convert()));
+        QTimer::singleShot(300, this, &ConversionWizard::convert);
     }
 }
 
