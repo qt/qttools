@@ -1533,6 +1533,7 @@ void Generator::generateThreadSafeness(const Node *node, CodeMarker *marker)
                 text << tlink;
             else
                 text << rlink;
+            text << ".";
         }
         text << Atom::ParaRight;
         break;
