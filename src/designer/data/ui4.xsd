@@ -15,6 +15,7 @@
                         <xs:element name="pixmapfunction" type="xs:string" minOccurs="0" />
                         <xs:element name="customwidgets" type="CustomWidgets" minOccurs="0" />
                         <xs:element name="tabstops" type="TabStops" minOccurs="0" />
+                        <xs:element name="images" use="deprecated" />
                         <xs:element name="includes" type="Includes" minOccurs="0" />
                         <xs:element name="resources" type="Resources" minOccurs="0" />
                         <xs:element name="connections" type="Connections" minOccurs="0" />
@@ -117,7 +118,10 @@
                         <xs:element name="sizehint" type="Size" minOccurs="0" />
                         <xs:element name="addpagemethod" type="xs:string" minOccurs="0" />
                         <xs:element name="container" type="xs:integer" minOccurs="0" />
+                        <xs:element name="sizepolicy" use="deprecated" />
                         <xs:element name="pixmap" type="xs:string" minOccurs="0" />
+                        <xs:element name="script" use="deprecated" />
+                        <xs:element name="properties" use="deprecated" />
                         <xs:element name="slots" type="Slots" minOccurs="0" />
                         <xs:element name="propertyspecifications" type="PropertySpecifications" minOccurs="0" />
                 </xs:all>
@@ -198,6 +202,8 @@
                 <xs:sequence>
                         <xs:element name="class" type="xs:string" minOccurs="0" maxOccurs="unbounded" /> <!-- unbounded kept for compatibility reasons -->
                         <xs:element name="property" type="Property" minOccurs="0" maxOccurs="unbounded" />
+                        <xs:element name="script" use="deprecated" />
+                        <xs:element name="widgetdata" use="deprecated" />
                         <xs:element name="attribute" type="Property" minOccurs="0" maxOccurs="unbounded" />
 <!-- item view begin -->
                         <xs:element name="row" type="Row" minOccurs="0" maxOccurs="unbounded" />

@@ -68,7 +68,7 @@
             <xsl:text>    inline Kind kind() const { return m_kind; }&endl;&endl;</xsl:text>
         </xsl:if>
 
-        <xsl:for-each select="$node/xs:element">
+        <xsl:for-each select="$node/xs:element[not(@use) or (@use!='deprecated')]">
             <xsl:variable name="array" select="@maxOccurs='unbounded'"/>
             <xsl:variable name="camel-case-name">
                 <xsl:call-template name="camel-case">
@@ -168,7 +168,7 @@
 
         <xsl:variable name="isChoice" select="$node[name()='xs:choice']"/>
 
-        <xsl:for-each select="$node/xs:element">
+        <xsl:for-each select="$node/xs:element[not(@use) or (@use!='deprecated')]">
             <xsl:variable name="camel-case-name">
                 <xsl:call-template name="camel-case">
                     <xsl:with-param name="text" select="@name"/>
@@ -210,8 +210,8 @@
 
         <xsl:if test="not($isChoice) and not(@macOccurs='unbounded')">
             <xsl:text>&endl;    enum Child {&endl;</xsl:text>
-            <xsl:for-each select="$node/xs:element">
-            <xsl:variable name="camel-case-name">
+            <xsl:for-each select="$node/xs:element[not(@use) or (@use!='deprecated')]">
+                <xsl:variable name="camel-case-name">
                     <xsl:call-template name="camel-case">
                         <xsl:with-param name="text" select="@name"/>
                     </xsl:call-template>

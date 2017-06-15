@@ -54,7 +54,7 @@
     <xsl:template name="dtor-delete-members">
         <xsl:param name="node"/>
 
-        <xsl:for-each select="$node/xs:element">
+        <xsl:for-each select="$node/xs:element[not(@use) or (@use!='deprecated')]">
             <xsl:variable name="camel-case-name">
                 <xsl:call-template name="camel-case">
                     <xsl:with-param name="text" select="@name"/>
@@ -259,6 +259,12 @@
             <xsl:text>, Qt::CaseInsensitive)) {&endl;</xsl:text>
 
             <xsl:choose>
+                <xsl:when test="@use='deprecated'">
+                    <xsl:text>                qWarning("Omitting deprecated element &lt;</xsl:text>
+                    <xsl:value-of select="$lower-name"/>
+                    <xsl:text>&gt;.");&endl;</xsl:text>
+                    <xsl:text>                reader.skipCurrentElement();&endl;</xsl:text>
+                </xsl:when>
                 <xsl:when test="not($array) and $xs-type-cat = 'value'">
                     <xsl:variable name="qstring-func">
                         <xsl:call-template name="xs-type-from-qstring-func">
@@ -482,7 +488,7 @@
     <xsl:template name="write-impl-save-sequence-child-element">
         <xsl:param name="node"/>
         <xsl:variable name="name" select="concat('Dom', $node/@name)"/>
-        <xsl:for-each select="$node/xs:element">
+        <xsl:for-each select="$node/xs:element[not(@use) or (@use!='deprecated')]">
             <xsl:variable name="camel-case-name">
                 <xsl:call-template name="camel-case">
                     <xsl:with-param name="text" select="@name"/>
@@ -630,7 +636,7 @@
         <xsl:param name="name"/>
         <xsl:variable name="isChoice" select="name($node)='xs:choice'"/>
 
-        <xsl:for-each select="$node/xs:element">
+        <xsl:for-each select="$node/xs:element[not(@use) or (@use!='deprecated')]">
             <xsl:variable name="array" select="@maxOccurs = 'unbounded'"/>
             <xsl:variable name="camel-case-name">
                 <xsl:call-template name="camel-case">
@@ -738,7 +744,7 @@
             <xsl:variable name="isChoice" select="name()='xs:choice'"/>
             <xsl:variable name="make-child-enum" select="boolean(xs:sequence) and not(@maxOccurs='unbounded')"/>
 
-            <xsl:for-each select="xs:element">
+            <xsl:for-each select="xs:element[not(@use) or (@use!='deprecated')]">
                 <xsl:if test="not($isChoice) and not(@maxOccurs='unbounded')">
                     <xsl:variable name="camel-case-name">
                         <xsl:call-template name="camel-case">
