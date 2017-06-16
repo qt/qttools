@@ -250,7 +250,6 @@ static void processQdocconfFile(const QString &fileName)
     config.load(fileName);
     QString project = config.getString(CONFIG_PROJECT);
     QString moduleHeader = config.getString(CONFIG_MODULEHEADER);
-    //qDebug() << "Start project:" << project;
     /*
       Add the defines to the configuration variables.
      */
@@ -273,6 +272,7 @@ static void processQdocconfFile(const QString &fileName)
         phase += "prepare phase ";
     else if (Generator::generating())
         phase += "generate phase ";
+
     QString msg = "Running qdoc for " + config.getString(CONFIG_PROJECT) + phase;
     Location::logToStdErr(msg);
 

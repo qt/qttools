@@ -55,6 +55,7 @@ public:
     virtual void parseHeaderFile(const Location& location, const QString& filePath) Q_DECL_OVERRIDE;
     virtual void parseSourceFile(const Location& location, const QString& filePath) Q_DECL_OVERRIDE;
     virtual void precompileHeaders() Q_DECL_OVERRIDE;
+    Node* parseFnArg(const Location& location, const QString& fnArg);
 
  private:
     void getDefaultArgs();

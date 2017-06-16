@@ -281,6 +281,7 @@ public:
     virtual void setObsoleteLink(const QString& ) { };
     virtual void setQtVariable(const QString& ) { }
     virtual QString qtVariable() const { return QString(); }
+    virtual bool hasTag(const QString& ) const { return false; }
 
     const QMap<LinkType, QPair<QString,QString> >& links() const { return linkMap_; }
     void setLink(LinkType linkType, const QString &link, const QString &desc);
@@ -1038,6 +1039,10 @@ public:
     const SharedCommentNode* collective() const { return collective_; }
     void setCollectiveNode(SharedCommentNode* t) Q_DECL_OVERRIDE { collective_ = t; }
 
+    virtual bool hasTag(const QString& t) const Q_DECL_OVERRIDE { return (tag_ == t); }
+    void setTag(const QString& t) { tag_ = t; }
+    const QString &tag() const { return tag_; }
+
 private:
     void addAssociatedProperty(PropertyNode* property);
 
@@ -1066,6 +1071,7 @@ private:
     const FunctionNode* reimplementedFrom_;
     PropNodeList        associatedProperties_;
     SharedCommentNode*  collective_;
+    QString             tag_;
 };
 
 class PropertyNode : public LeafNode

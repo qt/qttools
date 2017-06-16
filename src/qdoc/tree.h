@@ -216,6 +216,7 @@ class Tree
                              bool broken);
     TargetList* getTargetList(const QString& module);
     QStringList getTargetListKeys() { return targetListMap_->keys(); }
+    Node* findFunctionNodeForTag(const QString &tag, Aggregate* parent = 0);
 
  public:
     const QString& camelCaseModuleName() const { return camelCaseModuleName_; }
