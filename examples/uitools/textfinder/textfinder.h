@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2017 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the examples of the Qt Toolkit.
@@ -54,9 +54,9 @@
 #include <QWidget>
 
 QT_BEGIN_NAMESPACE
+class QLineEdit;
 class QPushButton;
 class QTextEdit;
-class QLineEdit;
 QT_END_NAMESPACE
 
 //! [0]
@@ -65,20 +65,16 @@ class TextFinder : public QWidget
     Q_OBJECT
 
 public:
-    TextFinder(QWidget *parent = 0);
+    explicit TextFinder(QWidget *parent = nullptr);
 
 private slots:
     void on_findButton_clicked();
 
 private:
-    QWidget* loadUiFile();
-    void loadTextFile();
-
     QPushButton *ui_findButton;
     QTextEdit *ui_textEdit;
     QLineEdit *ui_lineEdit;
-    bool isFirstTime;
 };
 //! [0]
 
-#endif
+#endif // TEXTFINDER_H

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2017 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the examples of the Qt Toolkit.
@@ -48,15 +48,43 @@
 **
 ****************************************************************************/
 
-#include <QtUiTools>
-#include <QtWidgets>
 #include "textfinder.h"
+#include <QFile>
+#include <QLineEdit>
+#include <QMessageBox>
+#include <QPushButton>
+#include <QTextEdit>
+#include <QTextStream>
+#include <QUiLoader>
+#include <QVBoxLayout>
+
+//! [4]
+static QWidget *loadUiFile(QWidget *parent)
+{
+    QFile file(":/forms/textfinder.ui");
+    file.open(QIODevice::ReadOnly);
+
+    QUiLoader loader;
+    return loader.load(&file, parent);
+}
+//! [4]
+
+//! [5]
+static QString loadTextFile()
+{
+    QFile inputFile(":/forms/input.txt");
+    inputFile.open(QIODevice::ReadOnly);
+    QTextStream in(&inputFile);
+    in.setCodec("UTF-8");
+    return in.readAll();
+}
+//! [5]
 
 //! [0]
 TextFinder::TextFinder(QWidget *parent)
     : QWidget(parent)
 {
-    QWidget *formWidget = loadUiFile();
+    QWidget *formWidget = loadUiFile(this);
 
 //! [1]
     ui_findButton = findChild<QPushButton*>("findButton");
@@ -69,7 +97,7 @@ TextFinder::TextFinder(QWidget *parent)
 //! [2]
 
 //! [3a]
-    loadTextFile();
+    ui_textEdit->setText(loadTextFile());
 //! [3a]
 
 //! [3b]
@@ -80,39 +108,8 @@ TextFinder::TextFinder(QWidget *parent)
 
 //! [3c]
     setWindowTitle(tr("Text Finder"));
-    isFirstTime = true;
 }
 //! [3c]
-
-//! [4]
-QWidget* TextFinder::loadUiFile()
-{
-    QUiLoader loader;
-
-    QFile file(":/forms/textfinder.ui");
-    file.open(QFile::ReadOnly);
-
-    QWidget *formWidget = loader.load(&file, this);
-    file.close();
-
-    return formWidget;
-}
-//! [4]
-
-//! [5]
-void TextFinder::loadTextFile()
-{
-    QFile inputFile(":/forms/input.txt");
-    inputFile.open(QIODevice::ReadOnly);
-    QTextStream in(&inputFile);
-    QString line = in.readAll();
-    inputFile.close();
-
-    ui_textEdit->append(line);
-    ui_textEdit->setUndoRedoEnabled(false);
-    ui_textEdit->setUndoRedoEnabled(true);
-}
-//! [5]
 
 //! [6] //! [7]
 void TextFinder::on_findButton_clicked()
@@ -122,14 +119,14 @@ void TextFinder::on_findButton_clicked()
 
     bool found = false;
 
-    if (isFirstTime == false)
-        document->undo();
+    // undo previous change (if any)
+    document->undo();
 
     if (searchString.isEmpty()) {
         QMessageBox::information(this, tr("Empty Search Field"),
-                "The search field is empty. Please enter a word and click Find.");
+                                 tr("The search field is empty. "
+                                    "Please enter a word and click Find."));
     } else {
-
         QTextCursor highlightCursor(document);
         QTextCursor cursor(document);
 
@@ -141,12 +138,13 @@ void TextFinder::on_findButton_clicked()
         colorFormat.setForeground(Qt::red);
 
         while (!highlightCursor.isNull() && !highlightCursor.atEnd()) {
-            highlightCursor = document->find(searchString, highlightCursor, QTextDocument::FindWholeWords);
+            highlightCursor = document->find(searchString, highlightCursor,
+                                             QTextDocument::FindWholeWords);
 
             if (!highlightCursor.isNull()) {
                 found = true;
                 highlightCursor.movePosition(QTextCursor::WordRight,
-                                       QTextCursor::KeepAnchor);
+                                             QTextCursor::KeepAnchor);
                 highlightCursor.mergeCharFormat(colorFormat);
             }
         }
@@ -154,11 +152,10 @@ void TextFinder::on_findButton_clicked()
 //! [8]
         cursor.endEditBlock();
 //! [7] //! [9]
-        isFirstTime = false;
 
         if (found == false) {
             QMessageBox::information(this, tr("Word Not Found"),
-                "Sorry, the word cannot be found.");
+                                     tr("Sorry, the word cannot be found."));
         }
     }
 }
