@@ -477,7 +477,7 @@ void WidgetHandle::changeGridLayoutItemSpan()
        break;
 
     case WidgetHandle::Bottom: {
-       if (pt.y() > 0 && info.width() > 1) {
+       if (pt.y() > 0 && info.height() > 1) {
            cmd = new ChangeLayoutItemGeometry(m_formWindow);
            cmd->init(m_widget, info.y(), info.x(), info.height() - 1, info.width());
        } else if (pt.y() < 0 && bottom != -1 && grid->itemAt(bottom)->spacerItem()) {
