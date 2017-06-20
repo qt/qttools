@@ -70,6 +70,13 @@ class QT_FORMEDITOR_EXPORT FormWindow: public FormWindowBase
     Q_OBJECT
 
 public:
+    enum HandleOperation
+    {
+        NoHandleOperation,
+        ResizeHandleOperation,
+        ChangeLayoutSpanHandleOperation
+    };
+
     explicit FormWindow(FormEditor *core, QWidget *parent = 0, Qt::WindowFlags flags = 0);
     virtual ~FormWindow();
 
@@ -198,6 +205,9 @@ public:
     virtual QEditorFormBuilder *createFormBuilder() Q_DECL_OVERRIDE;
 
     bool eventFilter(QObject *watched, QEvent *event) Q_DECL_OVERRIDE;
+
+    HandleOperation handleOperation() const { return m_handleOperation; }
+    void setHandleOperation(HandleOperation o) { m_handleOperation = o; }
 
 signals:
     void contextMenuRequested(QMenu *menu, QWidget *widget);
@@ -354,6 +364,7 @@ private:
     QStringList m_includeHints;
 
     QPoint m_contextMenuPosition;
+    HandleOperation m_handleOperation = NoHandleOperation;
 
 private:
     friend class WidgetEditorTool;

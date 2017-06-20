@@ -209,6 +209,14 @@ bool FormWindowManager::eventFilter(QObject *o, QEvent *e)
             return true;
         }
         switch (eventType) {
+        case QEvent::LayoutRequest:
+            // QTBUG-61439: Suppress layout request while changing the QGridLayout
+            // span of a QTabWidget, which sends LayoutRequest in resizeEvent().
+            if (fw->handleOperation() == FormWindow::ChangeLayoutSpanHandleOperation) {
+                e->ignore();
+                return true;
+            }
+            break;
 
         case QEvent::WindowActivate: {
             if (fw->parentWidget()->isWindow() && fw->isMainContainer(managedWidget) && activeFormWindow() != fw) {
