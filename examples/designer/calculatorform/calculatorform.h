@@ -61,7 +61,7 @@ class CalculatorForm : public QWidget
     Q_OBJECT
 
 public:
-    CalculatorForm(QWidget *parent = 0);
+    explicit CalculatorForm(QWidget *parent = nullptr);
 
 private slots:
     void on_inputSpinBox1_valueChanged(int value);

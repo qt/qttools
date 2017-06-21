@@ -59,33 +59,32 @@
 //! [0]
 TicTacToePlugin::TicTacToePlugin(QObject *parent)
     : QObject(parent)
-    , initialized(false)
 {
 }
 
 QString TicTacToePlugin::name() const
 {
-    return "TicTacToe";
+    return QStringLiteral("TicTacToe");
 }
 
 QString TicTacToePlugin::group() const
 {
-    return "Display Widgets [Examples]";
+    return QStringLiteral("Display Widgets [Examples]");
 }
 
 QString TicTacToePlugin::toolTip() const
 {
-    return "";
+    return QString();
 }
 
 QString TicTacToePlugin::whatsThis() const
 {
-    return "";
+    return QString();
 }
 
 QString TicTacToePlugin::includeFile() const
 {
-    return "tictactoe.h";
+    return QStringLiteral("tictactoe.h");
 }
 
 QIcon TicTacToePlugin::icon() const
@@ -101,7 +100,7 @@ bool TicTacToePlugin::isContainer() const
 QWidget *TicTacToePlugin::createWidget(QWidget *parent)
 {
     TicTacToe *ticTacToe = new TicTacToe(parent);
-    ticTacToe->setState("-X-XO----");
+    ticTacToe->setState(QStringLiteral("-X-XO----"));
     return ticTacToe;
 }
 

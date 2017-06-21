@@ -66,7 +66,7 @@ class MultiPageWidget : public QWidget
     Q_PROPERTY(QString pageTitle READ pageTitle WRITE setPageTitle STORED false)
 
 public:
-    explicit MultiPageWidget(QWidget *parent = 0);
+    explicit MultiPageWidget(QWidget *parent = nullptr);
 
     QSize sizeHint() const override;
 

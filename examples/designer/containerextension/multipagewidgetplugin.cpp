@@ -65,7 +65,6 @@
 //! [0]
 MultiPageWidgetPlugin::MultiPageWidgetPlugin(QObject *parent)
     : QObject(parent)
-    , initialized(false)
 {
 }
 

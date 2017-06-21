@@ -67,7 +67,7 @@ class MultiPageWidgetPlugin: public QObject, public QDesignerCustomWidgetInterfa
 //! [1]
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 public:
-    explicit MultiPageWidgetPlugin(QObject *parent = 0);
+    explicit MultiPageWidgetPlugin(QObject *parent = nullptr);
 
     QString name() const override;
     QString group() const override;
@@ -86,7 +86,7 @@ private slots:
     void pageTitleChanged(const QString &title);
 
 private:
-    bool initialized;
+    bool initialized = false;
 };
 
 #endif

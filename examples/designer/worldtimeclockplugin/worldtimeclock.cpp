@@ -56,13 +56,9 @@
 
 WorldTimeClock::WorldTimeClock(QWidget *parent)
     : QWidget(parent)
-    , timeZoneOffset(0)
-
 {
-    typedef void (QWidget::*WidgetUpdateSlot)();
-
     QTimer *timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, static_cast<WidgetUpdateSlot>(&QWidget::update));
+    connect(timer, &QTimer::timeout, this, QOverload<>::of(&QWidget::update));
     timer->start(1000);
 
     setWindowTitle(tr("World Time Clock"));

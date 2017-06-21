@@ -59,7 +59,7 @@ class QDESIGNER_WIDGET_EXPORT AnalogClock : public QWidget
     Q_OBJECT
 
 public:
-    explicit AnalogClock(QWidget *parent = 0);
+    explicit AnalogClock(QWidget *parent = nullptr);
 
 protected:
     void paintEvent(QPaintEvent *event) override;

@@ -63,7 +63,7 @@ class MultiPageWidgetExtensionFactory: public QExtensionFactory
     Q_OBJECT
 
 public:
-    explicit MultiPageWidgetExtensionFactory(QExtensionManager *parent = 0);
+    explicit MultiPageWidgetExtensionFactory(QExtensionManager *parent = nullptr);
 
 protected:
     QObject *createExtension(QObject *object, const QString &iid, QObject *parent) const override;
