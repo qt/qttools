@@ -709,6 +709,16 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
                     generateAnnotatedList(relative, marker, cn->members());
             }
         }
+        else if (atom->string().startsWith("examplefiles") ||
+                 atom->string().startsWith("exampleimages")) {
+            if (relative->isExample()) {
+                Node::DocSubtype subType = (atom->string().mid(7,5) == "image") ? Node::Image : Node::File;
+                generateFileList(static_cast<const DocumentNode*>(relative), marker, subType,
+                                 atom->string().mid(atom->string().indexOf(" ")).trimmed());
+            }
+            else
+                relative->location().warning(QString("'\\generatelist \1' can only be used with '\\example' topic command").arg(atom->string()));
+        }
         else if (atom->string() == QLatin1String("classhierarchy")) {
             generateClassHierarchy(relative, qdb_->getCppClasses());
         }

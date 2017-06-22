@@ -153,7 +153,7 @@ protected:
     void generateFileList(const DocumentNode* dn,
                           CodeMarker* marker,
                           Node::DocSubtype subtype,
-                          const QString& tag);
+                          const QString& regExp = QString());
     void generateSince(const Node *node, CodeMarker *marker);
     void generateStatus(const Node *node, CodeMarker *marker);
     void generatePrivateSignalNote(const Node* node, CodeMarker* marker);
@@ -230,6 +230,7 @@ private:
     static QmlTypeNode* qmlTypeContext_;
 
     void generateReimplementedFrom(const FunctionNode *func, CodeMarker *marker);
+    static bool compareNodes(Node *a, Node *b) { return (a->name() < b->name()); }
 
  protected:
     const Config* config_;

@@ -960,7 +960,7 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
 
     if (node->isDocumentNode()) {
         const DocumentNode *dn = static_cast<const DocumentNode *>(node);
-        if (dn->isExample()) {
+        if (dn->isExample() && !dn->noAutoList()) {
             generateExampleFiles(dn, marker);
         }
         else if (dn->docSubtype() == Node::File) {
@@ -983,8 +983,8 @@ void Generator::generateExampleFiles(const DocumentNode *dn, CodeMarker *marker)
 {
     if (dn->childNodes().isEmpty())
         return;
-    generateFileList(dn, marker, Node::File, QString("Files:"));
-    generateFileList(dn, marker, Node::Image, QString("Images:"));
+    generateFileList(dn, marker, Node::File);
+    generateFileList(dn, marker, Node::Image);
 }
 
 void Generator::generateDocumentNode(DocumentNode* /* dn */, CodeMarker* /* marker */)
@@ -1005,16 +1005,39 @@ void Generator::generateCollectionNode(CollectionNode* , CodeMarker* )
 void Generator::generateFileList(const DocumentNode* dn,
                                  CodeMarker* marker,
                                  Node::DocSubtype subtype,
-                                 const QString& tag)
+                                 const QString& regExp)
 {
     int count = 0;
     Text text;
     OpenedList openedList(OpenedList::Bullet);
+    QString tag;
 
-    text << Atom::ParaLeft << tag << Atom::ParaRight
-         << Atom(Atom::ListLeft, openedList.styleString());
+    NodeList children(dn->childNodes());
+    std::sort(children.begin(), children.end(), Generator::compareNodes);
+    if (!regExp.isEmpty()) {
+        QRegExp re(regExp);
+        QMutableListIterator<Node*> i(children);
+        while (i.hasNext()) {
+            if (!re.exactMatch(i.next()->name()))
+                i.remove();
+        }
+    }
+    if (children.size() > 1) {
+        switch (subtype) {
+        default:
+        case Node::File:
+            tag = "Files:";
+            break;
+        case Node::Image:
+            tag = "Images:";
+            break;
+        }
+        text << Atom::ParaLeft << tag << Atom::ParaRight;
+    }
 
-    foreach (const Node* child, dn->childNodes()) {
+    text << Atom(Atom::ListLeft, openedList.styleString());
+
+    foreach (const Node* child, children) {
         if (child->docSubtype() == subtype) {
             ++count;
             QString file = child->name();

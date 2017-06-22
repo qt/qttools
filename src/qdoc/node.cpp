@@ -1213,7 +1213,7 @@ NodeList Aggregate::overloads(const QString &funcName) const
   given \a type and having the given \a parent and \a name.
  */
 Aggregate::Aggregate(NodeType type, Aggregate *parent, const QString& name)
-    : Node(type, parent, name)
+    : Node(type, parent, name), noAutoList_(false)
 {
     switch (type) {
     case Class:

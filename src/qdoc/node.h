@@ -423,7 +423,8 @@ public:
     void setOutputSubdirectory(const QString& t) Q_DECL_OVERRIDE;
     const NodeMap& primaryFunctionMap() { return primaryFunctionMap_; }
     const QMap<QString, NodeList>& secondaryFunctionMap() { return secondaryFunctionMap_; }
-
+    bool noAutoList() const { return noAutoList_; }
+    virtual void setNoAutoList(bool b)  Q_DECL_OVERRIDE { noAutoList_ = b; }
 protected:
     Aggregate(NodeType type, Aggregate* parent, const QString& name);
 
@@ -444,6 +445,7 @@ private:
     NodeMap childMap_;
     NodeMap primaryFunctionMap_;
     QMap<QString, NodeList> secondaryFunctionMap_;
+    bool noAutoList_;
 };
 
 class LeafNode : public Node
@@ -1151,7 +1153,7 @@ class CollectionNode : public Aggregate
                 Aggregate* parent,
                 const QString& name,
                 Genus genus)
-     : Aggregate(type, parent, name), seen_(false), noAutoList_(false)
+     : Aggregate(type, parent, name), seen_(false)
     {
         setPageType(Node::OverviewPage);
         setGenus(genus);
@@ -1194,12 +1196,10 @@ class CollectionNode : public Aggregate
 
     void markSeen() { seen_ = true; }
     void markNotSeen() { seen_ = false; }
-    bool noAutoList() const { return noAutoList_; }
-    virtual void setNoAutoList(bool b)  Q_DECL_OVERRIDE { noAutoList_ = b; }
+
 
  private:
     bool        seen_;
-    bool        noAutoList_;
     QString     title_;
     QString     subtitle_;
     NodeList    members_;
