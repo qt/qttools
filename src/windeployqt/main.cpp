@@ -914,9 +914,12 @@ QStringList findQtPlugins(quint64 *usedQtModules, quint64 disabledQtModules,
                     std::wcerr << "Warning: Cannot determine dependencies of "
                         << QDir::toNativeSeparators(pluginPath) << ": " << errorMessage << '\n';
                 }
-                if (neededModules & disabledQtModules) {
-                    if (optVerboseLevel)
-                        std::wcout << "Skipping plugin " << plugin << " due to disabled dependencies.\n";
+                if (const quint64 missingModules = neededModules & disabledQtModules) {
+                    if (optVerboseLevel) {
+                        std::wcout << "Skipping plugin " << plugin
+                            << " due to disabled dependencies ("
+                            << formatQtModules(missingModules).constData() << ").\n";
+                    }
                 } else {
                     if (const quint64 missingModules = (neededModules & ~*usedQtModules)) {
                         *usedQtModules |= missingModules;
