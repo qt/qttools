@@ -360,13 +360,13 @@
     \section1 \\example
 
     The \\example command is for documenting an example. The argument
-    is the example's path relative to omne of the paths listed in the
+    is the example's path relative to one of the paths listed in the
     \l {exampledirs-variable} {exampledirs} variable in the QDoc
     configuration file.
 
-    The documentation page will be output to \c {path-to-example}.html.
-    QDoc will add a list of all the example's source files at the top
-    of the page.
+    The documentation page will be output to \c {modulename-path-to-example}.html.
+    QDoc will add a list of all the example's source and images files at the end
+    of the page, unless \l {noautolist-command}{\\noautolist} command is used.
 
     For example, if \l {exampledirs-variable} {exampledirs} contains
     \c $QTDIR/examples/widgets/imageviewer, then
@@ -391,6 +391,9 @@
         <center><h1>Image Viewer Example</h1></center>
         \endraw
 
+        The example shows how to combine QLabel and QScrollArea
+        to display an image.
+
         Files:
         \list
         \li \l{http://doc.qt.io/qt-5/qtwidgets-widgets-imageviewer-imageviewer-cpp.html}
@@ -401,11 +404,12 @@
            {widgets/imageviewer/main.cpp}
         \endlist
 
-        The example shows how to combine QLabel and QScrollArea
-        to display an image.
 
         ...
     \endquotation
+
+    \b {See also:} \l {generatelist-command}{\\generatelist examplefiles},
+                   \l {noautolist-command}{\\noautolist}
 
     \target externalpage-command
     \section1 \\externalpage

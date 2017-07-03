@@ -2651,8 +2651,10 @@ void CppCodeParser::createExampleFileNodes(DocumentNode *dn)
     fullPath.truncate(fullPath.lastIndexOf('/'));
 
     QStringList exampleFiles = Config::getFilesHere(fullPath, exampleNameFilter, Location(), excludeDirs, excludeFiles);
-    QString imagesPath = fullPath + "/images";
-    QStringList imageFiles = Config::getFilesHere(imagesPath, exampleImageFilter, Location(), excludeDirs, excludeFiles);
+    // Search for all image files under the example project, excluding doc/images directory.
+    QSet<QString> excludeDocDirs(excludeDirs);
+    excludeDocDirs.insert(QDir(fullPath).canonicalPath() + "/doc/images");
+    QStringList imageFiles = Config::getFilesHere(fullPath, exampleImageFilter, Location(), excludeDocDirs, excludeFiles);
     if (!exampleFiles.isEmpty()) {
         // move main.cpp and to the end, if it exists
         QString mainCpp;

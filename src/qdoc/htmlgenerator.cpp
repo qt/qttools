@@ -713,8 +713,11 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
                  atom->string().startsWith("exampleimages")) {
             if (relative->isExample()) {
                 Node::DocSubtype subType = (atom->string().mid(7,5) == "image") ? Node::Image : Node::File;
-                generateFileList(static_cast<const DocumentNode*>(relative), marker, subType,
-                                 atom->string().mid(atom->string().indexOf(" ")).trimmed());
+                QString regExp;
+                int secondArg = atom->string().indexOf(" ");
+                if (secondArg != -1)
+                    regExp = atom->string().mid(++secondArg);
+                generateFileList(static_cast<const DocumentNode*>(relative), marker, subType, regExp);
             }
             else
                 relative->location().warning(QString("'\\generatelist \1' can only be used with '\\example' topic command").arg(atom->string()));
