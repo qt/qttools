@@ -1576,10 +1576,26 @@ static bool deployWebEngineCore(const QMap<QString, QString> &qmakeVariables,
             << QDir::toNativeSeparators(translations.absoluteFilePath()) << '.';
         return true;
     }
-    // Missing translations may cause crashes, ignore --no-translations.
-    return createDirectory(options.translationsDirectory, errorMessage)
-        && updateFile(translations.absoluteFilePath(), options.translationsDirectory,
-                      options.updateFileFlags, options.json, errorMessage);
+    if (options.translations) {
+        // Copy the whole translations directory.
+        return createDirectory(options.translationsDirectory, errorMessage)
+                && updateFile(translations.absoluteFilePath(), options.translationsDirectory,
+                              options.updateFileFlags, options.json, errorMessage);
+    } else {
+        // Translations have been turned off, but QtWebEngine needs at least one.
+        const QFileInfo enUSpak(translations.filePath() + QStringLiteral("/en-US.pak"));
+        if (!enUSpak.exists()) {
+            std::wcerr << "Warning: Cannot find "
+                       << QDir::toNativeSeparators(enUSpak.absoluteFilePath()) << ".\n";
+            return true;
+        }
+        const QString webEngineTranslationsDir = options.translationsDirectory + QLatin1Char('/')
+                + translations.fileName();
+        if (!createDirectory(webEngineTranslationsDir, errorMessage))
+            return false;
+        return updateFile(enUSpak.absoluteFilePath(), webEngineTranslationsDir,
+                          options.updateFileFlags, options.json, errorMessage);
+    }
 }
 
 int main(int argc, char **argv)
