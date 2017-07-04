@@ -1573,7 +1573,7 @@ static bool deployWebEngineCore(const QMap<QString, QString> &qmakeVariables,
                                  + QStringLiteral("/qtwebengine_locales"));
     if (!translations.isDir()) {
         std::wcerr << "Warning: Cannot find the translation files of the QtWebEngine module at "
-            << QDir::toNativeSeparators(translations.absoluteFilePath()) << '.';
+            << QDir::toNativeSeparators(translations.absoluteFilePath()) << ".\n";
         return true;
     }
     if (options.translations) {
