@@ -68,7 +68,7 @@ class TicTacToePlugin : public QObject, public QDesignerCustomWidgetInterface
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 
 public:
-    TicTacToePlugin(QObject *parent = 0);
+    explicit TicTacToePlugin(QObject *parent = nullptr);
 
     QString name() const override;
     QString group() const override;
@@ -83,7 +83,7 @@ public:
     QString domXml() const override;
 
 private:
-    bool initialized;
+    bool initialized = false;
 };
 
 #endif

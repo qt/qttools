@@ -62,7 +62,7 @@ class QDESIGNER_WIDGET_EXPORT WorldTimeClock : public QWidget
 //! [0]
 
 public:
-    explicit WorldTimeClock(QWidget *parent = 0);
+    explicit WorldTimeClock(QWidget *parent = nullptr);
 
 public slots:
     void setTimeZone(int hourOffset);
@@ -74,7 +74,7 @@ protected:
     void paintEvent(QPaintEvent *event) override;
 
 private:
-    int timeZoneOffset;
+    int timeZoneOffset = 0;
 //! [2]
 };
 //! [1] //! [2]

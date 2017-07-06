@@ -56,7 +56,6 @@
 //! [0]
 AnalogClockPlugin::AnalogClockPlugin(QObject *parent)
     : QObject(parent)
-    , initialized(false)
 {
 }
 //! [0]
@@ -88,14 +87,14 @@ QWidget *AnalogClockPlugin::createWidget(QWidget *parent)
 //! [4]
 QString AnalogClockPlugin::name() const
 {
-    return "AnalogClock";
+    return QStringLiteral("AnalogClock");
 }
 //! [4]
 
 //! [5]
 QString AnalogClockPlugin::group() const
 {
-    return "Display Widgets [Examples]";
+    return QStringLiteral("Display Widgets [Examples]");
 }
 //! [5]
 
@@ -109,14 +108,14 @@ QIcon AnalogClockPlugin::icon() const
 //! [7]
 QString AnalogClockPlugin::toolTip() const
 {
-    return "";
+    return QString();
 }
 //! [7]
 
 //! [8]
 QString AnalogClockPlugin::whatsThis() const
 {
-    return "";
+    return QString();
 }
 //! [8]
 
@@ -156,6 +155,6 @@ QString AnalogClockPlugin::domXml() const
 //! [12]
 QString AnalogClockPlugin::includeFile() const
 {
-    return "analogclock.h";
+    return QStringLiteral("analogclock.h");
 }
 //! [12]

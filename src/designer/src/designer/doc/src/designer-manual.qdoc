@@ -2009,8 +2009,8 @@ pixmap property in the property editor.
     \snippet ../uitools/textfinder/textfinder.cpp 4
 
     In a class that uses QtUiTools to build its user interface at run time, we
-    can locate objects in the form using qFindChild(). For example, in the
-    follownig code, we locate some components based on their object names and
+    can locate objects in the form using QObject::findChild(). For example, in the
+    following code, we locate some components based on their object names and
     widget types:
 
     \snippet ../uitools/textfinder/textfinder.cpp 1

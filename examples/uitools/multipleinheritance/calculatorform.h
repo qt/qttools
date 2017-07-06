@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2017 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the examples of the Qt Toolkit.
@@ -61,7 +61,7 @@ class CalculatorForm : public QWidget, private Ui::CalculatorForm
     Q_OBJECT
 
 public:
-    CalculatorForm(QWidget *parent = 0);
+    explicit CalculatorForm(QWidget *parent = nullptr);
 
 private slots:
     void on_inputSpinBox1_valueChanged(int value);

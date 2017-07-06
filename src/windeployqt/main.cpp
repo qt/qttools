@@ -915,9 +915,12 @@ QStringList findQtPlugins(quint64 *usedQtModules, quint64 disabledQtModules,
                     std::wcerr << "Warning: Cannot determine dependencies of "
                         << QDir::toNativeSeparators(pluginPath) << ": " << errorMessage << '\n';
                 }
-                if (neededModules & disabledQtModules) {
-                    if (optVerboseLevel)
-                        std::wcout << "Skipping plugin " << plugin << " due to disabled dependencies.\n";
+                if (const quint64 missingModules = neededModules & disabledQtModules) {
+                    if (optVerboseLevel) {
+                        std::wcout << "Skipping plugin " << plugin
+                            << " due to disabled dependencies ("
+                            << formatQtModules(missingModules).constData() << ").\n";
+                    }
                 } else {
                     if (const quint64 missingModules = (neededModules & ~*usedQtModules)) {
                         *usedQtModules |= missingModules;
@@ -1018,6 +1021,42 @@ static QString libraryPath(const QString &libraryLocation, const char *name,
     return result;
 }
 
+static QString vcDebugRedistDir() { return QStringLiteral("Debug_NonRedist"); }
+
+static QString vcRedistDir()
+{
+    const char vcDirVar[] = "VCINSTALLDIR";
+    const QChar slash(QLatin1Char('/'));
+    QString vcRedistDirName = QDir::cleanPath(QFile::decodeName(qgetenv(vcDirVar)));
+    if (vcRedistDirName.isEmpty()) {
+        std::wcerr << "Warning: Cannot find Visual Studio installation directory, " << vcDirVar
+            << " is not set.\n";
+        return QString();
+    }
+    if (!vcRedistDirName.endsWith(slash))
+        vcRedistDirName.append(slash);
+    vcRedistDirName.append(QStringLiteral("redist"));
+    if (!QFileInfo(vcRedistDirName).isDir()) {
+        std::wcerr << "Warning: Cannot find Visual Studio redist directory, "
+            << QDir::toNativeSeparators(vcRedistDirName).toStdWString() << ".\n";
+        return QString();
+    }
+    const QString vc2017RedistDirName = vcRedistDirName + QStringLiteral("/MSVC");
+    if (!QFileInfo(vc2017RedistDirName).isDir())
+        return vcRedistDirName; // pre 2017
+    // Look in reverse order for folder containing the debug redist folder
+    const QFileInfoList subDirs =
+        QDir(vc2017RedistDirName).entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name | QDir::Reversed);
+    for (const QFileInfo &f : subDirs) {
+        const QString path = f.absoluteFilePath();
+        if (QFileInfo(path + slash + vcDebugRedistDir()).isDir())
+            return path;
+    }
+    std::wcerr << "Warning: Cannot find Visual Studio redist directory under "
+        << QDir::toNativeSeparators(vc2017RedistDirName).toStdWString() << ".\n";
+    return QString();
+}
+
 static QStringList compilerRunTimeLibs(Platform platform, bool isDebug, unsigned wordSize)
 {
     QStringList result;
@@ -1041,27 +1080,15 @@ static QStringList compilerRunTimeLibs(Platform platform, bool isDebug, unsigned
     }
         break;
     case Windows: { // MSVC/Desktop: Add redistributable packages.
-        const char vcDirVar[] = "VCINSTALLDIR";
-        const QChar slash(QLatin1Char('/'));
-        QString vcRedistDirName = QDir::cleanPath(QFile::decodeName(qgetenv(vcDirVar)));
-        if (vcRedistDirName.isEmpty()) {
-             std::wcerr << "Warning: Cannot find Visual Studio installation directory, " << vcDirVar << " is not set.\n";
+        QString vcRedistDirName = vcRedistDir();
+        if (vcRedistDirName.isEmpty())
              break;
-        }
-        if (!vcRedistDirName.endsWith(slash))
-            vcRedistDirName.append(slash);
-        vcRedistDirName.append(QStringLiteral("redist"));
-        QDir vcRedistDir(vcRedistDirName);
-        if (!vcRedistDir.exists()) {
-            std::wcerr << "Warning: Cannot find Visual Studio redist directory, "
-                       << QDir::toNativeSeparators(vcRedistDirName).toStdWString() << ".\n";
-            break;
-        }
         QStringList redistFiles;
+        QDir vcRedistDir(vcRedistDirName);
         const QString wordSizeString(QLatin1String(wordSize > 32 ? "x64" : "x86"));
         if (isDebug) {
             // Append DLLs from Debug_NonRedist\x??\Microsoft.VC<version>.DebugCRT.
-            if (vcRedistDir.cd(QLatin1String("Debug_NonRedist")) && vcRedistDir.cd(wordSizeString)) {
+            if (vcRedistDir.cd(vcDebugRedistDir()) && vcRedistDir.cd(wordSizeString)) {
                 const QStringList names = vcRedistDir.entryList(QStringList(QStringLiteral("Microsoft.VC*.DebugCRT")), QDir::Dirs);
                 if (!names.isEmpty() && vcRedistDir.cd(names.first())) {
                     const QFileInfoList &dlls = vcRedistDir.entryInfoList(QStringList(QLatin1String("*.dll")));
@@ -1070,14 +1097,15 @@ static QStringList compilerRunTimeLibs(Platform platform, bool isDebug, unsigned
                 }
             }
         } else { // release: Bundle vcredist<>.exe
+            QString releaseRedistDir = vcRedistDirName;
             const QStringList countryCodes = vcRedistDir.entryList(QStringList(QStringLiteral("[0-9]*")), QDir::Dirs);
-            if (!countryCodes.isEmpty()) {
-                const QFileInfo fi(vcRedistDirName + slash + countryCodes.first() + slash
-                                   + QStringLiteral("vcredist_") + wordSizeString
-                                   + QStringLiteral(".exe"));
-                if (fi.isFile())
-                    redistFiles.append(fi.absoluteFilePath());
-            }
+            if (!countryCodes.isEmpty()) // Pre MSVC2017
+                releaseRedistDir += QLatin1Char('/') + countryCodes.constFirst();
+            const QFileInfo fi(releaseRedistDir + QLatin1Char('/')
+                               + QStringLiteral("vcredist_") + wordSizeString
+                               + QStringLiteral(".exe"));
+            if (fi.isFile())
+                redistFiles.append(fi.absoluteFilePath());
         }
         if (redistFiles.isEmpty()) {
             std::wcerr << "Warning: Cannot find Visual Studio " << (isDebug ? "debug" : "release")
@@ -1546,13 +1574,29 @@ static bool deployWebEngineCore(const QMap<QString, QString> &qmakeVariables,
                                  + QStringLiteral("/qtwebengine_locales"));
     if (!translations.isDir()) {
         std::wcerr << "Warning: Cannot find the translation files of the QtWebEngine module at "
-            << QDir::toNativeSeparators(translations.absoluteFilePath()) << '.';
+            << QDir::toNativeSeparators(translations.absoluteFilePath()) << ".\n";
         return true;
     }
-    // Missing translations may cause crashes, ignore --no-translations.
-    return createDirectory(options.translationsDirectory, errorMessage)
-        && updateFile(translations.absoluteFilePath(), options.translationsDirectory,
-                      options.updateFileFlags, options.json, errorMessage);
+    if (options.translations) {
+        // Copy the whole translations directory.
+        return createDirectory(options.translationsDirectory, errorMessage)
+                && updateFile(translations.absoluteFilePath(), options.translationsDirectory,
+                              options.updateFileFlags, options.json, errorMessage);
+    } else {
+        // Translations have been turned off, but QtWebEngine needs at least one.
+        const QFileInfo enUSpak(translations.filePath() + QStringLiteral("/en-US.pak"));
+        if (!enUSpak.exists()) {
+            std::wcerr << "Warning: Cannot find "
+                       << QDir::toNativeSeparators(enUSpak.absoluteFilePath()) << ".\n";
+            return true;
+        }
+        const QString webEngineTranslationsDir = options.translationsDirectory + QLatin1Char('/')
+                + translations.fileName();
+        if (!createDirectory(webEngineTranslationsDir, errorMessage))
+            return false;
+        return updateFile(enUSpak.absoluteFilePath(), webEngineTranslationsDir,
+                          options.updateFileFlags, options.json, errorMessage);
+    }
 }
 
 int main(int argc, char **argv)

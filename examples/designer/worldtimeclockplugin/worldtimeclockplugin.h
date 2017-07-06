@@ -64,7 +64,7 @@ class WorldTimeClockPlugin : public QObject,
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 
 public:
-    explicit WorldTimeClockPlugin(QObject *parent = 0);
+    explicit WorldTimeClockPlugin(QObject *parent = nullptr);
 
     bool isContainer() const override;
     bool isInitialized() const override;
@@ -79,7 +79,7 @@ public:
     void initialize(QDesignerFormEditorInterface *core) override;
 
 private:
-    bool initialized;
+    bool initialized = false;
 };
 //! [0]
 

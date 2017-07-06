@@ -488,7 +488,7 @@
     \section1 \\e (emphasis, italics)
 
     The \\e command renders its argument in a special font, normally italics. This
-    command used to be called \\i, which is now deprecated. Use \e for italics.
+    command used to be called \\i, which is now deprecated.
 
     If the argument contains spaces or other punctuation, enclose the
     argument in curly brackets.

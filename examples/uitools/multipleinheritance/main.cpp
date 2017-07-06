@@ -48,8 +48,8 @@
 **
 ****************************************************************************/
 
-#include <QApplication>
 #include "calculatorform.h"
+#include <QApplication>
 
 //! [0]
 int main(int argc, char *argv[])

@@ -87,7 +87,7 @@ class TicTacToeTaskMenuFactory : public QExtensionFactory
     Q_OBJECT
 
 public:
-    explicit TicTacToeTaskMenuFactory(QExtensionManager *parent = 0);
+    explicit TicTacToeTaskMenuFactory(QExtensionManager *parent = nullptr);
 
 protected:
     QObject *createExtension(QObject *object, const QString &iid, QObject *parent) const override;

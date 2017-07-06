@@ -55,7 +55,6 @@
 
 WorldTimeClockPlugin::WorldTimeClockPlugin(QObject *parent)
     : QObject(parent)
-    , initialized(false)
 {
 }
 
@@ -79,12 +78,12 @@ QWidget *WorldTimeClockPlugin::createWidget(QWidget *parent)
 
 QString WorldTimeClockPlugin::name() const
 {
-    return "WorldTimeClock";
+    return QStringLiteral("WorldTimeClock");
 }
 
 QString WorldTimeClockPlugin::group() const
 {
-    return "Display Widgets [Examples]";
+    return QStringLiteral("Display Widgets [Examples]");
 }
 
 QIcon WorldTimeClockPlugin::icon() const
@@ -94,12 +93,12 @@ QIcon WorldTimeClockPlugin::icon() const
 
 QString WorldTimeClockPlugin::toolTip() const
 {
-    return "";
+    return QString();
 }
 
 QString WorldTimeClockPlugin::whatsThis() const
 {
-    return "";
+    return QString();
 }
 
 bool WorldTimeClockPlugin::isContainer() const
@@ -125,5 +124,5 @@ QString WorldTimeClockPlugin::domXml() const
 
 QString WorldTimeClockPlugin::includeFile() const
 {
-    return "worldtimeclock.h";
+    return QStringLiteral("worldtimeclock.h");
 }

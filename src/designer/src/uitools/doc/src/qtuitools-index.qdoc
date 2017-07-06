@@ -59,4 +59,9 @@
     \list
         \li \l{Qt UI Tools C++ Classes}{C++ Classes}
     \endlist
+
+    \section1 Examples
+     \list
+      \li \l{Qt UI Tools Examples}
+     \endlist
 */

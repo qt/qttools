@@ -60,7 +60,7 @@ class AnalogClockPlugin : public QObject, public QDesignerCustomWidgetInterface
     Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QDesignerCustomWidgetInterface")
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 public:
-    explicit AnalogClockPlugin(QObject *parent = 0);
+    explicit AnalogClockPlugin(QObject *parent = nullptr);
 
     bool isContainer() const override;
     bool isInitialized() const override;
@@ -75,7 +75,7 @@ public:
     void initialize(QDesignerFormEditorInterface *core) override;
 
 private:
-    bool initialized;
+    bool initialized = false;
 };
 //! [0]
 

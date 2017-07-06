@@ -83,9 +83,7 @@ QAction *TicTacToeTaskMenu::preferredEditAction() const
 //! [3]
 QList<QAction *> TicTacToeTaskMenu::taskActions() const
 {
-    QList<QAction *> list;
-    list.append(editStateAction);
-    return list;
+    return QList<QAction *>{editStateAction};
 }
 //! [3]
 
@@ -102,11 +100,11 @@ QObject *TicTacToeTaskMenuFactory::createExtension(QObject *object,
                                                    QObject *parent) const
 {
     if (iid != Q_TYPEID(QDesignerTaskMenuExtension))
-        return 0;
+        return nullptr;
 
     if (TicTacToe *tic = qobject_cast<TicTacToe*>(object))
         return new TicTacToeTaskMenu(tic, parent);
 
-    return 0;
+    return nullptr;
 }
 //! [5]

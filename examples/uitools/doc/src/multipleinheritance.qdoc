@@ -33,7 +33,7 @@
     \brief Using a form created with Qt Designer in an application.
 
     The Multiple Inheritance Example shows how to use a form created with
-    Qt Designer in an application by subclassing both QWidget and the user
+    \l{Qt Designer} in an application by subclassing both QWidget and the user
     interface class, which is \c{Ui::CalculatorForm}.
 
     \image multipleinheritance-example.png
@@ -67,8 +67,7 @@
     \section1 CalculatorForm Implementation
 
     In the constructor, we call \c setupUi() to load the user interface file.
-    Note that we do not need the \c{ui} prefix as \c CalculatorForm is a
-    subclass of the user interface class.
+    Note that setupUi is a method of \c Ui::CalculatorForm.
 
     \snippet multipleinheritance/calculatorform.cpp 0
 

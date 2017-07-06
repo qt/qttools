@@ -53,9 +53,10 @@
 #include <QMouseEvent>
 #include <QPainter>
 
+static inline QString defaultState() { return QStringLiteral("---------"); }
+
 TicTacToe::TicTacToe(QWidget *parent)
     : QWidget(parent)
-    , turnNumber(0)
 {
 }
 
@@ -72,7 +73,7 @@ QSize TicTacToe::sizeHint() const
 void TicTacToe::setState(const QString &newState)
 {
     turnNumber = 0;
-    myState = "---------";
+    myState = defaultState();
     int position = 0;
     while (position < 9 && position < newState.length()) {
         QChar mark = newState.at(position);
@@ -92,7 +93,7 @@ QString TicTacToe::state() const
 
 void TicTacToe::clearBoard()
 {
-    myState = "---------";
+    myState = defaultState();
     turnNumber = 0;
     update();
 }

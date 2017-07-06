@@ -65,7 +65,7 @@ class TicTacToe : public QWidget
     Q_PROPERTY(QString state READ state WRITE setState)
 
 public:
-    explicit TicTacToe(QWidget *parent = 0);
+    explicit TicTacToe(QWidget *parent = nullptr);
 
     QSize minimumSizeHint() const override;
     QSize sizeHint() const override;
@@ -78,14 +78,14 @@ protected:
     void paintEvent(QPaintEvent *event) override;
 
 private:
-    enum { Empty = '-', Cross = 'X', Nought = 'O' };
+    enum : char { Empty = '-', Cross = 'X', Nought = 'O' };
 
     QRect cellRect(int row, int col) const;
     int cellWidth() const { return width() / 3; }
     int cellHeight() const { return height() / 3; }
 
     QString myState;
-    int turnNumber;
+    int turnNumber = 0;
 };
 //! [0]
 

@@ -59,11 +59,9 @@ MultiPageWidget::MultiPageWidget(QWidget *parent)
     , stackWidget(new QStackedWidget)
     , comboBox(new QComboBox)
 {
-    typedef void (QComboBox::*ComboBoxActivatedIntSignal)(int);
+    comboBox->setObjectName(QStringLiteral("__qt__passive_comboBox"));
 
-    comboBox->setObjectName("__qt__passive_comboBox");
-
-    connect(comboBox, static_cast<ComboBoxActivatedIntSignal>(&QComboBox::activated),
+    connect(comboBox, QOverload<int>::of(&QComboBox::activated),
             this, &MultiPageWidget::setCurrentIndex);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
