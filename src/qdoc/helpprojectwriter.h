@@ -53,6 +53,24 @@ struct SubProject
     QStringList groups;
 };
 
+/*
+ * Name is the human-readable name to be shown in Assistant.
+ * Ids is a list of unique identifiers.
+ * Ref is the location of the documentation for the keyword.
+ */
+struct Keyword {
+    QString name;
+    QStringList ids;
+    QString ref;
+    Keyword(QString name, QString id, QString ref) : name(name), ids(QStringList(id)), ref(ref) {}
+    Keyword(QString name, QStringList ids, QString ref) : name(name), ids(ids), ref(ref) {}
+    bool operator<(const Keyword &o) const
+    {
+        // Order by name; use id as a secondary sort key
+        return (name == o.name) ? ids.last() < o.ids.last() : name < o.name;
+    }
+};
+
 struct HelpProject
 {
     using NodeStatusSet = QSet<unsigned char>;
@@ -64,7 +82,7 @@ struct HelpProject
     QString fileName;
     QString indexRoot;
     QString indexTitle;
-    QList<QStringList> keywords;
+    QList<Keyword> keywords;
     QSet<QString> files;
     QSet<QString> extraFiles;
     QSet<QString> filterAttributes;
@@ -74,6 +92,7 @@ struct HelpProject
     QHash<const Node *, NodeStatusSet> memberStatus;
     bool includeIndexNodes;
 };
+
 
 class HelpProjectWriter
 {
@@ -88,7 +107,7 @@ private:
     void generateProject(HelpProject &project);
     void generateSections(HelpProject &project, QXmlStreamWriter &writer, const Node *node);
     bool generateSection(HelpProject &project, QXmlStreamWriter &writer, const Node *node);
-    QStringList keywordDetails(const Node *node) const;
+    Keyword keywordDetails(const Node *node) const;
     void writeHashFile(QFile &file);
     void writeNode(HelpProject &project, QXmlStreamWriter &writer, const Node *node);
     void readSelectors(SubProject &subproject, const QStringList &selectors);

@@ -195,44 +195,37 @@ void HelpProjectWriter::addExtraFiles(const QSet<QString> &files)
         projects[i].extraFiles.unite(files);
 }
 
-/*!
-    Returns a list of strings describing the keyword details for a given node.
-
-    The first string is the human-readable name to be shown in Assistant.
-    The second string is a unique identifier.
-    The third string is the location of the documentation for the keyword.
- */
-QStringList HelpProjectWriter::keywordDetails(const Node *node) const
+Keyword HelpProjectWriter::keywordDetails(const Node *node) const
 {
-    QStringList details;
+    QString ref = gen_->fullDocumentLocation(node, false);
 
     if (node->parent() && !node->parent()->name().isEmpty()) {
-        // "name"
-        if (node->isEnumType() || node->isTypedef())
-            details << node->parent()->name() + "::" + node->name();
-        else
-            details << node->name();
-        // "id"
-        if (!node->isRelatedNonmember())
-            details << node->parent()->name() + "::" + node->name();
-        else
-            details << node->name();
+        QString name = (node->isEnumType() || node->isTypedef())
+                ? node->parent()->name()+"::"+node->name()
+                : node->name();
+        QString id = (!node->isRelatedNonmember())
+                ? node->parent()->name()+"::"+node->name()
+                : node->name();
+        return Keyword(name, id, ref);
     } else if (node->isQmlType() || node->isQmlBasicType()) {
-        details << node->name();
-        details << "QML." + node->name();
+        QString name = node->name();
+        QString moduleName = node->logicalModuleName();
+        QStringList ids("QML." + name);
+        if (!moduleName.isEmpty()) {
+            QString majorVersion = node->logicalModule()
+                    ? node->logicalModule()->logicalModuleVersion().split('.')[0]
+                    : QString();
+            ids << "QML." + moduleName + majorVersion + "." + name;
+        }
+        return Keyword(name, ids, ref);
     } else if (node->isJsType() || node->isJsBasicType()) {
-        details << node->name();
-        details << "JS." + node->name();
+        return Keyword(node->name(), "JS." + node->name(), ref);
     } else if (node->isTextPageNode()) {
-        const PageNode *fake = static_cast<const PageNode *>(node);
-        details << fake->fullTitle();
-        details << fake->fullTitle();
+        const auto *pageNode = static_cast<const PageNode *>(node);
+        return Keyword(pageNode->fullTitle(), pageNode->fullTitle(), ref);
     } else {
-        details << node->name();
-        details << node->name();
+        return Keyword(node->name(), node->name(), ref);
     }
-    details << gen_->fullDocumentLocation(node, false);
-    return details;
 }
 
 bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter & /* writer */,
@@ -300,11 +293,11 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
             const auto keywords = node->doc().keywords();
             for (const Atom *keyword : keywords) {
                 if (!keyword->string().isEmpty()) {
-                    QStringList details;
-                    details << keyword->string() << keyword->string()
-                            << gen_->fullDocumentLocation(node, false);
-                    project.keywords.append(details);
-                } else
+                    project.keywords.append(Keyword(keyword->string(),
+                                                    keyword->string(),
+                                                    gen_->fullDocumentLocation(node, false)));
+                }
+                else
                     node->doc().location().warning(
                             QStringLiteral("Bad keyword in %1")
                                     .arg(gen_->fullDocumentLocation(node, false)));
@@ -328,15 +321,15 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
                 if (enumNode->itemAccess(item.name()) == Access::Private)
                     continue;
 
+                QString name;
+                QString id;
                 if (!node->parent()->name().isEmpty()) {
-                    details << node->parent()->name() + "::" + item.name(); // "name"
-                    details << node->parent()->name() + "::" + item.name(); // "id"
+                    name = id = node->parent()->name() + "::" + item.name();
                 } else {
-                    details << item.name(); // "name"
-                    details << item.name(); // "id"
+                    name = id = item.name();
                 }
-                details << gen_->fullDocumentLocation(node, false);
-                project.keywords.append(details);
+                QString ref = gen_->fullDocumentLocation(node, false);
+                project.keywords.append(Keyword(name, id, ref));
             }
         }
         break;
@@ -345,16 +338,15 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
     case Node::Module:
     case Node::QmlModule:
     case Node::JsModule: {
-        const CollectionNode *cn = static_cast<const CollectionNode *>(node);
+        const auto *cn = static_cast<const CollectionNode *>(node);
         if (!cn->fullTitle().isEmpty()) {
             if (cn->doc().hasKeywords()) {
                 const auto keywords = cn->doc().keywords();
                 for (const Atom *keyword : keywords) {
                     if (!keyword->string().isEmpty()) {
-                        QStringList details;
-                        details << keyword->string() << keyword->string()
-                                << gen_->fullDocumentLocation(node, false);
-                        project.keywords.append(details);
+                        project.keywords.append(Keyword(keyword->string(),
+                                                        keyword->string(),
+                                                        gen_->fullDocumentLocation(node, false)));
                     } else
                         cn->doc().location().warning(
                                 QStringLiteral("Bad keyword in %1")
@@ -403,12 +395,12 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
     case Node::TypeAlias:
     case Node::Typedef: {
         const TypedefNode *typedefNode = static_cast<const TypedefNode *>(node);
-        QStringList typedefDetails = keywordDetails(node);
+        Keyword typedefDetails = keywordDetails(node);
         const EnumNode *enumNode = typedefNode->associatedEnum();
         // Use the location of any associated enum node in preference
         // to that of the typedef.
         if (enumNode)
-            typedefDetails[2] = gen_->fullDocumentLocation(enumNode, false);
+            typedefDetails.ref = gen_->fullDocumentLocation(enumNode, false);
 
         project.keywords.append(typedefDetails);
     } break;
@@ -420,16 +412,15 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
         // Page nodes (such as manual pages) contain subtypes, titles and other
         // attributes.
     case Node::Page: {
-        const PageNode *pn = static_cast<const PageNode *>(node);
+        const auto *pn = static_cast<const PageNode *>(node);
         if (!pn->fullTitle().isEmpty()) {
             if (pn->doc().hasKeywords()) {
                 const auto keywords = pn->doc().keywords();
                 for (const Atom *keyword : keywords) {
                     if (!keyword->string().isEmpty()) {
-                        QStringList details;
-                        details << keyword->string() << keyword->string()
-                                << gen_->fullDocumentLocation(node, false);
-                        project.keywords.append(details);
+                        project.keywords.append(Keyword(keyword->string(),
+                                                        keyword->string(),
+                                                        gen_->fullDocumentLocation(node, false)));
                     } else {
                         QString loc = gen_->fullDocumentLocation(node, false);
                         pn->doc().location().warning(QStringLiteral("Bad keyword in %1").arg(loc));
@@ -798,12 +789,14 @@ void HelpProjectWriter::generateProject(HelpProject &project)
 
     writer.writeStartElement("keywords");
     std::sort(project.keywords.begin(), project.keywords.end());
-    for (const QStringList &details : qAsConst(project.keywords)) {
-        writer.writeStartElement("keyword");
-        writer.writeAttribute("name", details[0]);
-        writer.writeAttribute("id", details[1]);
-        writer.writeAttribute("ref", details[2]);
-        writer.writeEndElement(); // keyword
+    for (const auto &k : qAsConst(project.keywords)) {
+        for (const auto &id : qAsConst(k.ids)) {
+            writer.writeStartElement("keyword");
+            writer.writeAttribute("name", k.name);
+            writer.writeAttribute("id", id);
+            writer.writeAttribute("ref", k.ref);
+            writer.writeEndElement(); //keyword
+        }
     }
     writer.writeEndElement(); // keywords
 
