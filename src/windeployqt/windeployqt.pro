@@ -9,4 +9,5 @@ CONFIG += force_bootstrap
 
 win32: LIBS += -lshlwapi
 
+QMAKE_TARGET_DESCRIPTION = "Qt Windows Deployment Tool"
 load(qt_tool)

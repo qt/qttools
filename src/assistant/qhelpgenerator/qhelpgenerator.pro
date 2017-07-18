@@ -7,4 +7,5 @@ SOURCES += ../shared/helpgenerator.cpp \
 
 HEADERS += ../shared/helpgenerator.h
 
+QMAKE_TARGET_DESCRIPTION = "Qt Compressed Help File Generator"
 load(qt_tool)

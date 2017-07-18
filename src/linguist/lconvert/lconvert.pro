@@ -6,4 +6,5 @@ SOURCES += main.cpp
 
 include(../shared/formats.pri)
 
+QMAKE_TARGET_DESCRIPTION = "Qt Translation File Converter"
 load(qt_tool)

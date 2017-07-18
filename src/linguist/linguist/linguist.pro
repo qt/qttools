@@ -60,7 +60,7 @@ DEFINES += QT_KEYWORDS
 TARGET = linguist
 
 QMAKE_TARGET_PRODUCT = Qt Linguist
-QMAKE_TARGET_DESCRIPTION = Tool for adding translations to Qt applications
+QMAKE_TARGET_DESCRIPTION = Qt Linguist
 
 win32 {
    RC_ICONS = linguist.ico

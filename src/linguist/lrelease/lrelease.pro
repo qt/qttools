@@ -11,4 +11,5 @@ qmake.name = QMAKE
 qmake.value = $$shell_path($$QMAKE_QMAKE)
 QT_TOOL_ENV += qmake
 
+QMAKE_TARGET_DESCRIPTION = "Qt Translation File Compiler"
 load(qt_tool)

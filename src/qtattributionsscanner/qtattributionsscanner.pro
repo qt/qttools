@@ -18,4 +18,5 @@ HEADERS += \
 
 DEFINES += QT_NO_CAST_FROM_ASCII QT_NO_CAST_TO_ASCII
 
+QMAKE_TARGET_DESCRIPTION = "Qt Source Code Attribution Scanner"
 load(qt_tool)

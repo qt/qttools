@@ -95,6 +95,7 @@ qtPrepareTool(QHELPGENERATOR, qhelpgenerator)
 
 QMAKE_DOCS = $$PWD/doc/config/qdoc.qdocconf
 
+QMAKE_TARGET_DESCRIPTION = "Qt Documentation Compiler"
 load(qt_tool)
 
 TR_EXCLUDE += $$PWD/*

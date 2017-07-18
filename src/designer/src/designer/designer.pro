@@ -60,7 +60,7 @@ FORMS += saveformastemplate.ui \
     qdesigner_appearanceoptions.ui
 
 QMAKE_TARGET_PRODUCT = Qt Designer
-QMAKE_TARGET_DESCRIPTION = Tool for designing and building graphical user interfaces with Qt Widgets
+QMAKE_TARGET_DESCRIPTION = Qt Designer
 
 win32 {
    RC_ICONS = designer.ico
