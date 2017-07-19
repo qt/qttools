@@ -412,18 +412,6 @@ bool AppxLocalEngine::installPackage(IAppxManifestReader *reader, const QString 
         return false;
     }
 
-    ComPtr<IAsyncInfo> asyncInfo;
-    hr = deploymentOperation.As(&asyncInfo);
-    RETURN_FALSE_IF_FAILED("Failed to cast deployment operation to info.");
-    AsyncStatus status;
-    hr = asyncInfo->get_Status(&status);
-    RETURN_FALSE_IF_FAILED("Failed to retrieve deployment operation's status.");
-
-    if (status != Completed) {
-        qCWarning(lcWinRtRunner) << "Deployment operation did not succeed.";
-        return false;
-    }
-
     ComPtr<IDeploymentResult> results;
     hr = deploymentOperation->GetResults(&results);
     RETURN_FALSE_IF_FAILED("Failed to retrieve package registration results.");
