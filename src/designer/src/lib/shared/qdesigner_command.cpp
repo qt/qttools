@@ -610,6 +610,7 @@ void ReparentWidgetCommand::undo()
     m_oldParentWidget->setProperty("_q_zOrder", QVariant::fromValue(m_oldParentZOrder));
 
     QWidgetList newZOrder = qvariant_cast<QWidgetList>(m_newParentWidget->property("_q_zOrder"));
+    newZOrder.removeAll(m_widget);
     m_newParentWidget->setProperty("_q_zOrder", QVariant::fromValue(newZOrder));
 
     m_widget->show();
