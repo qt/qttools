@@ -11,10 +11,6 @@ DEFINES += QDESIGNER_COMPONENTS_LIBRARY
 
 static:DEFINES += QT_DESIGNER_STATIC
 
-# Override qt_targets
-QMAKE_TARGET_PRODUCT = Designer
-QMAKE_TARGET_DESCRIPTION = Graphical user interface designer.
-
 SOURCES += qdesigner_components.cpp
 
 INCLUDEPATH += . .. \
