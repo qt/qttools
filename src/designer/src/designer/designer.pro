@@ -59,7 +59,6 @@ FORMS += saveformastemplate.ui \
     preferencesdialog.ui \
     qdesigner_appearanceoptions.ui
 
-QMAKE_TARGET_PRODUCT = Qt Designer
 QMAKE_TARGET_DESCRIPTION = Qt Designer
 
 win32 {

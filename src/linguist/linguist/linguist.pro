@@ -59,7 +59,6 @@ contains(QT_PRODUCT, OpenSource.*):DEFINES *= QT_OPENSOURCE
 DEFINES += QT_KEYWORDS
 TARGET = linguist
 
-QMAKE_TARGET_PRODUCT = Qt Linguist
 QMAKE_TARGET_DESCRIPTION = Qt Linguist
 
 win32 {
