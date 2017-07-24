@@ -816,7 +816,8 @@ static const PluginModuleMapping pluginModuleMappings[] =
     {"texttospeech", QtTextToSpeechModule},
     {"qtwebengine", QtWebEngineModule | QtWebEngineCoreModule | QtWebEngineWidgetsModule},
     {"sceneparsers", Qt3DRendererModule},
-    {"renderplugins", Qt3DRendererModule}
+    {"renderplugins", Qt3DRendererModule},
+    {"geometryloaders", Qt3DRendererModule}
 };
 
 static inline quint64 qtModuleForPlugin(const QString &subDirName)
