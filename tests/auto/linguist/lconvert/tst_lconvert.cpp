@@ -46,10 +46,8 @@ private slots:
     void converts();
     void roundtrips_data();
     void roundtrips();
-#if 0
     void chains_data();
     void chains();
-#endif
     void merge();
 
 private:
@@ -247,7 +245,6 @@ void tst_lconvert::converts()
 
 Q_DECLARE_METATYPE(QList<QStringList>);
 
-#if 0
 void tst_lconvert::chains_data()
 {
     QTest::addColumn<QString>("inFileName");
@@ -255,6 +252,9 @@ void tst_lconvert::chains_data()
     QTest::addColumn<QStringList>("stations");
     QTest::addColumn<QList<QStringList> >("args");
 
+    QTest::newRow("no-untranslated") << "untranslated.ts" << "untranslated.ts.out"
+                                     << QStringList({"ts", "ts"})
+                                     << QList<QStringList>({QStringList("-no-untranslated")});
 }
 
 void tst_lconvert::chains()
@@ -266,7 +266,6 @@ void tst_lconvert::chains()
 
     convertChain(inFileName, outFileName, stations, args);
 }
-#endif
 
 void tst_lconvert::roundtrips_data()
 {

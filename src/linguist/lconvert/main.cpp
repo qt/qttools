@@ -94,6 +94,8 @@ static int usage(const QStringList &args)
         "           Drop obsolete messages.\n\n"
         "    -no-finished\n"
         "           Drop finished messages.\n\n"
+        "    -no-untranslated\n"
+        "           Drop untranslated messages.\n\n"
         "    -sort-contexts\n"
         "           Sort contexts in output TS file alphabetically.\n\n"
         "    -locations {absolute|relative|none}\n"
@@ -145,6 +147,7 @@ int main(int argc, char *argv[])
     bool dropTranslations = false;
     bool noObsolete = false;
     bool noFinished = false;
+    bool noUntranslated = false;
     bool verbose = false;
     bool noUiLines = false;
     Translator::LocationsType locations = Translator::DefaultLocations;
@@ -199,6 +202,8 @@ int main(int argc, char *argv[])
             noObsolete = true;
         } else if (args[i] == QLatin1String("-no-finished")) {
             noFinished = true;
+        } else if (args[i] == QLatin1String("-no-untranslated")) {
+            noUntranslated = true;
         } else if (args[i] == QLatin1String("-sort-contexts")) {
             cd.m_sortContexts = true;
         } else if (args[i] == QLatin1String("-locations")) {
@@ -256,6 +261,8 @@ int main(int argc, char *argv[])
         tr.stripObsoleteMessages();
     if (noFinished)
         tr.stripFinishedMessages();
+    if (noUntranslated)
+        tr.stripUntranslatedMessages();
     if (dropTranslations)
         tr.dropTranslations();
     if (noUiLines)

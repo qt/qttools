@@ -128,6 +128,7 @@ public:
 
     void stripObsoleteMessages();
     void stripFinishedMessages();
+    void stripUntranslatedMessages();
     void stripEmptyContexts();
     void stripNonPluralForms();
     void stripIdenticalSourceTranslations();

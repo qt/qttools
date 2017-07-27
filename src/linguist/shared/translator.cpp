@@ -420,6 +420,16 @@ void Translator::stripFinishedMessages()
     m_indexOk = false;
 }
 
+void Translator::stripUntranslatedMessages()
+{
+    for (TMM::Iterator it = m_messages.begin(); it != m_messages.end(); )
+        if (!it->isTranslated())
+            it = m_messages.erase(it);
+        else
+            ++it;
+    m_indexOk = false;
+}
+
 void Translator::stripEmptyContexts()
 {
     for (TMM::Iterator it = m_messages.begin(); it != m_messages.end();)
