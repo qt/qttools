@@ -1048,7 +1048,10 @@ static QString vcRedistDir()
     const QFileInfoList subDirs =
         QDir(vc2017RedistDirName).entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name | QDir::Reversed);
     for (const QFileInfo &f : subDirs) {
-        const QString path = f.absoluteFilePath();
+        QString path = f.absoluteFilePath();
+        if (QFileInfo(path + slash + vcDebugRedistDir()).isDir())
+            return path;
+        path += QStringLiteral("/onecore");
         if (QFileInfo(path + slash + vcDebugRedistDir()).isDir())
             return path;
     }
