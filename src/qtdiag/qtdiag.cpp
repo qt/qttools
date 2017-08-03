@@ -39,6 +39,10 @@
 #  include <QtGui/QOpenGLFunctions>
 #  include <QtGui/QOpenGLVersionProfile>
 #endif // QT_NO_OPENGL
+#if QT_CONFIG(vulkan)
+#  include <QtGui/QVulkanInstance>
+#  include <QtGui/QVulkanWindow>
+#endif // vulkan
 #include <QtGui/QWindow>
 #include <QtGui/QTouchDevice>
 
@@ -59,6 +63,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QFileSelector>
 #include <QtCore/QDebug>
+#include <QtCore/QVersionNumber>
 
 #include <private/qsimd_p.h>
 #include <private/qguiapplication_p.h>
@@ -214,6 +219,44 @@ void dumpGlInfo(QTextStream &str, bool listExtensions)
 }
 
 #endif // !QT_NO_OPENGL
+
+#if QT_CONFIG(vulkan)
+QVersionNumber vulkanVersion(uint32_t v)
+{
+    return QVersionNumber(VK_VERSION_MAJOR(v), VK_VERSION_MINOR(v), VK_VERSION_PATCH(v));
+}
+
+void dumpVkInfo(QTextStream &str)
+{
+    QVulkanInstance inst;
+    if (inst.create()) {
+        str << "Vulkan instance available\n";
+        str << "Supported instance extensions:\n";
+        for (const QVulkanExtension &ext : inst.supportedExtensions())
+            str << "  " << ext.name << ", version " << ext.version << "\n";
+        str << "Supported layers:\n";
+        for (const QVulkanLayer &layer : inst.supportedLayers())
+            str << "  " << layer.name << ", version " << layer.version
+                << ", spec version " << layer.specVersion.toString()
+                << ", " << layer.description << "\n";
+        // Show at least the available physical devices. Anything additional
+        // needs lots of initialization, or, if done through QVulkanWindow, an
+        // exposed window. None of these are very tempting right now.
+        str << "Available physical devices:\n";
+        QVulkanWindow window;
+        window.setVulkanInstance(&inst);
+        for (const VkPhysicalDeviceProperties &props : window.availablePhysicalDevices()) {
+            str << "  API version " << vulkanVersion(props.apiVersion).toString()
+                << hex << ", vendor 0x" << props.vendorID
+                << ", device 0x" << props.deviceID << ", " << props.deviceName
+                << dec << ", type " << props.deviceType
+                << ", driver version " << vulkanVersion(props.driverVersion).toString();
+        }
+    } else {
+        str << "Unable to create a Vulkan instance, error code is" << inst.errorCode() << "\n";
+    }
+}
+#endif // vulkan
 
 #define DUMP_CAPABILITY(str, integration, capability) \
     if (platformIntegration->hasCapability(QPlatformIntegration::capability)) \
@@ -626,6 +669,13 @@ QString qtDiag(unsigned flags)
 #else
     Q_UNUSED(flags)
 #endif // !QT_NO_OPENGL
+
+#if QT_CONFIG(vulkan)
+    if (flags & QtDiagVk) {
+        dumpVkInfo(str);
+        str << "\n\n";
+    }
+#endif // vulkan
 
     // On Windows, this will provide addition GPU info similar to the output of dxdiag.
     if (const QPlatformNativeInterface *ni = QGuiApplication::platformNativeInterface()) {
