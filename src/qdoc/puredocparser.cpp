@@ -184,7 +184,23 @@ bool PureDocParser::processQdocComments()
                 ArgList::ConstIterator a = args.cbegin();
                 while (a != args.cend()) {
                     Doc nodeDoc = doc;
-                    Node* node = processTopicCommand(nodeDoc,topic,*a);
+                    Node *node = 0;
+                    if (topic == COMMAND_FN) {
+                        node = parserForLanguage("Clang")->parseFnArg(doc.location(), a->first);
+                    } else if (topic == COMMAND_MACRO) {
+                        node = parserForLanguage("Clang")->parseMacroArg(doc.location(), a->first);
+                    } else if (topic == COMMAND_QMLSIGNAL ||
+                               topic == COMMAND_QMLMETHOD ||
+                               topic == COMMAND_QMLATTACHEDSIGNAL ||
+                               topic == COMMAND_QMLATTACHEDMETHOD ||
+                               topic == COMMAND_JSSIGNAL ||
+                               topic == COMMAND_JSMETHOD ||
+                               topic == COMMAND_JSATTACHEDSIGNAL ||
+                               topic == COMMAND_JSATTACHEDMETHOD) {
+                        node = parseOtherFuncArg(topic, doc.location(), a->first);
+                    } else {
+                        node = processTopicCommand(nodeDoc, topic, *a);
+                    }
                     if (node != 0) {
                         nodes.append(node);
                         docs.append(nodeDoc);

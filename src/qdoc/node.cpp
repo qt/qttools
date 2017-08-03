@@ -186,11 +186,12 @@ void Node::removeRelates()
 
 /*!
   Returns this node's name member. Appends "()" to the returned
-  name, if this node is a function node.
+  name if this node is a function node, but not if it is a macro
+  because macro names normally appear without parentheses.
  */
 QString Node::plainName() const
 {
-    if (type() == Node::Function)
+    if (isFunction() && !isMacro())
         return name_ + QLatin1String("()");
     return name_;
 }
@@ -2220,7 +2221,31 @@ void FunctionNode::addParameter(const Parameter& parameter)
 }
 
 /*!
+  Split the parameters \a t and store them in this function's
+  Parameter vector.
  */
+void FunctionNode::setParameters(const QString &t)
+{
+    clearParams();
+    if (!t.isEmpty()) {
+        QStringList commaSplit = t.split(',');
+        foreach (QString s, commaSplit) {
+            QStringList blankSplit = s.split(' ');
+            QString pName = blankSplit.last();
+            blankSplit.removeLast();
+            QString pType = blankSplit.join(' ');
+            int i = 0;
+            while (i < pName.length() && !pName.at(i).isLetter())
+                i++;
+            if (i > 0) {
+                pType += QChar(' ') + pName.left(i);
+                pName = pName.mid(i);
+            }
+            addParameter(Parameter(pType, pName));
+        }
+    }
+}
+
 void FunctionNode::borrowParameterNames(const FunctionNode *source)
 {
     QVector<Parameter>::Iterator t = parameters_.begin();
@@ -2320,17 +2345,22 @@ QString FunctionNode::signature(bool values, bool noReturnType) const
     QString s;
     if (!noReturnType && !returnType().isEmpty())
         s = returnType() + QLatin1Char(' ');
-    s += name() + QLatin1Char('(');
-    QStringList reconstructedParameters = reconstructParameters(values);
-    int p = reconstructedParameters.size();
-    if (p > 0) {
-        for (int i=0; i<p; i++) {
-            s += reconstructedParameters[i];
-            if (i < (p-1))
-                s += ", ";
+    s += name();
+    if (!isMacroWithoutParams()) {
+        s += QLatin1Char('(');
+        QStringList reconstructedParameters = reconstructParameters(values);
+        int p = reconstructedParameters.size();
+        if (p > 0) {
+            for (int i=0; i<p; i++) {
+                s += reconstructedParameters[i];
+                if (i < (p-1))
+                    s += ", ";
+            }
         }
+        s += QLatin1Char(')');
+        if (isMacro())
+            return s;
     }
-    s += QLatin1Char(')');
     if (isConst())
         s += " const";
     if (isRef())
@@ -2362,6 +2392,36 @@ void FunctionNode::debug() const
 {
     qDebug("QML METHOD %s returnType_ %s parentPath_ %s",
            qPrintable(name()), qPrintable(returnType_), qPrintable(parentPath_.join(' ')));
+}
+
+/*!
+  Compares this FunctionNode to the FunctionNode pointed to
+  by \a fn. Returns true if they describe the same function.
+ */
+bool FunctionNode::compare(const FunctionNode *fn) const
+{
+    if (!fn)
+        return false;
+    if (type() != fn->type())
+        return false;
+    if (parent() != fn->parent())
+        return false;
+    if (returnType_ != fn->returnType())
+        return false;
+    if (isConst() != fn->isConst())
+        return false;
+    if (isAttached() != fn->isAttached())
+        return false;
+    const QVector<Parameter>& p = fn->parameters();
+    if (parameters().size() != p.size())
+        return false;
+    if (!p.isEmpty()) {
+        for (int i = 0; i < p.size(); ++i) {
+            if (parameters()[i].dataType() != p[i].dataType())
+                return false;
+        }
+    }
+    return true;
 }
 
 /*!

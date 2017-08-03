@@ -72,7 +72,6 @@ public:
 protected:
     const QSet<QString>& topicCommands();
     const QSet<QString>& otherMetaCommands();
-    Node* processFnCommand(const ArgLocPair& arg, const Doc& doc);
     virtual Node* processTopicCommand(const Doc& doc,
                                       const QString& command,
                                       const ArgLocPair& arg);
@@ -88,11 +87,6 @@ protected:
                              QString& element,
                              QString& name,
                              const Location& location);
-    bool splitQmlMethodArg(const QString& arg,
-                           QString& type,
-                           QString& module,
-                           QString& element,
-                           const Location& location);
     virtual void processOtherMetaCommand(const Doc& doc,
                                          const QString& command,
                                          const ArgLocPair& argLocPair,
@@ -114,24 +108,9 @@ protected:
     bool matchTemplateAngles(CodeChunk *type = 0);
     bool matchDataType(CodeChunk *type, QString *var = 0, bool qProp = false);
     bool matchParameter(QVector<Parameter>& pvect, bool& isQPrivateSignal);
-    bool matchFunctionDecl(Aggregate *parent,
-                           QStringList *parentPathPtr,
-                           FunctionNode **funcPtr,
-                           const QString &templateStuff,
-                           ExtraFuncData& extra);
     bool matchUsingDecl(Aggregate* parent);
-    bool makeFunctionNode(const QString &synopsis,
-                          QStringList *parentPathPtr,
-                          FunctionNode **funcPtr,
-                          ExtraFuncData& params);
-    FunctionNode* makeFunctionNode(const Doc& doc,
-                                   const QString& sig,
-                                   Aggregate* parent,
-                                   Node::NodeType type,
-                                   bool attached,
-                                   QString qdoctag);
     void createExampleFileNodes(DocumentNode *dn);
-    int matchFunctionModifier();
+
  protected:
     QMap<QString, Node::NodeType> nodeTypeMap;
     Tokenizer *tokenizer;

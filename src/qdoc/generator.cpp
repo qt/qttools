@@ -2168,7 +2168,7 @@ void Generator::initializeTextOutput()
 
 void Generator::supplementAlsoList(const Node *node, QList<Text> &alsoList)
 {
-    if (node->type() == Node::Function) {
+    if (node->isFunction() && !node->isMacro()) {
         const FunctionNode *func = static_cast<const FunctionNode *>(node);
         if (func->overloadNumber() == 0) {
             QString alternateName;

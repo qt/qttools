@@ -239,6 +239,7 @@ public:
     virtual bool isImplicit() const { return false; }
     virtual bool isInCollective() const { return false; }
     virtual bool isSharedCommentNode() const { return false; }
+    virtual bool isMacro() const { return false; }
     virtual void addMember(Node* ) { }
     virtual bool hasMembers() const { return false; }
     virtual bool hasNamespaces() const { return false; }
@@ -935,6 +936,7 @@ public:
     void setReimplemented(bool b);
     void addParameter(const Parameter& parameter);
     inline void setParameters(const QVector<Parameter>& parameters);
+    void setParameters(const QString &t);
     void borrowParameterNames(const FunctionNode* source);
     void setReimplementedFrom(FunctionNode* from) { reimplementedFrom_ = from; }
 
@@ -949,7 +951,9 @@ public:
     bool isSomeCtor() const { return isCtor() || isCCtor() || isMCtor(); }
     bool isMacroWithParams() const { return (metaness_ == MacroWithParams); }
     bool isMacroWithoutParams() const { return (metaness_ == MacroWithoutParams); }
-    bool isMacro() const { return (isMacroWithParams() || isMacroWithoutParams()); }
+    bool isMacro() const Q_DECL_OVERRIDE {
+        return (isMacroWithParams() || isMacroWithoutParams());
+    }
     bool isSignal() const { return (metaness_ == Signal); }
     bool isSlot() const { return (metaness_ == Slot); }
     bool isCtor() const { return (metaness_ == Ctor); }
@@ -982,6 +986,7 @@ public:
     virtual bool isJsMethod() const Q_DECL_OVERRIDE {
         return (type() == Node::QmlMethod) && (genus() == Node::JS);
     }
+    QVector<Parameter> &parameters() { return parameters_; }
     const QVector<Parameter>& parameters() const { return parameters_; }
     void clearParams() { parameters_.clear(); }
     QStringList parameterNames() const;
@@ -1042,6 +1047,7 @@ public:
     virtual bool hasTag(const QString& t) const Q_DECL_OVERRIDE { return (tag_ == t); }
     void setTag(const QString& t) { tag_ = t; }
     const QString &tag() const { return tag_; }
+    bool compare(const FunctionNode *fn) const;
 
 private:
     void addAssociatedProperty(PropertyNode* property);

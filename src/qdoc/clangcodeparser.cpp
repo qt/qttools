@@ -475,8 +475,17 @@ CXChildVisitResult ClangVisitor::visitFnSignature(CXCursor cursor, CXSourceLocat
     case CXCursor_Constructor:
     case CXCursor_Destructor:
     case CXCursor_ConversionFunction: {
-        ignoreSignature = ignoredSymbol(functionName(cursor));
-        *fnNode = ignoreSignature ? 0 : findFunctionNodeForCursor(qdb_, cursor);
+        ignoreSignature = false;
+        if (ignoredSymbol(functionName(cursor))) {
+            *fnNode = 0;
+            ignoreSignature = true;
+        } else {
+            *fnNode = findFunctionNodeForCursor(qdb_, cursor);
+            if (*fnNode && (*fnNode)->isFunction()) {
+                FunctionNode* fn = static_cast<FunctionNode*>(*fnNode);
+                readParameterNamesAndAttributes(fn, cursor);
+            }
+        }
         break;
     }
     default:
@@ -799,7 +808,6 @@ void ClangVisitor::readParameterNamesAndAttributes(FunctionNode* fn, CXCursor cu
     });
     fn->setParameters(pvect);
 }
-
 
 void ClangVisitor::parseProperty(const QString& spelling, const Location& loc)
 {
@@ -1349,10 +1357,22 @@ void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QStrin
                     }
                 }
                 else {
-                    if (topic == "fn")
+                    if (topic == COMMAND_FN) {
                         node = parseFnArg(doc.location(), a->first);
-                    else
+                    } else if (topic == COMMAND_MACRO) {
+                        node = parseMacroArg(doc.location(), a->first);
+                    } else if (topic == COMMAND_QMLSIGNAL ||
+                               topic == COMMAND_QMLMETHOD ||
+                               topic == COMMAND_QMLATTACHEDSIGNAL ||
+                               topic == COMMAND_QMLATTACHEDMETHOD ||
+                               topic == COMMAND_JSSIGNAL ||
+                               topic == COMMAND_JSMETHOD ||
+                               topic == COMMAND_JSATTACHEDSIGNAL ||
+                               topic == COMMAND_JSATTACHEDMETHOD) {
+                        node = parseOtherFuncArg(topic, doc.location(), a->first);
+                    } else {
                         node = processTopicCommand(nodeDoc, topic, *a);
+                    }
                     if (node != 0) {
                         nodes.append(node);
                         docs.append(nodeDoc);
@@ -1389,15 +1409,142 @@ void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QStrin
 }
 
 /*!
-  Use clang to parse the function signature from an fn command.
-  \a fnArg is the string to parse. It is always a function decl.
-  \a location is used for reporting errors.
+ */
+Node* ClangCodeParser::parseOtherFuncArg(const QString& topic,
+                                         const Location& location,
+                                         const QString& funcArg)
+{
+    if (Generator::preparing() && !Generator::singleExec())
+        return 0;
+
+    QString funcName;
+    QString returnType;
+
+    int leftParen = funcArg.indexOf(QChar('('));
+    if (leftParen > 0)
+        funcName = funcArg.left(leftParen);
+    else
+        funcName = funcArg;
+    int firstBlank = funcName.indexOf(QChar(' '));
+    if (firstBlank > 0) {
+        returnType = funcName.left(firstBlank);
+        funcName = funcName.right(funcName.length() - firstBlank - 1);
+    }
+
+    QStringList colonSplit(funcName.split("::"));
+    if (colonSplit.size() < 2) {
+        QString msg = "Unrecognizable QML module/component qualifier for " + funcArg;
+        location.warning(tr(msg.toLatin1().data()));
+        return 0;
+    }
+    QString moduleName;
+    QString elementName;
+    if (colonSplit.size() > 2) {
+        moduleName = colonSplit[0];
+        elementName = colonSplit[1];
+    } else {
+        elementName = colonSplit[0];
+    }
+    funcName = colonSplit.last();
+
+    Aggregate *aggregate = qdb_->findQmlType(moduleName, elementName);
+    bool attached = false;
+    if (!aggregate)
+        aggregate = qdb_->findQmlBasicType(moduleName, elementName);
+    if (!aggregate)
+        return 0;
+
+    Node::NodeType nodeType = Node::QmlMethod;
+    if (topic == COMMAND_QMLSIGNAL || topic == COMMAND_JSSIGNAL) {
+        nodeType = Node::QmlSignal;
+    } else if (topic == COMMAND_QMLATTACHEDSIGNAL || topic == COMMAND_JSATTACHEDSIGNAL) {
+        nodeType = Node::QmlSignal;
+        attached = true;
+    } else if (topic == COMMAND_QMLATTACHEDMETHOD || topic == COMMAND_JSATTACHEDMETHOD) {
+        attached = true;
+    } else {
+        Q_ASSERT(topic == COMMAND_QMLMETHOD || topic == COMMAND_JSMETHOD);
+    }
+
+    QString params;
+    QStringList leftParenSplit = funcArg.split('(');
+    if (leftParenSplit.size() > 1) {
+        QStringList rightParenSplit = leftParenSplit[1].split(')');
+        if (rightParenSplit.size() > 0)
+            params = rightParenSplit[0];
+    }
+    FunctionNode *funcNode = static_cast<FunctionNode*>(new FunctionNode(nodeType, aggregate, funcName, attached));
+    funcNode->setAccess(Node::Public);
+    funcNode->setLocation(location);
+    funcNode->setReturnType(returnType);
+    funcNode->setParameters(params);
+    return funcNode;
+}
+
+/*!
+  Parse the macroArg ad hoc, without using clang and without
+  using the old qdoc C++ parser.
+ */
+Node* ClangCodeParser::parseMacroArg(const Location& location, const QString& macroArg)
+{
+    if (Generator::preparing() && !Generator::singleExec())
+        return 0;
+    FunctionNode* newMacroNode = 0;
+    QStringList leftParenSplit = macroArg.split('(');
+    if (leftParenSplit.size() > 0) {
+        QString macroName;
+        FunctionNode* oldMacroNode = 0;
+        QStringList blankSplit = leftParenSplit[0].split(' ');
+        if (blankSplit.size() > 0) {
+            macroName = blankSplit.last();
+            oldMacroNode = static_cast<FunctionNode*>(qdb_->findMacroNode(macroName));
+        }
+        QString returnType;
+        if (blankSplit.size() > 1) {
+            blankSplit.removeLast();
+            returnType = blankSplit.join(' ');
+        }
+        QString params;
+        if (leftParenSplit.size() > 1) {
+            const QString &afterParen = leftParenSplit.at(1);
+            int rightParen = afterParen.indexOf(')');
+            if (rightParen >= 0)
+                params = afterParen.left(rightParen);
+        }
+        int i = 0;
+        while (i < macroName.length() && !macroName.at(i).isLetter())
+            i++;
+        if (i > 0) {
+            returnType += QChar(' ') + macroName.left(i);
+            macroName = macroName.mid(i);
+        }
+        newMacroNode = static_cast<FunctionNode*>(new FunctionNode(qdb_->primaryTreeRoot(), macroName));
+        newMacroNode->setAccess(Node::Public);
+        newMacroNode->setLocation(location);
+        if (params.isEmpty())
+            newMacroNode->setMetaness(FunctionNode::MacroWithoutParams);
+        else
+            newMacroNode->setMetaness(FunctionNode::MacroWithParams);
+        newMacroNode->setReturnType(returnType);
+        newMacroNode->setParameters(params);
+        if (oldMacroNode && newMacroNode->compare(oldMacroNode)) {
+            location.warning(ClangCodeParser::tr("\\macro %1 documented more than once").arg(macroArg));
+            oldMacroNode->doc().location().warning(tr("(The previous doc is here)"));
+        }
+    }
+    return newMacroNode;
+ }
+
+/*!
+  Use clang to parse the function signature from a function
+  command. \a location is used for reporting errors. \a fnArg
+  is the string to parse. It is always a function decl.
  */
 Node* ClangCodeParser::parseFnArg(const Location& location, const QString& fnArg)
 {
     Node* fnNode = 0;
     if (Generator::preparing() && !Generator::singleExec())
-        return 0;
+        return fnNode;
     /*
       If the \fn command begins with a tag, then don't try to
       parse the \fn command with clang. Use the tag to search
@@ -1409,8 +1556,42 @@ Node* ClangCodeParser::parseFnArg(const Location& location, const QString& fnArg
         if (end > 1) {
             QString tag = fnArg.left(end + 1);
             fnNode = qdb_->findFunctionNodeForTag(tag);
-            if (!fnNode)
+            if (!fnNode) {
                 location.error(ClangCodeParser::tr("tag \\fn %1 not used in any include file in current module").arg(tag));
+            } else {
+                /*
+                  The function node was found. Use the formal
+                  parameter names from the \FN command, because
+                  they will be the names used in the documentation.
+                 */
+                FunctionNode* fn = static_cast<FunctionNode*>(fnNode);
+                QStringList leftParenSplit = fnArg.split('(');
+                if (leftParenSplit.size() > 1) {
+                    QStringList rightParenSplit = leftParenSplit[1].split(')');
+                    if (rightParenSplit.size() > 0) {
+                        QString params = rightParenSplit[0];
+                        if (!params.isEmpty()) {
+                            QStringList commaSplit = params.split(',');
+                            QVector<Parameter>& pvect = fn->parameters();
+                            if (pvect.size() == commaSplit.size()) {
+                                for (int i = 0; i < pvect.size(); ++i) {
+                                    QStringList blankSplit = commaSplit[i].split(' ');
+                                    if (blankSplit.size() > 0) {
+                                        QString pName = blankSplit.last();
+                                        int i = 0;
+                                        while (i < pName.length() && !pName.at(i).isLetter())
+                                            i++;
+                                        if (i > 0)
+                                            pName = pName.mid(i);
+                                        if (!pName.isEmpty() && pName != pvect[i].name())
+                                            pvect[i].setName(pName);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
         return fnNode;
     }
@@ -1447,7 +1628,7 @@ Node* ClangCodeParser::parseFnArg(const Location& location, const QString& fnArg
         location.error(ClangCodeParser::tr("clang could not parse \\fn %1").arg(fnArg));
         clang_disposeTranslationUnit(tu);
         clang_disposeIndex(index);
-        return 0;
+        return fnNode;
     } else {
         /*
           Always visit the tu if one is constructed, because

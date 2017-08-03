@@ -389,7 +389,7 @@ QString CppCodeMarker::markedUpQmlItem(const Node* node, bool summary)
 QString CppCodeMarker::markedUpName(const Node *node)
 {
     QString name = linkTag(node, taggedNode(node));
-    if (node->type() == Node::Function)
+    if (node->isFunction() && !node->isMacro())
         name += "()";
     return name;
 }

@@ -1548,4 +1548,28 @@ Node* Tree::findFunctionNodeForTag(const QString &tag, Aggregate* parent)
     return 0;
 }
 
+/*!
+  There should only be one macro node for macro name \a t.
+  The macro node is not built until the \macro command is seen.
+ */
+Node *Tree::findMacroNode(const QString &t, const Aggregate *parent)
+{
+    if (!parent)
+        parent = root();
+    const NodeList &children = parent->childNodes();
+    for (Node *n : children) {
+        if (n && (n->isMacro() || n->isFunction()) && n->name() == t)
+            return n;
+    }
+    for (Node *n : children) {
+        if (n && n->isAggregate()) {
+            Aggregate *a = static_cast<Aggregate*>(n);
+            n = findMacroNode(t, a);
+            if (n)
+                return n;
+        }
+    }
+    return 0;
+}
+
 QT_END_NAMESPACE

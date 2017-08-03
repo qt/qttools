@@ -217,6 +217,7 @@ class Tree
     TargetList* getTargetList(const QString& module);
     QStringList getTargetListKeys() { return targetListMap_->keys(); }
     Node* findFunctionNodeForTag(const QString &tag, Aggregate* parent = 0);
+    Node *findMacroNode(const QString &t, const Aggregate *parent = 0);
 
  public:
     const QString& camelCaseModuleName() const { return camelCaseModuleName_; }
