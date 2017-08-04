@@ -37,6 +37,7 @@
 
 namespace Scanner {
 
+QVector<Package> readFile(const QString &filePath, LogLevel logLevel);
 QVector<Package> scanDirectory(const QString &directory, LogLevel logLevel);
 
 }

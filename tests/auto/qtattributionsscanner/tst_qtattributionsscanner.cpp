@@ -47,6 +47,8 @@ private slots:
     void test();
 
 private:
+    void readExpectedFile(const QString &baseDir, const QString &fileName, QByteArray *content);
+
     QString m_cmd;
     QString m_basePath;
 };
@@ -62,25 +64,45 @@ tst_qtattributionsscanner::tst_qtattributionsscanner()
 
 void tst_qtattributionsscanner::test_data()
 {
-    QTest::addColumn<QString>("directory");
-    QTest::newRow("good") << QStringLiteral("good");
-    QTest::newRow("warnings (incomplete)") << QStringLiteral("warnings/incomplete");
-    QTest::newRow("warnings (unknown attribute)") << QStringLiteral("warnings/unknown");
+    QTest::addColumn<QString>("input");
+    QTest::addColumn<QString>("stdout_file");
+    QTest::addColumn<QString>("stderr_file");
+
+    QTest::newRow("good")
+            << QStringLiteral("good")
+            << QStringLiteral("good/expected.json")
+            << QStringLiteral("good/expected.error");
+    QTest::newRow("warnings (incomplete)")
+            << QStringLiteral("warnings/incomplete")
+            << QStringLiteral("warnings/incomplete/expected.json")
+            << QStringLiteral("warnings/incomplete/expected.error");
+    QTest::newRow("warnings (unknown attribute)")
+            << QStringLiteral("warnings/unknown")
+            << QStringLiteral("warnings/unknown/expected.json")
+            << QStringLiteral("warnings/unknown/expected.error");
+    QTest::newRow("singlefile")
+            << QStringLiteral("good/minimal/qt_attribution.json")
+            << QStringLiteral("good/minimal/expected.json")
+            << QStringLiteral("good/minimal/expected.error");
 }
 
-static void readExpectedFile(const QString &dir, const QString &fileName, QByteArray *content)
+void tst_qtattributionsscanner::readExpectedFile(const QString &baseDir, const QString &fileName, QByteArray *content)
 {
-    QFile file(QDir(dir).absoluteFilePath(fileName));
+    QFile file(QDir(m_basePath).absoluteFilePath(fileName));
     QVERIFY2(file.open(QIODevice::ReadOnly | QIODevice::Text), "Could not open " + file.fileName().toLocal8Bit());
     *content = file.readAll();
-    content->replace("%{PWD}", dir.toUtf8());
+    content->replace("%{PWD}", baseDir.toUtf8());
 }
 
 void tst_qtattributionsscanner::test()
 {
-    QFETCH(QString, directory);
+    QFETCH(QString, input);
+    QFETCH(QString, stdout_file);
+    QFETCH(QString, stderr_file);
 
-    QString dir = QDir(m_basePath).absoluteFilePath(directory);
+    QString dir = QDir(m_basePath).absoluteFilePath(input);
+    if (QFileInfo(dir).isFile())
+        dir = QFileInfo(dir).absolutePath();
 
     QProcess proc;
     QString command = m_cmd + " " + dir + " --output-format json";
@@ -100,7 +122,7 @@ void tst_qtattributionsscanner::test()
         stdErr.replace(QDir::separator(), "/");
 
         QByteArray expectedErrorOutput;
-        readExpectedFile(dir, "expected.error", &expectedErrorOutput);
+        readExpectedFile(dir, stderr_file, &expectedErrorOutput);
 
         QCOMPARE(stdErr, expectedErrorOutput);
     }
@@ -113,7 +135,7 @@ void tst_qtattributionsscanner::test()
         QVERIFY2(!actualJson.isNull(), "Invalid output: " + jsonError.errorString().toLatin1());
 
         QByteArray expectedOutput;
-        readExpectedFile(dir, "expected.json", &expectedOutput);
+        readExpectedFile(dir, stdout_file, &expectedOutput);
         QJsonDocument expectedJson = QJsonDocument::fromJson(expectedOutput);
 
         if (!QTest::qCompare(actualJson, expectedJson, "actualJson", "expectedJson", __FILE__, __LINE__)) {

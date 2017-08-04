@@ -1,0 +1,21 @@
+[
+    {
+        "Copyright": "Copyright",
+        "Description": "",
+        "Homepage": "",
+        "Id": "minimal",
+        "License": "License",
+        "LicenseFile": "",
+        "LicenseId": "",
+        "Name": "Minimal",
+        "Path": "%{PWD}",
+        "Files": "",
+        "QDocModule": "qtest",
+        "QtParts": [
+            "libs"
+        ],
+        "QtUsage": "Usage",
+        "Version": "",
+        "DownloadLocation": ""
+    }
+]
