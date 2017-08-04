@@ -1550,6 +1550,7 @@ static bool deployWebEngineCore(const QMap<QString, QString> &qmakeVariables,
                                 const Options &options, bool isDebug, QString *errorMessage)
 {
     static const char *installDataFiles[] = {"icudtl.dat",
+                                             "qtwebengine_devtools_resources.pak",
                                              "qtwebengine_resources.pak",
                                              "qtwebengine_resources_100p.pak",
                                              "qtwebengine_resources_200p.pak"};
