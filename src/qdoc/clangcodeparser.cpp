@@ -1022,8 +1022,8 @@ void ClangCodeParser::buildPCH()
                                 QByteArray entry;
                                 entry = "#include \"";
                                 entry += headerPath;
-                                entry += QChar('/');
-                                entry += phead;
+                                entry += '/';
+                                entry += phead.toLatin1();
                                 entry += "\"\n";
                                 tmpHeaderFile.write(entry);
                             }
