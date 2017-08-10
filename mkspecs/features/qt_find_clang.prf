@@ -40,12 +40,12 @@ defineReplace(findLLVMVersionFromLibDir) {
 }
 
 for(_, $$list(_)) { # just a way to break easily
-    isEmpty(CLANG_INSTALL_DIR): CLANG_INSTALL_DIR = $$(CLANG_INSTALL_DIR)
-    CLANG_INSTALL_DIR = $$clean_path($$CLANG_INSTALL_DIR)
-    clangInstallDir = $$CLANG_INSTALL_DIR
-    isEmpty(CLANG_INSTALL_DIR) {
+    isEmpty(LLVM_INSTALL_DIR): LLVM_INSTALL_DIR = $$(LLVM_INSTALL_DIR)
+    LLVM_INSTALL_DIR = $$clean_path($$LLVM_INSTALL_DIR)
+    clangInstallDir = $$LLVM_INSTALL_DIR
+    isEmpty(LLVM_INSTALL_DIR) {
         win32 {
-            log("Set the CLANG_INSTALL_DIR environment variable to configure clang location.$$escape_expand(\\n)")
+            log("Set the LLVM_INSTALL_DIR environment variable to configure clang location.$$escape_expand(\\n)")
             break()
         }
         clangInstallDir = /usr
@@ -64,17 +64,17 @@ for(_, $$list(_)) { # just a way to break easily
         CLANG_VERSION = $$findLLVMVersionFromLibDir($$CLANG_LIBDIR)
     }
     isEmpty(CLANG_VERSION) {
-        !isEmpty(CLANG_INSTALL_DIR): \
-            error("Cannot determine clang version at $${CLANG_INSTALL_DIR}.")
-        log("Set the CLANG_INSTALL_DIR environment variable to configure clang location.$$escape_expand(\\n)")
+        !isEmpty(LLVM_INSTALL_DIR): \
+            error("Cannot determine clang version at $${LLVM_INSTALL_DIR}.")
+        log("Set the LLVM_INSTALL_DIR environment variable to configure clang location.$$escape_expand(\\n)")
         break()
     }
 
     LIBCLANG_MAIN_HEADER = $$CLANG_INCLUDEPATH/clang-c/Index.h
     !exists($$LIBCLANG_MAIN_HEADER) {
-        !isEmpty(CLANG_INSTALL_DIR): \
+        !isEmpty(LLVM_INSTALL_DIR): \
             error("Cannot find libclang's main header file, candidate: $${LIBCLANG_MAIN_HEADER}.")
-        log("Set the CLANG_INSTALL_DIR environment variable to configure clang location.$$escape_expand(\\n)")
+        log("Set the LLVM_INSTALL_DIR environment variable to configure clang location.$$escape_expand(\\n)")
         break()
     }
 
@@ -86,7 +86,7 @@ for(_, $$list(_)) { # just a way to break easily
 
     !versionIsAtLeast($$CLANG_VERSION, "3.9.0") {
         log("LLVM/Clang version >= 3.9.0 required, version provided: $$CLANG_VERSION.$$escape_expand(\\n)")
-        log("Clang was found in $$CLANG_INSTALL_DIR. Set the CLANG_INSTALL_DIR environment variable to override.$$escape_expand(\\n)")
+        log("Clang was found in $$LLVM_INSTALL_DIR. Set the LLVM_INSTALL_DIR environment variable to override.$$escape_expand(\\n)")
         break()
     }
 
