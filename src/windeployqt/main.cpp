@@ -817,7 +817,8 @@ static const PluginModuleMapping pluginModuleMappings[] =
     {"qtwebengine", QtWebEngineModule | QtWebEngineCoreModule | QtWebEngineWidgetsModule},
     {"styles", QtWidgetsModule},
     {"sceneparsers", Qt3DRendererModule},
-    {"renderplugins", Qt3DRendererModule}
+    {"renderplugins", Qt3DRendererModule},
+    {"geometryloaders", Qt3DRendererModule}
 };
 
 static inline quint64 qtModuleForPlugin(const QString &subDirName)
@@ -1048,7 +1049,10 @@ static QString vcRedistDir()
     const QFileInfoList subDirs =
         QDir(vc2017RedistDirName).entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name | QDir::Reversed);
     for (const QFileInfo &f : subDirs) {
-        const QString path = f.absoluteFilePath();
+        QString path = f.absoluteFilePath();
+        if (QFileInfo(path + slash + vcDebugRedistDir()).isDir())
+            return path;
+        path += QStringLiteral("/onecore");
         if (QFileInfo(path + slash + vcDebugRedistDir()).isDir())
             return path;
     }
@@ -1547,6 +1551,7 @@ static bool deployWebEngineCore(const QMap<QString, QString> &qmakeVariables,
                                 const Options &options, bool isDebug, QString *errorMessage)
 {
     static const char *installDataFiles[] = {"icudtl.dat",
+                                             "qtwebengine_devtools_resources.pak",
                                              "qtwebengine_resources.pak",
                                              "qtwebengine_resources_100p.pak",
                                              "qtwebengine_resources_200p.pak"};

@@ -178,6 +178,17 @@ void WidgetHandle::mousePressEvent(QMouseEvent *e)
 
     m_origPressPos = container->mapFromGlobal(e->globalPos());
     m_geom = m_origGeom = m_widget->geometry();
+
+    switch (WidgetSelection::widgetState(m_formWindow->core(), m_widget)) {
+    case WidgetSelection::UnlaidOut:
+    case WidgetSelection::LaidOut:
+        m_formWindow->setHandleOperation(FormWindow::ResizeHandleOperation);
+        break;
+    case WidgetSelection::ManagedGridLayout:
+    case WidgetSelection::ManagedFormLayout:
+        m_formWindow->setHandleOperation(FormWindow::ChangeLayoutSpanHandleOperation);
+        break;
+    }
 }
 
 void WidgetHandle::mouseMoveEvent(QMouseEvent *e)
@@ -326,6 +337,8 @@ void WidgetHandle::mouseMoveEvent(QMouseEvent *e)
 
 void WidgetHandle::mouseReleaseEvent(QMouseEvent *e)
 {
+    m_formWindow->setHandleOperation(FormWindow::NoHandleOperation);
+
     if (e->button() != Qt::LeftButton || !m_active)
         return;
 

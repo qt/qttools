@@ -774,7 +774,8 @@ bool readInputFile(Options *options)
     {
         const QJsonValue deploymentDependencies = jsonObject.value(QStringLiteral("deployment-dependencies"));
         if (!deploymentDependencies.isUndefined()) {
-            const auto dependencies = deploymentDependencies.toString().splitRef(QLatin1Char(','));
+            QString deploymentDependenciesString = deploymentDependencies.toString();
+            const auto dependencies = deploymentDependenciesString.splitRef(QLatin1Char(','));
             for (const QStringRef &dependency : dependencies) {
                 QString path = options->qtInstallDirectory + QLatin1Char('/') + dependency;
                 if (QFileInfo(path).isDir()) {

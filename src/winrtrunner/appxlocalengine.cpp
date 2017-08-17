@@ -412,18 +412,6 @@ bool AppxLocalEngine::installPackage(IAppxManifestReader *reader, const QString 
         return false;
     }
 
-    ComPtr<IAsyncInfo> asyncInfo;
-    hr = deploymentOperation.As(&asyncInfo);
-    RETURN_FALSE_IF_FAILED("Failed to cast deployment operation to info.");
-    AsyncStatus status;
-    hr = asyncInfo->get_Status(&status);
-    RETURN_FALSE_IF_FAILED("Failed to retrieve deployment operation's status.");
-
-    if (status != Completed) {
-        qCWarning(lcWinRtRunner) << "Deployment operation did not succeed.";
-        return false;
-    }
-
     ComPtr<IDeploymentResult> results;
     hr = deploymentOperation->GetResults(&results);
     RETURN_FALSE_IF_FAILED("Failed to retrieve package registration results.");
@@ -433,10 +421,15 @@ bool AppxLocalEngine::installPackage(IAppxManifestReader *reader, const QString 
     RETURN_FALSE_IF_FAILED("Failed to retrieve extended error code.");
 
     if (FAILED(errorCode)) {
-        HString errorText;
-        if (SUCCEEDED(results->get_ErrorText(errorText.GetAddressOf()))) {
-            qCWarning(lcWinRtRunner) << "Unable to register package:"
-                                     << QString::fromWCharArray(errorText.GetRawBuffer(NULL));
+        if (HRESULT_CODE(errorCode) == ERROR_INSTALL_PREREQUISITE_FAILED) {
+            qCWarning(lcWinRtRunner) << "Unable to register package: A requirement for installation was not met. "
+                "Check that your Windows version matches TargetDeviceFamily's MinVersion set in your AppxManifest.xml.";
+        } else {
+            HString errorText;
+            if (SUCCEEDED(results->get_ErrorText(errorText.GetAddressOf()))) {
+                qCWarning(lcWinRtRunner) << "Unable to register package:"
+                    << QString::fromWCharArray(errorText.GetRawBuffer(NULL));
+            }
         }
         if (HRESULT_CODE(errorCode) == ERROR_INSTALL_POLICY_FAILURE) {
             // The user's license has expired. Give them the opportunity to renew it.
