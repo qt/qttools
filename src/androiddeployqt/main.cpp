@@ -1296,6 +1296,9 @@ bool updateAndroidManifest(Options &options)
         }
     }
 
+    options.localJars.removeDuplicates();
+    options.initClasses.removeDuplicates();
+
     QHash<QString, QString> replacements;
     replacements[QLatin1String("-- %%INSERT_APP_NAME%% --")] = QFileInfo(options.applicationBinary).baseName().mid(sizeof("lib") - 1);
     replacements[QLatin1String("-- %%INSERT_APP_LIB_NAME%% --")] = QFileInfo(options.applicationBinary).baseName().mid(sizeof("lib") - 1);
