@@ -311,9 +311,6 @@ bool QHelpGenerator::createTables()
                              "NamespaceId INTEGER, "
                              "FileId INTEGER, "
                              "Anchor TEXT )")
-            << QLatin1String("CREATE TABLE IndexItemTable ("
-                             "Id INTEGER, "
-                             "IndexId INTEGER )")
             << QLatin1String("CREATE TABLE IndexFilterTable ("
                              "FilterAttributeId INTEGER, "
                              "IndexId INTEGER )")
