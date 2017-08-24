@@ -477,7 +477,13 @@ int main(int argc, char *argv[])
         }
     }
     if (!config.filesToRegister().isEmpty())
-        CollectionConfiguration::updateLastRegisterTime(helpEngine);
+        if (Q_UNLIKELY(qEnvironmentVariableIsSet("SOURCE_DATE_EPOCH"))) {
+            QDateTime dt;
+            dt.setSecsSinceEpoch(qEnvironmentVariableIntValue("SOURCE_DATE_EPOCH"));
+            CollectionConfiguration::updateLastRegisterTime(helpEngine, dt);
+        }
+        else
+            CollectionConfiguration::updateLastRegisterTime(helpEngine);
 
     if (!config.title().isEmpty())
         CollectionConfiguration::setWindowTitle(helpEngine, config.title());
@@ -511,8 +517,10 @@ int main(int argc, char *argv[])
         config.enableAddressBar());
     CollectionConfiguration::setAddressBarVisible(helpEngine,
          !config.hideAddressBar());
-    CollectionConfiguration::setCreationTime(helpEngine,
-        QDateTime::currentMSecsSinceEpoch() / 1000);
+    uint time = QDateTime::currentMSecsSinceEpoch() / 1000;
+    if (Q_UNLIKELY(qEnvironmentVariableIsSet("SOURCE_DATE_EPOCH")))
+        time = qEnvironmentVariableIntValue("SOURCE_DATE_EPOCH");
+    CollectionConfiguration::setCreationTime(helpEngine, time);
     CollectionConfiguration::setFullTextSearchFallbackEnabled(helpEngine,
         config.fullTextSearchFallbackEnabled());
 

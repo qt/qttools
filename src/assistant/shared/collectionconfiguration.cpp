@@ -278,9 +278,14 @@ const QDateTime CollectionConfiguration::lastRegisterTime(const QHelpEngineCore 
     return helpEngine.customValue(LastRegisterTime, QDateTime()).toDateTime();
 }
 
+void CollectionConfiguration::updateLastRegisterTime(QHelpEngineCore &helpEngine, QDateTime dt)
+{
+    helpEngine.setCustomValue(LastRegisterTime, dt);
+}
+
 void CollectionConfiguration::updateLastRegisterTime(QHelpEngineCore &helpEngine)
 {
-    helpEngine.setCustomValue(LastRegisterTime, QDateTime::currentDateTime());
+    updateLastRegisterTime(helpEngine, QDateTime::currentDateTime());
 }
 
 bool CollectionConfiguration::isNewer(const QHelpEngineCore &newer,

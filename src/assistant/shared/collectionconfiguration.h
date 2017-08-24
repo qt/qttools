@@ -132,6 +132,7 @@ public:
      * "-register" command line switch, not GUI or remote control actions.
      */
     static const QDateTime lastRegisterTime(const QHelpEngineCore &helpEngine);
+    static void updateLastRegisterTime(QHelpEngineCore &helpEngine, QDateTime dt);
     static void updateLastRegisterTime(QHelpEngineCore &helpEngine);
 
     static bool fullTextSearchFallbackEnabled(const QHelpEngineCore &helpEngine);
