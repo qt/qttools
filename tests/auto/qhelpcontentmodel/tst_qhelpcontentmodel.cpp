@@ -135,7 +135,7 @@ void tst_QHelpContentModel::contentItemAt()
 
     QCOMPARE(h.currentFilter(), QString("unfiltered"));
 
-    QModelIndex root = m->index(0, 0);
+    QModelIndex root = m->index(2, 0);
     if (!root.isValid())
         QFAIL("Cannot retrieve root item!");
     QHelpContentItem *item = m->contentItemAt(root);
@@ -146,7 +146,7 @@ void tst_QHelpContentModel::contentItemAt()
     item = m->contentItemAt(m->index(4, 0, root));
     QCOMPARE(item->title(), QString("qmake Concepts"));
 
-    item = m->contentItemAt(m->index(3, 0));
+    item = m->contentItemAt(m->index(1, 0));
     QCOMPARE(item->title(), QString("Fancy Manual"));
 
     w.start();

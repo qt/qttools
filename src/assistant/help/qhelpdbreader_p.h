@@ -66,6 +66,43 @@ class QHelpDBReader : public QObject
     Q_OBJECT
 
 public:
+    class IndexItem
+    {
+    public:
+        IndexItem() = default;
+        QString name;
+        QString identifier;
+        int fileId = 0;
+        QString anchor;
+        QStringList filterAttributes;
+    };
+
+    class FileItem
+    {
+    public:
+        FileItem() = default;
+        QString name;
+        QString title;
+        QStringList filterAttributes;
+    };
+
+    class ContentsItem
+    {
+    public:
+        ContentsItem() = default;
+        QByteArray data;
+        QStringList filterAttributes;
+    };
+
+    class IndexTable
+    {
+    public:
+        QList<IndexItem> indexItems;
+        QList<FileItem> fileItems;
+        QList<ContentsItem> contentsItems;
+        QStringList usedFilterAttributes;
+    };
+
     QHelpDBReader(const QString &dbName);
     QHelpDBReader(const QString &dbName, const QString &uniqueId,
         QObject *parent);
@@ -73,40 +110,21 @@ public:
 
     bool init();
 
-    QString errorMessage() const;
-
-    QString databaseName() const;
     QString namespaceName() const;
     QString virtualFolder() const;
+    IndexTable indexTable() const;
     QList<QStringList> filterAttributeSets() const;
-    QStringList files(const QStringList &filterAttributes,
+    QMap<QString, QByteArray> filesData(const QStringList &filterAttributes,
         const QString &extensionFilter = QString()) const;
-    bool fileExists(const QString &virtualFolder, const QString &filePath,
-        const QStringList &filterAttributes = QStringList()) const;
     QByteArray fileData(const QString &virtualFolder,
         const QString &filePath) const;
 
     QStringList customFilters() const;
     QStringList filterAttributes(const QString &filterName = QString()) const;
-    QStringList indicesForFilter(const QStringList &filterAttributes) const;
-    void linksForKeyword(const QString &keyword, const QStringList &filterAttributes,
-        QMap<QString, QUrl> *linkMap) const;
 
-    void linksForIdentifier(const QString &id, const QStringList &filterAttributes,
-        QMap<QString, QUrl> *linkMap) const;
-
-    QList<QByteArray> contentsForFilter(const QStringList &filterAttributes) const;
-    QUrl urlOfPath(const QString &relativePath) const;
-
-    QSet<int> indexIds(const QStringList &attributes) const;
-    bool createAttributesCache(const QStringList &attributes,
-        const QSet<int> &indexIds);
     QVariant metaData(const QString &name) const;
 
 private:
-    QUrl buildQUrl(const QString &ns, const QString &folder,
-        const QString &relFileName, const QString &anchor) const;
-    QString mergeList(const QStringList &list) const;
     QString quote(const QString &string) const;
     bool initDB();
 
@@ -116,9 +134,6 @@ private:
     QString m_error;
     QSqlQuery *m_query = nullptr;
     mutable QString m_namespace;
-    QSet<QString> m_viewAttributes;
-    bool m_useAttributesCache = false;
-    QSet<int> m_indicesCache;
 };
 
 QT_END_NAMESPACE

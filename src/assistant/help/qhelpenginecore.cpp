@@ -65,20 +65,12 @@ void QHelpEngineCorePrivate::init(const QString &collectionFile,
 QHelpEngineCorePrivate::~QHelpEngineCorePrivate()
 {
     delete collectionHandler;
-    clearMaps();
+    emitReadersAboutToBeInvalidated();
 }
 
-void QHelpEngineCorePrivate::clearMaps()
+void QHelpEngineCorePrivate::emitReadersAboutToBeInvalidated()
 {
     emit q->readersAboutToBeInvalidated();
-
-    for (const QHelpDBReader *reader : qAsConst(readerMap))
-        delete reader;
-
-    readerMap.clear();
-    fileNameReaderMap.clear();
-    virtualFolderMap.clear();
-    orderedFileNameList.clear();
 }
 
 bool QHelpEngineCorePrivate::setup()
@@ -89,47 +81,21 @@ bool QHelpEngineCorePrivate::setup()
 
     needsSetup = false;
     emit q->setupStarted();
-    clearMaps();
+    emitReadersAboutToBeInvalidated();
 
-    if (!collectionHandler->openCollectionFile()) {
-        emit q->setupFinished();
-        return false;
-    }
+    const bool opened = collectionHandler->openCollectionFile();
+    if (opened)
+        q->currentFilter();
 
-    const QHelpCollectionHandler::DocInfoList &docList =
-            collectionHandler->registeredDocumentations();
-    const QFileInfo fi(collectionHandler->collectionFile());
-
-    for (const QHelpCollectionHandler::DocInfo &info : docList) {
-        const QString &absFileName = QDir::isAbsolutePath(info.fileName)
-                ? info.fileName
-                : QFileInfo(fi.absolutePath() + QDir::separator() + info.fileName)
-                  .absoluteFilePath();
-
-        QHelpDBReader *reader = new QHelpDBReader(absFileName,
-            QHelpGlobal::uniquifyConnectionName(info.fileName, this), this);
-        if (!reader->init()) {
-            emit q->warning(QHelpEngineCore::tr("Cannot open documentation file %1: %2.")
-                            .arg(absFileName, reader->errorMessage()));
-            continue;
-        }
-
-        readerMap.insert(info.namespaceName, reader);
-        fileNameReaderMap.insert(absFileName, reader);
-        virtualFolderMap.insert(info.folderName, reader);
-        orderedFileNameList.append(absFileName);
-    }
-    q->currentFilter();
     emit q->setupFinished();
-    return true;
+
+    return opened;
 }
 
 void QHelpEngineCorePrivate::errorReceived(const QString &msg)
 {
     error = msg;
 }
-
-
 
 /*!
     \class QHelpEngineCore
@@ -252,7 +218,7 @@ void QHelpEngineCore::setCollectionFile(const QString &fileName)
     if (d->collectionHandler) {
         delete d->collectionHandler;
         d->collectionHandler = 0;
-        d->clearMaps();
+        d->emitReadersAboutToBeInvalidated();
     }
     d->init(fileName, this);
     d->needsSetup = true;
@@ -349,20 +315,20 @@ bool QHelpEngineCore::unregisterDocumentation(const QString &namespaceName)
 */
 QString QHelpEngineCore::documentationFileName(const QString &namespaceName)
 {
-    if (d->setup()) {
-        const QHelpCollectionHandler::DocInfoList &docList =
-            d->collectionHandler->registeredDocumentations(namespaceName);
-        for (const QHelpCollectionHandler::DocInfo &info : docList) {
-            if (info.namespaceName == namespaceName) {
-                if (QDir::isAbsolutePath(info.fileName))
-                    return info.fileName;
+    if (!d->setup())
+        return QString();
 
-                return QFileInfo(QFileInfo(d->collectionHandler->collectionFile()).absolutePath()
-                                 + QDir::separator() + info.fileName).absoluteFilePath();
-            }
-        }
-    }
-    return QString();
+    const QHelpCollectionHandler::FileInfo fileInfo =
+            d->collectionHandler->registeredDocumentation(namespaceName);
+
+    if (fileInfo.namespaceName.isEmpty())
+        return QString();
+
+    if (QDir::isAbsolutePath(fileInfo.fileName))
+        return fileInfo.fileName;
+
+    return QFileInfo(QFileInfo(d->collectionHandler->collectionFile()).absolutePath()
+                     + QLatin1Char('/') + fileInfo.fileName).absoluteFilePath();
 }
 
 /*!
@@ -374,8 +340,9 @@ QStringList QHelpEngineCore::registeredDocumentations() const
     QStringList list;
     if (!d->setup())
         return list;
-    const QHelpCollectionHandler::DocInfoList &docList = d->collectionHandler->registeredDocumentations();
-    for (const QHelpCollectionHandler::DocInfo &info : docList)
+    const QHelpCollectionHandler::FileInfoList &docList
+            = d->collectionHandler->registeredDocumentations();
+    for (const QHelpCollectionHandler::FileInfo &info : docList)
         list.append(info.namespaceName);
     return list;
 }
@@ -488,15 +455,10 @@ void QHelpEngineCore::setCurrentFilter(const QString &filterName)
 */
 QList<QStringList> QHelpEngineCore::filterAttributeSets(const QString &namespaceName) const
 {
-    QList<QStringList> ret;
-    if (d->setup()) {
-        QHelpDBReader *reader = d->readerMap.value(namespaceName);
-        if (reader)
-            ret = reader->filterAttributeSets();
-    }
-    if (ret.isEmpty())
-        ret.append(QStringList());
-    return ret;
+    if (!d->setup())
+        return QList<QStringList>();
+
+    return d->collectionHandler->filterAttributeSets(namespaceName);
 }
 
 /*!
@@ -511,17 +473,13 @@ QList<QUrl> QHelpEngineCore::files(const QString namespaceName,
     QList<QUrl> res;
     if (!d->setup())
         return res;
-    QHelpDBReader *reader = d->readerMap.value(namespaceName);
-    if (!reader) {
-        d->error = tr("The specified namespace does not exist.");
-        return res;
-    }
 
     QUrl url;
     url.setScheme(QLatin1String("qthelp"));
     url.setAuthority(namespaceName);
 
-    const QStringList &files = reader->files(filterAttributes, extensionFilter);
+    const QStringList &files = d->collectionHandler->files(
+                namespaceName, filterAttributes, extensionFilter);
     for (const QString &file : files) {
         url.setPath(QLatin1String("/") + file);
         res.append(url);
@@ -537,48 +495,19 @@ QList<QUrl> QHelpEngineCore::files(const QString namespaceName,
 */
 QUrl QHelpEngineCore::findFile(const QUrl &url) const
 {
-    QUrl res;
-    if (!d->setup() || !url.isValid() || url.toString().count(QLatin1Char('/')) < 4
-        || url.scheme() != QLatin1String("qthelp")) {
-        return res;
-    }
-
-    const QString &ns = url.authority();
-    QString filePath = url.path();
-    if (filePath.startsWith(QLatin1Char('/')))
-        filePath = filePath.mid(1);
-    const QString &virtualFolder = filePath.mid(0, filePath.indexOf(QLatin1Char('/'), 1));
-    filePath.remove(0, virtualFolder.length() + 1);
-
-    QHelpDBReader *defaultReader = 0;
-    if (d->readerMap.contains(ns)) {
-        defaultReader = d->readerMap.value(ns);
-        if (defaultReader->fileExists(virtualFolder, filePath))
-            return url;
-    }
+    if (!d->setup())
+        return url;
 
     const QStringList &attributes = filterAttributes(currentFilter());
-    for (const QHelpDBReader *reader : d->virtualFolderMap.values(virtualFolder)) {
-        if (reader == defaultReader)
-            continue;
-        if (reader->fileExists(virtualFolder, filePath, attributes)) {
-            res = url;
-            res.setAuthority(reader->namespaceName());
-            return res;
-        }
-    }
+    QUrl result = d->collectionHandler->findFile(url, attributes);
+    if (!result.isEmpty())
+        return result;
 
-    for (const QHelpDBReader *reader : d->virtualFolderMap.values(virtualFolder)) {
-        if (reader == defaultReader)
-            continue;
-        if (reader->fileExists(virtualFolder, filePath)) {
-            res = url;
-            res.setAuthority(reader->namespaceName());
-            break;
-        }
-    }
+    result = d->collectionHandler->findFile(url);
+    if (!result.isEmpty())
+        return result;
 
-    return res;
+    return url;
 }
 
 /*!
@@ -589,35 +518,10 @@ QUrl QHelpEngineCore::findFile(const QUrl &url) const
 */
 QByteArray QHelpEngineCore::fileData(const QUrl &url) const
 {
-    if (!d->setup() || !url.isValid() || url.toString().count(QLatin1Char('/')) < 4
-        || url.scheme() != QLatin1String("qthelp")) {
+    if (!d->setup())
         return QByteArray();
-    }
 
-    const QString &ns = url.authority();
-    QString filePath = url.path();
-    if (filePath.startsWith(QLatin1Char('/')))
-        filePath = filePath.mid(1);
-    const QString &virtualFolder = filePath.mid(0, filePath.indexOf(QLatin1Char('/'), 1));
-    filePath.remove(0, virtualFolder.length() + 1);
-
-    QByteArray ba;
-    QHelpDBReader *defaultReader = 0;
-    if (d->readerMap.contains(ns)) {
-        defaultReader = d->readerMap.value(ns);
-        ba = defaultReader->fileData(virtualFolder, filePath);
-    }
-
-    if (ba.isEmpty()) {
-        for (const QHelpDBReader *reader : d->virtualFolderMap.values(virtualFolder)) {
-            if (reader == defaultReader)
-                continue;
-            ba = reader->fileData(virtualFolder, filePath);
-            if (!ba.isEmpty())
-                return ba;
-        }
-    }
-    return ba;
+    return d->collectionHandler->fileData(url);
 }
 
 /*!
@@ -628,15 +532,10 @@ QByteArray QHelpEngineCore::fileData(const QUrl &url) const
 */
 QMap<QString, QUrl> QHelpEngineCore::linksForIdentifier(const QString &id) const
 {
-    QMap<QString, QUrl> linkMap;
     if (!d->setup())
-        return linkMap;
+        return QMap<QString, QUrl>();
 
-    const QStringList &attributes = filterAttributes(d->currentFilter);
-    for (const QHelpDBReader *reader : qAsConst(d->readerMap))
-        reader->linksForIdentifier(id, attributes, &linkMap);
-
-    return linkMap;
+    return d->collectionHandler->linksForIdentifier(id, filterAttributes(d->currentFilter));
 }
 
 /*!
@@ -647,11 +546,10 @@ QMap<QString, QUrl> QHelpEngineCore::linksForIdentifier(const QString &id) const
 */
 QMap<QString, QUrl> QHelpEngineCore::linksForKeyword(const QString &keyword) const
 {
-    QMap<QString, QUrl> linkMap;
-    const QStringList &attributes = filterAttributes(d->currentFilter);
-    for (const QHelpDBReader *reader : qAsConst(d->readerMap))
-        reader->linksForKeyword(keyword, attributes, &linkMap);
-    return linkMap;
+    if (!d->setup())
+        return QMap<QString, QUrl>();
+
+    return d->collectionHandler->linksForKeyword(keyword, filterAttributes(d->currentFilter));
 }
 
 /*!

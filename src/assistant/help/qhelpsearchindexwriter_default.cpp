@@ -40,6 +40,7 @@
 #include "qhelpsearchindexwriter_default_p.h"
 #include "qhelp_global.h"
 #include "qhelpenginecore.h"
+#include "qhelpdbreader_p.h"
 
 #include <QtCore/QDataStream>
 #include <QtCore/QDateTime>
@@ -362,14 +363,6 @@ static bool clearIndexMap(QHelpEngineCore *engine)
     return engine->removeCustomValue(QLatin1String(IndexedNamespacesKey));
 }
 
-static QList<QUrl> indexableFiles(QHelpEngineCore *helpEngine,
-    const QString &namespaceName, const QStringList &attributes)
-{
-    return helpEngine->files(namespaceName, attributes, QLatin1String("html"))
-         + helpEngine->files(namespaceName, attributes, QLatin1String("htm"))
-         + helpEngine->files(namespaceName, attributes, QLatin1String("txt"));
-}
-
 void QHelpSearchIndexWriter::run()
 {
     QMutexLocker lock(&m_mutex);
@@ -386,13 +379,6 @@ void QHelpSearchIndexWriter::run()
     QHelpEngineCore engine(collectionFile, 0);
     if (!engine.setupData())
         return;
-
-//    QFileInfo fInfo(indexPath);
-//    if (fInfo.exists() && !fInfo.isWritable()) {
-//        qWarning("Full Text Search, could not create index (missing permissions for '%s').",
-//                 qPrintable(indexPath));
-//        return;
-//    }
 
     if (reindex)
         clearIndexMap(&engine);
@@ -458,27 +444,32 @@ void QHelpSearchIndexWriter::run()
         if (indexMap.contains(namespaceName))
             continue;
 
+        const QString fileName = engine.documentationFileName(namespaceName);
+        QHelpDBReader reader(fileName, QHelpGlobal::uniquifyConnectionName(
+                                 fileName, this), nullptr);
+        if (!reader.init())
+            continue;
+
+        const QString virtualFolder = reader.virtualFolder();
+
         const QList<QStringList> &attributeSets =
             engine.filterAttributeSets(namespaceName);
 
         for (const QStringList &attributes : attributeSets) {
             const QString &attributesString = attributes.join(QLatin1Char('|'));
-            QSet<QString> documentsSet;
-            const QList<QUrl> &docFiles = indexableFiles(&engine, namespaceName, attributes);
-            for (QUrl url : docFiles) {
-                // get rid of duplicated files
-                if (url.hasFragment())
-                    url.setFragment(QString());
 
-                const QString &s = url.toString();
-                if (s.endsWith(QLatin1String(".html"))
-                    || s.endsWith(QLatin1String(".htm"))
-                    || s.endsWith(QLatin1String(".txt")))
-                    documentsSet.insert(s);
-            }
+            const QMap<QString, QByteArray> htmlFiles
+                    = reader.filesData(attributes, QLatin1String("html"));
+            const QMap<QString, QByteArray> htmFiles
+                    = reader.filesData(attributes, QLatin1String("htm"));
+            const QMap<QString, QByteArray> txtFiles
+                    = reader.filesData(attributes, QLatin1String("txt"));
 
-            const QStringList documentsList(documentsSet.toList());
-            for (const QString &url : documentsList) {
+            QMap<QString, QByteArray> files = htmlFiles;
+            files.unite(htmFiles);
+            files.unite(txtFiles);
+
+            for (auto it = files.cbegin(), end = files.cend(); it != end ; ++it) {
                 lock.relock();
                 if (m_cancel) {
                     // store what we have done so far
@@ -489,9 +480,26 @@ void QHelpSearchIndexWriter::run()
                 }
                 lock.unlock();
 
-                const QByteArray data(engine.fileData(url));
+                const QString &file = it.key();
+                const QByteArray &data = it.value();
+
                 if (data.isEmpty())
                     continue;
+
+                QUrl url;
+                url.setScheme(QLatin1String("qthelp"));
+                url.setAuthority(namespaceName);
+                url.setPath(QLatin1Char('/') + virtualFolder + QLatin1Char('/') + file);
+
+                if (url.hasFragment())
+                    url.setFragment(QString());
+
+                const QString &fullFileName = url.toString();
+                if (!fullFileName.endsWith(QLatin1String(".html"))
+                        && !fullFileName.endsWith(QLatin1String(".htm"))
+                        && !fullFileName.endsWith(QLatin1String(".txt"))) {
+                    continue;
+                }
 
                 QTextStream s(data);
                 const QString &en = QHelpGlobal::codecFromData(data);
@@ -503,8 +511,8 @@ void QHelpSearchIndexWriter::run()
 
                 QString title;
                 QString contents;
-                if (url.endsWith(QLatin1String(".txt"))) {
-                    title = url.mid(url.lastIndexOf(QLatin1Char('/')) + 1);
+                if (fullFileName.endsWith(QLatin1String(".txt"))) {
+                    title = fullFileName.mid(fullFileName.lastIndexOf(QLatin1Char('/')) + 1);
                     contents = text.toHtmlEscaped();
                 } else {
                     QTextDocument doc;
@@ -514,7 +522,7 @@ void QHelpSearchIndexWriter::run()
                     contents = doc.toPlainText().toHtmlEscaped();
                 }
 
-                writer.insertDoc(namespaceName, attributesString, url, title, contents);
+                writer.insertDoc(namespaceName, attributesString, fullFileName, title, contents);
             }
         }
         writer.flush();

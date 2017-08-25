@@ -41,6 +41,7 @@
 #include "qhelpenginecore.h"
 #include "qhelpengine_p.h"
 #include "qhelpdbreader_p.h"
+#include "qhelpcollectionhandler_p.h"
 
 #include <QDir>
 #include <QtCore/QStack>
@@ -53,12 +54,10 @@ QT_BEGIN_NAMESPACE
 class QHelpContentItemPrivate
 {
 public:
-    QHelpContentItemPrivate(const QString &t, const QString &l,
-                            QHelpDBReader *r, QHelpContentItem *p)
+    QHelpContentItemPrivate(const QString &t, const QUrl &l, QHelpContentItem *p)
         : parent(p),
           title(t),
-          link(l),
-          helpDBReader(r)
+          link(l)
     {
     }
 
@@ -67,8 +66,7 @@ public:
     QList<QHelpContentItem*> childItems;
     QHelpContentItem *parent;
     QString title;
-    QString link;
-    QHelpDBReader *helpDBReader;
+    QUrl link;
 };
 
 class QHelpContentProvider : public QThread
@@ -91,7 +89,7 @@ private:
     QStringList m_filterAttributes;
     QQueue<QHelpContentItem*> m_rootItems;
     QMutex m_mutex;
-    bool m_abort;
+    bool m_abort = false;
 };
 
 class QHelpContentModelPrivate
@@ -110,10 +108,9 @@ public:
     \since 4.4
 */
 
-QHelpContentItem::QHelpContentItem(const QString &name, const QString &link,
-                                   QHelpDBReader *reader, QHelpContentItem *parent)
+QHelpContentItem::QHelpContentItem(const QString &name, const QUrl &link, QHelpContentItem *parent)
 {
-    d = new QHelpContentItemPrivate(name, link, reader, parent);
+    d = new QHelpContentItemPrivate(name, link, parent);
 }
 
 /*!
@@ -166,7 +163,7 @@ QString QHelpContentItem::title() const
 */
 QUrl QHelpContentItem::url() const
 {
-    return d->helpDBReader->urlOfPath(d->link);
+    return d->link;
 }
 
 /*!
@@ -191,7 +188,6 @@ QHelpContentProvider::QHelpContentProvider(QHelpEnginePrivate *helpEngine)
     : QThread(helpEngine)
 {
     m_helpEngine = helpEngine;
-    m_abort = false;
 }
 
 QHelpContentProvider::~QHelpContentProvider()
@@ -237,6 +233,28 @@ QHelpContentItem *QHelpContentProvider::rootItem()
     return m_rootItems.dequeue();
 }
 
+// TODO: this is a copy from helpcollectionhandler, make it common
+static QUrl buildQUrl(const QString &ns, const QString &folder,
+                      const QString &relFileName, const QString &anchor)
+{
+    QUrl url;
+    url.setScheme(QLatin1String("qthelp"));
+    url.setAuthority(ns);
+    url.setPath(QLatin1Char('/') + folder + QLatin1Char('/') + relFileName);
+    url.setFragment(anchor);
+    return url;
+}
+
+static QUrl constructUrl(const QString &namespaceName,
+                         const QString &folderName,
+                         const QString &relativePath)
+{
+    const int idx = relativePath.indexOf(QLatin1Char('#'));
+    const QString &rp = idx < 0 ? relativePath : relativePath.left(idx);
+    const QString anchor = idx < 0 ? QString() : relativePath.mid(idx + 1);
+    return buildQUrl(namespaceName, folderName, rp, anchor);
+}
+
 void QHelpContentProvider::run()
 {
     QString title;
@@ -246,11 +264,21 @@ void QHelpContentProvider::run()
 
     m_mutex.lock();
     QHelpContentItem * const rootItem = new QHelpContentItem(QString(), QString(), 0);
-    QStringList atts = m_filterAttributes;
-    const QStringList fileNames = m_helpEngine->orderedFileNameList;
+    const QStringList attributes = m_filterAttributes;
+    const QString collectionFile = m_helpEngine->collectionHandler->collectionFile();
     m_mutex.unlock();
 
-    for (const QString &dbFileName : fileNames) {
+    if (collectionFile.isEmpty())
+        return;
+
+    QHelpCollectionHandler collectionHandler(collectionFile);
+    if (!collectionHandler.openCollectionFile())
+        return;
+
+    const QList<QHelpCollectionHandler::ContentsData> result
+            = collectionHandler.contentsForFilter(attributes);
+
+    for (const auto &contentsData : result) {
         m_mutex.lock();
         if (m_abort) {
             delete rootItem;
@@ -259,32 +287,29 @@ void QHelpContentProvider::run()
             return;
         }
         m_mutex.unlock();
-        QHelpDBReader reader(dbFileName,
-            QHelpGlobal::uniquifyConnectionName(dbFileName +
-            QLatin1String("FromQHelpContentProvider"),
-            QThread::currentThread()), 0);
-        if (!reader.init())
-            continue;
-        for (const QByteArray &ba : reader.contentsForFilter(atts)) {
-            if (ba.size() < 1)
+
+        const QString namespaceName = contentsData.namespaceName;
+        const QString folderName = contentsData.folderName;
+        for (const QByteArray &contents : contentsData.contentsList)  {
+            if (contents.size() < 1)
                 continue;
 
             int _depth = 0;
             bool _root = false;
             QStack<QHelpContentItem*> stack;
 
-            QDataStream s(ba);
+            QDataStream s(contents);
             for (;;) {
                 s >> depth;
                 s >> link;
                 s >> title;
                 if (title.isEmpty())
                     break;
+                const QUrl url = constructUrl(namespaceName, folderName, link);
 CHECK_DEPTH:
                 if (depth == 0) {
                     m_mutex.lock();
-                    item = new QHelpContentItem(title, link,
-                        m_helpEngine->fileNameReaderMap.value(dbFileName), rootItem);
+                    item = new QHelpContentItem(title, url, rootItem);
                     rootItem->d->appendChild(item);
                     m_mutex.unlock();
                     stack.push(item);
@@ -296,8 +321,7 @@ CHECK_DEPTH:
                         stack.push(item);
                     }
                     if (depth == _depth) {
-                        item = new QHelpContentItem(title, link,
-                            m_helpEngine->fileNameReaderMap.value(dbFileName), stack.top());
+                        item = new QHelpContentItem(title, url, stack.top());
                         stack.top()->d->appendChild(item);
                     } else if (depth < _depth) {
                         stack.pop();
@@ -308,14 +332,13 @@ CHECK_DEPTH:
             }
         }
     }
+
     m_mutex.lock();
     m_rootItems.enqueue(rootItem);
     m_abort = false;
     m_mutex.unlock();
     emit finishedSuccessFully();
 }
-
-
 
 /*!
     \class QHelpContentModel

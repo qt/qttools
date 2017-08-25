@@ -476,14 +476,15 @@ int main(int argc, char *argv[])
             return -1;
         }
     }
-    if (!config.filesToRegister().isEmpty())
+    if (!config.filesToRegister().isEmpty()) {
         if (Q_UNLIKELY(qEnvironmentVariableIsSet("SOURCE_DATE_EPOCH"))) {
             QDateTime dt;
             dt.setSecsSinceEpoch(qEnvironmentVariableIntValue("SOURCE_DATE_EPOCH"));
             CollectionConfiguration::updateLastRegisterTime(helpEngine, dt);
-        }
-        else
+        } else {
             CollectionConfiguration::updateLastRegisterTime(helpEngine);
+        }
+    }
 
     if (!config.title().isEmpty())
         CollectionConfiguration::setWindowTitle(helpEngine, config.title());

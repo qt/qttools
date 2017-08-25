@@ -48,6 +48,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QPluginLoader>
+#include <QtCore/QTimer>
 #include <QtWidgets/QApplication>
 #include <QtSql/QSqlQuery>
 
@@ -64,15 +65,26 @@ void QHelpEnginePrivate::init(const QString &collectionFile,
         indexModel = new QHelpIndexModel(this);
 
     connect(helpEngineCore, &QHelpEngineCore::setupFinished,
-            this, &QHelpEnginePrivate::applyCurrentFilter);
+            this, &QHelpEnginePrivate::scheduleApplyCurrentFilter);
     connect(helpEngineCore, &QHelpEngineCore::currentFilterChanged,
-            this, &QHelpEnginePrivate::applyCurrentFilter);
+            this, &QHelpEnginePrivate::scheduleApplyCurrentFilter);
+}
+
+void QHelpEnginePrivate::scheduleApplyCurrentFilter()
+{
+    if (!error.isEmpty())
+        return;
+
+    if (m_isApplyCurrentFilterScheduled)
+        return;
+
+    m_isApplyCurrentFilterScheduled = true;
+    QTimer::singleShot(0, this, &QHelpEnginePrivate::applyCurrentFilter);
 }
 
 void QHelpEnginePrivate::applyCurrentFilter()
 {
-    if (!error.isEmpty())
-        return;
+    m_isApplyCurrentFilterScheduled = false;
     contentModel->createContents(currentFilter);
     indexModel->createIndex(currentFilter);
 }

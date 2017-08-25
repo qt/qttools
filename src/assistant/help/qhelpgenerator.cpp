@@ -470,7 +470,6 @@ bool QHelpGenerator::insertFiles(const QStringList &files, const QString &rootPa
 
     QString title;
     QString charSet;
-    FileNameTableData fileNameData;
     QList<QByteArray> fileDataList;
     QMap<int, QSet<int> > tmpFileFilterMap;
     QList<FileNameTableData> fileNameDataList;
@@ -508,6 +507,7 @@ bool QHelpGenerator::insertFiles(const QStringList &files, const QString &rootPa
         if (it == d->fileMap.cend()) {
             fileDataList.append(qCompress(data));
 
+            FileNameTableData fileNameData;
             fileNameData.name = fileName;
             fileNameData.fileId = tableFileId;
             fileNameData.title = title;

@@ -41,6 +41,7 @@
 #include "qhelp_global.h"
 
 #include <QtCore/QVariant>
+#include <QtCore/QVector>
 #include <QtCore/QFile>
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlQuery>
@@ -105,16 +106,6 @@ bool QHelpDBReader::initDB()
     return true;
 }
 
-QString QHelpDBReader::databaseName() const
-{
-    return m_dbName;
-}
-
-QString QHelpDBReader::errorMessage() const
-{
-    return m_error;
-}
-
 QString QHelpDBReader::namespaceName() const
 {
     if (!m_namespace.isEmpty())
@@ -137,6 +128,202 @@ QString QHelpDBReader::virtualFolder() const
     return QString();
 }
 
+static bool isAttributeUsed(QSqlQuery *query, const QString &tableName, int attributeId)
+{
+    query->prepare(QString::fromLatin1("SELECT FilterAttributeId "
+                     "FROM %1 "
+                     "WHERE FilterAttributeId = ? "
+                     "LIMIT 1").arg(tableName));
+    query->bindValue(0, attributeId);
+    query->exec();
+    return query->next(); // if we got a result it means it was used
+}
+
+static int filterDataCount(QSqlQuery *query, const QString &tableName)
+{
+    query->exec(QString::fromLatin1("SELECT COUNT(*) FROM"
+              "(SELECT DISTINCT * FROM %1)").arg(tableName));
+    query->next();
+    return query->value(0).toInt();
+}
+
+QHelpDBReader::IndexTable QHelpDBReader::indexTable() const
+{
+    IndexTable table;
+    if (!m_query)
+        return table;
+
+    QMap<int, QString> attributeIds;
+    m_query->exec(QLatin1String("SELECT DISTINCT Id, Name FROM FilterAttributeTable ORDER BY Id"));
+    while (m_query->next())
+        attributeIds.insert(m_query->value(0).toInt(), m_query->value(1).toString());
+
+    // Maybe some are unused and specified erroneously in the named filter only,
+    // like it was in case of qtlocation.qch <= qt 5.9
+    QVector<int> usedAttributeIds;
+    for (auto it = attributeIds.cbegin(), end = attributeIds.cend(); it != end; ++it) {
+        const int attributeId = it.key();
+        if (isAttributeUsed(m_query, QLatin1String("IndexFilterTable"), attributeId)
+                || isAttributeUsed(m_query, QLatin1String("ContentsFilterTable"), attributeId)
+                || isAttributeUsed(m_query, QLatin1String("FileFilterTable"), attributeId)) {
+            usedAttributeIds.append(attributeId);
+        }
+    }
+
+    bool legacy = false;
+    m_query->exec(QLatin1String("SELECT * FROM pragma_table_info('IndexTable') "
+                                "WHERE name='ContextName'"));
+    if (m_query->next())
+        legacy = true;
+
+    const QString identifierColumnName = legacy
+            ? QLatin1String("ContextName")
+            : QLatin1String("Identifier");
+
+    const int usedAttributeCount = usedAttributeIds.count();
+
+    QMap<int, IndexItem> idToIndexItem;
+
+    m_query->exec(QString::fromLatin1("SELECT Name, %1, FileId, Anchor, Id "
+                                      "FROM IndexTable "
+                                      "ORDER BY Id").arg(identifierColumnName));
+    while (m_query->next()) {
+        IndexItem indexItem;
+        indexItem.name       = m_query->value(0).toString();
+        indexItem.identifier = m_query->value(1).toString();
+        indexItem.fileId     = m_query->value(2).toInt();
+        indexItem.anchor     = m_query->value(3).toString();
+        const int indexId    = m_query->value(4).toInt();
+
+        idToIndexItem.insert(indexId, indexItem);
+    }
+
+    QMap<int, FileItem> idToFileItem;
+    QMap<int, int> originalFileIdToNewFileId;
+
+    int filesCount = 0;
+    m_query->exec(QLatin1String("SELECT "
+                                    "FileNameTable.FileId, "
+                                    "FileNameTable.Name, "
+                                    "FileNameTable.Title "
+                                "FROM FileNameTable, FolderTable "
+                                "WHERE FileNameTable.FolderId = FolderTable.Id "
+                                "ORDER BY FileId"));
+    while (m_query->next()) {
+        const int fileId = m_query->value(0).toInt();
+        FileItem fileItem;
+        fileItem.name   = m_query->value(1).toString();
+        fileItem.title  = m_query->value(2).toString();
+
+        idToFileItem.insert(fileId, fileItem);
+        originalFileIdToNewFileId.insert(fileId, filesCount);
+        ++filesCount;
+    }
+
+    QMap<int, ContentsItem> idToContentsItem;
+
+    m_query->exec(QLatin1String("SELECT Data, Id "
+                                "FROM ContentsTable "
+                                "ORDER BY Id"));
+    while (m_query->next()) {
+        ContentsItem contentsItem;
+        contentsItem.data    = m_query->value(0).toByteArray();
+        const int contentsId = m_query->value(1).toInt();
+
+        idToContentsItem.insert(contentsId, contentsItem);
+    }
+
+    bool optimized = true;
+
+    if (usedAttributeCount) {
+        // May optimize only when all usedAttributes are attached to every
+        // index and file. It means the number of rows in the
+        // IndexTable multiplied by number of used attributes
+        // must equal the number of rows inside IndexFilterTable
+        // (yes, we have a combinatorial explosion of data in IndexFilterTable,
+        // which we want to optimize). The same with FileNameTable and
+        // FileFilterTable.
+
+        const bool mayOptimizeIndexTable
+                = filterDataCount(m_query, QLatin1String("IndexFilterTable"))
+                == idToIndexItem.count() * usedAttributeCount;
+        const bool mayOptimizeFileTable
+                = filterDataCount(m_query, QLatin1String("FileFilterTable"))
+                == idToFileItem.count() * usedAttributeCount;
+        const bool mayOptimizeContentsTable
+                = filterDataCount(m_query, QLatin1String("ContentsFilterTable"))
+                == idToContentsItem.count() * usedAttributeCount;
+        optimized = mayOptimizeIndexTable && mayOptimizeFileTable && mayOptimizeContentsTable;
+
+        if (!optimized) {
+            m_query->exec(QLatin1String(
+                              "SELECT "
+                                  "IndexFilterTable.IndexId, "
+                                  "FilterAttributeTable.Name "
+                              "FROM "
+                                  "IndexFilterTable, "
+                                  "FilterAttributeTable "
+                              "WHERE "
+                                  "IndexFilterTable.FilterAttributeId = FilterAttributeTable.Id"));
+            while (m_query->next()) {
+                const int indexId = m_query->value(0).toInt();
+                auto it = idToIndexItem.find(indexId);
+                if (it != idToIndexItem.end())
+                    it.value().filterAttributes.append(m_query->value(1).toString());
+            }
+
+            m_query->exec(QLatin1String(
+                              "SELECT "
+                                  "FileFilterTable.FileId, "
+                                  "FilterAttributeTable.Name "
+                              "FROM "
+                                  "FileFilterTable, "
+                                  "FilterAttributeTable "
+                              "WHERE "
+                                  "FileFilterTable.FilterAttributeId = FilterAttributeTable.Id"));
+            while (m_query->next()) {
+                const int fileId = m_query->value(0).toInt();
+                auto it = idToFileItem.find(fileId);
+                if (it != idToFileItem.end())
+                    it.value().filterAttributes.append(m_query->value(1).toString());
+            }
+
+            m_query->exec(QLatin1String(
+                              "SELECT "
+                                  "ContentsFilterTable.ContentsId, "
+                                  "FilterAttributeTable.Name "
+                              "FROM "
+                                  "ContentsFilterTable, "
+                                  "FilterAttributeTable "
+                              "WHERE "
+                                  "ContentsFilterTable.FilterAttributeId = FilterAttributeTable.Id"));
+            while (m_query->next()) {
+                const int contentsId = m_query->value(0).toInt();
+                auto it = idToContentsItem.find(contentsId);
+                if (it != idToContentsItem.end())
+                    it.value().filterAttributes.append(m_query->value(1).toString());
+            }
+        }
+    }
+
+    // reindex fileId references
+    for (auto it = idToIndexItem.cbegin(), end = idToIndexItem.cend(); it != end; ++it) {
+        IndexItem item = it.value();
+        item.fileId = originalFileIdToNewFileId.value(item.fileId);
+        table.indexItems.append(item);
+    }
+
+    table.fileItems = idToFileItem.values();
+    table.contentsItems = idToContentsItem.values();
+
+    if (optimized) {
+        for (int attributeId : usedAttributeIds)
+            table.usedFilterAttributes.append(attributeIds.value(attributeId));
+    }
+
+    return table;
+}
+
 QList<QStringList> QHelpDBReader::filterAttributeSets() const
 {
     QList<QStringList> result;
@@ -154,42 +341,6 @@ QList<QStringList> QHelpDBReader::filterAttributeSets() const
         }
     }
     return result;
-}
-
-bool QHelpDBReader::fileExists(const QString &virtualFolder,
-                               const QString &filePath,
-                               const QStringList &filterAttributes) const
-{
-    if (virtualFolder.isEmpty() || filePath.isEmpty() || !m_query)
-        return false;
-
-//SELECT COUNT(a.Name) FROM FileNameTable a, FolderTable b, FileFilterTable c, FilterAttributeTable d WHERE a.FolderId=b.Id AND b.Name='qtdoc' AND a.Name='qstring.html' AND a.FileId=c.FileId AND c.FilterAttributeId=d.Id AND d.Name='qtrefdoc'
-
-    QString query;
-    namespaceName();
-    if (filterAttributes.isEmpty()) {
-        query = QString(QLatin1String("SELECT COUNT(a.Name) FROM FileNameTable a, FolderTable b "
-            "WHERE a.FolderId=b.Id AND b.Name=\'%1\' AND a.Name=\'%2\'")).arg(quote(virtualFolder)).arg(quote(filePath));
-    } else {
-        query = QString(QLatin1String("SELECT COUNT(a.Name) FROM FileNameTable a, FolderTable b, "
-            "FileFilterTable c, FilterAttributeTable d WHERE a.FolderId=b.Id "
-            "AND b.Name=\'%1\' AND a.Name=\'%2\' AND a.FileId=c.FileId AND "
-            "c.FilterAttributeId=d.Id AND d.Name=\'%3\'"))
-            .arg(quote(virtualFolder)).arg(quote(filePath))
-            .arg(quote(filterAttributes.first()));
-        for (int i = 1; i < filterAttributes.count(); ++i) {
-            query.append(QString(QLatin1String(" INTERSECT SELECT COUNT(a.Name) FROM FileNameTable a, "
-                "FolderTable b, FileFilterTable c, FilterAttributeTable d WHERE a.FolderId=b.Id "
-                "AND b.Name=\'%1\' AND a.Name=\'%2\' AND a.FileId=c.FileId AND "
-                "c.FilterAttributeId=d.Id AND d.Name=\'%3\'"))
-                .arg(quote(virtualFolder)).arg(quote(filePath))
-                .arg(quote(filterAttributes.at(i))));
-        }
-    }
-    m_query->exec(query);
-    if (m_query->next() && m_query->isValid() && m_query->value(0).toInt())
-        return true;
-    return false;
 }
 
 QByteArray QHelpDBReader::fileData(const QString &virtualFolder,
@@ -243,252 +394,59 @@ QStringList QHelpDBReader::filterAttributes(const QString &filterName) const
     return lst;
 }
 
-QStringList QHelpDBReader::indicesForFilter(const QStringList &filterAttributes) const
+QMap<QString, QByteArray> QHelpDBReader::filesData(
+        const QStringList &filterAttributes,
+        const QString &extensionFilter) const
 {
-    QStringList indices;
+    QMap<QString, QByteArray> result;
     if (!m_query)
-        return indices;
-
-    //SELECT DISTINCT a.Name FROM IndexTable a, IndexFilterTable b, FilterAttributeTable c WHERE a.Id=b.IndexId AND b.FilterAttributeId=c.Id AND c.Name in ('4.2.3', 'qt')
-
-    QString query;
-    if (filterAttributes.isEmpty()) {
-        query = QLatin1String("SELECT DISTINCT Name FROM IndexTable");
-    } else {
-        query = QString(QLatin1String("SELECT DISTINCT a.Name FROM IndexTable a, "
-        "IndexFilterTable b, FilterAttributeTable c WHERE a.Id=b.IndexId "
-        "AND b.FilterAttributeId=c.Id AND c.Name='%1'")).arg(quote(filterAttributes.first()));
-        for (int i = 1; i < filterAttributes.count(); ++i) {
-            query.append(QString(QLatin1String(" INTERSECT SELECT DISTINCT a.Name FROM IndexTable a, "
-                "IndexFilterTable b, FilterAttributeTable c WHERE a.Id=b.IndexId "
-                "AND b.FilterAttributeId=c.Id AND c.Name='%1'"))
-                .arg(quote(filterAttributes.at(i))));
-        }
-    }
-
-    m_query->exec(query);
-    while (m_query->next()) {
-        if (!m_query->value(0).toString().isEmpty())
-            indices.append(m_query->value(0).toString());
-    }
-    return indices;
-}
-
-void QHelpDBReader::linksForKeyword(const QString &keyword,
-                                    const QStringList &filterAttributes,
-                                    QMap<QString, QUrl> *linkMap) const
-{
-    if (!m_query)
-        return;
-
-    QString query;
-    if (filterAttributes.isEmpty()) {
-        query = QString(QLatin1String("SELECT d.Title, f.Name, e.Name, d.Name, a.Anchor "
-            "FROM IndexTable a, FileNameTable d, "
-            "FolderTable e, NamespaceTable f WHERE "
-            "a.FileId=d.FileId AND d.FolderId=e.Id AND a.NamespaceId=f.Id "
-            "AND a.Name='%1'")).arg(quote(keyword));
-    } else if (m_useAttributesCache) {
-        query = QString(QLatin1String("SELECT d.Title, f.Name, e.Name, d.Name, a.Anchor, a.Id "
-            "FROM IndexTable a, "
-            "FileNameTable d, FolderTable e, NamespaceTable f WHERE "
-            "a.FileId=d.FileId AND d.FolderId=e.Id "
-            "AND a.NamespaceId=f.Id AND a.Name='%1'"))
-            .arg(quote(keyword));
-        m_query->exec(query);
-        while (m_query->next()) {
-            if (m_indicesCache.contains(m_query->value(5).toInt())) {
-                linkMap->insertMulti(m_query->value(0).toString(), buildQUrl(m_query->value(1).toString(),
-                    m_query->value(2).toString(), m_query->value(3).toString(),
-                    m_query->value(4).toString()));
-            }
-        }
-        return;
-    } else {
-        query = QString(QLatin1String("SELECT d.Title, f.Name, e.Name, d.Name, a.Anchor "
-            "FROM IndexTable a, IndexFilterTable b, FilterAttributeTable c, "
-            "FileNameTable d, FolderTable e, NamespaceTable f "
-            "WHERE a.FileId=d.FileId AND d.FolderId=e.Id "
-            "AND a.NamespaceId=f.Id AND b.IndexId=a.Id AND b.FilterAttributeId=c.Id "
-            "AND a.Name='%1' AND c.Name='%2'")).arg(quote(keyword))
-            .arg(quote(filterAttributes.first()));
-        for (int i = 1; i < filterAttributes.count(); ++i) {
-            query.append(QString(QLatin1String(" INTERSECT SELECT d.Title, f.Name, e.Name, d.Name, a.Anchor "
-                "FROM IndexTable a, IndexFilterTable b, FilterAttributeTable c, "
-                "FileNameTable d, FolderTable e, NamespaceTable f "
-                "WHERE a.FileId=d.FileId AND d.FolderId=e.Id "
-                "AND a.NamespaceId=f.Id AND b.IndexId=a.Id AND b.FilterAttributeId=c.Id "
-                "AND a.Name='%1' AND c.Name='%2'")).arg(quote(keyword))
-                .arg(quote(filterAttributes.at(i))));
-        }
-    }
-
-    QString title;
-    m_query->exec(query);
-    while (m_query->next()) {
-        title = m_query->value(0).toString();
-        if (title.isEmpty()) // generate a title + corresponding path
-            title = keyword + QLatin1String(" : ") + m_query->value(3).toString();
-        linkMap->insertMulti(title, buildQUrl(m_query->value(1).toString(),
-            m_query->value(2).toString(), m_query->value(3).toString(),
-            m_query->value(4).toString()));
-    }
-}
-
-void QHelpDBReader::linksForIdentifier(const QString &id,
-                                       const QStringList &filterAttributes,
-                                       QMap<QString, QUrl> *linkMap) const
-{
-    if (!m_query)
-        return;
-
-    QString query;
-    if (filterAttributes.isEmpty()) {
-        query = QString(QLatin1String("SELECT d.Title, f.Name, e.Name, d.Name, a.Anchor "
-        "FROM IndexTable a, FileNameTable d, FolderTable e, "
-        "NamespaceTable f WHERE a.FileId=d.FileId AND "
-        "d.FolderId=e.Id AND a.NamespaceId=f.Id AND a.Identifier='%1'"))
-        .arg(quote(id));
-    } else if (m_useAttributesCache) {
-        query = QString(QLatin1String("SELECT d.Title, f.Name, e.Name, d.Name, a.Anchor, a.Id "
-            "FROM IndexTable a,"
-            "FileNameTable d, FolderTable e, NamespaceTable f WHERE "
-            "a.FileId=d.FileId AND d.FolderId=e.Id "
-            "AND a.NamespaceId=f.Id AND a.Identifier='%1'"))
-            .arg(quote(id));
-        m_query->exec(query);
-        while (m_query->next()) {
-            if (m_indicesCache.contains(m_query->value(5).toInt())) {
-                linkMap->insertMulti(m_query->value(0).toString(), buildQUrl(m_query->value(1).toString(),
-                    m_query->value(2).toString(), m_query->value(3).toString(),
-                    m_query->value(4).toString()));
-            }
-        }
-        return;
-    } else {
-        query = QString(QLatin1String("SELECT d.Title, f.Name, e.Name, d.Name, a.Anchor "
-            "FROM IndexTable a, IndexFilterTable b, FilterAttributeTable c, "
-            "FileNameTable d, FolderTable e, NamespaceTable f "
-            "WHERE a.FileId=d.FileId AND d.FolderId=e.Id "
-            "AND a.NamespaceId=f.Id AND b.IndexId=a.Id AND b.FilterAttributeId=c.Id "
-            "AND a.Identifier='%1' AND c.Name='%2'")).arg(quote(id))
-            .arg(quote(filterAttributes.first()));
-        for (int i = 0; i < filterAttributes.count(); ++i) {
-            query.append(QString(QLatin1String(" INTERSECT SELECT d.Title, f.Name, e.Name, "
-                "d.Name, a.Anchor FROM IndexTable a, IndexFilterTable b, "
-                "FilterAttributeTable c, FileNameTable d, "
-                "FolderTable e, NamespaceTable f WHERE "
-                "a.FileId=d.FileId AND d.FolderId=e.Id AND a.NamespaceId=f.Id "
-                "AND b.IndexId=a.Id AND b.FilterAttributeId=c.Id AND "
-                "a.Identifier='%1' AND c.Name='%2'")).arg(quote(id))
-                .arg(quote(filterAttributes.at(i))));
-        }
-    }
-
-    m_query->exec(query);
-    while (m_query->next()) {
-        linkMap->insertMulti(m_query->value(0).toString(), buildQUrl(m_query->value(1).toString(),
-            m_query->value(2).toString(), m_query->value(3).toString(),
-            m_query->value(4).toString()));
-    }
-}
-
-QUrl QHelpDBReader::buildQUrl(const QString &ns, const QString &folder,
-                              const QString &relFileName, const QString &anchor) const
-{
-    QUrl url;
-    url.setScheme(QLatin1String("qthelp"));
-    url.setAuthority(ns);
-    url.setPath(QLatin1Char('/') + folder + QLatin1Char('/') + relFileName);
-    url.setFragment(anchor);
-    return url;
-}
-
-QList<QByteArray> QHelpDBReader::contentsForFilter(const QStringList &filterAttributes) const
-{
-    QList<QByteArray> contents;
-    if (!m_query)
-        return contents;
-
-    //SELECT DISTINCT a.Data FROM ContentsTable a, ContentsFilterTable b, FilterAttributeTable c WHERE a.Id=b.ContentsId AND b.FilterAttributeId=c.Id AND c.Name='qt' INTERSECT SELECT DISTINCT a.Data FROM ContentsTable a, ContentsFilterTable b, FilterAttributeTable c WHERE a.Id=b.ContentsId AND b.FilterAttributeId=c.Id AND c.Name='3.3.8';
-
-    QString query;
-    if (filterAttributes.isEmpty()) {
-        query = QLatin1String("SELECT Data from ContentsTable");
-    } else {
-        query = QString(QLatin1String("SELECT a.Data FROM ContentsTable a, "
-            "ContentsFilterTable b, FilterAttributeTable c "
-            "WHERE a.Id=b.ContentsId AND b.FilterAttributeId=c.Id "
-            "AND c.Name='%1'")).arg(quote(filterAttributes.first()));
-        for (int i = 1; i < filterAttributes.count(); ++i) {
-            query.append(QString(QLatin1String(" INTERSECT SELECT a.Data FROM ContentsTable a, "
-            "ContentsFilterTable b, FilterAttributeTable c "
-            "WHERE a.Id=b.ContentsId AND b.FilterAttributeId=c.Id "
-            "AND c.Name='%1'")).arg(quote(filterAttributes.at(i))));
-        }
-    }
-
-    m_query->exec(query);
-    while (m_query->next())
-        contents.append(m_query->value(0).toByteArray());
-    return contents;
-}
-
-QUrl QHelpDBReader::urlOfPath(const QString &relativePath) const
-{
-    if (!m_query)
-        return QUrl();
-
-    m_query->exec(QLatin1String("SELECT a.Name, b.Name FROM NamespaceTable a, "
-        "FolderTable b WHERE a.id=b.NamespaceId and a.Id=1"));
-    if (!m_query->next())
-        return QUrl();
-
-    const int idx = relativePath.indexOf(QLatin1Char('#'));
-    const QString &rp = idx < 0 ? relativePath : relativePath.left(idx);
-    const QString anchor = idx < 0 ? QString() : relativePath.mid(idx + 1);
-    return buildQUrl(m_query->value(0).toString(),
-                     m_query->value(1).toString(), rp, anchor);
-}
-
-QStringList QHelpDBReader::files(const QStringList &filterAttributes,
-                                 const QString &extensionFilter) const
-{
-    QStringList lst;
-    if (!m_query)
-        return lst;
+        return result;
 
     QString query;
     QString extension;
     if (!extensionFilter.isEmpty())
-        extension = QString(QLatin1String("AND b.Name like \'%.%1\'")).arg(extensionFilter);
+        extension = QString(QLatin1String("AND FileNameTable.Name "
+                                          "LIKE \'%.%1\'")).arg(extensionFilter);
 
     if (filterAttributes.isEmpty()) {
-        query = QString(QLatin1String("SELECT a.Name, b.Name FROM FolderTable a, "
-            "FileNameTable b WHERE b.FolderId=a.Id %1"))
+        query = QString(QLatin1String("SELECT "
+                                          "FileNameTable.Name, "
+                                          "FileDataTable.Data "
+                                      "FROM "
+                                          "FolderTable, "
+                                          "FileNameTable, "
+                                          "FileDataTable "
+                                      "WHERE FileDataTable.Id = FileNameTable.FileId "
+                                      "AND FileNameTable.FolderId = FolderTable.Id %1"))
             .arg(extension);
     } else {
-        query = QString(QLatin1String("SELECT a.Name, b.Name FROM FolderTable a, "
-            "FileNameTable b, FileFilterTable c, FilterAttributeTable d "
-            "WHERE b.FolderId=a.Id AND b.FileId=c.FileId "
-            "AND c.FilterAttributeId=d.Id AND d.Name=\'%1\' %2"))
-            .arg(quote(filterAttributes.first())).arg(extension);
-        for (int i = 1; i < filterAttributes.count(); ++i) {
-            query.append(QString(QLatin1String(" INTERSECT SELECT a.Name, b.Name FROM "
-                "FolderTable a, FileNameTable b, FileFilterTable c, "
-                "FilterAttributeTable d WHERE b.FolderId=a.Id AND "
-                "b.FileId=c.FileId AND c.FilterAttributeId=d.Id AND "
-                "d.Name=\'%1\' %2")).arg(quote(filterAttributes.at(i)))
-                .arg(extension));
+        for (int i = 0; i < filterAttributes.count(); ++i) {
+            if (i > 0)
+                query.append(QLatin1String(" INTERSECT "));
+            query.append(QString(QLatin1String(
+                                     "SELECT "
+                                         "FileNameTable.Name, "
+                                         "FileDataTable.Data "
+                                     "FROM "
+                                         "FolderTable, "
+                                         "FileNameTable, "
+                                         "FileDataTable, "
+                                         "FileFilterTable, "
+                                         "FilterAttributeTable "
+                                     "WHERE FileDataTable.Id = FileNameTable.FileId "
+                                     "AND FileNameTable.FolderId = FolderTable.Id "
+                                     "AND FileNameTable.FileId = FileFilterTable.FileId "
+                                     "AND FileFilterTable.FilterAttributeId = FilterAttributeTable.Id "
+                                     "AND FilterAttributeTable.Name = \'%1\' %2"))
+                         .arg(quote(filterAttributes.at(i)))
+                         .arg(extension));
         }
     }
     m_query->exec(query);
-    while (m_query->next()) {
-        lst.append(m_query->value(0).toString() + QLatin1Char('/')
-            + m_query->value(1).toString());
-    }
+    while (m_query->next())
+        result.insert(m_query->value(0).toString(), qUncompress(m_query->value(1).toByteArray()));
 
-    return lst;
+    return result;
 }
 
 QVariant QHelpDBReader::metaData(const QString &name) const
@@ -506,72 +464,11 @@ QVariant QHelpDBReader::metaData(const QString &name) const
     return v;
 }
 
-QString QHelpDBReader::mergeList(const QStringList &list) const
-{
-    QString str;
-    for (const QString &s : list)
-        str.append(QLatin1Char('\'') + quote(s) + QLatin1String("\', "));
-    if (str.endsWith(QLatin1String(", ")))
-        str.chop(2);
-    return str;
-}
-
 QString QHelpDBReader::quote(const QString &string) const
 {
     QString s = string;
     s.replace(QLatin1Char('\''), QLatin1String("\'\'"));
     return s;
-}
-
-QSet<int> QHelpDBReader::indexIds(const QStringList &attributes) const
-{
-    QSet<int> ids;
-
-    if (attributes.isEmpty())
-        return ids;
-
-    QString query = QString(QLatin1String("SELECT a.IndexId FROM IndexFilterTable a, "
-        "FilterAttributeTable b WHERE a.FilterAttributeId=b.Id "
-        "AND b.Name='%1'")).arg(attributes.first());
-    for (const QString &attribute : attributes) {
-        query.append(QString(QLatin1String(" INTERSECT SELECT a.IndexId FROM "
-            "IndexFilterTable a, FilterAttributeTable b WHERE "
-            "a.FilterAttributeId=b.Id AND b.Name='%1'"))
-            .arg(attribute));
-    }
-
-    if (!m_query->exec(query))
-            return ids;
-
-    while (m_query->next())
-        ids.insert(m_query->value(0).toInt());
-
-    return ids;
-}
-
-bool QHelpDBReader::createAttributesCache(const QStringList &attributes,
-                                          const QSet<int> &indexIds)
-{
-    m_useAttributesCache = false;
-
-    if (attributes.count() < 2) {
-        m_viewAttributes.clear();
-        return true;
-    }
-
-    const bool needUpdate = !m_viewAttributes.count();
-
-    for (const QString &s : attributes)
-        m_viewAttributes.remove(s);
-
-    if (m_viewAttributes.count() || needUpdate) {
-        m_viewAttributes.clear();
-        m_indicesCache = indexIds;
-    }
-    for (const QString &s : attributes)
-        m_viewAttributes.insert(s);
-    m_useAttributesCache = true;
-    return true;
 }
 
 QT_END_NAMESPACE

@@ -146,6 +146,7 @@ HelpEngineWrapper::HelpEngineWrapper(const QString &collectionFile)
      * This call is reverted by initialDocSetupDone(), which must be
      * called after the new docs have been installed.
      */
+//  TODO: probably remove it
     disconnect(d->m_helpEngine, &QHelpEngineCore::setupFinished,
             searchEngine(), &QHelpSearchEngine::scheduleIndexDocumentation);
 
@@ -175,6 +176,7 @@ HelpEngineWrapper::~HelpEngineWrapper()
 void HelpEngineWrapper::initialDocSetupDone()
 {
     TRACE_OBJ
+//  TODO: probably remove it
     connect(d->m_helpEngine, &QHelpEngineCore::setupFinished,
             searchEngine(), &QHelpSearchEngine::scheduleIndexDocumentation);
     setupData();

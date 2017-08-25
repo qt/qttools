@@ -50,7 +50,6 @@ QT_BEGIN_NAMESPACE
 
 
 class QHelpEnginePrivate;
-class QHelpDBReader;
 class QHelpContentItemPrivate;
 class QHelpContentModelPrivate;
 class QHelpEngine;
@@ -70,8 +69,8 @@ public:
     int childPosition(QHelpContentItem *child) const;
 
 private:
-    QHelpContentItem(const QString &name, const QString &link,
-        QHelpDBReader *reader, QHelpContentItem *parent = nullptr);
+    QHelpContentItem(const QString &name, const QUrl &link,
+                     QHelpContentItem *parent = nullptr);
 
     QHelpContentItemPrivate *d;
     friend class QHelpContentProvider;

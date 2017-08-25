@@ -170,11 +170,11 @@ void tst_QHelpIndexModel::linksForIndex()
     QCOMPARE(map.count(), 2);
     QCOMPARE(map.contains("Test Manual"), true);
     QCOMPARE(map.value("Test Manual"),
-        QUrl("qthelp://trolltech.com.1.0.0.test/testFolder/test.html#foo"));
+        QUrl("qthelp://trolltech.com.1-0-0.test/testFolder/test.html#foo"));
 
     QCOMPARE(map.contains("Fancy"), true);
     QCOMPARE(map.value("Fancy"),
-        QUrl("qthelp://trolltech.com.1.0.0.test/testFolder/fancy.html#foo"));
+        QUrl("qthelp://trolltech.com.1-0-0.test/testFolder/fancy.html#foo"));
 
     map = m->linksForKeyword("foobar");
     QCOMPARE(map.count(), 1);
@@ -193,7 +193,7 @@ void tst_QHelpIndexModel::linksForIndex()
     QCOMPARE(map.count(), 1);
     QCOMPARE(map.contains("Test Manual"), true);
     QCOMPARE(map.value("Test Manual"),
-        QUrl("qthelp://trolltech.com.1.0.0.test/testFolder/test.html#foo"));
+        QUrl("qthelp://trolltech.com.1-0-0.test/testFolder/test.html#foo"));
 }
 
 QTEST_MAIN(tst_QHelpIndexModel)

@@ -79,13 +79,8 @@ public:
     virtual void init(const QString &collectionFile,
         QHelpEngineCore *helpEngineCore);
 
-    void clearMaps();
+    void emitReadersAboutToBeInvalidated();
     bool setup();
-
-    QMap<QString, QHelpDBReader*> readerMap;
-    QMap<QString, QHelpDBReader*> fileNameReaderMap;
-    QMultiMap<QString, QHelpDBReader*> virtualFolderMap;
-    QStringList orderedFileNameList;
 
     QHelpCollectionHandler *collectionHandler = nullptr;
     QString currentFilter;
@@ -131,7 +126,12 @@ public slots:
     void unsetIndexWidgetBusy();
 
 private slots:
+    void scheduleApplyCurrentFilter();
     void applyCurrentFilter();
+
+private:
+    bool m_isApplyCurrentFilterScheduled = false;
+
 };
 
 QT_END_NAMESPACE

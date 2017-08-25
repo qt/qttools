@@ -59,6 +59,8 @@
 
 #include <QtSql/QSqlQuery>
 
+#include "qhelpdbreader_p.h"
+
 QT_BEGIN_NAMESPACE
 
 class QHelpCollectionHandler : public QObject
@@ -66,13 +68,29 @@ class QHelpCollectionHandler : public QObject
     Q_OBJECT
 
 public:
-    struct DocInfo
+    struct FileInfo
     {
         QString fileName;
         QString folderName;
         QString namespaceName;
     };
-    typedef QList<DocInfo> DocInfoList;
+    typedef QList<FileInfo> FileInfoList;
+
+    struct TimeStamp
+    {
+        int namespaceId = -1;
+        int folderId = -1;
+        QString fileName;
+        int size = 0;
+        QString timeStamp;
+    };
+
+    struct ContentsData
+    {
+        QString namespaceName;
+        QString folderName;
+        QList<QByteArray> contentsList;
+    };
 
     explicit QHelpCollectionHandler(const QString &collectionFile,
         QObject *parent = 0);
@@ -88,33 +106,67 @@ public:
     bool addCustomFilter(const QString &filterName,
         const QStringList &attributes);
 
-    DocInfoList registeredDocumentations(const QString &namespaceName = QString()) const;
+    FileInfo registeredDocumentation(const QString &namespaceName) const;
+    FileInfoList registeredDocumentations() const;
     bool registerDocumentation(const QString &fileName);
     bool unregisterDocumentation(const QString &namespaceName);
+
+    bool fileExists(const QUrl &url) const;
+    QStringList files(const QString &namespaceName,
+                      const QStringList &filterAttributes = QStringList(),
+                      const QString &extensionFilter = QString()) const;
+    QString namespaceForFile(const QUrl &url,
+                             const QStringList &filterAttributes = QStringList()) const;
+    QUrl findFile(const QUrl &url,
+                  const QStringList &filterAttributes = QStringList()) const;
+    QByteArray fileData(const QUrl &url) const;
+
+    QStringList indicesForFilter(const QStringList &filterAttributes) const;
+    QList<ContentsData> contentsForFilter(const QStringList &filterAttributes) const;
 
     bool removeCustomValue(const QString &key);
     QVariant customValue(const QString &key, const QVariant &defaultValue) const;
     bool setCustomValue(const QString &key, const QVariant &value);
 
-    bool addFilterAttributes(const QStringList &attributes);
     QStringList filterAttributes() const;
     QStringList filterAttributes(const QString &filterName) const;
+    QList<QStringList> filterAttributeSets(const QString &namespaceName) const;
 
     int registerNamespace(const QString &nspace, const QString &fileName);
-    bool registerVirtualFolder(const QString &folderName, int namespaceId);
-    void optimizeDatabase(const QString &fileName);
+    int registerVirtualFolder(const QString &folderName, int namespaceId);
+
+    QMap<QString, QUrl> linksForIdentifier(const QString &id,
+                                           const QStringList &filterAttributes) const;
+    QMap<QString, QUrl> linksForKeyword(const QString &keyword,
+                                        const QStringList &filterAttributes) const;
 
 signals:
-    void error(const QString &msg);
+    void error(const QString &msg) const;
 
 private:
-    bool isDBOpened();
-    void closeDB();
+    QMap<QString, QUrl> linksForField(const QString &fieldName,
+                                      const QString &fieldValue,
+                                      const QStringList &filterAttributes) const;
+    bool isDBOpened() const;
     bool createTables(QSqlQuery *query);
+    void closeDB();
+    bool createIndexAndNamespaceFilterTables(QSqlQuery *query);
+    bool registerIndexAndNamespaceFilterTables(const QString &nameSpace);
+    bool registerFilterAttributes(const QList<QStringList> &attributeSets, int nsId);
+    bool registerFileAttributeSets(const QList<QStringList> &attributeSets, int nsId);
+    bool registerIndexTable(const QHelpDBReader::IndexTable &indexTable,
+                            int nsId, int vfId, const QString &fileName);
+    bool unregisterIndexTable(int nsId, int vfId);
+    QString absoluteDocPath(const QString &fileName) const;
+    bool isTimeStampCorrect(const TimeStamp &timeStamp) const;
+    bool hasTimeStampInfo(const QString &nameSpace) const;
+    void scheduleVacuum();
+    void execVacuum();
 
     QString m_collectionFile;
     QString m_connectionName;
     QSqlQuery *m_query = nullptr;
+    bool m_vacuumScheduled = false;
 };
 
 QT_END_NAMESPACE
