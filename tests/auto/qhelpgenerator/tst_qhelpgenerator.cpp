@@ -182,7 +182,7 @@ void tst_QHelpGenerator::checkMetaData()
     m_query->exec("SELECT COUNT(Value) FROM MetaDataTable");
     if (!m_query->next())
         QFAIL("Meta Data Error");
-    QCOMPARE(m_query->value(0).toInt(), 4);
+    QCOMPARE(m_query->value(0).toInt(), 3);
 
     m_query->exec("SELECT Value FROM MetaDataTable WHERE Name=\'author\'");
     if (!m_query->next())
