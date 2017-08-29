@@ -1163,7 +1163,7 @@ void ClangCodeParser::buildPCH()
                 }
                 CXErrorCode err = clang_parseTranslationUnit2(index_,
                     tmpHeader.toLatin1().data(),
-                    args_.data(), args_.size(), nullptr, 0,
+                    args_.data(), static_cast<int>(args_.size()), nullptr, 0,
                     flags_ | CXTranslationUnit_ForSerialization, &tu);
                 if (!err && tu) {
                     pchName_ = pchFileDir_->path().toUtf8() + "/" + module + ".pch";
@@ -1231,7 +1231,7 @@ void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QStrin
 
     CXTranslationUnit tu;
     CXErrorCode err = clang_parseTranslationUnit2(index_, filePath.toLocal8Bit(), args_.data(),
-                                                  args_.size(), nullptr, 0, flags_, &tu);
+                                                  static_cast<int>(args_.size()), nullptr, 0, flags_, &tu);
     if (err || !tu) {
         qWarning() << "(qdoc) Could not parse source file" << filePath << " error code:" << err;
         clang_disposeIndex(index_);
