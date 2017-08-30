@@ -45,7 +45,6 @@
 #include <qdebug.h>
 #include <qscopedvaluerollback.h>
 #include <qelapsedtimer.h>
-#include <qregularexpression.h>
 #include <qtemporarydir.h>
 #include "generator.h"
 
@@ -683,71 +682,75 @@ void ClangVisitor::readParameterNamesAndAttributes(FunctionNode* fn, CXCursor cu
 
 void ClangVisitor::parseProperty(const QString& spelling, const Location& loc)
 {
-    const QLatin1String metaKeyword("READ|WRITE|CONSTANT|FINAL|REVISION|MEMBER|RESET|SCRIPTABLE|STORED|WRITE|DESIGNABLE|EDITABLE|NOTIFY|USER");
-    static QRegularExpression typeNameRx(QLatin1String("^[^(]*\\((?<type>.*?)\\s*(?<name>[a-zA-Z0-9_]+)\\s+(")
-        + metaKeyword + QLatin1String(")\\s"));
-    auto match = typeNameRx.match(spelling);
-    if (!match.hasMatch()) {
-        qWarning() << "(qdoc) ERROR PARSING " << spelling;
+    int lpIdx = spelling.indexOf(QChar('('));
+    int rpIdx = spelling.lastIndexOf(QChar(')'));
+    if (lpIdx <= 0 || rpIdx <= lpIdx)
         return;
+    QString signature = spelling.mid(lpIdx + 1, rpIdx - lpIdx - 1);
+    signature = signature.simplified();
+    QStringList part = signature.split(QChar(' '));
+    if (part.size() < 2)
+        return;
+    QString type = part.at(0);
+    QString name = part.at(1);
+    if (name.at(0) == QChar('*')) {
+        type.append(QChar('*'));
+        name.remove(0,1);
     }
-    auto type = match.captured(QStringLiteral("type"));
-    auto name = match.captured(QStringLiteral("name"));
     auto *property = new PropertyNode(parent_, name);
     property->setAccess(Node::Public);
     property->setLocation(loc);
     property->setDataType(type);
-
-    static QRegularExpression nextKeyword(QLatin1String("\\s(?<key>") + metaKeyword
-        + QLatin1String(")\\s+(?<value>.*?)(\\s*\\)$|\\s+(") + metaKeyword + QLatin1String("))"));
-    int pos = match.capturedEnd(QStringLiteral("name"));
-    while ((match = nextKeyword.match(spelling, pos)).hasMatch()) {
-        pos = match.capturedEnd(QStringLiteral("value"));
-        auto key = match.capturedRef(QStringLiteral("key"));
-        auto value =  match.captured(QStringLiteral("value"));
+    int i = 2;
+    while (i < part.size()) {
+        QString key = part.at(i++);
         // Keywords with no associated values
         if (key == "CONSTANT") {
             property->setConstant();
         } else if (key == "FINAL") {
             property->setFinal();
-        } else if (key == "READ") {
-            qdb_->addPropertyFunction(property, value, PropertyNode::Getter);
-        } else if (key == "WRITE") {
-            qdb_->addPropertyFunction(property, value, PropertyNode::Setter);
-            property->setWritable(true);
-        } else if (key == "STORED") {
-            property->setStored(value.toLower() == "true");
-        } else if (key == "DESIGNABLE") {
-            QString v = value.toLower();
-            if (v == "true")
-                property->setDesignable(true);
-            else if (v == "false")
-                property->setDesignable(false);
-            else {
-                property->setDesignable(false);
-                property->setRuntimeDesFunc(value);
-            }
-        } else if (key == "RESET") {
-            qdb_->addPropertyFunction(property, value, PropertyNode::Resetter);
-        } else if (key == "NOTIFY") {
-            qdb_->addPropertyFunction(property, value, PropertyNode::Notifier);
-        } else if (key == "REVISION") {
-            int revision;
-            bool ok;
-            revision = value.toInt(&ok);
-            if (ok)
-                property->setRevision(revision);
-            else
-                loc.warning(ClangCodeParser::tr("Invalid revision number: %1").arg(value));
-        } else if (key == "SCRIPTABLE") {
-            QString v = value.toLower();
-            if (v == "true")
-                property->setScriptable(true);
-            else if (v == "false")
-                property->setScriptable(false);
-            else {
-                property->setScriptable(false);
-                property->setRuntimeScrFunc(value);
+        }
+        if (i < part.size()) {
+            QString value =  part.at(i++);
+            if (key == "READ") {
+                qdb_->addPropertyFunction(property, value, PropertyNode::Getter);
+            } else if (key == "WRITE") {
+                qdb_->addPropertyFunction(property, value, PropertyNode::Setter);
+                property->setWritable(true);
+            } else if (key == "STORED") {
+                property->setStored(value.toLower() == "true");
+            } else if (key == "DESIGNABLE") {
+                QString v = value.toLower();
+                if (v == "true")
+                    property->setDesignable(true);
+                else if (v == "false")
+                    property->setDesignable(false);
+                else {
+                    property->setDesignable(false);
+                    property->setRuntimeDesFunc(value);
+                }
+            } else if (key == "RESET") {
+                qdb_->addPropertyFunction(property, value, PropertyNode::Resetter);
+            } else if (key == "NOTIFY") {
+                qdb_->addPropertyFunction(property, value, PropertyNode::Notifier);
+            } else if (key == "REVISION") {
+                int revision;
+                bool ok;
+                revision = value.toInt(&ok);
+                if (ok)
+                    property->setRevision(revision);
+                else
+                    loc.warning(ClangCodeParser::tr("Invalid revision number: %1").arg(value));
+            } else if (key == "SCRIPTABLE") {
+                QString v = value.toLower();
+                if (v == "true")
+                    property->setScriptable(true);
+                else if (v == "false")
+                    property->setScriptable(false);
+                else {
+                    property->setScriptable(false);
+                    property->setRuntimeScrFunc(value);
+                }
             }
         }
     }
