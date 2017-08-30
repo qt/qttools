@@ -26,7 +26,7 @@
 **
 ****************************************************************************/
 
-// There must be no #include before this !
+#ifdef HEINOUS_SYSINC_HACK // There must be no #include before this !
 #define setlocale locale_file_name_for_clang_qdoc() { \
         static char data[] = __FILE__;           \
         return data;                             \
@@ -34,6 +34,7 @@
     extern char *setlocale
 #include <locale.h>
 #undef setlocale
+#endif // HEINOUS_SYSINC_HACK
 
 #include <qglobal.h>
 #include <qhashfunctions.h>
@@ -653,6 +654,7 @@ QDocCommandLineParser::QDocCommandLineParser()
     addOption(frameworkOption);
 }
 
+#ifdef HEINOUS_SYSINC_HACK
 /*!
   Return the system include directory used when compiling this file.
  */
@@ -666,6 +668,7 @@ static QByteArray getSystemIncludePath()
         return QByteArray();
     return QByteArray(raw, slash - raw);
 }
+#endif // HEINOUS_SYSINC_HACK
 
 void QDocCommandLineParser::process(const QCoreApplication &app)
 {
@@ -715,8 +718,10 @@ void QDocCommandLineParser::process(const QCoreApplication &app)
     for (const auto &i : paths)
         includesPaths << "-I" << currentDir.absoluteFilePath(i);
     auto paths2 = values(includePathSystemOption);
+#ifdef HEINOUS_SYSINC_HACK
     if (paths2.isEmpty())
         paths2 << QString(getSystemIncludePath());
+#endif // HEINOUS_SYSINC_HACK
     for (const auto &i : paths2)
         includesPaths << "-isystem" << currentDir.absoluteFilePath(i);
     const auto paths3 = values(frameworkOption);
