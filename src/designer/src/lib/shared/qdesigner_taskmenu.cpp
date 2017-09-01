@@ -88,9 +88,10 @@ static QString objName(const QDesignerFormEditorInterface *core, QObject *object
 
     const QString objectNameProperty = QStringLiteral("objectName");
     const int index = sheet->indexOf(objectNameProperty);
-    const qdesigner_internal::PropertySheetStringValue objectNameValue
-            = qvariant_cast<qdesigner_internal::PropertySheetStringValue>(sheet->property(index));
-    return objectNameValue.value();
+    const QVariant v = sheet->property(index);
+    if (v.canConvert<qdesigner_internal::PropertySheetStringValue>())
+        return v.value<qdesigner_internal::PropertySheetStringValue>().value();
+    return v.toString();
 }
 
 enum { ApplyMinimumWidth = 0x1, ApplyMinimumHeight = 0x2, ApplyMaximumWidth = 0x4, ApplyMaximumHeight = 0x8 };
