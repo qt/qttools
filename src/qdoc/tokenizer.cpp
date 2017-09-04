@@ -501,7 +501,7 @@ void Tokenizer::initialize(const Config &config)
     if (!versionSym.isEmpty())
         versionX->setPattern("[ \t]*(?:" + QRegExp::escape(versionSym)
                              + ")[ \t]+\"([^\"]*)\"[ \t]*");
-    definedX = new QRegExp("defined ?\\(?([A-Z_0-9a-z]+) ?\\)");
+    definedX = new QRegExp("defined ?\\(?([A-Z_0-9a-z]+) ?\\)?");
 
     QStringList d = config.getStringList(CONFIG_DEFINES);
     d += "qdoc";
