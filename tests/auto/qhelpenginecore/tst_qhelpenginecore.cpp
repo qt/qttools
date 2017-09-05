@@ -117,7 +117,7 @@ void tst_QHelpEngineCore::setCollectionFile()
 
     QStringList docs = help.registeredDocumentations();
     QCOMPARE(docs.count(), 1);
-    QCOMPARE(docs.first(), QLatin1String("trolltech.com.1-0-0.test"));
+    QCOMPARE(docs.first(), QLatin1String("trolltech.com.1.0.0.test"));
 }
 
 void tst_QHelpEngineCore::copyCollectionFile()
@@ -193,7 +193,7 @@ void tst_QHelpEngineCore::registeredDocumentations()
     QCOMPARE(docs.count(), 3);
     QStringList lst;
     lst << "trolltech.com.3-3-8.qmake" << "trolltech.com.4-3-0.qmake"
-        << "trolltech.com.1-0-0.test";
+        << "trolltech.com.1.0.0.test";
     foreach (QString s, docs)
         lst.removeAll(s);
     QCOMPARE(lst.isEmpty(), true);
@@ -249,7 +249,7 @@ void tst_QHelpEngineCore::documentationFileName()
     QCOMPARE(c.setupData(), true);
     QCOMPARE(c.documentationFileName(QLatin1String("trolltech.com.3-3-8.qmake")),
         QString(m_path + "/data/qmake-3.3.8.qch"));
-    QCOMPARE(c.documentationFileName(QLatin1String("trolltech.com.1-0-0.test")),
+    QCOMPARE(c.documentationFileName(QLatin1String("trolltech.com.1.0.0.test")),
         QString(m_path + "/data/test.qch"));
     QCOMPARE(c.documentationFileName(QLatin1String("trolltech.com.empty")),
         QString());
@@ -324,7 +324,7 @@ void tst_QHelpEngineCore::filterAttributeSets()
 {
     QHelpEngineCore help(m_colFile, 0);
     QCOMPARE(help.setupData(), true);
-    QList<QStringList> lst = help.filterAttributeSets("trolltech.com.1-0-0.test");
+    QList<QStringList> lst = help.filterAttributeSets("trolltech.com.1.0.0.test");
     QCOMPARE(lst.count(), 2);
     QCOMPARE(lst.first().count(), 2);
     QCOMPARE((bool)lst.first().contains("filter1"), true);
@@ -365,7 +365,7 @@ void tst_QHelpEngineCore::fileData()
     QCOMPARE(help.setupData(), true);
     QByteArray ba = help.fileData(QUrl("NotExisting"));
     QCOMPARE(ba.size(), 0);
-    ba = help.fileData(QUrl("qthelp://trolltech.com.1-0-0.test/testFolder/test.html"));
+    ba = help.fileData(QUrl("qthelp://trolltech.com.1.0.0.test/testFolder/test.html"));
     QTextStream s(ba, QIODevice::ReadOnly|QIODevice::Text);
     QFile f(m_path + "/data/test.html");
     if (!f.open(QIODevice::ReadOnly|QIODevice::Text))
