@@ -39,6 +39,11 @@
 
 QT_BEGIN_NAMESPACE
 
+bool operator==(const QmlImportScanResult::Module &m1, const QmlImportScanResult::Module &m2)
+{
+    return m1.className.isEmpty() ? m1.name == m2.name : m1.className == m2.className;
+}
+
 // Return install path (cp -r semantics)
 QString QmlImportScanResult::Module::installPath(const QString &root) const
 {
@@ -153,19 +158,10 @@ QmlImportScanResult runQmlImportScanner(const QString &directory, const QString 
     return result;
 }
 
-static inline bool contains(const QList<QmlImportScanResult::Module> &modules, const QString &className)
-{
-    for (const QmlImportScanResult::Module &m : modules) {
-        if (m.className == className)
-            return true;
-    }
-    return false;
-}
-
 void QmlImportScanResult::append(const QmlImportScanResult &other)
 {
     for (const QmlImportScanResult::Module &module : other.modules) {
-        if (!contains(modules, module.className))
+        if (std::find(modules.cbegin(), modules.cend(), module) == modules.cend())
             modules.append(module);
     }
     for (const QString &plugin : other.plugins) {

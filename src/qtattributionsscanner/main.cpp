@@ -44,12 +44,13 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     a.setApplicationName(QStringLiteral("Qt Attributions Scanner"));
-    a.setApplicationVersion(QStringLiteral("1.0"));
+    a.setApplicationVersion(QStringLiteral("1.1"));
 
     QCommandLineParser parser;
-    parser.setApplicationDescription(tr("Searches and processes qt_attribution.json files in Qt sources."));
-    parser.addPositionalArgument(QStringLiteral("directory"),
-                                 tr("The directory to scan recursively."));
+    parser.setApplicationDescription(tr("Processes qt_attribution.json files in Qt sources."));
+    parser.addPositionalArgument(QStringLiteral("path"),
+                                 tr("Path to a qt_attribution.json file, "
+                                    "or a directory to be scannned recursively."));
     parser.addHelpOption();
     parser.addVersionOption();
 
@@ -60,6 +61,10 @@ int main(int argc, char *argv[])
     QCommandLineOption filterOption(QStringLiteral("filter"),
                                     tr("Filter packages according to <filter> (e.g. QDocModule=qtcore)"),
                                     QStringLiteral("expression"));
+    QCommandLineOption baseDirOption(QStringLiteral("basedir"),
+                                     tr("Paths in documentation are made relative to this "
+                                        "directory."),
+                                     QStringLiteral("directory"));
     QCommandLineOption outputOption({ QStringLiteral("o"), QStringLiteral("output") },
                                     tr("Write generated data to <file>."),
                                     QStringLiteral("file"));
@@ -70,6 +75,7 @@ int main(int argc, char *argv[])
 
     parser.addOption(generatorOption);
     parser.addOption(filterOption);
+    parser.addOption(baseDirOption);
     parser.addOption(outputOption);
     parser.addOption(verboseOption);
     parser.addOption(silentOption);
@@ -90,13 +96,22 @@ int main(int argc, char *argv[])
     if (parser.positionalArguments().size() != 1)
         parser.showHelp(2);
 
-    const QString directory = parser.positionalArguments().last();
+    const QString path = parser.positionalArguments().last();
 
-    if (logLevel == VerboseLog)
-        std::cerr << qPrintable(tr("Recursively scanning %1 for qt_attribution.json files...").arg(
-                                    QDir::toNativeSeparators(directory))) << std::endl;
-
-    QVector<Package> packages = Scanner::scanDirectory(directory, logLevel);
+    QVector<Package> packages;
+    const QFileInfo pathInfo(path);
+    if (pathInfo.isDir()) {
+        if (logLevel == VerboseLog)
+            std::cerr << qPrintable(tr("Recursively scanning %1 for qt_attribution.json files...").arg(
+                                        QDir::toNativeSeparators(path))) << std::endl;
+        packages = Scanner::scanDirectory(path, logLevel);
+    } else if (pathInfo.isFile()) {
+        packages = Scanner::readFile(path, logLevel);
+    } else {
+        std::cerr << qPrintable(tr("%1 is not a valid file or directory.").arg(
+                                    QDir::toNativeSeparators(path))) << std::endl << std::endl;
+        parser.showHelp(7);
+    }
 
     if (parser.isSet(filterOption)) {
         PackageFilter filter(parser.value(filterOption));
@@ -124,8 +139,16 @@ int main(int argc, char *argv[])
 
     QString generator = parser.value(generatorOption);
     if (generator == QLatin1String("qdoc")) {
-        // include top level module name in printed paths
-        QString baseDirectory = QDir(directory).absoluteFilePath(QStringLiteral(".."));
+        QString baseDirectory = parser.value(baseDirOption);
+        if (baseDirectory.isEmpty()) {
+            if (pathInfo.isDir()) {
+                // include top level module name in printed paths
+                baseDirectory = pathInfo.dir().absoluteFilePath(QStringLiteral(".."));
+            } else {
+                baseDirectory = pathInfo.absoluteDir().absoluteFilePath(QStringLiteral(".."));
+            }
+        }
+
         QDocGenerator::generate(out, packages, baseDirectory, logLevel);
     } else if (generator == QLatin1String("json")) {
         JsonGenerator::generate(out, packages, logLevel);

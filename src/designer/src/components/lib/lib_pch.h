@@ -26,5 +26,7 @@
 **
 ****************************************************************************/
 
+#if defined __cplusplus
 #include <QtDesigner/QtDesigner>
 #include <QtDesigner/QExtensionManager>
+#endif

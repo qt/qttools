@@ -140,7 +140,7 @@ static Package readPackage(const QJsonObject &object, const QString &filePath, L
     return p;
 }
 
-static QVector<Package> readFile(const QString &filePath, LogLevel logLevel)
+QVector<Package> readFile(const QString &filePath, LogLevel logLevel)
 {
     if (logLevel == VerboseLog) {
         std::cerr << qPrintable(tr("Reading file %1...").arg(

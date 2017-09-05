@@ -137,12 +137,6 @@ void tst_QHelpGenerator::checkIndices()
         || m_query->value(1).toString() != QLatin1String("foo"))
         QFAIL("Index Error!");
 
-    /*
-    m_query->exec("SELECT COUNT(DISTINCT Id) FROM IndexItemTable");
-    if (!m_query->next() || m_query->value(0).toInt() != 7)
-        QFAIL("Index Error!");
-    */
-
     m_query->exec("SELECT COUNT(a.Id) FROM IndexTable a, "
         "IndexFilterTable b, FilterAttributeTable c WHERE a.Id=b.IndexId "
         "AND b.FilterAttributeId=c.Id AND c.Name=\'filter2\'");

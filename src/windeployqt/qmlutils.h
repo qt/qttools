@@ -55,6 +55,8 @@ struct QmlImportScanResult {
     QStringList plugins;
 };
 
+bool operator==(const QmlImportScanResult::Module &m1, const QmlImportScanResult::Module &m2);
+
 QmlImportScanResult runQmlImportScanner(const QString &directory, const QString &qmlImportPath,
                                         bool usesWidgets, int platform, DebugMatchMode debugMatchMode,
                                         QString *errorMessage);
