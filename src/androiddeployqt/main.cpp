@@ -106,20 +106,12 @@ struct Options
         , gdbServer(Auto)
         , installApk(false)
         , uninstallApk(false)
-        , fetchedRemoteModificationDates(false)
     {}
-
-    ~Options()
-    {
-        if (!temporaryDirectoryName.isEmpty())
-            deleteRecursively(temporaryDirectoryName);
-    }
 
     enum DeploymentMechanism
     {
         Bundled,
-        Ministro,
-        Debug
+        Ministro
     };
 
     enum TriState {
@@ -203,9 +195,6 @@ struct Options
     QStringList localLibs;
     QStringList localJars;
     QStringList initClasses;
-    QString temporaryDirectoryName;
-    bool fetchedRemoteModificationDates;
-    QDateTime remoteModificationDate;
     QStringList permissions;
     QStringList features;
 };
@@ -361,20 +350,6 @@ Options parseOptions()
                 QString deploymentMechanism = arguments.at(++i);
                 if (deploymentMechanism.compare(QLatin1String("ministro"), Qt::CaseInsensitive) == 0) {
                     options.deploymentMechanism = Options::Ministro;
-                } else if (deploymentMechanism.compare(QLatin1String("debug"), Qt::CaseInsensitive) == 0) {
-                    options.deploymentMechanism = Options::Debug;
-
-                    QString temporaryDirectoryName = QStandardPaths::standardLocations(QStandardPaths::TempLocation).at(0)
-                            + QLatin1String("/android-build-")
-                            + QUuid::createUuid().toString();
-                    if (QFileInfo(temporaryDirectoryName).exists()) {
-                        fprintf(stderr, "Temporary directory '%s' already exists. Bailing out.\n",
-                                qPrintable(temporaryDirectoryName));
-                        options.helpRequested = true;
-                    } else {
-                        options.temporaryDirectoryName = temporaryDirectoryName;
-                    }
-
                 } else if (deploymentMechanism.compare(QLatin1String("bundled"), Qt::CaseInsensitive) == 0) {
                     options.deploymentMechanism = Options::Bundled;
                 } else {
@@ -489,7 +464,6 @@ void printHelp()
                     "    --deployment <mechanism>: Supported deployment mechanisms:\n"
                     "       bundled (default): Include Qt files in stand-alone package.\n"
                     "       ministro: Use the Ministro service to manage Qt files.\n"
-                    "       debug: Copy Qt files to device for quick debugging.\n"
                     "    --no-build: Do not build the package, it is useful to just install\n"
                     "       a package previously built.\n"
                     "    --install: Installs apk to device/emulator. By default this step is\n"
@@ -1942,70 +1916,6 @@ FILE *runAdb(const Options &options, const QString &arguments)
     return adbCommand;
 }
 
-bool fetchRemoteModifications(Options *options, const QString &directory)
-{
-    options->fetchedRemoteModificationDates = true;
-
-    FILE *adbCommand = runAdb(*options, QLatin1String(" shell cat ") + shellQuote(directory + QLatin1String("/modification.txt")));
-    if (adbCommand == 0)
-        return false;
-
-    char buffer[512];
-    QString qtPath;
-    while (fgets(buffer, sizeof(buffer), adbCommand) != 0)
-        qtPath += QString::fromUtf8(buffer, qstrlen(buffer));
-
-    pclose(adbCommand);
-
-    if (options->qtInstallDirectory != qtPath) {
-        adbCommand = runAdb(*options, QLatin1String(" shell rm -r ") + shellQuote(directory));
-        if (options->verbose) {
-            fprintf(stdout, "  -- Removing old Qt libs.\n");
-            while (fgets(buffer, sizeof(buffer), adbCommand) != 0)
-                fprintf(stdout, "%s", buffer);
-        }
-        pclose(adbCommand);
-    }
-
-    adbCommand = runAdb(*options, QLatin1String(" ls ") + shellQuote(directory));
-    if (adbCommand == 0)
-        return false;
-
-    while (fgets(buffer, sizeof(buffer), adbCommand) != 0) {
-        QByteArray line = QByteArray::fromRawData(buffer, qstrlen(buffer));
-        if (line.count() < (3 * 8 + 3))
-            continue;
-        if (line.at(8) != ' '
-                || line.at(17) != ' '
-                || line.at(26) != ' ') {
-            continue;
-        }
-        QString fileName = QString::fromLocal8Bit(line.mid(27)).trimmed();
-        if (fileName != QLatin1String("modification.txt"))
-            continue;
-        bool ok;
-        int time = line.mid(18, 8).toUInt(&ok, 16);
-        if (!ok)
-            continue;
-
-        options->remoteModificationDate = QDateTime::fromSecsSinceEpoch(time);
-        break;
-    }
-
-    pclose(adbCommand);
-
-    {
-        QFile file(options->temporaryDirectoryName + QLatin1String("/modification.txt"));
-        if (!file.open(QIODevice::WriteOnly)) {
-            fprintf(stderr, "Cannot create modification timestamp.\n");
-            return false;
-        }
-        file.write(options->qtInstallDirectory.toUtf8());
-    }
-
-    return true;
-}
-
 bool goodToCopy(const Options *options, const QString &file, QStringList *unmetDependencies)
 {
     if (!file.endsWith(QLatin1String(".so")))
@@ -2023,36 +1933,6 @@ bool goodToCopy(const Options *options, const QString &file, QStringList *unmetD
     return ret;
 }
 
-bool deployToLocalTmp(Options *options,
-                      const QString &qtDependency)
-{
-    if (!options->installApk)
-        return true;
-
-    if (!options->fetchedRemoteModificationDates)
-        fetchRemoteModifications(options, QLatin1String("/data/local/tmp/qt"));
-
-    QFileInfo fileInfo(options->qtInstallDirectory + QLatin1Char('/') + qtDependency);
-
-    // Make sure precision is the same as what we get from Android
-    QDateTime sourceModified = QDateTime::fromSecsSinceEpoch(fileInfo.lastModified().toSecsSinceEpoch());
-
-    if (options->remoteModificationDate.isNull() || options->remoteModificationDate < sourceModified) {
-        if (!copyFileIfNewer(options->qtInstallDirectory + QLatin1Char('/') + qtDependency,
-                             options->temporaryDirectoryName + QLatin1Char('/') + qtDependency,
-                             options->verbose)) {
-            return false;
-        }
-
-        if (qtDependency.endsWith(QLatin1String(".so"))
-                && !stripFile(*options, options->temporaryDirectoryName + QLatin1Char('/') + qtDependency)) {
-            return false;
-        }
-    }
-
-    return true;
-}
-
 bool copyQtFiles(Options *options)
 {
     if (options->verbose) {
@@ -2063,90 +1943,61 @@ bool copyQtFiles(Options *options)
         case Options::Ministro:
             fprintf(stdout, "Setting %d dependencies from Qt in package.\n", options->qtDependencies.size());
             break;
-        case Options::Debug:
-            fprintf(stdout, "Copying %d dependencies from Qt to device.\n", options->qtDependencies.size());
-            break;
         };
     }
 
-    if (options->deploymentMechanism == Options::Debug) {
-        // For debug deployment, we copy all libraries and plugins
-        QDirIterator dirIterator(options->qtInstallDirectory, QDirIterator::Subdirectories);
-        while (dirIterator.hasNext()) {
-            dirIterator.next();
+    if (!options->build)
+        return true;
 
-            QFileInfo info = dirIterator.fileInfo();
-            if (!info.isDir()) {
-                QString relativePath = info.absoluteFilePath().mid(options->qtInstallDirectory.length());
-                if (relativePath.startsWith(QLatin1Char('/')))
-                    relativePath.remove(0, 1);
-                if ((relativePath.startsWith(QLatin1String("lib/")) && relativePath.endsWith(QLatin1String(".so")))
-                        || relativePath.startsWith(QLatin1String("jar/"))
-                        || relativePath.startsWith(QLatin1String("imports/"))
-                        || relativePath.startsWith(QLatin1String("qml/"))
-                        || relativePath.startsWith(QLatin1String("plugins/"))) {
-                    if (!deployToLocalTmp(options, relativePath))
-                        return false;
-                }
-            }
-        }
+    QString libsDirectory = QLatin1String("libs/");
 
-        for (const QtDependency &qtDependency : qAsConst(options->qtDependencies))
-            options->bundledFiles += qMakePair(qtDependency.relativePath, qtDependency.relativePath);
-    } else {
-        if (!options->build)
-            return true;
+    // Copy other Qt dependencies
+    QString libDestinationDirectory = libsDirectory + options->architecture + QLatin1Char('/');
+    QString assetsDestinationDirectory = QLatin1String("assets/--Added-by-androiddeployqt--/");
+    for (const QtDependency &qtDependency : qAsConst(options->qtDependencies)) {
+        QString sourceFileName = qtDependency.absolutePath;
+        QString destinationFileName;
 
-        QString libsDirectory = QLatin1String("libs/");
-
-        // Copy other Qt dependencies
-        QString libDestinationDirectory = libsDirectory + options->architecture + QLatin1Char('/');
-        QString assetsDestinationDirectory = QLatin1String("assets/--Added-by-androiddeployqt--/");
-        for (const QtDependency &qtDependency : qAsConst(options->qtDependencies)) {
-            QString sourceFileName = qtDependency.absolutePath;
-            QString destinationFileName;
-
-            if (qtDependency.relativePath.endsWith(QLatin1String(".so"))) {
-                QString garbledFileName;
-                if (qtDependency.relativePath.startsWith(QLatin1String("lib/"))) {
-                    garbledFileName = qtDependency.relativePath.mid(sizeof("lib/") - 1);
-                } else {
-                    garbledFileName = QLatin1String("lib")
-                                    + QString(qtDependency.relativePath).replace(QLatin1Char('/'), QLatin1Char('_'));
-
-                }
-                destinationFileName = libDestinationDirectory + garbledFileName;
-
-            } else if (qtDependency.relativePath.startsWith(QLatin1String("jar/"))) {
-                destinationFileName = libsDirectory + qtDependency.relativePath.mid(sizeof("jar/") - 1);
+        if (qtDependency.relativePath.endsWith(QLatin1String(".so"))) {
+            QString garbledFileName;
+            if (qtDependency.relativePath.startsWith(QLatin1String("lib/"))) {
+                garbledFileName = qtDependency.relativePath.mid(sizeof("lib/") - 1);
             } else {
-                destinationFileName = assetsDestinationDirectory + qtDependency.relativePath;
-            }
+                garbledFileName = QLatin1String("lib")
+                                + QString(qtDependency.relativePath).replace(QLatin1Char('/'), QLatin1Char('_'));
 
-            if (!QFile::exists(sourceFileName)) {
-                fprintf(stderr, "Source Qt file does not exist: %s.\n", qPrintable(sourceFileName));
-                return false;
             }
+            destinationFileName = libDestinationDirectory + garbledFileName;
 
-            QStringList unmetDependencies;
-            if (!goodToCopy(options, sourceFileName, &unmetDependencies)) {
-                if (options->verbose) {
-                    fprintf(stdout, "  -- Skipping %s. It has unmet dependencies: %s.\n",
-                            qPrintable(sourceFileName),
-                            qPrintable(unmetDependencies.join(QLatin1Char(','))));
-                }
-                continue;
-            }
-
-            if (options->deploymentMechanism == Options::Bundled
-                    && !copyFileIfNewer(sourceFileName,
-                                        options->outputDirectory + QLatin1Char('/') + destinationFileName,
-                                        options->verbose)) {
-                return false;
-            }
-
-            options->bundledFiles += qMakePair(destinationFileName, qtDependency.relativePath);
+        } else if (qtDependency.relativePath.startsWith(QLatin1String("jar/"))) {
+            destinationFileName = libsDirectory + qtDependency.relativePath.mid(sizeof("jar/") - 1);
+        } else {
+            destinationFileName = assetsDestinationDirectory + qtDependency.relativePath;
         }
+
+        if (!QFile::exists(sourceFileName)) {
+            fprintf(stderr, "Source Qt file does not exist: %s.\n", qPrintable(sourceFileName));
+            return false;
+        }
+
+        QStringList unmetDependencies;
+        if (!goodToCopy(options, sourceFileName, &unmetDependencies)) {
+            if (options->verbose) {
+                fprintf(stdout, "  -- Skipping %s. It has unmet dependencies: %s.\n",
+                        qPrintable(sourceFileName),
+                        qPrintable(unmetDependencies.join(QLatin1Char(','))));
+            }
+            continue;
+        }
+
+        if (options->deploymentMechanism == Options::Bundled
+                && !copyFileIfNewer(sourceFileName,
+                                    options->outputDirectory + QLatin1Char('/') + destinationFileName,
+                                    options->verbose)) {
+            return false;
+        }
+
+        options->bundledFiles += qMakePair(destinationFileName, qtDependency.relativePath);
     }
 
     return true;
@@ -2536,9 +2387,6 @@ bool installApk(const Options &options)
 
 bool copyStdCpp(Options *options)
 {
-    if (options->deploymentMechanism == Options::Debug && !options->installApk)
-        return true;
-
     if (options->verbose)
         fprintf(stdout, "Copying STL library\n");
 
@@ -2554,21 +2402,12 @@ bool copyStdCpp(Options *options)
         return false;
     }
 
-    QString destinationDirectory =
-            options->deploymentMechanism == Options::Debug
-            ? options->temporaryDirectoryName + QLatin1String("/lib")
-            : options->outputDirectory + QLatin1String("/libs/") + options->architecture;
+    const QString destinationDirectory = options->outputDirectory
+            + QLatin1String("/libs/") + options->architecture;
 
     if (!copyFileIfNewer(filePath, destinationDirectory + QLatin1String("/lib")
                                    + options->stdCppName + QLatin1String(".so"),
                          options->verbose)) {
-        return false;
-    }
-
-    if (options->deploymentMechanism == Options::Debug
-        && !deployToLocalTmp(options, QLatin1String("/lib/lib")
-                                      + options->stdCppName
-                                      + QLatin1String(".so"))) {
         return false;
     }
 
@@ -2852,30 +2691,6 @@ bool copyGdbServer(const Options &options)
     return true;
 }
 
-bool deployAllToLocalTmp(const Options &options)
-{
-    FILE *adbCommand = runAdb(options,
-                              QString::fromLatin1(" push %1 /data/local/tmp/qt/")
-                              .arg(shellQuote(options.temporaryDirectoryName)));
-    if (adbCommand == 0)
-        return false;
-
-    if (options.verbose) {
-        fprintf(stdout, "  -- Deploying Qt files to device.\n");
-        char buffer[512];
-        while (fgets(buffer, sizeof(buffer), adbCommand) != 0)
-            fprintf(stdout, "%s", buffer);
-    }
-
-    int errorCode = pclose(adbCommand);
-    if (errorCode != 0) {
-        fprintf(stderr, "Copying files to device failed!\n");
-        return false;
-    }
-
-    return true;
-}
-
 bool generateAssetsFileList(const Options &options)
 {
     if (options.verbose)
@@ -2946,7 +2761,6 @@ enum ErrorCode
     CannotBuildAndroidProject = 14,
     CannotSignPackage = 15,
     CannotInstallApk = 16,
-    CannotDeployAllToLocalTmp = 17,
     CannotGenerateAssetsFileList = 18,
     CannotCopyAndroidExtraResources = 19
 };
@@ -3013,9 +2827,6 @@ int main(int argc, char *argv[])
 
     if (!copyQtFiles(&options))
         return CannotCopyQtFiles;
-
-    if (options.installApk && options.deploymentMechanism == Options::Debug && !deployAllToLocalTmp(options))
-        return CannotDeployAllToLocalTmp;
 
     if (options.build) {
         if (Q_UNLIKELY(options.timing))
