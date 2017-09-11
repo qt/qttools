@@ -4595,6 +4595,12 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
             tags << re.cap(1).toLower();
             pos += re.matchedLength();
         }
+
+        // Include tags added via \meta {tag} {tag1[,tag2,...]}
+        // within \example topic
+        for (const auto &tag : en->doc().metaTagMap().values("tag"))
+            tags += QSet<QString>::fromList(tag.toLower().split(QLatin1Char(',')));
+
         tags += QSet<QString>::fromList(en->title().toLower().split(QLatin1Char(' ')));
 
         // Clean up tags, exclude invalid and common words

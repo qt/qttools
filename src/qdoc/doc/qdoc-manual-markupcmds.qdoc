@@ -3889,8 +3889,9 @@
     \section1 \\meta
 
     The \\meta command is mainly used for including metadata in DITA
-    XML files. It is also used when generating HTML output for specifying
-    the \e maintainer(s) of a C++ class.
+    XML files. It is also used for adding metadata to example documentation,
+    and when generating HTML output for specifying the \e maintainer(s) of a
+    C++ class.
 
     The command has two arguments: the first argument is the name of the
     metadata attribute, and the second argument is the
@@ -3954,6 +3955,27 @@
     In the example output, several values have been set using default
     values obtained from the QDoc configuration file. See \l
     {Generating DITA XML Output} for details.
+
+    \b {Example Metadata}
+
+    Another use for \\meta command is to include metadata (tags) in
+    \l {example-command}{\\example} documentation. By default, QDoc
+    generates example tags based on the example's \l {title-command}{\\title}
+    and module name. These tags are displayed in Qt Creator's Welcome mode,
+    helping users navigate the list of examples.
+
+    Additional tags can be created with \c {\\meta {tag} {tag1,[tag2,...]}}.
+    For example:
+    \badcode
+    / *!
+        \example helloworld
+        \title Hello World Example
+        \meta {tag} {tutorial,basic}
+    * /
+    \endcode
+
+    This would result in the following tags: \e {tutorial,basic,hello,world}.
+    Common words such as \e example are ignored.
 
     \target noautolist-command
     \section1 \\noautolist

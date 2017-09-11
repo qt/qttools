@@ -409,7 +409,8 @@
     \endquotation
 
     \b {See also:} \l {generatelist-command}{\\generatelist examplefiles},
-                   \l {noautolist-command}{\\noautolist}
+                   \l {noautolist-command}{\\noautolist},
+                   \l {meta-command}{\\meta}
 
     \target externalpage-command
     \section1 \\externalpage
