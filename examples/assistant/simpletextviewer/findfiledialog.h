@@ -76,7 +76,7 @@ public:
 private slots:
     void browse();
     void help();
-    void openFile(QTreeWidgetItem *item = 0);
+    void openFile(QTreeWidgetItem *item = nullptr);
     void update();
 
 private:
