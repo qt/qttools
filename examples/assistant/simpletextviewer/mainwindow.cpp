@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2017 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the examples of the Qt Toolkit.
@@ -48,17 +48,17 @@
 **
 ****************************************************************************/
 
-#include <QtCore/QLibraryInfo>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QMenuBar>
-#include <QtWidgets/QMessageBox>
-
-#include "mainwindow.h"
-#include "findfiledialog.h"
 #include "assistant.h"
+#include "findfiledialog.h"
+#include "mainwindow.h"
 #include "textedit.h"
+
+#include <QAction>
+#include <QApplication>
+#include <QLibraryInfo>
+#include <QMenu>
+#include <QMenuBar>
+#include <QMessageBox>
 
 // ![0]
 MainWindow::MainWindow()

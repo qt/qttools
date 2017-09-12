@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2017 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the examples of the Qt Toolkit.
@@ -48,20 +48,20 @@
 **
 ****************************************************************************/
 
-#include <QtCore/QDir>
-#include <QtWidgets/QLayout>
-#include <QtWidgets/QComboBox>
-#include <QtWidgets/QTreeWidget>
-#include <QtWidgets/QLayout>
-#include <QtWidgets/QFileDialog>
-#include <QtWidgets/QDialogButtonBox>
-#include <QtWidgets/QToolButton>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QLabel>
-
-#include "findfiledialog.h"
 #include "assistant.h"
+#include "findfiledialog.h"
 #include "textedit.h"
+
+#include <QComboBox>
+#include <QDialogButtonBox>
+#include <QDir>
+#include <QFileDialog>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QPushButton>
+#include <QToolButton>
+#include <QTreeWidget>
+#include <QTreeWidgetItem>
 
 //! [0]
 FindFileDialog::FindFileDialog(TextEdit *editor, Assistant *assistant)

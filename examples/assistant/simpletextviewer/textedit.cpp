@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2017 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the examples of the Qt Toolkit.
@@ -48,10 +48,10 @@
 **
 ****************************************************************************/
 
-#include <QtCore/QFileInfo>
-#include <QtCore/QFile>
-
 #include "textedit.h"
+
+#include <QFile>
+#include <QFileInfo>
 
 TextEdit::TextEdit(QWidget *parent)
     : QTextEdit(parent)
