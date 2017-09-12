@@ -275,15 +275,14 @@ static Node *findFunctionNodeForCursor(QDocDatabase* qdb, CXCursor cur) {
                 continue;
             auto fn = static_cast<FunctionNode*>(candidate);
             const auto &funcParams = fn->parameters();
-            const int actualArg = numArg - fn->isPrivateSignal();
-            if (funcParams.count() != (actualArg + isVariadic))
+            if (funcParams.count() != (numArg + isVariadic))
                 continue;
             if (fn->isConst() != bool(clang_CXXMethod_isConst(cur)))
                 continue;
             if (isVariadic && funcParams.last().dataType() != QLatin1String("..."))
                 continue;
             bool different = false;
-            for (int i = 0; i < actualArg; i++) {
+            for (int i = 0; i < numArg; i++) {
                 if (args.size() <= i)
                     args.append(fromCXString(clang_getTypeSpelling(clang_getArgType(funcType, i))));
                 QString t1 = funcParams.at(i).dataType();
