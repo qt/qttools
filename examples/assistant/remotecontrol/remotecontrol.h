@@ -57,7 +57,7 @@
 
 QT_BEGIN_NAMESPACE
 class QProcess;
-QT_END_NAMESPACE;
+QT_END_NAMESPACE
 
 class RemoteControl : public QMainWindow
 {
