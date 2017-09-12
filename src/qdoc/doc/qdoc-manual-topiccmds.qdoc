@@ -360,7 +360,7 @@
     \section1 \\example
 
     The \\example command is for documenting an example. The argument
-    is the example's path relative to omne of the paths listed in the
+    is the example's path relative to one of the paths listed in the
     \l {exampledirs-variable} {exampledirs} variable in the QDoc
     configuration file.
 
