@@ -54,8 +54,6 @@
 
 int main(int argc, char *argv[])
 {
-    Q_INIT_RESOURCE(remotecontrol);
-
     QApplication a(argc, argv);
     RemoteControl w;
     w.show();
