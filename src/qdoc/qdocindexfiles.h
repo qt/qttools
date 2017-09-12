@@ -38,12 +38,14 @@ class Atom;
 class Generator;
 class QStringList;
 class QDocDatabase;
+class WebXMLGenerator;
 class QXmlStreamWriter;
 class QXmlStreamAttributes;
 
 class QDocIndexFiles
 {
     friend class QDocDatabase;
+    friend class WebXMLGenerator; // for using generateIndexSection()
 
  private:
     static QDocIndexFiles* qdocIndexFiles();

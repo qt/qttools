@@ -141,7 +141,7 @@ protected:
     static QString sinceTitles[];
 
     void initializeTextOutput();
-    QString fileName(const Node* node) const;
+    QString fileName(const Node* node, const QString &extension = QString()) const;
     QMap<QString, QString> &formattingLeftMap();
     QMap<QString, QString> &formattingRightMap();
     const Atom* generateAtomList(const Atom *atom,

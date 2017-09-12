@@ -36,6 +36,7 @@
 #include "cppcodeparser.h"
 #include "doc.h"
 #include "htmlgenerator.h"
+#include "webxmlgenerator.h"
 #include "location.h"
 #include "plaincodemarker.h"
 #include "puredocparser.h"
@@ -727,6 +728,7 @@ int main(int argc, char **argv)
     QmlCodeMarker qmlMarker;
 
     HtmlGenerator htmlGenerator;
+    WebXMLGenerator webXMLGenerator;
 
     // Set the globals declared at the top of this file:
     QDocCommandLineParser parser;

@@ -103,6 +103,9 @@ protected:
     void generateKeywordAnchors(const Node* node);
     void generateAssociatedPropertyNotes(const FunctionNode* fn);
 
+    QString getLink(const Atom *atom, const Node *relative, const Node **node);
+    QString getAutoLink(const Atom *atom, const Node *relative, const Node **node);
+
 private:
     enum SubTitleSize { SmallSubTitle, LargeSubTitle };
     enum ExtractionMarkType {
@@ -206,9 +209,6 @@ private:
                                 CodeMarker *marker);
     void generateLink(const Atom *atom, CodeMarker *marker);
     void generateStatus(const Node *node, CodeMarker *marker);
-
-    QString getLink(const Atom *atom, const Node *relative, const Node** node);
-    QString getAutoLink(const Atom *atom, const Node *relative, const Node** node);
 
     inline bool hasBrief(const Node *node);
     QString registerRef(const QString& ref);

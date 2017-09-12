@@ -759,6 +759,10 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter& writer,
                                           Node* node,
                                           bool generateInternalNodes)
 {
+    if (!gen_)
+        gen_ = Generator::currentGenerator();
+
+    Q_ASSERT(gen_);
     /*
       Don't include index nodes in a new index file. Or DITA map nodes.
      */

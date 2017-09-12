@@ -45,7 +45,9 @@ HEADERS += atom.h \
            separator.h \
            text.h \
            tokenizer.h \
-           tree.h
+           tree.h \
+           webxmlgenerator.h
+
 SOURCES += atom.cpp \
            codechunk.cpp \
            codemarker.cpp \
@@ -72,7 +74,8 @@ SOURCES += atom.cpp \
            text.cpp \
            tokenizer.cpp \
            tree.cpp \
-           yyindent.cpp
+           yyindent.cpp \
+           webxmlgenerator.cpp
 
 ### QML/JS Parser ###
 

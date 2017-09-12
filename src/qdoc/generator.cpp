@@ -303,7 +303,7 @@ void Generator::beginSubPage(const Aggregate* node, const QString& fileName)
 
     QFile* outFile = new QFile(redirectDocumentationToDevNull_ ? QStringLiteral("/dev/null") : path);
     if (!redirectDocumentationToDevNull_ && outFile->exists())
-        node->location().error(tr("HTML file already exists; overwriting %1").arg(outFile->fileName()));
+        node->location().error(tr("Output file already exists; overwriting %1").arg(outFile->fileName()));
     if (!outFile->open(QFile::WriteOnly))
         node->location().fatal(tr("Cannot open output file '%1'").arg(outFile->fileName()));
     Generator::debug("Writing: " + path);
@@ -440,17 +440,16 @@ QString Generator::fileBase(const Node *node) const
 /*!
   If the \a node has a URL, return the URL as the file name.
   Otherwise, construct the file name from the fileBase() and
-  the fileExtension(), and return the constructed name.
+  either the provided \a extension or fileExtension(), and
+  return the constructed name.
  */
-QString Generator::fileName(const Node* node) const
+QString Generator::fileName(const Node* node, const QString &extension) const
 {
     if (!node->url().isEmpty())
         return node->url();
 
-    QString name = fileBase(node);
-    name += QLatin1Char('.');
-    name += fileExtension();
-    return name;
+    QString name = fileBase(node) + QLatin1Char('.');
+    return extension.isNull() ? name + fileExtension() : name + extension;
 }
 
 QString Generator::cleanRef(const QString& ref)
