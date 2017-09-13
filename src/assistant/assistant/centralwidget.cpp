@@ -35,6 +35,7 @@
 #include "tracer.h"
 #include "../shared/collectionconfiguration.h"
 
+#include <QtCore/QRegExp>
 #include <QtCore/QTimer>
 
 #include <QtGui/QKeyEvent>
