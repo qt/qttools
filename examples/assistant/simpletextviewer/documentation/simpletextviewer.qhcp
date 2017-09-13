@@ -21,10 +21,10 @@
             <file>
                 <input>simpletextviewer.qhp</input>
                 <output>simpletextviewer.qch</output>
-                </file>
-            </generate>
+            </file>
+        </generate>
         <register>
             <file>simpletextviewer.qch</file>
-            </register>
-        </docFiles>
-    </QHelpCollectionProject>
+        </register>
+    </docFiles>
+</QHelpCollectionProject>
