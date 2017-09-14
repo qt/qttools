@@ -1577,11 +1577,11 @@ Node* ClangCodeParser::parseFnArg(const Location& location, const QString& fnArg
                                     QStringList blankSplit = commaSplit[i].split(' ');
                                     if (blankSplit.size() > 0) {
                                         QString pName = blankSplit.last();
-                                        int i = 0;
-                                        while (i < pName.length() && !pName.at(i).isLetter())
-                                            i++;
-                                        if (i > 0)
-                                            pName = pName.mid(i);
+                                        int j = 0;
+                                        while (j < pName.length() && !pName.at(i).isLetter())
+                                            j++;
+                                        if (j > 0)
+                                            pName = pName.mid(j);
                                         if (!pName.isEmpty() && pName != pvect[i].name())
                                             pvect[i].setName(pName);
                                     }
