@@ -237,7 +237,6 @@ public:
     virtual bool isDefault() const { return false; }
     virtual bool isExternalPage() const { return false; }
     virtual bool isImplicit() const { return false; }
-    virtual bool isInCollective() const { return false; }
     virtual bool isSharedCommentNode() const { return false; }
     virtual bool isMacro() const { return false; }
     virtual void addMember(Node* ) { }
@@ -265,7 +264,6 @@ public:
     virtual Tree* tree() const;
     virtual void findChildren(const QString& , NodeList& nodes) const { nodes.clear(); }
     virtual void setNoAutoList(bool ) { }
-    virtual void setCollectiveNode(SharedCommentNode* ) { }
     bool isIndexNode() const { return indexNodeFlag_; }
     NodeType type() const { return (NodeType) nodeType_; }
     virtual DocSubtype docSubtype() const { return NoSubtype; }
@@ -283,6 +281,7 @@ public:
     virtual void setQtVariable(const QString& ) { }
     virtual QString qtVariable() const { return QString(); }
     virtual bool hasTag(const QString& ) const { return false; }
+    virtual void setOverloadFlag(bool ) { }
 
     const QMap<LinkType, QPair<QString,QString> >& links() const { return linkMap_; }
     void setLink(LinkType linkType, const QString &link, const QString &desc);
@@ -310,6 +309,9 @@ public:
     virtual void addPageKeywords(const QString& ) { }
 
     void clearRelated() { relatesTo_ = 0; }
+
+    bool isSharingComment() const { return (sharedCommentNode_ != 0); }
+    void setSharedCommentNode(SharedCommentNode* t);
 
     //QString guid() const;
     QString extractClassName(const QString &string) const;
@@ -368,6 +370,7 @@ private:
 
     Aggregate* parent_;
     Aggregate* relatesTo_;
+    SharedCommentNode *sharedCommentNode_;
     QString name_;
     Location declLocation_;
     Location defLocation_;
@@ -882,13 +885,16 @@ public:
 class SharedCommentNode : public LeafNode
 {
  public:
-    SharedCommentNode(Aggregate* parent, int count)
-        : LeafNode(Node::SharedComment, parent, QString()) { collective_.reserve(count); }
+    SharedCommentNode(Node *n)
+        : LeafNode(Node::SharedComment, n->parent(), QString()) {
+        collective_.reserve(1); n->setSharedCommentNode(this);
+    }
     virtual ~SharedCommentNode() { collective_.clear(); }
 
     virtual bool isSharedCommentNode() const Q_DECL_OVERRIDE { return true; }
     void append(Node* n) { collective_.append(n); }
     const QVector<Node*>& collective() const { return collective_; }
+    void setOverloadFlag(bool b) Q_DECL_OVERRIDE;
 
  private:
     QVector<Node*> collective_;
@@ -931,7 +937,7 @@ public:
     void setConst(bool b) { const_ = b; }
     void setStatic(bool b) { static_ = b; }
     unsigned char overloadNumber() const { return overloadNumber_; }
-    void setOverloadFlag(bool b) { overload_ = b; }
+    void setOverloadFlag(bool b) Q_DECL_OVERRIDE { overload_ = b; }
     void setOverloadNumber(unsigned char n) { overloadNumber_ = n; }
     void setReimplemented(bool b);
     void addParameter(const Parameter& parameter);
@@ -1040,9 +1046,8 @@ public:
     void setRefRef(bool b) { isRefRef_ = b; }
     bool isRefRef() const { return isRefRef_; }
 
-    bool isInCollective() const Q_DECL_OVERRIDE { return (collective_ != 0); }
-    const SharedCommentNode* collective() const { return collective_; }
-    void setCollectiveNode(SharedCommentNode* t) Q_DECL_OVERRIDE { collective_ = t; }
+    void setInvokable(bool b) { isInvokable_ = b; }
+    bool isInvokable() const { return isInvokable_; }
 
     virtual bool hasTag(const QString& t) const Q_DECL_OVERRIDE { return (tag_ == t); }
     void setTag(const QString& t) { tag_ = t; }
@@ -1077,7 +1082,6 @@ private:
     QVector<Parameter> parameters_;
     const FunctionNode* reimplementedFrom_;
     PropNodeList        associatedProperties_;
-    SharedCommentNode*  collective_;
     QString             tag_;
 };
 

@@ -68,10 +68,14 @@ public:
     bool parseParameters(const QString& parameters, QVector<Parameter>& pvect, bool& isQPrivateSignal);
     const Location& declLoc() const { return declLoc_; }
     void setDeclLoc() { declLoc_ = location(); }
+    static bool isJSMethodTopic(const QString &t);
+    static bool isQMLMethodTopic(const QString &t);
+    static bool isJSPropertyTopic(const QString &t);
+    static bool isQMLPropertyTopic(const QString &t);
 
 protected:
-    const QSet<QString>& topicCommands();
-    const QSet<QString>& otherMetaCommands();
+    static const QSet<QString>& topicCommands();
+    static const QSet<QString>& otherMetaCommands();
     virtual Node* processTopicCommand(const Doc& doc,
                                       const QString& command,
                                       const ArgLocPair& arg);
@@ -92,6 +96,9 @@ protected:
                                          const ArgLocPair& argLocPair,
                                          Node *node);
     void processOtherMetaCommands(const Doc& doc, Node *node);
+    void processOtherMetaCommands(NodeList &nodes, DocList& docs);
+    void processTopicArgs(const Doc &doc, const QString &topic, NodeList &nodes, DocList &docs);
+    bool hasTooManyTopics(const Doc &doc) const;
 
  protected:
     void reset();

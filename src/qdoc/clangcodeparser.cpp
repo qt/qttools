@@ -1247,11 +1247,8 @@ void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QStrin
 
     CXToken *tokens;
     unsigned int numTokens = 0;
+    const QSet<QString>& metacommands = topicCommands() + otherMetaCommands();
     clang_tokenize(tu, clang_getCursorExtent(cur), &tokens, &numTokens);
-
-    const QSet<QString>& topicCommandsAllowed = topicCommands();
-    const QSet<QString>& otherMetacommandsAllowed = otherMetaCommands();
-    const QSet<QString>& metacommandsAllowed = topicCommandsAllowed + otherMetacommandsAllowed;
 
     for (unsigned int i = 0; i < numTokens; ++i) {
         if (clang_getTokenKind(tokens[i]) != CXToken_Comment)
@@ -1263,36 +1260,18 @@ void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QStrin
         auto loc = fromCXSourceLocation(clang_getTokenLocation(tu, tokens[i]));
         auto end_loc = fromCXSourceLocation(clang_getRangeEnd(clang_getTokenExtent(tu, tokens[i])));
         Doc::trimCStyleComment(loc,comment);
-        Doc doc(loc, end_loc, comment, metacommandsAllowed, topicCommandsAllowed);
 
+        // Doc constructor parses the comment.
+        Doc doc(loc, end_loc, comment, metacommands, topicCommands());
+        if (hasTooManyTopics(doc))
+            continue;
 
-        /*
-         *              Doc parses the comment.
-         */
-
-        QString topic;
-        bool isQmlPropertyTopic = false;
-        bool isJsPropertyTopic = false;
-
-        const TopicList& topics = doc.topicsUsed();
-        if (!topics.isEmpty()) {
-            topic = topics[0].topic;
-            if (topic.startsWith("qml")) {
-                if ((topic == COMMAND_QMLPROPERTY) ||
-                    (topic == COMMAND_QMLPROPERTYGROUP) ||
-                    (topic == COMMAND_QMLATTACHEDPROPERTY)) {
-                    isQmlPropertyTopic = true;
-                }
-            } else if (topic.startsWith("js")) {
-                if ((topic == COMMAND_JSPROPERTY) ||
-                    (topic == COMMAND_JSPROPERTYGROUP) ||
-                    (topic == COMMAND_JSATTACHEDPROPERTY)) {
-                    isJsPropertyTopic = true;
-                }
-            }
-        }
-        NodeList nodes;
         DocList docs;
+        QString topic;
+        NodeList nodes;
+        const TopicList& topics = doc.topicsUsed();
+        if (!topics.isEmpty())
+            topic = topics[0].topic;
 
         if (topic.isEmpty()) {
             CXSourceLocation commentLoc = clang_getTokenLocation(tu, tokens[i]);
@@ -1317,92 +1296,10 @@ void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QStrin
                                        "the comment.")
                                        .arg(COMMAND_FN).arg(COMMAND_PAGE));
             }
-        } else if (isQmlPropertyTopic || isJsPropertyTopic) {
-            Doc nodeDoc = doc;
-            processQmlProperties(nodeDoc, nodes, docs, isJsPropertyTopic);
         } else {
-            ArgList args;
-            const QSet<QString>& topicCommandsUsed = topicCommandsAllowed & doc.metaCommandsUsed();
-            if (topicCommandsUsed.count() > 0) {
-                topic = *topicCommandsUsed.constBegin();
-                args = doc.metaCommandArgs(topic);
-            }
-            if (topicCommandsUsed.count() > 1) {
-                QString topicList;
-                QSet<QString>::ConstIterator t = topicCommandsUsed.constBegin();
-                while (t != topicCommandsUsed.constEnd()) {
-                    topicList += " \\" + *t + QLatin1Char(',');
-                    ++t;
-                }
-                topicList[topicList.lastIndexOf(',')] = '.';
-                int i = topicList.lastIndexOf(',');
-                topicList[i] = ' ';
-                topicList.insert(i+1,"and");
-                doc.location().warning(tr("Multiple topic commands found in comment: %1").arg(topicList));
-            }
-            ArgList::ConstIterator a = args.constBegin();
-            Node *node = 0;
-            SharedCommentNode* scn = 0;
-            int count = args.size();
-            while (a != args.constEnd()) {
-                Doc nodeDoc = doc;
-                if ((count > 1) && (topic == COMMAND_FN)) {
-                    node = parseFnArg(doc.location(), a->first);
-                    if (node != 0) {
-                        if (scn == 0) {
-                            scn = new SharedCommentNode(node->parent(), count);
-                            nodes.append(scn);
-                            docs.append(nodeDoc);
-                        }
-                        scn->append(node);
-                        node->setCollectiveNode(scn);
-                    }
-                }
-                else {
-                    if (topic == COMMAND_FN) {
-                        node = parseFnArg(doc.location(), a->first);
-                    } else if (topic == COMMAND_MACRO) {
-                        node = parseMacroArg(doc.location(), a->first);
-                    } else if (topic == COMMAND_QMLSIGNAL ||
-                               topic == COMMAND_QMLMETHOD ||
-                               topic == COMMAND_QMLATTACHEDSIGNAL ||
-                               topic == COMMAND_QMLATTACHEDMETHOD ||
-                               topic == COMMAND_JSSIGNAL ||
-                               topic == COMMAND_JSMETHOD ||
-                               topic == COMMAND_JSATTACHEDSIGNAL ||
-                               topic == COMMAND_JSATTACHEDMETHOD) {
-                        node = parseOtherFuncArg(topic, doc.location(), a->first);
-                    } else {
-                        node = processTopicCommand(nodeDoc, topic, *a);
-                    }
-                    if (node != 0) {
-                        nodes.append(node);
-                        docs.append(nodeDoc);
-                    }
-                }
-                ++a;
-            }
+            processTopicArgs(doc, topic, nodes, docs);
         }
-
-        NodeList::Iterator n = nodes.begin();
-        QList<Doc>::Iterator d = docs.begin();
-        while (n != nodes.end()) {
-            processOtherMetaCommands(*d, *n);
-            (*n)->setDoc(*d);
-            checkModuleInclusion(*n);
-            if ((*n)->isAggregate() && ((Aggregate *)*n)->includes().isEmpty()) {
-                Aggregate *m = static_cast<Aggregate *>(*n);
-                while (m->parent() && m->physicalModuleName().isEmpty()) {
-                    m = m->parent();
-                }
-                if (m == *n)
-                    ((Aggregate *)*n)->addInclude((*n)->name());
-                else
-                    ((Aggregate *)*n)->setIncludes(m->includes());
-            }
-            ++d;
-            ++n;
-        }
+        processOtherMetaCommands(nodes, docs);
     }
 
     clang_disposeTokens(tu, tokens, numTokens);

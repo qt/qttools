@@ -109,125 +109,35 @@ void PureDocParser::parseSourceFile(const Location& location, const QString& fil
  */
 bool PureDocParser::processQdocComments()
 {
-    const QSet<QString>& topicCommandsAllowed = topicCommands();
-    const QSet<QString>& otherMetacommandsAllowed = otherMetaCommands();
-    const QSet<QString>& metacommandsAllowed = topicCommandsAllowed + otherMetacommandsAllowed;
+    const QSet<QString>& metacommands = topicCommands() + otherMetaCommands();
 
     while (tok != Tok_Eoi) {
         if (tok == Tok_Doc) {
-            /*
-              lexeme() returns an entire qdoc comment.
-             */
-            QString comment = lexeme();
+            QString comment = lexeme(); // returns an entire qdoc comment.
             Location start_loc(location());
             readToken();
 
             Doc::trimCStyleComment(start_loc,comment);
             Location end_loc(location());
 
-            /*
-              Doc parses the comment.
-             */
-            Doc doc(start_loc, end_loc, comment, metacommandsAllowed, topicCommandsAllowed);
-
-            QString topic;
-            bool isQmlPropertyTopic = false;
-            bool isJsPropertyTopic = false;
-
+            // Doc constructor parses the comment.
+            Doc doc(start_loc, end_loc, comment, metacommands, topicCommands());
             const TopicList& topics = doc.topicsUsed();
-            if (!topics.isEmpty()) {
-                topic = topics[0].topic;
-                if ((topic == COMMAND_QMLPROPERTY) ||
-                    (topic == COMMAND_QMLPROPERTYGROUP) ||
-                    (topic == COMMAND_QMLATTACHEDPROPERTY)) {
-                    isQmlPropertyTopic = true;
-                }
-                else if ((topic == COMMAND_JSPROPERTY) ||
-                         (topic == COMMAND_JSPROPERTYGROUP) ||
-                         (topic == COMMAND_JSATTACHEDPROPERTY)) {
-                    isJsPropertyTopic = true;
-                }
-            }
-
-            NodeList nodes;
-            DocList docs;
-
-            if (topic.isEmpty()) {
+            if (topics.isEmpty()) {
                 doc.location().warning(tr("This qdoc comment contains no topic command "
                                           "(e.g., '\\%1', '\\%2').")
                                        .arg(COMMAND_MODULE).arg(COMMAND_PAGE));
+                continue;
             }
-            else if (isQmlPropertyTopic || isJsPropertyTopic) {
-                Doc nodeDoc = doc;
-                processQmlProperties(nodeDoc, nodes, docs, isJsPropertyTopic);
-            }
-            else {
-                ArgList args;
-                QSet<QString> topicCommandsUsed = topicCommandsAllowed & doc.metaCommandsUsed();
-                if (topicCommandsUsed.count() > 0) {
-                    topic = *topicCommandsUsed.begin();
-                    args = doc.metaCommandArgs(topic);
-                }
-                if (topicCommandsUsed.count() > 1) {
-                    QString topics;
-                    QSet<QString>::ConstIterator t = topicCommandsUsed.constBegin();
-                    while (t != topicCommandsUsed.constEnd()) {
-                        topics += " \\" + *t + QLatin1Char(',');
-                        ++t;
-                    }
-                    topics[topics.lastIndexOf(',')] = '.';
-                    int i = topics.lastIndexOf(',');
-                    topics[i] = ' ';
-                    topics.insert(i+1,"and");
-                    doc.location().warning(tr("Multiple topic commands found in comment: %1").arg(topics));
-                }
-                ArgList::ConstIterator a = args.cbegin();
-                while (a != args.cend()) {
-                    Doc nodeDoc = doc;
-                    Node *node = 0;
-                    if (topic == COMMAND_FN) {
-                        node = parserForLanguage("Clang")->parseFnArg(doc.location(), a->first);
-                    } else if (topic == COMMAND_MACRO) {
-                        node = parserForLanguage("Clang")->parseMacroArg(doc.location(), a->first);
-                    } else if (topic == COMMAND_QMLSIGNAL ||
-                               topic == COMMAND_QMLMETHOD ||
-                               topic == COMMAND_QMLATTACHEDSIGNAL ||
-                               topic == COMMAND_QMLATTACHEDMETHOD ||
-                               topic == COMMAND_JSSIGNAL ||
-                               topic == COMMAND_JSMETHOD ||
-                               topic == COMMAND_JSATTACHEDSIGNAL ||
-                               topic == COMMAND_JSATTACHEDMETHOD) {
-                        node = parseOtherFuncArg(topic, doc.location(), a->first);
-                    } else {
-                        node = processTopicCommand(nodeDoc, topic, *a);
-                    }
-                    if (node != 0) {
-                        nodes.append(node);
-                        docs.append(nodeDoc);
-                    }
-                    ++a;
-                }
-            }
+            if (hasTooManyTopics(doc))
+                continue;
 
-            Node* treeRoot = QDocDatabase::qdocDB()->primaryTreeRoot();
-            NodeList::Iterator n = nodes.begin();
-            QList<Doc>::Iterator d = docs.begin();
-            while (n != nodes.end()) {
-                processOtherMetaCommands(*d, *n);
-                (*n)->setDoc(*d);
-                checkModuleInclusion(*n);
-                if ((*n)->isAggregate() && ((Aggregate *)*n)->includes().isEmpty()) {
-                    Aggregate *m = static_cast<Aggregate *>(*n);
-                    while (m->parent() && m->parent() != treeRoot)
-                        m = m->parent();
-                    if (m == *n)
-                        ((Aggregate *)*n)->addInclude((*n)->name());
-                    else
-                        ((Aggregate *)*n)->setIncludes(m->includes());
-                }
-                ++d;
-                ++n;
-            }
+            DocList docs;
+            NodeList nodes;
+            QString topic = topics[0].topic;
+
+            processTopicArgs(doc, topic, nodes, docs);
+            processOtherMetaCommands(nodes, docs);
         }
         else {
             readToken();
@@ -235,6 +145,5 @@ bool PureDocParser::processQdocComments()
     }
     return true;
 }
-
 
 QT_END_NAMESPACE

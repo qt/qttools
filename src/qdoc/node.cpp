@@ -308,6 +308,7 @@ Node::Node(NodeType type, Aggregate *parent, const QString& name)
       indexNodeFlag_(false),
       parent_(parent),
       relatesTo_(0),
+      sharedCommentNode_(0),
       name_(name)
 {
     if (parent_)
@@ -785,6 +786,15 @@ void Node::setLocation(const Location& t)
         declLocation_ = t;
         defLocation_ = t;
     }
+}
+
+/*!
+  Adds this node to the shared comment node \a t.
+ */
+void Node::setSharedCommentNode(SharedCommentNode* t)
+{
+    sharedCommentNode_ = t;
+    t->append(this);
 }
 
 /*!
@@ -2046,8 +2056,8 @@ FunctionNode::FunctionNode(Aggregate *parent, const QString& name)
       isImplicit_(false),
       isRef_(false),
       isRefRef_(false),
-      reimplementedFrom_(0),
-      collective_(0)
+      isInvokable_(false),
+      reimplementedFrom_(0)
 {
     setGenus(Node::CPP);
 }
@@ -2077,8 +2087,8 @@ FunctionNode::FunctionNode(NodeType type, Aggregate *parent, const QString& name
       isImplicit_(false),
       isRef_(false),
       isRefRef_(false),
-      reimplementedFrom_(0),
-      collective_(0)
+      isInvokable_(false),
+      reimplementedFrom_(0)
 {
     setGenus(Node::QML);
     if (type == QmlMethod || type == QmlSignal) {
@@ -3068,6 +3078,15 @@ void CollectionNode::setLogicalModuleInfo(const QStringList& info)
         else
             logicalModuleVersionMinor_ = "0";
     }
+}
+
+/*!
+  Sets the overload flag to \b in each node in the collection.
+ */
+void SharedCommentNode::setOverloadFlag(bool b)
+{
+    for (Node *n : collective_)
+        n->setOverloadFlag(b);
 }
 
 QT_END_NAMESPACE

@@ -4020,7 +4020,8 @@ void HtmlGenerator::generateDetailedMember(const Node *node,
     if (node->isSharedCommentNode()) {
         const SharedCommentNode *scn = reinterpret_cast<const SharedCommentNode*>(node);
         const QVector<Node*>& collective = scn->collective();
-        out() << "<div class=\"fngroup\">\n";
+        if (collective.size() > 1)
+            out() << "<div class=\"fngroup\">\n";
         foreach (const Node* n, collective) {
             if (n->isFunction()) {
                 nodeRef = refForNode(n);
@@ -4030,7 +4031,8 @@ void HtmlGenerator::generateDetailedMember(const Node *node,
                 out() << "</h3>";
             }
         }
-        out() << "</div>";
+        if (collective.size() > 1)
+            out() << "</div>";
         out() << divNavTop << '\n';
     }
     else {

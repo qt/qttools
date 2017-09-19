@@ -51,6 +51,9 @@ QStringList CppCodeParser::exampleDirs;
 QSet<QString> CppCodeParser::excludeDirs;
 QSet<QString> CppCodeParser::excludeFiles;
 
+static QSet<QString> topicCommands_;
+static QSet<QString> otherMetaCommands_;
+
 /*!
   The constructor initializes some regular expressions
   and calls reset().
@@ -59,6 +62,63 @@ CppCodeParser::CppCodeParser()
     : varComment("/\\*\\s*([a-zA-Z_0-9]+)\\s*\\*/"), sep("(?:<[^>]+>)?::")
 {
     reset();
+    if (topicCommands_.isEmpty()) {
+        topicCommands_ << COMMAND_CLASS
+                       << COMMAND_DITAMAP
+                       << COMMAND_ENUM
+                       << COMMAND_EXAMPLE
+                       << COMMAND_EXTERNALPAGE
+                       << COMMAND_FILE
+                       << COMMAND_FN
+                       << COMMAND_GROUP
+                       << COMMAND_HEADERFILE
+                       << COMMAND_MACRO
+                       << COMMAND_MODULE
+                       << COMMAND_NAMESPACE
+                       << COMMAND_PAGE
+                       << COMMAND_PROPERTY
+                       << COMMAND_TYPEALIAS
+                       << COMMAND_TYPEDEF
+                       << COMMAND_VARIABLE
+                       << COMMAND_QMLTYPE
+                       << COMMAND_QMLPROPERTY
+                       << COMMAND_QMLPROPERTYGROUP
+                       << COMMAND_QMLATTACHEDPROPERTY
+                       << COMMAND_QMLSIGNAL
+                       << COMMAND_QMLATTACHEDSIGNAL
+                       << COMMAND_QMLMETHOD
+                       << COMMAND_QMLATTACHEDMETHOD
+                       << COMMAND_QMLBASICTYPE
+                       << COMMAND_QMLMODULE
+                       << COMMAND_JSTYPE
+                       << COMMAND_JSPROPERTY
+                       << COMMAND_JSPROPERTYGROUP
+                       << COMMAND_JSATTACHEDPROPERTY
+                       << COMMAND_JSSIGNAL
+                       << COMMAND_JSATTACHEDSIGNAL
+                       << COMMAND_JSMETHOD
+                       << COMMAND_JSATTACHEDMETHOD
+                       << COMMAND_JSBASICTYPE
+                       << COMMAND_JSMODULE;
+    }
+    if (otherMetaCommands_.isEmpty()) {
+        otherMetaCommands_ = commonMetaCommands();
+        otherMetaCommands_ << COMMAND_INHEADERFILE
+                           << COMMAND_OVERLOAD
+                           << COMMAND_REIMP
+                           << COMMAND_RELATES
+                           << COMMAND_CONTENTSPAGE
+                           << COMMAND_NEXTPAGE
+                           << COMMAND_PREVIOUSPAGE
+                           << COMMAND_INDEXPAGE
+                           << COMMAND_STARTPAGE
+                           << COMMAND_QMLINHERITS
+                           << COMMAND_QMLINSTANTIATES
+                           << COMMAND_QMLDEFAULT
+                           << COMMAND_QMLREADONLY
+                           << COMMAND_QMLABSTRACT
+                           << COMMAND_ABSTRACT;
+    }
 }
 
 /*!
@@ -150,52 +210,11 @@ QStringList CppCodeParser::sourceFileNameFilter()
     return QStringList();
 }
 
-
-static QSet<QString> topicCommands_;
 /*!
   Returns the set of strings reopresenting the topic commands.
  */
 const QSet<QString>& CppCodeParser::topicCommands()
 {
-    if (topicCommands_.isEmpty()) {
-        topicCommands_ << COMMAND_CLASS
-                       << COMMAND_DITAMAP
-                       << COMMAND_ENUM
-                       << COMMAND_EXAMPLE
-                       << COMMAND_EXTERNALPAGE
-                       << COMMAND_FILE
-                       << COMMAND_FN
-                       << COMMAND_GROUP
-                       << COMMAND_HEADERFILE
-                       << COMMAND_MACRO
-                       << COMMAND_MODULE
-                       << COMMAND_NAMESPACE
-                       << COMMAND_PAGE
-                       << COMMAND_PROPERTY
-                       << COMMAND_TYPEALIAS
-                       << COMMAND_TYPEDEF
-                       << COMMAND_VARIABLE
-                       << COMMAND_QMLTYPE
-                       << COMMAND_QMLPROPERTY
-                       << COMMAND_QMLPROPERTYGROUP
-                       << COMMAND_QMLATTACHEDPROPERTY
-                       << COMMAND_QMLSIGNAL
-                       << COMMAND_QMLATTACHEDSIGNAL
-                       << COMMAND_QMLMETHOD
-                       << COMMAND_QMLATTACHEDMETHOD
-                       << COMMAND_QMLBASICTYPE
-                       << COMMAND_QMLMODULE
-                       << COMMAND_JSTYPE
-                       << COMMAND_JSPROPERTY
-                       << COMMAND_JSPROPERTYGROUP
-                       << COMMAND_JSATTACHEDPROPERTY
-                       << COMMAND_JSSIGNAL
-                       << COMMAND_JSATTACHEDSIGNAL
-                       << COMMAND_JSMETHOD
-                       << COMMAND_JSATTACHEDMETHOD
-                       << COMMAND_JSBASICTYPE
-                       << COMMAND_JSMODULE;
-    }
     return topicCommands_;
 }
 
@@ -569,31 +588,12 @@ void CppCodeParser::processQmlProperties(const Doc& doc,
     }
 }
 
-static QSet<QString> otherMetaCommands_;
 /*!
   Returns the set of strings representing the common metacommands
   plus some other metacommands.
  */
 const QSet<QString>& CppCodeParser::otherMetaCommands()
 {
-    if (otherMetaCommands_.isEmpty()) {
-        otherMetaCommands_ = commonMetaCommands();
-        otherMetaCommands_ << COMMAND_INHEADERFILE
-                           << COMMAND_OVERLOAD
-                           << COMMAND_REIMP
-                           << COMMAND_RELATES
-                           << COMMAND_CONTENTSPAGE
-                           << COMMAND_NEXTPAGE
-                           << COMMAND_PREVIOUSPAGE
-                           << COMMAND_INDEXPAGE
-                           << COMMAND_STARTPAGE
-                           << COMMAND_QMLINHERITS
-                           << COMMAND_QMLINSTANTIATES
-                           << COMMAND_QMLDEFAULT
-                           << COMMAND_QMLREADONLY
-                           << COMMAND_QMLABSTRACT
-                           << COMMAND_ABSTRACT;
-    }
     return otherMetaCommands_;
 }
 
@@ -617,8 +617,8 @@ void CppCodeParser::processOtherMetaCommand(const Doc& doc,
         }
     }
     else if (command == COMMAND_OVERLOAD) {
-        if (node && node->isFunction())
-            ((FunctionNode *) node)->setOverloadFlag(true);
+        if (node && (node->isFunction() || node->isSharedCommentNode()))
+            node->setOverloadFlag(true);
         else
             doc.location().warning(tr("Ignored '\\%1'").arg(COMMAND_OVERLOAD));
     }
@@ -1306,6 +1306,148 @@ void CppCodeParser::createExampleFileNodes(DocumentNode *dn)
                     Node::Image,
                     Node::NoPageType);
     }
+}
+
+/*!
+  returns true if \a t is \e {jssignal}, \e {jsmethod},
+  \e {jsattachedsignal}, or \e {jsattachedmethod}.
+ */
+bool CppCodeParser::isJSMethodTopic(const QString &t)
+{
+    return (t == COMMAND_JSSIGNAL ||
+            t == COMMAND_JSMETHOD ||
+            t == COMMAND_JSATTACHEDSIGNAL ||
+            t == COMMAND_JSATTACHEDMETHOD);
+}
+
+/*!
+  returns true if \a t is \e {qmlsignal}, \e {qmlmethod},
+  \e {qmlattachedsignal}, or \e {qmlattachedmethod}.
+ */
+bool CppCodeParser::isQMLMethodTopic(const QString &t)
+{
+    return (t == COMMAND_QMLSIGNAL ||
+            t == COMMAND_QMLMETHOD ||
+            t == COMMAND_QMLATTACHEDSIGNAL ||
+            t == COMMAND_QMLATTACHEDMETHOD);
+}
+
+/*!
+  Returns true if \a t is \e {jsproperty}, \e {jspropertygroup},
+  or \e {jsattachedproperty}.
+ */
+bool CppCodeParser::isJSPropertyTopic(const QString &t)
+{
+    return (t == COMMAND_JSPROPERTY ||
+            t == COMMAND_JSPROPERTYGROUP ||
+            t == COMMAND_JSATTACHEDPROPERTY);
+}
+
+/*!
+  Returns true if \a t is \e {qmlproperty}, \e {qmlpropertygroup},
+  or \e {qmlattachedproperty}.
+ */
+bool CppCodeParser::isQMLPropertyTopic(const QString &t)
+{
+    return (t == COMMAND_QMLPROPERTY ||
+            t == COMMAND_QMLPROPERTYGROUP ||
+            t == COMMAND_QMLATTACHEDPROPERTY);
+}
+
+void CppCodeParser::processTopicArgs(const Doc &doc, const QString &topic, NodeList &nodes, DocList &docs)
+{
+    if (isQMLPropertyTopic(topic)) {
+        processQmlProperties(doc, nodes, docs, false);
+    } else if (isJSPropertyTopic(topic)) {
+        processQmlProperties(doc, nodes, docs, true);
+    } else {
+        ArgList args = doc.metaCommandArgs(topic);
+        Node *node = 0;
+        if (args.size() == 1) {
+            if (topic == COMMAND_FN)
+                node = parserForLanguage("Clang")->parseFnArg(doc.location(), args[0].first);
+            else if (topic == COMMAND_MACRO)
+                node = parseMacroArg(doc.location(), args[0].first);
+            else if (isQMLMethodTopic(topic) || isJSMethodTopic(topic))
+                node = parseOtherFuncArg(topic, doc.location(), args[0].first);
+            else
+                node = processTopicCommand(doc, topic, args[0]);
+            if (node != 0) {
+                nodes.append(node);
+                docs.append(doc);
+            }
+        } else if (args.size() > 1) {
+            QVector<SharedCommentNode*> sharedCommentNodes;
+            ArgList::ConstIterator arg = args.constBegin();
+            while (arg != args.constEnd()) {
+                if (topic == COMMAND_FN)
+                    node = parserForLanguage("Clang")->parseFnArg(doc.location(), arg->first);
+                else if (topic == COMMAND_MACRO)
+                    node = parseMacroArg(doc.location(), arg->first);
+                else if (isQMLMethodTopic(topic) || isJSMethodTopic(topic))
+                    node = parseOtherFuncArg(topic, doc.location(), arg->first);
+                else
+                    node = processTopicCommand(doc, topic, *arg);
+                if (node != 0) {
+                    bool found = false;
+                    for (SharedCommentNode *scn : sharedCommentNodes) {
+                        if (scn->parent() == node->parent()) {
+                            node->setSharedCommentNode(scn);
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        SharedCommentNode *scn = new SharedCommentNode(node);
+                        sharedCommentNodes.append(scn);
+                        nodes.append(scn);
+                        docs.append(doc);
+                    }
+                }
+                ++arg;
+            }
+        }
+    }
+}
+
+void CppCodeParser::processOtherMetaCommands(NodeList &nodes, DocList& docs)
+{
+    NodeList::Iterator n = nodes.begin();
+    QList<Doc>::Iterator d = docs.begin();
+    while (n != nodes.end()) {
+        processOtherMetaCommands(*d, *n);
+        (*n)->setDoc(*d);
+        checkModuleInclusion(*n);
+        if ((*n)->isAggregate() && ((Aggregate *)*n)->includes().isEmpty()) {
+            Aggregate *m = static_cast<Aggregate *>(*n);
+            while (m->parent() && m->physicalModuleName().isEmpty())
+                m = m->parent();
+            if (m == *n)
+                ((Aggregate *)*n)->addInclude((*n)->name());
+            else
+                ((Aggregate *)*n)->setIncludes(m->includes());
+        }
+        ++d;
+        ++n;
+    }
+}
+
+bool CppCodeParser::hasTooManyTopics(const Doc &doc) const
+{
+    QSet<QString> topicCommandsUsed = topicCommands() & doc.metaCommandsUsed();
+    if (topicCommandsUsed.count() > 1) {
+        QString topicList;
+        for (const auto &t : topicCommandsUsed)
+            topicList += QLatin1String(" \\") + t + QLatin1Char(',');
+        topicList[topicList.lastIndexOf(',')] = '.';
+        int i = topicList.lastIndexOf(',');
+        Q_ASSERT(i >= 0); // we had at least two commas
+        topicList[i] = ' ';
+        topicList.insert(i + 1, "and");
+        doc.location().warning(tr("Multiple topic commands found in comment:%1").arg(topicList));
+        return true;
+    }
+    return false;
 }
 
 QT_END_NAMESPACE

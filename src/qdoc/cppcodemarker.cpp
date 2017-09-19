@@ -674,7 +674,7 @@ QList<Section> CppCodeMarker::sections(const Aggregate *inner,
 
             NodeList::ConstIterator r = inner->relatedNodes().constBegin();
             while (r != inner->relatedNodes().constEnd()) {
-                if ((*r)->type() == Node::Function) {
+                if ((*r)->isFunction()) {
                     FunctionNode *func = static_cast<FunctionNode *>(*r);
                     if (func->isMacro())
                         insert(macros, *r, style, status);
@@ -689,25 +689,20 @@ QList<Section> CppCodeMarker::sections(const Aggregate *inner,
 
             NodeList::ConstIterator c = inner->childNodes().constBegin();
             while (c != inner->childNodes().constEnd()) {
-                if ((*c)->type() == Node::Enum ||
-                        (*c)->type() == Node::Typedef) {
+                if ((*c)->isSharingComment()) {
+                    // do nothing
+                } else if ((*c)->isEnumType() || (*c)->isTypedef()) {
                     insert(memberTypes, *c, style, status);
-                }
-                else if ((*c)->type() == Node::Property) {
+                } else if ((*c)->isProperty()) {
                     insert(properties, *c, style, status);
-                }
-                else if ((*c)->type() == Node::Variable) {
+                } else if ((*c)->isVariable()) {
                     if (!(*c)->doc().isEmpty())
                         insert(memberVariables, *c, style, status);
-                }
-                else if ((*c)->type() == Node::Function) {
+                } else if ((*c)->isFunction()) {
                     FunctionNode *function = static_cast<FunctionNode *>(*c);
-                    if (!function->isInCollective()) {
-                        if (!function->hasAssociatedProperties() || !function->doc().isEmpty())
-                            insert(memberFunctions, function, style, status);
-                    }
-                }
-                else if ((*c)->type() == Node::SharedComment) {
+                    if (!function->hasAssociatedProperties() || !function->doc().isEmpty())
+                        insert(memberFunctions, function, style, status);
+                } else if ((*c)->isSharedCommentNode()) {
                     SharedCommentNode *scn = static_cast<SharedCommentNode *>(*c);
                     if (!scn->doc().isEmpty())
                         insert(memberFunctions, scn, style, status);
