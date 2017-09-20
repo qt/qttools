@@ -158,10 +158,10 @@ class PropertyEditorToolWindow : public QDesignerToolWindow
 public:
     explicit PropertyEditorToolWindow(QDesignerWorkbench *workbench);
 
-    QRect geometryHint() const Q_DECL_OVERRIDE;
+    QRect geometryHint() const override;
 
 protected:
-    void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
+    void showEvent(QShowEvent *event) override;
 };
 
 PropertyEditorToolWindow::PropertyEditorToolWindow(QDesignerWorkbench *workbench) :
@@ -215,7 +215,7 @@ class ActionEditorToolWindow: public QDesignerToolWindow
 public:
     explicit ActionEditorToolWindow(QDesignerWorkbench *workbench);
 
-    QRect geometryHint() const Q_DECL_OVERRIDE;
+    QRect geometryHint() const override;
 };
 
 ActionEditorToolWindow::ActionEditorToolWindow(QDesignerWorkbench *workbench) :
@@ -257,7 +257,7 @@ class ObjectInspectorToolWindow: public QDesignerToolWindow
 public:
     explicit ObjectInspectorToolWindow(QDesignerWorkbench *workbench);
 
-    QRect geometryHint() const Q_DECL_OVERRIDE;
+    QRect geometryHint() const override;
 };
 
 ObjectInspectorToolWindow::ObjectInspectorToolWindow(QDesignerWorkbench *workbench) :
@@ -292,7 +292,7 @@ class ResourceEditorToolWindow: public QDesignerToolWindow
 public:
     explicit ResourceEditorToolWindow(QDesignerWorkbench *workbench);
 
-    QRect geometryHint() const Q_DECL_OVERRIDE;
+    QRect geometryHint() const override;
 };
 
 ResourceEditorToolWindow::ResourceEditorToolWindow(QDesignerWorkbench *workbench)  :
@@ -326,7 +326,7 @@ class SignalSlotEditorToolWindow: public QDesignerToolWindow
 public:
     explicit SignalSlotEditorToolWindow(QDesignerWorkbench *workbench);
 
-    QRect geometryHint() const Q_DECL_OVERRIDE;
+    QRect geometryHint() const override;
 };
 
 SignalSlotEditorToolWindow::SignalSlotEditorToolWindow(QDesignerWorkbench *workbench) :
@@ -367,7 +367,7 @@ class WidgetBoxToolWindow: public QDesignerToolWindow
 public:
     explicit WidgetBoxToolWindow(QDesignerWorkbench *workbench);
 
-    QRect geometryHint() const Q_DECL_OVERRIDE;
+    QRect geometryHint() const override;
 };
 
 WidgetBoxToolWindow::WidgetBoxToolWindow(QDesignerWorkbench *workbench) :

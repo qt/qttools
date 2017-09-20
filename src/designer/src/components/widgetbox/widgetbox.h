@@ -50,30 +50,30 @@ public:
 
     QDesignerFormEditorInterface *core() const;
 
-    int categoryCount() const Q_DECL_OVERRIDE;
-    Category category(int cat_idx) const Q_DECL_OVERRIDE;
-    void addCategory(const Category &cat) Q_DECL_OVERRIDE;
-    void removeCategory(int cat_idx) Q_DECL_OVERRIDE;
+    int categoryCount() const override;
+    Category category(int cat_idx) const override;
+    void addCategory(const Category &cat) override;
+    void removeCategory(int cat_idx) override;
 
-    int widgetCount(int cat_idx) const Q_DECL_OVERRIDE;
-    Widget widget(int cat_idx, int wgt_idx) const Q_DECL_OVERRIDE;
-    void addWidget(int cat_idx, const Widget &wgt) Q_DECL_OVERRIDE;
-    void removeWidget(int cat_idx, int wgt_idx) Q_DECL_OVERRIDE;
+    int widgetCount(int cat_idx) const override;
+    Widget widget(int cat_idx, int wgt_idx) const override;
+    void addWidget(int cat_idx, const Widget &wgt) override;
+    void removeWidget(int cat_idx, int wgt_idx) override;
 
-    void dropWidgets(const QList<QDesignerDnDItemInterface*> &item_list, const QPoint &global_mouse_pos) Q_DECL_OVERRIDE;
+    void dropWidgets(const QList<QDesignerDnDItemInterface*> &item_list, const QPoint &global_mouse_pos) override;
 
-    void setFileName(const QString &file_name) Q_DECL_OVERRIDE;
-    QString fileName() const Q_DECL_OVERRIDE;
-    bool load() Q_DECL_OVERRIDE;
-    bool save() Q_DECL_OVERRIDE;
+    void setFileName(const QString &file_name) override;
+    QString fileName() const override;
+    bool load() override;
+    bool save() override;
 
-    bool loadContents(const QString &contents) Q_DECL_OVERRIDE;
-    QIcon iconForWidget(const QString &className, const QString &category = QString()) const Q_DECL_OVERRIDE;
+    bool loadContents(const QString &contents) override;
+    QIcon iconForWidget(const QString &className, const QString &category = QString()) const override;
 
 protected:
-    void dragEnterEvent (QDragEnterEvent * event) Q_DECL_OVERRIDE;
-    void dragMoveEvent(QDragMoveEvent * event) Q_DECL_OVERRIDE;
-    void dropEvent (QDropEvent * event) Q_DECL_OVERRIDE;
+    void dragEnterEvent (QDragEnterEvent * event) override;
+    void dragMoveEvent(QDragMoveEvent * event) override;
+    void dropEvent (QDropEvent * event) override;
 
 private slots:
     void handleMousePress(const QString &name, const QString &xml, const QPoint &global_mouse_pos);

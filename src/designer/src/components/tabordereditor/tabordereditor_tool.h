@@ -52,16 +52,16 @@ public:
     explicit TabOrderEditorTool(QDesignerFormWindowInterface *formWindow, QObject *parent = 0);
     virtual ~TabOrderEditorTool();
 
-    QDesignerFormEditorInterface *core() const Q_DECL_OVERRIDE;
-    QDesignerFormWindowInterface *formWindow() const Q_DECL_OVERRIDE;
+    QDesignerFormEditorInterface *core() const override;
+    QDesignerFormWindowInterface *formWindow() const override;
 
-    QWidget *editor() const Q_DECL_OVERRIDE;
-    QAction *action() const Q_DECL_OVERRIDE;
+    QWidget *editor() const override;
+    QAction *action() const override;
 
-    void activated() Q_DECL_OVERRIDE;
-    void deactivated() Q_DECL_OVERRIDE;
+    void activated() override;
+    void deactivated() override;
 
-    bool handleEvent(QWidget *widget, QWidget *managedWidget, QEvent *event) Q_DECL_OVERRIDE;
+    bool handleEvent(QWidget *widget, QWidget *managedWidget, QEvent *event) override;
 
 private:
     QDesignerFormWindowInterface *m_formWindow;

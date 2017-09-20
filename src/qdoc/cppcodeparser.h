@@ -61,15 +61,15 @@ public:
     ~CppCodeParser();
     static CppCodeParser* cppParser() { return cppParser_; }
 
-    virtual void initializeParser(const Config& config) Q_DECL_OVERRIDE;
-    virtual void terminateParser() Q_DECL_OVERRIDE;
-    virtual QString language() Q_DECL_OVERRIDE;
-    virtual QStringList headerFileNameFilter() Q_DECL_OVERRIDE;
-    virtual QStringList sourceFileNameFilter() Q_DECL_OVERRIDE;
-    virtual void parseHeaderFile(const Location& location, const QString& filePath) Q_DECL_OVERRIDE;
-    virtual void parseSourceFile(const Location& location, const QString& filePath) Q_DECL_OVERRIDE;
-    virtual void doneParsingHeaderFiles() Q_DECL_OVERRIDE;
-    virtual void doneParsingSourceFiles() Q_DECL_OVERRIDE;
+    void initializeParser(const Config& config) override;
+    void terminateParser() override;
+    QString language() override;
+    QStringList headerFileNameFilter() override;
+    QStringList sourceFileNameFilter() override;
+    void parseHeaderFile(const Location& location, const QString& filePath) override;
+    void parseSourceFile(const Location& location, const QString& filePath) override;
+    void doneParsingHeaderFiles() override;
+    void doneParsingSourceFiles() override;
     bool parseParameters(const QString& parameters, QVector<Parameter>& pvect, bool& isQPrivateSignal);
     const Location& declLoc() const { return declLoc_; }
     void setDeclLoc() { declLoc_ = location(); }

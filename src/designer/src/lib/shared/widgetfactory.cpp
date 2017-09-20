@@ -103,7 +103,7 @@ public:
 class ComboEventFilter : public QObject {
 public:
     explicit ComboEventFilter(QComboBox *parent) : QObject(parent) {}
-    bool eventFilter(QObject *watched, QEvent *event) Q_DECL_OVERRIDE;
+    bool eventFilter(QObject *watched, QEvent *event) override;
 };
 
 bool ComboEventFilter::eventFilter(QObject *watched, QEvent *event)

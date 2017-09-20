@@ -61,13 +61,13 @@ public:
     explicit QDesignerDnDItem(DropType type, QWidget *source = 0);
     virtual ~QDesignerDnDItem();
 
-    DomUI *domUi() const Q_DECL_OVERRIDE;
-    QWidget *decoration() const Q_DECL_OVERRIDE;
-    QWidget *widget() const Q_DECL_OVERRIDE;
-    QPoint hotSpot() const Q_DECL_OVERRIDE;
-    QWidget *source() const Q_DECL_OVERRIDE;
+    DomUI *domUi() const override;
+    QWidget *decoration() const override;
+    QWidget *widget() const override;
+    QPoint hotSpot() const override;
+    QWidget *source() const override;
 
-    DropType type() const Q_DECL_OVERRIDE;
+    DropType type() const override;
 
 protected:
     void setDomUi(DomUI *dom_ui);

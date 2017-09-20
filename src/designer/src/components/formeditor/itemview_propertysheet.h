@@ -53,14 +53,14 @@ public:
     QHash<QString,QString> propertyNameMap() const;
 
     // QDesignerPropertySheet
-    QVariant property(int index) const Q_DECL_OVERRIDE;
-    void setProperty(int index, const QVariant &value) Q_DECL_OVERRIDE;
+    QVariant property(int index) const override;
+    void setProperty(int index, const QVariant &value) override;
 
-    void setChanged(int index, bool changed) Q_DECL_OVERRIDE;
-    bool isChanged(int index) const Q_DECL_OVERRIDE;
+    void setChanged(int index, bool changed) override;
+    bool isChanged(int index) const override;
 
-    bool hasReset(int index) const Q_DECL_OVERRIDE;
-    bool reset(int index) Q_DECL_OVERRIDE;
+    bool hasReset(int index) const override;
+    bool reset(int index) override;
 
 private:
     void initHeaderProperties(QHeaderView *hv, const QString &prefix);

@@ -42,7 +42,7 @@ class FormWindowDnDItem : public QDesignerDnDItem
 public:
     FormWindowDnDItem(QDesignerDnDItemInterface::DropType type, FormWindow *form,
                         QWidget *widget, const QPoint &global_mouse_pos);
-    DomUI *domUi() const Q_DECL_OVERRIDE;
+    DomUI *domUi() const override;
 };
 
 }  // namespace qdesigner_internal

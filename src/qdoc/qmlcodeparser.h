@@ -56,12 +56,12 @@ public:
     QmlCodeParser();
     virtual ~QmlCodeParser();
 
-    virtual void initializeParser(const Config& config) Q_DECL_OVERRIDE;
-    virtual void terminateParser() Q_DECL_OVERRIDE;
-    virtual QString language() Q_DECL_OVERRIDE;
-    virtual QStringList sourceFileNameFilter() Q_DECL_OVERRIDE;
-    virtual void parseSourceFile(const Location& location, const QString& filePath) Q_DECL_OVERRIDE;
-    virtual void doneParsingSourceFiles() Q_DECL_OVERRIDE;
+    void initializeParser(const Config& config) override;
+    void terminateParser() override;
+    QString language() override;
+    QStringList sourceFileNameFilter() override;
+    void parseSourceFile(const Location& location, const QString& filePath) override;
+    void doneParsingSourceFiles() override;
 
 #ifndef QT_NO_DECLARATIVE
     /* Copied from src/declarative/qml/qdeclarativescriptparser.cpp */

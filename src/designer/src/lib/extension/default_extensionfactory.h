@@ -47,7 +47,7 @@ class QDESIGNER_EXTENSION_EXPORT QExtensionFactory : public QObject, public QAbs
 public:
     explicit QExtensionFactory(QExtensionManager *parent = Q_NULLPTR);
 
-    QObject *extension(QObject *object, const QString &iid) const Q_DECL_OVERRIDE;
+    QObject *extension(QObject *object, const QString &iid) const override;
     QExtensionManager *extensionManager() const;
 
 private Q_SLOTS:

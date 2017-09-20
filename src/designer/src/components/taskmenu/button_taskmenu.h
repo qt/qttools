@@ -83,8 +83,8 @@ class ButtonGroupTaskMenu : public QObject, public QDesignerTaskMenuExtension
 public:
     explicit ButtonGroupTaskMenu(QButtonGroup *buttonGroup, QObject *parent = 0);
 
-    QAction *preferredEditAction() const Q_DECL_OVERRIDE;
-    QList<QAction*> taskActions() const Q_DECL_OVERRIDE;
+    QAction *preferredEditAction() const override;
+    QList<QAction*> taskActions() const override;
 
 private:
     QButtonGroup *m_buttonGroup;
@@ -101,8 +101,8 @@ public:
     explicit ButtonTaskMenu(QAbstractButton *button, QObject *parent = 0);
     virtual ~ButtonTaskMenu();
 
-    QAction *preferredEditAction() const Q_DECL_OVERRIDE;
-    QList<QAction*> taskActions() const Q_DECL_OVERRIDE;
+    QAction *preferredEditAction() const override;
+    QList<QAction*> taskActions() const override;
 
     QAbstractButton *button() const;
 

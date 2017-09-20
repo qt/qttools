@@ -72,35 +72,35 @@ public:
     explicit QDesignerPropertySheet(QObject *object, QObject *parent = 0);
     virtual ~QDesignerPropertySheet();
 
-    int indexOf(const QString &name) const Q_DECL_OVERRIDE;
+    int indexOf(const QString &name) const override;
 
-    int count() const Q_DECL_OVERRIDE;
-    QString propertyName(int index) const Q_DECL_OVERRIDE;
+    int count() const override;
+    QString propertyName(int index) const override;
 
-    QString propertyGroup(int index) const Q_DECL_OVERRIDE;
-    void setPropertyGroup(int index, const QString &group) Q_DECL_OVERRIDE;
+    QString propertyGroup(int index) const override;
+    void setPropertyGroup(int index, const QString &group) override;
 
-    bool hasReset(int index) const Q_DECL_OVERRIDE;
-    bool reset(int index) Q_DECL_OVERRIDE;
+    bool hasReset(int index) const override;
+    bool reset(int index) override;
 
-    bool isAttribute(int index) const Q_DECL_OVERRIDE;
-    void setAttribute(int index, bool b) Q_DECL_OVERRIDE;
+    bool isAttribute(int index) const override;
+    void setAttribute(int index, bool b) override;
 
-    bool isVisible(int index) const Q_DECL_OVERRIDE;
-    void setVisible(int index, bool b) Q_DECL_OVERRIDE;
+    bool isVisible(int index) const override;
+    void setVisible(int index, bool b) override;
 
-    QVariant property(int index) const Q_DECL_OVERRIDE;
-    void setProperty(int index, const QVariant &value) Q_DECL_OVERRIDE;
+    QVariant property(int index) const override;
+    void setProperty(int index, const QVariant &value) override;
 
-    bool isChanged(int index) const Q_DECL_OVERRIDE;
+    bool isChanged(int index) const override;
 
-    void setChanged(int index, bool changed) Q_DECL_OVERRIDE;
+    void setChanged(int index, bool changed) override;
 
-    bool dynamicPropertiesAllowed() const Q_DECL_OVERRIDE;
-    int addDynamicProperty(const QString &propertyName, const QVariant &value) Q_DECL_OVERRIDE;
-    bool removeDynamicProperty(int index) Q_DECL_OVERRIDE;
-    bool isDynamicProperty(int index) const Q_DECL_OVERRIDE;
-    bool canAddDynamicProperty(const QString &propertyName) const Q_DECL_OVERRIDE;
+    bool dynamicPropertiesAllowed() const override;
+    int addDynamicProperty(const QString &propertyName, const QVariant &value) override;
+    bool removeDynamicProperty(int index) override;
+    bool isDynamicProperty(int index) const override;
+    bool canAddDynamicProperty(const QString &propertyName) const override;
 
     bool isDefaultDynamicProperty(int index) const;
 
@@ -113,7 +113,7 @@ public:
     void setIconCache(qdesigner_internal::DesignerIconCache *cache);
     int createFakeProperty(const QString &propertyName, const QVariant &value = QVariant());
 
-    bool isEnabled(int index) const Q_DECL_OVERRIDE;
+    bool isEnabled(int index) const override;
     QObject *object() const;
 
     static bool internalDynamicPropertiesEnabled();
@@ -218,7 +218,7 @@ public:
 
 private:
     // Does a  qobject_cast on  the object.
-    QObject *createPropertySheet(QObject *qObject, QObject *parent) const Q_DECL_OVERRIDE;
+    QObject *createPropertySheet(QObject *qObject, QObject *parent) const override;
 };
 
 template <class Object, class PropertySheet>

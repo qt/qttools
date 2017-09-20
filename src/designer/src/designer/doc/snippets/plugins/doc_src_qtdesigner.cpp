@@ -246,7 +246,7 @@ class MyCustomWidgets: public QObject, public QDesignerCustomWidgetCollectionInt
 public:
     MyCustomWidgets(QObject *parent = 0);
 
-    QList<QDesignerCustomWidgetInterface*> customWidgets() const Q_DECL_OVERRIDE;
+    QList<QDesignerCustomWidgetInterface*> customWidgets() const override;
 
 private:
     QList<QDesignerCustomWidgetInterface*> widgets;

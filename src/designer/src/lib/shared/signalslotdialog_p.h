@@ -75,7 +75,7 @@ class SignatureModel : public QStandardItemModel {
 
 public:
     SignatureModel(QObject *parent = 0);
-    bool setData (const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
+    bool setData (const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
 
 signals:
     void checkSignature(const QString &signature, bool *ok);

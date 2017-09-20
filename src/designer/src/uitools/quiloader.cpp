@@ -101,9 +101,9 @@ public:
     TranslatingTextBuilder(bool trEnabled, const QByteArray &className) :
         m_trEnabled(trEnabled), m_className(className) {}
 
-    QVariant loadText(const DomProperty *icon) const Q_DECL_OVERRIDE;
+    QVariant loadText(const DomProperty *icon) const override;
 
-    QVariant toNativeValue(const QVariant &value) const Q_DECL_OVERRIDE;
+    QVariant toNativeValue(const QVariant &value) const override;
 
 private:
     bool m_trEnabled;
@@ -346,7 +346,7 @@ public:
         return ParentClass::createActionGroup(parent, name);
     }
 
-    QWidget *createWidget(const QString &className, QWidget *parent, const QString &name) Q_DECL_OVERRIDE
+    QWidget *createWidget(const QString &className, QWidget *parent, const QString &name) override
     {
         if (QWidget *widget = loader->createWidget(className, parent, name)) {
             widget->setObjectName(name);
@@ -356,7 +356,7 @@ public:
         return 0;
     }
 
-    QLayout *createLayout(const QString &className, QObject *parent, const QString &name) Q_DECL_OVERRIDE
+    QLayout *createLayout(const QString &className, QObject *parent, const QString &name) override
     {
         if (QLayout *layout = loader->createLayout(className, parent, name)) {
             layout->setObjectName(name);
@@ -366,7 +366,7 @@ public:
         return 0;
     }
 
-    QActionGroup *createActionGroup(QObject *parent, const QString &name) Q_DECL_OVERRIDE
+    QActionGroup *createActionGroup(QObject *parent, const QString &name) override
     {
         if (QActionGroup *actionGroup = loader->createActionGroup(parent, name)) {
             actionGroup->setObjectName(name);
@@ -376,7 +376,7 @@ public:
         return 0;
     }
 
-    QAction *createAction(QObject *parent, const QString &name)  Q_DECL_OVERRIDE
+    QAction *createAction(QObject *parent, const QString &name)  override
     {
         if (QAction *action = loader->createAction(parent, name)) {
             action->setObjectName(name);
@@ -386,10 +386,10 @@ public:
         return 0;
     }
 
-    void applyProperties(QObject *o, const QList<DomProperty*> &properties) Q_DECL_OVERRIDE;
-    QWidget *create(DomUI *ui, QWidget *parentWidget) Q_DECL_OVERRIDE;
-    QWidget *create(DomWidget *ui_widget, QWidget *parentWidget) Q_DECL_OVERRIDE;
-    bool addItem(DomWidget *ui_widget, QWidget *widget, QWidget *parentWidget) Q_DECL_OVERRIDE;
+    void applyProperties(QObject *o, const QList<DomProperty*> &properties) override;
+    QWidget *create(DomUI *ui, QWidget *parentWidget) override;
+    QWidget *create(DomWidget *ui_widget, QWidget *parentWidget) override;
+    bool addItem(DomWidget *ui_widget, QWidget *widget, QWidget *parentWidget) override;
 
 private:
     QByteArray m_class;

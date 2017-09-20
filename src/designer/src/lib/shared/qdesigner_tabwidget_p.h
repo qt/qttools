@@ -75,7 +75,7 @@ public:
     // Add context menu and return page submenu or 0.
     QMenu *addContextMenuActions(QMenu *popup);
 
-    bool eventFilter(QObject *o, QEvent *e) Q_DECL_OVERRIDE;
+    bool eventFilter(QObject *o, QEvent *e) override;
 
     QDesignerFormWindowInterface *formWindow() const;
 
@@ -108,10 +108,10 @@ class QDESIGNER_SHARED_EXPORT QTabWidgetPropertySheet : public QDesignerProperty
 public:
     explicit QTabWidgetPropertySheet(QTabWidget *object, QObject *parent = 0);
 
-    void setProperty(int index, const QVariant &value) Q_DECL_OVERRIDE;
-    QVariant property(int index) const Q_DECL_OVERRIDE;
-    bool reset(int index) Q_DECL_OVERRIDE;
-    bool isEnabled(int index) const Q_DECL_OVERRIDE;
+    void setProperty(int index, const QVariant &value) override;
+    QVariant property(int index) const override;
+    bool reset(int index) override;
+    bool isEnabled(int index) const override;
 
     // Check whether the property is to be saved. Returns false for the page
     // properties (as the property sheet has no concept of 'stored')

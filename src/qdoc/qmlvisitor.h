@@ -67,30 +67,30 @@ public:
                   const QSet<QString> &topics);
     virtual ~QmlDocVisitor();
 
-    bool visit(QQmlJS::AST::UiImport *import) Q_DECL_OVERRIDE;
-    void endVisit(QQmlJS::AST::UiImport *definition) Q_DECL_OVERRIDE;
+    bool visit(QQmlJS::AST::UiImport *import) override;
+    void endVisit(QQmlJS::AST::UiImport *definition) override;
 
-    bool visit(QQmlJS::AST::UiObjectDefinition *definition) Q_DECL_OVERRIDE;
-    void endVisit(QQmlJS::AST::UiObjectDefinition *definition) Q_DECL_OVERRIDE;
+    bool visit(QQmlJS::AST::UiObjectDefinition *definition) override;
+    void endVisit(QQmlJS::AST::UiObjectDefinition *definition) override;
 
-    bool visit(QQmlJS::AST::UiPublicMember *member) Q_DECL_OVERRIDE;
-    void endVisit(QQmlJS::AST::UiPublicMember *definition) Q_DECL_OVERRIDE;
+    bool visit(QQmlJS::AST::UiPublicMember *member) override;
+    void endVisit(QQmlJS::AST::UiPublicMember *definition) override;
 
-    virtual bool visit(QQmlJS::AST::UiObjectBinding *) Q_DECL_OVERRIDE;
-    virtual void endVisit(QQmlJS::AST::UiObjectBinding *) Q_DECL_OVERRIDE;
-    virtual void endVisit(QQmlJS::AST::UiArrayBinding *) Q_DECL_OVERRIDE;
-    virtual bool visit(QQmlJS::AST::UiArrayBinding *) Q_DECL_OVERRIDE;
+    bool visit(QQmlJS::AST::UiObjectBinding *) override;
+    void endVisit(QQmlJS::AST::UiObjectBinding *) override;
+    void endVisit(QQmlJS::AST::UiArrayBinding *) override;
+    bool visit(QQmlJS::AST::UiArrayBinding *) override;
 
-    bool visit(QQmlJS::AST::IdentifierPropertyName *idproperty) Q_DECL_OVERRIDE;
+    bool visit(QQmlJS::AST::IdentifierPropertyName *idproperty) override;
 
-    bool visit(QQmlJS::AST::FunctionDeclaration *) Q_DECL_OVERRIDE;
-    void endVisit(QQmlJS::AST::FunctionDeclaration *) Q_DECL_OVERRIDE;
+    bool visit(QQmlJS::AST::FunctionDeclaration *) override;
+    void endVisit(QQmlJS::AST::FunctionDeclaration *) override;
 
-    bool visit(QQmlJS::AST::UiScriptBinding *) Q_DECL_OVERRIDE;
-    void endVisit(QQmlJS::AST::UiScriptBinding *) Q_DECL_OVERRIDE;
+    bool visit(QQmlJS::AST::UiScriptBinding *) override;
+    void endVisit(QQmlJS::AST::UiScriptBinding *) override;
 
-    bool visit(QQmlJS::AST::UiQualifiedId *) Q_DECL_OVERRIDE;
-    void endVisit(QQmlJS::AST::UiQualifiedId *) Q_DECL_OVERRIDE;
+    bool visit(QQmlJS::AST::UiQualifiedId *) override;
+    void endVisit(QQmlJS::AST::UiQualifiedId *) override;
 
 private:
     QString getFullyQualifiedId(QQmlJS::AST::UiQualifiedId *id);

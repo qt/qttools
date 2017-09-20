@@ -59,29 +59,29 @@ public:
     explicit QDesignerMemberSheet(QObject *object, QObject *parent = 0);
     virtual ~QDesignerMemberSheet();
 
-    int indexOf(const QString &name) const Q_DECL_OVERRIDE;
+    int indexOf(const QString &name) const override;
 
-    int count() const Q_DECL_OVERRIDE;
-    QString memberName(int index) const Q_DECL_OVERRIDE;
+    int count() const override;
+    QString memberName(int index) const override;
 
-    QString memberGroup(int index) const Q_DECL_OVERRIDE;
-    void setMemberGroup(int index, const QString &group) Q_DECL_OVERRIDE;
+    QString memberGroup(int index) const override;
+    void setMemberGroup(int index, const QString &group) override;
 
-    bool isVisible(int index) const Q_DECL_OVERRIDE;
-    void setVisible(int index, bool b) Q_DECL_OVERRIDE;
+    bool isVisible(int index) const override;
+    void setVisible(int index, bool b) override;
 
-    bool isSignal(int index) const Q_DECL_OVERRIDE;
-    bool isSlot(int index) const Q_DECL_OVERRIDE;
+    bool isSignal(int index) const override;
+    bool isSlot(int index) const override;
 
-    bool inheritedFromWidget(int index) const Q_DECL_OVERRIDE;
+    bool inheritedFromWidget(int index) const override;
 
     static bool signalMatchesSlot(const QString &signal, const QString &slot);
 
-    QString declaredInClass(int index) const Q_DECL_OVERRIDE;
+    QString declaredInClass(int index) const override;
 
-    QString signature(int index) const Q_DECL_OVERRIDE;
-    QList<QByteArray> parameterTypes(int index) const Q_DECL_OVERRIDE;
-    QList<QByteArray> parameterNames(int index) const Q_DECL_OVERRIDE;
+    QString signature(int index) const override;
+    QList<QByteArray> parameterTypes(int index) const override;
+    QList<QByteArray> parameterNames(int index) const override;
 
 private:
     QDesignerMemberSheetPrivate *d;
@@ -96,7 +96,7 @@ public:
     QDesignerMemberSheetFactory(QExtensionManager *parent = 0);
 
 protected:
-    QObject *createExtension(QObject *object, const QString &iid, QObject *parent) const Q_DECL_OVERRIDE;
+    QObject *createExtension(QObject *object, const QString &iid, QObject *parent) const override;
 };
 
 QT_END_NAMESPACE

@@ -415,7 +415,7 @@ public:
 
     int findText(const QString &text) const;
 
-    Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    Qt::ItemFlags flags(const QModelIndex &index) const override;
 };
 
 InlineEditorModel::InlineEditorModel(int rows, int cols, QObject *parent)

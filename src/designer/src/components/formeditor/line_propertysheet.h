@@ -45,9 +45,9 @@ public:
     explicit LinePropertySheet(Line *object, QObject *parent = 0);
     virtual ~LinePropertySheet();
 
-    void setProperty(int index, const QVariant &value) Q_DECL_OVERRIDE;
-    bool isVisible(int index) const Q_DECL_OVERRIDE;
-    QString propertyGroup(int index) const Q_DECL_OVERRIDE;
+    void setProperty(int index, const QVariant &value) override;
+    bool isVisible(int index) const override;
+    QString propertyGroup(int index) const override;
 };
 
 typedef QDesignerPropertySheetFactory<Line, LinePropertySheet> LinePropertySheetFactory;

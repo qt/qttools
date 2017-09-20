@@ -82,7 +82,7 @@ public:
     // Utility to create an action
     static QAction *createAction(QDesignerFormWindowInterface *fw, const QString &objectName, bool separator);
 
-    bool eventFilter (QObject *watched, QEvent *event) Q_DECL_OVERRIDE;
+    bool eventFilter (QObject *watched, QEvent *event) override;
 
     // Helper for task menu extension
     QList<QAction *> contextMenuActions(const QPoint &globalPos = QPoint(-1, -1));

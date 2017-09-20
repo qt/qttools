@@ -80,8 +80,8 @@ private slots:
     void cacheReloaded();
 
 protected:
-    void setItemData(int role, const QVariant &v) Q_DECL_OVERRIDE;
-    QVariant getItemData(int role) const Q_DECL_OVERRIDE;
+    void setItemData(int role, const QVariant &v) override;
+    QVariant getItemData(int role) const override;
 
 private:
     void setPropertyBrowserVisible(bool v);

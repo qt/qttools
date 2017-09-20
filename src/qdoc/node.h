@@ -385,7 +385,7 @@ public:
 
     Node* findChildNode(const QString& name, Node::Genus genus) const;
     Node* findChildNode(const QString& name, NodeType type);
-    virtual void findChildren(const QString& name, NodeList& nodes) const Q_DECL_OVERRIDE;
+    void findChildren(const QString& name, NodeList& nodes) const override;
     FunctionNode* findFunctionNode(const QString& name, const QString& params) const;
     FunctionNode* findFunctionNode(const FunctionNode* clone) const;
     void addInclude(const QString &include);
@@ -395,8 +395,8 @@ public:
     void deleteChildren();
     void removeFromRelated();
 
-    virtual bool isAggregate() const Q_DECL_OVERRIDE { return true; }
-    virtual bool isLeaf() const Q_DECL_OVERRIDE { return false; }
+    bool isAggregate() const override { return true; }
+    bool isLeaf() const override { return false; }
     const EnumNode* findEnumNodeForValue(const QString &enumValue) const;
     const NodeList & childNodes() const { return children_; }
     const NodeList & relatedNodes() const { return related_; }
@@ -408,23 +408,23 @@ public:
     QStringList primaryKeys();
     QStringList secondaryKeys();
     const QStringList& pageKeywords() const { return pageKeywds; }
-    virtual void addPageKeywords(const QString& t) Q_DECL_OVERRIDE { pageKeywds << t; }
-    virtual void setOutputFileName(const QString& f) Q_DECL_OVERRIDE { outputFileName_ = f; }
-    virtual QString outputFileName() const Q_DECL_OVERRIDE { return outputFileName_; }
-    virtual QmlPropertyNode* hasQmlProperty(const QString& ) const Q_DECL_OVERRIDE;
-    virtual QmlPropertyNode* hasQmlProperty(const QString&, bool attached) const Q_DECL_OVERRIDE;
+    void addPageKeywords(const QString& t) override { pageKeywds << t; }
+    void setOutputFileName(const QString& f) override { outputFileName_ = f; }
+    QString outputFileName() const override { return outputFileName_; }
+    QmlPropertyNode* hasQmlProperty(const QString& ) const override;
+    QmlPropertyNode* hasQmlProperty(const QString&, bool attached) const override;
     virtual QmlTypeNode* qmlBaseNode() { return 0; }
     void addChild(Node* child, const QString& title);
     const QStringList& groupNames() const { return groupNames_; }
-    virtual void appendGroupName(const QString& t) Q_DECL_OVERRIDE { groupNames_.append(t); }
+    void appendGroupName(const QString& t) override { groupNames_.append(t); }
     void printChildren(const QString& title);
     void addChild(Node* child);
     void removeChild(Node* child);
-    void setOutputSubdirectory(const QString& t) Q_DECL_OVERRIDE;
+    void setOutputSubdirectory(const QString& t) override;
     const NodeMap& primaryFunctionMap() { return primaryFunctionMap_; }
     const QMap<QString, NodeList>& secondaryFunctionMap() { return secondaryFunctionMap_; }
     bool noAutoList() const { return noAutoList_; }
-    virtual void setNoAutoList(bool b)  Q_DECL_OVERRIDE { noAutoList_ = b; }
+    void setNoAutoList(bool b)  override { noAutoList_ = b; }
 protected:
     Aggregate(NodeType type, Aggregate* parent, const QString& name);
 
@@ -454,8 +454,8 @@ public:
     LeafNode();
     virtual ~LeafNode() { }
 
-    virtual bool isAggregate() const Q_DECL_OVERRIDE { return false; }
-    virtual bool isLeaf() const Q_DECL_OVERRIDE { return true; }
+    bool isAggregate() const override { return false; }
+    bool isLeaf() const override { return true; }
 
 protected:
     LeafNode(NodeType type, Aggregate* parent, const QString& name);
@@ -467,9 +467,9 @@ class NamespaceNode : public Aggregate
 public:
     NamespaceNode(Aggregate* parent, const QString& name);
     virtual ~NamespaceNode() { }
-    virtual bool isNamespace() const Q_DECL_OVERRIDE { return true; }
-    virtual Tree* tree() const Q_DECL_OVERRIDE { return (parent() ? parent()->tree() : tree_); }
-    virtual bool wasSeen() const Q_DECL_OVERRIDE { return seen_; }
+    bool isNamespace() const override { return true; }
+    Tree* tree() const override { return (parent() ? parent()->tree() : tree_); }
+    bool wasSeen() const override { return seen_; }
 
     void markSeen() { seen_ = true; }
     void markNotSeen() { seen_ = false; }
@@ -518,11 +518,11 @@ class ClassNode : public Aggregate
 public:
     ClassNode(Aggregate* parent, const QString& name);
     virtual ~ClassNode() { }
-    virtual bool isClass() const Q_DECL_OVERRIDE { return true; }
-    virtual bool isWrapper() const Q_DECL_OVERRIDE { return wrapper_; }
-    virtual QString obsoleteLink() const Q_DECL_OVERRIDE { return obsoleteLink_; }
-    virtual void setObsoleteLink(const QString& t) Q_DECL_OVERRIDE { obsoleteLink_ = t; }
-    virtual void setWrapper() Q_DECL_OVERRIDE { wrapper_ = true; }
+    bool isClass() const override { return true; }
+    bool isWrapper() const override { return wrapper_; }
+    QString obsoleteLink() const override { return obsoleteLink_; }
+    void setObsoleteLink(const QString& t) override { obsoleteLink_ = t; }
+    void setWrapper() override { wrapper_ = true; }
 
     void addResolvedBaseClass(Access access, ClassNode* node);
     void addDerivedClass(Access access, ClassNode* node);
@@ -543,8 +543,8 @@ public:
 
     QmlTypeNode* qmlElement() { return qmlelement; }
     void setQmlElement(QmlTypeNode* qcn) { qmlelement = qcn; }
-    virtual bool isAbstract() const Q_DECL_OVERRIDE { return abstract_; }
-    virtual void setAbstract(bool b) Q_DECL_OVERRIDE { abstract_ = b; }
+    bool isAbstract() const override { return abstract_; }
+    void setAbstract(bool b) override { abstract_ = b; }
     PropertyNode* findPropertyNode(const QString& name);
     QmlTypeNode* findQmlBaseNode();
 
@@ -569,22 +569,22 @@ public:
              PageType ptype);
     virtual ~DocumentNode() { }
 
-    virtual bool isDocumentNode() const Q_DECL_OVERRIDE { return true; }
-    virtual void setTitle(const QString &title) Q_DECL_OVERRIDE;
-    virtual void setSubTitle(const QString &subTitle) Q_DECL_OVERRIDE { subtitle_ = subTitle; }
+    bool isDocumentNode() const override { return true; }
+    void setTitle(const QString &title) override;
+    void setSubTitle(const QString &subTitle) override { subtitle_ = subTitle; }
 
-    DocSubtype docSubtype() const Q_DECL_OVERRIDE { return nodeSubtype_; }
-    virtual QString title() const Q_DECL_OVERRIDE { return title_; }
-    virtual QString fullTitle() const Q_DECL_OVERRIDE;
-    virtual QString subTitle() const Q_DECL_OVERRIDE;
+    DocSubtype docSubtype() const override { return nodeSubtype_; }
+    QString title() const override { return title_; }
+    QString fullTitle() const override;
+    QString subTitle() const override;
     virtual QString imageFileName() const { return QString(); }
-    virtual QString nameForLists() const Q_DECL_OVERRIDE { return title(); }
+    QString nameForLists() const override { return title(); }
     virtual void setImageFileName(const QString& ) { }
 
-    virtual bool isHeaderFile() const Q_DECL_OVERRIDE { return (docSubtype() == Node::HeaderFile); }
-    virtual bool isExample() const Q_DECL_OVERRIDE { return (docSubtype() == Node::Example); }
-    virtual bool isExampleFile() const Q_DECL_OVERRIDE { return (parent() && parent()->isExample()); }
-    virtual bool isExternalPage() const Q_DECL_OVERRIDE { return nodeSubtype_ == ExternalPage; }
+    bool isHeaderFile() const override { return (docSubtype() == Node::HeaderFile); }
+    bool isExample() const override { return (docSubtype() == Node::Example); }
+    bool isExampleFile() const override { return (parent() && parent()->isExample()); }
+    bool isExternalPage() const override { return nodeSubtype_ == ExternalPage; }
 
 protected:
     DocSubtype nodeSubtype_;
@@ -598,8 +598,8 @@ public:
     ExampleNode(Aggregate* parent, const QString& name)
         : DocumentNode(parent, name, Node::Example, Node::ExamplePage) { }
     virtual ~ExampleNode() { }
-    virtual QString imageFileName() const Q_DECL_OVERRIDE { return imageFileName_; }
-    virtual void setImageFileName(const QString& ifn) Q_DECL_OVERRIDE { imageFileName_ = ifn; }
+    QString imageFileName() const override { return imageFileName_; }
+    void setImageFileName(const QString& ifn) override { imageFileName_ = ifn; }
 
 private:
     QString imageFileName_;
@@ -630,33 +630,33 @@ class QmlTypeNode : public Aggregate
 public:
     QmlTypeNode(Aggregate* parent, const QString& name);
     virtual ~QmlTypeNode();
-    virtual bool isQmlType() const Q_DECL_OVERRIDE { return isQmlNode(); }
-    virtual bool isJsType() const Q_DECL_OVERRIDE { return isJsNode(); }
-    virtual bool isQtQuickNode() const Q_DECL_OVERRIDE {
+    bool isQmlType() const override { return isQmlNode(); }
+    bool isJsType() const override { return isJsNode(); }
+    bool isQtQuickNode() const override {
         return (logicalModuleName() == QLatin1String("QtQuick"));
     }
-    virtual ClassNode* classNode() Q_DECL_OVERRIDE { return cnode_; }
-    virtual void setClassNode(ClassNode* cn) Q_DECL_OVERRIDE { cnode_ = cn; }
-    virtual bool isAbstract() const Q_DECL_OVERRIDE { return abstract_; }
-    virtual bool isWrapper() const Q_DECL_OVERRIDE { return wrapper_; }
-    virtual void setAbstract(bool b) Q_DECL_OVERRIDE { abstract_ = b; }
-    virtual void setWrapper() Q_DECL_OVERRIDE { wrapper_ = true; }
-    virtual bool isInternal() const Q_DECL_OVERRIDE { return (status() == Internal); }
-    virtual QString qmlFullBaseName() const Q_DECL_OVERRIDE;
-    virtual QString obsoleteLink() const Q_DECL_OVERRIDE { return obsoleteLink_; }
-    virtual void setObsoleteLink(const QString& t) Q_DECL_OVERRIDE { obsoleteLink_ = t; }
-    virtual QString logicalModuleName() const Q_DECL_OVERRIDE;
-    virtual QString logicalModuleVersion() const Q_DECL_OVERRIDE;
-    virtual QString logicalModuleIdentifier() const Q_DECL_OVERRIDE;
-    virtual CollectionNode* logicalModule() const Q_DECL_OVERRIDE { return logicalModule_; }
-    virtual void setQmlModule(CollectionNode* t) Q_DECL_OVERRIDE { logicalModule_ = t; }
+    ClassNode* classNode() override { return cnode_; }
+    void setClassNode(ClassNode* cn) override { cnode_ = cn; }
+    bool isAbstract() const override { return abstract_; }
+    bool isWrapper() const override { return wrapper_; }
+    void setAbstract(bool b) override { abstract_ = b; }
+    void setWrapper() override { wrapper_ = true; }
+    bool isInternal() const override { return (status() == Internal); }
+    QString qmlFullBaseName() const override;
+    QString obsoleteLink() const override { return obsoleteLink_; }
+    void setObsoleteLink(const QString& t) override { obsoleteLink_ = t; }
+    QString logicalModuleName() const override;
+    QString logicalModuleVersion() const override;
+    QString logicalModuleIdentifier() const override;
+    CollectionNode* logicalModule() const override { return logicalModule_; }
+    void setQmlModule(CollectionNode* t) override { logicalModule_ = t; }
 
     const ImportList& importList() const { return importList_; }
     void setImportList(const ImportList& il) { importList_ = il; }
     const QString& qmlBaseName() const { return qmlBaseName_; }
     void setQmlBaseName(const QString& name) { qmlBaseName_ = name; }
     bool qmlBaseNodeNotSet() const { return (qmlBaseNode_ == 0); }
-    virtual QmlTypeNode* qmlBaseNode() Q_DECL_OVERRIDE { return qmlBaseNode_; }
+    QmlTypeNode* qmlBaseNode() override { return qmlBaseNode_; }
     void setQmlBaseNode(QmlTypeNode* b) { qmlBaseNode_ = b; }
     void requireCppClass() { cnodeRequired_ = true; }
     bool cppClassRequired() const { return cnodeRequired_; }
@@ -686,8 +686,8 @@ public:
     QmlBasicTypeNode(Aggregate* parent,
                      const QString& name);
     virtual ~QmlBasicTypeNode() { }
-    virtual bool isQmlBasicType() const Q_DECL_OVERRIDE { return (genus() == Node::QML); }
-    virtual bool isJsBasicType() const Q_DECL_OVERRIDE { return (genus() == Node::JS); }
+    bool isQmlBasicType() const override { return (genus() == Node::QML); }
+    bool isJsBasicType() const override { return (genus() == Node::JS); }
 };
 
 class QmlPropertyGroupNode : public Aggregate
@@ -695,21 +695,21 @@ class QmlPropertyGroupNode : public Aggregate
 public:
     QmlPropertyGroupNode(QmlTypeNode* parent, const QString& name);
     virtual ~QmlPropertyGroupNode() { }
-    virtual bool isQtQuickNode() const Q_DECL_OVERRIDE { return parent()->isQtQuickNode(); }
-    virtual QString qmlTypeName() const Q_DECL_OVERRIDE { return parent()->qmlTypeName(); }
-    virtual QString logicalModuleName() const Q_DECL_OVERRIDE {
+    bool isQtQuickNode() const override { return parent()->isQtQuickNode(); }
+    QString qmlTypeName() const override { return parent()->qmlTypeName(); }
+    QString logicalModuleName() const override {
         return parent()->logicalModuleName();
     }
-    virtual QString logicalModuleVersion() const Q_DECL_OVERRIDE {
+    QString logicalModuleVersion() const override {
         return parent()->logicalModuleVersion();
     }
-    virtual QString logicalModuleIdentifier() const Q_DECL_OVERRIDE {
+    QString logicalModuleIdentifier() const override {
         return parent()->logicalModuleIdentifier();
     }
-    virtual QString idNumber() Q_DECL_OVERRIDE;
-    virtual bool isQmlPropertyGroup() const Q_DECL_OVERRIDE { return genus() == Node::QML; }
-    virtual bool isJsPropertyGroup() const Q_DECL_OVERRIDE { return genus() == Node::JS; }
-    virtual QString element() const Q_DECL_OVERRIDE { return parent()->name(); }
+    QString idNumber() override;
+    bool isQmlPropertyGroup() const override { return genus() == Node::QML; }
+    bool isJsPropertyGroup() const override { return genus() == Node::JS; }
+    QString element() const override { return parent()->name(); }
 
  private:
     int     idNumber_;
@@ -726,10 +726,10 @@ public:
                     bool attached);
     virtual ~QmlPropertyNode() { }
 
-    virtual void setDataType(const QString& dataType) Q_DECL_OVERRIDE { type_ = dataType; }
+    void setDataType(const QString& dataType) override { type_ = dataType; }
     void setStored(bool stored) { stored_ = toFlagValue(stored); }
     void setDesignable(bool designable) { designable_ = toFlagValue(designable); }
-    virtual void setReadOnly(bool ro) Q_DECL_OVERRIDE { readOnly_ = toFlagValue(ro); }
+    void setReadOnly(bool ro) override { readOnly_ = toFlagValue(ro); }
     void setDefault() { isdefault_ = true; }
 
     const QString &dataType() const { return type_; }
@@ -738,24 +738,24 @@ public:
     bool isStored() const { return fromFlagValue(stored_,true); }
     bool isDesignable() const { return fromFlagValue(designable_,false); }
     bool isWritable();
-    virtual bool isQmlProperty() const Q_DECL_OVERRIDE { return genus() == QML; }
-    virtual bool isJsProperty() const Q_DECL_OVERRIDE { return genus() == JS; }
-    virtual bool isDefault() const Q_DECL_OVERRIDE { return isdefault_; }
-    virtual bool isReadOnly() const Q_DECL_OVERRIDE { return fromFlagValue(readOnly_,false); }
-    virtual bool isAlias() const Q_DECL_OVERRIDE { return isAlias_; }
-    virtual bool isAttached() const Q_DECL_OVERRIDE { return attached_; }
-    virtual bool isQtQuickNode() const Q_DECL_OVERRIDE { return parent()->isQtQuickNode(); }
-    virtual QString qmlTypeName() const Q_DECL_OVERRIDE { return parent()->qmlTypeName(); }
-    virtual QString logicalModuleName() const Q_DECL_OVERRIDE {
+    bool isQmlProperty() const override { return genus() == QML; }
+    bool isJsProperty() const override { return genus() == JS; }
+    bool isDefault() const override { return isdefault_; }
+    bool isReadOnly() const override { return fromFlagValue(readOnly_,false); }
+    bool isAlias() const override { return isAlias_; }
+    bool isAttached() const override { return attached_; }
+    bool isQtQuickNode() const override { return parent()->isQtQuickNode(); }
+    QString qmlTypeName() const override { return parent()->qmlTypeName(); }
+    QString logicalModuleName() const override {
         return parent()->logicalModuleName();
     }
-    virtual QString logicalModuleVersion() const Q_DECL_OVERRIDE {
+    QString logicalModuleVersion() const override {
         return parent()->logicalModuleVersion();
     }
-    virtual QString logicalModuleIdentifier() const Q_DECL_OVERRIDE {
+    QString logicalModuleIdentifier() const override {
         return parent()->logicalModuleIdentifier();
     }
-    virtual QString element() const Q_DECL_OVERRIDE;
+    QString element() const override;
 
  private:
     PropertyNode* findCorrespondingCppProperty();
@@ -794,7 +794,7 @@ public:
     void addItem(const EnumItem& item);
     void setFlagsType(TypedefNode* typedeff);
     bool hasItem(const QString &name) const { return names_.contains(name); }
-    virtual bool isEnumType() const Q_DECL_OVERRIDE { return true; }
+    bool isEnumType() const override { return true; }
 
     const QList<EnumItem>& items() const { return items_; }
     Access itemAccess(const QString& name) const;
@@ -910,8 +910,8 @@ public:
     bool isConst() const { return const_; }
     bool isStatic() const { return static_; }
     bool isOverload() const { return overload_; }
-    bool isReimplemented() const Q_DECL_OVERRIDE { return reimplemented_; }
-    bool isFunction() const Q_DECL_OVERRIDE { return true; }
+    bool isReimplemented() const override { return reimplemented_; }
+    bool isFunction() const override { return true; }
     bool isSomeCtor() const { return isCtor() || isCCtor() || isMCtor(); }
     bool isMacroWithParams() const { return (metaness_ == MacroWithParams); }
     bool isMacroWithoutParams() const { return (metaness_ == MacroWithoutParams); }
@@ -927,22 +927,22 @@ public:
     bool isNonvirtual() const { return (virtualness_ == NonVirtual); }
     bool isVirtual() const { return (virtualness_ == NormalVirtual); }
     bool isPureVirtual() const { return (virtualness_ == PureVirtual); }
-    virtual bool isQmlSignal() const Q_DECL_OVERRIDE {
+    bool isQmlSignal() const override {
         return (type() == Node::QmlSignal) && (genus() == Node::QML);
     }
-    virtual bool isJsSignal() const Q_DECL_OVERRIDE {
+    bool isJsSignal() const override {
         return (type() == Node::QmlSignal) && (genus() == Node::JS);
     }
-    virtual bool isQmlSignalHandler() const Q_DECL_OVERRIDE {
+    bool isQmlSignalHandler() const override {
         return (type() == Node::QmlSignalHandler) && (genus() == Node::QML);
     }
-    virtual bool isJsSignalHandler() const Q_DECL_OVERRIDE {
+    bool isJsSignalHandler() const override {
         return (type() == Node::QmlSignalHandler) && (genus() == Node::JS);
     }
-    virtual bool isQmlMethod() const Q_DECL_OVERRIDE {
+    bool isQmlMethod() const override {
         return (type() == Node::QmlMethod) && (genus() == Node::QML);
     }
-    virtual bool isJsMethod() const Q_DECL_OVERRIDE {
+    bool isJsMethod() const override {
         return (type() == Node::QmlMethod) && (genus() == Node::JS);
     }
     const QVector<Parameter>& parameters() const { return parameters_; }
@@ -959,18 +959,18 @@ public:
     bool hasActiveAssociatedProperty() const;
 
     QStringList reconstructParameters(bool values = false) const;
-    virtual QString signature(bool values, bool noReturnType = false) const Q_DECL_OVERRIDE;
-    virtual QString element() const Q_DECL_OVERRIDE { return parent()->name(); }
-    virtual bool isAttached() const Q_DECL_OVERRIDE { return attached_; }
-    virtual bool isQtQuickNode() const Q_DECL_OVERRIDE { return parent()->isQtQuickNode(); }
-    virtual QString qmlTypeName() const Q_DECL_OVERRIDE { return parent()->qmlTypeName(); }
-    virtual QString logicalModuleName() const Q_DECL_OVERRIDE {
+    QString signature(bool values, bool noReturnType = false) const override;
+    QString element() const override { return parent()->name(); }
+    bool isAttached() const override { return attached_; }
+    bool isQtQuickNode() const override { return parent()->isQtQuickNode(); }
+    QString qmlTypeName() const override { return parent()->qmlTypeName(); }
+    QString logicalModuleName() const override {
         return parent()->logicalModuleName();
     }
-    virtual QString logicalModuleVersion() const Q_DECL_OVERRIDE {
+    QString logicalModuleVersion() const override {
         return parent()->logicalModuleVersion();
     }
-    virtual QString logicalModuleIdentifier() const Q_DECL_OVERRIDE {
+    QString logicalModuleIdentifier() const override {
         return parent()->logicalModuleIdentifier();
     }
     bool isPrivateSignal() const { return privateSignal_; }
@@ -1026,8 +1026,8 @@ public:
     PropertyNode(Aggregate* parent, const QString& name);
     virtual ~PropertyNode() { }
 
-    virtual void setDataType(const QString& dataType) Q_DECL_OVERRIDE { type_ = dataType; }
-    virtual bool isProperty() const Q_DECL_OVERRIDE { return true; }
+    void setDataType(const QString& dataType) override { type_ = dataType; }
+    bool isProperty() const override { return true; }
     void addFunction(FunctionNode* function, FunctionRole role);
     void addSignal(FunctionNode* function, FunctionRole role);
     void setStored(bool stored) { stored_ = toFlagValue(stored); }
@@ -1160,36 +1160,36 @@ class CollectionNode : public Aggregate
     }
     virtual ~CollectionNode() { }
 
-    virtual bool isCollectionNode() const Q_DECL_OVERRIDE { return true; }
-    virtual bool isGroup() const Q_DECL_OVERRIDE { return genus() == Node::DOC; }
-    virtual bool isModule() const Q_DECL_OVERRIDE { return genus() == Node::CPP; }
-    virtual bool isQmlModule() const Q_DECL_OVERRIDE { return genus() == Node::QML; }
-    virtual bool isJsModule() const Q_DECL_OVERRIDE { return genus() == Node::JS; }
-    virtual QString qtVariable() const Q_DECL_OVERRIDE { return qtVariable_; }
-    virtual void setQtVariable(const QString& v) Q_DECL_OVERRIDE { qtVariable_ = v; }
-    virtual void addMember(Node* node) Q_DECL_OVERRIDE;
-    virtual bool hasMembers() const Q_DECL_OVERRIDE;
-    virtual bool hasNamespaces() const Q_DECL_OVERRIDE;
-    virtual bool hasClasses() const Q_DECL_OVERRIDE;
-    virtual void getMemberNamespaces(NodeMap& out) Q_DECL_OVERRIDE;
-    virtual void getMemberClasses(NodeMap& out) const Q_DECL_OVERRIDE;
-    virtual bool wasSeen() const Q_DECL_OVERRIDE { return seen_; }
-    virtual QString title() const Q_DECL_OVERRIDE { return title_; }
-    virtual QString subTitle() const Q_DECL_OVERRIDE { return subtitle_; }
-    virtual QString fullTitle() const Q_DECL_OVERRIDE { return title_; }
-    virtual QString nameForLists() const Q_DECL_OVERRIDE { return title_; }
-    virtual void setTitle(const QString &title) Q_DECL_OVERRIDE;
-    virtual void setSubTitle(const QString &subTitle) Q_DECL_OVERRIDE { subtitle_ = subTitle; }
+    bool isCollectionNode() const override { return true; }
+    bool isGroup() const override { return genus() == Node::DOC; }
+    bool isModule() const override { return genus() == Node::CPP; }
+    bool isQmlModule() const override { return genus() == Node::QML; }
+    bool isJsModule() const override { return genus() == Node::JS; }
+    QString qtVariable() const override { return qtVariable_; }
+    void setQtVariable(const QString& v) override { qtVariable_ = v; }
+    void addMember(Node* node) override;
+    bool hasMembers() const override;
+    bool hasNamespaces() const override;
+    bool hasClasses() const override;
+    void getMemberNamespaces(NodeMap& out) override;
+    void getMemberClasses(NodeMap& out) const override;
+    bool wasSeen() const override { return seen_; }
+    QString title() const override { return title_; }
+    QString subTitle() const override { return subtitle_; }
+    QString fullTitle() const override { return title_; }
+    QString nameForLists() const override { return title_; }
+    void setTitle(const QString &title) override;
+    void setSubTitle(const QString &subTitle) override { subtitle_ = subTitle; }
 
-    virtual QString logicalModuleName() const Q_DECL_OVERRIDE { return logicalModuleName_; }
-    virtual QString logicalModuleVersion() const Q_DECL_OVERRIDE {
+    QString logicalModuleName() const override { return logicalModuleName_; }
+    QString logicalModuleVersion() const override {
         return logicalModuleVersionMajor_ + QLatin1Char('.') + logicalModuleVersionMinor_;
     }
-    virtual QString logicalModuleIdentifier() const Q_DECL_OVERRIDE {
+    QString logicalModuleIdentifier() const override {
         return logicalModuleName_ + logicalModuleVersionMajor_;
     }
-    virtual void setLogicalModuleInfo(const QString& arg) Q_DECL_OVERRIDE;
-    virtual void setLogicalModuleInfo(const QStringList& info) Q_DECL_OVERRIDE;
+    void setLogicalModuleInfo(const QString& arg) override;
+    void setLogicalModuleInfo(const QStringList& info) override;
 
     const NodeList& members() const { return members_; }
     void printMembers(const QString& title);

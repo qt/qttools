@@ -56,7 +56,7 @@ namespace qdesigner_internal {
         QDesignerIntrospection();
         virtual ~QDesignerIntrospection();
 
-        const QDesignerMetaObjectInterface* metaObject(const QObject *object) const Q_DECL_OVERRIDE;
+        const QDesignerMetaObjectInterface* metaObject(const QObject *object) const override;
 
         const QDesignerMetaObjectInterface* metaObjectForQMetaObject(const QMetaObject *metaObject) const;
     private:

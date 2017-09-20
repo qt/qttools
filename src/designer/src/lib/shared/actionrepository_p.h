@@ -83,9 +83,9 @@ public:
     QString actionName(int row) const;
     QAction *actionAt(const QModelIndex &index) const;
 
-    QMimeData *mimeData(const QModelIndexList &indexes) const Q_DECL_OVERRIDE;
-    QStringList mimeTypes() const Q_DECL_OVERRIDE;
-    bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) Q_DECL_OVERRIDE;
+    QMimeData *mimeData(const QModelIndexList &indexes) const override;
+    QStringList mimeTypes() const override;
+    bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) override;
 
     // Find the associated menus and toolbars, ignore toolbuttons
     static QWidgetList associatedWidgets(const QAction *action);
@@ -127,15 +127,15 @@ signals:
     void actionActivated(QAction *action);
 
 protected slots:
-    void currentChanged(const QModelIndex &current, const QModelIndex &previous) Q_DECL_OVERRIDE;
+    void currentChanged(const QModelIndex &current, const QModelIndex &previous) override;
 
 protected:
-    void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
-    void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;
-    void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
-    void focusInEvent(QFocusEvent *event) Q_DECL_OVERRIDE;
-    void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
-    void startDrag(Qt::DropActions supportedActions) Q_DECL_OVERRIDE;
+    void dragEnterEvent(QDragEnterEvent *event) override;
+    void dragMoveEvent(QDragMoveEvent *event) override;
+    void dropEvent(QDropEvent *event) override;
+    void focusInEvent(QFocusEvent *event) override;
+    void contextMenuEvent(QContextMenuEvent *event) override;
+    void startDrag(Qt::DropActions supportedActions) override;
 
 private slots:
     void slotActivated(const QModelIndex &);
@@ -161,15 +161,15 @@ signals:
     void actionActivated(QAction *action);
 
 protected slots:
-    void currentChanged(const QModelIndex &current, const QModelIndex &previous) Q_DECL_OVERRIDE;
+    void currentChanged(const QModelIndex &current, const QModelIndex &previous) override;
 
 protected:
-    void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
-    void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;
-    void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
-    void focusInEvent(QFocusEvent *event) Q_DECL_OVERRIDE;
-    void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
-    void startDrag(Qt::DropActions supportedActions) Q_DECL_OVERRIDE;
+    void dragEnterEvent(QDragEnterEvent *event) override;
+    void dragMoveEvent(QDragMoveEvent *event) override;
+    void dropEvent(QDropEvent *event) override;
+    void focusInEvent(QFocusEvent *event) override;
+    void contextMenuEvent(QContextMenuEvent *event) override;
+    void startDrag(Qt::DropActions supportedActions) override;
 
 private slots:
     void slotActivated(const QModelIndex &);
@@ -238,7 +238,7 @@ public:
     ActionRepositoryMimeData(QAction *, Qt::DropAction dropAction);
 
     const ActionList &actionList() const { return m_actionList; }
-    QStringList formats() const Q_DECL_OVERRIDE;
+    QStringList formats() const override;
 
     static QPixmap actionDragPixmap(const QAction *action);
 

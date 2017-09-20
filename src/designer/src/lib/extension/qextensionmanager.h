@@ -45,10 +45,10 @@ public:
     explicit QExtensionManager(QObject *parent = Q_NULLPTR);
     ~QExtensionManager();
 
-    void registerExtensions(QAbstractExtensionFactory *factory, const QString &iid = QString()) Q_DECL_OVERRIDE;
-    void unregisterExtensions(QAbstractExtensionFactory *factory, const QString &iid = QString()) Q_DECL_OVERRIDE;
+    void registerExtensions(QAbstractExtensionFactory *factory, const QString &iid = QString()) override;
+    void unregisterExtensions(QAbstractExtensionFactory *factory, const QString &iid = QString()) override;
 
-    QObject *extension(QObject *object, const QString &iid) const Q_DECL_OVERRIDE;
+    QObject *extension(QObject *object, const QString &iid) const override;
 
 private:
     typedef QList<QAbstractExtensionFactory*> FactoryList;

@@ -60,33 +60,33 @@ public:
     explicit FormWindowManager(QDesignerFormEditorInterface *core, QObject *parent = 0);
     virtual ~FormWindowManager();
 
-    QDesignerFormEditorInterface *core() const Q_DECL_OVERRIDE;
+    QDesignerFormEditorInterface *core() const override;
 
-    QAction *action(Action action) const Q_DECL_OVERRIDE;
-    QActionGroup *actionGroup(ActionGroup actionGroup) const Q_DECL_OVERRIDE;
+    QAction *action(Action action) const override;
+    QActionGroup *actionGroup(ActionGroup actionGroup) const override;
 
-    QDesignerFormWindowInterface *activeFormWindow() const Q_DECL_OVERRIDE;
+    QDesignerFormWindowInterface *activeFormWindow() const override;
 
-    int formWindowCount() const Q_DECL_OVERRIDE;
-    QDesignerFormWindowInterface *formWindow(int index) const Q_DECL_OVERRIDE;
+    int formWindowCount() const override;
+    QDesignerFormWindowInterface *formWindow(int index) const override;
 
-    QDesignerFormWindowInterface *createFormWindow(QWidget *parentWidget = 0, Qt::WindowFlags flags = 0) Q_DECL_OVERRIDE;
+    QDesignerFormWindowInterface *createFormWindow(QWidget *parentWidget = 0, Qt::WindowFlags flags = 0) override;
 
-    QPixmap createPreviewPixmap() const Q_DECL_OVERRIDE;
+    QPixmap createPreviewPixmap() const override;
 
-    bool eventFilter(QObject *o, QEvent *e) Q_DECL_OVERRIDE;
+    bool eventFilter(QObject *o, QEvent *e) override;
 
-    void dragItems(const QList<QDesignerDnDItemInterface*> &item_list) Q_DECL_OVERRIDE;
+    void dragItems(const QList<QDesignerDnDItemInterface*> &item_list) override;
 
     QUndoGroup *undoGroup() const;
 
-    PreviewManager *previewManager() const Q_DECL_OVERRIDE { return m_previewManager; }
+    PreviewManager *previewManager() const override { return m_previewManager; }
 
 public slots:
-    void addFormWindow(QDesignerFormWindowInterface *formWindow) Q_DECL_OVERRIDE;
-    void removeFormWindow(QDesignerFormWindowInterface *formWindow) Q_DECL_OVERRIDE;
-    void setActiveFormWindow(QDesignerFormWindowInterface *formWindow) Q_DECL_OVERRIDE;
-    void closeAllPreviews() Q_DECL_OVERRIDE;
+    void addFormWindow(QDesignerFormWindowInterface *formWindow) override;
+    void removeFormWindow(QDesignerFormWindowInterface *formWindow) override;
+    void setActiveFormWindow(QDesignerFormWindowInterface *formWindow) override;
+    void closeAllPreviews() override;
     void deviceProfilesChanged();
 
 private slots:
@@ -103,7 +103,7 @@ private slots:
     void slotActionBreakLayoutActivated();
     void slotActionAdjustSizeActivated();
     void slotActionSimplifyLayoutActivated();
-    void showPreview() Q_DECL_OVERRIDE;
+    void showPreview() override;
     void slotActionGroupPreviewInStyle(const QString &style, int deviceProfileIndex);
     void slotActionShowFormWindowSettingsDialog();
 

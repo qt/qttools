@@ -80,7 +80,7 @@ signals:
     void closeEventReceived(QCloseEvent *e);
 
 protected:
-    void closeEvent(QCloseEvent *e) Q_DECL_OVERRIDE;
+    void closeEvent(QCloseEvent *e) override;
 private:
     CloseEventPolicy m_policy;
 };

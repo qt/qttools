@@ -45,14 +45,14 @@ public:
     JsCodeMarker();
     ~JsCodeMarker();
 
-    virtual bool recognizeCode(const QString &code) Q_DECL_OVERRIDE;
-    virtual bool recognizeExtension(const QString &ext) Q_DECL_OVERRIDE;
-    virtual bool recognizeLanguage(const QString &language) Q_DECL_OVERRIDE;
-    virtual Atom::AtomType atomType() const Q_DECL_OVERRIDE;
+    bool recognizeCode(const QString &code) override;
+    bool recognizeExtension(const QString &ext) override;
+    bool recognizeLanguage(const QString &language) override;
+    Atom::AtomType atomType() const override;
 
     virtual QString markedUpCode(const QString &code,
                                  const Node *relative,
-                                 const Location &location) Q_DECL_OVERRIDE;
+                                 const Location &location) override;
 
 private:
     QString addMarkUp(const QString &code, const Node *relative,

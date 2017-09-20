@@ -98,22 +98,22 @@ protected:
     using QFormBuilder::createDom;
     using QFormBuilder::create;
 
-    QWidget *create(DomUI *ui, QWidget *parentWidget) Q_DECL_OVERRIDE;
-    DomWidget *createDom(QWidget *widget, DomWidget *ui_parentWidget, bool recursive = true) Q_DECL_OVERRIDE;
-    QWidget *create(DomWidget *ui_widget, QWidget *parentWidget) Q_DECL_OVERRIDE;
-    QLayout *create(DomLayout *ui_layout, QLayout *layout, QWidget *parentWidget) Q_DECL_OVERRIDE;
-    void createResources(DomResources *resources) Q_DECL_OVERRIDE;
+    QWidget *create(DomUI *ui, QWidget *parentWidget) override;
+    DomWidget *createDom(QWidget *widget, DomWidget *ui_parentWidget, bool recursive = true) override;
+    QWidget *create(DomWidget *ui_widget, QWidget *parentWidget) override;
+    QLayout *create(DomLayout *ui_layout, QLayout *layout, QWidget *parentWidget) override;
+    void createResources(DomResources *resources) override;
 
-    QWidget *createWidget(const QString &widgetName, QWidget *parentWidget, const QString &name) Q_DECL_OVERRIDE;
-    bool addItem(DomWidget *ui_widget, QWidget *widget, QWidget *parentWidget) Q_DECL_OVERRIDE;
-    bool addItem(DomLayoutItem *ui_item, QLayoutItem *item, QLayout *layout) Q_DECL_OVERRIDE;
+    QWidget *createWidget(const QString &widgetName, QWidget *parentWidget, const QString &name) override;
+    bool addItem(DomWidget *ui_widget, QWidget *widget, QWidget *parentWidget) override;
+    bool addItem(DomLayoutItem *ui_item, QLayoutItem *item, QLayout *layout) override;
 
     virtual QIcon nameToIcon(const QString &filePath, const QString &qrcPath);
     virtual QPixmap nameToPixmap(const QString &filePath, const QString &qrcPath);
 
-    void applyProperties(QObject *o, const QList<DomProperty*> &properties) Q_DECL_OVERRIDE;
+    void applyProperties(QObject *o, const QList<DomProperty*> &properties) override;
 
-    void loadExtraInfo(DomWidget *ui_widget, QWidget *widget, QWidget *parentWidget) Q_DECL_OVERRIDE;
+    void loadExtraInfo(DomWidget *ui_widget, QWidget *widget, QWidget *parentWidget) override;
 
     QtResourceSet *internalResourceSet() const { return m_tempResourceSet; }
 
@@ -144,7 +144,7 @@ public:
                              const DeviceProfile &deviceProfile = DeviceProfile());
 
 protected:
-    void createCustomWidgets(DomCustomWidgets *) Q_DECL_OVERRIDE;
+    void createCustomWidgets(DomCustomWidgets *) override;
 };
 
 

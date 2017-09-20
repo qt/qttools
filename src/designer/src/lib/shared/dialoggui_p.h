@@ -58,27 +58,27 @@ public:
     QMessageBox::StandardButton
         message(QWidget *parent, Message context, QMessageBox::Icon icon,
                 const QString &title, const QString &text, QMessageBox::StandardButtons buttons = QMessageBox::Ok,
-                QMessageBox::StandardButton defaultButton = QMessageBox::NoButton) Q_DECL_OVERRIDE;
+                QMessageBox::StandardButton defaultButton = QMessageBox::NoButton) override;
 
     QMessageBox::StandardButton
         message(QWidget *parent, Message context, QMessageBox::Icon icon,
                 const QString &title, const QString &text, const QString &informativeText,
                 QMessageBox::StandardButtons buttons = QMessageBox::Ok,
-                QMessageBox::StandardButton defaultButton = QMessageBox::NoButton) Q_DECL_OVERRIDE;
+                QMessageBox::StandardButton defaultButton = QMessageBox::NoButton) override;
 
     QMessageBox::StandardButton
         message(QWidget *parent, Message context, QMessageBox::Icon icon,
                 const QString &title, const QString &text, const QString &informativeText, const QString &detailedText,
                 QMessageBox::StandardButtons buttons = QMessageBox::Ok,
-                QMessageBox::StandardButton defaultButton = QMessageBox::NoButton) Q_DECL_OVERRIDE;
+                QMessageBox::StandardButton defaultButton = QMessageBox::NoButton) override;
 
-    QString getExistingDirectory(QWidget *parent = 0, const QString &caption = QString(), const QString &dir = QString(), QFileDialog::Options options = QFileDialog::ShowDirsOnly) Q_DECL_OVERRIDE;
-    QString getOpenFileName(QWidget *parent = 0, const QString &caption = QString(), const QString &dir = QString(), const QString &filter = QString(), QString *selectedFilter = 0, QFileDialog::Options options = 0) Q_DECL_OVERRIDE;
-    QStringList getOpenFileNames(QWidget *parent = 0, const QString &caption = QString(), const QString &dir = QString(), const QString &filter = QString(), QString *selectedFilter = 0, QFileDialog::Options options = 0) Q_DECL_OVERRIDE;
-    QString getSaveFileName(QWidget *parent = 0, const QString &caption = QString(), const QString &dir = QString(), const QString &filter = QString(), QString *selectedFilter = 0, QFileDialog::Options options = 0) Q_DECL_OVERRIDE;
+    QString getExistingDirectory(QWidget *parent = 0, const QString &caption = QString(), const QString &dir = QString(), QFileDialog::Options options = QFileDialog::ShowDirsOnly) override;
+    QString getOpenFileName(QWidget *parent = 0, const QString &caption = QString(), const QString &dir = QString(), const QString &filter = QString(), QString *selectedFilter = 0, QFileDialog::Options options = 0) override;
+    QStringList getOpenFileNames(QWidget *parent = 0, const QString &caption = QString(), const QString &dir = QString(), const QString &filter = QString(), QString *selectedFilter = 0, QFileDialog::Options options = 0) override;
+    QString getSaveFileName(QWidget *parent = 0, const QString &caption = QString(), const QString &dir = QString(), const QString &filter = QString(), QString *selectedFilter = 0, QFileDialog::Options options = 0) override;
 
-    QString getOpenImageFileName(QWidget *parent = 0, const QString &caption = QString(), const QString &dir = QString(), const QString &filter = QString(), QString *selectedFilter = 0, QFileDialog::Options options = 0) Q_DECL_OVERRIDE;
-    QStringList getOpenImageFileNames(QWidget *parent = 0, const QString &caption = QString(), const QString &dir = QString(), const QString &filter = QString(), QString *selectedFilter = 0, QFileDialog::Options options = 0) Q_DECL_OVERRIDE;
+    QString getOpenImageFileName(QWidget *parent = 0, const QString &caption = QString(), const QString &dir = QString(), const QString &filter = QString(), QString *selectedFilter = 0, QFileDialog::Options options = 0) override;
+    QStringList getOpenImageFileNames(QWidget *parent = 0, const QString &caption = QString(), const QString &dir = QString(), const QString &filter = QString(), QString *selectedFilter = 0, QFileDialog::Options options = 0) override;
 
 private:
     QFileIconProvider *ensureIconProvider();

@@ -53,7 +53,7 @@ class IconProvider : public QFileIconProvider {
 
 public:
     IconProvider();
-    QIcon icon (const QFileInfo &info) const Q_DECL_OVERRIDE;
+    QIcon icon (const QFileInfo &info) const override;
 
     inline bool loadCheck(const QFileInfo &info) const;
     QImage loadImage(const QString &fileName) const;

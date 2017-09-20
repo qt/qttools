@@ -49,7 +49,7 @@ protected:
     explicit ActionProviderBase(QWidget *widget);
 
 public:
-    void adjustIndicator(const QPoint &pos) Q_DECL_OVERRIDE;
+    void adjustIndicator(const QPoint &pos) override;
     virtual Qt::Orientation orientation() const = 0;
 
 protected:
@@ -66,12 +66,12 @@ class QT_FORMEDITOR_EXPORT QToolBarActionProvider: public QObject, public Action
 public:
     explicit QToolBarActionProvider(QToolBar *widget, QObject *parent = 0);
 
-    QRect actionGeometry(QAction *action) const Q_DECL_OVERRIDE;
-    QAction *actionAt(const QPoint &pos) const Q_DECL_OVERRIDE;
-    Qt::Orientation orientation() const Q_DECL_OVERRIDE;
+    QRect actionGeometry(QAction *action) const override;
+    QAction *actionAt(const QPoint &pos) const override;
+    Qt::Orientation orientation() const override;
 
 protected:
-    QRect indicatorGeometry(const QPoint &pos, Qt::LayoutDirection layoutDirection) const Q_DECL_OVERRIDE;
+    QRect indicatorGeometry(const QPoint &pos, Qt::LayoutDirection layoutDirection) const override;
 
 private:
     QToolBar *m_widget;
@@ -84,9 +84,9 @@ class QT_FORMEDITOR_EXPORT QMenuBarActionProvider: public QObject, public Action
 public:
     explicit QMenuBarActionProvider(QMenuBar *widget, QObject *parent = 0);
 
-    QRect actionGeometry(QAction *action) const Q_DECL_OVERRIDE;
-    QAction *actionAt(const QPoint &pos) const Q_DECL_OVERRIDE;
-    Qt::Orientation orientation() const Q_DECL_OVERRIDE;
+    QRect actionGeometry(QAction *action) const override;
+    QAction *actionAt(const QPoint &pos) const override;
+    Qt::Orientation orientation() const override;
 
 private:
     QMenuBar *m_widget;
@@ -99,9 +99,9 @@ class QT_FORMEDITOR_EXPORT QMenuActionProvider: public QObject, public ActionPro
 public:
     explicit QMenuActionProvider(QMenu *widget, QObject *parent = 0);
 
-    QRect actionGeometry(QAction *action) const Q_DECL_OVERRIDE;
-    QAction *actionAt(const QPoint &pos) const Q_DECL_OVERRIDE;
-    Qt::Orientation orientation() const Q_DECL_OVERRIDE;
+    QRect actionGeometry(QAction *action) const override;
+    QAction *actionAt(const QPoint &pos) const override;
+    Qt::Orientation orientation() const override;
 
 private:
     QMenu *m_widget;

@@ -173,7 +173,7 @@ public:
 
     void clear();
 
-    void showEvent(QShowEvent * /*e*/) Q_DECL_OVERRIDE
+    void showEvent(QShowEvent * /*e*/) override
     {
         updateBackground();
     }
@@ -200,14 +200,14 @@ public slots:
     void enableUpdateBackground(bool enable);
 
 protected:
-    void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
-    void mouseMoveEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
-    void mousePressEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
-    void mouseReleaseEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
-    void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
-    void mouseDoubleClickEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
-    void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
-    void contextMenuEvent(QContextMenuEvent * event) Q_DECL_OVERRIDE;
+    void paintEvent(QPaintEvent *e) override;
+    void mouseMoveEvent(QMouseEvent *e) override;
+    void mousePressEvent(QMouseEvent *e) override;
+    void mouseReleaseEvent(QMouseEvent *e) override;
+    void keyPressEvent(QKeyEvent *e) override;
+    void mouseDoubleClickEvent(QMouseEvent *e) override;
+    void resizeEvent(QResizeEvent *e) override;
+    void contextMenuEvent(QContextMenuEvent * event) override;
 
     virtual Connection *createConnection(QWidget *source, QWidget *target);
     virtual void modifyConnection(Connection *con);

@@ -52,12 +52,12 @@ class QAxWidgetPropertySheet: public QDesignerPropertySheet
 public:
     explicit QAxWidgetPropertySheet(QDesignerAxWidget *object, QObject *parent = 0);
 
-    bool isEnabled(int index) const Q_DECL_OVERRIDE;
-    QVariant property(int index) const Q_DECL_OVERRIDE;
-    void setProperty(int index, const QVariant &value) Q_DECL_OVERRIDE;
-    bool reset(int index) Q_DECL_OVERRIDE;
-    int indexOf(const QString &name) const Q_DECL_OVERRIDE;
-    bool dynamicPropertiesAllowed() const Q_DECL_OVERRIDE;
+    bool isEnabled(int index) const override;
+    QVariant property(int index) const override;
+    void setProperty(int index, const QVariant &value) override;
+    bool reset(int index) override;
+    int indexOf(const QString &name) const override;
+    bool dynamicPropertiesAllowed() const override;
 
     static const char *controlPropertyName;
 

@@ -43,20 +43,20 @@ public:
     PlainCodeMarker();
     ~PlainCodeMarker();
 
-    bool recognizeCode( const QString& code ) Q_DECL_OVERRIDE;
-    bool recognizeExtension( const QString& ext ) Q_DECL_OVERRIDE;
-    bool recognizeLanguage( const QString& lang ) Q_DECL_OVERRIDE;
-    Atom::AtomType atomType() const Q_DECL_OVERRIDE;
-    QString markedUpCode( const QString& code, const Node *relative, const Location &location ) Q_DECL_OVERRIDE;
+    bool recognizeCode( const QString& code ) override;
+    bool recognizeExtension( const QString& ext ) override;
+    bool recognizeLanguage( const QString& lang ) override;
+    Atom::AtomType atomType() const override;
+    QString markedUpCode( const QString& code, const Node *relative, const Location &location ) override;
     QString markedUpSynopsis( const Node *node, const Node *relative,
-                              SynopsisStyle style ) Q_DECL_OVERRIDE;
-    QString markedUpName( const Node *node ) Q_DECL_OVERRIDE;
-    QString markedUpFullName( const Node *node, const Node *relative ) Q_DECL_OVERRIDE;
-    QString markedUpEnumValue(const QString &enumValue, const Node *relative) Q_DECL_OVERRIDE;
-    QString markedUpIncludes( const QStringList& includes ) Q_DECL_OVERRIDE;
-    QString functionBeginRegExp( const QString& funcName ) Q_DECL_OVERRIDE;
-    QString functionEndRegExp( const QString& funcName ) Q_DECL_OVERRIDE;
-    QList<Section> sections(const Aggregate *innerNode, SynopsisStyle style, Status status) Q_DECL_OVERRIDE;
+                              SynopsisStyle style ) override;
+    QString markedUpName( const Node *node ) override;
+    QString markedUpFullName( const Node *node, const Node *relative ) override;
+    QString markedUpEnumValue(const QString &enumValue, const Node *relative) override;
+    QString markedUpIncludes( const QStringList& includes ) override;
+    QString functionBeginRegExp( const QString& funcName ) override;
+    QString functionEndRegExp( const QString& funcName ) override;
+    QList<Section> sections(const Aggregate *innerNode, SynopsisStyle style, Status status) override;
 };
 
 QT_END_NAMESPACE

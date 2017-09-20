@@ -71,17 +71,17 @@ public:
     virtual ~ActionEditor();
 
     QDesignerFormWindowInterface *formWindow() const;
-    void setFormWindow(QDesignerFormWindowInterface *formWindow) Q_DECL_OVERRIDE;
+    void setFormWindow(QDesignerFormWindowInterface *formWindow) override;
 
-    QDesignerFormEditorInterface *core() const Q_DECL_OVERRIDE;
+    QDesignerFormEditorInterface *core() const override;
 
     QAction *actionNew() const;
     QAction *actionDelete() const;
 
     QString filter() const;
 
-    void manageAction(QAction *action) Q_DECL_OVERRIDE;
-    void unmanageAction(QAction *action) Q_DECL_OVERRIDE;
+    void manageAction(QAction *action) override;
+    void unmanageAction(QAction *action) override;
 
     static ObjectNamingMode objectNamingMode() { return m_objectNamingMode; }
     static void setObjectNamingMode(ObjectNamingMode n) { m_objectNamingMode = n; }

@@ -53,9 +53,9 @@ class AppxEnginePrivate;
 class AppxEngine : public RunnerEngine
 {
 public:
-    qint64 pid() const Q_DECL_OVERRIDE;
-    int exitCode() const Q_DECL_OVERRIDE;
-    QString executable() const Q_DECL_OVERRIDE;
+    qint64 pid() const override;
+    int exitCode() const override;
+    QString executable() const override;
 
 protected:
     explicit AppxEngine(Runner *runner, AppxEnginePrivate *dd);

@@ -37,10 +37,10 @@ class ServicesProxyModel : public QSortFilterProxyModel
 
 public:
     ServicesProxyModel(QObject *parent = Q_NULLPTR);
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
 protected:
-    bool lessThan(const QModelIndex &left, const QModelIndex &right) const Q_DECL_OVERRIDE;
+    bool lessThan(const QModelIndex &left, const QModelIndex &right) const override;
 };
 
 #endif // SERVICESFILTERPROXYMODEL_H

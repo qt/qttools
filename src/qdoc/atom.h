@@ -209,13 +209,13 @@ class LinkAtom : public Atom
     LinkAtom(Atom* previous, const LinkAtom& t);
     virtual ~LinkAtom() { }
 
-    virtual bool isLinkAtom() const Q_DECL_OVERRIDE { return true; }
-    virtual Node::Genus genus() Q_DECL_OVERRIDE { resolveSquareBracketParams(); return genus_; }
-    virtual bool specifiesDomain() Q_DECL_OVERRIDE { resolveSquareBracketParams(); return (domain_ != 0); }
-    virtual Tree* domain() Q_DECL_OVERRIDE { resolveSquareBracketParams(); return domain_; }
-    virtual Node::NodeType goal() Q_DECL_OVERRIDE { resolveSquareBracketParams(); return goal_; }
-    virtual const QString& error() Q_DECL_OVERRIDE { return error_; }
-    virtual void resolveSquareBracketParams() Q_DECL_OVERRIDE;
+    bool isLinkAtom() const override { return true; }
+    Node::Genus genus() override { resolveSquareBracketParams(); return genus_; }
+    bool specifiesDomain() override { resolveSquareBracketParams(); return (domain_ != 0); }
+    Tree* domain() override { resolveSquareBracketParams(); return domain_; }
+    Node::NodeType goal() override { resolveSquareBracketParams(); return goal_; }
+    const QString& error() override { return error_; }
+    void resolveSquareBracketParams() override;
 
  protected:
     bool        resolved_;

@@ -51,15 +51,15 @@ class QStackedWidgetContainer: public QObject, public QDesignerContainerExtensio
 public:
     explicit QStackedWidgetContainer(QStackedWidget *widget, QObject *parent = 0);
 
-    int count() const Q_DECL_OVERRIDE { return m_widget->count(); }
-    QWidget *widget(int index) const Q_DECL_OVERRIDE { return m_widget->widget(index); }
+    int count() const override { return m_widget->count(); }
+    QWidget *widget(int index) const override { return m_widget->widget(index); }
 
-    int currentIndex() const Q_DECL_OVERRIDE { return m_widget->currentIndex(); }
-    void setCurrentIndex(int index) Q_DECL_OVERRIDE;
+    int currentIndex() const override { return m_widget->currentIndex(); }
+    void setCurrentIndex(int index) override;
 
-    void addWidget(QWidget *widget) Q_DECL_OVERRIDE;
-    void insertWidget(int index, QWidget *widget) Q_DECL_OVERRIDE;
-    void remove(int index) Q_DECL_OVERRIDE;
+    void addWidget(QWidget *widget) override;
+    void insertWidget(int index, QWidget *widget) override;
+    void remove(int index) override;
 
 private:
     QStackedWidget *m_widget;
@@ -73,15 +73,15 @@ class QTabWidgetContainer: public QObject, public QDesignerContainerExtension
 public:
     explicit QTabWidgetContainer(QTabWidget *widget, QObject *parent = 0);
 
-    int count() const Q_DECL_OVERRIDE { return m_widget->count(); }
-    QWidget *widget(int index) const Q_DECL_OVERRIDE { return m_widget->widget(index); }
+    int count() const override { return m_widget->count(); }
+    QWidget *widget(int index) const override { return m_widget->widget(index); }
 
-    int currentIndex() const Q_DECL_OVERRIDE { return m_widget->currentIndex(); }
-    void setCurrentIndex(int index) Q_DECL_OVERRIDE;
+    int currentIndex() const override { return m_widget->currentIndex(); }
+    void setCurrentIndex(int index) override;
 
-    void addWidget(QWidget *widget) Q_DECL_OVERRIDE;
-    void insertWidget(int index, QWidget *widget) Q_DECL_OVERRIDE;
-    void remove(int index) Q_DECL_OVERRIDE;
+    void addWidget(QWidget *widget) override;
+    void insertWidget(int index, QWidget *widget) override;
+    void remove(int index) override;
 
 private:
     QTabWidget *m_widget;
@@ -95,15 +95,15 @@ class QToolBoxContainer: public QObject, public QDesignerContainerExtension
 public:
     explicit QToolBoxContainer(QToolBox *widget, QObject *parent = 0);
 
-    int count() const Q_DECL_OVERRIDE { return m_widget->count(); }
-    QWidget *widget(int index) const Q_DECL_OVERRIDE { return m_widget->widget(index); }
+    int count() const override { return m_widget->count(); }
+    QWidget *widget(int index) const override { return m_widget->widget(index); }
 
-    int currentIndex() const Q_DECL_OVERRIDE { return m_widget->currentIndex(); }
-    void setCurrentIndex(int index) Q_DECL_OVERRIDE;
+    int currentIndex() const override { return m_widget->currentIndex(); }
+    void setCurrentIndex(int index) override;
 
-    void addWidget(QWidget *widget) Q_DECL_OVERRIDE;
-    void insertWidget(int index, QWidget *widget) Q_DECL_OVERRIDE;
-    void remove(int index) Q_DECL_OVERRIDE;
+    void addWidget(QWidget *widget) override;
+    void insertWidget(int index, QWidget *widget) override;
+    void remove(int index) override;
 
 private:
     QToolBox *m_widget;
@@ -118,16 +118,16 @@ class SingleChildContainer: public QDesignerContainerExtension
 protected:
     explicit SingleChildContainer(Container *widget, bool active = true);
 public:
-    int count() const Q_DECL_OVERRIDE;
-    QWidget *widget(int index) const Q_DECL_OVERRIDE;
-    int currentIndex() const Q_DECL_OVERRIDE;
-    void setCurrentIndex(int /*index*/) Q_DECL_OVERRIDE {}
-    void addWidget(QWidget *widget) Q_DECL_OVERRIDE;
-    void insertWidget(int index, QWidget *widget) Q_DECL_OVERRIDE;
-    void remove(int /*index*/) Q_DECL_OVERRIDE {}
+    int count() const override;
+    QWidget *widget(int index) const override;
+    int currentIndex() const override;
+    void setCurrentIndex(int /*index*/) override {}
+    void addWidget(QWidget *widget) override;
+    void insertWidget(int index, QWidget *widget) override;
+    void remove(int /*index*/) override {}
 
-    bool canAddWidget() const Q_DECL_OVERRIDE { return false; }
-    bool canRemove(int) const Q_DECL_OVERRIDE { return false; }
+    bool canAddWidget() const override { return false; }
+    bool canRemove(int) const override { return false; }
 
 private:
     const bool m_active;

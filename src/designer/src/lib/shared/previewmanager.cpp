@@ -103,7 +103,7 @@ class DesignerZoomProxyWidget : public ZoomProxyWidget  {
 public:
     DesignerZoomProxyWidget(QGraphicsItem *parent = 0, Qt::WindowFlags wFlags = 0);
 protected:
-    QSizeF sizeHint(Qt::SizeHint which, const QSizeF & constraint = QSizeF() ) const Q_DECL_OVERRIDE;
+    QSizeF sizeHint(Qt::SizeHint which, const QSizeF & constraint = QSizeF() ) const override;
 };
 
 DesignerZoomProxyWidget::DesignerZoomProxyWidget(QGraphicsItem *parent, Qt::WindowFlags wFlags) :
@@ -124,7 +124,7 @@ class DesignerZoomWidget : public ZoomWidget {
 public:
     DesignerZoomWidget(QWidget *parent = 0);
 private:
-    QGraphicsProxyWidget *createProxyWidget(QGraphicsItem *parent = 0, Qt::WindowFlags wFlags = 0) const Q_DECL_OVERRIDE;
+    QGraphicsProxyWidget *createProxyWidget(QGraphicsItem *parent = 0, Qt::WindowFlags wFlags = 0) const override;
 };
 
 DesignerZoomWidget::DesignerZoomWidget(QWidget *parent) :
@@ -328,7 +328,7 @@ class ZoomablePreviewDeviceSkin : public PreviewDeviceSkin
     Q_OBJECT
 public:
     explicit ZoomablePreviewDeviceSkin(const DeviceSkinParameters &parameters, QWidget *parent);
-    void setPreview(QWidget *w) Q_DECL_OVERRIDE;
+    void setPreview(QWidget *w) override;
 
     int zoomPercent() const; // Device Skins have a double 'zoom' property
 
@@ -339,9 +339,9 @@ signals:
     void zoomPercentChanged(int);
 
 protected:
-    void populateContextMenu(QMenu *m) Q_DECL_OVERRIDE;
-    QMatrix skinTransform() const Q_DECL_OVERRIDE;
-    void fitWidget(const QSize &size) Q_DECL_OVERRIDE;
+    void populateContextMenu(QMenu *m) override;
+    QMatrix skinTransform() const override;
+    void fitWidget(const QSize &size) override;
 
 private:
     ZoomMenu *m_zoomMenu;

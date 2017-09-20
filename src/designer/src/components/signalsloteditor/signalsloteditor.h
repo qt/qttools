@@ -50,8 +50,8 @@ public:
 
     virtual void setSignal(SignalSlotConnection *con, const QString &member);
     virtual void setSlot(SignalSlotConnection *con, const QString &member);
-    void setSource(Connection *con, const QString &obj_name) Q_DECL_OVERRIDE;
-    void setTarget(Connection *con, const QString &obj_name) Q_DECL_OVERRIDE;
+    void setSource(Connection *con, const QString &obj_name) override;
+    void setTarget(Connection *con, const QString &obj_name) override;
 
     DomConnections *toUi() const;
     void fromUi(const DomConnections *connections, QWidget *parent);
@@ -63,11 +63,11 @@ public:
     void addEmptyConnection();
 
 protected:
-    QWidget *widgetAt(const QPoint &pos) const Q_DECL_OVERRIDE;
+    QWidget *widgetAt(const QPoint &pos) const override;
 
 private:
-    Connection *createConnection(QWidget *source, QWidget *destination) Q_DECL_OVERRIDE;
-    void modifyConnection(Connection *con) Q_DECL_OVERRIDE;
+    Connection *createConnection(QWidget *source, QWidget *destination) override;
+    void modifyConnection(Connection *con) override;
 
     QDesignerFormWindowInterface *m_form_window;
     bool m_showAllSignalsSlots;

@@ -59,17 +59,17 @@ namespace  {
     class QDesignerMetaEnum : public QDesignerMetaEnumInterface {
     public:
         QDesignerMetaEnum(const QMetaEnum &qEnum);
-        bool isFlag() const Q_DECL_OVERRIDE                        { return m_enum.isFlag(); }
-        QString key(int index) const Q_DECL_OVERRIDE               { return charToQString(m_enum.key(index)); }
-        int keyCount() const Q_DECL_OVERRIDE                       { return m_enum.keyCount(); }
-        int keyToValue(const QString &key) const Q_DECL_OVERRIDE   { return m_enum.keyToValue(key.toUtf8()); }
-        int keysToValue(const QString &keys) const Q_DECL_OVERRIDE { return m_enum.keysToValue(keys.toUtf8()); }
-        QString name() const Q_DECL_OVERRIDE                       { return m_name; }
-        QString scope() const Q_DECL_OVERRIDE                      { return m_scope; }
-        QString separator() const Q_DECL_OVERRIDE;
-        int value(int index) const Q_DECL_OVERRIDE                 { return m_enum.value(index); }
-        QString valueToKey(int value) const Q_DECL_OVERRIDE        { return charToQString(m_enum.valueToKey(value)); }
-        QString valueToKeys(int value) const Q_DECL_OVERRIDE       { return charToQString(m_enum.valueToKeys(value)); }
+        bool isFlag() const override                        { return m_enum.isFlag(); }
+        QString key(int index) const override               { return charToQString(m_enum.key(index)); }
+        int keyCount() const override                       { return m_enum.keyCount(); }
+        int keyToValue(const QString &key) const override   { return m_enum.keyToValue(key.toUtf8()); }
+        int keysToValue(const QString &keys) const override { return m_enum.keysToValue(keys.toUtf8()); }
+        QString name() const override                       { return m_name; }
+        QString scope() const override                      { return m_scope; }
+        QString separator() const override;
+        int value(int index) const override                 { return m_enum.value(index); }
+        QString valueToKey(int value) const override        { return charToQString(m_enum.valueToKey(value)); }
+        QString valueToKeys(int value) const override       { return charToQString(m_enum.valueToKeys(value)); }
 
     private:
         const QMetaEnum m_enum;
@@ -96,22 +96,22 @@ namespace  {
         QDesignerMetaProperty(const QMetaProperty &property);
         virtual ~QDesignerMetaProperty();
 
-        const QDesignerMetaEnumInterface *enumerator() const Q_DECL_OVERRIDE { return m_enumerator; }
+        const QDesignerMetaEnumInterface *enumerator() const override { return m_enumerator; }
 
-        Kind kind() const Q_DECL_OVERRIDE { return m_kind; }
+        Kind kind() const override { return m_kind; }
 
-        AccessFlags accessFlags() const Q_DECL_OVERRIDE { return m_access; }
-        Attributes attributes(const QObject *object = 0) const Q_DECL_OVERRIDE;
+        AccessFlags accessFlags() const override { return m_access; }
+        Attributes attributes(const QObject *object = 0) const override;
 
-        QVariant::Type type() const Q_DECL_OVERRIDE { return m_property.type(); }
-        QString name() const Q_DECL_OVERRIDE        { return m_name; }
-        QString typeName() const Q_DECL_OVERRIDE    { return m_typeName; }
-        int userType() const Q_DECL_OVERRIDE        { return m_property.userType(); }
-        bool hasSetter() const Q_DECL_OVERRIDE      { return m_property.hasStdCppSet(); }
+        QVariant::Type type() const override { return m_property.type(); }
+        QString name() const override        { return m_name; }
+        QString typeName() const override    { return m_typeName; }
+        int userType() const override        { return m_property.userType(); }
+        bool hasSetter() const override      { return m_property.hasStdCppSet(); }
 
-        QVariant read(const QObject *object) const Q_DECL_OVERRIDE { return m_property.read(object); }
-        bool reset(QObject *object) const  Q_DECL_OVERRIDE { return m_property.reset(object); }
-        bool write(QObject *object, const QVariant &value) const Q_DECL_OVERRIDE { return m_property.write(object, value); }
+        QVariant read(const QObject *object) const override { return m_property.read(object); }
+        bool reset(QObject *object) const  override { return m_property.reset(object); }
+        bool write(QObject *object, const QVariant &value) const override { return m_property.write(object, value); }
 
     private:
         const QMetaProperty m_property;

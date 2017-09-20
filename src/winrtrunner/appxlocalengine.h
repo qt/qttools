@@ -56,26 +56,26 @@ public:
     static RunnerEngine *create(Runner *runner);
     static QStringList deviceNames();
 
-    bool install(bool removeFirst = false) Q_DECL_OVERRIDE;
-    bool remove() Q_DECL_OVERRIDE;
-    bool start() Q_DECL_OVERRIDE;
+    bool install(bool removeFirst = false) override;
+    bool remove() override;
+    bool start() override;
     bool enableDebugging(const QString &debuggerExecutable,
-                        const QString &debuggerArguments) Q_DECL_OVERRIDE;
-    bool disableDebugging() Q_DECL_OVERRIDE;
-    bool suspend() Q_DECL_OVERRIDE;
-    bool waitForFinished(int secs) Q_DECL_OVERRIDE;
-    bool stop() Q_DECL_OVERRIDE;
+                        const QString &debuggerArguments) override;
+    bool disableDebugging() override;
+    bool suspend() override;
+    bool waitForFinished(int secs) override;
+    bool stop() override;
 
-    QString devicePath(const QString &relativePath) const Q_DECL_OVERRIDE;
-    bool sendFile(const QString &localFile, const QString &deviceFile) Q_DECL_OVERRIDE;
-    bool receiveFile(const QString &deviceFile, const QString &localFile) Q_DECL_OVERRIDE;
+    QString devicePath(const QString &relativePath) const override;
+    bool sendFile(const QString &localFile, const QString &deviceFile) override;
+    bool receiveFile(const QString &deviceFile, const QString &localFile) override;
 
 private:
     explicit AppxLocalEngine(Runner *runner);
     ~AppxLocalEngine();
 
-    QString extensionSdkPath() const Q_DECL_OVERRIDE;
-    bool installPackage(IAppxManifestReader *reader, const QString &filePath) Q_DECL_OVERRIDE;
+    QString extensionSdkPath() const override;
+    bool installPackage(IAppxManifestReader *reader, const QString &filePath) override;
 
     bool parseExitCode();
     friend struct QScopedPointerDeleter<AppxLocalEngine>;

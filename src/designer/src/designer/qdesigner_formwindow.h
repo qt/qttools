@@ -66,9 +66,9 @@ signals:
     void triggerAction();
 
 protected:
-    void changeEvent(QEvent *e) Q_DECL_OVERRIDE;
-    void closeEvent(QCloseEvent *ev) Q_DECL_OVERRIDE;
-    void resizeEvent(QResizeEvent* rev) Q_DECL_OVERRIDE;
+    void changeEvent(QEvent *e) override;
+    void closeEvent(QCloseEvent *ev) override;
+    void resizeEvent(QResizeEvent* rev) override;
 
 private:
     int getNumberOfUntitledWindows() const;

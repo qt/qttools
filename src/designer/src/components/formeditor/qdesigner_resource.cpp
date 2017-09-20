@@ -133,13 +133,13 @@ public:
     QStringList loadedQrcFiles() const                    { return m_loadedQrcFiles.keys(); } // needed only for loading old resource attribute of <iconset> tag.
 #endif
 
-    QVariant loadResource(const QDir &workingDirectory, const DomProperty *icon) const Q_DECL_OVERRIDE;
+    QVariant loadResource(const QDir &workingDirectory, const DomProperty *icon) const override;
 
-    QVariant toNativeValue(const QVariant &value) const Q_DECL_OVERRIDE;
+    QVariant toNativeValue(const QVariant &value) const override;
 
-    DomProperty *saveResource(const QDir &workingDirectory, const QVariant &value) const Q_DECL_OVERRIDE;
+    DomProperty *saveResource(const QDir &workingDirectory, const QVariant &value) const override;
 
-    bool isResourceType(const QVariant &value) const Q_DECL_OVERRIDE;
+    bool isResourceType(const QVariant &value) const override;
 private:
 
     QDesignerFormEditorInterface *m_core;
@@ -361,11 +361,11 @@ class QDesignerTextBuilder : public QTextBuilder
 public:
     QDesignerTextBuilder() {}
 
-    QVariant loadText(const DomProperty *icon) const Q_DECL_OVERRIDE;
+    QVariant loadText(const DomProperty *icon) const override;
 
-    QVariant toNativeValue(const QVariant &value) const Q_DECL_OVERRIDE;
+    QVariant toNativeValue(const QVariant &value) const override;
 
-    DomProperty *saveText(const QVariant &value) const Q_DECL_OVERRIDE;
+    DomProperty *saveText(const QVariant &value) const override;
 };
 
 QVariant QDesignerTextBuilder::loadText(const DomProperty *text) const

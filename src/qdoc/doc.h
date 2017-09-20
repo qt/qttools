@@ -92,9 +92,9 @@ public:
     TopicRef() { }
     ~TopicRef();
 
-    virtual bool isMapRef() const Q_DECL_OVERRIDE { return false; }
-    virtual const DitaRefList* subrefs() const Q_DECL_OVERRIDE { return &subrefs_; }
-    virtual void appendSubref(DitaRef* t) Q_DECL_OVERRIDE { subrefs_.append(t); }
+    bool isMapRef() const override { return false; }
+    const DitaRefList* subrefs() const override { return &subrefs_; }
+    void appendSubref(DitaRef* t) override { subrefs_.append(t); }
 
 private:
     DitaRefList subrefs_;
@@ -106,7 +106,7 @@ public:
     MapRef() { }
     ~MapRef() { }
 
-    virtual bool isMapRef() const Q_DECL_OVERRIDE { return true; }
+    bool isMapRef() const override { return true; }
 };
 
 class Doc

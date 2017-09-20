@@ -72,10 +72,10 @@ public:
     HtmlGenerator();
     ~HtmlGenerator();
 
-    virtual void initializeGenerator(const Config& config) Q_DECL_OVERRIDE;
-    virtual void terminateGenerator() Q_DECL_OVERRIDE;
-    virtual QString format() Q_DECL_OVERRIDE;
-    virtual void generateDocs() Q_DECL_OVERRIDE;
+    void initializeGenerator(const Config& config) override;
+    void terminateGenerator() override;
+    QString format() override;
+    void generateDocs() override;
     void generateManifestFiles();
 
     QString protectEnc(const QString &string);
@@ -83,18 +83,18 @@ public:
     static QString sinceTitle(int i) { return sinceTitles[i]; }
 
 protected:
-    virtual void generateQAPage() Q_DECL_OVERRIDE;
+    void generateQAPage() override;
     QString generateLinksToLinksPage(const QString& module, CodeMarker* marker);
     QString generateLinksToBrokenLinksPage(CodeMarker* marker, int& count);
     virtual int generateAtom(const Atom *atom,
                              const Node *relative,
-                             CodeMarker *marker) Q_DECL_OVERRIDE;
-    virtual void generateClassLikeNode(Aggregate* inner, CodeMarker* marker) Q_DECL_OVERRIDE;
-    virtual void generateQmlTypePage(QmlTypeNode* qcn, CodeMarker* marker) Q_DECL_OVERRIDE;
-    virtual void generateQmlBasicTypePage(QmlBasicTypeNode* qbtn, CodeMarker* marker) Q_DECL_OVERRIDE;
-    virtual void generateDocumentNode(DocumentNode* dn, CodeMarker* marker) Q_DECL_OVERRIDE;
-    virtual void generateCollectionNode(CollectionNode* cn, CodeMarker* marker) Q_DECL_OVERRIDE;
-    virtual QString fileExtension() const Q_DECL_OVERRIDE;
+                             CodeMarker *marker) override;
+    void generateClassLikeNode(Aggregate* inner, CodeMarker* marker) override;
+    void generateQmlTypePage(QmlTypeNode* qcn, CodeMarker* marker) override;
+    void generateQmlBasicTypePage(QmlBasicTypeNode* qbtn, CodeMarker* marker) override;
+    void generateDocumentNode(DocumentNode* dn, CodeMarker* marker) override;
+    void generateCollectionNode(CollectionNode* cn, CodeMarker* marker) override;
+    QString fileExtension() const override;
     virtual QString refForNode(const Node *node);
     virtual QString linkForNode(const Node *node, const Node *relative);
 
@@ -181,7 +181,7 @@ private:
     void generateDetailedQmlMember(Node *node,
                                    const Aggregate *relative,
                                    CodeMarker *marker);
-    void generateQmlInherits(QmlTypeNode* qcn, CodeMarker* marker) Q_DECL_OVERRIDE;
+    void generateQmlInherits(QmlTypeNode* qcn, CodeMarker* marker) override;
     void generateQmlInstantiates(QmlTypeNode* qcn, CodeMarker* marker);
     void generateInstantiatedBy(ClassNode* cn, CodeMarker* marker);
 
@@ -212,7 +212,7 @@ private:
 
     inline bool hasBrief(const Node *node);
     QString registerRef(const QString& ref);
-    virtual QString fileBase(const Node *node) const Q_DECL_OVERRIDE;
+    QString fileBase(const Node *node) const override;
     QString fileName(const Node *node);
     static int hOffset(const Node *node);
     static bool isThreeColumnEnumValueTable(const Atom *atom);

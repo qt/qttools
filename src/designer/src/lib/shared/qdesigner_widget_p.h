@@ -63,11 +63,11 @@ public:
 
     void updatePixmap();
 
-    QSize minimumSizeHint() const Q_DECL_OVERRIDE
+    QSize minimumSizeHint() const override
     { return QWidget::minimumSizeHint().expandedTo(QSize(16, 16)); }
 
 protected:
-    void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
+    void paintEvent(QPaintEvent *e) override;
 
 private:
     qdesigner_internal::FormWindowBase* m_formWindow;

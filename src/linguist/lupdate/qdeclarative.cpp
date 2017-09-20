@@ -419,9 +419,9 @@ public:
     bool operator()() const { return directives != 0; }
     int end() const { return lastOffset; }
 
-    void pragmaLibrary() Q_DECL_OVERRIDE { consumeDirective(); }
-    void importFile(const QString &, const QString &, int, int) Q_DECL_OVERRIDE { consumeDirective(); }
-    void importModule(const QString &, const QString &, const QString &, int, int) Q_DECL_OVERRIDE { consumeDirective(); }
+    void pragmaLibrary() override { consumeDirective(); }
+    void importFile(const QString &, const QString &, int, int) override { consumeDirective(); }
+    void importModule(const QString &, const QString &, const QString &, int, int) override { consumeDirective(); }
 
 private:
     void consumeDirective()

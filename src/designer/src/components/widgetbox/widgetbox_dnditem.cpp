@@ -70,9 +70,9 @@ public:
 
 protected:
 
-    QWidget *create(DomWidget *ui_widget, QWidget *parents) Q_DECL_OVERRIDE;
-    QWidget *createWidget(const QString &widgetName, QWidget *parentWidget, const QString &name) Q_DECL_OVERRIDE;
-    void createCustomWidgets(DomCustomWidgets *) Q_DECL_OVERRIDE;
+    QWidget *create(DomWidget *ui_widget, QWidget *parents) override;
+    QWidget *createWidget(const QString &widgetName, QWidget *parentWidget, const QString &name) override;
+    void createCustomWidgets(DomCustomWidgets *) override;
 };
 
 WidgetBoxResource::WidgetBoxResource(QDesignerFormEditorInterface *core) :

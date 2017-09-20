@@ -46,25 +46,25 @@ public:
     explicit FormWindowCursor(FormWindow *fw, QObject *parent = 0);
     virtual ~FormWindowCursor();
 
-    QDesignerFormWindowInterface *formWindow() const Q_DECL_OVERRIDE;
+    QDesignerFormWindowInterface *formWindow() const override;
 
-    bool movePosition(MoveOperation op, MoveMode mode) Q_DECL_OVERRIDE;
+    bool movePosition(MoveOperation op, MoveMode mode) override;
 
-    int position() const Q_DECL_OVERRIDE;
-    void setPosition(int pos, MoveMode mode) Q_DECL_OVERRIDE;
+    int position() const override;
+    void setPosition(int pos, MoveMode mode) override;
 
-    QWidget *current() const Q_DECL_OVERRIDE;
+    QWidget *current() const override;
 
-    int widgetCount() const Q_DECL_OVERRIDE;
-    QWidget *widget(int index) const Q_DECL_OVERRIDE;
+    int widgetCount() const override;
+    QWidget *widget(int index) const override;
 
-    bool hasSelection() const Q_DECL_OVERRIDE;
-    int selectedWidgetCount() const Q_DECL_OVERRIDE;
-    QWidget *selectedWidget(int index) const Q_DECL_OVERRIDE;
+    bool hasSelection() const override;
+    int selectedWidgetCount() const override;
+    QWidget *selectedWidget(int index) const override;
 
-    void setProperty(const QString &name, const QVariant &value) Q_DECL_OVERRIDE;
-    void setWidgetProperty(QWidget *widget, const QString &name, const QVariant &value) Q_DECL_OVERRIDE;
-    void resetWidgetProperty(QWidget *widget, const QString &name) Q_DECL_OVERRIDE;
+    void setProperty(const QString &name, const QVariant &value) override;
+    void setWidgetProperty(QWidget *widget, const QString &name, const QVariant &value) override;
+    void resetWidgetProperty(QWidget *widget, const QString &name) override;
 
 public slots:
     void update();

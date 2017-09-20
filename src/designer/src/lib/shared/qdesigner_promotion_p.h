@@ -55,22 +55,22 @@ namespace qdesigner_internal {
     public:
         explicit QDesignerPromotion(QDesignerFormEditorInterface *core);
 
-        PromotedClasses promotedClasses() const Q_DECL_OVERRIDE;
+        PromotedClasses promotedClasses() const override;
 
-        QSet<QString> referencedPromotedClassNames() const Q_DECL_OVERRIDE;
+        QSet<QString> referencedPromotedClassNames() const override;
 
         virtual bool addPromotedClass(const QString &baseClass,
                                       const QString &className,
                                       const QString &includeFile,
-                                      QString *errorMessage) Q_DECL_OVERRIDE;
+                                      QString *errorMessage) override;
 
-        bool removePromotedClass(const QString &className, QString *errorMessage) Q_DECL_OVERRIDE;
+        bool removePromotedClass(const QString &className, QString *errorMessage) override;
 
-        bool changePromotedClassName(const QString &oldclassName, const QString &newClassName, QString *errorMessage) Q_DECL_OVERRIDE;
+        bool changePromotedClassName(const QString &oldclassName, const QString &newClassName, QString *errorMessage) override;
 
-        bool setPromotedClassIncludeFile(const QString &className, const QString &includeFile, QString *errorMessage) Q_DECL_OVERRIDE;
+        bool setPromotedClassIncludeFile(const QString &className, const QString &includeFile, QString *errorMessage) override;
 
-        QList<QDesignerWidgetDataBaseItemInterface *> promotionBaseClasses() const Q_DECL_OVERRIDE;
+        QList<QDesignerWidgetDataBaseItemInterface *> promotionBaseClasses() const override;
 
     private:
         bool canBePromoted(const QDesignerWidgetDataBaseItemInterface *) const;

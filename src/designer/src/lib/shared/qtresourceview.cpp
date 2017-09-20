@@ -79,7 +79,7 @@ public:
     ResourceListWidget(QWidget *parent = 0);
 
 protected:
-    void startDrag(Qt::DropActions supportedActions) Q_DECL_OVERRIDE;
+    void startDrag(Qt::DropActions supportedActions) override;
 };
 
 ResourceListWidget::ResourceListWidget(QWidget *parent) :

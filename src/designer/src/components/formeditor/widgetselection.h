@@ -114,7 +114,7 @@ public:
 
     QDesignerFormEditorInterface *core() const;
 
-    bool eventFilter(QObject *object, QEvent *event) Q_DECL_OVERRIDE;
+    bool eventFilter(QObject *object, QEvent *event) override;
 
     enum  WidgetState { UnlaidOut, LaidOut, ManagedGridLayout, ManagedFormLayout };
     static WidgetState widgetState(const QDesignerFormEditorInterface *core, QWidget *w);

@@ -49,13 +49,13 @@ class QMdiAreaContainer: public QObject, public QDesignerContainerExtension
 public:
     explicit QMdiAreaContainer(QMdiArea *widget, QObject *parent = 0);
 
-    int count() const Q_DECL_OVERRIDE;
-    QWidget *widget(int index) const Q_DECL_OVERRIDE;
-    int currentIndex() const Q_DECL_OVERRIDE;
-    void setCurrentIndex(int index) Q_DECL_OVERRIDE;
-    void addWidget(QWidget *widget) Q_DECL_OVERRIDE;
-    void insertWidget(int index, QWidget *widget) Q_DECL_OVERRIDE;
-    void remove(int index) Q_DECL_OVERRIDE;
+    int count() const override;
+    QWidget *widget(int index) const override;
+    int currentIndex() const override;
+    void setCurrentIndex(int index) override;
+    void addWidget(QWidget *widget) override;
+    void insertWidget(int index, QWidget *widget) override;
+    void remove(int index) override;
 
     // Semismart positioning of a new MDI child after cascading
     static void positionNewMdiChild(const QWidget *area, QWidget *mdiChild);
@@ -73,11 +73,11 @@ class QMdiAreaPropertySheet: public QDesignerPropertySheet
 public:
     explicit QMdiAreaPropertySheet(QWidget *mdiArea, QObject *parent = 0);
 
-    void setProperty(int index, const QVariant &value) Q_DECL_OVERRIDE;
-    bool reset(int index) Q_DECL_OVERRIDE;
-    bool isEnabled(int index) const Q_DECL_OVERRIDE;
-    bool isChanged(int index) const Q_DECL_OVERRIDE;
-    QVariant property(int index) const Q_DECL_OVERRIDE;
+    void setProperty(int index, const QVariant &value) override;
+    bool reset(int index) override;
+    bool isEnabled(int index) const override;
+    bool isChanged(int index) const override;
+    QVariant property(int index) const override;
 
     // Check whether the property is to be saved. Returns false for the page
     // properties (as the property sheet has no concept of 'stored')

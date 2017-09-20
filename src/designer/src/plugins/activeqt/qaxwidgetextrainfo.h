@@ -46,14 +46,14 @@ class QAxWidgetExtraInfo: public QObject, public QDesignerExtraInfoExtension
 public:
     QAxWidgetExtraInfo(QDesignerAxWidget *widget, QDesignerFormEditorInterface *core, QObject *parent);
 
-    QWidget *widget() const Q_DECL_OVERRIDE;
-    QDesignerFormEditorInterface *core() const Q_DECL_OVERRIDE;
+    QWidget *widget() const override;
+    QDesignerFormEditorInterface *core() const override;
 
-    bool saveUiExtraInfo(DomUI *ui) Q_DECL_OVERRIDE;
-    bool loadUiExtraInfo(DomUI *ui) Q_DECL_OVERRIDE;
+    bool saveUiExtraInfo(DomUI *ui) override;
+    bool loadUiExtraInfo(DomUI *ui) override;
 
-    bool saveWidgetExtraInfo(DomWidget *ui_widget) Q_DECL_OVERRIDE;
-    bool loadWidgetExtraInfo(DomWidget *ui_widget) Q_DECL_OVERRIDE;
+    bool saveWidgetExtraInfo(DomWidget *ui_widget) override;
+    bool loadWidgetExtraInfo(DomWidget *ui_widget) override;
 
 private:
     QPointer<QDesignerAxWidget> m_widget;
@@ -67,7 +67,7 @@ public:
     explicit QAxWidgetExtraInfoFactory(QDesignerFormEditorInterface *core, QExtensionManager *parent = 0);
 
 protected:
-    QObject *createExtension(QObject *object, const QString &iid, QObject *parent) const Q_DECL_OVERRIDE;
+    QObject *createExtension(QObject *object, const QString &iid, QObject *parent) const override;
 
 private:
     QDesignerFormEditorInterface *m_core;

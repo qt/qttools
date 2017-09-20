@@ -139,8 +139,8 @@ public:
     void init(QWidget *widget);
 
 protected:
-    QWidgetList reorderWidget(const QWidgetList &list, QWidget *widget) const Q_DECL_OVERRIDE;
-    void reorder(QWidget *widget) const Q_DECL_OVERRIDE;
+    QWidgetList reorderWidget(const QWidgetList &list, QWidget *widget) const override;
+    void reorder(QWidget *widget) const override;
 };
 
 class QDESIGNER_SHARED_EXPORT LowerWidgetCommand: public ChangeZOrderCommand
@@ -152,8 +152,8 @@ public:
     void init(QWidget *widget);
 
 protected:
-    QWidgetList reorderWidget(const QWidgetList &list, QWidget *widget) const Q_DECL_OVERRIDE;
-    void reorder(QWidget *widget) const Q_DECL_OVERRIDE;
+    QWidgetList reorderWidget(const QWidgetList &list, QWidget *widget) const override;
+    void reorder(QWidget *widget) const override;
 };
 
 class QDESIGNER_SHARED_EXPORT AdjustWidgetSizeCommand: public QDesignerFormWindowCommand

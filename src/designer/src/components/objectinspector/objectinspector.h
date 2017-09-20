@@ -48,16 +48,16 @@ public:
     explicit ObjectInspector(QDesignerFormEditorInterface *core, QWidget *parent = 0);
     virtual ~ObjectInspector();
 
-    QDesignerFormEditorInterface *core() const Q_DECL_OVERRIDE;
+    QDesignerFormEditorInterface *core() const override;
 
-    void getSelection(Selection &s) const Q_DECL_OVERRIDE;
-    bool selectObject(QObject *o) Q_DECL_OVERRIDE;
-    void clearSelection() Q_DECL_OVERRIDE;
+    void getSelection(Selection &s) const override;
+    bool selectObject(QObject *o) override;
+    void clearSelection() override;
 
-    void setFormWindow(QDesignerFormWindowInterface *formWindow) Q_DECL_OVERRIDE;
+    void setFormWindow(QDesignerFormWindowInterface *formWindow) override;
 
 public slots:
-    void mainContainerChanged() Q_DECL_OVERRIDE;
+    void mainContainerChanged() override;
 
 private slots:
     void slotSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
@@ -65,10 +65,10 @@ private slots:
     void slotHeaderDoubleClicked(int column);
 
 protected:
-    void dragEnterEvent (QDragEnterEvent * event) Q_DECL_OVERRIDE;
-    void dragMoveEvent(QDragMoveEvent * event) Q_DECL_OVERRIDE;
-    void dragLeaveEvent(QDragLeaveEvent * event) Q_DECL_OVERRIDE;
-    void dropEvent (QDropEvent * event) Q_DECL_OVERRIDE;
+    void dragEnterEvent (QDragEnterEvent * event) override;
+    void dragMoveEvent(QDragMoveEvent * event) override;
+    void dragLeaveEvent(QDragLeaveEvent * event) override;
+    void dropEvent (QDropEvent * event) override;
 
 private:
     class ObjectInspectorPrivate;

@@ -49,19 +49,19 @@ public:
     QmlCodeMarker();
     ~QmlCodeMarker();
 
-    virtual bool recognizeCode(const QString &code) Q_DECL_OVERRIDE;
-    virtual bool recognizeExtension(const QString &ext) Q_DECL_OVERRIDE;
-    virtual bool recognizeLanguage(const QString &language) Q_DECL_OVERRIDE;
-    virtual Atom::AtomType atomType() const Q_DECL_OVERRIDE;
+    bool recognizeCode(const QString &code) override;
+    bool recognizeExtension(const QString &ext) override;
+    bool recognizeLanguage(const QString &language) override;
+    Atom::AtomType atomType() const override;
     virtual QString markedUpCode(const QString &code,
                                  const Node *relative,
-                                 const Location &location) Q_DECL_OVERRIDE;
+                                 const Location &location) override;
 
-    virtual QString markedUpName(const Node *node) Q_DECL_OVERRIDE;
-    virtual QString markedUpFullName(const Node *node, const Node *relative) Q_DECL_OVERRIDE;
-    virtual QString markedUpIncludes(const QStringList &includes) Q_DECL_OVERRIDE;
-    virtual QString functionBeginRegExp(const QString &funcName) Q_DECL_OVERRIDE;
-    virtual QString functionEndRegExp(const QString &funcName) Q_DECL_OVERRIDE;
+    QString markedUpName(const Node *node) override;
+    QString markedUpFullName(const Node *node, const Node *relative) override;
+    QString markedUpIncludes(const QStringList &includes) override;
+    QString functionBeginRegExp(const QString &funcName) override;
+    QString functionEndRegExp(const QString &funcName) override;
 
     /* Copied from src/declarative/qml/qdeclarativescriptparser.cpp */
 #ifndef QT_NO_DECLARATIVE

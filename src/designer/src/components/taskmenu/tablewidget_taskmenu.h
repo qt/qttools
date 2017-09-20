@@ -49,8 +49,8 @@ public:
     explicit TableWidgetTaskMenu(QTableWidget *button, QObject *parent = 0);
     virtual ~TableWidgetTaskMenu();
 
-    QAction *preferredEditAction() const Q_DECL_OVERRIDE;
-    QList<QAction*> taskActions() const Q_DECL_OVERRIDE;
+    QAction *preferredEditAction() const override;
+    QList<QAction*> taskActions() const override;
 
 private slots:
     void editItems();
