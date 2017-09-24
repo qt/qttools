@@ -891,7 +891,7 @@ static const char *typeName(int type)
         return "invalid";
     if (type == QVariant::UserType)
         return "user type";
-    return Q_NULLPTR;
+    return nullptr;
 }
 
 static QString msgUnsupportedType(const QString &propertyName, int type)

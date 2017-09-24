@@ -1154,7 +1154,7 @@ static bool updateLibrary(const QString &sourceFileName, const QString &targetDi
     if (options.deployPdb) {
         const QFileInfo pdb(pdbFileName(sourceFileName));
         if (pdb.isFile())
-            return updateFile(pdb.absoluteFilePath(), targetDirectory, options.updateFileFlags, Q_NULLPTR, errorMessage);
+            return updateFile(pdb.absoluteFilePath(), targetDirectory, options.updateFileFlags, nullptr, errorMessage);
     }
     return true;
 }
@@ -1204,7 +1204,7 @@ static DeployResult deploy(const Options &options,
     }
     for (int b = 1; b < options.binaries.size(); ++b) {
         if (!findDependentQtLibraries(libraryLocation, options.binaries.at(b), options.platform, errorMessage, &dependentQtLibs,
-                                      Q_NULLPTR, Q_NULLPTR, Q_NULLPTR)) {
+                                      nullptr, nullptr, nullptr)) {
             return result;
         }
     }

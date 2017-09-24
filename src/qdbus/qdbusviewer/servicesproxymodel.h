@@ -36,7 +36,7 @@ class ServicesProxyModel : public QSortFilterProxyModel
     Q_OBJECT
 
 public:
-    ServicesProxyModel(QObject *parent = Q_NULLPTR);
+    ServicesProxyModel(QObject *parent = nullptr);
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
 protected:

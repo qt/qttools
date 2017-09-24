@@ -447,7 +447,7 @@ void QPixelTool::grabScreen()
 
     const QBrush darkBrush = palette().color(QPalette::Dark);
     const QDesktopWidget *desktopWidget = QApplication::desktop();
-    if (QScreen *screen = QGuiApplication::screens().value(desktopWidget->screenNumber(this), Q_NULLPTR)) {
+    if (QScreen *screen = QGuiApplication::screens().value(desktopWidget->screenNumber(this), nullptr)) {
         m_buffer = screen->grabWindow(desktopWidget->winId(), x, y, w, h);
     } else {
         m_buffer = QPixmap(w, h);

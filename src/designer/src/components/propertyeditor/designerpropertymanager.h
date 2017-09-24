@@ -66,7 +66,7 @@ class ResetDecorator : public QObject
 {
     Q_OBJECT
 public:
-    explicit ResetDecorator(const QDesignerFormEditorInterface *core, QObject *parent = Q_NULLPTR);
+    explicit ResetDecorator(const QDesignerFormEditorInterface *core, QObject *parent = nullptr);
     ~ResetDecorator();
 
     void connectPropertyManager(QtAbstractPropertyManager *manager);

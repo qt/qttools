@@ -60,7 +60,7 @@ class QHELP_EXPORT QHelpSearchQueryWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit QHelpSearchQueryWidget(QWidget *parent = Q_NULLPTR);
+    explicit QHelpSearchQueryWidget(QWidget *parent = nullptr);
     ~QHelpSearchQueryWidget();
 
     void expandExtendedSearch();

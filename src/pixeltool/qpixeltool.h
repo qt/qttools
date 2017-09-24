@@ -38,7 +38,7 @@ class QPixelTool : public QWidget
 {
     Q_OBJECT
 public:
-    explicit QPixelTool(QWidget *parent = Q_NULLPTR);
+    explicit QPixelTool(QWidget *parent = nullptr);
     ~QPixelTool();
 
     void setPreviewImage(const QImage &image);

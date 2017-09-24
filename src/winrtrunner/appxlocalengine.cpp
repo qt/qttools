@@ -480,7 +480,7 @@ bool AppxLocalEngine::install(bool removeFirst)
             return true;
     }
 
-    return installDependencies() && installPackage(Q_NULLPTR, d->manifest);
+    return installDependencies() && installPackage(nullptr, d->manifest);
 }
 
 bool AppxLocalEngine::remove()

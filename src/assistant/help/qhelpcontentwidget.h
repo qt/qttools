@@ -71,7 +71,7 @@ public:
 
 private:
     QHelpContentItem(const QString &name, const QString &link,
-        QHelpDBReader *reader, QHelpContentItem *parent = Q_NULLPTR);
+        QHelpDBReader *reader, QHelpContentItem *parent = nullptr);
 
     QHelpContentItemPrivate *d;
     friend class QHelpContentProvider;

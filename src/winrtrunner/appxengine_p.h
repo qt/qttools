@@ -94,7 +94,7 @@ public:
 
 #define wchar(str) reinterpret_cast<LPCWSTR>(str.utf16())
 #define hStringFromQString(str) HStringReference(reinterpret_cast<const wchar_t *>(str.utf16())).Get()
-#define QStringFromHString(hstr) QString::fromWCharArray(WindowsGetStringRawBuffer(hstr, Q_NULLPTR))
+#define QStringFromHString(hstr) QString::fromWCharArray(WindowsGetStringRawBuffer(hstr, nullptr))
 
 #define RETURN_IF_FAILED(msg, ret) \
     if (FAILED(hr)) { \
