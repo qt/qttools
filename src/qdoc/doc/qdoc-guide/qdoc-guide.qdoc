@@ -178,10 +178,6 @@
     are located. Typically, the templates directory contains a \c scripts,
     \c images, and a \c style directory, containing scripts and CSS files.
 
-    \badcode
-        HTML.templatedir = <path to templates>
-    \endcode
-
     The main configuration variables are:
     \badcode
         HTML.postheader
@@ -190,10 +186,10 @@
         HTML.footer
 
         HTML.headerstyles
-        HTML.stylesheets = style.css \
-                           style1.css
+        HTML.stylesheets = template/style/style.css \
+                           template/style/style1.css
 
-        HTML.scripts = script.js
+        HTML.scripts = template/scripts/script.js
     \endcode
 
     The \c{HTML.headerstyles} variable inserts the style information into the
@@ -201,21 +197,11 @@
     copy into the output directory. As well, QDoc will embed the string
     in the \c postheader, \c footer, and related variables into each HTML file.
 
-    The \l {HTML Specific Configuration Variables} article outlines the usage
+    The \l {Format-specific Configuration Variables} article outlines the usage
     of each variable.
 
-    \section2 DITA XML Configuration
-
-    DITA XML output is enabled using the \c outputformats variable. Unlike HTML
-    documentation, QDoc does not need HTML style templates for generating
-    documentation in DITA XML format.
-
-    \badcode
-        outputformats = DITAXML
-        outputdir
-    \endcode
-
     \section2 Qt Index Reference
+
     Documentation projects can link to Qt APIs and other articles by specifying
     the path to the \c qt.index file. When qdoc generates the Qt Reference
     Documentation, it will also generate an index file, containing the URLs to
