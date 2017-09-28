@@ -66,6 +66,7 @@ public:
     virtual QString format() = 0;
     virtual void generateDocs();
     virtual void initializeGenerator(const Config &config);
+    virtual void initializeFormat(const Config &config);
     virtual void terminateGenerator();
 
     QString fullDocumentLocation(const Node *node, bool useSubdir = false);
@@ -231,6 +232,9 @@ private:
 
     void generateReimplementedFrom(const FunctionNode *func, CodeMarker *marker);
     static bool compareNodes(Node *a, Node *b) { return (a->name() < b->name()); }
+    static void copyTemplateFiles(const Config &config,
+                                  const QString &configVar,
+                                  const QString &subDir);
 
  protected:
     const Config* config_;
@@ -242,6 +246,7 @@ private:
     bool threeColumnEnumValueTable_;
     bool showInternal_;
     bool singleExec_;
+    bool quoting_;
     int numTableRows_;
     QString link_;
     QString sectionNumber_;

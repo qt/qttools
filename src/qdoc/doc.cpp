@@ -496,6 +496,8 @@ private:
     void skipSpacesOrOneEndl();
     void skipAllSpaces();
     void skipToNextPreprocessorCommand();
+    static bool isCode(const Atom *atom);
+    static bool isQuote(const Atom *atom);
 
     QStack<int> openedInputs;
 
@@ -528,6 +530,7 @@ private:
     QStack<OpenedList> openedLists;
     Quoter quoter;
     QStack<DitaRef*> ditarefs_;
+    Atom *lastAtom;
 };
 
 int DocParser::tabSize;
@@ -535,7 +538,7 @@ QStringList DocParser::exampleFiles;
 QStringList DocParser::exampleDirs;
 QStringList DocParser::sourceFiles;
 QStringList DocParser::sourceDirs;
-bool DocParser::quoting;
+bool DocParser::quoting = false;
 
 /*!
   Parse the \a source string to build a Text data structure
@@ -610,6 +613,11 @@ void DocParser::parse(const QString& source,
                 }
             }
             else {
+                // Ignore quoting atoms to make appendToCode()
+                // append to the correct atom.
+                if (!quoting || !isQuote(priv->text.lastAtom()))
+                    lastAtom = priv->text.lastAtom();
+
                 int cmd = cmdHash()->value(cmdStr,NOT_A_CMD);
                 switch (cmd) {
                 case CMD_A:
@@ -679,40 +687,31 @@ void DocParser::parse(const QString& source,
                     break;
                 case CMD_CODELINE:
                 {
-                    if (!quoting) {
-                        if (priv->text.lastAtom()->type() == Atom::Code
-                                && priv->text.lastAtom()->string().endsWith("\n\n"))
-                            priv->text.lastAtom()->chopString();
-                        appendToCode("\n");
-                    }
-                    else {
+                    if (quoting) {
                         append(Atom::CodeQuoteCommand, cmdStr);
                         append(Atom::CodeQuoteArgument, " ");
                     }
+                    if (isCode(lastAtom) && lastAtom->string().endsWith("\n\n"))
+                        lastAtom->chopString();
+                    appendToCode("\n");
                 }
                     break;
                 case CMD_DOTS:
                 {
-                    if (!quoting) {
-                        if (priv->text.lastAtom()->type() == Atom::Code
-                                && priv->text.lastAtom()->string().endsWith("\n\n"))
-                            priv->text.lastAtom()->chopString();
-
-                        QString arg = getOptionalArgument();
-                        int indent = 4;
-                        if (!arg.isEmpty())
-                            indent = arg.toInt();
-                        for (int i = 0; i < indent; ++i)
-                            appendToCode(" ");
-                        appendToCode("...\n");
-                    }
-                    else {
+                    QString arg = getOptionalArgument();
+                    if (arg.isEmpty())
+                        arg = "4";
+                    if (quoting) {
                         append(Atom::CodeQuoteCommand, cmdStr);
-                        QString arg = getOptionalArgument();
-                        if (arg.isEmpty())
-                            arg = "4";
                         append(Atom::CodeQuoteArgument, arg);
                     }
+                    if (isCode(lastAtom) && lastAtom->string().endsWith("\n\n"))
+                        lastAtom->chopString();
+
+                    int indent = arg.toInt();
+                    for (int i = 0; i < indent; ++i)
+                        appendToCode(" ");
+                    appendToCode("...\n");
                 }
                     break;
                 case CMD_ELSE:
@@ -1104,33 +1103,36 @@ void DocParser::parse(const QString& source,
                     break;
                 case CMD_PRINTLINE:
                     leavePara();
-                    if (!quoting)
-                        appendToCode(quoter.quoteLine(location(), cmdStr,
-                                                      getRestOfLine()));
-                    else {
+                {
+                    QString rest = getRestOfLine();
+                    if (quoting) {
                         append(Atom::CodeQuoteCommand, cmdStr);
-                        append(Atom::CodeQuoteArgument, getRestOfLine());
+                        append(Atom::CodeQuoteArgument, rest);
                     }
+                    appendToCode(quoter.quoteLine(location(), cmdStr, rest));
+                }
                     break;
                 case CMD_PRINTTO:
                     leavePara();
-                    if (!quoting)
-                        appendToCode(quoter.quoteTo(location(), cmdStr,
-                                                    getRestOfLine()));
-                    else {
+                {
+                    QString rest = getRestOfLine();
+                    if (quoting) {
                         append(Atom::CodeQuoteCommand, cmdStr);
-                        append(Atom::CodeQuoteArgument, getRestOfLine());
+                        append(Atom::CodeQuoteArgument, rest);
                     }
+                    appendToCode(quoter.quoteTo(location(), cmdStr, rest));
+                }
                     break;
                 case CMD_PRINTUNTIL:
                     leavePara();
-                    if (!quoting)
-                        appendToCode(quoter.quoteUntil(location(), cmdStr,
-                                                       getRestOfLine()));
-                    else {
+                {
+                    QString rest = getRestOfLine();
+                    if (quoting) {
                         append(Atom::CodeQuoteCommand, cmdStr);
-                        append(Atom::CodeQuoteArgument, getRestOfLine());
+                        append(Atom::CodeQuoteArgument, rest);
                     }
+                    appendToCode(quoter.quoteUntil(location(), cmdStr, rest));
+                }
                     break;
                 case CMD_QUOTATION:
                     if (openCommand(cmd)) {
@@ -1139,46 +1141,45 @@ void DocParser::parse(const QString& source,
                     }
                     break;
                 case CMD_QUOTEFILE:
-                {
                     leavePara();
+                {
                     QString fileName = getArgument();
                     Doc::quoteFromFile(location(), quoter, fileName);
-                    if (!quoting) {
-                        append(Atom::Code,
-                               quoter.quoteTo(location(), cmdStr, QString()));
-                        quoter.reset();
-                    }
-                    else {
+                    if (quoting) {
                         append(Atom::CodeQuoteCommand, cmdStr);
                         append(Atom::CodeQuoteArgument, fileName);
                     }
-                    break;
+                    append(Atom::Code, quoter.quoteTo(location(), cmdStr, QString()));
+                    quoter.reset();
                 }
+                    break;
                 case CMD_QUOTEFROMFILE:
                     leavePara();
-                    if (!quoting)
-                        quoteFromFile();
-                    else {
+                {
+                    QString arg = getArgument();
+                    if (quoting) {
                         append(Atom::CodeQuoteCommand, cmdStr);
-                        append(Atom::CodeQuoteArgument, getArgument());
+                        append(Atom::CodeQuoteArgument, arg);
                     }
+                    Doc::quoteFromFile(location(), quoter, arg);
+                }
                     break;
                 case CMD_QUOTEFUNCTION:
                     leavePara();
+                {
                     marker = quoteFromFile();
                     p1 = getRestOfLine();
-                    if (!quoting) {
-                        quoter.quoteTo(location(), cmdStr,
-                                       slashed(marker->functionBeginRegExp(p1)));
-                        append(Atom::Code,
-                               quoter.quoteUntil(location(), cmdStr,
-                                                 slashed(marker->functionEndRegExp(p1))));
-                        quoter.reset();
-                    }
-                    else {
+                    if (quoting) {
                         append(Atom::CodeQuoteCommand, cmdStr);
                         append(Atom::CodeQuoteArgument, slashed(marker->functionEndRegExp(p1)));
                     }
+                    quoter.quoteTo(location(), cmdStr,
+                                   slashed(marker->functionBeginRegExp(p1)));
+                    append(Atom::Code,
+                           quoter.quoteUntil(location(), cmdStr,
+                                             slashed(marker->functionEndRegExp(p1))));
+                    quoter.reset();
+                }
                     break;
                 case CMD_RAW:
                     leavePara();
@@ -1236,36 +1237,36 @@ void DocParser::parse(const QString& source,
                     break;
                 case CMD_SKIPLINE:
                     leavePara();
-                    if (!quoting)
-                        quoter.quoteLine(location(),
-                                         cmdStr,
-                                         getRestOfLine());
-                    else {
+                {
+                    QString rest = getRestOfLine();
+                    if (quoting) {
                         append(Atom::CodeQuoteCommand, cmdStr);
-                        append(Atom::CodeQuoteArgument, getRestOfLine());
+                        append(Atom::CodeQuoteArgument, rest);
                     }
+                    quoter.quoteLine(location(), cmdStr, rest);
+                }
                     break;
                 case CMD_SKIPTO:
                     leavePara();
-                    if (!quoting)
-                        quoter.quoteTo(location(),
-                                       cmdStr,
-                                       getRestOfLine());
-                    else {
+                {
+                    QString rest = getRestOfLine();
+                    if (quoting) {
                         append(Atom::CodeQuoteCommand, cmdStr);
-                        append(Atom::CodeQuoteArgument, getRestOfLine());
+                        append(Atom::CodeQuoteArgument, rest);
                     }
+                    quoter.quoteTo(location(), cmdStr, rest);
+                }
                     break;
                 case CMD_SKIPUNTIL:
                     leavePara();
-                    if (!quoting)
-                        quoter.quoteUntil(location(),
-                                          cmdStr,
-                                          getRestOfLine());
-                    else {
+                {
+                    QString rest = getRestOfLine();
+                    if (quoting) {
                         append(Atom::CodeQuoteCommand, cmdStr);
-                        append(Atom::CodeQuoteArgument, getRestOfLine());
+                        append(Atom::CodeQuoteArgument, rest);
                     }
+                    quoter.quoteUntil(location(), cmdStr, rest);
+                }
                     break;
                 case CMD_SPAN:
                     p1 = ATOM_FORMATTING_SPAN + getArgument(true);
@@ -1281,10 +1282,8 @@ void DocParser::parse(const QString& source,
                         append(Atom::SnippetLocation, snippet);
                         append(Atom::SnippetIdentifier, identifier);
                     }
-                    else {
-                        marker = Doc::quoteFromFile(location(),quoter,snippet);
-                        appendToCode(quoter.quoteSnippet(location(), identifier), marker->atomType());
-                    }
+                    marker = Doc::quoteFromFile(location(), quoter, snippet);
+                    appendToCode(quoter.quoteSnippet(location(), identifier), marker->atomType());
                 }
                     break;
                 case CMD_SUB:
@@ -2030,19 +2029,21 @@ void DocParser::appendWord(const QString &word)
 
 void DocParser::appendToCode(const QString& markedCode)
 {
-    Atom::AtomType lastType = priv->text.lastAtom()->type();
-    if (lastType != Atom::Qml && lastType != Atom::Code && lastType != Atom::JavaScript)
-        append(Atom::Qml);
-    priv->text.lastAtom()->appendString(markedCode);
+    if (!isCode(lastAtom)) {
+        append(Atom::Code);
+        lastAtom = priv->text.lastAtom();
+    }
+    lastAtom->appendString(markedCode);
 }
 
 void DocParser::appendToCode(const QString &markedCode, Atom::AtomType defaultType)
 {
-    Atom::AtomType lastType = priv->text.lastAtom()->type();
-    if (lastType != Atom::Qml && lastType != Atom::Code && lastType != Atom::JavaScript)
+    if (!isCode(lastAtom)) {
         append(defaultType, markedCode);
-    else
-        priv->text.lastAtom()->appendString(markedCode);
+        lastAtom = priv->text.lastAtom();
+    } else {
+        lastAtom->appendString(markedCode);
+    }
 }
 
 void DocParser::startNewPara()
@@ -2808,6 +2809,30 @@ QString DocParser::slashed(const QString& str)
 }
 
 /*!
+ Returns \c true if \a atom represents a code snippet.
+ */
+bool DocParser::isCode(const Atom *atom)
+{
+    Atom::AtomType type = atom->type();
+    return (type == Atom::Code
+            || type == Atom::Qml
+            || type == Atom::JavaScript);
+}
+
+/*!
+ Returns \c true if \a atom represents quoting information.
+ */
+bool DocParser::isQuote(const Atom *atom)
+{
+    Atom::AtomType type = atom->type();
+    return (type == Atom::CodeQuoteArgument
+            || type == Atom::CodeQuoteCommand
+            || type == Atom::SnippetCommand
+            || type == Atom::SnippetIdentifier
+            || type == Atom::SnippetLocation);
+}
+
+/*!
   Parse the qdoc comment \a source. Build up a list of all the topic
   commands found including their arguments.  This constructor is used
   when there can be more than one topic command in theqdoc comment.
@@ -3130,28 +3155,23 @@ void Doc::initialize(const Config& config)
     DocParser::exampleDirs = config.getCanonicalPathList(CONFIG_EXAMPLEDIRS);
     DocParser::sourceFiles = config.getCanonicalPathList(CONFIG_SOURCES);
     DocParser::sourceDirs = config.getCanonicalPathList(CONFIG_SOURCEDIRS);
-    DocParser::quoting = config.getBool(CONFIG_QUOTINGINFORMATION);
 
     QmlTypeNode::qmlOnly = config.getBool(CONFIG_QMLONLY);
     QStringMap reverseAliasMap;
     config_ = &config;
 
-    QSet<QString> commands = config.subVars(CONFIG_ALIAS);
-    QSet<QString>::ConstIterator c = commands.constBegin();
-    while (c != commands.constEnd()) {
-        QString alias = config.getString(CONFIG_ALIAS + Config::dot + *c);
+    for (const auto &a : config.subVars(CONFIG_ALIAS)) {
+        QString alias = config.getString(CONFIG_ALIAS + Config::dot + a);
         if (reverseAliasMap.contains(alias)) {
             config.lastLocation().warning(tr("Command name '\\%1' cannot stand"
                                              " for both '\\%2' and '\\%3'")
                                           .arg(alias)
                                           .arg(reverseAliasMap[alias])
-                                          .arg(*c));
+                                          .arg(a));
+        } else {
+            reverseAliasMap.insert(alias, a);
         }
-        else {
-            reverseAliasMap.insert(alias, *c);
-        }
-        aliasMap()->insert(*c, alias);
-        ++c;
+        aliasMap()->insert(a, alias);
     }
 
     int i = 0;
@@ -3164,10 +3184,8 @@ void Doc::initialize(const Config& config)
         i++;
     }
 
-    QSet<QString> macroNames = config.subVars(CONFIG_MACRO);
-    QSet<QString>::ConstIterator n = macroNames.constBegin();
-    while (n != macroNames.constEnd()) {
-        QString macroDotName = CONFIG_MACRO + Config::dot + *n;
+    for (const auto &macroName : config.subVars(CONFIG_MACRO)) {
+        QString macroDotName = CONFIG_MACRO + Config::dot + macroName;
         Macro macro;
         macro.numParams = -1;
         macro.defaultDef = config.getString(macroDotName);
@@ -3177,16 +3195,13 @@ void Doc::initialize(const Config& config)
         }
         bool silent = false;
 
-        QSet<QString> formats = config.subVars(macroDotName);
-        QSet<QString>::ConstIterator f = formats.constBegin();
-        while (f != formats.constEnd()) {
-            QString def = config.getString(macroDotName + Config::dot + *f);
+        for (const auto &f : config.subVars(macroDotName)) {
+            QString def = config.getString(macroDotName + Config::dot + f);
             if (!def.isEmpty()) {
-                macro.otherDefs.insert(*f, def);
+                macro.otherDefs.insert(f, def);
                 int m = Config::numParams(def);
-                if (macro.numParams == -1) {
+                if (macro.numParams == -1)
                     macro.numParams = m;
-                }
                 else if (macro.numParams != m) {
                     if (!silent) {
                         QString other = tr("default");
@@ -3196,8 +3211,8 @@ void Doc::initialize(const Config& config)
                                                          " inconsistent number"
                                                          " of arguments (%2"
                                                          " %3, %4 %5)")
-                                                      .arg(*n)
-                                                      .arg(*f)
+                                                      .arg(macroName)
+                                                      .arg(f)
                                                       .arg(m)
                                                       .arg(other)
                                                       .arg(macro.numParams));
@@ -3207,13 +3222,16 @@ void Doc::initialize(const Config& config)
                         macro.numParams = m;
                 }
             }
-            ++f;
         }
-
         if (macro.numParams != -1)
-            macroHash()->insert(*n, macro);
-        ++n;
+            macroHash()->insert(macroName, macro);
     }
+    // If any of the formats define quotinginformation, activate quoting
+    DocParser::quoting = config.getBool(CONFIG_QUOTINGINFORMATION);
+    for (const auto &format : config.getOutputFormats())
+        DocParser::quoting = DocParser::quoting || config.getBool(format
+                                                                  + Config::dot
+                                                                  + CONFIG_QUOTINGINFORMATION);
 }
 
 /*!

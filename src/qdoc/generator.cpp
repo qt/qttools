@@ -1682,6 +1682,7 @@ void Generator::generateOverloadedSignal(const Node* node, CodeMarker* marker)
  */
 void Generator::generateDocs()
 {
+    currentGenerator_ = this;
     generateAggregate(qdb_->primaryTreeRoot());
 }
 
@@ -1788,40 +1789,12 @@ QString Generator::indent(int level, const QString& markedCode)
     return t;
 }
 
+
+
 void Generator::initialize(const Config &config)
 {
-
-    if (config.getBool(QString("HTML.nosubdirs")))
-        resetUseOutputSubdirs();
-
-    outFileNames_.clear();
     outputFormats = config.getOutputFormats();
     redirectDocumentationToDevNull_ = config.getBool(CONFIG_REDIRECTDOCUMENTATIONTODEVNULL);
-    if (!outputFormats.isEmpty()) {
-        outDir_ = config.getOutputDir();
-        if (outDir_.isEmpty()) {
-            config.lastLocation().fatal(tr("No output directory specified in "
-                                           "configuration file or on the command line"));
-        }
-        else {
-            outSubdir_ = outDir_.mid(outDir_.lastIndexOf('/') + 1);
-        }
-
-        QDir dirInfo;
-        if (dirInfo.exists(outDir_)) {
-            if (!generating() && Generator::useOutputSubdirs()) {
-                if (!Config::removeDirContents(outDir_))
-                    config.lastLocation().error(tr("Cannot empty output directory '%1'").arg(outDir_));
-            }
-        }
-        else {
-            if (!dirInfo.mkpath(outDir_))
-                config.lastLocation().fatal(tr("Cannot create output directory '%1'").arg(outDir_));
-        }
-
-        if (!dirInfo.exists(outDir_ + "/images") && !dirInfo.mkdir(outDir_ + "/images"))
-            config.lastLocation().fatal(tr("Cannot create images directory '%1'").arg(outDir_ + "/images"));
-    }
 
     imageFiles = config.getCanonicalPathList(CONFIG_IMAGES);
     imageDirs = config.getCanonicalPathList(CONFIG_IMAGEDIRS);
@@ -1833,81 +1806,20 @@ void Generator::initialize(const Config &config)
     exampleImgExts = config.getStringList(CONFIG_EXAMPLES + Config::dot + CONFIG_IMAGEEXTENSIONS);
 
     QString imagesDotFileExtensions = CONFIG_IMAGES + Config::dot + CONFIG_FILEEXTENSIONS;
-    QSet<QString> formats = config.subVars(imagesDotFileExtensions);
-    QSet<QString>::ConstIterator f = formats.constBegin();
-    while (f != formats.constEnd()) {
-        imgFileExts[*f] = config.getStringList(imagesDotFileExtensions + Config::dot + *f);
-        ++f;
-    }
+    for (const auto &ext : config.subVars(imagesDotFileExtensions))
+        imgFileExts[ext] = config.getStringList(imagesDotFileExtensions + Config::dot + ext);
 
-    QList<Generator *>::ConstIterator g = generators.constBegin();
-    while (g != generators.constEnd()) {
-        if (outputFormats.contains((*g)->format())) {
-            currentGenerator_ = (*g);
-            (*g)->initializeGenerator(config);
-            QStringList extraImages = config.getCanonicalPathList((*g)->format() +
-                                                         Config::dot +
-                                                         CONFIG_EXTRAIMAGES, true);
-            QStringList::ConstIterator e = extraImages.constBegin();
-            while (e != extraImages.constEnd()) {
-                QString filePath = *e;
-                if (!filePath.isEmpty())
-                    Config::copyFile(config.lastLocation(), filePath, filePath,
-                                     (*g)->outputDir() + "/images");
-                ++e;
-            }
-
-            // Documentation template handling
-            QStringList scripts = config.getCanonicalPathList((*g)->format()+Config::dot+CONFIG_SCRIPTS, true);
-            if (!scripts.isEmpty()) {
-                QDir dirInfo;
-                if (!dirInfo.exists(outDir_ + "/scripts") && !dirInfo.mkdir(outDir_ + "/scripts")) {
-                    config.lastLocation().fatal(tr("Cannot create scripts directory '%1'")
-                                                .arg(outDir_ + "/scripts"));
-                }
-                else {
-                    e = scripts.constBegin();
-                    while (e != scripts.constEnd()) {
-                        QString filePath = *e;
-                        if (!filePath.isEmpty())
-                            Config::copyFile(config.lastLocation(), filePath, filePath,
-                                             (*g)->outputDir() + "/scripts");
-                        ++e;
-                    }
-                }
-            }
-
-            QStringList styles = config.getCanonicalPathList((*g)->format()+Config::dot+CONFIG_STYLESHEETS, true);
-            if (!styles.isEmpty()) {
-                QDir dirInfo;
-                if (!dirInfo.exists(outDir_ + "/style") && !dirInfo.mkdir(outDir_ + "/style")) {
-                    config.lastLocation().fatal(tr("Cannot create style directory '%1'")
-                                                .arg(outDir_ + "/style"));
-                }
-                else {
-                    e = styles.constBegin();
-                    while (e != styles.constEnd()) {
-                        QString filePath = *e;
-                        if (!filePath.isEmpty())
-                            Config::copyFile(config.lastLocation(), filePath, filePath,
-                                             (*g)->outputDir() + "/style");
-                        ++e;
-                    }
-                }
-            }
+    for (auto &g : generators) {
+        if (outputFormats.contains(g->format())) {
+            currentGenerator_ = g;
+            g->initializeGenerator(config);
         }
-        ++g;
     }
 
-    QRegExp secondParamAndAbove("[\2-\7]");
-    QSet<QString> formattingNames = config.subVars(CONFIG_FORMATTING);
-    QSet<QString>::ConstIterator n = formattingNames.constBegin();
-    while (n != formattingNames.constEnd()) {
-        QString formattingDotName = CONFIG_FORMATTING + Config::dot + *n;
-        QSet<QString> formats = config.subVars(formattingDotName);
-        QSet<QString>::ConstIterator f = formats.constBegin();
-        while (f != formats.constEnd()) {
-            QString def = config.getString(formattingDotName + Config::dot + *f);
+    for (const auto &n : config.subVars(CONFIG_FORMATTING)) {
+        QString formattingDotName = CONFIG_FORMATTING + Config::dot + n;
+        for (const auto &f : config.subVars(formattingDotName)) {
+            QString def = config.getString(formattingDotName + Config::dot + f);
             if (!def.isEmpty()) {
                 int numParams = Config::numParams(def);
                 int numOccs = def.count("\1");
@@ -1915,24 +1827,20 @@ void Generator::initialize(const Config &config)
                     config.lastLocation().warning(tr("Formatting '%1' must "
                                                      "have exactly one "
                                                      "parameter (found %2)")
-                                                  .arg(*n).arg(numParams));
-                }
-                else if (numOccs > 1) {
+                                                  .arg(n).arg(numParams));
+                } else if (numOccs > 1) {
                     config.lastLocation().fatal(tr("Formatting '%1' must "
                                                    "contain exactly one "
                                                    "occurrence of '\\1' "
                                                    "(found %2)")
-                                                .arg(*n).arg(numOccs));
-                }
-                else {
+                                                .arg(n).arg(numOccs));
+                } else {
                     int paramPos = def.indexOf("\1");
-                    fmtLeftMaps[*f].insert(*n, def.left(paramPos));
-                    fmtRightMaps[*f].insert(*n, def.mid(paramPos + 1));
+                    fmtLeftMaps[f].insert(n, def.left(paramPos));
+                    fmtRightMaps[f].insert(n, def.mid(paramPos + 1));
                 }
             }
-            ++f;
         }
-        ++n;
     }
 
     project_ = config.getString(CONFIG_PROJECT);
@@ -1940,23 +1848,92 @@ void Generator::initialize(const Config &config)
     outputPrefixes.clear();
     QStringList items = config.getStringList(CONFIG_OUTPUTPREFIXES);
     if (!items.isEmpty()) {
-        foreach (const QString &prefix, items)
+        for (const auto &prefix : items)
             outputPrefixes[prefix] = config.getString(CONFIG_OUTPUTPREFIXES + Config::dot + prefix);
-    }
-    else {
+    } else {
         outputPrefixes[QLatin1String("QML")] = QLatin1String("qml-");
         outputPrefixes[QLatin1String("JS")] = QLatin1String("js-");
     }
 
     outputSuffixes.clear();
-    items = config.getStringList(CONFIG_OUTPUTSUFFIXES);
-    if (!items.isEmpty()) {
-        foreach (const QString &suffix, items)
-            outputSuffixes[suffix] = config.getString(CONFIG_OUTPUTSUFFIXES + Config::dot + suffix);
-    }
+    for (const auto &suffix : config.getStringList(CONFIG_OUTPUTSUFFIXES))
+        outputSuffixes[suffix] = config.getString(CONFIG_OUTPUTSUFFIXES + Config::dot + suffix);
 
     noLinkErrors_ = config.getBool(CONFIG_NOLINKERRORS);
     autolinkErrors_ = config.getBool(CONFIG_AUTOLINKERRORS);
+}
+
+/*!
+  Creates template-specific subdirs (e.g. /styles and /scripts for HTML)
+  and copies the files to them.
+  */
+void Generator::copyTemplateFiles(const Config &config, const QString &configVar, const QString &subDir)
+{
+    QStringList files = config.getCanonicalPathList(configVar, true);
+    if (!files.isEmpty()) {
+        QDir dirInfo;
+        QString templateDir = outDir_ + QLatin1Char('/') + subDir;
+        if (!dirInfo.exists(templateDir) && !dirInfo.mkdir(templateDir)) {
+            config.lastLocation().fatal(tr("Cannot create %1 directory '%2'")
+                                        .arg(subDir, templateDir));
+        } else {
+            for (const auto &file : files) {
+                if (!file.isEmpty())
+                    Config::copyFile(config.lastLocation(), file, file, templateDir);
+            }
+        }
+    }
+}
+
+/*!
+    Reads format-specific variables from \a config, sets output
+    (sub)directories, creates them on the filesystem and copies the
+    template-specific files.
+ */
+void Generator::initializeFormat(const Config &config)
+{
+    outFileNames_.clear();
+    useOutputSubdirs_ = true;
+    if (config.getBool(format() + Config::dot + "nosubdirs"))
+        resetUseOutputSubdirs();
+
+    if (outputFormats.isEmpty())
+        return;
+
+    outDir_ = config.getOutputDir(format());
+    if (outDir_.isEmpty()) {
+        config.lastLocation().fatal(tr("No output directory specified in "
+                                       "configuration file or on the command line"));
+    } else {
+        outSubdir_ = outDir_.mid(outDir_.lastIndexOf('/') + 1);
+    }
+
+    QDir dirInfo;
+    if (dirInfo.exists(outDir_)) {
+        if (!generating() && Generator::useOutputSubdirs()) {
+            if (!Config::removeDirContents(outDir_))
+                config.lastLocation().error(tr("Cannot empty output directory '%1'").arg(outDir_));
+        }
+    } else if (!dirInfo.mkpath(outDir_)) {
+        config.lastLocation().fatal(tr("Cannot create output directory '%1'").arg(outDir_));
+    }
+
+    // Output directory exists, which is enough for prepare phase.
+    if (preparing())
+        return;
+
+    if (!dirInfo.exists(outDir_ + "/images") && !dirInfo.mkdir(outDir_ + "/images"))
+        config.lastLocation().fatal(tr("Cannot create images directory '%1'").arg(outDir_ + "/images"));
+
+    copyTemplateFiles(config, format() + Config::dot + CONFIG_STYLESHEETS, "style");
+    copyTemplateFiles(config, format() + Config::dot + CONFIG_SCRIPTS, "scripts");
+    copyTemplateFiles(config, format() + Config::dot + CONFIG_EXTRAIMAGES, "images");
+
+    // Use a format-specific .quotinginformation if defined, otherwise a global value
+    if (config.subVars(format()).contains(CONFIG_QUOTINGINFORMATION))
+        quoting_ = config.getBool(format() + Config::dot + CONFIG_QUOTINGINFORMATION);
+    else
+        quoting_ = config.getBool(CONFIG_QUOTINGINFORMATION);
 }
 
 /*!

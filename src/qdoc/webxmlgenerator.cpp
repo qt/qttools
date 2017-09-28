@@ -143,7 +143,7 @@ void WebXMLGenerator::generateIndexSections(QXmlStreamWriter &writer,
             writer.writeEndElement(); // generatedlist
         }
 
-        inLink = inContents = inSectionHeading = false;
+        inLink = inContents = inSectionHeading = hasQuotingInformation = false;
         numTableRows = 0;
 
         const Atom *atom = node->doc().body().firstAtom();
@@ -209,6 +209,8 @@ void WebXMLGenerator::generateAggregate(Aggregate *node)
 const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer,
                                              const Atom *atom, const Node *relative, CodeMarker *marker)
 {
+    bool keepQuoting = false;
+
     switch (atom->type()) {
     case Atom::AutoLink:
         if (!inLink && !inSectionHeading) {
@@ -287,12 +289,18 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer,
         break;
 
     case Atom::Code:
-        writer.writeTextElement("code", trimmedTrailing(plainCode(atom->string()), QString(), QString()));
+        if (!hasQuotingInformation)
+            writer.writeTextElement("code", trimmedTrailing(plainCode(atom->string()), QString(), QString()));
+        else
+            keepQuoting = true;
         break;
 
 #ifdef QDOC_QML
     case Atom::Qml:
-        writer.writeTextElement("qml", trimmedTrailing(plainCode(atom->string()), QString(), QString()));
+        if (!hasQuotingInformation)
+            writer.writeTextElement("qml", trimmedTrailing(plainCode(atom->string()), QString(), QString()));
+        else
+            keepQuoting = true;
 #endif
     case Atom::CodeBad:
         writer.writeTextElement("badcode", trimmedTrailing(plainCode(atom->string()), QString(), QString()));
@@ -309,17 +317,23 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer,
         break;
 
     case Atom::CodeQuoteArgument:
-        if (quoteCommand == "dots") {
-            writer.writeAttribute("indent", atom->string());
-            writer.writeCharacters("...");
-        } else
-            writer.writeCharacters(atom->string());
-        writer.writeEndElement(); // code
+        if (quoting_) {
+            if (quoteCommand == "dots") {
+                writer.writeAttribute("indent", atom->string());
+                writer.writeCharacters("...");
+            } else {
+                writer.writeCharacters(atom->string());
+            }
+            writer.writeEndElement(); // code
+            keepQuoting = true;
+        }
         break;
 
     case Atom::CodeQuoteCommand:
-        quoteCommand = atom->string();
-        writer.writeStartElement(quoteCommand);
+        if (quoting_) {
+            quoteCommand = atom->string();
+            writer.writeStartElement(quoteCommand);
+        }
         break;
 
     case Atom::FootnoteLeft:
@@ -547,16 +561,23 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer,
         break;
 
     case Atom::SnippetCommand:
-        writer.writeStartElement(atom->string());
+        if (quoting_) {
+            writer.writeStartElement(atom->string());
+
+        }
         break;
 
     case Atom::SnippetIdentifier:
-        writer.writeAttribute("identifier", atom->string());
-        writer.writeEndElement();
+        if (quoting_) {
+            writer.writeAttribute("identifier", atom->string());
+            writer.writeEndElement();
+            keepQuoting = true;
+        }
         break;
 
     case Atom::SnippetLocation:
-        writer.writeAttribute("location", atom->string());
+        if (quoting_)
+            writer.writeAttribute("location", atom->string());
         break;
 
     case Atom::String:
@@ -617,6 +638,8 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer,
     default:
         break;
     }
+
+    hasQuotingInformation = keepQuoting;
 
     if (atom)
         return atom->next();

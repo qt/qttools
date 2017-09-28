@@ -75,6 +75,7 @@ private:
     bool inContents;
     bool inSectionHeading;
     bool inTableHeader;
+    bool hasQuotingInformation;
     int numTableRows;
     bool threeColumnEnumValueTable;
     QString quoteCommand;

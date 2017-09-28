@@ -1354,6 +1354,13 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
     case Atom::EndQmlText:
         // don't do anything with these. They are just tags.
         break;
+    case Atom::CodeQuoteArgument:
+    case Atom::CodeQuoteCommand:
+    case Atom::SnippetCommand:
+    case Atom::SnippetIdentifier:
+    case Atom::SnippetLocation:
+        // no HTML output (ignore)
+        break;
     default:
         unknownAtom(atom);
     }

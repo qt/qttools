@@ -342,11 +342,12 @@ int Config::getInt(const QString& var) const
 }
 
 /*!
-  Function to return the correct outputdir.
+  Function to return the correct outputdir for the output \a format.
+  If \a format is not specified, defaults to 'HTML'.
   outputdir can be set using the qdocconf or the command-line
   variable -outputdir.
   */
-QString Config::getOutputDir() const
+QString Config::getOutputDir(const QString &format) const
 {
     QString t;
     if (overrideOutputDir.isNull())
@@ -359,7 +360,7 @@ QString Config::getOutputDir() const
     }
     if (!Generator::useOutputSubdirs()) {
         t = t.left(t.lastIndexOf('/'));
-        QString singleOutputSubdir = getString("HTML.outputsubdir");
+        QString singleOutputSubdir = getString(format + Config::dot + "outputsubdir");
         if (singleOutputSubdir.isEmpty())
             singleOutputSubdir = "html";
         t += QLatin1Char('/') + singleOutputSubdir;

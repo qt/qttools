@@ -85,7 +85,7 @@ public:
     const Location& lastLocation() const { return lastLocation_; }
     bool getBool(const QString& var) const;
     int getInt(const QString& var) const;
-    QString getOutputDir() const;
+    QString getOutputDir(const QString &format = QString("HTML")) const;
     QSet<QString> getOutputFormats() const;
     QString getString(const QString& var, const QString& defaultString = QString()) const;
     QSet<QString> getStringSet(const QString& var) const;

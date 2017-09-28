@@ -86,11 +86,13 @@ static QList<Translator> translators;
 /*!
   Read some XML indexes containing definitions from other
   documentation sets. \a config contains a variable that
-  lists directories where index files can bge found. It also
+  lists directories where index files can be found. It also
   contains the \c depends variable, which lists the modules
-  that the current module depends on.
+  that the current module depends on. \a formats contains
+  a list of output formats; each format may have a different
+  output subdirectory where index files are located.
 */
-static void loadIndexFiles(Config& config)
+static void loadIndexFiles(Config& config, const QSet<QString> &formats)
 {
     QDocDatabase* qdb = QDocDatabase::qdocDB();
     QStringList indexFiles;
@@ -105,14 +107,17 @@ static void loadIndexFiles(Config& config)
 
     dependModules += config.getStringList(CONFIG_DEPENDS);
     dependModules.removeDuplicates();
+    QSet<QString> subDirs;
 
-    bool noOutputSubdirs = false;
-    QString singleOutputSubdir;
-    if (config.getBool(QString("HTML.nosubdirs"))) {
-        noOutputSubdirs = true;
-        singleOutputSubdir = config.getString("HTML.outputsubdir");
-        if (singleOutputSubdir.isEmpty())
-            singleOutputSubdir = "html";
+    for (const auto &format : formats) {
+        if (config.getBool(format + Config::dot + "nosubdirs")) {
+            QString singleOutputSubdir = config.getString(format
+                                                          + Config::dot
+                                                          + "outputsubdir");
+            if (singleOutputSubdir.isEmpty())
+                singleOutputSubdir = "html";
+            subDirs << singleOutputSubdir;
+        }
     }
 
     if (dependModules.size() > 0) {
@@ -143,19 +148,21 @@ static void loadIndexFiles(Config& config)
             for (int i = 0; i < dependModules.size(); i++) {
                 QString indexToAdd;
                 QList<QFileInfo> foundIndices;
+                // Always look in module-specific subdir, even with *.nosubdirs config
+                subDirs << dependModules[i];
                 for (int j = 0; j < indexDirs.size(); j++) {
-                    QString fileToLookFor = indexDirs[j] + QLatin1Char('/');
-                    if (noOutputSubdirs)
-                        fileToLookFor += singleOutputSubdir;
-                    else
-                        fileToLookFor += dependModules[i];
-                    fileToLookFor += QLatin1Char('/') + dependModules[i] + QLatin1String(".index");
-                    if (QFile::exists(fileToLookFor)) {
-                        QFileInfo tempFileInfo(fileToLookFor);
-                        if (!foundIndices.contains(tempFileInfo))
-                            foundIndices.append(tempFileInfo);
+                    for (const auto &subDir : subDirs) {
+                        QString fileToLookFor = indexDirs[j]
+                                + QLatin1Char('/') + subDir
+                                + QLatin1Char('/') + dependModules[i];
+                        if (QFile::exists(fileToLookFor)) {
+                            QFileInfo tempFileInfo(fileToLookFor);
+                            if (!foundIndices.contains(tempFileInfo))
+                                foundIndices.append(tempFileInfo);
+                        }
                     }
                 }
+                subDirs.remove(dependModules[i]);
                 std::sort(foundIndices.begin(), foundIndices.end(), creationTimeBefore);
                 if (foundIndices.size() > 1) {
                     /*
@@ -271,10 +278,10 @@ static void processQdocconfFile(const QString &fileName)
      */
     Location::initialize(config);
     Tokenizer::initialize(config);
-    Doc::initialize(config);
     CodeMarker::initialize(config);
     CodeParser::initialize(config);
     Generator::initialize(config);
+    Doc::initialize(config);
 
 #ifndef QT_NO_TRANSLATION
     /*
@@ -341,7 +348,7 @@ static void processQdocconfFile(const QString &fileName)
     if (!Generator::singleExec()) {
         if (!Generator::preparing()) {
             Generator::debug("  loading index files");
-            loadIndexFiles(config);
+            loadIndexFiles(config, outputFormats);
             Generator::debug("  done loading index files");
         }
         qdb->newPrimaryTree(project);
@@ -499,6 +506,7 @@ static void processQdocconfFile(const QString &fileName)
         if (generator == 0)
             outputFormatsLocation.fatal(QCoreApplication::translate("QDoc",
                                                "Unknown output format '%1'").arg(*of));
+        generator->initializeFormat(config);
         generator->generateDocs();
         ++of;
     }
