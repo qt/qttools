@@ -272,7 +272,9 @@ int main(int argc, char *argv[])
 #endif
     TRACE_OBJ
     QScopedPointer<QCoreApplication> a(createApplication(argc, argv));
+#if QT_CONFIG(library)
     a->addLibraryPath(a->applicationDirPath() + QLatin1String("/plugins"));
+#endif
     setupTranslations();
 
 #if defined(BROWSER_QTWEBKIT)
