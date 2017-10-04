@@ -5,12 +5,10 @@ qtHaveModule(widgets) {
         message("Some graphics-related tools are unavailable without PNG support")
     } else {
         SUBDIRS = assistant \
-                  pixeltool
+                  pixeltool \
+                  designer
 
-        qtConfig(process) {
-            SUBDIRS += designer
-            linguist.depends = designer
-        }
+        linguist.depends = designer
     }
 }
 
