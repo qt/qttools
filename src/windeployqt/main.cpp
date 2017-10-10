@@ -37,6 +37,7 @@
 #include <QtCore/QJsonArray>
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QCommandLineOption>
+#include <QtCore/QOperatingSystemVersion>
 #include <QtCore/QSharedPointer>
 #include <QtCore/QVector>
 
@@ -1047,13 +1048,16 @@ static QString vcRedistDir()
     // Look in reverse order for folder containing the debug redist folder
     const QFileInfoList subDirs =
         QDir(vc2017RedistDirName).entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name | QDir::Reversed);
+    const bool isWindows10 = QOperatingSystemVersion::current() >= QOperatingSystemVersion::Windows10;
     for (const QFileInfo &f : subDirs) {
         QString path = f.absoluteFilePath();
         if (QFileInfo(path + slash + vcDebugRedistDir()).isDir())
             return path;
-        path += QStringLiteral("/onecore");
-        if (QFileInfo(path + slash + vcDebugRedistDir()).isDir())
-            return path;
+        if (isWindows10) {
+            path += QStringLiteral("/onecore");
+            if (QFileInfo(path + slash + vcDebugRedistDir()).isDir())
+                return path;
+        }
     }
     std::wcerr << "Warning: Cannot find Visual Studio redist directory under "
         << QDir::toNativeSeparators(vc2017RedistDirName).toStdWString() << ".\n";
