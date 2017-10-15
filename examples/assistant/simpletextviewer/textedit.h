@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2017 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the examples of the Qt Toolkit.
@@ -51,15 +51,15 @@
 #ifndef TEXTEDIT_H
 #define TEXTEDIT_H
 
-#include <QtCore/QUrl>
-#include <QtWidgets/QTextEdit>
+#include <QTextEdit>
+#include <QUrl>
 
 class TextEdit : public QTextEdit
 {
     Q_OBJECT
 
 public:
-    TextEdit(QWidget *parent = 0);
+    TextEdit(QWidget *parent = nullptr);
     void setContents(const QString &fileName);
 
 private:

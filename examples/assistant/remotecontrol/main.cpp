@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2017 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the examples of the Qt Toolkit.
@@ -48,16 +48,14 @@
 **
 ****************************************************************************/
 
-#include <QtWidgets/QApplication>
 #include "remotecontrol.h"
+
+#include <QApplication>
 
 int main(int argc, char *argv[])
 {
-    Q_INIT_RESOURCE(remotecontrol);
-
     QApplication a(argc, argv);
     RemoteControl w;
     w.show();
-    a.connect(&a, SIGNAL(lastWindowClosed()), &a, SLOT(quit()));
     return a.exec();
 }

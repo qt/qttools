@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2017 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the examples of the Qt Toolkit.
@@ -48,14 +48,13 @@
 **
 ****************************************************************************/
 
-#include <QtCore/QByteArray>
-#include <QtCore/QDir>
-#include <QtCore/QLibraryInfo>
-#include <QtCore/QProcess>
-
-#include <QtWidgets/QMessageBox>
-
 #include "assistant.h"
+
+#include <QByteArray>
+#include <QDir>
+#include <QLibraryInfo>
+#include <QMessageBox>
+#include <QProcess>
 
 Assistant::Assistant()
     : proc(0)
@@ -109,7 +108,7 @@ bool Assistant::startAssistant()
         proc->start(app, args);
 
         if (!proc->waitForStarted()) {
-            QMessageBox::critical(0, QObject::tr("Simple Text Viewer"),
+            QMessageBox::critical(nullptr, QObject::tr("Simple Text Viewer"),
                 QObject::tr("Unable to launch Qt Assistant (%1)").arg(app));
             return false;
         }

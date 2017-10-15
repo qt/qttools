@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2017 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the examples of the Qt Toolkit.
@@ -48,14 +48,13 @@
 **
 ****************************************************************************/
 
-#include <QtCore/QDir>
-#include <QtCore/QProcess>
-#include <QtCore/QTextStream>
-#include <QtCore/QLibraryInfo>
-
-#include <QtWidgets/QMessageBox>
-
 #include "remotecontrol.h"
+
+#include <QDir>
+#include <QLibraryInfo>
+#include <QMessageBox>
+#include <QProcess>
+#include <QTextStream>
 
 RemoteControl::RemoteControl(QWidget *parent, Qt::WindowFlags flags)
         : QMainWindow(parent, flags)
