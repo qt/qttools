@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
     if (parser.positionalArguments().size() != 1)
         parser.showHelp(2);
 
-    const QString directory = parser.positionalArguments().last();
+    const QString directory = parser.positionalArguments().constLast();
 
     if (logLevel == VerboseLog)
         std::cerr << qPrintable(tr("Recursively scanning %1 for qt_attribution.json files...").arg(

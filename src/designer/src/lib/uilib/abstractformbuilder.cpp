@@ -357,7 +357,7 @@ QWidget *QAbstractFormBuilder::create(DomWidget *ui_widget, QWidget *parentWidge
         if (QWidget *child  = create(ui_child, w)) {
             children += child;
         } else {
-            const QString className = ui_child->elementClass().empty() ? QString() : ui_child->elementClass().front();
+            const QString className = ui_child->elementClass().value(0);
             uiLibWarning(QCoreApplication::translate("QAbstractFormBuilder", "The creation of a widget of the class '%1' failed.").arg(className));
         }
     }

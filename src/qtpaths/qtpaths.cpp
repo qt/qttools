@@ -140,7 +140,7 @@ static QString searchStringOrError(QCommandLineParser *parser)
     int positionalArgumentCount = parser->positionalArguments().size();
     if (positionalArgumentCount != 1)
         error(QCoreApplication::translate("qtpaths", "Exactly one argument needed as searchitem"));
-    return parser->positionalArguments().first();
+    return parser->positionalArguments().constFirst();
 }
 
 int main(int argc, char **argv)

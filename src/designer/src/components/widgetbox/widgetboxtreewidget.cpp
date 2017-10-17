@@ -925,7 +925,7 @@ void WidgetBoxTreeWidget::dropWidgets(const QList<QDesignerDnDItemInterface*> &i
         DomWidget *fakeTopLevel = dom_ui->takeElementWidget();
         DomWidget *firstWidget = 0;
         if (fakeTopLevel && !fakeTopLevel->elementWidget().isEmpty()) {
-            firstWidget = fakeTopLevel->elementWidget().first();
+            firstWidget = fakeTopLevel->elementWidget().constFirst();
             dom_ui->setElementWidget(firstWidget);
         } else {
             dom_ui->setElementWidget(fakeTopLevel);
