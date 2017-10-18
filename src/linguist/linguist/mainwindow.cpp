@@ -2590,7 +2590,6 @@ void MainWindow::readConfig()
 {
     QSettings config;
 
-    QRect r(pos(), size());
     restoreGeometry(config.value(settingPath("Geometry/WindowGeometry")).toByteArray());
     restoreState(config.value(settingPath("MainWindowState")).toByteArray());
 

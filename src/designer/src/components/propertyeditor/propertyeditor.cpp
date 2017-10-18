@@ -175,7 +175,6 @@ void PropertyEditor::setupStringProperty(QtVariantProperty *property, bool isMai
 
 void PropertyEditor::setupPaletteProperty(QtVariantProperty *property)
 {
-    QPalette value = qvariant_cast<QPalette>(property->value());
     QPalette superPalette = QPalette();
     QWidget *currentWidget = qobject_cast<QWidget *>(m_object);
     if (currentWidget) {

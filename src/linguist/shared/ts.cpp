@@ -188,7 +188,6 @@ QString TSReader::readTransContents()
 
 bool TSReader::read(Translator &translator)
 {
-    STRING(byte);
     STRING(catalog);
     STRING(comment);
     STRING(context);
@@ -216,13 +215,11 @@ bool TSReader::read(Translator &translator)
     STRING(type);
     STRING(unfinished);
     STRING(userdata);
-    STRING(value);
     STRING(vanished);
     //STRING(version);
     STRING(yes);
 
     static const QString strextrans(QLatin1String("extra-"));
-    static const QString strUtf8(QLatin1String("UTF-8"));
 
     while (!atEnd()) {
         readNext();

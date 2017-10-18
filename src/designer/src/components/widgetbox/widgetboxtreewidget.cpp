@@ -465,7 +465,6 @@ bool WidgetBoxTreeWidget::readWidget(Widget *w, const QString &xml, QXmlStreamRe
     int nesting = 0;
     bool endEncountered = false;
     bool parsedWidgetTag = false;
-    QString outmostElement;
     while (!endEncountered) {
         const qint64 currentPosition = r.characterOffset();
         switch(r.readNext()) {
@@ -530,7 +529,6 @@ void WidgetBoxTreeWidget::writeCategories(QXmlStreamWriter &writer, const Catego
     const QString category = QLatin1String(categoryElementC);
     const QString categoryEntry = QLatin1String(categoryEntryElementC);
     const QString iconPrefix = QLatin1String(iconPrefixC);
-    const QString widgetTag = QLatin1String(widgetElementC);
 
     //
     // <widgetbox>

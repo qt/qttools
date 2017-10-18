@@ -63,7 +63,6 @@ private:
 bool QPHReader::read(Translator &translator)
 {
     m_currentField = NoField;
-    QString result;
     while (!atEnd()) {
         readNext();
         if (isStartElement()) {

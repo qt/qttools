@@ -57,7 +57,6 @@ void ErrorsView::clear()
 
 void ErrorsView::addError(int model, const ErrorType type, const QString &arg)
 {
-    QString error;
     switch (type) {
       case SuperfluousAccelerator:
         addError(model, tr("Accelerator possibly superfluous in translation."));

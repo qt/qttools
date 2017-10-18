@@ -64,7 +64,6 @@ void PaletteEditorButton::setSuperPalette(const QPalette &palette)
 void PaletteEditorButton::showPaletteEditor()
 {
     int result;
-    QPalette p = QPalette();
     QPalette pal = PaletteEditor::getPalette(m_core, 0, m_palette, m_superPalette, &result);
     if (result == QDialog::Accepted) {
         m_palette = pal;

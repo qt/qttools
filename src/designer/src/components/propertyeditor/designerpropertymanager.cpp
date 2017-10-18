@@ -1576,8 +1576,6 @@ void DesignerPropertyManager::reloadResourceProperties()
                 defaultIcon = iconCache->icon(icon);
         }
 
-        QMap<QPair<QIcon::Mode, QIcon::State>, PropertySheetPixmapValue> iconPaths = icon.paths();
-
         QMap<QPair<QIcon::Mode, QIcon::State>, QtProperty *> subProperties = m_propertyToIconSubProperties.value(property);
         for (auto itSub = subProperties.cbegin(), end = subProperties.cend(); itSub != end; ++itSub) {
             const QPair<QIcon::Mode, QIcon::State> pair = itSub.key();

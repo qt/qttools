@@ -184,7 +184,6 @@ bool QDesignerMemberSheet::isSlot(int index) const
 
 bool QDesignerMemberSheet::inheritedFromWidget(int index) const
 {
-    const QString name = d->m_meta->method(index)->signature();
     return declaredInClass(index) == QStringLiteral("QWidget") || declaredInClass(index) == QStringLiteral("QObject");
 }
 
