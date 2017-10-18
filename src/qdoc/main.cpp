@@ -786,5 +786,5 @@ int main(int argc, char **argv)
     qDebug() << "main(): qdoc database deleted";
 #endif
 
-    return EXIT_SUCCESS;
+    return Location::exitCode();
 }

@@ -42,7 +42,10 @@ QT_BEGIN_NAMESPACE
 const Location Location::null;
 
 int Location::tabSize;
+int Location::warningCount = 0;
+int Location::warningLimit = -1;
 QString Location::programName;
+QString Location::project;
 QRegExp *Location::spuriousRegExp = 0;
 bool Location::logProgress_ = false;
 
@@ -276,6 +279,24 @@ void Location::error(const QString& message, const QString& details) const
 }
 
 /*!
+  Returns the error code QDoc should exit with; EXIT_SUCCESS
+  or the number of documentation warnings if they exceeded
+  the limit set by warninglimit configuration variable.
+ */
+int Location::exitCode()
+{
+    if (warningLimit < 0 || warningCount <= warningLimit)
+        return EXIT_SUCCESS;
+
+    Location::null.emitMessage(Error,
+        tr("Documentation warnings (%1) exceeded the limit (%2) for '%3'.")
+            .arg(QString::number(warningCount),
+                 QString::number(warningLimit),
+                 project), QString());
+    return warningCount;
+}
+
+/*!
   Writes \a message and \a detals to stderr as a formatted
   error message and then exits the program. qdoc prints fatal
   errors in either phase (Prepare or Generate).
@@ -308,6 +329,11 @@ void Location::initialize(const Config& config)
 {
     tabSize = config.getInt(CONFIG_TABSIZE);
     programName = config.programName();
+    project = config.getString(CONFIG_PROJECT);
+    warningCount = 0;
+    if (qEnvironmentVariableIsSet("QDOC_ENABLE_WARNINGLIMIT")
+        || config.getBool(CONFIG_WARNINGLIMIT + Config::dot + "enabled"))
+        warningLimit = config.getInt(CONFIG_WARNINGLIMIT);
 
     QRegExp regExp = config.getRegExp(CONFIG_SPURIOUS);
     if (regExp.isValid()) {
@@ -382,8 +408,10 @@ void Location::emitMessage(MessageType type,
     result.replace("\n", "\n    ");
     if (type == Error)
         result.prepend(tr(": error: "));
-    else if (type == Warning)
+    else if (type == Warning) {
         result.prepend(tr(": warning: "));
+        ++warningCount;
+    }
     if (type != Report)
         result.prepend(toString());
     fprintf(stderr, "%s\n", result.toLatin1().data());

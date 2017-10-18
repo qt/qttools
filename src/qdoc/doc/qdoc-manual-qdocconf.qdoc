@@ -122,6 +122,7 @@
     \li \l {tabsize-variable} {tabsize}
     \li \l {version-variable} {version}
     \li \l {versionsym-variable} {versionsym}
+    \li \l {warninglimit-variable} {warninglimit}
     \endlist
 
     \section1 Categories
@@ -1120,6 +1121,31 @@
     implemented. Currently, it only works within raw HTML code.
 
     See also \l {version} {\\version}.
+
+    \target warninglimit-variable
+    \section1 warninglimit
+
+    The \c warninglimit variable sets the maximum number of documentation
+    warnings allowed. If this limit is exceeded, QDoc continues as normal
+    but exits with the warning count as the error code. If the limit was
+    not exceeded or \c warninglimit was not defined, QDoc process exits
+    with 0, assuming there were no other critical errors.
+
+    Setting the \c warninglimit to \c 0 means failure on any warning.
+
+    \note By default, QDoc does not enforce the warning limit. Enable it
+    with \c {warninglimit.enabled = true} or by defining
+    the \c QDOC_ENABLE_WARNINGLIMIT environment variable.
+
+    For example,
+
+    \badcode
+    # Fail the documentation build if we have more than 100 warnings
+    warninglimit = 100
+    warninglimit.enabled = true
+    \endcode
+
+    The \c warninglimit variable was introduced in Qt 5.11.
 */
 
 /*!

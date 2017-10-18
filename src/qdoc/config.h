@@ -232,6 +232,7 @@ struct ConfigStrings
     static QString QMLONLY;
     static QString QMLTYPESPAGE;
     static QString QMLTYPESTITLE;
+    static QString WARNINGLIMIT;
     static QString WRITEQAPAGES;
 };
 
@@ -312,6 +313,7 @@ struct ConfigStrings
 #define CONFIG_QMLONLY ConfigStrings::QMLONLY
 #define CONFIG_QMLTYPESPAGE ConfigStrings::QMLTYPESPAGE
 #define CONFIG_QMLTYPESTITLE ConfigStrings::QMLTYPESTITLE
+#define CONFIG_WARNINGLIMIT ConfigStrings::WARNINGLIMIT
 #define CONFIG_WRITEQAPAGES ConfigStrings::WRITEQAPAGES
 
 QT_END_NAMESPACE

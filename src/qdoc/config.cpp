@@ -119,6 +119,7 @@ QString ConfigStrings::IMAGEEXTENSIONS = QStringLiteral("imageextensions");
 QString ConfigStrings::QMLONLY = QStringLiteral("qmlonly");
 QString ConfigStrings::QMLTYPESPAGE = QStringLiteral("qmltypespage");
 QString ConfigStrings::QMLTYPESTITLE = QStringLiteral("qmltypestitle");
+QString ConfigStrings::WARNINGLIMIT = QStringLiteral("warninglimit");
 QString ConfigStrings::WRITEQAPAGES = QStringLiteral("writeqapages");
 
 /*!
