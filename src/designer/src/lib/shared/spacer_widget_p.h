@@ -54,7 +54,6 @@ class QDESIGNER_SHARED_EXPORT Spacer: public QWidget
 {
     Q_OBJECT
 
-    Q_ENUMS(SizeType)
     // Special hack: Make name appear as "spacer name"
     Q_PROPERTY(QString spacerName  READ objectName WRITE setObjectName)
     Q_PROPERTY(Qt::Orientation orientation READ orientation WRITE setOrientation)

@@ -54,7 +54,6 @@ class QtColorLine : public QWidget
     Q_PROPERTY(bool backgroundCheckered READ isBackgroundCheckered WRITE setBackgroundCheckered)
     Q_PROPERTY(ColorComponent colorComponent READ colorComponent WRITE setColorComponent)
     Q_PROPERTY(Qt::Orientation orientation READ orientation WRITE setOrientation)
-    Q_ENUMS(ColorComponent)
 public:
 
     enum ColorComponent {
@@ -66,6 +65,7 @@ public:
         Value,
         Alpha
     };
+    Q_ENUM(ColorComponent)
 
     QSize minimumSizeHint() const;
     QSize sizeHint() const;
