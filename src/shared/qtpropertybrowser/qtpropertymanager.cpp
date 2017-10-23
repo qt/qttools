@@ -5177,8 +5177,8 @@ void QtFlagPropertyManager::uninitializeProperty(QtProperty *property)
     if (it != d_ptr->m_propertyToFlags.end()) {
         for (QtProperty *prop : qAsConst(it.value()))  {
             if (prop) {
-                delete prop;
                 d_ptr->m_flagToProperty.remove(prop);
+                delete prop;
             }
         }
     }
