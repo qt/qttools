@@ -667,7 +667,7 @@ void QDocCommandLineParser::process(const QCoreApplication &app)
         Config::overrideOutputDir = value(outputDirOption);
     foreach (const QString &format, values(outputFormatOption))
         Config::overrideOutputFormats.insert(format);
-    noLinkErrors = isSet(noLinkErrorsOption);
+    noLinkErrors = isSet(noLinkErrorsOption) || qEnvironmentVariableIsSet("QDOC_NOLINKERRORS");
     autolinkErrors = isSet(autoLinkErrorsOption);
     if (isSet(debugOption))
         Generator::startDebugging(QString("command line"));
