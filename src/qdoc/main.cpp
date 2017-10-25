@@ -154,7 +154,7 @@ static void loadIndexFiles(Config& config, const QSet<QString> &formats)
                     for (const auto &subDir : subDirs) {
                         QString fileToLookFor = indexDirs[j]
                                 + QLatin1Char('/') + subDir
-                                + QLatin1Char('/') + dependModules[i];
+                                + QLatin1Char('/') + dependModules[i] + ".index";
                         if (QFile::exists(fileToLookFor)) {
                             QFileInfo tempFileInfo(fileToLookFor);
                             if (!foundIndices.contains(tempFileInfo))
