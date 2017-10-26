@@ -860,6 +860,8 @@ Node *Aggregate::findChildNode(const QString& name, Node::Genus genus) const
             }
         }
     }
+    if (genus != Node::DontCare && this->genus() != genus)
+        return nullptr;
     return primaryFunctionMap_.value(name);
 }
 

@@ -466,11 +466,14 @@ void QDocDatabase::destroyQdocDB()
 
   In particular, the type node map is initialized with a lot
   type names that don't refer to documented types. For example,
-  the C++ standard types are included. These might be documented
+  many C++ standard types are included. These might be documented
   here at some point, but for now they are not. Other examples
   include \c array and \c data, which are just generic names
   used as place holders in function signatures that appear in
   the documentation.
+
+  \note Do not add QML basic types into this list as it will
+        break linking to those types.
 
   Also calls Node::initialize() to initialize the search goal map.
  */
@@ -487,7 +490,6 @@ void QDocDatabase::initializeDB()
     typeNodeMap_.insert( "autoSearch", 0);
     typeNodeMap_.insert( "axis", 0);
     typeNodeMap_.insert( "backClicked", 0);
-    typeNodeMap_.insert( "bool", 0);
     typeNodeMap_.insert( "boomTime", 0);
     typeNodeMap_.insert( "border", 0);
     typeNodeMap_.insert( "buttonClicked", 0);
@@ -496,7 +498,6 @@ void QDocDatabase::initializeDB()
     typeNodeMap_.insert( "clicked", 0);
     typeNodeMap_.insert( "close", 0);
     typeNodeMap_.insert( "closed", 0);
-    typeNodeMap_.insert( "color", 0);
     typeNodeMap_.insert( "cond", 0);
     typeNodeMap_.insert( "data", 0);
     typeNodeMap_.insert( "dataReady", 0);
@@ -505,10 +506,8 @@ void QDocDatabase::initializeDB()
     typeNodeMap_.insert( "datetime", 0);
     typeNodeMap_.insert( "day", 0);
     typeNodeMap_.insert( "deactivated", 0);
-    typeNodeMap_.insert( "double", 0);
     typeNodeMap_.insert( "drag", 0);
     typeNodeMap_.insert( "easing", 0);
-    typeNodeMap_.insert( "enumeration", 0);
     typeNodeMap_.insert( "error", 0);
     typeNodeMap_.insert( "exposure", 0);
     typeNodeMap_.insert( "fatalError", 0);
@@ -530,14 +529,12 @@ void QDocDatabase::initializeDB()
     typeNodeMap_.insert( "imageProcessing", 0);
     typeNodeMap_.insert( "index", 0);
     typeNodeMap_.insert( "initialized", 0);
-    typeNodeMap_.insert( "int", 0);
     typeNodeMap_.insert( "isLoaded", 0);
     typeNodeMap_.insert( "item", 0);
     typeNodeMap_.insert( "jsdict", 0);
     typeNodeMap_.insert( "jsobject", 0);
     typeNodeMap_.insert( "key", 0);
     typeNodeMap_.insert( "keysequence", 0);
-    typeNodeMap_.insert( "list", 0);
     typeNodeMap_.insert( "listViewClicked", 0);
     typeNodeMap_.insert( "loadRequest", 0);
     typeNodeMap_.insert( "locale", 0);
@@ -567,7 +564,6 @@ void QDocDatabase::initializeDB()
     typeNodeMap_.insert( "progress", 0);
     typeNodeMap_.insert( "puzzleLost", 0);
     typeNodeMap_.insert( "qmlSignal", 0);
-    typeNodeMap_.insert( "real", 0);
     typeNodeMap_.insert( "rectangle", 0);
     typeNodeMap_.insert( "request", 0);
     typeNodeMap_.insert( "requestId", 0);
@@ -591,7 +587,6 @@ void QDocDatabase::initializeDB()
     typeNodeMap_.insert( "std::pair", 0);
     typeNodeMap_.insert( "std::string", 0);
     typeNodeMap_.insert( "std::vector", 0);
-    typeNodeMap_.insert( "string", 0);
     typeNodeMap_.insert( "stringlist", 0);
     typeNodeMap_.insert( "swapPlayers", 0);
     typeNodeMap_.insert( "symbol", 0);
@@ -1453,7 +1448,7 @@ const Node* QDocDatabase::findFunctionNode(const QString& target,
   When searching the index trees, the search begins at the
   root.
  */
-const Node* QDocDatabase::findTypeNode(const QString& type, const Node* relative)
+const Node* QDocDatabase::findTypeNode(const QString& type, const Node* relative, Node::Genus genus)
 {
     QStringList path = type.split("::");
     if ((path.size() == 1) && (path.at(0)[0].isLower() || path.at(0) == QString("T"))) {
@@ -1461,7 +1456,7 @@ const Node* QDocDatabase::findTypeNode(const QString& type, const Node* relative
         if (i != typeNodeMap_.end())
             return i.value();
     }
-    return forest_.findTypeNode(path, relative);
+    return forest_.findTypeNode(path, relative, genus);
 }
 
 /*!

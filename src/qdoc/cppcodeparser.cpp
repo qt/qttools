@@ -2678,10 +2678,12 @@ void CppCodeParser::createExampleFileNodes(DocumentNode *dn)
     }
 
     foreach (const QString &exampleFile, exampleFiles) {
-        new DocumentNode(dn,
+        DocumentNode *fileNode = new DocumentNode(dn,
                     exampleFile.mid(sizeOfBoringPartOfName),
                     Node::File,
                     Node::NoPageType);
+        if (fileNode->name().endsWith(".qml"))
+            fileNode->setGenus(Node::QML);
     }
     foreach (const QString &imageFile, imageFiles) {
         new DocumentNode(dn,

@@ -579,12 +579,12 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
         break;
     case Atom::Qml:
         out() << "<pre class=\"qml\">"
-              << trimmedTrailing(highlightedCode(indent(codeIndent,atom->string()),relative), codePrefix, codeSuffix)
+              << trimmedTrailing(highlightedCode(indent(codeIndent,atom->string()),relative, false, Node::QML), codePrefix, codeSuffix)
               << "</pre>\n";
         break;
     case Atom::JavaScript:
         out() << "<pre class=\"js\">"
-              << trimmedTrailing(highlightedCode(indent(codeIndent,atom->string()),relative), codePrefix, codeSuffix)
+              << trimmedTrailing(highlightedCode(indent(codeIndent,atom->string()),relative, false, Node::JS), codePrefix, codeSuffix)
               << "</pre>\n";
         break;
     case Atom::CodeNew:
@@ -3244,7 +3244,7 @@ void HtmlGenerator::generateQmlItem(const Node *node,
         marked.remove("<@type>");
         marked.remove("</@type>");
     }
-    out() << highlightedCode(marked, relative, false);
+    out() << highlightedCode(marked, relative, false, Node::QML);
 }
 
 void HtmlGenerator::generateList(const Node* relative, CodeMarker* marker, const QString& selector)
@@ -3498,7 +3498,7 @@ void HtmlGenerator::generateSynopsis(const Node *node,
 
 QString HtmlGenerator::highlightedCode(const QString& markedCode,
                                        const Node* relative,
-                                       bool alignNames)
+                                       bool alignNames, Node::Genus genus)
 {
     QString src = markedCode;
     QString html;
@@ -3533,17 +3533,17 @@ QString HtmlGenerator::highlightedCode(const QString& markedCode,
                 html += QLatin1String("</b>");
             }
             else if (parseArg(src, funcTag, &i, srcSize, &arg, &par1)) {
-                const Node* n = qdb_->findFunctionNode(par1.toString(), relative, Node::DontCare);
+                const Node* n = qdb_->findFunctionNode(par1.toString(), relative, genus);
                 QString link = linkForNode(n, relative);
                 addLink(link, arg, &html);
                 par1 = QStringRef();
             }
             else if (parseArg(src, typeTag, &i, srcSize, &arg, &par1)) {
                 par1 = QStringRef();
-                const Node* n = qdb_->findTypeNode(arg.toString(), relative);
+                const Node* n = qdb_->findTypeNode(arg.toString(), relative, genus);
                 html += QLatin1String("<span class=\"type\">");
                 if (n && (n->isQmlBasicType() || n->isJsBasicType())) {
-                    if (relative && (relative->isQmlType() || relative->isJsType()))
+                    if (relative && (relative->genus() == n->genus() || genus == n->genus()))
                         addLink(linkForNode(n,relative), arg, &html);
                     else
                         html += arg;
