@@ -1029,6 +1029,16 @@ void deployPlugins(const ApplicationBundleInfo &appBundleInfo, const QString &pl
     // Plugin white list:
     QStringList pluginList;
 
+    const auto addPlugins = [&pluginSourcePath,&pluginList](const QString &subDirectory,
+            const std::function<bool(QString)> &predicate = std::function<bool(QString)>()) {
+        const QStringList libs = QDir(pluginSourcePath + QLatin1Char('/') + subDirectory)
+                .entryList({QStringLiteral("*.dylib")});
+        for (const QString &lib : libs) {
+            if (!lib.endsWith(QStringLiteral("_debug.dylib")) && (!predicate || predicate(lib)))
+                pluginList.append(subDirectory + QLatin1Char('/') + lib);
+        }
+    };
+
     // Platform plugin:
     pluginList.append("platforms/libqcocoa.dylib");
 
@@ -1039,64 +1049,37 @@ void deployPlugins(const ApplicationBundleInfo &appBundleInfo, const QString &pl
     const QString libInfixWithFramework = getLibInfix(deploymentInfo.deployedFrameworks) + QStringLiteral(".framework");
 
     // Network
-    if (deploymentInfo.deployedFrameworks.contains(QStringLiteral("QtNetwork") + libInfixWithFramework)) {
-        QStringList bearerPlugins = QDir(pluginSourcePath +  QStringLiteral("/bearer")).entryList(QStringList() << QStringLiteral("*.dylib"));
-        foreach (const QString &plugin, bearerPlugins) {
-            if (!plugin.endsWith(QStringLiteral("_debug.dylib")))
-                pluginList.append(QStringLiteral("bearer/") + plugin);
-        }
-    }
+    if (deploymentInfo.deployedFrameworks.contains(QStringLiteral("QtNetwork") + libInfixWithFramework))
+        addPlugins(QStringLiteral("bearer"));
 
     // All image formats (svg if QtSvg.framework is used)
-    QStringList imagePlugins = QDir(pluginSourcePath +  QStringLiteral("/imageformats")).entryList(QStringList() << QStringLiteral("*.dylib"));
-    foreach (const QString &plugin, imagePlugins) {
-        if (plugin.contains(QStringLiteral("qsvg"))) {
-            if (deploymentInfo.deployedFrameworks.contains(QStringLiteral("QtSvg") + libInfixWithFramework))
-                pluginList.append(QStringLiteral("imageformats/") + plugin);
-        } else if (!plugin.endsWith(QStringLiteral("_debug.dylib"))) {
-            pluginList.append(QStringLiteral("imageformats/") + plugin);
-        }
-    }
+    const bool usesSvg = deploymentInfo.deployedFrameworks.contains(QStringLiteral("QtSvg") + libInfixWithFramework);
+    addPlugins(QStringLiteral("imageformats"), [usesSvg](const QString &lib) {
+        if (lib.contains(QStringLiteral("qsvg")) && !usesSvg)
+            return false;
+        return true;
+    });
 
-    QStringList iconEngines = QDir(pluginSourcePath + QStringLiteral("/iconengines")).entryList(QStringList() << QStringLiteral("*.dylib"));
-    foreach (const QString &plugin, iconEngines) {
-        if (!plugin.endsWith(QStringLiteral("_debug.dylib"))) {
-            pluginList.append(QStringLiteral("iconengines/") + plugin);
-        }
-    }
+    addPlugins(QStringLiteral("iconengines"));
 
     // Sql plugins if QtSql.framework is in use
     if (deploymentInfo.deployedFrameworks.contains(QStringLiteral("QtSql") + libInfixWithFramework)) {
-        QStringList sqlPlugins = QDir(pluginSourcePath +  QStringLiteral("/sqldrivers")).entryList(QStringList() << QStringLiteral("*.dylib"));
-        foreach (const QString &plugin, sqlPlugins) {
-            if (plugin.endsWith(QStringLiteral("_debug.dylib")))
-                continue;
-
-            // Some sql plugins are known to cause app store rejections. Skip or warn for these plugins.
-            if (plugin.startsWith(QStringLiteral("libqsqlodbc")) || plugin.startsWith(QStringLiteral("libqsqlpsql"))) {
-                LogWarning() << "Plugin" << plugin << "uses private API and is not Mac App store compliant.";
+        addPlugins(QStringLiteral("sqldrivers"), [](const QString &lib) {
+            if (lib.startsWith(QStringLiteral("libqsqlodbc")) || lib.startsWith(QStringLiteral("libqsqlpsql"))) {
+                LogWarning() << "Plugin" << lib << "uses private API and is not Mac App store compliant.";
                 if (appstoreCompliant) {
-                    LogWarning() << "Skip plugin" << plugin;
-                    continue;
+                    LogWarning() << "Skip plugin" << lib;
+                    return false;
                 }
             }
-
-            pluginList.append(QStringLiteral("sqldrivers/") + plugin);
-        }
+            return true;
+        });
     }
 
     // multimedia plugins if QtMultimedia.framework is in use
     if (deploymentInfo.deployedFrameworks.contains(QStringLiteral("QtMultimedia") + libInfixWithFramework)) {
-        QStringList plugins = QDir(pluginSourcePath + QStringLiteral("/mediaservice")).entryList(QStringList() << QStringLiteral("*.dylib"));
-        foreach (const QString &plugin, plugins) {
-            if (!plugin.endsWith(QStringLiteral("_debug.dylib")))
-                pluginList.append(QStringLiteral("mediaservice/") + plugin);
-        }
-        plugins = QDir(pluginSourcePath + QStringLiteral("/audio")).entryList(QStringList() << QStringLiteral("*.dylib"));
-        foreach (const QString &plugin, plugins) {
-            if (!plugin.endsWith(QStringLiteral("_debug.dylib")))
-                pluginList.append(QStringLiteral("audio/") + plugin);
-        }
+        addPlugins(QStringLiteral("mediaservice"));
+        addPlugins(QStringLiteral("audio"));
     }
 
     foreach (const QString &plugin, pluginList) {
