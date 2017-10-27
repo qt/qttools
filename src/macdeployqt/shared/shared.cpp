@@ -1045,6 +1045,9 @@ void deployPlugins(const ApplicationBundleInfo &appBundleInfo, const QString &pl
     // Cocoa print support
     pluginList.append("printsupport/libcocoaprintersupport.dylib");
 
+    // Styles
+    addPlugins(QStringLiteral("styles"));
+
     // Check if Qt was configured with -libinfix
     const QString libInfixWithFramework = getLibInfix(deploymentInfo.deployedFrameworks) + QStringLiteral(".framework");
 
