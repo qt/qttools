@@ -1844,6 +1844,8 @@ void Generator::initialize(const Config &config)
     }
 
     project_ = config.getString(CONFIG_PROJECT);
+    outDir_ = config.getOutputDir();
+    outSubdir_ = outDir_.mid(outDir_.lastIndexOf('/') + 1);
 
     outputPrefixes.clear();
     QStringList items = config.getStringList(CONFIG_OUTPUTPREFIXES);
