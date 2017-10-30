@@ -1474,7 +1474,7 @@ const Node* QDocDatabase::findNodeForTarget(const QString& target, const Node* r
         node = findNodeByNameAndType(QStringList(target), Node::Document);
     else {
         QStringList path = target.split("::");
-        int flags = SearchBaseClasses | SearchEnumValues; // | NonFunction;
+        int flags = SearchBaseClasses | SearchEnumValues;
         foreach (Tree* t, searchOrder()) {
             const Node* n = t->findNode(path, relative, flags, Node::DontCare);
             if (n)

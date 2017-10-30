@@ -383,7 +383,7 @@ class Aggregate : public Node
 public:
     virtual ~Aggregate();
 
-    Node* findChildNode(const QString& name, Node::Genus genus) const;
+    Node* findChildNode(const QString& name, Node::Genus genus, int findFlags = 0) const;
     Node* findChildNode(const QString& name, NodeType type);
     void findChildren(const QString& name, NodeList& nodes) const override;
     FunctionNode* findFunctionNode(const QString& name, const QString& params) const;

@@ -833,7 +833,7 @@ Aggregate::~Aggregate()
   find all this node's children that have the given \a name,
   and return the one that satisfies the \a genus requirement.
  */
-Node *Aggregate::findChildNode(const QString& name, Node::Genus genus) const
+Node *Aggregate::findChildNode(const QString& name, Node::Genus genus, int findFlags) const
 {
     if (genus == Node::DontCare) {
         Node *node = childMap_.value(name);
@@ -849,14 +849,23 @@ Node *Aggregate::findChildNode(const QString& name, Node::Genus genus) const
                 }
             }
         }
-    }
-    else {
+    } else {
         NodeList nodes = childMap_.values(name);
         if (!nodes.isEmpty()) {
             for (int i=0; i<nodes.size(); ++i) {
                 Node* node = nodes.at(i);
-                if (genus == node->genus())
+                if (genus == node->genus()) {
+                    if (findFlags & TypesOnly) {
+                        if (!node->isTypedef()
+                                && !node->isClass()
+                                && !node->isQmlType()
+                                && !node->isQmlBasicType()
+                                && !node->isJsType()
+                                && !node->isJsBasicType())
+                            continue;
+                    }
                     return node;
+                }
             }
         }
     }

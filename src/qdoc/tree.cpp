@@ -913,7 +913,7 @@ const Node* Tree::findNode(const QStringList& path,
             if (node == 0 || !node->isAggregate())
                 break;
 
-            const Node* next = static_cast<const Aggregate*>(node)->findChildNode(path.at(i), genus);
+            const Node* next = static_cast<const Aggregate*>(node)->findChildNode(path.at(i), genus, findFlags);
             if (!next && (findFlags & SearchEnumValues) && i == path.size()-1) {
                 next = static_cast<const Aggregate*>(node)->findEnumNodeForValue(path.at(i));
             }
@@ -921,7 +921,7 @@ const Node* Tree::findNode(const QStringList& path,
                 node->isClass() && (findFlags & SearchBaseClasses)) {
                 NodeList baseClasses = allBaseClasses(static_cast<const ClassNode*>(node));
                 foreach (const Node* baseClass, baseClasses) {
-                    next = static_cast<const Aggregate*>(baseClass)->findChildNode(path.at(i), genus);
+                    next = static_cast<const Aggregate*>(baseClass)->findChildNode(path.at(i), genus, findFlags);
                     if (!next && (findFlags & SearchEnumValues) && i == path.size() - 1)
                         next = static_cast<const Aggregate*>(baseClass)->findEnumNodeForValue(path.at(i));
                     if (next) {

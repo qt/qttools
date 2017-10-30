@@ -51,7 +51,7 @@ class QDocDatabase;
 enum FindFlag {
     SearchBaseClasses = 0x1,
     SearchEnumValues = 0x2,
-    NonFunction = 0x4
+    TypesOnly = 0x4
 };
 
 class QDocForest
@@ -145,7 +145,7 @@ class QDocForest
 
     const Node* findTypeNode(const QStringList& path, const Node* relative, Node::Genus genus)
     {
-        int flags = SearchBaseClasses | SearchEnumValues | NonFunction;
+        int flags = SearchBaseClasses | SearchEnumValues | TypesOnly;
         if (relative && genus == Node::DontCare && relative->genus() != Node::DOC)
             genus = relative->genus();
         foreach (Tree* t, searchOrder()) {
