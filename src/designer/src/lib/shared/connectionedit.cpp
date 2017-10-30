@@ -1194,12 +1194,10 @@ void ConnectionEdit::mouseDoubleClickEvent(QMouseEvent *e)
         case Dragging:
             break;
         case Editing:
-            if (!m_widget_under_mouse.isNull()) {
+            if (!m_widget_under_mouse.isNull())
                 emit widgetActivated(m_widget_under_mouse);
-            } else if (m_sel_con_set.size() == 1) {
-                Connection *con = m_sel_con_set.keys().first();
-                modifyConnection(con);
-            }
+            else if (m_sel_con_set.size() == 1)
+                modifyConnection(m_sel_con_set.constBegin().key());
             break;
     }
 

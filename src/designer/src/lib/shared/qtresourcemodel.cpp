@@ -473,7 +473,7 @@ QStringList QtResourceModel::loadedQrcFiles() const
 
 bool QtResourceModel::isModified(const QString &path) const
 {
-    QMap<QString, bool>::const_iterator it = d_ptr->m_pathToModified.find(path);
+    QMap<QString, bool>::const_iterator it = d_ptr->m_pathToModified.constFind(path);
     if (it != d_ptr->m_pathToModified.constEnd())
         return it.value();
     return true;
@@ -481,7 +481,7 @@ bool QtResourceModel::isModified(const QString &path) const
 
 void QtResourceModel::setModified(const QString &path)
 {
-    QMap<QString, bool>::const_iterator itMod = d_ptr->m_pathToModified.find(path);
+    QMap<QString, bool>::const_iterator itMod = d_ptr->m_pathToModified.constFind(path);
     if (itMod == d_ptr->m_pathToModified.constEnd())
         return;
 

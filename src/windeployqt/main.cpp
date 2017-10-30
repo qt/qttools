@@ -953,7 +953,8 @@ static QStringList translationNameFilters(quint64 modules, const QString &prefix
 }
 
 static bool deployTranslations(const QString &sourcePath, quint64 usedQtModules,
-                               const QString &target, unsigned flags, QString *errorMessage)
+                               const QString &target, const Options &options,
+                               QString *errorMessage)
 {
     // Find available languages prefixes by checking on qtbase.
     QStringList prefixes;
@@ -979,14 +980,22 @@ static bool deployTranslations(const QString &sourcePath, quint64 usedQtModules,
         arguments.clear();
         const QString targetFile = QStringLiteral("qt_") + prefix + QStringLiteral(".qm");
         arguments.append(QStringLiteral("-o"));
-        arguments.append(QDir::toNativeSeparators(absoluteTarget + QLatin1Char('/') + targetFile));
+        const QString targetFilePath = absoluteTarget + QLatin1Char('/') + targetFile;
+        if (options.json)
+            options.json->addFile(sourcePath +  QLatin1Char('/') + targetFile, targetFilePath);
+        arguments.append(QDir::toNativeSeparators(targetFilePath));
         const QFileInfoList &langQmFiles = sourceDir.entryInfoList(translationNameFilters(usedQtModules, prefix));
-        for (const QFileInfo &langQmFileFi : langQmFiles)
+        for (const QFileInfo &langQmFileFi : langQmFiles) {
+            if (options.json) {
+                options.json->addFile(langQmFileFi.absoluteFilePath(),
+                                      absoluteTarget + QLatin1Char('/') + langQmFileFi.fileName());
+            }
             arguments.append(langQmFileFi.fileName());
+        }
         if (optVerboseLevel)
             std::wcout << "Creating " << targetFile << "...\n";
         unsigned long exitCode;
-        if (!(flags & SkipUpdateFile)
+        if ((options.updateFileFlags & SkipUpdateFile) == 0
             && (!runProcess(binary, arguments, sourcePath, &exitCode, 0, 0, errorMessage) || exitCode)) {
             return false;
         }
@@ -1525,7 +1534,7 @@ static DeployResult deploy(const Options &options,
             return result;
         if (!deployTranslations(qmakeVariables.value(QStringLiteral("QT_INSTALL_TRANSLATIONS")),
                                 result.deployedQtLibraries, options.translationsDirectory,
-                                options.updateFileFlags, errorMessage)) {
+                                options, errorMessage)) {
             return result;
         }
     }
