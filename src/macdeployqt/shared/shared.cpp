@@ -1085,6 +1085,17 @@ void deployPlugins(const ApplicationBundleInfo &appBundleInfo, const QString &pl
         addPlugins(QStringLiteral("audio"));
     }
 
+    // render related plugins if Qt3DRender.framework is in use
+    if (deploymentInfo.deployedFrameworks.contains(QStringLiteral("Qt3DRender") + libInfixWithFramework)) {
+        addPlugins(QStringLiteral("sceneparsers"));
+        addPlugins(QStringLiteral("geometryloaders"));
+    }
+
+    // scene related plugins if Qt3DQuickRender.framework is in use
+    if (deploymentInfo.deployedFrameworks.contains(QStringLiteral("Qt3DQuickRender") + libInfixWithFramework)) {
+        addPlugins(QStringLiteral("renderplugins"));
+    }
+
     foreach (const QString &plugin, pluginList) {
         QString sourcePath = pluginSourcePath + "/" + plugin;
         if (useDebugLibs) {
