@@ -108,6 +108,7 @@ private:
         const QString &relFileName, const QString &anchor) const;
     QString mergeList(const QStringList &list) const;
     QString quote(const QString &string) const;
+    bool initDB();
 
     bool m_initDone = false;
     QString m_dbName;
