@@ -1414,7 +1414,6 @@ void DocParser::parse(const QString& source,
                                                "syntax definitions"));
                             }
                             else {
-                                location().push(macro.defaultDefLocation.filePath());
                                 QString expanded = expandMacroToString(cmdStr,
                                                                        macro.defaultDef,
                                                                        macro.numParams);
