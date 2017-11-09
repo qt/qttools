@@ -1110,24 +1110,38 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
             out() << "<dt>";
         }
         else { // (atom->string() == ATOM_LIST_VALUE)
-            // ### Trenton
-
-            QString t= protectEnc(plainCode(marker->markedUpEnumValue(atom->next()->string(),relative)));
+            const Atom* lookAhead = atom->next();
+            QString t = lookAhead->string();
+            lookAhead = lookAhead->next();
+            Q_ASSERT(lookAhead->type() == Atom::ListTagRight);
+            lookAhead = lookAhead->next();
+            if (lookAhead && lookAhead->type() == Atom::SinceTagLeft) {
+                lookAhead = lookAhead->next();
+                Q_ASSERT(lookAhead && lookAhead->type() == Atom::String);
+                t = t + QLatin1String(" (since ");
+                if (lookAhead->string().at(0).isDigit())
+                    t = t + QLatin1String("Qt ");
+                t = t + lookAhead->string() + QLatin1String(")");
+                skipAhead = 4;
+            }
+            else {
+                skipAhead = 1;
+            }
+            t = protectEnc(plainCode(marker->markedUpEnumValue(t, relative)));
             out() << "<tr><td class=\"topAlign\"><code>" << t << "</code>";
 
             if (relative->type() == Node::Enum) {
                 out() << "</td><td class=\"topAlign tblval\">";
                 const EnumNode *enume = static_cast<const EnumNode *>(relative);
                 QString itemValue = enume->itemValue(atom->next()->string());
-
                 if (itemValue.isEmpty())
                     out() << '?';
                 else
                     out() << "<code>" << protectEnc(itemValue) << "</code>";
             }
-            skipAhead = 1;
         }
         break;
+    case Atom::SinceTagRight:
     case Atom::ListTagRight:
         if (atom->string() == ATOM_LIST_TAG)
             out() << "</dt>\n";

@@ -1329,7 +1329,12 @@ void DocParser::parse(const QString& source,
                 case CMD_VALUE:
                     leaveValue();
                     if (openedLists.top().style() == OpenedList::Value) {
+                        QString p2;
                         p1 = getArgument();
+                        if (p1.startsWith(QLatin1String("[since ")) && p1.endsWith(QLatin1String("]"))) {
+                            p2 = p1.mid(7, p1.length() - 8);
+                            p1 = getArgument();
+                        }
                         if (!priv->enumItemList.contains(p1))
                             priv->enumItemList.append(p1);
 
@@ -1337,6 +1342,11 @@ void DocParser::parse(const QString& source,
                         append(Atom::ListTagLeft, ATOM_LIST_VALUE);
                         append(Atom::String, p1);
                         append(Atom::ListTagRight, ATOM_LIST_VALUE);
+                        if (!p2.isEmpty()) {
+                            append(Atom::SinceTagLeft, ATOM_LIST_VALUE);
+                            append(Atom::String, p2);
+                            append(Atom::SinceTagRight, ATOM_LIST_VALUE);
+                        }
                         append(Atom::ListItemLeft, ATOM_LIST_VALUE);
 
                         skipSpacesOrOneEndl();

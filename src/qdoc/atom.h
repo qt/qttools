@@ -109,6 +109,8 @@ public:
         SidebarLeft,
         SidebarRight,
         SinceList,
+        SinceTagLeft,
+        SinceTagRight,
         SnippetCommand,
         SnippetIdentifier,
         SnippetLocation,

@@ -121,6 +121,8 @@ QT_BEGIN_NAMESPACE
   \value SidebarLeft
   \value SidebarRight
   \value SinceList
+  \value SinceTagLeft
+  \value SinceTagRight
   \value String
   \value TableLeft
   \value TableRight
@@ -209,6 +211,8 @@ static const struct {
     { "SidebarLeft", Atom::SidebarLeft },
     { "SidebarRight", Atom::SidebarRight },
     { "SinceList", Atom::SinceList },
+    { "SinceTagLeft", Atom::SinceTagLeft },
+    { "SinceTagRight", Atom::SinceTagRight },
     { "SnippetCommand", Atom::SnippetCommand },
     { "SnippetIdentifier", Atom::SnippetIdentifier },
     { "SnippetLocation", Atom::SnippetLocation },
