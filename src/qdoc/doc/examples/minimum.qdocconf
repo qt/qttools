@@ -5,6 +5,10 @@
 
 #include(compat.qdocconf)
 
+# QDoc needs lists of file extensions to know which files
+# to process in different situations.
+
+include(fileextensions.qdocconf)
 
 # The outputdir variable specifies the directory
 # where QDoc will put the generated documentation.
