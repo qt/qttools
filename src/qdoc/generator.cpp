@@ -1413,6 +1413,27 @@ void Generator::generatePrivateSignalNote(const Node* node, CodeMarker* marker)
 }
 
 /*!
+  Generates a bold line that says:
+  "This function can be invoked via the meta-object system and from QML. See Q_INVOKABLE."
+ */
+void Generator::generateInvokableNote(const Node* node, CodeMarker* marker)
+{
+    Text text;
+    text << Atom::ParaLeft
+         << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD)
+         << "Note: "
+         << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD)
+         << "This function can be invoked via the meta-object system and from QML. See "
+         << Atom(Atom::Link,"Q_INVOKABLE")
+         << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
+         << "Q_INVOKABLE"
+         << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK)
+         << "."
+         << Atom::ParaRight;
+    generateText(text, node, marker);
+}
+
+/*!
   Generate the documentation for \a relative. i.e. \a relative
   is the node that reporesentas the entity where a qdoc comment
   was found, and \a text represents the qdoc comment.

@@ -1072,6 +1072,7 @@ private:
     bool isImplicit_ : 1;
     bool isRef_ : 1;
     bool isRefRef_ : 1;
+    bool isInvokable_ : 1;
     unsigned char overloadNumber_;
     QVector<Parameter> parameters_;
     const FunctionNode* reimplementedFrom_;

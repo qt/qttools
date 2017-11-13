@@ -3368,6 +3368,7 @@ void HtmlGenerator::generateSectionList(const Section& section,
     bool alignNames = true;
     if (!section.members.isEmpty()) {
         bool hasPrivateSignals = false;
+        bool isInvokable = false;
         bool twoColumn = false;
         if (style == CodeMarker::Subpage) {
             alignNames = false;
@@ -3417,6 +3418,11 @@ void HtmlGenerator::generateSectionList(const Section& section,
                     if (alignNames)
                         out() << "</td><td class=\"memItemRight bottomAlign\">[see note below]";
                 }
+                else if (fn->isInvokable()) {
+                    isInvokable = true;
+                    if (alignNames)
+                        out() << "</td><td class=\"memItemRight bottomAlign\">[see note below]";
+                }
             }
             if (alignNames)
                 out() << "</td></tr>\n";
@@ -3434,6 +3440,9 @@ void HtmlGenerator::generateSectionList(const Section& section,
         }
         if (hasPrivateSignals && alignNames) {
             generatePrivateSignalNote(relative, marker);
+        }
+        if (isInvokable && alignNames) {
+            generateInvokableNote(relative, marker);
         }
     }
 
@@ -4077,6 +4086,8 @@ void HtmlGenerator::generateDetailedMember(const Node *node,
         const FunctionNode* fn = static_cast<const FunctionNode*>(node);
         if (fn->isPrivateSignal())
             generatePrivateSignalNote(node, marker);
+        if (fn->isInvokable())
+            generateInvokableNote(node, marker);
         generateAssociatedPropertyNotes(fn);
     }
     else if (node->isEnumType()) {
