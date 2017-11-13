@@ -13,12 +13,13 @@ qtHaveModule(widgets) {
 }
 
 SUBDIRS += linguist \
-    qdoc \
     qtattributionsscanner
 
 qtConfig(library) {
     !android|android_app: SUBDIRS += qtplugininfo
 }
+
+config_clang: SUBDIRS += qdoc
 
 if(!android|android_app):!uikit: SUBDIRS += qtpaths
 

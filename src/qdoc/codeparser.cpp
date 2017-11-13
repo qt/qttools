@@ -112,11 +112,6 @@ void CodeParser::parseHeaderFile(const Location& location, const QString& filePa
     parseSourceFile(location, filePath);
 }
 
-void CodeParser::doneParsingHeaderFiles()
-{
-    doneParsingSourceFiles();
-}
-
 /*!
   All the code parsers in the static list are initialized here,
   after the qdoc configuration variables have been set.
@@ -356,6 +351,21 @@ void CodeParser::setLink(Node* node, Node::LinkType linkType, const QString& arg
     QString desc;
     extractPageLinkAndDesc(arg, &link, &desc);
     node->setLink(linkType, link, desc);
+}
+
+/*!
+  \brief Test for whether a doc comment warrants warnings.
+
+  Returns true if qdoc should report that it has found something
+  wrong with the qdoc comment in \a doc. Sometimes, qdoc should
+  not report the warning, for example, when the comment contains
+  the \c internal command, which normally means qdoc will not use
+  the comment in the documentation anyway, so there is no point
+  in reporting warnings about it.
+ */
+bool CodeParser::isWorthWarningAbout(const Doc &doc)
+{
+    return (showInternal_ || !doc.metaCommandsUsed().contains(QStringLiteral("internal")));
 }
 
 /*!

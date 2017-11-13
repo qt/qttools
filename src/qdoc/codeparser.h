@@ -53,13 +53,17 @@ public:
     virtual QStringList sourceFileNameFilter() = 0;
     virtual void parseHeaderFile(const Location& location, const QString& filePath);
     virtual void parseSourceFile(const Location& location, const QString& filePath) = 0;
-    virtual void doneParsingHeaderFiles();
-    virtual void doneParsingSourceFiles() = 0;
+    virtual void precompileHeaders() { }
+    virtual Node *parseFnArg(const Location &, const QString &) { return 0; }
+    virtual Node *parseMacroArg(const Location &, const QString &) { return 0; }
+    virtual Node *parseOtherFuncArg(const QString &, const Location &, const QString &) { return 0; }
 
     bool isParsingH() const;
     bool isParsingCpp() const;
     bool isParsingQdoc() const;
     const QString& currentFile() const { return currentFile_; }
+    const QString& moduleHeader() const { return moduleHeader_; }
+    void setModuleHeader(const QString& t) { moduleHeader_ = t; }
     void checkModuleInclusion(Node* n);
 
     static void initialize(const Config& config);
@@ -68,6 +72,7 @@ public:
     static CodeParser *parserForHeaderFile(const QString &filePath);
     static CodeParser *parserForSourceFile(const QString &filePath);
     static void setLink(Node* node, Node::LinkType linkType, const QString& arg);
+    static bool isWorthWarningAbout(const Doc &doc);
 
 protected:
     const QSet<QString>& commonMetaCommands();
@@ -78,6 +83,7 @@ protected:
     static void extractPageLinkAndDesc(const QString& arg,
                                        QString* link,
                                        QString* desc);
+    QString moduleHeader_;
     QString currentFile_;
     QDocDatabase* qdb_;
 

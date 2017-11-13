@@ -348,6 +348,8 @@ class QDocDatabase
     const CollectionNode* getCollectionNode(const QString& name, Node::Genus genus) {
         return forest_.getCollectionNode(name, genus);
     }
+    Node *findFunctionNodeForTag(QString tag) { return primaryTree()->findFunctionNodeForTag(tag); }
+    Node* findMacroNode(const QString &t) { return primaryTree()->findMacroNode(t); }
 
   private:
     const Node* findNodeForTarget(QStringList& targetPath,

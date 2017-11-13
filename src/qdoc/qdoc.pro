@@ -1,3 +1,4 @@
+
 !force_bootstrap {
     requires(qtConfig(xmlstreamwriter))
 }
@@ -10,6 +11,11 @@ qtHaveModule(qmldevtools-private) {
     DEFINES += QT_NO_DECLARATIVE
 }
 
+LIBS += $$CLANG_LIBS
+INCLUDEPATH += $$CLANG_INCLUDEPATH
+!disable_external_rpath: QMAKE_RPATHDIR += $$CLANG_LIBDIR
+DEFINES += $$shell_quote(CLANG_RESOURCE_DIR=\"$${CLANG_LIBDIR}/clang/$${CLANG_VERSION}/include\")
+
 DEFINES += \
     QDOC2_COMPAT
 
@@ -19,9 +25,13 @@ INCLUDEPATH += $$QT_SOURCE_TREE/src/tools/qdoc \
 # Increase the stack size on MSVC to 4M to avoid a stack overflow
 win32-msvc*:{
     QMAKE_LFLAGS += /STACK:4194304
+} else {
+    # (MSVC objects to defining a function in the locale.h dllimport context)
+    DEFINES += HEINOUS_SYSINC_HACK
 }
 
 HEADERS += atom.h \
+           clangcodeparser.h \
            codechunk.h \
            codemarker.h \
            codeparser.h \
@@ -49,6 +59,7 @@ HEADERS += atom.h \
            webxmlgenerator.h
 
 SOURCES += atom.cpp \
+           clangcodeparser.cpp \
            codechunk.cpp \
            codemarker.cpp \
            codeparser.cpp \

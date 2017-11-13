@@ -163,7 +163,6 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
                     const QString &paramName = hasName ? (*p).name() : (*p).dataType();
                     if (style != Subpage || !hasName)
                         synopsis += "<@param>" + protect(paramName) + "</@param>";
-                    synopsis += protect((*p).rightType());
                     if (style != Subpage && !(*p).defaultValue().isEmpty())
                         synopsis += " = " + protect((*p).defaultValue());
                     ++p;
@@ -185,14 +184,24 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
                 synopsis.append(" = 0");
             else if (func->isDeleted())
                 synopsis.append(" = delete");
-            else if (func->isDefaulted())
+            else if (func->isImplicit() || func->isDefaulted())
                synopsis.append(" = default");
+            if (func->isRef())
+               synopsis.append(" &");
+            else if (func->isRefRef())
+               synopsis.append(" &&");
         }
         else if (style == Subpage) {
             if (!func->returnType().isEmpty() && func->returnType() != "void")
                 synopsis += " : " + typified(func->returnType());
         }
         else {
+            if (func->isRef())
+               synopsis.append(" &");
+            else if (func->isRefRef())
+               synopsis.append(" &&");
+            if (func->isImplicit() || func->isDefaulted())
+               synopsis.append(" = default");
             QStringList bracketed;
             if (func->isStatic()) {
                 bracketed += "static";
@@ -349,7 +358,6 @@ QString CppCodeMarker::markedUpQmlItem(const Node* node, bool summary)
                     synopsis += typified((*p).dataType(), true);
                 const QString &paramName = hasName ? (*p).name() : (*p).dataType();
                 synopsis += "<@param>" + protect(paramName) + "</@param>";
-                synopsis += protect((*p).rightType());
                 ++p;
             }
         }
@@ -381,7 +389,7 @@ QString CppCodeMarker::markedUpQmlItem(const Node* node, bool summary)
 QString CppCodeMarker::markedUpName(const Node *node)
 {
     QString name = linkTag(node, taggedNode(node));
-    if (node->type() == Node::Function)
+    if (node->isFunction() && !node->isMacro())
         name += "()";
     return name;
 }
@@ -582,7 +590,7 @@ QList<Section> CppCodeMarker::sections(const Aggregate *inner,
                                 insert(publicFunctions, *c, style, status);
                             }
                         }
-                        else {
+                        else if ((*c)->type() != Node::SharedComment) {
                             insert(publicTypes, *c, style, status);
                         }
                         break;
@@ -694,8 +702,15 @@ QList<Section> CppCodeMarker::sections(const Aggregate *inner,
                 }
                 else if ((*c)->type() == Node::Function) {
                     FunctionNode *function = static_cast<FunctionNode *>(*c);
-                    if (!function->hasAssociatedProperties() || !function->doc().isEmpty())
-                        insert(memberFunctions, function, style, status);
+                    if (!function->isInCollective()) {
+                        if (!function->hasAssociatedProperties() || !function->doc().isEmpty())
+                            insert(memberFunctions, function, style, status);
+                    }
+                }
+                else if ((*c)->type() == Node::SharedComment) {
+                    SharedCommentNode *scn = static_cast<SharedCommentNode *>(*c);
+                    if (!scn->doc().isEmpty())
+                        insert(memberFunctions, scn, style, status);
                 }
                 ++c;
             }
@@ -918,7 +933,7 @@ QString CppCodeMarker::addMarkUp(const QString &in,
 
     readChar();
 
-    while (ch != EOF) {
+    while (ch != QChar(EOF)) {
         QString tag;
         bool target = false;
 
@@ -977,7 +992,7 @@ QString CppCodeMarker::addMarkUp(const QString &in,
                 finish = i;
                 readChar();
 
-                while (ch != EOF && ch != '"') {
+                while (ch != QChar(EOF) && ch != '"') {
                     if (ch == '\\')
                         readChar();
                     readChar();
@@ -989,7 +1004,7 @@ QString CppCodeMarker::addMarkUp(const QString &in,
             case '#':
                 finish = i;
                 readChar();
-                while (ch != EOF && ch != '\n') {
+                while (ch != QChar(EOF) && ch != '\n') {
                     if (ch == '\\')
                         readChar();
                     finish = i;
@@ -1001,7 +1016,7 @@ QString CppCodeMarker::addMarkUp(const QString &in,
                 finish = i;
                 readChar();
 
-                while (ch != EOF && ch != '\'') {
+                while (ch != QChar(EOF) && ch != '\'') {
                     if (ch == '\\')
                         readChar();
                     readChar();
@@ -1036,7 +1051,7 @@ QString CppCodeMarker::addMarkUp(const QString &in,
                     do {
                         finish = i;
                         readChar();
-                    } while (ch != EOF && ch != '\n');
+                    } while (ch != QChar(EOF) && ch != '\n');
                     tag = QStringLiteral("comment");
                 } else if (ch == '*') {
                     bool metAster = false;
@@ -1046,7 +1061,7 @@ QString CppCodeMarker::addMarkUp(const QString &in,
                     readChar();
 
                     while (!metAsterSlash) {
-                        if (ch == EOF)
+                        if (ch == QChar(EOF))
                             break;
 
                         if (ch == '*')

@@ -61,7 +61,6 @@ public:
     QString language() override;
     QStringList sourceFileNameFilter() override;
     void parseSourceFile(const Location& location, const QString& filePath) override;
-    void doneParsingSourceFiles() override;
 
 #ifndef QT_NO_DECLARATIVE
     /* Copied from src/declarative/qml/qdeclarativescriptparser.cpp */

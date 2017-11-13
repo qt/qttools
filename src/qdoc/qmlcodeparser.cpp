@@ -204,14 +204,6 @@ void QmlCodeParser::parseSourceFile(const Location& location, const QString& fil
 #endif
 }
 
-/*!
-  Performs cleanup after qdoc is done parsing all the QML files.
-  Currently, no cleanup is required.
- */
-void QmlCodeParser::doneParsingSourceFiles()
-{
-}
-
 static QSet<QString> topicCommands_;
 /*!
   Returns the set of strings representing the topic commands.

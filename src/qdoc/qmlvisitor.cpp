@@ -382,7 +382,7 @@ bool QmlSignatureParser::matchParameter()
             readToken();
         }
     }
-    func_->addParameter(Parameter(dataType.toString(), "", name, defaultValue.toString()));
+    func_->addParameter(Parameter(dataType.toString(), name, defaultValue.toString()));
     return true;
 }
 

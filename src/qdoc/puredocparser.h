@@ -55,8 +55,11 @@ public:
     QStringList sourceFileNameFilter() override;
     void parseSourceFile(const Location& location, const QString& filePath) override;
 
+    static PureDocParser *pureDocParser() { return pureParser_; }
+
  private:
     bool processQdocComments();
+    static PureDocParser *pureParser_;
 };
 
 QT_END_NAMESPACE

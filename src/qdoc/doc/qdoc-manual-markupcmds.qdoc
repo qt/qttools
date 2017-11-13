@@ -45,7 +45,6 @@
     \li \l {brief-command} {\\brief}
     \li \l {c-command} {\\c}
     \li \l {caption-command} {\\caption}
-    \li \l {chapter-command} {\\chapter}
     \li \l {code-command} {\\code}
     \li \l {codeline-command} {\\codeline}
     \li \l {div-command} {\\div}
@@ -74,7 +73,6 @@
     \li \l {note-command} {\\note}
     \li \l {oldcode-command} {\\oldcode}
     \li \l {omit-command} {\\omit}
-    \li \l {part-command} {\\part}
     \li \l {printline-command} {\\printline}
     \li \l {printto-command} {\\printto}
     \li \l {printuntil-command} {\\printuntil}
@@ -730,17 +728,13 @@
     \title Document Structure
 
     The document structuring commands are for dividing your document
-    into sections. QDoc supports six kinds of sections: \c \part, \c
-    \chapter, \c \section1, \c \section2, \c \section3, and \c
-    \section4. The \c \section1..4 commands are the most useful. They
+    into sections. QDoc supports four levels of section: \c \section1,
+    \c \section2, \c \section3, and \c \section4. The section commands
     correspond to the traditional section, subsection, etc used in
     outlining.
 
-    \target part-command
-    \section1 \\part
-
-    The \\part command is intended for use in a large document, like a
-    book.
+    \target section-commands
+    \section1 Section commands
 
     In general a document structuring command considers everything
     that follows it until the first line break as its argument. The
@@ -748,88 +742,77 @@
     spanned over several lines, make sure that each line (except the
     last one) is ended with a backslash.
 
-    In total, there are six levels of sections in QDoc: \c \part, \c
-    \chapter, \c \section1, \c \section2, \c \section3 and \c
-    \section4. \c \section1 to \c \section4 correspond to the
-    traditional section, subsection, subsubsection and
-    subsubsubsection.
+    In total, there are four levels for sections in QDoc: \c \section1,
+    \c \section2, \c \section3 and \c \section4. These correspond to the
+    traditional section, subsection, subsubsection and subsubsubsection.
 
     There is a strict ordering of the section units:
 
            \code
-           part
-              |
-              chapter
-                    |
-                    section1
-                           |
-                           section2
-                                  |
-                                  section3
-                                         |
-                                         section4
+           section1
+                  |
+                  section2
+                         |
+                         section3
+                                |
+                                section4
            \endcode
 
-    For example, a \c section1 unit can only appear as the top level
-    section or inside a \c chapter unit. Skipping a section unit, for
-    example from \c part to \c section1, is not allowed.
-
-    You can \e begin with either of the three: \c part, \c chapter or
-    \c section1.
+    When sections are used, the first section command should be \c section1.
 
 
            \code
            / *!
-               \part Basic Qt
+               \section1 Basic Qt
 
-               This is the first part.
-
-
-                   \chapter Getting Started
-
-                   This is the first part's first chapter.
+               This is the first section.
 
 
-                       \section1 Hello Qt
+                   \section2 Getting Started
 
-                       This is the first chapter's first section.
-
-
-                       \section1 Making Connections
-
-                       This is the first chapter's second section.
+                   This is the first subsection.
 
 
-                       \section1 Using the Reference Documentation
+                       \section3 Hello Qt
 
-                       This is the first chapter's third section.
-
-
-                   \chapter Creating Dialogs
-
-                   This is the first part's second chapter.
+                       This is the first subsubsection.
 
 
-                       \section1 Subclassing QDialog
+                       \section3 Making Connections
 
-                       This is the second chapter's first section.
+                       This is the second subsubsection.
+
+
+                       \section3 Using the Reference Documentation
+
+                       This is the third subsubsection.
+
+
+                   \section2 Creating Dialogs
+
+                   This is the second subsection.
+
+
+                       \section3 Subclassing QDialog
+
+                       This is the first subsubsection.
 
                        ...
 
 
-               \part Intermediate Qt
+               \section1 Intermediate Qt
 
-               This is the second part.
-
-
-                   \chapter Layout Management
-
-                   This is the second part's first chapter.
+               This is the second section.
 
 
-                       \section1 Basic Layouts
+                   \section2 Layout Management
 
-                       This is the first chapter's first section.
+                   This is the second section's first subsection.
+
+
+                       \section3 Basic Layouts
+
+                       This is the first subsubsection.
 
                ...
            * /
@@ -842,54 +825,54 @@
                <a name="Basic Qt">
                <h1>Basic Qt</h1>
                </a>
-               <p>This is the first part.</p>
+               <p>This is the first section.</p>
 
                    <a name="Getting started">
                    <h2>Getting Started</h2>
                    </a>
-                   This is the first part's first chapter.</p>
+                   This is the first subsection.</p>
 
                        <a name="Hello Qt">
                        <h3>Hello Qt</h3>
                        </a>
-                       <p>This is the first chapter's first section.</p>
+                       <p>This is the first subsubsection.</p>
 
                        <a name="Making Connections">
                        <h3>Making Connections</h3>
                        </a>
-                       <p>This is the first chapter's second section.</p>
+                       <p>This is the second subsubsection.</p>
 
                        <a name="Using the Reference Documentation">
                        <h3>Using the Reference Documentation</h3>
                        </a>
-                       <p>This is the first chapter's third section.</p>
+                       <p>This is the third subsubsection.</p>
 
                    <a name="Creating Dialogs">
                    <h2>Creating Dialogs</h2>
                    </a>
-                   <p>This is the first part's second chapter.</p>
+                   <p>This is the second subsection.</p>
 
                        <a name="Subclassing QDialog">
                        <h3>Subclassing QDialog</h3>
                        </a>
-                       <p>This is the second chapter's first section.</p>
+                       <p>This is the first subsubsection.</p>
 
                        ...
 
                <a name="Intermediate Qt">
                <h1>Intermediate Qt</h1>
                </a>
-               <p>This is the second part.</p>
+               <p>This is the second section.</p>
 
                    <a name="Layout Management">
                    <h2>Layout Management</h2>
                    </a>
-                   <p>This is the second part's first chapter.</p>
+                   <p>This is the second section's first subsection.</p>
 
                        <a name="Basic Layouts">
                        <h3>Basic Layouts</h3>
                        </a>
-                       <p>This is the first chapter's first section.</p>
+                       <p>This is the first subsubsection.</p>
 
                ...
 
@@ -900,21 +883,12 @@
     heading appears in the automatically generated table of contents
     that normally appears in the upper right-hand corner of the page.
 
-    \target chapter-command
-    \section1 \\chapter
-
-    The \\chapter command is intended for use in
-    larger documents, and divides the document into chapters.
-
-    See \l{part} {\\part} for an explanation of the various
-    section units, command argument, and rendering.
-
     \target sectionOne-command
     \section1 \\section1
 
     The \\section1 command starts a new section.
 
-    See \l{part} {\\part} for an explanation of the various
+    See \l{section-commands} {Section commands} for an explanation of the various
     section units, command argument, and rendering.
 
     \target sectionTwo-command
@@ -922,7 +896,7 @@
 
     The \\section2 command starts a new section.
 
-    See \l{part} {\\part} for an explanation of the various
+    See \l{section-commands} {Section commands} for an explanation of the various
     section units, command argument, and rendering.
 
     \target sectionThree-command
@@ -930,7 +904,7 @@
 
     The \\section3 command starts a new section.
 
-    See \l{part} {\\part} for an explanation of the various
+    See \l{section-commands} {Section commands} for an explanation of the various
     section units, command argument, and rendering.
 
     \target sectionFour-command
@@ -938,7 +912,7 @@
 
     The \\section4 command starts a new section.
 
-    See \l{part} {\\part} for an explanation of the various
+    See \l{section-commands} {Section commands} for an explanation of the various
     section units, command argument, and rendering.
 
 */
@@ -1874,8 +1848,7 @@
     \l {title-command} {\\title} command.
 
     \li \c {\l {Introduction to QDoc}}- The text from one of the
-    \l{part-command} {\\part}, \l{chapter} {\\chapter}, or \l
-    {sectionOne-command} {\\section} commands.
+    \l{section-commands} {Section commands}.
 
     \li \c {\l fontmatching} - The argument of a \l {target-command}
     {\\target} command.

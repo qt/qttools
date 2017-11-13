@@ -160,6 +160,7 @@ struct ConfigStrings
     static QString BASE;
     static QString BASEDIR;
     static QString BUILDVERSION;
+    static QString CLANGDEFINES;
     static QString CODEINDENT;
     static QString CODEPREFIX;
     static QString CODESUFFIX;
@@ -188,11 +189,13 @@ struct ConfigStrings
     static QString IGNORETOKENS;
     static QString IMAGEDIRS;
     static QString IMAGES;
+    static QString INCLUDEPATHS;
     static QString INDEXES;
     static QString LANDINGPAGE;
     static QString LANGUAGE;
     static QString MACRO;
     static QString MANIFESTMETA;
+    static QString MODULEHEADER;
     static QString NATURALLANGUAGE;
     static QString NAVIGATION;
     static QString NOLINKERRORS;
@@ -241,6 +244,7 @@ struct ConfigStrings
 #define CONFIG_BASE ConfigStrings::BASE
 #define CONFIG_BASEDIR ConfigStrings::BASEDIR
 #define CONFIG_BUILDVERSION ConfigStrings::BUILDVERSION
+#define CONFIG_CLANGDEFINES ConfigStrings::CLANGDEFINES
 #define CONFIG_CODEINDENT ConfigStrings::CODEINDENT
 #define CONFIG_CODEPREFIX ConfigStrings::CODEPREFIX
 #define CONFIG_CODESUFFIX ConfigStrings::CODESUFFIX
@@ -269,11 +273,13 @@ struct ConfigStrings
 #define CONFIG_IGNORETOKENS ConfigStrings::IGNORETOKENS
 #define CONFIG_IMAGEDIRS ConfigStrings::IMAGEDIRS
 #define CONFIG_IMAGES ConfigStrings::IMAGES
+#define CONFIG_INCLUDEPATHS ConfigStrings::INCLUDEPATHS
 #define CONFIG_INDEXES ConfigStrings::INDEXES
 #define CONFIG_LANDINGPAGE ConfigStrings::LANDINGPAGE
 #define CONFIG_LANGUAGE ConfigStrings::LANGUAGE
 #define CONFIG_MACRO ConfigStrings::MACRO
 #define CONFIG_MANIFESTMETA ConfigStrings::MANIFESTMETA
+#define CONFIG_MODULEHEADER ConfigStrings::MODULEHEADER
 #define CONFIG_NATURALLANGUAGE ConfigStrings::NATURALLANGUAGE
 #define CONFIG_NAVIGATION ConfigStrings::NAVIGATION
 #define CONFIG_NOLINKERRORS ConfigStrings::NOLINKERRORS

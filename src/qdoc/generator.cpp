@@ -894,15 +894,8 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
             QSet<QString> definedParams;
             QVector<Parameter>::ConstIterator p = func->parameters().constBegin();
             while (p != func->parameters().constEnd()) {
-                if ((*p).name().isEmpty() && (*p).dataType() != QLatin1String("...")
-                        && (*p).dataType() != QLatin1String("void")
-                        && func->name() != QLatin1String("operator++")
-                        && func->name() != QLatin1String("operator--")) {
-                    node->doc().location().warning(tr("Missing parameter name"));
-                }
-                else {
+                if (!(*p).name().isEmpty())
                     definedParams.insert((*p).name());
-                }
                 ++p;
             }
 
@@ -1638,8 +1631,7 @@ void Generator::generateOverloadedSignal(const Node* node, CodeMarker* marker)
     for (int i = 0; i < func->parameters().size(); ++i) {
         if (i != 0)
             code += ", ";
-        const Parameter &p = func->parameters().at(i);
-        code += p.dataType() + p.rightType();
+        code += func->parameters().at(i).dataType();
     }
 
     code += QLatin1Char(')');
@@ -1654,7 +1646,7 @@ void Generator::generateOverloadedSignal(const Node* node, CodeMarker* marker)
         code += p.dataType();
         if (code[code.size()-1].isLetterOrNumber())
             code += QLatin1Char(' ');
-        code += p.name()  + p.rightType();
+        code += p.name();
     }
 
     code += "){ /* ... */ });";
@@ -2154,7 +2146,7 @@ void Generator::initializeTextOutput()
 
 void Generator::supplementAlsoList(const Node *node, QList<Text> &alsoList)
 {
-    if (node->type() == Node::Function) {
+    if (node->isFunction() && !node->isMacro()) {
         const FunctionNode *func = static_cast<const FunctionNode *>(node);
         if (func->overloadNumber() == 0) {
             QString alternateName;

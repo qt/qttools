@@ -3993,26 +3993,42 @@ void HtmlGenerator::generateDetailedMember(const Node *node,
 #endif
     generateExtractionMark(node, MemberMark);
     generateKeywordAnchors(node);
-    QString nodeRef = refForNode(node);
-    if (node->isEnumType() && (etn = static_cast<const EnumNode *>(node))->flagsType()) {
-#ifdef GENERATE_MAC_REFS
-        generateMacRef(etn->flagsType(), marker);
-#endif
-        out() << "<h3 class=\"flags\" id=\"" << nodeRef << "\">";
-        out() << "<a name=\"" + nodeRef + "\"></a>";
-        generateSynopsis(etn, relative, marker, CodeMarker::Detailed);
-        out() << "<br/>";
-        generateSynopsis(etn->flagsType(),
-                         relative,
-                         marker,
-                         CodeMarker::Detailed);
-        out() << "</h3>\n";
+    QString nodeRef = 0;
+    if (node->isSharedCommentNode()) {
+        const SharedCommentNode *scn = reinterpret_cast<const SharedCommentNode*>(node);
+        const QVector<Node*>& collective = scn->collective();
+        out() << "<div class=\"fngroup\">\n";
+        foreach (const Node* n, collective) {
+            if (n->isFunction()) {
+                nodeRef = refForNode(n);
+                out() << "<h3 class=\"fn fngroupitem\" id=\"" << nodeRef << "\">";
+                out() << "<a name=\"" + nodeRef + "\"></a>";
+                generateSynopsis(n, relative, marker, CodeMarker::Detailed);
+                out() << "</h3>";
+            }
+        }
+        out() << "</div>";
+        out() << divNavTop << '\n';
     }
     else {
-        out() << "<h3 class=\"fn\" id=\"" << nodeRef << "\">";
-        out() << "<a name=\"" + nodeRef + "\"></a>";
-        generateSynopsis(node, relative, marker, CodeMarker::Detailed);
-        out() << "</h3>" << divNavTop << '\n';
+        nodeRef = refForNode(node);
+        if (node->isEnumType() && (etn = static_cast<const EnumNode *>(node))->flagsType()) {
+#ifdef GENERATE_MAC_REFS
+            generateMacRef(etn->flagsType(), marker);
+#endif
+            out() << "<h3 class=\"flags\" id=\"" << nodeRef << "\">";
+            out() << "<a name=\"" + nodeRef + "\"></a>";
+            generateSynopsis(etn, relative, marker, CodeMarker::Detailed);
+            out() << "<br/>";
+            generateSynopsis(etn->flagsType(), relative, marker, CodeMarker::Detailed);
+            out() << "</h3>\n";
+        }
+        else {
+            out() << "<h3 class=\"fn\" id=\"" << nodeRef << "\">";
+            out() << "<a name=\"" + nodeRef + "\"></a>";
+            generateSynopsis(node, relative, marker, CodeMarker::Detailed);
+            out() << "</h3>" << divNavTop << '\n';
+        }
     }
 
     generateStatus(node, marker);

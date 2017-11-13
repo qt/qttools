@@ -494,6 +494,11 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader& reader,
         functionNode->setIsDefaulted(attributes.value(QLatin1String("default")) == QLatin1String("true"));
         functionNode->setFinal(attributes.value(QLatin1String("final")) == QLatin1String("true"));
         functionNode->setOverride(attributes.value(QLatin1String("override")) == QLatin1String("true"));
+        int refness = attributes.value(QLatin1String("refness")).toUInt();
+        if (refness == 1)
+            functionNode->setRef(true);
+        else if (refness == 2)
+            functionNode->setRefRef(true);
         if (attributes.value(QLatin1String("overload")) == QLatin1String("true")) {
             functionNode->setOverloadFlag(true);
             functionNode->setOverloadNumber(attributes.value(QLatin1String("overload-number")).toUInt());
@@ -518,8 +523,7 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader& reader,
             if (reader.name() == QLatin1String("parameter")) {
                 // Do not use the default value for the parameter; it is not
                 // required, and has been known to cause problems.
-                Parameter parameter(childAttributes.value(QLatin1String("left")).toString(),
-                                    childAttributes.value(QLatin1String("right")).toString(),
+                Parameter parameter(childAttributes.value(QLatin1String("type")).toString(),
                                     childAttributes.value(QLatin1String("name")).toString(),
                                     QString()); // childAttributes.value(QLatin1String("default"))
                 functionNode->addParameter(parameter);
@@ -1020,6 +1024,8 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter& writer,
                 ClassNode* n = related.node_;
                 if (n)
                     baseStrings.insert(n->fullName());
+                else if (!related.path_.isEmpty())
+                    baseStrings.insert(related.path_.join(QLatin1String("::")));
             }
             if (!baseStrings.isEmpty())
             {
@@ -1195,6 +1201,10 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter& writer,
             writer.writeAttribute("default", functionNode->isDefaulted() ? "true" : "false");
             writer.writeAttribute("final", functionNode->isFinal() ? "true" : "false");
             writer.writeAttribute("override", functionNode->isOverride() ? "true" : "false");
+            if (functionNode->isRef())
+                writer.writeAttribute("refness", QString::number(1));
+            else if (functionNode->isRefRef())
+                writer.writeAttribute("refness", QString::number(2));
             if (functionNode->isOverload())
                 writer.writeAttribute("overload-number", QString::number(functionNode->overloadNumber()));
             if (functionNode->relates()) {
@@ -1234,8 +1244,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter& writer,
             for (int i = 0; i < functionNode->parameters().size(); ++i) {
                 Parameter parameter = functionNode->parameters()[i];
                 writer.writeStartElement("parameter");
-                writer.writeAttribute("left", parameter.dataType());
-                writer.writeAttribute("right", parameter.rightType());
+                writer.writeAttribute("type", parameter.dataType());
                 writer.writeAttribute("name", parameter.name());
                 writer.writeAttribute("default", parameter.defaultValue());
                 writer.writeEndElement(); // parameter

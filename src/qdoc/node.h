@@ -52,6 +52,7 @@ class FunctionNode;
 class PropertyNode;
 class CollectionNode;
 class QmlPropertyNode;
+class SharedCommentNode;
 
 typedef QList<Node*> NodeList;
 typedef QList<PropertyNode*> PropNodeList;
@@ -87,6 +88,7 @@ public:
         QmlSignalHandler,
         QmlMethod,
         QmlBasicType,
+        SharedComment,
         LastType
     };
 
@@ -205,6 +207,7 @@ public:
     virtual bool isJsBasicType() const { return false; }
     virtual bool isEnumType() const { return false; }
     virtual bool isTypedef() const { return false; }
+    virtual bool isTypeAlias() const { return false; }
     virtual bool isExample() const { return false; }
     virtual bool isExampleFile() const { return false; }
     virtual bool isHeaderFile() const { return false; }
@@ -216,6 +219,7 @@ public:
     virtual bool isQtQuickNode() const { return false; }
     virtual bool isAbstract() const { return false; }
     virtual bool isProperty() const { return false; }
+    virtual bool isVariable() const { return false; }
     virtual bool isQmlProperty() const { return false; }
     virtual bool isJsProperty() const { return false; }
     virtual bool isQmlPropertyGroup() const { return false; }
@@ -232,6 +236,10 @@ public:
     virtual bool isReadOnly() const { return false; }
     virtual bool isDefault() const { return false; }
     virtual bool isExternalPage() const { return false; }
+    virtual bool isImplicit() const { return false; }
+    virtual bool isInCollective() const { return false; }
+    virtual bool isSharedCommentNode() const { return false; }
+    virtual bool isMacro() const { return false; }
     virtual void addMember(Node* ) { }
     virtual bool hasMembers() const { return false; }
     virtual bool hasNamespaces() const { return false; }
@@ -257,6 +265,7 @@ public:
     virtual Tree* tree() const;
     virtual void findChildren(const QString& , NodeList& nodes) const { nodes.clear(); }
     virtual void setNoAutoList(bool ) { }
+    virtual void setCollectiveNode(SharedCommentNode* ) { }
     bool isIndexNode() const { return indexNodeFlag_; }
     NodeType type() const { return (NodeType) nodeType_; }
     virtual DocSubtype docSubtype() const { return NoSubtype; }
@@ -273,6 +282,7 @@ public:
     virtual void setObsoleteLink(const QString& ) { };
     virtual void setQtVariable(const QString& ) { }
     virtual QString qtVariable() const { return QString(); }
+    virtual bool hasTag(const QString& ) const { return false; }
 
     const QMap<LinkType, QPair<QString,QString> >& links() const { return linkMap_; }
     void setLink(LinkType linkType, const QString &link, const QString &desc);
@@ -322,7 +332,6 @@ public:
     virtual void setOutputSubdirectory(const QString& t) { outSubDir_ = t; }
     QString fullDocumentName() const;
     static QString cleanId(const QString &str);
-    //QString idForNode() const;
 
     static FlagValue toFlagValue(bool b);
     static bool fromFlagValue(FlagValue fv, bool defaultValue);
@@ -824,6 +833,19 @@ private:
     const EnumNode* associatedEnum_;
 };
 
+class TypeAliasNode : public TypedefNode
+{
+ public:
+    TypeAliasNode(Aggregate* parent, const QString& name, const QString& aliasedType);
+    virtual ~TypeAliasNode() { }
+
+    virtual bool isTypeAlias() const { return true; }
+    QString aliasedType() { return aliasedType_; }
+
+ private:
+    QString aliasedType_;
+};
+
 inline void EnumNode::setFlagsType(TypedefNode* t)
 {
     flagsType_ = t;
@@ -835,7 +857,6 @@ class Parameter
 public:
     Parameter() {}
     Parameter(const QString& dataType,
-              const QString& rightType = QString(),
               const QString& name = QString(),
               const QString& defaultValue = QString());
     Parameter(const Parameter& p);
@@ -844,19 +865,33 @@ public:
 
     void setName(const QString& name) { name_ = name; }
 
-    bool hasType() const { return dataType_.length() + rightType_.length() > 0; }
+    bool hasType() const { return dataType_.length() > 0; }
     const QString& dataType() const { return dataType_; }
-    const QString& rightType() const { return rightType_; }
     const QString& name() const { return name_; }
     const QString& defaultValue() const { return defaultValue_; }
+    void setDefaultValue(const QString& defaultValue) { defaultValue_ = defaultValue; }
 
     QString reconstruct(bool value = false) const;
 
  public:
     QString dataType_;
-    QString rightType_;  // mws says remove this 04/08/2015
     QString name_;
     QString defaultValue_;
+};
+
+class SharedCommentNode : public LeafNode
+{
+ public:
+    SharedCommentNode(Aggregate* parent, int count)
+        : LeafNode(Node::SharedComment, parent, QString()) { collective_.reserve(count); }
+    virtual ~SharedCommentNode() { collective_.clear(); }
+
+    virtual bool isSharedCommentNode() const Q_DECL_OVERRIDE { return true; }
+    void append(Node* n) { collective_.append(n); }
+    const QVector<Node*>& collective() const { return collective_; }
+
+ private:
+    QVector<Node*> collective_;
 };
 
 //friend class QTypeInfo<Parameter>;
@@ -901,8 +936,9 @@ public:
     void setReimplemented(bool b);
     void addParameter(const Parameter& parameter);
     inline void setParameters(const QVector<Parameter>& parameters);
+    void setParameters(const QString &t);
     void borrowParameterNames(const FunctionNode* source);
-    void setReimplementedFrom(FunctionNode* from);
+    void setReimplementedFrom(FunctionNode* from) { reimplementedFrom_ = from; }
 
     const QString& returnType() const { return returnType_; }
     QString metaness() const;
@@ -915,7 +951,9 @@ public:
     bool isSomeCtor() const { return isCtor() || isCCtor() || isMCtor(); }
     bool isMacroWithParams() const { return (metaness_ == MacroWithParams); }
     bool isMacroWithoutParams() const { return (metaness_ == MacroWithoutParams); }
-    bool isMacro() const { return (isMacroWithParams() || isMacroWithoutParams()); }
+    bool isMacro() const Q_DECL_OVERRIDE {
+        return (isMacroWithParams() || isMacroWithoutParams());
+    }
     bool isSignal() const { return (metaness_ == Signal); }
     bool isSlot() const { return (metaness_ == Slot); }
     bool isCtor() const { return (metaness_ == Ctor); }
@@ -924,6 +962,9 @@ public:
     bool isMCtor() const { return (metaness_ == MCtor); }
     bool isCAssign() const { return (metaness_ == CAssign); }
     bool isMAssign() const { return (metaness_ == MAssign); }
+    bool isSpecialMemberFunction() const {
+        return (isDtor() || isCCtor() || isMCtor() || isCAssign() || isMAssign());
+    }
     bool isNonvirtual() const { return (virtualness_ == NonVirtual); }
     bool isVirtual() const { return (virtualness_ == NormalVirtual); }
     bool isPureVirtual() const { return (virtualness_ == PureVirtual); }
@@ -945,12 +986,12 @@ public:
     bool isJsMethod() const override {
         return (type() == Node::QmlMethod) && (genus() == Node::JS);
     }
+    QVector<Parameter> &parameters() { return parameters_; }
     const QVector<Parameter>& parameters() const { return parameters_; }
     void clearParams() { parameters_.clear(); }
     QStringList parameterNames() const;
     QString rawParameters(bool names = false, bool values = false) const;
     const FunctionNode* reimplementedFrom() const { return reimplementedFrom_; }
-    const QList<FunctionNode*> &reimplementedBy() const { return reimplementedBy_; }
     const PropNodeList& associatedProperties() const { return associatedProperties_; }
     const QStringList& parentPath() const { return parentPath_; }
     bool hasAssociatedProperties() const { return !associatedProperties_.isEmpty(); }
@@ -990,6 +1031,24 @@ public:
     void setOverride(bool b) { isOverride_ = b; }
     bool isOverride() const { return isOverride_; }
 
+    void setImplicit(bool b) { isImplicit_ = b; }
+    bool isImplicit() const Q_DECL_OVERRIDE { return isImplicit_; }
+
+    void setRef(bool b) { isRef_ = b; }
+    bool isRef() const { return isRef_; }
+
+    void setRefRef(bool b) { isRefRef_ = b; }
+    bool isRefRef() const { return isRefRef_; }
+
+    bool isInCollective() const Q_DECL_OVERRIDE { return (collective_ != 0); }
+    const SharedCommentNode* collective() const { return collective_; }
+    void setCollectiveNode(SharedCommentNode* t) Q_DECL_OVERRIDE { collective_ = t; }
+
+    virtual bool hasTag(const QString& t) const Q_DECL_OVERRIDE { return (tag_ == t); }
+    void setTag(const QString& t) { tag_ = t; }
+    const QString &tag() const { return tag_; }
+    bool compare(const FunctionNode *fn) const;
+
 private:
     void addAssociatedProperty(PropertyNode* property);
 
@@ -1010,11 +1069,15 @@ private:
     bool isDefaulted_ : 1;
     bool isFinal_ : 1;
     bool isOverride_ : 1;
+    bool isImplicit_ : 1;
+    bool isRef_ : 1;
+    bool isRefRef_ : 1;
     unsigned char overloadNumber_;
     QVector<Parameter> parameters_;
     const FunctionNode* reimplementedFrom_;
     PropNodeList        associatedProperties_;
-    QList<FunctionNode*> reimplementedBy_;
+    SharedCommentNode*  collective_;
+    QString             tag_;
 };
 
 class PropertyNode : public LeafNode
@@ -1115,17 +1178,18 @@ public:
     VariableNode(Aggregate* parent, const QString &name);
     virtual ~VariableNode() { }
 
-    void setLeftType(const QString &leftType) { lrftType_ = leftType; }
+    void setLeftType(const QString &leftType) { leftType_ = leftType; }
     void setRightType(const QString &rightType) { rightType_ = rightType; }
     void setStatic(bool b) { static_ = b; }
 
-    const QString &leftType() const { return lrftType_; }
+    const QString &leftType() const { return leftType_; }
     const QString &rightType() const { return rightType_; }
-    QString dataType() const { return lrftType_ + rightType_; }
+    QString dataType() const { return leftType_ + rightType_; }
     bool isStatic() const { return static_; }
+    virtual bool isVariable() const { return true; }
 
 private:
-    QString lrftType_;
+    QString leftType_;
     QString rightType_;
     bool static_;
 };
