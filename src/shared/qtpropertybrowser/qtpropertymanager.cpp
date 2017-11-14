@@ -1542,7 +1542,7 @@ public:
     {
         QDate val{QDate::currentDate()};
         QDate minVal{QDate(1752, 9, 14)};
-        QDate maxVal{QDate(7999, 12, 31)};
+        QDate maxVal{QDate(9999, 12, 31)};
         QDate minimumValue() const { return minVal; }
         QDate maximumValue() const { return maxVal; }
         void setMinimumValue(const QDate &newMinVal) { setSimpleMinimumData(this, newMinVal); }
