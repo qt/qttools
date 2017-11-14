@@ -1057,14 +1057,15 @@ void ClangCodeParser::getMoreArgs()
           that list instead.
          */
         QList<QString> headers = allHeaders_.values();
-        QString filePath = headers.at(0);
         auto forest = qdb_->searchOrder();
 
         QByteArray version = qdb_->version().toUtf8();
         QString basicIncludeDir = QDir::cleanPath(QString(Config::installDir + "/../include"));
         moreArgs_ += "-I" + basicIncludeDir.toLatin1();
-        moreArgs_ += "-I" + QDir::cleanPath(QString(filePath + "/../")).toLatin1();
-        moreArgs_ += "-I" + QDir::cleanPath(QString(filePath + "/../../")).toLatin1();
+        if (!headers.isEmpty()) {
+            moreArgs_ += "-I" + QDir::cleanPath(QString(headers.at(0) + "/../")).toLatin1();
+            moreArgs_ += "-I" + QDir::cleanPath(QString(headers.at(0) + "/../../")).toLatin1();
+        }
         for (const auto &s : forest) {
             QString module = basicIncludeDir +"/" + s->camelCaseModuleName();
             moreArgs_ += QString("-I" + module).toLatin1();
