@@ -562,7 +562,7 @@ void QPixelTool::saveToFile()
     }
 
     while (fileDialog.exec() == QDialog::Accepted
-        && !m_buffer.save(fileDialog.selectedFiles().first())) {
+        && !m_buffer.save(fileDialog.selectedFiles().constFirst())) {
         QMessageBox::warning(this, QLatin1String("Unable to write image"),
                              QLatin1String("Unable to write ")
                              + QDir::toNativeSeparators(fileDialog.selectedFiles().first()));

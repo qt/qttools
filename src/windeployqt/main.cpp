@@ -982,13 +982,13 @@ static bool deployTranslations(const QString &sourcePath, quint64 usedQtModules,
         arguments.append(QStringLiteral("-o"));
         const QString targetFilePath = absoluteTarget + QLatin1Char('/') + targetFile;
         if (options.json)
-            options.json->addFile(sourcePath +  QLatin1Char('/') + targetFile, targetFilePath);
+            options.json->addFile(sourcePath +  QLatin1Char('/') + targetFile, absoluteTarget);
         arguments.append(QDir::toNativeSeparators(targetFilePath));
         const QFileInfoList &langQmFiles = sourceDir.entryInfoList(translationNameFilters(usedQtModules, prefix));
         for (const QFileInfo &langQmFileFi : langQmFiles) {
             if (options.json) {
                 options.json->addFile(langQmFileFi.absoluteFilePath(),
-                                      absoluteTarget + QLatin1Char('/') + langQmFileFi.fileName());
+                                      absoluteTarget);
             }
             arguments.append(langQmFileFi.fileName());
         }

@@ -79,6 +79,19 @@ bool QHelpDBReader::init()
     if (!QFile::exists(m_dbName))
         return false;
 
+    if (!initDB()) {
+        QSqlDatabase::removeDatabase(m_uniqueId);
+        return false;
+    }
+
+    m_initDone = true;
+    m_query = new QSqlQuery(QSqlDatabase::database(m_uniqueId));
+
+    return true;
+}
+
+bool QHelpDBReader::initDB()
+{
     QSqlDatabase db = QSqlDatabase::addDatabase(QLatin1String("QSQLITE"), m_uniqueId);
     db.setConnectOptions(QLatin1String("QSQLITE_OPEN_READONLY"));
     db.setDatabaseName(m_dbName);
@@ -87,13 +100,8 @@ bool QHelpDBReader::init()
                                   %2 - The unique id for the connection
                                   %3 - The actual error string */
         m_error = tr("Cannot open database '%1' '%2': %3").arg(m_dbName, m_uniqueId, db.lastError().text());
-        QSqlDatabase::removeDatabase(m_uniqueId);
         return false;
     }
-
-    m_initDone = true;
-    m_query = new QSqlQuery(db);
-
     return true;
 }
 
