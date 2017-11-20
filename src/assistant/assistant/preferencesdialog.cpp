@@ -251,7 +251,7 @@ void PreferencesDialog::updateFilterPage()
     for (const QString &a : helpEngine.filterAttributes())
         new QTreeWidgetItem(m_ui.attributeWidget, QStringList() << a);
 
-    if (!m_filterMap.keys().isEmpty())
+    if (!m_filterMap.isEmpty())
         m_ui.filterWidget->setCurrentRow(0);
 }
 

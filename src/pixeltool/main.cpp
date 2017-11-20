@@ -68,7 +68,7 @@ int main(int argc, char **argv)
     QPixelTool pixelTool;
 
     if (!parser.positionalArguments().isEmpty()) {
-        const QString previewImageFileName = parser.positionalArguments().first();
+        const QString previewImageFileName = parser.positionalArguments().constFirst();
         if (QFileInfo(previewImageFileName).exists()) {
             QImage previewImage(previewImageFileName);
             if (!previewImage.size().isEmpty())

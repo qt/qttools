@@ -37,7 +37,6 @@
 #include <QtCore/QTextStream>
 #include <QtTest/QtTest>
 
-#ifndef QT_NO_PROCESS
 static const QString msgProcessError(const QProcess &process, const QString &what,
                                      const QByteArray &stdOut = QByteArray(),
                                      const QByteArray &stdErr = QByteArray())
@@ -98,8 +97,6 @@ static bool runProcess(const QString &binary,
     return true;
 }
 
-#endif // !QT_NO_PROCESS
-
 class tst_windeployqt : public QObject
 {
     Q_OBJECT
@@ -116,9 +113,6 @@ private:
 
 void tst_windeployqt::initTestCase()
 {
-#ifdef QT_NO_PROCESS
-    QSKIP("This test requires QProcess support");
-#else
     m_windeployqtBinary = QStandardPaths::findExecutable("windeployqt");
     QVERIFY(!m_windeployqtBinary.isEmpty());
     m_testApp = QFINDTESTDATA("testapp");
@@ -126,14 +120,10 @@ void tst_windeployqt::initTestCase()
     const QFileInfo testAppBinary(m_testApp + QLatin1String("/testapp.exe"));
     QVERIFY2(testAppBinary.isFile(), qPrintable(testAppBinary.absoluteFilePath()));
     m_testAppBinary = testAppBinary.absoluteFilePath();
-#endif // QT_NO_PROCESS
 }
 
 void tst_windeployqt::help()
 {
-#ifdef QT_NO_PROCESS
-    QSKIP("This test requires QProcess support");
-#else
     QString errorMessage;
     QByteArray stdOut;
     QByteArray stdErr;
@@ -141,7 +131,6 @@ void tst_windeployqt::help()
                         QString(),  QProcessEnvironment(), 5000, &stdOut, &stdErr),
              qPrintable(errorMessage));
     QVERIFY2(!stdOut.isEmpty(), stdErr);
-#endif // QT_NO_PROCESS
 }
 
 // deploy(): Deploys the test application and launches it with Qt removed from the environment
@@ -149,9 +138,6 @@ void tst_windeployqt::help()
 
 void tst_windeployqt::deploy()
 {
-#ifdef QT_NO_PROCESS
-    QSKIP("This test requires QProcess support");
-#else
     QString errorMessage;
     // Deploy application
     QStringList deployArguments;
@@ -189,7 +175,6 @@ void tst_windeployqt::deploy()
     // Verify that application still runs
     QVERIFY2(runProcess(m_testAppBinary, QStringList(), &errorMessage, QString(), env, 10000),
              qPrintable(errorMessage));
-#endif // QT_NO_PROCESS
 }
 
 QTEST_MAIN(tst_windeployqt)

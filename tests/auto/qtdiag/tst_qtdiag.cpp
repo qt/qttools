@@ -46,9 +46,6 @@ private:
 
 void tst_QtDiag::initTestCase()
 {
-#ifdef QT_NO_PROCESS
-    QSKIP("This test requires QProcess support");
-#else
     QString binary = QLibraryInfo::location(QLibraryInfo::BinariesPath) + QStringLiteral("/qtdiag");
 #  ifdef Q_OS_WIN
     binary += QStringLiteral(".exe");
@@ -62,14 +59,10 @@ void tst_QtDiag::initTestCase()
             +  QByteArrayLiteral("' does not exist.");
         QSKIP(message.constData());
     }
-#endif // !QT_NO_PROCESS
 }
 
 void tst_QtDiag::run()
 {
-#ifdef QT_NO_PROCESS
-    QSKIP("This test requires QProcess support");
-#else
     if (m_binary.isEmpty())
         QSKIP("Binary could not be found");
     QProcess process;
@@ -83,7 +76,6 @@ void tst_QtDiag::run()
     QVERIFY(!output.isEmpty());
     output.replace('\r', "");
     qDebug("\n%s", output.constData());
-#endif // !QT_NO_PROCESS
 }
 
 QTEST_MAIN(tst_QtDiag)

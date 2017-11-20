@@ -697,8 +697,8 @@ bool KeymapParser::parseKmap(QFile *f)
             if (kcpos >= 0 && kcpos < (tokens.count()-3) && tokens[kcpos+2] == "=") {
                 quint16 keycode = tokens[kcpos+1].toInt();
 
-                if (keycode <= 0 || keycode > 0x1ff /* KEY_MAX */) {
-                    parseWarning("keycode out of range [0..0x1ff]");
+                if (keycode <= 0 || keycode > 0x2ff /* KEY_MAX */) {
+                    parseWarning("keycode out of range [0..0x2ff]");
                     break;
                 }
 

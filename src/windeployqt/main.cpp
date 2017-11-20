@@ -37,6 +37,7 @@
 #include <QtCore/QJsonArray>
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QCommandLineOption>
+#include <QtCore/QOperatingSystemVersion>
 #include <QtCore/QSharedPointer>
 #include <QtCore/QVector>
 
@@ -952,7 +953,8 @@ static QStringList translationNameFilters(quint64 modules, const QString &prefix
 }
 
 static bool deployTranslations(const QString &sourcePath, quint64 usedQtModules,
-                               const QString &target, unsigned flags, QString *errorMessage)
+                               const QString &target, const Options &options,
+                               QString *errorMessage)
 {
     // Find available languages prefixes by checking on qtbase.
     QStringList prefixes;
@@ -978,14 +980,22 @@ static bool deployTranslations(const QString &sourcePath, quint64 usedQtModules,
         arguments.clear();
         const QString targetFile = QStringLiteral("qt_") + prefix + QStringLiteral(".qm");
         arguments.append(QStringLiteral("-o"));
-        arguments.append(QDir::toNativeSeparators(absoluteTarget + QLatin1Char('/') + targetFile));
+        const QString targetFilePath = absoluteTarget + QLatin1Char('/') + targetFile;
+        if (options.json)
+            options.json->addFile(sourcePath +  QLatin1Char('/') + targetFile, absoluteTarget);
+        arguments.append(QDir::toNativeSeparators(targetFilePath));
         const QFileInfoList &langQmFiles = sourceDir.entryInfoList(translationNameFilters(usedQtModules, prefix));
-        for (const QFileInfo &langQmFileFi : langQmFiles)
+        for (const QFileInfo &langQmFileFi : langQmFiles) {
+            if (options.json) {
+                options.json->addFile(langQmFileFi.absoluteFilePath(),
+                                      absoluteTarget);
+            }
             arguments.append(langQmFileFi.fileName());
+        }
         if (optVerboseLevel)
             std::wcout << "Creating " << targetFile << "...\n";
         unsigned long exitCode;
-        if (!(flags & SkipUpdateFile)
+        if ((options.updateFileFlags & SkipUpdateFile) == 0
             && (!runProcess(binary, arguments, sourcePath, &exitCode, 0, 0, errorMessage) || exitCode)) {
             return false;
         }
@@ -1048,13 +1058,16 @@ static QString vcRedistDir()
     // Look in reverse order for folder containing the debug redist folder
     const QFileInfoList subDirs =
         QDir(vc2017RedistDirName).entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name | QDir::Reversed);
+    const bool isWindows10 = QOperatingSystemVersion::current() >= QOperatingSystemVersion::Windows10;
     for (const QFileInfo &f : subDirs) {
         QString path = f.absoluteFilePath();
         if (QFileInfo(path + slash + vcDebugRedistDir()).isDir())
             return path;
-        path += QStringLiteral("/onecore");
-        if (QFileInfo(path + slash + vcDebugRedistDir()).isDir())
-            return path;
+        if (isWindows10) {
+            path += QStringLiteral("/onecore");
+            if (QFileInfo(path + slash + vcDebugRedistDir()).isDir())
+                return path;
+        }
     }
     std::wcerr << "Warning: Cannot find Visual Studio redist directory under "
         << QDir::toNativeSeparators(vc2017RedistDirName).toStdWString() << ".\n";
@@ -1521,7 +1534,7 @@ static DeployResult deploy(const Options &options,
             return result;
         if (!deployTranslations(qmakeVariables.value(QStringLiteral("QT_INSTALL_TRANSLATIONS")),
                                 result.deployedQtLibraries, options.translationsDirectory,
-                                options.updateFileFlags, errorMessage)) {
+                                options, errorMessage)) {
             return result;
         }
     }

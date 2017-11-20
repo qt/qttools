@@ -465,7 +465,6 @@ bool WidgetBoxTreeWidget::readWidget(Widget *w, const QString &xml, QXmlStreamRe
     int nesting = 0;
     bool endEncountered = false;
     bool parsedWidgetTag = false;
-    QString outmostElement;
     while (!endEncountered) {
         const qint64 currentPosition = r.characterOffset();
         switch(r.readNext()) {
@@ -530,7 +529,6 @@ void WidgetBoxTreeWidget::writeCategories(QXmlStreamWriter &writer, const Catego
     const QString category = QLatin1String(categoryElementC);
     const QString categoryEntry = QLatin1String(categoryEntryElementC);
     const QString iconPrefix = QLatin1String(iconPrefixC);
-    const QString widgetTag = QLatin1String(widgetElementC);
 
     //
     // <widgetbox>
@@ -925,7 +923,7 @@ void WidgetBoxTreeWidget::dropWidgets(const QList<QDesignerDnDItemInterface*> &i
         DomWidget *fakeTopLevel = dom_ui->takeElementWidget();
         DomWidget *firstWidget = 0;
         if (fakeTopLevel && !fakeTopLevel->elementWidget().isEmpty()) {
-            firstWidget = fakeTopLevel->elementWidget().first();
+            firstWidget = fakeTopLevel->elementWidget().constFirst();
             dom_ui->setElementWidget(firstWidget);
         } else {
             dom_ui->setElementWidget(fakeTopLevel);

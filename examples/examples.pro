@@ -1,4 +1,4 @@
 TEMPLATE = subdirs
 qtHaveModule(widgets): SUBDIRS += help designer linguist uitools assistant
 
-winrt: SUBDIRS -= assistant designer
+!qtConfig(process): SUBDIRS -= assistant designer

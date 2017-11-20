@@ -658,13 +658,14 @@ void QtResourceView::selectResource(const QString &resource)
     if (fi.isDir())
         dir = QDir(resource);
     QString dirPath = dir.absolutePath();
-    QMap<QString, QTreeWidgetItem *>::const_iterator it;
-    while ((it = d_ptr->m_pathToItem.find(dirPath)) == d_ptr->m_pathToItem.constEnd()) {
+    const auto cend = d_ptr->m_pathToItem.constEnd();
+    auto it = cend;
+    while ((it = d_ptr->m_pathToItem.constFind(dirPath)) == cend) {
         if (!dir.cdUp())
             break;
         dirPath = dir.absolutePath();
     }
-    if (it != d_ptr->m_pathToItem.constEnd()) {
+    if (it != cend) {
         QTreeWidgetItem *treeItem = it.value();
         d_ptr->m_treeWidget->setCurrentItem(treeItem);
         d_ptr->m_treeWidget->scrollToItem(treeItem);

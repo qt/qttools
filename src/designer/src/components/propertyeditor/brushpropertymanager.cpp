@@ -132,7 +132,6 @@ const BrushPropertyManager::EnumIndexIconMap &BrushPropertyManager::brushStyleIc
     if (brushIcons()->empty()) {
         const int brushStyleCount = sizeof(brushStyles)/sizeof(const char *);
         QBrush brush(Qt::black);
-        const QIcon solidIcon = QtPropertyBrowserUtils::brushValueIcon(brush);
         for (int i = 0; i < brushStyleCount; i++) {
             const Qt::BrushStyle style = brushStyleIndexToStyle(i);
             brush.setStyle(style);

@@ -94,7 +94,6 @@ static QString namespacePlaceholders(const QMultiMap<QString, QStringList> &name
 
 static void bindNamespacesAndAttributes(QSqlQuery *query, const QMultiMap<QString, QStringList> &namespaces)
 {
-    QString placeholders;
     const auto &namespaceList = namespaces.uniqueKeys();
     for (const QString &ns : namespaceList) {
         query->addBindValue(ns);

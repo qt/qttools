@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2017 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the examples of the Qt Toolkit.
@@ -51,7 +51,7 @@
 #ifndef FINDFILEDIALOG_H
 #define FINDFILEDIALOG_H
 
-#include <QtWidgets/QDialog>
+#include <QDialog>
 
 QT_BEGIN_NAMESPACE
 class QComboBox;
@@ -76,7 +76,7 @@ public:
 private slots:
     void browse();
     void help();
-    void openFile(QTreeWidgetItem *item = 0);
+    void openFile(QTreeWidgetItem *item = nullptr);
     void update();
 
 private:

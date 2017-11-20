@@ -190,7 +190,6 @@ DomUI *QDesignerWidgetBox::xmlToUi(const QString &name, const QString &xml, bool
 
     // The xml description must either contain a root element "ui" with a child element "widget"
     // or "widget" as the root element (4.3 legacy)
-    const QString widgetTag = QStringLiteral("widget");
 
     while (!reader.atEnd()) {
         if (reader.readNext() == QXmlStreamReader::StartElement) {

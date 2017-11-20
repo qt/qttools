@@ -132,7 +132,7 @@ QVariant TranslatingTextBuilder::toNativeValue(const QVariant &value) const
     if (value.canConvert<QUiTranslatableStringValue>()) {
         QUiTranslatableStringValue tsv = qvariant_cast<QUiTranslatableStringValue>(value);
         if (!m_trEnabled)
-            return QString::fromUtf8(tsv.value().data());
+            return QString::fromUtf8(tsv.value().constData());
         return QVariant::fromValue(
             QCoreApplication::translate(m_className, tsv.value(), tsv.comment()));
     }

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2017 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the examples of the Qt Toolkit.
@@ -51,19 +51,20 @@
 #ifndef REMOTECONTROL_H
 #define REMOTECONTROL_H
 
-#include <QtWidgets/QMainWindow>
 #include "ui_remotecontrol.h"
+
+#include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
 class QProcess;
-QT_END_NAMESPACE;
+QT_END_NAMESPACE
 
 class RemoteControl : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    RemoteControl(QWidget *parent = 0, Qt::WindowFlags flags = 0);
+    RemoteControl(QWidget *parent = nullptr, Qt::WindowFlags flags = 0);
     ~RemoteControl();
 
 private:

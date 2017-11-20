@@ -34,15 +34,14 @@
 
     \image simpletextviewer-example.png
 
-    This is done in two stages. Firstly, documentation is created and \QA
-    is customized; secondly, the functionality to launch and control
-    \QA is added to the application.
+    This example shows how to use \QA as a customized help viewer in
+    a custom application. This is done in two stages. Firstly,
+    documentation is created and \QA is customized; secondly, the
+    functionality to launch and control \QA is added to the application.
 
     The Simple Text Viewer application lets the user select and view
-    existing files.
-
-    The application provides its own custom documentation that is
-    available from the \gui Help menu in the main window's menu bar
+    existing files. The application provides its own custom documentation
+    that is available from the \gui Help menu in the main window's menu bar
     or by clicking the \gui Help button in the application's find file
     dialog.
 
@@ -353,8 +352,8 @@
     The implementation for \c showDocumentation() is now straightforward.
     Firstly, we ensure that \QA is running, then we send the request to
     display the \a page via the \c stdin channel of the process. It is very
-    important here that the command is terminated by the '\\0' character
-    followed by an end of line token to flush the channel.
+    important here that the command is terminated by an end of line token
+    to flush the channel.
 
     \snippet simpletextviewer/assistant.cpp 1
 

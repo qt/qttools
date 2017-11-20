@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
     if (parser.positionalArguments().size() != 1)
         parser.showHelp(2);
 
-    const QString path = parser.positionalArguments().last();
+    const QString path = parser.positionalArguments().constLast();
 
     QVector<Package> packages;
     const QFileInfo pathInfo(path);
