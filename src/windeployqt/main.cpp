@@ -985,7 +985,8 @@ static bool deployTranslations(const QString &sourcePath, quint64 usedQtModules,
         arguments.append(QDir::toNativeSeparators(targetFilePath));
         const QFileInfoList &langQmFiles = sourceDir.entryInfoList(translationNameFilters(usedQtModules, prefix));
         for (const QFileInfo &langQmFileFi : langQmFiles) {
-            if (options.json) {
+            // winrt relies on a proper list of deployed files. We cannot cheat an mention files we do not ship here.
+            if (options.json && !options.isWinRt()) {
                 options.json->addFile(langQmFileFi.absoluteFilePath(),
                                       absoluteTarget);
             }
