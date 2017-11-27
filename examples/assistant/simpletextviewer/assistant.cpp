@@ -108,8 +108,9 @@ bool Assistant::startAssistant()
         proc->start(app, args);
 
         if (!proc->waitForStarted()) {
-            QMessageBox::critical(nullptr, QObject::tr("Simple Text Viewer"),
-                QObject::tr("Unable to launch Qt Assistant (%1)").arg(app));
+            QMessageBox::critical(nullptr,
+                                  tr("Simple Text Viewer"),
+                                  tr("Unable to launch Qt Assistant (%1)").arg(app));
             return false;
         }
     }
