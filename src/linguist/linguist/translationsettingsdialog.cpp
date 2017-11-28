@@ -42,6 +42,14 @@ TranslationSettingsDialog::TranslationSettingsDialog(QWidget *parent)
 
     for (int i = QLocale::C + 1; i < QLocale::LastLanguage; ++i) {
         QString lang = QLocale::languageToString(QLocale::Language(i));
+        auto loc = QLocale(QLocale::Language(i));
+        if (loc.language() != QLocale::English) {
+            QString nln = loc.nativeLanguageName();
+            if (!nln.isEmpty()) {
+                //: <english> (<endonym>)  (language and country names)
+                lang = tr("%1 (%2)").arg(lang, nln);
+            }
+        }
         m_ui.srcCbLanguageList->addItem(lang, QVariant(i));
     }
     m_ui.srcCbLanguageList->model()->sort(0, Qt::AscendingOrder);
@@ -73,6 +81,12 @@ static void fillCountryCombo(const QVariant &lng, QComboBox *combo)
     if (lang != QLocale::C) {
         foreach (QLocale::Country cntr, QLocale::countriesForLanguage(lang)) {
             QString country = QLocale::countryToString(cntr);
+            auto loc = QLocale(lang, cntr);
+            if (loc.language() != QLocale::English) {
+                QString ncn = loc.nativeCountryName();
+                if (!ncn.isEmpty())
+                    country = TranslationSettingsDialog::tr("%1 (%2)").arg(country, ncn);
+            }
             combo->addItem(country, QVariant(cntr));
         }
         combo->model()->sort(0, Qt::AscendingOrder);
