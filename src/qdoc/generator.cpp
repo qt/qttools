@@ -293,7 +293,7 @@ void Generator::writeOutFileNames()
   Attaches a QTextStream to the created file, which is written
   to all over the place using out().
  */
-void Generator::beginSubPage(const Aggregate* node, const QString& fileName)
+void Generator::beginSubPage(const Node* node, const QString& fileName)
 {
     QString path = outputDir() + QLatin1Char('/');
     if (Generator::useOutputSubdirs() && !node->outputSubdirectory().isEmpty() &&
@@ -315,7 +315,7 @@ void Generator::beginSubPage(const Aggregate* node, const QString& fileName)
         out->setCodec(outputCodec);
 #endif
     outStreamStack.push(out);
-    const_cast<Aggregate*>(node)->setOutputFileName(fileName);
+    const_cast<Node*>(node)->setOutputFileName(fileName);
 }
 
 /*!
@@ -334,7 +334,7 @@ QString Generator::fileBase(const Node *node) const
 {
     if (node->relates())
         node = node->relates();
-    else if (!node->isAggregate())
+    else if (!node->isAggregate() && !node->isCollectionNode())
         node = node->parent();
     if (node->type() == Node::QmlPropertyGroup) {
         node = node->parent();
@@ -967,7 +967,7 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
     }
 }
 
-void Generator::generateClassLikeNode(Aggregate* /* classe */, CodeMarker* /* marker */)
+void Generator::generateClassLikeNode(Node* /* node */, CodeMarker* /* marker */)
 {
 }
 
@@ -1122,7 +1122,7 @@ void Generator::generateInherits(const ClassNode *classe, CodeMarker *marker)
 /*!
   Recursive writing of HTML files from the root \a node.
  */
-void Generator::generateAggregate(Aggregate* node)
+void Generator::generateDocumentation(Node* node)
 {
     if (!node->url().isNull())
         return;
@@ -1138,7 +1138,7 @@ void Generator::generateAggregate(Aggregate* node)
         if (docNode->docSubtype() == Node::Image)
             return;
         if (docNode->docSubtype() == Node::Page) {
-            if (node->count() > 0)
+            if (docNode->count() > 0)
                 qDebug("PAGE %s HAS CHILDREN", qPrintable(docNode->title()));
         }
     }
@@ -1154,7 +1154,7 @@ void Generator::generateAggregate(Aggregate* node)
         if ((node->isNamespace() && node->status() != Node::Intermediate)
             || node->isClass()) {
             beginSubPage(node, fileName(node));
-            generateClassLikeNode(node, marker);
+            generateClassLikeNode(static_cast<Aggregate*>(node), marker);
             endSubPage();
         }
         if (node->isQmlType() || node->isJsType()) {
@@ -1174,43 +1174,46 @@ void Generator::generateAggregate(Aggregate* node)
             generateQmlBasicTypePage(qbtn, marker);
             endSubPage();
         }
-        else if (node->isCollectionNode()) {
-            /*
-              A collection node collects: groups, C++ modules,
-              QML modules or JavaScript modules.
-
-              Don't output an HTML page for the collection
-              node unless the \group, \module, \qmlmodule or
-              \jsmodule command was actually seen by qdoc in
-              the qdoc comment for the node.
-
-              A key prerequisite in this case is the call to
-              mergeCollections(cn). We must determine whether
-              this group, module, QML module, or JavaScript
-              module has members in other modules. We know at
-              this point that cn's members list contains only
-              members in the current module. Therefore, before
-              outputting the page for cn, we must search for
-              members of cn in the other modules and add them
-              to the members list.
-            */
-            CollectionNode* cn = static_cast<CollectionNode*>(node);
-            if (cn->wasSeen()) {
-                qdb_->mergeCollections(cn);
-                beginSubPage(node, fileName(node));
-                generateCollectionNode(cn, marker);
-                endSubPage();
-            }
-        }
     }
 
-    int i = 0;
-    while (i < node->childNodes().count()) {
-        Node *c = node->childNodes().at(i);
-        if (c->isAggregate() && c->access() != Node::Private) {
-            generateAggregate((Aggregate*)c);
+    if (node->isAggregate()) {
+        Aggregate* aggregate = static_cast<Aggregate*>(node);
+        int i = 0;
+        while (i < aggregate->childNodes().count()) {
+            Node *c = aggregate->childNodes().at(i);
+            if (c->isAggregate() && c->access() != Node::Private) {
+                generateDocumentation((Aggregate*)c);
+            }
+            else if (c->isCollectionNode()) {
+                /*
+                  A collection node collects: groups, C++ modules,
+                  QML modules or JavaScript modules.
+
+                  Don't output an HTML page for the collection
+                  node unless the \group, \module, \qmlmodule or
+                  \jsmodule command was actually seen by qdoc in
+                  the qdoc comment for the node.
+
+                  A key prerequisite in this case is the call to
+                  mergeCollections(cn). We must determine whether
+                  this group, module, QML module, or JavaScript
+                  module has members in other modules. We know at
+                  this point that cn's members list contains only
+                  members in the current module. Therefore, before
+                  outputting the page for cn, we must search for
+                  members of cn in the other modules and add them
+                  to the members list.
+                */
+                CollectionNode* cn = static_cast<CollectionNode*>(c);
+                if (cn->wasSeen()) {
+                    qdb_->mergeCollections(cn);
+                    beginSubPage(c, fileName(c));
+                    generateCollectionNode(cn, marker);
+                    endSubPage();
+                }
+            }
+            ++i;
         }
-        ++i;
     }
 }
 
@@ -1695,7 +1698,7 @@ void Generator::generateOverloadedSignal(const Node* node, CodeMarker* marker)
 void Generator::generateDocs()
 {
     currentGenerator_ = this;
-    generateAggregate(qdb_->primaryTreeRoot());
+    generateDocumentation(qdb_->primaryTreeRoot());
 }
 
 Generator *Generator::generatorForFormat(const QString& format)

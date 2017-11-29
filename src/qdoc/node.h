@@ -1215,14 +1215,14 @@ public:
     const DitaRefList& map() const { return doc().ditamap(); }
 };
 
-class CollectionNode : public Aggregate
+class CollectionNode : public LeafNode
 {
  public:
  CollectionNode(NodeType type,
                 Aggregate* parent,
                 const QString& name,
                 Genus genus)
-     : Aggregate(type, parent, name), seen_(false)
+     : LeafNode(type, parent, name), seen_(false), noAutoList_(false)
     {
         setPageType(Node::OverviewPage);
         setGenus(genus);
@@ -1266,12 +1266,19 @@ class CollectionNode : public Aggregate
     void markSeen() { seen_ = true; }
     void markNotSeen() { seen_ = false; }
 
+    bool noAutoList() const { return noAutoList_; }
+    void setNoAutoList(bool b)  override { noAutoList_ = b; }
+
+    const QStringList& groupNames() const { return groupNames_; }
+    void appendGroupName(const QString& t) override { groupNames_.append(t); }
 
  private:
     bool        seen_;
+    bool        noAutoList_;
     QString     title_;
     QString     subtitle_;
     NodeList    members_;
+    QStringList groupNames_;
     QString     logicalModuleName_;
     QString     logicalModuleVersionMajor_;
     QString     logicalModuleVersionMinor_;

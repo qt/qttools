@@ -1384,8 +1384,10 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
 /*!
   Generate a reference page for a C++ class or a C++ namespace.
  */
-void HtmlGenerator::generateClassLikeNode(Aggregate* inner, CodeMarker* marker)
+void HtmlGenerator::generateClassLikeNode(Node* node, CodeMarker* marker)
 {
+    Q_ASSERT(node->isAggregate());
+    Aggregate* inner = static_cast<Aggregate*>(node);
     QList<Section> sections;
     QList<Section>::ConstIterator s;
 
@@ -1846,16 +1848,6 @@ void HtmlGenerator::generateCollectionNode(CollectionNode* cn, CodeMarker* marke
         nmm.clear();
     }
 
-    sections = marker->sections(cn, CodeMarker::Summary, CodeMarker::Okay);
-    s = sections.constBegin();
-    while (s != sections.constEnd()) {
-        ref = registerRef((*s).name);
-        out() << "<a name=\"" << ref << "\"></a>" << divNavTop << '\n';
-        out() << "<h2 id=\"" << ref << "\">" << protectEnc((*s).name) << "</h2>\n";
-        generateSectionList(*s, cn, marker, CodeMarker::Summary);
-        ++s;
-    }
-
     Text brief = cn->doc().briefText();
     if (cn->isModule() && !brief.isEmpty()) {
         generateExtractionMark(cn, DetailedDescriptionMark);
@@ -1879,20 +1871,6 @@ void HtmlGenerator::generateCollectionNode(CollectionNode* cn, CodeMarker* marke
             generateAnnotatedList(cn, marker, cn->members());
         else if (cn->isQmlModule() || cn->isJsModule())
             generateAnnotatedList(cn, marker, cn->members());
-    }
-
-    sections = marker->sections(cn, CodeMarker::Detailed, CodeMarker::Okay);
-    s = sections.constBegin();
-    while (s != sections.constEnd()) {
-        //out() << "<hr />\n";
-        out() << "<h2>" << protectEnc((*s).name) << "</h2>\n";
-
-        NodeList::ConstIterator m = (*s).members.constBegin();
-        while (m != (*s).members.constEnd()) {
-            generateDetailedMember(*m, cn, marker);
-            ++m;
-        }
-        ++s;
     }
     generateFooter(cn);
 }
@@ -3946,7 +3924,6 @@ QString HtmlGenerator::linkForNode(const Node *node, const Node *relative)
         return QString();
     if (node->access() == Node::Private)
         return QString();
-
     QString fn = fileName(node);
     if (node && node->parent() &&
         (node->parent()->isQmlType() || node->parent()->isJsType())
@@ -3956,7 +3933,8 @@ QString HtmlGenerator::linkForNode(const Node *node, const Node *relative)
     }
     QString link = fn;
 
-    if (!node->isAggregate() || node->isQmlPropertyGroup() || node->isJsPropertyGroup()) {
+    if ((!node->isAggregate() && !node->isCollectionNode())
+        || node->isQmlPropertyGroup() || node->isJsPropertyGroup()) {
         QString ref = refForNode(node);
         if (relative && fn == fileName(relative) && ref == refForNode(relative))
             return QString();

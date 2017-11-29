@@ -71,18 +71,17 @@ int WebXMLGenerator::generateAtom(const Atom * /* atom, */,
     return 0;
 }
 
-void WebXMLGenerator::generateClassLikeNode(Aggregate *inner,
-                                            CodeMarker *marker)
+void WebXMLGenerator::generateClassLikeNode(Node *node, CodeMarker *marker)
 {
     QByteArray data;
     QXmlStreamWriter writer(&data);
     writer.setAutoFormatting(true);
-    beginSubPage(inner, Generator::fileName(inner, "webxml"));
+    beginSubPage(node, Generator::fileName(node, "webxml"));
     writer.writeStartDocument();
     writer.writeStartElement("WebXML");
     writer.writeStartElement("document");
 
-    generateIndexSections(writer, inner, marker);
+    generateIndexSections(writer, node, marker);
 
     writer.writeEndElement(); // document
     writer.writeEndElement(); // WebXML
@@ -172,7 +171,7 @@ void WebXMLGenerator::generateIndexSections(QXmlStreamWriter &writer,
     }
 }
 
-void WebXMLGenerator::generateAggregate(Aggregate *node)
+void WebXMLGenerator::generateDocumentation(Node *node)
 {
     // Don't generate nodes that are already processed, or if they're not supposed to
     // generate output, ie. external, index or images nodes.
@@ -189,7 +188,7 @@ void WebXMLGenerator::generateAggregate(Aggregate *node)
     CodeMarker *marker = CodeMarker::markerForFileName(node->location().filePath());
     if (node->parent()) {
         if ((node->isNamespace() && node->status() != Node::Intermediate) || node->isClass())
-            generateClassLikeNode(node, marker);
+            generateClassLikeNode(static_cast<Aggregate*>(node), marker);
         else if (node->isDocumentNode())
             generateDocumentNode(static_cast<DocumentNode *>(node), marker);
         else if (node->isCollectionNode() && node->wasSeen()) {
@@ -200,9 +199,12 @@ void WebXMLGenerator::generateAggregate(Aggregate *node)
         // else if TODO: anything else?
     }
 
-    for (auto c : node->childNodes()) {
-        if (c->isAggregate() && !c->isPrivate())
-            generateAggregate(static_cast<Aggregate *>(c));
+    if (node->isAggregate()) {
+        Aggregate* aggregate = static_cast<Aggregate*>(node);
+        for (auto c : aggregate->childNodes()) {
+            if (c->isAggregate() && !c->isPrivate())
+                generateDocumentation(c);
+        }
     }
 }
 

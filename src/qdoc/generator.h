@@ -103,22 +103,22 @@ public:
     static QString plainCode(const QString& markedCode);
 
 protected:
-    virtual void beginSubPage(const Aggregate* node, const QString& fileName);
-    virtual void endSubPage();
+    void beginSubPage(const Node* node, const QString& fileName);
+    void endSubPage();
     virtual QString fileBase(const Node* node) const;
     virtual QString fileExtension() const = 0;
     virtual void generateQAPage() { }
     virtual void generateAlsoList(const Node *node, CodeMarker *marker);
     virtual int generateAtom(const Atom *atom, const Node *relative, CodeMarker *marker);
     virtual void generateBody(const Node *node, CodeMarker *marker);
-    virtual void generateClassLikeNode(Aggregate* inner, CodeMarker* marker);
+    virtual void generateClassLikeNode(Node* node, CodeMarker* marker);
     virtual void generateQmlTypePage(QmlTypeNode* , CodeMarker* ) { }
     virtual void generateQmlBasicTypePage(QmlBasicTypeNode* , CodeMarker* ) { }
     virtual void generateDocumentNode(DocumentNode* dn, CodeMarker* marker);
     virtual void generateCollectionNode(CollectionNode* cn, CodeMarker* marker);
     virtual void generateInheritedBy(const ClassNode *classe, CodeMarker *marker);
     virtual void generateInherits(const ClassNode *classe, CodeMarker *marker);
-    virtual void generateAggregate(Aggregate* node);
+    virtual void generateDocumentation(Node* node);
     virtual void generateMaintainerList(const Aggregate* node, CodeMarker* marker);
     virtual void generateQmlInheritedBy(const QmlTypeNode* qcn, CodeMarker* marker);
     virtual void generateQmlInherits(QmlTypeNode* qcn, CodeMarker* marker);
