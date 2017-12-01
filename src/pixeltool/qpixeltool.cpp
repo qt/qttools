@@ -458,13 +458,13 @@ void QPixelTool::grabScreen()
     for (int i = 0; i < desktopWidget->numScreens(); ++i)
         screenRect |= desktopWidget->screenGeometry(i);
     geom -= screenRect;
-    QVector<QRect> rects = geom.rects();
-    if (rects.size() > 0) {
+    const auto rectsInRegion = geom.rectCount();
+    if (rectsInRegion > 0) {
         QPainter p(&m_buffer);
         p.translate(-x, -y);
         p.setPen(Qt::NoPen);
         p.setBrush(darkBrush);
-        p.drawRects(rects);
+        p.drawRects(geom.begin(), rectsInRegion);
     }
 
     update();
