@@ -111,6 +111,7 @@
     \li \l {language-variable} {language}
     \li \l {macro-variable} {macro}
     \li \l {manifestmeta-variable} {manifestmeta}
+    \li \l {navigation-variable} {navigation}
     \li \l {outputdir-variable} {outputdir}
     \li \l {outputformats-variable} {outputformats}
     \li \l {outputprefixes-variable} {outputprefixes}
@@ -796,6 +797,63 @@
     {C.7. The lang and xml:lang Attributes} and
     \l{http://www.w3.org/TR/i18n-html-tech-lang/#ri20040429.113217290}
     {Best Practice 13: Using Hans and Hant codes}.
+
+    \target navigation-variable
+    \section1 navigation
+
+    The \c navigation sub-variables, if defined, set the home page, landing
+    page, C++ classes page, and QML types page that are visible in the
+    generated navigation bar for each page.
+
+    In a project with multiple sub-projects (for example, Qt modules), each
+    sub-project typically defines its own landing page while the same home
+    page is used across all sub-projects.
+
+    \b Sub-variables
+
+    \table
+      \row \li \c navigation.homepage
+           \li Project home page.
+      \row \li \c navigation.hometitle
+           \li (Optional) User-visible title for the home page.
+               Default value is taken from \c homepage.
+      \row \li \c navigation.landingpage
+           \li Sub-project landing page.
+      \row \li \c navigation.landingtitle
+           \li (Optional) User-visible title for the landing page.
+               Defaults value is taken from \c landingpage.
+      \row \li \c navigation.cppclassespage
+           \li Top-level page that lists all C++ classes for this (sub-)project.
+               Typically, the title of a \l {module-command}{\\module} page.
+      \row \li \c navigation.cppclassestitle
+           \li (Optional) User-visible title for the C++ classes page.
+               Default is "C++ Classes".
+      \row \li \c navigation.qmltypespage
+           \li Top-level page that lists all QML types for this (sub-)project.
+               Typically, the title of a \l {qmlmodule-command}{\\qmlmodule} page.
+      \row \li \c navigation.qmltypestitle
+           \li (Optional) User-visible title for the QML types page.
+               Default is "QML Types".
+    \endtable
+
+    For example:
+
+    \badcode
+    # Common configuration
+    navigation.homepage  = index.html
+    navigation.hometitle = "Qt $QT_VER"
+
+    # qtquick.qdocconf
+    navigation.landingpage    = "Qt Quick"
+    navigation.cppclassespage = "Qt Quick C++ Classes"
+    navigation.qmltypespage   = "Qt Quick QML Types"
+    \endcode
+
+    The above configuration produces the following navigation bar for \c Item QML type:
+
+    \badcode
+    Qt 5.10 > Qt Quick > QML Types > Item QML Type
+    \endcode
 
     \target outputdir-variable
     \section1 outputdir

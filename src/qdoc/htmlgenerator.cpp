@@ -243,14 +243,22 @@ void HtmlGenerator::initializeGenerator(const Config &config)
     if (!examplesPath.isEmpty())
         examplesPath += QLatin1Char('/');
 
-    //retrieve the config for the navigation bar
+    // Retrieve the config for the navigation bar
     homepage = config.getString(CONFIG_NAVIGATION
                                     + Config::dot
                                     + CONFIG_HOMEPAGE);
 
+    hometitle = config.getString(CONFIG_NAVIGATION
+                                    + Config::dot
+                                    + CONFIG_HOMETITLE, homepage);
+
     landingpage = config.getString(CONFIG_NAVIGATION
                                     + Config::dot
                                     + CONFIG_LANDINGPAGE);
+
+    landingtitle = config.getString(CONFIG_NAVIGATION
+                                    + Config::dot
+                                    + CONFIG_LANDINGTITLE, landingpage);
 
     cppclassespage = config.getString(CONFIG_NAVIGATION
                                     + Config::dot
@@ -1904,15 +1912,21 @@ void HtmlGenerator::generateNavigationBar(const QString &title,
     Atom::AtomType itemRight = tableItems ?
                 Atom::TableItemRight : Atom::ListItemRight;
 
-    if (homepage == title)
+    if (hometitle == title)
         return;
     if (!homepage.isEmpty())
         navigationbar << Atom(itemLeft)
-                      << Atom(Atom::NavAutoLink, homepage)
+                      << Atom(Atom::NavLink, homepage)
+                      << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
+                      << Atom(Atom::String, hometitle)
+                      << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK)
                       << Atom(itemRight);
-    if (!landingpage.isEmpty() && landingpage != title)
+    if (!landingpage.isEmpty() && landingtitle != title)
         navigationbar << Atom(itemLeft)
-                    << Atom(Atom::NavAutoLink, landingpage)
+                    << Atom(Atom::NavLink, landingpage)
+                    << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
+                    << Atom(Atom::String, landingtitle)
+                    << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK)
                     << Atom(itemRight);
 
     if (node->isClass()) {
@@ -2006,14 +2020,15 @@ void HtmlGenerator::generateHeader(const QString& title,
 
     //determine the rest of the <title> element content: "title | titleSuffix version"
     QString titleSuffix;
-    if (!landingpage.isEmpty()) {
-        //for normal pages: "title | landingpage version"
-        titleSuffix = landingpage;
+    if (!landingtitle.isEmpty()) {
+        //for normal pages: "title | landingtitle version"
+        titleSuffix = landingtitle;
     }
-    else if (!homepage.isEmpty()) {
-        //for pages that set the homepage but not landing page: "title | homepage version"
-        if (title != homepage)
-            titleSuffix = homepage;
+    else if (!hometitle.isEmpty()) {
+        // for pages that set the homepage title but not landing page title:
+        // "title | hometitle version"
+        if (title != hometitle)
+            titleSuffix = hometitle;
     }
     else if (!project.isEmpty()) {
         //for projects outside of Qt or Qt 5: "title | project version"
