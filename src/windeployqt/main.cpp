@@ -1118,9 +1118,12 @@ static QStringList compilerRunTimeLibs(Platform platform, bool isDebug, unsigned
             const QStringList countryCodes = vcRedistDir.entryList(QStringList(QStringLiteral("[0-9]*")), QDir::Dirs);
             if (!countryCodes.isEmpty()) // Pre MSVC2017
                 releaseRedistDir += QLatin1Char('/') + countryCodes.constFirst();
-            const QFileInfo fi(releaseRedistDir + QLatin1Char('/')
-                               + QStringLiteral("vcredist_") + wordSizeString
-                               + QStringLiteral(".exe"));
+            QFileInfo fi(releaseRedistDir + QLatin1Char('/') + QStringLiteral("vc_redist.")
+                         + wordSizeString + QStringLiteral(".exe"));
+            if (!fi.isFile()) { // Pre MSVC2017/15.5
+                fi.setFile(releaseRedistDir + QLatin1Char('/') + QStringLiteral("vcredist_")
+                           + wordSizeString + QStringLiteral(".exe"));
+            }
             if (fi.isFile())
                 redistFiles.append(fi.absoluteFilePath());
         }
