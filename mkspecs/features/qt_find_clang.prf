@@ -42,7 +42,7 @@ defineReplace(findLLVMVersionFromLibDir) {
 for(_, $$list(_)) { # just a way to break easily
     isEmpty(LLVM_INSTALL_DIR): LLVM_INSTALL_DIR = $$(LLVM_INSTALL_DIR)
     LLVM_INSTALL_DIR = $$clean_path($$LLVM_INSTALL_DIR)
-    contains(QT_ARCH, x86_64): \
+    contains(QMAKE_HOST.arch, x86_64): \
         clangInstallDir = $$replace(LLVM_INSTALL_DIR, _ARCH_, 64)
     else: \
         clangInstallDir = $$replace(LLVM_INSTALL_DIR, _ARCH_, 32)
