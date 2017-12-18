@@ -156,9 +156,15 @@ void checkSizes(QDesignerFormWindowInterface *fw, const QSize &size, QSize *form
 enum RectSubPropertyMask {  SubPropertyX=1, SubPropertyY = 2, SubPropertyWidth = 4, SubPropertyHeight = 8 };
 enum SizePolicySubPropertyMask { SubPropertyHSizePolicy = 1, SubPropertyHStretch = 2, SubPropertyVSizePolicy = 4, SubPropertyVStretch = 8 };
 enum AlignmentSubPropertyMask { SubPropertyHorizontalAlignment = 1, SubPropertyVerticalAlignment = 2 };
-enum StringSubPropertyMask { SubPropertyStringValue = 1, SubPropertyStringComment = 2, SubPropertyStringTranslatable = 4, SubPropertyStringDisambiguation = 8 };
-enum StringListSubPropertyMask { SubPropertyStringListValue = 1, SubPropertyStringListComment = 2, SubPropertyStringListTranslatable = 4, SubPropertyStringListDisambiguation = 8 };
-enum KeySequenceSubPropertyMask { SubPropertyKeySequenceValue = 1, SubPropertyKeySequenceComment = 2, SubPropertyKeySequenceTranslatable = 4, SubPropertyKeySequenceDisambiguation = 8 };
+enum StringSubPropertyMask { SubPropertyStringValue = 1, SubPropertyStringComment = 2,
+                             SubPropertyStringTranslatable = 4, SubPropertyStringDisambiguation = 8,
+                             SubPropertyStringId = 16 };
+enum StringListSubPropertyMask { SubPropertyStringListValue = 1, SubPropertyStringListComment = 2,
+                                 SubPropertyStringListTranslatable = 4, SubPropertyStringListDisambiguation = 8,
+                                 SubPropertyStringListId = 16 };
+enum KeySequenceSubPropertyMask { SubPropertyKeySequenceValue = 1, SubPropertyKeySequenceComment = 2,
+                                  SubPropertyKeySequenceTranslatable = 4, SubPropertyKeySequenceDisambiguation = 8,
+                                  SubPropertyKeySequenceId = 16 };
 
 enum CommonSubPropertyMask { SubPropertyAll = 0xFFFFFFFF };
 
@@ -202,6 +208,7 @@ unsigned compareSubProperties(const qdesigner_internal::PropertySheetStringValue
     COMPARE_SUBPROPERTY(str1, str2, comment,        rc, SubPropertyStringComment)
     COMPARE_SUBPROPERTY(str1, str2, translatable,   rc, SubPropertyStringTranslatable)
     COMPARE_SUBPROPERTY(str1, str2, disambiguation, rc, SubPropertyStringDisambiguation)
+    COMPARE_SUBPROPERTY(str1, str2, id,             rc, SubPropertyStringId)
     return rc;
 }
 // find changed subproperties of qdesigner_internal::PropertySheetStringListValue
@@ -212,6 +219,7 @@ unsigned compareSubProperties(const qdesigner_internal::PropertySheetStringListV
     COMPARE_SUBPROPERTY(str1, str2, comment,        rc, SubPropertyStringListComment)
     COMPARE_SUBPROPERTY(str1, str2, translatable,   rc, SubPropertyStringListTranslatable)
     COMPARE_SUBPROPERTY(str1, str2, disambiguation, rc, SubPropertyStringListDisambiguation)
+    COMPARE_SUBPROPERTY(str1, str2, id,             rc, SubPropertyStringListId)
     return rc;
 }
 // find changed subproperties of qdesigner_internal::PropertySheetKeySequenceValue
@@ -222,6 +230,7 @@ unsigned compareSubProperties(const qdesigner_internal::PropertySheetKeySequence
     COMPARE_SUBPROPERTY(str1, str2, comment,        rc, SubPropertyKeySequenceComment)
     COMPARE_SUBPROPERTY(str1, str2, translatable,   rc, SubPropertyKeySequenceTranslatable)
     COMPARE_SUBPROPERTY(str1, str2, disambiguation, rc, SubPropertyKeySequenceDisambiguation)
+    COMPARE_SUBPROPERTY(str1, str2, id,             rc, SubPropertyKeySequenceId)
     return rc;
 }
 
@@ -395,6 +404,7 @@ qdesigner_internal::PropertySheetStringValue applyStringSubProperty(const qdesig
     SET_SUBPROPERTY(rc, newValue, comment, setComment, mask, SubPropertyStringComment)
     SET_SUBPROPERTY(rc, newValue, translatable, setTranslatable, mask, SubPropertyStringTranslatable)
     SET_SUBPROPERTY(rc, newValue, disambiguation, setDisambiguation, mask, SubPropertyStringDisambiguation)
+    SET_SUBPROPERTY(rc, newValue, id, setId, mask, SubPropertyStringId)
     return rc;
 }
 
@@ -407,6 +417,7 @@ qdesigner_internal::PropertySheetStringListValue applyStringListSubProperty(cons
     SET_SUBPROPERTY(rc, newValue, comment, setComment, mask, SubPropertyStringListComment)
     SET_SUBPROPERTY(rc, newValue, translatable, setTranslatable, mask, SubPropertyStringListTranslatable)
     SET_SUBPROPERTY(rc, newValue, disambiguation, setDisambiguation, mask, SubPropertyStringListDisambiguation)
+    SET_SUBPROPERTY(rc, newValue, id, setId, mask, SubPropertyStringListId)
     return rc;
 }
 
@@ -419,6 +430,7 @@ qdesigner_internal::PropertySheetKeySequenceValue applyKeySequenceSubProperty(co
     SET_SUBPROPERTY(rc, newValue, comment, setComment, mask, SubPropertyKeySequenceComment)
     SET_SUBPROPERTY(rc, newValue, translatable, setTranslatable, mask, SubPropertyKeySequenceTranslatable)
     SET_SUBPROPERTY(rc, newValue, disambiguation, setDisambiguation, mask, SubPropertyKeySequenceDisambiguation)
+    SET_SUBPROPERTY(rc, newValue, id, setId, mask, SubPropertyKeySequenceId)
     return rc;
 }
 

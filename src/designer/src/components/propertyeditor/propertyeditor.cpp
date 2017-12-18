@@ -912,6 +912,9 @@ void PropertyEditor::setObject(QObject *object)
     m_propertyManager->setObject(object);
     QDesignerFormWindowInterface *formWindow = QDesignerFormWindowInterface::findFormWindow(m_object);
     FormWindowBase *fwb = qobject_cast<FormWindowBase *>(formWindow);
+    const bool idIdBasedTranslation = fwb && fwb->useIdBasedTranslations();
+    const bool idIdBasedTranslationUnchanged = (idIdBasedTranslation == DesignerPropertyManager::useIdBasedTranslations());
+    DesignerPropertyManager::setUseIdBasedTranslations(idIdBasedTranslation);
     m_treeFactory->setFormWindowBase(fwb);
     m_groupFactory->setFormWindowBase(fwb);
 
@@ -933,6 +936,7 @@ void PropertyEditor::setObject(QObject *object)
 
     m_propertySheet = qobject_cast<QDesignerPropertySheetExtension*>(m->extension(object, Q_TYPEID(QDesignerPropertySheetExtension)));
     if (m_propertySheet) {
+        const int stringTypeId = qMetaTypeId<PropertySheetStringValue>();
         const int propertyCount = m_propertySheet->count();
         for (int i = 0; i < propertyCount; ++i) {
             if (!m_propertySheet->isVisible(i))
@@ -945,8 +949,14 @@ void PropertyEditor::setObject(QObject *object)
             const QMap<QString, QtVariantProperty *>::const_iterator rit = toRemove.constFind(propertyName);
             if (rit != toRemove.constEnd()) {
                 QtVariantProperty *property = rit.value();
-                if (m_propertyToGroup.value(property) == groupName && toBrowserType(m_propertySheet->property(i), propertyName) == property->propertyType())
+                const int propertyType = property->propertyType();
+                // Also remove string properties in case a change in translation mode
+                // occurred since different sub-properties are used (disambiguation/id).
+                if (m_propertyToGroup.value(property) == groupName
+                    && (idIdBasedTranslationUnchanged || propertyType != stringTypeId)
+                    && toBrowserType(m_propertySheet->property(i), propertyName) == propertyType) {
                     toRemove.remove(propertyName);
+                }
             }
         }
     }

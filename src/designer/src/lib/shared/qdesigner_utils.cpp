@@ -456,7 +456,8 @@ namespace qdesigner_internal
     {
         return m_translatable == rhs.m_translatable
                && m_disambiguation == rhs.m_disambiguation
-               && m_comment == rhs.m_comment;
+               && m_comment == rhs.m_comment
+               && m_id == rhs.m_id;
     }
 
     PropertySheetStringValue::PropertySheetStringValue(const QString &value,

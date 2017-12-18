@@ -66,6 +66,7 @@ struct FormWindowData {
 
     bool hasFormGrid{false};
     Grid grid;
+    bool idBasedTranslations{false};
 };
 
 inline bool operator==(const FormWindowData &fd1, const FormWindowData &fd2) { return fd1.equals(fd2); }
@@ -77,7 +78,9 @@ QDebug operator<<(QDebug str, const  FormWindowData &d)
         <<  ',' << d.defaultSpacing << " LayoutFunctions=" << d.layoutFunctionsEnabled << ','
         << d.marginFunction << ',' << d.spacingFunction << " PixFunction="
         << d.pixFunction << " Author=" << d.author << " Hints=" << d.includeHints
-        << " Grid=" << d.hasFormGrid << d.grid.deltaX() << d.grid.deltaY() << '\n';
+        << " Grid=" << d.hasFormGrid << d.grid.deltaX() << d.grid.deltaY()
+        << " ID-based translations" << d.idBasedTranslations
+        << '\n';
     return str;
 }
 
@@ -93,7 +96,8 @@ bool FormWindowData::equals(const FormWindowData &rhs) const
            author                 == rhs.author &&
            includeHints           == rhs.includeHints &&
            hasFormGrid            == rhs.hasFormGrid &&
-           grid                   == rhs.grid;
+           grid                   == rhs.grid &&
+           idBasedTranslations    == rhs.idBasedTranslations;
 }
 
 void FormWindowData::fromFormWindow(FormWindowBase* fw)
@@ -123,6 +127,7 @@ void FormWindowData::fromFormWindow(FormWindowBase* fw)
 
     hasFormGrid = fw->hasFormGrid();
     grid = hasFormGrid ? fw->designerGrid() : FormWindowBase::defaultDesignerGrid();
+    idBasedTranslations = fw->useIdBasedTranslations();
 }
 
 void FormWindowData::applyToFormWindow(FormWindowBase* fw) const
@@ -148,6 +153,7 @@ void FormWindowData::applyToFormWindow(FormWindowBase* fw) const
     fw->setHasFormGrid(hasFormGrid);
     if (hasFormGrid || hadFormGrid != hasFormGrid)
         fw->setDesignerGrid(hasFormGrid ? grid : FormWindowBase::defaultDesignerGrid());
+    fw->setUseIdBasedTranslations(idBasedTranslations);
 }
 
 // -------------------------- FormWindowSettings
@@ -213,6 +219,7 @@ FormWindowData FormWindowSettings::data() const
 
     rc.hasFormGrid = m_ui->gridPanel->isChecked();
     rc.grid = m_ui->gridPanel->grid();
+    rc.idBasedTranslations = m_ui->idBasedTranslationsCheckBox->isChecked();
     return rc;
 }
 
@@ -239,6 +246,7 @@ void FormWindowSettings::setData(const FormWindowData &data)
 
     m_ui->gridPanel->setChecked(data.hasFormGrid);
     m_ui->gridPanel->setGrid(data.grid);
+    m_ui->idBasedTranslationsCheckBox->setChecked(data.idBasedTranslations);
 }
 
 void FormWindowSettings::accept()

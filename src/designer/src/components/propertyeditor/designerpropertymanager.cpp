@@ -109,17 +109,27 @@ void TranslatablePropertyManager<PropertySheetValue>::initialize(QtVariantProper
     m_translatableToValue.insert(translatable, property);
     property->addSubProperty(translatable);
 
-    QtVariantProperty *disambiguation = m->addProperty(QVariant::String, DesignerPropertyManager::tr("disambiguation"));
-    disambiguation->setValue(value.disambiguation());
-    m_valueToDisambiguation.insert(property, disambiguation);
-    m_disambiguationToValue.insert(disambiguation, property);
-    property->addSubProperty(disambiguation);
+    if (!DesignerPropertyManager::useIdBasedTranslations()) {
+        QtVariantProperty *disambiguation = m->addProperty(QVariant::String, DesignerPropertyManager::tr("disambiguation"));
+        disambiguation->setValue(value.disambiguation());
+        m_valueToDisambiguation.insert(property, disambiguation);
+        m_disambiguationToValue.insert(disambiguation, property);
+        property->addSubProperty(disambiguation);
+    }
 
     QtVariantProperty *comment = m->addProperty(QVariant::String, DesignerPropertyManager::tr("comment"));
     comment->setValue(value.comment());
     m_valueToComment.insert(property, comment);
     m_commentToValue.insert(comment, property);
     property->addSubProperty(comment);
+
+    if (DesignerPropertyManager::useIdBasedTranslations()) {
+        QtVariantProperty *id = m->addProperty(QVariant::String, DesignerPropertyManager::tr("id"));
+        id->setValue(value.id());
+        m_valueToId.insert(property, id);
+        m_idToValue.insert(id, property);
+        property->addSubProperty(id);
+    }
 }
 
 template <class PropertySheetValue>
@@ -139,10 +149,16 @@ bool TranslatablePropertyManager<PropertySheetValue>::uninitialize(QtProperty *p
         delete disambiguation;
         m_disambiguationToValue.remove(disambiguation);
     }
+    if (QtProperty *id = m_valueToId.value(property)) {
+        delete id;
+        m_idToValue.remove(id);
+    }
+
     m_values.remove(property);
     m_valueToComment.remove(property);
     m_valueToTranslatable.remove(property);
     m_valueToDisambiguation.remove(property);
+    m_valueToId.remove(property);
     return true;
 }
 
@@ -165,6 +181,12 @@ bool TranslatablePropertyManager<PropertySheetValue>::destroy(QtProperty *subPro
     if (disambiguationToValueIt != m_disambiguationToValue.end()) {
         m_valueToDisambiguation.remove(disambiguationToValueIt.value());
         m_disambiguationToValue.erase(disambiguationToValueIt);
+        return true;
+    }
+    const auto idToValueIt = m_idToValue.find(subProperty);
+    if (idToValueIt != m_idToValue.end()) {
+        m_valueToId.remove(idToValueIt.value());
+        m_idToValue.erase(idToValueIt);
         return true;
     }
     return false;
@@ -205,6 +227,16 @@ int TranslatablePropertyManager<PropertySheetValue>::valueChanged(QtVariantPrope
         }
         return DesignerPropertyManager::Unchanged;
     }
+    if (QtProperty *property = m_idToValue.value(propertyIn)) {
+        const PropertySheetValue oldValue = m_values.value(property);
+        PropertySheetValue newValue = oldValue;
+        newValue.setId(value.toString());
+        if (newValue != oldValue) {
+            m->variantProperty(property)->setValue(QVariant::fromValue(newValue));
+            return DesignerPropertyManager::Changed;
+        }
+        return DesignerPropertyManager::Unchanged;
+    }
     return DesignerPropertyManager::NoMatch;
 }
 
@@ -228,6 +260,8 @@ int TranslatablePropertyManager<PropertySheetValue>::setValue(QtVariantPropertyM
         translatable->setValue(value.translatable());
     if (QtVariantProperty *disambiguation = m->variantProperty(m_valueToDisambiguation.value(property)))
         disambiguation->setValue(value.disambiguation());
+    if (QtVariantProperty *id = m->variantProperty(m_valueToId.value(property)))
+        id->setValue(value.id());
     it.value() = value;
     return DesignerPropertyManager::Changed;
 }
@@ -875,6 +909,8 @@ DesignerPropertyManager::~DesignerPropertyManager()
 {
     clear();
 }
+
+bool DesignerPropertyManager::m_IdBasedTranslations = false;
 
 int DesignerPropertyManager::bitCount(int mask) const
 {

@@ -170,20 +170,7 @@
      </item>
     </layout>
    </item>
-   <item row="5" column="1">
-    <spacer>
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>111</width>
-       <height>115</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="7" column="0" colspan="2">
+   <item row="8" column="0" colspan="2">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -193,14 +180,14 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="0" colspan="2">
+   <item row="7" column="0" colspan="2">
     <widget class="Line" name="line">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
-   <item row="4" column="0" rowspan="2">
+   <item row="4" column="0" rowspan="3">
     <widget class="QGroupBox" name="includeHintsGroupBox">
      <property name="title">
       <string>&amp;Include Hints</string>
@@ -258,6 +245,35 @@
       </item>
      </layout>
     </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QGroupBox" name="translationsGroupBox">
+     <property name="title">
+      <string>Translations</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="QCheckBox" name="idBasedTranslationsCheckBox">
+        <property name="text">
+         <string>ID-based</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="6" column="1">
+    <spacer>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>111</width>
+       <height>115</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>

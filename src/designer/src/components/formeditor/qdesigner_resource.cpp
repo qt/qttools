@@ -338,6 +338,9 @@ inline void translationParametersToDom(const PropertySheetTranslatableData &data
     const QString propertyExtracomment = data.comment();
     if (!propertyExtracomment.isEmpty())
         e->setAttributeExtraComment(propertyExtracomment);
+    const QString &id = data.id();
+    if (!id.isEmpty())
+        e->setAttributeId(id);
     if (!data.translatable())
         e->setAttributeNotr(QStringLiteral("true"));
 }
@@ -349,6 +352,8 @@ inline void translationParametersFromDom(const DomElement *e, PropertySheetTrans
         data->setDisambiguation(e->attributeComment());
     if (e->hasAttributeExtraComment())
         data->setComment(e->attributeExtraComment());
+    if (e->hasAttributeId())
+        data->setId(e->attributeId());
     if (e->hasAttributeNotr()) {
         const QString notr = e->attributeNotr();
         const bool translatable = !(notr == QStringLiteral("true") || notr == QStringLiteral("yes"));
@@ -502,6 +507,8 @@ void QDesignerResource::saveDom(DomUI *ui, QWidget *widget)
         ui->setElementExportMacro(exportMacro);
     }
 
+    ui->setAttributeIdbasedtr(m_formWindow->useIdBasedTranslations());
+
     const QVariantMap designerFormData = m_formWindow->formData();
     if (!designerFormData.empty()) {
         DomPropertyList domPropertyList;
@@ -625,6 +632,9 @@ QWidget *QDesignerResource::create(DomUI *ui, QWidget *parentWidget)
     m_isMainWidget = true;
     QDesignerWidgetItemInstaller wii; // Make sure we use QDesignerWidgetItem.
     QWidget *mainWidget = QAbstractFormBuilder::create(ui, parentWidget);
+
+    if (m_formWindow)
+        m_formWindow->setUseIdBasedTranslations(ui->attributeIdbasedtr());
 
     if (mainWidget && m_formWindow) {
         m_formWindow->setAuthor(ui->elementAuthor());

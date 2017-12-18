@@ -161,6 +161,9 @@ public:
     void setLineTerminatorMode(LineTerminatorMode mode);
     LineTerminatorMode lineTerminatorMode() const;
 
+    bool useIdBasedTranslations() const;
+    void setUseIdBasedTranslations(bool v);
+
 public slots:
     void resourceSetActivated(QtResourceSet *resourceSet, bool resourceSetChanged);
 

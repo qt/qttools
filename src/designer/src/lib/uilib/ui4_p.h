@@ -175,6 +175,11 @@ public:
     inline void setAttributeDisplayname(const QString &a) { m_attr_displayname = a; m_has_attr_displayname = true; }
     inline void clearAttributeDisplayname() { m_has_attr_displayname = false; }
 
+    inline bool hasAttributeIdbasedtr() const { return m_has_attr_idbasedtr; }
+    inline bool attributeIdbasedtr() const { return m_attr_idbasedtr; }
+    inline void setAttributeIdbasedtr(bool a) { m_attr_idbasedtr = a; m_has_attr_idbasedtr = true; }
+    inline void clearAttributeIdbasedtr() { m_has_attr_idbasedtr = false; }
+
     inline bool hasAttributeStdsetdef() const { return m_has_attr_stdsetdef; }
     inline int attributeStdsetdef() const { return m_attr_stdsetdef; }
     inline void setAttributeStdsetdef(int a) { m_attr_stdsetdef = a; m_has_attr_stdsetdef = true; }
@@ -287,6 +292,9 @@ private:
 
     QString m_attr_displayname;
     bool m_has_attr_displayname = false;
+
+    bool m_attr_idbasedtr = false;
+    bool m_has_attr_idbasedtr = false;
 
     int m_attr_stdsetdef = 0;
     bool m_has_attr_stdsetdef = false;
@@ -2067,6 +2075,11 @@ public:
     inline void setAttributeExtraComment(const QString &a) { m_attr_extraComment = a; m_has_attr_extraComment = true; }
     inline void clearAttributeExtraComment() { m_has_attr_extraComment = false; }
 
+    inline bool hasAttributeId() const { return m_has_attr_id; }
+    inline QString attributeId() const { return m_attr_id; }
+    inline void setAttributeId(const QString &a) { m_attr_id = a; m_has_attr_id = true; }
+    inline void clearAttributeId() { m_has_attr_id = false; }
+
     // child element accessors
     inline QStringList elementString() const { return m_string; }
     void setElementString(const QStringList &a);
@@ -2081,6 +2094,9 @@ private:
 
     QString m_attr_extraComment;
     bool m_has_attr_extraComment = false;
+
+    QString m_attr_id;
+    bool m_has_attr_id = false;
 
     // child element data
     uint m_children = 0;
@@ -2258,6 +2274,11 @@ public:
     inline void setAttributeExtraComment(const QString &a) { m_attr_extraComment = a; m_has_attr_extraComment = true; }
     inline void clearAttributeExtraComment() { m_has_attr_extraComment = false; }
 
+    inline bool hasAttributeId() const { return m_has_attr_id; }
+    inline QString attributeId() const { return m_attr_id; }
+    inline void setAttributeId(const QString &a) { m_attr_id = a; m_has_attr_id = true; }
+    inline void clearAttributeId() { m_has_attr_id = false; }
+
 private:
     QString m_text;
 
@@ -2270,6 +2291,9 @@ private:
 
     QString m_attr_extraComment;
     bool m_has_attr_extraComment = false;
+
+    QString m_attr_id;
+    bool m_has_attr_id = false;
 };
 
 class QDESIGNER_UILIB_EXPORT DomPointF {

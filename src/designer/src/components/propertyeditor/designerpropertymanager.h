@@ -108,10 +108,12 @@ private:
     QHash<QtProperty *, QtProperty *> m_valueToComment;
     QHash<QtProperty *, QtProperty *> m_valueToTranslatable;
     QHash<QtProperty *, QtProperty *> m_valueToDisambiguation;
+    QHash<QtProperty *, QtProperty *> m_valueToId;
 
     QHash<QtProperty *, QtProperty *> m_commentToValue;
     QHash<QtProperty *, QtProperty *> m_translatableToValue;
     QHash<QtProperty *, QtProperty *> m_disambiguationToValue;
+    QHash<QtProperty *, QtProperty *> m_idToValue;
 };
 
 class DesignerPropertyManager : public QtVariantPropertyManager
@@ -148,6 +150,11 @@ public:
     static int designerKeySequenceTypeId();
 
     void setObject(QObject *object) { m_object = object; }
+
+    static void setUseIdBasedTranslations(bool v)
+        { m_IdBasedTranslations = v; }
+    static bool useIdBasedTranslations()
+        { return m_IdBasedTranslations; }
 
 public Q_SLOTS:
     void setAttribute(QtProperty *property, const QString &attribute, const QVariant &value) override;
@@ -238,6 +245,7 @@ private:
     QObject *m_object;
 
     QtProperty *m_sourceOfChange;
+    static bool m_IdBasedTranslations;
 };
 
 class DesignerEditorFactory : public QtVariantEditorFactory

@@ -83,6 +83,7 @@ public:
     const DeviceProfile m_deviceProfile;
     FormWindowBase::LineTerminatorMode m_lineTerminatorMode;
     FormWindowBase::ResourceFileSaveMode m_saveResourcesBehaviour;
+    bool m_useIdBasedTranslations;
 };
 
 FormWindowBasePrivate::FormWindowBasePrivate(QDesignerFormEditorInterface *core) :
@@ -94,7 +95,8 @@ FormWindowBasePrivate::FormWindowBasePrivate(QDesignerFormEditorInterface *core)
     m_resourceSet(0),
     m_deviceProfile(QDesignerSharedSettings(core).currentDeviceProfile()),
     m_lineTerminatorMode(FormWindowBase::NativeLineTerminator),
-    m_saveResourcesBehaviour(FormWindowBase::SaveAllResourceFiles)
+    m_saveResourcesBehaviour(FormWindowBase::SaveAllResourceFiles),
+    m_useIdBasedTranslations(false)
 {
 }
 
@@ -524,6 +526,16 @@ void FormWindowBase::triggerDefaultAction(QWidget *widget)
 {
     if (QAction *action = qdesigner_internal::preferredEditAction(core(), widget))
         QTimer::singleShot(0, action, &QAction::trigger);
+}
+
+bool FormWindowBase::useIdBasedTranslations() const
+{
+    return m_d->m_useIdBasedTranslations;
+}
+
+void FormWindowBase::setUseIdBasedTranslations(bool v)
+{
+    m_d->m_useIdBasedTranslations = v;
 }
 
 QStringList FormWindowBase::checkContents() const

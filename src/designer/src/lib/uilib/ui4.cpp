@@ -83,6 +83,10 @@ void DomUI::read(QXmlStreamReader &reader)
             setAttributeDisplayname(attribute.value().toString());
             continue;
         }
+        if (name == QLatin1String("idbasedtr")) {
+            setAttributeIdbasedtr(attribute.value() == QLatin1String("true"));
+            continue;
+        }
         if (name == QLatin1String("stdsetdef")) {
             setAttributeStdsetdef(attribute.value().toInt());
             continue;
@@ -212,6 +216,9 @@ void DomUI::write(QXmlStreamWriter &writer, const QString &tagName) const
 
     if (hasAttributeDisplayname())
         writer.writeAttribute(QStringLiteral("displayname"), attributeDisplayname());
+
+    if (hasAttributeIdbasedtr())
+        writer.writeAttribute(QStringLiteral("idbasedtr"), (attributeIdbasedtr() ? QLatin1String("true") : QLatin1String("false")));
 
     if (hasAttributeStdsetdef())
         writer.writeAttribute(QStringLiteral("stdsetdef"), QString::number(attributeStdsetdef()));
@@ -4038,6 +4045,10 @@ void DomStringList::read(QXmlStreamReader &reader)
             setAttributeExtraComment(attribute.value().toString());
             continue;
         }
+        if (name == QLatin1String("id")) {
+            setAttributeId(attribute.value().toString());
+            continue;
+        }
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
@@ -4072,6 +4083,9 @@ void DomStringList::write(QXmlStreamWriter &writer, const QString &tagName) cons
 
     if (hasAttributeExtraComment())
         writer.writeAttribute(QStringLiteral("extracomment"), attributeExtraComment());
+
+    if (hasAttributeId())
+        writer.writeAttribute(QStringLiteral("id"), attributeId());
 
     for (const QString &v : m_string)
         writer.writeTextElement(QStringLiteral("string"), v);
@@ -4472,6 +4486,10 @@ void DomString::read(QXmlStreamReader &reader)
             setAttributeExtraComment(attribute.value().toString());
             continue;
         }
+        if (name == QLatin1String("id")) {
+            setAttributeId(attribute.value().toString());
+            continue;
+        }
         reader.raiseError(QLatin1String("Unexpected attribute ") + name);
     }
 
@@ -4506,6 +4524,9 @@ void DomString::write(QXmlStreamWriter &writer, const QString &tagName) const
 
     if (hasAttributeExtraComment())
         writer.writeAttribute(QStringLiteral("extracomment"), attributeExtraComment());
+
+    if (hasAttributeId())
+        writer.writeAttribute(QStringLiteral("id"), attributeId());
 
     if (!m_text.isEmpty())
         writer.writeCharacters(m_text);
