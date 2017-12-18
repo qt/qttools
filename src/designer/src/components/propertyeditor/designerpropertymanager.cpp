@@ -149,19 +149,22 @@ bool TranslatablePropertyManager<PropertySheetValue>::uninitialize(QtProperty *p
 template <class PropertySheetValue>
 bool TranslatablePropertyManager<PropertySheetValue>::destroy(QtProperty *subProperty)
 {
-    if (QtProperty *stringCommentProperty = m_commentToValue.value(subProperty, 0)) {
-        m_valueToComment.remove(stringCommentProperty);
-        m_commentToValue.remove(subProperty);
+    const auto commentToValueIt = m_commentToValue.find(subProperty);
+    if (commentToValueIt != m_commentToValue.end()) {
+        m_valueToComment.remove(commentToValueIt.value());
+        m_commentToValue.erase(commentToValueIt);
         return true;
     }
-    if (QtProperty *stringTranslatableProperty = m_translatableToValue.value(subProperty, 0)) {
-        m_valueToTranslatable.remove(stringTranslatableProperty);
-        m_translatableToValue.remove(subProperty);
+    const auto translatableToValueIt = m_translatableToValue.find(subProperty);
+    if (translatableToValueIt != m_translatableToValue.end()) {
+        m_valueToTranslatable.remove(translatableToValueIt.value());
+        m_translatableToValue.erase(translatableToValueIt);
         return true;
     }
-    if (QtProperty *stringDisambiguationProperty = m_disambiguationToValue.value(subProperty, 0)) {
-        m_valueToDisambiguation.remove(stringDisambiguationProperty);
-        m_disambiguationToValue.remove(subProperty);
+    const auto disambiguationToValueIt = m_disambiguationToValue.find(subProperty);
+    if (disambiguationToValueIt != m_disambiguationToValue.end()) {
+        m_valueToDisambiguation.remove(disambiguationToValueIt.value());
+        m_disambiguationToValue.erase(disambiguationToValueIt);
         return true;
     }
     return false;

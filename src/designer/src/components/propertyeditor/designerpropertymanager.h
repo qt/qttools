@@ -104,14 +104,14 @@ public:
                  int expectedTypeId, const QVariant &value);
 
 private:
-    QMap<QtProperty *, PropertySheetValue> m_values;
-    QMap<QtProperty *, QtProperty *> m_valueToComment;
-    QMap<QtProperty *, QtProperty *> m_valueToTranslatable;
-    QMap<QtProperty *, QtProperty *> m_valueToDisambiguation;
+    QHash<QtProperty *, PropertySheetValue> m_values;
+    QHash<QtProperty *, QtProperty *> m_valueToComment;
+    QHash<QtProperty *, QtProperty *> m_valueToTranslatable;
+    QHash<QtProperty *, QtProperty *> m_valueToDisambiguation;
 
-    QMap<QtProperty *, QtProperty *> m_commentToValue;
-    QMap<QtProperty *, QtProperty *> m_translatableToValue;
-    QMap<QtProperty *, QtProperty *> m_disambiguationToValue;
+    QHash<QtProperty *, QtProperty *> m_commentToValue;
+    QHash<QtProperty *, QtProperty *> m_translatableToValue;
+    QHash<QtProperty *, QtProperty *> m_disambiguationToValue;
 };
 
 class DesignerPropertyManager : public QtVariantPropertyManager
