@@ -52,7 +52,7 @@ class UiReader : public QXmlDefaultHandler
 public:
     UiReader(Translator &translator, ConversionData &cd)
       : m_translator(translator), m_cd(cd), m_lineNumber(-1), m_isTrString(false),
-        m_insideStringList(false)
+        m_insideStringList(false), m_idBasedTranslations(false)
     {}
 
     bool startElement(const QString &namespaceURI, const QString &localName,
@@ -74,12 +74,14 @@ private:
     QString m_source;
     QString m_comment;
     QString m_extracomment;
+    QString m_id;
     QXmlLocator *m_locator;
 
     QString m_accum;
     int m_lineNumber;
     bool m_isTrString;
     bool m_insideStringList;
+    bool m_idBasedTranslations;
 };
 
 bool UiReader::startElement(const QString &namespaceURI,
@@ -96,6 +98,10 @@ bool UiReader::startElement(const QString &namespaceURI,
         flush();
         m_insideStringList = true;
         readTranslationAttributes(atts);
+    } else if (qName == QLatin1String("ui")) { // UI "header"
+        const int translationTypeIndex = atts.index(QStringLiteral("idbasedtr"));
+        m_idBasedTranslations = translationTypeIndex >= 0
+            && atts.value(translationTypeIndex) == QLatin1String("true");
     }
     m_accum.clear();
     return true;
@@ -147,12 +153,14 @@ void UiReader::flush()
            m_comment, QString(), m_cd.m_sourceFileName,
            m_lineNumber, QStringList());
         msg.setExtraComment(m_extracomment);
+        msg.setId(m_id);
         m_translator.extend(msg, m_cd);
     }
     m_source.clear();
     if (!m_insideStringList) {
         m_comment.clear();
         m_extracomment.clear();
+        m_id.clear();
     }
 }
 
@@ -163,6 +171,8 @@ void UiReader::readTranslationAttributes(const QXmlAttributes &atts)
         m_isTrString = true;
         m_comment = atts.value(QStringLiteral("comment"));
         m_extracomment = atts.value(QStringLiteral("extracomment"));
+        if (m_idBasedTranslations)
+            m_id = atts.value(QStringLiteral("id"));
         if (!m_cd.m_noUiLines)
             m_lineNumber = m_locator->lineNumber();
     } else {
