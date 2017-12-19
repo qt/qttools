@@ -362,7 +362,7 @@ QString Config::getOutputDir(const QString &format) const
         QString project = getString(CONFIG_PROJECT);
         t += QLatin1Char('/') + project.toLower();
     }
-    if (!Generator::useOutputSubdirs()) {
+    if (getBool(format + Config::dot + "nosubdirs")) {
         t = t.left(t.lastIndexOf('/'));
         QString singleOutputSubdir = getString(format + Config::dot + "outputsubdir");
         if (singleOutputSubdir.isEmpty())
