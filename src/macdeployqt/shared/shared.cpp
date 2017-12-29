@@ -1079,21 +1079,18 @@ void deployPlugins(const ApplicationBundleInfo &appBundleInfo, const QString &pl
         });
     }
 
-    // multimedia plugins if QtMultimedia.framework is in use
-    if (deploymentInfo.deployedFrameworks.contains(QStringLiteral("QtMultimedia") + libInfixWithFramework)) {
-        addPlugins(QStringLiteral("mediaservice"));
-        addPlugins(QStringLiteral("audio"));
-    }
+    static const std::map<QString, std::vector<QString>> map {
+        {QStringLiteral("QtMultimedia"), {QStringLiteral("mediaservice"), QStringLiteral("audio")}},
+        {QStringLiteral("Qt3DRender"), {QStringLiteral("sceneparsers"), QStringLiteral("geometryloaders")}},
+        {QStringLiteral("Qt3DQuickRender"), {QStringLiteral("renderplugins")}}
+    };
 
-    // render related plugins if Qt3DRender.framework is in use
-    if (deploymentInfo.deployedFrameworks.contains(QStringLiteral("Qt3DRender") + libInfixWithFramework)) {
-        addPlugins(QStringLiteral("sceneparsers"));
-        addPlugins(QStringLiteral("geometryloaders"));
-    }
-
-    // scene related plugins if Qt3DQuickRender.framework is in use
-    if (deploymentInfo.deployedFrameworks.contains(QStringLiteral("Qt3DQuickRender") + libInfixWithFramework)) {
-        addPlugins(QStringLiteral("renderplugins"));
+    for (const auto &it : map) {
+        if (deploymentInfo.deployedFrameworks.contains(it.first + libInfixWithFramework)) {
+            for (const auto &pluginType : it.second) {
+                addPlugins(pluginType);
+            }
+        }
     }
 
     foreach (const QString &plugin, pluginList) {
