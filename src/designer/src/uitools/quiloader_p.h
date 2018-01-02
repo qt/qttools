@@ -73,14 +73,16 @@ class QUiTranslatableStringValue
 public:
     QByteArray value() const { return m_value; }
     void setValue(const QByteArray &value) { m_value = value; }
-    QByteArray comment() const { return m_comment; }
-    void setComment(const QByteArray &comment) { m_comment = comment; }
+    QByteArray qualifier() const { return m_qualifier; }
+    void setQualifier(const QByteArray &qualifier) { m_qualifier = qualifier; }
+
+    QString translate(const QByteArray &className, bool idBased) const;
 
 private:
     friend QDataStream &operator>>(QDataStream &in, QUiTranslatableStringValue &s);
 
     QByteArray m_value;
-    QByteArray m_comment;
+    QByteArray m_qualifier; // Comment or ID for id-based tr().
 };
 
 struct QUiItemRolePair {

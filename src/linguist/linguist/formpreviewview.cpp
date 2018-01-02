@@ -59,12 +59,12 @@ int qHash(const QUiTranslatableStringValue &tsv)
 static int qHash(const QUiTranslatableStringValue &tsv)
 #endif
 {
-    return qHash(tsv.value()) ^ qHash(tsv.comment());
+    return qHash(tsv.value()) ^ qHash(tsv.qualifier());
 }
 
 static bool operator==(const QUiTranslatableStringValue &tsv1, const QUiTranslatableStringValue &tsv2)
 {
-    return tsv1.value() == tsv2.value() && tsv1.comment() == tsv2.comment();
+    return tsv1.value() == tsv2.value() && tsv1.qualifier() == tsv2.qualifier();
 }
 
 #define INSERT_TARGET(_tsv, _type, _target, _prop) \
@@ -273,7 +273,7 @@ static void retranslateTargets(
     QString sourceText = QString::fromUtf8(tsv.value());
     QString text;
     if (MessageItem *msg = dataModel->findMessage(
-            className, sourceText, QString::fromUtf8(tsv.comment())))
+            className, sourceText, QString::fromUtf8(tsv.qualifier())))
         text = msg->translation();
     if (text.isEmpty() && !tsv.value().isEmpty())
         text = QLatin1Char('#') + sourceText;
@@ -549,7 +549,7 @@ void FormPreviewView::setSourceContext(int model, MessageItem *messageItem)
     }
     QUiTranslatableStringValue tsv;
     tsv.setValue(messageItem->text().toUtf8());
-    tsv.setComment(messageItem->comment().toUtf8());
+    tsv.setQualifier(messageItem->comment().toUtf8());
     m_highlights = m_targets.value(tsv);
     if (m_lastModel != model) {
         for (TargetsHash::Iterator it = m_targets.begin(), end = m_targets.end(); it != end; ++it)
