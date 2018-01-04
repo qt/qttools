@@ -57,24 +57,6 @@ public:
 };
 Q_DECLARE_INTERFACE(QAbstractExtensionManager, "org.qt-project.Qt.QAbstractExtensionManager")
 
-#if defined(Q_CC_MSVC) && (_MSC_VER < 1300)
-
-template <class T>
-inline T qt_extension_helper(QAbstractExtensionManager *, QObject *, T)
-{ return 0; }
-
-template <class T>
-inline T qt_extension(QAbstractExtensionManager* manager, QObject *object)
-{ return qt_extension_helper(manager, object, T(0)); }
-
-#define Q_DECLARE_EXTENSION_INTERFACE(IFace, IId) \
-const char * const IFace##_iid = IId; \
-Q_DECLARE_INTERFACE(IFace, IId) \
-template <> inline IFace *qt_extension_helper<IFace *>(QAbstractExtensionManager *manager, QObject *object, IFace *) \
-{ QObject *extension = manager->extension(object, Q_TYPEID(IFace)); return (IFace *)(extension ? extension->qt_metacast(IFace##_iid) : 0); }
-
-#else
-
 template <class T>
 inline T qt_extension(QAbstractExtensionManager *, QObject *)
 { return Q_NULLPTR; }
@@ -84,8 +66,6 @@ const char * const IFace##_iid = IId; \
 Q_DECLARE_INTERFACE(IFace, IId) \
 template <> inline IFace *qt_extension<IFace *>(QAbstractExtensionManager *manager, QObject *object) \
 { QObject *extension = manager->extension(object, Q_TYPEID(IFace)); return extension ? static_cast<IFace *>(extension->qt_metacast(IFace##_iid)) : static_cast<IFace *>(Q_NULLPTR); }
-
-#endif
 
 QT_END_NAMESPACE
 

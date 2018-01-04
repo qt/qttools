@@ -104,11 +104,7 @@ private:
     QMap<int, bool> m_propValues;
 };
 
-#if defined Q_CC_MSVC && _MSC_VER < 1300
-template <> inline QDesignerAxWidget *qobject_cast_helper<QDesignerAxWidget*>(QObject *o,  QDesignerAxWidget*)
-#else
 template <> inline QDesignerAxWidget *qobject_cast<QDesignerAxWidget*>(QObject *o)
-#endif
 {
     if (!o)
         return 0;
