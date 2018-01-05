@@ -56,10 +56,6 @@ public:
     virtual void parseSourceFile(const Location& location, const QString& filePath) Q_DECL_OVERRIDE;
     virtual void precompileHeaders() Q_DECL_OVERRIDE;
     virtual Node *parseFnArg(const Location &location, const QString &fnArg) Q_DECL_OVERRIDE;
-    virtual Node *parseMacroArg(const Location &location, const QString &macroArg) Q_DECL_OVERRIDE;
-    virtual Node *parseOtherFuncArg(const QString &topic,
-                                    const Location &location,
-                                    const QString &funcArg) Q_DECL_OVERRIDE;
 
  private:
     void getDefaultArgs();

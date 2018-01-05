@@ -66,6 +66,10 @@ public:
     QStringList headerFileNameFilter() override;
     QStringList sourceFileNameFilter() override;
     bool parseParameters(const QString& parameters, QVector<Parameter>& pvect, bool& isQPrivateSignal);
+    Node *parseMacroArg(const Location &location, const QString &macroArg) override;
+    Node *parseOtherFuncArg(const QString &topic,
+                            const Location &location,
+                            const QString &funcArg) override;
     const Location& declLoc() const { return declLoc_; }
     void setDeclLoc() { declLoc_ = location(); }
     static bool isJSMethodTopic(const QString &t);

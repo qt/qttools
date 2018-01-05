@@ -1220,6 +1220,128 @@ bool CppCodeParser::parseParameters(const QString& parameters,
     return true;
 }
 
+/*!
+ Parse QML/JS signal/method topic commands.
+ */
+Node* CppCodeParser::parseOtherFuncArg(const QString& topic,
+                                         const Location& location,
+                                         const QString& funcArg)
+{
+    QString funcName;
+    QString returnType;
+
+    int leftParen = funcArg.indexOf(QChar('('));
+    if (leftParen > 0)
+        funcName = funcArg.left(leftParen);
+    else
+        funcName = funcArg;
+    int firstBlank = funcName.indexOf(QChar(' '));
+    if (firstBlank > 0) {
+        returnType = funcName.left(firstBlank);
+        funcName = funcName.right(funcName.length() - firstBlank - 1);
+    }
+
+    QStringList colonSplit(funcName.split("::"));
+    if (colonSplit.size() < 2) {
+        QString msg = "Unrecognizable QML module/component qualifier for " + funcArg;
+        location.warning(tr(msg.toLatin1().data()));
+        return 0;
+    }
+    QString moduleName;
+    QString elementName;
+    if (colonSplit.size() > 2) {
+        moduleName = colonSplit[0];
+        elementName = colonSplit[1];
+    } else {
+        elementName = colonSplit[0];
+    }
+    funcName = colonSplit.last();
+
+    Aggregate *aggregate = qdb_->findQmlType(moduleName, elementName);
+    bool attached = false;
+    if (!aggregate)
+        aggregate = qdb_->findQmlBasicType(moduleName, elementName);
+    if (!aggregate)
+        return 0;
+
+    Node::NodeType nodeType = Node::QmlMethod;
+    if (topic == COMMAND_QMLSIGNAL || topic == COMMAND_JSSIGNAL) {
+        nodeType = Node::QmlSignal;
+    } else if (topic == COMMAND_QMLATTACHEDSIGNAL || topic == COMMAND_JSATTACHEDSIGNAL) {
+        nodeType = Node::QmlSignal;
+        attached = true;
+    } else if (topic == COMMAND_QMLATTACHEDMETHOD || topic == COMMAND_JSATTACHEDMETHOD) {
+        attached = true;
+    } else {
+        Q_ASSERT(topic == COMMAND_QMLMETHOD || topic == COMMAND_JSMETHOD);
+    }
+
+    QString params;
+    QStringList leftParenSplit = funcArg.split('(');
+    if (leftParenSplit.size() > 1) {
+        QStringList rightParenSplit = leftParenSplit[1].split(')');
+        if (rightParenSplit.size() > 0)
+            params = rightParenSplit[0];
+    }
+    FunctionNode *funcNode = static_cast<FunctionNode*>(new FunctionNode(nodeType, aggregate, funcName, attached));
+    funcNode->setAccess(Node::Public);
+    funcNode->setLocation(location);
+    funcNode->setReturnType(returnType);
+    funcNode->setParameters(params);
+    return funcNode;
+}
+
+/*!
+  Parse the \macro arguments ad hoc, without using any actual parser.
+ */
+Node* CppCodeParser::parseMacroArg(const Location& location, const QString& macroArg)
+{
+    FunctionNode* newMacroNode = 0;
+    QStringList leftParenSplit = macroArg.split('(');
+    if (leftParenSplit.size() > 0) {
+        QString macroName;
+        FunctionNode* oldMacroNode = 0;
+        QStringList blankSplit = leftParenSplit[0].split(' ');
+        if (blankSplit.size() > 0) {
+            macroName = blankSplit.last();
+            oldMacroNode = static_cast<FunctionNode*>(qdb_->findMacroNode(macroName));
+        }
+        QString returnType;
+        if (blankSplit.size() > 1) {
+            blankSplit.removeLast();
+            returnType = blankSplit.join(' ');
+        }
+        QString params;
+        if (leftParenSplit.size() > 1) {
+            const QString &afterParen = leftParenSplit.at(1);
+            int rightParen = afterParen.indexOf(')');
+            if (rightParen >= 0)
+                params = afterParen.left(rightParen);
+        }
+        int i = 0;
+        while (i < macroName.length() && !macroName.at(i).isLetter())
+            i++;
+        if (i > 0) {
+            returnType += QChar(' ') + macroName.left(i);
+            macroName = macroName.mid(i);
+        }
+        newMacroNode = static_cast<FunctionNode*>(new FunctionNode(qdb_->primaryTreeRoot(), macroName));
+        newMacroNode->setAccess(Node::Public);
+        newMacroNode->setLocation(location);
+        if (params.isEmpty())
+            newMacroNode->setMetaness(FunctionNode::MacroWithoutParams);
+        else
+            newMacroNode->setMetaness(FunctionNode::MacroWithParams);
+        newMacroNode->setReturnType(returnType);
+        newMacroNode->setParameters(params);
+        if (oldMacroNode && newMacroNode->compare(oldMacroNode)) {
+            location.warning(tr("\\macro %1 documented more than once").arg(macroArg));
+            oldMacroNode->doc().location().warning(tr("(The previous doc is here)"));
+        }
+    }
+    return newMacroNode;
+ }
+
 void CppCodeParser::createExampleFileNodes(DocumentNode *dn)
 {
     QString examplePath = dn->name();
