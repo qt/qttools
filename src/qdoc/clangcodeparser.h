@@ -47,15 +47,15 @@ class ClangCodeParser : public CppCodeParser
 public:
     ~ClangCodeParser();
 
-    virtual void initializeParser(const Config& config) Q_DECL_OVERRIDE;
-    virtual void terminateParser() Q_DECL_OVERRIDE;
-    virtual QString language() Q_DECL_OVERRIDE;
-    virtual QStringList headerFileNameFilter() Q_DECL_OVERRIDE;
-    virtual QStringList sourceFileNameFilter() Q_DECL_OVERRIDE;
-    virtual void parseHeaderFile(const Location& location, const QString& filePath) Q_DECL_OVERRIDE;
-    virtual void parseSourceFile(const Location& location, const QString& filePath) Q_DECL_OVERRIDE;
-    virtual void precompileHeaders() Q_DECL_OVERRIDE;
-    virtual Node *parseFnArg(const Location &location, const QString &fnArg) Q_DECL_OVERRIDE;
+    void initializeParser(const Config& config) override;
+    void terminateParser() override;
+    QString language() override;
+    QStringList headerFileNameFilter() override;
+    QStringList sourceFileNameFilter() override;
+    void parseHeaderFile(const Location& location, const QString& filePath) override;
+    void parseSourceFile(const Location& location, const QString& filePath) override;
+    void precompileHeaders() override;
+    Node *parseFnArg(const Location &location, const QString &fnArg) override;
 
  private:
     void getDefaultArgs();

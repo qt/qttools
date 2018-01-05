@@ -891,10 +891,10 @@ class SharedCommentNode : public LeafNode
     }
     virtual ~SharedCommentNode() { collective_.clear(); }
 
-    virtual bool isSharedCommentNode() const Q_DECL_OVERRIDE { return true; }
+    bool isSharedCommentNode() const override { return true; }
     void append(Node* n) { collective_.append(n); }
     const QVector<Node*>& collective() const { return collective_; }
-    void setOverloadFlag(bool b) Q_DECL_OVERRIDE;
+    void setOverloadFlag(bool b) override;
 
  private:
     QVector<Node*> collective_;
@@ -937,7 +937,7 @@ public:
     void setConst(bool b) { const_ = b; }
     void setStatic(bool b) { static_ = b; }
     unsigned char overloadNumber() const { return overloadNumber_; }
-    void setOverloadFlag(bool b) Q_DECL_OVERRIDE { overload_ = b; }
+    void setOverloadFlag(bool b) override { overload_ = b; }
     void setOverloadNumber(unsigned char n) { overloadNumber_ = n; }
     void setReimplemented(bool b);
     void addParameter(const Parameter& parameter);
@@ -957,7 +957,7 @@ public:
     bool isSomeCtor() const { return isCtor() || isCCtor() || isMCtor(); }
     bool isMacroWithParams() const { return (metaness_ == MacroWithParams); }
     bool isMacroWithoutParams() const { return (metaness_ == MacroWithoutParams); }
-    bool isMacro() const Q_DECL_OVERRIDE {
+    bool isMacro() const override {
         return (isMacroWithParams() || isMacroWithoutParams());
     }
     bool isSignal() const { return (metaness_ == Signal); }
@@ -1038,7 +1038,7 @@ public:
     bool isOverride() const { return isOverride_; }
 
     void setImplicit(bool b) { isImplicit_ = b; }
-    bool isImplicit() const Q_DECL_OVERRIDE { return isImplicit_; }
+    bool isImplicit() const override { return isImplicit_; }
 
     void setRef(bool b) { isRef_ = b; }
     bool isRef() const { return isRef_; }
@@ -1049,7 +1049,7 @@ public:
     void setInvokable(bool b) { isInvokable_ = b; }
     bool isInvokable() const { return isInvokable_; }
 
-    virtual bool hasTag(const QString& t) const Q_DECL_OVERRIDE { return (tag_ == t); }
+    bool hasTag(const QString& t) const override { return (tag_ == t); }
     void setTag(const QString& t) { tag_ = t; }
     const QString &tag() const { return tag_; }
     bool compare(const FunctionNode *fn) const;
