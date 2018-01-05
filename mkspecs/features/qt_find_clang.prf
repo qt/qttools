@@ -88,8 +88,8 @@ for(_, $$list(_)) { # just a way to break easily
         CLANG_LIBS += -lclang
 
     !versionIsAtLeast($$CLANG_VERSION, "3.9.0") {
-        log("LLVM/Clang version >= 3.9.0 required, version provided: $$CLANG_VERSION.$$escape_expand(\\n)")
-        log("Clang was found in $$LLVM_INSTALL_DIR. Set the LLVM_INSTALL_DIR environment variable to override.$$escape_expand(\\n)")
+        log("LLVM/Clang version >= 3.9.0 required, version provided: $${CLANG_VERSION}.$$escape_expand(\\n)")
+        log("Clang was found in $${clangInstallDir}. Set the LLVM_INSTALL_DIR environment variable to override.$$escape_expand(\\n)")
         break()
     }
 
