@@ -41,6 +41,8 @@
 #include "qtgradientstopscontroller.h"
 #include "ui_qtgradienteditor.h"
 
+#include <QtWidgets/QButtonGroup>
+
 QT_BEGIN_NAMESPACE
 
 class QtGradientEditorPrivate
