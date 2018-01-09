@@ -392,10 +392,6 @@ private:
             return true;
         if (symbolName == QLatin1String("QPrivateSignal"))
             return true;
-        if (parent_->name() != "QObject" && parent_->name() != "QMetaType"
-            && (symbolName == QLatin1String("metaObject") || symbolName == QLatin1String("tr")
-                || symbolName == QLatin1String("trUtf8")))
-            return true;
         return false;
     }
 
@@ -1205,6 +1201,7 @@ void ClangCodeParser::precompileHeaders()
         args_.push_back(p.constData());
 
     flags_ = (CXTranslationUnit_Flags) (CXTranslationUnit_Incomplete | CXTranslationUnit_SkipFunctionBodies | CXTranslationUnit_KeepGoing);
+    // Change 2nd parameter to 1 to make clang report errors.
     index_ = clang_createIndex(1, 0);
     buildPCH();
     clang_disposeIndex(index_);
@@ -1370,6 +1367,7 @@ Node* ClangCodeParser::parseFnArg(const Location& location, const QString& fnArg
     CXTranslationUnit_Flags flags = (CXTranslationUnit_Flags) (CXTranslationUnit_Incomplete |
                                                                CXTranslationUnit_SkipFunctionBodies |
                                                                CXTranslationUnit_KeepGoing);
+    // Change 2nd parameter to 1 to make clang report errors.
     CXIndex index = clang_createIndex(1, 0);
 
     std::vector<const char *> args(std::begin(defaultArgs_), std::end(defaultArgs_));

@@ -835,11 +835,29 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
                 out() << "</p>";
             }
             else if (!node->isWrapper() && !quiet && !node->isReimplemented()) {
-                node->location().warning(tr("No documentation for '%1'").arg(node->plainSignature()));
+                bool report = true;
+                /*
+                  These are the member function names added by the macro
+                  Q_OBJECT. Usually they are not documented, but they can
+                  be documented, so this test avoids reporting an error if
+                  they are not documented. But maybe we should generate a
+                  standard text for each of them?
+                 */
+                if (node->name() == QLatin1String("metaObject") ||
+                    node->name() == QLatin1String("tr") ||
+                    node->name() == QLatin1String("trUtf8")) {
+                    report = false;
+                }
+                if (report)
+                    node->location().warning(tr("No documentation for '%1'").arg(node->plainSignature()));
             }
         }
         else if (!node->isWrapper() && !quiet && !node->isReimplemented()) {
-            node->location().warning(tr("No documentation for '%1'").arg(node->plainSignature()));
+            /*
+              Don't require documentation of things defined in Q_GADGET
+             */
+            if (node->name() != QLatin1String("QtGadgetHelper"))
+                node->location().warning(tr("No documentation for '%1'").arg(node->plainSignature()));
         }
     }
     else {
