@@ -279,7 +279,7 @@ bool QDesignerMenuBar::handleKeyPressEvent(QWidget *, QKeyEvent *e)
                 showMenu();
                 break;
             }
-            // fall through
+            Q_FALLTHROUGH();
 
         case Qt::Key_Escape:
             update();

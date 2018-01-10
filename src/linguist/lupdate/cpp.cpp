@@ -924,7 +924,7 @@ CppParser::TokenType CppParser::getToken()
                 }
                 if (yyCh < '0' || yyCh > '9')
                     return Tok_Null;
-                // Fallthrough
+                Q_FALLTHROUGH();
             case '1':
             case '2':
             case '3':
@@ -1786,7 +1786,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                 break;
             }
         }
-        /* fall through */
+        Q_FALLTHROUGH();
         case Tok_AngledInclude: {
             QStringList cSources = cd.m_allCSources.values(yyWord);
             if (!cSources.isEmpty()) {
@@ -2071,7 +2071,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                     pendingContext.clear();
                 }
             }
-            // fallthrough
+            Q_FALLTHROUGH();
         case Tok_Semicolon:
             prospectiveContext.clear();
             prefix.clear();
@@ -2118,10 +2118,10 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                     yyTokColonSeen = false;
                 }
             }
-            // fallthrough
+            Q_FALLTHROUGH();
         case Tok_LeftParen:
             yyTokIdentSeen = false;
-            // fallthrough
+            Q_FALLTHROUGH();
         case Tok_Comma:
         case Tok_QuestionMark:
             metaExpected = true;
@@ -2134,7 +2134,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
         default:
             if (!yyParenDepth)
                 prospectiveContext.clear();
-            // fallthrough
+            Q_FALLTHROUGH();
         case Tok_RightBracket: // ignoring indexing; for static initializers
         case_default:
             yyTok = getToken();

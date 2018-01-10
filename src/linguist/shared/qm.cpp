@@ -231,10 +231,10 @@ void Releaser::writeMessage(const ByteTranslatorMessage &msg, QDataStream &strea
     default:
     case HashContextSourceTextComment:
         stream << quint8(Tag_Comment) << msg.comment();
-        // fall through
+        Q_FALLTHROUGH();
     case HashContextSourceText:
         stream << quint8(Tag_SourceText) << msg.sourceText();
-        // fall through
+        Q_FALLTHROUGH();
     case HashContext:
         stream << quint8(Tag_Context) << msg.context();
         break;

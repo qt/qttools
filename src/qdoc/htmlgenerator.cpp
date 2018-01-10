@@ -589,7 +589,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
         break;
     case Atom::CodeNew:
         out() << "<p>you can rewrite it as</p>\n";
-        // fallthrough
+        Q_FALLTHROUGH();
     case Atom::Code:
         out() << "<pre class=\"cpp\">"
               << trimmedTrailing(highlightedCode(indent(codeIndent,atom->string()),relative), codePrefix, codeSuffix)
@@ -597,7 +597,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
         break;
     case Atom::CodeOld:
         out() << "<p>For example, if you have code like</p>\n";
-        // fallthrough
+        Q_FALLTHROUGH();
     case Atom::CodeBad:
         out() << "<pre class=\"cpp plain\">"
               << trimmedTrailing(protectEnc(plainCode(indent(codeIndent,atom->string()))), codePrefix, codeSuffix)
