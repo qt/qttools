@@ -202,7 +202,7 @@ void WebXMLGenerator::generateDocumentation(Node *node)
     if (node->isAggregate()) {
         Aggregate* aggregate = static_cast<Aggregate*>(node);
         for (auto c : aggregate->childNodes()) {
-            if (c->isAggregate() && !c->isPrivate())
+            if ((c->isAggregate() || c->isCollectionNode()) && !c->isPrivate())
                 generateDocumentation(c);
         }
     }
