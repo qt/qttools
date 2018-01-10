@@ -610,9 +610,9 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader& reader,
         if (!physicalModuleName.isEmpty())
             qdb_->addToModule(physicalModuleName, node);
         if (!href.isEmpty()) {
-            if (node->isExternalPage())
-                node->setUrl(href);
-            else if (!indexUrl.isEmpty())
+            node->setUrl(href);
+            // Include the index URL if it exists
+            if (!node->isExternalPage() && !indexUrl.isEmpty())
                 node->setUrl(indexUrl + QLatin1Char('/') + href);
         }
 
