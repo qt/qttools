@@ -1415,10 +1415,26 @@ Node* ClangCodeParser::parseFnArg(const Location& location, const QString& fnArg
         if (fnNode == 0) {
             unsigned diagnosticCount = clang_getNumDiagnostics(tu);
             if (diagnosticCount > 0) {
-                location.warning(ClangCodeParser::tr("clang found diagnostics parsing \\fn %1").arg(fnArg));
-                for (unsigned i = 0; i < diagnosticCount; ++i) {
-                    CXDiagnostic diagnostic = clang_getDiagnostic(tu, i);
-                    location.report(tr("    %1").arg(fromCXString(clang_formatDiagnostic(diagnostic, 0))));
+                bool report = true;
+                QStringList signature = fnArg.split(QLatin1String("::"));
+                if (signature.size() > 1) {
+                    QStringList typeAndQualifier = signature.at(0).split(' ');
+                    QString qualifier = typeAndQualifier.last();
+                    int i = 0;
+                    while (qualifier.size() > i && !qualifier.at(i).isLetter())
+                        qualifier[i++] = QChar(' ');
+                    if (i > 0)
+                        qualifier = qualifier.simplified();
+                    ClassNode* cn = qdb_->findClassNode(QStringList(qualifier));
+                    if (cn && cn->isInternal())
+                        report = false;
+                }
+                if (report) {
+                    location.warning(ClangCodeParser::tr("clang found diagnostics parsing \\fn %1").arg(fnArg));
+                    for (unsigned i = 0; i < diagnosticCount; ++i) {
+                        CXDiagnostic diagnostic = clang_getDiagnostic(tu, i);
+                        location.report(tr("    %1").arg(fromCXString(clang_formatDiagnostic(diagnostic, 0))));
+                    }
                 }
             }
         }

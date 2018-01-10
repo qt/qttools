@@ -257,7 +257,9 @@ void CodeParser::processCommonMetaCommand(const Location& location,
         node->setThreadSafeness(Node::NonReentrant);
     }
     else if (command == COMMAND_PRELIMINARY) {
-        node->setStatus(Node::Preliminary);
+        // \internal wins.
+        if (!node->isInternal())
+            node->setStatus(Node::Preliminary);
     }
     else if (command == COMMAND_INTERNAL) {
         if (!showInternal_) {
