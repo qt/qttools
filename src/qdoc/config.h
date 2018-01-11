@@ -185,6 +185,7 @@ struct ConfigStrings
     static QString HEADERSCRIPTS;
     static QString HEADERSTYLES;
     static QString HOMEPAGE;
+    static QString HOMETITLE;
     static QString IGNOREDIRECTIVES;
     static QString IGNORETOKENS;
     static QString IMAGEDIRS;
@@ -192,6 +193,7 @@ struct ConfigStrings
     static QString INCLUDEPATHS;
     static QString INDEXES;
     static QString LANDINGPAGE;
+    static QString LANDINGTITLE;
     static QString LANGUAGE;
     static QString MACRO;
     static QString MANIFESTMETA;
@@ -269,6 +271,7 @@ struct ConfigStrings
 #define CONFIG_HEADERSCRIPTS ConfigStrings::HEADERSCRIPTS
 #define CONFIG_HEADERSTYLES ConfigStrings::HEADERSTYLES
 #define CONFIG_HOMEPAGE ConfigStrings::HOMEPAGE
+#define CONFIG_HOMETITLE ConfigStrings::HOMETITLE
 #define CONFIG_IGNOREDIRECTIVES ConfigStrings::IGNOREDIRECTIVES
 #define CONFIG_IGNORETOKENS ConfigStrings::IGNORETOKENS
 #define CONFIG_IMAGEDIRS ConfigStrings::IMAGEDIRS
@@ -276,6 +279,7 @@ struct ConfigStrings
 #define CONFIG_INCLUDEPATHS ConfigStrings::INCLUDEPATHS
 #define CONFIG_INDEXES ConfigStrings::INDEXES
 #define CONFIG_LANDINGPAGE ConfigStrings::LANDINGPAGE
+#define CONFIG_LANDINGTITLE ConfigStrings::LANDINGTITLE
 #define CONFIG_LANGUAGE ConfigStrings::LANGUAGE
 #define CONFIG_MACRO ConfigStrings::MACRO
 #define CONFIG_MANIFESTMETA ConfigStrings::MANIFESTMETA

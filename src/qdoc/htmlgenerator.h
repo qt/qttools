@@ -263,7 +263,9 @@ private:
     static int id;
     QList<ManifestMetaFilter> manifestMetaContent;
     QString homepage;
+    QString hometitle;
     QString landingpage;
+    QString landingtitle;
     QString cppclassespage;
     QString cppclassestitle;
     QString qmltypespage;
