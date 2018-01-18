@@ -48,7 +48,7 @@ for(_, $$list(_)) { # just a way to break easily
         clangInstallDir = $$replace(LLVM_INSTALL_DIR, _ARCH_, 32)
     isEmpty(LLVM_INSTALL_DIR) {
         win32 {
-            log("Set the LLVM_INSTALL_DIR environment variable to configure clang location.$$escape_expand(\\n)")
+            log("Set the LLVM_INSTALL_DIR environment variable to configure clang location (required to build qdoc).$$escape_expand(\\n)")
             break()
         }
         clangInstallDir = /usr
