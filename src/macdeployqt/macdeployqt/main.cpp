@@ -53,6 +53,7 @@ int main(int argc, char **argv)
         qDebug() << "   -codesign=<ident>  : Run codesign with the given identity on all executables";
         qDebug() << "   -appstore-compliant: Skip deployment of components that use private API";
         qDebug() << "   -libpath=<path>    : Add the given path to the library search path";
+        qDebug() << "   -fs=<filesystem>   : Set the filesystem used for the .dmg disk image (defaults to HFS+)";
         qDebug() << "";
         qDebug() << "macdeployqt takes an application bundle as input and makes it";
         qDebug() << "self-contained by copying in the Qt frameworks and plugins that";
@@ -83,6 +84,7 @@ int main(int argc, char **argv)
 
     bool plugins = true;
     bool dmg = false;
+    QByteArray filesystem("HFS+");
     bool useDebugLibs = false;
     extern bool runStripEnabled;
     extern bool alwaysOwerwriteEnabled;
@@ -162,6 +164,13 @@ int main(int argc, char **argv)
             LogDebug() << "Argument found:" << argument;
             deployFramework = true;
 
+        } else if (argument.startsWith(QByteArray("-fs"))) {
+            LogDebug() << "Argument found:" << argument;
+            int index = argument.indexOf('=');
+            if (index == -1)
+                LogError() << "Missing filesystem type";
+            else
+                filesystem = argument.mid(index+1);
         } else if (argument.startsWith("-")) {
             LogError() << "Unknown argument" << argument << "\n";
             return 1;
@@ -207,7 +216,7 @@ int main(int argc, char **argv)
 
     if (dmg) {
         LogNormal();
-        createDiskImage(appBundlePath);
+        createDiskImage(appBundlePath, filesystem);
     }
 
     return 0;

@@ -1493,7 +1493,7 @@ void codesign(const QString &identity, const QString &appBundlePath) {
     codesignBundle(identity, appBundlePath, QList<QString>());
 }
 
-void createDiskImage(const QString &appBundlePath)
+void createDiskImage(const QString &appBundlePath, const QString &filesystemType)
 {
     QString appBaseName = appBundlePath;
     appBaseName.chop(4); // remove ".app" from end
@@ -1511,16 +1511,22 @@ void createDiskImage(const QString &appBundlePath)
         LogNormal() << "Creating disk image (.dmg) for" << appBundlePath;
     }
 
+    LogNormal() << "Image will use" << filesystemType;
+
     // More dmg options can be found in the hdiutil man page.
     QStringList options = QStringList()
             << "create" << dmgName
             << "-srcfolder" << appBundlePath
             << "-format" << "UDZO"
+            << "-fs" << filesystemType
             << "-volname" << appBaseName;
 
     QProcess hdutil;
     hdutil.start("hdiutil", options);
     hdutil.waitForFinished(-1);
+    if (hdutil.exitCode() != 0) {
+        LogError() << "Bundle creation error:" << hdutil.readAllStandardError();
+    }
 }
 
 void fixupFramework(const QString &frameworkName)
