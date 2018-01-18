@@ -77,6 +77,7 @@ private:
 
 private slots:
     void setupFinished();
+    void storeBookmarks();
 
     void addBookmarkActivated();
     void removeBookmarkActivated();
@@ -136,6 +137,12 @@ public:
     ~BookmarkTreeView() {}
 
     void subclassKeyPressEvent(QKeyEvent *event);
+
+signals:
+    void editingDone();
+
+protected slots:
+    void commitData(QWidget *editor);
 
 private slots:
     void setExpandedData(const QModelIndex &index);

@@ -100,7 +100,8 @@ enum QtModule
     QtWebChannelModule        = 0x0000200000000000,
     QtTextToSpeechModule      = 0x0000400000000000,
     QtSerialBusModule         = 0x0000800000000000,
-    QtGamePadModule           = 0x0001000000000000
+    QtGamePadModule           = 0x0001000000000000,
+    Qt3DAnimationModule       = 0x0002000000000000
 };
 
 struct QtModuleEntry {
@@ -156,6 +157,7 @@ static QtModuleEntry qtModuleEntries[] = {
     { Qt3DQuickModule, "3dquick", "Qt53DQuick", 0 },
     { Qt3DQuickRendererModule, "3dquickrenderer", "Qt53DQuickRender", 0 },
     { Qt3DInputModule, "3dinput", "Qt53DInput", 0 },
+    { Qt3DAnimationModule, "3danimation", "Qt53DAnimation", 0 },
     { QtLocationModule, "geoservices", "Qt5Location", 0 },
     { QtWebChannelModule, "webchannel", "Qt5WebChannel", 0 },
     { QtTextToSpeechModule, "texttospeech", "Qt5TextToSpeech", 0 },
@@ -1119,9 +1121,12 @@ static QStringList compilerRunTimeLibs(Platform platform, bool isDebug, unsigned
             const QStringList countryCodes = vcRedistDir.entryList(QStringList(QStringLiteral("[0-9]*")), QDir::Dirs);
             if (!countryCodes.isEmpty()) // Pre MSVC2017
                 releaseRedistDir += QLatin1Char('/') + countryCodes.constFirst();
-            const QFileInfo fi(releaseRedistDir + QLatin1Char('/')
-                               + QStringLiteral("vcredist_") + wordSizeString
-                               + QStringLiteral(".exe"));
+            QFileInfo fi(releaseRedistDir + QLatin1Char('/') + QStringLiteral("vc_redist.")
+                         + wordSizeString + QStringLiteral(".exe"));
+            if (!fi.isFile()) { // Pre MSVC2017/15.5
+                fi.setFile(releaseRedistDir + QLatin1Char('/') + QStringLiteral("vcredist_")
+                           + wordSizeString + QStringLiteral(".exe"));
+            }
             if (fi.isFile())
                 redistFiles.append(fi.absoluteFilePath());
         }

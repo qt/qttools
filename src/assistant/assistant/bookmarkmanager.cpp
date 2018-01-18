@@ -81,6 +81,12 @@ void BookmarkManager::BookmarkTreeView::subclassKeyPressEvent(QKeyEvent *event)
     QTreeView::keyPressEvent(event);
 }
 
+void BookmarkManager::BookmarkTreeView::commitData(QWidget *editor)
+{
+    QTreeView::commitData(editor);
+    emit editingDone();
+}
+
 void BookmarkManager::BookmarkTreeView::setExpandedData(const QModelIndex &index)
 {
     TRACE_OBJ
@@ -142,6 +148,8 @@ void BookmarkManager::addBookmark(const QString &title, const QString &url)
     TRACE_OBJ
     showBookmarkDialog(title.isEmpty() ? tr("Untitled") : title,
         url.isEmpty() ? QLatin1String("about:blank") : url);
+
+    storeBookmarks();
 }
 
 // -- private
@@ -178,6 +186,8 @@ BookmarkManager::BookmarkManager()
             [this](const QModelIndex &index) { setSourceFromIndex(index, false); });
     connect(bookmarkTreeView, &QWidget::customContextMenuRequested,
             this, &BookmarkManager::customContextMenuRequested);
+    connect(bookmarkTreeView, &BookmarkTreeView::editingDone,
+            this, &BookmarkManager::storeBookmarks);
 
     connect(&HelpEngineWrapper::instance(), &HelpEngineWrapper::setupFinished,
             this, &BookmarkManager::setupFinished);
@@ -195,13 +205,14 @@ BookmarkManager::BookmarkManager()
             this, &BookmarkManager::refreshBookmarkToolBar);
     connect(bookmarkModel, &QAbstractItemModel::dataChanged,
             this, &BookmarkManager::refreshBookmarkToolBar);
+
 }
 
 BookmarkManager::~BookmarkManager()
 {
     TRACE_OBJ
     delete bookmarkManagerWidget;
-    HelpEngineWrapper::instance().setBookmarks(bookmarkModel->bookmarks());
+    storeBookmarks();
     delete bookmarkModel;
 }
 
@@ -225,6 +236,8 @@ void BookmarkManager::removeItem(const QModelIndex &index)
             return;
     }
     bookmarkModel->removeItem(current);
+
+    storeBookmarks();
 }
 
 bool BookmarkManager::eventFilter(QObject *object, QEvent *event)
@@ -330,6 +343,11 @@ void BookmarkManager::setupFinished()
         typeAndSearchModel = new QSortFilterProxyModel(this);
     typeAndSearchModel->setDynamicSortFilter(true);
     typeAndSearchModel->setSourceModel(bookmarkFilterModel);
+}
+
+void BookmarkManager::storeBookmarks()
+{
+    HelpEngineWrapper::instance().setBookmarks(bookmarkModel->bookmarks());
 }
 
 void BookmarkManager::addBookmarkActivated()
@@ -517,6 +535,8 @@ void BookmarkManager::managerWidgetAboutToClose()
 {
     delete bookmarkManagerWidget;
     bookmarkManagerWidget = 0;
+
+    storeBookmarks();
 }
 
 void BookmarkManager::textChanged(const QString &text)
