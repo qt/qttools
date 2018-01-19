@@ -109,12 +109,12 @@ signals:
 
 private:
     bool isDBOpened();
+    void closeDB();
     bool createTables(QSqlQuery *query);
 
-    bool m_dbOpened;
     QString m_collectionFile;
     QString m_connectionName;
-    mutable QSqlQuery m_query;
+    QSqlQuery *m_query = nullptr;
 };
 
 QT_END_NAMESPACE
