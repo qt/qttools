@@ -501,11 +501,18 @@ void QHelpSearchIndexWriter::run()
                 if (text.isEmpty())
                     continue;
 
-                QTextDocument doc;
-                doc.setHtml(text);
+                QString title;
+                QString contents;
+                if (url.endsWith(QLatin1String(".txt"))) {
+                    title = url.mid(url.lastIndexOf(QLatin1Char('/')) + 1);
+                    contents = text.toHtmlEscaped();
+                } else {
+                    QTextDocument doc;
+                    doc.setHtml(text);
 
-                const QString &title = doc.metaInformation(QTextDocument::DocumentTitle).toHtmlEscaped();
-                const QString &contents = doc.toPlainText().toHtmlEscaped();
+                    title = doc.metaInformation(QTextDocument::DocumentTitle).toHtmlEscaped();
+                    contents = doc.toPlainText().toHtmlEscaped();
+                }
 
                 writer.insertDoc(namespaceName, attributesString, url, title, contents);
             }

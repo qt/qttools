@@ -349,8 +349,6 @@ AppxLocalEngine::AppxLocalEngine(Runner *runner)
 
 AppxLocalEngine::~AppxLocalEngine()
 {
-    Q_D(const AppxLocalEngine);
-    CloseHandle(d->processHandle);
 }
 
 bool AppxLocalEngine::installPackage(IAppxManifestReader *reader, const QString &filePath)

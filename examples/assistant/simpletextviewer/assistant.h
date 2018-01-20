@@ -51,6 +51,7 @@
 #ifndef ASSISTANT_H
 #define ASSISTANT_H
 
+#include <QCoreApplication>
 #include <QString>
 
 QT_BEGIN_NAMESPACE
@@ -59,6 +60,8 @@ QT_END_NAMESPACE
 
 class Assistant
 {
+    Q_DECLARE_TR_FUNCTIONS(Assistant)
+
 public:
     Assistant();
     ~Assistant();
