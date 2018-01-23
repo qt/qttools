@@ -124,10 +124,12 @@ int main(int argc, char *argv[])
 
     QString generator = parser.value(generatorOption);
     if (generator == QLatin1String("qdoc")) {
+        out.setCodec("UTF-8");
         // include top level module name in printed paths
         QString baseDirectory = QDir(directory).absoluteFilePath(QStringLiteral(".."));
         QDocGenerator::generate(out, packages, baseDirectory, logLevel);
     } else if (generator == QLatin1String("json")) {
+        out.setCodec("UTF-8");
         JsonGenerator::generate(out, packages, logLevel);
     } else {
         std::cerr << qPrintable(tr("Unknown output-format %1.").arg(generator)) << std::endl;
