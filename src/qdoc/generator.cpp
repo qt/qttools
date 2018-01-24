@@ -781,7 +781,7 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
             quiet = true;
         }
     }
-    if (node->doc().isEmpty()) {
+    if (!node->hasDoc() && !node->hasSharedDoc()) {
         /*
           Test for special function, like a destructor or copy constructor,
           that has no documentation.
@@ -863,7 +863,7 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
                 node->location().warning(tr("No documentation for '%1'").arg(node->plainSignature()));
         }
     }
-    else {
+    else if (!node->isSharingComment()) {
         if (node->type() == Node::Function) {
             const FunctionNode *func = static_cast<const FunctionNode *>(node);
             if (func->reimplementedFrom() != 0)

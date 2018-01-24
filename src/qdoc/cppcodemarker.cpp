@@ -678,7 +678,7 @@ QList<Section> CppCodeMarker::sections(const Aggregate *inner,
                     FunctionNode *func = static_cast<FunctionNode *>(*r);
                     if (func->isMacro())
                         insert(macros, *r, style, status);
-                    else
+                    else if (!func->isSharingComment())
                         insert(relatedNonMembers, *r, style, status);
                 }
                 else {
@@ -700,8 +700,10 @@ QList<Section> CppCodeMarker::sections(const Aggregate *inner,
                         insert(memberVariables, *c, style, status);
                 } else if ((*c)->isFunction()) {
                     FunctionNode *function = static_cast<FunctionNode *>(*c);
-                    if (!function->hasAssociatedProperties() || !function->doc().isEmpty())
-                        insert(memberFunctions, function, style, status);
+                    if (!function->isSharingComment()) {
+                        if (!function->hasAssociatedProperties() || !function->doc().isEmpty())
+                            insert(memberFunctions, function, style, status);
+                    }
                 } else if ((*c)->isSharedCommentNode()) {
                     SharedCommentNode *scn = static_cast<SharedCommentNode *>(*c);
                     if (!scn->doc().isEmpty())
