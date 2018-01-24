@@ -1318,8 +1318,6 @@ void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QStrin
 Node* ClangCodeParser::parseFnArg(const Location& location, const QString& fnArg)
 {
     Node* fnNode = 0;
-    if (Generator::preparing() && !Generator::singleExec())
-        return fnNode;
     /*
       If the \fn command begins with a tag, then don't try to
       parse the \fn command with clang. Use the tag to search
