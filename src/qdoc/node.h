@@ -178,8 +178,8 @@ public:
     }
     void setThreadSafeness(ThreadSafeness t) { safeness_ = (unsigned char) t; }
     void setSince(const QString &since);
-    void setRelates(Aggregate* pseudoParent);
-    void setRelates(const QString &name);
+    virtual void setRelates(Aggregate* pseudoParent);
+    virtual void setRelates(const QString &name);
     void setPhysicalModuleName(const QString &name) { physicalModuleName_ = name; }
     void setUrl(const QString& url) { url_ = url; }
     void setTemplateStuff(const QString &t) { templateStuff_ = t; }
@@ -311,6 +311,7 @@ public:
     void clearRelated() { relatesTo_ = 0; }
 
     bool isSharingComment() const { return (sharedCommentNode_ != 0); }
+    bool hasSharedDoc() const;
     void setSharedCommentNode(SharedCommentNode* t);
 
     //QString guid() const;
@@ -895,6 +896,8 @@ class SharedCommentNode : public LeafNode
     void append(Node* n) { collective_.append(n); }
     const QVector<Node*>& collective() const { return collective_; }
     void setOverloadFlag(bool b) override;
+    void setRelates(Aggregate* pseudoParent) override;
+    void setRelates(const QString &name) override;
 
  private:
     QVector<Node*> collective_;

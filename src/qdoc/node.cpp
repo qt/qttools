@@ -798,6 +798,15 @@ void Node::setSharedCommentNode(SharedCommentNode* t)
 }
 
 /*!
+  Returns true if this node is sharing a comment and the
+  shared comment is not empty.
+ */
+bool Node::hasSharedDoc() const
+{
+    return (sharedCommentNode_ && sharedCommentNode_->hasDoc());
+}
+
+/*!
   \class Aggregate
  */
 
@@ -1044,7 +1053,7 @@ QStringList Aggregate::secondaryKeys()
 void Aggregate::makeUndocumentedChildrenInternal()
 {
     foreach (Node *child, childNodes()) {
-        if (child->doc().isEmpty() && child->status() != Node::Intermediate) {
+        if (!child->isSharingComment() && child->doc().isEmpty() && child->status() != Node::Intermediate) {
             child->setAccess(Node::Private);
             child->setStatus(Node::Internal);
         }
@@ -3087,6 +3096,28 @@ void SharedCommentNode::setOverloadFlag(bool b)
 {
     for (Node *n : collective_)
         n->setOverloadFlag(b);
+}
+
+/*!
+  Sets the pointer to the node that this node relates to
+  in each of the nodes in this shared comment node's collective.
+ */
+void SharedCommentNode::setRelates(Aggregate *pseudoParent)
+{
+    Node::setRelates(pseudoParent);
+    for (Node *n : collective_)
+        n->setRelates(pseudoParent);
+}
+
+/*!
+  Sets the (unresolved) entity \a name that this node relates to
+  in each of the nodes in this shared comment node's collective.
+ */
+void SharedCommentNode::setRelates(const QString& name)
+{
+    Node::setRelates(name);
+    for (Node *n : collective_)
+        n->setRelates(name);
 }
 
 QT_END_NAMESPACE
