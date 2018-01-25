@@ -1079,6 +1079,20 @@ void deployPlugins(const ApplicationBundleInfo &appBundleInfo, const QString &pl
         });
     }
 
+    // WebView plugins if QtWebView.framework is in use
+    if (deploymentInfo.deployedFrameworks.contains(QStringLiteral("QtWebView") + libInfixWithFramework)) {
+        addPlugins(QStringLiteral("webview"), [](const QString &lib) {
+            if (lib.startsWith(QStringLiteral("libqtwebview_webengine"))) {
+                LogWarning() << "Plugin" << lib << "uses QtWebEngine and is not Mac App store compliant.";
+                if (appstoreCompliant) {
+                    LogWarning() << "Skip plugin" << lib;
+                    return false;
+                }
+            }
+            return true;
+        });
+    }
+
     static const std::map<QString, std::vector<QString>> map {
         {QStringLiteral("QtMultimedia"), {QStringLiteral("mediaservice"), QStringLiteral("audio")}},
         {QStringLiteral("Qt3DRender"), {QStringLiteral("sceneparsers"), QStringLiteral("geometryloaders")}},
