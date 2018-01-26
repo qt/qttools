@@ -36,6 +36,7 @@
 #include "doc.h"
 #include "editdistance.h"
 #include "generator.h"
+#include "loggingcategory.h"
 #include "openedlist.h"
 #include "quoter.h"
 #include "separator.h"
@@ -83,7 +84,6 @@ QString Generator::sinceTitles[] =
 };
 QStringList Generator::styleDirs;
 QStringList Generator::styleFiles;
-bool Generator::debugging_ = false;
 bool Generator::noLinkErrors_ = false;
 bool Generator::autolinkErrors_ = false;
 bool Generator::redirectDocumentationToDevNull_ = false;
@@ -99,25 +99,26 @@ static QLatin1String gt("&gt;");
 static QLatin1String lt("&lt;");
 static QLatin1String quot("&quot;");
 
+static inline void setDebugEnabled(bool v)
+{
+    const_cast<QLoggingCategory &>(lcQdoc()).setEnabled(QtDebugMsg, v);
+}
+
 void Generator::startDebugging(const QString& message)
 {
-    debugging_ = true;
-    qDebug() << "START DEBUGGING:" << message;
+    setDebugEnabled(true);
+    qCDebug(lcQdoc, "START DEBUGGING: %s", qPrintable(message));
 }
 
 void Generator::stopDebugging(const QString& message)
 {
-    debugging_ = false;
-    qDebug() << "STOP DEBUGGING:" << message;
+    qCDebug(lcQdoc, "STOP DEBUGGING: %s", qPrintable(message));
+    setDebugEnabled(false);
 }
 
-/*!
-  Prints \a message as an aid to debugging the release version.
- */
-void Generator::debug(const QString& message)
+bool Generator::debugging()
 {
-    if (debugging())
-        qDebug() << "  DEBUG:" << message;
+    return lcQdoc().isEnabled(QtDebugMsg);
 }
 
 /*!
@@ -306,7 +307,7 @@ void Generator::beginSubPage(const Node* node, const QString& fileName)
         node->location().error(tr("Output file already exists; overwriting %1").arg(outFile->fileName()));
     if (!outFile->open(QFile::WriteOnly))
         node->location().fatal(tr("Cannot open output file '%1'").arg(outFile->fileName()));
-    Generator::debug("Writing: " + path);
+    qCDebug(lcQdoc, "Writing: %s", qPrintable(path));
     outFileNames_ << fileName;
     QTextStream* out = new QTextStream(outFile);
 

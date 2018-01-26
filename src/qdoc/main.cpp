@@ -46,6 +46,7 @@
 #include "cppcodeparser.h"
 #include "doc.h"
 #include "htmlgenerator.h"
+#include "loggingcategory.h"
 #include "webxmlgenerator.h"
 #include "location.h"
 #include "plaincodemarker.h"
@@ -69,6 +70,8 @@
 #include <algorithm>
 
 QT_BEGIN_NAMESPACE
+
+Q_LOGGING_CATEGORY(lcQdoc, "qt.qdoc")
 
 bool creationTimeBefore(const QFileInfo &fi1, const QFileInfo &fi2)
 {
@@ -363,9 +366,9 @@ static void processQdocconfFile(const QString &fileName)
     qdb->clearSearchOrder();
     if (!Generator::singleExec()) {
         if (!Generator::preparing()) {
-            Generator::debug("  loading index files");
+            qCDebug(lcQdoc, "  loading index files");
             loadIndexFiles(config, outputFormats);
-            Generator::debug("  done loading index files");
+            qCDebug(lcQdoc, "  done loading index files");
         }
         qdb->newPrimaryTree(project);
     }
@@ -392,7 +395,7 @@ static void processQdocconfFile(const QString &fileName)
     QSet<QString> excludedDirs = QSet<QString>::fromList(config.getCanonicalPathList(CONFIG_EXCLUDEDIRS));
     QSet<QString> excludedFiles = QSet<QString>::fromList(config.getCanonicalPathList(CONFIG_EXCLUDEFILES));
 
-    Generator::debug("Adding doc/image dirs found in exampledirs to imagedirs");
+    qCDebug(lcQdoc, "Adding doc/image dirs found in exampledirs to imagedirs");
     QSet<QString> exampleImageDirs;
     QStringList exampleImageList = config.getExampleImageFiles(excludedDirs, excludedFiles);
     for (int i = 0; i < exampleImageList.size(); ++i) {
@@ -409,7 +412,7 @@ static void processQdocconfFile(const QString &fileName)
         QStringList headerList;
         QStringList sourceList;
 
-        Generator::debug("Reading headerdirs");
+        qCDebug(lcQdoc, "Reading headerdirs");
         headerList = config.getAllFiles(CONFIG_HEADERS,CONFIG_HEADERDIRS,excludedDirs,excludedFiles);
         QMap<QString,QString> headers;
         QMultiMap<QString,QString> headerFileNames;
@@ -423,7 +426,7 @@ static void processQdocconfFile(const QString &fileName)
             headerFileNames.insert(t,t);
         }
 
-        Generator::debug("Reading sourcedirs");
+        qCDebug(lcQdoc, "Reading sourcedirs");
         sourceList = config.getAllFiles(CONFIG_SOURCES,CONFIG_SOURCEDIRS,excludedDirs,excludedFiles);
         QMap<QString,QString> sources;
         QMultiMap<QString,QString> sourceFileNames;
@@ -440,7 +443,7 @@ static void processQdocconfFile(const QString &fileName)
           Find all the qdoc files in the example dirs, and add
           them to the source files to be parsed.
         */
-        Generator::debug("Reading exampledirs");
+        qCDebug(lcQdoc, "Reading exampledirs");
         QStringList exampleQdocList = config.getExampleQdocFiles(excludedDirs, excludedFiles);
         for (int i=0; i<exampleQdocList.size(); ++i) {
             if (!sources.contains(exampleQdocList[i])) {
@@ -454,14 +457,14 @@ static void processQdocconfFile(const QString &fileName)
           to the big tree.
         */
 
-        Generator::debug("Parsing header files");
+        qCDebug(lcQdoc, "Parsing header files");
         int parsed = 0;
         QMap<QString,QString>::ConstIterator h = headers.constBegin();
         while (h != headers.constEnd()) {
             CodeParser *codeParser = CodeParser::parserForHeaderFile(h.key());
             if (codeParser) {
                 ++parsed;
-                Generator::debug(QString("Parsing " + h.key()));
+                qCDebug(lcQdoc, "Parsing %s", qPrintable(h.key()));
                 codeParser->parseHeaderFile(config.location(), h.key());
             }
             ++h;
@@ -476,25 +479,25 @@ static void processQdocconfFile(const QString &fileName)
           add it to the big tree.
         */
         parsed = 0;
-        Generator::debug("Parsing source files");
+        qCDebug(lcQdoc, "Parsing source files");
         QMap<QString,QString>::ConstIterator s = sources.constBegin();
         while (s != sources.constEnd()) {
             CodeParser *codeParser = CodeParser::parserForSourceFile(s.key());
             if (codeParser) {
                 ++parsed;
-                Generator::debug(QString("Parsing " + s.key()));
+                qCDebug(lcQdoc, "Parsing %s", qPrintable(s.key()));
                 codeParser->parseSourceFile(config.location(), s.key());
             }
             ++s;
         }
-        Generator::debug(QString("Parsing done."));
+        qCDebug(lcQdoc, "Parsing done.");
 
         /*
           Now the primary tree has been built from all the header and
           source files. Resolve all the class names, function names,
           targets, URLs, links, and other stuff that needs resolving.
         */
-        Generator::debug("Resolving stuff prior to generating docs");
+        qCDebug(lcQdoc, "Resolving stuff prior to generating docs");
         qdb->resolveIssues();
     }
     else {
@@ -508,7 +511,7 @@ static void processQdocconfFile(const QString &fileName)
       format can be requested. The tree is traversed for each
       one.
      */
-    Generator::debug("Generating docs");
+    qCDebug(lcQdoc, "Generating docs");
     QSet<QString>::ConstIterator of = outputFormats.constBegin();
     while (of != outputFormats.constEnd()) {
         Generator* generator = Generator::generatorForFormat(*of);
@@ -525,7 +528,7 @@ static void processQdocconfFile(const QString &fileName)
 #endif
     qdb->clearLinkCounts();
 
-    Generator::debug("Terminating qdoc classes");
+    qCDebug(lcQdoc, "Terminating qdoc classes");
     if (Generator::debugging())
         Generator::stopDebugging(project);
 
@@ -538,7 +541,7 @@ static void processQdocconfFile(const QString &fileName)
     Location::terminate();
     QDir::setCurrent(prevCurrentDir);
 
-    Generator::debug("qdoc classes terminated");
+    qCDebug(lcQdoc, "qdoc classes terminated");
 }
 
 class QDocCommandLineParser : public QCommandLineParser
@@ -708,6 +711,8 @@ void QDocCommandLineParser::process(const QCoreApplication &app)
     autolinkErrors = isSet(autoLinkErrorsOption);
     if (isSet(debugOption))
         Generator::startDebugging(QString("command line"));
+    qCDebug(lcQdoc).noquote() << "Arguments :" << QCoreApplication::arguments();
+
     if (isSet(prepareOption))
         Generator::setQDocPass(Generator::Prepare);
     if (isSet(generateOption))

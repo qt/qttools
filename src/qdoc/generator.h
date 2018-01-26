@@ -81,10 +81,9 @@ public:
     static const QStringList& outputFileNames() { return outFileNames_; }
     static void writeOutFileNames();
     static void augmentImageDirs(QSet<QString>& moreImageDirs);
-    static void debug(const QString& message);
     static void startDebugging(const QString& message);
     static void stopDebugging(const QString& message);
-    static bool debugging() { return debugging_; }
+    static bool debugging();
     static bool noLinkErrors() { return noLinkErrors_; }
     static bool autolinkErrors() { return autolinkErrors_; }
     static void setQDocPass(QDocPass t) { qdocPass_ = t; }
@@ -221,7 +220,6 @@ private:
     static QStringList scriptFiles;
     static QStringList styleDirs;
     static QStringList styleFiles;
-    static bool debugging_;
     static bool noLinkErrors_;
     static bool autolinkErrors_;
     static bool redirectDocumentationToDevNull_;

@@ -47,6 +47,7 @@
 #include "codechunk.h"
 #include "config.h"
 #include "clangcodeparser.h"
+#include "loggingcategory.h"
 #include "qdocdatabase.h"
 #include <qdebug.h>
 #include <qscopedvaluerollback.h>
@@ -60,6 +61,25 @@ QT_BEGIN_NAMESPACE
 
 static CXTranslationUnit_Flags flags_ = (CXTranslationUnit_Flags)0;
 static CXIndex index_ = 0;
+
+#ifndef QT_NO_DEBUG_STREAM
+template <class T>
+static QDebug operator<<(QDebug debug, const std::vector<T> &v)
+{
+    QDebugStateSaver saver(debug);
+    debug.noquote();
+    debug.nospace();
+    const size_t size = v.size();
+    debug << "std::vector<>[" << size << "](";
+    for (size_t i = 0; i < size; ++i) {
+        if (i)
+            debug << ", ";
+        debug << v[i];
+    }
+    debug << ')';
+    return debug;
+}
+#endif // !QT_NO_DEBUG_STREAM
 
 /*!
    Call clang_visitChildren on the given cursor with the lambda as a callback
@@ -975,6 +995,8 @@ void ClangCodeParser::initializeParser(const Config &config)
             }
         }
     }
+    qCDebug(lcQdoc).nospace() << __FUNCTION__ << " Clang v" << CINDEX_VERSION_MAJOR
+        << '.' << CINDEX_VERSION_MINOR;
 }
 
 /*!
@@ -1170,6 +1192,8 @@ void ClangCodeParser::buildPCH()
                     tmpHeader.toLatin1().data(),
                     args_.data(), static_cast<int>(args_.size()), nullptr, 0,
                     flags_ | CXTranslationUnit_ForSerialization, &tu);
+                qCDebug(lcQdoc) << __FUNCTION__ << "clang_parseTranslationUnit2("
+                    << tmpHeader <<  args_ << ") returns" << err;
                 if (!err && tu) {
                     pchName_ = pchFileDir_->path().toUtf8() + "/" + module + ".pch";
                     auto error = clang_saveTranslationUnit(tu, pchName_.constData(), clang_defaultSaveOptions(tu));
@@ -1238,6 +1262,8 @@ void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QStrin
     CXTranslationUnit tu;
     CXErrorCode err = clang_parseTranslationUnit2(index_, filePath.toLocal8Bit(), args_.data(),
                                                   static_cast<int>(args_.size()), nullptr, 0, flags_, &tu);
+    qCDebug(lcQdoc) << __FUNCTION__ << "clang_parseTranslationUnit2("
+        << filePath <<  args_ << ") returns" << err;
     if (err || !tu) {
         qWarning() << "(qdoc) Could not parse source file" << filePath << " error code:" << err;
         clang_disposeIndex(index_);
@@ -1397,7 +1423,8 @@ Node* ClangCodeParser::parseFnArg(const Location& location, const QString& fnArg
                                                   1,
                                                   flags,
                                                   &tu);
-
+    qCDebug(lcQdoc) << __FUNCTION__ << "clang_parseTranslationUnit2("
+        << dummyFileName <<  args_ << ") returns" << err;
     if (err || !tu) {
         location.error(ClangCodeParser::tr("clang could not parse \\fn %1").arg(fnArg));
         clang_disposeTranslationUnit(tu);

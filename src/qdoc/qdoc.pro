@@ -44,6 +44,7 @@ HEADERS += atom.h \
            helpprojectwriter.h \
            htmlgenerator.h \
            location.h \
+           loggingcategory.h \
            node.h \
            openedlist.h \
            plaincodemarker.h \
