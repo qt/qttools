@@ -1450,6 +1450,10 @@ void Tree::insertQmlType(const QString& key, QmlTypeNode* n)
 /*!
   Split \a target on "::" and find the function node with that
   path.
+
+  This function used to return 0 if a matching node was found,
+  but the node represented a macro without parameters. That test
+  was removed by mws 26/01/2018.
  */
 const Node* Tree::findFunctionNode(const QString& target,
                                    const QString& params,
@@ -1461,10 +1465,7 @@ const Node* Tree::findFunctionNode(const QString& target,
         t.chop(2);
     }
     QStringList path = t.split("::");
-    const FunctionNode* fn = findFunctionNode(path, params, relative, SearchBaseClasses, genus);
-    if (fn && !fn->isMacroWithoutParams())
-        return fn;
-    return 0;
+    return findFunctionNode(path, params, relative, SearchBaseClasses, genus);
 }
 
 /*!
