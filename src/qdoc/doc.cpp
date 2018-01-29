@@ -580,8 +580,7 @@ void DocParser::parse(const QString& source,
         QChar ch = input_.at(pos);
 
         switch (ch.unicode()) {
-        case '\\':
-        {
+        case '\\': {
             QString cmdStr;
             backslashPos = pos;
             pos++;
@@ -679,7 +678,6 @@ void DocParser::parse(const QString& source,
                     closeCommand(cmd);
                     break;
                 case CMD_CODELINE:
-                {
                     if (quoting) {
                         append(Atom::CodeQuoteCommand, cmdStr);
                         append(Atom::CodeQuoteArgument, " ");
@@ -687,10 +685,8 @@ void DocParser::parse(const QString& source,
                     if (isCode(lastAtom) && lastAtom->string().endsWith("\n\n"))
                         lastAtom->chopString();
                     appendToCode("\n");
-                }
                     break;
-                case CMD_DOTS:
-                {
+                case CMD_DOTS: {
                     QString arg = getOptionalArgument();
                     if (arg.isEmpty())
                         arg = "4";
@@ -705,22 +701,20 @@ void DocParser::parse(const QString& source,
                     for (int i = 0; i < indent; ++i)
                         appendToCode(" ");
                     appendToCode("...\n");
-                }
                     break;
+                }
                 case CMD_ELSE:
                     if (preprocessorSkipping.size() > 0) {
                         if (preprocessorSkipping.top()) {
                             --numPreprocessorSkipping;
-                        }
-                        else {
+                        } else {
                             ++numPreprocessorSkipping;
                         }
                         preprocessorSkipping.top() = !preprocessorSkipping.top();
                         (void)getRestOfLine(); // ### should ensure that it's empty
                         if (numPreprocessorSkipping)
                             skipToNextPreprocessorCommand();
-                    }
-                    else {
+                    } else {
                         location().warning(tr("Unexpected '\\%1'").arg(cmdName(CMD_ELSE)));
                     }
                     break;
@@ -750,8 +744,7 @@ void DocParser::parse(const QString& source,
                         (void)getRestOfLine(); // ### should ensure that it's empty
                         if (numPreprocessorSkipping)
                             skipToNextPreprocessorCommand();
-                    }
-                    else {
+                    } else {
                         location().warning(tr("Unexpected '\\%1'").arg(cmdName(CMD_ENDIF)));
                     }
                     break;
@@ -783,9 +776,8 @@ void DocParser::parse(const QString& source,
                     break;
                 case CMD_ENDMAPREF:
                 case CMD_ENDTOPICREF:
-                    if (closeCommand(cmd)) {
-                        ditarefs_.pop(); // zzz
-                    }
+                    if (closeCommand(cmd))
+                        ditarefs_.pop();
                     break;
                 case CMD_ENDOMIT:
                     closeCommand(cmd);
@@ -827,7 +819,7 @@ void DocParser::parse(const QString& source,
                     if (openCommand(cmd)) {
                         enterPara();
                         append(Atom::FootnoteLeft);
-                        paraState = OutsideParagraph; // ###
+                        paraState = OutsideParagraph;
                     }
                     break;
                 case CMD_ANNOTATEDLIST:
@@ -836,8 +828,7 @@ void DocParser::parse(const QString& source,
                 case CMD_SINCELIST:
                     append(Atom::SinceList, getRestOfLine().simplified());
                     break;
-                case CMD_GENERATELIST:
-                    {
+                case CMD_GENERATELIST: {
                         QString arg1 = getArgument();
                         QString arg2 = getOptionalArgument();
                         if (!arg2.isEmpty())
@@ -854,18 +845,15 @@ void DocParser::parse(const QString& source,
                         leaveTableRow();
                         append(Atom::TableHeaderLeft);
                         inTableHeader = true;
-                    }
-                    else {
-                        if (openedCommands.contains(CMD_TABLE)) {
+                    } else {
+                        if (openedCommands.contains(CMD_TABLE))
                             location().warning(tr("Cannot use '\\%1' within '\\%2'")
                                                .arg(cmdName(CMD_HEADER))
                                                .arg(cmdName(openedCommands.top())));
-                        }
-                        else {
+                        else
                             location().warning(tr("Cannot use '\\%1' outside of '\\%2'")
                                                .arg(cmdName(CMD_HEADER))
                                                .arg(cmdName(CMD_TABLE)));
-                        }
                     }
                     break;
                 case CMD_I:
@@ -895,13 +883,12 @@ void DocParser::parse(const QString& source,
                     enterPara(Atom::ImportantLeft, Atom::ImportantRight);
                     break;
                 case CMD_INCLUDE:
-                case CMD_INPUT:
-                {
+                case CMD_INPUT: {
                     QString fileName = getArgument();
                     QString identifier = getRestOfLine();
                     include(fileName, identifier);
-                }
                     break;
+                }
                 case CMD_INLINEIMAGE:
                     enterPara();
                     append(Atom::InlineImage, getArgument());
@@ -912,8 +899,7 @@ void DocParser::parse(const QString& source,
                     if (paraState == OutsideParagraph) {
                         enterPara();
                         indexStartedPara = true;
-                    }
-                    else {
+                    } else {
                         const Atom *last = priv->text.lastAtom();
                         if (indexStartedPara &&
                                 (last->type() != Atom::FormattingRight ||
@@ -927,17 +913,15 @@ void DocParser::parse(const QString& source,
                     break;
                 case CMD_L:
                     enterPara();
-                    if (isLeftBracketAhead()) {
+                    if (isLeftBracketAhead())
                         p2 = getBracketedArgument();
-                    }
                     if (isLeftBraceAhead()) {
                         p1 = getArgument();
                         append(p1, p2);
-                        if (!p2.isEmpty() && !(priv->text.lastAtom()->error().isEmpty())) {
+                        if (!p2.isEmpty() && !(priv->text.lastAtom()->error().isEmpty()))
                             location().warning(tr("Check parameter in '[ ]' of '\\l' command: '%1', "
                                                   "possible misspelling, or unrecognized module name")
                                                .arg(priv->text.lastAtom()->error()));
-                        }
                         if (isLeftBraceAhead()) {
                             currentLinkAtom = priv->text.lastAtom();
                             startFormat(ATOM_FORMATTING_LINK, cmd);
@@ -947,15 +931,13 @@ void DocParser::parse(const QString& source,
                             append(Atom::String, cleanLink(p1));
                             append(Atom::FormattingRight, ATOM_FORMATTING_LINK);
                         }
-                    }
-                    else {
+                    } else {
                         p1 = getArgument();
                         append(p1, p2);
-                        if (!p2.isEmpty() && !(priv->text.lastAtom()->error().isEmpty())) {
+                        if (!p2.isEmpty() && !(priv->text.lastAtom()->error().isEmpty()))
                             location().warning(tr("Check parameter in '[ ]' of '\\l' command: '%1', "
                                                   "possible misspelling, or unrecognized module name")
                                                .arg(priv->text.lastAtom()->error()));
-                        }
                         append(Atom::FormattingLeft, ATOM_FORMATTING_LINK);
                         append(Atom::String, cleanLink(p1));
                         append(Atom::FormattingRight, ATOM_FORMATTING_LINK);
@@ -1022,29 +1004,21 @@ void DocParser::parse(const QString& source,
                 case CMD_LI:
                     leavePara();
                     if (openedCommands.top() == CMD_LIST) {
-                        if (openedLists.top().isStarted()) {
-                            append(Atom::ListItemRight,
-                                   openedLists.top().styleString());
-                        }
-                        else {
-                            append(Atom::ListLeft,
-                                   openedLists.top().styleString());
-                        }
+                        if (openedLists.top().isStarted())
+                            append(Atom::ListItemRight, openedLists.top().styleString());
+                        else
+                            append(Atom::ListLeft, openedLists.top().styleString());
                         openedLists.top().next();
-                        append(Atom::ListItemNumber,
-                               openedLists.top().numberString());
-                        append(Atom::ListItemLeft,
-                               openedLists.top().styleString());
+                        append(Atom::ListItemNumber, openedLists.top().numberString());
+                        append(Atom::ListItemLeft, openedLists.top().styleString());
                         enterPara();
-                    }
-                    else if (openedCommands.top() == CMD_TABLE) {
+                    } else if (openedCommands.top() == CMD_TABLE) {
                         p1 = "1,1";
                         p2.clear();
                         if (isLeftBraceAhead()) {
                             p1 = getArgument();
-                            if (isLeftBraceAhead()) {
+                            if (isLeftBraceAhead())
                                 p2 = getArgument();
-                            }
                         }
 
                         if (!inTableHeader && !inTableRow) {
@@ -1054,21 +1028,18 @@ void DocParser::parse(const QString& source,
                                                .arg(cmdName(CMD_LI)));
                             append(Atom::TableRowLeft);
                             inTableRow = true;
-                        }
-                        else if (inTableItem) {
+                        } else if (inTableItem) {
                             append(Atom::TableItemRight);
                             inTableItem = false;
                         }
 
                         append(Atom::TableItemLeft, p1, p2);
                         inTableItem = true;
-                    }
-                    else {
+                    } else
                         location().warning(tr("Command '\\%1' outside of '\\%2' and '\\%3'")
                                            .arg(cmdName(cmd))
                                            .arg(cmdName(CMD_LIST))
                                            .arg(cmdName(CMD_TABLE)));
-                    }
                     break;
                 case CMD_OLDCODE:
                     leavePara();
@@ -1085,48 +1056,44 @@ void DocParser::parse(const QString& source,
                     if (!priv->omitEnumItemList.contains(p1))
                         priv->omitEnumItemList.append(p1);
                     break;
-                case CMD_PRINTLINE:
+                case CMD_PRINTLINE: {
                     leavePara();
-                {
                     QString rest = getRestOfLine();
                     if (quoting) {
                         append(Atom::CodeQuoteCommand, cmdStr);
                         append(Atom::CodeQuoteArgument, rest);
                     }
                     appendToCode(quoter.quoteLine(location(), cmdStr, rest));
-                }
                     break;
-                case CMD_PRINTTO:
+                }
+                case CMD_PRINTTO: {
                     leavePara();
-                {
                     QString rest = getRestOfLine();
                     if (quoting) {
                         append(Atom::CodeQuoteCommand, cmdStr);
                         append(Atom::CodeQuoteArgument, rest);
                     }
                     appendToCode(quoter.quoteTo(location(), cmdStr, rest));
-                }
                     break;
-                case CMD_PRINTUNTIL:
+                }
+                case CMD_PRINTUNTIL: {
                     leavePara();
-                {
                     QString rest = getRestOfLine();
                     if (quoting) {
                         append(Atom::CodeQuoteCommand, cmdStr);
                         append(Atom::CodeQuoteArgument, rest);
                     }
                     appendToCode(quoter.quoteUntil(location(), cmdStr, rest));
-                }
                     break;
+                }
                 case CMD_QUOTATION:
                     if (openCommand(cmd)) {
                         leavePara();
                         append(Atom::QuotationLeft);
                     }
                     break;
-                case CMD_QUOTEFILE:
+                case CMD_QUOTEFILE: {
                     leavePara();
-                {
                     QString fileName = getArgument();
                     Doc::quoteFromFile(location(), quoter, fileName);
                     if (quoting) {
@@ -1135,36 +1102,31 @@ void DocParser::parse(const QString& source,
                     }
                     append(Atom::Code, quoter.quoteTo(location(), cmdStr, QString()));
                     quoter.reset();
-                }
                     break;
-                case CMD_QUOTEFROMFILE:
+                }
+                case CMD_QUOTEFROMFILE: {
                     leavePara();
-                {
                     QString arg = getArgument();
                     if (quoting) {
                         append(Atom::CodeQuoteCommand, cmdStr);
                         append(Atom::CodeQuoteArgument, arg);
                     }
                     Doc::quoteFromFile(location(), quoter, arg);
-                }
                     break;
-                case CMD_QUOTEFUNCTION:
+                }
+                case CMD_QUOTEFUNCTION: {
                     leavePara();
-                {
                     marker = quoteFromFile();
                     p1 = getRestOfLine();
                     if (quoting) {
                         append(Atom::CodeQuoteCommand, cmdStr);
                         append(Atom::CodeQuoteArgument, slashed(marker->functionEndRegExp(p1)));
                     }
-                    quoter.quoteTo(location(), cmdStr,
-                                   slashed(marker->functionBeginRegExp(p1)));
-                    append(Atom::Code,
-                           quoter.quoteUntil(location(), cmdStr,
-                                             slashed(marker->functionEndRegExp(p1))));
+                    quoter.quoteTo(location(), cmdStr, slashed(marker->functionBeginRegExp(p1)));
+                    append(Atom::Code, quoter.quoteUntil(location(), cmdStr, slashed(marker->functionEndRegExp(p1))));
                     quoter.reset();
-                }
                     break;
+                }
                 case CMD_RAW:
                     leavePara();
                     p1 = getRestOfLine();
@@ -1184,18 +1146,15 @@ void DocParser::parse(const QString& source,
                         leaveTableRow();
                         append(Atom::TableRowLeft,p1);
                         inTableRow = true;
-                    }
-                    else {
-                        if (openedCommands.contains(CMD_TABLE)) {
+                    } else {
+                        if (openedCommands.contains(CMD_TABLE))
                             location().warning(tr("Cannot use '\\%1' within '\\%2'")
                                                .arg(cmdName(CMD_ROW))
                                                .arg(cmdName(openedCommands.top())));
-                        }
-                        else {
+                        else
                             location().warning(tr("Cannot use '\\%1' outside of '\\%2'")
                                                .arg(cmdName(CMD_ROW))
                                                .arg(cmdName(CMD_TABLE)));
-                        }
                     }
                     break;
                 case CMD_SA:
@@ -1219,46 +1178,42 @@ void DocParser::parse(const QString& source,
                         append(Atom::SidebarLeft);
                     }
                     break;
-                case CMD_SKIPLINE:
+                case CMD_SKIPLINE: {
                     leavePara();
-                {
                     QString rest = getRestOfLine();
                     if (quoting) {
                         append(Atom::CodeQuoteCommand, cmdStr);
                         append(Atom::CodeQuoteArgument, rest);
                     }
                     quoter.quoteLine(location(), cmdStr, rest);
-                }
                     break;
-                case CMD_SKIPTO:
+                }
+                case CMD_SKIPTO: {
                     leavePara();
-                {
                     QString rest = getRestOfLine();
                     if (quoting) {
                         append(Atom::CodeQuoteCommand, cmdStr);
                         append(Atom::CodeQuoteArgument, rest);
                     }
                     quoter.quoteTo(location(), cmdStr, rest);
-                }
                     break;
-                case CMD_SKIPUNTIL:
+                }
+                case CMD_SKIPUNTIL: {
                     leavePara();
-                {
                     QString rest = getRestOfLine();
                     if (quoting) {
                         append(Atom::CodeQuoteCommand, cmdStr);
                         append(Atom::CodeQuoteArgument, rest);
                     }
                     quoter.quoteUntil(location(), cmdStr, rest);
-                }
                     break;
+                }
                 case CMD_SPAN:
                     p1 = ATOM_FORMATTING_SPAN + getArgument(true);
                     startFormat(p1, cmd);
                     break;
-                case CMD_SNIPPET:
+                case CMD_SNIPPET: {
                     leavePara();
-                {
                     QString snippet = getArgument();
                     QString identifier = getRestOfLine();
                     if (quoting) {
@@ -1268,8 +1223,8 @@ void DocParser::parse(const QString& source,
                     }
                     marker = Doc::quoteFromFile(location(), quoter, snippet);
                     appendToCode(quoter.quoteSnippet(location(), identifier), marker->atomType());
-                }
                     break;
+                }
                 case CMD_SUB:
                     startFormat(ATOM_FORMATTING_SUBSCRIPT, cmd);
                     break;
@@ -1277,7 +1232,6 @@ void DocParser::parse(const QString& source,
                     startFormat(ATOM_FORMATTING_SUPERSCRIPT, cmd);
                     break;
                 case CMD_TABLE:
-                    //p1 = getRestOfLine();
                     p1 = getOptionalArgument();
                     p2 = getOptionalArgument();
                     if (openCommand(cmd)) {
@@ -1308,24 +1262,18 @@ void DocParser::parse(const QString& source,
                 case CMD_UNDERLINE:
                     startFormat(ATOM_FORMATTING_UNDERLINE, cmd);
                     break;
-                case CMD_UNICODE:
+                case CMD_UNICODE: {
                     enterPara();
                     p1 = getArgument();
-                {
                     bool ok;
                     uint unicodeChar = p1.toUInt(&ok, 0);
-                    if (!ok ||
-                            (unicodeChar == 0x0000) ||
-                            (unicodeChar > 0xFFFE)) {
-                        location().warning(tr("Invalid Unicode character '%1' specified "
-                                              "with '%2'")
+                    if (!ok || (unicodeChar == 0x0000) || (unicodeChar > 0xFFFE))
+                        location().warning(tr("Invalid Unicode character '%1' specified with '%2'")
                                            .arg(p1, cmdName(CMD_UNICODE)));
-                    }
-                    else {
+                    else
                         append(Atom::String, QChar(unicodeChar));
-                    }
-                }
                     break;
+                }
                 case CMD_VALUE:
                     leaveValue();
                     if (openedLists.top().style() == OpenedList::Value) {
@@ -1352,9 +1300,8 @@ void DocParser::parse(const QString& source,
                         skipSpacesOrOneEndl();
                         if (isBlankLine())
                             append(Atom::Nop);
-                    }
-                    else {
-                        // ### problems
+                    } else {
+                        // ### unknown problems
                     }
                     break;
                 case CMD_WARNING:
@@ -1376,8 +1323,7 @@ void DocParser::parse(const QString& source,
                         append(Atom::AutoLink,p1);
                         append(Atom::String, ".");
                         append(Atom::ParaRight);
-                    }
-                    else {
+                    } else {
                         append(Atom::ParaLeft);
                         append(Atom::String,"This is an overloaded function.");
                         append(Atom::ParaRight);
@@ -1393,8 +1339,7 @@ void DocParser::parse(const QString& source,
                         if (possibleTopics.contains(cmdStr)) {
                             priv->topics_.append(Topic(cmdStr,arg));
                         }
-                    }
-                    else if (macroHash()->contains(cmdStr)) {
+                    } else if (macroHash()->contains(cmdStr)) {
                         const Macro &macro = macroHash()->value(cmdStr);
                         int numPendingFi = 0;
                         QStringMap::ConstIterator d;
@@ -1406,8 +1351,7 @@ void DocParser::parse(const QString& source,
 
                             if (d == macro.otherDefs.constEnd()) {
                                 append(Atom::FormatEndif);
-                            }
-                            else {
+                            } else {
                                 append(Atom::FormatElse);
                                 numPendingFi++;
                             }
@@ -1421,8 +1365,7 @@ void DocParser::parse(const QString& source,
                                             tr("Macro cannot have both "
                                                "format-specific and qdoc- "
                                                "syntax definitions"));
-                            }
-                            else {
+                            } else {
                                 QString expanded = expandMacroToString(cmdStr,
                                                                        macro.defaultDef,
                                                                        macro.numParams);
@@ -1431,8 +1374,7 @@ void DocParser::parse(const QString& source,
                                 pos = backslashPos;
                             }
                         }
-                    }
-                    else {
+                    } else {
                         location().warning(
                                     tr("Unknown command '\\%1'").arg(cmdStr),
                                     detailsUnknownCommand(metaCommandSet,cmdStr));
@@ -1440,17 +1382,16 @@ void DocParser::parse(const QString& source,
                         append(Atom::UnknownCommand, cmdStr);
                     }
                 }
-            }
-        }
+            } // case '\\' (qdoc markup command)
             break;
+        }
         case '{':
             enterPara();
             appendChar('{');
             braceDepth++;
             pos++;
             break;
-        case '}':
-        {
+        case '}': {
             braceDepth--;
             pos++;
 
@@ -1458,14 +1399,12 @@ void DocParser::parse(const QString& source,
             if (f == pendingFormats.end()) {
                 enterPara();
                 appendChar('}');
-            }
-            else {
+            } else {
                 append(Atom::FormattingRight, *f);
                 if (*f == ATOM_FORMATTING_INDEX) {
                     if (indexStartedPara)
                         skipAllSpaces();
-                }
-                else if (*f == ATOM_FORMATTING_LINK) {
+                } else if (*f == ATOM_FORMATTING_LINK) {
                     // hack for C++ to support links like
                     // \l{QString::}{count()}
                     if (currentLinkAtom &&
@@ -1478,11 +1417,10 @@ void DocParser::parse(const QString& source,
                 }
                 pendingFormats.erase(f);
             }
-        }
             break;
+        }
         // Do not parse content after '//!' comments
-        case '/':
-        {
+        case '/': {
             if (pos + 2 < len)
                 if (input_.at(pos + 1) == '/')
                     if (input_.at(pos + 2) == '!') {
@@ -1492,8 +1430,7 @@ void DocParser::parse(const QString& source,
                     }
             Q_FALLTHROUGH(); // fall through
         }
-        default:
-        {
+        default: {
             bool newWord;
             switch (priv->text.lastAtom()->type()) {
             case Atom::ParaLeft:
@@ -1507,13 +1444,11 @@ void DocParser::parse(const QString& source,
                 if (ch.isSpace()) {
                     ++pos;
                     newWord = false;
-                }
-                else {
+                } else {
                     enterPara();
                     newWord = true;
                 }
-            }
-            else {
+            } else {
                 if (ch.isSpace()) {
                     ++pos;
                     if ((ch == '\n') &&
@@ -1521,13 +1456,11 @@ void DocParser::parse(const QString& source,
                              isBlankLine())) {
                         leavePara();
                         newWord = false;
-                    }
-                    else {
+                    } else {
                         appendChar(' ');
                         newWord = true;
                     }
-                }
-                else {
+                } else {
                     newWord = true;
                 }
             }
@@ -1543,48 +1476,36 @@ void DocParser::parse(const QString& source,
                     if (islower(latin1Ch)) {
                         ++numLowercase;
                         ++pos;
-                    }
-                    else if (isupper(latin1Ch)) {
+                    } else if (isupper(latin1Ch)) {
                         if (pos > startPos)
                             ++numInternalUppercase;
                         ++pos;
-                    }
-                    else if (isdigit(latin1Ch)) {
-                        if (pos > startPos) {
+                    } else if (isdigit(latin1Ch)) {
+                        if (pos > startPos)
                             ++pos;
-                        }
-                        else {
+                        else
                             break;
-                        }
-                    }
-                    else if (latin1Ch == '_' || latin1Ch == '@') {
+                    } else if (latin1Ch == '_' || latin1Ch == '@') {
                         ++numStrangeSymbols;
                         ++pos;
-                    }
-                    else if (latin1Ch == ':' && pos < len - 1
-                             && input_.at(pos + 1) == QLatin1Char(':')) {
+                    } else if (latin1Ch == ':' && pos < len - 1 && input_.at(pos + 1) == QLatin1Char(':')) {
                         ++numStrangeSymbols;
                         pos += 2;
-                    }
-                    else if (latin1Ch == '(') {
+                    } else if (latin1Ch == '(') {
                         if (pos > startPos) {
-                            if (pos < len - 1 &&
-                                    input_.at(pos + 1) == QLatin1Char(')')) {
+                            if (pos < len - 1 && input_.at(pos + 1) == QLatin1Char(')')) {
                                 ++numStrangeSymbols;
                                 pos += 2;
                                 break;
-                            }
-                            else {
+                            } else {
                                 // ### handle functions with signatures
                                 // and function calls
                                 break;
                             }
-                        }
-                        else {
+                        } else {
                             break;
                         }
-                    }
-                    else {
+                    } else {
                         break;
                     }
                 }
@@ -1594,23 +1515,22 @@ void DocParser::parse(const QString& source,
                         appendChar(ch);
                         ++pos;
                     }
-                }
-                else {
+                } else {
                     QString word = input_.mid(startPos, pos - startPos);
                     // is word a C++ symbol or an English word?
-                    if ((numInternalUppercase >= 1 && numLowercase >= 2)
-                            || numStrangeSymbols > 0) {
+                    if ((numInternalUppercase >= 1 && numLowercase >= 2) || numStrangeSymbols > 0) {
                         if (word.startsWith(QString("__")))
                             appendWord(word);
                         else
                             append(Atom::AutoLink, word);
                     }
-                    else
+                    else {
                         appendWord(word);
+                    }
                 }
             }
-        }
-        }
+        } // default:
+        } // switch (ch.unicode())
     }
     leaveValueList();
 
