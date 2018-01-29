@@ -414,8 +414,6 @@ private:
         Returns true if the symbol should be ignored for the documentation.
      */
     bool ignoredSymbol(const QString &symbolName) {
-        if (symbolName.startsWith(QLatin1String("qt_")))
-            return true;
         if (symbolName == QLatin1String("QPrivateSignal"))
             return true;
         return false;

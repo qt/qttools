@@ -838,15 +838,16 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
             else if (!node->isWrapper() && !quiet && !node->isReimplemented()) {
                 bool report = true;
                 /*
-                  These are the member function names added by the macros
-                  Q_OBJECT and Q_DECLARE_PRIVATE. Usually they are not
-                  documented, but they can be documented, so this test
-                  avoids reporting an error if they are not documented.
+                  These are the member function names added by macros.
+                  Usually they are not documented, but they can be
+                  documented, so this test avoids reporting an error
+                  if they are not documented.
 
                   But maybe we should generate a standard text for each
                   of them?
                  */
-                if (node->name() == QLatin1String("metaObject") ||
+                if (node->name().startsWith(QLatin1String("qt_")) ||
+                    node->name() == QLatin1String("metaObject") ||
                     node->name() == QLatin1String("tr") ||
                     node->name() == QLatin1String("trUtf8") ||
                     node->name() == QLatin1String("d_func")) {
