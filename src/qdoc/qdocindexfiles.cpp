@@ -1386,18 +1386,18 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter& writer,
         }
     }
 
-    // Inner nodes and function nodes contain child nodes of some sort, either
-    // actual child nodes or function parameters. For these, we close the
-    // opening tag, create child elements, then add a closing tag for the
-    // element. Elements for all other nodes are closed in the opening tag.
-
-    if (node->isAggregate()) {
-        const Aggregate* inner = static_cast<const Aggregate*>(node);
-
-        if (inner->doc().hasTableOfContents()) {
-            for (int i = 0; i < inner->doc().tableOfContents().size(); ++i) {
-                Atom* item = inner->doc().tableOfContents()[i];
-                int level = inner->doc().tableOfContentsLevels()[i];
+    /*
+      Some nodes have a table of contents. For these, we close
+      the opening tag, create sub-elements for the items in the
+      table of contents, and then add a closing tag for the
+      element. Elements for all other nodes are closed in the
+      opening tag.
+    */
+    if (node->isAggregate() || node->isCollectionNode()) {
+        if (node->doc().hasTableOfContents()) {
+            for (int i = 0; i < node->doc().tableOfContents().size(); ++i) {
+                Atom* item = node->doc().tableOfContents()[i];
+                int level = node->doc().tableOfContentsLevels()[i];
                 QString title = Text::sectionHeading(item).toString();
                 writer.writeStartElement("contents");
                 writer.writeAttribute("name", Doc::canonicalTitle(title));
