@@ -47,6 +47,7 @@
 #include "codechunk.h"
 #include "config.h"
 #include "clangcodeparser.h"
+#include "generator.h"
 #include "loggingcategory.h"
 #include "qdocdatabase.h"
 #include <qdebug.h>
@@ -1230,7 +1231,7 @@ void ClangCodeParser::precompileHeaders()
 
     flags_ = (CXTranslationUnit_Flags) (CXTranslationUnit_Incomplete | CXTranslationUnit_SkipFunctionBodies | CXTranslationUnit_KeepGoing);
     // Change 2nd parameter to 1 to make clang report errors.
-    index_ = clang_createIndex(1, 0);
+    index_ = clang_createIndex(1, Generator::debugging() ? 1 : 0);
     buildPCH();
     clang_disposeIndex(index_);
 }
