@@ -1442,7 +1442,7 @@ Node* ClangCodeParser::parseFnArg(const Location& location, const QString& fnArg
         visitor.visitFnArg(cur, &fnNode, ignoreSignature);
         if (fnNode == 0) {
             unsigned diagnosticCount = clang_getNumDiagnostics(tu);
-            if (diagnosticCount > 0) {
+            if (diagnosticCount > 0 && (!Generator::preparing() || Generator::singleExec())) {
                 bool report = true;
                 QStringList signature = fnArg.split(QLatin1String("::"));
                 if (signature.size() > 1) {
