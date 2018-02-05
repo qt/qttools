@@ -1558,6 +1558,13 @@ bool CppCodeParser::hasTooManyTopics(const Doc &doc) const
 {
     QSet<QString> topicCommandsUsed = topicCommands() & doc.metaCommandsUsed();
     if (topicCommandsUsed.count() > 1) {
+        bool ok = true;
+        for (const auto &t : topicCommandsUsed) {
+            if (!t.startsWith(QLatin1String("qml")) && !t.startsWith(QLatin1String("js")))
+                ok = false;
+        }
+        if (ok)
+            return false;
         QString topicList;
         for (const auto &t : topicCommandsUsed)
             topicList += QLatin1String(" \\") + t + QLatin1Char(',');
