@@ -101,7 +101,8 @@ enum QtModule
     QtTextToSpeechModule      = 0x0000400000000000,
     QtSerialBusModule         = 0x0000800000000000,
     QtGamePadModule           = 0x0001000000000000,
-    Qt3DAnimationModule       = 0x0002000000000000
+    Qt3DAnimationModule       = 0x0002000000000000,
+    QtWebViewModule           = 0x0004000000000000
 };
 
 struct QtModuleEntry {
@@ -161,7 +162,8 @@ static QtModuleEntry qtModuleEntries[] = {
     { QtLocationModule, "geoservices", "Qt5Location", 0 },
     { QtWebChannelModule, "webchannel", "Qt5WebChannel", 0 },
     { QtTextToSpeechModule, "texttospeech", "Qt5TextToSpeech", 0 },
-    { QtSerialBusModule, "serialbus", "Qt5SerialBus", 0 }
+    { QtSerialBusModule, "serialbus", "Qt5SerialBus", 0 },
+    { QtWebViewModule, "webview", "Qt5WebView", 0 }
 };
 
 static const char webKitProcessC[] = "QtWebProcess";
@@ -821,7 +823,8 @@ static const PluginModuleMapping pluginModuleMappings[] =
     {"styles", QtWidgetsModule},
     {"sceneparsers", Qt3DRendererModule},
     {"renderplugins", Qt3DRendererModule},
-    {"geometryloaders", Qt3DRendererModule}
+    {"geometryloaders", Qt3DRendererModule},
+    {"webview", QtWebViewModule}
 };
 
 static inline quint64 qtModuleForPlugin(const QString &subDirName)
