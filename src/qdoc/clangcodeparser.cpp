@@ -805,6 +805,8 @@ void ClangVisitor::readParameterNamesAndAttributes(FunctionNode* fn, CXCursor cu
             }
             if (annotation == QLatin1String("qt_invokable"))
                 fn->setInvokable(true);
+        } else if (kind == CXCursor_CXXOverrideAttr) {
+            fn->setOverride(true);
         } else if (kind == CXCursor_ParmDecl) {
             if (i >= pvect.count())
                 return CXChildVisit_Break; // Attributes comes before parameters so we can break.
