@@ -373,6 +373,43 @@ QString QDocForest::getLinkCounts(QStringList& strings, QVector<int>& counts)
 }
 
 /*!
+  Finds the node for the qualified function path in \a target
+  that also has the parameters in \a params and returns it.
+  \a target is the path name to the function, without a return
+  type and withpout the parameters.
+
+  \a relative is the node in the primary tree where the search
+  begins. It is not used in the other trees, if the node is not
+  found in the primary tree. \a genus can be used to force the
+  search to find a C++ function or a QML function.
+
+  The entire forest is searched, but the first match is accepted.
+ */
+const FunctionNode* QDocForest::findFunctionNode(const QString& target,
+                                                 const QString& params,
+                                                 const Node* relative,
+                                                 Node::Genus genus)
+{
+    foreach (Tree* t, searchOrder()) {
+        const Node* n = t->findFunctionNode(target, params, relative, genus);
+        if (n)
+            return static_cast<const FunctionNode *>(n);
+        relative = 0;
+    }
+    return 0;
+}
+
+/*!
+  Finds the node for the qualified function path in \a target
+  and returns it. \a target is a complete function signature
+  without the return type.
+
+  \a relative is the node in the primary tree where the search
+  begins. It is not used in the other trees, if the node is not
+  found in the primary tree. \a genus can be used to force the
+  search to find a C++ function or a QML function.
+
+  The entire forest is searched, but the first match is accepted.
  */
 const Node* QDocForest::findFunctionNode(const QString& target,
                                          const Node* relative,
@@ -387,13 +424,7 @@ const Node* QDocForest::findFunctionNode(const QString& target,
     }
     else
         function = target;
-    foreach (Tree* t, searchOrder()) {
-        const Node* n = t->findFunctionNode(function, params, relative, genus);
-        if (n)
-            return n;
-        relative = 0;
-    }
-    return 0;
+    return findFunctionNode(function, params, relative, genus);
 }
 
 /*! \class QDocDatabase

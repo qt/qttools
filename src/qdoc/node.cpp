@@ -1814,6 +1814,35 @@ QmlTypeNode* ClassNode::findQmlBaseNode()
 }
 
 /*!
+  \a fn is an overriding function in this class or in a class
+  derived from this class. Find the node for the function that
+  \a fn overrides in this class's children or in one of this
+  class's base classes. Return a pointer to the overridden
+  function or return 0.
+ */
+FunctionNode* ClassNode::findOverriddenFunction(const FunctionNode* fn)
+{
+    QList<RelatedClass>::Iterator bc = bases_.begin();
+    while (bc != bases_.end()) {
+        ClassNode *cn = bc->node_;
+        if (!cn) {
+            cn = QDocDatabase::qdocDB()->findClassNode(bc->path_);
+            bc->node_ = cn;
+        }
+        if (cn) {
+            FunctionNode* result = cn->findFunctionNode(fn);
+            if (result && !result->isNonvirtual())
+                return result;
+            result = cn->findOverriddenFunction(fn);
+            if (result && !result->isNonvirtual())
+                return result;
+        }
+        ++bc;
+    }
+    return 0;
+}
+
+/*!
   \class DocumentNode
  */
 
@@ -2065,8 +2094,7 @@ FunctionNode::FunctionNode(Aggregate *parent, const QString& name)
       isImplicit_(false),
       isRef_(false),
       isRefRef_(false),
-      isInvokable_(false),
-      reimplementedFrom_(0)
+      isInvokable_(false)
 {
     setGenus(Node::CPP);
 }
@@ -2096,8 +2124,7 @@ FunctionNode::FunctionNode(NodeType type, Aggregate *parent, const QString& name
       isImplicit_(false),
       isRef_(false),
       isRefRef_(false),
-      isInvokable_(false),
-      reimplementedFrom_(0)
+      isInvokable_(false)
 {
     setGenus(Node::QML);
     if (type == QmlMethod || type == QmlSignal) {

@@ -179,6 +179,40 @@ QString functionName(CXCursor cursor)
 }
 
 /*!
+  Reconstruct the qualified path name of a function that is
+  being overridden.
+ */
+static QString reconstructQualifiedPathForCursor(CXCursor cur) {
+    QString path;
+    auto kind = clang_getCursorKind(cur);
+    while (!clang_isInvalid(kind) && kind != CXCursor_TranslationUnit) {
+        switch (kind) {
+        case CXCursor_Namespace:
+        case CXCursor_StructDecl:
+        case CXCursor_ClassDecl:
+        case CXCursor_UnionDecl:
+        case CXCursor_ClassTemplate:
+            path.prepend("::");
+            path.prepend(fromCXString(clang_getCursorSpelling(cur)));
+            break;
+        case CXCursor_FunctionDecl:
+        case CXCursor_FunctionTemplate:
+        case CXCursor_CXXMethod:
+        case CXCursor_Constructor:
+        case CXCursor_Destructor:
+        case CXCursor_ConversionFunction:
+            path = functionName(cur);
+            break;
+        default:
+            break;
+        }
+        cur = clang_getCursorSemanticParent(cur);
+        kind = clang_getCursorKind(cur);
+    }
+    return path;
+}
+
+/*!
   Find the node from the QDocDatabase \a qdb that corrseponds to the declaration
   represented by the cursor \a cur, if it exists.
  */
@@ -361,7 +395,6 @@ public:
                 isInteresting = allHeaders_.contains(fi.canonicalFilePath());
                 isInterestingCache_[file] = isInteresting;
             }
-
             if (isInteresting) {
                 return visitHeader(cur, loc);
             }
@@ -655,9 +688,10 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
             unsigned int numOverridden = 0;
             clang_getOverriddenCursors(cursor, &overridden, &numOverridden);
             for (uint i = 0; i < numOverridden; ++i) {
-                auto n = findNodeForCursor(qdb_, overridden[i]);
-                if (n && n->isFunction()) {
-                    fn->setReimplementedFrom(static_cast<FunctionNode *>(n));
+                QString path = reconstructQualifiedPathForCursor(overridden[i]);
+                if (!path.isEmpty()) {
+                    fn->setReimplementedFrom(path);
+                    break;
                 }
             }
             clang_disposeOverriddenCursors(overridden);
@@ -1218,7 +1252,6 @@ void ClangCodeParser::buildPCH()
                 args_.pop_back(); // remove the "-xc++";
             }
         }
-        qdb_->resolveInheritance();
     }
 }
 

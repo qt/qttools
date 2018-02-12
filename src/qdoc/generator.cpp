@@ -868,7 +868,7 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
     else if (!node->isSharingComment()) {
         if (node->type() == Node::Function) {
             const FunctionNode *func = static_cast<const FunctionNode *>(node);
-            if (func->reimplementedFrom() != 0)
+            if (!func->reimplementedFrom().isEmpty())
                 generateReimplementedFrom(func, marker);
         }
 
@@ -1319,19 +1319,20 @@ bool Generator::generateQmlText(const Text& text,
     return result;
 }
 
-void Generator::generateReimplementedFrom(const FunctionNode *func,
-                                          CodeMarker *marker)
+void Generator::generateReimplementedFrom(const FunctionNode *fn, CodeMarker *marker)
 {
-    if (func->reimplementedFrom() != 0) {
-        const FunctionNode *from = func->reimplementedFrom();
-        if (from->access() != Node::Private &&
-                from->parent()->access() != Node::Private) {
-            Text text;
-            text << Atom::ParaLeft << "Reimplemented from ";
-            QString fullName =  from->parent()->name() + "::" + from->name() + "()";
-            appendFullName(text, from->parent(), fullName, from);
-            text << "." << Atom::ParaRight;
-            generateText(text, func, marker);
+    if (!fn->reimplementedFrom().isEmpty()) {
+        if (fn->parent()->isClass()) {
+            ClassNode* cn = static_cast<ClassNode*>(fn->parent());
+            const FunctionNode *from = cn->findOverriddenFunction(fn);
+            if (from && from->access() != Node::Private && from->parent()->access() != Node::Private) {
+                Text text;
+                text << Atom::ParaLeft << "Reimplemented from ";
+                QString fullName =  from->parent()->name() + "::" + from->name() + "()";
+                appendFullName(text, from->parent(), fullName, from);
+                text << "." << Atom::ParaRight;
+                generateText(text, fn, marker);
+            }
         }
     }
 }

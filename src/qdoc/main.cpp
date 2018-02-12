@@ -471,8 +471,6 @@ static void processQdocconfFile(const QString &fileName)
         }
 
         clangParser_->precompileHeaders();
-        // Moved into ClangCodeParser after building PCH
-        //qdb->resolveInheritance();
 
         /*
           Parse each source text file in the set using the appropriate parser and
@@ -498,6 +496,7 @@ static void processQdocconfFile(const QString &fileName)
           targets, URLs, links, and other stuff that needs resolving.
         */
         qCDebug(lcQdoc, "Resolving stuff prior to generating docs");
+        qdb->resolveInheritance();
         qdb->resolveIssues();
     }
     else {

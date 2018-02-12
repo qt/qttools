@@ -560,6 +560,7 @@ public:
     void setAbstract(bool b) override { abstract_ = b; }
     PropertyNode* findPropertyNode(const QString& name);
     QmlTypeNode* findQmlBaseNode();
+    FunctionNode* findOverriddenFunction(const FunctionNode* fn);
 
 private:
     QList<RelatedClass> bases_;
@@ -947,7 +948,7 @@ public:
     inline void setParameters(const QVector<Parameter>& parameters);
     void setParameters(const QString &t);
     void borrowParameterNames(const FunctionNode* source);
-    void setReimplementedFrom(FunctionNode* from) { reimplementedFrom_ = from; }
+    void setReimplementedFrom(const QString &path) { reimplementedFrom_ = path; }
 
     const QString& returnType() const { return returnType_; }
     QString metaness() const;
@@ -1000,7 +1001,7 @@ public:
     void clearParams() { parameters_.clear(); }
     QStringList parameterNames() const;
     QString rawParameters(bool names = false, bool values = false) const;
-    const FunctionNode* reimplementedFrom() const { return reimplementedFrom_; }
+    const QString& reimplementedFrom() const { return reimplementedFrom_; }
     const PropNodeList& associatedProperties() const { return associatedProperties_; }
     const QStringList& parentPath() const { return parentPath_; }
     bool hasAssociatedProperties() const { return !associatedProperties_.isEmpty(); }
@@ -1083,7 +1084,7 @@ private:
     bool isInvokable_ : 1;
     unsigned char overloadNumber_;
     QVector<Parameter> parameters_;
-    const FunctionNode* reimplementedFrom_;
+    QString             reimplementedFrom_;
     PropNodeList        associatedProperties_;
     QString             tag_;
 };
