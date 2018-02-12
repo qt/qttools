@@ -2308,6 +2308,10 @@ QString Generator::typeString(const Node *node)
         return "QML signal handler";
     case Node::QmlMethod:
         return "QML method";
+    case Node::Module:
+        return "module";
+    case Node::QmlModule:
+        return "QML module";
     default:
         return "documentation";
     }
