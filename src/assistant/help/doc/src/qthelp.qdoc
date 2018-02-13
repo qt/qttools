@@ -352,7 +352,7 @@
     \snippet doc_src_qthelp.qdoc 13
 
     Finally, the actual documentation files have to be listed. Make sure
-    that all files neccessary to display the help are mentioned, i.e.
+    that all files necessary to display the help are mentioned, i.e.
     stylesheets or similar files need to be there as well. The files, like all
     file references in a Qt help project, are relative to the help project file
     itself. As the example shows, files (but not directories) can also be
