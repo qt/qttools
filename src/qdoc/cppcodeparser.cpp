@@ -1346,31 +1346,24 @@ void CppCodeParser::createExampleFileNodes(DocumentNode *dn)
 {
     QString examplePath = dn->name();
     QString proFileName = examplePath + QLatin1Char('/') + examplePath.split(QLatin1Char('/')).last() + ".pro";
-    QString userFriendlyFilePath;
-
     QString fullPath = Config::findFile(dn->doc().location(),
                                         exampleFiles,
                                         exampleDirs,
-                                        proFileName,
-                                        userFriendlyFilePath);
+                                        proFileName);
 
     if (fullPath.isEmpty()) {
         QString tmp = proFileName;
         proFileName = examplePath + QLatin1Char('/') + "qbuild.pro";
-        userFriendlyFilePath.clear();
         fullPath = Config::findFile(dn->doc().location(),
                                     exampleFiles,
                                     exampleDirs,
-                                    proFileName,
-                                    userFriendlyFilePath);
+                                    proFileName);
         if (fullPath.isEmpty()) {
             proFileName = examplePath + QLatin1Char('/') + examplePath.split(QLatin1Char('/')).last() + ".qmlproject";
-            userFriendlyFilePath.clear();
             fullPath = Config::findFile(dn->doc().location(),
                                         exampleFiles,
                                         exampleDirs,
-                                        proFileName,
-                                        userFriendlyFilePath);
+                                        proFileName);
             if (fullPath.isEmpty()) {
                 QString details = QLatin1String("Example directories: ") + exampleDirs.join(QLatin1Char(' '));
                 if (!exampleFiles.isEmpty())

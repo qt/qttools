@@ -1065,8 +1065,7 @@ void Generator::generateFileList(const DocumentNode* dn,
                                                        QStringList(),
                                                        exampleDirs,
                                                        file,
-                                                       exampleImgExts,
-                                                       userFriendlyFilePath);
+                                                       exampleImgExts);
                     outFileNames_ << prefix.mid(1) + userFriendlyFilePath;
                     userFriendlyFilePath.truncate(userFriendlyFilePath.lastIndexOf('/'));
                     QString imgOutDir = outDir_ + prefix + userFriendlyFilePath;
@@ -1786,7 +1785,7 @@ QString Generator::imageFileName(const Node *relative, const QString& fileBase)
                                         imageDirs,
                                         fileBase,
                                         imgFileExts[format()],
-                                        userFriendlyFilePath);
+                                        &userFriendlyFilePath);
 
     if (filePath.isEmpty())
         return QString();

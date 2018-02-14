@@ -707,10 +707,11 @@ QString Config::findFile(const Location& location,
                          const QStringList& files,
                          const QStringList& dirs,
                          const QString& fileName,
-                         QString& userFriendlyFilePath)
+                         QString *userFriendlyFilePath)
 {
     if (fileName.isEmpty() || fileName.startsWith(QLatin1Char('/'))) {
-        userFriendlyFilePath = fileName;
+        if (userFriendlyFilePath)
+            *userFriendlyFilePath = fileName;
         return fileName;
     }
 
@@ -740,26 +741,27 @@ QString Config::findFile(const Location& location,
         }
     }
 
-    userFriendlyFilePath = QString();
+    if (userFriendlyFilePath)
+        userFriendlyFilePath->clear();
     if (!fileInfo.exists())
         return QString();
 
-    QStringList::ConstIterator c = components.constBegin();
-    for (;;) {
-        bool isArchive = (c != components.constEnd() - 1);
-        QString userFriendly = *c;
+    if (userFriendlyFilePath) {
+        QStringList::ConstIterator c = components.constBegin();
+        for (;;) {
+            bool isArchive = (c != components.constEnd() - 1);
+            userFriendlyFilePath->append(*c);
 
-        userFriendlyFilePath += userFriendly;
+            if (isArchive) {
+                QString extracted = extractedDirs[fileInfo.filePath()];
+                ++c;
+                fileInfo.setFile(QDir(extracted), *c);
+            } else {
+                break;
+            }
 
-        if (isArchive) {
-            QString extracted = extractedDirs[fileInfo.filePath()];
-            ++c;
-            fileInfo.setFile(QDir(extracted), *c);
-        } else {
-            break;
+            userFriendlyFilePath->append(QLatin1Char('?'));
         }
-
-        userFriendlyFilePath += QLatin1Char('?');
     }
     return fileInfo.filePath();
 }
@@ -771,7 +773,7 @@ QString Config::findFile(const Location& location,
                          const QStringList& dirs,
                          const QString& fileBase,
                          const QStringList& fileExtensions,
-                         QString& userFriendlyFilePath)
+                         QString *userFriendlyFilePath)
 {
     QStringList::ConstIterator e = fileExtensions.constBegin();
     while (e != fileExtensions.constEnd()) {

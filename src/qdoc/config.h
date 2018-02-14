@@ -114,13 +114,13 @@ public:
                             const QStringList &files,
                             const QStringList& dirs,
                             const QString& fileName,
-                            QString& userFriendlyFilePath);
+                            QString *userFriendlyFilePath = nullptr);
     static QString findFile(const Location &location,
                             const QStringList &files,
                             const QStringList &dirs,
                             const QString &fileBase,
                             const QStringList &fileExtensions,
-                            QString &userFriendlyFilePath);
+                            QString *userFriendlyFilePath = nullptr);
     static QString copyFile(const Location& location,
                             const QString& sourceFilePath,
                             const QString& userFriendlySourceFilePath,

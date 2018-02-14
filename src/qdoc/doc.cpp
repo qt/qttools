@@ -3218,7 +3218,7 @@ CodeMarker *Doc::quoteFromFile(const Location &location,
     QString filePath = Config::findFile(location,
                                         DocParser::exampleFiles,
                                         DocParser::exampleDirs,
-                                        fileName, userFriendlyFilePath);
+                                        fileName, &userFriendlyFilePath);
     if (filePath.isEmpty()) {
         QString details = QLatin1String("Example directories: ") + DocParser::exampleDirs.join(QLatin1Char(' '));
         if (!DocParser::exampleFiles.isEmpty())
