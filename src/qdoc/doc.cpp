@@ -35,6 +35,7 @@
 #include "text.h"
 #include "atom.h"
 #include "tokenizer.h"
+#include "loggingcategory.h"
 #include <qdatetime.h>
 #include <qfile.h>
 #include <qfileinfo.h>
@@ -3206,6 +3207,21 @@ void Doc::trimCStyleComment(Location& location, QString& str)
     str = str.mid(3, str.length() - 5);
 }
 
+QString Doc::resolveFile(const Location &location,
+                         const QString &fileName,
+                         QString *userFriendlyFilePath)
+{
+    const QString result = Config::findFile(location,
+                                            DocParser::exampleFiles,
+                                            DocParser::exampleDirs,
+                                            fileName, userFriendlyFilePath);
+    qCDebug(lcQdoc).noquote().nospace() << __FUNCTION__ << "(location="
+          << location.fileName() << ':' << location.lineNo()
+          << ", fileName=\"" << fileName << "\"), resolved to \""
+          << result;
+    return result;
+}
+
 CodeMarker *Doc::quoteFromFile(const Location &location,
                                Quoter &quoter,
                                const QString &fileName)
@@ -3215,10 +3231,7 @@ CodeMarker *Doc::quoteFromFile(const Location &location,
     QString code;
 
     QString userFriendlyFilePath;
-    QString filePath = Config::findFile(location,
-                                        DocParser::exampleFiles,
-                                        DocParser::exampleDirs,
-                                        fileName, &userFriendlyFilePath);
+    const QString filePath = resolveFile(location, fileName, &userFriendlyFilePath);
     if (filePath.isEmpty()) {
         QString details = QLatin1String("Example directories: ") + DocParser::exampleDirs.join(QLatin1Char(' '));
         if (!DocParser::exampleFiles.isEmpty())

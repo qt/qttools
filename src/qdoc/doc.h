@@ -172,6 +172,8 @@ public:
     static void terminate();
     static QString alias( const QString &english );
     static void trimCStyleComment( Location& location, QString& str );
+    static QString resolveFile(const Location &location,const QString &fileName,
+                               QString *userFriendlyFilePath = nullptr);
     static CodeMarker *quoteFromFile(const Location &location,
                                      Quoter &quoter,
                                      const QString &fileName);

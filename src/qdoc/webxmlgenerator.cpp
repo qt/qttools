@@ -578,8 +578,13 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer,
         break;
 
     case Atom::SnippetLocation:
-        if (quoting_)
-            writer.writeAttribute("location", atom->string());
+        if (quoting_) {
+            const QString location = atom->string();
+            writer.writeAttribute("location", location);
+            const QString resolved = Doc::resolveFile(Location(), location);
+            if (!resolved.isEmpty())
+                writer.writeAttribute("path", resolved);
+        }
         break;
 
     case Atom::String:
