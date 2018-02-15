@@ -88,7 +88,7 @@ public:
     bool addCustomFilter(const QString &filterName,
         const QStringList &attributes);
 
-    DocInfoList registeredDocumentations() const;
+    DocInfoList registeredDocumentations(const QString &namespaceName = QString()) const;
     bool registerDocumentation(const QString &fileName);
     bool unregisterDocumentation(const QString &namespaceName);
 
