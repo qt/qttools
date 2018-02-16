@@ -27,7 +27,7 @@
 /*!
     \page qdoc-guide.html
     \title Getting Started with QDoc
-    \nextpage Creating QDoc Configuration Files
+    \nextpage Installing clang for QDoc
 
     Qt uses QDoc to generate its documentation set into HTML and DITA XML
     formats. QDoc uses a set of configuration files to generate documentation
@@ -44,6 +44,11 @@
         \li \c Documentation in \c C++, \c QML, and \c .qdoc files
     \endlist
 
+    \note From Qt 5.11, \l{QDoc Manual}{QDoc} requires \l{http://clang.llvm.org}{clang}
+    from LLVM 3.9 for parsing C++ header and source files, and for parsing the function
+    signatures in \l {fn-command} {\\fn} commands. See \l {Installing clang for QDoc}
+    for details.
+
     This section intends to cover the basic necessities for creating a
     documentation set. Additionally, the guide presents special considerations
     and options to documenting non-C++ API documentation as well as QML
@@ -55,6 +60,7 @@
     \section1 Chapters
 
     \list 1
+    \li \l{Installing clang for QDoc}
     \li \l{Creating QDoc Configuration Files}
     \li \l{Writing Documentation}
     \li \l{Categories of Documentation}
@@ -70,7 +76,7 @@
 /*!
     \page qdoc-guide-conf.html
     \title Creating QDoc Configuration Files
-    \previouspage Getting Started with QDoc
+    \previouspage Installing clang for QDoc
     \nextpage Writing Documentation
     To generate documentation, QDoc uses configuration files, with the
     \c qdocconf extension, to store configuration settings.
@@ -620,3 +626,22 @@
 */
 
 
+/*!
+    \page qdoc-guide-clang.html
+    \title Installing clang for QDoc
+    \previouspage Getting Started with QDoc
+    \nextpage Creating QDoc Configuration Files
+
+    As of this writing, the decision of whether to use static or dynamic
+    linking of libclang has not been made. The most likely outcome will be
+    to include libclang in the binary packages with QDoc and have the installer
+    put libclang in the same directory used for Creator's libclang. It is
+    hoped that both Creator and QDoc will eventually use the same version of
+    libclang, but as of this writing, QDoc might require a later version of
+    libclang than is required for Creator.
+
+    As of this writing, users wishing to build and/or run QDoc must install
+    \l{http://clang.llvm.org}{LLVM 3.9} or greater and set the variable
+    LLVM_INSTALL_DIR accordingly. The pre-built binaries needed can be
+    found \l {http://releases.llvm.org/download.html}{here}.
+*/
