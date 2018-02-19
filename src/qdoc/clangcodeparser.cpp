@@ -538,6 +538,7 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
     case CXCursor_UnionDecl:
         if (fromCXString(clang_getCursorSpelling(cursor)).isEmpty()) // anonymous struct or union
             return CXChildVisit_Continue;
+        Q_FALLTHROUGH();
     case CXCursor_ClassDecl:
     case CXCursor_ClassTemplate: {
 
