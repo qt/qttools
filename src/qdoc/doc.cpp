@@ -1852,17 +1852,6 @@ void DocParser::parseAlso()
             else {
                 str = target;
             }
-#ifdef QDOC2_COMPAT
-        }
-        else if (input_[pos] == '\\' && input_.mid(pos, 5) == "\\link") {
-            pos += 6;
-            target = getArgument();
-            int endPos = input_.indexOf("\\endlink", pos);
-            if (endPos != -1) {
-                str = input_.mid(pos, endPos - pos).trimmed();
-                pos = endPos + 8;
-            }
-#endif
         }
         else {
             target = getArgument();
