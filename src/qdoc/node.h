@@ -677,6 +677,7 @@ public:
     static void addInheritedBy(const Node *base, Node* sub);
     static void subclasses(const Node *base, NodeList& subs);
     static void terminate();
+    bool inherits(Aggregate* type);
 
 public:
     static bool qmlOnly;

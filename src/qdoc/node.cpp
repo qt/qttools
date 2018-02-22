@@ -2669,6 +2669,20 @@ QString QmlTypeNode::logicalModuleIdentifier() const
 }
 
 /*!
+  Returns true if this QML type inherits \a type.
+ */
+bool QmlTypeNode::inherits(Aggregate* type)
+{
+    QmlTypeNode* qtn = qmlBaseNode();
+    while (qtn != 0) {
+        if (qtn == type)
+            return true;
+        qtn = qtn->qmlBaseNode();
+    }
+    return false;
+}
+
+/*!
   Constructs a Qml basic type node. The new node has the given
   \a parent and \a name.
  */
