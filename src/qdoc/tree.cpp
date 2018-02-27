@@ -274,15 +274,16 @@ const FunctionNode* Tree::findFunctionNode(const QStringList& path,
             // functions are private.
             const FunctionNode* func = static_cast<const FunctionNode*>(node);
             while (func->access() == Node::Private) {
-                const FunctionNode* from = func->reimplementedFrom();
-                if (from != 0) {
-                    if (from->access() != Node::Private)
-                        return from;
-                    else
-                        func = from;
-                }
-                else
+                if (func->reimplementedFrom().isEmpty())
+                    return func;
+                QString path = func->reimplementedFrom();
+                const FunctionNode* from = qdb_->findFunctionNode(path, params, relative, genus);
+                if (from == 0)
                     break;
+                if (from->access() != Node::Private)
+                    return from;
+                else
+                    func = from;
             }
             return func;
         }
@@ -415,16 +416,7 @@ void Tree::resolveInheritanceHelper(int pass, ClassNode* cn)
     else {
         NodeList::ConstIterator c = cn->childNodes().constBegin();
         while (c != cn->childNodes().constEnd()) {
-            if ((*c)->type() == Node::Function) {
-                FunctionNode* func = (FunctionNode*)* c;
-                FunctionNode* from = findVirtualFunctionInBaseClasses(cn, func);
-                if (from != 0) {
-                    if (func->isNonvirtual())
-                        func->setVirtual();
-                    func->setReimplementedFrom(from);
-                }
-            }
-            else if ((*c)->type() == Node::Property)
+            if ((*c)->type() == Node::Property)
                 cn->fixPropertyUsingBaseClasses(static_cast<PropertyNode*>(*c));
             ++c;
         }
@@ -542,26 +534,6 @@ void Tree::fixInheritance(NamespaceNode* rootNode)
         }
         ++c;
     }
-}
-
-/*!
- */
-FunctionNode* Tree::findVirtualFunctionInBaseClasses(ClassNode* cn, FunctionNode* clone)
-{
-    const QList<RelatedClass>& rc = cn->baseClasses();
-    QList<RelatedClass>::ConstIterator r = rc.constBegin();
-    while (r != rc.constEnd()) {
-        FunctionNode* func;
-        if ((*r).node_) {
-            if (((func = findVirtualFunctionInBaseClasses((*r).node_, clone)) != 0 ||
-                 (func = (*r).node_->findFunctionNode(clone)) != 0)) {
-                if (!func->isNonvirtual())
-                    return func;
-            }
-        }
-        ++r;
-    }
-    return 0;
 }
 
 /*!
@@ -1450,6 +1422,10 @@ void Tree::insertQmlType(const QString& key, QmlTypeNode* n)
 /*!
   Split \a target on "::" and find the function node with that
   path.
+
+  This function used to return 0 if a matching node was found,
+  but the node represented a macro without parameters. That test
+  was removed by mws 26/01/2018.
  */
 const Node* Tree::findFunctionNode(const QString& target,
                                    const QString& params,
@@ -1461,10 +1437,7 @@ const Node* Tree::findFunctionNode(const QString& target,
         t.chop(2);
     }
     QStringList path = t.split("::");
-    const FunctionNode* fn = findFunctionNode(path, params, relative, SearchBaseClasses, genus);
-    if (fn && !fn->isMacroWithoutParams())
-        return fn;
-    return 0;
+    return findFunctionNode(path, params, relative, SearchBaseClasses, genus);
 }
 
 /*!

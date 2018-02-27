@@ -473,7 +473,7 @@ bool CodeMarker::insertReimpFunc(FastSection& fs, Node* node, Status status)
 {
     if ((node->access() != Node::Private) && (node->relates() == 0)) {
         const FunctionNode* fn = static_cast<const FunctionNode*>(node);
-        if ((fn->reimplementedFrom() != 0) && (status == Okay)) {
+        if (!fn->reimplementedFrom().isEmpty() && (status == Okay)) {
             if (fn->parent() == fs.parent_) {
                 QString key = sortName(fn);
                 if (!fs.reimpMemberMap.contains(key)) {

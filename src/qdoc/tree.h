@@ -168,8 +168,6 @@ class Tree
                                          Node::Genus genus = Node::DontCare) const;
     const NamespaceNode *root() const { return &root_; }
 
-    FunctionNode *findVirtualFunctionInBaseClasses(ClassNode *classe,
-                                                   FunctionNode *clone);
     NodeList allBaseClasses(const ClassNode *classe) const;
     QString refForAtom(const Atom* atom);
 

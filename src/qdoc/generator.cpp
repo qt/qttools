@@ -36,6 +36,7 @@
 #include "doc.h"
 #include "editdistance.h"
 #include "generator.h"
+#include "loggingcategory.h"
 #include "openedlist.h"
 #include "quoter.h"
 #include "separator.h"
@@ -83,7 +84,6 @@ QString Generator::sinceTitles[] =
 };
 QStringList Generator::styleDirs;
 QStringList Generator::styleFiles;
-bool Generator::debugging_ = false;
 bool Generator::noLinkErrors_ = false;
 bool Generator::autolinkErrors_ = false;
 bool Generator::redirectDocumentationToDevNull_ = false;
@@ -99,25 +99,26 @@ static QLatin1String gt("&gt;");
 static QLatin1String lt("&lt;");
 static QLatin1String quot("&quot;");
 
+static inline void setDebugEnabled(bool v)
+{
+    const_cast<QLoggingCategory &>(lcQdoc()).setEnabled(QtDebugMsg, v);
+}
+
 void Generator::startDebugging(const QString& message)
 {
-    debugging_ = true;
-    qDebug() << "START DEBUGGING:" << message;
+    setDebugEnabled(true);
+    qCDebug(lcQdoc, "START DEBUGGING: %s", qPrintable(message));
 }
 
 void Generator::stopDebugging(const QString& message)
 {
-    debugging_ = false;
-    qDebug() << "STOP DEBUGGING:" << message;
+    qCDebug(lcQdoc, "STOP DEBUGGING: %s", qPrintable(message));
+    setDebugEnabled(false);
 }
 
-/*!
-  Prints \a message as an aid to debugging the release version.
- */
-void Generator::debug(const QString& message)
+bool Generator::debugging()
 {
-    if (debugging())
-        qDebug() << "  DEBUG:" << message;
+    return lcQdoc().isEnabled(QtDebugMsg);
 }
 
 /*!
@@ -306,7 +307,7 @@ void Generator::beginSubPage(const Node* node, const QString& fileName)
         node->location().error(tr("Output file already exists; overwriting %1").arg(outFile->fileName()));
     if (!outFile->open(QFile::WriteOnly))
         node->location().fatal(tr("Cannot open output file '%1'").arg(outFile->fileName()));
-    Generator::debug("Writing: " + path);
+    qCDebug(lcQdoc, "Writing: %s", qPrintable(path));
     outFileNames_ << fileName;
     QTextStream* out = new QTextStream(outFile);
 
@@ -781,7 +782,7 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
             quiet = true;
         }
     }
-    if (node->doc().isEmpty()) {
+    if (!node->hasDoc() && !node->hasSharedDoc()) {
         /*
           Test for special function, like a destructor or copy constructor,
           that has no documentation.
@@ -837,15 +838,16 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
             else if (!node->isWrapper() && !quiet && !node->isReimplemented()) {
                 bool report = true;
                 /*
-                  These are the member function names added by the macros
-                  Q_OBJECT and Q_DECLARE_PRIVATE. Usually they are not
-                  documented, but they can be documented, so this test
-                  avoids reporting an error if they are not documented.
+                  These are the member function names added by macros.
+                  Usually they are not documented, but they can be
+                  documented, so this test avoids reporting an error
+                  if they are not documented.
 
                   But maybe we should generate a standard text for each
                   of them?
                  */
-                if (node->name() == QLatin1String("metaObject") ||
+                if (node->name().startsWith(QLatin1String("qt_")) ||
+                    node->name() == QLatin1String("metaObject") ||
                     node->name() == QLatin1String("tr") ||
                     node->name() == QLatin1String("trUtf8") ||
                     node->name() == QLatin1String("d_func")) {
@@ -863,10 +865,10 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
                 node->location().warning(tr("No documentation for '%1'").arg(node->plainSignature()));
         }
     }
-    else {
+    else if (!node->isSharingComment()) {
         if (node->type() == Node::Function) {
             const FunctionNode *func = static_cast<const FunctionNode *>(node);
-            if (func->reimplementedFrom() != 0)
+            if (!func->reimplementedFrom().isEmpty())
                 generateReimplementedFrom(func, marker);
         }
 
@@ -1063,8 +1065,7 @@ void Generator::generateFileList(const DocumentNode* dn,
                                                        QStringList(),
                                                        exampleDirs,
                                                        file,
-                                                       exampleImgExts,
-                                                       userFriendlyFilePath);
+                                                       exampleImgExts);
                     outFileNames_ << prefix.mid(1) + userFriendlyFilePath;
                     userFriendlyFilePath.truncate(userFriendlyFilePath.lastIndexOf('/'));
                     QString imgOutDir = outDir_ + prefix + userFriendlyFilePath;
@@ -1318,19 +1319,20 @@ bool Generator::generateQmlText(const Text& text,
     return result;
 }
 
-void Generator::generateReimplementedFrom(const FunctionNode *func,
-                                          CodeMarker *marker)
+void Generator::generateReimplementedFrom(const FunctionNode *fn, CodeMarker *marker)
 {
-    if (func->reimplementedFrom() != 0) {
-        const FunctionNode *from = func->reimplementedFrom();
-        if (from->access() != Node::Private &&
-                from->parent()->access() != Node::Private) {
-            Text text;
-            text << Atom::ParaLeft << "Reimplemented from ";
-            QString fullName =  from->parent()->name() + "::" + from->name() + "()";
-            appendFullName(text, from->parent(), fullName, from);
-            text << "." << Atom::ParaRight;
-            generateText(text, func, marker);
+    if (!fn->reimplementedFrom().isEmpty()) {
+        if (fn->parent()->isClass()) {
+            ClassNode* cn = static_cast<ClassNode*>(fn->parent());
+            const FunctionNode *from = cn->findOverriddenFunction(fn);
+            if (from && from->access() != Node::Private && from->parent()->access() != Node::Private) {
+                Text text;
+                text << Atom::ParaLeft << "Reimplemented from ";
+                QString fullName =  from->parent()->name() + "::" + from->name() + "()";
+                appendFullName(text, from->parent(), fullName, from);
+                text << "." << Atom::ParaRight;
+                generateText(text, fn, marker);
+            }
         }
     }
 }
@@ -1784,7 +1786,7 @@ QString Generator::imageFileName(const Node *relative, const QString& fileBase)
                                         imageDirs,
                                         fileBase,
                                         imgFileExts[format()],
-                                        userFriendlyFilePath);
+                                        &userFriendlyFilePath);
 
     if (filePath.isEmpty())
         return QString();
@@ -2306,6 +2308,10 @@ QString Generator::typeString(const Node *node)
         return "QML signal handler";
     case Node::QmlMethod:
         return "QML method";
+    case Node::Module:
+        return "module";
+    case Node::QmlModule:
+        return "QML module";
     default:
         return "documentation";
     }

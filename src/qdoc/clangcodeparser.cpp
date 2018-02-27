@@ -47,6 +47,8 @@
 #include "codechunk.h"
 #include "config.h"
 #include "clangcodeparser.h"
+#include "generator.h"
+#include "loggingcategory.h"
 #include "qdocdatabase.h"
 #include <qdebug.h>
 #include <qscopedvaluerollback.h>
@@ -60,6 +62,25 @@ QT_BEGIN_NAMESPACE
 
 static CXTranslationUnit_Flags flags_ = (CXTranslationUnit_Flags)0;
 static CXIndex index_ = 0;
+
+#ifndef QT_NO_DEBUG_STREAM
+template <class T>
+static QDebug operator<<(QDebug debug, const std::vector<T> &v)
+{
+    QDebugStateSaver saver(debug);
+    debug.noquote();
+    debug.nospace();
+    const size_t size = v.size();
+    debug << "std::vector<>[" << size << "](";
+    for (size_t i = 0; i < size; ++i) {
+        if (i)
+            debug << ", ";
+        debug << v[i];
+    }
+    debug << ')';
+    return debug;
+}
+#endif // !QT_NO_DEBUG_STREAM
 
 /*!
    Call clang_visitChildren on the given cursor with the lambda as a callback
@@ -155,6 +176,40 @@ QString functionName(CXCursor cursor)
     if (ltLoc > 0 && !name.startsWith("operator<"))
         name = name.left(ltLoc);
     return name;
+}
+
+/*!
+  Reconstruct the qualified path name of a function that is
+  being overridden.
+ */
+static QString reconstructQualifiedPathForCursor(CXCursor cur) {
+    QString path;
+    auto kind = clang_getCursorKind(cur);
+    while (!clang_isInvalid(kind) && kind != CXCursor_TranslationUnit) {
+        switch (kind) {
+        case CXCursor_Namespace:
+        case CXCursor_StructDecl:
+        case CXCursor_ClassDecl:
+        case CXCursor_UnionDecl:
+        case CXCursor_ClassTemplate:
+            path.prepend("::");
+            path.prepend(fromCXString(clang_getCursorSpelling(cur)));
+            break;
+        case CXCursor_FunctionDecl:
+        case CXCursor_FunctionTemplate:
+        case CXCursor_CXXMethod:
+        case CXCursor_Constructor:
+        case CXCursor_Destructor:
+        case CXCursor_ConversionFunction:
+            path = functionName(cur);
+            break;
+        default:
+            break;
+        }
+        cur = clang_getCursorSemanticParent(cur);
+        kind = clang_getCursorKind(cur);
+    }
+    return path;
 }
 
 /*!
@@ -340,7 +395,6 @@ public:
                 isInteresting = allHeaders_.contains(fi.canonicalFilePath());
                 isInterestingCache_[file] = isInteresting;
             }
-
             if (isInteresting) {
                 return visitHeader(cur, loc);
             }
@@ -394,8 +448,6 @@ private:
         Returns true if the symbol should be ignored for the documentation.
      */
     bool ignoredSymbol(const QString &symbolName) {
-        if (symbolName.startsWith(QLatin1String("qt_")))
-            return true;
         if (symbolName == QLatin1String("QPrivateSignal"))
             return true;
         return false;
@@ -519,6 +571,7 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
     case CXCursor_UnionDecl:
         if (fromCXString(clang_getCursorSpelling(cursor)).isEmpty()) // anonymous struct or union
             return CXChildVisit_Continue;
+        Q_FALLTHROUGH();
     case CXCursor_ClassDecl:
     case CXCursor_ClassTemplate: {
 
@@ -635,9 +688,10 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
             unsigned int numOverridden = 0;
             clang_getOverriddenCursors(cursor, &overridden, &numOverridden);
             for (uint i = 0; i < numOverridden; ++i) {
-                auto n = findNodeForCursor(qdb_, overridden[i]);
-                if (n && n->isFunction()) {
-                    fn->setReimplementedFrom(static_cast<FunctionNode *>(n));
+                QString path = reconstructQualifiedPathForCursor(overridden[i]);
+                if (!path.isEmpty()) {
+                    fn->setReimplementedFrom(path);
+                    break;
                 }
             }
             clang_disposeOverriddenCursors(overridden);
@@ -786,6 +840,8 @@ void ClangVisitor::readParameterNamesAndAttributes(FunctionNode* fn, CXCursor cu
             }
             if (annotation == QLatin1String("qt_invokable"))
                 fn->setInvokable(true);
+        } else if (kind == CXCursor_CXXOverrideAttr) {
+            fn->setOverride(true);
         } else if (kind == CXCursor_ParmDecl) {
             if (i >= pvect.count())
                 return CXChildVisit_Break; // Attributes comes before parameters so we can break.
@@ -975,6 +1031,8 @@ void ClangCodeParser::initializeParser(const Config &config)
             }
         }
     }
+    qCDebug(lcQdoc).nospace() << __FUNCTION__ << " Clang v" << CINDEX_VERSION_MAJOR
+        << '.' << CINDEX_VERSION_MINOR;
 }
 
 /*!
@@ -1170,6 +1228,8 @@ void ClangCodeParser::buildPCH()
                     tmpHeader.toLatin1().data(),
                     args_.data(), static_cast<int>(args_.size()), nullptr, 0,
                     flags_ | CXTranslationUnit_ForSerialization, &tu);
+                qCDebug(lcQdoc) << __FUNCTION__ << "clang_parseTranslationUnit2("
+                    << tmpHeader <<  args_ << ") returns" << err;
                 if (!err && tu) {
                     pchName_ = pchFileDir_->path().toUtf8() + "/" + module + ".pch";
                     auto error = clang_saveTranslationUnit(tu, pchName_.constData(), clang_defaultSaveOptions(tu));
@@ -1192,7 +1252,6 @@ void ClangCodeParser::buildPCH()
                 args_.pop_back(); // remove the "-xc++";
             }
         }
-        qdb_->resolveInheritance();
     }
 }
 
@@ -1208,7 +1267,7 @@ void ClangCodeParser::precompileHeaders()
 
     flags_ = (CXTranslationUnit_Flags) (CXTranslationUnit_Incomplete | CXTranslationUnit_SkipFunctionBodies | CXTranslationUnit_KeepGoing);
     // Change 2nd parameter to 1 to make clang report errors.
-    index_ = clang_createIndex(1, 0);
+    index_ = clang_createIndex(1, Generator::debugging() ? 1 : 0);
     buildPCH();
     clang_disposeIndex(index_);
 }
@@ -1238,6 +1297,8 @@ void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QStrin
     CXTranslationUnit tu;
     CXErrorCode err = clang_parseTranslationUnit2(index_, filePath.toLocal8Bit(), args_.data(),
                                                   static_cast<int>(args_.size()), nullptr, 0, flags_, &tu);
+    qCDebug(lcQdoc) << __FUNCTION__ << "clang_parseTranslationUnit2("
+        << filePath <<  args_ << ") returns" << err;
     if (err || !tu) {
         qWarning() << "(qdoc) Could not parse source file" << filePath << " error code:" << err;
         clang_disposeIndex(index_);
@@ -1318,8 +1379,6 @@ void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QStrin
 Node* ClangCodeParser::parseFnArg(const Location& location, const QString& fnArg)
 {
     Node* fnNode = 0;
-    if (Generator::preparing() && !Generator::singleExec())
-        return fnNode;
     /*
       If the \fn command begins with a tag, then don't try to
       parse the \fn command with clang. Use the tag to search
@@ -1399,7 +1458,8 @@ Node* ClangCodeParser::parseFnArg(const Location& location, const QString& fnArg
                                                   1,
                                                   flags,
                                                   &tu);
-
+    qCDebug(lcQdoc) << __FUNCTION__ << "clang_parseTranslationUnit2("
+        << dummyFileName <<  args_ << ") returns" << err;
     if (err || !tu) {
         location.error(ClangCodeParser::tr("clang could not parse \\fn %1").arg(fnArg));
         clang_disposeTranslationUnit(tu);
@@ -1418,7 +1478,7 @@ Node* ClangCodeParser::parseFnArg(const Location& location, const QString& fnArg
         visitor.visitFnArg(cur, &fnNode, ignoreSignature);
         if (fnNode == 0) {
             unsigned diagnosticCount = clang_getNumDiagnostics(tu);
-            if (diagnosticCount > 0) {
+            if (diagnosticCount > 0 && (!Generator::preparing() || Generator::singleExec())) {
                 bool report = true;
                 QStringList signature = fnArg.split(QLatin1String("::"));
                 if (signature.size() > 1) {

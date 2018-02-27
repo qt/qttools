@@ -12,7 +12,8 @@ qtHaveModule(qmldevtools-private) {
 }
 
 LIBS += $$CLANG_LIBS
-INCLUDEPATH += $$CLANG_INCLUDEPATH
+!contains(QMAKE_DEFAULT_INCDIRS, $$CLANG_INCLUDEPATH): INCLUDEPATH += $$CLANG_INCLUDEPATH
+
 !disable_external_rpath: QMAKE_RPATHDIR += $$CLANG_LIBDIR
 DEFINES += $$shell_quote(CLANG_RESOURCE_DIR=\"$${CLANG_LIBDIR}/clang/$${CLANG_VERSION}/include\")
 
@@ -44,6 +45,7 @@ HEADERS += atom.h \
            helpprojectwriter.h \
            htmlgenerator.h \
            location.h \
+           loggingcategory.h \
            node.h \
            openedlist.h \
            plaincodemarker.h \

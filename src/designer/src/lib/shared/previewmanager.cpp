@@ -781,7 +781,7 @@ QWidget *PreviewManager::showPreview(const QDesignerFormWindowInterface *fw,
         if (QWidget *lastPreview = d->m_previews.back().m_widget) {
             QDesktopWidget *desktop = qApp->desktop();
             const QRect lastPreviewGeometry = lastPreview->frameGeometry();
-            const QRect availGeometry = desktop->availableGeometry(desktop->screenNumber(lastPreview));
+            const QRect availGeometry = desktop->availableGeometry(lastPreview);
             const QPoint newPos = lastPreviewGeometry.topRight() + QPoint(Spacing, 0);
             if (newPos.x() +  size.width() < availGeometry.right())
                 widget->move(newPos);

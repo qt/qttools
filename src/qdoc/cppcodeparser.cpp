@@ -626,28 +626,12 @@ void CppCodeParser::processOtherMetaCommand(const Doc& doc,
         if (node != 0 && node->parent() && !node->parent()->isInternal()) {
             if (node->type() == Node::Function) {
                 FunctionNode *func = (FunctionNode *) node;
-                const FunctionNode *from = func->reimplementedFrom();
-                if (from == 0) {
-                    if (isWorthWarningAbout(doc)) {
-                        doc.location().warning(tr("Cannot find base function for '\\%1' in %2()")
-                                               .arg(COMMAND_REIMP).arg(node->name()),
-                                               tr("The function either doesn't exist in any "
-                                                  "base class with the same signature or it "
-                                                  "exists but isn't virtual."));
-                    }
-                }
-                /*
-                  Ideally, we would enable this check to warn whenever
-                  \reimp is used incorrectly, and only make the node
-                  internal if the function is a reimplementation of
-                  another function in a base class.
-                */
-                else if ((from->access() == Node::Private
-                          || from->parent()->access() == Node::Private)
-                         && isWorthWarningAbout(doc)) {
-                    doc.location().warning(tr("'\\%1' in %2() should be '\\internal' "
-                                              "because its base function is private "
-                                              "or internal").arg(COMMAND_REIMP).arg(node->name()));
+                if (func->reimplementedFrom().isEmpty() && isWorthWarningAbout(doc)) {
+                    doc.location().warning(tr("Cannot find base function for '\\%1' in %2()")
+                                           .arg(COMMAND_REIMP).arg(node->name()),
+                                           tr("The function either doesn't exist in any "
+                                              "base class with the same signature or it "
+                                              "exists but isn't virtual."));
                 }
                 func->setReimplemented(true);
             }
@@ -1346,31 +1330,24 @@ void CppCodeParser::createExampleFileNodes(DocumentNode *dn)
 {
     QString examplePath = dn->name();
     QString proFileName = examplePath + QLatin1Char('/') + examplePath.split(QLatin1Char('/')).last() + ".pro";
-    QString userFriendlyFilePath;
-
     QString fullPath = Config::findFile(dn->doc().location(),
                                         exampleFiles,
                                         exampleDirs,
-                                        proFileName,
-                                        userFriendlyFilePath);
+                                        proFileName);
 
     if (fullPath.isEmpty()) {
         QString tmp = proFileName;
         proFileName = examplePath + QLatin1Char('/') + "qbuild.pro";
-        userFriendlyFilePath.clear();
         fullPath = Config::findFile(dn->doc().location(),
                                     exampleFiles,
                                     exampleDirs,
-                                    proFileName,
-                                    userFriendlyFilePath);
+                                    proFileName);
         if (fullPath.isEmpty()) {
             proFileName = examplePath + QLatin1Char('/') + examplePath.split(QLatin1Char('/')).last() + ".qmlproject";
-            userFriendlyFilePath.clear();
             fullPath = Config::findFile(dn->doc().location(),
                                         exampleFiles,
                                         exampleDirs,
-                                        proFileName,
-                                        userFriendlyFilePath);
+                                        proFileName);
             if (fullPath.isEmpty()) {
                 QString details = QLatin1String("Example directories: ") + exampleDirs.join(QLatin1Char(' '));
                 if (!exampleFiles.isEmpty())
@@ -1558,6 +1535,13 @@ bool CppCodeParser::hasTooManyTopics(const Doc &doc) const
 {
     QSet<QString> topicCommandsUsed = topicCommands() & doc.metaCommandsUsed();
     if (topicCommandsUsed.count() > 1) {
+        bool ok = true;
+        for (const auto &t : topicCommandsUsed) {
+            if (!t.startsWith(QLatin1String("qml")) && !t.startsWith(QLatin1String("js")))
+                ok = false;
+        }
+        if (ok)
+            return false;
         QString topicList;
         for (const auto &t : topicCommandsUsed)
             topicList += QLatin1String(" \\") + t + QLatin1Char(',');

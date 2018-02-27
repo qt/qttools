@@ -3943,8 +3943,15 @@ QString HtmlGenerator::linkForNode(const Node *node, const Node *relative)
     if (node && node->parent() &&
         (node->parent()->isQmlType() || node->parent()->isJsType())
         && node->parent()->isAbstract()) {
-        if (Generator::qmlTypeContext())
-            fn = fileName(Generator::qmlTypeContext());
+        if (Generator::qmlTypeContext()) {
+            if (Generator::qmlTypeContext()->inherits(node->parent())) {
+                fn = fileName(Generator::qmlTypeContext());
+            }
+            else if (node->parent()->isInternal()) {
+                node->doc().location().warning(tr("Cannot link to property in internal type '%1'").arg(node->parent()->name()));
+                return QString();
+            }
+        }
     }
     QString link = fn;
 

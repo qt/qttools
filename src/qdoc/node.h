@@ -178,8 +178,8 @@ public:
     }
     void setThreadSafeness(ThreadSafeness t) { safeness_ = (unsigned char) t; }
     void setSince(const QString &since);
-    void setRelates(Aggregate* pseudoParent);
-    void setRelates(const QString &name);
+    virtual void setRelates(Aggregate* pseudoParent);
+    virtual void setRelates(const QString &name);
     void setPhysicalModuleName(const QString &name) { physicalModuleName_ = name; }
     void setUrl(const QString& url) { url_ = url; }
     void setTemplateStuff(const QString &t) { templateStuff_ = t; }
@@ -311,6 +311,7 @@ public:
     void clearRelated() { relatesTo_ = 0; }
 
     bool isSharingComment() const { return (sharedCommentNode_ != 0); }
+    bool hasSharedDoc() const;
     void setSharedCommentNode(SharedCommentNode* t);
 
     //QString guid() const;
@@ -559,6 +560,7 @@ public:
     void setAbstract(bool b) override { abstract_ = b; }
     PropertyNode* findPropertyNode(const QString& name);
     QmlTypeNode* findQmlBaseNode();
+    FunctionNode* findOverriddenFunction(const FunctionNode* fn);
 
 private:
     QList<RelatedClass> bases_;
@@ -675,6 +677,7 @@ public:
     static void addInheritedBy(const Node *base, Node* sub);
     static void subclasses(const Node *base, NodeList& subs);
     static void terminate();
+    bool inherits(Aggregate* type);
 
 public:
     static bool qmlOnly;
@@ -895,6 +898,8 @@ class SharedCommentNode : public LeafNode
     void append(Node* n) { collective_.append(n); }
     const QVector<Node*>& collective() const { return collective_; }
     void setOverloadFlag(bool b) override;
+    void setRelates(Aggregate* pseudoParent) override;
+    void setRelates(const QString &name) override;
 
  private:
     QVector<Node*> collective_;
@@ -944,7 +949,7 @@ public:
     inline void setParameters(const QVector<Parameter>& parameters);
     void setParameters(const QString &t);
     void borrowParameterNames(const FunctionNode* source);
-    void setReimplementedFrom(FunctionNode* from) { reimplementedFrom_ = from; }
+    void setReimplementedFrom(const QString &path) { reimplementedFrom_ = path; }
 
     const QString& returnType() const { return returnType_; }
     QString metaness() const;
@@ -997,7 +1002,7 @@ public:
     void clearParams() { parameters_.clear(); }
     QStringList parameterNames() const;
     QString rawParameters(bool names = false, bool values = false) const;
-    const FunctionNode* reimplementedFrom() const { return reimplementedFrom_; }
+    const QString& reimplementedFrom() const { return reimplementedFrom_; }
     const PropNodeList& associatedProperties() const { return associatedProperties_; }
     const QStringList& parentPath() const { return parentPath_; }
     bool hasAssociatedProperties() const { return !associatedProperties_.isEmpty(); }
@@ -1080,7 +1085,7 @@ private:
     bool isInvokable_ : 1;
     unsigned char overloadNumber_;
     QVector<Parameter> parameters_;
-    const FunctionNode* reimplementedFrom_;
+    QString             reimplementedFrom_;
     PropNodeList        associatedProperties_;
     QString             tag_;
 };

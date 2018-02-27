@@ -137,7 +137,10 @@ class QDocForest
     const Node* findFunctionNode(const QString& target,
                                  const Node* relative,
                                  Node::Genus genus);
-
+    const FunctionNode* findFunctionNode(const QString& target,
+                                         const QString& params,
+                                         const Node* relative,
+                                         Node::Genus genus);
     const Node* findNodeForTarget(QStringList& targetPath,
                                   const Node* relative,
                                   Node::Genus genus,
@@ -336,6 +339,12 @@ class QDocDatabase
     Aggregate* findRelatesNode(const QStringList& path) { return forest_.findRelatesNode(path); }
     const Node* findFunctionNode(const QString& target, const Node* relative, Node::Genus genus) {
         return forest_.findFunctionNode(target, relative, genus);
+    }
+    const FunctionNode* findFunctionNode(const QString& target,
+                                         const QString& params,
+                                         const Node* relative,
+                                         Node::Genus genus) {
+        return forest_.findFunctionNode(target, params, relative, genus);
     }
     const Node* findTypeNode(const QString& type, const Node* relative, Node::Genus genus);
     const Node* findNodeForTarget(const QString& target, const Node* relative);
