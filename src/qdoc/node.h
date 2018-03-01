@@ -1058,6 +1058,7 @@ public:
     void setTag(const QString& t) { tag_ = t; }
     const QString &tag() const { return tag_; }
     bool compare(const FunctionNode *fn) const;
+    bool isIgnored() const;
 
 private:
     void addAssociatedProperty(PropertyNode* property);
