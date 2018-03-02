@@ -551,7 +551,7 @@ QList<Section> CppCodeMarker::sections(const Aggregate *inner,
                     bool isSlot = false;
                     bool isSignal = false;
                     bool isStatic = false;
-                    if ((*c)->type() == Node::Function) {
+                    if ((*c)->isFunction()) {
                         const FunctionNode *func = (const FunctionNode *) *c;
                         isSlot = (func->isSlot());
                         isSignal = (func->isSignal());
@@ -565,9 +565,15 @@ QList<Section> CppCodeMarker::sections(const Aggregate *inner,
                             continue;
                         }
                     }
-                    else if ((*c)->type() == Node::Variable) {
+                    else if ((*c)->isVariable()) {
                         const VariableNode *var = static_cast<const VariableNode *>(*c);
                         isStatic = var->isStatic();
+                    }
+                    else if ((*c)->isTypedef()) {
+                        if ((*c)->name() == QLatin1String("QtGadgetHelper")) {
+                            ++c;
+                            continue;
+                        }
                     }
 
                     switch ((*c)->access()) {
@@ -696,6 +702,10 @@ QList<Section> CppCodeMarker::sections(const Aggregate *inner,
                 if ((*c)->isSharingComment()) {
                     // do nothing
                 } else if ((*c)->isEnumType() || (*c)->isTypedef()) {
+                    if ((*c)->name() == QLatin1String("QtGadgetHelper")) {
+                        ++c;
+                        continue;
+                    }
                     insert(memberTypes, *c, style, status);
                 } else if ((*c)->isProperty()) {
                     insert(properties, *c, style, status);
