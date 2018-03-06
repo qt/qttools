@@ -1144,6 +1144,15 @@ void ClangCodeParser::getMoreArgs()
     else {
         moreArgs_ = includePaths_;
     }
+
+    // Canonicalize include paths
+    for (int i = 0; i < moreArgs_.size(); ++i) {
+        if (!moreArgs_.at(i).startsWith("-")) {
+            QFileInfo fi(QDir::current(), moreArgs_[i]);
+            if (fi.exists())
+                moreArgs_[i] = fi.canonicalFilePath().toLatin1();
+        }
+    }
 }
 
 /*!
