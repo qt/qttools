@@ -2482,6 +2482,34 @@ bool FunctionNode::compare(const FunctionNode *fn) const
 }
 
 /*!
+  In some cases, it is ok for a public function to be not documented.
+  For example, the macro Q_OBJECT adds several functions to the API of
+  a class, but these functions are normally not meant to be documented.
+  So if a function node doesn't have documentation, then if its name is
+  in the list of functions that it is ok not to document, this function
+  returns true. Otherwise, it returns false.
+
+  These are the member function names added by macros.  Usually they
+  are not documented, but they can be documented, so this test avoids
+  reporting an error if they are not documented.
+
+  But maybe we should generate a standard text for each of them?
+ */
+bool FunctionNode::isIgnored() const
+{
+    if (!hasDoc() && !hasSharedDoc()) {
+        if (name().startsWith(QLatin1String("qt_")) ||
+            name() == QLatin1String("metaObject") ||
+            name() == QLatin1String("tr") ||
+            name() == QLatin1String("trUtf8") ||
+            name() == QLatin1String("d_func")) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/*!
   \class PropertyNode
 
   This class describes one instance of using the Q_PROPERTY macro.
