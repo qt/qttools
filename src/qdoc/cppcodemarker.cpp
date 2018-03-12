@@ -841,6 +841,13 @@ QList<Section> CppCodeMarker::sections(const Aggregate *inner,
                         }
                     }
                     break;
+                case Node::SharedComment:
+                    {
+                        SharedCommentNode *scn = static_cast<SharedCommentNode *>(*n);
+                        if (!scn->doc().isEmpty())
+                            insert(functions, scn, style, status);
+                    }
+                    break;
                 default:
                     break;
                 }
