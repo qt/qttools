@@ -86,6 +86,7 @@ private slots:
 
 private:
     void logMessage(const QString &msg);
+    void showEvent(QShowEvent *) override;
 
     QDBusConnection c;
     QString currentService;

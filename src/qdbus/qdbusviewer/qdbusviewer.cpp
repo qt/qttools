@@ -171,6 +171,11 @@ void QDBusViewer::logMessage(const QString &msg)
     log->append(msg + QLatin1Char('\n'));
 }
 
+void QDBusViewer::showEvent(QShowEvent *)
+{
+    serviceFilterLine->setFocus();
+}
+
 void QDBusViewer::logError(const QString &msg)
 {
     log->append(QLatin1String("<font color=\"red\">Error: </font>") + msg.toHtmlEscaped() + QLatin1String("<br>"));
