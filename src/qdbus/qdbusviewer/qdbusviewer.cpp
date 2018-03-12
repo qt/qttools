@@ -36,6 +36,7 @@
 #include <QtCore/QStringListModel>
 #include <QtCore/QMetaProperty>
 #include <QtCore/QSettings>
+#include <QtGui/QKeyEvent>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QShortcut>
@@ -87,6 +88,7 @@ QDBusViewer::QDBusViewer(const QDBusConnection &connection, QWidget *parent)  :
     servicesProxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
 
     servicesView = new QTableView(this);
+    servicesView->installEventFilter(this);
     servicesView->setModel(servicesProxyModel);
     // Make services grid view behave like a list view with headers
     servicesView->verticalHeader()->hide();
@@ -174,6 +176,21 @@ void QDBusViewer::logMessage(const QString &msg)
 void QDBusViewer::showEvent(QShowEvent *)
 {
     serviceFilterLine->setFocus();
+}
+
+bool QDBusViewer::eventFilter(QObject *obj, QEvent *event)
+{
+    if (obj == servicesView) {
+        if (event->type() == QEvent::KeyPress) {
+            QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+            if (keyEvent->modifiers() == Qt::NoModifier) {
+                if (keyEvent->key() == Qt::Key_Enter || keyEvent->key() == Qt::Key_Return) {
+                    tree->setFocus();
+                }
+            }
+        }
+    }
+    return false;
 }
 
 void QDBusViewer::logError(const QString &msg)
