@@ -96,27 +96,27 @@ QDBusViewer::QDBusViewer(const QDBusConnection &connection, QWidget *parent)  :
     servicesView->setSortingEnabled(true);
     servicesView->sortByColumn(0, Qt::AscendingOrder);
 
-    connect(serviceFilterLine, SIGNAL(textChanged(QString)), servicesProxyModel, SLOT(setFilterFixedString(QString)));
+    connect(serviceFilterLine, &QLineEdit::textChanged, servicesProxyModel, &QSortFilterProxyModel::setFilterFixedString);
 
     tree = new QTreeView;
     tree->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    connect(tree, SIGNAL(activated(QModelIndex)), this, SLOT(activate(QModelIndex)));
+    connect(tree, &QAbstractItemView::activated, this, &QDBusViewer::activate);
 
     refreshAction = new QAction(tr("&Refresh"), tree);
     refreshAction->setData(42); // increase the amount of 42 used as magic number by one
     refreshAction->setShortcut(QKeySequence::Refresh);
-    connect(refreshAction, SIGNAL(triggered()), this, SLOT(refreshChildren()));
+    connect(refreshAction, &QAction::triggered, this, &QDBusViewer::refreshChildren);
 
     QShortcut *refreshShortcut = new QShortcut(QKeySequence::Refresh, tree);
-    connect(refreshShortcut, SIGNAL(activated()), this, SLOT(refreshChildren()));
+    connect(refreshShortcut, &QShortcut::activated, this, &QDBusViewer::refreshChildren);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     topSplitter = new QSplitter(Qt::Vertical, this);
     layout->addWidget(topSplitter);
 
     log = new LogViewer;
-    connect(log, SIGNAL(anchorClicked(QUrl)), this, SLOT(anchorClicked(QUrl)));
+    connect(log, &QTextBrowser::anchorClicked, this, &QDBusViewer::anchorClicked);
 
     splitter = new QSplitter(topSplitter);
     splitter->addWidget(servicesView);
@@ -131,22 +131,17 @@ QDBusViewer::QDBusViewer(const QDBusConnection &connection, QWidget *parent)  :
     topSplitter->addWidget(splitter);
     topSplitter->addWidget(log);
 
-    connect(servicesView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-            this, SLOT(serviceChanged(QModelIndex)));
-    connect(tree, SIGNAL(customContextMenuRequested(QPoint)),
-            this, SLOT(showContextMenu(QPoint)));
+    connect(servicesView->selectionModel(), &QItemSelectionModel::currentChanged, this, &QDBusViewer::serviceChanged);
+    connect(tree, &QWidget::customContextMenuRequested, this, &QDBusViewer::showContextMenu);
 
     QMetaObject::invokeMethod(this, "refresh", Qt::QueuedConnection);
 
     if (c.isConnected()) {
         logMessage(QLatin1String("Connected to D-Bus."));
         QDBusConnectionInterface *iface = c.interface();
-        connect(iface, SIGNAL(serviceRegistered(QString)),
-                this, SLOT(serviceRegistered(QString)));
-        connect(iface, SIGNAL(serviceUnregistered(QString)),
-                this, SLOT(serviceUnregistered(QString)));
-        connect(iface, SIGNAL(serviceOwnerChanged(QString,QString,QString)),
-                this, SLOT(serviceOwnerChanged(QString,QString,QString)));
+        connect(iface, &QDBusConnectionInterface::serviceRegistered, this, &QDBusViewer::serviceRegistered);
+        connect(iface, &QDBusConnectionInterface::serviceUnregistered, this, &QDBusViewer::serviceUnregistered);
+        connect(iface, &QDBusConnectionInterface::serviceOwnerChanged, this, &QDBusViewer::serviceOwnerChanged);
     } else {
         logError(QLatin1String("Cannot connect to D-Bus: ") + c.lastError().message());
     }
@@ -460,8 +455,9 @@ void QDBusViewer::serviceChanged(const QModelIndex &index)
         return;
     currentService = index.data().toString();
 
-    tree->setModel(new QDBusViewModel(currentService, c));
-    connect(tree->model(), SIGNAL(busError(QString)), this, SLOT(logError(QString)));
+    QDBusViewModel *model = new QDBusViewModel(currentService, c);
+    tree->setModel(model);
+    connect(model, &QDBusModel::busError, this, &QDBusViewer::logError);
 }
 
 void QDBusViewer::serviceRegistered(const QString &service)
