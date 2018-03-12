@@ -97,6 +97,7 @@ QDBusViewer::QDBusViewer(const QDBusConnection &connection, QWidget *parent)  :
     servicesView->sortByColumn(0, Qt::AscendingOrder);
 
     connect(serviceFilterLine, &QLineEdit::textChanged, servicesProxyModel, &QSortFilterProxyModel::setFilterFixedString);
+    connect(serviceFilterLine, &QLineEdit::returnPressed, this, &QDBusViewer::serviceFilterReturnPressed);
 
     tree = new QTreeView;
     tree->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -499,6 +500,15 @@ void QDBusViewer::serviceOwnerChanged(const QString &name, const QString &oldOwn
         servicesModel->removeRows(hit.row(), 1);
         serviceRegistered(name);
     }
+}
+
+void QDBusViewer::serviceFilterReturnPressed()
+{
+    if (servicesProxyModel->rowCount() <= 0)
+        return;
+
+    servicesView->selectRow(0);
+    servicesView->setFocus();
 }
 
 void QDBusViewer::refreshChildren()
