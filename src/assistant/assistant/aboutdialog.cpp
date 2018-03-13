@@ -88,7 +88,7 @@ void AboutLabel::setSource(const QUrl &url)
     || !HelpViewer::canOpenPage(url.path()))) {
         if (!QDesktopServices::openUrl(url)) {
             QMessageBox::warning(this, tr("Warning"),
-                tr("Unable to launch external application.\n"), tr("OK"));
+                tr("Unable to launch external application."), tr("OK"));
         }
     }
 }

@@ -501,10 +501,10 @@
     <string>&amp;Accelerators</string>
    </property>
    <property name="toolTip">
-    <string>Toggle the validity check of accelerators</string>
+    <string>Toggles the validity check of accelerators</string>
    </property>
    <property name="whatsThis">
-    <string>Toggle the validity check of accelerators, i.e. whether the number of ampersands in the source and translation text is the same. If the check fails, a message is shown in the warnings window.</string>
+    <string>Toggles the validity check of accelerators, i.e. whether the number of ampersands in the source and translation text is the same. If the check fails, a message is shown in the warnings window.</string>
    </property>
    <property name="menuRole">
     <enum>QAction::NoRole</enum>
@@ -515,13 +515,13 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Surrounding &amp;Whitespace.</string>
+    <string>Surrounding &amp;Whitespace</string>
    </property>
    <property name="toolTip">
-    <string>Toggle the validity check of surrounding whitespace.</string>
+    <string>Toggles the validity check of surrounding whitespace.</string>
    </property>
    <property name="whatsThis">
-    <string>Toggle the validity check of surrounding whitespace. If the check fails, a message is shown in the warnings window.</string>
+    <string>Toggles the validity check of surrounding whitespace. If the check fails, a message is shown in the warnings window.</string>
    </property>
    <property name="menuRole">
     <enum>QAction::NoRole</enum>
@@ -535,10 +535,10 @@
     <string>&amp;Ending Punctuation</string>
    </property>
    <property name="toolTip">
-    <string>Toggle the validity check of ending punctuation</string>
+    <string>Toggles the validity check of ending punctuation</string>
    </property>
    <property name="whatsThis">
-    <string>Toggle the validity check of ending punctuation. If the check fails, a message is shown in the warnings window.</string>
+    <string>Toggles the validity check of ending punctuation. If the check fails, a message is shown in the warnings window.</string>
    </property>
    <property name="menuRole">
     <enum>QAction::NoRole</enum>
@@ -552,10 +552,10 @@
     <string>&amp;Phrase matches</string>
    </property>
    <property name="toolTip">
-    <string>Toggle checking that phrase suggestions are used</string>
+    <string>Toggles checking that phrase suggestions are used</string>
    </property>
    <property name="whatsThis">
-    <string>Toggle checking that phrase suggestions are used. If the check fails, a message is shown in the warnings window.</string>
+    <string>Toggles checking that phrase suggestions are used. If the check fails, a message is shown in the warnings window.</string>
    </property>
    <property name="menuRole">
     <enum>QAction::NoRole</enum>
@@ -569,10 +569,10 @@
     <string>Place &amp;Marker Matches</string>
    </property>
    <property name="toolTip">
-    <string>Toggle the validity check of place markers</string>
+    <string>Toggles the validity check of place markers</string>
    </property>
    <property name="whatsThis">
-    <string>Toggle the validity check of place markers, i.e. whether %1, %2, ... are used consistently in the source text and translation text. If the check fails, a message is shown in the warnings window.</string>
+    <string>Toggles the validity check of place markers, i.e. whether %1, %2, ... are used consistently in the source text and translation text. If the check fails, a message is shown in the warnings window.</string>
    </property>
    <property name="menuRole">
     <enum>QAction::NoRole</enum>
@@ -899,7 +899,7 @@
     <string>Visualize whitespace</string>
    </property>
    <property name="toolTip">
-    <string>Toggle visualize whitespace in editors</string>
+    <string>Toggles visualize whitespace in editors</string>
    </property>
   </action>
   <action name="actionIncreaseZoom">
