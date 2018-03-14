@@ -57,8 +57,8 @@ public slots:
     void saveToFile();
     void increaseGridSize() { setGridSize(m_gridSize + 1); }
     void decreaseGridSize() { setGridSize(m_gridSize - 1); }
-    void increaseZoom() { setZoom(m_zoom + 1); }
-    void decreaseZoom() { setZoom(m_zoom - 1); }
+    void increaseZoom();
+    void decreaseZoom();
     void aboutPixelTool();
 
 protected:
@@ -88,6 +88,7 @@ private:
     int m_gridActive;
     int m_zoom;
     int m_gridSize;
+    int m_lcdMode;
 
     int m_updateId;
     int m_displayZoomId;

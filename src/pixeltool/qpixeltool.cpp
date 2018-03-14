@@ -84,6 +84,7 @@ QPixelTool::QPixelTool(QWidget *parent)
     m_gridActive = settings.value(QLatin1String("gridActive"), 1).toInt();
     m_zoom = settings.value(QLatin1String("zoom"), 4).toInt();
     m_initialSize = settings.value(QLatin1String("initialSize"), QSize(250, 200)).toSize();
+    m_lcdMode = settings.value(QLatin1String("lcdMode"), 0).toInt();
 
     move(initialPos(settings, m_initialSize));
 
@@ -101,6 +102,7 @@ QPixelTool::~QPixelTool()
     settings.setValue(QLatin1String("zoom"), m_zoom);
     settings.setValue(QLatin1String("initialSize"), size());
     settings.setValue(QLatin1String("position"), pos());
+    settings.setValue(QLatin1String("lcdMode"), m_lcdMode);
 }
 
 void QPixelTool::setPreviewImage(const QImage &image)
@@ -140,6 +142,58 @@ void render_string(QPainter *p, int w, int h, const QString &text, int flags)
     p->drawText(bounds, flags, text);
 }
 
+static QImage imageLCDFilter(const QImage &image, int lcdMode)
+{
+    Q_ASSERT(lcdMode > 0 && lcdMode < 5);
+    const bool vertical = (lcdMode > 2);
+    QImage scaled(image.width()  * (vertical ? 1 : 3),
+                  image.height() * (vertical ? 3 : 1),
+                  image.format());
+
+    const int w = image.width();
+    const int h = image.height();
+    if (!vertical) {
+        for (int y = 0; y < h; ++y) {
+            const QRgb *in = reinterpret_cast<const QRgb *>(image.scanLine(y));
+            QRgb *out = reinterpret_cast<QRgb *>(scaled.scanLine(y));
+            if (lcdMode == 1) {
+                for (int x = 0; x < w; ++x) {
+                    *out++ = in[x] & 0xffff0000;
+                    *out++ = in[x] & 0xff00ff00;
+                    *out++ = in[x] & 0xff0000ff;
+                }
+            } else {
+                for (int x = 0; x < w; ++x) {
+                    *out++ = in[x] & 0xff0000ff;
+                    *out++ = in[x] & 0xff00ff00;
+                    *out++ = in[x] & 0xffff0000;
+                }
+            }
+        }
+    } else {
+        for (int y = 0; y < h; ++y) {
+            const QRgb *in = reinterpret_cast<const QRgb *>(image.scanLine(y));
+            QRgb *out1 = reinterpret_cast<QRgb *>(scaled.scanLine(y * 3 + 0));
+            QRgb *out2 = reinterpret_cast<QRgb *>(scaled.scanLine(y * 3 + 1));
+            QRgb *out3 = reinterpret_cast<QRgb *>(scaled.scanLine(y * 3 + 2));
+            if (lcdMode == 2) {
+                for (int x = 0; x < w; ++x) {
+                    out1[x] = in[x] & 0xffff0000;
+                    out2[x] = in[x] & 0xff00ff00;
+                    out3[x] = in[x] & 0xff0000ff;
+                }
+            } else {
+                for (int x = 0; x < w; ++x) {
+                    out1[x] = in[x] & 0xff0000ff;
+                    out2[x] = in[x] & 0xff00ff00;
+                    out3[x] = in[x] & 0xffff0000;
+                }
+            }
+        }
+    }
+    return scaled;
+}
+
 void QPixelTool::paintEvent(QPaintEvent *)
 {
     QPainter p(this);
@@ -159,19 +213,30 @@ void QPixelTool::paintEvent(QPaintEvent *)
     int h = height();
 
     p.save();
-    p.scale(m_zoom, m_zoom);
-    p.drawPixmap(0, 0, m_buffer);
-    p.scale(1/m_zoom, 1/m_zoom);
+    if (m_lcdMode == 0)  {
+        p.scale(m_zoom, m_zoom);
+        p.drawPixmap(0, 0, m_buffer);
+    } else {
+        if (m_lcdMode <= 2)
+            p.scale(m_zoom / 3.0, m_zoom);
+        else
+            p.scale(m_zoom, m_zoom / 3.0);
+        p.drawImage(0, 0, imageLCDFilter(m_buffer.toImage(), m_lcdMode));
+    }
     p.restore();
 
     // Draw the grid on top.
     if (m_gridActive) {
         p.setPen(m_gridActive == 1 ? Qt::black : Qt::white);
         int incr = m_gridSize * m_zoom;
-        for (int x=0; x<w; x+=incr)
-            p.drawLine(x, 0, x, h);
-        for (int y=0; y<h; y+=incr)
-            p.drawLine(0, y, w, y);
+        if (m_lcdMode == 0 || m_lcdMode > 2) {
+            for (int x=0; x<w; x+=incr)
+                p.drawLine(x, 0, x, h);
+        }
+        if (m_lcdMode <= 2) {
+            for (int y=0; y<h; y+=incr)
+                p.drawLine(0, y, w, y);
+        }
     }
 
     QFont f(QLatin1String("courier"));
@@ -361,6 +426,19 @@ void QPixelTool::contextMenuEvent(QContextMenuEvent *e)
                    this, &QPixelTool::decreaseGridSize, Qt::Key_PageDown);
     menu.addSeparator();
 
+    QActionGroup *lcdGroup = new QActionGroup(&menu);
+    addCheckableAction(menu, QLatin1String("No subpixels"), m_lcdMode == 0,
+                       QKeySequence(), lcdGroup);
+    QAction *rgbPixels = addCheckableAction(menu, QLatin1String("RGB subpixels"),
+                                            m_lcdMode == 1, QKeySequence(), lcdGroup);
+    QAction *bgrPixels = addCheckableAction(menu, QLatin1String("BGR subpixels"),
+                                            m_lcdMode == 2, QKeySequence(), lcdGroup);
+    QAction *vrgbPixels = addCheckableAction(menu, QLatin1String("VRGB subpixels"),
+                                             m_lcdMode == 3, QKeySequence(), lcdGroup);
+    QAction *vbgrPixels = addCheckableAction(menu, QLatin1String("VBGR subpixels"),
+                                             m_lcdMode == 4, QKeySequence(), lcdGroup);
+    menu.addSeparator();
+
     // Zoom options
     menu.addAction(QLatin1String("Zoom in"),
                    this, &QPixelTool::increaseZoom, Qt::Key_Plus);
@@ -397,8 +475,24 @@ void QPixelTool::contextMenuEvent(QContextMenuEvent *e)
     else
         m_gridActive = 2;
 
+    // Read out lcd settings
+    if (rgbPixels->isChecked())
+        m_lcdMode = 1;
+    else if (bgrPixels->isChecked())
+        m_lcdMode = 2;
+    else if (vrgbPixels->isChecked())
+        m_lcdMode = 3;
+    else if (vbgrPixels->isChecked())
+        m_lcdMode = 4;
+    else
+        m_lcdMode = 0;
+
     m_autoUpdate = autoUpdate->isChecked();
     m_freeze = freeze->isChecked();
+
+    // LCD mode looks off unless zoom is dividable by 3
+    if (m_lcdMode && m_zoom % 3)
+        setZoom((m_zoom + 1) / 3);
 }
 
 QSize QPixelTool::sizeHint() const
@@ -503,6 +597,22 @@ void QPixelTool::toggleFreeze()
     m_freeze = !m_freeze;
     if (!m_freeze)
         m_dragStart = m_dragCurrent = QPoint();
+}
+
+void QPixelTool::increaseZoom()
+{
+    if (!m_lcdMode)
+        setZoom(m_zoom + 1);
+    else
+        setZoom(m_zoom + 3);
+}
+
+void QPixelTool::decreaseZoom()
+{
+    if (!m_lcdMode)
+        setZoom(m_zoom - 1);
+    else
+        setZoom(m_zoom - 3);
 }
 
 void QPixelTool::setZoom(int zoom)
