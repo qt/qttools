@@ -17,10 +17,12 @@
 
 use strict;
 
+use File::Basename;
 use File::Spec;
 use File::Copy;
 use IO::File;
 use File::Path;
+use File::Temp;
 
 my $USAGE=<<EOF;
 Usage: generate_ui
@@ -46,6 +48,40 @@ my $qtXmlPatterns = File::Spec->catfile($qtDir, 'bin', 'xmlpatterns');
 print 'uic at: ',$uicDir, ' Designer at: ',$designerDir, ' uilib at: ',$uiLibDir,' XML at ',$xmlDir,"\n";
 die ('Invalid folder structure') unless -d $xmlDir && -d $uicDir && -d $uiLibDir;
 
+# Read out license delimited by '/** .. **/' from a C++ source
+sub readCppLicense
+{
+    my ($fileName) = @_;
+    my $license = '';
+    my $file = new IO::File('<' . $fileName) or die ('Unable to open ' . $fileName . ' for reading: ' . $!);
+    while (my $line = <$file>) {
+        $license .= $line;
+        last if index($line, '*****/') >= 0;
+    }
+    $file->close();
+    return $license;
+}
+
+# Replace special keys in XSL files and return a handle to temporary file
+sub replaceXslKeys
+{
+   my ($xslSourceFileName, $license, $uiHeaderName) = @_;
+
+   my $xslSourceFile = new IO::File('<' . $xslSourceFileName) or die ('Unable to open ' . $xslSourceFileName . ' for reading: ' . $!);
+   my $xsl = '';
+   while (my $line = <$xslSourceFile>) {
+       $xsl .= $line;
+   }
+   $xslSourceFile->close();
+   $xsl =~ s/\@LICENSE\@/$license/g;
+   $xsl =~ s/\@HEADER\@/$uiHeaderName/g if defined $uiHeaderName;
+
+   my $xslHandle = File::Temp->new(DIR => dirname($xslSourceFileName), SUFFIX => '.xsl');
+   print $xslHandle $xsl;
+   $xslHandle->close();
+   return $xslHandle;
+}
+
 # Run xalan. Note: xmlpatterns currently reports a syntax error on the sheets
 sub runXSLT
 {
@@ -59,31 +95,32 @@ sub runXSLT
 
 my $uiLibImpl = File::Spec->catfile($uiLibDir, 'ui4.cpp');
 my $uiLibHeader = File::Spec->catfile($uiLibDir, 'ui4_p.h');
+my $license = readCppLicense($uiLibImpl);
 
-print "Running XSLT processor for header...\n";
-runXSLT(File::Spec->catfile($xmlDir, 'ui4.xsd'),
-        File::Spec->catfile($xmlDir, 'generate_header.xsl'),
-        $uiLibHeader);
-print "Running XSLT processor for source...\n";
-runXSLT(File::Spec->catfile($xmlDir, 'ui4.xsd'),
-        File::Spec->catfile($xmlDir, 'generate_impl.xsl'),
-        $uiLibImpl);
+print "Running XSLT processor for uilib header...\n";
 
-# uic: Header is called 'ui4.h' instead of 'ui4_p.h'. Use header as is, fix include in source.
+my $ui4Xsd = File::Spec->catfile($xmlDir, 'ui4.xsd');
+my $headerXslSource = File::Spec->catfile($xmlDir, 'generate_header.xsl');
+my $headerXsl = replaceXslKeys($headerXslSource, $license);
+runXSLT($ui4Xsd, $headerXsl->filename, $uiLibHeader);
+
+print "Running XSLT processor for uilib source...\n";
+my $implXslSource = File::Spec->catfile($xmlDir, 'generate_impl.xsl');
+my $implXsl = replaceXslKeys($implXslSource, $license, 'ui4_p.h');
+runXSLT($ui4Xsd, $implXsl->filename, $uiLibImpl);
+
+# uic: Header is called 'ui4.h' instead of 'ui4_p.h'
 
 my $uicImpl = File::Spec->catfile($uicDir, 'ui4.cpp');
 my $uicHeader = File::Spec->catfile($uicDir, 'ui4.h');
+$license = readCppLicense($uicImpl);
 
-File::Copy::copy($uiLibHeader, $uicHeader) or die ('Unable to copy ' . $uiLibHeader . ' ' . $uicHeader . ' ' . $!);
+print "Running XSLT processor for uic header...\n";
+$headerXsl = replaceXslKeys($headerXslSource, $license);
+runXSLT($ui4Xsd, $headerXsl->filename, $uicHeader);
 
-my $uiLibImplHandle = new IO::File('<' . $uiLibImpl) or die ('Unable to read ' . $uiLibImpl  . ':' . $!);
-my $uicImplHandle = new IO::File('>' . $uicImpl) or die ('Unable to write ' . $uicImpl . ':' . $!);
-while (my $line = <$uiLibImplHandle>) {
-    $line =~ s/ui4_p\.h/ui4.h/;
-    print $uicImplHandle $line;
-}
-
-$uiLibImplHandle->close();
-$uicImplHandle->close();
+print "Running XSLT processor for uic source...\n";
+$implXsl = replaceXslKeys($implXslSource, $license, 'ui4.h');
+runXSLT($ui4Xsd, $implXsl->filename, $uicImpl);
 
 system('git', 'diff');
