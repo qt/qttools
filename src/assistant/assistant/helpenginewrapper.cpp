@@ -761,12 +761,11 @@ HelpEngineWrapperPrivate::HelpEngineWrapperPrivate(const QString &collectionFile
 void HelpEngineWrapperPrivate::initFileSystemWatchers()
 {
     TRACE_OBJ
-    for (const QString &ns : m_helpEngine->registeredDocumentations()) {
-        const QString &docFile = m_helpEngine->documentationFileName(ns);
-        m_qchWatcher->addPath(docFile);
-        connect(m_qchWatcher, &QFileSystemWatcher::fileChanged, this,
-                QOverload<const QString &>::of(&HelpEngineWrapperPrivate::qchFileChanged));
-    }
+    for (const QString &ns : m_helpEngine->registeredDocumentations())
+        m_qchWatcher->addPath(m_helpEngine->documentationFileName(ns));
+
+    connect(m_qchWatcher, &QFileSystemWatcher::fileChanged, this,
+            QOverload<const QString &>::of(&HelpEngineWrapperPrivate::qchFileChanged));
     checkDocFilesWatched();
 }
 
