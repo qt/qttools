@@ -69,7 +69,7 @@ public:
     void buildPCH();
 
 private:
-    QSet<QString> allHeaders_;
+    QHash<QString, QString> allHeaders_; // file name->path
     QVector<QByteArray> includePaths_;
     QScopedPointer<QTemporaryDir> pchFileDir_;
     QByteArray pchName_;

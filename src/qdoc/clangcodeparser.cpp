@@ -373,7 +373,7 @@ static Node *findFunctionNodeForCursor(QDocDatabase* qdb, CXCursor cur) {
 
 class ClangVisitor {
 public:
-    ClangVisitor(QDocDatabase *qdb, const QSet<QString> &allHeaders)
+    ClangVisitor(QDocDatabase *qdb, const QHash<QString, QString> &allHeaders)
         : qdb_(qdb), parent_(qdb->primaryTreeRoot()), allHeaders_(allHeaders) { }
 
     QDocDatabase* qdocDB() { return qdb_; }
@@ -392,7 +392,8 @@ public:
                 isInteresting = *it;
             } else {
                 QFileInfo fi(fromCXString(clang_getFileName(file)));
-                isInteresting = allHeaders_.contains(fi.canonicalFilePath());
+                // Match by file name in case of PCH/installed headers
+                isInteresting = allHeaders_.contains(fi.fileName());
                 isInterestingCache_[file] = isInteresting;
             }
             if (isInteresting) {
@@ -441,7 +442,7 @@ private:
 
     QDocDatabase* qdb_;
     Aggregate *parent_;
-    QSet<QString> allHeaders_;
+    const QHash<QString, QString> allHeaders_;
     QHash<CXFile, bool> isInterestingCache_; // doing a canonicalFilePath is slow, so keep a cache.
 
     /*!
@@ -1074,7 +1075,7 @@ QStringList ClangCodeParser::sourceFileNameFilter()
 void ClangCodeParser::parseHeaderFile(const Location & /*location*/, const QString &filePath)
 {
     QFileInfo fi(filePath);
-    allHeaders_.insert(fi.canonicalFilePath());
+    allHeaders_.insert(fi.fileName(), fi.canonicalPath());
 }
 
 static const char *defaultArgs_[] = {
@@ -1109,6 +1110,21 @@ void ClangCodeParser::getDefaultArgs()
         args_.push_back(p.constData());
 }
 
+static QVector<QByteArray> includePathsFromHeaders(const QHash<QString, QString> &allHeaders)
+{
+    QVector<QByteArray> result;
+    for (auto it = allHeaders.cbegin(), end = allHeaders.cend(); it != end; ++it) {
+        const QByteArray path = "-I" + it.value().toLatin1();
+        const QByteArray parent = "-I"
+            + QDir::cleanPath(it.value() + QLatin1String("/../")).toLatin1();
+        if (!result.contains(path))
+            result.append(path);
+        if (!result.contains(parent))
+            result.append(parent);
+    }
+    return result;
+}
+
 /*!
   Load the include paths into \a moreArgs.
  */
@@ -1120,16 +1136,12 @@ void ClangCodeParser::getMoreArgs()
           of reasonable places to look for include files and use
           that list instead.
          */
-        QList<QString> headers = allHeaders_.values();
         auto forest = qdb_->searchOrder();
 
         QByteArray version = qdb_->version().toUtf8();
         QString basicIncludeDir = QDir::cleanPath(QString(Config::installDir + "/../include"));
         moreArgs_ += "-I" + basicIncludeDir.toLatin1();
-        if (!headers.isEmpty()) {
-            moreArgs_ += "-I" + QDir::cleanPath(QString(headers.at(0) + "/../")).toLatin1();
-            moreArgs_ += "-I" + QDir::cleanPath(QString(headers.at(0) + "/../../")).toLatin1();
-        }
+        moreArgs_ += includePathsFromHeaders(allHeaders_);
         for (const auto &s : forest) {
             QString module = basicIncludeDir +"/" + s->camelCaseModuleName();
             moreArgs_ += QString("-I" + module).toLatin1();
