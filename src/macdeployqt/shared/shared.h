@@ -59,6 +59,11 @@ public:
     QString sourceFilePath;
     QString frameworkDestinationDirectory;
     QString binaryDestinationDirectory;
+
+    bool isDebugLibrary() const
+    {
+        return binaryName.contains(QLatin1String("_debug"));
+    }
 };
 
 class DylibInfo
@@ -99,6 +104,7 @@ public:
     QSet<QString> rpathsUsed;
     bool useLoaderPath;
     bool isFramework;
+    bool isDebug;
 };
 
 inline QDebug operator<<(QDebug debug, const ApplicationBundleInfo &info);

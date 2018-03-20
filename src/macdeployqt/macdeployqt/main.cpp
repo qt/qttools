@@ -179,6 +179,9 @@ int main(int argc, char **argv)
 
     DeploymentInfo deploymentInfo = deployQtFrameworks(appBundlePath, additionalExecutables, useDebugLibs);
 
+    if (deploymentInfo.isDebug)
+        useDebugLibs = true;
+
     if (deployFramework && deploymentInfo.isFramework)
         fixupFramework(appBundlePath);
 
