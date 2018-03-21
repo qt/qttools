@@ -2,8 +2,8 @@ option(host_build)
 QT = core-private
 DEFINES += QT_NO_CAST_FROM_ASCII QT_NO_CAST_TO_ASCII QT_NO_FOREACH
 
-SOURCES += main.cpp utils.cpp qmlutils.cpp elfreader.cpp
-HEADERS += utils.h qmlutils.h elfreader.h
+include(../shared/winutils/winutils.pri)
+SOURCES += main.cpp
 
 CONFIG += force_bootstrap
 
