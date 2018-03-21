@@ -124,7 +124,7 @@ QStringList findSharedLibraries(const QDir &directory, Platform platform,
         if (debugMatchMode != MatchDebugOrRelease && (platform & WindowsBased)) {
             bool debugDll;
             if (readPeExecutable(dllPath, &errorMessage, 0, 0, &debugDll,
-                                 (platform == WindowsMinGW))) {
+                                 (platform == WindowsDesktopMinGW))) {
                 matches = debugDll == (debugMatchMode == MatchDebug);
             } else {
                 std::wcerr << "Warning: Unable to read " << QDir::toNativeSeparators(dllPath)

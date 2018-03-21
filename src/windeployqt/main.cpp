@@ -194,7 +194,7 @@ static Platform platformFromMkSpec(const QString &xSpec)
     if (xSpec == QLatin1String("linux-g++"))
         return Unix;
     if (xSpec.startsWith(QLatin1String("win32-")))
-        return xSpec.contains(QLatin1String("g++")) ? WindowsMinGW : Windows;
+        return xSpec.contains(QLatin1String("g++")) ? WindowsDesktopMinGW : WindowsDesktop;
     if (xSpec.startsWith(QLatin1String("winrt-x")))
         return WinRtIntel;
     if (xSpec.startsWith(QLatin1String("winrt-arm")))
@@ -255,7 +255,7 @@ struct Options {
     bool compilerRunTime = false;
     AngleDetection angleDetection = AngleDetectionAuto;
     bool softwareRasterizer = true;
-    Platform platform = Windows;
+    Platform platform = WindowsDesktop;
     quint64 additionalLibraries = 0;
     quint64 disabledLibraries = 0;
     unsigned updateFileFlags = 0;
@@ -481,7 +481,7 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
     else if (parser->isSet(noCompilerRunTimeOption))
         options->compilerRunTime = false;
 
-    if (options->compilerRunTime && options->platform != WindowsMinGW && options->platform != Windows) {
+    if (options->compilerRunTime && options->platform != WindowsDesktopMinGW && options->platform != WindowsDesktop) {
         *errorMessage = QStringLiteral("Deployment of the compiler runtime is implemented for Desktop only.");
         return CommandLineParseError;
     }
@@ -889,8 +889,8 @@ QStringList findQtPlugins(quint64 *usedQtModules, quint64 disabledQtModules,
             const bool isPlatformPlugin = subDirName == QLatin1String("platforms");
             if (isPlatformPlugin) {
                 switch (platform) {
-                case Windows:
-                case WindowsMinGW:
+                case WindowsDesktop:
+                case WindowsDesktopMinGW:
                 case WinCEIntel:
                 case WinCEArm:
                     filter = QStringLiteral("qwindows");
@@ -1084,7 +1084,7 @@ static QStringList compilerRunTimeLibs(Platform platform, bool isDebug, unsigned
 {
     QStringList result;
     switch (platform) {
-    case WindowsMinGW: { // MinGW: Add runtime libraries
+    case WindowsDesktopMinGW: { // MinGW: Add runtime libraries
         static const char *minGwRuntimes[] = {"*gcc_", "*stdc++", "*winpthread"};
         const QString gcc = findInPath(QStringLiteral("g++.exe"));
         if (gcc.isEmpty()) {
@@ -1102,7 +1102,7 @@ static QStringList compilerRunTimeLibs(Platform platform, bool isDebug, unsigned
                 result.append(dllFi.absoluteFilePath());
     }
         break;
-    case Windows: { // MSVC/Desktop: Add redistributable packages.
+    case WindowsDesktop: { // MSVC/Desktop: Add redistributable packages.
         QString vcRedistDirName = vcRedistDir();
         if (vcRedistDirName.isEmpty())
              break;
@@ -1644,7 +1644,7 @@ int main(int argc, char **argv)
     const QMap<QString, QString> qmakeVariables = queryQMakeAll(&errorMessage);
     const QString xSpec = qmakeVariables.value(QStringLiteral("QMAKE_XSPEC"));
     options.platform = platformFromMkSpec(xSpec);
-    if (options.platform == WindowsMinGW || options.platform == Windows)
+    if (options.platform == WindowsDesktopMinGW || options.platform == WindowsDesktop)
         options.compilerRunTime = true;
 
     {   // Command line

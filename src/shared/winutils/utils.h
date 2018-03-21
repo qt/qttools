@@ -51,8 +51,8 @@ enum PlatformFlag {
 };
 
 enum Platform {
-    Windows = WindowsBased + IntelBased,
-    WindowsMinGW = WindowsBased + IntelBased + MinGW,
+    WindowsDesktop = WindowsBased + IntelBased,
+    WindowsDesktopMinGW = WindowsBased + IntelBased + MinGW,
     WinRtIntel = WindowsBased + IntelBased + 1,
     WinRtArm = WindowsBased + ArmBased + 2,
     WinCEIntel = WindowsBased + IntelBased + 5,
@@ -196,7 +196,7 @@ inline bool readExecutable(const QString &executableFileName, Platform platform,
     return platform == Unix ?
         readElfExecutable(executableFileName, errorMessage, dependentLibraries, wordSize, isDebug) :
         readPeExecutable(executableFileName, errorMessage, dependentLibraries, wordSize, isDebug,
-                         (platform == WindowsMinGW));
+                         (platform == WindowsDesktopMinGW));
 }
 
 // Return dependent modules of executable files.
