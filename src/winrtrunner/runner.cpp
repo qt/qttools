@@ -201,6 +201,14 @@ bool Runner::disableDebugging()
     return d->engine->disableDebugging();
 }
 
+bool Runner::setLoopbackExemptClientEnabled(bool enabled)
+{
+    Q_D(Runner);
+    Q_ASSERT(d->engine);
+
+    return d->engine->setLoopbackExemptClientEnabled(enabled);
+}
+
 bool Runner::suspend()
 {
     Q_D(Runner);

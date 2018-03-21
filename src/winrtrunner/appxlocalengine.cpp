@@ -40,6 +40,8 @@
 #include "appxlocalengine.h"
 #include "appxengine_p.h"
 
+#include "utils.h"
+
 #include <QtCore/QDateTime>
 #include <QtCore/QDir>
 #include <QtCore/QDirIterator>
@@ -561,6 +563,46 @@ bool AppxLocalEngine::disableDebugging()
     HRESULT hr = d->packageDebug->DisableDebugging(wchar(d->packageFullName));
     RETURN_FALSE_IF_FAILED("Failed to disable debugging for application");
 
+    return true;
+}
+
+bool AppxLocalEngine::setLoopbackExemptClientEnabled(bool enabled)
+{
+    Q_D(AppxLocalEngine);
+    qCDebug(lcWinRtRunner) << __FUNCTION__ << enabled;
+
+    if (!enabled) {
+        PACKAGE_EXECUTION_STATE state;
+        HRESULT hr = d->packageDebug->GetPackageExecutionState(wchar(d->packageFullName), &state);
+        RETURN_FALSE_IF_FAILED("Failed to get package execution state");
+        if (state != PES_TERMINATED && state != PES_UNKNOWN) {
+            qCWarning(lcWinRtRunner) << "Cannot unregister loopback exemption for running program."
+                                     << "Please use checknetisolation.exe to check/clean up the exemption list.";
+            return false;
+        }
+    }
+
+    QByteArray stdOut;
+    QByteArray stdErr;
+    unsigned long exitCode = 0;
+    QString errorMessage;
+    QStringList arguments;
+    const QString binary = QStringLiteral("checknetisolation.exe");
+    arguments << QStringLiteral("LoopbackExempt")
+              << (enabled ? QStringLiteral("-a") : QStringLiteral("-d"))
+              << QStringLiteral("-p=") + sidForPackage(d->packageFamilyName);
+    if (!runProcess(binary, arguments, QString(), &exitCode, &stdOut, &stdErr, &errorMessage)) {
+        qCWarning(lcWinRtRunner) << "Could not run" << binary;
+        return false;
+    }
+    if (exitCode) {
+        if (errorMessage.isEmpty()) {
+            errorMessage = binary + QStringLiteral(" returned ") + QString::number(exitCode)
+                        + QStringLiteral(": ") + QString::fromLocal8Bit(stdErr);
+        }
+        qCWarning(lcWinRtRunner) << errorMessage;
+        return false;
+    }
     return true;
 }
 

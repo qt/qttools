@@ -459,6 +459,12 @@ bool AppxPhoneEngine::disableDebugging()
     return false;
 }
 
+bool AppxPhoneEngine::setLoopbackExemptClientEnabled(bool)
+{
+    qCDebug(lcWinRtRunner) << __FUNCTION__;
+    return false;
+}
+
 bool AppxPhoneEngine::suspend()
 {
     qCDebug(lcWinRtRunner) << __FUNCTION__;

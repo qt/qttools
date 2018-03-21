@@ -21,6 +21,7 @@ HEADERS += \
 LIBS += -lruntimeobject -lwsclient -lShlwapi -lurlmon -lxmllite -lcrypt32
 
 include(../shared/corecon/corecon.pri)
+include(../shared/winutils/winutils.pri)
 
 QMAKE_TARGET_DESCRIPTION = "Qt WinRT Runner"
 load(qt_tool)

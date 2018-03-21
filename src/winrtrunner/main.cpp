@@ -144,6 +144,12 @@ int main(int argc, char *argv[])
                                           QStringLiteral("Always exit with code 0, regardless of the error state."));
     parser.addOption(ignoreErrorsOption);
 
+    QCommandLineOption loopbackExemptOption(QStringLiteral("loopbackexempt"),
+                                            QLatin1String("Enable localhost communication. At the"
+                                                          "moment the only supported value is \"client\""),
+                                            QStringLiteral("mode"));
+    parser.addOption(loopbackExemptOption);
+
     parser.addHelpOption();
     parser.setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
     QStringList arguments = QCoreApplication::arguments();
@@ -172,6 +178,16 @@ int main(int argc, char *argv[])
             // fall through
         default: // Impossible
             break;
+        }
+    }
+    bool loopbackExemptClient = false;
+    if (parser.isSet(loopbackExemptOption)) {
+        const QString value = parser.value(loopbackExemptOption);
+        if (value == QStringLiteral("client")) {
+            loopbackExemptClient = true;
+        } else {
+            qCCritical(lcWinRtRunner) << "Incorrect value specified for loopbackexempt.";
+            parser.showHelp(1);
         }
     }
     QLoggingCategory::setFilterRules(filterRules.join(QLatin1Char('\n')));
@@ -245,6 +261,12 @@ int main(int argc, char *argv[])
         return ignoreErrors ? 0 : 3;
     }
 
+    if (loopbackExemptClient && !runner.setLoopbackExemptClientEnabled(true)) {
+        qCDebug(lcWinRtRunner) << "Could not enable loopback exemption for client, "
+                                  "exiting with code 3.";
+        return ignoreErrors ? 0 : 3;
+    }
+
     if (parser.isSet(debugOption)) {
         const QString &debuggerExecutable = parser.value(debugOption);
         const QString &debuggerArguments = parser.value(debuggerArgumentsOption);
@@ -273,6 +295,9 @@ int main(int argc, char *argv[])
 
     if (waitEnabled)
         runner.wait(waitTime);
+
+    if (loopbackExemptClient)
+        runner.setLoopbackExemptClientEnabled(false);
 
     if (suspendEnabled && !runner.suspend()) {
         qCDebug(lcWinRtRunner) << "Suspend failed, exiting with code 6.";
