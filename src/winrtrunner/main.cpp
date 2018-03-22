@@ -145,8 +145,11 @@ int main(int argc, char *argv[])
     parser.addOption(ignoreErrorsOption);
 
     QCommandLineOption loopbackExemptOption(QStringLiteral("loopbackexempt"),
-                                            QLatin1String("Enable localhost communication. At the"
-                                                          "moment the only supported value is \"client\""),
+                                            QLatin1String("Enables localhost communication for clients,"
+                                                          "servers or both. Adding this possibility "
+                                                          "for servers needs elevated rights and "
+                                                          "might ask for these in a dialog."
+                                                          "Possible values: client, server, clientserver"),
                                             QStringLiteral("mode"));
     parser.addOption(loopbackExemptOption);
 
@@ -181,10 +184,16 @@ int main(int argc, char *argv[])
         }
     }
     bool loopbackExemptClient = false;
+    bool loopbackExemptServer = false;
     if (parser.isSet(loopbackExemptOption)) {
         const QString value = parser.value(loopbackExemptOption);
         if (value == QStringLiteral("client")) {
             loopbackExemptClient = true;
+        } else if (value == QStringLiteral("server")) {
+            loopbackExemptServer = true;
+        } else if (value == QStringLiteral("clientserver")) {
+            loopbackExemptClient = true;
+            loopbackExemptServer = true;
         } else {
             qCCritical(lcWinRtRunner) << "Incorrect value specified for loopbackexempt.";
             parser.showHelp(1);
@@ -267,6 +276,12 @@ int main(int argc, char *argv[])
         return ignoreErrors ? 0 : 3;
     }
 
+    if (loopbackExemptServer && !runner.setLoopbackExemptServerEnabled(true)) {
+        qCDebug(lcWinRtRunner) << "Could not enable loopback exemption for server, "
+                                  "exiting with code 3.";
+        return ignoreErrors ? 0 : 3;
+    }
+
     if (parser.isSet(debugOption)) {
         const QString &debuggerExecutable = parser.value(debugOption);
         const QString &debuggerArguments = parser.value(debuggerArgumentsOption);
@@ -298,6 +313,9 @@ int main(int argc, char *argv[])
 
     if (loopbackExemptClient)
         runner.setLoopbackExemptClientEnabled(false);
+
+    if (loopbackExemptServer)
+        runner.setLoopbackExemptServerEnabled(false);
 
     if (suspendEnabled && !runner.suspend()) {
         qCDebug(lcWinRtRunner) << "Suspend failed, exiting with code 6.";

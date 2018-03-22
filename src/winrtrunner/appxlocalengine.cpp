@@ -49,6 +49,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QLoggingCategory>
 #include <QtCore/QStandardPaths>
+#include <QtCore/QOperatingSystemVersion>
 
 #include <ShlObj.h>
 #include <Shlwapi.h>
@@ -245,6 +246,8 @@ public:
     ComPtr<IPackageManager> packageManager;
     ComPtr<IApplicationActivationManager> appLauncher;
     ComPtr<IPackageDebugSettings> packageDebug;
+
+    Qt::HANDLE loopbackServerProcessHandle = INVALID_HANDLE_VALUE;
 
     void retrieveInstalledPackages();
 };
@@ -605,6 +608,46 @@ bool AppxLocalEngine::setLoopbackExemptClientEnabled(bool enabled)
     }
     return true;
 }
+
+bool AppxLocalEngine::setLoopbackExemptServerEnabled(bool enabled)
+{
+    Q_D(AppxLocalEngine);
+    const QOperatingSystemVersion minimal
+        = QOperatingSystemVersion(QOperatingSystemVersion::Windows, 10, 0, 14393);
+    if (QOperatingSystemVersion::current() < minimal) {
+        qCWarning(lcWinRtRunner) << "Cannot enable loopback exemption for servers. If you want"
+                                 << "to use this feature please update to a Windows version >="
+                                 << minimal;
+        return false;
+    }
+
+    if (enabled) {
+        QStringList arguments;
+        const QString binary = QStringLiteral("checknetisolation.exe");
+        arguments << QStringLiteral("LoopbackExempt") << QStringLiteral("-is")
+                  << QStringLiteral("-p=") + sidForPackage(d->packageFamilyName);
+        if (!runElevatedBackgroundProcess(binary, arguments, &d->loopbackServerProcessHandle)) {
+            qCWarning(lcWinRtRunner) << "Could not start" << binary;
+            return false;
+        }
+    } else {
+        if (d->loopbackServerProcessHandle != INVALID_HANDLE_VALUE) {
+            if (!TerminateProcess(d->loopbackServerProcessHandle, 0)) {
+                qCWarning(lcWinRtRunner) << "Could not terminate loopbackexempt debug session";
+                return false;
+            }
+            if (!CloseHandle(d->loopbackServerProcessHandle)) {
+                qCWarning(lcWinRtRunner) << "Could not close loopbackexempt debug session process handle";
+                return false;
+            }
+        } else {
+            qCWarning(lcWinRtRunner) << "loopbackexempt debug session could not be found";
+            return false;
+        }
+    }
+    return true;
+}
+
 
 bool AppxLocalEngine::suspend()
 {

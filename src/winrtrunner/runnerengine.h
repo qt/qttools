@@ -54,6 +54,7 @@ public:
     virtual bool enableDebugging(const QString &debugger, const QString &debuggerArguments) = 0;
     virtual bool disableDebugging() = 0;
     virtual bool setLoopbackExemptClientEnabled(bool enabled) = 0;
+    virtual bool setLoopbackExemptServerEnabled(bool enabled) = 0;
     virtual bool suspend() = 0;
     virtual bool waitForFinished(int secs) = 0;
     virtual bool stop() = 0;

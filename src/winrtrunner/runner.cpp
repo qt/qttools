@@ -209,6 +209,14 @@ bool Runner::setLoopbackExemptClientEnabled(bool enabled)
     return d->engine->setLoopbackExemptClientEnabled(enabled);
 }
 
+bool Runner::setLoopbackExemptServerEnabled(bool enabled)
+{
+    Q_D(Runner);
+    Q_ASSERT(d->engine);
+
+    return d->engine->setLoopbackExemptServerEnabled(enabled);
+}
+
 bool Runner::suspend()
 {
     Q_D(Runner);

@@ -69,6 +69,7 @@ public:
     bool enableDebugging(const QString &debuggerExecutable, const QString &debuggerArguments);
     bool disableDebugging();
     bool setLoopbackExemptClientEnabled(bool enabled);
+    bool setLoopbackExemptServerEnabled(bool enabled);
     bool suspend();
     bool stop();
     bool wait(int maxWaitTime = 0);
