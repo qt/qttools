@@ -303,6 +303,36 @@ bool runProcess(const QString &binary, const QStringList &args,
     return true;
 }
 
+bool runElevatedBackgroundProcess(const QString &binary, const QStringList &args, Qt::HANDLE *processHandle)
+{
+    QScopedArrayPointer<wchar_t> binaryW(new wchar_t[binary.size() + 1]);
+    binary.toWCharArray(binaryW.data());
+    binaryW[binary.size()] = 0;
+
+    const QString arguments = args.join(QLatin1Char(' '));
+    QScopedArrayPointer<wchar_t> argumentsW(new wchar_t[arguments.size() + 1]);
+    arguments.toWCharArray(argumentsW.data());
+    argumentsW[arguments.size()] = 0;
+
+    SHELLEXECUTEINFO shellExecute = {0};
+    shellExecute.cbSize = sizeof(shellExecute);
+    shellExecute.fMask = SEE_MASK_NOCLOSEPROCESS;
+    shellExecute.hwnd = 0;
+    shellExecute.lpVerb = L"runas"; // causes elevation
+    shellExecute.lpFile = binaryW.data();
+    shellExecute.lpParameters = argumentsW.data();
+    shellExecute.lpDirectory = 0;
+    shellExecute.nShow = SW_SHOW;
+    shellExecute.hInstApp = 0;
+
+    bool ret = ShellExecuteEx(&shellExecute);
+
+    if (processHandle)
+        *processHandle = shellExecute.hProcess;
+
+    return ret;
+}
+
 #else // Q_OS_WIN
 
 static inline char *encodeFileName(const QString &f)
@@ -430,6 +460,15 @@ bool runProcess(const QString &binary, const QStringList &args,
     if (exitCode)
         *exitCode = WEXITSTATUS(status);
     return true;
+}
+
+bool runElevatedBackgroundProcess(const QString &binary, const QStringList &args, Qt::HANDLE *processHandle)
+{
+    Q_UNUSED(binary);
+    Q_UNUSED(args);
+    Q_UNUSED(processHandle);
+    Q_UNIMPLEMENTED();
+    return false;
 }
 
 #endif // !Q_OS_WIN
