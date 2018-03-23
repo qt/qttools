@@ -195,7 +195,11 @@ QVector<Package> scanDirectory(const QString &directory, LogLevel logLevel)
     QDir dir(directory);
     QVector<Package> packages;
 
-    dir.setNameFilters(QStringList() << QStringLiteral("qt_attribution.json"));
+    QStringList nameFilters = QStringList()
+            << QStringLiteral("qt_attribution.json");
+    if (qEnvironmentVariableIsSet("QT_ATTRIBUTIONSSCANNER_TEST"))
+        nameFilters << QStringLiteral("qt_attribution_test.json");
+    dir.setNameFilters(nameFilters);
     dir.setFilter(QDir::AllDirs | QDir::NoDotAndDotDot | QDir::Files);
 
     const QFileInfoList entries = dir.entryInfoList();
