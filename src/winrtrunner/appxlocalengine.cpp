@@ -187,6 +187,8 @@ private:
 
         HANDLE shmem = 0;
         DWORD ret = 0;
+        quint64 size = 4096;
+        const quint32 resizeMessageType = QtInfoMsg + 1;
         forever {
             HANDLE handles[] = { that->runLock, event };
             DWORD result = WaitForMultipleObjects(2, handles, FALSE, INFINITE);
@@ -195,7 +197,6 @@ private:
             if (result == WAIT_OBJECT_0)
                 break;
 
-            // debug event set; print message
             if (result == WAIT_OBJECT_0 + 1) {
                 if (!shmem) {
                     shmem = OpenFileMapping(GENERIC_READ, FALSE,
@@ -209,8 +210,38 @@ private:
                 }
 
                 const quint32 *data = reinterpret_cast<const quint32 *>(
-                            MapViewOfFile(shmem, FILE_MAP_READ, 0, 0, 4096));
-                QtMsgType messageType = static_cast<QtMsgType>(data[0]);
+                            MapViewOfFile(shmem, FILE_MAP_READ, 0, 0, size));
+                if (!data) {
+                    qCWarning(lcWinRtRunner) << "Unable to map view of shared memory for app debugging:"
+                                             << qt_error_string(GetLastError());
+                    ret = 1;
+                    break;
+                }
+                const quint32 type = data[0];
+                // resize message received; Resize shared memory
+                if (type == resizeMessageType) {
+                    size = (data[2] << 8) + data[1];
+                    if (!UnmapViewOfFile(data)) {
+                        qCWarning(lcWinRtRunner) << "Unable to unmap view of shared memory for app debugging:"
+                                                 << qt_error_string(GetLastError());
+                        ret = 1;
+                        break;
+                    }
+                    if (shmem) {
+                        if (!CloseHandle(shmem)) {
+                            qCWarning(lcWinRtRunner) << "Unable to close shared memory handle:"
+                                                     << qt_error_string(GetLastError());
+                            ret = 1;
+                            break;
+                        }
+                        shmem = 0;
+                    }
+                    SetEvent(ackEvent);
+                    continue;
+                }
+
+                // debug event set; print message
+                QtMsgType messageType = static_cast<QtMsgType>(type);
                 QString message = QString::fromWCharArray(
                             reinterpret_cast<const wchar_t *>(data + 1));
                 UnmapViewOfFile(data);
