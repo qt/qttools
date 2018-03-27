@@ -236,7 +236,7 @@ bool HelpProjectWriter::generateSection(HelpProject &project,
     if (!node->url().isEmpty() && !(project.includeIndexNodes && !node->url().startsWith("http")))
         return false;
 
-    if (node->access() == Node::Private || node->status() == Node::Internal)
+    if (node->isPrivate() || node->isInternal())
         return false;
 
     if (node->name().isEmpty())
@@ -269,15 +269,14 @@ bool HelpProjectWriter::generateSection(HelpProject &project,
                 }
             }
             // Accept only the node types in the selectors hash.
-            else if (node->type() != Node::Document)
+            else if (!node->isDocumentNode())
                 project.subprojects[i].nodes[objName] = node;
             else {
                 // Accept only doc nodes with subtypes contained in the selector's
                 // mask.
                 const DocumentNode *docNode = static_cast<const DocumentNode *>(node);
                 if (subproject.selectors[node->type()].contains(docNode->docSubtype()) &&
-                        docNode->docSubtype() != Node::ExternalPage &&
-                        !docNode->fullTitle().isEmpty()) {
+                    !docNode->isExternalPage() && !docNode->fullTitle().isEmpty()) {
 
                     project.subprojects[i].nodes[objName] = node;
                 }
@@ -416,8 +415,7 @@ bool HelpProjectWriter::generateSection(HelpProject &project,
         // attributes.
     case Node::Document: {
         const DocumentNode *docNode = static_cast<const DocumentNode*>(node);
-        if (docNode->docSubtype() != Node::ExternalPage &&
-                docNode->docSubtype() != Node::Image &&
+        if (!docNode->isExternalPage() && docNode->docSubtype() != Node::Image &&
                 !docNode->fullTitle().isEmpty()) {
 
             if (docNode->docSubtype() != Node::File) {
@@ -479,10 +477,10 @@ void HelpProjectWriter::generateSections(HelpProject &project,
             if (childNode->isIndexNode())
                 continue;
 
-            if (childNode->access() == Node::Private)
+            if (childNode->isPrivate())
                 continue;
 
-            if (childNode->type() == Node::Document) {
+            if (childNode->isDocumentNode()) {
                 childSet << childNode;
             }
             else if (childNode->isQmlPropertyGroup() || childNode->isJsPropertyGroup()) {
@@ -497,7 +495,7 @@ void HelpProjectWriter::generateSections(HelpProject &project,
                  */
                 const Aggregate* inner = static_cast<const Aggregate*>(childNode);
                 foreach (const Node* n, inner->childNodes()) {
-                    if (n->access() == Node::Private)
+                    if (n->isPrivate())
                         continue;
                     childSet << n;
                 }
@@ -509,7 +507,7 @@ void HelpProjectWriter::generateSections(HelpProject &project,
                     project.memberStatus[childNode->relates()].insert(childNode->status());
                 }
 
-                if (childNode->type() == Node::Function) {
+                if (childNode->isFunction()) {
                     const FunctionNode *funcNode = static_cast<const FunctionNode *>(childNode);
                     if (funcNode->isOverload())
                         continue;

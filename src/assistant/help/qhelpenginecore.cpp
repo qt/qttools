@@ -351,7 +351,7 @@ QString QHelpEngineCore::documentationFileName(const QString &namespaceName)
 {
     if (d->setup()) {
         const QHelpCollectionHandler::DocInfoList &docList =
-            d->collectionHandler->registeredDocumentations();
+            d->collectionHandler->registeredDocumentations(namespaceName);
         for (const QHelpCollectionHandler::DocInfo &info : docList) {
             if (info.namespaceName == namespaceName) {
                 if (QDir::isAbsolutePath(info.fileName))

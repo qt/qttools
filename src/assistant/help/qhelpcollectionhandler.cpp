@@ -355,12 +355,21 @@ bool QHelpCollectionHandler::addCustomFilter(const QString &filterName,
     return true;
 }
 
-QHelpCollectionHandler::DocInfoList QHelpCollectionHandler::registeredDocumentations() const
+QHelpCollectionHandler::DocInfoList QHelpCollectionHandler::registeredDocumentations(
+        const QString &namespaceName) const
 {
     DocInfoList list;
     if (m_dbOpened) {
-        m_query.exec(QLatin1String("SELECT a.Name, a.FilePath, b.Name "
-            "FROM NamespaceTable a, FolderTable b WHERE a.Id=b.NamespaceId"));
+        static const QLatin1String baseQuery("SELECT a.Name, a.FilePath, b.Name "
+                                             "FROM NamespaceTable a, FolderTable b "
+                                             "WHERE a.Id=b.NamespaceId");
+        if (namespaceName.isEmpty()) {
+            m_query.prepare(baseQuery);
+        } else {
+            m_query.prepare(baseQuery + QLatin1String(" AND a.Name=? LIMIT 1"));
+            m_query.bindValue(0, namespaceName);
+        }
+        m_query.exec();
 
         while (m_query.next()) {
             DocInfo info;

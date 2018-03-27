@@ -704,9 +704,11 @@ void QDocCommandLineParser::process(const QCoreApplication &app)
     const auto paths = values(includePathOption);
     for (const auto &i : paths)
         includesPaths << "-I" << currentDir.absoluteFilePath(i);
+#ifdef QDOC_PASS_ISYSTEM
     const auto paths2 = values(includePathSystemOption);
     for (const auto &i : paths2)
         includesPaths << "-isystem" << currentDir.absoluteFilePath(i);
+#endif
     const auto paths3 = values(frameworkOption);
     for (const auto &i : paths3)
         includesPaths << "-F" << currentDir.absoluteFilePath(i);
