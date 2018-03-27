@@ -168,11 +168,19 @@ private:
         const QString handleBase = QStringLiteral("Local\\AppContainerNamedObjects\\")
                 + sidForPackage(that->package);
         const QString eventName = handleBase + QStringLiteral("\\qdebug-event");
+        const QString ackEventName = handleBase + QStringLiteral("\\qdebug-event-ack");
         const QString shmemName = handleBase + QStringLiteral("\\qdebug-shmem");
 
         HANDLE event = CreateEvent(NULL, FALSE, FALSE, reinterpret_cast<LPCWSTR>(eventName.utf16()));
         if (!event) {
             qCWarning(lcWinRtRunner) << "Unable to open shared event for app debugging:"
+                                     << qt_error_string(GetLastError());
+            return 1;
+        }
+
+        HANDLE ackEvent = CreateEvent(NULL, FALSE, FALSE, reinterpret_cast<LPCWSTR>(ackEventName.utf16()));
+        if (!ackEvent) {
+            qCWarning(lcWinRtRunner) << "Unable to open shared acknowledge event for app debugging:"
                                      << qt_error_string(GetLastError());
             return 1;
         }
@@ -206,6 +214,7 @@ private:
                 QString message = QString::fromWCharArray(
                             reinterpret_cast<const wchar_t *>(data + 1));
                 UnmapViewOfFile(data);
+                SetEvent(ackEvent);
                 switch (messageType) {
                 default:
                 case QtDebugMsg:
@@ -232,6 +241,8 @@ private:
             CloseHandle(shmem);
         if (event)
             CloseHandle(event);
+        if (ackEvent)
+            CloseHandle(ackEvent);
         return ret;
     }
     HANDLE runLock;
