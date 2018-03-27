@@ -1176,7 +1176,7 @@ void ClangCodeParser::getMoreArgs()
  */
 void ClangCodeParser::buildPCH()
 {
-    if (!pchFileDir_) {
+    if (!pchFileDir_ && !moduleHeader().isEmpty()) {
         pchFileDir_.reset(new QTemporaryDir(QDir::tempPath() + QLatin1String("/qdoc_pch")));
         if (pchFileDir_->isValid()) {
             //const QByteArray module = qdb_->primaryTreeRoot()->tree()->camelCaseModuleName().toUtf8();

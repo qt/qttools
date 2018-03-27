@@ -366,7 +366,7 @@ static void processQdocconfFile(const QString &fileName)
         qdb->newPrimaryTree(project);
     else
         qdb->setPrimaryTree(project);
-    if (!moduleHeader.isEmpty())
+    if (!moduleHeader.isNull())
         clangParser_->setModuleHeader(moduleHeader);
     else
         clangParser_->setModuleHeader(project);
