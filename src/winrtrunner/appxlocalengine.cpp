@@ -189,8 +189,8 @@ private:
         DWORD ret = 0;
         quint64 size = 4096;
         const quint32 resizeMessageType = QtInfoMsg + 1;
+        HANDLE handles[] = { that->runLock, event };
         forever {
-            HANDLE handles[] = { that->runLock, event };
             DWORD result = WaitForMultipleObjects(2, handles, FALSE, INFINITE);
 
             // runLock set; exit thread
