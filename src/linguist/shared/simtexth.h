@@ -41,16 +41,17 @@ class Translator;
 struct Candidate
 {
     Candidate() {}
-    Candidate(const QString& source0, const QString &target0)
-        : source(source0), target(target0)
+    Candidate(const QString& source0, const QString &target0, const QString &context0)
+        : source(source0), target(target0), context(context0)
     {}
 
     QString source;
     QString target;
+    QString context;
 };
 
 inline bool operator==( const Candidate& c, const Candidate& d ) {
-    return c.target == d.target && c.source == d.source;
+    return c.target == d.target && c.source == d.source && c.context == d.context;
 }
 inline bool operator!=( const Candidate& c, const Candidate& d ) {
     return !operator==( c, d );

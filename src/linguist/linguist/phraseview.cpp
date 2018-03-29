@@ -179,7 +179,7 @@ static CandidateList similarTextHeuristicCandidates(MultiDataModel *model, int m
         if (candidates.count() == maxCandidates && score > scores[maxCandidates - 1])
             candidates.removeLast();
         if (candidates.count() < maxCandidates && score >= textSimilarityThreshold ) {
-            Candidate cand(s, mtm.translation());
+            Candidate cand(s, mtm.translation(), mtm.context());
 
             int i;
             for (i = 0; i < candidates.size(); ++i) {
@@ -222,7 +222,9 @@ void PhraseView::setSourceText(int model, const QString &sourceText)
         foreach (const Candidate &candidate, cl) {
             QString def;
             if (n < 9)
-                def = tr("Guess (%1)").arg(QKeySequence(Qt::CTRL | (Qt::Key_0 + (n + 1))).toString(QKeySequence::NativeText));
+                def = tr("Guess from '%1' (%2)")
+                      .arg(candidate.context, QKeySequence(Qt::CTRL | (Qt::Key_0 + (n + 1)))
+                                              .toString(QKeySequence::NativeText));
             else
                 def = tr("Guess");
             Phrase *guess = new Phrase(candidate.source, candidate.target, def, n);
