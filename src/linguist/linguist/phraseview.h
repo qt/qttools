@@ -36,6 +36,8 @@
 
 QT_BEGIN_NAMESPACE
 
+static const int DefaultMaxCandidates = 5;
+
 class MultiDataModel;
 class PhraseModel;
 
@@ -73,9 +75,13 @@ public:
 public slots:
     void toggleGuessing();
     void update();
+    int getMaxCandidates() const { return m_maxCandidates; }
+    void setMaxCandidates(const int max);
+    static int getDefaultMaxCandidates() { return DefaultMaxCandidates; }
 
 signals:
     void phraseSelected(int latestModel, const QString &phrase);
+    void showFewerGuessesAvailable(bool canShow);
 
 protected:
     // QObject
@@ -88,6 +94,9 @@ private slots:
     void selectPhrase(const QModelIndex &index);
     void selectPhrase();
     void editPhrase();
+    void moreGuesses();
+    void fewerGuesses();
+    void resetNumGuesses();
 
 private:
     QList<Phrase *> getPhrases(int model, const QString &sourceText);
@@ -100,6 +109,7 @@ private:
     QString m_sourceText;
     int m_modelIndex;
     bool m_doGuesses;
+    int m_maxCandidates = DefaultMaxCandidates;
 };
 
 QT_END_NAMESPACE

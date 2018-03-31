@@ -44,9 +44,6 @@
 
 QT_BEGIN_NAMESPACE
 
-// Maximum number of guesses to display
-static const int MaxCandidates = 5;
-
 static QString phraseViewHeaderKey()
 {
     return settingPath("PhraseViewHeader");
@@ -154,6 +151,30 @@ void PhraseView::editPhrase()
     edit(currentIndex());
 }
 
+void PhraseView::setMaxCandidates(const int max)
+{
+    m_maxCandidates = max;
+    emit showFewerGuessesAvailable(m_maxCandidates > DefaultMaxCandidates);
+}
+
+void PhraseView::moreGuesses()
+{
+    setMaxCandidates(m_maxCandidates + DefaultMaxCandidates);
+    setSourceText(m_modelIndex, m_sourceText);
+}
+
+void PhraseView::fewerGuesses()
+{
+    setMaxCandidates(m_maxCandidates - DefaultMaxCandidates);
+    setSourceText(m_modelIndex, m_sourceText);
+}
+
+void PhraseView::resetNumGuesses()
+{
+    setMaxCandidates(DefaultMaxCandidates);
+    setSourceText(m_modelIndex, m_sourceText);
+}
+
 static CandidateList similarTextHeuristicCandidates(MultiDataModel *model, int mi,
     const char *text, int maxCandidates)
 {
@@ -217,7 +238,7 @@ void PhraseView::setSourceText(int model, const QString &sourceText)
 
     if (!sourceText.isEmpty() && m_doGuesses) {
         CandidateList cl = similarTextHeuristicCandidates(m_dataModel, model,
-            sourceText.toLatin1(), MaxCandidates);
+            sourceText.toLatin1(), m_maxCandidates);
         int n = 0;
         foreach (const Candidate &candidate, cl) {
             QString def;

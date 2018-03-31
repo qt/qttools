@@ -1933,6 +1933,10 @@ void MainWindow::setupMenuBar()
     connect(m_ui.actionIncreaseZoom, SIGNAL(triggered()), m_messageEditor, SLOT(increaseFontSize()));
     connect(m_ui.actionDecreaseZoom, SIGNAL(triggered()), m_messageEditor, SLOT(decreaseFontSize()));
     connect(m_ui.actionResetZoomToDefault, SIGNAL(triggered()), m_messageEditor, SLOT(resetFontSize()));
+    connect(m_ui.actionShowMoreGuesses, SIGNAL(triggered()), m_phraseView, SLOT(moreGuesses()));
+    connect(m_ui.actionShowFewerGuesses, SIGNAL(triggered()), m_phraseView, SLOT(fewerGuesses()));
+    connect(m_phraseView, SIGNAL(showFewerGuessesAvailable(bool)), m_ui.actionShowFewerGuesses, SLOT(setEnabled(bool)));
+    connect(m_ui.actionResetGuessesToDefault, SIGNAL(triggered()), m_phraseView, SLOT(resetNumGuesses()));
     m_ui.menuViewViews->addAction(m_contextDock->toggleViewAction());
     m_ui.menuViewViews->addAction(m_messagesDock->toggleViewAction());
     m_ui.menuViewViews->addAction(m_phrasesDock->toggleViewAction());
@@ -2622,6 +2626,8 @@ void MainWindow::readConfig()
 
     m_messageEditor->setFontSize(
                 config.value(settingPath("Options/EditorFontsize"), font().pointSize()).toReal());
+    m_phraseView->setMaxCandidates(config.value(settingPath("Options/NumberOfGuesses"),
+                                                PhraseView::getDefaultMaxCandidates()).toInt());
 
     recentFiles().readConfig();
 
@@ -2657,6 +2663,7 @@ void MainWindow::writeConfig()
     recentFiles().writeConfig();
 
     config.setValue(settingPath("Options/EditorFontsize"), m_messageEditor->fontSize());
+    config.setValue(settingPath("Options/NumberOfGuesses"), m_phraseView->getMaxCandidates());
 
     config.beginWriteArray(settingPath("OpenedPhraseBooks"),
         m_phraseBooks.size());

@@ -110,6 +110,15 @@
      <addaction name="separator"/>
      <addaction name="actionResetZoomToDefault"/>
     </widget>
+    <widget class="QMenu" name="menuGuesses">
+     <property name="title">
+      <string>Guesses</string>
+     </property>
+     <addaction name="actionShowMoreGuesses"/>
+     <addaction name="actionShowFewerGuesses"/>
+     <addaction name="separator"/>
+     <addaction name="actionResetGuessesToDefault"/>
+    </widget>
     <addaction name="actionResetSorting"/>
     <addaction name="actionDisplayGuesses"/>
     <addaction name="actionStatistics"/>
@@ -117,6 +126,7 @@
     <addaction name="actionVisualizeWhitespace"/>
     <addaction name="separator"/>
     <addaction name="menuZoom"/>
+    <addaction name="menuGuesses"/>
     <addaction name="separator"/>
     <addaction name="menuToolbars"/>
     <addaction name="menuViewViews"/>
@@ -924,6 +934,30 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+0</string>
+   </property>
+  </action>
+  <action name="actionShowMoreGuesses">
+   <property name="text">
+    <string>Show more</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt++</string>
+   </property>
+  </action>
+  <action name="actionShowFewerGuesses">
+   <property name="text">
+    <string>Show fewer</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+-</string>
+   </property>
+  </action>
+  <action name="actionResetGuessesToDefault">
+   <property name="text">
+    <string>Reset to default</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+0</string>
    </property>
   </action>
  </widget>
