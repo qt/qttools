@@ -33,6 +33,7 @@
 #include "messagemodel.h"
 
 #include <QDialog>
+#include <QRegularExpression>
 
 QT_BEGIN_NAMESPACE
 
@@ -41,15 +42,20 @@ class FindDialog : public QDialog, public Ui::FindDialog
     Q_OBJECT
 public:
     FindDialog(QWidget *parent = 0);
+    QRegularExpression &getRegExp() { return m_regExp; }
 
 signals:
     void findNext(const QString& text, DataModel::FindLocation where,
-                  bool matchCase, bool ignoreAccelerators, bool skipObsolete);
+                  bool matchCase, bool ignoreAccelerators, bool skipObsolete, bool useRegExp);
 
 private slots:
     void emitFindNext();
-    void verifyText(const QString &);
+    void verify();
     void find();
+
+private:
+    QRegularExpression m_regExp;
+    bool m_redText = false;
 };
 
 QT_END_NAMESPACE

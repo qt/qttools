@@ -44,14 +44,25 @@ FindDialog::FindDialog(QWidget *parent)
     findNxt->setEnabled(false);
 
     connect(findNxt, SIGNAL(clicked()), this, SLOT(emitFindNext()));
-    connect(led, SIGNAL(textChanged(QString)), this, SLOT(verifyText(QString)));
+    connect(useRegExp, SIGNAL(stateChanged(int)), this, SLOT(verify()));
+    connect(led, SIGNAL(textChanged(QString)), this, SLOT(verify()));
 
     led->setFocus();
 }
 
-void FindDialog::verifyText(const QString &text)
+void FindDialog::verify()
 {
-    findNxt->setEnabled(!text.isEmpty());
+    bool validRegExp = true;
+    if (useRegExp->isChecked() && !led->text().isEmpty()) {
+        m_regExp.setPattern(led->text());
+        validRegExp = m_regExp.isValid();
+    }
+    if (validRegExp && m_redText)
+        led->setStyleSheet(QStringLiteral("color: auto;"));
+    else if (!validRegExp && !m_redText)
+        led->setStyleSheet(QStringLiteral("color: red;"));
+    m_redText = !validRegExp;
+    findNxt->setEnabled(!led->text().isEmpty() && validRegExp);
 }
 
 void FindDialog::emitFindNext()
@@ -65,7 +76,8 @@ void FindDialog::emitFindNext()
                 (comments->isChecked() ? DataModel::Comments : 0));
     else
         where = DataModel::Translations;
-    emit findNext(led->text(), where, matchCase->isChecked(), ignoreAccelerators->isChecked(), skipObsolete->isChecked());
+    emit findNext(led->text(), where, matchCase->isChecked(), ignoreAccelerators->isChecked(),
+                  skipObsolete->isChecked(), useRegExp->isChecked());
     led->selectAll();
 }
 

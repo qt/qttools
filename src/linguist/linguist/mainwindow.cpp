@@ -277,6 +277,7 @@ MainWindow::MainWindow()
       m_findMatchCase(Qt::CaseInsensitive),
       m_findIgnoreAccelerators(true),
       m_findSkipObsolete(false),
+      m_findUseRegExp(false),
       m_findWhere(DataModel::NoLocation),
       m_translationSettingsDialog(0),
       m_settingCurrentMessage(false),
@@ -483,8 +484,8 @@ MainWindow::MainWindow()
             this, SLOT(updateTranslation(QStringList)));
     connect(m_messageEditor, SIGNAL(translatorCommentChanged(QString)),
             this, SLOT(updateTranslatorComment(QString)));
-    connect(m_findDialog, SIGNAL(findNext(QString,DataModel::FindLocation,bool,bool,bool)),
-            this, SLOT(findNext(QString,DataModel::FindLocation,bool,bool,bool)));
+    connect(m_findDialog, SIGNAL(findNext(QString,DataModel::FindLocation,bool,bool,bool,bool)),
+            this, SLOT(findNext(QString,DataModel::FindLocation,bool,bool,bool,bool)));
     connect(m_translateDialog, SIGNAL(requestMatchUpdate(bool&)), SLOT(updateTranslateHit(bool&)));
     connect(m_translateDialog, SIGNAL(activated(int)), SLOT(translate(int)));
 
@@ -986,8 +987,10 @@ bool MainWindow::searchItem(DataModel::FindLocation where, const QString &search
         // FIXME: This removes too much. The proper solution might be too slow, though.
         text.remove(QLatin1Char('&'));
 
-    int foundOffset = text.indexOf(m_findText, 0, m_findMatchCase);
-    return foundOffset >= 0;
+    if (m_findUseRegExp)
+        return m_findDialog->getRegExp().match(text).hasMatch();
+    else
+        return text.indexOf(m_findText, 0, m_findMatchCase) >= 0;
 }
 
 void MainWindow::findAgain()
@@ -1763,7 +1766,7 @@ bool MainWindow::next(bool checkUnfinished)
 }
 
 void MainWindow::findNext(const QString &text, DataModel::FindLocation where,
-                          bool matchCase, bool ignoreAccelerators, bool skipObsolete)
+                          bool matchCase, bool ignoreAccelerators, bool skipObsolete, bool useRegExp)
 {
     if (text.isEmpty())
         return;
@@ -1772,6 +1775,12 @@ void MainWindow::findNext(const QString &text, DataModel::FindLocation where,
     m_findMatchCase = matchCase ? Qt::CaseSensitive : Qt::CaseInsensitive;
     m_findIgnoreAccelerators = ignoreAccelerators;
     m_findSkipObsolete = skipObsolete;
+    m_findUseRegExp = useRegExp;
+    if (m_findUseRegExp) {
+        m_findDialog->getRegExp().setPatternOptions(matchCase
+                                                    ? QRegularExpression::NoPatternOption
+                                                    : QRegularExpression::CaseInsensitiveOption);
+    }
     m_ui.actionFindNext->setEnabled(true);
     findAgain();
 }
