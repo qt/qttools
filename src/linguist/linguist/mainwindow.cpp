@@ -2321,11 +2321,14 @@ void MainWindow::updateProgress()
 {
     int numEditable = m_dataModel->getNumEditable();
     int numFinished = m_dataModel->getNumFinished();
-    if (!m_dataModel->modelCount())
+    if (!m_dataModel->modelCount()) {
         m_progressLabel->setText(QString(QLatin1String("    ")));
-    else
-        m_progressLabel->setText(QString(QLatin1String(" %1/%2 "))
-                                 .arg(numFinished).arg(numEditable));
+        m_progressLabel->setToolTip(QString());
+    } else {
+        m_progressLabel->setText(QStringLiteral(" %1/%2 ").arg(numFinished).arg(numEditable));
+        m_progressLabel->setToolTip(tr("%n unfinished message(s) left.", 0,
+                                       numEditable - numFinished));
+    }
     bool enable = numFinished != numEditable;
     m_ui.actionPrevUnfinished->setEnabled(enable);
     m_ui.actionNextUnfinished->setEnabled(enable);
