@@ -72,6 +72,19 @@ public:
     }
 };
 
+class ServicesModel : public QStringListModel
+{
+public:
+    explicit ServicesModel(QObject *parent = nullptr)
+        : QStringListModel(parent)
+    {}
+
+    Qt::ItemFlags flags(const QModelIndex &index) const override
+    {
+        return QStringListModel::flags(index) & ~Qt::ItemIsEditable;
+    }
+};
+
 QDBusViewer::QDBusViewer(const QDBusConnection &connection, QWidget *parent)  :
     QWidget(parent),
     c(connection),
@@ -81,7 +94,7 @@ QDBusViewer::QDBusViewer(const QDBusConnection &connection, QWidget *parent)  :
     serviceFilterLine->setPlaceholderText(tr("Search..."));
 
     // Create model for services list
-    servicesModel = new QStringListModel(this);
+    servicesModel = new ServicesModel(this);
     // Wrap service list model in proxy for easy filtering and interactive sorting
     servicesProxyModel = new ServicesProxyModel(this);
     servicesProxyModel->setSourceModel(servicesModel);
