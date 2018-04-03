@@ -130,6 +130,14 @@
     </message>
 </context>
 <context>
+    <name>main</name>
+    <message>
+        <location filename="main.qml" line="3"/>
+        <source>xxx</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>scope</name>
     <message>
         <location filename="main.cpp" line="34"/>

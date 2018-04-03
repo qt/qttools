@@ -397,12 +397,17 @@ QSet<QString> Config::getOutputFormats() const
 
   If \a var is not contained in the location map it returns
   \a defaultString.
+
+  \note By default, \a defaultString is a null string. If \a var
+  is found but contains an empty string, that is returned instead.
+  This allows determining whether a configuration variable is
+  undefined (null string) or defined as empty (empty string).
  */
 QString Config::getString(const QString& var, const QString& defaultString) const
 {
     QList<ConfigVar> configVars = configVars_.values(var);
     if (!configVars.empty()) {
-        QString value;
+        QString value("");
         int i = configVars.size() - 1;
         while (i >= 0) {
             const ConfigVar& cv = configVars[i];

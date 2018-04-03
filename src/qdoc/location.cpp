@@ -463,11 +463,8 @@ QString Location::toString() const
 
 QString Location::top() const
 {
-    QString str = filePath();
-    if (!QDir::isAbsolutePath(str)) {
-        QDir path(str);
-        str = path.absolutePath();
-    }
+    QDir path(filePath());
+    QString str = path.absolutePath();
     if (lineNo() >= 1) {
         str += QLatin1Char(':');
         str += QString::number(lineNo());
