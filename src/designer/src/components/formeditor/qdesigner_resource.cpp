@@ -507,7 +507,8 @@ void QDesignerResource::saveDom(DomUI *ui, QWidget *widget)
         ui->setElementExportMacro(exportMacro);
     }
 
-    ui->setAttributeIdbasedtr(m_formWindow->useIdBasedTranslations());
+    if (m_formWindow->useIdBasedTranslations())
+        ui->setAttributeIdbasedtr(true);
 
     const QVariantMap designerFormData = m_formWindow->formData();
     if (!designerFormData.empty()) {
