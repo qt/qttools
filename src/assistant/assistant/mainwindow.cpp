@@ -163,7 +163,7 @@ MainWindow::MainWindow(CmdLineParser *cmdLine, QWidget *parent)
     connect(bookMarkManager, &BookmarkManager::setSource,
             m_centralWidget, &CentralWidget::setSource);
     connect(bookMarkManager, &BookmarkManager::setSourceInNewTab,
-            [openPagesManager](const QUrl &url){ openPagesManager->createPage(url); });
+            openPagesManager, [openPagesManager](const QUrl &url){ openPagesManager->createPage(url); });
 
     QHelpSearchEngine *searchEngine = helpEngineWrapper.searchEngine();
     connect(searchEngine, &QHelpSearchEngine::indexingStarted,
@@ -681,7 +681,7 @@ void MainWindow::setupActions()
     connect(m_centralWidget, &CentralWidget::backwardAvailable,
             globalActions, &GlobalActions::updateActions);
     connect(m_centralWidget, &CentralWidget::highlighted,
-            [this](const QString &link) { statusBar()->showMessage(link);} );
+            this, [this](const QString &link) { statusBar()->showMessage(link);} );
 
     // index window
     connect(m_indexWindow, &IndexWindow::linkActivated,

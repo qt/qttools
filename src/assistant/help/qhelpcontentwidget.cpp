@@ -349,7 +349,7 @@ QHelpContentModel::QHelpContentModel(QHelpEnginePrivate *helpEngine)
     connect(d->qhelpContentProvider, &QHelpContentProvider::finishedSuccessFully,
             this, &QHelpContentModel::insertContents, Qt::QueuedConnection);
     connect(helpEngine->q, &QHelpEngineCore::readersAboutToBeInvalidated,
-            [this]() { invalidateContents(); });
+            this, [this]() { invalidateContents(); });
 }
 
 /*!
