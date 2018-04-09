@@ -44,18 +44,18 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
-    QAction *quitAction = fileMenu->addAction(tr("&Quit"), this, SLOT(close()));
+    QAction *quitAction = fileMenu->addAction(tr("&Quit"), this, &QWidget::close);
     quitAction->setShortcut(QKeySequence::Quit);
     quitAction->setMenuRole(QAction::QuitRole);
 
     QMenu *helpMenu = menuBar()->addMenu(tr("&Help"));
     QAction *aboutAction = helpMenu->addAction(tr("&About"));
     aboutAction->setMenuRole(QAction::AboutRole);
-    QObject::connect(aboutAction, SIGNAL(triggered()), this, SLOT(about()));
+    QObject::connect(aboutAction, &QAction::triggered, this, &MainWindow::about);
 
     QAction *aboutQtAction = helpMenu->addAction(tr("About &Qt"));
     aboutQtAction->setMenuRole(QAction::AboutQtRole);
-    QObject::connect(aboutQtAction, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+    QObject::connect(aboutQtAction, &QAction::triggered, qApp, &QApplication::aboutQt);
 
     tabWidget = new QTabWidget;
     setCentralWidget(tabWidget);

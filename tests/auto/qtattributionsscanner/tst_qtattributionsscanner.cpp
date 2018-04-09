@@ -81,7 +81,7 @@ void tst_qtattributionsscanner::test_data()
             << QStringLiteral("warnings/unknown/expected.json")
             << QStringLiteral("warnings/unknown/expected.error");
     QTest::newRow("singlefile")
-            << QStringLiteral("good/minimal/qt_attribution.json")
+            << QStringLiteral("good/minimal/qt_attribution_test.json")
             << QStringLiteral("good/minimal/expected.json")
             << QStringLiteral("good/minimal/expected.error");
 }
@@ -106,6 +106,9 @@ void tst_qtattributionsscanner::test()
 
     QProcess proc;
     QString command = m_cmd + " " + dir + " --output-format json";
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    env.insert("QT_ATTRIBUTIONSSCANNER_TEST", "1");
+    proc.setProcessEnvironment(env);
     proc.start(command, QIODevice::ReadWrite | QIODevice::Text);
 
     QVERIFY2(proc.waitForStarted(), qPrintable(command + QLatin1String(" :") + proc.errorString()));

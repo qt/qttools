@@ -46,8 +46,8 @@ PropertyDialog::PropertyDialog(QWidget *parent, Qt::WindowFlags f)
     propertyTable->horizontalHeader()->setStretchLastSection(true);
     propertyTable->setEditTriggers(QAbstractItemView::AllEditTriggers);
 
-    connect(buttonBox, SIGNAL(accepted()), SLOT(accept()), Qt::QueuedConnection);
-    connect(buttonBox, SIGNAL(rejected()), SLOT(reject()), Qt::QueuedConnection);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept, Qt::QueuedConnection);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject, Qt::QueuedConnection);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->addWidget(label);

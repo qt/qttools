@@ -78,6 +78,7 @@ private slots:
     void serviceUnregistered(const QString &service);
     void serviceOwnerChanged(const QString &name, const QString &oldOwner, const QString &newOwner);
 
+    void serviceFilterReturnPressed();
     void activate(const QModelIndex &item);
 
     void logError(const QString &msg);
@@ -85,6 +86,8 @@ private slots:
 
 private:
     void logMessage(const QString &msg);
+    void showEvent(QShowEvent *) override;
+    bool eventFilter(QObject *obj, QEvent *event) override;
 
     QDBusConnection c;
     QString currentService;

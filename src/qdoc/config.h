@@ -102,6 +102,7 @@ public:
     QString getIncludeFilePath(const QString& fileName) const;
     QStringList getExampleQdocFiles(const QSet<QString> &excludedDirs, const QSet<QString> &excludedFiles);
     QStringList getExampleImageFiles(const QSet<QString> &excludedDirs, const QSet<QString> &excludedFiles);
+    QByteArray getEnv(const char *varName);
 
     static QStringList loadMaster(const QString& fileName);
     static bool isFileExcluded(const QString &fileName, const QSet<QString> &excludedFiles);

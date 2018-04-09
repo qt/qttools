@@ -40,7 +40,7 @@ void LogViewer::contextMenuEvent(QContextMenuEvent *event)
 {
     QMenu *menu = createStandardContextMenu();
     QAction *action = menu->addAction(tr("Clear"));
-    connect(action, SIGNAL(triggered()), this, SLOT(clear()));
+    connect(action, &QAction::triggered, this, &QTextEdit::clear);
     menu->exec(event->globalPos());
     delete menu;
 }
