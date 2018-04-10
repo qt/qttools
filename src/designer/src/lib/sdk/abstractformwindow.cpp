@@ -821,6 +821,22 @@ void QDesignerFormWindowInterface::activateResourceFilePaths(const QStringList &
 */
 
 /*!
+    \fn ResourceFileSaveMode QDesignerFormWindowInterface::resourceFileSaveMode() const
+
+    Returns the resource file save mode behavior.
+
+    \sa setResourceFileSaveMode()
+*/
+
+/*!
+    \fn void QDesignerFormWindowInterface::setResourceFileSaveMode(ResourceFileSaveMode behavior)
+
+    Sets the resource file save mode \a behavior.
+
+    \sa resourceFileSaveMode()
+*/
+
+/*!
     \fn void QDesignerFormWindowInterface::widgetManaged(QWidget *widget)
 
     This signal is emitted whenever a widget on the form becomes managed.
