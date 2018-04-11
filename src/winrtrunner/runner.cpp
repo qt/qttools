@@ -65,11 +65,27 @@ public:
     QString manifest;
     QStringList arguments;
     int deviceIndex;
-    QString deviceOutputFile;
-    QString localOutputFile;
+    struct TestPaths {
+        // File path in application bundle
+        QString deviceOutputFile;
+        // temporary output path (if absolute path or stdout (-) was given
+        QString localOutputFile;
+        // final output location. Might be equal to localOutputFile or stdout (-)
+        QString finalOutputFile;
+    };
+    QVector<TestPaths> testPaths;
 
     QString profile;
     QScopedPointer<RunnerEngine> engine;
+
+    QString defaultOutputFileName(const QString &format = QString())
+    {
+        QString ret = QFileInfo(engine->executable()).baseName() + QStringLiteral("_output");
+        if (!format.isEmpty())
+            ret += QLatin1Char('_') + format;
+        ret += QStringLiteral(".txt");
+        return ret;
+    }
 };
 
 QMap<QString, QStringList> Runner::deviceNames()
@@ -247,19 +263,46 @@ bool Runner::setupTest()
     Q_ASSERT(d->engine);
 
     // Fix-up output path
-    int outputIndex = d->arguments.indexOf(QStringLiteral("-o")) + 1;
-    if (outputIndex > 0 && d->arguments.size() > outputIndex) {
-        d->localOutputFile = d->arguments.at(outputIndex);
-    } else {
-        if (outputIndex > 0)
-            d->arguments.removeAt(outputIndex);
-        d->localOutputFile = QFileInfo(d->engine->executable()).baseName() + QStringLiteral("_output.txt");
+    int outputIndex = d->arguments.indexOf(QStringLiteral("-o"));
+    // if no -o was given: Use the default location winrtrunner can read from and write on stdout
+    if (outputIndex == -1) {
+        RunnerPrivate::TestPaths out;
+        out.localOutputFile = d->defaultOutputFileName();
+        out.finalOutputFile = QLatin1Char('-');
         d->arguments.append(QStringLiteral("-o"));
-        d->arguments.append(QString());
-        outputIndex = d->arguments.length() - 1;
+        out.deviceOutputFile = d->engine->devicePath(out.localOutputFile);
+        d->arguments.append(out.deviceOutputFile);
+        d->testPaths.append(out);
+    } else {
+        while (outputIndex != -1) {
+            ++outputIndex;
+            QString format;
+            RunnerPrivate::TestPaths out;
+            if (d->arguments.size() <= outputIndex) {
+                qCWarning(lcWinRtRunner) << "-o needs an extra parameter specifying the filename and optional format";
+                return false;
+            }
+
+            QString output = d->arguments.at(outputIndex);
+            int commaIndex = output.indexOf(QLatin1Char(','));
+            // -o <name>,<format>
+            if (commaIndex != -1) {
+                format = output.mid(commaIndex + 1);
+                output = output.left(commaIndex);
+            }
+            out.finalOutputFile = output;
+            if (QFileInfo(output).isAbsolute() || output == QLatin1Char('-'))
+                out.localOutputFile = d->defaultOutputFileName(format);
+            else
+                out.localOutputFile = output;
+            out.deviceOutputFile = d->engine->devicePath(out.localOutputFile);
+            d->arguments[outputIndex] = out.deviceOutputFile;
+            if (!format.isEmpty())
+                d->arguments[outputIndex] += QLatin1Char(',') + format;
+            d->testPaths.append(out);
+            outputIndex = d->arguments.indexOf(QStringLiteral("-o"), outputIndex);
+        }
     }
-    d->deviceOutputFile = d->engine->devicePath(d->localOutputFile);
-    d->arguments[outputIndex] = d->deviceOutputFile;
 
     // Write a qt.conf to the executable directory
     QDir executableDir = QFileInfo(d->engine->executable()).absoluteDir();
@@ -281,22 +324,36 @@ bool Runner::collectTest()
     Q_ASSERT(d->engine);
 
     // Fetch test output
-    if (!d->engine->receiveFile(d->deviceOutputFile, d->localOutputFile)) {
-        qCWarning(lcWinRtRunner).nospace().noquote()
+    for (RunnerPrivate::TestPaths output : d->testPaths) {
+        if (!d->engine->receiveFile(output.deviceOutputFile, output.localOutputFile)) {
+            qCWarning(lcWinRtRunner).nospace().noquote()
                 << "Unable to copy test output file \""
-                << QDir::toNativeSeparators(d->deviceOutputFile)
-                << "\" to local file \"" << QDir::toNativeSeparators(d->localOutputFile) << "\".";
-        return false;
-    }
+                << QDir::toNativeSeparators(output.deviceOutputFile)
+                << "\" to local file \"" << QDir::toNativeSeparators(output.localOutputFile) << "\".";
+            return false;
+        }
 
-    QFile testResults(d->localOutputFile);
-    if (!testResults.open(QFile::ReadOnly)) {
-        qCWarning(lcWinRtRunner) << "Unable to read test results:" << testResults.errorString();
-        return false;
-    }
+        if (output.finalOutputFile == QLatin1Char('-')) {
+            QFile testResults(output.localOutputFile);
+            if (!testResults.open(QFile::ReadOnly)) {
+                qCWarning(lcWinRtRunner) << "Unable to read test results:" << testResults.errorString();
+                return false;
+            }
 
-    const QByteArray contents = testResults.readAll();
-    std::fputs(contents.constData(), stdout);
+            const QByteArray contents = testResults.readAll();
+            std::fputs(contents.constData(), stdout);
+        } else if (output.localOutputFile != output.finalOutputFile) {
+            if (QFile::exists(output.finalOutputFile) && !QFile::remove(output.finalOutputFile)) {
+                qCWarning(lcWinRtRunner) << "Could not remove file" << output.finalOutputFile;
+                return false;
+            }
+            if (!QFile(output.localOutputFile).copy(output.finalOutputFile)) {
+                qCWarning(lcWinRtRunner) << "Could not copy intermediate file" << output.localOutputFile
+                    << "to final destination" << output.finalOutputFile;
+                return false;
+            }
+        }
+    }
     return true;
 }
 
