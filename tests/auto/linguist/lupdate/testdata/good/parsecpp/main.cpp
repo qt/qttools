@@ -655,3 +655,19 @@ QString unicodeEscape()
 {
     return QApplication::tr("Context", "soft\u00ADhyphen");
 }
+
+
+
+// QTBUG-63364: C++17 nested namespaces
+namespace Outer::Inner {
+
+class Class
+{
+    Q_OBJECT
+    void function()
+    {
+        tr("MoreFunStuff!");
+    }
+};
+
+}

@@ -1894,9 +1894,23 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                 text = yyWord;
                 text.detach();
                 HashString ns = HashString(text);
-                yyTok = getToken();
+                NamespaceList nestedNamespaces;
+                forever {
+                    yyTok = getToken();
+                    if (yyTok != Tok_ColonColon)
+                        break;
+                    yyTok = getToken();
+                    if (yyTok != Tok_Ident)
+                        break;  // whoops
+                    nestedNamespaces.append(ns);
+                    text = yyWord;
+                    text.detach();
+                    ns = HashString(text);
+                }
                 if (yyTok == Tok_LeftBrace) {
                     namespaceDepths.push(namespaces.count());
+                    for (const auto &nns : nestedNamespaces)
+                        enterNamespace(&namespaces, nns);
                     enterNamespace(&namespaces, ns);
 
                     functionContext = namespaces;
@@ -1907,6 +1921,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                     yyTok = getToken();
                 } else if (yyTok == Tok_Equals) {
                     // e.g. namespace Is = OuterSpace::InnerSpace;
+                    // Note: 'Is' being qualified is invalid per C++17.
                     NamespaceList fullName;
                     yyTok = getToken();
                     if (yyTok == Tok_ColonColon)
