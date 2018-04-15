@@ -148,6 +148,7 @@
     <addaction name="actionNextUnfinished"/>
     <addaction name="actionPrev"/>
     <addaction name="actionNext"/>
+    <addaction name="actionDone"/>
     <addaction name="actionDoneAndNext"/>
     <addaction name="actionBeginFromSource"/>
    </widget>
@@ -958,6 +959,23 @@
    </property>
    <property name="shortcut">
     <string>Alt+0</string>
+   </property>
+  </action>
+  <action name="actionDone">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>D&amp;one</string>
+   </property>
+   <property name="toolTip">
+    <string>Mark item as done</string>
+   </property>
+   <property name="whatsThis">
+    <string>Mark this item as done.</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::NoRole</enum>
    </property>
   </action>
  </widget>

@@ -1588,12 +1588,16 @@ void MainWindow::refreshItemViews()
     updateStatistics();
 }
 
-void MainWindow::doneAndNext()
+void MainWindow::done()
 {
     int model = m_messageEditor->activeModel();
     if (model >= 0 && m_dataModel->isModelWritable(model))
         m_dataModel->setFinished(m_currentIndex, true);
+}
 
+void MainWindow::doneAndNext()
+{
+    done();
     if (!m_messageEditor->focusNextUnfinished())
         nextUnfinished();
 }
@@ -1843,6 +1847,7 @@ void MainWindow::setupMenuBar()
     // No well defined theme icons for these actions
     m_ui.actionAccelerators->setIcon(QIcon(prefix + QStringLiteral("/accelerator.png")));
     m_ui.actionOpenPhraseBook->setIcon(QIcon(prefix + QStringLiteral("/book.png")));
+    m_ui.actionDone->setIcon(QIcon(prefix + QStringLiteral("/done.png")));
     m_ui.actionDoneAndNext->setIcon(QIcon(prefix + QStringLiteral("/doneandnext.png")));
     m_ui.actionNext->setIcon(QIcon(prefix + QStringLiteral("/next.png")));
     m_ui.actionNextUnfinished->setIcon(QIcon(prefix + QStringLiteral("/nextunfinished.png")));
@@ -1902,6 +1907,7 @@ void MainWindow::setupMenuBar()
     connect(m_ui.actionNextUnfinished, SIGNAL(triggered()), this, SLOT(nextUnfinished()));
     connect(m_ui.actionNext, SIGNAL(triggered()), this, SLOT(next()));
     connect(m_ui.actionPrev, SIGNAL(triggered()), this, SLOT(prev()));
+    connect(m_ui.actionDone, SIGNAL(triggered()), this, SLOT(done()));
     connect(m_ui.actionDoneAndNext, SIGNAL(triggered()), this, SLOT(doneAndNext()));
     connect(m_ui.actionBeginFromSource, SIGNAL(triggered()), m_messageEditor, SLOT(beginFromSource()));
     connect(m_messageEditor, SIGNAL(beginFromSourceAvailable(bool)), m_ui.actionBeginFromSource, SLOT(setEnabled(bool)));
@@ -1962,6 +1968,9 @@ void MainWindow::setupMenuBar()
 
     m_ui.actionManual->setWhatsThis(tr("Display the manual for %1.").arg(tr("Qt Linguist")));
     m_ui.actionAbout->setWhatsThis(tr("Display information about %1.").arg(tr("Qt Linguist")));
+    m_ui.actionDone->setShortcuts(QList<QKeySequence>()
+                                     << QKeySequence(QLatin1String("Alt+Return"))
+                                     << QKeySequence(QLatin1String("Alt+Enter")));
     m_ui.actionDoneAndNext->setShortcuts(QList<QKeySequence>()
                                             << QKeySequence(QLatin1String("Ctrl+Return"))
                                             << QKeySequence(QLatin1String("Ctrl+Enter")));
@@ -2194,6 +2203,7 @@ void MainWindow::setupToolBars()
     translationst->addAction(m_ui.actionNext);
     translationst->addAction(m_ui.actionPrevUnfinished);
     translationst->addAction(m_ui.actionNextUnfinished);
+    translationst->addAction(m_ui.actionDone);
     translationst->addAction(m_ui.actionDoneAndNext);
 
     validationt->addAction(m_ui.actionAccelerators);
@@ -2345,6 +2355,7 @@ void MainWindow::updateProgress()
     bool enable = numFinished != numEditable;
     m_ui.actionPrevUnfinished->setEnabled(enable);
     m_ui.actionNextUnfinished->setEnabled(enable);
+    m_ui.actionDone->setEnabled(enable);
     m_ui.actionDoneAndNext->setEnabled(enable);
 
     m_ui.actionPrev->setEnabled(m_dataModel->contextCount() > 0);
