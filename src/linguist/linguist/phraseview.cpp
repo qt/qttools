@@ -247,7 +247,7 @@ void PhraseView::setSourceText(int model, const QString &sourceText)
                       .arg(candidate.context, QKeySequence(Qt::CTRL | (Qt::Key_0 + (n + 1)))
                                               .toString(QKeySequence::NativeText));
             else
-                def = tr("Guess");
+                def = tr("Guess from '%1'").arg(candidate.context);
             Phrase *guess = new Phrase(candidate.source, candidate.target, def, n);
             m_guesses.append(guess);
             m_phraseModel->addPhrase(guess);
