@@ -140,6 +140,7 @@ private slots:
     void updateLatestModel(const QModelIndex &index);
     void selectedContextChanged(const QModelIndex &sortedIndex, const QModelIndex &oldIndex);
     void selectedMessageChanged(const QModelIndex &sortedIndex, const QModelIndex &oldIndex);
+    void setCurrentMessage(int modelIndex, const Candidate &tm);
 
     // To synchronize from the message editor to the model ...
     void updateTranslation(const QStringList &translations);

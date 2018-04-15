@@ -433,6 +433,8 @@ public:
         { return multiContextItem(index.context())->multiMessageItem(index.message()); }
     MessageItem *messageItem(const MultiDataIndex &index, int model) const;
     MessageItem *messageItem(const MultiDataIndex &index) const { return messageItem(index, index.model()); }
+    int findContextIndex(const QString &context) const;
+    MultiContextItem *findContext(const QString &context) const;
 
     static QString condenseFileNames(const QStringList &names);
     static QStringList prettifyFileNames(const QStringList &names);
@@ -458,9 +460,6 @@ private slots:
 private:
     friend class MultiDataModelIterator;
     friend class MessageModel;
-
-    int findContextIndex(const QString &context) const;
-    MultiContextItem *findContext(const QString &context) const;
 
     ContextItem *contextItem(const MultiDataIndex &index) const
         { return multiContextItem(index.context())->contextItem(index.model()); }

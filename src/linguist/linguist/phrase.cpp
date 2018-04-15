@@ -58,10 +58,9 @@ Phrase::Phrase()
 {
 }
 
-Phrase::Phrase(const QString &source, const QString &target,
-               const QString &definition, int sc)
-    : shrtc(sc), s(source), t(target), d(definition),
-      m_phraseBook(0)
+Phrase::Phrase(const QString &source, const QString &target, const QString &definition,
+               const Candidate &candidate, int sc)
+    : shrtc(sc), s(source), t(target), d(definition), cand(candidate), m_phraseBook(0)
 {
 }
 

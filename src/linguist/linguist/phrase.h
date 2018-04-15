@@ -34,6 +34,8 @@
 #include <QList>
 #include <QtCore/QLocale>
 
+#include "simtexth.h"
+
 QT_BEGIN_NAMESPACE
 
 class PhraseBook;
@@ -42,8 +44,8 @@ class Phrase
 {
 public:
     Phrase();
-    Phrase(const QString &source, const QString &target,
-            const QString &definition, int sc = -1);
+    Phrase(const QString &source, const QString &target, const QString &definition,
+            const Candidate &candidate, int sc = -1);
     Phrase(const QString &source, const QString &target,
             const QString &definition, PhraseBook *phraseBook);
 
@@ -54,6 +56,7 @@ public:
     QString definition() const {return d;}
     void setDefinition (const QString &nd);
     int shortcut() const { return shrtc; }
+    Candidate candidate() const { return cand; }
     PhraseBook *phraseBook() const { return m_phraseBook; }
     void setPhraseBook(PhraseBook *book) { m_phraseBook = book; }
 
@@ -62,6 +65,7 @@ private:
     QString s;
     QString t;
     QString d;
+    Candidate cand;
     PhraseBook *m_phraseBook;
 };
 

@@ -427,6 +427,8 @@ MainWindow::MainWindow()
 
     connect(m_phraseView, SIGNAL(phraseSelected(int,QString)),
             m_messageEditor, SLOT(setTranslation(int,QString)));
+    connect(m_phraseView, SIGNAL(setCurrentMessageFromGuess(int,Candidate)),
+            this, SLOT(setCurrentMessage(int,Candidate)));
     connect(m_contextView->selectionModel(),
             SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
             this, SLOT(selectedContextChanged(QModelIndex,QModelIndex)));
@@ -1278,7 +1280,8 @@ void MainWindow::printPhraseBook(QAction *action)
 void MainWindow::addToPhraseBook()
 {
     MessageItem *currentMessage = m_dataModel->messageItem(m_currentIndex);
-    Phrase *phrase = new Phrase(currentMessage->text(), currentMessage->translation(), QString());
+    Phrase *phrase = new Phrase(currentMessage->text(), currentMessage->translation(),
+                                QString(), nullptr);
     QStringList phraseBookList;
     QHash<QString, PhraseBook *> phraseBookHash;
     foreach (PhraseBook *pb, m_phraseBooks) {
@@ -2247,6 +2250,15 @@ void MainWindow::setCurrentMessage(const QModelIndex &index, int model)
     const QModelIndex &theIndex = m_messageModel->index(index.row(), model + 1, index.parent());
     setCurrentMessage(theIndex);
     m_messageEditor->setEditorFocus(model);
+}
+
+void MainWindow::setCurrentMessage(int modelIndex, const Candidate &cand)
+{
+    int contextIndex = m_dataModel->findContextIndex(cand.context);
+    int messageIndex = m_dataModel->multiContextItem(contextIndex)->findMessage(cand.source,
+                                                                                cand.disambiguation);
+    setCurrentMessage(m_messageModel->modelIndex(MultiDataIndex(modelIndex, contextIndex,
+                                                                messageIndex)));
 }
 
 QModelIndex MainWindow::currentContextIndex() const

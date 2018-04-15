@@ -82,6 +82,7 @@ public slots:
 signals:
     void phraseSelected(int latestModel, const QString &phrase);
     void showFewerGuessesAvailable(bool canShow);
+    void setCurrentMessageFromGuess(int modelIndex, const Candidate &cand);
 
 protected:
     // QObject
@@ -94,6 +95,7 @@ private slots:
     void selectPhrase(const QModelIndex &index);
     void selectPhrase();
     void editPhrase();
+    void gotoMessageFromGuess();
     void moreGuesses();
     void fewerGuesses();
     void resetNumGuesses();

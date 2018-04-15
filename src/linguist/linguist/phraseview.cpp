@@ -108,10 +108,16 @@ void PhraseView::contextMenuEvent(QContextMenuEvent *event)
 
     QAction *editAction = new QAction(tr("Edit"), contextMenu);
     connect(editAction, SIGNAL(triggered()), this, SLOT(editPhrase()));
-    editAction->setEnabled(model()->flags(index) & Qt::ItemIsEditable);
+    Qt::ItemFlags isFromPhraseBook = model()->flags(index) & Qt::ItemIsEditable;
+    editAction->setEnabled(isFromPhraseBook);
+
+    QAction *gotoAction = new QAction(tr("Go to"), contextMenu);
+    connect(gotoAction, SIGNAL(triggered()), this, SLOT(gotoMessageFromGuess()));
+    gotoAction->setEnabled(!isFromPhraseBook);
 
     contextMenu->addAction(insertAction);
     contextMenu->addAction(editAction);
+    contextMenu->addAction(gotoAction);
 
     contextMenu->exec(event->globalPos());
     event->accept();
@@ -149,6 +155,12 @@ void PhraseView::selectPhrase()
 void PhraseView::editPhrase()
 {
     edit(currentIndex());
+}
+
+void PhraseView::gotoMessageFromGuess()
+{
+    emit setCurrentMessageFromGuess(m_modelIndex,
+                                    m_phraseModel->phrase(currentIndex())->candidate());
 }
 
 void PhraseView::setMaxCandidates(const int max)
@@ -200,7 +212,7 @@ static CandidateList similarTextHeuristicCandidates(MultiDataModel *model, int m
         if (candidates.count() == maxCandidates && score > scores[maxCandidates - 1])
             candidates.removeLast();
         if (candidates.count() < maxCandidates && score >= textSimilarityThreshold ) {
-            Candidate cand(s, mtm.translation(), mtm.context());
+            Candidate cand(mtm.context(), s, mtm.comment(), mtm.translation());
 
             int i;
             for (i = 0; i < candidates.size(); ++i) {
@@ -248,7 +260,7 @@ void PhraseView::setSourceText(int model, const QString &sourceText)
                                               .toString(QKeySequence::NativeText));
             else
                 def = tr("Guess from '%1'").arg(candidate.context);
-            Phrase *guess = new Phrase(candidate.source, candidate.target, def, n);
+            Phrase *guess = new Phrase(candidate.source, candidate.translation, def, candidate, n);
             m_guesses.append(guess);
             m_phraseModel->addPhrase(guess);
             ++n;
