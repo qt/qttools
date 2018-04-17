@@ -188,13 +188,15 @@ bool NewForm::openTemplate(QString *ptrToErrorMessage)
 
     tempFormFile.setAutoRemove(true);
     if (!tempFormFile.open()) {
-        *ptrToErrorMessage = tr("A temporary form file could not be created in %1.").arg(QDir::tempPath());
+        *ptrToErrorMessage = tr("A temporary form file could not be created in %1: %2")
+            .arg(QDir::toNativeSeparators(QDir::tempPath()), tempFormFile.errorString());
         return false;
     }
     const QString tempFormFileName = tempFormFile.fileName();
     tempFormFile.write(contents.toUtf8());
     if (!tempFormFile.flush())  {
-        *ptrToErrorMessage = tr("The temporary form file %1 could not be written.").arg(tempFormFileName);
+        *ptrToErrorMessage = tr("The temporary form file %1 could not be written: %2")
+            .arg(QDir::toNativeSeparators(tempFormFileName), tempFormFile.errorString());
         return false;
     }
     tempFormFile.close();
