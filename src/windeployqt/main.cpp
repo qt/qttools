@@ -668,13 +668,11 @@ static inline QString helpText(const QCommandLineParser &p)
 
 static inline bool isQtModule(const QString &libName)
 {
-    // Match Standard modules, Qt5XX.dll, Qt[Commercial]Charts.dll and special cases.
-    return libName.size() > 2
-        && ((libName.startsWith(QLatin1String("Qt"), Qt::CaseInsensitive) && libName.at(2).isDigit())
-            || libName.startsWith(QLatin1String("QtCommercial"), Qt::CaseInsensitive)
-            || libName.startsWith(QLatin1String("QtCharts"), Qt::CaseInsensitive)
-            || libName.startsWith(QLatin1String("DataVisualization"), Qt::CaseInsensitive)
-            || libName.startsWith(QLatin1String("Enginio"), Qt::CaseInsensitive));
+    // Match Standard modules named Qt5XX.dll
+    if (libName.size() < 3 || !libName.startsWith(QLatin1String("Qt"), Qt::CaseInsensitive))
+        return false;
+    const QChar version = libName.at(2);
+    return version.isDigit() && (version.toLatin1() - '0') == QT_VERSION_MAJOR;
 }
 
 // Helper for recursively finding all dependent Qt libraries.
