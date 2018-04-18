@@ -44,9 +44,6 @@
 
 QT_BEGIN_NAMESPACE
 
-// Maximum number of guesses to display
-static const int MaxCandidates = 5;
-
 static QString phraseViewHeaderKey()
 {
     return settingPath("PhraseViewHeader");
@@ -154,6 +151,30 @@ void PhraseView::editPhrase()
     edit(currentIndex());
 }
 
+void PhraseView::setMaxCandidates(const int max)
+{
+    m_maxCandidates = max;
+    emit showFewerGuessesAvailable(m_maxCandidates > DefaultMaxCandidates);
+}
+
+void PhraseView::moreGuesses()
+{
+    setMaxCandidates(m_maxCandidates + DefaultMaxCandidates);
+    setSourceText(m_modelIndex, m_sourceText);
+}
+
+void PhraseView::fewerGuesses()
+{
+    setMaxCandidates(m_maxCandidates - DefaultMaxCandidates);
+    setSourceText(m_modelIndex, m_sourceText);
+}
+
+void PhraseView::resetNumGuesses()
+{
+    setMaxCandidates(DefaultMaxCandidates);
+    setSourceText(m_modelIndex, m_sourceText);
+}
+
 static CandidateList similarTextHeuristicCandidates(MultiDataModel *model, int mi,
     const char *text, int maxCandidates)
 {
@@ -179,7 +200,7 @@ static CandidateList similarTextHeuristicCandidates(MultiDataModel *model, int m
         if (candidates.count() == maxCandidates && score > scores[maxCandidates - 1])
             candidates.removeLast();
         if (candidates.count() < maxCandidates && score >= textSimilarityThreshold ) {
-            Candidate cand(s, mtm.translation());
+            Candidate cand(s, mtm.translation(), mtm.context());
 
             int i;
             for (i = 0; i < candidates.size(); ++i) {
@@ -217,14 +238,16 @@ void PhraseView::setSourceText(int model, const QString &sourceText)
 
     if (!sourceText.isEmpty() && m_doGuesses) {
         CandidateList cl = similarTextHeuristicCandidates(m_dataModel, model,
-            sourceText.toLatin1(), MaxCandidates);
+            sourceText.toLatin1(), m_maxCandidates);
         int n = 0;
         foreach (const Candidate &candidate, cl) {
             QString def;
             if (n < 9)
-                def = tr("Guess (%1)").arg(QKeySequence(Qt::CTRL | (Qt::Key_0 + (n + 1))).toString(QKeySequence::NativeText));
+                def = tr("Guess from '%1' (%2)")
+                      .arg(candidate.context, QKeySequence(Qt::CTRL | (Qt::Key_0 + (n + 1)))
+                                              .toString(QKeySequence::NativeText));
             else
-                def = tr("Guess");
+                def = tr("Guess from '%1'").arg(candidate.context);
             Phrase *guess = new Phrase(candidate.source, candidate.target, def, n);
             m_guesses.append(guess);
             m_phraseModel->addPhrase(guess);

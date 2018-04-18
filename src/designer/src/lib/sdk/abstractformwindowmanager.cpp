@@ -434,6 +434,12 @@ QAction *QDesignerFormWindowManagerInterface::actionSimplifyLayout() const
 */
 
 /*!
+  \fn QPixmap QDesignerFormWindowManagerInterface::createPreviewPixmap() const
+
+  Creates a pixmap representing the preview of the currently active form.
+*/
+
+/*!
     Allows you to intervene and control \QD's "undo" action. The
     function returns the original action.
 

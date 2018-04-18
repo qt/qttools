@@ -62,7 +62,7 @@ BookmarkManagerWidget::BookmarkManagerWidget(BookmarkModel *sourceModel,
             this, &BookmarkManagerWidget::customContextMenuRequested);
 
     connect(ui.remove, &QAbstractButton::clicked,
-            [this]() { removeItem(); });
+            this, [this]() { removeItem(); });
     connect(ui.lineEdit, &QLineEdit::textChanged,
             this, &BookmarkManagerWidget::textChanged);
     QShortcut *shortcut = new QShortcut(QKeySequence::Find, ui.lineEdit);

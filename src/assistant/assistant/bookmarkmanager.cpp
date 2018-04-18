@@ -183,7 +183,7 @@ BookmarkManager::BookmarkManager()
     bookmarkWidget->ui.stackedWidget->addWidget(bookmarkTreeView);
 
     connect(bookmarkTreeView, &QAbstractItemView::activated,
-            [this](const QModelIndex &index) { setSourceFromIndex(index, false); });
+            this, [this](const QModelIndex &index) { setSourceFromIndex(index, false); });
     connect(bookmarkTreeView, &QWidget::customContextMenuRequested,
             this, &BookmarkManager::customContextMenuRequested);
     connect(bookmarkTreeView, &BookmarkTreeView::editingDone,

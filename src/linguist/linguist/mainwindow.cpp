@@ -277,6 +277,7 @@ MainWindow::MainWindow()
       m_findMatchCase(Qt::CaseInsensitive),
       m_findIgnoreAccelerators(true),
       m_findSkipObsolete(false),
+      m_findUseRegExp(false),
       m_findWhere(DataModel::NoLocation),
       m_translationSettingsDialog(0),
       m_settingCurrentMessage(false),
@@ -483,8 +484,8 @@ MainWindow::MainWindow()
             this, SLOT(updateTranslation(QStringList)));
     connect(m_messageEditor, SIGNAL(translatorCommentChanged(QString)),
             this, SLOT(updateTranslatorComment(QString)));
-    connect(m_findDialog, SIGNAL(findNext(QString,DataModel::FindLocation,bool,bool,bool)),
-            this, SLOT(findNext(QString,DataModel::FindLocation,bool,bool,bool)));
+    connect(m_findDialog, SIGNAL(findNext(QString,DataModel::FindLocation,bool,bool,bool,bool)),
+            this, SLOT(findNext(QString,DataModel::FindLocation,bool,bool,bool,bool)));
     connect(m_translateDialog, SIGNAL(requestMatchUpdate(bool&)), SLOT(updateTranslateHit(bool&)));
     connect(m_translateDialog, SIGNAL(activated(int)), SLOT(translate(int)));
 
@@ -986,8 +987,10 @@ bool MainWindow::searchItem(DataModel::FindLocation where, const QString &search
         // FIXME: This removes too much. The proper solution might be too slow, though.
         text.remove(QLatin1Char('&'));
 
-    int foundOffset = text.indexOf(m_findText, 0, m_findMatchCase);
-    return foundOffset >= 0;
+    if (m_findUseRegExp)
+        return m_findDialog->getRegExp().match(text).hasMatch();
+    else
+        return text.indexOf(m_findText, 0, m_findMatchCase) >= 0;
 }
 
 void MainWindow::findAgain()
@@ -1763,7 +1766,7 @@ bool MainWindow::next(bool checkUnfinished)
 }
 
 void MainWindow::findNext(const QString &text, DataModel::FindLocation where,
-                          bool matchCase, bool ignoreAccelerators, bool skipObsolete)
+                          bool matchCase, bool ignoreAccelerators, bool skipObsolete, bool useRegExp)
 {
     if (text.isEmpty())
         return;
@@ -1772,6 +1775,12 @@ void MainWindow::findNext(const QString &text, DataModel::FindLocation where,
     m_findMatchCase = matchCase ? Qt::CaseSensitive : Qt::CaseInsensitive;
     m_findIgnoreAccelerators = ignoreAccelerators;
     m_findSkipObsolete = skipObsolete;
+    m_findUseRegExp = useRegExp;
+    if (m_findUseRegExp) {
+        m_findDialog->getRegExp().setPatternOptions(matchCase
+                                                    ? QRegularExpression::NoPatternOption
+                                                    : QRegularExpression::CaseInsensitiveOption);
+    }
     m_ui.actionFindNext->setEnabled(true);
     findAgain();
 }
@@ -1924,6 +1933,10 @@ void MainWindow::setupMenuBar()
     connect(m_ui.actionIncreaseZoom, SIGNAL(triggered()), m_messageEditor, SLOT(increaseFontSize()));
     connect(m_ui.actionDecreaseZoom, SIGNAL(triggered()), m_messageEditor, SLOT(decreaseFontSize()));
     connect(m_ui.actionResetZoomToDefault, SIGNAL(triggered()), m_messageEditor, SLOT(resetFontSize()));
+    connect(m_ui.actionShowMoreGuesses, SIGNAL(triggered()), m_phraseView, SLOT(moreGuesses()));
+    connect(m_ui.actionShowFewerGuesses, SIGNAL(triggered()), m_phraseView, SLOT(fewerGuesses()));
+    connect(m_phraseView, SIGNAL(showFewerGuessesAvailable(bool)), m_ui.actionShowFewerGuesses, SLOT(setEnabled(bool)));
+    connect(m_ui.actionResetGuessesToDefault, SIGNAL(triggered()), m_phraseView, SLOT(resetNumGuesses()));
     m_ui.menuViewViews->addAction(m_contextDock->toggleViewAction());
     m_ui.menuViewViews->addAction(m_messagesDock->toggleViewAction());
     m_ui.menuViewViews->addAction(m_phrasesDock->toggleViewAction());
@@ -2321,11 +2334,14 @@ void MainWindow::updateProgress()
 {
     int numEditable = m_dataModel->getNumEditable();
     int numFinished = m_dataModel->getNumFinished();
-    if (!m_dataModel->modelCount())
+    if (!m_dataModel->modelCount()) {
         m_progressLabel->setText(QString(QLatin1String("    ")));
-    else
-        m_progressLabel->setText(QString(QLatin1String(" %1/%2 "))
-                                 .arg(numFinished).arg(numEditable));
+        m_progressLabel->setToolTip(QString());
+    } else {
+        m_progressLabel->setText(QStringLiteral(" %1/%2 ").arg(numFinished).arg(numEditable));
+        m_progressLabel->setToolTip(tr("%n unfinished message(s) left.", 0,
+                                       numEditable - numFinished));
+    }
     bool enable = numFinished != numEditable;
     m_ui.actionPrevUnfinished->setEnabled(enable);
     m_ui.actionNextUnfinished->setEnabled(enable);
@@ -2610,6 +2626,8 @@ void MainWindow::readConfig()
 
     m_messageEditor->setFontSize(
                 config.value(settingPath("Options/EditorFontsize"), font().pointSize()).toReal());
+    m_phraseView->setMaxCandidates(config.value(settingPath("Options/NumberOfGuesses"),
+                                                PhraseView::getDefaultMaxCandidates()).toInt());
 
     recentFiles().readConfig();
 
@@ -2645,6 +2663,7 @@ void MainWindow::writeConfig()
     recentFiles().writeConfig();
 
     config.setValue(settingPath("Options/EditorFontsize"), m_messageEditor->fontSize());
+    config.setValue(settingPath("Options/NumberOfGuesses"), m_phraseView->getMaxCandidates());
 
     config.beginWriteArray(settingPath("OpenedPhraseBooks"),
         m_phraseBooks.size());

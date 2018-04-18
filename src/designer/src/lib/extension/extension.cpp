@@ -126,7 +126,7 @@ QT_BEGIN_NAMESPACE
 */
 
 /*!
-   \fn T qt_extension(QAbstractExtensionManager* manager, QObject *object)
+   \fn template <class T> T qt_extension(QAbstractExtensionManager* manager, QObject *object)
 
    \relates QExtensionManager
 
@@ -167,7 +167,7 @@ QT_BEGIN_NAMESPACE
    class definition for \a ExtensionName, in the associated header
    file.
 
-   \sa Q_DECLARE_INTERFACE()
+   \sa {Q_DECLARE_INTERFACE}{Q_DECLARE_INTERFACE()}
 */
 
 QT_END_NAMESPACE

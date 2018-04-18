@@ -223,7 +223,7 @@ QHelpIndexModel::QHelpIndexModel(QHelpEnginePrivate *helpEngine)
     connect(d->indexProvider, &QThread::finished,
             this, &QHelpIndexModel::insertIndices);
     connect(helpEngine->q, &QHelpEngineCore::readersAboutToBeInvalidated,
-            [this]() { invalidateIndex(); });
+            this, [this]() { invalidateIndex(); });
 }
 
 QHelpIndexModel::~QHelpIndexModel()

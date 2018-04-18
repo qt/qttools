@@ -36,7 +36,7 @@ QT_BEGIN_NAMESPACE
 using namespace qdesigner_internal;
 
 /*!
-    \class QDesignerFormWindowManager
+    \class qdesigner_internal::QDesignerFormWindowManager
     \inmodule QtDesigner
 
     Extends QDesignerFormWindowManagerInterface with methods to control
@@ -58,7 +58,7 @@ QDesignerFormWindowManager::~QDesignerFormWindowManager()
 }
 
 /*!
-    \fn PreviewManager *QDesignerFormWindowManager::previewManager() const
+    \fn PreviewManager *qdesigner_internal::QDesignerFormWindowManager::previewManager() const
 
     Accesses the previewmanager implementation.
 

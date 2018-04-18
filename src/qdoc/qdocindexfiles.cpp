@@ -1224,11 +1224,11 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter& writer,
 
             /*
               Note: The "signature" attribute is written to the
-              index file, but it is not read back in. Is that ok?
+              index file, but it is not read back in by qdoc. However,
+              we need it for the webxml generator.
             */
             QString signature = functionNode->signature(false);
-            if (functionNode->isConst())
-                signature += " const";
+            // 'const' is already part of FunctionNode::signature()
             if (functionNode->isFinal())
                 signature += " final";
             if (functionNode->isOverride())

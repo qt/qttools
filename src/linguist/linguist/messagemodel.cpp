@@ -1351,7 +1351,7 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
 
         MultiContextItem *mci = m_data->multiContextItem(row);
 
-        if (role == Qt::DisplayRole || (role == Qt::ToolTipRole && column == numLangs)) {
+        if (role == Qt::DisplayRole || role == Qt::ToolTipRole) {
             switch (column - numLangs) {
             case 0: // Context
                 {
@@ -1361,6 +1361,10 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
                 }
             case 1:
                 {
+                    if (role == Qt::ToolTipRole) {
+                        return tr("%n unfinished message(s) left.", 0,
+                                  mci->getNumEditable() - mci->getNumFinished());
+                    }
                     QString s;
                     s.sprintf("%d/%d", mci->getNumFinished(), mci->getNumEditable());
                     return s;
