@@ -865,9 +865,9 @@
     \section1 \\namespace
 
     The \\namespace command is for documenting the contents of the C++
-    namespace named as its argument. The documentation outline QDoc
-    generates for a namespace is similar to the outline it generates
-    for a C++ class.
+    namespace named as its argument. The reference page QDoc generates
+    for a namespace is similar to the reference page it generates for a
+    C++ class.
 
     \code
     / *!
@@ -913,6 +913,14 @@
 
                ...
            \endquotation
+
+    Note that in C++, a particular namespace can be used in more
+    than one module, but when C++ elements from different modules
+    are declared in the same namespace, the namespace itself must
+    be documented in one module only. For example, namespace Qt in
+    the example above contains types and functions from both QtCore
+    and QtGui, but it is documented with the \\namespace command
+    only in QtCore.
 
     \target page-command
     \section1 \\page

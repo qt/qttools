@@ -50,7 +50,7 @@ public:
 
 protected:
     int generateAtom(const Atom *atom, const Node *relative, CodeMarker *marker) override;
-    void generateClassLikeNode(Node *node, CodeMarker *marker) override;
+    void generateCppReferencePage(Node *node, CodeMarker *marker) override;
     void generateDocumentNode(DocumentNode *dn, CodeMarker *marker) override;
     void generateDocumentation(Node *node) override;
     QString fileExtension() const override;

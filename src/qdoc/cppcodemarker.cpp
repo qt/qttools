@@ -455,80 +455,83 @@ QString CppCodeMarker::functionEndRegExp(const QString& /* funcName */)
     return "^\\}$";
 }
 
-QList<Section> CppCodeMarker::sections(const Aggregate *inner,
+QList<Section> CppCodeMarker::sections(const Aggregate *aggregate,
                                        SynopsisStyle style,
                                        Status status)
 {
     QList<Section> sections;
 
-    if (inner->isClass()) {
+    bool documentAll = true;
+    if (aggregate->isClass()) {
+        if (aggregate->parent() && !aggregate->name().isEmpty() && !aggregate->hasDoc())
+            documentAll = false;
         if (style == Summary) {
-            FastSection privateFunctions(inner,
+            FastSection privateFunctions(aggregate,
                                          "Private Functions",
                                          QString(),
                                          "private function",
                                          "private functions");
-            FastSection privateSlots(inner, "Private Slots", QString(), "private slot", "private slots");
-            FastSection privateTypes(inner, "Private Types", QString(), "private type", "private types");
-            FastSection protectedFunctions(inner,
+            FastSection privateSlots(aggregate, "Private Slots", QString(), "private slot", "private slots");
+            FastSection privateTypes(aggregate, "Private Types", QString(), "private type", "private types");
+            FastSection protectedFunctions(aggregate,
                                            "Protected Functions",
                                            QString(),
                                            "protected function",
                                            "protected functions");
-            FastSection protectedSlots(inner,
+            FastSection protectedSlots(aggregate,
                                        "Protected Slots",
                                        QString(),
                                        "protected slot",
                                        "protected slots");
-            FastSection protectedTypes(inner,
+            FastSection protectedTypes(aggregate,
                                        "Protected Types",
                                        QString(),
                                        "protected type",
                                        "protected types");
-            FastSection protectedVariables(inner,
+            FastSection protectedVariables(aggregate,
                                            "Protected Variables",
                                            QString(),
                                            "protected type",
                                            "protected variables");
-            FastSection publicFunctions(inner,
+            FastSection publicFunctions(aggregate,
                                         "Public Functions",
                                         QString(),
                                         "public function",
                                         "public functions");
-            FastSection publicSignals(inner, "Signals", QString(), "signal", "signals");
-            FastSection publicSlots(inner, "Public Slots", QString(), "public slot", "public slots");
-            FastSection publicTypes(inner, "Public Types", QString(), "public type", "public types");
-            FastSection publicVariables(inner,
+            FastSection publicSignals(aggregate, "Signals", QString(), "signal", "signals");
+            FastSection publicSlots(aggregate, "Public Slots", QString(), "public slot", "public slots");
+            FastSection publicTypes(aggregate, "Public Types", QString(), "public type", "public types");
+            FastSection publicVariables(aggregate,
                                         "Public Variables",
                                         QString(),
                                         "public variable",
                                         "public variables");
-            FastSection properties(inner, "Properties", QString(), "property", "properties");
-            FastSection relatedNonMembers(inner,
+            FastSection properties(aggregate, "Properties", QString(), "property", "properties");
+            FastSection relatedNonMembers(aggregate,
                                           "Related Non-Members",
                                           QString(),
                                           "related non-member",
                                           "related non-members");
-            FastSection staticPrivateMembers(inner,
+            FastSection staticPrivateMembers(aggregate,
                                              "Static Private Members",
                                              QString(),
                                              "static private member",
                                              "static private members");
-            FastSection staticProtectedMembers(inner,
+            FastSection staticProtectedMembers(aggregate,
                                                "Static Protected Members",
                                                QString(),
                                                "static protected member",
                                                "static protected members");
-            FastSection staticPublicMembers(inner,
+            FastSection staticPublicMembers(aggregate,
                                             "Static Public Members",
                                             QString(),
                                             "static public member",
                                             "static public members");
-            FastSection macros(inner, "Macros", QString(), "macro", "macros");
+            FastSection macros(aggregate, "Macros", QString(), "macro", "macros");
 
-            NodeList::ConstIterator r = inner->relatedNodes().constBegin();
-            while (r != inner->relatedNodes().constEnd()) {
-                if ((*r)->type() == Node::Function) {
+            NodeList::ConstIterator r = aggregate->relatedNodes().constBegin();
+            while (r != aggregate->relatedNodes().constEnd()) {
+                if ((*r)->isFunction()) {
                     FunctionNode *func = static_cast<FunctionNode *>(*r);
                     if (func->isMacro())
                         insert(macros, *r, style, status);
@@ -542,12 +545,16 @@ QList<Section> CppCodeMarker::sections(const Aggregate *inner,
             }
 
             QStack<const Aggregate *> stack;
-            stack.push(inner);
+            stack.push(aggregate);
             while (!stack.isEmpty()) {
                 const Aggregate* ancestor = stack.pop();
 
                 NodeList::ConstIterator c = ancestor->childNodes().constBegin();
                 while (c != ancestor->childNodes().constEnd()) {
+                    if (!documentAll && !(*c)->hasDoc()) {
+                        ++c;
+                        continue;
+                    }
                     bool isSlot = false;
                     bool isSignal = false;
                     bool isStatic = false;
@@ -675,15 +682,15 @@ QList<Section> CppCodeMarker::sections(const Aggregate *inner,
             append(sections, macros);
         }
         else if (style == Detailed) {
-            FastSection memberFunctions(inner,"Member Function Documentation","func","member","members");
-            FastSection memberTypes(inner,"Member Type Documentation","types","member","members");
-            FastSection memberVariables(inner,"Member Variable Documentation","vars","member","members");
-            FastSection properties(inner,"Property Documentation","prop","member","members");
-            FastSection relatedNonMembers(inner,"Related Non-Members","relnonmem","member","members");
-            FastSection macros(inner,"Macro Documentation","macros","member","members");
+            FastSection memberFunctions(aggregate,"Member Function Documentation","func","member","members");
+            FastSection memberTypes(aggregate,"Member Type Documentation","types","member","members");
+            FastSection memberVariables(aggregate,"Member Variable Documentation","vars","member","members");
+            FastSection properties(aggregate,"Property Documentation","prop","member","members");
+            FastSection relatedNonMembers(aggregate,"Related Non-Members","relnonmem","member","members");
+            FastSection macros(aggregate,"Macro Documentation","macros","member","members");
 
-            NodeList::ConstIterator r = inner->relatedNodes().constBegin();
-            while (r != inner->relatedNodes().constEnd()) {
+            NodeList::ConstIterator r = aggregate->relatedNodes().constBegin();
+            while (r != aggregate->relatedNodes().constEnd()) {
                 if ((*r)->isFunction()) {
                     FunctionNode *func = static_cast<FunctionNode *>(*r);
                     if (func->isMacro())
@@ -697,10 +704,13 @@ QList<Section> CppCodeMarker::sections(const Aggregate *inner,
                 ++r;
             }
 
-            NodeList::ConstIterator c = inner->childNodes().constBegin();
-            while (c != inner->childNodes().constEnd()) {
+            NodeList::ConstIterator c = aggregate->childNodes().constBegin();
+            while (c != aggregate->childNodes().constEnd()) {
                 if ((*c)->isSharingComment()) {
                     // do nothing
+                } else if (!documentAll && !(*c)->hasDoc()) {
+                    ++c;
+                    continue;
                 } else if ((*c)->isEnumType() || (*c)->isTypedef()) {
                     if ((*c)->name() == QLatin1String("QtGadgetHelper")) {
                         ++c;
@@ -738,10 +748,10 @@ QList<Section> CppCodeMarker::sections(const Aggregate *inner,
             append(sections, macros);
         }
         else {
-            FastSection all(inner,QString(),QString(),"member","members");
+            FastSection all(aggregate,QString(),QString(),"member","members");
 
             QStack<const Aggregate*> stack;
-            stack.push(inner);
+            stack.push(aggregate);
 
             while (!stack.isEmpty()) {
                 const Aggregate* ancestor = stack.pop();
@@ -764,52 +774,59 @@ QList<Section> CppCodeMarker::sections(const Aggregate *inner,
             }
             append(sections, all);
         }
-    }
-    else {
-        if (style == Summary || style == Detailed) {
-            FastSection namespaces(inner,
-                                   "Namespaces",
-                                   style == Detailed ? "nmspace" : QString(),
-                                   "namespace",
-                                   "namespaces");
-            FastSection classes(inner,
-                                "Classes",
-                                style == Detailed ? "classes" : QString(),
-                                "class",
-                                "classes");
-            FastSection types(inner,
-                              style == Summary ? "Types" : "Type Documentation",
-                              style == Detailed ? "types" : QString(),
-                              "type",
-                              "types");
-            FastSection variables(inner,
-                                  style == Summary ? "Variables" : "Variable Documentation",
-                                  style == Detailed ? "vars" : QString(),
-                                  "variable",
-                                  "variables");
-            FastSection staticVariables(inner,
-                                        "Static Variables",
-                                        QString(),
-                                        "static variable",
-                                        "static variables");
-            FastSection functions(inner,
-                                  style == Summary ?
-                                      "Functions" : "Function Documentation",
-                                  style == Detailed ? "func" : QString(),
-                                  "function",
-                                  "functions");
-            FastSection macros(inner,
-                               style == Summary ?
-                                   "Macros" : "Macro Documentation",
-                               style == Detailed ? "macros" : QString(),
-                               "macro",
-                               "macros");
+    } else if (style == Summary || style == Detailed) {
+        FastSection namespaces(aggregate,
+                               "Namespaces",
+                               style == Detailed ? "nmspace" : QString(),
+                               "namespace",
+                               "namespaces");
+        FastSection classes(aggregate,
+                            "Classes",
+                            style == Detailed ? "classes" : QString(),
+                            "class",
+                            "classes");
+        FastSection types(aggregate,
+                          style == Summary ? "Types" : "Type Documentation",
+                          style == Detailed ? "types" : QString(),
+                          "type",
+                          "types");
+        FastSection variables(aggregate,
+                              style == Summary ? "Variables" : "Variable Documentation",
+                              style == Detailed ? "vars" : QString(),
+                              "variable",
+                              "variables");
+        FastSection staticVariables(aggregate,
+                                    "Static Variables",
+                                    QString(),
+                                    "static variable",
+                                    "static variables");
+        FastSection functions(aggregate,
+                              style == Summary ?
+                              "Functions" : "Function Documentation",
+                              style == Detailed ? "func" : QString(),
+                              "function",
+                              "functions");
+        FastSection macros(aggregate,
+                           style == Summary ?
+                           "Macros" : "Macro Documentation",
+                           style == Detailed ? "macros" : QString(),
+                           "macro",
+                           "macros");
 
-            NodeList nodeList = inner->childNodes();
-            nodeList += inner->relatedNodes();
-
-            NodeList::ConstIterator n = nodeList.constBegin();
-            while (n != nodeList.constEnd()) {
+        NodeList nodeList = aggregate->childNodes();
+        nodeList += aggregate->relatedNodes();
+        if (aggregate->isNamespace()) {
+            const NamespaceNode* ns = static_cast<const NamespaceNode*>(aggregate);
+            if (!ns->hasDoc())
+                documentAll = false;
+            if (style == Summary) {
+                if (!ns->orphans().isEmpty())
+                    nodeList += ns->orphans();
+            }
+        }
+        NodeList::ConstIterator n = nodeList.constBegin();
+        while (n != nodeList.constEnd()) {
+            if (documentAll || (*n)->hasDoc()) {
                 switch ((*n)->type()) {
                 case Node::Namespace:
                     insert(namespaces, *n, style, status);
@@ -851,31 +868,16 @@ QList<Section> CppCodeMarker::sections(const Aggregate *inner,
                 default:
                     break;
                 }
-                ++n;
             }
-            if (inner->isNamespace()) {
-                const NamespaceNode* ns = static_cast<const NamespaceNode*>(inner);
-                if (!ns->orphans().isEmpty()) {
-                    foreach (Node* n, ns->orphans()) {
-                        // Use inner as a temporary parent when inserting orphans
-                        Aggregate* p = n->parent();
-                        n->setParent(const_cast<Aggregate*>(inner));
-                        if (n->isClass())
-                            insert(classes, n, style, status);
-                        else if (n->isNamespace())
-                            insert(namespaces, n, style, status);
-                        n->setParent(p);
-                    }
-                }
-            }
-            append(sections, namespaces);
-            append(sections, classes);
-            append(sections, types);
-            append(sections, variables);
-            append(sections, staticVariables);
-            append(sections, functions);
-            append(sections, macros);
+            ++n;
         }
+        append(sections, namespaces);
+        append(sections, classes);
+        append(sections, types);
+        append(sections, variables);
+        append(sections, staticVariables);
+        append(sections, functions);
+        append(sections, macros);
     }
 
     return sections;

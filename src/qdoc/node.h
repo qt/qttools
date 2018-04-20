@@ -115,8 +115,7 @@ public:
         Deprecated,
         Preliminary,
         Active,
-        Internal,
-        Intermediate
+        Internal
     }; // don't reorder this enum
 
     enum ThreadSafeness {
@@ -264,6 +263,7 @@ public:
     virtual Tree* tree() const;
     virtual void findChildren(const QString& , NodeList& nodes) const { nodes.clear(); }
     virtual void setNoAutoList(bool ) { }
+    virtual bool docMustBeGenerated() const { return false; }
     bool isIndexNode() const { return indexNodeFlag_; }
     NodeType type() const { return (NodeType) nodeType_; }
     virtual DocSubtype docSubtype() const { return NoSubtype; }
@@ -287,6 +287,7 @@ public:
     void setLink(LinkType linkType, const QString &link, const QString &desc);
 
     Access access() const { return (Access) access_; }
+    bool isPublic() const { return (Access) access_ == Public; }
     bool isPrivate() const { return (Access) access_ == Private; }
     QString accessString() const;
     const Location& declLocation() const { return declLocation_; }
@@ -489,11 +490,24 @@ public:
     void setTree(Tree* t) { tree_ = t; }
     const NodeList& orphans() const { return orphans_; }
     void addOrphan(Node* child) { orphans_.append(child); }
+    QString whereDocumented() const { return whereDocumented_; }
+    void setWhereDocumented(const QString &t) { whereDocumented_ = t; }
+    bool isDocumentedHere() const;
+    bool hasDocumentedChildren() const;
+    void reportDocumentedChildrenInUndocumentedNamespace() const;
+    bool docMustBeGenerated() const override;
+    void setDocumented() { documented_ = true; }
+    bool wasDocumented() const { return documented_; }
+    void setDocNode(NamespaceNode* ns) { docNode_ = ns; }
+    NamespaceNode* docNode() const { return docNode_; }
 
  private:
-    bool        seen_;
-    Tree*       tree_;
-    NodeList    orphans_;
+    bool                seen_;
+    bool                documented_;
+    Tree*               tree_;
+    QString             whereDocumented_;
+    NamespaceNode*      docNode_;
+    NodeList            orphans_;
 };
 
 struct RelatedClass

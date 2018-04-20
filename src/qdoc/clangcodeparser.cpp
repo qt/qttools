@@ -1386,7 +1386,7 @@ void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QStrin
                 docs.append(doc);
             } else if (CodeParser::isWorthWarningAbout(doc)) {
                 doc.location().warning(tr("Cannot tie this documentation to anything"),
-                                       tr("I found a /*! ... */ comment, but there was no "
+                                       tr("qdoc found a /*! ... */ comment, but there was no "
                                        "topic command (e.g., '\\%1', '\\%2') in the "
                                        "comment and no function definition following "
                                        "the comment.")

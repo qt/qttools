@@ -755,19 +755,19 @@ bool Node::isInternal() const
 }
 
 /*!
-  Returns a pointer to the Tree this node is in.
- */
-Tree* Node::tree() const
-{
-    return (parent() ? parent()->tree() : 0);
-}
-
-/*!
   Returns a pointer to the root of the Tree this node is in.
  */
 const Node* Node::root() const
 {
     return (parent() ? parent()->root() : this);
+}
+
+/*!
+  Returns a pointer to the Tree this node is in.
+ */
+Tree* Node::tree() const
+{
+    return root()->tree();
 }
 
 /*!
@@ -1046,14 +1046,12 @@ QStringList Aggregate::secondaryKeys()
 /*!
   Mark all child nodes that have no documentation as having
   private access and internal status. qdoc will then ignore
-  them for documentation purposes. Some nodes have an
-  Intermediate status, meaning that they should be ignored,
-  but not their children.
+  them for documentation purposes.
  */
 void Aggregate::makeUndocumentedChildrenInternal()
 {
     foreach (Node *child, childNodes()) {
-        if (!child->isSharingComment() && child->doc().isEmpty() && child->status() != Node::Intermediate) {
+        if (!child->isSharingComment() && !child->hasDoc() && !child->docMustBeGenerated()) {
             child->setAccess(Node::Private);
             child->setStatus(Node::Internal);
         }
@@ -1605,16 +1603,79 @@ LeafNode::LeafNode(Aggregate* parent, NodeType type, const QString& name)
 
 /*!
   \class NamespaceNode
+  \brief This class represents a C++ namespace.
+
+  A namespace can be used in multiple C++ modules, so there
+  can be a NamespaceNode for namespace Xxx in more than one
+  Node tree.
  */
 
 /*!
-  Constructs a namespace node.
+  Constructs a namespace node for a namespace named \a name.
+  The namespace node has the specified \a parent.
  */
 NamespaceNode::NamespaceNode(Aggregate *parent, const QString& name)
-    : Aggregate(Namespace, parent, name), seen_(false), tree_(0)
+    : Aggregate(Namespace, parent, name), seen_(false), documented_(false), tree_(0), docNode_(0)
 {
     setGenus(Node::CPP);
     setPageType(ApiPage);
+}
+
+/*!
+  Returns true if this namespace is to be documented in the
+  current module. There can be elements declared in this
+  namespace spread over multiple modules. Those elements are
+  documented in the modules where they are declared, but they
+  are linked to from the namespace page in the module where
+  the namespace itself is documented.
+ */
+bool NamespaceNode::isDocumentedHere() const
+{
+    return whereDocumented_ == tree()->camelCaseModuleName();
+}
+
+/*!
+  Returns true if this namespace node contains at least one
+  child that has documentation and is not private or internal.
+ */
+bool NamespaceNode::hasDocumentedChildren() const
+{
+    foreach (Node* n, childNodes()) {
+        if (n->hasDoc() && !n->isPrivate() && !n->isInternal())
+            return true;
+    }
+    return false;
+}
+
+/*!
+  Report qdoc warning for each documented child in a namespace
+  that is not documented. This function should only be called
+  when the namespace is not documented.
+ */
+void NamespaceNode::reportDocumentedChildrenInUndocumentedNamespace() const
+{
+    foreach (Node* n, childNodes()) {
+        if (n->hasDoc() && !n->isPrivate() && !n->isInternal()) {
+            QString msg1 = n->name();
+            if (n->isFunction())
+                msg1 += "()";
+            msg1 += tr(" is documented, but namespace %1 is not documented in any module.").arg(name());
+            QString msg2 = tr("Add /*! '\\%1 %2' ... */ or remove the qdoc comment marker (!) at that line number.").arg(COMMAND_NAMESPACE).arg(name());
+
+            n->doc().location().warning(msg1, msg2);
+        }
+    }
+}
+
+/*!
+  Returns true if this namespace node is not private and
+  contains at least one public child node with documentation.
+ */
+bool NamespaceNode::docMustBeGenerated() const
+{
+    if (hasDoc() && !isInternal() && !isPrivate())
+        return true;
+    return (hasDocumentedChildren() ? true : false);
 }
 
 /*!

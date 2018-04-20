@@ -239,8 +239,8 @@ Node* CppCodeParser::processTopicCommand(const Doc& doc,
           without including the namespace qualifier.
          */
         Node::NodeType type =  nodeTypeMap[command];
-        QStringList paths = arg.first.split(QLatin1Char(' '));
-        QStringList path = paths[0].split("::");
+        QStringList words = arg.first.split(QLatin1Char(' '));
+        QStringList path = words[0].split("::");
         Node *node = 0;
 
         node = qdb_->findNodeInOpenNamespace(path, type);
@@ -258,6 +258,7 @@ Node* CppCodeParser::processTopicCommand(const Doc& doc,
             if (type == Node::Namespace) {
                 NamespaceNode* ns = static_cast<NamespaceNode*>(node);
                 ns->markSeen();
+                ns->setWhereDocumented(ns->tree()->camelCaseModuleName());
             }
             /*
               This treats a class as a namespace.

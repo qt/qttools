@@ -89,7 +89,7 @@ protected:
     virtual int generateAtom(const Atom *atom,
                              const Node *relative,
                              CodeMarker *marker) override;
-    void generateClassLikeNode(Node* node, CodeMarker* marker) override;
+    void generateCppReferencePage(Node* node, CodeMarker* marker) override;
     void generateQmlTypePage(QmlTypeNode* qcn, CodeMarker* marker) override;
     void generateQmlBasicTypePage(QmlBasicTypeNode* qbtn, CodeMarker* marker) override;
     void generateDocumentNode(DocumentNode* dn, CodeMarker* marker) override;

@@ -1131,25 +1131,21 @@ void QDocDatabase::findAllLegaleseTexts(Aggregate* node)
 }
 
 /*!
-  Finds all the namespace nodes and puts them in an index.
+  Finds all the namespace nodes in the tree beginning at
+  \a node and puts them in a map to be used later as an
+  index.
+
+  Ensure each namespace node has a name before inserting
+  it into the map, because the root namespace node has no
+  name, and we are not interested in it.
  */
 void QDocDatabase::findAllNamespaces(Aggregate* node)
 {
-    NodeList::ConstIterator c = node->childNodes().constBegin();
-    while (c != node->childNodes().constEnd()) {
-        if ((*c)->access() != Node::Private || (*c)->isNamespace()) {
-            if ((*c)->isAggregate()) {
-                findAllNamespaces(static_cast<Aggregate *>(*c));
-                if ((*c)->isNamespace()) {
-                    // Ensure that the namespace's name is not empty (the root
-                    // namespace has no name).
-                    if (!(*c)->name().isEmpty()) {
-                        nmm_.insert((*c)->name(), *c);
-                    }
-                }
-            }
-        }
-        ++c;
+    foreach (Node* n, node->childNodes()) {
+        if (n->isNamespace() && !n->name().isEmpty())
+            nmm_.insert(n->name(), n);
+        if (n->isNamespace() || (n->isAggregate() && n->access() != Node::Private))
+            findAllNamespaces(static_cast<Aggregate *>(n));
     }
 }
 
@@ -1400,6 +1396,12 @@ void QDocDatabase::resolveStuff()
 }
 
 /*!
+  Multiple namespace nodes for a particular namespace can be
+  created in multiple places. This function first finds all
+  namespace nodes and inserts them into a multimap. Then it
+  combines all the namespace nodes with the same name into a
+  single node and inserts that combined namespace node into
+  a namespace index.
  */
 void QDocDatabase::resolveNamespaces()
 {
@@ -1413,62 +1415,61 @@ void QDocDatabase::resolveNamespaces()
     QList<QString> keys = nmm_.uniqueKeys();
     foreach (const QString &s, keys) {
         NamespaceNode* ns = 0;
+        NamespaceNode* somewhere = 0;
         QList<Node*> nodes = nmm_.values(s);
         int count = nmm_.remove(s);
-        if (count > 1) {
+        if (count > 0) {
             foreach (Node* n, nodes) {
-                // Treat public namespaces from index trees as 'seen'
-                if (n->isNamespace() && (n->wasSeen() || (n->isIndexNode() && n->access() == Node::Public))) {
-                    ns = static_cast<NamespaceNode*>(n);
-                    ns->markSeen();
+                ns = static_cast<NamespaceNode*>(n);
+                if (ns->isDocumentedHere())
                     break;
+                else if (ns->wasDocumented())
+                    somewhere = ns;
+                ns = 0;
+            }
+            if (ns) {
+                foreach (Node* n, nodes) {
+                    NamespaceNode* NS = static_cast<NamespaceNode*>(n);
+                    if (NS->wasDocumented() && NS != ns) {
+                        ns->doc().location().warning(tr("Namespace %1 documented more than once").arg(NS->name()));
+                        NS->doc().location().warning(tr("...also seen here"));
+                    }
+                }
+
+            } else if (somewhere == 0) {
+                foreach (Node* n, nodes) {
+                    NamespaceNode* NS = static_cast<NamespaceNode*>(n);
+                    NS->reportDocumentedChildrenInUndocumentedNamespace();
+                }
+            }
+            if (somewhere) {
+                foreach (Node* n, nodes) {
+                    NamespaceNode* NS = static_cast<NamespaceNode*>(n);
+                    if (NS != somewhere)
+                        NS->setDocNode(somewhere);
                 }
             }
         }
-        else if (count == 1)
-            ns = static_cast<NamespaceNode*>(nodes.at(0));
-        if (ns && ns->wasSeen()) {
-            if (count >1) {
-                foreach (Node* n, nodes) {
-                    if (n->isNamespace()) {
-                        NamespaceNode* NS = static_cast<NamespaceNode*>(n);
-                        if ((NS != ns) && !NS->childNodes().isEmpty()) {
-                            const NodeList& children = NS->childNodes();
-                            int i = children.size() - 1;
-                            while (i >= 0) {
-                                Node* child = children.at(i--);
-                                if (!child)
-                                    continue;
-                                if (!child->isClass()
-                                    && !child->isQmlType()
-                                    && !child->isNamespace()) {
-                                    NS->removeChild(child);
-                                    ns->addChild(child);
-                                }
-                                else {
-                                    NS->setStatus(Node::Intermediate);
-                                    NS->setAccess(Node::Public);
-                                    ns->addOrphan(child);
-                                }
-                            }
-                        }
+        if (ns && count > 1) {
+            foreach (Node* n, nodes) {
+                NamespaceNode* NS = static_cast<NamespaceNode*>(n);
+                if ((NS != ns) && !NS->childNodes().isEmpty()) {
+                    const NodeList& children = NS->childNodes();
+                    int i = children.size() - 1;
+                    while (i >= 0) {
+                        Node* child = children.at(i--);
+                        if (child && child->isPublic() && !child->isInternal())
+                            ns->addOrphan(child);
                     }
                 }
             }
-            namespaceIndex_.insert(ns->name(), ns);
         }
+        if (ns == 0)
+            ns = static_cast<NamespaceNode*>(nodes.at(0));
+        namespaceIndex_.insert(ns->name(), ns);
     }
 }
-#if 0
-/*!
- */
-const Node* QDocDatabase::findFunctionNode(const QString& target,
-                                           const Node* relative,
-                                           Node::Genus genus)
-{
-    return forest_.findFunctionNode(target, relative, genus);
-}
-#endif
+
 /*!
   This function is called for autolinking to a \a type,
   which could be a function return type or a parameter

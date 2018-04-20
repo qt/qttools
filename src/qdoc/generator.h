@@ -110,7 +110,7 @@ protected:
     virtual void generateAlsoList(const Node *node, CodeMarker *marker);
     virtual int generateAtom(const Atom *atom, const Node *relative, CodeMarker *marker);
     virtual void generateBody(const Node *node, CodeMarker *marker);
-    virtual void generateClassLikeNode(Node* node, CodeMarker* marker);
+    virtual void generateCppReferencePage(Node* node, CodeMarker* marker);
     virtual void generateQmlTypePage(QmlTypeNode* , CodeMarker* ) { }
     virtual void generateQmlBasicTypePage(QmlBasicTypeNode* , CodeMarker* ) { }
     virtual void generateDocumentNode(DocumentNode* dn, CodeMarker* marker);

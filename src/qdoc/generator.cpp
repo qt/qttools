@@ -403,6 +403,13 @@ QString Generator::fileBase(const Node *node) const
             base.prepend(QLatin1Char('-'));
             p = pp;
         }
+        if (node->isNamespace() && !node->name().isEmpty()) {
+            const NamespaceNode* ns = static_cast<const NamespaceNode*>(node);
+            if (!ns->isDocumentedHere()) {
+                base.append(QLatin1String("-sub-"));
+                base.append(ns->tree()->camelCaseModuleName());
+            }
+        }
     }
 
     // the code below is effectively equivalent to:
@@ -973,7 +980,7 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
     }
 }
 
-void Generator::generateClassLikeNode(Node* /* node */, CodeMarker* /* marker */)
+void Generator::generateCppReferencePage(Node* /* node */, CodeMarker* /* marker */)
 {
 }
 
@@ -1156,13 +1163,12 @@ void Generator::generateDocumentation(Node* node)
     CodeMarker *marker = CodeMarker::markerForFileName(node->location().filePath());
 
     if (node->parent() != 0) {
-        if ((node->isNamespace() && node->status() != Node::Intermediate)
-            || node->isClass()) {
+        if (node->isClass() || (node->isNamespace() && node->docMustBeGenerated())) {
             beginSubPage(node, fileName(node));
-            generateClassLikeNode(static_cast<Aggregate*>(node), marker);
+            generateCppReferencePage(static_cast<Aggregate*>(node), marker);
             endSubPage();
         }
-        if (node->isQmlType() || node->isJsType()) {
+        else if (node->isQmlType() || node->isJsType()) {
             beginSubPage(node, fileName(node));
             QmlTypeNode* qcn = static_cast<QmlTypeNode*>(node);
             generateQmlTypePage(qcn, marker);
@@ -1186,7 +1192,7 @@ void Generator::generateDocumentation(Node* node)
         int i = 0;
         while (i < aggregate->childNodes().count()) {
             Node *c = aggregate->childNodes().at(i);
-            if (c->isAggregate() && c->access() != Node::Private) {
+            if (c->isAggregate() && !c->isPrivate()) {
                 generateDocumentation((Aggregate*)c);
             }
             else if (c->isCollectionNode()) {

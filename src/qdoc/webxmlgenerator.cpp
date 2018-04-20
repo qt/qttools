@@ -71,7 +71,7 @@ int WebXMLGenerator::generateAtom(const Atom * /* atom, */,
     return 0;
 }
 
-void WebXMLGenerator::generateClassLikeNode(Node *node, CodeMarker *marker)
+void WebXMLGenerator::generateCppReferencePage(Node *node, CodeMarker *marker)
 {
     QByteArray data;
     QXmlStreamWriter writer(&data);
@@ -93,7 +93,7 @@ void WebXMLGenerator::generateClassLikeNode(Node *node, CodeMarker *marker)
 
 void WebXMLGenerator::generateDocumentNode(DocumentNode *dn, CodeMarker *marker)
 {
-    generateClassLikeNode(dn, marker);
+    generateCppReferencePage(dn, marker);
 }
 
 void WebXMLGenerator::generateIndexSections(QXmlStreamWriter &writer,
@@ -189,14 +189,14 @@ void WebXMLGenerator::generateDocumentation(Node *node)
 
     CodeMarker *marker = CodeMarker::markerForFileName(node->location().filePath());
     if (node->parent()) {
-        if ((node->isNamespace() && node->status() != Node::Intermediate) || node->isClass())
-            generateClassLikeNode(static_cast<Aggregate*>(node), marker);
+        if (node->isNamespace() || node->isClass())
+            generateCppReferencePage(static_cast<Aggregate*>(node), marker);
         else if (node->isDocumentNode())
             generateDocumentNode(static_cast<DocumentNode *>(node), marker);
         else if (node->isCollectionNode() && node->wasSeen()) {
             // see remarks in base class impl.
             qdb_->mergeCollections(static_cast<CollectionNode *>(node));
-            generateClassLikeNode(node, marker);
+            generateCppReferencePage(node, marker);
         }
         // else if TODO: anything else?
     }

@@ -189,12 +189,16 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader& reader,
         lineNo = attributes.value("lineno").toInt();
     }
     if (elementName == QLatin1String("namespace")) {
-        node = new NamespaceNode(parent, name);
-
+        NamespaceNode* ns = new NamespaceNode(parent, name);
+        node = ns;
         if (!indexUrl.isEmpty())
             location = Location(indexUrl + QLatin1Char('/') + name.toLower() + ".html");
         else if (!indexUrl.isNull())
             location = Location(name.toLower() + ".html");
+        if (attributes.hasAttribute(QLatin1String("documented"))) {
+            if (attributes.value(QLatin1String("documented")) == QLatin1String("true"))
+                ns->setDocumented();
+        }
 
     }
     else if (elementName == QLatin1String("class")) {
@@ -641,7 +645,7 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader& reader,
             node->setLocation(t);
             location = t;
         }
-        Doc doc(location, location, " ", emptySet, emptySet); // placeholder
+        Doc doc(location, location, QString(), emptySet, emptySet); // placeholder
         node->setDoc(doc);
         node->setIndexNodeFlag();
         node->setOutputSubdirectory(project_.toLower());
@@ -1043,11 +1047,12 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter& writer,
         break;
     case Node::Namespace:
         {
-            const NamespaceNode* namespaceNode = static_cast<const NamespaceNode*>(node);
-            if (!namespaceNode->physicalModuleName().isEmpty())
-                writer.writeAttribute("module", namespaceNode->physicalModuleName());
-            if (!namespaceNode->groupNames().isEmpty())
-                writer.writeAttribute("groups", namespaceNode->groupNames().join(QLatin1Char(',')));
+            const NamespaceNode* ns = static_cast<const NamespaceNode*>(node);
+            writer.writeAttribute("documented", ns->hasDoc() ? "true" : "false");
+            if (!ns->physicalModuleName().isEmpty())
+                writer.writeAttribute("module", ns->physicalModuleName());
+            if (!ns->groupNames().isEmpty())
+                writer.writeAttribute("groups", ns->groupNames().join(QLatin1Char(',')));
             if (!brief.isEmpty())
                 writer.writeAttribute("brief", brief);
         }
