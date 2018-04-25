@@ -39,7 +39,7 @@ QT_BEGIN_NAMESPACE
 
 static const char roman[] = "m\2d\5c\2l\5x\2v\5i";
 
-OpenedList::OpenedList( Style style )
+OpenedList::OpenedList( ListStyle style )
     : sty( style ), ini( 1 ), nex( 0 )
 {
 }

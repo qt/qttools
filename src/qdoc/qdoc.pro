@@ -56,12 +56,12 @@ HEADERS += atom.h \
            loggingcategory.h \
            node.h \
            openedlist.h \
-           plaincodemarker.h \
            puredocparser.h \
            qdocdatabase.h \
            qdoctagfiles.h \
            qdocindexfiles.h \
            quoter.h \
+           sections.h \
            separator.h \
            text.h \
            tokenizer.h \
@@ -85,12 +85,12 @@ SOURCES += atom.cpp \
            main.cpp \
            node.cpp \
            openedlist.cpp \
-           plaincodemarker.cpp \
            puredocparser.cpp \
            qdocdatabase.cpp \
            qdoctagfiles.cpp \
            qdocindexfiles.cpp \
            quoter.cpp \
+           sections.cpp \
            separator.cpp \
            text.cpp \
            tokenizer.cpp \

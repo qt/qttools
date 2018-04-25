@@ -26,10 +26,6 @@
 **
 ****************************************************************************/
 
-/*
-  cppcodemarker.h
-*/
-
 #ifndef CPPCODEMARKER_H
 #define CPPCODEMARKER_H
 
@@ -49,12 +45,8 @@ public:
     bool recognizeExtension(const QString& ext) override;
     bool recognizeLanguage(const QString& lang) override;
     Atom::AtomType atomType() const override;
-    virtual QString markedUpCode(const QString& code,
-                                 const Node *relative,
-                                 const Location &location) override;
-    virtual QString markedUpSynopsis(const Node *node,
-                                     const Node *relative,
-                                     SynopsisStyle style) override;
+    QString markedUpCode(const QString& code, const Node *relative, const Location &location) override;
+    QString markedUpSynopsis(const Node *node, const Node *relative, Sections::Style style) override;
     QString markedUpQmlItem(const Node *node, bool summary) override;
     QString markedUpName(const Node *node) override;
     QString markedUpFullName(const Node *node, const Node *relative) override;
@@ -62,17 +54,9 @@ public:
     QString markedUpIncludes(const QStringList& includes) override;
     QString functionBeginRegExp(const QString& funcName) override;
     QString functionEndRegExp(const QString& funcName) override;
-    virtual QList<Section> sections(const Aggregate *innerNode,
-                                    SynopsisStyle style,
-                                    Status status) override;
-    virtual QList<Section> qmlSections(Aggregate* aggregate,
-                                       SynopsisStyle style,
-                                       Status status = Okay) override;
 
 private:
-    QString addMarkUp(const QString& protectedCode,
-                      const Node *relative,
-                      const Location &location);
+    QString addMarkUp(const QString& protectedCode, const Node *relative, const Location &location);
 };
 
 QT_END_NAMESPACE

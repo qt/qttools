@@ -154,10 +154,10 @@ private:
     QString generateAllQmlMembersFile(QmlTypeNode* qml_cn, CodeMarker* marker);
     QString generateLowStatusMemberFile(Aggregate *inner,
                                         CodeMarker *marker,
-                                        CodeMarker::Status status);
+                                        Sections::Status status);
     QString generateQmlMemberFile(QmlTypeNode* qcn,
                                   CodeMarker *marker,
-                                  CodeMarker::Status status);
+                                  Sections::Status status);
     void generateClassHierarchy(const Node *relative, NodeMap &classMap);
     void generateAnnotatedList(const Node* relative, CodeMarker* marker, const NodeMultiMap& nodeMap);
     void generateAnnotatedLists(const Node* relative, CodeMarker* marker, const NodeMultiMap& nodeMap);
@@ -173,7 +173,7 @@ private:
     void generateSectionList(const Section& section,
                              const Node *relative,
                              CodeMarker *marker,
-                             CodeMarker::SynopsisStyle style);
+                             Sections::Style style);
     void generateQmlSummary(const Section& section,
                             const Node *relative,
                             CodeMarker *marker);
@@ -191,11 +191,11 @@ private:
     void generateSection(const NodeList& nl,
                          const Node *relative,
                          CodeMarker *marker,
-                         CodeMarker::SynopsisStyle style);
+                         Sections::Style style);
     void generateSynopsis(const Node *node,
                           const Node *relative,
                           CodeMarker *marker,
-                          CodeMarker::SynopsisStyle style,
+                          Sections::Style style,
                           bool alignNames = false,
                           const QString* prefix = 0);
     void generateSectionInheritedList(const Section& section, const Node *relative);

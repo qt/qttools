@@ -427,7 +427,7 @@ public:
     QString outputFileName() const override { return outputFileName_; }
     QmlPropertyNode* hasQmlProperty(const QString& ) const override;
     QmlPropertyNode* hasQmlProperty(const QString&, bool attached) const override;
-    virtual QmlTypeNode* qmlBaseNode() { return 0; }
+    virtual QmlTypeNode* qmlBaseNode() const { return 0; }
     void addChild(Node* child, const QString& title);
     const QStringList& groupNames() const { return groupNames_; }
     void appendGroupName(const QString& t) override { groupNames_.append(t); }
@@ -684,7 +684,7 @@ public:
     const QString& qmlBaseName() const { return qmlBaseName_; }
     void setQmlBaseName(const QString& name) { qmlBaseName_ = name; }
     bool qmlBaseNodeNotSet() const { return (qmlBaseNode_ == 0); }
-    QmlTypeNode* qmlBaseNode() override { return qmlBaseNode_; }
+    QmlTypeNode* qmlBaseNode() const override { return qmlBaseNode_; }
     void setQmlBaseNode(QmlTypeNode* b) { qmlBaseNode_ = b; }
     void requireCppClass() { cnodeRequired_ = true; }
     bool cppClassRequired() const { return cnodeRequired_; }

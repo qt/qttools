@@ -44,18 +44,18 @@ class OpenedList
     Q_DECLARE_TR_FUNCTIONS(QDoc::OpenedList)
 
 public:
-    enum Style { Bullet, Tag, Value, Numeric, UpperAlpha, LowerAlpha,
-                 UpperRoman, LowerRoman };
+    enum ListStyle { Bullet, Tag, Value, Numeric, UpperAlpha, LowerAlpha,
+                     UpperRoman, LowerRoman };
 
     OpenedList()
         : sty( Bullet ), ini( 1 ), nex( 0 ) { }
-    OpenedList( Style style );
+    OpenedList( ListStyle style );
     OpenedList( const Location& location, const QString& hint );
 
     void next() { nex++; }
 
     bool isStarted() const { return nex >= ini; }
-    Style style() const { return sty; }
+    ListStyle style() const { return sty; }
     QString styleString() const;
     int number() const { return nex; }
     QString numberString() const;
@@ -68,7 +68,7 @@ private:
     static QString toRoman( int n );
     static int fromRoman( const QString& str );
 
-    Style sty;
+    ListStyle sty;
     int ini;
     int nex;
     QString pref;
