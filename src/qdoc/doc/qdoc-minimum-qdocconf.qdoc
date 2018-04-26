@@ -52,7 +52,7 @@ find the meaning.
    include(compat.qdocconf)
 \endcode
 
-For compatibility with older versions of Qt, it is recommended
+For compatibility with older versions of QDoc, it is recommended
 to include compat.qdocconf.
 
 \code

@@ -3452,10 +3452,9 @@
 
         \brief Alphabetical list of classes.
 
-        This is a list of all Qt classes. For a list of the classes
-        provided for compatibility with Qt3, see \l{Qt3 Support
-        Classes}. For classes that have been deprecated, see the
-        \l{Obsolete Classes} list.
+        This is a list of all Qt classes. For classes that
+        have been deprecated, see the \l{Obsolete Classes}
+        list.
 
         \generatelist classes Q
     * /
@@ -3506,30 +3505,6 @@
     JavaScript types from the module specified with the second argument.
 
     \note Support for this argument was introduced in QDoc 5.6.
-
-    \section2 \c compatclasses
-
-    The \c compatclasses argument generates a list in alphabetical
-    order of the support classes. It is normally used only to
-    generate the Qt3 Support Classes page this way:
-
-    \code
-    / *!
-        \page compatclasses.html
-        \title Qt3 Support Classes
-        \ingroup classlists
-
-        \brief Enable porting of code from Qt 3 to Qt 4.
-
-        These are the classes that Qt provides for compatibility with Qt
-        3. Most of these are provided by the Qt3Support module.
-
-        \generatelist compatclasses
-    * /
-    \endcode
-
-    A support class is identified in the \\class comment with the \l
-    {compat-command} {\\compat} command.
 
     \section2 \c {examplefiles [regular_expression]}
 
@@ -3701,95 +3676,6 @@
     The \\else command can only be used within \l {if-command}
     {\\if...\\endif} commands, but is useful when there is only two
     alternatives.
-
-           \code
-           / *!
-               The Qt 3 support library is provided to keep old
-               source code working.
-
-               In addition to the \c Qt3Support classes, Qt 4 provides
-               compatibility functions when it's possible for an old
-               API to cohabit with the new one.
-
-               \if !defined(QT3_SUPPORT)
-                   \if defined(QT3_SUPPORTWARNINGS)
-                       The compiler emits a warning when a
-                       compatibility function is called. (This works
-                       only with GCC 3.2+ and MSVC 7.)
-                   \else
-                       To use the Qt 3 support library, you need to
-                       have the line QT += qt3support in your .pro
-                       file (qmake automatically define the
-                       QT3_SUPPORT symbol, turning on compatibility
-                       function support).
-
-                       You can also define the symbol manually (for example,
-                       if you don't want to link against the \c
-                       Qt3Support library), or you can define \c
-                       QT3_SUPPORT_WARNINGS instead, telling the
-                       compiler to emit a warning when a compatibility
-                       function is called. (This works only with GCC
-                       3.2+ and MSVC 7.)
-                   \endif
-               \endif
-           * /
-           \endcode
-
-    If the \c QT3_SUPPORT is defined, the comment will be rendered
-    like this:
-
-           \quotation
-               The Qt 3 support library is provided to keep old source
-               code working.
-
-               In addition to the Qt3Support classes, Qt 4 provides
-               compatibility functions when it's possible for an old
-               API to cohabit with the new one.
-           \endquotation
-
-    If \c QT3_SUPPORT is not defined but \c QT3_SUPPORT_WARNINGS is
-    defined, the comment will be rendered like this:
-
-           \quotation
-               The Qt 3 support library is provided to keep old source
-               code working.
-
-               In addition to the Qt3Support classes, Qt 4 provides
-               compatibility functions when it's possible for an old
-               API to cohabit with the new one.
-
-               The compiler emits a warning when a compatibility
-               function is called. (This works only with GCC 3.2+ and
-               MSVC 7.)
-           \endquotation
-
-           If none of the symbols are defined, the comment will be
-           rendered as
-
-           \quotation
-               The Qt 3 support library is provided to keep old
-               source code working.
-
-               In addition to the \c Qt3Support classes, Qt 4 provides
-               compatibility functions when it's possible for an old
-               API to cohabit with the new one.
-
-               To use the Qt 3 support library, you need to have the
-               line QT += qt3support in your .pro file (qmake
-               automatically define the QT3_SUPPORT symbol, turning on
-               compatibility function support).
-
-               You can also define the symbol manually (e.g., if you
-               don't want to link against the \c Qt3Support library),
-               or you can define \c QT3_SUPPORT_WARNINGS instead,
-               telling the compiler to emit a warning when a
-               compatibility function is called. (This works only with
-               GCC 3.2+ and MSVC 7.)
-           \endquotation
-
-           See also \l{if-command} {\\if}, \l{endif-command} {\\endif}, \l
-           {defines-variable} {defines} and \l {falsehoods-variable}
-           {falsehoods}.
 
     \target include-command
     \section1 \\include

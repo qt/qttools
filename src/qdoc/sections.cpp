@@ -203,16 +203,10 @@ void Sections::insert(FastSection &fs, Node *node, Style style, Status status)
     }
 
     if (!irrelevant) {
-        if (status == Compat) {
-            irrelevant = (node->status() != Node::Compat);
-        }
-        else if (status == Obsolete) {
+        if (status == Obsolete)
             irrelevant = (node->status() != Node::Obsolete);
-        }
-        else {
-            irrelevant = (node->status() == Node::Compat ||
-                          node->status() == Node::Obsolete);
-        }
+        else
+            irrelevant = (node->status() == Node::Obsolete);
     }
 
     if (!irrelevant) {

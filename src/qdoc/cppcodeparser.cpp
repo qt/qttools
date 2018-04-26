@@ -823,29 +823,6 @@ bool CppCodeParser::skipTo(int target)
     return tok == target;
 }
 
-/*!
-  If the current token is one of the keyword thingees that
-  are used in Qt, skip over it to the next token and return
-  true. Otherwise just return false without reading the
-  next token.
- */
-bool CppCodeParser::matchCompat()
-{
-    switch (tok) {
-    case Tok_QT_COMPAT:
-    case Tok_QT_COMPAT_CONSTRUCTOR:
-    case Tok_QT_DEPRECATED:
-    case Tok_QT_MOC_COMPAT:
-    case Tok_QT3_SUPPORT:
-    case Tok_QT3_SUPPORT_CONSTRUCTOR:
-    case Tok_QT3_MOC_SUPPORT:
-        readToken();
-        return true;
-    default:
-        return false;
-    }
-}
-
 bool CppCodeParser::matchModuleQualifier(QString& name)
 {
     bool matches = (lexeme() == QString('.'));

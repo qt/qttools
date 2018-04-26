@@ -40,7 +40,6 @@
 
 QT_BEGIN_NAMESPACE
 
-#define COMMAND_COMPAT                  Doc::alias(QLatin1String("compat"))
 #define COMMAND_DEPRECATED              Doc::alias(QLatin1String("deprecated")) // ### don't document
 #define COMMAND_INGROUP                 Doc::alias(QLatin1String("ingroup"))
 #define COMMAND_INMODULE                Doc::alias(QLatin1String("inmodule"))  // ### don't document
@@ -191,8 +190,7 @@ static QSet<QString> commonMetaCommands_;
 const QSet<QString>& CodeParser::commonMetaCommands()
 {
     if (commonMetaCommands_.isEmpty()) {
-        commonMetaCommands_ << COMMAND_COMPAT
-                            << COMMAND_DEPRECATED
+        commonMetaCommands_ << COMMAND_DEPRECATED
                             << COMMAND_INGROUP
                             << COMMAND_INMODULE
                             << COMMAND_INQMLMODULE
@@ -226,11 +224,7 @@ void CodeParser::processCommonMetaCommand(const Location& location,
                                           const ArgLocPair& arg,
                                           Node* node)
 {
-    if (command == COMMAND_COMPAT) {
-        location.warning(tr("\\compat command used, but Qt3 compatibility is no longer supported"));
-        node->setStatus(Node::Compat);
-    }
-    else if (command == COMMAND_DEPRECATED) {
+    if (command == COMMAND_DEPRECATED) {
         node->setStatus(Node::Obsolete);
     }
     else if ((command == COMMAND_INGROUP) || (command == COMMAND_INPUBLICGROUP)) {

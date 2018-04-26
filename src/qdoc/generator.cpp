@@ -668,21 +668,10 @@ QString Generator::fullDocumentLocation(const Node *node, bool useSubdir)
         break;
     }
 
-    // Various objects can be compat (deprecated) or obsolete.
-    // Is this even correct?
     if (!node->isClass() && !node->isNamespace()) {
-        switch (node->status()) {
-        case Node::Compat:
-            parentName.replace(QLatin1Char('.') + currentGenerator()->fileExtension(),
-                               "-compat." + currentGenerator()->fileExtension());
-            break;
-        case Node::Obsolete:
+        if (node->status() == Node::Obsolete)
             parentName.replace(QLatin1Char('.') + currentGenerator()->fileExtension(),
                                "-obsolete." + currentGenerator()->fileExtension());
-            break;
-        default:
-            ;
-        }
     }
 
     return fdl + parentName.toLower() + anchorRef;
@@ -1388,20 +1377,6 @@ void Generator::generateStatus(const Node *node, CodeMarker *marker)
         text << " It is provided to keep old source code working. "
              << "We strongly advise against "
              << "using it in new code." << Atom::ParaRight;
-        break;
-    case Node::Compat:
-        // reimplemented in HtmlGenerator subclass
-        if (node->isAggregate()) {
-            text << Atom::ParaLeft
-                 << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD)
-                 << "This "
-                 << typeString(node)
-                 << " is part of the Qt compatibility layer."
-                 << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD)
-                 << " It is provided to keep old source code working. "
-                 << "We strongly advise against using it in new code."
-                 << Atom::ParaRight;
-        }
         break;
     case Node::Internal:
     default:

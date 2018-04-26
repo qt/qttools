@@ -209,7 +209,6 @@ private:
                                 const Aggregate *relative,
                                 CodeMarker *marker);
     void generateLink(const Atom *atom, CodeMarker *marker);
-    void generateStatus(const Node *node, CodeMarker *marker);
 
     inline bool hasBrief(const Node *node);
     QString registerRef(const QString& ref);

@@ -1460,13 +1460,6 @@ void HtmlGenerator::generateCppReferencePage(Node* node, CodeMarker* marker)
               << "Obsolete members</a></li>\n";
     }
 
-    QString compatLink = generateLowStatusMemberFile(aggregate,
-                                                     marker,
-                                                     Sections::Compat);
-    if (!compatLink.isEmpty())
-        out() << "<li><a href=\"" << compatLink << "\">"
-              << "Compatibility members</a></li>\n";
-
     out() << "</ul>\n";
     generateThreadSafeness(aggregate, marker);
 
@@ -1788,13 +1781,6 @@ void HtmlGenerator::generateDocumentNode(DocumentNode* dn, CodeMarker* marker)
             out() << "<li><a href=\"" << obsoleteLink << "\">"
                   << "Obsolete members</a></li>\n";
         }
-
-        QString compatLink = generateLowStatusMemberFile(dn,
-                                                         marker,
-                                                         Sections::Compat);
-        if (!compatLink.isEmpty())
-            out() << "<li><a href=\"" << compatLink << "\">"
-                  << "Compatibility members</a></li>\n";
 
         out() << "</ul>\n";
     }
@@ -2727,14 +2713,8 @@ QString HtmlGenerator::generateLowStatusMemberFile(Aggregate *aggregate,
     QString title;
     QString fileName;
 
-    if (status == Sections::Compat) {
-        title = "Compatibility Members for " + aggregate->name();
-        fileName = fileBase(aggregate) + "-compat." + fileExtension();
-    }
-    else {
-        title = "Obsolete Members for " + aggregate->name();
-        fileName = fileBase(aggregate) + "-obsolete." + fileExtension();
-    }
+    title = "Obsolete Members for " + aggregate->name();
+    fileName = fileBase(aggregate) + "-obsolete." + fileExtension();
     if (status == Sections::Obsolete) {
         QString link;
         if (useOutputSubdirs() && !Generator::outputSubdir().isEmpty())
@@ -2748,22 +2728,12 @@ QString HtmlGenerator::generateLowStatusMemberFile(Aggregate *aggregate,
     generateSidebar();
     generateTitle(title, Text(), SmallSubTitle, aggregate, marker);
 
-    if (status == Sections::Compat) {
-        out() << "<p><b>The following members of class "
-              << "<a href=\"" << linkForNode(aggregate, 0) << "\">"
-              << protectEnc(aggregate->name()) << "</a>"
-              << " are part of the "
-                 "Qt compatibility layer.</b> We advise against "
-                 "using them in new code.</p>\n";
-    }
-    else {
-        out() << "<p><b>The following members of class "
-              << "<a href=\"" << linkForNode(aggregate, 0) << "\">"
-              << protectEnc(aggregate->name()) << "</a>"
-              << " are obsolete.</b> "
-              << "They are provided to keep old source code working. "
-              << "We strongly advise against using them in new code.</p>\n";
-    }
+    out() << "<p><b>The following members of class "
+          << "<a href=\"" << linkForNode(aggregate, 0) << "\">"
+          << protectEnc(aggregate->name()) << "</a>"
+          << " are obsolete.</b> "
+          << "They are provided to keep old source code working. "
+          << "We strongly advise against using them in new code.</p>\n";
 
     for (i = 0; i < sections.size(); ++i) {
         out() << "<h2>" << protectEnc(sections.at(i).name_) << "</h2>\n";
@@ -3777,22 +3747,9 @@ QString HtmlGenerator::protect(const QString &string, const QString &outputEncod
 
 QString HtmlGenerator::fileBase(const Node *node) const
 {
-    QString result;
-
-    result = Generator::fileBase(node);
-
-    if (!node->isAggregate()) {
-        switch (node->status()) {
-        case Node::Compat:
-            result += QLatin1String("-compat");
-            break;
-        case Node::Obsolete:
-            result += QLatin1String("-obsolete");
-            break;
-        default:
-            ;
-        }
-    }
+    QString result = Generator::fileBase(node);
+    if (!node->isAggregate() && node->status() == Node::Obsolete)
+        result += QLatin1String("-obsolete");
     return result;
 }
 
@@ -4006,16 +3963,8 @@ void HtmlGenerator::generateFullName(const Node *apparentNode, const Node *relat
         actualNode = apparentNode;
     out() << "<a href=\"" << linkForNode(actualNode, relative);
     if (true || relative == 0 || relative->status() != actualNode->status()) {
-        switch (actualNode->status()) {
-        case Node::Obsolete:
+        if (actualNode->status() == Node::Obsolete)
             out() << "\" class=\"obsolete";
-            break;
-        case Node::Compat:
-            out() << "\" class=\"compat";
-            break;
-        default:
-            ;
-        }
     }
     out() << "\">";
     out() << protectEnc(apparentNode->fullName(relative));
@@ -4169,23 +4118,6 @@ const QPair<QString,QString> HtmlGenerator::anchorForNode(const Node *node)
     return anchorPair;
 }
 
-void HtmlGenerator::generateStatus(const Node *node, CodeMarker *marker)
-{
-    Text text;
-
-    switch (node->status()) {
-    case Node::Obsolete:
-        if (node->isAggregate())
-            Generator::generateStatus(node, marker);
-        break;
-    case Node::Compat:
-        // Porting to Qt 4 no longer supported
-        break;
-    default:
-        Generator::generateStatus(node, marker);
-    }
-}
-
 #ifdef GENERATE_MAC_REFS
 /*
   No longer valid.
@@ -4208,22 +4140,12 @@ void HtmlGenerator::beginLink(const QString &link, const Node *node, const Node 
         if (showBrokenLinks)
             out() << "<i>";
     }
-    else if (node == 0 ||
-             (relative != 0 && node->status() == relative->status())) {
+    else if (node == 0 || (relative != 0 && node->status() == relative->status()))
         out() << "<a href=\"" << link_ << "\">";
-    }
-    else {
-        switch (node->status()) {
-        case Node::Obsolete:
-            out() << "<a href=\"" << link_ << "\" class=\"obsolete\">";
-            break;
-        case Node::Compat:
-            out() << "<a href=\"" << link_ << "\" class=\"compat\">";
-            break;
-        default:
-            out() << "<a href=\"" << link_ << "\">";
-        }
-    }
+    else if (node->status() == Node::Obsolete)
+        out() << "<a href=\"" << link_ << "\" class=\"obsolete\">";
+    else
+        out() << "<a href=\"" << link_ << "\">";
     inLink_ = true;
 }
 

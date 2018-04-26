@@ -110,7 +110,6 @@ public:
     enum Access { Public, Protected, Private };
 
     enum Status {
-        Compat,
         Obsolete,
         Deprecated,
         Preliminary,

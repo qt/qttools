@@ -114,7 +114,6 @@ protected:
  private:
     bool match(int target);
     bool skipTo(int target);
-    bool matchCompat();
     bool matchModuleQualifier(QString& name);
     bool matchTemplateAngles(CodeChunk *type = 0);
     bool matchDataType(CodeChunk *type, QString *var = 0, bool qProp = false);

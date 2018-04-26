@@ -571,10 +571,6 @@ void HelpProjectWriter::addMembers(HelpProject &project, QXmlStreamWriter &write
         QString membersPath = href + QStringLiteral("-members.html");
         writeSection(writer, membersPath, tr("List of all members"));
     }
-    if (project.memberStatus[node].contains(Node::Compat)) {
-        QString compatPath = href + QStringLiteral("-compat.html");
-        writeSection(writer, compatPath, tr("Compatibility members"));
-    }
     if (project.memberStatus[node].contains(Node::Obsolete)) {
         QString obsoletePath = href + QStringLiteral("-obsolete.html");
         writeSection(writer, obsoletePath, tr("Obsolete members"));

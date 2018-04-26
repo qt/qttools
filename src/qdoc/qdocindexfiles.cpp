@@ -599,9 +599,7 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader& reader,
             node->setThreadSafeness(Node::UnspecifiedSafeness);
 
         QString status = attributes.value(QLatin1String("status")).toString();
-        if (status == QLatin1String("compat"))
-            node->setStatus(Node::Compat);
-        else if (status == QLatin1String("obsolete"))
+        if (status == QLatin1String("obsolete"))
             node->setStatus(Node::Obsolete);
         else if (status == QLatin1String("deprecated"))
             node->setStatus(Node::Obsolete);
@@ -921,9 +919,6 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter& writer,
 
     QString status;
     switch (node->status()) {
-    case Node::Compat:
-        status = "compat";
-        break;
     case Node::Obsolete:
         status = "obsolete";
         break;

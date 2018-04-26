@@ -47,7 +47,6 @@
 
     \list
       \li \l {abstract-command} {\\abstract}
-      \li \l {compat-command}{\\compat},
       \li \l {contentspage-command}{\\contentspage},
       \li \l {indexpage-command}{\\indexpage},
       \li \l {ingroup-command}{\\ingroup},
@@ -211,8 +210,7 @@
 
     These commands are for indicating that a documented element has
     some special status. The element could be marked as about to be
-    made obsolete, or that it is provided for compatibility with an
-    earlier version, or is simply not to be included in the public
+    made obsolete, or that it is simply not to be included in the public
     interface. The \l {since-command}{\\since} command is for
     specifying the version number in which a function or class first
     appeared. The \l {qmlabstract-command} {\\qmlabstract} command is
@@ -236,83 +234,6 @@
     also marked with \e{\\internal} so that its reference page is not
     generated. It the abstract QML type is not marked internal, it
     will have a reference page in the documentation.
-
-    \target compat-command
-    \section1 \\compat
-
-    The \\compat command is for indicating that a class or function is
-    part of the support library provided to keep old source code
-    working.
-
-    The command must stand on its own line.
-
-    Usually an equivalent function or class is provided as an
-    alternative.
-
-    If the command is used in the documentation of a class, the
-    command expands to a warning that the referenced class is part of
-    the support library. The warning is located at the top of the
-    documentation page.
-
-    \code
-    \beginqdoc
-        \class MyQt3SupportClass
-        \compat
-    \endqdoc
-    \endcode
-
-    QDoc renders this at the top of the MyQt3SupportClass class
-    reference page.
-
-    \quotation
-        \b {This class is part of the Qt 3 support
-        library.} It is provided to keep old source code
-        working. We strongly advise against using it in new
-        code. See the \l
-        {http://doc.qt.io/qt-4.8/porting4.html} {Porting
-        Guide} for more information.
-    \endquotation
-
-    If the command is used when documenting a function, QDoc will
-    create and link to a separate page documenting Qt 3 support
-    members when generating the reference documentation for the
-    associated class.
-
-    \code
-    \beginqdoc
-        \fn MyClass::MyQt3SupportMemberFunction
-        \compat
-
-        Use MyNewFunction() instead.
-    \endqdoc
-    \endcode
-
-    QDoc renders this in \c{myclass-qt3.html} as:
-
-    \quotation
-        \raw HTML
-        <h1>Qt 3 Support Members for MyClass</h1>
-        \endraw
-
-        \b {The following class members are part of the Qt 3
-        support layer.} They are provided to help you port old code to
-        Qt 4. We advise against using them in new code.
-
-        ...
-
-        \list
-            \li void MyQt3SupportMemberFunction()
-            \li ...
-        \endlist
-
-        \raw HTML
-        <hr />
-        <h2>Member Function Documentation</h2>
-        <h3>void MyQt3SupportMemberFunction ()</h3>
-        <p>Use MyNewFunction() instead.</p>
-        \endraw
-        ...
-    \endquotation
 
     \target default-command
     \section1 \\default

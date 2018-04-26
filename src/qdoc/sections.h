@@ -102,7 +102,7 @@ class Sections
 {
  public:
     enum Style { Summary, Detailed, Subpage, Accessors };
-    enum Status { Compat, Obsolete, Okay };
+    enum Status { Obsolete, Okay };
 
     Sections() { }
     ~Sections() { }
