@@ -229,7 +229,9 @@ bool QHelpCollectionHandler::openCollectionFile()
     for (const QHelpCollectionHandler::FileInfo &info : docList) {
         if (!hasTimeStampInfo(info.namespaceName)
                 && !registerIndexAndNamespaceFilterTables(info.namespaceName)) {
-            return false;
+            // we may have a doc registered without a timestamp
+            // and the doc may be missing currently
+            unregisterDocumentation(info.namespaceName);
         }
     }
 
