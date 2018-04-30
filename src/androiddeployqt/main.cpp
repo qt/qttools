@@ -1797,7 +1797,7 @@ bool readDependencies(Options *options)
             bool ok = readDependenciesFromElf(options, fileName, &usedDependencies, &remainingDependencies);
             if (!ok)
                 return false;
-        } else if (options->verbose) {
+        } else {
             fprintf(stdout, "Skipping %s due to unmet dependencies: %s\n",
                     qPrintable(fileName),
                     qPrintable(unmetDependencies.join(QLatin1Char(','))));
@@ -1808,11 +1808,9 @@ bool readDependencies(Options *options)
     while (it != options->localLibs.end()) {
         QStringList unmetDependencies;
         if (!goodToCopy(options, absoluteFilePath(options, *it), &unmetDependencies)) {
-            if (options->verbose) {
-                fprintf(stdout, "Skipping %s due to unmet dependencies: %s\n",
-                        qPrintable(*it),
-                        qPrintable(unmetDependencies.join(QLatin1Char(','))));
-            }
+            fprintf(stdout, "Skipping %s due to unmet dependencies: %s\n",
+                    qPrintable(*it),
+                    qPrintable(unmetDependencies.join(QLatin1Char(','))));
             it = options->localLibs.erase(it);
         } else {
             ++it;
@@ -2004,11 +2002,9 @@ bool copyQtFiles(Options *options)
 
         QStringList unmetDependencies;
         if (!goodToCopy(options, sourceFileName, &unmetDependencies)) {
-            if (options->verbose) {
-                fprintf(stdout, "  -- Skipping %s. It has unmet dependencies: %s.\n",
-                        qPrintable(sourceFileName),
-                        qPrintable(unmetDependencies.join(QLatin1Char(','))));
-            }
+            fprintf(stdout, "  -- Skipping %s. It has unmet dependencies: %s.\n",
+                    qPrintable(sourceFileName),
+                    qPrintable(unmetDependencies.join(QLatin1Char(','))));
             continue;
         }
 

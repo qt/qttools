@@ -86,6 +86,7 @@ protected:
     bool eventFilter(QObject *object, QEvent *event);
 
 private slots:
+    void done();
     void doneAndNext();
     void prev();
     void next();
