@@ -41,7 +41,7 @@ defineReplace(findLLVMVersionFromLibDir) {
 
 for(_, $$list(_)) { # just a way to break easily
     isEmpty(FORCE_MINGW_QDOC_BUILD): FORCE_MINGW_QDOC_BUILD = $$(FORCE_MINGW_QDOC_BUILD)
-    mingw : isEmpty(FORCE_MINGW_QDOC_BUILD) {
+    equals(QMAKE_HOST.os, Windows):gcc:isEmpty(FORCE_MINGW_QDOC_BUILD) {
             log("QDoc build is disabled on MinGW in Qt 5.11.0, because of a missing feature in the release infrastructure.")
             log("You can enable it by setting FORCE_MINGW_QDOC_BUILD")
             break()
