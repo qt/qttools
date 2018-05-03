@@ -33,15 +33,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>336</width>
-    <height>169</height>
+    <width>422</width>
+    <height>386</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Statistics</string>
   </property>
   <layout class="QGridLayout">
-   <item row="1" column="0">
+   <item row="2" column="0">
     <layout class="QHBoxLayout">
      <item>
       <spacer name="spacer4_2">
@@ -107,64 +107,234 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
-       <widget class="QLabel" name="untrWords">
+      <item row="0" column="3">
+       <widget class="QLabel" name="textLabel7">
+        <property name="text">
+         <string>Unfinished</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QLabel" name="wordsSourceTextbox">
         <property name="text">
          <string>0</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="2">
-       <widget class="QLabel" name="trWords">
+      <item row="3" column="2">
+       <widget class="QLabel" name="wordsFinishedTextbox">
         <property name="text">
          <string>0</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
+      <item row="3" column="3">
+       <widget class="QLabel" name="wordsUnfinishedTextbox">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
        <widget class="QLabel" name="textLabel1">
         <property name="text">
          <string>Words:</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="2">
-       <widget class="QLabel" name="trChars">
+      <item row="1" column="2">
+       <widget class="QLabel" name="charsFinishedTextbox">
         <property name="text">
          <string>0</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
-       <widget class="QLabel" name="untrChars">
+      <item row="1" column="3">
+       <widget class="QLabel" name="charsUnfinishedTextbox">
         <property name="text">
          <string>0</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
+      <item row="1" column="1">
+       <widget class="QLabel" name="charsSourceTextbox">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
        <widget class="QLabel" name="textLabel3">
         <property name="text">
          <string>Characters:</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
+      <item row="2" column="0">
        <widget class="QLabel" name="textLabel6">
         <property name="text">
          <string>Characters (with spaces):</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="2">
-       <widget class="QLabel" name="trCharsSpc">
+      <item row="2" column="2">
+       <widget class="QLabel" name="charsSpacesFinishedTextbox">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLabel" name="charsSpacesSourceTextbox">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="3">
+       <widget class="QLabel" name="charsSpacesUnfinishedTextbox">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QFrame" name="frame5">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QGridLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="textLabelTot">
+        <property name="text">
+         <string>Total translatable messages:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="textLabelTotFinished">
+        <property name="text">
+         <string>Total finished:</string>
+        </property>
+        <property name="indent">
+         <number>15</number>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="textLabelFinishedNoWarn">
+        <property name="text">
+         <string>Without warnings:</string>
+        </property>
+        <property name="indent">
+         <number>30</number>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="textLabelFinishedWarn">
+        <property name="text">
+         <string>With warnings:</string>
+        </property>
+        <property name="indent">
+         <number>30</number>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="textLabelUnfinished">
+        <property name="text">
+         <string>Unfinished:</string>
+        </property>
+        <property name="indent">
+         <number>15</number>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel" name="textLabelUnfinishedNoWarn">
+        <property name="text">
+         <string>Without warnings:</string>
+        </property>
+        <property name="indent">
+         <number>30</number>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLabel" name="textLabelUnfinishedWarn">
+        <property name="text">
+         <string>With warnings:</string>
+        </property>
+        <property name="indent">
+         <number>30</number>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="0">
+       <widget class="QLabel" name="textLabelTotWithObs">
+        <property name="text">
+         <string>Total messages including obsolete:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLabel" name="totalMessagesTextbox">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLabel" name="totalFinishedTextbox">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLabel" name="finishedWithoutWarningsTextbox">
         <property name="text">
          <string>0</string>
         </property>
        </widget>
       </item>
       <item row="3" column="1">
-       <widget class="QLabel" name="untrCharsSpc">
+       <widget class="QLabel" name="finishedWithWarningsTextbox">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QLabel" name="unfinishedNoObsTextbox">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="QLabel" name="unfinishedNoWarningsTextbox">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1">
+       <widget class="QLabel" name="unfinishedWithWarningsTextbox">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="1">
+       <widget class="QLabel" name="totalWithObsoleteTextbox">
         <property name="text">
          <string>0</string>
         </property>

@@ -34,6 +34,24 @@
 
 QT_BEGIN_NAMESPACE
 
+struct StatisticalData
+{
+    int wordsSource;
+    int charsSource;
+    int charsSpacesSource;
+    int wordsFinished;
+    int charsFinished;
+    int charsSpacesFinished;
+    int wordsUnfinished;
+    int charsUnfinished;
+    int charsSpacesUnfinished;
+    int translatedMsgNoDanger;
+    int translatedMsgDanger;
+    int obsoleteMsg;
+    int unfinishedMsgNoDanger;
+    int unfinishedMsgDanger;
+};
+
 class Statistics : public QDialog, public Ui::Statistics
 {
     Q_OBJECT
@@ -43,7 +61,7 @@ public:
     ~Statistics() {}
 
 public slots:
-    virtual void updateStats(int w1, int c1, int cs1, int w2, int c2, int cs2);
+    virtual void updateStats(const StatisticalData &newStats);
 
 protected slots:
     virtual void languageChange();

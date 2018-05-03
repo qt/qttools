@@ -2722,8 +2722,8 @@ void MainWindow::toggleStatistics()
     if (m_ui.actionStatistics->isChecked()) {
         if (!m_statistics) {
             m_statistics = new Statistics(this);
-            connect(m_dataModel, SIGNAL(statsChanged(int,int,int,int,int,int)),
-                m_statistics, SLOT(updateStats(int,int,int,int,int,int)));
+            connect(m_dataModel, SIGNAL(statsChanged(StatisticalData)),
+                m_statistics, SLOT(updateStats(StatisticalData)));
         }
         m_statistics->show();
         updateStatistics();

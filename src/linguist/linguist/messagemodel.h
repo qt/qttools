@@ -42,6 +42,7 @@ QT_BEGIN_NAMESPACE
 
 class DataModel;
 class MultiDataModel;
+struct StatisticalData;
 
 class MessageItem
 {
@@ -73,6 +74,7 @@ public:
     void setType(TranslatorMessage::Type type) { m_message.setType(type); }
 
     bool isFinished() const { return type() == TranslatorMessage::Finished; }
+    bool isUnfinished() const { return type() == TranslatorMessage::Unfinished; }
     bool isObsolete() const
         { return type() == TranslatorMessage::Obsolete || type() == TranslatorMessage::Vanished; }
     const TranslatorMessage &message() const { return m_message; }
@@ -217,7 +219,7 @@ public:
     int getSrcCharsSpc() const { return m_srcCharsSpc; }
 
 signals:
-    void statsChanged(int words, int characters, int cs, int words2, int characters2, int cs2);
+    void statsChanged(const StatisticalData &newStats);
     void progressChanged(int finishedCount, int oldFinishedCount);
     void languageChanged();
     void modifiedChanged();
@@ -444,7 +446,7 @@ signals:
     void modelDeleted(int model);
     void allModelsDeleted();
     void languageChanged(int model);
-    void statsChanged(int words, int characters, int cs, int words2, int characters2, int cs2);
+    void statsChanged(const StatisticalData &newStats);
     void modifiedChanged(bool);
     void multiContextDataChanged(const MultiDataIndex &index);
     void contextDataChanged(const MultiDataIndex &index);

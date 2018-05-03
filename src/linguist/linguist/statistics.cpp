@@ -41,14 +41,31 @@ void Statistics::languageChange()
     retranslateUi(this);
 }
 
-void Statistics::updateStats(int sW,int sC,int sCS,int trW,int trC,int trCS)
+void Statistics::updateStats(const StatisticalData& newStats)
 {
-    untrWords->setText(QString::number(sW));
-    untrChars->setText(QString::number(sC));
-    untrCharsSpc->setText(QString::number(sCS));
-    trWords->setText(QString::number(trW));
-    trChars->setText(QString::number(trC));
-    trCharsSpc->setText(QString::number(trCS));
+    int totals = newStats.translatedMsgDanger + newStats.translatedMsgNoDanger
+               + newStats.unfinishedMsgNoDanger + newStats.unfinishedMsgDanger;
+    int totalsWithObsolete = totals + newStats.obsoleteMsg;
+    int unfinished = newStats.unfinishedMsgDanger + newStats.unfinishedMsgNoDanger;
+    int finished = newStats.translatedMsgNoDanger + newStats.translatedMsgDanger;
+
+    wordsSourceTextbox->setText(QString::number(newStats.wordsSource));
+    charsSourceTextbox->setText(QString::number(newStats.charsSource));
+    charsSpacesSourceTextbox->setText(QString::number(newStats.charsSpacesSource));
+    wordsFinishedTextbox->setText(QString::number(newStats.wordsFinished));
+    charsFinishedTextbox->setText(QString::number(newStats.charsFinished));
+    charsSpacesFinishedTextbox->setText(QString::number(newStats.charsSpacesFinished));
+    wordsUnfinishedTextbox->setText(QString::number(newStats.wordsUnfinished));
+    charsUnfinishedTextbox->setText(QString::number(newStats.charsUnfinished));
+    charsSpacesUnfinishedTextbox->setText(QString::number(newStats.charsSpacesUnfinished));
+    totalMessagesTextbox->setText(QString::number(totals));
+    totalWithObsoleteTextbox->setText(QString::number(totalsWithObsolete));
+    totalFinishedTextbox->setText(QString::number(finished));
+    finishedWithoutWarningsTextbox->setText(QString::number(newStats.translatedMsgNoDanger));
+    finishedWithWarningsTextbox->setText(QString::number(newStats.translatedMsgDanger));
+    unfinishedNoObsTextbox->setText(QString::number(unfinished));
+    unfinishedNoWarningsTextbox->setText(QString::number(newStats.unfinishedMsgNoDanger));
+    unfinishedWithWarningsTextbox->setText(QString::number(newStats.unfinishedMsgDanger));
 }
 
 QT_END_NAMESPACE

@@ -27,6 +27,7 @@
 ****************************************************************************/
 
 #include "messagemodel.h"
+#include "statistics.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
@@ -426,20 +427,37 @@ void DataModel::setSourceLanguageAndCountry(QLocale::Language lang, QLocale::Cou
 
 void DataModel::updateStatistics()
 {
-    int trW = 0;
-    int trC = 0;
-    int trCS = 0;
-
+    StatisticalData stats {};
     for (DataModelIterator it(this); it.isValid(); ++it) {
         const MessageItem *mi = it.current();
-        if (mi->isFinished()) {
-            const QStringList translations = mi->translations();
-            for (const QString &trnsl : translations)
-                doCharCounting(trnsl, trW, trC, trCS);
+        if (mi->isObsolete()) {
+            stats.obsoleteMsg++;
+        } else if (mi->isFinished()) {
+            bool hasDanger = false;
+            for (const QString &trnsl : mi->translations()) {
+                doCharCounting(trnsl, stats.wordsFinished, stats.charsFinished, stats.charsSpacesFinished);
+                hasDanger |= mi->danger();
+            }
+            if (hasDanger)
+                stats.translatedMsgDanger++;
+            else
+                stats.translatedMsgNoDanger++;
+        } else if (mi->isUnfinished()) {
+            bool hasDanger = false;
+            for (const QString &trnsl : mi->translations()) {
+                doCharCounting(trnsl, stats.wordsUnfinished, stats.charsUnfinished, stats.charsSpacesUnfinished);
+                hasDanger |= mi->danger();
+            }
+            if (hasDanger)
+                stats.unfinishedMsgDanger++;
+            else
+                stats.unfinishedMsgNoDanger++;
         }
     }
-
-    emit statsChanged(m_srcWords, m_srcChars, m_srcCharsSpc, trW, trC, trCS);
+    stats.wordsSource = m_srcWords;
+    stats.charsSource = m_srcChars;
+    stats.charsSpacesSource = m_srcCharsSpc;
+    emit statsChanged(stats);
 }
 
 void DataModel::setModified(bool isModified)
@@ -771,7 +789,7 @@ void MultiDataModel::append(DataModel *dm, bool readWrite)
     updateCountsOnAdd(modelCount() - 1, readWrite);
     connect(dm, SIGNAL(modifiedChanged()), SLOT(onModifiedChanged()));
     connect(dm, SIGNAL(languageChanged()), SLOT(onLanguageChanged()));
-    connect(dm, SIGNAL(statsChanged(int,int,int,int,int,int)), SIGNAL(statsChanged(int,int,int,int,int,int)));
+    connect(dm, SIGNAL(statsChanged(StatisticalData)), SIGNAL(statsChanged(StatisticalData)));
     emit modelAppended();
 }
 
