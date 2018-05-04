@@ -63,25 +63,6 @@ QHash<QString, QString> Generator::outputSuffixes;
 QString Generator::project_;
 QStringList Generator::scriptDirs;
 QStringList Generator::scriptFiles;
-QString Generator::sinceTitles[] =
-{
-    "    New Namespaces",
-    "    New Classes",
-    "    New Member Functions",
-    "    New Functions in Namespaces",
-    "    New Global Functions",
-    "    New Macros",
-    "    New Enum Types",
-    "    New Typedefs",
-    "    New Properties",
-    "    New Variables",
-    "    New QML Types",
-    "    New QML Properties",
-    "    New QML Signals",
-    "    New QML Signal Handlers",
-    "    New QML Methods",
-    ""
-};
 QStringList Generator::styleDirs;
 QStringList Generator::styleFiles;
 bool Generator::noLinkErrors_ = false;

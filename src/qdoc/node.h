@@ -33,7 +33,7 @@
 #include <qmap.h>
 #include <qpair.h>
 #include <qstringlist.h>
-
+#include <qvector.h>
 #include "codechunk.h"
 #include "doc.h"
 
@@ -55,6 +55,7 @@ class QmlPropertyNode;
 class SharedCommentNode;
 
 typedef QList<Node*> NodeList;
+typedef QVector<Node*> NodeVector;
 typedef QList<PropertyNode*> PropNodeList;
 typedef QMap<QString, Node*> NodeMap;
 typedef QMultiMap<QString, Node*> NodeMultiMap;
@@ -237,6 +238,8 @@ public:
     virtual bool isImplicit() const { return false; }
     virtual bool isSharedCommentNode() const { return false; }
     virtual bool isMacro() const { return false; }
+    virtual bool isStatic() const { return false; }
+
     virtual void addMember(Node* ) { }
     virtual bool hasMembers() const { return false; }
     virtual bool hasNamespaces() const { return false; }
@@ -968,7 +971,7 @@ public:
     QString metaness() const;
     QString virtualness() const;
     bool isConst() const { return const_; }
-    bool isStatic() const { return static_; }
+    bool isStatic() const override { return static_; }
     bool isOverload() const { return overload_; }
     bool isReimplemented() const override { return reimplemented_; }
     bool isFunction() const override { return true; }
@@ -1132,11 +1135,11 @@ public:
     const QString &dataType() const { return type_; }
     QString qualifiedDataType() const;
     NodeList functions() const;
-    NodeList functions(FunctionRole role) const { return functions_[(int)role]; }
-    NodeList getters() const { return functions(Getter); }
-    NodeList setters() const { return functions(Setter); }
-    NodeList resetters() const { return functions(Resetter); }
-    NodeList notifiers() const { return functions(Notifier); }
+    const NodeList &functions(FunctionRole role) const { return functions_[(int)role]; }
+    const NodeList &getters() const { return functions(Getter); }
+    const NodeList &setters() const { return functions(Setter); }
+    const NodeList &resetters() const { return functions(Resetter); }
+    const NodeList &notifiers() const { return functions(Notifier); }
     FunctionRole role(const FunctionNode* fn) const;
     bool isStored() const { return fromFlagValue(stored_, storedDefault()); }
     bool isDesignable() const { return fromFlagValue(designable_, designableDefault()); }
@@ -1209,8 +1212,8 @@ public:
     const QString &leftType() const { return leftType_; }
     const QString &rightType() const { return rightType_; }
     QString dataType() const { return leftType_ + rightType_; }
-    bool isStatic() const { return static_; }
-    virtual bool isVariable() const { return true; }
+    bool isStatic() const override { return static_; }
+    virtual bool isVariable() const override { return true; }
 
 private:
     QString leftType_;

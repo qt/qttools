@@ -53,7 +53,7 @@ public:
                                  const Location& /*location*/) { return protect(code); }
     virtual QString markedUpSynopsis(const Node* /*node*/,
                                      const Node* /*relative*/,
-                                     Sections::Style /*style*/) { return QString(); }
+                                     Section::Style /*style*/) { return QString(); }
     virtual QString markedUpQmlItem(const Node* , bool) { return QString(); }
     virtual QString markedUpName(const Node* /*node*/) { return QString(); }
     virtual QString markedUpFullName(const Node* /*node*/,

@@ -49,24 +49,6 @@ class HtmlGenerator : public Generator
     Q_DECLARE_TR_FUNCTIONS(QDoc::HtmlGenerator)
 
 public:
-    enum SinceType {
-        Namespace,
-        Class,
-        MemberFunction,
-        NamespaceFunction,
-        GlobalFunction,
-        Macro,
-        Enum,
-        Typedef,
-        Property,
-        Variable,
-        QmlClass,
-        QmlProperty,
-        QmlSignal,
-        QmlSignalHandler,
-        QmlMethod,
-        LastSinceType
-    };
 
 public:
     HtmlGenerator();
@@ -80,7 +62,6 @@ public:
 
     QString protectEnc(const QString &string);
     static QString protect(const QString &string, const QString &encoding = "ISO-8859-1");
-    static QString sinceTitle(int i) { return sinceTitles[i]; }
 
 protected:
     void generateQAPage() override;
@@ -147,17 +128,12 @@ private:
     void generateIncludes(const Aggregate *inner, CodeMarker *marker);
     void generateTableOfContents(const Node *node,
                                  CodeMarker *marker,
-                                 QList<Section>* sections = 0);
+                                 QVector<Section>* sections = 0);
     void generateSidebar();
-    QString generateListOfAllMemberFile(const Aggregate *inner,
-                                        CodeMarker *marker);
-    QString generateAllQmlMembersFile(QmlTypeNode* qml_cn, CodeMarker* marker);
-    QString generateLowStatusMemberFile(Aggregate *inner,
-                                        CodeMarker *marker,
-                                        Sections::Status status);
-    QString generateQmlMemberFile(QmlTypeNode* qcn,
-                                  CodeMarker *marker,
-                                  Sections::Status status);
+    QString generateAllMembersFile(const Section &section, CodeMarker *marker);
+    QString generateAllQmlMembersFile(const Sections &sections, CodeMarker* marker);
+    QString generateObsoleteMembersFile(const Sections &sections, CodeMarker *marker);
+    QString generateObsoleteQmlMembersFile(const Sections &sections, CodeMarker *marker);
     void generateClassHierarchy(const Node *relative, NodeMap &classMap);
     void generateAnnotatedList(const Node* relative, CodeMarker* marker, const NodeMultiMap& nodeMap);
     void generateAnnotatedLists(const Node* relative, CodeMarker* marker, const NodeMultiMap& nodeMap);
@@ -173,7 +149,7 @@ private:
     void generateSectionList(const Section& section,
                              const Node *relative,
                              CodeMarker *marker,
-                             Sections::Style style);
+                             Section::Status = Section::Active);
     void generateQmlSummary(const Section& section,
                             const Node *relative,
                             CodeMarker *marker);
@@ -188,14 +164,11 @@ private:
     void generateQmlInstantiates(QmlTypeNode* qcn, CodeMarker* marker);
     void generateInstantiatedBy(ClassNode* cn, CodeMarker* marker);
 
-    void generateSection(const NodeList& nl,
-                         const Node *relative,
-                         CodeMarker *marker,
-                         Sections::Style style);
+    void generateSection(const NodeVector& nv, const Node *relative, CodeMarker *marker);
     void generateSynopsis(const Node *node,
                           const Node *relative,
                           CodeMarker *marker,
-                          Sections::Style style,
+                          Section::Style style,
                           bool alignNames = false,
                           const QString* prefix = 0);
     void generateSectionInheritedList(const Section& section, const Node *relative);

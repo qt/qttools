@@ -138,8 +138,6 @@ protected:
     static QString trimmedTrailing(const QString &string,
                                    const QString &prefix,
                                    const QString &suffix);
-    static QString sinceTitles[];
-
     void initializeTextOutput();
     QString fileName(const Node* node, const QString &extension = QString()) const;
     QMap<QString, QString> &formattingLeftMap();

@@ -111,7 +111,7 @@ QString CppCodeMarker::markedUpCode(const QString &code,
 
 QString CppCodeMarker::markedUpSynopsis(const Node *node,
                                         const Node * /* relative */,
-                                        Sections::Style style)
+                                        Section::Style style)
 {
     const int MaxEnumValues = 6;
     const FunctionNode *func;
@@ -124,11 +124,11 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
     QString name;
 
     name = taggedNode(node);
-    if (style != Sections::Detailed)
+    if (style != Section::Details)
         name = linkTag(node, name);
     name = "<@name>" + name + "</@name>";
 
-    if ((style == Sections::Detailed) && !node->parent()->name().isEmpty() &&
+    if ((style == Section::Details) && !node->parent()->name().isEmpty() &&
         (node->type() != Node::Property) && !node->isQmlNode() && !node->isJsNode())
         name.prepend(taggedNode(node->parent()) + "::");
 
@@ -145,7 +145,7 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
     case Node::QmlMethod:
         func = (const FunctionNode *) node;
 
-        if (style != Sections::Subpage && !func->returnType().isEmpty())
+        if (style != Section::AllMembers && !func->returnType().isEmpty())
             synopsis = typified(func->returnType(), true);
         synopsis += name;
         if (!func->isMacroWithoutParams()) {
@@ -159,9 +159,9 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
                     if (hasName)
                         synopsis += typified((*p).dataType(), true);
                     const QString &paramName = hasName ? (*p).name() : (*p).dataType();
-                    if (style != Sections::Subpage || !hasName)
+                    if (style != Section::AllMembers || !hasName)
                         synopsis += "<@param>" + protect(paramName) + "</@param>";
-                    if (style != Sections::Subpage && !(*p).defaultValue().isEmpty())
+                    if (style != Section::AllMembers && !(*p).defaultValue().isEmpty())
                         synopsis += " = " + protect((*p).defaultValue());
                     ++p;
                 }
@@ -171,7 +171,7 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
         if (func->isConst())
             synopsis += " const";
 
-        if (style == Sections::Summary || style == Sections::Accessors) {
+        if (style == Section::Summary || style == Section::Accessors) {
             if (!func->isNonvirtual())
                 synopsis.prepend("virtual ");
             if (func->isFinal())
@@ -189,7 +189,7 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
             else if (func->isRefRef())
                synopsis.append(" &&");
         }
-        else if (style == Sections::Subpage) {
+        else if (style == Section::AllMembers) {
             if (!func->returnType().isEmpty() && func->returnType() != "void")
                 synopsis += " : " + typified(func->returnType());
         }
@@ -237,7 +237,7 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
     case Node::Enum:
         enume = static_cast<const EnumNode *>(node);
         synopsis = "enum " + name;
-        if (style == Sections::Summary) {
+        if (style == Section::Summary) {
             synopsis += " { ";
 
             QStringList documentedItems = enume->doc().enumItemNames();
@@ -288,7 +288,7 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
         break;
     case Node::Variable:
         variable = static_cast<const VariableNode *>(node);
-        if (style == Sections::Subpage) {
+        if (style == Section::AllMembers) {
             synopsis = name + " : " + typified(variable->dataType());
         }
         else {
@@ -300,7 +300,7 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
         synopsis = name;
     }
 
-    if (style == Sections::Summary) {
+    if (style == Section::Summary) {
         if (node->status() == Node::Preliminary) {
             extra += "(preliminary) ";
         }
