@@ -457,9 +457,10 @@
     The \c falsehoods variable defines the truth value of specified
     preprocessor symbols as false.
 
-    If this variable is not set for a preprocessor symbol, QDoc
-    assumes its truth value is true. The exception is '0', which value
-    always is false.
+    The values of the variable are regular expressions (see QRegExp
+    for details). If this variable is not set for a preprocessor
+    symbol, QDoc assumes its truth value is true. The exception is
+    '0', which is always false.
 
     QDoc will recognize, and is able to evaluate, the following
     preprocessor syntax:
