@@ -14,6 +14,14 @@ qtHaveModule(qmldevtools-private) {
 LIBS += $$CLANG_LIBS
 !contains(QMAKE_DEFAULT_INCDIRS, $$CLANG_INCLUDEPATH): INCLUDEPATH += $$CLANG_INCLUDEPATH
 
+# Support static libclang linking on different platforms
+equals(QMAKE_HOST.os, Windows): {
+    DEFINES += CINDEX_LINKAGE=
+} else {
+    LIBS += -lz -ldl
+    equals(QMAKE_HOST.os, Darwin): LIBS += -lcurses -lm -lxml2
+}
+
 !contains(QMAKE_DEFAULT_LIBDIRS, $$CLANG_LIBDIR):!disable_external_rpath: QMAKE_RPATHDIR += $$CLANG_LIBDIR
 DEFINES += $$shell_quote(CLANG_RESOURCE_DIR=\"$${CLANG_LIBDIR}/clang/$${CLANG_VERSION}/include\")
 
