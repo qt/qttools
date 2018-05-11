@@ -1213,9 +1213,16 @@ QStringList QHelpCollectionHandler::filterAttributes(const QString &filterName) 
 {
     QStringList list;
     if (m_query) {
-        m_query->prepare(QLatin1String("SELECT a.Name FROM FilterAttributeTable a, "
-            "FilterTable b, FilterNameTable c WHERE a.Id=b.FilterAttributeId "
-            "AND b.NameId=c.Id AND c.Name=?"));
+        m_query->prepare(QLatin1String(
+                 "SELECT "
+                     "FilterAttributeTable.Name "
+                 "FROM "
+                     "FilterAttributeTable, "
+                     "FilterTable, "
+                     "FilterNameTable "
+                 "WHERE FilterAttributeTable.Id = FilterTable.FilterAttributeId "
+                 "AND FilterTable.NameId = FilterNameTable.Id "
+                 "AND FilterNameTable.Name=?"));
         m_query->bindValue(0, filterName);
         m_query->exec();
         while (m_query->next())

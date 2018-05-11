@@ -390,8 +390,15 @@ QList<QStringList> QHelpDBReader::filterAttributeSets() const
 {
     QList<QStringList> result;
     if (m_query) {
-        m_query->exec(QLatin1String("SELECT a.Id, b.Name FROM FileAttributeSetTable a, "
-            "FilterAttributeTable b WHERE a.FilterAttributeId=b.Id ORDER BY a.Id"));
+        m_query->exec(QLatin1String(
+                  "SELECT "
+                      "FileAttributeSetTable.Id, "
+                      "FilterAttributeTable.Name "
+                  "FROM "
+                      "FileAttributeSetTable, "
+                      "FilterAttributeTable "
+                  "WHERE FileAttributeSetTable.FilterAttributeId = FilterAttributeTable.Id "
+                  "ORDER BY FileAttributeSetTable.Id"));
         int oldId = -1;
         while (m_query->next()) {
             const int id = m_query->value(0).toInt();
@@ -413,9 +420,20 @@ QByteArray QHelpDBReader::fileData(const QString &virtualFolder,
         return ba;
 
     namespaceName();
-    m_query->prepare(QLatin1String("SELECT a.Data FROM FileDataTable a, FileNameTable b, FolderTable c, "
-        "NamespaceTable d WHERE a.Id=b.FileId AND (b.Name=? OR b.Name=?) AND b.FolderId=c.Id "
-        "AND c.Name=? AND c.NamespaceId=d.Id AND d.Name=?"));
+    m_query->prepare(QLatin1String(
+                    "SELECT "
+                        "FileDataTable.Data "
+                    "FROM "
+                        "FileDataTable, "
+                        "FileNameTable, "
+                        "FolderTable, "
+                        "NamespaceTable "
+                    "WHERE FileDataTable.Id = FileNameTable.FileId "
+                    "AND (FileNameTable.Name = ? OR FileNameTable.Name = ?) "
+                    "AND FileNameTable.FolderId = FolderTable.Id "
+                    "AND FolderTable.Name = ? "
+                    "AND FolderTable.NamespaceId = NamespaceTable.Id "
+                    "AND NamespaceTable.Name = ?"));
     m_query->bindValue(0, filePath);
     m_query->bindValue(1, QString(QLatin1String("./") + filePath));
     m_query->bindValue(2, virtualFolder);
@@ -444,9 +462,16 @@ QStringList QHelpDBReader::filterAttributes(const QString &filterName) const
         if (filterName.isEmpty()) {
             m_query->prepare(QLatin1String("SELECT Name FROM FilterAttributeTable"));
         } else {
-            m_query->prepare(QLatin1String("SELECT a.Name FROM FilterAttributeTable a, "
-                "FilterTable b, FilterNameTable c WHERE c.Name=? "
-                "AND c.Id=b.NameId AND b.FilterAttributeId=a.Id"));
+            m_query->prepare(QLatin1String(
+                     "SELECT "
+                         "FilterAttributeTable.Name "
+                     "FROM "
+                         "FilterAttributeTable, "
+                         "FilterTable, "
+                         "FilterNameTable "
+                     "WHERE FilterNameTable.Name = ? "
+                    "AND FilterNameTable.Id = FilterTable.NameId "
+                    "AND FilterTable.FilterAttributeId = FilterAttributeTable.Id"));
             m_query->bindValue(0, filterName);
         }
         m_query->exec();
