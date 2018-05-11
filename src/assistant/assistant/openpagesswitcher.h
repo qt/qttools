@@ -43,7 +43,7 @@ class OpenPagesSwitcher : public QFrame
 
 public:
     OpenPagesSwitcher(OpenPagesModel *model);
-    ~OpenPagesSwitcher();
+    ~OpenPagesSwitcher() override;
 
     void gotoNextPage();
     void gotoPreviousPage();

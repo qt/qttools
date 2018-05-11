@@ -61,7 +61,7 @@ public:
     static QByteArray fileDataForLocalUrl(const QUrl &url);
 
     // Create an instance of QNetworkAccessManager for WebKit-type browsers.
-    static QNetworkAccessManager *createNetworkAccessManager(QObject *parent = 0);
+    static QNetworkAccessManager *createNetworkAccessManager(QObject *parent = nullptr);
 };
 
 QT_END_NAMESPACE

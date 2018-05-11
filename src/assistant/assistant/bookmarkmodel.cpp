@@ -42,7 +42,7 @@ BookmarkModel::BookmarkModel()
     : QAbstractItemModel()
     , m_folder(false)
     , m_editable(false)
-    , rootItem(0)
+    , rootItem(nullptr)
 {
 }
 
@@ -236,20 +236,19 @@ BookmarkModel::data(const QModelIndex &index, int role) const
     if (index.isValid()) {
         if (BookmarkItem *item = itemFromIndex(index)) {
             switch (role) {
-                case Qt::EditRole: {
+                case Qt::EditRole:
                 case Qt::DisplayRole:
                     if (index.data(UserRoleFolder).toBool() && index.column() == 1)
                         return QString();
                     return item->data(index.column());
-                }   break;
 
-                case Qt::DecorationRole: {
+                case Qt::DecorationRole:
                     if (index.column() == 0)
                         return index.data(UserRoleFolder).toBool()
                             ? folderIcon : bookmarkIcon;
-                }   break;
+                    break;
 
-                default:;
+                default:
                     return item->data(role);
             }
         }
@@ -363,7 +362,7 @@ QMimeData*
 BookmarkModel::mimeData(const QModelIndexList &indexes) const
 {
     if (indexes.isEmpty())
-        return 0;
+        return nullptr;
 
     QByteArray data;
     QDataStream stream(&data, QIODevice::WriteOnly);

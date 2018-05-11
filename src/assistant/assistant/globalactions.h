@@ -42,7 +42,7 @@ class GlobalActions : public QObject
     Q_OBJECT
     Q_DISABLE_COPY(GlobalActions)
 public:
-    static GlobalActions *instance(QObject *parent = 0);
+    static GlobalActions *instance(QObject *parent = nullptr);
 
     QList<QAction *> actionList() const { return m_actionList; }
     QAction *backAction() const { return m_backAction; }

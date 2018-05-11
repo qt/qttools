@@ -334,9 +334,9 @@ void HelpViewer::contextMenuEvent(QContextMenuEvent *event)
 {
     TRACE_OBJ
 
-    QMenu menu(QString(), 0);
+    QMenu menu(QString(), nullptr);
     QUrl link;
-    QAction *copyAnchorAction = 0;
+    QAction *copyAnchorAction = nullptr;
     if (d->hasAnchorAt(this, event->pos())) {
         link = anchorAt(event->pos());
         if (link.isRelative())

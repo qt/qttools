@@ -376,7 +376,7 @@ void QHelpSearchIndexWriter::run()
 
     lock.unlock();
 
-    QHelpEngineCore engine(collectionFile, 0);
+    QHelpEngineCore engine(collectionFile, nullptr);
     if (!engine.setupData())
         return;
 

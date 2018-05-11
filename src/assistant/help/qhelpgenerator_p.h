@@ -65,7 +65,7 @@ class QHELP_EXPORT QHelpGenerator : public QObject
     Q_OBJECT
 
 public:
-    QHelpGenerator(QObject *parent = 0);
+    QHelpGenerator(QObject *parent = nullptr);
     ~QHelpGenerator();
 
     bool generate(QHelpDataInterface *helpData,

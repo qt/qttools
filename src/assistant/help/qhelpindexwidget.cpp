@@ -56,7 +56,7 @@ class QHelpIndexProvider : public QThread
 {
 public:
     QHelpIndexProvider(QHelpEnginePrivate *helpEngine);
-    ~QHelpIndexProvider();
+    ~QHelpIndexProvider() override;
     void collectIndices(const QString &customFilterName);
     void stopCollecting();
     QStringList indices() const;
@@ -319,7 +319,7 @@ QModelIndex QHelpIndexModel::filter(const QString &filter, const QString &wildca
 */
 
 QHelpIndexWidget::QHelpIndexWidget()
-    : QListView(0)
+    : QListView(nullptr)
 {
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     setUniformItemSizes(true);

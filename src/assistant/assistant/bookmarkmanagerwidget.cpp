@@ -188,7 +188,7 @@ void BookmarkManagerWidget::findPrevious()
 void BookmarkManagerWidget::importBookmarks()
 {
     TRACE_OBJ
-    const QString &fileName = QFileDialog::getOpenFileName(0, tr("Open File"),
+    const QString &fileName = QFileDialog::getOpenFileName(nullptr, tr("Open File"),
         QDir::currentPath(), tr("Files (*.xbel)"));
 
     if (fileName.isEmpty())
@@ -204,7 +204,7 @@ void BookmarkManagerWidget::importBookmarks()
 void BookmarkManagerWidget::exportBookmarks()
 {
     TRACE_OBJ
-    QString fileName = QFileDialog::getSaveFileName(0, tr("Save File"),
+    QString fileName = QFileDialog::getSaveFileName(nullptr, tr("Save File"),
         QLatin1String("untitled.xbel"), tr("Files (*.xbel)"));
 
     const QLatin1String suffix(".xbel");
@@ -268,10 +268,10 @@ void BookmarkManagerWidget::customContextMenuRequested(const QPoint &point)
     if (!bookmarkModel->parent(index).isValid())
         return;
 
-    QAction *remove = 0;
-    QAction *rename = 0;
-    QAction *showItem = 0;
-    QAction *showItemInNewTab = 0;
+    QAction *remove = nullptr;
+    QAction *rename = nullptr;
+    QAction *showItem = nullptr;
+    QAction *showItemInNewTab = nullptr;
 
     QMenu menu;
     if (bookmarkModel->data(index, UserRoleFolder).toBool()) {

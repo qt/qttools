@@ -69,7 +69,7 @@ class QHelpSearchIndexReader : public QThread
     Q_OBJECT
 
 public:
-    ~QHelpSearchIndexReader();
+    ~QHelpSearchIndexReader() override;
 
     void cancelSearching();
     void search(const QString &collectionFile,

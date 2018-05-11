@@ -98,7 +98,7 @@ AboutDialog::AboutDialog(QWidget *parent)
         Qt::WindowTitleHint|Qt::WindowSystemMenuHint)
 {
     TRACE_OBJ
-    m_pixmapLabel = 0;
+    m_pixmapLabel = nullptr;
     m_aboutLabel = new AboutLabel();
 
     m_closeButton = new QPushButton();

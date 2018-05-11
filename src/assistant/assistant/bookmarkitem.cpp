@@ -68,7 +68,7 @@ BookmarkItem::child(int number) const
 {
     if (number >= 0 && number < m_children.count())
         return m_children[number];
-    return 0;
+    return nullptr;
 }
 
 int BookmarkItem::childCount() const

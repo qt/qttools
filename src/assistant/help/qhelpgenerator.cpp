@@ -237,9 +237,9 @@ void QHelpGenerator::setupProgress(QHelpDataInterface *helpData)
     // contents 10%
     // files    60%
     // indices  27%
-    d->contentStep = 10.0/(double)helpData->customFilters().count();
-    d->fileStep = 60.0/(double)numberOfFiles;
-    d->indexStep = 27.0/(double)numberOfIndices;
+    d->contentStep = 10.0/double(helpData->customFilters().count());
+    d->fileStep = 60.0/double(numberOfFiles);
+    d->indexStep = 27.0/double(numberOfIndices);
 }
 
 void QHelpGenerator::addProgress(double step)
@@ -256,7 +256,7 @@ void QHelpGenerator::cleanupDB()
     if (d->query) {
         d->query->clear();
         delete d->query;
-        d->query = 0;
+        d->query = nullptr;
     }
     QSqlDatabase::removeDatabase(QLatin1String("builder"));
 }

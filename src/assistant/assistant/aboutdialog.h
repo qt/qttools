@@ -43,7 +43,7 @@ class AboutLabel : public QTextBrowser
     Q_OBJECT
 
 public:
-    AboutLabel(QWidget *parent = 0);
+    AboutLabel(QWidget *parent = nullptr);
     void setText(const QString &text, const QByteArray &resources);
     QSize minimumSizeHint() const override;
 
@@ -59,7 +59,7 @@ class AboutDialog : public QDialog
     Q_OBJECT
 
 public:
-    AboutDialog(QWidget *parent = 0);
+    AboutDialog(QWidget *parent = nullptr);
     void setText(const QString &text, const QByteArray &resources);
     void setPixmap(const QPixmap &pixmap);
     QString documentTitle() const;

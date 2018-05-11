@@ -41,8 +41,8 @@ class FindWidget : public QWidget
 {
     Q_OBJECT
 public:
-    FindWidget(QWidget *parent = 0);
-    ~FindWidget();
+    FindWidget(QWidget *parent = nullptr);
+    ~FindWidget() override;
 
     void show();
     void showAndClear();

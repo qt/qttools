@@ -45,8 +45,8 @@ class PreferencesDialog : public QDialog
     Q_OBJECT
 
 public:
-    PreferencesDialog(QWidget *parent = 0);
-    ~PreferencesDialog();
+    PreferencesDialog(QWidget *parent = nullptr);
+    ~PreferencesDialog() override;
 
     void showDialog();
 

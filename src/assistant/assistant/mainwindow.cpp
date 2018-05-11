@@ -89,13 +89,7 @@ enum { warnAboutMissingModules = 0 };
 
 MainWindow::MainWindow(CmdLineParser *cmdLine, QWidget *parent)
     : QMainWindow(parent)
-    , m_bookmarkWidget(0)
-    , m_filterCombo(0)
-    , m_toolBarMenu(0)
     , m_cmdLine(cmdLine)
-    , m_progressWidget(0)
-    , m_qtDocInstaller(0)
-    , m_connectedInitSignals(false)
 {
     TRACE_OBJ
 
@@ -495,8 +489,8 @@ void MainWindow::checkInitState()
         }
     } else {
         if (m_connectedInitSignals) {
-            disconnect(helpEngine.contentModel(), 0, this, 0);
-            disconnect(helpEngine.indexModel(), 0, this, 0);
+            disconnect(helpEngine.contentModel(), nullptr, this, nullptr);
+            disconnect(helpEngine.indexModel(), nullptr, this, nullptr);
         }
         HelpEngineWrapper::instance().initialDocSetupDone();
         emit initDone();
@@ -1109,7 +1103,7 @@ void MainWindow::indexingFinished()
     TRACE_OBJ
     statusBar()->removeWidget(m_progressWidget);
     delete m_progressWidget;
-    m_progressWidget = 0;
+    m_progressWidget = nullptr;
 }
 
 QString MainWindow::collectionFileDirectory(bool createDir, const QString &cacheDir)

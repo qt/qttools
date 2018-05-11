@@ -103,7 +103,7 @@ class QHelpSearchIndexWriter : public QThread
 
 public:
     QHelpSearchIndexWriter();
-    ~QHelpSearchIndexWriter();
+    ~QHelpSearchIndexWriter() override;
 
     void cancelIndexing();
     void updateIndex(const QString &collectionFile,

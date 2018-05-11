@@ -55,7 +55,7 @@
 QT_BEGIN_NAMESPACE
 
 namespace {
-    CentralWidget *staticCentralWidget = 0;
+    CentralWidget *staticCentralWidget = nullptr;
 }
 
 // -- TabBar
@@ -184,7 +184,7 @@ void TabBar::slotCustomContextMenuRequested(const QPoint &pos)
 CentralWidget::CentralWidget(QWidget *parent)
     : QWidget(parent)
 #ifndef QT_NO_PRINTER
-    , m_printer(0)
+    , m_printer(nullptr)
 #endif
     , m_findWidget(new FindWidget(this))
     , m_stackedWidget(new QStackedWidget(this))
@@ -462,7 +462,7 @@ void CentralWidget::find(const QString &ttf, bool forward, bool incremental)
     TRACE_OBJ
     bool found = false;
     if (HelpViewer *viewer = currentHelpViewer()) {
-        HelpViewer::FindFlags flags = 0;
+        HelpViewer::FindFlags flags;
         if (!forward)
             flags |= HelpViewer::FindBackward;
         if (m_findWidget->caseSensitive())
@@ -546,7 +546,7 @@ void CentralWidget::highlightSearchTerms()
 
     HelpViewer *viewer = currentHelpViewer();
     for (const QString &word : words)
-        viewer->findText(word, 0, false, true);
+        viewer->findText(word, nullptr, false, true);
     disconnect(viewer, &HelpViewer::loadFinished,
                this, &CentralWidget::highlightSearchTerms);
 }

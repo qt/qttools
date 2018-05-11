@@ -45,7 +45,7 @@ class BookmarkModel : public QAbstractItemModel
      Q_OBJECT
 public:
     BookmarkModel();
-    ~BookmarkModel();
+    ~BookmarkModel() override;
 
     QByteArray bookmarks() const;
     void setBookmarks(const QByteArray &bookmarks);

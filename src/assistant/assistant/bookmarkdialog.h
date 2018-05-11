@@ -41,8 +41,8 @@ class BookmarkDialog : public QDialog
     Q_OBJECT
 public:
     BookmarkDialog(BookmarkModel *bookmarkModel, const QString &title,
-        const QString &url, QWidget *parent = 0);
-    ~BookmarkDialog();
+        const QString &url, QWidget *parent = nullptr);
+    ~BookmarkDialog() override;
 
 private:
     bool isRootItem(const QModelIndex &index) const;

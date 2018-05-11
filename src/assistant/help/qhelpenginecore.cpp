@@ -217,7 +217,7 @@ void QHelpEngineCore::setCollectionFile(const QString &fileName)
 
     if (d->collectionHandler) {
         delete d->collectionHandler;
-        d->collectionHandler = 0;
+        d->collectionHandler = nullptr;
         d->emitReadersAboutToBeInvalidated();
     }
     d->init(fileName, this);
@@ -270,7 +270,7 @@ QString QHelpEngineCore::namespaceName(const QString &documentationFileName)
 {
     QHelpDBReader reader(documentationFileName,
         QHelpGlobal::uniquifyConnectionName(QLatin1String("GetNamespaceName"),
-        QThread::currentThread()), 0);
+        QThread::currentThread()), nullptr);
     if (reader.init())
         return reader.namespaceName();
     return QString();
@@ -603,7 +603,7 @@ bool QHelpEngineCore::setCustomValue(const QString &key, const QVariant &value)
 QVariant QHelpEngineCore::metaData(const QString &documentationFileName,
                                    const QString &name)
 {
-    QHelpDBReader reader(documentationFileName, QLatin1String("GetMetaData"), 0);
+    QHelpDBReader reader(documentationFileName, QLatin1String("GetMetaData"), nullptr);
 
     if (reader.init())
         return reader.metaData(name);

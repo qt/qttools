@@ -45,7 +45,7 @@ typedef QVector<QVariant> DataVector;
 class BookmarkItem
 {
 public:
-    explicit BookmarkItem(const DataVector &data, BookmarkItem *parent = 0);
+    explicit BookmarkItem(const DataVector &data, BookmarkItem *parent = nullptr);
     ~BookmarkItem();
 
     BookmarkItem *parent() const;

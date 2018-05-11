@@ -98,8 +98,8 @@ private:
     void showSwitcherOrSelectPage() const;
 
     OpenPagesModel *m_model;
-    OpenPagesWidget *m_openPagesWidget;
-    OpenPagesSwitcher *m_openPagesSwitcher;
+    OpenPagesWidget *m_openPagesWidget = nullptr;
+    OpenPagesSwitcher *m_openPagesSwitcher = nullptr;
 
     static OpenPagesManager *m_instance;
 };

@@ -184,7 +184,7 @@ void OpenPagesWidget::handleClicked(const QModelIndex &index)
         QWidget *vp = viewport();
         const QPoint &cursorPos = QCursor::pos();
         QMouseEvent e(QEvent::MouseMove, vp->mapFromGlobal(cursorPos), cursorPos,
-            Qt::NoButton, 0, 0);
+            Qt::NoButton, nullptr, nullptr);
         QCoreApplication::sendEvent(vp, &e);
     }
 }

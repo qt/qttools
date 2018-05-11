@@ -279,7 +279,7 @@ void PreferencesDialog::updateFilterMap()
         return;
 
     QStringList newAtts;
-    QTreeWidgetItem *itm = 0;
+    QTreeWidgetItem *itm = nullptr;
     for (int i = 0; i < m_ui.attributeWidget->topLevelItemCount(); ++i) {
         itm = m_ui.attributeWidget->topLevelItem(i);
         if (itm->checkState(0) == Qt::Checked)

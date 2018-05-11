@@ -103,7 +103,7 @@ private:
     {
     }
 
-    ~QHelpSearchQueryWidgetPrivate()
+    ~QHelpSearchQueryWidgetPrivate() override
     {
         // nothing todo
     }
@@ -193,7 +193,6 @@ private slots:
 private:
     friend class QHelpSearchQueryWidget;
 
-    bool m_compactMode = false;
     QLabel *m_searchLabel = nullptr;
     QPushButton *m_searchButton = nullptr;
     QLineEdit *m_lineEdit = nullptr;
@@ -201,6 +200,7 @@ private:
     QToolButton *m_prevQueryButton = nullptr;
     QueryHistory m_queries;
     QCompleter m_searchCompleter;
+    bool m_compactMode = false;
 };
 
 #include "qhelpsearchquerywidget.moc"

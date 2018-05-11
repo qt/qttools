@@ -44,7 +44,7 @@ class BookmarkFilterModel : public QAbstractProxyModel
 {
     Q_OBJECT
 public:
-    explicit BookmarkFilterModel(QObject *parent = 0);
+    explicit BookmarkFilterModel(QObject *parent = nullptr);
 
     void setSourceModel(QAbstractItemModel *sourceModel) override;
 
@@ -81,10 +81,10 @@ private:
     void collectItems(const QModelIndex &parent);
 
 private:
-    bool hideBookmarks;
-    BookmarkModel *sourceModel;
+    BookmarkModel *sourceModel = nullptr;
     PersistentModelIndexCache cache;
     QPersistentModelIndex indexToRemove;
+    bool hideBookmarks = true;
 };
 
 // -- BookmarkTreeModel
@@ -93,7 +93,7 @@ class BookmarkTreeModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 public:
-    BookmarkTreeModel(QObject *parent = 0);
+    BookmarkTreeModel(QObject *parent = nullptr);
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
 protected:

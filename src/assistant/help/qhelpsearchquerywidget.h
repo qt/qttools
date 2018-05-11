@@ -61,7 +61,7 @@ class QHELP_EXPORT QHelpSearchQueryWidget : public QWidget
 
 public:
     explicit QHelpSearchQueryWidget(QWidget *parent = nullptr);
-    ~QHelpSearchQueryWidget();
+    ~QHelpSearchQueryWidget() override;
 
     void expandExtendedSearch();
     void collapseExtendedSearch();

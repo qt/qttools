@@ -42,7 +42,7 @@
 
 QT_BEGIN_NAMESPACE
 
-OpenPagesManager *OpenPagesManager::m_instance = 0;
+OpenPagesManager *OpenPagesManager::m_instance = nullptr;
 
 OpenPagesManager *OpenPagesManager::createInstance(QObject *parent,
                       bool defaultCollection, const QUrl &cmdLineUrl)
@@ -64,8 +64,6 @@ OpenPagesManager::OpenPagesManager(QObject *parent, bool defaultCollection,
                                    const QUrl &cmdLineUrl)
     : QObject(parent)
     , m_model(new OpenPagesModel(this))
-    , m_openPagesWidget(0)
-    , m_openPagesSwitcher(0)
 {
     TRACE_OBJ
     m_openPagesWidget = new OpenPagesWidget(m_model);
@@ -89,7 +87,7 @@ OpenPagesManager::OpenPagesManager(QObject *parent, bool defaultCollection,
 OpenPagesManager ::~OpenPagesManager()
 {
     TRACE_OBJ
-    m_instance = 0;
+    m_instance = nullptr;
     delete m_openPagesSwitcher;
 }
 
@@ -147,7 +145,7 @@ void OpenPagesManager::setupInitialPages(bool defaultCollection,
         break;
     }
     default:
-        Q_ASSERT(!"Unhandled option");
+        Q_ASSERT(0);
     }
 
     if (m_model->rowCount() == 0)
@@ -181,7 +179,7 @@ HelpViewer *OpenPagesManager::createPage(const QUrl &url, bool fromSearch)
 {
     TRACE_OBJ
     if (HelpViewer::launchWithExternalApp(url))
-        return 0;
+        return nullptr;
 
     emit aboutToAddPage();
 

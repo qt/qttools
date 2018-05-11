@@ -43,8 +43,8 @@ class IndexWindow : public QWidget
     Q_OBJECT
 
 public:
-    IndexWindow(QWidget *parent = 0);
-    ~IndexWindow();
+    IndexWindow(QWidget *parent = nullptr);
+    ~IndexWindow() override;
 
     void setSearchLineEditText(const QString &text);
     QString searchLineEditText() const

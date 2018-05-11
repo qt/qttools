@@ -45,8 +45,8 @@ class BookmarkManagerWidget : public QWidget
     Q_OBJECT
 public:
     explicit BookmarkManagerWidget(BookmarkModel *bookmarkModel,
-        QWidget *parent = 0);
-    ~BookmarkManagerWidget();
+        QWidget *parent = nullptr);
+    ~BookmarkManagerWidget() override;
 
 protected:
     void closeEvent(QCloseEvent *event) override;

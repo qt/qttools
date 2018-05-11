@@ -46,7 +46,7 @@ class QtDocInstaller : public QThread
 public:
     typedef QPair<QString, QStringList> DocInfo;
     QtDocInstaller(const QList<DocInfo> &docInfos);
-    ~QtDocInstaller();
+    ~QtDocInstaller() override;
     void installDocs();
 
 signals:

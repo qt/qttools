@@ -61,7 +61,7 @@ signals:
     void addBookmark(const QString &title, const QString &url);
 
 private:
-    TabBar(QWidget *parent = 0);
+    TabBar(QWidget *parent = nullptr);
 
 private slots:
     void slotCurrentChanged(int index);
@@ -75,8 +75,8 @@ class CentralWidget : public QWidget
     friend class OpenPagesManager;
 
 public:
-    CentralWidget(QWidget *parent = 0);
-    ~CentralWidget();
+    CentralWidget(QWidget *parent = nullptr);
+    ~CentralWidget() override;
 
     static CentralWidget *instance();
 

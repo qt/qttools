@@ -51,9 +51,6 @@ public:
 #if defined(BROWSER_QTEXTBROWSER)
     HelpViewerPrivate(int zoom)
         : zoomCount(zoom)
-        , forceFont(false)
-        , lastAnchor(QString())
-        , m_loadFinished(false)
     { }
 #elif defined(BROWSER_QTWEBKIT)
     HelpViewerPrivate()
@@ -98,9 +95,9 @@ public slots:
     }
 
 public:
-    int zoomCount;
-    bool forceFont;
     QString lastAnchor;
+    int zoomCount;
+    bool forceFont = false;
 
 private:
 
@@ -120,7 +117,7 @@ private:
 #endif // BROWSER_QTWEBKIT
 
 public:
-    bool m_loadFinished;
+    bool m_loadFinished = false;
 
 };
 

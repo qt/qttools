@@ -66,8 +66,8 @@ public:
     };
     Q_DECLARE_FLAGS(FindFlags, FindFlag)
 
-    HelpViewer(qreal zoom, QWidget *parent = 0);
-    ~HelpViewer();
+    HelpViewer(qreal zoom, QWidget *parent = nullptr);
+    ~HelpViewer() override;
 
     QFont viewerFont() const;
     void setViewerFont(const QFont &font);

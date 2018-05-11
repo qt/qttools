@@ -65,16 +65,16 @@ private:
 
 private:
     MainWindow *m_mainWindow;
-    bool m_debug;
-
-    bool m_caching;
     QUrl m_setSource;
-    bool m_syncContents;
     QString m_activateKeyword;
     QString m_activateIdentifier;
-    int m_expandTOC;
     QString m_currentFilter;
     HelpEngineWrapper &helpEngine;
+    int m_expandTOC = -2;
+    bool m_debug = false;
+
+    bool m_caching = true;
+    bool m_syncContents = false;
 };
 
 QT_END_NAMESPACE

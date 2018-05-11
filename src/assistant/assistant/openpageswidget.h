@@ -40,7 +40,7 @@ class OpenPagesDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 public:
-    explicit OpenPagesDelegate(QObject *parent = 0);
+    explicit OpenPagesDelegate(QObject *parent = nullptr);
     void paint(QPainter *painter, const QStyleOptionViewItem &option,
         const QModelIndex &index) const override;
 
@@ -52,7 +52,7 @@ class OpenPagesWidget : public QTreeView
     Q_OBJECT
 public:
     OpenPagesWidget(OpenPagesModel *model);
-    ~OpenPagesWidget();
+    ~OpenPagesWidget() override;
 
     void selectCurrentPage();
     void allowContextMenu(bool ok);

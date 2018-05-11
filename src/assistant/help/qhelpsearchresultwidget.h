@@ -58,7 +58,7 @@ class QHELP_EXPORT QHelpSearchResultWidget : public QWidget
     Q_OBJECT
 
 public:
-    ~QHelpSearchResultWidget();
+    ~QHelpSearchResultWidget() override;
     QUrl linkAt(const QPoint &point);
 
 Q_SIGNALS:

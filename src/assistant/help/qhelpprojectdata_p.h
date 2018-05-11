@@ -62,7 +62,7 @@ class QHELP_EXPORT QHelpProjectData : public QHelpDataInterface
 {
 public:
     QHelpProjectData();
-    ~QHelpProjectData();
+    ~QHelpProjectData() override;
 
     bool readData(const QString &fileName);
     QString errorMessage() const;

@@ -74,7 +74,7 @@ class QHelpContentProvider : public QThread
     Q_OBJECT
 public:
     QHelpContentProvider(QHelpEnginePrivate *helpEngine);
-    ~QHelpContentProvider();
+    ~QHelpContentProvider() override;
     void collectContents(const QString &customFilterName);
     void stopCollecting();
     QHelpContentItem *rootItem();
@@ -229,7 +229,7 @@ QHelpContentItem *QHelpContentProvider::rootItem()
 {
     QMutexLocker locker(&m_mutex);
     if (m_rootItems.isEmpty())
-        return 0;
+        return nullptr;
     return m_rootItems.dequeue();
 }
 
@@ -260,10 +260,10 @@ void QHelpContentProvider::run()
     QString title;
     QString link;
     int depth = 0;
-    QHelpContentItem *item = 0;
+    QHelpContentItem *item = nullptr;
 
     m_mutex.lock();
-    QHelpContentItem * const rootItem = new QHelpContentItem(QString(), QString(), 0);
+    QHelpContentItem * const rootItem = new QHelpContentItem(QString(), QString(), nullptr);
     const QStringList attributes = m_filterAttributes;
     const QString collectionFile = m_helpEngine->collectionHandler->collectionFile();
     m_mutex.unlock();
@@ -395,7 +395,7 @@ void QHelpContentModel::invalidateContents(bool onShutDown)
     d->qhelpContentProvider->stopCollecting();
     if (d->rootItem) {
         delete d->rootItem;
-        d->rootItem = 0;
+        d->rootItem = nullptr;
     }
     if (!onShutDown)
         endResetModel();
@@ -535,7 +535,7 @@ QVariant QHelpContentModel::data(const QModelIndex &index, int role) const
 */
 
 QHelpContentWidget::QHelpContentWidget()
-    : QTreeView(0)
+    : QTreeView(nullptr)
 {
     header()->hide();
     setUniformRowHeights(true);

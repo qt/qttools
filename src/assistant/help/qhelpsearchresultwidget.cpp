@@ -61,7 +61,7 @@ class QResultWidget : public QTextBrowser
     Q_OBJECT
 
 public:
-    QResultWidget(QWidget *parent = 0)
+    QResultWidget(QWidget *parent = nullptr)
         : QTextBrowser(parent)
     {
         connect(this, &QTextBrowser::anchorClicked,
@@ -208,7 +208,7 @@ private:
                                last), isIndexing);
         }
 
-        hitsLabel->setText(QHelpSearchResultWidget::tr("%1 - %2 of %n Hits", 0, count).arg(first).arg(last));
+        hitsLabel->setText(QHelpSearchResultWidget::tr("%1 - %2 of %n Hits", nullptr, count).arg(first).arg(last));
         firstResultPage->setEnabled(resultFirstToShow);
         previousResultPage->setEnabled(resultFirstToShow);
         lastResultPage->setEnabled(count - last);
@@ -224,14 +224,13 @@ private:
 
     static const int ResultsRange = 20;
 
-    int resultFirstToShow = 0;
-    bool isIndexing = false;
-
     QToolButton *firstResultPage = nullptr;
     QToolButton *previousResultPage = nullptr;
-    QLabel *hitsLabel = nullptr;
     QToolButton *nextResultPage = nullptr;
     QToolButton *lastResultPage = nullptr;
+    QLabel *hitsLabel = nullptr;
+    int resultFirstToShow = 0;
+    bool isIndexing = false;
 };
 
 #include "qhelpsearchresultwidget.moc"

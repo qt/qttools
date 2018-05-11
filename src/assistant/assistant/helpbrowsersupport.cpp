@@ -168,7 +168,7 @@ public:
 
 protected:
     QNetworkReply *createRequest(Operation op,
-        const QNetworkRequest &request, QIODevice *outgoingData = 0) override;
+        const QNetworkRequest &request, QIODevice *outgoingData = nullptr) override;
 };
 
 HelpNetworkAccessManager::HelpNetworkAccessManager(QObject *parent)

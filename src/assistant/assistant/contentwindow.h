@@ -45,7 +45,7 @@ class ContentWindow : public QWidget
 
 public:
     ContentWindow();
-    ~ContentWindow();
+    ~ContentWindow() override;
 
     bool syncToContent(const QUrl &url);
     void expandToDepth(int depth);

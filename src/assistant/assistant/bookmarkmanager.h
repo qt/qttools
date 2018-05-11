@@ -48,7 +48,7 @@ class BookmarkManager : public QObject
     class BookmarkWidget;
     class BookmarkTreeView;
     class BookmarkListView;
-    Q_DISABLE_COPY(BookmarkManager);
+    Q_DISABLE_COPY(BookmarkManager)
 
 public:
     static BookmarkManager* instance();
@@ -68,7 +68,7 @@ signals:
 
 private:
     BookmarkManager();
-    ~BookmarkManager();
+    ~BookmarkManager() override;
 
     void removeItem(const QModelIndex &index);
     bool eventFilter(QObject *object, QEvent *event) override;
@@ -95,30 +95,30 @@ private slots:
     void customContextMenuRequested(const QPoint &point);
 
 private:
-    bool typeAndSearch;
+    bool typeAndSearch = false;
 
     static QMutex mutex;
     static BookmarkManager *bookmarkManager;
 
-    QMenu *bookmarkMenu;
-    QToolBar *m_toolBar;
+    QMenu *bookmarkMenu = nullptr;
+    QToolBar *m_toolBar = nullptr;
 
     BookmarkModel *bookmarkModel;
-    BookmarkFilterModel *bookmarkFilterModel;
-    QSortFilterProxyModel *typeAndSearchModel;
+    BookmarkFilterModel *bookmarkFilterModel = nullptr;
+    QSortFilterProxyModel *typeAndSearchModel = nullptr;
 
     BookmarkWidget *bookmarkWidget;
     BookmarkTreeView *bookmarkTreeView;
-    BookmarkManagerWidget *bookmarkManagerWidget;
+    BookmarkManagerWidget *bookmarkManagerWidget = nullptr;
 };
 
 class BookmarkManager::BookmarkWidget : public QWidget
 {
     Q_OBJECT
 public:
-    BookmarkWidget(QWidget *parent = 0)
+    BookmarkWidget(QWidget *parent = nullptr)
         : QWidget(parent) { ui.setupUi(this); }
-    virtual ~BookmarkWidget() {}
+    virtual ~BookmarkWidget() override {}
 
     Ui::BookmarkWidget ui;
 
@@ -133,8 +133,8 @@ class BookmarkManager::BookmarkTreeView : public QTreeView
 {
     Q_OBJECT
 public:
-    BookmarkTreeView(QWidget *parent = 0);
-    ~BookmarkTreeView() {}
+    BookmarkTreeView(QWidget *parent = nullptr);
+    ~BookmarkTreeView() override {}
 
     void subclassKeyPressEvent(QKeyEvent *event);
 
@@ -142,7 +142,7 @@ signals:
     void editingDone();
 
 protected slots:
-    void commitData(QWidget *editor);
+    void commitData(QWidget *editor) override;
 
 private slots:
     void setExpandedData(const QModelIndex &index);

@@ -112,7 +112,7 @@ const QString HelpEngineWrapper::TrUnfiltered()
     return s;
 }
 
-HelpEngineWrapper *HelpEngineWrapper::helpEngineWrapper = 0;
+HelpEngineWrapper *HelpEngineWrapper::helpEngineWrapper = nullptr;
 
 HelpEngineWrapper &HelpEngineWrapper::instance(const QString &collectionFile)
 {
@@ -130,7 +130,7 @@ void HelpEngineWrapper::removeInstance()
 {
     TRACE_OBJ
     delete helpEngineWrapper;
-    helpEngineWrapper = 0;
+    helpEngineWrapper = nullptr;
 }
 
 HelpEngineWrapper::HelpEngineWrapper(const QString &collectionFile)

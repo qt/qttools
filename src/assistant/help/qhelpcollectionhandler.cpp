@@ -331,7 +331,7 @@ bool QHelpCollectionHandler::copyCollectionFile(const QString &fileName)
     const QString &colFile = fi.absoluteFilePath();
     const QString &connectionName = QHelpGlobal::uniquifyConnectionName(
                 QLatin1String("QHelpCollectionHandlerCopy"), this);
-    QSqlQuery *copyQuery = 0;
+    QSqlQuery *copyQuery = nullptr;
     bool openingOk = true;
     {
         QSqlDatabase db = QSqlDatabase::addDatabase(QLatin1String("QSQLITE"), connectionName);
@@ -651,7 +651,7 @@ bool QHelpCollectionHandler::registerDocumentation(const QString &fileName)
         return false;
 
     QHelpDBReader reader(fileName, QHelpGlobal::uniquifyConnectionName(
-        QLatin1String("QHelpCollectionHandler"), this), 0);
+        QLatin1String("QHelpCollectionHandler"), this), nullptr);
     if (!reader.init()) {
         emit error(tr("Cannot open documentation file %1.").arg(fileName));
         return false;
