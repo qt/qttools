@@ -40,6 +40,13 @@ defineReplace(findLLVMVersionFromLibDir) {
 }
 
 for(_, $$list(_)) { # just a way to break easily
+    isEmpty(FORCE_MINGW_QDOC_BUILD): FORCE_MINGW_QDOC_BUILD = $$(FORCE_MINGW_QDOC_BUILD)
+    equals(QMAKE_HOST.os, Windows):gcc:isEmpty(FORCE_MINGW_QDOC_BUILD) {
+            log("QDoc build is disabled on MinGW in Qt 5.11.0, because of a missing feature in the release infrastructure.")
+            log("You can enable it by setting FORCE_MINGW_QDOC_BUILD")
+            break()
+    }
+
     isEmpty(LLVM_INSTALL_DIR): LLVM_INSTALL_DIR = $$(LLVM_INSTALL_DIR)
     LLVM_INSTALL_DIR = $$clean_path($$LLVM_INSTALL_DIR)
     contains(QMAKE_HOST.arch, x86_64): \
@@ -83,9 +90,200 @@ for(_, $$list(_)) { # just a way to break easily
 
     !contains(QMAKE_DEFAULT_LIBDIRS, $$CLANG_LIBDIR): CLANG_LIBS = -L$${CLANG_LIBDIR}
     equals(QMAKE_HOST.os, Windows): \
-        CLANG_LIBS += -llibclang -ladvapi32 -lshell32
-    else: \
-        CLANG_LIBS += -lclang
+        CLANG_LIBS += -llibclang_static -ladvapi32 -lshell32 -lMincore
+    else: {
+        !equals(QMAKE_HOST.os, Darwin): CLANG_LIBS+=-Wl,--start-group
+        CLANG_LIBS += -lclangAnalysis \
+                      -lclangApplyReplacements \
+                      -lclangARCMigrate \
+                      -lclangAST \
+                      -lclangASTMatchers \
+                      -lclangBasic \
+                      -lclangChangeNamespace \
+                      -lclangCodeGen \
+                      -lclangCrossTU \
+                      -lclangDaemon \
+                      -lclangDriver \
+                      -lclangDynamicASTMatchers \
+                      -lclangEdit \
+                      -lclangFormat \
+                      -lclangFrontend \
+                      -lclangFrontendTool \
+                      -lclangHandleCXX \
+                      -lclangIncludeFixer \
+                      -lclangIncludeFixerPlugin \
+                      -lclangIndex \
+                      -lclangLex \
+                      -lclangMove \
+                      -lclangParse \
+                      -lclangQuery \
+                      -lclangReorderFields \
+                      -lclangRewrite \
+                      -lclangRewriteFrontend \
+                      -lclangSema \
+                      -lclangSerialization \
+                      -lclang_static \
+                      -lclangStaticAnalyzerCheckers \
+                      -lclangStaticAnalyzerCore \
+                      -lclangStaticAnalyzerFrontend \
+                      -lclangTidy \
+                      -lclangTidyAndroidModule \
+                      -lclangTidyBoostModule \
+                      -lclangTidyBugproneModule \
+                      -lclangTidyCERTModule \
+                      -lclangTidyCppCoreGuidelinesModule \
+                      -lclangTidyFuchsiaModule \
+                      -lclangTidyGoogleModule \
+                      -lclangTidyHICPPModule \
+                      -lclangTidyLLVMModule \
+                      -lclangTidyMiscModule \
+                      -lclangTidyModernizeModule \
+                      -lclangTidyMPIModule \
+                      -lclangTidyObjCModule \
+                      -lclangTidyPerformanceModule \
+                      -lclangTidyPlugin \
+                      -lclangTidyReadabilityModule \
+                      -lclangTidyUtils \
+                      -lclangTooling \
+                      -lclangToolingASTDiff \
+                      -lclangToolingCore \
+                      -lclangToolingRefactor \
+                      -lfindAllSymbols \
+                      -lLLVMAArch64AsmParser \
+                      -lLLVMAArch64AsmPrinter \
+                      -lLLVMAArch64CodeGen \
+                      -lLLVMAArch64Desc \
+                      -lLLVMAArch64Disassembler \
+                      -lLLVMAArch64Info \
+                      -lLLVMAArch64Utils \
+                      -lLLVMAMDGPUAsmParser \
+                      -lLLVMAMDGPUAsmPrinter \
+                      -lLLVMAMDGPUCodeGen \
+                      -lLLVMAMDGPUDesc \
+                      -lLLVMAMDGPUDisassembler \
+                      -lLLVMAMDGPUInfo \
+                      -lLLVMAMDGPUUtils \
+                      -lLLVMAnalysis \
+                      -lLLVMARMAsmParser \
+                      -lLLVMARMAsmPrinter \
+                      -lLLVMARMCodeGen \
+                      -lLLVMARMDesc \
+                      -lLLVMARMDisassembler \
+                      -lLLVMARMInfo \
+                      -lLLVMARMUtils \
+                      -lLLVMAsmParser \
+                      -lLLVMAsmPrinter \
+                      -lLLVMBinaryFormat \
+                      -lLLVMBitReader \
+                      -lLLVMBitWriter \
+                      -lLLVMBPFAsmParser \
+                      -lLLVMBPFAsmPrinter \
+                      -lLLVMBPFCodeGen \
+                      -lLLVMBPFDesc \
+                      -lLLVMBPFDisassembler \
+                      -lLLVMBPFInfo \
+                      -lLLVMCodeGen \
+                      -lLLVMCore \
+                      -lLLVMCoroutines \
+                      -lLLVMCoverage \
+                      -lLLVMDebugInfoCodeView \
+                      -lLLVMDebugInfoDWARF \
+                      -lLLVMDebugInfoMSF \
+                      -lLLVMDebugInfoPDB \
+                      -lLLVMDemangle \
+                      -lLLVMDlltoolDriver \
+                      -lLLVMExecutionEngine \
+                      -lLLVMFuzzMutate \
+                      -lLLVMGlobalISel \
+                      -lLLVMHexagonAsmParser \
+                      -lLLVMHexagonCodeGen \
+                      -lLLVMHexagonDesc \
+                      -lLLVMHexagonDisassembler \
+                      -lLLVMHexagonInfo \
+                      -lLLVMInstCombine \
+                      -lLLVMInstrumentation \
+                      -lLLVMInterpreter \
+                      -lLLVMipo \
+                      -lLLVMIRReader \
+                      -lLLVMLanaiAsmParser \
+                      -lLLVMLanaiAsmPrinter \
+                      -lLLVMLanaiCodeGen \
+                      -lLLVMLanaiDesc \
+                      -lLLVMLanaiDisassembler \
+                      -lLLVMLanaiInfo \
+                      -lLLVMLibDriver \
+                      -lLLVMLineEditor \
+                      -lLLVMLinker \
+                      -lLLVMLTO \
+                      -lLLVMMC \
+                      -lLLVMMCDisassembler \
+                      -lLLVMMCJIT \
+                      -lLLVMMCParser \
+                      -lLLVMMipsAsmParser \
+                      -lLLVMMipsAsmPrinter \
+                      -lLLVMMipsCodeGen \
+                      -lLLVMMipsDesc \
+                      -lLLVMMipsDisassembler \
+                      -lLLVMMipsInfo \
+                      -lLLVMMIRParser \
+                      -lLLVMMSP430AsmPrinter \
+                      -lLLVMMSP430CodeGen \
+                      -lLLVMMSP430Desc \
+                      -lLLVMMSP430Info \
+                      -lLLVMNVPTXAsmPrinter \
+                      -lLLVMNVPTXCodeGen \
+                      -lLLVMNVPTXDesc \
+                      -lLLVMNVPTXInfo \
+                      -lLLVMObjCARCOpts \
+                      -lLLVMObject \
+                      -lLLVMObjectYAML \
+                      -lLLVMOption \
+                      -lLLVMOrcJIT \
+                      -lLLVMPasses \
+                      -lLLVMPowerPCAsmParser \
+                      -lLLVMPowerPCAsmPrinter \
+                      -lLLVMPowerPCCodeGen \
+                      -lLLVMPowerPCDesc \
+                      -lLLVMPowerPCDisassembler \
+                      -lLLVMPowerPCInfo \
+                      -lLLVMProfileData \
+                      -lLLVMRuntimeDyld \
+                      -lLLVMScalarOpts \
+                      -lLLVMSelectionDAG \
+                      -lLLVMSparcAsmParser \
+                      -lLLVMSparcAsmPrinter \
+                      -lLLVMSparcCodeGen \
+                      -lLLVMSparcDesc \
+                      -lLLVMSparcDisassembler \
+                      -lLLVMSparcInfo \
+                      -lLLVMSupport \
+                      -lLLVMSymbolize \
+                      -lLLVMSystemZAsmParser \
+                      -lLLVMSystemZAsmPrinter \
+                      -lLLVMSystemZCodeGen \
+                      -lLLVMSystemZDesc \
+                      -lLLVMSystemZDisassembler \
+                      -lLLVMSystemZInfo \
+                      -lLLVMTableGen \
+                      -lLLVMTarget \
+                      -lLLVMTransformUtils \
+                      -lLLVMVectorize \
+                      -lLLVMWindowsManifest \
+                      -lLLVMX86AsmParser \
+                      -lLLVMX86AsmPrinter \
+                      -lLLVMX86CodeGen \
+                      -lLLVMX86Desc \
+                      -lLLVMX86Disassembler \
+                      -lLLVMX86Info \
+                      -lLLVMX86Utils \
+                      -lLLVMXCoreAsmPrinter \
+                      -lLLVMXCoreCodeGen \
+                      -lLLVMXCoreDesc \
+                      -lLLVMXCoreDisassembler \
+                      -lLLVMXCoreInfo \
+                      -lLLVMXRay
+        !equals(QMAKE_HOST.os, Darwin): CLANG_LIBS+=-Wl,--end-group
+    }
 
     !versionIsAtLeast($$CLANG_VERSION, "3.9.0") {
         log("LLVM/Clang version >= 3.9.0 required, version provided: $${CLANG_VERSION}.$$escape_expand(\\n)")
