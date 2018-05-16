@@ -93,7 +93,7 @@ for(_, $$list(_)) { # just a way to break easily
 
     !contains(QMAKE_DEFAULT_LIBDIRS, $$CLANG_LIBDIR): CLANG_LIBS = -L$${CLANG_LIBDIR}
 
-    !isEmpty(QDOC_USE_STATIC_LIBCLANG) {
+    isEmpty(QDOC_USE_STATIC_LIBCLANG) {
         equals(QMAKE_HOST.os, Windows): \
             CLANG_LIBS += -llibclang -ladvapi32 -lshell32
         else: \
