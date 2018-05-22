@@ -31,17 +31,16 @@
 #include "qdesigner_settings.h"
 #include "qdesigner_workbench.h"
 
-#include <QtDesigner/QDesignerPropertyEditorInterface>
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerActionEditorInterface>
-#include <QtDesigner/QDesignerObjectInspectorInterface>
-#include <QtDesigner/QDesignerWidgetBoxInterface>
+#include <QtDesigner/abstractpropertyeditor.h>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractactioneditor.h>
+#include <QtDesigner/abstractobjectinspector.h>
+#include <QtDesigner/abstractwidgetbox.h>
 #include <QtDesigner/QDesignerComponents>
 
-#include <QtCore/QEvent>
-#include <QtCore/QDebug>
-#include <QtWidgets/QAction>
-#include <QtGui/QCloseEvent>
+#include <QtCore/qdebug.h>
+#include <QtWidgets/qaction.h>
+#include <QtGui/qevent.h>
 
 enum { debugToolWindow = 0 };
 

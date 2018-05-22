@@ -63,8 +63,8 @@
 //
 
 #include "uilib_global.h"
-#include <QtCore/QList>
-#include <QtCore/QString>
+#include <QtCore/qlist.h>
+#include <QtCore/qstring.h>
 
 QT_BEGIN_NAMESPACE
 

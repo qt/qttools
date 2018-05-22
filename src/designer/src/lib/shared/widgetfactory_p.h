@@ -44,12 +44,12 @@
 #include "shared_global_p.h"
 #include "pluginmanager_p.h"
 
-#include <QtDesigner/QDesignerWidgetFactoryInterface>
+#include <QtDesigner/abstractwidgetfactory.h>
 
-#include <QtCore/QMap>
-#include <QtCore/QHash>
-#include <QtCore/QVariant>
-#include <QtCore/QPointer>
+#include <QtCore/qmap.h>
+#include <QtCore/qhash.h>
+#include <QtCore/qvariant.h>
+#include <QtCore/qpointer.h>
 
 QT_BEGIN_NAMESPACE
 

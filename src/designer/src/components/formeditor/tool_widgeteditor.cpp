@@ -30,18 +30,18 @@
 #include "formwindow.h"
 
 // sdk
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerWidgetFactoryInterface>
-#include <QtDesigner/QDesignerWidgetBoxInterface>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractwidgetfactory.h>
+#include <QtDesigner/abstractwidgetbox.h>
 
 #include <layoutinfo_p.h>
 #include <qdesigner_dnditem_p.h>
 #include <qdesigner_resource.h>
 
 #include <QtGui/qevent.h>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QMainWindow>
-#include <QtGui/QCursor>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qmainwindow.h>
+#include <QtGui/qcursor.h>
 #include <QtCore/qdebug.h>
 
 QT_BEGIN_NAMESPACE

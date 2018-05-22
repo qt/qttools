@@ -26,15 +26,15 @@
 **
 ****************************************************************************/
 
-#include <QtCore/QVector>
-#include <QtGui/QMouseEvent>
-#include <QtWidgets/QGridLayout>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QDialogButtonBox>
-#include <QtGui/QPainter>
-#include <QtGui/QPainterPath>
-#include <QtWidgets/QStyleOption>
+#include <QtCore/qvector.h>
+#include <QtGui/qevent.h>
+#include <QtWidgets/qgridlayout.h>
+#include <QtWidgets/qlabel.h>
+#include <QtWidgets/qpushbutton.h>
+#include <QtWidgets/qdialogbuttonbox.h>
+#include <QtGui/qpainter.h>
+#include <QtGui/qpainterpath.h>
+#include <QtWidgets/qstyleoption.h>
 #include "versiondialog.h"
 
 QT_BEGIN_NAMESPACE

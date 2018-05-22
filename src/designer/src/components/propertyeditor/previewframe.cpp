@@ -29,12 +29,12 @@
 #include "previewframe.h"
 #include "previewwidget.h"
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QDebug>
-#include <QtGui/QPainter>
-#include <QtWidgets/QMdiArea>
-#include <QtWidgets/QMdiSubWindow>
-#include <QtGui/QPaintEvent>
+#include <QtCore/qcoreapplication.h>
+#include <QtCore/qdebug.h>
+#include <QtGui/qpainter.h>
+#include <QtWidgets/qmdiarea.h>
+#include <QtWidgets/qmdisubwindow.h>
+#include <QtGui/qevent.h>
 
 QT_BEGIN_NAMESPACE
 

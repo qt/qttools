@@ -45,8 +45,8 @@
 
 #include <QtDesigner/formbuilder.h>
 
-#include <QtCore/QMap>
-#include <QtCore/QSet>
+#include <QtCore/qmap.h>
+#include <QtCore/qset.h>
 
 QT_BEGIN_NAMESPACE
 

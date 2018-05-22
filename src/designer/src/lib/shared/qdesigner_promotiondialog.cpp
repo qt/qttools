@@ -32,31 +32,29 @@
 #include "widgetdatabase_p.h"
 #include "signalslotdialog_p.h"
 
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerFormWindowInterface>
-#include <QtDesigner/QDesignerPromotionInterface>
-#include <QtDesigner/QDesignerWidgetDataBaseItemInterface>
-#include <QtDesigner/QDesignerIntegrationInterface>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractformwindow.h>
+#include <QtDesigner/abstractpromotioninterface.h>
+#include <QtDesigner/abstractwidgetdatabase.h>
+#include <QtDesigner/abstractintegration.h>
 #include <abstractdialoggui_p.h>
 
-#include <QtCore/QTimer>
-#include <QtWidgets/QVBoxLayout>
-#include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QFormLayout>
-#include <QtWidgets/QDialogButtonBox>
-#include <QtWidgets/QTreeView>
-#include <QtWidgets/QHeaderView>
-#include <QtWidgets/QPushButton>
-#include <QtCore/QItemSelectionModel>
-#include <QtCore/QItemSelection>
-#include <QtWidgets/QComboBox>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QCheckBox>
-#include <QtGui/QRegularExpressionValidator>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QSpacerItem>
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QAction>
+#include <QtCore/qtimer.h>
+#include <QtWidgets/qboxlayout.h>
+#include <QtWidgets/qformlayout.h>
+#include <QtWidgets/qdialogbuttonbox.h>
+#include <QtWidgets/qtreeview.h>
+#include <QtWidgets/qheaderview.h>
+#include <QtWidgets/qpushbutton.h>
+#include <QtCore/qitemselectionmodel.h>
+#include <QtWidgets/qcombobox.h>
+#include <QtWidgets/qlineedit.h>
+#include <QtWidgets/qcheckbox.h>
+#include <QtGui/qvalidator.h>
+#include <QtWidgets/qlabel.h>
+#include <QtWidgets/qlayoutitem.h>
+#include <QtWidgets/qmenu.h>
+#include <QtWidgets/qaction.h>
 
 QT_BEGIN_NAMESPACE
 

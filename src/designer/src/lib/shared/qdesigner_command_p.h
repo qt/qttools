@@ -49,13 +49,13 @@
 
 #include <QtDesigner/layoutdecoration.h>
 
-#include <QtGui/QIcon>
-#include <QtCore/QObject>
-#include <QtCore/QPair>
-#include <QtCore/QMap>
-#include <QtCore/QHash>
-#include <QtCore/QPoint>
-#include <QtCore/QRect>
+#include <QtGui/qicon.h>
+#include <QtCore/qobject.h>
+#include <QtCore/qpair.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qhash.h>
+#include <QtCore/qpoint.h>
+#include <QtCore/qrect.h>
 
 QT_BEGIN_NAMESPACE
 

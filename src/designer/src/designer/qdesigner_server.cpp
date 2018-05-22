@@ -26,12 +26,12 @@
 **
 ****************************************************************************/
 
-#include <QtCore/QFileInfo>
-#include <QtCore/QStringList>
+#include <QtCore/qfileinfo.h>
+#include <QtCore/qstringlist.h>
 
-#include <QtNetwork/QHostAddress>
-#include <QtNetwork/QTcpServer>
-#include <QtNetwork/QTcpSocket>
+#include <QtNetwork/qhostaddress.h>
+#include <QtNetwork/qtcpserver.h>
+#include <QtNetwork/qtcpsocket.h>
 
 #include "qdesigner.h"
 #include "qdesigner_server.h"

@@ -31,8 +31,8 @@
 
 #include "propertyeditor_global.h"
 
-#include <QtGui/QPalette>
-#include <QtWidgets/QToolButton>
+#include <QtGui/qpalette.h>
+#include <QtWidgets/qtoolbutton.h>
 
 #include "abstractformeditor.h"
 

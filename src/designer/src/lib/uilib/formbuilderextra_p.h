@@ -64,11 +64,11 @@
 
 #include "uilib_global.h"
 
-#include <QtCore/QHash>
-#include <QtCore/QPointer>
-#include <QtCore/QStringList>
-#include <QtCore/QMap>
-#include <QtCore/QDir>
+#include <QtCore/qhash.h>
+#include <QtCore/qpointer.h>
+#include <QtCore/qstringlist.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qdir.h>
 
 QT_BEGIN_NAMESPACE
 

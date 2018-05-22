@@ -29,7 +29,7 @@
 #ifndef QDESIGNER_SERVER_H
 #define QDESIGNER_SERVER_H
 
-#include <QtCore/QObject>
+#include <QtCore/qobject.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -29,11 +29,11 @@
 #ifndef ACTIVEQT_EXTRAINFO_H
 #define ACTIVEQT_EXTRAINFO_H
 
-#include <QtDesigner/QDesignerExtraInfoExtension>
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QExtensionFactory>
+#include <QtDesigner/extrainfo.h>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/default_extensionfactory.h>
 
-#include <QtCore/QPointer>
+#include <QtCore/qpointer.h>
 
 QT_BEGIN_NAMESPACE
 

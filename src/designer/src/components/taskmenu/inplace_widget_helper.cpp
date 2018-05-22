@@ -29,10 +29,10 @@
 #include "abstractformwindow.h"
 #include "inplace_widget_helper.h"
 
-#include <QtGui/QResizeEvent>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QToolButton>
-#include <QtWidgets/QShortcut>
+#include <QtGui/qevent.h>
+#include <QtWidgets/qpushbutton.h>
+#include <QtWidgets/qtoolbutton.h>
+#include <QtWidgets/qshortcut.h>
 
 QT_BEGIN_NAMESPACE
 

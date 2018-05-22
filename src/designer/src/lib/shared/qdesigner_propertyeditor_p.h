@@ -43,7 +43,7 @@
 
 #include "shared_global_p.h"
 #include "shared_enums_p.h"
-#include <QtDesigner/QDesignerPropertyEditorInterface>
+#include <QtDesigner/abstractpropertyeditor.h>
 
 QT_BEGIN_NAMESPACE
 

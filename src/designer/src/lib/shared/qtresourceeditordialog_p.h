@@ -40,8 +40,8 @@
 #ifndef QTRESOURCEEDITOR_H
 #define QTRESOURCEEDITOR_H
 
-#include <QtCore/QScopedPointer>
-#include <QtWidgets/QDialog>
+#include <QtCore/qscopedpointer.h>
+#include <QtWidgets/qdialog.h>
 
 QT_BEGIN_NAMESPACE
 

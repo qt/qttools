@@ -32,7 +32,7 @@
 #include "itemlisteditor.h"
 #include <qdesigner_command_p.h>
 
-#include <QtWidgets/QWidget>
+#include <QtWidgets/qwidget.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -30,7 +30,7 @@
 #define CONTAINER_H
 
 #include <QtDesigner/extension.h>
-#include <QtCore/QObject>
+#include <QtCore/qobject.h>
 
 QT_BEGIN_NAMESPACE
 

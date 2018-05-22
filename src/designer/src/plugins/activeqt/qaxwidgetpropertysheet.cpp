@@ -29,15 +29,15 @@
 #include "qaxwidgetpropertysheet.h"
 #include "qdesigneraxwidget.h"
 
-#include <QtDesigner/QDesignerMemberSheetExtension>
-#include <QtDesigner/QDesignerFormWindowInterface>
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerPropertyEditorInterface>
+#include <QtDesigner/membersheet.h>
+#include <QtDesigner/abstractformwindow.h>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractpropertyeditor.h>
 
-#include <QtDesigner/QExtensionManager>
+#include <QtDesigner/qextensionmanager.h>
 #include <private/qdesigner_utils_p.h>
-#include <QtCore/QDebug>
-#include <QtCore/QTimer>
+#include <QtCore/qdebug.h>
+#include <QtCore/qtimer.h>
 
 static const char *geometryPropertyC = "geometry";
 

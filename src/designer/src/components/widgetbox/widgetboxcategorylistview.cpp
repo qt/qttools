@@ -28,22 +28,22 @@
 
 #include "widgetboxcategorylistview.h"
 
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerWidgetDataBaseInterface>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractwidgetdatabase.h>
 
-#include <QtXml/QDomDocument>
+#include <QtXml/qdom.h>
 
-#include <QtGui/QIcon>
-#include <QtGui/QRegularExpressionValidator>
-#include <QtWidgets/QListView>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QItemDelegate>
-#include <QtCore/QSortFilterProxyModel>
+#include <QtGui/qicon.h>
+#include <QtGui/qvalidator.h>
+#include <QtWidgets/qlistview.h>
+#include <QtWidgets/qlineedit.h>
+#include <QtWidgets/qitemdelegate.h>
+#include <QtCore/qsortfilterproxymodel.h>
 
-#include <QtCore/QAbstractListModel>
-#include <QtCore/QList>
-#include <QtCore/QTextStream>
-#include <QtCore/QRegularExpression>
+#include <QtCore/qabstractitemmodel.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qtextstream.h>
+#include <QtCore/qregularexpression.h>
 
 static const char *widgetElementC = "widget";
 static const char *nameAttributeC = "name";

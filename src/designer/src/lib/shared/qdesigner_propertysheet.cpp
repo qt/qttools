@@ -35,22 +35,22 @@
 
 #include <QtDesigner/private/formbuilderextra_p.h>
 
-#include <QtDesigner/QDesignerFormWindowInterface>
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerWidgetDataBaseInterface>
+#include <QtDesigner/abstractformwindow.h>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractwidgetdatabase.h>
 
-#include <QtCore/QDebug>
+#include <QtCore/qdebug.h>
 
-#include <QtWidgets/QLayout>
-#include <QtWidgets/QDockWidget>
-#include <QtWidgets/QDialog>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QGroupBox>
-#include <QtWidgets/QStyle>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QToolBar>
-#include <QtWidgets/QMainWindow>
-#include <QtWidgets/QMenuBar>
+#include <QtWidgets/qlayout.h>
+#include <QtWidgets/qdockwidget.h>
+#include <QtWidgets/qdialog.h>
+#include <QtWidgets/qlabel.h>
+#include <QtWidgets/qgroupbox.h>
+#include <QtWidgets/qstyle.h>
+#include <QtWidgets/qapplication.h>
+#include <QtWidgets/qtoolbar.h>
+#include <QtWidgets/qmainwindow.h>
+#include <QtWidgets/qmenubar.h>
 
 QT_BEGIN_NAMESPACE
 

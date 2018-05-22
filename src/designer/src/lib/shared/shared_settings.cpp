@@ -33,14 +33,14 @@
 
 #include <actioneditor_p.h>
 
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerSettingsInterface>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractsettings.h>
 
-#include <QtCore/QStringList>
-#include <QtCore/QDir>
-#include <QtCore/QVariantMap>
-#include <QtCore/QCoreApplication>
-#include <QtCore/QSize>
+#include <QtCore/qstringlist.h>
+#include <QtCore/qdir.h>
+#include <QtCore/qvariant.h>
+#include <QtCore/qcoreapplication.h>
+#include <QtCore/qsize.h>
 
 QT_BEGIN_NAMESPACE
 

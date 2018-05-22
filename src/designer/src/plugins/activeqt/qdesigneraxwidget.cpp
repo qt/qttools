@@ -28,11 +28,11 @@
 
 #include "qdesigneraxwidget.h"
 
-#include <QtCore/QMetaProperty>
-#include <QtCore/QDebug>
-#include <QtGui/QIcon>
-#include <QtGui/QPainter>
-#include <QtGui/QResizeEvent>
+#include <QtCore/qmetaobject.h>
+#include <QtCore/qdebug.h>
+#include <QtGui/qicon.h>
+#include <QtGui/qpainter.h>
+#include <QtGui/qevent.h>
 
 #include <ActiveQt/QAxWidget>
 

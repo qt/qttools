@@ -32,11 +32,11 @@
 #include "qaxwidgetpropertysheet.h"
 #include "qaxwidgettaskmenu.h"
 
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerFormWindowInterface>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractformwindow.h>
 
 #include <QtCore/qplugin.h>
-#include <QtGui/QIcon>
+#include <QtGui/qicon.h>
 #include <ActiveQt/QAxWidget>
 
 QT_BEGIN_NAMESPACE

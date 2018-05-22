@@ -29,9 +29,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QtWidgets/QMainWindow>
-#include <QtCore/QVector>
-#include <QtWidgets/QMdiArea>
+#include <QtWidgets/qmainwindow.h>
+#include <QtCore/qvector.h>
+#include <QtWidgets/qmdiarea.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -35,16 +35,16 @@
 #include <qdesigner_formwindowcommand_p.h>
 
 #include <QtDesigner/private/ui4_p.h>
-#include <QtDesigner/QDesignerFormWindowInterface>
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerMetaDataBaseInterface>
+#include <QtDesigner/abstractformwindow.h>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractmetadatabase.h>
 
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QUndoCommand>
-#include <QtWidgets/QMenu>
+#include <QtWidgets/qapplication.h>
+#include <QtWidgets/qundostack.h>
+#include <QtWidgets/qmenu.h>
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QDebug>
+#include <QtCore/qcoreapplication.h>
+#include <QtCore/qdebug.h>
 
 QT_BEGIN_NAMESPACE
 

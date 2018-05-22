@@ -29,10 +29,10 @@
 #include "tabordereditor_tool.h"
 #include "tabordereditor.h"
 
-#include <QtDesigner/QDesignerFormWindowInterface>
+#include <QtDesigner/abstractformwindow.h>
 
-#include <QtCore/QEvent>
-#include <QtWidgets/QAction>
+#include <QtCore/qcoreevent.h>
+#include <QtWidgets/qaction.h>
 
 QT_BEGIN_NAMESPACE
 

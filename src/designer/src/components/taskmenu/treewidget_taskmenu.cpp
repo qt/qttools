@@ -29,15 +29,15 @@
 #include "treewidget_taskmenu.h"
 #include "treewidgeteditor.h"
 
-#include <QtDesigner/QDesignerFormWindowInterface>
+#include <QtDesigner/abstractformwindow.h>
 
-#include <QtWidgets/QAction>
-#include <QtWidgets/QStyle>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QStyleOption>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qstyle.h>
+#include <QtWidgets/qlineedit.h>
+#include <QtWidgets/qstyleoption.h>
 
-#include <QtCore/QEvent>
-#include <QtCore/QVariant>
+#include <QtCore/qcoreevent.h>
+#include <QtCore/qvariant.h>
 #include <QtCore/qdebug.h>
 
 QT_BEGIN_NAMESPACE

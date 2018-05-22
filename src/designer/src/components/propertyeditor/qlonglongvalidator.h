@@ -29,7 +29,7 @@
 #ifndef QLONGLONGVALIDATOR_H
 #define QLONGLONGVALIDATOR_H
 
-#include <QtGui/QValidator>
+#include <QtGui/qvalidator.h>
 
 QT_BEGIN_NAMESPACE
 

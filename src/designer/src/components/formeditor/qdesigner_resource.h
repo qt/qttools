@@ -32,9 +32,9 @@
 #include "formeditor_global.h"
 #include "qsimpleresource_p.h"
 
-#include <QtCore/QHash>
-#include <QtCore/QStack>
-#include <QtCore/QList>
+#include <QtCore/qhash.h>
+#include <QtCore/qstack.h>
+#include <QtCore/qlist.h>
 
 QT_BEGIN_NAMESPACE
 

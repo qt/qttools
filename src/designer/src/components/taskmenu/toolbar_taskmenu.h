@@ -29,12 +29,12 @@
 #ifndef TOOLBAR_TASKMENU_H
 #define TOOLBAR_TASKMENU_H
 
-#include <QtDesigner/QDesignerTaskMenuExtension>
+#include <QtDesigner/taskmenu.h>
 
 #include <extensionfactory_p.h>
 
-#include <QtWidgets/QToolBar>
-#include <QtWidgets/QStatusBar>
+#include <QtWidgets/qtoolbar.h>
+#include <QtWidgets/qstatusbar.h>
 
 QT_BEGIN_NAMESPACE
 

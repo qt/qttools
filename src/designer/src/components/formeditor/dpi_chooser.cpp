@@ -30,13 +30,12 @@
 
 #include <deviceprofile_p.h>
 
-#include <QtWidgets/QComboBox>
-#include <QtWidgets/QSpinBox>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QVBoxLayout>
-#include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QCheckBox>
+#include <QtWidgets/qcombobox.h>
+#include <QtWidgets/qspinbox.h>
+#include <QtWidgets/qlabel.h>
+#include <QtWidgets/qboxlayout.h>
+#include <QtWidgets/qpushbutton.h>
+#include <QtWidgets/qcheckbox.h>
 
 QT_BEGIN_NAMESPACE
 

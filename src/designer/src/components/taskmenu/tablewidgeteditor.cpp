@@ -35,12 +35,12 @@
 #include <designerpropertymanager.h>
 #include <qttreepropertybrowser.h>
 
-#include <QtDesigner/QDesignerFormWindowInterface>
-#include <QtDesigner/QDesignerFormEditorInterface>
+#include <QtDesigner/abstractformwindow.h>
+#include <QtDesigner/abstractformeditor.h>
 
-#include <QtCore/QDir>
-#include <QtCore/QQueue>
-#include <QtCore/QTextStream>
+#include <QtCore/qdir.h>
+#include <QtCore/qqueue.h>
+#include <QtCore/qtextstream.h>
 
 QT_BEGIN_NAMESPACE
 

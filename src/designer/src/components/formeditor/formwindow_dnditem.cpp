@@ -33,11 +33,11 @@
 #include <qdesigner_resource.h>
 #include <qtresourcemodel_p.h>
 
-#include <QtDesigner/QDesignerFormEditorInterface>
+#include <QtDesigner/abstractformeditor.h>
 #include <QtDesigner/private/ui4_p.h>
 
-#include <QtWidgets/QLabel>
-#include <QtGui/QPixmap>
+#include <QtWidgets/qlabel.h>
+#include <QtGui/qpixmap.h>
 
 QT_BEGIN_NAMESPACE
 

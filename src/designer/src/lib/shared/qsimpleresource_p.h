@@ -42,8 +42,8 @@
 
 #include "shared_global_p.h"
 #include "abstractformbuilder.h"
-#include <QtCore/QStringList>
-#include <QtCore/QVector>
+#include <QtCore/qstringlist.h>
+#include <QtCore/qvector.h>
 
 QT_BEGIN_NAMESPACE
 

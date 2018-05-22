@@ -28,12 +28,11 @@
 
 #include "qwizard_container.h"
 
-#include <QtDesigner/QExtensionManager>
-#include <QtDesigner/QDesignerFormEditorInterface>
+#include <QtDesigner/qextensionmanager.h>
+#include <QtDesigner/abstractformeditor.h>
 
-#include <QtWidgets/QWizard>
-#include <QtWidgets/QWizardPage>
-#include <QtCore/QDebug>
+#include <QtWidgets/qwizard.h>
+#include <QtCore/qdebug.h>
 
 QT_BEGIN_NAMESPACE
 

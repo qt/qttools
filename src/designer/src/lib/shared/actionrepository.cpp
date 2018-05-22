@@ -31,22 +31,22 @@
 #include "iconloader_p.h"
 #include "qdesigner_utils_p.h"
 
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerPropertySheetExtension>
-#include <QtDesigner/QExtensionManager>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/propertysheet.h>
+#include <QtDesigner/qextensionmanager.h>
 
-#include <QtGui/QDrag>
-#include <QtGui/QContextMenuEvent>
-#include <QtGui/QStandardItemModel>
-#include <QtWidgets/QToolButton>
-#include <QtGui/QPixmap>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QHeaderView>
-#include <QtWidgets/QToolBar>
-#include <QtWidgets/QMenu>
+#include <QtGui/qdrag.h>
 #include <QtGui/qevent.h>
-#include <QtCore/QSet>
-#include <QtCore/QDebug>
+#include <QtGui/qstandarditemmodel.h>
+#include <QtWidgets/qtoolbutton.h>
+#include <QtGui/qpixmap.h>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qheaderview.h>
+#include <QtWidgets/qtoolbar.h>
+#include <QtWidgets/qmenu.h>
+#include <QtGui/qevent.h>
+#include <QtCore/qset.h>
+#include <QtCore/qdebug.h>
 
 Q_DECLARE_METATYPE(QAction*)
 

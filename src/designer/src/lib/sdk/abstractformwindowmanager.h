@@ -32,8 +32,8 @@
 #include <QtDesigner/sdk_global.h>
 #include <QtDesigner/abstractformwindow.h>
 
-#include <QtCore/QObject>
-#include <QtCore/QScopedPointer>
+#include <QtCore/qobject.h>
+#include <QtCore/qscopedpointer.h>
 
 QT_BEGIN_NAMESPACE
 

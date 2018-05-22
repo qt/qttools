@@ -54,15 +54,15 @@
 #include "formbuilderextra_p.h"
 #include "resourcebuilder_p.h"
 
-#include <QtCore/QDateTime>
-#include <QtCore/QUrl>
+#include <QtCore/qdatetime.h>
+#include <QtCore/qurl.h>
 #include <QtCore/qdebug.h>
 
-#include <QtGui/QIcon>
-#include <QtGui/QPixmap>
-#include <QtGui/QFont>
-#include <QtWidgets/QFrame>
-#include <QtWidgets/QAbstractScrollArea>
+#include <QtGui/qicon.h>
+#include <QtGui/qpixmap.h>
+#include <QtGui/qfont.h>
+#include <QtWidgets/qframe.h>
+#include <QtWidgets/qabstractscrollarea.h>
 
 QT_BEGIN_NAMESPACE
 

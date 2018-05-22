@@ -44,12 +44,12 @@
 #include "dynamicpropertysheet.h"
 #include <QtDesigner/propertysheet.h>
 #include <QtDesigner/default_extensionfactory.h>
-#include <QtDesigner/QExtensionManager>
+#include <QtDesigner/qextensionmanager.h>
 
-#include <QtCore/QVariant>
-#include <QtCore/QPair>
+#include <QtCore/qvariant.h>
+#include <QtCore/qpair.h>
 
-#include <QtCore/QPointer>
+#include <QtCore/qpointer.h>
 
 QT_BEGIN_NAMESPACE
 

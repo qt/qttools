@@ -33,13 +33,13 @@
 
 #include <qdesigner_utils_p.h>
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QVariant>
-#include <QtCore/QString>
-#include <QtCore/QDebug>
-#include <QtCore/QFile>
-#include <QtCore/QTextStream>
-#include <QtCore/QXmlStreamReader>
+#include <QtCore/qcoreapplication.h>
+#include <QtCore/qvariant.h>
+#include <QtCore/qstring.h>
+#include <QtCore/qdebug.h>
+#include <QtCore/qfile.h>
+#include <QtCore/qtextstream.h>
+#include <QtCore/qxmlstream.h>
 
 QT_BEGIN_NAMESPACE
 

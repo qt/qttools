@@ -29,7 +29,7 @@
 #ifndef NEWFORM_H
 #define NEWFORM_H
 
-#include <QtWidgets/QDialog>
+#include <QtWidgets/qdialog.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -28,10 +28,10 @@
 
 #include "buddyeditor.h"
 
-#include <QtDesigner/QDesignerFormWindowInterface>
-#include <QtDesigner/QDesignerPropertySheetExtension>
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QExtensionManager>
+#include <QtDesigner/abstractformwindow.h>
+#include <QtDesigner/propertysheet.h>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/qextensionmanager.h>
 
 #include <qdesigner_command_p.h>
 #include <qdesigner_propertycommand_p.h>
@@ -41,10 +41,10 @@
 #include <metadatabase_p.h>
 
 #include <QtCore/qdebug.h>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QApplication>
+#include <QtWidgets/qlabel.h>
+#include <QtWidgets/qmenu.h>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qapplication.h>
 
 #include <algorithm>
 

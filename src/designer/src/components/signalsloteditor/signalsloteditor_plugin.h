@@ -31,10 +31,10 @@
 
 #include "signalsloteditor_global.h"
 
-#include <QtDesigner/QDesignerFormEditorPluginInterface>
+#include <QtDesigner/abstractformeditorplugin.h>
 
-#include <QtCore/QPointer>
-#include <QtCore/QHash>
+#include <QtCore/qpointer.h>
+#include <QtCore/qhash.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -29,10 +29,10 @@
 #include "saveformastemplate.h"
 #include "qdesigner_settings.h"
 
-#include <QtCore/QFile>
-#include <QtWidgets/QFileDialog>
-#include <QtWidgets/QMessageBox>
-#include <QtWidgets/QPushButton>
+#include <QtCore/qfile.h>
+#include <QtWidgets/qfiledialog.h>
+#include <QtWidgets/qmessagebox.h>
+#include <QtWidgets/qpushbutton.h>
 
 #include <QtDesigner/abstractformeditor.h>
 #include <QtDesigner/abstractformwindow.h>

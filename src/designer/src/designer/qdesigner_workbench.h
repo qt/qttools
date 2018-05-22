@@ -31,11 +31,11 @@
 
 #include "designer_enums.h"
 
-#include <QtCore/QObject>
-#include <QtCore/QHash>
-#include <QtCore/QSet>
-#include <QtCore/QRect>
-#include <QtCore/QVector>
+#include <QtCore/qobject.h>
+#include <QtCore/qhash.h>
+#include <QtCore/qset.h>
+#include <QtCore/qrect.h>
+#include <QtCore/qvector.h>
 
 QT_BEGIN_NAMESPACE
 

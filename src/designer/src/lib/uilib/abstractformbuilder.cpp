@@ -55,45 +55,45 @@
 #include "ui4_p.h"
 #include "properties_p.h"
 
-#include <QtCore/QVariant>
-#include <QtCore/QMetaProperty>
-#include <QtCore/QFileInfo>
-#include <QtCore/QDir>
-#include <QtCore/QQueue>
-#include <QtCore/QHash>
-#include <QtCore/QPair>
+#include <QtCore/qvariant.h>
+#include <QtCore/qmetaobject.h>
+#include <QtCore/qfileinfo.h>
+#include <QtCore/qdir.h>
+#include <QtCore/qqueue.h>
+#include <QtCore/qhash.h>
+#include <QtCore/qpair.h>
 #include <QtCore/qdebug.h>
-#include <QtCore/QCoreApplication>
+#include <QtCore/qcoreapplication.h>
 
-#include <QtWidgets/QAction>
-#include <QtWidgets/QMainWindow>
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QMenuBar>
-#include <QtWidgets/QStatusBar>
-#include <QtWidgets/QToolBar>
-#include <QtWidgets/QMdiArea>
-#include <QtWidgets/QDockWidget>
-#include <QtWidgets/QWizard>
-#include <QtWidgets/QStackedWidget>
-#include <QtWidgets/QToolBox>
-#include <QtWidgets/QTabWidget>
-#include <QtWidgets/QSplitter>
-#include <QtWidgets/QButtonGroup>
-#include <QtWidgets/QBoxLayout>
-#include <QtWidgets/QFormLayout>
-#include <QtWidgets/QGridLayout>
-#include <QtWidgets/QScrollArea>
-#include <QtWidgets/QTreeWidget>
-#include <QtWidgets/QListWidget>
-#include <QtWidgets/QHeaderView>
-#include <QtWidgets/QTableWidget>
-#include <QtWidgets/QFontComboBox>
-#include <QtWidgets/QPushButton>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qmainwindow.h>
+#include <QtWidgets/qmenu.h>
+#include <QtWidgets/qmenubar.h>
+#include <QtWidgets/qstatusbar.h>
+#include <QtWidgets/qtoolbar.h>
+#include <QtWidgets/qmdiarea.h>
+#include <QtWidgets/qdockwidget.h>
+#include <QtWidgets/qwizard.h>
+#include <QtWidgets/qstackedwidget.h>
+#include <QtWidgets/qtoolbox.h>
+#include <QtWidgets/qtabwidget.h>
+#include <QtWidgets/qsplitter.h>
+#include <QtWidgets/qbuttongroup.h>
+#include <QtWidgets/qboxlayout.h>
+#include <QtWidgets/qformlayout.h>
+#include <QtWidgets/qgridlayout.h>
+#include <QtWidgets/qscrollarea.h>
+#include <QtWidgets/qtreewidget.h>
+#include <QtWidgets/qlistwidget.h>
+#include <QtWidgets/qheaderview.h>
+#include <QtWidgets/qtablewidget.h>
+#include <QtWidgets/qfontcombobox.h>
+#include <QtWidgets/qpushbutton.h>
 #ifndef QFORMINTERNAL_NAMESPACE
 #  include <private/qlayout_p.h> // Compiling within Designer
 #endif
 
-#include <QtCore/QXmlStreamReader>
+#include <QtCore/qxmlstream.h>
 
 #include <QtCore/qdebug.h>
 

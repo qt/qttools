@@ -31,22 +31,22 @@
 #include <qdesigner_formwindowcommand_p.h>
 #include <formwindowbase_p.h>
 
-#include <QtDesigner/QDesignerFormWindowInterface>
-#include <QtDesigner/QDesignerFormWindowCursorInterface>
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerMetaDataBaseInterface>
-#include <QtDesigner/QDesignerObjectInspectorInterface>
-#include <QtDesigner/QDesignerPropertyEditorInterface>
+#include <QtDesigner/abstractformwindow.h>
+#include <QtDesigner/abstractformwindowcursor.h>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractmetadatabase.h>
+#include <QtDesigner/abstractobjectinspector.h>
+#include <QtDesigner/abstractpropertyeditor.h>
 
-#include <QtWidgets/QAction>
-#include <QtWidgets/QActionGroup>
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QStyle>
-#include <QtWidgets/QStyleOption>
-#include <QtWidgets/QAbstractButton>
-#include <QtWidgets/QButtonGroup>
-#include <QtWidgets/QApplication>
-#include <QtCore/QDebug>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qactiongroup.h>
+#include <QtWidgets/qmenu.h>
+#include <QtWidgets/qstyle.h>
+#include <QtWidgets/qstyleoption.h>
+#include <QtWidgets/qabstractbutton.h>
+#include <QtWidgets/qbuttongroup.h>
+#include <QtWidgets/qapplication.h>
+#include <QtCore/qdebug.h>
 
 Q_DECLARE_METATYPE(QButtonGroup*)
 

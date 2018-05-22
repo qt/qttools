@@ -42,8 +42,8 @@
 
 #include "shared_global_p.h"
 
-#include <QtCore/QString>
-#include <QtCore/QSharedDataPointer>
+#include <QtCore/qstring.h>
+#include <QtCore/qshareddata.h>
 
 QT_BEGIN_NAMESPACE
 

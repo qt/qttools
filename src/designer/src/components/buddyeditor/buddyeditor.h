@@ -32,8 +32,8 @@
 #include "buddyeditor_global.h"
 
 #include <connectionedit_p.h>
-#include <QtCore/QPointer>
-#include <QtCore/QSet>
+#include <QtCore/qpointer.h>
+#include <QtCore/qset.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -40,7 +40,7 @@
 #ifndef CSSHIGHLIGHTER_H
 #define CSSHIGHLIGHTER_H
 
-#include <QtGui/QSyntaxHighlighter>
+#include <QtGui/qsyntaxhighlighter.h>
 #include "shared_global_p.h"
 
 QT_BEGIN_NAMESPACE

@@ -29,10 +29,10 @@
 #ifndef WIDGETBOXCATEGORYLISTVIEW_H
 #define WIDGETBOXCATEGORYLISTVIEW_H
 
-#include <QtDesigner/QDesignerWidgetBoxInterface>
+#include <QtDesigner/abstractwidgetbox.h>
 
-#include <QtWidgets/QListView>
-#include <QtCore/QList>
+#include <QtWidgets/qlistview.h>
+#include <QtCore/qlist.h>
 
 QT_BEGIN_NAMESPACE
 

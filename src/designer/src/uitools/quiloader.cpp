@@ -60,22 +60,22 @@
 #include <ui4_p.h>
 
 #include <QtCore/qdebug.h>
-#include <QtCore/QDataStream>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QActionGroup>
-#include <QtWidgets/QApplication>
-#include <QtCore/QDir>
-#include <QtCore/QLibraryInfo>
-#include <QtWidgets/QLayout>
-#include <QtWidgets/QWidget>
-#include <QtCore/QMap>
-#include <QtWidgets/QTabWidget>
-#include <QtWidgets/QTreeWidget>
-#include <QtWidgets/QListWidget>
-#include <QtWidgets/QTableWidget>
-#include <QtWidgets/QToolBox>
-#include <QtWidgets/QComboBox>
-#include <QtWidgets/QFontComboBox>
+#include <QtCore/qdatastream.h>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qactiongroup.h>
+#include <QtWidgets/qapplication.h>
+#include <QtCore/qdir.h>
+#include <QtCore/qlibraryinfo.h>
+#include <QtWidgets/qlayout.h>
+#include <QtWidgets/qwidget.h>
+#include <QtCore/qmap.h>
+#include <QtWidgets/qtabwidget.h>
+#include <QtWidgets/qtreewidget.h>
+#include <QtWidgets/qlistwidget.h>
+#include <QtWidgets/qtablewidget.h>
+#include <QtWidgets/qtoolbox.h>
+#include <QtWidgets/qcombobox.h>
+#include <QtWidgets/qfontcombobox.h>
 
 QT_BEGIN_NAMESPACE
 

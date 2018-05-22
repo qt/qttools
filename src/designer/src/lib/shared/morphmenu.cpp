@@ -34,39 +34,39 @@
 #include "layoutinfo_p.h"
 #include "qdesigner_propertycommand_p.h"
 
-#include <QtDesigner/QExtensionManager>
-#include <QtDesigner/QDesignerContainerExtension>
-#include <QtDesigner/QDesignerFormWindowInterface>
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerLanguageExtension>
-#include <QtDesigner/QDesignerWidgetDataBaseInterface>
-#include <QtDesigner/QDesignerMetaDataBaseInterface>
-#include <QtDesigner/QDesignerPropertySheetExtension>
+#include <QtDesigner/qextensionmanager.h>
+#include <QtDesigner/container.h>
+#include <QtDesigner/abstractformwindow.h>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractlanguage.h>
+#include <QtDesigner/abstractwidgetdatabase.h>
+#include <QtDesigner/abstractmetadatabase.h>
+#include <QtDesigner/propertysheet.h>
 
-#include <QtWidgets/QWidget>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QLayout>
-#include <QtWidgets/QUndoStack>
-#include <QtWidgets/QSplitter>
+#include <QtWidgets/qwidget.h>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qmenu.h>
+#include <QtWidgets/qapplication.h>
+#include <QtWidgets/qlayout.h>
+#include <QtWidgets/qundostack.h>
+#include <QtWidgets/qsplitter.h>
 
-#include <QtWidgets/QFrame>
-#include <QtWidgets/QGroupBox>
-#include <QtWidgets/QTabWidget>
-#include <QtWidgets/QStackedWidget>
-#include <QtWidgets/QToolBox>
-#include <QtWidgets/QAbstractItemView>
-#include <QtWidgets/QAbstractButton>
-#include <QtWidgets/QAbstractSpinBox>
-#include <QtWidgets/QTextEdit>
-#include <QtWidgets/QPlainTextEdit>
-#include <QtWidgets/QLabel>
+#include <QtWidgets/qframe.h>
+#include <QtWidgets/qgroupbox.h>
+#include <QtWidgets/qtabwidget.h>
+#include <QtWidgets/qstackedwidget.h>
+#include <QtWidgets/qtoolbox.h>
+#include <QtWidgets/qabstractitemview.h>
+#include <QtWidgets/qabstractbutton.h>
+#include <QtWidgets/qabstractspinbox.h>
+#include <QtWidgets/qtextedit.h>
+#include <QtWidgets/qplaintextedit.h>
+#include <QtWidgets/qlabel.h>
 
-#include <QtCore/QStringList>
-#include <QtCore/QMap>
-#include <QtCore/QVariant>
-#include <QtCore/QDebug>
+#include <QtCore/qstringlist.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qvariant.h>
+#include <QtCore/qdebug.h>
 
 Q_DECLARE_METATYPE(QWidgetList)
 

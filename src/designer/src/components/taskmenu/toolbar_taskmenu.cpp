@@ -29,15 +29,15 @@
 #include "toolbar_taskmenu.h"
 #include "qdesigner_toolbar_p.h"
 
-#include <QtDesigner/QDesignerFormWindowInterface>
+#include <QtDesigner/abstractformwindow.h>
 
 #include <promotiontaskmenu_p.h>
 #include <qdesigner_command_p.h>
 
-#include <QtWidgets/QAction>
-#include <QtWidgets/QUndoStack>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qundostack.h>
 
-#include <QtCore/QDebug>
+#include <QtCore/qdebug.h>
 
 QT_BEGIN_NAMESPACE
 

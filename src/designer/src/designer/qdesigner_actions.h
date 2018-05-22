@@ -32,10 +32,10 @@
 #include "assistantclient.h"
 #include "qdesigner_settings.h"
 
-#include <QtCore/QObject>
-#include <QtCore/QPointer>
+#include <QtCore/qobject.h>
+#include <QtCore/qpointer.h>
 #ifndef QT_NO_PRINTER
-#include <QtPrintSupport/QPrinter>
+#include <QtPrintSupport/qprinter.h>
 #endif
 
 QT_BEGIN_NAMESPACE

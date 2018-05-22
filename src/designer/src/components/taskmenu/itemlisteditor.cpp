@@ -32,12 +32,12 @@
 #include <formwindowbase_p.h>
 #include <designerpropertymanager.h>
 
-#include <QtDesigner/QDesignerFormWindowInterface>
+#include <QtDesigner/abstractformwindow.h>
 
 #include <qttreepropertybrowser.h>
 
-#include <QtWidgets/QSplitter>
-#include <QtCore/QCoreApplication>
+#include <QtWidgets/qsplitter.h>
+#include <QtCore/qcoreapplication.h>
 
 QT_BEGIN_NAMESPACE
 

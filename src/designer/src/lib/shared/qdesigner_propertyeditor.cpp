@@ -29,14 +29,14 @@
 #include "qdesigner_propertyeditor_p.h"
 #include "pluginmanager_p.h"
 
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerDynamicPropertySheetExtension>
-#include <QtDesigner/QDesignerPropertySheetExtension>
-#include <QtDesigner/QExtensionManager>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/dynamicpropertysheet.h>
+#include <QtDesigner/propertysheet.h>
+#include <QtDesigner/qextensionmanager.h>
 #include <widgetfactory_p.h>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QAbstractButton>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qlineedit.h>
+#include <QtWidgets/qabstractbutton.h>
 
 QT_BEGIN_NAMESPACE
 

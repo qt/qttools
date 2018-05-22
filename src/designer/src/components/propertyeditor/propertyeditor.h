@@ -32,10 +32,10 @@
 #include "propertyeditor_global.h"
 #include <qdesigner_propertyeditor_p.h>
 
-#include <QtCore/QPointer>
-#include <QtCore/QMap>
-#include <QtCore/QVector>
-#include <QtCore/QSet>
+#include <QtCore/qpointer.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qvector.h>
+#include <QtCore/qset.h>
 
 QT_BEGIN_NAMESPACE
 

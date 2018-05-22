@@ -51,8 +51,8 @@
 #ifndef QUILOADER_H
 #define QUILOADER_H
 
-#include <QtCore/QObject>
-#include <QtCore/QScopedPointer>
+#include <QtCore/qobject.h>
+#include <QtCore/qscopedpointer.h>
 
 QT_BEGIN_NAMESPACE
 

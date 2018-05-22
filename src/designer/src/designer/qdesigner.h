@@ -29,8 +29,8 @@
 #ifndef QDESIGNER_H
 #define QDESIGNER_H
 
-#include <QtCore/QPointer>
-#include <QtWidgets/QApplication>
+#include <QtCore/qpointer.h>
+#include <QtWidgets/qapplication.h>
 
 QT_BEGIN_NAMESPACE
 

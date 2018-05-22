@@ -28,11 +28,11 @@
 
 #include "itemview_propertysheet.h"
 
-#include <QtDesigner/QDesignerFormEditorInterface>
+#include <QtDesigner/abstractformeditor.h>
 
-#include <QtWidgets/QAbstractItemView>
-#include <QtWidgets/QHeaderView>
-#include <QtCore/QDebug>
+#include <QtWidgets/qabstractitemview.h>
+#include <QtWidgets/qheaderview.h>
+#include <QtCore/qdebug.h>
 
 QT_BEGIN_NAMESPACE
 

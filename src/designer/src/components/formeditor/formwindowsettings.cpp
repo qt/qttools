@@ -32,10 +32,10 @@
 #include <formwindowbase_p.h>
 #include <grid_p.h>
 
-#include <QtWidgets/QStyle>
+#include <QtWidgets/qstyle.h>
 
-#include <QtCore/QRegularExpression>
-#include <QtCore/QDebug>
+#include <QtCore/qregularexpression.h>
+#include <QtCore/qdebug.h>
 
 #include <algorithm>
 

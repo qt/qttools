@@ -28,22 +28,21 @@
 
 #include "deviceprofile_p.h"
 
-#include <QtDesigner/QDesignerFormEditorInterface>
+#include <QtDesigner/abstractformeditor.h>
 #include <widgetfactory_p.h>
 #include <qdesigner_utils_p.h>
 
-#include <QtWidgets/QApplication>
-#include <QtGui/QFont>
-#include <QtWidgets/QDesktopWidget>
-#include <QtWidgets/QStyle>
-#include <QtWidgets/QStyleFactory>
-#include <QtWidgets/QApplication>
+#include <QtWidgets/qapplication.h>
+#include <QtGui/qfont.h>
+#include <QtWidgets/qdesktopwidget.h>
+#include <QtWidgets/qstyle.h>
+#include <QtWidgets/qstylefactory.h>
+#include <QtWidgets/qapplication.h>
 
-#include <QtCore/QSharedData>
-#include <QtCore/QTextStream>
+#include <QtCore/qshareddata.h>
+#include <QtCore/qtextstream.h>
 
-#include <QtCore/QXmlStreamWriter>
-#include <QtCore/QXmlStreamReader>
+#include <QtCore/qxmlstream.h>
 
 
 static const char *dpiXPropertyC = "_q_customDpiX";

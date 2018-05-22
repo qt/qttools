@@ -43,10 +43,10 @@
 
 #include "shared_global_p.h"
 
-#include <QtWidgets/QWidget>
-#include <QtWidgets/QDialog>
+#include <QtWidgets/qwidget.h>
+#include <QtWidgets/qdialog.h>
 
-#include <QtCore/QScopedPointer>
+#include <QtCore/qscopedpointer.h>
 
 QT_BEGIN_NAMESPACE
 

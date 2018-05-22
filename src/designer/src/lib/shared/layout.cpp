@@ -34,31 +34,30 @@
 #include "widgetfactory_p.h"
 #include "qdesigner_widgetitem_p.h"
 
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerFormWindowInterface>
-#include <QtDesigner/QDesignerContainerExtension>
-#include <QtDesigner/QExtensionManager>
-#include <QtDesigner/QDesignerPropertySheetExtension>
-#include <QtDesigner/QDesignerWidgetDataBaseInterface>
-#include <QtDesigner/QDesignerMetaDataBaseInterface>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractformwindow.h>
+#include <QtDesigner/container.h>
+#include <QtDesigner/qextensionmanager.h>
+#include <QtDesigner/propertysheet.h>
+#include <QtDesigner/abstractwidgetdatabase.h>
+#include <QtDesigner/abstractmetadatabase.h>
 
 #include <QtCore/qdebug.h>
-#include <QtCore/QVector>
+#include <QtCore/qvector.h>
 
-#include <QtGui/QKeyEvent>
-#include <QtWidgets/QGridLayout>
-#include <QtGui/QPainter>
-#include <QtGui/QBitmap>
-#include <QtWidgets/QSplitter>
-#include <QtWidgets/QMainWindow>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QScrollArea>
-#include <QtWidgets/QFormLayout>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QWizardPage>
-#include <QtWidgets/QWizard>
-#include <QtCore/QDebug>
-#include <QtCore/QSet>
+#include <QtGui/qevent.h>
+#include <QtWidgets/qgridlayout.h>
+#include <QtGui/qpainter.h>
+#include <QtGui/qbitmap.h>
+#include <QtWidgets/qsplitter.h>
+#include <QtWidgets/qmainwindow.h>
+#include <QtWidgets/qapplication.h>
+#include <QtWidgets/qscrollarea.h>
+#include <QtWidgets/qformlayout.h>
+#include <QtWidgets/qlabel.h>
+#include <QtWidgets/qwizard.h>
+#include <QtCore/qdebug.h>
+#include <QtCore/qset.h>
 
 #include <algorithm>
 

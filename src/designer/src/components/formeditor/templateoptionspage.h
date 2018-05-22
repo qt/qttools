@@ -29,12 +29,12 @@
 #ifndef QDESIGNER_TEMPLATEOPTIONS_H
 #define QDESIGNER_TEMPLATEOPTIONS_H
 
-#include <QtDesigner/QDesignerOptionsPageInterface>
+#include <QtDesigner/abstractoptionspage.h>
 
-#include <QtCore/QPointer>
-#include <QtCore/QStringList>
+#include <QtCore/qpointer.h>
+#include <QtCore/qstringlist.h>
 
-#include <QtWidgets/QWidget>
+#include <QtWidgets/qwidget.h>
 
 QT_BEGIN_NAMESPACE
 

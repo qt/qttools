@@ -31,15 +31,15 @@
 #include "metadatabase_p.h"
 #include "widgetdatabase_p.h"
 
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerFormWindowInterface>
-#include <QtDesigner/QDesignerFormWindowManagerInterface>
-#include <QtDesigner/QDesignerObjectInspectorInterface>
-#include <QtDesigner/QDesignerWidgetBoxInterface>
-#include <QtDesigner/QDesignerWidgetDataBaseInterface>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractformwindow.h>
+#include <QtDesigner/abstractformwindowmanager.h>
+#include <QtDesigner/abstractobjectinspector.h>
+#include <QtDesigner/abstractwidgetbox.h>
+#include <QtDesigner/abstractwidgetdatabase.h>
 
-#include <QtCore/QMap>
-#include <QtCore/QCoreApplication>
+#include <QtCore/qmap.h>
+#include <QtCore/qcoreapplication.h>
 #include <qdebug.h>
 
 QT_BEGIN_NAMESPACE

@@ -41,8 +41,8 @@
 #define ABSTRACTMETAOBJECT_H
 
 #include <QtDesigner/sdk_global.h>
-#include <QtCore/QVariant>
-#include <QtCore/QFlags>
+#include <QtCore/qvariant.h>
+#include <QtCore/qflags.h>
 
 QT_BEGIN_NAMESPACE
 

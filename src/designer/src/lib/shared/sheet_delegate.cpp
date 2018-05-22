@@ -28,10 +28,10 @@
 
 #include "sheet_delegate_p.h"
 
-#include <QtCore/QAbstractItemModel>
-#include <QtWidgets/QTreeView>
-#include <QtWidgets/QStyle>
-#include <QtGui/QPainter>
+#include <QtCore/qabstractitemmodel.h>
+#include <QtWidgets/qtreeview.h>
+#include <QtWidgets/qstyle.h>
+#include <QtGui/qpainter.h>
 
 QT_BEGIN_NAMESPACE
 

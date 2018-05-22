@@ -26,8 +26,8 @@
 **
 ****************************************************************************/
 
-#include <QtCore/QTextStream>
-#include <QtWidgets/QTextEdit>
+#include <QtCore/qtextstream.h>
+#include <QtWidgets/qtextedit.h>
 
 #include "htmlhighlighter_p.h"
 

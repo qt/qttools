@@ -44,8 +44,8 @@
 #include "qdesigner_propertysheet_p.h"
 #include "qdesigner_utils_p.h"
 
-#include <QtCore/QPointer>
-#include <QtGui/QIcon>
+#include <QtCore/qpointer.h>
+#include <QtGui/qicon.h>
 
 QT_BEGIN_NAMESPACE
 

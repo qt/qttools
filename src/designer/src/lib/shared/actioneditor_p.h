@@ -42,9 +42,9 @@
 
 #include "shared_global_p.h"
 #include "shared_enums_p.h"
-#include <QtDesigner/QDesignerActionEditorInterface>
+#include <QtDesigner/abstractactioneditor.h>
 
-#include <QtCore/QPointer>
+#include <QtCore/qpointer.h>
 
 QT_BEGIN_NAMESPACE
 

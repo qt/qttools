@@ -29,7 +29,7 @@
 #ifndef LAYOUTTASKMENU_H
 #define LAYOUTTASKMENU_H
 
-#include <QtDesigner/QDesignerTaskMenuExtension>
+#include <QtDesigner/taskmenu.h>
 
 #include <qlayout_widget_p.h>
 #include <spacer_widget_p.h>

@@ -37,13 +37,13 @@
 #include <qdesigner_dockwidget_p.h>
 #include <qsimpleresource_p.h>
 
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerFormWindowManagerInterface>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractformwindowmanager.h>
 
 #include <QtDesigner/private/ui4_p.h>
 
-#include <QtWidgets/QStyle>
-#include <QtWidgets/QApplication>
+#include <QtWidgets/qstyle.h>
+#include <QtWidgets/qapplication.h>
 
 QT_BEGIN_NAMESPACE
 

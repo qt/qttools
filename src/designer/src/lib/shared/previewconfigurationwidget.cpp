@@ -36,17 +36,17 @@
 
 #include <deviceskin.h>
 
-#include <QtDesigner/QDesignerSettingsInterface>
+#include <QtDesigner/abstractsettings.h>
 
-#include <QtWidgets/QFileDialog>
-#include <QtWidgets/QStyleFactory>
-#include <QtWidgets/QFileDialog>
-#include <QtWidgets/QMessageBox>
-#include <QtCore/QPair>
-#include <QtCore/QList>
-#include <QtCore/QDebug>
-#include <QtCore/QFileInfo>
-#include <QtCore/QSharedData>
+#include <QtWidgets/qfiledialog.h>
+#include <QtWidgets/qstylefactory.h>
+#include <QtWidgets/qfiledialog.h>
+#include <QtWidgets/qmessagebox.h>
+#include <QtCore/qpair.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qdebug.h>
+#include <QtCore/qfileinfo.h>
+#include <QtCore/qshareddata.h>
 
 
 static const char *skinResourcePathC = ":/skins/";

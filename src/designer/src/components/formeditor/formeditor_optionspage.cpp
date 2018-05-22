@@ -38,15 +38,15 @@
 #include <private/actioneditor_p.h>
 
 // SDK
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerFormWindowManagerInterface>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractformwindowmanager.h>
 
-#include <QtCore/QString>
-#include <QtCore/QCoreApplication>
-#include <QtWidgets/QGroupBox>
-#include <QtWidgets/QVBoxLayout>
-#include <QtWidgets/QFormLayout>
-#include <QtWidgets/QComboBox>
+#include <QtCore/qstring.h>
+#include <QtCore/qcoreapplication.h>
+#include <QtWidgets/qgroupbox.h>
+#include <QtWidgets/qboxlayout.h>
+#include <QtWidgets/qformlayout.h>
+#include <QtWidgets/qcombobox.h>
 
 QT_BEGIN_NAMESPACE
 

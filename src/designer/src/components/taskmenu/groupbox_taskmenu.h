@@ -29,8 +29,8 @@
 #ifndef GROUPBOX_TASKMENU_H
 #define GROUPBOX_TASKMENU_H
 
-#include <QtWidgets/QGroupBox>
-#include <QtCore/QPointer>
+#include <QtWidgets/qgroupbox.h>
+#include <QtCore/qpointer.h>
 
 #include <qdesigner_taskmenu_p.h>
 #include <extensionfactory_p.h>

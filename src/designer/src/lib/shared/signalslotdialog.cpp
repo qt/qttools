@@ -34,22 +34,22 @@
 #include "qdesigner_formwindowcommand_p.h"
 #include "iconloader_p.h"
 
-#include <QtDesigner/QDesignerMemberSheetExtension>
-#include <QtDesigner/QExtensionManager>
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerFormWindowInterface>
-#include <QtDesigner/QDesignerWidgetFactoryInterface>
+#include <QtDesigner/membersheet.h>
+#include <QtDesigner/qextensionmanager.h>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractformwindow.h>
+#include <QtDesigner/abstractwidgetfactory.h>
 #include <abstractdialoggui_p.h>
 
-#include <QtGui/QStandardItemModel>
-#include <QtGui/QRegularExpressionValidator>
-#include <QtWidgets/QItemDelegate>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QMessageBox>
+#include <QtGui/qstandarditemmodel.h>
+#include <QtGui/qvalidator.h>
+#include <QtWidgets/qitemdelegate.h>
+#include <QtWidgets/qlineedit.h>
+#include <QtWidgets/qapplication.h>
+#include <QtWidgets/qmessagebox.h>
 
-#include <QtCore/QRegularExpression>
-#include <QtCore/QDebug>
+#include <QtCore/qregularexpression.h>
+#include <QtCore/qdebug.h>
 
 QT_BEGIN_NAMESPACE
 

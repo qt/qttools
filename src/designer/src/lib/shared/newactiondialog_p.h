@@ -42,8 +42,8 @@
 
 #include "qdesigner_utils_p.h" //  PropertySheetIconValue
 
-#include <QtWidgets/QDialog>
-#include <QtGui/QKeySequence>
+#include <QtWidgets/qdialog.h>
+#include <QtGui/qkeysequence.h>
 
 QT_BEGIN_NAMESPACE
 

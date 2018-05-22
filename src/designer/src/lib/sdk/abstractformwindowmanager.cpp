@@ -28,7 +28,7 @@
 
 #include "abstractformwindowmanager.h"
 
-#include <QtCore/QMap>
+#include <QtCore/qmap.h>
 
 QT_BEGIN_NAMESPACE
 

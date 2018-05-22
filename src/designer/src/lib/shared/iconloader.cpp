@@ -28,9 +28,9 @@
 
 #include "iconloader_p.h"
 
-#include <QtCore/QFile>
-#include <QtGui/QIcon>
-#include <QtGui/QPixmap>
+#include <QtCore/qfile.h>
+#include <QtGui/qicon.h>
+#include <QtGui/qpixmap.h>
 
 QT_BEGIN_NAMESPACE
 

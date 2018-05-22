@@ -33,19 +33,19 @@
 
 #include <abstractdialoggui_p.h>
 
-#include <QtDesigner/QDesignerSettingsInterface>
-#include <QtDesigner/QDesignerFormEditorInterface>
+#include <QtDesigner/abstractsettings.h>
+#include <QtDesigner/abstractformeditor.h>
 
-#include <QtCore/QFileInfo>
-#include <QtCore/QDir>
-#include <QtCore/QCoreApplication>
-#include <QtXml/QDomDocument>
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QHeaderView>
-#include <QtWidgets/QInputDialog>
-#include <QtWidgets/QMessageBox>
-#include <QtWidgets/QPushButton>
-#include <QtGui/QStandardItemModel>
+#include <QtCore/qfileinfo.h>
+#include <QtCore/qdir.h>
+#include <QtCore/qcoreapplication.h>
+#include <QtXml/qdom.h>
+#include <QtWidgets/qmenu.h>
+#include <QtWidgets/qheaderview.h>
+#include <QtWidgets/qinputdialog.h>
+#include <QtWidgets/qmessagebox.h>
+#include <QtWidgets/qpushbutton.h>
+#include <QtGui/qstandarditemmodel.h>
 
 QT_BEGIN_NAMESPACE
 

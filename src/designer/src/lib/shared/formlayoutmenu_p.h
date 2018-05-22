@@ -41,9 +41,9 @@
 //
 
 #include "shared_global_p.h"
-#include <QtCore/QObject>
-#include <QtCore/QList>
-#include <QtCore/QPointer>
+#include <QtCore/qobject.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qpointer.h>
 
 QT_BEGIN_NAMESPACE
 

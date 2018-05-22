@@ -32,7 +32,7 @@
 #include <shared_settings_p.h>
 #include <iconloader_p.h>
 
-#include <QtDesigner/QDesignerFormEditorInterface>
+#include <QtDesigner/abstractformeditor.h>
 #include <abstractdialoggui_p.h>
 
 QT_BEGIN_NAMESPACE

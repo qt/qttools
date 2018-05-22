@@ -29,7 +29,7 @@
 #include "qdesigner_formwindowmanager_p.h"
 #include "plugindialog_p.h"
 
-#include <QtDesigner/QDesignerFormEditorInterface>
+#include <QtDesigner/abstractformeditor.h>
 
 QT_BEGIN_NAMESPACE
 

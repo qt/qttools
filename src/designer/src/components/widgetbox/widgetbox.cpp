@@ -30,18 +30,18 @@
 #include "widgetboxtreewidget.h"
 #include "widgetbox_dnditem.h"
 
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerFormWindowManagerInterface>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractformwindowmanager.h>
 
 #include <iconloader_p.h>
 #include <qdesigner_utils_p.h>
 
-#include <QtGui/QDropEvent>
-#include <QtWidgets/QVBoxLayout>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QToolBar>
-#include <QtWidgets/QLineEdit>
-#include <QtGui/QIcon>
+#include <QtGui/qevent.h>
+#include <QtWidgets/qboxlayout.h>
+#include <QtWidgets/qapplication.h>
+#include <QtWidgets/qtoolbar.h>
+#include <QtWidgets/qlineedit.h>
+#include <QtGui/qicon.h>
 
 QT_BEGIN_NAMESPACE
 

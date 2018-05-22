@@ -36,10 +36,10 @@
 #include <qdesigner_utils_p.h>
 #include <shared_enums_p.h>
 
-#include <QtCore/QUrl>
-#include <QtCore/QMap>
-#include <QtGui/QFont>
-#include <QtGui/QIcon>
+#include <QtCore/qurl.h>
+#include <QtCore/qmap.h>
+#include <QtGui/qfont.h>
+#include <QtGui/qicon.h>
 
 QT_BEGIN_NAMESPACE
 

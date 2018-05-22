@@ -32,8 +32,8 @@
 #include <qdesigner_taskmenu_p.h>
 #include <extensionfactory_p.h>
 
-#include <QtWidgets/QTableWidget>
-#include <QtCore/QPointer>
+#include <QtWidgets/qtablewidget.h>
+#include <QtCore/qpointer.h>
 
 QT_BEGIN_NAMESPACE
 

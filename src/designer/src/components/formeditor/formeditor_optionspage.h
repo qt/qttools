@@ -29,8 +29,8 @@
 #ifndef FORMEDITOR_OPTIONSPAGE_H
 #define FORMEDITOR_OPTIONSPAGE_H
 
-#include <QtDesigner/QDesignerOptionsPageInterface>
-#include <QtCore/QPointer>
+#include <QtDesigner/abstractoptionspage.h>
+#include <QtCore/qpointer.h>
 
 QT_BEGIN_NAMESPACE
 

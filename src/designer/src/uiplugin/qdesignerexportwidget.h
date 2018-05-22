@@ -29,7 +29,7 @@
 #ifndef QDESIGNEREXPORTWIDGET_H
 #define QDESIGNEREXPORTWIDGET_H
 
-#include <QtCore/QtGlobal>
+#include <QtCore/qglobal.h>
 
 QT_BEGIN_NAMESPACE
 

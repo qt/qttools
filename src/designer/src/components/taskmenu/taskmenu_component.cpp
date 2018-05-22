@@ -41,8 +41,8 @@
 #include "toolbar_taskmenu.h"
 #include "layouttaskmenu.h"
 
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QExtensionManager>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/qextensionmanager.h>
 
 QT_BEGIN_NAMESPACE
 

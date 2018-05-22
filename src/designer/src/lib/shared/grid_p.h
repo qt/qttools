@@ -42,7 +42,7 @@
 
 #include "shared_global_p.h"
 
-#include <QtCore/QVariantMap>
+#include <QtCore/qvariant.h>
 
 QT_BEGIN_NAMESPACE
 

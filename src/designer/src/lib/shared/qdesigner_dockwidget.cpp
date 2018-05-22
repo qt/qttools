@@ -29,14 +29,14 @@
 #include "qdesigner_dockwidget_p.h"
 #include "layoutinfo_p.h"
 
-#include <QtDesigner/QDesignerFormWindowInterface>
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerContainerExtension>
-#include <QtDesigner/QExtensionManager>
-#include <QtDesigner/QDesignerFormWindowCursorInterface>
+#include <QtDesigner/abstractformwindow.h>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/container.h>
+#include <QtDesigner/qextensionmanager.h>
+#include <QtDesigner/abstractformwindowcursor.h>
 
-#include <QtWidgets/QMainWindow>
-#include <QtWidgets/QLayout>
+#include <QtWidgets/qmainwindow.h>
+#include <QtWidgets/qlayout.h>
 
 QT_BEGIN_NAMESPACE
 

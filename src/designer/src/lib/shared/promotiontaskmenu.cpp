@@ -36,15 +36,15 @@
 #include "qdesigner_objectinspector_p.h"
 #include "abstractintrospection_p.h"
 
-#include <QtDesigner/QDesignerFormWindowInterface>
-#include <QtDesigner/QDesignerFormWindowCursorInterface>
-#include <QtDesigner/QDesignerLanguageExtension>
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QExtensionManager>
+#include <QtDesigner/abstractformwindow.h>
+#include <QtDesigner/abstractformwindowcursor.h>
+#include <QtDesigner/abstractlanguage.h>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/qextensionmanager.h>
 
-#include <QtWidgets/QAction>
-#include <QtWidgets/QWidget>
-#include <QtWidgets/QMenu>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qwidget.h>
+#include <QtWidgets/qmenu.h>
 #include <QtCore/qdebug.h>
 
 QT_BEGIN_NAMESPACE

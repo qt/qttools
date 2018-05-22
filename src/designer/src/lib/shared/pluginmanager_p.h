@@ -43,11 +43,11 @@
 #include "shared_global_p.h"
 #include "shared_enums_p.h"
 
-#include <QtCore/QSharedDataPointer>
-#include <QtCore/QMap>
-#include <QtCore/QPair>
-#include <QtCore/QObject>
-#include <QtCore/QStringList>
+#include <QtCore/qshareddata.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qpair.h>
+#include <QtCore/qobject.h>
+#include <QtCore/qstringlist.h>
 
 QT_BEGIN_NAMESPACE
 

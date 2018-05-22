@@ -28,10 +28,10 @@
 
 #include "qdesigner_membersheet_p.h"
 
-#include <QtDesigner/QDesignerFormEditorInterface>
+#include <QtDesigner/abstractformeditor.h>
 #include <abstractintrospection_p.h>
 
-#include <QtWidgets/QWidget>
+#include <QtWidgets/qwidget.h>
 QT_BEGIN_NAMESPACE
 
 static QList<QByteArray> stringListToByteArray(const QStringList &l)

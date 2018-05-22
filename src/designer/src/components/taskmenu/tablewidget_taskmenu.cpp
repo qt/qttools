@@ -29,16 +29,16 @@
 #include "tablewidget_taskmenu.h"
 #include "tablewidgeteditor.h"
 
-#include <QtDesigner/QDesignerFormWindowInterface>
+#include <QtDesigner/abstractformwindow.h>
 
-#include <QtWidgets/QTableWidget>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QStyle>
-#include <QtWidgets/QStyleOption>
+#include <QtWidgets/qtablewidget.h>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qlineedit.h>
+#include <QtWidgets/qstyle.h>
+#include <QtWidgets/qstyleoption.h>
 
-#include <QtCore/QEvent>
-#include <QtCore/QVariant>
+#include <QtCore/qcoreevent.h>
+#include <QtCore/qvariant.h>
 #include <QtCore/qdebug.h>
 
 QT_BEGIN_NAMESPACE

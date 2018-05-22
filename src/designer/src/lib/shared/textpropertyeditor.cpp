@@ -30,15 +30,15 @@
 #include "propertylineedit_p.h"
 #include "stylesheeteditor_p.h"
 
-#include <QtWidgets/QLineEdit>
-#include <QtGui/QRegularExpressionValidator>
-#include <QtGui/QResizeEvent>
-#include <QtWidgets/QCompleter>
-#include <QtWidgets/QAbstractItemView>
-#include <QtCore/QRegularExpression>
-#include <QtCore/QUrl>
-#include <QtCore/QFile>
-#include <QtCore/QDebug>
+#include <QtWidgets/qlineedit.h>
+#include <QtGui/qvalidator.h>
+#include <QtGui/qevent.h>
+#include <QtWidgets/qcompleter.h>
+#include <QtWidgets/qabstractitemview.h>
+#include <QtCore/qregularexpression.h>
+#include <QtCore/qurl.h>
+#include <QtCore/qfile.h>
+#include <QtCore/qdebug.h>
 
 QT_BEGIN_NAMESPACE
 

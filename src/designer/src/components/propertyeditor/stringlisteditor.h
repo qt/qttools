@@ -30,7 +30,7 @@
 #define STRINGLISTEDITOR_H
 
 #include "ui_stringlisteditor.h"
-#include <QtCore/QStringList>
+#include <QtCore/qstringlist.h>
 
 QT_BEGIN_NAMESPACE
 class QStringListModel;

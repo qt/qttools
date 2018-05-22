@@ -30,13 +30,12 @@
 #include "layoutinfo_p.h"
 
 #include <QtDesigner/abstractformwindow.h>
-#include <QtDesigner/QDesignerFormWindowInterface>
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerPropertySheetExtension>
-#include <QtDesigner/QExtensionManager>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/propertysheet.h>
+#include <QtDesigner/qextensionmanager.h>
 
-#include <QtWidgets/QLayout>
-#include <QtGui/QPainter>
+#include <QtWidgets/qlayout.h>
+#include <QtGui/qpainter.h>
 #include <QtGui/qevent.h>
 #include <QtCore/qdebug.h>
 

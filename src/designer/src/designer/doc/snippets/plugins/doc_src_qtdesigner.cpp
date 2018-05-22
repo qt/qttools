@@ -234,7 +234,7 @@ QObject *AGeneralExtensionFactory::createExtension(QObject *object,
 #include customwidgettwointerface.h
 #include customwidgetthreeinterface.h
 
-#include <QtDesigner/QtDesigner>
+#include <QtDesigner/qtdesigner.h>
 #include <QtCore/qplugin.h>
 
 class MyCustomWidgets: public QObject, public QDesignerCustomWidgetCollectionInterface

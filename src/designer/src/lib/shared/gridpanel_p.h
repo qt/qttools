@@ -42,7 +42,7 @@
 
 #include "shared_global_p.h"
 
-#include <QtWidgets/QWidget>
+#include <QtWidgets/qwidget.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -42,11 +42,11 @@
 
 #include "shared_global_p.h"
 
-#include <QtDesigner/QDesignerMetaDataBaseInterface>
+#include <QtDesigner/abstractmetadatabase.h>
 
-#include <QtCore/QHash>
-#include <QtCore/QStringList>
-#include <QtGui/QCursor>
+#include <QtCore/qhash.h>
+#include <QtCore/qstringlist.h>
+#include <QtGui/qcursor.h>
 
 QT_BEGIN_NAMESPACE
 

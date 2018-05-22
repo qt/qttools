@@ -32,11 +32,11 @@
 
 #include <QtCore/qdebug.h>
 
-#include <QtWidgets/QLayout>
-#include <QtWidgets/QMenuBar>
-#include <QtWidgets/QToolBar>
-#include <QtWidgets/QStatusBar>
-#include <QtWidgets/QDockWidget>
+#include <QtWidgets/qlayout.h>
+#include <QtWidgets/qmenubar.h>
+#include <QtWidgets/qtoolbar.h>
+#include <QtWidgets/qstatusbar.h>
+#include <QtWidgets/qdockwidget.h>
 
 QT_BEGIN_NAMESPACE
 

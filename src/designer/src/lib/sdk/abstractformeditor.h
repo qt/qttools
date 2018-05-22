@@ -31,8 +31,8 @@
 
 #include <QtDesigner/sdk_global.h>
 
-#include <QtCore/QObject>
-#include <QtCore/QPointer>
+#include <QtCore/qobject.h>
+#include <QtCore/qpointer.h>
 
 QT_BEGIN_NAMESPACE
 

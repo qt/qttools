@@ -27,8 +27,8 @@
 ****************************************************************************/
 
 #include "qdesigner.h"
-#include <QtCore/QLibraryInfo>
-#include <QtCore/QDir>
+#include <QtCore/qlibraryinfo.h>
+#include <QtCore/qdir.h>
 
 #include <stdlib.h>
 

@@ -41,7 +41,7 @@
 #define SHARED_EXTENSIONFACTORY_H
 
 #include <QtDesigner/default_extensionfactory.h>
-#include <QtDesigner/QExtensionManager>
+#include <QtDesigner/qextensionmanager.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -32,8 +32,8 @@
 #include <qdesigner_propertysheet_p.h>
 #include <extensionfactory_p.h>
 
-#include <QtWidgets/QTreeView>
-#include <QtWidgets/QTableView>
+#include <QtWidgets/qtreeview.h>
+#include <QtWidgets/qtableview.h>
 
 QT_BEGIN_NAMESPACE
 

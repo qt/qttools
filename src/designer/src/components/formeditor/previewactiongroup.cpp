@@ -31,8 +31,8 @@
 #include <deviceprofile_p.h>
 #include <shared_settings_p.h>
 
-#include <QtWidgets/QStyleFactory>
-#include <QtCore/QVariant>
+#include <QtWidgets/qstylefactory.h>
+#include <QtCore/qvariant.h>
 
 QT_BEGIN_NAMESPACE
 

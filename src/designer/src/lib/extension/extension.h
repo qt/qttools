@@ -29,8 +29,8 @@
 #ifndef EXTENSION_H
 #define EXTENSION_H
 
-#include <QtCore/QString>
-#include <QtCore/QObject>
+#include <QtCore/qstring.h>
+#include <QtCore/qobject.h>
 
 QT_BEGIN_NAMESPACE
 

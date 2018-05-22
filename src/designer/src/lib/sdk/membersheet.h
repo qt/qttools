@@ -31,8 +31,8 @@
 
 #include <QtDesigner/extension.h>
 
-#include <QtCore/QList>
-#include <QtCore/QByteArray>
+#include <QtCore/qlist.h>
+#include <QtCore/qbytearray.h>
 
 QT_BEGIN_NAMESPACE
 

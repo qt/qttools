@@ -37,19 +37,19 @@
 #include "promotiontaskmenu_p.h"
 #include "qdesigner_objectinspector_p.h"
 
-#include <QtDesigner/QDesignerFormWindowInterface>
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerWidgetFactoryInterface>
-#include <QtDesigner/QExtensionManager>
+#include <QtDesigner/abstractformwindow.h>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractwidgetfactory.h>
+#include <QtDesigner/qextensionmanager.h>
 
-#include <QtCore/QMimeData>
+#include <QtCore/qmimedata.h>
 
 #include <QtCore/qdebug.h>
 
-#include <QtWidgets/QApplication>
-#include <QtGui/QDrag>
-#include <QtWidgets/QLineEdit>
-#include <QtGui/QPainter>
+#include <QtWidgets/qapplication.h>
+#include <QtGui/qdrag.h>
+#include <QtWidgets/qlineedit.h>
+#include <QtGui/qpainter.h>
 #include <QtGui/qevent.h>
 
 Q_DECLARE_METATYPE(QAction*)

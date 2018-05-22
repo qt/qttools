@@ -29,10 +29,10 @@
 #ifndef QACTIVEXPLUGINOBJECT_H
 #define QACTIVEXPLUGINOBJECT_H
 
-#include <QtCore/QPointer>
-#include <QtCore/QMap>
-#include <QtWidgets/QWidget>
-#include <QtGui/QPixmap>
+#include <QtCore/qpointer.h>
+#include <QtCore/qmap.h>
+#include <QtWidgets/qwidget.h>
+#include <QtGui/qpixmap.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -34,28 +34,27 @@
 #include "formwindowbase_p.h"
 
 #include <abstractdialoggui_p.h>
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerResourceBrowserInterface>
-#include <QtDesigner/QDesignerLanguageExtension>
-#include <QtDesigner/QDesignerIntegrationInterface>
-#include <QtDesigner/QExtensionManager>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractresourcebrowser.h>
+#include <QtDesigner/abstractlanguage.h>
+#include <QtDesigner/abstractintegration.h>
+#include <QtDesigner/qextensionmanager.h>
 
-#include <QtWidgets/QToolButton>
-#include <QtWidgets/QComboBox>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QDialogButtonBox>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QDialog>
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QVBoxLayout>
-#include <QtGui/QImageReader>
-#include <QtWidgets/QDialogButtonBox>
-#include <QtWidgets/QVBoxLayout>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QLabel>
-#include <QtGui/QValidator>
-#include <QtCore/QDebug>
+#include <QtWidgets/qtoolbutton.h>
+#include <QtWidgets/qcombobox.h>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qdialogbuttonbox.h>
+#include <QtWidgets/qpushbutton.h>
+#include <QtWidgets/qdialog.h>
+#include <QtWidgets/qmenu.h>
+#include <QtWidgets/qapplication.h>
+#include <QtWidgets/qboxlayout.h>
+#include <QtGui/qimagereader.h>
+#include <QtWidgets/qdialogbuttonbox.h>
+#include <QtWidgets/qlineedit.h>
+#include <QtWidgets/qlabel.h>
+#include <QtGui/qvalidator.h>
+#include <QtCore/qdebug.h>
 
 
 QT_BEGIN_NAMESPACE

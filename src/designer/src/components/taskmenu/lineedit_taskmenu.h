@@ -29,8 +29,8 @@
 #ifndef LINEEDIT_TASKMENU_H
 #define LINEEDIT_TASKMENU_H
 
-#include <QtWidgets/QLineEdit>
-#include <QtCore/QPointer>
+#include <QtWidgets/qlineedit.h>
+#include <QtCore/qpointer.h>
 
 #include <qdesigner_taskmenu_p.h>
 #include <extensionfactory_p.h>

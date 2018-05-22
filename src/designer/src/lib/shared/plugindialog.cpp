@@ -31,17 +31,17 @@
 #include "pluginmanager_p.h"
 #include "iconloader_p.h"
 
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerIntegrationInterface>
-#include <QtDesigner/QDesignerWidgetDataBaseInterface>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractintegration.h>
+#include <QtDesigner/abstractwidgetdatabase.h>
 
-#include <QtUiPlugin/QDesignerCustomWidgetCollectionInterface>
+#include <QtUiPlugin/customwidget.h>
 
-#include <QtWidgets/QStyle>
-#include <QtWidgets/QHeaderView>
-#include <QtWidgets/QPushButton>
-#include <QtCore/QFileInfo>
-#include <QtCore/QPluginLoader>
+#include <QtWidgets/qstyle.h>
+#include <QtWidgets/qheaderview.h>
+#include <QtWidgets/qpushbutton.h>
+#include <QtCore/qfileinfo.h>
+#include <QtCore/qpluginloader.h>
 
 QT_BEGIN_NAMESPACE
 

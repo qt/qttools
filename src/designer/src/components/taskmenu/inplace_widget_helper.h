@@ -30,10 +30,10 @@
 #define INPLACE_WIDGETHELPER_H
 
 
-#include <QtCore/QObject>
-#include <QtCore/QPoint>
-#include <QtCore/QSize>
-#include <QtCore/QPointer>
+#include <QtCore/qobject.h>
+#include <QtCore/qpoint.h>
+#include <QtCore/qsize.h>
+#include <QtCore/qpointer.h>
 #include <qglobal.h>
 
 QT_BEGIN_NAMESPACE

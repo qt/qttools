@@ -54,15 +54,15 @@
 #include "textbuilder_p.h"
 #include "ui4_p.h"
 
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QBoxLayout>
-#include <QtWidgets/QGridLayout>
+#include <QtWidgets/qlabel.h>
+#include <QtWidgets/qboxlayout.h>
+#include <QtWidgets/qgridlayout.h>
 
-#include <QtCore/QVariant>
+#include <QtCore/qvariant.h>
 #include <QtCore/qdebug.h>
-#include <QtCore/QTextStream>
-#include <QtCore/QStringList>
-#include <QtCore/QCoreApplication>
+#include <QtCore/qtextstream.h>
+#include <QtCore/qstringlist.h>
+#include <QtCore/qcoreapplication.h>
 
 #include <limits.h>
 

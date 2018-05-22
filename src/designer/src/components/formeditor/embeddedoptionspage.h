@@ -29,9 +29,9 @@
 #ifndef EMBEDDEDOPTIONSPAGE_H
 #define EMBEDDEDOPTIONSPAGE_H
 
-#include <QtDesigner/QDesignerOptionsPageInterface>
-#include <QtCore/QPointer>
-#include <QtWidgets/QWidget>
+#include <QtDesigner/abstractoptionspage.h>
+#include <QtCore/qpointer.h>
+#include <QtWidgets/qwidget.h>
 
 QT_BEGIN_NAMESPACE
 

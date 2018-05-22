@@ -43,7 +43,7 @@
 #include "shared_global_p.h"
 #include "qdesigner_propertysheet_p.h"
 #include "qdesigner_utils_p.h"
-#include <QtGui/QPalette>
+#include <QtGui/qpalette.h>
 
 QT_BEGIN_NAMESPACE
 

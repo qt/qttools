@@ -28,11 +28,11 @@
 
 #include "qdesigner_qsettings_p.h"
 
-#include <QtCore/QSettings>
-#include <QtCore/QCoreApplication>
-#include <QtCore/QTextStream>
-#include <QtCore/QString>
-#include <QtCore/QDebug>
+#include <QtCore/qsettings.h>
+#include <QtCore/qcoreapplication.h>
+#include <QtCore/qtextstream.h>
+#include <QtCore/qstring.h>
+#include <QtCore/qdebug.h>
 
 QDesignerQSettings::QDesignerQSettings() :
     m_settings(qApp->organizationName(), settingsApplicationName())

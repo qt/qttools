@@ -31,9 +31,9 @@
 #include "designerpropertymanager.h"
 #include "qtpropertybrowserutils_p.h"
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QVariant>
-#include <QtCore/QString>
+#include <QtCore/qcoreapplication.h>
+#include <QtCore/qvariant.h>
+#include <QtCore/qstring.h>
 
 static const char *brushStyles[] = {
 QT_TRANSLATE_NOOP("BrushPropertyManager", "No brush"),

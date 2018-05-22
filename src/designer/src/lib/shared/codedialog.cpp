@@ -32,24 +32,24 @@
 
 #include <texteditfindwidget.h>
 
-#include <QtWidgets/QAction>
-#include <QtWidgets/QApplication>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qapplication.h>
 #ifndef QT_NO_CLIPBOARD
-#include <QtGui/QClipboard>
+#include <QtGui/qclipboard.h>
 #endif
-#include <QtWidgets/QDialogButtonBox>
-#include <QtWidgets/QFileDialog>
-#include <QtGui/QIcon>
-#include <QtGui/QKeyEvent>
-#include <QtWidgets/QMessageBox>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QTextEdit>
-#include <QtWidgets/QToolBar>
-#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/qdialogbuttonbox.h>
+#include <QtWidgets/qfiledialog.h>
+#include <QtGui/qicon.h>
+#include <QtGui/qevent.h>
+#include <QtWidgets/qmessagebox.h>
+#include <QtWidgets/qpushbutton.h>
+#include <QtWidgets/qtextedit.h>
+#include <QtWidgets/qtoolbar.h>
+#include <QtWidgets/qboxlayout.h>
 
-#include <QtCore/QDebug>
-#include <QtCore/QDir>
-#include <QtCore/QTemporaryFile>
+#include <QtCore/qdebug.h>
+#include <QtCore/qdir.h>
+#include <QtCore/qtemporaryfile.h>
 
 QT_BEGIN_NAMESPACE
 

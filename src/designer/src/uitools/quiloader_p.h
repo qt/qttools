@@ -62,8 +62,8 @@
 // We mean it.
 //
 
-#include <QtCore/QByteArray>
-#include <QtCore/QMetaType>
+#include <QtCore/qbytearray.h>
+#include <QtCore/qmetatype.h>
 
 QT_FORWARD_DECLARE_CLASS(QDataStream)
 

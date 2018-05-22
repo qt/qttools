@@ -53,13 +53,13 @@
 
 #include "uilib_global.h"
 
-#include <QtCore/QList>
-#include <QtCore/QHash>
-#include <QtCore/QDir>
-#include <QtCore/QScopedPointer>
+#include <QtCore/qlist.h>
+#include <QtCore/qhash.h>
+#include <QtCore/qdir.h>
+#include <QtCore/qscopedpointer.h>
 
-#include <QtWidgets/QSizePolicy>
-#include <QtGui/QPalette>
+#include <QtWidgets/qsizepolicy.h>
+#include <QtGui/qpalette.h>
 
 QT_BEGIN_NAMESPACE
 #if 0

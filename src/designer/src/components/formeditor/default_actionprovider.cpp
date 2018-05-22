@@ -30,10 +30,10 @@
 #include "invisible_widget_p.h"
 #include "qdesigner_toolbar_p.h"
 
-#include <QtWidgets/QAction>
-#include <QtWidgets/QApplication>
-#include <QtCore/QRect>
-#include <QtCore/QDebug>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qapplication.h>
+#include <QtCore/qrect.h>
+#include <QtCore/qdebug.h>
 
 QT_BEGIN_NAMESPACE
 

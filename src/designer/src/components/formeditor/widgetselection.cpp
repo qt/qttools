@@ -31,8 +31,8 @@
 #include "formwindowmanager.h"
 
 // sdk
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QExtensionManager>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/qextensionmanager.h>
 
 // shared
 #include <qdesigner_command_p.h>
@@ -42,16 +42,16 @@
 #include <formwindowbase_p.h>
 #include <grid_p.h>
 
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QWidget>
-#include <QtGui/QMouseEvent>
-#include <QtWidgets/QStylePainter>
-#include <QtWidgets/QGridLayout>
-#include <QtWidgets/QFormLayout>
-#include <QtWidgets/QStyleOptionToolButton>
-#include <QtWidgets/QApplication>
+#include <QtWidgets/qmenu.h>
+#include <QtWidgets/qwidget.h>
+#include <QtGui/qevent.h>
+#include <QtWidgets/qstylepainter.h>
+#include <QtWidgets/qgridlayout.h>
+#include <QtWidgets/qformlayout.h>
+#include <QtWidgets/qstyleoption.h>
+#include <QtWidgets/qapplication.h>
 
-#include <QtCore/QVariant>
+#include <QtCore/qvariant.h>
 #include <QtCore/qdebug.h>
 
 #include <algorithm>

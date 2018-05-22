@@ -31,14 +31,14 @@
 #include "formwindow.h"
 
 // sdk
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerTaskMenuExtension>
-#include <QtDesigner/QExtensionManager>
-#include <QtDesigner/QDesignerFormWindowCursorInterface>
-#include <QtDesigner/QDesignerFormWindowManagerInterface>
-#include <QtDesigner/QDesignerContainerExtension>
-#include <QtDesigner/QDesignerMetaDataBaseInterface>
-#include <QtDesigner/QDesignerPropertyEditorInterface>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/taskmenu.h>
+#include <QtDesigner/qextensionmanager.h>
+#include <QtDesigner/abstractformwindowcursor.h>
+#include <QtDesigner/abstractformwindowmanager.h>
+#include <QtDesigner/container.h>
+#include <QtDesigner/abstractmetadatabase.h>
+#include <QtDesigner/abstractpropertyeditor.h>
 
 // shared
 #include <qdesigner_utils_p.h>
@@ -50,19 +50,19 @@
 #include <grid_p.h>
 
 // Qt
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QHeaderView>
-#include <QtWidgets/QScrollBar>
-#include <QtGui/QPainter>
-#include <QtWidgets/QVBoxLayout>
-#include <QtCore/QItemSelectionModel>
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QTreeView>
-#include <QtWidgets/QStyledItemDelegate>
+#include <QtWidgets/qapplication.h>
+#include <QtWidgets/qheaderview.h>
+#include <QtWidgets/qscrollbar.h>
+#include <QtGui/qpainter.h>
+#include <QtWidgets/qboxlayout.h>
+#include <QtCore/qitemselectionmodel.h>
+#include <QtWidgets/qmenu.h>
+#include <QtWidgets/qtreeview.h>
+#include <QtWidgets/qstyleditemdelegate.h>
 #include <QtGui/qevent.h>
 
-#include <QtCore/QVector>
-#include <QtCore/QDebug>
+#include <QtCore/qvector.h>
+#include <QtCore/qdebug.h>
 
 QT_BEGIN_NAMESPACE
 

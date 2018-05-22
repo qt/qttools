@@ -32,7 +32,7 @@
 #include <qdesigner_propertysheet_p.h>
 #include <extensionfactory_p.h>
 
-#include <QtWidgets/QLayout>
+#include <QtWidgets/qlayout.h>
 
 QT_BEGIN_NAMESPACE
 

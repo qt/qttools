@@ -28,18 +28,18 @@
 
 #include "zoomwidget_p.h"
 
-#include <QtWidgets/QGraphicsScene>
-#include <QtWidgets/QGraphicsProxyWidget>
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QActionGroup>
-#include <QtGui/QContextMenuEvent>
-#include <QtWidgets/QScrollBar>
+#include <QtWidgets/qgraphicsscene.h>
+#include <QtWidgets/qgraphicsproxywidget.h>
+#include <QtWidgets/qmenu.h>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qactiongroup.h>
+#include <QtGui/qevent.h>
+#include <QtWidgets/qscrollbar.h>
 
-#include <QtCore/QTextStream>
+#include <QtCore/qtextstream.h>
 #include <QtCore/qmath.h>
-#include <QtCore/QDebug>
-#include <QtCore/QList>
+#include <QtCore/qdebug.h>
+#include <QtCore/qlist.h>
 
 QT_BEGIN_NAMESPACE
 

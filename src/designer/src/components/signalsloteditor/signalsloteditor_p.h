@@ -40,11 +40,11 @@
 // We mean it.
 //
 
-#include <QtCore/QString>
-#include <QtCore/QStringList>
-#include <QtCore/QList>
-#include <QtCore/QPointer>
-#include <QtCore/QAbstractItemModel>
+#include <QtCore/qstring.h>
+#include <QtCore/qstringlist.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qpointer.h>
+#include <QtCore/qabstractitemmodel.h>
 
 #include <connectionedit_p.h>
 

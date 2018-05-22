@@ -39,28 +39,28 @@
 #include "qdesigner_utils_p.h"
 #include "spacer_widget_p.h"
 
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerContainerExtension>
-#include <QtDesigner/QExtensionManager>
-#include <QtDesigner/QDesignerTaskMenuExtension>
-#include <QtDesigner/QDesignerIntegrationInterface>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/container.h>
+#include <QtDesigner/qextensionmanager.h>
+#include <QtDesigner/taskmenu.h>
+#include <QtDesigner/abstractintegration.h>
 
 #include <QtCore/qdebug.h>
-#include <QtCore/QList>
-#include <QtCore/QSet>
-#include <QtCore/QTimer>
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QListWidget>
-#include <QtWidgets/QTreeWidget>
-#include <QtWidgets/QTableWidget>
-#include <QtWidgets/QComboBox>
-#include <QtWidgets/QTabWidget>
-#include <QtWidgets/QToolBox>
-#include <QtWidgets/QToolBar>
-#include <QtWidgets/QStatusBar>
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QLabel>
+#include <QtCore/qlist.h>
+#include <QtCore/qset.h>
+#include <QtCore/qtimer.h>
+#include <QtWidgets/qmenu.h>
+#include <QtWidgets/qlistwidget.h>
+#include <QtWidgets/qtreewidget.h>
+#include <QtWidgets/qtablewidget.h>
+#include <QtWidgets/qcombobox.h>
+#include <QtWidgets/qtabwidget.h>
+#include <QtWidgets/qtoolbox.h>
+#include <QtWidgets/qtoolbar.h>
+#include <QtWidgets/qstatusbar.h>
+#include <QtWidgets/qmenu.h>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qlabel.h>
 
 QT_BEGIN_NAMESPACE
 

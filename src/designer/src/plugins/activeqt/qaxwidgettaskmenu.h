@@ -29,7 +29,7 @@
 #ifndef QACTIVEXTASKMENU_H
 #define QACTIVEXTASKMENU_H
 
-#include <QtDesigner/QDesignerTaskMenuExtension>
+#include <QtDesigner/taskmenu.h>
 #include <QtDesigner/private/extensionfactory_p.h>
 
 QT_BEGIN_NAMESPACE

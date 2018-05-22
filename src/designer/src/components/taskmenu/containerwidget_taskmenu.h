@@ -34,7 +34,7 @@
 
 #include <extensionfactory_p.h>
 
-#include <QtCore/QPointer>
+#include <QtCore/qpointer.h>
 
 QT_BEGIN_NAMESPACE
 

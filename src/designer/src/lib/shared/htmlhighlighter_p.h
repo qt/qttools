@@ -40,7 +40,7 @@
 #ifndef HTMLHIGHLIGHTER_H
 #define HTMLHIGHLIGHTER_H
 
-#include <QtGui/QSyntaxHighlighter>
+#include <QtGui/qsyntaxhighlighter.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -29,12 +29,12 @@
 #include "promotionmodel_p.h"
 #include "widgetdatabase_p.h"
 
-#include <QtDesigner/QDesignerWidgetDataBaseInterface>
-#include <QtDesigner/QDesignerPromotionInterface>
-#include <QtDesigner/QDesignerFormEditorInterface>
+#include <QtDesigner/abstractwidgetdatabase.h>
+#include <QtDesigner/abstractpromotioninterface.h>
+#include <QtDesigner/abstractformeditor.h>
 
-#include <QtGui/QStandardItem>
-#include <QtCore/QCoreApplication>
+#include <QtGui/qstandarditemmodel.h>
+#include <QtCore/qcoreapplication.h>
 
 QT_BEGIN_NAMESPACE
 

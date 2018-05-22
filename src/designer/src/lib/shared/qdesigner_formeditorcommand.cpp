@@ -28,7 +28,7 @@
 
 
 #include "qdesigner_formeditorcommand_p.h"
-#include <QtDesigner/QDesignerFormEditorInterface>
+#include <QtDesigner/abstractformeditor.h>
 
 QT_BEGIN_NAMESPACE
 

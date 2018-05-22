@@ -39,34 +39,34 @@
 #include "formwindowbase_p.h"
 #include "qdesigner_taskmenu_p.h"
 
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerPropertyEditorInterface>
-#include <QtDesigner/QDesignerPropertySheetExtension>
-#include <QtDesigner/QExtensionManager>
-#include <QtDesigner/QDesignerMetaDataBaseInterface>
-#include <QtDesigner/QDesignerSettingsInterface>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractpropertyeditor.h>
+#include <QtDesigner/propertysheet.h>
+#include <QtDesigner/qextensionmanager.h>
+#include <QtDesigner/abstractmetadatabase.h>
+#include <QtDesigner/abstractsettings.h>
 
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QToolBar>
-#include <QtWidgets/QSplitter>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QApplication>
+#include <QtWidgets/qmenu.h>
+#include <QtWidgets/qtoolbar.h>
+#include <QtWidgets/qsplitter.h>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qapplication.h>
 #ifndef QT_NO_CLIPBOARD
-#include <QtGui/QClipboard>
+#include <QtGui/qclipboard.h>
 #endif
-#include <QtWidgets/QItemDelegate>
-#include <QtGui/QPainter>
-#include <QtWidgets/QVBoxLayout>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QToolButton>
-#include <QtGui/QContextMenuEvent>
-#include <QtCore/QItemSelection>
+#include <QtWidgets/qitemdelegate.h>
+#include <QtGui/qpainter.h>
+#include <QtWidgets/qboxlayout.h>
+#include <QtWidgets/qlineedit.h>
+#include <QtWidgets/qlabel.h>
+#include <QtWidgets/qpushbutton.h>
+#include <QtWidgets/qtoolbutton.h>
+#include <QtGui/qevent.h>
+#include <QtCore/qitemselectionmodel.h>
 
-#include <QtCore/QRegularExpression>
-#include <QtCore/QDebug>
-#include <QtCore/QBuffer>
+#include <QtCore/qregularexpression.h>
+#include <QtCore/qdebug.h>
+#include <QtCore/qbuffer.h>
 
 Q_DECLARE_METATYPE(QAction*)
 

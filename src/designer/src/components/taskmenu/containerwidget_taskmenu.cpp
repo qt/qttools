@@ -28,25 +28,25 @@
 
 #include "containerwidget_taskmenu.h"
 
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerFormWindowInterface>
-#include <QtDesigner/QExtensionManager>
-#include <QtDesigner/QDesignerContainerExtension>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractformwindow.h>
+#include <QtDesigner/qextensionmanager.h>
+#include <QtDesigner/container.h>
 
 #include <qdesigner_command_p.h>
 #include <qdesigner_dockwidget_p.h>
 #include <promotiontaskmenu_p.h>
 #include <widgetdatabase_p.h>
 
-#include <QtWidgets/QAction>
-#include <QtWidgets/QMainWindow>
-#include <QtWidgets/QToolBox>
-#include <QtWidgets/QStackedWidget>
-#include <QtWidgets/QTabWidget>
-#include <QtWidgets/QScrollArea>
-#include <QtWidgets/QMdiArea>
-#include <QtWidgets/QWizard>
-#include <QtWidgets/QMenu>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qmainwindow.h>
+#include <QtWidgets/qtoolbox.h>
+#include <QtWidgets/qstackedwidget.h>
+#include <QtWidgets/qtabwidget.h>
+#include <QtWidgets/qscrollarea.h>
+#include <QtWidgets/qmdiarea.h>
+#include <QtWidgets/qwizard.h>
+#include <QtWidgets/qmenu.h>
 
 #include <QtCore/qdebug.h>
 

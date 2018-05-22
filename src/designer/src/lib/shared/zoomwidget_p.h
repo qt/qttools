@@ -42,9 +42,9 @@
 
 #include "shared_global_p.h"
 
-#include <QtWidgets/QGraphicsView>
-#include <QtWidgets/QGraphicsProxyWidget>
-#include <QtCore/QVector>
+#include <QtWidgets/qgraphicsview.h>
+#include <QtWidgets/qgraphicsproxywidget.h>
+#include <QtCore/qvector.h>
 
 QT_BEGIN_NAMESPACE
 

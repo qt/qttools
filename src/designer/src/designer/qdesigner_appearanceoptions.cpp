@@ -32,9 +32,9 @@
 #include "qdesigner_settings.h"
 #include "qdesigner_toolwindow.h"
 
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtCore/QTimer>
-#include <QtCore/QDebug>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtCore/qtimer.h>
+#include <QtCore/qdebug.h>
 
 QT_BEGIN_NAMESPACE
 

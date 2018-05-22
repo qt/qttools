@@ -45,7 +45,7 @@
 #include "deviceprofile_p.h"
 
 #include <QtCore/qglobal.h>
-#include <QtCore/QList>
+#include <QtCore/qlist.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -29,13 +29,12 @@
 #ifndef QWIZARD_CONTAINER_H
 #define QWIZARD_CONTAINER_H
 
-#include <QtDesigner/QDesignerContainerExtension>
+#include <QtDesigner/container.h>
 
 #include <qdesigner_propertysheet_p.h>
 #include <extensionfactory_p.h>
 
-#include <QtWidgets/QWizard>
-#include <QtWidgets/QWizardPage>
+#include <QtWidgets/qwizard.h>
 
 QT_BEGIN_NAMESPACE
 

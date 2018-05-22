@@ -32,8 +32,8 @@
 #include "signalsloteditor_global.h"
 #include "signalsloteditor.h"
 
-#include <QtCore/QPointer>
-#include <QtDesigner/QDesignerFormWindowToolInterface>
+#include <QtCore/qpointer.h>
+#include <QtDesigner/abstractformwindowtool.h>
 
 QT_BEGIN_NAMESPACE
 

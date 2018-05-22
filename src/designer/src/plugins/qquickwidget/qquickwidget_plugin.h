@@ -29,8 +29,8 @@
 #ifndef QQUICKWIDGET_PLUGIN_H
 #define QQUICKWIDGET_PLUGIN_H
 
-#include <QtQuick/QQuickWindow>
-#include <QtUiPlugin/QDesignerCustomWidgetInterface>
+#include <QtQuick/qquickwindow.h>
+#include <QtUiPlugin/customwidget.h>
 
 QT_BEGIN_NAMESPACE
 

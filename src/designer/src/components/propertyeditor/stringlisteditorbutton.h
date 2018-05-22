@@ -31,8 +31,8 @@
 
 #include "propertyeditor_global.h"
 
-#include <QtCore/QStringList>
-#include <QtWidgets/QToolButton>
+#include <QtCore/qstringlist.h>
+#include <QtWidgets/qtoolbutton.h>
 
 QT_BEGIN_NAMESPACE
 

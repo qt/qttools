@@ -28,5 +28,5 @@
 
 #if defined __cplusplus
 #include <QtDesigner/QtDesigner>
-#include <QtDesigner/QExtensionManager>
+#include <QtDesigner/qextensionmanager.h>
 #endif

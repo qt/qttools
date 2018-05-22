@@ -34,23 +34,23 @@
 #include "qtgradientutils.h"
 #include "qdesigner_utils_p.h"
 
-#include <QtDesigner/QDesignerFormWindowInterface>
-#include <QtDesigner/QDesignerFormWindowCursorInterface>
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerPropertySheetExtension>
-#include <QtDesigner/QDesignerIntegrationInterface>
-#include <QtDesigner/QDesignerSettingsInterface>
-#include <QtDesigner/QExtensionManager>
+#include <QtDesigner/abstractformwindow.h>
+#include <QtDesigner/abstractformwindowcursor.h>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/propertysheet.h>
+#include <QtDesigner/abstractintegration.h>
+#include <QtDesigner/abstractsettings.h>
+#include <QtDesigner/qextensionmanager.h>
 
-#include <QtWidgets/QAction>
-#include <QtWidgets/QColorDialog>
-#include <QtWidgets/QDialogButtonBox>
-#include <QtWidgets/QFontDialog>
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QPushButton>
-#include <QtGui/QTextDocument>
-#include <QtWidgets/QToolBar>
-#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qcolordialog.h>
+#include <QtWidgets/qdialogbuttonbox.h>
+#include <QtWidgets/qfontdialog.h>
+#include <QtWidgets/qmenu.h>
+#include <QtWidgets/qpushbutton.h>
+#include <QtGui/qtextdocument.h>
+#include <QtWidgets/qtoolbar.h>
+#include <QtWidgets/qboxlayout.h>
 #include <private/qcssparser_p.h>
 
 QT_BEGIN_NAMESPACE

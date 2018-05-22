@@ -35,33 +35,33 @@
 #include <spacer_widget_p.h>
 #include <qlayout_widget_p.h>
 
-#include <QtDesigner/QDesignerFormWindowInterface>
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerFormWindowManagerInterface>
-#include <QtDesigner/QExtensionManager>
-#include <QtDesigner/QDesignerIntegrationInterface>
-#include <QtDesigner/QDesignerContainerExtension>
-#include <QtDesigner/QDesignerMetaDataBaseInterface>
-#include <QtDesigner/QDesignerFormWindowCursorInterface>
+#include <QtDesigner/abstractformwindow.h>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractformwindowmanager.h>
+#include <QtDesigner/qextensionmanager.h>
+#include <QtDesigner/abstractintegration.h>
+#include <QtDesigner/container.h>
+#include <QtDesigner/abstractmetadatabase.h>
+#include <QtDesigner/abstractformwindowcursor.h>
 #include <abstractdialoggui_p.h>
 
-#include <QtCore/QAbstractItemModel>
-#include <QtCore/QDebug>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QButtonGroup>
-#include <QtWidgets/QMenu>
-#include <QtCore/QSortFilterProxyModel>
-#include <QtGui/QStandardItemModel>
-#include <QtWidgets/QComboBox>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QItemDelegate>
-#include <QtWidgets/QItemEditorFactory>
-#include <QtWidgets/QTreeView>
-#include <QtWidgets/QHeaderView>
-#include <QtWidgets/QVBoxLayout>
-#include <QtWidgets/QToolButton>
-#include <QtWidgets/QButtonGroup>
-#include <QtWidgets/QToolBar>
+#include <QtCore/qabstractitemmodel.h>
+#include <QtCore/qdebug.h>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qbuttongroup.h>
+#include <QtWidgets/qmenu.h>
+#include <QtCore/qsortfilterproxymodel.h>
+#include <QtGui/qstandarditemmodel.h>
+#include <QtWidgets/qcombobox.h>
+#include <QtWidgets/qapplication.h>
+#include <QtWidgets/qitemdelegate.h>
+#include <QtWidgets/qitemeditorfactory.h>
+#include <QtWidgets/qtreeview.h>
+#include <QtWidgets/qheaderview.h>
+#include <QtWidgets/qboxlayout.h>
+#include <QtWidgets/qtoolbutton.h>
+#include <QtWidgets/qbuttongroup.h>
+#include <QtWidgets/qtoolbar.h>
 
 QT_BEGIN_NAMESPACE
 

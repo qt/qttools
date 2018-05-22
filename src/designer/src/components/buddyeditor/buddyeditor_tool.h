@@ -31,9 +31,9 @@
 
 #include "buddyeditor_global.h"
 
-#include <QtCore/QPointer>
+#include <QtCore/qpointer.h>
 
-#include <QtDesigner/QDesignerFormWindowToolInterface>
+#include <QtDesigner/abstractformwindowtool.h>
 
 QT_BEGIN_NAMESPACE
 

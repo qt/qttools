@@ -50,12 +50,12 @@
 
 #include "resourcebuilder_p.h"
 #include "ui4_p.h"
-#include <QtCore/QVariant>
-#include <QtCore/QFileInfo>
-#include <QtCore/QDir>
-#include <QtCore/QDebug>
-#include <QtGui/QPixmap>
-#include <QtGui/QIcon>
+#include <QtCore/qvariant.h>
+#include <QtCore/qfileinfo.h>
+#include <QtCore/qdir.h>
+#include <QtCore/qdebug.h>
+#include <QtGui/qpixmap.h>
+#include <QtGui/qicon.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -42,8 +42,8 @@
 
 #include "shared_global_p.h"
 
-#include <QtWidgets/QGroupBox>
-#include <QtCore/QSharedDataPointer>
+#include <QtWidgets/qgroupbox.h>
+#include <QtCore/qshareddata.h>
 
 QT_BEGIN_NAMESPACE
 

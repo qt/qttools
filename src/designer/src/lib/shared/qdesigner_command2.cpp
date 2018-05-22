@@ -33,11 +33,11 @@
 #include "widgetfactory_p.h"
 #include "qlayout_widget_p.h"
 
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerMetaDataBaseInterface>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractmetadatabase.h>
 
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QLayout>
+#include <QtWidgets/qapplication.h>
+#include <QtWidgets/qlayout.h>
 
 QT_BEGIN_NAMESPACE
 

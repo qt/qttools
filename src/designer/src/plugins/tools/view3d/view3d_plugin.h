@@ -31,10 +31,10 @@
 
 #include "view3d_global.h"
 
-#include <QtCore/QList>
-#include <QtCore/QHash>
-#include <QtCore/QPointer>
-#include <QtDesigner/QDesignerFormEditorPluginInterface>
+#include <QtCore/qlist.h>
+#include <QtCore/qhash.h>
+#include <QtCore/qpointer.h>
+#include <QtDesigner/qdesignerformeditorplugininterface.h>
 
 QT_BEGIN_NAMESPACE
 

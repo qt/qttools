@@ -47,49 +47,49 @@
 #include <qdesigner_formwindowmanager_p.h>
 
 // sdk
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerFormWindowInterface>
-#include <QtDesigner/QDesignerIntegrationInterface>
-#include <QtDesigner/QDesignerLanguageExtension>
-#include <QtDesigner/QDesignerMetaDataBaseInterface>
-#include <QtDesigner/QDesignerFormWindowManagerInterface>
-#include <QtDesigner/QDesignerFormWindowCursorInterface>
-#include <QtDesigner/QDesignerFormEditorPluginInterface>
-#include <QtDesigner/QExtensionManager>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractformwindow.h>
+#include <QtDesigner/abstractintegration.h>
+#include <QtDesigner/abstractlanguage.h>
+#include <QtDesigner/abstractmetadatabase.h>
+#include <QtDesigner/abstractformwindowmanager.h>
+#include <QtDesigner/abstractformwindowcursor.h>
+#include <QtDesigner/abstractformeditorplugin.h>
+#include <QtDesigner/qextensionmanager.h>
 
 #include <QtDesigner/private/shared_settings_p.h>
 #include <QtDesigner/private/formwindowbase_p.h>
 
-#include <QtWidgets/QAction>
-#include <QtWidgets/QActionGroup>
-#include <QtWidgets/QStyleFactory>
-#include <QtGui/QCloseEvent>
-#include <QtWidgets/QFileDialog>
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QMessageBox>
-#include <QtWidgets/QPushButton>
-#include <QtGui/QIcon>
-#include <QtGui/QImage>
-#include <QtGui/QPixmap>
-#include <QtWidgets/QMdiSubWindow>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qactiongroup.h>
+#include <QtWidgets/qstylefactory.h>
+#include <QtWidgets/qfiledialog.h>
+#include <QtWidgets/qmenu.h>
+#include <QtWidgets/qmessagebox.h>
+#include <QtWidgets/qmdisubwindow.h>
+#include <QtWidgets/qpushbutton.h>
+#include <QtGui/qevent.h>
+#include <QtGui/qicon.h>
+#include <QtGui/qimage.h>
+#include <QtGui/qpixmap.h>
 #ifndef QT_NO_PRINTER
-#include <QtPrintSupport/QPrintDialog>
+#include <QtPrintSupport/qprintdialog.h>
 #endif
-#include <QtGui/QPainter>
-#include <QtGui/QTransform>
-#include <QtGui/QCursor>
-#include <QtCore/QSizeF>
+#include <QtGui/qpainter.h>
+#include <QtGui/qtransform.h>
+#include <QtGui/qcursor.h>
+#include <QtCore/qsize.h>
 
-#include <QtCore/QLibraryInfo>
-#include <QtCore/QBuffer>
-#include <QtCore/QPluginLoader>
+#include <QtCore/qlibraryinfo.h>
+#include <QtCore/qbuffer.h>
+#include <QtCore/qpluginloader.h>
 #include <QtCore/qdebug.h>
-#include <QtCore/QTimer>
-#include <QtCore/QMetaObject>
-#include <QtCore/QFileInfo>
-#include <QtWidgets/QStatusBar>
-#include <QtWidgets/QDesktopWidget>
-#include <QtXml/QDomDocument>
+#include <QtCore/qtimer.h>
+#include <QtCore/qmetaobject.h>
+#include <QtCore/qfileinfo.h>
+#include <QtWidgets/qstatusbar.h>
+#include <QtWidgets/qdesktopwidget.h>
+#include <QtXml/qdom.h>
 
 QT_BEGIN_NAMESPACE
 

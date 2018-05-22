@@ -40,7 +40,7 @@
 #ifndef PREVIEWACTIONGROUP_H
 #define PREVIEWACTIONGROUP_H
 
-#include <QtWidgets/QActionGroup>
+#include <QtWidgets/qactiongroup.h>
 
 QT_BEGIN_NAMESPACE
 

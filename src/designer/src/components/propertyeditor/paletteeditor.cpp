@@ -31,14 +31,14 @@
 #include <iconloader_p.h>
 #include <qtcolorbutton.h>
 
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerFormWindowManagerInterface>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractformwindowmanager.h>
 
-#include <QtCore/QMetaProperty>
-#include <QtGui/QPainter>
-#include <QtWidgets/QToolButton>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QHeaderView>
+#include <QtCore/qmetaobject.h>
+#include <QtGui/qpainter.h>
+#include <QtWidgets/qtoolbutton.h>
+#include <QtWidgets/qlabel.h>
+#include <QtWidgets/qheaderview.h>
 
 QT_BEGIN_NAMESPACE
 

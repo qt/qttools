@@ -31,10 +31,10 @@
 
 #include <QtDesigner/sdk_global.h>
 
-#include <QtCore/QSharedDataPointer>
-#include <QtCore/QMetaType>
-#include <QtWidgets/QWidget>
-#include <QtGui/QIcon>
+#include <QtCore/qshareddata.h>
+#include <QtCore/qmetatype.h>
+#include <QtWidgets/qwidget.h>
+#include <QtGui/qicon.h>
 
 QT_BEGIN_NAMESPACE
 

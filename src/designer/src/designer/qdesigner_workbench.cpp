@@ -35,38 +35,38 @@
 #include "qdesigner_formwindow.h"
 #include "appfontdialog.h"
 
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerFormWindowInterface>
-#include <QtDesigner/QDesignerFormWindowManagerInterface>
-#include <QtDesigner/QDesignerFormEditorPluginInterface>
-#include <QtDesigner/QDesignerWidgetBoxInterface>
-#include <QtDesigner/QDesignerMetaDataBaseInterface>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractformwindow.h>
+#include <QtDesigner/abstractformwindowmanager.h>
+#include <QtDesigner/abstractformeditorplugin.h>
+#include <QtDesigner/abstractwidgetbox.h>
+#include <QtDesigner/abstractmetadatabase.h>
 
 #include <QtDesigner/QDesignerComponents>
-#include <QtDesigner/QDesignerIntegrationInterface>
+#include <QtDesigner/abstractintegration.h>
 #include <QtDesigner/private/pluginmanager_p.h>
 #include <QtDesigner/private/formwindowbase_p.h>
 #include <QtDesigner/private/actioneditor_p.h>
 
-#include <QtCore/QDir>
-#include <QtCore/QFile>
-#include <QtCore/QUrl>
-#include <QtCore/QTimer>
-#include <QtCore/QPluginLoader>
+#include <QtCore/qdir.h>
+#include <QtCore/qfile.h>
+#include <QtCore/qurl.h>
+#include <QtCore/qtimer.h>
+#include <QtCore/qpluginloader.h>
 #include <QtCore/qdebug.h>
 
-#include <QtWidgets/QActionGroup>
-#include <QtGui/QCloseEvent>
-#include <QtWidgets/QDesktopWidget>
-#include <QtWidgets/QDockWidget>
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QMenuBar>
-#include <QtWidgets/QMessageBox>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QToolBar>
-#include <QtWidgets/QMdiArea>
-#include <QtWidgets/QMdiSubWindow>
-#include <QtWidgets/QLayout>
+#include <QtWidgets/qactiongroup.h>
+#include <QtGui/qevent.h>
+#include <QtWidgets/qdesktopwidget.h>
+#include <QtWidgets/qdockwidget.h>
+#include <QtWidgets/qmenu.h>
+#include <QtWidgets/qmenubar.h>
+#include <QtWidgets/qmessagebox.h>
+#include <QtWidgets/qpushbutton.h>
+#include <QtWidgets/qtoolbar.h>
+#include <QtWidgets/qmdiarea.h>
+#include <QtWidgets/qmdisubwindow.h>
+#include <QtWidgets/qlayout.h>
 
 QT_BEGIN_NAMESPACE
 

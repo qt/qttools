@@ -30,10 +30,10 @@
 #include "formwindowbase_p.h"
 #include "grid_p.h"
 
-#include <QtDesigner/QDesignerFormWindowInterface>
-#include <QtGui/QPainter>
-#include <QtWidgets/QStyle>
-#include <QtWidgets/QStyleOption>
+#include <QtDesigner/abstractformwindow.h>
+#include <QtGui/qpainter.h>
+#include <QtWidgets/qstyle.h>
+#include <QtWidgets/qstyleoption.h>
 #include <QtGui/qevent.h>
 
 QT_BEGIN_NAMESPACE

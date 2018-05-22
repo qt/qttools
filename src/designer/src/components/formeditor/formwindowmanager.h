@@ -33,10 +33,10 @@
 
 #include <QtDesigner/private/qdesigner_formwindowmanager_p.h>
 
-#include <QtCore/QObject>
-#include <QtCore/QList>
-#include <QtCore/QPointer>
-#include <QtCore/QMap>
+#include <QtCore/qobject.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qpointer.h>
+#include <QtCore/qmap.h>
 
 QT_BEGIN_NAMESPACE
 

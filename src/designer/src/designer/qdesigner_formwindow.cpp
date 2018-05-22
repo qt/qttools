@@ -31,27 +31,25 @@
 #include "formwindowbase_p.h"
 
 // sdk
-#include <QtDesigner/QDesignerFormWindowInterface>
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerPropertySheetExtension>
-#include <QtDesigner/QDesignerPropertyEditorInterface>
-#include <QtDesigner/QDesignerFormWindowManagerInterface>
-#include <QtDesigner/QDesignerTaskMenuExtension>
-#include <QtDesigner/QExtensionManager>
+#include <QtDesigner/abstractformwindow.h>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/propertysheet.h>
+#include <QtDesigner/abstractpropertyeditor.h>
+#include <QtDesigner/abstractformwindowmanager.h>
+#include <QtDesigner/taskmenu.h>
+#include <QtDesigner/qextensionmanager.h>
 
-#include <QtCore/QEvent>
-#include <QtCore/QFile>
-#include <QtCore/QRegularExpression>
+#include <QtCore/qfile.h>
+#include <QtCore/qregularexpression.h>
 
-#include <QtWidgets/QAction>
-#include <QtGui/QCloseEvent>
-#include <QtWidgets/QFileDialog>
-#include <QtWidgets/QMessageBox>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QVBoxLayout>
-#include <QtWidgets/QUndoCommand>
-#include <QtGui/QWindowStateChangeEvent>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qfiledialog.h>
+#include <QtWidgets/qmessagebox.h>
+#include <QtWidgets/qpushbutton.h>
+#include <QtWidgets/qboxlayout.h>
+#include <QtWidgets/qundostack.h>
 
+#include <QtGui/qevent.h>
 QT_BEGIN_NAMESPACE
 
 QDesignerFormWindow::QDesignerFormWindow(QDesignerFormWindowInterface *editor, QDesignerWorkbench *workbench, QWidget *parent, Qt::WindowFlags flags)

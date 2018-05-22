@@ -41,8 +41,8 @@
 #define ABSTRACTDIALOGGUI_H
 
 #include <QtDesigner/sdk_global.h>
-#include <QtWidgets/QMessageBox>
-#include <QtWidgets/QFileDialog>
+#include <QtWidgets/qmessagebox.h>
+#include <QtWidgets/qfiledialog.h>
 
 QT_BEGIN_NAMESPACE
 

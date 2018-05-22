@@ -31,27 +31,27 @@
 #include "abstractformbuilder.h"
 #include "formwindowbase_p.h"
 
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerFormWindowInterface>
-#include <QtDesigner/QDesignerResourceBrowserInterface>
-#include <QtDesigner/QDesignerLanguageExtension>
-#include <QtDesigner/QDesignerTaskMenuExtension>
-#include <QtDesigner/QExtensionManager>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractformwindow.h>
+#include <QtDesigner/abstractresourcebrowser.h>
+#include <QtDesigner/abstractlanguage.h>
+#include <QtDesigner/taskmenu.h>
+#include <QtDesigner/qextensionmanager.h>
 
-#include <QtCore/QDir>
-#include <QtCore/QProcess>
-#include <QtCore/QLibraryInfo>
-#include <QtCore/QDebug>
-#include <QtCore/QQueue>
-#include <QtCore/QSharedData>
+#include <QtCore/qdir.h>
+#include <QtCore/qprocess.h>
+#include <QtCore/qlibraryinfo.h>
+#include <QtCore/qdebug.h>
+#include <QtCore/qqueue.h>
+#include <QtCore/qshareddata.h>
 
-#include <QtWidgets/QApplication>
-#include <QtGui/QIcon>
-#include <QtGui/QPixmap>
-#include <QtWidgets/QListWidget>
-#include <QtWidgets/QTreeWidget>
-#include <QtWidgets/QTableWidget>
-#include <QtWidgets/QComboBox>
+#include <QtWidgets/qapplication.h>
+#include <QtGui/qicon.h>
+#include <QtGui/qpixmap.h>
+#include <QtWidgets/qlistwidget.h>
+#include <QtWidgets/qtreewidget.h>
+#include <QtWidgets/qtablewidget.h>
+#include <QtWidgets/qcombobox.h>
 
 QT_BEGIN_NAMESPACE
 

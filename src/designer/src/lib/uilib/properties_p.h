@@ -64,12 +64,12 @@
 
 #include "uilib_global.h"
 
-#include <QtCore/QObject>
-#include <QtCore/QMetaProperty>
-#include <QtCore/QLocale>
-#include <QtCore/QCoreApplication>
+#include <QtCore/qobject.h>
+#include <QtCore/qmetaobject.h>
+#include <QtCore/qlocale.h>
+#include <QtCore/qcoreapplication.h>
 
-#include <QtWidgets/QWidget>
+#include <QtWidgets/qwidget.h>
 
 #include "formbuilderextra_p.h"
 

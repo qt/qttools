@@ -29,8 +29,8 @@
 #ifndef QDESIGNER_APPFONTWIDGET_H
 #define QDESIGNER_APPFONTWIDGET_H
 
-#include <QtWidgets/QGroupBox>
-#include <QtWidgets/QDialog>
+#include <QtWidgets/qgroupbox.h>
+#include <QtWidgets/qdialog.h>
 
 QT_BEGIN_NAMESPACE
 

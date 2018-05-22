@@ -28,15 +28,15 @@
 
 #include "assistantclient.h"
 
-#include <QtCore/QString>
-#include <QtCore/QProcess>
-#include <QtCore/QDir>
-#include <QtCore/QLibraryInfo>
-#include <QtCore/QDebug>
-#include <QtCore/QFileInfo>
-#include <QtCore/QObject>
-#include <QtCore/QTextStream>
-#include <QtCore/QCoreApplication>
+#include <QtCore/qstring.h>
+#include <QtCore/qprocess.h>
+#include <QtCore/qdir.h>
+#include <QtCore/qlibraryinfo.h>
+#include <QtCore/qdebug.h>
+#include <QtCore/qfileinfo.h>
+#include <QtCore/qobject.h>
+#include <QtCore/qtextstream.h>
+#include <QtCore/qcoreapplication.h>
 
 QT_BEGIN_NAMESPACE
 

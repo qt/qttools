@@ -33,34 +33,31 @@
 
 #include "iconloader_p.h"
 
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerSettingsInterface>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractsettings.h>
 
-#include <QtCore/QList>
-#include <QtCore/QMap>
-#include <QtCore/QPointer>
-#include <QtCore/QXmlStreamReader>
-#include <QtCore/QXmlStreamWriter>
-#include <QtCore/QXmlStreamAttributes>
+#include <QtCore/qlist.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qpointer.h>
+#include <QtCore/qxmlstream.h>
 
-#include <QtWidgets/QAction>
-#include <QtWidgets/QColorDialog>
-#include <QtWidgets/QComboBox>
-#include <QtGui/QFontDatabase>
-#include <QtGui/QTextCursor>
-#include <QtGui/QPainter>
-#include <QtGui/QIcon>
-#include <QtWidgets/QMenu>
-#include <QtGui/QMoveEvent>
-#include <QtWidgets/QTabWidget>
-#include <QtGui/QTextDocument>
-#include <QtGui/QTextBlock>
-#include <QtWidgets/QToolBar>
-#include <QtWidgets/QToolButton>
-#include <QtWidgets/QVBoxLayout>
-#include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QDialogButtonBox>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qcolordialog.h>
+#include <QtWidgets/qcombobox.h>
+#include <QtGui/qfontdatabase.h>
+#include <QtGui/qtextcursor.h>
+#include <QtGui/qpainter.h>
+#include <QtGui/qicon.h>
+#include <QtWidgets/qmenu.h>
+#include <QtGui/qevent.h>
+#include <QtWidgets/qtabwidget.h>
+#include <QtGui/qtextobject.h>
+#include <QtGui/qtextdocument.h>
+#include <QtWidgets/qtoolbar.h>
+#include <QtWidgets/qtoolbutton.h>
+#include <QtWidgets/qboxlayout.h>
+#include <QtWidgets/qpushbutton.h>
+#include <QtWidgets/qdialogbuttonbox.h>
 
 QT_BEGIN_NAMESPACE
 

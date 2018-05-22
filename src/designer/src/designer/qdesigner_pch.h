@@ -27,14 +27,14 @@
 ****************************************************************************/
 
 #if defined __cplusplus
-#include <QtCore/QObject>
-#include <QtCore/QPointer>
-#include <QtCore/QSettings>
+#include <QtCore/qobject.h>
+#include <QtCore/qpointer.h>
+#include <QtCore/qsettings.h>
 #include <QtCore/qdebug.h>
-#include <QtGui/QCloseEvent>
-#include <QtWidgets/QHeaderView>
-#include <QtWidgets/QMessageBox>
-#include <QtWidgets/QVBoxLayout>
+#include <QtGui/qevent.h>
+#include <QtWidgets/qheaderview.h>
+#include <QtWidgets/qmessagebox.h>
+#include <QtWidgets/qboxlayout.h>
 #include <QtDesigner/abstractformeditor.h>
 #include <QtDesigner/abstractformwindow.h>
 

@@ -43,13 +43,13 @@
 
 #include "shared_global_p.h"
 
-#include <QtDesigner/QDesignerWidgetDataBaseInterface>
+#include <QtDesigner/abstractwidgetdatabase.h>
 
-#include <QtGui/QIcon>
-#include <QtCore/QString>
-#include <QtCore/QVariant>
-#include <QtCore/QPair>
-#include <QtCore/QStringList>
+#include <QtGui/qicon.h>
+#include <QtCore/qstring.h>
+#include <QtCore/qvariant.h>
+#include <QtCore/qpair.h>
+#include <QtCore/qstringlist.h>
 
 QT_BEGIN_NAMESPACE
 

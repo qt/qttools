@@ -30,7 +30,7 @@
 #define ABSTRACTWIDGETFACTORY_H
 
 #include <QtDesigner/sdk_global.h>
-#include <QtCore/QObject>
+#include <QtCore/qobject.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -43,8 +43,8 @@
 
 #include "shared_global_p.h"
 
-#include <QtWidgets/QWidget>
-#include <QtWidgets/QSizePolicy>
+#include <QtWidgets/qwidget.h>
+#include <QtWidgets/qsizepolicy.h>
 
 QT_BEGIN_NAMESPACE
 

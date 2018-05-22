@@ -32,14 +32,14 @@
 #include <abstractdialoggui_p.h>
 #include <deviceprofile_p.h>
 
-#include <QtWidgets/QDialogButtonBox>
-#include <QtWidgets/QVBoxLayout>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QStyleFactory>
-#include <QtGui/QFontDatabase>
+#include <QtWidgets/qdialogbuttonbox.h>
+#include <QtWidgets/qboxlayout.h>
+#include <QtWidgets/qpushbutton.h>
+#include <QtWidgets/qstylefactory.h>
+#include <QtGui/qfontdatabase.h>
 
-#include <QtCore/QFileInfo>
-#include <QtCore/QFile>
+#include <QtCore/qfileinfo.h>
+#include <QtCore/qfile.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -29,13 +29,13 @@
 #ifndef QMDIAREA_CONTAINER_H
 #define QMDIAREA_CONTAINER_H
 
-#include <QtDesigner/QDesignerContainerExtension>
+#include <QtDesigner/container.h>
 
 
 #include <qdesigner_propertysheet_p.h>
 #include <extensionfactory_p.h>
 
-#include <QtWidgets/QMdiArea>
+#include <QtWidgets/qmdiarea.h>
 
 QT_BEGIN_NAMESPACE
 

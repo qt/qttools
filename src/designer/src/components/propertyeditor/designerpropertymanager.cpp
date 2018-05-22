@@ -48,25 +48,25 @@
 #include <iconselector_p.h>
 #include <abstractdialoggui_p.h>
 
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QToolButton>
-#include <QtWidgets/QHBoxLayout>
-#include <QtCore/QFileInfo>
+#include <QtWidgets/qlabel.h>
+#include <QtWidgets/qtoolbutton.h>
+#include <QtWidgets/qboxlayout.h>
+#include <QtCore/qfileinfo.h>
 #ifndef QT_NO_CLIPBOARD
-#include <QtGui/QClipboard>
+#include <QtGui/qclipboard.h>
 #endif
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QDialogButtonBox>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QFileDialog>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QKeySequenceEdit>
-#include <QtGui/QContextMenuEvent>
-#include <QtWidgets/QApplication>
-#include <QtCore/QUrl>
+#include <QtWidgets/qlineedit.h>
+#include <QtWidgets/qdialogbuttonbox.h>
+#include <QtWidgets/qpushbutton.h>
+#include <QtWidgets/qfiledialog.h>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qmenu.h>
+#include <QtWidgets/qkeysequenceedit.h>
+#include <QtGui/qevent.h>
+#include <QtWidgets/qapplication.h>
+#include <QtCore/qurl.h>
 
-#include <QtCore/QDebug>
+#include <QtCore/qdebug.h>
 
 QT_BEGIN_NAMESPACE
 

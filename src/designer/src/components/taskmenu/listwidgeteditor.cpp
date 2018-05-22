@@ -30,12 +30,12 @@
 #include <designerpropertymanager.h>
 #include <abstractformbuilder.h>
 
-#include <QtDesigner/QDesignerSettingsInterface>
-#include <QtDesigner/QDesignerFormEditorInterface>
+#include <QtDesigner/abstractsettings.h>
+#include <QtDesigner/abstractformeditor.h>
 
-#include <QtWidgets/QComboBox>
-#include <QtWidgets/QGroupBox>
-#include <QtWidgets/QDialogButtonBox>
+#include <QtWidgets/qcombobox.h>
+#include <QtWidgets/qgroupbox.h>
+#include <QtWidgets/qdialogbuttonbox.h>
 
 QT_BEGIN_NAMESPACE
 

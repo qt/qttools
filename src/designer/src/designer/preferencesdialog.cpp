@@ -30,11 +30,11 @@
 #include "ui_preferencesdialog.h"
 #include "qdesigner_appearanceoptions.h"
 
-#include <QtDesigner/QDesignerOptionsPageInterface>
-#include <QtDesigner/QDesignerFormEditorInterface>
+#include <QtDesigner/abstractoptionspage.h>
+#include <QtDesigner/abstractformeditor.h>
 
-#include <QtWidgets/QFileDialog>
-#include <QtWidgets/QPushButton>
+#include <QtWidgets/qfiledialog.h>
+#include <QtWidgets/qpushbutton.h>
 
 QT_BEGIN_NAMESPACE
 

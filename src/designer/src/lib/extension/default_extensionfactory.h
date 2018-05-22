@@ -32,9 +32,9 @@
 #include <QtDesigner/extension_global.h>
 #include <QtDesigner/extension.h>
 
-#include <QtCore/QMap>
-#include <QtCore/QHash>
-#include <QtCore/QPair>
+#include <QtCore/qmap.h>
+#include <QtCore/qhash.h>
+#include <QtCore/qpair.h>
 
 QT_BEGIN_NAMESPACE
 

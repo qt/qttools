@@ -42,7 +42,7 @@
 
 #include "shared_global_p.h"
 
-#include <QtDesigner/QDesignerPromotionInterface>
+#include <QtDesigner/abstractpromotioninterface.h>
 
 QT_BEGIN_NAMESPACE
 

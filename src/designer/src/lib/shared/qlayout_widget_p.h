@@ -42,12 +42,12 @@
 
 #include "shared_global_p.h"
 
-#include <QtDesigner/QDesignerLayoutDecorationExtension>
+#include <QtDesigner/layoutdecoration.h>
 
-#include <QtCore/QPointer>
-#include <QtCore/QVariant>
-#include <QtWidgets/QWidget>
-#include <QtWidgets/QLayout>
+#include <QtCore/qpointer.h>
+#include <QtCore/qvariant.h>
+#include <QtWidgets/qwidget.h>
+#include <QtWidgets/qlayout.h>
 
 QT_BEGIN_NAMESPACE
 

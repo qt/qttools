@@ -34,18 +34,17 @@
 #include <qlayout_widget_p.h>
 #include <orderdialog_p.h>
 
-#include <QtDesigner/QExtensionManager>
-#include <QtDesigner/QDesignerFormWindowInterface>
-#include <QtDesigner/QDesignerFormWindowCursorInterface>
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerWidgetFactoryInterface>
-#include <QtDesigner/QDesignerPropertySheetExtension>
+#include <QtDesigner/qextensionmanager.h>
+#include <QtDesigner/abstractformwindow.h>
+#include <QtDesigner/abstractformwindowcursor.h>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractwidgetfactory.h>
+#include <QtDesigner/propertysheet.h>
 
-#include <QtGui/QPainter>
-#include <QtGui/QMouseEvent>
-#include <QtGui/QResizeEvent>
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QApplication>
+#include <QtGui/qpainter.h>
+#include <QtGui/qevent.h>
+#include <QtWidgets/qmenu.h>
+#include <QtWidgets/qapplication.h>
 
 Q_DECLARE_METATYPE(QWidgetList)
 

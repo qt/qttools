@@ -28,12 +28,12 @@
 
 #include "qquickwidget_plugin.h"
 
-#include <QtDesigner/QExtensionFactory>
-#include <QtDesigner/QExtensionManager>
+#include <QtDesigner/default_extensionfactory.h>
+#include <QtDesigner/qextensionmanager.h>
 
-#include <QtCore/QtPlugin>
-#include <QtCore/QDebug>
-#include <QtQuickWidgets/QQuickWidget>
+#include <QtCore/qplugin.h>
+#include <QtCore/qdebug.h>
+#include <QtQuickWidgets/qquickwidget.h>
 
 QT_BEGIN_NAMESPACE
 

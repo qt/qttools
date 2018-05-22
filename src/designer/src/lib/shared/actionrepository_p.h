@@ -41,12 +41,12 @@
 #define ACTIONREPOSITORY_H
 
 #include "shared_global_p.h"
-#include <QtCore/QMimeData>
-#include <QtGui/QStandardItemModel>
-#include <QtWidgets/QTreeView>
-#include <QtWidgets/QListView>
-#include <QtWidgets/QStackedWidget>
-#include <QtGui/QIcon>
+#include <QtCore/qmimedata.h>
+#include <QtGui/qstandarditemmodel.h>
+#include <QtWidgets/qtreeview.h>
+#include <QtWidgets/qlistview.h>
+#include <QtWidgets/qstackedwidget.h>
+#include <QtGui/qicon.h>
 
 QT_BEGIN_NAMESPACE
 

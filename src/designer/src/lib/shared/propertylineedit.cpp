@@ -28,9 +28,8 @@
 
 #include "propertylineedit_p.h"
 
-#include <QtGui/QContextMenuEvent>
-#include <QtGui/QKeyEvent>
-#include <QtWidgets/QMenu>
+#include <QtGui/qevent.h>
+#include <QtWidgets/qmenu.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -30,7 +30,7 @@
 #include "qdesigneraxwidget.h"
 #include "qaxwidgetpropertysheet.h"
 
-#include <QtDesigner/QDesignerFormEditorInterface>
+#include <QtDesigner/abstractformeditor.h>
 #include <QtDesigner/private/ui4_p.h>
 
 QT_BEGIN_NAMESPACE

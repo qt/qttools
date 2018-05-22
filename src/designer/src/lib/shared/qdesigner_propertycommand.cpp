@@ -33,26 +33,26 @@
 #include "spacer_widget_p.h"
 #include "qdesigner_propertysheet_p.h"
 
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerIntegrationInterface>
-#include <QtDesigner/QDesignerFormWindowInterface>
-#include <QtDesigner/QDesignerFormWindowCursorInterface>
-#include <QtDesigner/QDesignerDynamicPropertySheetExtension>
-#include <QtDesigner/QDesignerPropertySheetExtension>
-#include <QtDesigner/QDesignerPropertyEditorInterface>
-#include <QtDesigner/QDesignerObjectInspectorInterface>
-#include <QtDesigner/QDesignerIntegrationInterface>
-#include <QtDesigner/QDesignerWidgetDataBaseInterface>
-#include <QtDesigner/QExtensionManager>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractintegration.h>
+#include <QtDesigner/abstractformwindow.h>
+#include <QtDesigner/abstractformwindowcursor.h>
+#include <QtDesigner/dynamicpropertysheet.h>
+#include <QtDesigner/propertysheet.h>
+#include <QtDesigner/abstractpropertyeditor.h>
+#include <QtDesigner/abstractobjectinspector.h>
+#include <QtDesigner/abstractintegration.h>
+#include <QtDesigner/abstractwidgetdatabase.h>
+#include <QtDesigner/qextensionmanager.h>
 
-#include <QtCore/QSize>
-#include <QtCore/QTextStream>
-#include <QtWidgets/QWidget>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QDialog>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QLayout>
+#include <QtCore/qsize.h>
+#include <QtCore/qtextstream.h>
+#include <QtWidgets/qwidget.h>
+#include <QtWidgets/qapplication.h>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qdialog.h>
+#include <QtWidgets/qpushbutton.h>
+#include <QtWidgets/qlayout.h>
 #include <qdebug.h>
 
 QT_BEGIN_NAMESPACE

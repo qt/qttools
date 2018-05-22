@@ -29,8 +29,8 @@
 #ifndef SIGNALSLOTEDITORWINDOW_H
 #define SIGNALSLOTEDITORWINDOW_H
 
-#include <QtCore/QPointer>
-#include <QtWidgets/QWidget>
+#include <QtCore/qpointer.h>
+#include <QtWidgets/qwidget.h>
 
 QT_BEGIN_NAMESPACE
 

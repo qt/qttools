@@ -31,10 +31,10 @@
 
 #include "designer_enums.h"
 #include <shared_settings_p.h>
-#include <QtCore/QMap>
-#include <QtCore/QRect>
-#include <QtCore/QStringList>
-#include <QtCore/QVariant>
+#include <QtCore/qmap.h>
+#include <QtCore/qrect.h>
+#include <QtCore/qstringlist.h>
+#include <QtCore/qvariant.h>
 
 QT_BEGIN_NAMESPACE
 

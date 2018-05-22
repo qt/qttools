@@ -43,15 +43,15 @@
 
 #include "shared_global_p.h"
 
-#include <QtCore/QMultiMap>
-#include <QtCore/QList>
-#include <QtCore/QPointer>
+#include <QtCore/qmap.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qpointer.h>
 
-#include <QtWidgets/QWidget>
-#include <QtGui/QPixmap>
-#include <QtGui/QPolygonF>
+#include <QtWidgets/qwidget.h>
+#include <QtGui/qpixmap.h>
+#include <QtGui/qpolygon.h>
 
-#include <QtWidgets/QUndoCommand>
+#include <QtWidgets/qundostack.h>
 
 QT_BEGIN_NAMESPACE
 

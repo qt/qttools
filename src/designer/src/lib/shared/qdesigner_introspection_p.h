@@ -42,7 +42,7 @@
 
 #include "shared_global_p.h"
 #include <abstractintrospection_p.h>
-#include <QtCore/QMap>
+#include <QtCore/qmap.h>
 
 QT_BEGIN_NAMESPACE
 

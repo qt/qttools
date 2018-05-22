@@ -51,9 +51,9 @@
 #include <qtgradientutils.h>
 #include <qtresourcemodel_p.h>
 
-#include <QtCore/QVariant>
-#include <QtCore/QFile>
-#include <QtCore/QDir>
+#include <QtCore/qvariant.h>
+#include <QtCore/qfile.h>
+#include <QtCore/qdir.h>
 
 #include <QtCore/qdebug.h>
 

@@ -36,29 +36,29 @@
 
 #include <deviceskin.h>
 
-#include <QtDesigner/QDesignerFormWindowInterface>
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerFormWindowManagerInterface>
-#include <QtDesigner/QDesignerSettingsInterface>
+#include <QtDesigner/abstractformwindow.h>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractformwindowmanager.h>
+#include <QtDesigner/abstractsettings.h>
 
-#include <QtWidgets/QWidget>
+#include <QtWidgets/qwidget.h>
 #include <QtGui/qevent.h>
-#include <QtWidgets/QDesktopWidget>
-#include <QtWidgets/QMainWindow>
-#include <QtWidgets/QDockWidget>
-#include <QtWidgets/QApplication>
-#include <QtGui/QPixmap>
-#include <QtWidgets/QVBoxLayout>
-#include <QtWidgets/QDialog>
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QActionGroup>
-#include <QtGui/QCursor>
-#include <QtGui/QMatrix>
+#include <QtWidgets/qdesktopwidget.h>
+#include <QtWidgets/qmainwindow.h>
+#include <QtWidgets/qdockwidget.h>
+#include <QtWidgets/qapplication.h>
+#include <QtGui/qpixmap.h>
+#include <QtWidgets/qboxlayout.h>
+#include <QtWidgets/qdialog.h>
+#include <QtWidgets/qmenu.h>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qactiongroup.h>
+#include <QtGui/qcursor.h>
+#include <QtGui/qmatrix.h>
 
-#include <QtCore/QMap>
-#include <QtCore/QDebug>
-#include <QtCore/QSharedData>
+#include <QtCore/qmap.h>
+#include <QtCore/qdebug.h>
+#include <QtCore/qshareddata.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -31,7 +31,7 @@
 
 // sdk
 #include <QtDesigner/propertysheet.h>
-#include <QtDesigner/QExtensionManager>
+#include <QtDesigner/qextensionmanager.h>
 #include <qdesigner_propertycommand_p.h>
 
 #include <QtCore/qdebug.h>

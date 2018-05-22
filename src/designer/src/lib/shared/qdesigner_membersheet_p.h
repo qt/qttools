@@ -44,7 +44,7 @@
 
 #include <QtDesigner/membersheet.h>
 #include <QtDesigner/default_extensionfactory.h>
-#include <QtCore/QStringList>
+#include <QtCore/qstringlist.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -61,39 +61,39 @@
 #include <shared_settings_p.h>
 #include <grid_p.h>
 
-#include <QtDesigner/QExtensionManager>
-#include <QtDesigner/QDesignerWidgetDataBaseInterface>
-#include <QtDesigner/QDesignerPropertySheetExtension>
-#include <QtDesigner/QDesignerWidgetFactoryInterface>
-#include <QtDesigner/QDesignerContainerExtension>
-#include <QtDesigner/QDesignerTaskMenuExtension>
-#include <QtDesigner/QDesignerWidgetBoxInterface>
+#include <QtDesigner/qextensionmanager.h>
+#include <QtDesigner/abstractwidgetdatabase.h>
+#include <QtDesigner/propertysheet.h>
+#include <QtDesigner/abstractwidgetfactory.h>
+#include <QtDesigner/container.h>
+#include <QtDesigner/taskmenu.h>
+#include <QtDesigner/abstractwidgetbox.h>
 #include <QtDesigner/private/ui4_p.h>
 
 #include <abstractdialoggui_p.h>
 
-#include <QtCore/QtDebug>
-#include <QtCore/QBuffer>
-#include <QtCore/QTimer>
-#include <QtCore/QXmlStreamReader>
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QActionGroup>
+#include <QtCore/qdebug.h>
+#include <QtCore/qbuffer.h>
+#include <QtCore/qtimer.h>
+#include <QtCore/qxmlstream.h>
+#include <QtWidgets/qmenu.h>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qactiongroup.h>
 #ifndef QT_NO_CLIPBOARD
-#include <QtGui/QClipboard>
+#include <QtGui/qclipboard.h>
 #endif
-#include <QtWidgets/QUndoGroup>
-#include <QtWidgets/QScrollArea>
-#include <QtWidgets/QRubberBand>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QSplitter>
-#include <QtGui/QPainter>
-#include <QtWidgets/QGroupBox>
-#include <QtWidgets/QDockWidget>
-#include <QtWidgets/QToolBox>
-#include <QtWidgets/QStackedWidget>
-#include <QtWidgets/QTabWidget>
-#include <QtWidgets/QButtonGroup>
+#include <QtWidgets/qundogroup.h>
+#include <QtWidgets/qscrollarea.h>
+#include <QtWidgets/qrubberband.h>
+#include <QtWidgets/qapplication.h>
+#include <QtWidgets/qsplitter.h>
+#include <QtGui/qpainter.h>
+#include <QtWidgets/qgroupbox.h>
+#include <QtWidgets/qdockwidget.h>
+#include <QtWidgets/qtoolbox.h>
+#include <QtWidgets/qstackedwidget.h>
+#include <QtWidgets/qtabwidget.h>
+#include <QtWidgets/qbuttongroup.h>
 
 Q_DECLARE_METATYPE(QWidget*)
 

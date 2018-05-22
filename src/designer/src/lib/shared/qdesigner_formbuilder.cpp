@@ -37,13 +37,13 @@
 // sdk
 #include <QtDesigner/container.h>
 #include <QtDesigner/propertysheet.h>
-#include <QtDesigner/QExtensionManager>
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerFormWindowInterface>
-#include <QtDesigner/QDesignerWidgetFactoryInterface>
+#include <QtDesigner/qextensionmanager.h>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractformwindow.h>
+#include <QtDesigner/abstractwidgetfactory.h>
 #include <abstractdialoggui_p.h>
 
-#include <QtUiPlugin/QDesignerCustomWidgetInterface>
+#include <QtUiPlugin/customwidget.h>
 
 // shared
 #include <qdesigner_propertysheet_p.h>
@@ -51,21 +51,21 @@
 #include <formwindowbase_p.h>
 #include <qtresourcemodel_p.h>
 
-#include <QtWidgets/QWidget>
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QToolBar>
-#include <QtWidgets/QMenuBar>
-#include <QtWidgets/QMainWindow>
-#include <QtWidgets/QStyleFactory>
-#include <QtWidgets/QStyle>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QAbstractScrollArea>
-#include <QtWidgets/QMessageBox>
-#include <QtGui/QPixmap>
+#include <QtWidgets/qwidget.h>
+#include <QtWidgets/qmenu.h>
+#include <QtWidgets/qtoolbar.h>
+#include <QtWidgets/qmenubar.h>
+#include <QtWidgets/qmainwindow.h>
+#include <QtWidgets/qstylefactory.h>
+#include <QtWidgets/qstyle.h>
+#include <QtWidgets/qapplication.h>
+#include <QtWidgets/qabstractscrollarea.h>
+#include <QtWidgets/qmessagebox.h>
+#include <QtGui/qpixmap.h>
 
-#include <QtCore/QBuffer>
+#include <QtCore/qbuffer.h>
 #include <QtCore/qdebug.h>
-#include <QtCore/QCoreApplication>
+#include <QtCore/qcoreapplication.h>
 
 QT_BEGIN_NAMESPACE
 

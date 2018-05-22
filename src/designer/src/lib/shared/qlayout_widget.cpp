@@ -33,26 +33,25 @@
 #include "invisible_widget_p.h"
 #include "qdesigner_widgetitem_p.h"
 
-#include <QtDesigner/QDesignerFormWindowInterface>
-#include <QtDesigner/QExtensionManager>
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerPropertySheetExtension>
-#include <QtDesigner/QDesignerWidgetFactoryInterface>
+#include <QtDesigner/abstractformwindow.h>
+#include <QtDesigner/qextensionmanager.h>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/propertysheet.h>
+#include <QtDesigner/abstractwidgetfactory.h>
 
-#include <QtGui/QPainter>
-#include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QVBoxLayout>
-#include <QtWidgets/QGridLayout>
-#include <QtWidgets/QFormLayout>
-#include <QtWidgets/QApplication>
+#include <QtGui/qpainter.h>
+#include <QtWidgets/qboxlayout.h>
+#include <QtWidgets/qgridlayout.h>
+#include <QtWidgets/qformlayout.h>
+#include <QtWidgets/qapplication.h>
 #include <QtGui/qevent.h>
 
 #include <QtCore/qdebug.h>
-#include <QtCore/QtAlgorithms>
-#include <QtCore/QMap>
-#include <QtCore/QStack>
-#include <QtCore/QPair>
-#include <QtCore/QSet>
+#include <QtCore/qalgorithms.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qstack.h>
+#include <QtCore/qpair.h>
+#include <QtCore/qset.h>
 
 #include <algorithm>
 

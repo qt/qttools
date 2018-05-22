@@ -40,9 +40,9 @@
 #ifndef PROMOTIONMODEL_H
 #define PROMOTIONMODEL_H
 
-#include <QtGui/QStandardItemModel>
-#include <QtCore/QMetaType>
-#include <QtCore/QSet>
+#include <QtGui/qstandarditemmodel.h>
+#include <QtCore/qmetatype.h>
+#include <QtCore/qset.h>
 
 QT_BEGIN_NAMESPACE
 

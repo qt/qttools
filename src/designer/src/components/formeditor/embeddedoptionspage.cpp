@@ -39,20 +39,19 @@
 
 
 // SDK
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerFormWindowManagerInterface>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractformwindowmanager.h>
 
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QVBoxLayout>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QComboBox>
-#include <QtWidgets/QToolButton>
-#include <QtWidgets/QMessageBox>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QGroupBox>
+#include <QtWidgets/qlabel.h>
+#include <QtWidgets/qboxlayout.h>
+#include <QtWidgets/qapplication.h>
+#include <QtWidgets/qcombobox.h>
+#include <QtWidgets/qtoolbutton.h>
+#include <QtWidgets/qmessagebox.h>
+#include <QtWidgets/qlabel.h>
+#include <QtWidgets/qgroupbox.h>
 
-#include <QtCore/QSet>
+#include <QtCore/qset.h>
 
 #include <algorithm>
 

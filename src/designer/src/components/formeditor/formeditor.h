@@ -31,7 +31,7 @@
 
 #include "formeditor_global.h"
 
-#include <QtDesigner/QDesignerFormEditorInterface>
+#include <QtDesigner/abstractformeditor.h>
 
 QT_BEGIN_NAMESPACE
 

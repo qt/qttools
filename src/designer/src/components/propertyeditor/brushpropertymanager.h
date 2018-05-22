@@ -29,9 +29,9 @@
 #ifndef BRUSHPROPERTYMANAGER_H
 #define BRUSHPROPERTYMANAGER_H
 
-#include <QtCore/QMap>
-#include <QtGui/QBrush>
-#include <QtGui/QIcon>
+#include <QtCore/qmap.h>
+#include <QtGui/qbrush.h>
+#include <QtGui/qicon.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -27,7 +27,7 @@
 ****************************************************************************/
 
 #include "default_container.h"
-#include <QtCore/QDebug>
+#include <QtCore/qdebug.h>
 
 QT_BEGIN_NAMESPACE
 

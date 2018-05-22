@@ -31,33 +31,33 @@
 #include "qtresourceeditordialog_p.h"
 #include "iconloader_p.h"
 
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerSettingsInterface>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractsettings.h>
 
-#include <QtWidgets/QToolBar>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QSplitter>
-#include <QtWidgets/QTreeWidget>
-#include <QtWidgets/QListWidget>
-#include <QtWidgets/QHeaderView>
-#include <QtWidgets/QVBoxLayout>
-#include <QtGui/QPainter>
-#include <QtCore/QFileInfo>
-#include <QtCore/QDir>
-#include <QtCore/QQueue>
-#include <QtGui/QPainter>
-#include <QtWidgets/QDialogButtonBox>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QMessageBox>
-#include <QtWidgets/QApplication>
+#include <QtWidgets/qtoolbar.h>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qsplitter.h>
+#include <QtWidgets/qtreewidget.h>
+#include <QtWidgets/qlistwidget.h>
+#include <QtWidgets/qheaderview.h>
+#include <QtWidgets/qboxlayout.h>
+#include <QtGui/qpainter.h>
+#include <QtCore/qfileinfo.h>
+#include <QtCore/qdir.h>
+#include <QtCore/qqueue.h>
+#include <QtGui/qpainter.h>
+#include <QtWidgets/qdialogbuttonbox.h>
+#include <QtWidgets/qpushbutton.h>
+#include <QtWidgets/qmessagebox.h>
+#include <QtWidgets/qapplication.h>
 #ifndef QT_NO_CLIPBOARD
-#include <QtGui/QClipboard>
+#include <QtGui/qclipboard.h>
 #endif
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QLineEdit>
-#include <QtGui/QDrag>
-#include <QtCore/QMimeData>
-#include <QtXml/QDomDocument>
+#include <QtWidgets/qmenu.h>
+#include <QtWidgets/qlineedit.h>
+#include <QtGui/qdrag.h>
+#include <QtCore/qmimedata.h>
+#include <QtXml/qdom.h>
 
 #include <algorithm>
 

@@ -40,9 +40,9 @@
 #ifndef STYLESHEETEDITOR_H
 #define STYLESHEETEDITOR_H
 
-#include <QtWidgets/QTextEdit>
-#include <QtWidgets/QDialog>
-#include <QtWidgets/QLabel>
+#include <QtWidgets/qtextedit.h>
+#include <QtWidgets/qdialog.h>
+#include <QtWidgets/qlabel.h>
 #include "shared_global_p.h"
 
 QT_BEGIN_NAMESPACE

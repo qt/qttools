@@ -28,14 +28,14 @@
 
 #include "qmdiarea_container.h"
 
-#include <QtDesigner/QExtensionManager>
-#include <QtDesigner/QDesignerFormEditorInterface>
+#include <QtDesigner/qextensionmanager.h>
+#include <QtDesigner/abstractformeditor.h>
 
-#include <QtWidgets/QMdiArea>
-#include <QtWidgets/QMdiSubWindow>
-#include <QtWidgets/QApplication>
-#include <QtCore/QDebug>
-#include <QtCore/QHash>
+#include <QtWidgets/qmdiarea.h>
+#include <QtWidgets/qmdisubwindow.h>
+#include <QtWidgets/qapplication.h>
+#include <QtCore/qdebug.h>
+#include <QtCore/qhash.h>
 
 QT_BEGIN_NAMESPACE
 

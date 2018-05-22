@@ -41,8 +41,8 @@
 //
 
 #include "propertyeditor_global.h"
-#include <QtWidgets/QDialog>
-#include <QtCore/QVariant>
+#include <QtWidgets/qdialog.h>
+#include <QtCore/qvariant.h>
 
 QT_BEGIN_NAMESPACE
 

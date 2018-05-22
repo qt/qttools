@@ -30,18 +30,18 @@
 #include "abstractdialoggui_p.h"
 #include "abstractintrospection_p.h"
 
-#include <QtDesigner/QDesignerOptionsPageInterface>
-#include <QtDesigner/QDesignerSettingsInterface>
-#include <QtDesigner/QDesignerPropertyEditorInterface>
-#include <QtDesigner/QDesignerFormWindowManagerInterface>
-#include <QtDesigner/QExtensionManager>
-#include <QtDesigner/QDesignerMetaDataBaseInterface>
-#include <QtDesigner/QDesignerWidgetDataBaseInterface>
-#include <QtDesigner/QDesignerWidgetFactoryInterface>
-#include <QtDesigner/QDesignerObjectInspectorInterface>
-#include <QtDesigner/QDesignerIntegrationInterface>
-#include <QtDesigner/QDesignerActionEditorInterface>
-#include <QtDesigner/QDesignerWidgetBoxInterface>
+#include <QtDesigner/abstractoptionspage.h>
+#include <QtDesigner/abstractsettings.h>
+#include <QtDesigner/abstractpropertyeditor.h>
+#include <QtDesigner/abstractformwindowmanager.h>
+#include <QtDesigner/qextensionmanager.h>
+#include <QtDesigner/abstractmetadatabase.h>
+#include <QtDesigner/abstractwidgetdatabase.h>
+#include <QtDesigner/abstractwidgetfactory.h>
+#include <QtDesigner/abstractobjectinspector.h>
+#include <QtDesigner/abstractintegration.h>
+#include <QtDesigner/abstractactioneditor.h>
+#include <QtDesigner/abstractwidgetbox.h>
 
 #include <actioneditor_p.h>
 #include <pluginmanager_p.h>
@@ -52,9 +52,9 @@
 #include <formwindowbase_p.h>
 #include <grid_p.h>
 #include <iconloader_p.h>
-#include <QtDesigner/QDesignerPromotionInterface>
+#include <QtDesigner/abstractpromotioninterface.h>
 
-#include <QtGui/QIcon>
+#include <QtGui/qicon.h>
 
 // Must be done outside of the Qt namespace
 static void initResources()

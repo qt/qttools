@@ -30,10 +30,10 @@
 #include <formlayoutmenu_p.h>
 #include <morphmenu_p.h>
 
-#include <QtDesigner/QDesignerFormWindowInterface>
+#include <QtDesigner/abstractformwindow.h>
 
-#include <QtWidgets/QAction>
-#include <QtCore/QDebug>
+#include <QtWidgets/qaction.h>
+#include <QtCore/qdebug.h>
 
 QT_BEGIN_NAMESPACE
 

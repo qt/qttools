@@ -30,16 +30,15 @@
 #include "qdesigneraxwidget.h"
 #include "qaxwidgetpropertysheet.h"
 
-#include <QtDesigner/QDesignerFormWindowInterface>
-#include <QtDesigner/QDesignerFormWindowCursorInterface>
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QExtensionManager>
+#include <QtDesigner/abstractformwindow.h>
+#include <QtDesigner/abstractformwindowcursor.h>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/qextensionmanager.h>
 
-#include <QtWidgets/QUndoCommand>
-#include <QtWidgets/QMessageBox>
-#include <QtWidgets/QUndoStack>
-#include <QtWidgets/QAction>
-#include <QtCore/QUuid>
+#include <QtWidgets/qmessagebox.h>
+#include <QtWidgets/qundostack.h>
+#include <QtWidgets/qaction.h>
+#include <QtCore/quuid.h>
 #include <ActiveQt/qaxselect.h>
 
 #include <qt_windows.h>

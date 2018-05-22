@@ -28,8 +28,8 @@
 
 #include "view3d_tool.h"
 
-#include <QtWidgets/QAction>
-#include <QtDesigner/QDesignerFormWindowInterface>
+#include <QtWidgets/qaction.h>
+#include <QtDesigner/qdesignerformwindowinterface.h>
 
 QView3DTool::QView3DTool(QDesignerFormWindowInterface *formWindow, QObject *parent)
     :  QDesignerFormWindowToolInterface(parent)

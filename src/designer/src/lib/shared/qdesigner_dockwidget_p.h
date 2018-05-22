@@ -41,7 +41,7 @@
 #define QDESIGNER_DOCKWIDGET_H
 
 #include "shared_global_p.h"
-#include <QtWidgets/QDockWidget>
+#include <QtWidgets/qdockwidget.h>
 
 QT_BEGIN_NAMESPACE
 

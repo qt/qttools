@@ -30,27 +30,25 @@
 #include "qdesigner_utils_p.h"
 #include "qdesigner_qsettings_p.h"
 
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QExtensionManager>
-#include <QtDesigner/QDesignerLanguageExtension>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/qextensionmanager.h>
+#include <QtDesigner/abstractlanguage.h>
 
-#include <QtUiPlugin/QDesignerCustomWidgetInterface>
+#include <QtUiPlugin/customwidget.h>
 
-#include <QtCore/QDir>
-#include <QtCore/QFile>
-#include <QtCore/QFileInfo>
-#include <QtCore/QSet>
-#include <QtCore/QPluginLoader>
-#include <QtCore/QLibrary>
-#include <QtCore/QLibraryInfo>
+#include <QtCore/qdir.h>
+#include <QtCore/qfile.h>
+#include <QtCore/qfileinfo.h>
+#include <QtCore/qset.h>
+#include <QtCore/qpluginloader.h>
+#include <QtCore/qlibrary.h>
+#include <QtCore/qlibraryinfo.h>
 #include <QtCore/qdebug.h>
-#include <QtCore/QMap>
-#include <QtCore/QSettings>
-#include <QtCore/QCoreApplication>
+#include <QtCore/qmap.h>
+#include <QtCore/qsettings.h>
+#include <QtCore/qcoreapplication.h>
 
-#include <QtCore/QXmlStreamReader>
-#include <QtCore/QXmlStreamAttributes>
-#include <QtCore/QXmlStreamAttribute>
+#include <QtCore/qxmlstream.h>
 
 static const char *uiElementC = "ui";
 static const char *languageAttributeC = "language";

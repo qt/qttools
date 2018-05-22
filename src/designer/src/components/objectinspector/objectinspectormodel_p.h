@@ -42,13 +42,12 @@
 
 #include <layoutinfo_p.h>
 
-#include <QtGui/QStandardItemModel>
-#include <QtGui/QIcon>
-#include <QtCore/QModelIndex>
-#include <QtCore/QString>
-#include <QtCore/QList>
-#include <QtCore/QMultiMap>
-#include <QtCore/QPointer>
+#include <QtGui/qstandarditemmodel.h>
+#include <QtGui/qicon.h>
+#include <QtCore/qstring.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qpointer.h>
 
 QT_BEGIN_NAMESPACE
 

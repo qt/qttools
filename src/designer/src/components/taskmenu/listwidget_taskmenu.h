@@ -29,8 +29,8 @@
 #ifndef LISTWIDGET_TASKMENU_H
 #define LISTWIDGET_TASKMENU_H
 
-#include <QtWidgets/QListWidget>
-#include <QtCore/QPointer>
+#include <QtWidgets/qlistwidget.h>
+#include <QtCore/qpointer.h>
 
 #include <qdesigner_taskmenu_p.h>
 #include <extensionfactory_p.h>

@@ -35,7 +35,7 @@
 #include "inplace_widget_helper.h"
 #include <qdesigner_utils_p.h>
 
-#include <QtCore/QPointer>
+#include <QtCore/qpointer.h>
 
 QT_BEGIN_NAMESPACE
 

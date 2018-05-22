@@ -33,12 +33,12 @@
 #include <formwindowbase_p.h>
 
 // Qt
-#include <QtWidgets/QUndoStack>
-#include <QtCore/QHash>
-#include <QtCore/QList>
-#include <QtCore/QMap>
-#include <QtCore/QSet>
-#include <QtCore/QPointer>
+#include <QtWidgets/qundostack.h>
+#include <QtCore/qhash.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qset.h>
+#include <QtCore/qpointer.h>
 
 QT_BEGIN_NAMESPACE
 

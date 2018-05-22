@@ -30,17 +30,17 @@
 #include "formwindowbase_p.h"
 #include <QtDesigner/private/ui4_p.h>
 
-#include <QtGui/QPainter>
-#include <QtGui/QBitmap>
-#include <QtGui/QPixmap>
-#include <QtGui/QImage>
-#include <QtWidgets/QLabel>
-#include <QtGui/QDrag>
-#include <QtGui/QCursor>
-#include <QtGui/QDropEvent>
-#include <QtGui/QRgb>
+#include <QtGui/qpainter.h>
+#include <QtGui/qbitmap.h>
+#include <QtGui/qpixmap.h>
+#include <QtGui/qimage.h>
+#include <QtWidgets/qlabel.h>
+#include <QtGui/qdrag.h>
+#include <QtGui/qcursor.h>
+#include <QtGui/qevent.h>
+#include <QtGui/qrgb.h>
 
-#include <QtCore/QMultiMap>
+#include <QtCore/qmap.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -33,27 +33,27 @@
 #include "qdesigner_propertycommand_p.h"
 #include "ui_formlayoutrowdialog.h"
 
-#include <QtDesigner/QDesignerFormWindowInterface>
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerWidgetFactoryInterface>
-#include <QtDesigner/QDesignerPropertySheetExtension>
-#include <QtDesigner/QExtensionManager>
-#include <QtDesigner/QDesignerWidgetDataBaseInterface>
-#include <QtDesigner/QDesignerLanguageExtension>
+#include <QtDesigner/abstractformwindow.h>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractwidgetfactory.h>
+#include <QtDesigner/propertysheet.h>
+#include <QtDesigner/qextensionmanager.h>
+#include <QtDesigner/abstractwidgetdatabase.h>
+#include <QtDesigner/abstractlanguage.h>
 
-#include <QtWidgets/QAction>
-#include <QtWidgets/QWidget>
-#include <QtWidgets/QFormLayout>
-#include <QtWidgets/QUndoStack>
-#include <QtWidgets/QDialog>
-#include <QtWidgets/QPushButton>
-#include <QtGui/QRegularExpressionValidator>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qwidget.h>
+#include <QtWidgets/qformlayout.h>
+#include <QtWidgets/qundostack.h>
+#include <QtWidgets/qdialog.h>
+#include <QtWidgets/qpushbutton.h>
+#include <QtGui/qvalidator.h>
 
-#include <QtCore/QPair>
-#include <QtCore/QCoreApplication>
-#include <QtCore/QRegularExpression>
-#include <QtCore/QMultiHash>
-#include <QtCore/QDebug>
+#include <QtCore/qpair.h>
+#include <QtCore/qcoreapplication.h>
+#include <QtCore/qregularexpression.h>
+#include <QtCore/qhash.h>
+#include <QtCore/qdebug.h>
 
 static const char *buddyPropertyC = "buddy";
 static const char *fieldWidgetBaseClasses[] = {

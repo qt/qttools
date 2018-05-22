@@ -31,14 +31,14 @@
 
 #include <widgetfactory_p.h>
 
-#include <QtWidgets/QTabBar>
-#include <QtWidgets/QSizeGrip>
-#include <QtWidgets/QAbstractButton>
-#include <QtWidgets/QToolBox>
-#include <QtWidgets/QMenuBar>
-#include <QtWidgets/QMainWindow>
-#include <QtWidgets/QDockWidget>
-#include <QtWidgets/QToolBar>
+#include <QtWidgets/qtabbar.h>
+#include <QtWidgets/qsizegrip.h>
+#include <QtWidgets/qabstractbutton.h>
+#include <QtWidgets/qtoolbox.h>
+#include <QtWidgets/qmenubar.h>
+#include <QtWidgets/qmainwindow.h>
+#include <QtWidgets/qdockwidget.h>
+#include <QtWidgets/qtoolbar.h>
 
 #include <QtCore/qdebug.h>
 

@@ -29,7 +29,7 @@
 #ifndef MENUTASKMENU_H
 #define MENUTASKMENU_H
 
-#include <QtDesigner/QDesignerTaskMenuExtension>
+#include <QtDesigner/taskmenu.h>
 
 #include <qdesigner_menu_p.h>
 #include <qdesigner_menubar_p.h>

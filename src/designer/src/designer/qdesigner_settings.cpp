@@ -31,18 +31,18 @@
 #include "qdesigner_toolwindow.h"
 #include "qdesigner_workbench.h"
 
-#include <QtDesigner/QDesignerSettingsInterface>
+#include <QtDesigner/abstractsettings.h>
 
 #include <abstractformeditor.h>
 #include <qdesigner_utils_p.h>
 #include <previewmanager_p.h>
 
-#include <QtCore/QVariant>
-#include <QtCore/QDir>
+#include <QtCore/qvariant.h>
+#include <QtCore/qdir.h>
 
-#include <QtWidgets/QDesktopWidget>
-#include <QtWidgets/QStyle>
-#include <QtWidgets/QListView>
+#include <QtWidgets/qdesktopwidget.h>
+#include <QtWidgets/qstyle.h>
+#include <QtWidgets/qlistview.h>
 
 #include <QtCore/qdebug.h>
 

@@ -42,9 +42,9 @@
 
 #include "shared_global_p.h"
 
-#include <QtDesigner/QDesignerSettingsInterface>
+#include <QtDesigner/abstractsettings.h>
 
-#include <QtCore/QSettings>
+#include <QtCore/qsettings.h>
 
 QT_BEGIN_NAMESPACE
 

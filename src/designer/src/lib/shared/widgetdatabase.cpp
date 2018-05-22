@@ -36,18 +36,18 @@
 #include <QtDesigner/private/ui4_p.h>
 
 #include <QtDesigner/propertysheet.h>
-#include <QtDesigner/QExtensionManager>
-#include <QtDesigner/QDesignerFormEditorInterface>
+#include <QtDesigner/qextensionmanager.h>
+#include <QtDesigner/abstractformeditor.h>
 
 #include <QtUiPlugin/customwidget.h>
 
-#include <QtCore/QXmlStreamWriter>
+#include <QtCore/qxmlstream.h>
 
-#include <QtCore/QScopedPointer>
+#include <QtCore/qscopedpointer.h>
 #include <QtCore/qdebug.h>
-#include <QtCore/QMetaProperty>
-#include <QtCore/QTextStream>
-#include <QtCore/QCoreApplication>
+#include <QtCore/qmetaobject.h>
+#include <QtCore/qtextstream.h>
+#include <QtCore/qcoreapplication.h>
 
 QT_BEGIN_NAMESPACE
 

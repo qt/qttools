@@ -41,8 +41,8 @@
 #define DESIGNEROBJECTINSPECTOR_H
 
 #include "shared_global_p.h"
-#include <QtDesigner/QDesignerObjectInspectorInterface>
-#include <QtCore/QList>
+#include <QtDesigner/abstractobjectinspector.h>
+#include <QtCore/qlist.h>
 
 QT_BEGIN_NAMESPACE
 

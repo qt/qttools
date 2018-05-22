@@ -28,10 +28,10 @@
 
 #include "grid_p.h"
 
-#include <QtCore/QString>
-#include <QtCore/QVector>
-#include <QtGui/QPainter>
-#include <QtWidgets/QWidget>
+#include <QtCore/qstring.h>
+#include <QtCore/qvector.h>
+#include <QtGui/qpainter.h>
+#include <QtWidgets/qwidget.h>
 #include <QtGui/qevent.h>
 
 QT_BEGIN_NAMESPACE

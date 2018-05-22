@@ -50,7 +50,7 @@
 
 #include "textbuilder_p.h"
 #include "ui4_p.h"
-#include <QtCore/QVariant>
+#include <QtCore/qvariant.h>
 
 QT_BEGIN_NAMESPACE
 

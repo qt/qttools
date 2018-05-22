@@ -31,7 +31,7 @@
 #include <abstractdialoggui_p.h>
 #include <qdesigner_propertysheet_p.h>
 
-#include <QtWidgets/QPushButton>
+#include <QtWidgets/qpushbutton.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -42,14 +42,14 @@
 
 #include "shared_global_p.h"
 
-#include <QtDesigner/QDesignerFormWindowInterface>
+#include <QtDesigner/abstractformwindow.h>
 
-#include <QtCore/QVariant>
-#include <QtCore/QSharedDataPointer>
-#include <QtCore/QMap>
-#include <QtWidgets/QMainWindow>
-#include <QtGui/QIcon>
-#include <QtGui/QPixmap>
+#include <QtCore/qvariant.h>
+#include <QtCore/qshareddata.h>
+#include <QtCore/qmap.h>
+#include <QtWidgets/qmainwindow.h>
+#include <QtGui/qicon.h>
+#include <QtGui/qpixmap.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -30,12 +30,11 @@
 #include "iconloader_p.h"
 #include "ui_orderdialog.h"
 
-#include <QtDesigner/QExtensionManager>
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerContainerExtension>
-#include <QtCore/QAbstractItemModel>
-#include <QtCore/QModelIndex>
-#include <QtWidgets/QPushButton>
+#include <QtDesigner/qextensionmanager.h>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/container.h>
+#include <QtCore/qabstractitemmodel.h>
+#include <QtWidgets/qpushbutton.h>
 
 QT_BEGIN_NAMESPACE
 

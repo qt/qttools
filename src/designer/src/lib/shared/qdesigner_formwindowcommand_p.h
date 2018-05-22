@@ -42,8 +42,8 @@
 
 #include "shared_global_p.h"
 
-#include <QtCore/QPointer>
-#include <QtWidgets/QUndoCommand>
+#include <QtCore/qpointer.h>
+#include <QtWidgets/qundostack.h>
 
 QT_BEGIN_NAMESPACE
 

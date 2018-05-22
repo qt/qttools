@@ -30,7 +30,7 @@
 #define DEFAULT_LAYOUTDECORATION_H
 
 #include "formeditor_global.h"
-#include <QtDesigner/QDesignerLayoutDecorationExtension>
+#include <QtDesigner/layoutdecoration.h>
 #include <QtDesigner/default_extensionfactory.h>
 
 QT_BEGIN_NAMESPACE

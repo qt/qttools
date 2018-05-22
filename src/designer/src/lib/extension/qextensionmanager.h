@@ -31,7 +31,7 @@
 
 #include <QtDesigner/extension_global.h>
 #include <QtDesigner/extension.h>
-#include <QtCore/QHash>
+#include <QtCore/qhash.h>
 
 QT_BEGIN_NAMESPACE
 

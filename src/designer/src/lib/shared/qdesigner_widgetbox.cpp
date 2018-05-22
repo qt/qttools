@@ -31,10 +31,10 @@
 
 #include <QtDesigner/private/ui4_p.h>
 
-#include <QtCore/QRegularExpression>
-#include <QtCore/QDebug>
-#include <QtCore/QXmlStreamReader>
-#include <QtCore/QSharedData>
+#include <QtCore/qregularexpression.h>
+#include <QtCore/qdebug.h>
+#include <QtCore/qxmlstream.h>
+#include <QtCore/qshareddata.h>
 
 QT_BEGIN_NAMESPACE
 

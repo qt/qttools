@@ -31,9 +31,9 @@
 
 #include "formeditor_global.h"
 #include "formwindow.h"
-#include <QtDesigner/QDesignerFormWindowCursorInterface>
+#include <QtDesigner/abstractformwindowcursor.h>
 
-#include <QtCore/QObject>
+#include <QtCore/qobject.h>
 
 QT_BEGIN_NAMESPACE
 

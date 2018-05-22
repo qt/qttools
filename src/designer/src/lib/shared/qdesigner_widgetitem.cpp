@@ -30,20 +30,19 @@
 #include "qdesigner_widget_p.h"
 #include "widgetfactory_p.h"
 
-#include <QtDesigner/QDesignerFormWindowInterface>
-#include <QtDesigner/QExtensionManager>
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerContainerExtension>
-#include <QtDesigner/QDesignerWidgetDataBaseInterface>
+#include <QtDesigner/abstractformwindow.h>
+#include <QtDesigner/qextensionmanager.h>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/container.h>
+#include <QtDesigner/abstractwidgetdatabase.h>
 
-#include <QtWidgets/QVBoxLayout>
-#include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QGridLayout>
-#include <QtWidgets/QFormLayout>
-#include <QtWidgets/QApplication>
+#include <QtWidgets/qboxlayout.h>
+#include <QtWidgets/qgridlayout.h>
+#include <QtWidgets/qformlayout.h>
+#include <QtWidgets/qapplication.h>
 
-#include <QtCore/QTextStream>
-#include <QtCore/QDebug>
+#include <QtCore/qtextstream.h>
+#include <QtCore/qdebug.h>
 #include <private/qlayout_p.h>
 
 QT_BEGIN_NAMESPACE

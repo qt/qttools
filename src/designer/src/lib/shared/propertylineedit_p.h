@@ -42,7 +42,7 @@
 
 #include "shared_global_p.h"
 
-#include <QtWidgets/QLineEdit>
+#include <QtWidgets/qlineedit.h>
 
 QT_BEGIN_NAMESPACE
 

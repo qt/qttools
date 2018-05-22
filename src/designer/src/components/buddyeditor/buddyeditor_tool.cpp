@@ -29,9 +29,9 @@
 #include "buddyeditor_tool.h"
 #include "buddyeditor.h"
 
-#include <QtDesigner/QDesignerFormWindowInterface>
+#include <QtDesigner/abstractformwindow.h>
 
-#include <QtWidgets/QAction>
+#include <QtWidgets/qaction.h>
 
 QT_BEGIN_NAMESPACE
 

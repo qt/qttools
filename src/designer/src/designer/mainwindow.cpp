@@ -35,20 +35,20 @@
 #include "qdesigner_settings.h"
 #include "qttoolbardialog.h"
 
-#include <QtDesigner/QDesignerFormWindowInterface>
+#include <QtDesigner/abstractformwindow.h>
 
-#include <QtWidgets/QAction>
-#include <QtGui/QCloseEvent>
-#include <QtWidgets/QToolBar>
-#include <QtWidgets/QMdiSubWindow>
-#include <QtWidgets/QStatusBar>
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QLayout>
-#include <QtWidgets/QDockWidget>
+#include <QtWidgets/qaction.h>
+#include <QtGui/qevent.h>
+#include <QtWidgets/qtoolbar.h>
+#include <QtWidgets/qmdisubwindow.h>
+#include <QtWidgets/qstatusbar.h>
+#include <QtWidgets/qmenu.h>
+#include <QtWidgets/qlayout.h>
+#include <QtWidgets/qdockwidget.h>
 
-#include <QtCore/QUrl>
-#include <QtCore/QDebug>
-#include <QtCore/QMimeData>
+#include <QtCore/qurl.h>
+#include <QtCore/qdebug.h>
+#include <QtCore/qmimedata.h>
 
 static const char *uriListMimeFormatC = "text/uri-list";
 

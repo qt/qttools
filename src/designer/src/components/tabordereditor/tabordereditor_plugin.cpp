@@ -26,14 +26,14 @@
 **
 ****************************************************************************/
 
-#include <QtWidgets/QAction>
+#include <QtWidgets/qaction.h>
 
 #include "tabordereditor_plugin.h"
 #include "tabordereditor_tool.h"
 
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerFormWindowInterface>
-#include <QtDesigner/QDesignerFormWindowManagerInterface>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractformwindow.h>
+#include <QtDesigner/abstractformwindowmanager.h>
 
 QT_BEGIN_NAMESPACE
 

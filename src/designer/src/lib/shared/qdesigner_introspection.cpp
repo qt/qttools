@@ -28,10 +28,9 @@
 
 #include "qdesigner_introspection_p.h"
 
-#include <QtCore/QMetaObject>
-#include <QtCore/QMetaEnum>
-#include <QtCore/QStringList>
-#include <QtCore/QVector>
+#include <QtCore/qmetaobject.h>
+#include <QtCore/qstringlist.h>
+#include <QtCore/qvector.h>
 
 QT_BEGIN_NAMESPACE
 

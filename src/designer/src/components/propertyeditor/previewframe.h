@@ -29,8 +29,8 @@
 #ifndef PREVIEWFRAME_H
 #define PREVIEWFRAME_H
 
-#include <QtWidgets/QFrame>
-#include <QtCore/QPointer>
+#include <QtWidgets/qframe.h>
+#include <QtCore/qpointer.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -42,10 +42,10 @@
 
 #include "shared_global_p.h"
 
-#include <QtWidgets/QAction>
-#include <QtWidgets/QMenu>
-#include <QtGui/QPixmap>
-#include <QtCore/QHash>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qmenu.h>
+#include <QtGui/qpixmap.h>
+#include <QtCore/qhash.h>
 
 QT_BEGIN_NAMESPACE
 

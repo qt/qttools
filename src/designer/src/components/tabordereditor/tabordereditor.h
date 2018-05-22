@@ -31,11 +31,11 @@
 
 #include "tabordereditor_global.h"
 
-#include <QtCore/QPointer>
-#include <QtWidgets/QWidget>
-#include <QtGui/QRegion>
-#include <QtGui/QFont>
-#include <QtGui/QFontMetrics>
+#include <QtCore/qpointer.h>
+#include <QtWidgets/qwidget.h>
+#include <QtGui/qregion.h>
+#include <QtGui/qfont.h>
+#include <QtGui/qfontmetrics.h>
 
 QT_BEGIN_NAMESPACE
 

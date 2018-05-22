@@ -42,10 +42,10 @@
 
 #include "qdesigner_formwindowcommand_p.h"
 
-#include <QtCore/QVariant>
-#include <QtCore/QList>
-#include <QtCore/QPair>
-#include <QtCore/QSharedPointer>
+#include <QtCore/qvariant.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qpair.h>
+#include <QtCore/qsharedpointer.h>
 
 QT_BEGIN_NAMESPACE
 

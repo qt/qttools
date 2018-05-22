@@ -28,7 +28,7 @@
 
 #include "stringlisteditor.h"
 #include <iconloader_p.h>
-#include <QtCore/QStringListModel>
+#include <QtCore/qstringlistmodel.h>
 
 QT_BEGIN_NAMESPACE
 

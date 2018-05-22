@@ -30,17 +30,17 @@
 
 #include "rcc_p.h"
 
-#include <QtCore/QByteArray>
-#include <QtCore/QDateTime>
-#include <QtCore/QDebug>
-#include <QtCore/QDir>
-#include <QtCore/QDirIterator>
-#include <QtCore/QFile>
-#include <QtCore/QIODevice>
-#include <QtCore/QLocale>
-#include <QtCore/QRegExp>
-#include <QtCore/QStack>
-#include <QtCore/QXmlStreamReader>
+#include <QtCore/qbytearray.h>
+#include <QtCore/qdatetime.h>
+#include <QtCore/qdebug.h>
+#include <QtCore/qdir.h>
+#include <QtCore/qdiriterator.h>
+#include <QtCore/qfile.h>
+#include <QtCore/qiodevice.h>
+#include <QtCore/qlocale.h>
+#include <QtCore/qregexp.h>
+#include <QtCore/qstack.h>
+#include <QtCore/qxmlstream.h>
 
 #include <algorithm>
 

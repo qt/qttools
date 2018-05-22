@@ -31,9 +31,9 @@
 
 #include <layoutinfo_p.h>
 
-#include <QtDesigner/QDesignerMetaDataBaseItemInterface>
-#include <QtDesigner/QDesignerFormWindowInterface>
-#include <QtDesigner/QDesignerFormEditorInterface>
+#include <QtDesigner/abstractmetadatabase.h>
+#include <QtDesigner/abstractformwindow.h>
+#include <QtDesigner/abstractformeditor.h>
 
 QT_BEGIN_NAMESPACE
 

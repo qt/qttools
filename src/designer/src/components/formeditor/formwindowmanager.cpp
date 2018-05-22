@@ -54,25 +54,25 @@
 #include <spacer_widget_p.h>
 
 // SDK
-#include <QtDesigner/QExtensionManager>
-#include <QtDesigner/QDesignerLanguageExtension>
-#include <QtDesigner/QDesignerContainerExtension>
-#include <QtDesigner/QDesignerWidgetBoxInterface>
-#include <QtDesigner/QDesignerIntegrationInterface>
+#include <QtDesigner/qextensionmanager.h>
+#include <QtDesigner/abstractlanguage.h>
+#include <QtDesigner/container.h>
+#include <QtDesigner/abstractwidgetbox.h>
+#include <QtDesigner/abstractintegration.h>
 
-#include <QtWidgets/QUndoGroup>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QSplitter>
-#include <QtGui/QMouseEvent>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QSizeGrip>
+#include <QtWidgets/qundogroup.h>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qsplitter.h>
+#include <QtGui/qevent.h>
+#include <QtWidgets/qapplication.h>
+#include <QtWidgets/qsizegrip.h>
 #ifndef QT_NO_CLIPBOARD
-#include <QtGui/QClipboard>
+#include <QtGui/qclipboard.h>
 #endif
-#include <QtWidgets/QMdiArea>
-#include <QtWidgets/QMdiSubWindow>
-#include <QtWidgets/QDesktopWidget>
-#include <QtWidgets/QMessageBox>
+#include <QtWidgets/qmdiarea.h>
+#include <QtWidgets/qmdisubwindow.h>
+#include <QtWidgets/qdesktopwidget.h>
+#include <QtWidgets/qmessagebox.h>
 
 #include <QtCore/qdebug.h>
 

@@ -29,9 +29,9 @@
 #ifndef FONTPROPERTYMANAGER_H
 #define FONTPROPERTYMANAGER_H
 
-#include <QtCore/QMap>
-#include <QtCore/QStringList>
-#include <QtGui/QFont>
+#include <QtCore/qmap.h>
+#include <QtCore/qstringlist.h>
+#include <QtGui/qfont.h>
 
 QT_BEGIN_NAMESPACE
 

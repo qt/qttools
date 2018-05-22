@@ -29,8 +29,8 @@
 #include "layout_propertysheet.h"
 
 // sdk
-#include <QtDesigner/QExtensionManager>
-#include <QtDesigner/QDesignerFormEditorInterface>
+#include <QtDesigner/qextensionmanager.h>
+#include <QtDesigner/abstractformeditor.h>
 // shared
 
 #include <qlayout_widget_p.h>
@@ -38,12 +38,12 @@
 #include <QtDesigner/private/ui4_p.h>
 #include <QtDesigner/private/formbuilderextra_p.h>
 
-#include <QtWidgets/QFormLayout>
+#include <QtWidgets/qformlayout.h>
 
-#include <QtCore/QHash>
-#include <QtCore/QDebug>
-#include <QtCore/QTextStream>
-#include <QtCore/QByteArray>
+#include <QtCore/qhash.h>
+#include <QtCore/qdebug.h>
+#include <QtCore/qtextstream.h>
+#include <QtCore/qbytearray.h>
 #include <QtCore/QRegularExpression> // Remove once there is an editor for lists
 
 QT_BEGIN_NAMESPACE

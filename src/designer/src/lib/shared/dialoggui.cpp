@@ -28,15 +28,15 @@
 
 #include "dialoggui_p.h"
 
-#include <QtWidgets/QFileIconProvider>
-#include <QtGui/QIcon>
-#include <QtGui/QImage>
-#include <QtGui/QImageReader>
-#include <QtGui/QPixmap>
+#include <QtWidgets/qfileiconprovider.h>
+#include <QtGui/qicon.h>
+#include <QtGui/qimage.h>
+#include <QtGui/qimagereader.h>
+#include <QtGui/qpixmap.h>
 
-#include <QtCore/QFileInfo>
-#include <QtCore/QFile>
-#include <QtCore/QSet>
+#include <QtCore/qfileinfo.h>
+#include <QtCore/qfile.h>
+#include <QtCore/qset.h>
 
 // QFileDialog on X11 does not provide an image preview. Display icons.
 #if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)

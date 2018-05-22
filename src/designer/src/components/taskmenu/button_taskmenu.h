@@ -29,9 +29,9 @@
 #ifndef BUTTON_TASKMENU_H
 #define BUTTON_TASKMENU_H
 
-#include <QtWidgets/QAbstractButton>
-#include <QtWidgets/QCommandLinkButton>
-#include <QtWidgets/QButtonGroup>
+#include <QtWidgets/qabstractbutton.h>
+#include <QtWidgets/qcommandlinkbutton.h>
+#include <QtWidgets/qbuttongroup.h>
 
 #include <qdesigner_taskmenu_p.h>
 #include <extensionfactory_p.h>

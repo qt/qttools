@@ -43,9 +43,9 @@
 #include "shared_global_p.h"
 #include <QtDesigner/abstractdnditem.h>
 
-#include <QtCore/QPoint>
-#include <QtCore/QList>
-#include <QtCore/QMimeData>
+#include <QtCore/qpoint.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qmimedata.h>
 
 QT_BEGIN_NAMESPACE
 

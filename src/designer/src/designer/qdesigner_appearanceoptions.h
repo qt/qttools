@@ -32,11 +32,11 @@
 #include "designer_enums.h"
 #include "qdesigner_toolwindow.h"
 
-#include <QtDesigner/QDesignerOptionsPageInterface>
+#include <QtDesigner/abstractoptionspage.h>
 
-#include <QtCore/QObject>
-#include <QtCore/QPointer>
-#include <QtWidgets/QWidget>
+#include <QtCore/qobject.h>
+#include <QtCore/qpointer.h>
+#include <QtWidgets/qwidget.h>
 
 QT_BEGIN_NAMESPACE
 

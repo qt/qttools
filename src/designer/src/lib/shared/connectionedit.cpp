@@ -31,17 +31,16 @@
 
 #include <QtDesigner/abstractformwindow.h>
 
-#include <QtGui/QPainter>
-#include <QtGui/QPaintEvent>
-#include <QtGui/QFontMetrics>
-#include <QtGui/QPixmap>
-#include <QtGui/QMatrix>
-#include <QtWidgets/QApplication>
-#include <QtGui/QContextMenuEvent>
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QAction>
+#include <QtGui/qpainter.h>
+#include <QtGui/qevent.h>
+#include <QtGui/qfontmetrics.h>
+#include <QtGui/qpixmap.h>
+#include <QtGui/qmatrix.h>
+#include <QtWidgets/qapplication.h>
+#include <QtWidgets/qmenu.h>
+#include <QtWidgets/qaction.h>
 
-#include <QtCore/QMultiMap>
+#include <QtCore/qmap.h>
 
 QT_BEGIN_NAMESPACE
 

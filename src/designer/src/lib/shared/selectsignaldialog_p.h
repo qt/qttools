@@ -40,8 +40,8 @@
 #ifndef SELECTSIGNALDIALOG_H
 #define SELECTSIGNALDIALOG_H
 
-#include <QtWidgets/QDialog>
-#include <QtCore/QStringList>
+#include <QtWidgets/qdialog.h>
+#include <QtCore/qstringlist.h>
 
 QT_BEGIN_NAMESPACE
 

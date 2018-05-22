@@ -31,9 +31,9 @@
 #include "formwindow.h"
 #include "formeditor.h"
 
-#include <QtDesigner/QExtensionManager>
+#include <QtDesigner/qextensionmanager.h>
 
-#include <QtWidgets/QLayout>
+#include <QtWidgets/qlayout.h>
 
 QT_BEGIN_NAMESPACE
 

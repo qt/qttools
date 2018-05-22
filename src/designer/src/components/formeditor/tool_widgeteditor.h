@@ -29,10 +29,10 @@
 #ifndef TOOL_WIDGETEDITOR_H
 #define TOOL_WIDGETEDITOR_H
 
-#include <QtDesigner/QDesignerFormWindowToolInterface>
+#include <QtDesigner/abstractformwindowtool.h>
 
 #include <QtGui/qevent.h>
-#include <QtCore/QPointer>
+#include <QtCore/qpointer.h>
 
 QT_BEGIN_NAMESPACE
 

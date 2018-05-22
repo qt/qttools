@@ -40,7 +40,7 @@
 #ifndef PLAINTEXTEDITOR_H
 #define PLAINTEXTEDITOR_H
 
-#include <QtWidgets/QDialog>
+#include <QtWidgets/qdialog.h>
 #include "shared_global_p.h"
 
 QT_BEGIN_NAMESPACE

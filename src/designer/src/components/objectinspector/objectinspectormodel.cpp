@@ -34,20 +34,20 @@
 #include <qdesigner_utils_p.h>
 #include <iconloader_p.h>
 
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerFormWindowInterface>
-#include <QtDesigner/QDesignerWidgetDataBaseInterface>
-#include <QtDesigner/QDesignerContainerExtension>
-#include <QtDesigner/QDesignerMetaDataBaseInterface>
-#include <QtDesigner/QExtensionManager>
-#include <QtWidgets/QLayout>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QLayoutItem>
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QButtonGroup>
-#include <QtCore/QSet>
-#include <QtCore/QDebug>
-#include <QtCore/QCoreApplication>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractformwindow.h>
+#include <QtDesigner/abstractwidgetdatabase.h>
+#include <QtDesigner/container.h>
+#include <QtDesigner/abstractmetadatabase.h>
+#include <QtDesigner/qextensionmanager.h>
+#include <QtWidgets/qlayout.h>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qlayoutitem.h>
+#include <QtWidgets/qmenu.h>
+#include <QtWidgets/qbuttongroup.h>
+#include <QtCore/qset.h>
+#include <QtCore/qdebug.h>
+#include <QtCore/qcoreapplication.h>
 
 #include <algorithm>
 

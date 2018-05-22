@@ -33,14 +33,14 @@
 #include "promotiontaskmenu_p.h"
 #include "widgetfactory_p.h"
 
-#include <QtDesigner/QDesignerFormWindowInterface>
+#include <QtDesigner/abstractformwindow.h>
 
-#include <QtWidgets/QToolButton>
-#include <QtWidgets/QAction>
+#include <QtWidgets/qtoolbutton.h>
+#include <QtWidgets/qaction.h>
 #include <QtGui/qevent.h>
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QStackedWidget>
-#include <QtCore/QDebug>
+#include <QtWidgets/qmenu.h>
+#include <QtWidgets/qstackedwidget.h>
+#include <QtCore/qdebug.h>
 
 QT_BEGIN_NAMESPACE
 

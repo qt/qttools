@@ -29,12 +29,12 @@
 #ifndef QMAINWINDOW_CONTAINER_H
 #define QMAINWINDOW_CONTAINER_H
 
-#include <QtDesigner/QDesignerContainerExtension>
-#include <QtDesigner/QExtensionFactory>
+#include <QtDesigner/container.h>
+#include <QtDesigner/default_extensionfactory.h>
 
 #include <extensionfactory_p.h>
 
-#include <QtWidgets/QMainWindow>
+#include <QtWidgets/qmainwindow.h>
 
 QT_BEGIN_NAMESPACE
 

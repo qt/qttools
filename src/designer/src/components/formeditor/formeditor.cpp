@@ -51,8 +51,8 @@
 #include "itemview_propertysheet.h"
 
 // sdk
-#include <QtDesigner/QExtensionManager>
-#include <QtDesigner/QDesignerIntegrationInterface>
+#include <QtDesigner/qextensionmanager.h>
+#include <QtDesigner/abstractintegration.h>
 // shared
 #include <pluginmanager_p.h>
 #include <qdesigner_taskmenu_p.h>

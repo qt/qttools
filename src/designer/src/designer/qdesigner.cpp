@@ -36,21 +36,20 @@
 
 #include <qdesigner_propertysheet_p.h>
 
-#include <QtGui/QFileOpenEvent>
-#include <QtGui/QCloseEvent>
-#include <QtWidgets/QMessageBox>
-#include <QtGui/QIcon>
-#include <QtWidgets/QErrorMessage>
-#include <QtCore/QMetaObject>
-#include <QtCore/QFile>
-#include <QtCore/QLibraryInfo>
-#include <QtCore/QLocale>
-#include <QtCore/QTimer>
-#include <QtCore/QTranslator>
-#include <QtCore/QFileInfo>
+#include <QtGui/qevent.h>
+#include <QtWidgets/qmessagebox.h>
+#include <QtGui/qicon.h>
+#include <QtWidgets/qerrormessage.h>
+#include <QtCore/qmetaobject.h>
+#include <QtCore/qfile.h>
+#include <QtCore/qlibraryinfo.h>
+#include <QtCore/qlocale.h>
+#include <QtCore/qtimer.h>
+#include <QtCore/qtranslator.h>
+#include <QtCore/qfileinfo.h>
 #include <QtCore/qdebug.h>
-#include <QtCore/QCommandLineParser>
-#include <QtCore/QCommandLineOption>
+#include <QtCore/qcommandlineparser.h>
+#include <QtCore/qcommandlineoption.h>
 
 #include <QtDesigner/QDesignerComponents>
 

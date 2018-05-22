@@ -32,16 +32,15 @@
 #include "promotiontaskmenu_p.h"
 #include "formwindowbase_p.h"
 
-#include <QtDesigner/QDesignerFormWindowInterface>
+#include <QtDesigner/abstractformwindow.h>
 
-#include <QtCore/QEvent>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QToolBox>
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QLayout>
-#include <QtWidgets/QApplication>
-#include <QtGui/QContextMenuEvent>
-#include <QtCore/QHash>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qtoolbox.h>
+#include <QtWidgets/qmenu.h>
+#include <QtWidgets/qlayout.h>
+#include <QtWidgets/qapplication.h>
+#include <QtGui/qevent.h>
+#include <QtCore/qhash.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -30,8 +30,8 @@
 
 #include <promotiontaskmenu_p.h>
 
-#include <QtWidgets/QAction>
-#include <QtCore/QDebug>
+#include <QtWidgets/qaction.h>
+#include <QtCore/qdebug.h>
 
 QT_BEGIN_NAMESPACE
 

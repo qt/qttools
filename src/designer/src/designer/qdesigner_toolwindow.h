@@ -31,9 +31,9 @@
 
 #include "mainwindow.h"
 
-#include <QtCore/QPointer>
-#include <QtGui/QFontDatabase>
-#include <QtWidgets/QMainWindow>
+#include <QtCore/qpointer.h>
+#include <QtGui/qfontdatabase.h>
+#include <QtWidgets/qmainwindow.h>
 
 QT_BEGIN_NAMESPACE
 

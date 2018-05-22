@@ -32,8 +32,8 @@
 #include "formeditor_global.h"
 #include <invisible_widget_p.h>
 
-#include <QtCore/QHash>
-#include <QtCore/QPointer>
+#include <QtCore/qhash.h>
+#include <QtCore/qpointer.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -42,11 +42,11 @@
 
 #include "shared_global_p.h"
 
-#include <QtWidgets/QAction>
-#include <QtWidgets/QToolButton>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qtoolbutton.h>
 
-#include <QtCore/QList>
-#include <QtCore/QPoint>
+#include <QtCore/qlist.h>
+#include <QtCore/qpoint.h>
 
 QT_BEGIN_NAMESPACE
 

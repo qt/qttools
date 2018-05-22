@@ -48,27 +48,27 @@
 #include "abstractintrospection_p.h"
 
 // sdk
-#include <QtDesigner/QDesignerFormEditorInterface>
-#include <QtDesigner/QDesignerContainerExtension>
-#include <QtDesigner/QExtensionManager>
-#include <QtDesigner/QDesignerPropertySheetExtension>
-#include <QtDesigner/QDesignerLanguageExtension>
-#include <QtDesigner/QDesignerFormWindowManagerInterface>
-#include <QtDesigner/QDesignerFormWindowCursorInterface>
+#include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/container.h>
+#include <QtDesigner/qextensionmanager.h>
+#include <QtDesigner/propertysheet.h>
+#include <QtDesigner/abstractlanguage.h>
+#include <QtDesigner/abstractformwindowmanager.h>
+#include <QtDesigner/abstractformwindowcursor.h>
 
-#include <QtUiPlugin/QDesignerCustomWidgetInterface>
+#include <QtUiPlugin/customwidget.h>
 
 #include <QtWidgets/QtWidgets>
-#include <QtWidgets/QScrollBar>
-#include <QtWidgets/QFontComboBox>
-#include <QtWidgets/QAbstractSpinBox>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QButtonGroup>
-#include <QtWidgets/QStyle>
-#include <QtWidgets/QStyleFactory>
-#include <QtWidgets/QWizard>
+#include <QtWidgets/qscrollbar.h>
+#include <QtWidgets/qfontcombobox.h>
+#include <QtWidgets/qabstractspinbox.h>
+#include <QtWidgets/qlineedit.h>
+#include <QtWidgets/qbuttongroup.h>
+#include <QtWidgets/qstyle.h>
+#include <QtWidgets/qstylefactory.h>
+#include <QtWidgets/qwizard.h>
 #include <QtCore/qdebug.h>
-#include <QtCore/QMetaObject>
+#include <QtCore/qmetaobject.h>
 
 QT_BEGIN_NAMESPACE
 

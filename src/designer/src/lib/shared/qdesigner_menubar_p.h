@@ -42,11 +42,11 @@
 
 #include "shared_global_p.h"
 
-#include <QtWidgets/QAction>
-#include <QtWidgets/QMenuBar>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qmenubar.h>
 
-#include <QtCore/QPointer>
-#include <QtCore/QMimeData>
+#include <QtCore/qpointer.h>
+#include <QtCore/qmimedata.h>
 
 QT_BEGIN_NAMESPACE
 

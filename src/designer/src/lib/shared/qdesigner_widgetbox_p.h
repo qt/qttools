@@ -41,7 +41,7 @@
 #define QDESIGNER_WIDGETBOX_H
 
 #include "shared_global_p.h"
-#include <QtDesigner/QDesignerWidgetBoxInterface>
+#include <QtDesigner/abstractwidgetbox.h>
 
 QT_BEGIN_NAMESPACE
 

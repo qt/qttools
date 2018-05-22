@@ -29,8 +29,8 @@
 #ifndef LABEL_TASKMENU_H
 #define LABEL_TASKMENU_H
 
-#include <QtWidgets/QLabel>
-#include <QtCore/QPointer>
+#include <QtWidgets/qlabel.h>
+#include <QtCore/qpointer.h>
 
 #include <qdesigner_taskmenu_p.h>
 #include <extensionfactory_p.h>

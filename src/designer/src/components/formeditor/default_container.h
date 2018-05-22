@@ -29,15 +29,15 @@
 #ifndef DEFAULT_CONTAINER_H
 #define DEFAULT_CONTAINER_H
 
-#include <QtDesigner/QDesignerContainerExtension>
+#include <QtDesigner/container.h>
 #include <QtDesigner/extension.h>
 #include <extensionfactory_p.h>
 
-#include <QtWidgets/QStackedWidget>
-#include <QtWidgets/QTabWidget>
-#include <QtWidgets/QToolBox>
-#include <QtWidgets/QScrollArea>
-#include <QtWidgets/QDockWidget>
+#include <QtWidgets/qstackedwidget.h>
+#include <QtWidgets/qtabwidget.h>
+#include <QtWidgets/qtoolbox.h>
+#include <QtWidgets/qscrollarea.h>
+#include <QtWidgets/qdockwidget.h>
 
 QT_BEGIN_NAMESPACE
 

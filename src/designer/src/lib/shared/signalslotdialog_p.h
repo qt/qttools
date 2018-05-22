@@ -41,9 +41,9 @@
 #define _SIGNALSLOTDIALOG_H
 
 #include "shared_global_p.h"
-#include <QtCore/QStringList>
-#include <QtWidgets/QDialog>
-#include <QtGui/QStandardItemModel>
+#include <QtCore/qstringlist.h>
+#include <QtWidgets/qdialog.h>
+#include <QtGui/qstandarditemmodel.h>
 
 QT_BEGIN_NAMESPACE
 
