@@ -66,5 +66,6 @@ int main(int argc, char **argv)
         flags |= QtDiagVk;
 
     std::wcout << qtDiag(flags).toStdWString();
+    std::wcout.flush();
     return 0;
 }
