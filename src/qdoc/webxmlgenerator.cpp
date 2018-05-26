@@ -166,6 +166,8 @@ void WebXMLGenerator::generateIndexSections(QXmlStreamWriter &writer,
         if (node->isAggregate()) {
             for (auto child : static_cast<Aggregate *>(node)->childNodes())
                 generateIndexSections(writer, child, marker);
+            for (auto related : static_cast<Aggregate *>(node)->relatedNodes())
+                generateIndexSections(writer, related, marker);
         }
         writer.writeEndElement();
     }
