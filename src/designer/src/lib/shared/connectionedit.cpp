@@ -158,8 +158,8 @@ public:
                             const QPoint &old_target_pos,
                             const QPoint &new_source_pos,
                             const QPoint &new_target_pos);
-    virtual void redo();
-    virtual void undo();
+    void redo() override;
+    void undo() override;
 private:
     Connection *m_con;
     const QPoint m_old_source_pos;
@@ -233,8 +233,8 @@ class SetEndPointCommand : public CECommand
 {
 public:
     SetEndPointCommand(ConnectionEdit *edit, Connection *con, EndPoint::Type type, QObject *object);
-    virtual void redo();
-    virtual void undo();
+    void redo() override;
+    void undo() override;
 private:
     Connection *m_con;
     const EndPoint::Type m_type;

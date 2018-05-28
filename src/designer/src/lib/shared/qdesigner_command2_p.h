@@ -62,14 +62,14 @@ class QDESIGNER_SHARED_EXPORT MorphLayoutCommand : public QDesignerFormWindowCom
     Q_DISABLE_COPY(MorphLayoutCommand)
 public:
     explicit MorphLayoutCommand(QDesignerFormWindowInterface *formWindow);
-    virtual ~MorphLayoutCommand();
+    ~MorphLayoutCommand() override;
 
     bool init(QWidget *w, int newType);
 
     static bool canMorph(const QDesignerFormWindowInterface *formWindow, QWidget *w, int *ptrToCurrentType = 0);
 
-    virtual void redo();
-    virtual void undo();
+    void redo() override;
+    void undo() override;
 
 private:
     static QString formatDescription(QDesignerFormEditorInterface *core, const QWidget *w, int oldType, int newType);
@@ -89,8 +89,8 @@ public:
 
     bool init(QWidget *w, Qt::Alignment alignment);
 
-    virtual void redo();
-    virtual void undo();
+    void redo() override;
+    void undo() override;
 
     // Find out alignment and return whether command is enabled.
     static Qt::Alignment alignmentOf(const QDesignerFormEditorInterface *core, QWidget *w, bool *enabled = 0);

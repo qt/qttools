@@ -288,8 +288,8 @@ class QDESIGNER_SHARED_EXPORT AddConnectionCommand : public CECommand
 {
 public:
     AddConnectionCommand(ConnectionEdit *edit, Connection *con);
-    virtual void redo();
-    virtual void undo();
+    void redo() override;
+    void undo() override;
 private:
     Connection *m_con;
 };
@@ -298,8 +298,8 @@ class QDESIGNER_SHARED_EXPORT DeleteConnectionsCommand : public CECommand
 {
 public:
     DeleteConnectionsCommand(ConnectionEdit *edit, const ConnectionList &con_list);
-    virtual void redo();
-    virtual void undo();
+    void redo() override;
+    void undo() override;
 private:
     ConnectionList m_con_list;
 };

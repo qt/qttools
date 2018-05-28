@@ -173,8 +173,8 @@ class SetMemberCommand : public QUndoCommand, public CETypes
 public:
     SetMemberCommand(SignalSlotConnection *con, EndPoint::Type type,
                         const QString &member, SignalSlotEditor *editor);
-    virtual void redo();
-    virtual void undo();
+    void redo() override;
+    void undo() override;
 private:
     const QString m_old_member;
     const QString m_new_member;
@@ -227,8 +227,8 @@ public:
                                      SignalSlotConnection *conn,
                                      const QString &newSignal,
                                      const QString &newSlot);
-    virtual void redo();
-    virtual void undo();
+    void redo() override;
+    void undo() override;
 
 private:
     SignalSlotConnection *m_conn;

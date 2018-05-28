@@ -269,8 +269,8 @@ public:
 
     QString newWidgetName() const { return m_afterWidget->objectName(); }
 
-    virtual void redo();
-    virtual void undo();
+    void redo() override;
+    void undo() override;
 
     static QStringList candidateClasses(QDesignerFormWindowInterface *fw, QWidget *w);
 
