@@ -445,10 +445,10 @@ public:
 
     void init(QToolBox *toolBox);
 
-    virtual void removePage();
-    virtual void addPage();
-
 protected:
+    void removePage();
+    void addPage();
+
     QPointer<QToolBox> m_toolBox;
     QPointer<QWidget> m_widget;
     int m_index;
@@ -513,10 +513,10 @@ public:
 
     void init(QTabWidget *tabWidget);
 
-    virtual void removePage();
-    virtual void addPage();
-
 protected:
+    void removePage();
+    void addPage();
+
     QPointer<QTabWidget> m_tabWidget;
     QPointer<QWidget> m_widget;
     int m_index;
@@ -586,10 +586,10 @@ public:
 
     void init(QStackedWidget *stackedWidget);
 
-    virtual void removePage();
-    virtual void addPage();
-
 protected:
+    void removePage();
+    void addPage();
+
     QPointer<QStackedWidget> m_stackedWidget;
     QPointer<QWidget> m_widget;
     int m_index;
@@ -780,10 +780,10 @@ public:
 
     void init(QWidget *containerWidget);
 
-    virtual void removePage();
-    virtual void addPage();
-
 protected:
+    void removePage();
+    void addPage();
+
     QPointer<QWidget> m_containerWidget;
     QPointer<QWidget> m_widget;
     int m_index;
