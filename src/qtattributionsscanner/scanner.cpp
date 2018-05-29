@@ -112,10 +112,7 @@ static Package readPackage(const QJsonObject &object, const QString &filePath, L
             missingPropertyWarning(filePath, QStringLiteral("Name"));
         if (p.id.isEmpty())
             missingPropertyWarning(filePath, QStringLiteral("Id"));
-        if (p.qdocModule.isEmpty())
-            missingPropertyWarning(filePath, QStringLiteral("QDocModule"));
-        if (p.qtUsage.isEmpty())
-            missingPropertyWarning(filePath, QStringLiteral("QtUsage"));
+
         if (p.license.isEmpty())
             missingPropertyWarning(filePath, QStringLiteral("License"));
         if (p.copyright.isEmpty())
