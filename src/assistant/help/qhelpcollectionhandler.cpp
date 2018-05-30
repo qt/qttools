@@ -177,10 +177,11 @@ bool QHelpCollectionHandler::openCollectionFile()
                                 "OR Name=\'ContentsFilterTable\' "
                                 "OR Name=\'FileAttributeSetTable\' "
                                 "OR Name=\'OptimizedFilterTable\' "
-                                "OR Name=\'TimeStampTable\')"));
+                                "OR Name=\'TimeStampTable\' "
+                                "OR Name=\'VersionTable\')"));
     m_query->next();
-    if (m_query->value(0).toInt() != 9) {
-        if (!createIndexAndNamespaceFilterTables(m_query)) {
+    if (m_query->value(0).toInt() != 10) {
+        if (!recreateIndexAndNamespaceFilterTables(m_query)) {
             emit error(tr("Cannot create index tables in file %1.").arg(collectionFile()));
             return false;
         }
@@ -349,7 +350,7 @@ bool QHelpCollectionHandler::copyCollectionFile(const QString &fileName)
     copyQuery->exec(QLatin1String("PRAGMA synchronous=OFF"));
     copyQuery->exec(QLatin1String("PRAGMA cache_size=3000"));
 
-    if (!createTables(copyQuery) || !createIndexAndNamespaceFilterTables(copyQuery)) {
+    if (!createTables(copyQuery) || !recreateIndexAndNamespaceFilterTables(copyQuery)) {
         emit error(tr("Cannot copy collection file: %1").arg(colFile));
         return false;
     }
@@ -444,9 +445,19 @@ bool QHelpCollectionHandler::createTables(QSqlQuery *query)
     return true;
 }
 
-bool QHelpCollectionHandler::createIndexAndNamespaceFilterTables(QSqlQuery *query)
+bool QHelpCollectionHandler::recreateIndexAndNamespaceFilterTables(QSqlQuery *query)
 {
     const QStringList tables = QStringList()
+            << QLatin1String("DROP TABLE IF EXISTS FileNameTable")
+            << QLatin1String("DROP TABLE IF EXISTS IndexTable")
+            << QLatin1String("DROP TABLE IF EXISTS ContentsTable")
+            << QLatin1String("DROP TABLE IF EXISTS FileFilterTable")
+            << QLatin1String("DROP TABLE IF EXISTS IndexFilterTable")
+            << QLatin1String("DROP TABLE IF EXISTS ContentsFilterTable")
+            << QLatin1String("DROP TABLE IF EXISTS FileAttributeSetTable")
+            << QLatin1String("DROP TABLE IF EXISTS OptimizedFilterTable")
+            << QLatin1String("DROP TABLE IF EXISTS TimeStampTable")
+            << QLatin1String("DROP TABLE IF EXISTS VersionTable")
             << QLatin1String("CREATE TABLE FileNameTable ("
                              "FolderId INTEGER, "
                              "Name TEXT, "
@@ -484,7 +495,10 @@ bool QHelpCollectionHandler::createIndexAndNamespaceFilterTables(QSqlQuery *quer
                              "FolderId INTEGER, "
                              "FilePath TEXT, "
                              "Size INTEGER, "
-                             "TimeStamp TEXT)");
+                             "TimeStamp TEXT)")
+            << QLatin1String("CREATE TABLE VersionTable ("
+                             "NamespaceId INTEGER, "
+                             "Version TEXT)");
 
     for (const QString &q : tables) {
         if (!query->exec(q))
@@ -671,6 +685,7 @@ bool QHelpCollectionHandler::registerDocumentation(const QString &fileName)
     if (vfId < 1)
         return false;
 
+    registerVersion(reader.version(), nsId);
     registerFilterAttributes(reader.filterAttributeSets(), nsId); // qset, what happens when removing documentation?
     for (const QString &filterName : reader.customFilters())
         addCustomFilter(filterName, reader.filterAttributes(filterName));
@@ -873,9 +888,19 @@ QString QHelpCollectionHandler::namespaceForFile(const QUrl &url,
     if (namespaceList.isEmpty())
         return QString();
 
-    return namespaceList.contains(fileInfo.namespaceName)
-            ? fileInfo.namespaceName
-            : namespaceList.first(); // TODO: version match heuristics
+    if (namespaceList.contains(fileInfo.namespaceName))
+        return fileInfo.namespaceName;
+
+    const QString originalVersion = namespaceVersion(fileInfo.namespaceName);
+
+    for (const QString &ns : namespaceList) {
+        const QString nsVersion = namespaceVersion(ns);
+        if (originalVersion == nsVersion)
+            return ns;
+    }
+
+    // TODO: still, we may like to return the ns for the highest available version
+    return namespaceList.first();
 }
 
 QStringList QHelpCollectionHandler::files(const QString &namespaceName,
@@ -1235,6 +1260,25 @@ QList<QStringList> QHelpCollectionHandler::filterAttributeSets(const QString &na
     return result;
 }
 
+QString QHelpCollectionHandler::namespaceVersion(const QString &namespaceName) const
+{
+    if (!m_query)
+        return QString();
+
+    m_query->prepare(QLatin1String("SELECT "
+                                       "VersionTable.Version "
+                                   "FROM "
+                                       "NamespaceTable, "
+                                       "VersionTable "
+                                   "WHERE NamespaceTable.Name = ? "
+                                   "AND NamespaceTable.Id = VersionTable.NamespaceId"));
+    m_query->bindValue(0, namespaceName);
+    if (!m_query->exec() || !m_query->next())
+        return QString();
+
+    return m_query->value(0).toString();
+}
+
 int QHelpCollectionHandler::registerNamespace(const QString &nspace, const QString &fileName)
 {
     const int errorValue = -1;
@@ -1284,6 +1328,19 @@ int QHelpCollectionHandler::registerVirtualFolder(const QString &folderName, int
     return virtualId;
 }
 
+bool QHelpCollectionHandler::registerVersion(const QString &version, int namespaceId)
+{
+    if (!m_query)
+        return false;
+
+    m_query->prepare(QLatin1String("INSERT INTO VersionTable "
+                                   "(NamespaceId, Version) "
+                                   "VALUES(?, ?)"));
+    m_query->addBindValue(namespaceId);
+    m_query->addBindValue(version);
+    return m_query->exec();
+}
+
 bool QHelpCollectionHandler::registerIndexAndNamespaceFilterTables(const QString &nameSpace)
 {
     if (!isDBOpened())
@@ -1312,6 +1369,7 @@ bool QHelpCollectionHandler::registerIndexAndNamespaceFilterTables(const QString
     if (!reader.init())
         return false;
 
+    registerVersion(reader.version(), nsId);
     if (!registerFileAttributeSets(reader.filterAttributeSets(), nsId))
         return false;
 
@@ -1576,6 +1634,11 @@ bool QHelpCollectionHandler::unregisterIndexTable(int nsId, int vfId)
         return false;
 
     m_query->prepare(QLatin1String("DELETE FROM TimeStampTable WHERE NamespaceId = ?"));
+    m_query->bindValue(0, nsId);
+    if (!m_query->exec())
+        return false;
+
+    m_query->prepare(QLatin1String("DELETE FROM VersionTable WHERE NamespaceId = ?"));
     m_query->bindValue(0, nsId);
     if (!m_query->exec())
         return false;

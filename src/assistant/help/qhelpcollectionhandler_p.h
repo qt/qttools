@@ -134,6 +134,7 @@ public:
 
     int registerNamespace(const QString &nspace, const QString &fileName);
     int registerVirtualFolder(const QString &folderName, int namespaceId);
+    bool registerVersion(const QString &version, int namespaceId);
 
     QMap<QString, QUrl> linksForIdentifier(const QString &id,
                                            const QStringList &filterAttributes) const;
@@ -144,13 +145,14 @@ signals:
     void error(const QString &msg) const;
 
 private:
+    QString namespaceVersion(const QString &namespaceName) const;
     QMap<QString, QUrl> linksForField(const QString &fieldName,
                                       const QString &fieldValue,
                                       const QStringList &filterAttributes) const;
     bool isDBOpened() const;
     bool createTables(QSqlQuery *query);
     void closeDB();
-    bool createIndexAndNamespaceFilterTables(QSqlQuery *query);
+    bool recreateIndexAndNamespaceFilterTables(QSqlQuery *query);
     bool registerIndexAndNamespaceFilterTables(const QString &nameSpace);
     bool registerFilterAttributes(const QList<QStringList> &attributeSets, int nsId);
     bool registerFileAttributeSets(const QList<QStringList> &attributeSets, int nsId);

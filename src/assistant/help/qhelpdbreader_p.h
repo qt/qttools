@@ -112,6 +112,7 @@ public:
 
     QString namespaceName() const;
     QString virtualFolder() const;
+    QString version() const;
     IndexTable indexTable() const;
     QList<QStringList> filterAttributeSets() const;
     QMap<QString, QByteArray> filesData(const QStringList &filterAttributes,
@@ -127,6 +128,7 @@ public:
 private:
     QString quote(const QString &string) const;
     bool initDB();
+    QString qtVersionHeuristic() const;
 
     bool m_initDone = false;
     QString m_dbName;

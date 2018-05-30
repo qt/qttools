@@ -57,6 +57,7 @@ struct HelpProject
     QString name;
     QString helpNamespace;
     QString virtualFolder;
+    QString version;
     QString fileName;
     QString indexRoot;
     QString indexTitle;

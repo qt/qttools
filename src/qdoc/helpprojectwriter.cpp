@@ -74,6 +74,7 @@ void HelpProjectWriter::reset(const Config &config,
         QString prefix = CONFIG_QHP + Config::dot + projectName + Config::dot;
         project.helpNamespace = config.getString(prefix + "namespace");
         project.virtualFolder = config.getString(prefix + "virtualFolder");
+        project.version = config.getString(CONFIG_VERSION);
         project.fileName = config.getString(prefix + "file");
         if (project.fileName.isEmpty())
             project.fileName = defaultFileName;
@@ -672,6 +673,10 @@ void HelpProjectWriter::generateProject(HelpProject &project)
     // Write metaData, virtualFolder and namespace elements.
     writer.writeTextElement("namespace", project.helpNamespace);
     writer.writeTextElement("virtualFolder", project.virtualFolder);
+    writer.writeStartElement("metaData");
+    writer.writeAttribute("name", "version");
+    writer.writeAttribute("value", project.version);
+    writer.writeEndElement();
 
     // Write customFilter elements.
     QHash<QString, QSet<QString> >::ConstIterator it;

@@ -128,6 +128,68 @@ QString QHelpDBReader::virtualFolder() const
     return QString();
 }
 
+QString QHelpDBReader::version() const
+{
+    const QString versionString = metaData(QLatin1String("version")).toString();
+    if (versionString.isEmpty())
+        return qtVersionHeuristic();
+    return versionString;
+}
+
+QString QHelpDBReader::qtVersionHeuristic() const
+{
+    const QString nameSpace = namespaceName();
+    if (!nameSpace.startsWith(QLatin1String("org.qt-project.")))
+        return QString();
+
+    // We take the namespace tail, starting from the last letter in namespace name.
+    // We drop any non digit characters.
+    const QChar dot(QLatin1Char('.'));
+    QString tail;
+    for (int i = nameSpace.count(); i > 0; --i) {
+        const QChar c = nameSpace.at(i - 1);
+        if (c.isDigit() || c == dot)
+            tail.prepend(c);
+
+        if (c.isLetter())
+            break;
+    }
+
+    if (!tail.startsWith(dot) && tail.count(dot) == 1) {
+        // The org.qt-project.qtquickcontrols2.5120 case,
+        // tail = 2.5120 here. We need to cut "2." here.
+        const int dotIndex = tail.indexOf(dot);
+        if (dotIndex > 0)
+            tail = tail.mid(dotIndex);
+    }
+
+    // Drop beginning dots
+    while (tail.startsWith(dot))
+        tail = tail.mid(1);
+
+    // Drop ending dots
+    while (tail.endsWith(dot))
+        tail.chop(1);
+
+    if (tail.count(dot) == 0) {
+        if (tail.count() > 5)
+            return tail;
+
+        // When we have 3 digits, we split it like: ABC -> A.B.C
+        // When we have 4 digits, we split it like: ABCD -> A.BC.D
+        // When we have 5 digits, we split it like: ABCDE -> A.BC.DE
+        const int major = tail.left(1).toInt();
+        const int minor = tail.count() == 3
+                ? tail.mid(1, 1).toInt() : tail.mid(1, 2).toInt();
+        const int patch = tail.count() == 5
+                ? tail.right(2).toInt() : tail.right(1).toInt();
+
+        return QString::fromUtf8("%1.%2.%3").arg(major).arg(minor).arg(patch);
+    }
+
+    return tail;
+}
+
 static bool isAttributeUsed(QSqlQuery *query, const QString &tableName, int attributeId)
 {
     query->prepare(QString::fromLatin1("SELECT FilterAttributeId "
