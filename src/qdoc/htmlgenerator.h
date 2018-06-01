@@ -143,7 +143,7 @@ private:
                             CodeMarker *marker);
     void generateBrief(const Node *node,
                        CodeMarker *marker,
-                       const Node *relative = 0);
+                       const Node *relative = 0, bool addLink=true);
     void generateIncludes(const Aggregate *inner, CodeMarker *marker);
     void generateTableOfContents(const Node *node,
                                  CodeMarker *marker,
