@@ -61,7 +61,12 @@ for(_, $$list(_)) { # just a way to break easily
             log("Set the LLVM_INSTALL_DIR environment variable to configure clang location (required to build qdoc).$$escape_expand(\\n)")
             break()
         }
-        clangInstallDir = /usr
+        macos {
+            # Default to homebrew llvm on macOS. The CLANG_VERSION test below will complain if missing.
+            clangInstallDir = /usr/local/opt/llvm
+        } else {
+            clangInstallDir = /usr
+        }
     }
 
     # note: llvm_config only exits on unix
