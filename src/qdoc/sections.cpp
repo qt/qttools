@@ -89,6 +89,7 @@ void Section::clear()
             classMapList_[i] = 0;
             delete cm;
         }
+        classMapList_.clear();
     }
     keys_.clear();
     obsoleteKeys_.clear();
@@ -102,6 +103,7 @@ void Section::clear()
             classKeysNodesList_[i] = 0;
             delete ckn;
         }
+        classKeysNodesList_.clear();
     }
     aggregate_ = 0;
 }

@@ -1701,10 +1701,12 @@ void HtmlGenerator::generateDocumentNode(DocumentNode* dn, CodeMarker* marker)
 
     SectionVector::const_iterator s = sections.stdSummarySections().constBegin();
     while (s != sections.stdSummarySections().constEnd()) {
-        QString ref = registerRef(s->title());
-        out() << "<a name=\"" << ref << "\"></a>" << divNavTop << '\n';
-        out() << "<h2 id=\"" << ref << "\">" << protectEnc(s->title()) << "</h2>\n";
-        generateSectionList(*s, dn, marker);
+        if (!s->isEmpty()) {
+            QString ref = registerRef(s->title());
+            out() << "<a name=\"" << ref << "\"></a>" << divNavTop << '\n';
+            out() << "<h2 id=\"" << ref << "\">" << protectEnc(s->title()) << "</h2>\n";
+            generateSectionList(*s, dn, marker);
+        }
         ++s;
     }
 
