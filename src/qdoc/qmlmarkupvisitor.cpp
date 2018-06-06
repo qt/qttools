@@ -362,7 +362,7 @@ bool QmlMarkupVisitor::visit(QQmlJS::AST::RegExpLiteral *literal)
     return true;
 }
 
-bool QmlMarkupVisitor::visit(QQmlJS::AST::ArrayLiteral *literal)
+bool QmlMarkupVisitor::visit(QQmlJS::AST::ArrayPattern *literal)
 {
     addVerbatim(literal->lbracketToken);
     QQmlJS::AST::Node::accept(literal->elements, this);
@@ -370,22 +370,22 @@ bool QmlMarkupVisitor::visit(QQmlJS::AST::ArrayLiteral *literal)
     return false;
 }
 
-bool QmlMarkupVisitor::visit(QQmlJS::AST::ObjectLiteral *literal)
+bool QmlMarkupVisitor::visit(QQmlJS::AST::ObjectPattern *literal)
 {
     addVerbatim(literal->lbraceToken);
     return true;
 }
 
-void QmlMarkupVisitor::endVisit(QQmlJS::AST::ObjectLiteral *literal)
+void QmlMarkupVisitor::endVisit(QQmlJS::AST::ObjectPattern *literal)
 {
     addVerbatim(literal->rbraceToken);
 }
 
 
-bool QmlMarkupVisitor::visit(QQmlJS::AST::ElementList *list)
+bool QmlMarkupVisitor::visit(QQmlJS::AST::PatternElementList *list)
 {
-    for (QQmlJS::AST::ElementList *it = list; it; it = it->next) {
-        QQmlJS::AST::Node::accept(it->expression, this);
+    for (QQmlJS::AST::PatternElementList *it = list; it; it = it->next) {
+        QQmlJS::AST::Node::accept(it->element, this);
         //addVerbatim(it->commaToken);
     }
     QQmlJS::AST::Node::accept(list->elision, this);
@@ -398,12 +398,12 @@ bool QmlMarkupVisitor::visit(QQmlJS::AST::Elision *elision)
     return true;
 }
 
-bool QmlMarkupVisitor::visit(QQmlJS::AST::PropertyNameAndValue *list)
+bool QmlMarkupVisitor::visit(QQmlJS::AST::PatternProperty *list)
 {
     QQmlJS::AST::Node::accept(list->name, this);
     addVerbatim(list->colonToken, list->colonToken);
-    QQmlJS::AST::Node::accept(list->value, this);
-    addVerbatim(list->commaToken, list->commaToken);
+    QQmlJS::AST::Node::accept(list->initializer, this);
+    //addVerbatim(list->commaToken, list->commaToken);
     return false;
 }
 
@@ -553,7 +553,7 @@ bool QmlMarkupVisitor::visit(QQmlJS::AST::VariableStatement *statement)
 {
     addVerbatim(statement->declarationKindToken);
     QQmlJS::AST::Node::accept(statement->declarations, this);
-    addVerbatim(statement->semicolonToken);
+    //addVerbatim(statement->semicolonToken);
     return false;
 }
 
@@ -563,13 +563,6 @@ bool QmlMarkupVisitor::visit(QQmlJS::AST::VariableDeclarationList *list)
         QQmlJS::AST::Node::accept(it->declaration, this);
         addVerbatim(it->commaToken);
     }
-    return false;
-}
-
-bool QmlMarkupVisitor::visit(QQmlJS::AST::VariableDeclaration *declaration)
-{
-    addMarkedUpToken(declaration->identifierToken, QLatin1String("name"));
-    QQmlJS::AST::Node::accept(declaration->expression, this);
     return false;
 }
 
@@ -636,40 +629,12 @@ bool QmlMarkupVisitor::visit(QQmlJS::AST::ForStatement *statement)
     return false;
 }
 
-bool QmlMarkupVisitor::visit(QQmlJS::AST::LocalForStatement *statement)
-{
-    addMarkedUpToken(statement->forToken, QLatin1String("keyword"));
-    addVerbatim(statement->lparenToken);
-    addMarkedUpToken(statement->varToken, QLatin1String("keyword"));
-    QQmlJS::AST::Node::accept(statement->declarations, this);
-    addVerbatim(statement->firstSemicolonToken);
-    QQmlJS::AST::Node::accept(statement->condition, this);
-    addVerbatim(statement->secondSemicolonToken);
-    QQmlJS::AST::Node::accept(statement->expression, this);
-    addVerbatim(statement->rparenToken);
-    QQmlJS::AST::Node::accept(statement->statement, this);
-    return false;
-}
-
 bool QmlMarkupVisitor::visit(QQmlJS::AST::ForEachStatement *statement)
 {
     addMarkedUpToken(statement->forToken, QLatin1String("keyword"));
     addVerbatim(statement->lparenToken);
-    QQmlJS::AST::Node::accept(statement->initialiser, this);
-    addVerbatim(statement->inToken);
-    QQmlJS::AST::Node::accept(statement->expression, this);
-    addVerbatim(statement->rparenToken);
-    QQmlJS::AST::Node::accept(statement->statement, this);
-    return false;
-}
-
-bool QmlMarkupVisitor::visit(QQmlJS::AST::LocalForEachStatement *statement)
-{
-    addMarkedUpToken(statement->forToken, QLatin1String("keyword"));
-    addVerbatim(statement->lparenToken);
-    addMarkedUpToken(statement->varToken, QLatin1String("keyword"));
-    QQmlJS::AST::Node::accept(statement->declaration, this);
-    addVerbatim(statement->inToken);
+    QQmlJS::AST::Node::accept(statement->lhs, this);
+    addVerbatim(statement->inOfToken);
     QQmlJS::AST::Node::accept(statement->expression, this);
     addVerbatim(statement->rparenToken);
     QQmlJS::AST::Node::accept(statement->statement, this);
@@ -817,8 +782,9 @@ bool QmlMarkupVisitor::visit(QQmlJS::AST::FunctionDeclaration *declaration)
 
 bool QmlMarkupVisitor::visit(QQmlJS::AST::FormalParameterList *list)
 {
-    addVerbatim(list->commaToken);
-    addMarkedUpToken(list->identifierToken, QLatin1String("name"));
+//    addVerbatim(list->commaToken);
+    QQmlJS::AST::Node::accept(list->element, this);
+    //addMarkedUpToken(list->identifierToken, QLatin1String("name"));
     return false;
 }
 

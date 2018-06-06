@@ -79,14 +79,14 @@ public:
     bool visit(QQmlJS::AST::NumericLiteral *) override;
     bool visit(QQmlJS::AST::StringLiteral *) override;
     bool visit(QQmlJS::AST::RegExpLiteral *) override;
-    bool visit(QQmlJS::AST::ArrayLiteral *) override;
+    bool visit(QQmlJS::AST::ArrayPattern *) override;
 
-    bool visit(QQmlJS::AST::ObjectLiteral *) override;
-    void endVisit(QQmlJS::AST::ObjectLiteral *) override;
+    bool visit(QQmlJS::AST::ObjectPattern *) override;
+    void endVisit(QQmlJS::AST::ObjectPattern *) override;
 
-    bool visit(QQmlJS::AST::ElementList *) override;
+    bool visit(QQmlJS::AST::PatternElementList *) override;
     bool visit(QQmlJS::AST::Elision *) override;
-    bool visit(QQmlJS::AST::PropertyNameAndValue *) override;
+    bool visit(QQmlJS::AST::PatternProperty *) override;
     bool visit(QQmlJS::AST::ArrayMemberExpression *) override;
     bool visit(QQmlJS::AST::FieldMemberExpression *) override;
     bool visit(QQmlJS::AST::NewMemberExpression *) override;
@@ -112,16 +112,13 @@ public:
 
     bool visit(QQmlJS::AST::VariableStatement *) override;
     bool visit(QQmlJS::AST::VariableDeclarationList *) override;
-    bool visit(QQmlJS::AST::VariableDeclaration *) override;
     bool visit(QQmlJS::AST::EmptyStatement *) override;
     bool visit(QQmlJS::AST::ExpressionStatement *) override;
     bool visit(QQmlJS::AST::IfStatement *) override;
     bool visit(QQmlJS::AST::DoWhileStatement *) override;
     bool visit(QQmlJS::AST::WhileStatement *) override;
     bool visit(QQmlJS::AST::ForStatement *) override;
-    bool visit(QQmlJS::AST::LocalForStatement *) override;
     bool visit(QQmlJS::AST::ForEachStatement *) override;
-    bool visit(QQmlJS::AST::LocalForEachStatement *) override;
     bool visit(QQmlJS::AST::ContinueStatement *) override;
     bool visit(QQmlJS::AST::BreakStatement *) override;
     bool visit(QQmlJS::AST::ReturnStatement *) override;
