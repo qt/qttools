@@ -1549,11 +1549,13 @@ void HtmlGenerator::generateQmlTypePage(QmlTypeNode* qcn, CodeMarker* marker)
 
     SectionVector::ConstIterator s = sections.stdQmlTypeSummarySections().constBegin();
     while (s != sections.stdQmlTypeSummarySections().constEnd()) {
-        QString ref = registerRef(s->title().toLower());
-        out() << "<a name=\"" << ref
-              << "\"></a>" << divNavTop << '\n';
-        out() << "<h2 id=\"" << ref << "\">" << protectEnc(s->title()) << "</h2>\n";
-        generateQmlSummary(*s, qcn, marker);
+        if (!s->isEmpty()) {
+            QString ref = registerRef(s->title().toLower());
+            out() << "<a name=\"" << ref
+                  << "\"></a>" << divNavTop << '\n';
+            out() << "<h2 id=\"" << ref << "\">" << protectEnc(s->title()) << "</h2>\n";
+            generateQmlSummary(*s, qcn, marker);
+        }
         ++s;
     }
 
@@ -1571,12 +1573,14 @@ void HtmlGenerator::generateQmlTypePage(QmlTypeNode* qcn, CodeMarker* marker)
 
     s = sections.stdQmlTypeDetailsSections().constBegin();
     while (s != sections.stdQmlTypeDetailsSections().constEnd()) {
-        out() << "<h2>" << protectEnc(s->title()) << "</h2>\n";
-        NodeVector::ConstIterator m = s->members().constBegin();
-        while (m != s->members().constEnd()) {
-            generateDetailedQmlMember(*m, qcn, marker);
-            out() << "<br/>\n";
-            ++m;
+        if (!s->isEmpty()) {
+            out() << "<h2>" << protectEnc(s->title()) << "</h2>\n";
+            NodeVector::ConstIterator m = s->members().constBegin();
+            while (m != s->members().constEnd()) {
+                generateDetailedQmlMember(*m, qcn, marker);
+                out() << "<br/>\n";
+                ++m;
+            }
         }
         ++s;
     }
