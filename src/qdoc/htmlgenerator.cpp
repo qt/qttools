@@ -1729,12 +1729,14 @@ void HtmlGenerator::generateDocumentNode(DocumentNode* dn, CodeMarker* marker)
     s = sections.stdDetailsSections().constBegin();
     while (s != sections.stdDetailsSections().constEnd()) {
         //out() << "<hr />\n";
-        out() << "<h2>" << protectEnc(s->title()) << "</h2>\n";
+        if (!s->isEmpty()) {
+            out() << "<h2>" << protectEnc(s->title()) << "</h2>\n";
 
-        NodeVector::ConstIterator m = s->members().constBegin();
-        while (m != s->members().constEnd()) {
-            generateDetailedMember(*m, dn, marker);
-            ++m;
+            NodeVector::ConstIterator m = s->members().constBegin();
+            while (m != s->members().constEnd()) {
+                generateDetailedMember(*m, dn, marker);
+                ++m;
+            }
         }
         ++s;
     }
