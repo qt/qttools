@@ -1684,8 +1684,9 @@ void HtmlGenerator::generateDocumentNode(DocumentNode* dn, CodeMarker* marker)
                   subTitleSize,
                   dn,
                   marker);
-
-    if (dn->docSubtype() == Node::HeaderFile) {
+    if (dn->isExample()) {
+        generateBrief(dn, marker, 0, false);
+    } else if (dn->docSubtype() == Node::HeaderFile) {
         // Generate brief text and status for modules.
         generateBrief(dn, marker);
         generateStatus(dn, marker);
@@ -2362,10 +2363,15 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
 }
 
 void HtmlGenerator::generateBrief(const Node *node, CodeMarker *marker,
-                                  const Node *relative)
+                                  const Node *relative, bool addLink)
 {
     Text brief = node->doc().briefText();
+
     if (!brief.isEmpty()) {
+        if (!brief.lastAtom()->string().endsWith('.')) {
+            brief << Atom(Atom::String, ".");
+            node->doc().location().warning(tr("'\\brief' statement does not end with a full stop."));
+        }
         generateExtractionMark(node, BriefMark);
         out() << "<p>";
         generateText(brief, node, marker);
@@ -2374,8 +2380,9 @@ void HtmlGenerator::generateBrief(const Node *node, CodeMarker *marker,
             out() << " <a href=\"#";
         else
             out() << " <a href=\"" << linkForNode(node, relative) << '#';
-        out() << registerRef("details") << "\">More...</a></p>\n";
 
+        if (addLink)
+            out() << registerRef("details") << "\">More...</a></p>\n";
 
         generateExtractionMark(node, EndMark);
     }
