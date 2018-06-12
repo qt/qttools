@@ -4,7 +4,7 @@ qtHaveModule(webkitwidgets):!contains(QT_CONFIG, static) {
     BROWSER = qtextbrowser
 }
 
-QT += widgets network help sql help
+QT += widgets network help sql
 qtHaveModule(printsupport): QT += printsupport
 PROJECTNAME = Assistant
 
