@@ -1376,11 +1376,60 @@ void DocParser::parse(const QString& source,
                             }
                         }
                     } else {
-                        location().warning(
-                                    tr("Unknown command '\\%1'").arg(cmdStr),
-                                    detailsUnknownCommand(metaCommandSet,cmdStr));
-                        enterPara();
-                        append(Atom::UnknownCommand, cmdStr);
+                        int curPos = 0;
+                        int numUppercase = 0;
+                        int numLowercase = 0;
+                        int numStrangeSymbols = 0;
+
+                        while (curPos < cmdStr.size()) {
+                            unsigned char latin1Ch = cmdStr.at(curPos).toLatin1();
+                            if (islower(latin1Ch)) {
+                                ++numLowercase;
+                                ++curPos;
+                            } else if (isupper(latin1Ch)) {
+                                ++numUppercase;
+                                ++curPos;
+                            } else if (isdigit(latin1Ch)) {
+                                if (curPos > 0)
+                                    ++curPos;
+                                else
+                                    break;
+                            } else if (latin1Ch == '_' || latin1Ch == '@') {
+                                ++numStrangeSymbols;
+                                ++curPos;
+                            } else if ((latin1Ch == ':') &&
+                                       (curPos < cmdStr.size() - 1) &&
+                                       (cmdStr.at(curPos + 1) == QLatin1Char(':'))) {
+                                ++numStrangeSymbols;
+                                curPos += 2;
+                            } else if (latin1Ch == '(') {
+                                if (curPos > 0) {
+                                    if ((curPos < cmdStr.size() - 1) &&
+                                        (cmdStr.at(curPos + 1) == QLatin1Char(')'))) {
+                                        ++numStrangeSymbols;
+                                        pos += 2;
+                                        break;
+                                    } else {
+                                        // ### handle functions with signatures
+                                        // and function calls
+                                        break;
+                                    }
+                                } else {
+                                    break;
+                                }
+                            } else {
+                                break;
+                            }
+                        }
+                        if ((numUppercase >= 1 && numLowercase >= 2) || numStrangeSymbols > 0) {
+                            qDebug() << "APPENDING: " << cmdStr;
+                            appendWord(cmdStr);
+                        } else {
+                            location().warning(tr("Unknown command '\\%1'").arg(cmdStr),
+                                               detailsUnknownCommand(metaCommandSet,cmdStr));
+                            enterPara();
+                            append(Atom::UnknownCommand, cmdStr);
+                        }
                     }
                 }
             } // case '\\' (qdoc markup command)
