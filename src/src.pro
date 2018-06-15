@@ -27,10 +27,6 @@ mac {
     SUBDIRS += macdeployqt
 }
 
-android {
-    SUBDIRS += androiddeployqt
-}
-
 qtHaveModule(dbus): SUBDIRS += qdbus
 
 win32|winrt:SUBDIRS += windeployqt
@@ -45,7 +41,6 @@ qtNomakeTools( \
 # This is necessary to avoid a race condition between toolchain.prf
 # invocations in a module-by-module cross-build.
 cross_compile:isEmpty(QMAKE_HOST_CXX.INCDIRS) {
-    androiddeployqt.depends += qtattributionsscanner
     qdoc.depends += qtattributionsscanner
     windeployqt.depends += qtattributionsscanner
     winrtrunner.depends += qtattributionsscanner
