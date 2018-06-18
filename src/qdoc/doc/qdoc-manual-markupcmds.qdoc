@@ -2999,7 +2999,7 @@
            \code
            / *!
                \property QWidget::isActiveWindow
-               \brief Whether this widget's window is the active window
+               \brief Whether this widget's window is the active window.
 
                The active window is the window that contains the widget that
                has keyboard focus.
@@ -3017,7 +3017,7 @@
            / *!
                \property QWidget::geometry
                \brief The geometry of the widget relative to its parent and
-               excluding the window frame
+               excluding the window frame.
 
                When changing the geometry, the widget, if visible,
                receives a move event (moveEvent()) and/or a resize
