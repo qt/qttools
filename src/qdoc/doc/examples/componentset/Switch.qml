@@ -53,7 +53,7 @@ import QtQuick 1.0
 /*!
     \qmltype ToggleSwitch
     \inqmlmodule UIComponents
-    \brief A component that can be turned on or off
+    \brief A component that can be turned on or off.
 
     A toggle switch has two states: an \c on and an \c off state. The \c off
     state is when the \l on property is set to \c false.
