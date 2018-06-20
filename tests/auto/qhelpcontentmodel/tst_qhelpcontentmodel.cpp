@@ -146,7 +146,7 @@ void tst_QHelpContentModel::contentItemAt()
     item = m->contentItemAt(m->index(4, 0, root));
     QCOMPARE(item->title(), QString("qmake Concepts"));
 
-    item = m->contentItemAt(m->index(1, 0));
+    item = m->contentItemAt(m->index(0, 0));
     QCOMPARE(item->title(), QString("Fancy Manual"));
 
     w.start();

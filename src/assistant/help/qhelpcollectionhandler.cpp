@@ -41,12 +41,14 @@
 #include "qhelp_global.h"
 #include "qhelpdbreader_p.h"
 
+#include <QtCore/QDataStream>
 #include <QtCore/QDateTime>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 #include <QtCore/QTimer>
 #include <QtCore/QVector>
+#include <QtCore/QVersionNumber>
 
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlDriver>
@@ -1028,6 +1030,23 @@ QStringList QHelpCollectionHandler::indicesForFilter(const QStringList &filterAt
     return indices;
 }
 
+static QString getTitle(const QByteArray &contents)
+{
+    if (!contents.size())
+        return QString();
+
+    int depth = 0;
+    QString link;
+    QString title;
+
+    QDataStream s(contents);
+    s >> depth;
+    s >> link;
+    s >> title;
+
+    return title;
+}
+
 QList<QHelpCollectionHandler::ContentsData> QHelpCollectionHandler::contentsForFilter(
         const QStringList &filterAttributes) const
 {
@@ -1038,14 +1057,17 @@ QList<QHelpCollectionHandler::ContentsData> QHelpCollectionHandler::contentsForF
                 "SELECT DISTINCT "
                     "NamespaceTable.Name, "
                     "FolderTable.Name, "
-                    "ContentsTable.Data "
+                    "ContentsTable.Data, "
+                    "VersionTable.Version "
                 "FROM "
                     "FolderTable, "
                     "NamespaceTable, "
-                    "ContentsTable "
+                    "ContentsTable, "
+                    "VersionTable "
                 "WHERE ContentsTable.NamespaceId = NamespaceTable.Id "
                 "AND NamespaceTable.Id = FolderTable.NamespaceId "
-                "AND ContentsTable.NamespaceId = NamespaceTable.Id");
+                "AND ContentsTable.NamespaceId = NamespaceTable.Id "
+                "AND VersionTable.NamespaceId = NamespaceTable.Id");
 
     const QString filterQuery = filterlessQuery
             + prepareFilterQuery(filterAttributes.count(),
@@ -1059,18 +1081,34 @@ QList<QHelpCollectionHandler::ContentsData> QHelpCollectionHandler::contentsForF
 
     m_query->exec();
 
-    QMap<QString, ContentsData> contentsMap;
+    QMap<QString, QMap<QVersionNumber, ContentsData>> contentsMap;
 
     while (m_query->next()) {
         const QString namespaceName = m_query->value(0).toString();
+        const QByteArray contents = m_query->value(2).toByteArray();
+        const QString versionString = m_query->value(3).toString();
+
+        const QString title = getTitle(contents);
+        const QVersionNumber version = QVersionNumber::fromString(versionString);
         // get existing or insert a new one otherwise
-        ContentsData &contentsData = contentsMap[namespaceName];
+        ContentsData &contentsData = contentsMap[title][version];
         contentsData.namespaceName = namespaceName;
         contentsData.folderName = m_query->value(1).toString();
-        contentsData.contentsList.append(m_query->value(2).toByteArray());
+        contentsData.contentsList.append(contents);
     }
 
-    return contentsMap.values();
+    QList<QHelpCollectionHandler::ContentsData> result;
+    for (const auto &versionContents : qAsConst(contentsMap)) {
+        // insert items in the reverse order of version number
+        const auto itBegin = versionContents.constBegin();
+        auto it = versionContents.constEnd();
+        while (it != itBegin) {
+            --it;
+            result.append(it.value());
+        }
+    }
+
+    return result;
 }
 
 bool QHelpCollectionHandler::removeCustomValue(const QString &key)
