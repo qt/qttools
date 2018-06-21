@@ -2280,21 +2280,19 @@ QString Generator::typeString(const Node *node)
     case Node::Function:
         return "function";
     case Node::Property:
+    case Node::QmlProperty:
         return "property";
     case Node::QmlPropertyGroup:
         return "property group";
-    case Node::QmlProperty:
-        return "QML property";
     case Node::QmlSignal:
-        return "QML signal";
+        return "signal";
     case Node::QmlSignalHandler:
-        return "QML signal handler";
+        return "signal handler";
     case Node::QmlMethod:
-        return "QML method";
+        return "method";
     case Node::Module:
-        return "module";
     case Node::QmlModule:
-        return "QML module";
+        return "module";
     default:
         return "documentation";
     }
