@@ -436,7 +436,7 @@ private:
     bool m_layoutSimplified;
 };
 
-class QDESIGNER_SHARED_EXPORT ToolBoxCommand: public QDesignerFormWindowCommand
+class ToolBoxCommand: public QDesignerFormWindowCommand
 {
 
 public:
@@ -456,7 +456,7 @@ protected:
     QIcon m_itemIcon;
 };
 
-class QDESIGNER_SHARED_EXPORT MoveToolBoxPageCommand: public ToolBoxCommand
+class MoveToolBoxPageCommand: public ToolBoxCommand
 {
 
 public:
@@ -473,7 +473,7 @@ private:
     int m_oldIndex;
 };
 
-class QDESIGNER_SHARED_EXPORT DeleteToolBoxPageCommand: public ToolBoxCommand
+class DeleteToolBoxPageCommand: public ToolBoxCommand
 {
 
 public:
@@ -486,7 +486,7 @@ public:
     void undo() override;
 };
 
-class QDESIGNER_SHARED_EXPORT AddToolBoxPageCommand: public ToolBoxCommand
+class AddToolBoxPageCommand: public ToolBoxCommand
 {
 
 public:
@@ -504,7 +504,7 @@ public:
     void undo() override;
 };
 
-class QDESIGNER_SHARED_EXPORT TabWidgetCommand: public QDesignerFormWindowCommand
+class TabWidgetCommand: public QDesignerFormWindowCommand
 {
 
 public:
@@ -524,7 +524,7 @@ protected:
     QIcon m_itemIcon;
 };
 
-class QDESIGNER_SHARED_EXPORT DeleteTabPageCommand: public TabWidgetCommand
+class DeleteTabPageCommand: public TabWidgetCommand
 {
 
 public:
@@ -537,7 +537,7 @@ public:
     void undo() override;
 };
 
-class QDESIGNER_SHARED_EXPORT AddTabPageCommand: public TabWidgetCommand
+class AddTabPageCommand: public TabWidgetCommand
 {
 
 public:
@@ -555,7 +555,7 @@ public:
     void undo() override;
 };
 
-class QDESIGNER_SHARED_EXPORT MoveTabPageCommand: public TabWidgetCommand
+class MoveTabPageCommand: public TabWidgetCommand
 {
 
 public:
@@ -577,7 +577,7 @@ private:
     QIcon m_icon;
 };
 
-class QDESIGNER_SHARED_EXPORT StackedWidgetCommand: public QDesignerFormWindowCommand
+class StackedWidgetCommand: public QDesignerFormWindowCommand
 {
 
 public:
@@ -595,7 +595,7 @@ protected:
     int m_index;
 };
 
-class QDESIGNER_SHARED_EXPORT MoveStackedWidgetCommand: public StackedWidgetCommand
+class MoveStackedWidgetCommand: public StackedWidgetCommand
 {
 
 public:
@@ -612,7 +612,7 @@ private:
     int m_oldIndex;
 };
 
-class QDESIGNER_SHARED_EXPORT DeleteStackedWidgetPageCommand: public StackedWidgetCommand
+class DeleteStackedWidgetPageCommand: public StackedWidgetCommand
 {
 
 public:
@@ -625,7 +625,7 @@ public:
     void undo() override;
 };
 
-class QDESIGNER_SHARED_EXPORT AddStackedWidgetPageCommand: public StackedWidgetCommand
+class AddStackedWidgetPageCommand: public StackedWidgetCommand
 {
 
 public:
@@ -643,7 +643,7 @@ public:
     void undo() override;
 };
 
-class QDESIGNER_SHARED_EXPORT CreateMenuBarCommand: public QDesignerFormWindowCommand
+class  CreateMenuBarCommand: public QDesignerFormWindowCommand
 {
 
 public:
@@ -659,7 +659,7 @@ private:
     QPointer<QMenuBar> m_menuBar;
 };
 
-class QDESIGNER_SHARED_EXPORT DeleteMenuBarCommand: public QDesignerFormWindowCommand
+class DeleteMenuBarCommand: public QDesignerFormWindowCommand
 {
 
 public:
@@ -675,7 +675,7 @@ private:
     QPointer<QMenuBar> m_menuBar;
 };
 
-class QDESIGNER_SHARED_EXPORT CreateStatusBarCommand: public QDesignerFormWindowCommand
+class CreateStatusBarCommand: public QDesignerFormWindowCommand
 {
 
 public:
@@ -707,7 +707,7 @@ private:
     QPointer<QStatusBar> m_statusBar;
 };
 
-class QDESIGNER_SHARED_EXPORT AddToolBarCommand: public QDesignerFormWindowCommand
+class AddToolBarCommand: public QDesignerFormWindowCommand
 {
 
 public:
@@ -723,7 +723,7 @@ private:
     QPointer<QToolBar> m_toolBar;
 };
 
-class QDESIGNER_SHARED_EXPORT DeleteToolBarCommand: public QDesignerFormWindowCommand
+class DeleteToolBarCommand: public QDesignerFormWindowCommand
 {
 
 public:
@@ -739,7 +739,7 @@ private:
     QPointer<QToolBar> m_toolBar;
 };
 
-class QDESIGNER_SHARED_EXPORT DockWidgetCommand: public QDesignerFormWindowCommand
+class DockWidgetCommand: public QDesignerFormWindowCommand
 {
 
 public:
@@ -752,7 +752,7 @@ protected:
     QPointer<QDockWidget> m_dockWidget;
 };
 
-class QDESIGNER_SHARED_EXPORT AddDockWidgetCommand: public QDesignerFormWindowCommand
+class AddDockWidgetCommand: public QDesignerFormWindowCommand
 {
 
 public:
@@ -1024,7 +1024,7 @@ private:
     ActionData m_actionData;
 };
 
-class QDESIGNER_SHARED_EXPORT ActionInsertionCommand : public QDesignerFormWindowCommand
+class ActionInsertionCommand : public QDesignerFormWindowCommand
 {
 
 protected:
@@ -1044,7 +1044,7 @@ private:
     bool m_update;
 };
 
-class QDESIGNER_SHARED_EXPORT InsertActionIntoCommand : public ActionInsertionCommand
+class InsertActionIntoCommand : public ActionInsertionCommand
 {
 
 public:
@@ -1054,7 +1054,7 @@ public:
     void undo() override {  removeAction(); }
 };
 
-class QDESIGNER_SHARED_EXPORT RemoveActionFromCommand : public ActionInsertionCommand
+class RemoveActionFromCommand : public ActionInsertionCommand
 {
 
 public:
@@ -1064,7 +1064,7 @@ public:
     void undo() override {  insertAction(); }
 };
 
-class QDESIGNER_SHARED_EXPORT MenuActionCommand : public QDesignerFormWindowCommand
+class MenuActionCommand : public QDesignerFormWindowCommand
 {
 public:
     void init(QAction *action, QAction *actionBefore, QWidget *associatedWidget, QWidget *objectToSelect);
@@ -1082,7 +1082,7 @@ private:
     QWidget *m_objectToSelect;
 };
 
-class QDESIGNER_SHARED_EXPORT AddMenuActionCommand : public MenuActionCommand
+class AddMenuActionCommand : public MenuActionCommand
 {
 
 public:
@@ -1092,7 +1092,7 @@ public:
     void undo() override { removeMenu(); }
 };
 
-class QDESIGNER_SHARED_EXPORT RemoveMenuActionCommand : public MenuActionCommand
+class RemoveMenuActionCommand : public MenuActionCommand
 {
 
 public:
@@ -1102,7 +1102,7 @@ public:
     void undo() override { insertMenu(); }
 };
 
-class QDESIGNER_SHARED_EXPORT CreateSubmenuCommand : public QDesignerFormWindowCommand
+class CreateSubmenuCommand : public QDesignerFormWindowCommand
 {
 
 public:
