@@ -377,10 +377,14 @@ static void processQdocconfFile(const QString &fileName)
 
     // Store the title of the index (landing) page
     NamespaceNode* root = qdb->primaryTreeRoot();
-    if (root)
+    if (root) {
+        QString title = config.getString(CONFIG_NAVIGATION
+                                        + Config::dot
+                                        + CONFIG_LANDINGPAGE);
         root->tree()->setIndexTitle(config.getString(CONFIG_NAVIGATION
-                                                     + Config::dot
-                                                     + CONFIG_LANDINGPAGE));
+                                        + Config::dot
+                                        + CONFIG_LANDINGTITLE, title));
+    }
 
     QSet<QString> excludedDirs = QSet<QString>::fromList(config.getCanonicalPathList(CONFIG_EXCLUDEDIRS));
     QSet<QString> excludedFiles = QSet<QString>::fromList(config.getCanonicalPathList(CONFIG_EXCLUDEFILES));
