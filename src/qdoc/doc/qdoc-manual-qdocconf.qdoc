@@ -1218,8 +1218,7 @@
     \section1 Overview
 
     Qt Assistant uses a system for managing Qt documentation that requires
-    QDoc to generate inventories of files in a format that is similar to the
-    old style DCF format, but with additional features.
+    QDoc to generate inventories of files.
 
     QDoc allows configuration variables to be used to specify which pages are
     to be used in each documentation set it generates. These are specified as

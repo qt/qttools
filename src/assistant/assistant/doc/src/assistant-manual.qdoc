@@ -374,25 +374,6 @@
     a semicolon, as shown in the following example:
 
     \snippet doc_src_assistant-manual.qdoc 4
-
-    \section1 Compatibility with Old Formats
-
-    In Qt versions up to 4.3, the help system was based on Document Content File
-    (DCF) and Qt Assistant Documentation Profile (ADP) formats.
-    Unfortunately, the old file formats are not compatible with the new ones
-    that are described in this manual and that are used from Qt 4.4 on, also in Qt 5.
-    In general, the differences are not that big \mdash in most cases is the old
-    format is just a subset of the new one. One example is the \c namespace tag in
-    the Qt Help Project format, which was not part of the old format, but plays a vital
-    role in the new one. To help you to move to the new file format, we have created
-    a conversion wizard.
-
-    The wizard is started by executing \c qhelpconverter. It guides you through the
-    conversion of different parts of the file and generates a new \c qch or \c qhcp
-    file.
-
-    Once the wizard is finished and the files created, run the \c qhelpgenerator
-    or the \c qcollectiongenerator tool to generate the binary help files used by \QA.
 */
 
 /*

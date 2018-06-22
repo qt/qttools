@@ -76,7 +76,6 @@ bin/patternist*
 bin/phonon*
 bin/qcollectiongenerator*
 bin/qdbus*
-bin/qhelpconverter*
 bin/qhelpgenerator*
 bin/xmlpatterns*
 bin/cetest*
