@@ -781,7 +781,7 @@ bool QmlDocVisitor::visit(QQmlJS::AST::FunctionDeclaration* fd)
             if (formals) {
                 QQmlJS::AST::FormalParameterList* fpl = formals;
                 do {
-                    parameters.append(Parameter(QString(), QString(), fpl->element->bindingIdentifier));
+                    parameters.append(Parameter(QString(), QString(), fpl->element->bindingIdentifier.toString()));
                     fpl = fpl->next;
                 } while (fpl && fpl != formals);
                 qmlMethod->setParameters(parameters);
