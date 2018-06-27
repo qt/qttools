@@ -39,9 +39,6 @@
 #include "config.h"
 #include "generator.h"
 #include <stdlib.h>
-#if QT_CONFIG(process)
-#include "qprocess.h"
-#endif
 
 QT_BEGIN_NAMESPACE
 
@@ -932,30 +929,6 @@ QStringList Config::loadMaster(const QString& fileName)
 }
 
 /*!
-    Returns the value of the environment variable \a varName.
-    If qgetenv() returns null and \a varName starts with 'Q',
-    try to query the variable from qmake.
-*/
-QByteArray Config::getEnv(const char *varName)
-{
-    QByteArray var = qgetenv(varName);
-#if QT_CONFIG(process)
-    if (var.isNull() && varName[0] == 'Q') {
-        QString path(QCoreApplication::applicationFilePath());
-        path.replace(path.lastIndexOf('/') + 1, prog.size(), "qmake");
-        QProcess qmake;
-        qmake.start(path, QStringList() << "-query" << varName);
-        if (qmake.waitForFinished()) {
-            QByteArray result = qmake.readAll().trimmed();
-            if (result.at(0) != '*')
-                var = result;
-        }
-    }
-#endif
-    return var;
-}
-
-/*!
   Load, parse, and process a qdoc configuration file. This
   function is only called by the other load() function, but
   this one is recursive, i.e., it calls itself when it sees
@@ -1059,7 +1032,7 @@ void Config::load(Location location, const QString& fileName)
                             SKIP_CHAR();
                         }
                         if (!var.isEmpty()) {
-                            const QByteArray val = getEnv(var.toLatin1().data());
+                            const QByteArray val = qgetenv(var.toLatin1().data());
                             if (val.isNull()) {
                                 location.fatal(tr("Environment variable '%1' undefined").arg(var));
                             }
@@ -1167,7 +1140,7 @@ void Config::load(Location location, const QString& fileName)
                             SKIP_CHAR();
                         }
                         if (!var.isEmpty()) {
-                            const QByteArray val = getEnv(var.toLatin1().constData());
+                            const QByteArray val = qgetenv(var.toLatin1().constData());
                             if (val.isNull()) {
                                 location.fatal(tr("Environment variable '%1' undefined").arg(var));
                             }
