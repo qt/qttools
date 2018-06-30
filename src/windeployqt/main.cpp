@@ -102,7 +102,8 @@ enum QtModule
     QtSerialBusModule         = 0x0000800000000000,
     QtGamePadModule           = 0x0001000000000000,
     Qt3DAnimationModule       = 0x0002000000000000,
-    QtWebViewModule           = 0x0004000000000000
+    QtWebViewModule           = 0x0004000000000000,
+    Qt3DExtrasModule          = 0x0008000000000000
 };
 
 struct QtModuleEntry {
@@ -159,6 +160,7 @@ static QtModuleEntry qtModuleEntries[] = {
     { Qt3DQuickRendererModule, "3dquickrenderer", "Qt53DQuickRender", 0 },
     { Qt3DInputModule, "3dinput", "Qt53DInput", 0 },
     { Qt3DAnimationModule, "3danimation", "Qt53DAnimation", 0 },
+    { Qt3DExtrasModule, "3dextras", "Qt53DExtras", 0 },
     { QtLocationModule, "geoservices", "Qt5Location", 0 },
     { QtWebChannelModule, "webchannel", "Qt5WebChannel", 0 },
     { QtTextToSpeechModule, "texttospeech", "Qt5TextToSpeech", 0 },

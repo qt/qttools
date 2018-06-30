@@ -2376,14 +2376,15 @@ void HtmlGenerator::generateBrief(const Node *node, CodeMarker *marker,
         out() << "<p>";
         generateText(brief, node, marker);
 
-        if (!relative || node == relative)
-            out() << " <a href=\"#";
-        else
-            out() << " <a href=\"" << linkForNode(node, relative) << '#';
+        if (addLink) {
+            if (!relative || node == relative)
+                out() << " <a href=\"#";
+            else
+                out() << " <a href=\"" << linkForNode(node, relative) << '#';
+            out() << registerRef("details") << "\">More...</a>";
+        }
 
-        if (addLink)
-            out() << registerRef("details") << "\">More...</a></p>\n";
-
+        out() << "</p>\n";
         generateExtractionMark(node, EndMark);
     }
 }

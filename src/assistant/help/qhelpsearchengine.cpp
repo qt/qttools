@@ -276,7 +276,7 @@ private:
     \since 4.4
     \inmodule QtHelp
     \brief The QHelpSearchQuery class contains the field name and the associated
-    search term
+    search term.
 
     The QHelpSearchQuery class contains the field name and the associated search
     term. Depending on the field the search term might get split up into separate

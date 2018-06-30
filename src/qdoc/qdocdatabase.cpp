@@ -1050,7 +1050,9 @@ void QDocDatabase::findAllClasses(Aggregate* node)
             }
             else if ((*c)->isExample()) {
                 // use the module index title as key for the example map
-                examples_.insert((*c)->tree()->indexTitle(), *c);
+                QString title = (*c)->tree()->indexTitle();
+                if (!examples_.contains(title, *c))
+                    examples_.insert(title, *c);
             }
             else if ((*c)->isAggregate()) {
                 findAllClasses(static_cast<Aggregate*>(*c));

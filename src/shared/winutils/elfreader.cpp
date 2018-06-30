@@ -430,6 +430,8 @@ QList<QByteArray> ElfReader::dependencies()
                 dynamicData += sizeof(quint32); // past d_ptr.
             const char *name = mapper.start + dynStrOffset + offset;
             result.push_back(name);
+        } else {
+             dynamicData += m_elfData.elfclass == Elf_ELFCLASS64 ? 8 : 4;
         }
     }
     return result;
