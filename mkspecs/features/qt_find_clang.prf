@@ -58,7 +58,7 @@ for(_, $$list(_)) { # just a way to break easily
         }
         macos {
             # Default to homebrew llvm on macOS. The CLANG_VERSION test below will complain if missing.
-            clangInstallDir = /usr/local/opt/llvm
+            clangInstallDir = $$system("brew --prefix llvm")
         } else {
             clangInstallDir = /usr
         }
