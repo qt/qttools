@@ -47,9 +47,9 @@ int main(int argc, char *argv[])
     a.setApplicationVersion(QStringLiteral("1.1"));
 
     QCommandLineParser parser;
-    parser.setApplicationDescription(tr("Processes qt_attribution.json files in Qt sources."));
+    parser.setApplicationDescription(tr("Processes attribution files in Qt sources."));
     parser.addPositionalArgument(QStringLiteral("path"),
-                                 tr("Path to a qt_attribution.json file, "
+                                 tr("Path to a qt_attribution.json/README.chromium file, "
                                     "or a directory to be scannned recursively."));
     parser.addHelpOption();
     parser.addVersionOption();
@@ -58,6 +58,11 @@ int main(int argc, char *argv[])
                                        tr("Output format (\"qdoc\", \"json\")."),
                                        QStringLiteral("generator"),
                                        QStringLiteral("qdoc"));
+    QCommandLineOption inputFormatOption(QStringLiteral("input-files"),
+                                       tr("Input files (\"qt_attributions\" scans for qt_attribution.json, "
+                                          "\"chromium_attributions\" for README.Chromium, \"all\" for both)."),
+                                       QStringLiteral("input_format"),
+                                       QStringLiteral("qt_attributions"));
     QCommandLineOption filterOption(QStringLiteral("filter"),
                                     tr("Filter packages according to <filter> (e.g. QDocModule=qtcore)"),
                                     QStringLiteral("expression"));
@@ -74,6 +79,7 @@ int main(int argc, char *argv[])
                                     tr("Minimal output."));
 
     parser.addOption(generatorOption);
+    parser.addOption(inputFormatOption);
     parser.addOption(filterOption);
     parser.addOption(baseDirOption);
     parser.addOption(outputOption);
@@ -98,13 +104,27 @@ int main(int argc, char *argv[])
 
     const QString path = parser.positionalArguments().constLast();
 
+    QString inputFormat = parser.value(inputFormatOption);
+    Scanner::InputFormats formats;
+    if (inputFormat == QLatin1String("qt_attributions"))
+        formats = Scanner::InputFormat::QtAttributions;
+    else if (inputFormat == QLatin1String("chromium_attributions"))
+        formats = Scanner::InputFormat::ChromiumAttributions;
+    else if (inputFormat == QLatin1String("all"))
+        formats = Scanner::InputFormat::QtAttributions | Scanner::InputFormat::ChromiumAttributions;
+    else {
+        std::cerr << qPrintable(tr("%1 is not a valid input-files argument").arg(inputFormat)) << std::endl << std::endl;
+        parser.showHelp(8);
+    }
+
+    // Parse the attribution files
     QVector<Package> packages;
     const QFileInfo pathInfo(path);
     if (pathInfo.isDir()) {
         if (logLevel == VerboseLog)
-            std::cerr << qPrintable(tr("Recursively scanning %1 for qt_attribution.json files...").arg(
+            std::cerr << qPrintable(tr("Recursively scanning %1 for attribution files...").arg(
                                         QDir::toNativeSeparators(path))) << std::endl;
-        packages = Scanner::scanDirectory(path, logLevel);
+        packages = Scanner::scanDirectory(path, formats, logLevel);
     } else if (pathInfo.isFile()) {
         packages = Scanner::readFile(path, logLevel);
     } else {
@@ -113,6 +133,7 @@ int main(int argc, char *argv[])
         parser.showHelp(7);
     }
 
+    // Apply the filter
     if (parser.isSet(filterOption)) {
         PackageFilter filter(parser.value(filterOption));
         if (filter.type == PackageFilter::InvalidFilter)
@@ -125,6 +146,7 @@ int main(int argc, char *argv[])
     if (logLevel == VerboseLog)
         std::cerr << qPrintable(tr("%1 packages found.").arg(packages.size())) << std::endl;
 
+    // Prepare the output text stream
     QTextStream out(stdout);
     QFile outFile(parser.value(outputOption));
     if (!outFile.fileName().isEmpty()) {
@@ -137,6 +159,7 @@ int main(int argc, char *argv[])
         out.setDevice(&outFile);
     }
 
+    // Generate the output and write it
     QString generator = parser.value(generatorOption);
     out.setCodec("UTF-8");
     if (generator == QLatin1String("qdoc")) {

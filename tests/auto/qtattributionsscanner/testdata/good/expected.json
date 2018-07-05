@@ -1,5 +1,24 @@
 [
     {
+        "Copyright": "",
+        "Description": "Hello world!\nLine 2",
+        "DownloadLocation": "",
+        "Files": "",
+        "Homepage": "",
+        "Id": "chromium-test",
+        "License": "License",
+        "LicenseFile": "",
+        "LicenseId": "",
+        "Name": "Test",
+        "Path": "%{PWD}/chromium",
+        "QDocModule": "qtwebengine",
+        "QtParts": [
+            "libs"
+        ],
+        "QtUsage": "Used in Qt WebEngine",
+        "Version": ""
+    },
+    {
         "Copyright": "Copyright",
         "Description": "Multi\nLine\nDescription",
         "Homepage": "www.qt.io",

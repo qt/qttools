@@ -37,8 +37,15 @@
 
 namespace Scanner {
 
+enum class InputFormat {
+    QtAttributions = 0x1, // qt_attributions.json
+    ChromiumAttributions = 0x2, // README.chromium
+};
+Q_DECLARE_FLAGS(InputFormats, InputFormat)
+Q_DECLARE_OPERATORS_FOR_FLAGS(InputFormats)
+
 QVector<Package> readFile(const QString &filePath, LogLevel logLevel);
-QVector<Package> scanDirectory(const QString &directory, LogLevel logLevel);
+QVector<Package> scanDirectory(const QString &directory, InputFormats inputFormats, LogLevel logLevel);
 
 }
 
