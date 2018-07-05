@@ -447,7 +447,7 @@ bool AppxLocalEngine::installPackage(IAppxManifestReader *reader, const QString 
                                         return S_OK;
                                     }).Get());
     RETURN_FALSE_IF_FAILED("Could not register deployment completed callback.");
-    DWORD ret = WaitForSingleObjectEx(ev, 15000, FALSE);
+    DWORD ret = WaitForSingleObjectEx(ev, 60000, FALSE);
     CloseHandle(ev);
     if (ret != WAIT_OBJECT_0) {
         if (ret == WAIT_TIMEOUT)
@@ -544,7 +544,7 @@ bool AppxLocalEngine::remove()
                                         return S_OK;
                                     }).Get());
     RETURN_FALSE_IF_FAILED("Could not register deployment completed callback.");
-    DWORD ret = WaitForSingleObjectEx(ev, 15000, FALSE);
+    DWORD ret = WaitForSingleObjectEx(ev, 60000, FALSE);
     CloseHandle(ev);
     if (ret != WAIT_OBJECT_0) {
         if (ret == WAIT_TIMEOUT)
