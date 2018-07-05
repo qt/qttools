@@ -1261,8 +1261,6 @@ bool deployQmlImports(const QString &appBundlePath, DeploymentInfo deploymentInf
         return false;
     }
 
-    bool qtQuickContolsInUse = false; // condition for QtQuick.PrivateWidgets below
-
     // sort imports to deploy a module before its sub-modules (otherwise
     // deployQmlImports can consider the module deployed if it has already
     // deployed one of its sub-module)
@@ -1275,9 +1273,6 @@ bool deployQmlImports(const QString &appBundlePath, DeploymentInfo deploymentInf
         QString name = import["name"].toString();
         QString path = import["path"].toString();
         QString type = import["type"].toString();
-
-        if (import["name"] == "QtQuick.Controls")
-            qtQuickContolsInUse = true;
 
         LogNormal() << "Deploying QML import" << name;
 
@@ -1305,26 +1300,6 @@ bool deployQmlImports(const QString &appBundlePath, DeploymentInfo deploymentInf
         if (version.startsWith(QLatin1Char('.')))
             name.append(version);
 
-        deployQmlImport(appBundlePath, deploymentInfo.rpathsUsed, path, name);
-        LogNormal() << "";
-    }
-
-    // Special case:
-    // Use of QtQuick.PrivateWidgets is not discoverable at deploy-time.
-    // Recreate the run-time logic here as best as we can - deploy it iff
-    //      1) QtWidgets.framework is used
-    //      2) QtQuick.Controls is used
-    // The intended failure mode is that libwidgetsplugin.dylib will be present
-    // in the app bundle but not used at run-time.
-
-    // Check if Qt was configured with -libinfix
-    const QString libInfixWithFramework = getLibInfix(deploymentInfo.deployedFrameworks) + QStringLiteral(".framework");
-
-    if (deploymentInfo.deployedFrameworks.contains(QStringLiteral("QtWidgets") + libInfixWithFramework)
-            && qtQuickContolsInUse) {
-        LogNormal() << "Deploying QML import QtQuick.PrivateWidgets";
-        QString name = "QtQuick/PrivateWidgets";
-        QString path = qmlImportsPath + QLatin1Char('/') + name;
         deployQmlImport(appBundlePath, deploymentInfo.rpathsUsed, path, name);
         LogNormal() << "";
     }
