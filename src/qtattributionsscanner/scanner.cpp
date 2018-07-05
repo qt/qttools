@@ -112,11 +112,8 @@ static Package readPackage(const QJsonObject &object, const QString &filePath, L
             missingPropertyWarning(filePath, QStringLiteral("Name"));
         if (p.id.isEmpty())
             missingPropertyWarning(filePath, QStringLiteral("Id"));
-
         if (p.license.isEmpty())
             missingPropertyWarning(filePath, QStringLiteral("License"));
-        if (p.copyright.isEmpty())
-            missingPropertyWarning(filePath, QStringLiteral("Copyright"));
         if (p.qtParts.isEmpty())
             p.qtParts << QStringLiteral("libs");
 
