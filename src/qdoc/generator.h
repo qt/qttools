@@ -71,6 +71,7 @@ public:
 
     QString fullDocumentLocation(const Node *node, bool useSubdir = false);
     const Config* config() { return config_; }
+    QString linkForExampleFile(const QString &path, const Node *parent);
 
     static Generator *currentGenerator() { return currentGenerator_; }
     static Generator *generatorForFormat(const QString& format);
@@ -102,6 +103,8 @@ public:
     static QString plainCode(const QString& markedCode);
 
 protected:
+    void beginFilePage(const Node* node, const QString& fileName);
+    void endFilePage() { endSubPage(); } // for symmetry
     void beginSubPage(const Node* node, const QString& fileName);
     void endSubPage();
     virtual QString fileBase(const Node* node) const;
@@ -113,7 +116,7 @@ protected:
     virtual void generateCppReferencePage(Node* node, CodeMarker* marker);
     virtual void generateQmlTypePage(QmlTypeNode* , CodeMarker* ) { }
     virtual void generateQmlBasicTypePage(QmlBasicTypeNode* , CodeMarker* ) { }
-    virtual void generateDocumentNode(DocumentNode* dn, CodeMarker* marker);
+    virtual void generatePageNode(PageNode* pn, CodeMarker* marker);
     virtual void generateCollectionNode(CollectionNode* cn, CodeMarker* marker);
     virtual void generateInheritedBy(const ClassNode *classe, CodeMarker *marker);
     virtual void generateInherits(const ClassNode *classe, CodeMarker *marker);
@@ -147,11 +150,14 @@ protected:
                                  CodeMarker *marker,
                                  bool generate,
                                  int& numGeneratedAtoms);
-    void generateExampleFiles(const DocumentNode *dn, CodeMarker *marker);
-    void generateFileList(const DocumentNode* dn,
+    void generateFileList(const ExampleNode* en, CodeMarker* marker, bool images);
+#if 0
+    // Keeping this until usage shows we no longer need it. mws 17/08/2018
+    void generateFileList(const PageNode* pn,
                           CodeMarker* marker,
-                          Node::DocSubtype subtype,
-                          const QString& regExp = QString());
+                          Node::NodeSubtype subtype,
+                          const QString& regExp);
+#endif
     void generateSince(const Node *node, CodeMarker *marker);
     void generateStatus(const Node *node, CodeMarker *marker);
     void generatePrivateSignalNote(const Node* node, CodeMarker* marker);
@@ -229,6 +235,7 @@ private:
 
     void generateReimplementedFrom(const FunctionNode *func, CodeMarker *marker);
     static bool compareNodes(Node *a, Node *b) { return (a->name() < b->name()); }
+    static bool comparePaths(QString a, QString b) { return (a < b); }
     static void copyTemplateFiles(const Config &config,
                                   const QString &configVar,
                                   const QString &subDir);

@@ -91,9 +91,9 @@ void WebXMLGenerator::generateCppReferencePage(Node *node, CodeMarker *marker)
     endSubPage();
 }
 
-void WebXMLGenerator::generateDocumentNode(DocumentNode *dn, CodeMarker *marker)
+void WebXMLGenerator::generatePageNode(PageNode *pn, CodeMarker *marker)
 {
-    generateCppReferencePage(dn, marker);
+    generateCppReferencePage(pn, marker);
 }
 
 void WebXMLGenerator::generateIndexSections(QXmlStreamWriter &writer,
@@ -109,7 +109,7 @@ void WebXMLGenerator::generateIndexSections(QXmlStreamWriter &writer,
         writer.writeAttribute("line", QString::number(node->doc().location().lineNo()));
         writer.writeAttribute("column", QString::number(node->doc().location().columnNo()));
 
-        if (node->isDocumentNode())
+        if (node->isTextPageNode())
             generateRelations(writer, node);
 
         if (node->isModule()) {
@@ -177,27 +177,25 @@ void WebXMLGenerator::generateDocumentation(Node *node)
 {
     // Don't generate nodes that are already processed, or if they're not supposed to
     // generate output, ie. external, index or images nodes.
-    if (!node->url().isNull() ||
-         node->isExternalPage() ||
-         node->isIndexNode() ||
-         node->docSubtype() == Node::Image) {
+    if (!node->url().isNull() || node->isExternalPage() || node->isIndexNode())
         return;
-    }
 
     if (node->isInternal() && !showInternal_)
         return;
 
     CodeMarker *marker = CodeMarker::markerForFileName(node->location().filePath());
     if (node->parent()) {
-        if (node->isNamespace() || node->isClass())
+        if (node->isNamespace() || node->isClass() || node->isHeader())
             generateCppReferencePage(static_cast<Aggregate*>(node), marker);
-        else if (node->isDocumentNode())
-            generateDocumentNode(static_cast<DocumentNode *>(node), marker);
-        else if (node->isCollectionNode() && node->wasSeen()) {
-            // see remarks in base class impl.
-            qdb_->mergeCollections(static_cast<CollectionNode *>(node));
-            generateCppReferencePage(node, marker);
+        else if (node->isCollectionNode()) {
+            if (node->wasSeen()) {
+                // see remarks in base class impl.
+                qdb_->mergeCollections(static_cast<CollectionNode *>(node));
+                generateCppReferencePage(node, marker);
+            }
         }
+        else if (node->isTextPageNode())
+            generatePageNode(static_cast<PageNode *>(node), marker);
         // else if TODO: anything else?
     }
 
@@ -239,7 +237,7 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer,
     case Atom::BriefLeft:
 
         writer.writeStartElement("brief");
-        switch (relative->type()) {
+        switch (relative->nodeType()) {
         case Node::Property:
             writer.writeCharacters("This property");
             break;
@@ -249,7 +247,7 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer,
         default:
             break;
         }
-        if (relative->type() == Node::Property || relative->type() == Node::Variable) {
+        if (relative->nodeType() == Node::Property || relative->nodeType() == Node::Variable) {
             QString str;
             const Atom *a = atom->next();
             while (a != nullptr && a->type() != Atom::BriefRight) {
@@ -275,7 +273,7 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer,
         break;
 
     case Atom::BriefRight:
-        if (relative->type() == Node::Property || relative->type() == Node::Variable)
+        if (relative->nodeType() == Node::Property || relative->nodeType() == Node::Variable)
             writer.writeCharacters(".");
 
         writer.writeEndElement(); // brief
@@ -457,7 +455,7 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer,
         else if (atom->string() == ATOM_LIST_TAG)
             writer.writeAttribute("type", "definition");
         else if (atom->string() == ATOM_LIST_VALUE) {
-            if (relative->type() == Node::Enum)
+            if (relative->nodeType() == Node::Enum)
                 writer.writeAttribute("type", "enum");
             else
                 writer.writeAttribute("type", "definition");
@@ -665,11 +663,11 @@ void WebXMLGenerator::startLink(QXmlStreamWriter &writer, const Atom *atom,
         writer.writeAttribute("raw", atom->string());
         writer.writeAttribute("href", link);
         writer.writeAttribute("type", targetType(node));
-        switch (node->type()) {
+        switch (node->nodeType()) {
         case Node::Enum:
             writer.writeAttribute("enum", fullName);
             break;
-        case Node::Document:
+        case Node::Page:
             writer.writeAttribute("page", fullName);
             break;
         case Node::Property:
@@ -687,12 +685,12 @@ void WebXMLGenerator::startLink(QXmlStreamWriter &writer, const Atom *atom,
 
 QString WebXMLGenerator::targetType(const Node *node)
 {
-    switch (node->type()) {
+    switch (node->nodeType()) {
     case Node::Namespace:
         return "namespace";
     case Node::Class:
         return "class";
-    case Node::Document:
+    case Node::Page:
         return "page";
     case Node::Enum:
         return "enum";
@@ -798,7 +796,7 @@ const QPair<QString,QString> WebXMLGenerator::anchorForNode(const Node *node)
     QPair<QString,QString> anchorPair;
 
     anchorPair.first = fullDocumentLocation(node);
-    if (node->isDocumentNode())
+    if (node->isTextPageNode())
         anchorPair.second = node->title();
 
     return anchorPair;

@@ -101,7 +101,7 @@ void QDocTagFiles::generateTagFileCompounds(QXmlStreamWriter& writer, const Aggr
             continue;
 
         QString kind;
-        switch (node->type()) {
+        switch (node->nodeType()) {
         case Node::Namespace:
             kind = "namespace";
             break;
@@ -141,7 +141,7 @@ void QDocTagFiles::generateTagFileCompounds(QXmlStreamWriter& writer, const Aggr
         writer.writeStartElement("compound");
         writer.writeAttribute("kind", kind);
 
-        if (node->type() == Node::Class) {
+        if (node->nodeType() == Node::Class) {
             writer.writeTextElement("name", node->fullDocumentName());
             writer.writeTextElement("filename", gen_->fullDocumentLocation(node, false));
 
@@ -187,7 +187,7 @@ void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter& writer, const Aggreg
 
         QString nodeName;
         QString kind;
-        switch (node->type()) {
+        switch (node->nodeType()) {
         case Node::Enum:
             nodeName = "member";
             kind = "enum";
@@ -239,7 +239,7 @@ void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter& writer, const Aggreg
         if (!kind.isEmpty())
             writer.writeAttribute("kind", kind);
 
-        switch (node->type()) {
+        switch (node->nodeType()) {
         case Node::Class:
             writer.writeCharacters(node->fullDocumentName());
             writer.writeEndElement();

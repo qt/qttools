@@ -259,11 +259,11 @@ void CodeParser::processCommonMetaCommand(const Location& location,
         if (!showInternal_) {
             node->setAccess(Node::Private);
             node->setStatus(Node::Internal);
-            if (node->type() == Node::QmlPropertyGroup) {
+            if (node->nodeType() == Node::QmlPropertyGroup) {
                 const QmlPropertyGroupNode* qpgn = static_cast<const QmlPropertyGroupNode*>(node);
                 NodeList::ConstIterator p = qpgn->childNodes().constBegin();
                 while (p != qpgn->childNodes().constEnd()) {
-                    if ((*p)->type() == Node::QmlProperty) {
+                    if ((*p)->nodeType() == Node::QmlProperty) {
                         (*p)->setAccess(Node::Private);
                         (*p)->setStatus(Node::Internal);
                     }
@@ -288,15 +288,13 @@ void CodeParser::processCommonMetaCommand(const Location& location,
         node->setThreadSafeness(Node::ThreadSafe);
     }
     else if (command == COMMAND_TITLE) {
-        node->setTitle(arg.first);
-        if (!node->isDocumentNode() && !node->isCollectionNode())
-            location.warning(tr("Ignored '\\%1'").arg(COMMAND_SUBTITLE));
+        if (!node->setTitle(arg.first))
+            location.warning(tr("Ignored '\\%1'").arg(COMMAND_TITLE));
         else if (node->isExample())
             qdb_->addExampleNode(static_cast<ExampleNode*>(node));
     }
     else if (command == COMMAND_SUBTITLE) {
-        node->setSubTitle(arg.first);
-        if (!node->isDocumentNode() && !node->isCollectionNode())
+        if (!node->setSubtitle(arg.first))
             location.warning(tr("Ignored '\\%1'").arg(COMMAND_SUBTITLE));
     }
     else if (command == COMMAND_QTVARIABLE) {
@@ -414,7 +412,7 @@ void CodeParser::checkModuleInclusion(Node* n)
 {
     if (n->physicalModuleName().isEmpty()) {
         n->setPhysicalModuleName(Generator::defaultModuleName());
-        switch (n->type()) {
+        switch (n->nodeType()) {
         case Node::Class:
             if (n->access() != Node::Private && !n->doc().isEmpty()) {
                 n->doc().location().warning(tr("Class %1 has no \\inmodule command; "

@@ -81,7 +81,7 @@ struct TargetLoc
 };
 
 typedef QMultiMap<QString, TargetRec*> TargetMap;
-typedef QMultiMap<QString, DocumentNode*> DocumentNodeMultiMap;
+typedef QMultiMap<QString, PageNode*> PageNodeMultiMap;
 typedef QMap<QString, QmlTypeNode*> QmlTypeMap;
 typedef QMultiMap<QString, const ExampleNode*> ExampleNodeMap;
 typedef QVector<TargetLoc*> TargetList;
@@ -115,7 +115,7 @@ class Tree
     Node* findNodeRecursive(const QStringList& path,
                             int pathIndex,
                             Node* start,
-                            const NodeTypeList& types) const;
+                            const QList<int> &types) const;
 
     const Node* findNodeForTarget(const QStringList& path,
                                   const QString& target,
@@ -139,7 +139,7 @@ class Tree
     QmlTypeNode* findQmlTypeNode(const QStringList& path);
 
     Node* findNodeByNameAndType(const QStringList& path, Node::NodeType type) const;
-    Aggregate* findRelatesNode(const QStringList& path);
+    PageNode* findRelatesNode(const QStringList& path);
     QString getRef(const QString& target, const Node* node) const;
     void insertTarget(const QString& name,
                       const QString& title,
@@ -148,7 +148,7 @@ class Tree
                       int priority);
     void resolveTargets(Aggregate* root);
     const Node* findUnambiguousTarget(const QString& target, Node::Genus genus, QString& ref) const;
-    const DocumentNode* findDocumentNodeByTitle(const QString& title) const;
+    const PageNode* findPageNodeByTitle(const QString& title) const;
 
     void addPropertyFunction(PropertyNode *property,
                              const QString &funcName,
@@ -171,19 +171,19 @@ class Tree
     NodeList allBaseClasses(const ClassNode *classe) const;
     QString refForAtom(const Atom* atom);
 
-    CNMap* getCollectionMap(Node::Genus genus);
+    CNMap* getCollectionMap(Node::NodeType type);
     const CNMap& groups() const { return groups_; }
     const CNMap& modules() const { return modules_; }
     const CNMap& qmlModules() const { return qmlModules_; }
     const CNMap& jsModules() const { return jsModules_; }
 
-    CollectionNode* getCollection(const QString& name, Node::Genus genus);
-    CollectionNode* findCollection(const QString& name, Node::Genus genus);
+    CollectionNode* getCollection(const QString& name, Node::NodeType type);
+    CollectionNode* findCollection(const QString& name, Node::NodeType type);
 
-    CollectionNode* findGroup(const QString& name) { return findCollection(name, Node::DOC); }
-    CollectionNode* findModule(const QString& name) { return findCollection(name, Node::CPP); }
-    CollectionNode* findQmlModule(const QString& name) { return findCollection(name, Node::QML); }
-    CollectionNode* findJsModule(const QString& name) { return findCollection(name, Node::JS); }
+    CollectionNode* findGroup(const QString& name) { return findCollection(name, Node::Group); }
+    CollectionNode* findModule(const QString& name) { return findCollection(name, Node::Module); }
+    CollectionNode* findQmlModule(const QString& name) { return findCollection(name, Node::QmlModule); }
+    CollectionNode* findJsModule(const QString& name) { return findCollection(name, Node::JsModule); }
 
     CollectionNode* addGroup(const QString& name) { return findGroup(name); }
     CollectionNode* addModule(const QString& name) { return findModule(name); }
@@ -238,7 +238,7 @@ private:
     QDocDatabase* qdb_;
     NamespaceNode root_;
     PropertyMap unresolvedPropertyMap;
-    DocumentNodeMultiMap    docNodesByTitle_;
+    PageNodeMultiMap        pageNodesByTitle_;
     TargetMap               nodesByTargetRef_;
     TargetMap               nodesByTargetTitle_;
     CNMap                   groups_;

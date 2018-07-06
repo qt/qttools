@@ -204,9 +204,12 @@ bool QmlDocVisitor::applyDocumentation(QQmlJS::AST::SourceLocation location, Nod
         if (topicsUsed.size() > 0) {
             for (int i=0; i<topicsUsed.size(); ++i) {
                 QString topic = topicsUsed.at(i).topic;
+                if (!topic.startsWith(QLatin1String("qml")) && !topic.startsWith(QLatin1String("js")))
+                    continue; // maybe a qdoc warning here? mws 18/07/18
                 QString args = topicsUsed.at(i).args;
-                if ((topic == COMMAND_QMLPROPERTY) || (topic == COMMAND_QMLATTACHEDPROPERTY) ||
-                    (topic == COMMAND_JSPROPERTY) || (topic == COMMAND_JSATTACHEDPROPERTY)) {
+                if (topic == COMMAND_JSTYPE) {
+                    node->changeType(Node::QmlType, Node::JsType);
+                } else if (topic.endsWith(QLatin1String("property"))) {
                     QmlPropArgs qpa;
                     if (splitQmlPropertyArg(doc, args, qpa)) {
                         if (qpa.name_ == nodePassedIn->name()) {
@@ -214,8 +217,7 @@ bool QmlDocVisitor::applyDocumentation(QQmlJS::AST::SourceLocation location, Nod
                                 nodePassedIn->setDataType(qpa.type_);
                         }
                         else {
-                            bool isAttached = (topic == COMMAND_QMLATTACHEDPROPERTY) ||
-                                (topic == COMMAND_JSATTACHEDPROPERTY);
+                            bool isAttached = topic.contains(QLatin1String("attached"));
                             QmlPropertyNode* n = parent->hasQmlProperty(qpa.name_, isAttached);
                             if (n == 0)
                                 n = new QmlPropertyNode(parent, qpa.name_, qpa.type_, isAttached);
@@ -226,20 +228,19 @@ bool QmlDocVisitor::applyDocumentation(QQmlJS::AST::SourceLocation location, Nod
                                 n->setDefault();
                             if (isAttached)
                                 n->setReadOnly(0);
-                            if ((topic == COMMAND_JSPROPERTY) ||
-                                (topic == COMMAND_JSATTACHEDPROPERTY))
-                                n->setGenus(Node::JS);
+                            if ((topic == COMMAND_JSPROPERTY) || (topic == COMMAND_JSATTACHEDPROPERTY))
+                                n->changeType(Node::QmlProperty, Node::JsProperty);
                             nodes.append(n);
                         }
                     }
                     else
                         qDebug() << "  FAILED TO PARSE QML OR JS PROPERTY:" << topic << args;
-                }
-                else if ((topic == COMMAND_QMLMETHOD) || (topic == COMMAND_QMLATTACHEDMETHOD) ||
-                         (topic == COMMAND_JSMETHOD) || (topic == COMMAND_JSATTACHEDMETHOD)) {
+                } else if (topic.endsWith(QLatin1String("method"))) {
                     if (node->isFunction()) {
                         FunctionNode* fn = static_cast<FunctionNode*>(node);
                         QmlSignatureParser qsp(fn, args, doc.location());
+                        if (topic == COMMAND_JSMETHOD || topic == COMMAND_JSATTACHEDMETHOD)
+                            fn->changeMetaness(FunctionNode::QmlMethod, FunctionNode::JsMethod);
                     }
                 }
             }
@@ -292,7 +293,7 @@ bool QmlSignatureParser::matchDataType(CodeChunk* dataType, QString* var)
     /*
       This code is really hard to follow... sorry. The loop is there to match
       Alpha::Beta::Gamma::...::Omega.
-    */
+     */
     for (;;) {
         bool virgin = true;
 
@@ -341,7 +342,7 @@ bool QmlSignatureParser::matchDataType(CodeChunk* dataType, QString* var)
     /*
       The usual case: Look for an optional identifier, then for
       some array brackets.
-    */
+     */
     dataType->appendHotspot();
 
     if ((var != 0) && match(Tok_Ident))
@@ -580,13 +581,18 @@ QString QmlDocVisitor::getFullyQualifiedId(QQmlJS::AST::UiQualifiedId *id)
   qdoc database. Increment the object nesting level, which is used
   to test whether we are at the public API level. The public level
   is level 1.
-*/
+
+  Note that this visit() function creates the qdoc object node as a
+  QmlType. If it is actually a JsType, this fact is discovered when
+  the qdoc comment is applied to the node. The node's typet is then
+  changed to JsType.
+ */
 bool QmlDocVisitor::visit(QQmlJS::AST::UiObjectDefinition *definition)
 {
     QString type = getFullyQualifiedId(definition->qualifiedTypeNameId);
     nestingLevel++;
 
-    if (current->type() == Node::Namespace) {
+    if (current->nodeType() == Node::Namespace) {
         QmlTypeNode *component = new QmlTypeNode(current, name);
         component->setTitle(name);
         component->setImportList(importList);
@@ -680,7 +686,7 @@ QString qualifiedIdToString(QQmlJS::AST::UiQualifiedId *node)
     Visits the public \a member declaration, which can be a
     signal or a property. It is a custom signal or property.
     Only visit the \a member if the nestingLevel is 1.
-*/
+ */
 bool QmlDocVisitor::visit(QQmlJS::AST::UiPublicMember *member)
 {
     if (nestingLevel > 1) {
@@ -692,19 +698,19 @@ bool QmlDocVisitor::visit(QQmlJS::AST::UiPublicMember *member)
         if (current->isQmlType() || current->isJsType()) {
             QmlTypeNode *qmlType = static_cast<QmlTypeNode *>(current);
             if (qmlType) {
-
+                FunctionNode::Metaness metaness = FunctionNode::QmlSignal;
+                if (qmlType->isJsType())
+                    metaness = FunctionNode::JsSignal;
                 QString name = member->name.toString();
-                FunctionNode *qmlSignal = new FunctionNode(Node::QmlSignal, current, name, false);
-
+                FunctionNode *newSignal = new FunctionNode(metaness, current, name);
                 QVector<Parameter> parameters;
                 for (QQmlJS::AST::UiParameterList *it = member->parameters; it; it = it->next) {
                     const QString type = qualifiedIdToString(it->type);
                     if (!type.isEmpty() && !it->name.isEmpty())
                         parameters.append(Parameter(type, QString(), it->name.toString()));
                 }
-
-                qmlSignal->setParameters(parameters);
-                applyDocumentation(member->firstSourceLocation(), qmlSignal);
+                newSignal->setParameters(parameters);
+                applyDocumentation(member->firstSourceLocation(), newSignal);
             }
         }
         break;
@@ -718,11 +724,8 @@ bool QmlDocVisitor::visit(QQmlJS::AST::UiPublicMember *member)
             if (qmlType) {
                 QString name = member->name.toString();
                 QmlPropertyNode* qmlPropNode = qmlType->hasQmlProperty(name);
-                if (qmlPropNode == 0) {
+                if (qmlPropNode == 0)
                     qmlPropNode = new QmlPropertyNode(qmlType, name, type, false);
-                    if (current->isJsType())
-                        qmlPropNode->setGenus(Node::JS);
-                }
                 qmlPropNode->setReadOnly(member->isReadonlyMember);
                 if (member->isDefaultMember)
                     qmlPropNode->setDefault();
@@ -763,10 +766,11 @@ bool QmlDocVisitor::visit(QQmlJS::AST::FunctionDeclaration* fd)
     if (current->isQmlType() || current->isJsType()) {
         QmlTypeNode* qmlType = static_cast<QmlTypeNode*>(current);
         if (qmlType) {
+            FunctionNode::Metaness metaness = FunctionNode::QmlMethod;
+            if (qmlType->isJsType())
+                metaness = FunctionNode::JsMethod;
             QString name = fd->name.toString();
-            FunctionNode* qmlMethod = new FunctionNode(Node::QmlMethod, current, name, false);
-            if (current->isJsType())
-                qmlMethod->setGenus(Node::JS);
+            FunctionNode* newMethod = new FunctionNode(metaness, current, name);
             int overloads = 0;
             NodeList::ConstIterator i = current->childNodes().constBegin();
             while (i != current->childNodes().constEnd()) {
@@ -775,7 +779,7 @@ bool QmlDocVisitor::visit(QQmlJS::AST::FunctionDeclaration* fd)
                 i++;
             }
             if (overloads > 1)
-                qmlMethod->setOverloadFlag(true);
+                newMethod->setOverloadFlag(true);
             QVector<Parameter> parameters;
             QQmlJS::AST::FormalParameterList* formals = fd->formals;
             if (formals) {
@@ -784,9 +788,9 @@ bool QmlDocVisitor::visit(QQmlJS::AST::FunctionDeclaration* fd)
                     parameters.append(Parameter(QString(), QString(), fpl->element->bindingIdentifier.toString()));
                     fpl = fpl->next;
                 } while (fpl && fpl != formals);
-                qmlMethod->setParameters(parameters);
+                newMethod->setParameters(parameters);
             }
-            applyDocumentation(fd->firstSourceLocation(), qmlMethod);
+            applyDocumentation(fd->firstSourceLocation(), newMethod);
         }
     }
     return true;
@@ -820,7 +824,10 @@ bool QmlDocVisitor::visit(QQmlJS::AST::UiScriptBinding* )
         if (handler.length() > 2 && handler.startsWith("on") && handler.at(2).isUpper()) {
             QmlTypeNode* qmlType = static_cast<QmlTypeNode*>(current);
             if (qmlType) {
-                FunctionNode* qmlSH = new FunctionNode(Node::QmlSignalHandler,current,handler,false);
+                FunctionNode::Metaness metaness = FunctionNode::QmSignalHandler;
+                if (qmlType->isJsType())
+                    metaness = FunctionNode::JsSignalHandler;
+                FunctionNode* qmlSH = new FunctionNode(metaness, current, handler);
                 applyDocumentation(sb->firstSourceLocation(), qmlSH);
             }
         }

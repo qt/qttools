@@ -125,9 +125,9 @@ class QDocForest
         return 0;
     }
 
-    Aggregate* findRelatesNode(const QStringList& path) {
+    PageNode* findRelatesNode(const QStringList& path) {
         foreach (Tree* t, searchOrder()) {
-            Aggregate* n = t->findRelatesNode(path);
+            PageNode* n = t->findRelatesNode(path);
             if (n)
                 return n;
         }
@@ -160,20 +160,20 @@ class QDocForest
         return 0;
     }
 
-    const DocumentNode* findDocumentNodeByTitle(const QString& title)
+    const PageNode* findPageNodeByTitle(const QString& title)
     {
         foreach (Tree* t, searchOrder()) {
-            const DocumentNode* n = t->findDocumentNodeByTitle(title);
+            const PageNode* n = t->findPageNodeByTitle(title);
             if (n)
                 return n;
         }
         return 0;
     }
 
-    const CollectionNode* getCollectionNode(const QString& name, Node::Genus genus)
+    const CollectionNode* getCollectionNode(const QString& name, Node::NodeType type)
     {
         foreach (Tree* t, searchOrder()) {
-            const CollectionNode* cn = t->getCollection(name, genus);
+            const CollectionNode* cn = t->getCollection(name, type);
             if (cn)
                 return cn;
         }
@@ -336,7 +336,7 @@ class QDocDatabase
     ********************************************************************/
     ClassNode* findClassNode(const QStringList& path) { return forest_.findClassNode(path); }
     Node* findNodeForInclude(const QStringList& path) { return forest_.findNodeForInclude(path); }
-    Aggregate* findRelatesNode(const QStringList& path) { return forest_.findRelatesNode(path); }
+    PageNode* findRelatesNode(const QStringList& path) { return forest_.findRelatesNode(path); }
     const Node* findFunctionNode(const QString& target, const Node* relative, Node::Genus genus) {
         return forest_.findFunctionNode(target, relative, genus);
     }
@@ -348,14 +348,14 @@ class QDocDatabase
     }
     const Node* findTypeNode(const QString& type, const Node* relative, Node::Genus genus);
     const Node* findNodeForTarget(const QString& target, const Node* relative);
-    const DocumentNode* findDocumentNodeByTitle(const QString& title) {
-        return forest_.findDocumentNodeByTitle(title);
+    const PageNode* findPageNodeByTitle(const QString& title) {
+        return forest_.findPageNodeByTitle(title);
     }
     Node* findNodeByNameAndType(const QStringList& path, Node::NodeType type) {
         return forest_.findNodeByNameAndType(path, type);
     }
-    const CollectionNode* getCollectionNode(const QString& name, Node::Genus genus) {
-        return forest_.getCollectionNode(name, genus);
+    const CollectionNode* getCollectionNode(const QString& name, Node::NodeType type) {
+        return forest_.getCollectionNode(name, type);
     }
     Node *findFunctionNodeForTag(QString tag) { return primaryTree()->findFunctionNodeForTag(tag); }
     Node* findMacroNode(const QString &t) { return primaryTree()->findMacroNode(t); }
@@ -403,7 +403,7 @@ class QDocDatabase
     void setLocalSearch() { forest_.searchOrder_ = QVector<Tree*>(1, primaryTree()); }
     void setSearchOrder(const QVector<Tree*>& searchOrder) { forest_.searchOrder_ = searchOrder; }
     void setSearchOrder(QStringList& t) { forest_.setSearchOrder(t); }
-    void mergeCollections(Node::Genus genus, CNMap& cnm, const Node* relative);
+    void mergeCollections(Node::NodeType type, CNMap& cnm, const Node* relative);
     void mergeCollections(CollectionNode* c);
     void clearSearchOrder() { forest_.clearSearchOrder(); }
     void incrementLinkCount(const Node* t) { t->tree()->incrementLinkCount(); }

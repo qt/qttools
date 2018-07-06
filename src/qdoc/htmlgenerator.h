@@ -73,7 +73,7 @@ protected:
     void generateCppReferencePage(Node* node, CodeMarker* marker) override;
     void generateQmlTypePage(QmlTypeNode* qcn, CodeMarker* marker) override;
     void generateQmlBasicTypePage(QmlBasicTypeNode* qbtn, CodeMarker* marker) override;
-    void generateDocumentNode(DocumentNode* dn, CodeMarker* marker) override;
+    void generatePageNode(PageNode* pn, CodeMarker* marker) override;
     void generateCollectionNode(CollectionNode* cn, CodeMarker* marker) override;
     QString fileExtension() const override;
     virtual QString refForNode(const Node *node);
@@ -192,15 +192,12 @@ private:
 #ifdef GENERATE_MAC_REFS
     void generateMacRef(const Node *node, CodeMarker *marker);
 #endif
+    void beginLink(const QString &link);
     void beginLink(const QString &link, const Node *node, const Node *relative);
     void endLink();
     void generateExtractionMark(const Node *node, ExtractionMarkType markType);
     void reportOrphans(const Aggregate* parent);
 
-    void beginDitamapPage(const Aggregate* node, const QString& fileName);
-    void endDitamapPage();
-    void writeDitaMap(const DitaMapNode* node);
-    void writeDitaRefs(const DitaRefList& ditarefs);
     QXmlStreamWriter& xmlWriter();
 
     QHash<QString, QString> refMap;
@@ -255,7 +252,7 @@ public:
 inline bool HtmlGenerator::hasBrief(const Node *node)
 {
     return !(node->isQmlType()
-             || node->isDocumentNode()
+             || node->isPageNode()
              || node->isCollectionNode()
              || node->isJsType());
 }

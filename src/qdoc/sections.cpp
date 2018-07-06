@@ -134,29 +134,32 @@ QString Section::sortName(const Node *node, const QString* name)
     }
 
     if (node->isFunction()) {
-        const FunctionNode *func = static_cast<const FunctionNode *>(node);
-        QString sortNo;
-        if (func->isSomeCtor())
-            sortNo = QLatin1String("C");
-        else if (func->isDtor())
-            sortNo = QLatin1String("D");
-        else if (nodeName.startsWith(QLatin1String("operator"))
-                 && nodeName.length() > 8
-                 && !nodeName[8].isLetterOrNumber())
-            sortNo = QLatin1String("F");
-        else
-            sortNo = QLatin1String("E");
-        return sortNo + nodeName + QLatin1Char(' ') + QString::number(func->overloadNumber(), 36);
-    }
+        const FunctionNode *fn = static_cast<const FunctionNode *>(node);
+        if (fn->isCppFunction()) {
+            QString sortNo;
+            if (fn->isSomeCtor())
+                sortNo = QLatin1String("C");
+            else if (fn->isDtor())
+                sortNo = QLatin1String("D");
+            else if (nodeName.startsWith(QLatin1String("operator"))
+                     && nodeName.length() > 8
+                     && !nodeName[8].isLetterOrNumber())
+                sortNo = QLatin1String("F");
+            else
+                sortNo = QLatin1String("E");
+            return sortNo + nodeName + QLatin1Char(' ') + QString::number(fn->overloadNumber(), 36);
+        }
+        if (fn->isQmlMethod() || fn->isQmlSignal() || fn->isQmlSignalHandler())
+            return QLatin1Char('E') + nodeName;
 
+        if (fn->isJsMethod() || fn->isJsSignal() || fn->isJsSignalHandler())
+            return QLatin1Char('E') + nodeName;
+    }
     if (node->isClass())
         return QLatin1Char('A') + nodeName;
 
     if (node->isProperty() || node->isVariable())
         return QLatin1Char('E') + nodeName;
-
-    if (node->isQmlMethod() || node->isQmlSignal() || node->isQmlSignalHandler())
-         return QLatin1Char('E') + nodeName;
 
     return QLatin1Char('B') + nodeName;
 }
@@ -318,18 +321,22 @@ Sections::Sections(Aggregate *aggregate) : aggregate_(aggregate)
 {
     initSections();
     initAggregate(allMembers_, aggregate_);
-    switch (aggregate_->type()) {
+    switch (aggregate_->nodeType()) {
     case Node::Class:
         initAggregate(stdCppClassSummarySections_, aggregate_);
         initAggregate(stdCppClassDetailsSections_, aggregate_);
         buildStdCppClassRefPageSections();
         break;
+    case Node::JsType:
+    case Node::JsBasicType:
     case Node::QmlType:
     case Node::QmlBasicType:
         initAggregate(stdQmlTypeSummarySections_, aggregate_);
         initAggregate(stdQmlTypeDetailsSections_, aggregate_);
         buildStdQmlTypeRefPageSections();
         break;
+    case Node::Namespace:
+    case Node::HeaderFile:
     default:
         initAggregate(stdSummarySections_, aggregate_);
         initAggregate(stdDetailsSections_, aggregate_);
@@ -351,7 +358,8 @@ Sections::Sections(const NodeMultiMap& nsmap) : aggregate_(0)
     NodeMultiMap::const_iterator n = nsmap.constBegin();
     while (n != nsmap.constEnd()) {
         Node* node = n.value();
-        switch (node->type()) {
+        switch (node->nodeType()) {
+        case Node::JsType:
         case Node::QmlType:
             sections[SinceQmlTypes].appendMember(node);
             break;
@@ -369,24 +377,40 @@ Sections::Sections(const NodeMultiMap& nsmap) : aggregate_(0)
             break;
         case Node::Function: {
             const FunctionNode* fn = static_cast<const FunctionNode*>(node);
-            if (fn->isMacro())
-                sections[SinceMacros].appendMember(node);
-            else {
-                Node* p = fn->parent();
-                if (p) {
-                    if (p->type() == Node::Class)
-                        sections[SinceMemberFunctions].appendMember(node);
-                    else if (p->type() == Node::Namespace) {
-                        if (p->name().isEmpty())
-                            sections[SinceGlobalFunctions].appendMember(node);
+            switch (fn->metaness()) {
+            case FunctionNode::JsSignal:
+            case FunctionNode::QmlSignal:
+                sections[SinceQmlSignals].appendMember(node);
+                break;
+            case FunctionNode::JsSignalHandler:
+            case FunctionNode::QmlSignalHandler:
+                sections[SinceQmlSignalHandlers].appendMember(node);
+                break;
+            case FunctionNode::JsMethod:
+            case FunctionNode::QmlMethod:
+                sections[SinceQmlMethods].appendMember(node);
+                break;
+            default:
+                if (fn->isMacro())
+                    sections[SinceMacros].appendMember(node);
+                else {
+                    Node* p = fn->parent();
+                    if (p) {
+                        if (p->isClass())
+                            sections[SinceMemberFunctions].appendMember(node);
+                        else if (p->isNamespace()) {
+                            if (p->name().isEmpty())
+                                sections[SinceGlobalFunctions].appendMember(node);
+                            else
+                                sections[SinceNamespaceFunctions].appendMember(node);
+                        }
                         else
-                            sections[SinceNamespaceFunctions].appendMember(node);
+                            sections[SinceGlobalFunctions].appendMember(node);
                     }
                     else
                         sections[SinceGlobalFunctions].appendMember(node);
                 }
-                else
-                    sections[SinceGlobalFunctions].appendMember(node);
+                break;
             }
             break;
         }
@@ -396,17 +420,9 @@ Sections::Sections(const NodeMultiMap& nsmap) : aggregate_(0)
         case Node::Variable:
             sections[SinceVariables].appendMember(node);
             break;
+        case Node::JsProperty:
         case Node::QmlProperty:
             sections[SinceQmlProperties].appendMember(node);
-            break;
-        case Node::QmlSignal:
-            sections[SinceQmlSignals].appendMember(node);
-            break;
-        case Node::QmlSignalHandler:
-            sections[SinceQmlSignalHandlers].appendMember(node);
-            break;
-        case Node::QmlMethod:
-            sections[SinceQmlMethods].appendMember(node);
             break;
         default:
             break;
@@ -424,12 +440,14 @@ Sections::Sections(const NodeMultiMap& nsmap) : aggregate_(0)
 Sections::~Sections()
 {
     if (aggregate_) {
-        switch (aggregate_->type()) {
+        switch (aggregate_->nodeType()) {
         case Node::Class:
             clear(stdCppClassSummarySections());
             clear(stdCppClassDetailsSections());
             allMembersSection().clear();
             break;
+        case Node::JsType:
+        case Node::JsBasicType:
         case Node::QmlType:
         case Node::QmlBasicType:
             clear(stdQmlTypeSummarySections());
@@ -592,7 +610,7 @@ void Sections::reduce(QVector<Section> &v)
  */
 void Sections::stdRefPageSwitch(SectionVector &v, Node *n)
 {
-    switch (n->type()) {
+    switch (n->nodeType()) {
     case Node::Namespace:
         v[StdNamespaces].insert(n);
         return;
@@ -795,20 +813,21 @@ void Sections::distributeQmlNodeInDetailsVector(SectionVector &dv, Node *n)
             dv[QmlAttachedProperties].insert(pn);
         else
             dv[QmlProperties].insert(pn);
-    } else if (n->isQmlSignal() || n->isJsSignal()) {
+    } else if (n->isFunction()) {
         FunctionNode* fn = static_cast<FunctionNode*>(n);
-        if (fn->isAttached())
-            dv[QmlAttachedSignals].insert(fn);
-        else
-            dv[QmlSignals].insert(fn);
-    } else if (n->isQmlSignalHandler() || n->isJsSignalHandler()) {
-        dv[QmlSignalHandlers].insert(n);
-    } else if (n->isQmlMethod() || n->isJsMethod()) {
-        FunctionNode* fn = static_cast<FunctionNode*>(n);
-        if (fn->isAttached())
-            dv[QmlAttachedMethods].insert(fn);
-        else
-            dv[QmlMethods].insert(fn);
+        if (fn->isQmlSignal() || fn->isJsSignal()) {
+            if (fn->isAttached())
+                dv[QmlAttachedSignals].insert(fn);
+            else
+                dv[QmlSignals].insert(fn);
+        } else if (fn->isQmlSignalHandler() || fn->isJsSignalHandler()) {
+            dv[QmlSignalHandlers].insert(fn);
+        } else if (fn->isQmlMethod() || fn->isJsMethod()) {
+            if (fn->isAttached())
+                dv[QmlAttachedMethods].insert(fn);
+            else
+                dv[QmlMethods].insert(fn);
+        }
     } else if (n->isSharedCommentNode() && n->hasDoc())
         dv[QmlMethods].insert(n);
 }
@@ -823,20 +842,21 @@ void Sections::distributeQmlNodeInSummaryVector(SectionVector &sv, Node *n)
             sv[QmlAttachedProperties].insert(pn);
         else
             sv[QmlProperties].insert(pn);
-    } else if (n->isQmlSignal() || n->isJsSignal()) {
+    } else if (n->isFunction()) {
         FunctionNode* fn = static_cast<FunctionNode*>(n);
-        if (fn->isAttached())
-            sv[QmlAttachedSignals].insert(fn);
-        else
-            sv[QmlSignals].insert(fn);
-    } else if (n->isQmlSignalHandler() || n->isJsSignalHandler()) {
-        sv[QmlSignalHandlers].insert(n);
-    } else if (n->isQmlMethod() || n->isJsMethod()) {
-        FunctionNode* fn = static_cast<FunctionNode*>(n);
-        if (fn->isAttached())
-            sv[QmlAttachedMethods].insert(fn);
-        else
-            sv[QmlMethods].insert(fn);
+        if (fn->isQmlSignal() || fn->isJsSignal()) {
+            if (fn->isAttached())
+                sv[QmlAttachedSignals].insert(fn);
+            else
+                sv[QmlSignals].insert(fn);
+        } else if (fn->isQmlSignalHandler() || fn->isJsSignalHandler()) {
+            sv[QmlSignalHandlers].insert(fn);
+        } else if (fn->isQmlMethod() || fn->isJsMethod()) {
+            if (fn->isAttached())
+                sv[QmlAttachedMethods].insert(fn);
+            else
+                sv[QmlMethods].insert(fn);
+        }
     }
 }
 
@@ -931,12 +951,12 @@ void Sections::buildStdQmlTypeRefPageSections()
     SectionVector &dv = stdQmlTypeDetailsSections();
     Section &allMembers = allMembersSection();
 
-    const Aggregate* qcn = aggregate_;
+    const Aggregate* qtn = aggregate_;
     while (true) {
-        if (!qcn->isAbstract() || !classMap)
-            classMap = allMembers.newClassMap(qcn);
-        NodeList::ConstIterator c = qcn->childNodes().constBegin();
-        while (c != qcn->childNodes().constEnd()) {
+        if (!qtn->isAbstract() || !classMap)
+            classMap = allMembers.newClassMap(qtn);
+        NodeList::ConstIterator c = qtn->childNodes().constBegin();
+        while (c != qtn->childNodes().constEnd()) {
             Node *n = *c;
             if (n->isInternal()) {
                 ++c;
@@ -947,25 +967,25 @@ void Sections::buildStdQmlTypeRefPageSections()
             distributeQmlNodeInDetailsVector(dv, n);
             ++c;
         }
-        if (qcn->qmlBaseNode() == qcn) {
+        if (qtn->qmlBaseNode() == qtn) {
             qDebug() << "qdoc internal error: circular type definition."
-                     << "QML type" << qcn->name()
+                     << "QML type" << qtn->name()
                      << "can't be its own base type";
-            qcn = 0;
+            qtn = 0;
             break;
         }
-        qcn = static_cast<QmlTypeNode*>(qcn->qmlBaseNode());
-        if (qcn == 0)
+        qtn = static_cast<QmlTypeNode*>(qtn->qmlBaseNode());
+        if (qtn == 0)
             break;
-        if (!qcn->isAbstract())
+        if (!qtn->isAbstract())
             break;
     }
 
-    while (qcn != 0) {
-        if (!qcn->isAbstract() || !classMap)
-            classMap = allMembers.newClassMap(qcn);
-        NodeList::ConstIterator c = qcn->childNodes().constBegin();
-        while (c != qcn->childNodes().constEnd()) {
+    while (qtn != 0) {
+        if (!qtn->isAbstract() || !classMap)
+            classMap = allMembers.newClassMap(qtn);
+        NodeList::ConstIterator c = qtn->childNodes().constBegin();
+        while (c != qtn->childNodes().constEnd()) {
             Node *n = *c;
             if (n->isInternal()) {
                 ++c;
@@ -974,14 +994,14 @@ void Sections::buildStdQmlTypeRefPageSections()
             allMembers.add(classMap, n);
             ++c;
         }
-        if (qcn->qmlBaseNode() == qcn) {
+        if (qtn->qmlBaseNode() == qtn) {
             qDebug() << "qdoc internal error: circular type definition."
-                     << "QML type" << qcn->name()
+                     << "QML type" << qtn->name()
                      << "can't be its own base type";
-            qcn = 0;
+            qtn = 0;
             break;
         }
-        qcn = static_cast<QmlTypeNode*>(qcn->qmlBaseNode());
+        qtn = static_cast<QmlTypeNode*>(qtn->qmlBaseNode());
     }
     reduce(sv);
     reduce(dv);

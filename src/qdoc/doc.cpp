@@ -1435,7 +1435,6 @@ void DocParser::parse(const QString& source,
                             }
                         }
                         if ((numUppercase >= 1 && numLowercase >= 2) || numStrangeSymbols > 0) {
-                            qDebug() << "APPENDING: " << cmdStr;
                             appendWord(cmdStr);
                         } else {
                             location().warning(tr("Unknown command '\\%1'").arg(cmdStr),
@@ -1900,6 +1899,7 @@ void DocParser::parseAlso()
     while (pos < len && input_[pos] != '\n') {
         QString target;
         QString str;
+        bool skipMe = false;
 
         if (input_[pos] == '{') {
             target = getArgument();
@@ -1918,14 +1918,18 @@ void DocParser::parseAlso()
         else {
             target = getArgument();
             str = cleanLink(target);
+            if (target == QLatin1String("and") || target == QLatin1String("."))
+                skipMe = true;
         }
 
-        Text also;
-        also << Atom(Atom::Link, target)
-             << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
-             << str
-             << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
-        priv->addAlso(also);
+        if (!skipMe) {
+            Text also;
+            also << Atom(Atom::Link, target)
+                 << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
+                 << str
+                 << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
+            priv->addAlso(also);
+        }
 
         skipSpacesOnLine();
         if (pos < len && input_[pos] == ',') {

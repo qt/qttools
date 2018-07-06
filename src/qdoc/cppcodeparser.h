@@ -119,7 +119,7 @@ protected:
     bool matchDataType(CodeChunk *type, QString *var = 0, bool qProp = false);
     bool matchParameter(QVector<Parameter>& pvect, bool& isQPrivateSignal);
     bool matchUsingDecl(Aggregate* parent);
-    void createExampleFileNodes(DocumentNode *dn);
+    void setExampleFileLists(PageNode *pn);
 
  protected:
     QMap<QString, Node::NodeType> nodeTypeMap;
@@ -150,7 +150,6 @@ protected:
 #define COMMAND_ENUM                    Doc::alias("enum")
 #define COMMAND_EXAMPLE                 Doc::alias("example")
 #define COMMAND_EXTERNALPAGE            Doc::alias("externalpage")
-#define COMMAND_FILE                    Doc::alias("file")
 #define COMMAND_FN                      Doc::alias("fn")
 #define COMMAND_GROUP                   Doc::alias("group")
 #define COMMAND_HEADERFILE              Doc::alias("headerfile")

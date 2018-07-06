@@ -60,6 +60,8 @@ public:
         DivLeft,
         DivRight,
         EndQmlText,
+        ExampleFileLink,
+        ExampleImageLink,
         FootnoteLeft,
         FootnoteRight,
         FormatElse,

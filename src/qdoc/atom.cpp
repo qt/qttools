@@ -78,6 +78,8 @@ QT_BEGIN_NAMESPACE
   \value DivLeft
   \value DivRight
   \value EndQmlText
+  \value ExampleFileLink
+  \value ExampleImageLink
   \value FormatElse
   \value FormatEndif
   \value FormatIf
@@ -162,6 +164,8 @@ static const struct {
     { "DivLeft", Atom::DivLeft },
     { "DivRight", Atom::DivRight },
     { "EndQmlText", Atom::EndQmlText },
+    { "ExampleFileLink", Atom::ExampleFileLink},
+    { "ExampleImageLink", Atom::ExampleImageLink},
     { "FootnoteLeft", Atom::FootnoteLeft },
     { "FootnoteRight", Atom::FootnoteRight },
     { "FormatElse", Atom::FormatElse },

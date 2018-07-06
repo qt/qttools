@@ -262,7 +262,7 @@ QString CodeMarker::taggedNode(const Node* node)
     QString tag;
     QString name = node->name();
 
-    switch (node->type()) {
+    switch (node->nodeType()) {
     case Node::Namespace:
         tag = QLatin1String("@namespace");
         break;
@@ -294,13 +294,8 @@ QString CodeMarker::taggedNode(const Node* node)
             name = name.mid(4);
         tag = QLatin1String("@property");
         break;
-    case Node::Document:
+    case Node::Page:
         tag = QLatin1String("@property");
-        break;
-    case Node::QmlMethod:
-    case Node::QmlSignal:
-    case Node::QmlSignalHandler:
-        tag = QLatin1String("@function");
         break;
     default:
         tag = QLatin1String("@unknown");
@@ -313,22 +308,29 @@ QString CodeMarker::taggedNode(const Node* node)
 QString CodeMarker::taggedQmlNode(const Node* node)
 {
     QString tag;
-    switch (node->type()) {
-    case Node::QmlProperty:
+    if (node->isFunction()) {
+        const FunctionNode* fn = static_cast<const FunctionNode*>(node);
+        switch (fn->metaness()) {
+        case FunctionNode::JsSignal:
+        case FunctionNode::QmlSignal:
+            tag = QLatin1String("@signal");
+            break;
+        case FunctionNode::JsSignalHandler:
+        case FunctionNode::QmlSignalHandler:
+            tag = QLatin1String("@signalhandler");
+            break;
+        case FunctionNode::JsMethod:
+        case FunctionNode::QmlMethod:
+            tag = QLatin1String("@method");
+            break;
+        default:
+            tag = QLatin1String("@unknown");
+            break;
+        }
+    } else if (node->isQmlProperty() || node->isJsProperty()) {
         tag = QLatin1String("@property");
-        break;
-    case Node::QmlSignal:
-        tag = QLatin1String("@signal");
-        break;
-    case Node::QmlSignalHandler:
-        tag = QLatin1String("@signalhandler");
-        break;
-    case Node::QmlMethod:
-        tag = QLatin1String("@method");
-        break;
-    default:
+    } else {
         tag = QLatin1String("@unknown");
-        break;
     }
     return QLatin1Char('<') + tag + QLatin1Char('>') + protect(node->name())
             + QLatin1String("</") + tag + QLatin1Char('>');
@@ -348,7 +350,7 @@ static QString encode(const QString &string)
 QStringList CodeMarker::macRefsForNode(Node *node)
 {
     QString result = QLatin1String("cpp/");
-    switch (node->type()) {
+    switch (node->nodeType()) {
     case Node::Class:
     {
         const ClassNode *classe = static_cast<const ClassNode *>(node);
@@ -361,8 +363,7 @@ QStringList CodeMarker::macRefsForNode(Node *node)
     case Node::Enum:
     {
         QStringList stringList;
-        stringList << encode(result + QLatin1String("tag/") +
-                             macName(node));
+        stringList << encode(result + QLatin1String("tag/") + macName(node));
         foreach (const QString &enumName, node->doc().enumItemNames()) {
             // ### Write a plainEnumValue() and use it here
             stringList << encode(result + QLatin1String("econst/") +
@@ -413,9 +414,6 @@ QStringList CodeMarker::macRefsForNode(Node *node)
         }
         return stringList;
     }
-    case Node::Namespace:
-    case Node::Document:
-    case Node::QmlType:
     default:
         return QStringList();
     }
@@ -431,12 +429,10 @@ QString CodeMarker::macName(const Node *node, const QString &name)
         node = node->parent();
     }
 
-    if (node->name().isEmpty()) {
+    if (node->name().isEmpty())
         return QLatin1Char('/') + protect(myName);
-    }
-    else {
+    else
         return node->plainFullName() + QLatin1Char('/') + protect(myName);
-    }
 }
 
 QT_END_NAMESPACE

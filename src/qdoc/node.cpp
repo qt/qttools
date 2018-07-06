@@ -54,40 +54,93 @@ QMap<QString,Node::NodeType> Node::goals_;
  */
 void Node::initialize()
 {
+    goals_.insert("namespace", Node::Namespace);
     goals_.insert("class", Node::Class);
-    goals_.insert("qmltype", Node::QmlType);
-    goals_.insert("page", Node::Document);
+    goals_.insert("header", Node::HeaderFile);
+    goals_.insert("headerfile", Node::HeaderFile);
+    goals_.insert("page", Node::Page);
+    goals_.insert("enum", Node::Enum);
+    goals_.insert("example", Node::Example);
+    goals_.insert("externalpage", Node::ExternalPage);
+    goals_.insert("typedef", Node::Typedef);
+    goals_.insert("typealias", Node::Typedef);
     goals_.insert("function", Node::Function);
     goals_.insert("property", Node::Property);
     goals_.insert("variable", Node::Variable);
     goals_.insert("group", Node::Group);
     goals_.insert("module", Node::Module);
+    goals_.insert("qmltype", Node::QmlType);
     goals_.insert("qmlmodule", Node::QmlModule);
     goals_.insert("qmppropertygroup", Node::QmlPropertyGroup);
     goals_.insert("qmlproperty", Node::QmlProperty);
-    goals_.insert("qmlsignal", Node::QmlSignal);
-    goals_.insert("qmlsignalhandler", Node::QmlSignalHandler);
-    goals_.insert("qmlmethod", Node::QmlMethod);
+    goals_.insert("qmlsignal", Node::Function);
+    goals_.insert("qmlsignalhandler", Node::Function);
+    goals_.insert("qmlmethod", Node::Function);
     goals_.insert("qmlbasictype", Node::QmlBasicType);
-    goals_.insert("enum", Node::Enum);
-    goals_.insert("typealias", Node::Typedef);
-    goals_.insert("typedef", Node::Typedef);
-    goals_.insert("namespace", Node::Namespace);
+    goals_.insert("sharedcomment", Node::SharedComment);
+    goals_.insert("collection", Node::Collection);
 }
 
+/*!
+  If this Node's type is \a from, change the type to \a to
+  and return \c true. Otherwise return false. This function
+  is used to change Qml node types to Javascript node types,
+  because these nodes are created as Qml nodes before it is
+  discovered that the entity represented by the node is not
+  Qml but javascript.
+
+  Note that if the function returns true, which means the node
+  type was indeed changed, then the node's Genus is also changed
+  from QML to JS.
+
+  The function also works in the other direction, but there is
+  no use case for that.
+ */
+bool Node::changeType(NodeType from, NodeType to)
+{
+    if (nodeType_ == from) {
+        nodeType_ = to;
+        switch (to) {
+          case QmlType:
+          case QmlModule:
+          case QmlPropertyGroup:
+          case QmlProperty:
+          case QmlBasicType:
+              setGenus(Node::QML);
+              break;
+          case JsType:
+          case JsModule:
+          case JsPropertyGroup:
+          case JsProperty:
+          case JsBasicType:
+              setGenus(Node::JS);
+              break;
+          default:
+              setGenus(Node::CPP);
+              break;
+        }
+        return true;
+    }
+    return false;
+}
+
+/*!
+  Returns \c true if the node \a n1 is less than node \a n2. The
+  comparison is performed by comparing properties of the nodes
+  in order of increasing complexity.
+ */
 bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
 {
-    if (n1->isAggregate() && n2->isAggregate()) {
-        const Aggregate* f1 = static_cast<const Aggregate*>(n1);
-        const Aggregate* f2 = static_cast<const Aggregate*>(n2);
-
+    if (n1->isPageNode() && n2->isPageNode()) {
+        const PageNode* f1 = static_cast<const PageNode*>(n1);
+        const PageNode* f2 = static_cast<const PageNode*>(n2);
         if (f1->fullTitle() < f2->fullTitle())
             return true;
         else if (f1->fullTitle() > f2->fullTitle())
             return false;
     }
 
-    if (n1->type() == Node::Function && n2->type() == Node::Function) {
+    if (n1->nodeType() == Node::Function && n2->nodeType() == Node::Function) {
         const FunctionNode* f1 = static_cast<const FunctionNode*>(n1);
         const FunctionNode* f2 = static_cast<const FunctionNode*>(n2);
 
@@ -107,9 +160,9 @@ bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
     else if (n1->location().filePath() > n2->location().filePath())
         return false;
 
-    if (n1->type() < n2->type())
+    if (n1->nodeType() < n2->nodeType())
         return true;
-    else if (n1->type() > n2->type())
+    else if (n1->nodeType() > n2->nodeType())
         return false;
 
     if (n1->name() < n2->name())
@@ -162,13 +215,13 @@ Node::~Node()
     Removes this node from the aggregate's list of related
     nodes, or if this node has created a dummy "relates"
     aggregate, deletes it.
-*/
+ */
 void Node::removeRelates()
 {
     if (!relatesTo_)
         return;
 
-    if (relatesTo_->isDocumentNode() && !relatesTo_->parent()) {
+    if (relatesTo_->isDummyNode() && !relatesTo_->parent()) {
         delete relatesTo_;
         relatesTo_ = 0;
     } else {
@@ -240,32 +293,21 @@ QString Node::plainSignature() const
  */
 QString Node::fullName(const Node* relative) const
 {
-    if ((isDocumentNode() || isGroup()) && !title().isEmpty())
+    if ((isTextPageNode() || isGroup()) && !title().isEmpty())
         return title();
     return plainFullName(relative);
 }
 
 /*!
-  Try to match this node's type and subtype with one of the
-  pairs in \a types. If a match is found, return true. If no
-  match is found, return false.
-
-  \a types is a list of type/subtype pairs, where the first
-  value in the pair is a Node::NodeType, and the second value is
-  a Node::DocSubtype. The second value is used in the match if
-  this node's type is Node::Document.
+  Try to match this node's type with one of the \a types.
+  If a match is found, return true. If no match is found,
+  return false.
  */
-bool Node::match(const NodeTypeList& types) const
+bool Node::match(const QList<int>& types) const
 {
     for (int i=0; i<types.size(); ++i) {
-        if (type() == types.at(i).first) {
-            if (type() == Node::Document) {
-                if (docSubtype() == types.at(i).second)
-                    return true;
-            }
-            else
-                return true;
-        }
+        if (nodeType() == types.at(i))
+            return true;
     }
     return false;
 }
@@ -350,6 +392,95 @@ Node::Node(NodeType type, Aggregate *parent, const QString& name)
         operators_.insert("new[]","new-array");
         operators_.insert("new","new");
     }
+    setPageType(getPageType(type));
+    setGenus(getGenus(type));
+}
+
+/*!
+  Determines the appropriate PageType value for the NodeType
+  value \a t and returns that PageType value.
+ */
+Node::PageType Node::getPageType(Node::NodeType t)
+{
+    switch (t) {
+      case Node::Namespace:
+      case Node::Class:
+      case Node::HeaderFile:
+      case Node::Enum:
+      case Node::Function:
+      case Node::Typedef:
+      case Node::Property:
+      case Node::Variable:
+      case Node::QmlType:
+      case Node::QmlPropertyGroup:
+      case Node::QmlProperty:
+      case Node::QmlBasicType:
+      case Node::JsType:
+      case Node::JsPropertyGroup:
+      case Node::JsProperty:
+      case Node::JsBasicType:
+      case Node::SharedComment:
+          return Node::ApiPage;
+      case Node::Example:
+          return Node::ExamplePage;
+      case Node::Page:
+      case Node::ExternalPage:
+          return Node::NoPageType;
+      case Node::Group:
+      case Node::Module:
+      case Node::QmlModule:
+      case Node::JsModule:
+      case Node::Collection:
+          return Node::OverviewPage;
+      default:
+          return Node::NoPageType;
+    }
+}
+
+/*!
+  Determines the appropriate Genus value for the NodeType
+  value \a t and returns that Genus value. Note that this
+  function is called in the Node() constructor. It always
+  returns Node::CPP when \a t is Node::Function, which
+  means the FunctionNode() constructor must determine its
+  own Genus value separately, because class FunctionNode
+  is a subclass of Node.
+ */
+Node::Genus Node::getGenus(Node::NodeType t)
+{
+    switch (t) {
+      case Node::Enum:
+      case Node::Class:
+      case Node::Module:
+      case Node::Typedef:
+      case Node::Property:
+      case Node::Variable:
+      case Node::Function:
+      case Node::Namespace:
+      case Node::HeaderFile:
+          return Node::CPP;
+      case Node::QmlType:
+      case Node::QmlModule:
+      case Node::QmlProperty:
+      case Node::QmlBasicType:
+      case Node::QmlPropertyGroup:
+          return Node::QML;
+      case Node::JsType:
+      case Node::JsModule:
+      case Node::JsProperty:
+      case Node::JsBasicType:
+      case Node::JsPropertyGroup:
+          return Node::JS;
+      case Node::Page:
+      case Node::Group:
+      case Node::Example:
+      case Node::ExternalPage:
+          return Node::DOC;
+      case Node::Collection:
+      case Node::SharedComment:
+      default:
+          return Node::DontCare;
+    }
 }
 
 /*! \fn QString Node::url() const
@@ -377,25 +508,23 @@ QString Node::pageTypeString(unsigned char t)
 {
     switch ((PageType)t) {
     case Node::AttributionPage:
-        return "attribution";
+        return QLatin1String("attribution");
     case Node::ApiPage:
-        return "api";
+        return QLatin1String("api");
     case Node::ArticlePage:
-        return "article";
+        return QLatin1String("article");
     case Node::ExamplePage:
-        return "example";
+        return QLatin1String("example");
     case Node::HowToPage:
-        return "howto";
+        return QLatin1String("howto");
     case Node::OverviewPage:
-        return "overview";
+        return QLatin1String("overview");
     case Node::TutorialPage:
-        return "tutorial";
+        return QLatin1String("tutorial");
     case Node::FAQPage:
-        return "faq";
-    case Node::DitaMapPage:
-        return "ditamap";
+        return QLatin1String("faq");
     default:
-        return "article";
+        return QLatin1String("article");
     }
 }
 
@@ -405,7 +534,11 @@ QString Node::pageTypeString(unsigned char t)
  */
 QString Node::nodeTypeString() const
 {
-    return nodeTypeString(type());
+    if (isFunction()) {
+        const FunctionNode *fn = static_cast<const FunctionNode*>(this);
+        return fn->kindString();
+    }
+    return nodeTypeString(nodeType());
 }
 
 /*!
@@ -416,82 +549,58 @@ QString Node::nodeTypeString(unsigned char t)
 {
     switch ((NodeType)t) {
     case Namespace:
-        return "namespace";
+        return QLatin1String("namespace");
     case Class:
-        return "class";
-    case Document:
-        return "document";
-    case Enum:
-        return "enum";
-    case Typedef:
-        return "typedef";
-    case Function:
-        return "function";
-    case Property:
-        return "property";
-    case Variable:
-        return "variable";
-    case Group:
-        return "group";
-    case Module:
-        return "module";
-    case QmlType:
-        return "QML type";
-    case QmlBasicType:
-        return "QML basic type";
-    case QmlModule:
-        return "QML module";
-    case QmlProperty:
-        return "QML property";
-    case QmlPropertyGroup:
-        return "QML property group";
-    case QmlSignal:
-        return "QML signal";
-    case QmlSignalHandler:
-        return "QML signal handler";
-    case QmlMethod:
-        return "QML method";
-    case SharedComment:
-        return "shared comment";
-    default:
-        break;
-    }
-    return QString();
-}
-
-/*!
-  Returns this node's subtype as a string for use as an
-  attribute value in XML or HTML. This is only useful
-  in the case where the node type is Document.
- */
-QString Node::nodeSubtypeString() const
-{
-    return nodeSubtypeString(docSubtype());
-}
-
-/*!
-  Returns the node subtype \a t as a string for use as an
-  attribute value in XML or HTML. This is only useful
-  in the case where the node type is Document.
- */
-QString Node::nodeSubtypeString(unsigned char t)
-{
-    switch ((DocSubtype)t) {
-    case Example:
-        return "example";
+        return QLatin1String("class");
     case HeaderFile:
-        return "header file";
-    case File:
-        return "file";
-    case Image:
-        return "image";
+        return QLatin1String("header");
     case Page:
-        return "page";
+        return QLatin1String("page");
+    case Enum:
+        return QLatin1String("enum");
+    case Example:
+        return QLatin1String("example");
     case ExternalPage:
-        return "external page";
-    case DitaMap:
-        return "ditamap";
-    case NoSubtype:
+        return QLatin1String("external page");
+    case Typedef:
+        return QLatin1String("typedef");
+    case Function:
+        return QLatin1String("function");
+    case Property:
+        return QLatin1String("property");
+    case Variable:
+        return QLatin1String("variable");
+    case Group:
+        return QLatin1String("group");
+    case Module:
+        return QLatin1String("module");
+
+    case QmlType:
+        return QLatin1String("QML type");
+    case QmlBasicType:
+        return QLatin1String("QML basic type");
+    case QmlModule:
+        return QLatin1String("QML module");
+    case QmlProperty:
+        return QLatin1String("QML property");
+    case QmlPropertyGroup:
+        return QLatin1String("QML property group");
+
+    case JsType:
+        return QLatin1String("JS type");
+    case JsBasicType:
+        return QLatin1String("JS basic type");
+    case JsModule:
+        return QLatin1String("JS module");
+    case JsProperty:
+        return QLatin1String("JS property");
+    case JsPropertyGroup:
+        return QLatin1String("JS property group");
+
+    case SharedComment:
+        return QLatin1String("shared comment");
+    case Collection:
+        return QLatin1String("collection");
     default:
         break;
     }
@@ -517,8 +626,6 @@ void Node::setPageType(const QString& t)
         pageType_ = (unsigned char) ArticlePage;
     else if (t == "example")
         pageType_ = (unsigned char) ExamplePage;
-    else if (t == "ditamap")
-        pageType_ = (unsigned char) DitaMapPage;
 }
 
 /*! Converts the boolean value \a b to an enum representation
@@ -556,7 +663,7 @@ bool Node::fromFlagValue(FlagValue fv, bool defaultValue)
 /*!
   Sets the pointer to the node that this node relates to.
  */
-void Node::setRelates(Aggregate *pseudoParent)
+void Node::setRelates(PageNode *pseudoParent)
 {
     if (pseudoParent == parent())
         return;
@@ -573,7 +680,7 @@ void Node::setRelates(const QString& name)
 {
     removeRelates();
     // Create a dummy aggregate for writing the name into the index
-    relatesTo_ = new DocumentNode(0, name, Node::NoSubtype, Node::NoPageType);
+    relatesTo_ = new DummyNode(0, name);
 }
 
 /*!
@@ -593,7 +700,7 @@ void Node::setLink(LinkType linkType, const QString &link, const QString &desc)
     Sets the information about the project and version a node was introduced
     in. The string is simplified, removing excess whitespace before being
     stored.
-*/
+ */
 void Node::setSince(const QString &since)
 {
     since_ = since.simplified();
@@ -606,14 +713,14 @@ QString Node::accessString() const
 {
     switch ((Access) access_) {
     case Protected:
-        return "protected";
+        return QLatin1String("protected");
     case Private:
-        return "private";
+        return QLatin1String("private");
     case Public:
     default:
         break;
     }
-    return "public";
+    return QLatin1String("public");
 }
 
 /*!
@@ -650,14 +757,14 @@ QString RelatedClass::accessString() const
 {
     switch (access_) {
     case Node::Protected:
-        return "protected";
+        return QLatin1String("protected");
     case Node::Private:
-        return "private";
+        return QLatin1String("private");
     case Node::Public:
     default:
         break;
     }
-    return "public";
+    return QLatin1String("public");
 }
 
 /*!
@@ -909,7 +1016,7 @@ Node* Aggregate::findChildNode(const QString& name, NodeType type)
         NodeList nodes = childMap_.values(name);
         for (int i=0; i<nodes.size(); ++i) {
             Node* node = nodes.at(i);
-            if (node->type() == type)
+            if (node->nodeType() == type)
                 return node;
         }
     }
@@ -967,7 +1074,7 @@ FunctionNode *Aggregate::findFunctionNode(const QString& name, const QString& pa
           parameters should have been specified in the \l command.
           But if the primary function is marked internal, search
           the secondary list to find one that is not marked internal.
-        */
+         */
         if (!fn) {
             if (!testParams.empty())
                 return 0;
@@ -1067,7 +1174,7 @@ void Aggregate::normalizeOverloads()
                   Either the primary function is not active or it is private.
                   It therefore can't be the primary function. Search the list
                   of overloads to find one that can be the primary function.
-                */
+                 */
                 NodeList& overloads = secondaryFunctionMap_[primaryFunc->name()];
                 NodeList::ConstIterator s = overloads.constBegin();
                 while (s != overloads.constEnd()) {
@@ -1076,7 +1183,7 @@ void Aggregate::normalizeOverloads()
                       Any non-obsolete, non-private function (i.e., visible function)
                       is preferable to the current primary function. Swap the primary
                       and overload functions.
-                    */
+                     */
                     if (overloadFunc->status() == Active && overloadFunc->access() != Private) {
                         primaryFunc->setOverloadNumber(overloadFunc->overloadNumber());
                         overloads.replace(overloads.indexOf(overloadFunc), primaryFunc);
@@ -1104,7 +1211,7 @@ void Aggregate::normalizeOverloads()
                   overload in the secondary function map that is not marked
                   with \overload but that is active and not private. Then
                   swap it with the primary function.
-                */
+                 */
                 NodeList& overloads = secondaryFunctionMap_[primaryFunc->name()];
                 NodeList::ConstIterator s = overloads.constBegin();
                 while (s != overloads.constEnd()) {
@@ -1133,17 +1240,6 @@ void Aggregate::normalizeOverloads()
         if ((*c)->isAggregate())
             ((Aggregate *) *c)->normalizeOverloads();
         ++c;
-    }
-}
-
-/*!
- */
-void Aggregate::removeFromRelated()
-{
-    while (!related_.isEmpty()) {
-        Node *p = static_cast<Node *>(related_.takeFirst());
-
-        if (p != 0 && p->relates() == this) p->clearRelated();
     }
 }
 
@@ -1208,24 +1304,6 @@ NodeList Aggregate::overloads(const QString &funcName) const
 }
 
 /*!
-  Construct an inner node (i.e., not a leaf node) of the
-  given \a type and having the given \a parent and \a name.
- */
-Aggregate::Aggregate(NodeType type, Aggregate *parent, const QString& name)
-    : Node(type, parent, name), noAutoList_(false)
-{
-    switch (type) {
-    case Class:
-    case QmlType:
-    case Namespace:
-        setPageType(ApiPage);
-        break;
-    default:
-        break;
-    }
-}
-
-/*!
   Appends an \a include file to the list of include files.
  */
 void Aggregate::addInclude(const QString& include)
@@ -1268,7 +1346,7 @@ bool Aggregate::isSameSignature(const FunctionNode *f1, const FunctionNode *f2)
             /*
               ### hack for C++ to handle superfluous
               "Foo::" prefixes gracefully
-            */
+             */
             if (t1 != t2 && t1 != (f2->parent()->name() + "::" + t2)) {
                 // Accept a difference in the template parametters of the type if one
                 // is omited (eg. "QAtomicInteger" == "QAtomicInteger<T>")
@@ -1295,9 +1373,7 @@ bool Aggregate::isSameSignature(const FunctionNode *f1, const FunctionNode *f2)
 void Aggregate::addChild(Node *child)
 {
     children_.append(child);
-    if (child->type() == Function
-            || child->type() == QmlMethod
-            || child->type() == QmlSignal) {
+    if (child->isFunction()) {
         FunctionNode *func = static_cast<FunctionNode*>(child);
         QString name = func->name();
         if (!primaryFunctionMap_.contains(name)) {
@@ -1311,7 +1387,7 @@ void Aggregate::addChild(Node *child)
         }
     }
     else {
-        if (child->type() == Enum)
+        if (child->isEnumType())
             enumChildren_.append(child);
         childMap_.insertMulti(child->name(), child);
     }
@@ -1329,7 +1405,7 @@ void Aggregate::addChild(Node *child)
   again, because it is presumed to already be there. We just
   want to be able to find the child by its \a title.
  */
-void Aggregate::addChild(Node* child, const QString& title)
+void Aggregate::addChildByTitle(Node* child, const QString& title)
 {
     childMap_.insertMulti(title, child);
 }
@@ -1344,9 +1420,7 @@ void Aggregate::removeChild(Node *child)
 {
     children_.removeAll(child);
     enumChildren_.removeAll(child);
-    if (child->type() == Function
-            || child->type() == QmlMethod
-            || child->type() == QmlSignal) {
+    if (child->isFunction()) {
         QMap<QString, Node *>::Iterator primary = primaryFunctionMap_.find(child->name());
         NodeList& overloads = secondaryFunctionMap_[child->name()];
         if (primary != primaryFunctionMap_.end() && *primary == child) {
@@ -1382,7 +1456,7 @@ void Aggregate::removeChild(Node *child)
 }
 
 /*!
- Recursively sets the output subdirectory for children
+  Recursively sets the output subdirectory for children
  */
 void Aggregate::setOutputSubdirectory(const QString &t)
 {
@@ -1400,7 +1474,7 @@ void Aggregate::setOutputSubdirectory(const QString &t)
   This function is only really useful if the class's module has not
   been defined in the header file with a QT_MODULE macro or with an
   \inmodule command in the documentation.
-*/
+ */
 QString Node::physicalModuleName() const
 {
     if (!physicalModuleName_.isEmpty())
@@ -1421,89 +1495,48 @@ QString Node::physicalModuleName() const
 
     QString physicalModuleName = moduleDir.left(finish);
 
-    if (physicalModuleName == "corelib")
-        return "QtCore";
-    else if (physicalModuleName == "uitools")
-        return "QtUiTools";
-    else if (physicalModuleName == "gui")
-        return "QtGui";
-    else if (physicalModuleName == "network")
-        return "QtNetwork";
-    else if (physicalModuleName == "opengl")
-        return "QtOpenGL";
-    else if (physicalModuleName == "svg")
-        return "QtSvg";
-    else if (physicalModuleName == "sql")
-        return "QtSql";
-    else if (physicalModuleName == "qtestlib")
-        return "QtTest";
+    if (physicalModuleName == QLatin1String("corelib"))
+        return QLatin1String("QtCore");
+    else if (physicalModuleName == QLatin1String("uitools"))
+        return QLatin1String("QtUiTools");
+    else if (physicalModuleName == QLatin1String("gui"))
+        return QLatin1String("QtGui");
+    else if (physicalModuleName == QLatin1String("network"))
+        return QLatin1String("QtNetwork");
+    else if (physicalModuleName == QLatin1String("opengl"))
+        return QLatin1String("QtOpenGL");
+    else if (physicalModuleName == QLatin1String("svg"))
+        return QLatin1String("QtSvg");
+    else if (physicalModuleName == QLatin1String("sql"))
+        return QLatin1String("QtSql");
+    else if (physicalModuleName == QLatin1String("qtestlib"))
+        return QLatin1String("QtTest");
     else if (moduleDir.contains("webkit"))
-        return "QtWebKit";
-    else if (physicalModuleName == "xml")
-        return "QtXml";
+        return QLatin1String("QtWebKit");
+    else if (physicalModuleName == QLatin1String("xml"))
+        return QLatin1String("QtXml");
     else
         return QString();
 }
 
 /*!
-  Removes a node from the list of nodes related to this one.
-  If it is a function node, also remove from the primary/
-  secondary function maps.
- */
-void Aggregate::removeRelated(Node *pseudoChild)
-{
-    related_.removeAll(pseudoChild);
-
-    if (pseudoChild->isFunction()) {
-        QMap<QString, Node *>::Iterator p = primaryFunctionMap_.find(pseudoChild->name());
-        while (p != primaryFunctionMap_.end()) {
-            if (p.value() == pseudoChild) {
-                primaryFunctionMap_.erase(p);
-                break;
-            }
-            ++p;
-        }
-        NodeList& overloads = secondaryFunctionMap_[pseudoChild->name()];
-        overloads.removeAll(pseudoChild);
-    }
-}
-
-/*!
-  Adds \a pseudoChild to the list of nodes related to this one. Resolve a correct
-  overload number for a related non-member function.
- */
-void Aggregate::addRelated(Node *pseudoChild)
-{
-    related_.append(pseudoChild);
-
-    if (pseudoChild->isFunction()) {
-        FunctionNode* fn = static_cast<FunctionNode*>(pseudoChild);
-        if (primaryFunctionMap_.contains(pseudoChild->name())) {
-            secondaryFunctionMap_[pseudoChild->name()].append(pseudoChild);
-            fn->setOverloadNumber(secondaryFunctionMap_[pseudoChild->name()].size());
-            fn->setOverloadFlag(true);
-        }
-        else {
-            primaryFunctionMap_.insert(pseudoChild->name(), pseudoChild);
-            fn->setOverloadNumber(0);
-            fn->setOverloadFlag(false);
-        }
-    }
-}
-
-/*!
-  If this node has a child that is a QML property named \a n,
-  return the pointer to that child.
+  If this node has a child that is a QML property or JS property
+  named \a n, return a pointer to that child. Otherwise return 0.
  */
 QmlPropertyNode* Aggregate::hasQmlProperty(const QString& n) const
 {
+    NodeType goal1 = Node::QmlProperty;
+    NodeType goal2 = Node::QmlPropertyGroup;
+    if (isJsNode()) {
+        goal1 = Node::JsProperty;
+        goal2 = Node::JsPropertyGroup;
+    }
     foreach (Node* child, childNodes()) {
-        if (child->type() == Node::QmlProperty) {
+        if (child->nodeType() == goal1) {
             if (child->name() == n)
                 return static_cast<QmlPropertyNode*>(child);
-        }
-        else if (child->isQmlPropertyGroup()) {
-            QmlPropertyNode* t = child->hasQmlProperty(n);
+        } else if (child->nodeType() == goal2) {
+            QmlPropertyNode* t = static_cast<Aggregate*>(child)->hasQmlProperty(n);
             if (t)
                 return t;
         }
@@ -1512,87 +1545,30 @@ QmlPropertyNode* Aggregate::hasQmlProperty(const QString& n) const
 }
 
 /*!
-  If this node has a child that is a QML property named \a n
-  whose type (attached or normal property) matches \a attached,
-  return the pointer to that child.
+  If this node has a child that is a QML property or JS property
+  named \a n and that also matches \a attached, return a pointer
+  to that child.
  */
 QmlPropertyNode* Aggregate::hasQmlProperty(const QString& n, bool attached) const
 {
+    NodeType goal1 = Node::QmlProperty;
+    NodeType goal2 = Node::QmlPropertyGroup;
+    if (isJsNode()) {
+        goal1 = Node::JsProperty;
+        goal2 = Node::JsPropertyGroup;
+    }
     foreach (Node* child, childNodes()) {
-        if (child->type() == Node::QmlProperty) {
+        if (child->nodeType() == goal1) {
             if (child->name() == n && child->isAttached() == attached)
                 return static_cast<QmlPropertyNode*>(child);
-        }
-        else if (child->isQmlPropertyGroup()) {
-            QmlPropertyNode* t = child->hasQmlProperty(n, attached);
+        } else if (child->nodeType() == goal2) {
+            QmlPropertyNode* t = static_cast<Aggregate*>(child)->hasQmlProperty(n, attached);
             if (t)
                 return t;
         }
     }
     return 0;
 }
-
-/*!
-  \class LeafNode
- */
-
-/*! \fn bool LeafNode::isAggregate() const
-  Returns \c false because this is a LeafNode.
- */
-
-/*!
-  Constructs a leaf node named \a name of the specified
-  \a type. The new leaf node becomes a child of \a parent.
- */
-LeafNode::LeafNode(NodeType type, Aggregate *parent, const QString& name)
-    : Node(type, parent, name)
-{
-    switch (type) {
-    case Enum:
-    case Function:
-    case Typedef:
-    case Variable:
-    case QmlProperty:
-    case QmlSignal:
-    case QmlSignalHandler:
-    case QmlMethod:
-    case QmlBasicType:
-    case SharedComment:
-        setPageType(ApiPage);
-        break;
-    default:
-        break;
-    }
-}
-
-/*!
-  This constructor should only be used when this node's parent
-  is meant to be \a parent, but this node is not to be listed
-  as a child of \a parent. It is currently only used for the
-  documentation case where a \e{qmlproperty} command is used
-  to override the QML definition of a QML property.
- */
-LeafNode::LeafNode(Aggregate* parent, NodeType type, const QString& name)
-    : Node(type, 0, name)
-{
-    setParent(parent);
-    switch (type) {
-    case Enum:
-    case Function:
-    case Typedef:
-    case Variable:
-    case QmlProperty:
-    case QmlSignal:
-    case QmlSignalHandler:
-    case QmlMethod:
-    case SharedComment:
-        setPageType(ApiPage);
-        break;
-    default:
-        break;
-    }
-}
-
 
 /*!
   \class NamespaceNode
@@ -1602,17 +1578,6 @@ LeafNode::LeafNode(Aggregate* parent, NodeType type, const QString& name)
   can be a NamespaceNode for namespace Xxx in more than one
   Node tree.
  */
-
-/*!
-  Constructs a namespace node for a namespace named \a name.
-  The namespace node has the specified \a parent.
- */
-NamespaceNode::NamespaceNode(Aggregate *parent, const QString& name)
-    : Aggregate(Namespace, parent, name), seen_(false), documented_(false), tree_(0), docNode_(0)
-{
-    setGenus(Node::CPP);
-    setPageType(ApiPage);
-}
 
 /*!
   Returns true if this namespace is to be documented in the
@@ -1675,19 +1640,6 @@ bool NamespaceNode::docMustBeGenerated() const
   \class ClassNode
   \brief This class represents a C++ class.
  */
-
-/*!
-  Constructs a class node. A class node will generate an API page.
- */
-ClassNode::ClassNode(Aggregate *parent, const QString& name)
-    : Aggregate(Class, parent, name)
-{
-    abstract_ = false;
-    wrapper_ = false;
-    qmlelement = 0;
-    setGenus(Node::CPP);
-    setPageType(ApiPage);
-}
 
 /*!
   Adds the base class \a node to this class's list of base
@@ -1897,104 +1849,98 @@ FunctionNode* ClassNode::findOverriddenFunction(const FunctionNode* fn)
 }
 
 /*!
-  \class DocumentNode
+  \class Headerode
+  \brief This class represents a C++ header file.
  */
 
 /*!
-  The type of a DocumentNode is Document, and it has a \a subtype,
-  which specifies the type of DocumentNode. The page type for
-  the page index is set here.
+  \class PageNode
  */
-DocumentNode::DocumentNode(Aggregate* parent, const QString& name, DocSubtype subtype, Node::PageType ptype)
-    : Aggregate(Document, parent, name), nodeSubtype_(subtype)
+
+/*! \fn QString PageNode::title() const
+  Returns the node's title, which is used for the page title.
+ */
+
+/*! \fn QString PageNode::subtitle() const
+  Returns the node's subtitle, which may be empty.
+ */
+
+/*!
+  Returns the node's full title, which is usually whatever
+  title() returns, but for some cases the full title migth
+  be different from title(), so this might require changing,
+  because currently it just returns the title().
+
+  mws 13/07/2018. This function used to test the node subtype
+  for File or Image and append text to the title(), but there
+  are no node subtypes now, so it can't do that. There are no
+  node type values for File and Image either. Files and images
+  are used in examples, but the ExampleNode's example files
+  and example images are stored as lists of path strings.
+ */
+QString PageNode::fullTitle() const
 {
-    setGenus(Node::DOC);
-    switch (subtype) {
-    case Page:
-        setPageType(ptype);
-        break;
-    case DitaMap:
-        setPageType(ptype);
-        break;
-    case Example:
-        setPageType(ExamplePage);
-        break;
-    default:
-        break;
-    }
+    return title();
 }
 
-/*! \fn QString DocumentNode::title() const
-  Returns the document node's title. This is used for the page title.
-*/
-
 /*!
-  Sets the document node's \a title. This is used for the page title.
+  Sets the node's \a title, which is used for the page title.
+  Returns true.
  */
-void DocumentNode::setTitle(const QString &title)
+bool PageNode::setTitle(const QString &title)
 {
     title_ = title;
-    parent()->addChild(this, title);
+    parent()->addChildByTitle(this, title);
+    return true;
 }
 
 /*!
-  Returns the document node's full title, which is usually
-  just title(), but for some DocSubtype values is different
-  from title()
+  \fn bool PageNode::setSubtitle(const QString &subtitle)
+  Sets the node's \a subtitle. Returns true;
  */
-QString DocumentNode::fullTitle() const
+
+/*!
+  While there are related nodes, remove the first one. If it
+  relates to this node (it should), clear that relationship.
+ */
+void PageNode::removeFromRelated()
 {
-    if (nodeSubtype_ == File) {
-        if (title().isEmpty())
-            return name().mid(name().lastIndexOf('/') + 1) + " Example File";
-        else
-            return title();
-    }
-    else if (nodeSubtype_ == Image) {
-        if (title().isEmpty())
-            return name().mid(name().lastIndexOf('/') + 1) + " Image File";
-        else
-            return title();
-    }
-    else if (nodeSubtype_ == HeaderFile) {
-        if (title().isEmpty())
-            return name();
-        else
-            return name() + " - " + title();
-    }
-    else {
-        return title();
+    while (!related_.isEmpty()) {
+        Node *p = static_cast<Node *>(related_.takeFirst());
+        if (p != 0 && p->relates() == this) p->clearRelated();
     }
 }
 
 /*!
-  Returns the subtitle.
+  Removes \a pseudoChild from the list of nodes related to
+  this node. If \a pseudoChild is a function node, it is
+  also remove from the primary/secondary function maps of
+  this node, if this node is a subclass of PageNode
+  that has function maps.
  */
-QString DocumentNode::subTitle() const
+void PageNode::removeRelated(Node *pseudoChild)
 {
-    if (!subtitle_.isEmpty())
-        return subtitle_;
+    related_.removeAll(pseudoChild);
+    removePseudoChild(pseudoChild);
+}
 
-    if ((nodeSubtype_ == File) || (nodeSubtype_ == Image)) {
-        if (title().isEmpty() && name().contains(QLatin1Char('/')))
-            return name();
-    }
-    return QString();
+/*!
+  Adds \a pseudoChild to the list of nodes related to this
+  node. Also adds \a pseudoChild to the primary/secondary
+  function maps, if this PageNode is the base class of
+  a subclass that has function maps. In that case, it also
+  resolves a correct overload number for a related non-member
+  function.
+ */
+void PageNode::addRelated(Node *pseudoChild)
+{
+    related_.append(pseudoChild);
+    addPseudoChild(pseudoChild);
 }
 
 /*!
   \class EnumNode
  */
-
-/*!
-  The constructor for the node representing an enum type
-  has a \a parent class and an enum type \a name.
- */
-EnumNode::EnumNode(Aggregate *parent, const QString& name)
-    : LeafNode(Enum, parent, name), flagsType_(0)
-{
-    setGenus(Node::CPP);
-}
 
 /*!
   Add \a item to the enum type's item list.
@@ -2035,14 +1981,6 @@ QString EnumNode::itemValue(const QString &name) const
 
 /*!
  */
-TypedefNode::TypedefNode(Aggregate *parent, const QString& name)
-    : LeafNode(Typedef, parent, name), associatedEnum_(0)
-{
-    setGenus(Node::CPP);
-}
-
-/*!
- */
 void TypedefNode::setAssociatedEnum(const EnumNode *enume)
 {
     associatedEnum_ = enume;
@@ -2051,16 +1989,6 @@ void TypedefNode::setAssociatedEnum(const EnumNode *enume)
 /*!
   \class TypeAliasNode
  */
-
-/*!
-  Constructs a TypeAliasNode for the \a aliasedType with the
-  specified \a name and \a parent.
- */
-TypeAliasNode::TypeAliasNode(Aggregate *parent, const QString& name, const QString& aliasedType)
-    : TypedefNode(parent, name), aliasedType_(aliasedType)
-{
-    // nothing.
-}
 
 /*!
   \class Parameter
@@ -2132,7 +2060,7 @@ QString Parameter::reconstruct(bool value) const
   is set by addChild() in the Node base class.
  */
 FunctionNode::FunctionNode(Aggregate *parent, const QString& name)
-    : LeafNode(Function, parent, name),
+    : Node(Function, parent, name),
       metaness_(Plain),
       virtualness_(NonVirtual),
       const_(false),
@@ -2150,20 +2078,21 @@ FunctionNode::FunctionNode(Aggregate *parent, const QString& name)
       isRefRef_(false),
       isInvokable_(false)
 {
-    setGenus(Node::CPP);
+    // nothing
 }
 
 /*!
   Construct a function node for a QML method or signal, specified
-  by \a type. It's parent is \a parent, and it's name is \a name.
-  If \a attached is true, it is an attached method or signal.
+  by ther Metaness value \a type. It's parent is \a parent, and
+  it's name is \a name. If \a attached is true, it is an attached
+  method or signal.
 
   Do not set overloadNumber_ in the initializer list because it
   is set by addChild() in the Node base class.
  */
-FunctionNode::FunctionNode(NodeType type, Aggregate *parent, const QString& name, bool attached)
-    : LeafNode(type, parent, name),
-      metaness_(Plain),
+FunctionNode::FunctionNode(Metaness kind, Aggregate *parent, const QString& name, bool attached)
+    : Node(Function, parent, name),
+      metaness_(kind),
       virtualness_(NonVirtual),
       const_(false),
       static_(false),
@@ -2180,13 +2109,9 @@ FunctionNode::FunctionNode(NodeType type, Aggregate *parent, const QString& name
       isRefRef_(false),
       isInvokable_(false)
 {
-    setGenus(Node::QML);
-    if (type == QmlMethod || type == QmlSignal) {
-        if (name.startsWith("__"))
-            setStatus(Internal);
-    }
-    else if (type == Function)
-        setGenus(Node::CPP);
+    setGenus(getGenus(metaness_));
+    if (!isCppNode() && name.startsWith("__"))
+        setStatus(Internal);
 }
 
 /*!
@@ -2197,14 +2122,14 @@ QString FunctionNode::virtualness() const
 {
     switch (virtualness_) {
     case FunctionNode::NormalVirtual:
-        return "virtual";
+        return QLatin1String("virtual");
     case FunctionNode::PureVirtual:
-        return "pure";
+        return QLatin1String("pure");
     case FunctionNode::NonVirtual:
     default:
         break;
     }
-    return "non";
+    return QLatin1String("non");
 }
 
 /*!
@@ -2227,41 +2152,149 @@ void FunctionNode::setVirtualness(const QString& t)
     }
 }
 
+static QMap<QString, FunctionNode::Metaness> metanessMap_;
+static void buildMetanessMap()
+{
+    metanessMap_["plain"] = FunctionNode::Plain;
+    metanessMap_["signal"] = FunctionNode::Signal;
+    metanessMap_["slot"] = FunctionNode::Slot;
+    metanessMap_["constructor"] = FunctionNode::Ctor;
+    metanessMap_["copy-constructor"] = FunctionNode::CCtor;
+    metanessMap_["move-constructor"] = FunctionNode::MCtor;
+    metanessMap_["destructor"] = FunctionNode::Dtor;
+    metanessMap_["macro"] = FunctionNode::MacroWithParams;
+    metanessMap_["macrowithparams"] = FunctionNode::MacroWithParams;
+    metanessMap_["macrowithoutparams"] = FunctionNode::MacroWithoutParams;
+    metanessMap_["copy-assign"] = FunctionNode::CAssign;
+    metanessMap_["move-assign"] = FunctionNode::MAssign;
+    metanessMap_["native"] = FunctionNode::Native;
+    metanessMap_["qmlsignal"] = FunctionNode::QmlSignal;
+    metanessMap_["qmlsignalhandler"] = FunctionNode::QmlSignalHandler;
+    metanessMap_["qmlmethod"] = FunctionNode::QmlMethod;
+    metanessMap_["jssignal"] = FunctionNode::JsSignal;
+    metanessMap_["jssignalhandler"] = FunctionNode::JsSignalHandler;
+    metanessMap_["jsmethos"] = FunctionNode::JsMethod;
+}
+
+static QMap<QString, FunctionNode::Metaness> topicMetanessMap_;
+static void buildTopicMetanessMap()
+{
+    topicMetanessMap_["fn"] = FunctionNode::Plain;
+    topicMetanessMap_["qmlsignal"] = FunctionNode::QmlSignal;
+    topicMetanessMap_["qmlattachedsignal"] = FunctionNode::QmlSignal;
+    topicMetanessMap_["qmlmethod"] = FunctionNode::QmlMethod;
+    topicMetanessMap_["qmlattachedmethod"] = FunctionNode::QmlMethod;
+    topicMetanessMap_["jssignal"] = FunctionNode::JsSignal;
+    topicMetanessMap_["jsattachedsignal"] = FunctionNode::JsSignal;
+    topicMetanessMap_["jsmethod"] = FunctionNode::JsMethod;
+    topicMetanessMap_["jsattachedmethod"] = FunctionNode::JsMethod;
+}
+
+/*!
+  Determines the Genus value for this FunctionNode given the
+  Metaness value \a t. Returns the Genus value. \a t must be
+  one of the values of Metaness. If not, Node::DontCare is
+  returned.
+ */
+Node::Genus FunctionNode::getGenus(FunctionNode::Metaness t)
+{
+    switch (t) {
+        case FunctionNode::Plain:
+        case FunctionNode::Signal:
+        case FunctionNode::Slot:
+        case FunctionNode::Ctor:
+        case FunctionNode::Dtor:
+        case FunctionNode::CCtor:
+        case FunctionNode::MCtor:
+        case FunctionNode::MacroWithParams:
+        case FunctionNode::MacroWithoutParams:
+        case FunctionNode::Native:
+        case FunctionNode::CAssign:
+        case FunctionNode::MAssign:
+            return Node::CPP;
+        case FunctionNode::QmlSignal:
+        case FunctionNode::QmlSignalHandler:
+        case FunctionNode::QmlMethod:
+            return Node::QML;
+        case FunctionNode::JsSignal:
+        case FunctionNode::JsSignalHandler:
+        case FunctionNode::JsMethod:
+            return Node::JS;
+    }
+    return Node::DontCare;
+}
+
+/*!
+  This static function converts the string \a t to an enum
+  value for the kind of function named by \a t.
+ */
+FunctionNode::Metaness FunctionNode::getMetaness(const QString& t)
+{
+    if (metanessMap_.isEmpty())
+        buildMetanessMap();
+    return metanessMap_[t];
+}
+
+/*!
+  This static function converts the topic string \a t to an enum
+  value for the kind of function this FunctionNode represents.
+ */
+FunctionNode::Metaness FunctionNode::getMetanessFromTopic(const QString& t)
+{
+    if (topicMetanessMap_.isEmpty())
+        buildTopicMetanessMap();
+    return topicMetanessMap_[t];
+}
+
 /*!
   Sets the function node's Metaness value based on the value
   of string \a t, which is the value of the function's "meta"
-  attribute in an index file.
+  attribute in an index file. Returns the Metaness value
  */
-void FunctionNode::setMetaness(const QString& t)
+FunctionNode::Metaness FunctionNode::setMetaness(const QString& t)
 {
-    if (t == QLatin1String("plain"))
-        metaness_ = Plain;
-    else if (t == QLatin1String("signal"))
-        metaness_ = Signal;
-    else if (t == QLatin1String("slot"))
-        metaness_ = Slot;
-    else if (t == QLatin1String("constructor"))
-        metaness_ = Ctor;
-    else if (t == QLatin1String("copy-constructor"))
-        metaness_ = CCtor;
-    else if (t == QLatin1String("move-constructor"))
-        metaness_ = MCtor;
-    else if (t == QLatin1String("destructor"))
-        metaness_ = Dtor;
-    else if (t == QLatin1String("macro"))
-        metaness_ = MacroWithParams;
-    else if (t == QLatin1String("macrowithparams"))
-        metaness_ = MacroWithParams;
-    else if (t == QLatin1String("macrowithoutparams"))
-        metaness_ = MacroWithoutParams;
-    else if (t == QLatin1String("copy-assign"))
-        metaness_ = CAssign;
-    else if (t == QLatin1String("move-assign"))
-        metaness_ = MAssign;
-    else if (t == QLatin1String("native"))
-        metaness_ = Native;
-    else
-        metaness_ = Plain;
+    metaness_ = getMetaness(t);
+    return metaness_;
+}
+
+/*!
+  If this function node's metaness is \a from, change the
+  metaness to \a to and return \c true. Otherwise return
+  false. This function is used to change Qml function node
+  metaness values to Javascript function node metaness,
+  values because these nodes are created as Qml function
+  nodes before it is discovered that what the function node
+  represents is not a Qml function but a javascript function.
+
+  Note that if the function returns true, which means the node
+  type was indeed changed, then the node's Genus is also changed
+  from QML to JS.
+
+  The function also works in the other direction, but there is
+  no use case for that.
+ */
+bool FunctionNode::changeMetaness(Metaness from, Metaness to)
+{
+    if (metaness_ == from) {
+        metaness_ = to;
+        switch (to) {
+          case QmlSignal:
+          case QmlSignalHandler:
+          case QmlMethod:
+              setGenus(Node::QML);
+              break;
+          case JsSignal:
+          case JsSignalHandler:
+          case JsMethod:
+              setGenus(Node::JS);
+              break;
+          default:
+              setGenus(Node::CPP);
+              break;
+        }
+        return true;
+    }
+    return false;
 }
 
 /*! \fn void FunctionNode::setOverloadFlag(bool b)
@@ -2287,10 +2320,35 @@ void FunctionNode::setReimplemented(bool b)
 }
 
 /*!
+  Returns a string representing the kind of function this
+  Function node represents, which depends on the Metaness
+  value.
+ */
+QString FunctionNode::kindString() const
+{
+    switch (metaness_) {
+        case FunctionNode::QmlSignal:
+            return "QML signal";
+        case FunctionNode::QmlSignalHandler:
+            return "QML signal handler";
+        case FunctionNode::QmlMethod:
+            return "QML method";
+        case FunctionNode::JsSignal:
+            return "JS signal";
+        case FunctionNode::JsSignalHandler:
+            return "JS signal handler";
+        case FunctionNode::JsMethod:
+            return "JS method";
+        default:
+            return "function";
+    }
+}
+
+/*!
   Returns a string representing the Metaness enum value for
   this function. It is used in index files.
  */
-QString FunctionNode::metaness() const
+QString FunctionNode::metanessString() const
 {
     switch (metaness_) {
     case FunctionNode::Plain:
@@ -2317,6 +2375,18 @@ QString FunctionNode::metaness() const
         return "copy-assign";
     case FunctionNode::MAssign:
         return "move-assign";
+    case FunctionNode::QmlSignal:
+        return "qmlsignal";
+    case FunctionNode::QmlSignalHandler:
+        return "qmlsignalhandler";
+    case FunctionNode::QmlMethod:
+        return "qmlmethod";
+    case FunctionNode::JsSignal:
+        return "jssignal";
+    case FunctionNode::JsSignalHandler:
+        return "jssignalhandler";
+    case FunctionNode::JsMethod:
+        return "jsmethod";
     default:
         return "plain";
     }
@@ -2513,7 +2583,7 @@ bool FunctionNode::compare(const FunctionNode *fn) const
 {
     if (!fn)
         return false;
-    if (type() != fn->type())
+    if (metaness() != fn->metaness())
         return false;
     if (parent() != fn->parent())
         return false;
@@ -2559,6 +2629,9 @@ bool FunctionNode::isIgnored() const
             name() == QLatin1String("d_func")) {
             return true;
         }
+        QString s = signature(false, false);
+        if (s.contains(QLatin1String("enum_type")) && s.contains(QLatin1String("operator|")))
+            return true;
     }
     return false;
 }
@@ -2574,7 +2647,7 @@ bool FunctionNode::isIgnored() const
   everything else is set to default values.
  */
 PropertyNode::PropertyNode(Aggregate *parent, const QString& name)
-    : LeafNode(Property, parent, name),
+    : Node(Property, parent, name),
       stored_(FlagValueDefault),
       designable_(FlagValueDefault),
       scriptable_(FlagValueDefault),
@@ -2585,7 +2658,7 @@ PropertyNode::PropertyNode(Aggregate *parent, const QString& name)
       revision_(-1),
       overrides_(0)
 {
-    setGenus(Node::CPP);
+    // nothing
 }
 
 /*!
@@ -2630,7 +2703,7 @@ QString PropertyNode::qualifiedDataType() const
             /*
               'int' becomes 'const int' ('int const' is
               correct C++, but looks wrong)
-            */
+             */
             return "const " + type_;
         }
     }
@@ -2643,11 +2716,13 @@ bool QmlTypeNode::qmlOnly = false;
 QMultiMap<const Node*, Node*> QmlTypeNode::inheritedBy;
 
 /*!
-  Constructs a Qml class node. The new node has the given
-  \a parent and \a name.
+  Constructs a Qml type node or a Js type node depending on
+  the value of \a type, which is Node::QmlType by default,
+  but which can also be Node::JsType. The new node has the
+  given \a parent and \a name.
  */
-QmlTypeNode::QmlTypeNode(Aggregate *parent, const QString& name)
-    : Aggregate(QmlType, parent, name),
+QmlTypeNode::QmlTypeNode(Aggregate *parent, const QString& name, NodeType type)
+    : Aggregate(type, parent, name),
       abstract_(false),
       cnodeRequired_(false),
       wrapper_(false),
@@ -2661,8 +2736,6 @@ QmlTypeNode::QmlTypeNode(Aggregate *parent, const QString& name)
         i = 4;
     }
     setTitle(name.mid(i));
-    setPageType(Node::ApiPage);
-    setGenus(Node::QML);
 }
 
 /*!
@@ -2765,26 +2838,26 @@ bool QmlTypeNode::inherits(Aggregate* type)
 }
 
 /*!
-  Constructs a Qml basic type node. The new node has the given
-  \a parent and \a name.
+  Constructs either a Qml basic type node or a Javascript
+  basic type node, depending on the value pf \a type, which
+  must be either Node::QmlBasicType or Node::JsBasicType.
+  The new node has the given \a parent and \a name.
  */
-QmlBasicTypeNode::QmlBasicTypeNode(Aggregate *parent,
-                                   const QString& name)
-    : Aggregate(QmlBasicType, parent, name)
+QmlBasicTypeNode::QmlBasicTypeNode(Aggregate *parent, const QString& name, Node::NodeType type)
+    : Aggregate(type, parent, name)
 {
     setTitle(name);
-    setGenus(Node::QML);
 }
 
 /*!
-  Constructor for the Qml property group node. \a parent is
-  always a QmlTypeNode.
+  Constructor for both the Qml property group node and the
+  Javascript property group node. The determination is made
+  by testing whether the \a parent is a QML node or a JS node.
  */
 QmlPropertyGroupNode::QmlPropertyGroupNode(QmlTypeNode* parent, const QString& name)
-    : Aggregate(QmlPropertyGroup, parent, name)
+    : Aggregate(parent->isJsType() ? JsPropertyGroup : QmlPropertyGroup, parent, name)
 {
     idNumber_ = -1;
-    setGenus(Node::QML);
 }
 
 /*!
@@ -2808,7 +2881,7 @@ QmlPropertyNode::QmlPropertyNode(Aggregate* parent,
                                  const QString& name,
                                  const QString& type,
                                  bool attached)
-    : LeafNode(QmlProperty, parent, name),
+    : Node(parent->isJsType() ? JsProperty : QmlProperty, parent, name),
       type_(type),
       stored_(FlagValueDefault),
       designable_(FlagValueDefault),
@@ -2817,12 +2890,10 @@ QmlPropertyNode::QmlPropertyNode(Aggregate* parent,
       attached_(attached),
       readOnly_(FlagValueDefault)
 {
-    setPageType(ApiPage);
     if (type_ == QString("alias"))
         isAlias_ = true;
     if (name.startsWith("__"))
         setStatus(Internal);
-    setGenus(Node::QML);
 }
 
 /*!
@@ -2891,7 +2962,7 @@ PropertyNode* QmlPropertyNode::findCorrespondingCppProperty()
                   Now find the C++ property corresponding to
                   the QML property in the QML property group,
                   <group>.<property>.
-                */
+                 */
                 if (dotSplit.size() > 1) {
                     QStringList path(extractClassName(pn->qualifiedDataType()));
                     Node* nn = QDocDatabase::qdocDB()->findClassNode(path);
@@ -2904,7 +2975,7 @@ PropertyNode* QmlPropertyNode::findCorrespondingCppProperty()
                           Otherwise, return the C++ property
                           corresponding to the QML property
                           group.
-                        */
+                         */
                         return (pn2 ? pn2 : pn);
                     }
                 }
@@ -2943,7 +3014,7 @@ QString Node::fullDocumentName() const
             break;
         }
 
-        if (n->isDocumentNode())
+        if (n->isTextPageNode())
             break;
 
         // Examine the parent node if one exists.
@@ -2958,7 +3029,7 @@ QString Node::fullDocumentName() const
     if (n->isQmlType() || n->isJsType())
         concatenator = QLatin1Char('.');
 
-    if (n->isDocumentNode())
+    if (n->isTextPageNode())
         concatenator = QLatin1Char('#');
 
     return pieces.join(concatenator);
@@ -3056,10 +3127,56 @@ void Aggregate::printChildren(const QString& title)
     if (children_.size() > 0) {
         for (int i=0; i<children_.size(); ++i) {
             Node* n = children_.at(i);
-            qDebug() << "  CHILD:" << n->name() << n->nodeTypeString() << n->nodeSubtypeString();
+            qDebug() << "  CHILD:" << n->name() << n->nodeTypeString();
         }
     }
 }
+
+/*!
+  Removes \a pseudoChild from this node's primary/secondary
+  function maps.
+ */
+void Aggregate::removePseudoChild(Node *pseudoChild)
+{
+    if (pseudoChild->isFunction()) {
+        QMap<QString, Node *>::Iterator p = primaryFunctionMap_.find(pseudoChild->name());
+        while (p != primaryFunctionMap_.end()) {
+            if (p.value() == pseudoChild) {
+                primaryFunctionMap_.erase(p);
+                break;
+            }
+            ++p;
+        }
+        NodeList& overloads = secondaryFunctionMap_[pseudoChild->name()];
+        overloads.removeAll(pseudoChild);
+    }
+}
+
+/*!
+  Adds \a pseudoChild to the list of nodes related to this one. Resolve a correct
+  overload number for a related non-member function.
+ */
+void Aggregate::addPseudoChild(Node *pseudoChild)
+{
+    if (pseudoChild->isFunction()) {
+        FunctionNode* fn = static_cast<FunctionNode*>(pseudoChild);
+        if (primaryFunctionMap_.contains(pseudoChild->name())) {
+            secondaryFunctionMap_[pseudoChild->name()].append(pseudoChild);
+            fn->setOverloadNumber(secondaryFunctionMap_[pseudoChild->name()].size());
+            fn->setOverloadFlag(true);
+        }
+        else {
+            primaryFunctionMap_.insert(pseudoChild->name(), pseudoChild);
+            fn->setOverloadNumber(0);
+            fn->setOverloadFlag(false);
+        }
+    }
+}
+
+/*!
+  \class CollectionNode
+  \brief A class for holding the members of a collection of doc pages.
+ */
 
 /*!
   Returns \c true if the collection node's member list is
@@ -3154,18 +3271,9 @@ void CollectionNode::printMembers(const QString& title)
     if (members_.size() > 0) {
         for (int i=0; i<members_.size(); ++i) {
             Node* n = members_.at(i);
-            qDebug() << "  MEMBER:" << n->name() << n->nodeTypeString() << n->nodeSubtypeString();
+            qDebug() << "  MEMBER:" << n->name() << n->nodeTypeString();
         }
     }
-}
-
-/*!
-  Sets the document node's \a title. This is used for the page title.
- */
-void CollectionNode::setTitle(const QString& title)
-{
-    title_ = title;
-    parent()->addChild(this, title);
 }
 
 /*!
@@ -3222,10 +3330,10 @@ void SharedCommentNode::setOverloadFlag(bool b)
 }
 
 /*!
-  Sets the pointer to the node that this node relates to
-  in each of the nodes in this shared comment node's collective.
+  Sets each node in this node's collective to be related to
+  \a pseudoParent.
  */
-void SharedCommentNode::setRelates(Aggregate *pseudoParent)
+void SharedCommentNode::setRelates(PageNode *pseudoParent)
 {
     Node::setRelates(pseudoParent);
     for (Node *n : collective_)

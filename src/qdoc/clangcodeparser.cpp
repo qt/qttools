@@ -253,7 +253,7 @@ static Node *findNodeForCursor(QDocDatabase* qdb, CXCursor cur) {
         bool isVariadic = clang_isFunctionTypeVariadic(funcType);
         QVarLengthArray<QString, 20> args;
         for (Node *candidate : qAsConst(candidates)) {
-            if (!candidate->isFunction())
+            if (!candidate->isFunction(Node::CPP))
                 continue;
             auto fn = static_cast<FunctionNode*>(candidate);
             const auto &funcParams = fn->parameters();
@@ -332,7 +332,7 @@ static Node *findFunctionNodeForCursor(QDocDatabase* qdb, CXCursor cur) {
         bool isVariadic = clang_isFunctionTypeVariadic(funcType);
         QVarLengthArray<QString, 20> args;
         for (Node *candidate : qAsConst(candidates)) {
-            if (!candidate->isFunction())
+            if (!candidate->isFunction(Node::CPP))
                 continue;
             auto fn = static_cast<FunctionNode*>(candidate);
             const auto &funcParams = fn->parameters();
@@ -535,7 +535,7 @@ CXChildVisitResult ClangVisitor::visitFnSignature(CXCursor cursor, CXSourceLocat
             ignoreSignature = true;
         } else {
             *fnNode = findFunctionNodeForCursor(qdb_, cursor);
-            if (*fnNode && (*fnNode)->isFunction()) {
+            if (*fnNode && (*fnNode)->isFunction(Node::CPP)) {
                 FunctionNode* fn = static_cast<FunctionNode*>(*fnNode);
                 readParameterNamesAndAttributes(fn, cursor);
             }
@@ -646,7 +646,7 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
 
         CXType funcType = clang_getCursorType(cursor);
 
-        FunctionNode* fn = new FunctionNode(Node::Function, parent_, name, false);
+        FunctionNode* fn = new FunctionNode(parent_, name);
 
         CXSourceRange range = clang_Cursor_getCommentRange(cursor);
         if (!clang_Range_isNull(range)) {
@@ -989,7 +989,7 @@ Node* ClangVisitor::nodeForCommentAtLocation(CXSourceLocation loc, CXSourceLocat
     }
     auto *node = findNodeForCursor(qdb_, *decl_it);
     // borrow the parameter name from the definition
-    if (node && node->isFunction())
+    if (node && node->isFunction(Node::CPP))
         readParameterNamesAndAttributes(static_cast<FunctionNode*>(node), *decl_it);
     return node;
 }
@@ -1091,6 +1091,8 @@ static const char *defaultArgs_[] = {
     "-std=c++14",
 #ifndef Q_OS_WIN
     "-fPIC",
+#else
+    "-fms-compatibility-version=19",
 #endif
     "-fno-exceptions", // Workaround for clang bug http://reviews.llvm.org/D17988
     "-DQ_QDOC",
@@ -1100,11 +1102,10 @@ static const char *defaultArgs_[] = {
     "-DQT_ANNOTATE_FUNCTION(a)=__attribute__((annotate(#a)))",
     "-DQT_ANNOTATE_ACCESS_SPECIFIER(a)=__attribute__((annotate(#a)))",
     "-Wno-constant-logical-operand",
-#ifdef Q_OS_WIN
-    "-fms-compatibility-version=19",
-#endif
-    "-I" CLANG_RESOURCE_DIR
+    "-Wno-macro-redefined",
+    "-Wno-nullability-completeness"
 };
+static QByteArray clangResourcePath = "-I";
 
 /*!
   Load the default arguments and the defines into \a args.
@@ -1114,6 +1115,8 @@ void ClangCodeParser::getDefaultArgs()
 {
     args_.clear();
     args_.insert(args_.begin(), std::begin(defaultArgs_), std::end(defaultArgs_));
+    clangResourcePath += CLANG_RESOURCE_DIR;
+    args_.push_back(clangResourcePath.data());
     // Add the defines from the qdocconf file.
     for (const auto &p : qAsConst(defines_))
         args_.push_back(p.constData());
@@ -1139,7 +1142,7 @@ static QVector<QByteArray> includePathsFromHeaders(const QHash<QString, QString>
  */
 void ClangCodeParser::getMoreArgs()
 {
-    if (includePaths_.isEmpty() || includePaths_.at(0) != QByteArray("-I")) {
+    if (includePaths_.isEmpty()) {
         /*
           The include paths provided are inadequate. Make a list
           of reasonable places to look for include files and use

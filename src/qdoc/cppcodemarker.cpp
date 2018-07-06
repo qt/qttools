@@ -129,10 +129,10 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
     name = "<@name>" + name + "</@name>";
 
     if ((style == Section::Details) && !node->parent()->name().isEmpty() &&
-        (node->type() != Node::Property) && !node->isQmlNode() && !node->isJsNode())
+        !node->isProperty() && !node->isQmlNode() && !node->isJsNode())
         name.prepend(taggedNode(node->parent()) + "::");
 
-    switch (node->type()) {
+    switch (node->nodeType()) {
     case Node::Namespace:
         synopsis = "namespace " + name;
         break;
@@ -140,9 +140,6 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
         synopsis = "class " + name;
         break;
     case Node::Function:
-    case Node::QmlSignal:
-    case Node::QmlSignalHandler:
-    case Node::QmlMethod:
         func = (const FunctionNode *) node;
 
         if (style != Section::AllMembers && !func->returnType().isEmpty())
@@ -336,10 +333,7 @@ QString CppCodeMarker::markedUpQmlItem(const Node* node, bool summary)
     if (node->isQmlProperty() || node->isJsProperty()) {
         const QmlPropertyNode* pn = static_cast<const QmlPropertyNode*>(node);
         synopsis = name + " : " + typified(pn->dataType());
-    }
-    else if ((node->type() == Node::QmlMethod) ||
-             (node->type() == Node::QmlSignal) ||
-             (node->type() == Node::QmlSignalHandler)) {
+    } else if (node->isFunction(Node::QML) || node->isFunction(Node::JS)) {
         const FunctionNode* func = static_cast<const FunctionNode*>(node);
         if (!func->returnType().isEmpty())
             synopsis = typified(func->returnType(), true) + name;
@@ -360,8 +354,7 @@ QString CppCodeMarker::markedUpQmlItem(const Node* node, bool summary)
             }
         }
         synopsis += QLatin1Char(')');
-    }
-    else
+    } else
         synopsis = name;
 
     QString extra;
@@ -412,7 +405,7 @@ QString CppCodeMarker::markedUpFullName(const Node *node, const Node *relative)
 
 QString CppCodeMarker::markedUpEnumValue(const QString &enumValue, const Node *relative)
 {
-    if (relative->type() != Node::Enum)
+    if (relative->nodeType() != Node::Enum)
         return enumValue;
 
     const Node *node = relative->parent();

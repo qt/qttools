@@ -1027,11 +1027,10 @@ void QDocDatabase::findAllClasses(Aggregate* node)
     while (c != node->childNodes().constEnd()) {
         if ((*c)->access() != Node::Private && (!(*c)->isInternal() || showInternal_) &&
             (*c)->tree()->camelCaseModuleName() != QString("QDoc")) {
-
-            if ((*c)->type() == Node::Class) {
+            if ((*c)->isClass()) {
                 QString className = (*c)->name();
                 if ((*c)->parent() &&
-                        (*c)->parent()->type() == Node::Namespace &&
+                        (*c)->parent()->nodeType() == Node::Namespace &&
                         !(*c)->parent()->name().isEmpty())
                     className = (*c)->parent()->name()+"::"+className;
 
@@ -1084,7 +1083,7 @@ void QDocDatabase::findAllFunctions(Aggregate* node)
             if ((*c)->isAggregate()) {
                 findAllFunctions(static_cast<Aggregate*>(*c));
             }
-            else if ((*c)->type() == Node::Function) {
+            else if ((*c)->nodeType() == Node::Function) {
                 const FunctionNode* func = static_cast<const FunctionNode*>(*c);
                 if ((func->status() > Node::Obsolete) && !func->isInternal() &&
                     !func->isSomeCtor() && !func->isDtor()) {
@@ -1104,12 +1103,10 @@ void QDocDatabase::findAllAttributions(Aggregate* node)
     NodeList::ConstIterator c = node->childNodes().constBegin();
     while (c != node->childNodes().constEnd()) {
         if ((*c)->access() != Node::Private) {
-            if ((*c)->docSubtype() == Node::Page
-                     && (*c)->pageType() == Node::AttributionPage) {
+            if ((*c)->pageType() == Node::AttributionPage)
                 attributions_.insertMulti((*c)->tree()->indexTitle(), *c);
-            } else if ((*c)->isAggregate()) {
+            else if ((*c)->isAggregate())
                 findAllAttributions(static_cast<Aggregate*>(*c));
-            }
         }
         ++c;
     }
@@ -1161,13 +1158,13 @@ void QDocDatabase::findAllObsoleteThings(Aggregate* node)
 {
     NodeList::const_iterator c = node->childNodes().constBegin();
     while (c != node->childNodes().constEnd()) {
-        if ((*c)->access() != Node::Private) {
+        if (!(*c)->isPrivate()) {
             QString name = (*c)->name();
-            if ((*c)->status() == Node::Obsolete) {
-                if ((*c)->type() == Node::Class) {
-                    if ((*c)->parent() && (*c)->parent()->type() == Node::Namespace &&
-                        !(*c)->parent()->name().isEmpty())
-                        name = (*c)->parent()->name() + "::" + name;
+            if ((*c)->isObsolete()) {
+                if ((*c)->isClass()) {
+                    Node* parent = (*c)->parent();
+                    if (parent && parent->isNamespace() && !parent->name().isEmpty())
+                        name = parent->name() + "::" + name;
                     obsoleteClasses_.insert(name, *c);
                 }
                 else if ((*c)->isQmlType() || (*c)->isJsType()) {
@@ -1177,26 +1174,25 @@ void QDocDatabase::findAllObsoleteThings(Aggregate* node)
                     obsoleteQmlTypes_.insert(name,*c);
                 }
             }
-            else if ((*c)->type() == Node::Class) {
+            else if ((*c)->isClass()) { //not obsolete
                 Aggregate* n = static_cast<Aggregate*>(*c);
                 bool inserted = false;
                 NodeList::const_iterator p = n->childNodes().constBegin();
                 while (p != n->childNodes().constEnd()) {
-                    if ((*p)->access() != Node::Private) {
-                        switch ((*p)->type()) {
+                    if (!(*p)->isPrivate() && (*p)->isObsolete()) {
+                        switch ((*p)->nodeType()) {
                         case Node::Enum:
                         case Node::Typedef:
                         case Node::Function:
                         case Node::Property:
-                        case Node::Variable:
-                            if ((*p)->status() == Node::Obsolete) {
-                                if ((*c)->parent() && (*c)->parent()->type() == Node::Namespace &&
-                                    !(*c)->parent()->name().isEmpty())
-                                    name = (*c)->parent()->name() + "::" + name;
-                                classesWithObsoleteMembers_.insert(name, *c);
-                                inserted = true;
-                            }
+                        case Node::Variable: {
+                            Node* parent = (*c)->parent();
+                            if (parent && parent->isNamespace() && !parent->name().isEmpty())
+                                name = (*c)->parent()->name() + "::" + name;
+                            classesWithObsoleteMembers_.insert(name, *c);
+                            inserted = true;
                             break;
+                        }
                         default:
                             break;
                         }
@@ -1211,19 +1207,16 @@ void QDocDatabase::findAllObsoleteThings(Aggregate* node)
                 bool inserted = false;
                 NodeList::const_iterator p = n->childNodes().constBegin();
                 while (p != n->childNodes().constEnd()) {
-                    if ((*p)->access() != Node::Private) {
-                        switch ((*c)->type()) {
+                    if (!(*p)->isPrivate() && (*p)->isObsolete()) {
+                        switch ((*p)->nodeType()) {
+                        case Node::JsProperty:
                         case Node::QmlProperty:
-                        case Node::QmlSignal:
-                        case Node::QmlSignalHandler:
-                        case Node::QmlMethod:
+                        case Node::Function:
                             if ((*c)->parent()) {
                                 Node* parent = (*c)->parent();
-                                if ((parent->isQmlPropertyGroup() ||
-                                     parent->isJsPropertyGroup()) && parent->parent())
+                                if ((parent->isQmlPropertyGroup() || parent->isJsPropertyGroup()) && parent->parent())
                                     parent = parent->parent();
-                                if (parent && (parent->isQmlType() || parent->isJsType()) &&
-                                    !parent->name().isEmpty())
+                                if (parent && (parent->isQmlType() || parent->isJsType()) && !parent->name().isEmpty())
                                     name = parent->name() + "::" + name;
                             }
                             qmlTypesWithObsoleteMembers_.insert(name,*c);
@@ -1273,7 +1266,7 @@ void QDocDatabase::findAllSince(Aggregate* node)
             if (nqcmap == newQmlTypeMaps_.end())
                 nqcmap = newQmlTypeMaps_.insert(sinceString,NodeMap());
 
-            if ((*child)->type() == Node::Function) {
+            if ((*child)->nodeType() == Node::Function) {
                 // Insert functions into the general since map.
                 FunctionNode *func = static_cast<FunctionNode *>(*child);
                 if ((func->status() > Node::Obsolete) && !func->isSomeCtor() && !func->isDtor()) {
@@ -1281,7 +1274,7 @@ void QDocDatabase::findAllSince(Aggregate* node)
                 }
             }
             else {
-                if ((*child)->type() == Node::Class) {
+                if ((*child)->nodeType() == Node::Class) {
                     // Insert classes into the since and class maps.
                     QString className = (*child)->name();
                     if ((*child)->parent() && !(*child)->parent()->name().isEmpty()) {
@@ -1506,7 +1499,7 @@ const Node* QDocDatabase::findNodeForTarget(const QString& target, const Node* r
     if (target.isEmpty())
         node = relative;
     else if (target.endsWith(".html"))
-        node = findNodeByNameAndType(QStringList(target), Node::Document);
+        node = findNodeByNameAndType(QStringList(target), Node::Page);
     else {
         QStringList path = target.split("::");
         int flags = SearchBaseClasses | SearchEnumValues;
@@ -1516,7 +1509,7 @@ const Node* QDocDatabase::findNodeForTarget(const QString& target, const Node* r
                 return n;
             relative = 0;
         }
-        node = findDocumentNodeByTitle(target);
+        node = findPageNodeByTitle(target);
     }
     return node;
 }
@@ -1677,16 +1670,16 @@ Node* QDocDatabase::findNodeInOpenNamespace(QStringList& path, Node::NodeType ty
 }
 
 /*!
-  Finds all the collection nodes of the specified \a genus
-  into the collection node map \a cnm. Nodes that match the
-  \a relative node are not included.
+  Finds all the collection nodes of the specified \a type
+  and merges them into the collection node map \a cnm. Nodes
+  that match the \a relative node are not included.
  */
-void QDocDatabase::mergeCollections(Node::Genus genus, CNMap& cnm, const Node* relative)
+void QDocDatabase::mergeCollections(Node::NodeType type, CNMap& cnm, const Node* relative)
 {
     cnm.clear();
     CNMultiMap cnmm;
     foreach (Tree* t, searchOrder()) {
-        CNMap* m = t->getCollectionMap(genus);
+        CNMap* m = t->getCollectionMap(type);
         if (m && !m->isEmpty()) {
             CNMap::const_iterator i = m->cbegin();
             while (i != m->cend()) {
@@ -1714,8 +1707,8 @@ void QDocDatabase::mergeCollections(Node::Genus genus, CNMap& cnm, const Node* r
                 foreach (CollectionNode* v, values) {
                     if (v != n) {
                         // Allow multiple (major) versions of QML/JS modules
-                        if (n->type() == Node::QmlModule
-                                && n->logicalModuleIdentifier() != v->logicalModuleIdentifier()) {
+                        if ((n->isQmlModule() || n->isJsModule()) &&
+                                n->logicalModuleIdentifier() != v->logicalModuleIdentifier()) {
                             if (v->wasSeen() && v != relative && !v->members().isEmpty())
                                 cnm.insert(v->fullTitle().toLower(), v);
                             continue;
@@ -1738,20 +1731,20 @@ void QDocDatabase::mergeCollections(Node::Genus genus, CNMap& cnm, const Node* r
 
 /*!
   Finds all the collection nodes with the same name
-  and genus as \a c and merges their members into the
+  and type as \a c and merges their members into the
   members list of \a c.
 
-  For QML and JS modules, the merge is done only if
-  the module identifier matches between the nodes, to avoid
-  merging modules with different (major) versions.
+  For QML and JS modules, only nodes with matching
+  module identifiers are merged to avoid merging
+  modules with different (major) versions.
  */
 void QDocDatabase::mergeCollections(CollectionNode* c)
 {
     foreach (Tree* t, searchOrder()) {
-        CollectionNode* cn = t->getCollection(c->name(), c->genus());
+        CollectionNode* cn = t->getCollection(c->name(), c->nodeType());
         if (cn && cn != c) {
-            if (cn->type() == Node::QmlModule
-                    && cn->logicalModuleIdentifier() != c->logicalModuleIdentifier())
+            if ((cn->isQmlModule() || cn->isJsModule()) &&
+                cn->logicalModuleIdentifier() != c->logicalModuleIdentifier())
                 continue;
             foreach (Node* n, cn->members())
                 c->addMember(n);
@@ -1792,7 +1785,7 @@ const Node* QDocDatabase::findNodeForAtom(const Atom* a, const Node* relative, Q
         node = relative; // search for a target on the current page.
     else if (domain) {
         if (first.endsWith(".html"))
-            node = domain->findNodeByNameAndType(QStringList(first), Node::Document);
+            node = domain->findNodeByNameAndType(QStringList(first), Node::Page);
         else if (first.endsWith(QChar(')'))) {
             QString function, params;
             int length = first.length();
@@ -1815,7 +1808,7 @@ const Node* QDocDatabase::findNodeForAtom(const Atom* a, const Node* relative, Q
     }
     else {
         if (first.endsWith(".html"))
-            node = findNodeByNameAndType(QStringList(first), Node::Document);
+            node = findNodeByNameAndType(QStringList(first), Node::Page);
         else if (first.endsWith(QChar(')'))) {
             node = findFunctionNode(first, relative, genus);
         }
