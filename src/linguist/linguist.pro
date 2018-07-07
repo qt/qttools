@@ -46,5 +46,5 @@ QMAKE_SUBSTITUTES += cmake_linguist_config_file cmake_linguist_config_version_fi
 
 cmake_linguist_tools_files.files += $$cmake_linguist_config_file.output $$cmake_linguist_config_version_file.output $$cmake_linguist_macros_file.output
 cmake_linguist_tools_files.path = $$[QT_INSTALL_LIBS]/cmake/Qt5LinguistTools
-cmake_linguist_tools_files.CONFIG = no_check_exists
+cmake_linguist_tools_files.CONFIG = no_check_exist
 INSTALLS += cmake_linguist_tools_files

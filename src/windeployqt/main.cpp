@@ -437,7 +437,7 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
     parser->addOption(listOption);
 
     QCommandLineOption verboseOption(QStringLiteral("verbose"),
-                                     QStringLiteral("Verbose level."),
+                                     QStringLiteral("Verbose level (0-2)."),
                                      QStringLiteral("level"));
     parser->addOption(verboseOption);
 

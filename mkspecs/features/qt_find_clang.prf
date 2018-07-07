@@ -43,13 +43,8 @@ isEmpty(QDOC_USE_STATIC_LIBCLANG): QDOC_USE_STATIC_LIBCLANG = $$(QDOC_USE_STATIC
 cache(QDOC_USE_STATIC_LIBCLANG)
 
 for(_, $$list(_)) { # just a way to break easily
-    isEmpty(FORCE_MINGW_QDOC_BUILD): FORCE_MINGW_QDOC_BUILD = $$(FORCE_MINGW_QDOC_BUILD)
-    equals(QMAKE_HOST.os, Windows):gcc:isEmpty(FORCE_MINGW_QDOC_BUILD) {
-            log("QDoc build is disabled on MinGW in Qt 5.11.0, because of a missing feature in the release infrastructure.")
-            log("You can enable it by setting FORCE_MINGW_QDOC_BUILD")
-            break()
-    }
-
+    mingw:isEmpty(LLVM_INSTALL_DIR): LLVM_INSTALL_DIR = $$(LLVM_INSTALL_DIR_MINGW)
+    msvc:isEmpty(LLVM_INSTALL_DIR): LLVM_INSTALL_DIR = $$(LLVM_INSTALL_DIR_MSVC)
     isEmpty(LLVM_INSTALL_DIR): LLVM_INSTALL_DIR = $$(LLVM_INSTALL_DIR)
     LLVM_INSTALL_DIR = $$clean_path($$LLVM_INSTALL_DIR)
     contains(QMAKE_HOST.arch, x86_64): \
@@ -98,13 +93,16 @@ for(_, $$list(_)) { # just a way to break easily
 
     !contains(QMAKE_DEFAULT_LIBDIRS, $$CLANG_LIBDIR): CLANG_LIBS = -L$${CLANG_LIBDIR}
 
+    CLANG_DEFINES =
+
     isEmpty(QDOC_USE_STATIC_LIBCLANG) {
         equals(QMAKE_HOST.os, Windows): \
             CLANG_LIBS += -llibclang -ladvapi32 -lshell32
         else: \
             CLANG_LIBS += -lclang
     } else {
-        equals(QMAKE_HOST.os, Windows) {
+        msvc {
+            CLANG_DEFINES += CINDEX_LINKAGE=
             CLANG_LIBS += -llibclang_static -ladvapi32 -lshell32 -lMincore
         } else {
             !equals(QMAKE_HOST.os, Darwin): CLANG_LIBS+=-Wl,--start-group
@@ -298,6 +296,10 @@ for(_, $$list(_)) { # just a way to break easily
                         -lLLVMXCoreInfo \
                         -lLLVMXRay
             !equals(QMAKE_HOST.os, Darwin): CLANG_LIBS+=-Wl,--end-group
+            CLANG_LIBS += -lz
+            mingw: CLANG_LIBS += -lpsapi -lshell32 -lole32 -luuid -ladvapi32 -lversion
+            else: CLANG_LIBS += -ldl
+            equals(QMAKE_HOST.os, Darwin): CLANG_LIBS += -lcurses -lm -lxml2
         }
     }
 
@@ -310,6 +312,7 @@ for(_, $$list(_)) { # just a way to break easily
     cache(CLANG_LIBS)
     cache(CLANG_INCLUDEPATH)
     cache(CLANG_LIBDIR)
+    cache(CLANG_DEFINES)
     cache(CLANG_VERSION)
     cache(CONFIG, add, $$list(config_clang))
 }
