@@ -78,6 +78,9 @@ public:
 
     QWidget *load(QIODevice *dev, QWidget *parentWidget) override;
 
+    DomUI *readUi(QIODevice *dev);
+    QWidget *loadUi(DomUI *ui, QWidget *parentWidget);
+
 protected:
     using QEditorFormBuilder::create;
     using QEditorFormBuilder::createDom;

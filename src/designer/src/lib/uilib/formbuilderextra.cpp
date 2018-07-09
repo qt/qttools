@@ -63,6 +63,7 @@
 #include <QtCore/QTextStream>
 #include <QtCore/QStringList>
 #include <QtCore/QCoreApplication>
+#include <QtCore/QXmlStreamReader>
 
 #include <limits.h>
 
@@ -114,6 +115,102 @@ void QFormBuilderExtra::clear()
     m_buttonGroups.clear();
 }
 
+// Return UI file version from attribute 'version="4.0"'
+static QPair<int, int> uiVersion(const QString &attr)
+{
+    const QVector<QStringRef> versions = attr.splitRef(QLatin1Char('.'), QString::SkipEmptyParts);
+    if (versions.size() >= 2) {
+        bool okMajor, okMinor;
+        const int majorVersion = versions.at(0).toInt(&okMajor);
+        const int minorVersion = versions.at(1).toInt(&okMinor);
+        if (okMajor &&  okMinor)
+            return QPair<int, int>(majorVersion, minorVersion);
+    }
+    return QPair<int, int>(-1, -1);
+}
+
+static inline QString msgXmlError(const QXmlStreamReader &reader)
+{
+    return QCoreApplication::translate("QAbstractFormBuilder",
+                                       "An error has occurred while reading the UI file at line %1, column %2: %3")
+                                       .arg(reader.lineNumber()).arg(reader.columnNumber())
+                                       .arg(reader.errorString());
+}
+
+// Read and check the  version and the (optional) language attribute
+// of an <ui> element and leave reader positioned at <ui>.
+static bool inline readUiAttributes(QXmlStreamReader &reader, const QString &language,
+                                    QString *errorMessage)
+{
+    const QString uiElement = QStringLiteral("ui");
+    // Read up to first element
+    while (!reader.atEnd()) {
+        switch (reader.readNext()) {
+        case QXmlStreamReader::Invalid:
+            *errorMessage = msgXmlError(reader);
+            return false;
+        case QXmlStreamReader::StartElement:
+            if (reader.name().compare(uiElement, Qt::CaseInsensitive) == 0) {
+                const QString versionAttribute = QStringLiteral("version");
+                const QString languageAttribute = QStringLiteral("language");
+                const QXmlStreamAttributes attributes = reader.attributes();
+                if (attributes.hasAttribute(versionAttribute)) {
+                    const QString versionString = attributes.value(versionAttribute).toString();
+                    if (uiVersion(versionString).first < 4) {
+                        *errorMessage =
+                            QCoreApplication::translate("QAbstractFormBuilder",
+                                                        "This file was created using Designer from Qt-%1 and cannot be read.")
+                                                        .arg(versionString);
+                        return false;
+                    } // version error
+                }     // has version
+                if (attributes.hasAttribute(languageAttribute)) {
+                    // Check on optional language (Jambi)
+                    const QString formLanguage = attributes.value(languageAttribute).toString();
+                    if (!formLanguage.isEmpty() && formLanguage.compare(language, Qt::CaseInsensitive)) {
+                        *errorMessage =
+                            QCoreApplication::translate("QAbstractFormBuilder",
+                                                        "This file cannot be read because it was created using %1.")
+                                                        .arg(formLanguage);
+                        return false;
+                    } // language error
+                }    // has language
+                return true;
+            }  // <ui> matched
+            break;
+        default:
+            break;
+        }
+    }
+    // No <ui> found.
+    *errorMessage = QCoreApplication::translate("QAbstractFormBuilder",
+                                                "Invalid UI file: The root element <ui> is missing.");
+    return false;
+}
+
+DomUI *QFormBuilderExtra::readUi(QIODevice *dev)
+{
+    QXmlStreamReader reader(dev);
+    m_errorString.clear();
+    if (!readUiAttributes(reader, m_language, &m_errorString)) {
+        uiLibWarning(m_errorString);
+        return nullptr;
+    }
+    DomUI *ui = new DomUI;
+    ui->read(reader);
+    if (reader.hasError()) {
+        m_errorString = msgXmlError(reader);
+        uiLibWarning(m_errorString);
+        delete ui;
+        return nullptr;
+    }
+    return ui;
+}
+
+QString QFormBuilderExtra::msgInvalidUiFile()
+{
+    return QCoreApplication::translate("QAbstractFormBuilder", "Invalid UI file");
+}
 
 bool QFormBuilderExtra::applyPropertyInternally(QObject *o, const QString &propertyName, const QVariant &value)
 {

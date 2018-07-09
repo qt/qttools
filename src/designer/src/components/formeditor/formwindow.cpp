@@ -2140,6 +2140,14 @@ bool FormWindow::handleContextMenu(QWidget *, QWidget *managedWidget, QContextMe
 
 bool FormWindow::setContents(QIODevice *dev, QString *errorMessageIn /* = 0 */)
 {
+    QDesignerResource r(this);
+    QScopedPointer<DomUI> ui(r.readUi(dev));
+    if (ui.isNull()) {
+        if (errorMessageIn)
+            *errorMessageIn = r.errorString();
+        return false;
+    }
+
     UpdateBlocker ub(this);
     clearSelection();
     m_selection->clearSelectionPool();
@@ -2151,8 +2159,7 @@ bool FormWindow::setContents(QIODevice *dev, QString *errorMessageIn /* = 0 */)
     m_undoStack.clear();
     emit changed();
 
-    QDesignerResource r(this);
-    QWidget *w = r.load(dev, formContainer());
+    QWidget *w = r.loadUi(ui.data(), formContainer());
     if (w) {
         setMainContainer(w);
         emit changed();
