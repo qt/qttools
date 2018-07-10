@@ -55,7 +55,7 @@ QT_BEGIN_NAMESPACE
 #   define QHELP_EXPORT Q_DECL_IMPORT
 #endif
 
-class QHelpGlobal {
+class QHELP_EXPORT QHelpGlobal {
 public:
     static QString uniquifyConnectionName(const QString &name, void *pointer);
     static QString documentTitle(const QString &content);

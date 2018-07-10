@@ -1,7 +1,9 @@
 TARGET = tst_qhelpgenerator
 CONFIG += testcase
 
-SOURCES += tst_qhelpgenerator.cpp
+HEADERS += ../../../src/assistant/shared/helpgenerator.h
+SOURCES += tst_qhelpgenerator.cpp \
+           ../../../src/assistant/shared/helpgenerator.cpp
 QT      += help-private sql testlib
 
 DEFINES += SRCDIR=\\\"$$PWD\\\"

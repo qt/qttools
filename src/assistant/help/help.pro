@@ -15,7 +15,6 @@ SOURCES += qhelpenginecore.cpp \
     qhelpdbreader.cpp \
     qhelpcontentwidget.cpp \
     qhelpindexwidget.cpp \
-    qhelpgenerator.cpp \
     qhelpdatainterface.cpp \
     qhelpprojectdata.cpp \
     qhelpcollectionhandler.cpp \
@@ -34,7 +33,6 @@ HEADERS += qhelpenginecore.h \
     qhelpdbreader_p.h \
     qhelpcontentwidget.h \
     qhelpindexwidget.h \
-    qhelpgenerator_p.h \
     qhelpdatainterface_p.h \
     qhelpprojectdata_p.h \
     qhelpcollectionhandler_p.h \

@@ -45,7 +45,7 @@
 QT_BEGIN_NAMESPACE
 
 class QHelpDataInterface;
-class QHelpGenerator;
+class HelpGeneratorPrivate;
 
 class HelpGenerator : public QObject
 {
@@ -63,7 +63,7 @@ private slots:
     void printWarning(const QString &msg);
 
 private:
-    QHelpGenerator *generator;
+    HelpGeneratorPrivate *m_private;
 };
 
 QT_END_NAMESPACE

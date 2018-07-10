@@ -31,8 +31,8 @@
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>
 
-#include <QtHelp/private/qhelpgenerator_p.h>
 #include <QtHelp/private/qhelpprojectdata_p.h>
+#include "../../../src/assistant/shared/helpgenerator.h"
 
 class tst_QHelpGenerator : public QObject
 {
@@ -76,7 +76,7 @@ void tst_QHelpGenerator::generateHelp()
     if (!data.readData(inputFile))
         QFAIL("Cannot read qthp file!");
 
-    QHelpGenerator generator;
+    HelpGenerator generator;
     QCOMPARE(generator.generate(&data, m_outputFile), true);
 
     {
@@ -201,8 +201,8 @@ void tst_QHelpGenerator::generateTwice()
     if (!data.readData(inputFile))
         QFAIL("Cannot read qhp file!");
 
-    QHelpGenerator generator1;
-    QHelpGenerator generator2;
+    HelpGenerator generator1;
+    HelpGenerator generator2;
     QString outputFile1 = path + QLatin1String("/data/test1.qch");
     QString outputFile2 = path + QLatin1String("/data/test2.qch");
     QCOMPARE(generator1.generate(&data, outputFile1), true);
