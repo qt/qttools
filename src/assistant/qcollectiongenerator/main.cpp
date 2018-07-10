@@ -29,7 +29,6 @@
 #include "../shared/collectionconfiguration.h"
 #include "../shared/helpgenerator.h"
 
-#include <private/qhelpgenerator_p.h>
 #include <private/qhelpprojectdata_p.h>
 
 #include <QtCore/QDataStream>
