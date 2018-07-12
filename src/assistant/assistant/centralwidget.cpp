@@ -33,7 +33,6 @@
 #include "helpviewer.h"
 #include "openpagesmanager.h"
 #include "tracer.h"
-#include "../shared/collectionconfiguration.h"
 
 #include <QtCore/QRegExp>
 #include <QtCore/QTimer>
