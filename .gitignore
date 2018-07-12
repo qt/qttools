@@ -74,12 +74,10 @@ bin/rcc*
 bin/uic*
 bin/patternist*
 bin/phonon*
-bin/qcollectiongenerator*
 bin/qdbus*
 bin/qhelpgenerator*
 bin/xmlpatterns*
 bin/cetest*
-bin/collectiongenerator
 bin/helpconverter
 bin/helpgenerator
 bin/kmap2qmap*

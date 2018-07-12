@@ -189,7 +189,7 @@
     \section2 Creating a Custom Help Collection File
 
     The help collection file (*.qhc) used by \QA is created when running the
-    \c qcollectiongenerator tool on a help collection project file (*.qhcp).
+    \c qhelpgenerator tool on a help collection project file (*.qhcp).
     The project file format is XML and it supports the following tags:
 
     \table
@@ -279,7 +279,7 @@
 
     \snippet doc_src_assistant-manual.qdoc 1
 
-    To create the binary collection file, run the \c qcollectiongenerator tool:
+    To create the binary collection file, run the \c qhelpgenerator tool:
 
     \snippet doc_src_assistant-manual.qdoc 10
 

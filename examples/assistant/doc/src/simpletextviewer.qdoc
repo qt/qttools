@@ -301,10 +301,10 @@
 
     As the last step, we have to generate the binary collection file
     out of the help collection project file. This is done by running the
-    \c qcollectiongenerator tool.
+    \c qhelpgenerator tool.
 
     \code
-    qcollectiongenerator simpletextviewer.qhcp -o simpletextviewer.qhc
+    qhelpgenerator simpletextviewer.qhcp -o simpletextviewer.qhc
     \endcode
 
     To test all our customizations made to \QA, we add the collection

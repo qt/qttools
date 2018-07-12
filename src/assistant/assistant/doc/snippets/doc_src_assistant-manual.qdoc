@@ -154,5 +154,5 @@ assistant -collectionFile mycollection.qhc
 //! [9]
 
 //! [10]
-qcollectiongenerator mycollection.qhcp -o mycollection.qhc
+qhelpgenerator mycollection.qhcp -o mycollection.qhc
 //! [10]

@@ -71,7 +71,7 @@ qhelpgenerator doc.qhp -o doc.qch
 
 
 //! [4]
-qcollectiongenerator mycollection.qhcp -o mycollection.qhc
+qhelpgenerator mycollection.qhcp -o mycollection.qhc
 //! [4]
 
 

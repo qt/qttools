@@ -103,33 +103,32 @@
         \row
             \li \l {Qt Help Project}
             \li .qhp
-            \li The input file for the help generator consisting of the table
-               of contents, indices, and references to the actual documentation
-               files (*.html). It also defines a unique namespace for the
-               documentation.
+            \li Contains the table of contents, indices, and references to the
+                actual documentation files (*.html). It also defines a unique
+                namespace for the documentation. This file is passed to the help
+                generator for creating a compressed help file.
 
         \row
             \li Qt Compressed Help
             \li .qch
-            \li The output file of the help generator. This binary file contains
-               all the information specified in the help project file along with
-               all the compressed documentation files.
+            \li Contains all the information specified in the help project file
+                along with all the compressed documentation files.
 
         \row
             \li \l {Qt Help Collection Project}
             \li .qhcp
-            \li The input file for the help collection generator. It contains
-               references to the compressed help files that should be included in
-               the collection; it also may contain other information for
-               customizing Qt Assistant.
+            \li An XML file that contains references to the compressed help
+                files that should be included in the help collection. In
+                addition, it may contain information for customizing Qt
+                Assistant. This file can be passed to the help generator for
+                creating a help collection file.
 
         \row
             \li Qt Help Collection
             \li .qhc
-            \li The output of the help collection generator. This is the file
-               QHelpEngine operates on. It contains references to any number of
-               compressed help files as well as additional information, such as
-               custom filters.
+            \li The help collection file that QHelpEngine operates on. It can
+                contain references to any number of compressed help files as
+                well as additional information, such as custom filters.
     \endtable
 
     \section1 Generating Qt Help
@@ -165,11 +164,9 @@
 
     \snippet doc_src_qthelp.qdoc 4
 
-    Instead of running two tools, one for generating the compressed
-    help and another for generating the collection file, it is also
-    possible to just run the qcollectiongenerator tool with a
-    slightly modified project file instructing the generator to
-    create the compressed help first.
+    To generate both the compressed help and the collection file in one go,
+    modify the help collection project file so that it instructs the help
+    generator to create the compressed help first:
 
     \snippet doc_src_qthelp.qdoc 5
 
