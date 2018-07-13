@@ -1,21 +1,19 @@
 option(host_build)
-QT = core-private
+QT = core
 DEFINES += QT_NO_CAST_FROM_ASCII QT_NO_CAST_TO_ASCII
 
 HEADERS += \
-    ../shared/projectdescriptionreader.h \
     ../shared/runqttool.h
 
 SOURCES += \
-    ../shared/projectdescriptionreader.cpp \
     ../shared/runqttool.cpp \
     main.cpp
 
-include(../shared/formats.pri)
+INCLUDEPATH += ../shared
 
 qmake.name = QMAKE
 qmake.value = $$shell_path($$QMAKE_QMAKE)
 QT_TOOL_ENV += qmake
 
-QMAKE_TARGET_DESCRIPTION = "Qt Translation File Compiler"
+QMAKE_TARGET_DESCRIPTION = "Qt Translation File Compiler for QMake Projects"
 load(qt_tool)

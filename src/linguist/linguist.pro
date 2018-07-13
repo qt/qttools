@@ -1,8 +1,11 @@
 TEMPLATE = subdirs
 SUBDIRS  = \
+    lconvert \
+    lprodump \
     lrelease \
+    lrelease-pro \
     lupdate \
-    lconvert
+    lupdate-pro
 !no-png:qtHaveModule(widgets) {
     QT_FOR_CONFIG += widgets
     qtConfig(process):qtConfig(pushbutton):qtConfig(toolbutton) {
