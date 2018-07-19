@@ -3,7 +3,12 @@ SUBDIRS  = \
     lrelease \
     lupdate \
     lconvert
-!no-png:qtHaveModule(widgets):qtConfig(process): SUBDIRS += linguist
+!no-png:qtHaveModule(widgets) {
+    QT_FOR_CONFIG += widgets
+    qtConfig(process):qtConfig(pushbutton):qtConfig(toolbutton) {
+        SUBDIRS += linguist
+    }
+}
 
 qtNomakeTools( \
     linguist \

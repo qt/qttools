@@ -4,13 +4,15 @@ qtHaveModule(widgets) {
     no-png {
         message("Some graphics-related tools are unavailable without PNG support")
     } else {
-        SUBDIRS = assistant \
-                  pixeltool \
-                  designer
+        QT_FOR_CONFIG += widgets
+        qtConfig(pushbutton):qtConfig(toolbutton) {
+            SUBDIRS = assistant \
+                      designer \
+                      pixeltool
 
-        qtHaveModule(quick):qtConfig(thread): SUBDIRS += distancefieldgenerator
-
-        linguist.depends = designer
+            linguist.depends = designer
+        }
+        qtHaveModule(quick):qtConfig(thread):qtConfig(toolbutton): SUBDIRS += distancefieldgenerator
     }
 }
 
