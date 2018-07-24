@@ -44,7 +44,7 @@
 
 QT_BEGIN_NAMESPACE
 
-class QHelpDataInterface;
+class QHelpProjectData;
 class HelpGeneratorPrivate;
 
 class HelpGenerator : public QObject
@@ -53,9 +53,9 @@ class HelpGenerator : public QObject
 
 public:
     HelpGenerator(bool silent = false);
-    bool generate(QHelpDataInterface *helpData,
+    bool generate(QHelpProjectData *helpData,
         const QString &outputFileName);
-    bool checkLinks(const QHelpDataInterface &helpData);
+    bool checkLinks(const QHelpProjectData &helpData);
     QString error() const;
 
 private slots:

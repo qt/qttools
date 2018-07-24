@@ -38,7 +38,7 @@
 ****************************************************************************/
 
 #include "helpgenerator.h"
-#include "qhelpdatainterface_p.h"
+#include "qhelpprojectdata_p.h"
 #include <qhelp_global.h>
 
 #include <QtCore/QtMath>
@@ -64,9 +64,9 @@ class HelpGeneratorPrivate : public QObject
 public:
     HelpGeneratorPrivate(QObject *parent = nullptr) : QObject(parent) {}
 
-    bool generate(QHelpDataInterface *helpData,
+    bool generate(QHelpProjectData *helpData,
         const QString &outputFileName);
-    bool checkLinks(const QHelpDataInterface &helpData);
+    bool checkLinks(const QHelpProjectData &helpData);
     QString error() const;
 
 Q_SIGNALS:
@@ -97,7 +97,7 @@ private:
         const QStringList &filterAttributes);
     bool insertMetaData(const QMap<QString, QVariant> &metaData);
     void cleanupDB();
-    void setupProgress(QHelpDataInterface *helpData);
+    void setupProgress(QHelpProjectData *helpData);
     void addProgress(double step);
 
     QString m_error;
@@ -121,7 +121,7 @@ private:
     set from it. The Qt compressed help file is written to \a
     outputFileName. Returns true on success, otherwise false.
 */
-bool HelpGeneratorPrivate::generate(QHelpDataInterface *helpData,
+bool HelpGeneratorPrivate::generate(QHelpProjectData *helpData,
                               const QString &outputFileName)
 {
     emit progressChanged(0);
@@ -210,7 +210,7 @@ bool HelpGeneratorPrivate::generate(QHelpDataInterface *helpData,
     return true;
 }
 
-void HelpGeneratorPrivate::setupProgress(QHelpDataInterface *helpData)
+void HelpGeneratorPrivate::setupProgress(QHelpProjectData *helpData)
 {
     m_progress = 0;
     m_oldProgress = 0;
@@ -772,7 +772,7 @@ bool HelpGeneratorPrivate::insertMetaData(const QMap<QString, QVariant> &metaDat
     return true;
 }
 
-bool HelpGeneratorPrivate::checkLinks(const QHelpDataInterface &helpData)
+bool HelpGeneratorPrivate::checkLinks(const QHelpProjectData &helpData)
 {
     /*
      * Step 1: Gather the canoncal file paths of all files in the project.
@@ -848,13 +848,13 @@ HelpGenerator::HelpGenerator(bool silent)
             this, &HelpGenerator::printWarning);
 }
 
-bool HelpGenerator::generate(QHelpDataInterface *helpData,
+bool HelpGenerator::generate(QHelpProjectData *helpData,
                              const QString &outputFileName)
 {
     return m_private->generate(helpData, outputFileName);
 }
 
-bool HelpGenerator::checkLinks(const QHelpDataInterface &helpData)
+bool HelpGenerator::checkLinks(const QHelpProjectData &helpData)
 {
     return m_private->checkLinks(helpData);
 }

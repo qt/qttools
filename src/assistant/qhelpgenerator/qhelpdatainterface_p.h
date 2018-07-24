@@ -129,20 +129,6 @@ struct QHelpDataCustomFilter {
     QString name;
 };
 
-class QHelpDataInterface
-{
-public:
-    QHelpDataInterface() {}
-    virtual ~QHelpDataInterface() {}
-
-    virtual QString namespaceName() const = 0;
-    virtual QString virtualFolder() const = 0;
-    virtual QList<QHelpDataCustomFilter> customFilters() const = 0;
-    virtual QList<QHelpDataFilterSection> filterSections() const = 0;
-    virtual QMap<QString, QVariant> metaData() const = 0;
-    virtual QString rootPath() const = 0;
-};
-
 QT_END_NAMESPACE
 
 #endif // QHELPDATAINTERFACE_H
