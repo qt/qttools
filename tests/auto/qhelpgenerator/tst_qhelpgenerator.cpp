@@ -31,8 +31,8 @@
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>
 
-#include <QtHelp/private/qhelpprojectdata_p.h>
-#include "../../../src/assistant/shared/helpgenerator.h"
+#include "../../../src/assistant/qhelpgenerator/qhelpprojectdata_p.h"
+#include "../../../src/assistant/qhelpgenerator/helpgenerator.h"
 
 class tst_QHelpGenerator : public QObject
 {

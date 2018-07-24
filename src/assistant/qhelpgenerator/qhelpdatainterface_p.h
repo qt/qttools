@@ -51,14 +51,13 @@
 // We mean it.
 //
 
-#include "qhelp_global.h"
-
-#include <QtCore/QStringList>
 #include <QtCore/QSharedData>
+#include <QtCore/QStringList>
+#include <QtCore/QVariant>
 
 QT_BEGIN_NAMESPACE
 
-class QHELP_EXPORT QHelpDataContentItem
+class QHelpDataContentItem
 {
 public:
     QHelpDataContentItem(QHelpDataContentItem *parent, const QString &title,
@@ -75,7 +74,7 @@ private:
     QList<QHelpDataContentItem*> m_children;
 };
 
-struct QHELP_EXPORT QHelpDataIndexItem {
+struct QHelpDataIndexItem {
     QHelpDataIndexItem() {}
     QHelpDataIndexItem(const QString &n, const QString &id, const QString &r)
         : name(n), identifier(id), reference(r) {}
@@ -101,7 +100,7 @@ public:
     QStringList files;
 };
 
-class QHELP_EXPORT QHelpDataFilterSection
+class QHelpDataFilterSection
 {
 public:
     QHelpDataFilterSection();
@@ -125,12 +124,12 @@ private:
     QSharedDataPointer<QHelpDataFilterSectionData> d;
 };
 
-struct QHELP_EXPORT QHelpDataCustomFilter {
+struct QHelpDataCustomFilter {
     QStringList filterAttributes;
     QString name;
 };
 
-class QHELP_EXPORT QHelpDataInterface
+class QHelpDataInterface
 {
 public:
     QHelpDataInterface() {}

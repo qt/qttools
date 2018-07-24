@@ -38,7 +38,7 @@
 ****************************************************************************/
 
 #include "helpgenerator.h"
-#include <private/qhelpdatainterface_p.h>
+#include "qhelpdatainterface_p.h"
 #include <qhelp_global.h>
 
 #include <QtCore/QtMath>

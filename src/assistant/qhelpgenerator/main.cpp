@@ -27,8 +27,9 @@
 ****************************************************************************/
 
 #include "../shared/collectionconfiguration.h"
-#include "../shared/helpgenerator.h"
+#include "helpgenerator.h"
 #include "collectionconfigreader.h"
+#include "qhelpprojectdata_p.h"
 
 #include <QtCore/QBuffer>
 #include <QtCore/QDataStream>
@@ -41,7 +42,6 @@
 
 #include <QtHelp/QHelpEngineCore>
 
-#include <private/qhelpprojectdata_p.h>
 
 QT_USE_NAMESPACE
 

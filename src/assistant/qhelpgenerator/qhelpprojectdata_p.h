@@ -51,14 +51,13 @@
 // We mean it.
 //
 
-#include "qhelp_global.h"
 #include "qhelpdatainterface_p.h"
 
 QT_BEGIN_NAMESPACE
 
 class QHelpProjectDataPrivate;
 
-class QHELP_EXPORT QHelpProjectData : public QHelpDataInterface
+class QHelpProjectData : public QHelpDataInterface
 {
 public:
     QHelpProjectData();
