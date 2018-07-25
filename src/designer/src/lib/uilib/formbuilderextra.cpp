@@ -63,6 +63,7 @@
 #include <QtCore/qtextstream.h>
 #include <QtCore/qstringlist.h>
 #include <QtCore/qcoreapplication.h>
+#include <QtCore/qversionnumber.h>
 
 #include <limits.h>
 
@@ -114,20 +115,6 @@ void QFormBuilderExtra::clear()
     m_buttonGroups.clear();
 }
 
-// Return UI file version from attribute 'version="4.0"'
-static QPair<int, int> uiVersion(const QString &attr)
-{
-    const QVector<QStringRef> versions = attr.splitRef(QLatin1Char('.'), QString::SkipEmptyParts);
-    if (versions.size() >= 2) {
-        bool okMajor, okMinor;
-        const int majorVersion = versions.at(0).toInt(&okMajor);
-        const int minorVersion = versions.at(1).toInt(&okMinor);
-        if (okMajor &&  okMinor)
-            return QPair<int, int>(majorVersion, minorVersion);
-    }
-    return QPair<int, int>(-1, -1);
-}
-
 static inline QString msgXmlError(const QXmlStreamReader &reader)
 {
     return QCoreApplication::translate("QAbstractFormBuilder",
@@ -154,12 +141,13 @@ static bool inline readUiAttributes(QXmlStreamReader &reader, const QString &lan
                 const QString languageAttribute = QStringLiteral("language");
                 const QXmlStreamAttributes attributes = reader.attributes();
                 if (attributes.hasAttribute(versionAttribute)) {
-                    const QString versionString = attributes.value(versionAttribute).toString();
-                    if (uiVersion(versionString).first < 4) {
+                    const QVersionNumber version =
+                        QVersionNumber::fromString(attributes.value(versionAttribute));
+                    if (version < QVersionNumber(4)) {
                         *errorMessage =
                             QCoreApplication::translate("QAbstractFormBuilder",
                                                         "This file was created using Designer from Qt-%1 and cannot be read.")
-                                                        .arg(versionString);
+                                                        .arg(attributes.value(versionAttribute));
                         return false;
                     } // version error
                 }     // has version
