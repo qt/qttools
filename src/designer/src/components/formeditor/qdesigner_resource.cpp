@@ -461,6 +461,11 @@ QDesignerResource::~QDesignerResource()
 {
 }
 
+DomUI *QDesignerResource::readUi(QIODevice *dev)
+{
+    return d->readUi(dev);
+}
+
 static inline QString messageBoxTitle()
 {
     return QApplication::translate("Designer", "Qt Designer");
@@ -596,10 +601,19 @@ void QDesignerResource::saveDom(DomUI *ui, QWidget *widget)
 
 QWidget *QDesignerResource::load(QIODevice *dev, QWidget *parentWidget)
 {
-    QWidget *w = QEditorFormBuilder::load(dev, parentWidget);
-    if (w)  // Store the class name as 'reset' value for the main container's object name.
-        w->setProperty("_q_classname", w->objectName());
-    return w;
+    QScopedPointer<DomUI> ui(readUi(dev));
+    return ui.isNull() ? nullptr : loadUi(ui.data(), parentWidget);
+}
+
+QWidget *QDesignerResource::loadUi(DomUI *ui, QWidget *parentWidget)
+{
+    QWidget *widget = create(ui, parentWidget);
+    // Store the class name as 'reset' value for the main container's object name.
+    if (widget)
+        widget->setProperty("_q_classname", widget->objectName());
+    else if (d->m_errorString.isEmpty())
+        d->m_errorString = QFormBuilderExtra::msgInvalidUiFile();
+    return widget;
 }
 
 bool QDesignerResource::saveRelative() const

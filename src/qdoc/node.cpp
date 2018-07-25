@@ -77,18 +77,10 @@ void Node::initialize()
 
 bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
 {
-    if (n1->isDocumentNode() && n2->isDocumentNode()) {
-        const DocumentNode* f1 = static_cast<const DocumentNode*>(n1);
-        const DocumentNode* f2 = static_cast<const DocumentNode*>(n2);
-        if (f1->fullTitle() < f2->fullTitle())
-            return true;
-        else if (f1->fullTitle() > f2->fullTitle())
-            return false;
-    }
+    if (n1->isAggregate() && n2->isAggregate()) {
+        const Aggregate* f1 = static_cast<const Aggregate*>(n1);
+        const Aggregate* f2 = static_cast<const Aggregate*>(n2);
 
-    if (n1->isCollectionNode() && n2->isCollectionNode()) {
-        const CollectionNode* f1 = static_cast<const CollectionNode*>(n1);
-        const CollectionNode* f2 = static_cast<const CollectionNode*>(n2);
         if (f1->fullTitle() < f2->fullTitle())
             return true;
         else if (f1->fullTitle() > f2->fullTitle())

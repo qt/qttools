@@ -92,6 +92,7 @@ namespace QFormInternal
 class DomButtonGroups;
 class DomButtonGroup;
 class DomCustomWidget;
+class DomUI;
 
 class QAbstractFormBuilder;
 class QResourceBuilder;
@@ -114,6 +115,9 @@ public:
     };
 
     void clear();
+
+    DomUI *readUi(QIODevice *dev);
+    static QString msgInvalidUiFile();
 
     bool applyPropertyInternally(QObject *o, const QString &propertyName, const QVariant &value);
 

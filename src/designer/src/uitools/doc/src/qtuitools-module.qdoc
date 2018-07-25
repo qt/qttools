@@ -42,7 +42,9 @@
     in a \c qmake project file to ensure that the application is compiled
     and linked appropriately.
 
+    \if !defined(qtforpython)
     \snippet quiloader/doc_src_qtuiloader.pro 0
+    \endif
 
     A form loader object, provided by the QUiLoader class, is used to
     construct the user interface. This user interface can
