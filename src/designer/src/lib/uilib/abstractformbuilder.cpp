@@ -1698,29 +1698,21 @@ void QAbstractFormBuilder::applyTabStops(QWidget *widget, DomTabStops *tabStops)
     if (!tabStops)
         return;
 
-    QWidget *lastWidget = 0;
-
-    const QStringList l = tabStops->elementTabStop();
-    for (int i=0; i<l.size(); ++i) {
-        const QString name = l.at(i);
-
-        QWidget *child = widget->findChild<QWidget*>(name);
-        if (!child) {
-            uiLibWarning(QCoreApplication::translate("QAbstractFormBuilder", "While applying tab stops: The widget '%1' could not be found.").arg(name));
-            continue;
+    const QStringList &names = tabStops->elementTabStop();
+    QWidgetList widgets;
+    widgets.reserve(names.size());
+    for (const QString &name : names) {
+        if (QWidget *child = widget->findChild<QWidget*>(name)) {
+            widgets.append(child);
+        } else {
+            uiLibWarning(QCoreApplication::translate("QAbstractFormBuilder",
+                                                     "While applying tab stops: The widget '%1' could not be found.")
+                                                     .arg(name));
         }
-
-        if (i == 0) {
-            lastWidget = widget->findChild<QWidget*>(name);
-            continue;
-        } else if (!child || !lastWidget) {
-            continue;
-        }
-
-        QWidget::setTabOrder(lastWidget, child);
-
-        lastWidget = widget->findChild<QWidget*>(name);
     }
+
+    for (int i = 1, count = widgets.size(); i < count; ++i)
+        QWidget::setTabOrder(widgets.at(i - 1), widgets.at(i));
 }
 
 /*!
