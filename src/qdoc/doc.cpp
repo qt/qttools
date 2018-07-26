@@ -469,6 +469,7 @@ private:
     void leaveValueList();
     void leaveTableRow();
     CodeMarker *quoteFromFile();
+    bool expandMacro();
     void expandMacro(const QString& name, const QString& def, int numParams);
     QString expandMacroToString(const QString &name, const QString &def, int numParams);
     Doc::Sections getSectioningUnit();
@@ -2107,6 +2108,55 @@ CodeMarker *DocParser::quoteFromFile()
     return Doc::quoteFromFile(location(), quoter, getArgument());
 }
 
+/*!
+  Expands a macro in-place in input.
+
+  Expects the current \e pos in the input to point to a backslash, and the macro to have a
+  default definition. Format-specific macros are currently not expanded.
+
+  \note In addition to macros, a valid use for a backslash in an argument include
+  escaping non-alnum characters, and splitting a single argument across multiple
+  lines by escaping newlines. Escaping is also handled here.
+
+  Returns \c true on successful macro expansion.
+ */
+bool DocParser::expandMacro()
+{
+    Q_ASSERT(input_[pos].unicode() == '\\');
+
+    QString cmdStr;
+    int backslashPos = pos++;
+    while (pos < (int) input_.length() && input_[pos].isLetterOrNumber())
+        cmdStr += input_[pos++];
+
+    if (!cmdStr.isEmpty()) {
+        if (macroHash()->contains(cmdStr)) {
+            const Macro &macro = macroHash()->value(cmdStr);
+            if (!macro.defaultDef.isEmpty()) {
+                QString expanded = expandMacroToString(cmdStr,
+                                                       macro.defaultDef,
+                                                       macro.numParams);
+                input_.replace(backslashPos, endPos - backslashPos, expanded);
+                len = input_.length();
+                pos = backslashPos;
+                return true;
+            } else {
+                location().warning(tr("Macro '%1' does not have a default definition").arg(cmdStr));
+            }
+        } else {
+            location().warning(tr("Unknown macro '%1'").arg(cmdStr));
+            pos = ++backslashPos;
+        }
+    } else if (input_[pos].isSpace()) {
+        skipAllSpaces();
+    } else if (input_[pos].unicode() == '\\') {
+        // allow escaping a backslash
+        input_.remove(pos--, 1);
+        --len;
+    }
+    return false;
+}
+
 void DocParser::expandMacro(const QString &name,
                             const QString &def,
                             int numParams)
@@ -2244,24 +2294,8 @@ QString DocParser::getBracedArgument(bool verbatim)
                 pos++;
                 break;
             case '\\':
-                if (verbatim) {
-                    arg += input_[pos];
-                    pos++;
-                }
-                else {
-                    pos++;
-                    if (pos < (int) input_.length()) {
-                        if (input_[pos].isLetterOrNumber())
-                            break;
-                        arg += input_[pos];
-                        if (input_[pos].isSpace()) {
-                            skipAllSpaces();
-                        }
-                        else {
-                            pos++;
-                        }
-                    }
-                }
+                if (verbatim || !expandMacro())
+                    arg += input_[pos++];
                 break;
             default:
                 if (input_[pos].isSpace() && !verbatim)
@@ -2320,24 +2354,8 @@ QString DocParser::getArgument(bool verbatim)
                 }
                 break;
             case '\\':
-                if (verbatim) {
-                    arg += input_[pos];
-                    pos++;
-                }
-                else {
-                    pos++;
-                    if (pos < (int) input_.length()) {
-                        if (input_[pos].isLetterOrNumber())
-                            break;
-                        arg += input_[pos];
-                        if (input_[pos].isSpace()) {
-                            skipAllSpaces();
-                        }
-                        else {
-                            pos++;
-                        }
-                    }
-                }
+                if (verbatim || !expandMacro())
+                    arg += input_[pos++];
                 break;
             default:
                 arg += input_[pos];
@@ -2470,7 +2488,8 @@ QString DocParser::getMetaCommandArgument(const QString &cmdStr)
             ++parenDepth;
         else if (input_.at(pos) == ')')
             --parenDepth;
-
+        else if (input_.at(pos) == '\\' && expandMacro())
+            continue;
         ++pos;
     }
     if (pos == input_.size() && parenDepth > 0) {
