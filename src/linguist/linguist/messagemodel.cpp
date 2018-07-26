@@ -275,8 +275,8 @@ bool DataModel::load(const QString &fileName, bool *langGuessed, QWidget *parent
     if (lang.isEmpty()) {
         lang = QFileInfo(fileName).baseName();
         int pos = lang.indexOf(QLatin1Char('_'));
-        if (pos != -1 && pos + 3 == lang.length())
-            lang = fileName.mid(pos + 1);
+        if (pos != -1)
+            lang.remove(0, pos + 1);
         else
             lang.clear();
         *langGuessed = true;
