@@ -181,6 +181,7 @@
     For lupdate to work successfully, it must know which translation files to
     produce. The files are listed in the application's \c .pro Qt project file.
 
+    \target lupdate
     \section1 Using lupdate
 
     Usage: \c {lupdate myproject.pro}
@@ -228,6 +229,7 @@
     \l{Qt Linguist Manual: Translators}{Translators} section for more
     information.
 
+    \target lrelease
     \section1 Using lrelease
 
     Usage: \c {lrelease myproject.pro}
