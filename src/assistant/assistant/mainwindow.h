@@ -90,7 +90,7 @@ private slots:
     void showNewAddress(const QUrl &url);
     void showTopicChooser(const QMap<QString, QUrl> &links, const QString &keyword);
     void updateApplicationFont();
-    void filterDocumentation(const QString &customFilter);
+    void filterDocumentation(int filterIndex);
     void setupFilterCombo();
     void lookForNewQtDocumentation();
     void indexingStarted();

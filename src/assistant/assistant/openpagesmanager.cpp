@@ -237,7 +237,7 @@ void OpenPagesManager::closeOrReloadPages(const QString &nameSpace, bool tryRelo
         HelpViewer *page = m_model->pageAt(i);
         if (page->source().host() != nameSpace)
             continue;
-        if (tryReload  && HelpEngineWrapper::instance().findFile(page->source()).isValid())
+        if (tryReload && HelpEngineWrapper::instance().findFile(page->source()).isValid())
             page->reload();
         else if (m_model->rowCount() == 1)
             page->setSource(QUrl(QLatin1String("about:blank")));

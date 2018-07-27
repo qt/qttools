@@ -36,9 +36,17 @@ QT_BEGIN_NAMESPACE
 
 class FontPanel;
 class HelpEngineWrapper;
-class RegisteredDocsModel;
 class QFileSystemWatcher;
-class QSortFilterProxyModel;
+
+struct FilterSetup {
+    QMap<QString, QString>     m_namespaceToComponent;
+    QMap<QString, QStringList> m_componentToNamespace;
+
+    QMap<QString, QString>     m_namespaceToFileName;
+    QMap<QString, QString>     m_fileNameToNamespace;
+
+    QMap<QString, QStringList> m_filterToComponents;
+};
 
 class PreferencesDialog : public QDialog
 {
@@ -51,12 +59,17 @@ public:
     void showDialog();
 
 private slots:
-    void updateAttributes(QListWidgetItem *item);
-    void updateFilterMap();
-    void addFilter();
-    void removeFilter();
-    void addDocumentationLocal();
+    void filterSelected(QListWidgetItem *item);
+    void componentsChanged(const QStringList &components);
+    void addFilterClicked();
+    void renameFilterClicked();
+    void removeFilterClicked();
+    void addFilter(const QString &filterName, const QStringList &components);
+    void removeFilter(const QString &filterName);
+    void addDocumentation();
     void removeDocumentation();
+    void okClicked();
+    void applyClicked();
     void applyChanges();
     void appFontSettingToggled(bool on);
     void appFontSettingChanged(int index);
@@ -73,19 +86,27 @@ signals:
     void updateUserInterface();
 
 private:
+    QString suggestedNewFilterName(const QString &initialFilterName) const;
+    QString getUniqueFilterName(const QString &windowTitle,
+                                const QString &initialFilterName = QString());
     void updateFilterPage();
+    void updateCurrentFilter();
+    void updateDocumentationPage();
     void updateFontSettingsPage();
     void updateOptionsPage();
-    QList<int> currentRegisteredDocsSelection() const;
+    FilterSetup readOriginalSetup() const;
 
     Ui::PreferencesDialogClass m_ui;
-    QMap<QString, QStringList> m_filterMapBackup;
-    QMap<QString, QStringList> m_filterMap;
-    QStringList m_removedFilters;
-    QStringList m_docsBackup;
-    RegisteredDocsModel *m_registeredDocsModel;
-    QSortFilterProxyModel *m_registereredDocsFilterModel;
-    QStringList m_unregDocs;
+
+    FilterSetup m_originalSetup;
+    FilterSetup m_currentSetup;
+
+    QMap<QString, QListWidgetItem *> m_namespaceToItem;
+    QHash<QListWidgetItem *, QString> m_itemToNamespace;
+
+    QMap<QString, QListWidgetItem *> m_filterToItem;
+    QHash<QListWidgetItem *, QString> m_itemToFilter;
+
     FontPanel *m_appFontPanel;
     FontPanel *m_browserFontPanel;
     bool m_appFontChanged;

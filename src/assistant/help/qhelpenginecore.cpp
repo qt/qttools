@@ -41,6 +41,7 @@
 #include "qhelpengine_p.h"
 #include "qhelpdbreader_p.h"
 #include "qhelpcollectionhandler_p.h"
+#include "qhelpfilterengine.h"
 
 #include <QtCore/QDir>
 #include <QtCore/QFile>
@@ -59,6 +60,7 @@ void QHelpEngineCorePrivate::init(const QString &collectionFile,
     collectionHandler = new QHelpCollectionHandler(collectionFile, helpEngineCore);
     connect(collectionHandler, &QHelpCollectionHandler::error,
             this, &QHelpEngineCorePrivate::errorReceived);
+    filterEngine->setCollectionHandler(collectionHandler);
     needsSetup = true;
 }
 
@@ -111,11 +113,14 @@ void QHelpEngineCorePrivate::errorReceived(const QString &msg)
     depends on the currently set custom filter. Depending on the filter,
     the function may return different results.
 
-    Every help engine can contain any number of custom filters. A custom
-    filter is defined by a name and set of filter attributes and can be
-    added to the help engine by calling addCustomFilter(). Analogous,
-    it is removed by calling removeCustomFilter(). customFilters() returns
-    all defined filters.
+    The help engine can contain any number of custom filters.
+    The management of the filters, including adding new filters,
+    changing filter definitions, or removing existing filters,
+    is done through the QHelpFilterEngine class, which can be accessed
+    by the filterEngine() method. This replaces older filter API that is
+    deprecated since Qt 5.13. Please call setUsesFilterEngine() with
+    \c true to enable the new functionality.
+
 
     The help engine also offers the possibility to set and read values
     in a persistant way comparable to ini files or Windows registry
@@ -152,6 +157,9 @@ void QHelpEngineCorePrivate::errorReceived(const QString &msg)
 
 /*!
     \fn void QHelpEngineCore::currentFilterChanged(const QString &newFilter)
+    \obsolete
+
+    QHelpFilterEngine::filterActivated() should be used instead.
 
     This signal is emitted when the current filter is changed to
     \a newFilter.
@@ -173,6 +181,7 @@ QHelpEngineCore::QHelpEngineCore(const QString &collectionFile, QObject *parent)
     : QObject(parent)
 {
     d = new QHelpEngineCorePrivate();
+    d->filterEngine = new QHelpFilterEngine(this);
     d->init(collectionFile, this);
 }
 
@@ -184,6 +193,7 @@ QHelpEngineCore::QHelpEngineCore(QHelpEngineCorePrivate *helpEngineCorePrivate,
     : QObject(parent)
 {
     d = helpEngineCorePrivate;
+    d->filterEngine = new QHelpFilterEngine(this);
 }
 
 /*!
@@ -219,6 +229,19 @@ void QHelpEngineCore::setCollectionFile(const QString &fileName)
     }
     d->init(fileName, this);
     d->needsSetup = true;
+}
+
+/*!
+    \since 5.13
+
+    Returns the filter engine associated with this help engine.
+    The filter engine allows for adding, changing, and removing existing
+    filters for this help engine. To use the engine you also have to call
+    \l setUsesFilterEngine() set to \c true.
+*/
+QHelpFilterEngine *QHelpEngineCore::filterEngine() const
+{
+    return d->filterEngine;
 }
 
 /*!
@@ -345,6 +368,10 @@ QStringList QHelpEngineCore::registeredDocumentations() const
 }
 
 /*!
+    \obsolete
+
+    QHelpFilterEngine::filters() should be used instead.
+
     Returns a list of custom filters.
 
     \sa addCustomFilter(), removeCustomFilter()
@@ -357,6 +384,10 @@ QStringList QHelpEngineCore::customFilters() const
 }
 
 /*!
+    \obsolete
+
+    QHelpFilterEngine::setFilterData() should be used instead.
+
     Adds the new custom filter \a filterName. The filter attributes
     are specified by \a attributes. If the filter already exists,
     its attribute set is replaced. The function returns true if
@@ -373,6 +404,10 @@ bool QHelpEngineCore::addCustomFilter(const QString &filterName,
 }
 
 /*!
+    \obsolete
+
+    QHelpFilterEngine::removeFilter() should be used instead.
+
     Returns true if the filter \a filterName was removed successfully,
     otherwise false.
 
@@ -386,6 +421,10 @@ bool QHelpEngineCore::removeCustomFilter(const QString &filterName)
 }
 
 /*!
+    \obsolete
+
+    QHelpFilterEngine::availableComponents() should be used instead.
+
     Returns a list of all defined filter attributes.
 */
 QStringList QHelpEngineCore::filterAttributes() const
@@ -396,6 +435,10 @@ QStringList QHelpEngineCore::filterAttributes() const
 }
 
 /*!
+    \obsolete
+
+    QHelpFilterEngine::filterData() should be used instead.
+
     Returns a list of filter attributes used by the custom
     filter \a filterName.
 */
@@ -407,9 +450,12 @@ QStringList QHelpEngineCore::filterAttributes(const QString &filterName) const
 }
 
 /*!
+    \obsolete
     \property QHelpEngineCore::currentFilter
     \brief the name of the custom filter currently applied.
     \since 4.5
+
+    QHelpFilterEngine::activeFilter() should be used instead.
 
     Setting this property will save the new custom filter permanently in the
     help collection file. To set a custom filter without saving it
@@ -446,6 +492,10 @@ void QHelpEngineCore::setCurrentFilter(const QString &filterName)
 }
 
 /*!
+    \obsolete
+
+    QHelpFilterEngine::filterData() should be used instead.
+
     Returns a list of filter attributes for the different filter sections
     defined in the Qt compressed help file with the given namespace
     \a namespaceName.
@@ -459,6 +509,10 @@ QList<QStringList> QHelpEngineCore::filterAttributeSets(const QString &namespace
 }
 
 /*!
+    \obsolete
+
+    files() should be used instead.
+
     Returns a list of files contained in the Qt compressed help file \a
     namespaceName. The files can be filtered by \a filterAttributes as
     well as by their extension \a extensionFilter (e.g. 'html').
@@ -485,22 +539,55 @@ QList<QUrl> QHelpEngineCore::files(const QString namespaceName,
 }
 
 /*!
-    Returns an invalid URL if the file \a url cannot be found.
-    If the file exists, either the same url is returned or a
-    different url if the file is located in a different namespace
-    which is merged via a common virtual folder.
+    Returns a list of files contained in the Qt compressed help file
+    for \a namespaceName. The files can be filtered by \a filterName as
+    well as by their extension \a extensionFilter (for example, 'html').
+*/
+QList<QUrl> QHelpEngineCore::files(const QString namespaceName,
+    const QString &filterName,
+    const QString &extensionFilter)
+{
+    QList<QUrl> res;
+    if (!d->setup())
+        return res;
+
+    QUrl url;
+    url.setScheme(QLatin1String("qthelp"));
+    url.setAuthority(namespaceName);
+
+    const QStringList &files = d->collectionHandler->files(
+                namespaceName, filterName, extensionFilter);
+    for (const QString &file : files) {
+        url.setPath(QLatin1String("/") + file);
+        res.append(url);
+    }
+    return res;
+}
+
+/*!
+    Returns the corrected URL for the \a url that may refer to
+    a different namespace defined by the virtual folder defined
+    as a part of the \a url. If the virtual folder matches the namespace
+    of the \a url, the method just checks if the file exists and returns
+    the same \a url. When the virtual folder doesn't match the namespace
+    of the \a url, it tries to find the best matching namespace according
+    to the active filter. When the namespace is found, it returns the
+    corrected URL if the file exists, otherwise it returns an invalid URL.
 */
 QUrl QHelpEngineCore::findFile(const QUrl &url) const
 {
     if (!d->setup())
         return url;
 
-    const QStringList &attributes = filterAttributes(currentFilter());
-    QUrl result = d->collectionHandler->findFile(url, attributes);
+    QUrl result = d->usesFilterEngine
+            ? d->collectionHandler->findFile(url, d->filterEngine->activeFilter())
+            : d->collectionHandler->findFile(url, filterAttributes(currentFilter())); // obsolete
     if (!result.isEmpty())
         return result;
 
-    result = d->collectionHandler->findFile(url, QStringList());
+    result = d->usesFilterEngine
+            ? d->collectionHandler->findFile(url, QString())
+            : d->collectionHandler->findFile(url, QStringList()); // obsolete
     if (!result.isEmpty())
         return result;
 
@@ -522,29 +609,36 @@ QByteArray QHelpEngineCore::fileData(const QUrl &url) const
 }
 
 /*!
-    Returns documents found for the \a id. The map contains the
-    document titles and their URLs.
-    The returned map contents depends on the current filter, meaning only the keywords
-    registered for the current filter will be returned.
+    Returns a map of the documents found for the \a id. The map contains the
+    document titles and their URLs. The returned map contents depend on
+    the current filter, and therefore only the identifiers registered for
+    the current filter will be returned.
 */
 QMap<QString, QUrl> QHelpEngineCore::linksForIdentifier(const QString &id) const
 {
     if (!d->setup())
         return QMap<QString, QUrl>();
 
+    if (d->usesFilterEngine)
+        return d->collectionHandler->linksForIdentifier(id, d->filterEngine->activeFilter());
+
+    // obsolete
     return d->collectionHandler->linksForIdentifier(id, filterAttributes(d->currentFilter));
 }
 
 /*!
-    \since 4.5
-
-    Returns all documents found for the \a keyword. The returned map consists of the
-    document titles and their URLs.
+    Returns a map of all the documents found for the \a keyword. The map
+    contains the document titles and URLs. The returned map contents depend
+    on the current filter, and therefore only the keywords registered for
+    the current filter will be returned.
 */
 QMap<QString, QUrl> QHelpEngineCore::linksForKeyword(const QString &keyword) const
 {
     if (!d->setup())
         return QMap<QString, QUrl>();
+
+    if (d->usesFilterEngine)
+        return d->collectionHandler->linksForKeyword(keyword, d->filterEngine->activeFilter());
 
     return d->collectionHandler->linksForKeyword(keyword, filterAttributes(d->currentFilter));
 }
@@ -621,7 +715,7 @@ QString QHelpEngineCore::error() const
     \since 4.5
 
     If QHelpEngineCore is in auto save filter mode, the current filter is
-    automatically saved when it is changed by the setCurrentFilter()
+    automatically saved when it is changed by the QHelpFilterEngine::setActiveFilter()
     function. The filter is saved persistently in the help collection file.
 
     By default, this mode is on.
@@ -634,6 +728,31 @@ void QHelpEngineCore::setAutoSaveFilter(bool save)
 bool QHelpEngineCore::autoSaveFilter() const
 {
     return d->autoSaveFilter;
+}
+
+/*!
+    \since 5.13
+
+    Enables or disables the new filter engine functionality
+    inside the help engine, according to the passed \a uses parameter.
+
+    \sa filterEngine()
+*/
+void QHelpEngineCore::setUsesFilterEngine(bool uses)
+{
+    d->usesFilterEngine = uses;
+}
+
+/*!
+    \since 5.13
+
+    Returns whether the help engine uses the new filter functionality.
+
+    \sa filterEngine()
+*/
+bool QHelpEngineCore::usesFilterEngine() const
+{
+    return d->usesFilterEngine;
 }
 
 QT_END_NAMESPACE

@@ -37,85 +37,59 @@
 **
 ****************************************************************************/
 
-#include "qhelpfilterdata.h"
+#ifndef QHELPFILTERENGINE_H
+#define QHELPFILTERENGINE_H
+
+#include <QtHelp/qhelp_global.h>
+
+#include <QtCore/QObject>
 
 QT_BEGIN_NAMESPACE
 
-class QHelpFilterDataPrivate : public QSharedData
-{
-public:
-    QHelpFilterDataPrivate() = default;
-    QHelpFilterDataPrivate(const QHelpFilterDataPrivate &other)
-        : QSharedData(other)
-        , m_components(other.m_components)
-    { }
-    ~QHelpFilterDataPrivate() = default;
+class QUrl;
+template <class K, class T>
+class QMap;
 
-    QStringList m_components;
+class QHelpCollectionHandler;
+class QHelpEngineCore;
+class QHelpFilterData;
+class QHelpFilterEnginePrivate;
+
+class QHELP_EXPORT QHelpFilterEngine : public QObject
+{
+    Q_OBJECT
+public:
+    QMap<QString, QString> namespaceToComponent() const;
+
+    QStringList filters() const;
+
+    QString activeFilter() const;
+    bool setActiveFilter(const QString &filterName);
+
+    QStringList availableComponents() const;
+
+    QHelpFilterData filterData(const QString &filterName) const;
+    bool setFilterData(const QString &filterName, const QHelpFilterData &filterData);
+
+    bool removeFilter(const QString &filterName);
+
+    QStringList namespacesForFilter(const QString &filterName) const;
+
+Q_SIGNALS:
+    void filterActivated(const QString &newFilter);
+
+protected:
+    explicit QHelpFilterEngine(QHelpEngineCore *helpEngine);
+    virtual ~QHelpFilterEngine();
+
+private:
+    void setCollectionHandler(QHelpCollectionHandler *collectionHandler);
+
+    QHelpFilterEnginePrivate *d;
+    friend class QHelpEngineCore;
+    friend class QHelpEngineCorePrivate;
 };
 
-/*!
-    \class QHelpFilterData
-    \since 5.13
-    \inmodule QtHelp
-    \brief The QHelpFilterData class provides details for the filters
-    used by QHelpFilterEngine.
-
-    By using setComponents() you may constrain the search results to
-    documents that belong only to components specified on the given list.
-
-    \sa QHelpFilterEngine
-*/
-
-/*!
-    Constructs the empty filter.
-*/
-QHelpFilterData::QHelpFilterData()
-    : d(new QHelpFilterDataPrivate)
-{
-}
-
-/*!
-    Constructs a copy of \a other.
-*/
-QHelpFilterData::QHelpFilterData(const QHelpFilterData &other)
-    : d(other.d)
-{
-}
-
-/*!
-    Destroys the filter.
-*/
-QHelpFilterData::~QHelpFilterData()
-{
-}
-
-/*!
-    Assigns \a other to this filter and returns a reference to this filter.
-*/
-QHelpFilterData &QHelpFilterData::operator=(const QHelpFilterData &other)
-{
-    d = other.d;
-    return *this;
-}
-
-/*!
-    Specifies the component list that is used for filtering
-    the search results. Only the results which match the \a components
-    will be returned.
-*/
-void QHelpFilterData::setComponents(const QStringList &components)
-{
-    d->m_components = components;
-}
-
-/*!
-    Returns the component list that is used for filtering
-    the search results.
-*/
-QStringList QHelpFilterData::components() const
-{
-    return d->m_components;
-}
-
 QT_END_NAMESPACE
+
+#endif // QHELPFILTERENGINE_H

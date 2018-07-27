@@ -45,6 +45,7 @@ class QHelpContentWidget;
 class QHelpIndexModel;
 class QHelpIndexWidget;
 class QHelpSearchEngine;
+class QHelpFilterEngine;
 
 enum {
     ShowHomePage = 0,
@@ -76,18 +77,12 @@ public:
     const QString collectionFile() const;
     bool registerDocumentation(const QString &docFile);
     bool unregisterDocumentation(const QString &namespaceName);
-    bool addCustomFilter(const QString &filterName,
-                         const QStringList &attributes);
-    bool removeCustomFilter(const QString &filterName);
-    void setCurrentFilter(const QString &filterName);
-    const QString currentFilter() const;
-    const QStringList customFilters() const;
     QUrl findFile(const QUrl &url) const;
     QByteArray fileData(const QUrl &url) const;
     QMap<QString, QUrl> linksForIdentifier(const QString &id) const;
-    const QStringList filterAttributes() const;
-    const QStringList filterAttributes(const QString &filterName) const;
     QString error() const;
+
+    QHelpFilterEngine *filterEngine() const;
 
     /*
      * To be called after assistant has finished looking for new documentation.
@@ -175,8 +170,6 @@ public:
     bool showTabs() const;
     void setShowTabs(bool show);
 
-    static const QString TrUnfiltered();
-
     bool fullTextSearchFallbackEnabled() const;
 
     const QByteArray topicChooserGeometry() const;
@@ -189,11 +182,7 @@ signals:
     void documentationUpdated(const QString &namespaceName);
 
     // Forwarded from QHelpEngineCore.
-    void currentFilterChanged(const QString &currentFilter);
     void setupFinished();
-
-private slots:
-    void handleCurrentFilterChanged(const QString &filter);
 
 private:
     HelpEngineWrapper(const QString &collectionFile);

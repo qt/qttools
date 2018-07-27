@@ -38,6 +38,7 @@
 ****************************************************************************/
 
 #include "qhelpenginecore.h"
+#include "qhelpfilterengine.h"
 #include "qhelpsearchindexreader_default_p.h"
 
 #include <QtCore/QSet>
@@ -52,12 +53,20 @@ namespace qt {
 void Reader::setIndexPath(const QString &path)
 {
     m_indexPath = path;
-    m_namespaces.clear();
+    m_namespaceAttributes.clear();
+    m_filterEngineNamespaceList.clear();
+    m_useFilterEngine = false;
 }
 
-void Reader::addNamespace(const QString &namespaceName, const QStringList &attributes)
+void Reader::addNamespaceAttributes(const QString &namespaceName, const QStringList &attributes)
 {
-    m_namespaces.insert(namespaceName, attributes);
+    m_namespaceAttributes.insert(namespaceName, attributes);
+}
+
+void Reader::setFilterEngineNamespaceList(const QStringList &namespaceList)
+{
+    m_useFilterEngine = true;
+    m_filterEngineNamespaceList = namespaceList;
 }
 
 static QString namespacePlaceholders(const QMultiMap<QString, QStringList> &namespaces)
@@ -106,18 +115,42 @@ static void bindNamespacesAndAttributes(QSqlQuery *query, const QMultiMap<QStrin
     }
 }
 
+static QString namespacePlaceholders(const QStringList &namespaceList)
+{
+    QString placeholders;
+    bool firstNS = true;
+    for (int i = namespaceList.count(); i; --i) {
+        if (firstNS)
+            firstNS = false;
+        else
+            placeholders += QLatin1String(" OR ");
+        placeholders += QLatin1String("namespace = ?");
+    }
+    return placeholders;
+}
+
+static void bindNamespacesAndAttributes(QSqlQuery *query, const QStringList &namespaceList)
+{
+    for (const QString &ns : namespaceList)
+        query->addBindValue(ns);
+}
+
 QVector<QHelpSearchResult> Reader::queryTable(const QSqlDatabase &db,
                                          const QString &tableName,
                                          const QString &searchInput) const
 {
-    const QString &nsPlaceholders = namespacePlaceholders(m_namespaces);
+    const QString nsPlaceholders = m_useFilterEngine
+            ? namespacePlaceholders(m_filterEngineNamespaceList)
+            : namespacePlaceholders(m_namespaceAttributes);
     QSqlQuery query(db);
     query.prepare(QLatin1String("SELECT url, title, snippet(") + tableName +
                   QLatin1String(", -1, '<b>', '</b>', '...', '10') FROM ") + tableName +
                   QLatin1String(" WHERE (") + nsPlaceholders +
                   QLatin1String(") AND ") + tableName +
                   QLatin1String(" MATCH ? ORDER BY rank"));
-    bindNamespacesAndAttributes(&query, m_namespaces);
+    m_useFilterEngine
+            ? bindNamespacesAndAttributes(&query, m_filterEngineNamespaceList)
+            : bindNamespacesAndAttributes(&query, m_namespaceAttributes);
     query.addBindValue(searchInput);
     query.exec();
 
@@ -140,6 +173,7 @@ void Reader::searchInDB(const QString &searchInput)
         QSqlDatabase db = QSqlDatabase::addDatabase(QLatin1String("QSQLITE"), uniqueId);
         db.setConnectOptions(QLatin1String("QSQLITE_OPEN_READONLY"));
         db.setDatabaseName(m_indexPath + QLatin1String("/fts"));
+
         if (db.open()) {
             const QVector<QHelpSearchResult> titleResults = queryTable(db,
                                              QLatin1String("titles"), searchInput);
@@ -197,6 +231,7 @@ void QHelpSearchIndexReaderDefault::run()
     const QString searchInput = m_searchInput;
     const QString collectionFile = m_collectionFile;
     const QString indexPath = m_indexFilesFolder;
+    const bool usesFilterEngine = m_usesFilterEngine;
 
     lock.unlock();
 
@@ -207,25 +242,30 @@ void QHelpSearchIndexReaderDefault::run()
     if (!engine.setupData())
         return;
 
-    const QStringList &registeredDocs = engine.registeredDocumentations();
-
     emit searchingStarted();
-
-    const QStringList &currentFilter = engine.filterAttributes(engine.currentFilter());
 
     // setup the reader
     m_reader.setIndexPath(indexPath);
-    for (const QString &namespaceName : registeredDocs) {
-        const QList<QStringList> &attributeSets =
-            engine.filterAttributeSets(namespaceName);
 
-        for (const QStringList &attributes : attributeSets) {
-            if (attributesMatchFilter(attributes, currentFilter)) {
-                m_reader.addNamespace(namespaceName, attributes);
+    if (usesFilterEngine) {
+        m_reader.setFilterEngineNamespaceList(
+                    engine.filterEngine()->namespacesForFilter(
+                        engine.filterEngine()->activeFilter()));
+    } else {
+        const QStringList &registeredDocs = engine.registeredDocumentations();
+        const QStringList &currentFilter = engine.filterAttributes(engine.currentFilter());
+
+        for (const QString &namespaceName : registeredDocs) {
+            const QList<QStringList> &attributeSets =
+                    engine.filterAttributeSets(namespaceName);
+
+            for (const QStringList &attributes : attributeSets) {
+                if (attributesMatchFilter(attributes, currentFilter)) {
+                    m_reader.addNamespaceAttributes(namespaceName, attributes);
+                }
             }
         }
     }
-
 
     lock.relock();
     if (m_cancel) {

@@ -68,6 +68,7 @@ class QHelpIndexModel;
 class QHelpIndexWidget;
 class QHelpSearchEngine;
 class QHelpCollectionHandler;
+class QHelpFilterEngine;
 
 class QHelpEngineCorePrivate : public QObject
 {
@@ -82,10 +83,12 @@ public:
     bool setup();
 
     QHelpCollectionHandler *collectionHandler = nullptr;
+    QHelpFilterEngine *filterEngine = nullptr;
     QString currentFilter;
     QString error;
     bool needsSetup = true;
     bool autoSaveFilter = true;
+    bool usesFilterEngine = false;
 
 protected:
     QHelpEngineCore *q;

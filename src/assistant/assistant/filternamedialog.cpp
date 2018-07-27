@@ -25,7 +25,6 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-#include "tracer.h"
 
 #include <QtWidgets/QPushButton>
 
@@ -36,7 +35,6 @@ QT_BEGIN_NAMESPACE
 FilterNameDialog::FilterNameDialog(QWidget *parent)
     : QDialog(parent)
 {
-    TRACE_OBJ
     m_ui.setupUi(this);
     connect(m_ui.buttonBox->button(QDialogButtonBox::Ok), &QAbstractButton::clicked,
             this, &QDialog::accept);
@@ -47,15 +45,19 @@ FilterNameDialog::FilterNameDialog(QWidget *parent)
     m_ui.buttonBox->button(QDialogButtonBox::Ok)->setDisabled(true);
 }
 
+void FilterNameDialog::setFilterName(const QString &filter)
+{
+    m_ui.lineEdit->setText(filter);
+    m_ui.lineEdit->selectAll();
+}
+
 QString FilterNameDialog::filterName() const
 {
-    TRACE_OBJ
     return m_ui.lineEdit->text();
 }
 
 void FilterNameDialog::updateOkButton()
 {
-    TRACE_OBJ
     m_ui.buttonBox->button(QDialogButtonBox::Ok)
         ->setDisabled(m_ui.lineEdit->text().isEmpty());
 }

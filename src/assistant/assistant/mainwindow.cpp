@@ -80,6 +80,7 @@
 #include <QtHelp/QHelpEngineCore>
 #include <QtHelp/QHelpIndexModel>
 #include <QtHelp/QHelpSearchEngine>
+#include <QtHelp/QHelpFilterEngine>
 
 #include <cstdlib>
 
@@ -268,8 +269,8 @@ MainWindow::MainWindow(CmdLineParser *cmdLine, QWidget *parent)
 
     if (!m_cmdLine->currentFilter().isEmpty()) {
         const QString &curFilter = m_cmdLine->currentFilter();
-        if (helpEngineWrapper.customFilters().contains(curFilter))
-            helpEngineWrapper.setCurrentFilter(curFilter);
+        if (helpEngineWrapper.filterEngine()->filters().contains(curFilter))
+            helpEngineWrapper.filterEngine()->setActiveFilter(curFilter);
     }
 
     if (usesDefaultCollection())
@@ -737,9 +738,9 @@ void MainWindow::setupFilterToolbar()
 
     connect(&helpEngine, &HelpEngineWrapper::setupFinished,
             this, &MainWindow::setupFilterCombo, Qt::QueuedConnection);
-    connect(m_filterCombo, QOverload<const QString &>::of(&QComboBox::activated),
+    connect(m_filterCombo, QOverload<int>::of(&QComboBox::activated),
             this, &MainWindow::filterDocumentation);
-    connect(&helpEngine, &HelpEngineWrapper::currentFilterChanged,
+    connect(helpEngine.filterEngine(), &QHelpFilterEngine::filterActivated,
             this, &MainWindow::currentFilterChanged);
 
     setupFilterCombo();
@@ -1048,21 +1049,27 @@ void MainWindow::setupFilterCombo()
 {
     TRACE_OBJ
     HelpEngineWrapper &helpEngine = HelpEngineWrapper::instance();
-    QString curFilter = m_filterCombo->currentText();
-    if (curFilter.isEmpty())
-        curFilter = helpEngine.currentFilter();
+    const QString currentFilter = helpEngine.filterEngine()->activeFilter();
     m_filterCombo->clear();
-    m_filterCombo->addItems(helpEngine.customFilters());
-    int idx = m_filterCombo->findText(curFilter);
+    m_filterCombo->addItem(tr("Unfiltered"));
+    const QStringList allFilters = helpEngine.filterEngine()->filters();
+    if (!allFilters.isEmpty())
+        m_filterCombo->insertSeparator(1);
+    for (const QString &filter : allFilters)
+        m_filterCombo->addItem(filter, filter);
+
+    int idx = m_filterCombo->findData(currentFilter);
     if (idx < 0)
         idx = 0;
     m_filterCombo->setCurrentIndex(idx);
 }
 
-void MainWindow::filterDocumentation(const QString &customFilter)
+void MainWindow::filterDocumentation(int filterIndex)
 {
     TRACE_OBJ
-    HelpEngineWrapper::instance().setCurrentFilter(customFilter);
+
+    const QString filter = m_filterCombo->itemData(filterIndex).toString();
+    HelpEngineWrapper::instance().filterEngine()->setActiveFilter(filter);
 }
 
 void MainWindow::expandTOC(int depth)
@@ -1143,8 +1150,9 @@ QString MainWindow::defaultHelpCollectionFileName()
 void MainWindow::currentFilterChanged(const QString &filter)
 {
     TRACE_OBJ
-    const int index = m_filterCombo->findText(filter);
-    Q_ASSERT(index != -1);
+    int index = m_filterCombo->findData(filter);
+    if (index < 0)
+        index = 0;
     m_filterCombo->setCurrentIndex(index);
 }
 

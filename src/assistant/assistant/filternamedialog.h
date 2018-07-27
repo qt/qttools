@@ -40,6 +40,8 @@ class FilterNameDialog : public QDialog
 
 public:
     FilterNameDialog(QWidget *parent = nullptr);
+
+    void setFilterName(const QString &filter);
     QString filterName() const;
 
 private slots:

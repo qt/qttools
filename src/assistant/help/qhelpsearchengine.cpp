@@ -231,7 +231,8 @@ private:
 
         m_searchInput = searchInput;
         indexReader->cancelSearching();
-        indexReader->search(helpEngine->collectionFile(), indexFilesFolder(), searchInput);
+        indexReader->search(helpEngine->collectionFile(), indexFilesFolder(),
+                            searchInput, helpEngine->usesFilterEngine());
     }
 
     void cancelSearching()

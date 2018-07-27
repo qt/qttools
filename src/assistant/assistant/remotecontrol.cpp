@@ -42,6 +42,7 @@
 #include <QtWidgets/QApplication>
 
 #include <QtHelp/QHelpEngine>
+#include <QtHelp/QHelpFilterEngine>
 #include <QtHelp/QHelpIndexWidget>
 #include <QtHelp/QHelpSearchQueryWidget>
 
@@ -223,12 +224,12 @@ void RemoteControl::handleExpandTocCommand(const QString &arg)
 void RemoteControl::handleSetCurrentFilterCommand(const QString &arg)
 {
     TRACE_OBJ
-    if (helpEngine.customFilters().contains(arg)) {
+    if (helpEngine.filterEngine()->filters().contains(arg)) {
         if (m_caching) {
             clearCache();
             m_currentFilter = arg;
         } else {
-            helpEngine.setCurrentFilter(arg);
+            helpEngine.filterEngine()->setActiveFilter(arg);
         }
     }
 }
@@ -270,7 +271,7 @@ void RemoteControl::applyCache()
         if (!links.isEmpty())
             CentralWidget::instance()->setSource(links.first());
     } else if (!m_currentFilter.isEmpty()) {
-        helpEngine.setCurrentFilter(m_currentFilter);
+        helpEngine.filterEngine()->setActiveFilter(m_currentFilter);
     }
 
     if (m_syncContents)

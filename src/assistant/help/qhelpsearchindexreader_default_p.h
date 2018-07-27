@@ -64,7 +64,8 @@ class Reader
 {
 public:
     void setIndexPath(const QString &path);
-    void addNamespace(const QString &namespaceName, const QStringList &attributes);
+    void addNamespaceAttributes(const QString &namespaceName, const QStringList &attributes);
+    void setFilterEngineNamespaceList(const QStringList &namespaceList);
 
     void searchInDB(const QString &term);
     QVector<QHelpSearchResult> searchResults() const;
@@ -74,9 +75,11 @@ private:
                                           const QString &tableName,
                                           const QString &searchInput) const;
 
-    QString m_indexPath;
-    QMultiMap<QString, QStringList> m_namespaces;
+    QMultiMap<QString, QStringList> m_namespaceAttributes;
+    QStringList m_filterEngineNamespaceList;
     QVector<QHelpSearchResult> m_searchResults;
+    QString m_indexPath;
+    bool m_useFilterEngine = false;
 };
 
 

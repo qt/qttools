@@ -70,7 +70,6 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void insertIndices();
-    void invalidateIndex(bool onShutDown = false);
 
 private:
     QHelpIndexModel(QHelpEnginePrivate *helpEngine);

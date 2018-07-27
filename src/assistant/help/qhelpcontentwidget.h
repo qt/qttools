@@ -100,7 +100,6 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void insertContents();
-    void invalidateContents(bool onShutDown = false);
 
 private:
     QHelpContentModel(QHelpEnginePrivate *helpEngine);

@@ -65,8 +65,9 @@ private:
     void run() override;
 
     QHelpEnginePrivate *m_helpEngine;
-    QStringList m_indices;
+    QString m_currentFilter;
     QStringList m_filterAttributes;
+    QStringList m_indices;
     mutable QMutex m_mutex;
 };
 
@@ -98,6 +99,7 @@ QHelpIndexProvider::~QHelpIndexProvider()
 void QHelpIndexProvider::collectIndices(const QString &customFilterName)
 {
     m_mutex.lock();
+    m_currentFilter = customFilterName;
     m_filterAttributes = m_helpEngine->q->filterAttributes(customFilterName);
     m_mutex.unlock();
 
@@ -122,9 +124,10 @@ QStringList QHelpIndexProvider::indices() const
 void QHelpIndexProvider::run()
 {
     m_mutex.lock();
-    m_indices.clear();
+    const QString currentFilter = m_currentFilter;
     const QStringList attributes = m_filterAttributes;
     const QString collectionFile = m_helpEngine->collectionHandler->collectionFile();
+    m_indices = QStringList();
     m_mutex.unlock();
 
     if (collectionFile.isEmpty())
@@ -134,7 +137,9 @@ void QHelpIndexProvider::run()
     if (!collectionHandler.openCollectionFile())
         return;
 
-    const QStringList result = collectionHandler.indicesForFilter(attributes);
+    const QStringList result = m_helpEngine->usesFilterEngine
+            ? collectionHandler.indicesForFilter(currentFilter)
+            : collectionHandler.indicesForFilter(attributes);
 
     m_mutex.lock();
     m_indices = result;
@@ -179,11 +184,6 @@ QHelpIndexModel::QHelpIndexModel(QHelpEnginePrivate *helpEngine)
 QHelpIndexModel::~QHelpIndexModel()
 {
     delete d;
-}
-
-void QHelpIndexModel::invalidateIndex(bool onShutDown)
-{
-    Q_UNUSED(onShutDown)
 }
 
 /*!

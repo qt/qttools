@@ -56,7 +56,7 @@ void QHelpSearchIndexReader::cancelSearching()
 }
 
 void QHelpSearchIndexReader::search(const QString &collectionFile, const QString &indexFilesFolder,
-    const QString &searchInput)
+    const QString &searchInput, bool usesFilterEngine)
 {
     wait();
 
@@ -65,6 +65,7 @@ void QHelpSearchIndexReader::search(const QString &collectionFile, const QString
     m_searchInput = searchInput;
     m_collectionFile = collectionFile;
     m_indexFilesFolder = indexFilesFolder;
+    m_usesFilterEngine = usesFilterEngine;
 
     start(QThread::NormalPriority);
 }
