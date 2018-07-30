@@ -1027,7 +1027,8 @@ void QDocDatabase::findAllClasses(Aggregate* node)
     while (c != node->childNodes().constEnd()) {
         if ((*c)->access() != Node::Private && (!(*c)->isInternal() || showInternal_) &&
             (*c)->tree()->camelCaseModuleName() != QString("QDoc")) {
-            if ((*c)->type() == Node::Class && !(*c)->doc().isEmpty()) {
+
+            if ((*c)->type() == Node::Class) {
                 QString className = (*c)->name();
                 if ((*c)->parent() &&
                         (*c)->parent()->type() == Node::Namespace &&
@@ -1036,8 +1037,8 @@ void QDocDatabase::findAllClasses(Aggregate* node)
 
                 cppClasses_.insert(className.toLower(), *c);
             }
-            else if (((*c)->isQmlType() || (*c)->isQmlBasicType() ||
-                      (*c)->isJsType() || (*c)->isJsBasicType()) && !(*c)->doc().isEmpty()) {
+            else if ((*c)->isQmlType() || (*c)->isQmlBasicType() ||
+                      (*c)->isJsType() || (*c)->isJsBasicType()) {
                 QString qmlTypeName = (*c)->name().toLower();
                 if (qmlTypeName.startsWith(QLatin1String("QML:"), Qt::CaseInsensitive))
                     qmlTypes_.insert(qmlTypeName.mid(4),*c);
