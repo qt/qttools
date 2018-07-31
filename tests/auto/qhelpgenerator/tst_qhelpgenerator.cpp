@@ -170,11 +170,11 @@ void tst_QHelpGenerator::checkFiles()
         fileAtts[id].append(m_query->value(1).toString());
     }
     QCOMPARE(fileAtts.count(), 2);
-    QCOMPARE((bool)fileAtts.value(1).contains("test"), true);
-    QCOMPARE((bool)fileAtts.value(1).contains("filter1"), true);
-    QCOMPARE((bool)fileAtts.value(1).contains("filter2"), false);
-    QCOMPARE((bool)fileAtts.value(2).contains("test"), true);
-    QCOMPARE((bool)fileAtts.value(2).contains("filter2"), true);
+    QVERIFY(fileAtts.value(1).contains("test"));
+    QVERIFY(fileAtts.value(1).contains("filter1"));
+    QVERIFY(!fileAtts.value(1).contains("filter2"));
+    QVERIFY(fileAtts.value(2).contains("test"));
+    QVERIFY(fileAtts.value(2).contains("filter2"));
 }
 
 void tst_QHelpGenerator::checkMetaData()
