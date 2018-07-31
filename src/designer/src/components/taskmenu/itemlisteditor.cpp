@@ -56,7 +56,7 @@ public:
         m_width += fontMetrics().width(QStringLiteral("/this/is/some/random/path"));
     }
 
-    virtual QSize sizeHint() const
+    QSize sizeHint() const override
     {
         return QSize(m_width, 1);
     }

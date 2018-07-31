@@ -81,7 +81,7 @@ class NewActionDialog: public QDialog
     Q_OBJECT
 public:
     explicit NewActionDialog(ActionEditor *parent);
-    virtual ~NewActionDialog();
+    ~NewActionDialog() override;
 
     ActionData actionData() const;
     void setActionData(const ActionData &d);

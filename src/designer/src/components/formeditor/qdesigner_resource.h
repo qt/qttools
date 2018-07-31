@@ -63,7 +63,7 @@ class QT_FORMEDITOR_EXPORT QDesignerResource : public QEditorFormBuilder
 {
 public:
     explicit QDesignerResource(FormWindow *fw);
-    virtual ~QDesignerResource();
+    ~QDesignerResource() override;
 
     void save(QIODevice *dev, QWidget *widget) override;
 

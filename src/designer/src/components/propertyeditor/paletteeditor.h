@@ -45,7 +45,7 @@ class PaletteEditor: public QDialog
 {
     Q_OBJECT
 public:
-    virtual ~PaletteEditor();
+    ~PaletteEditor() override;
 
     static QPalette getPalette(QDesignerFormEditorInterface *core,
                 QWidget* parent, const QPalette &init = QPalette(),

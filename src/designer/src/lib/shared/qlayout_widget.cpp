@@ -111,7 +111,9 @@ namespace qdesigner_internal {
     class PaddingSpacerItem : public QSpacerItem {
     public:
         PaddingSpacerItem() : QSpacerItem(0, 0, QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding) {}
-        virtual Qt::Orientations expandingDirections () const { return Qt::Vertical | Qt::Horizontal; }
+
+        Qt::Orientations expandingDirections () const override
+        { return Qt::Vertical | Qt::Horizontal; }
     };
 }
 

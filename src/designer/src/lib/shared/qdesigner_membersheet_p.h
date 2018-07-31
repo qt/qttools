@@ -57,7 +57,7 @@ class QDESIGNER_SHARED_EXPORT QDesignerMemberSheet: public QObject, public QDesi
 
 public:
     explicit QDesignerMemberSheet(QObject *object, QObject *parent = 0);
-    virtual ~QDesignerMemberSheet();
+    ~QDesignerMemberSheet() override;
 
     int indexOf(const QString &name) const override;
 

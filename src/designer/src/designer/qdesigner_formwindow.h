@@ -46,7 +46,7 @@ public:
 
     void firstShow();
 
-    virtual ~QDesignerFormWindow();
+    ~QDesignerFormWindow() override;
 
     QAction *action() const;
     QDesignerWorkbench *workbench() const;

@@ -70,7 +70,7 @@ class QDESIGNER_SHARED_EXPORT QDesignerPropertySheet: public QObject, public QDe
     Q_INTERFACES(QDesignerPropertySheetExtension QDesignerDynamicPropertySheetExtension)
 public:
     explicit QDesignerPropertySheet(QObject *object, QObject *parent = 0);
-    virtual ~QDesignerPropertySheet();
+    ~QDesignerPropertySheet() override;
 
     int indexOf(const QString &name) const override;
 
@@ -191,9 +191,9 @@ class QDESIGNER_SHARED_EXPORT QDesignerAbstractPropertySheetFactory: public QExt
     Q_INTERFACES(QAbstractExtensionFactory)
 public:
     explicit QDesignerAbstractPropertySheetFactory(QExtensionManager *parent = 0);
-    virtual ~QDesignerAbstractPropertySheetFactory();
+    ~QDesignerAbstractPropertySheetFactory() override;
 
-    QObject *extension(QObject *object, const QString &iid) const;
+    QObject *extension(QObject *object, const QString &iid) const override;
 
 private slots:
     void objectDestroyed(QObject *object);

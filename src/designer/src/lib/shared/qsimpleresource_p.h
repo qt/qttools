@@ -61,7 +61,7 @@ class QDESIGNER_SHARED_EXPORT QSimpleResource : public QAbstractFormBuilder
 {
 public:
     explicit QSimpleResource(QDesignerFormEditorInterface *core);
-    virtual ~QSimpleResource();
+    ~QSimpleResource() override;
 
     QBrush setupBrush(DomBrush *brush);
     DomBrush *saveBrush(const QBrush &brush);

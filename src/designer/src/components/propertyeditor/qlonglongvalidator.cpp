@@ -45,10 +45,7 @@ QLongLongValidator::QLongLongValidator(qlonglong minimum, qlonglong maximum,
 {
 }
 
-QLongLongValidator::~QLongLongValidator()
-{
-    // nothing
-}
+QLongLongValidator::~QLongLongValidator() = default;
 
 QValidator::State QLongLongValidator::validate(QString & input, int &) const
 {
@@ -100,10 +97,7 @@ QULongLongValidator::QULongLongValidator(qulonglong minimum, qulonglong maximum,
 {
 }
 
-QULongLongValidator::~QULongLongValidator()
-{
-    // nothing
-}
+QULongLongValidator::~QULongLongValidator() = default;
 
 QValidator::State QULongLongValidator::validate(QString & input, int &) const
 {

@@ -80,9 +80,7 @@ TaskMenuComponent::TaskMenuComponent(QDesignerFormEditorInterface *core, QObject
     mgr->registerExtensions(new ComboBoxTaskMenuFactory(taskMenuId, mgr), taskMenuId);
 }
 
-TaskMenuComponent::~TaskMenuComponent()
-{
-}
+TaskMenuComponent::~TaskMenuComponent() = default;
 
 QDesignerFormEditorInterface *TaskMenuComponent::core() const
 {

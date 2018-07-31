@@ -64,7 +64,7 @@ class QDESIGNER_SHARED_EXPORT QDesignerTaskMenu: public QObject, public QDesigne
     Q_INTERFACES(QDesignerTaskMenuExtension)
 public:
     QDesignerTaskMenu(QWidget *widget, QObject *parent);
-    virtual ~QDesignerTaskMenu();
+    ~QDesignerTaskMenu() override;
 
     QWidget *widget() const;
 

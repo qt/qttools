@@ -126,9 +126,7 @@ QtResourceSet::QtResourceSet(QtResourceModel *model) :
     d_ptr->q_ptr = this;
 }
 
-QtResourceSet::~QtResourceSet()
-{
-}
+QtResourceSet::~QtResourceSet() = default;
 
 QStringList QtResourceSet::activeResourceFilePaths() const
 {

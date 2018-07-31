@@ -306,9 +306,7 @@ WidgetDataBase::WidgetDataBase(QDesignerFormEditorInterface *core, QObject *pare
     item(indexOfClassName(QStringLiteral("QDialog")))->setContainer(true);
 }
 
-WidgetDataBase::~WidgetDataBase()
-{
-}
+WidgetDataBase::~WidgetDataBase() = default;
 
 QDesignerFormEditorInterface *WidgetDataBase::core() const
 {

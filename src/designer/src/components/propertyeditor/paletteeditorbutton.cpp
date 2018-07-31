@@ -47,9 +47,7 @@ PaletteEditorButton::PaletteEditorButton(QDesignerFormEditorInterface *core, con
     connect(this, &QAbstractButton::clicked, this, &PaletteEditorButton::showPaletteEditor);
 }
 
-PaletteEditorButton::~PaletteEditorButton()
-{
-}
+PaletteEditorButton::~PaletteEditorButton() = default;
 
 void PaletteEditorButton::setPalette(const QPalette &palette)
 {

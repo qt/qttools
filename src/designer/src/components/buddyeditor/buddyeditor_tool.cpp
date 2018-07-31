@@ -44,9 +44,7 @@ BuddyEditorTool::BuddyEditorTool(QDesignerFormWindowInterface *formWindow, QObje
 {
 }
 
-BuddyEditorTool::~BuddyEditorTool()
-{
-}
+BuddyEditorTool::~BuddyEditorTool() = default;
 
 QDesignerFormEditorInterface *BuddyEditorTool::core() const
 {

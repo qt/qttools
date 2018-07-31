@@ -74,7 +74,7 @@ public:
     typedef QList<qdesigner_internal::DeviceProfile> DeviceProfileList;
 
     explicit NewFormWidget(QDesignerFormEditorInterface *core, QWidget *parentWidget);
-    virtual ~NewFormWidget();
+    ~NewFormWidget() override;
 
     bool hasCurrentTemplate() const override;
     QString currentTemplate(QString *errorMessage = 0) override;

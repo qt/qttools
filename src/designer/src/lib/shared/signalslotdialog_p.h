@@ -128,7 +128,7 @@ public:
     enum FocusMode { FocusSlots, FocusSignals };
 
     explicit SignalSlotDialog(QDesignerDialogGuiInterface *dialogGui, QWidget *parent = 0, FocusMode m = FocusSlots);
-    virtual ~SignalSlotDialog();
+    ~SignalSlotDialog() override;
 
     DialogCode showDialog(SignalSlotDialogData &slotData, SignalSlotDialogData &signalData);
 

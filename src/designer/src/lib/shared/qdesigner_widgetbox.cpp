@@ -64,9 +64,7 @@ QDesignerWidgetBoxInterface::Widget::Widget(const QString &aname, const QString 
 {
 }
 
-QDesignerWidgetBoxInterface::Widget::~Widget()
-{
-}
+QDesignerWidgetBoxInterface::Widget::~Widget() = default;
 
 QDesignerWidgetBoxInterface::Widget::Widget(const Widget &w) :
     m_data(w.m_data)

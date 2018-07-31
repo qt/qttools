@@ -200,9 +200,7 @@ WidgetFactory::WidgetFactory(QDesignerFormEditorInterface *core, QObject *parent
 {
 }
 
-WidgetFactory::~WidgetFactory()
-{
-}
+WidgetFactory::~WidgetFactory() = default;
 
 QDesignerFormWindowInterface *WidgetFactory::currentFormWindow(QDesignerFormWindowInterface *fw)
 {

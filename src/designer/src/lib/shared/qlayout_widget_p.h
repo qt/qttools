@@ -168,7 +168,7 @@ protected:
     QLayoutSupport(QDesignerFormWindowInterface *formWindow, QWidget *widget, LayoutHelper *helper, QObject *parent = 0);
 
 public:
-    virtual ~QLayoutSupport();
+    ~QLayoutSupport() override;
 
     inline QDesignerFormWindowInterface *formWindow() const   { return m_formWindow; }
 

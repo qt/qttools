@@ -52,7 +52,7 @@ class QAction;
 class QDesignerActionProviderExtension
 {
 public:
-    virtual ~QDesignerActionProviderExtension() {}
+    virtual ~QDesignerActionProviderExtension() = default;
 
     virtual QRect actionGeometry(QAction *action) const = 0;
     virtual QAction *actionAt(const QPoint &pos) const = 0;

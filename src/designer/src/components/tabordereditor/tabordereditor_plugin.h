@@ -52,7 +52,7 @@ class QT_TABORDEREDITOR_EXPORT TabOrderEditorPlugin: public QObject, public QDes
     Q_INTERFACES(QDesignerFormEditorPluginInterface)
 public:
     TabOrderEditorPlugin();
-    virtual ~TabOrderEditorPlugin();
+    ~TabOrderEditorPlugin() override;
 
     bool isInitialized() const override;
     void initialize(QDesignerFormEditorInterface *core) override;

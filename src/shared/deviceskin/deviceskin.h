@@ -129,10 +129,10 @@ protected slots:
     void moveParent();
 
 protected:
-    virtual void paintEvent( QPaintEvent * );
-    virtual void mousePressEvent( QMouseEvent *e );
-    virtual void mouseMoveEvent( QMouseEvent *e );
-    virtual void mouseReleaseEvent( QMouseEvent * );
+    void paintEvent(QPaintEvent *) override;
+    void mousePressEvent(QMouseEvent *e) override;
+    void mouseMoveEvent(QMouseEvent *e) override;
+    void mouseReleaseEvent(QMouseEvent *) override;
 
 private:
     void calcRegions();

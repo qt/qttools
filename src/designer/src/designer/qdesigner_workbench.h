@@ -70,7 +70,7 @@ class QDesignerWorkbench: public QObject
 
 public:
     QDesignerWorkbench();
-    virtual ~QDesignerWorkbench();
+    ~QDesignerWorkbench() override;
 
     UIMode mode() const;
 

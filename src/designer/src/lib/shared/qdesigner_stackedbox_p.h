@@ -66,7 +66,7 @@ public:
 
     // Install helper on QStackedWidget
     static void install(QStackedWidget *stackedWidget);
-    bool eventFilter(QObject *watched, QEvent *event);
+    bool eventFilter(QObject *watched, QEvent *event) override;
 
     void setButtonToolTipEnabled(bool v) { m_buttonToolTipEnabled = v; }
     bool buttonToolTipEnabled() const    { return m_buttonToolTipEnabled; }

@@ -546,7 +546,7 @@ signals:
     void themeChanged(const QString &theme);
 
 protected:
-    void contextMenuEvent(QContextMenuEvent *event);
+    void contextMenuEvent(QContextMenuEvent *event) override;
 
 private slots:
     void defaultActionActivated();
@@ -2212,9 +2212,7 @@ DesignerEditorFactory::DesignerEditorFactory(QDesignerFormEditorInterface *core,
             this, &DesignerEditorFactory::resetProperty);
 }
 
-DesignerEditorFactory::~DesignerEditorFactory()
-{
-}
+DesignerEditorFactory::~DesignerEditorFactory() = default;
 
 void DesignerEditorFactory::setSpacing(int spacing)
 {

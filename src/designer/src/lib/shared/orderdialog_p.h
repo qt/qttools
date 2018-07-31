@@ -60,7 +60,7 @@ class QDESIGNER_SHARED_EXPORT OrderDialog: public QDialog
     Q_OBJECT
 public:
     OrderDialog(QWidget *parent);
-    virtual ~OrderDialog();
+    ~OrderDialog() override;
 
     static QWidgetList pagesOfContainer(const QDesignerFormEditorInterface *core, QWidget *container);
 

@@ -99,7 +99,7 @@ class ButtonTaskMenu: public QDesignerTaskMenu
     Q_DISABLE_COPY(ButtonTaskMenu)
 public:
     explicit ButtonTaskMenu(QAbstractButton *button, QObject *parent = 0);
-    virtual ~ButtonTaskMenu();
+    ~ButtonTaskMenu() override;
 
     QAction *preferredEditAction() const override;
     QList<QAction*> taskActions() const override;

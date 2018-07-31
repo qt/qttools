@@ -66,9 +66,7 @@ SaveFormAsTemplate::SaveFormAsTemplate(QDesignerFormEditorInterface *core,
             this, &SaveFormAsTemplate::checkToAddPath);
 }
 
-SaveFormAsTemplate::~SaveFormAsTemplate()
-{
-}
+SaveFormAsTemplate::~SaveFormAsTemplate() = default;
 
 void SaveFormAsTemplate::accept()
 {

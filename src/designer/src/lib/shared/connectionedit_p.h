@@ -89,7 +89,7 @@ class QDESIGNER_SHARED_EXPORT Connection : public CETypes
 public:
     explicit Connection(ConnectionEdit *edit);
     explicit Connection(ConnectionEdit *edit, QObject *source, QObject *target);
-    virtual ~Connection() {}
+    virtual ~Connection() = default;
 
     QObject *object(EndPoint::Type type) const
     {
@@ -155,7 +155,7 @@ class QDESIGNER_SHARED_EXPORT ConnectionEdit : public QWidget, public CETypes
     Q_OBJECT
 public:
     ConnectionEdit(QWidget *parent, QDesignerFormWindowInterface *form);
-    virtual ~ConnectionEdit();
+    ~ConnectionEdit() override;
 
     inline const QPointer<QWidget> &background() const { return m_bg_widget; }
 
@@ -276,7 +276,7 @@ public:
    explicit  CECommand(ConnectionEdit *edit)
         : m_edit(edit) {}
 
-    virtual bool mergeWith(const QUndoCommand *) { return false; }
+    bool mergeWith(const QUndoCommand *) override { return false; }
 
     ConnectionEdit *edit() const { return m_edit; }
 

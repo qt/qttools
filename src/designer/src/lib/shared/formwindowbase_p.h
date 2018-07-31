@@ -71,7 +71,7 @@ public:
     enum HighlightMode  { Restore, Highlight };
 
     explicit FormWindowBase(QDesignerFormEditorInterface *core, QWidget *parent = 0, Qt::WindowFlags flags = 0);
-    virtual ~FormWindowBase();
+    ~FormWindowBase() override;
 
     QVariantMap formData();
     void setFormData(const QVariantMap &vm);

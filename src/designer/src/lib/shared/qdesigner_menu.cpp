@@ -110,9 +110,7 @@ QDesignerMenu::QDesignerMenu(QWidget *parent) :
     installEventFilter(this);
 }
 
-QDesignerMenu::~QDesignerMenu()
-{
-}
+QDesignerMenu::~QDesignerMenu() = default;
 
 void QDesignerMenu::slotAdjustSizeNow()
 {

@@ -45,9 +45,7 @@ SpacerPropertySheet::SpacerPropertySheet(Spacer *object, QObject *parent)
     clearFakeProperties();
 }
 
-SpacerPropertySheet::~SpacerPropertySheet()
-{
-}
+SpacerPropertySheet::~SpacerPropertySheet() = default;
 
 bool SpacerPropertySheet::isVisible(int index) const
 {

@@ -46,9 +46,7 @@ SignalSlotEditorTool::SignalSlotEditorTool(QDesignerFormWindowInterface *formWin
 {
 }
 
-SignalSlotEditorTool::~SignalSlotEditorTool()
-{
-}
+SignalSlotEditorTool::~SignalSlotEditorTool() = default;
 
 QDesignerFormEditorInterface *SignalSlotEditorTool::core() const
 {

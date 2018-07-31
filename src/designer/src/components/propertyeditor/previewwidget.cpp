@@ -38,9 +38,7 @@ PreviewWidget::PreviewWidget(QWidget *parent)
     ui.setupUi(this);
 }
 
-PreviewWidget::~PreviewWidget()
-{
-}
+PreviewWidget::~PreviewWidget() = default;
 
 
 QT_END_NAMESPACE

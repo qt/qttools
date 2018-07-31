@@ -40,7 +40,7 @@ class PreviewWidget: public QWidget
     Q_OBJECT
 public:
     explicit PreviewWidget(QWidget *parent);
-    virtual ~PreviewWidget();
+    ~PreviewWidget() override;
 
 private:
     Ui::PreviewWidget ui;

@@ -45,7 +45,7 @@ class QT_TASKMENU_EXPORT TaskMenuComponent: public QObject
     Q_OBJECT
 public:
     explicit TaskMenuComponent(QDesignerFormEditorInterface *core, QObject *parent = 0);
-    virtual ~TaskMenuComponent();
+    ~TaskMenuComponent() override;
 
     QDesignerFormEditorInterface *core() const;
 

@@ -90,14 +90,10 @@ namespace qdesigner_internal {
 class ElidingLabel : public QWidget
 {
 public:
-    ElidingLabel(const QString &text = QString(), QWidget *parent = 0)
-        : QWidget(parent),
-        m_text(text),
-        m_mode(Qt::ElideRight) {
-        setContentsMargins(3, 2, 3, 2);
-    }
-    QSize sizeHint() const;
-    void paintEvent(QPaintEvent *e);
+    explicit ElidingLabel(const QString &text = QString(),
+                          QWidget *parent = nullptr) : QWidget(parent), m_text(text)
+        { setContentsMargins(3, 2, 3, 2); }
+
     void setText(const QString &text) {
         m_text = text;
         updateGeometry();
@@ -106,9 +102,14 @@ public:
         m_mode = mode;
         updateGeometry();
     }
+
+protected:
+    QSize sizeHint() const override;
+    void paintEvent(QPaintEvent *e) override;
+
 private:
     QString m_text;
-    Qt::TextElideMode m_mode;
+    Qt::TextElideMode m_mode = Qt::ElideRight;
 };
 
 QSize ElidingLabel::sizeHint() const

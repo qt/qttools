@@ -69,9 +69,7 @@ void TextEditTaskMenu::initialize()
     m_taskActions.append(sep);
 }
 
-TextEditTaskMenu::~TextEditTaskMenu()
-{
-}
+TextEditTaskMenu::~TextEditTaskMenu() = default;
 
 QAction *TextEditTaskMenu::preferredEditAction() const
 {

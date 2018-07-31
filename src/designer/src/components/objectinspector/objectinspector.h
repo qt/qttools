@@ -46,7 +46,7 @@ class QT_OBJECTINSPECTOR_EXPORT ObjectInspector: public QDesignerObjectInspector
     Q_OBJECT
 public:
     explicit ObjectInspector(QDesignerFormEditorInterface *core, QWidget *parent = 0);
-    virtual ~ObjectInspector();
+    ~ObjectInspector() override;
 
     QDesignerFormEditorInterface *core() const override;
 

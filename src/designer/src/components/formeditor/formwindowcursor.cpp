@@ -48,9 +48,7 @@ FormWindowCursor::FormWindowCursor(FormWindow *fw, QObject *parent)
     connect(fw, &QDesignerFormWindowInterface::changed, this, &FormWindowCursor::update);
 }
 
-FormWindowCursor::~FormWindowCursor()
-{
-}
+FormWindowCursor::~FormWindowCursor() = default;
 
 QDesignerFormWindowInterface *FormWindowCursor::formWindow() const
 {

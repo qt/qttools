@@ -51,9 +51,7 @@ MetaDataBaseItem::MetaDataBaseItem(QObject *object)
 {
 }
 
-MetaDataBaseItem::~MetaDataBaseItem()
-{
-}
+MetaDataBaseItem::~MetaDataBaseItem() = default;
 
 QString MetaDataBaseItem::name() const
 {

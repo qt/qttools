@@ -49,7 +49,7 @@ class WidgetEditorTool: public QDesignerFormWindowToolInterface
     Q_OBJECT
 public:
     explicit WidgetEditorTool(FormWindow *formWindow);
-    virtual ~WidgetEditorTool();
+    ~WidgetEditorTool() override;
 
     QDesignerFormEditorInterface *core() const override;
     QDesignerFormWindowInterface *formWindow() const override;

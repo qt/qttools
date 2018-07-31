@@ -48,7 +48,7 @@ class ComboBoxTaskMenu: public QDesignerTaskMenu
 public:
     explicit ComboBoxTaskMenu(QComboBox *button,
                               QObject *parent = 0);
-    virtual ~ComboBoxTaskMenu();
+    ~ComboBoxTaskMenu() override;
 
     QAction *preferredEditAction() const override;
     QList<QAction*> taskActions() const override;

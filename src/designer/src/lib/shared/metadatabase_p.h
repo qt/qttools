@@ -56,7 +56,7 @@ class QDESIGNER_SHARED_EXPORT MetaDataBaseItem: public QDesignerMetaDataBaseItem
 {
 public:
     explicit MetaDataBaseItem(QObject *object);
-    virtual ~MetaDataBaseItem();
+    ~MetaDataBaseItem() override;
 
     QString name() const override;
     void setName(const QString &name) override;
@@ -90,7 +90,7 @@ class QDESIGNER_SHARED_EXPORT MetaDataBase: public QDesignerMetaDataBaseInterfac
     Q_OBJECT
 public:
     explicit MetaDataBase(QDesignerFormEditorInterface *core, QObject *parent = 0);
-    virtual ~MetaDataBase();
+    ~MetaDataBase() override;
 
     QDesignerFormEditorInterface *core() const override;
 

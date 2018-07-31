@@ -55,7 +55,7 @@ namespace qdesigner_internal {
         Q_OBJECT
     public:
         InPlaceWidgetHelper(QWidget *editorWidget, QWidget *parentWidget, QDesignerFormWindowInterface *fw);
-        virtual ~InPlaceWidgetHelper();
+        ~InPlaceWidgetHelper() override;
 
         bool eventFilter(QObject *object, QEvent *event) override;
 

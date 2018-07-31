@@ -364,7 +364,7 @@ inline void translationParametersFromDom(const DomElement *e, PropertySheetTrans
 class QDesignerTextBuilder : public QTextBuilder
 {
 public:
-    QDesignerTextBuilder() {}
+    QDesignerTextBuilder()  = default;
 
     QVariant loadText(const DomProperty *icon) const override;
 
@@ -457,9 +457,7 @@ QDesignerResource::QDesignerResource(FormWindow *formWindow)  :
     }
 }
 
-QDesignerResource::~QDesignerResource()
-{
-}
+QDesignerResource::~QDesignerResource() = default;
 
 DomUI *QDesignerResource::readUi(QIODevice *dev)
 {

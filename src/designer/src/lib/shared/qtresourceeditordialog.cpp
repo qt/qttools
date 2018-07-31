@@ -223,7 +223,7 @@ public:
     QString alias() const { return m_alias; }
     QString fullPath() const { return m_fullPath; }
 private:
-    QtResourceFile() {}
+    QtResourceFile() = default;
 
     QString m_path;
     QString m_alias;
@@ -238,7 +238,7 @@ public:
     QString language() const { return m_language; }
     QList<QtResourceFile *> resourceFiles() const { return m_resourceFiles; }
 private:
-    QtResourcePrefix() {}
+    QtResourcePrefix() = default;
 
     QString m_prefix;
     QString m_language;
@@ -256,7 +256,7 @@ public:
     QtQrcFileData initialState() const { return m_initialState; }
 
 private:
-    QtQrcFile() { }
+    QtQrcFile() = default;
 
     void setPath(const QString &path) {
         m_path = path;
@@ -276,7 +276,7 @@ class QtQrcManager : public QObject
     Q_OBJECT
 public:
     QtQrcManager(QObject *parent = 0);
-    ~QtQrcManager();
+    ~QtQrcManager() override;
 
     QList<QtQrcFile *> qrcFiles() const;
 

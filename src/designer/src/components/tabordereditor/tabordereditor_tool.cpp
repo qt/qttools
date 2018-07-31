@@ -45,9 +45,7 @@ TabOrderEditorTool::TabOrderEditorTool(QDesignerFormWindowInterface *formWindow,
 {
 }
 
-TabOrderEditorTool::~TabOrderEditorTool()
-{
-}
+TabOrderEditorTool::~TabOrderEditorTool() = default;
 
 QDesignerFormEditorInterface *TabOrderEditorTool::core() const
 {

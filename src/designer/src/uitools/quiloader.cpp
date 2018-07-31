@@ -242,7 +242,7 @@ public:
     {
     }
 
-    virtual bool eventFilter(QObject *o, QEvent *event)
+    bool eventFilter(QObject *o, QEvent *event) override
     {
         if (event->type() == QEvent::LanguageChange) {
             const QList<QByteArray> &dynamicPropertyNames = o->dynamicPropertyNames();

@@ -58,15 +58,9 @@ QT_BEGIN_NAMESPACE
 namespace QFormInternal {
 #endif
 
-QTextBuilder::QTextBuilder()
-{
+QTextBuilder::QTextBuilder() = default;
 
-}
-
-QTextBuilder::~QTextBuilder()
-{
-
-}
+QTextBuilder::~QTextBuilder() = default;
 
 QVariant QTextBuilder::loadText(const DomProperty *property) const
 {

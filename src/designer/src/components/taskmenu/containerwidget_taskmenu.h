@@ -57,7 +57,7 @@ class ContainerWidgetTaskMenu: public QDesignerTaskMenu
     Q_OBJECT
 public:
     explicit ContainerWidgetTaskMenu(QWidget *widget, ContainerType type, QObject *parent = 0);
-    virtual ~ContainerWidgetTaskMenu();
+    ~ContainerWidgetTaskMenu() override;
 
     QAction *preferredEditAction() const override;
     QList<QAction*> taskActions() const override;

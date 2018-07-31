@@ -63,10 +63,7 @@ QSimpleResource::QSimpleResource(QDesignerFormEditorInterface *core) :
     setWorkingDirectory(QDir(workingDirectory));
 }
 
-QSimpleResource::~QSimpleResource()
-{
-
-}
+QSimpleResource::~QSimpleResource() = default;
 
 QBrush QSimpleResource::setupBrush(DomBrush *brush)
 {

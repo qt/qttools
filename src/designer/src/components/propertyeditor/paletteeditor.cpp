@@ -73,9 +73,7 @@ PaletteEditor::PaletteEditor(QDesignerFormEditorInterface *core, QWidget *parent
     ui.paletteView->setColumnHidden(3, true);
 }
 
-PaletteEditor::~PaletteEditor()
-{
-}
+PaletteEditor::~PaletteEditor() = default;
 
 QPalette PaletteEditor::palette() const
 {

@@ -72,7 +72,7 @@ class QDESIGNER_UILIB_EXPORT QFormBuilder: public QAbstractFormBuilder
 {
 public:
     QFormBuilder();
-    virtual ~QFormBuilder();
+    ~QFormBuilder() override;
 
     QStringList pluginPaths() const;
 

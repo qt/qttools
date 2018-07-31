@@ -59,7 +59,7 @@ public:
             // Use that file name instead of a temporary one
             const QString &fileName = QString());
 
-    virtual ~NewForm();
+    ~NewForm() override;
 
     // Convenience for implementing file dialogs with preview
     static QImage grabForm(QDesignerFormEditorInterface *core,

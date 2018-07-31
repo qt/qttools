@@ -73,7 +73,7 @@ public:
 
     DomConnection *toUi() const;
 
-    virtual void updateVisibility();
+    void updateVisibility() override;
 
     enum State { Valid, ObjectDeleted, InvalidMethod, NotAncestor };
     State isValid(const QWidget *background) const;

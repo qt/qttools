@@ -70,7 +70,7 @@ class QUiLoader : public QObject
     Q_OBJECT
 public:
     explicit QUiLoader(QObject *parent = nullptr);
-    virtual ~QUiLoader();
+    ~QUiLoader() override;
 
     QStringList pluginPaths() const;
     void clearPluginPaths();

@@ -190,12 +190,12 @@ class AddLinkDialog : public QDialog
 
 public:
     AddLinkDialog(RichTextEditor *editor, QWidget *parent = 0);
-    ~AddLinkDialog();
+    ~AddLinkDialog() override;
 
     int showDialog();
 
 public slots:
-    void accept();
+    void accept() override;
 
 private:
     RichTextEditor *m_editor;

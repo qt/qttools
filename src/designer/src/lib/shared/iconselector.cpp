@@ -143,9 +143,7 @@ LanguageResourceDialog::LanguageResourceDialog(QDesignerResourceBrowserInterface
     d_ptr->init( this);
 }
 
-LanguageResourceDialog::~LanguageResourceDialog()
-{
-}
+LanguageResourceDialog::~LanguageResourceDialog() = default;
 
 void LanguageResourceDialog::setCurrentPath(const QString &filePath)
 {
@@ -482,9 +480,7 @@ IconSelector::IconSelector(QWidget *parent) :
     d_ptr->slotUpdate();
 }
 
-IconSelector::~IconSelector()
-{
-}
+IconSelector::~IconSelector() = default;
 
 void IconSelector::setIcon(const PropertySheetIconValue &icon)
 {
@@ -528,7 +524,8 @@ class BlankSuppressingValidator : public QValidator {
 public:
     explicit BlankSuppressingValidator(QObject * parent = 0) : QValidator(parent) {}
 
-    virtual State validate(QString &input, int &pos) const {
+    State validate(QString &input, int &pos) const override
+    {
         const int blankPos = input.indexOf(QLatin1Char(' '));
         if (blankPos != -1) {
             pos = blankPos;
@@ -587,9 +584,7 @@ IconThemeEditor::IconThemeEditor(QWidget *parent, bool wantResetButton) :
     setFocusProxy(d->m_themeLineEdit);
 }
 
-IconThemeEditor::~IconThemeEditor()
-{
-}
+IconThemeEditor::~IconThemeEditor() = default;
 
 void IconThemeEditor::reset()
 {

@@ -69,9 +69,9 @@ public:
     Q_DECLARE_FLAGS(FindFlags, FindFlag)
 
     explicit AbstractFindWidget(FindFlags flags = FindFlags(), QWidget *parent = 0);
-    virtual ~AbstractFindWidget();
+    ~AbstractFindWidget() override;
 
-    bool eventFilter(QObject *object, QEvent *e);
+    bool eventFilter(QObject *object, QEvent *e) override;
 
     static QIcon findIconSet();
 
@@ -83,7 +83,7 @@ public slots:
     void findCurrentText();
 
 protected:
-    void keyPressEvent(QKeyEvent *event);
+    void keyPressEvent(QKeyEvent *event) override;
 
 private slots:
     void updateButtons();

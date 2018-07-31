@@ -48,7 +48,7 @@ public:
     explicit TextEditTaskMenu(QTextEdit *button, QObject *parent = 0);
     explicit TextEditTaskMenu(QPlainTextEdit *button, QObject *parent = 0);
 
-    virtual ~TextEditTaskMenu();
+    ~TextEditTaskMenu() override;
 
     QAction *preferredEditAction() const override;
     QList<QAction*> taskActions() const override;

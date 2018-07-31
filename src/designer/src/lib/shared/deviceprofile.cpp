@@ -130,9 +130,7 @@ DeviceProfile& DeviceProfile::operator=(const DeviceProfile &o)
     return *this;
 }
 
-DeviceProfile::~DeviceProfile()
-{
-}
+DeviceProfile::~DeviceProfile() = default;
 
 void DeviceProfile::clear()
 {

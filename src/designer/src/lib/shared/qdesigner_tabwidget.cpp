@@ -88,9 +88,7 @@ QTabWidgetEventFilter::QTabWidgetEventFilter(QTabWidget *parent) :
     connect(m_actionDeletePage, &QAction::triggered, this, &QTabWidgetEventFilter::removeCurrentPage);
 }
 
-QTabWidgetEventFilter::~QTabWidgetEventFilter()
-{
-}
+QTabWidgetEventFilter::~QTabWidgetEventFilter() = default;
 
 void QTabWidgetEventFilter::install(QTabWidget *tabWidget)
 {

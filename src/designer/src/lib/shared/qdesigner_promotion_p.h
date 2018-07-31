@@ -59,10 +59,10 @@ namespace qdesigner_internal {
 
         QSet<QString> referencedPromotedClassNames() const override;
 
-        virtual bool addPromotedClass(const QString &baseClass,
-                                      const QString &className,
-                                      const QString &includeFile,
-                                      QString *errorMessage) override;
+        bool addPromotedClass(const QString &baseClass,
+                              const QString &className,
+                              const QString &includeFile,
+                              QString *errorMessage) override;
 
         bool removePromotedClass(const QString &className, QString *errorMessage) override;
 

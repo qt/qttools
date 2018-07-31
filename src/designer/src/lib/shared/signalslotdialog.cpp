@@ -174,8 +174,10 @@ namespace {
                   const QStringList &oldFakeSlots, const QStringList &oldFakeSignals,
                   const QStringList &newFakeSlots, const QStringList &newFakeSignals);
 
-        virtual void undo() { fakeMethodsToMetaDataBase(core(), m_object, m_oldFakeSlots, m_oldFakeSignals); }
-        virtual void redo() { fakeMethodsToMetaDataBase(core(), m_object, m_newFakeSlots, m_newFakeSignals); }
+        void undo() override
+        { fakeMethodsToMetaDataBase(core(), m_object, m_oldFakeSlots, m_oldFakeSignals); }
+        void redo() override
+        { fakeMethodsToMetaDataBase(core(), m_object, m_newFakeSlots, m_newFakeSignals); }
 
     private:
         QObject *m_object;

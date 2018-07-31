@@ -53,7 +53,7 @@ class QDESIGNER_SHARED_EXPORT DialogGui : public QDesignerDialogGuiInterface
 {
 public:
     DialogGui();
-    virtual ~DialogGui();
+    ~DialogGui() override;
 
     QMessageBox::StandardButton
         message(QWidget *parent, Message context, QMessageBox::Icon icon,

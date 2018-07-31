@@ -63,9 +63,7 @@ FormWindowWidgetStack::FormWindowWidgetStack(QObject *parent) :
     m_formContainer->setAutoFillBackground(true);
 }
 
-FormWindowWidgetStack::~FormWindowWidgetStack()
-{
-}
+FormWindowWidgetStack::~FormWindowWidgetStack() = default;
 
 int FormWindowWidgetStack::count() const
 {

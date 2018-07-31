@@ -72,9 +72,7 @@ QDesignerWidget::QDesignerWidget(QDesignerFormWindowInterface* formWindow, QWidg
 {
 }
 
-QDesignerWidget::~QDesignerWidget()
-{
-}
+QDesignerWidget::~QDesignerWidget() = default;
 
 QDesignerFormWindowInterface* QDesignerWidget::formWindow() const
 {

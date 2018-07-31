@@ -110,7 +110,7 @@ class QDESIGNER_SHARED_EXPORT  QtResourceViewDialog : public QDialog
     Q_OBJECT
 public:
     explicit QtResourceViewDialog(QDesignerFormEditorInterface *core, QWidget *parent = 0);
-    virtual ~QtResourceViewDialog();
+    ~QtResourceViewDialog() override;
 
     QString selectedResource() const;
     void selectResource(const QString &path);

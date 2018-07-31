@@ -120,9 +120,7 @@ Layout::Layout(const QWidgetList &wl, QWidget *p, QDesignerFormWindowInterface *
         m_oldGeometry = m_layoutBase->geometry();
 }
 
-Layout::~Layout()
-{
-}
+Layout::~Layout() = default;
 
 /*!  The widget list we got in the constructor might contain too much
   widgets (like widgets with different parents, already laid out
@@ -480,8 +478,8 @@ public:
     BoxLayout(const QWidgetList &wl, QWidget *p, QDesignerFormWindowInterface *fw, QWidget *lb,
               Qt::Orientation orientation);
 
-    virtual void doLayout();
-    virtual void sort();
+    void doLayout() override;
+    void sort() override;
 
 private:
     const Qt::Orientation m_orientation;
@@ -533,8 +531,8 @@ public:
     SplitterLayout(const QWidgetList &wl, QWidget *p, QDesignerFormWindowInterface *fw, QWidget *lb,
                    Qt::Orientation orientation);
 
-    virtual void doLayout();
-    virtual void sort();
+    void doLayout() override;
+    void sort() override;
 
 private:
     const Qt::Orientation m_orientation;
@@ -581,6 +579,7 @@ void SplitterLayout::doLayout()
 
 class Grid
 {
+    Q_DISABLE_COPY(Grid);
 public:
     enum Mode {
         GridLayout, // Arbitrary size/supports span
@@ -1064,8 +1063,8 @@ class GridLayout : public Layout
 public:
     GridLayout(const QWidgetList &wl, QWidget *p, QDesignerFormWindowInterface *fw, QWidget *lb);
 
-    virtual void doLayout();
-    virtual void sort()                  { setWidgets(buildGrid(widgets())); }
+    void doLayout() override;
+    void sort() override { setWidgets(buildGrid(widgets())); }
 
 protected:
     QWidgetList buildGrid(const QWidgetList &);

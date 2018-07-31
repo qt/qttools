@@ -173,9 +173,7 @@ QAbstractFormBuilder::QAbstractFormBuilder() : d(new QFormBuilderExtra)
 
 /*!
     Destroys the form builder.*/
-QAbstractFormBuilder::~QAbstractFormBuilder()
-{
-}
+QAbstractFormBuilder::~QAbstractFormBuilder() = default;
 
 /*!
     \fn QWidget *QAbstractFormBuilder::load(QIODevice *device, QWidget *parent)

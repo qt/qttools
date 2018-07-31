@@ -51,7 +51,7 @@ class QT_SIGNALSLOTEDITOR_EXPORT SignalSlotEditorPlugin: public QObject, public 
     Q_INTERFACES(QDesignerFormEditorPluginInterface)
 public:
     SignalSlotEditorPlugin();
-    virtual ~SignalSlotEditorPlugin();
+    ~SignalSlotEditorPlugin() override;
 
     bool isInitialized() const override;
     void initialize(QDesignerFormEditorInterface *core) override;

@@ -89,7 +89,7 @@ public:
     ActionGroupDelegate(QObject *parent)
         : QItemDelegate(parent) {}
 
-    virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override
     {
         if (option.state & QStyle::State_Selected)
             painter->fillRect(option.rect, option.palette.highlight());
@@ -97,7 +97,7 @@ public:
         QItemDelegate::paint(painter, option, index);
     }
 
-    virtual void drawFocus(QPainter * /*painter*/, const QStyleOptionViewItem &/*option*/, const QRect &/*rect*/) const {}
+    void drawFocus(QPainter *, const QStyleOptionViewItem &, const QRect &) const override {}
 };
 
 //--------  ActionEditor

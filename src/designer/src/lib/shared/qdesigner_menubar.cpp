@@ -69,10 +69,7 @@ SpecialMenuAction::SpecialMenuAction(QObject *parent)
 {
 }
 
-SpecialMenuAction::~SpecialMenuAction()
-{
-}
-
+SpecialMenuAction::~SpecialMenuAction() = default;
 
 } // namespace qdesigner_internal
 
@@ -107,9 +104,7 @@ QDesignerMenuBar::QDesignerMenuBar(QWidget *parent)  :
     installEventFilter(this);
 }
 
-QDesignerMenuBar::~QDesignerMenuBar()
-{
-}
+QDesignerMenuBar::~QDesignerMenuBar() = default;
 
 void QDesignerMenuBar::paintEvent(QPaintEvent *event)
 {

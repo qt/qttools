@@ -68,7 +68,7 @@ class QDESIGNER_SHARED_EXPORT ActionEditor: public QDesignerActionEditorInterfac
     Q_OBJECT
 public:
     explicit ActionEditor(QDesignerFormEditorInterface *core, QWidget *parent = 0, Qt::WindowFlags flags = 0);
-    virtual ~ActionEditor();
+    ~ActionEditor() override;
 
     QDesignerFormWindowInterface *formWindow() const;
     void setFormWindow(QDesignerFormWindowInterface *formWindow) override;

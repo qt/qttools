@@ -46,9 +46,7 @@ StringListEditorButton::StringListEditorButton(
     connect(this, &QAbstractButton::clicked, this, &StringListEditorButton::showStringListEditor);
 }
 
-StringListEditorButton::~StringListEditorButton()
-{
-}
+StringListEditorButton::~StringListEditorButton() = default;
 
 void StringListEditorButton::setStringList(const QStringList &stringList)
 {

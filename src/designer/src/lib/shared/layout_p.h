@@ -69,7 +69,7 @@ public:
                                  QDesignerFormWindowInterface *fw,
                                  QWidget *layoutBase, LayoutInfo::Type layoutType);
 
-    virtual ~Layout();
+    ~Layout() override;
 
     virtual void sort() = 0;
     virtual void doLayout() = 0;

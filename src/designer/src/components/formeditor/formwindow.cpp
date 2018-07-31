@@ -102,6 +102,7 @@ QT_BEGIN_NAMESPACE
 namespace {
 class BlockSelection
 {
+    Q_DISABLE_COPY(BlockSelection)
 public:
     BlockSelection(qdesigner_internal::FormWindow *fw)
         : m_formWindow(fw),
@@ -130,6 +131,7 @@ namespace qdesigner_internal {
 
 class FormWindow::Selection
 {
+    Q_DISABLE_COPY(Selection)
 public:
     Selection();
     ~Selection();
@@ -167,9 +169,7 @@ private:
     SelectionHash m_usedSelections;
 };
 
-FormWindow::Selection::Selection()
-{
-}
+FormWindow::Selection::Selection() = default;
 
 FormWindow::Selection::~Selection()
 {
@@ -1417,14 +1417,13 @@ int FormWindow::calcValue(int val, bool forward, bool snap, int snapOffset) cons
 
 // ArrowKeyOperation: Stores a keyboard move or resize (Shift pressed)
 // operation.
-struct ArrowKeyOperation {
-    ArrowKeyOperation() : resize(false), distance(0), arrowKey(Qt::Key_Left) {}
+struct ArrowKeyOperation
+{
+    QRect apply(const QRect &rect) const;
 
-    QRect apply(const QRect &in) const;
-
-    bool resize; // Resize: Shift-Key->drag bottom/right corner, else just move
-    int distance;
-    int arrowKey;
+    bool resize = false; // Resize: Shift-Key->drag bottom/right corner, else just move
+    int distance = 0;
+    int arrowKey = Qt::Key_Left;
 };
 
 } // namespace

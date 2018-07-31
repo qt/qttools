@@ -115,7 +115,7 @@ public:
         MultipleFormNonModalPreview };
 
     explicit PreviewManager(PreviewMode mode, QObject *parent);
-    virtual ~PreviewManager();
+    ~PreviewManager() override;
 
     // Show preview. Raise existing preview window if there is one with a matching
     // configuration, else create a new preview.

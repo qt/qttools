@@ -53,9 +53,9 @@ class FormWindowSettings: public QDialog
     Q_OBJECT
 public:
     explicit FormWindowSettings(QDesignerFormWindowInterface *formWindow);
-    virtual ~FormWindowSettings();
+    ~FormWindowSettings() override;
 
-    virtual void accept();
+    void accept() override;
 
 private:
     FormWindowData data() const;

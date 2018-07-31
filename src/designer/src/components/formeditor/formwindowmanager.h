@@ -58,7 +58,7 @@ class QT_FORMEDITOR_EXPORT FormWindowManager
     Q_OBJECT
 public:
     explicit FormWindowManager(QDesignerFormEditorInterface *core, QObject *parent = 0);
-    virtual ~FormWindowManager();
+    ~FormWindowManager() override;
 
     QDesignerFormEditorInterface *core() const override;
 

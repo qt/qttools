@@ -43,7 +43,7 @@ class LinePropertySheet: public QDesignerPropertySheet
     Q_INTERFACES(QDesignerPropertySheetExtension)
 public:
     explicit LinePropertySheet(Line *object, QObject *parent = 0);
-    virtual ~LinePropertySheet();
+    ~LinePropertySheet() override;
 
     void setProperty(int index, const QVariant &value) override;
     bool isVisible(int index) const override;

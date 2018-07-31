@@ -57,7 +57,7 @@ public:
     };
 
     QDesigner(int &argc, char **argv);
-    virtual ~QDesigner();
+    ~QDesigner() override;
 
     ParseArgumentsResult parseCommandLineArguments();
 

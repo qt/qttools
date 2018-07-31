@@ -186,6 +186,7 @@ void ObjectInspectorTreeView::keyPressEvent(QKeyEvent *event)
 // ------------ ObjectInspectorPrivate
 
 class ObjectInspector::ObjectInspectorPrivate {
+    Q_DISABLE_COPY(ObjectInspectorPrivate)
 public:
     ObjectInspectorPrivate(QDesignerFormEditorInterface *core);
     ~ObjectInspectorPrivate();

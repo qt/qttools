@@ -457,9 +457,7 @@ PreviewConfiguration &PreviewConfiguration::operator=(const PreviewConfiguration
     return *this;
 }
 
-PreviewConfiguration::~PreviewConfiguration()
-{
-}
+PreviewConfiguration::~PreviewConfiguration() = default;
 
 void PreviewConfiguration::clear()
 {

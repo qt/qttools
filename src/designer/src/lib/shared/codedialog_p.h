@@ -54,7 +54,7 @@ class QDESIGNER_SHARED_EXPORT CodeDialog : public QDialog
     Q_OBJECT
     explicit CodeDialog(QWidget *parent = 0);
 public:
-    virtual ~CodeDialog();
+    ~CodeDialog() override;
 
     static bool generateCode(const QDesignerFormWindowInterface *fw,
                              QString *code,

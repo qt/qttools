@@ -45,9 +45,7 @@ QLayoutWidgetPropertySheet::QLayoutWidgetPropertySheet(QLayoutWidget *object, QO
     clearFakeProperties();
 }
 
-QLayoutWidgetPropertySheet::~QLayoutWidgetPropertySheet()
-{
-}
+QLayoutWidgetPropertySheet::~QLayoutWidgetPropertySheet() = default;
 
 bool QLayoutWidgetPropertySheet::isVisible(int index) const
 {

@@ -50,7 +50,7 @@ class QT_SIGNALSLOTEDITOR_EXPORT SignalSlotEditorTool: public QDesignerFormWindo
     Q_OBJECT
 public:
     explicit SignalSlotEditorTool(QDesignerFormWindowInterface *formWindow, QObject *parent = 0);
-    virtual ~SignalSlotEditorTool();
+    ~SignalSlotEditorTool() override;
 
     QDesignerFormEditorInterface *core() const override;
     QDesignerFormWindowInterface *formWindow() const override;

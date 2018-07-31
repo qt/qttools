@@ -78,7 +78,7 @@ public:
     };
 
     explicit FormWindow(FormEditor *core, QWidget *parent = 0, Qt::WindowFlags flags = 0);
-    virtual ~FormWindow();
+    ~FormWindow() override;
 
     QDesignerFormEditorInterface *core() const override;
 

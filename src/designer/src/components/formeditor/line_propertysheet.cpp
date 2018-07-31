@@ -46,9 +46,7 @@ LinePropertySheet::LinePropertySheet(Line *object, QObject *parent)
     clearFakeProperties();
 }
 
-LinePropertySheet::~LinePropertySheet()
-{
-}
+LinePropertySheet::~LinePropertySheet() = default;
 
 bool LinePropertySheet::isVisible(int index) const
 {

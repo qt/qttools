@@ -47,7 +47,7 @@ class LayoutPropertySheet: public QDesignerPropertySheet
     Q_INTERFACES(QDesignerPropertySheetExtension)
 public:
     explicit LayoutPropertySheet(QLayout *object, QObject *parent = 0);
-    virtual ~LayoutPropertySheet();
+    ~LayoutPropertySheet() override;
 
     void setProperty(int index, const QVariant &value) override;
     QVariant property(int index) const override;

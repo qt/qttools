@@ -311,9 +311,7 @@ namespace qdesigner_internal
     {
     }
 
-    PropertySheetIconValue::~PropertySheetIconValue()
-    {
-    }
+    PropertySheetIconValue::~PropertySheetIconValue() = default;
 
     PropertySheetIconValue::PropertySheetIconValue(const PropertySheetIconValue &rhs) :
         m_data(rhs.m_data)

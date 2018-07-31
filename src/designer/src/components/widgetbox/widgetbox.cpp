@@ -117,9 +117,7 @@ WidgetBox::WidgetBox(QDesignerFormEditorInterface *core, QWidget *parent, Qt::Wi
     setAcceptDrops (true);
 }
 
-WidgetBox::~WidgetBox()
-{
-}
+WidgetBox::~WidgetBox() = default;
 
 QDesignerFormEditorInterface *WidgetBox::core() const
 {

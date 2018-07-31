@@ -147,9 +147,7 @@ FormEditor::FormEditor(QObject *parent)
     setSettingsManager(new QDesignerQSettings());
 }
 
-FormEditor::~FormEditor()
-{
-}
+FormEditor::~FormEditor() = default;
 
 void FormEditor::slotQrcFileChangedExternally(const QString &path)
 {

@@ -65,15 +65,9 @@ namespace QFormInternal {
 
 enum { themeDebug = 0 };
 
-QResourceBuilder::QResourceBuilder()
-{
+QResourceBuilder::QResourceBuilder() = default;
 
-}
-
-QResourceBuilder::~QResourceBuilder()
-{
-
-}
+QResourceBuilder::~QResourceBuilder() = default;
 
 int QResourceBuilder::iconStateFlags(const DomResourceIcon *dpi)
 {

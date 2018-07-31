@@ -574,9 +574,9 @@ public:
 
     void setForm(QDesignerFormWindowInterface *form);
 
-    virtual QWidget *createEditor(QWidget *parent,
-                                    const QStyleOptionViewItem &option,
-                                    const QModelIndex &index) const;
+    QWidget *createEditor(QWidget *parent,
+                          const QStyleOptionViewItem &option,
+                          const QModelIndex &index) const override;
 
 private slots:
     void emitCommitData();

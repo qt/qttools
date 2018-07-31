@@ -167,7 +167,7 @@ namespace {
 
         ReverseClassesMemberIterator &operator*()     { return *this; }
         ReverseClassesMemberIterator &operator++()    { return *this; }
-        void operator=(const ClassNameSignaturePair &classNameSignature);
+        ReverseClassesMemberIterator &operator=(const ClassNameSignaturePair &classNameSignature);
 
     private:
         qdesigner_internal::ClassesMemberFunctions *m_result;
@@ -181,7 +181,7 @@ namespace {
     {
     }
 
-    void ReverseClassesMemberIterator::operator=(const ClassNameSignaturePair &classNameSignature)
+    ReverseClassesMemberIterator &ReverseClassesMemberIterator::operator=(const ClassNameSignaturePair &classNameSignature)
     {
         // prepend a new entry if class changes
         if (!m_memberList || classNameSignature.first != m_lastClassName) {
@@ -190,6 +190,7 @@ namespace {
             m_memberList = &(m_result->front().m_memberList);
         }
         m_memberList->push_back(classNameSignature.second);
+        return *this;
     }
 
     // Output iterator for a pair of pair of <classname,  signature>
@@ -200,8 +201,10 @@ namespace {
 
         SignatureIterator &operator*()     { return *this; }
         SignatureIterator &operator++()    { return *this; }
-        void operator=(const ClassNameSignaturePair &classNameSignature) {
+        SignatureIterator &operator=(const ClassNameSignaturePair &classNameSignature)
+        {
             m_result->insert(classNameSignature.second, classNameSignature.first);
+            return *this;
         }
 
     private:

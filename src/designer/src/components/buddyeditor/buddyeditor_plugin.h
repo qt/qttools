@@ -52,7 +52,7 @@ class QT_BUDDYEDITOR_EXPORT BuddyEditorPlugin: public QObject, public QDesignerF
     Q_INTERFACES(QDesignerFormEditorPluginInterface)
 public:
     BuddyEditorPlugin();
-    virtual ~BuddyEditorPlugin();
+    ~BuddyEditorPlugin() override;
 
     bool isInitialized() const override;
     void initialize(QDesignerFormEditorInterface *core) override;
