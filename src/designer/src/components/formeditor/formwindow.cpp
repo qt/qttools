@@ -2554,17 +2554,16 @@ void FormWindow::highlightWidget(QWidget *widget, const QPoint &pos, HighlightMo
 
 QWidgetList FormWindow::widgets(QWidget *widget) const
 {
-    const  QObjectList children = widget->children();
-    if (children.empty())
+    if (widget->children().isEmpty())
         return QWidgetList();
     QWidgetList rc;
-    const QObjectList::const_iterator cend = children.constEnd();
-    for (QObjectList::const_iterator it = children.constBegin(); it != cend; ++it)
-        if ((*it)->isWidgetType()) {
-            QWidget *w = qobject_cast<QWidget*>(*it);
+    for (QObject *o : widget->children()) {
+        if (o->isWidgetType()) {
+            QWidget *w = qobject_cast<QWidget*>(o);
             if (isManaged(w))
                 rc.push_back(w);
         }
+    }
     return rc;
 }
 

@@ -2824,10 +2824,7 @@ void ResetDecorator::slotPropertyChanged(QtProperty *property)
     if (prIt == m_createdResetWidgets.constEnd())
         return;
 
-    const QList<ResetWidget *> editors = prIt.value();
-    const QList<ResetWidget *>::ConstIterator cend = editors.constEnd();
-    for (QList<ResetWidget *>::ConstIterator itEditor = editors.constBegin(); itEditor != cend; ++itEditor) {
-        ResetWidget *widget = *itEditor;
+    for (ResetWidget *widget : prIt.value()) {
         widget->setResetEnabled(property->isModified() || isModifiedInMultiSelection(m_core, property->propertyName()));
         widget->setValueText(property->valueText());
         widget->setValueIcon(property->valueIcon());

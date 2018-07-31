@@ -35,14 +35,13 @@
 QT_BEGIN_NAMESPACE
 
 // Qt Implementation
-static QStringList byteArrayListToStringList(const QList<QByteArray> &l)
+static QStringList byteArrayListToStringList(const QByteArrayList &l)
 {
     if (l.empty())
         return QStringList();
     QStringList rc;
-    const QList<QByteArray>::const_iterator cend = l.constEnd();
-    for (QList<QByteArray>::const_iterator it = l.constBegin(); it != cend; ++it)
-        rc += QString::fromUtf8(*it);
+    for (const QByteArray &b : l)
+        rc += QString::fromUtf8(b);
     return rc;
 }
 

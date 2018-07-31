@@ -105,10 +105,7 @@ bool QToolBoxHelper::eventFilter(QObject *watched, QEvent *event)
 QToolBoxHelper *QToolBoxHelper::helperOf(const QToolBox *toolbox)
 {
     // Look for 1st order children only..otherwise, we might get filters of nested widgets
-    const QObjectList children = toolbox->children();
-    const QObjectList::const_iterator cend = children.constEnd();
-    for (QObjectList::const_iterator it = children.constBegin(); it != cend; ++it) {
-        QObject *o = *it;
+    for (QObject *o : toolbox->children()) {
         if (!o->isWidgetType())
             if (QToolBoxHelper *h = qobject_cast<QToolBoxHelper *>(o))
                 return h;

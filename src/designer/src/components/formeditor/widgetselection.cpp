@@ -681,8 +681,7 @@ void WidgetSelection::updateGeometry()
 
 void WidgetSelection::hide()
 {
-    for (int i = WidgetHandle::LeftTop; i < WidgetHandle::TypeCount; ++i) {
-        WidgetHandle *h = m_handles[ i ];
+    for (WidgetHandle *h : m_handles) {
         if (h)
             h->hide();
     }
@@ -690,8 +689,7 @@ void WidgetSelection::hide()
 
 void WidgetSelection::show()
 {
-    for (int i = WidgetHandle::LeftTop; i < WidgetHandle::TypeCount; ++i) {
-        WidgetHandle *h = m_handles[ i ];
+    for (WidgetHandle *h : m_handles) {
         if (h) {
             h->show();
             h->raise();
@@ -701,8 +699,7 @@ void WidgetSelection::show()
 
 void WidgetSelection::update()
 {
-    for (int i = WidgetHandle::LeftTop; i < WidgetHandle::TypeCount; ++i) {
-        WidgetHandle *h = m_handles[ i ];
+    for (WidgetHandle *h : m_handles) {
         if (h)
             h->update();
     }

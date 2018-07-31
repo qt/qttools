@@ -87,11 +87,10 @@ DPI_Chooser::DPI_Chooser(QWidget *parent) :
     //: System resolution
     m_predefinedCombo->addItem(tr("System (%1 x %2)").arg(m_systemEntry->dpiX).arg(m_systemEntry->dpiY), QVariant::fromValue(systemEntry));
     // Devices. Exclude the system values as not to duplicate the entries
-    const int predefinedCount = sizeof(dpiEntries)/sizeof(DPI_Entry);
-    const struct DPI_Entry *ecend = dpiEntries + predefinedCount;
-    for (const struct DPI_Entry *it = dpiEntries; it < ecend; ++it)
-        if (it->dpiX != m_systemEntry->dpiX || it->dpiY != m_systemEntry->dpiY)
-            m_predefinedCombo->addItem(tr(it->description), QVariant::fromValue(it));
+    for (const DPI_Entry &e : dpiEntries) {
+        if (e.dpiX != m_systemEntry->dpiX || e.dpiY != m_systemEntry->dpiY)
+            m_predefinedCombo->addItem(tr(e.description), QVariant::fromValue(&e));
+    }
     m_predefinedCombo->addItem(tr("User defined"));
 
     setFocusProxy(m_predefinedCombo);

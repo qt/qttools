@@ -128,13 +128,11 @@ void HtmlHighlighter::highlightBlock(const QString &text)
             break;
         case InComment:
             start = pos;
-            while (pos < len) {
+            for ( ; pos < len; ++pos) {
                 if (text.mid(pos, 3) == endComment) {
                     pos += 3;
                     state = NormalState;
                     break;
-                } else {
-                    ++pos;
                 }
             }
             setFormat(start, pos - start, m_formats[Comment]);

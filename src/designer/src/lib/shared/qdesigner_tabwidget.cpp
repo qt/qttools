@@ -98,10 +98,7 @@ void QTabWidgetEventFilter::install(QTabWidget *tabWidget)
 QTabWidgetEventFilter *QTabWidgetEventFilter::eventFilterOf(const QTabWidget *tabWidget)
 {
     // Look for 1st order children only..otherwise, we might get filters of nested tab widgets
-    const QObjectList children = tabWidget->children();
-    const QObjectList::const_iterator cend = children.constEnd();
-    for (QObjectList::const_iterator it = children.constBegin(); it != cend; ++it) {
-        QObject *o = *it;
+    for (QObject *o : tabWidget->children()) {
         if (!o->isWidgetType())
             if (QTabWidgetEventFilter *ef = qobject_cast<QTabWidgetEventFilter*>(o))
                 return ef;

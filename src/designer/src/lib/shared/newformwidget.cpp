@@ -194,11 +194,8 @@ NewFormWidget::NewFormWidget(QDesignerFormEditorInterface *core, QWidget *parent
             m_ui->profileComboBox->setCurrentIndex(ci + profileComboIndexOffset);
     }
     // Fill size combo
-    const int sizeCount =  sizeof(templateSizes)/ sizeof(TemplateSize);
-    for (int i = 0; i < sizeCount; i++) {
-        const QSize size = QSize(templateSizes[i].width, templateSizes[i].height);
-        m_ui->sizeComboBox->addItem(tr(templateSizes[i].name), size);
-    }
+    for (const TemplateSize &t : templateSizes)
+        m_ui->sizeComboBox->addItem(tr(t.name), QSize(t.width, t.height));
 
     setTemplateSize(settings.newFormSize());
 

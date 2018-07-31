@@ -65,14 +65,11 @@ private:
 IconProvider::IconProvider()
 {
     // Determine a list of readable extensions (upper and lower case)
-    typedef QList<QByteArray> ByteArrayList;
-    const ByteArrayList fmts = QImageReader::supportedImageFormats();
-    const ByteArrayList::const_iterator cend = fmts.constEnd();
-    for (ByteArrayList::const_iterator it = fmts.constBegin(); it != cend; ++it) {
-        const QString suffix = QString::fromUtf8(it->constData());
+    const auto &fmts = QImageReader::supportedImageFormats();
+    for (const QByteArray &fmt : fmts) {
+        const QString suffix = QString::fromUtf8(fmt);
         m_imageFormats.insert(suffix.toLower());
         m_imageFormats.insert(suffix.toUpper());
-
     }
 }
 

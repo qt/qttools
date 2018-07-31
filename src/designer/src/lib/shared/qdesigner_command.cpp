@@ -2112,7 +2112,7 @@ void ChangeCurrentPageCommand::undo()
     containerExtension()->setCurrentIndex(m_oldIndex);
 }
 
-static int itemRoles[] = {
+static const int itemRoles[] = {
     Qt::DecorationPropertyRole,
     Qt::DisplayPropertyRole,
     Qt::ToolTipPropertyRole,
@@ -2122,8 +2122,7 @@ static int itemRoles[] = {
     Qt::TextAlignmentRole,
     Qt::BackgroundRole,
     Qt::ForegroundRole,
-    Qt::CheckStateRole,
-    -1
+    Qt::CheckStateRole
 };
 
 template<class T>
@@ -2139,8 +2138,8 @@ static void copyRolesFromItem(ItemData *id, const T *item, bool editor)
 {
     static const Qt::ItemFlags defaultFlags = T().flags();
 
-    for (int i = 0; itemRoles[i] != -1; i++)
-        copyRoleFromItem<T>(id, itemRoles[i], item);
+    for (int i : itemRoles)
+        copyRoleFromItem<T>(id, i, item);
 
     if (editor)
         copyRoleFromItem<T>(id, ItemFlagsShadowRole, item);
@@ -2221,8 +2220,8 @@ ItemData::ItemData(const QTreeWidgetItem *item, int column)
     PropertySheetStringValue str(item->text(column));
     m_properties.insert(Qt::DisplayPropertyRole, QVariant::fromValue(str));
 
-    for (int i = 0; itemRoles[i] != -1; i++)
-        copyRoleFromItem(this, itemRoles[i], item, column);
+    for (int i : itemRoles)
+        copyRoleFromItem(this, i, item, column);
 }
 
 void ItemData::fillTreeItemColumn(QTreeWidgetItem *item, int column, DesignerIconCache *iconCache) const
@@ -2368,9 +2367,10 @@ bool TableWidgetContents::nonEmpty(const QTableWidgetItem *item, int headerColum
         return true;
     }
 
-    for (int i = 0; itemRoles[i] != -1; i++)
-        if (itemRoles[i] != Qt::DisplayPropertyRole && item->data(itemRoles[i]).isValid())
+    for (int i : itemRoles) {
+        if (i != Qt::DisplayPropertyRole && item->data(i).isValid())
             return true;
+    }
 
     return false;
 }

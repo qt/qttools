@@ -418,11 +418,9 @@ void MorphWidgetCommand::morph(QWidget *before, QWidget *after)
             afterChildContainer->setLayout(childLayout);
         } else {
             // Non-Laid-out: Reparent, move over
-            const QObjectList c = beforeChildContainer->children();
-            const QObjectList::const_iterator cend = c.constEnd();
-            for (QObjectList::const_iterator it =  c.constBegin(); it != cend; ++it) {
-                if ( (*it)->isWidgetType()) {
-                    QWidget *w = static_cast<QWidget*>(*it);
+            for (QObject *o : beforeChildContainer->children()) {
+                if (o->isWidgetType()) {
+                    QWidget *w = static_cast<QWidget*>(o);
                     if (fw->isManaged(w)) {
                         const QRect geom = w->geometry();
                         w->setParent(afterChildContainer);

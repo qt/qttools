@@ -206,10 +206,7 @@ void QStackedWidgetEventFilter::install(QStackedWidget *stackedWidget)
 QStackedWidgetEventFilter *QStackedWidgetEventFilter::eventFilterOf(const QStackedWidget *stackedWidget)
 {
     // Look for 1st order children only..otherwise, we might get filters of nested widgets
-    const QObjectList children = stackedWidget->children();
-    const QObjectList::const_iterator cend = children.constEnd();
-    for (QObjectList::const_iterator it = children.constBegin(); it != cend; ++it) {
-        QObject *o = *it;
+    for (QObject *o : stackedWidget->children()) {
         if (!o->isWidgetType())
             if (QStackedWidgetEventFilter *ef = qobject_cast<QStackedWidgetEventFilter *>(o))
                 return ef;

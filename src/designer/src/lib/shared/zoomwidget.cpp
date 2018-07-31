@@ -59,9 +59,7 @@ ZoomMenu::ZoomMenu(QObject *parent) :
    m_menuActions(new QActionGroup(this))
 {
     connect(m_menuActions, &QActionGroup::triggered, this, &ZoomMenu::slotZoomMenu);
-    const int nz = sizeof(menuZoomList)/sizeof(int);
-    for (int i = 0; i < nz; i++) {
-        const int zoom = menuZoomList[i];
+    for (int zoom : menuZoomList) {
         //: Zoom factor
         QAction *a = m_menuActions->addAction(tr("%1 %").arg(zoom));
         a->setCheckable(true);

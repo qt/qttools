@@ -76,10 +76,7 @@ ToolBarEventFilter::ToolBarEventFilter(QToolBar *tb) :
 ToolBarEventFilter *ToolBarEventFilter::eventFilterOf(const QToolBar *tb)
 {
     // Look for 1st order children only..otherwise, we might get filters of nested widgets
-    const QObjectList children = tb->children();
-    const QObjectList::const_iterator cend = children.constEnd();
-    for (QObjectList::const_iterator it = children.constBegin(); it != cend; ++it) {
-        QObject *o = *it;
+    for (QObject *o : tb->children()) {
         if (!o->isWidgetType())
             if (ToolBarEventFilter *ef = qobject_cast<ToolBarEventFilter *>(o))
                 return ef;

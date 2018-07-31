@@ -970,9 +970,7 @@ void QAbstractFormBuilder::setupColorGroup(QPalette &palette, QPalette::ColorGro
     const QMetaEnum colorRole_enum = metaEnum<QAbstractFormBuilderGadget>("colorRole");
 
     const auto colorRoles = group->elementColorRole();
-    for (int role = 0; role < colorRoles.size(); ++role) {
-        const DomColorRole *colorRole = colorRoles.at(role);
-
+    for (const DomColorRole *colorRole : colorRoles) {
         if (colorRole->hasAttributeRole()) {
             const int r = colorRole_enum.keyToValue(colorRole->attributeRole().toLatin1());
             if (r != -1) {
@@ -1745,16 +1743,15 @@ DomResources *QAbstractFormBuilder::saveResources()
 DomButtonGroups *QAbstractFormBuilder::saveButtonGroups(const QWidget *mainContainer)
 {
     // Save fst order buttongroup children of maincontainer
-    const QObjectList mchildren = mainContainer->children();
+    const QObjectList &mchildren = mainContainer->children();
     if (mchildren.empty())
         return 0;
     QVector<DomButtonGroup *> domGroups;
-    const QObjectList::const_iterator cend = mchildren.constEnd();
-    for (QObjectList::const_iterator it = mchildren.constBegin(); it != cend; ++it)
-        if (QButtonGroup *bg = qobject_cast<QButtonGroup *>(*it))
+    for (QObject *o : mchildren) {
+        if (auto bg = qobject_cast<QButtonGroup *>(o))
             if (DomButtonGroup* dg = createDom(bg))
                 domGroups.push_back(dg);
-
+    }
     if (domGroups.empty())
         return 0;
     DomButtonGroups *rc = new DomButtonGroups;
