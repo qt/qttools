@@ -4104,14 +4104,13 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node,
     generateKeywordAnchors(node);
 
     QString qmlItemHeader("<div class=\"qmlproto\">\n"
-                          "<div class=\"table\"><table class=\"qmlname\">\n"
-                          "<tr valign=\"top\" class=\"odd\" id=\"%1\">\n"
-                          "<td class=\"%2\"><p>\n"
-                          "<a name=\"%3\"></a>");
+                          "<div class=\"table\"><table class=\"qmlname\">\n");
 
-    QString qmlItemFooter("</p></td></tr>\n"
-                          "</table></div>\n"
-                          "</div>");
+    QString qmlItemStart("<tr valign=\"top\" class=\"odd\" id=\"%1\">\n"
+                    "<td class=\"%2\"><p>\n<a name=\"%3\"></a>");
+    QString qmlItemEnd("</p></td></tr>\n");
+
+    QString qmlItemFooter("</table></div>\n</div>");
 
     out() << "<div class=\"qmlitem\">";
     QString nodeRef = refForNode(node);
@@ -4149,7 +4148,9 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node,
     }
     else if (node->type() == Node::QmlProperty) {
         qpn = static_cast<QmlPropertyNode*>(node);
-        out() << qmlItemHeader.arg(nodeRef, "tblQmlPropNode", refForNode(qpn));
+        out() << qmlItemHeader;
+        out() << qmlItemStart.arg(nodeRef, "tblQmlPropNode", refForNode(qpn));
+
         if (!qpn->isReadOnlySet()) {
             if (qpn->declarativeCppNode())
                 qpn->setReadOnly(!qpn->isWritable());
@@ -4158,24 +4159,43 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node,
             out() << "<span class=\"qmlreadonly\">[read-only] </span>";
         if (qpn->isDefault())
             out() << "<span class=\"qmldefault\">[default] </span>";
+
         generateQmlItem(qpn, relative, marker, false);
+        out() << qmlItemEnd;
         out() << qmlItemFooter;
-    }
-    else if (node->type() == Node::QmlSignal ||
-             node->type() == Node::QmlSignalHandler ||
-             node->type() == Node::QmlMethod) {
-        out() << qmlItemHeader.arg(nodeRef, "tblQmlFuncNode", refForNode(node));
+    } else if (node->isSharedCommentNode()) {
+        const SharedCommentNode *scn = reinterpret_cast<const SharedCommentNode*>(node);
+        const QVector<Node*>& collective = scn->collective();
+        if (collective.size() > 1)
+            out() << "<div class=\"fngroup\">\n";
+        out() << qmlItemHeader;
+        for (const auto m : collective) {
+            if (m->type() == Node::QmlSignal ||
+                     m->type() == Node::QmlSignalHandler ||
+                     m->type() == Node::QmlMethod) {
+                out() << qmlItemStart.arg(nodeRef, "tblQmlFuncNode", refForNode(m));
+                generateSynopsis(m, relative, marker, Section::Details, false);
+                out() << qmlItemEnd;
+            }
+        }
+        out() << qmlItemFooter;
+        if (collective.size() > 1)
+            out() << "</div>";
+    } else { // assume the node is a method/signal handler
+        out() << qmlItemHeader;
+        out() << qmlItemStart.arg(nodeRef, "tblQmlFuncNode", refForNode(node));
         generateSynopsis(node, relative, marker, Section::Details, false);
+        out() << qmlItemEnd;
         out() << qmlItemFooter;
     }
+
     out() << "<div class=\"qmldoc\">";
     generateStatus(node, marker);
     generateBody(node, marker);
     generateThreadSafeness(node, marker);
     generateSince(node, marker);
     generateAlsoList(node, marker);
-    out() << "</div>";
-    out() << "</div>";
+    out() << "</div></div>";
     generateExtractionMark(node, EndMark);
 }
 

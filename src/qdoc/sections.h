@@ -231,6 +231,8 @@ class Sections
     void stdRefPageSwitch(SectionVector &v, Node *n);
     void distributeNodeInSummaryVector(SectionVector &sv, Node *n);
     void distributeNodeInDetailsVector(SectionVector &dv, Node *n);
+    void distributeQmlNodeInDetailsVector(SectionVector &dv, Node *n);
+    void distributeQmlNodeInSummaryVector(SectionVector &sv, Node *n);
     void initAggregate(SectionVector &v, Aggregate *aggregate);
 
  private:
