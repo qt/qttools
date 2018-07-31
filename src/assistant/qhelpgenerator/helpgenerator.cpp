@@ -226,9 +226,9 @@ void HelpGeneratorPrivate::setupProgress(QHelpProjectData *helpData)
     // contents 10%
     // files    60%
     // indices  27%
-    m_contentStep = 10.0/double(helpData->customFilters().count());
-    m_fileStep = 60.0/double(numberOfFiles);
-    m_indexStep = 27.0/double(numberOfIndices);
+    m_contentStep = 10.0 / qMax(helpData->customFilters().count(), 1);
+    m_fileStep = 60.0 / qMax(numberOfFiles, 1);
+    m_indexStep = 27.0 / qMax(numberOfIndices, 1);
 }
 
 void HelpGeneratorPrivate::addProgress(double step)
