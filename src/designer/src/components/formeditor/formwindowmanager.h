@@ -37,6 +37,7 @@
 #include <QtCore/qlist.h>
 #include <QtCore/qpointer.h>
 #include <QtCore/qmap.h>
+#include <QtCore/qset.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -158,7 +159,7 @@ private:
     QAction *m_actionUndo;
     QAction *m_actionRedo;
 
-    QMap<QWidget *,bool> getUnsortedLayoutsToBeBroken(bool firstOnly) const;
+    QSet<QWidget *> getUnsortedLayoutsToBeBroken(bool firstOnly) const;
     bool hasLayoutsToBeBroken() const;
     QWidgetList layoutsToBeBroken(QWidget *w) const;
     QWidgetList layoutsToBeBroken() const;

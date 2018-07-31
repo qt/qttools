@@ -742,10 +742,10 @@ QWidgetList FormWindowManager::layoutsToBeBroken(QWidget *w) const
 
 }
 
-QMap<QWidget *, bool> FormWindowManager::getUnsortedLayoutsToBeBroken(bool firstOnly) const
+QSet<QWidget *> FormWindowManager::getUnsortedLayoutsToBeBroken(bool firstOnly) const
 {
     // Return a set of layouts to be broken.
-    QMap<QWidget *, bool> layouts;
+    QSet<QWidget *> layouts;
 
     QWidgetList selection = m_activeFormWindow->selectedWidgets();
     if (selection.isEmpty() && m_activeFormWindow->mainContainer())
@@ -756,7 +756,7 @@ QMap<QWidget *, bool> FormWindowManager::getUnsortedLayoutsToBeBroken(bool first
         const QWidgetList &list = layoutsToBeBroken(selectedWidget);
         if (!list.empty()) {
             for (QWidget *widget : list)
-                layouts.insert(widget, true);
+                layouts.insert(widget);
             if (firstOnly)
                 return layouts;
         }
@@ -774,12 +774,10 @@ QWidgetList FormWindowManager::layoutsToBeBroken() const
 {
     // Get all layouts. This is a list of all 'red' layouts (QLayoutWidgets)
     // up to the first 'real' widget with a layout in hierarchy order.
-    QMap<QWidget *, bool> unsortedLayouts = getUnsortedLayoutsToBeBroken(false);
+    const QSet<QWidget *> unsortedLayouts = getUnsortedLayoutsToBeBroken(false);
     // Sort in order of hierarchy
     QWidgetList orderedLayoutList;
-    const QMap<QWidget *, bool>::const_iterator lscend  = unsortedLayouts.constEnd();
-    for (QMap<QWidget *, bool>::const_iterator itLay = unsortedLayouts.constBegin(); itLay != lscend; ++itLay) {
-        QWidget *wToBeInserted = itLay.key();
+    for (QWidget *wToBeInserted : unsortedLayouts) {
         if (!orderedLayoutList.contains(wToBeInserted)) {
             // try to find first child, use as insertion position, else append
             const QWidgetList::iterator firstChildPos = findFirstChildOf(orderedLayoutList.begin(), orderedLayoutList.end(), wToBeInserted);
