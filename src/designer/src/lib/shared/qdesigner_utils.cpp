@@ -349,7 +349,7 @@ namespace qdesigner_internal
             const ModeStateKey otherPair = itOther.key();
             if (thisPair < otherPair)
                 return true;
-            else if (otherPair < thisPair)
+            if (otherPair < thisPair)
                 return false;
             const int crc = itThis.value().compare(itOther.value());
             if (crc < 0)
@@ -359,9 +359,7 @@ namespace qdesigner_internal
             ++itThis;
             ++itOther;
         }
-        if (itOther != itOtherEnd)
-            return true;
-        return false;
+        return itOther != itOtherEnd;
     }
 
     bool PropertySheetIconValue::isEmpty() const

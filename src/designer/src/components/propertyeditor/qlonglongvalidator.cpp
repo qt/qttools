@@ -55,16 +55,13 @@ QValidator::State QLongLongValidator::validate(QString & input, int &) const
         return Intermediate;
     bool ok;
     qlonglong entered = input.toLongLong(&ok);
-    if (!ok || (entered < 0 && b >= 0)) {
+    if (!ok || (entered < 0 && b >= 0))
         return Invalid;
-    } else if (entered >= b && entered <= t) {
+    if (entered >= b && entered <= t)
         return Acceptable;
-    } else {
-        if (entered >= 0)
-            return (entered > t) ? Invalid : Intermediate;
-        else
-            return (entered < b) ? Invalid : Intermediate;
-    }
+    if (entered >= 0)
+        return entered > t ? Invalid : Intermediate;
+    return entered < b ? Invalid : Intermediate;
 }
 
 void QLongLongValidator::setRange(qlonglong bottom, qlonglong top)

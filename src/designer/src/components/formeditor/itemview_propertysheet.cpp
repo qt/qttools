@@ -250,9 +250,8 @@ bool ItemViewPropertySheet::reset(int index)
            return true;
        }
        return resetRC;
-    } else {
-        return QDesignerPropertySheet::reset(index);
     }
+    return QDesignerPropertySheet::reset(index);
 }
 
 QT_END_NAMESPACE

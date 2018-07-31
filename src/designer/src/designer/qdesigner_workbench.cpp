@@ -697,44 +697,42 @@ bool QDesignerWorkbench::handleClose()
             dirtyForms << w;
     }
 
-    if (dirtyForms.size()) {
-        if (dirtyForms.size() == 1) {
-            if (!dirtyForms.at(0)->close()) {
-                m_state = StateUp;
-                return false;
+    const int count = dirtyForms.size();
+    if (count == 1) {
+        if (!dirtyForms.at(0)->close()) {
+            m_state = StateUp;
+            return false;
+        }
+    } else if (count > 1) {
+        QMessageBox box(QMessageBox::Warning, tr("Save Forms?"),
+                        tr("There are %n forms with unsaved changes."
+                           " Do you want to review these changes before quitting?", "", count),
+                        QMessageBox::Cancel | QMessageBox::Discard | QMessageBox::Save);
+        box.setInformativeText(tr("If you do not review your documents, all your changes will be lost."));
+        box.button(QMessageBox::Discard)->setText(tr("Discard Changes"));
+        QPushButton *save = static_cast<QPushButton *>(box.button(QMessageBox::Save));
+        save->setText(tr("Review Changes"));
+        box.setDefaultButton(save);
+        switch (box.exec()) {
+        case QMessageBox::Cancel:
+            m_state = StateUp;
+            return false;
+        case QMessageBox::Save:
+            for (QDesignerFormWindow *fw : qAsConst(dirtyForms)) {
+                fw->show();
+                fw->raise();
+                if (!fw->close()) {
+                    m_state = StateUp;
+                    return false;
+                }
             }
-        } else {
-            int count = dirtyForms.size();
-            QMessageBox box(QMessageBox::Warning, tr("Save Forms?"),
-                    tr("There are %n forms with unsaved changes."
-                        " Do you want to review these changes before quitting?", "", count),
-                    QMessageBox::Cancel | QMessageBox::Discard | QMessageBox::Save);
-            box.setInformativeText(tr("If you do not review your documents, all your changes will be lost."));
-            box.button(QMessageBox::Discard)->setText(tr("Discard Changes"));
-            QPushButton *save = static_cast<QPushButton *>(box.button(QMessageBox::Save));
-            save->setText(tr("Review Changes"));
-            box.setDefaultButton(save);
-            switch (box.exec()) {
-            case QMessageBox::Cancel:
-                m_state = StateUp;
-                return false;
-            case QMessageBox::Save:
-               for (QDesignerFormWindow *fw : qAsConst(dirtyForms)) {
-                   fw->show();
-                   fw->raise();
-                   if (!fw->close()) {
-                       m_state = StateUp;
-                       return false;
-                   }
-               }
-               break;
-            case QMessageBox::Discard:
-              for (QDesignerFormWindow *fw : qAsConst(dirtyForms)) {
-                  fw->editor()->setDirty(false);
-                  fw->setWindowModified(false);
-              }
-              break;
+            break;
+        case QMessageBox::Discard:
+            for (QDesignerFormWindow *fw : qAsConst(dirtyForms)) {
+                fw->editor()->setDirty(false);
+                fw->setWindowModified(false);
             }
+            break;
         }
     }
 
@@ -757,7 +755,7 @@ void QDesignerWorkbench::updateWindowMenu(QDesignerFormWindowInterface *fwi)
     QDesignerFormWindow *activeFormWindow = 0;
     do {
         if (!fwi)
-        break;
+            break;
         activeFormWindow = qobject_cast<QDesignerFormWindow *>(fwi->parentWidget());
         if (!activeFormWindow)
             break;

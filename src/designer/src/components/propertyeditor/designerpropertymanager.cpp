@@ -1272,7 +1272,8 @@ void DesignerPropertyManager::setAttribute(QtProperty *property,
         it.value() = val;
         emit attributeChanged(variantProperty(property), attribute, value);
         return;
-    } else if (attribute == QLatin1String(flagsAttributeC) && m_flagValues.contains(property)) {
+    }
+    if (attribute == QLatin1String(flagsAttributeC) && m_flagValues.contains(property)) {
         if (value.userType() != designerFlagListTypeId())
             return;
 
@@ -1793,7 +1794,8 @@ void DesignerPropertyManager::setValue(QtProperty *property, const QVariant &val
         emit propertyChanged(property);
 
         return;
-    } else if (m_alignValues.contains(property)) {
+    }
+    if (m_alignValues.contains(property)) {
         if (value.type() != QVariant::UInt && !value.canConvert(QVariant::UInt))
             return;
 
@@ -1818,7 +1820,8 @@ void DesignerPropertyManager::setValue(QtProperty *property, const QVariant &val
         emit propertyChanged(property);
 
         return;
-    } else if (m_paletteValues.contains(property)) {
+    }
+    if (m_paletteValues.contains(property)) {
         if (value.type() != QVariant::Palette && !value.canConvert(QVariant::Palette))
             return;
 
@@ -1840,7 +1843,8 @@ void DesignerPropertyManager::setValue(QtProperty *property, const QVariant &val
         emit propertyChanged(property);
 
         return;
-    } else if (m_iconValues.contains(property)) {
+    }
+    if (m_iconValues.contains(property)) {
         if (value.userType() != designerIconTypeId())
             return;
 
@@ -1891,7 +1895,8 @@ void DesignerPropertyManager::setValue(QtProperty *property, const QVariant &val
         property->setToolTip(QDir::toNativeSeparators(toolTip));
 
         return;
-    } else if (m_pixmapValues.contains(property)) {
+    }
+    if (m_pixmapValues.contains(property)) {
         if (value.userType() != designerPixmapTypeId())
             return;
 
@@ -1910,7 +1915,8 @@ void DesignerPropertyManager::setValue(QtProperty *property, const QVariant &val
         property->setToolTip(QDir::toNativeSeparators(pixmap.path()));
 
         return;
-    } else if (m_uintValues.contains(property)) {
+    }
+    if (m_uintValues.contains(property)) {
         if (value.type() != QVariant::UInt && !value.canConvert(QVariant::UInt))
             return;
 
@@ -1926,7 +1932,8 @@ void DesignerPropertyManager::setValue(QtProperty *property, const QVariant &val
         emit propertyChanged(property);
 
         return;
-    } else if (m_longLongValues.contains(property)) {
+    }
+    if (m_longLongValues.contains(property)) {
         if (value.type() != QVariant::LongLong && !value.canConvert(QVariant::LongLong))
             return;
 
@@ -1942,7 +1949,8 @@ void DesignerPropertyManager::setValue(QtProperty *property, const QVariant &val
         emit propertyChanged(property);
 
         return;
-    } else if (m_uLongLongValues.contains(property)) {
+    }
+    if (m_uLongLongValues.contains(property)) {
         if (value.type() != QVariant::ULongLong && !value.canConvert(QVariant::ULongLong))
             return;
 
@@ -1958,7 +1966,8 @@ void DesignerPropertyManager::setValue(QtProperty *property, const QVariant &val
         emit propertyChanged(property);
 
         return;
-    } else if (m_urlValues.contains(property)) {
+    }
+    if (m_urlValues.contains(property)) {
         if (value.type() != QVariant::Url && !value.canConvert(QVariant::Url))
             return;
 
@@ -1974,7 +1983,8 @@ void DesignerPropertyManager::setValue(QtProperty *property, const QVariant &val
         emit propertyChanged(property);
 
         return;
-    } else if (m_byteArrayValues.contains(property)) {
+    }
+    if (m_byteArrayValues.contains(property)) {
         if (value.type() != QVariant::ByteArray && !value.canConvert(QVariant::ByteArray))
             return;
 
@@ -2193,7 +2203,8 @@ bool DesignerPropertyManager::resetIconSubProperty(QtProperty *property)
         QtVariantProperty *pixmapProperty = variantProperty(property);
         pixmapProperty->setValue(QVariant::fromValue(PropertySheetPixmapValue()));
         return true;
-    } else if (m_propertyToTheme.contains(iconProperty)) {
+    }
+    if (m_propertyToTheme.contains(iconProperty)) {
         QtVariantProperty *themeProperty = variantProperty(property);
         themeProperty->setValue(QString());
         return true;

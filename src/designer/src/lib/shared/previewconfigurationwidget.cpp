@@ -298,11 +298,11 @@ int  PreviewConfigurationWidget::PreviewConfigurationWidgetPrivate::browseSkin()
             rc = m_browseSkinIndex++;
 
             break;
-        } else {
-            const QString msgTitle = tr("%1 - Error").arg(title);
-            const QString msg = tr("%1 is not a valid skin directory:\n%2").arg(directory).arg(readError);
-            QMessageBox::warning (m_parent, msgTitle, msg);
         }
+        const QString msgTitle = tr("%1 - Error").arg(title);
+        const QString msg = tr("%1 is not a valid skin directory:\n%2")
+                            .arg(directory, readError);
+        QMessageBox::warning (m_parent, msgTitle, msg);
     } while (true);
     return rc;
 }

@@ -265,7 +265,8 @@ DomProperty *QDesignerResourceBuilder::saveResource(const QDir &workingDirectory
         }
         p->setElementPixmap(rp);
         return p;
-    } else if (value.canConvert<PropertySheetIconValue>()) {
+    }
+    if (value.canConvert<PropertySheetIconValue>()) {
         const PropertySheetIconValue icon = qvariant_cast<PropertySheetIconValue>(value);
         const QMap<QPair<QIcon::Mode, QIcon::State>, PropertySheetPixmapValue> pixmaps = icon.paths();
         const QString theme = icon.theme();
@@ -323,9 +324,8 @@ DomProperty *QDesignerResourceBuilder::saveResource(const QDir &workingDirectory
 
 bool QDesignerResourceBuilder::isResourceType(const QVariant &value) const
 {
-    if (value.canConvert<PropertySheetPixmapValue>() || value.canConvert<PropertySheetIconValue>())
-        return true;
-    return false;
+    return value.canConvert<PropertySheetPixmapValue>()
+        || value.canConvert<PropertySheetIconValue>();
 }
 // ------------------------- QDesignerTextBuilder
 
@@ -882,7 +882,8 @@ QLayoutItem *QDesignerResource::create(DomLayoutItem *ui_layoutItem, QLayout *la
         }
 
         return new QWidgetItem(spacer);
-    } else if (ui_layoutItem->kind() == DomLayoutItem::Layout && parentWidget) {
+    }
+    if (ui_layoutItem->kind() == DomLayoutItem::Layout && parentWidget) {
         DomLayout *ui_layout = ui_layoutItem->elementLayout();
         QLayoutWidget *layoutWidget = new QLayoutWidget(m_formWindow, parentWidget);
         core()->metaDataBase()->add(layoutWidget);
@@ -1095,7 +1096,7 @@ DomWidget *QDesignerResource::createDom(QWidget *widget, DomWidget *ui_parentWid
     if (!item)
         return 0;
 
-    if (qobject_cast<Spacer*>(widget) && m_copyWidget == false)
+    if (qobject_cast<Spacer*>(widget) && !m_copyWidget)
         return 0;
 
     const QDesignerWidgetDataBaseInterface *wdb = core()->widgetDataBase();
@@ -1802,7 +1803,7 @@ FormBuilderClipboard QDesignerResource::paste(QIODevice *dev, QWidget *widgetPar
                                     .arg(reader.lineNumber()).arg(reader.columnNumber())
                                     .arg(reader.errorString()));
         uiInitialized = false;
-    } else if (uiInitialized == false) {
+    } else if (!uiInitialized) {
         //: Parsing clipboard contents
         designerWarning(QCoreApplication::translate("QDesignerResource", "Error while pasting clipboard contents: The root element <ui> is missing."));
     }
@@ -1977,7 +1978,8 @@ DomProperty *QDesignerResource::createProperty(QObject *object, const QString &p
         p->setAttributeName(propertyName);
         p->setElementSet(flagString);
         return applyProperStdSetAttribute(object, propertyName, p);
-    } else if (value.canConvert<PropertySheetEnumValue>()) {
+    }
+    if (value.canConvert<PropertySheetEnumValue>()) {
         const PropertySheetEnumValue e = qvariant_cast<PropertySheetEnumValue>(value);
         bool ok;
         const QString id = e.metaEnum.toString(e.value, DesignerMetaEnum::FullyQualified, &ok);
@@ -1993,7 +1995,8 @@ DomProperty *QDesignerResource::createProperty(QObject *object, const QString &p
         p->setAttributeName(propertyName);
         p->setElementEnum(id);
         return applyProperStdSetAttribute(object, propertyName, p);
-    } else if (value.canConvert<PropertySheetStringValue>()) {
+    }
+    if (value.canConvert<PropertySheetStringValue>()) {
         const PropertySheetStringValue strVal = qvariant_cast<PropertySheetStringValue>(value);
         DomProperty *p = stringToDomProperty(strVal.value(), strVal);
         if (!hasSetter(core(), object, propertyName))

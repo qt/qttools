@@ -873,7 +873,8 @@ bool QDesignerActions::writeOutForm(QDesignerFormWindowInterface *fw, const QStr
         if (box.clickedButton() == cancelButton) {
             removeBackup(backupFile);
             return false;
-        } else if (box.clickedButton() == switchButton) {
+        }
+        if (box.clickedButton() == switchButton) {
             QString extension = uiExtension();
             const QString fileName = QFileDialog::getSaveFileName(fw, tr("Save Form As"),
                                                                   QDir::current().absolutePath(),

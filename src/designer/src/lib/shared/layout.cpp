@@ -267,13 +267,16 @@ void Layout::finishLayout(bool needMove, QLayout *layout)
             if (!m_formWindow->isManaged(widget)) {
                 widget = widget->parentWidget();
                 continue;
-            } else if (LayoutInfo::isWidgetLaidout(m_formWindow->core(), widget)) {
+            }
+            if (LayoutInfo::isWidgetLaidout(m_formWindow->core(), widget)) {
                 widget = widget->parentWidget();
                 continue;
-            } else if (isPageOfContainerWidget(m_formWindow, widget)) {
+            }
+            if (isPageOfContainerWidget(m_formWindow, widget)) {
                 widget = widget->parentWidget();
                 continue;
-            } else if (widget->parentWidget()) {
+            }
+            if (widget->parentWidget()) {
                 QScrollArea *area = qobject_cast<QScrollArea*>(widget->parentWidget()->parentWidget());
                 if (area && area->widget() == widget) {
                     widget = area;

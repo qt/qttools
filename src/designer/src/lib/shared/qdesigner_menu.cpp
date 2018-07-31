@@ -252,7 +252,8 @@ bool QDesignerMenu::handleKeyPressEvent(QWidget * /*widget*/, QKeyEvent *e)
             if (!action || action->isSeparator() || action == m_addSeparator) {
                 e->ignore();
                 return true;
-            } else if (!e->text().isEmpty() && e->text().at(0).toLatin1() >= 32) {
+            }
+            if (!e->text().isEmpty() && e->text().at(0).toLatin1() >= 32) {
                 showLineEdit();
                 QApplication::sendEvent(m_editor, e);
                 e->accept();
@@ -868,9 +869,7 @@ bool QDesignerMenu::hideSubMenuOnCursorKey()
     }
     closeMenuChain();
     update();
-    if (parentMenuBar())
-        return false;
-    return true;
+    return parentMenuBar() == nullptr;
 }
 
 // Open a submenu using the left/right keys according to layoutDirection().

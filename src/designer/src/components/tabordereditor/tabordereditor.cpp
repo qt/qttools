@@ -152,7 +152,7 @@ void TabOrderEditor::paintEvent(QPaintEvent *e)
     p.setClipRegion(e->region());
 
     int cur = m_current_index - 1;
-    if (m_beginning == false && cur < 0)
+    if (!m_beginning && cur < 0)
         cur = m_tab_order_list.size() - 1;
 
     for (int i = 0; i < m_tab_order_list.size(); ++i) {

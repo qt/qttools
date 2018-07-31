@@ -347,10 +347,7 @@ bool Connection::ground() const
 
 QPoint Connection::endPointPos(EndPoint::Type type) const
 {
-    if (type == EndPoint::Source)
-        return m_source_pos;
-    else
-        return m_target_pos;
+    return type == EndPoint::Source ? m_source_pos : m_target_pos;
 }
 
 static QPoint lineEntryPos(const QPoint &p1, const QPoint &p2, const QRect &rect)

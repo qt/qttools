@@ -603,7 +603,7 @@ bool FormWindow::handleMousePressEvent(QWidget * widget, QWidget *managedWidget,
     if (debugFormWindow)
         qDebug() << "handleMousePressEvent:" <<  widget << ',' << managedWidget;
 
-    if (buttons == Qt::MidButton || isMainContainer(managedWidget) == true) { // press was on the formwindow
+    if (buttons == Qt::MidButton || isMainContainer(managedWidget)) { // press was on the formwindow
         clearObjectInspectorSelection(m_core);  // We might have a toolbar or non-widget selected in the object inspector.
         clearSelection(false);
 
@@ -677,10 +677,8 @@ bool FormWindow::handleMouseMoveEvent(QWidget *, QWidget *, QMouseEvent *e)
 
     const bool canStartDrag = (m_startPos - pos).manhattanLength() > QApplication::startDragDistance();
 
-    if (canStartDrag == false) {
-        // nothing to do
+    if (!canStartDrag) // nothing to do
         return true;
-    }
 
     m_mouseState = MouseMoveDrag;
     const bool blocked = blockSelectionChanged(true);
@@ -698,7 +696,8 @@ bool FormWindow::handleMouseMoveEvent(QWidget *, QWidget *, QMouseEvent *e)
             if (!isManaged(current)) {
                 current = current->parentWidget();
                 continue;
-            } else if (LayoutInfo::isWidgetLaidout(core(), current)) {
+            }
+            if (LayoutInfo::isWidgetLaidout(core(), current)) {
                 // Go up to parent of layout if shift pressed, else do that only for splitters
                 if (!canDragWidgetInLayout(core(), current)) {
                     current = current->parentWidget();
@@ -917,10 +916,8 @@ void FormWindow::clearSelection(bool changePropertyDisplay)
 
 void FormWindow::emitSelectionChanged()
 {
-    if (m_blockSelectionChanged == true) {
-        // nothing to do
+    if (m_blockSelectionChanged) // nothing to do
         return;
-    }
 
     m_selectionChangedTimer->start(0);
 }
@@ -1171,9 +1168,8 @@ bool FormWindow::unify(QObject *w, QString &s, bool changeIt)
     const StringSet::const_iterator enEnd = existingNames.constEnd();
     if (existingNames.constFind(s) == enEnd)
         return true;
-    else
-        if (!changeIt)
-            return false;
+    if (!changeIt)
+        return false;
 
     // split 'name_number'
     qlonglong num = 0;
@@ -1752,9 +1748,8 @@ static inline DomUI *domUIFromClipboard(int *widgetCount, int *actionCount)
                 ui = new DomUI();
                 ui->read(reader);
                 break;
-            } else {
-                reader.raiseError(QCoreApplication::translate("FormWindow", "Unexpected element <%1>").arg(reader.name().toString()));
             }
+            reader.raiseError(QCoreApplication::translate("FormWindow", "Unexpected element <%1>").arg(reader.name().toString()));
         }
     }
     if (reader.hasError()) {
@@ -2082,13 +2077,13 @@ QMenu *FormWindow::initializePopupMenu(QWidget *managedWidget)
     // of a multiselection to be correct.
     const bool selected = isWidgetSelected(managedWidget);
     bool update = false;
-    if (selected == false) {
+    if (selected) {
+        update = setCurrentWidget(managedWidget);
+    } else {
         clearObjectInspectorSelection(m_core); // We might have a toolbar or non-widget selected in the object inspector.
         clearSelection(false);
         update = trySelectWidget(managedWidget, true);
         raiseChildSelections(managedWidget); // raise selections and select widget
-    } else {
-        update = setCurrentWidget(managedWidget);
     }
 
     if (update) {
@@ -2759,9 +2754,9 @@ static Qt::DockWidgetArea detectDropArea(QMainWindow *mainWindow, const QRect &a
 
         if (topRight && topLeft)
             return Qt::TopDockWidgetArea;
-        else if (topRight && !topLeft)
+        if (topRight && !topLeft)
             return Qt::RightDockWidgetArea;
-        else if (!topRight && topLeft)
+        if (!topRight && topLeft)
             return Qt::LeftDockWidgetArea;
         return Qt::BottomDockWidgetArea;
     }
@@ -2769,24 +2764,14 @@ static Qt::DockWidgetArea detectDropArea(QMainWindow *mainWindow, const QRect &a
     if (x < 0) {
         if (y < 0)
             return mainWindow->corner(Qt::TopLeftCorner);
-        else if (y > h)
-            return mainWindow->corner(Qt::BottomLeftCorner);
-        else
-            return Qt::LeftDockWidgetArea;
-    } else if (x > w) {
+        return y > h ? mainWindow->corner(Qt::BottomLeftCorner) : Qt::LeftDockWidgetArea;
+    }
+    if (x > w) {
         if (y < 0)
             return mainWindow->corner(Qt::TopRightCorner);
-        else if (y > h)
-            return mainWindow->corner(Qt::BottomRightCorner);
-        else
-            return Qt::RightDockWidgetArea;
-    } else {
-        if (y < 0)
-            return Qt::TopDockWidgetArea;
-        else
-            return Qt::BottomDockWidgetArea;
+        return y > h ? mainWindow->corner(Qt::BottomRightCorner) : Qt::RightDockWidgetArea;
     }
-    return Qt::LeftDockWidgetArea;
+    return y < 0 ? Qt::TopDockWidgetArea :Qt::LeftDockWidgetArea;
 }
 
 bool FormWindow::dropDockWidget(QDesignerDnDItemInterface *item, const QPoint &global_mouse_pos)

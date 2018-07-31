@@ -472,10 +472,9 @@ void InlineEditorModel::addTextList(const QMap<QString, bool> &text_list)
 
 Qt::ItemFlags InlineEditorModel::flags(const QModelIndex &index) const
 {
-    if (isTitle(index.row()))
-        return Qt::ItemIsEnabled;
-    else
-        return Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+    return isTitle(index.row())
+        ? Qt::ItemFlags(Qt::ItemIsEnabled)
+        : Qt::ItemFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 }
 
 int InlineEditorModel::findText(const QString &text) const
@@ -531,9 +530,9 @@ void InlineEditor::checkSelection(int idx)
         return;
 
    if (m_model->isTitle(idx))
-        setCurrentIndex(m_idx);
-    else
-        m_idx = idx;
+       setCurrentIndex(m_idx);
+   else
+       m_idx = idx;
 }
 
 void InlineEditor::addTitle(const QString &title)

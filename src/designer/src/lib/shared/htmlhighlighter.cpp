@@ -113,7 +113,8 @@ void HtmlHighlighter::highlightBlock(const QString &text)
                         break;
                     }
                     break;
-                } else if (ch == amp) {
+                }
+                if (ch == amp) {
                     start = pos;
                     while (pos < len && text.at(pos++) != semicolon)
                         ;

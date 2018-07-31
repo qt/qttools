@@ -273,7 +273,7 @@ namespace qdesigner_internal {
     QString realObjectName(QDesignerFormEditorInterface *core, QObject *object)
     {
         if (!object)
-        return QString();
+            return QString();
 
         const QDesignerMetaDataBaseInterface *mdb = core->metaDataBase();
         if (const QDesignerMetaDataBaseItemInterface *item = mdb->item(object))

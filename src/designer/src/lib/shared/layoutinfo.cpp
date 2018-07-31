@@ -51,13 +51,13 @@ LayoutInfo::Type LayoutInfo::layoutType(const QDesignerFormEditorInterface *core
     Q_UNUSED(core)
     if (!layout)
         return NoLayout;
-    else if (qobject_cast<const QHBoxLayout*>(layout))
+    if (qobject_cast<const QHBoxLayout*>(layout))
         return HBox;
-    else if (qobject_cast<const QVBoxLayout*>(layout))
+    if (qobject_cast<const QVBoxLayout*>(layout))
         return VBox;
-    else if (qobject_cast<const QGridLayout*>(layout))
+    if (qobject_cast<const QGridLayout*>(layout))
         return Grid;
-    else if (qobject_cast<const QFormLayout*>(layout))
+    if (qobject_cast<const QFormLayout*>(layout))
        return Form;
     return UnknownLayout;
 }

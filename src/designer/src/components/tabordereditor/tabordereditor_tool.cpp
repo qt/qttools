@@ -62,10 +62,7 @@ bool TabOrderEditorTool::handleEvent(QWidget *widget, QWidget *managedWidget, QE
     Q_UNUSED(widget);
     Q_UNUSED(managedWidget);
 
-    if (event->type() == QEvent::KeyPress || event->type() == QEvent::KeyRelease)
-        return true;
-
-    return false;
+    return event->type() == QEvent::KeyPress || event->type() == QEvent::KeyRelease;
 }
 
 QWidget *TabOrderEditorTool::editor() const

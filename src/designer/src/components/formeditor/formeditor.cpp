@@ -155,9 +155,9 @@ void FormEditor::slotQrcFileChangedExternally(const QString &path)
         return;
 
     QDesignerIntegration::ResourceFileWatcherBehaviour behaviour = integration()->resourceFileWatcherBehaviour();
-    if (behaviour == QDesignerIntegration::NoResourceFileWatcher) {
+    if (behaviour == QDesignerIntegration::NoResourceFileWatcher)
         return;
-    } else if (behaviour == QDesignerIntegration::PromptToReloadResourceFile) {
+    if (behaviour == QDesignerIntegration::PromptToReloadResourceFile) {
         QMessageBox::StandardButton button = dialogGui()->message(topLevel(), QDesignerDialogGuiInterface::FileChangedMessage, QMessageBox::Warning,
                 tr("Resource File Changed"),
                 tr("The file \"%1\" has changed outside Designer. Do you want to reload it?").arg(path),

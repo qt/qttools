@@ -176,7 +176,7 @@ void BuddyEditor::updateBackground()
             std::any_of(newList.cbegin(), newList.cend(),
                         [source, target] (const Connection *nc)
                         { return nc->object(EndPoint::Source) == source && nc->object(EndPoint::Target) == target; });
-        if (found == false)
+        if (!found)
             toRemove.append(con);
     }
     if (!toRemove.isEmpty()) {
@@ -197,11 +197,11 @@ void BuddyEditor::updateBackground()
                 break;
             }
         }
-        if (found == false) {
+        if (found) {
+            delete newConn;
+        } else {
             AddConnectionCommand command(this, newConn);
             command.redo();
-        } else {
-            delete newConn;
         }
     }
     m_updating = false;

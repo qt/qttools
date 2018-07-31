@@ -418,7 +418,7 @@ bool PropertyEditor::isExpanded(QtBrowserItem *item) const
 {
     if (m_buttonBrowser == m_currentBrowser)
         return m_buttonBrowser->isExpanded(item);
-    else if (m_treeBrowser == m_currentBrowser)
+    if (m_treeBrowser == m_currentBrowser)
         return m_treeBrowser->isExpanded(item);
     return false;
 }
@@ -1239,10 +1239,8 @@ bool PropertyEditor::isDynamicProperty(const QtBrowserItem* item) const
     if (!dynamicSheet)
         return false;
 
-    if (m_propertyToGroup.contains(item->property())
-                && dynamicSheet->isDynamicProperty(m_propertySheet->indexOf(item->property()->propertyName())))
-        return true;
-    return false;
+    return m_propertyToGroup.contains(item->property())
+        && dynamicSheet->isDynamicProperty(m_propertySheet->indexOf(item->property()->propertyName()));
 }
 
 void PropertyEditor::editProperty(const QString &name)

@@ -89,12 +89,9 @@ QDesigner::QDesigner(int &argc, char **argv)
 
 QDesigner::~QDesigner()
 {
-    if (m_workbench)
-        delete m_workbench;
-    if (m_server)
-        delete m_server;
-    if (m_client)
-        delete m_client;
+    delete m_workbench;
+    delete m_server;
+    delete m_client;
 }
 
 void QDesigner::showErrorMessage(const char *message)

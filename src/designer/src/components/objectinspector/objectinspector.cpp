@@ -300,7 +300,7 @@ void ObjectInspector::ObjectInspectorPrivate::showContainersCurrentPage(QWidget 
                 if (count > 1 && !c->widget(c->currentIndex())->isAncestorOf(widget)) {
                     for (int i = 0; i < count; i++)
                         if (c->widget(i)->isAncestorOf(widget)) {
-                            if (macroStarted == false) {
+                            if (!macroStarted) {
                                 macroStarted = true;
                                 fw->beginCommand(tr("Change Current Page"));
                             }
@@ -314,7 +314,7 @@ void ObjectInspector::ObjectInspectorPrivate::showContainersCurrentPage(QWidget 
         }
         w = w->parentWidget();
     }
-    if (macroStarted == true)
+    if (macroStarted)
         fw->endCommand();
 }
 

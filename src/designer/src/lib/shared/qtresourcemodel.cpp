@@ -416,7 +416,7 @@ void QtResourceModelPrivate::setWatcherEnabled(const QString &path, bool enable)
 void QtResourceModelPrivate::addWatcher(const QString &path)
 {
     QMap<QString, bool>::ConstIterator it = m_fileWatchedMap.constFind(path);
-    if (it != m_fileWatchedMap.constEnd() && it.value() == false)
+    if (it != m_fileWatchedMap.constEnd() && !it.value())
         return;
 
     m_fileWatchedMap.insert(path, true);

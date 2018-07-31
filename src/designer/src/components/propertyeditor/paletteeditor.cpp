@@ -468,9 +468,8 @@ void RoleEditor::setLabel(const QString &label)
 void RoleEditor::setEdited(bool on)
 {
     QFont font;
-    if (on == true) {
+    if (on)
         font.setBold(on);
-    }
     m_label->setFont(font);
     m_edited = on;
 }

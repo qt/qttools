@@ -1948,7 +1948,7 @@ void QLayoutWidget::paintEvent(QPaintEvent*)
         for (int i = 0; i < rowCount; i++) {
             for (int j = 0; j < columnCount; j++) {
                 const QRect cellRect = grid->cellRect(i, j);
-                if (j < columnCount - 1 && excludedColumnsForRow.value(i).value(j, false) == false) {
+                if (j < columnCount - 1 && !excludedColumnsForRow.value(i).value(j, false)) {
                     const double y0 = (i == 0)
                             ? 0 : (grid->cellRect(i - 1, j).bottom() + cellRect.top()) / 2.0;
                     const double y1 = (i == rowCount - 1)
@@ -1956,7 +1956,7 @@ void QLayoutWidget::paintEvent(QPaintEvent*)
                     const double x = (cellRect.right() + grid->cellRect(i, j + 1).left()) / 2.0;
                     p.drawLine(QPointF(x, y0), QPointF(x, y1));
                 }
-                if (i < rowCount - 1 && excludedRowsForColumn.value(j).value(i, false) == false) {
+                if (i < rowCount - 1 && !excludedRowsForColumn.value(j).value(i, false)) {
                     const double x0 = (j == 0)
                             ? 0 : (grid->cellRect(i, j - 1).right() + cellRect.left()) / 2.0;
                     const double x1 = (j == columnCount - 1)

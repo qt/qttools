@@ -75,32 +75,26 @@ namespace {
 struct QtResourceFileData {
     QString path;
     QString alias;
-    bool operator==(const QtResourceFileData &other) const {
-        if (path == other.path && alias == other.alias)
-            return true;
-        return false;
-    }
+    bool operator==(const QtResourceFileData &other) const
+    { return path == other.path && alias == other.alias; }
 };
 
 struct QtResourcePrefixData {
     QString prefix;
     QString language;
     QList<QtResourceFileData> resourceFileList;
-    bool operator==(const QtResourcePrefixData &other) const {
-        if (prefix == other.prefix && language == other.language && resourceFileList == other.resourceFileList)
-            return true;
-        return false;
+    bool operator==(const QtResourcePrefixData &other) const
+    {
+        return prefix == other.prefix && language == other.language
+            && resourceFileList == other.resourceFileList;
     }
 };
 
 struct QtQrcFileData {
     QString qrcPath;
     QList<QtResourcePrefixData> resourceList;
-    bool operator==(const QtQrcFileData &other) const {
-        if (qrcPath == other.qrcPath && resourceList == other.resourceList)
-            return true;
-        return false;
-    }
+    bool operator==(const QtQrcFileData &other) const
+    { return qrcPath == other.qrcPath && resourceList == other.resourceList; }
 };
 
 bool loadResourceFileData(const QDomElement &fileElem, QtResourceFileData *fileData, QString *errorMessage)
@@ -1794,7 +1788,7 @@ QString QtResourceEditorDialogPrivate::browseForNewLocation(const QString &resou
 {
     QFileInfo fi(resourceFile);
     const QString initialPath = rootDir.absoluteFilePath(fi.fileName());
-    while (1) {
+    while (true) {
         QString newPath = m_dlgGui->getSaveFileName(q_ptr,
                     QCoreApplication::translate("QtResourceEditorDialog", "Copy As"),
                     initialPath);
@@ -2102,7 +2096,7 @@ QString QtResourceEditorDialog::selectedResource() const
 
     const QString dotSlash(QStringLiteral("./"));
     const QString dotDotSlash(QStringLiteral("../"));
-    while (1) {
+    while (true) {
         if (resourceEnding.startsWith(slash))
             resourceEnding = resourceEnding.mid(1);
         else if (resourceEnding.startsWith(dotSlash))

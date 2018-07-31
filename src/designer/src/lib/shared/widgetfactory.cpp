@@ -439,16 +439,16 @@ QString WidgetFactory::classNameOf(QDesignerFormEditorInterface *c, const QObjec
         return customClassName;
     if (qobject_cast<const QDesignerMenuBar*>(w))
         return QStringLiteral("QMenuBar");
-    else if (qobject_cast<const QDesignerMenu*>(w))
+    if (qobject_cast<const QDesignerMenu*>(w))
         return QStringLiteral("QMenu");
-     else if (qobject_cast<const QDesignerDockWidget*>(w))
+    if (qobject_cast<const QDesignerDockWidget*>(w))
         return QStringLiteral("QDockWidget");
-    else if (qobject_cast<const QDesignerDialog*>(w))
+    if (qobject_cast<const QDesignerDialog*>(w))
         return QStringLiteral("QDialog");
-    else if (qobject_cast<const QDesignerWidget*>(w))
+    if (qobject_cast<const QDesignerWidget*>(w))
         return QStringLiteral("QWidget");
 #ifdef Q_OS_WIN
-    else if (isAxWidget(w))
+    if (isAxWidget(w))
         return QStringLiteral("QAxWidget");
 #endif
     return QLatin1String(className);
@@ -806,19 +806,22 @@ bool WidgetFactory::isPassiveInteractor(QWidget *widget)
         if (isTabBarInteractor(tabBar))
             m_lastWasAPassiveInteractor = true;
         return m_lastWasAPassiveInteractor;
+    }
 #ifndef QT_NO_SIZEGRIP
-    }  else if (qobject_cast<QSizeGrip*>(widget)) {
+    if (qobject_cast<QSizeGrip*>(widget))
         return (m_lastWasAPassiveInteractor = true);
 #endif
-    }  else if (qobject_cast<QMdiSubWindow*>(widget))
+    if (qobject_cast<QMdiSubWindow*>(widget))
         return (m_lastWasAPassiveInteractor = true);
-    else if (qobject_cast<QAbstractButton*>(widget) && (qobject_cast<QTabBar*>(widget->parent()) || qobject_cast<QToolBox*>(widget->parent())))
+    if (qobject_cast<QAbstractButton*>(widget)
+        && (qobject_cast<QTabBar*>(widget->parent()) || qobject_cast<QToolBox*>(widget->parent()))) {
         return (m_lastWasAPassiveInteractor = true);
-    else if (qobject_cast<QMenuBar*>(widget))
+    }
+    if (qobject_cast<QMenuBar*>(widget))
         return (m_lastWasAPassiveInteractor = true);
-    else if (qobject_cast<QToolBar*>(widget))
+    if (qobject_cast<QToolBar*>(widget))
         return (m_lastWasAPassiveInteractor = true);
-    else if (qobject_cast<QScrollBar*>(widget)) {
+    if (qobject_cast<QScrollBar*>(widget)) {
         // A scroll bar is an interactor on a QAbstractScrollArea only.
         if (const QWidget *parent = widget->parentWidget()) {
             const QString objectName = parent->objectName();

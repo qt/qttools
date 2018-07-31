@@ -428,7 +428,7 @@ bool QAbstractFormBuilder::addItem(DomWidget *ui_widget, QWidget *widget, QWidge
 
 #ifndef QT_NO_TOOLBAR
         // apply the toolbar's attributes
-        else if (QToolBar *toolBar = qobject_cast<QToolBar*>(widget)) {
+        if (QToolBar *toolBar = qobject_cast<QToolBar*>(widget)) {
             mw->addToolBar(toolbarAreaFromDOMAttributes(attributes), toolBar);
             // check break
             if (const DomProperty *attr = attributes.value(strings.toolBarBreakAttribute))
@@ -441,7 +441,7 @@ bool QAbstractFormBuilder::addItem(DomWidget *ui_widget, QWidget *widget, QWidge
 
 #ifndef QT_NO_STATUSBAR
         // statusBar
-        else if (QStatusBar *statusBar = qobject_cast<QStatusBar*>(widget)) {
+        if (QStatusBar *statusBar = qobject_cast<QStatusBar*>(widget)) {
             mw->setStatusBar(statusBar);
             return true;
         }
@@ -449,7 +449,7 @@ bool QAbstractFormBuilder::addItem(DomWidget *ui_widget, QWidget *widget, QWidge
 
 #ifndef QT_NO_DOCKWIDGET
         // apply the dockwidget's attributes
-        else if (QDockWidget *dockWidget = qobject_cast<QDockWidget*>(widget)) {
+        if (QDockWidget *dockWidget = qobject_cast<QDockWidget*>(widget)) {
             if (const DomProperty *attr = attributes.value(strings.dockWidgetAreaAttribute)) {
                 Qt::DockWidgetArea area = static_cast<Qt::DockWidgetArea>(attr->elementNumber());
                 if (!dockWidget->isAreaAllowed(area)) {
@@ -470,7 +470,7 @@ bool QAbstractFormBuilder::addItem(DomWidget *ui_widget, QWidget *widget, QWidge
         }
 #endif
 
-        else if (! mw->centralWidget()) {
+        if (!mw->centralWidget()) {
             mw->setCentralWidget(widget);
             return true;
         }
@@ -568,15 +568,15 @@ bool QAbstractFormBuilder::addItem(DomWidget *ui_widget, QWidget *widget, QWidge
 #endif
 
 #ifndef QT_NO_WIZARD
-     else if (QWizard *wizard = qobject_cast<QWizard *>(parentWidget)) {
-         QWizardPage *page = qobject_cast<QWizardPage*>(widget);
-         if (!page) {
-             uiLibWarning(QCoreApplication::translate("QAbstractFormBuilder", "Attempt to add child that is not of class QWizardPage to QWizard."));
-             return false;
-         }
-         wizard->addPage(page);
-         return true;
-     }
+    else if (QWizard *wizard = qobject_cast<QWizard *>(parentWidget)) {
+        QWizardPage *page = qobject_cast<QWizardPage*>(widget);
+        if (!page) {
+            uiLibWarning(QCoreApplication::translate("QAbstractFormBuilder", "Attempt to add child that is not of class QWizardPage to QWizard."));
+            return false;
+        }
+        wizard->addPage(page);
+        return true;
+    }
 #endif
     return false;
 }
@@ -1322,7 +1322,7 @@ DomWidget *QAbstractFormBuilder::createDom(QWidget *widget, DomWidget *ui_parent
 
     for (QObject *obj : qAsConst(children)) {
         if (QWidget *childWidget = qobject_cast<QWidget*>(obj)) {
-            if (d->m_laidout.contains(childWidget) || recursive == false)
+            if (d->m_laidout.contains(childWidget) || !recursive)
                 continue;
 
             if (QMenu *menu = qobject_cast<QMenu *>(childWidget)) {
@@ -2525,7 +2525,7 @@ void QAbstractFormBuilder::loadItemViewExtraInfo(DomWidget *ui_widget, QAbstract
 void QAbstractFormBuilder::loadExtraInfo(DomWidget *ui_widget, QWidget *widget, QWidget *parentWidget)
 {
     const QFormBuilderStrings &strings = QFormBuilderStrings::instance();
-    if (0) {
+    if (false) {
 #ifndef QT_NO_LISTWIDGET
     } else if (QListWidget *listWidget = qobject_cast<QListWidget*>(widget)) {
         loadListWidgetExtraInfo(ui_widget, listWidget, parentWidget);
