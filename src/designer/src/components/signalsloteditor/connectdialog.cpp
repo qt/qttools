@@ -59,8 +59,8 @@ static QString realClassName(QDesignerFormEditorInterface *core, QWidget *widget
 static QString widgetLabel(QDesignerFormEditorInterface *core, QWidget *widget)
 {
     return QString::fromUtf8("%1 (%2)")
-            .arg(qdesigner_internal::realObjectName(core, widget))
-            .arg(realClassName(core, widget));
+            .arg(qdesigner_internal::realObjectName(core, widget),
+                 realClassName(core, widget));
 }
 
 namespace qdesigner_internal {

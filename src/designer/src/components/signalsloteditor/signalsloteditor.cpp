@@ -137,7 +137,7 @@ void SignalSlotConnection::updateVisibility()
 QString SignalSlotConnection::toString() const
 {
     return QCoreApplication::translate("SignalSlotConnection", "SENDER(%1), SIGNAL(%2), RECEIVER(%3), SLOT(%4)")
-        .arg(sender()).arg(signal()).arg(receiver()).arg(slot());
+        .arg(sender(), signal(), receiver(), slot());
 }
 
 SignalSlotConnection::State SignalSlotConnection::isValid(const QWidget *background) const

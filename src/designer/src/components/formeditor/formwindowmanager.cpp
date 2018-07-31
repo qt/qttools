@@ -297,7 +297,7 @@ void FormWindowManager::removeFormWindow(QDesignerFormWindowInterface *w)
         setActiveFormWindow(0);
 
     // Make sure that widget box is enabled by default
-    if (m_formWindows.size() == 0 && m_core->widgetBox())
+    if (m_formWindows.isEmpty() && m_core->widgetBox())
         m_core->widgetBox()->setEnabled(true);
 
 }

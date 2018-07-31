@@ -779,8 +779,9 @@ QWidget *QDesignerResource::create(DomUI *ui, QWidget *parentWidget)
 QWidget *QDesignerResource::create(DomWidget *ui_widget, QWidget *parentWidget)
 {
     const QString className = ui_widget->attributeClass();
-    if (!m_isMainWidget && className == QStringLiteral("QWidget") && ui_widget->elementLayout().size() &&
-                !ui_widget->hasAttributeNative()) {
+    if (!m_isMainWidget && className == QStringLiteral("QWidget")
+        && !ui_widget->elementLayout().isEmpty()
+        && !ui_widget->hasAttributeNative()) {
         // ### check if elementLayout.size() == 1
 
         QDesignerContainerExtension *container = qt_extension<QDesignerContainerExtension*>(core()->extensionManager(), parentWidget);

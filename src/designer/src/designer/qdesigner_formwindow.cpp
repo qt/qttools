@@ -205,7 +205,7 @@ void QDesignerFormWindow::updateWindowTitle(const QString &fileName)
 
     if (const QWidget *mc = m_editor->mainContainer()) {
         setWindowIcon(mc->windowIcon());
-        setWindowTitle(tr("%1 - %2[*]").arg(mc->windowTitle()).arg(fileNameTitle));
+        setWindowTitle(tr("%1 - %2[*]").arg(mc->windowTitle(), fileNameTitle));
     } else {
         setWindowTitle(fileNameTitle);
     }

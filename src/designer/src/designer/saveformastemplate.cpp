@@ -92,7 +92,8 @@ void SaveFormAsTemplate::accept()
 
     while (!file.open(QFile::WriteOnly)) {
         if (QMessageBox::information(m_formWindow, tr("Open Error"),
-            tr("There was an error opening template %1 for writing. Reason: %2").arg(name).arg(file.errorString()),
+            tr("There was an error opening template %1 for writing. Reason: %2")
+              .arg(name, file.errorString()),
             QMessageBox::Retry|QMessageBox::Cancel, QMessageBox::Cancel) == QMessageBox::Cancel) {
             return;
         }
@@ -106,7 +107,8 @@ void SaveFormAsTemplate::accept()
     m_formWindow->setFileName(origName);
     while (file.write(ba) != ba.size()) {
         if (QMessageBox::information(m_formWindow, tr("Write Error"),
-            tr("There was an error writing the template %1 to disk. Reason: %2").arg(name).arg(file.errorString()),
+            tr("There was an error writing the template %1 to disk. Reason: %2")
+              .arg(name, file.errorString()),
             QMessageBox::Retry|QMessageBox::Cancel, QMessageBox::Cancel) == QMessageBox::Cancel) {
                 file.close();
                 file.remove();

@@ -1568,10 +1568,10 @@ void ConnectionEdit::createContextMenu(QMenu &menu)
 {
     // Select
     QAction *selectAllAction = menu.addAction(tr("Select All"));
-    selectAllAction->setEnabled(connectionList().size());
+    selectAllAction->setEnabled(!connectionList().isEmpty());
     connect(selectAllAction, &QAction::triggered, this, &ConnectionEdit::selectAll);
     QAction *deselectAllAction = menu.addAction(tr("Deselect All"));
-    deselectAllAction->setEnabled(selection().size());
+    deselectAllAction->setEnabled(!selection().isEmpty());
     connect(deselectAllAction, &QAction::triggered, this, &ConnectionEdit::selectNone);
     menu.addSeparator();
     // Delete

@@ -1863,7 +1863,10 @@ bool QtResourceEditorDialogPrivate::loadQrcFile(const QString &path, QtQrcFileDa
     QDomDocument doc;
     int errLine, errCol;
     if (!doc.setContent(dataArray, errorMessage, &errLine, &errCol))  {
-        *errorMessage = QCoreApplication::translate("QtResourceEditorDialog", "A parse error occurred at line %1, column %2 of %3:\n%4").arg(errLine).arg(errCol).arg(path).arg(*errorMessage);
+        *errorMessage =
+            QCoreApplication::translate("QtResourceEditorDialog",
+                                        "A parse error occurred at line %1, column %2 of %3:\n%4")
+                                       .arg(errLine).arg(errCol).arg(path, *errorMessage);
         return false;
     }
 
@@ -1875,8 +1878,12 @@ bool QtResourceEditorDialogPrivate::saveQrcFile(const QtQrcFileData &qrcFileData
     QFile file(qrcFileData.qrcPath);
     while (!file.open(QIODevice::WriteOnly)) {
         QMessageBox msgBox(QMessageBox::Warning,
-                QCoreApplication::translate("QtResourceEditorDialog", "Save Resource File"),
-                QCoreApplication::translate("QtResourceEditorDialog", "Could not write %1: %2").arg(qrcFileData.qrcPath).arg(file.errorString()),
+                QCoreApplication::translate("QtResourceEditorDialog",
+                                            "Save Resource File"),
+                QCoreApplication::translate("QtResourceEditorDialog",
+                                            "Could not write %1: %2")
+                                           .arg(qrcFileData.qrcPath,
+                                                file.errorString()),
                 QMessageBox::Cancel|QMessageBox::Ignore|QMessageBox::Retry);
         msgBox.setEscapeButton(QMessageBox::Cancel);
         msgBox.setDefaultButton(QMessageBox::Ignore);

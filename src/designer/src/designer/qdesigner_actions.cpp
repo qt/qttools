@@ -863,7 +863,7 @@ bool QDesignerActions::writeOutForm(QDesignerFormWindowInterface *fw, const QStr
         box.setInformativeText(tr("The file %1 could not be opened."
                                "\nReason: %2"
                                "\nWould you like to retry or select a different file?")
-                                .arg(f.fileName()).arg(f.errorString()));
+                                .arg(f.fileName(), f.errorString()));
         QPushButton *retryButton = box.addButton(QMessageBox::Retry);
         retryButton->setDefault(true);
         QPushButton *switchButton = box.addButton(tr("Select New File"), QMessageBox::AcceptRole);
@@ -901,7 +901,7 @@ bool QDesignerActions::writeOutForm(QDesignerFormWindowInterface *fw, const QStr
         box.setWindowModality(Qt::WindowModal);
         box.setInformativeText(tr("It was not possible to write the entire file %1 to disk."
                                 "\nReason:%2\nWould you like to retry?")
-                                .arg(f.fileName()).arg(f.errorString()));
+                                .arg(f.fileName(), f.errorString()));
         box.setDefaultButton(QMessageBox::Retry);
         switch (box.exec()) {
         case QMessageBox::Retry:

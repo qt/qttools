@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
     case QDesigner::ParseArgumentsHelpRequested:
         return 0;
     }
-    app.setQuitOnLastWindowClosed(false);
+    QGuiApplication::setQuitOnLastWindowClosed(false);
 
-    return app.exec();
+    return QApplication::exec();
 }

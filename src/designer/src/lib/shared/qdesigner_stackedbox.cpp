@@ -162,11 +162,17 @@ static inline QString stackedClassName(QStackedWidget *w)
 void QStackedWidgetPreviewEventFilter::updateButtonToolTip(QObject *o)
 {
     if (o == m_prev) {
-        const QString msg = tr("Go to previous page of %1 '%2' (%3/%4).").arg(stackedClassName(m_stackedWidget)).arg(m_stackedWidget->objectName()).arg(m_stackedWidget->currentIndex() + 1).arg(m_stackedWidget->count());
+        const QString msg = tr("Go to previous page of %1 '%2' (%3/%4).")
+                            .arg(stackedClassName(m_stackedWidget), m_stackedWidget->objectName())
+                            .arg(m_stackedWidget->currentIndex() + 1)
+                            .arg(m_stackedWidget->count());
         m_prev->setToolTip(msg);
     } else {
         if (o == m_next) {
-            const QString msg = tr("Go to next page of %1 '%2' (%3/%4).").arg(stackedClassName(m_stackedWidget)).arg(m_stackedWidget->objectName()).arg(m_stackedWidget->currentIndex() + 1).arg(m_stackedWidget->count());
+            const QString msg = tr("Go to next page of %1 '%2' (%3/%4).")
+                                .arg(stackedClassName(m_stackedWidget), m_stackedWidget->objectName())
+                                .arg(m_stackedWidget->currentIndex() + 1)
+                                .arg(m_stackedWidget->count());
             m_next->setToolTip(msg);
         }
     }

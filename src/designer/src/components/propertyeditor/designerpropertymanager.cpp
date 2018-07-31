@@ -767,7 +767,7 @@ void PixmapEditor::pasteActionActivated()
     QString text = clipboard->text(subtype);
     if (!text.isNull()) {
         QStringList list = text.split(QLatin1Char('\n'));
-        if (list.size() > 0) {
+        if (!list.isEmpty()) {
             text = list.at(0);
             if (m_iconThemeModeEnabled && QIcon::hasThemeIcon(text)) {
                 setTheme(text);
@@ -1531,7 +1531,8 @@ QString DesignerPropertyManager::valueText(const QtProperty *property) const
     }
     if (m_alignValues.contains(const_cast<QtProperty *>(property))) {
         const uint v = m_alignValues.value(const_cast<QtProperty *>(property));
-        return tr("%1, %2").arg(indexHToString(alignToIndexH(v))).arg(indexVToString(alignToIndexV(v)));
+        return tr("%1, %2").arg(indexHToString(alignToIndexH(v)),
+                                indexVToString(alignToIndexV(v)));
     }
     if (m_paletteValues.contains(const_cast<QtProperty *>(property))) {
         const PaletteData data = m_paletteValues.value(const_cast<QtProperty *>(property));

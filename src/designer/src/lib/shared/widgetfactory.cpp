@@ -486,8 +486,10 @@ QLayout *WidgetFactory::createLayout(QWidget *widget, QLayout *parentLayout, int
         if (page) {
             widget = page;
         } else {
-            const QString msg = tr("The current page of the container '%1' (%2) could not be determined while creating a layout."
-"This indicates an inconsistency in the ui-file, probably a layout being constructed on a container widget.").arg(widget->objectName()).arg(classNameOf(core(), widget));
+            const QString msg =
+                tr("The current page of the container '%1' (%2) could not be determined while creating a layout."
+                   "This indicates an inconsistency in the ui-file, probably a layout being constructed on a container widget.")
+                .arg(widget->objectName(), classNameOf(core(), widget));
             designerWarning(msg);
         }
     }
@@ -525,7 +527,7 @@ QLayout *WidgetFactory::createLayout(QWidget *widget, QLayout *parentLayout, int
         if (!box) {  // we support only unmanaged box layouts
             const QString msg = tr("Attempt to add a layout to a widget '%1' (%2) which already has an unmanaged layout of type %3.\n"
                                             "This indicates an inconsistency in the ui-file.").
-                                 arg(widget->objectName()).arg(classNameOf(core(), widget)).arg(classNameOf(core(), widget->layout()));
+                                 arg(widget->objectName(), classNameOf(core(), widget), classNameOf(core(), widget->layout()));
             designerWarning(msg);
             return 0;
         }

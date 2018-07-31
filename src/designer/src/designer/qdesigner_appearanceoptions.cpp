@@ -62,13 +62,11 @@ QDesignerAppearanceOptionsWidget::QDesignerAppearanceOptionsWidget(QWidget *pare
     m_ui(new Ui::AppearanceOptionsWidget),
     m_initialUIMode(NeutralMode)
 {
-    typedef void (QComboBox::*QComboIntSignal)(int);
-
     m_ui->setupUi(this);
 
     m_ui->m_uiModeCombo->addItem(tr("Docked Window"), QVariant(DockedMode));
     m_ui->m_uiModeCombo->addItem(tr("Multiple Top-Level Windows"), QVariant(TopLevelMode));
-    connect(m_ui->m_uiModeCombo, static_cast<QComboIntSignal>(&QComboBox::currentIndexChanged),
+    connect(m_ui->m_uiModeCombo, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &QDesignerAppearanceOptionsWidget::slotUiModeComboChanged);
 
     m_ui->m_fontPanel->setCheckable(true);

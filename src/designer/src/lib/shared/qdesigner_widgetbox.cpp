@@ -215,15 +215,15 @@ DomUI *QDesignerWidgetBox::xmlToUi(const QString &name, const QString &xml, bool
         delete ui;
         *errorMessage = tr("A parse error occurred at line %1, column %2 of the XML code "
                            "specified for the widget %3: %4\n%5")
-                           .arg(reader.lineNumber()).arg(reader.columnNumber()).arg(name)
-                           .arg(reader.errorString()).arg(xml);
+                           .arg(reader.lineNumber()).arg(reader.columnNumber())
+                           .arg(name, reader.errorString(), xml);
         return 0;
     }
 
     if (!ui || !ui->elementWidget()) {
         delete ui;
         *errorMessage = tr("The XML code specified for the widget %1 does not contain "
-                           "any widget elements.\n%2").arg(name).arg(xml);
+                           "any widget elements.\n%2").arg(name, xml);
         return 0;
     }
 

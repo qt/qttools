@@ -643,7 +643,8 @@ QDesignerPropertySheet::QDesignerPropertySheet(QObject *object, QObject *parent)
         } else {
             if (qobject_cast<const QMenuBar *>(d->m_object)) {
                 // Keep the menu bar editable in the form even if a native menu bar is used.
-                const bool nativeMenuBarDefault = !qApp->testAttribute(Qt::AA_DontUseNativeMenuBar);
+                const bool nativeMenuBarDefault =
+                    !QCoreApplication::testAttribute(Qt::AA_DontUseNativeMenuBar);
                 createFakeProperty(QStringLiteral("nativeMenuBar"), QVariant(nativeMenuBarDefault));
             }
         }

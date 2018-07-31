@@ -797,7 +797,8 @@ void PropertyEditor::updateToolBarLabel()
     classLabelText += className;
 
     m_classLabel->setText(classLabelText);
-    m_classLabel->setToolTip(tr("Object: %1\nClass: %2").arg(objectName).arg(className));
+    m_classLabel->setToolTip(tr("Object: %1\nClass: %2")
+                             .arg(objectName, className));
 }
 
 void PropertyEditor::updateBrowserValue(QtVariantProperty *property, const QVariant &value)

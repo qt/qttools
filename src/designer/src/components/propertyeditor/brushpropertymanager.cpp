@@ -265,7 +265,8 @@ bool BrushPropertyManager::valueText(const QtProperty *property, QString *text) 
         return false;
     const QBrush &brush = brit.value();
     const QString styleName = brushStyleIndexToString(brushStyleToIndex(brush.style()));
-    *text = QCoreApplication::translate("BrushPropertyManager", "[%1, %2]").arg(styleName).arg(QtPropertyBrowserUtils::colorValueText(brush.color()));
+    *text = QCoreApplication::translate("BrushPropertyManager", "[%1, %2]")
+            .arg(styleName, QtPropertyBrowserUtils::colorValueText(brush.color()));
     return true;
 }
 

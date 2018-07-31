@@ -186,14 +186,14 @@ QDesignerWidgetBoxInterface *QDesignerComponents::createWidgetBox(QDesignerFormE
     const QString userWidgetBoxFile = widgetBoxFileName(QT_VERSION, lang);
 
     widgetBox->setFileName(userWidgetBoxFile);
-    if (!QFileInfo(userWidgetBoxFile).exists()) {
+    if (!QFileInfo::exists(userWidgetBoxFile)) {
         // check previous version, that is, are we running the new version for the first time
         // If so, try to copy the old widget box file
         if (const int minv = qtMinorVersion(QT_VERSION)) {
             int oldVersion = QT_VERSION;
             setMinorVersion(minv - 1, &oldVersion);
             const QString oldWidgetBoxFile = widgetBoxFileName(oldVersion, lang);
-            if (QFileInfo(oldWidgetBoxFile).exists())
+            if (QFileInfo::exists(oldWidgetBoxFile))
                 QFile::copy(oldWidgetBoxFile, userWidgetBoxFile);
         }
     }

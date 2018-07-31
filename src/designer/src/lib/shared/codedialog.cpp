@@ -223,12 +223,14 @@ void CodeDialog::slotSaveAs()
 
          QFile file(fileName);
          if (!file.open(QIODevice::WriteOnly|QIODevice::Text)) {
-             warning(tr("The file %1 could not be opened: %2").arg(fileName).arg(file.errorString()));
+             warning(tr("The file %1 could not be opened: %2")
+                     .arg(fileName, file.errorString()));
              continue;
          }
          file.write(code().toUtf8());
          if (!file.flush()) {
-             warning(tr("The file %1 could not be written: %2").arg(fileName).arg(file.errorString()));
+             warning(tr("The file %1 could not be written: %2")
+                     .arg(fileName, file.errorString()));
              continue;
          }
          file.close();

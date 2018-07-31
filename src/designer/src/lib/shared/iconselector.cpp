@@ -321,7 +321,8 @@ bool IconSelector::checkPixmap(const QString &fileName, CheckMode cm, QString *e
     QImageReader reader(fileName);
     if (!reader.canRead()) {
         if (errorMessage)
-            *errorMessage = tr("The file '%1' does not appear to be a valid pixmap file: %2").arg(fileName).arg(reader.errorString());
+            *errorMessage = tr("The file '%1' does not appear to be a valid pixmap file: %2")
+                              .arg(fileName, reader.errorString());
         return false;
     }
     if (cm == CheckFast)
@@ -330,7 +331,8 @@ bool IconSelector::checkPixmap(const QString &fileName, CheckMode cm, QString *e
     const QImage image = reader.read();
     if (image.isNull()) {
         if (errorMessage)
-            *errorMessage = tr("The file '%1' could not be read: %2").arg(fileName).arg(reader.errorString());
+            *errorMessage = tr("The file '%1' could not be read: %2")
+                               .arg(fileName, reader.errorString());
         return false;
     }
     return true;
