@@ -69,6 +69,7 @@
 #include <QtWidgets/qwizard.h>
 #include <QtCore/qdebug.h>
 #include <QtCore/qmetaobject.h>
+#include <QtCore/qpointer.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -188,8 +189,6 @@ WidgetFactory::Strings::Strings() :
 {
 }
 // ---------------- WidgetFactory
-QPointer<QWidget> *WidgetFactory::m_lastPassiveInteractor = new QPointer<QWidget>();
-bool WidgetFactory::m_lastWasAPassiveInteractor = false;
 const char *WidgetFactory::disableStyleCustomPaintingPropertyC = "_q_custom_style_disabled";
 
 WidgetFactory::WidgetFactory(QDesignerFormEditorInterface *core, QObject *parent)
@@ -789,59 +788,62 @@ static bool isTabBarInteractor(const QTabBar *tabBar)
     return false;
 }
 
-bool WidgetFactory::isPassiveInteractor(QWidget *widget)
+static bool isPassiveInteractorHelper(const QWidget *widget)
 {
     static const QString qtPassive = QStringLiteral("__qt__passive_");
     static const QString qtMainWindowSplitter = QStringLiteral("qt_qmainwindow_extended_splitter");
-    if (m_lastPassiveInteractor != 0 && (QWidget*)(*m_lastPassiveInteractor) == widget)
-        return m_lastWasAPassiveInteractor;
 
-    if (QApplication::activePopupWidget() || widget == 0) // if a popup is open, we have to make sure that this one is closed, else X might do funny things
-        return true;
-
-    m_lastWasAPassiveInteractor = false;
-    (*m_lastPassiveInteractor) = widget;
-
-    if (const QTabBar *tabBar = qobject_cast<const QTabBar*>(widget)) {
-        if (isTabBarInteractor(tabBar))
-            m_lastWasAPassiveInteractor = true;
-        return m_lastWasAPassiveInteractor;
-    }
-#ifndef QT_NO_SIZEGRIP
-    if (qobject_cast<QSizeGrip*>(widget))
-        return (m_lastWasAPassiveInteractor = true);
+    if (qobject_cast<const QMenuBar*>(widget)
+#if QT_CONFIG(sizegrip)
+        || qobject_cast<const QSizeGrip*>(widget)
 #endif
-    if (qobject_cast<QMdiSubWindow*>(widget))
-        return (m_lastWasAPassiveInteractor = true);
-    if (qobject_cast<QAbstractButton*>(widget)
-        && (qobject_cast<QTabBar*>(widget->parent()) || qobject_cast<QToolBox*>(widget->parent()))) {
-        return (m_lastWasAPassiveInteractor = true);
+        || qobject_cast<const QMdiSubWindow*>(widget)
+        || qobject_cast<const QToolBar*>(widget)) {
+        return true;
     }
-    if (qobject_cast<QMenuBar*>(widget))
-        return (m_lastWasAPassiveInteractor = true);
-    if (qobject_cast<QToolBar*>(widget))
-        return (m_lastWasAPassiveInteractor = true);
-    if (qobject_cast<QScrollBar*>(widget)) {
+
+    if (qobject_cast<const QAbstractButton*>(widget)) {
+        auto parent = widget->parent();
+        if (qobject_cast<const QTabBar*>(parent) || qobject_cast<const QToolBox*>(parent))
+            return true;
+    } else if (const auto tabBar = qobject_cast<const QTabBar*>(widget)) {
+        if (isTabBarInteractor(tabBar))
+            return true;
+    } else if (qobject_cast<const QScrollBar*>(widget)) {
         // A scroll bar is an interactor on a QAbstractScrollArea only.
-        if (const QWidget *parent = widget->parentWidget()) {
+        if (auto parent = widget->parentWidget()) {
             const QString objectName = parent->objectName();
             static const QString scrollAreaVContainer = QStringLiteral("qt_scrollarea_vcontainer");
             static const QString scrollAreaHContainer = QStringLiteral("qt_scrollarea_hcontainer");
-            if (objectName == scrollAreaVContainer || objectName == scrollAreaHContainer) {
-                m_lastWasAPassiveInteractor = true;
-                return m_lastWasAPassiveInteractor;
-            }
+            if (objectName == scrollAreaVContainer || objectName == scrollAreaHContainer)
+                return true;
         }
-    } else if (qstrcmp(widget->metaObject()->className(), "QDockWidgetTitle") == 0)
-        return (m_lastWasAPassiveInteractor = true);
-    else if (qstrcmp(widget->metaObject()->className(), "QWorkspaceTitleBar") == 0)
-        return (m_lastWasAPassiveInteractor = true);
-    const QString name = widget->objectName();
-    if (name.startsWith(qtPassive) || name == qtMainWindowSplitter) {
-        m_lastWasAPassiveInteractor = true;
-        return m_lastWasAPassiveInteractor;
+    } else if (qstrcmp(widget->metaObject()->className(), "QDockWidgetTitle") == 0) {
+        return true;
+    } else if (qstrcmp(widget->metaObject()->className(), "QWorkspaceTitleBar") == 0) {
+        return true;
     }
-    return m_lastWasAPassiveInteractor;
+    const QString &name = widget->objectName();
+    return name.startsWith(qtPassive) || name == qtMainWindowSplitter;
+}
+
+bool WidgetFactory::isPassiveInteractor(QWidget *widget)
+{
+    static bool lastWasAPassiveInteractor = false;
+    static QPointer<QWidget> lastPassiveInteractor;
+
+    if (!lastPassiveInteractor.isNull() && lastPassiveInteractor.data() == widget)
+        return lastWasAPassiveInteractor;
+
+    // if a popup is open, we have to make sure that this one is closed,
+    // else X might do funny things
+    if (QApplication::activePopupWidget() || widget == nullptr)
+        return true;
+
+    lastWasAPassiveInteractor = isPassiveInteractorHelper(widget);
+    lastPassiveInteractor = widget;
+
+    return lastWasAPassiveInteractor;
 }
 
 void WidgetFactory::formWindowAdded(QDesignerFormWindowInterface *formWindow)

@@ -49,7 +49,6 @@
 #include <QtCore/qmap.h>
 #include <QtCore/qhash.h>
 #include <QtCore/qvariant.h>
-#include <QtCore/qpointer.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -163,9 +162,6 @@ private:
     QStyle *m_currentStyle;
     typedef QHash<QString, QStyle *> StyleCache;
     StyleCache m_styleCache;
-
-    static QPointer<QWidget> *m_lastPassiveInteractor;
-    static bool m_lastWasAPassiveInteractor;
 };
 
 } // namespace qdesigner_internal
