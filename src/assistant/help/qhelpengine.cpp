@@ -117,22 +117,12 @@ void QHelpEnginePrivate::unsetIndexWidgetBusy()
 #endif
 }
 
-void QHelpEnginePrivate::stopDataCollection()
-{
-    contentModel->invalidateContents(true);
-    indexModel->invalidateIndex(true);
-}
-
-
-
 /*!
     \class QHelpEngine
     \since 4.4
     \inmodule QtHelp
     \brief The QHelpEngine class provides access to contents and
     indices of the help engine.
-
-
 */
 
 /*!
@@ -152,7 +142,6 @@ QHelpEngine::QHelpEngine(const QString &collectionFile, QObject *parent)
 */
 QHelpEngine::~QHelpEngine()
 {
-    d->stopDataCollection();
 }
 
 /*!

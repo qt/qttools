@@ -65,12 +65,6 @@ void QHelpEngineCorePrivate::init(const QString &collectionFile,
 QHelpEngineCorePrivate::~QHelpEngineCorePrivate()
 {
     delete collectionHandler;
-    emitReadersAboutToBeInvalidated();
-}
-
-void QHelpEngineCorePrivate::emitReadersAboutToBeInvalidated()
-{
-    emit q->readersAboutToBeInvalidated();
 }
 
 bool QHelpEngineCorePrivate::setup()
@@ -81,7 +75,6 @@ bool QHelpEngineCorePrivate::setup()
 
     needsSetup = false;
     emit q->setupStarted();
-    emitReadersAboutToBeInvalidated();
 
     const bool opened = collectionHandler->openCollectionFile();
     if (opened)
@@ -153,6 +146,11 @@ void QHelpEngineCorePrivate::errorReceived(const QString &msg)
 */
 
 /*!
+    \fn void QHelpEngineCore::readersAboutToBeInvalidated()
+    \obsolete
+*/
+
+/*!
     \fn void QHelpEngineCore::currentFilterChanged(const QString &newFilter)
 
     This signal is emitted when the current filter is changed to
@@ -218,7 +216,6 @@ void QHelpEngineCore::setCollectionFile(const QString &fileName)
     if (d->collectionHandler) {
         delete d->collectionHandler;
         d->collectionHandler = nullptr;
-        d->emitReadersAboutToBeInvalidated();
     }
     d->init(fileName, this);
     d->needsSetup = true;

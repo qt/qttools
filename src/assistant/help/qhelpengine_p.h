@@ -79,7 +79,6 @@ public:
     virtual void init(const QString &collectionFile,
         QHelpEngineCore *helpEngineCore);
 
-    void emitReadersAboutToBeInvalidated();
     bool setup();
 
     QHelpCollectionHandler *collectionHandler = nullptr;
@@ -111,8 +110,6 @@ public:
     QHelpIndexWidget *indexWidget = nullptr;
 
     QHelpSearchEngine *searchEngine = nullptr;
-
-    void stopDataCollection();
 
     friend class QHelpContentProvider;
     friend class QHelpContentModel;
