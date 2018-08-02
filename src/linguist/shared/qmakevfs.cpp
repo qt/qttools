@@ -50,7 +50,7 @@ QMakeVfs::QMakeVfs()
 #endif
 {
 #ifndef QT_NO_TEXTCODEC
-    m_textCodec = 0;
+    m_textCodec = nullptr;
 #endif
     ref();
 }
