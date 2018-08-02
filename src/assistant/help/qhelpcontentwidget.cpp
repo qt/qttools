@@ -40,7 +40,6 @@
 #include "qhelpcontentwidget.h"
 #include "qhelpenginecore.h"
 #include "qhelpengine_p.h"
-#include "qhelpdbreader_p.h"
 #include "qhelpcollectionhandler_p.h"
 
 #include <QDir>
