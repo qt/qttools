@@ -402,10 +402,10 @@ static QByteArray generateTrueTypeCMap(QFontEngine *fe)
     quint32 previousGlyphIndex = 0xfffffffe;
     bool inSegment = false;
 
-    QGlyphLayoutArray<10> layout;
+    QGlyphLayoutArray<1> layout;
     for (uint uc = 0; uc < 0x10000; ++uc) {
         QChar ch(uc);
-        int nglyphs = 10;
+        int nglyphs = 1;
 
         bool validGlyph = fe->stringToCMap(&ch, 1, &layout, &nglyphs, /*flags*/ 0)
                           && nglyphs == 1 && layout.glyphs[0];
@@ -503,14 +503,14 @@ void QPF::addGlyphs(QFontEngine *fe, const QList<CharacterRange> &ranges)
                 * (sizeof(QFontEngineQPF2::Glyph)
                     + qRound(fe->maxCharWidth() * (fe->ascent() + fe->descent()).toReal())));
 
-        QGlyphLayoutArray<10> layout;
+        QGlyphLayoutArray<1> layout;
 
         for (CharacterRange range : ranges) {
             if (debugVerbosity > 2)
                 qDebug() << "rendering range from" << range.start << "to" << range.end;
             for (uint uc = range.start; uc < range.end; ++uc) {
                 QChar ch(uc);
-                int nglyphs = 10;
+                int nglyphs = 1;
                 if (!fe->stringToCMap(&ch, 1, &layout, &nglyphs, /*flags*/ 0))
                     continue;
 
@@ -524,8 +524,12 @@ void QPF::addGlyphs(QFontEngine *fe, const QList<CharacterRange> &ranges)
 
                 Q_ASSERT(glyphIndex < glyphCount);
 
-                QImage img = fe->alphaMapForGlyph(glyphIndex).convertToFormat(QImage::Format_Indexed8);
                 glyph_metrics_t metrics = fe->boundingBox(glyphIndex);
+                const bool valid = metrics.width.value() != 0 && metrics.height.value() != 0;
+
+                QImage img = valid
+                    ? fe->alphaMapForGlyph(glyphIndex).convertToFormat(QImage::Format_Indexed8)
+                    : QPixmap(0,0).toImage();
 
                 const quint32 oldSize = glyphs.size();
                 glyphs.resize(glyphs.size() + sizeof(QFontEngineQPF2::Glyph) + img.byteCount());
