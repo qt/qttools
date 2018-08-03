@@ -85,7 +85,6 @@ private:
     QStringList m_docsBackup;
     RegisteredDocsModel *m_registeredDocsModel;
     QSortFilterProxyModel *m_registereredDocsFilterModel;
-    QStringList m_regDocs;
     QStringList m_unregDocs;
     FontPanel *m_appFontPanel;
     FontPanel *m_browserFontPanel;

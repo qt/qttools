@@ -348,7 +348,6 @@ void PreferencesDialog::addDocumentationLocal()
             entry.nameSpace = nameSpace;
             entry.fileName = fileName;
             m_registeredDocsModel->append(entry);
-            m_regDocs.append(nameSpace);
             m_unregDocs.removeAll(nameSpace);
         }
     }
@@ -462,7 +461,7 @@ void PreferencesDialog::applyChanges()
         helpEngine.unregisterDocumentation(doc);
     }
 
-    if (filtersWereChanged || !m_regDocs.isEmpty() || !m_unregDocs.isEmpty())
+    if (filtersWereChanged || !m_unregDocs.isEmpty())
         helpEngine.setupData();
 
     helpEngine.setShowTabs(m_ui.showTabs->isChecked());
