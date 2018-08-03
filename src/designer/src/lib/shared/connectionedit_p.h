@@ -43,7 +43,7 @@
 
 #include "shared_global_p.h"
 
-#include <QtCore/qmap.h>
+#include <QtCore/qhash.h>
 #include <QtCore/qlist.h>
 #include <QtCore/qpointer.h>
 
@@ -68,8 +68,8 @@ class QDESIGNER_SHARED_EXPORT CETypes
 {
 public:
     typedef QList<Connection*> ConnectionList;
-    typedef QMap<Connection*, Connection*> ConnectionSet;
-    typedef QMap<QWidget*, QWidget*> WidgetSet;
+    typedef QHash<Connection*, Connection*> ConnectionSet;
+    typedef QHash<QWidget*, QWidget*> WidgetSet;
 
     class EndPoint {
     public:

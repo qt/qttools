@@ -995,7 +995,7 @@ DomColorGroup *QAbstractFormBuilder::saveColorGroup(const QPalette &palette)
     const uint mask = palette.resolve();
     for (int role = QPalette::WindowText; role < QPalette::NColorRoles; ++role) {
         if (mask & (1 << role)) {
-            QBrush br = palette.brush(QPalette::ColorRole(role));
+            const QBrush &br = palette.brush(QPalette::ColorRole(role));
 
             DomColorRole *colorRole = new DomColorRole();
             colorRole->setElementBrush(saveBrush(br));
@@ -1112,20 +1112,20 @@ DomBrush *QAbstractFormBuilder::saveBrush(const QBrush &br)
         }
         gradient->setElementGradientStop(stops);
         if (type == QGradient::LinearGradient) {
-            const QLinearGradient *lgr = (const QLinearGradient *)(gr);
+            auto lgr = static_cast<const QLinearGradient *>(gr);
             gradient->setAttributeStartX(lgr->start().x());
             gradient->setAttributeStartY(lgr->start().y());
             gradient->setAttributeEndX(lgr->finalStop().x());
             gradient->setAttributeEndY(lgr->finalStop().y());
         } else if (type == QGradient::RadialGradient) {
-            const QRadialGradient *rgr = (const QRadialGradient *)(gr);
+            auto rgr = static_cast<const QRadialGradient *>(gr);
             gradient->setAttributeCentralX(rgr->center().x());
             gradient->setAttributeCentralY(rgr->center().y());
             gradient->setAttributeFocalX(rgr->focalPoint().x());
             gradient->setAttributeFocalY(rgr->focalPoint().y());
             gradient->setAttributeRadius(rgr->radius());
         } else if (type == QGradient::ConicalGradient) {
-            const QConicalGradient *cgr = (const QConicalGradient *)(gr);
+            auto cgr = static_cast<const QConicalGradient *>(gr);
             gradient->setAttributeCentralX(cgr->center().x());
             gradient->setAttributeCentralY(cgr->center().y());
             gradient->setAttributeAngle(cgr->angle());
@@ -1140,7 +1140,7 @@ DomBrush *QAbstractFormBuilder::saveBrush(const QBrush &br)
             brush->setElementTexture(p);
         }
     } else {
-        QColor c = br.color();
+        const QColor &c = br.color();
         DomColor *color = new DomColor();
         color->setElementRed(c.red());
         color->setElementGreen(c.green());

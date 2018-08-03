@@ -169,7 +169,8 @@ enum KeySequenceSubPropertyMask { SubPropertyKeySequenceValue = 1, SubPropertyKe
 enum CommonSubPropertyMask { SubPropertyAll = 0xFFFFFFFF };
 
 // Set the mask flag in mask if the properties do not match.
-#define COMPARE_SUBPROPERTY(object1, object2, getter, mask, maskFlag) if (object1.getter() != object2.getter()) mask |= maskFlag;
+#define COMPARE_SUBPROPERTY(object1, object2, getter, mask, maskFlag) \
+    if (object1.getter() != object2.getter()) (mask) |= (maskFlag);
 
 // find changed subproperties of a rectangle
 unsigned compareSubProperties(const QRect & r1, const QRect & r2)
@@ -360,7 +361,8 @@ unsigned compareSubProperties(const QVariant & q1, const QVariant & q2, qdesigne
 }
 
 // Apply  the sub property if mask flag is set in mask
-#define SET_SUBPROPERTY(rc, newValue, getter, setter, mask, maskFlag) if (mask & maskFlag) rc.setter(newValue.getter());
+#define SET_SUBPROPERTY(rc, newValue, getter, setter, mask, maskFlag) \
+    if ((mask) & (maskFlag)) rc.setter((newValue).getter());
 
 // apply changed subproperties to a rectangle
 QRect applyRectSubProperty(const QRect &oldValue, const QRect &newValue, unsigned mask)

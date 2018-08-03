@@ -701,7 +701,7 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
 
     void GridLayoutState::applyToLayout(const QDesignerFormEditorInterface *core, QWidget *w) const
     {
-        typedef QMap<QLayoutItem *, QRect> LayoutItemRectMap;
+        typedef QHash<QLayoutItem *, QRect> LayoutItemRectMap;
         QGridLayout *grid = qobject_cast<QGridLayout *>(LayoutInfo::managedLayout(core, w));
         Q_ASSERT(grid);
         if (debugLayout)
