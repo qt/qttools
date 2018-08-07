@@ -1052,8 +1052,8 @@
         are optional in the plain-text system. However, with the text-ID-based
         system, this extra information becomes essential because without it you only
         have the text ID and the translator might not be able to make a sensible
-        translation from without any other context. You can use long descriptive
-        text ID and no comments but comments are often easier to understand.
+        translation from that without further context. You can use long descriptive
+        text IDs and no comments, but comments are often easier to understand.
 
     \endlist
 
