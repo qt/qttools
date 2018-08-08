@@ -632,16 +632,19 @@
     \previouspage Getting Started with QDoc
     \nextpage Creating QDoc Configuration Files
 
-    As of this writing, the decision of whether to use static or dynamic
-    linking of libclang has not been made. The most likely outcome will be
-    to include libclang in the binary packages with QDoc and have the installer
-    put libclang in the same directory used for Creator's libclang. It is
-    hoped that both Creator and QDoc will eventually use the same version of
-    libclang, but as of this writing, QDoc might require a later version of
-    libclang than is required for Creator.
+    If you are going to build QDoc from source, the following prerequisites
+    apply:
 
-    As of this writing, users wishing to build and/or run QDoc must install
-    \l{http://clang.llvm.org}{LLVM 3.9} or greater and set the variable
-    LLVM_INSTALL_DIR accordingly. The pre-built binaries needed can be
-    found \l {http://releases.llvm.org/download.html}{here}.
+    \list 1
+      \li Install \l{http://clang.llvm.org}{LLVM 3.9} or greater.
+          The pre-built binaries needed can be found
+          \l {http://releases.llvm.org/download.html}{here}.
+      \li Set the environment variable \c LLVM_INSTALL_DIR to point to the
+          directory where LLVM is installed. This should be the top level
+          directory. For example, on a Linux system with LLVM installed to
+          \c /usr/llvm:
+          \badcode
+            $ export LLVM_INSTALL_DIR=/usr/llvm
+          \endcode
+    \endlist
 */

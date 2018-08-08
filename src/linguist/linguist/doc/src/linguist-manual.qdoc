@@ -511,16 +511,27 @@
 
     \section2 Changing the Target Locale
 
-    If the target language and country are not explicitly set, \QL deducts them
-    from the translation source file name. For example, \c app_de.ts sets the
+    You can set the locale information explicitly in \gui Edit >
+    \gui {Translation File Settings}. If the target language and country
+    are not explicitly set when you open a translation source file, \QL
+    attempts to deduct them from the translation source file name. This
+    requires that the translation files adhere to the following file name
+    convention:
+    \c appname_language[_country].ts, where:
+
+    \list
+      \li \c language is an ISO 639 language code in lowercase.
+      \li \c country is an ISO 3166 two-letter country code in uppercase.
+    \endlist
+
+    If this attempt to resolve the target language and country fails, the
+    \gui {Translation File Settings} window opens.
+
+    For example, \c app_de.ts sets the
     target language to German, and \c app_de_ch.ts sets the target language to
     German and the target country to Switzerland. This also helps loading
     translations for the current locale automatically. For more information, see
     \l{linguist-programmers.html}{Developers}.
-
-    If your files do not follow this convention, you can also set the
-    locale information explicitly by selecting \gui Edit >
-    \gui {Translation File Settings}.
 
     \image linguist-translationfilesettings.png
 
