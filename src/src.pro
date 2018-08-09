@@ -21,7 +21,7 @@ qtConfig(library) {
     !android|android_app: SUBDIRS += qtplugininfo
 }
 
-config_clang: SUBDIRS += qdoc
+config_clang: qtConfig(thread): SUBDIRS += qdoc
 
 if(!android|android_app):!uikit: SUBDIRS += qtpaths
 
