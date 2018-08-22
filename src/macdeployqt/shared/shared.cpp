@@ -418,7 +418,8 @@ QStringList findAppFrameworkNames(const QString &appBundlePath)
     // populate the frameworks list with QtFoo.framework etc,
     // as found in /Contents/Frameworks/
     QString searchPath = appBundlePath + "/Contents/Frameworks/";
-    QDirIterator iter(searchPath, QStringList() << QString::fromLatin1("*.framework"), QDir::Dirs);
+    QDirIterator iter(searchPath, QStringList() << QString::fromLatin1("*.framework"),
+                      QDir::Dirs | QDir::NoSymLinks);
     while (iter.hasNext()) {
         iter.next();
         frameworks << iter.fileInfo().fileName();
@@ -431,7 +432,8 @@ QStringList findAppFrameworkPaths(const QString &appBundlePath)
 {
     QStringList frameworks;
     QString searchPath = appBundlePath + "/Contents/Frameworks/";
-    QDirIterator iter(searchPath, QStringList() << QString::fromLatin1("*.framework"), QDir::Dirs);
+    QDirIterator iter(searchPath, QStringList() << QString::fromLatin1("*.framework"),
+                      QDir::Dirs | QDir::NoSymLinks);
     while (iter.hasNext()) {
         iter.next();
         frameworks << iter.fileInfo().filePath();
@@ -445,8 +447,7 @@ QStringList findAppLibraries(const QString &appBundlePath)
     QStringList result;
     // dylibs
     QDirIterator iter(appBundlePath, QStringList() << QString::fromLatin1("*.dylib"),
-            QDir::Files, QDirIterator::Subdirectories);
-
+            QDir::Files | QDir::NoSymLinks, QDirIterator::Subdirectories);
     while (iter.hasNext()) {
         iter.next();
         result << iter.fileInfo().filePath();
