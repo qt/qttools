@@ -43,8 +43,15 @@ isEmpty(QDOC_USE_STATIC_LIBCLANG): QDOC_USE_STATIC_LIBCLANG = $$(QDOC_USE_STATIC
 cache(QDOC_USE_STATIC_LIBCLANG)
 
 for(_, $$list(_)) { # just a way to break easily
-    mingw:isEmpty(LLVM_INSTALL_DIR): LLVM_INSTALL_DIR = $$(LLVM_INSTALL_DIR_MINGW)
-    msvc:isEmpty(LLVM_INSTALL_DIR): LLVM_INSTALL_DIR = $$(LLVM_INSTALL_DIR_MSVC)
+    equals(QMAKE_HOST.os, Windows) {
+        # on Windows we have only two host compilers, MSVC or mingw. The former we never
+        # use for cross-compilation where it isn't also the target compiler. The latter
+        # is not detectable as this .prf file is evaluated against the target configuration
+        # and therefore checking for "mingw" won't work when the target compiler is clang (Android)
+        # or qcc (QNX).
+        msvc:isEmpty(LLVM_INSTALL_DIR): LLVM_INSTALL_DIR = $$(LLVM_INSTALL_DIR_MSVC)
+        else:isEmpty(LLVM_INSTALL_DIR): LLVM_INSTALL_DIR = $$(LLVM_INSTALL_DIR_MINGW)
+    }
     isEmpty(LLVM_INSTALL_DIR): LLVM_INSTALL_DIR = $$(LLVM_INSTALL_DIR)
     LLVM_INSTALL_DIR = $$clean_path($$LLVM_INSTALL_DIR)
     contains(QMAKE_HOST.arch, x86_64): \
