@@ -3,7 +3,7 @@ TEMPLATE = subdirs
 qtHaveModule(widgets) {
     no-png {
         message("Some graphics-related tools are unavailable without PNG support")
-    } else {
+    } else: !uikit {
         SUBDIRS = assistant \
                   pixeltool \
                   designer
@@ -18,14 +18,14 @@ SUBDIRS += linguist \
     qtattributionsscanner
 
 qtConfig(library) {
-    !android|android_app: SUBDIRS += qtplugininfo
+    if(!android|android_app):!uikit: SUBDIRS += qtplugininfo
 }
 
 config_clang: qtConfig(thread): SUBDIRS += qdoc
 
 if(!android|android_app):!uikit: SUBDIRS += qtpaths
 
-mac {
+macos {
     SUBDIRS += macdeployqt
 }
 
