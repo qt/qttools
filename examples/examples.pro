@@ -1,4 +1,7 @@
 TEMPLATE = subdirs
-qtHaveModule(widgets): SUBDIRS += help designer linguist uitools assistant
+qtHaveModule(widgets) {
+    SUBDIRS += linguist
+    !uikit: SUBDIRS += help designer uitools assistant
+}
 
 !qtConfig(process): SUBDIRS -= assistant designer
