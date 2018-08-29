@@ -99,6 +99,7 @@ public:
     QSet<QString> rpathsUsed;
     bool useLoaderPath;
     bool isFramework;
+    bool containsModule(const QString &module, const QString &libInFix) const;
 };
 
 inline QDebug operator<<(QDebug debug, const ApplicationBundleInfo &info);
