@@ -414,7 +414,7 @@ void CodeMarker::insert(FastSection &fastSection,
         }
     }
 
-    if (node->access() == Node::Private) {
+    if (node->access() == Node::Private || node->isInternal()) {
         irrelevant = true;
     }
     else if (node->type() == Node::Function) {
