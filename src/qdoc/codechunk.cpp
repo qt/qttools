@@ -86,7 +86,7 @@ static const bool needSpace[9][9] = {
 
 static int category( QChar ch )
 {
-    return charCategory[(int)ch.toLatin1()];
+    return charCategory[static_cast<int>(ch.toLatin1())];
 }
 
 CodeChunk::CodeChunk()

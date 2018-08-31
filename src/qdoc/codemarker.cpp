@@ -104,7 +104,7 @@ void CodeMarker::terminate()
 CodeMarker *CodeMarker::markerForCode(const QString& code)
 {
     CodeMarker *defaultMarker = markerForLanguage(defaultLang);
-    if (defaultMarker != 0 && defaultMarker->recognizeCode(code))
+    if (defaultMarker != nullptr && defaultMarker->recognizeCode(code))
         return defaultMarker;
 
     QList<CodeMarker *>::ConstIterator m = markers.constBegin();
@@ -122,7 +122,7 @@ CodeMarker *CodeMarker::markerForFileName(const QString& fileName)
     int dot = -1;
     while ((dot = fileName.lastIndexOf(QLatin1Char('.'), dot)) != -1) {
         QString ext = fileName.mid(dot + 1);
-        if (defaultMarker != 0 && defaultMarker->recognizeExtension(ext))
+        if (defaultMarker != nullptr && defaultMarker->recognizeExtension(ext))
             return defaultMarker;
         QList<CodeMarker *>::ConstIterator m = markers.constBegin();
         while (m != markers.constEnd()) {
@@ -143,7 +143,7 @@ CodeMarker *CodeMarker::markerForLanguage(const QString& lang)
             return *m;
         ++m;
     }
-    return 0;
+    return nullptr;
 }
 
 const Node *CodeMarker::nodeForString(const QString& string)

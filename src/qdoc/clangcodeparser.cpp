@@ -60,8 +60,8 @@
 
 QT_BEGIN_NAMESPACE
 
-static CXTranslationUnit_Flags flags_ = (CXTranslationUnit_Flags)0;
-static CXIndex index_ = 0;
+static CXTranslationUnit_Flags flags_ = static_cast<CXTranslationUnit_Flags>(0);
+static CXIndex index_ = nullptr;
 
 #ifndef QT_NO_DEBUG_STREAM
 template <class T>
@@ -531,7 +531,7 @@ CXChildVisitResult ClangVisitor::visitFnSignature(CXCursor cursor, CXSourceLocat
     case CXCursor_ConversionFunction: {
         ignoreSignature = false;
         if (ignoredSymbol(functionName(cursor))) {
-            *fnNode = 0;
+            *fnNode = nullptr;
             ignoreSignature = true;
         } else {
             *fnNode = findFunctionNodeForCursor(qdb_, cursor);
@@ -621,7 +621,7 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
     }
     case CXCursor_Namespace: {
         QString namespaceName = fromCXString(clang_getCursorDisplayName(cursor));
-        NamespaceNode* ns = 0;
+        NamespaceNode* ns = nullptr;
         if (parent_)
             ns = static_cast<NamespaceNode*>(parent_->findChildNode(namespaceName, Node::Namespace));
         if (!ns) {
@@ -742,7 +742,7 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         if (findNodeForCursor(qdb_, cursor)) // Was already parsed, propably in another tu
             return CXChildVisit_Continue;
         QString enumTypeName = fromCXString(clang_getCursorSpelling(cursor));
-        EnumNode* en = 0;
+        EnumNode* en = nullptr;
         if (enumTypeName.isEmpty()) {
             enumTypeName = "anonymous";
             if (parent_ && (parent_->isClass() || parent_->isNamespace())) {
@@ -1297,7 +1297,7 @@ void ClangCodeParser::precompileHeaders()
     for (const auto &p : qAsConst(moreArgs_))
         args_.push_back(p.constData());
 
-    flags_ = (CXTranslationUnit_Flags) (CXTranslationUnit_Incomplete | CXTranslationUnit_SkipFunctionBodies | CXTranslationUnit_KeepGoing);
+    flags_ = static_cast<CXTranslationUnit_Flags>(CXTranslationUnit_Incomplete | CXTranslationUnit_SkipFunctionBodies | CXTranslationUnit_KeepGoing);
     // Change 2nd parameter to 1 to make clang report errors.
     index_ = clang_createIndex(1, Generator::debugging() ? 1 : 0);
     buildPCH();
@@ -1314,7 +1314,7 @@ void ClangCodeParser::precompileHeaders()
 void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QString& filePath)
 {
     currentFile_ = filePath;
-    flags_ = (CXTranslationUnit_Flags) (CXTranslationUnit_Incomplete | CXTranslationUnit_SkipFunctionBodies | CXTranslationUnit_KeepGoing);
+    flags_ = static_cast<CXTranslationUnit_Flags>(CXTranslationUnit_Incomplete | CXTranslationUnit_SkipFunctionBodies | CXTranslationUnit_KeepGoing);
     index_ = clang_createIndex(1, 0);
 
     getDefaultArgs();
@@ -1410,7 +1410,7 @@ void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QStrin
  */
 Node* ClangCodeParser::parseFnArg(const Location& location, const QString& fnArg)
 {
-    Node* fnNode = 0;
+    Node* fnNode = nullptr;
     /*
       If the \fn command begins with a tag, then don't try to
       parse the \fn command with clang. Use the tag to search
@@ -1461,7 +1461,7 @@ Node* ClangCodeParser::parseFnArg(const Location& location, const QString& fnArg
         }
         return fnNode;
     }
-    CXTranslationUnit_Flags flags = (CXTranslationUnit_Flags) (CXTranslationUnit_Incomplete |
+    CXTranslationUnit_Flags flags = static_cast<CXTranslationUnit_Flags>(CXTranslationUnit_Incomplete |
                                                                CXTranslationUnit_SkipFunctionBodies |
                                                                CXTranslationUnit_KeepGoing);
     // Change 2nd parameter to 1 to make clang report errors.
@@ -1508,7 +1508,7 @@ Node* ClangCodeParser::parseFnArg(const Location& location, const QString& fnArg
         ClangVisitor visitor(qdb_, allHeaders_);
         bool ignoreSignature = false;
         visitor.visitFnArg(cur, &fnNode, ignoreSignature);
-        if (fnNode == 0) {
+        if (fnNode == nullptr) {
             unsigned diagnosticCount = clang_getNumDiagnostics(tu);
             if (diagnosticCount > 0 && (!Generator::preparing() || Generator::singleExec())) {
                 bool report = true;

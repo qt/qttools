@@ -229,7 +229,7 @@ static const struct {
     { "Target", Atom::Target },
     { "UnhandledFormat", Atom::UnhandledFormat },
     { "UnknownCommand", Atom::UnknownCommand },
-    { 0, 0 }
+    { nullptr, 0 }
 };
 
 /*! \fn Atom::Atom(AtomType type, const QString& string)
@@ -289,7 +289,7 @@ static const struct {
  */
 const Atom* Atom::next(AtomType t) const
 {
-    return (next_ && (next_->type() == t)) ? next_ : 0;
+    return (next_ && (next_->type() == t)) ? next_ : nullptr;
 }
 
 /*!
@@ -298,7 +298,7 @@ const Atom* Atom::next(AtomType t) const
  */
 const Atom* Atom::next(AtomType t, const QString& s) const
 {
-    return (next_ && (next_->type() == t) && (next_->string() == s)) ? next_ : 0;
+    return (next_ && (next_->type() == t) && (next_->string() == s)) ? next_ : nullptr;
 }
 
 /*! \fn const Atom *Atom::next() const
@@ -325,7 +325,7 @@ QString Atom::typeString() const
 
     if (!deja) {
         int i = 0;
-        while (atms[i].english != 0) {
+        while (atms[i].english != nullptr) {
             if (atms[i].no != i)
                 Location::internalError(QCoreApplication::translate("QDoc::Atom", "atom %1 missing").arg(i));
             i++;
@@ -333,8 +333,8 @@ QString Atom::typeString() const
         deja = true;
     }
 
-    int i = (int) type();
-    if (i < 0 || i > (int) Last)
+    int i = static_cast<int>(type());
+    if (i < 0 || i > static_cast<int>(Last))
         return QLatin1String("Invalid");
     return QLatin1String(atms[i].english);
 }
@@ -378,7 +378,7 @@ LinkAtom::LinkAtom(const QString& p1, const QString& p2)
       resolved_(false),
       genus_(Node::DontCare),
       goal_(Node::NoType),
-      domain_(0),
+      domain_(nullptr),
       squareBracketParams_(p2)
 {
     // nada.
