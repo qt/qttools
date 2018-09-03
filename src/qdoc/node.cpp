@@ -850,7 +850,8 @@ Node *Aggregate::findChildNode(const QString& name, Node::Genus genus, int findF
                                 && !node->isQmlType()
                                 && !node->isQmlBasicType()
                                 && !node->isJsType()
-                                && !node->isJsBasicType())
+                                && !node->isJsBasicType()
+                                && !node->isEnumType())
                             continue;
                     }
                     return node;
