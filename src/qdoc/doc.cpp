@@ -2136,7 +2136,7 @@ bool DocParser::expandMacro()
                 QString expanded = expandMacroToString(cmdStr,
                                                        macro.defaultDef,
                                                        macro.numParams);
-                input_.replace(backslashPos, endPos - backslashPos, expanded);
+                input_.replace(backslashPos, pos - backslashPos, expanded);
                 len = input_.length();
                 pos = backslashPos;
                 return true;
