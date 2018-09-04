@@ -1350,7 +1350,8 @@ void HtmlGenerator::generateCppReferencePage(Node* node, CodeMarker* marker)
     generateHeader(title, aggregate, marker);
 
     Sections sections(aggregate);
-    generateTableOfContents(aggregate, marker, &sections.stdCppClassSummarySections());
+    SectionVector *sectionVector = ns ? &sections.stdSummarySections() : &sections.stdCppClassSummarySections();
+    generateTableOfContents(aggregate, marker, sectionVector);
     generateKeywordAnchors(aggregate);
     generateTitle(title, subtitleText, SmallSubTitle, aggregate, marker);
     if (ns && !ns->hasDoc() && ns->docNode()) {
@@ -1390,8 +1391,8 @@ void HtmlGenerator::generateCppReferencePage(Node* node, CodeMarker* marker)
 
     bool needOtherSection = false;
 
-    SectionVector::ConstIterator s = sections.stdCppClassSummarySections().constBegin();
-    while (s != sections.stdCppClassSummarySections().constEnd()) {
+    SectionVector::ConstIterator s = sectionVector->constBegin();
+    while (s != sectionVector->constEnd()) {
         if (s->members().isEmpty() && s->reimplementedMembers().isEmpty()) {
             if (!s->inheritedMembers().isEmpty())
                 needOtherSection = true;
@@ -1426,8 +1427,8 @@ void HtmlGenerator::generateCppReferencePage(Node* node, CodeMarker* marker)
         out() << "<h3>Additional Inherited Members</h3>\n"
                  "<ul>\n";
 
-        s = sections.stdCppClassSummarySections().constBegin();
-        while (s != sections.stdCppClassSummarySections().constEnd()) {
+        s = sectionVector->constBegin();
+        while (s != sectionVector->constEnd()) {
             if (s->members().isEmpty() && !s->inheritedMembers().isEmpty())
                 generateSectionInheritedList(*s, aggregate);
             ++s;
@@ -1450,8 +1451,9 @@ void HtmlGenerator::generateCppReferencePage(Node* node, CodeMarker* marker)
         generateExtractionMark(aggregate, EndMark);
     }
 
-    s = sections.stdCppClassDetailsSections().constBegin();
-    while (s != sections.stdCppClassDetailsSections().constEnd()) {
+    sectionVector = ns ? &sections.stdDetailsSections() : &sections.stdCppClassDetailsSections();
+    s = sectionVector->constBegin();
+    while (s != sectionVector->constEnd()) {
         //out() << "<hr />\n";
         if (!s->divClass().isEmpty())
             out() << "<div class=\"" << s->divClass() << "\">\n"; // QTBUG-9504
