@@ -79,7 +79,7 @@ public:
     bool load(QDesignerWidgetBox::LoadMode loadMode);
     bool loadContents(const QString &contents);
     bool save();
-    QIcon iconForWidget(QString iconName) const;
+    QIcon iconForWidget(const QString &iconName) const;
 
 signals:
     void pressed(const QString name, const QString dom_xml, const QPoint &global_mouse_pos);

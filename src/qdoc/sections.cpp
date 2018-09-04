@@ -783,6 +783,63 @@ void Sections::distributeNodeInDetailsVector(SectionVector &dv, Node *n)
         dv[DetailsMemberFunctions].insert(n);
 }
 
+void Sections::distributeQmlNodeInDetailsVector(SectionVector &dv, Node *n)
+{
+    if (n->isSharingComment())
+        return;
+    if (n->isQmlPropertyGroup() || n->isJsPropertyGroup())
+        dv[QmlProperties].insert(n);
+    else if (n->isQmlProperty() || n->isJsProperty()) {
+        QmlPropertyNode* pn = static_cast<QmlPropertyNode*>(n);
+        if (pn->isAttached())
+            dv[QmlAttachedProperties].insert(pn);
+        else
+            dv[QmlProperties].insert(pn);
+    } else if (n->isQmlSignal() || n->isJsSignal()) {
+        FunctionNode* fn = static_cast<FunctionNode*>(n);
+        if (fn->isAttached())
+            dv[QmlAttachedSignals].insert(fn);
+        else
+            dv[QmlSignals].insert(fn);
+    } else if (n->isQmlSignalHandler() || n->isJsSignalHandler()) {
+        dv[QmlSignalHandlers].insert(n);
+    } else if (n->isQmlMethod() || n->isJsMethod()) {
+        FunctionNode* fn = static_cast<FunctionNode*>(n);
+        if (fn->isAttached())
+            dv[QmlAttachedMethods].insert(fn);
+        else
+            dv[QmlMethods].insert(fn);
+    } else if (n->isSharedCommentNode() && n->hasDoc())
+        dv[QmlMethods].insert(n);
+}
+
+void Sections::distributeQmlNodeInSummaryVector(SectionVector &sv, Node *n)
+{
+    if (n->isQmlPropertyGroup() || n->isJsPropertyGroup())
+        sv[QmlProperties].insert(n);
+    else if (n->isQmlProperty() || n->isJsProperty()) {
+        QmlPropertyNode* pn = static_cast<QmlPropertyNode*>(n);
+        if (pn->isAttached())
+            sv[QmlAttachedProperties].insert(pn);
+        else
+            sv[QmlProperties].insert(pn);
+    } else if (n->isQmlSignal() || n->isJsSignal()) {
+        FunctionNode* fn = static_cast<FunctionNode*>(n);
+        if (fn->isAttached())
+            sv[QmlAttachedSignals].insert(fn);
+        else
+            sv[QmlSignals].insert(fn);
+    } else if (n->isQmlSignalHandler() || n->isJsSignalHandler()) {
+        sv[QmlSignalHandlers].insert(n);
+    } else if (n->isQmlMethod() || n->isJsMethod()) {
+        FunctionNode* fn = static_cast<FunctionNode*>(n);
+        if (fn->isAttached())
+            sv[QmlAttachedMethods].insert(fn);
+        else
+            sv[QmlMethods].insert(fn);
+    }
+}
+
 static void pushBaseClasses(QStack<ClassNode*> &stack, ClassNode *cn)
 {
     QList<RelatedClass>::ConstIterator r = cn->baseClasses().constBegin();
@@ -886,42 +943,8 @@ void Sections::buildStdQmlTypeRefPageSections()
                 continue;
             }
             allMembers.add(classMap, n);
-            if (n->isQmlPropertyGroup() || n->isJsPropertyGroup()) {
-                sv[QmlProperties].insert(n);
-                dv[QmlProperties].insert(n);
-            } else if (n->isQmlProperty() || n->isJsProperty()) {
-                QmlPropertyNode* pn = static_cast<QmlPropertyNode*>(n);
-                if (pn->isAttached()) {
-                    sv[QmlAttachedProperties].insert(pn);
-                    dv[QmlAttachedProperties].insert(pn);
-                } else {
-                    sv[QmlProperties].insert(pn);
-                    dv[QmlProperties].insert(pn);
-                }
-            } else if (n->isQmlSignal() || n->isJsSignal()) {
-                FunctionNode* sn = static_cast<FunctionNode*>(n);
-                if (sn->isAttached()) {
-                    sv[QmlAttachedSignals].insert(sn);
-                    dv[QmlAttachedSignals].insert(sn);
-                } else {
-                    sv[QmlSignals].insert(sn);
-                    dv[QmlSignals].insert(sn);
-                }
-            }
-            else if (n->isQmlSignalHandler() || n->isJsSignalHandler()) {
-                sv[QmlSignalHandlers].insert(n);
-                dv[QmlSignalHandlers].insert(n);
-            }
-            else if (n->isQmlMethod() || n->isJsMethod()) {
-                FunctionNode* mn = static_cast<FunctionNode*>(n);
-                if (mn->isAttached()) {
-                    sv[QmlAttachedMethods].insert(mn);
-                    dv[QmlAttachedMethods].insert(mn);
-                } else {
-                    sv[QmlMethods].insert(mn);
-                    dv[QmlMethods].insert(mn);
-                }
-            }
+            distributeQmlNodeInSummaryVector(sv, n);
+            distributeQmlNodeInDetailsVector(dv, n);
             ++c;
         }
         if (qcn->qmlBaseNode() == qcn) {

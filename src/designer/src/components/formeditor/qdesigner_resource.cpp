@@ -1027,11 +1027,10 @@ void QDesignerResource::applyProperties(QObject *o, const QList<DomProperty*> &p
 QWidget *QDesignerResource::createWidget(const QString &widgetName, QWidget *parentWidget, const QString &_name)
 {
     QString name = _name;
-    QString className = widgetName;
     if (m_isMainWidget)
         m_isMainWidget = false;
 
-    QWidget *w = core()->widgetFactory()->createWidget(className, parentWidget);
+    QWidget *w = core()->widgetFactory()->createWidget(widgetName, parentWidget);
     if (!w)
         return 0;
 

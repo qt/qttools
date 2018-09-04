@@ -73,7 +73,8 @@ public:
 
     Method selectedMethod() const;
 
-    void populate(QDesignerFormEditorInterface *core, QObject *object, QString defaultSignal);
+    void populate(QDesignerFormEditorInterface *core, QObject *object,
+                  const QString &defaultSignal);
 
 private slots:
     void currentChanged(const QModelIndex &, const QModelIndex &);

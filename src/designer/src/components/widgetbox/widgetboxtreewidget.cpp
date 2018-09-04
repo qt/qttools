@@ -106,7 +106,7 @@ WidgetBoxTreeWidget::WidgetBoxTreeWidget(QDesignerFormEditorInterface *core, QWi
             this, &WidgetBoxTreeWidget::handleMousePress);
 }
 
-QIcon WidgetBoxTreeWidget::iconForWidget(QString iconName) const
+QIcon WidgetBoxTreeWidget::iconForWidget(const QString &iconName) const
 {
     if (iconName.isEmpty())
         return qdesigner_internal::qtLogoIcon();

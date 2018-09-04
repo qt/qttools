@@ -437,13 +437,11 @@ void TextEditor::buttonClicked()
         newText = dlg.text();
     }
         break;
-    case ValidationURL: {
-        QString oldPath = oldText;
-        if (oldPath.isEmpty() || oldPath.startsWith(QStringLiteral("qrc:")))
+    case ValidationURL:
+        if (oldText.isEmpty() || oldText.startsWith(QStringLiteral("qrc:")))
             resourceActionActivated();
         else
             fileActionActivated();
-    }
         return;
     default:
         return;
@@ -1548,7 +1546,7 @@ QString DesignerPropertyManager::valueText(const QtProperty *property) const
         const QString theme = icon.theme();
         if (!theme.isEmpty() && QIcon::hasThemeIcon(theme))
             return tr("[Theme] %1").arg(theme);
-        const PropertySheetIconValue::ModeStateToPixmapMap paths = icon.paths();
+        const auto &paths = icon.paths();
         const PropertySheetIconValue::ModeStateToPixmapMap::const_iterator it = paths.constFind(qMakePair(QIcon::Normal, QIcon::Off));
         if (it == paths.constEnd())
             return QString();
@@ -1604,7 +1602,7 @@ void DesignerPropertyManager::reloadResourceProperties()
     DesignerIconCache *iconCache = 0;
     for (auto itIcon = m_iconValues.cbegin(), end = m_iconValues.cend(); itIcon!= end; ++itIcon) {
         QtProperty *property = itIcon.key();
-        PropertySheetIconValue icon = itIcon.value();
+        const PropertySheetIconValue &icon = itIcon.value();
 
         QIcon defaultIcon = m_defaultIcons.value(property);
         if (!icon.paths().isEmpty()) {
@@ -1864,7 +1862,7 @@ void DesignerPropertyManager::setValue(QtProperty *property, const QVariant &val
                 defaultIcon = fwb->iconCache()->icon(icon);
         }
 
-        QMap<QPair<QIcon::Mode, QIcon::State>, PropertySheetPixmapValue> iconPaths = icon.paths();
+        const auto &iconPaths = icon.paths();
 
         QMap<QPair<QIcon::Mode, QIcon::State>, QtProperty *> subProperties = m_propertyToIconSubProperties.value(property);
         for (auto itSub = subProperties.cbegin(), end = subProperties.cend(); itSub != end; ++itSub) {

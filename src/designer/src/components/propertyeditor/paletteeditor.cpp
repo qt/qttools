@@ -180,7 +180,7 @@ void PaletteEditor::updatePreviewPalette()
     QPalette previewPalette;
     for (int i = QPalette::WindowText; i < QPalette::NColorRoles; i++) {
         const QPalette::ColorRole r = static_cast<QPalette::ColorRole>(i);
-        const QBrush br = currentPalette.brush(g, r);
+        const QBrush &br = currentPalette.brush(g, r);
         previewPalette.setBrush(QPalette::Active, r, br);
         previewPalette.setBrush(QPalette::Inactive, r, br);
         previewPalette.setBrush(QPalette::Disabled, r, br);

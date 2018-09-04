@@ -143,7 +143,8 @@ static inline QString msgNoSignals()
     return QCoreApplication::translate("QDesignerTaskMenu", "no signals available");
 }
 
-void SelectSignalDialog::populate(QDesignerFormEditorInterface *core, QObject *object, QString defaultSignal)
+void SelectSignalDialog::populate(QDesignerFormEditorInterface *core, QObject *object,
+                                  const QString &defaultSignal)
 {
     m_okButton->setEnabled(false);
 
