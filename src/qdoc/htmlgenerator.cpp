@@ -2659,8 +2659,9 @@ QString HtmlGenerator::generateObsoleteMembersFile(const Sections &sections, Cod
         //out() << "<hr />\n";
         out() << "<h2>" << protectEnc(details_spv.at(i)->title()) << "</h2>\n";
 
-        NodeVector::ConstIterator m = details_spv.at(i)->members().constBegin();
-        while (m != details_spv.at(i)->members().constEnd()) {
+        const NodeVector &members = details_spv.at(i)->obsoleteMembers();
+        NodeVector::ConstIterator m = members.constBegin();
+        while (m != members.constEnd()) {
             if ((*m)->access() != Node::Private)
                 generateDetailedMember(*m, aggregate, marker);
             ++m;
