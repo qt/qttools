@@ -3312,7 +3312,7 @@ void HtmlGenerator::generateSectionList(const Section& section,
             generateInvokableNote(relative, marker);
     }
 
-    if (section.style() == Section::Summary && !section.inheritedMembers().isEmpty()) {
+    if (status != Section::Obsolete && section.style() == Section::Summary && !section.inheritedMembers().isEmpty()) {
         out() << "<ul>\n";
         generateSectionInheritedList(section, relative);
         out() << "</ul>\n";
