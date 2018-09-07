@@ -471,7 +471,7 @@ private:
     CodeMarker *quoteFromFile();
     bool expandMacro();
     void expandMacro(const QString& name, const QString& def, int numParams);
-    QString expandMacroToString(const QString &name, const QString &def, int numParams);
+    QString expandMacroToString(const QString &name, const QString &def, int numParams, const QString &matchExpr);
     Doc::Sections getSectioningUnit();
     QString getArgument(bool verbatim = false);
     QString getBracedArgument(bool verbatim);
@@ -1345,32 +1345,40 @@ void DocParser::parse(const QString& source,
                         const Macro &macro = macroHash()->value(cmdStr);
                         int numPendingFi = 0;
                         QStringMap::ConstIterator d;
+                        int numFormatDefs = 0;
+                        QString matchExpr;
                         d = macro.otherDefs.constBegin();
                         while (d != macro.otherDefs.constEnd()) {
-                            append(Atom::FormatIf, d.key());
-                            expandMacro(cmdStr, *d, macro.numParams);
-                            ++d;
-
-                            if (d == macro.otherDefs.constEnd()) {
-                                append(Atom::FormatEndif);
+                            if (d.key() == "match") {
+                                matchExpr = d.value();
+                                ++d;
                             } else {
-                                append(Atom::FormatElse);
-                                numPendingFi++;
+                                append(Atom::FormatIf, d.key());
+                                expandMacro(cmdStr, *d, macro.numParams);
+                                ++d;
+                                ++numFormatDefs;
+                                if (d == macro.otherDefs.constEnd()) {
+                                    append(Atom::FormatEndif);
+                                } else {
+                                    append(Atom::FormatElse);
+                                    numPendingFi++;
+                                }
                             }
                         }
                         while (numPendingFi-- > 0)
                             append(Atom::FormatEndif);
 
                         if (!macro.defaultDef.isEmpty()) {
-                            if (!macro.otherDefs.isEmpty()) {
+                            if (numFormatDefs > 0) {
                                 macro.defaultDefLocation.warning(
                                             tr("Macro cannot have both "
-                                               "format-specific and qdoc- "
+                                               "format-specific and qdoc-"
                                                "syntax definitions"));
                             } else {
                                 QString expanded = expandMacroToString(cmdStr,
                                                                        macro.defaultDef,
-                                                                       macro.numParams);
+                                                                       macro.numParams,
+                                                                       matchExpr);
                                 input_.replace(backslashPos, endPos - backslashPos, expanded);
                                 len = input_.length();
                                 pos = backslashPos;
@@ -2129,13 +2137,15 @@ bool DocParser::expandMacro()
     while (pos < (int) input_.length() && input_[pos].isLetterOrNumber())
         cmdStr += input_[pos++];
 
+    endPos = pos;
     if (!cmdStr.isEmpty()) {
         if (macroHash()->contains(cmdStr)) {
             const Macro &macro = macroHash()->value(cmdStr);
             if (!macro.defaultDef.isEmpty()) {
                 QString expanded = expandMacroToString(cmdStr,
                                                        macro.defaultDef,
-                                                       macro.numParams);
+                                                       macro.numParams,
+                                                       macro.otherDefs.value("match"));
                 input_.replace(backslashPos, pos - backslashPos, expanded);
                 len = input_.length();
                 pos = backslashPos;
@@ -2202,15 +2212,14 @@ void DocParser::expandMacro(const QString &name,
     }
 }
 
-QString DocParser::expandMacroToString(const QString &name, const QString &def, int numParams)
+QString DocParser::expandMacroToString(const QString &name, const QString &def, int numParams, const QString &matchExpr)
 {
-    if (numParams == 0) {
-        return def;
-    }
-    else {
-        QStringList args;
-        QString rawString;
+    QString rawString;
 
+    if (numParams == 0) {
+        rawString = def;
+    } else {
+        QStringList args;
         for (int i = 0; i < numParams; i++) {
             if (numParams == 1 || isLeftBraceAhead()) {
                 args << getArgument(true);
@@ -2236,8 +2245,21 @@ QString DocParser::expandMacroToString(const QString &name, const QString &def, 
                 rawString += def[j++];
             }
         }
-        return rawString;
     }
+    if (matchExpr.isEmpty())
+        return rawString;
+
+    QString result;
+    QRegExp re(matchExpr);
+    int capStart = (re.captureCount() > 0) ? 1 : 0;
+    int i = 0;
+    while ((i = re.indexIn(rawString, i)) != -1) {
+        for (int c = capStart; c <= re.captureCount(); ++c)
+            result += re.cap(c);
+        i += re.matchedLength();
+    }
+
+    return result;
 }
 
 Doc::Sections DocParser::getSectioningUnit()
@@ -2331,7 +2353,6 @@ QString DocParser::getArgument(bool verbatim)
 
     int delimDepth = 0;
     int startPos = pos;
-    endPos = pos;
     QString arg = getBracedArgument(verbatim);
     if (arg.isEmpty()) {
         while ((pos < input_.length()) &&

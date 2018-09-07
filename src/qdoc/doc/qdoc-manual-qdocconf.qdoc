@@ -767,6 +767,23 @@
     \verinfo {QFooBar} {1.0 beta}
     \endcode
 
+    A special macro option, \e match, can be added for additional
+    regular expression pattern matching for expanded macros.
+
+    For example,
+
+    \badcode
+    macro.qtminorversion       = "$QT_VER"
+    macro.qtminorversion.match = "\\d+\\.(\\d+)"
+    \endcode
+
+    This creates a macro \\qtminorversion that expands to the minor
+    version based on the QT_VER environment variable.
+
+    A macro that defines a match pattern outputs all capture groups
+    (parentheses) concatenated together, or the exact matched string
+    if the pattern does not contain any capture groups.
+
     See also \l {alias-variable} {alias}.
 
     \target manifestmeta-variable
