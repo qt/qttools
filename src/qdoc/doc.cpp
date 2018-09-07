@@ -480,7 +480,7 @@ private:
     QString getRestOfLine();
     QString getMetaCommandArgument(const QString &cmdStr);
     QString getUntilEnd(int cmd);
-    QString getCode(int cmd, CodeMarker *marker);
+    QString getCode(int cmd, CodeMarker *marker, const QString &argStr = QString());
     QString getUnmarkedCode(int cmd);
 
     bool isBlankLine();
@@ -627,7 +627,7 @@ void DocParser::parse(const QString& source,
                     break;
                 case CMD_BADCODE:
                     leavePara();
-                    append(Atom::CodeBad,getCode(CMD_BADCODE, marker));
+                    append(Atom::CodeBad, getCode(CMD_BADCODE, marker, getMetaCommandArgument(cmdStr)));
                     break;
                 case CMD_BR:
                     enterPara();
@@ -655,18 +655,22 @@ void DocParser::parse(const QString& source,
                     break;
                 case CMD_CODE:
                     leavePara();
-                    append(Atom::Code, getCode(CMD_CODE, 0));
+                    append(Atom::Code, getCode(CMD_CODE, 0, getMetaCommandArgument(cmdStr)));
                     break;
                 case CMD_QML:
                     leavePara();
-                    append(Atom::Qml, getCode(CMD_QML, CodeMarker::markerForLanguage(QLatin1String("QML"))));
+                    append(Atom::Qml, getCode(CMD_QML,
+                                              CodeMarker::markerForLanguage(QLatin1String("QML")),
+                                              getMetaCommandArgument(cmdStr)));
                     break;
                 case CMD_QMLTEXT:
                     append(Atom::QmlText);
                     break;
                 case CMD_JS:
                     leavePara();
-                    append(Atom::JavaScript, getCode(CMD_JS, CodeMarker::markerForLanguage(QLatin1String("JavaScript"))));
+                    append(Atom::JavaScript, getCode(CMD_JS,
+                                                     CodeMarker::markerForLanguage(QLatin1String("JavaScript")),
+                                                     getMetaCommandArgument(cmdStr)));
                     break;
                 case CMD_DIV:
                     leavePara();
@@ -2541,9 +2545,27 @@ QString DocParser::getUntilEnd(int cmd)
     return t;
 }
 
-QString DocParser::getCode(int cmd, CodeMarker *marker)
+QString DocParser::getCode(int cmd, CodeMarker *marker, const QString &argStr)
 {
     QString code = untabifyEtc(getUntilEnd(cmd));
+
+    if (!argStr.isEmpty()) {
+        QStringList args = argStr.split(" ", QString::SkipEmptyParts);
+        int paramNo, j = 0;
+        while (j < code.size()) {
+            if (code[j] == '\\'
+                 && j < code.size() - 1
+                 && (paramNo = code[j + 1].digitValue()) >= 1
+                 && paramNo <= args.size()) {
+                QString p = args[paramNo - 1];
+                code.replace(j, 2, p);
+                j += qMin(1, p.size());
+            } else {
+                ++j;
+            }
+        }
+    }
+
     int indent = indentLevel(code);
     code = unindent(indent, code);
     if (!marker)

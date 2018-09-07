@@ -993,7 +993,32 @@
 
     Other QDoc commands are disabled within \\code... \\endcode, and
     the special character '\\' is accepted and rendered like the rest
-    of the code.
+    of the code, unless it is followed by a digit and parameters were
+    passed to \\code.
+
+    \section2 Code snippet parameters
+
+    Since QDoc version 5.12, \\code command accepts also optional
+    parameters. Parameters are useful for injecting simple
+    strings into the code snippet. To inject a string to a specific
+    location in the snippet, add a backslash followed by a digit (1..8).
+    The digits correspond with the order of the argument list, where
+    arguments are separated by spaces.
+
+    For example:
+
+    \code
+    / *!
+    \code * hello
+    /\1 \2 \1/
+    \ endcode
+    * /
+    \endcode
+
+    For the above snippet, QDoc renders the word \e hello enclosed in
+    a C-style comment.
+
+    \section2 Including code from external files
 
     To include code snippets from an external file, use the
     \l{07-0-qdoc-commands-includingexternalcode.html#snippet-command}
@@ -1017,6 +1042,8 @@
     Substitute \\code with this command when documenting command-line
     instructions, shell scripts or any other content that is not in a Qt
     language, but should still be styled similarly to a \\code paragraph.
+
+    Like \\code, \\badcode accepts also optional parameters.
 
     \target newcode-command
     \section1 \\newcode
@@ -1118,6 +1145,9 @@
             }
         }
     \endqml
+
+    Like the \l{code-command}{\\code} command, \\qml accepts optional
+    parameters.
 */
 
 
