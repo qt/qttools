@@ -496,7 +496,7 @@ QString resolveDyldPrefix(const QString &path, const QString &loaderPath, const 
                 return QDir::cleanPath(QDir::currentPath() + "/" +
                                        QFileInfo(executablePath).path() + path.mid(QStringLiteral("@executable_path").length()));
             }
-        } else if (path.startsWith(QStringLiteral("@loader_path/"))) {
+        } else if (path.startsWith(QStringLiteral("@loader_path"))) {
             // path relative to loader dir
             if (QDir::isAbsolutePath(loaderPath)) {
                 return QDir::cleanPath(QFileInfo(loaderPath).path() + path.mid(QStringLiteral("@loader_path").length()));
@@ -909,6 +909,19 @@ void stripAppBinary(const QString &bundlePath)
     runStrip(findAppBinary(bundlePath));
 }
 
+bool DeploymentInfo::containsModule(const QString &module, const QString &libInFix) const
+{
+    // Check for framework first
+    if (deployedFrameworks.contains(QLatin1String("Qt") + module + libInFix +
+                                    QLatin1String(".framework"))) {
+        return true;
+    }
+    // Check for dylib
+    const QRegularExpression dylibRegExp(QLatin1String("libQt[0-9]+") + module +
+                                         libInFix + QLatin1String(".[0-9]+.dylib"));
+    return deployedFrameworks.filter(dylibRegExp).size() > 0;
+}
+
 /*
     Deploys the the listed frameworks listed into an app bundle.
     The frameworks are searched for dependencies, which are also deployed.
@@ -1016,7 +1029,7 @@ QString getLibInfix(const QStringList &deployedFrameworks)
 {
     QString libInfix;
     foreach (const QString &framework, deployedFrameworks) {
-        if (framework.startsWith(QStringLiteral("QtCore"))) {
+        if (framework.startsWith(QStringLiteral("QtCore")) && framework.endsWith(QStringLiteral(".framework"))) {
             Q_ASSERT(framework.length() >= 16);
             // 16 == "QtCore" + ".framework"
             const int lengthOfLibInfix = framework.length() - 16;
@@ -1066,14 +1079,14 @@ void deployPlugins(const ApplicationBundleInfo &appBundleInfo, const QString &pl
     addPlugins(QStringLiteral("styles"));
 
     // Check if Qt was configured with -libinfix
-    const QString libInfixWithFramework = getLibInfix(deploymentInfo.deployedFrameworks) + QStringLiteral(".framework");
+    const QString libInfix = getLibInfix(deploymentInfo.deployedFrameworks);
 
     // Network
-    if (deploymentInfo.deployedFrameworks.contains(QStringLiteral("QtNetwork") + libInfixWithFramework))
+    if (deploymentInfo.containsModule("Network", libInfix))
         addPlugins(QStringLiteral("bearer"));
 
-    // All image formats (svg if QtSvg.framework is used)
-    const bool usesSvg = deploymentInfo.deployedFrameworks.contains(QStringLiteral("QtSvg") + libInfixWithFramework);
+    // All image formats (svg if QtSvg is used)
+    const bool usesSvg = deploymentInfo.containsModule("Svg", libInfix);
     addPlugins(QStringLiteral("imageformats"), [usesSvg](const QString &lib) {
         if (lib.contains(QStringLiteral("qsvg")) && !usesSvg)
             return false;
@@ -1082,8 +1095,8 @@ void deployPlugins(const ApplicationBundleInfo &appBundleInfo, const QString &pl
 
     addPlugins(QStringLiteral("iconengines"));
 
-    // Sql plugins if QtSql.framework is in use
-    if (deploymentInfo.deployedFrameworks.contains(QStringLiteral("QtSql") + libInfixWithFramework)) {
+    // Sql plugins if QtSql is in use
+    if (deploymentInfo.containsModule("Sql", libInfix)) {
         addPlugins(QStringLiteral("sqldrivers"), [](const QString &lib) {
             if (lib.startsWith(QStringLiteral("libqsqlodbc")) || lib.startsWith(QStringLiteral("libqsqlpsql"))) {
                 LogWarning() << "Plugin" << lib << "uses private API and is not Mac App store compliant.";
@@ -1096,8 +1109,8 @@ void deployPlugins(const ApplicationBundleInfo &appBundleInfo, const QString &pl
         });
     }
 
-    // WebView plugins if QtWebView.framework is in use
-    if (deploymentInfo.deployedFrameworks.contains(QStringLiteral("QtWebView") + libInfixWithFramework)) {
+    // WebView plugins if QtWebView is in use
+    if (deploymentInfo.containsModule("WebView", libInfix)) {
         addPlugins(QStringLiteral("webview"), [](const QString &lib) {
             if (lib.startsWith(QStringLiteral("libqtwebview_webengine"))) {
                 LogWarning() << "Plugin" << lib << "uses QtWebEngine and is not Mac App store compliant.";
@@ -1111,15 +1124,15 @@ void deployPlugins(const ApplicationBundleInfo &appBundleInfo, const QString &pl
     }
 
     static const std::map<QString, std::vector<QString>> map {
-        {QStringLiteral("QtMultimedia"), {QStringLiteral("mediaservice"), QStringLiteral("audio")}},
-        {QStringLiteral("Qt3DRender"), {QStringLiteral("sceneparsers"), QStringLiteral("geometryloaders")}},
-        {QStringLiteral("Qt3DQuickRender"), {QStringLiteral("renderplugins")}},
-        {QStringLiteral("QtPositioning"), {QStringLiteral("position")}},
-        {QStringLiteral("QtLocation"), {QStringLiteral("geoservices")}}
+        {QStringLiteral("Multimedia"), {QStringLiteral("mediaservice"), QStringLiteral("audio")}},
+        {QStringLiteral("3DRender"), {QStringLiteral("sceneparsers"), QStringLiteral("geometryloaders")}},
+        {QStringLiteral("3DQuickRender"), {QStringLiteral("renderplugins")}},
+        {QStringLiteral("Positioning"), {QStringLiteral("position")}},
+        {QStringLiteral("Location"), {QStringLiteral("geoservices")}}
     };
 
     for (const auto &it : map) {
-        if (deploymentInfo.deployedFrameworks.contains(it.first + libInfixWithFramework)) {
+        if (deploymentInfo.containsModule(it.first, libInfix)) {
             for (const auto &pluginType : it.second) {
                 addPlugins(pluginType);
             }

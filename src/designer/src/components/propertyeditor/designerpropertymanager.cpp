@@ -895,6 +895,7 @@ DesignerPropertyManager::DesignerPropertyManager(QDesignerFormEditorInterface *c
     QtVariantPropertyManager(parent),
     m_changingSubValue(false),
     m_core(core),
+    m_object(nullptr),
     m_sourceOfChange(0)
 {
     connect(this, &QtVariantPropertyManager::valueChanged,

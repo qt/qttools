@@ -27,7 +27,7 @@
 /*!
     \page qdoc-guide.html
     \title Getting Started with QDoc
-    \nextpage Installing clang for QDoc
+    \nextpage Installing Clang for QDoc
 
     Qt uses QDoc to generate its documentation set into HTML and DITA XML
     formats. QDoc uses a set of configuration files to generate documentation
@@ -44,9 +44,9 @@
         \li \c Documentation in \c C++, \c QML, and \c .qdoc files
     \endlist
 
-    \note From Qt 5.11, \l{QDoc Manual}{QDoc} requires \l{http://clang.llvm.org}{clang}
-    from LLVM 3.9 for parsing C++ header and source files, and for parsing the function
-    signatures in \l {fn-command} {\\fn} commands. See \l {Installing clang for QDoc}
+    \note From Qt 5.11, \l{QDoc Manual}{QDoc} requires \l{http://clang.llvm.org}{Clang}
+    for parsing C++ header and source files, and for parsing the function
+    signatures in \l {fn-command} {\\fn} commands. See \l {Installing Clang for QDoc}
     for details.
 
     This section intends to cover the basic necessities for creating a
@@ -60,7 +60,7 @@
     \section1 Chapters
 
     \list 1
-    \li \l{Installing clang for QDoc}
+    \li \l{Installing Clang for QDoc}
     \li \l{Creating QDoc Configuration Files}
     \li \l{Writing Documentation}
     \li \l{Categories of Documentation}
@@ -76,7 +76,7 @@
 /*!
     \page qdoc-guide-conf.html
     \title Creating QDoc Configuration Files
-    \previouspage Installing clang for QDoc
+    \previouspage Installing Clang for QDoc
     \nextpage Writing Documentation
     To generate documentation, QDoc uses configuration files, with the
     \c qdocconf extension, to store configuration settings.
@@ -628,7 +628,7 @@
 
 /*!
     \page qdoc-guide-clang.html
-    \title Installing clang for QDoc
+    \title Installing Clang for QDoc
     \previouspage Getting Started with QDoc
     \nextpage Creating QDoc Configuration Files
 
@@ -636,15 +636,21 @@
     apply:
 
     \list 1
-      \li Install \l{http://clang.llvm.org}{LLVM 3.9} or greater.
+      \li Install \l{http://clang.llvm.org}{LLVM 6.0} or greater.
           The pre-built binaries needed can be found
           \l {http://releases.llvm.org/download.html}{here}.
       \li Set the environment variable \c LLVM_INSTALL_DIR to point to the
           directory where LLVM is installed. This should be the top level
-          directory. For example, on a Linux system with LLVM installed to
-          \c /usr/llvm:
+          directory. For example, on a Linux or macOS system with LLVM
+          installed to \c /usr/llvm:
           \badcode
             $ export LLVM_INSTALL_DIR=/usr/llvm
+          \endcode
+
+          On a Windows system with LLVM installed to \c
+          {C:\Program Files\LLVM}:
+          \badcode
+            C:\> setx LLVM_INSTALL_DIR "C:\Program Files\LLVM"
           \endcode
     \endlist
 */
