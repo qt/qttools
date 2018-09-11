@@ -8,7 +8,7 @@ qtHaveModule(widgets) {
                   pixeltool \
                   designer
 
-        qtConfig(thread): SUBDIRS += distancefieldgenerator
+        qtHaveModule(quick):qtConfig(thread): SUBDIRS += distancefieldgenerator
 
         linguist.depends = designer
     }
