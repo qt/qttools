@@ -105,6 +105,8 @@ public:
     bool useLoaderPath;
     bool isFramework;
     bool isDebug;
+
+    bool containsModule(const QString &module, const QString &libInFix) const;
 };
 
 inline QDebug operator<<(QDebug debug, const ApplicationBundleInfo &info);

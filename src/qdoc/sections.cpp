@@ -179,7 +179,7 @@ void Section::insert(Node *node)
         }
     }
 
-    if (node->isPrivate()) {
+    if (node->isPrivate() || node->isInternal()) {
         irrelevant = true;
     }
     else if (node->isFunction()) {

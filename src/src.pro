@@ -3,7 +3,7 @@ TEMPLATE = subdirs
 qtHaveModule(widgets) {
     no-png {
         message("Some graphics-related tools are unavailable without PNG support")
-    } else: !uikit {
+    } else {
         SUBDIRS = assistant \
                   pixeltool \
                   designer
@@ -18,12 +18,12 @@ SUBDIRS += linguist \
     qtattributionsscanner
 
 qtConfig(library) {
-    if(!android|android_app):!uikit: SUBDIRS += qtplugininfo
+    !android|android_app: SUBDIRS += qtplugininfo
 }
 
 config_clang: qtConfig(thread): SUBDIRS += qdoc
 
-if(!android|android_app):!uikit: SUBDIRS += qtpaths
+!android|android_app: SUBDIRS += qtpaths
 
 macos {
     SUBDIRS += macdeployqt
@@ -36,8 +36,8 @@ winrt:SUBDIRS += winrtrunner
 qtHaveModule(gui):!android:!uikit:!qnx:!winrt: SUBDIRS += qtdiag
 
 qtNomakeTools( \
+    distancefieldgenerator \
     pixeltool \
-    macdeployqt \
 )
 
 # This is necessary to avoid a race condition between toolchain.prf
