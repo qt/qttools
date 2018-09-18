@@ -151,7 +151,9 @@ marked with the \l{c-command}{\\c} command in the case of boolean values.
 
 QML enumerations are documented as QML properties with the
 \l{qmlproperty-command}{\\qmlproperty} command. The type of the property
-is \c enumeration.
+is \c enumeration. Use the \l{value-command}{\\value} command to document
+the enum values. Add the type name as a prefix to each value, separated by
+a period (.), as QDoc does not do this automatically.
 
 \snippet examples/qml.qdoc.sample enums
 

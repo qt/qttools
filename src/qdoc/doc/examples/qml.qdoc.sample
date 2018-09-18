@@ -105,12 +105,10 @@ signal clicked()
 Sets the font's weight.
 
 The weight can be one of:
-\list
-\li Font.Light
-\li Font.Normal - the default
-\li Font.DemiBold
-\li Font.Bold
-\li Font.Black
-\endlist
-*/
+\value Font.Light
+\value Font.Normal      The default
+\value Font.DemiBold
+\value Font.Bold
+\value Font.Black
+
 //! [enums]
