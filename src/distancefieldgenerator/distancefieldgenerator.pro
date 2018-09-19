@@ -17,3 +17,4 @@ HEADERS += \
     distancefieldmodel.h \
     distancefieldmodelworker.h
 
+QMAKE_DOCS = $$PWD/doc/qtdistancefieldgenerator.qdocconf
