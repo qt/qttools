@@ -68,21 +68,22 @@ public:
     ProString();
     ProString(const ProString &other);
     PROITEM_EXPLICIT ProString(const QString &str);
+    PROITEM_EXPLICIT ProString(const QStringRef &str);
     PROITEM_EXPLICIT ProString(const char *str);
     ProString(const QString &str, int offset, int length);
     void setValue(const QString &str);
     void clear() { m_string.clear(); m_length = 0; }
     ProString &setSource(const ProString &other) { m_file = other.m_file; return *this; }
-    ProString &setSource(const ProFile *pro) { m_file = pro; return *this; }
-    const ProFile *sourceFile() const { return m_file; }
+    ProString &setSource(int id) { m_file = id; return *this; }
+    int sourceFile() const { return m_file; }
 
     ProString &prepend(const ProString &other);
-    ProString &append(const ProString &other, bool *pending = 0);
+    ProString &append(const ProString &other, bool *pending = nullptr);
     ProString &append(const QString &other) { return append(ProString(other)); }
     ProString &append(const QLatin1String other);
     ProString &append(const char *other) { return append(QLatin1String(other)); }
     ProString &append(QChar other);
-    ProString &append(const ProStringList &other, bool *pending = 0, bool skipEmpty1st = false);
+    ProString &append(const ProStringList &other, bool *pending = nullptr, bool skipEmpty1st = false);
     ProString &operator+=(const ProString &other) { return append(other); }
     ProString &operator+=(const QString &other) { return append(other); }
     ProString &operator+=(const QLatin1String other) { return append(other); }
@@ -94,6 +95,7 @@ public:
 
     bool operator==(const ProString &other) const { return toQStringRef() == other.toQStringRef(); }
     bool operator==(const QString &other) const { return toQStringRef() == other; }
+    bool operator==(const QStringRef &other) const { return toQStringRef() == other; }
     bool operator==(QLatin1String other) const  { return toQStringRef() == other; }
     bool operator==(const char *other) const { return toQStringRef() == QLatin1String(other); }
     bool operator!=(const ProString &other) const { return !(*this == other); }
@@ -131,14 +133,15 @@ public:
     bool contains(const QString &s, Qt::CaseSensitivity cs = Qt::CaseSensitive) const { return indexOf(s, 0, cs) >= 0; }
     bool contains(const char *s, Qt::CaseSensitivity cs = Qt::CaseSensitive) const { return indexOf(QLatin1String(s), 0, cs) >= 0; }
     bool contains(QChar c, Qt::CaseSensitivity cs = Qt::CaseSensitive) const { return indexOf(c, 0, cs) >= 0; }
-    int toLongLong(bool *ok = 0, int base = 10) const { return toQStringRef().toLongLong(ok, base); }
-    int toInt(bool *ok = 0, int base = 10) const { return toQStringRef().toInt(ok, base); }
-    short toShort(bool *ok = 0, int base = 10) const { return toQStringRef().toShort(ok, base); }
+    int toLongLong(bool *ok = nullptr, int base = 10) const { return toQStringRef().toLongLong(ok, base); }
+    int toInt(bool *ok = nullptr, int base = 10) const { return toQStringRef().toInt(ok, base); }
+    short toShort(bool *ok = nullptr, int base = 10) const { return toQStringRef().toShort(ok, base); }
 
     uint hash() const { return m_hash; }
     static uint hash(const QChar *p, int n);
 
     ALWAYS_INLINE QStringRef toQStringRef() const { return QStringRef(&m_string, m_offset, m_length); }
+    ALWAYS_INLINE QStringView toQStringView() const { return QStringView(m_string).mid(m_offset, m_length); }
 
     ALWAYS_INLINE ProKey &toKey() { return *(ProKey *)this; }
     ALWAYS_INLINE const ProKey &toKey() const { return *(const ProKey *)this; }
@@ -163,7 +166,7 @@ private:
 
     QString m_string;
     int m_offset, m_length;
-    const ProFile *m_file;
+    int m_file;
     mutable uint m_hash;
     QChar *prepareExtend(int extraLen, int thisTarget, int extraTarget);
     uint updatedHash() const;
@@ -203,14 +206,14 @@ Q_DECLARE_TYPEINFO(ProKey, Q_MOVABLE_TYPE);
 uint qHash(const ProString &str);
 QString operator+(const ProString &one, const ProString &two);
 inline QString operator+(const ProString &one, const QString &two)
-    { return one + ProString(two); }
+    { return one.toQStringRef() + two; }
 inline QString operator+(const QString &one, const ProString &two)
-    { return ProString(one) + two; }
+    { return one + two.toQStringRef(); }
 
 inline QString operator+(const ProString &one, const char *two)
-    { QString ret = one.toQStringRef() + QLatin1String(two); ret.detach(); return ret; }
+    { return one.toQStringRef() + QLatin1String(two); }
 inline QString operator+(const char *one, const ProString &two)
-    { QString ret = QLatin1String(one) + two.toQStringRef(); ret.detach(); return ret;  }
+    { return QLatin1String(one) + two.toQStringRef(); }
 inline QString operator+(const ProString &one, QChar two)
     { return one.toQStringRef() + two; }
 inline QString operator+(QChar one, const ProString &two)
@@ -225,6 +228,55 @@ inline bool operator!=(const QString &that, const ProString &other)
     { return !(other == that); }
 
 QTextStream &operator<<(QTextStream &t, const ProString &str);
+
+// This class manages read-only access to a ProString via a raw data QString
+// temporary, ensuring that the latter is accessed exclusively.
+class ProStringRoUser
+{
+public:
+    ProStringRoUser(QString &rs)
+    {
+        Q_ASSERT(rs.isDetached() || rs.isEmpty());
+        m_rs = &rs;
+    }
+    ProStringRoUser(const ProString &ps, QString &rs)
+        : ProStringRoUser(rs)
+    {
+        ps.toQString(rs);
+    }
+    // No destructor, as a RAII pattern cannot be used: references to the
+    // temporary string can legitimately outlive instances of this class
+    // (if they are held by Qt, e.g. in QRegExp).
+    QString &set(const ProString &ps) { return ps.toQString(*m_rs); }
+    QString &str() { return *m_rs; }
+
+protected:
+    QString *m_rs;
+};
+
+// This class manages read-write access to a ProString via a raw data QString
+// temporary, ensuring that the latter is accessed exclusively, and that raw
+// data does not leak outside its source's refcounting.
+class ProStringRwUser : public ProStringRoUser
+{
+public:
+    ProStringRwUser(QString &rs)
+        : ProStringRoUser(rs), m_ps(nullptr) {}
+    ProStringRwUser(const ProString &ps, QString &rs)
+        : ProStringRoUser(ps, rs), m_ps(&ps) {}
+    QString &set(const ProString &ps) { m_ps = &ps; return ProStringRoUser::set(ps); }
+    ProString extract(const QString &s) const
+        { return s.isSharedWith(*m_rs) ? *m_ps : ProString(s).setSource(*m_ps); }
+    ProString extract(const QString &s, const ProStringRwUser &other) const
+    {
+        if (other.m_ps && s.isSharedWith(*other.m_rs))
+            return *other.m_ps;
+        return extract(s);
+    }
+
+private:
+    const ProString *m_ps;
+};
 
 class ProStringList : public QVector<ProString> {
 public:
@@ -329,6 +381,9 @@ enum ProToken {
                         // - function name: hash (2), length (1), chars (length)
                         // - body length (2)
                         // - body + TokTerminator (body length)
+    TokBypassNesting,   // escape from function local variable scopes:
+                        // - block length (2)
+                        // - block + TokTerminator (block length)
     TokMask = 0xff,
     TokQuoted = 0x100,  // The expression is quoted => join expanded stringlist
     TokNewStr = 0x200   // Next stringlist element
@@ -337,9 +392,10 @@ enum ProToken {
 class QMAKE_EXPORT ProFile
 {
 public:
-    explicit ProFile(const QString &fileName);
+    ProFile(int id, const QString &fileName);
     ~ProFile();
 
+    int id() const { return m_id; }
     QString fileName() const { return m_fileName; }
     QString directoryName() const { return m_directoryName; }
     const QString &items() const { return m_proitems; }
@@ -364,6 +420,7 @@ private:
     QString m_proitems;
     QString m_fileName;
     QString m_directoryName;
+    int m_id;
     bool m_ok;
     bool m_hostBuild;
 };

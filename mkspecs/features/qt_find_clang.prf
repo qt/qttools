@@ -56,7 +56,10 @@ for(_, $$list(_)) { # just a way to break easily
         }
     }
     isEmpty(LLVM_INSTALL_DIR): LLVM_INSTALL_DIR = $$(LLVM_INSTALL_DIR)
+    # Assume libclang is installed on the target system
+    isEmpty(LLVM_INSTALL_DIR): LLVM_INSTALL_DIR = $$system("llvm-config --prefix")
     LLVM_INSTALL_DIR = $$clean_path($$LLVM_INSTALL_DIR)
+
     contains(QMAKE_HOST.arch, x86_64): \
         clangInstallDir = $$replace(LLVM_INSTALL_DIR, _ARCH_, 64)
     else: \

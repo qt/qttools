@@ -118,7 +118,7 @@ bool operator==(const QMakeBaseKey &one, const QMakeBaseKey &two)
 }
 
 QMakeBaseEnv::QMakeBaseEnv()
-    : evaluator(0)
+    : evaluator(nullptr)
 {
 #ifdef PROEVALUATOR_THREAD_SAFE
     inProgress = false;
@@ -152,6 +152,7 @@ void QMakeEvaluator::initStatics()
     statics.strhost_build = QLatin1String("host_build");
     statics.strTEMPLATE = ProKey("TEMPLATE");
     statics.strQMAKE_PLATFORM = ProKey("QMAKE_PLATFORM");
+    statics.strQMAKE_DIR_SEP = ProKey("QMAKE_DIR_SEP");
     statics.strQMAKESPEC = ProKey("QMAKESPEC");
 #ifdef PROEVALUATOR_FULL
     statics.strREQUIRES = ProKey("REQUIRES");
@@ -214,7 +215,7 @@ QMakeEvaluator::QMakeEvaluator(QMakeGlobals *option, QMakeParser *parser, QMakeV
     initStatics();
 
     // Configuration, more or less
-    m_caller = 0;
+    m_caller = nullptr;
 #ifdef PROEVALUATOR_CUMULATIVE
     m_cumulative = false;
 #endif
@@ -225,6 +226,7 @@ QMakeEvaluator::QMakeEvaluator(QMakeGlobals *option, QMakeParser *parser, QMakeV
     m_skipLevel = 0;
 #endif
     m_listCount = 0;
+    m_toggle = 0;
     m_valuemapStack.push(ProValueMap());
     m_valuemapInited = false;
 }
@@ -270,13 +272,13 @@ void QMakeEvaluator::skipHashStr(const ushort *&tokPtr)
 
 // FIXME: this should not build new strings for direct sections.
 // Note that the E_SPRINTF and E_LIST implementations rely on the deep copy.
-ProStringList QMakeEvaluator::split_value_list(const QStringRef &vals, const ProFile *source)
+ProStringList QMakeEvaluator::split_value_list(const QStringRef &vals, int source)
 {
     QString build;
     ProStringList ret;
 
     if (!source)
-        source = currentProFile();
+        source = currentFileId();
 
     const QChar *vals_data = vals.data();
     const int vals_len = vals.length();
@@ -295,6 +297,7 @@ ProStringList QMakeEvaluator::split_value_list(const QStringRef &vals, const Pro
         case '\'':
             if (!quote)
                 quote = unicode;
+            // FIXME: this is inconsistent with the "there are no empty strings" dogma.
             hadWord = true;
             break;
         case ' ':
@@ -334,7 +337,8 @@ static void replaceInList(ProStringList *varlist,
         const QRegExp &regexp, const QString &replace, bool global, QString &tmp)
 {
     for (ProStringList::Iterator varit = varlist->begin(); varit != varlist->end(); ) {
-        QString val = varit->toQString(tmp);
+        ProStringRoUser u1(*varit, tmp);
+        QString val = u1.str();
         QString copy = val; // Force detach and have a reference value
         val.replace(regexp, replace);
         if (!val.isSharedWith(copy) && val != copy) {
@@ -594,6 +598,24 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::visitProBlock(
             tokPtr += blockLen;
             okey = true, or_op = false; // force next evaluation
             break;
+        case TokBypassNesting:
+            blockLen = getBlockLen(tokPtr);
+            if ((m_cumulative || okey != or_op) && blockLen) {
+                ProValueMapStack savedValuemapStack = m_valuemapStack;
+                m_valuemapStack.clear();
+                m_valuemapStack.append(savedValuemapStack.takeFirst());
+                traceMsg("visiting nesting-bypassing block");
+                ret = visitProBlock(tokPtr);
+                traceMsg("visited nesting-bypassing block");
+                savedValuemapStack.prepend(m_valuemapStack.first());
+                m_valuemapStack = savedValuemapStack;
+            } else {
+                traceMsg("skipped nesting-bypassing block");
+                ret = ReturnTrue;
+            }
+            tokPtr += blockLen;
+            okey = true, or_op = false; // force next evaluation
+            break;
         case TokTestDef:
         case TokReplaceDef:
             if (m_cumulative || okey != or_op) {
@@ -756,7 +778,7 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::visitProLoop(
             }
             infinite = true;
         } else {
-            const QString &itl = it_list.toQString(m_tmp1);
+            const QStringRef &itl = it_list.toQStringRef();
             int dotdot = itl.indexOf(statics.strDotDot);
             if (dotdot != -1) {
                 bool ok;
@@ -853,13 +875,13 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::visitProVariable(
         ProStringList varVal;
         if (expandVariableReferences(tokPtr, sizeHint, &varVal, true) == ReturnError)
             return ReturnError;
-        const QString &val = varVal.at(0).toQString(m_tmp1);
+        const QStringRef &val = varVal.at(0).toQStringRef();
         if (val.length() < 4 || val.at(0) != QLatin1Char('s')) {
             evalError(fL1S("The ~= operator can handle only the s/// function."));
             return ReturnTrue;
         }
         QChar sep = val.at(1);
-        QStringList func = val.split(sep);
+        auto func = val.split(sep, QString::KeepEmptyParts);
         if (func.count() < 3 || func.count() > 4) {
             evalError(fL1S("The s/// function expects 3 or 4 arguments."));
             return ReturnTrue;
@@ -871,8 +893,8 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::visitProVariable(
             case_sense = func[3].indexOf(QLatin1Char('i')) == -1;
             quote = func[3].indexOf(QLatin1Char('q')) != -1;
         }
-        QString pattern = func[1];
-        QString replace = func[2];
+        QString pattern = func[1].toString();
+        QString replace = func[2].toString();
         if (quote)
             pattern = QRegExp::escape(pattern);
 
@@ -919,13 +941,16 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::visitProVariable(
     if (varName == statics.strTEMPLATE)
         setTemplate();
     else if (varName == statics.strQMAKE_PLATFORM)
-        m_featureRoots = 0;
+        m_featureRoots = nullptr;
+    else if (varName == statics.strQMAKE_DIR_SEP)
+        m_dirSep = first(varName);
     else if (varName == statics.strQMAKESPEC) {
         if (!values(varName).isEmpty()) {
             QString spec = values(varName).first().toQString();
             if (IoUtils::isAbsolutePath(spec)) {
                 m_qmakespec = spec;
-                m_featureRoots = 0;
+                m_qmakespecName = IoUtils::fileName(m_qmakespec).toString();
+                m_featureRoots = nullptr;
             }
         }
     }
@@ -950,11 +975,9 @@ void QMakeEvaluator::setTemplate()
             values.erase(values.begin() + 1, values.end());
     }
     if (!m_option->user_template_prefix.isEmpty()) {
-        QString val = values.first().toQString(m_tmp1);
-        if (!val.startsWith(m_option->user_template_prefix)) {
-            val.prepend(m_option->user_template_prefix);
-            values = ProStringList(ProString(val));
-        }
+        ProString val = values.first();
+        if (!val.startsWith(m_option->user_template_prefix))
+            values = ProStringList(ProString(m_option->user_template_prefix + val));
     }
 }
 
@@ -970,6 +993,13 @@ static ProString msvcBinDirToQMakeArch(QString subdir)
         subdir.remove(0, idx + 1);
     subdir = subdir.toLower();
     if (subdir == QLatin1String("amd64"))
+        return ProString("x86_64");
+    // Since 2017 the folder structure from here is HostX64|X86/x64|x86
+    idx = subdir.indexOf(QLatin1Char('\\'));
+    if (idx == -1)
+        return ProString("x86");
+    subdir.remove(0, idx + 1);
+    if (subdir == QLatin1String("x64"))
         return ProString("x86_64");
     return ProString(subdir);
 }
@@ -990,7 +1020,7 @@ static ProString msvcArchitecture(const QString &vcInstallDir, const QString &pa
     QString vcBinDir = vcInstallDir;
     if (vcBinDir.endsWith(QLatin1Char('\\')))
         vcBinDir.chop(1);
-    const auto dirs = pathVar.split(QLatin1Char(';'));
+    const auto dirs = pathVar.split(QLatin1Char(';'), QString::SkipEmptyParts);
     for (const QString &dir : dirs) {
         if (!dir.startsWith(vcBinDir, Qt::CaseInsensitive))
             continue;
@@ -1052,8 +1082,12 @@ void QMakeEvaluator::loadDefaults()
     vars[ProKey("QMAKE_HOST.arch")] << archStr;
 
 # if defined(Q_CC_MSVC) // ### bogus condition, but nobody x-builds for msvc with a different qmake
+    // Since VS 2017 we need VCToolsInstallDir instead of VCINSTALLDIR
+    QString vcInstallDir = m_option->getEnv(QLatin1String("VCToolsInstallDir"));
+    if (vcInstallDir.isEmpty())
+        vcInstallDir = m_option->getEnv(QLatin1String("VCINSTALLDIR"));
     vars[ProKey("QMAKE_TARGET.arch")] = msvcArchitecture(
-                m_option->getEnv(QLatin1String("VCINSTALLDIR")),
+                vcInstallDir,
                 m_option->getEnv(QLatin1String("PATH")));
 # endif
 #elif defined(Q_OS_UNIX)
@@ -1072,6 +1106,7 @@ void QMakeEvaluator::loadDefaults()
 
 bool QMakeEvaluator::prepareProject(const QString &inDir)
 {
+    QMakeVfs::VfsFlags flags = (m_cumulative ? QMakeVfs::VfsCumulative : QMakeVfs::VfsExact);
     QString superdir;
     if (m_option->do_cache) {
         QString conffile;
@@ -1082,7 +1117,7 @@ bool QMakeEvaluator::prepareProject(const QString &inDir)
             superdir = m_outputDir;
             forever {
                 QString superfile = superdir + QLatin1String("/.qmake.super");
-                if (m_vfs->exists(superfile)) {
+                if (m_vfs->exists(superfile, flags)) {
                     m_superfile = QDir::cleanPath(superfile);
                     break;
                 }
@@ -1097,10 +1132,10 @@ bool QMakeEvaluator::prepareProject(const QString &inDir)
             QString dir = m_outputDir;
             forever {
                 conffile = sdir + QLatin1String("/.qmake.conf");
-                if (!m_vfs->exists(conffile))
+                if (!m_vfs->exists(conffile, flags))
                     conffile.clear();
                 cachefile = dir + QLatin1String("/.qmake.cache");
-                if (!m_vfs->exists(cachefile))
+                if (!m_vfs->exists(cachefile, flags))
                     cachefile.clear();
                 if (!conffile.isEmpty() || !cachefile.isEmpty()) {
                     if (dir != sdir)
@@ -1128,7 +1163,7 @@ bool QMakeEvaluator::prepareProject(const QString &inDir)
     QString dir = m_outputDir;
     forever {
         QString stashfile = dir + QLatin1String("/.qmake.stash");
-        if (dir == (!superdir.isEmpty() ? superdir : m_buildRoot) || m_vfs->exists(stashfile)) {
+        if (dir == (!superdir.isEmpty() ? superdir : m_buildRoot) || m_vfs->exists(stashfile, flags)) {
             m_stashfile = QDir::cleanPath(stashfile);
             break;
         }
@@ -1176,8 +1211,6 @@ bool QMakeEvaluator::loadSpecInternal()
     // This also ensures that m_featureRoots is valid.
     if (evaluateFeatureFile(QLatin1String("spec_post.prf")) != ReturnTrue)
         return false;
-    // The MinGW and x-build specs may change the separator; $$shell_{path,quote}() need it
-    m_dirSep = first(ProKey("QMAKE_DIR_SEP"));
     return true;
 }
 
@@ -1229,7 +1262,7 @@ bool QMakeEvaluator::loadSpec()
                 goto cool;
             }
         }
-        evalError(fL1S("Could not find qmake configuration file %1.").arg(qmakespec));
+        evalError(fL1S("Could not find qmake spec '%1'.").arg(qmakespec));
         return false;
     }
   cool:
@@ -1255,7 +1288,8 @@ bool QMakeEvaluator::loadSpec()
                 m_cachefile, QMakeHandler::EvalConfigFile, LoadProOnly) != ReturnTrue)
             return false;
     }
-    if (!m_stashfile.isEmpty() && m_vfs->exists(m_stashfile)) {
+    QMakeVfs::VfsFlags flags = (m_cumulative ? QMakeVfs::VfsCumulative : QMakeVfs::VfsExact);
+    if (!m_stashfile.isEmpty() && m_vfs->exists(m_stashfile, flags)) {
         valuesRef(ProKey("_QMAKE_STASH_")) << ProString(m_stashfile);
         if (evaluateFile(
                 m_stashfile, QMakeHandler::EvalConfigFile, LoadProOnly) != ReturnTrue)
@@ -1268,7 +1302,7 @@ void QMakeEvaluator::setupProject()
 {
     setTemplate();
     ProValueMap &vars = m_valuemapStack.top();
-    ProFile *proFile = currentProFile();
+    int proFile = currentFileId();
     vars[ProKey("TARGET")] << ProString(QFileInfo(currentFileName()).baseName()).setSource(proFile);
     vars[ProKey("_PRO_FILE_")] << ProString(currentFileName()).setSource(proFile);
     vars[ProKey("_PRO_FILE_PWD_")] << ProString(currentDirectory()).setSource(proFile);
@@ -1278,7 +1312,7 @@ void QMakeEvaluator::setupProject()
 void QMakeEvaluator::evaluateCommand(const QString &cmds, const QString &where)
 {
     if (!cmds.isEmpty()) {
-        ProFile *pro = m_parser->parsedProBlock(QStringRef(&cmds), where, -1);
+        ProFile *pro = m_parser->parsedProBlock(QStringRef(&cmds), 0, where, -1);
         if (pro->isOk()) {
             m_locationStack.push(m_current);
             visitProBlock(pro, pro->tokPtr());
@@ -1303,7 +1337,8 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::evaluateConfigFeatures()
         bool finished = true;
         ProStringList configs = values(statics.strCONFIG);
         for (int i = configs.size() - 1; i >= 0; --i) {
-            QString config = configs.at(i).toQString(m_tmp1).toLower();
+            ProStringRoUser u1(configs.at(i), m_tmp1);
+            QString config = u1.str().toLower();
             if (!processed.contains(config)) {
                 config.detach();
                 processed.insert(config);
@@ -1399,6 +1434,9 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::visitProFile(
     if (flags & LoadPreFiles) {
         setupProject();
 
+        if (!m_option->extra_cmds[QMakeEvalEarly].isEmpty())
+            evaluateCommand(m_option->extra_cmds[QMakeEvalEarly], fL1S("(command line -early)"));
+
         for (ProValueMap::ConstIterator it = m_extraVars.constBegin();
              it != m_extraVars.constEnd(); ++it)
             m_valuemapStack.first().insert(it.key(), it.value());
@@ -1410,8 +1448,8 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::visitProFile(
         if ((vr = evaluateFeatureFile(QLatin1String("default_pre.prf"))) == ReturnError)
             goto failed;
 
-        if (!m_option->precmds.isEmpty()) {
-            evaluateCommand(m_option->precmds, fL1S("(command line)"));
+        if (!m_option->extra_cmds[QMakeEvalBefore].isEmpty()) {
+            evaluateCommand(m_option->extra_cmds[QMakeEvalBefore], fL1S("(command line)"));
 
             // Again, after user configs, to override them
             applyExtraConfigs();
@@ -1424,7 +1462,7 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::visitProFile(
     debugMsg(1, "done visiting file %s", qPrintable(pro->fileName()));
 
     if (flags & LoadPostFiles) {
-        evaluateCommand(m_option->postcmds, fL1S("(command line -after)"));
+        evaluateCommand(m_option->extra_cmds[QMakeEvalAfter], fL1S("(command line -after)"));
 
         // Again, to ensure the project does not mess with us.
         // Specifically, do not allow a project to override debug/release within a
@@ -1433,6 +1471,9 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::visitProFile(
 
         if ((vr = evaluateFeatureFile(QLatin1String("default_post.prf"))) == ReturnError)
             goto failed;
+
+        if (!m_option->extra_cmds[QMakeEvalLate].isEmpty())
+            evaluateCommand(m_option->extra_cmds[QMakeEvalLate], fL1S("(command line -late)"));
 
         if ((vr = evaluateConfigFeatures()) == ReturnError)
             goto failed;
@@ -1481,7 +1522,7 @@ void QMakeEvaluator::updateFeaturePaths()
     feature_roots += m_option->getPathListEnv(QLatin1String("QMAKEFEATURES"));
     feature_roots += m_qmakefeatures;
     feature_roots += m_option->splitPathList(
-                m_option->propertyValue(ProKey("QMAKEFEATURES")).toQString(m_mtmp));
+                m_option->propertyValue(ProKey("QMAKEFEATURES")).toQString());
 
     QStringList feature_bases;
     if (!m_buildRoot.isEmpty()) {
@@ -1545,7 +1586,7 @@ ProString QMakeEvaluator::propertyValue(const ProKey &name) const
         return ProString(m_mkspecPaths.join(m_option->dirlist_sep));
     ProString ret = m_option->propertyValue(name);
 //    if (ret.isNull())
-//        evalError(fL1S("Querying unknown property %1").arg(name.toQString(m_mtmp)));
+//        evalError(fL1S("Querying unknown property %1").arg(name.toQStringView()));
     return ret;
 }
 
@@ -1553,6 +1594,14 @@ ProFile *QMakeEvaluator::currentProFile() const
 {
     if (m_profileStack.count() > 0)
         return m_profileStack.top();
+    return nullptr;
+}
+
+int QMakeEvaluator::currentFileId() const
+{
+    ProFile *pro = currentProFile();
+    if (pro)
+        return pro->id();
     return 0;
 }
 
@@ -1584,21 +1633,18 @@ bool QMakeEvaluator::isActiveConfig(const QStringRef &config, bool regex)
         return m_hostBuild;
 
     if (regex && (config.contains(QLatin1Char('*')) || config.contains(QLatin1Char('?')))) {
-        QString cfg = config.toString();
-        cfg.detach(); // Keep m_tmp out of QRegExp's cache
-        QRegExp re(cfg, Qt::CaseSensitive, QRegExp::Wildcard);
+        QRegExp re(config.toString(), Qt::CaseSensitive, QRegExp::Wildcard);
 
         // mkspecs
         if (re.exactMatch(m_qmakespecName))
             return true;
 
         // CONFIG variable
-        int t = 0;
         const auto configValues = values(statics.strCONFIG);
         for (const ProString &configValue : configValues) {
-            if (re.exactMatch(configValue.toQString(m_tmp[t])))
+            ProStringRoUser u1(configValue, m_tmp[m_toggle ^= 1]);
+            if (re.exactMatch(u1.str()))
                 return true;
-            t ^= 1;
         }
     } else {
         // mkspecs
@@ -1701,14 +1747,14 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::evaluateBoolFunction(
             if (ret.at(0) == statics.strtrue)
                 return ReturnTrue;
             bool ok;
-            int val = ret.at(0).toQString(m_tmp1).toInt(&ok);
+            int val = ret.at(0).toInt(&ok);
             if (ok) {
                 if (val)
                     return ReturnTrue;
             } else {
+                ProStringRoUser u1(function, m_tmp1);
                 evalError(fL1S("Unexpected return value from test '%1': %2.")
-                          .arg(function.toQString(m_tmp1))
-                          .arg(ret.join(QLatin1String(" :: "))));
+                          .arg(u1.str(), ret.join(QLatin1String(" :: "))));
             }
         }
         return ReturnFalse;
@@ -1719,12 +1765,13 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::evaluateBoolFunction(
 QMakeEvaluator::VisitReturn QMakeEvaluator::evaluateConditionalFunction(
         const ProKey &func, const ushort *&tokPtr)
 {
-    if (int func_t = statics.functions.value(func)) {
+    auto adef = statics.functions.constFind(func);
+    if (adef != statics.functions.constEnd()) {
         //why don't the builtin functions just use args_list? --Sam
         ProStringList args;
         if (expandVariableReferences(tokPtr, 5, &args, true) == ReturnError)
             return ReturnError;
-        return evaluateBuiltinConditional(func_t, func, args);
+        return evaluateBuiltinConditional(*adef, func, args);
     }
 
     QHash<ProKey, ProFunctionDef>::ConstIterator it =
@@ -1738,20 +1785,20 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::evaluateConditionalFunction(
     }
 
     skipExpression(tokPtr);
-    evalError(fL1S("'%1' is not a recognized test function.").arg(func.toQString(m_tmp1)));
+    evalError(fL1S("'%1' is not a recognized test function.").arg(func.toQStringView()));
     return ReturnFalse;
 }
 
 QMakeEvaluator::VisitReturn QMakeEvaluator::evaluateExpandFunction(
         const ProKey &func, const ushort *&tokPtr, ProStringList *ret)
 {
-    if (int func_t = statics.expands.value(func)) {
+    auto adef = statics.expands.constFind(func);
+    if (adef != statics.expands.constEnd()) {
         //why don't the builtin functions just use args_list? --Sam
         ProStringList args;
         if (expandVariableReferences(tokPtr, 5, &args, true) == ReturnError)
             return ReturnError;
-        *ret = evaluateBuiltinExpand(func_t, func, args);
-        return ReturnTrue;
+        return evaluateBuiltinExpand(*adef, func, args, *ret);
     }
 
     QHash<ProKey, ProFunctionDef>::ConstIterator it =
@@ -1765,7 +1812,7 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::evaluateExpandFunction(
     }
 
     skipExpression(tokPtr);
-    evalError(fL1S("'%1' is not a recognized replace function.").arg(func.toQString(m_tmp1)));
+    evalError(fL1S("'%1' is not a recognized replace function.").arg(func.toQStringView()));
     return ReturnFalse;
 }
 
@@ -1773,7 +1820,7 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::evaluateConditional(
         const QStringRef &cond, const QString &where, int line)
 {
     VisitReturn ret = ReturnFalse;
-    ProFile *pro = m_parser->parsedProBlock(cond, where, line, QMakeParser::TestGrammar);
+    ProFile *pro = m_parser->parsedProBlock(cond, 0, where, line, QMakeParser::TestGrammar);
     if (pro->isOk()) {
         m_locationStack.push(m_current);
         ret = visitProBlock(pro, pro->tokPtr());
@@ -1827,7 +1874,7 @@ ProValueMap *QMakeEvaluator::findValues(const ProKey &variableName, ProValueMap:
         if (first && isFunctParam(variableName))
             break;
     }
-    return 0;
+    return nullptr;
 }
 
 ProStringList &QMakeEvaluator::valuesRef(const ProKey &variableName)

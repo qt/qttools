@@ -632,25 +632,34 @@
     \previouspage Getting Started with QDoc
     \nextpage Creating QDoc Configuration Files
 
-    If you are going to build QDoc from source, the following prerequisites
-    apply:
+    QDoc uses libclang when parsing C++ files as well as function signatures in
+    \l {fn-command} {\\fn} commands. libclang is part of
+    \l {https://llvm.org/}{the LLVM Compiler Infrastructure Project}.
+    If you are going to build QDoc from source, you need to install
+    \l{http://clang.llvm.org}{LLVM 6.0} or greater first. You can find the
+    required pre-built binaries
+    \l {http://releases.llvm.org/download.html}{here}.
 
-    \list 1
-      \li Install \l{http://clang.llvm.org}{LLVM 6.0} or greater.
-          The pre-built binaries needed can be found
-          \l {http://releases.llvm.org/download.html}{here}.
-      \li Set the environment variable \c LLVM_INSTALL_DIR to point to the
-          directory where LLVM is installed. This should be the top level
-          directory. For example, on a Linux or macOS system with LLVM
-          installed to \c /usr/llvm:
-          \badcode
-            $ export LLVM_INSTALL_DIR=/usr/llvm
-          \endcode
+    The build system uses the tool \c llvm-config to discover the location of
+    Clang on your system, and relies on it being in the c\ PATH environment
+    variable. \c llvm-config is commonly installed with Clang and libclang on
+    Linux systems, and also on macOS if LLVM is installed with Brew. The
+    installation binaries provided for Windows do not include \c llvm-config,
+    but requires that you build the debug version of LLVM from source.
 
-          On a Windows system with LLVM installed to \c
-          {C:\Program Files\LLVM}:
-          \badcode
-            C:\> setx LLVM_INSTALL_DIR "C:\Program Files\LLVM"
-          \endcode
-    \endlist
+    If \c llvm-config is not in your \c PATH environment variable, or not
+    installed on your system, you can still build QDoc, by manually setting the
+    environment variable \c LLVM_INSTALL_DIR to point to the directory where
+    LLVM is installed. This directory should be the top level directory. For
+    example, on a Linux or macOS system with LLVM installed to \c /usr/llvm:
+
+    \badcode
+        $ export LLVM_INSTALL_DIR=/usr/llvm
+    \endcode
+
+    On a Windows system with LLVM installed to \c {C:\Program Files\LLVM}:
+
+    \badcode
+        C:\> setx LLVM_INSTALL_DIR "C:\Program Files\LLVM"
+    \endcode
 */

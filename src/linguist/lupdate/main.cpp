@@ -402,11 +402,12 @@ static bool isSupportedExtension(const QString &ext)
 static QStringList getResources(const QString &resourceFile, QMakeVfs *vfs)
 {
     Q_ASSERT(vfs);
-    if (!vfs->exists(resourceFile))
+    if (!vfs->exists(resourceFile, QMakeVfs::VfsCumulative))
         return QStringList();
     QString content;
     QString errStr;
-    if (!vfs->readFile(resourceFile, &content, &errStr)) {
+    if (vfs->readFile(vfs->idForFileName(resourceFile, QMakeVfs::VfsCumulative),
+                      &content, &errStr) != QMakeVfs::ReadOk) {
         printErr(LU::tr("lupdate error: Can not read %1: %2\n").arg(resourceFile, errStr));
         return QStringList();
     }

@@ -85,7 +85,7 @@ QStringList ProFileEvaluator::values(const QString &variableName, const ProFile 
     QStringList ret;
     ret.reserve(values.size());
     foreach (const ProString &str, values)
-        if (str.sourceFile() == pro)
+        if (str.sourceFile() == pro->id())
             ret << d->m_option->expandEnvVars(str.toQString());
     return ret;
 }
@@ -127,7 +127,7 @@ QStringList ProFileEvaluator::absoluteFileValues(
         QString absEl;
         if (IoUtils::isAbsolutePath(el)) {
             const QString elWithSysroot = QDir::cleanPath(sysrootify(el, baseDirectory));
-            if (d->m_vfs->exists(elWithSysroot)) {
+            if (d->m_vfs->exists(elWithSysroot, QMakeVfs::VfsCumulative)) {
                 result << elWithSysroot;
                 goto next;
             }
@@ -135,7 +135,7 @@ QStringList ProFileEvaluator::absoluteFileValues(
         } else {
             foreach (const QString &dir, searchDirs) {
                 QString fn = QDir::cleanPath(dir + QLatin1Char('/') + el);
-                if (d->m_vfs->exists(fn)) {
+                if (d->m_vfs->exists(fn, QMakeVfs::VfsCumulative)) {
                     result << fn;
                     goto next;
                 }
@@ -147,7 +147,9 @@ QStringList ProFileEvaluator::absoluteFileValues(
         {
             int nameOff = absEl.lastIndexOf(QLatin1Char('/'));
             QString absDir = d->m_tmp1.setRawData(absEl.constData(), nameOff);
-            if (d->m_vfs->exists(absDir)) {
+            // NOTE: This does not support virtual files. That shouldn't be a problem,
+            // because no sane project would add generated files by wildcard.
+            if (IoUtils::fileType(absDir) == IoUtils::FileIsDir) {
                 QString wildcard = d->m_tmp2.setRawData(absEl.constData() + nameOff + 1,
                                                         absEl.length() - nameOff - 1);
                 if (wildcard.contains(QLatin1Char('*')) || wildcard.contains(QLatin1Char('?'))) {

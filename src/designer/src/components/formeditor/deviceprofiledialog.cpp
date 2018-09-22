@@ -37,6 +37,7 @@
 #include <QtWidgets/qpushbutton.h>
 #include <QtWidgets/qstylefactory.h>
 #include <QtGui/qfontdatabase.h>
+#include <QtGui/qvalidator.h>
 
 #include <QtCore/qfileinfo.h>
 #include <QtCore/qfile.h>
@@ -55,7 +56,6 @@ template <class IntIterator>
     static void populateNumericCombo(IntIterator i1, IntIterator i2, QComboBox *cb)
 {
     QString s;
-    cb->setEditable(false);
     for ( ; i1 != i2 ; ++i1) {
         const int n = *i1;
         s.setNum(n);
@@ -75,6 +75,11 @@ DeviceProfileDialog::DeviceProfileDialog(QDesignerDialogGuiInterface *dlgGui, QW
 
     const QList<int> standardFontSizes = QFontDatabase::standardSizes();
     populateNumericCombo(standardFontSizes.constBegin(), standardFontSizes.constEnd(), m_ui->m_systemFontSizeCombo);
+
+    // 288pt observed on macOS.
+    const int maxPointSize = qMax(288, standardFontSizes.constLast());
+    m_ui->m_systemFontSizeCombo->setValidator(new QIntValidator(1, maxPointSize,
+                                                                m_ui->m_systemFontSizeCombo));
 
     // Styles
     const QStringList styles = QStyleFactory::keys();

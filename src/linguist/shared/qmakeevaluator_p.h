@@ -43,7 +43,7 @@
      r == ReturnNext ? "next" : \
      r == ReturnReturn ? "return" : \
      "<invalid>")
-#  define dbgKey(s) qPrintable(s.toString().toQString())
+#  define dbgKey(s) s.toString().toQStringRef().toLocal8Bit().constData()
 #  define dbgStr(s) qPrintable(formatValue(s, true))
 #  define dbgStrList(s) qPrintable(formatValueList(s))
 #  define dbgSepStrList(s) qPrintable(formatValueList(s, true))
@@ -64,6 +64,22 @@ QT_BEGIN_NAMESPACE
 
 namespace QMakeInternal {
 
+struct QMakeBuiltinInit
+{
+    const char *name;
+    int func;
+    enum { VarArgs = 1000 };
+    int min_args, max_args;
+    const char *args;
+};
+
+struct QMakeBuiltin
+{
+    QMakeBuiltin(const QMakeBuiltinInit &data);
+    QString usage;
+    int index, minArgs, maxArgs;
+};
+
 struct QMakeStatics {
     QString field_sep;
     QString strtrue;
@@ -78,12 +94,13 @@ struct QMakeStatics {
     QString strhost_build;
     ProKey strTEMPLATE;
     ProKey strQMAKE_PLATFORM;
+    ProKey strQMAKE_DIR_SEP;
     ProKey strQMAKESPEC;
 #ifdef PROEVALUATOR_FULL
     ProKey strREQUIRES;
 #endif
-    QHash<ProKey, int> expands;
-    QHash<ProKey, int> functions;
+    QHash<ProKey, QMakeBuiltin> expands;
+    QHash<ProKey, QMakeBuiltin> functions;
     QHash<ProKey, ProKey> varMap;
     ProStringList fakeValue;
 };
@@ -91,6 +108,8 @@ struct QMakeStatics {
 extern QMakeStatics statics;
 
 }
+
+Q_DECLARE_TYPEINFO(QMakeInternal::QMakeBuiltin, Q_MOVABLE_TYPE);
 
 QT_END_NAMESPACE
 
