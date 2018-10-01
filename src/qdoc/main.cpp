@@ -255,18 +255,18 @@ static void processQdocconfFile(const QString &fileName)
     if (!qdocGlobals.currentDir().isEmpty())
         QDir::setCurrent(qdocGlobals.currentDir());
 
-    QString phase = " in -";
+    QString phase = " in ";
     if (Generator::singleExec())
-        phase += "single exec mode, ";
+        phase += "single process mode, ";
     else
-        phase += "separate exec mode, ";
+        phase += "dual process mode, ";
     if (Generator::preparing())
-        phase += "prepare phase ";
+        phase += "(prepare phase)";
     else if (Generator::generating())
-        phase += "generate phase ";
+        phase += "(generate phase)";
 
-    QString msg = "Running qdoc for " + config.getString(CONFIG_PROJECT) + phase;
-    Location::logToStdErr(msg);
+    QString msg = "Start qdoc for " + config.getString(CONFIG_PROJECT) + phase;
+    Location::logToStdErrAlways(msg);
 
     /*
       Initialize all the classes and data structures with the
@@ -461,7 +461,7 @@ static void processQdocconfFile(const QString &fileName)
           add it to the big tree.
         */
         parsed = 0;
-        qCDebug(lcQdoc, "Parsing source files");
+        Location::logToStdErrAlways("Parse source files for " + project);
         QMap<QString,QString>::ConstIterator s = sources.constBegin();
         while (s != sources.constEnd()) {
             CodeParser *codeParser = CodeParser::parserForSourceFile(s.key());
@@ -472,7 +472,7 @@ static void processQdocconfFile(const QString &fileName)
             }
             ++s;
         }
-        qCDebug(lcQdoc, "Parsing done.");
+        Location::logToStdErrAlways("Source files parsed for " + project);
 
         /*
           Now the primary tree has been built from all the header and
@@ -515,6 +515,8 @@ static void processQdocconfFile(const QString &fileName)
     if (Generator::debugging())
         Generator::stopDebugging(project);
 
+    msg = "End qdoc for " + config.getString(CONFIG_PROJECT) + phase;
+    Location::logToStdErrAlways(msg);
     QDocDatabase::qdocDB()->setVersion(QString());
     Generator::terminate();
     CodeParser::terminate();

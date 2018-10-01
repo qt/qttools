@@ -1009,6 +1009,7 @@ ClangCodeParser::~ClangCodeParser()
  */
 void ClangCodeParser::initializeParser(const Config &config)
 {
+    printParsingErrors_ = 1;
     const auto args = config.getStringList(CONFIG_INCLUDEPATHS);
     includePaths_.resize(args.size());
     std::transform(args.begin(), args.end(), includePaths_.begin(),
@@ -1096,6 +1097,7 @@ static const char *defaultArgs_[] = {
 #endif
     "-fno-exceptions", // Workaround for clang bug http://reviews.llvm.org/D17988
     "-DQ_QDOC",
+    "-DQ_CLANG_QDOC",
     "-DQT_DISABLE_DEPRECATED_BEFORE=0",
     "-DQT_ANNOTATE_CLASS(type,...)=static_assert(sizeof(#__VA_ARGS__), #type);",
     "-DQT_ANNOTATE_CLASS2(type,a1,a2)=static_assert(sizeof(#a1, #a2), #type);",
@@ -1143,6 +1145,8 @@ static QVector<QByteArray> includePathsFromHeaders(const QHash<QString, QString>
 void ClangCodeParser::getMoreArgs()
 {
     if (includePaths_.isEmpty()) {
+        Location::logToStdErrAlways("No include paths passed to qdoc");
+        Location::logToStdErrAlways("Guess reasonable include paths:");
         /*
           The include paths provided are inadequate. Make a list
           of reasonable places to look for include files and use
@@ -1150,22 +1154,22 @@ void ClangCodeParser::getMoreArgs()
          */
         auto forest = qdb_->searchOrder();
 
+        printParsingErrors_ = 0;
         QByteArray version = qdb_->version().toUtf8();
         QString basicIncludeDir = QDir::cleanPath(QString(Config::installDir + "/../include"));
         moreArgs_ += "-I" + basicIncludeDir.toLatin1();
         moreArgs_ += includePathsFromHeaders(allHeaders_);
+        for (const auto p : moreArgs_) {
+            Location::logToStdErrAlways(p);
+        }
+#if 0
         for (const auto &s : forest) {
             QString module = basicIncludeDir +"/" + s->camelCaseModuleName();
             moreArgs_ += QString("-I" + module).toLatin1();
             moreArgs_ += QString("-I" + module + "/" + qdb_->version()).toLatin1();
             moreArgs_ += QString("-I" + module + "/" + qdb_->version() + "/" + module).toLatin1();
         }
-        for (int i=0; i<includePaths_.size(); ++i) {
-            if (!includePaths_.at(i).startsWith("-"))
-                moreArgs_ += "-I" + includePaths_.at(i);
-            else
-                moreArgs_ += includePaths_.at(i);
-        }
+#endif
     }
     else {
         moreArgs_ = includePaths_;
@@ -1195,6 +1199,7 @@ void ClangCodeParser::buildPCH()
             const QByteArray module = moduleHeader().toUtf8();
             QByteArray header;
             QByteArray privateHeaderDir;
+            Location::logToStdErrAlways("Build & visit PCH for " + moduleHeader());
             // Find the path to the module's header (e.g. QtGui/QtGui) to be used
             // as pre-compiled header
             for (const auto &p : qAsConst(includePaths_)) {
@@ -1259,6 +1264,8 @@ void ClangCodeParser::buildPCH()
                         }
                     }
                 }
+                if (printParsingErrors_ == 0)
+                    Location::logToStdErrAlways("clang not printing errors; include paths were guessed");
                 CXErrorCode err = clang_parseTranslationUnit2(index_,
                     tmpHeader.toLatin1().data(),
                     args_.data(), static_cast<int>(args_.size()), nullptr, 0,
@@ -1269,20 +1276,20 @@ void ClangCodeParser::buildPCH()
                     pchName_ = pchFileDir_->path().toUtf8() + "/" + module + ".pch";
                     auto error = clang_saveTranslationUnit(tu, pchName_.constData(), clang_defaultSaveOptions(tu));
                     if (error) {
-                        qWarning() << "(qdoc) Could not save PCH file for " << module << error;
+                        Location::logToStdErrAlways("Could not save PCH file for " + moduleHeader());
                         pchName_.clear();
                     }
-                    // Visit the header now, as token from pre-compiled header won't be visited later
-                    CXCursor cur = clang_getTranslationUnitCursor(tu);
-                    ClangVisitor visitor(qdb_, allHeaders_);
-                    visitor.visitChildren(cur);
-
+                    else {
+                        // Visit the header now, as token from pre-compiled header won't be visited later
+                        CXCursor cur = clang_getTranslationUnitCursor(tu);
+                        ClangVisitor visitor(qdb_, allHeaders_);
+                        visitor.visitChildren(cur);
+                        Location::logToStdErrAlways("PCH built & visited for " + moduleHeader());
+                    }
                     clang_disposeTranslationUnit(tu);
                 } else {
                     pchFileDir_->remove();
-                    qWarning() << "(qdoc) Could not create PCH file for "
-                               << tmpHeader
-                               << " error code:" << err;
+                    Location::logToStdErrAlways("Could not create PCH file for " + moduleHeader());
                 }
                 args_.pop_back(); // remove the "-xc++";
             }
@@ -1301,8 +1308,8 @@ void ClangCodeParser::precompileHeaders()
         args_.push_back(p.constData());
 
     flags_ = static_cast<CXTranslationUnit_Flags>(CXTranslationUnit_Incomplete | CXTranslationUnit_SkipFunctionBodies | CXTranslationUnit_KeepGoing);
-    // Change 2nd parameter to 1 to make clang report errors.
-    index_ = clang_createIndex(1, Generator::debugging() ? 1 : 0);
+    // 1 as 2nd parameter tells clang to report parser errors.
+    index_ = clang_createIndex(1, printParsingErrors_);
     buildPCH();
     clang_disposeIndex(index_);
 }

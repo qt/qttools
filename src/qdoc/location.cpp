@@ -32,6 +32,7 @@
 #include "generator.h"
 #include <qdir.h>
 #include <qregexp.h>
+#include <QTime>
 #include <stdlib.h>
 #include <limits.h>
 
@@ -375,6 +376,17 @@ void Location::logToStdErr(const QString& message)
         fprintf(stderr, "LOG: %s\n", message.toLatin1().data());
         fflush(stderr);
     }
+}
+
+/*!
+  Always prints the current time and \a message to \c stderr
+  followed by a \c{'\n'}.
+ */
+void Location::logToStdErrAlways(const QString& message)
+{
+    QTime t = QTime::currentTime();
+    fprintf(stderr, "%s LOG: %s\n", t.toString().toLatin1().data(), message.toLatin1().data());
+    fflush(stderr);
 }
 
 /*!
