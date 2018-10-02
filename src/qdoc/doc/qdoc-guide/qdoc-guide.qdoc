@@ -644,7 +644,7 @@
 
     The Qt build system uses the tool \c llvm-config to discover the location
     of LLVM on your system, and relies on the path to llvm-config being in
-    the c\ PATH environment variable to do so. \c llvm-config is commonly
+    the \c PATH environment variable to do so. \c llvm-config is commonly
     installed with LLVM and Clang on Linux systems, and also on macOS if
     LLVM is installed using Brew.
 
@@ -677,6 +677,6 @@
     On a Windows system with LLVM installed to \c {C:\Program Files\LLVM}:
 
     \badcode
-        C:\> set LLVM_INSTALL_DIR="C:\Program Files\LLVM"
+        C:\> set LLVM_INSTALL_DIR=C:\Program Files\LLVM
     \endcode
 */
