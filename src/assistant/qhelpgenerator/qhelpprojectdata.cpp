@@ -75,16 +75,21 @@ private:
     void readTOC();
     void readKeywords();
     void readFiles();
-    void raiseUnknownTokenError();
+    void skipUnknownToken();
     void addMatchingFiles(const QString &pattern);
     bool hasValidSyntax(const QString &nameSpace, const QString &vFolder) const;
 
     QMap<QString, QStringList> dirEntriesCache;
 };
 
-void QHelpProjectDataPrivate::raiseUnknownTokenError()
+void QHelpProjectDataPrivate::skipUnknownToken()
 {
-    raiseError(QCoreApplication::translate("QHelpProject", "Unknown token in file \"%1\".").arg(fileName));
+    const QString message = QCoreApplication::translate("QHelpProject",
+                  "Skipping unknown token <%1> in file \"%2\".")
+                  .arg(name()).arg(fileName) + QLatin1Char('\n');
+    fputs(qPrintable(message), stdout);
+
+    skipCurrentElement();
 }
 
 void QHelpProjectDataPrivate::readData(const QByteArray &contents)
@@ -139,7 +144,7 @@ void QHelpProjectDataPrivate::readProject()
                     metaData.insert(n, attributes().
                                     value(QLatin1String("value")).toString());
             } else {
-                raiseUnknownTokenError();
+                skipUnknownToken();
             }
         } else if (isEndElement() && name() == QLatin1String("QtHelpProject")) {
             if (namespaceName.isEmpty())
@@ -163,7 +168,7 @@ void QHelpProjectDataPrivate::readCustomFilter()
             if (name() == QLatin1String("filterAttribute"))
                 filter.filterAttributes.append(readElementText());
             else
-                raiseUnknownTokenError();
+                skipUnknownToken();
         } else if (isEndElement() && name() == QLatin1String("customFilter")) {
             break;
         }
@@ -186,7 +191,7 @@ void QHelpProjectDataPrivate::readFilterSection()
             else if (name() == QLatin1String("files"))
                 readFiles();
             else
-                raiseUnknownTokenError();
+                skipUnknownToken();
         } else if (isEndElement() && name() == QLatin1String("filterSection")) {
             break;
         }
@@ -211,7 +216,7 @@ void QHelpProjectDataPrivate::readTOC()
                 }
                 contentStack.push(itm);
             } else {
-                raiseUnknownTokenError();
+                skipUnknownToken();
             }
         } else if (isEndElement()) {
             if (name() == QLatin1String("section")) {
@@ -220,7 +225,7 @@ void QHelpProjectDataPrivate::readTOC()
             } else if (name() == QLatin1String("toc") && contentStack.isEmpty()) {
                 return;
             } else {
-                raiseUnknownTokenError();
+                skipUnknownToken();
             }
         }
     }
@@ -254,7 +259,7 @@ void QHelpProjectDataPrivate::readKeywords()
                 filterSectionList.last()
                     .addIndex(QHelpDataIndexItem(nameAttribute, idAttribute, refAttribute));
             } else {
-                raiseUnknownTokenError();
+                skipUnknownToken();
             }
         } else if (isEndElement()) {
             if (name() == QLatin1String("keyword"))
@@ -262,7 +267,7 @@ void QHelpProjectDataPrivate::readKeywords()
             else if (name() == QLatin1String("keywords"))
                 return;
             else
-                raiseUnknownTokenError();
+                skipUnknownToken();
         }
     }
 }
@@ -275,14 +280,14 @@ void QHelpProjectDataPrivate::readFiles()
             if (name() == QLatin1String("file"))
                 addMatchingFiles(readElementText());
             else
-                raiseUnknownTokenError();
+                skipUnknownToken();
         } else if (isEndElement()) {
             if (name() == QLatin1String("file"))
                 continue;
             else if (name() == QLatin1String("files"))
                 return;
             else
-                raiseUnknownTokenError();
+                skipUnknownToken();
         }
     }
 }
