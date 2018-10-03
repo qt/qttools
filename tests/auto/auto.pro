@@ -1,6 +1,7 @@
 TEMPLATE=subdirs
 SUBDIRS=\
     linguist \
+    qdoc \
     qtattributionsscanner \
     qhelpcontentmodel \
     qhelpenginecore \

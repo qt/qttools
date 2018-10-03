@@ -29,6 +29,8 @@ win32-icc*|win32-msvc*:{
     QMAKE_LFLAGS += /STACK:4194304
 }
 
+include(qdoc.pri)
+
 HEADERS += atom.h \
            clangcodeparser.h \
            codechunk.h \
