@@ -86,7 +86,7 @@ static QHash<QString,QString> defaults;
 typedef QPair<QString, QTranslator*> Translator;
 static QList<Translator> translators;
 #endif
-static ClangCodeParser* clangParser_ = 0;
+static ClangCodeParser* clangParser_ = nullptr;
 
 /*!
   Read some XML indexes containing definitions from other
@@ -310,7 +310,7 @@ static void processQdocconfFile(const QString &fileName)
             }
         }
         if (!found) {
-            QTranslator *translator = new QTranslator(0);
+            QTranslator *translator = new QTranslator(nullptr);
             if (!translator->load(*fn)) {
                 config.lastLocation().error(QCoreApplication::translate("QDoc", "Cannot load translator '%1'").arg(*fn));
             }
@@ -507,7 +507,7 @@ static void processQdocconfFile(const QString &fileName)
     QSet<QString>::ConstIterator of = outputFormats.constBegin();
     while (of != outputFormats.constEnd()) {
         Generator* generator = Generator::generatorForFormat(*of);
-        if (generator == 0)
+        if (generator == nullptr)
             outputFormatsLocation.fatal(QCoreApplication::translate("QDoc",
                                                "Unknown output format '%1'").arg(*of));
         generator->initializeFormat(config);
