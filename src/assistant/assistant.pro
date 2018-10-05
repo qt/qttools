@@ -1,3 +1,4 @@
+requires(qtHaveModule(sql))
 TEMPLATE = subdirs
 
 SUBDIRS += \
