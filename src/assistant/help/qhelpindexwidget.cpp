@@ -197,12 +197,21 @@ void QHelpIndexModel::invalidateIndex(bool onShutDown)
 */
 void QHelpIndexModel::createIndex(const QString &customFilterName)
 {
+    const bool running = d->indexProvider->isRunning();
     d->indexProvider->collectIndices(customFilterName);
+    if (running)
+        return;
+
+    d->indices = QStringList();
+    filter(QString());
     emit indexCreationStarted();
 }
 
 void QHelpIndexModel::insertIndices()
 {
+    if (d->indexProvider->isRunning())
+        return;
+
     d->indices = d->indexProvider->indices();
     filter(QString());
     emit indexCreated();
