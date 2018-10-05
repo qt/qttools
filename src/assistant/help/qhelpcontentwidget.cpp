@@ -78,9 +78,6 @@ public:
     void stopCollecting();
     QHelpContentItem *rootItem();
 
-signals:
-    void finishedSuccessFully();
-
 private:
     void run() override;
 
@@ -334,7 +331,6 @@ CHECK_DEPTH:
     m_rootItems.enqueue(rootItem);
     m_abort = false;
     m_mutex.unlock();
-    emit finishedSuccessFully();
 }
 
 /*!
@@ -366,10 +362,8 @@ QHelpContentModel::QHelpContentModel(QHelpEnginePrivate *helpEngine)
     d = new QHelpContentModelPrivate();
     d->qhelpContentProvider = new QHelpContentProvider(helpEngine);
 
-    connect(d->qhelpContentProvider, &QHelpContentProvider::finishedSuccessFully,
-            this, &QHelpContentModel::insertContents, Qt::QueuedConnection);
-    connect(helpEngine->q, &QHelpEngineCore::readersAboutToBeInvalidated,
-            this, [this]() { invalidateContents(); });
+    connect(d->qhelpContentProvider, &QThread::finished,
+            this, &QHelpContentModel::insertContents);
 }
 
 /*!
@@ -383,19 +377,7 @@ QHelpContentModel::~QHelpContentModel()
 
 void QHelpContentModel::invalidateContents(bool onShutDown)
 {
-    if (onShutDown) {
-        disconnect(d->qhelpContentProvider, &QHelpContentProvider::finishedSuccessFully,
-                   this, &QHelpContentModel::insertContents);
-    } else {
-        beginResetModel();
-    }
-    d->qhelpContentProvider->stopCollecting();
-    if (d->rootItem) {
-        delete d->rootItem;
-        d->rootItem = nullptr;
-    }
-    if (!onShutDown)
-        endResetModel();
+    Q_UNUSED(onShutDown)
 }
 
 /*!
@@ -404,12 +386,25 @@ void QHelpContentModel::invalidateContents(bool onShutDown)
 */
 void QHelpContentModel::createContents(const QString &customFilterName)
 {
+    const bool running = d->qhelpContentProvider->isRunning();
     d->qhelpContentProvider->collectContents(customFilterName);
+    if (running)
+        return;
+
+    if (d->rootItem) {
+        beginResetModel();
+        delete d->rootItem;
+        d->rootItem = nullptr;
+        endResetModel();
+    }
     emit contentsCreationStarted();
 }
 
 void QHelpContentModel::insertContents()
 {
+    if (d->qhelpContentProvider->isRunning())
+        return;
+
     QHelpContentItem * const newRootItem = d->qhelpContentProvider->rootItem();
     if (!newRootItem)
         return;
