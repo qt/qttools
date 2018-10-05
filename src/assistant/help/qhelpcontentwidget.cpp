@@ -199,12 +199,10 @@ void QHelpContentProvider::collectContents(const QString &customFilterName)
     m_mutex.lock();
     m_filterAttributes = m_helpEngine->q->filterAttributes(customFilterName);
     m_mutex.unlock();
-    if (!isRunning()) {
-        start(LowPriority);
-    } else {
+
+    if (isRunning())
         stopCollecting();
-        start(LowPriority);
-    }
+    start(LowPriority);
 }
 
 void QHelpContentProvider::stopCollecting()
