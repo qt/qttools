@@ -1216,11 +1216,12 @@ static bool importLessThan(const QVariant &v1, const QVariant &v2)
 }
 
 // Scan qml files in qmldirs for import statements, deploy used imports from Qml2ImportsPath to Contents/Resources/qml.
-bool deployQmlImports(const QString &appBundlePath, DeploymentInfo deploymentInfo, QStringList &qmlDirs)
+bool deployQmlImports(const QString &appBundlePath, DeploymentInfo deploymentInfo, QStringList &qmlDirs, QStringList &qmlImportPaths)
 {
     LogNormal() << "";
     LogNormal() << "Deploying QML imports ";
-    LogNormal() << "Application QML file search path(s) is" << qmlDirs;
+    LogNormal() << "Application QML file path(s) is" << qmlDirs;
+    LogNormal() << "QML module search path(s) is" << qmlImportPaths;
 
     // Use qmlimportscanner from QLibraryInfo::BinariesPath
     QString qmlImportScannerPath = QDir::cleanPath(QLibraryInfo::location(QLibraryInfo::BinariesPath) + "/qmlimportscanner");
@@ -1243,6 +1244,8 @@ bool deployQmlImports(const QString &appBundlePath, DeploymentInfo deploymentInf
         argumentList.append("-rootPath");
         argumentList.append(qmlDir);
     }
+    for (const QString &importPath : qmlImportPaths)
+        argumentList << "-importPath" << importPath;
     QString qmlImportsPath = QLibraryInfo::location(QLibraryInfo::Qml2ImportsPath);
     argumentList.append( "-importPath");
     argumentList.append(qmlImportsPath);

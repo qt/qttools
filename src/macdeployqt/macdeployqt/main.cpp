@@ -49,6 +49,7 @@ int main(int argc, char **argv)
         qDebug() << "   -use-debug-libs    : Deploy with debug versions of frameworks and plugins (implies -no-strip)";
         qDebug() << "   -executable=<path> : Let the given executable use the deployed frameworks too";
         qDebug() << "   -qmldir=<path>     : Scan for QML imports in the given path";
+        qDebug() << "   -qmlimport=<path>  : Add the given path to the QML module search locations";
         qDebug() << "   -always-overwrite  : Copy files even if the target file exists";
         qDebug() << "   -codesign=<ident>  : Run codesign with the given identity on all executables";
         qDebug() << "   -appstore-compliant: Skip deployment of components that use private API";
@@ -92,6 +93,7 @@ int main(int argc, char **argv)
     QStringList additionalExecutables;
     bool qmldirArgumentUsed = false;
     QStringList qmlDirs;
+    QStringList qmlImportPaths;
     extern bool runCodesign;
     extern QString codesignIdentiy;
     extern bool appstoreCompliant;
@@ -136,6 +138,13 @@ int main(int argc, char **argv)
                 LogError() << "Missing qml directory path";
             else
                 qmlDirs << argument.mid(index+1);
+        } else if (argument.startsWith(QByteArray("-qmlimport"))) {
+            LogDebug() << "Argument found:" << argument;
+            int index = argument.indexOf('=');
+            if (index == -1)
+                LogError() << "Missing qml import path";
+            else
+                qmlImportPaths << argument.mid(index+1);
         } else if (argument.startsWith(QByteArray("-libpath"))) {
             LogDebug() << "Argument found:" << argument;
             int index = argument.indexOf('=');
@@ -194,7 +203,7 @@ int main(int argc, char **argv)
     }
 
     if (!qmlDirs.isEmpty()) {
-        bool ok = deployQmlImports(appBundlePath, deploymentInfo, qmlDirs);
+        bool ok = deployQmlImports(appBundlePath, deploymentInfo, qmlDirs, qmlImportPaths);
         if (!ok && qmldirArgumentUsed)
             return 1; // exit if the user explicitly asked for qml import deployment
 
