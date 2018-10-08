@@ -779,6 +779,14 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
         }
         else if (atom->string() == QLatin1String("related")) {
             generateList(relative, marker, "related");
+        } else {
+            const CollectionNode* cn = qdb_->getCollectionNode(atom->string(), Node::Group);
+            if (cn) {
+                if (!generateGroupList(const_cast<CollectionNode*>(cn)))
+                    relative->location().warning(QString("'\\generatelist \1' group is empty").arg(atom->string()));
+            } else {
+                relative->location().warning(QString("'\\generatelist \1' no such group").arg(atom->string()));
+            }
         }
         break;
     case Atom::SinceList:
@@ -3100,6 +3108,30 @@ void HtmlGenerator::generateQmlItem(const Node *node,
         marked.remove("</@type>");
     }
     out() << highlightedCode(marked, relative, false, Node::QML);
+}
+
+/*!
+  This function generates a simple bullet list for the members
+  of collection node \a {cn}. The collection node must be a group
+  and must not be empty. If it is empty, nothing is output, and
+  false is returned. Otherewise, the list is generated and true is returned.
+ */
+bool HtmlGenerator::generateGroupList(CollectionNode* cn)
+{
+    qdb_->mergeCollections(cn);
+    if (cn->members().isEmpty())
+        return false;
+    out() << "<ul>\n";
+    foreach (const Node* node, cn->members()) {
+        out() << "<li>"
+              << "<a href=\"#"
+              << Doc::canonicalTitle(node->title())
+              << "\">"
+              << node->title()
+              << "</a></li>\n";
+    }
+    out() << "</ul>\n";
+    return true;
 }
 
 void HtmlGenerator::generateList(const Node* relative, CodeMarker* marker, const QString& selector)
