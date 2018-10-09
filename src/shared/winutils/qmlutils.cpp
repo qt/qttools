@@ -95,14 +95,16 @@ static void findFileRecursion(const QDir &directory, Platform platform,
     }
 }
 
-QmlImportScanResult runQmlImportScanner(const QString &directory, const QString &qmlImportPath,
+QmlImportScanResult runQmlImportScanner(const QString &directory, const QStringList &qmlImportPaths,
                                         bool usesWidgets, int platform, DebugMatchMode debugMatchMode,
                                         QString *errorMessage)
 {
     Q_UNUSED(usesWidgets);
     QmlImportScanResult result;
     QStringList arguments;
-    arguments << QStringLiteral("-importPath") << qmlImportPath << QStringLiteral("-rootPath") << directory;
+    for (const QString &importPath : qmlImportPaths)
+        arguments << QStringLiteral("-importPath") << importPath;
+    arguments << QStringLiteral("-rootPath") << directory;
     unsigned long exitCode;
     QByteArray stdOut;
     QByteArray stdErr;

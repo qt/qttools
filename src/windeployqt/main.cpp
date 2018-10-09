@@ -262,6 +262,7 @@ struct Options {
     quint64 disabledLibraries = 0;
     unsigned updateFileFlags = 0;
     QStringList qmlDirectories; // Project's QML files.
+    QStringList qmlImportPaths; // Custom QML module locations.
     QString directory;
     QString translationsDirectory; // Translations target directory
     QString libraryDirectory;
@@ -377,6 +378,11 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
                                     QStringLiteral("Scan for QML-imports starting from directory."),
                                     QStringLiteral("directory"));
     parser->addOption(qmlDirOption);
+
+    QCommandLineOption qmlImportOption(QStringLiteral("qmlimport"),
+                                       QStringLiteral("Add the given path to the QML module search locations."),
+                                       QStringLiteral("directory"));
+    parser->addOption(qmlImportOption);
 
     QCommandLineOption noQuickImportOption(QStringLiteral("no-quick-import"),
                                            QStringLiteral("Skip deployment of Qt Quick imports."));
@@ -589,6 +595,9 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
 
     if (parser->isSet(qmlDirOption))
         options->qmlDirectories = parser->values(qmlDirOption);
+
+    if (parser->isSet(qmlImportOption))
+        options->qmlImportPaths = parser->values(qmlImportOption);
 
     const QString &file = posArgs.front();
     const QFileInfo fi(QDir::cleanPath(file));
@@ -1298,6 +1307,10 @@ static DeployResult deploy(const Options &options,
     // Scan Quick2 imports
     QmlImportScanResult qmlScanResult;
     if (options.quickImports && usesQml2) {
+        // Custom list of import paths provided by user
+        QStringList qmlImportPaths = options.qmlImportPaths;
+        // Qt's own QML modules
+        qmlImportPaths << qmakeVariables.value(QStringLiteral("QT_INSTALL_QML"));
         QStringList qmlDirectories = options.qmlDirectories;
         if (qmlDirectories.isEmpty()) {
             const QString qmlDirectory = findQmlDirectory(options.platform, options.directory);
@@ -1308,7 +1321,7 @@ static DeployResult deploy(const Options &options,
             if (optVerboseLevel >= 1)
                 std::wcout << "Scanning " << QDir::toNativeSeparators(qmlDirectory) << ":\n";
             const QmlImportScanResult scanResult =
-                runQmlImportScanner(qmlDirectory, qmakeVariables.value(QStringLiteral("QT_INSTALL_QML")),
+                runQmlImportScanner(qmlDirectory, qmlImportPaths,
                                     result.directlyUsedQtLibraries & QtWidgetsModule,
                                     options.platform, debugMatchMode, errorMessage);
             if (!scanResult.ok)
