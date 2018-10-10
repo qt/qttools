@@ -1,7 +1,9 @@
 CONFIG += testcase
 QT = core testlib
 TARGET = tst_qdocglobals
+INCLUDEPATH += $$PWD/../../../../src/qdoc
 
-include($$PWD/../../../../src/qdoc/qdoc.pri)
+HEADERS += $$PWD/../../../../src/qdoc/qdocglobals.h
 
-SOURCES += tst_qdocglobals.cpp
+SOURCES += $$PWD/../../../../src/qdoc/qdocglobals.cpp \
+           tst_qdocglobals.cpp

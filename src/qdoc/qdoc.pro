@@ -29,8 +29,6 @@ win32-icc*|win32-msvc*:{
     QMAKE_LFLAGS += /STACK:4194304
 }
 
-include(qdoc.pri)
-
 HEADERS += atom.h \
            clangcodeparser.h \
            codechunk.h \
@@ -59,6 +57,7 @@ HEADERS += atom.h \
            tokenizer.h \
            tree.h \
            webxmlgenerator.h \
+           qdocglobals.h \
            qdoccommandlineparser.h
 
 SOURCES += atom.cpp \
@@ -90,6 +89,7 @@ SOURCES += atom.cpp \
            tree.cpp \
            yyindent.cpp \
            webxmlgenerator.cpp \
+           qdocglobals.cpp \
            qdoccommandlineparser.cpp
 
 ### QML/JS Parser ###
