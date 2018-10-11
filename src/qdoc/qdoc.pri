@@ -3,4 +3,5 @@
 INCLUDEPATH += $$PWD
 
 HEADERS += $$PWD/qdocglobals.h
+
 SOURCES += $$PWD/qdocglobals.cpp

@@ -127,7 +127,8 @@ QStringList QDocGlobals::includesPaths()
 
 void QDocGlobals::addIncludePath(const QString &flag, const QString &path)
 {
-    m_includesPaths << flag << path;
+    QString includePath = flag + path;
+    m_includesPaths << includePath;
 }
 
 QStringList &QDocGlobals::dependModules()

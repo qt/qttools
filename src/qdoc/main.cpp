@@ -50,6 +50,7 @@
 #include "puredocparser.h"
 #include "qmlcodemarker.h"
 #include "qmlcodeparser.h"
+#include "qdoccommandlineparser.h"
 #include "qdocdatabase.h"
 #include "qdocglobals.h"
 #include "qtranslator.h"
@@ -76,7 +77,7 @@ static QList<Translator> translators;
 #endif
 
 static ClangCodeParser* clangParser_ = nullptr;
-Q_GLOBAL_STATIC(QDocGlobals, qdocGlobals)
+static QDocGlobals qdocGlobals;
 
 /*!
   Read some XML indexes containing definitions from other
@@ -100,8 +101,8 @@ static void loadIndexFiles(Config& config, const QSet<QString> &formats)
             Location::null.warning(QString("Index file not found: %1").arg(index));
     }
 
-    qdocGlobals->dependModules() += config.getStringList(CONFIG_DEPENDS);
-    qdocGlobals->dependModules().removeDuplicates();
+    qdocGlobals.dependModules() += config.getStringList(CONFIG_DEPENDS);
+    qdocGlobals.dependModules().removeDuplicates();
     QSet<QString> subDirs;
 
     for (const auto &format : formats) {
@@ -115,41 +116,41 @@ static void loadIndexFiles(Config& config, const QSet<QString> &formats)
         }
     }
 
-    if (qdocGlobals->dependModules().size() > 0) {
-        if (qdocGlobals->indexDirs().size() > 0) {
-            for (int i = 0; i < qdocGlobals->indexDirs().size(); i++) {
-                if (qdocGlobals->indexDirs()[i].startsWith("..")) {
-                    const QString prefix(QDir(qdocGlobals->currentDir()).relativeFilePath(qdocGlobals->previousCurrentDir()));
+    if (qdocGlobals.dependModules().size() > 0) {
+        if (qdocGlobals.indexDirs().size() > 0) {
+            for (int i = 0; i < qdocGlobals.indexDirs().size(); i++) {
+                if (qdocGlobals.indexDirs()[i].startsWith("..")) {
+                    const QString prefix(QDir(qdocGlobals.currentDir()).relativeFilePath(qdocGlobals.previousCurrentDir()));
                     if (!prefix.isEmpty())
-                        qdocGlobals->indexDirs()[i].prepend(prefix + QLatin1Char('/'));
+                        qdocGlobals.indexDirs()[i].prepend(prefix + QLatin1Char('/'));
                 }
             }
             /*
               Add all subdirectories of the indexdirs as dependModules,
               when an asterisk is used in the 'depends' list.
             */
-            if (qdocGlobals->dependModules().contains("*")) {
-                qdocGlobals->dependModules().removeOne("*");
-                for (int i = 0; i < qdocGlobals->indexDirs().size(); i++) {
-                    QDir scanDir = QDir(qdocGlobals->indexDirs()[i]);
+            if (qdocGlobals.dependModules().contains("*")) {
+                qdocGlobals.dependModules().removeOne("*");
+                for (int i = 0; i < qdocGlobals.indexDirs().size(); i++) {
+                    QDir scanDir = QDir(qdocGlobals.indexDirs()[i]);
                     scanDir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
                     QFileInfoList dirList = scanDir.entryInfoList();
                     for (int j = 0; j < dirList.size(); j++) {
                         if (dirList[j].fileName().toLower() != config.getString(CONFIG_PROJECT).toLower())
-                            qdocGlobals->dependModules().append(dirList[j].fileName());
+                            qdocGlobals.dependModules().append(dirList[j].fileName());
                     }
                 }
             }
-            for (int i = 0; i < qdocGlobals->dependModules().size(); i++) {
+            for (int i = 0; i < qdocGlobals.dependModules().size(); i++) {
                 QString indexToAdd;
                 QList<QFileInfo> foundIndices;
                 // Always look in module-specific subdir, even with *.nosubdirs config
-                subDirs << qdocGlobals->dependModules()[i];
-                for (int j = 0; j < qdocGlobals->indexDirs().size(); j++) {
+                subDirs << qdocGlobals.dependModules()[i];
+                for (int j = 0; j < qdocGlobals.indexDirs().size(); j++) {
                     for (const auto &subDir : subDirs) {
-                        QString fileToLookFor = qdocGlobals->indexDirs()[j]
+                        QString fileToLookFor = qdocGlobals.indexDirs()[j]
                                 + QLatin1Char('/') + subDir
-                                + QLatin1Char('/') + qdocGlobals->dependModules()[i] + ".index";
+                                + QLatin1Char('/') + qdocGlobals.dependModules()[i] + ".index";
                         if (QFile::exists(fileToLookFor)) {
                             QFileInfo tempFileInfo(fileToLookFor);
                             if (!foundIndices.contains(tempFileInfo))
@@ -157,7 +158,7 @@ static void loadIndexFiles(Config& config, const QSet<QString> &formats)
                         }
                     }
                 }
-                subDirs.remove(qdocGlobals->dependModules()[i]);
+                subDirs.remove(qdocGlobals.dependModules()[i]);
                 std::sort(foundIndices.begin(), foundIndices.end(), creationTimeBefore);
                 if (foundIndices.size() > 1) {
                     /*
@@ -169,10 +170,10 @@ static void loadIndexFiles(Config& config, const QSet<QString> &formats)
                     for (int k = 0; k < foundIndices.size(); k++)
                         indexPaths << foundIndices[k].absoluteFilePath();
                     Location::null.warning(QString("Multiple index files found for dependency \"%1\":\n%2").arg(
-                                               qdocGlobals->dependModules()[i], indexPaths.join('\n')));
+                                               qdocGlobals.dependModules()[i], indexPaths.join('\n')));
                     Location::null.warning(QString("Using %1 as index file for dependency \"%2\"").arg(
                                                foundIndices[foundIndices.size() - 1].absoluteFilePath(),
-                                               qdocGlobals->dependModules()[i]));
+                                               qdocGlobals.dependModules()[i]));
                     indexToAdd = foundIndices[foundIndices.size() - 1].absoluteFilePath();
                 }
                 else if (foundIndices.size() == 1) {
@@ -184,7 +185,7 @@ static void loadIndexFiles(Config& config, const QSet<QString> &formats)
                 }
                 else {
                     Location::null.warning(QString("\"%1\" Cannot locate index file for dependency \"%2\"").arg(
-                                               config.getString(CONFIG_PROJECT), qdocGlobals->dependModules()[i]));
+                                               config.getString(CONFIG_PROJECT), qdocGlobals.dependModules()[i]));
                 }
             }
         }
@@ -214,19 +215,19 @@ static void processQdocconfFile(const QString &fileName)
     Config config(QCoreApplication::translate("QDoc", "qdoc"));
 
     QHash<QString,QString>::iterator iter;
-    for (iter = qdocGlobals->defaults().begin(); iter != qdocGlobals->defaults().end(); ++iter)
+    for (iter = qdocGlobals.defaults().begin(); iter != qdocGlobals.defaults().end(); ++iter)
         config.setStringList(iter.key(), QStringList() << iter.value());
 
-    config.setStringList(CONFIG_SYNTAXHIGHLIGHTING, QStringList(qdocGlobals->highlighting() ? "true" : "false"));
-    config.setStringList(CONFIG_SHOWINTERNAL, QStringList(qdocGlobals->showInternal() ? "true" : "false"));
-    config.setStringList(CONFIG_SINGLEEXEC, QStringList(qdocGlobals->singleExec() ? "true" : "false"));
-    config.setStringList(CONFIG_WRITEQAPAGES, QStringList(qdocGlobals->writeQaPages() ? "true" : "false"));
-    config.setStringList(CONFIG_REDIRECTDOCUMENTATIONTODEVNULL, QStringList(qdocGlobals->redirectDocumentationToDevNull() ? "true" : "false"));
-    config.setStringList(CONFIG_NOLINKERRORS, QStringList(qdocGlobals->noLinkErrors() ? "true" : "false"));
-    config.setStringList(CONFIG_AUTOLINKERRORS, QStringList(qdocGlobals->autolinkErrors() ? "true" : "false"));
-    config.setStringList(CONFIG_OBSOLETELINKS, QStringList(qdocGlobals->obsoleteLinks() ? "true" : "false"));
+    config.setStringList(CONFIG_SYNTAXHIGHLIGHTING, QStringList(qdocGlobals.highlighting() ? "true" : "false"));
+    config.setStringList(CONFIG_SHOWINTERNAL, QStringList(qdocGlobals.showInternal() ? "true" : "false"));
+    config.setStringList(CONFIG_SINGLEEXEC, QStringList(qdocGlobals.singleExec() ? "true" : "false"));
+    config.setStringList(CONFIG_WRITEQAPAGES, QStringList(qdocGlobals.writeQaPages() ? "true" : "false"));
+    config.setStringList(CONFIG_REDIRECTDOCUMENTATIONTODEVNULL, QStringList(qdocGlobals.redirectDocumentationToDevNull() ? "true" : "false"));
+    config.setStringList(CONFIG_NOLINKERRORS, QStringList(qdocGlobals.noLinkErrors() ? "true" : "false"));
+    config.setStringList(CONFIG_AUTOLINKERRORS, QStringList(qdocGlobals.autolinkErrors() ? "true" : "false"));
+    config.setStringList(CONFIG_OBSOLETELINKS, QStringList(qdocGlobals.obsoleteLinks() ? "true" : "false"));
 
-    qdocGlobals->setPreviousCurrentDir(QDir::currentPath());
+    qdocGlobals.setPreviousCurrentDir(QDir::currentPath());
 
     /*
       With the default configuration values in place, load
@@ -244,15 +245,15 @@ static void processQdocconfFile(const QString &fileName)
     /*
       Add the defines to the configuration variables.
      */
-    QStringList defs = qdocGlobals->defines() + config.getStringList(CONFIG_DEFINES);
+    QStringList defs = qdocGlobals.defines() + config.getStringList(CONFIG_DEFINES);
     config.setStringList(CONFIG_DEFINES,defs);
-    QStringList incs = qdocGlobals->includesPaths() + config.getStringList(CONFIG_INCLUDEPATHS);
+    QStringList incs = qdocGlobals.includesPaths() + config.getStringList(CONFIG_INCLUDEPATHS);
     config.setStringList(CONFIG_INCLUDEPATHS, incs);
     Location::terminate();
 
-    qdocGlobals->setCurrentDir(QFileInfo(fileName).path());
-    if (!qdocGlobals->currentDir().isEmpty())
-        QDir::setCurrent(qdocGlobals->currentDir());
+    qdocGlobals.setCurrentDir(QFileInfo(fileName).path());
+    if (!qdocGlobals.currentDir().isEmpty())
+        QDir::setCurrent(qdocGlobals.currentDir());
 
     QString phase = " in -";
     if (Generator::singleExec())
@@ -360,9 +361,9 @@ static void processQdocconfFile(const QString &fileName)
     else
         clangParser_->setModuleHeader(project);
 
-    qdocGlobals->dependModules() = config.getStringList(CONFIG_DEPENDS);
-    qdocGlobals->dependModules().removeDuplicates();
-    qdb->setSearchOrder(qdocGlobals->dependModules());
+    qdocGlobals.dependModules() = config.getStringList(CONFIG_DEPENDS);
+    qdocGlobals.dependModules().removeDuplicates();
+    qdb->setSearchOrder(qdocGlobals.dependModules());
 
     // Store the title of the index (landing) page
     NamespaceNode* root = qdb->primaryTreeRoot();
@@ -521,209 +522,9 @@ static void processQdocconfFile(const QString &fileName)
     Doc::terminate();
     Tokenizer::terminate();
     Location::terminate();
-    QDir::setCurrent(qdocGlobals->previousCurrentDir());
+    QDir::setCurrent(qdocGlobals.previousCurrentDir());
 
     qCDebug(lcQdoc, "qdoc classes terminated");
-}
-
-class QDocCommandLineParser : public QCommandLineParser
-{
-public:
-    QDocCommandLineParser();
-    void process(const QCoreApplication &app);
-
-private:
-    QCommandLineOption defineOption, dependsOption, highlightingOption;
-    QCommandLineOption showInternalOption, redirectDocumentationToDevNullOption;
-    QCommandLineOption noExamplesOption, indexDirOption, installDirOption;
-    QCommandLineOption obsoleteLinksOption, outputDirOption, outputFormatOption;
-    QCommandLineOption noLinkErrorsOption, autoLinkErrorsOption, debugOption;
-    QCommandLineOption prepareOption, generateOption, logProgressOption;
-    QCommandLineOption singleExecOption, writeQaPagesOption;
-    QCommandLineOption includePathOption, includePathSystemOption, frameworkOption;
-};
-
-QDocCommandLineParser::QDocCommandLineParser()
-    : QCommandLineParser(),
-      defineOption(QStringList() << QStringLiteral("D")),
-      dependsOption(QStringList() << QStringLiteral("depends")),
-      highlightingOption(QStringList() << QStringLiteral("highlighting")),
-      showInternalOption(QStringList() << QStringLiteral("showinternal")),
-      redirectDocumentationToDevNullOption(QStringList() << QStringLiteral("redirect-documentation-to-dev-null")),
-      noExamplesOption(QStringList() << QStringLiteral("no-examples")),
-      indexDirOption(QStringList() << QStringLiteral("indexdir")),
-      installDirOption(QStringList() << QStringLiteral("installdir")),
-      obsoleteLinksOption(QStringList() << QStringLiteral("obsoletelinks")),
-      outputDirOption(QStringList() << QStringLiteral("outputdir")),
-      outputFormatOption(QStringList() << QStringLiteral("outputformat")),
-      noLinkErrorsOption(QStringList() << QStringLiteral("no-link-errors")),
-      autoLinkErrorsOption(QStringList() << QStringLiteral("autolink-errors")),
-      debugOption(QStringList() << QStringLiteral("debug")),
-      prepareOption(QStringList() << QStringLiteral("prepare")),
-      generateOption(QStringList() << QStringLiteral("generate")),
-      logProgressOption(QStringList() << QStringLiteral("log-progress")),
-      singleExecOption(QStringList() << QStringLiteral("single-exec")),
-      writeQaPagesOption(QStringList() << QStringLiteral("write-qa-pages")),
-      includePathOption("I", "Add dir to the include path for header files.", "path"),
-      includePathSystemOption("isystem", "Add dir to the system include path for header files.", "path"),
-      frameworkOption("F", "Add macOS framework to the include path for header files.", "framework")
-{
-    setApplicationDescription(QCoreApplication::translate("qdoc", "Qt documentation generator"));
-    addHelpOption();
-    addVersionOption();
-
-    setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
-
-    addPositionalArgument("file1.qdocconf ...", QCoreApplication::translate("qdoc", "Input files"));
-
-    defineOption.setDescription(QCoreApplication::translate("qdoc", "Define the argument as a macro while parsing sources"));
-    defineOption.setValueName(QStringLiteral("macro[=def]"));
-    addOption(defineOption);
-
-    dependsOption.setDescription(QCoreApplication::translate("qdoc", "Specify dependent modules"));
-    dependsOption.setValueName(QStringLiteral("module"));
-    addOption(dependsOption);
-
-    highlightingOption.setDescription(QCoreApplication::translate("qdoc", "Turn on syntax highlighting (makes qdoc run slower)"));
-    addOption(highlightingOption);
-
-    showInternalOption.setDescription(QCoreApplication::translate("qdoc", "Include content marked internal"));
-    addOption(showInternalOption);
-
-    redirectDocumentationToDevNullOption.setDescription(QCoreApplication::translate("qdoc", "Save all documentation content to /dev/null. Useful if someone is interested in qdoc errors only."));
-    addOption(redirectDocumentationToDevNullOption);
-
-    noExamplesOption.setDescription(QCoreApplication::translate("qdoc", "Do not generate documentation for examples"));
-    addOption(noExamplesOption);
-
-    indexDirOption.setDescription(QCoreApplication::translate("qdoc", "Specify a directory where QDoc should search for index files to load"));
-    indexDirOption.setValueName(QStringLiteral("dir"));
-    addOption(indexDirOption);
-
-    installDirOption.setDescription(QCoreApplication::translate("qdoc", "Specify the directory where the output will be after running \"make install\""));
-    installDirOption.setValueName(QStringLiteral("dir"));
-    addOption(installDirOption);
-
-    obsoleteLinksOption.setDescription(QCoreApplication::translate("qdoc", "Report links from obsolete items to non-obsolete items"));
-    addOption(obsoleteLinksOption);
-
-    outputDirOption.setDescription(QCoreApplication::translate("qdoc", "Specify output directory, overrides setting in qdocconf file"));
-    outputDirOption.setValueName(QStringLiteral("dir"));
-    addOption(outputDirOption);
-
-    outputFormatOption.setDescription(QCoreApplication::translate("qdoc", "Specify output format, overrides setting in qdocconf file"));
-    outputFormatOption.setValueName(QStringLiteral("format"));
-    addOption(outputFormatOption);
-
-    noLinkErrorsOption.setDescription(QCoreApplication::translate("qdoc", "Do not print link errors (i.e. missing targets)"));
-    addOption(noLinkErrorsOption);
-
-    autoLinkErrorsOption.setDescription(QCoreApplication::translate("qdoc", "Show errors when automatic linking fails"));
-    addOption(autoLinkErrorsOption);
-
-    debugOption.setDescription(QCoreApplication::translate("qdoc", "Enable debug output"));
-    addOption(debugOption);
-
-    prepareOption.setDescription(QCoreApplication::translate("qdoc", "Run qdoc only to generate an index file, not the docs"));
-    addOption(prepareOption);
-
-    generateOption.setDescription(QCoreApplication::translate("qdoc", "Run qdoc to read the index files and generate the docs"));
-    addOption(generateOption);
-
-    logProgressOption.setDescription(QCoreApplication::translate("qdoc", "Log progress on stderr."));
-    addOption(logProgressOption);
-
-    singleExecOption.setDescription(QCoreApplication::translate("qdoc", "Run qdoc once over all the qdoc conf files."));
-    addOption(singleExecOption);
-
-    writeQaPagesOption.setDescription(QCoreApplication::translate("qdoc", "Write QA pages."));
-    addOption(writeQaPagesOption);
-
-    includePathOption.setFlags(QCommandLineOption::ShortOptionStyle);
-    addOption(includePathOption);
-
-    addOption(includePathSystemOption);
-
-    frameworkOption.setFlags(QCommandLineOption::ShortOptionStyle);
-    addOption(frameworkOption);
-}
-
-void QDocCommandLineParser::process(const QCoreApplication &app)
-{
-    QCommandLineParser::process(app);
-
-    qdocGlobals->addDefine(values(defineOption));
-    qdocGlobals->dependModules() += values(dependsOption);
-    qdocGlobals->enableHighlighting(isSet(highlightingOption));
-    qdocGlobals->setShowInternal(isSet(showInternalOption));
-    qdocGlobals->setSingleExec(isSet(singleExecOption));
-    qdocGlobals->setWriteQaPages(isSet(writeQaPagesOption));
-    qdocGlobals->setRedirectDocumentationToDevNull(isSet(redirectDocumentationToDevNullOption));
-    Config::generateExamples = !isSet(noExamplesOption);
-    foreach (const QString &indexDir, values(indexDirOption)) {
-        if (QFile::exists(indexDir))
-            qdocGlobals->appendToIndexDirs(indexDir);
-        else
-            qDebug() << "Cannot find index directory" << indexDir;
-    }
-    if (isSet(installDirOption))
-        Config::installDir = value(installDirOption);
-    qdocGlobals->setObsoleteLinks(isSet(obsoleteLinksOption));
-    if (isSet(outputDirOption))
-        Config::overrideOutputDir = value(outputDirOption);
-    foreach (const QString &format, values(outputFormatOption))
-        Config::overrideOutputFormats.insert(format);
-    qdocGlobals->setNoLinkErrors(isSet(noLinkErrorsOption) || qEnvironmentVariableIsSet("QDOC_NOLINKERRORS"));
-    qdocGlobals->setAutolinkErrors(isSet(autoLinkErrorsOption));
-    if (isSet(debugOption))
-        Generator::startDebugging(QString("command line"));
-    qCDebug(lcQdoc).noquote() << "Arguments :" << QCoreApplication::arguments();
-
-    if (isSet(prepareOption))
-        Generator::setQDocPass(Generator::Prepare);
-    if (isSet(generateOption))
-        Generator::setQDocPass(Generator::Generate);
-    if (isSet(singleExecOption)) {
-        Generator::setSingleExec();
-        if (isSet(indexDirOption))
-            qDebug() << "WARNING: -indexdir option ignored: Index files are not used in -single-exec mode.";
-    }
-    if (isSet(writeQaPagesOption))
-        Generator::setWriteQaPages();
-    if (isSet(logProgressOption))
-        Location::startLoggingProgress();
-
-    QDir currentDir = QDir::current();
-    const auto paths = values(includePathOption);
-    for (const auto &i : paths)
-        qdocGlobals->addIncludePath("-I ", currentDir.absoluteFilePath(i));
-
-#ifdef QDOC_PASS_ISYSTEM
-    const auto paths2 = values(includePathSystemOption);
-    for (const auto &i : paths2)
-        qdocGlobals->addIncludePath("-isystem", currentDir.absoluteFilePath(i));
-#endif
-    const auto paths3 = values(frameworkOption);
-    for (const auto &i : paths3)
-        qdocGlobals->addIncludePath("-F", currentDir.absoluteFilePath(i));
-
-    /*
-      The default indent for code is 0.
-      The default value for false is 0.
-      The default supported file extensions are cpp, h, qdoc and qml.
-      The default language is c++.
-      The default output format is html.
-      The default tab size is 8.
-      And those are all the default values for configuration variables.
-     */
-    if (qdocGlobals->defaults().isEmpty()) {
-        qdocGlobals->defaults().insert(CONFIG_CODEINDENT, QLatin1String("0"));
-        qdocGlobals->defaults().insert(CONFIG_FALSEHOODS, QLatin1String("0"));
-        qdocGlobals->defaults().insert(CONFIG_FILEEXTENSIONS, QLatin1String("*.cpp *.h *.qdoc *.qml"));
-        qdocGlobals->defaults().insert(CONFIG_LANGUAGE, QLatin1String("Cpp"));
-        qdocGlobals->defaults().insert(CONFIG_OUTPUTFORMATS, QLatin1String("HTML"));
-        qdocGlobals->defaults().insert(CONFIG_TABSIZE, QLatin1String("8"));
-    }
 }
 
 QT_END_NAMESPACE
@@ -763,21 +564,21 @@ int main(int argc, char **argv)
 
     // Set the globals declared at the top of this file:
     QDocCommandLineParser parser;
-    parser.process(app);
+    parser.process(app, qdocGlobals);
 
     // Get the list of files to act on:
     QStringList qdocFiles = parser.positionalArguments();
     if (qdocFiles.isEmpty())
         parser.showHelp();
 
-    if (qdocGlobals->singleExec())
+    if (qdocGlobals.singleExec())
         qdocFiles = Config::loadMaster(qdocFiles.at(0));
 
     // Main loop (adapted, when needed, to handle single exec mode):
     if (Generator::singleExec())
         Generator::setQDocPass(Generator::Prepare);
     foreach (const QString &qf, qdocFiles) {
-        qdocGlobals->dependModules().clear();
+        qdocGlobals.dependModules().clear();
         processQdocconfFile(qf);
     }
     if (Generator::singleExec()) {
@@ -785,7 +586,7 @@ int main(int argc, char **argv)
         QDocDatabase* qdb = QDocDatabase::qdocDB();
         qdb->processForest();
         foreach (const QString &qf, qdocFiles) {
-            qdocGlobals->dependModules().clear();
+            qdocGlobals.dependModules().clear();
             processQdocconfFile(qf);
         }
     }

@@ -58,7 +58,8 @@ HEADERS += atom.h \
            text.h \
            tokenizer.h \
            tree.h \
-           webxmlgenerator.h
+           webxmlgenerator.h \
+           qdoccommandlineparser.h
 
 SOURCES += atom.cpp \
            clangcodeparser.cpp \
@@ -88,7 +89,8 @@ SOURCES += atom.cpp \
            tokenizer.cpp \
            tree.cpp \
            yyindent.cpp \
-           webxmlgenerator.cpp
+           webxmlgenerator.cpp \
+           qdoccommandlineparser.cpp
 
 ### QML/JS Parser ###
 
