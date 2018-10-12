@@ -1,3 +1,5 @@
+TARGET = qdistancefieldgenerator
+
 QT += gui widgets gui-private core-private quick-private
 
 SOURCES += \
@@ -18,3 +20,7 @@ HEADERS += \
     distancefieldmodelworker.h
 
 QMAKE_DOCS = $$PWD/doc/qtdistancefieldgenerator.qdocconf
+
+QMAKE_TARGET_DESCRIPTION = "Qt Distance Field Generator"
+
+load(qt_app)
