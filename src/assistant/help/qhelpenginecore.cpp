@@ -500,7 +500,7 @@ QUrl QHelpEngineCore::findFile(const QUrl &url) const
     if (!result.isEmpty())
         return result;
 
-    result = d->collectionHandler->findFile(url);
+    result = d->collectionHandler->findFile(url, QStringList());
     if (!result.isEmpty())
         return result;
 
