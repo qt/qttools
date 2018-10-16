@@ -780,8 +780,8 @@ bool QHelpCollectionHandler::fileExists(const QUrl &url) const
     if (fileInfo.namespaceName.isEmpty())
         return false;
 
-    m_query->prepare(QLatin1String("SELECT COUNT (DISTINCT NamespaceTable.Id)"
-                                   "FROM"
+    m_query->prepare(QLatin1String("SELECT COUNT (DISTINCT NamespaceTable.Id) "
+                                   "FROM "
                                        "FileNameTable, "
                                        "NamespaceTable, "
                                        "FolderTable "
