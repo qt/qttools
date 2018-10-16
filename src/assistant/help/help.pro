@@ -12,6 +12,7 @@ DEFINES -= QT_ASCII_CAST_WARNINGS
 RESOURCES += helpsystem.qrc
 SOURCES += qhelpenginecore.cpp \
     qhelpengine.cpp \
+    qhelpcollectiondetails.cpp \
     qhelpfilterdata.cpp \
     qhelpdbreader.cpp \
     qhelpcontentwidget.cpp \
@@ -28,6 +29,7 @@ SOURCES += qhelpenginecore.cpp \
 HEADERS += qhelpenginecore.h \
     qhelpengine.h \
     qhelpengine_p.h \
+    qhelpcollectiondetails.h \
     qhelpfilterdata.h \
     qhelp_global.h \
     qhelpdbreader_p.h \
