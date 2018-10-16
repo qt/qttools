@@ -30,6 +30,7 @@ HEADERS += aboutdialog.h \
     helpviewer_p.h \
     indexwindow.h \
     mainwindow.h \
+    optionswidget.h \
     preferencesdialog.h \
     qtdocinstaller.h \
     remotecontrol.h \
@@ -62,6 +63,7 @@ SOURCES += aboutdialog.cpp \
     indexwindow.cpp \
     main.cpp \
     mainwindow.cpp \
+    optionswidget.cpp \
     preferencesdialog.cpp \
     qtdocinstaller.cpp \
     remotecontrol.cpp \
