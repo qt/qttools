@@ -68,7 +68,6 @@ private:
     QStringList m_indices;
     QStringList m_filterAttributes;
     mutable QMutex m_mutex;
-    bool m_abort = false;
 };
 
 class QHelpIndexModelPrivate
@@ -111,11 +110,7 @@ void QHelpIndexProvider::stopCollecting()
 {
     if (!isRunning())
         return;
-    m_mutex.lock();
-    m_abort = true;
-    m_mutex.unlock();
     wait();
-    m_abort = false;
 }
 
 QStringList QHelpIndexProvider::indices() const

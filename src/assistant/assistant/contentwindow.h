@@ -35,8 +35,6 @@
 
 QT_BEGIN_NAMESPACE
 
-class QHelpEngine;
-class QHelpContentItem;
 class QHelpContentWidget;
 
 class ContentWindow : public QWidget
