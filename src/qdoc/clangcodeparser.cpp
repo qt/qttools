@@ -1245,23 +1245,19 @@ void ClangCodeParser::buildPCH()
                 args_.push_back("-xc++");
                 CXTranslationUnit tu;
                 QString tmpHeader = pchFileDir_->path() + "/" + module;
-                if (QFile::copy(header, tmpHeader) && !privateHeaderDir.isEmpty()) {
-                    privateHeaderDir = QDir::cleanPath(privateHeaderDir.constData()).toLatin1();
-                    const char *const headerPath = privateHeaderDir.constData();
-                    const QStringList pheaders = QDir(headerPath).entryList();
-                    QFile tmpHeaderFile(tmpHeader);
-                    if (tmpHeaderFile.open(QIODevice::Text | QIODevice::Append)) {
-                        for (const QString &phead : pheaders) {
-                            if (phead.endsWith("_p.h")) {
-                                QByteArray entry;
-                                entry = "#include \"";
-                                entry += headerPath;
-                                entry += '/';
-                                entry += phead.toLatin1();
-                                entry += "\"\n";
-                                tmpHeaderFile.write(entry);
-                            }
-                        }
+                QFile tmpHeaderFile(tmpHeader);
+                if (tmpHeaderFile.open(QIODevice::Text | QIODevice::WriteOnly)) {
+                    QFile headerFile(header);
+                    if (!headerFile.open(QFile::ReadOnly)) {
+                        qWarning() << "Could not read module header file" << header;
+                        return;
+                    }
+                    QTextStream in(&headerFile);
+                    QTextStream out(&tmpHeaderFile);
+                    while (!in.atEnd()) {
+                        QString line = in.readLine().simplified();
+                        if (line.startsWith(QLatin1String("#include")))
+                            out << line << "\n";
                     }
                 }
                 if (printParsingErrors_ == 0)
