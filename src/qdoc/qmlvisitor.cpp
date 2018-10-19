@@ -45,47 +45,6 @@
 
 QT_BEGIN_NAMESPACE
 
-#define COMMAND_DEPRECATED              Doc::alias(QLatin1String("deprecated"))
-#define COMMAND_INGROUP                 Doc::alias(QLatin1String("ingroup"))
-#define COMMAND_INTERNAL                Doc::alias(QLatin1String("internal"))
-#define COMMAND_OBSOLETE                Doc::alias(QLatin1String("obsolete"))
-#define COMMAND_PAGEKEYWORDS            Doc::alias(QLatin1String("pagekeywords"))
-#define COMMAND_PRELIMINARY             Doc::alias(QLatin1String("preliminary"))
-#define COMMAND_SINCE                   Doc::alias(QLatin1String("since"))
-#define COMMAND_WRAPPER                 Doc::alias(QLatin1String("wrapper"))
-#define COMMAND_NOAUTOLIST              Doc::alias(QLatin1String("noautolist"))
-
-#define COMMAND_ABSTRACT                Doc::alias(QLatin1String("abstract"))
-#define COMMAND_QMLABSTRACT             Doc::alias(QLatin1String("qmlabstract"))
-#define COMMAND_QMLCLASS                Doc::alias(QLatin1String("qmlclass"))
-#define COMMAND_QMLTYPE                 Doc::alias(QLatin1String("qmltype"))
-#define COMMAND_QMLMODULE               Doc::alias(QLatin1String("qmlmodule"))
-#define COMMAND_QMLPROPERTY             Doc::alias(QLatin1String("qmlproperty"))
-#define COMMAND_QMLPROPERTYGROUP        Doc::alias(QLatin1String("qmlpropertygroup"))
-#define COMMAND_QMLATTACHEDPROPERTY     Doc::alias(QLatin1String("qmlattachedproperty"))
-#define COMMAND_QMLINHERITS             Doc::alias(QLatin1String("inherits"))
-#define COMMAND_QMLINSTANTIATES         Doc::alias(QLatin1String("instantiates"))
-#define COMMAND_INQMLMODULE             Doc::alias(QLatin1String("inqmlmodule"))
-#define COMMAND_QMLSIGNAL               Doc::alias(QLatin1String("qmlsignal"))
-#define COMMAND_QMLATTACHEDSIGNAL       Doc::alias(QLatin1String("qmlattachedsignal"))
-#define COMMAND_QMLMETHOD               Doc::alias(QLatin1String("qmlmethod"))
-#define COMMAND_QMLATTACHEDMETHOD       Doc::alias(QLatin1String("qmlattachedmethod"))
-#define COMMAND_QMLDEFAULT              Doc::alias(QLatin1String("default"))
-#define COMMAND_QMLREADONLY             Doc::alias(QLatin1String("readonly"))
-#define COMMAND_QMLBASICTYPE            Doc::alias(QLatin1String("qmlbasictype"))
-
-#define COMMAND_JSTYPE                 Doc::alias(QLatin1String("jstype"))
-#define COMMAND_JSMODULE               Doc::alias(QLatin1String("jsmodule"))
-#define COMMAND_JSPROPERTY             Doc::alias(QLatin1String("jsproperty"))
-#define COMMAND_JSPROPERTYGROUP        Doc::alias(QLatin1String("jspropertygroup"))
-#define COMMAND_JSATTACHEDPROPERTY     Doc::alias(QLatin1String("jsattachedproperty"))
-#define COMMAND_INJSMODULE             Doc::alias(QLatin1String("injsmodule"))
-#define COMMAND_JSSIGNAL               Doc::alias(QLatin1String("jssignal"))
-#define COMMAND_JSATTACHEDSIGNAL       Doc::alias(QLatin1String("jsattachedsignal"))
-#define COMMAND_JSMETHOD               Doc::alias(QLatin1String("jsmethod"))
-#define COMMAND_JSATTACHEDMETHOD       Doc::alias(QLatin1String("jsattachedmethod"))
-#define COMMAND_JSBASICTYPE            Doc::alias(QLatin1String("jsbasictype"))
-
 #ifndef QT_NO_DECLARATIVE
 /*!
   The constructor stores all the parameters in local data members.

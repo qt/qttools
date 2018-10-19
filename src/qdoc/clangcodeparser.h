@@ -70,6 +70,7 @@ public:
 
 private:
     int printParsingErrors_;
+    QString version_;
     QHash<QString, QString> allHeaders_; // file name->path
     QVector<QByteArray> includePaths_;
     QScopedPointer<QTemporaryDir> pchFileDir_;

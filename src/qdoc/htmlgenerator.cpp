@@ -48,7 +48,6 @@
 
 QT_BEGIN_NAMESPACE
 
-#define COMMAND_VERSION                 Doc::alias("version")
 int HtmlGenerator::id = 0;
 bool HtmlGenerator::debugging_on = false;
 

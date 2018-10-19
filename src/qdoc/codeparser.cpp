@@ -40,27 +40,6 @@
 
 QT_BEGIN_NAMESPACE
 
-#define COMMAND_DEPRECATED              Doc::alias(QLatin1String("deprecated")) // ### don't document
-#define COMMAND_INGROUP                 Doc::alias(QLatin1String("ingroup"))
-#define COMMAND_INMODULE                Doc::alias(QLatin1String("inmodule"))  // ### don't document
-#define COMMAND_INQMLMODULE             Doc::alias(QLatin1String("inqmlmodule"))
-#define COMMAND_INJSMODULE              Doc::alias(QLatin1String("injsmodule"))
-#define COMMAND_INTERNAL                Doc::alias(QLatin1String("internal"))
-#define COMMAND_MAINCLASS               Doc::alias(QLatin1String("mainclass"))
-#define COMMAND_NONREENTRANT            Doc::alias(QLatin1String("nonreentrant"))
-#define COMMAND_OBSOLETE                Doc::alias(QLatin1String("obsolete"))
-#define COMMAND_PAGEKEYWORDS            Doc::alias(QLatin1String("pagekeywords"))
-#define COMMAND_PRELIMINARY             Doc::alias(QLatin1String("preliminary"))
-#define COMMAND_INPUBLICGROUP           Doc::alias(QLatin1String("inpublicgroup"))
-#define COMMAND_QTVARIABLE              Doc::alias(QLatin1String("qtvariable"))
-#define COMMAND_REENTRANT               Doc::alias(QLatin1String("reentrant"))
-#define COMMAND_SINCE                   Doc::alias(QLatin1String("since"))
-#define COMMAND_SUBTITLE                Doc::alias(QLatin1String("subtitle"))
-#define COMMAND_THREADSAFE              Doc::alias(QLatin1String("threadsafe"))
-#define COMMAND_TITLE                   Doc::alias(QLatin1String("title"))
-#define COMMAND_WRAPPER                 Doc::alias(QLatin1String("wrapper"))
-#define COMMAND_NOAUTOLIST              Doc::alias(QLatin1String("noautolist"))
-
 QList<CodeParser *> CodeParser::parsers;
 bool CodeParser::showInternal_ = false;
 bool CodeParser::singleExec_ = false;

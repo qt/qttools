@@ -1010,6 +1010,7 @@ ClangCodeParser::~ClangCodeParser()
 void ClangCodeParser::initializeParser(const Config &config)
 {
     printParsingErrors_ = 1;
+    version_ = config.getString(CONFIG_VERSION);
     const auto args = config.getStringList(CONFIG_INCLUDEPATHS);
     includePaths_.resize(args.size());
     std::transform(args.begin(), args.end(), includePaths_.begin(),
@@ -1309,6 +1310,13 @@ void ClangCodeParser::precompileHeaders()
     clang_disposeIndex(index_);
 }
 
+static float getUnpatchedVersion(QString t)
+{
+    if (t.count(QChar('.')) > 1)
+        t.truncate(t.lastIndexOf(QChar('.')));
+    return t.toFloat();
+}
+
 /*!
   Get ready to parse the C++ cpp file identified by \a filePath
   and add its parsed contents to the database. \a location is
@@ -1390,12 +1398,20 @@ void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QStrin
                 nodes.append(n);
                 docs.append(doc);
             } else if (CodeParser::isWorthWarningAbout(doc)) {
-                doc.location().warning(tr("Cannot tie this documentation to anything"),
-                                       tr("qdoc found a /*! ... */ comment, but there was no "
-                                       "topic command (e.g., '\\%1', '\\%2') in the "
-                                       "comment and no function definition following "
-                                       "the comment.")
-                                       .arg(COMMAND_FN).arg(COMMAND_PAGE));
+                bool future = false;
+                if (doc.metaCommandsUsed().contains(COMMAND_SINCE)) {
+                    QString sinceVersion = doc.metaCommandArgs(COMMAND_SINCE)[0].first;
+                    if (getUnpatchedVersion(sinceVersion) > getUnpatchedVersion(version_))
+                        future = true;
+                }
+                if (!future) {
+                    doc.location().warning(tr("Cannot tie this documentation to anything"),
+                                           tr("qdoc found a /*! ... */ comment, but there was no "
+                                              "topic command (e.g., '\\%1', '\\%2') in the "
+                                              "comment and no function definition following "
+                                              "the comment.")
+                                           .arg(COMMAND_FN).arg(COMMAND_PAGE));
+                }
             }
         } else {
             processTopicArgs(doc, topic, nodes, docs);
