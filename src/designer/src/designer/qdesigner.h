@@ -67,7 +67,7 @@ public:
     void setMainWindow(MainWindowBase *tw);
 
 protected:
-    bool event(QEvent *ev);
+    bool event(QEvent *ev) override;
 
 signals:
     void initialized();

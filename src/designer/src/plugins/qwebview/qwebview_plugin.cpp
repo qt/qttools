@@ -28,9 +28,6 @@
 
 #include "qwebview_plugin.h"
 
-#include <QtDesigner/qextensionfactory.h>
-#include <QtDesigner/qextensionmanager.h>
-
 #include <QtCore/qplugin.h>
 #include <QWebView>
 
