@@ -72,8 +72,13 @@
 #include <QtGui/qicon.h>
 #include <QtGui/qimage.h>
 #include <QtGui/qpixmap.h>
-#ifndef QT_NO_PRINTER
-#include <QtPrintSupport/qprintdialog.h>
+#if defined(QT_PRINTSUPPORT_LIB) // Some platforms may not build QtPrintSupport
+#  include <QtPrintSupport/qtprintsupportglobal.h>
+#  if QT_CONFIG(printer) && QT_CONFIG(printdialog)
+#    include <QtPrintSupport/qprinter.h>
+#    include <QtPrintSupport/qprintdialog.h>
+#    define HAS_PRINTER
+#  endif
 #endif
 #include <QtGui/qpainter.h>
 #include <QtGui/qtransform.h>
@@ -479,7 +484,7 @@ QActionGroup *QDesignerActions::createHelpActions()
 
 QDesignerActions::~QDesignerActions()
 {
-#ifndef QT_NO_PRINTER
+#ifdef HAS_PRINTER
     delete m_printer;
 #endif
 }
@@ -1355,7 +1360,7 @@ void QDesignerActions::formWindowCountChanged()
 
 void QDesignerActions::printPreviewImage()
 {
-#if !defined(QT_NO_PRINTER) && !defined(QT_NO_PRINTDIALOG)
+#ifdef HAS_PRINTER
     QDesignerFormWindowInterface *fw = core()->formWindowManager()->activeFormWindow();
     if (!fw)
         return;
@@ -1401,7 +1406,7 @@ void QDesignerActions::printPreviewImage()
     core()->topLevel()->setCursor(oldCursor);
 
     showStatusBarMessage(tr("Printed %1.").arg(QFileInfo(fw->fileName()).fileName()));
-#endif
+#endif // HAS_PRINTER
 }
 
 QT_END_NAMESPACE

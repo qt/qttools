@@ -79,7 +79,7 @@
 #include <QtWidgets/qmenu.h>
 #include <QtWidgets/qaction.h>
 #include <QtWidgets/qactiongroup.h>
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
 #include <QtGui/qclipboard.h>
 #endif
 #include <QtWidgets/qundogroup.h>
@@ -374,7 +374,7 @@ bool FormWindow::isChildOf(const QWidget *c, const QWidget *p)
 
 void FormWindow::setCursorToAll(const QCursor &c, QWidget *start)
 {
-#ifndef QT_NO_CURSOR
+#if QT_CONFIG(cursor)
     start->setCursor(c);
     const QWidgetList widgets = start->findChildren<QWidget*>();
     for (QWidget *widget : widgets) {
@@ -1646,7 +1646,7 @@ QString FormWindow::contents() const
     return QString::fromUtf8(b.buffer());
 }
 
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
 void FormWindow::copy()
 {
     QBuffer b;
@@ -1730,7 +1730,7 @@ QWidget *FormWindow::containerForPaste() const
     return w;
 }
 
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
 // Construct DomUI from clipboard (paste) and determine number of widgets/actions.
 static inline DomUI *domUIFromClipboard(int *widgetCount, int *actionCount)
 {
@@ -1813,7 +1813,7 @@ static void positionPastedWidgetsAtMousePosition(FormWindow *fw, const QPoint &c
         (*it)->move((*it)->pos() + offset);
 }
 
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
 void FormWindow::paste(PasteMode pasteMode)
 {
     // Avoid QDesignerResource constructing widgets that are not used as
@@ -1942,7 +1942,7 @@ void FormWindow::manageWidget(QWidget *w)
     m_insertedWidgets.insert(w);
     m_widgets.append(w);
 
-#ifndef QT_NO_CURSOR
+#if QT_CONFIG(cursor)
     setCursorToAll(Qt::ArrowCursor, w);
 #endif
 

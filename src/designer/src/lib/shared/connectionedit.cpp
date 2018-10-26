@@ -1120,7 +1120,7 @@ void ConnectionEdit::abortConnection()
     m_tmp_con->update();
     delete m_tmp_con;
     m_tmp_con = 0;
-#ifndef QT_NO_CURSOR
+#if QT_CONFIG(cursor)
     setCursor(QCursor());
 #endif
     if (m_widget_under_mouse == m_bg_widget)
@@ -1213,7 +1213,7 @@ void ConnectionEdit::mouseReleaseEvent(QMouseEvent *e)
                 abortConnection();
             else
                 endConnection(m_widget_under_mouse, e->pos());
-#ifndef QT_NO_CURSOR
+#if QT_CONFIG(cursor)
             setCursor(QCursor());
 #endif
             break;
@@ -1248,7 +1248,7 @@ void ConnectionEdit::findObjectsUnderMouse(const QPoint &pos)
 
     const EndPoint hs = endPointAt(pos);
     if (hs != m_end_point_under_mouse) {
-#ifndef QT_NO_CURSOR
+#if QT_CONFIG(cursor)
         if (m_end_point_under_mouse.isNull())
             setCursor(Qt::PointingHandCursor);
         else
@@ -1271,7 +1271,7 @@ void ConnectionEdit::mouseMoveEvent(QMouseEvent *e)
                     && !m_widget_under_mouse.isNull()) {
                 m_start_connection_on_drag = false;
                 startConnection(m_widget_under_mouse, e->pos());
-#ifndef QT_NO_CURSOR
+#if QT_CONFIG(cursor)
                 setCursor(Qt::CrossCursor);
 #endif
             }

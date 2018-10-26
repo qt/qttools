@@ -34,9 +34,6 @@
 
 #include <QtCore/qobject.h>
 #include <QtCore/qpointer.h>
-#ifndef QT_NO_PRINTER
-#include <QtPrintSupport/qprinter.h>
-#endif
 
 QT_BEGIN_NAMESPACE
 
@@ -53,6 +50,7 @@ class AppFontDialog;
 class QRect;
 class QWidget;
 class QPixmap;
+class QPrinter;
 class QMenu;
 
 namespace qdesigner_internal {
@@ -206,9 +204,7 @@ private:
 
     QPointer<AppFontDialog> m_appFontDialog;
 
-#ifndef QT_NO_PRINTER
     QPrinter *m_printer = nullptr;
-#endif
 
     qdesigner_internal::PreviewManager *m_previewManager = nullptr;
 };

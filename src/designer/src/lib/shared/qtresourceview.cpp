@@ -50,7 +50,7 @@
 #include <QtWidgets/qpushbutton.h>
 #include <QtWidgets/qmessagebox.h>
 #include <QtWidgets/qapplication.h>
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
 #include <QtGui/qclipboard.h>
 #endif
 #include <QtWidgets/qmenu.h>
@@ -134,7 +134,7 @@ public:
     void slotResourceActivated(QListWidgetItem *);
     void slotEditResources();
     void slotReloadResources();
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
     void slotCopyResourcePath();
 #endif
     void slotListWidgetContextMenuRequested(const QPoint &pos);
@@ -238,7 +238,7 @@ void QtResourceViewPrivate::slotReloadResources()
     }
 }
 
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
 void QtResourceViewPrivate::slotCopyResourcePath()
 {
     const QString path = q_ptr->selectedResource();
@@ -574,7 +574,7 @@ QtResourceView::QtResourceView(QDesignerFormEditorInterface *core, QWidget *pare
     connect(d_ptr->m_reloadResourcesAction, SIGNAL(triggered()), this, SLOT(slotReloadResources()));
     d_ptr->m_reloadResourcesAction->setEnabled(false);
 
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
     QIcon copyIcon = QIcon::fromTheme(QStringLiteral("edit-copy"), qdesigner_internal::createIconSet(QStringLiteral("editcopy.png")));
     d_ptr->m_copyResourcePathAction = new QAction(copyIcon, tr("Copy Path"), this);
     connect(d_ptr->m_copyResourcePathAction, SIGNAL(triggered()), this, SLOT(slotCopyResourcePath()));

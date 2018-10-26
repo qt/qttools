@@ -122,7 +122,7 @@ public:
     virtual void highlightWidget(QWidget *w, const QPoint &pos, HighlightMode mode = Highlight) = 0;
 
     enum PasteMode { PasteAll, PasteActionsOnly };
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
     virtual void paste(PasteMode pasteMode) = 0;
 #endif
 

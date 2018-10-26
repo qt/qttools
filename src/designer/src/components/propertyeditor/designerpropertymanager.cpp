@@ -52,7 +52,7 @@
 #include <QtWidgets/qtoolbutton.h>
 #include <QtWidgets/qboxlayout.h>
 #include <QtCore/qfileinfo.h>
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
 #include <QtGui/qclipboard.h>
 #endif
 #include <QtWidgets/qlineedit.h>
@@ -551,7 +551,7 @@ private slots:
     void resourceActionActivated();
     void fileActionActivated();
     void themeActionActivated();
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
     void copyActionActivated();
     void pasteActionActivated();
     void clipboardDataChanged();
@@ -616,14 +616,14 @@ PixmapEditor::PixmapEditor(QDesignerFormEditorInterface *core, QWidget *parent) 
     connect(m_resourceAction, &QAction::triggered, this, &PixmapEditor::resourceActionActivated);
     connect(m_fileAction, &QAction::triggered, this, &PixmapEditor::fileActionActivated);
     connect(m_themeAction, &QAction::triggered, this, &PixmapEditor::themeActionActivated);
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
     connect(m_copyAction, &QAction::triggered, this, &PixmapEditor::copyActionActivated);
     connect(m_pasteAction, &QAction::triggered, this, &PixmapEditor::pasteActionActivated);
 #endif
     setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Ignored));
     setFocusProxy(m_button);
 
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
     connect(QApplication::clipboard(), &QClipboard::dataChanged,
             this, &PixmapEditor::clipboardDataChanged);
     clipboardDataChanged();
@@ -748,7 +748,7 @@ void PixmapEditor::themeActionActivated()
     }
 }
 
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
 void PixmapEditor::copyActionActivated()
 {
     QClipboard *clipboard = QApplication::clipboard();

@@ -34,7 +34,7 @@
 
 #include <QtWidgets/qaction.h>
 #include <QtWidgets/qapplication.h>
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
 #include <QtGui/qclipboard.h>
 #endif
 #include <QtWidgets/qdialogbuttonbox.h>
@@ -84,7 +84,7 @@ CodeDialog::CodeDialog(QWidget *parent) :
     QAction *saveAction = toolBar->addAction(saveIcon, tr("Save..."));
     connect(saveAction, &QAction::triggered, this, &CodeDialog::slotSaveAs);
 
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
     const QIcon copyIcon = createIconSet(QStringLiteral("editcopy.png"));
     QAction *copyAction = toolBar->addAction(copyIcon, tr("Copy All"));
     connect(copyAction, &QAction::triggered, this, &CodeDialog::copyAll);
@@ -245,7 +245,7 @@ void CodeDialog::warning(const QString &msg)
              msg, QMessageBox::Close);
 }
 
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
 void CodeDialog::copyAll()
 {
     QApplication::clipboard()->setText(code());

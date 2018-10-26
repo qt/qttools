@@ -281,7 +281,7 @@ QVariant domPropertyToVariant(const DomProperty *p)
         return QVariant(QUrl(url->elementString()->text()));
     }
 
-#ifndef QT_NO_CURSOR
+#if QT_CONFIG(cursor)
     case DomProperty::Cursor:
         return QVariant::fromValue(QCursor(static_cast<Qt::CursorShape>(p->elementCursor())));
 
@@ -479,7 +479,7 @@ static bool applySimpleProperty(const QVariant &v, bool translateString, DomProp
     }
         return true;
 
-#ifndef QT_NO_CURSOR
+#if QT_CONFIG(cursor)
     case QVariant::Cursor: {
         const QMetaEnum cursorShape_enum = metaEnum<QAbstractFormBuilderGadget>("cursorShape");
         dom_prop->setElementCursorShape(QLatin1String(cursorShape_enum.valueToKey(qvariant_cast<QCursor>(v).shape())));

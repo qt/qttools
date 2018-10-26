@@ -199,7 +199,7 @@ public:
     //  Initialize and return a popup menu for a managed widget
     QMenu *initializePopupMenu(QWidget *managedWidget) override;
 
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
     void paste(PasteMode pasteMode) override;
 #endif
     QEditorFormBuilder *createFormBuilder() override;
@@ -216,7 +216,7 @@ public slots:
     void deleteWidgets();
     void raiseWidgets();
     void lowerWidgets();
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
     void copy();
     void cut();
     void paste();
