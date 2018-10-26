@@ -133,6 +133,9 @@ DECLARE_WIDGET(QCalendarWidget, "")
 #if QT_CONFIG(columnview)
 DECLARE_WIDGET(QColumnView, "")
 #endif
+#if QT_CONFIG(undoview)
+DECLARE_WIDGET(QUndoView, "")
+#endif
 
 #if QT_CONFIG(wizard)
 DECLARE_WIDGET(QWizard, "")
