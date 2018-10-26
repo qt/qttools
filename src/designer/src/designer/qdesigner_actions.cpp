@@ -169,8 +169,6 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
       m_settingsActions(createActionGroup(this)),
       m_windowActions(createActionGroup(this)),
       m_toolActions(createActionGroup(this, true)),
-      m_helpActions(0),
-      m_styleActions(0),
       m_editWidgetsAction(new QAction(tr("Edit Widgets"), this)),
       m_newFormAction(new QAction(qdesigner_internal::createIconSet(QStringLiteral("filenew.png")), tr("&New..."), this)),
       m_openFormAction(new QAction(qdesigner_internal::createIconSet(QStringLiteral("fileopen.png")), tr("&Open..."), this)),
@@ -182,19 +180,13 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
       m_savePreviewImageAction(new QAction(tr("Save &Image..."), this)),
       m_printPreviewAction(new QAction(tr("&Print..."), this)),
       m_quitAction(new QAction(tr("&Quit"), this)),
-      m_previewFormAction(0),
       m_viewCodeAction(new QAction(tr("View &Code..."), this)),
       m_minimizeAction(new QAction(tr("&Minimize"), this)),
       m_bringAllToFrontSeparator(createSeparator(this)),
       m_bringAllToFrontAction(new QAction(tr("Bring All to Front"), this)),
       m_windowListSeparatorAction(createSeparator(this)),
       m_preferencesAction(new QAction(tr("Preferences..."), this)),
-      m_appFontAction(new QAction(tr("Additional Fonts..."), this)),
-      m_appFontDialog(0),
-#ifndef QT_NO_PRINTER
-      m_printer(0),
-#endif
-      m_previewManager(0)
+      m_appFontAction(new QAction(tr("Additional Fonts..."), this))
 {
     typedef void (QDesignerActions::*VoidSlot)();
 

@@ -176,8 +176,8 @@ private:
     QActionGroup *m_settingsActions;
     QActionGroup *m_windowActions;
     QActionGroup *m_toolActions;
-    QActionGroup *m_helpActions;
-    QActionGroup *m_styleActions;
+    QActionGroup *m_helpActions = nullptr;
+    QActionGroup *m_styleActions = nullptr;
 
     QAction *m_editWidgetsAction;
 
@@ -193,7 +193,7 @@ private:
 
     QAction *m_quitAction;
 
-    QAction *m_previewFormAction;
+    QAction *m_previewFormAction = nullptr;
     QAction *m_viewCodeAction;
 
     QAction *m_minimizeAction;
@@ -207,10 +207,10 @@ private:
     QPointer<AppFontDialog> m_appFontDialog;
 
 #ifndef QT_NO_PRINTER
-    QPrinter *m_printer;
+    QPrinter *m_printer = nullptr;
 #endif
 
-    qdesigner_internal::PreviewManager *m_previewManager;
+    qdesigner_internal::PreviewManager *m_previewManager = nullptr;
 };
 
 QT_END_NAMESPACE
