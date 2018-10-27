@@ -382,6 +382,7 @@ QList<int> PreferencesDialog::currentRegisteredDocsSelection() const
     QList<int> result;
     for (const QModelIndex &index : m_ui.registeredDocsListView->selectionModel()->selectedRows())
         result.append(m_registereredDocsFilterModel->mapToSource(index).row());
+    std::sort(result.begin(), result.end());
     return result;
 }
 
