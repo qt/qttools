@@ -98,7 +98,7 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotResourceActivated(QListWidgetItem *))
     Q_PRIVATE_SLOT(d_func(), void slotEditResources())
     Q_PRIVATE_SLOT(d_func(), void slotReloadResources())
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
     Q_PRIVATE_SLOT(d_func(), void slotCopyResourcePath())
 #endif
     Q_PRIVATE_SLOT(d_func(), void slotListWidgetContextMenuRequested(const QPoint &pos))

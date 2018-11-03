@@ -66,7 +66,7 @@ public:
 
 private slots:
     void slotSaveAs();
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
     void copyAll();
 #endif
 

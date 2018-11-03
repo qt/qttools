@@ -314,7 +314,7 @@ bool runElevatedBackgroundProcess(const QString &binary, const QStringList &args
     arguments.toWCharArray(argumentsW.data());
     argumentsW[arguments.size()] = 0;
 
-    SHELLEXECUTEINFO shellExecute = {0};
+    SHELLEXECUTEINFO shellExecute = {};
     shellExecute.cbSize = sizeof(shellExecute);
     shellExecute.fMask = SEE_MASK_NOCLOSEPROCESS;
     shellExecute.hwnd = 0;

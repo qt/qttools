@@ -169,13 +169,13 @@ QVariant TranslatingTextBuilder::toNativeValue(const QVariant &value) const
 // This is "exported" to linguist
 const QUiItemRolePair qUiItemRoles[] = {
     { Qt::DisplayRole, Qt::DisplayPropertyRole },
-#ifndef QT_NO_TOOLTIP
+#if QT_CONFIG(tooltip)
     { Qt::ToolTipRole, Qt::ToolTipPropertyRole },
 #endif
-#ifndef QT_NO_STATUSTIP
+#if QT_CONFIG(statustip)
     { Qt::StatusTipRole, Qt::StatusTipPropertyRole },
 #endif
-#ifndef QT_NO_WHATSTHIS
+#if QT_CONFIG(whatsthis)
     { Qt::WhatsThisRole, Qt::WhatsThisPropertyRole },
 #endif
     { -1 , -1 }
@@ -255,26 +255,26 @@ public:
                 }
             }
             if (0) {
-#ifndef QT_NO_TABWIDGET
+#if QT_CONFIG(tabwidget)
             } else if (QTabWidget *tabw = qobject_cast<QTabWidget*>(o)) {
                 const int cnt = tabw->count();
                 for (int i = 0; i < cnt; ++i) {
                     RETRANSLATE_SUBWIDGET_PROP(tabw, setTabText, PROP_TABPAGETEXT);
-# ifndef QT_NO_TOOLTIP
+#if QT_CONFIG(tooltip)
                     RETRANSLATE_SUBWIDGET_PROP(tabw, setTabToolTip, PROP_TABPAGETOOLTIP);
 # endif
-# ifndef QT_NO_WHATSTHIS
+#if QT_CONFIG(whatsthis)
                     RETRANSLATE_SUBWIDGET_PROP(tabw, setTabWhatsThis, PROP_TABPAGEWHATSTHIS);
 # endif
                 }
 #endif
-#ifndef QT_NO_LISTWIDGET
+#if QT_CONFIG(listwidget)
             } else if (QListWidget *listw = qobject_cast<QListWidget*>(o)) {
                 const int cnt = listw->count();
                 for (int i = 0; i < cnt; ++i)
                     reTranslateWidgetItem(listw->item(i), m_className, m_idBased);
 #endif
-#ifndef QT_NO_TREEWIDGET
+#if QT_CONFIG(treewidget)
             } else if (QTreeWidget *treew = qobject_cast<QTreeWidget*>(o)) {
                 if (QTreeWidgetItem *item = treew->headerItem())
                     recursiveReTranslate(item, m_className, m_idBased);
@@ -284,7 +284,7 @@ public:
                     recursiveReTranslate(item, m_className, m_idBased);
                 }
 #endif
-#ifndef QT_NO_TABLEWIDGET
+#if QT_CONFIG(tablewidget)
             } else if (QTableWidget *tablew = qobject_cast<QTableWidget*>(o)) {
                 const int row_cnt = tablew->rowCount();
                 const int col_cnt = tablew->columnCount();
@@ -296,7 +296,7 @@ public:
                         reTranslateTableItem(tablew->item(i, j), m_className, m_idBased);
                 }
 #endif
-#ifndef QT_NO_COMBOBOX
+#if QT_CONFIG(combobox)
             } else if (QComboBox *combow = qobject_cast<QComboBox*>(o)) {
                 if (!qobject_cast<QFontComboBox*>(o)) {
                     const int cnt = combow->count();
@@ -309,12 +309,12 @@ public:
                     }
                 }
 #endif
-#ifndef QT_NO_TOOLBOX
+#if QT_CONFIG(toolbox)
             } else if (QToolBox *toolw = qobject_cast<QToolBox*>(o)) {
                 const int cnt = toolw->count();
                 for (int i = 0; i < cnt; ++i) {
                     RETRANSLATE_SUBWIDGET_PROP(toolw, setItemText, PROP_TOOLITEMTEXT);
-# ifndef QT_NO_TOOLTIP
+#if QT_CONFIG(tooltip)
                     RETRANSLATE_SUBWIDGET_PROP(toolw, setItemToolTip, PROP_TOOLITEMTOOLTIP);
 # endif
                 }
@@ -482,24 +482,24 @@ QWidget *FormBuilderPrivate::create(DomWidget *ui_widget, QWidget *parentWidget)
         return 0;
 
     if (0) {
-#ifndef QT_NO_TABWIDGET
+#if QT_CONFIG(tabwidget)
     } else if (qobject_cast<QTabWidget*>(w)) {
 #endif
-#ifndef QT_NO_LISTWIDGET
+#if QT_CONFIG(listwidget)
     } else if (qobject_cast<QListWidget*>(w)) {
 #endif
-#ifndef QT_NO_TREEWIDGET
+#if QT_CONFIG(treewidget)
     } else if (qobject_cast<QTreeWidget*>(w)) {
 #endif
-#ifndef QT_NO_TABLEWIDGET
+#if QT_CONFIG(tablewidget)
     } else if (qobject_cast<QTableWidget*>(w)) {
 #endif
-#ifndef QT_NO_COMBOBOX
+#if QT_CONFIG(combobox)
     } else if (qobject_cast<QComboBox*>(w)) {
         if (qobject_cast<QFontComboBox*>(w))
             return w;
 #endif
-#ifndef QT_NO_TOOLBOX
+#if QT_CONFIG(toolbox)
     } else if (qobject_cast<QToolBox*>(w)) {
 #endif
     } else {
@@ -539,24 +539,24 @@ bool FormBuilderPrivate::addItem(DomWidget *ui_widget, QWidget *widget, QWidget 
     const QFormBuilderStrings &strings = QFormBuilderStrings::instance();
 
     if (0) {
-#ifndef QT_NO_TABWIDGET
+#if QT_CONFIG(tabwidget)
     } else if (QTabWidget *tabWidget = qobject_cast<QTabWidget*>(parentWidget)) {
         const DomPropertyHash attributes = propertyMap(ui_widget->elementAttribute());
         const int i = tabWidget->count() - 1;
         TRANSLATE_SUBWIDGET_PROP(tabWidget, titleAttribute, setTabText, PROP_TABPAGETEXT);
-# ifndef QT_NO_TOOLTIP
+#if QT_CONFIG(tooltip)
         TRANSLATE_SUBWIDGET_PROP(tabWidget, toolTipAttribute, setTabToolTip, PROP_TABPAGETOOLTIP);
 # endif
-# ifndef QT_NO_WHATSTHIS
+#if QT_CONFIG(whatsthis)
         TRANSLATE_SUBWIDGET_PROP(tabWidget, whatsThisAttribute, setTabWhatsThis, PROP_TABPAGEWHATSTHIS);
 # endif
 #endif
-#ifndef QT_NO_TOOLBOX
+#if QT_CONFIG(toolbox)
     } else if (QToolBox *toolBox = qobject_cast<QToolBox*>(parentWidget)) {
         const DomPropertyHash attributes = propertyMap(ui_widget->elementAttribute());
         const int i = toolBox->count() - 1;
         TRANSLATE_SUBWIDGET_PROP(toolBox, labelAttribute, setItemText, PROP_TOOLITEMTEXT);
-# ifndef QT_NO_TOOLTIP
+#if QT_CONFIG(tooltip)
         TRANSLATE_SUBWIDGET_PROP(toolBox, toolTipAttribute, setItemToolTip, PROP_TOOLITEMTOOLTIP);
 # endif
 #endif

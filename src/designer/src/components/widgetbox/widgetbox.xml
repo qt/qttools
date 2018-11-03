@@ -277,6 +277,16 @@
             </ui>
         </categoryentry>
 
+        <categoryentry name="Undo View" icon="widgets/listbox.png">
+            <ui>
+                <widget class="QUndoView">
+                    <property name="objectName">
+                        <string notr="true">undoView</string>
+                    </property>
+                </widget>
+            </ui>
+        </categoryentry>
+
     </category>
 
     <category name="Item Widgets (Item-Based)">

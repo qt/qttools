@@ -93,7 +93,7 @@ WidgetHandle::WidgetHandle(FormWindow *parent, WidgetHandle::Type t, WidgetSelec
 
 void WidgetHandle::updateCursor()
 {
-#ifndef QT_NO_CURSOR
+#if QT_CONFIG(cursor)
     if (!m_active) {
         setCursor(Qt::ArrowCursor);
         return;

@@ -135,25 +135,25 @@ QWidget *QFormBuilder::create(DomWidget *ui_widget, QWidget *parentWidget)
     d->setProcessingLayoutWidget(false);
     if (ui_widget->attributeClass() == QFormBuilderStrings::instance().qWidgetClass && !ui_widget->hasAttributeNative()
             && parentWidget
-#ifndef QT_NO_MAINWINDOW
+#if QT_CONFIG(mainwindow)
             && !qobject_cast<QMainWindow *>(parentWidget)
 #endif
-#ifndef QT_NO_TOOLBOX
+#if QT_CONFIG(toolbox)
             && !qobject_cast<QToolBox *>(parentWidget)
 #endif
-#ifndef QT_NO_STACKEDWIDGET
+#if QT_CONFIG(stackedwidget)
             && !qobject_cast<QStackedWidget *>(parentWidget)
 #endif
-#ifndef QT_NO_STACKEDWIDGET
+#if QT_CONFIG(tabwidget)
             && !qobject_cast<QTabWidget *>(parentWidget)
 #endif
-#ifndef QT_NO_SCROLLAREA
+#if QT_CONFIG(scrollarea)
             && !qobject_cast<QScrollArea *>(parentWidget)
 #endif
-#ifndef QT_NO_MDIAREA
+#if QT_CONFIG(mdiarea)
             && !qobject_cast<QMdiArea *>(parentWidget)
 #endif
-#ifndef QT_NO_DOCKWIDGET
+#if QT_CONFIG(dockwidget)
             && !qobject_cast<QDockWidget *>(parentWidget)
 #endif
         ) {
@@ -178,15 +178,15 @@ QWidget *QFormBuilder::createWidget(const QString &widgetName, QWidget *parentWi
 
     QWidget *w = 0;
 
-#ifndef QT_NO_TABWIDGET
+#if QT_CONFIG(tabwidget)
     if (qobject_cast<QTabWidget*>(parentWidget))
         parentWidget = 0;
 #endif
-#ifndef QT_NO_STACKEDWIDGET
+#if QT_CONFIG(stackedwidget)
     if (qobject_cast<QStackedWidget*>(parentWidget))
         parentWidget = 0;
 #endif
-#ifndef QT_NO_TOOLBOX
+#if QT_CONFIG(toolbox)
     if (qobject_cast<QToolBox*>(parentWidget))
         parentWidget = 0;
 #endif

@@ -261,7 +261,7 @@ void TabOrderEditor::initTabOrder()
 void TabOrderEditor::mouseMoveEvent(QMouseEvent *e)
 {
     e->accept();
-#ifndef QT_NO_CURSOR
+#if QT_CONFIG(cursor)
     if (m_indicator_region.contains(e->pos()))
         setCursor(Qt::PointingHandCursor);
     else

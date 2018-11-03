@@ -4,135 +4,140 @@
 #endif
 
 // widgets
-#ifndef QT_NO_CHECKBOX
+#if QT_CONFIG(checkbox)
 DECLARE_WIDGET(QCheckBox, "text")
 #endif
-#ifndef QT_NO_COMBOBOX
+#if QT_CONFIG(combobox)
 DECLARE_WIDGET(QComboBox, "")
 #endif
-#ifndef QT_NO_DATETIMEEDIT
+#if QT_CONFIG(datetimeedit)
 DECLARE_WIDGET(QDateTimeEdit, "")
-#endif
-#ifndef QT_NO_DATEEDIT
 DECLARE_WIDGET(QDateEdit, "")
-#endif
-#ifndef QT_NO_TIMEEDIT
 DECLARE_WIDGET(QTimeEdit, "")
 #endif
-#ifndef QT_NO_DIAL
+#if QT_CONFIG(dial)
 DECLARE_WIDGET(QDial, "")
 #endif
 DECLARE_WIDGET(QDialog, "")
-#ifndef QT_NO_DOCKWIDGET
+#if QT_CONFIG(dockwidget)
 DECLARE_WIDGET(QDockWidget, "")
 #endif
 DECLARE_WIDGET(QFrame, "")
-#ifndef QT_NO_GROUPBOX
+#if QT_CONFIG(groupbox)
 DECLARE_WIDGET(QGroupBox, "")
 #endif
-#ifndef QT_NO_SCROLLAREA
+#if QT_CONFIG(scrollarea)
 DECLARE_WIDGET(QScrollArea, "")
 #endif
-#ifndef QT_NO_LCDNUMBER
+#if QT_CONFIG(lcdnumber)
 DECLARE_WIDGET(QLCDNumber, "")
 #endif
 DECLARE_WIDGET(QLabel, "")
-#ifndef QT_NO_LINEEDIT
+#if QT_CONFIG(lineedit)
 DECLARE_WIDGET(QLineEdit, "")
 #endif
-#ifndef QT_NO_LISTVIEW
+#if QT_CONFIG(listview)
 DECLARE_WIDGET(QListView, "")
 #endif
-#ifndef QT_NO_LISTWIDGET
+#if QT_CONFIG(listwidget)
 DECLARE_WIDGET(QListWidget, "")
 #endif
-#ifndef QT_NO_MAINWINDOW
+#if QT_CONFIG(mainwindow)
 DECLARE_WIDGET(QMainWindow, "")
 #endif
-#ifndef QT_NO_MDIAREA
+#if QT_CONFIG(mdiarea)
 DECLARE_WIDGET(QMdiArea, "")
 #endif
-#ifndef QT_NO_MENU
+#if QT_CONFIG(menu)
 DECLARE_WIDGET(QMenu, "")
 #endif
-#ifndef QT_NO_MENUBAR
+#if QT_CONFIG(menubar)
 DECLARE_WIDGET(QMenuBar, "")
 #endif
-#ifndef QT_NO_PROGRESSBAR
+#if QT_CONFIG(progressbar)
 DECLARE_WIDGET(QProgressBar, "")
 #endif
+#if QT_CONFIG(pushbutton)
 DECLARE_WIDGET(QPushButton, "text")
+#endif
+#if QT_CONFIG(radiobutton)
 DECLARE_WIDGET(QRadioButton, "text")
+#endif
+#if QT_CONFIG(commandlinkbutton)
 DECLARE_WIDGET(QCommandLinkButton, "text")
-#ifndef QT_NO_SCROLLBAR
+#endif
+#if QT_CONFIG(scrollbar)
 DECLARE_WIDGET(QScrollBar, "")
 #endif
-#ifndef QT_NO_SLIDER
+#if QT_CONFIG(slider)
 DECLARE_WIDGET(QSlider, "")
 #endif
-#ifndef QT_NO_SPINBOX
+#if QT_CONFIG(spinbox)
 DECLARE_WIDGET(QSpinBox, "")
 DECLARE_WIDGET(QDoubleSpinBox, "")
 #endif
-#ifndef QT_NO_TABWIDGET
+#if QT_CONFIG(tabwidget)
 DECLARE_WIDGET(QTabWidget, "")
 #endif
-#ifndef QT_NO_TABLEVIEW
+#if QT_CONFIG(tableview)
 DECLARE_WIDGET(QTableView, "")
 #endif
-#ifndef QT_NO_TABLEWIDGET
+#if QT_CONFIG(tablewidget)
 DECLARE_WIDGET(QTableWidget, "")
 #endif
-#ifndef QT_NO_TEXTBROWSER
+#if QT_CONFIG(textbrowser)
 DECLARE_WIDGET(QTextBrowser, "")
 #endif
-#ifndef QT_NO_TEXTEDIT
+#if QT_CONFIG(textedit)
 DECLARE_WIDGET(QTextEdit, "")
 DECLARE_WIDGET(QPlainTextEdit, "")
 #endif
-#ifndef QT_NO_TOOLBAR
+#if QT_CONFIG(toolbar)
 DECLARE_WIDGET(QToolBar, "")
 #endif
-#ifndef QT_NO_TOOLBOX
+#if QT_CONFIG(toolbox)
 DECLARE_WIDGET(QToolBox, "")
 #endif
-#ifndef QT_NO_TOOLBUTTON
+#if QT_CONFIG(toolbutton)
 DECLARE_WIDGET(QToolButton, "text")
 #endif
-#ifndef QT_NO_TREEVIEW
+#if QT_CONFIG(treeview)
 DECLARE_WIDGET(QTreeView, "")
 #endif
-#ifndef QT_NO_TREEWIDGET
+#if QT_CONFIG(treewidget)
 DECLARE_WIDGET(QTreeWidget, "")
 #endif
 DECLARE_WIDGET(QWidget, "")
-#ifndef QT_NO_KEYSEQUENCEEDIT
+#if QT_CONFIG(keysequenceedit)
 DECLARE_WIDGET(QKeySequenceEdit, "")
 #endif
-#ifndef QT_NO_OPENGL
+#if QT_CONFIG(opengl)
 DECLARE_WIDGET(QOpenGLWidget, "")
 #endif
-#ifndef QT_NO_SPLITTER
+#if QT_CONFIG(splitter)
 DECLARE_WIDGET(QSplitter, "")
 #endif
-#ifndef QT_NO_STACKEDWIDGET
+#if QT_CONFIG(stackedwidget)
 DECLARE_WIDGET(QStackedWidget, "")
 #endif
-#ifndef QT_NO_STATUSBAR
+#if QT_CONFIG(statusbar)
 DECLARE_WIDGET(QStatusBar, "")
 #endif
 DECLARE_WIDGET(QDialogButtonBox, "")
-#ifndef QT_NO_FONTCOMBOBOX
+#if QT_CONFIG(fontcombobox)
 DECLARE_WIDGET(QFontComboBox, "")
 #endif
-#ifndef QT_NO_CALENDARWIDGET
+#if QT_CONFIG(calendarwidget)
 DECLARE_WIDGET(QCalendarWidget, "")
 #endif
-#ifndef QT_NO_COLUMNVIEW
+#if QT_CONFIG(columnview)
 DECLARE_WIDGET(QColumnView, "")
 #endif
+#if QT_CONFIG(undoview)
+DECLARE_WIDGET(QUndoView, "")
+#endif
 
-#ifndef QT_NO_WIZARD
+#if QT_CONFIG(wizard)
 DECLARE_WIDGET(QWizard, "")
 DECLARE_WIDGET(QWizardPage, "")
 #endif
@@ -146,6 +151,6 @@ DECLARE_LAYOUT(QGridLayout, "")
 DECLARE_LAYOUT(QHBoxLayout, "")
 DECLARE_LAYOUT(QStackedLayout, "")
 DECLARE_LAYOUT(QVBoxLayout, "")
-#ifndef QT_NO_FORMLAYOUT
+#if QT_CONFIG(formlayout)
 DECLARE_LAYOUT(QFormLayout, "")
 #endif

@@ -66,7 +66,7 @@
 #include <QtGui/qevent.h>
 #include <QtWidgets/qapplication.h>
 #include <QtWidgets/qsizegrip.h>
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
 #include <QtGui/qclipboard.h>
 #endif
 #include <QtWidgets/qmdiarea.h>
@@ -157,7 +157,7 @@ bool FormWindowManager::eventFilter(QObject *o, QEvent *e)
     case QEvent::ChildAdded:
     case QEvent::ChildPolished:
     case QEvent::ChildRemoved:
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
     case QEvent::Clipboard:
 #endif
     case QEvent::ContentsRectChange:
@@ -364,7 +364,7 @@ QWidget *FormWindowManager::findManagedWidget(FormWindow *fw, QWidget *w)
 
 void FormWindowManager::setupActions()
 {
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
     const QIcon cutIcon = QIcon::fromTheme(QStringLiteral("edit-cut"), createIconSet(QStringLiteral("editcut.png")));
     m_actionCut = new QAction(cutIcon, tr("Cu&t"), this);
     m_actionCut->setObjectName(QStringLiteral("__qt_cut_action"));
@@ -530,7 +530,7 @@ void FormWindowManager::setupActions()
     m_actionShowFormWindowSettingsDialog->setEnabled(false);
 }
 
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
 void FormWindowManager::slotActionCutActivated()
 {
     m_activeFormWindow->cut();
@@ -814,7 +814,7 @@ void FormWindowManager::slotUpdateActions()
     int selectedWidgetCount = 0;
     int laidoutWidgetCount = 0;
     int unlaidoutWidgetCount = 0;
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
     bool pasteAvailable = false;
 #endif
     bool layoutAvailable = false;
@@ -832,7 +832,7 @@ void FormWindowManager::slotUpdateActions()
         QWidgetList simplifiedSelection = m_activeFormWindow->selectedWidgets();
 
         selectedWidgetCount = simplifiedSelection.count();
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
         pasteAvailable = qApp->clipboard()->mimeData() && qApp->clipboard()->mimeData()->hasText();
 #endif
 
@@ -902,7 +902,7 @@ void FormWindowManager::slotUpdateActions()
         }
     } while(false);
 
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
     m_actionCut->setEnabled(selectedWidgetCount > 0);
     m_actionCopy->setEnabled(selectedWidgetCount > 0);
     m_actionPaste->setEnabled(pasteAvailable);
@@ -998,7 +998,7 @@ void FormWindowManager::slotActionShowFormWindowSettingsDialog()
 QAction *FormWindowManager::action(Action action) const
 {
     switch (action) {
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
     case QDesignerFormWindowManagerInterface::CutAction:
         return m_actionCut;
     case QDesignerFormWindowManagerInterface::CopyAction:
