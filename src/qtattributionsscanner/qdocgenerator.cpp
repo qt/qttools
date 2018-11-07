@@ -141,6 +141,7 @@ static void generate(QTextStream &out, const Package &package, const QDir &baseD
             if (logLevel != SilentLog)
                 std::cerr << qPrintable(tr("Cannot open file %1.").arg(
                                             QDir::toNativeSeparators(package.licenseFile))) << "\n";
+            out << "*/\n";
             return;
         }
         out << "\\badcode\n";
