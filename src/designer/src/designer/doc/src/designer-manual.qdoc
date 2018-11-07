@@ -58,6 +58,7 @@
     \section1 Table of Contents
 
     \list
+        \li  \l{A Quick Start to Qt Designer}
         \li  \l{Qt Designer's Editing Modes}
             \list
                 \li  \l{Qt Designer's Widget Editing Mode}{Widget Editing Mode}
