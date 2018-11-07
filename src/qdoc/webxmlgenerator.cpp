@@ -746,9 +746,6 @@ void WebXMLGenerator::generateRelations(QXmlStreamWriter &writer, const Node *no
             case Node::ContentsLink:
                 writer.writeAttribute("meta", "contents");
                 break;
-            case Node::IndexLink:
-                writer.writeAttribute("meta", "index");
-                break;
             default:
                 writer.writeAttribute("meta", "");
             }

@@ -48,7 +48,6 @@
     \list
       \li \l {abstract-command} {\\abstract}
       \li \l {contentspage-command}{\\contentspage},
-      \li \l {indexpage-command}{\\indexpage},
       \li \l {ingroup-command}{\\ingroup},
       \li \l {inherits-command}{\\inherits},
       \li \l {inmodule-command}{\\inmodule},
@@ -122,22 +121,15 @@
     \endraw
     \endquotation
 
-    The \l {indexpage-command} {\\indexpage} and \l
-    {startpage-command} {\\startpage} commands create links to the
-    page's index page and start page. These links can be used by
-    browsers and search engines.
+    The \l {startpage-command} {\\startpage} command creates a link to
+    the page the author wants as the first page of a multipage document.
 
-    The index page is typically an alphabetical list of the document's
-    titles and topics, while the start page is the page considered by
-    the author to be the starting point of a multipage document.
-
-    The links are included in the generated HTML source code, but have
-    no visual effect on the documentation:
+    The link is included in the generated HTML source code but has no
+    visual effect on the documentation:
 
     \code
     <head>
         ...
-        <link rel="index" href="index.html" />
         <link rel="start" href="basicqt.html" />
         ...
     </head>
@@ -185,19 +177,6 @@
     contents page. The command follows the same syntax and argument
     convention as the \l {previouspage-command} {\\previouspage}
     command.
-
-    \target indexpage-command
-    \section2 \\indexpage
-
-    The \\indexpage command specifies an index page for the current
-    document. The command must stand alone on its own line, and its
-    unique argument is the title of the index document.
-
-    QDoc will generate a link to the index page and include it in the
-    generated HTML file, but this has no visual effect on the
-    documentation. The generated link type tells browsers and search
-    engines which document is considered by the author to be the
-    index page of the collection.
 */
 
 /*!

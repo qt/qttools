@@ -121,8 +121,7 @@ public:
         StartLink,
         NextLink,
         PreviousLink,
-        ContentsLink,
-        IndexLink
+        ContentsLink
     };
 
     enum PageType {

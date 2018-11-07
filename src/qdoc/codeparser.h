@@ -110,7 +110,6 @@ private:
 #define COMMAND_FN                      Doc::alias(QLatin1String("fn"))
 #define COMMAND_GROUP                   Doc::alias(QLatin1String("group"))
 #define COMMAND_HEADERFILE              Doc::alias(QLatin1String("headerfile"))
-#define COMMAND_INDEXPAGE               Doc::alias(QLatin1String("indexpage"))
 #define COMMAND_INGROUP                 Doc::alias(QLatin1String("ingroup"))
 #define COMMAND_INHEADERFILE            Doc::alias(QLatin1String("inheaderfile"))
 #define COMMAND_INJSMODULE              Doc::alias(QLatin1String("injsmodule"))

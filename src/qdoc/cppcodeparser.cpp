@@ -109,7 +109,6 @@ CppCodeParser::CppCodeParser()
                            << COMMAND_CONTENTSPAGE
                            << COMMAND_NEXTPAGE
                            << COMMAND_PREVIOUSPAGE
-                           << COMMAND_INDEXPAGE
                            << COMMAND_STARTPAGE
                            << COMMAND_QMLINHERITS
                            << COMMAND_QMLINSTANTIATES
@@ -646,9 +645,6 @@ void CppCodeParser::processOtherMetaCommand(const Doc& doc,
     }
     else if (command == COMMAND_PREVIOUSPAGE) {
         setLink(node, Node::PreviousLink, arg);
-    }
-    else if (command == COMMAND_INDEXPAGE) {
-        setLink(node, Node::IndexLink, arg);
     }
     else if (command == COMMAND_STARTPAGE) {
         setLink(node, Node::StartLink, arg);
