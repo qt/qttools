@@ -90,11 +90,7 @@ CodeDialog::CodeDialog(QWidget *parent) :
     connect(copyAction, &QAction::triggered, this, &CodeDialog::copyAll);
 #endif
 
-    QAction *findAction = toolBar->addAction(
-            TextEditFindWidget::findIconSet(),
-            tr("&Find in Text..."),
-            m_impl->m_findWidget, &AbstractFindWidget::activate);
-    findAction->setShortcut(QKeySequence::Find);
+    toolBar->addAction(m_impl->m_findWidget->createFindAction(toolBar));
 
     vBoxLayout->addWidget(toolBar);
 

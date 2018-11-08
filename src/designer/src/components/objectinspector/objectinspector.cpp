@@ -738,14 +738,9 @@ ObjectInspector::ObjectInspector(QDesignerFormEditorInterface *core, QWidget *pa
     vbox->addWidget(findWidget);
 
     findWidget->setItemView(treeView);
-    QAction *findAction = new QAction(
-            ItemViewFindWidget::findIconSet(),
-            tr("&Find in Text..."),
-            this);
-    findAction->setShortcut(QKeySequence::Find);
+    QAction *findAction = findWidget->createFindAction(this);
     findAction->setShortcutContext(Qt::WidgetWithChildrenShortcut);
     addAction(findAction);
-    connect(findAction, &QAction::triggered, findWidget, &AbstractFindWidget::activate);
 }
 
 ObjectInspector::~ObjectInspector()

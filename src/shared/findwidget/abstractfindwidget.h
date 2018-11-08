@@ -45,6 +45,7 @@
 
 QT_BEGIN_NAMESPACE
 
+class QAction;
 class QCheckBox;
 class QEvent;
 class QKeyEvent;
@@ -74,6 +75,7 @@ public:
     bool eventFilter(QObject *object, QEvent *e) override;
 
     static QIcon findIconSet();
+    QAction *createFindAction(QObject *parent);
 
 public slots:
     void activate();

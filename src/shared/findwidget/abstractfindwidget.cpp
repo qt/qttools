@@ -53,16 +53,20 @@
 
 #include "abstractfindwidget.h"
 
+#include <QtCore/QCoreApplication>
 #include <QtCore/QEvent>
 #include <QtCore/QFile>
 #include <QtCore/QTimer>
 
-#include <QtWidgets/QCheckBox>
 #include <QtGui/QKeyEvent>
+
+#include <QtWidgets/QCheckBox>
+#include <QtWidgets/QAction>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLayout>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QSpacerItem>
+#include <QtWidgets/QShortcut>
 #include <QtWidgets/QToolButton>
 
 QT_BEGIN_NAMESPACE
@@ -200,6 +204,19 @@ AbstractFindWidget::~AbstractFindWidget() = default;
 QIcon AbstractFindWidget::findIconSet()
 {
     return createIconSet(QLatin1String("searchfind.png"));
+}
+
+/*!
+    Creates an actions with standard icon and shortcut to activate the widget.
+ */
+QAction *AbstractFindWidget::createFindAction(QObject *parent)
+{
+
+    auto result = new QAction(AbstractFindWidget::findIconSet(),
+                              tr("&Find in Text..."), parent);
+    connect(result, &QAction::triggered, this, &AbstractFindWidget::activate);
+    result->setShortcut(QKeySequence::Find);
+    return result;
 }
 
 /*!

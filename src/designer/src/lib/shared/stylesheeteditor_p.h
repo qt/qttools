@@ -49,6 +49,7 @@ QT_BEGIN_NAMESPACE
 
 class QDesignerFormWindowInterface;
 class QDesignerFormEditorInterface;
+class TextEditFindWidget;
 
 class QDialogButtonBox;
 
@@ -89,6 +90,7 @@ private slots:
     void slotRequestHelp();
 
 protected:
+    void keyPressEvent(QKeyEvent *) override;
     QDialogButtonBox *buttonBox() const;
     void setOkButtonEnabled(bool v);
 
@@ -97,12 +99,14 @@ private:
 
     QDialogButtonBox *m_buttonBox;
     StyleSheetEditor *m_editor;
+    TextEditFindWidget *m_findWidget;
     QLabel *m_validityLabel;
     QDesignerFormEditorInterface *m_core;
     QAction *m_addResourceAction;
     QAction *m_addGradientAction;
     QAction *m_addColorAction;
     QAction *m_addFontAction;
+    QAction *m_findAction;
 };
 
 // Edit the style sheet property of the designer selection.
