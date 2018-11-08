@@ -40,6 +40,7 @@
 #include <QtCore/QOperatingSystemVersion>
 #include <QtCore/QSharedPointer>
 #include <QtCore/QVector>
+#include <QtCore/qt_windows.h>
 
 #include <algorithm>
 #include <iostream>
@@ -680,13 +681,13 @@ static inline bool isQtModule(const QString &libName)
 // Helper for recursively finding all dependent Qt libraries.
 static bool findDependentQtLibraries(const QString &qtBinDir, const QString &binary, Platform platform,
                                      QString *errorMessage, QStringList *result,
-                                     unsigned *wordSize = 0, bool *isDebug = 0,
+                                     unsigned *wordSize = 0, bool *isDebug = 0, unsigned short *machineArch = 0,
                                      int *directDependencyCount = 0, int recursionDepth = 0)
 {
     QStringList dependentLibs;
     if (directDependencyCount)
         *directDependencyCount = 0;
-    if (!readExecutable(binary, platform, errorMessage, &dependentLibs, wordSize, isDebug)) {
+    if (!readExecutable(binary, platform, errorMessage, &dependentLibs, wordSize, isDebug, machineArch)) {
         errorMessage->prepend(QLatin1String("Unable to find dependent libraries of ") +
                               QDir::toNativeSeparators(binary) + QLatin1String(" :"));
         return false;
@@ -706,7 +707,7 @@ static bool findDependentQtLibraries(const QString &qtBinDir, const QString &bin
         *directDependencyCount = end - start;
     // Recurse
     for (int i = start; i < end; ++i)
-        if (!findDependentQtLibraries(qtBinDir, result->at(i), platform, errorMessage, result, 0, 0, 0, recursionDepth + 1))
+        if (!findDependentQtLibraries(qtBinDir, result->at(i), platform, errorMessage, result, 0, 0, 0, 0, recursionDepth + 1))
             return false;
     return true;
 }
@@ -1039,6 +1040,7 @@ static QString libraryPath(const QString &libraryLocation, const char *name,
 }
 
 static QString vcDebugRedistDir() { return QStringLiteral("Debug_NonRedist"); }
+static QString onecoreRedistDir() { return QStringLiteral("onecore"); }
 
 static QString vcRedistDir()
 {
@@ -1080,7 +1082,7 @@ static QString vcRedistDir()
     return QString();
 }
 
-static QStringList compilerRunTimeLibs(Platform platform, bool isDebug, unsigned wordSize)
+static QStringList compilerRunTimeLibs(Platform platform, bool isDebug, unsigned short machineArch)
 {
     QStringList result;
     switch (platform) {
@@ -1108,10 +1110,10 @@ static QStringList compilerRunTimeLibs(Platform platform, bool isDebug, unsigned
              break;
         QStringList redistFiles;
         QDir vcRedistDir(vcRedistDirName);
-        const QString wordSizeString(QLatin1String(wordSize > 32 ? "x64" : "x86"));
+        const QString machineArchString = getArchString(machineArch);
         if (isDebug) {
             // Append DLLs from Debug_NonRedist\x??\Microsoft.VC<version>.DebugCRT.
-            if (vcRedistDir.cd(vcDebugRedistDir()) && vcRedistDir.cd(wordSizeString)) {
+            if (vcRedistDir.cd(vcDebugRedistDir()) && vcRedistDir.cd(machineArchString)) {
                 const QStringList names = vcRedistDir.entryList(QStringList(QStringLiteral("Microsoft.VC*.DebugCRT")), QDir::Dirs);
                 if (!names.isEmpty() && vcRedistDir.cd(names.first())) {
                     const QFileInfoList &dlls = vcRedistDir.entryInfoList(QStringList(QLatin1String("*.dll")));
@@ -1125,10 +1127,10 @@ static QStringList compilerRunTimeLibs(Platform platform, bool isDebug, unsigned
             if (!countryCodes.isEmpty()) // Pre MSVC2017
                 releaseRedistDir += QLatin1Char('/') + countryCodes.constFirst();
             QFileInfo fi(releaseRedistDir + QLatin1Char('/') + QStringLiteral("vc_redist.")
-                         + wordSizeString + QStringLiteral(".exe"));
+                         + machineArchString + QStringLiteral(".exe"));
             if (!fi.isFile()) { // Pre MSVC2017/15.5
                 fi.setFile(releaseRedistDir + QLatin1Char('/') + QStringLiteral("vcredist_")
-                           + wordSizeString + QStringLiteral(".exe"));
+                           + machineArchString + QStringLiteral(".exe"));
             }
             if (fi.isFile())
                 redistFiles.append(fi.absoluteFilePath());
@@ -1201,9 +1203,10 @@ static DeployResult deploy(const Options &options,
     QStringList dependentQtLibs;
     bool detectedDebug;
     unsigned wordSize;
+    unsigned short machineArch;
     int directDependencyCount = 0;
     if (!findDependentQtLibraries(libraryLocation, options.binaries.first(), options.platform, errorMessage, &dependentQtLibs, &wordSize,
-                                  &detectedDebug, &directDependencyCount)) {
+                                  &detectedDebug, &machineArch, &directDependencyCount)) {
         return result;
     }
     for (int b = 1; b < options.binaries.size(); ++b) {
@@ -1298,7 +1301,7 @@ static DeployResult deploy(const Options &options,
             qmlScanResult.append(scanResult);
             // Additional dependencies of QML plugins.
             for (const QString &plugin : qAsConst(qmlScanResult.plugins)) {
-                if (!findDependentQtLibraries(libraryLocation, plugin, options.platform, errorMessage, &dependentQtLibs, &wordSize, &detectedDebug))
+                if (!findDependentQtLibraries(libraryLocation, plugin, options.platform, errorMessage, &dependentQtLibs, &wordSize, &detectedDebug, &machineArch))
                     return result;
             }
             if (optVerboseLevel >= 1) {
@@ -1392,7 +1395,8 @@ static DeployResult deploy(const Options &options,
                 deployedQtLibraries.append(libEglFullPath);
             }
             // Find the system D3d Compiler matching the D3D library.
-            if (options.systemD3dCompiler && !options.isWinRt()) {
+            // Any arm64 OS will be new enough to be shipped with the D3DCompiler inbox.
+            if (options.systemD3dCompiler && !options.isWinRt() && machineArch != IMAGE_FILE_MACHINE_ARM64) {
                 const QString d3dCompiler = findD3dCompiler(options.platform, qtBinDir, wordSize);
                 if (d3dCompiler.isEmpty()) {
                     std::wcerr << "Warning: Cannot find any version of the d3dcompiler DLL.\n";
@@ -1441,7 +1445,7 @@ static DeployResult deploy(const Options &options,
             options.directory : options.libraryDirectory;
         QStringList libraries = deployedQtLibraries;
         if (options.compilerRunTime)
-            libraries.append(compilerRunTimeLibs(options.platform, isDebug, wordSize));
+            libraries.append(compilerRunTimeLibs(options.platform, isDebug, machineArch));
         for (const QString &qtLib : qAsConst(libraries)) {
             if (!updateLibrary(qtLib, targetPath, options, errorMessage))
                 return result;

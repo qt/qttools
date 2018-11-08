@@ -840,7 +840,7 @@ inline void determineDebugAndDependentLibs(const ImageNtHeader *nth, const void 
 // and debug flags.
 bool readPeExecutable(const QString &peExecutableFileName, QString *errorMessage,
                       QStringList *dependentLibrariesIn, unsigned *wordSizeIn,
-                      bool *isDebugIn, bool isMinGW)
+                      bool *isDebugIn, bool isMinGW, unsigned short *machineArchIn)
 {
     bool result = false;
     HANDLE hFile = NULL;
@@ -889,6 +889,9 @@ bool readPeExecutable(const QString &peExecutableFileName, QString *errorMessage
             determineDebugAndDependentLibs(reinterpret_cast<const IMAGE_NT_HEADERS64 *>(ntHeaders),
                                            fileMemory, isMinGW, dependentLibrariesIn, isDebugIn, errorMessage);
         }
+
+        if (machineArchIn)
+            *machineArchIn = ntHeaders->FileHeader.Machine;
 
         result = true;
         if (optVerboseLevel > 1) {
@@ -970,7 +973,7 @@ QString findD3dCompiler(Platform platform, const QString &qtBinDir, unsigned wor
 #else // Q_OS_WIN
 
 bool readPeExecutable(const QString &, QString *errorMessage,
-                      QStringList *, unsigned *, bool *, bool)
+                      QStringList *, unsigned *, bool *, bool, unsigned short *)
 {
     *errorMessage = QStringLiteral("Not implemented.");
     return false;
@@ -1031,5 +1034,24 @@ bool patchQtCore(const QString &path, QString *errorMessage)
     }
     return true;
 }
+
+#ifdef Q_OS_WIN
+QString getArchString(unsigned short machineArch)
+{
+    switch (machineArch) {
+        case IMAGE_FILE_MACHINE_I386:
+            return QStringLiteral("x86");
+        case IMAGE_FILE_MACHINE_ARM:
+            return QStringLiteral("arm");
+        case IMAGE_FILE_MACHINE_AMD64:
+            return QStringLiteral("x64");
+        case IMAGE_FILE_MACHINE_ARM64:
+            return QStringLiteral("arm64");
+        default:
+            break;
+    }
+    return QString();
+}
+#endif // Q_OS_WIN
 
 QT_END_NAMESPACE
