@@ -1470,6 +1470,9 @@
     {positioning} and \l {substring} {argument} as the \l
     {printline-command} {\\printline} command.
 
+    If \\printuntil is used without an argument, it expands to all the
+    lines from the current position to the end of the quoted file.
+
     The lines from the source file are rendered in a separate
     paragraph, using a monospace font and the standard
     indentation. The code is shown verbatim.
