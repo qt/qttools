@@ -46,6 +46,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 #include <QtCore/QDebug>
+#include <QtCore/QRegExp>
 #include <QtCore/QSet>
 #include <QtCore/QVariant>
 #include <QtCore/QDateTime>

@@ -36,6 +36,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
 #include <QtCore/QLibraryInfo>
+#include <QtCore/QRegExp>
 #include <QtCore/QTranslator>
 
 #include <QtGui/QGuiApplication>
