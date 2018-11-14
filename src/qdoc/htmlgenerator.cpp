@@ -1399,7 +1399,6 @@ void HtmlGenerator::generateCppReferencePage(Node* node, CodeMarker* marker)
         }
         else {
             if (!s->members().isEmpty()) {
-                // out() << "<hr />\n";
                 QString ref = registerRef(s->title().toLower());
                 out() << "<a name=\"" << ref << "\"></a>" << divNavTop << "\n";
                 out() << "<h2 id=\"" << ref << "\">" << protectEnc(s->title()) << "</h2>\n";
@@ -1408,7 +1407,6 @@ void HtmlGenerator::generateCppReferencePage(Node* node, CodeMarker* marker)
             if (!s->reimplementedMembers().isEmpty()) {
                 QString name = QString("Reimplemented ") + s->title();
                 QString ref = registerRef(name.toLower());
-                //  out() << "<hr />\n";
                 out() << "<a name=\"" << ref << "\"></a>" << divNavTop << "\n";
                 out() << "<h2 id=\"" << ref << "\">" << protectEnc(name) << "</h2>\n";
                 generateSection(s->reimplementedMembers(), aggregate, marker);
@@ -1441,7 +1439,6 @@ void HtmlGenerator::generateCppReferencePage(Node* node, CodeMarker* marker)
 
     if (!aggregate->doc().isEmpty()) {
         generateExtractionMark(aggregate, DetailedDescriptionMark);
-        //out() << "<hr />\n"
         out() << "<div class=\"descr\">\n" // QTBUG-9504
               << "<h2 id=\"" << detailsRef << "\">" << "Detailed Description" << "</h2>\n";
         generateBody(aggregate, marker);
@@ -1454,57 +1451,58 @@ void HtmlGenerator::generateCppReferencePage(Node* node, CodeMarker* marker)
     sectionVector = ns ? &sections.stdDetailsSections() : &sections.stdCppClassDetailsSections();
     s = sectionVector->constBegin();
     while (s != sectionVector->constEnd()) {
-        //out() << "<hr />\n";
-        if (!s->divClass().isEmpty())
-            out() << "<div class=\"" << s->divClass() << "\">\n"; // QTBUG-9504
-        out() << "<h2>" << protectEnc(s->title()) << "</h2>\n";
-
+        bool headerGenerated = false;
         NodeVector::ConstIterator m = s->members().constBegin();
         while (m != s->members().constEnd()) {
-            if ((*m)->access() != Node::Private) { // ### check necessary?
-                if ((*m)->type() != Node::Class)
-                    generateDetailedMember(*m, aggregate, marker);
-                else {
-                    out() << "<h3> class ";
-                    generateFullName(*m, aggregate);
-                    out() << "</h3>";
-                    generateBrief(*m, marker, aggregate);
-                }
+            if ((*m)->access() == Node::Private) { // ### check necessary?
+                ++m;
+                continue;
+            }
+            if (!headerGenerated) {
+                if (!s->divClass().isEmpty())
+                    out() << "<div class=\"" << s->divClass() << "\">\n"; // QTBUG-9504
+                out() << "<h2>" << protectEnc(s->title()) << "</h2>\n";
+                headerGenerated = true;
+            }
+            if ((*m)->type() != Node::Class)
+                generateDetailedMember(*m, aggregate, marker);
+            else {
+                out() << "<h3> class ";
+                generateFullName(*m, aggregate);
+                out() << "</h3>";
+                generateBrief(*m, marker, aggregate);
+            }
+            QStringList names;
+            names << (*m)->name();
+            if ((*m)->type() == Node::Function) {
+                const FunctionNode *func = reinterpret_cast<const FunctionNode *>(*m);
+                if (func->isSomeCtor() || func->isDtor() || func->overloadNumber() != 0)
+                    names.clear();
+            } else if ((*m)->type() == Node::Property) {
+                const PropertyNode *prop = reinterpret_cast<const PropertyNode *>(*m);
+                if (!prop->getters().isEmpty() &&
+                        !names.contains(prop->getters().first()->name()))
+                    names << prop->getters().first()->name();
+                if (!prop->setters().isEmpty())
+                    names << prop->setters().first()->name();
+                if (!prop->resetters().isEmpty())
+                    names << prop->resetters().first()->name();
+                if (!prop->notifiers().isEmpty())
+                    names << prop->notifiers().first()->name();
+            } else if ((*m)->type() == Node::Enum) {
+                const EnumNode *enume = reinterpret_cast<const EnumNode*>(*m);
+                if (enume->flagsType())
+                    names << enume->flagsType()->name();
 
-                QStringList names;
-                names << (*m)->name();
-                if ((*m)->type() == Node::Function) {
-                    const FunctionNode *func = reinterpret_cast<const FunctionNode *>(*m);
-                    if (func->isSomeCtor() || func->isDtor() || func->overloadNumber() != 0)
-                        names.clear();
-                }
-                else if ((*m)->type() == Node::Property) {
-                    const PropertyNode *prop = reinterpret_cast<const PropertyNode *>(*m);
-                    if (!prop->getters().isEmpty() &&
-                            !names.contains(prop->getters().first()->name()))
-                        names << prop->getters().first()->name();
-                    if (!prop->setters().isEmpty())
-                        names << prop->setters().first()->name();
-                    if (!prop->resetters().isEmpty())
-                        names << prop->resetters().first()->name();
-                    if (!prop->notifiers().isEmpty())
-                        names << prop->notifiers().first()->name();
-                }
-                else if ((*m)->type() == Node::Enum) {
-                    const EnumNode *enume = reinterpret_cast<const EnumNode*>(*m);
-                    if (enume->flagsType())
-                        names << enume->flagsType()->name();
-
-                    foreach (const QString &enumName,
-                             enume->doc().enumItemNames().toSet() -
-                             enume->doc().omitEnumItemNames().toSet())
-                        names << plainCode(marker->markedUpEnumValue(enumName,
-                                                                     enume));
-                }
+                foreach (const QString &enumName,
+                        enume->doc().enumItemNames().toSet() -
+                        enume->doc().omitEnumItemNames().toSet())
+                    names << plainCode(marker->markedUpEnumValue(enumName,
+                                                                 enume));
             }
             ++m;
         }
-        if (!s->divClass().isEmpty())
+        if (headerGenerated && !s->divClass().isEmpty())
             out() << "</div>\n"; // QTBUG-9504
         ++s;
     }
