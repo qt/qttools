@@ -841,7 +841,7 @@ Node *Aggregate::findChildNode(const QString& name, Node::Genus genus, int findF
     } else {
         NodeList nodes = childMap_.values(name);
         if (!nodes.isEmpty()) {
-            for (int i=0; i<nodes.size(); ++i) {
+            for (int i = 0; i < nodes.size(); ++i) {
                 Node* node = nodes.at(i);
                 if (genus == node->genus()) {
                     if (findFlags & TypesOnly) {
@@ -853,7 +853,8 @@ Node *Aggregate::findChildNode(const QString& name, Node::Genus genus, int findF
                                 && !node->isJsBasicType()
                                 && !node->isEnumType())
                             continue;
-                    }
+                    } else if (findFlags & IgnoreModules && node->isModule())
+                        continue;
                     return node;
                 }
             }

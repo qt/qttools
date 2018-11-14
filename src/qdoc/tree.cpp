@@ -885,7 +885,11 @@ const Node* Tree::findNode(const QStringList& path,
             if (node == 0 || !node->isAggregate())
                 break;
 
-            const Node* next = static_cast<const Aggregate*>(node)->findChildNode(path.at(i), genus, findFlags);
+            // Clear the TypesOnly flag until the last path segment, as e.g. namespaces are not types.
+            // We also ignore module nodes as they are not aggregates and thus have no children.
+            int tmpFlags = (i < path.size() - 1) ? (findFlags & ~TypesOnly) | IgnoreModules : findFlags;
+
+            const Node* next = static_cast<const Aggregate*>(node)->findChildNode(path.at(i), genus, tmpFlags);
             if (!next && (findFlags & SearchEnumValues) && i == path.size()-1) {
                 next = static_cast<const Aggregate*>(node)->findEnumNodeForValue(path.at(i));
             }
@@ -893,7 +897,7 @@ const Node* Tree::findNode(const QStringList& path,
                 node->isClass() && (findFlags & SearchBaseClasses)) {
                 NodeList baseClasses = allBaseClasses(static_cast<const ClassNode*>(node));
                 foreach (const Node* baseClass, baseClasses) {
-                    next = static_cast<const Aggregate*>(baseClass)->findChildNode(path.at(i), genus, findFlags);
+                    next = static_cast<const Aggregate*>(baseClass)->findChildNode(path.at(i), genus, tmpFlags);
                     if (!next && (findFlags & SearchEnumValues) && i == path.size() - 1)
                         next = static_cast<const Aggregate*>(baseClass)->findEnumNodeForValue(path.at(i));
                     if (next) {
