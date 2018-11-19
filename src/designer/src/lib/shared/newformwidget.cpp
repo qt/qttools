@@ -465,7 +465,7 @@ void NewFormWidget::loadFrom(const QString &title, const QStringList &nameList,
 void NewFormWidget::on_treeWidget_itemPressed(QTreeWidgetItem *item)
 {
     if (item && !item->parent())
-        m_ui->treeWidget->setItemExpanded(item, !m_ui->treeWidget->isItemExpanded(item));
+        item->setExpanded(!item->isExpanded());
 }
 
 QSize NewFormWidget::templateSize() const

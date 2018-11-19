@@ -135,7 +135,7 @@ QTreeWidgetItem* PluginDialog::setTopLevelItem(const QString &itemName)
 {
     QTreeWidgetItem *topLevelItem = new QTreeWidgetItem(ui.treeWidget);
     topLevelItem->setText(0, itemName);
-    ui.treeWidget->setItemExpanded(topLevelItem, true);
+    topLevelItem->setExpanded(true);
     topLevelItem->setIcon(0, style()->standardPixmap(QStyle::SP_DirOpenIcon));
 
     QFont boldFont = topLevelItem->font(0);
@@ -151,7 +151,7 @@ QTreeWidgetItem* PluginDialog::setPluginItem(QTreeWidgetItem *topLevelItem,
     QTreeWidgetItem *pluginItem = new QTreeWidgetItem(topLevelItem);
     pluginItem->setFont(0, font);
     pluginItem->setText(0, itemName);
-    ui.treeWidget->setItemExpanded(pluginItem, true);
+    pluginItem->setExpanded(true);
     pluginItem->setIcon(0, style()->standardPixmap(QStyle::SP_DirOpenIcon));
 
     return pluginItem;
