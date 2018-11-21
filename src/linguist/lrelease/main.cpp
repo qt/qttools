@@ -49,14 +49,6 @@
 QT_USE_NAMESPACE
 
 #ifdef QT_BOOTSTRAPPED
-static QString binDir;
-
-static void initBinaryDir(
-#ifndef Q_OS_WIN
-        const char *argv0
-#endif
-        );
-
 struct LR {
     static inline QString tr(const char *sourceText, const char *comment = 0)
     {
@@ -214,14 +206,8 @@ static EvalHandler evalHandler;
 
 int main(int argc, char **argv)
 {
-#ifdef QT_BOOTSTRAPPED
-    initBinaryDir(
-#ifndef Q_OS_WIN
-            argv[0]
-#endif
-            );
-#else
     QCoreApplication app(argc, argv);
+#ifndef QT_BOOTSTRAPPED
 #ifndef Q_OS_WIN32
     QTranslator translator;
     QTranslator qtTranslator;
@@ -304,11 +290,7 @@ int main(int argc, char **argv)
             ProFileGlobals option;
             option.qmake_abslocation = QString::fromLocal8Bit(qgetenv("QMAKE"));
             if (option.qmake_abslocation.isEmpty())
-#ifdef QT_BOOTSTRAPPED
-                option.qmake_abslocation = binDir + QLatin1String("/qmake");
-#else
                 option.qmake_abslocation = app.applicationDirPath() + QLatin1String("/qmake");
-#endif
             option.initProperties();
             QMakeVfs vfs;
             QMakeParser parser(0, &vfs, &evalHandler);
@@ -357,65 +339,3 @@ int main(int argc, char **argv)
 
     return 0;
 }
-
-#ifdef QT_BOOTSTRAPPED
-
-#ifdef Q_OS_WIN
-# include <windows.h>
-#endif
-
-static void initBinaryDir(
-#ifndef Q_OS_WIN
-        const char *_argv0
-#endif
-        )
-{
-#ifdef Q_OS_WIN
-    wchar_t module_name[MAX_PATH];
-    GetModuleFileName(0, module_name, MAX_PATH);
-    QFileInfo filePath = QString::fromWCharArray(module_name);
-    binDir = filePath.path();
-#else
-    QString argv0 = QFile::decodeName(QByteArray(_argv0));
-    QString absPath;
-
-    if (!argv0.isEmpty() && argv0.at(0) == QLatin1Char('/')) {
-        /*
-          If argv0 starts with a slash, it is already an absolute
-          file path.
-        */
-        absPath = argv0;
-    } else if (argv0.contains(QLatin1Char('/'))) {
-        /*
-          If argv0 contains one or more slashes, it is a file path
-          relative to the current directory.
-        */
-        absPath = QDir::current().absoluteFilePath(argv0);
-    } else {
-        /*
-          Otherwise, the file path has to be determined using the
-          PATH environment variable.
-        */
-        QByteArray pEnv = qgetenv("PATH");
-        QDir currentDir = QDir::current();
-        QStringList paths = QString::fromLocal8Bit(pEnv.constData()).split(QLatin1String(":"));
-        for (QStringList::const_iterator p = paths.constBegin(); p != paths.constEnd(); ++p) {
-            if ((*p).isEmpty())
-                continue;
-            QString candidate = currentDir.absoluteFilePath(*p + QLatin1Char('/') + argv0);
-            QFileInfo candidate_fi(candidate);
-            if (candidate_fi.exists() && !candidate_fi.isDir()) {
-                binDir = candidate_fi.canonicalPath();
-                return;
-            }
-        }
-        return;
-    }
-
-    QFileInfo fi(absPath);
-    if (fi.exists())
-        binDir = fi.canonicalPath();
-#endif
-}
-
-#endif // QT_BOOTSTRAPPED
