@@ -1,2 +1,2 @@
-load(qt_find_clang)
+!wasm:load(qt_find_clang)
 load(qt_parts)
