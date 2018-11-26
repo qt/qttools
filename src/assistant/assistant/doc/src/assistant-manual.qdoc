@@ -251,7 +251,7 @@
             file in the \c{file} tags. It is possible to specify a different file or any
             language. The icon defined by the \c{icon} tags is applied to any language.
         \row
-            \li \c{<cacheDirectory base="collection > default">}
+            \li \c{<cacheDirectory>, <cacheDirectory base="collection">}
             \li Specifies the cache directory that is used to store index files
             needed for the full text search and a copy of the collection file.
             The copy is needed because \QA stores all its settings in the
