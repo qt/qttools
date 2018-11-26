@@ -62,6 +62,7 @@ private slots:
     void saveAs();
     void displayError(const QString &errorString);
     void selectString();
+    void about();
 
 private:
     void setupConnections();

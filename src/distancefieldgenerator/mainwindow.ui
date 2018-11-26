@@ -121,7 +121,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>19</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -141,8 +141,16 @@
     <addaction name="actionSelect_all"/>
     <addaction name="actionSelect_string"/>
    </widget>
+   <widget class="QMenu" name="menu_Help">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="actionAbout_App"/>
+    <addaction name="actionAbout_Qt"/>
+   </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Select"/>
+   <addaction name="menu_Help"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="action_Open">
@@ -185,6 +193,16 @@
   <action name="actionSelect_string">
    <property name="text">
     <string>Select &amp;string</string>
+   </property>
+  </action>
+  <action name="actionAbout_App">
+   <property name="text">
+    <string>About Qt Distance Field Generator</string>
+   </property>
+  </action>
+  <action name="actionAbout_Qt">
+   <property name="text">
+    <string>About Qt</string>
    </property>
   </action>
  </widget>

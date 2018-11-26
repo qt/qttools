@@ -93,6 +93,10 @@ void MainWindow::setupConnections()
     connect(ui->tbSelectAll, &QToolButton::clicked, this, &MainWindow::selectAll);
     connect(ui->actionSelect_all, &QAction::triggered, this, &MainWindow::selectAll);
     connect(ui->actionSelect_string, &QAction::triggered, this, &MainWindow::selectString);
+    connect(ui->actionAbout_App, &QAction::triggered, this, &MainWindow::about);
+    connect(ui->actionAbout_Qt, &QAction::triggered, this, [this]() {
+        QMessageBox::aboutQt(this);
+    });
     connect(ui->lwUnicodeRanges, &QListWidget::itemSelectionChanged, this, &MainWindow::updateUnicodeRanges);
 }
 
@@ -724,6 +728,21 @@ void MainWindow::selectString()
             }
         }
     }
+}
+
+void MainWindow::about()
+{
+    QMessageBox *msgBox = new QMessageBox(this);
+    msgBox->setAttribute(Qt::WA_DeleteOnClose);
+    msgBox->setWindowTitle(tr("About Qt Distance Field Generator"));
+    msgBox->setText(tr("<h3>Qt Distance Field Generator</h3>"
+                       "<p>Version %1.<br/>"
+                       "The Qt Distance Field Generator tool allows "
+                       "to prepare a font cache for Qt applications.</p>"
+                       "<p>Copyright (C) %2 The Qt Company Ltd.</p>")
+                    .arg(QLatin1String(QT_VERSION_STR))
+                    .arg(QLatin1String("2018")));
+    msgBox->show();
 }
 
 QT_END_NAMESPACE
