@@ -55,7 +55,7 @@ int main(int argc, char **argv)
     MainWindow mainWindow;
     if (!parser.positionalArguments().isEmpty())
         mainWindow.open(parser.positionalArguments().constFirst());
-    mainWindow.showMaximized();
+    mainWindow.show();
 
     return app.exec();
 }

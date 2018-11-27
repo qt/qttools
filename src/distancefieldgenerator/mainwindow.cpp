@@ -76,6 +76,8 @@ MainWindow::MainWindow(QWidget *parent)
     qRegisterMetaType<glyph_t>("glyph_t");
     qRegisterMetaType<QPainterPath>("QPainterPath");
 
+    restoreGeometry(m_settings.value(QStringLiteral("geometry")).toByteArray());
+
     setupConnections();
 }
 
@@ -98,6 +100,11 @@ void MainWindow::open(const QString &path)
     ui->tbSave->setDisabled(true);
     ui->action_Open->setDisabled(true);
     m_model->setFont(path);
+}
+
+void MainWindow::closeEvent(QCloseEvent * /*event*/)
+{
+    m_settings.setValue(QStringLiteral("geometry"), saveGeometry());
 }
 
 void MainWindow::setupConnections()

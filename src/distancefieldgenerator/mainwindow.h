@@ -51,6 +51,9 @@ public:
 
     void open(const QString &path);
 
+protected:
+    void closeEvent(QCloseEvent *event) override;
+
 private slots:
     void openFont();
     void startProgressBar(quint16 glyphCount);
