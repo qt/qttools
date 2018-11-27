@@ -68,7 +68,7 @@ namespace qdesigner_internal {
 StyleSheetEditor::StyleSheetEditor(QWidget *parent)
     : QTextEdit(parent)
 {
-    setTabStopDistance(fontMetrics().width(QLatin1Char(' ')) * 4);
+    setTabStopDistance(fontMetrics().horizontalAdvance(QLatin1Char(' ')) * 4);
     setAcceptRichText(false);
     new CssHighlighter(document());
 }

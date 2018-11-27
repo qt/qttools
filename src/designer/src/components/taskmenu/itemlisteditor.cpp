@@ -51,9 +51,9 @@ public:
         setResizeMode(Interactive);
         //: Sample string to determinate the width for the first column of the list item property browser
         const QString widthSampleString = QCoreApplication::translate("ItemPropertyBrowser", "XX Icon Selected off");
-        m_width = fontMetrics().width(widthSampleString);
+        m_width = fontMetrics().horizontalAdvance(widthSampleString);
         setSplitterPosition(m_width);
-        m_width += fontMetrics().width(QStringLiteral("/this/is/some/random/path"));
+        m_width += fontMetrics().horizontalAdvance(QStringLiteral("/this/is/some/random/path"));
     }
 
     QSize sizeHint() const override

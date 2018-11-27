@@ -331,7 +331,7 @@ void TabOrderEditor::mousePressEvent(QMouseEvent *e)
     if (m_current_index == -1)
         return;
 
-    m_tab_order_list.swap(target_index, m_current_index);
+    m_tab_order_list.swapItemsAt(target_index, m_current_index);
 
     ++m_current_index;
     if (m_current_index == m_tab_order_list.size())

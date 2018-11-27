@@ -175,7 +175,7 @@ NewFormWidget::NewFormWidget(QDesignerFormEditorInterface *core, QWidget *parent
     // Open parent, select and make visible
     if (selectedItem) {
         m_ui->treeWidget->setCurrentItem(selectedItem);
-        m_ui->treeWidget->setItemSelected(selectedItem, true);
+        selectedItem->setSelected(true);
         m_ui->treeWidget->scrollToItem(selectedItem->parent());
     }
     // Fill profile combo
