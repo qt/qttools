@@ -53,11 +53,12 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , m_settings(qApp->organizationName(), qApp->applicationName())
-    , m_model(nullptr)
+    , m_model(new DistanceFieldModel(this))
     , m_statusBarLabel(nullptr)
     , m_statusBarProgressBar(nullptr)
 {
     ui->setupUi(this);
+    ui->lvGlyphs->setModel(m_model);
 
     m_statusBarLabel = new QLabel(this);
     m_statusBarLabel->setText(tr("Ready"));
@@ -98,6 +99,16 @@ void MainWindow::setupConnections()
         QMessageBox::aboutQt(this);
     });
     connect(ui->lwUnicodeRanges, &QListWidget::itemSelectionChanged, this, &MainWindow::updateUnicodeRanges);
+
+    connect(ui->lvGlyphs->selectionModel(),
+            &QItemSelectionModel::selectionChanged,
+            this,
+            &MainWindow::updateSelection);
+    connect(m_model, &DistanceFieldModel::startGeneration, this, &MainWindow::startProgressBar);
+    connect(m_model, &DistanceFieldModel::stopGeneration, this, &MainWindow::stopProgressBar);
+    connect(m_model, &DistanceFieldModel::distanceFieldGenerated, this, &MainWindow::updateProgressBar);
+    connect(m_model, &DistanceFieldModel::stopGeneration, this, &MainWindow::populateUnicodeRanges);
+    connect(m_model, &DistanceFieldModel::error, this, &MainWindow::displayError);
 }
 
 void MainWindow::saveAs()
@@ -561,22 +572,6 @@ void MainWindow::openFont()
         m_fontFile = fileName;
         m_fontDir = QFileInfo(fileName).absolutePath();
         m_settings.setValue(QStringLiteral("fontDirectory"), m_fontDir);
-
-        if (m_model == nullptr) {
-            m_model = new DistanceFieldModel(this);
-            connect(m_model, &DistanceFieldModel::startGeneration, this, &MainWindow::startProgressBar);
-            connect(m_model, &DistanceFieldModel::stopGeneration, this, &MainWindow::stopProgressBar);
-            connect(m_model, &DistanceFieldModel::distanceFieldGenerated, this, &MainWindow::updateProgressBar);
-            connect(m_model, &DistanceFieldModel::stopGeneration, this, &MainWindow::populateUnicodeRanges);
-            connect(m_model, &DistanceFieldModel::error, this, &MainWindow::displayError);
-
-            ui->lvGlyphs->setModel(m_model);
-
-            connect(ui->lvGlyphs->selectionModel(),
-                    &QItemSelectionModel::selectionChanged,
-                    this,
-                    &MainWindow::updateSelection);
-        }
 
         ui->lwUnicodeRanges->clear();
         ui->lwUnicodeRanges->setDisabled(true);
