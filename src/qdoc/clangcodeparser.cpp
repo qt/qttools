@@ -1105,7 +1105,8 @@ static const char *defaultArgs_[] = {
     "-DQT_ANNOTATE_ACCESS_SPECIFIER(a)=__attribute__((annotate(#a)))",
     "-Wno-constant-logical-operand",
     "-Wno-macro-redefined",
-    "-Wno-nullability-completeness"
+    "-Wno-nullability-completeness",
+    "-I" CLANG_RESOURCE_DIR
 };
 static QByteArray clangResourcePath = "-I";
 
@@ -1117,8 +1118,6 @@ void ClangCodeParser::getDefaultArgs()
 {
     args_.clear();
     args_.insert(args_.begin(), std::begin(defaultArgs_), std::end(defaultArgs_));
-    clangResourcePath += CLANG_RESOURCE_DIR;
-    args_.push_back(clangResourcePath.data());
     // Add the defines from the qdocconf file.
     for (const auto &p : qAsConst(defines_))
         args_.push_back(p.constData());
