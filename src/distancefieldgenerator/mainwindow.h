@@ -49,6 +49,8 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    void open(const QString &path);
+
 private slots:
     void openFont();
     void startProgressBar(quint16 glyphCount);

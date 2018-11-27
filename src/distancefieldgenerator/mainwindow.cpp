@@ -84,6 +84,22 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::open(const QString &path)
+{
+    m_fileName.clear();
+    m_fontFile = path;
+    m_fontDir = QFileInfo(path).absolutePath();
+    m_settings.setValue(QStringLiteral("fontDirectory"), m_fontDir);
+
+    ui->lwUnicodeRanges->clear();
+    ui->lwUnicodeRanges->setDisabled(true);
+    ui->action_Save->setDisabled(true);
+    ui->action_Save_as->setDisabled(true);
+    ui->tbSave->setDisabled(true);
+    ui->action_Open->setDisabled(true);
+    m_model->setFont(path);
+}
+
 void MainWindow::setupConnections()
 {
     connect(ui->action_Open, &QAction::triggered, this, &MainWindow::openFont);
@@ -567,20 +583,8 @@ void MainWindow::openFont()
                                                     tr("Open font file"),
                                                     m_fontDir,
                                                     tr("Fonts (*.ttf *.otf);;All files (*)"));
-    if (!fileName.isEmpty()) {
-        m_fileName.clear();
-        m_fontFile = fileName;
-        m_fontDir = QFileInfo(fileName).absolutePath();
-        m_settings.setValue(QStringLiteral("fontDirectory"), m_fontDir);
-
-        ui->lwUnicodeRanges->clear();
-        ui->lwUnicodeRanges->setDisabled(true);
-        ui->action_Save->setDisabled(true);
-        ui->action_Save_as->setDisabled(true);
-        ui->tbSave->setDisabled(true);
-        ui->action_Open->setDisabled(true);
-        m_model->setFont(fileName);
-    }
+    if (!fileName.isEmpty())
+        open(fileName);
 }
 
 void MainWindow::updateProgressBar()
