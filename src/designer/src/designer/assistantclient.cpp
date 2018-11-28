@@ -113,13 +113,34 @@ QString AssistantClient::binary()
     return app;
 }
 
+void AssistantClient::readyReadStandardError()
+{
+     qWarning("%s: %s",
+              qPrintable(QDir::toNativeSeparators(m_process->program())),
+              m_process->readAllStandardError().constData());
+}
+
+void AssistantClient::processTerminated(int exitCode, QProcess::ExitStatus exitStatus)
+{
+    const QString binary = QDir::toNativeSeparators(m_process->program());
+    if (exitStatus != QProcess::NormalExit)
+        qWarning("%s: crashed.", qPrintable(binary));
+    else if (exitCode != 0)
+        qWarning("%s: terminated with exit code %d.", qPrintable(binary), exitCode);
+}
+
 bool AssistantClient::ensureRunning(QString *errorMessage)
 {
     if (isRunning())
         return true;
 
-    if (!m_process)
+    if (!m_process) {
         m_process = new QProcess;
+        QObject::connect(m_process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+                         this, &AssistantClient::processTerminated);
+        QObject::connect(m_process, &QProcess::readyReadStandardError,
+                         this, &AssistantClient::readyReadStandardError);
+    }
 
     const QString app = binary();
     if (!QFileInfo(app).isFile()) {

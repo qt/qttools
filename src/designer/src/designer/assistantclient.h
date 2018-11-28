@@ -29,17 +29,15 @@
 #ifndef ASSISTANTCLIENT_H
 #define ASSISTANTCLIENT_H
 
-#include <QtCore/qglobal.h>
+#include <QtCore/qprocess.h>
 
 QT_BEGIN_NAMESPACE
 
-class QProcess;
 class QString;
 
-class AssistantClient
+class AssistantClient : public QObject
 {
-    AssistantClient(const AssistantClient &);
-    AssistantClient &operator=(const AssistantClient &);
+    Q_OBJECT
 
 public:
     AssistantClient();
@@ -56,6 +54,10 @@ public:
     static QString designerManualUrl(int qtVersion = 0);
     // Root of the Qt Reference documentation
     static QString qtReferenceManualUrl(int qtVersion = 0);
+
+private slots:
+    void readyReadStandardError();
+    void processTerminated(int exitCode, QProcess::ExitStatus exitStatus);
 
 private:
     static QString binary();
