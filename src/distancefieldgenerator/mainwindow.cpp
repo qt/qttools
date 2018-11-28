@@ -35,6 +35,7 @@
 #include <QtCore/qmath.h>
 #include <QtCore/qendian.h>
 #include <QtCore/qbuffer.h>
+#include <QtGui/qdesktopservices.h>
 #include <QtGui/qrawfont.h>
 #include <QtWidgets/qmessagebox.h>
 #include <QtWidgets/qlabel.h>
@@ -49,6 +50,11 @@
 
 QT_BEGIN_NAMESPACE
 
+static void openHelp()
+{
+    QDesktopServices::openUrl(QUrl(QLatin1String("http://doc.qt.io/qt-5/qtdistancefieldgenerator-index.html")));
+}
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -59,6 +65,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     ui->lvGlyphs->setModel(m_model);
+
+    ui->actionHelp->setShortcut(QKeySequence::HelpContents);
 
     m_statusBarLabel = new QLabel(this);
     m_statusBarLabel->setText(tr("Ready"));
@@ -117,6 +125,7 @@ void MainWindow::setupConnections()
     connect(ui->tbSelectAll, &QToolButton::clicked, this, &MainWindow::selectAll);
     connect(ui->actionSelect_all, &QAction::triggered, this, &MainWindow::selectAll);
     connect(ui->actionSelect_string, &QAction::triggered, this, &MainWindow::selectString);
+    connect(ui->actionHelp, &QAction::triggered, this, openHelp);
     connect(ui->actionAbout_App, &QAction::triggered, this, &MainWindow::about);
     connect(ui->actionAbout_Qt, &QAction::triggered, this, [this]() {
         QMessageBox::aboutQt(this);
