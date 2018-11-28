@@ -384,11 +384,14 @@ int Translator::find(const QString &context,
 {
     if (!refs.isEmpty()) {
         for (TMM::ConstIterator it = m_messages.constBegin(); it != m_messages.constEnd(); ++it) {
-            if (it->context() == context && it->comment() == comment)
-                foreach (const TranslatorMessage::Reference &itref, it->allReferences())
-                    foreach (const TranslatorMessage::Reference &ref, refs)
+            if (it->context() == context && it->comment() == comment) {
+                foreach (const TranslatorMessage::Reference &itref, it->allReferences()) {
+                    foreach (const TranslatorMessage::Reference &ref, refs) {
                         if (itref == ref)
                             return it - m_messages.constBegin();
+                    }
+                }
+            }
         }
     }
     return -1;

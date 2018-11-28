@@ -2325,11 +2325,14 @@ void loadCPP(Translator &translator, const QStringList &filenames, ConversionDat
         parser.recordResults(isHeader(filename));
     }
 
-    foreach (const QString &filename, filenames)
-        if (!CppFiles::isBlacklisted(filename))
-            if (const Translator *tor = CppFiles::getTranslator(filename))
+    foreach (const QString &filename, filenames) {
+        if (!CppFiles::isBlacklisted(filename)) {
+            if (const Translator *tor = CppFiles::getTranslator(filename)) {
                 foreach (const TranslatorMessage &msg, tor->messages())
                     translator.extend(msg, cd);
+            }
+        }
+    }
 }
 
 QT_END_NAMESPACE
