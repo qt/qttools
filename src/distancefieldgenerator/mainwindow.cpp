@@ -630,9 +630,9 @@ void MainWindow::updateSelection()
     QModelIndexList list = ui->lvGlyphs->selectionModel()->selectedIndexes();
     QString label;
     if (list.size() == ui->lvGlyphs->model()->rowCount())
-        label = tr("Deselect &all");
+        label = tr("Deselect &All");
     else
-        label = tr("Select &all");
+        label = tr("Select &All");
 
     ui->tbSelectAll->setText(label);
     ui->actionSelect_all->setText(label);
