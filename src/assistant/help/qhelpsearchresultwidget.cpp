@@ -233,9 +233,6 @@ private:
     bool isIndexing = false;
 };
 
-#include "qhelpsearchresultwidget.moc"
-
-
 /*!
     \class QHelpSearchResultWidget
     \since 4.4
@@ -333,3 +330,5 @@ QUrl QHelpSearchResultWidget::linkAt(const QPoint &point)
 }
 
 QT_END_NAMESPACE
+
+#include "qhelpsearchresultwidget.moc"
