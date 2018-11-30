@@ -195,8 +195,10 @@ bool QHelpCollectionHandler::openCollectionFile()
     const FileInfoList &docList = registeredDocumentations();
     if (indexAndNamespaceFilterTablesMissing) {
         for (const QHelpCollectionHandler::FileInfo &info : docList) {
-            if (!registerIndexAndNamespaceFilterTables(info.namespaceName))
+            if (!registerIndexAndNamespaceFilterTables(info.namespaceName)) {
+                emit error(tr("Cannot register index tables in file %1.").arg(collectionFile()));
                 return false;
+            }
         }
         return true;
     }
@@ -224,8 +226,10 @@ bool QHelpCollectionHandler::openCollectionFile()
     // In this case we remove all records from tables.
     Transaction transaction(m_connectionName);
     for (const TimeStamp &timeStamp : toRemove) {
-        if (!unregisterIndexTable(timeStamp.namespaceId, timeStamp.folderId))
+        if (!unregisterIndexTable(timeStamp.namespaceId, timeStamp.folderId)) {
+            emit error(tr("Cannot unregister index tables in file %1.").arg(collectionFile()));
             return false;
+        }
     }
     transaction.commit();
 
