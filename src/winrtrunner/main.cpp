@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
 
     QCommandLineOption deviceOption(QStringLiteral("device"),
                                     QLatin1String("Specifies the device to target as a device name "
-                                                  " or index. Use --list-devices to find available "
+                                                  "or index. Use --list-devices to find available "
                                                   "devices. The default device is the first device "
                                                   "found for the active run profile."),
                                     QStringLiteral("name|index"));
