@@ -282,6 +282,13 @@ int main(int argc, char *argv[])
         return ignoreErrors ? 0 : 3;
     }
 
+    // If logging rules are set via env variable, we pass these to the application we are running
+    const QByteArray loggingRules = qgetenv("QT_LOGGING_RULES");
+    if (!loggingRules.isNull() && !runner.setLoggingRules(loggingRules)) {
+        qCDebug(lcWinRtRunner) << "Could not set logging rules, exiting with code 3.";
+        return ignoreErrors ? 0 : 3;
+    }
+
     if (parser.isSet(debugOption)) {
         const QString &debuggerExecutable = parser.value(debugOption);
         const QString &debuggerArguments = parser.value(debuggerArgumentsOption);
