@@ -1181,24 +1181,6 @@ static bool updateLibrary(const QString &sourceFileName, const QString &targetDi
     return true;
 }
 
-// Check for a Qt Quick Controls import path and return the version.
-// 'QtQuick/Controls' ==> 1, or 'QtQuick/Controls.2' ==> 2.
-static inline int quickControlsImportPath(const QString &ip)
-{
-    if (ip.contains(QLatin1String("Qt/labs/calendar"))
-        || ip.contains(QLatin1String("Qt/labs/folderlistmodel"))
-        || ip.contains(QLatin1String("Qt/labs/settings"))
-        || ip.contains(QLatin1String("QtQuick/Templates.2"))
-        || ip.contains(QLatin1String("QtQuick/Controls.2"))) {
-        return 2;
-    }
-    if (ip.endsWith(QLatin1String("QtQuick/Dialogs")) || ip.contains(QLatin1String("QtQuick/Dialogs/"))
-        || ip.contains(QLatin1String("QtQuick/Controls"))) {
-        return 1; // Dialogs only in v1, so far; no version number on directory: v1.
-    }
-    return 0; // Non-controls import
-}
-
 static DeployResult deploy(const Options &options,
                            const QMap<QString, QString> &qmakeVariables,
                            QString *errorMessage)
