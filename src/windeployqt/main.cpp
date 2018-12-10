@@ -311,8 +311,7 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
                                  Options *options, QString *errorMessage)
 {
     typedef QSharedPointer<QCommandLineOption> CommandLineOptionPtr;
-    typedef QPair<CommandLineOptionPtr, quint64> OptionMaskPair;
-    typedef QVector<OptionMaskPair> OptionMaskVector;
+    using OptionPtrVector = QVector<CommandLineOptionPtr>;
 
     parser->setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
     parser->setApplicationDescription(QStringLiteral("Qt Deploy Tool ") + QLatin1String(QT_VERSION_STR)
@@ -444,21 +443,22 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
     parser->addPositionalArgument(QStringLiteral("[files]"),
                                   QStringLiteral("Binaries or directory containing the binary."));
 
-    OptionMaskVector enabledModules;
-    OptionMaskVector disabledModules;
-    const size_t qtModulesCount = sizeof(qtModuleEntries)/sizeof(QtModuleEntry);
-    for (size_t i = 0; i < qtModulesCount; ++i) {
+    OptionPtrVector enabledModuleOptions;
+    OptionPtrVector disabledModuleOptions;
+    const int qtModulesCount = int(sizeof(qtModuleEntries) / sizeof(QtModuleEntry));
+    enabledModuleOptions.reserve(qtModulesCount);
+    disabledModuleOptions.reserve(qtModulesCount);
+    for (int i = 0; i < qtModulesCount; ++i) {
         const QString option = QLatin1String(qtModuleEntries[i].option);
         const QString name = QLatin1String(qtModuleEntries[i].libraryName);
         const QString enabledDescription = QStringLiteral("Add ") + name + QStringLiteral(" module.");
         CommandLineOptionPtr enabledOption(new QCommandLineOption(option, enabledDescription));
         parser->addOption(*enabledOption.data());
-        enabledModules.push_back(OptionMaskPair(enabledOption, qtModuleEntries[i].module));
-
+        enabledModuleOptions.append(enabledOption);
         const QString disabledDescription = QStringLiteral("Remove ") + name + QStringLiteral(" module.");
         CommandLineOptionPtr disabledOption(new QCommandLineOption(QStringLiteral("no-") + option,
                                                                    disabledDescription));
-        disabledModules.push_back(OptionMaskPair(disabledOption, qtModuleEntries[i].module));
+        disabledModuleOptions.append(disabledOption);
         parser->addOption(*disabledOption.data());
     }
 
@@ -534,11 +534,11 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
 
     options->patchQt = !parser->isSet(noPatchQtOption);
 
-    for (size_t i = 0; i < qtModulesCount; ++i) {
-        if (parser->isSet(*enabledModules.at(int(i)).first.data()))
-            options->additionalLibraries |= enabledModules.at(int(i)).second;
-        if (parser->isSet(*disabledModules.at(int(i)).first.data()))
-            options->disabledLibraries |= disabledModules.at(int(i)).second;
+    for (int i = 0; i < qtModulesCount; ++i) {
+        if (parser->isSet(*enabledModuleOptions.at(i)))
+            options->additionalLibraries |= qtModuleEntries[i].module;
+        if (parser->isSet(*disabledModuleOptions.at(i)))
+            options->disabledLibraries |= qtModuleEntries[i].module;
     }
 
     // Add some dependencies
