@@ -82,8 +82,8 @@ inline std::wostream &operator<<(std::wostream &str, const QString &s)
 // Container class for JSON output
 class JsonOutput
 {
-    typedef QPair<QString, QString> SourceTargetMapping;
-    typedef QList<SourceTargetMapping> SourceTargetMappings;
+    using SourceTargetMapping = QPair<QString, QString>;
+    using SourceTargetMappings = QList<SourceTargetMapping>;
 
 public:
     void addFile(const QString &source, const QString &target)

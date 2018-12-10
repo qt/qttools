@@ -310,7 +310,7 @@ enum CommandLineParseFlag {
 static inline int parseArguments(const QStringList &arguments, QCommandLineParser *parser,
                                  Options *options, QString *errorMessage)
 {
-    typedef QSharedPointer<QCommandLineOption> CommandLineOptionPtr;
+    using CommandLineOptionPtr = QSharedPointer<QCommandLineOption>;
     using OptionPtrVector = QVector<CommandLineOptionPtr>;
 
     parser->setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
