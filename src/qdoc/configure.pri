@@ -53,8 +53,26 @@ defineTest(qtConfTest_libclang) {
         }
     }
     isEmpty(LLVM_INSTALL_DIR): LLVM_INSTALL_DIR = $$(LLVM_INSTALL_DIR)
+
     # Assume libclang is installed on the target system
-    isEmpty(LLVM_INSTALL_DIR): LLVM_INSTALL_DIR = $$system("llvm-config --prefix 2>$$QMAKE_SYSTEM_NULL_DEVICE")
+    isEmpty(LLVM_INSTALL_DIR) {
+        llvmConfigCandidates = \
+            llvm-config-7 \
+            llvm-config-6.0 \
+            llvm-config-5.0 \
+            llvm-config-4.0 \
+            llvm-config-3.9 \
+            llvm-config
+
+        for (candidate, llvmConfigCandidates) {
+            LLVM_INSTALL_DIR = $$system("$$candidate --prefix 2>$$QMAKE_SYSTEM_NULL_DEVICE")
+            !isEmpty(LLVM_INSTALL_DIR) {
+                qtLog("Using Clang installation found in $${LLVM_INSTALL_DIR}." \
+                      "Set the LLVM_INSTALL_DIR environment variable to override.")
+                break()
+            }
+        }
+    }
     LLVM_INSTALL_DIR = $$clean_path($$LLVM_INSTALL_DIR)
 
     contains(QMAKE_HOST.arch, x86_64): \
@@ -312,7 +330,6 @@ defineTest(qtConfTest_libclang) {
 
     !versionIsAtLeast($$CLANG_VERSION, "3.9.0") {
         log("LLVM/Clang version >= 3.9.0 required, version provided: $${CLANG_VERSION}.$$escape_expand(\\n)")
-        log("Clang was found in $${clangInstallDir}. Set the LLVM_INSTALL_DIR environment variable to override.$$escape_expand(\\n)")
         return(false)
     }
 
