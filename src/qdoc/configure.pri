@@ -87,14 +87,14 @@ defineTest(qtConfTest_libclang) {
     }
     isEmpty(CLANG_VERSION) {
         !isEmpty(LLVM_INSTALL_DIR): \
-            error("Cannot determine clang version at $${clangInstallDir}.")
+            qtLog("Cannot determine version of clang installation in $${clangInstallDir}.")
         return(false)
     }
 
     LIBCLANG_MAIN_HEADER = $$CLANG_INCLUDEPATH/clang-c/Index.h
     !exists($$LIBCLANG_MAIN_HEADER) {
         !isEmpty(LLVM_INSTALL_DIR): \
-            error("Cannot find libclang's main header file, candidate: $${LIBCLANG_MAIN_HEADER}.")
+            qtLog("Cannot find libclang's main header file, candidate: $${LIBCLANG_MAIN_HEADER}.")
         return(false)
     }
 
