@@ -43,7 +43,6 @@
 // shared
 #include <qdesigner_utils_p.h>
 #include <formwindowbase_p.h>
-#include <itemviewfindwidget.h>
 #include <qdesigner_dnditem_p.h>
 #include <textpropertyeditor_p.h>
 #include <qdesigner_command_p.h>
@@ -192,7 +191,6 @@ public:
     ~ObjectInspectorPrivate();
 
     QTreeView *treeView() const { return m_treeView; }
-    ItemViewFindWidget *findWidget() const { return m_findWidget; }
     QDesignerFormEditorInterface *core() const { return m_core; }
     const QPointer<FormWindowBase> &formWindow() const { return m_formWindow; }
 
@@ -226,7 +224,6 @@ private:
     QDesignerFormEditorInterface *m_core;
     QTreeView *m_treeView;
     ObjectInspectorModel *m_model;
-    ItemViewFindWidget *m_findWidget;
     QPointer<FormWindowBase> m_formWindow;
     QPointer<QWidget> m_formFakeDropTarget;
     bool m_withinClearSelection;
@@ -236,8 +233,6 @@ ObjectInspector::ObjectInspectorPrivate::ObjectInspectorPrivate(QDesignerFormEdi
     m_core(core),
     m_treeView(new ObjectInspectorTreeView),
     m_model(new ObjectInspectorModel(m_treeView)),
-    m_findWidget(new ItemViewFindWidget(
-        ItemViewFindWidget::NarrowLayout | ItemViewFindWidget::NoWholeWords)),
     m_withinClearSelection(false)
 {
     m_treeView->setModel(m_model);
@@ -733,14 +728,6 @@ ObjectInspector::ObjectInspector(QDesignerFormEditorInterface *core, QWidget *pa
     connect(treeView->header(), &QHeaderView::sectionDoubleClicked,
             this, &ObjectInspector::slotHeaderDoubleClicked);
     setAcceptDrops(true);
-
-    ItemViewFindWidget *findWidget = m_impl->findWidget();
-    vbox->addWidget(findWidget);
-
-    findWidget->setItemView(treeView);
-    QAction *findAction = findWidget->createFindAction(this);
-    findAction->setShortcutContext(Qt::WidgetWithChildrenShortcut);
-    addAction(findAction);
 }
 
 ObjectInspector::~ObjectInspector()
