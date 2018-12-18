@@ -1,0 +1,58 @@
+/****************************************************************************
+**
+** Copyright (C) 2019 The Qt Company Ltd.
+** Contact: https://www.qt.io/licensing/
+**
+** This file is part of the documentation of the Qt Toolkit.
+**
+** $QT_BEGIN_LICENSE:FDL$
+** Commercial License Usage
+** Licensees holding valid commercial Qt licenses may use this file in
+** accordance with the commercial license agreement provided with the
+** Software or, alternatively, in accordance with the terms contained in
+** a written agreement between you and The Qt Company. For licensing terms
+** and conditions see https://www.qt.io/terms-conditions. For further
+** information use the contact form at https://www.qt.io/contact-us.
+**
+** GNU Free Documentation License Usage
+** Alternatively, this file may be used under the terms of the GNU Free
+** Documentation License version 1.3 as published by the Free Software
+** Foundation and appearing in the file included in the packaging of
+** this file. Please review the following information to ensure
+** the GNU Free Documentation License version 1.3 requirements
+** will be met: https://www.gnu.org/licenses/fdl-1.3.html.
+** $QT_END_LICENSE$
+**
+****************************************************************************/
+
+/*!
+    \page qdoctests-qdocfileoutput.html
+    \title Testing QDoc output from .qdoc files
+    \brief This is a simple page for testing purposes only.
+
+    QDoc generates documentation for software projects. It does this by
+    extracting \e {QDoc comments} from project source files. QDoc comments are
+    signified by a C-style-like comment tag followed by an exclamation point,
+    like this:
+    \beginqdoc \c {This text is contained within QDoc comment tags.} \endqdoc.
+
+    \section1 Supported file types
+    QDoc parses \c .cpp and \c .qdoc files. It does extract comments from
+    header (\c {.h}) files.
+
+    \section1 Further information
+    This test document is written with the purpose of testing the output QDoc
+    generates when parsing \c .qdoc files. It is fairly simple and makes use of
+    a limited subset of QDoc's command. Those commands are:
+    \list
+        \li \c {\page}
+        \li \c {\title}
+        \li \c {\brief}
+        \li \c {\e} (for emphasizing "QDoc comments")
+        \li \c {\c} (for multiple monospace-formatted entries)
+        \li \c {\section1}
+        \li \c {\list}
+        \li \c {\li}
+        \li \c {\endlist}
+    \endlist
+*/

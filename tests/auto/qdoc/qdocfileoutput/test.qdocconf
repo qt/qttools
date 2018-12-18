@@ -1,0 +1,11 @@
+project = Test
+description = "A test project for QDoc build artifacts"
+moduleheader =
+
+headerdirs = .
+sourcedirs = .
+
+sources.fileextensions = *.qdoc
+
+macro.beginqdoc = "\\c {/*!}"
+macro.endqdoc = "\\c */"
