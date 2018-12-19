@@ -117,3 +117,25 @@ QObject::tr("Hello World");
 
 // QTBUG-11843: complain about missing source in id-based messages
 qtTrId("no_source");
+
+QObject::tr(R"(simple one)" R"delim(enter
+)delim" R"delim(with delimiter )delim inside)delim" u8R"(with quote " inside)");
+
+QLatin1String not_translated(R"(
+                            This is a test string
+)");
+const char valid[] = QT_TRANSLATE_NOOP("global", R"(
+"The time has come," the Walrus said,
+"To talk of many things:
+Of shoes - and ships - and sealing-wax -
+Of cabbages - and kings -
+And why the sea is boiling hot -
+And whether pigs have wings."
+)");
+
+const QString nodelimiter(QObject::tr(R"(
+                            This is a test string
+)"));
+const Qstring withdelimiter = QObject::tr(R"delim(
+This is a test string
+)delim");
