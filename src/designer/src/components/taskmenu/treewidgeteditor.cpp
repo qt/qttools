@@ -196,6 +196,12 @@ QVariant TreeWidgetEditor::getItemData(int role) const
     return ui.treeWidget->currentItem()->data(col, role);
 }
 
+int TreeWidgetEditor::defaultItemFlags() const
+{
+    static const int flags = QTreeWidgetItem().flags();
+    return flags;
+}
+
 void TreeWidgetEditor::on_newItemButton_clicked()
 {
     QTreeWidgetItem *curItem = ui.treeWidget->currentItem();
