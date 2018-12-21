@@ -200,8 +200,12 @@ void Section::insert(Node *node)
         if (node->isObsolete()) {
             obsoleteMemberMap_.insertMulti(key, node);
         } else {
-            if (!inherited || style_ == AllMembers)
+            if (!inherited)
                 memberMap_.insertMulti(key, node);
+            else if (style_ == AllMembers) {
+                if (!memberMap_.contains(key))
+                    memberMap_.insertMulti(key, node);
+            }
             if (inherited && (node->parent()->isClass() || node->parent()->isNamespace())) {
                 if (inheritedMembers_.isEmpty() || inheritedMembers_.last().first != node->parent()) {
                     QPair<Aggregate *, int> p(node->parent(), 0);
