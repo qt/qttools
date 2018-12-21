@@ -186,7 +186,7 @@ void Section::insert(Node *node)
         FunctionNode *func = static_cast<FunctionNode *>(node);
         irrelevant = (inherited && (func->isSomeCtor() || func->isDtor()));
     }
-    else if (node->isClass() || node->isEnumType() || node->isTypedef()) {
+    else if (node->isClass() || node->isEnumType() || node->isTypedef() || node->isVariable()) {
         irrelevant = (inherited && style_ != AllMembers);
         if (!irrelevant && style_ == Details && node->isTypedef()) {
             const TypedefNode* tdn = static_cast<const TypedefNode*>(node);
@@ -200,9 +200,9 @@ void Section::insert(Node *node)
         if (node->isObsolete()) {
             obsoleteMemberMap_.insertMulti(key, node);
         } else {
-            if (!inherited) {
+            if (!inherited || style_ == AllMembers)
                 memberMap_.insertMulti(key, node);
-            } else if (node->parent()->isClass() || node->parent()->isNamespace()) {
+            if (inherited && (node->parent()->isClass() || node->parent()->isNamespace())) {
                 if (inheritedMembers_.isEmpty() || inheritedMembers_.last().first != node->parent()) {
                     QPair<Aggregate *, int> p(node->parent(), 0);
                     inheritedMembers_.append(p);
