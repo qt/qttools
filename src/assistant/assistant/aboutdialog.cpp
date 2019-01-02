@@ -49,7 +49,7 @@ AboutLabel::AboutLabel(QWidget *parent)
     TRACE_OBJ
     setFrameStyle(QFrame::NoFrame);
     QPalette p;
-    p.setColor(QPalette::Base, p.color(QPalette::Background));
+    p.setColor(QPalette::Base, p.color(QPalette::Window));
     setPalette(p);
 }
 

@@ -52,7 +52,7 @@ namespace qdesigner_internal {
             return QMdiArea::viewportEvent (event);
         QWidget *paintWidget = viewport();
         QPainter p(paintWidget);
-        p.fillRect(rect(), paintWidget->palette().color(backgroundRole()).dark());
+        p.fillRect(rect(), paintWidget->palette().color(backgroundRole()).darker());
         p.setPen(QPen(Qt::white));
         //: Palette editor background
         p.drawText(0, height() / 2,  width(), height(), Qt::AlignHCenter,
