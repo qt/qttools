@@ -184,6 +184,12 @@ QVariant TableWidgetEditor::getItemData(int role) const
     return item->data(role);
 }
 
+int TableWidgetEditor::defaultItemFlags() const
+{
+    static const int flags = QTableWidgetItem().flags();
+    return flags;
+}
+
 void TableWidgetEditor::on_tableWidget_currentCellChanged(int currentRow, int currentCol, int, int /* XXX remove me */)
 {
     m_rowEditor->setCurrentIndex(currentRow);

@@ -690,6 +690,31 @@ bool AppxLocalEngine::setLoopbackExemptServerEnabled(bool enabled)
     return true;
 }
 
+bool AppxLocalEngine::setLoggingRules(const QByteArray &rules)
+{
+    qCDebug(lcWinRtRunner) << __FUNCTION__;
+
+    QDir loggingIniDir(devicePath(QLatin1String("QtProject")));
+    if (!loggingIniDir.exists() && !loggingIniDir.mkpath(QStringLiteral("."))) {
+        qCWarning(lcWinRtRunner) << "Could not create" << loggingIniDir;
+        return false;
+    }
+    QFile loggingIniFile(loggingIniDir.absolutePath().append(QLatin1String("/qtlogging.ini")));
+    if (loggingIniFile.exists() && !loggingIniFile.remove()) {
+        qCWarning(lcWinRtRunner) << loggingIniFile << "already exists.";
+        return false;
+    }
+    if (!loggingIniFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        qCWarning(lcWinRtRunner) << "Could not open" << loggingIniFile << "for writing.";
+        return false;
+    }
+
+    QTextStream stream(&loggingIniFile);
+    stream << "[Rules]\n" << rules;
+
+    return true;
+}
+
 
 bool AppxLocalEngine::suspend()
 {

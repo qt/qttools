@@ -869,18 +869,15 @@
 
     \snippet doc_src_linguist-manual.pro 0
 
-    If your compiler uses a different encoding for its runtime
-    system than for its source code and you want to use  non-ASCII
-    characters in string literals, you will need to set the \c
-    CODECFORSRC. For example:
+    \c lupdate expects all source code to be encoded in UTF-8 by default.
+    Files that feature a BOM (Byte Order Mark) can also be encoded in
+    UTF-16 or UTF-32. Set the qmake variable \c CODECFORSRC to
+    \c UTF-16 to parse files without a BOM as UTF-16.
 
-    \snippet doc_src_linguist-manual.pro 2
-
-    Microsoft Visual Studio 2005 .NET appears to be the only compiler
-    for which this is necessary. However, if you want to write
-    portable code, we recommend that you avoid non-ASCII characters
-    in your source files. You can still specify non-ASCII characters
-    portably using escape sequences, for example:
+    Some editors, such as Visual Studio, however use a different
+    encoding by default. One way to avoid encoding issues is to limit any
+    source code to ASCII, and use escape sequences for translatable strings
+    with other characters, for example:
 
     \snippet doc_src_linguist-manual.cpp 3
 

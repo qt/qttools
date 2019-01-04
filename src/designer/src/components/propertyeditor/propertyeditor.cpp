@@ -913,8 +913,15 @@ void PropertyEditor::setObject(QObject *object)
     m_object = object;
     m_propertyManager->setObject(object);
     QDesignerFormWindowInterface *formWindow = QDesignerFormWindowInterface::findFormWindow(m_object);
-    if (Q_UNLIKELY(formWindow == nullptr)) // QTBUG-68507, can happen in Morph Undo macros with buddies
-        return;
+    // QTBUG-68507: Form window can be null for objects in Morph Undo macros with buddies
+    if (object != nullptr && formWindow == nullptr) {
+        formWindow = m_core->formWindowManager()->activeFormWindow();
+        if (formWindow == nullptr) {
+            qWarning("PropertyEditor::setObject(): Unable to find form window for \"%s\".",
+                     qPrintable(object->objectName()));
+            return;
+        }
+    }
     FormWindowBase *fwb = qobject_cast<FormWindowBase *>(formWindow);
     const bool idIdBasedTranslation = fwb && fwb->useIdBasedTranslations();
     const bool idIdBasedTranslationUnchanged = (idIdBasedTranslation == DesignerPropertyManager::useIdBasedTranslations());

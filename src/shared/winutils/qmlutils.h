@@ -47,10 +47,9 @@ struct QmlImportScanResult {
         QString relativePath;
     };
 
-    QmlImportScanResult() : ok(false) {}
     void append(const QmlImportScanResult &other);
 
-    bool ok;
+    bool ok = false;
     QList<Module> modules;
     QStringList plugins;
 };

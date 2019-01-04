@@ -35,6 +35,7 @@
 #include <QtCore/qmath.h>
 #include <QtCore/qendian.h>
 #include <QtCore/qbuffer.h>
+#include <QtGui/qdesktopservices.h>
 #include <QtGui/qrawfont.h>
 #include <QtWidgets/qmessagebox.h>
 #include <QtWidgets/qlabel.h>
@@ -49,15 +50,23 @@
 
 QT_BEGIN_NAMESPACE
 
+static void openHelp()
+{
+    QDesktopServices::openUrl(QUrl(QLatin1String("http://doc.qt.io/qt-5/qtdistancefieldgenerator-index.html")));
+}
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , m_settings(qApp->organizationName(), qApp->applicationName())
-    , m_model(nullptr)
+    , m_model(new DistanceFieldModel(this))
     , m_statusBarLabel(nullptr)
     , m_statusBarProgressBar(nullptr)
 {
     ui->setupUi(this);
+    ui->lvGlyphs->setModel(m_model);
+
+    ui->actionHelp->setShortcut(QKeySequence::HelpContents);
 
     m_statusBarLabel = new QLabel(this);
     m_statusBarLabel->setText(tr("Ready"));
@@ -75,12 +84,35 @@ MainWindow::MainWindow(QWidget *parent)
     qRegisterMetaType<glyph_t>("glyph_t");
     qRegisterMetaType<QPainterPath>("QPainterPath");
 
+    restoreGeometry(m_settings.value(QStringLiteral("geometry")).toByteArray());
+
     setupConnections();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::open(const QString &path)
+{
+    m_fileName.clear();
+    m_fontFile = path;
+    m_fontDir = QFileInfo(path).absolutePath();
+    m_settings.setValue(QStringLiteral("fontDirectory"), m_fontDir);
+
+    ui->lwUnicodeRanges->clear();
+    ui->lwUnicodeRanges->setDisabled(true);
+    ui->action_Save->setDisabled(true);
+    ui->action_Save_as->setDisabled(true);
+    ui->tbSave->setDisabled(true);
+    ui->action_Open->setDisabled(true);
+    m_model->setFont(path);
+}
+
+void MainWindow::closeEvent(QCloseEvent * /*event*/)
+{
+    m_settings.setValue(QStringLiteral("geometry"), saveGeometry());
 }
 
 void MainWindow::setupConnections()
@@ -93,7 +125,22 @@ void MainWindow::setupConnections()
     connect(ui->tbSelectAll, &QToolButton::clicked, this, &MainWindow::selectAll);
     connect(ui->actionSelect_all, &QAction::triggered, this, &MainWindow::selectAll);
     connect(ui->actionSelect_string, &QAction::triggered, this, &MainWindow::selectString);
+    connect(ui->actionHelp, &QAction::triggered, this, openHelp);
+    connect(ui->actionAbout_App, &QAction::triggered, this, &MainWindow::about);
+    connect(ui->actionAbout_Qt, &QAction::triggered, this, [this]() {
+        QMessageBox::aboutQt(this);
+    });
     connect(ui->lwUnicodeRanges, &QListWidget::itemSelectionChanged, this, &MainWindow::updateUnicodeRanges);
+
+    connect(ui->lvGlyphs->selectionModel(),
+            &QItemSelectionModel::selectionChanged,
+            this,
+            &MainWindow::updateSelection);
+    connect(m_model, &DistanceFieldModel::startGeneration, this, &MainWindow::startProgressBar);
+    connect(m_model, &DistanceFieldModel::stopGeneration, this, &MainWindow::stopProgressBar);
+    connect(m_model, &DistanceFieldModel::distanceFieldGenerated, this, &MainWindow::updateProgressBar);
+    connect(m_model, &DistanceFieldModel::stopGeneration, this, &MainWindow::populateUnicodeRanges);
+    connect(m_model, &DistanceFieldModel::error, this, &MainWindow::displayError);
 }
 
 void MainWindow::saveAs()
@@ -552,36 +599,8 @@ void MainWindow::openFont()
                                                     tr("Open font file"),
                                                     m_fontDir,
                                                     tr("Fonts (*.ttf *.otf);;All files (*)"));
-    if (!fileName.isEmpty()) {
-        m_fileName.clear();
-        m_fontFile = fileName;
-        m_fontDir = QFileInfo(fileName).absolutePath();
-        m_settings.setValue(QStringLiteral("fontDirectory"), m_fontDir);
-
-        if (m_model == nullptr) {
-            m_model = new DistanceFieldModel(this);
-            connect(m_model, &DistanceFieldModel::startGeneration, this, &MainWindow::startProgressBar);
-            connect(m_model, &DistanceFieldModel::stopGeneration, this, &MainWindow::stopProgressBar);
-            connect(m_model, &DistanceFieldModel::distanceFieldGenerated, this, &MainWindow::updateProgressBar);
-            connect(m_model, &DistanceFieldModel::stopGeneration, this, &MainWindow::populateUnicodeRanges);
-            connect(m_model, &DistanceFieldModel::error, this, &MainWindow::displayError);
-
-            ui->lvGlyphs->setModel(m_model);
-
-            connect(ui->lvGlyphs->selectionModel(),
-                    &QItemSelectionModel::selectionChanged,
-                    this,
-                    &MainWindow::updateSelection);
-        }
-
-        ui->lwUnicodeRanges->clear();
-        ui->lwUnicodeRanges->setDisabled(true);
-        ui->action_Save->setDisabled(true);
-        ui->action_Save_as->setDisabled(true);
-        ui->tbSave->setDisabled(true);
-        ui->action_Open->setDisabled(true);
-        m_model->setFont(fileName);
-    }
+    if (!fileName.isEmpty())
+        open(fileName);
 }
 
 void MainWindow::updateProgressBar()
@@ -620,9 +639,9 @@ void MainWindow::updateSelection()
     QModelIndexList list = ui->lvGlyphs->selectionModel()->selectedIndexes();
     QString label;
     if (list.size() == ui->lvGlyphs->model()->rowCount())
-        label = tr("Deselect &all");
+        label = tr("Deselect &All");
     else
-        label = tr("Select &all");
+        label = tr("Select &All");
 
     ui->tbSelectAll->setText(label);
     ui->actionSelect_all->setText(label);
@@ -724,6 +743,21 @@ void MainWindow::selectString()
             }
         }
     }
+}
+
+void MainWindow::about()
+{
+    QMessageBox *msgBox = new QMessageBox(this);
+    msgBox->setAttribute(Qt::WA_DeleteOnClose);
+    msgBox->setWindowTitle(tr("About Qt Distance Field Generator"));
+    msgBox->setText(tr("<h3>Qt Distance Field Generator</h3>"
+                       "<p>Version %1.<br/>"
+                       "The Qt Distance Field Generator tool allows "
+                       "to prepare a font cache for Qt applications.</p>"
+                       "<p>Copyright (C) %2 The Qt Company Ltd.</p>")
+                    .arg(QLatin1String(QT_VERSION_STR))
+                    .arg(QLatin1String("2018")));
+    msgBox->show();
 }
 
 QT_END_NAMESPACE

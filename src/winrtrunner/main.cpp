@@ -40,6 +40,7 @@
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
+#include <QtCore/QRegExp>
 #include <QtCore/QStringList>
 #include <QtCore/QMap>
 #include <QtCore/QLoggingCategory>
@@ -52,6 +53,23 @@ QT_USE_NAMESPACE
 
 int main(int argc, char *argv[])
 {
+    // If logging rules are set via env variable, we pass these to the application we are running.
+    // winrtrunner behaves different from other applications in the regard that its logging rules
+    // have to be enabled explicitly. Setting "*=true" will not enable extended logging. Reason is
+    // CI setting "*=true" if an auto test fails and additional winrtrunner output might just
+    // confuse users.
+    const QByteArray loggingRules = qgetenv("QT_LOGGING_RULES");
+    const QList<QByteArray> rules = loggingRules.split(';');
+    QRegExp runnerExp(QLatin1String("^qt\\.winrtrunner.*\\s*=\\s*true\\s*$"));
+    bool runnerRuleFound = false;
+    for (const QByteArray &rule : rules) {
+        if (runnerExp.indexIn(QLatin1String(rule)) != -1) {
+            runnerRuleFound = true;
+            break;
+        }
+    }
+    if (!runnerRuleFound)
+        qunsetenv("QT_LOGGING_RULES");
     QCoreApplication a(argc, argv);
     QCommandLineParser parser;
     parser.setApplicationDescription(QLatin1String("winrtrunner installs, runs, and collects test "
@@ -118,7 +136,7 @@ int main(int argc, char *argv[])
 
     QCommandLineOption deviceOption(QStringLiteral("device"),
                                     QLatin1String("Specifies the device to target as a device name "
-                                                  " or index. Use --list-devices to find available "
+                                                  "or index. Use --list-devices to find available "
                                                   "devices. The default device is the first device "
                                                   "found for the active run profile."),
                                     QStringLiteral("name|index"));
@@ -279,6 +297,11 @@ int main(int argc, char *argv[])
     if (loopbackExemptServer && !runner.setLoopbackExemptServerEnabled(true)) {
         qCDebug(lcWinRtRunner) << "Could not enable loopback exemption for server, "
                                   "exiting with code 3.";
+        return ignoreErrors ? 0 : 3;
+    }
+
+    if (!loggingRules.isNull() && !runner.setLoggingRules(loggingRules)) {
+        qCDebug(lcWinRtRunner) << "Could not set logging rules, exiting with code 3.";
         return ignoreErrors ? 0 : 3;
     }
 

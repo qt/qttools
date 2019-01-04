@@ -471,6 +471,12 @@ bool AppxPhoneEngine::setLoopbackExemptServerEnabled(bool)
     return false;
 }
 
+bool AppxPhoneEngine::setLoggingRules(const QByteArray &)
+{
+    qCDebug(lcWinRtRunner) << __FUNCTION__;
+    return false;
+}
+
 bool AppxPhoneEngine::suspend()
 {
     qCDebug(lcWinRtRunner) << __FUNCTION__;

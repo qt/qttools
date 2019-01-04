@@ -82,8 +82,8 @@ inline std::wostream &operator<<(std::wostream &str, const QString &s)
 // Container class for JSON output
 class JsonOutput
 {
-    typedef QPair<QString, QString> SourceTargetMapping;
-    typedef QList<SourceTargetMapping> SourceTargetMappings;
+    using SourceTargetMapping = QPair<QString, QString>;
+    using SourceTargetMappings = QList<SourceTargetMapping>;
 
 public:
     void addFile(const QString &source, const QString &target)
@@ -185,20 +185,27 @@ bool runElevatedBackgroundProcess(const QString &binary, const QStringList &args
 
 bool readPeExecutable(const QString &peExecutableFileName, QString *errorMessage,
                       QStringList *dependentLibraries = 0, unsigned *wordSize = 0,
-                      bool *isDebug = 0, bool isMinGW = false);
+                      bool *isDebug = 0, bool isMinGW = false, unsigned short *machineArch = nullptr);
 bool readElfExecutable(const QString &elfExecutableFileName, QString *errorMessage,
                       QStringList *dependentLibraries = 0, unsigned *wordSize = 0,
                       bool *isDebug = 0);
 
 inline bool readExecutable(const QString &executableFileName, Platform platform,
                            QString *errorMessage, QStringList *dependentLibraries = 0,
-                           unsigned *wordSize = 0, bool *isDebug = 0)
+                           unsigned *wordSize = 0, bool *isDebug = 0, unsigned short *machineArch = nullptr)
 {
     return platform == Unix ?
         readElfExecutable(executableFileName, errorMessage, dependentLibraries, wordSize, isDebug) :
         readPeExecutable(executableFileName, errorMessage, dependentLibraries, wordSize, isDebug,
-                         (platform == WindowsDesktopMinGW));
+                         (platform == WindowsDesktopMinGW), machineArch);
 }
+
+#ifdef Q_OS_WIN
+#  if !defined(IMAGE_FILE_MACHINE_ARM64)
+#    define IMAGE_FILE_MACHINE_ARM64 0xAA64
+#  endif
+QString getArchString (unsigned short machineArch);
+#endif // Q_OS_WIN
 
 // Return dependent modules of executable files.
 

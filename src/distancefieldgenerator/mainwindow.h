@@ -49,6 +49,11 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    void open(const QString &path);
+
+protected:
+    void closeEvent(QCloseEvent *event) override;
+
 private slots:
     void openFont();
     void startProgressBar(quint16 glyphCount);
@@ -62,6 +67,7 @@ private slots:
     void saveAs();
     void displayError(const QString &errorString);
     void selectString();
+    void about();
 
 private:
     void setupConnections();

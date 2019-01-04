@@ -58,6 +58,7 @@
     \section1 Table of Contents
 
     \list
+        \li  \l{A Quick Start to Qt Designer}
         \li  \l{Qt Designer's Editing Modes}
             \list
                 \li  \l{Qt Designer's Widget Editing Mode}{Widget Editing Mode}
@@ -507,7 +508,7 @@
         each corner and the midpoint of each side, indicating that it can be
         resized.
 
-        To select additional objects, hold down the \key Shift key and click on
+        To select additional objects, hold down the \key Control key and click on
         them. If more than one object is selected, the current object will be
         displayed with resize handles of a different color.
 
@@ -696,43 +697,24 @@
     form is previewed or used in an application. Placing objects in a layout
     also ensures that they will be resized correctly when the form is resized.
 
-
-    \tableofcontents
-
-    \section1 Applying and Breaking Layouts
-
-    The simplest way to manage objects is to apply a layout to a group of
-    existing objects. This is achieved by selecting the objects that you need
-    to manage and applying one of the standard layouts using the main toolbar,
-    the \gui Form menu, or the form's context menu.
-
     Once widgets have been inserted into a layout, it is not possible to move
     and resize them individually because the layout itself controls the
     geometry of each widget within it, taking account of the hints provided by
-    spacers. Instead, you must either break the layout and adjust each object's
-    geometry manually, or you can influence the widget's geometry by resizing
-    the layout.
-
-    To break the layout, press \key{Ctrl+0} or choose \gui{Break Layout} from
-    the form's context menu, the \gui Form menu or the main toolbar. You can
-    also add and remove spacers from the layout to influence the geometries of
+    spacers. Spacers can be added to the layout to influence the geometries of
     the widgets.
 
+    Layouts can be nested to form a hierarchy. For example, to achieve a
+    typical dialog layout with a horizontal row of buttons, the dialog
+    elements can be laid out using a vertical box layout with a horizontal
+    box layout containing the buttons at the bottom. For an introduction to
+    the Qt layout system, refer to \l{Layout Management}.
 
-    \target InsertingObjectsIntoALayout
-    \table
-        \row
-            \li  \inlineimage designer-layout-inserting.png
-            \li  \b{Inserting Objects into a Layout}
+    To break a layout, press \key{Ctrl+0} or choose \gui{Break Layout} from
+    the form's context menu, the \gui Form menu or the main toolbar.
 
-        Objects can be inserted into an existing layout by dragging them from
-        their current positions and dropping them at the required location. A
-        blue cursor is displayed in the layout as an object is dragged over
-        it to indicate where the object will be added.
-    \endtable
+    \tableofcontents
 
-
-    \section2 Setting A Top Level Layout
+    \section1 Setting A Top Level Layout
 
     The form's top level layout can be set by clearing the selection (click the
     left mouse button on the form itself) and applying a layout. A top level
@@ -749,10 +731,52 @@
         toolbar shown on the left, or from the context menu shown below.
     \endtable
 
+    Similary, top level layouts are set on container widgets (QGroupBox)
+    or on pages of page-based container widgets (QTabWidget, QToolBox
+    and QStackedWidget), respectively. The container widget needs to be
+    selected for this to succeed.
+
+    Top level layouts are not visible as separate objects in the Object
+    Inspector. Their properties appear below the widget properties of the
+    main form, container widget, or page of a container widget in the
+    Property Editor.
+
     \image designer-set-layout2.png
 
 
-    \section2 Horizontal and Vertical Layouts
+    \section1 Layout Objects
+
+    Layout objects are created by applying a layout to a group of
+    existing objects. This is achieved by selecting the objects that you need
+    to manage and applying one of the standard layouts using the main toolbar,
+    the \gui Form menu, or the form's context menu.
+
+    The layout object is indicated by a red frame on the form and appears as
+    an object in the Object Inspector. Its properties (margins and constraints)
+    are shown in the Property Editor.
+
+    The layout object can be selected and placed within another layout along
+    with other widgets and layout objects to build a layout hierarchy.
+
+    When a child layout object is selected, its parent layout object can be
+    selected by pressing down the \key Shift key while clicking on it. This
+    makes it possible to select a specific layout in a hierarchy, which is
+    otherwise difficult due to the small frame.
+
+
+    \section1 Inserting Objects Into a Layout
+    \target InsertingObjectsIntoALayout
+
+    Objects can be inserted into an existing layout by dragging them from
+    their current positions and dropping them at the required location. A
+    blue cursor is displayed in the layout as an object is dragged over
+    it to indicate where the object will be added.
+
+     \image designer-layout-inserting.png
+     \caption Inserting Objects into a Layout
+
+    \section1 Layout Types
+    \section2 Horizontal and Vertical (Box) Layouts
 
     The simplest way to arrange objects on a form is to place them in a
     horizontal or vertical layout. Horizontal layouts ensure that the widgets
@@ -764,7 +788,7 @@
     using the grid layout.
 
 
-    \section3 The Grid Layout
+    \section2 The Grid Layout
 
     Complex form layouts can be created by placing objects in a grid layout.
     This kind of layout gives the form designer much more freedom to arrange
@@ -773,7 +797,7 @@
     suitable than a nested arrangement of horizontal and vertical layouts.
 
 
-    \section3 The Form Layout
+    \section2 The Form Layout
 
     The QFormLayout
     class manages widgets in a two-column form; the left column holds labels
@@ -797,7 +821,7 @@
     \endtable
 
 
-\section3 Splitter Layouts
+    \section2 Splitter Layouts
 
     Another common way to manage the layout of objects on a form is to place
     them in a splitter. These splitters arrange the objects horizontally or
@@ -814,7 +838,7 @@
     keyboard shortcut, or \gui{Lay out} context menu entry.
 
 
-    \section2 Shortcut Keys
+    \section1 Shortcut Keys
 
     In addition to the standard toolbar and context menu entries, there is also
     a set of keyboard shortcuts to apply layouts on widgets.

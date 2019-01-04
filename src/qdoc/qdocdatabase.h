@@ -51,7 +51,8 @@ class QDocDatabase;
 enum FindFlag {
     SearchBaseClasses = 0x1,
     SearchEnumValues = 0x2,
-    TypesOnly = 0x4
+    TypesOnly = 0x4,
+    IgnoreModules = 0x8
 };
 
 class QDocForest

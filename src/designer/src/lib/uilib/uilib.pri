@@ -24,3 +24,5 @@ SOURCES += \
     $$PWD/formbuilderextra.cpp \
     $$PWD/resourcebuilder.cpp \
     $$PWD/textbuilder.cpp
+
+OTHER_FILES += $$PWD/widgets.table

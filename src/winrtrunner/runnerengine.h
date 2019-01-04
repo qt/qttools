@@ -55,6 +55,7 @@ public:
     virtual bool disableDebugging() = 0;
     virtual bool setLoopbackExemptClientEnabled(bool enabled) = 0;
     virtual bool setLoopbackExemptServerEnabled(bool enabled) = 0;
+    virtual bool setLoggingRules(const QByteArray &rules) = 0;
     virtual bool suspend() = 0;
     virtual bool waitForFinished(int secs) = 0;
     virtual bool stop() = 0;

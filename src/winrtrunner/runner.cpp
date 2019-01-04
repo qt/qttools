@@ -233,6 +233,14 @@ bool Runner::setLoopbackExemptServerEnabled(bool enabled)
     return d->engine->setLoopbackExemptServerEnabled(enabled);
 }
 
+bool Runner::setLoggingRules(const QByteArray &rules)
+{
+    Q_D(Runner);
+    Q_ASSERT(d->engine);
+
+    return d->engine->setLoggingRules(rules);
+}
+
 bool Runner::suspend()
 {
     Q_D(Runner);

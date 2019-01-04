@@ -64,6 +64,7 @@ public:
     bool disableDebugging() override;
     bool setLoopbackExemptClientEnabled(bool enabled) override;
     bool setLoopbackExemptServerEnabled(bool enabled) override;
+    bool setLoggingRules(const QByteArray &rules) override;
     bool suspend() override;
     bool waitForFinished(int secs) override;
     bool stop() override;

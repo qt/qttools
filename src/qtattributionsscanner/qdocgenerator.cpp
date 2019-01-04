@@ -143,7 +143,7 @@ static void generate(QTextStream &out, const Package &package, const QDir &baseD
                     tr("Path %1 : cannot open license file %2.")
                         .arg(QDir::toNativeSeparators(package.path))
                         .arg(QDir::toNativeSeparators(package.licenseFile))
-                ) << "\n";
+                ) << "*/\n";
             return;
         }
         out << "\\badcode\n";

@@ -60,8 +60,3 @@ TRANSLATIONS    = superapp_dk.ts \
                   superapp_no.ts \
                   superapp_se.ts
 #! [0]
-
-
-#! [2]
-CODECFORSRC     = UTF-8
-#! [2]

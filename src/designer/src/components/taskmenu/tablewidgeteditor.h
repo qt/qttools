@@ -82,6 +82,7 @@ private slots:
 protected:
     void setItemData(int role, const QVariant &v) override;
     QVariant getItemData(int role) const override;
+    int defaultItemFlags() const override;
 
 private:
     void setPropertyBrowserVisible(bool v);
