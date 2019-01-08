@@ -51,7 +51,7 @@ QString QmlImportScanResult::Module::installPath(const QString &root) const
     const int lastSlashPos = relativePath.lastIndexOf(QLatin1Char('/'));
     if (lastSlashPos != -1) {
         result += QLatin1Char('/');
-        result += relativePath.left(lastSlashPos);
+        result += relativePath.leftRef(lastSlashPos);
     }
     return result;
 }
@@ -114,7 +114,7 @@ QmlImportScanResult runQmlImportScanner(const QString &directory, const QString 
                         + QStringLiteral(": ") + QString::fromLocal8Bit(stdErr);
         return result;
     }
-    QJsonParseError jsonParseError;
+    QJsonParseError jsonParseError{};
     const QJsonDocument data = QJsonDocument::fromJson(stdOut, &jsonParseError);
     if (data.isNull() ) {
         *errorMessage = binary + QStringLiteral(" returned invalid JSON output: ")

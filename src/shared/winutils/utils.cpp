@@ -493,8 +493,6 @@ QString findInPath(const QString &file)
 
 const char *qmakeInfixKey = "QT_INFIX";
 
-QMap<QString, QString> queryQMakeAll(QString *errorMessage);
-
 QMap<QString, QString> queryQMakeAll(QString *errorMessage)
 {
     QByteArray stdOut;
@@ -819,12 +817,12 @@ inline void determineDebugAndDependentLibs(const ImageNtHeader *nth, const void 
 {
     const bool hasDebugEntry = nth->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_DEBUG].Size;
     QStringList dependentLibraries;
-    if (dependentLibrariesIn || (isDebugIn && hasDebugEntry && !isMinGW))
+    if (dependentLibrariesIn || (isDebugIn != nullptr && hasDebugEntry && !isMinGW))
         dependentLibraries = readImportSections(nth, fileMemory, errorMessage);
 
     if (dependentLibrariesIn)
         *dependentLibrariesIn = dependentLibraries;
-    if (isDebugIn) {
+    if (isDebugIn != nullptr) {
         if (isMinGW) {
             // Use logic that's used e.g. in objdump / pfd library
             *isDebugIn = !(nth->FileHeader.Characteristics & IMAGE_FILE_DEBUG_STRIPPED);

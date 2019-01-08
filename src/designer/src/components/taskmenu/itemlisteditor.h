@@ -85,6 +85,7 @@ private slots:
     void resetProperty(QtProperty *property);
 
 protected:
+    virtual int defaultItemFlags() const = 0;
     void setupProperties(PropertyDefinition *propDefs);
     void setupObject(QWidget *object);
     void setupEditor(QWidget *object, PropertyDefinition *propDefs);
@@ -138,6 +139,7 @@ private slots:
 protected:
     void setItemData(int role, const QVariant &v) override;
     QVariant getItemData(int role) const override;
+    int defaultItemFlags() const override;
 
 private:
     void setPropertyBrowserVisible(bool v);
