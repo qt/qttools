@@ -435,8 +435,15 @@ QDESIGNER_SHARED_EXPORT QDesignerFormWindowCommand *createTextPropertyCommand(co
 // Returns preferred task menu action for managed widget
 QDESIGNER_SHARED_EXPORT QAction *preferredEditAction(QDesignerFormEditorInterface *core, QWidget *managedWidget);
 
+enum class UicLanguage
+{
+    Cpp,
+    Python,
+};
+
 // Convenience to run UIC
-QDESIGNER_SHARED_EXPORT bool runUIC(const QString &fileName, QByteArray& ba, QString &errorMessage);
+QDESIGNER_SHARED_EXPORT bool runUIC(const QString &fileName, UicLanguage language,
+                                    QByteArray& ba, QString &errorMessage);
 
 // Find a suitable variable name for a class.
 QDESIGNER_SHARED_EXPORT QString qtify(const QString &name);

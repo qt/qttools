@@ -716,13 +716,29 @@ namespace qdesigner_internal
         return action;
     }
 
-    QDESIGNER_SHARED_EXPORT bool runUIC(const QString &fileName, QByteArray& ba, QString &errorMessage)
+    QDESIGNER_SHARED_EXPORT bool runUIC(const QString &fileName, UicLanguage language,
+                                        QByteArray& ba, QString &errorMessage)
     {
-        const QString binary = QLibraryInfo::location(QLibraryInfo::BinariesPath) + QStringLiteral("/uic");
         QProcess uic;
-        uic.start(binary, QStringList(fileName));
+        QStringList arguments;
+        QString binary = QLibraryInfo::location(QLibraryInfo::BinariesPath) + QStringLiteral("/uic");
+        switch (language) {
+        case UicLanguage::Cpp:
+            break;
+        case UicLanguage::Python:
+#if 0 // ### fixme: Enable when PYSIDE-797 is done (uic extended by Python generator)
+            arguments << QLatin1String("-g") << QLatin1String("python");
+#else
+            binary = QLatin1String("pyside2-uic");
+#endif
+            break;
+        }
+        arguments << fileName;
+
+        uic.start(binary, arguments);
         if (!uic.waitForStarted()) {
-            errorMessage = QApplication::translate("Designer", "Unable to launch %1.").arg(binary);
+            errorMessage = QApplication::translate("Designer", "Unable to launch %1: %2").
+                           arg(QDir::toNativeSeparators(binary), uic.errorString());
             return false;
         }
         if (!uic.waitForFinished()) {

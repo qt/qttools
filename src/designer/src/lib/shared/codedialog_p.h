@@ -48,6 +48,9 @@ QT_BEGIN_NAMESPACE
 class QDesignerFormWindowInterface;
 
 namespace qdesigner_internal {
+
+enum class UicLanguage;
+
 // Dialog for viewing code.
 class QDESIGNER_SHARED_EXPORT CodeDialog : public QDialog
 {
@@ -57,10 +60,12 @@ public:
     ~CodeDialog() override;
 
     static bool generateCode(const QDesignerFormWindowInterface *fw,
+                             UicLanguage language,
                              QString *code,
                              QString *errorMessage);
 
     static bool showCodeDialog(const QDesignerFormWindowInterface *fw,
+                               UicLanguage language,
                                QWidget *parent,
                                QString *errorMessage);
 
@@ -75,6 +80,7 @@ private:
     QString code() const;
     void setFormFileName(const QString &f);
     QString formFileName() const;
+    void setMimeType(const QString &m);
 
     void warning(const QString &msg);
 

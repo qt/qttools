@@ -185,7 +185,8 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
       m_savePreviewImageAction(new QAction(tr("Save &Image..."), this)),
       m_printPreviewAction(new QAction(tr("&Print..."), this)),
       m_quitAction(new QAction(tr("&Quit"), this)),
-      m_viewCodeAction(new QAction(tr("View &Code..."), this)),
+      m_viewCppCodeAction(new QAction(tr("View &C++ Code..."), this)),
+      m_viewPythonCodeAction(new QAction(tr("View &Python Code..."), this)),
       m_minimizeAction(new QAction(tr("&Minimize"), this)),
       m_bringAllToFrontSeparator(createSeparator(this)),
       m_bringAllToFrontAction(new QAction(tr("Bring All to Front"), this)),
@@ -224,7 +225,8 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
     m_closeFormAction->setObjectName(QStringLiteral("__qt_close_form_action"));
     m_quitAction->setObjectName(QStringLiteral("__qt_quit_action"));
     m_previewFormAction->setObjectName(QStringLiteral("__qt_preview_form_action"));
-    m_viewCodeAction->setObjectName(QStringLiteral("__qt_preview_code_action"));
+    m_viewCppCodeAction->setObjectName(QStringLiteral("__qt_preview_cpp_code_action"));
+    m_viewPythonCodeAction->setObjectName(QStringLiteral("__qt_preview_python_code_action"));
     m_minimizeAction->setObjectName(QStringLiteral("__qt_minimize_action"));
     m_bringAllToFrontAction->setObjectName(QStringLiteral("__qt_bring_all_to_front_action"));
     m_preferencesAction->setObjectName(QStringLiteral("__qt_preferences_action"));
@@ -393,10 +395,16 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
     connect(m_previewManager, &qdesigner_internal::PreviewManager::lastPreviewClosed,
             this, &QDesignerActions::updateCloseAction);
 
-    connect(m_viewCodeAction, &QAction::triggered, this, &QDesignerActions::viewCode);
-    // Preview code only in Cpp
-    if (qt_extension<QDesignerLanguageExtension *>(m_core->extensionManager(), m_core) == 0)
-        m_formActions->addAction(m_viewCodeAction);
+    connect(m_viewCppCodeAction, &QAction::triggered, this,
+            [this] () { this->viewCode(qdesigner_internal::UicLanguage::Cpp); });
+    connect(m_viewPythonCodeAction, &QAction::triggered, this,
+            [this] () { this->viewCode(qdesigner_internal::UicLanguage::Python); });
+
+    // Preview code only in Cpp/Python (uic)
+    if (qt_extension<QDesignerLanguageExtension *>(m_core->extensionManager(), m_core) == nullptr) {
+        m_formActions->addAction(m_viewCppCodeAction);
+        m_formActions->addAction(m_viewPythonCodeAction);
+    }
 
     m_formActions->addAction(createSeparator(this));
 
@@ -557,7 +565,7 @@ QAction *QDesignerActions::previewFormAction() const
 { return m_previewFormAction; }
 
 QAction *QDesignerActions::viewCodeAction() const
-{ return m_viewCodeAction; }
+{ return m_viewCppCodeAction; }
 
 
 void QDesignerActions::editWidgetsSlot()
@@ -728,13 +736,13 @@ void QDesignerActions::closePreview()
     m_previewManager->closeAllPreviews();
 }
 
-void  QDesignerActions::viewCode()
+void QDesignerActions::viewCode(qdesigner_internal::UicLanguage language)
 {
     QDesignerFormWindowInterface *fw = core()->formWindowManager()->activeFormWindow();
     if (!fw)
         return;
     QString errorMessage;
-    if (!qdesigner_internal::CodeDialog::showCodeDialog(fw, fw, &errorMessage))
+    if (!qdesigner_internal::CodeDialog::showCodeDialog(fw, language, fw, &errorMessage))
         QMessageBox::warning(fw, tr("Code generation failed"), errorMessage);
 }
 
@@ -943,7 +951,8 @@ void QDesignerActions::activeFormWindowChanged(QDesignerFormWindowInterface *for
     m_editWidgetsAction->setEnabled(enable);
 
     m_previewFormAction->setEnabled(enable);
-    m_viewCodeAction->setEnabled(enable);
+    m_viewCppCodeAction->setEnabled(enable);
+    m_viewPythonCodeAction->setEnabled(enable);
     m_styleActions->setEnabled(enable);
 }
 

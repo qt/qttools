@@ -49,6 +49,7 @@
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qdir.h>
+#include <QtCore/qmimedatabase.h>
 #include <QtCore/qtemporaryfile.h>
 
 QT_BEGIN_NAMESPACE
@@ -61,6 +62,7 @@ struct CodeDialog::CodeDialogPrivate {
     QTextEdit *m_textEdit;
     TextEditFindWidget *m_findWidget;
     QString m_formFileName;
+    QString m_mimeType;
 };
 
 CodeDialog::CodeDialogPrivate::CodeDialogPrivate()
@@ -142,7 +144,13 @@ QString CodeDialog::formFileName() const
     return m_impl->m_formFileName;
 }
 
+void CodeDialog::setMimeType(const QString &m)
+{
+    m_impl->m_mimeType = m;
+}
+
 bool CodeDialog::generateCode(const QDesignerFormWindowInterface *fw,
+                              UicLanguage language,
                               QString *code,
                               QString *errorMessage)
 {
@@ -175,47 +183,66 @@ bool CodeDialog::generateCode(const QDesignerFormWindowInterface *fw,
     tempFormFile.close();
     // Run uic
     QByteArray rc;
-    if (!runUIC(tempFormFileName, rc, *errorMessage))
+    if (!runUIC(tempFormFileName, language, rc, *errorMessage))
         return false;
     *code = QString::fromUtf8(rc);
     return true;
 }
 
 bool CodeDialog::showCodeDialog(const QDesignerFormWindowInterface *fw,
+                                UicLanguage language,
                                 QWidget *parent,
                                 QString *errorMessage)
 {
     QString code;
-    if (!generateCode(fw, &code, errorMessage))
+    if (!generateCode(fw, language, &code, errorMessage))
         return false;
 
-    CodeDialog dialog(parent);
-    dialog.setWindowTitle(tr("%1 - [Code]").arg(fw->mainContainer()->windowTitle()));
-    dialog.setCode(code);
-    dialog.setFormFileName(fw->fileName());
-    dialog.exec();
+    auto dialog = new CodeDialog(parent);
+    dialog->setModal(false);
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
+    dialog->setCode(code);
+    dialog->setFormFileName(fw->fileName());
+    QString languageName;
+    switch (language) {
+    case UicLanguage::Cpp:
+        languageName = QLatin1String("C++");
+        dialog->setMimeType(QLatin1String("text/x-chdr"));
+        break;
+    case UicLanguage::Python:
+        languageName = QLatin1String("Python");
+        dialog->setMimeType(QLatin1String("text/x-python"));
+        break;
+    }
+    dialog->setWindowTitle(tr("%1 - [%2 Code]").
+                           arg(fw->mainContainer()->windowTitle(), languageName));
+    dialog->show();
     return true;
 }
 
 void CodeDialog::slotSaveAs()
 {
     // build the default relative name 'ui_sth.h'
-    const QString headerSuffix = QString(QLatin1Char('h'));
-    QString filter;
-    const QString uiFile = formFileName();
+    QMimeDatabase mimeDb;
+    const QString suffix = mimeDb.mimeTypeForName(m_impl->m_mimeType).preferredSuffix();
 
-    if (!uiFile.isEmpty()) {
-        filter = QStringLiteral("ui_");
-        filter += QFileInfo(uiFile).baseName();
-        filter += QLatin1Char('.');
-        filter += headerSuffix;
-    }
     // file dialog
+    QFileDialog fileDialog(this, tr("Save Code"));
+    fileDialog.setMimeTypeFilters(QStringList(m_impl->m_mimeType));
+    fileDialog.setAcceptMode(QFileDialog::AcceptSave);
+    fileDialog.setDefaultSuffix(suffix);
+    const QString uiFile = formFileName();
+    if (!uiFile.isEmpty()) {
+        QFileInfo uiFi(uiFile);
+        fileDialog.setDirectory(uiFi.absolutePath());
+        fileDialog.selectFile(QLatin1String("ui_") + uiFi.baseName()
+                              + QLatin1Char('.') + suffix);
+    }
+
     while (true) {
-        const QString fileName =
-            QFileDialog::getSaveFileName (this, tr("Save Code"), filter, tr("Header Files (*.%1)").arg(headerSuffix));
-        if (fileName.isEmpty())
+        if (fileDialog.exec() != QDialog::Accepted)
             break;
+        const QString fileName = fileDialog.selectedFiles().constFirst();
 
          QFile file(fileName);
          if (!file.open(QIODevice::WriteOnly|QIODevice::Text)) {

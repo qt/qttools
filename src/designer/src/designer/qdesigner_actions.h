@@ -56,6 +56,7 @@ class QMenu;
 namespace qdesigner_internal {
     class PreviewConfiguration;
     class PreviewManager;
+    enum class UicLanguage;
 }
 
 class QDesignerActions: public QObject
@@ -118,7 +119,6 @@ private slots:
     void saveFormAs();
     void saveAllForms();
     void saveFormAsTemplate();
-    void viewCode();
     void notImplementedYet();
     void shutdown();
     void editWidgetsSlot();
@@ -152,6 +152,7 @@ private:
     bool ensureBackupDirectories();
     QPixmap createPreviewPixmap(QDesignerFormWindowInterface *fw);
     qdesigner_internal::PreviewConfiguration previewConfiguration();
+    void viewCode(qdesigner_internal::UicLanguage language);
 
     enum { MaxRecentFiles = 10 };
     QDesignerWorkbench *m_workbench;
@@ -192,7 +193,8 @@ private:
     QAction *m_quitAction;
 
     QAction *m_previewFormAction = nullptr;
-    QAction *m_viewCodeAction;
+    QAction *m_viewCppCodeAction;
+    QAction *m_viewPythonCodeAction;
 
     QAction *m_minimizeAction;
     QAction *m_bringAllToFrontSeparator;
