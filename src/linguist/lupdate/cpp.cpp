@@ -228,7 +228,7 @@ private:
     enum TokenType {
         Tok_Eof, Tok_class, Tok_friend, Tok_namespace, Tok_using, Tok_return,
         Tok_Q_OBJECT, Tok_Access, Tok_Cancel,
-        Tok_Ident, Tok_String, Tok_Arrow, Tok_Colon, Tok_ColonColon,
+        Tok_Ident, Tok_String, Tok_RawString, Tok_Arrow, Tok_Colon, Tok_ColonColon,
         Tok_Equals, Tok_LeftBracket, Tok_RightBracket, Tok_QuestionMark,
         Tok_LeftBrace, Tok_RightBrace, Tok_LeftParen, Tok_RightParen, Tok_Comma, Tok_Semicolon,
         Tok_Null, Tok_Integer,
@@ -737,6 +737,60 @@ CppParser::TokenType CppParser::getToken()
                 if (yyWord == strusing)
                     return Tok_using;
                 break;
+            }
+
+            // a C++11 raw string literal?
+            if (yyCh == '"' && (
+                        yyWord == QLatin1String("R") || yyWord == QLatin1String("LR") || yyWord == QLatin1String("u8R") ||
+                        yyWord == QLatin1String("uR") || yyWord == QLatin1String("UR")
+                        )) {
+                ptr = reinterpret_cast<ushort *>(const_cast<QChar *>(yyWord.unicode()));
+                //get delimiter
+                QString delimiter;
+                for (yyCh = getChar(); yyCh != EOF && yyCh != '('; yyCh = getChar())
+                    delimiter += QLatin1Char(yyCh);
+                if (yyCh != EOF)
+                    yyCh = getChar(); // throw away the opening parentheses
+                bool is_end = false;
+                ushort *ptr_past_end = nullptr;
+                while (yyCh != EOF && !is_end) {
+                    *ptr++ = yyCh;
+                    if (ptr_past_end != nullptr) {
+                        if (delimiter.size() == ptr - ptr_past_end
+                                && memcmp(delimiter.unicode(), ptr_past_end, (ptr - ptr_past_end) * sizeof (ushort)) == 0
+                           ) {
+                            // we've got the delimiter, check if " follows
+                            yyCh = getChar();
+                            if (yyCh == '"')
+                                is_end = true;
+                            else
+                                ptr_past_end = nullptr;
+                            continue;
+                        }
+                    }
+                    if (yyCh == ')') {
+                        ptr_past_end = ptr;
+                        if (delimiter.isEmpty()) {
+                            // no delimiter, check if " follows
+                            yyCh = getChar();
+                            if (yyCh == '"')
+                                is_end = true;
+                            else
+                                ptr_past_end = nullptr;
+                            continue;
+                        }
+                    }
+                    yyCh = getChar();
+                }
+                if (is_end)
+                    yyWord.resize(ptr_past_end - 1 - reinterpret_cast<const ushort *>(yyWord.unicode()));
+                else
+                    yyWord.resize(ptr - reinterpret_cast<const ushort *>(yyWord.unicode()));
+                if (yyCh != '"')
+                    yyMsg() << qPrintable(LU::tr("Unterminated/mismatched C++ Raw string\n"));
+                else
+                    yyCh = getChar();
+                return Tok_RawString;
             }
 
             return Tok_Ident;
@@ -1393,10 +1447,13 @@ bool CppParser::matchString(QString *s)
     bool matches = false;
     s->clear();
     forever {
-        if (yyTok != Tok_String)
+        if (yyTok != Tok_String && yyTok != Tok_RawString)
             return matches;
         matches = true;
-        *s += yyWord;
+        if (yyTok == Tok_String)
+            *s += transcode(yyWord);
+        else
+            *s += yyWord;
         s->detach();
         yyTok = getToken();
     }
@@ -1530,7 +1587,7 @@ void CppParser::recordMessage(int line, const QString &context, const QString &t
     const QString &extracomment, const QString &msgid, const TranslatorMessage::ExtraData &extra, bool plural)
 {
     TranslatorMessage msg(
-        transcode(context), transcode(text), transcode(comment), QString(),
+        transcode(context), text, transcode(comment), QString(),
         yyFileName, line, QStringList(),
         TranslatorMessage::Unfinished, plural);
     msg.setExtraComment(transcode(extracomment.simplified()));
@@ -1703,7 +1760,7 @@ void CppParser::handleTrId(bool plural)
     yyTok = getToken();
     if (matchString(&msgid) && !msgid.isEmpty()) {
         plural |= match(Tok_Comma);
-        recordMessage(line, QString(), sourcetext, QString(), extracomment,
+        recordMessage(line, QString(), transcode(sourcetext), QString(), extracomment,
                       msgid, extra, plural);
     }
     sourcetext.clear();

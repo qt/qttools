@@ -28,6 +28,26 @@
         <source>Hello World</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="main.cpp" line="121"/>
+        <source>simple oneenter
+with delimiter )delim insidewith quote &quot; inside</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="136"/>
+        <source>
+                            This is a test string
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="139"/>
+        <source>
+This is a test string
+</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>TopLevel</name>
@@ -42,6 +62,21 @@
     <message>
         <location filename="main.cpp" line="81"/>
         <source>TopLevel2</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>global</name>
+    <message>
+        <location filename="main.cpp" line="127"/>
+        <source>
+&quot;The time has come,&quot; the Walrus said,
+&quot;To talk of many things:
+Of shoes - and ships - and sealing-wax -
+Of cabbages - and kings -
+And why the sea is boiling hot -
+And whether pigs have wings.&quot;
+</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
