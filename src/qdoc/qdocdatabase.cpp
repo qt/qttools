@@ -799,7 +799,7 @@ QmlTypeNode* QDocDatabase::findQmlType(const QString& qmid, const QString& name)
     }
 
     QStringList path(name);
-    Node* n = forest_.findNodeByNameAndType(path, Node::QmlType);
+    Node* n = forest_.findNodeByNameAndType(path, &Node::isQmlType);
     if (n && (n->isQmlType() || n->isJsType()))
         return static_cast<QmlTypeNode*>(n);
     return 0;
@@ -823,7 +823,7 @@ Aggregate* QDocDatabase::findQmlBasicType(const QString& qmid, const QString& na
     }
 
     QStringList path(name);
-    Node* n = forest_.findNodeByNameAndType(path, Node::QmlBasicType);
+    Node* n = forest_.findNodeByNameAndType(path, &Node::isQmlBasicType);
     if (n && n->isQmlBasicType())
         return static_cast<Aggregate*>(n);
     return 0;
@@ -1337,7 +1337,7 @@ const Node* QDocDatabase::findNodeForTarget(const QString& target, const Node* r
     if (target.isEmpty())
         node = relative;
     else if (target.endsWith(".html"))
-        node = findNodeByNameAndType(QStringList(target), Node::Page);
+        node = findNodeByNameAndType(QStringList(target), &Node::isPageNode);
     else {
         QStringList path = target.split("::");
         int flags = SearchBaseClasses | SearchEnumValues;
@@ -1402,7 +1402,7 @@ void QDocDatabase::generateIndex(const QString &fileName, const QString &url, co
 
   This function only searches in the current primary tree.
  */
-Node* QDocDatabase::findNodeInOpenNamespace(QStringList& path, Node::NodeType type)
+Node* QDocDatabase::findNodeInOpenNamespace(QStringList& path, bool (Node::*isMatch) () const)
 {
     if (path.isEmpty())
         return 0;
@@ -1414,7 +1414,7 @@ Node* QDocDatabase::findNodeInOpenNamespace(QStringList& path, Node::NodeType ty
                 p = t.split("::") + path;
             else
                 p = path;
-            n = primaryTree()->findNodeByNameAndType(p, type);
+            n = primaryTree()->findNodeByNameAndType(p, isMatch);
             if (n) {
                 path = p;
                 break;
@@ -1540,7 +1540,7 @@ const Node* QDocDatabase::findNodeForAtom(const Atom* a, const Node* relative, Q
         node = relative; // search for a target on the current page.
     else if (domain) {
         if (first.endsWith(".html"))
-            node = domain->findNodeByNameAndType(QStringList(first), Node::Page);
+            node = domain->findNodeByNameAndType(QStringList(first), &Node::isPageNode);
         else if (first.endsWith(QChar(')'))) {
             QString signature;
             QString function = first;
@@ -1569,7 +1569,7 @@ const Node* QDocDatabase::findNodeForAtom(const Atom* a, const Node* relative, Q
     }
     else {
         if (first.endsWith(".html"))
-            node = findNodeByNameAndType(QStringList(first), Node::Page);
+            node = findNodeByNameAndType(QStringList(first), &Node::isPageNode);
         else if (first.endsWith(QChar(')')))
             node = findFunctionNode(first, relative, genus);
         if (!node)

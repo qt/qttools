@@ -56,6 +56,8 @@ void Node::initialize()
 {
     goals_.insert("namespace", Node::Namespace);
     goals_.insert("class", Node::Class);
+    goals_.insert("struct", Node::Struct);
+    goals_.insert("union", Node::Union);
     goals_.insert("header", Node::HeaderFile);
     goals_.insert("headerfile", Node::HeaderFile);
     goals_.insert("page", Node::Page);
@@ -383,6 +385,8 @@ Node::PageType Node::getPageType(Node::NodeType t)
     switch (t) {
       case Node::Namespace:
       case Node::Class:
+      case Node::Struct:
+      case Node::Union:
       case Node::HeaderFile:
       case Node::Enum:
       case Node::Function:
@@ -430,6 +434,8 @@ Node::Genus Node::getGenus(Node::NodeType t)
     switch (t) {
       case Node::Enum:
       case Node::Class:
+      case Node::Struct:
+      case Node::Union:
       case Node::Module:
       case Node::Typedef:
       case Node::Property:
@@ -532,6 +538,10 @@ QString Node::nodeTypeString(unsigned char t)
         return QLatin1String("namespace");
     case Class:
         return QLatin1String("class");
+    case Struct:
+        return QLatin1String("struct");
+    case Union:
+        return QLatin1String("union");
     case HeaderFile:
         return QLatin1String("header");
     case Page:
@@ -989,7 +999,7 @@ Node *Aggregate::findChildNode(const QString& name, Node::Genus genus, int findF
                 if (genus == node->genus()) {
                     if (findFlags & TypesOnly) {
                         if (!node->isTypedef()
-                                && !node->isClass()
+                                && !node->isClassNode()
                                 && !node->isQmlType()
                                 && !node->isQmlBasicType()
                                 && !node->isJsType()
@@ -1058,18 +1068,18 @@ void Aggregate::findChildren(const QString &name, NodeVector &nodes) const
 }
 
 /*!
-  This function is like findChildNode(), but if a node
-  with the specified \a name is found but it is not of the
-  specified \a type, 0 is returned.
+  This function searches for a child node of this Aggregate,
+  such that the child node has the spacified \a name and the
+  function \a isMatch returns true for the node. The function
+  passed must be one of the isXxx() functions in class Node
+  that tests the node type.
  */
-Node* Aggregate::findChildNode(const QString& name, NodeType type)
+Node* Aggregate::findNonfunctionChild(const QString& name, bool (Node::*isMatch) () const)
 {
-    if (type == Function)
-        return functionMap_.value(name);
     NodeList nodes = nonfunctionMap_.values(name);
     for (int i=0; i<nodes.size(); ++i) {
-        Node *node = nodes.at(i);
-        if (node->nodeType() == type)
+        Node* node = nodes.at(i);
+        if ((node->*(isMatch))())
             return node;
     }
     return nullptr;
@@ -1778,7 +1788,7 @@ void ClassNode::fixPropertyUsingBaseClasses(PropertyNode* pn)
     while (bc != baseClasses().constEnd()) {
         ClassNode* cn = bc->node_;
         if (cn) {
-            Node* n = cn->findChildNode(pn->name(), Node::Property);
+            Node* n = cn->findNonfunctionChild(pn->name(), &Node::isProperty);
             if (n) {
                 PropertyNode* baseProperty = static_cast<PropertyNode*>(n);
                 cn->fixPropertyUsingBaseClasses(baseProperty);
@@ -1797,7 +1807,7 @@ void ClassNode::fixPropertyUsingBaseClasses(PropertyNode* pn)
  */
 PropertyNode* ClassNode::findPropertyNode(const QString& name)
 {
-    Node* n = findChildNode(name, Node::Property);
+    Node* n = findNonfunctionChild(name, &Node::isProperty);
 
     if (n)
         return static_cast<PropertyNode*>(n);
@@ -2174,7 +2184,7 @@ void FunctionNode::setVirtualness(const QString& t)
         virtualness_ = NormalVirtual;
     else if (t == QLatin1String("pure")) {
         virtualness_ = PureVirtual;
-        if (parent() && parent()->isClass())
+        if (parent() && parent()->isClassNode())
             parent()->setAbstract(true);
     }
 }
@@ -3303,12 +3313,12 @@ void Aggregate::findAllObsoleteThings()
         if (!n->isPrivate()) {
             QString name = n->name();
             if (n->isObsolete()) {
-                if (n->isClass())
+                if (n->isClassNode())
                     QDocDatabase::obsoleteClasses().insert(n->qualifyCppName(), n);
                 else if (n->isQmlType() || n->isJsType())
                     QDocDatabase::obsoleteQmlTypes().insert(n->qualifyQmlName(), n);
-            } else if (n->isClass()) {
-                Aggregate *a = static_cast<Aggregate *>(n);
+            } else if (n->isClassNode()) {
+                Aggregate* a = static_cast<Aggregate*>(n);
                 if (a->hasObsoleteMembers())
                     QDocDatabase::classesWithObsoleteMembers().insert(n->qualifyCppName(), n);
             }
@@ -3334,7 +3344,7 @@ void Aggregate::findAllClasses()
     foreach (Node *n, children_) {
         if (!n->isPrivate() && !n->isInternal() &&
             n->tree()->camelCaseModuleName() != QString("QDoc")) {
-            if (n->isClass()) {
+            if (n->isClassNode()) {
                 QDocDatabase::cppClasses().insert(n->qualifyCppName().toLower(), n);
             } else if (n->isQmlType() || n->isQmlBasicType() || n->isJsType() || n->isJsBasicType()) {
                 QString name = n->unqualifyQmlName();
@@ -3404,7 +3414,7 @@ void Aggregate::findAllSince()
                 if (!fn->isObsolete() && !fn->isSomeCtor() && !fn->isDtor())
                     nsmap.value().insert(fn->name(), fn);
             }
-            else if (n->isClass()) {
+            else if (n->isClassNode()) {
                 // Insert classes into the since and class maps.
                 QString name = n->qualifyWithParentName();
                 nsmap.value().insert(name, n);
@@ -3474,6 +3484,39 @@ void Aggregate::resolveQmlInheritance()
             }
         }
     }
+}
+
+/*!
+  Returns a word representing the kind of Aggregate this node is.
+  Currently only works for class, struct, and union, but it can
+  easily be extended. If \a cap is true, the word is capitalised.
+ */
+QString Aggregate::typeWord(bool cap) const
+{
+    if (cap) {
+        switch (nodeType()) {
+        case Node::Class:
+            return QLatin1String("Class");
+        case Node::Struct:
+            return QLatin1String("Struct");
+        case Node::Union:
+            return QLatin1String("Union");
+        default:
+            break;
+        }
+    } else {
+        switch (nodeType()) {
+        case Node::Class:
+            return QLatin1String("class");
+        case Node::Struct:
+            return QLatin1String("struct");
+        case Node::Union:
+            return QLatin1String("union");
+        default:
+            break;
+        }
+    }
+    return QString();
 }
 
 /*!
@@ -3561,7 +3604,7 @@ bool CollectionNode::hasClasses() const
     if (!members_.isEmpty()) {
         NodeList::const_iterator i = members_.cbegin();
         while (i != members_.cend()) {
-            if ((*i)->isClass())
+            if ((*i)->isClassNode())
                 return true;
             ++i;
         }
@@ -3593,7 +3636,7 @@ void CollectionNode::getMemberClasses(NodeMap& out) const
     out.clear();
     NodeList::const_iterator i = members_.cbegin();
     while (i != members_.cend()) {
-        if ((*i)->isClass())
+        if ((*i)->isClassNode())
             out.insert((*i)->name(),(*i));
         ++i;
     }

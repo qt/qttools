@@ -95,7 +95,9 @@ protected:
     void setExampleFileLists(PageNode *pn);
 
  protected:
-    QMap<QString, Node::NodeType> nodeTypeMap;
+    typedef bool (Node::*NodeTypeTestFunc) () const;
+    QMap<QString, NodeTypeTestFunc> nodeTypeTestFuncMap_;
+    QMap<QString, Node::NodeType> nodeTypeMap_;
 
  private:
     static QStringList exampleFiles;

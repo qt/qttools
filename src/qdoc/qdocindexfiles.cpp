@@ -208,8 +208,16 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader& reader,
                 ns->setDocumented();
         }
 
-    } else if (elementName == QLatin1String("class")) {
-        node = new ClassNode(parent, name);
+    } else if (elementName == QLatin1String("class") || elementName == QLatin1String("struct") ||
+               elementName == QLatin1String("union")) {
+        Node::NodeType type = Node::Class;
+        if (elementName == QLatin1String("class"))
+            type = Node::Class;
+        else if (elementName == QLatin1String("struct"))
+            type = Node::Struct;
+        else if (elementName == QLatin1String("union"))
+            type = Node::Union;
+        node = new ClassNode(type, parent, name);
         if (attributes.hasAttribute(QLatin1String("bases"))) {
             QString bases = attributes.value(QLatin1String("bases")).toString();
             if (!bases.isEmpty())
@@ -799,6 +807,12 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node)
     case Node::Class:
         nodeName = "class";
         break;
+    case Node::Struct:
+        nodeName = "struct";
+        break;
+    case Node::Union:
+        nodeName = "union";
+        break;
     case Node::HeaderFile:
         nodeName = "header";
         break;
@@ -953,6 +967,8 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node)
     QString brief = node->doc().trimmedBriefText(node->name()).toString();
     switch (node->nodeType()) {
     case Node::Class:
+    case Node::Struct:
+    case Node::Union:
         {
             // Classes contain information about their base classes.
             const ClassNode* classNode = static_cast<const ClassNode*>(node);

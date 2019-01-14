@@ -155,7 +155,7 @@ QString Section::sortName(const Node *node, const QString* name)
         if (fn->isJsMethod() || fn->isJsSignal() || fn->isJsSignalHandler())
             return QLatin1Char('E') + nodeName;
     }
-    if (node->isClass())
+    if (node->isClassNode())
         return QLatin1Char('A') + nodeName;
 
     if (node->isProperty() || node->isVariable())
@@ -189,7 +189,7 @@ void Section::insert(Node *node)
         FunctionNode *func = static_cast<FunctionNode *>(node);
         irrelevant = (inherited && (func->isSomeCtor() || func->isDtor()));
     }
-    else if (node->isClass() || node->isEnumType() || node->isTypedef() || node->isVariable()) {
+    else if (node->isClassNode() || node->isEnumType() || node->isTypedef() || node->isVariable()) {
         irrelevant = (inherited && style_ != AllMembers);
         if (!irrelevant && style_ == Details && node->isTypedef()) {
             const TypedefNode* tdn = static_cast<const TypedefNode*>(node);
@@ -209,7 +209,7 @@ void Section::insert(Node *node)
                 if (!memberMap_.contains(key))
                     memberMap_.insertMulti(key, node);
             }
-            if (inherited && (node->parent()->isClass() || node->parent()->isNamespace())) {
+            if (inherited && (node->parent()->isClassNode() || node->parent()->isNamespace())) {
                 if (inheritedMembers_.isEmpty() || inheritedMembers_.last().first != node->parent()) {
                     QPair<Aggregate *, int> p(node->parent(), 0);
                     inheritedMembers_.append(p);
@@ -324,6 +324,8 @@ Sections::Sections(Aggregate *aggregate) : aggregate_(aggregate)
     initAggregate(allMembers_, aggregate_);
     switch (aggregate_->nodeType()) {
     case Node::Class:
+    case Node::Struct:
+    case Node::Union:
         initAggregate(stdCppClassSummarySections_, aggregate_);
         initAggregate(stdCppClassDetailsSections_, aggregate_);
         buildStdCppClassRefPageSections();
@@ -369,6 +371,8 @@ Sections::Sections(const NodeMultiMap& nsmap) : aggregate_(0)
             sections[SinceNamespaces].appendMember(node);
             break;
         case Node::Class:
+        case Node::Struct:
+        case Node::Union:
             sections[SinceClasses].appendMember(node);
             break;
         case Node::Enum:
@@ -398,7 +402,7 @@ Sections::Sections(const NodeMultiMap& nsmap) : aggregate_(0)
                 else {
                     Node* p = fn->parent();
                     if (p) {
-                        if (p->isClass())
+                        if (p->isClassNode())
                             sections[SinceMemberFunctions].appendMember(node);
                         else if (p->isNamespace()) {
                             if (p->name().isEmpty())
@@ -444,6 +448,8 @@ Sections::~Sections()
     if (aggregate_) {
         switch (aggregate_->nodeType()) {
         case Node::Class:
+        case Node::Struct:
+        case Node::Union:
             clear(stdCppClassSummarySections());
             clear(stdCppClassDetailsSections());
             allMembersSection().clear();
@@ -617,6 +623,8 @@ void Sections::stdRefPageSwitch(SectionVector &v, Node *n)
         v[StdNamespaces].insert(n);
         return;
     case Node::Class:
+    case Node::Struct:
+    case Node::Union:
         v[StdClasses].insert(n);
         return;
     case Node::Enum:
@@ -1053,7 +1061,7 @@ void Sections::buildStdQmlTypeRefPageSections()
 bool Sections::hasObsoleteMembers(SectionPtrVector *summary_spv, SectionPtrVector *details_spv) const
 {
     const SectionVector *sv = 0;
-    if (aggregate_->isClass())
+    if (aggregate_->isClassNode())
         sv = &stdCppClassSummarySections();
     else if (aggregate_->isQmlType() || aggregate_->isQmlBasicType())
         sv = &stdQmlTypeSummarySections();
@@ -1065,7 +1073,7 @@ bool Sections::hasObsoleteMembers(SectionPtrVector *summary_spv, SectionPtrVecto
             summary_spv->append(&(*s));
         ++s;
     }
-    if (aggregate_->isClass())
+    if (aggregate_->isClassNode())
         sv = &stdCppClassDetailsSections();
     else if (aggregate_->isQmlType() || aggregate_->isQmlBasicType())
         sv = &stdQmlTypeDetailsSections();

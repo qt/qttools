@@ -611,6 +611,8 @@ QString Generator::fullDocumentLocation(const Node *node, bool useSubdir)
 
     switch (node->nodeType()) {
     case Node::Class:
+    case Node::Struct:
+    case Node::Union:
     case Node::Namespace:
     case Node::Proxy:
         parentName = fileBase(node) + QLatin1Char('.') + currentGenerator()->fileExtension();
@@ -692,7 +694,7 @@ QString Generator::fullDocumentLocation(const Node *node, bool useSubdir)
         break;
     }
 
-    if (!node->isClass() && !node->isNamespace()) {
+    if (!node->isClassNode() && !node->isNamespace()) {
         if (node->status() == Node::Obsolete)
             parentName.replace(QLatin1Char('.') + currentGenerator()->fileExtension(),
                                "-obsolete." + currentGenerator()->fileExtension());
@@ -1143,7 +1145,7 @@ void Generator::generateDocumentation(Node* node)
             generatePageNode(static_cast<PageNode*>(node), marker);
             endSubPage();
         } else if (node->isAggregate()) {
-            if (node->isClass() || node->isHeader() ||
+            if (node->isClassNode() || node->isHeader() ||
                 (node->isNamespace() && node->docMustBeGenerated())) {
                 beginSubPage(node, fileName(node));
                 generateCppReferencePage(static_cast<Aggregate*>(node), marker);
@@ -1252,7 +1254,7 @@ bool Generator::generateQmlText(const Text& text,
 void Generator::generateReimplementsClause(const FunctionNode *fn, CodeMarker *marker)
 {
     if (!fn->overridesThis().isEmpty()) {
-        if (fn->parent()->isClass()) {
+        if (fn->parent()->isClassNode()) {
             ClassNode* cn = static_cast<ClassNode*>(fn->parent());
             const FunctionNode *overrides = cn->findOverriddenFunction(fn);
             if (overrides && !overrides->isPrivate() && !overrides->parent()->isPrivate()) {
@@ -2185,6 +2187,10 @@ QString Generator::typeString(const Node *node)
         return "namespace";
     case Node::Class:
         return "class";
+    case Node::Struct:
+        return "struct";
+    case Node::Union:
+        return "union";
     case Node::QmlType:
         return "type";
     case Node::QmlBasicType:

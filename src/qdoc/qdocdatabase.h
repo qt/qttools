@@ -95,9 +95,9 @@ class QDocForest
         return 0;
     }
 
-    Node* findNodeByNameAndType(const QStringList& path, Node::NodeType type) {
+    Node* findNodeByNameAndType(const QStringList& path, bool (Node::*isMatch) () const) {
         foreach (Tree* t, searchOrder()) {
-            Node* n = t->findNodeByNameAndType(path, type);
+            Node* n = t->findNodeByNameAndType(path, isMatch);
             if (n)
                 return n;
         }
@@ -303,8 +303,8 @@ class QDocDatabase
     /*******************************************************************
       The functions declared below are called for the current tree only.
     ********************************************************************/
-    Aggregate *findRelatesNode(const QStringList &path) { return primaryTree()->findRelatesNode(path); }
-    Node* findNodeInOpenNamespace(QStringList& path, Node::NodeType type);
+    Aggregate* findRelatesNode(const QStringList& path) { return primaryTree()->findRelatesNode(path); }
+    Node* findNodeInOpenNamespace(QStringList& path, bool (Node::*) () const);
     /*******************************************************************/
 
     /*****************************************************************************
@@ -324,8 +324,8 @@ class QDocDatabase
     const PageNode* findPageNodeByTitle(const QString& title) {
         return forest_.findPageNodeByTitle(title);
     }
-    Node* findNodeByNameAndType(const QStringList& path, Node::NodeType type) {
-        return forest_.findNodeByNameAndType(path, type);
+    Node* findNodeByNameAndType(const QStringList& path, bool (Node::*isMatch) () const) {
+        return forest_.findNodeByNameAndType(path, isMatch);
     }
     const CollectionNode* getCollectionNode(const QString& name, Node::NodeType type) {
         return forest_.getCollectionNode(name, type);

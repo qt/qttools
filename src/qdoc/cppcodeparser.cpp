@@ -93,7 +93,9 @@ CppCodeParser::CppCodeParser()
                        << COMMAND_JSMETHOD
                        << COMMAND_JSATTACHEDMETHOD
                        << COMMAND_JSBASICTYPE
-                       << COMMAND_JSMODULE;
+                       << COMMAND_JSMODULE
+                       << COMMAND_STRUCT
+                       << COMMAND_UNION;
     }
     if (metaCommands_.isEmpty()) {
         metaCommands_ = commonMetaCommands();
@@ -121,13 +123,26 @@ void CppCodeParser::initializeParser(const Config &config)
       All these can appear in a C++ namespace. Don't add
       anything that can't be in a C++ namespace.
      */
-    nodeTypeMap.insert(COMMAND_NAMESPACE, Node::Namespace);
-    nodeTypeMap.insert(COMMAND_CLASS, Node::Class);
-    nodeTypeMap.insert(COMMAND_ENUM, Node::Enum);
-    nodeTypeMap.insert(COMMAND_TYPEALIAS, Node::Typedef);
-    nodeTypeMap.insert(COMMAND_TYPEDEF, Node::Typedef);
-    nodeTypeMap.insert(COMMAND_PROPERTY, Node::Property);
-    nodeTypeMap.insert(COMMAND_VARIABLE, Node::Variable);
+    nodeTypeMap_.insert(COMMAND_NAMESPACE, Node::Namespace);
+    nodeTypeMap_.insert(COMMAND_CLASS, Node::Class);
+    nodeTypeMap_.insert(COMMAND_STRUCT, Node::Struct);
+    nodeTypeMap_.insert(COMMAND_UNION, Node::Union);
+    nodeTypeMap_.insert(COMMAND_ENUM, Node::Enum);
+    nodeTypeMap_.insert(COMMAND_TYPEALIAS, Node::Typedef);
+    nodeTypeMap_.insert(COMMAND_TYPEDEF, Node::Typedef);
+    nodeTypeMap_.insert(COMMAND_PROPERTY, Node::Property);
+    nodeTypeMap_.insert(COMMAND_VARIABLE, Node::Variable);
+
+    nodeTypeTestFuncMap_.insert(COMMAND_NAMESPACE, &Node::isNamespace);
+    nodeTypeTestFuncMap_.insert(COMMAND_CLASS, &Node::isClassNode);
+    nodeTypeTestFuncMap_.insert(COMMAND_STRUCT, &Node::isStruct);
+    nodeTypeTestFuncMap_.insert(COMMAND_UNION, &Node::isUnion);
+    nodeTypeTestFuncMap_.insert(COMMAND_ENUM, &Node::isEnumType);
+    nodeTypeTestFuncMap_.insert(COMMAND_TYPEALIAS, &Node::isTypedef);
+    nodeTypeTestFuncMap_.insert(COMMAND_TYPEDEF, &Node::isTypedef);
+    nodeTypeTestFuncMap_.insert(COMMAND_PROPERTY, &Node::isProperty);
+    nodeTypeTestFuncMap_.insert(COMMAND_VARIABLE, &Node::isVariable);
+
 
     exampleFiles = config.getCanonicalPathList(CONFIG_EXAMPLES);
     exampleDirs = config.getCanonicalPathList(CONFIG_EXAMPLEDIRS);
@@ -158,7 +173,8 @@ void CppCodeParser::initializeParser(const Config &config)
  */
 void CppCodeParser::terminateParser()
 {
-    nodeTypeMap.clear();
+    nodeTypeMap_.clear();
+    nodeTypeTestFuncMap_.clear();
     excludeDirs.clear();
     excludeFiles.clear();
     CodeParser::terminateParser();
@@ -200,7 +216,7 @@ Node* CppCodeParser::processTopicCommand(const Doc& doc,
     if (command == COMMAND_FN) {
         Q_UNREACHABLE();
     }
-    else if (nodeTypeMap.contains(command)) {
+    else if (nodeTypeMap_.contains(command)) {
         /*
           We should only get in here if the command refers to
           something that can appear in a C++ namespace,
@@ -209,7 +225,7 @@ Node* CppCodeParser::processTopicCommand(const Doc& doc,
           this way to allow the writer to refer to the entity
           without including the namespace qualifier.
          */
-        Node::NodeType type =  nodeTypeMap[command];
+        Node::NodeType type =  nodeTypeMap_[command];
         QStringList words = arg.first.split(QLatin1Char(' '));
         QStringList path;
         int idx = 0;
@@ -219,9 +235,9 @@ Node* CppCodeParser::processTopicCommand(const Doc& doc,
             idx = words.size() - 1;
         path = words[idx].split("::");
 
-        node = qdb_->findNodeInOpenNamespace(path, type);
+        node = qdb_->findNodeInOpenNamespace(path, nodeTypeTestFuncMap_[command]);
         if (node == 0)
-            node = qdb_->findNodeByNameAndType(path, type);
+            node = qdb_->findNodeByNameAndType(path, nodeTypeTestFuncMap_[command]);
         if (node == 0) {
             if (isWorthWarningAbout(doc)) {
                 doc.location().warning(tr("Cannot find '%1' specified with '\\%2' in any header file")
@@ -237,7 +253,10 @@ Node* CppCodeParser::processTopicCommand(const Doc& doc,
             /*
               This treats a class as a namespace.
              */
-            if ((type == Node::Class) || (type == Node::Namespace)) {
+            if ((type == Node::Class) ||
+                (type == Node::Namespace) ||
+                (type == Node::Struct) ||
+                (type == Node::Union)) {
                 if (path.size() > 1) {
                     path.pop_back();
                     QString ns = path.join(QLatin1String("::"));

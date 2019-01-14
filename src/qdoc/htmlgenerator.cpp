@@ -1349,6 +1349,7 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
     SectionVector *detailsSections = 0;
 
     Sections sections(aggregate);
+    QString word = aggregate->typeWord(true);
     if (aggregate->isNamespace()) {
         rawTitle = aggregate->plainName();
         fullTitle = aggregate->plainFullName();
@@ -1357,10 +1358,14 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
         summarySections = &sections.stdSummarySections();
         detailsSections = &sections.stdDetailsSections();
     }
-    else if (aggregate->isClass()) {
+    else if (aggregate->isClassNode()) {
         rawTitle = aggregate->plainName();
         fullTitle = aggregate->plainFullName();
-        title = rawTitle + " Class";
+        if (aggregate->isStruct())
+            word = QLatin1String("Struct");
+        else if (aggregate->isUnion())
+            word = QLatin1String("Union");
+        title = rawTitle + " " + word;
         summarySections = &sections.stdCppClassSummarySections();
         detailsSections = &sections.stdCppClassDetailsSections();
     }
@@ -1373,8 +1378,16 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
     }
 
     Text subtitleText;
-    if (rawTitle != fullTitle)
-        subtitleText << "(" << Atom(Atom::AutoLink, fullTitle) << ")" << Atom(Atom::LineBreak);
+    if (rawTitle != fullTitle) {
+        if (aggregate->parent()->isClassNode()) {
+            QString word2 = aggregate->parent()->typeWord(false);
+            subtitleText << word << " " << rawTitle << " is declared in " << word2
+                         << " " << Atom(Atom::AutoLink, aggregate->parent()->plainName())
+                         << "." << Atom(Atom::LineBreak);
+        } else {
+            subtitleText << "(" << Atom(Atom::AutoLink, fullTitle) << ")" << Atom(Atom::LineBreak);
+        }
+    }
 
     generateHeader(title, aggregate, marker);
     generateTableOfContents(aggregate, marker, summarySections);
@@ -1396,7 +1409,8 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
     }
     else
         generateBrief(aggregate, marker);
-    generateRequisites(aggregate, marker);
+    if (!aggregate->parent()->isClassNode())
+        generateRequisites(aggregate, marker);
     generateStatus(aggregate, marker);
     generateSince(aggregate, marker);
 
@@ -1499,7 +1513,7 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
                 out() << "<h2>" << protectEnc(s->title()) << "</h2>\n";
                 headerGenerated = true;
             }
-            if (!(*m)->isClass())
+            if (!(*m)->isClassNode())
                 generateDetailedMember(*m, aggregate, marker);
             else {
                 out() << "<h3> class ";
@@ -1606,7 +1620,7 @@ void HtmlGenerator::generateProxyPage(Aggregate *aggregate, CodeMarker *marker)
         NodeVector::ConstIterator m = s->members().constBegin();
         while (m != s->members().constEnd()) {
             if (!(*m)->isPrivate()) { // ### check necessary?
-                if (!(*m)->isClass())
+                if (!(*m)->isClassNode())
                     generateDetailedMember(*m, aggregate, marker);
                 else {
                     out() << "<h3> class ";
@@ -1971,7 +1985,7 @@ void HtmlGenerator::generateNavigationBar(const QString &title,
                     << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK)
                     << Atom(itemRight);
 
-    if (node->isClass()) {
+    if (node->isClassNode()) {
         if (!cppclassespage.isEmpty() && !cppclassestitle.isEmpty())
             navigationbar << Atom(itemLeft)
                         << Atom(Atom::NavLink, cppclassespage)
@@ -2002,7 +2016,7 @@ void HtmlGenerator::generateNavigationBar(const QString &title,
         if (node->isAggregate()) {
             QStringList groups = static_cast<const Aggregate*>(node)->groupNames();
             if (groups.length() == 1) {
-                const Node *groupNode = qdb_->findNodeByNameAndType(QStringList(groups[0]), Node::Group);
+                const Node *groupNode = qdb_->findNodeByNameAndType(QStringList(groups[0]), &Node::isGroup);
                 if (groupNode && !groupNode->title().isEmpty()) {
                     navigationbar << Atom(itemLeft)
                                   << Atom(Atom::NavLink, groupNode->name())
@@ -2283,7 +2297,7 @@ void HtmlGenerator::generateRequisites(Aggregate *aggregate, CodeMarker *marker)
         requisites.insert(sinceText, text);
     }
 
-    if (aggregate->isClass() || aggregate->isNamespace()) {
+    if (aggregate->isClassNode() || aggregate->isNamespace()) {
         //add the QT variable to the map
         if (!aggregate->physicalModuleName().isEmpty()) {
             const CollectionNode* cn = qdb_->getCollectionNode(aggregate->physicalModuleName(), Node::Module);
@@ -2295,7 +2309,7 @@ void HtmlGenerator::generateRequisites(Aggregate *aggregate, CodeMarker *marker)
         }
     }
 
-    if (aggregate->isClass()) {
+    if (aggregate->isClassNode()) {
         ClassNode* classe = static_cast<ClassNode*>(aggregate);
         if (classe->qmlElement() != nullptr && classe->status() != Node::Internal) {
             text.clear();
@@ -2567,7 +2581,7 @@ void HtmlGenerator::generateTableOfContents(const Node *node,
             }
         }
     }
-    else if (sections && (node->isClass() ||
+    else if (sections && (node->isClassNode() ||
                           node->isNamespace() ||
                           node->isQmlType() ||
                           node->isJsType())) {
@@ -4092,6 +4106,8 @@ int HtmlGenerator::hOffset(const Node *node)
     switch (node->nodeType()) {
     case Node::Namespace:
     case Node::Class:
+    case Node::Struct:
+    case Node::Union:
     case Node::Module:
         return 2;
     case Node::QmlModule:

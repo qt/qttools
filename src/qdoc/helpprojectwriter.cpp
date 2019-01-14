@@ -121,6 +121,8 @@ void HelpProjectWriter::readSelectors(SubProject &subproject, const QStringList 
     QHash<QString, Node::NodeType> typeHash;
     typeHash["namespace"] = Node::Namespace;
     typeHash["class"] = Node::Class;
+    typeHash["struct"] = Node::Struct;
+    typeHash["union"] = Node::Union;
     typeHash["header"] = Node::HeaderFile;
     typeHash["headerfile"] = Node::HeaderFile;
     typeHash["doc"] = Node::Page;  // to be removed from qdocconf files
@@ -293,6 +295,8 @@ bool HelpProjectWriter::generateSection(HelpProject &project,
     switch (node->nodeType()) {
 
     case Node::Class:
+    case Node::Struct:
+    case Node::Union:
         project.keywords.append(keywordDetails(node));
         break;
     case Node::QmlType:
@@ -559,7 +563,7 @@ void HelpProjectWriter::addMembers(HelpProject &project, QXmlStreamWriter &write
         return;
 
     bool derivedClass = false;
-    if (node->isClass())
+    if (node->isClassNode())
         derivedClass = !(static_cast<const ClassNode *>(node)->baseClasses().isEmpty());
 
     // Do not generate a 'List of all members' for namespaces or header files,
@@ -585,6 +589,8 @@ void HelpProjectWriter::writeNode(HelpProject &project, QXmlStreamWriter &writer
     switch (node->nodeType()) {
 
     case Node::Class:
+    case Node::Struct:
+    case Node::Union:
         writer.writeStartElement("section");
         writer.writeAttribute("ref", href);
         if (node->parent() && !node->parent()->name().isEmpty())
@@ -708,7 +714,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
     writer.writeStartElement("section");
     const Node* node = qdb_->findPageNodeByTitle(project.indexTitle);
     if (node == 0)
-        node = qdb_->findNodeByNameAndType(QStringList("index.html"), Node::Page);
+        node = qdb_->findNodeByNameAndType(QStringList("index.html"), &Node::isPageNode);
     QString indexPath;
     if (node)
         indexPath = gen_->fullDocumentLocation(node, false);

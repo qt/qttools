@@ -134,20 +134,6 @@ Node* Tree::findNodeForInclude(const QStringList& path) const
     return n;
 }
 
-static QList<int> aggregateTypes_;
-static const QList<int>& aggregateTypes()
-{
-    if (aggregateTypes_.isEmpty()) {
-        aggregateTypes_.reserve(5);
-        aggregateTypes_.append(Node::Class);
-        aggregateTypes_.append(Node::Namespace);
-        aggregateTypes_.append(Node::HeaderFile);
-        aggregateTypes_.append(Node::QmlType);
-        aggregateTypes_.append(Node::QmlBasicType);
-    }
-    return aggregateTypes_;
-}
-
 /*!
   This function searches this tree for an Aggregate node with
   the specified \a name. It returns the pointer to that node
@@ -160,7 +146,7 @@ Aggregate *Tree::findAggregate(const QString &name)
 {
     QStringList path;
     path << name;
-    return static_cast<Aggregate*>(findNodeRecursive(path, 0, const_cast<NamespaceNode*>(root()), aggregateTypes()));
+    return static_cast<Aggregate*>(findNodeRecursive(path, 0, const_cast<NamespaceNode*>(root()), &Node::isFirstClassAggregate));
 }
 
 /*!
@@ -173,7 +159,7 @@ ClassNode* Tree::findClassNode(const QStringList& path, const Node* start) const
 {
     if (!start)
         start = const_cast<NamespaceNode*>(root());
-    return static_cast<ClassNode*>(findNodeRecursive(path, 0, start, Node::Class));
+    return static_cast<ClassNode*>(findNodeRecursive(path, 0, start, &Node::isClassNode));
 }
 
 /*!
@@ -184,7 +170,7 @@ ClassNode* Tree::findClassNode(const QStringList& path, const Node* start) const
 NamespaceNode* Tree::findNamespaceNode(const QStringList& path) const
 {
     Node* start = const_cast<NamespaceNode*>(root());
-    return static_cast<NamespaceNode*>(findNodeRecursive(path, 0, start, Node::Namespace));
+    return static_cast<NamespaceNode*>(findNodeRecursive(path, 0, start, &Node::isNamespace));
 }
 
 /*!
@@ -208,20 +194,7 @@ QmlTypeNode* Tree::findQmlTypeNode(const QStringList& path)
         if (qcn)
             return qcn;
     }
-    return static_cast<QmlTypeNode*>(findNodeRecursive(path, 0, root(), Node::QmlType));
-}
-
-static QList<int> relatesTypes_;
-static const QList<int>& relatesTypes()
-{
-    if (relatesTypes_.isEmpty()) {
-        relatesTypes_.reserve(4);
-        relatesTypes_.append(Node::Class);
-        relatesTypes_.append(Node::Namespace);
-        relatesTypes_.append(Node::HeaderFile);
-        relatesTypes_.append(Node::Proxy);
-    }
-    return relatesTypes_;
+    return static_cast<QmlTypeNode*>(findNodeRecursive(path, 0, root(), &Node::isQmlType));
 }
 
 /*!
@@ -238,7 +211,7 @@ static const QList<int>& relatesTypes()
  */
 Aggregate *Tree::findRelatesNode(const QStringList &path)
 {
-    Node* n = findNodeRecursive(path, 0, root(), relatesTypes());
+    Node* n = findNodeRecursive(path, 0, root(), &Node::isRelatableType);
     return ((n && n->isAggregate()) ? static_cast<Aggregate*>(n) : 0);
 }
 
@@ -267,7 +240,7 @@ void Tree::resolveInheritance(Aggregate* n)
     for (int pass = 0; pass < 2; pass++) {
         NodeList::ConstIterator c = n->constBegin();
         while (c != n->constEnd()) {
-            if ((*c)->isClass()) {
+            if ((*c)->isClassNode()) {
                 resolveInheritanceHelper(pass, static_cast<ClassNode*>(*c));
                 resolveInheritance(static_cast<ClassNode*>(*c));
             } else if ((*c)->isNamespace()) {
@@ -416,8 +389,8 @@ void Tree::resolveCppToQmlLinks()
 void Tree::resolveUsingClauses()
 {
     const NodeList &children = root_.childNodes();
-    foreach (Node *child, children) {
-        if (child->isClass()) {
+    foreach (Node* child, children) {
+        if (child->isClassNode()) {
             ClassNode* cn = static_cast<ClassNode*>(child);
             QList<UsingClause>& usingClauses = cn->usingClauses();
             QList<UsingClause>::iterator uc = usingClauses.begin();
@@ -442,7 +415,7 @@ void Tree::fixInheritance(NamespaceNode* rootNode)
 
     NodeList::ConstIterator c = rootNode->constBegin();
     while (c != rootNode->constEnd()) {
-        if ((*c)->isClass())
+        if ((*c)->isClassNode())
             static_cast<ClassNode*>(*c)->fixBaseClasses();
         else if ((*c)->isNamespace())
             fixInheritance(static_cast<NamespaceNode*>(*c));
@@ -471,11 +444,68 @@ ClassList Tree::allBaseClasses(const ClassNode *classNode) const
   search at the tree root. \a subtype is not used unless
   \a type is \c{Page}.
  */
-Node* Tree::findNodeByNameAndType(const QStringList& path, Node::NodeType type) const
+Node* Tree::findNodeByNameAndType(const QStringList& path, bool (Node::*isMatch) () const) const
 {
-    return findNodeRecursive(path, 0, root(), type);
+    return findNodeRecursive(path, 0, root(), isMatch);
 }
 
+/*!
+  Recursive search for a node identified by \a path. Each
+  path element is a name. \a pathIndex specifies the index
+  of the name in \a path to try to match. \a start is the
+  node whose children shoulod be searched for one that has
+  that name. Each time a match is found, increment the
+  \a pathIndex and call this function recursively.
+
+  If the end of the path is reached (i.e. if a matching
+  node is found for each name in the \a path), the \a type
+  must match the type of the last matching node, and if the
+  type is \e{Page}, the \a subtype must match as well.
+
+  If the algorithm is successful, the pointer to the final
+  node is returned. Otherwise 0 is returned.
+ */
+Node* Tree::findNodeRecursive(const QStringList& path,
+                              int pathIndex,
+                              const Node* start,
+                              bool (Node::*isMatch) () const) const
+{
+    if (start == nullptr || path.isEmpty())
+        return nullptr;
+    Node* node = const_cast<Node*>(start);
+    if (!node->isAggregate())
+        return ((pathIndex >= path.size()) ? node : nullptr);
+#if 0
+    if (pathIndex >= path.size())
+        return nullptr;
+#endif
+    Aggregate* current = static_cast<Aggregate*>(node);
+    const NodeList& children = current->childNodes();
+    const QString& name = path.at(pathIndex);
+    foreach (Node *n, children) {
+        if (!n)
+            continue;
+        if (n->isQmlPropertyGroup()) {
+            n = findNodeRecursive(path, pathIndex, n, isMatch);
+            if (n)
+                return n;
+        }
+        else if (n->name() == name) {
+            if (pathIndex+1 >= path.size()) {
+                if ((n->*(isMatch))())
+                    return n;
+                continue;
+            }
+            else { // Search the children of n for the next name in the path.
+                n = findNodeRecursive(path, pathIndex+1, n, isMatch);
+                if (n)
+                    return n;
+            }
+        }
+    }
+    return nullptr;
+}
+#if 0
 /*!
   Recursive search for a node identified by \a path. Each
   path element is a name. \a pathIndex specifies the index
@@ -534,51 +564,7 @@ Node* Tree::findNodeRecursive(const QStringList& path,
     }
     return 0;
 }
-
-/*!
-  Recursive search for a node identified by \a path. Each
-  path element is a name. \a pathIndex specifies the index
-  of the name in \a path to try to match. \a start is the
-  node whose children shoulod be searched for one that has
-  that name. Each time a name match is found, increment the
-  \a pathIndex and call this function recursively.
-
-  If the end of the path is reached (i.e. if a matching
-  node is found for each name in the \a path), test the
-  matching node's type and subtype values against the ones
-  listed in \a types. If a match is found there, return the
-  pointer to the final node. Otherwise return 0.
- */
-Node* Tree::findNodeRecursive(const QStringList& path,
-                              int pathIndex,
-                              Node* start,
-                              const QList<int> &types) const
-{
-    if (!start || path.isEmpty())
-        return 0;
-    if (!start->isAggregate())
-        return ((pathIndex >= path.size()) ? start : 0);
-    if (pathIndex >= path.size())
-        return 0;
-
-    Aggregate* current = static_cast<Aggregate*>(start);
-    const NodeList &children = current->childNodes();
-    foreach (Node *n, children) {
-        if (n && n->name() == path.at(pathIndex)) {
-            if (pathIndex+1 >= path.size()) {
-                if (n->match(types))
-                    return n;
-            }
-            else if (n->isAggregate()) {
-                n = findNodeRecursive(path, pathIndex+1, n, types);
-                if (n)
-                    return n;
-            }
-        }
-    }
-    return 0;
-}
-
+#endif
 /*!
   Searches the tree for a node that matches the \a path plus
   the \a target. The search begins at \a start and moves up
@@ -732,7 +718,7 @@ const Node* Tree::matchPathAndTarget(const QStringList& path,
         }
     }
     if (((genus == Node::CPP) || (genus == Node::DontCare)) &&
-        node->isClass() && (flags & SearchBaseClasses)) {
+        node->isClassNode() && (flags & SearchBaseClasses)) {
         ClassList bases = allBaseClasses(static_cast<const ClassNode*>(node));
         foreach (const ClassNode *base, bases) {
             const Node *t = matchPathAndTarget(path, idx, target, base, flags, genus, ref);
@@ -802,7 +788,7 @@ const Node* Tree::findNode(const QStringList& path,
                 next = static_cast<const Aggregate*>(node)->findEnumNodeForValue(path.at(i));
             }
             if (!next && ((genus == Node::CPP) || (genus == Node::DontCare)) &&
-                node->isClass() && (flags & SearchBaseClasses)) {
+                node->isClassNode() && (flags & SearchBaseClasses)) {
                 ClassList bases = allBaseClasses(static_cast<const ClassNode*>(node));
                 foreach (const ClassNode *base, bases) {
                     next = base->findChildNode(path.at(i), genus, tmpFlags);
@@ -1336,7 +1322,7 @@ const FunctionNode *Tree::findFunctionNode(const QStringList &path,
         QmlTypeNode *qcn = lookupQmlType(QString(path[0] + "::" + path[1]));
         if (!qcn) {
             QStringList p(path[1]);
-            Node *n = findNodeByNameAndType(p, Node::QmlType);
+            Node* n = findNodeByNameAndType(p, &Node::isQmlType);
             if (n && (n->isQmlType() || n->isJsType()))
                 qcn = static_cast<QmlTypeNode*>(n);
         }
@@ -1366,7 +1352,7 @@ const FunctionNode *Tree::findFunctionNode(const QStringList &path,
             else
                 next = aggregate->findChildNode(path.at(i), genus);
 
-            if (!next && aggregate->isClass()) {
+            if (!next && aggregate->isClassNode()) {
                 ClassList bases = allBaseClasses(static_cast<const ClassNode*>(aggregate));
                 foreach (ClassNode *base, bases) {
                     if (i == path.size() - 1)

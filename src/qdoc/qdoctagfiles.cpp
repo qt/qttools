@@ -105,6 +105,8 @@ void QDocTagFiles::generateTagFileCompounds(QXmlStreamWriter &writer, const Aggr
             kind = "namespace";
             break;
         case Node::Class:
+        case Node::Struct:
+        case Node::Union:
         case Node::QmlType:
         case Node::JsType:
             kind = "class";
@@ -128,7 +130,7 @@ void QDocTagFiles::generateTagFileCompounds(QXmlStreamWriter &writer, const Aggr
         writer.writeStartElement("compound");
         writer.writeAttribute("kind", kind);
 
-        if (node->isClass()) {
+        if (node->isClassNode()) {
             writer.writeTextElement("name", node->fullDocumentName());
             writer.writeTextElement("filename", gen_->fullDocumentLocation(node, false));
 
@@ -194,6 +196,8 @@ void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter &writer, const Aggreg
             nodeName = "namespace";
             break;
         case Node::Class:
+        case Node::Struct:
+        case Node::Union:
             nodeName = "class";
             break;
         case Node::Variable:
@@ -227,6 +231,8 @@ void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter &writer, const Aggreg
 
         switch (node->nodeType()) {
         case Node::Class:
+        case Node::Struct:
+        case Node::Union:
             writer.writeCharacters(node->fullDocumentName());
             writer.writeEndElement();
             break;

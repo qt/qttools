@@ -198,7 +198,7 @@ void WebXMLGenerator::generateDocumentation(Node *node)
 
     CodeMarker *marker = CodeMarker::markerForFileName(node->location().filePath());
     if (node->parent()) {
-        if (node->isNamespace() || node->isClass() || node->isHeader())
+        if (node->isNamespace() || node->isClassNode() || node->isHeader())
             generateCppReferencePage(static_cast<Aggregate*>(node), marker);
         else if (node->isCollectionNode()) {
             if (node->wasSeen()) {
@@ -702,6 +702,8 @@ QString WebXMLGenerator::targetType(const Node *node)
     case Node::Namespace:
         return "namespace";
     case Node::Class:
+    case Node::Struct:
+    case Node::Union:
         return "class";
     case Node::Page:
         return "page";

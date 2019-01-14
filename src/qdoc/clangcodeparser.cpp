@@ -230,14 +230,15 @@ static Node *findNodeForCursor(QDocDatabase* qdb, CXCursor cur) {
         return nullptr;
     auto parent = static_cast<Aggregate *>(p);
 
+    QString name = fromCXString(clang_getCursorSpelling(cur));
     switch (kind) {
     case CXCursor_Namespace:
-        return parent->findChildNode(fromCXString(clang_getCursorSpelling(cur)), Node::Namespace);
+        return parent->findNonfunctionChild(name, &Node::isNamespace);
     case CXCursor_StructDecl:
     case CXCursor_ClassDecl:
     case CXCursor_UnionDecl:
     case CXCursor_ClassTemplate:
-        return parent->findChildNode(fromCXString(clang_getCursorSpelling(cur)), Node::Class);
+        return parent->findNonfunctionChild(name, &Node::isClassNode);
     case CXCursor_FunctionDecl:
     case CXCursor_FunctionTemplate:
     case CXCursor_CXXMethod:
@@ -288,12 +289,12 @@ static Node *findNodeForCursor(QDocDatabase* qdb, CXCursor cur) {
         return nullptr;
     }
     case CXCursor_EnumDecl:
-        return parent->findChildNode(fromCXString(clang_getCursorSpelling(cur)), Node::Enum);
+        return parent->findNonfunctionChild(name, &Node::isEnumType);
     case CXCursor_FieldDecl:
     case CXCursor_VarDecl:
-        return parent->findChildNode(fromCXString(clang_getCursorSpelling(cur)), Node::Variable);
+        return parent->findNonfunctionChild(name, &Node::isVariable);
     case CXCursor_TypedefDecl:
-        return parent->findChildNode(fromCXString(clang_getCursorSpelling(cur)), Node::Typedef);
+        return parent->findNonfunctionChild(name, &Node::isTypedef);
     default:
         return nullptr;
     }
@@ -462,7 +463,7 @@ private:
      */
     QString adjustTypeName(const QString &typeName) {
         auto parent = parent_->parent();
-        if (parent && parent->isClass()) {
+        if (parent && parent->isClassNode()) {
             QStringRef typeNameConstRemoved(&typeName);
             if (typeNameConstRemoved.startsWith(QLatin1String("const ")))
                 typeNameConstRemoved = typeName.midRef(6);
@@ -575,7 +576,6 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         Q_FALLTHROUGH();
     case CXCursor_ClassDecl:
     case CXCursor_ClassTemplate: {
-
         if (!clang_isCursorDefinition(cursor))
             return CXChildVisit_Continue;
 
@@ -585,11 +585,18 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         QString className = fromCXString(clang_getCursorSpelling(cursor));
 
         Aggregate* semanticParent = getSemanticParent(cursor);
-        if (semanticParent && semanticParent->findChildNode(className, Node::Class)) {
+        if (semanticParent && semanticParent->findNonfunctionChild(className, &Node::isClassNode)) {
             return CXChildVisit_Continue;
         }
 
-        ClassNode *classe = new ClassNode(semanticParent, className);
+        Node::NodeType type;
+        if (kind == CXCursor_ClassDecl || kind == CXCursor_ClassTemplate)
+            type = Node::Class;
+        else if (kind == CXCursor_StructDecl)
+            type = Node::Struct;
+        else
+            type = Node::Union;
+        ClassNode *classe = new ClassNode(type, semanticParent, className);
         classe->setAccess(fromCX_CXXAccessSpecifier(clang_getCXXAccessSpecifier(cursor)));
         classe->setLocation(fromCXSourceLocation(clang_getCursorLocation(cursor)));
 
@@ -603,14 +610,14 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
 
     }
     case CXCursor_CXXBaseSpecifier: {
-        if (!parent_->isClass())
+        if (!parent_->isClassNode())
             return CXChildVisit_Continue;
         auto access = fromCX_CXXAccessSpecifier(clang_getCXXAccessSpecifier(cursor));
         auto type = clang_getCursorType(cursor);
         auto baseCursor = clang_getTypeDeclaration(type);
         auto baseNode = findNodeForCursor(qdb_, baseCursor);
         auto classe = static_cast<ClassNode*>(parent_);
-        if (!baseNode || !baseNode->isClass()) {
+        if (!baseNode || !baseNode->isClassNode()) {
             QString bcName = fromCXString(clang_getCursorSpelling(baseCursor));
             classe->addUnresolvedBaseClass(access, QStringList(bcName), bcName);
             return CXChildVisit_Continue;
@@ -623,7 +630,7 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         QString namespaceName = fromCXString(clang_getCursorDisplayName(cursor));
         NamespaceNode* ns = nullptr;
         if (parent_)
-            ns = static_cast<NamespaceNode*>(parent_->findChildNode(namespaceName, Node::Namespace));
+            ns = static_cast<NamespaceNode*>(parent_->findNonfunctionChild(namespaceName, &Node::isNamespace));
         if (!ns) {
             ns = new NamespaceNode(parent_, namespaceName);
             ns->setAccess(Node::Public);
@@ -734,7 +741,7 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
     case CXCursor_FriendDecl: {
         // Friend functions are declared in the enclosing namespace
         Aggregate *ns = parent_;
-        while (ns && ns->isClass())
+        while (ns && ns->isClassNode())
             ns = ns->parent();
         QScopedValueRollback<Aggregate *> setParent(parent_, ns);
         // Visit the friend functions
@@ -748,8 +755,8 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         EnumNode* en = nullptr;
         if (enumTypeName.isEmpty()) {
             enumTypeName = "anonymous";
-            if (parent_ && (parent_->isClass() || parent_->isNamespace())) {
-                Node* n = parent_->findChildNode(enumTypeName, Node::Enum);
+            if (parent_ && (parent_->isClassNode() || parent_->isNamespace())) {
+                Node* n = parent_->findNonfunctionChild(enumTypeName, &Node::isEnumType);
                 if (n)
                     en = static_cast<EnumNode*>(n);
             }
@@ -796,7 +803,7 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         var->setAccess(access);
         var->setLocation(fromCXSourceLocation(clang_getCursorLocation(cursor)));
         var->setLeftType(fromCXString(clang_getTypeSpelling(clang_getCursorType(cursor))));
-        var->setStatic(kind == CXCursor_VarDecl && parent_->isClass());
+        var->setStatic(kind == CXCursor_VarDecl && parent_->isClassNode());
         return CXChildVisit_Continue;
     }
     case CXCursor_TypedefDecl: {
@@ -824,7 +831,7 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         return CXChildVisit_Continue;
     }
     default:
-        if (clang_isDeclaration(kind) && parent_->isClass()) {
+        if (clang_isDeclaration(kind) && parent_->isClassNode()) {
             // maybe a static_assert (which is not exposed from the clang API)
             QString spelling =  getSpelling(clang_getCursorExtent(cursor));
             if (spelling.startsWith(QLatin1String("Q_PROPERTY"))

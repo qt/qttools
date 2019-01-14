@@ -123,12 +123,13 @@ class Tree
     Node* findNodeRecursive(const QStringList& path,
                             int pathIndex,
                             const Node* start,
-                            Node::NodeType type) const;
+                            bool (Node::*) () const) const;
+#if 0
     Node* findNodeRecursive(const QStringList& path,
                             int pathIndex,
-                            Node* start,
-                            const QList<int> &types) const;
-
+                            const Node* start,
+                            Node::NodeType type) const;
+#endif
     const Node* findNodeForTarget(const QStringList& path,
                                   const QString& target,
                                   const Node* node,
@@ -150,8 +151,8 @@ class Tree
 
     QmlTypeNode* findQmlTypeNode(const QStringList& path);
 
-    Node* findNodeByNameAndType(const QStringList& path, Node::NodeType type) const;
-    Aggregate *findRelatesNode(const QStringList &path);
+    Node* findNodeByNameAndType(const QStringList& path, bool (Node::*isMatch) () const) const;
+    Aggregate* findRelatesNode(const QStringList& path);
     QString getRef(const QString& target, const Node* node) const;
     void insertTarget(const QString& name,
                       const QString& title,

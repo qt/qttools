@@ -76,6 +76,8 @@ public:
         NoType,
         Namespace,
         Class,
+        Struct,
+        Union,
         HeaderFile,
         Page,
         Enum,
@@ -168,6 +170,7 @@ public:
     static PageType getPageType(NodeType t);
 
     bool isActive() const { return (status_ == (unsigned char) Active); }
+    bool isAnyType() const { return true; }
     bool isClass() const { return nodeType_ == Class; }
     bool isCppNode() const { return genus() == CPP; }
     bool isEnumType() const { return nodeType_ == Enum; }
@@ -201,16 +204,20 @@ public:
     bool isQmlPropertyGroup() const { return nodeType_ == QmlPropertyGroup; }
     bool isQmlType() const { return nodeType_ == QmlType; }
     bool isRelatedNonmember() const { return relatedNonmember_; }
+    bool isStruct() const { return nodeType_ == Struct; }
     bool isSharedCommentNode() const { return nodeType_ == SharedComment; }
     bool isTypeAlias() const { return nodeType_ == Typedef; }
     bool isTypedef() const { return nodeType_ == Typedef; }
+    bool isUnion() const { return nodeType_ == Union; }
     bool isVariable() const { return nodeType_ == Variable; }
     bool isGenericCollection() const { return (nodeType_ == Node::Collection); }
 
     virtual bool isAbstract() const { return false; }
     virtual bool isAggregate() const { return false; } // means "can have children"
+    virtual bool isFirstClassAggregate() const { return false; } // Aggregate but not proxy or prop group"
     virtual bool isAlias() const { return false; }
     virtual bool isAttached() const { return false; }
+    virtual bool isClassNode() const { return false; }
     virtual bool isCollectionNode() const { return false; }
     virtual bool isDefault() const { return false; }
     virtual bool isInternal() const;
@@ -218,6 +225,7 @@ public:
     virtual bool isPageNode() const { return false; } // means "generates a doc page"
     virtual bool isQtQuickNode() const { return false; }
     virtual bool isReadOnly() const { return false; }
+    virtual bool isRelatableType() const { return false; }
     virtual bool isMarkedReimp() const { return false; }
     virtual bool isStatic() const { return false; }
     virtual bool isTextPageNode() const { return false; } // means PageNode but not Aggregate
@@ -442,10 +450,10 @@ class Aggregate : public PageNode
 {
 public:
     Node* findChildNode(const QString& name, Node::Genus genus, int findFlags = 0) const;
-    Node* findChildNode(const QString& name, NodeType type);
-    void findChildren(const QString &name, NodeVector &nodes) const;
-    FunctionNode *findFunctionChild(const QString &name, const Parameters &parameters);
-    FunctionNode *findFunctionChild(const FunctionNode *clone);
+    Node* findNonfunctionChild(const QString& name, bool (Node::*) () const);
+    void findChildren(const QString& name, NodeVector& nodes) const;
+    FunctionNode* findFunctionChild(const QString& name, const Parameters &parameters);
+    FunctionNode* findFunctionChild(const FunctionNode* clone);
 
     void normalizeOverloads();
     void markUndocumentedChildrenInternal();
@@ -485,6 +493,7 @@ public:
     bool hasOverloads(const FunctionNode *fn) const;
     void appendToRelatedByProxy(const NodeList &t) { relatedByProxy_.append(t); }
     NodeList &relatedByProxy() { return relatedByProxy_; }
+    QString typeWord(bool cap) const;
 
 protected:
     Aggregate(NodeType type, Aggregate *parent, const QString &name)
@@ -516,6 +525,7 @@ class ProxyNode : public Aggregate
  public:
     ProxyNode(Aggregate *parent, const QString &name);
     bool docMustBeGenerated() const override { return true; }
+    bool isRelatableType() const override { return true; }
 };
 
 class NamespaceNode : public Aggregate
@@ -525,8 +535,10 @@ public:
         seen_(false), documented_(false), tree_(0), docNode_(0) { }
     virtual ~NamespaceNode();
     Tree* tree() const override { return (parent() ? parent()->tree() : tree_); }
-    bool wasSeen() const override { return seen_; }
 
+    bool isFirstClassAggregate() const override { return true; }
+    bool isRelatableType() const override { return true; }
+    bool wasSeen() const override { return seen_; }
     void markSeen() { seen_ = true; }
     void markNotSeen() { seen_ = false; }
     void setTree(Tree* t) { tree_ = t; }
@@ -585,9 +597,12 @@ struct UsingClause
 class ClassNode : public Aggregate
 {
 public:
-    ClassNode(Aggregate* parent, const QString& name) : Aggregate(Class, parent, name),
+    ClassNode(NodeType type, Aggregate* parent, const QString& name) : Aggregate(type, parent, name),
         abstract_(false),  wrapper_(false), qmlelement(0) { }
     virtual ~ClassNode() { }
+    bool isFirstClassAggregate() const override { return true; }
+    bool isClassNode() const override { return true; }
+    bool isRelatableType() const override { return true; }
     bool isWrapper() const override { return wrapper_; }
     QString obsoleteLink() const override { return obsoleteLink_; }
     void setObsoleteLink(const QString& t) override { obsoleteLink_ = t; }
@@ -634,6 +649,8 @@ class HeaderNode : public Aggregate
 public:
     HeaderNode(Aggregate* parent, const QString& name) : Aggregate(HeaderFile, parent, name) { }
     virtual ~HeaderNode() { }
+    bool isFirstClassAggregate() const override { return true; }
+    bool isRelatableType() const override { return true; }
     QString title() const override { return (title_.isEmpty() ? name() : title_); }
     QString subtitle() const override { return subtitle_; }
     QString fullTitle() const override { return (title_.isEmpty() ? name() : name() + " - " + title_); }
@@ -692,6 +709,7 @@ class QmlTypeNode : public Aggregate
 public:
     QmlTypeNode(Aggregate* parent, const QString& name, NodeType type = QmlType);
     virtual ~QmlTypeNode();
+    bool isFirstClassAggregate() const override { return true; }
     bool isQtQuickNode() const override {
         return (logicalModuleName() == QLatin1String("QtQuick"));
     }
@@ -746,6 +764,7 @@ class QmlBasicTypeNode : public Aggregate
 public:
     QmlBasicTypeNode(Aggregate* parent, const QString& name, NodeType type = QmlBasicType);
     virtual ~QmlBasicTypeNode() { }
+    bool isFirstClassAggregate() const override { return true; }
 };
 
 class QmlPropertyGroupNode : public Aggregate
