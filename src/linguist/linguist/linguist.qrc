@@ -29,7 +29,6 @@
         <file>images/s_check_off.png</file>
         <file>images/s_check_on.png</file>
         <file>images/s_check_warning.png</file>
-        <file>images/splash.png</file>
         <file>images/up.png</file>
         <file>images/down.png</file>
         <file>images/editdelete.png</file>
@@ -57,5 +56,6 @@
         <file>images/win/undo.png</file>
         <file>images/win/validateplacemarkers.png</file>
         <file>images/win/whatsthis.png</file>
+        <file>images/icons/linguist-128-32.png</file>
     </qresource>
 </RCC>
