@@ -1096,6 +1096,16 @@ void deployPlugins(const ApplicationBundleInfo &appBundleInfo, const QString &pl
 
     addPlugins(QStringLiteral("iconengines"));
 
+    // Platforminputcontext plugins if QtGui is in use
+    if (deploymentInfo.containsModule("Gui", libInfix)) {
+        addPlugins(QStringLiteral("platforminputcontexts"), [&addPlugins](const QString &lib) {
+            // Deploy the virtual keyboard plugins if we have deployed virtualkeyboard
+            if (lib.startsWith(QStringLiteral("libqtvirtualkeyboard")))
+                addPlugins(QStringLiteral("virtualkeyboard"));
+            return true;
+        });
+    }
+
     // Sql plugins if QtSql is in use
     if (deploymentInfo.containsModule("Sql", libInfix)) {
         addPlugins(QStringLiteral("sqldrivers"), [](const QString &lib) {
