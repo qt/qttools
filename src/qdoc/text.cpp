@@ -171,6 +171,23 @@ QString Text::toString() const
     return str;
 }
 
+/*!
+  Returns true if this Text contains the substring \a str.
+ */
+bool Text::contains(const QString &str) const
+{
+    const Atom* atom = firstAtom();
+    while (atom != 0) {
+        if (atom->type() == Atom::String ||
+            atom->type() == Atom::AutoLink ||
+            atom->type() == Atom::C)
+            if (atom->string().contains(str, Qt::CaseInsensitive))
+                return true;
+        atom = atom->next();
+    }
+    return false;
+}
+
 Text Text::subText(Atom::AtomType left, Atom::AtomType right, const Atom* from, bool inclusive) const
 {
     const Atom* begin = from ? from : firstAtom();

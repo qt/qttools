@@ -58,6 +58,7 @@ public:
     void stripLastAtom();
 
     bool isEmpty() const { return first == 0; }
+    bool contains(const QString& str) const;
     QString toString() const;
     const Atom *firstAtom() const { return first; }
     const Atom *lastAtom() const { return last; }
