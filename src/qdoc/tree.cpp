@@ -965,7 +965,7 @@ void Tree::insertTarget(const QString& name,
 void Tree::resolveTargets(Aggregate* root)
 {
     foreach (Node* child, root->childNodes()) {
-        if (child->nodeType() == Node::Page) {
+        if (child->isTextPageNode()) {
             PageNode* node = static_cast<PageNode*>(child);
             QString key = node->title();
             if (!key.isEmpty()) {
