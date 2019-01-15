@@ -163,9 +163,8 @@ QString Text::toString() const
     const Atom* atom = firstAtom();
     while (atom != 0) {
         if (atom->type() == Atom::String ||
-                atom->type() == Atom::AutoLink ||
-                atom->type() == Atom::C ||
-                atom->type() == Atom::GuidLink)
+            atom->type() == Atom::AutoLink ||
+            atom->type() == Atom::C)
             str += atom->string();
         atom = atom->next();
     }

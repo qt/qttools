@@ -70,7 +70,6 @@ public:
         FormattingLeft,
         FormattingRight,
         GeneratedList,
-        GuidLink,
         HR,
         Image,
         ImageText,
