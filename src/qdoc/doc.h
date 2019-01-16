@@ -135,9 +135,6 @@ public:
     ~Doc();
 
     Doc& operator=( const Doc& doc );
-
-    void renameParameters(const QStringList &oldNames,
-                          const QStringList &newNames);
     void simplifyEnumDoc();
     void setBody(const Text &body);
     const DitaRefList& ditamap() const;

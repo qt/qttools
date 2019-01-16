@@ -2887,30 +2887,6 @@ Doc &Doc::operator=(const Doc& doc)
     return *this;
 }
 
-void Doc::renameParameters(const QStringList &oldNames,
-                           const QStringList &newNames)
-{
-    if (priv && oldNames != newNames) {
-        detach();
-
-        priv->params = newNames.toSet();
-
-        Atom *atom = priv->text.firstAtom();
-        while (atom) {
-            if (atom->type() == Atom::FormattingLeft
-                    && atom->string() == ATOM_FORMATTING_PARAMETER) {
-                atom = atom->next();
-                if (!atom)
-                    return;
-                int index = oldNames.indexOf(atom->string());
-                if (index != -1 && index < newNames.count())
-                    atom->setString(newNames.at(index));
-            }
-            atom = atom->next();
-        }
-    }
-}
-
 void Doc::simplifyEnumDoc()
 {
     if (priv) {
