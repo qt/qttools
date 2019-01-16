@@ -3787,10 +3787,6 @@ QString HtmlGenerator::getAutoLink(const Atom *atom, const Node *relative, const
     QString link = (*node)->url();
     if (link.isEmpty())
         link = linkForNode(*node, relative);
-#if 0 // should never happen now; mws 13/07/2018
-        if ((*node)->nodeSubtype() == Node::Image)
-            link = "images/used-in-examples/" + link;
-#endif
     if (!ref.isEmpty()) {
         int hashtag = link.lastIndexOf(QChar('#'));
         if (hashtag != -1)

@@ -255,30 +255,6 @@ QList<QQmlJS::AST::SourceLocation> QmlCodeMarker::extractPragmas(QString &script
                                                    endOffset - startOffset,
                                                    startLine,
                                                    startColumn));
-#if 0
-        token = l.lex();
-        if (Generator::debugging())
-            qDebug() << "  third token";
-        if (token != QQmlJSGrammar::T_IDENTIFIER ||
-                l.tokenStartLine() != startLine)
-            return removed;
-
-        QString pragmaValue = script.mid(l.tokenOffset(), l.tokenLength());
-        int endOffset = l.tokenLength() + l.tokenOffset();
-
-        token = l.lex();
-        if (l.tokenStartLine() == startLine)
-            return removed;
-
-        if (pragmaValue == QLatin1String("library")) {
-            replaceWithSpace(script, startOffset, endOffset - startOffset);
-            removed.append(
-                        QQmlJS::AST::SourceLocation(
-                            startOffset, endOffset - startOffset,
-                            startLine, startColumn));
-        } else
-            return removed;
-#endif
     }
     return removed;
 }
