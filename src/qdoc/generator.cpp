@@ -376,7 +376,19 @@ QString Generator::fileBase(const Node *node) const
         return node->fileNameBase();
 
     QString base;
-    if (node->isTextPageNode()) {
+    if (node->isCollectionNode()) {
+        base = node->name() + outputSuffix(node);
+        if (base.endsWith(".html"))
+            base.truncate(base.length() - 5);
+
+        if (node->isQmlModule())
+            base.append("-qmlmodule");
+        else if (node->isJsModule())
+            base.append("-jsmodule");
+        else if (node->isModule())
+            base.append("-module");
+        // Why not add "-group" for group pages?
+    } else if (node->isTextPageNode()) {
         base = node->name();
         if (base.endsWith(".html"))
             base.truncate(base.length() - 5);
@@ -407,22 +419,6 @@ QString Generator::fileBase(const Node *node) const
                          + QLatin1Char('-'));
         }
         base.prepend(outputPrefix(node));
-    }
-    else if (node->isCollectionNode()) {
-        base = node->name() + outputSuffix(node);
-        if (base.endsWith(".html"))
-            base.truncate(base.length() - 5);
-
-        if (node->isQmlModule()) {
-            base.append("-qmlmodule");
-        }
-        else if (node->isJsModule()) {
-            base.append("-jsmodule");
-        }
-        else if (node->isModule()) {
-            base.append("-module");
-        }
-        // Why not add "-group" for group pages?
     }
     else {
         const Node *p = node;
