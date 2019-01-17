@@ -351,11 +351,10 @@ void Tree::resolveInheritance(Aggregate* n)
     for (int pass = 0; pass < 2; pass++) {
         NodeList::ConstIterator c = n->childNodes().constBegin();
         while (c != n->childNodes().constEnd()) {
-            if ((*c)->nodeType() == Node::Class) {
+            if ((*c)->isClass()) {
                 resolveInheritanceHelper(pass, (ClassNode*)*c);
                 resolveInheritance((ClassNode*)*c);
-            }
-            else if ((*c)->nodeType() == Node::Namespace) {
+            } else if ((*c)->isNamespace()) {
                 NamespaceNode* ns = static_cast<NamespaceNode*>(*c);
                 resolveInheritance(ns);
             }
@@ -416,7 +415,7 @@ void Tree::resolveInheritanceHelper(int pass, ClassNode* cn)
     else {
         NodeList::ConstIterator c = cn->childNodes().constBegin();
         while (c != cn->childNodes().constEnd()) {
-            if ((*c)->nodeType() == Node::Property)
+            if ((*c)->isProperty())
                 cn->fixPropertyUsingBaseClasses(static_cast<PropertyNode*>(*c));
             ++c;
         }
@@ -440,7 +439,7 @@ void Tree::resolveProperties()
 
         NodeList::ConstIterator c = parent->childNodes().constBegin();
         while (c != parent->childNodes().constEnd()) {
-            if ((*c)->nodeType() == Node::Function) {
+            if ((*c)->isFunction()) {
                 FunctionNode* function = static_cast<FunctionNode*>(*c);
                 if (function->access() == property->access() &&
                         (function->status() == property->status() ||
@@ -526,9 +525,9 @@ void Tree::fixInheritance(NamespaceNode* rootNode)
 
     NodeList::ConstIterator c = rootNode->childNodes().constBegin();
     while (c != rootNode->childNodes().constEnd()) {
-        if ((*c)->nodeType() == Node::Class)
+        if ((*c)->isClass())
             static_cast<ClassNode*>(*c)->fixBaseClasses();
-        else if ((*c)->nodeType() == Node::Namespace) {
+        else if ((*c)->isNamespace()) {
             NamespaceNode* ns = static_cast<NamespaceNode*>(*c);
             fixInheritance(ns);
         }

@@ -369,7 +369,7 @@ QString Generator::fileBase(const Node *node) const
         node = node->relates();
     else if (!node->isPageNode() && !node->isCollectionNode())
         node = node->parent();
-    if (node->nodeType() == Node::QmlPropertyGroup)
+    if (node->isQmlPropertyGroup())
         node = node->parent();
 
     if (node->hasFileNameBase())
@@ -802,7 +802,7 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
           Test for special function, like a destructor or copy constructor,
           that has no documentation.
         */
-        if (node->nodeType() == Node::Function) {
+        if (node->isFunction()) {
             const FunctionNode* func = static_cast<const FunctionNode*>(node);
             if (func->isDtor()) {
                 Text text;
@@ -864,7 +864,7 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
         }
     }
     else if (!node->isSharingComment()) {
-        if (node->nodeType() == Node::Function) {
+        if (node->isFunction()) {
             const FunctionNode *func = static_cast<const FunctionNode *>(node);
             if (!func->reimplementedFrom().isEmpty())
                 generateReimplementedFrom(func, marker);
@@ -875,7 +875,7 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
                 return;
         }
 
-        if (node->nodeType() == Node::Enum) {
+        if (node->isEnumType()) {
             const EnumNode *enume = (const EnumNode *) node;
 
             QSet<QString> definedItems;
@@ -907,8 +907,7 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
                     ++a;
                 }
             }
-        }
-        else if (node->nodeType() == Node::Function) {
+        } else if (node->isFunction()) {
             const FunctionNode *func = static_cast<const FunctionNode *>(node);
             QSet<QString> definedParams;
             QVector<Parameter>::ConstIterator p = func->parameters().constBegin();
@@ -1310,7 +1309,7 @@ void Generator::generateSince(const Node *node, CodeMarker *marker)
         text << Atom::ParaLeft
              << "This "
              << typeString(node);
-        if (node->nodeType() == Node::Enum)
+        if (node->isEnumType())
             text << " was introduced or modified in ";
         else
             text << " was introduced in ";
@@ -1605,7 +1604,7 @@ void Generator::generateThreadSafeness(const Node *node, CodeMarker *marker)
  */
 void Generator::generateOverloadedSignal(const Node* node, CodeMarker* marker)
 {
-    if (node->nodeType() != Node::Function)
+    if (!node->isFunction())
         return;
     const FunctionNode *func = static_cast<const FunctionNode *>(node);
     if (!func->isSignal())

@@ -208,7 +208,7 @@ QStringList HelpProjectWriter::keywordDetails(const Node *node) const
 
     if (node->parent() && !node->parent()->name().isEmpty()) {
         // "name"
-        if (node->nodeType() == Node::Enum || node->nodeType() == Node::Typedef)
+        if (node->isEnumType() || node->isTypedef())
             details << node->parent()->name()+"::"+node->name();
         else
             details << node->name();
@@ -574,7 +574,7 @@ void HelpProjectWriter::addMembers(HelpProject &project, QXmlStreamWriter &write
         return;
 
     bool derivedClass = false;
-    if (node->nodeType() == Node::Class)
+    if (node->isClass())
         derivedClass = !(static_cast<const ClassNode *>(node)->baseClasses().isEmpty());
 
     // Do not generate a 'List of all members' for namespaces or header files,

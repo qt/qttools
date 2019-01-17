@@ -535,8 +535,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
             break;
         }
         out() << "<p>";
-        if (relative->nodeType() == Node::Property ||
-                relative->nodeType() == Node::Variable) {
+        if (relative->isProperty() || relative->isVariable()) {
             atom = atom->next();
             if (atom != nullptr && atom->type() == Atom::String) {
                 QString firstWord = atom->string().toLower().section(' ', 0, 0, QString::SectionSkipEmpty);
@@ -546,7 +545,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
                       || firstWord == QLatin1String("whether")
                       || firstWord == QLatin1String("which")) {
                     QString str = "This ";
-                    if (relative->nodeType() == Node::Property)
+                    if (relative->isProperty())
                         str += "property holds ";
                     else
                         str += "variable holds ";
@@ -1023,7 +1022,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
                 out() << "<th class=\"tblConst\">Constant</th>";
 
                 // If not in \enum topic, skip the value column
-                if (relative->nodeType() == Node::Enum)
+                if (relative->isEnumType())
                     out() << "<th class=\"tblval\">Value</th>";
 
                 out() << "<th class=\"tbldscr\">Description</th></tr>\n";
@@ -1085,7 +1084,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
             t = protectEnc(plainCode(marker->markedUpEnumValue(t, relative)));
             out() << "<tr><td class=\"topAlign\"><code>" << t << "</code>";
 
-            if (relative->nodeType() == Node::Enum) {
+            if (relative->isEnumType()) {
                 out() << "</td><td class=\"topAlign tblval\">";
                 const EnumNode *enume = static_cast<const EnumNode *>(relative);
                 QString itemValue = enume->itemValue(atom->next()->string());
@@ -1504,7 +1503,7 @@ void HtmlGenerator::generateCppReferencePage(Node* node, CodeMarker* marker)
                 out() << "<h2>" << protectEnc(s->title()) << "</h2>\n";
                 headerGenerated = true;
             }
-            if ((*m)->nodeType() != Node::Class)
+            if (!(*m)->isClass())
                 generateDetailedMember(*m, aggregate, marker);
             else {
                 out() << "<h3> class ";
@@ -1515,11 +1514,11 @@ void HtmlGenerator::generateCppReferencePage(Node* node, CodeMarker* marker)
 
             QStringList names;
             names << (*m)->name();
-            if ((*m)->nodeType() == Node::Function) {
+            if ((*m)->isFunction()) {
                 const FunctionNode *func = reinterpret_cast<const FunctionNode *>(*m);
                 if (func->isSomeCtor() || func->isDtor() || func->overloadNumber() != 0)
                     names.clear();
-            } else if ((*m)->nodeType() == Node::Property) {
+            } else if ((*m)->isProperty()) {
                 const PropertyNode *prop = reinterpret_cast<const PropertyNode *>(*m);
                 if (!prop->getters().isEmpty() &&
                     !names.contains(prop->getters().first()->name()))
@@ -1530,7 +1529,7 @@ void HtmlGenerator::generateCppReferencePage(Node* node, CodeMarker* marker)
                     names << prop->resetters().first()->name();
                 if (!prop->notifiers().isEmpty())
                     names << prop->notifiers().first()->name();
-            } else if ((*m)->nodeType() == Node::Enum) {
+            } else if ((*m)->isEnumType()) {
                 const EnumNode *enume = reinterpret_cast<const EnumNode*>(*m);
                 if (enume->flagsType())
                     names << enume->flagsType()->name();
@@ -2152,7 +2151,7 @@ void HtmlGenerator::generateRequisites(Aggregate *aggregate, CodeMarker *marker)
         requisites.insert(sinceText, text);
     }
 
-    if (aggregate->nodeType() == Node::Class || aggregate->nodeType() == Node::Namespace) {
+    if (aggregate->isClass() || aggregate->isNamespace()) {
         //add the QT variable to the map
         if (!aggregate->physicalModuleName().isEmpty()) {
             const CollectionNode* cn = qdb_->getCollectionNode(aggregate->physicalModuleName(), Node::Module);
@@ -2164,7 +2163,7 @@ void HtmlGenerator::generateRequisites(Aggregate *aggregate, CodeMarker *marker)
         }
     }
 
-    if (aggregate->nodeType() == Node::Class) {
+    if (aggregate->isClass()) {
         ClassNode* classe = static_cast<ClassNode*>(aggregate);
         if (classe->qmlElement() != nullptr && classe->status() != Node::Internal) {
             text.clear();
@@ -3196,7 +3195,7 @@ void HtmlGenerator::generateSection(const NodeVector& nv, const Node *relative, 
     bool alignNames = true;
     if (!nv.isEmpty()) {
         bool twoColumn = false;
-        if (nv.first()->nodeType() == Node::Property) {
+        if (nv.first()->isProperty()) {
             twoColumn = (nv.count() >= 5);
             alignNames = false;
         }
@@ -3259,8 +3258,7 @@ void HtmlGenerator::generateSectionList(const Section& section,
         if (section.style() == Section::AllMembers) {
             alignNames = false;
             twoColumn = (members.count() >= 16);
-        }
-        else if (members.first()->nodeType() == Node::Property) {
+        } else if (members.first()->isProperty()) {
             twoColumn = (members.count() >= 5);
             alignNames = false;
         }
@@ -4009,7 +4007,7 @@ const QPair<QString,QString> HtmlGenerator::anchorForNode(const Node *node)
     QPair<QString,QString> anchorPair;
 
     anchorPair.first = Generator::fileName(node);
-    if (node->nodeType() == Node::Page) {
+    if (node->isPageNode()) {
         const PageNode *pn = static_cast<const PageNode*>(node);
         anchorPair.second = pn->title();
     }
@@ -4096,13 +4094,13 @@ void HtmlGenerator::generateQmlSummary(const Section& section,
         while (m != section.members().constEnd()) {
             out() << "<li class=\"fn\">";
             generateQmlItem(*m,relative,marker,true);
-            if ((*m)->nodeType() == Node::QmlPropertyGroup) {
+            if ((*m)->isQmlPropertyGroup()) {
                 const QmlPropertyGroupNode* qpgn = static_cast<const QmlPropertyGroupNode*>(*m);
                 if (!qpgn->childNodes().isEmpty()) {
                     NodeList::ConstIterator p = qpgn->childNodes().constBegin();
                     out() << "<ul>\n";
                     while (p != qpgn->childNodes().constEnd()) {
-                        if ((*p)->nodeType() == Node::QmlProperty) {
+                        if ((*p)->isQmlProperty()) {
                             out() << "<li class=\"fn\">";
                             generateQmlItem(*p, relative, marker, true);
                             out() << "</li>\n";
@@ -4320,24 +4318,24 @@ void HtmlGenerator::generateExtractionMark(const Node *node, ExtractionMarkType 
     if (markType != EndMark) {
         out() << "<!-- $$$" + node->name();
         if (markType == MemberMark) {
-            if (node->nodeType() == Node::Function) {
+            if (node->isFunction()) {
                 const FunctionNode *func = static_cast<const FunctionNode *>(node);
                 if (!func->hasAssociatedProperties()) {
                     if (func->overloadNumber() == 0)
                         out() << "[overload1]";
                     out() << "$$$" + func->name() + func->rawParameters().remove(' ');
                 }
-            } else if (node->nodeType() == Node::Property) {
+            } else if (node->isProperty()) {
                 out() << "-prop";
                 const PropertyNode *prop = static_cast<const PropertyNode *>(node);
                 const NodeList &list = prop->functions();
                 foreach (const Node *propFuncNode, list) {
-                    if (propFuncNode->nodeType() == Node::Function) {
+                    if (propFuncNode->isFunction()) {
                         const FunctionNode *func = static_cast<const FunctionNode *>(propFuncNode);
                         out() << "$$$" + func->name() + func->rawParameters().remove(' ');
                     }
                 }
-            } else if (node->nodeType() == Node::Enum) {
+            } else if (node->isEnumType()) {
                 const EnumNode *enumNode = static_cast<const EnumNode *>(node);
                 foreach (const EnumItem &item, enumNode->items())
                     out() << "$$$" + item.name();

@@ -140,7 +140,7 @@ bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
             return false;
     }
 
-    if (n1->nodeType() == Node::Function && n2->nodeType() == Node::Function) {
+    if (n1->isFunction() && n2->isFunction()) {
         const FunctionNode* f1 = static_cast<const FunctionNode*>(n1);
         const FunctionNode* f2 = static_cast<const FunctionNode*>(n2);
 

@@ -247,7 +247,7 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer,
         default:
             break;
         }
-        if (relative->nodeType() == Node::Property || relative->nodeType() == Node::Variable) {
+        if (relative->isProperty() || relative->isVariable()) {
             QString str;
             const Atom *a = atom->next();
             while (a != nullptr && a->type() != Atom::BriefRight) {
@@ -273,7 +273,7 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer,
         break;
 
     case Atom::BriefRight:
-        if (relative->nodeType() == Node::Property || relative->nodeType() == Node::Variable)
+        if (relative->isProperty() || relative->isVariable())
             writer.writeCharacters(".");
 
         writer.writeEndElement(); // brief
@@ -455,7 +455,7 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer,
         else if (atom->string() == ATOM_LIST_TAG)
             writer.writeAttribute("type", "definition");
         else if (atom->string() == ATOM_LIST_VALUE) {
-            if (relative->nodeType() == Node::Enum)
+            if (relative->isEnumType())
                 writer.writeAttribute("type", "enum");
             else
                 writer.writeAttribute("type", "definition");

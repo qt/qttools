@@ -604,7 +604,7 @@ void CppCodeParser::processOtherMetaCommand(const Doc& doc,
     }
     else if (command == COMMAND_REIMP) {
         if (node != 0 && node->parent() && !node->parent()->isInternal()) {
-            if (node->nodeType() == Node::Function) {
+            if (node->isFunction()) {
                 FunctionNode *func = (FunctionNode *) node;
                 if (func->reimplementedFrom().isEmpty() && isWorthWarningAbout(doc)) {
                     doc.location().warning(tr("Cannot find base function for '\\%1' in %2()")

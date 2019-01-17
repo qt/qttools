@@ -141,7 +141,7 @@ void QDocTagFiles::generateTagFileCompounds(QXmlStreamWriter& writer, const Aggr
         writer.writeStartElement("compound");
         writer.writeAttribute("kind", kind);
 
-        if (node->nodeType() == Node::Class) {
+        if (node->isClass()) {
             writer.writeTextElement("name", node->fullDocumentName());
             writer.writeTextElement("filename", gen_->fullDocumentLocation(node, false));
 

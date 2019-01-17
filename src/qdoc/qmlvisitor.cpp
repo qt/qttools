@@ -551,7 +551,7 @@ bool QmlDocVisitor::visit(QQmlJS::AST::UiObjectDefinition *definition)
     QString type = getFullyQualifiedId(definition->qualifiedTypeNameId);
     nestingLevel++;
 
-    if (current->nodeType() == Node::Namespace) {
+    if (current->isNamespace()) {
         QmlTypeNode *component = new QmlTypeNode(current, name);
         component->setTitle(name);
         component->setImportList(importList);

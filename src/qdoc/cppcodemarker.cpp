@@ -405,7 +405,7 @@ QString CppCodeMarker::markedUpFullName(const Node *node, const Node *relative)
 
 QString CppCodeMarker::markedUpEnumValue(const QString &enumValue, const Node *relative)
 {
-    if (relative->nodeType() != Node::Enum)
+    if (!relative->isEnumType())
         return enumValue;
 
     const Node *node = relative->parent();
