@@ -805,6 +805,7 @@ static const PluginModuleMapping pluginModuleMappings[] =
     {"imageformats", QtGuiModule},
     {"platforms", QtGuiModule},
     {"platforminputcontexts", QtGuiModule},
+    {"virtualkeyboard", QtGuiModule},
     {"geoservices", QtLocationModule},
     {"audio", QtMultimediaModule},
     {"mediaservice", QtMultimediaModule},

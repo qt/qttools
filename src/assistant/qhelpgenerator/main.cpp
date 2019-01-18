@@ -70,7 +70,7 @@ int generateCollectionFile(const QByteArray &data, const QString &basePath, cons
     if (config.hasError()) {
         fputs(qPrintable(QHG::tr("Collection config file error: %1\n")
                          .arg(config.errorString())), stderr);
-        return -1;
+        return 1;
     }
 
     const QMap<QString, QString> &filesToGenerate = config.filesToGenerate();
@@ -79,13 +79,13 @@ int generateCollectionFile(const QByteArray &data, const QString &basePath, cons
         QHelpProjectData helpData;
         if (!helpData.readData(absoluteFilePath(basePath, it.key()))) {
             fprintf(stderr, "%s\n", qPrintable(helpData.errorMessage()));
-            return -1;
+            return 1;
         }
 
         HelpGenerator helpGenerator;
         if (!helpGenerator.generate(&helpData, absoluteFilePath(basePath, it.value()))) {
             fprintf(stderr, "%s\n", qPrintable(helpGenerator.error()));
-            return -1;
+            return 1;
         }
     }
 
@@ -96,20 +96,20 @@ int generateCollectionFile(const QByteArray &data, const QString &basePath, cons
         if (!colFi.dir().remove(colFi.fileName())) {
             fputs(qPrintable(QHG::tr("The file %1 cannot be overwritten.\n")
                              .arg(outputFile)), stderr);
-            return -1;
+            return 1;
         }
     }
 
     QHelpEngineCore helpEngine(outputFile);
     if (!helpEngine.setupData()) {
         fprintf(stderr, "%s\n", qPrintable(helpEngine.error()));
-        return -1;
+        return 1;
     }
 
     for (const QString &file : config.filesToRegister()) {
         if (!helpEngine.registerDocumentation(absoluteFilePath(basePath, file))) {
             fprintf(stderr, "%s\n", qPrintable(helpEngine.error()));
-            return -1;
+            return 1;
         }
     }
     if (!config.filesToRegister().isEmpty()) {
@@ -165,7 +165,7 @@ int generateCollectionFile(const QByteArray &data, const QString &basePath, cons
         QFile icon(absoluteFilePath(basePath, config.applicationIcon()));
         if (!icon.open(QIODevice::ReadOnly)) {
             fputs(qPrintable(QHG::tr("Cannot open %1.\n").arg(icon.fileName())), stderr);
-            return -1;
+            return 1;
         }
         CollectionConfiguration::setApplicationIcon(helpEngine, icon.readAll());
     }
@@ -183,7 +183,7 @@ int generateCollectionFile(const QByteArray &data, const QString &basePath, cons
         QFile icon(absoluteFilePath(basePath, config.aboutIcon()));
         if (!icon.open(QIODevice::ReadOnly)) {
             fputs(qPrintable(QHG::tr("Cannot open %1.\n").arg(icon.fileName())), stderr);
-            return -1;
+            return 1;
         }
         CollectionConfiguration::setAboutIcon(helpEngine, icon.readAll());
     }
@@ -205,7 +205,7 @@ int generateCollectionFile(const QByteArray &data, const QString &basePath, cons
             QFile f(fi.absoluteFilePath());
             if (!f.open(QIODevice::ReadOnly)) {
                 fputs(qPrintable(QHG::tr("Cannot open %1.\n").arg(f.fileName())), stderr);
-                return -1;
+                return 1;
             }
             QByteArray data = f.readAll();
             s << data;
@@ -350,7 +350,7 @@ int main(int argc, char *argv[])
         return 0;
     } else if (!error.isEmpty()) {
         fprintf(stderr, "%s\n\n%s", qPrintable(error), qPrintable(help));
-        return -1;
+        return 1;
     }
 
     // detect input file type (qhp or qhcp)
@@ -358,7 +358,7 @@ int main(int argc, char *argv[])
     QFile file(inputFile);
     if (!file.open(QIODevice::ReadOnly)) {
         fputs(qPrintable(QHG::tr("Could not open %1.\n").arg(inputFile)), stderr);
-        return -1;
+        return 1;
     }
 
     const QString outputExtension = inputType == InputQhp ? QCH : QHC;
@@ -385,7 +385,7 @@ int main(int argc, char *argv[])
         QHelpProjectData *helpData = new QHelpProjectData();
         if (!helpData->readData(inputFile)) {
             fprintf(stderr, "%s\n", qPrintable(helpData->errorMessage()));
-            return -1;
+            return 1;
         }
 
         HelpGenerator generator(silent);
@@ -397,7 +397,7 @@ int main(int argc, char *argv[])
         delete helpData;
         if (!success) {
             fprintf(stderr, "%s\n", qPrintable(generator.error()));
-            return -1;
+            return 1;
         }
     } else {
         const QByteArray data = file.readAll();

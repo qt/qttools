@@ -68,7 +68,6 @@
         \li \l{C++ Documentation Style}
         \li \l{QML Documentation Style}
         \endlist
-    \li \l{QML Documentation Example}
     \endlist
 
 */
@@ -397,7 +396,6 @@
     \page qdoc-categories.html
     \title Categories of Documentation
     \previouspage Writing Documentation
-    \nextpage QML Documentation Example
     \brief Describes the different types such as How-To's, Tutorials, Overviews,
     Examples, and Class Documentation.
 

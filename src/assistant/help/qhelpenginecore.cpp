@@ -83,6 +83,10 @@ bool QHelpEngineCorePrivate::setup()
     emit q->setupStarted();
     emitReadersAboutToBeInvalidated();
 
+    const QVariant readOnlyVariant = q->property("_q_readonly");
+    const bool readOnly = readOnlyVariant.isValid()
+            ? readOnlyVariant.toBool() : false;
+    collectionHandler->setReadOnly(readOnly);
     const bool opened = collectionHandler->openCollectionFile();
     if (opened)
         q->currentFilter();

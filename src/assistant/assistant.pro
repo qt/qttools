@@ -4,7 +4,8 @@ TEMPLATE = subdirs
 SUBDIRS += \
            help \
            assistant \
-           qhelpgenerator
+           qhelpgenerator \
+           qcollectiongenerator
 
 assistant.depends = help
 qhelpgenerator.depends = help
@@ -12,4 +13,5 @@ qhelpgenerator.depends = help
 qtNomakeTools( \
     assistant \
     qhelpgenerator \
+    qcollectiongenerator \
 )
