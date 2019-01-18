@@ -153,6 +153,9 @@ bool QHelpCollectionHandler::openCollectionFile()
         }
     }
 
+    if (m_readOnly)
+        return true;
+
     m_query->exec(QLatin1String("PRAGMA synchronous=OFF"));
     m_query->exec(QLatin1String("PRAGMA cache_size=3000"));
 
@@ -2317,6 +2320,11 @@ QStringList QHelpCollectionHandler::namespacesForFilter(const QString &filterNam
         namespaceList.append(m_query->value(0).toString());
 
     return namespaceList;
+}
+
+void QHelpCollectionHandler::setReadOnly(bool readOnly)
+{
+    m_readOnly = readOnly;
 }
 
 QT_END_NAMESPACE

@@ -1,5 +1,3 @@
-config_clang_done: return()
-
 defineReplace(extractVersion)      { return($$replace(1, ^(\\d+\\.\\d+\\.\\d+)(svn)?$, \\1)) }
 defineReplace(extractMajorVersion) { return($$replace(1, ^(\\d+)\\.\\d+\\.\\d+(svn)?$, \\1)) }
 defineReplace(extractMinorVersion) { return($$replace(1, ^\\d+\\.(\\d+)\\.\\d+(svn)?$, \\1)) }
@@ -39,10 +37,9 @@ defineReplace(findLLVMVersionFromLibDir) {
     return($$candidateVersion)
 }
 
-isEmpty(QDOC_USE_STATIC_LIBCLANG): QDOC_USE_STATIC_LIBCLANG = $$(QDOC_USE_STATIC_LIBCLANG)
-cache(QDOC_USE_STATIC_LIBCLANG)
+defineTest(qtConfTest_libclang) {
+    isEmpty(QDOC_USE_STATIC_LIBCLANG): QDOC_USE_STATIC_LIBCLANG = $$(QDOC_USE_STATIC_LIBCLANG)
 
-for(_, $$list(_)) { # just a way to break easily
     equals(QMAKE_HOST.os, Windows) {
         # on Windows we have only two host compilers, MSVC or mingw. The former we never
         # use for cross-compilation where it isn't also the target compiler. The latter
@@ -56,8 +53,26 @@ for(_, $$list(_)) { # just a way to break easily
         }
     }
     isEmpty(LLVM_INSTALL_DIR): LLVM_INSTALL_DIR = $$(LLVM_INSTALL_DIR)
+
     # Assume libclang is installed on the target system
-    isEmpty(LLVM_INSTALL_DIR): LLVM_INSTALL_DIR = $$system("llvm-config --prefix")
+    isEmpty(LLVM_INSTALL_DIR) {
+        llvmConfigCandidates = \
+            llvm-config-7 \
+            llvm-config-6.0 \
+            llvm-config-5.0 \
+            llvm-config-4.0 \
+            llvm-config-3.9 \
+            llvm-config
+
+        for (candidate, llvmConfigCandidates) {
+            LLVM_INSTALL_DIR = $$system("$$candidate --prefix 2>$$QMAKE_SYSTEM_NULL_DEVICE")
+            !isEmpty(LLVM_INSTALL_DIR) {
+                qtLog("Using Clang installation found in $${LLVM_INSTALL_DIR}." \
+                      "Set the LLVM_INSTALL_DIR environment variable to override.")
+                break()
+            }
+        }
+    }
     LLVM_INSTALL_DIR = $$clean_path($$LLVM_INSTALL_DIR)
 
     contains(QMAKE_HOST.arch, x86_64): \
@@ -66,8 +81,7 @@ for(_, $$list(_)) { # just a way to break easily
         clangInstallDir = $$replace(LLVM_INSTALL_DIR, _ARCH_, 32)
     isEmpty(LLVM_INSTALL_DIR) {
         win32 {
-            log("Set the LLVM_INSTALL_DIR environment variable to configure clang location (required to build qdoc).$$escape_expand(\\n)")
-            break()
+            return(false)
         }
         macos {
             # Default to homebrew llvm on macOS. The CLANG_VERSION test below will complain if missing.
@@ -91,17 +105,15 @@ for(_, $$list(_)) { # just a way to break easily
     }
     isEmpty(CLANG_VERSION) {
         !isEmpty(LLVM_INSTALL_DIR): \
-            error("Cannot determine clang version at $${clangInstallDir}.")
-        log("Set the LLVM_INSTALL_DIR environment variable to configure clang location.$$escape_expand(\\n)")
-        break()
+            qtLog("Cannot determine version of clang installation in $${clangInstallDir}.")
+        return(false)
     }
 
     LIBCLANG_MAIN_HEADER = $$CLANG_INCLUDEPATH/clang-c/Index.h
     !exists($$LIBCLANG_MAIN_HEADER) {
         !isEmpty(LLVM_INSTALL_DIR): \
-            error("Cannot find libclang's main header file, candidate: $${LIBCLANG_MAIN_HEADER}.")
-        log("Set the LLVM_INSTALL_DIR environment variable to configure clang location.$$escape_expand(\\n)")
-        break()
+            qtLog("Cannot find libclang's main header file, candidate: $${LIBCLANG_MAIN_HEADER}.")
+        return(false)
     }
 
     !contains(QMAKE_DEFAULT_LIBDIRS, $$CLANG_LIBDIR): CLANG_LIBS = -L$${CLANG_LIBDIR}
@@ -318,16 +330,31 @@ for(_, $$list(_)) { # just a way to break easily
 
     !versionIsAtLeast($$CLANG_VERSION, "3.9.0") {
         log("LLVM/Clang version >= 3.9.0 required, version provided: $${CLANG_VERSION}.$$escape_expand(\\n)")
-        log("Clang was found in $${clangInstallDir}. Set the LLVM_INSTALL_DIR environment variable to override.$$escape_expand(\\n)")
-        break()
+        return(false)
     }
 
-    cache(CLANG_LIBS)
-    cache(CLANG_INCLUDEPATH)
-    cache(CLANG_LIBDIR)
-    cache(CLANG_DEFINES)
-    cache(CLANG_VERSION)
-    cache(CONFIG, add, $$list(config_clang))
+    $${1}.libs = $$CLANG_LIBS
+    export($${1}.libs)
+    $${1}.cache += libs
+
+    $${1}.includepath = $$CLANG_INCLUDEPATH
+    export($${1}.includepath)
+    $${1}.cache += includepath
+
+    $${1}.libdir = $$CLANG_LIBDIR
+    export($${1}.libdir)
+    $${1}.cache += libdir
+
+    $${1}.defines = $$CLANG_DEFINES
+    export($${1}.defines)
+    $${1}.cache += defines
+
+    $${1}.version = $$CLANG_VERSION
+    export($${1}.version)
+    $${1}.cache += version
+
+    export($${1}.cache)
+
+    return(true)
 }
 
-cache(CONFIG, add, $$list(config_clang_done))

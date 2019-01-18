@@ -199,6 +199,8 @@ public:
                                         const QString &filterName) const;
     QStringList namespacesForFilter(const QString &filterName) const;
 
+    void setReadOnly(bool readOnly);
+
 signals:
     void error(const QString &msg) const;
 
@@ -232,6 +234,7 @@ private:
     QString m_connectionName;
     QSqlQuery *m_query = nullptr;
     bool m_vacuumScheduled = false;
+    bool m_readOnly = false;
 };
 
 QT_END_NAMESPACE

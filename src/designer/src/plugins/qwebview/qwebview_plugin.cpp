@@ -63,7 +63,7 @@ QString QWebViewPlugin::whatsThis() const
 
 QString QWebViewPlugin::includeFile() const
 {
-    return QStringLiteral("QtWebKitWidgets/QWebView");
+    return QStringLiteral("<QtWebKitWidgets/QWebView>");
 }
 
 QIcon QWebViewPlugin::icon() const

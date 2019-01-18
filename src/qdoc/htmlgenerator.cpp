@@ -1891,13 +1891,29 @@ void HtmlGenerator::generateNavigationBar(const QString &title,
     if (buildversion.isEmpty())
         return;
 
-    if (tableItems) {
+    navigationbar.clear();
+
+     if (tableItems) {
         out() << "</tr></table><table class=\"buildversion\"><tr>\n"
-              << "<td id=\"buildversion\" width=\"100%\" align=\"right\">"
-              << buildversion << "</td>\n";
+              << "<td id=\"buildversion\" width=\"100%\" align=\"right\">";
     } else {
-        out() << "<li id=\"buildversion\">" << buildversion << "</li>\n";
+        out() << "<li id=\"buildversion\">";
     }
+
+    // Link buildversion string to navigation.landingpage
+    if (!landingpage.isEmpty() && landingtitle != title) {
+        navigationbar << Atom(Atom::NavLink, landingpage)
+                      << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
+                      << Atom(Atom::String, buildversion)
+                      << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
+        generateText(navigationbar, node, marker);
+    } else {
+        out() << buildversion;
+    }
+    if (tableItems)
+        out() << "</td>\n";
+    else
+        out() << "</li>\n";
 }
 
 void HtmlGenerator::generateHeader(const QString& title,
