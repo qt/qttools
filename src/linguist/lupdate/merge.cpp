@@ -460,9 +460,13 @@ Translator merge(
             if (options & HeuristicSimilarText) {
                 int mi = tor.find(mv.context(), mv.comment(), mv.allReferences());
                 if (mi >= 0) {
-                    if (getSimilarityScore(tor.constMessage(mi).sourceText(), mv.sourceText())
-                            >= textSimilarityThreshold)
-                        continue;
+                    // The similar message found in tor (ts file) must NOT correspond exactly
+                    // to an other message is virginTor
+                    if (virginTor.find(tor.constMessage(mi)) < 0) {
+                        if (getSimilarityScore(tor.constMessage(mi).sourceText(), mv.sourceText())
+                                >= textSimilarityThreshold)
+                            continue;
+                    }
                 }
             }
         }
