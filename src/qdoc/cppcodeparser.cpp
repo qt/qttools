@@ -1439,17 +1439,22 @@ void CppCodeParser::processOtherMetaCommands(NodeList &nodes, DocList& docs)
     NodeList::Iterator n = nodes.begin();
     QList<Doc>::Iterator d = docs.begin();
     while (n != nodes.end()) {
-        processOtherMetaCommands(*d, *n);
-        (*n)->setDoc(*d);
-        checkModuleInclusion(*n);
-        if ((*n)->isAggregate() && ((Aggregate *)*n)->includes().isEmpty()) {
-            Aggregate *m = static_cast<Aggregate *>(*n);
-            while (m->parent() && m->physicalModuleName().isEmpty())
-                m = m->parent();
-            if (m == *n)
-                ((Aggregate *)*n)->addInclude((*n)->name());
-            else
-                ((Aggregate *)*n)->setIncludes(m->includes());
+        if (*n != nullptr) {
+            processOtherMetaCommands(*d, *n);
+            (*n)->setDoc(*d);
+            checkModuleInclusion(*n);
+            if ((*n)->isAggregate()) {
+                Aggregate *aggregate = static_cast<Aggregate *>(*n);
+                if (aggregate->includes().isEmpty()) {
+                    Aggregate *parent = aggregate;
+                    while (parent->physicalModuleName().isEmpty() && (parent->parent() != nullptr))
+                        parent = parent->parent();
+                    if (parent == aggregate)
+                        aggregate->addInclude(aggregate->name());
+                    else
+                        aggregate->setIncludes(parent->includes());
+                }
+            }
         }
         ++d;
         ++n;
