@@ -1037,7 +1037,6 @@ static QString libraryPath(const QString &libraryLocation, const char *name,
 }
 
 static QString vcDebugRedistDir() { return QStringLiteral("Debug_NonRedist"); }
-static QString onecoreRedistDir() { return QStringLiteral("onecore"); }
 
 static QString vcRedistDir()
 {
