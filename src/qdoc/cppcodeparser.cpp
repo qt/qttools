@@ -689,9 +689,68 @@ void CppCodeParser::processOtherMetaCommand(const Doc& doc,
     else if ((command == COMMAND_QMLABSTRACT) || (command == COMMAND_ABSTRACT)) {
         if (node->isQmlType() || node->isJsType())
             node->setAbstract(true);
-    }
-    else {
-        processCommonMetaCommand(doc.location(),command,argLocPair,node);
+    } else if (command == COMMAND_DEPRECATED) {
+        node->setStatus(Node::Obsolete);
+    } else if (command == COMMAND_INGROUP || command == COMMAND_INPUBLICGROUP) {
+        // Note: \ingroup and \inpublicgroup are the same (and now recognized as such).
+        qdb_->addToGroup(arg, node);
+    } else if (command == COMMAND_INMODULE) {
+        qdb_->addToModule(arg,node);
+    } else if (command == COMMAND_INQMLMODULE) {
+        qdb_->addToQmlModule(arg,node);
+    } else if (command == COMMAND_INJSMODULE) {
+        qdb_->addToJsModule(arg, node);
+    } else if (command == COMMAND_MAINCLASS) {
+        node->doc().location().warning(tr("'\\mainclass' is deprecated. Consider '\\ingroup mainclasses'"));
+    } else if (command == COMMAND_OBSOLETE) {
+        node->setStatus(Node::Obsolete);
+    } else if (command == COMMAND_NONREENTRANT) {
+        node->setThreadSafeness(Node::NonReentrant);
+    } else if (command == COMMAND_PRELIMINARY) {
+        // \internal wins.
+        if (!node->isInternal())
+            node->setStatus(Node::Preliminary);
+    } else if (command == COMMAND_INTERNAL) {
+        if (!showInternal()) {
+            node->setAccess(Node::Private);
+            node->setStatus(Node::Internal);
+            if (node->nodeType() == Node::QmlPropertyGroup) {
+                const QmlPropertyGroupNode* qpgn = static_cast<const QmlPropertyGroupNode*>(node);
+                NodeList::ConstIterator p = qpgn->childNodes().constBegin();
+                while (p != qpgn->childNodes().constEnd()) {
+                    if ((*p)->nodeType() == Node::QmlProperty) {
+                        (*p)->setAccess(Node::Private);
+                        (*p)->setStatus(Node::Internal);
+                    }
+                    ++p;
+                }
+            }
+        }
+    } else if (command == COMMAND_REENTRANT) {
+        node->setThreadSafeness(Node::Reentrant);
+    } else if (command == COMMAND_SINCE) {
+        node->setSince(arg);
+    } else if (command == COMMAND_WRAPPER) {
+        node->setWrapper();
+    } else if (command == COMMAND_PAGEKEYWORDS) {
+        node->addPageKeywords(arg);
+    } else if (command == COMMAND_THREADSAFE) {
+        node->setThreadSafeness(Node::ThreadSafe);
+    } else if (command == COMMAND_TITLE) {
+        if (!node->setTitle(arg))
+            doc.location().warning(tr("Ignored '\\%1'").arg(COMMAND_TITLE));
+        else if (node->isExample())
+            qdb_->addExampleNode(static_cast<ExampleNode*>(node));
+    } else if (command == COMMAND_SUBTITLE) {
+        if (!node->setSubtitle(arg))
+            doc.location().warning(tr("Ignored '\\%1'").arg(COMMAND_SUBTITLE));
+    } else if (command == COMMAND_QTVARIABLE) {
+        node->setQtVariable(arg);
+        if (!node->isModule() && !node->isQmlModule())
+            doc.location().warning(tr("Command '\\%1' is only meanigfule in '\\module' and '\\qmlmodule'.")
+                             .arg(COMMAND_QTVARIABLE));
+    } else if (command == COMMAND_NOAUTOLIST) {
+        node->setNoAutoList(true);
     }
 }
 
