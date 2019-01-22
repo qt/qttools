@@ -1202,53 +1202,55 @@ Node* CppCodeParser::parseOtherFuncArg(const QString& topic, const Location& loc
 }
 
 /*!
-  Parse the \macro arguments ad hoc, without using any actual parser.
+  Parse the macro arguments in \a macroArg ad hoc, without using
+  any actual parser. If successful, return a pointer to the new
+  FunctionNode for the macro. Otherwise return null. \a location
+  is used for reporting errors.
  */
 Node* CppCodeParser::parseMacroArg(const Location& location, const QString& macroArg)
 {
-    FunctionNode* newMacroNode = 0;
     QStringList leftParenSplit = macroArg.split('(');
-    if (leftParenSplit.size() > 0) {
-        QString macroName;
-        FunctionNode* oldMacroNode = 0;
-        QStringList blankSplit = leftParenSplit[0].split(' ');
-        if (blankSplit.size() > 0) {
-            macroName = blankSplit.last();
-            oldMacroNode = static_cast<FunctionNode*>(qdb_->findMacroNode(macroName));
-        }
-        QString returnType;
-        if (blankSplit.size() > 1) {
-            blankSplit.removeLast();
-            returnType = blankSplit.join(' ');
-        }
-        QString params;
-        if (leftParenSplit.size() > 1) {
-            const QString &afterParen = leftParenSplit.at(1);
-            int rightParen = afterParen.indexOf(')');
-            if (rightParen >= 0)
-                params = afterParen.left(rightParen);
-        }
-        int i = 0;
-        while (i < macroName.length() && !macroName.at(i).isLetter())
-            i++;
-        if (i > 0) {
-            returnType += QChar(' ') + macroName.left(i);
-            macroName = macroName.mid(i);
-        }
-        FunctionNode::Metaness metaness = FunctionNode::MacroWithParams;
-        if (params.isEmpty())
-            metaness = FunctionNode::MacroWithoutParams;
-        newMacroNode = new FunctionNode(metaness, qdb_->primaryTreeRoot(), macroName);
-        newMacroNode->setAccess(Node::Public);
-        newMacroNode->setLocation(location);
-        newMacroNode->setReturnType(returnType);
-        newMacroNode->setParameters(params);
-        if (oldMacroNode && newMacroNode->compare(oldMacroNode)) {
-            location.warning(tr("\\macro %1 documented more than once").arg(macroArg));
-            oldMacroNode->doc().location().warning(tr("(The previous doc is here)"));
-        }
+    if (leftParenSplit.isEmpty())
+        return nullptr;
+    QString macroName;
+    FunctionNode* oldMacroNode = 0;
+    QStringList blankSplit = leftParenSplit[0].split(' ');
+    if (blankSplit.size() > 0) {
+        macroName = blankSplit.last();
+        oldMacroNode = static_cast<FunctionNode*>(qdb_->findMacroNode(macroName));
     }
-    return newMacroNode;
+    QString returnType;
+    if (blankSplit.size() > 1) {
+        blankSplit.removeLast();
+        returnType = blankSplit.join(' ');
+    }
+    QString params;
+    if (leftParenSplit.size() > 1) {
+        const QString &afterParen = leftParenSplit.at(1);
+        int rightParen = afterParen.indexOf(')');
+        if (rightParen >= 0)
+            params = afterParen.left(rightParen);
+    }
+    int i = 0;
+    while (i < macroName.length() && !macroName.at(i).isLetter())
+        i++;
+    if (i > 0) {
+        returnType += QChar(' ') + macroName.left(i);
+        macroName = macroName.mid(i);
+    }
+    FunctionNode::Metaness metaness = FunctionNode::MacroWithParams;
+    if (params.isEmpty())
+        metaness = FunctionNode::MacroWithoutParams;
+    FunctionNode* macro = new FunctionNode(metaness, qdb_->primaryTreeRoot(), macroName);
+    macro->setAccess(Node::Public);
+    macro->setLocation(location);
+    macro->setReturnType(returnType);
+    macro->setParameters(params);
+    if (oldMacroNode && macro->compare(oldMacroNode)) {
+        location.warning(tr("\\macro %1 documented more than once").arg(macroArg));
+        oldMacroNode->doc().location().warning(tr("(The previous doc is here)"));
+    }
+    return macro;
  }
 
 void CppCodeParser::setExampleFileLists(PageNode *pn)
