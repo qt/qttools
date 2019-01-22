@@ -26,14 +26,8 @@
 **
 ****************************************************************************/
 
-/*
-  puredocparser.h
-*/
-
 #ifndef PUREDOCPARSER_H
 #define PUREDOCPARSER_H
-
-#include <qset.h>
 
 #include "cppcodeparser.h"
 #include "location.h"
@@ -49,8 +43,8 @@ class PureDocParser : public CppCodeParser
     Q_DECLARE_TR_FUNCTIONS(QDoc::PureDocParser)
 
 public:
-    PureDocParser();
-    virtual ~PureDocParser();
+    PureDocParser() { pureParser_ = this; }
+    virtual ~PureDocParser() { pureParser_ = nullptr; }
 
     QStringList sourceFileNameFilter() override;
     void parseSourceFile(const Location& location, const QString& filePath) override;

@@ -120,14 +120,6 @@ CppCodeParser::CppCodeParser()
 }
 
 /*!
-  The destructor is trivial.
- */
-CppCodeParser::~CppCodeParser()
-{
-    // nothing.
-}
-
-/*!
   The constructor initializes a map of special node types
   for identifying important nodes. And it initializes
   some filters for identifying and excluding certain kinds of files.
@@ -181,14 +173,6 @@ void CppCodeParser::terminateParser()
     excludeDirs.clear();
     excludeFiles.clear();
     CodeParser::terminateParser();
-}
-
-/*!
-  Returns "Cpp".
- */
-QString CppCodeParser::language()
-{
-    return "Cpp";
 }
 
 /*!

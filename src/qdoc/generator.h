@@ -111,19 +111,19 @@ protected:
     virtual QString fileExtension() const = 0;
     virtual void generateQAPage() { }
     virtual void generateAlsoList(const Node *node, CodeMarker *marker);
-    virtual int generateAtom(const Atom *atom, const Node *relative, CodeMarker *marker);
+    virtual int generateAtom(const Atom *, const Node *, CodeMarker *) { return 0; }
     virtual void generateBody(const Node *node, CodeMarker *marker);
-    virtual void generateCppReferencePage(Node* node, CodeMarker* marker);
-    virtual void generateQmlTypePage(QmlTypeNode* , CodeMarker* ) { }
-    virtual void generateQmlBasicTypePage(QmlBasicTypeNode* , CodeMarker* ) { }
-    virtual void generatePageNode(PageNode* pn, CodeMarker* marker);
-    virtual void generateCollectionNode(CollectionNode* cn, CodeMarker* marker);
+    virtual void generateCppReferencePage(Node *, CodeMarker *) {}
+    virtual void generateQmlTypePage(QmlTypeNode *, CodeMarker *) {}
+    virtual void generateQmlBasicTypePage(QmlBasicTypeNode *, CodeMarker *) {}
+    virtual void generatePageNode(PageNode *, CodeMarker *) {}
+    virtual void generateCollectionNode(CollectionNode *, CodeMarker *) {}
     virtual void generateInheritedBy(const ClassNode *classe, CodeMarker *marker);
     virtual void generateInherits(const ClassNode *classe, CodeMarker *marker);
     virtual void generateDocumentation(Node* node);
     virtual void generateMaintainerList(const Aggregate* node, CodeMarker* marker);
     virtual void generateQmlInheritedBy(const QmlTypeNode* qcn, CodeMarker* marker);
-    virtual void generateQmlInherits(QmlTypeNode* qcn, CodeMarker* marker);
+    virtual void generateQmlInherits(QmlTypeNode *, CodeMarker *) {}
     virtual bool generateQmlText(const Text& text,
                                  const Node *relative,
                                  CodeMarker *marker,

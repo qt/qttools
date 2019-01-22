@@ -58,11 +58,11 @@ class CppCodeParser : public CodeParser
 
 public:
     CppCodeParser();
-    ~CppCodeParser();
+    ~CppCodeParser() = default;
 
     void initializeParser(const Config& config) override;
     void terminateParser() override;
-    QString language() override;
+    QString language() override { return QStringLiteral("Cpp"); }
     QStringList headerFileNameFilter() override;
     QStringList sourceFileNameFilter() override;
     bool parseParameters(const QString& parameters, QVector<Parameter>& pvect, bool& isQPrivateSignal);

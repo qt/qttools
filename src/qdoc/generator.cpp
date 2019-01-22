@@ -724,13 +724,6 @@ void Generator::generateAlsoList(const Node *node, CodeMarker *marker)
     }
 }
 
-int Generator::generateAtom(const Atom * /* atom */,
-                            const Node * /* relative */,
-                            CodeMarker * /* marker */)
-{
-    return 0;
-}
-
 const Atom *Generator::generateAtomList(const Atom *atom,
                                         const Node *relative,
                                         CodeMarker *marker,
@@ -975,18 +968,6 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
             generateFileList(en, marker, true);
         }
     }
-}
-
-void Generator::generateCppReferencePage(Node* /* node */, CodeMarker* /* marker */)
-{
-}
-
-void Generator::generatePageNode(PageNode* /* pn */, CodeMarker* /* marker */)
-{
-}
-
-void Generator::generateCollectionNode(CollectionNode* , CodeMarker* )
-{
 }
 
 /*!
@@ -1244,13 +1225,6 @@ void Generator::generateQmlInheritedBy(const QmlTypeNode* qcn,
             generateText(text, qcn, marker);
         }
     }
-}
-
-/*!
- */
-void Generator::generateQmlInherits(QmlTypeNode* , CodeMarker* )
-{
-    // stub.
 }
 
 /*!

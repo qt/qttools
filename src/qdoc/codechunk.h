@@ -64,15 +64,15 @@ QT_BEGIN_NAMESPACE
 class CodeChunk
 {
 public:
-    CodeChunk();
-    CodeChunk( const QString& str );
+    CodeChunk() : hotspot(-1) {}
+    CodeChunk(const QString& str) : s(str), hotspot(-1) {}
 
     void append( const QString& lexeme );
-    void appendHotspot();
+    void appendHotspot() { if (hotspot == -1) hotspot = s.length(); }
 
     bool isEmpty() const { return s.isEmpty(); }
     void clear() { s.clear(); }
-    QString toString() const;
+    QString toString() const { return s; }
     QStringList toPath() const;
     QString left() const { return s.left(hotspot == -1 ? s.length() : hotspot); }
     QString right() const { return s.mid(hotspot == -1 ? s.length() : hotspot); }

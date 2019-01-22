@@ -42,23 +42,7 @@
 
 QT_BEGIN_NAMESPACE
 
-PureDocParser *PureDocParser::pureParser_ = 0;
-
-/*!
-  Constructs the pure doc parser.
-*/
-PureDocParser::PureDocParser()
-{
-    pureParser_ = this;
-}
-
-/*!
-  Destroys the pure doc parser.
- */
-PureDocParser::~PureDocParser()
-{
-    pureParser_ = 0;
-}
+PureDocParser *PureDocParser::pureParser_ = nullptr;
 
 /*!
   Returns a list of the kinds of files that the pure doc

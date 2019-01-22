@@ -89,16 +89,6 @@ static int category( QChar ch )
     return charCategory[static_cast<int>(ch.toLatin1())];
 }
 
-CodeChunk::CodeChunk()
-    : hotspot( -1 )
-{
-}
-
-CodeChunk::CodeChunk( const QString& str )
-    : s( str ), hotspot( -1 )
-{
-}
-
 void CodeChunk::append( const QString& lexeme )
 {
     if ( !s.isEmpty() && !lexeme.isEmpty() ) {
@@ -112,20 +102,6 @@ void CodeChunk::append( const QString& lexeme )
             s += QLatin1Char( ' ' );
     }
     s += lexeme;
-}
-
-void CodeChunk::appendHotspot()
-{
-    /*
-      The first hotspot is the right one.
-    */
-    if ( hotspot == -1 )
-        hotspot = s.length();
-}
-
-QString CodeChunk::toString() const
-{
-    return s;
 }
 
 QStringList CodeChunk::toPath() const
