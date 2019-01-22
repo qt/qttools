@@ -159,6 +159,7 @@ public:
     bool hasTableOfContents() const;
     bool hasKeywords() const;
     bool hasTargets() const;
+    bool isInternal() const;
     const QList<Atom *> &tableOfContents() const;
     const QVector<int> &tableOfContentsLevels() const;
     const QList<Atom *> &keywords() const;

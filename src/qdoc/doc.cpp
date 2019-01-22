@@ -3073,6 +3073,15 @@ const QSet<QString> &Doc::metaCommandsUsed() const
 }
 
 /*!
+  Returns true if the set of metacommands used in the doc
+  comment contains \e {internal}.
+ */
+bool Doc::isInternal() const
+{
+    return metaCommandsUsed().contains(QLatin1String("internal"));
+}
+
+/*!
   Returns a reference to the list of topic commands used in the
   current qdoc comment. Normally there is only one, but there
   can be multiple \e{qmlproperty} commands, for example.

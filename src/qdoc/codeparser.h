@@ -83,13 +83,14 @@ protected:
     static void extractPageLinkAndDesc(const QString& arg,
                                        QString* link,
                                        QString* desc);
+    static bool showInternal() { return showInternal_; }
     QString moduleHeader_;
     QString currentFile_;
     QDocDatabase* qdb_;
+    static bool showInternal_;
 
 private:
     static QList<CodeParser *> parsers;
-    static bool showInternal_;
     static bool singleExec_;
 };
 

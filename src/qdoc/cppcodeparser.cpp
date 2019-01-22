@@ -1397,17 +1397,19 @@ void CppCodeParser::processTopicArgs(const Doc &doc, const QString &topic, NodeL
         processQmlProperties(doc, nodes, docs, true);
     } else {
         ArgList args = doc.metaCommandArgs(topic);
-        Node *node = 0;
+        Node *node = nullptr;
         if (args.size() == 1) {
-            if (topic == COMMAND_FN)
-                node = parserForLanguage("Clang")->parseFnArg(doc.location(), args[0].first);
-            else if (topic == COMMAND_MACRO)
+            if (topic == COMMAND_FN) {
+                if (showInternal() || !doc.isInternal())
+                    node = parserForLanguage("Clang")->parseFnArg(doc.location(), args[0].first);
+            } else if (topic == COMMAND_MACRO) {
                 node = parseMacroArg(doc.location(), args[0].first);
-            else if (isQMLMethodTopic(topic) || isJSMethodTopic(topic))
+            } else if (isQMLMethodTopic(topic) || isJSMethodTopic(topic)) {
                 node = parseOtherFuncArg(topic, doc.location(), args[0].first);
-            else
+            } else {
                 node = processTopicCommand(doc, topic, args[0]);
-            if (node != 0) {
+            }
+            if (node != nullptr) {
                 nodes.append(node);
                 docs.append(doc);
             }
@@ -1415,15 +1417,18 @@ void CppCodeParser::processTopicArgs(const Doc &doc, const QString &topic, NodeL
             QVector<SharedCommentNode*> sharedCommentNodes;
             ArgList::ConstIterator arg = args.constBegin();
             while (arg != args.constEnd()) {
-                if (topic == COMMAND_FN)
-                    node = parserForLanguage("Clang")->parseFnArg(doc.location(), arg->first);
-                else if (topic == COMMAND_MACRO)
+                node = nullptr;
+                if (topic == COMMAND_FN) {
+                    if (showInternal() || !doc.isInternal())
+                        node = parserForLanguage("Clang")->parseFnArg(doc.location(), arg->first);
+                } else if (topic == COMMAND_MACRO) {
                     node = parseMacroArg(doc.location(), arg->first);
-                else if (isQMLMethodTopic(topic) || isJSMethodTopic(topic))
+                } else if (isQMLMethodTopic(topic) || isJSMethodTopic(topic)) {
                     node = parseOtherFuncArg(topic, doc.location(), arg->first);
-                else
+                } else {
                     node = processTopicCommand(doc, topic, *arg);
-                if (node != 0) {
+                }
+                if (node != nullptr) {
                     bool found = false;
                     for (SharedCommentNode *scn : sharedCommentNodes) {
                         if (scn->parent() == node->parent()) {
