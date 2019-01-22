@@ -29,18 +29,13 @@
 #ifndef CPPCODEPARSER_H
 #define CPPCODEPARSER_H
 
-#include <qregexp.h>
-
 #include "codeparser.h"
 
 QT_BEGIN_NAMESPACE
 
 class ClassNode;
-class CodeChunk;
-class CppCodeParserPrivate;
 class FunctionNode;
 class Aggregate;
-class Tokenizer;
 
 class CppCodeParser : public CodeParser
 {
@@ -65,13 +60,8 @@ public:
     QString language() override { return QStringLiteral("Cpp"); }
     QStringList headerFileNameFilter() override;
     QStringList sourceFileNameFilter() override;
-    bool parseParameters(const QString& parameters, QVector<Parameter>& pvect, bool& isQPrivateSignal);
-    Node *parseMacroArg(const Location &location, const QString &macroArg) override;
-    Node *parseOtherFuncArg(const QString &topic,
-                            const Location &location,
-                            const QString &funcArg) override;
-    const Location& declLoc() const { return declLoc_; }
-    void setDeclLoc() { declLoc_ = location(); }
+    FunctionNode *parseMacroArg(const Location &location, const QString &macroArg);
+    FunctionNode *parseOtherFuncArg(const QString &topic, const Location &location, const QString &funcArg);
     static bool isJSMethodTopic(const QString &t);
     static bool isQMLMethodTopic(const QString &t);
     static bool isJSPropertyTopic(const QString &t);
@@ -79,7 +69,7 @@ public:
 
 protected:
     static const QSet<QString>& topicCommands();
-    static const QSet<QString>& otherMetaCommands();
+    static const QSet<QString>& metaCommands();
     virtual Node* processTopicCommand(const Doc& doc,
                                       const QString& command,
                                       const ArgLocPair& arg);
@@ -95,46 +85,19 @@ protected:
                              QString& element,
                              QString& name,
                              const Location& location);
-    virtual void processOtherMetaCommand(const Doc& doc,
-                                         const QString& command,
-                                         const ArgLocPair& argLocPair,
-                                         Node *node);
-    void processOtherMetaCommands(const Doc& doc, Node *node);
-    void processOtherMetaCommands(NodeList &nodes, DocList& docs);
+    void processMetaCommand(const Doc &doc, const QString &command, const ArgLocPair &argLocPair, Node *node);
+    void processMetaCommands(const Doc &doc, Node *node);
+    void processMetaCommands(NodeList &nodes, DocList &docs);
     void processTopicArgs(const Doc &doc, const QString &topic, NodeList &nodes, DocList &docs);
     bool hasTooManyTopics(const Doc &doc) const;
 
- protected:
-    void reset();
-    void readToken();
-    const Location& location();
-    QString previousLexeme();
-    QString lexeme();
-
  private:
-    bool match(int target);
-    bool skipTo(int target);
-    bool matchModuleQualifier(QString& name);
-    bool matchTemplateAngles(CodeChunk *type = 0);
-    bool matchDataType(CodeChunk *type, QString *var = 0, bool qProp = false);
-    bool matchParameter(QVector<Parameter>& pvect, bool& isQPrivateSignal);
-    bool matchUsingDecl(Aggregate* parent);
     void setExampleFileLists(PageNode *pn);
 
  protected:
     QMap<QString, Node::NodeType> nodeTypeMap;
-    Tokenizer *tokenizer;
-    int tok;
-    Node::Access access;
-    FunctionNode::Metaness metaness_;
-    QString physicalModuleName;
-    QStringList lastPath_;
-    QRegExp varComment;
-    QRegExp sep;
-    Location declLoc_;
 
  private:
-
     static QStringList exampleFiles;
     static QStringList exampleDirs;
     static QSet<QString> excludeDirs;

@@ -71,17 +71,17 @@ int WebXMLGenerator::generateAtom(const Atom * /* atom, */,
     return 0;
 }
 
-void WebXMLGenerator::generateCppReferencePage(Node *node, CodeMarker *marker)
+void WebXMLGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *marker)
 {
     QByteArray data;
     QXmlStreamWriter writer(&data);
     writer.setAutoFormatting(true);
-    beginSubPage(node, Generator::fileName(node, "webxml"));
+    beginSubPage(aggregate, Generator::fileName(aggregate, "webxml"));
     writer.writeStartDocument();
     writer.writeStartElement("WebXML");
     writer.writeStartElement("document");
 
-    generateIndexSections(writer, node, marker);
+    generateIndexSections(writer, aggregate, marker);
 
     writer.writeEndElement(); // document
     writer.writeEndElement(); // WebXML
@@ -93,7 +93,22 @@ void WebXMLGenerator::generateCppReferencePage(Node *node, CodeMarker *marker)
 
 void WebXMLGenerator::generatePageNode(PageNode *pn, CodeMarker *marker)
 {
-    generateCppReferencePage(pn, marker);
+    QByteArray data;
+    QXmlStreamWriter writer(&data);
+    writer.setAutoFormatting(true);
+    beginSubPage(pn, Generator::fileName(pn, "webxml"));
+    writer.writeStartDocument();
+    writer.writeStartElement("WebXML");
+    writer.writeStartElement("document");
+
+    generateIndexSections(writer, pn, marker);
+
+    writer.writeEndElement(); // document
+    writer.writeEndElement(); // WebXML
+    writer.writeEndDocument();
+
+    out() << data;
+    endSubPage();
 }
 
 void WebXMLGenerator::generateIndexSections(QXmlStreamWriter &writer,
@@ -166,8 +181,6 @@ void WebXMLGenerator::generateIndexSections(QXmlStreamWriter &writer,
         if (node->isAggregate()) {
             for (auto child : static_cast<Aggregate *>(node)->childNodes())
                 generateIndexSections(writer, child, marker);
-            for (auto related : static_cast<Aggregate *>(node)->relatedNodes())
-                generateIndexSections(writer, related, marker);
         }
         writer.writeEndElement();
     }
@@ -191,7 +204,7 @@ void WebXMLGenerator::generateDocumentation(Node *node)
             if (node->wasSeen()) {
                 // see remarks in base class impl.
                 qdb_->mergeCollections(static_cast<CollectionNode *>(node));
-                generateCppReferencePage(node, marker);
+                generatePageNode(static_cast<PageNode *>(node), marker);
             }
         }
         else if (node->isTextPageNode())

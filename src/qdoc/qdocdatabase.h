@@ -38,11 +38,7 @@
 
 QT_BEGIN_NAMESPACE
 
-typedef QMap<QString, NodeMap> NodeMapMap;
-typedef QMap<QString, NodeMultiMap> NodeMultiMapMap;
-typedef QMultiMap<QString, Node*> QDocMultiMap;
 typedef QMap<Text, const Node*> TextToNodeMap;
-typedef QList<CollectionNode*> CollectionList;
 
 class Atom;
 class Generator;
@@ -57,7 +53,7 @@ enum FindFlag {
 
 class QDocForest
 {
-  public:
+  private:
     friend class QDocDatabase;
     QDocForest(QDocDatabase* qdb)
         : qdb_(qdb), primaryTree_(0), currentIndex_(0) { }
@@ -126,20 +122,8 @@ class QDocForest
         return 0;
     }
 
-    PageNode* findRelatesNode(const QStringList& path) {
-        foreach (Tree* t, searchOrder()) {
-            PageNode* n = t->findRelatesNode(path);
-            if (n)
-                return n;
-        }
-        return 0;
-    }
-
-    const Node* findFunctionNode(const QString& target,
-                                 const Node* relative,
-                                 Node::Genus genus);
-    const FunctionNode* findFunctionNode(const QString& target,
-                                         const QString& params,
+    const FunctionNode *findFunctionNode(const QStringList &path,
+                                         const Parameters &parameters,
                                          const Node* relative,
                                          Node::Genus genus);
     const Node* findNodeForTarget(QStringList& targetPath,
@@ -208,8 +192,6 @@ class QDocForest
     }
     void printLinkCounts(const QString& project);
     QString getLinkCounts(QStringList& strings, QVector<int>& counts);
-
-  private:
     void newPrimaryTree(const QString& module);
     void setPrimaryTree(const QString& t);
     NamespaceNode* newIndexTree(const QString& module);
@@ -266,14 +248,25 @@ class QDocDatabase
     QmlTypeNode* findQmlType(const ImportRec& import, const QString& name);
     Aggregate* findQmlBasicType(const QString& qmid, const QString& name);
 
+    static NodeMultiMap &obsoleteClasses() { return obsoleteClasses_; }
+    static NodeMultiMap &obsoleteQmlTypes() { return obsoleteQmlTypes_; }
+    static NodeMultiMap &classesWithObsoleteMembers() { return classesWithObsoleteMembers_; }
+    static NodeMultiMap &qmlTypesWithObsoleteMembers() { return qmlTypesWithObsoleteMembers_; }
+    static NodeMultiMap &cppClasses() { return cppClasses_; }
+    static NodeMultiMap &qmlBasicTypes() { return qmlBasicTypes_; }
+    static NodeMultiMap &qmlTypes() { return qmlTypes_; }
+    static NodeMultiMap &examples() { return examples_; }
+    static NodeMapMap &newClassMaps() { return newClassMaps_; }
+    static NodeMapMap &newQmlTypeMaps() { return newQmlTypeMaps_; }
+    static NodeMultiMapMap &newSinceMaps() { return newSinceMaps_; }
+
  private:
-    void findAllClasses(Aggregate *node);
-    void findAllFunctions(Aggregate *node);
-    void findAllAttributions(Aggregate *node);
+    void findAllClasses(Aggregate *node) { node->findAllClasses(); }
+    void findAllFunctions(Aggregate *node) { node->findAllFunctions(functionIndex_); }
+    void findAllAttributions(Aggregate *node) { node->findAllAttributions(attributions_); }
     void findAllLegaleseTexts(Aggregate *node);
-    void findAllNamespaces(Aggregate *node);
-    void findAllObsoleteThings(Aggregate* node);
-    void findAllSince(Aggregate *node);
+    void findAllObsoleteThings(Aggregate *node) { node->findAllObsoleteThings(); }
+    void findAllSince(Aggregate *node) { node->findAllSince(); }
 
  public:
     /*******************************************************************
@@ -284,7 +277,7 @@ class QDocDatabase
     NodeMultiMap& getClassesWithObsoleteMembers();
     NodeMultiMap& getObsoleteQmlTypes();
     NodeMultiMap& getQmlTypesWithObsoleteMembers();
-    NodeMultiMap& getNamespaces() { resolveNamespaces(); return namespaceIndex_; }
+    NodeMultiMap& getNamespaces();
     NodeMultiMap& getQmlBasicTypes();
     NodeMultiMap& getQmlTypes();
     NodeMultiMap& getExamples();
@@ -298,13 +291,7 @@ class QDocDatabase
     /*******************************************************************
       Many of these will be either eliminated or replaced.
     ********************************************************************/
-    void resolveInheritance() { primaryTree()->resolveInheritance(); }
-    void resolveQmlInheritance(Aggregate* root);
-    void resolveIssues();
     void resolveStuff();
-    void fixInheritance() { primaryTree()->fixInheritance(); }
-    void resolveProperties() { primaryTree()->resolveProperties(); }
-
     void insertTarget(const QString& name,
                       const QString& title,
                       TargetRec::TargetType type,
@@ -316,19 +303,13 @@ class QDocDatabase
     /*******************************************************************
       The functions declared below are called for the current tree only.
     ********************************************************************/
-    FunctionNode* findFunctionNode(const QStringList& parentPath, const FunctionNode* clone) {
-        return primaryTree()->findFunctionNode(parentPath, clone);
-    }
-    FunctionNode* findNodeInOpenNamespace(const QStringList& parentPath, const FunctionNode* clone);
+    Aggregate *findRelatesNode(const QStringList &path) { return primaryTree()->findRelatesNode(path); }
     Node* findNodeInOpenNamespace(QStringList& path, Node::NodeType type);
-    const Node* checkForCollision(const QString& name) {
-        return primaryTree()->checkForCollision(name);
-    }
     /*******************************************************************/
 
-    /*******************************************************************
-      The functions declared below handle the parameters in '[' ']'.
-    ********************************************************************/
+    /*****************************************************************************
+      This function can handle parameters enclosed in '[' ']' (domanin and genus).
+    ******************************************************************************/
     const Node* findNodeForAtom(const Atom* atom, const Node* relative, QString& ref);
     /*******************************************************************/
 
@@ -337,16 +318,7 @@ class QDocDatabase
     ********************************************************************/
     ClassNode* findClassNode(const QStringList& path) { return forest_.findClassNode(path); }
     Node* findNodeForInclude(const QStringList& path) { return forest_.findNodeForInclude(path); }
-    PageNode* findRelatesNode(const QStringList& path) { return forest_.findRelatesNode(path); }
-    const Node* findFunctionNode(const QString& target, const Node* relative, Node::Genus genus) {
-        return forest_.findFunctionNode(target, relative, genus);
-    }
-    const FunctionNode* findFunctionNode(const QString& target,
-                                         const QString& params,
-                                         const Node* relative,
-                                         Node::Genus genus) {
-        return forest_.findFunctionNode(target, params, relative, genus);
-    }
+    const FunctionNode *findFunctionNode(const QString &target, const Node *relative, Node::Genus genus);
     const Node* findTypeNode(const QString& type, const Node* relative, Node::Genus genus);
     const Node* findNodeForTarget(const QString& target, const Node* relative);
     const PageNode* findPageNodeByTitle(const QString& title) {
@@ -358,8 +330,8 @@ class QDocDatabase
     const CollectionNode* getCollectionNode(const QString& name, Node::NodeType type) {
         return forest_.getCollectionNode(name, type);
     }
-    Node *findFunctionNodeForTag(QString tag) { return primaryTree()->findFunctionNodeForTag(tag); }
-    Node* findMacroNode(const QString &t) { return primaryTree()->findMacroNode(t); }
+    FunctionNode *findFunctionNodeForTag(QString tag) { return primaryTree()->findFunctionNodeForTag(tag); }
+    FunctionNode *findMacroNode(const QString &t) { return primaryTree()->findMacroNode(t); }
 
   private:
     const Node* findNodeForTarget(QStringList& targetPath,
@@ -367,6 +339,12 @@ class QDocDatabase
                                   Node::Genus genus,
                                   QString& ref) {
         return forest_.findNodeForTarget(targetPath, relative, genus, ref);
+    }
+    const FunctionNode *findFunctionNode(const QStringList &path,
+                                         const Parameters &parameters,
+                                         const Node *relative,
+                                         Node::Genus genus) {
+        return forest_.findFunctionNode(path, parameters, relative, genus);
     }
 
     /*******************************************************************/
@@ -382,11 +360,7 @@ class QDocDatabase
 
     void generateTagFile(const QString& name, Generator* g);
     void readIndexes(const QStringList& indexFiles);
-    void generateIndex(const QString& fileName,
-                       const QString& url,
-                       const QString& title,
-                       Generator* g,
-                       bool generateInternalNodes = false);
+    void generateIndex(const QString &fileName, const QString &url, const QString &title, Generator *g);
 
     void clearOpenNamespaces() { openNamespaces_.clear(); }
     void insertOpenNamespace(const QString& path) { openNamespaces_.insert(path); }
@@ -424,10 +398,10 @@ class QDocDatabase
     QStringList getTargetListKeys() { return primaryTree()->getTargetListKeys(); }
     QStringList keys() { return forest_.keys(); }
     void resolveNamespaces();
+    void resolveProxies();
 
  private:
-    friend class QDocIndexFiles;
-    friend class QDocTagFiles;
+    friend class Tree;
 
     const Node* findNode(const QStringList& path,
                          const Node* relative,
@@ -451,26 +425,26 @@ class QDocDatabase
  private:
     static QDocDatabase*    qdocDB_;
     static NodeMap          typeNodeMap_;
+    static NodeMultiMap     obsoleteClasses_;
+    static NodeMultiMap     classesWithObsoleteMembers_;
+    static NodeMultiMap     obsoleteQmlTypes_;
+    static NodeMultiMap     qmlTypesWithObsoleteMembers_;
+    static NodeMultiMap     cppClasses_;
+    static NodeMultiMap     qmlBasicTypes_;
+    static NodeMultiMap     qmlTypes_;
+    static NodeMultiMap     examples_;
+    static NodeMapMap       newClassMaps_;
+    static NodeMapMap       newQmlTypeMaps_;
+    static NodeMultiMapMap  newSinceMaps_;
+
     bool                    showInternal_;
     bool                    singleExec_;
     QString                 version_;
     QDocForest              forest_;
 
-    NodeMultiMap            cppClasses_;
-    NodeMultiMap            obsoleteClasses_;
-    NodeMultiMap            classesWithObsoleteMembers_;
-    NodeMultiMap            obsoleteQmlTypes_;
-    NodeMultiMap            qmlTypesWithObsoleteMembers_;
     NodeMultiMap            namespaceIndex_;
-    NodeMultiMap            nmm_;
-    NodeMultiMap            qmlBasicTypes_;
-    NodeMultiMap            qmlTypes_;
-    NodeMultiMap            examples_;
     NodeMultiMap            attributions_;
-    NodeMapMap              newClassMaps_;
-    NodeMapMap              newQmlTypeMaps_;
-    NodeMultiMapMap         newSinceMaps_;
-    NodeMapMap              funcIndex_;
+    NodeMapMap              functionIndex_;
     TextToNodeMap           legaleseTexts_;
     QSet<QString>           openNamespaces_;
 };

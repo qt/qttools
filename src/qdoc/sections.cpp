@@ -172,7 +172,7 @@ void Section::insert(Node *node)
 {
     bool irrelevant = false;
     bool inherited = false;
-    if (!node->relates()) {
+    if (!node->isRelatedNonmember()) {
         Aggregate* p = node->parent();
         if (p->isQmlPropertyGroup())
             p = p->parent();
@@ -231,9 +231,9 @@ void Section::insert(Node *node)
  */
 bool Section::insertReimplementedMember(Node* node)
 {
-    if (!node->isPrivate() && (node->relates() == 0)) {
+    if (!node->isPrivate() && !node->isRelatedNonmember()) {
         const FunctionNode* fn = static_cast<const FunctionNode*>(node);
-        if (!fn->reimplementedFrom().isEmpty() && (status_ == Active)) {
+        if (!fn->overridesThis().isEmpty() && (status_ == Active)) {
             if (fn->parent() == aggregate_) {
                 QString key = sortName(fn);
                 if (!reimplementedMemberMap_.contains(key)) {
@@ -265,16 +265,13 @@ ClassMap *Section::newClassMap(const Aggregate* aggregate)
 void Section::add(ClassMap *classMap, Node *n)
 {
     if (n->isQmlPropertyGroup() || n->isJsPropertyGroup()) {
-        const QmlPropertyGroupNode* pg = static_cast<const QmlPropertyGroupNode*>(n);
-        NodeList::ConstIterator p = pg->childNodes().constBegin();
-        while (p != pg->childNodes().constEnd()) {
-            if ((*p)->isQmlProperty() || (*p)->isJsProperty()) {
-                QString key = (*p)->name();
-                key = sortName(*p, &key);
-                memberMap_.insert(key,*p);
-                classMap->second.insert(key,*p);
-            }
-            ++p;
+        Aggregate *aggregate = static_cast<Aggregate*>(n);
+        const NodeList &properties = aggregate->nonfunctionList();
+        foreach (Node *p, properties) {
+            QString key = p->name();
+            key = sortName(p, &key);
+            memberMap_.insert(key, p);
+            classMap->second.insert(key, p);
         }
     }
     else {
@@ -341,6 +338,7 @@ Sections::Sections(Aggregate *aggregate) : aggregate_(aggregate)
         break;
     case Node::Namespace:
     case Node::HeaderFile:
+    case Node::Proxy:
     default:
         initAggregate(stdSummarySections_, aggregate_);
         initAggregate(stdDetailsSections_, aggregate_);
@@ -660,20 +658,30 @@ void Sections::stdRefPageSwitch(SectionVector &v, Node *n)
 /*!
   Build the section vectors for a standard reference page,
   when the aggregate node is not a C++ class or a QML type.
+
+  If this is for a namespace page then if the namespace node
+  itself does not have documentation, only its children that
+  have documentation should be documented. In other words,
+  there are cases where a namespace is declared but does not
+  have documentation, but some of the elements declared in
+  that namespace do have documentation.
+
+  This special processing of namespaces that do not have a
+  documentation comment is meant to allow documenting its
+  members that do have documentation while avoiding posting
+  error messages for its members that are not documented.
  */
 void Sections::buildStdRefPageSections()
 {
     const NamespaceNode* ns = 0;
-    bool documentAll = true;
-    NodeList nodeList = aggregate_->childNodes();
-    nodeList += aggregate_->relatedNodes();
+    bool documentAll = true; // document all the children
     if (aggregate_->isNamespace()) {
         ns = static_cast<const NamespaceNode*>(aggregate_);
         if (!ns->hasDoc())
-            documentAll = false;
+            documentAll = false; // only document children that have documentation
     }
-    NodeList::ConstIterator c = nodeList.constBegin();
-    while (c != nodeList.constEnd()) {
+    NodeList::ConstIterator c = aggregate_->constBegin();
+    while (c != aggregate_->constEnd()) {
         Node *n = *c;
         if (documentAll || n->hasDoc()) {
             stdRefPageSwitch(stdSummarySections(), n);
@@ -681,9 +689,22 @@ void Sections::buildStdRefPageSections()
         }
         ++c;
     }
-    if (ns && !ns->orphans().isEmpty()) {
-        NodeList::ConstIterator c = ns->orphans().constBegin();
-        while (c != ns->orphans().constEnd()) {
+    if (!aggregate_->relatedByProxy().isEmpty()) {
+        c = aggregate_->relatedByProxy().constBegin();
+        while (c != aggregate_->relatedByProxy().constEnd()) {
+            Node *n = *c;
+            stdRefPageSwitch(stdSummarySections(), n);
+            ++c;
+        }
+    }
+    /*
+      If we are building the sections for the reference page
+      for a namespace node, include all the namespace node's
+      included children in the sections.
+     */
+    if (ns && !ns->includedChildren().isEmpty()) {
+        NodeList::ConstIterator c = ns->includedChildren().constBegin();
+        while (c != ns->includedChildren().constEnd()) {
             Node *n = *c;
             if (documentAll || n->hasDoc())
                 stdRefPageSwitch(stdSummarySections(), n);
@@ -704,6 +725,13 @@ void Sections::distributeNodeInSummaryVector(SectionVector &sv, Node *n)
 {
     if (n->isFunction()) {
         FunctionNode *fn = static_cast<FunctionNode*>(n);
+        if (fn->isRelatedNonmember()) {
+            if (fn->isMacro())
+                sv[Macros].insert(n);
+            else
+                sv[RelatedNonmembers].insert(n);
+            return;
+        }
         if (fn->hasAssociatedProperties() && !fn->hasActiveAssociatedProperty())
             return;
         else if (fn->isIgnored())
@@ -738,6 +766,10 @@ void Sections::distributeNodeInSummaryVector(SectionVector &sv, Node *n)
             else if (!sv[ProtectedFunctions].insertReimplementedMember(fn))
                 sv[ProtectedFunctions].insert(fn);
         }
+        return;
+    }
+    if (n->isRelatedNonmember()) {
+        sv[RelatedNonmembers].insert(n);
         return;
     }
     if (n->isVariable()) {
@@ -784,12 +816,23 @@ void Sections::distributeNodeInDetailsVector(SectionVector &dv, Node *n)
         return;
     if (n->isFunction()) {
         FunctionNode *fn = static_cast<FunctionNode*>(n);
+        if (fn->isRelatedNonmember()) {
+            if (fn->isMacro())
+                dv[DetailsMacros].insert(n);
+            else
+                dv[DetailsRelatedNonmembers].insert(n);
+            return;
+        }
         if (fn->isIgnored())
             return;
         if (!fn->isSharingComment()) {
             if (!fn->hasAssociatedProperties() || !fn->doc().isEmpty())
                 dv[DetailsMemberFunctions].insert(fn);
         }
+        return;
+    }
+    if (n->isRelatedNonmember()) {
+        dv[DetailsRelatedNonmembers].insert(n);
         return;
     }
     if (n->isEnumType() || n->isTypedef()) {
@@ -883,32 +926,13 @@ void Sections::buildStdCppClassRefPageSections()
     SectionVector &sv = stdCppClassSummarySections();
     SectionVector &dv = stdCppClassDetailsSections();
     Section &allMembers = allMembersSection();
-    NodeList::ConstIterator r = aggregate_->relatedNodes().constBegin();
-    while (r != aggregate_->relatedNodes().constEnd()) {
-        Node* n = *r;
-        if (n->isFunction()) {
-            FunctionNode *func = static_cast<FunctionNode *>(n);
-            if (func->isMacro()) {
-                sv[Macros].insert(n);
-                dv[DetailsMacros].insert(n);
-            } else {
-                sv[RelatedNonmembers].insert(n);
-                dv[DetailsRelatedNonmembers].insert(n);
-            }
-        } else {
-            sv[RelatedNonmembers].insert(n);
-            dv[DetailsRelatedNonmembers].insert(n);
-        }
-        ++r;
-    }
-
     bool documentAll = true;
     if (aggregate_->parent() && !aggregate_->name().isEmpty() && !aggregate_->hasDoc())
         documentAll = false;
-    NodeList::ConstIterator c = aggregate_->childNodes().constBegin();
-    while (c != aggregate_->childNodes().constEnd()) {
+    NodeList::ConstIterator c = aggregate_->constBegin();
+    while (c != aggregate_->constEnd()) {
         Node* n = *c;
-        if (!n->isPrivate() && !n->isProperty())
+        if (!n->isPrivate() && !n->isProperty() && !n->isRelatedNonmember())
             allMembers.insert(n);
         if (!documentAll && !n->hasDoc()) {
             ++c;
@@ -918,14 +942,22 @@ void Sections::buildStdCppClassRefPageSections()
         distributeNodeInDetailsVector(dv, n);
         ++c;
     }
+    if (!aggregate_->relatedByProxy().isEmpty()) {
+        c = aggregate_->relatedByProxy().constBegin();
+        while (c != aggregate_->relatedByProxy().constEnd()) {
+            Node *n = *c;
+            distributeNodeInSummaryVector(sv, n);
+            ++c;
+        }
+    }
 
     QStack<ClassNode*> stack;
     ClassNode* cn = static_cast<ClassNode*>(aggregate_);
     pushBaseClasses(stack, cn);
     while (!stack.isEmpty()) {
         ClassNode *cn = stack.pop();
-        c = cn->childNodes().constBegin();
-        while (c != cn->childNodes().constEnd()) {
+        c = cn->constBegin();
+        while (c != cn->constEnd()) {
             Node* n = *c;
             if (!n->isPrivate() && !n->isProperty())
                 allMembers.insert(n);
@@ -959,8 +991,8 @@ void Sections::buildStdQmlTypeRefPageSections()
     while (true) {
         if (!qtn->isAbstract() || !classMap)
             classMap = allMembers.newClassMap(qtn);
-        NodeList::ConstIterator c = qtn->childNodes().constBegin();
-        while (c != qtn->childNodes().constEnd()) {
+        NodeList::ConstIterator c = qtn->constBegin();
+        while (c != qtn->constEnd()) {
             Node *n = *c;
             if (n->isInternal()) {
                 ++c;
@@ -988,8 +1020,8 @@ void Sections::buildStdQmlTypeRefPageSections()
     while (qtn != 0) {
         if (!qtn->isAbstract() || !classMap)
             classMap = allMembers.newClassMap(qtn);
-        NodeList::ConstIterator c = qtn->childNodes().constBegin();
-        while (c != qtn->childNodes().constEnd()) {
+        NodeList::ConstIterator c = qtn->constBegin();
+        while (c != qtn->constEnd()) {
             Node *n = *c;
             if (n->isInternal()) {
                 ++c;

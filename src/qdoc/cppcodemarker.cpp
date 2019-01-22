@@ -148,19 +148,24 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
         if (!func->isMacroWithoutParams()) {
             synopsis += QLatin1Char('(');
             if (!func->parameters().isEmpty()) {
-                QVector<Parameter>::ConstIterator p = func->parameters().constBegin();
-                while (p != func->parameters().constEnd()) {
-                    if (p != func->parameters().constBegin())
+                const Parameters &parameters = func->parameters();
+                for (int i = 0; i < parameters.count(); i++) {
+                    if (i > 0)
                         synopsis += ", ";
-                    bool hasName = !(*p).name().isEmpty();
-                    if (hasName)
-                        synopsis += typified((*p).dataType(), true);
-                    const QString &paramName = hasName ? (*p).name() : (*p).dataType();
-                    if (style != Section::AllMembers || !hasName)
+                    QString name = parameters.at(i).name();
+                    QString type = parameters.at(i).type();
+                    QString value = parameters.at(i).defaultValue();
+                    QString paramName;
+                    if (!name.isEmpty()) {
+                        synopsis += typified(type, true);
+                        paramName = name;
+                    } else {
+                        paramName = type;
+                    }
+                    if (style != Section::AllMembers || name.isEmpty())
                         synopsis += "<@param>" + protect(paramName) + "</@param>";
-                    if (style != Section::AllMembers && !(*p).defaultValue().isEmpty())
-                        synopsis += " = " + protect((*p).defaultValue());
-                    ++p;
+                    if (style != Section::AllMembers && !value.isEmpty())
+                        synopsis += " = " + protect(value);
                 }
             }
             synopsis += QLatin1Char(')');
@@ -177,10 +182,6 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
                 synopsis.append(" override");
             if (func->isPureVirtual())
                 synopsis.append(" = 0");
-            else if (func->isDeleted())
-                synopsis.append(" = delete");
-            else if (func->isImplicit() || func->isDefaulted())
-               synopsis.append(" = default");
             if (func->isRef())
                synopsis.append(" &");
             else if (func->isRefRef())
@@ -195,15 +196,9 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
                synopsis.append(" &");
             else if (func->isRefRef())
                synopsis.append(" &&");
-            if (func->isImplicit() || func->isDefaulted())
-               synopsis.append(" = default");
             QStringList bracketed;
             if (func->isStatic()) {
                 bracketed += "static";
-            } else if (func->isDeleted()) {
-                bracketed += "delete";
-            } else if (func->isDefaulted()) {
-                bracketed += "default";
             } else if (!func->isNonvirtual()) {
                 if (func->isFinal())
                     bracketed += "final";
@@ -341,16 +336,20 @@ QString CppCodeMarker::markedUpQmlItem(const Node* node, bool summary)
             synopsis = name;
         synopsis += QLatin1Char('(');
         if (!func->parameters().isEmpty()) {
-            QVector<Parameter>::ConstIterator p = func->parameters().constBegin();
-            while (p != func->parameters().constEnd()) {
-                if (p != func->parameters().constBegin())
+            const Parameters &parameters = func->parameters();
+            for (int i = 0; i < parameters.count(); i++) {
+                if (i > 0)
                     synopsis += ", ";
-                bool hasName = !(*p).name().isEmpty();
-                if (hasName)
-                    synopsis += typified((*p).dataType(), true);
-                const QString &paramName = hasName ? (*p).name() : (*p).dataType();
+                QString name = parameters.at(i).name();
+                QString type = parameters.at(i).type();
+                QString paramName;
+                if (!name.isEmpty()) {
+                    synopsis += typified(type, true);
+                    paramName = name;
+                } else {
+                    paramName = type;
+                }
                 synopsis += "<@param>" + protect(paramName) + "</@param>";
-                ++p;
             }
         }
         synopsis += QLatin1Char(')');

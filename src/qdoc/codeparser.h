@@ -35,12 +35,13 @@
 QT_BEGIN_NAMESPACE
 
 class Config;
+class Location;
 class QString;
 class QDocDatabase;
 
 class CodeParser
 {
-    Q_DECLARE_TR_FUNCTIONS(QDoc::CodeParser)
+    Q_DECLARE_TR_FUNCTIONS(QDoc::CppCodeParser)
 
 public:
     CodeParser();
@@ -55,8 +56,6 @@ public:
     virtual void parseSourceFile(const Location& location, const QString& filePath) = 0;
     virtual void precompileHeaders() { }
     virtual Node *parseFnArg(const Location &, const QString &) { return 0; }
-    virtual Node *parseMacroArg(const Location &, const QString &) { return 0; }
-    virtual Node *parseOtherFuncArg(const QString &, const Location &, const QString &) { return 0; }
 
     bool isParsingH() const;
     bool isParsingCpp() const;
@@ -83,10 +82,10 @@ protected:
     QString moduleHeader_;
     QString currentFile_;
     QDocDatabase* qdb_;
-    static bool showInternal_;
 
 private:
     static QList<CodeParser *> parsers;
+    static bool showInternal_;
     static bool singleExec_;
 };
 

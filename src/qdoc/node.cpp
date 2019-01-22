@@ -65,6 +65,7 @@ void Node::initialize()
     goals_.insert("typedef", Node::Typedef);
     goals_.insert("typealias", Node::Typedef);
     goals_.insert("function", Node::Function);
+    goals_.insert("proxy", Node::Proxy);
     goals_.insert("property", Node::Property);
     goals_.insert("variable", Node::Variable);
     goals_.insert("group", Node::Group);
@@ -149,9 +150,9 @@ bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
         else if (f1->isConst() > f2->isConst())
             return false;
 
-        if (f1->signature(false) < f2->signature(false))
+        if (f1->signature(false, false) < f2->signature(false, false))
             return true;
-        else if (f1->signature(false) > f2->signature(false))
+        else if (f1->signature(false, false) > f2->signature(false, false))
             return false;
     }
 
@@ -199,34 +200,11 @@ void Node::clearPropertyGroupCount() { propertyGroupCount_ = 0; }
  */
 
 /*!
-  When this Node is destroyed, if it has a parent Node, it
-  removes itself from the parent node's child list.
+  The destructor does nothing.
  */
 Node::~Node()
 {
-    if (parent_)
-        parent_->removeChild(this);
-
-    if (relatesTo_)
-        removeRelates();
-}
-
-/*!
-    Removes this node from the aggregate's list of related
-    nodes, or if this node has created a dummy "relates"
-    aggregate, deletes it.
- */
-void Node::removeRelates()
-{
-    if (!relatesTo_)
-        return;
-
-    if (relatesTo_->isDummyNode() && !relatesTo_->parent()) {
-        delete relatesTo_;
-        relatesTo_ = 0;
-    } else {
-        relatesTo_->removeRelated(this);
-    }
+    // nothing.
 }
 
 /*!
@@ -340,8 +318,8 @@ Node::Node(NodeType type, Aggregate *parent, const QString& name)
       pageType_((unsigned char) NoPageType),
       status_((unsigned char) Active),
       indexNodeFlag_(false),
+      relatedNonmember_(false),
       parent_(parent),
-      relatesTo_(0),
       sharedCommentNode_(0),
       name_(name)
 {
@@ -432,6 +410,7 @@ Node::PageType Node::getPageType(Node::NodeType t)
       case Node::JsModule:
       case Node::Collection:
           return Node::OverviewPage;
+      case Node::Proxy:
       default:
           return Node::NoPageType;
     }
@@ -478,6 +457,7 @@ Node::Genus Node::getGenus(Node::NodeType t)
           return Node::DOC;
       case Node::Collection:
       case Node::SharedComment:
+      case Node::Proxy:
       default:
           return Node::DontCare;
     }
@@ -568,6 +548,8 @@ QString Node::nodeTypeString(unsigned char t)
         return QLatin1String("function");
     case Property:
         return QLatin1String("property");
+    case Proxy:
+        return QLatin1String("proxy");
     case Variable:
         return QLatin1String("variable");
     case Group:
@@ -658,29 +640,6 @@ bool Node::fromFlagValue(FlagValue fv, bool defaultValue)
     default:
         return defaultValue;
     }
-}
-
-/*!
-  Sets the pointer to the node that this node relates to.
- */
-void Node::setRelates(PageNode *pseudoParent)
-{
-    if (pseudoParent == parent())
-        return;
-
-    removeRelates();
-    relatesTo_ = pseudoParent;
-    pseudoParent->addRelated(this);
-}
-
-/*!
-  Sets the (unresolved) entity \a name that this node relates to.
- */
-void Node::setRelates(const QString& name)
-{
-    removeRelates();
-    // Create a dummy aggregate for writing the name into the index
-    relatesTo_ = new DummyNode(0, name);
 }
 
 /*!
@@ -848,17 +807,20 @@ bool Node::isInternal() const
         return true;
     if (parent() && parent()->status() == Internal)
         return true;
-    if (relates() && relates()->status() == Internal)
-        return true;
     return false;
 }
 
 /*!
   Returns a pointer to the root of the Tree this node is in.
  */
-const Node* Node::root() const
+Aggregate *Node::root() const
 {
-    return (parent() ? parent()->root() : this);
+    if (parent() == nullptr)
+        return (this->isAggregate() ? static_cast<Aggregate*>(const_cast<Node*>(this)) : nullptr);
+    Aggregate *t = parent();
+    while (t->parent() != nullptr)
+        t = t->parent();
+    return t;
 }
 
 /*!
@@ -906,17 +868,91 @@ bool Node::hasSharedDoc() const
 }
 
 /*!
+  Returns the CPP node's qualified name by prepending the
+  namespaces name + "::" if there isw a namespace.
+ */
+QString Node::qualifyCppName()
+{
+    if (parent_ && parent_->isNamespace() && !parent_->name().isEmpty())
+        return parent_->name() + "::" + name_;
+    return name_;
+}
+
+/*!
+  Return the name of this node qualified with the parent name
+  and "::" if there is a parent name.
+ */
+QString Node::qualifyWithParentName()
+{
+    if (parent_ && !parent_->name().isEmpty())
+        return parent_->name() + "::" + name_;
+    return name_;
+}
+
+
+/*!
+  Returns the QML node's qualified name by stripping off the
+  "QML:" if present and prepending the logical module name.
+ */
+QString Node::qualifyQmlName()
+{
+    QString qualifiedName = name_;
+    if (name_.startsWith(QLatin1String("QML:")))
+        qualifiedName = name_.mid(4);
+    qualifiedName = logicalModuleName() + "::" + name_;
+    return qualifiedName;
+}
+
+/*!
+  Returns the QML node's name after stripping off the
+  "QML:" if present.
+ */
+QString Node::unqualifyQmlName()
+{
+    QString qmlTypeName = name_.toLower();
+    if (qmlTypeName.startsWith(QLatin1String("qml:")))
+        qmlTypeName = qmlTypeName.mid(4);
+    return qmlTypeName;
+}
+
+/*!
   \class Aggregate
  */
 
 /*!
-  The inner node destructor deletes the children and removes
-  this node from its related nodes.
+  Calls delete for each child of this Aggregate that has this
+  Aggregate as its parent. A child node that has some other
+  Aggregate as its parent is deleted by that Aggregate's
+  destructor.
+
+  The destructor no longer deletes the collection of children
+  by calling qDeleteAll() because the child list can contain
+  pointers to children that have some other Aggregate as their
+  parent. This is because of how the \e{\\relates} command is
+  processed. An Aggregate can have a pointer to, for example,
+  a FunctionNode in its child list, but that FunctionNode has
+  a differen Aggregate as its parent because a \e{\\relates}
+  command was used to relate it to that parent. In that case,
+  the other Aggregate's destructor must delete that node.
+
+  \note This function is the \b only place where delete is
+  called to delete any subclass of Node.
+
+  \note This strategy depends on the node tree being destroyed
+  by calling delete on the root node of the tree. This happens
+  in the destructor of class Tree.
  */
 Aggregate::~Aggregate()
 {
-    removeFromRelated();
-    deleteChildren();
+    enumChildren_.clear();
+    nonfunctionMap_.clear();
+    functionMap_.clear();
+    for (int i = 0; i < children_.size(); ++i) {
+        if ((children_[i] != nullptr) && (children_[i]->parent() == this))
+            delete children_[i];
+        children_[i] = 0;
+    }
+    children_.clear();
 }
 
 /*!
@@ -932,7 +968,7 @@ Aggregate::~Aggregate()
 Node *Aggregate::findChildNode(const QString& name, Node::Genus genus, int findFlags) const
 {
     if (genus == Node::DontCare) {
-        Node *node = childMap_.value(name);
+        Node *node = nonfunctionMap_.value(name);
         if (node && !node->isQmlPropertyGroup()) // mws asks: Why not property group?
             return node;
         if (isQmlType() || isJsType()) {
@@ -946,7 +982,7 @@ Node *Aggregate::findChildNode(const QString& name, Node::Genus genus, int findF
             }
         }
     } else {
-        NodeList nodes = childMap_.values(name);
+        NodeList nodes = nonfunctionMap_.values(name);
         if (!nodes.isEmpty()) {
             for (int i = 0; i < nodes.size(); ++i) {
                 Node* node = nodes.at(i);
@@ -969,37 +1005,54 @@ Node *Aggregate::findChildNode(const QString& name, Node::Genus genus, int findF
     }
     if (genus != Node::DontCare && this->genus() != genus)
         return nullptr;
-    return primaryFunctionMap_.value(name);
+    return functionMap_.value(name);
 }
 
 /*!
   Find all the child nodes of this node that are named
   \a name and return them in \a nodes.
  */
-void Aggregate::findChildren(const QString& name, NodeList& nodes) const
+void Aggregate::findChildren(const QString &name, NodeVector &nodes) const
 {
-    nodes = childMap_.values(name);
-    Node* n = primaryFunctionMap_.value(name);
-    if (n) {
-        nodes.append(n);
-        NodeList t = secondaryFunctionMap_.value(name);
-        if (!t.isEmpty())
-            nodes.append(t);
+    nodes.clear();
+    int nonfunctionCount = nonfunctionMap_.count(name);
+    FunctionMap::const_iterator i = functionMap_.find(name);
+    if (i != functionMap_.end()) {
+        int functionCount = 0;
+        FunctionNode *fn = i.value();
+        while (fn != nullptr) {
+            ++functionCount;
+            fn = fn->nextOverload();
+        }
+        nodes.reserve(nonfunctionCount + functionCount);
+        fn = i.value();
+        while (fn != nullptr) {
+            nodes.append(fn);
+            fn = fn->nextOverload();
+        }
+    } else {
+        nodes.reserve(nonfunctionCount);
     }
-    if (!nodes.isEmpty() || !(isQmlNode() || isJsNode()))
-        return;
-    int i = name.indexOf(QChar('.'));
-    if (i < 0)
-        return;
-    QString qmlPropGroup = name.left(i);
-    NodeList t = childMap_.values(qmlPropGroup);
-    if (t.isEmpty())
-        return;
-    foreach (Node* n, t) {
-        if (n->isQmlPropertyGroup() || n->isJsPropertyGroup()) {
-            n->findChildren(name, nodes);
-            if (!nodes.isEmpty())
-                break;
+    if (nonfunctionCount > 0) {
+        NodeMap::const_iterator i = nonfunctionMap_.find(name);
+        while (i != nonfunctionMap_.end() && i.key() == name) {
+            nodes.append(i.value());
+            ++i;
+        }
+    }
+    if (nodes.isEmpty() && (isQmlNode() || isJsNode())) {
+        int idx = name.indexOf(QChar('.'));
+        if (idx < 0)
+            return;
+        QString qmlPropGroup = name.left(idx);
+        NodeMap::const_iterator i = nonfunctionMap_.find(qmlPropGroup);
+        while (i != nonfunctionMap_.end() && i.key() == qmlPropGroup) {
+            if (i.value()->isQmlPropertyGroup() || i.value()->isJsPropertyGroup()) {
+                static_cast<Aggregate*>(i.value())->findChildren(name, nodes);
+                if (!nodes.isEmpty())
+                    return;
+            }
+            ++i;
         }
     }
 }
@@ -1012,108 +1065,66 @@ void Aggregate::findChildren(const QString& name, NodeList& nodes) const
 Node* Aggregate::findChildNode(const QString& name, NodeType type)
 {
     if (type == Function)
-        return primaryFunctionMap_.value(name);
-    else {
-        NodeList nodes = childMap_.values(name);
-        for (int i=0; i<nodes.size(); ++i) {
-            Node* node = nodes.at(i);
-            if (node->nodeType() == type)
-                return node;
-        }
+        return functionMap_.value(name);
+    NodeList nodes = nonfunctionMap_.values(name);
+    for (int i=0; i<nodes.size(); ++i) {
+        Node *node = nodes.at(i);
+        if (node->nodeType() == type)
+            return node;
     }
-    return 0;
+    return nullptr;
 }
 
 /*!
-  Find a function node that is a child of this nose, such
-  that the function node has the specified \a name.
+  Find a function node that is a child of this node, such that
+  the function node has the specified \a name and \a parameters.
+  If \a parameters is empty but no matching function is found
+  that has no parameters, return the primary function whether
+  it has parameters or not.
  */
-FunctionNode *Aggregate::findFunctionNode(const QString& name, const QString& params) const
+FunctionNode *Aggregate::findFunctionChild(const QString &name, const Parameters &parameters)
 {
-    FunctionNode* pfn = static_cast<FunctionNode*>(primaryFunctionMap_.value(name));
-    FunctionNode* fn = pfn;
-    if (fn) {
-        const QVector<Parameter>* funcParams = &(fn->parameters());
-        if (params.isEmpty() && funcParams->isEmpty() && !fn->isInternal())
-            return fn;
-        bool isQPrivateSignal = false; // Not used in the search
-        QVector<Parameter> testParams;
-        if (!params.isEmpty()) {
-            CppCodeParser* cppParser = PureDocParser::pureDocParser();
-            cppParser->parseParameters(params, testParams, isQPrivateSignal);
-        }
-        NodeList funcs = secondaryFunctionMap_.value(name);
-        int i = -1;
-        while (fn) {
-            if (testParams.size() == funcParams->size()) {
-                if (testParams.isEmpty() && !fn->isInternal())
-                    return fn;
-                bool different = false;
-                for (int j=0; j<testParams.size(); j++) {
-                    if (testParams.at(j).dataType() != funcParams->at(j).dataType()) {
-                        different = true;
-                        break;
-                    }
+    FunctionMap::iterator i = functionMap_.find(name);
+    if (i == functionMap_.end())
+        return nullptr;
+    FunctionNode *fn = i.value();
+
+    if (parameters.isEmpty() && fn->parameters().isEmpty() && !fn->isInternal())
+        return fn;
+
+    while (fn != nullptr) {
+        if (parameters.count() == fn->parameters().count() && !fn->isInternal()) {
+            if (parameters.isEmpty())
+                return fn;
+            bool matched = true;
+            for (int i = 0; i < parameters.count(); i++) {
+                if (parameters.at(i).type() != fn->parameters().at(i).type()) {
+                    matched = false;
+                    break;
                 }
-                if (!different && !fn->isInternal())
-                    return fn;
             }
-            if (++i < funcs.size()) {
-                fn = static_cast<FunctionNode*>(funcs.at(i));
-                funcParams = &(fn->parameters());
-            }
-            else
-                fn = 0;
+            if (matched)
+                return fn;
         }
-        /*
-          Most \l commands that link to functions don't include
-          the parameter declarations in the function signature,
-          so if the \l is meant to go to a function that does
-          have parameters, the algorithm above won't find it.
-          Therefore we must return the pointer to the function
-          in the primary function map in the cases where the
-          parameters should have been specified in the \l command.
-          But if the primary function is marked internal, search
-          the secondary list to find one that is not marked internal.
-         */
-        if (!fn) {
-            if (!testParams.empty())
-                return 0;
-            if (pfn && !pfn->isInternal())
-                return pfn;
-            foreach (Node* n, funcs) {
-                fn = static_cast<FunctionNode*>(n);
-                if (!fn->isInternal())
-                    return fn;
-            }
-        }
+        fn = fn->nextOverload();
     }
-    return fn;
+    return parameters.isEmpty() ? i.value() : nullptr;
 }
 
 /*!
   Find the function node that is a child of this node, such
-  that the function has the same name and signature as the
-  \a clone node.
+  that the function described has the same name and signature
+  as the function described by the \a clone node.
  */
-FunctionNode *Aggregate::findFunctionNode(const FunctionNode *clone) const
+FunctionNode *Aggregate::findFunctionChild(const FunctionNode *clone)
 {
-    QMap<QString,Node*>::ConstIterator c = primaryFunctionMap_.constFind(clone->name());
-    if (c != primaryFunctionMap_.constEnd()) {
-        if (isSameSignature(clone, (FunctionNode *) *c)) {
-            return (FunctionNode *) *c;
-        }
-        else if (secondaryFunctionMap_.contains(clone->name())) {
-            const NodeList& secs = secondaryFunctionMap_[clone->name()];
-            NodeList::ConstIterator s = secs.constBegin();
-            while (s != secs.constEnd()) {
-                if (isSameSignature(clone, (FunctionNode *) *s))
-                    return (FunctionNode *) *s;
-                ++s;
-            }
-        }
+    FunctionNode *fn = functionMap_.value(clone->name());
+    while (fn != nullptr) {
+        if (isSameSignature(clone, fn))
+            return fn;
+        fn = fn->nextOverload();
     }
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -1121,27 +1132,7 @@ FunctionNode *Aggregate::findFunctionNode(const FunctionNode *clone) const
  */
 QStringList Aggregate::primaryKeys()
 {
-    QStringList t;
-    QMap<QString, Node*>::iterator i = primaryFunctionMap_.begin();
-    while (i != primaryFunctionMap_.end()) {
-        t.append(i.key());
-        ++i;
-    }
-    return t;
-}
-
-/*!
-  Returns the list of keys from the secondary function map.
- */
-QStringList Aggregate::secondaryKeys()
-{
-    QStringList t;
-    QMap<QString, NodeList>::iterator i = secondaryFunctionMap_.begin();
-    while (i != secondaryFunctionMap_.end()) {
-        t.append(i.key());
-        ++i;
-    }
-    return t;
+    return functionMap_.keys();
 }
 
 /*!
@@ -1149,12 +1140,27 @@ QStringList Aggregate::secondaryKeys()
   private access and internal status. qdoc will then ignore
   them for documentation purposes.
  */
-void Aggregate::makeUndocumentedChildrenInternal()
+void Aggregate::markUndocumentedChildrenInternal()
 {
-    foreach (Node *child, childNodes()) {
+    // Property group children have no doc of their own but follow the
+    // the access/status of their parent
+    if (this->isQmlPropertyGroup() || this->isJsPropertyGroup())
+        return;
+
+    foreach (Node *child, children_) {
         if (!child->isSharingComment() && !child->hasDoc() && !child->docMustBeGenerated()) {
+            if (child->isFunction()) {
+                if (static_cast<FunctionNode*>(child)->hasAssociatedProperties())
+                    continue;
+            } else if (child->isTypedef()) {
+                if (static_cast<TypedefNode*>(child)->hasAssociatedEnum())
+                    continue;
+            }
             child->setAccess(Node::Private);
             child->setStatus(Node::Internal);
+        }
+        if (child->isAggregate()) {
+            static_cast<Aggregate*>(child)->markUndocumentedChildrenInternal();
         }
     }
 }
@@ -1166,97 +1172,50 @@ void Aggregate::makeUndocumentedChildrenInternal()
  */
 void Aggregate::normalizeOverloads()
 {
-    QMap<QString, Node *>::Iterator p1 = primaryFunctionMap_.begin();
-    while (p1 != primaryFunctionMap_.end()) {
-        FunctionNode *primaryFunc = (FunctionNode *) *p1;
-        if (primaryFunc->status() != Active || primaryFunc->access() == Private) {
-            if (secondaryFunctionMap_.contains(primaryFunc->name())) {
-                /*
-                  Either the primary function is not active or it is private.
-                  It therefore can't be the primary function. Search the list
-                  of overloads to find one that can be the primary function.
-                 */
-                NodeList& overloads = secondaryFunctionMap_[primaryFunc->name()];
-                NodeList::ConstIterator s = overloads.constBegin();
-                while (s != overloads.constEnd()) {
-                    FunctionNode *overloadFunc = (FunctionNode *) *s;
-                    /*
-                      Any non-obsolete, non-private function (i.e., visible function)
-                      is preferable to the current primary function. Swap the primary
-                      and overload functions.
-                     */
-                    if (overloadFunc->status() == Active && overloadFunc->access() != Private) {
-                        primaryFunc->setOverloadNumber(overloadFunc->overloadNumber());
-                        overloads.replace(overloads.indexOf(overloadFunc), primaryFunc);
-                        *p1 = overloadFunc;
-                        overloadFunc->setOverloadFlag(false);
-                        overloadFunc->setOverloadNumber(0);
-                        break;
-                    }
-                    ++s;
-                }
-            }
-        }
-        ++p1;
-    }
     /*
-      Ensure that none of the primary functions is marked with \overload.
-     */
-    QMap<QString, Node *>::Iterator p = primaryFunctionMap_.begin();
-    while (p != primaryFunctionMap_.end()) {
-        FunctionNode *primaryFunc = (FunctionNode *) *p;
-        if (primaryFunc->isOverload()) {
-            if (secondaryFunctionMap_.contains(primaryFunc->name())) {
-                /*
-                  The primary function is marked with \overload. Find an
-                  overload in the secondary function map that is not marked
-                  with \overload but that is active and not private. Then
-                  swap it with the primary function.
-                 */
-                NodeList& overloads = secondaryFunctionMap_[primaryFunc->name()];
-                NodeList::ConstIterator s = overloads.constBegin();
-                while (s != overloads.constEnd()) {
-                    FunctionNode *overloadFunc = (FunctionNode *) *s;
-                    if (!overloadFunc->isOverload()) {
-                        if (overloadFunc->status() == Active && overloadFunc->access() != Private) {
-                            primaryFunc->setOverloadNumber(overloadFunc->overloadNumber());
-                            overloads.replace(overloads.indexOf(overloadFunc), primaryFunc);
-                            *p = overloadFunc;
-                            overloadFunc->setOverloadFlag(false);
-                            overloadFunc->setOverloadNumber(0);
-                            break;
-                        }
-                    }
-                    ++s;
-                }
+      Ensure that none of the primary functions is inactive, private,
+      or marked \e {overload}.
+    */
+    FunctionMap::Iterator i = functionMap_.begin();
+    while (i != functionMap_.end()) {
+        FunctionNode *fn = i.value();
+        if (fn->isOverload()) {
+            FunctionNode *primary = fn->findPrimaryFunction();
+            if (primary) {
+                primary->setNextOverload(fn);
+                i.value() = primary;
+                fn = primary;
+            } else {
+                fn->clearOverloadFlag();
             }
         }
-        ++p;
+        int count = 0;
+        fn->setOverloadNumber(0);
+        fn = fn->nextOverload();
+        while (fn != nullptr) {
+            fn->setOverloadNumber(++count);
+            fn = fn->nextOverload();
+        }
+        ++i; // process next function in function map.
     }
     /*
       Recursive part.
      */
-    NodeList::ConstIterator c = childNodes().constBegin();
-    while (c != childNodes().constEnd()) {
-        if ((*c)->isAggregate())
-            ((Aggregate *) *c)->normalizeOverloads();
-        ++c;
+    foreach (Node *n, children_) {
+        if (n->isAggregate())
+            static_cast<Aggregate*>(n)->normalizeOverloads();
     }
 }
 
 /*!
-  Deletes all this node's children.
+  Returns a const reference to the list of child nodes of this
+  aggregate that are not function nodes.
  */
-void Aggregate::deleteChildren()
+const NodeList &Aggregate::nonfunctionList()
 {
-    NodeList childrenCopy = children_;
-    // Clear internal collections before deleting child nodes
-    children_.clear();
-    childMap_.clear();
-    enumChildren_.clear();
-    primaryFunctionMap_.clear();
-    secondaryFunctionMap_.clear();
-    qDeleteAll(childrenCopy);
+    if (nonfunctionList_.isEmpty() || (nonfunctionList_.size() != nonfunctionMap_.size()))
+        nonfunctionList_ = nonfunctionMap_.values();
+    return nonfunctionList_;
 }
 
 /*! \fn bool Aggregate::isAggregate() const
@@ -1290,34 +1249,19 @@ const EnumNode *Aggregate::findEnumNodeForValue(const QString &enumValue) const
 }
 
 /*!
-  Returns a node list containing all the member functions of
-  some class such that the functions overload the name \a funcName.
+  Appends \a includeFile file to the list of include files.
  */
-NodeList Aggregate::overloads(const QString &funcName) const
+void Aggregate::addIncludeFile(const QString &includeFile)
 {
-    NodeList result;
-    Node *primary = primaryFunctionMap_.value(funcName);
-    if (primary) {
-        result << primary;
-        result += secondaryFunctionMap_[funcName];
-    }
-    return result;
+    includeFiles_.append(includeFile);
 }
 
 /*!
-  Appends an \a include file to the list of include files.
+  Sets the list of include files to \a includeFiles.
  */
-void Aggregate::addInclude(const QString& include)
+void Aggregate::setIncludeFiles(const QStringList &includeFiles)
 {
-    includes_.append(include);
-}
-
-/*!
-  Sets the list of include files to \a includes.
- */
-void Aggregate::setIncludes(const QStringList& includes)
-{
-    includes_ = includes;
+    includeFiles_ = includeFiles;
 }
 
 /*!
@@ -1325,7 +1269,7 @@ void Aggregate::setIncludes(const QStringList& includes)
  */
 bool Aggregate::isSameSignature(const FunctionNode *f1, const FunctionNode *f2)
 {
-    if (f1->parameters().size() != f2->parameters().size())
+    if (f1->parameters().count() != f2->parameters().count())
         return false;
     if (f1->isConst() != f2->isConst())
         return false;
@@ -1334,12 +1278,12 @@ bool Aggregate::isSameSignature(const FunctionNode *f1, const FunctionNode *f2)
     if (f1->isRefRef() != f2->isRefRef())
         return false;
 
-    QVector<Parameter>::ConstIterator p1 = f1->parameters().constBegin();
-    QVector<Parameter>::ConstIterator p2 = f2->parameters().constBegin();
-    while (p2 != f2->parameters().constEnd()) {
-        if ((*p1).hasType() && (*p2).hasType()) {
-            QString t1 = p1->dataType();
-            QString t2 = p2->dataType();
+    const Parameters &p1 = f1->parameters();
+    const Parameters &p2 = f2->parameters();
+    for (int i = 0; i < p1.count(); i++) {
+        if (p1.at(i).hasType() && p2.at(i).hasType()) {
+            QString t1 = p1.at(i).type();
+            QString t2 = p2.at(i).type();
 
             if (t1.length() < t2.length())
                 qSwap(t1, t2);
@@ -1360,44 +1304,60 @@ bool Aggregate::isSameSignature(const FunctionNode *f1, const FunctionNode *f2)
                     return false;
             }
         }
-        ++p1;
-        ++p2;
     }
     return true;
 }
 
 /*!
-  Adds the \a child to this node's child list. It might also
-  be necessary to update this node's internal collections and
-  the child's parent pointer and output subdirectory.
+  This function is only called by addChild(), when the child is a
+  FunctionNode. If the function map does not contain a function with
+  the name in \a fn, \a fn is inserted into the function map. If the
+  map already contains a function by that name, \a fn is appended to
+  that function's linked list of overloads.
+
+  \note A function's overloads appear in the linked list in the same
+  order they were created. The first overload in the list is the first
+  overload created. This order is maintained in the numbering of
+  overloads. In other words, the first overload in the linked list has
+  overload number 1, and the last overload in the list has overload
+  number n, where n is the number of overloads not including the
+  function in the function map.
+
+  \not Adding a function increments the aggregate's function count,
+  which is the total number of function nodes in the function map,
+  including the overloads. The overloads are not inserted into the map
+  but are in a linked list using the FunctionNode's nextOverload_
+  pointer.
+
+  \note The function's overload number and overload flag are set in
+  normalizeOverloads().
+
+  \sa normalizeOverloads()
  */
-void Aggregate::addChild(Node *child)
+void Aggregate::addFunction(FunctionNode *fn)
 {
-    children_.append(child);
-    if (child->isFunction()) {
-        FunctionNode *func = static_cast<FunctionNode*>(child);
-        QString name = func->name();
-        if (!primaryFunctionMap_.contains(name)) {
-            primaryFunctionMap_.insert(name, func);
-            func->setOverloadNumber(0);
-        }
-        else {
-            NodeList &overloads = secondaryFunctionMap_[name];
-            overloads.append(func);
-            func->setOverloadNumber(overloads.size());
-        }
-    }
-    else {
-        if (child->isEnumType())
-            enumChildren_.append(child);
-        childMap_.insertMulti(child->name(), child);
-    }
-    if (child->parent() == 0) {
-        child->setParent(this);
-        child->setOutputSubdirectory(this->outputSubdirectory());
-        child->setUrl(QString());
-        child->setIndexNodeFlag(isIndexNode());
-    }
+    FunctionMap::iterator i = functionMap_.find(fn->name());
+    if (i == functionMap_.end())
+        functionMap_.insert(fn->name(), fn);
+    else
+        i.value()->appendOverload(fn);
+    functionCount_++;
+}
+
+/*!
+  When an Aggregate adopts a function that is a child of
+  another Aggregate, the function is inserted into this
+  Aggregate's function map, if the function's name is not
+  already in the function map. If the function's name is
+  already in the function map, do nothing. The overload
+  link is already set correctly.
+ */
+void Aggregate::adoptFunction(FunctionNode *fn)
+{
+    FunctionMap::iterator i = functionMap_.find(fn->name());
+    if (i == functionMap_.end())
+        functionMap_.insert(fn->name(), fn);
+    functionCount_++;
 }
 
 /*!
@@ -1408,52 +1368,74 @@ void Aggregate::addChild(Node *child)
  */
 void Aggregate::addChildByTitle(Node* child, const QString& title)
 {
-    childMap_.insertMulti(title, child);
+    nonfunctionMap_.insertMulti(title, child);
 }
 
 /*!
-  The \a child is removed from this node's child list and
-  from this node's internal collections. The child's parent
-  pointer is set to 0, but its output subdirectory is not
-  changed.
+  Adds the \a child to this node's child list and sets the child's
+  parent pointer to this Aggregate. It then mounts the child with
+  mountChild().
+
+  The \a child is then added to this Aggregate's searchable maps
+  and lists.
+
+  \note This function does not test the child's parent pointer
+  for null before changing it. If the child's parent pointer
+  is not null, then it is being reparented. The child becomes
+  a child of this Aggregate, but it also remains a child of
+  the Aggregate that is it's old parent. But the child will
+  only have one parent, and it will be this Aggregate. The is
+  because of the \c relates command.
+
+  \sa mountChild(), dismountChild()
  */
-void Aggregate::removeChild(Node *child)
+void Aggregate::addChild(Node *child)
 {
-    children_.removeAll(child);
-    enumChildren_.removeAll(child);
+    children_.append(child);
+    child->setParent(this);
+    child->setOutputSubdirectory(this->outputSubdirectory());
+    child->setUrl(QString());
+    child->setIndexNodeFlag(isIndexNode());
     if (child->isFunction()) {
-        QMap<QString, Node *>::Iterator primary = primaryFunctionMap_.find(child->name());
-        NodeList& overloads = secondaryFunctionMap_[child->name()];
-        if (primary != primaryFunctionMap_.end() && *primary == child) {
-            primaryFunctionMap_.erase(primary);
-            if (!overloads.isEmpty()) {
-                FunctionNode* fn = static_cast<FunctionNode*>(overloads.takeFirst());
-                fn->setOverloadNumber(0);
-                primaryFunctionMap_.insert(child->name(), fn);
+        addFunction(static_cast<FunctionNode*>(child));
+    }
+    else {
+        nonfunctionMap_.insertMulti(child->name(), child);
+        if (child->isEnumType())
+            enumChildren_.append(child);
+    }
+}
+
+/*!
+  This Aggregate becomes the adoptive parent of \a child. The
+  \a child knows this Aggregate as its parent, but its former
+  parent continues to have pointers to the child in its child
+  list and in its searchable data structures. But the child is
+  also added to the child list and searchable data structures
+  of this Aggregate.
+
+  The one caveat is that if the child being adopted is a function
+  node, it's next overload pointer is not altered.
+ */
+void Aggregate::adoptChild(Node *child)
+{
+    if (child->parent() != this) {
+        children_.append(child);
+        child->setParent(this);
+        if (child->isFunction()) {
+            adoptFunction(static_cast<FunctionNode*>(child));
+        }
+        else {
+            nonfunctionMap_.insertMulti(child->name(), child);
+            if (child->isEnumType()) {
+                enumChildren_.append(child);
+            } else if (child->isSharedCommentNode()) {
+                SharedCommentNode *scn = static_cast<SharedCommentNode*>(child);
+                for (Node *n : scn->collective())
+                    adoptChild(n);
             }
         }
-        else
-            overloads.removeAll(child);
     }
-    QMap<QString, Node *>::Iterator ent = childMap_.find(child->name());
-    while (ent != childMap_.end() && ent.key() == child->name()) {
-        if (*ent == child) {
-            childMap_.erase(ent);
-            break;
-        }
-        ++ent;
-    }
-    if (child->title().isEmpty())
-        return;
-    ent = childMap_.find(child->title());
-    while (ent != childMap_.end() && ent.key() == child->title()) {
-        if (*ent == child) {
-            childMap_.erase(ent);
-            break;
-        }
-        ++ent;
-    }
-    child->setParent(0);
 }
 
 /*!
@@ -1462,8 +1444,8 @@ void Aggregate::removeChild(Node *child)
 void Aggregate::setOutputSubdirectory(const QString &t)
 {
     Node::setOutputSubdirectory(t);
-    for (int i = 0; i < childNodes().size(); ++i)
-        childNodes().at(i)->setOutputSubdirectory(t);
+    foreach (Node *n, children_)
+        n->setOutputSubdirectory(t);
 }
 
 /*!
@@ -1532,7 +1514,7 @@ QmlPropertyNode* Aggregate::hasQmlProperty(const QString& n) const
         goal1 = Node::JsProperty;
         goal2 = Node::JsPropertyGroup;
     }
-    foreach (Node* child, childNodes()) {
+    foreach (Node *child, children_) {
         if (child->nodeType() == goal1) {
             if (child->name() == n)
                 return static_cast<QmlPropertyNode*>(child);
@@ -1558,7 +1540,7 @@ QmlPropertyNode* Aggregate::hasQmlProperty(const QString& n, bool attached) cons
         goal1 = Node::JsProperty;
         goal2 = Node::JsPropertyGroup;
     }
-    foreach (Node* child, childNodes()) {
+    foreach (Node *child, children_) {
         if (child->nodeType() == goal1) {
             if (child->name() == n && child->isAttached() == attached)
                 return static_cast<QmlPropertyNode*>(child);
@@ -1572,6 +1554,28 @@ QmlPropertyNode* Aggregate::hasQmlProperty(const QString& n, bool attached) cons
 }
 
 /*!
+  The FunctionNode \a fn is assumed to be a member function
+  of this Aggregate. The function's name is looked up in the
+  Aggregate's function map. It should be found because it is
+  assumed that \a fn is in this Aggregate's function map. But
+  in case it is not found, \c false is returned.
+
+  Normally, the name will be found in the function map, and
+  the value of the iterator is used to get the value, which
+  is a pointer to another FunctionNode, which is not itself
+  an overload. If that function has a non-null overload
+  pointer, true is returned. Otherwise false is returned.
+
+  This is a convenience function that you should not need to
+  use.
+ */
+bool Aggregate::hasOverloads(const FunctionNode *fn) const
+{
+    FunctionMap::const_iterator i = functionMap_.find(fn->name());
+    return (i == functionMap_.end() ? false : (i.value()->nextOverload() != nullptr));
+}
+
+/*!
   \class NamespaceNode
   \brief This class represents a C++ namespace.
 
@@ -1579,6 +1583,18 @@ QmlPropertyNode* Aggregate::hasQmlProperty(const QString& n, bool attached) cons
   can be a NamespaceNode for namespace Xxx in more than one
   Node tree.
  */
+
+/*!
+  If this is the global namespace node, remove all orphans
+  from the child list before deleting anything.
+ */
+NamespaceNode::~NamespaceNode()
+{
+    for (int i = 0; i < children_.size(); ++i) {
+        if (children_[i]->parent() != this)
+            children_[i] = nullptr;
+    }
+}
 
 /*!
   Returns true if this namespace is to be documented in the
@@ -1599,7 +1615,7 @@ bool NamespaceNode::isDocumentedHere() const
  */
 bool NamespaceNode::hasDocumentedChildren() const
 {
-    foreach (Node* n, childNodes()) {
+    foreach (Node *n, children_) {
         if (n->hasDoc() && !n->isPrivate() && !n->isInternal())
             return true;
     }
@@ -1613,7 +1629,7 @@ bool NamespaceNode::hasDocumentedChildren() const
  */
 void NamespaceNode::reportDocumentedChildrenInUndocumentedNamespace() const
 {
-    foreach (Node* n, childNodes()) {
+    foreach (Node *n, children_) {
         if (n->hasDoc() && !n->isPrivate() && !n->isInternal()) {
             QString msg1 = n->name();
             if (n->isFunction())
@@ -1635,6 +1651,31 @@ bool NamespaceNode::docMustBeGenerated() const
     if (hasDoc() && !isInternal() && !isPrivate())
         return true;
     return (hasDocumentedChildren() ? true : false);
+}
+
+/*!
+  Returns a const reference to the namespace node's list of
+  included children, which contains pointers to all the child
+  nodes of other namespace nodes that have the same name as
+  this namespace node. The list is built after the prepare
+  phase has been run but just before the generate phase. It
+  is buils by QDocDatabase::resolveNamespaces().
+
+  \sa QDocDatabase::resolveNamespaces()
+ */
+const NodeList &NamespaceNode::includedChildren() const
+{
+    return includedChildren_;
+}
+
+/*!
+  This function is only called from QDocDatabase::resolveNamesapces().
+
+  \sa includedChildren(), QDocDatabase::resolveNamespaces()
+ */
+void NamespaceNode::includeChild(Node *child)
+{
+    includedChildren_.append(child);
 }
 
 /*!
@@ -1826,6 +1867,9 @@ QmlTypeNode* ClassNode::findQmlBaseNode()
   \a fn overrides in this class's children or in one of this
   class's base classes. Return a pointer to the overridden
   function or return 0.
+
+  This should be revised because clang provides the path to the
+  overridden function. mws 15/12/2018
  */
 FunctionNode* ClassNode::findOverriddenFunction(const FunctionNode* fn)
 {
@@ -1837,7 +1881,7 @@ FunctionNode* ClassNode::findOverriddenFunction(const FunctionNode* fn)
             bc->node_ = cn;
         }
         if (cn) {
-            FunctionNode* result = cn->findFunctionNode(fn);
+            FunctionNode *result = cn->findFunctionChild(fn);
             if (result && !result->isNonvirtual())
                 return result;
             result = cn->findOverriddenFunction(fn);
@@ -1900,44 +1944,9 @@ bool PageNode::setTitle(const QString &title)
   Sets the node's \a subtitle. Returns true;
  */
 
-/*!
-  While there are related nodes, remove the first one. If it
-  relates to this node (it should), clear that relationship.
+/*! \f void Node::markInternal()
+  Sets the node's access to Private and its status to Internal.
  */
-void PageNode::removeFromRelated()
-{
-    while (!related_.isEmpty()) {
-        Node *p = static_cast<Node *>(related_.takeFirst());
-        if (p != 0 && p->relates() == this) p->clearRelated();
-    }
-}
-
-/*!
-  Removes \a pseudoChild from the list of nodes related to
-  this node. If \a pseudoChild is a function node, it is
-  also remove from the primary/secondary function maps of
-  this node, if this node is a subclass of PageNode
-  that has function maps.
- */
-void PageNode::removeRelated(Node *pseudoChild)
-{
-    related_.removeAll(pseudoChild);
-    removePseudoChild(pseudoChild);
-}
-
-/*!
-  Adds \a pseudoChild to the list of nodes related to this
-  node. Also adds \a pseudoChild to the primary/secondary
-  function maps, if this PageNode is the base class of
-  a subclass that has function maps. In that case, it also
-  resolves a correct overload number for a related non-member
-  function.
- */
-void PageNode::addRelated(Node *pseudoChild)
-{
-    related_.append(pseudoChild);
-    addPseudoChild(pseudoChild);
-}
 
 /*!
   \class EnumNode
@@ -1977,6 +1986,18 @@ QString EnumNode::itemValue(const QString &name) const
 }
 
 /*!
+  Clone this node on the heap and make the clone a child of
+  \a parent. Return the pointer to the clone.
+ */
+Node *EnumNode::clone(Aggregate *parent)
+{
+    EnumNode *en = new EnumNode(*this); // shallow copy
+    en->setParent(nullptr);
+    parent->addChild(en);
+    return en;
+}
+
+/*!
   \class TypedefNode
  */
 
@@ -1988,96 +2009,89 @@ void TypedefNode::setAssociatedEnum(const EnumNode *enume)
 }
 
 /*!
+  Clone this node on the heap and make the clone a child of
+  \a parent. Return the pointer to the clone.
+ */
+Node *TypedefNode::clone(Aggregate *parent)
+{
+    TypedefNode *tn = new TypedefNode(*this); // shallow copy
+    tn->setParent(nullptr);
+    parent->addChild(tn);
+    return tn;
+}
+
+/*!
   \class TypeAliasNode
  */
 
 /*!
-  \class Parameter
-  \brief The class Parameter contains one parameter.
-
-  A parameter can be a function parameter or a macro
-  parameter.
+  Clone this node on the heap and make the clone a child of
+  \a parent. Return the pointer to the clone.
  */
-
-/*!
-  Constructs this parameter from the \a dataType, the \a name,
-  and the \a defaultValue.
- */
-Parameter::Parameter(const QString& dataType, const QString& name, const QString& defaultValue)
-    : dataType_(dataType),
-      name_(name),
-      defaultValue_(defaultValue)
+Node *TypeAliasNode::clone(Aggregate *parent)
 {
-    // nothing.
-}
-
-/*!
-  Standard copy constructor copies \p.
- */
-Parameter::Parameter(const Parameter& p)
-    : dataType_(p.dataType_),
-      name_(p.name_),
-      defaultValue_(p.defaultValue_)
-{
-    // nothing.
-}
-
-/*!
-  standard assignment operator assigns \p.
- */
-Parameter& Parameter::operator=(const Parameter& p)
-{
-    dataType_ = p.dataType_;
-    name_ = p.name_;
-    defaultValue_ = p.defaultValue_;
-    return *this;
-}
-
-/*!
-  Reconstructs the text describing the parameter and
-  returns it. If \a value is true, the default value
-  will be included, if there is one.
- */
-QString Parameter::reconstruct(bool value) const
-{
-    QString p = dataType_;
-    if (!p.endsWith(QChar('*')) && !p.endsWith(QChar('&')) && !p.endsWith(QChar(' ')))
-        p += QLatin1Char(' ');
-    p += name_;
-    if (value && !defaultValue_.isEmpty())
-        p += " = " + defaultValue_;
-    return p;
+    TypeAliasNode *tan = new TypeAliasNode(*this); // shallow copy
+    tan->setParent(nullptr);
+    parent->addChild(tan);
+    return tan;
 }
 
 /*!
   \class FunctionNode
+
+  This node is used to represent any kind of function being
+  documented. It can represent a C++ class member function,
+  a C++ global function, a QML method, a javascript method,
+  or a macro, with or without parameters.
+
+  A C++ function can be a signal a slot, a constructor of any
+  kind, a destructor, a copy or move assignment operator, or
+  just a plain old member function or global function.
+
+  A QML or javascript method can be a plain old method, or a
+  signal or signal handler.
+
+  If the function is not an overload, its overload flag is
+  false. If it is an overload, its overload flag is true.
+  If it is not an overload but it has overloads, its next
+  overload pointer will point to an overload function. If it
+  is an overload function, its overload flag is true, and it
+  may or may not have a non-null next overload pointer.
+
+  So all the overloads of a function are in a linked list
+  using the next overload pointer. If a function has no
+  overloads, its overload flag is false and its overload
+  pointer is null.
+
+  The function node also has an overload number. If the
+  node's overload flag is set, this overload number is
+  positive; otherwise, the overload number is 0.
  */
 
 /*!
   Construct a function node for a C++ function. It's parent
   is \a parent, and it's name is \a name.
 
-  Do not set overloadNumber_ in the initializer list because it
-  is set by addChild() in the Node base class.
+  \note The function node's overload flag is set to false, and
+  its overload number is set to 0. These data members are set
+  in normalizeOverloads(), when all the overloads are known.
  */
 FunctionNode::FunctionNode(Aggregate *parent, const QString& name)
     : Node(Function, parent, name),
-      metaness_(Plain),
-      virtualness_(NonVirtual),
       const_(false),
       static_(false),
-      reimplemented_(false),
+      reimpFlag_(false),
       attached_(false),
-      privateSignal_(false),
-      overload_(false),
-      isDeleted_(false),
-      isDefaulted_(false),
+      overloadFlag_(false),
       isFinal_(false),
       isOverride_(false),
-      isImplicit_(false),
       isRef_(false),
       isRefRef_(false),
-      isInvokable_(false)
+      isInvokable_(false),
+      metaness_(Plain),
+      virtualness_(NonVirtual),
+      overloadNumber_(0),
+      nextOverload_(nullptr)
 {
     // nothing
 }
@@ -2088,31 +2102,43 @@ FunctionNode::FunctionNode(Aggregate *parent, const QString& name)
   it's name is \a name. If \a attached is true, it is an attached
   method or signal.
 
-  Do not set overloadNumber_ in the initializer list because it
-  is set by addChild() in the Node base class.
+  \note The function node's overload flag is set to false, and
+  its overload number is set to 0. These data members are set
+  in normalizeOverloads(), when all the overloads are known.
  */
 FunctionNode::FunctionNode(Metaness kind, Aggregate *parent, const QString& name, bool attached)
     : Node(Function, parent, name),
-      metaness_(kind),
-      virtualness_(NonVirtual),
       const_(false),
       static_(false),
-      reimplemented_(false),
+      reimpFlag_(false),
       attached_(attached),
-      privateSignal_(false),
-      overload_(false),
-      isDeleted_(false),
-      isDefaulted_(false),
+      overloadFlag_(false),
       isFinal_(false),
       isOverride_(false),
-      isImplicit_(false),
       isRef_(false),
       isRefRef_(false),
-      isInvokable_(false)
+      isInvokable_(false),
+      metaness_(kind),
+      virtualness_(NonVirtual),
+      overloadNumber_(0),
+      nextOverload_(nullptr)
 {
     setGenus(getGenus(metaness_));
     if (!isCppNode() && name.startsWith("__"))
         setStatus(Internal);
+}
+
+/*!
+  Clone this node on the heap and make the clone a child of
+  \a parent. Return the pointer to the clone.
+ */
+Node *FunctionNode::clone(Aggregate *parent)
+{
+    FunctionNode *fn = new FunctionNode(*this); // shallow copy
+    fn->setParent(nullptr);
+    fn->setNextOverload(nullptr);
+    parent->addChild(fn);
+    return fn;
 }
 
 /*!
@@ -2298,27 +2324,69 @@ bool FunctionNode::changeMetaness(Metaness from, Metaness to)
     return false;
 }
 
-/*! \fn void FunctionNode::setOverloadFlag(bool b)
-  Sets this function node's overload flag to \a b.
-  It does not set the overload number.
- */
-
 /*! \fn void FunctionNode::setOverloadNumber(unsigned char n)
-  Sets this function node's overload number to \a n.
-  It does not set the overload flag.
+  Sets the function node's overload number to \a n. If \a n
+  is 0, the function node's overload flag is set to false. If
+  \a n is greater than 0, the overload flag is set to true.
  */
+void FunctionNode::setOverloadNumber(signed short n)
+{
+    overloadNumber_ = n;
+    overloadFlag_ = (n > 0) ? true : false;
+}
 
 /*!
-  Sets the function node's reimplementation flag to \a b.
-  When \a b is true, it is supposed to mean that this function
-  is a reimplementation of a virtual function in a base class,
-  but it really just means the \e {\\reimp} command was seen in
-  the qdoc comment.
+  If this function's next overload pointer is null, set it to
+  \a fn. Otherwise continue down the overload list by calling
+  this function recursively for the next overload.
+
+  Although this function appends an overload function to the list of
+  overloads for this function's name, it does not set the function's
+  overload number or it's overload flag. If the function has the
+  \c{\\overload} in its qdoc comment, that will set the overload
+  flag. But qdoc treats the \c{\\overload} command as a hint that the
+  function should be documented as an overload. The hint is almost
+  always correct, but qdoc reserves the right to decide which function
+  should be the primary function and which functions are the overloads.
+  These decisions are made in Aggregate::normalizeOverloads().
  */
-void FunctionNode::setReimplemented(bool b)
+void FunctionNode::appendOverload(FunctionNode *fn)
 {
-    reimplemented_ = b;
+    if (nextOverload_ == nullptr)
+        nextOverload_ = fn;
+    else
+        nextOverload_->appendOverload(fn);
 }
+
+/*!
+  This function assumes that this FunctionNode is marked as an
+  overlaod function. It asks if the next overload is marked as
+  an overload. If not, then remove that FunctionNode from the
+  overload list and return it. Otherwise call this function
+  recursively for the next overload.
+ */
+FunctionNode *FunctionNode::findPrimaryFunction()
+{
+    if (nextOverload_ != nullptr) {
+        if (!nextOverload_->isOverload()) {
+            FunctionNode *t = nextOverload_;
+            nextOverload_ = t->nextOverload();
+            t->setNextOverload(nullptr);
+            return t;
+        }
+        return nextOverload_->findPrimaryFunction();
+    }
+    return nullptr;
+}
+
+/*!
+  \fn void FunctionNode::setReimpFlag()
+
+  Sets the function node's reimp flag to \c true, which means
+  the \e {\\reimp} command was used in the qdoc comment. It is
+  supposed to mean that the function reimplements a virtual
+  function in a base class.
+ */
 
 /*!
   Returns a string representing the kind of function this
@@ -2395,52 +2463,6 @@ QString FunctionNode::metanessString() const
 }
 
 /*!
-  Append \a parameter to the parameter list.
- */
-void FunctionNode::addParameter(const Parameter& parameter)
-{
-    parameters_.append(parameter);
-}
-
-/*!
-  Split the parameters \a t and store them in this function's
-  Parameter vector.
- */
-void FunctionNode::setParameters(const QString &t)
-{
-    clearParams();
-    if (!t.isEmpty()) {
-        QStringList commaSplit = t.split(',');
-        foreach (QString s, commaSplit) {
-            QStringList blankSplit = s.split(' ');
-            QString pName = blankSplit.last();
-            blankSplit.removeLast();
-            QString pType = blankSplit.join(' ');
-            int i = 0;
-            while (i < pName.length() && !pName.at(i).isLetter())
-                i++;
-            if (i > 0) {
-                pType += QChar(' ') + pName.left(i);
-                pName = pName.mid(i);
-            }
-            addParameter(Parameter(pType, pName));
-        }
-    }
-}
-
-void FunctionNode::borrowParameterNames(const FunctionNode *source)
-{
-    QVector<Parameter>::Iterator t = parameters_.begin();
-    QVector<Parameter>::ConstIterator s = source->parameters_.constBegin();
-    while (s != source->parameters_.constEnd() && t != parameters_.end()) {
-        if (!(*s).name().isEmpty())
-            (*t).setName((*s).name());
-        ++s;
-        ++t;
-    }
-}
-
-/*!
   Adds the "associated" property \a p to this function node.
   The function might be the setter or getter for a property,
   for example.
@@ -2459,7 +2481,7 @@ bool FunctionNode::hasActiveAssociatedProperty() const
 {
     if (associatedProperties_.isEmpty())
         return false;
-    foreach (const PropertyNode* p, associatedProperties_) {
+    foreach (const Node *p, associatedProperties_) {
         if (!p->isObsolete())
             return true;
     }
@@ -2471,87 +2493,28 @@ bool FunctionNode::hasActiveAssociatedProperty() const
  */
 
 /*!
-  Returns the list of parameter names.
- */
-QStringList FunctionNode::parameterNames() const
-{
-    QStringList names;
-    QVector<Parameter>::ConstIterator p = parameters().constBegin();
-    while (p != parameters().constEnd()) {
-        names << (*p).name();
-        ++p;
-    }
-    return names;
-}
-
-/*!
-  Returns a raw list of parameters. If \a names is true, the
-  names are included. If \a values is true, the default values
-  are included, if any are present.
- */
-QString FunctionNode::rawParameters(bool names, bool values) const
-{
-    QString raw;
-    foreach (const Parameter &parameter, parameters()) {
-        raw += parameter.dataType();
-        if (names)
-            raw += parameter.name();
-        if (values)
-            raw += parameter.defaultValue();
-    }
-    return raw;
-}
-
-/*!
-  Returns the list of reconstructed parameters. If \a values
-  is true, the default values are included, if any are present.
- */
-QStringList FunctionNode::reconstructParameters(bool values) const
-{
-    QStringList reconstructedParameters;
-    QVector<Parameter>::ConstIterator p = parameters().constBegin();
-    while (p != parameters().constEnd()) {
-        reconstructedParameters << (*p).reconstruct(values);
-        ++p;
-    }
-    return reconstructedParameters;
-}
-
-/*!
   Reconstructs and returns the function's signature. If \a values
   is true, the default values of the parameters are included, if
   present.
  */
 QString FunctionNode::signature(bool values, bool noReturnType) const
 {
-    QString s;
+    QString result;
     if (!noReturnType && !returnType().isEmpty())
-        s = returnType() + QLatin1Char(' ');
-    s += name();
+        result = returnType() + QLatin1Char(' ');
+    result += name();
     if (!isMacroWithoutParams()) {
-        s += QLatin1Char('(');
-        QStringList reconstructedParameters = reconstructParameters(values);
-        int p = reconstructedParameters.size();
-        if (p > 0) {
-            for (int i=0; i<p; i++) {
-                s += reconstructedParameters[i];
-                if (i < (p-1))
-                    s += ", ";
-            }
-        }
-        s += QLatin1Char(')');
+        result += QLatin1Char('(') + parameters_.signature(values) + QLatin1Char(')');
         if (isMacro())
-            return s;
+            return result;
     }
     if (isConst())
-        s += " const";
+        result += " const";
     if (isRef())
-        s += " &";
+        result += " &";
     else if (isRefRef())
-        s += " &&";
-    if (isImplicit())
-        s += " = default";
-    return s;
+        result += " &&";
+    return result;
 }
 
 /*!
@@ -2565,6 +2528,18 @@ PropertyNode::FunctionRole PropertyNode::role(const FunctionNode* fn) const
             return (FunctionRole) i;
     }
     return Notifier;
+}
+
+/*!
+  Clone this node on the heap and make the clone a child of
+  \a parent. Return the pointer to the clone.
+ */
+Node *VariableNode::clone(Aggregate *parent)
+{
+    VariableNode *vn = new VariableNode(*this); // shallow copy
+    vn->setParent(nullptr);
+    parent->addChild(vn);
+    return vn;
 }
 
 /*!
@@ -2594,12 +2569,12 @@ bool FunctionNode::compare(const FunctionNode *fn) const
         return false;
     if (isAttached() != fn->isAttached())
         return false;
-    const QVector<Parameter>& p = fn->parameters();
-    if (parameters().size() != p.size())
+    const Parameters &p = fn->parameters();
+    if (parameters_.count() != p.count())
         return false;
     if (!p.isEmpty()) {
-        for (int i = 0; i < p.size(); ++i) {
-            if (parameters()[i].dataType() != p[i].dataType())
+        for (int i = 0; i < p.count(); ++i) {
+            if (parameters_.at(i).type() != p.at(i).type())
                 return false;
         }
     }
@@ -2634,6 +2609,27 @@ bool FunctionNode::isIgnored() const
         if (s.contains(QLatin1String("enum_type")) && s.contains(QLatin1String("operator|")))
             return true;
     }
+    return false;
+}
+
+/*!
+  Returns true if this function has overloads. Otherwise false.
+  First, if this function node's overload pointer is not nullptr,
+  return true. Next, if this function node's overload flag is true
+  return true. Finally, if this function's parent Aggregate has a
+  function by the same name as this one in its function map and
+  that function has overloads, return true. Otherwise return false.
+
+  There is a failsafe way to test it under any circumstances.
+ */
+bool FunctionNode::hasOverloads() const
+{
+    if (nextOverload_ != nullptr)
+        return true;
+    if (overloadFlag_)
+        return true;
+    if (parent())
+        return parent()->hasOverloads(this);
     return false;
 }
 
@@ -2873,6 +2869,39 @@ QString QmlPropertyGroupNode::idNumber()
     if (idNumber_ == -1)
         idNumber_ = incPropertyGroupCount();
     return QString().setNum(idNumber_);
+}
+
+/*!
+  Marks each of the properties in the property group
+  Private and Internal.
+ */
+void QmlPropertyGroupNode::markInternal()
+{
+    Node::markInternal();
+    foreach (Node *n, children_)
+        n->markInternal();
+}
+
+/*!
+  Marks each of the properties in the property group
+  as the default. Probably wrong.
+ */
+void QmlPropertyGroupNode::markDefault()
+{
+    Node::markDefault();
+    foreach (Node *n, children_)
+        n->markDefault();
+}
+
+/*!
+  Marks each of the properties in the property group
+  with the read only \a flag.
+ */
+void QmlPropertyGroupNode::markReadOnly(bool flag)
+{
+    Node::markReadOnly(flag);
+    foreach (Node *n, children_)
+        n->markReadOnly(flag);
 }
 
 /*!
@@ -3134,44 +3163,352 @@ void Aggregate::printChildren(const QString& title)
 }
 
 /*!
-  Removes \a pseudoChild from this node's primary/secondary
-  function maps.
+  Removes \a fn from this aggregate's function map. That's
+  all it does. If \a fn is in the function map index and it
+  has an overload, the value pointer in the function map
+  index is set to the the overload pointer. If the function
+  has no overload pointer, the function map entry is erased.
+
+  \note When removing a function node from the function map,
+  it is important to set the removed function node's next
+  overload pointer to null because the function node might
+  be added as a child to some other aggregate.
  */
-void Aggregate::removePseudoChild(Node *pseudoChild)
+void Aggregate::removeFunctionNode(FunctionNode *fn)
 {
-    if (pseudoChild->isFunction()) {
-        QMap<QString, Node *>::Iterator p = primaryFunctionMap_.find(pseudoChild->name());
-        while (p != primaryFunctionMap_.end()) {
-            if (p.value() == pseudoChild) {
-                primaryFunctionMap_.erase(p);
-                break;
+    FunctionMap::Iterator i = functionMap_.find(fn->name());
+    if (i != functionMap_.end()) {
+        if (i.value() == fn) {
+            if (fn->nextOverload() != nullptr) {
+                i.value() = fn->nextOverload();
+                fn->setNextOverload(nullptr);
+                fn->setOverloadNumber(0);
             }
-            ++p;
+            else {
+                functionMap_.erase(i);
+            }
+        } else {
+            FunctionNode *current = i.value();
+            while (current != nullptr) {
+                if (current->nextOverload() == fn) {
+                    current->setNextOverload(fn->nextOverload());
+                    fn->setNextOverload(nullptr);
+                    fn->setOverloadNumber(0);
+                    break;
+                }
+                current = current->nextOverload();
+            }
         }
-        NodeList& overloads = secondaryFunctionMap_[pseudoChild->name()];
-        overloads.removeAll(pseudoChild);
+    }
+}
+
+/*
+  When deciding whether to include a function in the function
+  index, if the function is marked private, don't include it.
+  If the function is marked obsolete, don't include it. If the
+  function is marked internal, don't include it. Or if the
+  function is a destructor or any kind of constructor, don't
+  include it. Otherwise include it.
+ */
+static bool keep(FunctionNode *fn)
+{
+    if (fn->isPrivate() ||
+        fn->isObsolete() ||
+        fn->isInternal() ||
+        fn->isSomeCtor() ||
+        fn->isDtor())
+        return false;
+    return true;
+}
+
+/*!
+  Insert all functions declared in this aggregate into the
+  \a functionIndex. Call the function recursively for each
+  child that is an aggregate.
+
+  Only include functions that are in the public API and
+  that are not constructors or destructors.
+ */
+void Aggregate::findAllFunctions(NodeMapMap &functionIndex)
+{
+    FunctionMap::const_iterator i;
+    for (i = functionMap_.constBegin(); i != functionMap_.constEnd(); ++i) {
+        FunctionNode *fn = i.value();
+        if (keep(fn))
+            functionIndex[fn->name()].insert(fn->parent()->fullDocumentName(), fn);
+        fn = fn->nextOverload();
+        while (fn != nullptr) {
+            if (keep(fn))
+                functionIndex[fn->name()].insert(fn->parent()->fullDocumentName(), fn);
+            fn = fn->nextOverload();
+        }
+    }
+    foreach (Node *n, children_) {
+        if (n->isAggregate() && !n->isPrivate())
+            static_cast<Aggregate*>(n)->findAllFunctions(functionIndex);
     }
 }
 
 /*!
-  Adds \a pseudoChild to the list of nodes related to this one. Resolve a correct
-  overload number for a related non-member function.
- */
-void Aggregate::addPseudoChild(Node *pseudoChild)
+  For each child of this node, if the child is a namespace node,
+  insert the child into the \a namespaces multimap. If the child
+  is an aggregate, call this function recursively for that child.
+
+  When the function called with the root node of a tree, it finds
+  all the namespace nodes in that tree and inserts them into the
+  \a namespaces multimap.
+
+  The root node of a tree is a namespace, but it has no name, so
+  it is not inserted into the map. So, if this function is called
+  for each tree in the qdoc database, it finds all the namespace
+  nodes in the database.
+  */
+void Aggregate::findAllNamespaces(NodeMultiMap &namespaces)
 {
-    if (pseudoChild->isFunction()) {
-        FunctionNode* fn = static_cast<FunctionNode*>(pseudoChild);
-        if (primaryFunctionMap_.contains(pseudoChild->name())) {
-            secondaryFunctionMap_[pseudoChild->name()].append(pseudoChild);
-            fn->setOverloadNumber(secondaryFunctionMap_[pseudoChild->name()].size());
-            fn->setOverloadFlag(true);
-        }
-        else {
-            primaryFunctionMap_.insert(pseudoChild->name(), pseudoChild);
-            fn->setOverloadNumber(0);
-            fn->setOverloadFlag(false);
+    foreach (Node *n, children_) {
+        if (n->isAggregate() && !n->isPrivate()) {
+            if (n->isNamespace() && !n->name().isEmpty())
+                namespaces.insert(n->name(), n);
+            static_cast<Aggregate*>(n)->findAllNamespaces(namespaces);
         }
     }
+}
+
+/*!
+  Returns true if this aggregate contains at least one child
+  that is marked obsolete. Otherwise returns false.
+ */
+bool Aggregate::hasObsoleteMembers()
+{
+    foreach (Node *n, children_) {
+        if (!n->isPrivate() && n->isObsolete()) {
+            if (n->isFunction() || n->isProperty() || n->isEnumType() ||
+                n->isTypedef() || n->isTypeAlias() || n->isVariable() ||
+                n->isQmlProperty() || n->isJsProperty())
+                return true;
+        }
+    }
+    return false;
+}
+
+/*!
+  Finds all the obsolete C++ classes and QML types in this
+  aggregate and all the C++ classes and QML types with obsolete
+  members, and inserts them into maps used elesewhere for
+  generating documentation.
+ */
+void Aggregate::findAllObsoleteThings()
+{
+    foreach (Node *n, children_) {
+        if (!n->isPrivate()) {
+            QString name = n->name();
+            if (n->isObsolete()) {
+                if (n->isClass())
+                    QDocDatabase::obsoleteClasses().insert(n->qualifyCppName(), n);
+                else if (n->isQmlType() || n->isJsType())
+                    QDocDatabase::obsoleteQmlTypes().insert(n->qualifyQmlName(), n);
+            } else if (n->isClass()) {
+                Aggregate *a = static_cast<Aggregate *>(n);
+                if (a->hasObsoleteMembers())
+                    QDocDatabase::classesWithObsoleteMembers().insert(n->qualifyCppName(), n);
+            }
+            else if (n->isQmlType() || n->isJsType()) {
+                Aggregate *a = static_cast<Aggregate *>(n);
+                if (a->hasObsoleteMembers())
+                    QDocDatabase::qmlTypesWithObsoleteMembers().insert(n->qualifyQmlName(), n);
+            }
+            else if (n->isAggregate()) {
+                static_cast<Aggregate*>(n)->findAllObsoleteThings();
+            }
+        }
+    }
+}
+
+/*!
+  Finds all the C++ classes, QML types, JS types, QML and JS
+  basic types, and examples in this aggregate and inserts them
+  into appropriate maps for later use in generating documentation.
+ */
+void Aggregate::findAllClasses()
+{
+    foreach (Node *n, children_) {
+        if (!n->isPrivate() && !n->isInternal() &&
+            n->tree()->camelCaseModuleName() != QString("QDoc")) {
+            if (n->isClass()) {
+                QDocDatabase::cppClasses().insert(n->qualifyCppName().toLower(), n);
+            } else if (n->isQmlType() || n->isQmlBasicType() || n->isJsType() || n->isJsBasicType()) {
+                QString name = n->unqualifyQmlName();
+                QDocDatabase::qmlTypes().insert(name, n);
+                //also add to the QML basic type map
+                if (n->isQmlBasicType() || n->isJsBasicType())
+                    QDocDatabase::qmlBasicTypes().insert(name, n);
+            } else if (n->isExample()) {
+                // use the module index title as key for the example map
+                QString title = n->tree()->indexTitle();
+                if (!QDocDatabase::examples().contains(title, n))
+                    QDocDatabase::examples().insert(title, n);
+            } else if (n->isAggregate()) {
+                static_cast<Aggregate*>(n)->findAllClasses();
+            }
+        }
+    }
+}
+
+/*!
+  Find all the attribution pages in this node and insert them
+  into \a attributions.
+ */
+void Aggregate::findAllAttributions(NodeMultiMap &attributions)
+{
+    foreach (Node *n, children_) {
+        if (!n->isPrivate()) {
+            if (n->pageType() == Node::AttributionPage)
+                attributions.insertMulti(n->tree()->indexTitle(), n);
+            else if (n->isAggregate())
+                static_cast<Aggregate*>(n)->findAllAttributions(attributions);
+        }
+    }
+}
+
+/*!
+  \fn void findAllSince()
+
+  Finds all the nodes in this node where a \e{since} command appeared
+  in the qdoc comment and sorts them into maps according to the kind
+  of node.
+
+  This function is used for generating the "New Classes... in x.y"
+  section on the \e{What's New in Qt x.y} page.
+ */
+void Aggregate::findAllSince()
+{
+    foreach (Node *n, children_) {
+        QString sinceString = n->since();
+        // Insert a new entry into each map for each new since string found.
+        if (!n->isPrivate() && !sinceString.isEmpty()) {
+            NodeMultiMapMap::iterator nsmap = QDocDatabase::newSinceMaps().find(sinceString);
+            if (nsmap == QDocDatabase::newSinceMaps().end())
+                nsmap = QDocDatabase::newSinceMaps().insert(sinceString, NodeMultiMap());
+
+            NodeMapMap::iterator ncmap = QDocDatabase::newClassMaps().find(sinceString);
+            if (ncmap == QDocDatabase::newClassMaps().end())
+                ncmap = QDocDatabase::newClassMaps().insert(sinceString, NodeMap());
+
+            NodeMapMap::iterator nqcmap = QDocDatabase::newQmlTypeMaps().find(sinceString);
+            if (nqcmap == QDocDatabase::newQmlTypeMaps().end())
+                nqcmap = QDocDatabase::newQmlTypeMaps().insert(sinceString, NodeMap());
+
+            if (n->isFunction()) {
+                // Insert functions into the general since map.
+                FunctionNode *fn = static_cast<FunctionNode*>(n);
+                if (!fn->isObsolete() && !fn->isSomeCtor() && !fn->isDtor())
+                    nsmap.value().insert(fn->name(), fn);
+            }
+            else if (n->isClass()) {
+                // Insert classes into the since and class maps.
+                QString name = n->qualifyWithParentName();
+                nsmap.value().insert(name, n);
+                ncmap.value().insert(name, n);
+            } else if (n->isQmlType() || n->isJsType()) {
+                // Insert QML elements into the since and element maps.
+                QString name = n->qualifyWithParentName();
+                nsmap.value().insert(name, n);
+                nqcmap.value().insert(name, n);
+            } else if (n->isQmlProperty() || n->isJsProperty()) {
+                // Insert QML properties into the since map.
+                nsmap.value().insert(n->name(), n);
+            } else {
+                // Insert external documents into the general since map.
+                QString name = n->qualifyWithParentName();
+                nsmap.value().insert(name, n);
+            }
+        }
+        // Recursively find child nodes with since commands.
+        if (n->isAggregate())
+            static_cast<Aggregate*>(n)->findAllSince();
+    }
+}
+
+/*!
+  For each QML Type node in this aggregate's children, if the
+  QML type has a QML base type name but its QML base type node
+  pointer is nullptr, use the QML base type name to look up the
+  base type node. If the node is found, set the node's QML base
+  type node pointer to that node.
+ */
+void Aggregate::resolveQmlInheritance()
+{
+    NodeMap previousSearches;
+    // Do we need recursion?
+    foreach (Node *child, children_) {
+        if (!child->isQmlType() && !child->isJsType())
+            continue;
+        QmlTypeNode *type = static_cast<QmlTypeNode *>(child);
+        if (type->qmlBaseNode() != nullptr)
+            continue;
+        if (type->qmlBaseName().isEmpty())
+            continue;
+        QmlTypeNode *base = static_cast<QmlTypeNode *>(previousSearches.value(type->qmlBaseName()));
+        if (base && (base != type)) {
+            type->setQmlBaseNode(base);
+            QmlTypeNode::addInheritedBy(base, type);
+        } else {
+            if (!type->importList().isEmpty()) {
+                const ImportList &imports = type->importList();
+                for (int i=0; i<imports.size(); ++i) {
+                    base = QDocDatabase::qdocDB()->findQmlType(imports[i], type->qmlBaseName());
+                    if (base && (base != type)) {
+                        if (base->logicalModuleVersion()[0] != imports[i].version_[0])
+                            base = 0; // Safeguard for QTBUG-53529
+                        break;
+                    }
+                }
+            }
+            if (base == 0) {
+                base = QDocDatabase::qdocDB()->findQmlType(QString(), type->qmlBaseName());
+            }
+            if (base && (base != type)) {
+                type->setQmlBaseNode(base);
+                QmlTypeNode::addInheritedBy(base, type);
+                previousSearches.insert(type->qmlBaseName(), base);
+            }
+        }
+    }
+}
+
+/*!
+  \class ProxyNode
+  \brief A class for representing an Aggregate that is documented in a different module.
+
+  This class is used to represent an Aggregate (usually a class)
+  that is located and documented in a different module. In the
+  current module, a ProxyNode holds child nodes that are related
+  to the class in the other module.
+
+  For example, class QHash is located and documented in QtCore.
+  There are many global functions named qHash() in QtCore that
+  are all related to class QHash using the \c relates command.
+  There are also a few qHash() function in QtNetwork that are
+  related to QHash. These functions must be documented when the
+  documentation for QtNetwork is generated, but the reference
+  page for QHash must link to that documentation in its related
+  nonmembers list.
+
+  The ProxyNode allows qdoc to construct links to the related
+  functions (or other things?) in QtNetwork from the reference
+  page in QtCore.
+ */
+
+/*!
+  Constructs the ProxyNode, which at this point looks like any
+  other Aggregate, and then finds the Tree this node is in and
+  appends this node to that Tree's proxy list so it will be
+  easy to find later.
+ */
+ProxyNode::ProxyNode(Aggregate *parent, const QString &name)
+    : Aggregate(Node::Proxy, parent, name)
+{
+    tree()->appendProxy(this);
 }
 
 /*!
@@ -3322,34 +3659,39 @@ void CollectionNode::setLogicalModuleInfo(const QStringList& info)
 }
 
 /*!
-  Sets the overload flag to \b in each node in the collection.
+  Searches the shared comment node's member nodes for function
+  nodes. Each function node's overload flag is set.
  */
-void SharedCommentNode::setOverloadFlag(bool b)
+void SharedCommentNode::setOverloadFlags()
 {
-    for (Node *n : collective_)
-        n->setOverloadFlag(b);
+    for (Node *n : collective_) {
+        if (n->isFunction())
+            static_cast<FunctionNode*>(n)->setOverloadFlag();
+    }
 }
 
 /*!
-  Sets each node in this node's collective to be related to
-  \a pseudoParent.
+  Clone this node on the heap and make the clone a child of
+  \a parent. Return the pointer to the clone.
  */
-void SharedCommentNode::setRelates(PageNode *pseudoParent)
+Node *SharedCommentNode::clone(Aggregate *parent)
 {
-    Node::setRelates(pseudoParent);
-    for (Node *n : collective_)
-        n->setRelates(pseudoParent);
+    SharedCommentNode *scn = new SharedCommentNode(*this); // shallow copy
+    scn->setParent(nullptr);
+    parent->addChild(scn);
+    return scn;
 }
 
+
 /*!
-  Sets the (unresolved) entity \a name that this node relates to
-  in each of the nodes in this shared comment node's collective.
+  Sets the related nonmember flag in this node and in each
+  node in the shared comment's collective.
  */
-void SharedCommentNode::setRelates(const QString& name)
+void SharedCommentNode::setRelatedNonmember(bool b)
 {
-    Node::setRelates(name);
+    Node::setRelatedNonmember(b);
     for (Node *n : collective_)
-        n->setRelates(name);
+        n->setRelatedNonmember(b);
 }
 
 QT_END_NAMESPACE

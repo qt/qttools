@@ -69,7 +69,6 @@ public:
 
 protected:
     const QSet<QString>& topicCommands();
-    const QSet<QString>& otherMetaCommands();
 
 private:
 #ifndef QT_NO_DECLARATIVE

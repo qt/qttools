@@ -90,14 +90,13 @@ void QDocTagFiles::destroyQDocTagFiles()
 }
 
 /*!
-  Generate the tag file section with the given \a writer for the \a node
-  specified, returning true if an element was written; otherwise returns
-  false.
+  Generate the tag file section with the given \a writer for the \a parent
+  node.
  */
-void QDocTagFiles::generateTagFileCompounds(QXmlStreamWriter& writer, const Aggregate* inner)
+void QDocTagFiles::generateTagFileCompounds(QXmlStreamWriter &writer, const Aggregate *parent)
 {
-    foreach (const Node* node, inner->childNodes()) {
-        if (!node->url().isEmpty())
+    foreach (const Node *node, const_cast<Aggregate *>(parent)->nonfunctionList()) {
+        if (!node->url().isEmpty() || node->isPrivate())
             continue;
 
         QString kind;
@@ -107,29 +106,17 @@ void QDocTagFiles::generateTagFileCompounds(QXmlStreamWriter& writer, const Aggr
             break;
         case Node::Class:
         case Node::QmlType:
+        case Node::JsType:
             kind = "class";
             break;
-        case Node::Enum:
-        case Node::Typedef:
-        case Node::Property:
-        case Node::Function:
-        case Node::Variable:
         default:
             continue;
         }
+        const Aggregate *aggregate = static_cast<const Aggregate*>(node);
 
-        QString access;
-        switch (node->access()) {
-        case Node::Public:
-            access = "public";
-            break;
-        case Node::Protected:
+        QString access = "public";
+        if (node->isProtected())
             access = "protected";
-            break;
-        case Node::Private:
-        default:
-            continue;
-        }
 
         QString objName = node->name();
 
@@ -155,33 +142,32 @@ void QDocTagFiles::generateTagFileCompounds(QXmlStreamWriter& writer, const Aggr
             }
 
             // Recurse to write all members.
-            generateTagFileMembers(writer, static_cast<const Aggregate*>(node));
+            generateTagFileMembers(writer, aggregate);
             writer.writeEndElement();
 
             // Recurse to write all compounds.
-            generateTagFileCompounds(writer, static_cast<const Aggregate*>(node));
-        }
-        else {
+            generateTagFileCompounds(writer, aggregate);
+        } else {
             writer.writeTextElement("name", node->fullDocumentName());
             writer.writeTextElement("filename", gen_->fullDocumentLocation(node, false));
 
             // Recurse to write all members.
-            generateTagFileMembers(writer, static_cast<const Aggregate*>(node));
+            generateTagFileMembers(writer, aggregate);
             writer.writeEndElement();
 
             // Recurse to write all compounds.
-            generateTagFileCompounds(writer, static_cast<const Aggregate*>(node));
+            generateTagFileCompounds(writer, aggregate);
         }
     }
 }
 
 /*!
-  Writes all the members of the \a inner node with the \a writer.
+  Writes all the members of the \a parent node with the \a writer.
   The node represents a C++ class, namespace, etc.
  */
-void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter& writer, const Aggregate* inner)
+void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter &writer, const Aggregate *parent)
 {
-    foreach (const Node* node, inner->childNodes()) {
+    foreach (const Node *node, parent->childNodes()) {
         if (!node->url().isEmpty())
             continue;
 
@@ -269,7 +255,7 @@ void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter& writer, const Aggreg
                 QStringList pieces = gen_->fullDocumentLocation(node, false).split(QLatin1Char('#'));
                 writer.writeTextElement("anchorfile", pieces[0]);
                 writer.writeTextElement("anchor", pieces[1]);
-                QString signature = functionNode->signature(false);
+                QString signature = functionNode->signature(false, false);
                 signature = signature.mid(signature.indexOf(QChar('('))).trimmed();
                 if (functionNode->isConst())
                     signature += " const";
@@ -279,10 +265,6 @@ void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter& writer, const Aggreg
                     signature += " override";
                 if (functionNode->isPureVirtual())
                     signature += " = 0";
-                else if (functionNode->isDeleted())
-                    signature += " = delete";
-                else if (functionNode->isDefaulted())
-                    signature += " = default";
                 writer.writeTextElement("arglist", signature);
             }
             writer.writeEndElement(); // member

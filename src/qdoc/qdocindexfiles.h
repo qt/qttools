@@ -55,19 +55,16 @@ class QDocIndexFiles
     ~QDocIndexFiles();
 
     void readIndexes(const QStringList& indexFiles);
-    void generateIndex(const QString& fileName,
-                       const QString& url,
-                       const QString& title,
-                       Generator* g,
-                       bool generateInternalNodes = false);
-
     void readIndexFile(const QString& path);
     void readIndexSection(QXmlStreamReader &reader, Node* current, const QString& indexUrl);
     void insertTarget(TargetRec::TargetType type, const QXmlStreamAttributes &attributes, Node *node);
     void resolveIndex();
-    void resolveRelates();
-    bool generateIndexSection(QXmlStreamWriter& writer, Node* node, bool generateInternalNodes = false);
-    void generateIndexSections(QXmlStreamWriter& writer, Node* node, bool generateInternalNodes = false);
+
+    void generateIndex(const QString &fileName, const QString &url, const QString &title, Generator *g);
+    void generateFunctionSection(QXmlStreamWriter &writer, FunctionNode *fn);
+    void generateFunctionSections(QXmlStreamWriter &writer, Aggregate *aggrtegate);
+    bool generateIndexSection(QXmlStreamWriter &writer, Node *node);
+    void generateIndexSections(QXmlStreamWriter &writer, Node *node);
 
  private:
     static QDocIndexFiles* qdocIndexFiles_;
@@ -75,7 +72,6 @@ class QDocIndexFiles
     Generator* gen_;
     QString project_;
     QVector<QPair<ClassNode*,QString> > basesList_;
-    QVector<QPair<FunctionNode*,QString> > relatedList_;
 };
 
 QT_END_NAMESPACE

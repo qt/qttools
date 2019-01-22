@@ -402,9 +402,7 @@ bool HelpProjectWriter::generateSection(HelpProject &project,
         // the set of files, we only need to ensure that related nodes
         // are inserted.
 
-        if (node->relates()) {
-            project.memberStatus[node->relates()].insert(node->status());
-        } else if (node->parent())
+        if (node->parent())
             project.memberStatus[node->parent()].insert(node->status());
     }
         break;
@@ -471,8 +469,7 @@ bool HelpProjectWriter::generateSection(HelpProject &project,
     return true;
 }
 
-void HelpProjectWriter::generateSections(HelpProject &project,
-                                         QXmlStreamWriter &writer, const Node *node)
+void HelpProjectWriter::generateSections(HelpProject &project, QXmlStreamWriter &writer, const Node *node)
 {
     /*
       Don't include index nodes in the help file.
@@ -487,17 +484,13 @@ void HelpProjectWriter::generateSections(HelpProject &project,
 
         // Ensure that we don't visit nodes more than once.
         QSet<const Node*> childSet;
-        foreach (const Node *childNode, aggregate->childNodes()) {
-            if (childNode->isIndexNode())
+        const NodeList &children = aggregate->childNodes();
+        foreach (const Node *child, children) {
+            if (child->isIndexNode() || child->isPrivate())
                 continue;
-
-            if (childNode->isPrivate())
-                continue;
-
-            if (childNode->isTextPageNode()) {
-                childSet << childNode;
-            }
-            else if (childNode->isQmlPropertyGroup() || childNode->isJsPropertyGroup()) {
+            if (child->isTextPageNode()) {
+                childSet << child;
+            } else if (child->isQmlPropertyGroup() || child->isJsPropertyGroup()) {
                 /*
                   Don't visit QML/JS property group nodes,
                   but visit their children, which are all
@@ -507,26 +500,18 @@ void HelpProjectWriter::generateSections(HelpProject &project,
                   because The Qml/Js Property Group is
                   an actual documented thing.
                  */
-                const Aggregate* aggregate = static_cast<const Aggregate*>(childNode);
-                foreach (const Node* n, aggregate->childNodes()) {
-                    if (n->isPrivate())
-                        continue;
-                    childSet << n;
+                const Aggregate *aggregate = static_cast<const Aggregate *>(child);
+                const NodeList &nodes = aggregate->childNodes();
+                foreach (const Node *n, nodes) {
+                    if (!n->isPrivate())
+                        childSet << n;
                 }
-            }
-            else {
+            } else {
                 // Store member status of children
-                project.memberStatus[node].insert(childNode->status());
-                if (childNode->relates()) {
-                    project.memberStatus[childNode->relates()].insert(childNode->status());
-                }
-
-                if (childNode->isFunction()) {
-                    const FunctionNode *funcNode = static_cast<const FunctionNode *>(childNode);
-                    if (funcNode->isOverload())
-                        continue;
-                }
-                childSet << childNode;
+                project.memberStatus[node].insert(child->status());
+                if (child->isFunction() && static_cast<const FunctionNode*>(child)->isOverload())
+                    continue;
+                childSet << child;
             }
         }
         foreach (const Node *child, childSet)

@@ -91,6 +91,7 @@ public:
     static bool preparing() { return (qdocPass_ == Prepare); }
     static bool generating() { return (qdocPass_ == Generate); }
     static bool singleExec() { return qdocSingleExec_; }
+    static bool dualExec() { return !qdocSingleExec_; }
     static bool writeQaPages() { return qdocWriteQaPages_; }
     static void setSingleExec() { qdocSingleExec_ = true; }
     static void setWriteQaPages() { qdocWriteQaPages_ = true; }
@@ -113,11 +114,13 @@ protected:
     virtual void generateAlsoList(const Node *node, CodeMarker *marker);
     virtual int generateAtom(const Atom *, const Node *, CodeMarker *) { return 0; }
     virtual void generateBody(const Node *node, CodeMarker *marker);
-    virtual void generateCppReferencePage(Node *, CodeMarker *) {}
+    virtual void generateCppReferencePage(Aggregate *, CodeMarker *) {}
+    virtual void generateProxyPage(Aggregate *, CodeMarker *) {}
     virtual void generateQmlTypePage(QmlTypeNode *, CodeMarker *) {}
     virtual void generateQmlBasicTypePage(QmlBasicTypeNode *, CodeMarker *) {}
     virtual void generatePageNode(PageNode *, CodeMarker *) {}
     virtual void generateCollectionNode(CollectionNode *, CodeMarker *) {}
+    virtual void generateGenericCollectionPage(CollectionNode *, CodeMarker *) {}
     virtual void generateInheritedBy(const ClassNode *classe, CodeMarker *marker);
     virtual void generateInherits(const ClassNode *classe, CodeMarker *marker);
     virtual void generateDocumentation(Node* node);
@@ -233,7 +236,7 @@ private:
     static bool useOutputSubdirs_;
     static QmlTypeNode* qmlTypeContext_;
 
-    void generateReimplementedFrom(const FunctionNode *func, CodeMarker *marker);
+    void generateReimplementsClause(const FunctionNode *fn, CodeMarker *marker);
     static bool compareNodes(Node *a, Node *b) { return (a->name() < b->name()); }
     static bool comparePaths(QString a, QString b) { return (a < b); }
     static void copyTemplateFiles(const Config &config,

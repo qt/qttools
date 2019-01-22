@@ -32,6 +32,7 @@
 #include "codeparser.h"
 #include "qdocdatabase.h"
 #include "tokenizer.h"
+#include "codechunk.h"
 
 #include <qfileinfo.h>
 #include <qstringlist.h>
@@ -117,7 +118,7 @@ class QmlSignatureParser
     QString previousLexeme() { return tokenizer_->previousLexeme(); }
 
     bool match(int target);
-    bool matchDataType(CodeChunk* dataType, QString* var);
+    bool matchTypeAndName(CodeChunk *type, QString *var);
     bool matchParameter();
     bool matchFunctionDecl();
 
@@ -182,11 +183,11 @@ bool QmlDocVisitor::applyDocumentation(QQmlJS::AST::SourceLocation location, Nod
                                 n = new QmlPropertyNode(parent, qpa.name_, qpa.type_, isAttached);
                             n->setLocation(doc.location());
                             n->setDoc(doc);
-                            n->setReadOnly(nodePassedIn->isReadOnly());
+                            n->markReadOnly(nodePassedIn->isReadOnly());
                             if (nodePassedIn->isDefault())
-                                n->setDefault();
+                                n->markDefault();
                             if (isAttached)
-                                n->setReadOnly(0);
+                                n->markReadOnly(0);
                             if ((topic == COMMAND_JSPROPERTY) || (topic == COMMAND_JSATTACHEDPROPERTY))
                                 n->changeType(Node::QmlProperty, Node::JsProperty);
                             nodes.append(n);
@@ -244,10 +245,10 @@ bool QmlSignatureParser::match(int target)
 }
 
 /*!
-  Parse a QML data type into \a dataType and an optional
+  Parse a QML data type into \a type and an optional
   variable name into \a var.
  */
-bool QmlSignatureParser::matchDataType(CodeChunk* dataType, QString* var)
+bool QmlSignatureParser::matchTypeAndName(CodeChunk *type, QString *var)
 {
     /*
       This code is really hard to follow... sorry. The loop is there to match
@@ -262,32 +263,32 @@ bool QmlSignatureParser::matchDataType(CodeChunk* dataType, QString* var)
                    match(Tok_short) ||
                    match(Tok_long) ||
                    match(Tok_int64)) {
-                dataType->append(previousLexeme());
+                type->append(previousLexeme());
                 virgin = false;
             }
         }
 
         if (virgin) {
             if (match(Tok_Ident)) {
-                dataType->append(previousLexeme());
+                type->append(previousLexeme());
             }
             else if (match(Tok_void) ||
                      match(Tok_int) ||
                      match(Tok_char) ||
                      match(Tok_double) ||
                      match(Tok_Ellipsis))
-                dataType->append(previousLexeme());
+                type->append(previousLexeme());
             else
                 return false;
         }
         else if (match(Tok_int) ||
                  match(Tok_char) ||
                  match(Tok_double)) {
-            dataType->append(previousLexeme());
+            type->append(previousLexeme());
         }
 
         if (match(Tok_Gulbrandsen))
-            dataType->append(previousLexeme());
+            type->append(previousLexeme());
         else
             break;
     }
@@ -296,13 +297,13 @@ bool QmlSignatureParser::matchDataType(CodeChunk* dataType, QString* var)
            match(Tok_Aster) ||
            match(Tok_const) ||
            match(Tok_Caret))
-        dataType->append(previousLexeme());
+        type->append(previousLexeme());
 
     /*
       The usual case: Look for an optional identifier, then for
       some array brackets.
      */
-    dataType->appendHotspot();
+    type->appendHotspot();
 
     if ((var != 0) && match(Tok_Ident))
         *var = previousLexeme();
@@ -311,7 +312,7 @@ bool QmlSignatureParser::matchDataType(CodeChunk* dataType, QString* var)
         int bracketDepth0 = tokenizer_->bracketDepth();
         while ((tokenizer_->bracketDepth() >= bracketDepth0 && tok_ != Tok_Eoi) ||
                tok_ == Tok_RightBracket) {
-            dataType->append(lexeme());
+            type->append(lexeme());
             readToken();
         }
     }
@@ -321,13 +322,13 @@ bool QmlSignatureParser::matchDataType(CodeChunk* dataType, QString* var)
 bool QmlSignatureParser::matchParameter()
 {
     QString name;
-    CodeChunk dataType;
+    CodeChunk type;
     CodeChunk defaultValue;
 
-    bool result = matchDataType(&dataType, &name);
+    bool result = matchTypeAndName(&type, &name);
     if (name.isEmpty()) {
-        name = dataType.toString();
-        dataType.clear();
+        name = type.toString();
+        type.clear();
     }
 
     if (!result)
@@ -342,7 +343,7 @@ bool QmlSignatureParser::matchParameter()
             readToken();
         }
     }
-    func_->addParameter(Parameter(dataType.toString(), name, defaultValue.toString()));
+    func_->parameters().append(type.toString(), name, defaultValue.toString());
     return true;
 }
 
@@ -353,7 +354,7 @@ bool QmlSignatureParser::matchFunctionDecl()
     int firstBlank = signature_.indexOf(QChar(' '));
     int leftParen = signature_.indexOf(QChar('('));
     if ((firstBlank > 0) && (leftParen - firstBlank) > 1) {
-        if (!matchDataType(&returnType, 0))
+        if (!matchTypeAndName(&returnType, 0))
             return false;
     }
 
@@ -368,14 +369,17 @@ bool QmlSignatureParser::matchFunctionDecl()
 
     if (tok_ != Tok_LeftParen)
         return false;
-
+    /*
+      Parsing the parameters should be moved into class Parameters,
+      but it can wait. mws 14/12/2018
+     */
     readToken();
 
     func_->setLocation(location_);
     func_->setReturnType(returnType.toString());
 
     if (tok_ != Tok_RightParen) {
-        func_->clearParams();
+        func_->parameters().clear();
         do {
             if (!matchParameter())
                 return false;
@@ -472,16 +476,10 @@ void QmlDocVisitor::applyMetacommands(QQmlJS::AST::SourceLocation,
                 }
             }
             else if (command == COMMAND_QMLDEFAULT) {
-                if (node->isQmlProperty() || node->isJsProperty()) {
-                    QmlPropertyNode* qpn = static_cast<QmlPropertyNode*>(node);
-                    qpn->setDefault();
-                }
+                node->markDefault();
             }
             else if (command == COMMAND_QMLREADONLY) {
-                if (node->isQmlProperty() || node->isJsProperty()) {
-                    QmlPropertyNode* qpn = static_cast<QmlPropertyNode*>(node);
-                    qpn->setReadOnly(1);
-                }
+                node->markReadOnly(1);
             }
             else if ((command == COMMAND_INGROUP) && !args.isEmpty()) {
                 ArgList::ConstIterator argsIter = args.constBegin();
@@ -662,13 +660,12 @@ bool QmlDocVisitor::visit(QQmlJS::AST::UiPublicMember *member)
                     metaness = FunctionNode::JsSignal;
                 QString name = member->name.toString();
                 FunctionNode *newSignal = new FunctionNode(metaness, current, name);
-                QVector<Parameter> parameters;
+                Parameters &parameters = newSignal->parameters();
                 for (QQmlJS::AST::UiParameterList *it = member->parameters; it; it = it->next) {
                     const QString type = qualifiedIdToString(it->type);
                     if (!type.isEmpty() && !it->name.isEmpty())
-                        parameters.append(Parameter(type, QString(), it->name.toString()));
+                        parameters.append(type, QString(), it->name.toString());
                 }
-                newSignal->setParameters(parameters);
                 applyDocumentation(member->firstSourceLocation(), newSignal);
             }
         }
@@ -685,9 +682,9 @@ bool QmlDocVisitor::visit(QQmlJS::AST::UiPublicMember *member)
                 QmlPropertyNode* qmlPropNode = qmlType->hasQmlProperty(name);
                 if (qmlPropNode == 0)
                     qmlPropNode = new QmlPropertyNode(qmlType, name, type, false);
-                qmlPropNode->setReadOnly(member->isReadonlyMember);
+                qmlPropNode->markReadOnly(member->isReadonlyMember);
                 if (member->isDefaultMember)
-                    qmlPropNode->setDefault();
+                    qmlPropNode->markDefault();
                 applyDocumentation(member->firstSourceLocation(), qmlPropNode);
             }
         }
@@ -719,38 +716,24 @@ bool QmlDocVisitor::visit(QQmlJS::AST::IdentifierPropertyName *)
  */
 bool QmlDocVisitor::visit(QQmlJS::AST::FunctionDeclaration* fd)
 {
-    if (nestingLevel > 1) {
-        return true;
-    }
-    if (current->isQmlType() || current->isJsType()) {
-        QmlTypeNode* qmlType = static_cast<QmlTypeNode*>(current);
-        if (qmlType) {
-            FunctionNode::Metaness metaness = FunctionNode::QmlMethod;
-            if (qmlType->isJsType())
-                metaness = FunctionNode::JsMethod;
-            QString name = fd->name.toString();
-            FunctionNode* newMethod = new FunctionNode(metaness, current, name);
-            int overloads = 0;
-            NodeList::ConstIterator i = current->childNodes().constBegin();
-            while (i != current->childNodes().constEnd()) {
-                if ((*i)->name() == name)
-                    overloads++;
-                i++;
-            }
-            if (overloads > 1)
-                newMethod->setOverloadFlag(true);
-            QVector<Parameter> parameters;
-            QQmlJS::AST::FormalParameterList* formals = fd->formals;
-            if (formals) {
-                QQmlJS::AST::FormalParameterList* fpl = formals;
-                do {
-                    parameters.append(Parameter(QString(), QString(), fpl->element->bindingIdentifier.toString()));
-                    fpl = fpl->next;
-                } while (fpl && fpl != formals);
-                newMethod->setParameters(parameters);
-            }
-            applyDocumentation(fd->firstSourceLocation(), newMethod);
+    if (nestingLevel <= 1) {
+        FunctionNode::Metaness metaness = FunctionNode::QmlMethod;
+        if (current->isJsType())
+            metaness = FunctionNode::JsMethod;
+        else if (!current->isQmlType())
+            return true;
+        QString name = fd->name.toString();
+        FunctionNode *method = new FunctionNode(metaness, current, name);
+        Parameters &parameters = method->parameters();
+        QQmlJS::AST::FormalParameterList *formals = fd->formals;
+        if (formals) {
+            QQmlJS::AST::FormalParameterList *fp = formals;
+            do {
+                parameters.append(QString(), QString(), fp->element->bindingIdentifier.toString());
+                fp = fp->next;
+            } while (fp && fp != formals);
         }
+        applyDocumentation(fd->firstSourceLocation(), method);
     }
     return true;
 }
