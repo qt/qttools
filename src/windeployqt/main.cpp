@@ -1140,6 +1140,7 @@ static QStringList compilerRunTimeLibs(Platform platform, bool isDebug, unsigned
         }
         result.append(redistFiles);
     }
+        break;
     default:
         break;
     }
