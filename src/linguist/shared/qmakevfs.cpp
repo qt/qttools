@@ -154,7 +154,7 @@ bool QMakeVfs::writeFile(int id, QIODevice::OpenMode mode, VfsFlags flags,
         *cont += contents;
     else
         *cont = contents;
-    Q_UNUSED(errStr)
+    Q_UNUSED(errStr);
     return true;
 #else
     QFileInfo qfi(fileNameForId(id));

@@ -308,7 +308,7 @@ DockedMainWindow::DockedMainWindow(QDesignerWorkbench *wb,
     setCentralWidget(dma);
 
     QStatusBar *sb = statusBar();
-    Q_UNUSED(sb)
+    Q_UNUSED(sb);
 
     m_toolBarManager = new ToolBarManager(this, this, toolBarMenu, wb->actionManager(), toolbars, toolWindows);
 }

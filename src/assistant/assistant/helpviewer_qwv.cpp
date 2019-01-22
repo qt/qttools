@@ -230,7 +230,7 @@ QString HelpViewer::title() const
 void HelpViewer::setTitle(const QString &title)
 {
     TRACE_OBJ
-    Q_UNUSED(title)
+    Q_UNUSED(title);
 }
 
 QUrl HelpViewer::source() const

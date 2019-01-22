@@ -48,7 +48,7 @@ namespace qdesigner_internal {
 */
 LayoutInfo::Type LayoutInfo::layoutType(const QDesignerFormEditorInterface *core, const QLayout *layout)
 {
-    Q_UNUSED(core)
+    Q_UNUSED(core);
     if (!layout)
         return NoLayout;
     if (qobject_cast<const QHBoxLayout*>(layout))
@@ -112,7 +112,7 @@ LayoutInfo::Type LayoutInfo::managedLayoutType(const QDesignerFormEditorInterfac
 
 QWidget *LayoutInfo::layoutParent(const QDesignerFormEditorInterface *core, QLayout *layout)
 {
-    Q_UNUSED(core)
+    Q_UNUSED(core);
 
     QObject *o = layout;
     while (o) {

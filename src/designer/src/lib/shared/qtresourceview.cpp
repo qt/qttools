@@ -302,7 +302,7 @@ void QtResourceViewPrivate::updateActions()
 
 void QtResourceViewPrivate::slotResourceSetActivated(QtResourceSet *resourceSet)
 {
-    Q_UNUSED(resourceSet)
+    Q_UNUSED(resourceSet);
 
     updateActions();
 

@@ -113,7 +113,7 @@ void OpenPagesSwitcher::setVisible(bool visible)
 void OpenPagesSwitcher::focusInEvent(QFocusEvent *event)
 {
     TRACE_OBJ
-    Q_UNUSED(event)
+    Q_UNUSED(event);
     m_openPagesWidget->setFocus();
 }
 

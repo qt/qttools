@@ -86,13 +86,13 @@ void BookmarkFilterModel::setSourceModel(QAbstractItemModel *_sourceModel)
 
 int BookmarkFilterModel::rowCount(const QModelIndex &index) const
 {
-    Q_UNUSED(index)
+    Q_UNUSED(index);
     return cache.count();
 }
 
 int BookmarkFilterModel::columnCount(const QModelIndex &index) const
 {
-    Q_UNUSED(index)
+    Q_UNUSED(index);
     if (sourceModel)
         return sourceModel->columnCount();
     return 0;
@@ -113,14 +113,14 @@ QModelIndex BookmarkFilterModel::mapFromSource(const QModelIndex &sourceIndex) c
 
 QModelIndex BookmarkFilterModel::parent(const QModelIndex &child) const
 {
-    Q_UNUSED(child)
+    Q_UNUSED(child);
     return QModelIndex();
 }
 
 QModelIndex BookmarkFilterModel::index(int row, int column,
     const QModelIndex &index) const
 {
-    Q_UNUSED(index)
+    Q_UNUSED(index);
     if (row < 0 || column < 0 || cache.count() <= row
         || !sourceModel || sourceModel->columnCount() <= column) {
         return QModelIndex();
@@ -294,7 +294,7 @@ int BookmarkTreeModel::columnCount(const QModelIndex &parent) const
 
 bool BookmarkTreeModel::filterAcceptsRow(int row, const QModelIndex &parent) const
 {
-    Q_UNUSED(row)
+    Q_UNUSED(row);
     BookmarkModel *model = qobject_cast<BookmarkModel*> (sourceModel());
     if (model->rowCount(parent) > 0
         && model->data(model->index(row, 0, parent), UserRoleFolder).toBool())

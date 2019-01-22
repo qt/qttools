@@ -1200,7 +1200,7 @@ static DeployResult deploy(const Options &options,
     const QString libraryLocation = options.platform == Unix ? qmakeVariables.value(QStringLiteral("QT_INSTALL_LIBS")) : qtBinDir;
     const QString infix = qmakeVariables.value(QLatin1String(qmakeInfixKey));
     const int version = qtVersion(qmakeVariables);
-    Q_UNUSED(version)
+    Q_UNUSED(version);
 
     if (optVerboseLevel > 1)
         std::wcout << "Qt binaries in " << QDir::toNativeSeparators(qtBinDir) << '\n';

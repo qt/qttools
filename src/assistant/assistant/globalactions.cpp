@@ -224,9 +224,9 @@ void GlobalActions::setupNavigationMenus(QAction *back, QAction *next,
             this, &GlobalActions::slotOpenActionUrl);
     next->setMenu(m_nextMenu);
 #else
-    Q_UNUSED(back)
-    Q_UNUSED(next)
-    Q_UNUSED(parent)
+    Q_UNUSED(back);
+    Q_UNUSED(next);
+    Q_UNUSED(parent);
 #endif
 }
 

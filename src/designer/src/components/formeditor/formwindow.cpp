@@ -1501,7 +1501,7 @@ ArrowKeyPropertyCommand::ArrowKeyPropertyCommand(QDesignerFormWindowInterface *f
     SetPropertyCommand(fw, p)
 {
     static const int mid = qRegisterMetaType<qdesigner_internal::ArrowKeyOperation>();
-    Q_UNUSED(mid)
+    Q_UNUSED(mid);
 }
 
 void ArrowKeyPropertyCommand::init(QWidgetList &l, const ArrowKeyOperation &op)

@@ -667,7 +667,7 @@ QString qtDiag(unsigned flags)
         str << "\n\n";
     }
 #else
-    Q_UNUSED(flags)
+    Q_UNUSED(flags);
 #endif // !QT_NO_OPENGL
 
 #if QT_CONFIG(vulkan)

@@ -552,7 +552,7 @@ QtGroupPropertyManager::~QtGroupPropertyManager()
 */
 bool QtGroupPropertyManager::hasValue(const QtProperty *property) const
 {
-    Q_UNUSED(property)
+    Q_UNUSED(property);
     return false;
 }
 
@@ -561,7 +561,7 @@ bool QtGroupPropertyManager::hasValue(const QtProperty *property) const
 */
 void QtGroupPropertyManager::initializeProperty(QtProperty *property)
 {
-    Q_UNUSED(property)
+    Q_UNUSED(property);
 }
 
 /*!
@@ -569,7 +569,7 @@ void QtGroupPropertyManager::initializeProperty(QtProperty *property)
 */
 void QtGroupPropertyManager::uninitializeProperty(QtProperty *property)
 {
-    Q_UNUSED(property)
+    Q_UNUSED(property);
 }
 
 // QtIntPropertyManager

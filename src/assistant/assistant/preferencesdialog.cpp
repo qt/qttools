@@ -543,25 +543,25 @@ void PreferencesDialog::updateFontSettingsPage()
 
 void PreferencesDialog::appFontSettingToggled(bool on)
 {
-    Q_UNUSED(on)
+    Q_UNUSED(on);
     m_appFontChanged = true;
 }
 
 void PreferencesDialog::appFontSettingChanged(int index)
 {
-    Q_UNUSED(index)
+    Q_UNUSED(index);
     m_appFontChanged = true;
 }
 
 void PreferencesDialog::browserFontSettingToggled(bool on)
 {
-    Q_UNUSED(on)
+    Q_UNUSED(on);
     m_browserFontChanged = true;
 }
 
 void PreferencesDialog::browserFontSettingChanged(int index)
 {
-    Q_UNUSED(index)
+    Q_UNUSED(index);
     m_browserFontChanged = true;
 }
 

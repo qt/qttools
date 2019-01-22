@@ -273,7 +273,7 @@ void IconSelectorPrivate::slotSetActivated()
 // Choose a pixmap from resource; use language-dependent resource browser if present
 QString IconSelector::choosePixmapResource(QDesignerFormEditorInterface *core, QtResourceModel *resourceModel, const QString &oldPath, QWidget *parent)
 {
-    Q_UNUSED(resourceModel)
+    Q_UNUSED(resourceModel);
     QString rc;
 
     if (LanguageResourceDialog* ldlg = LanguageResourceDialog::create(core, parent)) {

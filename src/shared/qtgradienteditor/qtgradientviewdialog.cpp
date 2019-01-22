@@ -80,7 +80,7 @@ void QtGradientViewDialog::slotGradientSelected(const QString &id)
 
 void QtGradientViewDialog::slotGradientActivated(const QString &id)
 {
-    Q_UNUSED(id)
+    Q_UNUSED(id);
     accept();
 }
 

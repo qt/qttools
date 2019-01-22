@@ -442,7 +442,7 @@ void QtVariantPropertyManagerPrivate::slotPropertyInserted(QtProperty *property,
 
 void QtVariantPropertyManagerPrivate::slotPropertyRemoved(QtProperty *property, QtProperty *parent)
 {
-    Q_UNUSED(parent)
+    Q_UNUSED(parent);
 
     QtVariantProperty *varProperty = m_internalToProperty.value(property, 0);
     if (!varProperty)

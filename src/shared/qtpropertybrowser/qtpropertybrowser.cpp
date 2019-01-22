@@ -713,7 +713,7 @@ QSet<QtProperty *> QtAbstractPropertyManager::properties() const
 */
 bool QtAbstractPropertyManager::hasValue(const QtProperty *property) const
 {
-    Q_UNUSED(property)
+    Q_UNUSED(property);
     return true;
 }
 
@@ -728,7 +728,7 @@ bool QtAbstractPropertyManager::hasValue(const QtProperty *property) const
 */
 QIcon QtAbstractPropertyManager::valueIcon(const QtProperty *property) const
 {
-    Q_UNUSED(property)
+    Q_UNUSED(property);
     return QIcon();
 }
 
@@ -743,7 +743,7 @@ QIcon QtAbstractPropertyManager::valueIcon(const QtProperty *property) const
 */
 QString QtAbstractPropertyManager::valueText(const QtProperty *property) const
 {
-    Q_UNUSED(property)
+    Q_UNUSED(property);
     return QString();
 }
 
@@ -810,7 +810,7 @@ QtProperty *QtAbstractPropertyManager::createProperty()
 */
 void QtAbstractPropertyManager::uninitializeProperty(QtProperty *property)
 {
-    Q_UNUSED(property)
+   Q_UNUSED(property);
 }
 
 ////////////////////////////////////

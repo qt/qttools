@@ -348,8 +348,8 @@ void QtGradientStopsControllerPrivate::slotStopChanged(QtGradientStop *stop, con
 
 void QtGradientStopsControllerPrivate::slotStopSelected(QtGradientStop *stop, bool selected)
 {
-    Q_UNUSED(stop)
-    Q_UNUSED(selected)
+    Q_UNUSED(stop);
+    Q_UNUSED(selected);
     QTimer::singleShot(0, q_ptr, SLOT(slotUpdatePositionSpinBox()));
 }
 

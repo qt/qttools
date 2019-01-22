@@ -135,7 +135,7 @@ void SearchWidget::searchingStarted()
 void SearchWidget::searchingFinished(int searchResultCount)
 {
     TRACE_OBJ
-    Q_UNUSED(searchResultCount)
+    Q_UNUSED(searchResultCount);
     qApp->restoreOverrideCursor();
 }
 

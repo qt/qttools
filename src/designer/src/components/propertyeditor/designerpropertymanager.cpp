@@ -2791,7 +2791,7 @@ static inline bool isModifiedInMultiSelection(const QDesignerFormEditorInterface
 QWidget *ResetDecorator::editor(QWidget *subEditor, bool resettable, QtAbstractPropertyManager *manager, QtProperty *property,
             QWidget *parent)
 {
-    Q_UNUSED(manager)
+    Q_UNUSED(manager);
 
     ResetWidget *resetWidget = 0;
     if (resettable) {

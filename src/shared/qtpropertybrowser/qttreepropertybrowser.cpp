@@ -323,7 +323,7 @@ QWidget *QtPropertyEditorDelegate::createEditor(QWidget *parent,
 void QtPropertyEditorDelegate::updateEditorGeometry(QWidget *editor,
         const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    Q_UNUSED(index)
+    Q_UNUSED(index);
     editor->setGeometry(option.rect.adjusted(0, 0, 0, -1));
 }
 

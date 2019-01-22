@@ -147,8 +147,8 @@ QVariant QResourceBuilder::toNativeValue(const QVariant &value) const
 
 DomProperty *QResourceBuilder::saveResource(const QDir &workingDirectory, const QVariant &value) const
 {
-    Q_UNUSED(workingDirectory)
-    Q_UNUSED(value)
+    Q_UNUSED(workingDirectory);
+    Q_UNUSED(value);
     return 0;
 }
 
