@@ -2209,7 +2209,10 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
             yyTok = getToken();
             break;
         case Tok_RightParen:
-            metaExpected = false;
+            if (yyParenDepth == 0)
+                metaExpected = true;
+            else
+                metaExpected = false;
             yyTok = getToken();
             break;
         default:
