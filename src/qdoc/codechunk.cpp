@@ -89,6 +89,37 @@ static int category( QChar ch )
     return charCategory[static_cast<int>(ch.toLatin1())];
 }
 
+/*!
+  \class CodeChunk
+
+  \brief The CodeChunk class represents a tiny piece of C++ code.
+
+  \note I think this class should be eliminated (mws 11/12/2018
+
+  The class provides conversion between a list of lexemes and a string.  It adds
+  spaces at the right place for consistent style.  The tiny pieces of code it
+  represents are data types, enum values, and default parameter values.
+
+  Apart from the piece of code itself, there are two bits of metainformation
+  stored in CodeChunk: the base and the hotspot.  The base is the part of the
+  piece that may be a hypertext link.  The base of
+
+      QMap<QString, QString>
+
+  is QMap.
+
+  The hotspot is the place the variable name should be inserted in the case of a
+  variable (or parameter) declaration.  The hotspot of
+
+      char * []
+
+  is between '*' and '[]'.
+*/
+
+/*!
+  Appends \a lexeme to the current string contents, inserting
+  a space if appropriate.
+ */
 void CodeChunk::append( const QString& lexeme )
 {
     if ( !s.isEmpty() && !lexeme.isEmpty() ) {
@@ -104,6 +135,11 @@ void CodeChunk::append( const QString& lexeme )
     s += lexeme;
 }
 
+/*!
+  Converts the string with a regular expression that I think
+  removes the angle brackets parts and then splits it on "::".
+  The result is returned as a string list.
+ */
 QStringList CodeChunk::toPath() const
 {
     QString t = s;
