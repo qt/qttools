@@ -57,6 +57,7 @@ defineTest(qtConfTest_libclang) {
     # Assume libclang is installed on the target system
     isEmpty(LLVM_INSTALL_DIR) {
         llvmConfigCandidates = \
+            llvm-config-8 \
             llvm-config-7 \
             llvm-config-6.0 \
             llvm-config-5.0 \
@@ -67,9 +68,17 @@ defineTest(qtConfTest_libclang) {
         for (candidate, llvmConfigCandidates) {
             LLVM_INSTALL_DIR = $$system("$$candidate --prefix 2>$$QMAKE_SYSTEM_NULL_DEVICE")
             !isEmpty(LLVM_INSTALL_DIR) {
-                qtLog("Using Clang installation found in $${LLVM_INSTALL_DIR}." \
-                      "Set the LLVM_INSTALL_DIR environment variable to override.")
-                break()
+                CLANG_INCLUDEPATH = $$system("$$candidate --includedir 2>/dev/null")
+                LIBCLANG_MAIN_HEADER = $$CLANG_INCLUDEPATH/clang-c/Index.h
+                !exists($$LIBCLANG_MAIN_HEADER) {
+                    !isEmpty(LLVM_INSTALL_DIR): \
+                        qtLog("Cannot find libclang's main header file, candidate: $${LIBCLANG_MAIN_HEADER}.")
+                        continue
+                } else {
+                    qtLog("Using Clang installation found in $${LLVM_INSTALL_DIR}." \
+                          "Set the LLVM_INSTALL_DIR environment variable to override.")
+                    break()
+                }
             }
         }
     }
