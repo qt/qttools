@@ -115,58 +115,58 @@ struct QtModuleEntry {
 };
 
 static QtModuleEntry qtModuleEntries[] = {
-    { QtBluetoothModule, "bluetooth", "Qt5Bluetooth", 0 },
+    { QtBluetoothModule, "bluetooth", "Qt5Bluetooth", nullptr },
     { QtConcurrentModule, "concurrent", "Qt5Concurrent", "qtbase" },
     { QtCoreModule, "core", "Qt5Core", "qtbase" },
     { QtDeclarativeModule, "declarative", "Qt5Declarative", "qtquick1" },
-    { QtDesignerModule, "designer", "Qt5Designer", 0 },
-    { QtDesignerComponents, "designercomponents", "Qt5DesignerComponents", 0 },
-    { QtEnginioModule, "enginio", "Enginio", 0 },
-    { QtGamePadModule, "gamepad", "Qt5Gamepad", 0 },
+    { QtDesignerModule, "designer", "Qt5Designer", nullptr },
+    { QtDesignerComponents, "designercomponents", "Qt5DesignerComponents", nullptr },
+    { QtEnginioModule, "enginio", "Enginio", nullptr },
+    { QtGamePadModule, "gamepad", "Qt5Gamepad", nullptr },
     { QtGuiModule, "gui", "Qt5Gui", "qtbase" },
     { QtHelpModule, "qthelp", "Qt5Help", "qt_help" },
     { QtMultimediaModule, "multimedia", "Qt5Multimedia", "qtmultimedia" },
     { QtMultimediaWidgetsModule, "multimediawidgets", "Qt5MultimediaWidgets", "qtmultimedia" },
     { QtMultimediaQuickModule, "multimediaquick", "Qt5MultimediaQuick_p", "qtmultimedia" },
     { QtNetworkModule, "network", "Qt5Network", "qtbase" },
-    { QtNfcModule, "nfc", "Qt5Nfc", 0 },
-    { QtOpenGLModule, "opengl", "Qt5OpenGL", 0 },
-    { QtPositioningModule, "positioning", "Qt5Positioning", 0 },
-    { QtPrintSupportModule, "printsupport", "Qt5PrintSupport", 0 },
+    { QtNfcModule, "nfc", "Qt5Nfc", nullptr },
+    { QtOpenGLModule, "opengl", "Qt5OpenGL", nullptr },
+    { QtPositioningModule, "positioning", "Qt5Positioning", nullptr },
+    { QtPrintSupportModule, "printsupport", "Qt5PrintSupport", nullptr },
     { QtQmlModule, "qml", "Qt5Qml", "qtdeclarative" },
-    { QtQmlToolingModule, "qmltooling", "qmltooling", 0 },
+    { QtQmlToolingModule, "qmltooling", "qmltooling", nullptr },
     { QtQuickModule, "quick", "Qt5Quick", "qtdeclarative" },
-    { QtQuickParticlesModule, "quickparticles", "Qt5QuickParticles", 0 },
-    { QtQuickWidgetsModule, "quickwidgets", "Qt5QuickWidgets", 0 },
+    { QtQuickParticlesModule, "quickparticles", "Qt5QuickParticles", nullptr },
+    { QtQuickWidgetsModule, "quickwidgets", "Qt5QuickWidgets", nullptr },
     { QtScriptModule, "script", "Qt5Script", "qtscript" },
     { QtScriptToolsModule, "scripttools", "Qt5ScriptTools", "qtscript" },
-    { QtSensorsModule, "sensors", "Qt5Sensors", 0 },
+    { QtSensorsModule, "sensors", "Qt5Sensors", nullptr },
     { QtSerialPortModule, "serialport", "Qt5SerialPort", "qtserialport" },
     { QtSqlModule, "sql", "Qt5Sql", "qtbase" },
-    { QtSvgModule, "svg", "Qt5Svg", 0 },
+    { QtSvgModule, "svg", "Qt5Svg", nullptr },
     { QtTestModule, "test", "Qt5Test", "qtbase" },
-    { QtWebKitModule, "webkit", "Qt5WebKit", 0 },
-    { QtWebKitWidgetsModule, "webkitwidgets", "Qt5WebKitWidgets", 0 },
-    { QtWebSocketsModule, "websockets", "Qt5WebSockets", 0 },
+    { QtWebKitModule, "webkit", "Qt5WebKit", nullptr },
+    { QtWebKitWidgetsModule, "webkitwidgets", "Qt5WebKitWidgets", nullptr },
+    { QtWebSocketsModule, "websockets", "Qt5WebSockets", nullptr },
     { QtWidgetsModule, "widgets", "Qt5Widgets", "qtbase" },
-    { QtWinExtrasModule, "winextras", "Qt5WinExtras", 0 },
+    { QtWinExtrasModule, "winextras", "Qt5WinExtras", nullptr },
     { QtXmlModule, "xml", "Qt5Xml", "qtbase" },
     { QtXmlPatternsModule, "xmlpatterns", "Qt5XmlPatterns", "qtxmlpatterns" },
-    { QtWebEngineCoreModule, "webenginecore", "Qt5WebEngineCore", 0 },
+    { QtWebEngineCoreModule, "webenginecore", "Qt5WebEngineCore", nullptr },
     { QtWebEngineModule, "webengine", "Qt5WebEngine", "qtwebengine" },
-    { QtWebEngineWidgetsModule, "webenginewidgets", "Qt5WebEngineWidgets", 0 },
-    { Qt3DCoreModule, "3dcore", "Qt53DCore", 0 },
-    { Qt3DRendererModule, "3drenderer", "Qt53DRender", 0 },
-    { Qt3DQuickModule, "3dquick", "Qt53DQuick", 0 },
-    { Qt3DQuickRendererModule, "3dquickrenderer", "Qt53DQuickRender", 0 },
-    { Qt3DInputModule, "3dinput", "Qt53DInput", 0 },
-    { Qt3DAnimationModule, "3danimation", "Qt53DAnimation", 0 },
-    { Qt3DExtrasModule, "3dextras", "Qt53DExtras", 0 },
-    { QtLocationModule, "geoservices", "Qt5Location", 0 },
-    { QtWebChannelModule, "webchannel", "Qt5WebChannel", 0 },
-    { QtTextToSpeechModule, "texttospeech", "Qt5TextToSpeech", 0 },
-    { QtSerialBusModule, "serialbus", "Qt5SerialBus", 0 },
-    { QtWebViewModule, "webview", "Qt5WebView", 0 }
+    { QtWebEngineWidgetsModule, "webenginewidgets", "Qt5WebEngineWidgets", nullptr },
+    { Qt3DCoreModule, "3dcore", "Qt53DCore", nullptr },
+    { Qt3DRendererModule, "3drenderer", "Qt53DRender", nullptr },
+    { Qt3DQuickModule, "3dquick", "Qt53DQuick", nullptr },
+    { Qt3DQuickRendererModule, "3dquickrenderer", "Qt53DQuickRender", nullptr },
+    { Qt3DInputModule, "3dinput", "Qt53DInput", nullptr },
+    { Qt3DAnimationModule, "3danimation", "Qt53DAnimation", nullptr },
+    { Qt3DExtrasModule, "3dextras", "Qt53DExtras", nullptr },
+    { QtLocationModule, "geoservices", "Qt5Location", nullptr },
+    { QtWebChannelModule, "webchannel", "Qt5WebChannel", nullptr },
+    { QtTextToSpeechModule, "texttospeech", "Qt5TextToSpeech", nullptr },
+    { QtSerialBusModule, "serialbus", "Qt5SerialBus", nullptr },
+    { QtWebViewModule, "webview", "Qt5WebView", nullptr }
 };
 
 static const char webKitProcessC[] = "QtWebProcess";
@@ -689,8 +689,9 @@ static inline bool isQtModule(const QString &libName)
 // Helper for recursively finding all dependent Qt libraries.
 static bool findDependentQtLibraries(const QString &qtBinDir, const QString &binary, Platform platform,
                                      QString *errorMessage, QStringList *result,
-                                     unsigned *wordSize = 0, bool *isDebug = 0, unsigned short *machineArch = 0,
-                                     int *directDependencyCount = 0, int recursionDepth = 0)
+                                     unsigned *wordSize = nullptr, bool *isDebug = nullptr,
+                                     unsigned short *machineArch = nullptr,
+                                     int *directDependencyCount = nullptr, int recursionDepth = 0)
 {
     QStringList dependentLibs;
     if (directDependencyCount)
@@ -715,7 +716,8 @@ static bool findDependentQtLibraries(const QString &qtBinDir, const QString &bin
         *directDependencyCount = end - start;
     // Recurse
     for (int i = start; i < end; ++i)
-        if (!findDependentQtLibraries(qtBinDir, result->at(i), platform, errorMessage, result, 0, 0, 0, 0, recursionDepth + 1))
+        if (!findDependentQtLibraries(qtBinDir, result->at(i), platform, errorMessage, result,
+                                      nullptr, nullptr, nullptr, nullptr, recursionDepth + 1))
             return false;
     return true;
 }
@@ -1009,7 +1011,8 @@ static bool deployTranslations(const QString &sourcePath, quint64 usedQtModules,
             std::wcout << "Creating " << targetFile << "...\n";
         unsigned long exitCode;
         if ((options.updateFileFlags & SkipUpdateFile) == 0
-            && (!runProcess(binary, arguments, sourcePath, &exitCode, 0, 0, errorMessage) || exitCode)) {
+            && (!runProcess(binary, arguments, sourcePath, &exitCode, nullptr, nullptr, errorMessage)
+                || exitCode)) {
             return false;
         }
     } // for prefixes.
@@ -1046,7 +1049,6 @@ static QString libraryPath(const QString &libraryLocation, const char *name,
 }
 
 static QString vcDebugRedistDir() { return QStringLiteral("Debug_NonRedist"); }
-static QString onecoreRedistDir() { return QStringLiteral("onecore"); }
 
 static QString vcRedistDir()
 {
@@ -1147,6 +1149,7 @@ static QStringList compilerRunTimeLibs(Platform platform, bool isDebug, unsigned
         }
         result.append(redistFiles);
     }
+        break;
     default:
         break;
     }
@@ -1710,7 +1713,7 @@ int main(int argc, char **argv)
         else
             std::fputs(options.json->toJson().constData(), stdout);
         delete options.json;
-        options.json = 0;
+        options.json = nullptr;
     }
 
     return 0;

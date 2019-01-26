@@ -142,7 +142,7 @@ int main(int argc, char **argv)
     QSplashScreen *splash = 0;
     int screenId = QApplication::desktop()->screenNumber(tmp.geometry().center());
     splash = new QSplashScreen(QApplication::desktop()->screen(screenId),
-        QPixmap(QLatin1String(":/images/splash.png")));
+        QPixmap(QLatin1String(":/images/icons/linguist-128-32.png")));
     if (QApplication::desktop()->isVirtualDesktop()) {
         QRect srect(0, 0, splash->width(), splash->height());
         splash->move(QApplication::desktop()->availableGeometry(screenId).center() - srect.center());

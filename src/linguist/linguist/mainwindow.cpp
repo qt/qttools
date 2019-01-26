@@ -1357,7 +1357,7 @@ void MainWindow::about()
     QString version = tr("Version %1");
     version = version.arg(QLatin1String(QT_VERSION_STR));
 
-    box.setText(tr("<center><img src=\":/images/splash.png\"/></img><p>%1</p></center>"
+    box.setText(tr("<center><img src=\":/images/icons/linguist-128-32.png\"/></img><p>%1</p></center>"
                     "<p>Qt Linguist is a tool for adding translations to Qt "
                     "applications.</p>"
                     "<p>Copyright (C) %2 The Qt Company Ltd."
