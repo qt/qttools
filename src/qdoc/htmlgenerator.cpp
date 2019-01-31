@@ -1376,8 +1376,8 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
     QString rawTitle;
     QString fullTitle;
     NamespaceNode* ns = nullptr;
-    SectionVector *summarySections = 0;
-    SectionVector *detailsSections = 0;
+    SectionVector *summarySections = nullptr;
+    SectionVector *detailsSections = nullptr;
 
     Sections sections(aggregate);
     QString word = aggregate->typeWord(true);
@@ -1598,8 +1598,8 @@ void HtmlGenerator::generateProxyPage(Aggregate *aggregate, CodeMarker *marker)
     QString rawTitle;
     QString fullTitle;
     Text subtitleText;
-    SectionVector *summarySections = 0;
-    SectionVector *detailsSections = 0;
+    SectionVector *summarySections = nullptr;
+    SectionVector *detailsSections = nullptr;
 
     Sections sections(aggregate);
     rawTitle = aggregate->plainName();

@@ -113,24 +113,24 @@ private:
                                const QString &buildversion,
                                bool tableItems = false);
     void generateHeader(const QString& title,
-                        const Node *node = 0,
-                        CodeMarker *marker = 0);
+                        const Node *node = nullptr,
+                        CodeMarker *marker = nullptr);
     void generateTitle(const QString& title,
                        const Text &subTitle,
                        SubTitleSize subTitleSize,
                        const Node *relative,
                        CodeMarker *marker);
-    void generateFooter(const Node *node = 0);
+    void generateFooter(const Node *node = nullptr);
     void generateRequisites(Aggregate *inner,
                             CodeMarker *marker);
     void generateQmlRequisites(QmlTypeNode *qcn,
                             CodeMarker *marker);
     void generateBrief(const Node *node,
                        CodeMarker *marker,
-                       const Node *relative = 0, bool addLink=true);
+                       const Node *relative = nullptr, bool addLink=true);
     void generateTableOfContents(const Node *node,
                                  CodeMarker *marker,
-                                 QVector<Section>* sections = 0);
+                                 QVector<Section>* sections = nullptr);
     void generateSidebar();
     QString generateAllMembersFile(const Section &section, CodeMarker *marker);
     QString generateAllQmlMembersFile(const Sections &sections, CodeMarker* marker);
@@ -173,14 +173,14 @@ private:
                           CodeMarker *marker,
                           Section::Style style,
                           bool alignNames = false,
-                          const QString* prefix = 0);
+                          const QString* prefix = nullptr);
     void generateSectionInheritedList(const Section& section, const Node *relative);
     QString highlightedCode(const QString& markedCode,
                             const Node* relative,
                             bool alignNames = false,
                             Node::Genus genus = Node::DontCare);
 
-    void generateFullName(const Node *apparentNode, const Node *relative, const Node *actualNode = 0);
+    void generateFullName(const Node *apparentNode, const Node *relative, const Node *actualNode = nullptr);
     void generateDetailedMember(const Node *node, const PageNode *relative, CodeMarker *marker);
     void generateLink(const Atom *atom, CodeMarker *marker);
 

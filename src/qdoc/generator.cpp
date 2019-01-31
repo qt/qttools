@@ -72,7 +72,7 @@ Generator::QDocPass Generator::qdocPass_ = Generator::Neither;
 bool Generator::qdocSingleExec_ = false;
 bool Generator::qdocWriteQaPages_ = false;
 bool Generator::useOutputSubdirs_ = true;
-QmlTypeNode* Generator::qmlTypeContext_ = 0;
+QmlTypeNode* Generator::qmlTypeContext_ = nullptr;
 
 static QRegExp tag("</?@[^>]*>");
 static QLatin1String amp("&amp;");
@@ -136,7 +136,7 @@ void Generator::appendFullName(Text& text,
                                const Node *relative,
                                const Node *actualNode)
 {
-    if (actualNode == 0)
+    if (actualNode == nullptr)
         actualNode = apparentNode;
     text << Atom(Atom::LinkNode, CodeMarker::stringForNode(actualNode))
          << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
@@ -149,7 +149,7 @@ void Generator::appendFullName(Text& text,
                                const QString& fullName,
                                const Node *actualNode)
 {
-    if (actualNode == 0)
+    if (actualNode == nullptr)
         actualNode = apparentNode;
     text << Atom(Atom::LinkNode, CodeMarker::stringForNode(actualNode))
          << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
@@ -597,7 +597,7 @@ QString Generator::fullDocumentLocation(const Node *node, bool useSubdir)
     else if (fileBase(node).isEmpty())
         return QString();
 
-    Node *parentNode = 0;
+    Node *parentNode = nullptr;
 
     if ((parentNode = node->parent())) {
         if (parentNode->isQmlPropertyGroup() || parentNode->isJsPropertyGroup()) {
@@ -739,7 +739,7 @@ const Atom *Generator::generateAtomList(const Atom *atom,
                                     generate && rightFormat,
                                     numAtoms);
             if (!atom)
-                return 0;
+                return nullptr;
 
             if (atom->type() == Atom::FormatElse) {
                 ++numAtoms;
@@ -749,7 +749,7 @@ const Atom *Generator::generateAtomList(const Atom *atom,
                                         generate && !rightFormat,
                                         numAtoms);
                 if (!atom)
-                    return 0;
+                    return nullptr;
             }
 
             if (atom->type() == Atom::FormatEndif) {
@@ -780,7 +780,7 @@ const Atom *Generator::generateAtomList(const Atom *atom,
                 atom = atom->next();
         }
     }
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -1090,7 +1090,7 @@ void Generator::generateDocumentation(Node* node)
      */
     CodeMarker *marker = CodeMarker::markerForFileName(node->location().filePath());
 
-    if (node->parent() != 0) {
+    if (node->parent() != nullptr) {
         if (node->isCollectionNode()) {
             /*
               A collection node collects: groups, C++ modules,
@@ -1223,7 +1223,7 @@ bool Generator::generateQmlText(const Text& text,
     const Atom* atom = text.firstAtom();
     bool result = false;
 
-    if (atom != 0) {
+    if (atom != nullptr) {
         initializeTextOutput();
         while (atom) {
             if (atom->type() != Atom::QmlText)
@@ -1378,7 +1378,7 @@ bool Generator::generateText(const Text& text,
                              CodeMarker *marker)
 {
     bool result = false;
-    if (text.firstAtom() != 0) {
+    if (text.firstAtom() != nullptr) {
         int numAtoms = 0;
         initializeTextOutput();
         generateAtomList(text.firstAtom(),
@@ -1626,7 +1626,7 @@ Generator *Generator::generatorForFormat(const QString& format)
             return *g;
         ++g;
     }
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -1897,7 +1897,7 @@ void Generator::initializeGenerator(const Config& config)
 
 bool Generator::matchAhead(const Atom *atom, Atom::AtomType expectedAtomType)
 {
-    return atom->next() != 0 && atom->next()->type() == expectedAtomType;
+    return atom->next() != nullptr && atom->next()->type() == expectedAtomType;
 }
 
 /*!
@@ -2062,7 +2062,7 @@ int Generator::skipAtoms(const Atom *atom, Atom::AtomType type) const
 {
     int skipAhead = 0;
     atom = atom->next();
-    while (atom != 0 && atom->type() != type) {
+    while (atom != nullptr && atom->type() != type) {
         skipAhead++;
         atom = atom->next();
     }
@@ -2090,7 +2090,7 @@ void Generator::supplementAlsoList(const Node *node, QList<Text> &alsoList)
         const FunctionNode *fn = static_cast<const FunctionNode *>(node);
         if (fn->overloadNumber() == 0) {
             QString alternateName;
-            const FunctionNode *alternateFunc = 0;
+            const FunctionNode *alternateFunc = nullptr;
 
             if (fn->name().startsWith("set") && fn->name().size() >= 4) {
                 alternateName = fn->name()[3].toLower();

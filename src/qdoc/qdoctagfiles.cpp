@@ -47,7 +47,7 @@ QT_BEGIN_NAMESPACE
   This class handles the generation of the qdoc tag file.
  */
 
-QDocTagFiles* QDocTagFiles::qdocTagFiles_ = NULL;
+QDocTagFiles* QDocTagFiles::qdocTagFiles_ = nullptr;
 
 /*!
   Constructs the singleton. \a qdb is the pointer to the
@@ -64,7 +64,7 @@ QDocTagFiles::QDocTagFiles()
  */
 QDocTagFiles::~QDocTagFiles()
 {
-    qdb_ = 0;
+    qdb_ = nullptr;
 }
 
 /*!
@@ -85,7 +85,7 @@ void QDocTagFiles::destroyQDocTagFiles()
 {
     if (qdocTagFiles_) {
         delete qdocTagFiles_;
-        qdocTagFiles_ = 0;
+        qdocTagFiles_ = nullptr;
     }
 }
 

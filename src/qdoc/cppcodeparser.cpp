@@ -229,16 +229,16 @@ Node* CppCodeParser::processTopicCommand(const Doc& doc,
         QStringList words = arg.first.split(QLatin1Char(' '));
         QStringList path;
         int idx = 0;
-        Node *node = 0;
+        Node *node = nullptr;
 
         if (type == Node::Variable && words.size() > 1)
             idx = words.size() - 1;
         path = words[idx].split("::");
 
         node = qdb_->findNodeInOpenNamespace(path, nodeTypeTestFuncMap_[command]);
-        if (node == 0)
+        if (node == nullptr)
             node = qdb_->findNodeByNameAndType(path, nodeTypeTestFuncMap_[command]);
-        if (node == 0) {
+        if (node == nullptr) {
             if (isWorthWarningAbout(doc)) {
                 doc.location().warning(tr("Cannot find '%1' specified with '\\%2' in any header file")
                                        .arg(arg.first).arg(command));
@@ -362,7 +362,7 @@ Node* CppCodeParser::processTopicCommand(const Doc& doc,
              (command == COMMAND_JSATTACHEDMETHOD)) {
         Q_UNREACHABLE();
     }
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -464,9 +464,9 @@ void CppCodeParser::processQmlProperties(const Doc& doc,
     QString module;
     QString qmlTypeName;
     QString property;
-    QmlPropertyNode* qpn = 0;
-    QmlTypeNode* qmlType = 0;
-    QmlPropertyGroupNode* qpgn = 0;
+    QmlPropertyNode* qpn = nullptr;
+    QmlTypeNode* qmlType = nullptr;
+    QmlPropertyGroupNode* qpgn = nullptr;
 
     Topic qmlPropertyGroupTopic;
     const TopicList& topics = doc.topicsUsed();
@@ -530,7 +530,7 @@ void CppCodeParser::processQmlProperties(const Doc& doc,
                 if (!aggregate)
                     aggregate = qdb_->findQmlBasicType(module, qmlTypeName);
                 if (aggregate) {
-                    if (aggregate->hasQmlProperty(property, attached) != 0) {
+                    if (aggregate->hasQmlProperty(property, attached) != nullptr) {
                         QString msg = tr("QML property documented multiple times: '%1'").arg(arg);
                         doc.startLocation().warning(msg);
                     }
@@ -846,7 +846,7 @@ FunctionNode *CppCodeParser::parseMacroArg(const Location &location, const QStri
     if (leftParenSplit.isEmpty())
         return nullptr;
     QString macroName;
-    FunctionNode* oldMacroNode = 0;
+    FunctionNode* oldMacroNode = nullptr;
     QStringList blankSplit = leftParenSplit[0].split(' ');
     if (blankSplit.size() > 0) {
         macroName = blankSplit.last();

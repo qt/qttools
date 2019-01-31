@@ -56,7 +56,7 @@ class QDocForest
   private:
     friend class QDocDatabase;
     QDocForest(QDocDatabase* qdb)
-        : qdb_(qdb), primaryTree_(0), currentIndex_(0) { }
+        : qdb_(qdb), primaryTree_(nullptr), currentIndex_(0) { }
     ~QDocForest();
 
     NamespaceNode* firstRoot();
@@ -68,7 +68,7 @@ class QDocForest
     QStringList keys() {
         return forest_.keys();
     }
-    NamespaceNode* primaryTreeRoot() { return (primaryTree_ ? primaryTree_->root() : 0); }
+    NamespaceNode* primaryTreeRoot() { return (primaryTree_ ? primaryTree_->root() : nullptr); }
     bool isEmpty() { return searchOrder().isEmpty(); }
     bool done() { return (currentIndex_ >= searchOrder().size()); }
     const QVector<Tree*>& searchOrder();
@@ -90,9 +90,9 @@ class QDocForest
             const Node* n = t->findNode(path, relative, findFlags, genus);
             if (n)
                 return n;
-            relative = 0;
+            relative = nullptr;
         }
-        return 0;
+        return nullptr;
     }
 
     Node* findNodeByNameAndType(const QStringList& path, bool (Node::*isMatch) () const) {
@@ -101,7 +101,7 @@ class QDocForest
             if (n)
                 return n;
         }
-        return 0;
+        return nullptr;
     }
 
     ClassNode* findClassNode(const QStringList& path) {
@@ -110,7 +110,7 @@ class QDocForest
             if (n)
                 return n;
         }
-        return 0;
+        return nullptr;
     }
 
     Node* findNodeForInclude(const QStringList& path) {
@@ -119,7 +119,7 @@ class QDocForest
             if (n)
                 return n;
         }
-        return 0;
+        return nullptr;
     }
 
     const FunctionNode *findFunctionNode(const QStringList &path,
@@ -140,9 +140,9 @@ class QDocForest
             const Node* n = t->findNode(path, relative, flags, genus);
             if (n)
                 return n;
-            relative = 0;
+            relative = nullptr;
         }
-        return 0;
+        return nullptr;
     }
 
     const PageNode* findPageNodeByTitle(const QString& title)
@@ -152,7 +152,7 @@ class QDocForest
             if (n)
                 return n;
         }
-        return 0;
+        return nullptr;
     }
 
     const CollectionNode* getCollectionNode(const QString& name, Node::NodeType type)
@@ -162,7 +162,7 @@ class QDocForest
             if (cn)
                 return cn;
         }
-        return 0;
+        return nullptr;
     }
 
     QmlTypeNode* lookupQmlType(const QString& name)
@@ -172,7 +172,7 @@ class QDocForest
             if (qcn)
                 return qcn;
         }
-        return 0;
+        return nullptr;
     }
 
     Aggregate* lookupQmlBasicType(const QString& name)
@@ -182,7 +182,7 @@ class QDocForest
             if (a)
                 return a;
         }
-        return 0;
+        return nullptr;
     }
     void clearSearchOrder() { searchOrder_.clear(); }
     void clearLinkCounts()

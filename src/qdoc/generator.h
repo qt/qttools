@@ -178,7 +178,7 @@ protected:
                   int* pos,
                   int n,
                   QStringRef* contents,
-                  QStringRef* par1 = 0,
+                  QStringRef* par1 = nullptr,
                   bool debug = false);
     void setImageFileExtensions(const QStringList& extensions);
     void unknownAtom(const Atom *atom);
@@ -197,7 +197,7 @@ protected:
     void appendFullName(Text& text,
                         const Node *apparentNode,
                         const Node *relative,
-                        const Node *actualNode = 0);
+                        const Node *actualNode = nullptr);
     void appendFullName(Text& text,
                         const Node *apparentNode,
                         const QString& fullName,

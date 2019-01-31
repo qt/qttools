@@ -232,9 +232,9 @@ public:
     virtual bool isWrapper() const;
 
     QString plainName() const;
-    QString plainFullName(const Node* relative = 0) const;
+    QString plainFullName(const Node* relative = nullptr) const;
     QString plainSignature() const;
-    QString fullName(const Node* relative=0) const;
+    QString fullName(const Node* relative = nullptr) const;
     virtual QString signature(bool ,  bool ) const { return plainName(); }
 
     const QString& fileNameBase() const { return fileNameBase_; }
@@ -292,7 +292,7 @@ public:
     virtual QString nameForLists() const { return name_; }
     virtual QString outputFileName() const { return QString(); }
     virtual QString obsoleteLink() const { return QString(); }
-    virtual void setObsoleteLink(const QString& ) { };
+    virtual void setObsoleteLink(const QString& ) { }
     virtual void setQtVariable(const QString& ) { }
     virtual QString qtVariable() const { return QString(); }
     virtual bool hasTag(const QString& ) const { return false; }
@@ -317,7 +317,7 @@ public:
     QString nodeSubtypeString() const;
     virtual void addPageKeywords(const QString& ) { }
 
-    bool isSharingComment() const { return (sharedCommentNode_ != 0); }
+    bool isSharingComment() const { return (sharedCommentNode_ != nullptr); }
     bool hasSharedDoc() const;
     void setSharedCommentNode(SharedCommentNode* t);
 
@@ -330,11 +330,11 @@ public:
     virtual QString logicalModuleIdentifier() const { return QString(); }
     virtual void setLogicalModuleInfo(const QString& ) { }
     virtual void setLogicalModuleInfo(const QStringList& ) { }
-    virtual CollectionNode* logicalModule() const { return 0; }
+    virtual CollectionNode* logicalModule() const { return nullptr; }
     virtual void setQmlModule(CollectionNode* ) { }
-    virtual ClassNode* classNode() { return 0; }
+    virtual ClassNode* classNode() { return nullptr; }
     virtual void setClassNode(ClassNode* ) { }
-    virtual const Node* applyModuleName(const Node* ) const { return 0; }
+    virtual const Node* applyModuleName(const Node* ) const { return nullptr; }
     virtual QString idNumber() { return "0"; }
     QmlTypeNode* qmlTypeNode();
     ClassNode* declarativeCppNode();
@@ -474,7 +474,7 @@ public:
     QStringList primaryKeys();
     QmlPropertyNode* hasQmlProperty(const QString& ) const;
     QmlPropertyNode* hasQmlProperty(const QString&, bool attached) const;
-    virtual QmlTypeNode* qmlBaseNode() const { return 0; }
+    virtual QmlTypeNode* qmlBaseNode() const { return nullptr; }
     void addChildByTitle(Node* child, const QString& title);
     void printChildren(const QString& title);
     void addChild(Node* child);
@@ -532,7 +532,7 @@ class NamespaceNode : public Aggregate
 {
 public:
     NamespaceNode(Aggregate* parent, const QString& name) : Aggregate(Namespace, parent, name),
-        seen_(false), documented_(false), tree_(0), docNode_(0) { }
+        seen_(false), documented_(false), tree_(nullptr), docNode_(nullptr) { }
     virtual ~NamespaceNode();
     Tree* tree() const override { return (parent() ? parent()->tree() : tree_); }
 
@@ -572,7 +572,7 @@ struct RelatedClass
         : access_(access), node_(node) { }
     // constructor for unresolved base class
     RelatedClass(Node::Access access, const QStringList& path, const QString& signature)
-        : access_(access), node_(0), path_(path), signature_(signature) { }
+        : access_(access), node_(nullptr), path_(path), signature_(signature) { }
     QString accessString() const;
     bool isPrivate() const { return (access_ == Node::Private); }
 
@@ -585,7 +585,7 @@ struct RelatedClass
 struct UsingClause
 {
     UsingClause() { }
-    UsingClause(const QString& signature) : node_(0), signature_(signature) { }
+    UsingClause(const QString& signature) : node_(nullptr), signature_(signature) { }
     const QString& signature() const { return signature_; }
     const Node* node() { return node_; }
     void setNode(const Node* n) { node_ = n; }
@@ -598,7 +598,7 @@ class ClassNode : public Aggregate
 {
 public:
     ClassNode(NodeType type, Aggregate* parent, const QString& name) : Aggregate(type, parent, name),
-        abstract_(false),  wrapper_(false), qmlelement(0) { }
+        abstract_(false),  wrapper_(false), qmlelement(nullptr) { }
     virtual ~ClassNode() { }
     bool isFirstClassAggregate() const override { return true; }
     bool isClassNode() const override { return true; }
@@ -733,7 +733,7 @@ public:
     void setImportList(const ImportList& il) { importList_ = il; }
     const QString& qmlBaseName() const { return qmlBaseName_; }
     void setQmlBaseName(const QString& name) { qmlBaseName_ = name; }
-    bool qmlBaseNodeNotSet() const { return (qmlBaseNode_ == 0); }
+    bool qmlBaseNodeNotSet() const { return (qmlBaseNode_ == nullptr); }
     QmlTypeNode* qmlBaseNode() const override { return qmlBaseNode_; }
     void setQmlBaseNode(QmlTypeNode* b) { qmlBaseNode_ = b; }
     void requireCppClass() { cnodeRequired_ = true; }
@@ -866,7 +866,7 @@ private:
 class EnumNode : public Node
 {
 public:
-    EnumNode(Aggregate *parent, const QString& name) : Node(Enum, parent, name), flagsType_(0) { }
+    EnumNode(Aggregate *parent, const QString& name) : Node(Enum, parent, name), flagsType_(nullptr) { }
     virtual ~EnumNode() { }
 
     void addItem(const EnumItem& item);
@@ -889,7 +889,7 @@ class TypedefNode : public Node
 {
 public:
     TypedefNode(Aggregate *parent, const QString& name) : Node(Typedef, parent, name),
-        associatedEnum_(0) { }
+        associatedEnum_(nullptr) { }
     virtual ~TypedefNode() { }
 
     bool hasAssociatedEnum() const { return associatedEnum_ != nullptr; }
@@ -991,7 +991,7 @@ public:
     void setVirtual() { virtualness_ = NormalVirtual; }
     void setConst(bool b) { const_ = b; }
     void setStatic(bool b) { static_ = b; }
-    void setReimpFlag() { reimpFlag_ = true; };
+    void setReimpFlag() { reimpFlag_ = true; }
     void setOverridesThis(const QString &path) { overridesThis_ = path; }
 
     const QString& returnType() const { return returnType_; }

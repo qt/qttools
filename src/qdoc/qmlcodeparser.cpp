@@ -49,8 +49,8 @@ QT_BEGIN_NAMESPACE
  */
 QmlCodeParser::QmlCodeParser()
 #ifndef QT_NO_DECLARATIVE
-    : lexer( 0 ),
-      parser( 0 )
+    : lexer(nullptr),
+      parser(nullptr)
 #endif
 {
 }
@@ -211,7 +211,7 @@ void QmlCodeParser::extractPragmas(QString &script)
     const QString pragma(QLatin1String("pragma"));
     const QString library(QLatin1String("library"));
 
-    QQmlJS::Lexer l(0);
+    QQmlJS::Lexer l(nullptr);
     l.setCode(script, 0);
 
     int token = l.lex();

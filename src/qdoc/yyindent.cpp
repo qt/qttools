@@ -113,11 +113,11 @@ void setIndentSize( int size )
     ppContinuationIndentSize = 2 * size;
 }
 
-static QRegExp *literal = 0;
-static QRegExp *label = 0;
-static QRegExp *inlineCComment = 0;
-static QRegExp *braceX = 0;
-static QRegExp *iflikeKeyword = 0;
+static QRegExp *literal = nullptr;
+static QRegExp *label = nullptr;
+static QRegExp *inlineCComment = nullptr;
+static QRegExp *braceX = nullptr;
+static QRegExp *iflikeKeyword = nullptr;
 
 /*
     Returns the first non-space character in the string t, or
@@ -297,13 +297,13 @@ struct LinizerState
     bool pendingRightBrace;
 };
 
-static QStringList *yyProgram = 0;
-static LinizerState *yyLinizerState = 0;
+static QStringList *yyProgram = nullptr;
+static LinizerState *yyLinizerState = nullptr;
 
 // shorthands
-static const QString *yyLine = 0;
-static const int *yyBraceDepth = 0;
-static const bool *yyLeftBraceFollows = 0;
+static const QString *yyLine = nullptr;
+static const int *yyBraceDepth = nullptr;
+static const bool *yyLeftBraceFollows = nullptr;
 
 /*
     Saves and restores the state of the global linizer. This enables

@@ -179,7 +179,7 @@ bool QmlDocVisitor::applyDocumentation(QQmlJS::AST::SourceLocation location, Nod
                         else {
                             bool isAttached = topic.contains(QLatin1String("attached"));
                             QmlPropertyNode* n = parent->hasQmlProperty(qpa.name_, isAttached);
-                            if (n == 0)
+                            if (n == nullptr)
                                 n = new QmlPropertyNode(parent, qpa.name_, qpa.type_, isAttached);
                             n->setLocation(doc.location());
                             n->setDoc(doc);
@@ -305,7 +305,7 @@ bool QmlSignatureParser::matchTypeAndName(CodeChunk *type, QString *var)
      */
     type->appendHotspot();
 
-    if ((var != 0) && match(Tok_Ident))
+    if ((var != nullptr) && match(Tok_Ident))
         *var = previousLexeme();
 
     if (tok_ == Tok_LeftBracket) {
@@ -354,7 +354,7 @@ bool QmlSignatureParser::matchFunctionDecl()
     int firstBlank = signature_.indexOf(QChar(' '));
     int leftParen = signature_.indexOf(QChar('('));
     if ((firstBlank > 0) && (leftParen - firstBlank) > 1) {
-        if (!matchTypeAndName(&returnType, 0))
+        if (!matchTypeAndName(&returnType, nullptr))
             return false;
     }
 
@@ -525,7 +525,7 @@ QString QmlDocVisitor::getFullyQualifiedId(QQmlJS::AST::UiQualifiedId *id)
     if (id) {
         result = id->name.toString();
         id = id->next;
-        while (id != 0) {
+        while (id != nullptr) {
             result += QChar('.') + id->name.toString();
             id = id->next;
         }
@@ -680,7 +680,7 @@ bool QmlDocVisitor::visit(QQmlJS::AST::UiPublicMember *member)
             if (qmlType) {
                 QString name = member->name.toString();
                 QmlPropertyNode* qmlPropNode = qmlType->hasQmlProperty(name);
-                if (qmlPropNode == 0)
+                if (qmlPropNode == nullptr)
                     qmlPropNode = new QmlPropertyNode(qmlType, name, type, false);
                 qmlPropNode->markReadOnly(member->isReadonlyMember);
                 if (member->isDefaultMember)

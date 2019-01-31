@@ -71,8 +71,8 @@ Tree::Tree(const QString& camelCaseModuleName, QDocDatabase* qdb)
       camelCaseModuleName_(camelCaseModuleName),
       physicalModuleName_(camelCaseModuleName.toLower()),
       qdb_(qdb),
-      root_(0, QString()),
-      targetListMap_(0)
+      root_(nullptr, QString()),
+      targetListMap_(nullptr)
 {
     root_.setPhysicalModuleName(physicalModuleName_);
     root_.setTree(this);
@@ -212,7 +212,7 @@ QmlTypeNode* Tree::findQmlTypeNode(const QStringList& path)
 Aggregate *Tree::findRelatesNode(const QStringList &path)
 {
     Node* n = findNodeRecursive(path, 0, root(), &Node::isRelatableType);
-    return ((n && n->isAggregate()) ? static_cast<Aggregate*>(n) : 0);
+    return ((n && n->isAggregate()) ? static_cast<Aggregate*>(n) : nullptr);
 }
 
 /*!
@@ -562,7 +562,7 @@ Node* Tree::findNodeRecursive(const QStringList& path,
             }
         }
     }
-    return 0;
+    return nullptr;
 }
 #endif
 /*!
@@ -585,14 +585,14 @@ const Node* Tree::findNodeForTarget(const QStringList& path,
                                     Node::Genus genus,
                                     QString& ref) const
 {
-    const Node* node = 0;
+    const Node* node = nullptr;
     if ((genus == Node::DontCare) || (genus == Node::DOC)) {
         node = findPageNodeByTitle(path.at(0));
         if (node) {
             if (!target.isEmpty()) {
                 ref = getRef(target, node);
                 if (ref.isEmpty())
-                    node = 0;
+                    node = nullptr;
             }
             if (node)
                 return node;
@@ -604,7 +604,7 @@ const Node* Tree::findNodeForTarget(const QStringList& path,
         if (!target.isEmpty()) {
             ref = getRef(target, node);
             if (ref.isEmpty())
-                node = 0;
+                node = nullptr;
         }
         if (node)
             return node;
@@ -633,7 +633,7 @@ const Node* Tree::findNodeForTarget(const QStringList& path,
                     ref = getRef(target, current);
                     if (!ref.isEmpty())
                         return current;
-                    return 0;
+                    return nullptr;
                 }
                 else
                     return current;
@@ -651,7 +651,7 @@ const Node* Tree::findNodeForTarget(const QStringList& path,
         current = current->parent();
         path_idx = 0;
     }
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -932,7 +932,7 @@ const Node*
 Tree::findUnambiguousTarget(const QString& target, Node::Genus genus, QString& ref) const
 {
     int numBestTargets = 0;
-    TargetRec* bestTarget = 0;
+    TargetRec* bestTarget = nullptr;
     QList<TargetRec*> bestTargetList;
 
     QString key = target;
@@ -961,7 +961,7 @@ Tree::findUnambiguousTarget(const QString& target, Node::Genus genus, QString& r
     }
 
     numBestTargets = 0;
-    bestTarget = 0;
+    bestTarget = nullptr;
     key = Doc::canonicalTitle(target);
     i = nodesByTargetRef_.find(key);
     while (i != nodesByTargetRef_.constEnd()) {
@@ -988,7 +988,7 @@ Tree::findUnambiguousTarget(const QString& target, Node::Genus genus, QString& r
     }
 
     ref.clear();
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -1023,7 +1023,7 @@ const PageNode* Tree::findPageNodeByTitle(const QString& title) const
         }
         return i.value();
     }
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -1077,7 +1077,7 @@ CNMap* Tree::getCollectionMap(Node::NodeType type)
     default:
         break;
     }
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -1094,7 +1094,7 @@ CollectionNode* Tree::getCollection(const QString& name, Node::NodeType type)
         if (i != m->cend())
             return i.value();
     }
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -1116,7 +1116,7 @@ CollectionNode* Tree::findCollection(const QString& name, Node::NodeType type)
 {
     CNMap* m = getCollectionMap(type);
     if (!m) // error
-        return 0;
+        return nullptr;
     CNMap::const_iterator i = m->constFind(name);
     if (i != m->cend())
         return i.value();
@@ -1419,7 +1419,7 @@ QString Tree::getNewLinkTarget(const Node* locNode,
     incrementLinkCount();
     QString target = QString("qa-target-%1").arg(-(linkCount()));
     TargetLoc* tloc = new TargetLoc(locNode, target, fileName, text, broken);
-    TargetList* tList = 0;
+    TargetList* tList = nullptr;
     TargetListMap::iterator i = targetListMap_->find(physicalModuleName);
     if (i == targetListMap_->end()) {
         tList = new TargetList;

@@ -46,7 +46,7 @@ class CppCodeParser : public CodeParser
         Node::NodeType type; // The node type: Function, etc.
         bool isAttached; // If true, the method is attached.
         bool isMacro;    // If true, we are parsing a macro signature.
-        ExtraFuncData() : root(0), type(Node::Function), isAttached(false), isMacro(false) { }
+        ExtraFuncData() : root(nullptr), type(Node::Function), isAttached(false), isMacro(false) { }
         ExtraFuncData(Aggregate* r, Node::NodeType t, bool a)
           : root(r), type(t), isAttached(a), isMacro(false) { }
     };

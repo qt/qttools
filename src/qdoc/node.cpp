@@ -322,7 +322,7 @@ Node::Node(NodeType type, Aggregate *parent, const QString& name)
       indexNodeFlag_(false),
       relatedNonmember_(false),
       parent_(parent),
-      sharedCommentNode_(0),
+      sharedCommentNode_(nullptr),
       name_(name)
 {
     if (parent_)
@@ -789,7 +789,7 @@ QmlTypeNode* Node::qmlTypeNode()
         if (n && (n->isQmlType() || n->isJsType()))
             return static_cast<QmlTypeNode*>(n);
     }
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -804,7 +804,7 @@ ClassNode* Node::declarativeCppNode()
     QmlTypeNode* qcn = qmlTypeNode();
     if (qcn)
         return qcn->classNode();
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -960,7 +960,7 @@ Aggregate::~Aggregate()
     for (int i = 0; i < children_.size(); ++i) {
         if ((children_[i] != nullptr) && (children_[i]->parent() == this))
             delete children_[i];
-        children_[i] = 0;
+        children_[i] = nullptr;
     }
     children_.clear();
 }
@@ -1255,7 +1255,7 @@ const EnumNode *Aggregate::findEnumNodeForValue(const QString &enumValue) const
         if (en->hasItem(enumValue))
             return en;
     }
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -1534,7 +1534,7 @@ QmlPropertyNode* Aggregate::hasQmlProperty(const QString& n) const
                 return t;
         }
     }
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -1560,7 +1560,7 @@ QmlPropertyNode* Aggregate::hasQmlProperty(const QString& n, bool attached) cons
                 return t;
         }
     }
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -1812,7 +1812,7 @@ PropertyNode* ClassNode::findPropertyNode(const QString& name)
     if (n)
         return static_cast<PropertyNode*>(n);
 
-    PropertyNode* pn = 0;
+    PropertyNode* pn = nullptr;
 
     const QList<RelatedClass> &bases = baseClasses();
     if (!bases.isEmpty()) {
@@ -1848,7 +1848,7 @@ PropertyNode* ClassNode::findPropertyNode(const QString& name)
  */
 QmlTypeNode* ClassNode::findQmlBaseNode()
 {
-    QmlTypeNode* result = 0;
+    QmlTypeNode* result = nullptr;
     const QList<RelatedClass>& bases = baseClasses();
 
     if (!bases.isEmpty()) {
@@ -1862,7 +1862,7 @@ QmlTypeNode* ClassNode::findQmlBaseNode()
             ClassNode* cn = bases[i].node_;
             if (cn) {
                 result = cn->findQmlBaseNode();
-                if (result != 0) {
+                if (result != nullptr) {
                     return result;
                 }
             }
@@ -1900,7 +1900,7 @@ FunctionNode* ClassNode::findOverriddenFunction(const FunctionNode* fn)
         }
         ++bc;
     }
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -2663,7 +2663,7 @@ PropertyNode::PropertyNode(Aggregate *parent, const QString& name)
       const_(false),
       final_(false),
       revision_(-1),
-      overrides_(0)
+      overrides_(nullptr)
 {
     // nothing
 }
@@ -2733,9 +2733,9 @@ QmlTypeNode::QmlTypeNode(Aggregate *parent, const QString& name, NodeType type)
       abstract_(false),
       cnodeRequired_(false),
       wrapper_(false),
-      cnode_(0),
-      logicalModule_(0),
-      qmlBaseNode_(0)
+      cnode_(nullptr),
+      logicalModule_(nullptr),
+      qmlBaseNode_(nullptr)
 {
     int i = 0;
     if (name.startsWith("QML:")) {
@@ -2836,7 +2836,7 @@ QString QmlTypeNode::logicalModuleIdentifier() const
 bool QmlTypeNode::inherits(Aggregate* type)
 {
     QmlTypeNode* qtn = qmlBaseNode();
-    while (qtn != 0) {
+    while (qtn != nullptr) {
         if (qtn == type)
             return true;
         qtn = qtn->qmlBaseNode();
@@ -3024,7 +3024,7 @@ PropertyNode* QmlPropertyNode::findCorrespondingCppProperty()
             }
         }
     }
-    return 0;
+    return nullptr;
 }
 
 /*!

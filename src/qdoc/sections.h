@@ -49,7 +49,7 @@ class Section
     enum Status { Obsolete, Active };
 
  public:
-    Section() : style_(Details), status_(Active), aggregate_(0) { }
+    Section() : style_(Details), status_(Active), aggregate_(nullptr) { }
     Section(Style style, Status status);
     ~Section();
 
@@ -108,7 +108,7 @@ class Section
     void setAggregate(Aggregate *t) { aggregate_ = t; }
 
  private:
-    QString sortName(const Node *node, const QString* name = 0);
+    QString sortName(const Node *node, const QString* name = nullptr);
 
  private:
     Style   style_;

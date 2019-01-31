@@ -114,7 +114,7 @@ class Tree
  private: // The rest of the class is private.
     Aggregate *findAggregate(const QString &name);
     Node* findNodeForInclude(const QStringList& path) const;
-    ClassNode* findClassNode(const QStringList& path, const Node* start = 0) const;
+    ClassNode* findClassNode(const QStringList& path, const Node* start = nullptr) const;
     NamespaceNode* findNamespaceNode(const QStringList& path) const;
     const FunctionNode *findFunctionNode(const QStringList &path,
                                          const Parameters &parameters,
@@ -220,8 +220,8 @@ class Tree
                              bool broken);
     TargetList* getTargetList(const QString& module);
     QStringList getTargetListKeys() { return targetListMap_->keys(); }
-    FunctionNode *findFunctionNodeForTag(const QString &tag, Aggregate *parent = 0);
-    FunctionNode *findMacroNode(const QString &t, const Aggregate *parent = 0);
+    FunctionNode *findFunctionNodeForTag(const QString &tag, Aggregate *parent = nullptr);
+    FunctionNode *findMacroNode(const QString &t, const Aggregate *parent = nullptr);
 
 private:
     bool treeHasBeenAnalyzed_;

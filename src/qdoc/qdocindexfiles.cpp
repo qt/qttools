@@ -50,7 +50,7 @@ enum QDocAttr {
     QDocAttrExternalPage
 };
 
-static Node* root_ = 0;
+static Node* root_ = nullptr;
 
 /*!
   \class QDocIndexFiles
@@ -58,13 +58,13 @@ static Node* root_ = 0;
   This class handles qdoc index files.
  */
 
-QDocIndexFiles* QDocIndexFiles::qdocIndexFiles_ = NULL;
+QDocIndexFiles* QDocIndexFiles::qdocIndexFiles_ = nullptr;
 
 /*!
   Constructs the singleton QDocIndexFiles.
  */
 QDocIndexFiles::QDocIndexFiles()
-    : gen_( 0 )
+    : gen_(nullptr)
 {
     qdb_ = QDocDatabase::qdocDB();
 }
@@ -74,8 +74,8 @@ QDocIndexFiles::QDocIndexFiles()
  */
 QDocIndexFiles::~QDocIndexFiles()
 {
-    qdb_ = 0;
-    gen_ = 0;
+    qdb_ = nullptr;
+    gen_ = nullptr;
 }
 
 /*!
@@ -96,7 +96,7 @@ void QDocIndexFiles::destroyQDocIndexFiles()
 {
     if (qdocIndexFiles_) {
         delete qdocIndexFiles_;
-        qdocIndexFiles_ = 0;
+        qdocIndexFiles_ = nullptr;
     }
 }
 
@@ -183,7 +183,7 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader& reader,
     QString href = attributes.value(QLatin1String("href")).toString();
     Node* node;
     Location location;
-    Aggregate* parent = 0;
+    Aggregate* parent = nullptr;
 
     bool hasReadChildren = false;
 
@@ -421,7 +421,7 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader& reader,
                 goto done;
             }
         }
-        PageNode* pn = 0;
+        PageNode* pn = nullptr;
         if (subtype == QDocAttrExample)
             pn = new ExampleNode(parent, name);
         else if (subtype == QDocAttrExternalPage)

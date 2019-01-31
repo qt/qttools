@@ -664,7 +664,7 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer,
     if (atom)
         return atom->next();
 
-    return 0;
+    return nullptr;
 }
 
 void WebXMLGenerator::startLink(QXmlStreamWriter &writer, const Atom *atom,

@@ -56,7 +56,7 @@ QVector<Section> Sections::stdQmlTypeDetailsSections_(7, Section(Section::Detail
   The constructor used when the \a style and \a status must
   be provided.
  */
-Section::Section(Style style, Status status) : style_(style), status_(status), aggregate_(0)
+Section::Section(Style style, Status status) : style_(style), status_(status), aggregate_(nullptr)
 {
     //members_.reserve(100);
     //obsoleteMembers_.reserve(50);
@@ -86,7 +86,7 @@ void Section::clear()
     if (!classMapList_.isEmpty()) {
         for (int i = 0; i < classMapList_.size(); i++) {
             ClassMap* cm = classMapList_[i];
-            classMapList_[i] = 0;
+            classMapList_[i] = nullptr;
             delete cm;
         }
         classMapList_.clear();
@@ -100,12 +100,12 @@ void Section::clear()
     if (!classKeysNodesList_.isEmpty()) {
         for (int i = 0; i < classKeysNodesList_.size(); i++) {
             ClassKeysNodes* ckn = classKeysNodesList_[i];
-            classKeysNodesList_[i] = 0;
+            classKeysNodesList_[i] = nullptr;
             delete ckn;
         }
         classKeysNodesList_.clear();
     }
-    aggregate_ = 0;
+    aggregate_ = nullptr;
 }
 
 /*!
@@ -116,7 +116,7 @@ void Section::clear()
 QString Section::sortName(const Node *node, const QString* name)
 {
     QString nodeName;
-    if (name != 0)
+    if (name != nullptr)
         nodeName = *name;
     else
         nodeName = node->name();
@@ -353,7 +353,7 @@ Sections::Sections(Aggregate *aggregate) : aggregate_(aggregate)
   This constructor builds a vector of sections from the \e since
   node map, \a nsmap
  */
-Sections::Sections(const NodeMultiMap& nsmap) : aggregate_(0)
+Sections::Sections(const NodeMultiMap& nsmap) : aggregate_(nullptr)
 {
     initSections();
     if (nsmap.isEmpty())
@@ -468,7 +468,7 @@ Sections::~Sections()
             allMembersSection().clear();
             break;
         }
-        aggregate_ = 0;
+        aggregate_ = nullptr;
     }
     else {
         clear(sinceSections());
@@ -681,7 +681,7 @@ void Sections::stdRefPageSwitch(SectionVector &v, Node *n)
  */
 void Sections::buildStdRefPageSections()
 {
-    const NamespaceNode* ns = 0;
+    const NamespaceNode* ns = nullptr;
     bool documentAll = true; // document all the children
     if (aggregate_->isNamespace()) {
         ns = static_cast<const NamespaceNode*>(aggregate_);
@@ -990,7 +990,7 @@ void Sections::buildStdCppClassRefPageSections()
  */
 void Sections::buildStdQmlTypeRefPageSections()
 {
-    ClassMap* classMap = 0;
+    ClassMap* classMap = nullptr;
     SectionVector &sv = stdQmlTypeSummarySections();
     SectionVector &dv = stdQmlTypeDetailsSections();
     Section &allMembers = allMembersSection();
@@ -1015,17 +1015,17 @@ void Sections::buildStdQmlTypeRefPageSections()
             qDebug() << "qdoc internal error: circular type definition."
                      << "QML type" << qtn->name()
                      << "can't be its own base type";
-            qtn = 0;
+            qtn = nullptr;
             break;
         }
         qtn = static_cast<QmlTypeNode*>(qtn->qmlBaseNode());
-        if (qtn == 0)
+        if (qtn == nullptr)
             break;
         if (!qtn->isAbstract())
             break;
     }
 
-    while (qtn != 0) {
+    while (qtn != nullptr) {
         if (!qtn->isAbstract() || !classMap)
             classMap = allMembers.newClassMap(qtn);
         NodeList::ConstIterator c = qtn->constBegin();
@@ -1042,7 +1042,7 @@ void Sections::buildStdQmlTypeRefPageSections()
             qDebug() << "qdoc internal error: circular type definition."
                      << "QML type" << qtn->name()
                      << "can't be its own base type";
-            qtn = 0;
+            qtn = nullptr;
             break;
         }
         qtn = static_cast<QmlTypeNode*>(qtn->qmlBaseNode());
@@ -1060,7 +1060,7 @@ void Sections::buildStdQmlTypeRefPageSections()
  */
 bool Sections::hasObsoleteMembers(SectionPtrVector *summary_spv, SectionPtrVector *details_spv) const
 {
-    const SectionVector *sv = 0;
+    const SectionVector *sv = nullptr;
     if (aggregate_->isClassNode())
         sv = &stdCppClassSummarySections();
     else if (aggregate_->isQmlType() || aggregate_->isQmlBasicType())

@@ -713,7 +713,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
     writer.writeStartElement("toc");
     writer.writeStartElement("section");
     const Node* node = qdb_->findPageNodeByTitle(project.indexTitle);
-    if (node == 0)
+    if (node == nullptr)
         node = qdb_->findNodeByNameAndType(QStringList("index.html"), &Node::isPageNode);
     QString indexPath;
     if (node)
@@ -730,7 +730,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
 
         if (subproject.type == QLatin1String("manual")) {
 
-            const Node *indexPage = qdb_->findNodeForTarget(subproject.indexTitle, 0);
+            const Node *indexPage = qdb_->findNodeForTarget(subproject.indexTitle, nullptr);
             if (indexPage) {
                 Text indexBody = indexPage->doc().body();
                 const Atom *atom = indexBody.firstAtom();
@@ -757,7 +757,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
                             if (sectionStack.top() > 0)
                                 writer.writeEndElement(); // section
 
-                            const Node *page = qdb_->findNodeForTarget(atom->string(), 0);
+                            const Node *page = qdb_->findNodeForTarget(atom->string(), nullptr);
                             writer.writeStartElement("section");
                             QString indexPath = gen_->fullDocumentLocation(page, false);
                             writer.writeAttribute("ref", indexPath);
@@ -786,7 +786,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
         } else {
 
             writer.writeStartElement("section");
-            QString indexPath = gen_->fullDocumentLocation(qdb_->findNodeForTarget(subproject.indexTitle, 0),
+            QString indexPath = gen_->fullDocumentLocation(qdb_->findNodeForTarget(subproject.indexTitle, nullptr),
                                                                false);
             writer.writeAttribute("ref", indexPath);
             writer.writeAttribute("title", subproject.title);
@@ -806,7 +806,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
                     if (!nextTitle.isEmpty() &&
                             node->links().value(Node::ContentsLink).first.isEmpty()) {
 
-                        const Node *nextPage = qdb_->findNodeForTarget(nextTitle, 0);
+                        const Node *nextPage = qdb_->findNodeForTarget(nextTitle, nullptr);
 
                         // Write the contents node.
                         writeNode(project, writer, node);
@@ -817,7 +817,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
                             nextTitle = nextPage->links().value(Node::NextLink).first;
                             if (nextTitle.isEmpty() || visited.contains(nextTitle))
                                 break;
-                            nextPage = qdb_->findNodeForTarget(nextTitle, 0);
+                            nextPage = qdb_->findNodeForTarget(nextTitle, nullptr);
                             visited.insert(nextTitle);
                         }
                         break;
