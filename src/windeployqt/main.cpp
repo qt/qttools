@@ -40,7 +40,12 @@
 #include <QtCore/QOperatingSystemVersion>
 #include <QtCore/QSharedPointer>
 #include <QtCore/QVector>
+
+#ifdef Q_OS_WIN
 #include <QtCore/qt_windows.h>
+#else
+#define IMAGE_FILE_MACHINE_ARM64 0xaa64
+#endif
 
 #include <algorithm>
 #include <iostream>
@@ -1102,6 +1107,7 @@ static QStringList compilerRunTimeLibs(Platform platform, bool isDebug, unsigned
                 result.append(dllFi.absoluteFilePath());
     }
         break;
+#ifdef Q_OS_WIN
     case WindowsDesktop: { // MSVC/Desktop: Add redistributable packages.
         QString vcRedistDirName = vcRedistDir();
         if (vcRedistDirName.isEmpty())
@@ -1141,6 +1147,7 @@ static QStringList compilerRunTimeLibs(Platform platform, bool isDebug, unsigned
         result.append(redistFiles);
     }
         break;
+#endif // Q_OS_WIN
     default:
         break;
     }
