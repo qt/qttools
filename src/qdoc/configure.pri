@@ -75,7 +75,8 @@ defineTest(qtConfTest_libclang) {
                         qtLog("Cannot find libclang's main header file, candidate: $${LIBCLANG_MAIN_HEADER}.")
                         continue
                 } else {
-                    qtLog("Using Clang installation found in $${LLVM_INSTALL_DIR}." \
+                    qtLog("QDoc:" \
+                          "Using Clang installation found in $${LLVM_INSTALL_DIR}." \
                           "Set the LLVM_INSTALL_DIR environment variable to override.")
                     break()
                 }
