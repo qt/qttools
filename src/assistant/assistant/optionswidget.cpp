@@ -33,6 +33,8 @@
 #include <QtWidgets/QListWidget>
 #include <QtWidgets/QVBoxLayout>
 
+#include <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 class ListWidgetDelegate : public QItemDelegate
@@ -113,11 +115,11 @@ void OptionsWidget::setOptions(const QStringList &validOptions,
 
     m_validOptions = validOptions;
     m_validOptions.removeDuplicates();
-    qSort(m_validOptions);
+    std::sort(m_validOptions.begin(), m_validOptions.end());
 
     m_selectedOptions = selectedOptions;
     m_selectedOptions.removeDuplicates();
-    qSort(m_selectedOptions);
+    std::sort(m_selectedOptions.begin(), m_selectedOptions.end());
 
     m_invalidOptions = subtract(m_selectedOptions, m_validOptions);
     const QStringList validSelectedOptions = subtract(m_selectedOptions, m_invalidOptions);
@@ -184,7 +186,7 @@ void OptionsWidget::itemChanged(QListWidgetItem *item)
 
     if (item->checkState() == Qt::Checked && !m_selectedOptions.contains(option)) {
         m_selectedOptions.append(option);
-        qSort(m_selectedOptions);
+        std::sort(m_selectedOptions.begin(), m_selectedOptions.end());
     } else if (item->checkState() == Qt::Unchecked && m_selectedOptions.contains(option)) {
         m_selectedOptions.removeOne(option);
     } else {

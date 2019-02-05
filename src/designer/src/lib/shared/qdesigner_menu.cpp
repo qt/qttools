@@ -172,7 +172,7 @@ void QDesignerMenu::startDrag(const QPoint &pos, Qt::KeyboardModifiers modifiers
     const int old_index = m_currentIndex;
     m_currentIndex = -1;
 
-    if (drag->start(dropAction) == Qt::IgnoreAction) {
+    if (drag->exec(dropAction) == Qt::IgnoreAction) {
         if (dropAction == Qt::MoveAction) {
             QAction *previous = safeActionAt(index);
             InsertActionIntoCommand *cmd = new InsertActionIntoCommand(fw);

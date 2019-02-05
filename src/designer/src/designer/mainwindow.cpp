@@ -50,6 +50,8 @@
 #include <QtCore/qdebug.h>
 #include <QtCore/qmimedata.h>
 
+#include <algorithm>
+
 static const char *uriListMimeFormatC = "text/uri-list";
 
 QT_BEGIN_NAMESPACE
@@ -260,7 +262,7 @@ bool toolBarTitleLessThan(const QToolBar *t1, const QToolBar *t2)
 void ToolBarManager::updateToolBarMenu()
 {
     // Sort tool bars alphabetically by title
-    qStableSort(m_toolbars.begin(), m_toolbars.end(), toolBarTitleLessThan);
+    std::stable_sort(m_toolbars.begin(), m_toolbars.end(), toolBarTitleLessThan);
     // add to menu
     m_toolBarMenu->clear();
     for (QToolBar *tb : qAsConst(m_toolbars))

@@ -318,7 +318,7 @@ void startActionDrag(QWidget *dragParent, ActionModel *model, const QModelIndexL
     if (ActionRepositoryMimeData *actionMimeData = qobject_cast<ActionRepositoryMimeData *>(data))
         drag->setPixmap(ActionRepositoryMimeData::actionDragPixmap(actionMimeData->actionList().front()));
 
-    drag->start(supportedActions);
+    drag->exec(supportedActions);
 }
 
 // ---------------- ActionTreeView:

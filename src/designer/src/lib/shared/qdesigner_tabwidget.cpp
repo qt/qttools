@@ -217,7 +217,7 @@ bool QTabWidgetEventFilter::eventFilter(QObject *o, QEvent *e)
 
             m_tabWidget->removeTab(m_dragIndex);
 
-            const Qt::DropActions dropAction = drg->start(Qt::MoveAction);
+            const Qt::DropActions dropAction = drg->exec(Qt::MoveAction);
 
             if (dropAction == Qt::IgnoreAction) {
                 // abort

@@ -403,7 +403,7 @@ void ToolBarEventFilter::startDrag(const QPoint &pos, Qt::KeyboardModifiers modi
     drag->setPixmap(ActionRepositoryMimeData::actionDragPixmap( action));
     drag->setMimeData(new ActionRepositoryMimeData(action, dropAction));
 
-    if (drag->start(dropAction) == Qt::IgnoreAction) {
+    if (drag->exec(dropAction) == Qt::IgnoreAction) {
         hideDragIndicator();
         if (dropAction == Qt::MoveAction) {
             const ActionList currentActions = m_toolBar->actions();

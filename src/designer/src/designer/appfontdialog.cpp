@@ -50,6 +50,8 @@
 #include <QtCore/qvector.h>
 #include <QtCore/qdebug.h>
 
+#include <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 enum {FileNameRole = Qt::UserRole + 1, IdRole =  Qt::UserRole + 2 };
@@ -352,7 +354,7 @@ static void removeFonts(const QModelIndexList &selectedIndexes, AppFontModel *mo
         }
     }
 
-    qStableSort(rows.begin(), rows.end());
+    std::stable_sort(rows.begin(), rows.end());
     for (int i = rows.size() - 1; i >= 0; i--)
         model->removeRow(rows[i]);
 }
