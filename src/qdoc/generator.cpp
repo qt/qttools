@@ -989,7 +989,8 @@ void Generator::generateFileList(const ExampleNode* en, CodeMarker* marker, bool
                                                    QStringList(),
                                                    exampleDirs,
                                                    file,
-                                                   exampleImgExts);
+                                                   exampleImgExts,
+                                                   &userFriendlyFilePath);
                 outFileNames_ << prefix.mid(1) + userFriendlyFilePath;
                 userFriendlyFilePath.truncate(userFriendlyFilePath.lastIndexOf('/'));
                 QString imgOutDir = outDir_ + prefix + userFriendlyFilePath;
