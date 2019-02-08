@@ -38,6 +38,7 @@
 #include "qdocdatabase.h"
 #include "separator.h"
 #include "tree.h"
+#include "quoter.h"
 #include <ctype.h>
 #include <qdebug.h>
 #include <qlist.h>
@@ -402,6 +403,36 @@ void HtmlGenerator::generateQAPage()
     }
     generateFooter();
     endSubPage();
+}
+
+/*!
+  Generate an html file with the contents of a C++ or QML source file.
+ */
+void HtmlGenerator::generateExampleFilePage(const Node *en,
+                                            const QString &file,
+                                            CodeMarker *marker)
+{
+    SubTitleSize subTitleSize = LargeSubTitle;
+    QString fullTitle = en->fullTitle();
+
+    beginFilePage(en, linkForExampleFile(file, en));
+    generateHeader(fullTitle, en, marker);
+    generateTitle(fullTitle,
+                  Text() << en->subtitle(),
+                  subTitleSize,
+                  en,
+                  marker);
+
+    Text text;
+    Quoter quoter;
+    Doc::quoteFromFile(en->doc().location(), quoter, file);
+    QString code = quoter.quoteTo(en->location(), QString(), QString());
+    CodeMarker *codeMarker = CodeMarker::markerForFileName(file);
+    text << Atom(codeMarker->atomType(), code);
+    Atom a(codeMarker->atomType(), code);
+
+    generateText(text, en, codeMarker);
+    endFilePage();
 }
 
 /*!

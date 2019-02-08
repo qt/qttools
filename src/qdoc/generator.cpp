@@ -1003,16 +1003,7 @@ void Generator::generateFileList(const ExampleNode* en, CodeMarker* marker, bool
 
         }
         else {
-            Text text;
-            Quoter quoter;
-            Doc::quoteFromFile(en->doc().location(), quoter, file);
-            QString code = quoter.quoteTo(en->location(), QString(), QString());
-            CodeMarker *codeMarker = CodeMarker::markerForFileName(file);
-            text << Atom(codeMarker->atomType(), code);
-            Atom a(codeMarker->atomType(), code);
-            beginFilePage(en, linkForExampleFile(file, en));
-            generateText(text, en, codeMarker);
-            endFilePage();
+            generateExampleFilePage(en, file, marker);
         }
 
         openedList.next();

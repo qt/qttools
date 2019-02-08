@@ -65,6 +65,7 @@ public:
 
 protected:
     void generateQAPage() override;
+    void generateExampleFilePage(const Node *en, const QString &file, CodeMarker *marker) override;
     QString generateLinksToLinksPage(const QString& module, CodeMarker* marker);
     QString generateLinksToBrokenLinksPage(CodeMarker* marker, int& count);
     virtual int generateAtom(const Atom *atom,

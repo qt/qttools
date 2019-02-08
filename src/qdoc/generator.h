@@ -111,6 +111,7 @@ protected:
     virtual QString fileBase(const Node* node) const;
     virtual QString fileExtension() const = 0;
     virtual void generateQAPage() { }
+    virtual void generateExampleFilePage(const Node *, const QString &, CodeMarker *) {}
     virtual void generateAlsoList(const Node *node, CodeMarker *marker);
     virtual int generateAtom(const Atom *, const Node *, CodeMarker *) { return 0; }
     virtual void generateBody(const Node *node, CodeMarker *marker);
