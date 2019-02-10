@@ -198,8 +198,8 @@ QString DialogGui::getSaveFileName(QWidget *parent, const QString &caption, cons
 
 void DialogGui::initializeImageFileDialog(QFileDialog &fileDialog, QFileDialog::Options options, QFileDialog::FileMode fm)
 {
-    fileDialog.setConfirmOverwrite( !(options & QFileDialog::DontConfirmOverwrite) );
-    fileDialog.setResolveSymlinks( !(options & QFileDialog::DontResolveSymlinks) );
+    fileDialog.setOption(QFileDialog::DontConfirmOverwrite, options.testFlag(QFileDialog::DontConfirmOverwrite));
+    fileDialog.setOption(QFileDialog::DontResolveSymlinks, options.testFlag(QFileDialog::DontResolveSymlinks));
     fileDialog.setIconProvider(ensureIconProvider());
     fileDialog.setFileMode(fm);
 }
