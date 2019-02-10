@@ -598,7 +598,7 @@ QtResourceView::QtResourceView(QDesignerFormEditorInterface *core, QWidget *pare
     d_ptr->m_splitter->addWidget(d_ptr->m_listWidget);
 
     QLayout *layout = new QVBoxLayout(this);
-    layout->setMargin(0);
+    layout->setContentsMargins(QMargins());
     layout->setSpacing(0);
     layout->addWidget(d_ptr->m_toolBar);
     layout->addWidget(d_ptr->m_splitter);

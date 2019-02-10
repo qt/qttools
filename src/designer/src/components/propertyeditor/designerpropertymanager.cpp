@@ -341,7 +341,7 @@ TextEditor::TextEditor(QDesignerFormEditorInterface *core, QWidget *parent) :
     m_button->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Ignored);
     m_button->setFixedWidth(20);
     m_layout->addWidget(m_button);
-    m_layout->setMargin(0);
+    m_layout->setContentsMargins(QMargins());
     m_layout->setSpacing(0);
 
     connect(m_resourceAction, &QAction::triggered, this, &TextEditor::resourceActionActivated);
@@ -597,7 +597,7 @@ PixmapEditor::PixmapEditor(QDesignerFormEditorInterface *core, QWidget *parent) 
     m_button->setFixedWidth(30);
     m_button->setPopupMode(QToolButton::MenuButtonPopup);
     m_layout->addWidget(m_button);
-    m_layout->setMargin(0);
+    m_layout->setContentsMargins(QMargins());
     m_layout->setSpacing(0);
     m_pixmapLabel->setFixedWidth(16);
     m_pixmapLabel->setAlignment(Qt::AlignCenter);
@@ -829,7 +829,7 @@ ResetWidget::ResetWidget(QtProperty *property, QWidget *parent) :
     m_button->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::MinimumExpanding));
     connect(m_button, &QAbstractButton::clicked, this, &ResetWidget::slotClicked);
     QLayout *layout = new QHBoxLayout(this);
-    layout->setMargin(0);
+    layout->setContentsMargins(QMargins());
     layout->setSpacing(m_spacing);
     layout->addWidget(m_iconLabel);
     layout->addWidget(m_textLabel);
@@ -856,7 +856,7 @@ void ResetWidget::setWidget(QWidget *widget)
     }
     delete layout();
     QLayout *layout = new QHBoxLayout(this);
-    layout->setMargin(0);
+    layout->setContentsMargins(QMargins());
     layout->setSpacing(m_spacing);
     layout->addWidget(widget);
     layout->addWidget(m_button);

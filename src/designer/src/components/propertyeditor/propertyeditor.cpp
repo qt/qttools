@@ -325,7 +325,7 @@ PropertyEditor::PropertyEditor(QDesignerFormEditorInterface *core, QWidget *pare
     layout->addWidget(m_classLabel);
     layout->addSpacerItem(new QSpacerItem(0,1));
     layout->addWidget(m_stackedWidget);
-    layout->setMargin(0);
+    layout->setContentsMargins(QMargins());
     layout->setSpacing(0);
 
     m_treeFactory = new DesignerEditorFactory(m_core, this);

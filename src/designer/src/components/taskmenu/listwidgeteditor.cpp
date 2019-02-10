@@ -52,7 +52,7 @@ ListWidgetEditor::ListWidgetEditor(QDesignerFormWindowInterface *form,
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 
     m_itemsEditor = new ItemListEditor(form, 0);
-    m_itemsEditor->layout()->setMargin(0);
+    m_itemsEditor->layout()->setContentsMargins(QMargins());
     m_itemsEditor->setNewItemText(tr("New Item"));
 
     QFrame *sep = new QFrame;

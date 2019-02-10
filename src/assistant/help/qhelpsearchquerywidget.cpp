@@ -229,7 +229,7 @@ QHelpSearchQueryWidget::QHelpSearchQueryWidget(QWidget *parent)
     d = new QHelpSearchQueryWidgetPrivate();
 
     QVBoxLayout *vLayout = new QVBoxLayout(this);
-    vLayout->setMargin(0);
+    vLayout->setContentsMargins(QMargins());
 
     QHBoxLayout* hBoxLayout = new QHBoxLayout();
     d->m_searchLabel = new QLabel(this);

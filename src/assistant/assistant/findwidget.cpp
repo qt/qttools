@@ -49,7 +49,7 @@ FindWidget::FindWidget(QWidget *parent)
     QString resourcePath = QLatin1String(":/qt-project.org/assistant/images/");
 
 #ifndef Q_OS_MAC
-    hboxLayout->setMargin(0);
+    hboxLayout->setContentsMargins(QMargins());
     hboxLayout->setSpacing(6);
     resourcePath.append(QLatin1String("win"));
 #else

@@ -758,7 +758,7 @@ ObjectInspector::ObjectInspector(QDesignerFormEditorInterface *core, QWidget *pa
     m_impl(new ObjectInspectorPrivate(core))
 {
     QVBoxLayout *vbox = new QVBoxLayout(this);
-    vbox->setMargin(0);
+    vbox->setContentsMargins(QMargins());
 
     vbox->addWidget(m_impl->filterLineEdit());
     QTreeView *treeView = m_impl->treeView();

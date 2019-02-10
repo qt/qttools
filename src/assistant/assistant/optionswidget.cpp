@@ -96,7 +96,7 @@ OptionsWidget::OptionsWidget(QWidget *parent)
     m_listWidget->setItemDelegate(new ListWidgetDelegate(m_listWidget));
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->addWidget(m_listWidget);
-    layout->setMargin(0);
+    layout->setContentsMargins(QMargins());
 
     connect(m_listWidget, &QListWidget::itemChanged, this, &OptionsWidget::itemChanged);
 }

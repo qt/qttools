@@ -1099,7 +1099,7 @@ void MainWindow::indexingStarted()
         progressBar->setSizePolicy(sizePolicy);
 
         hlayout->setSpacing(6);
-        hlayout->setMargin(0);
+        hlayout->setContentsMargins(QMargins());
         hlayout->addWidget(progressBar);
 
         statusBar()->addPermanentWidget(m_progressWidget);

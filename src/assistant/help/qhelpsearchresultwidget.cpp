@@ -253,12 +253,12 @@ QHelpSearchResultWidget::QHelpSearchResultWidget(QHelpSearchEngine *engine)
     , d(new QHelpSearchResultWidgetPrivate(engine))
 {
     QVBoxLayout *vLayout = new QVBoxLayout(this);
-    vLayout->setMargin(0);
+    vLayout->setContentsMargins(QMargins());
     vLayout->setSpacing(0);
 
     QHBoxLayout *hBoxLayout = new QHBoxLayout();
 #ifndef Q_OS_MAC
-    hBoxLayout->setMargin(0);
+    hBoxLayout->setContentsMargins(QMargins());
     hBoxLayout->setSpacing(0);
 #endif
     hBoxLayout->addWidget(d->firstResultPage = d->setupToolButton(

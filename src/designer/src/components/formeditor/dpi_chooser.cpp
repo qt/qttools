@@ -100,11 +100,11 @@ DPI_Chooser::DPI_Chooser(QWidget *parent) :
             this, &DPI_Chooser::syncSpinBoxes);
     // top row with predefined settings
     QVBoxLayout *vBoxLayout = new QVBoxLayout;
-    vBoxLayout->setMargin(0);
+    vBoxLayout->setContentsMargins(QMargins());
     vBoxLayout->addWidget(m_predefinedCombo);
     // Spin box row
     QHBoxLayout *hBoxLayout = new QHBoxLayout;
-    hBoxLayout->setMargin(0);
+    hBoxLayout->setContentsMargins(QMargins());
 
     m_dpiXSpinBox->setMinimum(minDPI);
     m_dpiXSpinBox->setMaximum(maxDPI);
