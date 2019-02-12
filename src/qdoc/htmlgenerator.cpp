@@ -2109,9 +2109,7 @@ void HtmlGenerator::generateHeader(const QString& title,
     if (node && !node->doc().location().isEmpty())
         out() << "<!-- " << node->doc().location().fileName() << " -->\n";
 
-    QString shortVersion = qdb_->version();
-    if (shortVersion.count(QChar('.')) == 2)
-        shortVersion.truncate(shortVersion.lastIndexOf(QChar('.')));
+    QString projectVersion = qdb_->version();
 
     //determine the rest of the <title> element content: "title | titleSuffix version"
     QString titleSuffix;
@@ -2140,8 +2138,8 @@ void HtmlGenerator::generateHeader(const QString& title,
         titleSuffix.clear();
 
     //for pages that duplicate the version, clear the duplicate
-    if (title.contains(shortVersion) || titleSuffix.contains(shortVersion))
-        shortVersion.clear();
+    if (title.contains(projectVersion) || titleSuffix.contains(projectVersion))
+        projectVersion.clear();
 
     QString divider;
     if (!titleSuffix.isEmpty() && !title.isEmpty())
@@ -2153,8 +2151,8 @@ void HtmlGenerator::generateHeader(const QString& title,
           << divider
           << titleSuffix;
 
-    if (!shortVersion.isEmpty())
-        out() << QLatin1Char(' ') << shortVersion;
+    if (!projectVersion.isEmpty())
+        out() << QLatin1Char(' ') << projectVersion;
 
     out() << "</title>\n";
 
