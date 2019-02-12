@@ -49,8 +49,8 @@ QT_BEGIN_NAMESPACE
  */
 QmlCodeParser::QmlCodeParser()
 #ifndef QT_NO_DECLARATIVE
-    : lexer( 0 ),
-      parser( 0 )
+    : lexer(nullptr),
+      parser(nullptr)
 #endif
 {
 }
@@ -134,17 +134,13 @@ void QmlCodeParser::parseSourceFile(const Location& location, const QString& fil
     extractPragmas(newCode);
     lexer->setCode(newCode, 1);
 
-    const QSet<QString>& topicCommandsAllowed = topicCommands();
-    const QSet<QString>& otherMetacommandsAllowed = otherMetaCommands();
-    const QSet<QString>& metacommandsAllowed = topicCommandsAllowed + otherMetacommandsAllowed;
-
     if (parser->parse()) {
         QQmlJS::AST::UiProgram *ast = parser->ast();
         QmlDocVisitor visitor(filePath,
                               newCode,
                               &engine,
-                              metacommandsAllowed,
-                              topicCommandsAllowed);
+                              topicCommands() + commonMetaCommands(),
+                              topicCommands());
         QQmlJS::AST::Node::accept(ast, &visitor);
     }
     foreach (const  QQmlJS::DiagnosticMessage &msg, parser->diagnosticMessages()) {
@@ -189,35 +185,6 @@ const QSet<QString>& QmlCodeParser::topicCommands()
     return topicCommands_;
 }
 
-static QSet<QString> otherMetaCommands_;
-/*!
-  Returns the set of strings representing the common metacommands
-  plus some other metacommands.
- */
-const QSet<QString>& QmlCodeParser::otherMetaCommands()
-{
-    if (otherMetaCommands_.isEmpty()) {
-        otherMetaCommands_ = commonMetaCommands();
-        otherMetaCommands_ << COMMAND_STARTPAGE
-                           << COMMAND_QMLINHERITS
-                           << COMMAND_QMLDEFAULT
-                           << COMMAND_QMLREADONLY
-                           << COMMAND_DEPRECATED
-                           << COMMAND_INGROUP
-                           << COMMAND_INTERNAL
-                           << COMMAND_OBSOLETE
-                           << COMMAND_PRELIMINARY
-                           << COMMAND_SINCE
-                           << COMMAND_ABSTRACT
-                           << COMMAND_QMLABSTRACT
-                           << COMMAND_INQMLMODULE
-                           << COMMAND_INJSMODULE
-                           << COMMAND_WRAPPER
-                           << COMMAND_NOAUTOLIST;
-    }
-    return otherMetaCommands_;
-}
-
 #ifndef QT_NO_DECLARATIVE
 /*!
   Copy and paste from src/declarative/qml/qdeclarativescriptparser.cpp.
@@ -244,7 +211,7 @@ void QmlCodeParser::extractPragmas(QString &script)
     const QString pragma(QLatin1String("pragma"));
     const QString library(QLatin1String("library"));
 
-    QQmlJS::Lexer l(0);
+    QQmlJS::Lexer l(nullptr);
     l.setCode(script, 0);
 
     int token = l.lex();

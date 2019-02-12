@@ -26,17 +26,8 @@
 **
 ****************************************************************************/
 
-/*
-  puredocparser.cpp
-*/
-
-#include <qfile.h>
-#include <stdio.h>
 #include <errno.h>
-#include "codechunk.h"
-#include "config.h"
 #include "tokenizer.h"
-#include <qdebug.h>
 #include "qdocdatabase.h"
 #include "puredocparser.h"
 
@@ -69,11 +60,10 @@ void PureDocParser::parseSourceFile(const Location& location, const QString& fil
         return;
     }
 
-    reset();
     Location fileLocation(filePath);
     Tokenizer fileTokenizer(fileLocation, in);
-    tokenizer = &fileTokenizer;
-    readToken();
+    tokenizer_ = &fileTokenizer;
+    tok_ = tokenizer_->getToken();
 
     /*
       The set of open namespaces is cleared before parsing
@@ -93,19 +83,19 @@ void PureDocParser::parseSourceFile(const Location& location, const QString& fil
  */
 bool PureDocParser::processQdocComments()
 {
-    const QSet<QString>& metacommands = topicCommands() + otherMetaCommands();
+    const QSet<QString>& commands = topicCommands() + metaCommands();
 
-    while (tok != Tok_Eoi) {
-        if (tok == Tok_Doc) {
-            QString comment = lexeme(); // returns an entire qdoc comment.
-            Location start_loc(location());
-            readToken();
+    while (tok_ != Tok_Eoi) {
+        if (tok_ == Tok_Doc) {
+            QString comment = tokenizer_->lexeme(); // returns an entire qdoc comment.
+            Location start_loc(tokenizer_->location());
+            tok_ = tokenizer_->getToken();
 
-            Doc::trimCStyleComment(start_loc,comment);
-            Location end_loc(location());
+            Doc::trimCStyleComment(start_loc, comment);
+            Location end_loc(tokenizer_->location());
 
             // Doc constructor parses the comment.
-            Doc doc(start_loc, end_loc, comment, metacommands, topicCommands());
+            Doc doc(start_loc, end_loc, comment, commands, topicCommands());
             const TopicList& topics = doc.topicsUsed();
             if (topics.isEmpty()) {
                 doc.location().warning(tr("This qdoc comment contains no topic command "
@@ -121,10 +111,10 @@ bool PureDocParser::processQdocComments()
             QString topic = topics[0].topic;
 
             processTopicArgs(doc, topic, nodes, docs);
-            processOtherMetaCommands(nodes, docs);
+            processMetaCommands(nodes, docs);
         }
         else {
-            readToken();
+            tok_ = tokenizer_->getToken();
         }
     }
     return true;

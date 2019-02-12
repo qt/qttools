@@ -40,6 +40,7 @@
 #include <QtWidgets/QDesktopWidget>
 #include <QtWidgets/QMessageBox>
 #include <QtGui/QDesktopServices>
+#include <QtGui/QScreen>
 
 QT_BEGIN_NAMESPACE
 
@@ -141,8 +142,10 @@ QString AboutDialog::documentTitle() const
 void AboutDialog::updateSize()
 {
     TRACE_OBJ
-    QSize screenSize = QApplication::desktop()->availableGeometry(QCursor::pos())
-        .size();
+    auto screen = QGuiApplication::screenAt(QCursor::pos());
+    if (!screen)
+        screen = QGuiApplication::primaryScreen();
+    const QSize screenSize = screen->availableSize();
     int limit = qMin(screenSize.width()/2, 500);
 
 #ifdef Q_OS_MAC
@@ -156,7 +159,7 @@ void AboutDialog::updateSize()
         width = limit;
 
     QFontMetrics fm(qApp->font("QWorkspaceTitleBar"));
-    int windowTitleWidth = qMin(fm.width(windowTitle()) + 50, limit);
+    int windowTitleWidth = qMin(fm.horizontalAdvance(windowTitle()) + 50, limit);
     if (windowTitleWidth > width)
         width = windowTitleWidth;
 

@@ -169,26 +169,32 @@ static QSet<QString> commonMetaCommands_;
 const QSet<QString>& CodeParser::commonMetaCommands()
 {
     if (commonMetaCommands_.isEmpty()) {
-        commonMetaCommands_ << COMMAND_DEPRECATED
+        commonMetaCommands_ << COMMAND_ABSTRACT
+                            << COMMAND_DEPRECATED
                             << COMMAND_INGROUP
+                            << COMMAND_INJSMODULE
                             << COMMAND_INMODULE
+                            << COMMAND_INPUBLICGROUP
                             << COMMAND_INQMLMODULE
                             << COMMAND_INTERNAL
                             << COMMAND_MAINCLASS
+                            << COMMAND_NOAUTOLIST
                             << COMMAND_NONREENTRANT
                             << COMMAND_OBSOLETE
                             << COMMAND_PAGEKEYWORDS
                             << COMMAND_PRELIMINARY
-                            << COMMAND_INPUBLICGROUP
+                            << COMMAND_QMLABSTRACT
+                            << COMMAND_QMLDEFAULT
+                            << COMMAND_QMLINHERITS
+                            << COMMAND_QMLREADONLY
                             << COMMAND_QTVARIABLE
                             << COMMAND_REENTRANT
                             << COMMAND_SINCE
+                            << COMMAND_STARTPAGE
                             << COMMAND_SUBTITLE
                             << COMMAND_THREADSAFE
                             << COMMAND_TITLE
-                            << COMMAND_WRAPPER
-                            << COMMAND_INJSMODULE
-                            << COMMAND_NOAUTOLIST;
+                            << COMMAND_WRAPPER;
    }
     return commonMetaCommands_;
 }
@@ -297,23 +303,27 @@ void CodeParser::checkModuleInclusion(Node* n)
 {
     if (n->physicalModuleName().isEmpty()) {
         n->setPhysicalModuleName(Generator::defaultModuleName());
+        QString word;
         switch (n->nodeType()) {
         case Node::Class:
-            if (n->access() != Node::Private && !n->doc().isEmpty()) {
-                n->doc().location().warning(tr("Class %1 has no \\inmodule command; "
-                                               "using project name by default: %2")
-                                            .arg(n->name()).arg(Generator::defaultModuleName()));
-            }
+            word = QLatin1String("Class");
+            break;
+        case Node::Struct:
+            word = QLatin1String("Struct");
+            break;
+        case Node::Union:
+            word = QLatin1String("Union");
             break;
         case Node::Namespace:
-            if (n->access() != Node::Private && !n->name().isEmpty() && !n->doc().isEmpty()) {
-                n->doc().location().warning(tr("Namespace %1 has no \\inmodule command; "
-                                               "using project name by default: %2")
-                                            .arg(n->name()).arg(Generator::defaultModuleName()));
-            }
+            word = QLatin1String("Namespace");
             break;
         default:
-            break;
+            return;
+        }
+        if (!n->isPrivate() && !n->name().isEmpty() && !n->doc().isEmpty()) {
+            n->doc().location().warning(tr("%1 %2 has no \\inmodule command; "
+                                           "using project name by default: %3")
+                                        .arg(word).arg(n->name()).arg(Generator::defaultModuleName()));
         }
     }
 }

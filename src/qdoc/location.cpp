@@ -47,7 +47,7 @@ int Location::warningCount = 0;
 int Location::warningLimit = -1;
 QString Location::programName;
 QString Location::project;
-QRegExp *Location::spuriousRegExp = 0;
+QRegExp *Location::spuriousRegExp = nullptr;
 bool Location::logProgress_ = false;
 
 /*!
@@ -65,7 +65,7 @@ bool Location::logProgress_ = false;
   Constructs an empty location.
  */
 Location::Location()
-    : stk(0), stkTop(&stkBottom), stkDepth(0), etcetera(false)
+    : stk(nullptr), stkTop(&stkBottom), stkDepth(0), etcetera(false)
 {
     // nothing.
 }
@@ -75,7 +75,7 @@ Location::Location()
   position stack.
  */
 Location::Location(const QString& fileName)
-    : stk(0), stkTop(&stkBottom), stkDepth(0), etcetera(false)
+    : stk(nullptr), stkTop(&stkBottom), stkDepth(0), etcetera(false)
 {
     push(fileName);
 }
@@ -85,7 +85,7 @@ Location::Location(const QString& fileName)
   this Location using the assignment operator.
  */
 Location::Location(const Location& other)
-    : stk(0), stkTop(&stkBottom), stkDepth(0), etcetera(false)
+    : stk(nullptr), stkTop(&stkBottom), stkDepth(0), etcetera(false)
 {
     *this = other;
 }
@@ -99,8 +99,8 @@ Location& Location::operator=(const Location& other)
     QStack<StackEntry> *oldStk = stk;
 
     stkBottom = other.stkBottom;
-    if (other.stk == 0) {
-        stk = 0;
+    if (other.stk == nullptr) {
+        stk = nullptr;
         stkTop = &stkBottom;
     }
     else {
@@ -158,7 +158,7 @@ void Location::advance(QChar ch)
 void Location::push(const QString& filePath)
 {
     if (stkDepth++ >= 1) {
-        if (stk == 0)
+        if (stk == nullptr)
             stk = new QStack<StackEntry>;
         stk->push(StackEntry());
         stkTop = &stk->top();
@@ -184,7 +184,7 @@ void Location::pop()
         stk->pop();
         if (stk->isEmpty()) {
             delete stk;
-            stk = 0;
+            stk = nullptr;
             stkTop = &stkBottom;
         }
         else {
@@ -354,7 +354,7 @@ void Location::initialize(const Config& config)
 void Location::terminate()
 {
     delete spuriousRegExp;
-    spuriousRegExp = 0;
+    spuriousRegExp = nullptr;
 }
 
 /*!
@@ -410,7 +410,7 @@ void Location::emitMessage(MessageType type,
                            const QString& details) const
 {
     if (type == Warning &&
-            spuriousRegExp != 0 &&
+            spuriousRegExp != nullptr &&
             spuriousRegExp->exactMatch(message))
         return;
 

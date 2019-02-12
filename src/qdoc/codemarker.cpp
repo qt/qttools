@@ -267,6 +267,8 @@ QString CodeMarker::taggedNode(const Node* node)
         tag = QLatin1String("@namespace");
         break;
     case Node::Class:
+    case Node::Struct:
+    case Node::Union:
         tag = QLatin1String("@class");
         break;
     case Node::Enum:

@@ -151,7 +151,7 @@ QString QmlCodeMarker::markedUpIncludes(const QStringList& includes)
         ++inc;
     }
     Location location;
-    return addMarkUp(code, 0, location);
+    return addMarkUp(code, nullptr, location);
 }
 
 QString QmlCodeMarker::functionBeginRegExp(const QString& funcName)
@@ -228,7 +228,7 @@ QList<QQmlJS::AST::SourceLocation> QmlCodeMarker::extractPragmas(QString &script
     const QString library(QLatin1String("library"));
     QList<QQmlJS::AST::SourceLocation> removed;
 
-    QQmlJS::Lexer l(0);
+    QQmlJS::Lexer l(nullptr);
     l.setCode(script, 0);
 
     int token = l.lex();

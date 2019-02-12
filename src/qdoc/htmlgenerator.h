@@ -65,16 +65,19 @@ public:
 
 protected:
     void generateQAPage() override;
+    void generateExampleFilePage(const Node *en, const QString &file, CodeMarker *marker) override;
     QString generateLinksToLinksPage(const QString& module, CodeMarker* marker);
     QString generateLinksToBrokenLinksPage(CodeMarker* marker, int& count);
     virtual int generateAtom(const Atom *atom,
                              const Node *relative,
                              CodeMarker *marker) override;
-    void generateCppReferencePage(Node* node, CodeMarker* marker) override;
+    void generateCppReferencePage(Aggregate *aggregate, CodeMarker *marker) override;
+    void generateProxyPage(Aggregate *aggregate, CodeMarker *marker) override;
     void generateQmlTypePage(QmlTypeNode* qcn, CodeMarker* marker) override;
     void generateQmlBasicTypePage(QmlBasicTypeNode* qbtn, CodeMarker* marker) override;
     void generatePageNode(PageNode* pn, CodeMarker* marker) override;
     void generateCollectionNode(CollectionNode* cn, CodeMarker* marker) override;
+    void generateGenericCollectionPage(CollectionNode *cn, CodeMarker *marker) override;
     QString fileExtension() const override;
     virtual QString refForNode(const Node *node);
     virtual QString linkForNode(const Node *node, const Node *relative);
@@ -82,7 +85,7 @@ protected:
     void generateManifestFile(const QString &manifest, const QString &element);
     void readManifestMetaContent(const Config &config);
     void generateKeywordAnchors(const Node* node);
-    void generateAssociatedPropertyNotes(const FunctionNode* fn);
+    void generateAssociatedPropertyNotes(FunctionNode *fn);
 
     QString getLink(const Atom *atom, const Node *relative, const Node **node);
     QString getAutoLink(const Atom *atom, const Node *relative, const Node **node);
@@ -110,25 +113,24 @@ private:
                                const QString &buildversion,
                                bool tableItems = false);
     void generateHeader(const QString& title,
-                        const Node *node = 0,
-                        CodeMarker *marker = 0);
+                        const Node *node = nullptr,
+                        CodeMarker *marker = nullptr);
     void generateTitle(const QString& title,
                        const Text &subTitle,
                        SubTitleSize subTitleSize,
                        const Node *relative,
                        CodeMarker *marker);
-    void generateFooter(const Node *node = 0);
+    void generateFooter(const Node *node = nullptr);
     void generateRequisites(Aggregate *inner,
                             CodeMarker *marker);
     void generateQmlRequisites(QmlTypeNode *qcn,
                             CodeMarker *marker);
     void generateBrief(const Node *node,
                        CodeMarker *marker,
-                       const Node *relative = 0, bool addLink=true);
-    void generateIncludes(const Aggregate *inner, CodeMarker *marker);
+                       const Node *relative = nullptr, bool addLink=true);
     void generateTableOfContents(const Node *node,
                                  CodeMarker *marker,
-                                 QVector<Section>* sections = 0);
+                                 QVector<Section>* sections = nullptr);
     void generateSidebar();
     QString generateAllMembersFile(const Section &section, CodeMarker *marker);
     QString generateAllQmlMembersFile(const Sections &sections, CodeMarker* marker);
@@ -171,17 +173,15 @@ private:
                           CodeMarker *marker,
                           Section::Style style,
                           bool alignNames = false,
-                          const QString* prefix = 0);
+                          const QString* prefix = nullptr);
     void generateSectionInheritedList(const Section& section, const Node *relative);
     QString highlightedCode(const QString& markedCode,
                             const Node* relative,
                             bool alignNames = false,
                             Node::Genus genus = Node::DontCare);
 
-    void generateFullName(const Node *apparentNode, const Node *relative, const Node *actualNode = 0);
-    void generateDetailedMember(const Node *node,
-                                const Aggregate *relative,
-                                CodeMarker *marker);
+    void generateFullName(const Node *apparentNode, const Node *relative, const Node *actualNode = nullptr);
+    void generateDetailedMember(const Node *node, const PageNode *relative, CodeMarker *marker);
     void generateLink(const Atom *atom, CodeMarker *marker);
 
     inline bool hasBrief(const Node *node);

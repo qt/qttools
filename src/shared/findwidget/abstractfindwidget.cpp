@@ -109,7 +109,7 @@ AbstractFindWidget::AbstractFindWidget(FindFlags flags, QWidget *parent)
     }
 #ifndef Q_OS_MAC
     topLayOut->setSpacing(6);
-    topLayOut->setMargin(0);
+    topLayOut->setContentsMargins(QMargins());
 #endif
 
     m_toolClose = new QToolButton(this);

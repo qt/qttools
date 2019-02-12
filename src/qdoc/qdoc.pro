@@ -48,6 +48,7 @@ HEADERS += atom.h \
            loggingcategory.h \
            node.h \
            openedlist.h \
+           parameters.h \
            puredocparser.h \
            qdocdatabase.h \
            qdoctagfiles.h \
@@ -79,6 +80,7 @@ SOURCES += atom.cpp \
            main.cpp \
            node.cpp \
            openedlist.cpp \
+           parameters.cpp \
            puredocparser.cpp \
            qdocdatabase.cpp \
            qdoctagfiles.cpp \

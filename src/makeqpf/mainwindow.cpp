@@ -37,6 +37,7 @@
 #include <QShortcut>
 #include <QCompleter>
 #include <QDirModel>
+#include <QRegularExpression>
 #include <QTextCodec>
 
 QT_BEGIN_NAMESPACE
@@ -236,8 +237,10 @@ void MainWindow::populateCharacterRanges()
     if (!f.open(QIODevice::ReadOnly | QIODevice::Text))
         return;
 
-    QRegExp rangeExpr("([0-9a-f]+)\\.\\.([0-9a-f]+); (.+)");
-    rangeExpr.setCaseSensitivity(Qt::CaseInsensitive);
+    QRegularExpression rangeExpr(
+         QRegularExpression::anchoredPattern("([0-9a-f]+)\\.\\.([0-9a-f]+); (.+)"),
+         QRegularExpression::CaseInsensitiveOption
+    );
 
     QString ellipsis(QChar(0x2026));
     if (!characterRangeView->fontMetrics().inFont(ellipsis.at(0)))
@@ -256,30 +259,31 @@ void MainWindow::populateCharacterRanges()
         if (line.isEmpty() || line.startsWith(QLatin1Char('#')))
             continue;
 
-        if (!rangeExpr.exactMatch(line) || rangeExpr.captureCount() != 3)
+        QRegularExpressionMatch match = rangeExpr.match(line);
+        if (!match.hasMatch())
             continue;
 
         QPF::CharacterRange range;
 
         bool ok = false;
-        range.start = rangeExpr.cap(1).toUInt(&ok, /*base*/16);
+        range.start = match.captured(1).toUInt(&ok, /*base*/16);
         if (!ok)
             continue;
-        range.end = rangeExpr.cap(2).toUInt(&ok, /*base*/16);
+        range.end = match.captured(2).toUInt(&ok, /*base*/16);
         if (!ok)
             continue;
 
         if (range.start >= 0xffff || range.end >= 0xffff)
             continue;
 
-        QString description = rangeExpr.cap(3);
+        QString description = match.captured(3);
 
         QListWidgetItem *item = new QListWidgetItem(characterRangeView);
         QString text = description;
         text.append(QLatin1String(" ("));
-        text.append(rangeExpr.cap(1));
+        text.append(match.captured(1));
         text.append(ellipsis);
-        text.append(rangeExpr.cap(2));
+        text.append(match.captured(2));
         text.append(QLatin1String(")"));
         item->setText(text);
         item->setCheckState(Qt::Checked);

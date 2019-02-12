@@ -461,7 +461,7 @@ QView3D::QView3D(QDesignerFormWindowInterface *form_window, QWidget *parent)
     connect(m_3d_widget, SIGNAL(updateForm()), this, SLOT(updateForm()));
 
     QGridLayout *layout = new QGridLayout(this);
-    layout->setMargin(0);
+    layout->setContentsMargins(QMargins());
     layout->addWidget(m_3d_widget, 0, 0, 1, 1);
 
     updateForm();

@@ -392,7 +392,7 @@ static void processQdocconfFile(const QString &fileName)
     }
     Generator::augmentImageDirs(exampleImageDirs);
 
-    if (!Generator::singleExec() || !Generator::generating()) {
+    if (Generator::dualExec() || Generator::preparing()) {
         QStringList headerList;
         QStringList sourceList;
 
@@ -473,19 +473,14 @@ static void processQdocconfFile(const QString &fileName)
             ++s;
         }
         Location::logToStdErrAlways("Source files parsed for " + project);
-
-        /*
-          Now the primary tree has been built from all the header and
-          source files. Resolve all the class names, function names,
-          targets, URLs, links, and other stuff that needs resolving.
-        */
-        qCDebug(lcQdoc, "Resolving stuff prior to generating docs");
-        qdb->resolveInheritance();
-        qdb->resolveIssues();
     }
-    else {
-        qdb->resolveStuff();
-    }
+    /*
+      Now the primary tree has been built from all the header and
+      source files. Resolve all the class names, function names,
+      targets, URLs, links, and other stuff that needs resolving.
+    */
+    qCDebug(lcQdoc, "Resolving stuff prior to generating docs");
+    qdb->resolveStuff();
 
     /*
       The primary tree is built and all the stuff that needed
@@ -576,17 +571,21 @@ int main(int argc, char **argv)
     if (qdocGlobals.singleExec())
         qdocFiles = Config::loadMaster(qdocFiles.at(0));
 
-    // Main loop (adapted, when needed, to handle single exec mode):
-    if (Generator::singleExec())
-        Generator::setQDocPass(Generator::Prepare);
-    foreach (const QString &qf, qdocFiles) {
-        qdocGlobals.dependModules().clear();
-        processQdocconfFile(qf);
-    }
     if (Generator::singleExec()) {
+        // single qdoc process for prepare and generate phases
+        Generator::setQDocPass(Generator::Prepare);
+        foreach (const QString &qf, qdocFiles) {
+            qdocGlobals.dependModules().clear();
+            processQdocconfFile(qf);
+        }
         Generator::setQDocPass(Generator::Generate);
-        QDocDatabase* qdb = QDocDatabase::qdocDB();
-        qdb->processForest();
+        QDocDatabase::qdocDB()->processForest();
+        foreach (const QString &qf, qdocFiles) {
+            qdocGlobals.dependModules().clear();
+            processQdocconfFile(qf);
+        }
+    } else {
+        // separate qdoc processes for prepare and generate phases
         foreach (const QString &qf, qdocFiles) {
             qdocGlobals.dependModules().clear();
             processQdocconfFile(qf);

@@ -57,6 +57,7 @@
 
 #include <QtWidgets/qactiongroup.h>
 #include <QtGui/qevent.h>
+#include <QtGui/qscreen.h>
 #include <QtWidgets/qdesktopwidget.h>
 #include <QtWidgets/qdockwidget.h>
 #include <QtWidgets/qmenu.h>
@@ -269,7 +270,7 @@ void QDesignerWorkbench::saveGeometriesForModeChange()
     case NeutralMode:
         break;
     case TopLevelMode: {
-        const QPoint desktopOffset = QApplication::desktop()->availableGeometry().topLeft();
+        const QPoint desktopOffset = QGuiApplication::primaryScreen()->availableGeometry().topLeft();
         for (QDesignerToolWindow *tw : qAsConst(m_toolWindows))
             m_Positions.insert(tw, Position(tw, desktopOffset));
         for (QDesignerFormWindow *fw : qAsConst(m_formWindows))
@@ -572,9 +573,9 @@ QRect QDesignerWorkbench::desktopGeometry() const
     case NeutralMode:
         break;
     }
-    const QDesktopWidget *desktop = qApp->desktop();
-    const int screenNumber = widget ? desktop->screenNumber(widget) : 0;
-    return desktop->availableGeometry(screenNumber);
+    const int screenNumber = widget ? QApplication::desktop()->screenNumber(widget) : 0;
+    auto screen = QGuiApplication::screens().value(screenNumber, QGuiApplication::primaryScreen());
+    return screen->availableGeometry();
 }
 
 QRect QDesignerWorkbench::availableGeometry() const
@@ -582,8 +583,9 @@ QRect QDesignerWorkbench::availableGeometry() const
     if (m_mode == DockedMode)
         return m_dockedMainWindow->mdiArea()->geometry();
 
-    const QDesktopWidget *desktop = qDesigner->desktop();
-    return desktop->availableGeometry(desktop->screenNumber(widgetBoxToolWindow()));
+    const int screenNumber = QApplication::desktop()->screenNumber(widgetBoxToolWindow());
+    auto screen = QGuiApplication::screens().value(screenNumber, QGuiApplication::primaryScreen());
+    return screen->availableGeometry();
 }
 
 int QDesignerWorkbench::marginHint() const

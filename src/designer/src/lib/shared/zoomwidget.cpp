@@ -535,7 +535,7 @@ void ZoomWidget::dump() const
             <<  m_proxy->effectiveSizeHint(Qt::MinimumSize)
             <<  m_proxy->effectiveSizeHint(Qt::PreferredSize)
             << m_proxy->effectiveSizeHint(Qt::MaximumSize)
-            << "\nMatrix: " << m_proxy->matrix()
+            << "\nTransform: " << m_proxy->transform()
             << "\nWidget: " <<  m_proxy->widget()->geometry()
             << "scaled" << (zoomFactor() * m_proxy->widget()->size());
     }

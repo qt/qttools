@@ -54,6 +54,8 @@
 #include <QHash>
 #include <QLibraryInfo>
 
+#include <algorithm>
+
 #include <stdio.h>
 
 QT_USE_NAMESPACE
@@ -111,7 +113,7 @@ static QStringList types()
     QStringList typelist;
     for (unsigned int i = 0; i < sizeof(lookupTableData)/sizeof(lookupTableData[0]); i++)
         typelist << QString::fromLatin1(lookupTableData[i].stringvalue);
-    qSort(typelist);
+    std::sort(typelist.begin(), typelist.end());
     return typelist;
 }
 
@@ -215,7 +217,7 @@ int main(int argc, char **argv)
 
     parser.process(app);
 
-    QStandardPaths::enableTestMode(parser.isSet(testmode));
+    QStandardPaths::setTestModeEnabled(parser.isSet(testmode));
 
     QStringList results;
     if (parser.isSet(qtversion)) {

@@ -193,7 +193,7 @@ CentralWidget::CentralWidget(QWidget *parent)
     staticCentralWidget = this;
     QVBoxLayout *vboxLayout = new QVBoxLayout(this);
 
-    vboxLayout->setMargin(0);
+    vboxLayout->setContentsMargins(QMargins());
     vboxLayout->setSpacing(0);
     vboxLayout->addWidget(m_tabBar);
     m_tabBar->setVisible(HelpEngineWrapper::instance().showTabs());

@@ -134,19 +134,19 @@ public:
     friend class LinkAtom;
 
     Atom(const QString& string)
-        : next_(0), type_(Link)
+        : next_(nullptr), type_(Link)
     {
         strs << string;
     }
 
     Atom(AtomType type, const QString& string = "")
-        : next_(0), type_(type)
+        : next_(nullptr), type_(type)
     {
         strs << string;
     }
 
     Atom(AtomType type, const QString& p1, const QString& p2)
-        : next_(0), type_(type)
+        : next_(nullptr), type_(type)
     {
         strs << p1;
         if (!p2.isEmpty())
@@ -192,7 +192,7 @@ public:
     virtual bool isLinkAtom() const { return false; }
     virtual Node::Genus genus() { return Node::DontCare; }
     virtual bool specifiesDomain() { return false; }
-    virtual Tree* domain() { return 0; }
+    virtual Tree* domain() { return nullptr; }
     virtual Node::NodeType goal() { return Node::NoType; }
     virtual const QString& error() { return noError_; }
     virtual void resolveSquareBracketParams() { }
@@ -214,7 +214,7 @@ class LinkAtom : public Atom
 
     bool isLinkAtom() const override { return true; }
     Node::Genus genus() override { resolveSquareBracketParams(); return genus_; }
-    bool specifiesDomain() override { resolveSquareBracketParams(); return (domain_ != 0); }
+    bool specifiesDomain() override { resolveSquareBracketParams(); return (domain_ != nullptr); }
     Tree* domain() override { resolveSquareBracketParams(); return domain_; }
     Node::NodeType goal() override { resolveSquareBracketParams(); return goal_; }
     const QString& error() override { return error_; }

@@ -58,7 +58,7 @@ FindDialog::FindDialog(MainWindow *parent)
     ui.comboFind->setModel(new CaseSensitiveModel(0, 1, ui.comboFind));
 
     QVBoxLayout *l = new QVBoxLayout(this);
-    l->setMargin(0);
+    l->setContentsMargins(QMargins());
     l->setSpacing(0);
     l->addWidget(contentsWidget);
 

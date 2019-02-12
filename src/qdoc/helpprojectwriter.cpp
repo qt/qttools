@@ -121,6 +121,8 @@ void HelpProjectWriter::readSelectors(SubProject &subproject, const QStringList 
     QHash<QString, Node::NodeType> typeHash;
     typeHash["namespace"] = Node::Namespace;
     typeHash["class"] = Node::Class;
+    typeHash["struct"] = Node::Struct;
+    typeHash["union"] = Node::Union;
     typeHash["header"] = Node::HeaderFile;
     typeHash["headerfile"] = Node::HeaderFile;
     typeHash["doc"] = Node::Page;  // to be removed from qdocconf files
@@ -293,6 +295,8 @@ bool HelpProjectWriter::generateSection(HelpProject &project,
     switch (node->nodeType()) {
 
     case Node::Class:
+    case Node::Struct:
+    case Node::Union:
         project.keywords.append(keywordDetails(node));
         break;
     case Node::QmlType:
@@ -402,9 +406,7 @@ bool HelpProjectWriter::generateSection(HelpProject &project,
         // the set of files, we only need to ensure that related nodes
         // are inserted.
 
-        if (node->relates()) {
-            project.memberStatus[node->relates()].insert(node->status());
-        } else if (node->parent())
+        if (node->parent())
             project.memberStatus[node->parent()].insert(node->status());
     }
         break;
@@ -471,8 +473,7 @@ bool HelpProjectWriter::generateSection(HelpProject &project,
     return true;
 }
 
-void HelpProjectWriter::generateSections(HelpProject &project,
-                                         QXmlStreamWriter &writer, const Node *node)
+void HelpProjectWriter::generateSections(HelpProject &project, QXmlStreamWriter &writer, const Node *node)
 {
     /*
       Don't include index nodes in the help file.
@@ -487,17 +488,13 @@ void HelpProjectWriter::generateSections(HelpProject &project,
 
         // Ensure that we don't visit nodes more than once.
         QSet<const Node*> childSet;
-        foreach (const Node *childNode, aggregate->childNodes()) {
-            if (childNode->isIndexNode())
+        const NodeList &children = aggregate->childNodes();
+        foreach (const Node *child, children) {
+            if (child->isIndexNode() || child->isPrivate())
                 continue;
-
-            if (childNode->isPrivate())
-                continue;
-
-            if (childNode->isTextPageNode()) {
-                childSet << childNode;
-            }
-            else if (childNode->isQmlPropertyGroup() || childNode->isJsPropertyGroup()) {
+            if (child->isTextPageNode()) {
+                childSet << child;
+            } else if (child->isQmlPropertyGroup() || child->isJsPropertyGroup()) {
                 /*
                   Don't visit QML/JS property group nodes,
                   but visit their children, which are all
@@ -507,26 +504,18 @@ void HelpProjectWriter::generateSections(HelpProject &project,
                   because The Qml/Js Property Group is
                   an actual documented thing.
                  */
-                const Aggregate* aggregate = static_cast<const Aggregate*>(childNode);
-                foreach (const Node* n, aggregate->childNodes()) {
-                    if (n->isPrivate())
-                        continue;
-                    childSet << n;
+                const Aggregate *aggregate = static_cast<const Aggregate *>(child);
+                const NodeList &nodes = aggregate->childNodes();
+                foreach (const Node *n, nodes) {
+                    if (!n->isPrivate())
+                        childSet << n;
                 }
-            }
-            else {
+            } else {
                 // Store member status of children
-                project.memberStatus[node].insert(childNode->status());
-                if (childNode->relates()) {
-                    project.memberStatus[childNode->relates()].insert(childNode->status());
-                }
-
-                if (childNode->isFunction()) {
-                    const FunctionNode *funcNode = static_cast<const FunctionNode *>(childNode);
-                    if (funcNode->isOverload())
-                        continue;
-                }
-                childSet << childNode;
+                project.memberStatus[node].insert(child->status());
+                if (child->isFunction() && static_cast<const FunctionNode*>(child)->isOverload())
+                    continue;
+                childSet << child;
             }
         }
         foreach (const Node *child, childSet)
@@ -574,7 +563,7 @@ void HelpProjectWriter::addMembers(HelpProject &project, QXmlStreamWriter &write
         return;
 
     bool derivedClass = false;
-    if (node->isClass())
+    if (node->isClassNode())
         derivedClass = !(static_cast<const ClassNode *>(node)->baseClasses().isEmpty());
 
     // Do not generate a 'List of all members' for namespaces or header files,
@@ -600,6 +589,8 @@ void HelpProjectWriter::writeNode(HelpProject &project, QXmlStreamWriter &writer
     switch (node->nodeType()) {
 
     case Node::Class:
+    case Node::Struct:
+    case Node::Union:
         writer.writeStartElement("section");
         writer.writeAttribute("ref", href);
         if (node->parent() && !node->parent()->name().isEmpty())
@@ -722,8 +713,8 @@ void HelpProjectWriter::generateProject(HelpProject &project)
     writer.writeStartElement("toc");
     writer.writeStartElement("section");
     const Node* node = qdb_->findPageNodeByTitle(project.indexTitle);
-    if (node == 0)
-        node = qdb_->findNodeByNameAndType(QStringList("index.html"), Node::Page);
+    if (node == nullptr)
+        node = qdb_->findNodeByNameAndType(QStringList("index.html"), &Node::isPageNode);
     QString indexPath;
     if (node)
         indexPath = gen_->fullDocumentLocation(node, false);
@@ -739,7 +730,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
 
         if (subproject.type == QLatin1String("manual")) {
 
-            const Node *indexPage = qdb_->findNodeForTarget(subproject.indexTitle, 0);
+            const Node *indexPage = qdb_->findNodeForTarget(subproject.indexTitle, nullptr);
             if (indexPage) {
                 Text indexBody = indexPage->doc().body();
                 const Atom *atom = indexBody.firstAtom();
@@ -766,7 +757,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
                             if (sectionStack.top() > 0)
                                 writer.writeEndElement(); // section
 
-                            const Node *page = qdb_->findNodeForTarget(atom->string(), 0);
+                            const Node *page = qdb_->findNodeForTarget(atom->string(), nullptr);
                             writer.writeStartElement("section");
                             QString indexPath = gen_->fullDocumentLocation(page, false);
                             writer.writeAttribute("ref", indexPath);
@@ -795,7 +786,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
         } else {
 
             writer.writeStartElement("section");
-            QString indexPath = gen_->fullDocumentLocation(qdb_->findNodeForTarget(subproject.indexTitle, 0),
+            QString indexPath = gen_->fullDocumentLocation(qdb_->findNodeForTarget(subproject.indexTitle, nullptr),
                                                                false);
             writer.writeAttribute("ref", indexPath);
             writer.writeAttribute("title", subproject.title);
@@ -815,7 +806,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
                     if (!nextTitle.isEmpty() &&
                             node->links().value(Node::ContentsLink).first.isEmpty()) {
 
-                        const Node *nextPage = qdb_->findNodeForTarget(nextTitle, 0);
+                        const Node *nextPage = qdb_->findNodeForTarget(nextTitle, nullptr);
 
                         // Write the contents node.
                         writeNode(project, writer, node);
@@ -826,7 +817,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
                             nextTitle = nextPage->links().value(Node::NextLink).first;
                             if (nextTitle.isEmpty() || visited.contains(nextTitle))
                                 break;
-                            nextPage = qdb_->findNodeForTarget(nextTitle, 0);
+                            nextPage = qdb_->findNodeForTarget(nextTitle, nullptr);
                             visited.insert(nextTitle);
                         }
                         break;

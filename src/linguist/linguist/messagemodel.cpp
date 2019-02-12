@@ -432,9 +432,11 @@ void DataModel::updateStatistics()
 
     for (DataModelIterator it(this); it.isValid(); ++it) {
         const MessageItem *mi = it.current();
-        if (mi->isFinished())
-            foreach (const QString &trnsl, mi->translations())
+        if (mi->isFinished()) {
+            const QStringList translations = mi->translations();
+            for (const QString &trnsl : translations)
                 doCharCounting(trnsl, trW, trC, trCS);
+        }
     }
 
     emit statsChanged(m_srcWords, m_srcChars, m_srcCharsSpc, trW, trC, trCS);

@@ -230,21 +230,22 @@ static Node *findNodeForCursor(QDocDatabase* qdb, CXCursor cur) {
         return nullptr;
     auto parent = static_cast<Aggregate *>(p);
 
+    QString name = fromCXString(clang_getCursorSpelling(cur));
     switch (kind) {
     case CXCursor_Namespace:
-        return parent->findChildNode(fromCXString(clang_getCursorSpelling(cur)), Node::Namespace);
+        return parent->findNonfunctionChild(name, &Node::isNamespace);
     case CXCursor_StructDecl:
     case CXCursor_ClassDecl:
     case CXCursor_UnionDecl:
     case CXCursor_ClassTemplate:
-        return parent->findChildNode(fromCXString(clang_getCursorSpelling(cur)), Node::Class);
+        return parent->findNonfunctionChild(name, &Node::isClassNode);
     case CXCursor_FunctionDecl:
     case CXCursor_FunctionTemplate:
     case CXCursor_CXXMethod:
     case CXCursor_Constructor:
     case CXCursor_Destructor:
     case CXCursor_ConversionFunction: {
-        NodeList candidates;
+        NodeVector candidates;
         parent->findChildren(functionName(cur), candidates);
         if (candidates.isEmpty())
             return nullptr;
@@ -256,19 +257,19 @@ static Node *findNodeForCursor(QDocDatabase* qdb, CXCursor cur) {
             if (!candidate->isFunction(Node::CPP))
                 continue;
             auto fn = static_cast<FunctionNode*>(candidate);
-            const auto &funcParams = fn->parameters();
-            const int actualArg = numArg - fn->isPrivateSignal();
-            if (funcParams.count() != (actualArg + isVariadic))
+            const Parameters &parameters = fn->parameters();
+            const int actualArg = numArg - parameters.isPrivateSignal();
+            if (parameters.count() != actualArg + isVariadic)
                 continue;
             if (fn->isConst() != bool(clang_CXXMethod_isConst(cur)))
                 continue;
-            if (isVariadic && funcParams.last().dataType() != QLatin1String("..."))
+            if (isVariadic && parameters.last().type() != QLatin1String("..."))
                 continue;
             bool different = false;
             for (int i = 0; i < actualArg; i++) {
                 if (args.size() <= i)
                     args.append(fromCXString(clang_getTypeSpelling(clang_getArgType(funcType, i))));
-                QString t1 = funcParams.at(i).dataType();
+                QString t1 = parameters.at(i).type();
                 QString t2 = args.at(i);
                 auto p2 = parent;
                 while (p2 && t1 != t2) {
@@ -288,12 +289,12 @@ static Node *findNodeForCursor(QDocDatabase* qdb, CXCursor cur) {
         return nullptr;
     }
     case CXCursor_EnumDecl:
-        return parent->findChildNode(fromCXString(clang_getCursorSpelling(cur)), Node::Enum);
+        return parent->findNonfunctionChild(name, &Node::isEnumType);
     case CXCursor_FieldDecl:
     case CXCursor_VarDecl:
-        return parent->findChildNode(fromCXString(clang_getCursorSpelling(cur)), Node::Variable);
+        return parent->findNonfunctionChild(name, &Node::isVariable);
     case CXCursor_TypedefDecl:
-        return parent->findChildNode(fromCXString(clang_getCursorSpelling(cur)), Node::Typedef);
+        return parent->findNonfunctionChild(name, &Node::isTypedef);
     default:
         return nullptr;
     }
@@ -323,7 +324,7 @@ static Node *findFunctionNodeForCursor(QDocDatabase* qdb, CXCursor cur) {
     case CXCursor_Constructor:
     case CXCursor_Destructor:
     case CXCursor_ConversionFunction: {
-        NodeList candidates;
+        NodeVector candidates;
         parent->findChildren(functionName(cur), candidates);
         if (candidates.isEmpty())
             return nullptr;
@@ -335,18 +336,18 @@ static Node *findFunctionNodeForCursor(QDocDatabase* qdb, CXCursor cur) {
             if (!candidate->isFunction(Node::CPP))
                 continue;
             auto fn = static_cast<FunctionNode*>(candidate);
-            const auto &funcParams = fn->parameters();
-            if (funcParams.count() != (numArg + isVariadic))
+            const Parameters &parameters = fn->parameters();
+            if (parameters.count() != (numArg + isVariadic))
                 continue;
             if (fn->isConst() != bool(clang_CXXMethod_isConst(cur)))
                 continue;
-            if (isVariadic && funcParams.last().dataType() != QLatin1String("..."))
+            if (isVariadic && parameters.last().type() != QLatin1String("..."))
                 continue;
             bool different = false;
             for (int i = 0; i < numArg; i++) {
                 if (args.size() <= i)
                     args.append(fromCXString(clang_getTypeSpelling(clang_getArgType(funcType, i))));
-                QString t1 = funcParams.at(i).dataType();
+                QString t1 = parameters.at(i).type();
                 QString t2 = args.at(i);
                 auto p2 = parent;
                 while (p2 && t1 != t2) {
@@ -462,7 +463,7 @@ private:
      */
     QString adjustTypeName(const QString &typeName) {
         auto parent = parent_->parent();
-        if (parent && parent->isClass()) {
+        if (parent && parent->isClassNode()) {
             QStringRef typeNameConstRemoved(&typeName);
             if (typeNameConstRemoved.startsWith(QLatin1String("const ")))
                 typeNameConstRemoved = typeName.midRef(6);
@@ -575,7 +576,6 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         Q_FALLTHROUGH();
     case CXCursor_ClassDecl:
     case CXCursor_ClassTemplate: {
-
         if (!clang_isCursorDefinition(cursor))
             return CXChildVisit_Continue;
 
@@ -585,11 +585,18 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         QString className = fromCXString(clang_getCursorSpelling(cursor));
 
         Aggregate* semanticParent = getSemanticParent(cursor);
-        if (semanticParent && semanticParent->findChildNode(className, Node::Class)) {
+        if (semanticParent && semanticParent->findNonfunctionChild(className, &Node::isClassNode)) {
             return CXChildVisit_Continue;
         }
 
-        ClassNode *classe = new ClassNode(semanticParent, className);
+        Node::NodeType type;
+        if (kind == CXCursor_ClassDecl || kind == CXCursor_ClassTemplate)
+            type = Node::Class;
+        else if (kind == CXCursor_StructDecl)
+            type = Node::Struct;
+        else
+            type = Node::Union;
+        ClassNode *classe = new ClassNode(type, semanticParent, className);
         classe->setAccess(fromCX_CXXAccessSpecifier(clang_getCXXAccessSpecifier(cursor)));
         classe->setLocation(fromCXSourceLocation(clang_getCursorLocation(cursor)));
 
@@ -603,14 +610,14 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
 
     }
     case CXCursor_CXXBaseSpecifier: {
-        if (!parent_->isClass())
+        if (!parent_->isClassNode())
             return CXChildVisit_Continue;
         auto access = fromCX_CXXAccessSpecifier(clang_getCXXAccessSpecifier(cursor));
         auto type = clang_getCursorType(cursor);
         auto baseCursor = clang_getTypeDeclaration(type);
         auto baseNode = findNodeForCursor(qdb_, baseCursor);
         auto classe = static_cast<ClassNode*>(parent_);
-        if (!baseNode || !baseNode->isClass()) {
+        if (!baseNode || !baseNode->isClassNode()) {
             QString bcName = fromCXString(clang_getCursorSpelling(baseCursor));
             classe->addUnresolvedBaseClass(access, QStringList(bcName), bcName);
             return CXChildVisit_Continue;
@@ -623,7 +630,7 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         QString namespaceName = fromCXString(clang_getCursorDisplayName(cursor));
         NamespaceNode* ns = nullptr;
         if (parent_)
-            ns = static_cast<NamespaceNode*>(parent_->findChildNode(namespaceName, Node::Namespace));
+            ns = static_cast<NamespaceNode*>(parent_->findNonfunctionChild(namespaceName, &Node::isNamespace));
         if (!ns) {
             ns = new NamespaceNode(parent_, namespaceName);
             ns->setAccess(Node::Public);
@@ -691,15 +698,17 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
             for (uint i = 0; i < numOverridden; ++i) {
                 QString path = reconstructQualifiedPathForCursor(overridden[i]);
                 if (!path.isEmpty()) {
-                    fn->setReimplementedFrom(path);
+                    fn->setOverride(true);
+                    fn->setOverridesThis(path);
                     break;
                 }
             }
             clang_disposeOverriddenCursors(overridden);
         }
         auto numArg = clang_getNumArgTypes(funcType);
-        QVector<Parameter> pvect;
-        pvect.reserve(numArg);
+        Parameters &parameters = fn->parameters();
+        parameters.clear();
+        parameters.reserve(numArg);
         for (int i = 0; i < numArg; ++i) {
             CXType argType = clang_getArgType(funcType, i);
             if (fn->isCtor()) {
@@ -715,15 +724,16 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
                 else if (argType.kind == CXType_LValueReference)
                     fn->setMetaness(FunctionNode::CAssign);
             }
-            pvect.append(Parameter(adjustTypeName(fromCXString(clang_getTypeSpelling(argType)))));
+            parameters.append(adjustTypeName(fromCXString(clang_getTypeSpelling(argType))));
         }
-        if (pvect.size() > 0 && pvect.last().dataType().endsWith(QLatin1String("::QPrivateSignal"))) {
-            pvect.pop_back(); // remove the QPrivateSignal argument
-            fn->setPrivateSignal();
+        if (parameters.count() > 0) {
+            if (parameters.last().type().endsWith(QLatin1String("::QPrivateSignal"))) {
+                parameters.pop_back(); // remove the QPrivateSignal argument
+                parameters.setPrivateSignal();
+            }
         }
         if (clang_isFunctionTypeVariadic(funcType))
-            pvect.append(Parameter(QStringLiteral("...")));
-        fn->setParameters(pvect);
+            parameters.append(QStringLiteral("..."));
         readParameterNamesAndAttributes(fn, cursor);
         return CXChildVisit_Continue;
     }
@@ -731,7 +741,7 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
     case CXCursor_FriendDecl: {
         // Friend functions are declared in the enclosing namespace
         Aggregate *ns = parent_;
-        while (ns && ns->isClass())
+        while (ns && ns->isClassNode())
             ns = ns->parent();
         QScopedValueRollback<Aggregate *> setParent(parent_, ns);
         // Visit the friend functions
@@ -745,8 +755,8 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         EnumNode* en = nullptr;
         if (enumTypeName.isEmpty()) {
             enumTypeName = "anonymous";
-            if (parent_ && (parent_->isClass() || parent_->isNamespace())) {
-                Node* n = parent_->findChildNode(enumTypeName, Node::Enum);
+            if (parent_ && (parent_->isClassNode() || parent_->isNamespace())) {
+                Node* n = parent_->findNonfunctionChild(enumTypeName, &Node::isEnumType);
                 if (n)
                     en = static_cast<EnumNode*>(n);
             }
@@ -793,7 +803,7 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         var->setAccess(access);
         var->setLocation(fromCXSourceLocation(clang_getCursorLocation(cursor)));
         var->setLeftType(fromCXString(clang_getTypeSpelling(clang_getCursorType(cursor))));
-        var->setStatic(kind == CXCursor_VarDecl && parent_->isClass());
+        var->setStatic(kind == CXCursor_VarDecl && parent_->isClassNode());
         return CXChildVisit_Continue;
     }
     case CXCursor_TypedefDecl: {
@@ -821,7 +831,7 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         return CXChildVisit_Continue;
     }
     default:
-        if (clang_isDeclaration(kind) && parent_->isClass()) {
+        if (clang_isDeclaration(kind) && parent_->isClassNode()) {
             // maybe a static_assert (which is not exposed from the clang API)
             QString spelling =  getSpelling(clang_getCursorExtent(cursor));
             if (spelling.startsWith(QLatin1String("Q_PROPERTY"))
@@ -836,7 +846,7 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
 
 void ClangVisitor::readParameterNamesAndAttributes(FunctionNode* fn, CXCursor cursor)
 {
-    auto pvect = fn->parameters();
+    Parameters &parameters = fn->parameters();
     // Visit the parameters and attributes
     int i = 0;
     visitChildrenLambda(cursor, [&](CXCursor cur) {
@@ -853,11 +863,11 @@ void ClangVisitor::readParameterNamesAndAttributes(FunctionNode* fn, CXCursor cu
         } else if (kind == CXCursor_CXXOverrideAttr) {
             fn->setOverride(true);
         } else if (kind == CXCursor_ParmDecl) {
-            if (i >= pvect.count())
+            if (i >= parameters.count())
                 return CXChildVisit_Break; // Attributes comes before parameters so we can break.
             QString name = fromCXString(clang_getCursorSpelling(cur));
             if (!name.isEmpty())
-                pvect[i].setName(name);
+                parameters[i].setName(name);
             // Find the default value
             visitChildrenLambda(cur, [&](CXCursor cur) {
                 if (clang_isExpression(clang_getCursorKind(cur))) {
@@ -866,7 +876,7 @@ void ClangVisitor::readParameterNamesAndAttributes(FunctionNode* fn, CXCursor cu
                         defaultValue = defaultValue.midRef(1).trimmed().toString();
                     if (defaultValue.isEmpty())
                         defaultValue = QStringLiteral("...");
-                    pvect[i].setDefaultValue(defaultValue);
+                    parameters[i].setDefaultValue(defaultValue);
                     return CXChildVisit_Break;
                 }
                 return CXChildVisit_Continue;
@@ -875,7 +885,6 @@ void ClangVisitor::readParameterNamesAndAttributes(FunctionNode* fn, CXCursor cu
         }
         return CXChildVisit_Continue;
     });
-    fn->setParameters(pvect);
 }
 
 void ClangVisitor::parseProperty(const QString& spelling, const Location& loc)
@@ -1109,7 +1118,6 @@ static const char *defaultArgs_[] = {
     "-Wno-nullability-completeness",
     "-I" CLANG_RESOURCE_DIR
 };
-static QByteArray clangResourcePath = "-I";
 
 /*!
   Load the default arguments and the defines into \a args.
@@ -1154,7 +1162,6 @@ void ClangCodeParser::getMoreArgs()
          */
         auto forest = qdb_->searchOrder();
 
-        printParsingErrors_ = 0;
         QByteArray version = qdb_->version().toUtf8();
         QString basicIncludeDir = QDir::cleanPath(QString(Config::installDir + "/../include"));
         moreArgs_ += "-I" + basicIncludeDir.toLatin1();
@@ -1326,6 +1333,11 @@ static float getUnpatchedVersion(QString t)
  */
 void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QString& filePath)
 {
+    /*
+      The set of open namespaces is cleared before parsing
+      each source file. The word "source" here means cpp file.
+     */
+    qdb_->clearOpenNamespaces();
     currentFile_ = filePath;
     flags_ = static_cast<CXTranslationUnit_Flags>(CXTranslationUnit_Incomplete | CXTranslationUnit_SkipFunctionBodies | CXTranslationUnit_KeepGoing);
     index_ = clang_createIndex(1, 0);
@@ -1336,6 +1348,7 @@ void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QStrin
         args_.push_back("-include-pch");
         args_.push_back(pchName_.constData());
     }
+    getMoreArgs();
     for (const auto &p : qAsConst(moreArgs_))
         args_.push_back(p.constData());
 
@@ -1356,7 +1369,7 @@ void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QStrin
 
     CXToken *tokens;
     unsigned int numTokens = 0;
-    const QSet<QString>& metacommands = topicCommands() + otherMetaCommands();
+    const QSet<QString> &commands = topicCommands() + metaCommands();
     clang_tokenize(tu, clang_getCursorExtent(cur), &tokens, &numTokens);
 
     for (unsigned int i = 0; i < numTokens; ++i) {
@@ -1371,7 +1384,7 @@ void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QStrin
         Doc::trimCStyleComment(loc,comment);
 
         // Doc constructor parses the comment.
-        Doc doc(loc, end_loc, comment, metacommands, topicCommands());
+        Doc doc(loc, end_loc, comment, commands, topicCommands());
         if (hasTooManyTopics(doc))
             continue;
 
@@ -1416,7 +1429,7 @@ void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QStrin
         } else {
             processTopicArgs(doc, topic, nodes, docs);
         }
-        processOtherMetaCommands(nodes, docs);
+        processMetaCommands(nodes, docs);
     }
 
     clang_disposeTokens(tu, tokens, numTokens);
@@ -1459,9 +1472,9 @@ Node* ClangCodeParser::parseFnArg(const Location& location, const QString& fnArg
                         QString params = rightParenSplit[0];
                         if (!params.isEmpty()) {
                             QStringList commaSplit = params.split(',');
-                            QVector<Parameter>& pvect = fn->parameters();
-                            if (pvect.size() == commaSplit.size()) {
-                                for (int i = 0; i < pvect.size(); ++i) {
+                            Parameters &parameters = fn->parameters();
+                            if (parameters.count() == commaSplit.size()) {
+                                for (int i = 0; i < parameters.count(); ++i) {
                                     QStringList blankSplit = commaSplit[i].split(' ');
                                     if (blankSplit.size() > 0) {
                                         QString pName = blankSplit.last();
@@ -1470,8 +1483,8 @@ Node* ClangCodeParser::parseFnArg(const Location& location, const QString& fnArg
                                             j++;
                                         if (j > 0)
                                             pName = pName.mid(j);
-                                        if (!pName.isEmpty() && pName != pvect[i].name())
-                                            pvect[i].setName(pName);
+                                        if (!pName.isEmpty() && pName != parameters[i].name())
+                                            parameters[i].setName(pName);
                                     }
                                 }
                             }
@@ -1529,6 +1542,11 @@ Node* ClangCodeParser::parseFnArg(const Location& location, const QString& fnArg
         ClangVisitor visitor(qdb_, allHeaders_);
         bool ignoreSignature = false;
         visitor.visitFnArg(cur, &fnNode, ignoreSignature);
+        /*
+          If the visitor couldn't find a FunctionNode for the
+          signature, then print the clang diagnostics if there
+          were any.
+         */
         if (fnNode == nullptr) {
             unsigned diagnosticCount = clang_getNumDiagnostics(tu);
             if (diagnosticCount > 0 && (!Generator::preparing() || Generator::singleExec())) {

@@ -89,34 +89,47 @@ typedef QMap<QString, TargetList*> TargetListMap;
 
 class Tree
 {
- private:
     friend class QDocForest;
     friend class QDocDatabase;
 
+ private: // Note the constructor and destructor are private.
     typedef QMap<PropertyNode::FunctionRole, QString> RoleMap;
     typedef QMap<PropertyNode*, RoleMap> PropertyMap;
 
     Tree(const QString& camelCaseModuleName, QDocDatabase* qdb);
     ~Tree();
 
-    Node* findNodeForInclude(const QStringList& path) const;
-    ClassNode* findClassNode(const QStringList& path, const Node* start = 0) const;
-    NamespaceNode* findNamespaceNode(const QStringList& path) const;
-    FunctionNode* findFunctionNode(const QStringList& parentPath, const FunctionNode* clone);
-    const Node* findFunctionNode(const QString& target,
-                                 const QString& params,
-                                 const Node* relative,
-                                 Node::Genus genus) const;
+ public: // Of necessity, a few public functions remain.
+    const QString &camelCaseModuleName() const { return camelCaseModuleName_; }
+    const QString &physicalModuleName() const { return physicalModuleName_; }
+    const QString &indexFileName() const { return indexFileName_; }
+    long incrementLinkCount() { return --linkCount_; }
+    void clearLinkCount() { linkCount_ = 0; }
+    long linkCount() const { return linkCount_; }
+    const QString &indexTitle() const { return indexTitle_; }
+    void setIndexTitle(const QString &t) { indexTitle_ = t; }
+    NodeList &proxies() { return proxies_; }
+    void appendProxy(ProxyNode *t) { proxies_.append(t); }
 
+ private: // The rest of the class is private.
+    Aggregate *findAggregate(const QString &name);
+    Node* findNodeForInclude(const QStringList& path) const;
+    ClassNode* findClassNode(const QStringList& path, const Node* start = nullptr) const;
+    NamespaceNode* findNamespaceNode(const QStringList& path) const;
+    const FunctionNode *findFunctionNode(const QStringList &path,
+                                         const Parameters &parameters,
+                                         const Node *relative,
+                                         Node::Genus genus) const;
+    Node* findNodeRecursive(const QStringList& path,
+                            int pathIndex,
+                            const Node* start,
+                            bool (Node::*) () const) const;
+#if 0
     Node* findNodeRecursive(const QStringList& path,
                             int pathIndex,
                             const Node* start,
                             Node::NodeType type) const;
-    Node* findNodeRecursive(const QStringList& path,
-                            int pathIndex,
-                            Node* start,
-                            const QList<int> &types) const;
-
+#endif
     const Node* findNodeForTarget(const QStringList& path,
                                   const QString& target,
                                   const Node* node,
@@ -132,14 +145,14 @@ class Tree
                                    QString& ref) const;
 
     const Node* findNode(const QStringList &path,
-                         const Node* relative,     // = 0,
-                         int findFlags,            // = 0,
-                         Node::Genus genus) const; // = Node::DontCare) const;
+                         const Node *relative,
+                         int flags,
+                         Node::Genus genus) const;
 
     QmlTypeNode* findQmlTypeNode(const QStringList& path);
 
-    Node* findNodeByNameAndType(const QStringList& path, Node::NodeType type) const;
-    PageNode* findRelatesNode(const QStringList& path);
+    Node* findNodeByNameAndType(const QStringList& path, bool (Node::*isMatch) () const) const;
+    Aggregate* findRelatesNode(const QStringList& path);
     QString getRef(const QString& target, const Node* node) const;
     void insertTarget(const QString& name,
                       const QString& title,
@@ -153,22 +166,16 @@ class Tree
     void addPropertyFunction(PropertyNode *property,
                              const QString &funcName,
                              PropertyNode::FunctionRole funcRole);
-    void resolveInheritance(Aggregate* n = 0);
+    void resolveInheritance(Aggregate *n);
     void resolveInheritanceHelper(int pass, ClassNode* cn);
     void resolveProperties();
     void resolveCppToQmlLinks();
     void resolveUsingClauses();
-    void fixInheritance(NamespaceNode *rootNode = 0);
+    void fixInheritance(NamespaceNode *rootNode);
     NamespaceNode *root() { return &root_; }
-
-    const FunctionNode *findFunctionNode(const QStringList &path,
-                                         const QString& params,
-                                         const Node *relative = 0,
-                                         int findFlags = 0,
-                                         Node::Genus genus = Node::DontCare) const;
     const NamespaceNode *root() const { return &root_; }
 
-    NodeList allBaseClasses(const ClassNode *classe) const;
+    ClassList allBaseClasses(const ClassNode *classe) const;
     QString refForAtom(const Atom* atom);
 
     CNMap* getCollectionMap(Node::NodeType type);
@@ -200,7 +207,6 @@ class Tree
     void insertQmlType(const QString& key, QmlTypeNode* n);
     void addExampleNode(ExampleNode* n) { exampleNodeMap_.insert(n->title(), n); }
     ExampleNodeMap& exampleNodeMap() { return exampleNodeMap_; }
-    const Node* checkForCollision(const QString& name);
     void setIndexFileName(const QString& t) { indexFileName_ = t; }
 
     bool treeHasBeenAnalyzed() const { return treeHasBeenAnalyzed_; }
@@ -214,18 +220,8 @@ class Tree
                              bool broken);
     TargetList* getTargetList(const QString& module);
     QStringList getTargetListKeys() { return targetListMap_->keys(); }
-    Node* findFunctionNodeForTag(const QString &tag, Aggregate* parent = 0);
-    Node *findMacroNode(const QString &t, const Aggregate *parent = 0);
-
- public:
-    const QString& camelCaseModuleName() const { return camelCaseModuleName_; }
-    const QString& physicalModuleName() const { return physicalModuleName_; }
-    const QString& indexFileName() const { return indexFileName_; }
-    long incrementLinkCount() { return --linkCount_; }
-    void clearLinkCount() { linkCount_ = 0; }
-    long linkCount() const { return linkCount_; }
-    const QString& indexTitle() const { return indexTitle_; }
-    void setIndexTitle(const QString &t) { indexTitle_ = t; }
+    FunctionNode *findFunctionNodeForTag(const QString &tag, Aggregate *parent = nullptr);
+    FunctionNode *findMacroNode(const QString &t, const Aggregate *parent = nullptr);
 
 private:
     bool treeHasBeenAnalyzed_;
@@ -248,6 +244,7 @@ private:
     QmlTypeMap              qmlTypeMap_;
     ExampleNodeMap          exampleNodeMap_;
     TargetListMap*          targetListMap_;
+    NodeList proxies_;
 };
 
 QT_END_NAMESPACE

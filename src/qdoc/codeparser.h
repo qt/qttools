@@ -35,12 +35,13 @@
 QT_BEGIN_NAMESPACE
 
 class Config;
+class Location;
 class QString;
 class QDocDatabase;
 
 class CodeParser
 {
-    Q_DECLARE_TR_FUNCTIONS(QDoc::CodeParser)
+    Q_DECLARE_TR_FUNCTIONS(QDoc::CppCodeParser)
 
 public:
     CodeParser();
@@ -54,9 +55,7 @@ public:
     virtual void parseHeaderFile(const Location& location, const QString& filePath);
     virtual void parseSourceFile(const Location& location, const QString& filePath) = 0;
     virtual void precompileHeaders() { }
-    virtual Node *parseFnArg(const Location &, const QString &) { return 0; }
-    virtual Node *parseMacroArg(const Location &, const QString &) { return 0; }
-    virtual Node *parseOtherFuncArg(const QString &, const Location &, const QString &) { return 0; }
+    virtual Node *parseFnArg(const Location &, const QString &) { return nullptr; }
 
     bool isParsingH() const;
     bool isParsingCpp() const;
@@ -83,10 +82,10 @@ protected:
     QString moduleHeader_;
     QString currentFile_;
     QDocDatabase* qdb_;
-    static bool showInternal_;
 
 private:
     static QList<CodeParser *> parsers;
+    static bool showInternal_;
     static bool singleExec_;
 };
 
@@ -168,6 +167,7 @@ private:
 #define COMMAND_RELATES                 Doc::alias(QLatin1String("relates"))
 #define COMMAND_RELEASEDATE             Doc::alias(QLatin1String("releasedate"))
 #define COMMAND_SINCE                   Doc::alias(QLatin1String("since"))
+#define COMMAND_STRUCT                  Doc::alias(QLatin1String("struct"))
 #define COMMAND_SUBTITLE                Doc::alias(QLatin1String("subtitle"))
 #define COMMAND_STARTPAGE               Doc::alias(QLatin1String("startpage"))
 #define COMMAND_THREADSAFE              Doc::alias(QLatin1String("threadsafe"))
@@ -176,6 +176,7 @@ private:
 #define COMMAND_TYPEDEF                 Doc::alias(QLatin1String("typedef"))
 #define COMMAND_VARIABLE                Doc::alias(QLatin1String("variable"))
 #define COMMAND_VERSION                 Doc::alias(QLatin1String("version"))
+#define COMMAND_UNION                   Doc::alias(QLatin1String("union"))
 #define COMMAND_WRAPPER                 Doc::alias(QLatin1String("wrapper"))
 
 QT_END_NAMESPACE

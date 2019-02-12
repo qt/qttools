@@ -61,7 +61,7 @@ IndexWindow::IndexWindow(QWidget *parent)
     connect(m_searchLineEdit, &QLineEdit::textChanged,
             this, &IndexWindow::filterIndices);
     m_searchLineEdit->installEventFilter(this);
-    layout->setMargin(4);
+    layout->setContentsMargins(4, 4, 4, 4);
     layout->addWidget(m_searchLineEdit);
 
     HelpEngineWrapper &helpEngine = HelpEngineWrapper::instance();

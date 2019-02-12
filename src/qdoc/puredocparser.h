@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -30,20 +30,17 @@
 #define PUREDOCPARSER_H
 
 #include "cppcodeparser.h"
-#include "location.h"
 
 QT_BEGIN_NAMESPACE
 
-class Config;
-class Node;
-class QString;
+class Location;
 
 class PureDocParser : public CppCodeParser
 {
     Q_DECLARE_TR_FUNCTIONS(QDoc::PureDocParser)
 
 public:
-    PureDocParser() { pureParser_ = this; }
+    PureDocParser() : tokenizer_(nullptr), tok_(0) { pureParser_ = this; }
     virtual ~PureDocParser() { pureParser_ = nullptr; }
 
     QStringList sourceFileNameFilter() override;
@@ -54,6 +51,8 @@ public:
  private:
     bool processQdocComments();
     static PureDocParser *pureParser_;
+    Tokenizer *tokenizer_;
+    int tok_;
 };
 
 QT_END_NAMESPACE

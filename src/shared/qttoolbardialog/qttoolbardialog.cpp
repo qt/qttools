@@ -1611,7 +1611,7 @@ void QtToolBarListWidget::startDrag(Qt::DropActions supportedActions)
             QMimeData *data = new QMimeData;
             data->setData("action", actionName.toLocal8Bit().constData());
             drag->setMimeData(data);
-            drag->start(supportedActions);
+            drag->exec(supportedActions);
         }
     }
 }

@@ -56,13 +56,12 @@ QT_BEGIN_NAMESPACE
 
 static QPoint initialPos(const QSettings &settings, const QSize &initialSize)
 {
-    const QDesktopWidget *desktopWidget = QApplication::desktop();
-    const QPoint defaultPos = desktopWidget->availableGeometry().topLeft();
+    const QPoint defaultPos = QGuiApplication::primaryScreen()->availableGeometry().topLeft();
     const QPoint savedPos =
         settings.value(QLatin1String("position"), QVariant(defaultPos)).toPoint();
-    const int savedScreen = desktopWidget->screenNumber(savedPos);
-    return savedScreen >= 0
-        && desktopWidget->availableGeometry(savedScreen).intersects(QRect(savedPos, initialSize))
+    auto savedScreen = QGuiApplication::screenAt(savedPos);
+    return savedScreen != nullptr
+        && savedScreen->availableGeometry().intersects(QRect(savedPos, initialSize))
         ? savedPos : defaultPos;
 }
 
@@ -503,8 +502,8 @@ QSize QPixelTool::sizeHint() const
 static inline QString pixelToolTitle(QPoint pos)
 {
     if (QHighDpiScaling::isActive()) {
-        const int screenNumber = QApplication::desktop()->screenNumber(pos);
-        pos = QHighDpi::toNativePixels(pos, QGuiApplication::screens().at(screenNumber));
+        if (auto screen = QGuiApplication::screenAt(pos))
+            pos = QHighDpi::toNativePixels(pos, screen);
     }
     return QCoreApplication::applicationName() + QLatin1String(" [")
         + QString::number(pos.x())
@@ -549,8 +548,9 @@ void QPixelTool::grabScreen()
     }
     QRegion geom(x, y, w, h);
     QRect screenRect;
-    for (int i = 0; i < desktopWidget->numScreens(); ++i)
-        screenRect |= desktopWidget->screenGeometry(i);
+    const auto screens = QGuiApplication::screens();
+    for (auto screen : screens)
+        screenRect |= screen->geometry();
     geom -= screenRect;
     const auto rectsInRegion = geom.rectCount();
     if (rectsInRegion > 0) {

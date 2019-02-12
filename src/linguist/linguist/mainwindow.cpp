@@ -359,7 +359,7 @@ MainWindow::MainWindow()
     // We can't call setCentralWidget(m_messageEditor), since it is already called in m_ui.setupUi()
     QBoxLayout *lout = new QBoxLayout(QBoxLayout::TopToBottom, m_ui.centralwidget);
     lout->addWidget(m_messageEditor);
-    lout->setMargin(0);
+    lout->setContentsMargins(QMargins());
     m_ui.centralwidget->setLayout(lout);
 
     // Set up the phrases & guesses dock widget

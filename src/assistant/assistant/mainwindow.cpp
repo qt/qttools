@@ -64,6 +64,7 @@
 #include <QtWidgets/QDockWidget>
 #include <QtGui/QFontDatabase>
 #include <QtGui/QImageReader>
+#include <QtGui/QScreen>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLayout>
@@ -216,7 +217,7 @@ MainWindow::MainWindow(CmdLineParser *cmdLine, QWidget *parent)
         tabifyDockWidget(indexDock, bookmarkDock);
         tabifyDockWidget(bookmarkDock, searchDock);
         contentDock->raise();
-        const QRect screen = QApplication::desktop()->screenGeometry();
+        const QRect screen = QGuiApplication::primaryScreen()->geometry();
         resize(4*screen.width()/5, 4*screen.height()/5);
 
         adjustSize();   // make sure we won't start outside of the screen
@@ -724,7 +725,7 @@ void MainWindow::setupFilterToolbar()
 
     m_filterCombo = new QComboBox(this);
     m_filterCombo->setMinimumWidth(QFontMetrics(QFont()).
-        width(QLatin1String("MakeTheComboBoxWidthEnough")));
+        horizontalAdvance(QLatin1String("MakeTheComboBoxWidthEnough")));
 
     QToolBar *filterToolBar = addToolBar(tr("Filter Toolbar"));
     filterToolBar->setObjectName(QLatin1String("FilterToolBar"));
@@ -1098,7 +1099,7 @@ void MainWindow::indexingStarted()
         progressBar->setSizePolicy(sizePolicy);
 
         hlayout->setSpacing(6);
-        hlayout->setMargin(0);
+        hlayout->setContentsMargins(QMargins());
         hlayout->addWidget(progressBar);
 
         statusBar()->addPermanentWidget(m_progressWidget);

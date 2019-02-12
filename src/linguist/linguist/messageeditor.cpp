@@ -134,14 +134,14 @@ void MessageEditor::setupEditorPage()
 
     QBoxLayout *subLayout = new QVBoxLayout;
 
-    subLayout->setMargin(5);
+    subLayout->setContentsMargins(5, 5, 5, 5);
     subLayout->addWidget(m_source);
     subLayout->addWidget(m_pluralSource);
     subLayout->addWidget(m_commentText);
 
     m_layout = new QVBoxLayout;
     m_layout->setSpacing(2);
-    m_layout->setMargin(2);
+    m_layout->setContentsMargins(2, 2, 2, 2);
     m_layout->addLayout(subLayout);
     m_layout->addStretch(1);
     editorPage->setLayout(m_layout);
@@ -199,7 +199,7 @@ void MessageEditor::messageModelAppended()
     connect(ed.transCommentText, SIGNAL(cursorPositionChanged()), SLOT(resetHoverSelection()));
     fixTabOrder();
     QBoxLayout *box = new QVBoxLayout(ed.container);
-    box->setMargin(5);
+    box->setContentsMargins(5, 5, 5, 5);
     box->addWidget(ed.transCommentText);
     box->addSpacing(ed.transCommentText->getEditor()->fontMetrics().height() / 2);
     m_layout->addWidget(ed.container);

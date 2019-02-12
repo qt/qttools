@@ -70,7 +70,7 @@ PreviewFrame::PreviewFrame(QWidget *parent) :
     setLineWidth(1);
 
     QVBoxLayout *vbox = new QVBoxLayout(this);
-    vbox->setMargin(0);
+    vbox->setContentsMargins(QMargins());
     vbox->addWidget(m_mdiArea);
 
     setMinimumSize(ensureMdiSubWindow()->minimumSizeHint());

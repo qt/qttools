@@ -313,7 +313,7 @@ void QDesignerMenuBar::startDrag(const QPoint &pos)
     const int old_index = m_currentIndex;
     m_currentIndex = -1;
 
-    if (drag->start(Qt::MoveAction) == Qt::IgnoreAction) {
+    if (drag->exec(Qt::MoveAction) == Qt::IgnoreAction) {
         InsertActionIntoCommand *cmd = new InsertActionIntoCommand(fw);
         cmd->init(this, action, safeActionAt(index));
         fw->commandHistory()->push(cmd);
