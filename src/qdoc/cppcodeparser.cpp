@@ -591,7 +591,7 @@ void CppCodeParser::processMetaCommand(const Doc &doc,
           Note that this might set the overload flag of the
           primary function. This is ok because the overload
           flags and overload numbers will be resolved later
-          in resolveOverloadNumbers().
+          in Aggregate::normalizeOverloads().
          */
         if (node->isFunction())
             static_cast<FunctionNode*>(node)->setOverloadFlag();
