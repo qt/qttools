@@ -1129,7 +1129,8 @@ void deployPlugins(const ApplicationBundleInfo &appBundleInfo, const QString &pl
         {QStringLiteral("3DRender"), {QStringLiteral("sceneparsers"), QStringLiteral("geometryloaders")}},
         {QStringLiteral("3DQuickRender"), {QStringLiteral("renderplugins")}},
         {QStringLiteral("Positioning"), {QStringLiteral("position")}},
-        {QStringLiteral("Location"), {QStringLiteral("geoservices")}}
+        {QStringLiteral("Location"), {QStringLiteral("geoservices")}},
+        {QStringLiteral("TextToSpeech"), {QStringLiteral("texttospeech")}}
     };
 
     for (const auto &it : map) {
