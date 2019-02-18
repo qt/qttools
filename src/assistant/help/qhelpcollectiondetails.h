@@ -65,7 +65,7 @@ public:
     QString component() const;
     QString version() const;
 
-    static QHelpCollectionDetails helpDetails(const QString &documentationFileName);
+    static QHelpCollectionDetails fromCompressedHelpFile(const QString &documentationFileName);
 
 private:
     QSharedDataPointer<QHelpCollectionDetailsPrivate> d;

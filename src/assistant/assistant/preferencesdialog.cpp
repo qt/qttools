@@ -351,7 +351,7 @@ void PreferencesDialog::addDocumentation()
     bool added = false;
 
     for (const QString &fileName : fileNames) {
-        const QHelpCollectionDetails details = QHelpCollectionDetails::helpDetails(fileName);
+        const QHelpCollectionDetails details = QHelpCollectionDetails::fromCompressedHelpFile(fileName);
         const QString namespaceName = details.namespaceName();
 
         if (m_currentSetup.m_namespaceToFileName.contains(namespaceName))

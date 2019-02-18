@@ -112,7 +112,7 @@ QString QHelpCollectionDetails::version() const
     return d->m_version;
 }
 
-QHelpCollectionDetails QHelpCollectionDetails::helpDetails(const QString &documentationFileName)
+QHelpCollectionDetails QHelpCollectionDetails::fromCompressedHelpFile(const QString &documentationFileName)
 {
     QHelpDBReader reader(documentationFileName,
         QHelpGlobal::uniquifyConnectionName(QLatin1String("GetHelpDetails"),
