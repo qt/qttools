@@ -48,10 +48,12 @@ public:
     QHelpFilterDataPrivate(const QHelpFilterDataPrivate &other)
         : QSharedData(other)
         , m_components(other.m_components)
+        , m_versions(other.m_versions)
     { }
     ~QHelpFilterDataPrivate() = default;
 
     QStringList m_components;
+    QStringList m_versions;
 };
 
 /*!
@@ -63,6 +65,8 @@ public:
 
     By using setComponents() you may constrain the search results to
     documents that belong only to components specified on the given list.
+    By using setVersions() you may constrain the search results to
+    documents that belong only to versions specified on the given list.
 
     \sa QHelpFilterEngine
 */
@@ -103,14 +107,30 @@ QHelpFilterData &QHelpFilterData::operator=(const QHelpFilterData &) = default;
 */
 QHelpFilterData &QHelpFilterData::operator=(QHelpFilterData &&) = default;
 
+bool QHelpFilterData::operator==(const QHelpFilterData &other) const
+{
+    return (d->m_components == other.d->m_components &&
+            d->m_versions == other.d->m_versions);
+}
+
 /*!
     Specifies the component list that is used for filtering
-    the search results. Only the results which match the \a components
-    will be returned.
+    the search results. Only results from components in the list
+    \a components shall be returned.
 */
 void QHelpFilterData::setComponents(const QStringList &components)
 {
     d->m_components = components;
+}
+
+/*!
+    Specifies the version list that is used for filtering
+    the search results. Only results from versions in the list
+    \a versions shall be returned.
+*/
+void QHelpFilterData::setVersions(const QStringList &versions)
+{
+    d->m_versions = versions;
 }
 
 /*!
@@ -120,6 +140,15 @@ void QHelpFilterData::setComponents(const QStringList &components)
 QStringList QHelpFilterData::components() const
 {
     return d->m_components;
+}
+
+/*!
+    Returns the version list that is used for filtering
+    the search results.
+*/
+QStringList QHelpFilterData::versions() const
+{
+    return d->m_versions;
 }
 
 QT_END_NAMESPACE

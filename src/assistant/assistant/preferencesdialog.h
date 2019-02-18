@@ -30,6 +30,7 @@
 #define PREFERENCESDIALOG_H
 
 #include <QtWidgets/QDialog>
+#include <QtHelp/QHelpFilterData>
 #include "ui_preferencesdialog.h"
 
 QT_BEGIN_NAMESPACE
@@ -42,10 +43,14 @@ struct FilterSetup {
     QMap<QString, QString>     m_namespaceToComponent;
     QMap<QString, QStringList> m_componentToNamespace;
 
+    QMap<QString, QString>     m_namespaceToVersion;
+    QMap<QString, QStringList> m_versionToNamespace;
+
     QMap<QString, QString>     m_namespaceToFileName;
     QMap<QString, QString>     m_fileNameToNamespace;
 
-    QMap<QString, QStringList> m_filterToComponents;
+    QMap<QString, QHelpFilterData> m_filterToData;
+    QString                        m_currentFilter;
 };
 
 class PreferencesDialog : public QDialog
@@ -61,10 +66,12 @@ public:
 private slots:
     void filterSelected(QListWidgetItem *item);
     void componentsChanged(const QStringList &components);
+    void versionsChanged(const QStringList &versions);
     void addFilterClicked();
     void renameFilterClicked();
     void removeFilterClicked();
-    void addFilter(const QString &filterName, const QStringList &components);
+    void addFilter(const QString &filterName,
+                   const QHelpFilterData &filterData = QHelpFilterData());
     void removeFilter(const QString &filterName);
     void addDocumentation();
     void removeDocumentation();

@@ -59,6 +59,7 @@ class QHELP_EXPORT QHelpFilterEngine : public QObject
     Q_OBJECT
 public:
     QMap<QString, QString> namespaceToComponent() const;
+    QMap<QString, QString> namespaceToVersion() const;
 
     QStringList filters() const;
 

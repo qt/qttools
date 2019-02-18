@@ -58,10 +58,13 @@ public:
 
     QHelpFilterData &operator=(const QHelpFilterData &other);
     QHelpFilterData &operator=(QHelpFilterData &&other);
+    bool operator==(const QHelpFilterData &other) const;
 
     void setComponents(const QStringList &components);
+    void setVersions(const QStringList &versions);
 
     QStringList components() const;
+    QStringList versions() const;
 private:
     QSharedDataPointer<QHelpFilterDataPrivate> d;
 };

@@ -188,7 +188,8 @@ bool QHelpCollectionHandler::openCollectionFile()
         QLatin1String("Filter"),
         QLatin1String("ComponentTable"),
         QLatin1String("ComponentMapping"),
-        QLatin1String("ComponentFilter")
+        QLatin1String("ComponentFilter"),
+        QLatin1String("VersionFilter")
     };
 
     QString queryString = QLatin1String("SELECT COUNT(*) "
@@ -486,6 +487,7 @@ bool QHelpCollectionHandler::recreateIndexAndNamespaceFilterTables(QSqlQuery *qu
             << QLatin1String("DROP TABLE IF EXISTS ComponentTable")
             << QLatin1String("DROP TABLE IF EXISTS ComponentMapping")
             << QLatin1String("DROP TABLE IF EXISTS ComponentFilter")
+            << QLatin1String("DROP TABLE IF EXISTS VersionFilter")
             << QLatin1String("CREATE TABLE FileNameTable ("
                              "FolderId INTEGER, "
                              "Name TEXT, "
@@ -538,6 +540,9 @@ bool QHelpCollectionHandler::recreateIndexAndNamespaceFilterTables(QSqlQuery *qu
                              "NamespaceId INTEGER)")
             << QLatin1String("CREATE TABLE ComponentFilter ("
                              "ComponentName TEXT, "
+                             "FilterId INTEGER)")
+            << QLatin1String("CREATE TABLE VersionFilter ("
+                             "Version TEXT, "
                              "FilterId INTEGER)");
 
     for (const QString &q : tables) {
@@ -581,6 +586,17 @@ QStringList QHelpCollectionHandler::availableComponents() const
     return list;
 }
 
+QStringList QHelpCollectionHandler::availableVersions() const
+{
+    QStringList list;
+    if (m_query) {
+        m_query->exec(QLatin1String("SELECT DISTINCT Version FROM VersionTable ORDER BY Version"));
+        while (m_query->next())
+            list.append(m_query->value(0).toString());
+    }
+    return list;
+}
+
 QMap<QString, QString> QHelpCollectionHandler::namespaceToComponent() const
 {
     QMap<QString, QString> result;
@@ -599,9 +615,26 @@ QMap<QString, QString> QHelpCollectionHandler::namespaceToComponent() const
     return result;
 }
 
+QMap<QString, QString> QHelpCollectionHandler::namespaceToVersion() const
+{
+    QMap<QString, QString> result;
+    if (m_query) {
+        m_query->exec(QLatin1String("SELECT "
+                                        "NamespaceTable.Name, "
+                                        "VersionTable.Version "
+                                    "FROM NamespaceTable, "
+                                        "VersionTable "
+                                    "WHERE NamespaceTable.Id = VersionTable.NamespaceId"));
+        while (m_query->next())
+            result.insert(m_query->value(0).toString(), m_query->value(1).toString());
+    }
+    return result;
+}
+
 QHelpFilterData QHelpCollectionHandler::filterData(const QString &filterName) const
 {
     QStringList components;
+    QStringList versions;
     if (m_query) {
         m_query->prepare(QLatin1String("SELECT ComponentFilter.ComponentName "
                                        "FROM ComponentFilter, Filter "
@@ -612,9 +645,21 @@ QHelpFilterData QHelpCollectionHandler::filterData(const QString &filterName) co
         m_query->exec();
         while (m_query->next())
             components.append(m_query->value(0).toString());
+
+        m_query->prepare(QLatin1String("SELECT VersionFilter.Version "
+                                       "FROM VersionFilter, Filter "
+                                       "WHERE VersionFilter.FilterId = Filter.FilterId "
+                                       "AND Filter.Name = ? "
+                                       "ORDER BY VersionFilter.Version"));
+        m_query->bindValue(0, filterName);
+        m_query->exec();
+        while (m_query->next())
+            versions.append(m_query->value(0).toString());
+
     }
     QHelpFilterData data;
     data.setComponents(components);
+    data.setVersions(versions);
     return data;
 }
 
@@ -633,6 +678,7 @@ bool QHelpCollectionHandler::setFilterData(const QString &filterName,
     const int filterId = m_query->lastInsertId().toInt();
 
     QVariantList componentList;
+    QVariantList versionList;
     QVariantList filterIdList;
 
     for (const QString &component : filterData.components()) {
@@ -644,7 +690,23 @@ bool QHelpCollectionHandler::setFilterData(const QString &filterName,
                                    "VALUES (?, ?)"));
     m_query->addBindValue(componentList);
     m_query->addBindValue(filterIdList);
-    return m_query->execBatch();
+    if (!m_query->execBatch())
+        return false;
+
+    filterIdList.clear();
+    for (const QString &version : filterData.versions()) {
+        versionList.append(version);
+        filterIdList.append(filterId);
+    }
+
+    m_query->prepare(QLatin1String("INSERT INTO VersionFilter "
+                                   "VALUES (?, ?)"));
+    m_query->addBindValue(versionList);
+    m_query->addBindValue(filterIdList);
+    if (!m_query->execBatch())
+        return false;
+
+    return true;
 }
 
 bool QHelpCollectionHandler::removeFilter(const QString &filterName)
@@ -669,6 +731,12 @@ bool QHelpCollectionHandler::removeFilter(const QString &filterName)
 
     m_query->prepare(QLatin1String("DELETE FROM ComponentFilter "
                                    "WHERE ComponentFilter.FilterId = ?"));
+    m_query->bindValue(0, filterId);
+    if (!m_query->exec())
+        return false;
+
+    m_query->prepare(QLatin1String("DELETE FROM VersionFilter "
+                                   "WHERE VersionFilter.FilterId = ?"));
     m_query->bindValue(0, filterId);
     if (!m_query->exec())
         return false;
@@ -955,7 +1023,8 @@ static QString prepareFilterQuery(const QString &filterName)
         return QString();
 
     return QString::fromLatin1(" AND EXISTS(SELECT * FROM Filter WHERE Filter.Name = ?) "
-                               "AND (NOT EXISTS("
+                               "AND ("
+                               "(NOT EXISTS(" // 1. filter by component
                                "SELECT * FROM "
                                    "ComponentFilter, "
                                    "Filter "
@@ -974,7 +1043,26 @@ static QString prepareFilterQuery(const QString &filterName)
                                    "AND ComponentTable.ComponentId = ComponentMapping.ComponentId "
                                    "AND ComponentTable.Name = ComponentFilter.ComponentName "
                                    "AND ComponentFilter.FilterId = Filter.FilterId "
-                                   "AND Filter.Name = ?)"
+                                   "AND Filter.Name = ?))"
+                               " AND "
+                               "(NOT EXISTS(" // 2. filter by version
+                               "SELECT * FROM "
+                                   "VersionFilter, "
+                                   "Filter "
+                               "WHERE VersionFilter.FilterId = Filter.FilterId "
+                                   "AND Filter.Name = ?) "
+                               "OR NamespaceTable.Id IN ("
+                               "SELECT "
+                                   "NamespaceTable.Id "
+                               "FROM "
+                                   "NamespaceTable, "
+                                   "VersionFilter, "
+                                   "VersionTable, "
+                                   "Filter "
+                               "WHERE VersionFilter.FilterId = Filter.FilterId "
+                                   "AND VersionFilter.Version = VersionTable.Version "
+                                   "AND VersionTable.NamespaceId = NamespaceTable.Id "
+                                   "AND Filter.Name = ?))"
                                ")");
 }
 
@@ -986,6 +1074,8 @@ static void bindFilterQuery(QSqlQuery *query, int bindStart, const QString &filt
     query->bindValue(bindStart, filterName);
     query->bindValue(bindStart + 1, filterName);
     query->bindValue(bindStart + 2, filterName);
+    query->bindValue(bindStart + 3, filterName);
+    query->bindValue(bindStart + 4, filterName);
 }
 
 static QString prepareFilterQuery(int attributesCount,

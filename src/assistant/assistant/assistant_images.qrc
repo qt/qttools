@@ -10,7 +10,9 @@
         <file>images/mac/editcopy.png</file>
         <file>images/mac/find.png</file>
         <file>images/mac/home.png</file>
+        <file>images/mac/minus.png</file>
         <file>images/mac/next.png</file>
+        <file>images/mac/plus.png</file>
         <file>images/mac/previous.png</file>
         <file>images/mac/print.png</file>
         <file>images/mac/synctoc.png</file>
@@ -23,7 +25,9 @@
         <file>images/win/editcopy.png</file>
         <file>images/win/find.png</file>
         <file>images/win/home.png</file>
+        <file>images/win/minus.png</file>
         <file>images/win/next.png</file>
+        <file>images/win/plus.png</file>
         <file>images/win/previous.png</file>
         <file>images/win/print.png</file>
         <file>images/win/synctoc.png</file>

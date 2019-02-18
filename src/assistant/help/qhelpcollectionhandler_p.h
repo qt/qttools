@@ -157,7 +157,9 @@ public:
     QStringList filters() const;
 
     QStringList availableComponents() const;
+    QStringList availableVersions() const;
     QMap<QString, QString> namespaceToComponent() const;
+    QMap<QString, QString> namespaceToVersion() const;
     QHelpFilterData filterData(const QString &filterName) const;
     bool setFilterData(const QString &filterName, const QHelpFilterData &filterData);
     bool removeFilter(const QString &filterName);

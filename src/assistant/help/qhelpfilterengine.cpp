@@ -170,6 +170,17 @@ QMap<QString, QString> QHelpFilterEngine::namespaceToComponent() const
 }
 
 /*!
+    Returns the map of all the available namespaces as keys
+    together with their associated versions as values.
+*/
+QMap<QString, QString> QHelpFilterEngine::namespaceToVersion() const
+{
+    if (!d->setup())
+        return QMap<QString, QString>();
+    return d->m_collectionHandler->namespaceToVersion();
+}
+
+/*!
     Returns the list of all filter names defined inside the filter engine.
 */
 QStringList QHelpFilterEngine::filters() const
