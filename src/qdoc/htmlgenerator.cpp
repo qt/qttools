@@ -1527,11 +1527,6 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
             ++s;
             continue;
         }
-        //out() << "<hr />\n";
-        if (!s->divClass().isEmpty())
-            out() << "<div class=\"" << s->divClass() << "\">\n"; // QTBUG-9504
-        out() << "<h2>" << protectEnc(s->title()) << "</h2>\n";
-
         NodeVector::ConstIterator m = s->members().constBegin();
         while (m != s->members().constEnd()) {
             if ((*m)->access() == Node::Private) { // ### check necessary?
