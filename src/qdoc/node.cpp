@@ -1089,8 +1089,8 @@ Node* Aggregate::findNonfunctionChild(const QString& name, bool (Node::*isMatch)
   Find a function node that is a child of this node, such that
   the function node has the specified \a name and \a parameters.
   If \a parameters is empty but no matching function is found
-  that has no parameters, return the primary function whether
-  it has parameters or not.
+  that has no parameters, return the first non-internal primary
+  function or overload, whether it has parameters or not.
  */
 FunctionNode *Aggregate::findFunctionChild(const QString &name, const Parameters &parameters)
 {
@@ -1118,7 +1118,14 @@ FunctionNode *Aggregate::findFunctionChild(const QString &name, const Parameters
         }
         fn = fn->nextOverload();
     }
-    return parameters.isEmpty() ? i.value() : nullptr;
+
+    if (parameters.isEmpty()) {
+        for (fn = i.value(); fn != nullptr; fn = fn->nextOverload())
+            if (!fn->isInternal())
+                return fn;
+        return i.value();
+    }
+    return nullptr;
 }
 
 /*!
@@ -1201,10 +1208,28 @@ void Aggregate::normalizeOverloads()
         }
         int count = 0;
         fn->setOverloadNumber(0);
-        fn = fn->nextOverload();
+        FunctionNode *internalFn = nullptr;
         while (fn != nullptr) {
-            fn->setOverloadNumber(++count);
-            fn = fn->nextOverload();
+            FunctionNode *next = fn->nextOverload();
+            if (next) {
+                if (next->isInternal()) {
+                    // internal overloads are moved to a separate list
+                    // and processed last
+                    fn->setNextOverload(next->nextOverload());
+                    next->setNextOverload(internalFn);
+                    internalFn = next;
+                } else {
+                    next->setOverloadNumber(++count);
+                }
+                fn = fn->nextOverload();
+            } else {
+                fn->setNextOverload(internalFn);
+                break;
+            }
+        }
+        while (internalFn) {
+            internalFn->setOverloadNumber(++count);
+            internalFn = internalFn->nextOverload();
         }
         ++i; // process next function in function map.
     }
@@ -2370,7 +2395,7 @@ void FunctionNode::appendOverload(FunctionNode *fn)
 
 /*!
   This function assumes that this FunctionNode is marked as an
-  overlaod function. It asks if the next overload is marked as
+  overload function. It asks if the next overload is marked as
   an overload. If not, then remove that FunctionNode from the
   overload list and return it. Otherwise call this function
   recursively for the next overload.

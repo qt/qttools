@@ -37,6 +37,10 @@
 #include <cstdlib>
 #include <iostream>
 
+#ifdef Q_OS_UNIX
+#include <sys/wait.h>
+#endif
+
 class FMT {
     Q_DECLARE_TR_FUNCTIONS(Linguist)
 };
