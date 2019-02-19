@@ -110,6 +110,11 @@ PreferencesDialog::PreferencesDialog(QWidget *parent)
         connect(m_ui.filterRemoveButton, &QAbstractButton::clicked,
                 this, &PreferencesDialog::removeFilterClicked);
 
+        m_ui.componentWidget->setNoOptionText(tr("No Component"));
+        m_ui.componentWidget->setInvalidOptionText(tr("Invalid Component"));
+        m_ui.versionWidget->setNoOptionText(tr("No Version"));
+        m_ui.versionWidget->setInvalidOptionText(tr("Invalid Version"));
+
         updateFilterPage();
     }
 
