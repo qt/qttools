@@ -220,7 +220,9 @@ private:
     bool createTables(QSqlQuery *query);
     void closeDB();
     bool recreateIndexAndNamespaceFilterTables(QSqlQuery *query);
-    bool registerIndexAndNamespaceFilterTables(const QString &nameSpace);
+    bool registerIndexAndNamespaceFilterTables(const QString &nameSpace,
+                                               bool createDefaultVersionFilter = false);
+    void createVersionFilter(const QString &version);
     bool registerFilterAttributes(const QList<QStringList> &attributeSets, int nsId);
     bool registerFileAttributeSets(const QList<QStringList> &attributeSets, int nsId);
     bool registerIndexTable(const QHelpDBReader::IndexTable &indexTable,

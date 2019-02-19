@@ -214,7 +214,7 @@ bool QHelpCollectionHandler::openCollectionFile()
     const FileInfoList &docList = registeredDocumentations();
     if (indexAndNamespaceFilterTablesMissing) {
         for (const QHelpCollectionHandler::FileInfo &info : docList) {
-            if (!registerIndexAndNamespaceFilterTables(info.namespaceName)) {
+            if (!registerIndexAndNamespaceFilterTables(info.namespaceName, true)) {
                 emit error(tr("Cannot register index tables in file %1.").arg(collectionFile()));
                 return false;
             }
@@ -1915,7 +1915,8 @@ bool QHelpCollectionHandler::registerVersion(const QString &version, int namespa
     return m_query->exec();
 }
 
-bool QHelpCollectionHandler::registerIndexAndNamespaceFilterTables(const QString &nameSpace)
+bool QHelpCollectionHandler::registerIndexAndNamespaceFilterTables(
+        const QString &nameSpace, bool createDefaultVersionFilter)
 {
     if (!isDBOpened())
         return false;
@@ -1952,7 +1953,24 @@ bool QHelpCollectionHandler::registerIndexAndNamespaceFilterTables(const QString
     if (!registerIndexTable(reader.indexTable(), nsId, vfId, fileName))
         return false;
 
+    if (createDefaultVersionFilter)
+        createVersionFilter(reader.version());
+
     return true;
+}
+
+void QHelpCollectionHandler::createVersionFilter(const QString &version)
+{
+    if (version.isEmpty())
+        return;
+
+    const QString filterName = tr("Version %1").arg(version);
+    if (filters().contains(filterName))
+        return;
+
+    QHelpFilterData filterData;
+    filterData.setVersions(QStringList() << version);
+    setFilterData(filterName, filterData);
 }
 
 bool QHelpCollectionHandler::registerIndexTable(const QHelpDBReader::IndexTable &indexTable,
