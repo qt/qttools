@@ -335,6 +335,9 @@ void PreferencesDialog::renameFilterClicked()
     const QHelpFilterData oldFilterData = m_currentSetup.m_filterToData.value(currentFilter);
     removeFilter(currentFilter);
     addFilter(newFilterName, oldFilterData);
+
+    if (m_currentSetup.m_currentFilter == currentFilter)
+        m_currentSetup.m_currentFilter = newFilterName;
 }
 
 void PreferencesDialog::removeFilterClicked()
@@ -352,6 +355,9 @@ void PreferencesDialog::removeFilterClicked()
     }
 
     removeFilter(currentFilter);
+
+    if (m_currentSetup.m_currentFilter == currentFilter)
+        m_currentSetup.m_currentFilter.clear();
 }
 
 void PreferencesDialog::addFilter(const QString &filterName,
@@ -524,10 +530,13 @@ void PreferencesDialog::applyChanges()
         changed = true;
     }
 
-    // in order to update the filtercombobox and indexwidget
-    // according to the new filter configuration
-    if (changed)
+    if (changed) {
+        helpEngine.filterEngine()->setActiveFilter(m_currentSetup.m_currentFilter);
+
+        // In order to update the filtercombobox and indexwidget
+        // according to the new filter configuration.
         helpEngine.setupData();
+    }
 
     helpEngine.setShowTabs(m_ui.showTabs->isChecked());
     if (m_showTabs != m_ui.showTabs->isChecked())
