@@ -265,7 +265,8 @@ void PreviewConfigurationWidget::PreviewConfigurationWidgetPrivate::storeSetting
 int  PreviewConfigurationWidget::PreviewConfigurationWidgetPrivate::browseSkin()
 {
     QFileDialog dlg(m_parent);
-    dlg.setFileMode(QFileDialog::DirectoryOnly);
+    dlg.setFileMode(QFileDialog::Directory);
+    dlg.setOption(QFileDialog::ShowDirsOnly);
     const QString title = tr("Load Custom Device Skin");
     dlg.setWindowTitle(title);
     dlg.setNameFilter(tr("All QVFB Skins (*.%1)").arg(QLatin1String(skinExtensionC)));
