@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2018 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Assistant of the Qt Toolkit.
@@ -37,7 +37,7 @@
 **
 ****************************************************************************/
 
-#include "qhelpcollectiondetails.h"
+#include "qcompressedhelpinfo.h"
 
 #include "qhelpdbreader_p.h"
 
@@ -45,17 +45,17 @@
 
 QT_BEGIN_NAMESPACE
 
-class QHelpCollectionDetailsPrivate : public QSharedData
+class QCompressedHelpInfoPrivate : public QSharedData
 {
 public:
-    QHelpCollectionDetailsPrivate() = default;
-    QHelpCollectionDetailsPrivate(const QHelpCollectionDetailsPrivate &other)
+    QCompressedHelpInfoPrivate() = default;
+    QCompressedHelpInfoPrivate(const QCompressedHelpInfoPrivate &other)
         : QSharedData(other)
         , m_namespaceName(other.m_namespaceName)
         , m_component(other.m_component)
         , m_version(other.m_version)
     { }
-    ~QHelpCollectionDetailsPrivate() = default;
+    ~QCompressedHelpInfoPrivate() = default;
 
     QString m_namespaceName;
     QString m_component;
@@ -63,10 +63,10 @@ public:
 };
 
 /*!
-    \class QHelpCollectionDetails
+    \class QCompressedHelpInfo
     \since 5.13
     \inmodule QtHelp
-    \brief The QHelpCollectionDetails class provides access to
+    \brief The QCompressedHelpInfo class provides access to
     the details about a compressed help file.
 
     The detailed information about the compressed
@@ -85,43 +85,43 @@ public:
 /*!
     Constructs empty information about a compressed help file.
 */
-QHelpCollectionDetails::QHelpCollectionDetails()
-    : d(new QHelpCollectionDetailsPrivate)
+QCompressedHelpInfo::QCompressedHelpInfo()
+    : d(new QCompressedHelpInfoPrivate)
 {
 }
 
 /*!
     Constructs a copy of \a other.
 */
-QHelpCollectionDetails::QHelpCollectionDetails(const QHelpCollectionDetails &) = default;
+QCompressedHelpInfo::QCompressedHelpInfo(const QCompressedHelpInfo &) = default;
 
 /*!
-    Move-constructs a QHelpCollectionDetails instance,
+    Move-constructs a QCompressedHelpInfo instance,
     making it point to the same object that \a other was pointing to,
     so that it contains the information the \a other used to contain.
 */
-QHelpCollectionDetails::QHelpCollectionDetails(QHelpCollectionDetails &&) = default;
+QCompressedHelpInfo::QCompressedHelpInfo(QCompressedHelpInfo &&) = default;
 
 /*!
-    Destroys the QHelpCollectionDetails.
+    Destroys the QCompressedHelpInfo.
 */
-QHelpCollectionDetails::~QHelpCollectionDetails() = default;
+QCompressedHelpInfo::~QCompressedHelpInfo() = default;
 
 /*!
     Makes this QHelpCollectionDetails into a copy of \a other, so the two
     are identical, and returns a reference to this QHelpCollectionDetails.
 */
-QHelpCollectionDetails &QHelpCollectionDetails::operator=(const QHelpCollectionDetails &) = default;
+QCompressedHelpInfo &QCompressedHelpInfo::operator=(const QCompressedHelpInfo &) = default;
 
 /*!
-    Move-assigns \a other to this QHelpCollectionDetails instance.
+    Move-assigns \a other to this QCompressedHelpInfo instance.
 */
-QHelpCollectionDetails &QHelpCollectionDetails::operator=(QHelpCollectionDetails &&) = default;
+QCompressedHelpInfo &QCompressedHelpInfo::operator=(QCompressedHelpInfo &&) = default;
 
 /*!
     Returns the namespace name of the compressed help file.
 */
-QString QHelpCollectionDetails::namespaceName() const
+QString QCompressedHelpInfo::namespaceName() const
 {
     return d->m_namespaceName;
 }
@@ -129,7 +129,7 @@ QString QHelpCollectionDetails::namespaceName() const
 /*!
     Returns the component of the compressed help file.
 */
-QString QHelpCollectionDetails::component() const
+QString QCompressedHelpInfo::component() const
 {
     return d->m_component;
 }
@@ -137,28 +137,28 @@ QString QHelpCollectionDetails::component() const
 /*!
     Returns the version of the compressed help file.
 */
-QString QHelpCollectionDetails::version() const
+QString QCompressedHelpInfo::version() const
 {
     return d->m_version;
 }
 
 /*!
-    Returns the QHelpCollectionDetails instance for the
+    Returns the QCompressedHelpInfo instance for the
     \a documentationFileName of the existing qch file.
 */
-QHelpCollectionDetails QHelpCollectionDetails::fromCompressedHelpFile(const QString &documentationFileName)
+QCompressedHelpInfo QCompressedHelpInfo::fromCompressedHelpFile(const QString &documentationFileName)
 {
     QHelpDBReader reader(documentationFileName,
-        QHelpGlobal::uniquifyConnectionName(QLatin1String("GetHelpDetails"),
+        QHelpGlobal::uniquifyConnectionName(QLatin1String("GetCompressedHelpInfo"),
         QThread::currentThread()), nullptr);
     if (reader.init()) {
-        QHelpCollectionDetails details;
-        details.d->m_namespaceName = reader.namespaceName();
-        details.d->m_component = reader.virtualFolder();
-        details.d->m_version = reader.version();
-        return details;
+        QCompressedHelpInfo info;
+        info.d->m_namespaceName = reader.namespaceName();
+        info.d->m_component = reader.virtualFolder();
+        info.d->m_version = reader.version();
+        return info;
     }
-    return QHelpCollectionDetails();
+    return QCompressedHelpInfo();
 }
 
 QT_END_NAMESPACE

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2018 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Assistant of the Qt Toolkit.
@@ -37,8 +37,8 @@
 **
 ****************************************************************************/
 
-#ifndef QHELPCOLLECTIONDETAILS_H
-#define QHELPCOLLECTIONDETAILS_H
+#ifndef QCOMPRESSEDHELPINFO_H
+#define QCOMPRESSEDHELPINFO_H
 
 #include <QtHelp/qhelp_global.h>
 
@@ -46,27 +46,27 @@
 
 QT_BEGIN_NAMESPACE
 
-class QHelpCollectionDetailsPrivate;
+class QCompressedHelpInfoPrivate;
 
-class QHELP_EXPORT QHelpCollectionDetails
+class QHELP_EXPORT QCompressedHelpInfo
 {
 public:
-    QHelpCollectionDetails();
-    QHelpCollectionDetails(const QHelpCollectionDetails &other);
-    QHelpCollectionDetails(QHelpCollectionDetails &&other);
-    virtual ~QHelpCollectionDetails();
+    QCompressedHelpInfo();
+    QCompressedHelpInfo(const QCompressedHelpInfo &other);
+    QCompressedHelpInfo(QCompressedHelpInfo &&other);
+    virtual ~QCompressedHelpInfo();
 
-    QHelpCollectionDetails &operator=(const QHelpCollectionDetails &other);
-    QHelpCollectionDetails &operator=(QHelpCollectionDetails &&other);
+    QCompressedHelpInfo &operator=(const QCompressedHelpInfo &other);
+    QCompressedHelpInfo &operator=(QCompressedHelpInfo &&other);
 
     QString namespaceName() const;
     QString component() const;
     QString version() const;
 
-    static QHelpCollectionDetails fromCompressedHelpFile(const QString &documentationFileName);
+    static QCompressedHelpInfo fromCompressedHelpFile(const QString &documentationFileName);
 
 private:
-    QSharedDataPointer<QHelpCollectionDetailsPrivate> d;
+    QSharedDataPointer<QCompressedHelpInfoPrivate> d;
 };
 
 QT_END_NAMESPACE

@@ -36,10 +36,10 @@
 #include <QtGui/QFontDatabase>
 #include <QtWidgets/QMessageBox>
 
+#include <QtHelp/QCompressedHelpInfo>
 #include <QtHelp/QHelpEngineCore>
 #include <QtHelp/QHelpFilterData>
 #include <QtHelp/QHelpFilterEngine>
-#include <QtHelp/QHelpCollectionDetails>
 
 #include <QtWidgets/QFileDialog>
 
@@ -398,8 +398,8 @@ void PreferencesDialog::addDocumentation()
     bool added = false;
 
     for (const QString &fileName : fileNames) {
-        const QHelpCollectionDetails details = QHelpCollectionDetails::fromCompressedHelpFile(fileName);
-        const QString namespaceName = details.namespaceName();
+        const QCompressedHelpInfo info = QCompressedHelpInfo::fromCompressedHelpFile(fileName);
+        const QString namespaceName = info.namespaceName();
 
         if (m_currentSetup.m_namespaceToFileName.contains(namespaceName))
             continue;
@@ -407,8 +407,8 @@ void PreferencesDialog::addDocumentation()
         if (m_currentSetup.m_fileNameToNamespace.contains(fileName))
             continue;
 
-        const QString component = details.component();
-        const QString version = details.version();
+        const QString component = info.component();
+        const QString version = info.version();
 
         m_currentSetup.m_namespaceToFileName.insert(namespaceName, fileName);
         m_currentSetup.m_fileNameToNamespace.insert(fileName, namespaceName);
