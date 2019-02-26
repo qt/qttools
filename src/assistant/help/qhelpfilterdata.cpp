@@ -38,6 +38,7 @@
 ****************************************************************************/
 
 #include "qhelpfilterdata.h"
+#include <QtCore/QVersionNumber>
 
 QT_BEGIN_NAMESPACE
 
@@ -53,7 +54,7 @@ public:
     ~QHelpFilterDataPrivate() = default;
 
     QStringList m_components;
-    QStringList m_versions;
+    QList<QVersionNumber> m_versions;
 };
 
 /*!
@@ -128,7 +129,7 @@ void QHelpFilterData::setComponents(const QStringList &components)
     the search results. Only results from versions in the list
     \a versions shall be returned.
 */
-void QHelpFilterData::setVersions(const QStringList &versions)
+void QHelpFilterData::setVersions(const QList<QVersionNumber> &versions)
 {
     d->m_versions = versions;
 }
@@ -146,7 +147,7 @@ QStringList QHelpFilterData::components() const
     Returns the version list that is used for filtering
     the search results.
 */
-QStringList QHelpFilterData::versions() const
+QList<QVersionNumber> QHelpFilterData::versions() const
 {
     return d->m_versions;
 }

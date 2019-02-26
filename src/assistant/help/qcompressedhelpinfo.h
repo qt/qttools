@@ -46,6 +46,7 @@
 
 QT_BEGIN_NAMESPACE
 
+class QVersionNumber;
 class QCompressedHelpInfoPrivate;
 
 class QHELP_EXPORT QCompressedHelpInfo
@@ -61,7 +62,7 @@ public:
 
     QString namespaceName() const;
     QString component() const;
-    QString version() const;
+    QVersionNumber version() const;
 
     static QCompressedHelpInfo fromCompressedHelpFile(const QString &documentationFileName);
 

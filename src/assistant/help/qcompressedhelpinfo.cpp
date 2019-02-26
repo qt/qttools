@@ -42,6 +42,7 @@
 #include "qhelpdbreader_p.h"
 
 #include <QtCore/QThread>
+#include <QtCore/QVersionNumber>
 
 QT_BEGIN_NAMESPACE
 
@@ -59,7 +60,7 @@ public:
 
     QString m_namespaceName;
     QString m_component;
-    QString m_version;
+    QVersionNumber m_version;
 };
 
 /*!
@@ -137,7 +138,7 @@ QString QCompressedHelpInfo::component() const
 /*!
     Returns the version of the compressed help file.
 */
-QString QCompressedHelpInfo::version() const
+QVersionNumber QCompressedHelpInfo::version() const
 {
     return d->m_version;
 }
@@ -155,7 +156,7 @@ QCompressedHelpInfo QCompressedHelpInfo::fromCompressedHelpFile(const QString &d
         QCompressedHelpInfo info;
         info.d->m_namespaceName = reader.namespaceName();
         info.d->m_component = reader.virtualFolder();
-        info.d->m_version = reader.version();
+        info.d->m_version = QVersionNumber::fromString(reader.version());
         return info;
     }
     return QCompressedHelpInfo();

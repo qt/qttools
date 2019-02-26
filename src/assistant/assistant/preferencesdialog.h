@@ -38,19 +38,20 @@ QT_BEGIN_NAMESPACE
 class FontPanel;
 class HelpEngineWrapper;
 class QFileSystemWatcher;
+class QVersionNumber;
 
 struct FilterSetup {
-    QMap<QString, QString>     m_namespaceToComponent;
-    QMap<QString, QStringList> m_componentToNamespace;
+    QMap<QString, QString>            m_namespaceToComponent;
+    QMap<QString, QStringList>        m_componentToNamespace;
 
-    QMap<QString, QString>     m_namespaceToVersion;
-    QMap<QString, QStringList> m_versionToNamespace;
+    QMap<QString, QVersionNumber>     m_namespaceToVersion;
+    QMap<QVersionNumber, QStringList> m_versionToNamespace;
 
-    QMap<QString, QString>     m_namespaceToFileName;
-    QMap<QString, QString>     m_fileNameToNamespace;
+    QMap<QString, QString>            m_namespaceToFileName;
+    QMap<QString, QString>            m_fileNameToNamespace;
 
-    QMap<QString, QHelpFilterData> m_filterToData;
-    QString                        m_currentFilter;
+    QMap<QString, QHelpFilterData>    m_filterToData;
+    QString                           m_currentFilter;
 };
 
 class PreferencesDialog : public QDialog

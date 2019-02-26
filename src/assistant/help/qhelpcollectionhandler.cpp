@@ -615,9 +615,9 @@ QMap<QString, QString> QHelpCollectionHandler::namespaceToComponent() const
     return result;
 }
 
-QMap<QString, QString> QHelpCollectionHandler::namespaceToVersion() const
+QMap<QString, QVersionNumber> QHelpCollectionHandler::namespaceToVersion() const
 {
-    QMap<QString, QString> result;
+    QMap<QString, QVersionNumber> result;
     if (m_query) {
         m_query->exec(QLatin1String("SELECT "
                                         "NamespaceTable.Name, "
@@ -625,8 +625,10 @@ QMap<QString, QString> QHelpCollectionHandler::namespaceToVersion() const
                                     "FROM NamespaceTable, "
                                         "VersionTable "
                                     "WHERE NamespaceTable.Id = VersionTable.NamespaceId"));
-        while (m_query->next())
-            result.insert(m_query->value(0).toString(), m_query->value(1).toString());
+        while (m_query->next()) {
+            result.insert(m_query->value(0).toString(),
+                QVersionNumber::fromString(m_query->value(1).toString()));
+        }
     }
     return result;
 }
@@ -634,7 +636,7 @@ QMap<QString, QString> QHelpCollectionHandler::namespaceToVersion() const
 QHelpFilterData QHelpCollectionHandler::filterData(const QString &filterName) const
 {
     QStringList components;
-    QStringList versions;
+    QList<QVersionNumber> versions;
     if (m_query) {
         m_query->prepare(QLatin1String("SELECT ComponentFilter.ComponentName "
                                        "FROM ComponentFilter, Filter "
@@ -654,7 +656,7 @@ QHelpFilterData QHelpCollectionHandler::filterData(const QString &filterName) co
         m_query->bindValue(0, filterName);
         m_query->exec();
         while (m_query->next())
-            versions.append(m_query->value(0).toString());
+            versions.append(QVersionNumber::fromString(m_query->value(0).toString()));
 
     }
     QHelpFilterData data;
@@ -694,8 +696,8 @@ bool QHelpCollectionHandler::setFilterData(const QString &filterName,
         return false;
 
     filterIdList.clear();
-    for (const QString &version : filterData.versions()) {
-        versionList.append(version);
+    for (const QVersionNumber &version : filterData.versions()) {
+        versionList.append(version.isNull() ? QString() : version.toString());
         filterIdList.append(filterId);
     }
 
@@ -1966,12 +1968,16 @@ void QHelpCollectionHandler::createVersionFilter(const QString &version)
     if (version.isEmpty())
         return;
 
+    const QVersionNumber versionNumber = QVersionNumber::fromString(version);
+    if (versionNumber.isNull())
+        return;
+
     const QString filterName = tr("Version %1").arg(version);
     if (filters().contains(filterName))
         return;
 
     QHelpFilterData filterData;
-    filterData.setVersions(QStringList() << version);
+    filterData.setVersions(QList<QVersionNumber>() << versionNumber);
     setFilterData(filterName, filterData);
 }
 

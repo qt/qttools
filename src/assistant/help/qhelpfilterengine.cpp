@@ -44,6 +44,7 @@
 #include "qhelpcollectionhandler_p.h"
 
 #include <QtCore/QThread>
+#include <QtCore/QVersionNumber>
 
 QT_BEGIN_NAMESPACE
 
@@ -173,10 +174,11 @@ QMap<QString, QString> QHelpFilterEngine::namespaceToComponent() const
     Returns the map of all the available namespaces as keys
     together with their associated versions as values.
 */
-QMap<QString, QString> QHelpFilterEngine::namespaceToVersion() const
+QMap<QString, QVersionNumber> QHelpFilterEngine::namespaceToVersion() const
 {
     if (!d->setup())
-        return QMap<QString, QString>();
+        return QMap<QString, QVersionNumber>();
+
     return d->m_collectionHandler->namespaceToVersion();
 }
 

@@ -33,6 +33,7 @@
 #include "helpenginewrapper.h"
 #include "openpagesmanager.h"
 
+#include <QtCore/QVersionNumber>
 #include <QtGui/QFontDatabase>
 #include <QtWidgets/QMessageBox>
 
@@ -46,6 +47,22 @@
 #include <QtDebug>
 
 QT_BEGIN_NAMESPACE
+
+static QStringList versionsToStringList(const QList<QVersionNumber> &versions)
+{
+    QStringList versionList;
+    for (const QVersionNumber &version : versions)
+        versionList.append(version.isNull() ? QString() : version.toString());
+    return versionList;
+}
+
+static QList<QVersionNumber> stringListToVersions(const QStringList &versionList)
+{
+    QList<QVersionNumber> versions;
+    for (const QString &versionString : versionList)
+        versions.append(QVersionNumber::fromString(versionString));
+    return versions;
+}
 
 PreferencesDialog::PreferencesDialog(QWidget *parent)
     : QDialog(parent)
@@ -231,8 +248,8 @@ void PreferencesDialog::updateCurrentFilter()
 
     m_ui.componentWidget->setOptions(m_currentSetup.m_componentToNamespace.keys(),
             m_currentSetup.m_filterToData.value(currentFilter).components());
-    m_ui.versionWidget->setOptions(m_currentSetup.m_versionToNamespace.keys(),
-            m_currentSetup.m_filterToData.value(currentFilter).versions());
+    m_ui.versionWidget->setOptions(versionsToStringList(m_currentSetup.m_versionToNamespace.keys()),
+            versionsToStringList(m_currentSetup.m_filterToData.value(currentFilter).versions()));
 }
 
 void PreferencesDialog::updateDocumentationPage()
@@ -274,7 +291,7 @@ void PreferencesDialog::versionsChanged(const QStringList &versions)
     if (currentFilter.isEmpty())
         return;
 
-    m_currentSetup.m_filterToData[currentFilter].setVersions(versions);
+    m_currentSetup.m_filterToData[currentFilter].setVersions(stringListToVersions(versions));
 }
 
 QString PreferencesDialog::suggestedNewFilterName(const QString &initialFilterName) const
@@ -408,7 +425,7 @@ void PreferencesDialog::addDocumentation()
             continue;
 
         const QString component = info.component();
-        const QString version = info.version();
+        const QVersionNumber version = info.version();
 
         m_currentSetup.m_namespaceToFileName.insert(namespaceName, fileName);
         m_currentSetup.m_fileNameToNamespace.insert(fileName, namespaceName);
@@ -445,7 +462,7 @@ void PreferencesDialog::removeDocumentation()
 
         const QString fileName = m_currentSetup.m_namespaceToFileName.value(namespaceName);
         const QString component = m_currentSetup.m_namespaceToComponent.value(namespaceName);
-        const QString version = m_currentSetup.m_namespaceToVersion.value(namespaceName);
+        const QVersionNumber version = m_currentSetup.m_namespaceToVersion.value(namespaceName);
         m_currentSetup.m_namespaceToComponent.remove(namespaceName);
         m_currentSetup.m_namespaceToVersion.remove(namespaceName);
         m_currentSetup.m_namespaceToFileName.remove(namespaceName);

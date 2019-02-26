@@ -48,6 +48,7 @@ QT_BEGIN_NAMESPACE
 
 template <class K, class T>
 class QMap;
+class QVersionNumber;
 
 class QHelpCollectionHandler;
 class QHelpEngineCore;
@@ -59,7 +60,7 @@ class QHELP_EXPORT QHelpFilterEngine : public QObject
     Q_OBJECT
 public:
     QMap<QString, QString> namespaceToComponent() const;
-    QMap<QString, QString> namespaceToVersion() const;
+    QMap<QString, QVersionNumber> namespaceToVersion() const;
 
     QStringList filters() const;
 

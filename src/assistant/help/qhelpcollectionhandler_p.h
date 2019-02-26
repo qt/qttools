@@ -63,6 +63,7 @@
 
 QT_BEGIN_NAMESPACE
 
+class QVersionNumber;
 class QHelpFilterData;
 
 class QHelpCollectionHandler : public QObject
@@ -159,7 +160,7 @@ public:
     QStringList availableComponents() const;
     QStringList availableVersions() const;
     QMap<QString, QString> namespaceToComponent() const;
-    QMap<QString, QString> namespaceToVersion() const;
+    QMap<QString, QVersionNumber> namespaceToVersion() const;
     QHelpFilterData filterData(const QString &filterName) const;
     bool setFilterData(const QString &filterName, const QHelpFilterData &filterData);
     bool removeFilter(const QString &filterName);
