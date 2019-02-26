@@ -78,10 +78,12 @@ QHelpFilterData::QHelpFilterData()
 /*!
     Constructs a copy of \a other.
 */
-QHelpFilterData::QHelpFilterData(const QHelpFilterData &other)
-    : d(other.d)
-{
-}
+QHelpFilterData::QHelpFilterData(const QHelpFilterData &) = default;
+
+/*!
+    Move-constructs a QHelpFilterData instance, making it point at the same object that \a other was pointing to.
+*/
+QHelpFilterData::QHelpFilterData(QHelpFilterData &&) = default;
 
 /*!
     Destroys the filter.
@@ -93,11 +95,13 @@ QHelpFilterData::~QHelpFilterData()
 /*!
     Assigns \a other to this filter and returns a reference to this filter.
 */
-QHelpFilterData &QHelpFilterData::operator=(const QHelpFilterData &other)
-{
-    d = other.d;
-    return *this;
-}
+QHelpFilterData &QHelpFilterData::operator=(const QHelpFilterData &) = default;
+
+
+/*!
+    Move-assigns \a other to this QHelpFilterData instance.
+*/
+QHelpFilterData &QHelpFilterData::operator=(QHelpFilterData &&) = default;
 
 /*!
     Specifies the component list that is used for filtering

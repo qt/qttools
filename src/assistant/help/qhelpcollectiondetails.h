@@ -53,9 +53,11 @@ class QHELP_EXPORT QHelpCollectionDetails
 public:
     QHelpCollectionDetails();
     QHelpCollectionDetails(const QHelpCollectionDetails &other);
+    QHelpCollectionDetails(QHelpCollectionDetails &&other);
     ~QHelpCollectionDetails();
 
     QHelpCollectionDetails &operator=(const QHelpCollectionDetails &other);
+    QHelpCollectionDetails &operator=(QHelpCollectionDetails &&other);
 
     void setNamespaceName(const QString &ns);
     void setComponent(const QString &component);

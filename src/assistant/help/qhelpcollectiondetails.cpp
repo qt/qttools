@@ -67,20 +67,15 @@ QHelpCollectionDetails::QHelpCollectionDetails()
 {
 }
 
-QHelpCollectionDetails::QHelpCollectionDetails(const QHelpCollectionDetails &other)
-    : d(other.d)
-{
-}
+QHelpCollectionDetails::QHelpCollectionDetails(const QHelpCollectionDetails &) = default;
 
-QHelpCollectionDetails::~QHelpCollectionDetails()
-{
-}
+QHelpCollectionDetails::QHelpCollectionDetails(QHelpCollectionDetails &&) = default;
 
-QHelpCollectionDetails &QHelpCollectionDetails::operator=(const QHelpCollectionDetails &other)
-{
-    d = other.d;
-    return *this;
-}
+QHelpCollectionDetails::~QHelpCollectionDetails() = default;
+
+QHelpCollectionDetails &QHelpCollectionDetails::operator=(const QHelpCollectionDetails &) = default;
+
+QHelpCollectionDetails &QHelpCollectionDetails::operator=(QHelpCollectionDetails &&) = default;
 
 void QHelpCollectionDetails::setNamespaceName(const QString &namespaceName)
 {

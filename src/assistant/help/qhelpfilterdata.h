@@ -53,9 +53,11 @@ class QHELP_EXPORT QHelpFilterData
 public:
     QHelpFilterData();
     QHelpFilterData(const QHelpFilterData &other);
+    QHelpFilterData(QHelpFilterData &&other);
     ~QHelpFilterData();
 
     QHelpFilterData &operator=(const QHelpFilterData &other);
+    QHelpFilterData &operator=(QHelpFilterData &&other);
 
     void setComponents(const QStringList &components);
 
