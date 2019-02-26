@@ -62,51 +62,114 @@ public:
     QString m_version;
 };
 
+/*!
+    \class QHelpCollectionDetails
+    \since 5.13
+    \inmodule QtHelp
+    \brief The QHelpCollectionDetails class provides access to
+    the details about a compressed help file.
+
+    The detailed information about the compressed
+    help file can be fetched by calling the fromCompressedHelpFile()
+    static method, providing the path to the compressed
+    help file.
+
+    The class provides access to various information about a compressed help file.
+    The namespace associated with the given compressed help file is
+    namespaceName(), the associated component name is component()
+    and version() provides version information.
+
+    \sa QHelpFilterEngine
+*/
+
+/*!
+    Constructs empty information about a compressed help file.
+*/
 QHelpCollectionDetails::QHelpCollectionDetails()
     : d(new QHelpCollectionDetailsPrivate)
 {
 }
 
+/*!
+    Constructs a copy of \a other.
+*/
 QHelpCollectionDetails::QHelpCollectionDetails(const QHelpCollectionDetails &) = default;
 
+/*!
+    Move-constructs a QHelpCollectionDetails instance,
+    making it point to the same object that \a other was pointing to,
+    so that it contains the information the \a other used to contain.
+*/
 QHelpCollectionDetails::QHelpCollectionDetails(QHelpCollectionDetails &&) = default;
 
+/*!
+    Destroys the QHelpCollectionDetails.
+*/
 QHelpCollectionDetails::~QHelpCollectionDetails() = default;
 
+/*!
+    Makes this QHelpCollectionDetails into a copy of \a other, so the two
+    are identical, and returns a reference to this QHelpCollectionDetails.
+*/
 QHelpCollectionDetails &QHelpCollectionDetails::operator=(const QHelpCollectionDetails &) = default;
 
+/*!
+    Move-assigns \a other to this QHelpCollectionDetails instance.
+*/
 QHelpCollectionDetails &QHelpCollectionDetails::operator=(QHelpCollectionDetails &&) = default;
 
+/*!
+    Specifies the namespace name of the compressed help file.
+*/
 void QHelpCollectionDetails::setNamespaceName(const QString &namespaceName)
 {
     d->m_namespaceName = namespaceName;
 }
 
+/*!
+    Specifies the component of the compressed help file.
+*/
 void QHelpCollectionDetails::setComponent(const QString &component)
 {
     d->m_component = component;
 }
 
+/*!
+    Specifies the version of the compressed help file.
+*/
 void QHelpCollectionDetails::setVersion(const QString &version)
 {
     d->m_version = version;
 }
 
+/*!
+    Returns the namespace name of the compressed help file.
+*/
 QString QHelpCollectionDetails::namespaceName() const
 {
     return d->m_namespaceName;
 }
 
+/*!
+    Returns the component of the compressed help file.
+*/
 QString QHelpCollectionDetails::component() const
 {
     return d->m_component;
 }
 
+/*!
+    Returns the version of the compressed help file.
+*/
 QString QHelpCollectionDetails::version() const
 {
     return d->m_version;
 }
 
+/*!
+    Returns the QHelpCollectionDetails instance for the
+    \a documentationFileName of the existing qch file.
+*/
 QHelpCollectionDetails QHelpCollectionDetails::fromCompressedHelpFile(const QString &documentationFileName)
 {
     QHelpDBReader reader(documentationFileName,
