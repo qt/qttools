@@ -46,7 +46,6 @@
 
 QT_BEGIN_NAMESPACE
 
-class QUrl;
 template <class K, class T>
 class QMap;
 
