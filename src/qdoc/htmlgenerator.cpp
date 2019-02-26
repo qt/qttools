@@ -4587,7 +4587,7 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
         writer.writeAttribute("docUrl", docUrl);
         QStringList proFiles;
         foreach (const QString file, en->files()) {
-            if (file.endsWith(".pro") || file.endsWith(".qmlproject"))
+            if (file.endsWith(".pro") || file.endsWith(".qmlproject") || file.endsWith(".pyproject"))
                 proFiles << file;
         }
         if (!proFiles.isEmpty()) {
@@ -4600,7 +4600,8 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
                 for (int j = 0; j < proFiles.size(); j++)
                 {
                     if (proFiles[j].endsWith(QStringLiteral("%1/%1.pro").arg(exampleName))
-                            || proFiles[j].endsWith(QStringLiteral("%1/%1.qmlproject").arg(exampleName))) {
+                            || proFiles[j].endsWith(QStringLiteral("%1/%1.qmlproject").arg(exampleName))
+                            || proFiles[j].endsWith(QStringLiteral("%1/%1.pyproject").arg(exampleName))) {
                         writer.writeAttribute("projectPath", examplesPath + proFiles[j]);
                         proWithExampleNameFound = true;
                         break;
