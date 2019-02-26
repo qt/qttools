@@ -54,7 +54,7 @@ public:
     QHelpCollectionDetails();
     QHelpCollectionDetails(const QHelpCollectionDetails &other);
     QHelpCollectionDetails(QHelpCollectionDetails &&other);
-    ~QHelpCollectionDetails();
+    virtual ~QHelpCollectionDetails();
 
     QHelpCollectionDetails &operator=(const QHelpCollectionDetails &other);
     QHelpCollectionDetails &operator=(QHelpCollectionDetails &&other);
