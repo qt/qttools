@@ -119,30 +119,6 @@ QHelpCollectionDetails &QHelpCollectionDetails::operator=(const QHelpCollectionD
 QHelpCollectionDetails &QHelpCollectionDetails::operator=(QHelpCollectionDetails &&) = default;
 
 /*!
-    Specifies the namespace name of the compressed help file.
-*/
-void QHelpCollectionDetails::setNamespaceName(const QString &namespaceName)
-{
-    d->m_namespaceName = namespaceName;
-}
-
-/*!
-    Specifies the component of the compressed help file.
-*/
-void QHelpCollectionDetails::setComponent(const QString &component)
-{
-    d->m_component = component;
-}
-
-/*!
-    Specifies the version of the compressed help file.
-*/
-void QHelpCollectionDetails::setVersion(const QString &version)
-{
-    d->m_version = version;
-}
-
-/*!
     Returns the namespace name of the compressed help file.
 */
 QString QHelpCollectionDetails::namespaceName() const
@@ -177,9 +153,9 @@ QHelpCollectionDetails QHelpCollectionDetails::fromCompressedHelpFile(const QStr
         QThread::currentThread()), nullptr);
     if (reader.init()) {
         QHelpCollectionDetails details;
-        details.setNamespaceName(reader.namespaceName());
-        details.setComponent(reader.virtualFolder());
-        details.setVersion(reader.version());
+        details.d->m_namespaceName = reader.namespaceName();
+        details.d->m_component = reader.virtualFolder();
+        details.d->m_version = reader.version();
         return details;
     }
     return QHelpCollectionDetails();

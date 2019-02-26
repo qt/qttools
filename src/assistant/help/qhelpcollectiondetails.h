@@ -59,10 +59,6 @@ public:
     QHelpCollectionDetails &operator=(const QHelpCollectionDetails &other);
     QHelpCollectionDetails &operator=(QHelpCollectionDetails &&other);
 
-    void setNamespaceName(const QString &ns);
-    void setComponent(const QString &component);
-    void setVersion(const QString &version);
-
     QString namespaceName() const;
     QString component() const;
     QString version() const;
