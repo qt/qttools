@@ -91,6 +91,8 @@ static QStringList subtract(const QStringList &minuend, const QStringList &subtr
 
 OptionsWidget::OptionsWidget(QWidget *parent)
     : QWidget(parent)
+    , m_noOptionText(tr("No Option"))
+    , m_invalidOptionText(tr("Invalid Option"))
 {
     m_listWidget = new QListWidget(this);
     m_listWidget->setItemDelegate(new ListWidgetDelegate(m_listWidget));
@@ -137,7 +139,6 @@ void OptionsWidget::setOptions(const QStringList &validOptions,
     }
 
     for (const QString &option : validUnselectedOptions) {
-        // TODO: make No Option text customizable
         appendItem(option, true, false);
         if (option.isEmpty() && validUnselectedOptions.count() > 1) // special No Option item
             appendSeparator();
@@ -154,14 +155,47 @@ QStringList OptionsWidget::selectedOptions() const
     return m_selectedOptions;
 }
 
+void OptionsWidget::setNoOptionText(const QString &text)
+{
+    if (m_noOptionText == text)
+        return;
+
+    m_noOptionText = text;
+
+    // update GUI
+    const auto itEnd = m_optionToItem.constEnd();
+    for (auto it = m_optionToItem.constBegin(); it != itEnd; ++it) {
+        const QString optionName = it.key();
+        if (optionName.isEmpty())
+            it.value()->setText(optionText(optionName, m_validOptions.contains(optionName)));
+    }
+}
+
+void OptionsWidget::setInvalidOptionText(const QString &text)
+{
+    if (m_invalidOptionText == text)
+        return;
+
+    m_invalidOptionText = text;
+
+    // update GUI
+    for (const QString &option : m_invalidOptions)
+        m_optionToItem.value(option)->setText(optionText(option, false));
+}
+
+QString OptionsWidget::optionText(const QString &optionName, bool valid) const
+{
+    QString text = optionName;
+    if (optionName.isEmpty())
+        text = QLatin1Char('[') + m_noOptionText + QLatin1Char(']');
+    if (!valid)
+        text += QLatin1String("\t[") + m_invalidOptionText + QLatin1Char(']');
+    return text;
+}
+
 QListWidgetItem *OptionsWidget::appendItem(const QString &optionName, bool valid, bool selected)
 {
-    QString optionText = optionName;
-    if (optionName.isEmpty())
-        optionText = QLatin1Char('[') + tr("No Option") + QLatin1Char(']');
-    if (!valid)
-        optionText += QLatin1String("\t[") + tr("Invalid Option") + QLatin1Char(']');
-    QListWidgetItem *optionItem = new QListWidgetItem(optionText, m_listWidget);
+    QListWidgetItem *optionItem = new QListWidgetItem(optionText(optionName, valid), m_listWidget);
     optionItem->setCheckState(selected ? Qt::Checked : Qt::Unchecked);
     m_listWidget->insertItem(m_listWidget->count(), optionItem);
     m_optionToItem[optionName] = optionItem;

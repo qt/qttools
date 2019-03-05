@@ -63,6 +63,7 @@
 
 QT_BEGIN_NAMESPACE
 
+class QVersionNumber;
 class QHelpFilterData;
 
 class QHelpCollectionHandler : public QObject
@@ -157,7 +158,9 @@ public:
     QStringList filters() const;
 
     QStringList availableComponents() const;
+    QStringList availableVersions() const;
     QMap<QString, QString> namespaceToComponent() const;
+    QMap<QString, QVersionNumber> namespaceToVersion() const;
     QHelpFilterData filterData(const QString &filterName) const;
     bool setFilterData(const QString &filterName, const QHelpFilterData &filterData);
     bool removeFilter(const QString &filterName);
@@ -218,7 +221,9 @@ private:
     bool createTables(QSqlQuery *query);
     void closeDB();
     bool recreateIndexAndNamespaceFilterTables(QSqlQuery *query);
-    bool registerIndexAndNamespaceFilterTables(const QString &nameSpace);
+    bool registerIndexAndNamespaceFilterTables(const QString &nameSpace,
+                                               bool createDefaultVersionFilter = false);
+    void createVersionFilter(const QString &version);
     bool registerFilterAttributes(const QList<QStringList> &attributeSets, int nsId);
     bool registerFileAttributeSets(const QList<QStringList> &attributeSets, int nsId);
     bool registerIndexTable(const QHelpDBReader::IndexTable &indexTable,

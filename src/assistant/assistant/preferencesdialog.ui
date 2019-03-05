@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>378</width>
+    <width>395</width>
     <height>341</height>
    </rect>
   </property>
@@ -70,15 +70,8 @@
        <string>Filters</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2">
-       <item row="0" column="0">
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>Filter:</string>
-         </property>
-        </widget>
-       </item>
        <item row="0" column="3">
-        <widget class="QLabel" name="label_2">
+        <widget class="QLabel" name="componentsLabel">
          <property name="frameShape">
           <enum>QFrame::NoFrame</enum>
          </property>
@@ -87,11 +80,21 @@
          </property>
         </widget>
        </item>
+       <item row="0" column="4">
+        <widget class="QLabel" name="versionsLabel">
+         <property name="text">
+          <string>Versions:</string>
+         </property>
+        </widget>
+       </item>
        <item row="1" column="0" colspan="3">
         <widget class="QListWidget" name="filterWidget"/>
        </item>
-       <item row="1" column="3">
+       <item row="1" column="3" rowspan="2">
         <widget class="OptionsWidget" name="componentWidget" native="true"/>
+       </item>
+       <item row="1" column="4" rowspan="2">
+        <widget class="OptionsWidget" name="versionWidget" native="true"/>
        </item>
        <item row="2" column="0">
         <widget class="QToolButton" name="filterAddButton">
@@ -111,6 +114,13 @@
         <widget class="QToolButton" name="filterRemoveButton">
          <property name="text">
           <string>Remove</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0" colspan="3">
+        <widget class="QLabel" name="filterLabel">
+         <property name="text">
+          <string>Filter:</string>
          </property>
         </widget>
        </item>

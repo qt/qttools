@@ -33,19 +33,36 @@
 #include "helpenginewrapper.h"
 #include "openpagesmanager.h"
 
+#include <QtCore/QVersionNumber>
 #include <QtGui/QFontDatabase>
 #include <QtWidgets/QMessageBox>
 
+#include <QtHelp/QCompressedHelpInfo>
 #include <QtHelp/QHelpEngineCore>
 #include <QtHelp/QHelpFilterData>
 #include <QtHelp/QHelpFilterEngine>
-#include <QtHelp/QHelpCollectionDetails>
 
 #include <QtWidgets/QFileDialog>
 
 #include <QtDebug>
 
 QT_BEGIN_NAMESPACE
+
+static QStringList versionsToStringList(const QList<QVersionNumber> &versions)
+{
+    QStringList versionList;
+    for (const QVersionNumber &version : versions)
+        versionList.append(version.isNull() ? QString() : version.toString());
+    return versionList;
+}
+
+static QList<QVersionNumber> stringListToVersions(const QStringList &versionList)
+{
+    QList<QVersionNumber> versions;
+    for (const QString &versionString : versionList)
+        versions.append(QVersionNumber::fromString(versionString));
+    return versions;
+}
 
 PreferencesDialog::PreferencesDialog(QWidget *parent)
     : QDialog(parent)
@@ -56,6 +73,16 @@ PreferencesDialog::PreferencesDialog(QWidget *parent)
     , m_hideDocsTab(!helpEngine.documentationManagerEnabled())
 {
     m_ui.setupUi(this);
+
+    QString resourcePath = QLatin1String(":/qt-project.org/assistant/images/");
+#ifdef Q_OS_MACOS
+    resourcePath.append(QLatin1String("mac"));
+#else
+    resourcePath.append(QLatin1String("win"));
+#endif
+
+    m_ui.filterAddButton->setIcon(QIcon(resourcePath + QLatin1String("/plus.png")));
+    m_ui.filterRemoveButton->setIcon(QIcon(resourcePath + QLatin1String("/minus.png")));
 
     // TODO: filter docs via lineedit
 
@@ -85,6 +112,8 @@ PreferencesDialog::PreferencesDialog(QWidget *parent)
     } else {
         connect(m_ui.componentWidget, &OptionsWidget::optionSelectionChanged,
                 this, &PreferencesDialog::componentsChanged);
+        connect(m_ui.versionWidget, &OptionsWidget::optionSelectionChanged,
+                this, &PreferencesDialog::versionsChanged);
         connect(m_ui.filterWidget, &QListWidget::currentItemChanged,
                 this, &PreferencesDialog::filterSelected);
         connect(m_ui.filterWidget, &QListWidget::itemDoubleClicked,
@@ -97,6 +126,11 @@ PreferencesDialog::PreferencesDialog(QWidget *parent)
                 this, &PreferencesDialog::renameFilterClicked);
         connect(m_ui.filterRemoveButton, &QAbstractButton::clicked,
                 this, &PreferencesDialog::removeFilterClicked);
+
+        m_ui.componentWidget->setNoOptionText(tr("No Component"));
+        m_ui.componentWidget->setInvalidOptionText(tr("Invalid Component"));
+        m_ui.versionWidget->setNoOptionText(tr("No Version"));
+        m_ui.versionWidget->setInvalidOptionText(tr("Invalid Version"));
 
         updateFilterPage();
     }
@@ -138,6 +172,7 @@ FilterSetup PreferencesDialog::readOriginalSetup() const
     FilterSetup filterSetup;
 
     filterSetup.m_namespaceToComponent = helpEngine.filterEngine()->namespaceToComponent();
+    filterSetup.m_namespaceToVersion = helpEngine.filterEngine()->namespaceToVersion();
     for (auto it = filterSetup.m_namespaceToComponent.constBegin();
          it != filterSetup.m_namespaceToComponent.constEnd(); ++it) {
         const QString namespaceName = it.key();
@@ -146,9 +181,16 @@ FilterSetup PreferencesDialog::readOriginalSetup() const
         filterSetup.m_fileNameToNamespace.insert(namespaceFileName, namespaceName);
         filterSetup.m_componentToNamespace[it.value()].append(namespaceName);
     }
+    for (auto it = filterSetup.m_namespaceToVersion.constBegin();
+         it != filterSetup.m_namespaceToVersion.constEnd(); ++it) {
+        filterSetup.m_versionToNamespace[it.value()].append(it.key());
+    }
+
     const QStringList allFilters = helpEngine.filterEngine()->filters();
     for (const QString &filter : allFilters)
-        filterSetup.m_filterToComponents.insert(filter, helpEngine.filterEngine()->filterData(filter).components());
+        filterSetup.m_filterToData.insert(filter, helpEngine.filterEngine()->filterData(filter));
+
+    filterSetup.m_currentFilter = helpEngine.filterEngine()->activeFilter();
 
     return filterSetup;
 }
@@ -164,16 +206,19 @@ void PreferencesDialog::updateFilterPage()
     if (m_hideFiltersTab)
         return;
 
-    const QString &currentFilter = m_itemToFilter.value(m_ui.filterWidget->currentItem());
+    QString currentFilter = m_itemToFilter.value(m_ui.filterWidget->currentItem());
+    if (currentFilter.isEmpty())
+        currentFilter = m_currentSetup.m_currentFilter;
 
     m_currentSetup = m_originalSetup;
 
     m_ui.filterWidget->clear();
     m_ui.componentWidget->clear();
+    m_ui.versionWidget->clear();
     m_itemToFilter.clear();
     m_filterToItem.clear();
 
-    for (const QString &filterName : m_currentSetup.m_filterToComponents.keys()) {
+    for (const QString &filterName : m_currentSetup.m_filterToData.keys()) {
         QListWidgetItem *item = new QListWidgetItem(filterName);
         m_ui.filterWidget->addItem(item);
         m_itemToFilter.insert(item, filterName);
@@ -197,11 +242,14 @@ void PreferencesDialog::updateCurrentFilter()
 
     const bool filterSelected = !currentFilter.isEmpty();
     m_ui.componentWidget->setEnabled(filterSelected);
+    m_ui.versionWidget->setEnabled(filterSelected);
     m_ui.filterRenameButton->setEnabled(filterSelected);
     m_ui.filterRemoveButton->setEnabled(filterSelected);
 
     m_ui.componentWidget->setOptions(m_currentSetup.m_componentToNamespace.keys(),
-                                     m_currentSetup.m_filterToComponents.value(currentFilter));
+            m_currentSetup.m_filterToData.value(currentFilter).components());
+    m_ui.versionWidget->setOptions(versionsToStringList(m_currentSetup.m_versionToNamespace.keys()),
+            versionsToStringList(m_currentSetup.m_filterToData.value(currentFilter).versions()));
 }
 
 void PreferencesDialog::updateDocumentationPage()
@@ -234,7 +282,16 @@ void PreferencesDialog::componentsChanged(const QStringList &components)
     if (currentFilter.isEmpty())
         return;
 
-    m_currentSetup.m_filterToComponents[currentFilter] = components;
+    m_currentSetup.m_filterToData[currentFilter].setComponents(components);
+}
+
+void PreferencesDialog::versionsChanged(const QStringList &versions)
+{
+    const QString &currentFilter = m_itemToFilter.value(m_ui.filterWidget->currentItem());
+    if (currentFilter.isEmpty())
+        return;
+
+    m_currentSetup.m_filterToData[currentFilter].setVersions(stringListToVersions(versions));
 }
 
 QString PreferencesDialog::suggestedNewFilterName(const QString &initialFilterName) const
@@ -284,7 +341,7 @@ void PreferencesDialog::addFilterClicked()
     if (newFilterName.isEmpty())
         return;
 
-    addFilter(newFilterName, QStringList());
+    addFilter(newFilterName);
 }
 
 void PreferencesDialog::renameFilterClicked()
@@ -297,9 +354,12 @@ void PreferencesDialog::renameFilterClicked()
     if (newFilterName.isEmpty())
         return;
 
-    const QStringList oldComponents = m_currentSetup.m_filterToComponents.value(currentFilter);
+    const QHelpFilterData oldFilterData = m_currentSetup.m_filterToData.value(currentFilter);
     removeFilter(currentFilter);
-    addFilter(newFilterName, oldComponents);
+    addFilter(newFilterName, oldFilterData);
+
+    if (m_currentSetup.m_currentFilter == currentFilter)
+        m_currentSetup.m_currentFilter = newFilterName;
 }
 
 void PreferencesDialog::removeFilterClicked()
@@ -317,12 +377,16 @@ void PreferencesDialog::removeFilterClicked()
     }
 
     removeFilter(currentFilter);
+
+    if (m_currentSetup.m_currentFilter == currentFilter)
+        m_currentSetup.m_currentFilter.clear();
 }
 
-void PreferencesDialog::addFilter(const QString &filterName, const QStringList &components)
+void PreferencesDialog::addFilter(const QString &filterName,
+                                  const QHelpFilterData &filterData)
 {
     QListWidgetItem *item = new QListWidgetItem(filterName);
-    m_currentSetup.m_filterToComponents.insert(filterName, components);
+    m_currentSetup.m_filterToData.insert(filterName, filterData);
     m_filterToItem.insert(filterName, item);
     m_itemToFilter.insert(item, filterName);
     m_ui.filterWidget->insertItem(m_filterToItem.keys().indexOf(filterName), item);
@@ -338,7 +402,7 @@ void PreferencesDialog::removeFilter(const QString &filterName)
     m_filterToItem.remove(filterName);
     delete item;
 
-    m_currentSetup.m_filterToComponents.remove(filterName);
+    m_currentSetup.m_filterToData.remove(filterName);
 }
 
 void PreferencesDialog::addDocumentation()
@@ -351,8 +415,8 @@ void PreferencesDialog::addDocumentation()
     bool added = false;
 
     for (const QString &fileName : fileNames) {
-        const QHelpCollectionDetails details = QHelpCollectionDetails::helpDetails(fileName);
-        const QString namespaceName = details.namespaceName();
+        const QCompressedHelpInfo info = QCompressedHelpInfo::fromCompressedHelpFile(fileName);
+        const QString namespaceName = info.namespaceName();
 
         if (m_currentSetup.m_namespaceToFileName.contains(namespaceName))
             continue;
@@ -360,12 +424,17 @@ void PreferencesDialog::addDocumentation()
         if (m_currentSetup.m_fileNameToNamespace.contains(fileName))
             continue;
 
-        const QString component = details.component();
+        const QString component = info.component();
+        const QVersionNumber version = info.version();
+
         m_currentSetup.m_namespaceToFileName.insert(namespaceName, fileName);
         m_currentSetup.m_fileNameToNamespace.insert(fileName, namespaceName);
 
         m_currentSetup.m_namespaceToComponent.insert(namespaceName, component);
         m_currentSetup.m_componentToNamespace[component].append(namespaceName);
+
+        m_currentSetup.m_namespaceToVersion.insert(namespaceName, version);
+        m_currentSetup.m_versionToNamespace[version].append(namespaceName);
 
         QListWidgetItem *item = new QListWidgetItem(namespaceName);
         m_namespaceToItem.insert(namespaceName, item);
@@ -393,12 +462,17 @@ void PreferencesDialog::removeDocumentation()
 
         const QString fileName = m_currentSetup.m_namespaceToFileName.value(namespaceName);
         const QString component = m_currentSetup.m_namespaceToComponent.value(namespaceName);
+        const QVersionNumber version = m_currentSetup.m_namespaceToVersion.value(namespaceName);
         m_currentSetup.m_namespaceToComponent.remove(namespaceName);
+        m_currentSetup.m_namespaceToVersion.remove(namespaceName);
         m_currentSetup.m_namespaceToFileName.remove(namespaceName);
         m_currentSetup.m_fileNameToNamespace.remove(fileName);
         m_currentSetup.m_componentToNamespace[component].removeOne(namespaceName);
         if (m_currentSetup.m_componentToNamespace[component].isEmpty())
             m_currentSetup.m_componentToNamespace.remove(component);
+        m_currentSetup.m_versionToNamespace[version].removeOne(namespaceName);
+        if (m_currentSetup.m_versionToNamespace[version].isEmpty())
+            m_currentSetup.m_versionToNamespace.remove(version);
     }
 
     updateCurrentFilter();
@@ -457,12 +531,12 @@ void PreferencesDialog::applyChanges()
         changed = true;
     }
 
-    const QMap<QString, QStringList> filtersToRemove = subtract(
-                m_originalSetup.m_filterToComponents,
-                m_currentSetup.m_filterToComponents);
-    const QMap<QString, QStringList> filtersToAdd = subtract(
-                m_currentSetup.m_filterToComponents,
-                m_originalSetup.m_filterToComponents);
+    const QMap<QString, QHelpFilterData> filtersToRemove = subtract(
+                m_originalSetup.m_filterToData,
+                m_currentSetup.m_filterToData);
+    const QMap<QString, QHelpFilterData> filtersToAdd = subtract(
+                m_currentSetup.m_filterToData,
+                m_originalSetup.m_filterToData);
 
     const QString &currentFilter = helpEngine.filterEngine()->activeFilter();
 
@@ -474,16 +548,17 @@ void PreferencesDialog::applyChanges()
     }
 
     for (auto it = filtersToAdd.cbegin(); it != filtersToAdd.cend(); ++it) {
-        QHelpFilterData data;
-        data.setComponents(it.value());
-        helpEngine.filterEngine()->setFilterData(it.key(), data);
+        helpEngine.filterEngine()->setFilterData(it.key(), it.value());
         changed = true;
     }
 
-    // in order to update the filtercombobox and indexwidget
-    // according to the new filter configuration
-    if (changed)
+    if (changed) {
+        helpEngine.filterEngine()->setActiveFilter(m_currentSetup.m_currentFilter);
+
+        // In order to update the filtercombobox and indexwidget
+        // according to the new filter configuration.
         helpEngine.setupData();
+    }
 
     helpEngine.setShowTabs(m_ui.showTabs->isChecked());
     if (m_showTabs != m_ui.showTabs->isChecked())

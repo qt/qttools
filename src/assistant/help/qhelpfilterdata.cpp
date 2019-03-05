@@ -38,6 +38,7 @@
 ****************************************************************************/
 
 #include "qhelpfilterdata.h"
+#include <QtCore/QVersionNumber>
 
 QT_BEGIN_NAMESPACE
 
@@ -48,10 +49,12 @@ public:
     QHelpFilterDataPrivate(const QHelpFilterDataPrivate &other)
         : QSharedData(other)
         , m_components(other.m_components)
+        , m_versions(other.m_versions)
     { }
     ~QHelpFilterDataPrivate() = default;
 
     QStringList m_components;
+    QList<QVersionNumber> m_versions;
 };
 
 /*!
@@ -63,6 +66,8 @@ public:
 
     By using setComponents() you may constrain the search results to
     documents that belong only to components specified on the given list.
+    By using setVersions() you may constrain the search results to
+    documents that belong only to versions specified on the given list.
 
     \sa QHelpFilterEngine
 */
@@ -78,10 +83,12 @@ QHelpFilterData::QHelpFilterData()
 /*!
     Constructs a copy of \a other.
 */
-QHelpFilterData::QHelpFilterData(const QHelpFilterData &other)
-    : d(other.d)
-{
-}
+QHelpFilterData::QHelpFilterData(const QHelpFilterData &) = default;
+
+/*!
+    Move-constructs a QHelpFilterData instance, making it point at the same object that \a other was pointing to.
+*/
+QHelpFilterData::QHelpFilterData(QHelpFilterData &&) = default;
 
 /*!
     Destroys the filter.
@@ -93,20 +100,38 @@ QHelpFilterData::~QHelpFilterData()
 /*!
     Assigns \a other to this filter and returns a reference to this filter.
 */
-QHelpFilterData &QHelpFilterData::operator=(const QHelpFilterData &other)
+QHelpFilterData &QHelpFilterData::operator=(const QHelpFilterData &) = default;
+
+
+/*!
+    Move-assigns \a other to this QHelpFilterData instance.
+*/
+QHelpFilterData &QHelpFilterData::operator=(QHelpFilterData &&) = default;
+
+bool QHelpFilterData::operator==(const QHelpFilterData &other) const
 {
-    d = other.d;
-    return *this;
+    return (d->m_components == other.d->m_components &&
+            d->m_versions == other.d->m_versions);
 }
 
 /*!
     Specifies the component list that is used for filtering
-    the search results. Only the results which match the \a components
-    will be returned.
+    the search results. Only results from components in the list
+    \a components shall be returned.
 */
 void QHelpFilterData::setComponents(const QStringList &components)
 {
     d->m_components = components;
+}
+
+/*!
+    Specifies the version list that is used for filtering
+    the search results. Only results from versions in the list
+    \a versions shall be returned.
+*/
+void QHelpFilterData::setVersions(const QList<QVersionNumber> &versions)
+{
+    d->m_versions = versions;
 }
 
 /*!
@@ -116,6 +141,15 @@ void QHelpFilterData::setComponents(const QStringList &components)
 QStringList QHelpFilterData::components() const
 {
     return d->m_components;
+}
+
+/*!
+    Returns the version list that is used for filtering
+    the search results.
+*/
+QList<QVersionNumber> QHelpFilterData::versions() const
+{
+    return d->m_versions;
 }
 
 QT_END_NAMESPACE

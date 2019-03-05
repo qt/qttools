@@ -46,6 +46,7 @@
 
 QT_BEGIN_NAMESPACE
 
+class QVersionNumber;
 class QHelpFilterDataPrivate;
 
 class QHELP_EXPORT QHelpFilterData
@@ -53,13 +54,18 @@ class QHELP_EXPORT QHelpFilterData
 public:
     QHelpFilterData();
     QHelpFilterData(const QHelpFilterData &other);
+    QHelpFilterData(QHelpFilterData &&other);
     ~QHelpFilterData();
 
     QHelpFilterData &operator=(const QHelpFilterData &other);
+    QHelpFilterData &operator=(QHelpFilterData &&other);
+    bool operator==(const QHelpFilterData &other) const;
 
     void setComponents(const QStringList &components);
+    void setVersions(const QList<QVersionNumber> &versions);
 
     QStringList components() const;
+    QList<QVersionNumber> versions() const;
 private:
     QSharedDataPointer<QHelpFilterDataPrivate> d;
 };

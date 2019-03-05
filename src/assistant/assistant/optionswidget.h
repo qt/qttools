@@ -49,15 +49,21 @@ public:
     QStringList validOptions() const;
     QStringList selectedOptions() const;
 
+    void setNoOptionText(const QString &text);
+    void setInvalidOptionText(const QString &text);
+
 signals:
     void optionSelectionChanged(const QStringList &options);
 
 private:
+    QString optionText(const QString &optionName, bool valid) const;
     QListWidgetItem *appendItem(const QString &optionName, bool valid, bool selected);
     void appendSeparator();
     void itemChanged(QListWidgetItem *item);
 
     QListWidget *m_listWidget = nullptr;
+    QString m_noOptionText;
+    QString m_invalidOptionText;
     QStringList m_validOptions;
     QStringList m_invalidOptions;
     QStringList m_selectedOptions;

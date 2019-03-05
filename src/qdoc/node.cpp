@@ -1244,12 +1244,15 @@ void Aggregate::normalizeOverloads()
 
 /*!
   Returns a const reference to the list of child nodes of this
-  aggregate that are not function nodes.
+  aggregate that are not function nodes. Duplicate nodes are
+  removed from the list.
  */
 const NodeList &Aggregate::nonfunctionList()
 {
-    if (nonfunctionList_.isEmpty() || (nonfunctionList_.size() != nonfunctionMap_.size()))
-        nonfunctionList_ = nonfunctionMap_.values();
+    std::list<Node*> list = nonfunctionMap_.values().toStdList();
+    list.sort();
+    list.unique();
+    nonfunctionList_ = NodeList::fromStdList(list);
     return nonfunctionList_;
 }
 
