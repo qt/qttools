@@ -478,7 +478,7 @@ void Parameters::set(const QString &signature)
     clear();
     if (!signature.isEmpty()) {
         QStringList commaSplit = signature.split(',');
-        parameters_.resize(commaSplit.size() + 1);
+        parameters_.resize(commaSplit.size());
         for (int i = 0; i < commaSplit.size(); i++) {
             QStringList blankSplit = commaSplit[i].split(' ');
             QString pName = blankSplit.last();
