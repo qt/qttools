@@ -314,11 +314,11 @@ void Node::setDoc(const Doc& doc, bool replace)
   parent's child list.
  */
 Node::Node(NodeType type, Aggregate *parent, const QString& name)
-    : nodeType_((unsigned char) type),
-      access_((unsigned char) Public),
-      safeness_((unsigned char) UnspecifiedSafeness),
-      pageType_((unsigned char) NoPageType),
-      status_((unsigned char) Active),
+    : nodeType_(type),
+      access_(Public),
+      safeness_(UnspecifiedSafeness),
+      pageType_(NoPageType),
+      status_(Active),
       indexNodeFlag_(false),
       relatedNonmember_(false),
       parent_(parent),
@@ -483,16 +483,16 @@ Node::Genus Node::getGenus(Node::NodeType t)
  */
 QString Node::pageTypeString() const
 {
-    return pageTypeString((PageType) pageType_);
+    return pageTypeString(pageType_);
 }
 
 /*!
   Returns the page type \a t as a string, for use as an
   attribute value in XML or HTML.
  */
-QString Node::pageTypeString(unsigned char t)
+QString Node::pageTypeString(PageType t)
 {
-    switch ((PageType)t) {
+    switch (t) {
     case Node::AttributionPage:
         return QLatin1String("attribution");
     case Node::ApiPage:
@@ -531,9 +531,9 @@ QString Node::nodeTypeString() const
   Returns the node type \a t as a string for use as an
   attribute value in XML or HTML.
  */
-QString Node::nodeTypeString(unsigned char t)
+QString Node::nodeTypeString(NodeType t)
 {
-    switch ((NodeType)t) {
+    switch (t) {
     case Namespace:
         return QLatin1String("namespace");
     case Class:
@@ -605,19 +605,19 @@ QString Node::nodeTypeString(unsigned char t)
 void Node::setPageType(const QString& t)
 {
     if ((t == "API") || (t == "api"))
-        pageType_ = (unsigned char) ApiPage;
+        pageType_ = ApiPage;
     else if (t == "howto")
-        pageType_ = (unsigned char) HowToPage;
+        pageType_ = HowToPage;
     else if (t == "overview")
-        pageType_ = (unsigned char) OverviewPage;
+        pageType_ = OverviewPage;
     else if (t == "tutorial")
-        pageType_ = (unsigned char) TutorialPage;
+        pageType_ = TutorialPage;
     else if (t == "faq")
-        pageType_ = (unsigned char) FAQPage;
+        pageType_ = FAQPage;
     else if (t == "article")
-        pageType_ = (unsigned char) ArticlePage;
+        pageType_ = ArticlePage;
     else if (t == "example")
-        pageType_ = (unsigned char) ExamplePage;
+        pageType_ = ExamplePage;
 }
 
 /*! Converts the boolean value \a b to an enum representation
@@ -680,7 +680,7 @@ void Node::setSince(const QString &since)
  */
 QString Node::accessString() const
 {
-    switch ((Access) access_) {
+    switch (access_) {
     case Protected:
         return QLatin1String("protected");
     case Private:
@@ -744,7 +744,7 @@ Node::Status Node::inheritedStatus() const
     Status parentStatus = Active;
     if (parent_)
         parentStatus = parent_->inheritedStatus();
-    return (Status)qMin((int)status_, (int)parentStatus);
+    return qMin(status_, parentStatus);
 }
 
 /*!
@@ -756,9 +756,9 @@ Node::Status Node::inheritedStatus() const
  */
 Node::ThreadSafeness Node::threadSafeness() const
 {
-    if (parent_ && (ThreadSafeness) safeness_ == parent_->inheritedThreadSafeness())
+    if (parent_ && safeness_ == parent_->inheritedThreadSafeness())
         return UnspecifiedSafeness;
-    return (ThreadSafeness) safeness_;
+    return safeness_;
 }
 
 /*!
@@ -768,9 +768,9 @@ Node::ThreadSafeness Node::threadSafeness() const
  */
 Node::ThreadSafeness Node::inheritedThreadSafeness() const
 {
-    if (parent_ && (ThreadSafeness) safeness_ == UnspecifiedSafeness)
+    if (parent_ && safeness_ == UnspecifiedSafeness)
         return parent_->inheritedThreadSafeness();
-    return (ThreadSafeness) safeness_;
+    return safeness_;
 }
 
 
