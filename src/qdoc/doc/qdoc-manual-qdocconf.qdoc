@@ -121,6 +121,8 @@
     \li \l {sources.fileextensions-variable} {sources.fileextensions}
     \li \l {spurious-variable} {spurious}
     \li \l {tabsize-variable} {tabsize}
+    \li \l {url-variable} {url}
+    \li \l {url.examples-variable} {url.examples}
     \li \l {version-variable} {version}
     \li \l {versionsym-variable} {versionsym}
     \li \l {warninglimit-variable} {warninglimit}
@@ -1699,7 +1701,59 @@
     references to for example Qt classes, the base URL is \c
     http://doc.qt.io/qt-4.8/.
 
-    See also \l indexes.
+    See also \l indexes and \l {url.examples}.
+
+    \target url.examples-variable
+    \section1 url.examples
+
+    The \c url.examples variable holds the base URL for the examples
+    associated with the current project.
+
+    If defined, a link to the example project directory is generated
+    at the end of each example documentation page. The \c url.examples
+    variable refers to the root directory of the examples related to
+    this project; it can be a link to an online repository (starting
+    with \e http:// or \e https://), or to the local file system
+    (\c file://).
+
+    If \c url.examples is not defined, QDoc will output a list of
+    example's files and images instead.
+
+    For example, given these definitions:
+
+    \badcode
+    url.examples = "https://code.qt.io/cgit/qt/qtbase.git/tree/examples/"
+    examplesinstallpath = corelib
+    \endcode
+
+    Then, for the following \l {example-command}{\\example} command:
+
+    \badcode *
+    /\1!
+        \example threads/semaphores
+        ...
+    \1/
+    \endcode
+
+    QDoc generates a link to
+    \c https://code.qt.io/cgit/qt/qtbase.git/tree/examples/corelib/threads/semaphores.
+
+    If the URL contains more components (for example, a query string)
+    after the example path, \\1 can be used as a placeholder for the
+    path:
+
+    \badcode
+    url.examples = "https://code.qt.io/cgit/qt/qtbase.git/tree/examples/\1?h=$QT_VER"
+    examplesinstallpath = corelib
+    \endcode
+
+    Given the same \\example command as above and assuming that
+    \c $QT_VER expands to \c {5.13}, the generated URL is
+    \c https://code.qt.io/cgit/qt/qtbase.git/tree/examples/corelib/threads/semaphores?h=5.13.
+
+    \c {url.examples} variable was introduced in QDoc version 5.13.
+
+    See also \l url, \l examplesinstallpath, and \l {example-command}{\\example}.
 
     \target howto
     \section1 How to Support Derived Projects
