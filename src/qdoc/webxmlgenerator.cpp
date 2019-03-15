@@ -26,19 +26,19 @@
 **
 ****************************************************************************/
 
-#include "codemarker.h"
-#include "generator.h"
 #include "webxmlgenerator.h"
 #include "node.h"
 #include "separator.h"
 #include "tree.h"
 #include "qdocdatabase.h"
-#include "qdocindexfiles.h"
 #include "helpprojectwriter.h"
 
 #include <QtCore/qxmlstream.h>
 
 QT_BEGIN_NAMESPACE
+
+static CodeMarker *marker_ = nullptr;
+
 
 void WebXMLGenerator::initializeGenerator(const Config &config)
 {
@@ -71,7 +71,7 @@ int WebXMLGenerator::generateAtom(const Atom * /* atom, */,
     return 0;
 }
 
-void WebXMLGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *marker)
+void WebXMLGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker * /* marker */)
 {
     QByteArray data;
     QXmlStreamWriter writer(&data);
@@ -81,7 +81,7 @@ void WebXMLGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker 
     writer.writeStartElement("WebXML");
     writer.writeStartElement("document");
 
-    generateIndexSections(writer, aggregate, marker);
+    generateIndexSections(writer, aggregate);
 
     writer.writeEndElement(); // document
     writer.writeEndElement(); // WebXML
@@ -91,7 +91,7 @@ void WebXMLGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker 
     endSubPage();
 }
 
-void WebXMLGenerator::generatePageNode(PageNode *pn, CodeMarker *marker)
+void WebXMLGenerator::generatePageNode(PageNode *pn, CodeMarker * /* marker */)
 {
     QByteArray data;
     QXmlStreamWriter writer(&data);
@@ -101,7 +101,7 @@ void WebXMLGenerator::generatePageNode(PageNode *pn, CodeMarker *marker)
     writer.writeStartElement("WebXML");
     writer.writeStartElement("document");
 
-    generateIndexSections(writer, pn, marker);
+    generateIndexSections(writer, pn);
 
     writer.writeEndElement(); // document
     writer.writeEndElement(); // WebXML
@@ -111,79 +111,75 @@ void WebXMLGenerator::generatePageNode(PageNode *pn, CodeMarker *marker)
     endSubPage();
 }
 
-void WebXMLGenerator::generateIndexSections(QXmlStreamWriter &writer,
-                                            Node *node, CodeMarker *marker)
+void WebXMLGenerator::generateIndexSections(QXmlStreamWriter &writer, Node *node)
 {
-    // TODO: Here, filter non-aggregate nodes based on their type if output
-    // contains items that Shiboken cannot (and does not need to) handle.
-    if (QDocIndexFiles::qdocIndexFiles()->generateIndexSection(writer, node)) {
+    marker_ = CodeMarker::markerForFileName(node->location().filePath());
+    QDocIndexFiles::qdocIndexFiles()->generateIndexSections(writer, node, this);
+}
 
-        // Add documentation to this node if it exists.
-        writer.writeStartElement("description");
-        writer.writeAttribute("path", node->doc().location().filePath());
-        writer.writeAttribute("line", QString::number(node->doc().location().lineNo()));
-        writer.writeAttribute("column", QString::number(node->doc().location().columnNo()));
+// Handles callbacks from QDocIndexFiles to add documentation to node
+void WebXMLGenerator::append(QXmlStreamWriter &writer, Node *node)
+{
+    Q_ASSERT(marker_);
 
-        if (node->isTextPageNode())
-            generateRelations(writer, node);
+    writer.writeStartElement("description");
+    writer.writeAttribute("path", node->doc().location().filePath());
+    writer.writeAttribute("line", QString::number(node->doc().location().lineNo()));
+    writer.writeAttribute("column", QString::number(node->doc().location().columnNo()));
 
-        if (node->isModule()) {
-            writer.writeStartElement("generatedlist");
-            writer.writeAttribute("contents", "classesbymodule");
-            CollectionNode *cnn = static_cast<CollectionNode *>(node);
+    if (node->isTextPageNode())
+        generateRelations(writer, node);
 
-            if (cnn->hasNamespaces()) {
-                writer.writeStartElement("section");
-                writer.writeStartElement("heading");
-                writer.writeAttribute("level", "1");
-                writer.writeCharacters("Namespaces");
-                writer.writeEndElement(); // heading
-                NodeMap namespaces;
-                cnn->getMemberNamespaces(namespaces);
-                generateAnnotatedList(writer, node, namespaces);
-                writer.writeEndElement(); // section
-            }
-            if (cnn->hasClasses()) {
-                writer.writeStartElement("section");
-                writer.writeStartElement("heading");
-                writer.writeAttribute("level", "1");
-                writer.writeCharacters("Classes");
-                writer.writeEndElement(); // heading
-                NodeMap classes;
-                cnn->getMemberClasses(classes);
-                generateAnnotatedList(writer, node, classes);
-                writer.writeEndElement(); // section
-            }
-            writer.writeEndElement(); // generatedlist
+    if (node->isModule()) {
+        writer.writeStartElement("generatedlist");
+        writer.writeAttribute("contents", "classesbymodule");
+        CollectionNode *cnn = static_cast<CollectionNode *>(node);
+
+        if (cnn->hasNamespaces()) {
+            writer.writeStartElement("section");
+            writer.writeStartElement("heading");
+            writer.writeAttribute("level", "1");
+            writer.writeCharacters("Namespaces");
+            writer.writeEndElement(); // heading
+            NodeMap namespaces;
+            cnn->getMemberNamespaces(namespaces);
+            generateAnnotatedList(writer, node, namespaces);
+            writer.writeEndElement(); // section
         }
-
-        inLink = inContents = inSectionHeading = hasQuotingInformation = false;
-        numTableRows = 0;
-
-        const Atom *atom = node->doc().body().firstAtom();
-        while (atom)
-            atom = addAtomElements(writer, atom, node, marker);
-
-        QList<Text> alsoList = node->doc().alsoList();
-        supplementAlsoList(node, alsoList);
-
-        if (!alsoList.isEmpty()) {
-            writer.writeStartElement("see-also");
-            for (int i = 0; i < alsoList.size(); ++i) {
-                const Atom *atom = alsoList.at(i).firstAtom();
-                while (atom)
-                    atom = addAtomElements(writer, atom, node, marker);
-            }
-            writer.writeEndElement(); // see-also
+        if (cnn->hasClasses()) {
+            writer.writeStartElement("section");
+            writer.writeStartElement("heading");
+            writer.writeAttribute("level", "1");
+            writer.writeCharacters("Classes");
+            writer.writeEndElement(); // heading
+            NodeMap classes;
+            cnn->getMemberClasses(classes);
+            generateAnnotatedList(writer, node, classes);
+            writer.writeEndElement(); // section
         }
-        writer.writeEndElement(); // description
-
-        if (node->isAggregate()) {
-            for (auto child : static_cast<Aggregate *>(node)->childNodes())
-                generateIndexSections(writer, child, marker);
-        }
-        writer.writeEndElement();
+        writer.writeEndElement(); // generatedlist
     }
+
+    inLink = inContents = inSectionHeading = hasQuotingInformation = false;
+    numTableRows = 0;
+
+    const Atom *atom = node->doc().body().firstAtom();
+    while (atom)
+        atom = addAtomElements(writer, atom, node, marker_);
+
+    QList<Text> alsoList = node->doc().alsoList();
+    supplementAlsoList(node, alsoList);
+
+    if (!alsoList.isEmpty()) {
+        writer.writeStartElement("see-also");
+        for (int i = 0; i < alsoList.size(); ++i) {
+            const Atom *atom = alsoList.at(i).firstAtom();
+            while (atom)
+                atom = addAtomElements(writer, atom, node, marker_);
+        }
+        writer.writeEndElement(); // see-also
+    }
+    writer.writeEndElement(); // description
 }
 
 void WebXMLGenerator::generateDocumentation(Node *node)
@@ -196,19 +192,18 @@ void WebXMLGenerator::generateDocumentation(Node *node)
     if (node->isInternal() && !showInternal_)
         return;
 
-    CodeMarker *marker = CodeMarker::markerForFileName(node->location().filePath());
     if (node->parent()) {
         if (node->isNamespace() || node->isClassNode() || node->isHeader())
-            generateCppReferencePage(static_cast<Aggregate*>(node), marker);
+            generateCppReferencePage(static_cast<Aggregate*>(node), nullptr);
         else if (node->isCollectionNode()) {
             if (node->wasSeen()) {
                 // see remarks in base class impl.
                 qdb_->mergeCollections(static_cast<CollectionNode *>(node));
-                generatePageNode(static_cast<PageNode *>(node), marker);
+                generatePageNode(static_cast<PageNode *>(node), nullptr);
             }
         }
         else if (node->isTextPageNode())
-            generatePageNode(static_cast<PageNode *>(node), marker);
+            generatePageNode(static_cast<PageNode *>(node), nullptr);
         // else if TODO: anything else?
     }
 

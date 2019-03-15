@@ -34,10 +34,11 @@
 #include "codemarker.h"
 #include "config.h"
 #include "htmlgenerator.h"
+#include "qdocindexfiles.h"
 
 QT_BEGIN_NAMESPACE
 
-class WebXMLGenerator : public HtmlGenerator
+class WebXMLGenerator : public HtmlGenerator, public IndexSectionWriter
 {
 public:
     explicit WebXMLGenerator() {}
@@ -46,7 +47,8 @@ public:
     void initializeGenerator(const Config &config) override;
     void terminateGenerator() override;
     QString format() override;
-    //void generateDocs() override;
+    // from IndexSectionWriter
+    void append(QXmlStreamWriter &writer, Node *node) override;
 
 protected:
     int generateAtom(const Atom *atom, const Node *relative, CodeMarker *marker) override;
@@ -57,8 +59,7 @@ protected:
 
     virtual const Atom *addAtomElements(QXmlStreamWriter &writer, const Atom *atom,
                                  const Node *relative, CodeMarker *marker);
-    virtual void generateIndexSections(QXmlStreamWriter &writer, Node *node,
-                                       CodeMarker *marker);
+    virtual void generateIndexSections(QXmlStreamWriter &writer, Node *node);
 
 
 private:

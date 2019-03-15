@@ -42,10 +42,18 @@ class WebXMLGenerator;
 class QXmlStreamWriter;
 class QXmlStreamAttributes;
 
+// A callback interface for extending index sections
+class IndexSectionWriter
+{
+public:
+    virtual ~IndexSectionWriter() {}
+    virtual void append(QXmlStreamWriter &writer, Node *node) = 0;
+};
+
 class QDocIndexFiles
 {
     friend class QDocDatabase;
-    friend class WebXMLGenerator; // for using generateIndexSection()
+    friend class WebXMLGenerator; // for using generateIndexSections()
 
  private:
     static QDocIndexFiles* qdocIndexFiles();
@@ -62,9 +70,9 @@ class QDocIndexFiles
 
     void generateIndex(const QString &fileName, const QString &url, const QString &title, Generator *g);
     void generateFunctionSection(QXmlStreamWriter &writer, FunctionNode *fn);
-    void generateFunctionSections(QXmlStreamWriter &writer, Aggregate *aggrtegate);
-    bool generateIndexSection(QXmlStreamWriter &writer, Node *node);
-    void generateIndexSections(QXmlStreamWriter &writer, Node *node);
+    void generateFunctionSections(QXmlStreamWriter &writer, Aggregate *aggregate);
+    bool generateIndexSection(QXmlStreamWriter &writer, Node *node, IndexSectionWriter *post = nullptr);
+    void generateIndexSections(QXmlStreamWriter &writer, Node *node, IndexSectionWriter *post = nullptr);
 
  private:
     static QDocIndexFiles* qdocIndexFiles_;

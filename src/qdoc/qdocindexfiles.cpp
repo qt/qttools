@@ -50,7 +50,8 @@ enum QDocAttr {
     QDocAttrExternalPage
 };
 
-static Node* root_ = nullptr;
+static Node *root_ = nullptr;
+static IndexSectionWriter *post_ = nullptr;
 
 /*!
   \class QDocIndexFiles
@@ -780,12 +781,14 @@ static const QString getThreadSafenessString(Node::ThreadSafeness t)
 
   \note Function nodes are processed in generateFunctionSection()
  */
-bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node)
+bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node, IndexSectionWriter *post)
 {
     if (!gen_)
         gen_ = Generator::currentGenerator();
 
     Q_ASSERT(gen_);
+
+    post_ = nullptr;
     /*
       Don't include index nodes in a new index file.
      */
@@ -1331,6 +1334,11 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node)
             writer.writeEndElement(); // page
         }
     }
+    // Append to the section if the callback object was set
+    if (post)
+        post->append(writer, node);
+
+    post_ = post;
     return true;
 }
 
@@ -1425,7 +1433,12 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
             writer.writeEndElement(); // parameter
         }
     }
-    writer.writeEndElement();
+
+    // Append to the section if the callback object was set
+    if (post_)
+        post_->append(writer, fn);
+
+    writer.writeEndElement(); // function
 }
 
 /*!
@@ -1466,7 +1479,7 @@ void QDocIndexFiles::generateFunctionSections(QXmlStreamWriter &writer, Aggregat
   Generate index sections for the child nodes of the given \a node
   using the \a writer specified.
 */
-void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node)
+void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node, IndexSectionWriter *post)
 {
     /*
       Note that groups, modules, and QML modules are written
@@ -1476,13 +1489,13 @@ void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node)
         node->isGroup() || node->isModule() || node->isQmlModule() || node->isJsModule())
         return;
 
-    if (generateIndexSection(writer, node)) {
+    if (generateIndexSection(writer, node, post)) {
         if (node->isAggregate()) {
             Aggregate *aggregate = static_cast<Aggregate *>(node);
             // First write the function children, then write the nonfunction children.
             generateFunctionSections(writer, aggregate);
             foreach (Node *n, aggregate->nonfunctionList())
-                generateIndexSections(writer, n);
+                generateIndexSections(writer, n, post);
         }
 
         if (node == root_) {
@@ -1498,7 +1511,7 @@ void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node)
             if (!groups.isEmpty()) {
                 CNMap::ConstIterator g = groups.constBegin();
                 while (g != groups.constEnd()) {
-                    if (generateIndexSection(writer, g.value()))
+                    if (generateIndexSection(writer, g.value(), post))
                         writer.writeEndElement();
                     ++g;
                 }
@@ -1508,7 +1521,7 @@ void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node)
             if (!modules.isEmpty()) {
                 CNMap::ConstIterator g = modules.constBegin();
                 while (g != modules.constEnd()) {
-                    if (generateIndexSection(writer, g.value()))
+                    if (generateIndexSection(writer, g.value(), post))
                         writer.writeEndElement();
                     ++g;
                 }
@@ -1518,7 +1531,7 @@ void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node)
             if (!qmlModules.isEmpty()) {
                 CNMap::ConstIterator g = qmlModules.constBegin();
                 while (g != qmlModules.constEnd()) {
-                    if (generateIndexSection(writer, g.value()))
+                    if (generateIndexSection(writer, g.value(), post))
                         writer.writeEndElement();
                     ++g;
                 }
@@ -1528,7 +1541,7 @@ void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node)
             if (!jsModules.isEmpty()) {
                 CNMap::ConstIterator g = jsModules.constBegin();
                 while (g != jsModules.constEnd()) {
-                    if (generateIndexSection(writer, g.value()))
+                    if (generateIndexSection(writer, g.value(), post))
                         writer.writeEndElement();
                     ++g;
                 }
@@ -1574,7 +1587,7 @@ void QDocIndexFiles::generateIndex(const QString& fileName,
     if (!root_->tree()->indexTitle().isEmpty())
         writer.writeAttribute("indexTitle", root_->tree()->indexTitle());
 
-    generateIndexSections(writer, root_);
+    generateIndexSections(writer, root_, nullptr);
 
     writer.writeEndElement(); // INDEX
     writer.writeEndElement(); // QDOCINDEX
