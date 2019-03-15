@@ -423,15 +423,13 @@ RichTextEditorToolBar::RichTextEditorToolBar(QDesignerFormEditorInterface *core,
     m_core(core),
     m_editor(editor)
 {
-    typedef void (QComboBox::*QComboStringSignal)(const QString &);
-
     // Font size combo box
     m_font_size_input->setEditable(false);
     const QList<int> font_sizes = QFontDatabase::standardSizes();
     for (int font_size : font_sizes)
         m_font_size_input->addItem(QString::number(font_size));
 
-    connect(m_font_size_input, static_cast<QComboStringSignal>(&QComboBox::activated),
+    connect(m_font_size_input, &QComboBox::textActivated,
             this, &RichTextEditorToolBar::sizeInputActivated);
     addWidget(m_font_size_input);
 
