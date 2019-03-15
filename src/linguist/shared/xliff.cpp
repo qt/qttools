@@ -732,10 +732,9 @@ bool XLIFFHandler::finalizeMessage(bool isPlural)
 
 bool XLIFFHandler::fatalError(const QXmlParseException &exception)
 {
-    QString msg;
-    msg.sprintf("XML error: Parse error at line %d, column %d (%s).\n",
-                 exception.lineNumber(), exception.columnNumber(),
-                 exception.message().toLatin1().data() );
+    QString msg = QString::asprintf("XML error: Parse error at line %d, column %d (%s).\n",
+                                    exception.lineNumber(), exception.columnNumber(),
+                                    exception.message().toLatin1().data());
     m_cd.appendError(msg);
     return false;
 }

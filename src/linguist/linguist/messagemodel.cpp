@@ -1367,9 +1367,7 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
                         return tr("%n unfinished message(s) left.", 0,
                                   mci->getNumEditable() - mci->getNumFinished());
                     }
-                    QString s;
-                    s.sprintf("%d/%d", mci->getNumFinished(), mci->getNumEditable());
-                    return s;
+                    return QString::asprintf("%d/%d", mci->getNumFinished(), mci->getNumEditable());
                 }
             default:
                 return QVariant(); // Status => no text
