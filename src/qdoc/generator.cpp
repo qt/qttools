@@ -368,8 +368,6 @@ QString Generator::fileBase(const Node *node) const
 {
     if (!node->isPageNode() && !node->isCollectionNode())
         node = node->parent();
-    if (node->isQmlPropertyGroup() || node->isJsPropertyGroup())
-        node = node->parent();
 
     if (node->hasFileNameBase())
         return node->fileNameBase();
@@ -600,15 +598,8 @@ QString Generator::fullDocumentLocation(const Node *node, bool useSubdir)
 
     Node *parentNode = nullptr;
 
-    if ((parentNode = node->parent())) {
-        if (parentNode->isQmlPropertyGroup() || parentNode->isJsPropertyGroup()) {
-            parentNode = parentNode->parent();
-            parentName = fullDocumentLocation(parentNode);
-        }
-        else {
-            parentName = fullDocumentLocation(node->parent());
-        }
-    }
+    if ((parentNode = node->parent()))
+        parentName = fullDocumentLocation(node->parent());
 
     switch (node->nodeType()) {
     case Node::Class:
@@ -1083,7 +1074,7 @@ void Generator::generateDocumentation(Node* node)
         return;
     if (node->isInternal() && !showInternal_)
         return;
-    if (node->isExternalPage() || node->isQmlPropertyGroup() || node->isJsPropertyGroup())
+    if (node->isExternalPage())
         return;
 
     /*
@@ -2213,9 +2204,6 @@ QString Generator::typeString(const Node *node)
     case Node::Property:
     case Node::QmlProperty:
         return "property";
-    case Node::JsPropertyGroup:
-    case Node::QmlPropertyGroup:
-        return "property group";
     case Node::Module:
     case Node::JsModule:
     case Node::QmlModule:

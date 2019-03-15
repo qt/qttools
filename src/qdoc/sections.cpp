@@ -174,8 +174,6 @@ void Section::insert(Node *node)
     bool inherited = false;
     if (!node->isRelatedNonmember()) {
         Aggregate* p = node->parent();
-        if (p->isQmlPropertyGroup())
-            p = p->parent();
         if (!p->isNamespace() && p != aggregate_) {
             if ((!p->isQmlType() && !p->isJsType()) || !p->isAbstract())
                 inherited = true;
@@ -264,22 +262,10 @@ ClassMap *Section::newClassMap(const Aggregate* aggregate)
  */
 void Section::add(ClassMap *classMap, Node *n)
 {
-    if (n->isQmlPropertyGroup() || n->isJsPropertyGroup()) {
-        Aggregate *aggregate = static_cast<Aggregate*>(n);
-        const NodeList &properties = aggregate->nonfunctionList();
-        foreach (Node *p, properties) {
-            QString key = p->name();
-            key = sortName(p, &key);
-            memberMap_.insert(key, p);
-            classMap->second.insert(key, p);
-        }
-    }
-    else {
-        QString key = n->name();
-        key = sortName(n, &key);
-        memberMap_.insert(key, n);
-        classMap->second.insert(key, n);
-    }
+    QString key = n->name();
+    key = sortName(n, &key);
+    memberMap_.insert(key, n);
+    classMap->second.insert(key, n);
 }
 
 /*!
@@ -860,9 +846,7 @@ void Sections::distributeQmlNodeInDetailsVector(SectionVector &dv, Node *n)
 {
     if (n->isSharingComment())
         return;
-    if (n->isQmlPropertyGroup() || n->isJsPropertyGroup())
-        dv[QmlProperties].insert(n);
-    else if (n->isQmlProperty() || n->isJsProperty()) {
+    if (n->isQmlProperty() || n->isJsProperty()) {
         QmlPropertyNode* pn = static_cast<QmlPropertyNode*>(n);
         if (pn->isAttached())
             dv[QmlAttachedProperties].insert(pn);
@@ -883,15 +867,16 @@ void Sections::distributeQmlNodeInDetailsVector(SectionVector &dv, Node *n)
             else
                 dv[QmlMethods].insert(fn);
         }
-    } else if (n->isSharedCommentNode() && n->hasDoc())
-        dv[QmlMethods].insert(n);
+    } else if (n->isSharedCommentNode() && n->hasDoc()) {
+        dv[QmlMethods].insert(n); // incorrect?
+    }
 }
 
 void Sections::distributeQmlNodeInSummaryVector(SectionVector &sv, Node *n)
 {
-    if (n->isQmlPropertyGroup() || n->isJsPropertyGroup())
-        sv[QmlProperties].insert(n);
-    else if (n->isQmlProperty() || n->isJsProperty()) {
+    if (n->isSharingComment())
+        return;
+    if (n->isQmlProperty() || n->isJsProperty()) {
         QmlPropertyNode* pn = static_cast<QmlPropertyNode*>(n);
         if (pn->isAttached())
             sv[QmlAttachedProperties].insert(pn);
@@ -911,6 +896,17 @@ void Sections::distributeQmlNodeInSummaryVector(SectionVector &sv, Node *n)
                 sv[QmlAttachedMethods].insert(fn);
             else
                 sv[QmlMethods].insert(fn);
+        }
+    } else if (n->isSharedCommentNode()) {
+        SharedCommentNode *scn = static_cast<SharedCommentNode*>(n);
+        if (scn->isPropertyGroup()) {
+            if (scn->name().isEmpty()) {
+                foreach (Node *n, scn->collective()) {
+                    sv[QmlProperties].insert(n);
+                }
+            } else {
+                sv[QmlProperties].insert(scn);
+            }
         }
     }
 }

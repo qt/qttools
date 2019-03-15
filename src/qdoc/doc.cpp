@@ -1343,7 +1343,8 @@ void DocParser::parse(const QString& source,
                         QString arg = getMetaCommandArgument(cmdStr);
                         priv->metaCommandMap[cmdStr].append(ArgLocPair(arg,location()));
                         if (possibleTopics.contains(cmdStr)) {
-                            priv->topics_.append(Topic(cmdStr,arg));
+                            if (!cmdStr.endsWith(QLatin1String("propertygroup")))
+                                priv->topics_.append(Topic(cmdStr,arg));
                         }
                     } else if (macroHash()->contains(cmdStr)) {
                         const Macro &macro = macroHash()->value(cmdStr);
@@ -1437,8 +1438,12 @@ void DocParser::parse(const QString& source,
                         if ((numUppercase >= 1 && numLowercase >= 2) || numStrangeSymbols > 0) {
                             appendWord(cmdStr);
                         } else {
-                            location().warning(tr("Unknown command '\\%1'").arg(cmdStr),
-                                               detailsUnknownCommand(metaCommandSet,cmdStr));
+                            if (!cmdStr.endsWith("propertygroup")) {
+                                // The QML and JS property group commands are no longer required
+                                // for grouping QML and JS properties. They are allowed but ignored.
+                                location().warning(tr("Unknown command '\\%1'").arg(cmdStr),
+                                                   detailsUnknownCommand(metaCommandSet,cmdStr));
+                            }
                             enterPara();
                             append(Atom::UnknownCommand, cmdStr);
                         }

@@ -169,7 +169,7 @@ const QSet<QString>& QmlCodeParser::topicCommands()
                        << COMMAND_QMLCLASS
                        << COMMAND_QMLTYPE
                        << COMMAND_QMLPROPERTY
-                       << COMMAND_QMLPROPERTYGROUP
+                       << COMMAND_QMLPROPERTYGROUP      // mws 13/03/2019
                        << COMMAND_QMLATTACHEDPROPERTY
                        << COMMAND_QMLSIGNAL
                        << COMMAND_QMLATTACHEDSIGNAL
@@ -178,7 +178,7 @@ const QSet<QString>& QmlCodeParser::topicCommands()
                        << COMMAND_QMLBASICTYPE
                        << COMMAND_JSTYPE
                        << COMMAND_JSPROPERTY
-                       << COMMAND_JSPROPERTYGROUP
+                       << COMMAND_JSPROPERTYGROUP       // mws 13/03/2019
                        << COMMAND_JSATTACHEDPROPERTY
                        << COMMAND_JSSIGNAL
                        << COMMAND_JSATTACHEDSIGNAL

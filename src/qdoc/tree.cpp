@@ -485,12 +485,7 @@ Node* Tree::findNodeRecursive(const QStringList& path,
     foreach (Node *n, children) {
         if (!n)
             continue;
-        if (n->isQmlPropertyGroup()) {
-            n = findNodeRecursive(path, pathIndex, n, isMatch);
-            if (n)
-                return n;
-        }
-        else if (n->name() == name) {
+        if (n->name() == name) {
             if (pathIndex+1 >= path.size()) {
                 if ((n->*(isMatch))())
                     return n;
@@ -542,14 +537,7 @@ Node* Tree::findNodeRecursive(const QStringList& path,
     foreach (Node *n, children) {
         if (!n)
             continue;
-        if (n->isQmlPropertyGroup()) {
-            if (type == Node::QmlProperty) {
-                n = findNodeRecursive(path, pathIndex, n, type);
-                if (n)
-                    return n;
-            }
-        }
-        else if (n->name() == name) {
+        if (n->name() == name) {
             if (pathIndex+1 >= path.size()) {
                 if ((n->nodeType() == type) || (type == Node::NoType))
                     return n;
