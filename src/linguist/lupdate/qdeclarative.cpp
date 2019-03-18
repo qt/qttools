@@ -221,7 +221,7 @@ private:
         return std::cerr << qPrintable(m_fileName) << ':' << line << ": ";
     }
 
-    void throwRecursionDepthError()
+    void throwRecursionDepthError() final
     {
         std::cerr << qPrintable(m_fileName) << ": "
                   << qPrintable(LU::tr("Maximum statement or expression depth exceeded"));

@@ -92,7 +92,7 @@ public:
     bool visit(QQmlJS::AST::UiQualifiedId *) override;
     void endVisit(QQmlJS::AST::UiQualifiedId *) override;
 
-    void throwRecursionDepthError();
+    void throwRecursionDepthError() final;
     bool hasError() const;
 
 private:
