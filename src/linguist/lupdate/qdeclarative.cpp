@@ -221,6 +221,13 @@ private:
         return std::cerr << qPrintable(m_fileName) << ':' << line << ": ";
     }
 
+    void throwRecursionDepthError()
+    {
+        std::cerr << qPrintable(m_fileName) << ": "
+                  << qPrintable(LU::tr("Maximum statement or expression depth exceeded"));
+    }
+
+
     void processComments(quint32 offset, bool flush = false);
     void processComment(const AST::SourceLocation &loc);
     void consumeComment();
