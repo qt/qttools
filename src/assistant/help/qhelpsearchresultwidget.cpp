@@ -43,6 +43,7 @@
 #include <QtCore/QString>
 #include <QtCore/QPointer>
 #include <QtCore/QStringList>
+#include <QtCore/QTextStream>
 
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLayout>
@@ -71,39 +72,39 @@ public:
 
     void showResultPage(const QVector<QHelpSearchResult> results, bool isIndexing)
     {
-        QString htmlFile = QString(QLatin1String("<html><head><title>%1"
-            "</title></head><body>")).arg(tr("Search Results"));
+        QString htmlFile;
+        QTextStream str(&htmlFile);
+        str << "<html><head><title>" << tr("Search Results") << "</title></head><body>";
 
         const int count = results.count();
         if (count != 0) {
-            if (isIndexing)
-                htmlFile += QString(QLatin1String("<div style=\"text-align:left;"
-                    " font-weight:bold; color:red\">"
-                    "%1&nbsp;<span style=\"font-weight:normal; color:black\">"
-                    "%2</span></div></div><br>")).arg(tr("Note:"))
-                    .arg(tr("The search results may not be complete since the "
-                            "documentation is still being indexed."));
+            if (isIndexing) {
+                str << "<div style=\"text-align:left;"
+                       " font-weight:bold; color:red\">" << tr("Note:")
+                    << "&nbsp;<span style=\"font-weight:normal; color:black\">"
+                    << tr("The search results may not be complete since the "
+                          "documentation is still being indexed.")
+                    << "</span></div></div><br>";
+            }
 
             for (const QHelpSearchResult &result : results) {
-                htmlFile += QString(QLatin1String("<div style=\"text-align:left;"
-                    " font-weight:bold\"><a href=\"%1\">%2</a>"
+                str << "<div style=\"text-align:left; font-weight:bold\"><a href=\""
+                    << result.url().toString() << "\">" << result.title() << "</a>"
                     "<div style=\"color:green; font-weight:normal;"
-                    " margin:5px\">%3</div></div><p></p>"))
-                        .arg(result.url().toString(), result.title(),
-                             result.snippet());
+                    " margin:5px\">" << result.snippet() << "</div></div><p></p>";
             }
         } else {
-            htmlFile += QLatin1String("<div align=\"center\"><br><br><h2>")
-                    + tr("Your search did not match any documents.")
-                    + QLatin1String("</h2><div>");
-            if (isIndexing)
-                htmlFile += QLatin1String("<div align=\"center\"><h3>")
-                    + tr("(The reason for this might be that the documentation "
-                         "is still being indexed.)")
-                    + QLatin1String("</h3><div>");
+            str << "<div align=\"center\"><br><br><h2>"
+                << tr("Your search did not match any documents.")
+                << "</h2><div>";
+            if (isIndexing) {
+                str << "<div align=\"center\"><h3>"
+                    << tr("(The reason for this might be that the documentation "
+                          "is still being indexed.)") << "</h3><div>";
+            }
         }
 
-        htmlFile += QLatin1String("</body></html>");
+        str << "</body></html>";
 
         setHtml(htmlFile);
     }
