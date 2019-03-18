@@ -115,6 +115,11 @@ QString QmlMarkupVisitor::markedUpCode()
     return output;
 }
 
+bool QmlMarkupVisitor::hasError() const
+{
+    return hasRecursionDepthError;
+}
+
 void QmlMarkupVisitor::addExtra(quint32 start, quint32 finish)
 {
     if (extraIndex >= extraLocations.length()) {
@@ -804,6 +809,12 @@ bool QmlMarkupVisitor::visit(QQmlJS::AST::UiObjectDefinition *definition)
     QQmlJS::AST::Node::accept(definition->initializer, this);
     return false;
 }
+
+void QmlMarkupVisitor::throwRecursionDepthError()
+{
+    hasRecursionDepthError = true;
+}
+
 #endif
 
 QT_END_NAMESPACE

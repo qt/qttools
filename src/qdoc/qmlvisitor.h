@@ -92,6 +92,9 @@ public:
     bool visit(QQmlJS::AST::UiQualifiedId *) override;
     void endVisit(QQmlJS::AST::UiQualifiedId *) override;
 
+    void throwRecursionDepthError();
+    bool hasError() const;
+
 private:
     QString getFullyQualifiedId(QQmlJS::AST::UiQualifiedId *id);
     QQmlJS::AST::SourceLocation precedingComment(quint32 offset) const;
@@ -112,6 +115,7 @@ private:
     QSet<QString> topics_;
     QSet<quint32> usedComments;
     Aggregate *current;
+    bool hasRecursionDepthError = false;
 };
 #endif
 

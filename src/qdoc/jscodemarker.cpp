@@ -130,6 +130,10 @@ QString JsCodeMarker::addMarkUp(const QString &code,
         // unhandled source text can be output.
         QmlMarkupVisitor visitor(code, pragmas, &engine);
         QQmlJS::AST::Node::accept(ast, &visitor);
+        if (visitor.hasError()) {
+            location.warning(location.fileName() +
+                             tr("Unable to analyze JavaScript. The output is incomplete."));
+        }
         output = visitor.markedUpCode();
     } else {
         location.warning(location.fileName() +

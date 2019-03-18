@@ -843,6 +843,17 @@ void QmlDocVisitor::endVisit(QQmlJS::AST::UiQualifiedId* )
 {
     // nothing.
 }
+
+void QmlDocVisitor::throwRecursionDepthError()
+{
+    hasRecursionDepthError = true;
+}
+
+bool QmlDocVisitor::hasError() const
+{
+    return hasRecursionDepthError;
+}
+
 #endif
 
 QT_END_NAMESPACE

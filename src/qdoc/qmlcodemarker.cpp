@@ -181,6 +181,10 @@ QString QmlCodeMarker::addMarkUp(const QString &code,
         // unhandled source text can be output.
         QmlMarkupVisitor visitor(code, pragmas, &engine);
         QQmlJS::AST::Node::accept(ast, &visitor);
+        if (visitor.hasError()) {
+            location.warning(location.fileName() +
+                             tr("Unable to analyze QML snippet. The output is incomplete."));
+        }
         output = visitor.markedUpCode();
     } else {
         location.warning(tr("Unable to parse QML snippet: \"%1\" at line %2, column %3").arg(
