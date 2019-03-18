@@ -83,6 +83,8 @@ static Package readPackage(const QJsonObject &object, const QString &filePath, L
             p.licenseFile = QDir(directory).absoluteFilePath(value);
         } else if (key == QLatin1String("Copyright")) {
             p.copyright = value;
+        } else if (key == QLatin1String("PackageComment")) {
+            p.packageComment = value;
         } else if (key == QLatin1String("QDocModule")) {
             p.qdocModule = value;
         } else if (key == QLatin1String("Description")) {

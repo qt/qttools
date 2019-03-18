@@ -58,6 +58,7 @@ static QJsonObject generate(Package package)
     obj.insert(QStringLiteral("LicenseFile"), package.licenseFile);
 
     obj.insert(QStringLiteral("Copyright"), package.copyright);
+    obj.insert(QStringLiteral("PackageComment"), package.packageComment);
 
     return obj;
 }

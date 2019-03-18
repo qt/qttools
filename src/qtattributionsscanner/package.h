@@ -53,6 +53,8 @@ struct Package {
     QString licenseFile; // path to file containing the license text. Optional.
 
     QString copyright; // A list of copyright owners. Mandatory.
+
+    QString packageComment; // Further comments about the package. Optional.
 };
 
 #endif // PACKAGE_H
