@@ -72,7 +72,7 @@ class Node
     Q_DECLARE_TR_FUNCTIONS(QDoc::Node)
 
 public:
-    enum NodeType {
+    enum NodeType : unsigned char {
         NoType,
         Namespace,
         Class,
@@ -105,11 +105,11 @@ public:
         LastType
     };
 
-    enum Genus { DontCare, CPP, JS, QML, DOC };
+    enum Genus : unsigned char { DontCare, CPP, JS, QML, DOC };
 
-    enum Access { Public, Protected, Private };
+    enum Access : unsigned char { Public, Protected, Private };
 
-    enum Status {
+    enum Status : unsigned char {
         Obsolete,
         Deprecated,
         Preliminary,
@@ -117,21 +117,21 @@ public:
         Internal
     }; // don't reorder this enum
 
-    enum ThreadSafeness {
+    enum ThreadSafeness : unsigned char {
         UnspecifiedSafeness,
         NonReentrant,
         Reentrant,
         ThreadSafe
     };
 
-    enum LinkType {
+    enum LinkType : unsigned char {
         StartLink,
         NextLink,
         PreviousLink,
         ContentsLink
     };
 
-    enum PageType {
+    enum PageType : unsigned char {
         NoPageType,
         AttributionPage,
         ApiPage,
@@ -155,21 +155,21 @@ public:
     virtual Tree *tree() const;
     Aggregate *root() const;
 
-    NodeType nodeType() const { return (NodeType) nodeType_; }
+    NodeType nodeType() const { return nodeType_; }
     QString nodeTypeString() const;
     bool changeType(NodeType from, NodeType to);
 
-    Genus genus() const { return (Genus) genus_; }
-    void setGenus(Genus t) { genus_ = (unsigned char) t; }
+    Genus genus() const { return genus_; }
+    void setGenus(Genus t) { genus_ = t; }
     static Genus getGenus(NodeType t);
 
-    PageType pageType() const { return (PageType) pageType_; }
+    PageType pageType() const { return pageType_; }
     QString pageTypeString() const;
-    void setPageType(PageType t) { pageType_ = (unsigned char) t; }
+    void setPageType(PageType t) { pageType_ = t; }
     void setPageType(const QString& t);
     static PageType getPageType(NodeType t);
 
-    bool isActive() const { return (status_ == (unsigned char) Active); }
+    bool isActive() const { return status_ == Active; }
     bool isAnyType() const { return true; }
     bool isClass() const { return nodeType_ == Class; }
     bool isCppNode() const { return genus() == CPP; }
@@ -190,13 +190,13 @@ public:
     bool isJsType() const { return nodeType_ == JsType; }
     bool isModule() const { return nodeType_ == Module; }
     bool isNamespace() const { return nodeType_ == Namespace; }
-    bool isObsolete() const { return (status_ == (unsigned char) Obsolete); }
-    bool isPreliminary() const { return (status_ == (unsigned char) Preliminary); }
-    bool isPrivate() const { return (Access) access_ == Private; }
+    bool isObsolete() const { return (status_ == Obsolete); }
+    bool isPreliminary() const { return (status_ == Preliminary); }
+    bool isPrivate() const { return access_ == Private; }
     bool isProperty() const { return nodeType_ == Property; }
     bool isProxyNode() const { return nodeType_ == Proxy; }
-    bool isPublic() const { return (Access) access_ == Public; }
-    bool isProtected() const { return (Access) access_ == Protected; }
+    bool isPublic() const { return access_ == Public; }
+    bool isProtected() const { return access_ == Protected; }
     bool isQmlBasicType() const { return nodeType_ == QmlBasicType; }
     bool isQmlModule() const { return nodeType_ == QmlModule; }
     bool isQmlNode() const { return genus() == QML; }
@@ -241,15 +241,15 @@ public:
     bool hasFileNameBase() const { return !fileNameBase_.isEmpty(); }
     void setFileNameBase(const QString& t) { fileNameBase_ = t; }
 
-    void setAccess(Access t) { access_ = (unsigned char) t; }
+    void setAccess(Access t) { access_ = t; }
     void setLocation(const Location& t);
     void setDoc(const Doc& doc, bool replace = false);
     void setStatus(Status t) {
-        if (status_ == (unsigned char) Obsolete && t == Deprecated)
+        if (status_ == Obsolete && t == Deprecated)
             return;
-        status_ = (unsigned char) t;
+        status_ = t;
     }
-    void setThreadSafeness(ThreadSafeness t) { safeness_ = (unsigned char) t; }
+    void setThreadSafeness(ThreadSafeness t) { safeness_ = t; }
     void setSince(const QString &since);
     void setPhysicalModuleName(const QString &name) { physicalModuleName_ = name; }
     void setUrl(const QString& url) { url_ = url; }
@@ -300,14 +300,14 @@ public:
     const QMap<LinkType, QPair<QString,QString> >& links() const { return linkMap_; }
     void setLink(LinkType linkType, const QString &link, const QString &desc);
 
-    Access access() const { return (Access) access_; }
+    Access access() const { return access_; }
     QString accessString() const;
     const Location& declLocation() const { return declLocation_; }
     const Location& defLocation() const { return defLocation_; }
     const Location& location() const { return (defLocation_.isEmpty() ? declLocation_ : defLocation_); }
     const Doc& doc() const { return doc_; }
     bool hasDoc() const { return !doc_.isEmpty(); }
-    Status status() const { return (Status) status_; }
+    Status status() const { return status_; }
     Status inheritedStatus() const;
     ThreadSafeness threadSafeness() const;
     ThreadSafeness inheritedThreadSafeness() const;
@@ -349,8 +349,8 @@ public:
     static QString cleanId(const QString &str);
     static FlagValue toFlagValue(bool b);
     static bool fromFlagValue(FlagValue fv, bool defaultValue);
-    static QString pageTypeString(unsigned char t);
-    static QString nodeTypeString(unsigned char t);
+    static QString pageTypeString(PageType t);
+    static QString nodeTypeString(NodeType t);
     static QString nodeSubtypeString(unsigned char t);
     static int incPropertyGroupCount();
     static void clearPropertyGroupCount();
@@ -362,12 +362,12 @@ protected:
     Node(NodeType type, Aggregate* parent, const QString& name);
 
 private:
-    unsigned char nodeType_;
-    unsigned char genus_;
-    unsigned char access_;
-    unsigned char safeness_;
-    unsigned char pageType_;
-    unsigned char status_;
+    NodeType nodeType_;
+    Genus genus_;
+    Access access_;
+    ThreadSafeness safeness_;
+    PageType pageType_;
+    Status status_;
     bool indexNodeFlag_ : 1;
     bool relatedNonmember_ : 1;
 

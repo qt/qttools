@@ -154,7 +154,10 @@ void HelpProjectWriter::readSelectors(SubProject &subproject, const QStringList 
     pageTypeHash["page"] = Node::Page;
     pageTypeHash["externalpage"] = Node::ExternalPage;
 
-    QSet<Node::NodeType> fullSubset = QSet<Node::NodeType>::fromList(pageTypeHash.values());
+
+    NodeTypeSet fullSubset;
+    for (auto it = pageTypeHash.cbegin(), end = pageTypeHash.cend(); it != end; ++it)
+        fullSubset.insert(it.value());
 
     foreach (const QString &selector, selectors) {
         QStringList pieces = selector.split(QLatin1Char(':'));
@@ -166,7 +169,7 @@ void HelpProjectWriter::readSelectors(SubProject &subproject, const QStringList 
             QString pageTypeStr = pieces[0].toLower();
             pieces = pieces[1].split(QLatin1Char(','));
             if (typeHash.contains(pageTypeStr)) {
-                QSet<Node::NodeType> nodeTypeSet;
+                NodeTypeSet nodeTypeSet;
                 for (int i = 0; i < pieces.size(); ++i) {
                     QString piece = pieces[i].toLower();
                     if (typeHash[pageTypeStr] == Node::Group

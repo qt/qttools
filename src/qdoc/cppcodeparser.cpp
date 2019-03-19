@@ -909,12 +909,19 @@ void CppCodeParser::setExampleFileLists(PageNode *pn)
                                         exampleDirs,
                                         proFileName);
             if (fullPath.isEmpty()) {
-                QString details = QLatin1String("Example directories: ") + exampleDirs.join(QLatin1Char(' '));
-                if (!exampleFiles.isEmpty())
-                    details += QLatin1String(", example files: ") + exampleFiles.join(QLatin1Char(' '));
-                pn->location().warning(tr("Cannot find file '%1' or '%2'").arg(tmp).arg(proFileName), details);
-                pn->location().warning(tr("  EXAMPLE PATH DOES NOT EXIST: %1").arg(examplePath), details);
-                return;
+                proFileName = examplePath + QLatin1Char('/') + examplePath.split(QLatin1Char('/')).last() + ".pyproject";
+                fullPath = Config::findFile(pn->doc().location(),
+                                            exampleFiles,
+                                            exampleDirs,
+                                            proFileName);
+                if (fullPath.isEmpty()) {
+                    QString details = QLatin1String("Example directories: ") + exampleDirs.join(QLatin1Char(' '));
+                    if (!exampleFiles.isEmpty())
+                        details += QLatin1String(", example files: ") + exampleFiles.join(QLatin1Char(' '));
+                    pn->location().warning(tr("Cannot find file '%1' or '%2'").arg(tmp).arg(proFileName), details);
+                    pn->location().warning(tr("  EXAMPLE PATH DOES NOT EXIST: %1").arg(examplePath), details);
+                    return;
+                }
             }
         }
     }
