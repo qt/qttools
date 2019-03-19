@@ -384,8 +384,12 @@ void Location::logToStdErr(const QString& message)
  */
 void Location::logToStdErrAlways(const QString& message)
 {
-    QTime t = QTime::currentTime();
-    fprintf(stderr, "%s LOG: %s\n", t.toString().toLatin1().data(), message.toLatin1().data());
+    if (Generator::useTimestamps()) {
+        QTime t = QTime::currentTime();
+        fprintf(stderr, "%s LOG: %s\n", t.toString().toLatin1().constData(), message.toLatin1().data());
+    } else {
+        fprintf(stderr, "LOG: %s\n", message.toLatin1().constData());
+    }
     fflush(stderr);
 }
 

@@ -48,6 +48,7 @@ private:
     QCommandLineOption prepareOption, generateOption, logProgressOption;
     QCommandLineOption singleExecOption, writeQaPagesOption;
     QCommandLineOption includePathOption, includePathSystemOption, frameworkOption;
+    QCommandLineOption timestampsOption;
 };
 
 QT_END_NAMESPACE

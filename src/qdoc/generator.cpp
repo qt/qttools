@@ -72,6 +72,7 @@ Generator::QDocPass Generator::qdocPass_ = Generator::Neither;
 bool Generator::qdocSingleExec_ = false;
 bool Generator::qdocWriteQaPages_ = false;
 bool Generator::useOutputSubdirs_ = true;
+bool Generator::useTimestamps_ = false;
 QmlTypeNode* Generator::qmlTypeContext_ = nullptr;
 
 static QRegExp tag("</?@[^>]*>");
