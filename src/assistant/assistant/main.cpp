@@ -268,6 +268,7 @@ void setupTranslations()
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     QCoreApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
     TRACE_OBJ
     QScopedPointer<QCoreApplication> a(createApplication(argc, argv));
