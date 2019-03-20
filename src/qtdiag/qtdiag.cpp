@@ -679,11 +679,15 @@ QString qtDiag(unsigned flags)
 
     // On Windows, this will provide addition GPU info similar to the output of dxdiag.
     if (const QPlatformNativeInterface *ni = QGuiApplication::platformNativeInterface()) {
-        const QVariant gpuInfoV = ni->property("gpu");
-        if (gpuInfoV.type() == QVariant::Map) {
-            const QString description = gpuInfoV.toMap().value(QStringLiteral("printable")).toString();
-            if (!description.isEmpty())
-                str << "\nGPU:\n" << description;
+        const QVariant gpuInfoV = ni->property("gpuList");
+        if (gpuInfoV.type() == QVariant::List) {
+            const auto gpuList = gpuInfoV.toList();
+            for (int i = 0; i < gpuList.size(); ++i) {
+                const QString description =
+                        gpuList.at(i).toMap().value(QStringLiteral("printable")).toString();
+                if (!description.isEmpty())
+                    str << "\nGPU #" << (i + 1) << ":\n" << description << '\n';
+            }
         }
     }
     return result;
