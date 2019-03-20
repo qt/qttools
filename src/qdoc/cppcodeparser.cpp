@@ -336,11 +336,21 @@ Node* CppCodeParser::processTopicCommand(const Doc& doc,
         pn->setLocation(doc.startLocation());
         return pn;
     } else if (command == COMMAND_QMLTYPE) {
-        QmlTypeNode* qcn = new QmlTypeNode(qdb_->primaryTreeRoot(), arg.first);
+        QmlTypeNode *qcn = nullptr;
+        Node *candidate = qdb_->primaryTreeRoot()->findChildNode(arg.first, Node::QML);
+        if (candidate != nullptr)
+            qcn = static_cast<QmlTypeNode*>(candidate);
+        else
+            qcn = new QmlTypeNode(qdb_->primaryTreeRoot(), arg.first);
         qcn->setLocation(doc.startLocation());
         return qcn;
     } else if (command == COMMAND_JSTYPE) {
-        QmlTypeNode* qcn = new QmlTypeNode(qdb_->primaryTreeRoot(), arg.first, Node::JsType);
+        QmlTypeNode *qcn = nullptr;
+        Node *candidate = qdb_->primaryTreeRoot()->findChildNode(arg.first, Node::JS);
+        if (candidate != nullptr)
+            qcn = static_cast<QmlTypeNode*>(candidate);
+        else
+            qcn = new QmlTypeNode(qdb_->primaryTreeRoot(), arg.first, Node::JsType);
         qcn->setLocation(doc.startLocation());
         return qcn;
     } else if (command == COMMAND_QMLBASICTYPE) {
@@ -442,15 +452,8 @@ void CppCodeParser::processQmlProperties(const Doc &doc, NodeList &nodes, DocLis
     }
 
     QmlTypeNode* qmlType = qdb_->findQmlType(module, qmlTypeName);
-    if (qmlType == nullptr) {
-        QString msg;
-        if (topics.size() > 1 && !group.isEmpty())
-            msg = tr("QML/JS type '%1' not found for property group '%2'").arg(qmlTypeName).arg(group);
-        else
-            msg = tr("QML/JS type '%1' not found for property '%2'").arg(qmlTypeName).arg(property);
-        doc.startLocation().warning(msg);
-        return;
-    }
+    if (qmlType == nullptr)
+        qmlType = new QmlTypeNode(qdb_->primaryTreeRoot(), qmlTypeName);
 
     SharedCommentNode* scn = nullptr;
     if (topics.size() > 1) {
@@ -565,7 +568,7 @@ void CppCodeParser::processMetaCommand(const Doc &doc,
     else if (command == COMMAND_RELATES) {
         QStringList path = arg.split("::");
         Aggregate *aggregate = qdb_->findRelatesNode(path);
-        if (!aggregate)
+        if (aggregate == nullptr)
             aggregate = new ProxyNode(node->root(), arg);
 
         if (node->parent() == aggregate) { // node is already a child of aggregate
@@ -751,9 +754,9 @@ FunctionNode *CppCodeParser::parseOtherFuncArg(const QString &topic, const Locat
     funcName = colonSplit.last();
 
     Aggregate *aggregate = qdb_->findQmlType(moduleName, elementName);
-    if (!aggregate)
+    if (aggregate == nullptr)
         aggregate = qdb_->findQmlBasicType(moduleName, elementName);
-    if (!aggregate)
+    if (aggregate == nullptr)
         return nullptr;
 
     QString params;

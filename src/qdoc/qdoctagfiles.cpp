@@ -73,7 +73,7 @@ QDocTagFiles::~QDocTagFiles()
  */
 QDocTagFiles* QDocTagFiles::qdocTagFiles()
 {
-   if (!qdocTagFiles_)
+   if (qdocTagFiles_ == nullptr)
       qdocTagFiles_ = new QDocTagFiles;
    return qdocTagFiles_;
 }
@@ -83,7 +83,7 @@ QDocTagFiles* QDocTagFiles::qdocTagFiles()
  */
 void QDocTagFiles::destroyQDocTagFiles()
 {
-    if (qdocTagFiles_) {
+    if (qdocTagFiles_ != nullptr) {
         delete qdocTagFiles_;
         qdocTagFiles_ = nullptr;
     }

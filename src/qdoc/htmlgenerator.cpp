@@ -2181,9 +2181,9 @@ void HtmlGenerator::generateHeader(const QString& title,
         if (node->links().contains(Node::PreviousLink)) {
             linkPair = node->links()[Node::PreviousLink];
             linkNode = qdb_->findNodeForTarget(linkPair.first, node);
-            if (!linkNode)
+            if (linkNode == nullptr)
                 node->doc().location().warning(tr("Cannot link to '%1'").arg(linkPair.first));
-            if (!linkNode || linkNode == node)
+            if (linkNode == nullptr || linkNode == node)
                 anchorPair = linkPair;
             else
                 anchorPair = anchorForNode(linkNode);
@@ -2202,9 +2202,9 @@ void HtmlGenerator::generateHeader(const QString& title,
         if (node->links().contains(Node::NextLink)) {
             linkPair = node->links()[Node::NextLink];
             linkNode = qdb_->findNodeForTarget(linkPair.first, node);
-            if (!linkNode)
+            if (linkNode == nullptr)
                 node->doc().location().warning(tr("Cannot link to '%1'").arg(linkPair.first));
-            if (!linkNode || linkNode == node)
+            if (linkNode == nullptr || linkNode == node)
                 anchorPair = linkPair;
             else
                 anchorPair = anchorForNode(linkNode);
@@ -2225,9 +2225,9 @@ void HtmlGenerator::generateHeader(const QString& title,
         if (node->links().contains(Node::StartLink)) {
             linkPair = node->links()[Node::StartLink];
             linkNode = qdb_->findNodeForTarget(linkPair.first, node);
-            if (!linkNode)
+            if (linkNode == nullptr)
                 node->doc().location().warning(tr("Cannot link to '%1'").arg(linkPair.first));
-            if (!linkNode || linkNode == node)
+            if (linkNode == nullptr || linkNode == node)
                 anchorPair = linkPair;
             else
                 anchorPair = anchorForNode(linkNode);
@@ -2412,7 +2412,7 @@ The number of rows is known.
 */
 void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
 {
-    if (!qcn)
+    if (qcn == nullptr)
         return;
     QMap<QString, Text> requisites;
     Text text;
@@ -2434,7 +2434,7 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
     //add the module name and version to the map
     QString logicalModuleVersion;
     const CollectionNode* collection = qdb_->getCollectionNode(qcn->logicalModuleName(), qcn->nodeType());
-    if (collection)
+    if (collection != nullptr)
         logicalModuleVersion = collection->logicalModuleVersion();
     else
         logicalModuleVersion = qcn->logicalModuleVersion();

@@ -35,7 +35,7 @@
 
 QT_BEGIN_NAMESPACE
 
-//Aggregate *Sections::aggregate_ = 0;
+//Aggregate *Sections::aggregate_ = nullptr;
 
 static bool sectionsInitialized = false;
 QVector<Section> Sections::stdSummarySections_(7, Section(Section::Summary, Section::Active));

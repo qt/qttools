@@ -159,7 +159,7 @@ void QDocForest::setPrimaryTree(const QString& t)
     QString T = t.toLower();
     primaryTree_ = findTree(T);
     forest_.remove(T);
-    if (!primaryTree_)
+    if (primaryTree_ == nullptr)
         qDebug() << "ERROR: Could not set primary tree to:" << t;
 }
 
@@ -477,7 +477,7 @@ QDocDatabase::~QDocDatabase()
 */
 QDocDatabase* QDocDatabase::qdocDB()
 {
-    if (!qdocDB_) {
+    if (qdocDB_ == nullptr) {
       qdocDB_ = new QDocDatabase;
       initializeDB();
     }
@@ -489,7 +489,7 @@ QDocDatabase* QDocDatabase::qdocDB()
  */
 void QDocDatabase::destroyQdocDB()
 {
-    if (qdocDB_) {
+    if (qdocDB_ != nullptr) {
         delete qdocDB_;
         qdocDB_ = nullptr;
     }
@@ -1555,7 +1555,7 @@ const Node* QDocDatabase::findNodeForAtom(const Atom* a, const Node* relative, Q
             QStringList path = function.split("::");
             node = domain->findFunctionNode(path, Parameters(signature), nullptr, genus);
         }
-        if (!node) {
+        if (node == nullptr) {
             int flags = SearchBaseClasses | SearchEnumValues;
             QStringList nodePath = first.split("::");
             QString target;
@@ -1572,11 +1572,11 @@ const Node* QDocDatabase::findNodeForAtom(const Atom* a, const Node* relative, Q
             node = findNodeByNameAndType(QStringList(first), &Node::isPageNode);
         else if (first.endsWith(QChar(')')))
             node = findFunctionNode(first, relative, genus);
-        if (!node)
+        if (node == nullptr)
             return findNodeForTarget(targetPath, relative, genus, ref);
     }
 
-    if (node && ref.isEmpty()) {
+    if (node != nullptr && ref.isEmpty()) {
         if (!node->url().isEmpty())
             return node;
         targetPath.removeFirst();

@@ -550,7 +550,12 @@ bool QmlDocVisitor::visit(QQmlJS::AST::UiObjectDefinition *definition)
     nestingLevel++;
 
     if (current->isNamespace()) {
-        QmlTypeNode *component = new QmlTypeNode(current, name);
+        QmlTypeNode *component = nullptr;
+        Node *candidate = current ->findChildNode(name, Node::QML);
+        if (candidate != nullptr)
+            component = static_cast<QmlTypeNode*>(candidate);
+        else
+            component = new QmlTypeNode(current, name);
         component->setTitle(name);
         component->setImportList(importList);
         importList.clear();

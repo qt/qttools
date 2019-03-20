@@ -1709,9 +1709,9 @@ void ClassNode::fixBaseClasses()
     // Remove private and duplicate base classes.
     while (i < bases_.size()) {
         ClassNode* bc = bases_.at(i).node_;
-        if (!bc)
+        if (bc == nullptr)
             bc = QDocDatabase::qdocDB()->findClassNode(bases_.at(i).path_);
-        if (bc && (bc->access() == Node::Private || found.contains(bc))) {
+        if (bc != nullptr && (bc->access() == Node::Private || found.contains(bc))) {
             RelatedClass rc = bases_.at(i);
             bases_.removeAt(i);
             ignoredBases_.append(rc);
@@ -1728,7 +1728,7 @@ void ClassNode::fixBaseClasses()
     i = 0;
     while (i < derived_.size()) {
         ClassNode* dc = derived_.at(i).node_;
-        if (dc && dc->access() == Node::Private) {
+        if (dc != nullptr && dc->access() == Node::Private) {
             derived_.removeAt(i);
             const QList<RelatedClass> &dd = dc->derivedClasses();
             for (int j = dd.size() - 1; j >= 0; --j)
@@ -1847,16 +1847,16 @@ FunctionNode* ClassNode::findOverriddenFunction(const FunctionNode* fn)
     QList<RelatedClass>::Iterator bc = bases_.begin();
     while (bc != bases_.end()) {
         ClassNode *cn = bc->node_;
-        if (!cn) {
+        if (cn == nullptr) {
             cn = QDocDatabase::qdocDB()->findClassNode(bc->path_);
             bc->node_ = cn;
         }
-        if (cn) {
+        if (cn != nullptr) {
             FunctionNode *result = cn->findFunctionChild(fn);
-            if (result && !result->isNonvirtual())
+            if (result != nullptr && !result->isNonvirtual())
                 return result;
             result = cn->findOverriddenFunction(fn);
-            if (result && !result->isNonvirtual())
+            if (result != nullptr && !result->isNonvirtual())
                 return result;
         }
         ++bc;
@@ -2528,7 +2528,7 @@ void FunctionNode::debug() const
  */
 bool FunctionNode::compare(const FunctionNode *fn) const
 {
-    if (!fn)
+    if (fn == nullptr)
         return false;
     if (metaness() != fn->metaness())
         return false;
@@ -3362,12 +3362,12 @@ void Aggregate::resolveQmlInheritance()
                     base = QDocDatabase::qdocDB()->findQmlType(imports[i], type->qmlBaseName());
                     if (base && (base != type)) {
                         if (base->logicalModuleVersion()[0] != imports[i].version_[0])
-                            base = 0; // Safeguard for QTBUG-53529
+                            base = nullptr; // Safeguard for QTBUG-53529
                         break;
                     }
                 }
             }
-            if (base == 0) {
+            if (base == nullptr) {
                 base = QDocDatabase::qdocDB()->findQmlType(QString(), type->qmlBaseName());
             }
             if (base && (base != type)) {

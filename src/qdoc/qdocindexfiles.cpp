@@ -85,7 +85,7 @@ QDocIndexFiles::~QDocIndexFiles()
  */
 QDocIndexFiles* QDocIndexFiles::qdocIndexFiles()
 {
-   if (!qdocIndexFiles_)
+   if (qdocIndexFiles_ == nullptr)
       qdocIndexFiles_ = new QDocIndexFiles;
    return qdocIndexFiles_;
 }
@@ -95,7 +95,7 @@ QDocIndexFiles* QDocIndexFiles::qdocIndexFiles()
  */
 void QDocIndexFiles::destroyQDocIndexFiles()
 {
-    if (qdocIndexFiles_) {
+    if (qdocIndexFiles_ != nullptr) {
         delete qdocIndexFiles_;
         qdocIndexFiles_ = nullptr;
     }
@@ -762,7 +762,7 @@ static const QString getThreadSafenessString(Node::ThreadSafeness t)
  */
 bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node, IndexSectionWriter *post)
 {
-    if (!gen_)
+    if (gen_ == nullptr)
         gen_ = Generator::currentGenerator();
 
     Q_ASSERT(gen_);

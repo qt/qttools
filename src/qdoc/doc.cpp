@@ -2577,7 +2577,7 @@ QString DocParser::getCode(int cmd, CodeMarker *marker, const QString &argStr)
 
     int indent = indentLevel(code);
     code = unindent(indent, code);
-    if (!marker)
+    if (marker == nullptr)
         marker = CodeMarker::markerForCode(code);
     return marker->markedUpCode(code, nullptr, location());
 }
@@ -3389,7 +3389,7 @@ QString Doc::canonicalTitle(const QString &title)
 
 void Doc::detach()
 {
-    if (!priv) {
+    if (priv == nullptr) {
         priv = new DocPrivate;
         return;
     }

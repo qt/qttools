@@ -650,7 +650,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
     else
         rootNode = qdb_->primaryTreeRoot();
 
-    if (!rootNode)
+    if (rootNode == nullptr)
         return;
 
     project.files.clear();

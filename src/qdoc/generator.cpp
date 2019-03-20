@@ -423,7 +423,7 @@ QString Generator::fileBase(const Node *node) const
         forever {
             const Node *pp = p->parent();
             base.prepend(p->name());
-            if (!pp || pp->name().isEmpty() || pp->isTextPageNode())
+            if (pp == nullptr || pp->name().isEmpty() || pp->isTextPageNode())
                 break;
             base.prepend(QLatin1Char('-'));
             p = pp;
@@ -546,7 +546,7 @@ QMap<QString, QString>& Generator::formattingRightMap()
  */
 QString Generator::fullDocumentLocation(const Node *node, bool useSubdir)
 {
-    if (!node)
+    if (node == nullptr)
         return QString();
     if (!node->url().isEmpty())
         return node->url();
@@ -721,7 +721,7 @@ const Atom *Generator::generateAtomList(const Atom *atom,
                                         bool generate,
                                         int &numAtoms)
 {
-    while (atom) {
+    while (atom != nullptr) {
         if (atom->type() == Atom::FormatIf) {
             int numAtoms0 = numAtoms;
             bool rightFormat = canHandleFormat(atom->string());
@@ -730,7 +730,7 @@ const Atom *Generator::generateAtomList(const Atom *atom,
                                     marker,
                                     generate && rightFormat,
                                     numAtoms);
-            if (!atom)
+            if (atom == nullptr)
                 return nullptr;
 
             if (atom->type() == Atom::FormatElse) {
@@ -740,7 +740,7 @@ const Atom *Generator::generateAtomList(const Atom *atom,
                                         marker,
                                         generate && !rightFormat,
                                         numAtoms);
-                if (!atom)
+                if (atom == nullptr)
                     return nullptr;
             }
 
