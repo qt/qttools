@@ -55,6 +55,7 @@ public:
     virtual ~QmlMarkupVisitor();
 
     QString markedUpCode();
+    bool hasError() const;
 
     bool visit(QQmlJS::AST::UiImport *) override;
     void endVisit(QQmlJS::AST::UiImport *) override;
@@ -152,6 +153,7 @@ private:
     void addVerbatim(QQmlJS::AST::SourceLocation first,
                      QQmlJS::AST::SourceLocation last = QQmlJS::AST::SourceLocation());
     QString sourceText(QQmlJS::AST::SourceLocation &location);
+    void throwRecursionDepthError();
 
     QQmlJS::Engine *engine;
     QVector<ExtraType> extraTypes;
@@ -160,6 +162,7 @@ private:
     QString output;
     quint32 cursor;
     int extraIndex;
+    bool hasRecursionDepthError = false;
 };
 Q_DECLARE_TYPEINFO(QmlMarkupVisitor::ExtraType, Q_PRIMITIVE_TYPE);
 #endif

@@ -2088,14 +2088,15 @@ void QAbstractFormBuilder::saveItemViewExtraInfo(const QAbstractItemView *itemVi
     //
     // Special handling for qtableview/qtreeview fake header attributes
     //
-    static const QStringList realPropertyNames =
-            (QStringList() << QStringLiteral("visible")
-                           << QStringLiteral("cascadingSectionResizes")
-                           << QStringLiteral("defaultSectionSize")
-                           << QStringLiteral("highlightSections")
-                           << QStringLiteral("minimumSectionSize")
-                           << QStringLiteral("showSortIndicator")
-                           << QStringLiteral("stretchLastSection"));
+    static const QLatin1String realPropertyNames[] = {
+        QLatin1String("visible"),
+        QLatin1String("cascadingSectionResizes"),
+        QLatin1String("minimumSectionSize"),    // before defaultSectionSize
+        QLatin1String("defaultSectionSize"),
+        QLatin1String("highlightSections"),
+        QLatin1String("showSortIndicator"),
+        QLatin1String("stretchLastSection"),
+    };
 
     if (const QTreeView *treeView = qobject_cast<const QTreeView*>(itemView)) {
         auto viewProperties = ui_widget->elementAttribute();
@@ -2465,14 +2466,15 @@ void QAbstractFormBuilder::loadItemViewExtraInfo(DomWidget *ui_widget, QAbstract
     //
     // Special handling for qtableview/qtreeview fake header attributes
     //
-    static const QStringList realPropertyNames =
-            (QStringList() << QStringLiteral("visible")
-                           << QStringLiteral("cascadingSectionResizes")
-                           << QStringLiteral("defaultSectionSize")
-                           << QStringLiteral("highlightSections")
-                           << QStringLiteral("minimumSectionSize")
-                           << QStringLiteral("showSortIndicator")
-                           << QStringLiteral("stretchLastSection"));
+    static const QLatin1String realPropertyNames[] = {
+        QLatin1String("visible"),
+        QLatin1String("cascadingSectionResizes"),
+        QLatin1String("minimumSectionSize"),    // before defaultSectionSize
+        QLatin1String("defaultSectionSize"),
+        QLatin1String("highlightSections"),
+        QLatin1String("showSortIndicator"),
+        QLatin1String("stretchLastSection"),
+    };
 
     if (QTreeView *treeView = qobject_cast<QTreeView*>(itemView)) {
         const auto &allAttributes = ui_widget->elementAttribute();

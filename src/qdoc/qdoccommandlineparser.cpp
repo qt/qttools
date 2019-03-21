@@ -58,7 +58,8 @@ QDocCommandLineParser::QDocCommandLineParser()
       writeQaPagesOption(QStringList() << QStringLiteral("write-qa-pages")),
       includePathOption("I", "Add dir to the include path for header files.", "path"),
       includePathSystemOption("isystem", "Add dir to the system include path for header files.", "path"),
-      frameworkOption("F", "Add macOS framework to the include path for header files.", "framework")
+      frameworkOption("F", "Add macOS framework to the include path for header files.", "framework"),
+      timestampsOption(QStringList() << QStringLiteral("timestamps"))
 {
     setApplicationDescription(QCoreApplication::translate("qdoc", "Qt documentation generator"));
     addHelpOption();
@@ -138,6 +139,9 @@ QDocCommandLineParser::QDocCommandLineParser()
 
     frameworkOption.setFlags(QCommandLineOption::ShortOptionStyle);
     addOption(frameworkOption);
+
+    timestampsOption.setDescription(QCoreApplication::translate("qdoc", "Timestamp each qdoc log line."));
+    addOption(timestampsOption);
 }
 
 void QDocCommandLineParser::process(const QCoreApplication &app, QDocGlobals &qdocGlobals)
@@ -184,6 +188,8 @@ void QDocCommandLineParser::process(const QCoreApplication &app, QDocGlobals &qd
         Generator::setWriteQaPages();
     if (isSet(logProgressOption))
         Location::startLoggingProgress();
+    if (isSet(timestampsOption))
+        Generator::setUseTimestamps();
 
     QDir currentDir = QDir::current();
     const auto paths = values(includePathOption);

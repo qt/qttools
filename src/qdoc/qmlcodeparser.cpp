@@ -142,6 +142,10 @@ void QmlCodeParser::parseSourceFile(const Location& location, const QString& fil
                               topicCommands() + commonMetaCommands(),
                               topicCommands());
         QQmlJS::AST::Node::accept(ast, &visitor);
+        if (visitor.hasError()) {
+            qDebug().nospace() << qPrintable(filePath) << ": Could not analyze QML file. "
+                               << "The output is incomplete.";
+        }
     }
     foreach (const  QQmlJS::DiagnosticMessage &msg, parser->diagnosticMessages()) {
         qDebug().nospace() << qPrintable(filePath) << ':' << msg.loc.startLine
