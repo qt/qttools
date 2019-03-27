@@ -49,7 +49,7 @@ QT_BEGIN_NAMESPACE
 class QVersionNumber;
 class QHelpFilterDataPrivate;
 
-class QHELP_EXPORT QHelpFilterData
+class QHELP_EXPORT QHelpFilterData final
 {
 public:
     QHelpFilterData();

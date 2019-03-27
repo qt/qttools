@@ -93,9 +93,7 @@ QHelpFilterData::QHelpFilterData(QHelpFilterData &&) = default;
 /*!
     Destroys the filter.
 */
-QHelpFilterData::~QHelpFilterData()
-{
-}
+QHelpFilterData::~QHelpFilterData() = default;
 
 /*!
     Assigns \a other to this filter and returns a reference to this filter.
