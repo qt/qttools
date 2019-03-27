@@ -61,6 +61,9 @@ public:
     QHelpFilterData &operator=(QHelpFilterData &&other);
     bool operator==(const QHelpFilterData &other) const;
 
+    void swap(QHelpFilterData &other) Q_DECL_NOTHROW
+    { d.swap(other.d); }
+
     void setComponents(const QStringList &components);
     void setVersions(const QList<QVersionNumber> &versions);
 

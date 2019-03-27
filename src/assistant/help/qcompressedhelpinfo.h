@@ -60,6 +60,9 @@ public:
     QCompressedHelpInfo &operator=(const QCompressedHelpInfo &other);
     QCompressedHelpInfo &operator=(QCompressedHelpInfo &&other);
 
+    void swap(QCompressedHelpInfo &other) Q_DECL_NOTHROW
+    { d.swap(other.d); }
+
     QString namespaceName() const;
     QString component() const;
     QVersionNumber version() const;
