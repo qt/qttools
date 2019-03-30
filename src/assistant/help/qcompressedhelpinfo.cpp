@@ -120,6 +120,13 @@ QCompressedHelpInfo &QCompressedHelpInfo::operator=(const QCompressedHelpInfo &)
 QCompressedHelpInfo &QCompressedHelpInfo::operator=(QCompressedHelpInfo &&) = default;
 
 /*!
+    \fn void QCompressedHelpInfo::swap(QCompressedHelpInfo &other)
+
+    Swaps the compressed help file \a other with this compressed help file. This
+    operation is very fast and never fails.
+*/
+
+/*!
     Returns the namespace name of the compressed help file.
 */
 QString QCompressedHelpInfo::namespaceName() const

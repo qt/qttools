@@ -93,9 +93,7 @@ QHelpFilterData::QHelpFilterData(QHelpFilterData &&) = default;
 /*!
     Destroys the filter.
 */
-QHelpFilterData::~QHelpFilterData()
-{
-}
+QHelpFilterData::~QHelpFilterData() = default;
 
 /*!
     Assigns \a other to this filter and returns a reference to this filter.
@@ -107,6 +105,13 @@ QHelpFilterData &QHelpFilterData::operator=(const QHelpFilterData &) = default;
     Move-assigns \a other to this QHelpFilterData instance.
 */
 QHelpFilterData &QHelpFilterData::operator=(QHelpFilterData &&) = default;
+
+/*!
+    \fn void QHelpFilterData::swap(QCompressedHelpInfo &other)
+
+    Swaps the filter \a other with this filter. This
+    operation is very fast and never fails.
+*/
 
 bool QHelpFilterData::operator==(const QHelpFilterData &other) const
 {

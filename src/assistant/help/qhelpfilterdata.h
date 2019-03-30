@@ -49,7 +49,7 @@ QT_BEGIN_NAMESPACE
 class QVersionNumber;
 class QHelpFilterDataPrivate;
 
-class QHELP_EXPORT QHelpFilterData
+class QHELP_EXPORT QHelpFilterData final
 {
 public:
     QHelpFilterData();
@@ -60,6 +60,9 @@ public:
     QHelpFilterData &operator=(const QHelpFilterData &other);
     QHelpFilterData &operator=(QHelpFilterData &&other);
     bool operator==(const QHelpFilterData &other) const;
+
+    void swap(QHelpFilterData &other) Q_DECL_NOTHROW
+    { d.swap(other.d); }
 
     void setComponents(const QStringList &components);
     void setVersions(const QList<QVersionNumber> &versions);
