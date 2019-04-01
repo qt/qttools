@@ -62,9 +62,9 @@ NEWLINE AT THE START</translation>
     </message>
     <message>
         <location filename="main.cpp" line="49"/>
-        <source>carriage return and line feed last
+        <source>carriage return and line feed last<byte value="xd"/>
 </source>
-        <translation type="unfinished">CARRIAGE RETURN AND LINE FEED LAST
+        <translation type="unfinished">CARRIAGE RETURN AND LINE FEED LAST<byte value="xd"/>
 </translation>
     </message>
 </context>
