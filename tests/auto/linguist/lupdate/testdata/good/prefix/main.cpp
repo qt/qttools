@@ -41,3 +41,16 @@ void Foo::bar()
 {
 	tr("BAR");
 }
+
+class BitFields : public QObject
+{
+    int bits : 20;
+    QString str = tr("text BitFields");
+};
+
+Bibi::Bibi()
+{
+    int bits : 32;
+    tr("text Bibi");
+    Babebi::tr("text Babebi");
+}

@@ -239,6 +239,7 @@ private:
     std::ostream &yyMsg(int line = 0);
 
     int getChar();
+    TokenType lookAheadToSemicolonOrLeftBrace();
     TokenType getToken();
 
     void processComment();
@@ -447,6 +448,23 @@ int CppParser::getChar()
         }
         yyInPtr = uc;
         return int(c);
+    }
+}
+
+CppParser::TokenType CppParser::lookAheadToSemicolonOrLeftBrace()
+{
+    if (*yyInPtr == 0)
+        return Tok_Eof;
+    const ushort *uc = yyInPtr + 1;
+    forever {
+        ushort c = *uc;
+        if (!c)
+            return Tok_Eof;
+        if (c == ';')
+            return Tok_Semicolon;
+        if (c == '{')
+            return Tok_LeftBrace;
+        ++uc;
     }
 }
 
@@ -2182,8 +2200,11 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                     pendingContext = prospectiveContext;
                     prospectiveContext.clear();
                 }
-                if (yyTok == Tok_Colon)
-                    yyTokColonSeen = true;
+                //ignore colons for bitfields (are usually followed by a semicolon)
+                if (yyTok == Tok_Colon) {
+                    if (lookAheadToSemicolonOrLeftBrace() != Tok_Semicolon)
+                        yyTokColonSeen = true;
+                }
             }
             metaExpected = true;
             yyTok = getToken();
