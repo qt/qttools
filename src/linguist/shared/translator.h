@@ -135,6 +135,7 @@ public:
     void dropTranslations();
     void dropUiLines();
     void makeFileNamesAbsolute(const QDir &originalPath);
+    bool translationsExist();
 
     struct Duplicates { QSet<int> byId, byContents; };
     Duplicates resolveDuplicates();

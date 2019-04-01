@@ -310,6 +310,19 @@ static void updateTsFiles(const Translator &fetchedTor, const QStringList &tsFil
                 printErr(LU::tr("lupdate warning: Specified source language '%1' disagrees with"
                                 " existing file's language '%2'. Ignoring.\n")
                          .arg(sourceLanguage, tor.sourceLanguageCode()));
+            // If there is translation in the file, the language should be recognized
+            // (when the language is not recognized, plural translations are lost)
+            if (tor.translationsExist()) {
+                QLocale::Language l;
+                QLocale::Country c;
+                tor.languageAndCountry(tor.languageCode(), &l, &c);
+                QStringList forms;
+                if (!getNumerusInfo(l, c, 0, &forms, 0)) {
+                    printErr(LU::tr("File %1 won't be updated: it contains translation but the"
+                    " target language is not recognized\n").arg(fileName));
+                    continue;
+                }
+            }
         } else {
             if (!targetLanguage.isEmpty())
                 tor.setLanguageCode(targetLanguage);
