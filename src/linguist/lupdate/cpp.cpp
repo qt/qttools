@@ -250,7 +250,6 @@ private:
     bool matchStringOrNull(QString *s);
     bool matchExpression();
 
-    QString transcode(const QString &str);
     void recordMessage(
         int line, const QString &context, const QString &text, const QString &comment,
         const QString &extracomment, const QString &msgid, const TranslatorMessage::ExtraData &extra,
@@ -1469,7 +1468,7 @@ bool CppParser::matchString(QString *s)
             return matches;
         matches = true;
         if (yyTok == Tok_String)
-            *s += transcode(yyWord);
+            *s += ParserTool::transcode(yyWord);
         else
             *s += yyWord;
         s->detach();
@@ -1550,65 +1549,14 @@ bool CppParser::matchExpression()
     return true;
 }
 
-QString CppParser::transcode(const QString &str)
-{
-    static const char tab[] = "abfnrtv";
-    static const char backTab[] = "\a\b\f\n\r\t\v";
-    // This function has to convert back to bytes, as C's \0* sequences work at that level.
-    const QByteArray in = str.toUtf8();
-    QByteArray out;
-
-    out.reserve(in.length());
-    for (int i = 0; i < in.length();) {
-        uchar c = in[i++];
-        if (c == '\\') {
-            if (i >= in.length())
-                break;
-            c = in[i++];
-
-            if (c == '\n')
-                continue;
-
-            if (c == 'x' || c == 'u' || c == 'U') {
-                const bool unicode = (c != 'x');
-                QByteArray hex;
-                while (i < in.length() && isxdigit((c = in[i]))) {
-                    hex += c;
-                    i++;
-                }
-                if (unicode)
-                    out += QString(QChar(hex.toUInt(nullptr, 16))).toUtf8();
-                else
-                    out += hex.toUInt(nullptr, 16);
-            } else if (c >= '0' && c < '8') {
-                QByteArray oct;
-                int n = 0;
-                oct += c;
-                while (n < 2 && i < in.length() && (c = in[i]) >= '0' && c < '8') {
-                    i++;
-                    n++;
-                    oct += c;
-                }
-                out += oct.toUInt(0, 8);
-            } else {
-                const char *p = strchr(tab, c);
-                out += !p ? c : backTab[p - tab];
-            }
-        } else {
-            out += c;
-        }
-    }
-    return QString::fromUtf8(out.constData(), out.length());
-}
-
 void CppParser::recordMessage(int line, const QString &context, const QString &text, const QString &comment,
     const QString &extracomment, const QString &msgid, const TranslatorMessage::ExtraData &extra, bool plural)
 {
     TranslatorMessage msg(
-        transcode(context), text, transcode(comment), QString(),
+        ParserTool::transcode(context), text, ParserTool::transcode(comment), QString(),
         yyFileName, line, QStringList(),
         TranslatorMessage::Unfinished, plural);
-    msg.setExtraComment(transcode(extracomment.simplified()));
+    msg.setExtraComment(ParserTool::transcode(extracomment.simplified()));
     msg.setId(msgid);
     msg.setExtras(extra);
     tor->append(msg);
@@ -1778,7 +1726,7 @@ void CppParser::handleTrId(bool plural)
     yyTok = getToken();
     if (matchString(&msgid) && !msgid.isEmpty()) {
         plural |= match(Tok_Comma);
-        recordMessage(line, QString(), transcode(sourcetext), QString(), extracomment,
+        recordMessage(line, QString(), ParserTool::transcode(sourcetext), QString(), extracomment,
                       msgid, extra, plural);
     }
     sourcetext.clear();
@@ -2335,11 +2283,11 @@ void CppParser::processComment()
                 context = comment.left(k);
                 comment.remove(0, k + 1);
                 TranslatorMessage msg(
-                        transcode(context), QString(),
-                        transcode(comment), QString(),
+                        ParserTool::transcode(context), QString(),
+                        ParserTool::transcode(comment), QString(),
                         yyFileName, yyLineNo, QStringList(),
                         TranslatorMessage::Finished, false);
-                msg.setExtraComment(transcode(extracomment.simplified()));
+                msg.setExtraComment(ParserTool::transcode(extracomment.simplified()));
                 extracomment.clear();
                 tor->append(msg);
                 tor->setExtras(extra);

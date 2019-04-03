@@ -99,6 +99,11 @@ bool loadQml(Translator &translator, const QString &filename, ConversionData &cd
     UNARY_MACRO(qsTranslate) \
     /*end*/
 
+class ParserTool
+{
+public:
+    static QString transcode(const QString &str);
+};
 
 class TrFunctionAliasManager {
 public:

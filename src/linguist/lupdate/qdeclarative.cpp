@@ -130,11 +130,11 @@ protected:
                 if (!sourcetext.isEmpty())
                     yyMsg(identLineNo) << qPrintable(LU::tr("//% cannot be used with %1(). Ignoring\n").arg(name));
 
-                TranslatorMessage msg(m_component, source,
+                TranslatorMessage msg(m_component, ParserTool::transcode(source),
                     comment, QString(), m_fileName,
                     node->firstSourceLocation().startLine, QStringList(),
                     TranslatorMessage::Unfinished, plural);
-                msg.setExtraComment(extracomment.simplified());
+                msg.setExtraComment(ParserTool::transcode(extracomment.simplified()));
                 msg.setId(msgid);
                 msg.setExtras(extra);
                 m_translator->extend(msg, m_cd);
@@ -171,11 +171,11 @@ protected:
                         plural = true;
                 }
 
-                TranslatorMessage msg(context, source,
+                TranslatorMessage msg(context, ParserTool::transcode(source),
                     comment, QString(), m_fileName,
                     node->firstSourceLocation().startLine, QStringList(),
                     TranslatorMessage::Unfinished, plural);
-                msg.setExtraComment(extracomment.simplified());
+                msg.setExtraComment(ParserTool::transcode(extracomment.simplified()));
                 msg.setId(msgid);
                 msg.setExtras(extra);
                 m_translator->extend(msg, m_cd);
@@ -199,11 +199,11 @@ protected:
 
                 bool plural = node->arguments->next;
 
-                TranslatorMessage msg(QString(), sourcetext,
+                TranslatorMessage msg(QString(), ParserTool::transcode(sourcetext),
                     QString(), QString(), m_fileName,
                     node->firstSourceLocation().startLine, QStringList(),
                     TranslatorMessage::Unfinished, plural);
-                msg.setExtraComment(extracomment.simplified());
+                msg.setExtraComment(ParserTool::transcode(extracomment.simplified()));
                 msg.setId(id);
                 msg.setExtras(extra);
                 m_translator->extend(msg, m_cd);
