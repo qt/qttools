@@ -283,7 +283,7 @@ bool BrushPropertyManager::value(const QtProperty *property, QVariant *v) const
     const PropertyBrushMap::const_iterator brit = m_brushValues.constFind(const_cast<QtProperty *>(property));
     if (brit == m_brushValues.constEnd())
         return false;
-    qVariantSetValue(*v, brit.value());
+    v->setValue(brit.value());
     return true;
 }
 }

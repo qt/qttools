@@ -74,7 +74,7 @@ namespace {
         data.promotedItem = dbItem;
         data.referenced = referenced;
 
-        const QVariant userData = qVariantFromValue(data);
+        const QVariant userData = QVariant::fromValue(data);
 
         StandardItemList rc =  modelRow();
         // name
