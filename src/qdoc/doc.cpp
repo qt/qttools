@@ -3087,6 +3087,15 @@ bool Doc::isInternal() const
 }
 
 /*!
+  Returns true if the set of metacommands used in the doc
+  comment contains \e {reimp}.
+ */
+bool Doc::isMarkedReimp() const
+{
+    return metaCommandsUsed().contains(QLatin1String("reimp"));
+}
+
+/*!
   Returns a reference to the list of topic commands used in the
   current qdoc comment. Normally there is only one, but there
   can be multiple \e{qmlproperty} commands, for example.

@@ -279,14 +279,15 @@ bool Node::match(const QList<int>& types) const
 
 /*!
   Sets this Node's Doc to \a doc. If \a replace is false and
-  this Node already has a Doc, a warning is reported that the
-  Doc is being overridden, and it reports where the previous
-  Doc was found. If \a replace is true, the Doc is replaced
-  silently.
+  this Node already has a Doc, and if this doc is not marked
+  with the \\reimp command, a warning is reported that the
+  existing Doc is being overridden, and it reports where the
+  previous Doc was found. If \a replace is true, the Doc is
+  replaced silently.
  */
 void Node::setDoc(const Doc& doc, bool replace)
 {
-    if (!doc_.isEmpty() && !replace) {
+    if (!doc_.isEmpty() && !replace && !doc.isMarkedReimp()) {
         doc.location().warning(tr("Overrides a previous doc"));
         doc_.location().warning(tr("(The previous doc is here)"));
     }
