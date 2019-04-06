@@ -91,12 +91,10 @@ public:
         Module,
         QmlType,
         QmlModule,
-        QmlPropertyGroup,
         QmlProperty,
         QmlBasicType,
         JsType,
         JsModule,
-        JsPropertyGroup,
         JsProperty,
         JsBasicType,
         SharedComment,
@@ -186,7 +184,6 @@ public:
     bool isJsModule() const { return nodeType_ == JsModule; }
     bool isJsNode() const { return genus() == JS; }
     bool isJsProperty() const { return nodeType_ == JsProperty; }
-    bool isJsPropertyGroup() const { return nodeType_ == JsPropertyGroup; }
     bool isJsType() const { return nodeType_ == JsType; }
     bool isModule() const { return nodeType_ == Module; }
     bool isNamespace() const { return nodeType_ == Namespace; }
@@ -201,7 +198,6 @@ public:
     bool isQmlModule() const { return nodeType_ == QmlModule; }
     bool isQmlNode() const { return genus() == QML; }
     bool isQmlProperty() const { return nodeType_ == QmlProperty; }
-    bool isQmlPropertyGroup() const { return nodeType_ == QmlPropertyGroup; }
     bool isQmlType() const { return nodeType_ == QmlType; }
     bool isRelatedNonmember() const { return relatedNonmember_; }
     bool isStruct() const { return nodeType_ == Struct; }
@@ -227,6 +223,7 @@ public:
     virtual bool isReadOnly() const { return false; }
     virtual bool isRelatableType() const { return false; }
     virtual bool isMarkedReimp() const { return false; }
+    virtual bool isPropertyGroup() const { return false; }
     virtual bool isStatic() const { return false; }
     virtual bool isTextPageNode() const { return false; } // means PageNode but not Aggregate
     virtual bool isWrapper() const;
@@ -352,8 +349,6 @@ public:
     static QString pageTypeString(PageType t);
     static QString nodeTypeString(NodeType t);
     static QString nodeSubtypeString(unsigned char t);
-    static int incPropertyGroupCount();
-    static void clearPropertyGroupCount();
     static void initialize();
     static NodeType goal(const QString& t) { return goals_.value(t); }
     static bool nodeNameLessThan(const Node *first, const Node *second);
@@ -767,33 +762,6 @@ public:
     bool isFirstClassAggregate() const override { return true; }
 };
 
-class QmlPropertyGroupNode : public Aggregate
-{
-public:
-    QmlPropertyGroupNode(QmlTypeNode* parent, const QString& name);
-    virtual ~QmlPropertyGroupNode() { }
-    bool isQtQuickNode() const override { return parent()->isQtQuickNode(); }
-    QString qmlTypeName() const override { return parent()->qmlTypeName(); }
-    QString logicalModuleName() const override {
-        return parent()->logicalModuleName();
-    }
-    QString logicalModuleVersion() const override {
-        return parent()->logicalModuleVersion();
-    }
-    QString logicalModuleIdentifier() const override {
-        return parent()->logicalModuleIdentifier();
-    }
-    QString idNumber() override;
-    QString element() const override { return parent()->name(); }
-
-    void markInternal() override;
-    void markDefault() override;
-    void markReadOnly(bool flag) override;
-
-private:
-    int     idNumber_;
-};
-
 class QmlPropertyNode : public Node
 {
     Q_DECLARE_TR_FUNCTIONS(QDoc::QmlPropertyNode)
@@ -830,7 +798,7 @@ public:
     QString logicalModuleIdentifier() const override {
         return parent()->logicalModuleIdentifier();
     }
-    QString element() const override;
+    QString element() const override { return parent()->name(); }
 
     void markDefault() override { isdefault_ = true; }
     void markReadOnly(bool flag) override { readOnly_ = toFlagValue(flag); }
@@ -931,8 +899,16 @@ public:
         : Node(Node::SharedComment, n->parent(), QString()) {
         collective_.reserve(1); n->setSharedCommentNode(this);
     }
+ SharedCommentNode(QmlTypeNode *parent, int count, QString &group)
+        : Node(Node::SharedComment, parent, group) {
+        collective_.reserve(count);
+    }
     virtual ~SharedCommentNode() { collective_.clear(); }
 
+    bool isPropertyGroup() const override { return !collective_.isEmpty() &&
+            (collective_.at(0)->isQmlProperty() || collective_.at(0)->isJsProperty());
+    }
+    int count() const { return collective_.size(); }
     void append(Node* n) { collective_.append(n); }
     const QVector<Node*>& collective() const { return collective_; }
     void setOverloadFlags();

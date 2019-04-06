@@ -73,12 +73,7 @@ protected:
     virtual Node* processTopicCommand(const Doc& doc,
                                       const QString& command,
                                       const ArgLocPair& arg);
-    void processQmlProperties(const Doc& doc, NodeList& nodes, DocList& docs, bool jsProps);
-    bool splitQmlPropertyGroupArg(const QString& arg,
-                                  QString& module,
-                                  QString& element,
-                                  QString& name,
-                                  const Location& location);
+    void processQmlProperties(const Doc &doc, NodeList &nodes, DocList &docs);
     bool splitQmlPropertyArg(const QString& arg,
                              QString& type,
                              QString& module,

@@ -141,8 +141,6 @@ void HelpProjectWriter::readSelectors(SubProject &subproject, const QStringList 
     typeHash["qmlmodule"] = Node::QmlModule;
     typeHash["qmlproperty"] = Node::JsProperty;
     typeHash["jsproperty"] = Node::QmlProperty;
-    typeHash["jspropertygroup"] = Node::JsPropertyGroup;
-    typeHash["qmlpropertygroup"] = Node::QmlPropertyGroup;
     typeHash["qmlclass"] = Node::QmlType; // Legacy alias for 'qmltype'
     typeHash["qmltype"] = Node::QmlType;
     typeHash["qmlbasictype"] = Node::QmlBasicType;
@@ -497,22 +495,6 @@ void HelpProjectWriter::generateSections(HelpProject &project, QXmlStreamWriter 
                 continue;
             if (child->isTextPageNode()) {
                 childSet << child;
-            } else if (child->isQmlPropertyGroup() || child->isJsPropertyGroup()) {
-                /*
-                  Don't visit QML/JS property group nodes,
-                  but visit their children, which are all
-                  QML/JS property nodes.
-
-                  This is probably not correct anymore,
-                  because The Qml/Js Property Group is
-                  an actual documented thing.
-                 */
-                const Aggregate *aggregate = static_cast<const Aggregate *>(child);
-                const NodeList &nodes = aggregate->childNodes();
-                foreach (const Node *n, nodes) {
-                    if (!n->isPrivate())
-                        childSet << n;
-                }
             } else {
                 // Store member status of children
                 project.memberStatus[node].insert(child->status());
@@ -668,7 +650,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
     else
         rootNode = qdb_->primaryTreeRoot();
 
-    if (!rootNode)
+    if (rootNode == nullptr)
         return;
 
     project.files.clear();

@@ -224,7 +224,7 @@ static Node *findNodeForCursor(QDocDatabase* qdb, CXCursor cur) {
         return qdb->primaryTreeRoot();
 
     Node *p = findNodeForCursor(qdb, clang_getCursorSemanticParent(cur));
-    if (!p)
+    if (p == nullptr)
         return nullptr;
     if (!p->isAggregate())
         return nullptr;
@@ -313,7 +313,7 @@ static Node *findFunctionNodeForCursor(QDocDatabase* qdb, CXCursor cur) {
         return qdb->primaryTreeRoot();
 
     Node *p = findNodeForCursor(qdb, clang_getCursorSemanticParent(cur));
-    if (!p || !p->isAggregate())
+    if (p == nullptr || !p->isAggregate())
         return nullptr;
     auto parent = static_cast<Aggregate *>(p);
 
@@ -617,7 +617,7 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         auto baseCursor = clang_getTypeDeclaration(type);
         auto baseNode = findNodeForCursor(qdb_, baseCursor);
         auto classe = static_cast<ClassNode*>(parent_);
-        if (!baseNode || !baseNode->isClassNode()) {
+        if (baseNode == nullptr || !baseNode->isClassNode()) {
             QString bcName = fromCXString(clang_getCursorSpelling(baseCursor));
             classe->addUnresolvedBaseClass(access, QStringList(bcName), bcName);
             return CXChildVisit_Continue;

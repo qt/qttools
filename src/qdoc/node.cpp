@@ -74,7 +74,6 @@ void Node::initialize()
     goals_.insert("module", Node::Module);
     goals_.insert("qmltype", Node::QmlType);
     goals_.insert("qmlmodule", Node::QmlModule);
-    goals_.insert("qmppropertygroup", Node::QmlPropertyGroup);
     goals_.insert("qmlproperty", Node::QmlProperty);
     goals_.insert("qmlsignal", Node::Function);
     goals_.insert("qmlsignalhandler", Node::Function);
@@ -106,14 +105,12 @@ bool Node::changeType(NodeType from, NodeType to)
         switch (to) {
           case QmlType:
           case QmlModule:
-          case QmlPropertyGroup:
           case QmlProperty:
           case QmlBasicType:
               setGenus(Node::QML);
               break;
           case JsType:
           case JsModule:
-          case JsPropertyGroup:
           case JsProperty:
           case JsBasicType:
               setGenus(Node::JS);
@@ -180,18 +177,6 @@ bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
 
     return false;
 }
-
-/*!
-  Increment the number of property groups seen in the current
-  file, and return the new value.
- */
-int Node::incPropertyGroupCount() { return ++propertyGroupCount_; }
-
-/*!
-  Reset the number of property groups seen in the current file
-  to 0, because we are starting a new file.
- */
-void Node::clearPropertyGroupCount() { propertyGroupCount_ = 0; }
 
 /*!
   \class Node
@@ -294,14 +279,15 @@ bool Node::match(const QList<int>& types) const
 
 /*!
   Sets this Node's Doc to \a doc. If \a replace is false and
-  this Node already has a Doc, a warning is reported that the
-  Doc is being overridden, and it reports where the previous
-  Doc was found. If \a replace is true, the Doc is replaced
-  silently.
+  this Node already has a Doc, and if this doc is not marked
+  with the \\reimp command, a warning is reported that the
+  existing Doc is being overridden, and it reports where the
+  previous Doc was found. If \a replace is true, the Doc is
+  replaced silently.
  */
 void Node::setDoc(const Doc& doc, bool replace)
 {
-    if (!doc_.isEmpty() && !replace) {
+    if (!doc_.isEmpty() && !replace && !doc.isMarkedReimp()) {
         doc.location().warning(tr("Overrides a previous doc"));
         doc_.location().warning(tr("(The previous doc is here)"));
     }
@@ -394,11 +380,9 @@ Node::PageType Node::getPageType(Node::NodeType t)
       case Node::Property:
       case Node::Variable:
       case Node::QmlType:
-      case Node::QmlPropertyGroup:
       case Node::QmlProperty:
       case Node::QmlBasicType:
       case Node::JsType:
-      case Node::JsPropertyGroup:
       case Node::JsProperty:
       case Node::JsBasicType:
       case Node::SharedComment:
@@ -448,13 +432,11 @@ Node::Genus Node::getGenus(Node::NodeType t)
       case Node::QmlModule:
       case Node::QmlProperty:
       case Node::QmlBasicType:
-      case Node::QmlPropertyGroup:
           return Node::QML;
       case Node::JsType:
       case Node::JsModule:
       case Node::JsProperty:
       case Node::JsBasicType:
-      case Node::JsPropertyGroup:
           return Node::JS;
       case Node::Page:
       case Node::Group:
@@ -575,8 +557,6 @@ QString Node::nodeTypeString(NodeType t)
         return QLatin1String("QML module");
     case QmlProperty:
         return QLatin1String("QML property");
-    case QmlPropertyGroup:
-        return QLatin1String("QML property group");
 
     case JsType:
         return QLatin1String("JS type");
@@ -586,8 +566,6 @@ QString Node::nodeTypeString(NodeType t)
         return QLatin1String("JS module");
     case JsProperty:
         return QLatin1String("JS property");
-    case JsPropertyGroup:
-        return QLatin1String("JS property group");
 
     case SharedComment:
         return QLatin1String("shared comment");
@@ -979,18 +957,8 @@ Node *Aggregate::findChildNode(const QString& name, Node::Genus genus, int findF
 {
     if (genus == Node::DontCare) {
         Node *node = nonfunctionMap_.value(name);
-        if (node && !node->isQmlPropertyGroup()) // mws asks: Why not property group?
+        if (node)
             return node;
-        if (isQmlType() || isJsType()) {
-            for (int i=0; i<children_.size(); ++i) {
-                Node* n = children_.at(i);
-                if (n->isQmlPropertyGroup() || isJsPropertyGroup()) {
-                    node = static_cast<Aggregate*>(n)->findChildNode(name, genus);
-                    if (node)
-                        return node;
-                }
-            }
-        }
     } else {
         NodeList nodes = nonfunctionMap_.values(name);
         if (!nodes.isEmpty()) {
@@ -1047,21 +1015,6 @@ void Aggregate::findChildren(const QString &name, NodeVector &nodes) const
         NodeMap::const_iterator i = nonfunctionMap_.find(name);
         while (i != nonfunctionMap_.end() && i.key() == name) {
             nodes.append(i.value());
-            ++i;
-        }
-    }
-    if (nodes.isEmpty() && (isQmlNode() || isJsNode())) {
-        int idx = name.indexOf(QChar('.'));
-        if (idx < 0)
-            return;
-        QString qmlPropGroup = name.left(idx);
-        NodeMap::const_iterator i = nonfunctionMap_.find(qmlPropGroup);
-        while (i != nonfunctionMap_.end() && i.key() == qmlPropGroup) {
-            if (i.value()->isQmlPropertyGroup() || i.value()->isJsPropertyGroup()) {
-                static_cast<Aggregate*>(i.value())->findChildren(name, nodes);
-                if (!nodes.isEmpty())
-                    return;
-            }
             ++i;
         }
     }
@@ -1159,11 +1112,6 @@ QStringList Aggregate::primaryKeys()
  */
 void Aggregate::markUndocumentedChildrenInternal()
 {
-    // Property group children have no doc of their own but follow the
-    // the access/status of their parent
-    if (this->isQmlPropertyGroup() || this->isJsPropertyGroup())
-        return;
-
     foreach (Node *child, children_) {
         if (!child->isSharingComment() && !child->hasDoc() && !child->docMustBeGenerated()) {
             if (child->isFunction()) {
@@ -1546,20 +1494,13 @@ QString Node::physicalModuleName() const
  */
 QmlPropertyNode* Aggregate::hasQmlProperty(const QString& n) const
 {
-    NodeType goal1 = Node::QmlProperty;
-    NodeType goal2 = Node::QmlPropertyGroup;
-    if (isJsNode()) {
-        goal1 = Node::JsProperty;
-        goal2 = Node::JsPropertyGroup;
-    }
+    NodeType goal = Node::QmlProperty;
+    if (isJsNode())
+        goal = Node::JsProperty;
     foreach (Node *child, children_) {
-        if (child->nodeType() == goal1) {
+        if (child->nodeType() == goal) {
             if (child->name() == n)
                 return static_cast<QmlPropertyNode*>(child);
-        } else if (child->nodeType() == goal2) {
-            QmlPropertyNode* t = static_cast<Aggregate*>(child)->hasQmlProperty(n);
-            if (t)
-                return t;
         }
     }
     return nullptr;
@@ -1572,20 +1513,13 @@ QmlPropertyNode* Aggregate::hasQmlProperty(const QString& n) const
  */
 QmlPropertyNode* Aggregate::hasQmlProperty(const QString& n, bool attached) const
 {
-    NodeType goal1 = Node::QmlProperty;
-    NodeType goal2 = Node::QmlPropertyGroup;
-    if (isJsNode()) {
-        goal1 = Node::JsProperty;
-        goal2 = Node::JsPropertyGroup;
-    }
+    NodeType goal = Node::QmlProperty;
+    if (isJsNode())
+        goal = Node::JsProperty;
     foreach (Node *child, children_) {
-        if (child->nodeType() == goal1) {
+        if (child->nodeType() == goal) {
             if (child->name() == n && child->isAttached() == attached)
                 return static_cast<QmlPropertyNode*>(child);
-        } else if (child->nodeType() == goal2) {
-            QmlPropertyNode* t = static_cast<Aggregate*>(child)->hasQmlProperty(n, attached);
-            if (t)
-                return t;
         }
     }
     return nullptr;
@@ -1776,9 +1710,9 @@ void ClassNode::fixBaseClasses()
     // Remove private and duplicate base classes.
     while (i < bases_.size()) {
         ClassNode* bc = bases_.at(i).node_;
-        if (!bc)
+        if (bc == nullptr)
             bc = QDocDatabase::qdocDB()->findClassNode(bases_.at(i).path_);
-        if (bc && (bc->access() == Node::Private || found.contains(bc))) {
+        if (bc != nullptr && (bc->access() == Node::Private || found.contains(bc))) {
             RelatedClass rc = bases_.at(i);
             bases_.removeAt(i);
             ignoredBases_.append(rc);
@@ -1795,7 +1729,7 @@ void ClassNode::fixBaseClasses()
     i = 0;
     while (i < derived_.size()) {
         ClassNode* dc = derived_.at(i).node_;
-        if (dc && dc->access() == Node::Private) {
+        if (dc != nullptr && dc->access() == Node::Private) {
             derived_.removeAt(i);
             const QList<RelatedClass> &dd = dc->derivedClasses();
             for (int j = dd.size() - 1; j >= 0; --j)
@@ -1914,16 +1848,16 @@ FunctionNode* ClassNode::findOverriddenFunction(const FunctionNode* fn)
     QList<RelatedClass>::Iterator bc = bases_.begin();
     while (bc != bases_.end()) {
         ClassNode *cn = bc->node_;
-        if (!cn) {
+        if (cn == nullptr) {
             cn = QDocDatabase::qdocDB()->findClassNode(bc->path_);
             bc->node_ = cn;
         }
-        if (cn) {
+        if (cn != nullptr) {
             FunctionNode *result = cn->findFunctionChild(fn);
-            if (result && !result->isNonvirtual())
+            if (result != nullptr && !result->isNonvirtual())
                 return result;
             result = cn->findOverriddenFunction(fn);
-            if (result && !result->isNonvirtual())
+            if (result != nullptr && !result->isNonvirtual())
                 return result;
         }
         ++bc;
@@ -2595,7 +2529,7 @@ void FunctionNode::debug() const
  */
 bool FunctionNode::compare(const FunctionNode *fn) const
 {
-    if (!fn)
+    if (fn == nullptr)
         return false;
     if (metaness() != fn->metaness())
         return false;
@@ -2885,64 +2819,6 @@ QmlBasicTypeNode::QmlBasicTypeNode(Aggregate *parent, const QString& name, Node:
 }
 
 /*!
-  Constructor for both the Qml property group node and the
-  Javascript property group node. The determination is made
-  by testing whether the \a parent is a QML node or a JS node.
- */
-QmlPropertyGroupNode::QmlPropertyGroupNode(QmlTypeNode* parent, const QString& name)
-    : Aggregate(parent->isJsType() ? JsPropertyGroup : QmlPropertyGroup, parent, name)
-{
-    idNumber_ = -1;
-}
-
-/*!
-  Return the property group node's id number for use in
-  constructing an id attribute for the property group.
-  If the id number is currently -1, increment the global
-  property group count and set the id number to the new
-  value.
- */
-QString QmlPropertyGroupNode::idNumber()
-{
-    if (idNumber_ == -1)
-        idNumber_ = incPropertyGroupCount();
-    return QString().setNum(idNumber_);
-}
-
-/*!
-  Marks each of the properties in the property group
-  Private and Internal.
- */
-void QmlPropertyGroupNode::markInternal()
-{
-    Node::markInternal();
-    foreach (Node *n, children_)
-        n->markInternal();
-}
-
-/*!
-  Marks each of the properties in the property group
-  as the default. Probably wrong.
- */
-void QmlPropertyGroupNode::markDefault()
-{
-    Node::markDefault();
-    foreach (Node *n, children_)
-        n->markDefault();
-}
-
-/*!
-  Marks each of the properties in the property group
-  with the read only \a flag.
- */
-void QmlPropertyGroupNode::markReadOnly(bool flag)
-{
-    Node::markReadOnly(flag);
-    foreach (Node *n, children_)
-        n->markReadOnly(flag);
-}
-
-/*!
   Constructor for the QML property node.
  */
 QmlPropertyNode::QmlPropertyNode(Aggregate* parent,
@@ -3056,16 +2932,6 @@ PropertyNode* QmlPropertyNode::findCorrespondingCppProperty()
 }
 
 /*!
-  This returns the name of the owning QML type.
- */
-QString QmlPropertyNode::element() const
-{
-    if (parent()->isQmlPropertyGroup())
-        return parent()->element();
-    return parent()->name();
-}
-
-/*!
   Construct the full document name for this node and return it.
  */
 QString Node::fullDocumentName() const
@@ -3074,7 +2940,7 @@ QString Node::fullDocumentName() const
     const Node* n = this;
 
     do {
-        if (!n->name().isEmpty() && !n->isQmlPropertyGroup())
+        if (!n->name().isEmpty())
             pieces.insert(0, n->name());
 
         if ((n->isQmlType() || n->isJsType()) && !n->logicalModuleName().isEmpty()) {
@@ -3497,12 +3363,12 @@ void Aggregate::resolveQmlInheritance()
                     base = QDocDatabase::qdocDB()->findQmlType(imports[i], type->qmlBaseName());
                     if (base && (base != type)) {
                         if (base->logicalModuleVersion()[0] != imports[i].version_[0])
-                            base = 0; // Safeguard for QTBUG-53529
+                            base = nullptr; // Safeguard for QTBUG-53529
                         break;
                     }
                 }
             }
-            if (base == 0) {
+            if (base == nullptr) {
                 base = QDocDatabase::qdocDB()->findQmlType(QString(), type->qmlBaseName());
             }
             if (base && (base != type)) {

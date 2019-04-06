@@ -2181,9 +2181,9 @@ void HtmlGenerator::generateHeader(const QString& title,
         if (node->links().contains(Node::PreviousLink)) {
             linkPair = node->links()[Node::PreviousLink];
             linkNode = qdb_->findNodeForTarget(linkPair.first, node);
-            if (!linkNode)
+            if (linkNode == nullptr)
                 node->doc().location().warning(tr("Cannot link to '%1'").arg(linkPair.first));
-            if (!linkNode || linkNode == node)
+            if (linkNode == nullptr || linkNode == node)
                 anchorPair = linkPair;
             else
                 anchorPair = anchorForNode(linkNode);
@@ -2202,9 +2202,9 @@ void HtmlGenerator::generateHeader(const QString& title,
         if (node->links().contains(Node::NextLink)) {
             linkPair = node->links()[Node::NextLink];
             linkNode = qdb_->findNodeForTarget(linkPair.first, node);
-            if (!linkNode)
+            if (linkNode == nullptr)
                 node->doc().location().warning(tr("Cannot link to '%1'").arg(linkPair.first));
-            if (!linkNode || linkNode == node)
+            if (linkNode == nullptr || linkNode == node)
                 anchorPair = linkPair;
             else
                 anchorPair = anchorForNode(linkNode);
@@ -2225,9 +2225,9 @@ void HtmlGenerator::generateHeader(const QString& title,
         if (node->links().contains(Node::StartLink)) {
             linkPair = node->links()[Node::StartLink];
             linkNode = qdb_->findNodeForTarget(linkPair.first, node);
-            if (!linkNode)
+            if (linkNode == nullptr)
                 node->doc().location().warning(tr("Cannot link to '%1'").arg(linkPair.first));
-            if (!linkNode || linkNode == node)
+            if (linkNode == nullptr || linkNode == node)
                 anchorPair = linkPair;
             else
                 anchorPair = anchorForNode(linkNode);
@@ -2412,7 +2412,7 @@ The number of rows is known.
 */
 void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
 {
-    if (!qcn)
+    if (qcn == nullptr)
         return;
     QMap<QString, Text> requisites;
     Text text;
@@ -2434,7 +2434,7 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
     //add the module name and version to the map
     QString logicalModuleVersion;
     const CollectionNode* collection = qdb_->getCollectionNode(qcn->logicalModuleName(), qcn->nodeType());
-    if (collection)
+    if (collection != nullptr)
         logicalModuleVersion = collection->logicalModuleVersion();
     else
         logicalModuleVersion = qcn->logicalModuleVersion();
@@ -3872,13 +3872,15 @@ QString HtmlGenerator::refForNode(const Node *node)
         else
             ref = node->name() + "-prop";
         break;
-    case Node::QmlPropertyGroup:
-    case Node::JsPropertyGroup:
     case Node::Property:
         ref = node->name() + "-prop";
         break;
     case Node::Variable:
         ref = node->name() + "-var";
+        break;
+    case Node::SharedComment:
+        if (node->isPropertyGroup())
+            ref = node->name() + "-prop";
         break;
     default:
         break;
@@ -3982,8 +3984,7 @@ QString HtmlGenerator::linkForNode(const Node *node, const Node *relative)
     }
     QString link = fn;
 
-    if ((!node->isAggregate() && !node->isCollectionNode())
-        || node->isQmlPropertyGroup() || node->isJsPropertyGroup()) {
+    if ((!node->isAggregate() && !node->isCollectionNode()) || node->isPropertyGroup()) {
         QString ref = refForNode(node);
         if (relative && fn == fileName(relative) && ref == refForNode(relative))
             return QString();
@@ -4250,13 +4251,13 @@ void HtmlGenerator::generateQmlSummary(const Section& section,
         NodeVector::const_iterator m = section.members().constBegin();
         while (m != section.members().constEnd()) {
             out() << "<li class=\"fn\">";
-            generateQmlItem(*m,relative,marker,true);
-            if ((*m)->isQmlPropertyGroup() || (*m)->isJsPropertyGroup()) {
-                const QmlPropertyGroupNode* qpgn = static_cast<const QmlPropertyGroupNode*>(*m);
-                if (qpgn->count() > 0) {
-                    NodeList::ConstIterator p = qpgn->constBegin();
+            generateQmlItem(*m, relative, marker, true);
+            if ((*m)->isPropertyGroup()) {
+                const SharedCommentNode* scn = static_cast<const SharedCommentNode*>(*m);
+                if (scn->count() > 0) {
+                    QVector<Node*>::ConstIterator p = scn->collective().constBegin();
                     out() << "<ul>\n";
-                    while (p != qpgn->constEnd()) {
+                    while (p != scn->collective().constEnd()) {
                         if ((*p)->isQmlProperty() || (*p)->isJsProperty()) {
                             out() << "<li class=\"fn\">";
                             generateQmlItem(*p, relative, marker, true);
@@ -4300,19 +4301,19 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node,
 
     out() << "<div class=\"qmlitem\">";
     QString nodeRef = refForNode(node);
-    if (node->isQmlPropertyGroup() || node->isJsPropertyGroup()) {
-        const QmlPropertyGroupNode* qpgn = static_cast<const QmlPropertyGroupNode*>(node);
-        NodeList::ConstIterator p = qpgn->constBegin();
+    if (node->isPropertyGroup()) {
+        const SharedCommentNode* scn = static_cast<const SharedCommentNode*>(node);
+        QVector<Node*>::ConstIterator p = scn->collective().constBegin();
         out() << "<div class=\"qmlproto\">";
         out() << "<div class=\"table\"><table class=\"qmlname\">";
 
-        QString heading = qpgn->name() + " group";
+        QString heading = scn->name() + " group";
         out() << "<tr valign=\"top\" class=\"even\" id=\"" << nodeRef << "\">";
         out() << "<th class=\"centerAlign\"><p>";
         out() << "<a name=\"" + nodeRef + "\"></a>";
         out() << "<b>" << heading << "</b>";
         out() << "</p></th></tr>";
-        while (p != qpgn->constEnd()) {
+        while (p != scn->collective().constEnd()) {
             if ((*p)->isQmlProperty() || (*p)->isJsProperty()) {
                 qpn = static_cast<QmlPropertyNode*>(*p);
                 nodeRef = refForNode(qpn);

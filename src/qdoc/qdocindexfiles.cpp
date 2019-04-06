@@ -85,7 +85,7 @@ QDocIndexFiles::~QDocIndexFiles()
  */
 QDocIndexFiles* QDocIndexFiles::qdocIndexFiles()
 {
-   if (!qdocIndexFiles_)
+   if (qdocIndexFiles_ == nullptr)
       qdocIndexFiles_ = new QDocIndexFiles;
    return qdocIndexFiles_;
 }
@@ -95,7 +95,7 @@ QDocIndexFiles* QDocIndexFiles::qdocIndexFiles()
  */
 void QDocIndexFiles::destroyQDocIndexFiles()
 {
-    if (qdocIndexFiles_) {
+    if (qdocIndexFiles_ != nullptr) {
         delete qdocIndexFiles_;
         qdocIndexFiles_ = nullptr;
     }
@@ -306,27 +306,6 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader& reader,
         else if (!indexUrl.isNull())
             location = Location(name);
         node = qbtn;
-    } else if (elementName == QLatin1String("qmlpropertygroup")) {
-        QmlTypeNode* qcn = static_cast<QmlTypeNode*>(parent);
-        QmlPropertyGroupNode* qpgn = new QmlPropertyGroupNode(qcn, name);
-        if (attributes.hasAttribute(QLatin1String("location")))
-            name = attributes.value("location").toString();
-        if (!indexUrl.isEmpty())
-            location = Location(indexUrl + QLatin1Char('/') + name);
-        else if (!indexUrl.isNull())
-            location = Location(name);
-        node = qpgn;
-    } else if (elementName == QLatin1String("jspropertygroup")) {
-        QmlTypeNode* qcn = static_cast<QmlTypeNode*>(parent);
-        QmlPropertyGroupNode* qpgn = new QmlPropertyGroupNode(qcn, name);
-        qpgn->setGenus(Node::JS);
-        if (attributes.hasAttribute(QLatin1String("location")))
-            name = attributes.value("location").toString();
-        if (!indexUrl.isEmpty())
-            location = Location(indexUrl + QLatin1Char('/') + name);
-        else if (!indexUrl.isNull())
-            location = Location(name);
-        node = qpgn;
     } else if (elementName == QLatin1String("qmlproperty")) {
         QString type = attributes.value(QLatin1String("type")).toString();
         bool attached = false;
@@ -783,7 +762,7 @@ static const QString getThreadSafenessString(Node::ThreadSafeness t)
  */
 bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node, IndexSectionWriter *post)
 {
-    if (!gen_)
+    if (gen_ == nullptr)
         gen_ = Generator::currentGenerator();
 
     Q_ASSERT(gen_);
@@ -886,12 +865,6 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node, 
     case Node::JsProperty:
         nodeName = "jsProperty";
         break;
-    case Node::QmlPropertyGroup:
-        nodeName = "qmlpropertygroup";
-        break;
-    case Node::JsPropertyGroup:
-        nodeName = "jspropertygroup";
-        break;
     case Node::Proxy:
         nodeName = "proxy";
         break;
@@ -937,12 +910,8 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node, 
         href = node->name();
     if (node->isQmlNode() || node->isJsNode()) {
         Aggregate* p = node->parent();
-        if (p) {
-            if (p->isQmlPropertyGroup() || p->isJsPropertyGroup())
-                p = p->parent();
-            if (p && (p->isQmlType() || p->isJsType()) && p->isAbstract())
-                href.clear();
-        }
+        if (p && (p->isQmlType() || p->isJsType()) && p->isAbstract())
+            href.clear();
     }
     if (!href.isEmpty())
         writer.writeAttribute("href", href);
@@ -1160,13 +1129,6 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node, 
             writer.writeAttribute("type", qpn->dataType());
             writer.writeAttribute("attached", qpn->isAttached() ? "true" : "false");
             writer.writeAttribute("writable", qpn->isWritable() ? "true" : "false");
-            if (!brief.isEmpty())
-                writer.writeAttribute("brief", brief);
-        }
-        break;
-    case Node::JsPropertyGroup:
-    case Node::QmlPropertyGroup:
-        {
             if (!brief.isEmpty())
                 writer.writeAttribute("brief", brief);
         }

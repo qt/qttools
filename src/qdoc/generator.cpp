@@ -368,8 +368,6 @@ QString Generator::fileBase(const Node *node) const
 {
     if (!node->isPageNode() && !node->isCollectionNode())
         node = node->parent();
-    if (node->isQmlPropertyGroup() || node->isJsPropertyGroup())
-        node = node->parent();
 
     if (node->hasFileNameBase())
         return node->fileNameBase();
@@ -425,7 +423,7 @@ QString Generator::fileBase(const Node *node) const
         forever {
             const Node *pp = p->parent();
             base.prepend(p->name());
-            if (!pp || pp->name().isEmpty() || pp->isTextPageNode())
+            if (pp == nullptr || pp->name().isEmpty() || pp->isTextPageNode())
                 break;
             base.prepend(QLatin1Char('-'));
             p = pp;
@@ -548,7 +546,7 @@ QMap<QString, QString>& Generator::formattingRightMap()
  */
 QString Generator::fullDocumentLocation(const Node *node, bool useSubdir)
 {
-    if (!node)
+    if (node == nullptr)
         return QString();
     if (!node->url().isEmpty())
         return node->url();
@@ -600,15 +598,8 @@ QString Generator::fullDocumentLocation(const Node *node, bool useSubdir)
 
     Node *parentNode = nullptr;
 
-    if ((parentNode = node->parent())) {
-        if (parentNode->isQmlPropertyGroup() || parentNode->isJsPropertyGroup()) {
-            parentNode = parentNode->parent();
-            parentName = fullDocumentLocation(parentNode);
-        }
-        else {
-            parentName = fullDocumentLocation(node->parent());
-        }
-    }
+    if ((parentNode = node->parent()))
+        parentName = fullDocumentLocation(node->parent());
 
     switch (node->nodeType()) {
     case Node::Class:
@@ -730,7 +721,7 @@ const Atom *Generator::generateAtomList(const Atom *atom,
                                         bool generate,
                                         int &numAtoms)
 {
-    while (atom) {
+    while (atom != nullptr) {
         if (atom->type() == Atom::FormatIf) {
             int numAtoms0 = numAtoms;
             bool rightFormat = canHandleFormat(atom->string());
@@ -739,7 +730,7 @@ const Atom *Generator::generateAtomList(const Atom *atom,
                                     marker,
                                     generate && rightFormat,
                                     numAtoms);
-            if (!atom)
+            if (atom == nullptr)
                 return nullptr;
 
             if (atom->type() == Atom::FormatElse) {
@@ -749,7 +740,7 @@ const Atom *Generator::generateAtomList(const Atom *atom,
                                         marker,
                                         generate && !rightFormat,
                                         numAtoms);
-                if (!atom)
+                if (atom == nullptr)
                     return nullptr;
             }
 
@@ -1083,7 +1074,7 @@ void Generator::generateDocumentation(Node* node)
         return;
     if (node->isInternal() && !showInternal_)
         return;
-    if (node->isExternalPage() || node->isQmlPropertyGroup() || node->isJsPropertyGroup())
+    if (node->isExternalPage())
         return;
 
     /*
@@ -2213,9 +2204,6 @@ QString Generator::typeString(const Node *node)
     case Node::Property:
     case Node::QmlProperty:
         return "property";
-    case Node::JsPropertyGroup:
-    case Node::QmlPropertyGroup:
-        return "property group";
     case Node::Module:
     case Node::JsModule:
     case Node::QmlModule:

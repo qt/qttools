@@ -61,7 +61,6 @@ depends += \
     qttestlib \
     qtuitools \
     qtwidgets \
-    qtxml \
-    qtxmlpatterns
+    qtxml
 
 navigation.landingpage = "QDoc Manual"

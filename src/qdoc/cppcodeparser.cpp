@@ -76,7 +76,7 @@ CppCodeParser::CppCodeParser()
                        << COMMAND_VARIABLE
                        << COMMAND_QMLTYPE
                        << COMMAND_QMLPROPERTY
-                       << COMMAND_QMLPROPERTYGROUP
+                       << COMMAND_QMLPROPERTYGROUP      // mws 13/03/2019
                        << COMMAND_QMLATTACHEDPROPERTY
                        << COMMAND_QMLSIGNAL
                        << COMMAND_QMLATTACHEDSIGNAL
@@ -86,7 +86,7 @@ CppCodeParser::CppCodeParser()
                        << COMMAND_QMLMODULE
                        << COMMAND_JSTYPE
                        << COMMAND_JSPROPERTY
-                       << COMMAND_JSPROPERTYGROUP
+                       << COMMAND_JSPROPERTYGROUP       // mws 13/03/2019
                        << COMMAND_JSATTACHEDPROPERTY
                        << COMMAND_JSSIGNAL
                        << COMMAND_JSATTACHEDSIGNAL
@@ -336,11 +336,21 @@ Node* CppCodeParser::processTopicCommand(const Doc& doc,
         pn->setLocation(doc.startLocation());
         return pn;
     } else if (command == COMMAND_QMLTYPE) {
-        QmlTypeNode* qcn = new QmlTypeNode(qdb_->primaryTreeRoot(), arg.first);
+        QmlTypeNode *qcn = nullptr;
+        Node *candidate = qdb_->primaryTreeRoot()->findChildNode(arg.first, Node::QML);
+        if (candidate != nullptr)
+            qcn = static_cast<QmlTypeNode*>(candidate);
+        else
+            qcn = new QmlTypeNode(qdb_->primaryTreeRoot(), arg.first);
         qcn->setLocation(doc.startLocation());
         return qcn;
     } else if (command == COMMAND_JSTYPE) {
-        QmlTypeNode* qcn = new QmlTypeNode(qdb_->primaryTreeRoot(), arg.first, Node::JsType);
+        QmlTypeNode *qcn = nullptr;
+        Node *candidate = qdb_->primaryTreeRoot()->findChildNode(arg.first, Node::JS);
+        if (candidate != nullptr)
+            qcn = static_cast<QmlTypeNode*>(candidate);
+        else
+            qcn = new QmlTypeNode(qdb_->primaryTreeRoot(), arg.first, Node::JsType);
         qcn->setLocation(doc.startLocation());
         return qcn;
     } else if (command == COMMAND_QMLBASICTYPE) {
@@ -363,36 +373,6 @@ Node* CppCodeParser::processTopicCommand(const Doc& doc,
         Q_UNREACHABLE();
     }
     return nullptr;
-}
-
-/*!
-  A QML property group argument has the form...
-
-  <QML-module>::<QML-type>::<name>
-
-  This function splits the argument into those parts.
-  A <QML-module> is the QML equivalent of a C++ namespace.
-  So this function splits \a arg on "::" and stores the
-  parts in \a module, \a qmlTypeName, and \a name, and returns
-  true. If any part is not found, a qdoc warning is emitted
-  and false is returned.
- */
-bool CppCodeParser::splitQmlPropertyGroupArg(const QString& arg,
-                                             QString& module,
-                                             QString& qmlTypeName,
-                                             QString& name,
-                                             const Location& location)
-{
-    QStringList colonSplit = arg.split("::");
-    if (colonSplit.size() == 3) {
-        module = colonSplit[0];
-        qmlTypeName = colonSplit[1];
-        name = colonSplit[2];
-        return true;
-    }
-    QString msg = "Unrecognizable QML module/component qualifier for " + arg;
-    location.warning(tr(msg.toLatin1().data()));
-    return false;
 }
 
 /*!
@@ -448,112 +428,75 @@ bool CppCodeParser::splitQmlPropertyArg(const QString& arg,
 }
 
 /*!
-  Process the topic \a command group found in the \a doc with arguments \a args.
-
-  Currently, this function is called only for \e{qmlproperty}
-  and \e{qmlattachedproperty}.
  */
-void CppCodeParser::processQmlProperties(const Doc& doc,
-                                         NodeList& nodes,
-                                         DocList& docs,
-                                         bool jsProps)
+void CppCodeParser::processQmlProperties(const Doc &doc, NodeList &nodes, DocList &docs)
 {
+    const TopicList& topics = doc.topicsUsed();
+    if (topics.isEmpty())
+        return;
+
     QString arg;
     QString type;
-    QString topic;
+    QString group;
     QString module;
-    QString qmlTypeName;
     QString property;
-    QmlPropertyNode* qpn = nullptr;
-    QmlTypeNode* qmlType = nullptr;
-    QmlPropertyGroupNode* qpgn = nullptr;
+    QString qmlTypeName;
 
-    Topic qmlPropertyGroupTopic;
-    const TopicList& topics = doc.topicsUsed();
-    for (int i=0; i<topics.size(); ++i) {
-        if ((topics.at(i).topic == COMMAND_QMLPROPERTYGROUP) ||
-            (topics.at(i).topic == COMMAND_JSPROPERTYGROUP)) {
-            qmlPropertyGroupTopic = topics.at(i);
-            break;
-        }
+    Topic topic = topics.at(0);
+    bool jsProps = isJSPropertyTopic(topic.topic);
+    arg = topic.args;
+    if (splitQmlPropertyArg(arg, type, module, qmlTypeName, property, doc.location())) {
+        int i = property.indexOf('.');
+        if (i != -1)
+            group = property.left(i);
     }
-    if (qmlPropertyGroupTopic.isEmpty() && topics.size() > 1) {
-        qmlPropertyGroupTopic = topics.at(0);
+
+    QmlTypeNode* qmlType = qdb_->findQmlType(module, qmlTypeName);
+    if (qmlType == nullptr)
+        qmlType = new QmlTypeNode(qdb_->primaryTreeRoot(), qmlTypeName);
+
+    SharedCommentNode* scn = nullptr;
+    if (topics.size() > 1) {
+        scn = new SharedCommentNode(qmlType, topics.size(), group);
+        scn->setLocation(doc.startLocation());
         if (jsProps)
-            qmlPropertyGroupTopic.topic = COMMAND_JSPROPERTYGROUP;
+            scn->setGenus(Node::JS);
         else
-            qmlPropertyGroupTopic.topic = COMMAND_QMLPROPERTYGROUP;
-        arg = qmlPropertyGroupTopic.args;
-        if (splitQmlPropertyArg(arg, type, module, qmlTypeName, property, doc.location())) {
-            int i = property.indexOf('.');
-            if (i != -1) {
-                property = property.left(i);
-                qmlPropertyGroupTopic.args = module + "::" + qmlTypeName + "::" + property;
-                doc.location().warning(tr("No QML property group command found; using \\%1 %2")
-                                       .arg(COMMAND_QMLPROPERTYGROUP).arg(qmlPropertyGroupTopic.args));
-            }
-            else {
-                /*
-                  Assumption: No '.' in the property name
-                  means there is no property group.
-                 */
-                qmlPropertyGroupTopic.clear();
-            }
-        }
+            scn->setGenus(Node::QML);
+        nodes.append(scn);
+        docs.append(doc);
     }
 
-    if (!qmlPropertyGroupTopic.isEmpty()) {
-        arg = qmlPropertyGroupTopic.args;
-        if (splitQmlPropertyGroupArg(arg, module, qmlTypeName, property, doc.location())) {
-            qmlType = qdb_->findQmlType(module, qmlTypeName);
-            if (qmlType) {
-                qpgn = new QmlPropertyGroupNode(qmlType, property);
-                qpgn->setLocation(doc.startLocation());
+    for (int i=0; i<topics.size(); ++i) {
+        QString cmd = topics.at(i).topic;
+        arg = topics.at(i).args;
+        if ((cmd == COMMAND_QMLPROPERTY) || (cmd == COMMAND_QMLATTACHEDPROPERTY) ||
+            (cmd == COMMAND_JSPROPERTY) || (cmd == COMMAND_JSATTACHEDPROPERTY)) {
+            bool attached = topics.at(i).topic.contains(QLatin1String("attached"));
+            if (splitQmlPropertyArg(arg, type, module, qmlTypeName, property, doc.location())) {
+                if (qmlType != qdb_->findQmlType(module, qmlTypeName)) {
+                    QString msg = tr("All properties in a group must belong to the same type: '%1'").arg(arg);
+                    doc.startLocation().warning(msg);
+                    continue;
+                }
+                if (qmlType->hasQmlProperty(property, attached) != nullptr) {
+                    QString msg = tr("QML property documented multiple times: '%1'").arg(arg);
+                    doc.startLocation().warning(msg);
+                    continue;
+                }
+                QmlPropertyNode* qpn = new QmlPropertyNode(qmlType, property, type, attached);
+                if (scn != nullptr)
+                    qpn->setSharedCommentNode(scn);
+                qpn->setLocation(doc.startLocation());
                 if (jsProps)
-                    qpgn->setGenus(Node::JS);
-                nodes.append(qpgn);
+                    qpn->setGenus(Node::JS);
+                else
+                    qpn->setGenus(Node::QML);
+                nodes.append(qpn);
                 docs.append(doc);
             }
-        }
-    }
-    for (int i=0; i<topics.size(); ++i) {
-        if (topics.at(i).topic == COMMAND_QMLPROPERTYGROUP) {
-             continue;
-        }
-        topic = topics.at(i).topic;
-        arg = topics.at(i).args;
-        if ((topic == COMMAND_QMLPROPERTY) || (topic == COMMAND_QMLATTACHEDPROPERTY) ||
-            (topic == COMMAND_JSPROPERTY) || (topic == COMMAND_JSATTACHEDPROPERTY)) {
-            bool attached = topic.contains(QLatin1String("attached"));
-            if (splitQmlPropertyArg(arg, type, module, qmlTypeName, property, doc.location())) {
-                Aggregate* aggregate = qdb_->findQmlType(module, qmlTypeName);
-                if (!aggregate)
-                    aggregate = qdb_->findQmlBasicType(module, qmlTypeName);
-                if (aggregate) {
-                    if (aggregate->hasQmlProperty(property, attached) != nullptr) {
-                        QString msg = tr("QML property documented multiple times: '%1'").arg(arg);
-                        doc.startLocation().warning(msg);
-                    }
-                    else if (qpgn) {
-                        qpn = new QmlPropertyNode(qpgn, property, type, attached);
-                        qpn->setLocation(doc.startLocation());
-                        if (jsProps)
-                            qpn->setGenus(Node::JS);
-                    }
-                    else {
-                        qpn = new QmlPropertyNode(aggregate, property, type, attached);
-                        qpn->setLocation(doc.startLocation());
-                        if (jsProps)
-                            qpn->setGenus(Node::JS);
-                        nodes.append(qpn);
-                        docs.append(doc);
-                    }
-                }
-            }
-        } else if (qpgn) {
-            doc.startLocation().warning(
-                tr("Invalid use of '\\%1'; not allowed in a '\\%2'").arg(
-                    topic, qmlPropertyGroupTopic.topic));
+        } else {
+            doc.startLocation().warning(tr("Command '\\%1'; not allowed with QML/JS property commands").arg(cmd));
         }
     }
 }
@@ -625,7 +568,7 @@ void CppCodeParser::processMetaCommand(const Doc &doc,
     else if (command == COMMAND_RELATES) {
         QStringList path = arg.split("::");
         Aggregate *aggregate = qdb_->findRelatesNode(path);
-        if (!aggregate)
+        if (aggregate == nullptr)
             aggregate = new ProxyNode(node->root(), arg);
 
         if (node->parent() == aggregate) { // node is already a child of aggregate
@@ -811,9 +754,9 @@ FunctionNode *CppCodeParser::parseOtherFuncArg(const QString &topic, const Locat
     funcName = colonSplit.last();
 
     Aggregate *aggregate = qdb_->findQmlType(moduleName, elementName);
-    if (!aggregate)
+    if (aggregate == nullptr)
         aggregate = qdb_->findQmlBasicType(moduleName, elementName);
-    if (!aggregate)
+    if (aggregate == nullptr)
         return nullptr;
 
     QString params;
@@ -999,9 +942,7 @@ bool CppCodeParser::isQMLMethodTopic(const QString &t)
  */
 bool CppCodeParser::isJSPropertyTopic(const QString &t)
 {
-    return (t == COMMAND_JSPROPERTY ||
-            t == COMMAND_JSPROPERTYGROUP ||
-            t == COMMAND_JSATTACHEDPROPERTY);
+    return (t == COMMAND_JSPROPERTY || t == COMMAND_JSATTACHEDPROPERTY);
 }
 
 /*!
@@ -1010,17 +951,13 @@ bool CppCodeParser::isJSPropertyTopic(const QString &t)
  */
 bool CppCodeParser::isQMLPropertyTopic(const QString &t)
 {
-    return (t == COMMAND_QMLPROPERTY ||
-            t == COMMAND_QMLPROPERTYGROUP ||
-            t == COMMAND_QMLATTACHEDPROPERTY);
+    return (t == COMMAND_QMLPROPERTY || t == COMMAND_QMLATTACHEDPROPERTY);
 }
 
 void CppCodeParser::processTopicArgs(const Doc &doc, const QString &topic, NodeList &nodes, DocList &docs)
 {
-    if (isQMLPropertyTopic(topic)) {
-        processQmlProperties(doc, nodes, docs, false);
-    } else if (isJSPropertyTopic(topic)) {
-        processQmlProperties(doc, nodes, docs, true);
+    if (isQMLPropertyTopic(topic) || isJSPropertyTopic(topic)) {
+        processQmlProperties(doc, nodes, docs);
     } else {
         ArgList args = doc.metaCommandArgs(topic);
         Node *node = nullptr;

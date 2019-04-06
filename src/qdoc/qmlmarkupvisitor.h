@@ -153,7 +153,7 @@ private:
     void addVerbatim(QQmlJS::AST::SourceLocation first,
                      QQmlJS::AST::SourceLocation last = QQmlJS::AST::SourceLocation());
     QString sourceText(QQmlJS::AST::SourceLocation &location);
-    void throwRecursionDepthError();
+    void throwRecursionDepthError() override;
 
     QQmlJS::Engine *engine;
     QVector<ExtraType> extraTypes;

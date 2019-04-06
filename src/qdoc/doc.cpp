@@ -1343,7 +1343,8 @@ void DocParser::parse(const QString& source,
                         QString arg = getMetaCommandArgument(cmdStr);
                         priv->metaCommandMap[cmdStr].append(ArgLocPair(arg,location()));
                         if (possibleTopics.contains(cmdStr)) {
-                            priv->topics_.append(Topic(cmdStr,arg));
+                            if (!cmdStr.endsWith(QLatin1String("propertygroup")))
+                                priv->topics_.append(Topic(cmdStr,arg));
                         }
                     } else if (macroHash()->contains(cmdStr)) {
                         const Macro &macro = macroHash()->value(cmdStr);
@@ -1437,8 +1438,12 @@ void DocParser::parse(const QString& source,
                         if ((numUppercase >= 1 && numLowercase >= 2) || numStrangeSymbols > 0) {
                             appendWord(cmdStr);
                         } else {
-                            location().warning(tr("Unknown command '\\%1'").arg(cmdStr),
-                                               detailsUnknownCommand(metaCommandSet,cmdStr));
+                            if (!cmdStr.endsWith("propertygroup")) {
+                                // The QML and JS property group commands are no longer required
+                                // for grouping QML and JS properties. They are allowed but ignored.
+                                location().warning(tr("Unknown command '\\%1'").arg(cmdStr),
+                                                   detailsUnknownCommand(metaCommandSet,cmdStr));
+                            }
                             enterPara();
                             append(Atom::UnknownCommand, cmdStr);
                         }
@@ -2572,7 +2577,7 @@ QString DocParser::getCode(int cmd, CodeMarker *marker, const QString &argStr)
 
     int indent = indentLevel(code);
     code = unindent(indent, code);
-    if (!marker)
+    if (marker == nullptr)
         marker = CodeMarker::markerForCode(code);
     return marker->markedUpCode(code, nullptr, location());
 }
@@ -3082,6 +3087,15 @@ bool Doc::isInternal() const
 }
 
 /*!
+  Returns true if the set of metacommands used in the doc
+  comment contains \e {reimp}.
+ */
+bool Doc::isMarkedReimp() const
+{
+    return metaCommandsUsed().contains(QLatin1String("reimp"));
+}
+
+/*!
   Returns a reference to the list of topic commands used in the
   current qdoc comment. Normally there is only one, but there
   can be multiple \e{qmlproperty} commands, for example.
@@ -3384,7 +3398,7 @@ QString Doc::canonicalTitle(const QString &title)
 
 void Doc::detach()
 {
-    if (!priv) {
+    if (priv == nullptr) {
         priv = new DocPrivate;
         return;
     }

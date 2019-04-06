@@ -160,6 +160,7 @@ public:
     bool hasKeywords() const;
     bool hasTargets() const;
     bool isInternal() const;
+    bool isMarkedReimp() const;
     const QList<Atom *> &tableOfContents() const;
     const QVector<int> &tableOfContentsLevels() const;
     const QList<Atom *> &keywords() const;
