@@ -553,7 +553,6 @@ int main(int argc, char **argv)
       Create code markers for plain text, C++,
       javascript, and QML.
      */
-    PlainCodeMarker plainMarker;
     CppCodeMarker cppMarker;
     JsCodeMarker jsMarker;
     QmlCodeMarker qmlMarker;
