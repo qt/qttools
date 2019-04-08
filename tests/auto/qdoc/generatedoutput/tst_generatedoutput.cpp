@@ -38,6 +38,7 @@ private slots:
     void init();
 
     void htmlFromCpp();
+    void htmlFromQml();
 
 private:
     QScopedPointer<QTemporaryDir> m_outputDir;
@@ -125,6 +126,31 @@ void tst_generatedOutput::htmlFromCpp()
 
     compareLineByLine(expectedFile, actualFile);
 }
+
+void tst_generatedOutput::htmlFromQml()
+{
+    const QStringList arguments = {
+            "--outputdir",
+            m_outputDir->path(),
+            QFINDTESTDATA("testqml.qdocconf")
+    };
+
+    if (!runQDocProcess(arguments))
+        QFAIL("Running QDoc failed. See output above.");
+
+    const QStringList files{
+        "test-componentset-example.html",
+        "uicomponents-qmlmodule.html"};
+
+    for (const auto &file : files) {
+        QString expectedPath = "/expected_output/" + file;
+        QString expectedFile(QFINDTESTDATA(expectedPath));
+        QString actualFile(m_outputDir->path() + "/" + file);
+
+        compareLineByLine(expectedFile, actualFile);
+    }
+}
+
 QTEST_APPLESS_MAIN(tst_generatedOutput)
 
 #include "tst_generatedoutput.moc"
