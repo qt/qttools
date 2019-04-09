@@ -684,6 +684,8 @@ void Sections::buildStdRefPageSections()
  */
 void Sections::distributeNodeInSummaryVector(SectionVector &sv, Node *n)
 {
+    if (n->isSharedCommentNode())
+        return;
     if (n->isFunction()) {
         FunctionNode *fn = static_cast<FunctionNode*>(n);
         if (fn->hasAssociatedProperties() && !fn->hasActiveAssociatedProperty())
