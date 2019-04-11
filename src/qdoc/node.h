@@ -188,6 +188,7 @@ public:
     bool isModule() const { return nodeType_ == Module; }
     bool isNamespace() const { return nodeType_ == Namespace; }
     bool isObsolete() const { return (status_ == Obsolete); }
+    bool isPage() const { return nodeType_ == Page; }
     bool isPreliminary() const { return (status_ == Preliminary); }
     bool isPrivate() const { return access_ == Private; }
     bool isProperty() const { return nodeType_ == Property; }

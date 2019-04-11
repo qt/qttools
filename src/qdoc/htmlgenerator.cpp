@@ -2053,9 +2053,11 @@ void HtmlGenerator::generateNavigationBar(const QString &title,
                 }
             }
         }
-        navigationbar << Atom(itemLeft)
-                      << Atom(Atom::String, title)
-                      << Atom(itemRight);
+        if (!navigationbar.isEmpty()) {
+            navigationbar << Atom(itemLeft)
+                          << Atom(Atom::String, title)
+                          << Atom(itemRight);
+        }
     }
 
     generateText(navigationbar, node, marker);
