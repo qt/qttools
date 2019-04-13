@@ -366,7 +366,9 @@
 
     The documentation page will be output to \c {modulename-path-to-example}.html.
     QDoc will add a list of all the example's source and images files at the end
-    of the page, unless \l {noautolist-command}{\\noautolist} command is used.
+    of the page, unless \l {noautolist-command}{\\noautolist} command is used or
+    the configuration variable \l {url.examples-variable}{url.examples} is defined
+    for the project.
 
     For example, if \l {exampledirs-variable} {exampledirs} contains
     \c $QTDIR/examples/widgets/imageviewer, then
@@ -410,6 +412,7 @@
 
     \b {See also:} \l {generatelist-command}{\\generatelist examplefiles},
                    \l {noautolist-command}{\\noautolist},
+                   \l {url.examples-variable}{url.examples},
                    \l {meta-command}{\\meta}
 
     \target externalpage-command

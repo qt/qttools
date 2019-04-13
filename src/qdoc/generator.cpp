@@ -42,6 +42,9 @@
 #include "separator.h"
 #include "tokenizer.h"
 #include "qdocdatabase.h"
+#ifndef QT_BOOTSTRAPPED
+#  include "QtCore/qurl.h"
+#endif
 
 QT_BEGIN_NAMESPACE
 
@@ -935,13 +938,61 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
         }
     }
 
+    // For examples, generate either a link to the project directory
+    // (if url.examples is defined), or a list of files/images.
     if (node->isExample()) {
         const ExampleNode* en = static_cast<const ExampleNode*>(node);
-        if (!en->noAutoList()) {
+        QString exampleUrl = config()->getString(CONFIG_URL + Config::dot + CONFIG_EXAMPLES);
+        if (!exampleUrl.isEmpty()) {
+            generateLinkToExample(en, marker, exampleUrl);
+        } else if (!en->noAutoList()) {
             generateFileList(en, marker, false);
             generateFileList(en, marker, true);
         }
     }
+}
+
+/*!
+  Generates a link to the project folder for example node \a en.
+  \a baseUrl is the base URL - path information is available in
+  the example node's name() and 'examplesinstallpath' configuration
+  variable.
+*/
+void Generator::generateLinkToExample(const ExampleNode *en,
+                                      CodeMarker *marker,
+                                      const QString &baseUrl)
+{
+        Text text;
+        QString exampleUrl(baseUrl);
+
+        if (!exampleUrl.contains("\1")) {
+            if (!exampleUrl.endsWith("/"))
+                exampleUrl += "/";
+            exampleUrl += "\1";
+        }
+
+        // Name of the example node is the path, relative to install path
+        QStringList path = QStringList()
+            << config()->getString(CONFIG_EXAMPLESINSTALLPATH)
+            << en->name();
+        path.removeAll({});
+
+        QString link;
+#ifndef QT_BOOTSTRAPPED
+        link = QUrl(baseUrl).host();
+#endif
+        if (!link.isEmpty())
+            link.prepend(" @ ");
+        link.prepend("Example project");
+
+        text << Atom::ParaLeft
+             << Atom(Atom::Link, exampleUrl.replace("\1", path.join("/")))
+             << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
+             << Atom(Atom::String, link)
+             << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK)
+             << Atom::ParaRight;
+
+        generateText(text, 0, marker);
 }
 
 /*!

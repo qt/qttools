@@ -1148,10 +1148,22 @@ static QVector<QByteArray> includePathsFromHeaders(const QHash<QString, QString>
 }
 
 /*!
-  Load the include paths into \a moreArgs.
+  Load the include paths into \a moreArgs and return false.
+  If no include paths were provided, try to guess reasonable
+  include paths but return true, so the clang diagnostics
+  can be turned off during PCH creation.
+
+  The use case for returning true is the QtPlatformHeaders
+  module when running qdoc on macOS. For some reason, the
+  include paths are not passed to qdoc, so it guesses them.
+  This results in clang reporting a large number of errors
+  during the PCH build. The errors are useles, except that
+  it probably means the build system isn't working correctly
+  for QtPlatformHeaders when running qdoc.
  */
-void ClangCodeParser::getMoreArgs()
+bool ClangCodeParser::getMoreArgs()
 {
+    bool guessedIncludePaths = false;
     if (includePaths_.isEmpty()) {
         Location::logToStdErrAlways("No include paths passed to qdoc");
         Location::logToStdErrAlways("Guess reasonable include paths:");
@@ -1160,6 +1172,7 @@ void ClangCodeParser::getMoreArgs()
           of reasonable places to look for include files and use
           that list instead.
          */
+        guessedIncludePaths = true;
         auto forest = qdb_->searchOrder();
 
         QByteArray version = qdb_->version().toUtf8();
@@ -1190,6 +1203,7 @@ void ClangCodeParser::getMoreArgs()
                 moreArgs_[i] = fi.canonicalFilePath().toLatin1();
         }
     }
+    return guessedIncludePaths;
 }
 
 /*!
@@ -1306,7 +1320,8 @@ void ClangCodeParser::buildPCH()
 void ClangCodeParser::precompileHeaders()
 {
     getDefaultArgs();
-    getMoreArgs();
+    if (getMoreArgs())
+        printParsingErrors_ = 0;
     for (const auto &p : qAsConst(moreArgs_))
         args_.push_back(p.constData());
 

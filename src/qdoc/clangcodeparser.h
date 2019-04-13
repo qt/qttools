@@ -65,7 +65,7 @@ public:
 
  private:
     void getDefaultArgs();
-    void getMoreArgs();
+    bool getMoreArgs();
     void buildPCH();
 
 private:

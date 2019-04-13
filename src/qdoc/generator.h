@@ -156,14 +156,10 @@ protected:
                                  CodeMarker *marker,
                                  bool generate,
                                  int& numGeneratedAtoms);
+    void generateLinkToExample(const ExampleNode *en,
+                               CodeMarker *marker,
+                               const QString &baseUrl);
     void generateFileList(const ExampleNode* en, CodeMarker* marker, bool images);
-#if 0
-    // Keeping this until usage shows we no longer need it. mws 17/08/2018
-    void generateFileList(const PageNode* pn,
-                          CodeMarker* marker,
-                          Node::NodeSubtype subtype,
-                          const QString& regExp);
-#endif
     void generateSince(const Node *node, CodeMarker *marker);
     void generateStatus(const Node *node, CodeMarker *marker);
     void generatePrivateSignalNote(const Node* node, CodeMarker* marker);

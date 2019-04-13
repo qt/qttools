@@ -296,10 +296,10 @@ void QPixelTool::keyPressEvent(QKeyEvent *e)
         toggleFreeze();
         break;
     case Qt::Key_Plus:
-        setZoom(m_zoom + 1);
+        increaseZoom();
         break;
     case Qt::Key_Minus:
-        setZoom(m_zoom - 1);
+        decreaseZoom();
         break;
     case Qt::Key_PageUp:
         setGridSize(m_gridSize + 1);
@@ -489,7 +489,7 @@ void QPixelTool::contextMenuEvent(QContextMenuEvent *e)
 
     // LCD mode looks off unless zoom is dividable by 3
     if (m_lcdMode && m_zoom % 3)
-        setZoom((m_zoom + 1) / 3);
+        setZoom(qMax(3, (m_zoom + 1) / 3));
 }
 
 QSize QPixelTool::sizeHint() const
