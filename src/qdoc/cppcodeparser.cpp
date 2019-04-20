@@ -338,7 +338,7 @@ Node* CppCodeParser::processTopicCommand(const Doc& doc,
     } else if (command == COMMAND_QMLTYPE) {
         QmlTypeNode *qcn = nullptr;
         Node *candidate = qdb_->primaryTreeRoot()->findChildNode(arg.first, Node::QML);
-        if (candidate != nullptr)
+        if (candidate != nullptr && candidate->isQmlType())
             qcn = static_cast<QmlTypeNode*>(candidate);
         else
             qcn = new QmlTypeNode(qdb_->primaryTreeRoot(), arg.first);
@@ -347,7 +347,7 @@ Node* CppCodeParser::processTopicCommand(const Doc& doc,
     } else if (command == COMMAND_JSTYPE) {
         QmlTypeNode *qcn = nullptr;
         Node *candidate = qdb_->primaryTreeRoot()->findChildNode(arg.first, Node::JS);
-        if (candidate != nullptr)
+        if (candidate != nullptr && candidate->isJsType())
             qcn = static_cast<QmlTypeNode*>(candidate);
         else
             qcn = new QmlTypeNode(qdb_->primaryTreeRoot(), arg.first, Node::JsType);
