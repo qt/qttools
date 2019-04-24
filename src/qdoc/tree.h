@@ -110,6 +110,8 @@ class Tree
     void setIndexTitle(const QString &t) { indexTitle_ = t; }
     NodeList &proxies() { return proxies_; }
     void appendProxy(ProxyNode *t) { proxies_.append(t); }
+    void addToDontDocumentMap(QString &arg);
+    void markDontDocumentNodes();
 
  private: // The rest of the class is private.
     Aggregate *findAggregate(const QString &name);
@@ -245,6 +247,7 @@ private:
     ExampleNodeMap          exampleNodeMap_;
     TargetListMap*          targetListMap_;
     NodeList proxies_;
+    NodeMap                 dontDocumentMap_;
 };
 
 QT_END_NAMESPACE

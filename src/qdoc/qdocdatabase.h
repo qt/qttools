@@ -417,10 +417,10 @@ class QDocDatabase
     QDocDatabase();
     QDocDatabase(QDocDatabase const& ) : showInternal_(false), forest_(this) { }
     QDocDatabase& operator=(QDocDatabase const& );
-    Tree* primaryTree() { return forest_.primaryTree(); }
 
  public:
     static bool             debug;
+    Tree* primaryTree() { return forest_.primaryTree(); }
 
  private:
     static QDocDatabase*    qdocDB_;

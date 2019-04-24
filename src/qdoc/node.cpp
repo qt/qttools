@@ -1113,16 +1113,18 @@ QStringList Aggregate::primaryKeys()
 void Aggregate::markUndocumentedChildrenInternal()
 {
     foreach (Node *child, children_) {
-        if (!child->isSharingComment() && !child->hasDoc() && !child->docMustBeGenerated()) {
-            if (child->isFunction()) {
-                if (static_cast<FunctionNode*>(child)->hasAssociatedProperties())
-                    continue;
-            } else if (child->isTypedef()) {
-                if (static_cast<TypedefNode*>(child)->hasAssociatedEnum())
-                    continue;
+        if (!child->isSharingComment() && !child->hasDoc() && !child->isDontDocument()) {
+            if (!child->docMustBeGenerated()) {
+                if (child->isFunction()) {
+                    if (static_cast<FunctionNode*>(child)->hasAssociatedProperties())
+                        continue;
+                } else if (child->isTypedef()) {
+                    if (static_cast<TypedefNode*>(child)->hasAssociatedEnum())
+                        continue;
+                }
+                child->setAccess(Node::Private);
+                child->setStatus(Node::Internal);
             }
-            child->setAccess(Node::Private);
-            child->setStatus(Node::Internal);
         }
         if (child->isAggregate()) {
             static_cast<Aggregate*>(child)->markUndocumentedChildrenInternal();
@@ -1863,6 +1865,26 @@ FunctionNode* ClassNode::findOverriddenFunction(const FunctionNode* fn)
         ++bc;
     }
     return nullptr;
+}
+
+/*!
+  Returns true if the class or struct represented by this class
+  node must be documented. If this function returns true, then
+  qdoc must find a qdoc comment for this class. If it returns
+  false, then the class need not be documented.
+ */
+bool ClassNode::docMustBeGenerated() const
+{
+    if (isInternal() || isPrivate() || isDontDocument() ||
+        declLocation().fileName().endsWith(QLatin1String("_p.h")))
+        return false;
+    if (count() == 0)
+        return false;
+    if (name().contains(QLatin1String("Private")))
+        return false;
+    if (functionCount_ == 0)
+        return false;
+    return true;
 }
 
 /*!

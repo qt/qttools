@@ -112,7 +112,8 @@ public:
         Deprecated,
         Preliminary,
         Active,
-        Internal
+        Internal,
+        DontDocument
     }; // don't reorder this enum
 
     enum ThreadSafeness : unsigned char {
@@ -171,6 +172,8 @@ public:
     bool isAnyType() const { return true; }
     bool isClass() const { return nodeType_ == Class; }
     bool isCppNode() const { return genus() == CPP; }
+    bool isDeprecated() const { return (status_ == Deprecated); }
+    bool isDontDocument() const { return (status_ == DontDocument); }
     bool isEnumType() const { return nodeType_ == Enum; }
     bool isExample() const { return nodeType_ == Example; }
     bool isExternalPage() const { return nodeType_ == ExternalPage; }
@@ -512,6 +515,8 @@ private:
     NodeList enumChildren_;
     NodeMap nonfunctionMap_;
     NodeList nonfunctionList_;
+
+ protected:
     int functionCount_;
     FunctionMap functionMap_;
 };
@@ -628,6 +633,7 @@ public:
     PropertyNode* findPropertyNode(const QString& name);
     QmlTypeNode* findQmlBaseNode();
     FunctionNode* findOverriddenFunction(const FunctionNode* fn);
+    bool docMustBeGenerated() const override;
 
 private:
     QList<RelatedClass> bases_;

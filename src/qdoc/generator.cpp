@@ -217,8 +217,7 @@ int Generator::appendSortedNames(Text& text, const ClassNode* cn, const QList<Re
     while (r != rc.constEnd()) {
         ClassNode* rcn = (*r).node_;
         if (rcn && rcn->access() == Node::Public &&
-              rcn->status() != Node::Internal &&
-              !rcn->doc().isEmpty()) {
+            !rcn->isInternal() && !rcn->doc().isEmpty()) {
             Text className;
             appendFullName(className, rcn, cn);
             classMap[className.toString().toLower()] = className;
@@ -690,7 +689,7 @@ QString Generator::fullDocumentLocation(const Node *node, bool useSubdir)
     }
 
     if (!node->isClassNode() && !node->isNamespace()) {
-        if (node->status() == Node::Obsolete)
+        if (node->isObsolete())
             parentName.replace(QLatin1Char('.') + currentGenerator()->fileExtension(),
                                "-obsolete." + currentGenerator()->fileExtension());
     }
@@ -1179,8 +1178,8 @@ void Generator::generateDocumentation(Node* node)
             generatePageNode(static_cast<PageNode*>(node), marker);
             endSubPage();
         } else if (node->isAggregate()) {
-            if (node->isClassNode() || node->isHeader() ||
-                (node->isNamespace() && node->docMustBeGenerated())) {
+            if ((node->isClassNode() || node->isHeader() || node->isNamespace()) &&
+                node->docMustBeGenerated()) {
                 beginSubPage(node, fileName(node));
                 generateCppReferencePage(static_cast<Aggregate*>(node), marker);
                 endSubPage();
