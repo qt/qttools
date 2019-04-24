@@ -174,6 +174,10 @@ static QtModuleEntry qtModuleEntries[] = {
     { QtWebViewModule, "webview", "Qt5WebView", nullptr }
 };
 
+enum QtPlugin {
+    QtVirtualKeyboardPlugin = 0x1
+};
+
 static const char webKitProcessC[] = "QtWebProcess";
 static const char webEngineProcessC[] = "QtWebEngineProcess";
 
@@ -260,6 +264,7 @@ struct Options {
     bool translations = true;
     bool systemD3dCompiler = true;
     bool compilerRunTime = false;
+    unsigned disabledPlugins = 0;
     AngleDetection angleDetection = AngleDetectionAuto;
     bool softwareRasterizer = true;
     Platform platform = WindowsDesktop;
@@ -405,6 +410,10 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
                                              QStringLiteral("Deploy compiler runtime (Desktop only)."));
     parser->addOption(compilerRunTimeOption);
 
+    QCommandLineOption noVirtualKeyboardOption(QStringLiteral("no-virtualkeyboard"),
+                                               QStringLiteral("Disable deployment of the Virtual Keyboard."));
+    parser->addOption(noVirtualKeyboardOption);
+
     QCommandLineOption noCompilerRunTimeOption(QStringLiteral("no-compiler-runtime"),
                                              QStringLiteral("Do not deploy compiler runtime (Desktop only)."));
     parser->addOption(noCompilerRunTimeOption);
@@ -498,6 +507,9 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
         *errorMessage = QStringLiteral("Deployment of the compiler runtime is implemented for Desktop only.");
         return CommandLineParseError;
     }
+
+    if (parser->isSet(noVirtualKeyboardOption))
+        options->disabledPlugins |= QtVirtualKeyboardPlugin;
 
     if (parser->isSet(releaseWithDebugInfoOption))
         std::wcerr << "Warning: " << releaseWithDebugInfoOption.names().first() << " is obsolete.";
@@ -878,6 +890,7 @@ static quint64 qtModule(QString module, const QString &infix)
 }
 
 QStringList findQtPlugins(quint64 *usedQtModules, quint64 disabledQtModules,
+                          unsigned disabledPlugins,
                           const QString &qtPluginsDirName, const QString &libraryLocation,
                           const QString &infix,
                           DebugMatchMode debugMatchModeIn, Platform platform, QString *platformPlugin)
@@ -897,6 +910,8 @@ QStringList findQtPlugins(quint64 *usedQtModules, quint64 disabledQtModules,
                 : debugMatchModeIn;
             QDir subDir(subDirFi.absoluteFilePath());
             // Filter out disabled plugins
+            if ((disabledPlugins & QtVirtualKeyboardPlugin) && subDirName == QLatin1String("virtualkeyboard"))
+                continue;
             if (disabledQtModules & QtQmlToolingModule && subDirName == QLatin1String("qmltooling"))
                 continue;
             // Filter for platform or any.
@@ -925,6 +940,11 @@ QStringList findQtPlugins(quint64 *usedQtModules, quint64 disabledQtModules,
             }
             const QStringList plugins = findSharedLibraries(subDir, platform, debugMatchMode, filter);
             for (const QString &plugin : plugins) {
+                // Filter out disabled plugins
+                if ((disabledPlugins & QtVirtualKeyboardPlugin)
+                    && plugin.startsWith(QLatin1String("qtvirtualkeyboardplugin"))) {
+                    continue;
+                }
                 const QString pluginPath = subDir.absoluteFilePath(plugin);
                 if (isPlatformPlugin)
                     *platformPlugin = pluginPath;
@@ -1355,6 +1375,7 @@ static DeployResult deploy(const Options &options,
         findQtPlugins(&result.deployedQtLibraries,
                       // For non-QML applications, disable QML to prevent it from being pulled in by the qtaccessiblequick plugin.
                       options.disabledLibraries | (usesQml2 ? 0 : (QtQmlModule | QtQuickModule)),
+                      options.disabledPlugins,
                       qmakeVariables.value(QStringLiteral("QT_INSTALL_PLUGINS")), libraryLocation, infix,
                       debugMatchMode, options.platform, &platformPlugin);
 
