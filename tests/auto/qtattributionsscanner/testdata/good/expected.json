@@ -10,6 +10,7 @@
         "LicenseFile": "",
         "LicenseId": "",
         "Name": "Test",
+        "PackageComment":"",
         "Path": "%{PWD}/chromium",
         "QDocModule": "qtwebengine",
         "QtParts": [
@@ -27,6 +28,7 @@
         "LicenseFile": "%{PWD}/complete/LICENSE",
         "LicenseId": "xxx",
         "Name": "Complete",
+        "PackageComment":"just a test package",
         "Path": "%{PWD}/complete",
         "Files": "",
         "QDocModule": "qtest",
@@ -44,6 +46,7 @@
         "LicenseFile": "",
         "LicenseId": "",
         "Name": "Minimal",
+        "PackageComment":"",
         "Path": "%{PWD}/minimal",
         "Files": "",
         "QDocModule": "qtest",

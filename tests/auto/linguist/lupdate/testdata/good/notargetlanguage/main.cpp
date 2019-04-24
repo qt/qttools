@@ -25,32 +25,18 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
+#include <QApplication>
+#include <QPushButton>
+#include <QTranslator>
 
-
-QString foo()
+int main(int argc, char *argv[])
 {
-	QCoreApplication::translate("Foo","XXX","YYY");
-}
+    QApplication app(argc, argv);
 
-Foo::Foo()
-{
-	tr("CTOR");
-}
+    QTranslator translator;
+    app.installTranslator(&translator);
 
-void Foo::bar()
-{
-	tr("BAR");
-}
+    QObject::tr("un mot","toto",1);
 
-class BitFields : public QObject
-{
-    int bits : 20;
-    QString str = tr("text BitFields");
-};
-
-Bibi::Bibi()
-{
-    int bits : 32;
-    tr("text Bibi");
-    Babebi::tr("text Babebi");
+    return app.exec();
 }

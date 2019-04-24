@@ -57,6 +57,7 @@ defineTest(qtConfTest_libclang) {
     # Assume libclang is installed on the target system
     isEmpty(LLVM_INSTALL_DIR) {
         llvmConfigCandidates = \
+            llvm-config-9 \
             llvm-config-8 \
             llvm-config-7 \
             llvm-config-6.0 \

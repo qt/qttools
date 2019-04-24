@@ -1767,6 +1767,11 @@
     ...
     \endcode
 
+    By default, qdoc looks for \c{//!} as a code snippet marker.
+    For \c{.pro}, \c{.py}, \c{.cmake}, and \c{CMakeLists.txt}
+    files, \c {#!} is detected. Finally, \c{<!--} is accepted in
+    \c{.html}, \c{.qrc}, \c{.ui}, \c{.xml}, \c{.dita}, and \c{.xq} files.
+
     \target codeline-command
     \section1 \\codeline
 

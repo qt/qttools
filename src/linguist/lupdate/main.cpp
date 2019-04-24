@@ -134,6 +134,57 @@ QStringList TrFunctionAliasManager::availableFunctionsWithAliases() const
 
 TrFunctionAliasManager trFunctionAliasManager;
 
+QString ParserTool::transcode(const QString &str)
+{
+    static const char tab[] = "abfnrtv";
+    static const char backTab[] = "\a\b\f\n\r\t\v";
+    // This function has to convert back to bytes, as C's \0* sequences work at that level.
+    const QByteArray in = str.toUtf8();
+    QByteArray out;
+
+    out.reserve(in.length());
+    for (int i = 0; i < in.length();) {
+        uchar c = in[i++];
+        if (c == '\\') {
+            if (i >= in.length())
+                break;
+            c = in[i++];
+
+            if (c == '\n')
+                continue;
+
+            if (c == 'x' || c == 'u' || c == 'U') {
+                const bool unicode = (c != 'x');
+                QByteArray hex;
+                while (i < in.length() && isxdigit((c = in[i]))) {
+                    hex += c;
+                    i++;
+                }
+                if (unicode)
+                    out += QString(QChar(hex.toUInt(nullptr, 16))).toUtf8();
+                else
+                    out += hex.toUInt(nullptr, 16);
+            } else if (c >= '0' && c < '8') {
+                QByteArray oct;
+                int n = 0;
+                oct += c;
+                while (n < 2 && i < in.length() && (c = in[i]) >= '0' && c < '8') {
+                    i++;
+                    n++;
+                    oct += c;
+                }
+                out += oct.toUInt(0, 8);
+            } else {
+                const char *p = strchr(tab, c);
+                out += !p ? c : backTab[p - tab];
+            }
+        } else {
+            out += c;
+        }
+    }
+    return QString::fromUtf8(out.constData(), out.length());
+}
+
 static QString m_defaultExtensions;
 
 static void printOut(const QString & out)
@@ -314,6 +365,19 @@ static void updateTsFiles(const Translator &fetchedTor, const QStringList &tsFil
                 printErr(LU::tr("lupdate warning: Specified source language '%1' disagrees with"
                                 " existing file's language '%2'. Ignoring.\n")
                          .arg(sourceLanguage, tor.sourceLanguageCode()));
+            // If there is translation in the file, the language should be recognized
+            // (when the language is not recognized, plural translations are lost)
+            if (tor.translationsExist()) {
+                QLocale::Language l;
+                QLocale::Country c;
+                tor.languageAndCountry(tor.languageCode(), &l, &c);
+                QStringList forms;
+                if (!getNumerusInfo(l, c, 0, &forms, 0)) {
+                    printErr(LU::tr("File %1 won't be updated: it contains translation but the"
+                    " target language is not recognized\n").arg(fileName));
+                    continue;
+                }
+            }
         } else {
             if (!targetLanguage.isEmpty())
                 tor.setLanguageCode(targetLanguage);

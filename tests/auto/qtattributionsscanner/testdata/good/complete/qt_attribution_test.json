@@ -17,5 +17,6 @@ Usage",
   "Version": "1.0",
   "DownloadLocation": "www.qt.io/1.0",
   "LicenseId": "xxx",
-  "LicenseFile": "LICENSE"
+  "LicenseFile": "LICENSE",
+  "PackageComment": "just a test package"
 }
