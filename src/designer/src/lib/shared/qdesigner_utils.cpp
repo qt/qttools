@@ -726,11 +726,7 @@ namespace qdesigner_internal
         case UicLanguage::Cpp:
             break;
         case UicLanguage::Python:
-#if 0 // ### fixme: Enable when PYSIDE-797 is done (uic extended by Python generator)
             arguments << QLatin1String("-g") << QLatin1String("python");
-#else
-            binary = QLatin1String("pyside2-uic");
-#endif
             break;
         }
         arguments << fileName;
