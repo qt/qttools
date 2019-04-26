@@ -1617,12 +1617,13 @@ AddToolBarCommand::AddToolBarCommand(QDesignerFormWindowInterface *formWindow)
 {
 }
 
-void AddToolBarCommand::init(QMainWindow *mainWindow)
+void AddToolBarCommand::init(QMainWindow *mainWindow, Qt::ToolBarArea area)
 {
     m_mainWindow = mainWindow;
     QDesignerWidgetFactoryInterface * wf =  formWindow()->core()->widgetFactory();
     // Pass on 0 parent first to avoid reparenting flicker.
     m_toolBar = qobject_cast<QToolBar*>(wf->createWidget(QStringLiteral("QToolBar"), 0));
+    m_toolBar->setProperty("_q_desiredArea", QVariant(area));
     wf->initialize(m_toolBar);
     m_toolBar->hide();
 }

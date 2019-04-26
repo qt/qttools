@@ -283,6 +283,7 @@ public:
 
     QAction *m_addMenuBar;
     QAction *m_addToolBar;
+    QAction *m_addAreaSubMenu;
     QAction *m_addStatusBar;
     QAction *m_removeStatusBar;
     QAction *m_containerFakeMethods;
@@ -311,6 +312,7 @@ QDesignerTaskMenuPrivate::QDesignerTaskMenuPrivate(QWidget *widget, QObject *par
     m_formLayoutMenu(new FormLayoutMenu(parent)),
     m_addMenuBar(new QAction(QDesignerTaskMenu::tr("Create Menu Bar"), parent)),
     m_addToolBar(new QAction(QDesignerTaskMenu::tr("Add Tool Bar"), parent)),
+    m_addAreaSubMenu(new QAction(QDesignerTaskMenu::tr("Add Tool Bar to Other Area"), parent)),
     m_addStatusBar(new QAction(QDesignerTaskMenu::tr("Create Status Bar"), parent)),
     m_removeStatusBar(new QAction(QDesignerTaskMenu::tr("Remove Status Bar"), parent)),
     m_containerFakeMethods(new QAction(QDesignerTaskMenu::tr("Change signals/slots..."), parent)),
@@ -362,7 +364,16 @@ QDesignerTaskMenu::QDesignerTaskMenu(QWidget *widget, QObject *parent) :
     connect(d->m_changeWhatsThis, &QAction::triggered, this, &QDesignerTaskMenu::changeWhatsThis);
     connect(d->m_changeStyleSheet, &QAction::triggered, this, &QDesignerTaskMenu::changeStyleSheet);
     connect(d->m_addMenuBar, &QAction::triggered, this, &QDesignerTaskMenu::createMenuBar);
-    connect(d->m_addToolBar, &QAction::triggered, this, &QDesignerTaskMenu::addToolBar);
+    connect(d->m_addToolBar, &QAction::triggered, this,
+            [this] () { this->addToolBar(Qt::TopToolBarArea); });
+    auto areaMenu = new QMenu;
+    d->m_addAreaSubMenu->setMenu(areaMenu);
+    areaMenu->addAction(QDesignerTaskMenu::tr("Left"),
+                        [this] () { this->addToolBar(Qt::LeftToolBarArea); });
+    areaMenu->addAction(QDesignerTaskMenu::tr("Right"),
+                        [this] () { this->addToolBar(Qt::RightToolBarArea); });
+    areaMenu->addAction(QDesignerTaskMenu::tr("Bottom"),
+                        [this] () { this->addToolBar(Qt::BottomToolBarArea); });
     connect(d->m_addStatusBar, &QAction::triggered, this, &QDesignerTaskMenu::createStatusBar);
     connect(d->m_removeStatusBar, &QAction::triggered, this, &QDesignerTaskMenu::removeStatusBar);
     connect(d->m_containerFakeMethods, &QAction::triggered, this, &QDesignerTaskMenu::containerFakeMethods);
@@ -408,7 +419,7 @@ void QDesignerTaskMenu::createMenuBar()
     }
 }
 
-void QDesignerTaskMenu::addToolBar()
+void QDesignerTaskMenu::addToolBar(Qt::ToolBarArea area)
 {
     if (QDesignerFormWindowInterface *fw = formWindow()) {
         QMainWindow *mw = qobject_cast<QMainWindow*>(fw->mainContainer());
@@ -418,7 +429,7 @@ void QDesignerTaskMenu::addToolBar()
         }
 
         AddToolBarCommand *cmd = new AddToolBarCommand(fw);
-        cmd->init(mw);
+        cmd->init(mw, area);
         fw->commandHistory()->push(cmd);
     }
 }
@@ -468,6 +479,7 @@ QList<QAction*> QDesignerTaskMenu::taskActions() const
                 actions.append(d->m_addMenuBar);
 
             actions.append(d->m_addToolBar);
+            actions.append(d->m_addAreaSubMenu);
             // ### create the status bar
             if (mw->findChild<QStatusBar *>(QString(), Qt::FindDirectChildrenOnly))
                 actions.append(d->m_removeStatusBar);

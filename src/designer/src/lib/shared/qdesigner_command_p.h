@@ -713,7 +713,7 @@ class AddToolBarCommand: public QDesignerFormWindowCommand
 public:
     explicit AddToolBarCommand(QDesignerFormWindowInterface *formWindow);
 
-    void init(QMainWindow *mainWindow);
+    void init(QMainWindow *mainWindow, Qt::ToolBarArea area);
 
     void undo() override;
     void redo() override;

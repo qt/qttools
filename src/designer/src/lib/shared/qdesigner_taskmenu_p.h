@@ -97,7 +97,7 @@ private slots:
     void changeWhatsThis();
     void changeStyleSheet();
     void createMenuBar();
-    void addToolBar();
+    void addToolBar(Qt::ToolBarArea area);
     void createStatusBar();
     void removeStatusBar();
     void containerFakeMethods();

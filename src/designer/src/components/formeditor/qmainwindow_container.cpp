@@ -78,8 +78,12 @@ namespace {
 
     ToolBarData toolBarData(QToolBar *me) {
         const QMainWindow *mw = qobject_cast<const QMainWindow*>(me->parentWidget());
-        if (!mw || !mw->layout() ||  mw->layout()->indexOf(me) == -1)
-            return ToolBarData(Qt::TopToolBarArea,false);
+        if (!mw || !mw->layout() ||  mw->layout()->indexOf(me) == -1) {
+            const QVariant desiredAreaV = me->property("_q_desiredArea");
+            const Qt::ToolBarArea desiredArea = desiredAreaV.canConvert<Qt::ToolBarArea>()
+                ? desiredAreaV.value<Qt::ToolBarArea>() : Qt::TopToolBarArea;
+            return {desiredArea, false};
+        }
         return ToolBarData(mw->toolBarArea(me), mw->toolBarBreak(me));
     }
 
