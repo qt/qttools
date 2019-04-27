@@ -8,6 +8,7 @@
         "LicenseFile": "",
         "LicenseId": "",
         "Name": "",
+        "PackageComment": "",
         "Path": "%{PWD}",
         "Files": "",
         "QDocModule": "",

@@ -526,7 +526,8 @@ void BookmarkManager::focusInEventOccurred()
 
 void BookmarkManager::managerWidgetAboutToClose()
 {
-    delete bookmarkManagerWidget;
+    if (bookmarkManagerWidget)
+        bookmarkManagerWidget->deleteLater();
     bookmarkManagerWidget = nullptr;
 
     storeBookmarks();

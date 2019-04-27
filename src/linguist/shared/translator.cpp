@@ -433,6 +433,17 @@ void Translator::stripUntranslatedMessages()
     m_indexOk = false;
 }
 
+bool Translator::translationsExist()
+{
+    for (TMM::Iterator it = m_messages.begin(); it != m_messages.end(); ) {
+        if (it->isTranslated())
+            return true;
+        else
+            ++it;
+    }
+    return false;
+}
+
 void Translator::stripEmptyContexts()
 {
     for (TMM::Iterator it = m_messages.begin(); it != m_messages.end();)

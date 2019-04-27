@@ -8,6 +8,7 @@
         "LicenseFile": "",
         "LicenseId": "",
         "Name": "Minimal",
+        "PackageComment": "",
         "Path": "%{PWD}",
         "Files": "",
         "QDocModule": "qtest",

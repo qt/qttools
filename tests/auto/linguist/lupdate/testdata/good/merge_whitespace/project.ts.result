@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1">
+<TS version="2.1" language="en_EN">
 <context>
     <name>QObject</name>
     <message>
@@ -62,9 +62,9 @@ NEWLINE AT THE START</translation>
     </message>
     <message>
         <location filename="main.cpp" line="49"/>
-        <source>carriage return and line feed last
+        <source>carriage return and line feed last<byte value="xd"/>
 </source>
-        <translation type="unfinished">CARRIAGE RETURN AND LINE FEED LAST
+        <translation type="unfinished">CARRIAGE RETURN AND LINE FEED LAST<byte value="xd"/>
 </translation>
     </message>
 </context>

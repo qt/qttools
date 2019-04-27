@@ -112,7 +112,7 @@ Quoter::Quoter()
     /* We're going to hard code these delimiters:
         * C++, Qt, Qt Script, Java:
           //! [<id>]
-        * .pro, .py files:
+        * .pro, .py, CMake files:
           #! [<id>]
         * .html, .qrc, .ui, .xq, .xml .dita files:
           <!-- [<id>] -->
@@ -120,6 +120,7 @@ Quoter::Quoter()
     if (!commentHash.size()) {
         commentHash["pro"] = "#!";
         commentHash["py"] = "#!";
+        commentHash["cmake"] = "#!";
         commentHash["html"] = "<!--";
         commentHash["qrc"] = "<!--";
         commentHash["ui"] = "<!--";
@@ -339,8 +340,10 @@ void Quoter::failedAtEnd( const Location& docLocation, const QString& command )
 
 QString Quoter::commentForCode() const
 {
-    QString suffix = QFileInfo(codeLocation.fileName()).suffix();
-    return commentHash.value(suffix, "//!");
+    QFileInfo fi = QFileInfo(codeLocation.fileName());
+    if (fi.fileName() == "CMakeLists.txt")
+        return "#!";
+    return commentHash.value(fi.suffix(), "//!");
 }
 
 QString Quoter::removeSpecialLines(const QString &line, const QString &comment, int unindent)
