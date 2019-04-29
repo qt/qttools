@@ -318,7 +318,8 @@ void MessageEditor::reallyFixTabOrder()
     }
 }
 
-/*! internal
+/*
+    \internal
     Returns all translations for an item.
     The number of translations is dependent on if we have a plural form or not.
     If we don't have a plural form, then this should only contain one item.

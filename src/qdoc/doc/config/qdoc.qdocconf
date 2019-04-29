@@ -3,6 +3,7 @@ include($QT_INSTALL_DOCS/global/qt-module-defaults.qdocconf)
 project          = QDoc
 description      = QDoc Manual
 version          = $QT_VERSION
+moduleheader     =
 
 sourcedirs = ..
 
