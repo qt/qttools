@@ -1870,6 +1870,15 @@ FunctionNode* ClassNode::findOverriddenFunction(const FunctionNode* fn)
   \brief This class represents a C++ header file.
  */
 
+HeaderNode::HeaderNode(Aggregate* parent, const QString& name) : Aggregate(HeaderFile, parent, name)
+{
+    // Add the include file with enclosing angle brackets removed
+    if (name.startsWith(QChar('<')) && name.length() > 2)
+        Aggregate::addIncludeFile(name.mid(1).chopped(1));
+    else
+        Aggregate::addIncludeFile(name);
+}
+
 /*!
   \class PageNode
  */

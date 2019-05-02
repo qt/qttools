@@ -643,7 +643,7 @@ private:
 class HeaderNode : public Aggregate
 {
 public:
-    HeaderNode(Aggregate* parent, const QString& name) : Aggregate(HeaderFile, parent, name) { }
+    HeaderNode(Aggregate* parent, const QString& name);
     virtual ~HeaderNode() { }
     bool isFirstClassAggregate() const override { return true; }
     bool isRelatableType() const override { return true; }

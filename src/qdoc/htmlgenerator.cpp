@@ -1401,9 +1401,7 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
         detailsSections = &sections.stdCppClassDetailsSections();
     }
     else if (aggregate->isHeader()) {
-        rawTitle = aggregate->title();
-        fullTitle = aggregate->fullTitle();
-        title = "Header " + rawTitle;
+        title = fullTitle = rawTitle = aggregate->fullTitle();
         summarySections = &sections.stdSummarySections();
         detailsSections = &sections.stdDetailsSections();
     }
