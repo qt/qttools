@@ -541,8 +541,11 @@ void CentralWidget::highlightSearchTerms()
     TRACE_OBJ
     QHelpSearchEngine *searchEngine =
         HelpEngineWrapper::instance().searchEngine();
-    const QStringList &words = searchEngine->searchInput().split(QRegExp("\\W+"), QString::SkipEmptyParts);
-
+    const QString searchInput = searchEngine->searchInput();
+    const bool wholePhrase = searchInput.startsWith(QLatin1Char('"')) &&
+                             searchInput.endsWith(QLatin1Char('"'));
+    const QStringList &words = wholePhrase ? QStringList(searchInput.mid(1, searchInput.length() - 2)) :
+                                searchInput.split(QRegExp("\\W+"), QString::SkipEmptyParts);
     HelpViewer *viewer = currentHelpViewer();
     for (const QString &word : words)
         viewer->findText(word, nullptr, false, true);
