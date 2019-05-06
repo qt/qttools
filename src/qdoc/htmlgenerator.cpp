@@ -1157,11 +1157,8 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
         break;
     case Atom::SectionHeadingLeft: {
         int unit = atom->string().toInt() + hOffset(relative);
-        out() << "<h" + QString::number(unit) + QLatin1Char(' ');
-        if (unit < 3) {
-            out() << "id=\"" << Doc::canonicalTitle(Text::sectionHeading(atom).toString()) << "\"";
-        }
-        out() << '>';
+        out() << "<h" + QString::number(unit) + QLatin1Char(' ')
+              << "id=\"" << Doc::canonicalTitle(Text::sectionHeading(atom).toString()) << "\">";
         inSectionHeading_ = true;
         break;
     }
