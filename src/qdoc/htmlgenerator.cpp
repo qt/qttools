@@ -4305,19 +4305,21 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node,
     QString qmlItemFooter("</table></div>\n</div>");
 
     out() << "<div class=\"qmlitem\">";
-    QString nodeRef = refForNode(node);
+    QString nodeRef;
     if (node->isPropertyGroup()) {
         const SharedCommentNode* scn = static_cast<const SharedCommentNode*>(node);
         QVector<Node*>::ConstIterator p = scn->collective().constBegin();
         out() << "<div class=\"qmlproto\">";
         out() << "<div class=\"table\"><table class=\"qmlname\">";
-
-        QString heading = scn->name() + " group";
-        out() << "<tr valign=\"top\" class=\"even\" id=\"" << nodeRef << "\">";
-        out() << "<th class=\"centerAlign\"><p>";
-        out() << "<a name=\"" + nodeRef + "\"></a>";
-        out() << "<b>" << heading << "</b>";
-        out() << "</p></th></tr>";
+        if (!scn->name().isEmpty()) {
+            nodeRef = refForNode(scn);
+            QString heading = scn->name() + " group";
+            out() << "<tr valign=\"top\" class=\"even\" id=\"" << nodeRef << "\">";
+            out() << "<th class=\"centerAlign\"><p>";
+            out() << "<a name=\"" + nodeRef + "\"></a>";
+            out() << "<b>" << heading << "</b>";
+            out() << "</p></th></tr>";
+        }
         while (p != scn->collective().constEnd()) {
             if ((*p)->isQmlProperty() || (*p)->isJsProperty()) {
                 qpn = static_cast<QmlPropertyNode*>(*p);
@@ -4361,7 +4363,7 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node,
             out() << "<div class=\"fngroup\">\n";
         out() << qmlItemHeader;
         for (const auto m : collective) {
-            if (m->isFunction(Node::CPP) || m->isFunction(Node::JS)) {
+            if (m->isFunction(Node::QML) || m->isFunction(Node::JS)) {
                 out() << qmlItemStart.arg(nodeRef, "tblQmlFuncNode", refForNode(m));
                 generateSynopsis(m, relative, marker, Section::Details, false);
                 out() << qmlItemEnd;
