@@ -235,9 +235,6 @@ void QHelpSearchIndexReaderDefault::run()
 
     lock.unlock();
 
-    if (searchInput.isEmpty())
-        return;
-
     QHelpEngineCore engine(collectionFile, nullptr);
     if (!engine.setupData())
         return;

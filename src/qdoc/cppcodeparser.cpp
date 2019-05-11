@@ -60,6 +60,7 @@ CppCodeParser::CppCodeParser()
     if (topicCommands_.isEmpty()) {
         topicCommands_ << COMMAND_CLASS
                        << COMMAND_DITAMAP
+                       << COMMAND_DONTDOCUMENT
                        << COMMAND_ENUM
                        << COMMAND_EXAMPLE
                        << COMMAND_EXTERNALPAGE
@@ -970,6 +971,8 @@ void CppCodeParser::processTopicArgs(const Doc &doc, const QString &topic, NodeL
                 node = parseMacroArg(doc.location(), args[0].first);
             } else if (isQMLMethodTopic(topic) || isJSMethodTopic(topic)) {
                 node = parseOtherFuncArg(topic, doc.location(), args[0].first);
+            } else if (topic == COMMAND_DONTDOCUMENT) {
+                qdb_->primaryTree()->addToDontDocumentMap(args[0].first);
             } else {
                 node = processTopicCommand(doc, topic, args[0]);
             }

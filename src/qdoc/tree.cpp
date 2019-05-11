@@ -144,8 +144,7 @@ Node* Tree::findNodeForInclude(const QStringList& path) const
  */
 Aggregate *Tree::findAggregate(const QString &name)
 {
-    QStringList path;
-    path << name;
+    QStringList path = name.split(QLatin1String("::"));
     return static_cast<Aggregate*>(findNodeRecursive(path, 0, const_cast<NamespaceNode*>(root()), &Node::isFirstClassAggregate));
 }
 
@@ -1421,6 +1420,48 @@ FunctionNode *Tree::findMacroNode(const QString &t, const Aggregate *parent)
         }
     }
     return nullptr;
+}
+
+/*!
+  Add the class and struct names in \a arg to the \e {don't document}
+  map.
+ */
+void Tree::addToDontDocumentMap(QString &arg)
+{
+    arg.remove(QChar('('));
+    arg.remove(QChar(')'));
+    QString t = arg.simplified();
+    QStringList sl = t.split(QChar(' '));
+    if (sl.isEmpty())
+        return;
+    for (const QString& s : sl) {
+        if (!dontDocumentMap_.contains(s))
+            dontDocumentMap_.insert(s, nullptr);
+    }
+}
+
+/*!
+  The \e {don't document} map has been loaded with the names
+  of classes and structs in the current module that are not
+  documented and should not be documented. Now traverse the
+  map, and for each class or struct name, find the class node
+  that represents that class or struct and mark it with the
+  \C DontDocument status.
+
+  This results in a map of the class and struct nodes in the
+  module that are in the public API but are not meant to be
+  used by anyone. They are only used internally, but for one
+  reason or another, they must have public visibility.
+ */
+void Tree::markDontDocumentNodes()
+{
+    NodeMap::iterator i = dontDocumentMap_.begin();
+    while (i != dontDocumentMap_.end()) {
+        Aggregate* node = findAggregate(i.key());
+        if (node != nullptr)
+            node->setStatus(Node::DontDocument);
+        ++i;
+    }
 }
 
 QT_END_NAMESPACE

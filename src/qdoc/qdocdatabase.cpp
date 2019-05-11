@@ -1124,6 +1124,7 @@ void QDocDatabase::resolveStuff() {
         primaryTreeRoot()->normalizeOverloads();
         primaryTree()->fixInheritance(primaryTreeRoot());
         primaryTree()->resolveProperties();
+        primaryTree()->markDontDocumentNodes();
         primaryTreeRoot()->markUndocumentedChildrenInternal();
         primaryTreeRoot()->resolveQmlInheritance();
         primaryTree()->resolveTargets(primaryTreeRoot());

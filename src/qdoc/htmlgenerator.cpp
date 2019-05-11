@@ -535,7 +535,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
                 if (autolinkErrors())
                     relative->doc().location().warning(tr("Can't autolink to '%1'").arg(atom->string()));
             }
-            else if (node && node->status() == Node::Obsolete) {
+            else if (node && node->isObsolete()) {
                 if ((relative->parent() != node) && !relative->isObsolete())
                     link.clear();
             }
@@ -988,7 +988,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
               no longer warn about linking to obsolete things?
              */
             node = nullptr;
-            if (node && node->status() == Node::Obsolete) {
+            if (node && node->isObsolete()) {
                 if ((relative->parent() != node) && !relative->isObsolete()) {
                     inObsoleteLink = true;
                     if (obsoleteLinks) {
@@ -1401,9 +1401,7 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
         detailsSections = &sections.stdCppClassDetailsSections();
     }
     else if (aggregate->isHeader()) {
-        rawTitle = aggregate->title();
-        fullTitle = aggregate->fullTitle();
-        title = "Header " + rawTitle;
+        title = fullTitle = rawTitle = aggregate->fullTitle();
         summarySections = &sections.stdSummarySections();
         detailsSections = &sections.stdDetailsSections();
     }
@@ -1509,7 +1507,12 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
     QString detailsRef = registerRef("details");
     out() << "<a name=\"" << detailsRef << "\"></a>" << divNavTop << '\n';
 
-    if (!aggregate->doc().isEmpty()) {
+    if (aggregate->doc().isEmpty()) {
+        QString command = "documentation";
+        if (aggregate->isClassNode())
+            command = "\'\\class\' comment";
+        aggregate->location().warning(tr("No %1 for '%2'").arg(command).arg(aggregate->plainSignature()));
+    } else {
         generateExtractionMark(aggregate, DetailedDescriptionMark);
         out() << "<div class=\"descr\">\n" // QTBUG-9504
               << "<h2 id=\"" << detailsRef << "\">" << "Detailed Description" << "</h2>\n";
@@ -2337,7 +2340,7 @@ void HtmlGenerator::generateRequisites(Aggregate *aggregate, CodeMarker *marker)
 
     if (aggregate->isClassNode()) {
         ClassNode* classe = static_cast<ClassNode*>(aggregate);
-        if (classe->qmlElement() != nullptr && classe->status() != Node::Internal) {
+        if (classe->qmlElement() != nullptr && !classe->isInternal()) {
             text.clear();
             text << Atom(Atom::LinkNode, CodeMarker::stringForNode(classe->qmlElement()))
                  << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
@@ -2462,7 +2465,7 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
 
     //add the instantiates to the map
     ClassNode* cn = qcn->classNode();
-    if (cn && (cn->status() != Node::Internal)) {
+    if (cn && !cn->isInternal()) {
         text.clear();
         text << Atom(Atom::LinkNode,CodeMarker::stringForNode(qcn));
         text << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK);
@@ -2747,7 +2750,7 @@ QString HtmlGenerator::generateAllQmlMembersFile(const Sections &sections, CodeM
             }
             out() << "<ul>\n";
             for (int j=0; j<keys.size(); j++) {
-                if (nodes[j]->access() == Node::Private || nodes[j]->status() == Node::Internal) {
+                if (nodes[j]->access() == Node::Private || nodes[j]->isInternal()) {
                     continue;
                 }
                 out() << "<li class=\"fn\">";
@@ -4019,7 +4022,7 @@ void HtmlGenerator::generateFullName(const Node *apparentNode, const Node *relat
     if (actualNode == nullptr)
         actualNode = apparentNode;
     out() << "<a href=\"" << linkForNode(actualNode, relative);
-    if (actualNode->status() == Node::Obsolete)
+    if (actualNode->isObsolete())
         out() << "\" class=\"obsolete";
     out() << "\">";
     out() << protectEnc(apparentNode->fullName(relative));
@@ -4215,7 +4218,7 @@ void HtmlGenerator::beginLink(const QString &link, const Node *node, const Node 
     }
     else if (node == nullptr || (relative != nullptr && node->status() == relative->status()))
         out() << "<a href=\"" << link_ << "\">";
-    else if (node->status() == Node::Obsolete)
+    else if (node->isObsolete())
         out() << "<a href=\"" << link_ << "\" class=\"obsolete\">";
     else
         out() << "<a href=\"" << link_ << "\">";
@@ -4419,7 +4422,7 @@ void HtmlGenerator::generateQmlInherits(QmlTypeNode* qcn, CodeMarker* marker)
 void HtmlGenerator::generateQmlInstantiates(QmlTypeNode* qcn, CodeMarker* marker)
 {
     ClassNode* cn = qcn->classNode();
-    if (cn && (cn->status() != Node::Internal)) {
+    if (cn && !cn->isInternal()) {
         Text text;
         text << Atom::ParaLeft;
         text << Atom(Atom::LinkNode,CodeMarker::stringForNode(qcn));
@@ -4452,7 +4455,7 @@ void HtmlGenerator::generateQmlInstantiates(QmlTypeNode* qcn, CodeMarker* marker
  */
 void HtmlGenerator::generateInstantiatedBy(ClassNode* cn, CodeMarker* marker)
 {
-    if (cn &&  cn->status() != Node::Internal && cn->qmlElement() != nullptr) {
+    if (cn &&  !cn->isInternal() && cn->qmlElement() != nullptr) {
         const QmlTypeNode* qcn = cn->qmlElement();
         Text text;
         text << Atom::ParaLeft;

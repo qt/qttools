@@ -293,15 +293,12 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
     }
 
     if (style == Section::Summary) {
-        if (node->status() == Node::Preliminary) {
+        if (node->isPreliminary())
             extra += "(preliminary) ";
-        }
-        else if (node->status() == Node::Deprecated) {
+        else if (node->isDeprecated())
             extra += "(deprecated) ";
-        }
-        else if (node->status() == Node::Obsolete) {
+        else if (node->isObsolete())
             extra += "(obsolete) ";
-        }
     }
 
     if (!extra.isEmpty()) {
@@ -358,15 +355,12 @@ QString CppCodeMarker::markedUpQmlItem(const Node* node, bool summary)
 
     QString extra;
     if (summary) {
-        if (node->status() == Node::Preliminary) {
+        if (node->isPreliminary())
             extra += " (preliminary)";
-        }
-        else if (node->status() == Node::Deprecated) {
+        else if (node->isDeprecated())
             extra += " (deprecated)";
-        }
-        else if (node->status() == Node::Obsolete) {
+        else if (node->isObsolete())
             extra += " (obsolete)";
-        }
     }
 
     if (!extra.isEmpty()) {
