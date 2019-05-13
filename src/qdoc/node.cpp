@@ -1901,6 +1901,13 @@ HeaderNode::HeaderNode(Aggregate* parent, const QString& name) : Aggregate(Heade
         Aggregate::addIncludeFile(name);
 }
 
+bool HeaderNode::docMustBeGenerated() const
+{
+    if (!hasDoc() || isInternal() || isDontDocument())
+        return false;
+    return true;
+}
+
 /*!
   \class PageNode
  */
