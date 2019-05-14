@@ -1730,7 +1730,7 @@ void HtmlGenerator::generateQmlTypePage(QmlTypeNode* qcn, CodeMarker* marker)
             out() << "<a name=\"" << ref
                   << "\"></a>" << divNavTop << '\n';
             out() << "<h2 id=\"" << ref << "\">" << protectEnc(s->title()) << "</h2>\n";
-            generateQmlSummary(*s, qcn, marker);
+            generateQmlSummary(s->members(), qcn, marker);
         }
         ++s;
     }
@@ -1796,7 +1796,7 @@ void HtmlGenerator::generateQmlBasicTypePage(QmlBasicTypeNode* qbtn, CodeMarker*
             out() << "<a name=\"" << ref
                   << "\"></a>" << divNavTop << '\n';
             out() << "<h2 id=\"" << ref << "\">" << protectEnc(s->title()) << "</h2>\n";
-            generateQmlSummary(*s, qbtn, marker);
+            generateQmlSummary(s->members(), qbtn, marker);
         }
         ++s;
     }
@@ -2867,7 +2867,7 @@ QString HtmlGenerator::generateObsoleteQmlMembersFile(const Sections &sections, 
         out() << "<a name=\"" << ref
               << "\"></a>" << divNavTop << '\n';
         out() << "<h2 id=\"" << ref << "\">" << protectEnc(summary_spv.at(i)->title()) << "</h2>\n";
-        generateQmlSummary(*(summary_spv.at(i)), aggregate, marker);
+        generateQmlSummary(summary_spv.at(i)->obsoleteMembers(), aggregate, marker);
     }
 
     for (int i = 0; i < details_spv.size(); ++i) {
@@ -4244,17 +4244,17 @@ void HtmlGenerator::endLink()
 }
 
 /*!
-  Generates the summary for the \a section. Only used for
+  Generates the summary list for the \a members. Only used for
   sections of QML element documentation.
  */
-void HtmlGenerator::generateQmlSummary(const Section& section,
+void HtmlGenerator::generateQmlSummary(const NodeVector &members,
                                        const Node *relative,
                                        CodeMarker *marker)
 {
-    if (!section.members().isEmpty()) {
+    if (!members.isEmpty()) {
         out() << "<ul>\n";
-        NodeVector::const_iterator m = section.members().constBegin();
-        while (m != section.members().constEnd()) {
+        NodeVector::const_iterator m = members.constBegin();
+        while (m != members.constEnd()) {
             out() << "<li class=\"fn\">";
             generateQmlItem(*m, relative, marker, true);
             if ((*m)->isPropertyGroup()) {
