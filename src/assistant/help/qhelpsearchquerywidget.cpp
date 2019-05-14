@@ -234,6 +234,7 @@ QHelpSearchQueryWidget::QHelpSearchQueryWidget(QWidget *parent)
     QHBoxLayout* hBoxLayout = new QHBoxLayout();
     d->m_searchLabel = new QLabel(this);
     d->m_lineEdit = new QLineEdit(this);
+    d->m_lineEdit->setClearButtonEnabled(true);
     d->m_lineEdit->setCompleter(&d->m_searchCompleter);
     d->m_lineEdit->installEventFilter(d);
     d->m_prevQueryButton = new QToolButton(this);

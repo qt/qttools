@@ -58,6 +58,7 @@ IndexWindow::IndexWindow(QWidget *parent)
     layout->addWidget(l);
 
     l->setBuddy(m_searchLineEdit);
+    m_searchLineEdit->setClearButtonEnabled(true);
     connect(m_searchLineEdit, &QLineEdit::textChanged,
             this, &IndexWindow::filterIndices);
     m_searchLineEdit->installEventFilter(this);
