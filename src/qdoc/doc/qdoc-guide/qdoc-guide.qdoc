@@ -638,6 +638,10 @@
     required pre-built binaries
     \l {http://releases.llvm.org/download.html}{here}.
 
+    To build QDoc on Debian-based Linux distributions, it is sufficient to
+    install the \c libclang-dev package and its dependencies. For running QDoc,
+    the \c libclang package is required.
+
     \section1 Set Clang location automatically
 
     The Qt build system uses the tool \c llvm-config to discover the location
@@ -665,12 +669,17 @@
     If \c llvm-config is not in your \c PATH environment variable, or not
     installed on your system, you can still build QDoc, by manually setting the
     environment variable \c LLVM_INSTALL_DIR to point to the directory where
-    LLVM is installed. This directory should be the top level directory. For
-    example, on a Linux or macOS system with LLVM installed to \c /usr/llvm:
+    the Clang libraries are installed. This directory should be the top level
+    directory. For example, on a Linux or macOS system with LLVM installed to
+    \c /usr/llvm:
 
     \badcode
         $ export LLVM_INSTALL_DIR=/usr/llvm
     \endcode
+
+    Debian-based Linux distributions usually offer multiple versions of the
+    \c libclang packages, such as \c libclang-<VERSION>. In this case,
+    \c LLVM_INSTALL_DIR should contain \c /usr/lib/clang/<VERSION> .
 
     On a Windows system with LLVM installed to \c {C:\Program Files\LLVM}:
 
