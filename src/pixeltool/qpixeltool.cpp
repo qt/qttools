@@ -88,7 +88,7 @@ QPixelTool::QPixelTool(QWidget *parent)
     move(initialPos(settings, m_initialSize));
 
     setMouseTracking(true);
-    setAttribute(Qt::WA_NoBackground);
+    setAttribute(Qt::WA_OpaquePaintEvent);
     m_updateId = startTimer(30);
 }
 

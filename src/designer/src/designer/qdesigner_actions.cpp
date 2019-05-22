@@ -604,7 +604,7 @@ bool QDesignerActions::openForm(QWidget *parent)
     closePreview();
     const QString extension = uiExtension();
     const QStringList fileNames = QFileDialog::getOpenFileNames(parent, tr("Open Form"),
-        m_openDirectory, tr("Designer UI files (*.%1);;All Files (*)").arg(extension), 0, QFileDialog::DontUseSheet);
+        m_openDirectory, tr("Designer UI files (*.%1);;All Files (*)").arg(extension), nullptr);
 
     if (fileNames.isEmpty())
         return false;
@@ -786,7 +786,7 @@ bool QDesignerActions::readInForm(const QString &fileName)
                 const QString extension = uiExtension();
                 fn = QFileDialog::getOpenFileName(core()->topLevel(),
                                                   tr("Open Form"), m_openDirectory,
-                                                  tr("Designer UI files (*.%1);;All Files (*)").arg(extension), 0, QFileDialog::DontUseSheet);
+                                                  tr("Designer UI files (*.%1);;All Files (*)").arg(extension), nullptr);
 
                 if (fn.isEmpty())
                     return false;
