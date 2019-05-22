@@ -115,8 +115,11 @@ FormWindowBase::FormWindowBase(QDesignerFormEditorInterface *core, QWidget *pare
 
 FormWindowBase::~FormWindowBase()
 {
-    QSet<QDesignerPropertySheet *> sheets = m_d->m_reloadableResources.keys().toSet();
-    sheets |= m_d->m_reloadablePropertySheets.keys().toSet();
+    QSet<QDesignerPropertySheet *> sheets;
+    for (auto it = m_d->m_reloadableResources.cbegin(), end = m_d->m_reloadableResources.cend(); it != end; ++it)
+        sheets.insert(it.key());
+    for (auto it = m_d->m_reloadablePropertySheets.cbegin(), end = m_d->m_reloadablePropertySheets.cend(); it != end; ++it)
+        sheets.insert(it.key());
 
     m_d->m_reloadableResources.clear();
     m_d->m_reloadablePropertySheets.clear();

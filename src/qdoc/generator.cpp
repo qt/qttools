@@ -868,7 +868,8 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
                 ++it;
             }
 
-            QSet<QString> documentedItems = enume->doc().enumItemNames().toSet();
+            const auto &documentedItemList = enume->doc().enumItemNames();
+            QSet<QString> documentedItems(documentedItemList.cbegin(), documentedItemList.cend());
             QSet<QString> allItems = definedItems + documentedItems;
             if (allItems.count() > definedItems.count() ||
                     allItems.count() > documentedItems.count()) {

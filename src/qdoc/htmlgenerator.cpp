@@ -1572,12 +1572,14 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
                 const EnumNode *enume = reinterpret_cast<const EnumNode*>(*m);
                 if (enume->flagsType())
                     names << enume->flagsType()->name();
-
-                foreach (const QString &enumName,
-                         enume->doc().enumItemNames().toSet() -
-                         enume->doc().omitEnumItemNames().toSet())
+                const auto &enumItemNameList = enume->doc().enumItemNames();
+                const auto &omitEnumItemNameList = enume->doc().omitEnumItemNames();
+                const auto items = QSet<QString>(enumItemNameList.cbegin(), enumItemNameList.cend())
+                    - QSet<QString>(omitEnumItemNameList.cbegin(), omitEnumItemNameList.cend());
+                for (const QString &enumName : items) {
                     names << plainCode(marker->markedUpEnumValue(enumName,
                                                                  enume));
+                }
             }
             ++m;
         }
@@ -1668,12 +1670,14 @@ void HtmlGenerator::generateProxyPage(Aggregate *aggregate, CodeMarker *marker)
                     const EnumNode *enume = reinterpret_cast<const EnumNode*>(*m);
                     if (enume->flagsType())
                         names << enume->flagsType()->name();
-
-                    foreach (const QString &enumName,
-                             enume->doc().enumItemNames().toSet() -
-                             enume->doc().omitEnumItemNames().toSet())
+                    const auto &enumItemNameList = enume->doc().enumItemNames();
+                    const auto &omitEnumItemNameList = enume->doc().omitEnumItemNames();
+                    const auto items = QSet<QString>(enumItemNameList.cbegin(), enumItemNameList.cend())
+                        - QSet<QString>(omitEnumItemNameList.cbegin(), omitEnumItemNameList.cend());
+                    for (const QString &enumName : items) {
                         names << plainCode(marker->markedUpEnumValue(enumName,
                                                                      enume));
+                    }
                 }
             }
             ++m;
@@ -4675,10 +4679,13 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
 
         // Include tags added via \meta {tag} {tag1[,tag2,...]}
         // within \example topic
-        for (const auto &tag : en->doc().metaTagMap().values("tag"))
-            tags += QSet<QString>::fromList(tag.toLower().split(QLatin1Char(',')));
+        for (const auto &tag : en->doc().metaTagMap().values("tag")) {
+            const auto &tagList = tag.toLower().split(QLatin1Char(','));
+            tags += QSet<QString>(tagList.cbegin(), tagList.cend());
+        }
 
-        tags += QSet<QString>::fromList(en->title().toLower().split(QLatin1Char(' ')));
+        const auto &titleWords = en->title().toLower().split(QLatin1Char(' '));
+        tags += QSet<QString>(titleWords.cbegin(), titleWords.cend());
 
         // Clean up tags, exclude invalid and common words
         QSet<QString>::iterator tag_it = tags.begin();
@@ -4711,7 +4718,7 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
         if (!tags.isEmpty()) {
             writer.writeStartElement("tags");
             bool wrote_one = false;
-            QStringList sortedTags = tags.toList();
+            QStringList sortedTags = tags.values();
             sortedTags.sort();
             foreach (const QString &tag, sortedTags) {
                 if (wrote_one)

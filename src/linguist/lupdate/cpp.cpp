@@ -1376,7 +1376,7 @@ void CppParser::processInclude(const QString &file, ConversionData &cd, const QS
 
     const int index = includeStack.indexOf(cleanFile);
     if (index != -1) {
-        CppFiles::addIncludeCycle(includeStack.mid(index).toSet());
+        CppFiles::addIncludeCycle(QSet<QString>(includeStack.cbegin() + index, includeStack.cend()));
         return;
     }
 

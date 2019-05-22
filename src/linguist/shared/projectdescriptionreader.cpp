@@ -72,18 +72,20 @@ private:
                     << QStringLiteral("sources")
                     << QStringLiteral("subProjects")
                     << QStringLiteral("translations");
-        const QSet<QString> actualKeys = project.keys().toSet();
+        QSet<QString> actualKeys;
+        for (auto it = project.constBegin(), end = project.constEnd(); it != end; ++it)
+            actualKeys.insert(it.key());
         const QSet<QString> missingKeys = requiredKeys - actualKeys;
         if (!missingKeys.isEmpty()) {
             *m_errorString = FMT::tr("Missing keys in project description: %1.").arg(
-                    missingKeys.toList().join(QLatin1String(", ")));
+                    missingKeys.values().join(QLatin1String(", ")));
             return false;
         }
         const QSet<QString> unexpected = actualKeys - allowedKeys;
         if (!unexpected.isEmpty()) {
             *m_errorString = FMT::tr("Unexpected keys in project %1: %2").arg(
                     project.value(QStringLiteral("projectFile")).toString(),
-                    unexpected.toList().join(QLatin1String(", ")));
+                    unexpected.values().join(QLatin1String(", ")));
             return false;
         }
         return isValidProjectDescription(project.value(QStringLiteral("subProjects")).toArray());

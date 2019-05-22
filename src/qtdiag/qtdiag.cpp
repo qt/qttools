@@ -207,7 +207,7 @@ void dumpGlInfo(QTextStream &str, bool listExtensions)
         str << '\n';
 #  endif // !QT_OPENGL_ES_2
         if (listExtensions) {
-            QList<QByteArray> extensionList = context.extensions().toList();
+            QByteArrayList extensionList = context.extensions().values();
             std::sort(extensionList.begin(), extensionList.end());
             str << " \nFound " << extensionList.size() << " extensions:\n";
             for (const QByteArray &extension : qAsConst(extensionList))

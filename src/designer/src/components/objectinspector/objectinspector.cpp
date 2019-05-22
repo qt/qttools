@@ -433,10 +433,11 @@ bool ObjectInspector::ObjectInspectorPrivate::selectObject(QObject *o)
         return false;
 
     QItemSelectionModel *selectionModel = m_treeView->selectionModel();
-    const ModelIndexSet currentSelectedItems = selectionModel->selectedRows(0).toSet();
+    const auto currentSelectedItemList = selectionModel->selectedRows(0);
+    const ModelIndexSet currentSelectedItems(currentSelectedItemList.cbegin(), currentSelectedItemList.cend());
 
     // Change in selection?
-    if (!currentSelectedItems.empty() && currentSelectedItems == objectIndexes.toSet())
+    if (!currentSelectedItems.empty() && currentSelectedItems == ModelIndexSet(objectIndexes.cbegin(), objectIndexes.cend()))
         return true;
 
     // do select and update

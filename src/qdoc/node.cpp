@@ -37,6 +37,8 @@
 #include "tokenizer.h"
 #include "puredocparser.h"
 
+#include <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 int Node::propertyGroupCount_ = 0;
@@ -1199,10 +1201,10 @@ void Aggregate::normalizeOverloads()
  */
 const NodeList &Aggregate::nonfunctionList()
 {
-    std::list<Node*> list = nonfunctionMap_.values().toStdList();
-    list.sort();
-    list.unique();
-    nonfunctionList_ = NodeList::fromStdList(list);
+    nonfunctionList_ = nonfunctionMap_.values();
+    std::sort(nonfunctionList_.begin(), nonfunctionList_.end());
+    nonfunctionList_.erase(std::unique(nonfunctionList_.begin(), nonfunctionList_.end()),
+                           nonfunctionList_.end());
     return nonfunctionList_;
 }
 

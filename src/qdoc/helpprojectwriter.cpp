@@ -82,13 +82,14 @@ void HelpProjectWriter::reset(const Config &config,
         project.extraFiles += config.getStringSet(CONFIG_QHP + Config::dot + "extraFiles");
         project.indexTitle = config.getString(prefix + "indexTitle");
         project.indexRoot = config.getString(prefix + "indexRoot");
-        project.filterAttributes = config.getStringList(prefix + "filterAttributes").toSet();
+        const auto &filterAttributes = config.getStringList(prefix + "filterAttributes");
+        project.filterAttributes = QSet<QString>(filterAttributes.cbegin(), filterAttributes.cend());
         project.includeIndexNodes = config.getBool(prefix + "includeIndexNodes");
         QSet<QString> customFilterNames = config.subVars(prefix + "customFilters");
         foreach (const QString &filterName, customFilterNames) {
             QString name = config.getString(prefix + "customFilters" + Config::dot + filterName + Config::dot + "name");
-            QSet<QString> filters = config.getStringList(prefix + "customFilters" + Config::dot + filterName + Config::dot + "filterAttributes").toSet();
-            project.customFilters[name] = filters;
+            const auto &filters = config.getStringList(prefix + "customFilters" + Config::dot + filterName + Config::dot + "filterAttributes");
+            project.customFilters[name] = QSet<QString>(filters.cbegin(), filters.cend());
         }
         //customFilters = config.defs.
 
@@ -679,7 +680,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
     for (it = project.customFilters.constBegin(); it != project.customFilters.constEnd(); ++it) {
         writer.writeStartElement("customFilter");
         writer.writeAttribute("name", it.key());
-        QStringList sortedAttributes = it.value().toList();
+        QStringList sortedAttributes = it.value().values();
         sortedAttributes.sort();
         foreach (const QString &filter, sortedAttributes)
             writer.writeTextElement("filterAttribute", filter);
@@ -690,7 +691,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
     writer.writeStartElement("filterSection");
 
     // Write filterAttribute elements.
-    QStringList sortedFilterAttributes = project.filterAttributes.toList();
+    QStringList sortedFilterAttributes = project.filterAttributes.values();
     sortedFilterAttributes.sort();
     foreach (const QString &filterName, sortedFilterAttributes)
         writer.writeTextElement("filterAttribute", filterName);
@@ -844,10 +845,10 @@ void HelpProjectWriter::generateProject(HelpProject &project)
 
     // The list of files to write is the union of generated files and
     // other files (images and extras) included in the project
-    QSet<QString> files = QSet<QString>::fromList(gen_->outputFileNames());
+    QSet<QString> files = QSet<QString>(gen_->outputFileNames().cbegin(), gen_->outputFileNames().cend());
     files.unite(project.files);
     files.unite(project.extraFiles);
-    QStringList sortedFiles = files.toList();
+    QStringList sortedFiles = files.values();
     sortedFiles.sort();
     foreach (const QString &usedFile, sortedFiles) {
         if (!usedFile.isEmpty())

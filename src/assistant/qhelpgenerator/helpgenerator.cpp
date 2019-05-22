@@ -428,14 +428,14 @@ bool HelpGeneratorPrivate::insertFiles(const QStringList &files, const QString &
         return false;
 
     emit statusChanged(tr("Insert files..."));
-    QList<int> filterAtts;
+    QSet<int> filterAtts;
     for (const QString &filterAtt : filterAttributes) {
         m_query->prepare(QLatin1String("SELECT Id FROM FilterAttributeTable "
             "WHERE Name=?"));
         m_query->bindValue(0, filterAtt);
         m_query->exec();
         if (m_query->next())
-            filterAtts.append(m_query->value(0).toInt());
+            filterAtts.insert(m_query->value(0).toInt());
     }
 
     int filterSetId = -1;
@@ -504,8 +504,8 @@ bool HelpGeneratorPrivate::insertFiles(const QStringList &files, const QString &
             fileNameDataList.append(fileNameData);
 
             m_fileMap.insert(fileName, tableFileId);
-            m_fileFilterMap.insert(tableFileId, filterAtts.toSet());
-            tmpFileFilterMap.insert(tableFileId, filterAtts.toSet());
+            m_fileFilterMap.insert(tableFileId, filterAtts);
+            tmpFileFilterMap.insert(tableFileId, filterAtts);
 
             ++tableFileId;
         } else {
@@ -525,7 +525,7 @@ bool HelpGeneratorPrivate::insertFiles(const QStringList &files, const QString &
     if (!tmpFileFilterMap.isEmpty()) {
         m_query->exec(QLatin1String("BEGIN"));
         for (auto it = tmpFileFilterMap.cbegin(), end = tmpFileFilterMap.cend(); it != end; ++it) {
-            QList<int> filterValues = it.value().toList();
+            QList<int> filterValues = it.value().values();
             std::sort(filterValues.begin(), filterValues.end());
             for (int fv : qAsConst(filterValues)) {
                 m_query->prepare(QLatin1String("INSERT INTO FileFilterTable "

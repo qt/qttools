@@ -713,7 +713,7 @@ bool FormWindow::handleMouseMoveEvent(QWidget *, QWidget *, QMouseEvent *e)
         widget_set.insert(current);
     }
 
-    sel = widget_set.toList();
+    sel = widget_set.values();
     QDesignerFormWindowCursorInterface *c = cursor();
     QWidget *current = c->current();
     if (sel.contains(current)) {

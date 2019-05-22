@@ -151,8 +151,10 @@ void CppCodeParser::initializeParser(const Config &config)
                 CONFIG_EXAMPLES + Config::dot + CONFIG_FILEEXTENSIONS);
 
     // Used for excluding dirs and files from the list of example files
-    excludeDirs = QSet<QString>::fromList(config.getCanonicalPathList(CONFIG_EXCLUDEDIRS));
-    excludeFiles = QSet<QString>::fromList(config.getCanonicalPathList(CONFIG_EXCLUDEFILES));
+    const auto &excludeDirsList = config.getCanonicalPathList(CONFIG_EXCLUDEDIRS);
+    excludeDirs = QSet<QString>(excludeDirsList.cbegin(), excludeDirsList.cend());
+    const auto &excludeFilesList = config.getCanonicalPathList(CONFIG_EXCLUDEDIRS);
+    excludeFiles = QSet<QString>(excludeFilesList.cbegin(), excludeFilesList.cend());
 
     if (!exampleFilePatterns.isEmpty())
         exampleNameFilter = exampleFilePatterns.join(' ');
@@ -706,7 +708,7 @@ void CppCodeParser::processMetaCommand(const Doc &doc,
  */
 void CppCodeParser::processMetaCommands(const Doc &doc, Node *node)
 {
-    QStringList metaCommandsUsed = doc.metaCommandsUsed().toList();
+    QStringList metaCommandsUsed = doc.metaCommandsUsed().values();
     metaCommandsUsed.sort(); // TODO: why are these sorted? mws 24/12/2018
     QStringList::ConstIterator cmd = metaCommandsUsed.constBegin();
     while (cmd != metaCommandsUsed.constEnd()) {

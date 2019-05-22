@@ -88,8 +88,8 @@ QT_BEGIN_NAMESPACE
 
 static QStringList unique(const QStringList &lst)
 {
-    const QSet<QString> s = QSet<QString>::fromList(lst);
-    return s.toList();
+    const QSet<QString> s(lst.cbegin(), lst.cend());
+    return s.values();
 }
 
 QStringList QDesignerPluginManager::defaultPluginPaths()

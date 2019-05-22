@@ -955,7 +955,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node, 
             }
             if (!baseStrings.isEmpty())
             {
-                QStringList baseStringsAsList = baseStrings.toList();
+                QStringList baseStringsAsList = baseStrings.values();
                 baseStringsAsList.sort();
                 writer.writeAttribute("bases", baseStringsAsList.join(QLatin1Char(',')));
             }

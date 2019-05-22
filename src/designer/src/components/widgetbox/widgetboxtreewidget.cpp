@@ -157,7 +157,8 @@ void  WidgetBoxTreeWidget::restoreExpandedState()
     const QString groupKey = QLatin1String(widgetBoxSettingsGroupC) + QLatin1Char('/');
     m_iconMode = settings->value(groupKey + QLatin1String(widgetBoxViewModeKeyC)).toBool();
     updateViewMode();
-    const StringSet closedCategories = settings->value(groupKey + QLatin1String(widgetBoxExpandedKeyC), QStringList()).toStringList().toSet();
+    const auto &closedCategoryList = settings->value(groupKey + QLatin1String(widgetBoxExpandedKeyC), QStringList()).toStringList();
+    const StringSet closedCategories(closedCategoryList.cbegin(), closedCategoryList.cend());
     expandAll();
     if (closedCategories.empty())
         return;

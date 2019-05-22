@@ -436,7 +436,8 @@ QString Config::getString(const QString& var, const QString& defaultString) cons
  */
 QSet<QString> Config::getStringSet(const QString& var) const
 {
-    return QSet<QString>::fromList(getStringList(var));
+    const auto &stringList = getStringList(var);
+    return QSet<QString>(stringList.cbegin(), stringList.cend());
 }
 
 /*!

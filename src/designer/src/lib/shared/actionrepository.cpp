@@ -234,7 +234,7 @@ QMimeData *ActionModel::mimeData(const QModelIndexList &indexes ) const
         if (QStandardItem *item = itemFromIndex(index))
             if (QAction *action = actionOfItem(item))
                 actions.insert(action);
-    return new ActionRepositoryMimeData(actions.toList(), Qt::CopyAction);
+    return new ActionRepositoryMimeData(actions.values(), Qt::CopyAction);
 }
 
 // Resource images are plain text. The drag needs to be restricted, however.
