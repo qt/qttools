@@ -119,8 +119,9 @@ void tst_QHelpIndexModel::setupIndex()
 
     QStringList lst;
     lst << "foo" << "bar" << "bla" << "einstein" << "newton";
-    QCOMPARE(m->stringList().count(), 5);
-    foreach (QString s, m->stringList())
+    const auto stringList = m->stringList();
+    QCOMPARE(stringList.count(), 5);
+    for (const QString &s : stringList)
         lst.removeAll(s);
     QCOMPARE(lst.isEmpty(), true);
 }

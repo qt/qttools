@@ -85,18 +85,18 @@ void tst_QHelpProjectData::customFilters()
     if (!data.readData(m_inputFile))
         QFAIL("Cannot read qhp file!");
 
-    QList<QHelpDataCustomFilter> filters = data.customFilters();
+    const QList<QHelpDataCustomFilter> filters = data.customFilters();
     QCOMPARE(filters.count(), 2);
 
-    foreach (QHelpDataCustomFilter f, filters) {
+    for (const QHelpDataCustomFilter &f : filters) {
         if (f.name == QLatin1String("Custom Filter 1")) {
-            foreach (QString id, f.filterAttributes) {
+            for (const QString &id : f.filterAttributes) {
                 if (id != QLatin1String("test")
                     && id != QLatin1String("filter1"))
                     QFAIL("Wrong filter attribute!");
             }
         } else if (f.name == QLatin1String("Custom Filter 2")) {
-            foreach (QString id, f.filterAttributes) {
+            for (const QString &id : f.filterAttributes) {
                 if (id != QLatin1String("test")
                     && id != QLatin1String("filter2"))
                     QFAIL("Wrong filter attribute!");
@@ -113,13 +113,14 @@ void tst_QHelpProjectData::filterSections()
     if (!data.readData(m_inputFile))
         QFAIL("Cannot read qhp file!");
 
-    QList<QHelpDataFilterSection> sections = data.filterSections();
+    const QList<QHelpDataFilterSection> sections = data.filterSections();
     QCOMPARE(sections.count(), 2);
 
-    foreach (QHelpDataFilterSection s, sections) {
+    for (const QHelpDataFilterSection &s : sections) {
         if (s.filterAttributes().contains("filter1")) {
-            QCOMPARE(s.indices().count(), 5);
-            foreach (QHelpDataIndexItem idx, s.indices()) {
+            const auto indices = s.indices();
+            QCOMPARE(indices.size(), 5);
+            for (const QHelpDataIndexItem &idx : indices) {
                 if (idx.name == QLatin1String("foo")) {
                     QCOMPARE(idx.identifier, QString("Test::foo"));
                 } else if (idx.name == QLatin1String("bar")) {
@@ -138,11 +139,14 @@ void tst_QHelpProjectData::filterSections()
             QCOMPARE(s.contents().first()->children().count(), 5);
         } else if (s.filterAttributes().contains("filter2")) {
             QCOMPARE(s.contents().count(), 1);
-            QStringList lst;
-            lst << "classic.css" << "fancy.html" << "cars.html";
-            foreach (QString f, s.files())
-                lst.removeAll(f);
-            QCOMPARE(lst.count(), 0);
+            const QStringList lst = {
+                "cars.html",
+                "classic.css",
+                "fancy.html",
+            };
+            auto files = s.files();
+            std::sort(files.begin(), files.end());
+            QCOMPARE(files, lst);
         } else {
             QFAIL("Unexpected filter attribute!");
         }

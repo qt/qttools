@@ -223,7 +223,7 @@ void tst_lupdate::good_data()
     dirs.removeAll(QLatin1String("backslashes"));
 #endif
 
-    foreach (const QString &dir, dirs)
+    for (const QString &dir : qAsConst(dirs))
         QTest::newRow(dir.toLocal8Bit()) << dir;
 }
 
@@ -253,7 +253,8 @@ void tst_lupdate::good()
             } else if (cmdstring.startsWith("TRANSLATION:")) {
                 cmdstring.remove(0, 12);
                 generatedtsfiles.clear();
-                foreach (const QByteArray &s, cmdstring.split(' '))
+                const auto parts = cmdstring.split(' ');
+                for (const QByteArray &s : parts)
                     if (!s.isEmpty())
                         generatedtsfiles << s;
             } else if (cmdstring.startsWith("cd ")) {
@@ -264,7 +265,7 @@ void tst_lupdate::good()
         file.close();
     }
 
-    foreach (const QString &ts, generatedtsfiles) {
+    for (const QString &ts : qAsConst(generatedtsfiles)) {
         QString genTs = workDir + QLatin1Char('/') + ts;
         QFile::remove(genTs);
         QString beforetsfile = dir + QLatin1Char('/') + ts + QLatin1String(".before");
@@ -304,7 +305,7 @@ void tst_lupdate::good()
             return;
     }
 
-    foreach (const QString &ts, generatedtsfiles)
+    for (const QString &ts : qAsConst(generatedtsfiles))
         doCompare(workDir + QLatin1Char('/') + ts,
                   dir + QLatin1Char('/') + ts + QLatin1String(".result"), false);
 }

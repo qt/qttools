@@ -173,7 +173,7 @@ void tst_lconvert::convertChain(const QString &_inFileName, const QString &_outF
     for (QProcess *cvt : qAsConst(cvts))
         QVERIFY2(cvt->waitForStarted(), qPrintable(cvt->errorString()));
     int st = 0;
-    foreach (QProcess *cvt, cvts)
+    for (QProcess *cvt : qAsConst(cvts))
         doWait(cvt, ++st);
 
     if (!QTest::currentTestFailed())

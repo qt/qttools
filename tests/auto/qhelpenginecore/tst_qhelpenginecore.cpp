@@ -29,6 +29,7 @@
 
 #include <QtCore/QUrl>
 #include <QtCore/QFileInfo>
+#include <QtCore/QScopeGuard>
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>
 
@@ -189,12 +190,12 @@ void tst_QHelpEngineCore::registeredDocumentations()
 {
     QHelpEngineCore help(m_colFile, 0);
     QCOMPARE(help.setupData(), true);
-    QStringList docs = help.registeredDocumentations();
+    const QStringList docs = help.registeredDocumentations();
     QCOMPARE(docs.count(), 3);
     QStringList lst;
     lst << "trolltech.com.3-3-8.qmake" << "trolltech.com.4-3-0.qmake"
         << "trolltech.com.1.0.0.test";
-    foreach (QString s, docs)
+    for (const QString &s : docs)
         lst.removeAll(s);
     QCOMPARE(lst.isEmpty(), true);
 }
@@ -259,12 +260,12 @@ void tst_QHelpEngineCore::customFilters()
 {
     QHelpEngineCore help(m_colFile, 0);
     QCOMPARE(help.setupData(), true);
-    QStringList custom = help.customFilters();
+    const QStringList custom = help.customFilters();
     QCOMPARE(custom.count(), 4);
     QStringList lst;
     lst << "qmake Manual" << "Custom Filter 1"
         << "Custom Filter 2" << "unfiltered";
-    foreach (QString s, custom)
+    for (const QString &s : custom)
         lst.removeAll(s);
     QCOMPARE(lst.count(), 0);
 }
@@ -293,11 +294,11 @@ void tst_QHelpEngineCore::filterAttributes()
 {
     QHelpEngineCore help(m_colFile, 0);
     QCOMPARE(help.setupData(), true);
-    QStringList atts = help.filterAttributes("qmake Manual");
+    const QStringList atts = help.filterAttributes("qmake Manual");
     QCOMPARE(atts.count(), 3);
     QStringList lst;
     lst << "qmake" << "tools" << "qt";
-    foreach (QString s, atts)
+    for (const QString &s : atts)
         lst.removeAll(s);
     QCOMPARE(lst.count(), 0);
 }
@@ -352,11 +353,13 @@ void tst_QHelpEngineCore::files()
     QCOMPARE(lst.count(), 0);
     lst = help.files("trolltech.com.4-3-0.qmake",
         QStringList() << "qt" << "qmake", "foo");
+
+    // print 'lst' if test fails:
+    auto printRemainder = qScopeGuard([&]{ for (const QUrl &url : lst) qDebug() << url; });
+
     QCOMPARE(lst.count(), 0);
 
-    foreach (QUrl url, lst)
-        qDebug() << url;
-
+    printRemainder.dismiss();
 }
 
 void tst_QHelpEngineCore::fileData()
