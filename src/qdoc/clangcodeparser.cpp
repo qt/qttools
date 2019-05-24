@@ -1226,6 +1226,8 @@ void ClangCodeParser::buildPCH()
             for (const auto &p : qAsConst(includePaths_)) {
                 if (p.endsWith(module)) {
                     QByteArray candidate = p + "/" + module;
+                    if (p.startsWith("-I"))
+                        candidate = candidate.mid(2);
                     if (QFile::exists(QString::fromUtf8(candidate))) {
                         header = candidate;
                         break;
