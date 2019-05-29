@@ -150,7 +150,7 @@ public:
         FlagValueTrue = 1
     };
 
-    virtual ~Node();
+    virtual ~Node() { }
     virtual Node *clone(Aggregate *) { return nullptr; } // currently only FunctionNode
     virtual Tree *tree() const;
     Aggregate *root() const;
@@ -283,7 +283,7 @@ public:
     virtual bool setTitle(const QString& ) { return false; }
     virtual bool setSubtitle(const QString& ) { return false; }
 
-    virtual void markInternal() { setAccess(Private); setStatus(Internal); }
+    void markInternal() { setAccess(Private); setStatus(Internal); }
     virtual void markDefault() { }
     virtual void markReadOnly(bool ) { }
 
@@ -313,7 +313,6 @@ public:
     bool hasDoc() const { return (hadDoc_ || !doc_.isEmpty()); }
     bool hadDoc() const { return hadDoc_; }
     Status status() const { return status_; }
-    Status inheritedStatus() const;
     ThreadSafeness threadSafeness() const;
     ThreadSafeness inheritedThreadSafeness() const;
     QString since() const { return since_; }
@@ -339,8 +338,6 @@ public:
     virtual void setQmlModule(CollectionNode* ) { }
     virtual ClassNode* classNode() { return nullptr; }
     virtual void setClassNode(ClassNode* ) { }
-    virtual const Node* applyModuleName(const Node* ) const { return nullptr; }
-    virtual QString idNumber() { return "0"; }
     QmlTypeNode* qmlTypeNode();
     ClassNode* declarativeCppNode();
     const QString& outputSubdirectory() const { return outSubDir_; }
