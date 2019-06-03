@@ -60,7 +60,7 @@ namespace qdesigner_internal {
 class QDESIGNER_SHARED_EXPORT Layout : public QObject
 {
     Q_OBJECT
-    Q_DISABLE_COPY(Layout)
+    Q_DISABLE_COPY_MOVE(Layout)
 protected:
     Layout(const QWidgetList &wl, QWidget *p, QDesignerFormWindowInterface *fw, QWidget *lb, LayoutInfo::Type layoutType);
 

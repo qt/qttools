@@ -60,7 +60,7 @@ protected:
 private:
     QScopedPointer<QtSpinBoxFactoryPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtSpinBoxFactory)
-    Q_DISABLE_COPY(QtSpinBoxFactory)
+    Q_DISABLE_COPY_MOVE(QtSpinBoxFactory)
     Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, int))
     Q_PRIVATE_SLOT(d_func(), void slotRangeChanged(QtProperty *, int, int))
     Q_PRIVATE_SLOT(d_func(), void slotSingleStepChanged(QtProperty *, int))
@@ -84,7 +84,7 @@ protected:
 private:
     QScopedPointer<QtSliderFactoryPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtSliderFactory)
-    Q_DISABLE_COPY(QtSliderFactory)
+    Q_DISABLE_COPY_MOVE(QtSliderFactory)
     Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, int))
     Q_PRIVATE_SLOT(d_func(), void slotRangeChanged(QtProperty *, int, int))
     Q_PRIVATE_SLOT(d_func(), void slotSingleStepChanged(QtProperty *, int))
@@ -108,7 +108,7 @@ protected:
 private:
     QScopedPointer<QtScrollBarFactoryPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtScrollBarFactory)
-    Q_DISABLE_COPY(QtScrollBarFactory)
+    Q_DISABLE_COPY_MOVE(QtScrollBarFactory)
     Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, int))
     Q_PRIVATE_SLOT(d_func(), void slotRangeChanged(QtProperty *, int, int))
     Q_PRIVATE_SLOT(d_func(), void slotSingleStepChanged(QtProperty *, int))
@@ -132,7 +132,7 @@ protected:
 private:
     QScopedPointer<QtCheckBoxFactoryPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtCheckBoxFactory)
-    Q_DISABLE_COPY(QtCheckBoxFactory)
+    Q_DISABLE_COPY_MOVE(QtCheckBoxFactory)
     Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, bool))
     Q_PRIVATE_SLOT(d_func(), void slotSetValue(bool))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
@@ -154,7 +154,7 @@ protected:
 private:
     QScopedPointer<QtDoubleSpinBoxFactoryPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtDoubleSpinBoxFactory)
-    Q_DISABLE_COPY(QtDoubleSpinBoxFactory)
+    Q_DISABLE_COPY_MOVE(QtDoubleSpinBoxFactory)
     Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, double))
     Q_PRIVATE_SLOT(d_func(), void slotRangeChanged(QtProperty *, double, double))
     Q_PRIVATE_SLOT(d_func(), void slotSingleStepChanged(QtProperty *, double))
@@ -179,7 +179,7 @@ protected:
 private:
     QScopedPointer<QtLineEditFactoryPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtLineEditFactory)
-    Q_DISABLE_COPY(QtLineEditFactory)
+    Q_DISABLE_COPY_MOVE(QtLineEditFactory)
     Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, const QString &))
     Q_PRIVATE_SLOT(d_func(), void slotRegExpChanged(QtProperty *, const QRegExp &))
     Q_PRIVATE_SLOT(d_func(), void slotSetValue(const QString &))
@@ -202,7 +202,7 @@ protected:
 private:
     QScopedPointer<QtDateEditFactoryPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtDateEditFactory)
-    Q_DISABLE_COPY(QtDateEditFactory)
+    Q_DISABLE_COPY_MOVE(QtDateEditFactory)
     Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, const QDate &))
     Q_PRIVATE_SLOT(d_func(), void slotRangeChanged(QtProperty *,
                         const QDate &, const QDate &))
@@ -226,7 +226,7 @@ protected:
 private:
     QScopedPointer<QtTimeEditFactoryPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtTimeEditFactory)
-    Q_DISABLE_COPY(QtTimeEditFactory)
+    Q_DISABLE_COPY_MOVE(QtTimeEditFactory)
     Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, const QTime &))
     Q_PRIVATE_SLOT(d_func(), void slotSetValue(const QTime &))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
@@ -248,7 +248,7 @@ protected:
 private:
     QScopedPointer<QtDateTimeEditFactoryPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtDateTimeEditFactory)
-    Q_DISABLE_COPY(QtDateTimeEditFactory)
+    Q_DISABLE_COPY_MOVE(QtDateTimeEditFactory)
     Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, const QDateTime &))
     Q_PRIVATE_SLOT(d_func(), void slotSetValue(const QDateTime &))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
@@ -270,7 +270,7 @@ protected:
 private:
     QScopedPointer<QtKeySequenceEditorFactoryPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtKeySequenceEditorFactory)
-    Q_DISABLE_COPY(QtKeySequenceEditorFactory)
+    Q_DISABLE_COPY_MOVE(QtKeySequenceEditorFactory)
     Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, const QKeySequence &))
     Q_PRIVATE_SLOT(d_func(), void slotSetValue(const QKeySequence &))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
@@ -292,7 +292,7 @@ protected:
 private:
     QScopedPointer<QtCharEditorFactoryPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtCharEditorFactory)
-    Q_DISABLE_COPY(QtCharEditorFactory)
+    Q_DISABLE_COPY_MOVE(QtCharEditorFactory)
     Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, const QChar &))
     Q_PRIVATE_SLOT(d_func(), void slotSetValue(const QChar &))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
@@ -314,7 +314,7 @@ protected:
 private:
     QScopedPointer<QtEnumEditorFactoryPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtEnumEditorFactory)
-    Q_DISABLE_COPY(QtEnumEditorFactory)
+    Q_DISABLE_COPY_MOVE(QtEnumEditorFactory)
     Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, int))
     Q_PRIVATE_SLOT(d_func(), void slotEnumNamesChanged(QtProperty *,
                         const QStringList &))
@@ -340,7 +340,7 @@ protected:
 private:
     QScopedPointer<QtCursorEditorFactoryPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtCursorEditorFactory)
-    Q_DISABLE_COPY(QtCursorEditorFactory)
+    Q_DISABLE_COPY_MOVE(QtCursorEditorFactory)
     Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, const QCursor &))
     Q_PRIVATE_SLOT(d_func(), void slotEnumChanged(QtProperty *, int))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
@@ -362,7 +362,7 @@ protected:
 private:
     QScopedPointer<QtColorEditorFactoryPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtColorEditorFactory)
-    Q_DISABLE_COPY(QtColorEditorFactory)
+    Q_DISABLE_COPY_MOVE(QtColorEditorFactory)
     Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, const QColor &))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
     Q_PRIVATE_SLOT(d_func(), void slotSetValue(const QColor &))
@@ -384,7 +384,7 @@ protected:
 private:
     QScopedPointer<QtFontEditorFactoryPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtFontEditorFactory)
-    Q_DISABLE_COPY(QtFontEditorFactory)
+    Q_DISABLE_COPY_MOVE(QtFontEditorFactory)
     Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, const QFont &))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
     Q_PRIVATE_SLOT(d_func(), void slotSetValue(const QFont &))

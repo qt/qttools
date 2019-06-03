@@ -50,7 +50,7 @@ namespace qdesigner_internal {
  * contains annotations indicating the platform the font is available on. */
 
 class FontPropertyManager {
-    Q_DISABLE_COPY(FontPropertyManager)
+    Q_DISABLE_COPY_MOVE(FontPropertyManager)
 
 public:
     FontPropertyManager();

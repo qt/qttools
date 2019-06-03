@@ -81,7 +81,7 @@ struct FormLayoutRow {
 // are updated. It also checks the buddy setting depending on whether  the
 // label text contains a buddy marker.
 class FormLayoutRowDialog : public QDialog {
-    Q_DISABLE_COPY(FormLayoutRowDialog)
+    Q_DISABLE_COPY_MOVE(FormLayoutRowDialog)
     Q_OBJECT
 public:
     explicit FormLayoutRowDialog(QDesignerFormEditorInterface *core,

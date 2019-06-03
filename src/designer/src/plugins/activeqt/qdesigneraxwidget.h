@@ -53,7 +53,7 @@ class QDesignerAxWidget : public QWidget
 {
     Q_OBJECT
     Q_PROPERTY(QString control READ control WRITE setControl RESET resetControl DESIGNABLE true)
-    Q_DISABLE_COPY(QDesignerAxWidget)
+    Q_DISABLE_COPY_MOVE(QDesignerAxWidget)
 
 protected:
     explicit QDesignerAxWidget(QWidget *parent);

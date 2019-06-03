@@ -68,7 +68,7 @@ class QDesignerWorkbench;
 class QDESIGNER_SHARED_EXPORT NewFormWidget : public QDesignerNewFormWidgetInterface
 {
     Q_OBJECT
-    Q_DISABLE_COPY(NewFormWidget)
+    Q_DISABLE_COPY_MOVE(NewFormWidget)
 
 public:
     typedef QList<qdesigner_internal::DeviceProfile> DeviceProfileList;

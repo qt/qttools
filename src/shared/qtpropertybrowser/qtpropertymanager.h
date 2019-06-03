@@ -94,7 +94,7 @@ protected:
 private:
     QScopedPointer<QtIntPropertyManagerPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtIntPropertyManager)
-    Q_DISABLE_COPY(QtIntPropertyManager)
+    Q_DISABLE_COPY_MOVE(QtIntPropertyManager)
 };
 
 class QtBoolPropertyManagerPrivate;
@@ -120,7 +120,7 @@ protected:
 private:
     QScopedPointer<QtBoolPropertyManagerPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtBoolPropertyManager)
-    Q_DISABLE_COPY(QtBoolPropertyManager)
+    Q_DISABLE_COPY_MOVE(QtBoolPropertyManager)
 };
 
 class QtDoublePropertyManagerPrivate;
@@ -157,7 +157,7 @@ protected:
 private:
     QScopedPointer<QtDoublePropertyManagerPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtDoublePropertyManager)
-    Q_DISABLE_COPY(QtDoublePropertyManager)
+    Q_DISABLE_COPY_MOVE(QtDoublePropertyManager)
 };
 
 class QtStringPropertyManagerPrivate;
@@ -185,7 +185,7 @@ protected:
 private:
     QScopedPointer<QtStringPropertyManagerPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtStringPropertyManager)
-    Q_DISABLE_COPY(QtStringPropertyManager)
+    Q_DISABLE_COPY_MOVE(QtStringPropertyManager)
 };
 
 class QtDatePropertyManagerPrivate;
@@ -216,7 +216,7 @@ protected:
 private:
     QScopedPointer<QtDatePropertyManagerPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtDatePropertyManager)
-    Q_DISABLE_COPY(QtDatePropertyManager)
+    Q_DISABLE_COPY_MOVE(QtDatePropertyManager)
 };
 
 class QtTimePropertyManagerPrivate;
@@ -241,7 +241,7 @@ protected:
 private:
     QScopedPointer<QtTimePropertyManagerPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtTimePropertyManager)
-    Q_DISABLE_COPY(QtTimePropertyManager)
+    Q_DISABLE_COPY_MOVE(QtTimePropertyManager)
 };
 
 class QtDateTimePropertyManagerPrivate;
@@ -266,7 +266,7 @@ protected:
 private:
     QScopedPointer<QtDateTimePropertyManagerPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtDateTimePropertyManager)
-    Q_DISABLE_COPY(QtDateTimePropertyManager)
+    Q_DISABLE_COPY_MOVE(QtDateTimePropertyManager)
 };
 
 class QtKeySequencePropertyManagerPrivate;
@@ -291,7 +291,7 @@ protected:
 private:
     QScopedPointer<QtKeySequencePropertyManagerPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtKeySequencePropertyManager)
-    Q_DISABLE_COPY(QtKeySequencePropertyManager)
+    Q_DISABLE_COPY_MOVE(QtKeySequencePropertyManager)
 };
 
 class QtCharPropertyManagerPrivate;
@@ -316,7 +316,7 @@ protected:
 private:
     QScopedPointer<QtCharPropertyManagerPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtCharPropertyManager)
-    Q_DISABLE_COPY(QtCharPropertyManager)
+    Q_DISABLE_COPY_MOVE(QtCharPropertyManager)
 };
 
 class QtEnumPropertyManager;
@@ -344,7 +344,7 @@ protected:
 private:
     QScopedPointer<QtLocalePropertyManagerPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtLocalePropertyManager)
-    Q_DISABLE_COPY(QtLocalePropertyManager)
+    Q_DISABLE_COPY_MOVE(QtLocalePropertyManager)
     Q_PRIVATE_SLOT(d_func(), void slotEnumChanged(QtProperty *, int))
     Q_PRIVATE_SLOT(d_func(), void slotPropertyDestroyed(QtProperty *))
 };
@@ -373,7 +373,7 @@ protected:
 private:
     QScopedPointer<QtPointPropertyManagerPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtPointPropertyManager)
-    Q_DISABLE_COPY(QtPointPropertyManager)
+    Q_DISABLE_COPY_MOVE(QtPointPropertyManager)
     Q_PRIVATE_SLOT(d_func(), void slotIntChanged(QtProperty *, int))
     Q_PRIVATE_SLOT(d_func(), void slotPropertyDestroyed(QtProperty *))
 };
@@ -405,7 +405,7 @@ protected:
 private:
     QScopedPointer<QtPointFPropertyManagerPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtPointFPropertyManager)
-    Q_DISABLE_COPY(QtPointFPropertyManager)
+    Q_DISABLE_COPY_MOVE(QtPointFPropertyManager)
     Q_PRIVATE_SLOT(d_func(), void slotDoubleChanged(QtProperty *, double))
     Q_PRIVATE_SLOT(d_func(), void slotPropertyDestroyed(QtProperty *))
 };
@@ -440,7 +440,7 @@ protected:
 private:
     QScopedPointer<QtSizePropertyManagerPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtSizePropertyManager)
-    Q_DISABLE_COPY(QtSizePropertyManager)
+    Q_DISABLE_COPY_MOVE(QtSizePropertyManager)
     Q_PRIVATE_SLOT(d_func(), void slotIntChanged(QtProperty *, int))
     Q_PRIVATE_SLOT(d_func(), void slotPropertyDestroyed(QtProperty *))
 };
@@ -478,7 +478,7 @@ protected:
 private:
     QScopedPointer<QtSizeFPropertyManagerPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtSizeFPropertyManager)
-    Q_DISABLE_COPY(QtSizeFPropertyManager)
+    Q_DISABLE_COPY_MOVE(QtSizeFPropertyManager)
     Q_PRIVATE_SLOT(d_func(), void slotDoubleChanged(QtProperty *, double))
     Q_PRIVATE_SLOT(d_func(), void slotPropertyDestroyed(QtProperty *))
 };
@@ -510,7 +510,7 @@ protected:
 private:
     QScopedPointer<QtRectPropertyManagerPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtRectPropertyManager)
-    Q_DISABLE_COPY(QtRectPropertyManager)
+    Q_DISABLE_COPY_MOVE(QtRectPropertyManager)
     Q_PRIVATE_SLOT(d_func(), void slotIntChanged(QtProperty *, int))
     Q_PRIVATE_SLOT(d_func(), void slotPropertyDestroyed(QtProperty *))
 };
@@ -545,7 +545,7 @@ protected:
 private:
     QScopedPointer<QtRectFPropertyManagerPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtRectFPropertyManager)
-    Q_DISABLE_COPY(QtRectFPropertyManager)
+    Q_DISABLE_COPY_MOVE(QtRectFPropertyManager)
     Q_PRIVATE_SLOT(d_func(), void slotDoubleChanged(QtProperty *, double))
     Q_PRIVATE_SLOT(d_func(), void slotPropertyDestroyed(QtProperty *))
 };
@@ -579,7 +579,7 @@ protected:
 private:
     QScopedPointer<QtEnumPropertyManagerPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtEnumPropertyManager)
-    Q_DISABLE_COPY(QtEnumPropertyManager)
+    Q_DISABLE_COPY_MOVE(QtEnumPropertyManager)
 };
 
 class QtFlagPropertyManagerPrivate;
@@ -609,7 +609,7 @@ protected:
 private:
     QScopedPointer<QtFlagPropertyManagerPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtFlagPropertyManager)
-    Q_DISABLE_COPY(QtFlagPropertyManager)
+    Q_DISABLE_COPY_MOVE(QtFlagPropertyManager)
     Q_PRIVATE_SLOT(d_func(), void slotBoolChanged(QtProperty *, bool))
     Q_PRIVATE_SLOT(d_func(), void slotPropertyDestroyed(QtProperty *))
 };
@@ -639,7 +639,7 @@ protected:
 private:
     QScopedPointer<QtSizePolicyPropertyManagerPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtSizePolicyPropertyManager)
-    Q_DISABLE_COPY(QtSizePolicyPropertyManager)
+    Q_DISABLE_COPY_MOVE(QtSizePolicyPropertyManager)
     Q_PRIVATE_SLOT(d_func(), void slotIntChanged(QtProperty *, int))
     Q_PRIVATE_SLOT(d_func(), void slotEnumChanged(QtProperty *, int))
     Q_PRIVATE_SLOT(d_func(), void slotPropertyDestroyed(QtProperty *))
@@ -672,7 +672,7 @@ protected:
 private:
     QScopedPointer<QtFontPropertyManagerPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtFontPropertyManager)
-    Q_DISABLE_COPY(QtFontPropertyManager)
+    Q_DISABLE_COPY_MOVE(QtFontPropertyManager)
     Q_PRIVATE_SLOT(d_func(), void slotIntChanged(QtProperty *, int))
     Q_PRIVATE_SLOT(d_func(), void slotEnumChanged(QtProperty *, int))
     Q_PRIVATE_SLOT(d_func(), void slotBoolChanged(QtProperty *, bool))
@@ -706,7 +706,7 @@ protected:
 private:
     QScopedPointer<QtColorPropertyManagerPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtColorPropertyManager)
-    Q_DISABLE_COPY(QtColorPropertyManager)
+    Q_DISABLE_COPY_MOVE(QtColorPropertyManager)
     Q_PRIVATE_SLOT(d_func(), void slotIntChanged(QtProperty *, int))
     Q_PRIVATE_SLOT(d_func(), void slotPropertyDestroyed(QtProperty *))
 };
@@ -736,7 +736,7 @@ protected:
 private:
     QScopedPointer<QtCursorPropertyManagerPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtCursorPropertyManager)
-    Q_DISABLE_COPY(QtCursorPropertyManager)
+    Q_DISABLE_COPY_MOVE(QtCursorPropertyManager)
 };
 
 QT_END_NAMESPACE

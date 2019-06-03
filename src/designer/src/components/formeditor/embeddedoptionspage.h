@@ -44,7 +44,7 @@ class EmbeddedOptionsControlPrivate;
 /* EmbeddedOptions Control. Presents the user with a list of embedded
  * device profiles he can modify/add/delete. */
 class EmbeddedOptionsControl : public QWidget {
-    Q_DISABLE_COPY(EmbeddedOptionsControl)
+    Q_DISABLE_COPY_MOVE(EmbeddedOptionsControl)
     Q_OBJECT
 public:
     explicit EmbeddedOptionsControl(QDesignerFormEditorInterface *core, QWidget *parent = nullptr);
@@ -71,7 +71,7 @@ private:
 // EmbeddedOptionsPage
 class EmbeddedOptionsPage : public QDesignerOptionsPageInterface
 {
-    Q_DISABLE_COPY(EmbeddedOptionsPage)
+    Q_DISABLE_COPY_MOVE(EmbeddedOptionsPage)
 public:
     explicit EmbeddedOptionsPage(QDesignerFormEditorInterface *core);
 

@@ -453,7 +453,7 @@ QDESIGNER_SHARED_EXPORT QString qtify(const QString &name);
  * which is important to avoid side-effects when putting it into QStackedLayout. */
 
 class QDESIGNER_SHARED_EXPORT UpdateBlocker {
-    Q_DISABLE_COPY(UpdateBlocker)
+    Q_DISABLE_COPY_MOVE(UpdateBlocker)
 
 public:
     UpdateBlocker(QWidget *w);

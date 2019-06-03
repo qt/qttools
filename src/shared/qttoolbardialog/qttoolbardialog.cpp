@@ -121,7 +121,7 @@ signals:
 private:
     QScopedPointer<QtFullToolBarManagerPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtFullToolBarManager)
-    Q_DISABLE_COPY(QtFullToolBarManager)
+    Q_DISABLE_COPY_MOVE(QtFullToolBarManager)
 };
 
 class QtFullToolBarManagerPrivate

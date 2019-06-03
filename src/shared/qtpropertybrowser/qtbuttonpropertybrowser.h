@@ -71,7 +71,7 @@ private:
 
     QScopedPointer<QtButtonPropertyBrowserPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtButtonPropertyBrowser)
-    Q_DISABLE_COPY(QtButtonPropertyBrowser)
+    Q_DISABLE_COPY_MOVE(QtButtonPropertyBrowser)
     Q_PRIVATE_SLOT(d_func(), void slotUpdate())
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed())
     Q_PRIVATE_SLOT(d_func(), void slotToggled(bool))

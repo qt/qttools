@@ -114,7 +114,7 @@ private:
 
     QScopedPointer<class QtColorLinePrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtColorLine)
-    Q_DISABLE_COPY(QtColorLine)
+    Q_DISABLE_COPY_MOVE(QtColorLine)
 };
 
 QT_END_NAMESPACE

@@ -122,7 +122,7 @@ private:
     friend class QtProperty;
     QScopedPointer<QtAbstractPropertyManagerPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtAbstractPropertyManager)
-    Q_DISABLE_COPY(QtAbstractPropertyManager)
+    Q_DISABLE_COPY_MOVE(QtAbstractPropertyManager)
 };
 
 class QtAbstractEditorFactoryBase : public QObject
@@ -288,7 +288,7 @@ private:
 
     QScopedPointer<QtAbstractPropertyBrowserPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtAbstractPropertyBrowser)
-    Q_DISABLE_COPY(QtAbstractPropertyBrowser)
+    Q_DISABLE_COPY_MOVE(QtAbstractPropertyBrowser)
     Q_PRIVATE_SLOT(d_func(), void slotPropertyInserted(QtProperty *,
                             QtProperty *, QtProperty *))
     Q_PRIVATE_SLOT(d_func(), void slotPropertyRemoved(QtProperty *,

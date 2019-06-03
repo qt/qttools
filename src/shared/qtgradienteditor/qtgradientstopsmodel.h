@@ -111,7 +111,7 @@ signals:
 private:
     QScopedPointer<class QtGradientStopsModelPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtGradientStopsModel)
-    Q_DISABLE_COPY(QtGradientStopsModel)
+    Q_DISABLE_COPY_MOVE(QtGradientStopsModel)
 };
 
 QT_END_NAMESPACE

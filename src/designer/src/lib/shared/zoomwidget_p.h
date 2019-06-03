@@ -59,7 +59,7 @@ namespace qdesigner_internal {
 
 class QDESIGNER_SHARED_EXPORT ZoomMenu : public QObject {
     Q_OBJECT
-    Q_DISABLE_COPY(ZoomMenu)
+    Q_DISABLE_COPY_MOVE(ZoomMenu)
 
 public:
     ZoomMenu(QObject *parent = nullptr);
@@ -92,7 +92,7 @@ class QDESIGNER_SHARED_EXPORT ZoomView : public QGraphicsView
     Q_PROPERTY(int zoom READ zoom WRITE setZoom DESIGNABLE true SCRIPTABLE true)
     Q_PROPERTY(bool zoomContextMenuEnabled READ isZoomContextMenuEnabled WRITE setZoomContextMenuEnabled DESIGNABLE true SCRIPTABLE true)
     Q_OBJECT
-    Q_DISABLE_COPY(ZoomView)
+    Q_DISABLE_COPY_MOVE(ZoomView)
 public:
     ZoomView(QWidget *parent = nullptr);
 
@@ -138,7 +138,7 @@ private:
  * This behaviour is required for Windows only. */
 
 class  QDESIGNER_SHARED_EXPORT ZoomProxyWidget : public QGraphicsProxyWidget {
-    Q_DISABLE_COPY(ZoomProxyWidget)
+    Q_DISABLE_COPY_MOVE(ZoomProxyWidget)
 public:
     explicit ZoomProxyWidget(QGraphicsItem *parent = nullptr, Qt::WindowFlags wFlags = {});
 
@@ -160,7 +160,7 @@ class QDESIGNER_SHARED_EXPORT ZoomWidget : public ZoomView
     Q_PROPERTY(bool widgetZoomContextMenuEnabled READ isWidgetZoomContextMenuEnabled WRITE setWidgetZoomContextMenuEnabled DESIGNABLE true SCRIPTABLE true)
     Q_PROPERTY(bool itemAcceptDrops READ itemAcceptDrops WRITE setItemAcceptDrops DESIGNABLE true SCRIPTABLE true)
     Q_OBJECT
-    Q_DISABLE_COPY(ZoomWidget)
+    Q_DISABLE_COPY_MOVE(ZoomWidget)
 
 public:
     ZoomWidget(QWidget *parent = nullptr);

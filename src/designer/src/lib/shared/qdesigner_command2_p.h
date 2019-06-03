@@ -59,7 +59,7 @@ class BreakLayoutCommand;
  * QLayoutWidget's. */
 
 class QDESIGNER_SHARED_EXPORT MorphLayoutCommand : public QDesignerFormWindowCommand {
-    Q_DISABLE_COPY(MorphLayoutCommand)
+    Q_DISABLE_COPY_MOVE(MorphLayoutCommand)
 public:
     explicit MorphLayoutCommand(QDesignerFormWindowInterface *formWindow);
     ~MorphLayoutCommand() override;
@@ -83,7 +83,7 @@ private:
 
 // Change the alignment of a widget in a managed grid/box layout cell.
 class LayoutAlignmentCommand : public QDesignerFormWindowCommand {
-    Q_DISABLE_COPY(LayoutAlignmentCommand)
+    Q_DISABLE_COPY_MOVE(LayoutAlignmentCommand)
 public:
     explicit LayoutAlignmentCommand(QDesignerFormWindowInterface *formWindow);
 

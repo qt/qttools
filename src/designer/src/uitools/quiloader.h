@@ -99,7 +99,7 @@ public:
 private:
     QScopedPointer<QUiLoaderPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QUiLoader)
-    Q_DISABLE_COPY(QUiLoader)
+    Q_DISABLE_COPY_MOVE(QUiLoader)
 };
 
 QT_END_NAMESPACE

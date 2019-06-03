@@ -65,7 +65,7 @@ class QtResourceModelPrivate
 {
     QtResourceModel *q_ptr = nullptr;
     Q_DECLARE_PUBLIC(QtResourceModel)
-    Q_DISABLE_COPY(QtResourceModelPrivate)
+    Q_DISABLE_COPY_MOVE(QtResourceModelPrivate)
 public:
     QtResourceModelPrivate();
     void activate(QtResourceSet *resourceSet, const QStringList &newPaths, int *errorCount = nullptr, QString *errorMessages = nullptr);

@@ -102,7 +102,7 @@ QT_BEGIN_NAMESPACE
 namespace {
 class BlockSelection
 {
-    Q_DISABLE_COPY(BlockSelection)
+    Q_DISABLE_COPY_MOVE(BlockSelection)
 public:
     BlockSelection(qdesigner_internal::FormWindow *fw)
         : m_formWindow(fw),
@@ -131,7 +131,7 @@ namespace qdesigner_internal {
 
 class FormWindow::Selection
 {
-    Q_DISABLE_COPY(Selection)
+    Q_DISABLE_COPY_MOVE(Selection)
 public:
     Selection();
     ~Selection();

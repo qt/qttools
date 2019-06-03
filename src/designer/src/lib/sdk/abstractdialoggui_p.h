@@ -50,7 +50,7 @@ class QWidget;
 
 class QDESIGNER_SDK_EXPORT QDesignerDialogGuiInterface
 {
-    Q_DISABLE_COPY(QDesignerDialogGuiInterface)
+    Q_DISABLE_COPY_MOVE(QDesignerDialogGuiInterface)
 public:
     QDesignerDialogGuiInterface();
     virtual ~QDesignerDialogGuiInterface();

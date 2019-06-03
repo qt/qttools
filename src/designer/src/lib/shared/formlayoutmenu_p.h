@@ -58,7 +58,7 @@ namespace qdesigner_internal {
 // pops up a dialog in which the user can specify label name, text and buddy.
 class QDESIGNER_SHARED_EXPORT FormLayoutMenu : public QObject
 {
-    Q_DISABLE_COPY(FormLayoutMenu)
+    Q_DISABLE_COPY_MOVE(FormLayoutMenu)
     Q_OBJECT
 public:
     typedef QList<QAction *> ActionList;

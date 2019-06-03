@@ -256,7 +256,7 @@ static void replaceWidgetListDynamicProperty(QWidget *parentWidget,
  * which cause other commands to be added. */
 class MorphWidgetCommand : public QDesignerFormWindowCommand
 {
-    Q_DISABLE_COPY(MorphWidgetCommand)
+    Q_DISABLE_COPY_MOVE(MorphWidgetCommand)
 public:
 
     explicit MorphWidgetCommand(QDesignerFormWindowInterface *formWindow);

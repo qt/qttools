@@ -99,7 +99,7 @@ namespace qdesigner_internal {
  * should return that in its size hint, else such cases won't work */
 
 class DesignerZoomProxyWidget : public ZoomProxyWidget  {
-    Q_DISABLE_COPY(DesignerZoomProxyWidget)
+    Q_DISABLE_COPY_MOVE(DesignerZoomProxyWidget)
 public:
     DesignerZoomProxyWidget(QGraphicsItem *parent = nullptr, Qt::WindowFlags wFlags = {});
 protected:
@@ -120,7 +120,7 @@ QSizeF DesignerZoomProxyWidget::sizeHint(Qt::SizeHint which, const QSizeF & cons
 
 // DesignerZoomWidget which returns DesignerZoomProxyWidget in its factory function
 class DesignerZoomWidget : public ZoomWidget {
-    Q_DISABLE_COPY(DesignerZoomWidget)
+    Q_DISABLE_COPY_MOVE(DesignerZoomWidget)
 public:
     DesignerZoomWidget(QWidget *parent = nullptr);
 private:

@@ -346,7 +346,7 @@ private:
 
 // Mixin class for storing the selection state
 class QDESIGNER_SHARED_EXPORT CursorSelectionState {
-    Q_DISABLE_COPY(CursorSelectionState)
+    Q_DISABLE_COPY_MOVE(CursorSelectionState)
 public:
     CursorSelectionState();
 

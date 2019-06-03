@@ -65,7 +65,7 @@ static const char fontFileKeyC[] = "fontFiles";
 
 class AppFontManager
 {
-    Q_DISABLE_COPY(AppFontManager)
+    Q_DISABLE_COPY_MOVE(AppFontManager)
     AppFontManager();
 public:
     static AppFontManager &instance();
@@ -213,7 +213,7 @@ const AppFontManager::FileNameFontIdPairs &AppFontManager::fonts() const
 
 // ------------- AppFontModel
 class AppFontModel : public QStandardItemModel {
-    Q_DISABLE_COPY(AppFontModel)
+    Q_DISABLE_COPY_MOVE(AppFontModel)
 public:
     AppFontModel(QObject *parent = nullptr);
 

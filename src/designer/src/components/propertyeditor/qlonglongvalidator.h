@@ -56,7 +56,7 @@ public:
     qlonglong top() const { return t; }
 
 private:
-    Q_DISABLE_COPY(QLongLongValidator)
+    Q_DISABLE_COPY_MOVE(QLongLongValidator)
 
     qlonglong b;
     qlonglong t;
@@ -84,7 +84,7 @@ public:
     qulonglong top() const { return t; }
 
 private:
-    Q_DISABLE_COPY(QULongLongValidator)
+    Q_DISABLE_COPY_MOVE(QULongLongValidator)
 
     qulonglong b;
     qulonglong t;

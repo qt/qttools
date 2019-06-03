@@ -52,7 +52,7 @@ namespace qdesigner_internal {
 
 /* Conveniene morph menu that acts on a single widget. */
 class QDESIGNER_SHARED_EXPORT MorphMenu : public QObject {
-    Q_DISABLE_COPY(MorphMenu)
+    Q_DISABLE_COPY_MOVE(MorphMenu)
     Q_OBJECT
 public:
     typedef QList<QAction *> ActionList;

@@ -49,7 +49,7 @@ class FormWindowBase;
 
 class FormWindowSettings: public QDialog
 {
-    Q_DISABLE_COPY(FormWindowSettings)
+    Q_DISABLE_COPY_MOVE(FormWindowSettings)
     Q_OBJECT
 public:
     explicit FormWindowSettings(QDesignerFormWindowInterface *formWindow);

@@ -582,7 +582,7 @@ void SplitterLayout::doLayout()
 
 class Grid
 {
-    Q_DISABLE_COPY(Grid);
+    Q_DISABLE_COPY_MOVE(Grid);
 public:
     enum Mode {
         GridLayout, // Arbitrary size/supports span

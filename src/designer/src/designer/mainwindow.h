@@ -55,7 +55,7 @@ class QMimeData;
 
 class MainWindowBase: public QMainWindow
 {
-    Q_DISABLE_COPY(MainWindowBase)
+    Q_DISABLE_COPY_MOVE(MainWindowBase)
     Q_OBJECT
 protected:
     explicit MainWindowBase(QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::Window);
@@ -89,7 +89,7 @@ private:
  * a signal to open a dropped file. */
 class DockedMdiArea : public QMdiArea
 {
-    Q_DISABLE_COPY(DockedMdiArea)
+    Q_DISABLE_COPY_MOVE(DockedMdiArea)
     Q_OBJECT
 public:
     explicit DockedMdiArea(const QString &extension, QWidget *parent = nullptr);
@@ -111,7 +111,7 @@ private:
 class ToolBarManager : public QObject
 {
     Q_OBJECT
-    Q_DISABLE_COPY(ToolBarManager)
+    Q_DISABLE_COPY_MOVE(ToolBarManager)
 public:
     explicit ToolBarManager(QMainWindow *configureableMainWindow,
                             QWidget *parent,
@@ -139,7 +139,7 @@ private:
 /* Main window to be used for docked mode */
 class DockedMainWindow : public MainWindowBase {
     Q_OBJECT
-    Q_DISABLE_COPY(DockedMainWindow)
+    Q_DISABLE_COPY_MOVE(DockedMainWindow)
 public:
     typedef QVector<QDesignerToolWindow *> DesignerToolWindowList;
     typedef QVector<QDockWidget *> DockWidgetList;

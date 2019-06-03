@@ -51,7 +51,7 @@ class QIODevice;
 class NewForm: public QDialog
 {
     Q_OBJECT
-    Q_DISABLE_COPY(NewForm)
+    Q_DISABLE_COPY_MOVE(NewForm)
 
 public:
     NewForm(QDesignerWorkbench *workbench,

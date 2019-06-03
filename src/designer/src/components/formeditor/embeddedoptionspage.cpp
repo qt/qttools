@@ -81,7 +81,7 @@ static bool ask(QWidget *parent,
 
 // ------------ EmbeddedOptionsControlPrivate
 class EmbeddedOptionsControlPrivate {
-     Q_DISABLE_COPY(EmbeddedOptionsControlPrivate)
+     Q_DISABLE_COPY_MOVE(EmbeddedOptionsControlPrivate)
 public:
     EmbeddedOptionsControlPrivate(QDesignerFormEditorInterface *core);
     void init(EmbeddedOptionsControl *q);

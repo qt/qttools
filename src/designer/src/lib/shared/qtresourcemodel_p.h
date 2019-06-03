@@ -77,7 +77,7 @@ private:
 
     QScopedPointer<class QtResourceSetPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtResourceSet)
-    Q_DISABLE_COPY(QtResourceSet)
+    Q_DISABLE_COPY_MOVE(QtResourceSet)
 };
 
 class QDESIGNER_SHARED_EXPORT QtResourceModel : public QObject // one instance per whole designer
@@ -122,7 +122,7 @@ private:
 
     QScopedPointer<class QtResourceModelPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtResourceModel)
-    Q_DISABLE_COPY(QtResourceModel)
+    Q_DISABLE_COPY_MOVE(QtResourceModel)
 
     Q_PRIVATE_SLOT(d_func(), void slotFileChanged(const QString &))
 };

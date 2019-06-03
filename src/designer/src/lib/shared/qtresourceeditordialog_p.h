@@ -73,7 +73,7 @@ private:
 
     QScopedPointer<class QtResourceEditorDialogPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtResourceEditorDialog)
-    Q_DISABLE_COPY(QtResourceEditorDialog)
+    Q_DISABLE_COPY_MOVE(QtResourceEditorDialog)
 
     Q_PRIVATE_SLOT(d_func(), void slotQrcFileInserted(QtQrcFile *))
     Q_PRIVATE_SLOT(d_func(), void slotQrcFileMoved(QtQrcFile *))

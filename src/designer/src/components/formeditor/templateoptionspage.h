@@ -51,7 +51,7 @@ namespace Ui {
 class TemplateOptionsWidget : public QWidget
 {
     Q_OBJECT
-    Q_DISABLE_COPY(TemplateOptionsWidget)
+    Q_DISABLE_COPY_MOVE(TemplateOptionsWidget)
 public:
     explicit TemplateOptionsWidget(QDesignerFormEditorInterface *core,
                                               QWidget *parent = nullptr);
@@ -75,7 +75,7 @@ private:
 
 class TemplateOptionsPage : public QDesignerOptionsPageInterface
 {
-     Q_DISABLE_COPY(TemplateOptionsPage)
+     Q_DISABLE_COPY_MOVE(TemplateOptionsPage)
 public:
     explicit TemplateOptionsPage(QDesignerFormEditorInterface *core);
 

@@ -255,7 +255,7 @@ QVariant ZoomProxyWidget::itemChange(GraphicsItemChange change, const QVariant &
 static const char *zoomedEventFilterRedirectorNameC = "__qt_ZoomedEventFilterRedirector";
 
 class ZoomedEventFilterRedirector : public QObject {
-    Q_DISABLE_COPY(ZoomedEventFilterRedirector)
+    Q_DISABLE_COPY_MOVE(ZoomedEventFilterRedirector)
 
 public:
     explicit ZoomedEventFilterRedirector(ZoomWidget *zw, QObject *parent);

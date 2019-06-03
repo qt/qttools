@@ -49,7 +49,7 @@ namespace qdesigner_internal {
 
 // Icon provider that reads out the known image formats
 class IconProvider : public QFileIconProvider {
-    Q_DISABLE_COPY(IconProvider)
+    Q_DISABLE_COPY_MOVE(IconProvider)
 
 public:
     IconProvider();

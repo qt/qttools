@@ -49,7 +49,7 @@ namespace qdesigner_internal {
 class ButtonGroupMenu : public QObject
 {
     Q_OBJECT
-    Q_DISABLE_COPY(ButtonGroupMenu)
+    Q_DISABLE_COPY_MOVE(ButtonGroupMenu)
 public:
     ButtonGroupMenu(QObject *parent = nullptr);
 
@@ -78,7 +78,7 @@ private:
 class ButtonGroupTaskMenu : public QObject, public QDesignerTaskMenuExtension
 {
     Q_OBJECT
-    Q_DISABLE_COPY(ButtonGroupTaskMenu)
+    Q_DISABLE_COPY_MOVE(ButtonGroupTaskMenu)
     Q_INTERFACES(QDesignerTaskMenuExtension)
 public:
     explicit ButtonGroupTaskMenu(QButtonGroup *buttonGroup, QObject *parent = nullptr);
@@ -96,7 +96,7 @@ private:
 class ButtonTaskMenu: public QDesignerTaskMenu
 {
     Q_OBJECT
-    Q_DISABLE_COPY(ButtonTaskMenu)
+    Q_DISABLE_COPY_MOVE(ButtonTaskMenu)
 public:
     explicit ButtonTaskMenu(QAbstractButton *button, QObject *parent = nullptr);
     ~ButtonTaskMenu() override;
@@ -142,7 +142,7 @@ private:
 class CommandLinkButtonTaskMenu: public ButtonTaskMenu
 {
     Q_OBJECT
-    Q_DISABLE_COPY(CommandLinkButtonTaskMenu)
+    Q_DISABLE_COPY_MOVE(CommandLinkButtonTaskMenu)
 public:
     explicit CommandLinkButtonTaskMenu(QCommandLinkButton *button, QObject *parent = nullptr);
 };

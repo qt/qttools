@@ -82,7 +82,7 @@ private:
     QWidget *m_decoration;
     QPoint m_hot_spot;
 
-    Q_DISABLE_COPY(QDesignerDnDItem)
+    Q_DISABLE_COPY_MOVE(QDesignerDnDItem)
 };
 
 // Mime data for use with designer drag and drop operations.
