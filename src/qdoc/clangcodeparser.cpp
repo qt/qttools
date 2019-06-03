@@ -1021,8 +1021,19 @@ void ClangCodeParser::initializeParser(const Config &config)
     printParsingErrors_ = 1;
     version_ = config.getString(CONFIG_VERSION);
     const auto args = config.getStringList(CONFIG_INCLUDEPATHS);
-    includePaths_.resize(args.size());
-    std::transform(args.begin(), args.end(), includePaths_.begin(),
+    QStringList squeezedArgs;
+    int i = 0;
+    while (i < args.size()) {
+        if (args.at(i) != QLatin1String("-I")) {
+            if (args.at(i).startsWith(QLatin1String("-I")))
+                squeezedArgs << args.at(i);
+            else
+                squeezedArgs << QLatin1String("-I") + args.at(i);
+        }
+        i++;
+    }
+    includePaths_.resize(squeezedArgs.size());
+    std::transform(squeezedArgs.begin(), squeezedArgs.end(), includePaths_.begin(),
                    [](const QString &s) { return s.toUtf8(); });
     CppCodeParser::initializeParser(config);
     pchFileDir_.reset(nullptr);

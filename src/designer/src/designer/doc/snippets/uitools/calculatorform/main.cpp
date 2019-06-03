@@ -57,11 +57,11 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    QWidget *widget = new QWidget;
+    QWidget widget;
     Ui::CalculatorForm ui;
-    ui.setupUi(widget);
+    ui.setupUi(&widget);
 
-    widget->show();
+    widget.show();
     return app.exec();
 }
 //! [1]
