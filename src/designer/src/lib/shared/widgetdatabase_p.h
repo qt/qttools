@@ -145,7 +145,7 @@ class QDESIGNER_SHARED_EXPORT WidgetDataBase: public QDesignerWidgetDataBaseInte
 {
     Q_OBJECT
 public:
-    explicit WidgetDataBase(QDesignerFormEditorInterface *core, QObject *parent = 0);
+    explicit WidgetDataBase(QDesignerFormEditorInterface *core, QObject *parent = nullptr);
     ~WidgetDataBase() override;
 
     QDesignerFormEditorInterface *core() const override;

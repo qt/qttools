@@ -41,7 +41,7 @@ class QDESIGNER_SDK_EXPORT QDesignerResourceBrowserInterface: public QWidget
 {
     Q_OBJECT
 public:
-    explicit QDesignerResourceBrowserInterface(QWidget *parent = Q_NULLPTR);
+    explicit QDesignerResourceBrowserInterface(QWidget *parent = nullptr);
     virtual ~QDesignerResourceBrowserInterface();
 
     virtual void setCurrentPath(const QString &filePath) = 0;

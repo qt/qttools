@@ -77,7 +77,7 @@ public:
         ChangeLayoutSpanHandleOperation
     };
 
-    explicit FormWindow(FormEditor *core, QWidget *parent = 0, Qt::WindowFlags flags = 0);
+    explicit FormWindow(FormEditor *core, QWidget *parent = nullptr, Qt::WindowFlags flags = {});
     ~FormWindow() override;
 
     QDesignerFormEditorInterface *core() const override;
@@ -118,7 +118,7 @@ public:
     void setFileName(const QString &fileName) override;
 
     QString contents() const override;
-    bool setContents(QIODevice *dev, QString *errorMessage = 0) override;
+    bool setContents(QIODevice *dev, QString *errorMessage = nullptr) override;
     bool setContents(const QString &) override;
 
     QDir absoluteDir() const override;
@@ -223,7 +223,7 @@ public slots:
 #endif
     void selectAll();
 
-    void createLayout(int type, QWidget *container = 0);
+    void createLayout(int type, QWidget *container = nullptr);
     void morphLayout(QWidget *container, int newType);
     void breakLayout(QWidget *w);
 

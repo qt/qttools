@@ -269,10 +269,10 @@ bool ActionModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int
 QAction *ActionModel::actionAt(const  QModelIndex &index) const
 {
     if (!index.isValid())
-        return 0;
+        return nullptr;
     QStandardItem *i = itemFromIndex(index);
     if (!i)
-        return 0;
+        return nullptr;
     return actionOfItem(i);
 }
 

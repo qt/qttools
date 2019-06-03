@@ -68,8 +68,8 @@ bool BuddyEditorTool::handleEvent(QWidget *widget, QWidget *managedWidget, QEven
 QWidget *BuddyEditorTool::editor() const
 {
     if (!m_editor) {
-        Q_ASSERT(formWindow() != 0);
-        m_editor = new BuddyEditor(formWindow(), 0);
+        Q_ASSERT(formWindow() != nullptr);
+        m_editor = new BuddyEditor(formWindow(), nullptr);
         connect(formWindow(), &QDesignerFormWindowInterface::mainContainerChanged,
                 m_editor.data(), &BuddyEditor::setBackground);
         connect(formWindow(), &QDesignerFormWindowInterface::changed,

@@ -63,7 +63,7 @@ class SpecialMenuAction: public QAction
 {
     Q_OBJECT
 public:
-    SpecialMenuAction(QObject *parent = 0);
+    SpecialMenuAction(QObject *parent = nullptr);
     ~SpecialMenuAction() override;
 };
 
@@ -73,7 +73,7 @@ class QDESIGNER_SHARED_EXPORT QDesignerMenuBar: public QMenuBar
 {
     Q_OBJECT
 public:
-    QDesignerMenuBar(QWidget *parent = 0);
+    QDesignerMenuBar(QWidget *parent = nullptr);
     ~QDesignerMenuBar() override;
 
     bool eventFilter(QObject *object, QEvent *event) override;

@@ -229,12 +229,12 @@ QLabel *buddyLabelOf(QDesignerFormWindowInterface *fw, QWidget *w)
     typedef QList<QLabel*> LabelList;
     const LabelList labelList = fw->findChildren<QLabel*>();
     if (labelList.empty())
-        return 0;
+        return nullptr;
     const LabelList::const_iterator cend = labelList.constEnd();
     for (LabelList::const_iterator it = labelList.constBegin(); it != cend; ++it )
         if ( (*it)->buddy() == w)
             return *it;
-    return 0;
+    return nullptr;
 }
 
 // Replace widgets in a widget-list type dynamic property of the parent
@@ -275,7 +275,7 @@ public:
     static QStringList candidateClasses(QDesignerFormWindowInterface *fw, QWidget *w);
 
 private:
-    static bool canMorph(QDesignerFormWindowInterface *fw, QWidget *w, int *childContainerCount = 0, MorphCategory *cat = 0);
+    static bool canMorph(QDesignerFormWindowInterface *fw, QWidget *w, int *childContainerCount = nullptr, MorphCategory *cat = nullptr);
     void morph(QWidget *before, QWidget *after);
 
     QWidget *m_beforeWidget;
@@ -313,8 +313,8 @@ bool MorphWidgetCommand::addMorphMacro(QDesignerFormWindowInterface *fw, QWidget
 
 MorphWidgetCommand::MorphWidgetCommand(QDesignerFormWindowInterface *formWindow)  :
     QDesignerFormWindowCommand(QString(), formWindow),
-    m_beforeWidget(0),
-    m_afterWidget(0)
+    m_beforeWidget(nullptr),
+    m_afterWidget(nullptr)
 {
 }
 
@@ -443,13 +443,13 @@ void MorphWidgetCommand::morph(QWidget *before, QWidget *after)
     } else if (QSplitter *splitter = qobject_cast<QSplitter *>(parent)) {
         const int index = splitter->indexOf(before);
         before->hide();
-        before->setParent(0);
+        before->setParent(nullptr);
         splitter->insertWidget(index, after);
         after->setParent(parent);
         after->setGeometry(oldGeom);
     } else {
         before->hide();
-        before->setParent(0);
+        before->setParent(nullptr);
         after->setParent(parent);
         after->setGeometry(oldGeom);
     }
@@ -495,7 +495,7 @@ bool MorphWidgetCommand::canMorph(QDesignerFormWindowInterface *fw, QWidget *w, 
     // Check the parent relationship. We accept only managed parent widgets
     // with a single, managed layout in which widget is a member.
     QWidget *parent = w->parentWidget();
-    if (parent == 0)
+    if (parent == nullptr)
         return false;
     if (QLayout *pl = LayoutInfo::managedLayout(core, parent))
         if (pl->indexOf(w) < 0 || !core->metaDataBase()->item(pl))
@@ -572,8 +572,8 @@ void MorphMenu::slotMorph(const QString &newClassName)
 
 bool MorphMenu::populateMenu(QWidget *w, QDesignerFormWindowInterface *fw)
 {
-    m_widget = 0;
-    m_formWindow = 0;
+    m_widget = nullptr;
+    m_formWindow = nullptr;
 
     // Clear menu
     if (m_subMenuAction) {

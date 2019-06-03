@@ -45,7 +45,7 @@ using namespace qdesigner_internal;
 
 static QWidget *decorationFromWidget(QWidget *w)
 {
-    QLabel *label = new QLabel(0, Qt::ToolTip);
+    QLabel *label = new QLabel(nullptr, Qt::ToolTip);
     QPixmap pm = w->grab(QRect(0, 0, -1, -1));
     label->setPixmap(pm);
     label->resize((QSizeF(pm.size()) / pm.devicePixelRatio()).toSize());
@@ -68,17 +68,17 @@ FormWindowDnDItem::FormWindowDnDItem(QDesignerDnDItemInterface::DropType type, F
     QPoint pos = widget->mapToGlobal(QPoint(0, 0));
     decoration->move(pos);
 
-    init(0, widget, decoration, global_mouse_pos);
+    init(nullptr, widget, decoration, global_mouse_pos);
 }
 
 DomUI *FormWindowDnDItem::domUi() const
 {
     DomUI *result = QDesignerDnDItem::domUi();
-    if (result != 0)
+    if (result != nullptr)
         return result;
     FormWindow *form = qobject_cast<FormWindow*>(source());
-    if (widget() == 0 || form == 0)
-        return 0;
+    if (widget() == nullptr || form == nullptr)
+        return nullptr;
 
     QtResourceModel *resourceModel = form->core()->resourceModel();
     QtResourceSet *currentResourceSet = resourceModel->currentResourceSet();

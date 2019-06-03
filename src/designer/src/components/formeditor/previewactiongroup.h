@@ -56,7 +56,7 @@ class PreviewActionGroup : public QActionGroup
     Q_DISABLE_COPY(PreviewActionGroup)
     Q_OBJECT
 public:
-    explicit PreviewActionGroup(QDesignerFormEditorInterface *core, QObject *parent = 0);
+    explicit PreviewActionGroup(QDesignerFormEditorInterface *core, QObject *parent = nullptr);
 
 signals:
     void preview(const QString &style, int deviceProfileIndex);

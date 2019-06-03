@@ -70,8 +70,8 @@ public:
     bool copy(QIODevice *dev, const FormBuilderClipboard &selection) override;
     DomUI *copy(const FormBuilderClipboard &selection) override;
 
-    FormBuilderClipboard paste(DomUI *ui, QWidget *widgetParent, QObject *actionParent = 0) override;
-    FormBuilderClipboard paste(QIODevice *dev,  QWidget *widgetParent, QObject *actionParent = 0) override;
+    FormBuilderClipboard paste(DomUI *ui, QWidget *widgetParent, QObject *actionParent = nullptr) override;
+    FormBuilderClipboard paste(QIODevice *dev,  QWidget *widgetParent, QObject *actionParent = nullptr) override;
 
     bool saveRelative() const;
     void setSaveRelative(bool relative);

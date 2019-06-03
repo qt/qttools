@@ -52,7 +52,7 @@ TaskMenuComponent::TaskMenuComponent(QDesignerFormEditorInterface *core, QObject
     : QObject(parent),
       m_core(core)
 {
-    Q_ASSERT(m_core != 0);
+    Q_ASSERT(m_core != nullptr);
 
     QExtensionManager *mgr = core->extensionManager();
     const QString taskMenuId =  QStringLiteral("QDesignerInternalTaskMenuExtension");

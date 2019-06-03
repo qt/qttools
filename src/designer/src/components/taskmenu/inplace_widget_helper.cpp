@@ -38,7 +38,7 @@ QT_BEGIN_NAMESPACE
 
 namespace qdesigner_internal {
     InPlaceWidgetHelper::InPlaceWidgetHelper(QWidget *editorWidget, QWidget *parentWidget, QDesignerFormWindowInterface *fw)
-        : QObject(0),
+        : QObject(nullptr),
     m_editorWidget(editorWidget),
     m_parentWidget(parentWidget),
     m_noChildEvent(m_parentWidget->testAttribute(Qt::WA_NoChildEventsForParent))

@@ -165,7 +165,7 @@ class QDESIGNER_SHARED_EXPORT QLayoutSupport: public QObject, public QDesignerLa
     Q_INTERFACES(QDesignerLayoutDecorationExtension)
 
 protected:
-    QLayoutSupport(QDesignerFormWindowInterface *formWindow, QWidget *widget, LayoutHelper *helper, QObject *parent = 0);
+    QLayoutSupport(QDesignerFormWindowInterface *formWindow, QWidget *widget, LayoutHelper *helper, QObject *parent = nullptr);
 
 public:
     ~QLayoutSupport() override;
@@ -203,7 +203,7 @@ public:
     static bool canSimplifyQuickCheck(const QGridLayout *);
     static bool canSimplifyQuickCheck(const QFormLayout *fl);
     // Factory function, create layout support according to layout type of widget
-    static QLayoutSupport *createLayoutSupport(QDesignerFormWindowInterface *formWindow, QWidget *widget, QObject *parent = 0);
+    static QLayoutSupport *createLayoutSupport(QDesignerFormWindowInterface *formWindow, QWidget *widget, QObject *parent = nullptr);
 
 protected:
     // figure out insertion position and mode from indicator on empty cell if supported
@@ -246,7 +246,7 @@ class QDESIGNER_SHARED_EXPORT QLayoutWidget: public QWidget
 {
     Q_OBJECT
 public:
-    explicit QLayoutWidget(QDesignerFormWindowInterface *formWindow, QWidget *parent = 0);
+    explicit QLayoutWidget(QDesignerFormWindowInterface *formWindow, QWidget *parent = nullptr);
 
     int layoutLeftMargin() const;
     void setLayoutLeftMargin(int layoutMargin);

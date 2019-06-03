@@ -120,7 +120,7 @@ namespace {
     // on closing (adds missing parentheses).
     class SignatureDelegate : public QItemDelegate {
     public:
-        SignatureDelegate(QObject * parent = 0);
+        SignatureDelegate(QObject * parent = nullptr);
         QWidget * createEditor (QWidget * parent, const QStyleOptionViewItem &option, const QModelIndex &index ) const override;
         void setModelData (QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const override;
 
@@ -189,7 +189,7 @@ namespace {
 
     FakeMethodMetaDBCommand::FakeMethodMetaDBCommand(QDesignerFormWindowInterface *formWindow) :
         qdesigner_internal::QDesignerFormWindowCommand(QApplication::translate("Command", "Change signals/slots"), formWindow),
-        m_object(0)
+        m_object(nullptr)
      {
      }
 
@@ -311,7 +311,7 @@ void SignaturePanel::setData(const SignalSlotDialogData &d)
 {
     m_model->clear();
 
-    QStandardItem *lastExisting = 0;
+    QStandardItem *lastExisting = nullptr;
     for (const QString &s : d.m_existingMethods) {
         lastExisting = createDisabledItem(s);
         m_model->appendRow(lastExisting);
@@ -455,7 +455,7 @@ bool SignalSlotDialog::editPromotedClass(QDesignerFormEditorInterface *core, con
     if (baseClassName.isEmpty())
         return false;
 
-    QWidget *widget = core->widgetFactory()->createWidget(baseClassName, 0);
+    QWidget *widget = core->widgetFactory()->createWidget(baseClassName, nullptr);
     if (!widget)
         return false;
     const bool rc = editPromotedClass(core, promotedClassName, widget, parent, mode);

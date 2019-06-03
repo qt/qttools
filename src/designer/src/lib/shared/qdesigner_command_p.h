@@ -369,7 +369,7 @@ public:
     inline QWidgetList widgets() const { return m_widgets; }
 
     void init(QWidget *parentWidget, const QWidgetList &widgets, LayoutInfo::Type layoutType,
-              QWidget *layoutBase = 0,
+              QWidget *layoutBase = nullptr,
               // Reparent/Hide instances of QLayoutWidget.
               bool reparentLayoutWidget = true);
 
@@ -424,7 +424,7 @@ public:
     bool init(QWidget *layoutBase);
 
     // Quick check
-    static bool canSimplify(QDesignerFormEditorInterface *core, const QWidget *w, int *layoutType = 0);
+    static bool canSimplify(QDesignerFormEditorInterface *core, const QWidget *w, int *layoutType = nullptr);
 
     void redo() override;
     void undo() override;
@@ -1011,7 +1011,7 @@ public:
     void undo() override;
 
     struct ActionDataItem {
-        ActionDataItem(QAction *_before = 0, QWidget *_widget = 0)
+        ActionDataItem(QAction *_before = nullptr, QWidget *_widget = nullptr)
             : before(_before), widget(_widget) {}
         QAction *before;
         QWidget *widget;
@@ -1031,7 +1031,7 @@ protected:
     ActionInsertionCommand(const QString &text, QDesignerFormWindowInterface *formWindow);
 
 public:
-    void init(QWidget *parentWidget, QAction *action, QAction *beforeAction = 0, bool update = true);
+    void init(QWidget *parentWidget, QAction *action, QAction *beforeAction = nullptr, bool update = true);
 
 protected:
     void insertAction();
@@ -1107,7 +1107,7 @@ class CreateSubmenuCommand : public QDesignerFormWindowCommand
 
 public:
     explicit CreateSubmenuCommand(QDesignerFormWindowInterface *formWindow);
-    void init(QDesignerMenu *menu, QAction *action, QObject *m_objectToSelect = 0);
+    void init(QDesignerMenu *menu, QAction *action, QObject *m_objectToSelect = nullptr);
     void redo() override;
     void undo() override;
 private:

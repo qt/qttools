@@ -48,7 +48,7 @@ Q_DECLARE_EXTENSION_INTERFACE(QDesignerTaskMenuExtension, "org.qt-project.Qt.Des
 
 
 inline QAction *QDesignerTaskMenuExtension::preferredEditAction() const
-{ return Q_NULLPTR; }
+{ return nullptr; }
 
 QT_END_NAMESPACE
 

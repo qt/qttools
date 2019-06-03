@@ -651,7 +651,7 @@ QStringList QDesignerPluginManager::pluginPaths() const
 QObject *QDesignerPluginManager::instance(const QString &plugin) const
 {
     if (m_d->m_disabledPlugins.contains(plugin))
-        return 0;
+        return nullptr;
 
     QPluginLoader loader(plugin);
     return loader.instance();

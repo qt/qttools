@@ -79,7 +79,7 @@ void ComboBoxTaskMenu::editItems()
     if (m_formWindow.isNull())
         return;
 
-    Q_ASSERT(m_comboBox != 0);
+    Q_ASSERT(m_comboBox != nullptr);
 
     ListWidgetEditor dlg(m_formWindow, m_comboBox->window());
     ListContents oldItems = dlg.fillContentsFromComboBox(m_comboBox);
@@ -103,9 +103,9 @@ QComboBox *ComboBoxTaskMenuFactory::checkObject(QObject *qObject) const
 {
     QComboBox *combo = qobject_cast<QComboBox*>(qObject);
     if (!combo)
-        return 0;
+        return nullptr;
     if (qobject_cast<QFontComboBox*>(combo))
-        return 0;
+        return nullptr;
     return combo;
 }
 

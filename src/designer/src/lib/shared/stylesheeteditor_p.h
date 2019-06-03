@@ -59,7 +59,7 @@ class QDESIGNER_SHARED_EXPORT StyleSheetEditor : public QTextEdit
 {
     Q_OBJECT
 public:
-    StyleSheetEditor(QWidget *parent = 0);
+    StyleSheetEditor(QWidget *parent = nullptr);
 };
 
 // Edit a style sheet.

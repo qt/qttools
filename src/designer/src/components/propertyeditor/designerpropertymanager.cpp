@@ -391,7 +391,7 @@ void TextEditor::setTextPropertyValidationMode(TextPropertyValidationMode vm)
         m_button->setFixedWidth(30);
         m_button->setPopupMode(QToolButton::MenuButtonPopup);
     } else {
-        m_button->setMenu(0);
+        m_button->setMenu(nullptr);
         m_button->setFixedWidth(20);
         m_button->setPopupMode(QToolButton::DelayedPopup);
     }
@@ -588,7 +588,7 @@ PixmapEditor::PixmapEditor(QDesignerFormEditorInterface *core, QWidget *parent) 
     m_copyAction(new QAction(createIconSet(QStringLiteral("editcopy.png")), tr("Copy Path"), this)),
     m_pasteAction(new QAction(createIconSet(QStringLiteral("editpaste.png")), tr("Paste Path"), this)),
     m_layout(new QHBoxLayout(this)),
-    m_pixmapCache(0)
+    m_pixmapCache(nullptr)
 {
     m_layout->addWidget(m_pixmapLabel);
     m_layout->addWidget(m_pathLabel);
@@ -794,7 +794,7 @@ class ResetWidget : public QWidget
 {
     Q_OBJECT
 public:
-    ResetWidget(QtProperty *property, QWidget *parent = 0);
+    ResetWidget(QtProperty *property, QWidget *parent = nullptr);
 
     void setWidget(QWidget *widget);
     void setResetEnabled(bool enabled);
@@ -848,11 +848,11 @@ void ResetWidget::setWidget(QWidget *widget)
 {
     if (m_textLabel) {
         delete m_textLabel;
-        m_textLabel = 0;
+        m_textLabel = nullptr;
     }
     if (m_iconLabel) {
         delete m_iconLabel;
-        m_iconLabel = 0;
+        m_iconLabel = nullptr;
     }
     delete layout();
     QLayout *layout = new QHBoxLayout(this);
@@ -896,7 +896,7 @@ DesignerPropertyManager::DesignerPropertyManager(QDesignerFormEditorInterface *c
     m_changingSubValue(false),
     m_core(core),
     m_object(nullptr),
-    m_sourceOfChange(0)
+    m_sourceOfChange(nullptr)
 {
     connect(this, &QtVariantPropertyManager::valueChanged,
             this, &DesignerPropertyManager::slotValueChanged);
@@ -1538,7 +1538,7 @@ QString DesignerPropertyManager::valueText(const QtProperty *property) const
         const PaletteData data = m_paletteValues.value(const_cast<QtProperty *>(property));
         const uint mask = data.val.resolve();
         if (mask)
-            return tr("Customized (%n roles)", 0, bitCount(mask));
+            return tr("Customized (%n roles)", nullptr, bitCount(mask));
         static const QString inherited = tr("Inherited");
         return inherited;
     }
@@ -1600,7 +1600,7 @@ QString DesignerPropertyManager::valueText(const QtProperty *property) const
 
 void DesignerPropertyManager::reloadResourceProperties()
 {
-    DesignerIconCache *iconCache = 0;
+    DesignerIconCache *iconCache = nullptr;
     for (auto itIcon = m_iconValues.cbegin(), end = m_iconValues.cend(); itIcon!= end; ++itIcon) {
         QtProperty *property = itIcon.key();
         const PropertySheetIconValue &icon = itIcon.value();
@@ -1919,7 +1919,7 @@ void DesignerPropertyManager::setValue(QtProperty *property, const QVariant &val
         if (value.type() != QVariant::UInt && !value.canConvert(QVariant::UInt))
             return;
 
-        const uint v = value.toUInt(0);
+        const uint v = value.toUInt(nullptr);
 
         const uint oldValue = m_uintValues.value(property);
         if (v == oldValue)
@@ -1936,7 +1936,7 @@ void DesignerPropertyManager::setValue(QtProperty *property, const QVariant &val
         if (value.type() != QVariant::LongLong && !value.canConvert(QVariant::LongLong))
             return;
 
-        const qlonglong v = value.toLongLong(0);
+        const qlonglong v = value.toLongLong(nullptr);
 
         const qlonglong oldValue = m_longLongValues.value(property);
         if (v == oldValue)
@@ -1953,7 +1953,7 @@ void DesignerPropertyManager::setValue(QtProperty *property, const QVariant &val
         if (value.type() != QVariant::ULongLong && !value.canConvert(QVariant::ULongLong))
             return;
 
-        qulonglong v = value.toULongLong(0);
+        qulonglong v = value.toULongLong(nullptr);
 
         qulonglong oldValue = m_uLongLongValues.value(property);
         if (v == oldValue)
@@ -2034,7 +2034,7 @@ void DesignerPropertyManager::initializeProperty(QtProperty *property)
         m_urlValues[property] = QUrl();
         break;
     case QVariant::ByteArray:
-        m_byteArrayValues[property] = 0;
+        m_byteArrayValues[property] = nullptr;
         break;
     case QVariant::Brush:
         m_brushManager.initializeProperty(this, property, enumTypeId());
@@ -2234,7 +2234,7 @@ void DesignerEditorFactory::setSpacing(int spacing)
 void DesignerEditorFactory::setFormWindowBase(qdesigner_internal::FormWindowBase *fwb)
 {
     m_fwb = fwb;
-    DesignerPixmapCache *cache = 0;
+    DesignerPixmapCache *cache = nullptr;
     if (fwb)
         cache = fwb->pixmapCache();
     for (auto it = m_editorToPixmapProperty.cbegin(), end = m_editorToPixmapProperty.cend(); it != end; ++it)
@@ -2386,7 +2386,7 @@ TextEditor *DesignerEditorFactory::createTextEditor(QWidget *parent, TextPropert
 QWidget *DesignerEditorFactory::createEditor(QtVariantPropertyManager *manager, QtProperty *property,
             QWidget *parent)
 {
-    QWidget *editor = 0;
+    QWidget *editor = nullptr;
     const int type = manager->propertyType(property);
     switch (type) {
     case QVariant::Bool: {
@@ -2646,7 +2646,7 @@ QtProperty *findPropertyForEditor(const QMap<Editor *, QtProperty *> &editorMap,
     for (auto it = editorMap.constBegin(), cend = editorMap.constEnd(); it != cend; ++it)
         if (it.key() == sender)
             return it.value();
-    return 0;
+    return nullptr;
 }
 
 void DesignerEditorFactory::slotStringTextChanged(const QString &value)
@@ -2793,7 +2793,7 @@ QWidget *ResetDecorator::editor(QWidget *subEditor, bool resettable, QtAbstractP
 {
     Q_UNUSED(manager);
 
-    ResetWidget *resetWidget = 0;
+    ResetWidget *resetWidget = nullptr;
     if (resettable) {
         resetWidget = new ResetWidget(property, parent);
         resetWidget->setSpacing(m_spacing);

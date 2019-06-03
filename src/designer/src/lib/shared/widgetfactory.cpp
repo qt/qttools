@@ -194,8 +194,8 @@ const char *WidgetFactory::disableStyleCustomPaintingPropertyC = "_q_custom_styl
 WidgetFactory::WidgetFactory(QDesignerFormEditorInterface *core, QObject *parent)
     : QDesignerWidgetFactoryInterface(parent),
       m_core(core),
-      m_formWindow(0),
-      m_currentStyle(0)
+      m_formWindow(nullptr),
+      m_currentStyle(nullptr)
 {
 }
 
@@ -223,13 +223,13 @@ QObject* WidgetFactory::createObject(const QString &className, QObject* parent) 
 {
     if (className.isEmpty()) {
         qWarning("** WARNING %s called with an empty class name", Q_FUNC_INFO);
-        return 0;
+        return nullptr;
     }
     if (className == m_strings.m_qAction)
         return new QAction(parent);
     if (className == m_strings.m_qButtonGroup)
         return new QButtonGroup(parent);
-    return 0;
+    return nullptr;
 }
 
 // Check for mismatched class names in plugins, which is hard to track.
@@ -256,7 +256,7 @@ QWidget*  WidgetFactory::createCustomWidget(const QString &className, QWidget *p
     *creationError = false;
     CustomWidgetFactoryMap::const_iterator it = m_customFactory.constFind(className);
     if (it == m_customFactory.constEnd())
-        return 0;
+        return nullptr;
 
     QDesignerCustomWidgetInterface *factory = it.value();
     QWidget *rc = factory->createWidget(parentWidget);
@@ -264,7 +264,7 @@ QWidget*  WidgetFactory::createCustomWidget(const QString &className, QWidget *p
     if (!rc) {
         *creationError = true;
         designerWarning(tr("The custom widget factory registered for widgets of class %1 returned 0.").arg(className));
-        return 0;
+        return nullptr;
     }
     // Figure out the base class unless it is known
     static QSet<QString> knownCustomClasses;
@@ -278,7 +278,7 @@ QWidget*  WidgetFactory::createCustomWidget(const QString &className, QWidget *p
                 // over.
                 if (mo && mo->className() == className)
                     mo = mo->superClass();
-                while (mo != 0) {
+                while (mo != nullptr) {
                     if (core()->widgetDataBase()->indexOfClassName(mo->className()) != -1) {
                         wdb->item(widgetInfoIndex)->setExtends(mo->className());
                         break;
@@ -310,14 +310,14 @@ QWidget *WidgetFactory::createWidget(const QString &widgetName, QWidget *parentW
 {
     if (widgetName.isEmpty()) {
         qWarning("** WARNING %s called with an empty class name", Q_FUNC_INFO);
-        return 0;
+        return nullptr;
     }
     // Preview or for form window?
     QDesignerFormWindowInterface *fw = m_formWindow;
     if (! fw)
         fw = QDesignerFormWindowInterface::findFormWindow(parentWidget);
 
-    QWidget *w = 0;
+    QWidget *w = nullptr;
     do {
         // 1) custom. If there is an explicit failure(factory wants to indicate something is wrong),
         //    return 0, do not try to find fallback, which might be worse in the case of Q3 widget.
@@ -392,7 +392,7 @@ QWidget *WidgetFactory::createWidget(const QString &widgetName, QWidget *parentW
         const QString fallBackBaseClass = m_strings.m_qWidget;
         QDesignerWidgetDataBaseInterface *db = core()->widgetDataBase();
         QDesignerWidgetDataBaseItemInterface *item = db->item(db->indexOfClassName(widgetName));
-        if (item == 0) {
+        if (item == nullptr) {
             // Emergency: Create, derived from QWidget
             QString includeFile = widgetName.toLower();
             includeFile +=  QStringLiteral(".h");
@@ -411,7 +411,7 @@ QWidget *WidgetFactory::createWidget(const QString &widgetName, QWidget *parentW
         }
     } while (false);
 
-    Q_ASSERT(w != 0);
+    Q_ASSERT(w != nullptr);
     if (m_currentStyle)
         w->setStyle(m_currentStyle);
      initializeCommon(w);
@@ -425,7 +425,7 @@ QWidget *WidgetFactory::createWidget(const QString &widgetName, QWidget *parentW
 
 QString WidgetFactory::classNameOf(QDesignerFormEditorInterface *c, const QObject* o)
 {
-    if (o == 0)
+    if (o == nullptr)
         return QString();
 
     const char *className = o->metaObject()->className();
@@ -468,7 +468,7 @@ QLayout *WidgetFactory::createUnmanagedLayout(QWidget *parentWidget, int type)
         Q_ASSERT(0);
         break;
     }
-    return 0;
+    return nullptr;
 }
 
 
@@ -480,7 +480,7 @@ QLayout *WidgetFactory::createLayout(QWidget *widget, QLayout *parentLayout, int
 {
     QDesignerMetaDataBaseInterface *metaDataBase = core()->metaDataBase();
 
-    if (parentLayout == 0) {
+    if (parentLayout == nullptr) {
         QWidget *page = containerOfWidget(widget);
         if (page) {
             widget = page;
@@ -493,13 +493,13 @@ QLayout *WidgetFactory::createLayout(QWidget *widget, QLayout *parentLayout, int
         }
     }
 
-    Q_ASSERT(metaDataBase->item(widget) != 0); // ensure the widget is managed
+    Q_ASSERT(metaDataBase->item(widget) != nullptr); // ensure the widget is managed
 
-    if (parentLayout == 0 && metaDataBase->item(widget->layout()) == 0) {
+    if (parentLayout == nullptr && metaDataBase->item(widget->layout()) == nullptr) {
         parentLayout = widget->layout();
     }
 
-    QWidget *parentWidget = parentLayout != 0 ? 0 : widget;
+    QWidget *parentWidget = parentLayout != nullptr ? nullptr : widget;
 
     QLayout *layout = createUnmanagedLayout(parentWidget, type);
     metaDataBase->add(layout); // add the layout in the MetaDataBase
@@ -520,15 +520,15 @@ QLayout *WidgetFactory::createLayout(QWidget *widget, QLayout *parentLayout, int
             sheet->setChanged(index, true);
     }
 
-    if (metaDataBase->item(widget->layout()) == 0) {
-        Q_ASSERT(layout->parent() == 0);
+    if (metaDataBase->item(widget->layout()) == nullptr) {
+        Q_ASSERT(layout->parent() == nullptr);
         QBoxLayout *box = qobject_cast<QBoxLayout*>(widget->layout());
         if (!box) {  // we support only unmanaged box layouts
             const QString msg = tr("Attempt to add a layout to a widget '%1' (%2) which already has an unmanaged layout of type %3.\n"
                                             "This indicates an inconsistency in the ui-file.").
                                  arg(widget->objectName(), classNameOf(core(), widget), classNameOf(core(), widget->layout()));
             designerWarning(msg);
-            return 0;
+            return nullptr;
         }
         box->addLayout(layout);
     }
@@ -565,13 +565,13 @@ QWidget* WidgetFactory::widgetOfContainer(QWidget *w) const
 {
     // ### cleanup
     if (!w)
-        return 0;
+        return nullptr;
     if (w->parentWidget() && w->parentWidget()->parentWidget() &&
          w->parentWidget()->parentWidget()->parentWidget() &&
          qobject_cast<QToolBox*>(w->parentWidget()->parentWidget()->parentWidget()))
         return w->parentWidget()->parentWidget()->parentWidget();
 
-    while (w != 0) {
+    while (w != nullptr) {
         if (core()->widgetDataBase()->isContainer(w) ||
              (w && qobject_cast<QDesignerFormWindowInterface*>(w->parentWidget())))
             return w;
@@ -708,7 +708,7 @@ static inline bool isApplicationStyle(const QString &styleName)
 
 void WidgetFactory::setStyleName(const QString &styleName)
 {
-    m_currentStyle = isApplicationStyle(styleName) ? static_cast<QStyle*>(0) : getStyle(styleName);
+    m_currentStyle = isApplicationStyle(styleName) ? nullptr : getStyle(styleName);
 }
 
 QStyle *WidgetFactory::style() const
@@ -727,7 +727,7 @@ QStyle *WidgetFactory::getStyle(const QString &styleName)
         if (!style) {
             const QString msg = tr("Cannot create style '%1'.").arg(styleName);
             designerWarning(msg);
-            return 0;
+            return nullptr;
         }
         it = m_styleCache.insert(styleName, style);
     }

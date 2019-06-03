@@ -89,7 +89,7 @@ public:
     void setReparentLayoutWidget(bool v) {  m_reparentLayoutWidget = v; }
 
 protected:
-    virtual void finishLayout(bool needMove, QLayout *layout = 0);
+    virtual void finishLayout(bool needMove, QLayout *layout = nullptr);
     virtual bool prepareLayout(bool &needMove, bool &needReparent);
 
     void setWidgets(const  QWidgetList &widgets) { m_widgets = widgets; }

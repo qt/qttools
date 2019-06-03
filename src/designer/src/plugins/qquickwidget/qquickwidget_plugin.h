@@ -40,7 +40,7 @@ class QQuickWidgetPlugin: public QObject, public QDesignerCustomWidgetInterface
     Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QDesignerCustomWidgetInterface")
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 public:
-    explicit QQuickWidgetPlugin(QObject *parent = 0);
+    explicit QQuickWidgetPlugin(QObject *parent = nullptr);
 
     QString name() const override;
     QString group() const override;

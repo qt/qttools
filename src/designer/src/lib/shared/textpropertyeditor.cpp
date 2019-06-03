@@ -234,7 +234,7 @@ namespace qdesigner_internal {
         switch (m_validationMode) {
         case ValidationStyleSheet:
             m_lineEdit->setValidator(new  StyleSheetValidator(m_lineEdit));
-            m_lineEdit->setCompleter(0);
+            m_lineEdit->setCompleter(nullptr);
             break;
         case ValidationMultiLine:
         case ValidationRichText:
@@ -242,20 +242,20 @@ namespace qdesigner_internal {
             // While it is not possible to actually type a newline  characters,
             // it can be pasted into the line edit.
             m_lineEdit->setValidator(new ReplacementValidator(m_lineEdit, NewLineChar, EscapedNewLine));
-            m_lineEdit->setCompleter(0);
+            m_lineEdit->setCompleter(nullptr);
             break;
         case ValidationSingleLine:
             // Set a  validator that replaces newline characters by a blank.
             m_lineEdit->setValidator(new ReplacementValidator(m_lineEdit, NewLineChar, QString(QLatin1Char(' '))));
-             m_lineEdit->setCompleter(0);
+             m_lineEdit->setCompleter(nullptr);
             break;
         case ValidationObjectName:
             setRegularExpressionValidator(QStringLiteral("^[_a-zA-Z][_a-zA-Z0-9]{1,1023}$"));
-             m_lineEdit->setCompleter(0);
+             m_lineEdit->setCompleter(nullptr);
              break;
         case ValidationObjectNameScope:
             setRegularExpressionValidator(QStringLiteral("^[_a-zA-Z:][_a-zA-Z0-9:]{1,1023}$"));
-            m_lineEdit->setCompleter(0);
+            m_lineEdit->setCompleter(nullptr);
             break;
         case ValidationURL: {
             static QStringList urlCompletions;

@@ -138,7 +138,7 @@ static QString getSaveFileNameWithExtension(QWidget *parent, const QString &titl
 
     QString saveFile;
     while (true) {
-        saveFile = QFileDialog::getSaveFileName(parent, title, dir, filter, 0, QFileDialog::DontConfirmOverwrite);
+        saveFile = QFileDialog::getSaveFileName(parent, title, dir, filter, nullptr, QFileDialog::DontConfirmOverwrite);
         if (saveFile.isEmpty())
             return saveFile;
 
@@ -206,7 +206,7 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
     m_quitAction->setIcon(QIcon::fromTheme(QStringLiteral("application-exit"), m_quitAction->icon()));
 #endif
 
-    Q_ASSERT(m_core != 0);
+    Q_ASSERT(m_core != nullptr);
     qdesigner_internal::QDesignerFormWindowManager *ifwm = qobject_cast<qdesigner_internal::QDesignerFormWindowManager *>(m_core->formWindowManager());
     Q_ASSERT(ifwm);
     m_previewManager = ifwm->previewManager();
@@ -238,7 +238,7 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
     m_saveFormAction->setProperty(QDesignerActions::defaultToolbarPropertyName, true);
 
     QDesignerFormWindowManagerInterface *formWindowManager = m_core->formWindowManager();
-    Q_ASSERT(formWindowManager != 0);
+    Q_ASSERT(formWindowManager != nullptr);
 
 //
 // file actions
@@ -939,7 +939,7 @@ void QDesignerActions::shutdown()
 
 void QDesignerActions::activeFormWindowChanged(QDesignerFormWindowInterface *formWindow)
 {
-    const bool enable = formWindow != 0;
+    const bool enable = formWindow != nullptr;
     m_saveFormAction->setEnabled(enable);
     m_saveFormAsAction->setEnabled(enable);
     m_saveAllFormsAction->setEnabled(enable);

@@ -187,7 +187,7 @@ QStackedWidgetEventFilter::QStackedWidgetEventFilter(QStackedWidget *parent) :
     m_actionInsertPage(new QAction(tr("Before Current Page"), this)),
     m_actionInsertPageAfter(new QAction(tr("After Current Page"), this)),
     m_actionChangePageOrder(new QAction(tr("Change Page Order..."), this)),
-    m_pagePromotionTaskMenu(new qdesigner_internal::PromotionTaskMenu(0, qdesigner_internal::PromotionTaskMenu::ModeSingleWidget, this))
+    m_pagePromotionTaskMenu(new qdesigner_internal::PromotionTaskMenu(nullptr, qdesigner_internal::PromotionTaskMenu::ModeSingleWidget, this))
 {
     setButtonToolTipEnabled(true);
     connect(m_actionPreviousPage, &QAction::triggered, this, &QStackedWidgetEventFilter::prevPage);
@@ -211,14 +211,14 @@ QStackedWidgetEventFilter *QStackedWidgetEventFilter::eventFilterOf(const QStack
             if (QStackedWidgetEventFilter *ef = qobject_cast<QStackedWidgetEventFilter *>(o))
                 return ef;
     }
-    return 0;
+    return nullptr;
 }
 
 QMenu *QStackedWidgetEventFilter::addStackedWidgetContextMenuActions(const QStackedWidget *stackedWidget, QMenu *popup)
 {
     QStackedWidgetEventFilter *filter = eventFilterOf(stackedWidget);
     if (!filter)
-        return 0;
+        return nullptr;
     return filter->addContextMenuActions(popup);
 }
 
@@ -299,7 +299,7 @@ void QStackedWidgetEventFilter::gotoPage(int page) {
 
 QMenu *QStackedWidgetEventFilter::addContextMenuActions(QMenu *popup)
 {
-    QMenu *pageMenu = 0;
+    QMenu *pageMenu = nullptr;
     const int count = stackedWidget()->count();
     const bool hasSeveralPages = count > 1;
     m_actionDeletePage->setEnabled(count);
@@ -346,7 +346,7 @@ bool QStackedWidgetPropertySheet::isEnabled(int index) const
 {
     if (propertyName(index) != QLatin1String(pagePropertyName))
         return QDesignerPropertySheet::isEnabled(index);
-    return  m_stackedWidget->currentWidget() != 0;
+    return  m_stackedWidget->currentWidget() != nullptr;
 }
 
 void QStackedWidgetPropertySheet::setProperty(int index, const QVariant &value)

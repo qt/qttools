@@ -49,7 +49,7 @@ class QT_BUDDYEDITOR_EXPORT BuddyEditorTool: public QDesignerFormWindowToolInter
 {
     Q_OBJECT
 public:
-    explicit BuddyEditorTool(QDesignerFormWindowInterface *formWindow, QObject *parent = 0);
+    explicit BuddyEditorTool(QDesignerFormWindowInterface *formWindow, QObject *parent = nullptr);
     ~BuddyEditorTool() override;
 
     QDesignerFormEditorInterface *core() const override;

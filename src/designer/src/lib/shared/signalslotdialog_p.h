@@ -74,7 +74,7 @@ class SignatureModel : public QStandardItemModel {
     Q_OBJECT
 
 public:
-    SignatureModel(QObject *parent = 0);
+    SignatureModel(QObject *parent = nullptr);
     bool setData (const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
 
 signals:
@@ -127,18 +127,18 @@ class QDESIGNER_SHARED_EXPORT SignalSlotDialog : public QDialog {
 public:
     enum FocusMode { FocusSlots, FocusSignals };
 
-    explicit SignalSlotDialog(QDesignerDialogGuiInterface *dialogGui, QWidget *parent = 0, FocusMode m = FocusSlots);
+    explicit SignalSlotDialog(QDesignerDialogGuiInterface *dialogGui, QWidget *parent = nullptr, FocusMode m = FocusSlots);
     ~SignalSlotDialog() override;
 
     DialogCode showDialog(SignalSlotDialogData &slotData, SignalSlotDialogData &signalData);
 
     // Edit fake methods stored in MetaDataBase (per instance, used for main containers)
-    static bool editMetaDataBase(QDesignerFormWindowInterface *fw, QObject *object, QWidget *parent = 0, FocusMode m = FocusSlots);
+    static bool editMetaDataBase(QDesignerFormWindowInterface *fw, QObject *object, QWidget *parent = nullptr, FocusMode m = FocusSlots);
 
     // Edit fake methods of a promoted class stored in WidgetDataBase (synthesizes a widget to obtain existing members).
-    static bool editPromotedClass(QDesignerFormEditorInterface *core, const QString &promotedClassName, QWidget *parent = 0, FocusMode m = FocusSlots);
+    static bool editPromotedClass(QDesignerFormEditorInterface *core, const QString &promotedClassName, QWidget *parent = nullptr, FocusMode m = FocusSlots);
     // Edit fake methods of a promoted class stored in WidgetDataBase on a base class instance.
-    static bool editPromotedClass(QDesignerFormEditorInterface *core, QObject *baseObject, QWidget *parent = 0, FocusMode m = FocusSlots);
+    static bool editPromotedClass(QDesignerFormEditorInterface *core, QObject *baseObject, QWidget *parent = nullptr, FocusMode m = FocusSlots);
 
 private slots:
     void slotCheckSignature(const QString &signature, bool *ok);

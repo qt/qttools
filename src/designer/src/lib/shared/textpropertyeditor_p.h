@@ -77,7 +77,7 @@ namespace qdesigner_internal {
             UpdateOnFinished
         };
 
-        explicit TextPropertyEditor(QWidget *parent = 0, EmbeddingMode embeddingMode = EmbeddingNone, TextPropertyValidationMode validationMode = ValidationMultiLine);
+        explicit TextPropertyEditor(QWidget *parent = nullptr, EmbeddingMode embeddingMode = EmbeddingNone, TextPropertyValidationMode validationMode = ValidationMultiLine);
 
         TextPropertyValidationMode textPropertyValidationMode() const { return m_validationMode; }
         void setTextPropertyValidationMode(TextPropertyValidationMode vm);

@@ -149,7 +149,7 @@ DomProperty *QResourceBuilder::saveResource(const QDir &workingDirectory, const 
 {
     Q_UNUSED(workingDirectory);
     Q_UNUSED(value);
-    return 0;
+    return nullptr;
 }
 
 bool QResourceBuilder::isResourceProperty(const DomProperty *p) const

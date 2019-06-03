@@ -61,7 +61,7 @@ void QDesignerDockWidget::setDocked(bool b)
         if (b && !docked()) {
             // Dock it
             // ### undo/redo stack
-            setParent(0);
+            setParent(nullptr);
             c->addWidget(this);
             formWindow()->selectWidget(this, formWindow()->cursor()->isWidgetSelected(this));
         } else if (!b && docked()) {
@@ -119,7 +119,7 @@ QMainWindow *QDesignerDockWidget::findMainWindow() const
 {
     if (QDesignerFormWindowInterface *fw = formWindow())
         return qobject_cast<QMainWindow*>(fw->mainContainer());
-    return 0;
+    return nullptr;
 }
 
 QT_END_NAMESPACE

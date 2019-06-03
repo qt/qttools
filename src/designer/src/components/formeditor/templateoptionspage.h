@@ -54,7 +54,7 @@ class TemplateOptionsWidget : public QWidget
     Q_DISABLE_COPY(TemplateOptionsWidget)
 public:
     explicit TemplateOptionsWidget(QDesignerFormEditorInterface *core,
-                                              QWidget *parent = 0);
+                                              QWidget *parent = nullptr);
     ~TemplateOptionsWidget();
 
 

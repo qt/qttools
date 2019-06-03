@@ -129,7 +129,7 @@ static QString declaredInClass(const QDesignerMetaObjectInterface *metaObject, c
 
     for (;;) {
         const QDesignerMetaObjectInterface *tmpMeta = meta->superClass();
-        if (tmpMeta == 0)
+        if (tmpMeta == nullptr)
             break;
         if (tmpMeta->indexOfMethod(member) == -1)
             break;

@@ -68,7 +68,7 @@ class QDESIGNER_SHARED_EXPORT QDesignerMenu: public QMenu
 {
     Q_OBJECT
 public:
-    QDesignerMenu(QWidget *parent = 0);
+    QDesignerMenu(QWidget *parent = nullptr);
     ~QDesignerMenu() override;
 
     bool eventFilter(QObject *object, QEvent *event) override;

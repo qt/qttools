@@ -89,7 +89,7 @@ WidgetBoxTreeWidget::WidgetBoxTreeWidget(QDesignerFormEditorInterface *core, QWi
     QTreeWidget(parent),
     m_core(core),
     m_iconMode(false),
-    m_scratchPadDeleteTimer(0)
+    m_scratchPadDeleteTimer(nullptr)
 {
     setFocusPolicy(Qt::NoFocus);
     setIndentation(0);
@@ -121,7 +121,7 @@ QIcon WidgetBoxTreeWidget::iconForWidget(const QString &iconName) const
 
 WidgetBoxCategoryListView *WidgetBoxTreeWidget::categoryViewAt(int idx) const
 {
-    WidgetBoxCategoryListView *rc = 0;
+    WidgetBoxCategoryListView *rc = nullptr;
     if (QTreeWidgetItem *cat_item = topLevelItem(idx))
         if (QTreeWidgetItem *embedItem = cat_item->child(0))
             rc = qobject_cast<WidgetBoxCategoryListView*>(itemWidget(embedItem, 0));
@@ -218,13 +218,13 @@ void WidgetBoxTreeWidget::slotSave()
 
 void WidgetBoxTreeWidget::handleMousePress(QTreeWidgetItem *item)
 {
-    if (item == 0)
+    if (item == nullptr)
         return;
 
     if (QApplication::mouseButtons() != Qt::LeftButton)
         return;
 
-    if (item->parent() == 0) {
+    if (item->parent() == nullptr) {
         item->setExpanded(!item->isExpanded());
         return;
     }
@@ -656,7 +656,7 @@ WidgetBoxTreeWidget::CategoryList WidgetBoxTreeWidget::loadCustomCategoryList() 
 void WidgetBoxTreeWidget::adjustSubListSize(QTreeWidgetItem *cat_item)
 {
     QTreeWidgetItem *embedItem = cat_item->child(0);
-    if (embedItem == 0)
+    if (embedItem == nullptr)
         return;
 
     WidgetBoxCategoryListView *list_widget = static_cast<WidgetBoxCategoryListView*>(itemWidget(embedItem, 0));
@@ -866,8 +866,8 @@ void WidgetBoxTreeWidget::contextMenuEvent(QContextMenuEvent *e)
 {
     QTreeWidgetItem *item = itemAt(e->pos());
 
-    const bool scratchpad_menu = item != 0
-                            && item->parent() != 0
+    const bool scratchpad_menu = item != nullptr
+                            && item->parent() != nullptr
                             && topLevelRole(item->parent()) ==  SCRATCHPAD_ITEM;
 
     QMenu menu;
@@ -903,17 +903,17 @@ void WidgetBoxTreeWidget::contextMenuEvent(QContextMenuEvent *e)
 
 void WidgetBoxTreeWidget::dropWidgets(const QList<QDesignerDnDItemInterface*> &item_list)
 {
-    QTreeWidgetItem *scratch_item = 0;
-    WidgetBoxCategoryListView *categoryView = 0;
+    QTreeWidgetItem *scratch_item = nullptr;
+    WidgetBoxCategoryListView *categoryView = nullptr;
     bool added = false;
 
     for (QDesignerDnDItemInterface *item : item_list) {
         QWidget *w = item->widget();
-        if (w == 0)
+        if (w == nullptr)
             continue;
 
         DomUI *dom_ui = item->domUi();
-        if (dom_ui == 0)
+        if (dom_ui == nullptr)
             continue;
 
         const int scratch_idx = ensureScratchpad();
@@ -922,7 +922,7 @@ void WidgetBoxTreeWidget::dropWidgets(const QList<QDesignerDnDItemInterface*> &i
 
         // Temporarily remove the fake toplevel in-between
         DomWidget *fakeTopLevel = dom_ui->takeElementWidget();
-        DomWidget *firstWidget = 0;
+        DomWidget *firstWidget = nullptr;
         if (fakeTopLevel && !fakeTopLevel->elementWidget().isEmpty()) {
             firstWidget = fakeTopLevel->elementWidget().constFirst();
             dom_ui->setElementWidget(firstWidget);

@@ -56,7 +56,7 @@ class ContainerWidgetTaskMenu: public QDesignerTaskMenu
 {
     Q_OBJECT
 public:
-    explicit ContainerWidgetTaskMenu(QWidget *widget, ContainerType type, QObject *parent = 0);
+    explicit ContainerWidgetTaskMenu(QWidget *widget, ContainerType type, QObject *parent = nullptr);
     ~ContainerWidgetTaskMenu() override;
 
     QAction *preferredEditAction() const override;
@@ -97,7 +97,7 @@ private:
 class WizardContainerWidgetTaskMenu : public ContainerWidgetTaskMenu {
     Q_OBJECT
 public:
-    explicit WizardContainerWidgetTaskMenu(QWizard *w, QObject *parent = 0);
+    explicit WizardContainerWidgetTaskMenu(QWizard *w, QObject *parent = nullptr);
 
     QList<QAction*> taskActions() const override;
 
@@ -112,7 +112,7 @@ private:
 class MdiContainerWidgetTaskMenu : public ContainerWidgetTaskMenu {
     Q_OBJECT
 public:
-    explicit MdiContainerWidgetTaskMenu(QMdiArea *m, QObject *parent = 0);
+    explicit MdiContainerWidgetTaskMenu(QMdiArea *m, QObject *parent = nullptr);
 
     QList<QAction*> taskActions() const override;
 private:
@@ -128,7 +128,7 @@ class ContainerWidgetTaskMenuFactory: public QExtensionFactory
 {
     Q_OBJECT
 public:
-    explicit ContainerWidgetTaskMenuFactory(QDesignerFormEditorInterface *core, QExtensionManager *extensionManager = 0);
+    explicit ContainerWidgetTaskMenuFactory(QDesignerFormEditorInterface *core, QExtensionManager *extensionManager = nullptr);
 
 protected:
     QObject *createExtension(QObject *object, const QString &iid, QObject *parent) const override;

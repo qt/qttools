@@ -76,7 +76,7 @@ static const char *ResourceViewDialogC = "ResourceDialog";
 // ---------------- ResourceListWidget: A list widget that has drag enabled
 class ResourceListWidget : public QListWidget {
 public:
-    ResourceListWidget(QWidget *parent = 0);
+    ResourceListWidget(QWidget *parent = nullptr);
 
 protected:
     void startDrag(Qt::DropActions supportedActions) override;
@@ -377,7 +377,7 @@ void QtResourceViewPrivate::createPaths()
     }
 
     QQueue<QPair<QString, QTreeWidgetItem *> > pathToParentItemQueue;
-    pathToParentItemQueue.enqueue(qMakePair(root, static_cast<QTreeWidgetItem *>(0)));
+    pathToParentItemQueue.enqueue(qMakePair(root, static_cast<QTreeWidgetItem *>(nullptr)));
     while (!pathToParentItemQueue.isEmpty()) {
         QPair<QString, QTreeWidgetItem *> pathToParentItem = pathToParentItemQueue.dequeue();
         const QString path = pathToParentItem.first;
@@ -496,7 +496,7 @@ void QtResourceViewPrivate::filterOutResources()
 
 QTreeWidgetItem *QtResourceViewPrivate::createPath(const QString &path, QTreeWidgetItem *parent)
 {
-    QTreeWidgetItem *item = 0;
+    QTreeWidgetItem *item = nullptr;
     if (parent)
         item = new QTreeWidgetItem(parent);
     else
@@ -815,7 +815,7 @@ public:
 };
 
 QtResourceViewDialogPrivate::QtResourceViewDialogPrivate(QDesignerFormEditorInterface *core) :
-    q_ptr(0),
+    q_ptr(nullptr),
     m_core(core),
     m_view(new QtResourceView(core)),
     m_box(new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel))

@@ -90,9 +90,9 @@ FormWindowBasePrivate::FormWindowBasePrivate(QDesignerFormEditorInterface *core)
     m_feature(QDesignerFormWindowInterface::DefaultFeature),
     m_grid(m_defaultGrid),
     m_hasFormGrid(false),
-    m_pixmapCache(0),
-    m_iconCache(0),
-    m_resourceSet(0),
+    m_pixmapCache(nullptr),
+    m_iconCache(nullptr),
+    m_resourceSet(nullptr),
     m_deviceProfile(QDesignerSharedSettings(core).currentDeviceProfile()),
     m_lineTerminatorMode(FormWindowBase::NativeLineTerminator),
     m_saveResourcesBehaviour(FormWindowBase::SaveAllResourceFiles),
@@ -398,7 +398,7 @@ const Grid &FormWindowBase::defaultDesignerGrid()
 
 QMenu *FormWindowBase::initializePopupMenu(QWidget * /*managedWidget*/)
 {
-    return 0;
+    return nullptr;
 }
 
 // Widget under mouse for finding the Widget to highlight
@@ -412,13 +412,13 @@ QWidget *FormWindowBase::widgetUnderMouse(const QPoint &formPos, WidgetUnderMous
     // the actual widget that's part of the edited GUI.
     QWidget *rc = widgetAt(formPos);
     if (!rc || qobject_cast<ConnectionEdit*>(rc))
-        return 0;
+        return nullptr;
 
     if (rc == mainContainer()) {
         // Refuse main container areas if the main container has a container extension,
         // for example when hitting QToolBox/QTabWidget empty areas.
         if (qt_extension<QDesignerContainerExtension*>(core()->extensionManager(), rc))
-            return 0;
+            return nullptr;
         return rc;
     }
 
@@ -430,12 +430,12 @@ QWidget *FormWindowBase::widgetUnderMouse(const QPoint &formPos, WidgetUnderMous
             // make sure the position is within the current page
             const int ci = c->currentIndex();
             if (ci < 0)
-                return 0;
+                return nullptr;
             QWidget *page = c->widget(ci);
             QRect pageGeometry = page->geometry();
             pageGeometry.moveTo(page->mapTo(this, pageGeometry.topLeft()));
             if (!pageGeometry.contains(formPos))
-                return 0;
+                return nullptr;
             return page;
         }
 
@@ -477,7 +477,7 @@ QMenu *FormWindowBase::createExtensionTaskMenu(QDesignerFormWindowInterface *fw,
         actions += intTaskMenu->taskActions();
     }
     if (actions.empty())
-        return 0;
+        return nullptr;
     if (trailingSeparator && !actions.back()->isSeparator()) {
         QAction *a  = new QAction(fw);
         a->setSeparator(true);

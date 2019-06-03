@@ -72,13 +72,13 @@ private:
 QTabWidgetEventFilter::QTabWidgetEventFilter(QTabWidget *parent) :
     QObject(parent),
     m_tabWidget(parent),
-    m_dropIndicator(0),
-    m_dragPage(0),
+    m_dropIndicator(nullptr),
+    m_dragPage(nullptr),
     m_mousePressed(false),
     m_actionDeletePage(new QAction(tr("Delete"),  this)),
     m_actionInsertPage(new QAction(tr("Before Current Page"), this)),
     m_actionInsertPageAfter(new QAction(tr("After Current Page"), this)),
-    m_pagePromotionTaskMenu(new qdesigner_internal::PromotionTaskMenu(0, qdesigner_internal::PromotionTaskMenu::ModeSingleWidget, this))
+    m_pagePromotionTaskMenu(new qdesigner_internal::PromotionTaskMenu(nullptr, qdesigner_internal::PromotionTaskMenu::ModeSingleWidget, this))
 {
     tabBar()->setAcceptDrops(true);
     tabBar()->installEventFilter(this);
@@ -103,14 +103,14 @@ QTabWidgetEventFilter *QTabWidgetEventFilter::eventFilterOf(const QTabWidget *ta
             if (QTabWidgetEventFilter *ef = qobject_cast<QTabWidgetEventFilter*>(o))
                 return ef;
     }
-    return 0;
+    return nullptr;
 }
 
 QMenu *QTabWidgetEventFilter::addTabWidgetContextMenuActions(const QTabWidget *tabWidget, QMenu *popup)
 {
     QTabWidgetEventFilter *filter = eventFilterOf(tabWidget);
     if (!filter)
-        return 0;
+        return nullptr;
     return filter->addContextMenuActions(popup);
 }
 
@@ -352,7 +352,7 @@ int QTabWidgetEventFilter::pageFromPosition(const QPoint &pos, QRect &rect) cons
 
 QMenu *QTabWidgetEventFilter::addContextMenuActions(QMenu *popup)
 {
-    QMenu *pageMenu = 0;
+    QMenu *pageMenu = nullptr;
     const int count = m_tabWidget->count();
     m_actionDeletePage->setEnabled(count);
     if (count) {

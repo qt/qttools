@@ -69,7 +69,7 @@ class QDESIGNER_SHARED_EXPORT QDesignerPropertySheet: public QObject, public QDe
     Q_OBJECT
     Q_INTERFACES(QDesignerPropertySheetExtension QDesignerDynamicPropertySheetExtension)
 public:
-    explicit QDesignerPropertySheet(QObject *object, QObject *parent = 0);
+    explicit QDesignerPropertySheet(QObject *object, QObject *parent = nullptr);
     ~QDesignerPropertySheet() override;
 
     int indexOf(const QString &name) const override;
@@ -190,7 +190,7 @@ class QDESIGNER_SHARED_EXPORT QDesignerAbstractPropertySheetFactory: public QExt
     Q_OBJECT
     Q_INTERFACES(QAbstractExtensionFactory)
 public:
-    explicit QDesignerAbstractPropertySheetFactory(QExtensionManager *parent = 0);
+    explicit QDesignerAbstractPropertySheetFactory(QExtensionManager *parent = nullptr);
     ~QDesignerAbstractPropertySheetFactory() override;
 
     QObject *extension(QObject *object, const QString &iid) const override;
@@ -212,7 +212,7 @@ private:
 template <class Object, class PropertySheet>
 class QDesignerPropertySheetFactory : public QDesignerAbstractPropertySheetFactory {
 public:
-    explicit QDesignerPropertySheetFactory(QExtensionManager *parent = 0);
+    explicit QDesignerPropertySheetFactory(QExtensionManager *parent = nullptr);
 
     static void registerExtension(QExtensionManager *mgr);
 
@@ -232,7 +232,7 @@ QObject *QDesignerPropertySheetFactory<Object, PropertySheet>::createPropertyShe
 {
     Object *object = qobject_cast<Object *>(qObject);
     if (!object)
-        return 0;
+        return nullptr;
     return new PropertySheet(object, parent);
 }
 

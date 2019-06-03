@@ -693,7 +693,7 @@ namespace qdesigner_internal
 
     QDESIGNER_SHARED_EXPORT QAction *preferredEditAction(QDesignerFormEditorInterface *core, QWidget *managedWidget)
     {
-        QAction *action = 0;
+        QAction *action = nullptr;
         if (const QDesignerTaskMenuExtension *taskMenu = qt_extension<QDesignerTaskMenuExtension*>(core->extensionManager(), managedWidget)) {
             action = taskMenu->preferredEditAction();
             if (!action) {

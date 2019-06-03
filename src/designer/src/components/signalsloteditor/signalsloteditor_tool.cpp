@@ -70,8 +70,8 @@ bool SignalSlotEditorTool::handleEvent(QWidget *widget, QWidget *managedWidget, 
 QWidget *SignalSlotEditorTool::editor() const
 {
     if (!m_editor) {
-        Q_ASSERT(formWindow() != 0);
-        m_editor = new qdesigner_internal::SignalSlotEditor(formWindow(), 0);
+        Q_ASSERT(formWindow() != nullptr);
+        m_editor = new qdesigner_internal::SignalSlotEditor(formWindow(), nullptr);
         connect(formWindow(), &QDesignerFormWindowInterface::mainContainerChanged,
                 m_editor.data(), &SignalSlotEditor::setBackground);
         connect(formWindow(), &QDesignerFormWindowInterface::changed,

@@ -49,17 +49,17 @@ namespace qdesigner_internal {
 QDesignerDnDItem::QDesignerDnDItem(DropType type, QWidget *source) :
     m_source(source),
     m_type(type),
-    m_dom_ui(0),
-    m_widget(0),
-    m_decoration(0)
+    m_dom_ui(nullptr),
+    m_widget(nullptr),
+    m_decoration(nullptr)
 {
 }
 
 void QDesignerDnDItem::init(DomUI *ui, QWidget *widget, QWidget *decoration,
                                     const QPoint &global_mouse_pos)
 {
-    Q_ASSERT(widget != 0 || ui != 0);
-    Q_ASSERT(decoration != 0);
+    Q_ASSERT(widget != nullptr || ui != nullptr);
+    Q_ASSERT(decoration != nullptr);
 
     m_dom_ui = ui;
     m_widget = widget;
@@ -70,7 +70,7 @@ void QDesignerDnDItem::init(DomUI *ui, QWidget *widget, QWidget *decoration,
 
 QDesignerDnDItem::~QDesignerDnDItem()
 {
-    if (m_decoration != 0)
+    if (m_decoration != nullptr)
         m_decoration->deleteLater();
     delete m_dom_ui;
 }

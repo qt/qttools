@@ -48,7 +48,7 @@ MorphLayoutCommand::MorphLayoutCommand(QDesignerFormWindowInterface *formWindow)
     m_breakLayoutCommand(new BreakLayoutCommand(formWindow)),
     m_layoutCommand(new LayoutCommand(formWindow)),
     m_newType(LayoutInfo::VBox),
-    m_layoutBase(0)
+    m_layoutBase(nullptr)
 {
 }
 
@@ -143,7 +143,7 @@ QString MorphLayoutCommand::formatDescription(QDesignerFormEditorInterface * /* 
 
 LayoutAlignmentCommand::LayoutAlignmentCommand(QDesignerFormWindowInterface *formWindow) :
     QDesignerFormWindowCommand(QApplication::translate("Command", "Change layout alignment"), formWindow),
-    m_newAlignment(0), m_oldAlignment(0), m_widget(0)
+    m_newAlignment(nullptr), m_oldAlignment(nullptr), m_widget(nullptr)
 {
 }
 
@@ -180,7 +180,7 @@ Qt::Alignment LayoutAlignmentCommand::alignmentOf(const QDesignerFormEditorInter
                          (type == LayoutInfo::HBox || type == LayoutInfo::VBox
                           || type == LayoutInfo::Grid);
     if (!enabled)
-        return Qt::Alignment(0);
+        return Qt::Alignment(nullptr);
     // Get alignment
     const int index = layout->indexOf(w);
     Q_ASSERT(index >= 0);
@@ -193,7 +193,7 @@ void LayoutAlignmentCommand::applyAlignment(const QDesignerFormEditorInterface *
 {
     // Find layout and apply to item
     QLayout *layout;
-    LayoutInfo::laidoutWidgetType(core, w, 0, &layout);
+    LayoutInfo::laidoutWidgetType(core, w, nullptr, &layout);
     if (layout) {
         const int index = layout->indexOf(w);
         if (index >= 0) {

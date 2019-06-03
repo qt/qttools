@@ -137,7 +137,7 @@ class QDESIGNER_SHARED_EXPORT PropertyListCommand : public QDesignerFormWindowCo
 public:
     typedef QList<QObject *> ObjectList;
 
-    explicit PropertyListCommand(QDesignerFormWindowInterface *formWindow, QUndoCommand *parent = 0);
+    explicit PropertyListCommand(QDesignerFormWindowInterface *formWindow, QUndoCommand *parent = nullptr);
 
     QObject* object(int index = 0) const;
 
@@ -156,7 +156,7 @@ protected:
     bool add(QObject *object, const QString &propertyName);
 
     // Init from a list and make sure referenceObject is added first to obtain the right property group
-    bool initList(const ObjectList &list, const QString &apropertyName, QObject *referenceObject = 0);
+    bool initList(const ObjectList &list, const QString &apropertyName, QObject *referenceObject = nullptr);
 
     // set a new value, return update mask
     unsigned setValue(QVariant value, bool changed, unsigned subPropertyMask);
@@ -209,11 +209,11 @@ class QDESIGNER_SHARED_EXPORT SetPropertyCommand: public PropertyListCommand
 public:
     typedef QList<QObject *> ObjectList;
 
-    explicit SetPropertyCommand(QDesignerFormWindowInterface *formWindow, QUndoCommand *parent = 0);
+    explicit SetPropertyCommand(QDesignerFormWindowInterface *formWindow, QUndoCommand *parent = nullptr);
 
     bool init(QObject *object, const QString &propertyName, const QVariant &newValue);
     bool init(const ObjectList &list, const QString &propertyName, const QVariant &newValue,
-              QObject *referenceObject = 0, bool enableSubPropertyHandling = true);
+              QObject *referenceObject = nullptr, bool enableSubPropertyHandling = true);
 
 
     inline QVariant newValue() const
@@ -246,7 +246,7 @@ public:
     explicit ResetPropertyCommand(QDesignerFormWindowInterface *formWindow);
 
     bool init(QObject *object, const QString &propertyName);
-    bool init(const ObjectList &list, const QString &propertyName, QObject *referenceObject = 0);
+    bool init(const ObjectList &list, const QString &propertyName, QObject *referenceObject = nullptr);
 
     virtual void redo();
 

@@ -45,7 +45,7 @@ namespace qdesigner_internal {
 ActionProviderBase::ActionProviderBase(QWidget *widget) :
     m_indicator(new InvisibleWidget(widget))
 {
-    Q_ASSERT(widget != 0);
+    Q_ASSERT(widget != nullptr);
 
     m_indicator->setAutoFillBackground(true);
     m_indicator->setBackgroundRole(QPalette::Window);

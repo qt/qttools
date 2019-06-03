@@ -45,7 +45,7 @@ class QMainWindowContainer: public QObject, public QDesignerContainerExtension
     Q_OBJECT
     Q_INTERFACES(QDesignerContainerExtension)
 public:
-    explicit QMainWindowContainer(QMainWindow *widget, QObject *parent = 0);
+    explicit QMainWindowContainer(QMainWindow *widget, QObject *parent = nullptr);
 
     int count() const override;
     QWidget *widget(int index) const override;

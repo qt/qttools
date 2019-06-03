@@ -68,8 +68,8 @@ bool TabOrderEditorTool::handleEvent(QWidget *widget, QWidget *managedWidget, QE
 QWidget *TabOrderEditorTool::editor() const
 {
     if (!m_editor) {
-        Q_ASSERT(formWindow() != 0);
-        m_editor = new TabOrderEditor(formWindow(), 0);
+        Q_ASSERT(formWindow() != nullptr);
+        m_editor = new TabOrderEditor(formWindow(), nullptr);
         connect(formWindow(), &QDesignerFormWindowInterface::mainContainerChanged,
                 m_editor.data(), &TabOrderEditor::setBackground);
     }

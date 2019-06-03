@@ -133,7 +133,7 @@ public:
 
 // Convert key to value for a given QMetaEnum
 template <class EnumType>
-inline EnumType enumKeyToValue(const QMetaEnum &metaEnum,const char *key, const EnumType* = 0)
+inline EnumType enumKeyToValue(const QMetaEnum &metaEnum,const char *key, const EnumType* = nullptr)
 {
     int val = metaEnum.keyToValue(key);
     if (val == -1) {
@@ -147,7 +147,7 @@ inline EnumType enumKeyToValue(const QMetaEnum &metaEnum,const char *key, const 
 
 // Convert keys to value for a given QMetaEnum
 template <class EnumType>
-inline EnumType enumKeysToValue(const QMetaEnum &metaEnum,const char *keys, const EnumType* = 0)
+inline EnumType enumKeysToValue(const QMetaEnum &metaEnum,const char *keys, const EnumType* = nullptr)
 {
     int val = metaEnum.keysToValue(keys);
     if (val == -1) {

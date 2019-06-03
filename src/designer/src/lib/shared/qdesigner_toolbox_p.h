@@ -94,7 +94,7 @@ private:
 // PropertySheet to handle the page properties
 class QDESIGNER_SHARED_EXPORT QToolBoxWidgetPropertySheet : public QDesignerPropertySheet {
 public:
-    explicit QToolBoxWidgetPropertySheet(QToolBox *object, QObject *parent = 0);
+    explicit QToolBoxWidgetPropertySheet(QToolBox *object, QObject *parent = nullptr);
 
     void setProperty(int index, const QVariant &value) override;
     QVariant property(int index) const override;

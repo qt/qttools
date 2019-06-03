@@ -384,11 +384,11 @@ ActionList QDesignerMenuBar::contextMenuActions()
             QVariant itemData;
             itemData.setValue(action);
 
-            QAction *remove_action = new QAction(tr("Remove Menu '%1'").arg(action->menu()->objectName()), 0);
+            QAction *remove_action = new QAction(tr("Remove Menu '%1'").arg(action->menu()->objectName()), nullptr);
             remove_action->setData(itemData);
             connect(remove_action, &QAction::triggered, this, &QDesignerMenuBar::deleteMenu);
             rc.push_back(remove_action);
-            QAction *sep = new QAction(0);
+            QAction *sep = new QAction(nullptr);
             sep->setSeparator(true);
             rc.push_back(sep);
         }
@@ -396,7 +396,7 @@ ActionList QDesignerMenuBar::contextMenuActions()
 
     m_promotionTaskMenu->addActions(formWindow(), PromotionTaskMenu::TrailingSeparator, rc);
 
-    QAction *remove_menubar = new QAction(tr("Remove Menu Bar"), 0);
+    QAction *remove_menubar = new QAction(tr("Remove Menu Bar"), nullptr);
     connect(remove_menubar, &QAction::triggered, this, &QDesignerMenuBar::slotRemoveMenuBar);
     rc.push_back(remove_menubar);
     return rc;
@@ -421,7 +421,7 @@ bool QDesignerMenuBar::handleContextMenuEvent(QWidget *, QContextMenuEvent *even
 
 void QDesignerMenuBar::slotRemoveMenuBar()
 {
-    Q_ASSERT(formWindow() != 0);
+    Q_ASSERT(formWindow() != nullptr);
 
     QDesignerFormWindowInterface *fw = formWindow();
 
@@ -452,7 +452,7 @@ void QDesignerMenuBar::leaveEditMode(LeaveEditMode mode)
     if (m_editor->text().isEmpty())
         return;
 
-    QAction *action = 0;
+    QAction *action = nullptr;
 
     QDesignerFormWindowInterface *fw = formWindow();
     Q_ASSERT(fw);
@@ -482,7 +482,7 @@ void QDesignerMenuBar::leaveEditMode(LeaveEditMode mode)
 
 void QDesignerMenuBar::showLineEdit()
 {
-    QAction *action = 0;
+    QAction *action = nullptr;
 
     if (m_currentIndex >= 0 && m_currentIndex < realActionCount())
         action = safeActionAt(m_currentIndex);
@@ -567,7 +567,7 @@ void QDesignerMenuBar::adjustIndicator(const QPoint &pos)
 {
     const int index = findAction(pos);
     QAction *action = safeActionAt(index);
-    Q_ASSERT(action != 0);
+    Q_ASSERT(action != nullptr);
 
     if (pos != QPoint(-1, -1)) {
         QDesignerMenu *m = qobject_cast<QDesignerMenu*>(action->menu());
@@ -700,13 +700,13 @@ QDesignerActionProviderExtension *QDesignerMenuBar::actionProvider()
         return qt_extension<QDesignerActionProviderExtension*>(core->extensionManager(), this);
     }
 
-    return 0;
+    return nullptr;
 }
 
 QAction *QDesignerMenuBar::currentAction() const
 {
     if (m_currentIndex < 0 || m_currentIndex >= actions().count())
-        return 0;
+        return nullptr;
 
     return safeActionAt(m_currentIndex);
 }
@@ -804,7 +804,7 @@ void QDesignerMenuBar::deleteMenuAction(QAction *action)
 {
     if (action && !qobject_cast<SpecialMenuAction*>(action)) {
         const int pos = actions().indexOf(action);
-        QAction *action_before = 0;
+        QAction *action_before = nullptr;
         if (pos != -1)
             action_before = safeActionAt(pos + 1);
 
@@ -859,7 +859,7 @@ void QDesignerMenuBar::showMenu(int index)
 QAction *QDesignerMenuBar::safeActionAt(int index) const
 {
     if (index < 0 || index >= actions().count())
-        return 0;
+        return nullptr;
 
     return actions().at(index);
 }
@@ -936,7 +936,7 @@ void QDesignerMenuBar::updateCurrentAction(bool selectAction)
     if (!menu)
         return;
 
-    QDesignerObjectInspector *oi = 0;
+    QDesignerObjectInspector *oi = nullptr;
     if (QDesignerFormWindowInterface *fw = formWindow())
         oi = qobject_cast<QDesignerObjectInspector *>(fw->core()->objectInspector());
 

@@ -143,7 +143,7 @@ QString ItemViewPropertySheetPrivate::fakePropertyName(const QString &prefix,
 
 ItemViewPropertySheet::ItemViewPropertySheet(QTreeView *treeViewObject, QObject *parent)
         : QDesignerPropertySheet(treeViewObject, parent),
-        d(new ItemViewPropertySheetPrivate(core(), treeViewObject->header(), 0))
+        d(new ItemViewPropertySheetPrivate(core(), treeViewObject->header(), nullptr))
 {
     initHeaderProperties(treeViewObject->header(), QStringLiteral("header"));
 }

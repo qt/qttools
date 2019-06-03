@@ -64,7 +64,7 @@ class DeviceProfileDialog : public QDialog
     Q_DISABLE_COPY(DeviceProfileDialog)
     Q_OBJECT
 public:
-    explicit DeviceProfileDialog(QDesignerDialogGuiInterface *dlgGui, QWidget *parent = 0);
+    explicit DeviceProfileDialog(QDesignerDialogGuiInterface *dlgGui, QWidget *parent = nullptr);
     ~DeviceProfileDialog();
 
     DeviceProfile deviceProfile() const;

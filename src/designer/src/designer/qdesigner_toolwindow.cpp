@@ -145,7 +145,7 @@ QRect QDesignerToolWindow::availableToolWindowGeometry() const
 
 //  ---------------------- PropertyEditorToolWindow
 
-static inline QWidget *createPropertyEditor(QDesignerFormEditorInterface *core, QWidget *parent = 0)
+static inline QWidget *createPropertyEditor(QDesignerFormEditorInterface *core, QWidget *parent = nullptr)
 {
     QDesignerPropertyEditorInterface *widget = QDesignerComponents::createPropertyEditor(core, parent);
     core->setPropertyEditor(widget);
@@ -202,7 +202,7 @@ void PropertyEditorToolWindow::showEvent(QShowEvent *event)
 
 //  ---------------------- ActionEditorToolWindow
 
-static inline QWidget *createActionEditor(QDesignerFormEditorInterface *core, QWidget *parent = 0)
+static inline QWidget *createActionEditor(QDesignerFormEditorInterface *core, QWidget *parent = nullptr)
 {
     QDesignerActionEditorInterface *widget = QDesignerComponents::createActionEditor(core, parent);
     core->setActionEditor(widget);
@@ -244,7 +244,7 @@ QRect ActionEditorToolWindow::geometryHint() const
 
 //  ---------------------- ObjectInspectorToolWindow
 
-static inline QWidget *createObjectInspector(QDesignerFormEditorInterface *core, QWidget *parent = 0)
+static inline QWidget *createObjectInspector(QDesignerFormEditorInterface *core, QWidget *parent = nullptr)
 {
     QDesignerObjectInspectorInterface *widget = QDesignerComponents::createObjectInspector(core, parent);
     core->setObjectInspector(widget);
@@ -296,7 +296,7 @@ public:
 
 ResourceEditorToolWindow::ResourceEditorToolWindow(QDesignerWorkbench *workbench)  :
     QDesignerToolWindow(workbench,
-                        QDesignerComponents::createResourceEditor(workbench->core(), 0),
+                        QDesignerComponents::createResourceEditor(workbench->core(), nullptr),
                         QStringLiteral("qt_designer_resourceeditor"),
                         QDesignerToolWindow::tr("Resource Browser"),
                         QStringLiteral("__qt_resource_editor_tool_action"),
@@ -330,7 +330,7 @@ public:
 
 SignalSlotEditorToolWindow::SignalSlotEditorToolWindow(QDesignerWorkbench *workbench) :
     QDesignerToolWindow(workbench,
-                        QDesignerComponents::createSignalSlotEditor(workbench->core(), 0),
+                        QDesignerComponents::createSignalSlotEditor(workbench->core(), nullptr),
                         QStringLiteral("qt_designer_signalsloteditor"),
                         QDesignerToolWindow::tr("Signal/Slot Editor"),
                         QStringLiteral("__qt_signal_slot_editor_tool_action"),
@@ -354,7 +354,7 @@ QRect SignalSlotEditorToolWindow::geometryHint() const
 
 //  ---------------------- WidgetBoxToolWindow
 
-static inline QWidget *createWidgetBox(QDesignerFormEditorInterface *core, QWidget *parent = 0)
+static inline QWidget *createWidgetBox(QDesignerFormEditorInterface *core, QWidget *parent = nullptr)
 {
     QDesignerWidgetBoxInterface *widget = QDesignerComponents::createWidgetBox(core, parent);
     core->setWidgetBox(widget);
@@ -411,7 +411,7 @@ QDesignerToolWindow *QDesignerToolWindow::createStandardToolWindow(StandardToolW
     default:
         break;
     }
-    return 0;
+    return nullptr;
 }
 
 

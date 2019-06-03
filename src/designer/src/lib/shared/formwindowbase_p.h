@@ -70,7 +70,8 @@ class QDESIGNER_SHARED_EXPORT FormWindowBase: public QDesignerFormWindowInterfac
 public:
     enum HighlightMode  { Restore, Highlight };
 
-    explicit FormWindowBase(QDesignerFormEditorInterface *core, QWidget *parent = 0, Qt::WindowFlags flags = 0);
+    explicit FormWindowBase(QDesignerFormEditorInterface *core, QWidget *parent = nullptr,
+                            Qt::WindowFlags flags = {});
     ~FormWindowBase() override;
 
     QVariantMap formData();

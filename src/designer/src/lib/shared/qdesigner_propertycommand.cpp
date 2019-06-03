@@ -1332,7 +1332,7 @@ bool ResetPropertyCommand::init(const ObjectList &list, const QString &aproperty
             ++it;
     }
     if (!modifiedList.contains(referenceObject))
-        referenceObject = Q_NULLPTR;
+        referenceObject = nullptr;
     if (modifiedList.isEmpty() || !initList(modifiedList, apropertyName, referenceObject))
         return false;
 

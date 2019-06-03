@@ -326,7 +326,7 @@ QDesignerIntegrationPrivate::QDesignerIntegrationPrivate(QDesignerIntegration *q
     headerLowercase(true),
     m_features(QDesignerIntegrationInterface::DefaultFeature),
     m_resourceFileWatcherBehaviour(QDesignerIntegrationInterface::PromptToReloadResourceFile),
-    m_gradientManager(0)
+    m_gradientManager(nullptr)
 {
 }
 
@@ -479,7 +479,7 @@ void QDesignerIntegrationPrivate::updateSelection()
 {
     QDesignerFormEditorInterface *core = q->core();
     QDesignerFormWindowInterface *formWindow = core->formWindowManager()->activeFormWindow();
-    QWidget *selection = 0;
+    QWidget *selection = nullptr;
 
     if (formWindow) {
         selection = formWindow->cursor()->current();
@@ -549,7 +549,7 @@ QObject *QDesignerIntegrationPrivate::propertyEditorObject()
 {
     if (QDesignerPropertyEditorInterface *propertyEditor = q->core()->propertyEditor())
         return propertyEditor->object();
-    return 0;
+    return nullptr;
 }
 
 // Load plugins into widget database and factory.
@@ -761,7 +761,7 @@ void QDesignerIntegration::updateCustomWidgetPlugins()
 
 QDesignerResourceBrowserInterface *QDesignerIntegration::createResourceBrowser(QWidget *)
 {
-    return 0;
+    return nullptr;
 }
 
 QString QDesignerIntegration::contextHelpId() const

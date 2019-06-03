@@ -68,7 +68,7 @@ SpacerTaskMenu::SpacerTaskMenu(Spacer *, QObject *parent) :
 
 QAction *SpacerTaskMenu::preferredEditAction() const
 {
-    return 0;
+    return nullptr;
 }
 
 QList<QAction*> SpacerTaskMenu::taskActions() const

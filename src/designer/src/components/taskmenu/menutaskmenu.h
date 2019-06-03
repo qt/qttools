@@ -52,7 +52,7 @@ class MenuTaskMenu : public QObject, public QDesignerTaskMenuExtension
     Q_OBJECT
     Q_INTERFACES(QDesignerTaskMenuExtension)
 public:
-    explicit MenuTaskMenu(QDesignerMenu *menu, QObject *parent = 0);
+    explicit MenuTaskMenu(QDesignerMenu *menu, QObject *parent = nullptr);
 
     QAction *preferredEditAction() const override;
     QList<QAction*> taskActions() const override;
@@ -74,7 +74,7 @@ class MenuBarTaskMenu : public QObject, public QDesignerTaskMenuExtension
     Q_OBJECT
     Q_INTERFACES(QDesignerTaskMenuExtension)
 public:
-    explicit MenuBarTaskMenu(QDesignerMenuBar *bar, QObject *parent = 0);
+    explicit MenuBarTaskMenu(QDesignerMenuBar *bar, QObject *parent = nullptr);
 
     QAction *preferredEditAction() const override;
     QList<QAction*> taskActions() const override;

@@ -49,7 +49,7 @@ class QStackedWidgetContainer: public QObject, public QDesignerContainerExtensio
     Q_OBJECT
     Q_INTERFACES(QDesignerContainerExtension)
 public:
-    explicit QStackedWidgetContainer(QStackedWidget *widget, QObject *parent = 0);
+    explicit QStackedWidgetContainer(QStackedWidget *widget, QObject *parent = nullptr);
 
     int count() const override { return m_widget->count(); }
     QWidget *widget(int index) const override { return m_widget->widget(index); }
@@ -71,7 +71,7 @@ class QTabWidgetContainer: public QObject, public QDesignerContainerExtension
     Q_OBJECT
     Q_INTERFACES(QDesignerContainerExtension)
 public:
-    explicit QTabWidgetContainer(QTabWidget *widget, QObject *parent = 0);
+    explicit QTabWidgetContainer(QTabWidget *widget, QObject *parent = nullptr);
 
     int count() const override { return m_widget->count(); }
     QWidget *widget(int index) const override { return m_widget->widget(index); }
@@ -93,7 +93,7 @@ class QToolBoxContainer: public QObject, public QDesignerContainerExtension
     Q_OBJECT
     Q_INTERFACES(QDesignerContainerExtension)
 public:
-    explicit QToolBoxContainer(QToolBox *widget, QObject *parent = 0);
+    explicit QToolBoxContainer(QToolBox *widget, QObject *parent = nullptr);
 
     int count() const override { return m_widget->count(); }
     QWidget *widget(int index) const override { return m_widget->widget(index); }
@@ -162,7 +162,7 @@ int SingleChildContainer<Container>::currentIndex() const
 template <class Container>
 void SingleChildContainer<Container>::addWidget(QWidget *widget)
 {
-    Q_ASSERT(m_container->widget() == 0);
+    Q_ASSERT(m_container->widget() == nullptr);
     widget->setParent(m_container);
     m_container->setWidget(widget);
 }
@@ -179,7 +179,7 @@ class QScrollAreaContainer: public QObject, public SingleChildContainer<QScrollA
     Q_OBJECT
     Q_INTERFACES(QDesignerContainerExtension)
 public:
-    explicit QScrollAreaContainer(QScrollArea *widget, QObject *parent = 0);
+    explicit QScrollAreaContainer(QScrollArea *widget, QObject *parent = nullptr);
 };
 
 // --------------- QDockWidgetContainer
@@ -188,7 +188,7 @@ class QDockWidgetContainer: public QObject, public SingleChildContainer<QDockWid
     Q_OBJECT
     Q_INTERFACES(QDesignerContainerExtension)
 public:
-    explicit QDockWidgetContainer(QDockWidget *widget, QObject *parent = 0);
+    explicit QDockWidgetContainer(QDockWidget *widget, QObject *parent = nullptr);
 };
 
 typedef ExtensionFactory<QDesignerContainerExtension, QStackedWidget, QStackedWidgetContainer> QDesignerStackedWidgetContainerFactory;

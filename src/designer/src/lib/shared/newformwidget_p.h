@@ -77,7 +77,7 @@ public:
     ~NewFormWidget() override;
 
     bool hasCurrentTemplate() const override;
-    QString currentTemplate(QString *errorMessage = 0) override;
+    QString currentTemplate(QString *errorMessage = nullptr) override;
 
     // Convenience for implementing file dialogs with preview
     static QImage grabForm(QDesignerFormEditorInterface *core,

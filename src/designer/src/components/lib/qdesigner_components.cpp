@@ -143,7 +143,7 @@ static inline void setMinorVersion(int minorVersion, int *qtVersion)
 }
 
 // Build the version-dependent name of the user widget box file, '$HOME.designer/widgetbox4.4.xml'
-static inline QString widgetBoxFileName(int qtVersion, const QDesignerLanguageExtension *lang = 0)
+static inline QString widgetBoxFileName(int qtVersion, const QDesignerLanguageExtension *lang = nullptr)
 {
     QString rc; {
         const QChar dot = QLatin1Char('.');

@@ -215,7 +215,7 @@ const AppFontManager::FileNameFontIdPairs &AppFontManager::fonts() const
 class AppFontModel : public QStandardItemModel {
     Q_DISABLE_COPY(AppFontModel)
 public:
-    AppFontModel(QObject *parent = 0);
+    AppFontModel(QObject *parent = nullptr);
 
     void init(const AppFontManager &mgr);
     void add(const QString &fontFile, int id);

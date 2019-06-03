@@ -55,7 +55,7 @@ enum class UicLanguage;
 class QDESIGNER_SHARED_EXPORT CodeDialog : public QDialog
 {
     Q_OBJECT
-    explicit CodeDialog(QWidget *parent = 0);
+    explicit CodeDialog(QWidget *parent = nullptr);
 public:
     ~CodeDialog() override;
 

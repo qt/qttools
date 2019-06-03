@@ -57,7 +57,7 @@ class DPI_Chooser : public QWidget {
     Q_OBJECT
 
 public:
-    explicit DPI_Chooser(QWidget *parent = 0);
+    explicit DPI_Chooser(QWidget *parent = nullptr);
     ~DPI_Chooser();
 
     void getDPI(int *dpiX, int *dpiY) const;

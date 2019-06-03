@@ -302,7 +302,7 @@ void ZoomWidget::setWidget(QWidget *w, Qt::WindowFlags wFlags)
         m_proxy->deleteLater();
     }
     // Set window flags on the outer proxy for them to take effect
-    m_proxy = createProxyWidget(0, Qt::Window);
+    m_proxy = createProxyWidget(nullptr, Qt::Window);
     m_proxy->setWidget(w);
 
     m_proxy->setWindowFlags(wFlags);

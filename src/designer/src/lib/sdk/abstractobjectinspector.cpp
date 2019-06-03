@@ -85,7 +85,7 @@ QDesignerObjectInspectorInterface::~QDesignerObjectInspectorInterface()
 */
 QDesignerFormEditorInterface *QDesignerObjectInspectorInterface::core() const
 {
-    return 0;
+    return nullptr;
 }
 
 /*!

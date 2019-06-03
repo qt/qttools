@@ -46,7 +46,7 @@ public:
     QStringList stringList() const;
 
     static QStringList getStringList(
-        QWidget *parent, const QStringList &init = QStringList(), int *result = 0);
+        QWidget *parent, const QStringList &init = QStringList(), int *result = nullptr);
 
 private slots:
     void on_upButton_clicked();
@@ -58,7 +58,7 @@ private slots:
     void currentValueChanged();
 
 private:
-    StringListEditor(QWidget *parent = 0);
+    StringListEditor(QWidget *parent = nullptr);
     void updateUi();
     int currentIndex() const;
     void setCurrentIndex(int index);

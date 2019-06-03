@@ -155,7 +155,7 @@ QObject *QExtensionManager::extension(QObject *object, const QString &iid) const
         if (QObject *ext = (*git)->extension(object, iid))
             return ext;
 
-    return 0;
+    return nullptr;
 }
 
 QT_END_NAMESPACE

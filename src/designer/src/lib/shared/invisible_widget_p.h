@@ -52,7 +52,7 @@ class QDESIGNER_SHARED_EXPORT InvisibleWidget: public QWidget
 {
     Q_OBJECT
 public:
-    InvisibleWidget(QWidget *parent = 0);
+    InvisibleWidget(QWidget *parent = nullptr);
 };
 
 } // namespace qdesigner_internal

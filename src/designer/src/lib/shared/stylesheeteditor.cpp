@@ -126,7 +126,7 @@ StyleSheetEditorDialog::StyleSheetEditorDialog(QDesignerFormEditorInterface *cor
         "background-image",
         "border-image",
         "image",
-        0
+        nullptr
     };
 
     const char * const colorProperties[] = {
@@ -141,7 +141,7 @@ StyleSheetEditorDialog::StyleSheetEditorDialog(QDesignerFormEditorInterface *cor
         "gridline-color",
         "selection-color",
         "selection-background-color",
-        0
+        nullptr
     };
 
     QMenu *resourceActionMenu = new QMenu(this);
@@ -390,7 +390,7 @@ StyleSheetPropertyEditorDialog::StyleSheetPropertyEditorDialog(QWidget *parent,
     m_fw(fw),
     m_widget(widget)
 {
-    Q_ASSERT(m_fw != 0);
+    Q_ASSERT(m_fw != nullptr);
 
     QPushButton *apply = buttonBox()->addButton(QDialogButtonBox::Apply);
     QObject::connect(apply, &QAbstractButton::clicked,
@@ -400,7 +400,7 @@ StyleSheetPropertyEditorDialog::StyleSheetPropertyEditorDialog(QWidget *parent,
 
     QDesignerPropertySheetExtension *sheet =
             qt_extension<QDesignerPropertySheetExtension*>(m_fw->core()->extensionManager(), m_widget);
-    Q_ASSERT(sheet != 0);
+    Q_ASSERT(sheet != nullptr);
     const int index = sheet->indexOf(QLatin1String(styleSheetProperty));
     const PropertySheetStringValue value = qvariant_cast<PropertySheetStringValue>(sheet->property(index));
     setText(value.value());

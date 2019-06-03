@@ -42,7 +42,7 @@ class QDESIGNER_SDK_EXPORT QDesignerWidgetFactoryInterface: public QObject
 {
     Q_OBJECT
 public:
-    explicit QDesignerWidgetFactoryInterface(QObject *parent = Q_NULLPTR);
+    explicit QDesignerWidgetFactoryInterface(QObject *parent = nullptr);
     virtual ~QDesignerWidgetFactoryInterface();
 
     virtual QDesignerFormEditorInterface *core() const = 0;
@@ -50,7 +50,7 @@ public:
     virtual QWidget* containerOfWidget(QWidget *w) const = 0;
     virtual QWidget* widgetOfContainer(QWidget *w) const = 0;
 
-    virtual QWidget *createWidget(const QString &name, QWidget *parentWidget = Q_NULLPTR) const = 0;
+    virtual QWidget *createWidget(const QString &name, QWidget *parentWidget = nullptr) const = 0;
     virtual QLayout *createLayout(QWidget *widget, QLayout *layout, int type) const = 0;
 
     virtual bool isPassiveInteractor(QWidget *widget) = 0;

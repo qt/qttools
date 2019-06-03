@@ -82,7 +82,7 @@ DPI_Chooser::DPI_Chooser(QWidget *parent) :
 
     // Predefined settings: System
     DeviceProfile::systemResolution(&(m_systemEntry->dpiX), &(m_systemEntry->dpiY));
-    m_systemEntry->description = 0;
+    m_systemEntry->description = nullptr;
     const struct DPI_Entry *systemEntry = m_systemEntry;
     //: System resolution
     m_predefinedCombo->addItem(tr("System (%1 x %2)").arg(m_systemEntry->dpiX).arg(m_systemEntry->dpiY), QVariant::fromValue(systemEntry));

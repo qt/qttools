@@ -56,7 +56,7 @@ void StringListEditorButton::setStringList(const QStringList &stringList)
 void StringListEditorButton::showStringListEditor()
 {
     int result;
-    QStringList lst = StringListEditor::getStringList(0, m_stringList, &result);
+    QStringList lst = StringListEditor::getStringList(nullptr, m_stringList, &result);
     if (result == QDialog::Accepted) {
         m_stringList = lst;
         emit stringListChanged(m_stringList);

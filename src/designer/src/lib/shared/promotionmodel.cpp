@@ -134,8 +134,8 @@ namespace qdesigner_internal {
 
         const QSet<QString> usedPromotedClasses = m_core->promotion()->referencedPromotedClassNames();
 
-        QDesignerWidgetDataBaseItemInterface *baseClass = 0;
-        QStandardItem *baseItem = 0;
+        QDesignerWidgetDataBaseItemInterface *baseClass = nullptr;
+        QStandardItem *baseItem = nullptr;
 
         const PromotedClasses::const_iterator bcend = promotedClasses.constEnd();
         for (PromotedClasses::const_iterator it = promotedClasses.constBegin(); it !=  bcend; ++it) {

@@ -72,7 +72,7 @@ class QDesignerAppearanceOptionsWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit QDesignerAppearanceOptionsWidget(QWidget *parent = 0);
+    explicit QDesignerAppearanceOptionsWidget(QWidget *parent = nullptr);
     ~QDesignerAppearanceOptionsWidget();
 
     AppearanceOptions appearanceOptions() const;

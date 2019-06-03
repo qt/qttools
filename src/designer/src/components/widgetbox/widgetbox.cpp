@@ -55,7 +55,7 @@ namespace qdesigner_internal {
 
 class WidgetBoxFilterLineEdit : public QLineEdit {
 public:
-    explicit WidgetBoxFilterLineEdit(QWidget *parent = 0) : QLineEdit(parent), m_defaultFocusPolicy(focusPolicy())
+    explicit WidgetBoxFilterLineEdit(QWidget *parent = nullptr) : QLineEdit(parent), m_defaultFocusPolicy(focusPolicy())
         { setFocusPolicy(Qt::NoFocus); }
 
 protected:
@@ -130,7 +130,7 @@ void WidgetBox::handleMousePress(const QString &name, const QString &xml, const 
         return;
 
     DomUI *ui = xmlToUi(name, xml, true);
-    if (ui == 0)
+    if (ui == nullptr)
         return;
     QList<QDesignerDnDItemInterface*> item_list;
     item_list.append(new WidgetBoxDnDItem(core(), ui, global_mouse_pos));
@@ -213,14 +213,14 @@ static const QDesignerMimeData *checkDragEvent(QDropEvent * event,
     const QDesignerMimeData *mimeData = qobject_cast<const QDesignerMimeData *>(event->mimeData());
     if (!mimeData) {
         event->ignore();
-        return 0;
+        return nullptr;
     }
     // If desired, ignore a widget box drag and drop, where widget==0.
     if (!acceptEventsFromWidgetBox) {
         const bool fromWidgetBox = !mimeData->items().first()->widget();
         if (fromWidgetBox) {
             event->ignore();
-            return 0;
+            return nullptr;
         }
     }
 

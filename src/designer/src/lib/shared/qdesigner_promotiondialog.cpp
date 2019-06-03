@@ -187,14 +187,14 @@ namespace qdesigner_internal {
                                                        const QString &promotableWidgetClassName,
                                                        QString *promoteTo) :
         QDialog(parent),
-        m_mode(promotableWidgetClassName.isEmpty() || promoteTo == 0 ? ModeEdit : ModeEditChooseClass),
+        m_mode(promotableWidgetClassName.isEmpty() || promoteTo == nullptr ? ModeEdit : ModeEditChooseClass),
         m_promotableWidgetClassName(promotableWidgetClassName),
         m_core(core),
         m_promoteTo(promoteTo),
         m_promotion(core->promotion()),
         m_model(new PromotionModel(core)),
         m_treeView(new QTreeView),
-        m_buttonBox(0),
+        m_buttonBox(nullptr),
         m_removeButton(new QPushButton(createIconSet(QString::fromUtf8("minus.png")), QString()))
     {
         m_buttonBox = createButtonBox();
@@ -352,7 +352,7 @@ namespace qdesigner_internal {
         flags = 0;
         const QModelIndexList indexes = selected.indexes();
         if (indexes.empty())
-            return 0;
+            return nullptr;
         const PromotionModel::ModelData data = m_model->modelData(indexes.constFirst());
         QDesignerWidgetDataBaseItemInterface *dbItem = data.promotedItem;
 

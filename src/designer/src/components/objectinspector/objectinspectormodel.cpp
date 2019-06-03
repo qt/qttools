@@ -277,14 +277,14 @@ namespace qdesigner_internal {
         model.push_back(entry);
 
         // 2) recurse over widget children via container extension or children list
-        const QDesignerContainerExtension *containerExtension = 0;
+        const QDesignerContainerExtension *containerExtension = nullptr;
         if (entry.type() == ObjectData::ExtensionContainer) {
             containerExtension = qt_extension<QDesignerContainerExtension*>(fwi->core()->extensionManager(), object);
             Q_ASSERT(containerExtension);
             const int count = containerExtension->count();
             for (int i=0; i < count; ++i) {
                 QObject *page = containerExtension->widget(i);
-                Q_ASSERT(page != 0);
+                Q_ASSERT(page != nullptr);
                 createModelRecursion(fwi, object, page, model, ctx);
             }
         }
@@ -364,10 +364,10 @@ namespace qdesigner_internal {
 
     ObjectInspectorModel::UpdateResult ObjectInspectorModel::update(QDesignerFormWindowInterface *fw)
     {
-        QWidget *mainContainer = fw ? fw->mainContainer() : static_cast<QWidget*>(0);
+        QWidget *mainContainer = fw ? fw->mainContainer() : nullptr;
         if (!mainContainer) {
             clearItems();
-            m_formWindow = 0;
+            m_formWindow = nullptr;
             return NoForm;
         }
         m_formWindow = fw;
@@ -377,7 +377,7 @@ namespace qdesigner_internal {
 
         static const QString separator = QCoreApplication::translate("ObjectInspectorModel", "separator");
         const ModelRecursionContext ctx(fw->core(),  separator);
-        createModelRecursion(fw, 0, mainContainer, newModel, ctx);
+        createModelRecursion(fw, nullptr, mainContainer, newModel, ctx);
 
         if (newModel == m_model) {
             updateItemContents(m_model, newModel);
@@ -394,7 +394,7 @@ namespace qdesigner_internal {
         if (index.isValid())
             if (const QStandardItem *item = itemFromIndex(index))
                 return objectOfItem(item);
-        return 0;
+        return nullptr;
     }
 
     // Missing Qt API: get a row

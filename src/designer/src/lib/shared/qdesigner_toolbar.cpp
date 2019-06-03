@@ -69,7 +69,7 @@ void ToolBarEventFilter::install(QToolBar *tb)
 ToolBarEventFilter::ToolBarEventFilter(QToolBar *tb) :
     QObject(tb),
     m_toolBar(tb),
-    m_promotionTaskMenu(0)
+    m_promotionTaskMenu(nullptr)
 {
 }
 
@@ -81,7 +81,7 @@ ToolBarEventFilter *ToolBarEventFilter::eventFilterOf(const QToolBar *tb)
             if (ToolBarEventFilter *ef = qobject_cast<ToolBarEventFilter *>(o))
                 return ef;
     }
-    return 0;
+    return nullptr;
 }
 
 bool ToolBarEventFilter::eventFilter (QObject *watched, QEvent *event)
@@ -130,7 +130,7 @@ ActionList ToolBarEventFilter::contextMenuActions(const QPoint &globalPos)
 
     // Insert before
     if (action && index != 0 && !action->isSeparator()) {
-        QAction *newSeperatorAct = new QAction(tr("Insert Separator before '%1'").arg(action->objectName()), 0);
+        QAction *newSeperatorAct = new QAction(tr("Insert Separator before '%1'").arg(action->objectName()), nullptr);
         itemData.setValue(action);
         newSeperatorAct->setData(itemData);
         connect(newSeperatorAct, &QAction::triggered, this, &ToolBarEventFilter::slotInsertSeparator);
@@ -139,8 +139,8 @@ ActionList ToolBarEventFilter::contextMenuActions(const QPoint &globalPos)
 
     // Append separator
     if (actions.empty() || !actions.back()->isSeparator()) {
-        QAction *newSeperatorAct = new QAction(tr("Append Separator"), 0);
-        itemData.setValue(static_cast<QAction*>(0));
+        QAction *newSeperatorAct = new QAction(tr("Append Separator"), nullptr);
+        itemData.setValue(static_cast<QAction*>(nullptr));
         newSeperatorAct->setData(itemData);
         connect(newSeperatorAct, &QAction::triggered, this, &ToolBarEventFilter::slotInsertSeparator);
         rc.push_back(newSeperatorAct);
@@ -151,14 +151,14 @@ ActionList ToolBarEventFilter::contextMenuActions(const QPoint &globalPos)
     m_promotionTaskMenu->addActions(formWindow(), PromotionTaskMenu::LeadingSeparator|PromotionTaskMenu::TrailingSeparator, rc);
     // Remove
     if (action) {
-        QAction *a = new QAction(tr("Remove action '%1'").arg(action->objectName()), 0);
+        QAction *a = new QAction(tr("Remove action '%1'").arg(action->objectName()), nullptr);
         itemData.setValue(action);
         a->setData(itemData);
         connect(a, &QAction::triggered, this, &ToolBarEventFilter::slotRemoveSelectedAction);
         rc.push_back(a);
     }
 
-    QAction *remove_toolbar = new QAction(tr("Remove Toolbar '%1'").arg(m_toolBar->objectName()), 0);
+    QAction *remove_toolbar = new QAction(tr("Remove Toolbar '%1'").arg(m_toolBar->objectName()), nullptr);
     connect(remove_toolbar, &QAction::triggered, this, &ToolBarEventFilter::slotRemoveToolBar);
     rc.push_back(remove_toolbar);
     return rc;
@@ -171,7 +171,7 @@ bool ToolBarEventFilter::handleContextMenuEvent(QContextMenuEvent * event )
     const QPoint globalPos = event->globalPos();
     const ActionList al = contextMenuActions(event->globalPos());
 
-    QMenu menu(0);
+    QMenu menu(nullptr);
     const ActionList::const_iterator acend = al.constEnd();
     for (ActionList::const_iterator it = al.constBegin(); it != acend; ++it)
         menu.addAction(*it);
@@ -186,14 +186,14 @@ void ToolBarEventFilter::slotRemoveSelectedAction()
         return;
 
     QAction *a = qvariant_cast<QAction*>(action->data());
-    Q_ASSERT(a != 0);
+    Q_ASSERT(a != nullptr);
 
     QDesignerFormWindowInterface *fw = formWindow();
     Q_ASSERT(fw);
 
     const ActionList actions = m_toolBar->actions();
     const int pos = actions.indexOf(a);
-    QAction *action_before = 0;
+    QAction *action_before = nullptr;
     if (pos != -1 && actions.count() > pos + 1)
         action_before = actions.at(pos + 1);
 
@@ -358,7 +358,7 @@ bool ToolBarEventFilter::handleDropEvent(QDropEvent *event)
     }
 
     // Try to find action to 'insert before'. Click on action or in free area, else ignore.
-    QAction *beforeAction = 0;
+    QAction *beforeAction = nullptr;
     const QPoint pos = event->pos();
     const int index = actionIndexAt(m_toolBar, pos, m_toolBar->orientation());
     if (index != -1) {
@@ -407,7 +407,7 @@ void ToolBarEventFilter::startDrag(const QPoint &pos, Qt::KeyboardModifiers modi
         hideDragIndicator();
         if (dropAction == Qt::MoveAction) {
             const ActionList currentActions = m_toolBar->actions();
-            QAction *previous = 0;
+            QAction *previous = nullptr;
             if (index >= 0 && index < currentActions.size())
                 previous = currentActions.at(index);
             InsertActionIntoCommand *cmd = new InsertActionIntoCommand(fw);
@@ -421,7 +421,7 @@ QAction *ToolBarEventFilter::actionAt(const QToolBar *tb, const QPoint &pos)
 {
     const int index = actionIndexAt(tb, pos, tb->orientation());
     if (index == -1)
-        return 0;
+        return nullptr;
     return tb->actions().at(index);
 }
 

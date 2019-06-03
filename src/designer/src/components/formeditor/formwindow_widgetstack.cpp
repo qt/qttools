@@ -104,9 +104,9 @@ void FormWindowWidgetStack::setCurrentTool(int index)
 
 void FormWindowWidgetStack::setSenderAsCurrentTool()
 {
-    QDesignerFormWindowToolInterface *tool = 0;
+    QDesignerFormWindowToolInterface *tool = nullptr;
     QAction *action = qobject_cast<QAction*>(sender());
-    if (action == 0) {
+    if (action == nullptr) {
         qDebug("FormWindowWidgetStack::setSenderAsCurrentTool(): sender is not a QAction");
         return;
     }
@@ -118,7 +118,7 @@ void FormWindowWidgetStack::setSenderAsCurrentTool()
         }
     }
 
-    if (tool == 0) {
+    if (tool == nullptr) {
         qDebug("FormWindowWidgetStack::setSenderAsCurrentTool(): unknown tool");
         return;
     }
@@ -147,7 +147,8 @@ void FormWindowWidgetStack::setMainContainer(QWidget *w)
     // This code is triggered once by the formwindow and
     // by integrations doing "revert to saved". Anything changing?
     const int previousCount = m_formContainerLayout->count();
-    QWidget *previousMainContainer = previousCount ? m_formContainerLayout->itemAt(0)->widget() : static_cast<QWidget*>(0);
+    QWidget *previousMainContainer = previousCount
+        ? m_formContainerLayout->itemAt(0)->widget() : nullptr;
     if (previousMainContainer == w)
         return;
     // Swap
@@ -177,7 +178,7 @@ void FormWindowWidgetStack::addTool(QDesignerFormWindowToolInterface *tool)
 QDesignerFormWindowToolInterface *FormWindowWidgetStack::tool(int index) const
 {
     if (index < 0 || index >= count())
-        return 0;
+        return nullptr;
 
     return m_tools.at(index);
 }
@@ -190,7 +191,7 @@ int FormWindowWidgetStack::currentIndex() const
 QWidget *FormWindowWidgetStack::defaultEditor() const
 {
     if (m_tools.isEmpty())
-        return 0;
+        return nullptr;
 
     return m_tools.at(0)->editor();
 }

@@ -42,7 +42,7 @@ class SpacerPropertySheet: public QDesignerPropertySheet
     Q_OBJECT
     Q_INTERFACES(QDesignerPropertySheetExtension)
 public:
-    explicit SpacerPropertySheet(Spacer *object, QObject *parent = 0);
+    explicit SpacerPropertySheet(Spacer *object, QObject *parent = nullptr);
      ~SpacerPropertySheet() override;
 
     void setProperty(int index, const QVariant &value) override;

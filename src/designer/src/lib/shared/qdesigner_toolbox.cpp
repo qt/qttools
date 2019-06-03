@@ -51,7 +51,7 @@ QToolBoxHelper::QToolBoxHelper(QToolBox *toolbox) :
     m_actionInsertPage(new QAction(tr("Before Current Page"), this)),
     m_actionInsertPageAfter(new QAction(tr("After Current Page"), this)),
     m_actionChangePageOrder(new QAction(tr("Change Page Order..."), this)),
-    m_pagePromotionTaskMenu(new qdesigner_internal::PromotionTaskMenu(0, qdesigner_internal::PromotionTaskMenu::ModeSingleWidget, this))
+    m_pagePromotionTaskMenu(new qdesigner_internal::PromotionTaskMenu(nullptr, qdesigner_internal::PromotionTaskMenu::ModeSingleWidget, this))
 {
     connect(m_actionDeletePage, &QAction::triggered, this, &QToolBoxHelper::removeCurrentPage);
     connect(m_actionInsertPage, &QAction::triggered, this, &QToolBoxHelper::addPage);
@@ -110,14 +110,14 @@ QToolBoxHelper *QToolBoxHelper::helperOf(const QToolBox *toolbox)
             if (QToolBoxHelper *h = qobject_cast<QToolBoxHelper *>(o))
                 return h;
     }
-    return 0;
+    return nullptr;
 }
 
 QMenu *QToolBoxHelper::addToolBoxContextMenuActions(const QToolBox *toolbox, QMenu *popup)
 {
     QToolBoxHelper *helper = helperOf(toolbox);
     if (!helper)
-        return 0;
+        return nullptr;
     return helper->addContextMenuActions(popup);
 }
 
@@ -203,7 +203,7 @@ void QToolBoxHelper::setCurrentItemBackgroundRole(QPalette::ColorRole role)
 
 QMenu *QToolBoxHelper::addContextMenuActions(QMenu *popup) const
 {
-    QMenu *pageMenu = 0;
+    QMenu *pageMenu = nullptr;
     const int count = m_toolbox->count();
     m_actionDeletePage->setEnabled(count > 1);
     if (count) {

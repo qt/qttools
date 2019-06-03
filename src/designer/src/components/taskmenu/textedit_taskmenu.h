@@ -45,8 +45,8 @@ class TextEditTaskMenu: public QDesignerTaskMenu
 {
     Q_OBJECT
 public:
-    explicit TextEditTaskMenu(QTextEdit *button, QObject *parent = 0);
-    explicit TextEditTaskMenu(QPlainTextEdit *button, QObject *parent = 0);
+    explicit TextEditTaskMenu(QTextEdit *button, QObject *parent = nullptr);
+    explicit TextEditTaskMenu(QPlainTextEdit *button, QObject *parent = nullptr);
 
     ~TextEditTaskMenu() override;
 

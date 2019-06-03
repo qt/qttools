@@ -48,7 +48,7 @@ QT_BEGIN_NAMESPACE
 namespace qdesigner_internal {
 
 TreeWidgetEditor::TreeWidgetEditor(QDesignerFormWindowInterface *form, QDialog *dialog)
-    : AbstractItemEditor(form, 0), m_updatingBrowser(false)
+    : AbstractItemEditor(form, nullptr), m_updatingBrowser(false)
 {
     m_columnEditor = new ItemListEditor(form, this);
     m_columnEditor->setObjectName(QStringLiteral("columnEditor"));
@@ -108,11 +108,11 @@ static AbstractItemEditor::PropertyDefinition treeHeaderPropList[] = {
     { Qt::ToolTipPropertyRole, 0, DesignerPropertyManager::designerStringTypeId, "toolTip" },
     { Qt::StatusTipPropertyRole, 0, DesignerPropertyManager::designerStringTypeId, "statusTip" },
     { Qt::WhatsThisPropertyRole, 0, DesignerPropertyManager::designerStringTypeId, "whatsThis" },
-    { Qt::FontRole, QVariant::Font, 0, "font" },
+    { Qt::FontRole, QVariant::Font, nullptr, "font" },
     { Qt::TextAlignmentRole, 0, DesignerPropertyManager::designerAlignmentTypeId, "textAlignment" },
-    { Qt::BackgroundRole, QVariant::Color, 0, "background" },
-    { Qt::ForegroundRole, QVariant::Brush, 0, "foreground" },
-    { 0, 0, 0, 0 }
+    { Qt::BackgroundRole, QVariant::Color, nullptr, "background" },
+    { Qt::ForegroundRole, QVariant::Brush, nullptr, "foreground" },
+    { 0, 0, nullptr, nullptr }
 };
 
 static AbstractItemEditor::PropertyDefinition treeItemColumnPropList[] = {
@@ -121,17 +121,17 @@ static AbstractItemEditor::PropertyDefinition treeItemColumnPropList[] = {
     { Qt::ToolTipPropertyRole, 0, DesignerPropertyManager::designerStringTypeId, "toolTip" },
     { Qt::StatusTipPropertyRole, 0, DesignerPropertyManager::designerStringTypeId, "statusTip" },
     { Qt::WhatsThisPropertyRole, 0, DesignerPropertyManager::designerStringTypeId, "whatsThis" },
-    { Qt::FontRole, QVariant::Font, 0, "font" },
+    { Qt::FontRole, QVariant::Font, nullptr, "font" },
     { Qt::TextAlignmentRole, 0, DesignerPropertyManager::designerAlignmentTypeId, "textAlignment" },
-    { Qt::BackgroundRole, QVariant::Brush, 0, "background" },
-    { Qt::ForegroundRole, QVariant::Brush, 0, "foreground" },
+    { Qt::BackgroundRole, QVariant::Brush, nullptr, "background" },
+    { Qt::ForegroundRole, QVariant::Brush, nullptr, "foreground" },
     { Qt::CheckStateRole, 0, QtVariantPropertyManager::enumTypeId, "checkState" },
-    { 0, 0, 0, 0 }
+    { 0, 0, nullptr, nullptr }
 };
 
 static AbstractItemEditor::PropertyDefinition treeItemCommonPropList[] = {
     { ItemFlagsShadowRole, 0, QtVariantPropertyManager::flagTypeId, "flags" },
-    { 0, 0, 0, 0 }
+    { 0, 0, nullptr, nullptr }
 };
 
 QtVariantProperty *TreeWidgetEditor::setupPropertyGroup(const QString &title, PropertyDefinition *propDefs)
@@ -205,7 +205,7 @@ int TreeWidgetEditor::defaultItemFlags() const
 void TreeWidgetEditor::on_newItemButton_clicked()
 {
     QTreeWidgetItem *curItem = ui.treeWidget->currentItem();
-    QTreeWidgetItem *newItem = 0;
+    QTreeWidgetItem *newItem = nullptr;
     ui.treeWidget->blockSignals(true);
     if (curItem) {
         if (curItem->parent())
@@ -250,7 +250,7 @@ void TreeWidgetEditor::on_deleteItemButton_clicked()
     if (!curItem)
         return;
 
-    QTreeWidgetItem *nextCurrent = 0;
+    QTreeWidgetItem *nextCurrent = nullptr;
     if (curItem->parent()) {
         int idx = curItem->parent()->indexOfChild(curItem);
         if (idx == curItem->parent()->childCount() - 1)

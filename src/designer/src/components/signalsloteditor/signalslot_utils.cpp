@@ -61,7 +61,7 @@ static void memberList(QDesignerFormEditorInterface *core,
         return;
     // 1) member sheet
     const QDesignerMemberSheetExtension *members = qt_extension<QDesignerMemberSheetExtension*>(core->extensionManager(), object);
-    Q_ASSERT(members != 0);
+    Q_ASSERT(members != nullptr);
     const int count = members->count();
     for (int i = 0; i < count; ++i) {
         if (!members->isVisible(i))
@@ -177,7 +177,7 @@ namespace {
 
     ReverseClassesMemberIterator::ReverseClassesMemberIterator(qdesigner_internal::ClassesMemberFunctions *result) :
        m_result(result),
-       m_memberList(0)
+       m_memberList(nullptr)
     {
     }
 
@@ -232,7 +232,7 @@ namespace qdesigner_internal {
     ClassesMemberFunctions reverseClassesMemberFunctions(const QString &obj_name, MemberType member_type,
                                                          const QString &peer, QDesignerFormWindowInterface *form)
     {
-        QObject *object = 0;
+        QObject *object = nullptr;
         if (obj_name == form->mainContainer()->objectName()) {
             object = form->mainContainer();
         } else {

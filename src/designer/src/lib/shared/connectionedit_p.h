@@ -74,7 +74,7 @@ public:
     class EndPoint {
     public:
         enum Type { Source, Target };
-        explicit EndPoint(Connection *_con = 0, Type _type = Source) : con(_con), type(_type) {}
+        explicit EndPoint(Connection *_con = nullptr, Type _type = Source) : con(_con), type(_type) {}
         bool isNull() const { return con == 0; }
         bool operator == (const EndPoint &other) const { return con == other.con && type == other.type; }
         bool operator != (const EndPoint &other) const { return !operator == (other); }

@@ -130,15 +130,15 @@ MetaDataBase::~MetaDataBase()
 MetaDataBaseItem *MetaDataBase::metaDataBaseItem(QObject *object) const
 {
     MetaDataBaseItem *i = m_items.value(object);
-    if (i == 0 || !i->enabled())
-        return 0;
+    if (i == nullptr || !i->enabled())
+        return nullptr;
     return i;
 }
 
 void MetaDataBase::add(QObject *object)
 {
     MetaDataBaseItem *item = m_items.value(object);
-    if (item != 0) {
+    if (item != nullptr) {
         item->setEnabled(true);
         if (debugMetaDatabase) {
             qDebug() << "MetaDataBase::add: Existing item for " << object->metaObject()->className() << item->name();

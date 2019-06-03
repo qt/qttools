@@ -99,7 +99,7 @@ LayoutInfo::Type LayoutInfo::managedLayoutType(const QDesignerFormEditorInterfac
                                                QLayout **ptrToLayout)
 {
     if (ptrToLayout)
-        *ptrToLayout = 0;
+        *ptrToLayout = nullptr;
     if (const QSplitter *splitter = qobject_cast<const QSplitter *>(w))
         return  splitter->orientation() == Qt::Horizontal ? HSplitter : VSplitter;
     QLayout *layout = managedLayout(core, w);
@@ -121,7 +121,7 @@ QWidget *LayoutInfo::layoutParent(const QDesignerFormEditorInterface *core, QLay
 
         o = o->parent();
     }
-    return 0;
+    return nullptr;
 }
 
 void LayoutInfo::deleteLayout(const QDesignerFormEditorInterface *core, QWidget *widget)
@@ -129,11 +129,11 @@ void LayoutInfo::deleteLayout(const QDesignerFormEditorInterface *core, QWidget 
     if (QDesignerContainerExtension *container = qt_extension<QDesignerContainerExtension*>(core->extensionManager(), widget))
         widget = container->widget(container->currentIndex());
 
-    Q_ASSERT(widget != 0);
+    Q_ASSERT(widget != nullptr);
 
     QLayout *layout = managedLayout(core, widget);
 
-    if (layout == 0 || core->metaDataBase()->item(layout) != 0) {
+    if (layout == nullptr || core->metaDataBase()->item(layout) != nullptr) {
         delete layout;
         widget->updateGeometry();
         return;
@@ -150,7 +150,7 @@ LayoutInfo::Type LayoutInfo::laidoutWidgetType(const QDesignerFormEditorInterfac
     if (isManaged)
         *isManaged = false;
     if (ptrToLayout)
-        *ptrToLayout = 0;
+        *ptrToLayout = nullptr;
 
     QWidget *parent = widget->parentWidget();
     if (!parent)
@@ -203,12 +203,12 @@ QLayout *LayoutInfo::internalLayout(const QWidget *widget)
 
 QLayout *LayoutInfo::managedLayout(const QDesignerFormEditorInterface *core, const QWidget *widget)
 {
-    if (widget == 0)
-        return 0;
+    if (widget == nullptr)
+        return nullptr;
 
     QLayout *layout = widget->layout();
     if (!layout)
-        return 0;
+        return nullptr;
 
     return managedLayout(core, layout);
 }
@@ -222,23 +222,23 @@ QLayout *LayoutInfo::managedLayout(const QDesignerFormEditorInterface *core, QLa
     /* This code exists mainly for the Q3GroupBox class, for which
      * widget->layout() returns an internal VBoxLayout. */
     const QDesignerMetaDataBaseItemInterface *item = metaDataBase->item(layout);
-    if (item == 0) {
+    if (item == nullptr) {
         layout = layout->findChild<QLayout*>();
         item = metaDataBase->item(layout);
     }
     if (!item)
-        return 0;
+        return nullptr;
     return layout;
 }
 
 // Is it a a dummy grid placeholder created by Designer?
 bool LayoutInfo::isEmptyItem(QLayoutItem *item)
 {
-    if (item == 0) {
+    if (item == nullptr) {
         qDebug() << "** WARNING Zero-item passed on to isEmptyItem(). This indicates a layout inconsistency.";
         return true;
     }
-    return item->spacerItem() != 0;
+    return item->spacerItem() != nullptr;
 }
 
 QDESIGNER_SHARED_EXPORT void getFormLayoutItemPosition(const QFormLayout *formLayout, int index, int *rowPtr, int *columnPtr, int *rowspanPtr, int *colspanPtr)
@@ -273,7 +273,8 @@ QDESIGNER_SHARED_EXPORT void formLayoutAddWidget(QFormLayout *formLayout, QWidge
         if (spanning) {
             formLayout->insertRow(r.y(), w);
         } else {
-            QWidget *label = 0, *field = 0;
+            QWidget *label = nullptr;
+            QWidget *field = nullptr;
             if (r.x() == 0) {
                 label = w;
             } else {

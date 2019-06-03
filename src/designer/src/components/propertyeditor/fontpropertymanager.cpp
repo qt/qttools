@@ -128,7 +128,7 @@ namespace qdesigner_internal {
             familyProperty->setAttribute(enumNamesAttribute, m_designerFamilyNames);
         }
         // Next
-        m_createdFontProperty = 0;
+        m_createdFontProperty = nullptr;
     }
 
     bool FontPropertyManager::uninitializeProperty(QtProperty *property)

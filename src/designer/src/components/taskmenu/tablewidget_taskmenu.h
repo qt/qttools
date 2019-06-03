@@ -46,7 +46,7 @@ class TableWidgetTaskMenu: public QDesignerTaskMenu
 {
     Q_OBJECT
 public:
-    explicit TableWidgetTaskMenu(QTableWidget *button, QObject *parent = 0);
+    explicit TableWidgetTaskMenu(QTableWidget *button, QObject *parent = nullptr);
     ~TableWidgetTaskMenu() override;
 
     QAction *preferredEditAction() const override;

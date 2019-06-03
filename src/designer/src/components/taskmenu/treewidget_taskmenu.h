@@ -46,7 +46,7 @@ class TreeWidgetTaskMenu: public QDesignerTaskMenu
 {
     Q_OBJECT
 public:
-    explicit TreeWidgetTaskMenu(QTreeWidget *button, QObject *parent = 0);
+    explicit TreeWidgetTaskMenu(QTreeWidget *button, QObject *parent = nullptr);
     ~TreeWidgetTaskMenu() override;
 
     QAction *preferredEditAction() const override;

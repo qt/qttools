@@ -216,7 +216,7 @@ void QSimpleResource::addCustomWidgetsToWidgetDatabase(const QDesignerFormEditor
 void QSimpleResource::handleDomCustomWidgets(const QDesignerFormEditorInterface *core,
                                              const DomCustomWidgets *dom_custom_widgets)
 {
-    if (dom_custom_widgets == 0)
+    if (dom_custom_widgets == nullptr)
         return;
     auto custom_widget_list = dom_custom_widgets->elementCustomWidget();
     // Attempt to insert each item derived from its base class.

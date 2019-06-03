@@ -56,7 +56,7 @@ static QDesignerFormEditorInterface *formEditorForObject(QObject *o) {
         o = o->parent();
     } while(o);
     Q_ASSERT(o);
-    return 0;
+    return nullptr;
 }
 
 // ------------ QDesignerMemberSheetPrivate
@@ -132,7 +132,7 @@ QString QDesignerMemberSheet::declaredInClass(int index) const
 
     for (;;) {
         const QDesignerMetaObjectInterface *tmp = meta_obj->superClass();
-        if (tmp == 0)
+        if (tmp == nullptr)
             break;
         if (tmp->indexOfMethod(member) == -1)
             break;
@@ -248,7 +248,7 @@ QObject *QDesignerMemberSheetFactory::createExtension(QObject *object, const QSt
         return new QDesignerMemberSheet(object, parent);
     }
 
-    return 0;
+    return nullptr;
 }
 
 QT_END_NAMESPACE

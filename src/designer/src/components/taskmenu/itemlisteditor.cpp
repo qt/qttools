@@ -98,14 +98,14 @@ static const char * const itemFlagNames[] = {
     QT_TRANSLATE_NOOP("AbstractItemEditor", "UserCheckable"),
     QT_TRANSLATE_NOOP("AbstractItemEditor", "Enabled"),
     QT_TRANSLATE_NOOP("AbstractItemEditor", "Tristate"),
-    0
+    nullptr
 };
 
 static const char * const checkStateNames[] = {
     QT_TRANSLATE_NOOP("AbstractItemEditor", "Unchecked"),
     QT_TRANSLATE_NOOP("AbstractItemEditor", "PartiallyChecked"),
     QT_TRANSLATE_NOOP("AbstractItemEditor", "Checked"),
-    0
+    nullptr
 };
 
 static QStringList c2qStringList(const char * const in[])

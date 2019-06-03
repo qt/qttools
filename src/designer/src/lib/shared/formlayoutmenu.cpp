@@ -370,7 +370,7 @@ QStringList FormLayoutRowDialog::fieldWidgetClasses(QDesignerFormEditorInterface
         // multimap of base class->custom widgets unless we have a language
         // extension installed which might do funny things with custom widgets.
         ClassMap customClassMap;
-        if (qt_extension<QDesignerLanguageExtension *>(core->extensionManager(), core) == 0) {
+        if (qt_extension<QDesignerLanguageExtension *>(core->extensionManager(), core) == nullptr) {
             const QDesignerWidgetDataBaseInterface *wdb = core->widgetDataBase();
             const int wdbCount = wdb->count();
             for (int w = 0; w < wdbCount; ++w) {
@@ -398,10 +398,10 @@ QStringList FormLayoutRowDialog::fieldWidgetClasses(QDesignerFormEditorInterface
 
 static QFormLayout *managedFormLayout(const QDesignerFormEditorInterface *core, const QWidget *w)
 {
-    QLayout *l = 0;
+    QLayout *l = nullptr;
     if (LayoutInfo::managedLayoutType(core, w, &l) == LayoutInfo::Form)
         return qobject_cast<QFormLayout *>(l);
-    return 0;
+    return nullptr;
 }
 
 // Create the widgets of a control row and apply text properties contained
@@ -485,7 +485,7 @@ void FormLayoutMenu::populate(QWidget *w, QDesignerFormWindowInterface *fw, Acti
         m_widget = w;
         break;
     default:
-        m_widget = 0;
+        m_widget = nullptr;
         break;
     }
 }
@@ -511,7 +511,7 @@ QAction *FormLayoutMenu::preferredEditAction(QWidget *w, QDesignerFormWindowInte
         m_widget = w;
         return m_populateFormAction;
     }
-    return 0;
+    return nullptr;
 }
 }
 

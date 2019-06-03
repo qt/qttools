@@ -87,7 +87,7 @@ public:
     void setNonLaidOutSizeHint(const QSize &s);
 
     // Check whether a QDesignerWidgetItem should be installed
-    static bool check(const QLayout *layout, QWidget *w, Qt::Orientations *ptrToOrientations = 0);
+    static bool check(const QLayout *layout, QWidget *w, Qt::Orientations *ptrToOrientations = nullptr);
 
     // Register itself using QLayoutPrivate's widget item factory method hook
     static void install();

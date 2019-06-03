@@ -58,7 +58,7 @@ QT_BEGIN_NAMESPACE
 static const char *designerApplicationName = "Designer";
 static const char designerDisplayName[] = "Qt Designer";
 static const char *designerWarningPrefix = "Designer: ";
-static QtMessageHandler previousMessageHandler = 0;
+static QtMessageHandler previousMessageHandler = nullptr;
 
 static void designerMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
@@ -73,8 +73,8 @@ static void designerMessageHandler(QtMsgType type, const QMessageLogContext &con
 
 QDesigner::QDesigner(int &argc, char **argv)
     : QApplication(argc, argv),
-      m_server(0),
-      m_client(0),
+      m_server(nullptr),
+      m_client(nullptr),
       m_workbench(0), m_suppressNewFormShow(false)
 {
     setOrganizationName(QStringLiteral("QtProject"));

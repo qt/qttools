@@ -59,11 +59,11 @@ ContainerWidgetTaskMenu::ContainerWidgetTaskMenu(QWidget *widget, ContainerType 
     m_type(type),
     m_containerWidget(widget),
     m_core(formWindow()->core()),
-    m_pagePromotionTaskMenu(new PromotionTaskMenu(0, PromotionTaskMenu::ModeSingleWidget, this)),
+    m_pagePromotionTaskMenu(new PromotionTaskMenu(nullptr, PromotionTaskMenu::ModeSingleWidget, this)),
     m_pageMenuAction(new QAction(this)),
     m_pageMenu(new QMenu),
     m_actionInsertPageAfter(new QAction(this)),
-    m_actionInsertPage(0),
+    m_actionInsertPage(nullptr),
     m_actionDeletePage(new QAction(tr("Delete"), this))
 {
     Q_ASSERT(m_core);
@@ -113,7 +113,7 @@ ContainerWidgetTaskMenu::~ContainerWidgetTaskMenu() = default;
 
 QAction *ContainerWidgetTaskMenu::preferredEditAction() const
 {
-    return 0;
+    return nullptr;
 }
 
 bool ContainerWidgetTaskMenu::canDeletePage() const
@@ -292,7 +292,7 @@ ContainerWidgetTaskMenuFactory::ContainerWidgetTaskMenuFactory(QDesignerFormEdit
 QObject *ContainerWidgetTaskMenuFactory::createExtension(QObject *object, const QString &iid, QObject *parent) const
 {
     if (iid != QStringLiteral("QDesignerInternalTaskMenuExtension") || !object->isWidgetType())
-        return 0;
+        return nullptr;
 
     QWidget *widget = qobject_cast<QWidget*>(object);
 
@@ -306,12 +306,12 @@ QObject *ContainerWidgetTaskMenuFactory::createExtension(QObject *object, const 
             const int idx = wb->indexOfObject(widget);
             const WidgetDataBaseItem *item = static_cast<const WidgetDataBaseItem *>(wb->item(idx));
             if (item->addPageMethod().isEmpty())
-                return 0;
+                return nullptr;
         }
     }
 
-    if (qt_extension<QDesignerContainerExtension*>(extensionManager(), object) == 0)
-        return 0;
+    if (qt_extension<QDesignerContainerExtension*>(extensionManager(), object) == nullptr)
+        return nullptr;
 
     if (QMdiArea* ma = qobject_cast<QMdiArea*>(widget))
         return new MdiContainerWidgetTaskMenu(ma, parent);

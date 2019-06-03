@@ -87,7 +87,7 @@ bool Spacer::isInLayout() const
 void Spacer::paintEvent(QPaintEvent *)
 {
     // Only draw spacers when we're editting widgets
-    if (m_formWindow != 0 && m_formWindow->currentTool() != 0)
+    if (m_formWindow != nullptr && m_formWindow->currentTool() != 0)
         return;
 
     QPainter p(this);

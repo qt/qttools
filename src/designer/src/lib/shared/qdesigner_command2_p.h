@@ -66,7 +66,7 @@ public:
 
     bool init(QWidget *w, int newType);
 
-    static bool canMorph(const QDesignerFormWindowInterface *formWindow, QWidget *w, int *ptrToCurrentType = 0);
+    static bool canMorph(const QDesignerFormWindowInterface *formWindow, QWidget *w, int *ptrToCurrentType = nullptr);
 
     void redo() override;
     void undo() override;
@@ -93,7 +93,7 @@ public:
     void undo() override;
 
     // Find out alignment and return whether command is enabled.
-    static Qt::Alignment alignmentOf(const QDesignerFormEditorInterface *core, QWidget *w, bool *enabled = 0);
+    static Qt::Alignment alignmentOf(const QDesignerFormEditorInterface *core, QWidget *w, bool *enabled = nullptr);
 
 private:
     static void applyAlignment(const QDesignerFormEditorInterface *core, QWidget *w, Qt::Alignment a);

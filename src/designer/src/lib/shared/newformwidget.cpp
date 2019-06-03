@@ -126,8 +126,8 @@ NewFormWidget::NewFormWidget(QDesignerFormEditorInterface *core, QWidget *parent
     QDesignerNewFormWidgetInterface(parentWidget),
     m_core(core),
     m_ui(new Ui::NewFormWidget),
-    m_currentItem(0),
-    m_acceptedItem(0)
+    m_currentItem(nullptr),
+    m_acceptedItem(nullptr)
 {
     typedef void (QComboBox::*QComboIntSignal)(int);
     typedef QList<qdesigner_internal::DeviceProfile> DeviceProfileList;
@@ -150,7 +150,7 @@ NewFormWidget::NewFormWidget(QDesignerFormEditorInterface *core, QWidget *parent
 
     // Resource templates
     const QString formTemplate = settings.formTemplate();
-    QTreeWidgetItem *selectedItem = 0;
+    QTreeWidgetItem *selectedItem = nullptr;
     loadFrom(templatePath, true, uiExtension, formTemplate, selectedItem);
     // Additional template paths
     const QStringList formTemplatePaths = settings.formTemplatePaths();
@@ -166,7 +166,7 @@ NewFormWidget::NewFormWidget(QDesignerFormEditorInterface *core, QWidget *parent
     }
 
     // Still no selection - default to first item
-    if (selectedItem == 0 && m_ui->treeWidget->topLevelItemCount() != 0) {
+    if (selectedItem == nullptr && m_ui->treeWidget->topLevelItemCount() != 0) {
         QTreeWidgetItem *firstTopLevel = m_ui->treeWidget->topLevelItem(0);
         if (firstTopLevel->childCount() > 0)
             selectedItem = firstTopLevel->child(0);
@@ -303,7 +303,7 @@ QImage NewFormWidget::grabForm(QDesignerFormEditorInterface *core,
     if (!workingDir.isEmpty())
         formBuilder.setWorkingDirectory(workingDir);
 
-    QWidget *widget = formBuilder.load(&file, 0);
+    QWidget *widget = formBuilder.load(&file, nullptr);
     if (!widget)
         return QImage();
 
@@ -436,7 +436,7 @@ void NewFormWidget::loadFrom(const QString &path, bool resourceFile, const QStri
 
         QTreeWidgetItem *item = new QTreeWidgetItem(root);
         const QString text = it->baseName().replace(underscore, blank);
-        if (selectedItemFound == 0 && text == selectedItem)
+        if (selectedItemFound == nullptr && text == selectedItem)
             selectedItemFound = item;
         item->setText(0, text);
         item->setData(0, TemplateNameRole, it->absoluteFilePath());
@@ -456,7 +456,7 @@ void NewFormWidget::loadFrom(const QString &title, const QStringList &nameList,
         const QString text = *it;
         QTreeWidgetItem *item = new QTreeWidgetItem(root);
         item->setText(0, text);
-        if (selectedItemFound == 0 && text == selectedItem)
+        if (selectedItemFound == nullptr && text == selectedItem)
             selectedItemFound = item;
         item->setData(0, ClassNameRole, *it);
     }
@@ -545,12 +545,12 @@ qdesigner_internal::DeviceProfile NewFormWidget::currentDeviceProfile() const
 
 bool NewFormWidget::hasCurrentTemplate() const
 {
-    return m_currentItem != 0;
+    return m_currentItem != nullptr;
 }
 
 QString NewFormWidget::currentTemplateI(QString *ptrToErrorMessage)
 {
-    if (m_currentItem == 0) {
+    if (m_currentItem == nullptr) {
         *ptrToErrorMessage = tr("Internal error: No template selected.");
         return QString();
     }

@@ -49,7 +49,7 @@ class AppFontWidget : public QGroupBox
     Q_DISABLE_COPY(AppFontWidget)
     Q_OBJECT
 public:
-    explicit AppFontWidget(QWidget *parent = 0);
+    explicit AppFontWidget(QWidget *parent = nullptr);
 
     QStringList fontFiles() const;
 
@@ -77,7 +77,7 @@ class AppFontDialog : public QDialog
     Q_DISABLE_COPY(AppFontDialog)
     Q_OBJECT
 public:
-    explicit AppFontDialog(QWidget *parent = 0);
+    explicit AppFontDialog(QWidget *parent = nullptr);
 
 private:
     AppFontWidget *m_appFontWidget;

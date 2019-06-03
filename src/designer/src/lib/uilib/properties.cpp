@@ -681,7 +681,7 @@ DomProperty *variantToDomProperty(QAbstractFormBuilder *afb, const QMetaObject *
             break;
         }
         uiLibWarning(msgCannotWriteProperty(pname, v));
-    } return 0;
+    } return nullptr;
     }
     return dom_prop;
 }

@@ -56,7 +56,7 @@ class QDESIGNER_SHARED_EXPORT QDesignerWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit QDesignerWidget(QDesignerFormWindowInterface* formWindow, QWidget *parent = 0);
+    explicit QDesignerWidget(QDesignerFormWindowInterface* formWindow, QWidget *parent = nullptr);
     ~QDesignerWidget() override;
 
     QDesignerFormWindowInterface* formWindow() const;

@@ -74,14 +74,14 @@ public:
     // Examines the immediate layout of the widget.
     static Type layoutType(const QDesignerFormEditorInterface *core, const QWidget *w);
     // Examines the managed layout of the widget
-    static Type managedLayoutType(const QDesignerFormEditorInterface *core, const QWidget *w, QLayout **layout = 0);
+    static Type managedLayoutType(const QDesignerFormEditorInterface *core, const QWidget *w, QLayout **layout = nullptr);
     static Type layoutType(const QDesignerFormEditorInterface *core, const QLayout *layout);
     static Type layoutType(const QString &typeName);
     static QString layoutName(Type t);
 
     static QWidget *layoutParent(const QDesignerFormEditorInterface *core, QLayout *layout);
 
-    static Type laidoutWidgetType(const QDesignerFormEditorInterface *core, QWidget *widget, bool *isManaged = 0, QLayout **layout = 0);
+    static Type laidoutWidgetType(const QDesignerFormEditorInterface *core, QWidget *widget, bool *isManaged = nullptr, QLayout **layout = nullptr);
     static bool inline isWidgetLaidout(const QDesignerFormEditorInterface *core, QWidget *widget) { return laidoutWidgetType(core, widget) != NoLayout; }
 
     static QLayout *managedLayout(const QDesignerFormEditorInterface *core, const QWidget *widget);
@@ -92,7 +92,7 @@ public:
     static bool isEmptyItem(QLayoutItem *item);
 };
 
-QDESIGNER_SHARED_EXPORT void getFormLayoutItemPosition(const QFormLayout *formLayout, int index, int *rowPtr, int *columnPtr = 0, int *rowspanPtr = 0, int *colspanPtr = 0);
+QDESIGNER_SHARED_EXPORT void getFormLayoutItemPosition(const QFormLayout *formLayout, int index, int *rowPtr, int *columnPtr = nullptr, int *rowspanPtr = nullptr, int *colspanPtr = nullptr);
 QDESIGNER_SHARED_EXPORT void formLayoutAddWidget(QFormLayout *formLayout, QWidget *w, const QRect &r, bool insert);
 } // namespace qdesigner_internal
 

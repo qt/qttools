@@ -124,7 +124,7 @@ public:
     QDir workingDirectory() const;
     void setWorkingDirectory(const QDir &directory);
 
-    virtual QWidget *load(QIODevice *dev, QWidget *parentWidget = Q_NULLPTR);
+    virtual QWidget *load(QIODevice *dev, QWidget *parentWidget = nullptr);
     virtual void save(QIODevice *dev, QWidget *widget);
 
     QString errorString() const;
