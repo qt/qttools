@@ -79,7 +79,6 @@ QDesignerMenuBar::QDesignerMenuBar(QWidget *parent)  :
     QMenuBar(parent),
     m_addMenu(new SpecialMenuAction(this)),
     m_currentIndex(0),
-    m_interactive(true),
     m_editor(new QLineEdit(this)),
     m_dragging(false),
     m_lastMenuActionIndex( -1),
@@ -778,13 +777,6 @@ void QDesignerMenuBar::adjustSpecialActions()
 {
     removeAction(m_addMenu);
     addAction(m_addMenu);
-}
-
-bool QDesignerMenuBar::interactive(bool i)
-{
-    const bool old = m_interactive;
-    m_interactive = i;
-    return old;
 }
 
 void QDesignerMenuBar::hideMenu(int index)

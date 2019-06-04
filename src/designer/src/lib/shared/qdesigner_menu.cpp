@@ -1129,13 +1129,6 @@ void QDesignerMenu::adjustSpecialActions()
     addAction(m_addSeparator);
 }
 
-bool QDesignerMenu::interactive(bool i)
-{
-    const bool old = m_interactive;
-    m_interactive = i;
-    return old;
-}
-
 void QDesignerMenu::enterEditMode()
 {
     if (m_currentIndex >= 0 && m_currentIndex <= realActionCount()) {

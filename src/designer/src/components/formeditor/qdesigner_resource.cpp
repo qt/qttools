@@ -808,12 +808,8 @@ QWidget *QDesignerResource::create(DomWidget *ui_widget, QWidget *parentWidget)
     QDesignerMenu *menu = qobject_cast<QDesignerMenu*>(w);
     QDesignerMenuBar *menuBar = qobject_cast<QDesignerMenuBar*>(w);
 
-    if (menu) {
-        menu->interactive(false);
+    if (menu)
         menu->hide();
-    } else if (menuBar) {
-        menuBar->interactive(false);
-    }
 
     for (DomActionRef *ui_action_ref : actionRefs) {
         const QString name = ui_action_ref->attributeName();
@@ -832,13 +828,10 @@ QWidget *QDesignerResource::create(DomWidget *ui_widget, QWidget *parentWidget)
         }
     }
 
-    if (menu) {
-        menu->interactive(true);
+    if (menu)
         menu->adjustSpecialActions();
-    } else if (menuBar) {
-        menuBar->interactive(true);
+    else if (menuBar)
         menuBar->adjustSpecialActions();
-    }
 
     ui_widget->setAttributeClass(className); // fix the class name
     applyExtensionDataFromDOM(this, core(), ui_widget, w);

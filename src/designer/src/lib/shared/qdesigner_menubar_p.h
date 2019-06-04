@@ -82,7 +82,6 @@ public:
     QDesignerActionProviderExtension *actionProvider();
 
     void adjustSpecialActions();
-    bool interactive(bool i);
     bool dragging() const;
 
     void moveLeft(bool ctrl = false);
@@ -153,7 +152,6 @@ private:
     QPointer<QMenu> m_activeMenu;
     QPoint m_startPosition;
     int m_currentIndex;
-    bool m_interactive;
     QLineEdit *m_editor;
     bool m_dragging;
     int m_lastMenuActionIndex;

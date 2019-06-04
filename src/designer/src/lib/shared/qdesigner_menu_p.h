@@ -83,7 +83,6 @@ public:
 
     void adjustSpecialActions();
 
-    bool interactive(bool i);
     void createRealMenuAction(QAction *action);
     void removeRealMenu(QAction *action);
 
@@ -181,7 +180,6 @@ private:
     QTimer *m_showSubMenuTimer;
     QTimer *m_deactivateWindowTimer;
     QTimer *m_adjustSizeTimer;
-    bool m_interactive;
     QLineEdit *m_editor;
     bool m_dragging;
     int m_lastSubMenuIndex;

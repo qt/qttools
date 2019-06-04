@@ -391,7 +391,8 @@ Qt::ToolBarArea QAbstractFormBuilder::toolbarAreaFromDOMAttributes(const DomProp
     case DomProperty::Number:
         return static_cast<Qt::ToolBarArea>(attr->elementNumber());
     case DomProperty::Enum:
-        return enumKeyOfObjectToValue<QAbstractFormBuilderGadget, Qt::ToolBarArea>("toolBarArea",  attr->elementEnum().toLatin1());
+        return enumKeyOfObjectToValue<QAbstractFormBuilderGadget, Qt::ToolBarArea>("toolBarArea",
+                                                                                   attr->elementEnum().toLatin1().constData());
     default:
         break;
     }
@@ -1017,7 +1018,8 @@ QBrush QAbstractFormBuilder::setupBrush(DomBrush *brush)
     if (!brush->hasAttributeBrushStyle())
         return br;
 
-    const Qt::BrushStyle style = enumKeyOfObjectToValue<QAbstractFormBuilderGadget, Qt::BrushStyle>("brushStyle", brush->attributeBrushStyle().toLatin1());
+    const Qt::BrushStyle style = enumKeyOfObjectToValue<QAbstractFormBuilderGadget, Qt::BrushStyle>("brushStyle",
+                                                                                                    brush->attributeBrushStyle().toLatin1().constData());
 
     if (style == Qt::LinearGradientPattern ||
             style == Qt::RadialGradientPattern ||

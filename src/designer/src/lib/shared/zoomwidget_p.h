@@ -131,7 +131,6 @@ private:
     qreal m_zoomFactor;
 
     bool m_zoomContextMenuEnabled;
-    bool m_resizeBlocked;
     ZoomMenu *m_zoomMenu;
 };
 

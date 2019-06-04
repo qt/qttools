@@ -254,7 +254,8 @@ QVariant domPropertyToVariant(const DomProperty *p)
         if (font->hasElementAntialiasing())
             f.setStyleStrategy(font->elementAntialiasing() ? QFont::PreferDefault : QFont::NoAntialias);
         if (font->hasElementStyleStrategy()) {
-            f.setStyleStrategy(enumKeyOfObjectToValue<QAbstractFormBuilderGadget, QFont::StyleStrategy>("styleStrategy", font->elementStyleStrategy().toLatin1()));
+            f.setStyleStrategy(enumKeyOfObjectToValue<QAbstractFormBuilderGadget, QFont::StyleStrategy>("styleStrategy",
+                                                                                                        font->elementStyleStrategy().toLatin1().constData()));
         }
         return QVariant::fromValue(f);
     }
@@ -286,13 +287,16 @@ QVariant domPropertyToVariant(const DomProperty *p)
         return QVariant::fromValue(QCursor(static_cast<Qt::CursorShape>(p->elementCursor())));
 
     case DomProperty::CursorShape:
-        return QVariant::fromValue(QCursor(enumKeyOfObjectToValue<QAbstractFormBuilderGadget, Qt::CursorShape>("cursorShape", p->elementCursorShape().toLatin1())));
+        return QVariant::fromValue(QCursor(enumKeyOfObjectToValue<QAbstractFormBuilderGadget, Qt::CursorShape>("cursorShape",
+                                                                                                               p->elementCursorShape().toLatin1().constData())));
 #endif
 
     case DomProperty::Locale: {
         const DomLocale *locale = p->elementLocale();
-        return QVariant::fromValue(QLocale(enumKeyOfObjectToValue<QAbstractFormBuilderGadget, QLocale::Language>("language", locale->attributeLanguage().toLatin1()),
-                    enumKeyOfObjectToValue<QAbstractFormBuilderGadget, QLocale::Country>("country", locale->attributeCountry().toLatin1())));
+        return QVariant::fromValue(QLocale(enumKeyOfObjectToValue<QAbstractFormBuilderGadget, QLocale::Language>("language",
+                                                                                                                 locale->attributeLanguage().toLatin1().constData()),
+                    enumKeyOfObjectToValue<QAbstractFormBuilderGadget, QLocale::Country>("country",
+                                                                                         locale->attributeCountry().toLatin1().constData())));
     }
     case DomProperty::SizePolicy: {
         const DomSizePolicy *sizep = p->elementSizePolicy();
