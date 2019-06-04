@@ -203,10 +203,7 @@ namespace qdesigner_internal {
                                            EmbeddingMode embeddingMode,
                                            TextPropertyValidationMode validationMode) :
         QWidget(parent),
-        m_validationMode(ValidationSingleLine),
-        m_updateMode(UpdateAsYouType),
-        m_lineEdit(new PropertyLineEdit(this)),
-        m_textEdited(false)
+        m_lineEdit(new PropertyLineEdit(this))
     {
         switch (embeddingMode) {
         case EmbeddingNone:

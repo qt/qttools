@@ -39,10 +39,7 @@ QT_BEGIN_NAMESPACE
 
 using namespace qdesigner_internal;
 
-BuddyEditorPlugin::BuddyEditorPlugin()
-    : m_initialized(false)
-{
-}
+BuddyEditorPlugin::BuddyEditorPlugin() = default;
 
 BuddyEditorPlugin::~BuddyEditorPlugin() = default;
 

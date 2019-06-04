@@ -109,9 +109,9 @@ private:
     QLabel *m_descriptionLabel;
 
     DeviceProfileList m_sortedProfiles;
-    EmbeddedOptionsControl *m_q;
-    bool m_dirty;
+    EmbeddedOptionsControl *m_q = nullptr;
     QSet<QString> m_usedProfiles;
+    bool m_dirty = false;
 };
 
 EmbeddedOptionsControlPrivate::EmbeddedOptionsControlPrivate(QDesignerFormEditorInterface *core) :
@@ -120,9 +120,7 @@ EmbeddedOptionsControlPrivate::EmbeddedOptionsControlPrivate(QDesignerFormEditor
     m_addButton(new QToolButton),
     m_editButton(new QToolButton),
     m_deleteButton(new QToolButton),
-    m_descriptionLabel(new QLabel),
-    m_q(0),
-    m_dirty(false)
+    m_descriptionLabel(new QLabel)
 {
     m_descriptionLabel->setMinimumHeight(80);
     // Determine used profiles to lock them

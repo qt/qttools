@@ -69,9 +69,9 @@ private:
     QAction *m_selectGroupAction;
     QAction *m_breakGroupAction;
 
-    QDesignerFormWindowInterface *m_formWindow;
-    QButtonGroup *m_buttonGroup;
-    QAbstractButton *m_currentButton;
+    QDesignerFormWindowInterface *m_formWindow = nullptr;
+    QButtonGroup *m_buttonGroup = nullptr;
+    QAbstractButton *m_currentButton = nullptr;
 };
 
 // Task menu extension of a QButtonGroup

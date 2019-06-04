@@ -79,7 +79,7 @@ public:
     static DomUI *xmlToUi(const QString &name, const QString &xml, bool insertFakeTopLevel);
 
 private:
-    LoadMode m_loadMode;
+    LoadMode m_loadMode = LoadMerge;
 };
 }  // namespace qdesigner_internal
 

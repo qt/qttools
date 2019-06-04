@@ -224,8 +224,7 @@ QPalette PaletteEditor::getPalette(QDesignerFormEditorInterface *core, QWidget* 
 //////////////////////
 
 PaletteModel::PaletteModel(QObject *parent)  :
-    QAbstractTableModel(parent),
-    m_compute(true)
+    QAbstractTableModel(parent)
 {
     const QMetaObject *meta = metaObject();
     const int index = meta->indexOfProperty("colorRole");
@@ -403,7 +402,6 @@ int PaletteModel::groupToColumn(QPalette::ColorGroup group) const
 BrushEditor::BrushEditor(QDesignerFormEditorInterface *core, QWidget *parent) :
     QWidget(parent),
     m_button(new QtColorButton(this)),
-    m_changed(false),
     m_core(core)
 {
     QLayout *layout = new QHBoxLayout(this);
@@ -439,8 +437,7 @@ bool BrushEditor::changed() const
 
 RoleEditor::RoleEditor(QWidget *parent) :
     QWidget(parent),
-    m_label(new QLabel(this)),
-    m_edited(false)
+    m_label(new QLabel(this))
 {
     QHBoxLayout *layout = new QHBoxLayout(this);
     layout->setContentsMargins(QMargins());

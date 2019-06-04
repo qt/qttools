@@ -209,16 +209,16 @@ public:
     enum PropertyKind { NormalProperty, FakeProperty, DynamicProperty, DefaultDynamicProperty };
     class Info {
     public:
-        Info();
+        Info() = default;
 
         QString group;
         QVariant defaultValue;
-        bool changed;
-        bool visible;
-        bool attribute;
-        bool reset;
-        PropertyType propertyType;
-        PropertyKind kind;
+        bool changed = false;
+        bool visible = true;
+        bool attribute = false;
+        bool reset = true;
+        PropertyType propertyType = QDesignerPropertySheet::PropertyNone;
+        PropertyKind kind = NormalProperty;
     };
 
     Info &ensureInfo(int index);
@@ -381,16 +381,6 @@ void QDesignerPropertySheetPrivate::setKeySequenceProperty(int index, const qdes
     Q_ASSERT(isKeySequenceProperty(index));
 
     m_keySequenceProperties[index] = value;
-}
-
-QDesignerPropertySheetPrivate::Info::Info() :
-    changed(false),
-    visible(true),
-    attribute(false),
-    reset(true),
-    propertyType(QDesignerPropertySheet::PropertyNone),
-    kind(NormalProperty)
-{
 }
 
 QDesignerPropertySheetPrivate::QDesignerPropertySheetPrivate(QDesignerPropertySheet *sheetPublic, QObject *object, QObject *sheetParent) :

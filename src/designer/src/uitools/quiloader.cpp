@@ -119,9 +119,6 @@ public:
     explicit TranslatingTextBuilder(bool idBased, bool trEnabled, const QByteArray &className) :
         m_idBased(idBased), m_trEnabled(trEnabled), m_className(className) {}
 
-    TranslatingTextBuilder(bool trEnabled, const QByteArray &className) :
-        m_trEnabled(trEnabled), m_className(className) {}
-
     QVariant loadText(const DomProperty *icon) const override;
 
     QVariant toNativeValue(const QVariant &value) const override;
@@ -336,13 +333,12 @@ class FormBuilderPrivate: public QFormBuilder
     typedef QFormBuilder ParentClass;
 
 public:
-    QUiLoader *loader;
+    QUiLoader *loader = nullptr;
 
-    bool dynamicTr;
-    bool trEnabled;
+    bool dynamicTr = false;
+    bool trEnabled = true;
 
-    FormBuilderPrivate(): loader(nullptr), dynamicTr(false), trEnabled(true),
-        m_trwatch(nullptr), m_idBased(false) {}
+    FormBuilderPrivate() = default;
 
     QWidget *defaultCreateWidget(const QString &className, QWidget *parent, const QString &name)
     {
@@ -411,8 +407,8 @@ public:
 
 private:
     QByteArray m_class;
-    TranslationWatcher *m_trwatch;
-    bool m_idBased;
+    TranslationWatcher *m_trwatch = nullptr;
+    bool m_idBased = false;
 };
 
 static QString convertTranslatable(const DomProperty *p, const QByteArray &className,

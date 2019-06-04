@@ -78,10 +78,7 @@ SpecialMenuAction::~SpecialMenuAction() = default;
 QDesignerMenuBar::QDesignerMenuBar(QWidget *parent)  :
     QMenuBar(parent),
     m_addMenu(new SpecialMenuAction(this)),
-    m_currentIndex(0),
     m_editor(new QLineEdit(this)),
-    m_dragging(false),
-    m_lastMenuActionIndex( -1),
     m_promotionTaskMenu(new PromotionTaskMenu(this, PromotionTaskMenu::ModeSingleWidget, this))
 {
     setContextMenuPolicy(Qt::DefaultContextMenu);

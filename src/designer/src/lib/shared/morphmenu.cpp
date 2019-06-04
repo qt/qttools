@@ -549,11 +549,7 @@ QStringList MorphWidgetCommand::candidateClasses(QDesignerFormWindowInterface *f
 
 // MorphMenu
 MorphMenu::MorphMenu(QObject *parent) :
-    QObject(parent),
-    m_subMenuAction(0),
-    m_menu(0),
-    m_widget(0),
-    m_formWindow(0)
+    QObject(parent)
 {
 }
 

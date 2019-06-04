@@ -120,7 +120,7 @@ private:
     QPalette m_palette;
     QPalette m_parentPalette;
     QMap<QPalette::ColorRole, QString> m_roleNames;
-    bool m_compute;
+    bool m_compute = true;
 };
 
 class BrushEditor : public QWidget
@@ -138,7 +138,7 @@ private slots:
     void brushChanged();
 private:
     QtColorButton *m_button;
-    bool m_changed;
+    bool m_changed = false;
     QDesignerFormEditorInterface *m_core;
 };
 
@@ -157,7 +157,7 @@ private slots:
     void emitResetProperty();
 private:
     QLabel *m_label;
-    bool    m_edited;
+    bool m_edited = false;
 };
 
 class ColorDelegate : public QItemDelegate

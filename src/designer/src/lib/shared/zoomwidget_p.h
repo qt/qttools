@@ -127,11 +127,11 @@ protected:
 
 private:
     QGraphicsScene *m_scene;
-    int m_zoom;
-    qreal m_zoomFactor;
+    int m_zoom = 100;
+    qreal m_zoomFactor = 1;
 
-    bool m_zoomContextMenuEnabled;
-    ZoomMenu *m_zoomMenu;
+    bool m_zoomContextMenuEnabled = false;
+    ZoomMenu *m_zoomMenu = nullptr;
 };
 
 /* The proxy widget used in  ZoomWidget. It  refuses to move away from 0,0,
@@ -204,10 +204,10 @@ private:
     QSize widgetSize() const;
     QSizeF widgetDecorationSizeF() const;
 
-    QGraphicsProxyWidget *m_proxy;
-    bool m_viewResizeBlocked;
-    bool m_widgetResizeBlocked;
-    bool m_widgetZoomContextMenuEnabled;
+    QGraphicsProxyWidget *m_proxy = nullptr;
+    bool m_viewResizeBlocked = false;
+    bool m_widgetResizeBlocked = false;
+    bool m_widgetZoomContextMenuEnabled = false;
 };
 
 } // namespace qdesigner_internal

@@ -1397,15 +1397,15 @@ DomActionRef *QAbstractFormBuilder::createActionRefDom(QAction *action)
 // Struct to store layout item parameters for saving layout items
 struct FormBuilderSaveLayoutEntry {
     explicit FormBuilderSaveLayoutEntry(QLayoutItem *li = 0) :
-        item(li), row(-1), column(-1), rowSpan(0), columnSpan(0), alignment(0) {}
+        item(li) {}
 
     void setAlignment(Qt::Alignment al);
 
     QLayoutItem *item;
-    int row;
-    int column;
-    int rowSpan;
-    int columnSpan;
+    int row = -1;
+    int column = -1;
+    int rowSpan = 0;
+    int columnSpan = 0;
     Qt::Alignment alignment;
 };
 

@@ -84,7 +84,7 @@ private:
     QFileIconProvider *ensureIconProvider();
     void initializeImageFileDialog(QFileDialog &fd, QFileDialog::Options options, QFileDialog::FileMode);
 
-    QFileIconProvider *m_iconProvider;
+    QFileIconProvider *m_iconProvider = nullptr;
 };
 
 }  // namespace qdesigner_internal

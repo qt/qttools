@@ -120,11 +120,7 @@ QVector<int> ZoomMenu::zoomValues()
 // --------- ZoomView
 ZoomView::ZoomView(QWidget *parent) :
     QGraphicsView(parent),
-    m_scene(new QGraphicsScene(this)),
-    m_zoom(100),
-    m_zoomFactor(1.0),
-    m_zoomContextMenuEnabled(false),
-    m_zoomMenu(0)
+    m_scene(new QGraphicsScene(this))
 {
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -285,11 +281,7 @@ bool ZoomedEventFilterRedirector::eventFilter(QObject *watched, QEvent *event)
 // --------- ZoomWidget
 
 ZoomWidget::ZoomWidget(QWidget *parent) :
-    ZoomView(parent),
-    m_proxy(0),
-    m_viewResizeBlocked(false),
-    m_widgetResizeBlocked(false),
-    m_widgetZoomContextMenuEnabled(false)
+    ZoomView(parent)
 {
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);

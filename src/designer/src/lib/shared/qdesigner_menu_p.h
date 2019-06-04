@@ -173,7 +173,7 @@ private:
     const QPixmap m_subMenuPixmap;
 
     QPoint m_startPosition;
-    int m_currentIndex;
+    int m_currentIndex = 0;
     QAction *m_addItem;
     QAction *m_addSeparator;
     QHash<QAction*, QDesignerMenu*> m_subMenus;
@@ -181,8 +181,8 @@ private:
     QTimer *m_deactivateWindowTimer;
     QTimer *m_adjustSizeTimer;
     QLineEdit *m_editor;
-    bool m_dragging;
-    int m_lastSubMenuIndex;
+    bool m_dragging = false;
+    int m_lastSubMenuIndex = -1;
 
     friend class qdesigner_internal::CreateSubmenuCommand;
     friend class qdesigner_internal::ActionInsertionCommand;

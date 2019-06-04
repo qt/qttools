@@ -128,13 +128,13 @@ namespace qdesigner_internal {
         void setRegularExpressionValidator(const QString &pattern);
         void markIntermediateState();
 
-        TextPropertyValidationMode m_validationMode;
-        UpdateMode m_updateMode;
+        TextPropertyValidationMode m_validationMode = ValidationSingleLine;
+        UpdateMode m_updateMode = UpdateAsYouType;
         PropertyLineEdit* m_lineEdit;
 
         // Cached text containing real newline characters.
         QString m_cachedText;
-        bool m_textEdited;
+        bool m_textEdited = false;
     };
 }
 

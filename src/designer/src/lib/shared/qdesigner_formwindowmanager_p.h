@@ -65,7 +65,7 @@ public:
     void showPluginDialog() override;
 
 private:
-    void *m_unused;
+    void *m_unused = nullptr;
 };
 
 } // namespace qdesigner_internal

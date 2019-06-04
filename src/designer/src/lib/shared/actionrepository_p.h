@@ -107,7 +107,7 @@ private:
 
     const QIcon m_emptyIcon;
 
-    QDesignerFormEditorInterface *m_core;
+    QDesignerFormEditorInterface *m_core = nullptr;
 };
 
 // Internal class that provides the detailed view of actions.

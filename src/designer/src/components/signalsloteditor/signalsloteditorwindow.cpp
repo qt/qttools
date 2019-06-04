@@ -510,12 +510,11 @@ private slots:
 
 private:
     InlineEditorModel *m_model;
-    int m_idx;
+    int m_idx = -1;
 };
 
 InlineEditor::InlineEditor(QWidget *parent) :
-    QComboBox(parent),
-    m_idx(-1)
+    QComboBox(parent)
 {
     setModel(m_model = new InlineEditorModel(0, 4, this));
     setFrame(false);

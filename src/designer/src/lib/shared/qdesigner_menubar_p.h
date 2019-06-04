@@ -151,10 +151,10 @@ private:
     QAction *m_addMenu;
     QPointer<QMenu> m_activeMenu;
     QPoint m_startPosition;
-    int m_currentIndex;
+    int m_currentIndex = 0;
     QLineEdit *m_editor;
-    bool m_dragging;
-    int m_lastMenuActionIndex;
+    bool m_dragging = false;
+    int m_lastMenuActionIndex = -1;
     QPointer<QWidget> m_lastFocusWidget;
     qdesigner_internal::PromotionTaskMenu* m_promotionTaskMenu;
 };

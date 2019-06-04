@@ -39,7 +39,6 @@ QT_BEGIN_NAMESPACE
 
 QQuickWidgetPlugin::QQuickWidgetPlugin(QObject *parent)
     : QObject(parent)
-    , m_initialized(false)
 {
 }
 

@@ -63,7 +63,7 @@ QtResourceSetPrivate::QtResourceSetPrivate(QtResourceModel *model) :
 // -------------------- QtResourceModelPrivate
 class QtResourceModelPrivate
 {
-    QtResourceModel *q_ptr;
+    QtResourceModel *q_ptr = nullptr;
     Q_DECLARE_PUBLIC(QtResourceModel)
     Q_DISABLE_COPY(QtResourceModelPrivate)
 public:
@@ -80,7 +80,7 @@ public:
     QMap<QtResourceSet *, bool>             m_newlyCreated; // all created but not activated yet
                                                             // (if was active at some point and it's not now it will not be on that map)
     QMap<QString, QList<QtResourceSet *> >  m_pathToResourceSet;
-    QtResourceSet                          *m_currentResourceSet;
+    QtResourceSet                          *m_currentResourceSet = nullptr;
 
     typedef QMap<QString, const QByteArray *> PathDataMap;
     PathDataMap m_pathToData;
@@ -89,8 +89,8 @@ public:
     QMap<QString, QString>     m_fileToQrc; // this map contains the content of active resource set only.
                                             // Activating different resource set changes the contents.
 
-    QFileSystemWatcher *m_fileWatcher;
-    bool m_fileWatcherEnabled;
+    QFileSystemWatcher *m_fileWatcher = nullptr;
+    bool m_fileWatcherEnabled = true;
     QMap<QString, bool> m_fileWatchedMap;
 private:
     void registerResourceSet(QtResourceSet *resourceSet);
@@ -105,13 +105,7 @@ private:
     void deleteResource(const QByteArray *data) const;
 };
 
-QtResourceModelPrivate::QtResourceModelPrivate() :
-    q_ptr(0),
-    m_currentResourceSet(0),
-    m_fileWatcher(0),
-    m_fileWatcherEnabled(true)
-{
-}
+QtResourceModelPrivate::QtResourceModelPrivate() = default;
 
 // --------------------- QtResourceSet
 QtResourceSet::QtResourceSet() :

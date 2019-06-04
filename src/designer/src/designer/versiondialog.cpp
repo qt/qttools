@@ -57,12 +57,12 @@ private:
     QVector<QPoint> hitPoints;
     QVector<QPoint> missPoints;
     QPainterPath m_path;
-    bool secondStage;
-    bool m_pushed;
+    bool secondStage = false;
+    bool m_pushed = false;
 };
 
 VersionLabel::VersionLabel(QWidget *parent)
-        : QLabel(parent), secondStage(false), m_pushed(false)
+        : QLabel(parent)
 {
     setPixmap(QPixmap(QStringLiteral(":/qt-project.org/designer/images/designer.png")));
     hitPoints.append(QPoint(56, 25));

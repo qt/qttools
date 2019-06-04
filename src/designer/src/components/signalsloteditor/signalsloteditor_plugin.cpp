@@ -38,10 +38,7 @@ QT_BEGIN_NAMESPACE
 
 using namespace qdesigner_internal;
 
-SignalSlotEditorPlugin::SignalSlotEditorPlugin()
-    : m_initialized(false), m_action(0)
-{
-}
+SignalSlotEditorPlugin::SignalSlotEditorPlugin() = default;
 
 SignalSlotEditorPlugin::~SignalSlotEditorPlugin() = default;
 

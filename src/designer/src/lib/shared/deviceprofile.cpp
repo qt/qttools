@@ -75,24 +75,17 @@ namespace qdesigner_internal {
 // ---------------- DeviceProfileData
 class DeviceProfileData : public QSharedData {
 public:
-    DeviceProfileData();
+    DeviceProfileData() = default;
     void fromSystem();
     void clear();
 
     QString m_fontFamily;
-    int m_fontPointSize;
     QString m_style;
-    int m_dpiX;
-    int m_dpiY;
     QString m_name;
+    int m_fontPointSize = -1;
+    int m_dpiX = -1;
+    int m_dpiY = -1;
 };
-
-DeviceProfileData::DeviceProfileData()  :
-   m_fontPointSize(-1),
-   m_dpiX(-1),
-   m_dpiY(-1)
-{
-}
 
 void DeviceProfileData::clear()
 {

@@ -202,26 +202,16 @@ static inline QToolButton *createDropDownButton(QAction *defaultAction, QWidget 
 PropertyEditor::PropertyEditor(QDesignerFormEditorInterface *core, QWidget *parent, Qt::WindowFlags flags)  :
     QDesignerPropertyEditor(parent, flags),
     m_core(core),
-    m_propertySheet(0),
-    m_currentBrowser(0),
-    m_treeBrowser(0),
     m_propertyManager(new DesignerPropertyManager(m_core, this)),
-    m_dynamicGroup(0),
-    m_updatingBrowser(false),
     m_stackedWidget(new QStackedWidget),
     m_filterWidget(new QLineEdit),
-    m_buttonIndex(-1),
-    m_treeIndex(-1),
     m_addDynamicAction(new QAction(createIconSet(QStringLiteral("plus.png")), tr("Add Dynamic Property..."), this)),
     m_removeDynamicAction(new QAction(createIconSet(QStringLiteral("minus.png")), tr("Remove Dynamic Property"), this)),
     m_sortingAction(new QAction(createIconSet(QStringLiteral("sort.png")), tr("Sorting"), this)),
     m_coloringAction(new QAction(createIconSet(QStringLiteral("color.png")), tr("Color Groups"), this)),
     m_treeAction(new QAction(tr("Tree View"), this)),
     m_buttonAction(new QAction(tr("Drop Down Button View"), this)),
-    m_classLabel(new ElidingLabel),
-    m_sorting(false),
-    m_coloring(false),
-    m_brightness(false)
+    m_classLabel(new ElidingLabel)
 {
     QVector<QColor> colors;
     colors.reserve(6);

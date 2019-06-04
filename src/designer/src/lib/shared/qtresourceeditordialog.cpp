@@ -794,7 +794,7 @@ class QtResourceEditorDialogPrivate
     QtResourceEditorDialog *q_ptr;
     Q_DECLARE_PUBLIC(QtResourceEditorDialog)
 public:
-    QtResourceEditorDialogPrivate();
+    QtResourceEditorDialogPrivate() = default;
 
     void slotQrcFileInserted(QtQrcFile *qrcFile);
     void slotQrcFileMoved(QtQrcFile *qrcFile);
@@ -853,10 +853,10 @@ public:
     QString qrcStartDirectory() const;
 
     Ui::QtResourceEditorDialog m_ui;
-    QDesignerFormEditorInterface *m_core;
-    QtResourceModel *m_resourceModel;
-    QDesignerDialogGuiInterface *m_dlgGui;
-    QtQrcManager *m_qrcManager;
+    QDesignerFormEditorInterface *m_core = nullptr;
+    QtResourceModel *m_resourceModel = nullptr;
+    QDesignerDialogGuiInterface *m_dlgGui = nullptr;
+    QtQrcManager *m_qrcManager = nullptr;
     QList<QtQrcFileData> m_initialState;
 
     QMap<QtQrcFile *, QListWidgetItem *> m_qrcFileToItem;
@@ -870,57 +870,29 @@ public:
     QMap<QStandardItem *, QtResourceFile *> m_pathItemToResourceFile;
     QMap<QStandardItem *, QtResourceFile *> m_aliasItemToResourceFile;
 
-    bool m_ignoreCurrentChanged;
-    bool m_firstQrcFileDialog;
-    QtQrcFile *m_currentQrcFile;
+    bool m_ignoreCurrentChanged = false;
+    bool m_firstQrcFileDialog = true;
+    QtQrcFile *m_currentQrcFile = nullptr;
 
-    QAction *m_newQrcFileAction;
-    QAction *m_importQrcFileAction;
-    QAction *m_removeQrcFileAction;
-    QAction *m_moveUpQrcFileAction;
-    QAction *m_moveDownQrcFileAction;
+    QAction *m_newQrcFileAction = nullptr;
+    QAction *m_importQrcFileAction = nullptr;
+    QAction *m_removeQrcFileAction = nullptr;
+    QAction *m_moveUpQrcFileAction = nullptr;
+    QAction *m_moveDownQrcFileAction = nullptr;
 
-    QAction *m_newPrefixAction;
-    QAction *m_addResourceFileAction;
-    QAction *m_changePrefixAction;
-    QAction *m_changeLanguageAction;
-    QAction *m_changeAliasAction;
-    QAction *m_clonePrefixAction;
-    QAction *m_moveUpAction;
-    QAction *m_moveDownAction;
-    QAction *m_removeAction;
+    QAction *m_newPrefixAction = nullptr;
+    QAction *m_addResourceFileAction = nullptr;
+    QAction *m_changePrefixAction = nullptr;
+    QAction *m_changeLanguageAction = nullptr;
+    QAction *m_changeAliasAction = nullptr;
+    QAction *m_clonePrefixAction = nullptr;
+    QAction *m_moveUpAction = nullptr;
+    QAction *m_moveDownAction = nullptr;
+    QAction *m_removeAction = nullptr;
 
-    QStandardItemModel *m_treeModel;
-    QItemSelectionModel *m_treeSelection;
+    QStandardItemModel *m_treeModel = nullptr;
+    QItemSelectionModel *m_treeSelection = nullptr;
 };
-
-QtResourceEditorDialogPrivate::QtResourceEditorDialogPrivate() :
-    q_ptr(0),
-    m_core(0),
-    m_resourceModel(0),
-    m_dlgGui(0),
-    m_qrcManager(0),
-    m_ignoreCurrentChanged(false),
-    m_firstQrcFileDialog(true),
-    m_currentQrcFile(0),
-    m_newQrcFileAction(0),
-    m_importQrcFileAction(0),
-    m_removeQrcFileAction(0),
-    m_moveUpQrcFileAction(0),
-    m_moveDownQrcFileAction(0),
-    m_newPrefixAction(0),
-    m_addResourceFileAction(0),
-    m_changePrefixAction(0),
-    m_changeLanguageAction(0),
-    m_changeAliasAction(0),
-    m_clonePrefixAction(0),
-    m_moveUpAction(0),
-    m_moveDownAction(0),
-    m_removeAction(0),
-    m_treeModel(0),
-    m_treeSelection(0)
-{
-}
 
 QMessageBox::StandardButton QtResourceEditorDialogPrivate::warning(const QString &title, const QString &text, QMessageBox::StandardButtons buttons,
                                                                    QMessageBox::StandardButton defaultButton) const

@@ -39,14 +39,9 @@ QT_BEGIN_NAMESPACE
 
 using namespace qdesigner_internal;
 
-TabOrderEditorPlugin::TabOrderEditorPlugin()
-    : m_initialized(false)
-{
-}
+TabOrderEditorPlugin::TabOrderEditorPlugin() = default;
 
-TabOrderEditorPlugin::~TabOrderEditorPlugin()
-{
-}
+TabOrderEditorPlugin::~TabOrderEditorPlugin() = default;
 
 bool TabOrderEditorPlugin::isInitialized() const
 {

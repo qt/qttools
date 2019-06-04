@@ -126,8 +126,7 @@ bool QDesignerWidgetBoxInterface::Widget::isNull() const
 
 namespace qdesigner_internal {
 QDesignerWidgetBox::QDesignerWidgetBox(QWidget *parent, Qt::WindowFlags flags)
-    : QDesignerWidgetBoxInterface(parent, flags),
-      m_loadMode(LoadMerge)
+    : QDesignerWidgetBoxInterface(parent, flags)
 {
 
 }

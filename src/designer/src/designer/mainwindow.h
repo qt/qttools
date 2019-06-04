@@ -82,7 +82,7 @@ signals:
 protected:
     void closeEvent(QCloseEvent *e) override;
 private:
-    CloseEventPolicy m_policy;
+    CloseEventPolicy m_policy = AcceptCloseEvents;
 };
 
 /* An MdiArea that listens for desktop file manager file drop events and emits

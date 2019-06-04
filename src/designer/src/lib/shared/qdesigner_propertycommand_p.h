@@ -182,15 +182,15 @@ protected:
     // properties of different widgets are equivalent
     struct PropertyDescription {
     public:
-        PropertyDescription();
+        PropertyDescription() = default;
         PropertyDescription(const QString &propertyName, QDesignerPropertySheetExtension *propertySheet, int index);
         bool equals(const PropertyDescription &p) const;
         void debug() const;
 
         QString m_propertyName;
         QString m_propertyGroup;
-        QVariant::Type m_propertyType;
-        SpecialProperty m_specialProperty;
+        QVariant::Type m_propertyType = QVariant::Invalid;
+        SpecialProperty m_specialProperty = SP_None;
     };
     const PropertyDescription &propertyDescription() const { return  m_propertyDescription; }
 

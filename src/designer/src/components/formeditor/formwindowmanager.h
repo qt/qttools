@@ -133,38 +133,38 @@ private:
 
     // edit actions
 #if QT_CONFIG(clipboard)
-    QAction *m_actionCut;
-    QAction *m_actionCopy;
-    QAction *m_actionPaste;
+    QAction *m_actionCut = nullptr;
+    QAction *m_actionCopy = nullptr;
+    QAction *m_actionPaste = nullptr;
 #endif
-    QAction *m_actionSelectAll;
-    QAction *m_actionDelete;
-    QAction *m_actionLower;
-    QAction *m_actionRaise;
+    QAction *m_actionSelectAll = nullptr;
+    QAction *m_actionDelete = nullptr;
+    QAction *m_actionLower = nullptr;
+    QAction *m_actionRaise = nullptr;
     // layout actions
-    QAction *m_actionHorizontalLayout;
-    QAction *m_actionVerticalLayout;
-    QAction *m_actionFormLayout;
-    QAction *m_actionSplitHorizontal;
-    QAction *m_actionSplitVertical;
-    QAction *m_actionGridLayout;
-    QAction *m_actionBreakLayout;
-    QAction *m_actionSimplifyLayout;
-    QAction *m_actionAdjustSize;
+    QAction *m_actionHorizontalLayout = nullptr;
+    QAction *m_actionVerticalLayout = nullptr;
+    QAction *m_actionFormLayout = nullptr;
+    QAction *m_actionSplitHorizontal = nullptr;
+    QAction *m_actionSplitVertical = nullptr;
+    QAction *m_actionGridLayout = nullptr;
+    QAction *m_actionBreakLayout = nullptr;
+    QAction *m_actionSimplifyLayout = nullptr;
+    QAction *m_actionAdjustSize = nullptr;
     // preview actions
-    QAction *m_actionDefaultPreview;
-    mutable PreviewActionGroup *m_actionGroupPreviewInStyle;
-    QAction *m_actionShowFormWindowSettingsDialog;
+    QAction *m_actionDefaultPreview = nullptr;
+    mutable PreviewActionGroup *m_actionGroupPreviewInStyle = nullptr;
+    QAction *m_actionShowFormWindowSettingsDialog = nullptr;
 
-    QAction *m_actionUndo;
-    QAction *m_actionRedo;
+    QAction *m_actionUndo = nullptr;
+    QAction *m_actionRedo = nullptr;
 
     QSet<QWidget *> getUnsortedLayoutsToBeBroken(bool firstOnly) const;
     bool hasLayoutsToBeBroken() const;
     QWidgetList layoutsToBeBroken(QWidget *w) const;
     QWidgetList layoutsToBeBroken() const;
 
-    QUndoGroup *m_undoGroup;
+    QUndoGroup *m_undoGroup = nullptr;
 
 };
 

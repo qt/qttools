@@ -58,7 +58,7 @@ private slots:
     void sceneGraphError(QQuickWindow::SceneGraphError, const QString &);
 
 private:
-    bool m_initialized;
+    bool m_initialized = false;
 };
 
 QT_END_NAMESPACE

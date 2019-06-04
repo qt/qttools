@@ -88,7 +88,7 @@ private:
     UIMode uiMode() const;
 
     Ui::AppearanceOptionsWidget *m_ui;
-    UIMode m_initialUIMode;
+    UIMode m_initialUIMode = NeutralMode;
 };
 
 /* The options page for appearance options. */

@@ -78,10 +78,7 @@ void uiLibWarning(const QString &message) {
 }
 
 
-QFormBuilderExtra::CustomWidgetData::CustomWidgetData() :
-    isContainer(false)
-{
-}
+QFormBuilderExtra::CustomWidgetData::CustomWidgetData() = default;
 
 QFormBuilderExtra::CustomWidgetData::CustomWidgetData(const DomCustomWidget *dcw) :
     addPageMethod(dcw->elementAddPageMethod()),
@@ -93,10 +90,7 @@ QFormBuilderExtra::CustomWidgetData::CustomWidgetData(const DomCustomWidget *dcw
 QFormBuilderExtra::QFormBuilderExtra() :
     m_defaultMargin(INT_MIN),
     m_defaultSpacing(INT_MIN),
-    m_language(QStringLiteral("c++")),
-    m_layoutWidget(false),
-    m_resourceBuilder(0),
-    m_textBuilder(0)
+    m_language(QStringLiteral("c++"))
 {
 }
 

@@ -69,8 +69,7 @@ namespace qdesigner_internal {
 // ----------- ActionModel
 ActionModel::ActionModel(QWidget *parent ) :
     QStandardItemModel(parent),
-    m_emptyIcon(emptyIcon()),
-    m_core(0)
+    m_emptyIcon(emptyIcon())
 {
     QStringList headers;
     headers += tr("Name");

@@ -167,11 +167,7 @@ static inline QMenu *addMenu(QMenuBar *mb, const QString &title, const ActionLis
 QDesignerWorkbench::QDesignerWorkbench()  :
     m_core(QDesignerComponents::createFormEditor(this)),
     m_windowActions(new QActionGroup(this)),
-    m_globalMenuBar(new QMenuBar),
-    m_mode(NeutralMode),
-    m_dockedMainWindow(0),
-    m_state(StateInitializing),
-    m_uiSettingsChanged(false)
+    m_globalMenuBar(new QMenuBar)
 {
     QDesignerSettings settings(m_core);
 

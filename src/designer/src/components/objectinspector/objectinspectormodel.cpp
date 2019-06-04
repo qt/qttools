@@ -134,21 +134,13 @@ namespace qdesigner_internal {
     // comparing the lists of ObjectData. If it is the same, only the item data (class name [changed by promotion],
     // object name and icon) are checked and the existing items are updated.
 
-    ObjectData::ObjectData() :
-        m_parent(0),
-        m_object(0),
-        m_type(Object),
-        m_managedLayoutType(LayoutInfo::NoLayout)
-    {
-    }
+    ObjectData::ObjectData() = default;
 
     ObjectData::ObjectData(QObject *parent, QObject *object, const ModelRecursionContext &ctx) :
        m_parent(parent),
        m_object(object),
-       m_type(Object),
        m_className(QLatin1String(object->metaObject()->className())),
-       m_objectName(object->objectName()),
-       m_managedLayoutType(LayoutInfo::NoLayout)
+       m_objectName(object->objectName())
     {
 
         // 1) set entry

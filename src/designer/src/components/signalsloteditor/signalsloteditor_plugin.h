@@ -69,8 +69,8 @@ private slots:
 private:
     QPointer<QDesignerFormEditorInterface> m_core;
     QHash<QDesignerFormWindowInterface*, SignalSlotEditorTool*> m_tools;
-    bool m_initialized;
-    QAction *m_action;
+    bool m_initialized = false;
+    QAction *m_action = nullptr;
 };
 
 }  // namespace qdesigner_internal

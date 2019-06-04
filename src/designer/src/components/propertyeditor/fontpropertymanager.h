@@ -96,7 +96,7 @@ private:
     PropertyToSubPropertiesMap m_propertyToFontSubProperties;
     QMap<QtProperty *, int> m_fontSubPropertyToFlag;
     PropertyToPropertyMap m_fontSubPropertyToProperty;
-    QtProperty *m_createdFontProperty;
+    QtProperty *m_createdFontProperty = nullptr;
     QStringList m_aliasingEnumNames;
     // Font families with Designer annotations
     QStringList m_designerFamilyNames;

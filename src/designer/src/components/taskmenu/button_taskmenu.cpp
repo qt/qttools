@@ -303,10 +303,7 @@ bool RemoveButtonsFromGroupCommand::init(const ButtonList &bl)
 ButtonGroupMenu::ButtonGroupMenu(QObject *parent) :
     QObject(parent),
     m_selectGroupAction(new QAction(tr("Select members"), this)),
-    m_breakGroupAction(new QAction(tr("Break"), this)),
-    m_formWindow(0),
-    m_buttonGroup(0),
-    m_currentButton(0)
+    m_breakGroupAction(new QAction(tr("Break"), this))
 {
     connect(m_breakGroupAction, &QAction::triggered, this, &ButtonGroupMenu::breakGroup);
     connect(m_selectGroupAction, &QAction::triggered, this, &ButtonGroupMenu::selectGroup);

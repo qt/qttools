@@ -320,10 +320,10 @@ private:
 
     FormEditor *m_core;
     FormWindowCursor *m_cursor;
-    QWidget *m_mainContainer;
-    QWidget *m_currentWidget;
+    QWidget *m_mainContainer = nullptr;
+    QWidget *m_currentWidget = nullptr;
 
-    bool m_blockSelectionChanged;
+    bool m_blockSelectionChanged = false;
 
     QPoint m_rectAnchor;
     QRect m_currRect;
@@ -340,18 +340,18 @@ private:
 
     QString m_fileName;
 
-    typedef QPair<QPalette ,bool> PaletteAndFill;
-    typedef QMap<QWidget*, PaletteAndFill> WidgetPaletteMap;
+    using PaletteAndFill = QPair<QPalette ,bool>;
+    using WidgetPaletteMap = QMap<QWidget*, PaletteAndFill>;
     WidgetPaletteMap m_palettesBeforeHighlight;
 
-    QRubberBand *m_rubberBand;
+    QRubberBand *m_rubberBand = nullptr;
 
-    QTimer *m_selectionChangedTimer;
-    QTimer *m_checkSelectionTimer;
-    QTimer *m_geometryChangedTimer;
+    QTimer *m_selectionChangedTimer = nullptr;
+    QTimer *m_checkSelectionTimer = nullptr;
+    QTimer *m_geometryChangedTimer = nullptr;
 
     FormWindowWidgetStack *m_widgetStack;
-    WidgetEditorTool *m_widgetEditor;
+    WidgetEditorTool *m_widgetEditor = nullptr;
 
     QStringList m_resourceFiles;
 

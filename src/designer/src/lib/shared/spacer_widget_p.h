@@ -88,14 +88,14 @@ private:
     bool isInLayout() const;
     void updateToolTip();
 
-    const QSize m_SizeOffset;
+    const QSize m_SizeOffset = QSize(3, 3); // A small offset to ensure the spacer is still visible when reset to size 0,0
     QDesignerFormWindowInterface *m_formWindow;
-    Qt::Orientation m_orientation;
-    bool m_interactive;
+    Qt::Orientation m_orientation = Qt::Vertical;
+    bool m_interactive = true;
     // Cache information about 'being in layout' which is expensive to calculate.
     enum LayoutState { InLayout, OutsideLayout, UnknownLayoutState };
-    mutable LayoutState m_layoutState;
-    QSize m_sizeHint;
+    mutable LayoutState m_layoutState = UnknownLayoutState;
+    QSize m_sizeHint = QSize(0, 0);
 };
 
 QT_END_NAMESPACE

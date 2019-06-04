@@ -111,7 +111,7 @@ public:
         QString addPageMethod;
         QString script;
         QString baseClass;
-        bool isContainer;
+        bool isContainer = false;
     };
 
     void clear();
@@ -198,12 +198,12 @@ private:
 
     ButtonGroupHash m_buttonGroups;
 
-    bool m_layoutWidget;
-    QResourceBuilder *m_resourceBuilder;
-    QTextBuilder *m_textBuilder;
+    bool m_layoutWidget = false;
+    QResourceBuilder *m_resourceBuilder = nullptr;
+    QTextBuilder *m_textBuilder = nullptr;
 
     QPointer<QWidget> m_parentWidget;
-    bool m_parentWidgetIsSet;
+    bool m_parentWidgetIsSet = false;
 };
 
 void uiLibWarning(const QString &message);

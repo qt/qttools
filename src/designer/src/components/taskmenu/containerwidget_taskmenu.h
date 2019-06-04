@@ -118,10 +118,10 @@ public:
 private:
     void initializeActions();
 
-    QAction *m_nextAction;
-    QAction *m_previousAction;
-    QAction *m_tileAction;
-    QAction *m_cascadeAction;
+    QAction *m_nextAction = nullptr;
+    QAction *m_previousAction = nullptr;
+    QAction *m_tileAction = nullptr;
+    QAction *m_cascadeAction = nullptr;
 };
 
 class ContainerWidgetTaskMenuFactory: public QExtensionFactory

@@ -88,7 +88,7 @@ protected:
     void emitPropertyValueChanged(const QString &name, const QVariant &value, bool enableSubPropertyHandling);
 
 private:
-    bool m_propertyChangedForwardingBlocked;
+    bool m_propertyChangedForwardingBlocked = false;
 
 };
 

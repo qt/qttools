@@ -68,8 +68,7 @@ private:
 ////////////////// Item editor ///////////////
 AbstractItemEditor::AbstractItemEditor(QDesignerFormWindowInterface *form, QWidget *parent)
     : QWidget(parent),
-      m_iconCache(qobject_cast<FormWindowBase *>(form)->iconCache()),
-      m_updatingBrowser(false)
+      m_iconCache(qobject_cast<FormWindowBase *>(form)->iconCache())
 {
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     m_propertyManager = new DesignerPropertyManager(form->core(), this);

@@ -79,8 +79,7 @@ static QToolBar *createToolBar(const QString &title, const QString &objectName, 
 // ---------------- MainWindowBase
 
 MainWindowBase::MainWindowBase(QWidget *parent, Qt::WindowFlags flags) :
-    QMainWindow(parent, flags),
-    m_policy(AcceptCloseEvents)
+    QMainWindow(parent, flags)
 {
 #ifndef Q_OS_MACOS
     setWindowIcon(qDesigner->windowIcon());

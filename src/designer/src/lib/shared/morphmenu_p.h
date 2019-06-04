@@ -68,10 +68,10 @@ private slots:
 private:
     bool populateMenu(QWidget *w, QDesignerFormWindowInterface *fw);
 
-    QAction *m_subMenuAction;
-    QMenu *m_menu;
-    QWidget *m_widget;
-    QDesignerFormWindowInterface *m_formWindow;
+    QAction *m_subMenuAction = nullptr;
+    QMenu *m_menu = nullptr;
+    QWidget *m_widget = nullptr;
+    QDesignerFormWindowInterface *m_formWindow = nullptr;
 };
 
 } // namespace qdesigner_internal

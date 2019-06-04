@@ -190,7 +190,7 @@ public:
 
     const WidgetVector &managedChildren() const { return m_managedChildren; }
 private:
-    QWidget *m_widget;
+    QWidget *m_widget = nullptr;
     WidgetVector m_managedChildren;
 };
 
@@ -894,8 +894,8 @@ struct QDESIGNER_SHARED_EXPORT TableWidgetContents {
     static QString defaultHeaderText(int i);
     static void insertHeaderItem(const QTableWidgetItem *item, int i, ListContents *header, bool editor);
 
-    int m_columnCount;
-    int m_rowCount;
+    int m_columnCount = 0;
+    int m_rowCount = 0;
     ListContents m_horizontalHeader;
     ListContents m_verticalHeader;
     TableItemMap m_items;
@@ -922,14 +922,14 @@ private:
 struct QDESIGNER_SHARED_EXPORT TreeWidgetContents {
 
     struct ItemContents : public ListContents {
-        ItemContents() : m_itemFlags(-1) {}
+        ItemContents() = default;
         ItemContents(const QTreeWidgetItem *item, bool editor);
         QTreeWidgetItem *createTreeItem(DesignerIconCache *iconCache, bool editor) const;
 
         bool operator==(const ItemContents &rhs) const;
         bool operator!=(const ItemContents &rhs) const { return !(*this == rhs); }
 
-        int m_itemFlags;
+        int m_itemFlags = -1;
         //bool m_firstColumnSpanned:1;
         //bool m_hidden:1;
         //bool m_expanded:1;

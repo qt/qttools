@@ -97,12 +97,12 @@ protected:
     DesignerIconCache *m_iconCache;
     DesignerPropertyManager *m_propertyManager;
     DesignerEditorFactory *m_editorFactory;
-    QSplitter *m_propertySplitter;
+    QSplitter *m_propertySplitter =  nullptr;
     QtTreePropertyBrowser *m_propertyBrowser;
     QList<QtVariantProperty*> m_properties;
     QList<QtVariantProperty*> m_rootProperties;
     QHash<QtVariantProperty*, int> m_propertyToRole;
-    bool m_updatingBrowser;
+    bool m_updatingBrowser = false;
 };
 
 class ItemListEditor: public AbstractItemEditor

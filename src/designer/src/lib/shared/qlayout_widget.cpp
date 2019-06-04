@@ -587,7 +587,7 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
     // that do not change the widgets within the layout; also provides some manipulation
     // functions and ability to apply the state to a layout provided its widgets haven't changed.
     struct GridLayoutState {
-        GridLayoutState();
+        GridLayoutState() = default;
 
         void fromLayout(QGridLayout *l);
         void applyToLayout(const QDesignerFormEditorInterface *core, QWidget *w) const;
@@ -620,8 +620,8 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
         WidgetItemMap widgetItemMap;
         WidgetAlignmentMap widgetAlignmentMap;
 
-        int rowCount;
-        int colCount;
+        int rowCount = 0;
+        int colCount = 0;
     };
 
     static inline bool needsSpacerItem(const GridLayoutState::CellState &cs) {
@@ -637,12 +637,6 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
         for (GridLayoutState::WidgetItemMap::const_iterator it = gs.widgetItemMap.constBegin(); it != wcend; ++it)
             str << "Item " << it.key() << it.value() << '\n';
         return str;
-    }
-
-    GridLayoutState::GridLayoutState() :
-         rowCount(0),
-         colCount(0)
-    {
     }
 
     GridLayoutState::CellStates GridLayoutState::cellStates(const QList<QRect> &rects, int numRows, int numColumns)

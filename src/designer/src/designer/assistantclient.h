@@ -64,7 +64,7 @@ private:
     bool sendCommand(const QString &cmd, QString *errorMessage);
     bool ensureRunning(QString *errorMessage);
 
-    QProcess *m_process;
+    QProcess *m_process = nullptr;
 };
 
 QT_END_NAMESPACE

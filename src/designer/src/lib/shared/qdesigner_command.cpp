@@ -342,10 +342,7 @@ void LowerWidgetCommand::reorder(QWidget *widget) const
 }
 
 // ---- ManageWidgetCommandHelper
-ManageWidgetCommandHelper::ManageWidgetCommandHelper() :
-    m_widget(0)
-{
-}
+ManageWidgetCommandHelper::ManageWidgetCommandHelper() = default;
 
 void ManageWidgetCommandHelper::init(const QDesignerFormWindowInterface *fw, QWidget *widget)
 {
@@ -2332,11 +2329,7 @@ void ListContents::applyToComboBox(QComboBox *comboBox, DesignerIconCache *iconC
 
 // --------- TableWidgetContents
 
-TableWidgetContents::TableWidgetContents() :
-    m_columnCount(0),
-    m_rowCount(0)
-{
-}
+TableWidgetContents::TableWidgetContents() = default;
 
 void TableWidgetContents::clear()
 {

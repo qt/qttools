@@ -938,12 +938,6 @@ PropertyListCommand::PropertyDescription::PropertyDescription(const QString &pro
 {
 }
 
-PropertyListCommand::PropertyDescription::PropertyDescription() :
-    m_propertyType(QVariant::Invalid),
-    m_specialProperty(SP_None)
-{
-}
-
 void PropertyListCommand::PropertyDescription::debug() const
 {
     qDebug() << m_propertyName << m_propertyGroup << m_propertyType << m_specialProperty;

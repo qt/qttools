@@ -89,26 +89,17 @@ public:
     QPointer<QDesignerObjectInspectorInterface> m_objectInspector;
     QPointer<QDesignerIntegrationInterface> m_integration;
     QPointer<QDesignerActionEditorInterface> m_actionEditor;
-    QDesignerSettingsInterface *m_settingsManager;
-    QDesignerPluginManager *m_pluginManager;
-    QDesignerPromotionInterface *m_promotion;
-    QDesignerIntrospectionInterface *m_introspection;
-    QDesignerDialogGuiInterface *m_dialogGui;
+    QDesignerSettingsInterface *m_settingsManager = nullptr;
+    QDesignerPluginManager *m_pluginManager = nullptr;
+    QDesignerPromotionInterface *m_promotion = nullptr;
+    QDesignerIntrospectionInterface *m_introspection = nullptr;
+    QDesignerDialogGuiInterface *m_dialogGui = nullptr;
     QPointer<QtResourceModel> m_resourceModel;
     QPointer<QtGradientManager> m_gradientManager; // instantiated and deleted by designer_integration
     QList<QDesignerOptionsPageInterface*> m_optionsPages;
 };
 
-QDesignerFormEditorInterfacePrivate::QDesignerFormEditorInterfacePrivate() :
-    m_settingsManager(0),
-    m_pluginManager(0),
-    m_promotion(0),
-    m_introspection(0),
-    m_dialogGui(0),
-    m_resourceModel(0),
-    m_gradientManager(0)
-{
-}
+QDesignerFormEditorInterfacePrivate::QDesignerFormEditorInterfacePrivate() = default;
 
 QDesignerFormEditorInterfacePrivate::~QDesignerFormEditorInterfacePrivate()
 {

@@ -82,8 +82,7 @@ static const PropertyNameTypeMap &stringPropertyTypes()
 }
 
 QDesignerPropertyEditor::QDesignerPropertyEditor(QWidget *parent, Qt::WindowFlags flags) :
-    QDesignerPropertyEditorInterface(parent, flags),
-    m_propertyChangedForwardingBlocked(false)
+    QDesignerPropertyEditorInterface(parent, flags)
 {
     // Make old signal work for  compatibility
     connect(this, &QDesignerPropertyEditorInterface::propertyChanged,

@@ -50,12 +50,7 @@ QT_BEGIN_NAMESPACE
 // should not be applied for  pixel-exact design.
 
 Spacer::Spacer(QWidget *parent) :
-    QWidget(parent),
-    m_SizeOffset(3, 3), // A small offset to ensure the spacer is still visible when reset to size 0,0
-    m_orientation(Qt::Vertical),
-    m_interactive(true),
-    m_layoutState(UnknownLayoutState),
-    m_sizeHint(0, 0)
+    QWidget(parent)
 {
     setAttribute(Qt::WA_MouseNoMask);
     m_formWindow = QDesignerFormWindowInterface::findFormWindow(this);
