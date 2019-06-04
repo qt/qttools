@@ -3,7 +3,7 @@ MODULE = designercomponents
 
 QT = core gui-private widgets-private designer-private
 QT_PRIVATE = xml
-CONFIG += internal_module
+CONFIG += internal_module create_cmake
 
 # QtDesignerComponents uses
 DEFINES += QT_STATICPLUGIN
