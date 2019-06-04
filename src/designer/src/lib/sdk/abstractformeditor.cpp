@@ -169,9 +169,7 @@ QDesignerFormEditorInterface::QDesignerFormEditorInterface(QObject *parent)
 /*!
     Destroys the QDesignerFormEditorInterface object.
 */
-QDesignerFormEditorInterface::~QDesignerFormEditorInterface()
-{
-}
+QDesignerFormEditorInterface::~QDesignerFormEditorInterface() = default;
 
 /*!
     Returns an interface to \QD's widget box.

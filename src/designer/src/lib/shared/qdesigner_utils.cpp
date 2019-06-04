@@ -270,9 +270,7 @@ namespace qdesigner_internal
     {
     }
 
-    PropertySheetPixmapValue::PropertySheetPixmapValue()
-    {
-    }
+    PropertySheetPixmapValue::PropertySheetPixmapValue() = default;
 
     PropertySheetPixmapValue::PixmapSource PropertySheetPixmapValue::getPixmapSource(QDesignerFormEditorInterface *core, const QString & path)
     {

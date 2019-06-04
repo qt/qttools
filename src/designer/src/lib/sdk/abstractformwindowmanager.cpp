@@ -136,9 +136,7 @@ QDesignerFormWindowManagerInterface::QDesignerFormWindowManagerInterface(QObject
 /*!
     Destroys the interface for the form window manager.
 */
-QDesignerFormWindowManagerInterface::~QDesignerFormWindowManagerInterface()
-{
-}
+QDesignerFormWindowManagerInterface::~QDesignerFormWindowManagerInterface() = default;
 
 /*!
     Allows you to intervene and control \QD's "cut" action. The function

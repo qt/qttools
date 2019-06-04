@@ -50,9 +50,7 @@ QDesignerFormWindowToolInterface::QDesignerFormWindowToolInterface(QObject *pare
 
 /*!
 */
-QDesignerFormWindowToolInterface::~QDesignerFormWindowToolInterface()
-{
-}
+QDesignerFormWindowToolInterface::~QDesignerFormWindowToolInterface() = default;
 
 /*!
     \fn virtual QDesignerFormEditorInterface *QDesignerFormWindowToolInterface::core() const = 0

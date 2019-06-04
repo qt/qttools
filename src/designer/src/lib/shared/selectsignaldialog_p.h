@@ -58,7 +58,7 @@ class SelectSignalDialog : public QDialog
 public:
     struct Method
     {
-        Method() {}
+        Method() = default;
         explicit Method(const QString &c, const QString &s, const QStringList &p = QStringList())
             : className(c), signature(s), parameterNames(p) {}
         bool isValid() const { return !signature.isEmpty(); }

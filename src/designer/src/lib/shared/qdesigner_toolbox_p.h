@@ -71,7 +71,7 @@ public:
     QPalette::ColorRole currentItemBackgroundRole() const;
     void setCurrentItemBackgroundRole(QPalette::ColorRole role);
 
-    bool eventFilter(QObject *watched, QEvent *event);
+    bool eventFilter(QObject *watched, QEvent *event) override;
     // Add context menu and return page submenu or 0.
 
     QMenu *addContextMenuActions(QMenu *popup) const;

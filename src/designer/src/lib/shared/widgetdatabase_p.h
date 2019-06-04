@@ -64,45 +64,45 @@ public:
     explicit WidgetDataBaseItem(const QString &name = QString(),
                                 const QString &group = QString());
 
-    QString name() const;
-    void setName(const QString &name);
+    QString name() const override;
+    void setName(const QString &name) override;
 
-    QString group() const;
-    void setGroup(const QString &group);
+    QString group() const override;
+    void setGroup(const QString &group) override;
 
-    QString toolTip() const;
-    void setToolTip(const QString &toolTip);
+    QString toolTip() const override;
+    void setToolTip(const QString &toolTip) override;
 
-    QString whatsThis() const;
-    void setWhatsThis(const QString &whatsThis);
+    QString whatsThis() const override;
+    void setWhatsThis(const QString &whatsThis) override;
 
-    QString includeFile() const;
-    void setIncludeFile(const QString &includeFile);
+    QString includeFile() const override;
+    void setIncludeFile(const QString &includeFile) override;
 
 
-    QIcon icon() const;
-    void setIcon(const QIcon &icon);
+    QIcon icon() const override;
+    void setIcon(const QIcon &icon) override;
 
-    bool isCompat() const;
-    void setCompat(bool compat);
+    bool isCompat() const override;
+    void setCompat(bool compat) override;
 
-    bool isContainer() const;
-    void setContainer(bool b);
+    bool isContainer() const override;
+    void setContainer(bool b) override;
 
-    bool isCustom() const;
-    void setCustom(bool b);
+    bool isCustom() const override;
+    void setCustom(bool b) override;
 
-    QString pluginPath() const;
-    void setPluginPath(const QString &path);
+    QString pluginPath() const override;
+    void setPluginPath(const QString &path) override;
 
-    bool isPromoted() const;
-    void setPromoted(bool b);
+    bool isPromoted() const override;
+    void setPromoted(bool b) override;
 
-    QString extends() const;
-    void setExtends(const QString &s);
+    QString extends() const override;
+    void setExtends(const QString &s) override;
 
-    void setDefaultPropertyValues(const QList<QVariant> &list);
-    QList<QVariant> defaultPropertyValues() const;
+    void setDefaultPropertyValues(const QList<QVariant> &list) override;
+    QList<QVariant> defaultPropertyValues() const override;
 
     static WidgetDataBaseItem *clone(const QDesignerWidgetDataBaseItemInterface *item);
 

@@ -417,13 +417,9 @@ int LayoutProperties::toPropertySheet(const QDesignerFormEditorInterface *core, 
 }
 
 // ---------------- LayoutHelper
-LayoutHelper::LayoutHelper()
-{
-}
+LayoutHelper::LayoutHelper() = default;
 
-LayoutHelper::~LayoutHelper()
-{
-}
+LayoutHelper::~LayoutHelper() = default;
 
 int LayoutHelper::indexOf(const QLayout *lt, const QWidget *widget)
 {
@@ -860,7 +856,7 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
     // ---------------- GridLayoutHelper
     class GridLayoutHelper : public  LayoutHelper {
     public:
-        GridLayoutHelper() {}
+        GridLayoutHelper() = default;
 
         QRect itemInfo(QLayout *lt, int index) const override;
         void insertWidget(QLayout *lt, const QRect &info, QWidget *w) override;
@@ -1017,7 +1013,7 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
         typedef QPair<QWidget *, QWidget *> WidgetPair;
         using FormLayoutState = QVector<WidgetPair>;
 
-        FormLayoutHelper() {}
+        FormLayoutHelper() = default;
 
         QRect itemInfo(QLayout *lt, int index) const override;
         void insertWidget(QLayout *lt, const QRect &info, QWidget *w) override;

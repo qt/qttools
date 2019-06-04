@@ -53,9 +53,7 @@ QDesignerFormWindowManager::QDesignerFormWindowManager(QObject *parent)
 {
 }
 
-QDesignerFormWindowManager::~QDesignerFormWindowManager()
-{
-}
+QDesignerFormWindowManager::~QDesignerFormWindowManager() = default;
 
 /*!
     \fn PreviewManager *qdesigner_internal::QDesignerFormWindowManager::previewManager() const

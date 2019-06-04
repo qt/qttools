@@ -80,7 +80,7 @@ public:
                    SpecialProperty specialProperty,
                    QDesignerPropertySheetExtension *sheet,
                    int index);
-    virtual ~PropertyHelper() {}
+    virtual ~PropertyHelper() = default;
 
     QObject *object() const { return m_object; }
     SpecialProperty specialProperty() const { return m_specialProperty; }
@@ -144,7 +144,7 @@ public:
     void setOldValue(const QVariant &oldValue, int index = 0);
 
     // Calls restoreDefaultValue() and update()
-    virtual void undo();
+    void undo() override;
 
 protected:
     using PropertyHelperPtr = QSharedPointer<PropertyHelper>;
@@ -157,7 +157,7 @@ protected:
     bool initList(const QObjectList &list, const QString &apropertyName, QObject *referenceObject = nullptr);
 
     // set a new value, return update mask
-    unsigned setValue(QVariant value, bool changed, unsigned subPropertyMask);
+    unsigned setValue(const QVariant &value, bool changed, unsigned subPropertyMask);
 
     // restore old value,  return update mask
     unsigned  restoreOldValue();
@@ -218,10 +218,10 @@ public:
     inline void setNewValue(const QVariant &newValue)
     { m_newValue = newValue; }
 
-    int id() const;
-    bool mergeWith(const QUndoCommand *other);
+    int id() const override;
+    bool mergeWith(const QUndoCommand *other) override;
 
-    virtual void redo();
+    void redo() override;
 
 protected:
     virtual QVariant mergeValue(const QVariant &newValue);

@@ -48,16 +48,12 @@ QT_BEGIN_NAMESPACE
     Constructs a QDesignerMetaEnumInterface object.
 */
 
-QDesignerMetaEnumInterface::QDesignerMetaEnumInterface()
-{
-}
+QDesignerMetaEnumInterface::QDesignerMetaEnumInterface() = default;
 
 /*!
     Destroys the QDesignerMetaEnumInterface object.
 */
-QDesignerMetaEnumInterface::~QDesignerMetaEnumInterface()
-{
-}
+QDesignerMetaEnumInterface::~QDesignerMetaEnumInterface() = default;
 
 /*!
     \fn bool QDesignerMetaEnumInterface::isFlag() const
@@ -143,17 +139,13 @@ QDesignerMetaEnumInterface::~QDesignerMetaEnumInterface()
     Constructs a QDesignerMetaPropertyInterface object.
 */
 
-QDesignerMetaPropertyInterface::QDesignerMetaPropertyInterface()
-{
-}
+QDesignerMetaPropertyInterface::QDesignerMetaPropertyInterface() = default;
 
 /*!
     Destroys the QDesignerMetaPropertyInterface object.
 */
 
-QDesignerMetaPropertyInterface::~QDesignerMetaPropertyInterface()
-{
-}
+QDesignerMetaPropertyInterface::~QDesignerMetaPropertyInterface() = default;
 
 /*!
     \enum QDesignerMetaPropertyInterface::Kind
@@ -277,17 +269,13 @@ QDesignerMetaPropertyInterface::~QDesignerMetaPropertyInterface()
     Constructs a QDesignerMetaMethodInterface object.
 */
 
-QDesignerMetaMethodInterface::QDesignerMetaMethodInterface()
-{
-}
+QDesignerMetaMethodInterface::QDesignerMetaMethodInterface() = default;
 
 /*!
     Destroys the QDesignerMetaMethodInterface object.
 */
 
-QDesignerMetaMethodInterface::~QDesignerMetaMethodInterface()
-{
-}
+QDesignerMetaMethodInterface::~QDesignerMetaMethodInterface() = default;
 
 /*!
     \enum QDesignerMetaMethodInterface::MethodType
@@ -380,17 +368,13 @@ QDesignerMetaMethodInterface::~QDesignerMetaMethodInterface()
     Constructs a QDesignerMetaObjectInterface object.
 */
 
-QDesignerMetaObjectInterface::QDesignerMetaObjectInterface()
-{
-}
+QDesignerMetaObjectInterface::QDesignerMetaObjectInterface() = default;
 
 /*!
     Destroys the QDesignerMetaObjectInterface object.
 */
 
-QDesignerMetaObjectInterface::~QDesignerMetaObjectInterface()
-{
-}
+QDesignerMetaObjectInterface::~QDesignerMetaObjectInterface() = default;
 
 /*!
     \fn QString QDesignerMetaObjectInterface::className() const

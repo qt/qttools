@@ -131,6 +131,8 @@ protected:
     LayoutHelper();
 
 public:
+    Q_DISABLE_COPY(LayoutHelper)
+
     virtual ~LayoutHelper();
 
     static LayoutHelper *createLayoutHelper(int type);

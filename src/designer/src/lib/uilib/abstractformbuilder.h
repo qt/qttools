@@ -118,6 +118,8 @@ class QFormBuilderExtra;
 class QDESIGNER_UILIB_EXPORT QAbstractFormBuilder
 {
 public:
+    Q_DISABLE_COPY(QAbstractFormBuilder)
+
     QAbstractFormBuilder();
     virtual ~QAbstractFormBuilder();
 
@@ -258,9 +260,6 @@ private:
 //  utils
 //
     static Qt::ToolBarArea toolbarAreaFromDOMAttributes(const DomPropertyHash &attributeMap);
-
-    QAbstractFormBuilder(const QAbstractFormBuilder &other);
-    void operator = (const QAbstractFormBuilder &other);
 
     friend QDESIGNER_UILIB_EXPORT DomProperty *variantToDomProperty(QAbstractFormBuilder *abstractFormBuilder, const QMetaObject *meta, const QString &propertyName, const QVariant &value);
     friend QDESIGNER_UILIB_EXPORT QVariant domPropertyToVariant(QAbstractFormBuilder *abstractFormBuilder,const QMetaObject *meta, const DomProperty *property);

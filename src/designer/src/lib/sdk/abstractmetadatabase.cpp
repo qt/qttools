@@ -50,9 +50,7 @@ QDesignerMetaDataBaseInterface::QDesignerMetaDataBaseInterface(QObject *parent)
 /*!
     Destroys the interface to the meta database.
 */
-QDesignerMetaDataBaseInterface::~QDesignerMetaDataBaseInterface()
-{
-}
+QDesignerMetaDataBaseInterface::~QDesignerMetaDataBaseInterface() = default;
 
 /*!
     \fn QDesignerMetaDataBaseItemInterface *QDesignerMetaDataBaseInterface::item(QObject *object) const

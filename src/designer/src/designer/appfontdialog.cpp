@@ -89,9 +89,7 @@ private:
     FileNameFontIdPairs m_fonts;
 };
 
-AppFontManager::AppFontManager()
-{
-}
+AppFontManager::AppFontManager() = default;
 
 AppFontManager &AppFontManager::instance()
 {

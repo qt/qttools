@@ -112,16 +112,12 @@ namespace QFormInternal {
     Constructs a new form builder.
 */
 
-QFormBuilder::QFormBuilder()
-{
-}
+QFormBuilder::QFormBuilder() = default;
 
 /*!
     Destroys the form builder.
 */
-QFormBuilder::~QFormBuilder()
-{
-}
+QFormBuilder::~QFormBuilder() = default;
 
 /*!
     \internal

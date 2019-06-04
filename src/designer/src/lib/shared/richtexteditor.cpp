@@ -262,7 +262,7 @@ public:
         : QTextEdit(parent)
     {}
 
-    void contextMenuEvent(QContextMenuEvent *event);
+    void contextMenuEvent(QContextMenuEvent *event) override;
 
 private slots:
     void actionTriggered(QAction *action);

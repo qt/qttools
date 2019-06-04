@@ -56,9 +56,9 @@ namespace qdesigner_internal {
         void setWantNewLine(bool nl) {  m_wantNewLine = nl; }
         bool wantNewLine() const { return m_wantNewLine; }
 
-        bool event(QEvent *e);
+        bool event(QEvent *e) override;
     protected:
-        void contextMenuEvent (QContextMenuEvent *event );
+        void contextMenuEvent (QContextMenuEvent *event ) override;
     private slots:
         void insertNewLine();
     private:

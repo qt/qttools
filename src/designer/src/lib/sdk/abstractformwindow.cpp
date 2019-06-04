@@ -161,9 +161,7 @@ QDesignerFormWindowInterface::QDesignerFormWindowInterface(QWidget *parent, Qt::
 /*!
     Destroys the form window interface.
 */
-QDesignerFormWindowInterface::~QDesignerFormWindowInterface()
-{
-}
+QDesignerFormWindowInterface::~QDesignerFormWindowInterface() = default;
 
 /*!
     Returns a pointer to \QD's current QDesignerFormEditorInterface

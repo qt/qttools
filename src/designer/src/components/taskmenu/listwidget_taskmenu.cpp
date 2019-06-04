@@ -60,9 +60,7 @@ ListWidgetTaskMenu::ListWidgetTaskMenu(QListWidget *button, QObject *parent)
     m_taskActions.append(sep);
 }
 
-ListWidgetTaskMenu::~ListWidgetTaskMenu()
-{
-}
+ListWidgetTaskMenu::~ListWidgetTaskMenu() = default;
 
 QAction *ListWidgetTaskMenu::preferredEditAction() const
 {

@@ -53,9 +53,7 @@ QDesignerWidgetFactoryInterface::QDesignerWidgetFactoryInterface(QObject *parent
 /*!
     \fn virtual QDesignerWidgetFactoryInterface::~QDesignerWidgetFactoryInterface()
 */
-QDesignerWidgetFactoryInterface::~QDesignerWidgetFactoryInterface()
-{
-}
+QDesignerWidgetFactoryInterface::~QDesignerWidgetFactoryInterface() = default;
 
 /*!
     \fn virtual QDesignerFormEditorInterface *QDesignerWidgetFactoryInterface::core() const = 0

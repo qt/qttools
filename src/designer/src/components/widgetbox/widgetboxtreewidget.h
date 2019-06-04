@@ -82,14 +82,14 @@ public:
     QIcon iconForWidget(const QString &iconName) const;
 
 signals:
-    void pressed(const QString name, const QString dom_xml, const QPoint &global_mouse_pos);
+    void pressed(const QString &name, const QString &dom_xml, const QPoint &global_mouse_pos);
 
 public slots:
     void filter(const QString &);
 
 protected:
-    void contextMenuEvent(QContextMenuEvent *e);
-    void resizeEvent(QResizeEvent *e);
+    void contextMenuEvent(QContextMenuEvent *e) override;
+    void resizeEvent(QResizeEvent *e) override;
 
 private slots:
     void slotSave();

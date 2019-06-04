@@ -85,7 +85,7 @@ signals:
     void resourceActivated(const QString &resource);
 
 protected:
-    bool event(QEvent *event);
+    bool event(QEvent *event) override;
 
 private:
 

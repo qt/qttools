@@ -120,7 +120,7 @@ public slots:
     void showContextMenu(const QPoint &globalPos);
 
 protected:
-    void contextMenuEvent(QContextMenuEvent *event);
+    void contextMenuEvent(QContextMenuEvent *event) override;
 
     // Overwrite for implementing additional behaviour when doing setZoom();
     virtual void applyZoom();

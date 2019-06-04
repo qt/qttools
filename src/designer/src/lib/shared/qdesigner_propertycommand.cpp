@@ -1114,7 +1114,7 @@ template <class PropertyListIterator, class Function>
 
 
 // set a new value, return update mask
-unsigned PropertyListCommand::setValue(QVariant value, bool changed, unsigned subPropertyMask)
+unsigned PropertyListCommand::setValue(const QVariant &value, bool changed, unsigned subPropertyMask)
 {
     if(debugPropertyCommands)
         qDebug() << "PropertyListCommand::setValue(" << value

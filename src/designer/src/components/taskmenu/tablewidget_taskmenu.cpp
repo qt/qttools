@@ -59,9 +59,7 @@ TableWidgetTaskMenu::TableWidgetTaskMenu(QTableWidget *button, QObject *parent)
 }
 
 
-TableWidgetTaskMenu::~TableWidgetTaskMenu()
-{
-}
+TableWidgetTaskMenu::~TableWidgetTaskMenu() = default;
 
 QAction *TableWidgetTaskMenu::preferredEditAction() const
 {

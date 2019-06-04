@@ -304,7 +304,7 @@ QMatrix PreviewDeviceSkin::skinTransform() const
 // ------------ PreviewConfigurationPrivate
 class PreviewConfigurationData : public QSharedData {
 public:
-    PreviewConfigurationData() {}
+    PreviewConfigurationData() = default;
     explicit PreviewConfigurationData(const QString &style, const QString &applicationStyleSheet, const QString &deviceSkin);
 
     QString m_style;

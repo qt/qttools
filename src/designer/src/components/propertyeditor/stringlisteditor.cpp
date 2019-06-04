@@ -60,9 +60,7 @@ StringListEditor::StringListEditor(QWidget *parent)
     updateUi();
 }
 
-StringListEditor::~StringListEditor()
-{
-}
+StringListEditor::~StringListEditor() = default;
 
 QStringList StringListEditor::getStringList(QWidget *parent, const QStringList &init, int *result)
 {

@@ -233,9 +233,7 @@ QDesignerIntegrationInterface::QDesignerIntegrationInterface(QDesignerFormEditor
     core->setIntegration(this);
 }
 
-QDesignerIntegrationInterface::~QDesignerIntegrationInterface()
-{
-}
+QDesignerIntegrationInterface::~QDesignerIntegrationInterface() = default;
 
 QDesignerFormEditorInterface *QDesignerIntegrationInterface::core() const
 {

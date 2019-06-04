@@ -841,7 +841,7 @@ protected:
 };
 
 struct QDESIGNER_SHARED_EXPORT ItemData {
-    ItemData() {}
+    ItemData() = default;
 
     ItemData(const QListWidgetItem *item, bool editor);
     ItemData(const QTableWidgetItem *item, bool editor);
@@ -858,7 +858,7 @@ struct QDESIGNER_SHARED_EXPORT ItemData {
 };
 
 struct QDESIGNER_SHARED_EXPORT ListContents {
-    ListContents() {}
+    ListContents() = default;
 
     ListContents(const QTreeWidgetItem *item);
     QTreeWidgetItem *createTreeItem(DesignerIconCache *iconCache) const;

@@ -59,9 +59,7 @@ QDesignerNewFormWidgetInterface::QDesignerNewFormWidgetInterface(QWidget *parent
     Destroys the QDesignerNewFormWidgetInterface object.
 */
 
-QDesignerNewFormWidgetInterface::~QDesignerNewFormWidgetInterface()
-{
-}
+QDesignerNewFormWidgetInterface::~QDesignerNewFormWidgetInterface() = default;
 
 /*!
     Creates an instance of the QDesignerNewFormWidgetInterface as a child
