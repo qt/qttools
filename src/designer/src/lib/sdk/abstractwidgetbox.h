@@ -71,8 +71,6 @@ public:
         QSharedDataPointer<QDesignerWidgetBoxWidgetData> m_data;
     };
 
-    typedef QList<Widget> WidgetList;
-
     class Category {
     public:
         enum Type { Default, Scratchpad };
@@ -96,7 +94,7 @@ public:
         Type m_type;
         QList<Widget> m_widget_list;
     };
-    typedef QList<Category> CategoryList;
+    using CategoryList = QList<Category>;
 
     explicit QDesignerWidgetBoxInterface(QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags());
     virtual ~QDesignerWidgetBoxInterface();

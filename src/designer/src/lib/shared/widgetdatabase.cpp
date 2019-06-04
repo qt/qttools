@@ -348,8 +348,8 @@ static WidgetDataBaseItem *createCustomWidgetItem(const QDesignerCustomWidgetInt
 void WidgetDataBase::loadPlugins()
 {
     typedef QMap<QString, int> NameIndexMap;
-    typedef QList<QDesignerWidgetDataBaseItemInterface*> ItemList;
-    typedef QSet<QString> NameSet;
+    using ItemList = QList<QDesignerWidgetDataBaseItemInterface *>;
+    using NameSet = QSet<QString>;
     // 1) create a map of existing custom classes
     NameIndexMap existingCustomClasses;
     NameSet nonCustomClasses;
@@ -539,7 +539,7 @@ QStringList WidgetDataBase::customFormWidgetClasses(const QDesignerFormEditorInt
 // properties to be suitable for new forms
 static QString xmlFromWidgetBox(const QDesignerFormEditorInterface *core, const QString &className, const QString &objectName)
 {
-    typedef QList<DomProperty*> PropertyList;
+    using PropertyList = QList<DomProperty *>;
 
     QDesignerWidgetBoxInterface::Widget widget;
     const bool found = QDesignerWidgetBox::findWidget(core->widgetBox(), className, QString(), &widget);

@@ -90,7 +90,7 @@ namespace {
         // A widget managed by the form window cursor
         ManagedWidgetSelection };
 
-    typedef QVector<QObject*> QObjectVector;
+    using QObjectVector = QVector<QObject *>;
 }
 
 static inline SelectionType selectionType(const QDesignerFormWindowInterface *fw, QObject *o)
@@ -421,7 +421,7 @@ bool ObjectInspector::ObjectInspectorPrivate::selectObject(QObject *o)
     if (!m_core->metaDataBase()->item(o))
         return false;
 
-    typedef QSet<QModelIndex> ModelIndexSet;
+    using ModelIndexSet = QSet<QModelIndex>;
 
     const QModelIndexList objectIndexes = indexesOf(o);
     if (objectIndexes.empty())

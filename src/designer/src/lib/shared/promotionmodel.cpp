@@ -39,7 +39,7 @@
 QT_BEGIN_NAMESPACE
 
 namespace {
-    typedef QList<QStandardItem *> StandardItemList;
+    using StandardItemList = QList<QStandardItem *>;
 
     // Model columns.
     enum { ClassNameColumn, IncludeFileColumn, IncludeTypeColumn, ReferencedColumn, NumColumns };
@@ -120,7 +120,7 @@ namespace qdesigner_internal {
     }
 
     void PromotionModel::updateFromWidgetDatabase() {
-        typedef QDesignerPromotionInterface::PromotedClasses PromotedClasses;
+        using PromotedClasses = QDesignerPromotionInterface::PromotedClasses;
 
         clear();
         initializeHeaders();

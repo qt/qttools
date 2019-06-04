@@ -500,10 +500,8 @@ QWidget *ColorDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem
         //editor->installEventFilter(const_cast<ColorDelegate *>(this));
         ed = editor;
     } else {
-        typedef void (BrushEditor::*BrushEditorWidgetSignal)(QWidget *);
-
         BrushEditor *editor = new BrushEditor(m_core, parent);
-        connect(editor, static_cast<BrushEditorWidgetSignal>(&BrushEditor::changed),
+        connect(editor, QOverload<QWidget *>::of(&BrushEditor::changed),
                 this, &ColorDelegate::commitData);
         editor->setFocusPolicy(Qt::NoFocus);
         editor->installEventFilter(const_cast<ColorDelegate *>(this));

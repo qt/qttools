@@ -78,8 +78,6 @@ DPI_Chooser::DPI_Chooser(QWidget *parent) :
     m_dpiXSpinBox(new QSpinBox),
     m_dpiYSpinBox(new QSpinBox)
 {
-    typedef void (QComboBox::*QComboIntSignal)(int);
-
     // Predefined settings: System
     DeviceProfile::systemResolution(&(m_systemEntry->dpiX), &(m_systemEntry->dpiY));
     m_systemEntry->description = nullptr;
@@ -96,7 +94,7 @@ DPI_Chooser::DPI_Chooser(QWidget *parent) :
     setFocusProxy(m_predefinedCombo);
     m_predefinedCombo->setEditable(false);
     m_predefinedCombo->setCurrentIndex(0);
-    connect(m_predefinedCombo, static_cast<QComboIntSignal>(&QComboBox::currentIndexChanged),
+    connect(m_predefinedCombo, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &DPI_Chooser::syncSpinBoxes);
     // top row with predefined settings
     QVBoxLayout *vBoxLayout = new QVBoxLayout;

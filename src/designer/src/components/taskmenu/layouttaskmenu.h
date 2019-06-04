@@ -72,8 +72,8 @@ public:
 
 };
 
-typedef qdesigner_internal::ExtensionFactory<QDesignerTaskMenuExtension, QLayoutWidget, LayoutWidgetTaskMenu> LayoutWidgetTaskMenuFactory;
-typedef qdesigner_internal::ExtensionFactory<QDesignerTaskMenuExtension, Spacer, SpacerTaskMenu> SpacerTaskMenuFactory;
+using LayoutWidgetTaskMenuFactory = qdesigner_internal::ExtensionFactory<QDesignerTaskMenuExtension, QLayoutWidget, LayoutWidgetTaskMenu>;
+using SpacerTaskMenuFactory = qdesigner_internal::ExtensionFactory<QDesignerTaskMenuExtension, Spacer, SpacerTaskMenu>;
 
 QT_END_NAMESPACE
 

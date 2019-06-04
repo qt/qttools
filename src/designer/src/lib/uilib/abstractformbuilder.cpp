@@ -199,7 +199,7 @@ QWidget *QAbstractFormBuilder::load(QIODevice *dev, QWidget *parentWidget)
 */
 QWidget *QAbstractFormBuilder::create(DomUI *ui, QWidget *parentWidget)
 {
-    typedef QFormBuilderExtra::ButtonGroupHash ButtonGroupHash;
+    using ButtonGroupHash = QFormBuilderExtra::ButtonGroupHash;
 
     d->clear();
     if (const DomLayoutDefault *def = ui->elementLayoutDefault()) {
@@ -2066,7 +2066,7 @@ void QAbstractFormBuilder::saveComboBoxExtraInfo(QComboBox *comboBox, DomWidget 
 
 void QAbstractFormBuilder::saveButtonExtraInfo(const QAbstractButton *widget, DomWidget *ui_widget, DomWidget *)
 {
-    typedef QList<DomProperty*> DomPropertyList;
+    using DomPropertyList = QList<DomProperty *>;
     if (const QButtonGroup *buttonGroup = widget->group()) {
         DomPropertyList attributes = ui_widget->elementAttribute();
         DomString *domString = new DomString();
@@ -2434,7 +2434,7 @@ static QString buttonGroupName(const DomWidget *ui_widget)
 
 void QAbstractFormBuilder::loadButtonExtraInfo(const DomWidget *ui_widget, QAbstractButton *button, QWidget *)
 {
-    typedef QFormBuilderExtra::ButtonGroupHash ButtonGroupHash;
+    using ButtonGroupHash = QFormBuilderExtra::ButtonGroupHash;
 
     const QString groupName = buttonGroupName(ui_widget);
     if (groupName.isEmpty())

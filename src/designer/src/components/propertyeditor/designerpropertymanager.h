@@ -44,7 +44,7 @@
 QT_BEGIN_NAMESPACE
 
 typedef QPair<QString, uint> DesignerIntPair;
-typedef QList<DesignerIntPair> DesignerFlagList;
+using DesignerFlagList = QList<DesignerIntPair>;
 
 class QDesignerFormEditorInterface;
 class QLineEdit;

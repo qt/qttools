@@ -53,7 +53,7 @@ private:
     QAction *m_editTextAction;
 };
 
-typedef ExtensionFactory<QDesignerTaskMenuExtension, QLineEdit, LineEditTaskMenu> LineEditTaskMenuFactory;
+using LineEditTaskMenuFactory = ExtensionFactory<QDesignerTaskMenuExtension, QLineEdit, LineEditTaskMenu>;
 }  // namespace qdesigner_internal
 
 QT_END_NAMESPACE

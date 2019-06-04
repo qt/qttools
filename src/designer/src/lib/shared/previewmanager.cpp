@@ -555,7 +555,7 @@ public:
 
     QPointer<QWidget> m_activePreview;
 
-    typedef QList<PreviewData> PreviewDataList;
+    using PreviewDataList = QList<PreviewData>;
 
     PreviewDataList m_previews;
 
@@ -798,7 +798,7 @@ QWidget *PreviewManager::showPreview(const QDesignerFormWindowInterface *fw,
 
 QWidget *PreviewManager::raise(const QDesignerFormWindowInterface *fw, const PreviewConfiguration &pc)
 {
-    typedef PreviewManagerPrivate::PreviewDataList PreviewDataList;
+    using PreviewDataList = PreviewManagerPrivate::PreviewDataList;
     if (d->m_previews.empty())
         return nullptr;
 
@@ -832,7 +832,7 @@ void PreviewManager::closeAllPreviews()
 
 void PreviewManager::updatePreviewClosed(QWidget *w)
 {
-    typedef PreviewManagerPrivate::PreviewDataList PreviewDataList;
+    using PreviewDataList = PreviewManagerPrivate::PreviewDataList;
     if (d->m_updateBlocked)
         return;
     // Purge out all 0 or widgets to be deleted

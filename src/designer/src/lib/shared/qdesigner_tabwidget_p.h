@@ -133,7 +133,7 @@ private:
     QMap<QWidget *, PageData> m_pageToData;
 };
 
-typedef QDesignerPropertySheetFactory<QTabWidget, QTabWidgetPropertySheet> QTabWidgetPropertySheetFactory;
+using QTabWidgetPropertySheetFactory = QDesignerPropertySheetFactory<QTabWidget, QTabWidgetPropertySheet>;
 
 QT_END_NAMESPACE
 

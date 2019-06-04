@@ -42,7 +42,7 @@
 
 QT_BEGIN_NAMESPACE
 
-typedef QPair<QString, QString> ClassNameSignaturePair;
+using ClassNameSignaturePair = QPair<QString, QString>;
 
 // Find all member functions that match a predicate on the signature string
 // using the member sheet and the fake methods stored in the widget

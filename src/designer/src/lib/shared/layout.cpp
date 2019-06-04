@@ -931,7 +931,7 @@ void Grid::shrink()
 bool Grid::shrinkFormLayoutSpans()
 {
     bool shrunk = false;
-    typedef  QSet<QWidget*> WidgetSet;
+    using WidgetSet = QSet<QWidget *>;
     // Determine unique set of widgets
     WidgetSet widgets;
     QWidget **end =  m_cells + m_ncols * m_nrows;

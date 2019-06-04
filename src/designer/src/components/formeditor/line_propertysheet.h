@@ -50,7 +50,7 @@ public:
     QString propertyGroup(int index) const override;
 };
 
-typedef QDesignerPropertySheetFactory<Line, LinePropertySheet> LinePropertySheetFactory;
+using LinePropertySheetFactory = QDesignerPropertySheetFactory<Line, LinePropertySheet>;
 }  // namespace qdesigner_internal
 
 QT_END_NAMESPACE

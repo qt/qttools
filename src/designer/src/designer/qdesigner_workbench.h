@@ -189,7 +189,7 @@ private:
         // main window in MDI mode)
         QPoint m_position;
     };
-    typedef  QHash<QWidget*, Position> PositionMap;
+    using PositionMap = QHash<QWidget*, Position>;
     PositionMap m_Positions;
 
     enum State { StateInitializing, StateUp, StateClosing };

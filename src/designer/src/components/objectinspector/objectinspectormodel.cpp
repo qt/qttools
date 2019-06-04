@@ -260,7 +260,7 @@ namespace qdesigner_internal {
         setItemsDisplayData(row, icons, ClassNameChanged|ObjectNameChanged|ClassIconChanged|TypeChanged|LayoutTypeChanged);
     }
 
-    typedef QList<ObjectData> ObjectModel;
+    using ObjectModel = QList<ObjectData>;
 
     // Recursive routine that creates the model by traversing the form window object tree.
     void createModelRecursion(const QDesignerFormWindowInterface *fwi,
@@ -269,8 +269,8 @@ namespace qdesigner_internal {
                               ObjectModel &model,
                               const ModelRecursionContext &ctx)
     {
-        typedef QList<QButtonGroup *> ButtonGroupList;
-        typedef QList<QAction *> ActionList;
+        using ButtonGroupList = QList<QButtonGroup *>;
+        using ActionList = QList<QAction *>;
 
         // 1) Create entry
         const ObjectData entry(parent, object, ctx);
@@ -442,7 +442,7 @@ namespace qdesigner_internal {
     {
         // Change text and icon. Keep a set of changed object
         // as for example actions might occur several times in the tree.
-        typedef QSet<QObject *> QObjectSet;
+        using QObjectSet = QSet<QObject *>;
 
         QObjectSet changedObjects;
 

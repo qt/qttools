@@ -83,7 +83,7 @@ static QString buddy(QLabel *label, QDesignerFormEditorInterface *core)
     return sheet->property(prop_idx).toString();
 }
 
-typedef QList<QLabel*> LabelList;
+using LabelList = QList<QLabel *>;
 
 namespace qdesigner_internal {
 

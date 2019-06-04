@@ -162,7 +162,7 @@ public:
 
 private:
 
-    typedef QList<WidgetSelection *> SelectionPool;
+    using SelectionPool = QList<WidgetSelection *>;
     SelectionPool m_selectionPool;
 
     typedef QHash<QWidget *, WidgetSelection *> SelectionHash;
@@ -1137,7 +1137,7 @@ static QSet<QString> languageKeywords()
 
 bool FormWindow::unify(QObject *w, QString &s, bool changeIt)
 {
-    typedef QSet<QString> StringSet;
+    using StringSet = QSet<QString>;
 
     QWidget *main = mainContainer();
     if (!main)
@@ -2413,7 +2413,7 @@ void FormWindow::simplifySelection(QWidgetList *sel) const
         sel->push_back(mainC);
         return;
     }
-    typedef QVector<QWidget *> WidgetVector;
+    using WidgetVector = QVector<QWidget *>;
     WidgetVector toBeRemoved;
     toBeRemoved.reserve(sel->size());
     const QWidgetList::const_iterator scend = sel->constEnd();

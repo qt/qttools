@@ -147,9 +147,9 @@ public:
     explicit CommandLinkButtonTaskMenu(QCommandLinkButton *button, QObject *parent = nullptr);
 };
 
-typedef ExtensionFactory<QDesignerTaskMenuExtension, QButtonGroup, ButtonGroupTaskMenu> ButtonGroupTaskMenuFactory;
-typedef ExtensionFactory<QDesignerTaskMenuExtension, QCommandLinkButton, CommandLinkButtonTaskMenu>  CommandLinkButtonTaskMenuFactory;
-typedef ExtensionFactory<QDesignerTaskMenuExtension, QAbstractButton, ButtonTaskMenu>  ButtonTaskMenuFactory;
+using ButtonGroupTaskMenuFactory = ExtensionFactory<QDesignerTaskMenuExtension, QButtonGroup, ButtonGroupTaskMenu>;
+using CommandLinkButtonTaskMenuFactory = ExtensionFactory<QDesignerTaskMenuExtension, QCommandLinkButton, CommandLinkButtonTaskMenu>;
+using ButtonTaskMenuFactory = ExtensionFactory<QDesignerTaskMenuExtension, QAbstractButton, ButtonTaskMenu>;
 }  // namespace qdesigner_internal
 
 QT_END_NAMESPACE

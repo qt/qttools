@@ -122,7 +122,7 @@ protected:
 private:
     QDesignerFormEditorInterface *m_core;
 
-    typedef QSet<QWidget *> WidgetSet;
+    using WidgetSet = QSet<QWidget *>;
     WidgetSet m_customWidgetsWithScript;
 
     const DeviceProfile m_deviceProfile;

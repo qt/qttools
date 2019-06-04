@@ -136,7 +136,7 @@ private:
 
 enum IncludeType { IncludeLocal, IncludeGlobal  };
 
-typedef  QPair<QString, IncludeType> IncludeSpecification;
+using IncludeSpecification = QPair<QString, IncludeType>;
 
 QDESIGNER_SHARED_EXPORT IncludeSpecification  includeSpecification(QString includeFile);
 QDESIGNER_SHARED_EXPORT QString buildIncludeFile(QString includeFile, IncludeType includeType);
@@ -184,7 +184,7 @@ QDESIGNER_SHARED_EXPORT QDesignerWidgetDataBaseItemInterface
                        bool promoted,
                        bool custom);
 
-typedef  QList<QDesignerWidgetDataBaseItemInterface*> WidgetDataBaseItemList;
+using WidgetDataBaseItemList = QList<QDesignerWidgetDataBaseItemInterface *>;
 
 QDESIGNER_SHARED_EXPORT WidgetDataBaseItemList
         promotionCandidates(const QDesignerWidgetDataBaseInterface *db,

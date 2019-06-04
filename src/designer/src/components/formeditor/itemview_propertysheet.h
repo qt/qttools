@@ -68,10 +68,8 @@ private:
     ItemViewPropertySheetPrivate *d;
 };
 
-typedef QDesignerPropertySheetFactory<QTreeView, ItemViewPropertySheet>
-                                      QTreeViewPropertySheetFactory;
-typedef QDesignerPropertySheetFactory<QTableView, ItemViewPropertySheet>
-                                      QTableViewPropertySheetFactory;
+using QTreeViewPropertySheetFactory = QDesignerPropertySheetFactory<QTreeView, ItemViewPropertySheet>;
+using QTableViewPropertySheetFactory = QDesignerPropertySheetFactory<QTableView, ItemViewPropertySheet>;
 }  // namespace qdesigner_internal
 
 QT_END_NAMESPACE

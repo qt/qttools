@@ -64,7 +64,7 @@ private:
     QAction *m_editItemsAction;
 };
 
-typedef ExtensionFactory<QDesignerTaskMenuExtension, QListWidget, ListWidgetTaskMenu> ListWidgetTaskMenuFactory;
+using ListWidgetTaskMenuFactory = ExtensionFactory<QDesignerTaskMenuExtension, QListWidget, ListWidgetTaskMenu>;
 }  // namespace qdesigner_internal
 
 QT_END_NAMESPACE

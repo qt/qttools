@@ -109,7 +109,7 @@ private:
     QDesignerTaskMenuPrivate *d;
 };
 
-typedef ExtensionFactory<QDesignerTaskMenuExtension, QWidget, QDesignerTaskMenu>  QDesignerTaskMenuFactory;
+using QDesignerTaskMenuFactory = ExtensionFactory<QDesignerTaskMenuExtension, QWidget, QDesignerTaskMenu>;
 
 } // namespace qdesigner_internal
 

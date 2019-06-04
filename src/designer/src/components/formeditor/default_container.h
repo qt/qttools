@@ -191,11 +191,11 @@ public:
     explicit QDockWidgetContainer(QDockWidget *widget, QObject *parent = nullptr);
 };
 
-typedef ExtensionFactory<QDesignerContainerExtension, QStackedWidget, QStackedWidgetContainer> QDesignerStackedWidgetContainerFactory;
-typedef ExtensionFactory<QDesignerContainerExtension, QTabWidget, QTabWidgetContainer> QDesignerTabWidgetContainerFactory;
-typedef ExtensionFactory<QDesignerContainerExtension, QToolBox, QToolBoxContainer> QDesignerToolBoxContainerFactory;
-typedef ExtensionFactory<QDesignerContainerExtension, QScrollArea, QScrollAreaContainer> QScrollAreaContainerFactory;
-typedef ExtensionFactory<QDesignerContainerExtension,  QDockWidget, QDockWidgetContainer> QDockWidgetContainerFactory;
+using QDesignerStackedWidgetContainerFactory = ExtensionFactory<QDesignerContainerExtension, QStackedWidget, QStackedWidgetContainer>;
+using QDesignerTabWidgetContainerFactory = ExtensionFactory<QDesignerContainerExtension, QTabWidget, QTabWidgetContainer>;
+using QDesignerToolBoxContainerFactory = ExtensionFactory<QDesignerContainerExtension, QToolBox, QToolBoxContainer>;
+using QScrollAreaContainerFactory = ExtensionFactory<QDesignerContainerExtension, QScrollArea, QScrollAreaContainer>;
+using QDockWidgetContainerFactory = ExtensionFactory<QDesignerContainerExtension,  QDockWidget, QDockWidgetContainer>;
 }  // namespace qdesigner_internal
 
 QT_END_NAMESPACE

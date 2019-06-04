@@ -36,8 +36,8 @@
 
 QT_BEGIN_NAMESPACE
 
-typedef QList<int> IdList;
-typedef QList<QWizardPage *> WizardPageList;
+using IdList = QList<int>;
+using WizardPageList = QList<QWizardPage *>;
 
 namespace qdesigner_internal {
 

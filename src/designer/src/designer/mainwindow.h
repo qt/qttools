@@ -141,8 +141,8 @@ class DockedMainWindow : public MainWindowBase {
     Q_OBJECT
     Q_DISABLE_COPY_MOVE(DockedMainWindow)
 public:
-    typedef QVector<QDesignerToolWindow *> DesignerToolWindowList;
-    typedef QVector<QDockWidget *> DockWidgetList;
+    using DesignerToolWindowList = QVector<QDesignerToolWindow *>;
+    using DockWidgetList = QVector<QDockWidget *>;
 
     explicit DockedMainWindow(QDesignerWorkbench *wb,
                               QMenu *toolBarMenu,

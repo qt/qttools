@@ -100,7 +100,7 @@ void QDesignerFormWindowCommand::updateBuddies(QDesignerFormWindowInterface *for
 {
     QExtensionManager* extensionManager = form->core()->extensionManager();
 
-    typedef QList<QLabel*> LabelList;
+    using LabelList = QList<QLabel *>;
 
     const LabelList label_list = form->findChildren<QLabel*>();
     if (label_list.empty())

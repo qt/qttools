@@ -179,7 +179,7 @@ private:
 // Helper to correctly unmanage a widget and its children for delete operations
 class  QDESIGNER_SHARED_EXPORT ManageWidgetCommandHelper {
 public:
-    typedef QVector<QWidget*> WidgetVector;
+    using WidgetVector = QVector<QWidget *>;
 
     ManageWidgetCommandHelper();
     void init(const QDesignerFormWindowInterface *fw, QWidget *widget);
@@ -316,24 +316,24 @@ private:
 class QDESIGNER_SHARED_EXPORT PromoteToCustomWidgetCommand : public QDesignerFormWindowCommand
 {
 public:
-    typedef QList<QPointer<QWidget> > WidgetList;
+    using WidgetPointerList = QList<QPointer<QWidget> >;
 
     explicit PromoteToCustomWidgetCommand(QDesignerFormWindowInterface *formWindow);
 
-    void init(const WidgetList &widgets, const QString &customClassName);
+    void init(const WidgetPointerList &widgets, const QString &customClassName);
     void redo() override;
     void undo() override;
 
 private:
     void updateSelection();
-    WidgetList m_widgets;
+    WidgetPointerList m_widgets;
     QString m_customClassName;
 };
 
 class QDESIGNER_SHARED_EXPORT DemoteFromCustomWidgetCommand : public QDesignerFormWindowCommand
 {
 public:
-    typedef PromoteToCustomWidgetCommand::WidgetList WidgetList;
+    using WidgetList = PromoteToCustomWidgetCommand::WidgetPointerList;
 
     explicit DemoteFromCustomWidgetCommand(QDesignerFormWindowInterface *formWindow);
 
@@ -354,7 +354,7 @@ public:
     void restore(QDesignerFormWindowInterface *formWindow) const;
 
 private:
-    typedef QList<QPointer<QWidget> > WidgetPointerList;
+    using WidgetPointerList = QList<QPointer<QWidget> >;
     WidgetPointerList m_selection;
     QPointer<QWidget> m_current;
 };
@@ -878,8 +878,8 @@ struct QDESIGNER_SHARED_EXPORT ListContents {
 // methods to retrieve and apply for ChangeTableContentsCommand
 struct QDESIGNER_SHARED_EXPORT TableWidgetContents {
 
-    typedef QPair<int, int> CellRowColumnAddress;
-    typedef QMap<CellRowColumnAddress, ItemData> TableItemMap;
+    using CellRowColumnAddress = QPair<int, int>;
+    using TableItemMap = QMap<CellRowColumnAddress, ItemData>;
 
     TableWidgetContents();
     void clear();
@@ -1016,7 +1016,7 @@ public:
         QAction *before;
         QWidget *widget;
     };
-    typedef QList<ActionDataItem> ActionData;
+    using ActionData = QList<ActionDataItem>;
 
 private:
     QAction *m_action;

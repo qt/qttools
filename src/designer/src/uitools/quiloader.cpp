@@ -330,7 +330,7 @@ class FormBuilderPrivate: public QFormBuilder
 {
     friend class QT_PREPEND_NAMESPACE(QUiLoader);
     friend class QT_PREPEND_NAMESPACE(QUiLoaderPrivate);
-    typedef QFormBuilder ParentClass;
+    using ParentClass = QFormBuilder;
 
 public:
     QUiLoader *loader = nullptr;

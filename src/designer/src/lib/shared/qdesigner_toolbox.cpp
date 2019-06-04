@@ -254,7 +254,7 @@ QToolBoxWidgetPropertySheet::QToolBoxWidgetPropertySheet(QToolBox *object, QObje
 
 QToolBoxWidgetPropertySheet::ToolBoxProperty QToolBoxWidgetPropertySheet::toolBoxPropertyFromName(const QString &name)
 {
-    typedef QHash<QString, ToolBoxProperty> ToolBoxPropertyHash;
+    using ToolBoxPropertyHash = QHash<QString, ToolBoxProperty>;
     static ToolBoxPropertyHash toolBoxPropertyHash;
     if (toolBoxPropertyHash.empty()) {
         toolBoxPropertyHash.insert(QLatin1String(currentItemTextKey),    PropertyCurrentItemText);

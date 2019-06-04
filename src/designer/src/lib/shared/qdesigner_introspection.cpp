@@ -283,13 +283,13 @@ namespace  {
         const qdesigner_internal::QDesignerIntrospection *m_introspection;
         const QMetaObject *m_metaObject;
 
-        typedef QVector<QDesignerMetaEnumInterface *> Enumerators;
+        using Enumerators = QVector<QDesignerMetaEnumInterface *>;
         Enumerators m_enumerators;
 
-        typedef QVector<QDesignerMetaMethodInterface *> Methods;
+        using Methods = QVector<QDesignerMetaMethodInterface *>;
         Methods m_methods;
 
-        typedef QVector<QDesignerMetaPropertyInterface *> Properties;
+        using Properties = QVector<QDesignerMetaPropertyInterface *>;
         Properties m_properties;
 
         QDesignerMetaPropertyInterface *m_userProperty;

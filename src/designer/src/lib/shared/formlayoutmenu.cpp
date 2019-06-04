@@ -131,8 +131,6 @@ FormLayoutRowDialog::FormLayoutRowDialog(QDesignerFormEditorInterface *core,
     m_fieldNameEdited(false),
     m_buddyClicked(false)
 {
-    typedef void (QComboBox::*QComboIntSignal)(int);
-
     Q_ASSERT(m_buddyMarkerRegexp.isValid());
 
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
@@ -155,7 +153,8 @@ FormLayoutRowDialog::FormLayoutRowDialog(QDesignerFormEditorInterface *core,
 
     m_ui.fieldClassComboBox->addItems(fieldWidgetClasses(core));
     m_ui.fieldClassComboBox->setCurrentIndex(0);
-    connect(m_ui.fieldClassComboBox, static_cast<QComboIntSignal>(&QComboBox::currentIndexChanged),
+    connect(m_ui.fieldClassComboBox,
+            QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &FormLayoutRowDialog::fieldClassChanged);
 
     updateOkButton();

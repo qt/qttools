@@ -76,8 +76,8 @@ private:
     PromotionTaskMenu *m_promotionTaskMenu;
 };
 
-typedef ExtensionFactory<QDesignerTaskMenuExtension, QToolBar, ToolBarTaskMenu> ToolBarTaskMenuFactory;
-typedef ExtensionFactory<QDesignerTaskMenuExtension, QStatusBar, StatusBarTaskMenu> StatusBarTaskMenuFactory;
+using ToolBarTaskMenuFactory = ExtensionFactory<QDesignerTaskMenuExtension, QToolBar, ToolBarTaskMenu>;
+using StatusBarTaskMenuFactory = ExtensionFactory<QDesignerTaskMenuExtension, QStatusBar, StatusBarTaskMenu>;
 
 }  // namespace qdesigner_internal
 

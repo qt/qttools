@@ -49,7 +49,7 @@ public:
         QDesignerWidgetDataBaseItemInterface *promotedItem;
     };
 
-    typedef QList<PromotedClass> PromotedClasses;
+    using PromotedClasses = QList<PromotedClass>;
 
     virtual PromotedClasses promotedClasses() const = 0;
 

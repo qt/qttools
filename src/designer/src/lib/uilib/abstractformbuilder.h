@@ -218,7 +218,7 @@ protected:
     QVariant toVariant(const QMetaObject *meta, DomProperty *property);
     static QString toString(const DomString *str);
 
-    typedef QHash<QString, DomProperty*> DomPropertyHash;
+    using DomPropertyHash = QHash<QString, DomProperty*>;
     static DomPropertyHash propertyMap(const QList<DomProperty*> &properties);
 
     void setupColorGroup(QPalette &palette, QPalette::ColorGroup colorGroup, DomColorGroup *group);
@@ -239,7 +239,7 @@ protected:
 //  Icon/pixmap stuff
 //
     // A Pair of icon path/qrc path.
-    typedef QPair<QString, QString> IconPaths;
+    using IconPaths = QPair<QString, QString>;
 
     IconPaths iconPaths(const QIcon &) const;
     IconPaths pixmapPaths(const QPixmap &) const;

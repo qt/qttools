@@ -125,7 +125,7 @@ void Grid::paint(QPainter &p, const QWidget *widget, QPaintEvent *e) const
         const int xend = e->rect().right();
         const int yend = e->rect().bottom();
 
-        typedef QVector<QPointF> Points;
+        using Points = QVector<QPointF>;
         static Points points;
         points.clear();
 

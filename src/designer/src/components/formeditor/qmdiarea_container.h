@@ -94,8 +94,8 @@ private:
 
 // Factories
 
-typedef ExtensionFactory<QDesignerContainerExtension,  QMdiArea,  QMdiAreaContainer> QMdiAreaContainerFactory;
-typedef QDesignerPropertySheetFactory<QMdiArea, QMdiAreaPropertySheet> QMdiAreaPropertySheetFactory;
+using QMdiAreaContainerFactory = ExtensionFactory<QDesignerContainerExtension,  QMdiArea,  QMdiAreaContainer>;
+using QMdiAreaPropertySheetFactory = QDesignerPropertySheetFactory<QMdiArea, QMdiAreaPropertySheet>;
 }  // namespace qdesigner_internal
 
 QT_END_NAMESPACE

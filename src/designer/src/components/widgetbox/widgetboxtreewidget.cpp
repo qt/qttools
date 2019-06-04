@@ -152,7 +152,7 @@ void WidgetBoxTreeWidget::saveExpandedState() const
 
 void  WidgetBoxTreeWidget::restoreExpandedState()
 {
-    typedef QSet<QString> StringSet;
+    using StringSet = QSet<QString>;
     QDesignerSettingsInterface *settings = m_core->settingsManager();
     const QString groupKey = QLatin1String(widgetBoxSettingsGroupC) + QLatin1Char('/');
     m_iconMode = settings->value(groupKey + QLatin1String(widgetBoxViewModeKeyC)).toBool();

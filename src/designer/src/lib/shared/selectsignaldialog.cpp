@@ -53,7 +53,7 @@ namespace qdesigner_internal {
 
 enum { MethodRole = Qt::UserRole + 1 };
 
-typedef QVector<SelectSignalDialog::Method> Methods;
+using Methods = QVector<SelectSignalDialog::Method>;
 
 SelectSignalDialog::SelectSignalDialog(QWidget *parent)
     : QDialog(parent)

@@ -232,7 +232,7 @@ void InsertWidgetCommand::undo()
 
 void InsertWidgetCommand::refreshBuddyLabels()
 {
-    typedef QList<QLabel*> LabelList;
+    using LabelList = QList<QLabel *>;
 
     const LabelList label_list = formWindow()->findChildren<QLabel*>();
     if (label_list.empty())
@@ -620,7 +620,7 @@ PromoteToCustomWidgetCommand::PromoteToCustomWidgetCommand
 {
 }
 
-void PromoteToCustomWidgetCommand::init(const WidgetList &widgets,const QString &customClassName)
+void PromoteToCustomWidgetCommand::init(const WidgetPointerList &widgets,const QString &customClassName)
 {
     m_widgets = widgets;
     m_customClassName = customClassName;

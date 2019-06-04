@@ -55,8 +55,8 @@ class FontPropertyManager {
 public:
     FontPropertyManager();
 
-    typedef QMap<QtProperty *, bool> ResetMap;
-    typedef QMap<QString, QString> NameMap;
+    using ResetMap = QMap<QtProperty *, bool>;
+    using NameMap = QMap<QString, QString>;
 
     // Call before QtVariantPropertyManager::initializeProperty.
     void preInitializeProperty(QtProperty *property, int type, ResetMap &resetMap);
@@ -80,9 +80,9 @@ public:
     static bool readFamilyMapping(NameMap *rc, QString *errorMessage);
 
 private:
-    typedef QMap<QtProperty *, QtProperty *> PropertyToPropertyMap;
-    typedef QList<QtProperty *> PropertyList;
-    typedef QMap<QtProperty *, PropertyList>  PropertyToSubPropertiesMap;
+    using PropertyToPropertyMap = QMap<QtProperty *, QtProperty *>;
+    using PropertyList = QList<QtProperty *>;
+    using PropertyToSubPropertiesMap = QMap<QtProperty *, PropertyList>;
 
     void removeAntialiasingProperty(QtProperty *);
     void updateModifiedState(QtProperty *property, const QVariant &value);

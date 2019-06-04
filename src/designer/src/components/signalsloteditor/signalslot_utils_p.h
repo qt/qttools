@@ -71,7 +71,7 @@ struct ClassMemberFunctions
     QStringList m_memberList;
 };
 
-typedef QList<ClassMemberFunctions> ClassesMemberFunctions;
+using ClassesMemberFunctions = QList<ClassMemberFunctions>;
 
 // Return classes and members in reverse class order to
 // populate of the combo of the ToolWindow.

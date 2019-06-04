@@ -60,7 +60,7 @@ namespace qdesigner_internal {
 
         const QDesignerMetaObjectInterface* metaObjectForQMetaObject(const QMetaObject *metaObject) const;
     private:
-        typedef QMap<const QMetaObject*, QDesignerMetaObjectInterface*> MetaObjectMap;
+        using MetaObjectMap = QMap<const QMetaObject*, QDesignerMetaObjectInterface*>;
         mutable MetaObjectMap m_metaObjectMap;
 
     };

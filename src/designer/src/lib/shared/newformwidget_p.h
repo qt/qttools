@@ -71,7 +71,7 @@ class QDESIGNER_SHARED_EXPORT NewFormWidget : public QDesignerNewFormWidgetInter
     Q_DISABLE_COPY_MOVE(NewFormWidget)
 
 public:
-    typedef QList<qdesigner_internal::DeviceProfile> DeviceProfileList;
+    using DeviceProfileList = QList<qdesigner_internal::DeviceProfile>;
 
     explicit NewFormWidget(QDesignerFormEditorInterface *core, QWidget *parentWidget);
     ~NewFormWidget() override;
@@ -112,8 +112,8 @@ private:
     bool showCurrentItemPixmap();
 
     // Pixmap cache (item, profile combo index)
-    typedef QPair<const QTreeWidgetItem *, int> ItemPixmapCacheKey;
-    typedef QMap<ItemPixmapCacheKey, QPixmap> ItemPixmapCache;
+    using ItemPixmapCacheKey = QPair<const QTreeWidgetItem *, int>;
+    using ItemPixmapCache = QMap<ItemPixmapCacheKey, QPixmap>;
     ItemPixmapCache m_itemPixmapCache;
 
     QDesignerFormEditorInterface *m_core;

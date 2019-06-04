@@ -404,7 +404,7 @@ QTabWidgetPropertySheet::QTabWidgetPropertySheet(QTabWidget *object, QObject *pa
 
 QTabWidgetPropertySheet::TabWidgetProperty QTabWidgetPropertySheet::tabWidgetPropertyFromName(const QString &name)
 {
-    typedef QHash<QString, TabWidgetProperty> TabWidgetPropertyHash;
+    using TabWidgetPropertyHash = QHash<QString, TabWidgetProperty>;
     static TabWidgetPropertyHash tabWidgetPropertyHash;
     if (tabWidgetPropertyHash.empty()) {
         tabWidgetPropertyHash.insert(QLatin1String(currentTabTextKey),      PropertyCurrentTabText);

@@ -59,7 +59,7 @@ public:
     explicit QDesignerPropertyEditor(QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr);
 
     // A pair <ValidationMode, bool isTranslatable>.
-    typedef QPair<TextPropertyValidationMode, bool> StringPropertyParameters;
+    using StringPropertyParameters = QPair<TextPropertyValidationMode, bool>;
 
     // Return a pair of validation mode and flag indicating whether property is translatable
     // for textual properties.

@@ -99,9 +99,9 @@ private:
 };
 
 // Factories
-typedef QDesignerPropertySheetFactory<QWizard, QWizardPropertySheet>  QWizardPropertySheetFactory;
-typedef QDesignerPropertySheetFactory<QWizardPage, QWizardPagePropertySheet>  QWizardPagePropertySheetFactory;
-typedef ExtensionFactory<QDesignerContainerExtension,  QWizard,  QWizardContainer> QWizardContainerFactory;
+using QWizardPropertySheetFactory = QDesignerPropertySheetFactory<QWizard, QWizardPropertySheet>;
+using QWizardPagePropertySheetFactory = QDesignerPropertySheetFactory<QWizardPage, QWizardPagePropertySheet>;
+using QWizardContainerFactory = ExtensionFactory<QDesignerContainerExtension,  QWizard,  QWizardContainer>;
 }  // namespace qdesigner_internal
 
 QT_END_NAMESPACE

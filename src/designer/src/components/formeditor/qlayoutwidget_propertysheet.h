@@ -51,7 +51,7 @@ public:
     bool dynamicPropertiesAllowed() const override;
 };
 
-typedef QDesignerPropertySheetFactory<QLayoutWidget, QLayoutWidgetPropertySheet> QLayoutWidgetPropertySheetFactory;
+using QLayoutWidgetPropertySheetFactory = QDesignerPropertySheetFactory<QLayoutWidget, QLayoutWidgetPropertySheet>;
 }  // namespace qdesigner_internal
 
 QT_END_NAMESPACE

@@ -108,7 +108,7 @@ Q_DECLARE_METATYPE(QWidgetList)
 QT_BEGIN_NAMESPACE
 
 namespace {
-    typedef QList<DomProperty*> DomPropertyList;
+    using DomPropertyList = QList<DomProperty *>;
 }
 
 static const char *currentUiVersion = "4.0";

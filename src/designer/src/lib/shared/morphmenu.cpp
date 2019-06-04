@@ -226,7 +226,7 @@ static QString suggestObjectName(const QString &oldClassName, const QString &new
 // Find the label whose buddy the widget is.
 QLabel *buddyLabelOf(QDesignerFormWindowInterface *fw, QWidget *w)
 {
-    typedef QList<QLabel*> LabelList;
+    using LabelList = QList<QLabel *>;
     const LabelList labelList = fw->findChildren<QLabel*>();
     if (labelList.empty())
         return nullptr;

@@ -72,7 +72,7 @@ class QDESIGNER_SHARED_EXPORT PropertyHelper {
     Q_DISABLE_COPY(PropertyHelper)
 public:
     // A pair of Value and changed flag
-    typedef QPair<QVariant, bool> Value;
+    using Value = QPair<QVariant, bool>;
 
     enum ObjectType {OT_Object, OT_FreeAction, OT_AssociatedAction, OT_Widget};
 
@@ -135,8 +135,6 @@ private:
 
 class QDESIGNER_SHARED_EXPORT PropertyListCommand : public QDesignerFormWindowCommand {
 public:
-    typedef QList<QObject *> ObjectList;
-
     explicit PropertyListCommand(QDesignerFormWindowInterface *formWindow, QUndoCommand *parent = nullptr);
 
     QObject* object(int index = 0) const;
@@ -149,14 +147,14 @@ public:
     virtual void undo();
 
 protected:
-    typedef QSharedPointer<PropertyHelper> PropertyHelperPtr;
-    typedef QList<PropertyHelperPtr> PropertyHelperList;
+    using PropertyHelperPtr = QSharedPointer<PropertyHelper>;
+    using PropertyHelperList = QList<PropertyHelperPtr>;
 
     // add an object
     bool add(QObject *object, const QString &propertyName);
 
     // Init from a list and make sure referenceObject is added first to obtain the right property group
-    bool initList(const ObjectList &list, const QString &apropertyName, QObject *referenceObject = nullptr);
+    bool initList(const QObjectList &list, const QString &apropertyName, QObject *referenceObject = nullptr);
 
     // set a new value, return update mask
     unsigned setValue(QVariant value, bool changed, unsigned subPropertyMask);
@@ -207,12 +205,10 @@ class QDESIGNER_SHARED_EXPORT SetPropertyCommand: public PropertyListCommand
 {
 
 public:
-    typedef QList<QObject *> ObjectList;
-
     explicit SetPropertyCommand(QDesignerFormWindowInterface *formWindow, QUndoCommand *parent = nullptr);
 
     bool init(QObject *object, const QString &propertyName, const QVariant &newValue);
-    bool init(const ObjectList &list, const QString &propertyName, const QVariant &newValue,
+    bool init(const QObjectList &list, const QString &propertyName, const QVariant &newValue,
               QObject *referenceObject = nullptr, bool enableSubPropertyHandling = true);
 
 
@@ -241,12 +237,10 @@ class QDESIGNER_SHARED_EXPORT ResetPropertyCommand: public PropertyListCommand
 {
 
 public:
-    typedef QList<QObject *> ObjectList;
-
     explicit ResetPropertyCommand(QDesignerFormWindowInterface *formWindow);
 
     bool init(QObject *object, const QString &propertyName);
-    bool init(const ObjectList &list, const QString &propertyName, QObject *referenceObject = nullptr);
+    bool init(const QObjectList &list, const QString &propertyName, QObject *referenceObject = nullptr);
 
     virtual void redo();
 

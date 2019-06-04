@@ -120,7 +120,7 @@ private:
     QMap<QWidget *, PageData> m_pageToData;
 };
 
-typedef QDesignerPropertySheetFactory<QToolBox, QToolBoxWidgetPropertySheet> QToolBoxWidgetPropertySheetFactory;
+using QToolBoxWidgetPropertySheetFactory = QDesignerPropertySheetFactory<QToolBox, QToolBoxWidgetPropertySheet>;
 
 QT_END_NAMESPACE
 

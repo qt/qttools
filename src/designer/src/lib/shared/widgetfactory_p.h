@@ -154,13 +154,13 @@ private:
 
     const Strings m_strings;
     QDesignerFormEditorInterface *m_core;
-    typedef QMap<QString, QDesignerCustomWidgetInterface*> CustomWidgetFactoryMap;
+    using CustomWidgetFactoryMap = QMap<QString, QDesignerCustomWidgetInterface*>;
     CustomWidgetFactoryMap m_customFactory;
     QDesignerFormWindowInterface *m_formWindow;
 
     // Points to the cached style or 0 if the default (qApp) is active
     QStyle *m_currentStyle;
-    typedef QHash<QString, QStyle *> StyleCache;
+    using StyleCache = QHash<QString, QStyle *>;
     StyleCache m_styleCache;
 };
 

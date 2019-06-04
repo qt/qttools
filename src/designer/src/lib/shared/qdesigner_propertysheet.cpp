@@ -127,8 +127,8 @@ static bool hasLayoutAttributes(QDesignerFormEditorInterface *core, QObject *obj
 // Cache DesignerMetaEnum by scope/name of a  QMetaEnum
 static const qdesigner_internal::DesignerMetaEnum &designerMetaEnumFor(const QDesignerMetaEnumInterface *me)
 {
-    typedef QPair<QString, QString> ScopeNameKey;
-    typedef QMap<ScopeNameKey, qdesigner_internal::DesignerMetaEnum> DesignerMetaEnumCache;
+    using ScopeNameKey = QPair<QString, QString>;
+    using DesignerMetaEnumCache = QMap<ScopeNameKey, qdesigner_internal::DesignerMetaEnum>;
     static DesignerMetaEnumCache cache;
 
     const QString name = me->name();
@@ -149,8 +149,8 @@ static const qdesigner_internal::DesignerMetaEnum &designerMetaEnumFor(const QDe
 // Cache DesignerMetaFlags by scope/name of a  QMetaEnum
 static const qdesigner_internal::DesignerMetaFlags &designerMetaFlagsFor(const QDesignerMetaEnumInterface *me)
 {
-    typedef QPair<QString, QString> ScopeNameKey;
-    typedef QMap<ScopeNameKey, qdesigner_internal::DesignerMetaFlags> DesignerMetaFlagsCache;
+    using ScopeNameKey = QPair<QString, QString>;
+    using DesignerMetaFlagsCache = QMap<ScopeNameKey, qdesigner_internal::DesignerMetaFlags>;
     static DesignerMetaFlagsCache cache;
 
     const QString name = me->name();
@@ -171,8 +171,8 @@ static const qdesigner_internal::DesignerMetaFlags &designerMetaFlagsFor(const Q
 // ------------ QDesignerMemberSheetPrivate
 class QDesignerPropertySheetPrivate {
 public:
-    typedef QDesignerPropertySheet::PropertyType PropertyType;
-    typedef QDesignerPropertySheet::ObjectType ObjectType;
+    using PropertyType = QDesignerPropertySheet::PropertyType;
+    using ObjectType = QDesignerPropertySheet::ObjectType;
 
     explicit QDesignerPropertySheetPrivate(QDesignerPropertySheet *sheetPublic, QObject *object, QObject *sheetParent);
 
@@ -228,7 +228,7 @@ public:
     const QDesignerMetaObjectInterface *m_meta;
     const ObjectType m_objectType;
 
-    typedef QHash<int, Info> InfoHash;
+    using InfoHash = QHash<int, Info>;
     InfoHash m_info;
     QHash<int, QVariant> m_fakeProperties;
     QHash<int, QVariant> m_addProperties;
@@ -468,7 +468,7 @@ QDesignerPropertySheet::PropertyType QDesignerPropertySheetPrivate::propertyType
 
 QString QDesignerPropertySheetPrivate::transformLayoutPropertyName(int index) const
 {
-    typedef QMap<QDesignerPropertySheet::PropertyType, QString> TypeNameMap;
+    using TypeNameMap = QMap<QDesignerPropertySheet::PropertyType, QString>;
     static TypeNameMap typeNameMap;
     if (typeNameMap.empty()) {
         typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutObjectName, QStringLiteral("objectName"));
@@ -560,7 +560,7 @@ QDesignerPropertySheet::QDesignerPropertySheet(QObject *object, QObject *parent)
     QObject(parent),
     d(new QDesignerPropertySheetPrivate(this, object, parent))
 {
-    typedef QDesignerPropertySheetPrivate::Info Info;
+    using Info = QDesignerPropertySheetPrivate::Info;
     const QDesignerMetaObjectInterface *baseMeta = d->m_meta;
 
     while (baseMeta &&baseMeta->className().startsWith(QStringLiteral("QDesigner"))) {
@@ -674,7 +674,7 @@ QDesignerPropertySheet::QDesignerPropertySheet(QObject *object, QObject *parent)
         createFakeProperty(QStringLiteral("floating"));
     }
 
-    typedef QList<QByteArray> ByteArrayList;
+    using ByteArrayList = QList<QByteArray>;
     const ByteArrayList names = object->dynamicPropertyNames();
     if (!names.empty()) {
         const ByteArrayList::const_iterator cend =  names.constEnd();
@@ -722,7 +722,7 @@ bool QDesignerPropertySheet::canAddDynamicProperty(const QString &propName) cons
 
 int QDesignerPropertySheet::addDynamicProperty(const QString &propName, const QVariant &value)
 {
-    typedef QDesignerPropertySheetPrivate::Info Info;
+    using Info = QDesignerPropertySheetPrivate::Info;
     if (!value.isValid())
         return -1; // property has invalid type
     if (!canAddDynamicProperty(propName))
@@ -883,7 +883,7 @@ void QDesignerPropertySheet::setIconCache(qdesigner_internal::DesignerIconCache 
 
 int QDesignerPropertySheet::createFakeProperty(const QString &propertyName, const QVariant &value)
 {
-    typedef QDesignerPropertySheetPrivate::Info Info;
+    using Info = QDesignerPropertySheetPrivate::Info;
     // fake properties
     const int index = d->m_meta->indexOfProperty(propertyName);
     if (index != -1) {
@@ -1612,7 +1612,7 @@ struct QDesignerAbstractPropertySheetFactory::PropertySheetFactoryPrivate {
     const QString m_propertySheetId;
     const QString m_dynamicPropertySheetId;
 
-    typedef QMap<QObject*, QObject*> ExtensionMap;
+    using ExtensionMap = QMap<QObject*, QObject*>;
     ExtensionMap m_extensions;
 };
 

@@ -57,7 +57,7 @@ static const char *skinExtensionC = "skin";
 
 // Pair of skin name, path
 typedef QPair<QString, QString> SkinNamePath;
-typedef QList<SkinNamePath> Skins;
+using Skins = QList<SkinNamePath>;
 enum { SkinComboNoneIndex = 0 };
 
 // find default skins (resources)
@@ -314,13 +314,11 @@ PreviewConfigurationWidget::PreviewConfigurationWidget(QDesignerFormEditorInterf
     QGroupBox(parent),
     m_impl(new PreviewConfigurationWidgetPrivate(core, this))
 {
-    typedef void (QComboBox::*QComboIntSignal)(int);
-
     connect(m_impl->appStyleSheetChangeButton(), &QAbstractButton::clicked,
             this, &PreviewConfigurationWidget::slotEditAppStyleSheet);
     connect(m_impl->skinRemoveButton(), &QAbstractButton::clicked,
             this, &PreviewConfigurationWidget::slotDeleteSkinEntry);
-    connect(m_impl->skinCombo(), static_cast<QComboIntSignal>(&QComboBox::currentIndexChanged),
+    connect(m_impl->skinCombo(), QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &PreviewConfigurationWidget::slotSkinChanged);
 
     m_impl->retrieveSettings();

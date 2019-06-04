@@ -60,7 +60,7 @@ private:
     QWidgetList m_widgets;
 };
 
-typedef ExtensionFactory<QDesignerContainerExtension, QMainWindow, QMainWindowContainer> QMainWindowContainerFactory;
+using QMainWindowContainerFactory = ExtensionFactory<QDesignerContainerExtension, QMainWindow, QMainWindowContainer>;
 }  // namespace qdesigner_internal
 
 QT_END_NAMESPACE

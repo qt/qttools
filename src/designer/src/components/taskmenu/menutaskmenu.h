@@ -83,8 +83,8 @@ private:
     QDesignerMenuBar *m_bar;
 };
 
-typedef ExtensionFactory<QDesignerTaskMenuExtension, QDesignerMenu, MenuTaskMenu> MenuTaskMenuFactory;
-typedef ExtensionFactory<QDesignerTaskMenuExtension, QDesignerMenuBar, MenuBarTaskMenu> MenuBarTaskMenuFactory;
+using MenuTaskMenuFactory = ExtensionFactory<QDesignerTaskMenuExtension, QDesignerMenu, MenuTaskMenu>;
+using MenuBarTaskMenuFactory = ExtensionFactory<QDesignerTaskMenuExtension, QDesignerMenuBar, MenuBarTaskMenu>;
 
 }  // namespace qdesigner_internal
 

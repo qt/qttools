@@ -1004,7 +1004,7 @@ PropertyHelper *PropertyListCommand::createPropertyHelper(QObject *object, Speci
 }
 
 // Init from a list and make sure referenceObject is added first to obtain the right property group
-bool PropertyListCommand::initList(const ObjectList &list, const QString &apropertyName, QObject *referenceObject)
+bool PropertyListCommand::initList(const QObjectList &list, const QString &apropertyName, QObject *referenceObject)
 {
     propertyHelperList().clear();
 
@@ -1209,7 +1209,7 @@ bool SetPropertyCommand::init(QObject *object, const QString &apropertyName, con
     return true;
 }
 
-bool SetPropertyCommand::init(const ObjectList &list, const QString &apropertyName, const QVariant &newValue,
+bool SetPropertyCommand::init(const QObjectList &list, const QString &apropertyName, const QVariant &newValue,
                               QObject *referenceObject, bool enableSubPropertyHandling)
 {
     if (!initList(list, apropertyName, referenceObject))
@@ -1319,10 +1319,10 @@ bool ResetPropertyCommand::init(QObject *object, const QString &apropertyName)
     return true;
 }
 
-bool ResetPropertyCommand::init(const ObjectList &list, const QString &apropertyName, QObject *referenceObject)
+bool ResetPropertyCommand::init(const QObjectList &list, const QString &apropertyName, QObject *referenceObject)
 {
-    ObjectList modifiedList = list; // filter out modified properties
-    for (ObjectList::iterator it = modifiedList.begin(); it != modifiedList.end() ; ) {
+    QObjectList modifiedList = list; // filter out modified properties
+    for (auto it = modifiedList.begin(); it != modifiedList.end() ; ) {
         QDesignerPropertySheetExtension* sheet = propertySheet(*it);
         Q_ASSERT(sheet);
         const int index = sheet->indexOf(apropertyName);

@@ -107,9 +107,9 @@ private:
     QMenu *m_widget;
 };
 
-typedef ExtensionFactory<QDesignerActionProviderExtension, QToolBar, QToolBarActionProvider> QToolBarActionProviderFactory;
-typedef ExtensionFactory<QDesignerActionProviderExtension, QMenuBar, QMenuBarActionProvider> QMenuBarActionProviderFactory;
-typedef ExtensionFactory<QDesignerActionProviderExtension, QMenu, QMenuActionProvider> QMenuActionProviderFactory;
+using QToolBarActionProviderFactory = ExtensionFactory<QDesignerActionProviderExtension, QToolBar, QToolBarActionProvider>;
+using QMenuBarActionProviderFactory = ExtensionFactory<QDesignerActionProviderExtension, QMenuBar, QMenuBarActionProvider>;
+using QMenuActionProviderFactory = ExtensionFactory<QDesignerActionProviderExtension, QMenu, QMenuActionProvider>;
 
 } // namespace qdesigner_internal
 

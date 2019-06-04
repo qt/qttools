@@ -142,7 +142,7 @@ QMdiAreaPropertySheet::QMdiAreaPropertySheet(QWidget *mdiArea, QObject *parent) 
 
 QMdiAreaPropertySheet::MdiAreaProperty QMdiAreaPropertySheet::mdiAreaProperty(const QString &name)
 {
-    typedef QHash<QString, MdiAreaProperty> MdiAreaPropertyHash;
+    using MdiAreaPropertyHash = QHash<QString, MdiAreaProperty>;
     static MdiAreaPropertyHash mdiAreaPropertyHash;
     if (mdiAreaPropertyHash.empty()) {
         mdiAreaPropertyHash.insert(QLatin1String(subWindowNameC), MdiAreaSubWindowName);

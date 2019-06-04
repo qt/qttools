@@ -59,7 +59,7 @@ QT_BEGIN_NAMESPACE
 
 namespace qdesigner_internal {
 
-typedef QList<DeviceProfile> DeviceProfileList;
+using DeviceProfileList = QList<DeviceProfile>;
 
 enum { profileComboIndexOffset = 1 };
 
@@ -137,8 +137,6 @@ EmbeddedOptionsControlPrivate::EmbeddedOptionsControlPrivate(QDesignerFormEditor
 
 void EmbeddedOptionsControlPrivate::init(EmbeddedOptionsControl *q)
 {
-    typedef void (QComboBox::*QComboIntSignal)(int);
-
     m_q = q;
     QVBoxLayout *vLayout = new QVBoxLayout;
     QHBoxLayout *hLayout = new QHBoxLayout;
@@ -146,7 +144,7 @@ void EmbeddedOptionsControlPrivate::init(EmbeddedOptionsControl *q)
     m_profileCombo->setEditable(false);
     hLayout->addWidget(m_profileCombo);
     m_profileCombo->addItem(EmbeddedOptionsControl::tr("None"));
-    EmbeddedOptionsControl::connect(m_profileCombo, static_cast<QComboIntSignal>(&QComboBox::currentIndexChanged),
+    EmbeddedOptionsControl::connect(m_profileCombo, QOverload<int>::of(&QComboBox::currentIndexChanged),
                                     m_q, &EmbeddedOptionsControl::slotProfileIndexChanged);
 
     m_addButton->setIcon(createIconSet(QString::fromUtf8("plus.png")));

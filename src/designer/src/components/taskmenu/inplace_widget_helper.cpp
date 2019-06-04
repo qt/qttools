@@ -43,14 +43,12 @@ namespace qdesigner_internal {
     m_parentWidget(parentWidget),
     m_noChildEvent(m_parentWidget->testAttribute(Qt::WA_NoChildEventsForParent))
     {
-        typedef void (QWidget::*QWidgetVoidSlot)();
-
         m_editorWidget->setAttribute(Qt::WA_DeleteOnClose);
         m_editorWidget->setParent(m_parentWidget->window());
         m_parentWidget->installEventFilter(this);
         m_editorWidget->installEventFilter(this);
         connect(m_editorWidget, &QObject::destroyed,
-                fw->mainContainer(), static_cast<QWidgetVoidSlot>(&QWidget::setFocus));
+                fw->mainContainer(), QOverload<>::of(&QWidget::setFocus));
     }
 
     InPlaceWidgetHelper::~InPlaceWidgetHelper()

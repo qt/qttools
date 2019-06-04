@@ -67,7 +67,7 @@ namespace qdesigner_internal {
 
 class QDESIGNER_SHARED_EXPORT QDesignerSharedSettings {
 public:
-    typedef QList<DeviceProfile> DeviceProfileList;
+    using DeviceProfileList = QList<DeviceProfile>;
 
     explicit QDesignerSharedSettings(QDesignerFormEditorInterface *core);
 

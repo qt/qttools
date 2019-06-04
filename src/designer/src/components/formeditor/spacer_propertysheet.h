@@ -51,7 +51,7 @@ public:
     bool dynamicPropertiesAllowed() const override;
 };
 
-typedef QDesignerPropertySheetFactory<Spacer, SpacerPropertySheet> SpacerPropertySheetFactory;
+using SpacerPropertySheetFactory = QDesignerPropertySheetFactory<Spacer, SpacerPropertySheet>;
 }  // namespace qdesigner_internal
 
 QT_END_NAMESPACE

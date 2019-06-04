@@ -144,7 +144,7 @@ private:
     QStackedWidget *m_stackedWidget;
 };
 
-typedef QDesignerPropertySheetFactory<QStackedWidget, QStackedWidgetPropertySheet> QStackedWidgetPropertySheetFactory;
+using QStackedWidgetPropertySheetFactory = QDesignerPropertySheetFactory<QStackedWidget, QStackedWidgetPropertySheet>;
 
 QT_END_NAMESPACE
 

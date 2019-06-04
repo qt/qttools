@@ -43,8 +43,8 @@
 
 QT_BEGIN_NAMESPACE
 
-typedef QList<QAction*> ActionList;
-typedef QList<QGraphicsItem *> GraphicsItemList;
+using ActionList = QList<QAction *>;
+using GraphicsItemList = QList<QGraphicsItem *>;
 
 enum { debugZoomWidget = 0 };
 

@@ -60,7 +60,7 @@ private:
     QAction *m_editPlainTextAction;
 };
 
-typedef ExtensionFactory<QDesignerTaskMenuExtension, QLabel, LabelTaskMenu>  LabelTaskMenuFactory;
+using LabelTaskMenuFactory = ExtensionFactory<QDesignerTaskMenuExtension, QLabel, LabelTaskMenu>;
 }  // namespace qdesigner_internal
 
 QT_END_NAMESPACE

@@ -194,8 +194,6 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
       m_preferencesAction(new QAction(tr("Preferences..."), this)),
       m_appFontAction(new QAction(tr("Additional Fonts..."), this))
 {
-    typedef void (QDesignerActions::*VoidSlot)();
-
 #if defined (Q_OS_UNIX) && !defined(Q_OS_MACOS)
     m_newFormAction->setIcon(QIcon::fromTheme(QStringLiteral("document-new"), m_newFormAction->icon()));
     m_openFormAction->setIcon(QIcon::fromTheme(QStringLiteral("document-open"), m_openFormAction->icon()));
@@ -255,10 +253,12 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
     m_fileActions->addAction(createSeparator(this));
 
     m_saveFormAction->setShortcut(QKeySequence::Save);
-    connect(m_saveFormAction, &QAction::triggered, this, static_cast<VoidSlot>(&QDesignerActions::saveForm));
+    connect(m_saveFormAction, &QAction::triggered, this,
+            QOverload<>::of(&QDesignerActions::saveForm));
     m_fileActions->addAction(m_saveFormAction);
 
-    connect(m_saveFormAsAction, &QAction::triggered, this, static_cast<VoidSlot>(&QDesignerActions::saveFormAs));
+    connect(m_saveFormAsAction, &QAction::triggered, this,
+            QOverload<>::of(&QDesignerActions::saveFormAs));
     m_fileActions->addAction(m_saveFormAsAction);
 
 #ifdef Q_OS_MACOS

@@ -67,15 +67,15 @@ class ConnectionEdit;
 class QDESIGNER_SHARED_EXPORT CETypes
 {
 public:
-    typedef QList<Connection*> ConnectionList;
-    typedef QHash<Connection*, Connection*> ConnectionSet;
-    typedef QHash<QWidget*, QWidget*> WidgetSet;
+    using ConnectionList = QList<Connection *>;
+    using ConnectionSet = QHash<Connection*, Connection*> ;
+    using WidgetSet = QHash<QWidget*, QWidget*>;
 
     class EndPoint {
     public:
         enum Type { Source, Target };
         explicit EndPoint(Connection *_con = nullptr, Type _type = Source) : con(_con), type(_type) {}
-        bool isNull() const { return con == 0; }
+        bool isNull() const { return con == nullptr; }
         bool operator == (const EndPoint &other) const { return con == other.con && type == other.type; }
         bool operator != (const EndPoint &other) const { return !operator == (other); }
         Connection *con;

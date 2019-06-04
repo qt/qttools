@@ -56,7 +56,7 @@ Q_DECLARE_METATYPE(QAction*)
 
 QT_BEGIN_NAMESPACE
 
-typedef QList<QAction *> ActionList;
+using ActionList = QList<QAction *>;
 
 using namespace qdesigner_internal;
 

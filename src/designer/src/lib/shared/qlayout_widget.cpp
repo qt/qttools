@@ -464,12 +464,12 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
         void simplify(const QDesignerFormEditorInterface *, QWidget *, const QRect &) override {}
 
         // Helper for restoring layout states
-        typedef QVector <QLayoutItem *> LayoutItemVector;
+        using LayoutItemVector = QVector<QLayoutItem *>;
         static LayoutItemVector disassembleLayout(QLayout *lt);
         static QLayoutItem *findItemOfWidget(const LayoutItemVector &lv, QWidget *w);
 
     private:
-        typedef QVector<QWidget *> BoxLayoutState;
+        using BoxLayoutState = QVector<QWidget *>;
 
         static BoxLayoutState state(const QBoxLayout*lt);
 
@@ -608,7 +608,7 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
         };
         // Horiontal, Vertical pair of state
         typedef QPair<DimensionCellState, DimensionCellState> CellState;
-        typedef QVector<CellState> CellStates;
+        using CellStates = QVector<CellState>;
 
         // Figure out states of a cell and return as a flat vector of
         // [column1, column2,...] (address as  row * columnCount + col)
@@ -695,7 +695,7 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
 
     void GridLayoutState::applyToLayout(const QDesignerFormEditorInterface *core, QWidget *w) const
     {
-        typedef QHash<QLayoutItem *, QRect> LayoutItemRectMap;
+        using LayoutItemRectMap =QHash<QLayoutItem *, QRect>;
         QGridLayout *grid = qobject_cast<QGridLayout *>(LayoutInfo::managedLayout(core, w));
         Q_ASSERT(grid);
         if (debugLayout)
@@ -1015,7 +1015,7 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
     class FormLayoutHelper : public  LayoutHelper {
     public:
         typedef QPair<QWidget *, QWidget *> WidgetPair;
-        typedef QVector<WidgetPair> FormLayoutState;
+        using FormLayoutState = QVector<WidgetPair>;
 
         FormLayoutHelper() {}
 
@@ -1179,8 +1179,8 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
 
     void FormLayoutHelper::simplify(const QDesignerFormEditorInterface *core, QWidget *widgetWithManagedLayout, const QRect &restrictionArea)
     {
-        typedef QPair<QLayoutItem*, QLayoutItem*> LayoutItemPair;
-        typedef QVector<LayoutItemPair> LayoutItemPairs;
+        using LayoutItemPair = QPair<QLayoutItem*, QLayoutItem*>;
+        using LayoutItemPairs = QVector<LayoutItemPair>;
 
         QFormLayout *formLayout = qobject_cast<QFormLayout *>(LayoutInfo::managedLayout(core, widgetWithManagedLayout));
         Q_ASSERT(formLayout);

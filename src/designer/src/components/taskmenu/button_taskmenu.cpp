@@ -56,8 +56,8 @@ namespace qdesigner_internal {
 
 enum { debugButtonMenu = 0 };
 
-typedef QList<QAbstractButton *> ButtonList;
-typedef QList<QButtonGroup *> ButtonGroupList;
+using ButtonList = QList<QAbstractButton *>;
+using ButtonGroupList = QList<QButtonGroup *>;
 
 // ButtonGroupCommand: Base for commands handling button groups and button lists
 // addButtonsToGroup() and removeButtonsFromGroup() are low-level helpers for

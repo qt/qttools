@@ -81,10 +81,10 @@ template <class IntType>
 class MetaEnum
 {
 public:
-    typedef QMap<QString, IntType> KeyToValueMap;
+    using KeyToValueMap = QMap<QString, IntType>;
 
     MetaEnum(const QString &name, const QString &scope, const QString &separator);
-    MetaEnum() {}
+    MetaEnum() = default;
     void addKey(IntType value, const QString &name);
 
     QString valueToKey(IntType value, bool *ok = nullptr) const;
@@ -273,8 +273,8 @@ class QDESIGNER_SHARED_EXPORT PropertySheetIconValue
     PropertySheetIconValue themed() const;
     PropertySheetIconValue unthemed() const;
 
-    typedef QPair<QIcon::Mode, QIcon::State> ModeStateKey;
-    typedef QMap<ModeStateKey, PropertySheetPixmapValue> ModeStateToPixmapMap;
+    using ModeStateKey = QPair<QIcon::Mode, QIcon::State>;
+    using ModeStateToPixmapMap = QMap<ModeStateKey, PropertySheetPixmapValue>;
 
     const ModeStateToPixmapMap &paths() const;
 

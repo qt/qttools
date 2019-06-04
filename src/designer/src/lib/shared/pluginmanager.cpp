@@ -134,9 +134,9 @@ static inline QString getDesignerLanguage(QDesignerFormEditorInterface *core)
 class QDesignerCustomWidgetSharedData : public QSharedData {
 public:
     // Type of a string property
-    typedef QPair<qdesigner_internal::TextPropertyValidationMode, bool> StringPropertyType;
-    typedef QHash<QString, StringPropertyType> StringPropertyTypeMap;
-    typedef QHash<QString, QString> PropertyToolTipMap;
+    using StringPropertyType = QPair<qdesigner_internal::TextPropertyValidationMode, bool>;
+    using StringPropertyTypeMap = QHash<QString, StringPropertyType>;
+    using PropertyToolTipMap = QHash<QString, QString>;
 
     explicit QDesignerCustomWidgetSharedData(const QString &thePluginPath) : pluginPath(thePluginPath) {}
     void clearXML();
@@ -453,7 +453,7 @@ QDesignerCustomWidgetData::ParseResult
 
 class QDesignerPluginManagerPrivate {
     public:
-    typedef QPair<QString, QString> ClassNamePropertyNameKey;
+    using ClassNamePropertyNameKey = QPair<QString, QString>;
 
     QDesignerPluginManagerPrivate(QDesignerFormEditorInterface *core);
 

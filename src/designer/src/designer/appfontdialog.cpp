@@ -81,8 +81,8 @@ public:
     bool removeAt(int index, QString *errorMessage);
 
     // Store loaded fonts as pair of file name and Id
-    typedef QPair<QString,int> FileNameFontIdPair;
-    typedef QList<FileNameFontIdPair> FileNameFontIdPairs;
+    using FileNameFontIdPair = QPair<QString,int>;
+    using FileNameFontIdPairs = QList<FileNameFontIdPair>;
     const FileNameFontIdPairs &fonts() const;
 
 private:
@@ -230,7 +230,7 @@ AppFontModel::AppFontModel(QObject * parent) :
 
 void AppFontModel::init(const AppFontManager &mgr)
 {
-    typedef AppFontManager::FileNameFontIdPairs FileNameFontIdPairs;
+    using FileNameFontIdPairs = AppFontManager::FileNameFontIdPairs;
 
     const FileNameFontIdPairs &fonts = mgr.fonts();
     const FileNameFontIdPairs::const_iterator cend = fonts.constEnd();

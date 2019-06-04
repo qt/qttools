@@ -73,7 +73,7 @@ public:
         bool visible{true};
     };
 
-    typedef QHash<int, Info> InfoHash;
+    using InfoHash = QHash<int, Info>;
 
     Info &ensureInfo(int index);
 
@@ -158,8 +158,7 @@ QString QDesignerMemberSheet::signature(int index) const
 
 bool QDesignerMemberSheet::isVisible(int index) const
 {
-    typedef QDesignerMemberSheetPrivate::InfoHash InfoHash;
-    const InfoHash::const_iterator it = d->m_info.constFind(index);
+    const auto it = d->m_info.constFind(index);
     if (it != d->m_info.constEnd())
         return it.value().visible;
 

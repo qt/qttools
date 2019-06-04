@@ -65,8 +65,6 @@
 
 QT_BEGIN_NAMESPACE
 
-typedef void (QComboBox::*QComboIntSignal)(int);
-
 // Add suitable form widgets to a list of objects for the  signal slot
 // editor. Prevent special widgets from showing up there.
 static void addWidgetToObjectList(const QWidget *w, QStringList &r)
@@ -81,8 +79,8 @@ static void addWidgetToObjectList(const QWidget *w, QStringList &r)
 
 static QStringList objectNameList(QDesignerFormWindowInterface *form)
 {
-    typedef QList<QAction*> ActionList;
-    typedef QList<QButtonGroup *> ButtonGroupList;
+    using ActionList = QList<QAction *>;
+    using ButtonGroupList = QList<QButtonGroup *>;
 
     QStringList result;
 
@@ -519,7 +517,7 @@ InlineEditor::InlineEditor(QWidget *parent) :
     setModel(m_model = new InlineEditorModel(0, 4, this));
     setFrame(false);
     m_idx = -1;
-    connect(this, static_cast<QComboIntSignal>(&QComboBox::activated),
+    connect(this, QOverload<int>::of(&QComboBox::activated),
             this, &InlineEditor::checkSelection);
 }
 
@@ -657,7 +655,7 @@ QWidget *ConnectionDelegate::createEditor(QWidget *parent,
         break;
     }
 
-    connect(inline_editor, static_cast<QComboIntSignal>(&QComboBox::activated),
+    connect(inline_editor, QOverload<int>::of(&QComboBox::activated),
             this, &ConnectionDelegate::emitCommitData);
 
     return inline_editor;

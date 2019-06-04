@@ -146,7 +146,7 @@ void QtResourceSet::setModified(const QString &path)
 // ------------------- QtResourceModelPrivate
 const QByteArray *QtResourceModelPrivate::createResource(const QString &path, QStringList *contents, int *errorCount, QIODevice &errorDevice) const
 {
-    typedef RCCResourceLibrary::ResourceDataFileMap ResourceDataFileMap;
+    using ResourceDataFileMap = RCCResourceLibrary::ResourceDataFileMap;
     const QByteArray *rc = nullptr;
     *errorCount = -1;
     contents->clear();

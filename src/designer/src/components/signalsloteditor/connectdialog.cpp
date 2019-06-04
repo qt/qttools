@@ -43,7 +43,7 @@
 QT_BEGIN_NAMESPACE
 
 namespace {
-    typedef QList<QListWidgetItem*> ListWidgetItems;
+    using ListWidgetItems = QList<QListWidgetItem *>;
 }
 
 static QString realClassName(QDesignerFormEditorInterface *core, QWidget *widget)
