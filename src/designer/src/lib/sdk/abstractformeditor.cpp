@@ -334,8 +334,7 @@ QDesignerPromotionInterface *QDesignerFormEditorInterface::promotion() const
 
 void QDesignerFormEditorInterface::setPromotion(QDesignerPromotionInterface *promotion)
 {
-    if (d->m_promotion)
-        delete d->m_promotion;
+    delete d->m_promotion;
     d->m_promotion = promotion;
 }
 
@@ -525,8 +524,7 @@ QDesignerIntrospectionInterface *QDesignerFormEditorInterface::introspection() c
 */
 void QDesignerFormEditorInterface::setIntrospection(QDesignerIntrospectionInterface *introspection)
 {
-    if (d->m_introspection)
-        delete d->m_introspection;
+     delete d->m_introspection;
      d->m_introspection = introspection;
 }
 

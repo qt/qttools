@@ -1259,7 +1259,8 @@ bool QDesignerPropertySheet::reset(int index)
     if (d->isResourceProperty(index)) {
         setProperty(index, d->emptyResourceProperty(index));
         return true;
-    } else if (isDynamic(index)) {
+    }
+    if (isDynamic(index)) {
         const QString propName = propertyName(index);
         const QVariant oldValue = d->m_addProperties.value(index);
         const QVariant defaultValue = d->m_info.value(index).defaultValue;

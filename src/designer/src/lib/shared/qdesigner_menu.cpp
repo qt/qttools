@@ -1101,11 +1101,10 @@ QDesignerMenu *QDesignerMenu::parentMenu() const
 
 QDesignerMenuBar *QDesignerMenu::parentMenuBar() const
 {
-    if (QDesignerMenuBar *mb = qobject_cast<QDesignerMenuBar*>(parentWidget())) {
+    if (QDesignerMenuBar *mb = qobject_cast<QDesignerMenuBar*>(parentWidget()))
         return mb;
-    } else if (QDesignerMenu *m = parentMenu()) {
+    if (QDesignerMenu *m = parentMenu())
         return m->parentMenuBar();
-    }
 
     return nullptr;
 }

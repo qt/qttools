@@ -278,7 +278,7 @@ DomProperty *QDesignerResourceBuilder::saveResource(const QDir &workingDirectory
                 const QIcon::Mode mode = itPix.key().first;
                 const QIcon::State state = itPix.key().second;
                 DomResourcePixmap *rp = new DomResourcePixmap;
-                const PropertySheetPixmapValue pix = itPix.value();
+                const PropertySheetPixmapValue &pix = itPix.value();
                 const PropertySheetPixmapValue::PixmapSource ps = pix.pixmapSource(m_core);
                 const QString pixPath = pix.path();
                 rp->setText(ps == PropertySheetPixmapValue::FilePixmap && m_saveRelative ? workingDirectory.relativeFilePath(pixPath) : pixPath);
@@ -1101,12 +1101,10 @@ DomWidget *QDesignerResource::createDom(QWidget *widget, DomWidget *ui_parentWid
         while (customInfo && customInfo->isCustom()) {
             m_usedCustomWidgets.insert(customInfo, true);
             const QString extends = customInfo->extends();
-            if (extends == customInfo->name()) {
+            if (extends == customInfo->name())
                 break; // There are faulty files around that have name==extends
-            } else {
-                const int extendsIndex = wdb->indexOfClassName(customInfo->extends());
-                customInfo = extendsIndex != -1 ?  wdb->item(extendsIndex) : nullptr;
-            }
+            const int extendsIndex = wdb->indexOfClassName(customInfo->extends());
+            customInfo = extendsIndex != -1 ?  wdb->item(extendsIndex) : nullptr;
         }
     }
 
@@ -1582,7 +1580,8 @@ bool QDesignerResource::addItem(DomLayoutItem *ui_item, QLayoutItem *item, QLayo
         const int colSpan = ui_item->hasAttributeColSpan() ? ui_item->attributeColSpan() : 1;
         grid->addWidget(item->widget(), ui_item->attributeRow(), ui_item->attributeColumn(), rowSpan, colSpan, item->alignment());
         return true;
-    } else if (box != nullptr) {
+    }
+    if (box != nullptr) {
         box->addItem(item);
         return true;
     }
@@ -1997,7 +1996,8 @@ DomProperty *QDesignerResource::createProperty(QObject *object, const QString &p
         p->setAttributeName(propertyName);
 
         return applyProperStdSetAttribute(object, propertyName, p);
-    } else if (value.canConvert<PropertySheetStringListValue>()) {
+    }
+    if (value.canConvert<PropertySheetStringListValue>()) {
         const PropertySheetStringListValue listValue = qvariant_cast<PropertySheetStringListValue>(value);
         DomProperty *p = new DomProperty;
         if (!hasSetter(core(), object, propertyName))
@@ -2010,7 +2010,8 @@ DomProperty *QDesignerResource::createProperty(QObject *object, const QString &p
         translationParametersToDom(listValue, domStringList);
         p->setElementStringList(domStringList);
         return applyProperStdSetAttribute(object, propertyName, p);
-    } else if (value.canConvert<PropertySheetKeySequenceValue>()) {
+    }
+    if (value.canConvert<PropertySheetKeySequenceValue>()) {
         const PropertySheetKeySequenceValue keyVal = qvariant_cast<PropertySheetKeySequenceValue>(value);
         DomProperty *p = stringToDomProperty(keyVal.value().toString(), keyVal);
         if (!hasSetter(core(), object, propertyName))

@@ -978,7 +978,7 @@ bool PropertyListCommand::add(QObject *object, const QString &propertyName)
         return false;
 
     if (!sheet->isEnabled(index))
-    return false;
+        return false;
 
     const PropertyDescription description(propertyName, sheet, index);
 

@@ -118,7 +118,6 @@ void SheetDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
 
 QSize SheetDelegate::sizeHint(const QStyleOptionViewItem &opt, const QModelIndex &index) const
 {
-    QStyleOptionViewItem option = opt;
     QSize sz = QItemDelegate::sizeHint(opt, index) + QSize(2, 2);
     return sz;
 }

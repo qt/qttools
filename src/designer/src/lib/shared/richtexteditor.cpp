@@ -738,7 +738,7 @@ QString RichTextEditor::text(Qt::TextFormat format) const
         return toPlainText();
     case Qt::RichText:
         return m_simplifyRichText ? simplifyRichTextFilter(toHtml()) : toHtml();
-    case Qt::AutoText:
+    default:
         break;
     }
     const QString html = toHtml();

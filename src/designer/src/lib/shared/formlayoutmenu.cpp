@@ -359,12 +359,11 @@ QStringList FormLayoutRowDialog::fieldWidgetClasses(QDesignerFormEditorInterface
     typedef QMultiHash<QString, QString> ClassMap;
 
     static QStringList rc;
-    if (rc.empty()) {
-        const int fwCount = sizeof(fieldWidgetBaseClasses)/sizeof(const char*);
+    if (rc.isEmpty()) {
         // Turn known base classes into list
         QStringList baseClasses;
-        for (int i = 0; i < fwCount; i++)
-            baseClasses.push_back(QLatin1String(fieldWidgetBaseClasses[i]));
+        for (auto fw : fieldWidgetBaseClasses)
+            baseClasses.append(QLatin1String(fw));
         // Scan for custom widgets that inherit them and store them in a
         // multimap of base class->custom widgets unless we have a language
         // extension installed which might do funny things with custom widgets.
@@ -385,9 +384,9 @@ QStringList FormLayoutRowDialog::fieldWidgetClasses(QDesignerFormEditorInterface
         }
         // Compile final list, taking each base class and append custom widgets
         // based on it.
-        for (int i = 0; i < fwCount; i++) {
-            rc.push_back(baseClasses.at(i));
-            rc += customClassMap.values(baseClasses.at(i));
+        for (const auto &baseClass : baseClasses) {
+            rc.append(baseClass);
+            rc += customClassMap.values(baseClass);
         }
     }
     return rc;

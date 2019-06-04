@@ -323,12 +323,10 @@ QWidget *WidgetFactory::createWidget(const QString &widgetName, QWidget *parentW
         //    return 0, do not try to find fallback, which might be worse in the case of Q3 widget.
         bool customWidgetCreationError;
         w = createCustomWidget(widgetName, parentWidget, &customWidgetCreationError);
-        if (w) {
+        if (w)
             break;
-        } else {
-            if (customWidgetCreationError)
-                return 0;
-        }
+        if (customWidgetCreationError)
+            return nullptr;
 
         // 2) Special widgets
         if (widgetName == m_strings.m_line) {

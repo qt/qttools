@@ -224,7 +224,7 @@ PropertyEditor::PropertyEditor(QDesignerFormEditorInterface *core, QWidget *pare
     m_colors.reserve(colors.count());
     const int darknessFactor = 250;
     for (int i = 0; i < colors.count(); i++) {
-        QColor c = colors.at(i);
+        const QColor &c = colors.at(i);
         m_colors.push_back(qMakePair(c, c.darker(darknessFactor)));
     }
     QColor dynamicColor(191, 207, 255);
@@ -1057,7 +1057,7 @@ void PropertyEditor::setObject(QObject *object)
                 QtVariantProperty *groupProperty = nullptr;
 
                 if (newProperty) {
-                    QMap<QString, QtVariantProperty*>::const_iterator itPrev = m_nameToProperty.insert(propertyName, property);
+                    QMap<QString, QtVariantProperty*>::const_iterator itPrev(m_nameToProperty.insert(propertyName, property));
                     m_propertyToGroup[property] = groupName;
                     if (m_sorting) {
                         QtProperty *previous = nullptr;

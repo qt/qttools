@@ -473,7 +473,7 @@ inline int valueOf(const QVariant &value, bool *ok = nullptr)
             *ok = true;
         return qvariant_cast<PropertySheetEnumValue>(value).value;
     }
-    else if (value.canConvert<PropertySheetFlagValue>()) {
+    if (value.canConvert<PropertySheetFlagValue>()) {
         if (ok)
             *ok = true;
         return qvariant_cast<PropertySheetFlagValue>(value).value;
