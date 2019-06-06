@@ -1181,13 +1181,12 @@ bool ClangCodeParser::getMoreArgs()
 {
     bool guessedIncludePaths = false;
     if (includePaths_.isEmpty()) {
-        Location::logToStdErrAlways("No include paths passed to qdoc");
-        Location::logToStdErrAlways("Guess reasonable include paths:");
         /*
           The include paths provided are inadequate. Make a list
           of reasonable places to look for include files and use
           that list instead.
          */
+        Location::logToStdErrAlways("No include paths passed to qdoc; guessing reasonable include paths");
         guessedIncludePaths = true;
         auto forest = qdb_->searchOrder();
 
@@ -1195,17 +1194,6 @@ bool ClangCodeParser::getMoreArgs()
         QString basicIncludeDir = QDir::cleanPath(QString(Config::installDir + "/../include"));
         moreArgs_ += "-I" + basicIncludeDir.toLatin1();
         moreArgs_ += includePathsFromHeaders(allHeaders_);
-        for (const auto p : moreArgs_) {
-            Location::logToStdErrAlways(p);
-        }
-#if 0
-        for (const auto &s : forest) {
-            QString module = basicIncludeDir +"/" + s->camelCaseModuleName();
-            moreArgs_ += QString("-I" + module).toLatin1();
-            moreArgs_ += QString("-I" + module + "/" + qdb_->version()).toLatin1();
-            moreArgs_ += QString("-I" + module + "/" + qdb_->version() + "/" + module).toLatin1();
-        }
-#endif
     }
     else {
         moreArgs_ = includePaths_;
