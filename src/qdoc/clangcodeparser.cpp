@@ -1022,19 +1022,24 @@ void ClangCodeParser::initializeParser(const Config &config)
     version_ = config.getString(CONFIG_VERSION);
     const auto args = config.getStringList(CONFIG_INCLUDEPATHS);
     QStringList squeezedArgs;
-    int i = 0;
-    while (i < args.size()) {
-        if (args.at(i) != QLatin1String("-I")) {
-            if (args.at(i).startsWith(QLatin1String("-I")))
-                squeezedArgs << args.at(i);
-            else
-                squeezedArgs << QLatin1String("-I") + args.at(i);
-        }
-        i++;
+    for (const auto &p : args) {
+        if (p.startsWith(QLatin1String("-I")))
+            squeezedArgs << p.mid(2).trimmed();
+        else
+            squeezedArgs << p;
     }
+    // Remove empty paths and duplicates
+    squeezedArgs.removeAll({});
+    squeezedArgs.removeDuplicates();
     includePaths_.resize(squeezedArgs.size());
     std::transform(squeezedArgs.begin(), squeezedArgs.end(), includePaths_.begin(),
-                   [](const QString &s) { return s.toUtf8(); });
+                   [](const QString &s) {
+                        QByteArray path(s.toUtf8());
+                        QFileInfo fi(QDir::current(), s);
+                        if (fi.exists())
+                            path = fi.canonicalFilePath().toUtf8();
+                        return path.prepend("-I");
+                    });
     CppCodeParser::initializeParser(config);
     pchFileDir_.reset(nullptr);
     allHeaders_.clear();
@@ -1206,14 +1211,6 @@ bool ClangCodeParser::getMoreArgs()
         moreArgs_ = includePaths_;
     }
 
-    // Canonicalize include paths
-    for (int i = 0; i < moreArgs_.size(); ++i) {
-        if (!moreArgs_.at(i).startsWith("-")) {
-            QFileInfo fi(QDir::current(), moreArgs_[i]);
-            if (fi.exists())
-                moreArgs_[i] = fi.canonicalFilePath().toLatin1();
-        }
-    }
     return guessedIncludePaths;
 }
 
@@ -1232,49 +1229,59 @@ void ClangCodeParser::buildPCH()
             QByteArray header;
             QByteArray privateHeaderDir;
             Location::logToStdErrAlways("Build & visit PCH for " + moduleHeader());
-            // Find the path to the module's header (e.g. QtGui/QtGui) to be used
-            // as pre-compiled header
-            for (const auto &p : qAsConst(includePaths_)) {
-                if (p.endsWith(module)) {
-                    QByteArray candidate = p + "/" + module;
+            // A predicate for std::find_if() to locate a path to the module's header
+            // (e.g. QtGui/QtGui) to be used as pre-compiled header
+            struct FindPredicate {
+                enum SearchType { Any, Module, Private };
+                QByteArray &candidate_;
+                const QByteArray &module_;
+                SearchType type_;
+                FindPredicate(QByteArray &candidate, const QByteArray &module, SearchType type = Any)
+                    : candidate_(candidate), module_(module), type_(type) {}
+
+                bool operator()(const QByteArray &p) const {
+                    if (type_ != Any && !p.endsWith(module_))
+                        return false;
+                    candidate_ = p + "/";
+                    switch (type_) {
+                    case Any:
+                    case Module:
+                        candidate_.append(module_);
+                        break;
+                    case Private:
+                        candidate_.append("private");
+                        break;
+                    default:
+                        break;
+                    }
                     if (p.startsWith("-I"))
-                        candidate = candidate.mid(2);
-                    if (QFile::exists(QString::fromUtf8(candidate))) {
-                        header = candidate;
-                        break;
-                    }
+                        candidate_ = candidate_.mid(2);
+                    return QFile::exists(QString::fromUtf8(candidate_));
                 }
-            }
-            if (header.isEmpty()) {
-                for (const auto &p : qAsConst(includePaths_)) {
-                    QByteArray candidate = p + "/" + module;
-                    if (QFile::exists(QString::fromUtf8(candidate))) {
-                        header = candidate;
-                        break;
-                    }
-                }
-            }
-            // Find the path to the module's private header directory (e.g.
-            // include/QtGui/5.8.0/QtGui/private) to use for including all
-            // the private headers in the PCH.
-            for (const auto &p : qAsConst(includePaths_)) {
-                if (p.endsWith(module)) {
-                    QByteArray candidate = p + "/private";
-                    if (QFile::exists(QString::fromUtf8(candidate))) {
-                        privateHeaderDir = candidate;
-                        break;
-                    }
-                }
-            }
-            if (header.isEmpty()) {
-                QByteArray installDocDir = Config::installDir.toUtf8();
-                const QByteArray candidate = installDocDir + "/../include/" + module + "/" + module;
-                if (QFile::exists(QString::fromUtf8(candidate)))
-                    header = candidate;
-            }
+            };
+
+            // First, search for an include path that contains the module name, then any path
+            QByteArray candidate;
+            auto it = std::find_if(includePaths_.begin(),
+                                   includePaths_.end(),
+                                   FindPredicate(candidate, module, FindPredicate::Module));
+            if (it == includePaths_.end())
+                it = std::find_if(includePaths_.begin(),
+                                  includePaths_.end(),
+                                  FindPredicate(candidate, module, FindPredicate::Any));
+            if (it != includePaths_.end())
+                header = candidate;
+
+            // Find the path to module's private headers - currently unused
+            it = std::find_if(includePaths_.begin(),
+                              includePaths_.end(),
+                              FindPredicate(candidate, module, FindPredicate::Private));
+            if (it != includePaths_.end())
+                privateHeaderDir = candidate;
+
             if (header.isEmpty()) {
                 qWarning() << "(qdoc) Could not find the module header in the include path for module"
-                    << module << "  (include paths: "<< includePaths_ << ")";
+                    << module << " (include paths: " << includePaths_ << ")";
             } else {
                 args_.push_back("-xc++");
                 CXTranslationUnit tu;
