@@ -92,6 +92,7 @@
 #include <QtCore/qtimer.h>
 #include <QtCore/qmetaobject.h>
 #include <QtCore/qfileinfo.h>
+#include <QtCore/qsavefile.h>
 #include <QtWidgets/qstatusbar.h>
 #include <QtWidgets/qdesktopwidget.h>
 #include <QtXml/qdom.h>
@@ -812,36 +813,9 @@ bool QDesignerActions::readInForm(const QString &fileName)
     return true;
 }
 
-static QString createBackup(const QString &fileName)
-{
-    const QString suffix = QStringLiteral(".bak");
-    QString backupFile = fileName + suffix;
-    QFileInfo fi(backupFile);
-    int i = 0;
-    while (fi.exists()) {
-        backupFile = fileName + suffix + QString::number(++i);
-        fi.setFile(backupFile);
-    }
-
-    if (QFile::copy(fileName, backupFile))
-        return backupFile;
-    return QString();
-}
-
-static void removeBackup(const QString &backupFile)
-{
-    if (!backupFile.isEmpty())
-        QFile::remove(backupFile);
-}
-
 bool QDesignerActions::writeOutForm(QDesignerFormWindowInterface *fw, const QString &saveFile, bool check)
 {
     Q_ASSERT(fw && !saveFile.isEmpty());
-
-    QString backupFile;
-    QFileInfo fi(saveFile);
-    if (fi.exists())
-        backupFile = createBackup(saveFile);
 
     if (check) {
         const QStringList problems = fw->checkContents();
@@ -854,10 +828,9 @@ bool QDesignerActions::writeOutForm(QDesignerFormWindowInterface *fw, const QStr
         if (fwb->lineTerminatorMode() == qdesigner_internal::FormWindowBase::CRLFLineTerminator)
             contents.replace(QLatin1Char('\n'), QStringLiteral("\r\n"));
     }
-    const QByteArray utf8Array = contents.toUtf8();
     m_workbench->updateBackup(fw);
 
-    QFile f(saveFile);
+    QSaveFile f(saveFile);
     while (!f.open(QFile::WriteOnly)) {
         QMessageBox box(QMessageBox::Warning,
                         tr("Save Form?"),
@@ -875,52 +848,34 @@ bool QDesignerActions::writeOutForm(QDesignerFormWindowInterface *fw, const QStr
         QPushButton *cancelButton = box.addButton(QMessageBox::Cancel);
         box.exec();
 
-        if (box.clickedButton() == cancelButton) {
-            removeBackup(backupFile);
+        if (box.clickedButton() == cancelButton)
             return false;
-        }
         if (box.clickedButton() == switchButton) {
             QString extension = uiExtension();
             const QString fileName = QFileDialog::getSaveFileName(fw, tr("Save Form As"),
                                                                   QDir::current().absolutePath(),
                                                                   QStringLiteral("*.") + extension);
-            if (fileName.isEmpty()) {
-                removeBackup(backupFile);
+            if (fileName.isEmpty())
                 return false;
-            }
-            if (f.fileName() != fileName) {
-                removeBackup(backupFile);
-                fi.setFile(fileName);
-                backupFile.clear();
-                if (fi.exists())
-                    backupFile = createBackup(fileName);
-            }
             f.setFileName(fileName);
             fw->setFileName(fileName);
         }
         // loop back around...
     }
-    while (f.write(utf8Array, utf8Array.size()) != utf8Array.size()) {
-        QMessageBox box(QMessageBox::Warning, tr("Save Form?"),
+    f.write(contents.toUtf8());
+    if (!f.commit()) {
+        QMessageBox box(QMessageBox::Warning, tr("Save Form"),
                         tr("Could not write file"),
-                        QMessageBox::Retry|QMessageBox::Cancel, fw);
+                        QMessageBox::Cancel, fw);
         box.setWindowModality(Qt::WindowModal);
-        box.setInformativeText(tr("It was not possible to write the entire file %1 to disk."
-                                "\nReason:%2\nWould you like to retry?")
+        box.setInformativeText(tr("It was not possible to write the file %1 to disk."
+                                "\nReason:%2")
                                 .arg(f.fileName(), f.errorString()));
-        box.setDefaultButton(QMessageBox::Retry);
-        switch (box.exec()) {
-        case QMessageBox::Retry:
-            f.resize(0);
-            break;
-        default:
-            return false;
-        }
+        box.exec();
+        return false;
     }
-    f.close();
-    removeBackup(backupFile);
     addRecentFile(saveFile);
-    m_saveDirectory = QFileInfo(f).absolutePath();
+    m_saveDirectory = QFileInfo(f.fileName()).absolutePath();
 
     fw->setDirty(false);
     fw->parentWidget()->setWindowModified(false);
