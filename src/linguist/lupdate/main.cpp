@@ -853,7 +853,7 @@ int main(int argc, char **argv)
             while (!lstFile.atEnd()) {
                 QString lineContent = QString::fromLocal8Bit(lstFile.readLine().trimmed());
 
-                if (lineContent.startsWith(QLatin1Literal("-I"))) {
+                if (lineContent.startsWith(QLatin1String("-I"))) {
                     if (lineContent.length() == 2) {
                         printErr(LU::tr("The -I option should be followed by a path.\n"));
                         return 1;

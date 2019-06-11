@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
                                                  "The package is installed if it is not already "
                                                  "installed. Pass --install to force "
                                                  "reinstallation."),
-                                   QLatin1Literal("debugger"));
+                                   QLatin1String("debugger"));
     parser.addOption(debugOption);
 
     QCommandLineOption debuggerArgumentsOption(QStringLiteral("debugger-arguments"),
