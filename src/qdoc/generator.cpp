@@ -600,8 +600,11 @@ QString Generator::fullDocumentLocation(const Node *node, bool useSubdir)
 
     Node *parentNode = nullptr;
 
-    if ((parentNode = node->parent()))
-        parentName = fullDocumentLocation(node->parent());
+    if ((parentNode = node->parent())) {
+        // use the parent's name unless the parent is the root namespace
+        if (!node->parent()->isNamespace() || !node->parent()->name().isEmpty())
+            parentName = fullDocumentLocation(node->parent());
+    }
 
     switch (node->nodeType()) {
     case Node::Class:
