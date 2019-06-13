@@ -1146,6 +1146,7 @@ void ConnectionEdit::mousePressEvent(QMouseEvent *e)
         con_under_mouse = connectionAt(e->pos());
 
     m_start_connection_on_drag = false;
+    const bool toggleSelection = e->modifiers().testFlag(Qt::ControlModifier);
     switch (cstate) {
         case Connecting:
             if (button == Qt::RightButton)
@@ -1155,18 +1156,17 @@ void ConnectionEdit::mousePressEvent(QMouseEvent *e)
             break;
         case Editing:
             if (!m_end_point_under_mouse.isNull()) {
-                if (!(e->modifiers() & Qt::ShiftModifier)) {
+                if (!toggleSelection)
                     startDrag(m_end_point_under_mouse, e->pos());
-                }
             } else if (con_under_mouse != nullptr) {
-                if (!(e->modifiers() & Qt::ShiftModifier)) {
+                if (toggleSelection) {
+                    setSelected(con_under_mouse, !selected(con_under_mouse));
+                } else {
                     selectNone();
                     setSelected(con_under_mouse, true);
-                } else {
-                    setSelected(con_under_mouse, !selected(con_under_mouse));
                 }
             } else {
-                if (!(e->modifiers() & Qt::ShiftModifier)) {
+                if (!toggleSelection) {
                     selectNone();
                     if (!m_widget_under_mouse.isNull())
                         m_start_connection_on_drag = true;
