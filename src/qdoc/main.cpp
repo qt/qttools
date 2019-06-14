@@ -242,6 +242,10 @@ static void processQdocconfFile(const QString &fileName)
     config.load(fileName);
     QString project = config.getString(CONFIG_PROJECT);
     QString moduleHeader = config.getString(CONFIG_MODULEHEADER);
+    if (project.isEmpty()) {
+        Location::logToStdErrAlways(QLatin1String("qdoc can't run; no project set in qdocconf file"));
+        exit(1);
+    }
     /*
       Add the defines to the configuration variables.
      */
