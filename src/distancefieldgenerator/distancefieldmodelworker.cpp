@@ -129,7 +129,7 @@ static void readCmapSubtable(DistanceFieldModelWorker *worker, const QByteArray 
         return;
     }
 
-    const void *end = cmap.constData() + tableOffset + subtable->length;
+    const void *end = cmap.constData() + tableOffset + length;
     worker->readCmapSubtable(subtable, end);
 }
 
