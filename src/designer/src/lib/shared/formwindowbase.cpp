@@ -223,12 +223,10 @@ void FormWindowBase::reloadProperties()
 {
     pixmapCache()->clear();
     iconCache()->clear();
-    QMapIterator<QDesignerPropertySheet *, QMap<int, bool> > itSheet(m_d->m_reloadableResources);
-    while (itSheet.hasNext()) {
-        QDesignerPropertySheet *sheet = itSheet.next().key();
-        QMapIterator<int, bool> itIndex(itSheet.value());
-        while (itIndex.hasNext()) {
-            const int index = itIndex.next().key();
+    for (auto it = m_d->m_reloadableResources.cbegin(), end = m_d->m_reloadableResources.cend(); it != end; ++it) {
+        QDesignerPropertySheet *sheet = it.key();
+        for (auto jt = it.value().begin(), end = it.value().end(); jt != end; ++jt) {
+            const int index = jt.key();
             const QVariant newValue = sheet->property(index);
             if (qobject_cast<QLabel *>(sheet->object()) && sheet->propertyName(index) == QStringLiteral("text")) {
                 const PropertySheetStringValue newString = qvariant_cast<PropertySheetStringValue>(newValue);
@@ -263,9 +261,7 @@ void FormWindowBase::reloadProperties()
             toolBox->setCurrentIndex(current);
         }
     }
-    QMapIterator<QDesignerPropertySheet *, QObject *> itSh(m_d->m_reloadablePropertySheets);
-    while (itSh.hasNext()) {
-        QObject *object = itSh.next().value();
+    for (QObject *object : qAsConst(m_d->m_reloadablePropertySheets)) {
         reloadIconResources(iconCache(), object);
     }
 }

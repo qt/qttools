@@ -80,12 +80,9 @@ QmlDocVisitor::~QmlDocVisitor()
  */
 QQmlJS::AST::SourceLocation QmlDocVisitor::precedingComment(quint32 offset) const
 {
-    QListIterator<QQmlJS::AST::SourceLocation> it(engine->comments());
-    it.toBack();
-
-    while (it.hasPrevious()) {
-
-        QQmlJS::AST::SourceLocation loc = it.previous();
+    const auto comments = engine->comments();
+    for (auto it = comments.rbegin(), end = comments.rend(); it != end; ++it) {
+        QQmlJS::AST::SourceLocation loc = *it;
 
         if (loc.begin() <= lastEndOffset) {
             // Return if we reach the end of the preceding structure.

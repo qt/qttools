@@ -203,11 +203,9 @@ void QtGradientWidgetPrivate::setupDrag(QtGradientStop *stop, int x)
     int viewportX = qRound(toViewport(stop->position()));
     m_dragOffset = x - viewportX;
 
-    QList<QtGradientStop *> stops = m_stops;
+    const QList<QtGradientStop *> stops = m_stops;
     m_stops.clear();
-    QListIterator<QtGradientStop *> itStop(stops);
-    while (itStop.hasNext()) {
-        QtGradientStop *s = itStop.next();
+    for (QtGradientStop *s : stops) {
         if (m_model->isSelected(s) || s == stop) {
             m_dragStops[s] = s->position() - stop->position();
             m_stops.append(s);
@@ -215,9 +213,7 @@ void QtGradientWidgetPrivate::setupDrag(QtGradientStop *stop, int x)
             m_dragOriginal[s->position()] = s->color();
         }
     }
-    itStop.toFront();
-    while (itStop.hasNext()) {
-        QtGradientStop *s = itStop.next();
+    for (QtGradientStop *s : stops) {
         if (!m_model->isSelected(s))
             m_stops.append(s);
     }
