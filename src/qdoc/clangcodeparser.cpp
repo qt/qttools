@@ -1259,56 +1259,69 @@ void ClangCodeParser::buildPCH()
                     header = candidate;
             }
             if (header.isEmpty()) {
-                qWarning() << "(qdoc) Could not find the module header in the include path for module"
+                qWarning() << "(qdoc) Could not find the module header in include paths for module"
                     << module << "  (include paths: "<< includePaths_ << ")";
-            } else {
-                args_.push_back("-xc++");
-                CXTranslationUnit tu;
-                QString tmpHeader = pchFileDir_->path() + "/" + module;
-                QFile tmpHeaderFile(tmpHeader);
-                if (tmpHeaderFile.open(QIODevice::Text | QIODevice::WriteOnly)) {
+                qWarning() << "       Artificial module header built from header dirs in qdocconf file";
+            }
+            args_.push_back("-xc++");
+            CXTranslationUnit tu;
+            QString tmpHeader = pchFileDir_->path() + "/" + module;
+            QFile tmpHeaderFile(tmpHeader);
+            if (tmpHeaderFile.open(QIODevice::Text | QIODevice::WriteOnly)) {
+                QTextStream out(&tmpHeaderFile);
+                if (header.isEmpty()) {
+                    QList<QString> keys = allHeaders_.keys();
+                    QList<QString> values = allHeaders_.values();
+                    for (int i = 0; i < keys.size(); i++) {
+                        if (!keys.at(i).endsWith(QLatin1String("_p.h")) &&
+                            !keys.at(i).startsWith(QLatin1String("moc_"))) {
+                            QString line = QLatin1String("#include \"") + values.at(i) +
+                                QLatin1String("/") + keys.at(i) + QLatin1String("\"");
+                            out << line << "\n";
+                        }
+                    }
+                } else {
                     QFile headerFile(header);
                     if (!headerFile.open(QFile::ReadOnly)) {
                         qWarning() << "Could not read module header file" << header;
                         return;
                     }
                     QTextStream in(&headerFile);
-                    QTextStream out(&tmpHeaderFile);
                     while (!in.atEnd()) {
                         QString line = in.readLine().simplified();
                         if (line.startsWith(QLatin1String("#include")))
                             out << line << "\n";
                     }
                 }
-                if (printParsingErrors_ == 0)
-                    Location::logToStdErrAlways("clang not printing errors; include paths were guessed");
-                CXErrorCode err = clang_parseTranslationUnit2(index_,
-                    tmpHeader.toLatin1().data(),
-                    args_.data(), static_cast<int>(args_.size()), nullptr, 0,
-                    flags_ | CXTranslationUnit_ForSerialization, &tu);
-                qCDebug(lcQdoc) << __FUNCTION__ << "clang_parseTranslationUnit2("
-                    << tmpHeader <<  args_ << ") returns" << err;
-                if (!err && tu) {
-                    pchName_ = pchFileDir_->path().toUtf8() + "/" + module + ".pch";
-                    auto error = clang_saveTranslationUnit(tu, pchName_.constData(), clang_defaultSaveOptions(tu));
-                    if (error) {
-                        Location::logToStdErrAlways("Could not save PCH file for " + moduleHeader());
-                        pchName_.clear();
-                    }
-                    else {
-                        // Visit the header now, as token from pre-compiled header won't be visited later
-                        CXCursor cur = clang_getTranslationUnitCursor(tu);
-                        ClangVisitor visitor(qdb_, allHeaders_);
-                        visitor.visitChildren(cur);
-                        Location::logToStdErrAlways("PCH built & visited for " + moduleHeader());
-                    }
-                    clang_disposeTranslationUnit(tu);
-                } else {
-                    pchFileDir_->remove();
-                    Location::logToStdErrAlways("Could not create PCH file for " + moduleHeader());
-                }
-                args_.pop_back(); // remove the "-xc++";
             }
+            if (printParsingErrors_ == 0)
+                Location::logToStdErrAlways("clang not printing errors; include paths were guessed");
+            CXErrorCode err = clang_parseTranslationUnit2(index_,
+                                    tmpHeader.toLatin1().data(),
+                                    args_.data(), static_cast<int>(args_.size()), nullptr, 0,
+                                    flags_ | CXTranslationUnit_ForSerialization, &tu);
+            qCDebug(lcQdoc) << __FUNCTION__ << "clang_parseTranslationUnit2("
+                            << tmpHeader <<  args_ << ") returns" << err;
+            if (!err && tu) {
+                pchName_ = pchFileDir_->path().toUtf8() + "/" + module + ".pch";
+                auto error = clang_saveTranslationUnit(tu, pchName_.constData(), clang_defaultSaveOptions(tu));
+                if (error) {
+                    Location::logToStdErrAlways("Could not save PCH file for " + moduleHeader());
+                    pchName_.clear();
+                }
+                else {
+                    // Visit the header now, as token from pre-compiled header won't be visited later
+                    CXCursor cur = clang_getTranslationUnitCursor(tu);
+                    ClangVisitor visitor(qdb_, allHeaders_);
+                    visitor.visitChildren(cur);
+                    Location::logToStdErrAlways("PCH built & visited for " + moduleHeader());
+                }
+                clang_disposeTranslationUnit(tu);
+            } else {
+                pchFileDir_->remove();
+                Location::logToStdErrAlways("Could not create PCH file for " + moduleHeader());
+            }
+            args_.pop_back(); // remove the "-xc++";
         }
     }
 }

@@ -151,7 +151,7 @@ static QString poEscapedLines(const QString &prefix, bool addSpace, const QStrin
 static QString poEscapedLines(const QString &prefix, bool addSpace, const QString &in0)
 {
     QString in = in0;
-    if (in.endsWith(QLatin1Char('\n')))
+    if (in == QString::fromLatin1("\n"))
         in.chop(1);
     return poEscapedLines(prefix, addSpace, in.split(QLatin1Char('\n')));
 }
@@ -321,6 +321,7 @@ premature_eol:
 
 static void slurpComment(QByteArray &msg, const QList<QByteArray> &lines, int & l)
 {
+    int firstLine = l;
     QByteArray prefix = lines.at(l);
     for (int i = 1; ; i++) {
         if (prefix.at(i) != ' ') {
@@ -330,11 +331,15 @@ static void slurpComment(QByteArray &msg, const QList<QByteArray> &lines, int & 
     }
     for (; l < lines.size(); ++l) {
         const QByteArray &line = lines.at(l);
-        if (line.startsWith(prefix))
+        if (line.startsWith(prefix)) {
+            if (l > firstLine)
+                msg += '\n';
             msg += line.mid(prefix.size());
-        else if (line != "#")
+        } else if (line == "#") {
+            msg += '\n';
+        } else {
             break;
-        msg += '\n';
+        }
     }
     --l;
 }
@@ -525,9 +530,10 @@ bool loadPO(Translator &translator, QIODevice &dev, ConversionData &cd)
                     }
                 }
               doneho:
-                if (lastCmtLine != -1)
+                if (lastCmtLine != -1) {
                     extras[QLatin1String("po-header_comment")] =
                             QByteArrayList_join(lines.mid(0, lastCmtLine + 1), '\n');
+                }
                 for (QHash<QString, QByteArray>::ConstIterator it = extras.constBegin(),
                                                                end = extras.constEnd();
                      it != end; ++it)
@@ -626,7 +632,7 @@ bool loadPO(Translator &translator, QIODevice &dev, ConversionData &cd)
                         item.id = line.mid(9);
                     } else {
                         item.automaticComments += line.mid(3);
-                        item.automaticComments += '\n';
+
                     }
                     break;
                 case '|':
