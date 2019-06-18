@@ -294,6 +294,7 @@ bool QHelpCollectionHandler::isTimeStampCorrect(const TimeStamp &timeStamp) cons
         return false;
 
     const QString oldFileName = m_query->value(0).toString();
+    m_query->clear();
     if (oldFileName != timeStamp.fileName)
         return false;
 
@@ -316,6 +317,7 @@ bool QHelpCollectionHandler::hasTimeStampInfo(const QString &nameSpace) const
     if (!m_query->next())
         return false;
 
+    m_query->clear();
     return true;
 }
 
@@ -1016,7 +1018,10 @@ bool QHelpCollectionHandler::fileExists(const QUrl &url) const
     if (!m_query->exec() || !m_query->next())
         return false;
 
-    return m_query->value(0).toInt();
+    const int count = m_query->value(0).toInt();
+    m_query->clear();
+
+    return count;
 }
 
 static QString prepareFilterQuery(const QString &filterName)
@@ -1820,7 +1825,10 @@ QString QHelpCollectionHandler::namespaceVersion(const QString &namespaceName) c
     if (!m_query->exec() || !m_query->next())
         return QString();
 
-    return m_query->value(0).toString();
+    const QString ret = m_query->value(0).toString();
+    m_query->clear();
+
+    return ret;
 }
 
 int QHelpCollectionHandler::registerNamespace(const QString &nspace, const QString &fileName)
@@ -1844,8 +1852,10 @@ int QHelpCollectionHandler::registerNamespace(const QString &nspace, const QStri
     m_query->bindValue(0, nspace);
     m_query->bindValue(1, fi.absoluteDir().relativeFilePath(fileName));
     int namespaceId = errorValue;
-    if (m_query->exec())
+    if (m_query->exec()) {
         namespaceId = m_query->lastInsertId().toInt();
+        m_query->clear();
+    }
     if (namespaceId < 1) {
         emit error(tr("Cannot register namespace \"%1\".").arg(nspace));
         return errorValue;
@@ -1863,8 +1873,10 @@ int QHelpCollectionHandler::registerVirtualFolder(const QString &folderName, int
     m_query->bindValue(1, folderName);
 
     int virtualId = -1;
-    if (m_query->exec())
+    if (m_query->exec()) {
         virtualId = m_query->lastInsertId().toInt();
+        m_query->clear();
+    }
     if (virtualId < 1) {
         emit error(tr("Cannot register virtual folder '%1'.").arg(folderName));
         return -1;
