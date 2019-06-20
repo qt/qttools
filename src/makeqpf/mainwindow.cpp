@@ -219,7 +219,7 @@ void MainWindow::on_sampleFile_editingFinished()
         coverage.insert(text.at(i));
 
     QList<QChar> sortedCoverage = QList<QChar>::fromSet(coverage);
-    qSort(sortedCoverage);
+    std::sort(sortedCoverage.begin(), sortedCoverage.end());
     // play simple :)
     for (QChar ch : qAsConst(sortedCoverage)) {
         QPF::CharacterRange r;

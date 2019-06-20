@@ -618,7 +618,7 @@ bool KeymapParser::parseKmap(QFile *f)
                     else
                         parseWarning("keymaps has an invalid range");
                 }
-                qSort(keymaps);
+                std::sort(keymaps.begin(), keymaps.end());
             }
             else
                 parseWarning("keymaps with more than one argument");
@@ -780,7 +780,7 @@ bool KeymapParser::parseKmap(QFile *f)
             }
         }
     }
-    qSort(m_keymap);
+    std::sort(m_keymap.begin(), m_keymap.end());
     return !m_keymap.isEmpty();
 }
 
