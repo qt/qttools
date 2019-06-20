@@ -438,7 +438,6 @@ QByteArray MainWindow::createSfntTable()
                      sizeof(QtdfHeader));
 
         // Maximum height allocator to find optimal number of textures
-        QRect allocatedArea;
         QVector<QRect> allocatedAreaPerTexture;
 
         struct GlyphData {
@@ -496,7 +495,6 @@ QByteArray MainWindow::createSfntTable()
                                                             rect.width(),
                                                             rect.height());
 
-                        allocatedArea |= rect;
 
                         glyphData.texCoord.xMargin = QT_DISTANCEFIELD_RADIUS(m_model->doubleGlyphResolution()) / qreal(QT_DISTANCEFIELD_SCALE(m_model->doubleGlyphResolution()));
                         glyphData.texCoord.yMargin = QT_DISTANCEFIELD_RADIUS(m_model->doubleGlyphResolution()) / qreal(QT_DISTANCEFIELD_SCALE(m_model->doubleGlyphResolution()));
