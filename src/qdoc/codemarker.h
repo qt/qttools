@@ -89,6 +89,13 @@ private:
     static QList<CodeMarker *> markers;
 };
 
+class PlainCodeMarker : public CodeMarker
+{
+ public:
+    PlainCodeMarker() { }
+    ~PlainCodeMarker() { }
+};
+
 QT_END_NAMESPACE
 
 #endif
