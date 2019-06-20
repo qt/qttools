@@ -488,13 +488,13 @@ QByteArray MainWindow::createSfntTable()
                             break;
 
                         glyphData.textureIndex = rect.y() / textureSize;
-                        if (glyphData.textureIndex >= allocatedAreaPerTexture.size())
-                            allocatedAreaPerTexture.resize(glyphData.textureIndex + 1);
+                        while (glyphData.textureIndex >= allocatedAreaPerTexture.size())
+                            allocatedAreaPerTexture.append(QRect(0, 0, 1, 1));
+
                         allocatedAreaPerTexture[glyphData.textureIndex] |= QRect(rect.x(),
                                                             rect.y() % textureSize,
                                                             rect.width(),
                                                             rect.height());
-
 
                         glyphData.texCoord.xMargin = QT_DISTANCEFIELD_RADIUS(m_model->doubleGlyphResolution()) / qreal(QT_DISTANCEFIELD_SCALE(m_model->doubleGlyphResolution()));
                         glyphData.texCoord.yMargin = QT_DISTANCEFIELD_RADIUS(m_model->doubleGlyphResolution()) / qreal(QT_DISTANCEFIELD_SCALE(m_model->doubleGlyphResolution()));
