@@ -417,10 +417,20 @@ QByteArray MainWindow::createSfntTable()
         header.minorVersion = 12;
         header.pixelSize = qToBigEndian(quint16(qRound(m_model->pixelSize())));
 
+        const quint8 padding = 2;
+        qreal scaleFactor = qreal(1) / QT_DISTANCEFIELD_SCALE(m_model->doubleGlyphResolution());
+        const int radius = QT_DISTANCEFIELD_RADIUS(m_model->doubleGlyphResolution())
+                / QT_DISTANCEFIELD_SCALE(m_model->doubleGlyphResolution());
+
         quint32 textureSize = ui->sbMaximumTextureSize->value();
+
+        // Since we are using a single area allocator that spans all textures, we need
+        // to split the textures one row before the actual maximum size, otherwise
+        // glyphs that fall on the edge between two textures will expand the texture
+        // they are assigned to, and this will end up being larger than the max.
+        textureSize -= quint32(qCeil(m_model->pixelSize() * scaleFactor) + radius * 2 + padding * 2);
         header.textureSize = qToBigEndian(textureSize);
 
-        const quint8 padding = 2;
         header.padding = padding;
         header.flags = m_model->doubleGlyphResolution() ? 1 : 0;
         header.numGlyphs = qToBigEndian(quint32(list.size()));
@@ -443,12 +453,8 @@ QByteArray MainWindow::createSfntTable()
         int textureCount = 0;
 
         {
-            qreal scaleFactor = qreal(1) / QT_DISTANCEFIELD_SCALE(m_model->doubleGlyphResolution());
             QTransform scaleDown;
             scaleDown.scale(scaleFactor, scaleFactor);
-
-            const int radius = QT_DISTANCEFIELD_RADIUS(m_model->doubleGlyphResolution())
-                    / QT_DISTANCEFIELD_SCALE(m_model->doubleGlyphResolution());
 
             {
                 bool foundOptimalSize = false;
@@ -466,6 +472,7 @@ QByteArray MainWindow::createSfntTable()
                         glyphData.boundingRect = scaleDown.mapRect(path.boundingRect());
                         int glyphWidth = qCeil(glyphData.boundingRect.width()) + radius * 2;
                         int glyphHeight = qCeil(glyphData.boundingRect.height()) + radius * 2;
+
                         glyphData.glyphSize = QSize(glyphWidth + padding * 2, glyphHeight + padding * 2);
 
                         if (glyphData.glyphSize.width() > qint32(textureSize)
