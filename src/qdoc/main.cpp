@@ -556,8 +556,14 @@ int main(int argc, char **argv)
     /*
       Create code markers for plain text, C++,
       javascript, and QML.
+
+      The plain CodeMarker must be instantiated first because it is used as
+      fallback when the other markers cannot be used.
+
+      Each marker instance is prepended to the CodeMarker::markers list by the
+      base class constructor.
      */
-    PlainCodeMarker plainMarker;
+    CodeMarker fallbackMarker;
     CppCodeMarker cppMarker;
     JsCodeMarker jsMarker;
     QmlCodeMarker qmlMarker;
