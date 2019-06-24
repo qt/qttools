@@ -147,9 +147,14 @@ void QmlCodeParser::parseSourceFile(const Location& location, const QString& fil
                                << "The output is incomplete.";
         }
     }
-    foreach (const  QQmlJS::DiagnosticMessage &msg, parser->diagnosticMessages()) {
-        qDebug().nospace() << qPrintable(filePath) << ':' << msg.loc.startLine
-                           << ": QML syntax error at col " << msg.loc.startColumn
+    foreach (const QQmlJS::DiagnosticMessage &msg, parser->diagnosticMessages()) {
+        qDebug().nospace() << qPrintable(filePath) << ':'
+#if Q_QML_PRIVATE_API_VERSION < 5
+                           << msg.loc.startLine << ": QML syntax error at col "
+                           << msg.loc.startColumn
+#else
+                           << msg.line << ": QML syntax error at col " << msg.column
+#endif
                            << ": " << qPrintable(msg.message);
     }
     currentFile_.clear();

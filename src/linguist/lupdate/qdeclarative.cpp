@@ -274,25 +274,20 @@ QString createErrorString(const QString &filename, const QString &code, Parser &
         if (m.isWarning())
             continue;
 
-        QString error = filename + QLatin1Char(':') + QString::number(m.loc.startLine)
-                        + QLatin1Char(':') + QString::number(m.loc.startColumn) + QLatin1String(": error: ")
-                        + m.message + QLatin1Char('\n');
+#if Q_QML_PRIVATE_API_VERSION < 5
+        const int line = m.loc.startLine;
+        const int column = m.loc.startColumn;
+#else
+        const int line = m.line;
+        const int column = m.column;
+#endif
+        QString error = filename + QLatin1Char(':')
+                        + QString::number(line) + QLatin1Char(':') + QString::number(column)
+                        + QLatin1String(": error: ") + m.message + QLatin1Char('\n');
 
-        int line = 0;
-        if (m.loc.startLine > 0)
-            line = m.loc.startLine - 1;
-
-        const QString textLine = lines.at(line);
-
+        const QString textLine = lines.at(line > 0 ? line - 1 : 0);
         error += textLine + QLatin1Char('\n');
-
-        int column = m.loc.startColumn - 1;
-        if (column < 0)
-            column = 0;
-
-        column = qMin(column, textLine.length());
-
-        for (int i = 0; i < column; ++i) {
+        for (int i = 0, end = qMin(column > 0 ? column - 1 : 0, textLine.length()); i < end; ++i) {
             const QChar ch = textLine.at(i);
             if (ch.isSpace())
                 error += ch.unicode();
