@@ -3050,11 +3050,11 @@ void HtmlGenerator::generateCompactList(ListType listType,
     NodeMultiMap::ConstIterator c = nmm.constBegin();
     while (c != nmm.constEnd()) {
         QStringList pieces = c.key().split("::");
-        QString key;
         int idx = commonPrefixLen;
         if (idx > 0 && !pieces.last().startsWith(commonPrefix, Qt::CaseInsensitive))
             idx = 0;
-        key = pieces.last().mid(idx).toLower();
+        QString last = pieces.last().toLower();
+        QString key = last.mid(idx);
 
         int paragraphNr = NumParagraphs - 1;
 
@@ -3067,7 +3067,7 @@ void HtmlGenerator::generateCompactList(ListType listType,
 
         paragraphName[paragraphNr] = key[0].toUpper();
         usedParagraphNames.insert(key[0].toLower().cell());
-        paragraph[paragraphNr].insert(c.key(), c.value());
+        paragraph[paragraphNr].insert(last, c.value());
         ++c;
     }
 
