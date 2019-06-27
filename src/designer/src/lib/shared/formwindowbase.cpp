@@ -84,6 +84,7 @@ public:
     FormWindowBase::LineTerminatorMode m_lineTerminatorMode;
     FormWindowBase::ResourceFileSaveMode m_saveResourcesBehaviour;
     bool m_useIdBasedTranslations;
+    bool m_connectSlotsByName;
 };
 
 FormWindowBasePrivate::FormWindowBasePrivate(QDesignerFormEditorInterface *core) :
@@ -96,7 +97,8 @@ FormWindowBasePrivate::FormWindowBasePrivate(QDesignerFormEditorInterface *core)
     m_deviceProfile(QDesignerSharedSettings(core).currentDeviceProfile()),
     m_lineTerminatorMode(FormWindowBase::NativeLineTerminator),
     m_saveResourcesBehaviour(FormWindowBase::SaveAllResourceFiles),
-    m_useIdBasedTranslations(false)
+    m_useIdBasedTranslations(false),
+    m_connectSlotsByName(true)
 {
 }
 
@@ -535,6 +537,16 @@ bool FormWindowBase::useIdBasedTranslations() const
 void FormWindowBase::setUseIdBasedTranslations(bool v)
 {
     m_d->m_useIdBasedTranslations = v;
+}
+
+bool FormWindowBase::connectSlotsByName() const
+{
+    return m_d->m_connectSlotsByName;
+}
+
+void FormWindowBase::setConnectSlotsByName(bool v)
+{
+    m_d->m_connectSlotsByName = v;
 }
 
 QStringList FormWindowBase::checkContents() const

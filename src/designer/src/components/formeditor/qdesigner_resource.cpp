@@ -512,6 +512,8 @@ void QDesignerResource::saveDom(DomUI *ui, QWidget *widget)
 
     if (m_formWindow->useIdBasedTranslations())
         ui->setAttributeIdbasedtr(true);
+    if (!m_formWindow->connectSlotsByName()) // Don't write out if true (default)
+        ui->setAttributeConnectslotsbyname(false);
 
     const QVariantMap designerFormData = m_formWindow->formData();
     if (!designerFormData.empty()) {
@@ -646,8 +648,12 @@ QWidget *QDesignerResource::create(DomUI *ui, QWidget *parentWidget)
     QDesignerWidgetItemInstaller wii; // Make sure we use QDesignerWidgetItem.
     QWidget *mainWidget = QAbstractFormBuilder::create(ui, parentWidget);
 
-    if (m_formWindow)
+    if (m_formWindow) {
         m_formWindow->setUseIdBasedTranslations(ui->attributeIdbasedtr());
+        // Default to true unless set.
+        const bool connectSlotsByName = !ui->hasAttributeConnectslotsbyname() || ui->attributeConnectslotsbyname();
+        m_formWindow->setConnectSlotsByName(connectSlotsByName);
+    }
 
     if (mainWidget && m_formWindow) {
         m_formWindow->setAuthor(ui->elementAuthor());

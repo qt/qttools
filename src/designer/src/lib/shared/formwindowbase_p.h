@@ -165,6 +165,9 @@ public:
     bool useIdBasedTranslations() const;
     void setUseIdBasedTranslations(bool v);
 
+    bool connectSlotsByName() const;
+    void setConnectSlotsByName(bool v);
+
 public slots:
     void resourceSetActivated(QtResourceSet *resourceSet, bool resourceSetChanged);
 
