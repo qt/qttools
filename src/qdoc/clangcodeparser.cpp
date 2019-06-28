@@ -1552,7 +1552,7 @@ Node* ClangCodeParser::parseFnArg(const Location& location, const QString& fnArg
                                                   flags,
                                                   &tu);
     qCDebug(lcQdoc) << __FUNCTION__ << "clang_parseTranslationUnit2("
-        << dummyFileName <<  args_ << ") returns" << err;
+        << dummyFileName <<  args << ") returns" << err;
     if (err || !tu) {
         location.error(ClangCodeParser::tr("clang could not parse \\fn %1").arg(fnArg));
         clang_disposeTranslationUnit(tu);
