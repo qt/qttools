@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the documentation of the Qt Toolkit.
@@ -84,7 +84,7 @@
     Most of the text that must be translated in an application
     consists of either single words or short phrases. These typically
     appear as window titles, menu items, tooltips,
-    and labels to buttons, check boxes and radio buttons.
+    and labels to buttons, check boxes, and radio buttons.
 
     The phrases are entered into the source code by the developer in
     their native language using a simple but special syntax to identify
@@ -96,15 +96,14 @@
     The release manager generates a set of translation
     files that are produced from the source files and passes these to the
     translator. The translator opens the translation files using \QL,
-    enters their translations and saves the results back into
+    enters their translations, and saves the results back into
     the translation files, which they pass back to the release manager.
     The release manager then generates fast compact versions of these
     translation files ready for use by the application.
 
-    The tools are
-    designed to be used in repeated cycles as applications change and
-    evolve, preserving existing translations and making it easy to
-    identify which new translations are required. \QL also
+    The tools are designed to be used in repeated cycles as applications
+    change and evolve, preserving existing translations and making it
+    easy to identify which new translations are required. \QL also
     provides a phrase book facility to help ensure consistent
     translations across multiple applications and projects.
 
@@ -119,15 +118,16 @@
     "open internet connection", in German.
 
     \li Keyboard accelerators may need to be changed but without
-    introducing conflicts. For example, "\&Quit" in English becomes "Avslutt"
-    in Norwegian which does not contain a "Q". We cannot use a letter
-    that is already in use - unless we change several accelerators.
+    introducing conflicts. For example, "\&Quit" in English becomes
+    "Avslutt" in Norwegian which does not contain a "Q". We cannot
+    use a letter that is already in use - unless we change several
+    accelerators.
 
     \li Phrases that contain variables, for example, "The 25 files
     selected will take 63 seconds to process", where the two numbers
-    are inserted programmatically at run-time may need to be reworded
-    because in a different language the word order and therefore the
-    placement of the variables may have to change.
+    are inserted programmatically at runtime, may need to be rephrased.
+    The word order in the other language may be different, so the
+    variables will have to be put in another place in the sentence.
 
     \endlist
 
@@ -150,9 +150,9 @@
     \previouspage Overview of the Translation Process
     \nextpage Qt Linguist Manual: Translators
 
-    Two tools are provided for the release manager, lupdate and
-    lrelease. These tools can process \l {qmake Manual}{qmake} project files, or operate
-    directly on the file system.
+    Two tools are provided for the release manager: \c lupdate and
+    \c lrelease. These tools can process \l {qmake Manual}{qmake} project files,
+    or operate directly on the file system.
 
     \section1 Creating Translation Files
 
@@ -178,7 +178,7 @@
 
     \endlist
 
-    For lupdate to work successfully, it must know which translation files to
+    For \c lupdate to work successfully, it must know which translation files to
     produce. The files are listed in the application's \c .pro Qt project file.
 
     \target lupdate
@@ -190,13 +190,59 @@
     strings in the specified source, header and \e {Qt Designer}
     interface files, and produces or updates \c .ts translation
     files. The files to process and the files to update can be set at
-    the command line, or provided in a \c .pro file specified as an
+    the command line, or provided in a \c .pro file specified as a
     command line argument. The developer creates the .pro file, as
     described in \l{Qt Linguist Manual: Developers}.
 
-    The produced translation files are given to
-    the translator who uses \QL to read the files and insert the
-    translations.
+    You can generate the translation file for a single QML file in
+    the following way:
+
+    \badcode
+        lupdate main.qml -ts main_en.ts
+    \endcode
+
+    To make a translation file for another language, for example French,
+    you copy main_en.ts to main_fr.ts, and translate the strings in the
+    French TS file.
+
+    \c lupdate processes QML files that are listed in the \c .qrc file:
+
+    \badcode
+        RESOURCES += qml.qrc
+    \endcode
+
+    To have all QML files processed by \c lupdate:
+
+    \badcode
+        lupdate application.qrc -ts myapp_en.ts
+    \endcode
+
+    You can also process all QML files without using a \c .qrc file:
+
+    \badcode
+        lupdate -extensions qml -ts myapp_en.ts
+    \endcode
+
+    If you are mostly processing QML files, but also have C++ code
+    that contains strings to be translated, you can add it in the same command:
+
+    \badcode
+        lupdate qml.qrc filevalidator.cpp -ts myapp_en.ts
+    \endcode
+
+    The translation files can be mentioned in the .pro file, but it
+    is also possible to do without it, and just specify the translation
+    file on the command line.
+
+    For example, to generate .ts files that will be used for English and
+    French:
+
+    \badcode
+        lupdate qml.qrc filevalidator.cpp -ts myapp_en.ts myapp_fr.ts
+    \endcode
+
+    The produced translation files are given to the translator who
+    uses \QL to read the files and insert the translations.
 
     Companies that have their own translators in-house may find it
     useful to run lupdate regularly, perhaps monthly, as the
@@ -249,6 +295,12 @@
     the developers placed in the source files. Once the QM files
     are available the application will detect them and use them
     automatically.
+
+    \c lrelease can be also be run without specifying a \.pro file:
+
+    \badcode
+        lrelease.exe main_en.ts languages\main_fr.ts
+    \endcode
 
     \note The lrelease tool only incorporates translations that are
     marked as "finished". Otherwise the original text is used
