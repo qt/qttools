@@ -129,7 +129,7 @@ static void readCmapSubtable(DistanceFieldModelWorker *worker, const QByteArray 
         return;
     }
 
-    const void *end = cmap.constData() + tableOffset + subtable->length;
+    const void *end = cmap.constData() + tableOffset + length;
     worker->readCmapSubtable(subtable, end);
 }
 
@@ -148,7 +148,7 @@ void DistanceFieldModelWorker::readCmapSubtable(const CmapSubtable4 *subtable, c
     const qint16 *idDeltas = reinterpret_cast<const qint16 *>(startCodes + segCount);
     const quint16 *idRangeOffsets = reinterpret_cast<const quint16 *>(idDeltas + segCount);
     const quint16 *glyphIdArray = idRangeOffsets + segCount;
-    if (glyphIdArray >= end) {
+    if (glyphIdArray > end) {
         emit error(tr("End of cmap table reached when parsing subtable format '4'"));
         return;
     }

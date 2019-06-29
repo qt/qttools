@@ -46,6 +46,7 @@
 #include <qtextcodec.h>
 #include <quuid.h>
 #include <qmap.h>
+#include <QtCore/qversionnumber.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -2110,8 +2111,6 @@ void HtmlGenerator::generateHeader(const QString& title,
     if (node && !node->doc().location().isEmpty())
         out() << "<!-- " << node->doc().location().fileName() << " -->\n";
 
-    QString projectVersion = qdb_->version();
-
     //determine the rest of the <title> element content: "title | titleSuffix version"
     QString titleSuffix;
     if (!landingtitle.isEmpty()) {
@@ -2133,14 +2132,8 @@ void HtmlGenerator::generateHeader(const QString& title,
         //default: "title | Qt version"
         titleSuffix = QLatin1String("Qt ");
 
-    //for pages that duplicate the title and suffix (landing pages, home pages,
-    // and module landing pages, clear the duplicate
     if (title == titleSuffix)
         titleSuffix.clear();
-
-    //for pages that duplicate the version, clear the duplicate
-    if (title.contains(projectVersion) || titleSuffix.contains(projectVersion))
-        projectVersion.clear();
 
     QString divider;
     if (!titleSuffix.isEmpty() && !title.isEmpty())
@@ -2152,9 +2145,18 @@ void HtmlGenerator::generateHeader(const QString& title,
           << divider
           << titleSuffix;
 
-    if (!projectVersion.isEmpty())
-        out() << QLatin1Char(' ') << projectVersion;
-
+    // append a full version to the suffix if neither suffix nor title
+    // include (a prefix of) version information
+    QVersionNumber projectVersion = QVersionNumber::fromString(qdb_->version());
+    if (!projectVersion.isNull()) {
+        QVersionNumber titleVersion;
+        QRegExp re("\\d+\\.\\d+");
+        const QString &versionedTitle = titleSuffix.isEmpty() ? title : titleSuffix;
+        if (versionedTitle.contains(re))
+            titleVersion = QVersionNumber::fromString(re.cap());
+        if (titleVersion.isNull() || !titleVersion.isPrefixOf(projectVersion))
+            out() << QLatin1Char(' ') << projectVersion.toString();
+    }
     out() << "</title>\n";
 
     // Include style sheet and script links.
