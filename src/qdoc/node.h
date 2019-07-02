@@ -651,6 +651,7 @@ class HeaderNode : public Aggregate
 public:
     HeaderNode(Aggregate* parent, const QString& name);
     virtual ~HeaderNode() { }
+    bool docMustBeGenerated() const override;
     bool isFirstClassAggregate() const override { return true; }
     bool isRelatableType() const override { return true; }
     QString title() const override { return (title_.isEmpty() ? name() : title_); }

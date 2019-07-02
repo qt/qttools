@@ -870,7 +870,7 @@ void Sections::distributeQmlNodeInDetailsVector(SectionVector &dv, Node *n)
                 dv[QmlMethods].insert(fn);
         }
     } else if (n->isSharedCommentNode() && n->hasDoc()) {
-        dv[QmlMethods].insert(n); // incorrect?
+        dv[n->isPropertyGroup() ? QmlProperties : QmlMethods].insert(n);
     }
 }
 
@@ -901,14 +901,11 @@ void Sections::distributeQmlNodeInSummaryVector(SectionVector &sv, Node *n)
         }
     } else if (n->isSharedCommentNode()) {
         SharedCommentNode *scn = static_cast<SharedCommentNode*>(n);
-        if (scn->isPropertyGroup()) {
-            if (scn->name().isEmpty()) {
-                foreach (Node *n, scn->collective()) {
-                    sv[QmlProperties].insert(n);
-                }
-            } else {
-                sv[QmlProperties].insert(scn);
-            }
+        if (scn->name().isEmpty()) {
+            for (auto child : scn->collective())
+                sv[child->isFunction(Node::QML) ? QmlMethods : QmlProperties].insert(child);
+        } else {
+            sv[QmlProperties].insert(scn);
         }
     }
 }
