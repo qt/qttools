@@ -1901,11 +1901,28 @@ HeaderNode::HeaderNode(Aggregate* parent, const QString& name) : Aggregate(Heade
         Aggregate::addIncludeFile(name);
 }
 
+/*!
+  Returns true if this header file node is not private and
+  contains at least one public child node with documentation.
+ */
 bool HeaderNode::docMustBeGenerated() const
 {
-    if (!hasDoc() || isInternal() || isDontDocument())
-        return false;
-    return true;
+    if (hasDoc() && !isInternal() && !isPrivate())
+        return true;
+    return (hasDocumentedChildren() ? true : false);
+}
+
+/*!
+  Returns true if this header file node contains at least one
+  child that has documentation and is not private or internal.
+ */
+bool HeaderNode::hasDocumentedChildren() const
+{
+    foreach (Node *n, children_) {
+        if (n->hasDoc() && !n->isPrivate() && !n->isInternal())
+            return true;
+    }
+    return false;
 }
 
 /*!

@@ -660,6 +660,7 @@ public:
     bool setTitle(const QString& title) override { title_ = title; return true; }
     bool setSubtitle(const QString &subtitle) override { subtitle_ = subtitle; return true; }
     QString nameForLists() const override { return title(); }
+    bool hasDocumentedChildren() const;
 
 private:
     QString title_;
