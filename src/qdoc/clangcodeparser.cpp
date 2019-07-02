@@ -1116,7 +1116,6 @@ static const char *defaultArgs_[] = {
 #else
     "-fms-compatibility-version=19",
 #endif
-    "-fno-exceptions", // Workaround for clang bug http://reviews.llvm.org/D17988
     "-DQ_QDOC",
     "-DQ_CLANG_QDOC",
     "-DQT_DISABLE_DEPRECATED_BEFORE=0",
