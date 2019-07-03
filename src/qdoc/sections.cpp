@@ -968,7 +968,7 @@ void Sections::buildStdCppClassRefPageSections()
                 ++c;
                 continue;
             }
-            distributeNodeInSummaryVector(sv, n);
+            //distributeNodeInSummaryVector(sv, n); Why was this here? mws 03/07/2019
             ++c;
         }
         pushBaseClasses(stack, cn);
