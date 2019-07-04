@@ -1875,15 +1875,11 @@ FunctionNode* ClassNode::findOverriddenFunction(const FunctionNode* fn)
  */
 bool ClassNode::docMustBeGenerated() const
 {
-    if (isInternal() || isPrivate() || isDontDocument() ||
-        declLocation().fileName().endsWith(QLatin1String("_p.h")))
+    if (!hasDoc() || isPrivate() || isInternal() || isDontDocument())
         return false;
-    if (count() == 0)
+    if (declLocation().fileName().endsWith(QLatin1String("_p.h")))
         return false;
-    if (name().contains(QLatin1String("Private")))
-        return false;
-    if (functionCount_ == 0)
-        return false;
+
     return true;
 }
 
