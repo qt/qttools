@@ -1463,11 +1463,12 @@ QSet<QString> codesignBundle(const QString &identity,
             continue;
 
         // Check if there are unsigned dependencies, sign these first.
-        QStringList dependencies =
-                getBinaryDependencies(rootBinariesPath, binary, additionalBinariesContainingRpaths).toSet()
-                .subtract(signedBinaries)
-                .subtract(pendingBinariesSet)
-                .toList();
+        QStringList dependencies = getBinaryDependencies(rootBinariesPath, binary,
+                                                         additionalBinariesContainingRpaths);
+        dependencies = QSet<QString>(dependencies.begin(), dependencies.end())
+            .subtract(signedBinaries)
+            .subtract(pendingBinariesSet)
+            .values();
 
         if (!dependencies.isEmpty()) {
             pendingBinaries.push(binary);

@@ -49,7 +49,12 @@ public:
 
 private:
     QVariant loadResource(int type, const QUrl &name) override;
+
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
     void setSource(const QUrl &url) override;
+#else
+    void doSetSource(const QUrl &name, QTextDocument::ResourceType type) override;
+#endif
 
     QMap<QString, QByteArray> m_resourceMap;
 };

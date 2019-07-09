@@ -486,7 +486,7 @@ static void writeExtras(QTextStream &t, const char *indent,
     }
     outs.sort();
     foreach (const QString &out, outs)
-        t << indent << out << endl;
+        t << indent << out << Qt::endl;
 }
 
 static void writeVariants(QTextStream &t, const char *indent, const QString &input)
