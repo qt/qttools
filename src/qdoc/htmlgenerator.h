@@ -153,7 +153,7 @@ private:
                              const Node *relative,
                              CodeMarker *marker,
                              Section::Status = Section::Active);
-    void generateQmlSummary(const Section& section,
+    void generateQmlSummary(const NodeVector &members,
                             const Node *relative,
                             CodeMarker *marker);
     void generateQmlItem(const Node *node,

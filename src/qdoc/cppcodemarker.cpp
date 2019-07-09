@@ -36,6 +36,7 @@
 #include <qdebug.h>
 #include <qregexp.h>
 #include <ctype.h>
+#include "generator.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -128,9 +129,11 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
         name = linkTag(node, name);
     name = "<@name>" + name + "</@name>";
 
-    if ((style == Section::Details) && !node->parent()->name().isEmpty() &&
-        !node->isProperty() && !node->isQmlNode() && !node->isJsNode())
-        name.prepend(taggedNode(node->parent()) + "::");
+    if (style == Section::Details) {
+        if (!node->parent()->name().isEmpty() && !node->parent()->isHeader() &&
+            !node->isProperty() && !node->isQmlNode() && !node->isJsNode())
+            name.prepend(taggedNode(node->parent()) + "::");
+    }
 
     switch (node->nodeType()) {
     case Node::Namespace:

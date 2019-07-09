@@ -1877,15 +1877,11 @@ FunctionNode* ClassNode::findOverriddenFunction(const FunctionNode* fn)
  */
 bool ClassNode::docMustBeGenerated() const
 {
-    if (isInternal() || isPrivate() || isDontDocument() ||
-        declLocation().fileName().endsWith(QLatin1String("_p.h")))
+    if (!hasDoc() || isPrivate() || isInternal() || isDontDocument())
         return false;
-    if (count() == 0)
+    if (declLocation().fileName().endsWith(QLatin1String("_p.h")))
         return false;
-    if (name().contains(QLatin1String("Private")))
-        return false;
-    if (functionCount_ == 0)
-        return false;
+
     return true;
 }
 
@@ -1901,6 +1897,30 @@ HeaderNode::HeaderNode(Aggregate* parent, const QString& name) : Aggregate(Heade
         Aggregate::addIncludeFile(name.mid(1).chopped(1));
     else
         Aggregate::addIncludeFile(name);
+}
+
+/*!
+  Returns true if this header file node is not private and
+  contains at least one public child node with documentation.
+ */
+bool HeaderNode::docMustBeGenerated() const
+{
+    if (hasDoc() && !isInternal() && !isPrivate())
+        return true;
+    return (hasDocumentedChildren() ? true : false);
+}
+
+/*!
+  Returns true if this header file node contains at least one
+  child that has documentation and is not private or internal.
+ */
+bool HeaderNode::hasDocumentedChildren() const
+{
+    foreach (Node *n, children_) {
+        if (n->hasDoc() && !n->isPrivate() && !n->isInternal())
+            return true;
+    }
+    return false;
 }
 
 /*!

@@ -1732,7 +1732,7 @@ void HtmlGenerator::generateQmlTypePage(QmlTypeNode* qcn, CodeMarker* marker)
             out() << "<a name=\"" << ref
                   << "\"></a>" << divNavTop << '\n';
             out() << "<h2 id=\"" << ref << "\">" << protectEnc(s->title()) << "</h2>\n";
-            generateQmlSummary(*s, qcn, marker);
+            generateQmlSummary(s->members(), qcn, marker);
         }
         ++s;
     }
@@ -1798,7 +1798,7 @@ void HtmlGenerator::generateQmlBasicTypePage(QmlBasicTypeNode* qbtn, CodeMarker*
             out() << "<a name=\"" << ref
                   << "\"></a>" << divNavTop << '\n';
             out() << "<h2 id=\"" << ref << "\">" << protectEnc(s->title()) << "</h2>\n";
-            generateQmlSummary(*s, qbtn, marker);
+            generateQmlSummary(s->members(), qbtn, marker);
         }
         ++s;
     }
@@ -2870,7 +2870,7 @@ QString HtmlGenerator::generateObsoleteQmlMembersFile(const Sections &sections, 
         out() << "<a name=\"" << ref
               << "\"></a>" << divNavTop << '\n';
         out() << "<h2 id=\"" << ref << "\">" << protectEnc(summary_spv.at(i)->title()) << "</h2>\n";
-        generateQmlSummary(*(summary_spv.at(i)), aggregate, marker);
+        generateQmlSummary(summary_spv.at(i)->obsoleteMembers(), aggregate, marker);
     }
 
     for (int i = 0; i < details_spv.size(); ++i) {
@@ -3054,11 +3054,11 @@ void HtmlGenerator::generateCompactList(ListType listType,
     NodeMultiMap::ConstIterator c = nmm.constBegin();
     while (c != nmm.constEnd()) {
         QStringList pieces = c.key().split("::");
-        QString key;
         int idx = commonPrefixLen;
         if (idx > 0 && !pieces.last().startsWith(commonPrefix, Qt::CaseInsensitive))
             idx = 0;
-        key = pieces.last().mid(idx).toLower();
+        QString last = pieces.last().toLower();
+        QString key = last.mid(idx);
 
         int paragraphNr = NumParagraphs - 1;
 
@@ -3071,7 +3071,7 @@ void HtmlGenerator::generateCompactList(ListType listType,
 
         paragraphName[paragraphNr] = key[0].toUpper();
         usedParagraphNames.insert(key[0].toLower().cell());
-        paragraph[paragraphNr].insert(c.key(), c.value());
+        paragraph[paragraphNr].insert(last, c.value());
         ++c;
     }
 
@@ -4247,17 +4247,17 @@ void HtmlGenerator::endLink()
 }
 
 /*!
-  Generates the summary for the \a section. Only used for
+  Generates the summary list for the \a members. Only used for
   sections of QML element documentation.
  */
-void HtmlGenerator::generateQmlSummary(const Section& section,
+void HtmlGenerator::generateQmlSummary(const NodeVector &members,
                                        const Node *relative,
                                        CodeMarker *marker)
 {
-    if (!section.members().isEmpty()) {
+    if (!members.isEmpty()) {
         out() << "<ul>\n";
-        NodeVector::const_iterator m = section.members().constBegin();
-        while (m != section.members().constEnd()) {
+        NodeVector::const_iterator m = members.constBegin();
+        while (m != members.constEnd()) {
             out() << "<li class=\"fn\">";
             generateQmlItem(*m, relative, marker, true);
             if ((*m)->isPropertyGroup()) {
@@ -4308,19 +4308,21 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node,
     QString qmlItemFooter("</table></div>\n</div>");
 
     out() << "<div class=\"qmlitem\">";
-    QString nodeRef = refForNode(node);
+    QString nodeRef;
     if (node->isPropertyGroup()) {
         const SharedCommentNode* scn = static_cast<const SharedCommentNode*>(node);
         QVector<Node*>::ConstIterator p = scn->collective().constBegin();
         out() << "<div class=\"qmlproto\">";
         out() << "<div class=\"table\"><table class=\"qmlname\">";
-
-        QString heading = scn->name() + " group";
-        out() << "<tr valign=\"top\" class=\"even\" id=\"" << nodeRef << "\">";
-        out() << "<th class=\"centerAlign\"><p>";
-        out() << "<a name=\"" + nodeRef + "\"></a>";
-        out() << "<b>" << heading << "</b>";
-        out() << "</p></th></tr>";
+        if (!scn->name().isEmpty()) {
+            nodeRef = refForNode(scn);
+            QString heading = scn->name() + " group";
+            out() << "<tr valign=\"top\" class=\"even\" id=\"" << nodeRef << "\">";
+            out() << "<th class=\"centerAlign\"><p>";
+            out() << "<a name=\"" + nodeRef + "\"></a>";
+            out() << "<b>" << heading << "</b>";
+            out() << "</p></th></tr>";
+        }
         while (p != scn->collective().constEnd()) {
             if ((*p)->isQmlProperty() || (*p)->isJsProperty()) {
                 qpn = static_cast<QmlPropertyNode*>(*p);
@@ -4364,7 +4366,7 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node,
             out() << "<div class=\"fngroup\">\n";
         out() << qmlItemHeader;
         for (const auto m : collective) {
-            if (m->isFunction(Node::CPP) || m->isFunction(Node::JS)) {
+            if (m->isFunction(Node::QML) || m->isFunction(Node::JS)) {
                 out() << qmlItemStart.arg(nodeRef, "tblQmlFuncNode", refForNode(m));
                 generateSynopsis(m, relative, marker, Section::Details, false);
                 out() << qmlItemEnd;
