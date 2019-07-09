@@ -286,7 +286,7 @@ ZoomWidget::ZoomWidget(QWidget *parent) :
 void ZoomWidget::setWidget(QWidget *w, Qt::WindowFlags wFlags)
 {
     if (debugZoomWidget)
-        qDebug() << "ZoomWidget::setWidget" << w << bin << wFlags;
+        qDebug() << "ZoomWidget::setWidget" << w << Qt::bin << wFlags;
 
     if (m_proxy) {
         scene().removeItem(m_proxy);

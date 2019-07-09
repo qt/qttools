@@ -685,8 +685,8 @@ QTextStream &operator<<(QTextStream &str, const QScreen *screen)
 {
     const QRect geometry = screen->geometry();
     str << '"' << screen->name() << "\" " << geometry.width()
-        << 'x' << geometry.height() << forcesign << geometry.x() << geometry.y()
-        << noforcesign << ", " << qRound(screen->logicalDotsPerInch()) << "DPI"
+        << 'x' << geometry.height() << Qt::forcesign << geometry.x() << geometry.y()
+        << Qt::noforcesign << ", " << qRound(screen->logicalDotsPerInch()) << "DPI"
         << ", Depth: " << screen->depth() << ", " << screen->refreshRate() << "Hz";
     const qreal dpr = screen->devicePixelRatio();
     if (!qFuzzyCompare(dpr, qreal(1)))
