@@ -222,6 +222,7 @@ void DeleteConnectionsCommand::undo()
         Q_ASSERT(!edit()->m_con_list.contains(con));
         emit edit()->aboutToAddConnection(edit()->m_con_list.size());
         edit()->m_con_list.append(con);
+        edit()->selectNone();
         edit()->setSelected(con, true);
         con->update();
         con->inserted();
