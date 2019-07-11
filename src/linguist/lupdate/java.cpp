@@ -108,11 +108,11 @@ std::ostream &yyMsg(int line = 0)
 static QChar getChar()
 {
     if (yyInPos >= yyInStr.size())
-        return EOF;
+      return QChar(EOF);
     QChar c = yyInStr[yyInPos++];
-    if (c.unicode() == '\n')
+    if (c == QLatin1Char('\n'))
         ++yyCurLineNo;
-    return c.unicode();
+    return c;
 }
 
 static int getToken()
@@ -124,7 +124,7 @@ static int getToken()
     yyComment.clear();
     yyString.clear();
 
-    while ( yyCh != EOF ) {
+    while (yyCh != QChar(EOF)) {
         yyLineNo = yyCurLineNo;
 
         if ( yyCh.isLetter() || yyCh.toLatin1() == '_' ) {
@@ -169,7 +169,7 @@ static int getToken()
                 if ( yyCh == QLatin1Char('/') ) {
                     do {
                         yyCh = getChar();
-                        if (yyCh == EOF)
+                        if (yyCh == QChar(EOF))
                             break;
                         yyComment.append(yyCh);
                     } while (yyCh != QLatin1Char('\n'));
@@ -181,7 +181,7 @@ static int getToken()
 
                     while ( !metAsterSlash ) {
                         yyCh = getChar();
-                        if ( yyCh == EOF ) {
+                        if (yyCh == QChar(EOF)) {
                             yyMsg() << qPrintable(LU::tr("Unterminated Java comment.\n"));
                             return Tok_Comment;
                         }
@@ -204,7 +204,7 @@ static int getToken()
             case '"':
                 yyCh = getChar();
 
-                while ( yyCh != EOF && yyCh != QLatin1Char('\n') && yyCh != QLatin1Char('"') ) {
+                while (yyCh != QChar(EOF) && yyCh != QLatin1Char('\n') && yyCh != QLatin1Char('"')) {
                     if ( yyCh == QLatin1Char('\\') ) {
                         yyCh = getChar();
                         if ( yyCh == QLatin1Char('u') ) {
@@ -257,7 +257,7 @@ static int getToken()
                     yyCh = getChar();
                 do {
                     yyCh = getChar();
-                } while ( yyCh != EOF && yyCh != QLatin1Char('\'') );
+                } while (yyCh != QChar(EOF) && yyCh != QLatin1Char('\''));
                 yyCh = getChar();
                 break;
             case '{':

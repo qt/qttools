@@ -290,7 +290,7 @@ QString createErrorString(const QString &filename, const QString &code, Parser &
         for (int i = 0, end = qMin(column > 0 ? column - 1 : 0, textLine.length()); i < end; ++i) {
             const QChar ch = textLine.at(i);
             if (ch.isSpace())
-                error += ch.unicode();
+                error += ch;
             else
                 error += QLatin1Char(' ');
         }
