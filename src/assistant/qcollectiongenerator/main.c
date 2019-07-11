@@ -48,6 +48,7 @@ static const char separator = '/';
 
 int main(int argc, char *argv[])
 {
+    (void)argc;
     printf("The \"%s\" tool is deprecated, use \"%s\" instead.\n\n",
            collectionGeneratorName, helpGeneratorName);
 
