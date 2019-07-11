@@ -39,6 +39,8 @@
 #include <qdebug.h>
 #include "generator.h"
 
+#include <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 /* qmake ignore Q_OBJECT */
@@ -886,18 +888,20 @@ void CppCodeParser::setExampleFileLists(PageNode *pn)
     if (!exampleFiles.isEmpty()) {
         // move main.cpp and to the end, if it exists
         QString mainCpp;
-        QMutableStringListIterator i(exampleFiles);
-        i.toBack();
-        while (i.hasPrevious()) {
-            QString fileName = i.previous();
+
+        const auto isGeneratedOrMainCpp = [&mainCpp](const QString &fileName) {
             if (fileName.endsWith("/main.cpp")) {
-                mainCpp = fileName;
-                i.remove();
+                if (mainCpp.isEmpty())
+                    mainCpp = fileName;
+                return true;
             }
-            else if (fileName.contains("/qrc_") || fileName.contains("/moc_")
-                     || fileName.contains("/ui_"))
-                i.remove();
-        }
+            return fileName.contains("/qrc_") || fileName.contains("/moc_") || fileName.contains("/ui_");
+        };
+
+        exampleFiles.erase(std::remove_if(exampleFiles.begin(), exampleFiles.end(),
+                                          isGeneratedOrMainCpp),
+                           exampleFiles.end());
+
         if (!mainCpp.isEmpty())
             exampleFiles.append(mainCpp);
 

@@ -1657,16 +1657,16 @@ QObject *QDesignerAbstractPropertySheetFactory::extension(QObject *object, const
 
 void QDesignerAbstractPropertySheetFactory::objectDestroyed(QObject *object)
 {
-    QMutableMapIterator<QObject*, QObject*> it(m_impl->m_extensions);
-    while (it.hasNext()) {
-        it.next();
+    for (auto it = m_impl->m_extensions.begin(), end = m_impl->m_extensions.end(); it != end; /*erasing*/) {
         if (it.key() == object || it.value() == object) {
             if (it.key() == object) {
                 QObject *ext = it.value();
                 disconnect(ext, &QObject::destroyed, this, &QDesignerAbstractPropertySheetFactory::objectDestroyed);
                 delete ext;
             }
-            it.remove();
+            it = m_impl->m_extensions.erase(it);
+        } else {
+            ++it;
         }
     }
 }
