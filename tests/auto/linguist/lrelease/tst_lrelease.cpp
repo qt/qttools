@@ -51,6 +51,7 @@ private slots:
     void idbased();
     void markuntranslated();
     void dupes();
+    void noTranslations();
 
 private:
     void doCompare(const QStringList &actual, const QString &expectedFn);
@@ -205,6 +206,17 @@ void tst_lrelease::dupes()
     QVERIFY(proc.waitForFinished());
     QVERIFY(proc.exitStatus() == QProcess::NormalExit);
     doCompare(QString(proc.readAllStandardError()).trimmed().split('\n'), dataDir + "dupes.errors");
+}
+
+void tst_lrelease::noTranslations()
+{
+    QProcess proc;
+    proc.start(lrelease, { dataDir + "no-translations.pro" });
+    QVERIFY(proc.waitForFinished());
+    QCOMPARE(proc.exitStatus(), QProcess::NormalExit);
+    QCOMPARE(proc.exitCode(), 0);
+    auto stderrOutput = proc.readAllStandardError();
+    QVERIFY(stderrOutput.contains("lrelease warning: Met no 'TRANSLATIONS' entry in project file"));
 }
 
 QTEST_MAIN(tst_lrelease)

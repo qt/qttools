@@ -1586,18 +1586,21 @@ Node* ClangCodeParser::parseFnArg(const Location& location, const QString& fnArg
             unsigned diagnosticCount = clang_getNumDiagnostics(tu);
             if (diagnosticCount > 0 && (!Generator::preparing() || Generator::singleExec())) {
                 bool report = true;
-                QStringList signature = fnArg.split(QLatin1String("::"));
+                QStringList signature = fnArg.split(QChar('('));
                 if (signature.size() > 1) {
-                    QStringList typeAndQualifier = signature.at(0).split(' ');
-                    QString qualifier = typeAndQualifier.last();
-                    int i = 0;
-                    while (qualifier.size() > i && !qualifier.at(i).isLetter())
-                        qualifier[i++] = QChar(' ');
-                    if (i > 0)
-                        qualifier = qualifier.simplified();
-                    ClassNode* cn = qdb_->findClassNode(QStringList(qualifier));
-                    if (cn && cn->isInternal())
-                        report = false;
+                    QStringList qualifiedName = signature.at(0).split(QChar(' '));
+                    qualifiedName = qualifiedName.last().split(QLatin1String("::"));
+                    if (qualifiedName.size() > 1) {
+                        QString qualifier = qualifiedName.at(0);
+                        int i = 0;
+                        while (qualifier.size() > i && !qualifier.at(i).isLetter())
+                            qualifier[i++] = QChar(' ');
+                        if (i > 0)
+                            qualifier = qualifier.simplified();
+                        ClassNode* cn = qdb_->findClassNode(QStringList(qualifier));
+                        if (cn && cn->isInternal())
+                            report = false;
+                    }
                 }
                 if (report) {
                     location.warning(ClangCodeParser::tr("clang found diagnostics parsing \\fn %1").arg(fnArg));
