@@ -180,7 +180,9 @@ static QStringList translationsFromProjects(const Projects &projects, bool topLe
 
 static QStringList translationsFromProject(const Project &project, bool topLevel)
 {
-    QStringList result = *project.translations;
+    QStringList result;
+    if (project.translations)
+        result = *project.translations;
     result << translationsFromProjects(project.subProjects, false);
     if (topLevel && result.isEmpty()) {
         printErr(LR::tr("lrelease warning: Met no 'TRANSLATIONS' entry in project file '%1'\n")
