@@ -1877,7 +1877,7 @@ bool ClassNode::docMustBeGenerated() const
 {
     if (!hasDoc() || isPrivate() || isInternal() || isDontDocument())
         return false;
-    if (declLocation().fileName().endsWith(QLatin1String("_p.h")))
+    if (declLocation().fileName().endsWith(QLatin1String("_p.h")) && !hasDoc())
         return false;
 
     return true;
