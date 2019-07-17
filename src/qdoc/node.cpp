@@ -1856,7 +1856,7 @@ FunctionNode* ClassNode::findOverriddenFunction(const FunctionNode* fn)
         }
         if (cn != nullptr) {
             FunctionNode *result = cn->findFunctionChild(fn);
-            if (result != nullptr && !result->isNonvirtual())
+            if (result != nullptr && !result->isNonvirtual() && result->hasDoc())
                 return result;
             result = cn->findOverriddenFunction(fn);
             if (result != nullptr && !result->isNonvirtual())
