@@ -204,11 +204,6 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader& reader,
             location = Location(indexUrl + QLatin1Char('/') + name.toLower() + ".html");
         else if (!indexUrl.isNull())
             location = Location(name.toLower() + ".html");
-        if (attributes.hasAttribute(QLatin1String("documented"))) {
-            if (attributes.value(QLatin1String("documented")) == QLatin1String("true"))
-                ns->setDocumented();
-        }
-
     } else if (elementName == QLatin1String("class") || elementName == QLatin1String("struct") ||
                elementName == QLatin1String("union")) {
         Node::NodeType type = Node::Class;
@@ -604,6 +599,11 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader& reader,
             node->setSince(since);
         }
 
+        if (attributes.hasAttribute(QLatin1String("documented"))) {
+            if (attributes.value(QLatin1String("documented")) == QLatin1String("true"))
+                node->setHadDoc();
+        }
+
         QString groupsAttr = attributes.value(QLatin1String("groups")).toString();
         if (!groupsAttr.isEmpty()) {
             QStringList groupNames = groupsAttr.split(QLatin1Char(','));
@@ -936,6 +936,9 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node, 
     if (!node->since().isEmpty())
         writer.writeAttribute("since", node->since());
 
+    if (node->hasDoc())
+        writer.writeAttribute("documented", "true");
+
     QString brief = node->doc().trimmedBriefText(node->name()).toString();
     switch (node->nodeType()) {
     case Node::Class:
@@ -970,7 +973,6 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node, 
     case Node::HeaderFile:
         {
             const HeaderNode* hn = static_cast<const HeaderNode*>(node);
-            writer.writeAttribute("documented", hn->hasDoc() ? "true" : "false");
             if (!hn->physicalModuleName().isEmpty())
                 writer.writeAttribute("module", hn->physicalModuleName());
             if (!hn->groupNames().isEmpty())
@@ -985,7 +987,6 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node, 
     case Node::Namespace:
         {
             const NamespaceNode* ns = static_cast<const NamespaceNode*>(node);
-            writer.writeAttribute("documented", ns->hasDoc() ? "true" : "false");
             if (!ns->physicalModuleName().isEmpty())
                 writer.writeAttribute("module", ns->physicalModuleName());
             if (!ns->groupNames().isEmpty())
@@ -1333,6 +1334,8 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
         writer.writeAttribute("lineno", QString("%1").arg(declLocation.lineNo()));
     }
 
+    if (fn->hasDoc())
+        writer.writeAttribute("documented", "true");
     if (fn->isRelatedNonmember())
         writer.writeAttribute("related", "true");
     if (!fn->since().isEmpty())

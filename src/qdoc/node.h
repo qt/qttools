@@ -258,6 +258,7 @@ public:
     void setReconstitutedBrief(const QString &t) { reconstitutedBrief_ = t; }
     void setParent(Aggregate* n) { parent_ = n; }
     void setIndexNodeFlag(bool isIndexNode = true) { indexNodeFlag_ = isIndexNode; }
+    void setHadDoc() { hadDoc_ = true; }
     virtual void setRelatedNonmember(bool b) { relatedNonmember_ = b; }
     virtual void setOutputFileName(const QString& ) { }
     virtual void addMember(Node* ) { }
@@ -307,7 +308,8 @@ public:
     const Location& defLocation() const { return defLocation_; }
     const Location& location() const { return (defLocation_.isEmpty() ? declLocation_ : defLocation_); }
     const Doc& doc() const { return doc_; }
-    bool hasDoc() const { return !doc_.isEmpty(); }
+    bool hasDoc() const { return (hadDoc_ || !doc_.isEmpty()); }
+    bool hadDoc() const { return hadDoc_; }
     Status status() const { return status_; }
     Status inheritedStatus() const;
     ThreadSafeness threadSafeness() const;
@@ -369,6 +371,7 @@ private:
     Status status_;
     bool indexNodeFlag_ : 1;
     bool relatedNonmember_ : 1;
+    bool hadDoc_ : 1;
 
     Aggregate* parent_;
     SharedCommentNode *sharedCommentNode_;
@@ -533,7 +536,7 @@ class NamespaceNode : public Aggregate
 {
 public:
     NamespaceNode(Aggregate* parent, const QString& name) : Aggregate(Namespace, parent, name),
-        seen_(false), documented_(false), tree_(nullptr), docNode_(nullptr) { }
+        seen_(false), tree_(nullptr), docNode_(nullptr) { }
     virtual ~NamespaceNode();
     Tree* tree() const override { return (parent() ? parent()->tree() : tree_); }
 
@@ -551,14 +554,11 @@ public:
     bool hasDocumentedChildren() const;
     void reportDocumentedChildrenInUndocumentedNamespace() const;
     bool docMustBeGenerated() const override;
-    void setDocumented() { documented_ = true; }
-    bool wasDocumented() const { return documented_; }
     void setDocNode(NamespaceNode* ns) { docNode_ = ns; }
     NamespaceNode* docNode() const { return docNode_; }
 
 private:
     bool                seen_;
-    bool                documented_;
     Tree*               tree_;
     QString             whereDocumented_;
     NamespaceNode*      docNode_;
@@ -633,6 +633,7 @@ public:
     PropertyNode* findPropertyNode(const QString& name);
     QmlTypeNode* findQmlBaseNode();
     FunctionNode* findOverriddenFunction(const FunctionNode* fn);
+    PropertyNode* findOverriddenProperty(const FunctionNode* fn);
     bool docMustBeGenerated() const override;
 
 private:
@@ -1130,6 +1131,7 @@ public:
     const NodeList &setters() const { return functions(Setter); }
     const NodeList &resetters() const { return functions(Resetter); }
     const NodeList &notifiers() const { return functions(Notifier); }
+    bool hasAccessFunction(const QString &name) const;
     FunctionRole role(const FunctionNode* fn) const;
     bool isStored() const { return fromFlagValue(stored_, storedDefault()); }
     bool isDesignable() const { return fromFlagValue(designable_, designableDefault()); }
