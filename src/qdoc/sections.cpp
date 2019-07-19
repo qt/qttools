@@ -602,9 +602,14 @@ void Sections::reduce(QVector<Section> &v)
 /*!
   This is a private helper function for buildStdRefPageSections().
  */
-void Sections::stdRefPageSwitch(SectionVector &v, Node *n)
+void Sections::stdRefPageSwitch(SectionVector &v, Node *n, Node *t)
 {
-    switch (n->nodeType()) {
+    // t is the reference node to be tested, n is the node to be distributed.
+    // t differs from n only for shared comment nodes.
+    if (!t)
+        t = n;
+
+    switch (t->nodeType()) {
     case Node::Namespace:
         v[StdNamespaces].insert(n);
         return;
@@ -619,7 +624,7 @@ void Sections::stdRefPageSwitch(SectionVector &v, Node *n)
         return;
     case Node::Function:
         {
-            FunctionNode *func = static_cast<FunctionNode *>(n);
+            FunctionNode *func = static_cast<FunctionNode *>(t);
             if (func->isMacro())
                 v[StdMacros].insert(n);
             else
@@ -628,7 +633,7 @@ void Sections::stdRefPageSwitch(SectionVector &v, Node *n)
         return;
     case Node::Variable:
         {
-            const VariableNode* var = static_cast<const VariableNode*>(n);
+            const VariableNode* var = static_cast<const VariableNode*>(t);
             if (!var->doc().isEmpty()) {
                 if (var->isStatic())
                     v[StdStaticVariables].insert(n);
@@ -639,9 +644,9 @@ void Sections::stdRefPageSwitch(SectionVector &v, Node *n)
         return;
     case Node::SharedComment:
         {
-            SharedCommentNode *scn = static_cast<SharedCommentNode *>(n);
-            if (!scn->doc().isEmpty())
-                v[StdFunctions].insert(scn);
+            SharedCommentNode *scn = static_cast<SharedCommentNode *>(t);
+            if (!scn->doc().isEmpty() && scn->collective().count())
+                stdRefPageSwitch(v, scn, scn->collective().first()); // TODO: warn about mixed node types in collective?
         }
         return;
     default:
@@ -810,8 +815,19 @@ void Sections::distributeNodeInDetailsVector(SectionVector &dv, Node *n)
 {
     if (n->isSharingComment())
         return;
-    if (n->isFunction()) {
-        FunctionNode *fn = static_cast<FunctionNode*>(n);
+
+     // t is the reference node to be tested - typically it's this node (n), but for
+    // shared comment nodes we need to distribute based on the nodes in its collective.
+    Node *t = n;
+
+    if (n->isSharedCommentNode() && n->hasDoc()) {
+        SharedCommentNode *scn = static_cast<SharedCommentNode *>(n);
+        if (scn->collective().count())
+            t = scn->collective().first(); // TODO: warn about mixed node types in collective?
+    }
+
+    if (t->isFunction()) {
+        FunctionNode *fn = static_cast<FunctionNode*>(t);
         if (fn->isRelatedNonmember()) {
             if (fn->isMacro())
                 dv[DetailsMacros].insert(n);
@@ -823,60 +839,71 @@ void Sections::distributeNodeInDetailsVector(SectionVector &dv, Node *n)
             return;
         if (!fn->isSharingComment()) {
             if (!fn->hasAssociatedProperties() || !fn->doc().isEmpty())
-                dv[DetailsMemberFunctions].insert(fn);
+                dv[DetailsMemberFunctions].insert(n);
         }
         return;
     }
-    if (n->isRelatedNonmember()) {
+    if (t->isRelatedNonmember()) {
         dv[DetailsRelatedNonmembers].insert(n);
         return;
     }
-    if (n->isEnumType() || n->isTypedef()) {
-        if (n->name() != QLatin1String("QtGadgetHelper"))
+    if (t->isEnumType() || t->isTypedef()) {
+        if (t->name() != QLatin1String("QtGadgetHelper"))
             dv[DetailsMemberTypes].insert(n);
         return;
     }
-    if (n->isProperty())
+    if (t->isProperty())
         dv[DetailsProperties].insert(n);
-    else if (n->isVariable() && !n->doc().isEmpty())
+    else if (t->isVariable() && !t->doc().isEmpty())
         dv[DetailsMemberVariables].insert(n);
-    else if (n->isSharedCommentNode() && !n->doc().isEmpty())
-        dv[DetailsMemberFunctions].insert(n);
 }
 
 void Sections::distributeQmlNodeInDetailsVector(SectionVector &dv, Node *n)
 {
     if (n->isSharingComment())
         return;
-    if (n->isQmlProperty() || n->isJsProperty()) {
-        QmlPropertyNode* pn = static_cast<QmlPropertyNode*>(n);
+
+    // t is the reference node to be tested - typically it's this node (n), but for
+    // shared comment nodes we need to distribute based on the nodes in its collective.
+    Node *t = n;
+
+    if (n->isSharedCommentNode() && n->hasDoc()) {
+        if (n->isPropertyGroup()) {
+            dv[QmlProperties].insert(n);
+            return;
+        }
+        SharedCommentNode *scn = static_cast<SharedCommentNode *>(n);
+        if (scn->collective().count())
+            t = scn->collective().first(); // TODO: warn about mixed node types in collective?
+    }
+
+    if (t->isQmlProperty() || t->isJsProperty()) {
+        QmlPropertyNode* pn = static_cast<QmlPropertyNode*>(t);
         if (pn->isAttached())
-            dv[QmlAttachedProperties].insert(pn);
+            dv[QmlAttachedProperties].insert(n);
         else
-            dv[QmlProperties].insert(pn);
-    } else if (n->isFunction()) {
-        FunctionNode* fn = static_cast<FunctionNode*>(n);
+            dv[QmlProperties].insert(n);
+    } else if (t->isFunction()) {
+        FunctionNode* fn = static_cast<FunctionNode*>(t);
         if (fn->isQmlSignal() || fn->isJsSignal()) {
             if (fn->isAttached())
-                dv[QmlAttachedSignals].insert(fn);
+                dv[QmlAttachedSignals].insert(n);
             else
-                dv[QmlSignals].insert(fn);
+                dv[QmlSignals].insert(n);
         } else if (fn->isQmlSignalHandler() || fn->isJsSignalHandler()) {
-            dv[QmlSignalHandlers].insert(fn);
+            dv[QmlSignalHandlers].insert(n);
         } else if (fn->isQmlMethod() || fn->isJsMethod()) {
             if (fn->isAttached())
-                dv[QmlAttachedMethods].insert(fn);
+                dv[QmlAttachedMethods].insert(n);
             else
-                dv[QmlMethods].insert(fn);
+                dv[QmlMethods].insert(n);
         }
-    } else if (n->isSharedCommentNode() && n->hasDoc()) {
-        dv[n->isPropertyGroup() ? QmlProperties : QmlMethods].insert(n);
     }
 }
 
 void Sections::distributeQmlNodeInSummaryVector(SectionVector &sv, Node *n)
 {
-    if (n->isSharingComment())
+    if (n->isSharedCommentNode())
         return;
     if (n->isQmlProperty() || n->isJsProperty()) {
         QmlPropertyNode* pn = static_cast<QmlPropertyNode*>(n);
@@ -898,14 +925,6 @@ void Sections::distributeQmlNodeInSummaryVector(SectionVector &sv, Node *n)
                 sv[QmlAttachedMethods].insert(fn);
             else
                 sv[QmlMethods].insert(fn);
-        }
-    } else if (n->isSharedCommentNode()) {
-        SharedCommentNode *scn = static_cast<SharedCommentNode*>(n);
-        if (scn->name().isEmpty()) {
-            for (auto child : scn->collective())
-                sv[child->isFunction(Node::QML) ? QmlMethods : QmlProperties].insert(child);
-        } else {
-            sv[QmlProperties].insert(scn);
         }
     }
 }

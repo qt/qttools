@@ -228,7 +228,7 @@ class Sections
     Aggregate *aggregate() const { return aggregate_; }
 
  private:
-    void stdRefPageSwitch(SectionVector &v, Node *n);
+    void stdRefPageSwitch(SectionVector &v, Node *n, Node *t = nullptr);
     void distributeNodeInSummaryVector(SectionVector &sv, Node *n);
     void distributeNodeInDetailsVector(SectionVector &dv, Node *n);
     void distributeQmlNodeInDetailsVector(SectionVector &dv, Node *n);
