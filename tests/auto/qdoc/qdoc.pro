@@ -1,6 +1,5 @@
 TEMPLATE = subdirs
 
 SUBDIRS = \
-    qdocfileoutput \
+    generatedoutput \
     qdocglobals
-

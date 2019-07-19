@@ -1,9 +1,9 @@
 CONFIG += testcase
 QT = core testlib
 
-TARGET = tst_qdocfileoutput
+TARGET = tst_generatedOutput
 
 SOURCES += \
-    tst_qdocfileoutput.cpp
+    tst_generatedoutput.cpp
 
 QMAKE_DOCS = $$PWD/test.qdocconf
