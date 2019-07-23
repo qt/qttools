@@ -1185,14 +1185,14 @@ void QDocDatabase::resolveNamespaces()
                 ns = static_cast<NamespaceNode*>(n);
                 if (ns->isDocumentedHere())
                     break;
-                else if (ns->wasDocumented())
+                else if (ns->hadDoc())
                     somewhere = ns;
                 ns = nullptr;
             }
             if (ns) {
                 foreach (Node *n, namespaces) {
                     NamespaceNode* NS = static_cast<NamespaceNode*>(n);
-                    if (NS->wasDocumented() && NS != ns) {
+                    if (NS->hadDoc() && NS != ns) {
                         ns->doc().location().warning(tr("Namespace %1 documented more than once")
                                                      .arg(NS->name()));
                         NS->doc().location().warning(tr("...also seen here"));

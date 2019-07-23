@@ -56,7 +56,7 @@ function(QT5_CREATE_TRANSLATION _qm_files)
         if(_my_sources)
           # make a list file to call lupdate on, so we don't make our commands too
           # long for some systems
-          get_filename_component(_ts_name ${_ts_file} NAME_WE)
+          get_filename_component(_ts_name ${_ts_file} NAME)
           set(_ts_lst_file "${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/${_ts_name}_lst_file")
           set(_lst_file_srcs)
           foreach(_lst_file_src ${_my_sources})
