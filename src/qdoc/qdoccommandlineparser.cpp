@@ -144,9 +144,44 @@ QDocCommandLineParser::QDocCommandLineParser()
     addOption(timestampsOption);
 }
 
-void QDocCommandLineParser::process(const QCoreApplication &app, QDocGlobals &qdocGlobals)
+/*!
+ * \internal
+ *
+ * Create a list of arguments from the command line and/or file(s).
+ * This lets QDoc accept arguments contained in a file provided as a
+ * command-line argument prepended by '@'.
+ */
+static QStringList argumentsFromCommandLineAndFile(const QStringList &arguments)
 {
-    QCommandLineParser::process(app);
+    QStringList allArguments;
+    allArguments.reserve(arguments.size());
+    for (const QString &argument : arguments) {
+        // "@file" doesn't start with a '-' so we can't use QCommandLineParser for it
+        if (argument.startsWith(QLatin1Char('@'))) {
+            QString optionsFile = argument;
+            optionsFile.remove(0, 1);
+            if (optionsFile.isEmpty())
+                qFatal("The @ option requires an input file");
+            QFile f(optionsFile);
+            if (!f.open(QIODevice::ReadOnly | QIODevice::Text))
+                qFatal("Cannot open options file specified with @: %ls",
+                       qUtf16Printable(optionsFile));
+            while (!f.atEnd()) {
+                QString line = QString::fromLocal8Bit(f.readLine().trimmed());
+                if (!line.isEmpty())
+                    allArguments << line;
+            }
+        } else {
+            allArguments << argument;
+        }
+    }
+    return allArguments;
+}
+
+void QDocCommandLineParser::process(const QStringList &arguments, QDocGlobals &qdocGlobals)
+{
+    auto allArguments = argumentsFromCommandLineAndFile(arguments);
+    QCommandLineParser::process(allArguments);
 
     qdocGlobals.addDefine(values(defineOption));
     qdocGlobals.dependModules() += values(dependsOption);

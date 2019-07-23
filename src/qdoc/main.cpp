@@ -573,7 +573,7 @@ int main(int argc, char **argv)
 
     // Set the globals declared at the top of this file:
     QDocCommandLineParser parser;
-    parser.process(app, qdocGlobals);
+    parser.process(app.arguments(), qdocGlobals);
 
     // Get the list of files to act on:
     QStringList qdocFiles = parser.positionalArguments();

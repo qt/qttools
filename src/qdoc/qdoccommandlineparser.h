@@ -37,7 +37,7 @@ class QDocCommandLineParser : public QCommandLineParser
 {
 public:
     QDocCommandLineParser();
-    void process(const QCoreApplication &app, QDocGlobals &qdocGlobals);
+    void process(const QStringList &arguments, QDocGlobals &qdocGlobals);
 
 private:
     QCommandLineOption defineOption, dependsOption, highlightingOption;
