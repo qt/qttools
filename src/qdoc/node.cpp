@@ -309,6 +309,7 @@ Node::Node(NodeType type, Aggregate *parent, const QString& name)
       status_(Active),
       indexNodeFlag_(false),
       relatedNonmember_(false),
+      hadDoc_(false),
       parent_(parent),
       sharedCommentNode_(nullptr),
       name_(name)
@@ -1086,7 +1087,7 @@ FunctionNode *Aggregate::findFunctionChild(const QString &name, const Parameters
 /*!
   Find the function node that is a child of this node, such
   that the function described has the same name and signature
-  as the function described by the \a clone node.
+  as the function described by the function node \a clone.
  */
 FunctionNode *Aggregate::findFunctionChild(const FunctionNode *clone)
 {
@@ -1858,10 +1859,48 @@ FunctionNode* ClassNode::findOverriddenFunction(const FunctionNode* fn)
         }
         if (cn != nullptr) {
             FunctionNode *result = cn->findFunctionChild(fn);
-            if (result != nullptr && !result->isNonvirtual())
+            if (result != nullptr && !result->isInternal() && !result->isNonvirtual() && result->hasDoc())
                 return result;
             result = cn->findOverriddenFunction(fn);
             if (result != nullptr && !result->isNonvirtual())
+                return result;
+        }
+        ++bc;
+    }
+    return nullptr;
+}
+
+/*!
+  \a fn is an overriding function in this class or in a class
+  derived from this class. Find the node for the property that
+  \a fn overrides in this class's children or in one of this
+  class's base classes. Return a pointer to the overridden
+  property or return 0.
+ */
+PropertyNode* ClassNode::findOverriddenProperty(const FunctionNode* fn)
+{
+    QList<RelatedClass>::Iterator bc = bases_.begin();
+    while (bc != bases_.end()) {
+        ClassNode *cn = bc->node_;
+        if (cn == nullptr) {
+            cn = QDocDatabase::qdocDB()->findClassNode(bc->path_);
+            bc->node_ = cn;
+        }
+        if (cn != nullptr) {
+            const NodeList &children = cn->childNodes();
+            NodeList::const_iterator i = children.begin();
+            while (i != children.end()) {
+                if ((*i)->isProperty()) {
+                    PropertyNode *pn = static_cast<PropertyNode*>(*i);
+                    if (pn->name() == fn->name() || pn->hasAccessFunction(fn->name())) {
+                        if (pn->hasDoc())
+                            return pn;
+                    }
+                }
+                i++;
+            }
+            PropertyNode *result = cn->findOverriddenProperty(fn);
+            if (result != nullptr)
                 return result;
         }
         ++bc;
@@ -1879,7 +1918,7 @@ bool ClassNode::docMustBeGenerated() const
 {
     if (!hasDoc() || isPrivate() || isInternal() || isDontDocument())
         return false;
-    if (declLocation().fileName().endsWith(QLatin1String("_p.h")))
+    if (declLocation().fileName().endsWith(QLatin1String("_p.h")) && !hasDoc())
         return false;
 
     return true;
@@ -2732,6 +2771,38 @@ QString PropertyNode::qualifiedDataType() const
     else {
         return type_;
     }
+}
+
+/*!
+  Returns true if this property has an access function named \a name.
+ */
+bool PropertyNode::hasAccessFunction(const QString &name) const
+{
+    NodeList::const_iterator i = getters().begin();
+    while (i != getters().end()) {
+        if ((*i)->name() == name)
+            return true;
+        ++i;
+    }
+    i = setters().begin();
+    while (i != setters().end()) {
+        if ((*i)->name() == name)
+            return true;
+        ++i;
+    }
+    i = resetters().begin();
+    while (i != resetters().end()) {
+        if ((*i)->name() == name)
+            return true;
+        ++i;
+    }
+    i = notifiers().begin();
+    while (i != notifiers().end()) {
+        if ((*i)->name() == name)
+            return true;
+        ++i;
+    }
+    return false;
 }
 
 bool QmlTypeNode::qmlOnly = false;
