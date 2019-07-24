@@ -35,7 +35,6 @@
 #include <QtCore/QTranslator>
 
 #include <QtWidgets/QApplication>
-#include <QtWidgets/QDesktopWidget>
 #include <QtGui/QPixmap>
 
 #ifdef Q_OS_MAC

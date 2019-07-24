@@ -37,7 +37,6 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QLayout>
 #include <QtWidgets/QApplication>
-#include <QtWidgets/QDesktopWidget>
 #include <QtWidgets/QMessageBox>
 #include <QtGui/QDesktopServices>
 #include <QtGui/QScreen>

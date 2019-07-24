@@ -71,7 +71,6 @@
 #endif
 #include <QtWidgets/qmdiarea.h>
 #include <QtWidgets/qmdisubwindow.h>
-#include <QtWidgets/qdesktopwidget.h>
 #include <QtWidgets/qmessagebox.h>
 
 #include <QtCore/qdebug.h>

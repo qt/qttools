@@ -58,7 +58,6 @@
 #include <QtWidgets/qactiongroup.h>
 #include <QtGui/qevent.h>
 #include <QtGui/qscreen.h>
-#include <QtWidgets/qdesktopwidget.h>
 #include <QtWidgets/qdockwidget.h>
 #include <QtWidgets/qmenu.h>
 #include <QtWidgets/qmenubar.h>
@@ -569,9 +568,9 @@ QRect QDesignerWorkbench::desktopGeometry() const
     case NeutralMode:
         break;
     }
-    const int screenNumber = widget ? QApplication::desktop()->screenNumber(widget) : 0;
-    auto screen = QGuiApplication::screens().value(screenNumber, QGuiApplication::primaryScreen());
-    return screen->availableGeometry();
+    const auto screen = widget ? widget->screen() : QGuiApplication::primaryScreen();
+    return screen ? screen->availableGeometry()
+                  : QGuiApplication::primaryScreen()->availableGeometry();
 }
 
 QRect QDesignerWorkbench::availableGeometry() const
@@ -579,9 +578,8 @@ QRect QDesignerWorkbench::availableGeometry() const
     if (m_mode == DockedMode)
         return m_dockedMainWindow->mdiArea()->geometry();
 
-    const int screenNumber = QApplication::desktop()->screenNumber(widgetBoxToolWindow());
-    auto screen = QGuiApplication::screens().value(screenNumber, QGuiApplication::primaryScreen());
-    return screen->availableGeometry();
+    const auto screen = widgetBoxToolWindow()->screen();
+    return screen ? screen->availableGeometry() : QGuiApplication::primaryScreen()->availableGeometry() ;
 }
 
 int QDesignerWorkbench::marginHint() const
