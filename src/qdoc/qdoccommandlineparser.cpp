@@ -156,7 +156,8 @@ void QDocCommandLineParser::process(const QCoreApplication &app, QDocGlobals &qd
     qdocGlobals.setWriteQaPages(isSet(writeQaPagesOption));
     qdocGlobals.setRedirectDocumentationToDevNull(isSet(redirectDocumentationToDevNullOption));
     Config::generateExamples = !isSet(noExamplesOption);
-    foreach (const QString &indexDir, values(indexDirOption)) {
+    const auto indexDirs = values(indexDirOption);
+    for (const auto &indexDir : indexDirs) {
         if (QFile::exists(indexDir))
             qdocGlobals.appendToIndexDirs(indexDir);
         else
@@ -167,7 +168,8 @@ void QDocCommandLineParser::process(const QCoreApplication &app, QDocGlobals &qd
     qdocGlobals.setObsoleteLinks(isSet(obsoleteLinksOption));
     if (isSet(outputDirOption))
         Config::overrideOutputDir = value(outputDirOption);
-    foreach (const QString &format, values(outputFormatOption))
+    const auto outputFormats = values(outputFormatOption);
+    for (const auto &format : outputFormats)
         Config::overrideOutputFormats.insert(format);
     qdocGlobals.setNoLinkErrors(isSet(noLinkErrorsOption) || qEnvironmentVariableIsSet("QDOC_NOLINKERRORS"));
     qdocGlobals.setAutolinkErrors(isSet(autoLinkErrorsOption));
