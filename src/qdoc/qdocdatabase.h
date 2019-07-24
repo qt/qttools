@@ -399,6 +399,7 @@ class QDocDatabase
     QStringList keys() { return forest_.keys(); }
     void resolveNamespaces();
     void resolveProxies();
+    void resolveBaseClasses();
 
  private:
     friend class Tree;
