@@ -197,22 +197,20 @@ static void loadIndexFiles(Config& config, const QSet<QString> &formats)
 }
 
 /*!
-  Processes the qdoc config file \a fileName. This is the
-  controller for all of qdoc.
+    Processes the qdoc config file \a fileName. This is the controller for all
+    of QDoc. The \a config instance represents the configuration data for QDoc.
+    All other classes are initialized with the same config.
  */
-static void processQdocconfFile(const QString &fileName)
+static void processQdocconfFile(const QString &fileName, Config &config)
 {
     /*
-      The Config instance represents the configuration data for qdoc.
-      All the other classes are initialized with the config. Below, we
-      initialize the configuration with some default values.
+      Below, we initialize the configuration with some default values.
 
       I don't think the call to translate() does anything here. For one
       thing, the translators haven't been installed at this point. And
       I doubt any translator would translate QDoc anyway. But I left it
       here because it does no harm.
      */
-    Config config(QCoreApplication::translate("QDoc", "qdoc"));
 
     QHash<QString,QString>::iterator iter;
     for (iter = qdocGlobals.defaults().begin(); iter != qdocGlobals.defaults().end(); ++iter)
@@ -571,9 +569,11 @@ int main(int argc, char **argv)
     HtmlGenerator htmlGenerator;
     WebXMLGenerator webXMLGenerator;
 
+    Config config(QCoreApplication::translate("QDoc", "qdoc"));
+
     // Set the globals declared at the top of this file:
     QDocCommandLineParser parser;
-    parser.process(app.arguments(), qdocGlobals);
+    parser.process(app.arguments(), qdocGlobals, &config);
 
     // Get the list of files to act on:
     QStringList qdocFiles = parser.positionalArguments();
@@ -586,21 +586,21 @@ int main(int argc, char **argv)
     if (Generator::singleExec()) {
         // single qdoc process for prepare and generate phases
         Generator::setQDocPass(Generator::Prepare);
-        foreach (const QString &qf, qdocFiles) {
+        for (const auto &file : qAsConst(qdocFiles)) {
             qdocGlobals.dependModules().clear();
-            processQdocconfFile(qf);
+            processQdocconfFile(file, config);
         }
         Generator::setQDocPass(Generator::Generate);
         QDocDatabase::qdocDB()->processForest();
-        foreach (const QString &qf, qdocFiles) {
+        for (const auto &file : qAsConst(qdocFiles)) {
             qdocGlobals.dependModules().clear();
-            processQdocconfFile(qf);
+            processQdocconfFile(file, config);
         }
     } else {
         // separate qdoc processes for prepare and generate phases
-        foreach (const QString &qf, qdocFiles) {
+        for (const auto &file : qAsConst(qdocFiles)) {
             qdocGlobals.dependModules().clear();
-            processQdocconfFile(qf);
+            processQdocconfFile(file, config);
         }
     }
 

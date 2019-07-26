@@ -28,8 +28,10 @@
 
 #ifndef QDOCCOMMANDLINEPARSER_H
 #define QDOCCOMMANDLINEPARSER_H
-#include <QtCore/qcommandlineparser.h>
+#include "config.h"
 #include "qdocglobals.h"
+
+#include <QCommandLineParser>
 
 QT_BEGIN_NAMESPACE
 
@@ -37,7 +39,7 @@ class QDocCommandLineParser : public QCommandLineParser
 {
 public:
     QDocCommandLineParser();
-    void process(const QStringList &arguments, QDocGlobals &qdocGlobals);
+    void process(const QStringList &arguments, QDocGlobals &qdocGlobals, Config *config);
 
 private:
     QCommandLineOption defineOption, dependsOption, highlightingOption;

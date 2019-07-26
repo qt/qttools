@@ -178,8 +178,10 @@ static QStringList argumentsFromCommandLineAndFile(const QStringList &arguments)
     return allArguments;
 }
 
-void QDocCommandLineParser::process(const QStringList &arguments, QDocGlobals &qdocGlobals)
+void QDocCommandLineParser::process(const QStringList &arguments, QDocGlobals &qdocGlobals,
+                                    Config *config)
 {
+    Q_ASSERT(config);
     auto allArguments = argumentsFromCommandLineAndFile(arguments);
     QCommandLineParser::process(allArguments);
 
@@ -190,7 +192,7 @@ void QDocCommandLineParser::process(const QStringList &arguments, QDocGlobals &q
     qdocGlobals.setSingleExec(isSet(singleExecOption));
     qdocGlobals.setWriteQaPages(isSet(writeQaPagesOption));
     qdocGlobals.setRedirectDocumentationToDevNull(isSet(redirectDocumentationToDevNullOption));
-    Config::generateExamples = !isSet(noExamplesOption);
+    config->generateExamples = !isSet(noExamplesOption);
     const auto indexDirs = values(indexDirOption);
     for (const auto &indexDir : indexDirs) {
         if (QFile::exists(indexDir))
@@ -199,13 +201,13 @@ void QDocCommandLineParser::process(const QStringList &arguments, QDocGlobals &q
             qDebug() << "Cannot find index directory" << indexDir;
     }
     if (isSet(installDirOption))
-        Config::installDir = value(installDirOption);
+        config->installDir = value(installDirOption);
     qdocGlobals.setObsoleteLinks(isSet(obsoleteLinksOption));
     if (isSet(outputDirOption))
-        Config::overrideOutputDir = value(outputDirOption);
+        config->overrideOutputDir = value(outputDirOption);
     const auto outputFormats = values(outputFormatOption);
     for (const auto &format : outputFormats)
-        Config::overrideOutputFormats.insert(format);
+        config->overrideOutputFormats.insert(format);
     qdocGlobals.setNoLinkErrors(isSet(noLinkErrorsOption) || qEnvironmentVariableIsSet("QDOC_NOLINKERRORS"));
     qdocGlobals.setAutolinkErrors(isSet(autoLinkErrorsOption));
     if (isSet(debugOption))
