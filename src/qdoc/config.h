@@ -34,6 +34,7 @@
 #define CONFIG_H
 
 #include "location.h"
+#include "qdoccommandlineparser.h"
 
 #include <QtCore/qmap.h>
 #include <QtCore/qpair.h>
@@ -81,11 +82,13 @@ public:
     void load(const QString &fileName);
     void setStringList(const QString &var, const QStringList &values);
 
+    void setOptions(const QDocCommandLineParser &parser);
     const QString &programName() const { return prog; }
     const Location &location() const { return loc; }
     const Location &lastLocation() const { return lastLocation_; }
     bool getBool(const QString &var) const;
     int getInt(const QString &var) const;
+
     QString getOutputDir(const QString &format = QString("HTML")) const;
     QSet<QString> getOutputFormats() const;
     QString getString(const QString &var, const QString &defaultString = QString()) const;

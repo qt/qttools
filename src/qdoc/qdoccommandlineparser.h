@@ -28,20 +28,18 @@
 
 #ifndef QDOCCOMMANDLINEPARSER_H
 #define QDOCCOMMANDLINEPARSER_H
-#include "config.h"
+
 #include "qdocglobals.h"
 
 #include <QtCore/qcommandlineparser.h>
 
 QT_BEGIN_NAMESPACE
 
-class QDocCommandLineParser : public QCommandLineParser
+struct QDocCommandLineParser : public QCommandLineParser
 {
-public:
     QDocCommandLineParser();
-    void process(const QStringList &arguments, QDocGlobals &qdocGlobals, Config *config);
+    void process(const QStringList &arguments, QDocGlobals &qdocGlobals);
 
-private:
     QCommandLineOption defineOption, dependsOption, highlightingOption;
     QCommandLineOption showInternalOption, redirectDocumentationToDevNullOption;
     QCommandLineOption noExamplesOption, indexDirOption, installDirOption;

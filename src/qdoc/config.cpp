@@ -319,6 +319,22 @@ void Config::setStringList(const QString &var, const QStringList &values)
 }
 
 /*!
+   Set configuration options from \a parser.
+ */
+void Config::setOptions(const QDocCommandLineParser &parser)
+{
+    generateExamples = !parser.isSet(parser.noExamplesOption);
+    if (parser.isSet(parser.installDirOption))
+        installDir = parser.value(parser.installDirOption);
+    if (parser.isSet(parser.outputDirOption))
+        overrideOutputDir = parser.value(parser.outputDirOption);
+
+    const auto outputFormats = parser.values(parser.outputFormatOption);
+    for (const auto &format : outputFormats)
+        overrideOutputFormats.insert(format);
+}
+
+/*!
   Looks up the configuarion variable \a var in the string
   map and returns the boolean value.
  */
