@@ -30,14 +30,16 @@
   config.cpp
 */
 
-#include <qdir.h>
-#include <qvariant.h>
-#include <qfile.h>
-#include <qtemporaryfile.h>
-#include <qtextstream.h>
-#include <qdebug.h>
 #include "config.h"
 #include "generator.h"
+
+#include <QtCore/qdebug.h>
+#include <QtCore/qdir.h>
+#include <QtCore/qfile.h>
+#include <QtCore/qtemporaryfile.h>
+#include <QtCore/qtextstream.h>
+#include <QtCore/qvariant.h>
+
 #include <stdlib.h>
 
 QT_BEGIN_NAMESPACE
@@ -1179,7 +1181,7 @@ void Config::load(Location location, const QString& fileName)
 
 bool Config::isFileExcluded(const QString &fileName, const QSet<QString> &excludedFiles)
 {
-    foreach (const QString &entry, excludedFiles) {
+    for (const QString &entry : qAsConst(excludedFiles)) {
         if (entry.contains(QLatin1Char('*')) || entry.contains(QLatin1Char('?'))) {
             QRegExp re(entry, Qt::CaseSensitive, QRegExp::Wildcard);
             if (re.exactMatch(fileName))

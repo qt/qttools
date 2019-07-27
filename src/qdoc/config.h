@@ -33,12 +33,13 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include <qmap.h>
-#include <qset.h>
-#include <qstringlist.h>
-#include <qstack.h>
-#include <qpair.h>
 #include "location.h"
+
+#include <QtCore/qmap.h>
+#include <QtCore/qpair.h>
+#include <QtCore/qset.h>
+#include <QtCore/qstack.h>
+#include <QtCore/qstringlist.h>
 
 QT_BEGIN_NAMESPACE
 
