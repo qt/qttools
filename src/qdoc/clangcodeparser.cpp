@@ -41,22 +41,24 @@
   clangcodeparser.cpp
 */
 
-#include <qfile.h>
-#include <stdio.h>
-#include <errno.h>
+#include "clangcodeparser.h"
+
 #include "codechunk.h"
 #include "config.h"
-#include "clangcodeparser.h"
 #include "generator.h"
 #include "loggingcategory.h"
 #include "qdocdatabase.h"
-#include <qdebug.h>
-#include <qscopedvaluerollback.h>
-#include <qelapsedtimer.h>
-#include <qtemporarydir.h>
-#include "generator.h"
+
+#include <QtCore/qdebug.h>
+#include <QtCore/qelapsedtimer.h>
+#include <QtCore/qfile.h>
+#include <QtCore/qscopedvaluerollback.h>
+#include <QtCore/qtemporarydir.h>
 
 #include <clang-c/Index.h>
+
+#include <stdio.h>
+#include <errno.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -29,19 +29,22 @@
 /*
   generator.cpp
 */
-#include <qdir.h>
-#include <qdebug.h>
+#include "generator.h"
+
 #include "codemarker.h"
 #include "config.h"
 #include "doc.h"
 #include "editdistance.h"
-#include "generator.h"
 #include "loggingcategory.h"
 #include "openedlist.h"
 #include "quoter.h"
 #include "separator.h"
 #include "tokenizer.h"
 #include "qdocdatabase.h"
+
+#include <QtCore/qdebug.h>
+#include <QtCore/qdir.h>
+
 #ifndef QT_BOOTSTRAPPED
 #  include "QtCore/qurl.h"
 #endif
