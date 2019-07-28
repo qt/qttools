@@ -31,7 +31,7 @@
 #include "config.h"
 #include "qdocglobals.h"
 
-#include <QCommandLineParser>
+#include <QtCore/qcommandlineparser.h>
 
 QT_BEGIN_NAMESPACE
 

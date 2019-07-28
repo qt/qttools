@@ -28,12 +28,12 @@
 
 #include "qdoccommandlineparser.h"
 
-#include <QtCore/qdebug.h>
-#include <QtCore/qfile.h>
-
 #include "config.h"
 #include "generator.h"
 #include "loggingcategory.h"
+
+#include <QtCore/qdebug.h>
+#include <QtCore/qfile.h>
 
 QDocCommandLineParser::QDocCommandLineParser()
     : QCommandLineParser(),
