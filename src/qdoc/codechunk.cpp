@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -30,10 +30,10 @@
   codechunk.cpp
 */
 
-#include <qregexp.h>
-#include <qstringlist.h>
-
 #include "codechunk.h"
+
+#include <QtCore/qregexp.h>
+#include <QtCore/qstringlist.h>
 
 QT_BEGIN_NAMESPACE
 

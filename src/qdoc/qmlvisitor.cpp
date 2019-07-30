@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -28,16 +28,17 @@
 
 #include "qmlvisitor.h"
 
-#include "node.h"
+#include "codechunk.h"
 #include "codeparser.h"
+#include "node.h"
 #include "qdocdatabase.h"
 #include "tokenizer.h"
-#include "codechunk.h"
 
-#include <qfileinfo.h>
-#include <qstringlist.h>
-#include <qglobal.h>
-#include <qdebug.h>
+#include <QtCore/qdebug.h>
+#include <QtCore/qfileinfo.h>
+#include <QtCore/qglobal.h>
+#include <QtCore/qstringlist.h>
+
 #ifndef QT_NO_DECLARATIVE
 #include <private/qqmljsast_p.h>
 #include <private/qqmljsastfwd_p.h>

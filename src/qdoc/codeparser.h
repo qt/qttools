@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -29,8 +29,9 @@
 #ifndef CODEPARSER_H
 #define CODEPARSER_H
 
-#include <qset.h>
 #include "node.h"
+
+#include <QtCore/qset.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -27,9 +27,10 @@
 ****************************************************************************/
 
 #include "parameters.h"
-#include "tokenizer.h"
+
 #include "codechunk.h"
 #include "generator.h"
+#include "tokenizer.h"
 
 QT_BEGIN_NAMESPACE
 

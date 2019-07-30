@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -29,11 +29,11 @@
 #ifndef HELPPROJECTWRITER_H
 #define HELPPROJECTWRITER_H
 
-#include <qstring.h>
-#include <qxmlstream.h>
-
 #include "config.h"
 #include "node.h"
+
+#include <QtCore/qstring.h>
+#include <QtCore/qxmlstream.h>
 
 QT_BEGIN_NAMESPACE
 

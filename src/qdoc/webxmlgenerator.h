@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2017 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -29,12 +29,12 @@
 #ifndef WEBXMLGENERATOR_H
 #define WEBXMLGENERATOR_H
 
-#include <QtCore/qxmlstream.h>
-
 #include "codemarker.h"
 #include "config.h"
 #include "htmlgenerator.h"
 #include "qdocindexfiles.h"
+
+#include <QtCore/qxmlstream.h>
 
 QT_BEGIN_NAMESPACE
 

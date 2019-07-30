@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -29,9 +29,10 @@
 #ifndef ATOM_H
 #define ATOM_H
 
-#include <qstringlist.h>
 #include "node.h"
-#include <qdebug.h>
+
+#include <QtCore/qdebug.h>
+#include <QtCore/qstringlist.h>
 
 QT_BEGIN_NAMESPACE
 

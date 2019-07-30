@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -26,17 +26,19 @@
 **
 ****************************************************************************/
 
-#include <qdebug.h>
-#include "config.h"
 #include "location.h"
-#include "generator.h"
-#include <qdir.h>
-#include <qregexp.h>
-#include <QTime>
-#include <stdlib.h>
-#include <limits.h>
 
+#include "config.h"
+#include "generator.h"
+
+#include <QtCore/qdebug.h>
+#include <QtCore/qdir.h>
+#include <QtCore/qregexp.h>
+#include <QtCore/QTime>
+
+#include <limits.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 QT_BEGIN_NAMESPACE
 

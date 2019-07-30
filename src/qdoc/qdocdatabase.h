@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -29,12 +29,13 @@
 #ifndef QDOCDATABASE_H
 #define QDOCDATABASE_H
 
-#include <qstring.h>
-#include <qmap.h>
-#include "tree.h"
 #include "config.h"
 #include "text.h"
-#include <qdebug.h>
+#include "tree.h"
+
+#include <QtCore/qdebug.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qstring.h>
 
 QT_BEGIN_NAMESPACE
 

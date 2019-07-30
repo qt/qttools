@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -26,13 +26,15 @@
 **
 ****************************************************************************/
 
-#include "generator.h"
-#include "atom.h"
-#include "tree.h"
 #include "qdocdatabase.h"
-#include "qdoctagfiles.h"
+
+#include "atom.h"
+#include "generator.h"
 #include "qdocindexfiles.h"
-#include <qdebug.h>
+#include "qdoctagfiles.h"
+#include "tree.h"
+
+#include <QtCore/qdebug.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -30,16 +30,18 @@
   cppcodeparser.cpp
 */
 
-#include <qfile.h>
-#include <stdio.h>
-#include <errno.h>
-#include "config.h"
 #include "cppcodeparser.h"
+
+#include "config.h"
 #include "qdocdatabase.h"
-#include <qdebug.h>
 #include "generator.h"
 
+#include <QtCore/qdebug.h>
+#include <QtCore/qfile.h>
+
 #include <algorithm>
+#include <errno.h>
+#include <stdio.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -28,8 +28,9 @@
 
 #include "qmlmarkupvisitor.h"
 
-#include <qstringlist.h>
-#include <qglobal.h>
+#include <QtCore/qglobal.h>
+#include <QtCore/qstringlist.h>
+
 #ifndef QT_NO_DECLARATIVE
 #include <private/qqmljsast_p.h>
 #include <private/qqmljsastfwd_p.h>

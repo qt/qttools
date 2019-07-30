@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -26,10 +26,12 @@
 **
 ****************************************************************************/
 
-#include <errno.h>
-#include "tokenizer.h"
-#include "qdocdatabase.h"
 #include "puredocparser.h"
+
+#include "qdocdatabase.h"
+#include "tokenizer.h"
+
+#include <errno.h>
 
 QT_BEGIN_NAMESPACE
 

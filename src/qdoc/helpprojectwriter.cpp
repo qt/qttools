@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -26,18 +26,18 @@
 **
 ****************************************************************************/
 
-#include <qcryptographichash.h>
-#include <qdebug.h>
-#include <qhash.h>
-#include <qmap.h>
+#include "helpprojectwriter.h"
 
 #include "atom.h"
-#include "helpprojectwriter.h"
-#include "htmlgenerator.h"
 #include "config.h"
+#include "htmlgenerator.h"
 #include "node.h"
 #include "qdocdatabase.h"
-#include <qdebug.h>
+
+#include <QtCore/qcryptographichash.h>
+#include <QtCore/qdebug.h>
+#include <QtCore/qhash.h>
+#include <QtCore/qmap.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -29,17 +29,14 @@
 #ifndef GENERATOR_H
 #define GENERATOR_H
 
-#include <qfile.h>
-#include <qfileinfo.h>
-#include <qlist.h>
-#include <qmap.h>
-#include <qregexp.h>
-#include <qstring.h>
-#include <qstringlist.h>
-#include <qtextstream.h>
-#include "config.h"
 #include "node.h"
 #include "text.h"
+
+#include <QtCore/qlist.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qstring.h>
+#include <QtCore/qstringlist.h>
+#include <QtCore/qtextstream.h>
 
 QT_BEGIN_NAMESPACE
 

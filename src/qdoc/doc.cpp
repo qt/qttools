@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -26,26 +26,29 @@
 **
 ****************************************************************************/
 
-#include "config.h"
 #include "doc.h"
+
+#include "atom.h"
+#include "config.h"
 #include "codemarker.h"
 #include "editdistance.h"
+#include "generator.h"
+#include "loggingcategory.h"
 #include "openedlist.h"
 #include "quoter.h"
 #include "text.h"
-#include "atom.h"
 #include "tokenizer.h"
-#include "loggingcategory.h"
-#include <qdatetime.h>
-#include <qfile.h>
-#include <qfileinfo.h>
-#include <qhash.h>
-#include <qtextstream.h>
-#include <qregexp.h>
+
+#include <QtCore/qdatetime.h>
+#include <QtCore/qdebug.h>
+#include <QtCore/qfile.h>
+#include <QtCore/qfileinfo.h>
+#include <QtCore/qhash.h>
+#include <QtCore/qregexp.h>
+#include <QtCore/qtextstream.h>
+
 #include <ctype.h>
 #include <limits.h>
-#include <qdebug.h>
-#include "generator.h"
 
 QT_BEGIN_NAMESPACE
 

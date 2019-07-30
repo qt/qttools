@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -26,15 +26,16 @@
 **
 ****************************************************************************/
 
-#include "config.h"
 #include "tokenizer.h"
+
+#include "config.h"
 #include "generator.h"
 
-#include <qfile.h>
-#include <qhash.h>
-#include <qregexp.h>
-#include <qstring.h>
-#include <qtextcodec.h>
+#include <QtCore/qfile.h>
+#include <QtCore/qhash.h>
+#include <QtCore/qregexp.h>
+#include <QtCore/qstring.h>
+#include <QtCore/qtextcodec.h>
 
 #include <ctype.h>
 #include <string.h>

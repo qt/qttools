@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -31,7 +31,8 @@
 */
 
 #include "separator.h"
-#include <qcoreapplication.h>
+
+#include <QtCore/qcoreapplication.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2017 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -27,11 +27,12 @@
 ****************************************************************************/
 
 #include "webxmlgenerator.h"
+
+#include "helpprojectwriter.h"
 #include "node.h"
+#include "qdocdatabase.h"
 #include "separator.h"
 #include "tree.h"
-#include "qdocdatabase.h"
-#include "helpprojectwriter.h"
 
 #include <QtCore/qxmlstream.h>
 

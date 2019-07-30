@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -26,16 +26,6 @@
 **
 ****************************************************************************/
 
-#include <algorithm>
-#include <stdlib.h>
-#include <QtCore/qcommandlineoption.h>
-#include <QtCore/qcommandlineparser.h>
-#include <QtCore/qdatetime.h>
-#include <QtCore/qdebug.h>
-#include <QtCore/qglobal.h>
-#include <QtCore/qglobalstatic.h>
-#include <QtCore/qhashfunctions.h>
-
 #include "clangcodeparser.h"
 #include "codemarker.h"
 #include "codeparser.h"
@@ -48,19 +38,30 @@
 #include "location.h"
 #include "loggingcategory.h"
 #include "puredocparser.h"
-#include "qmlcodemarker.h"
-#include "qmlcodeparser.h"
 #include "qdoccommandlineparser.h"
 #include "qdocdatabase.h"
 #include "qdocglobals.h"
+#include "qmlcodemarker.h"
+#include "qmlcodeparser.h"
 #include "qtranslator.h"
 #include "tokenizer.h"
 #include "tree.h"
 #include "webxmlgenerator.h"
 
+#include <QtCore/qcommandlineoption.h>
+#include <QtCore/qcommandlineparser.h>
+#include <QtCore/qdatetime.h>
+#include <QtCore/qdebug.h>
+#include <QtCore/qglobal.h>
+#include <QtCore/qglobalstatic.h>
+#include <QtCore/qhashfunctions.h>
+
 #ifndef QT_BOOTSTRAPPED
-#  include "qcoreapplication.h"
+#  include <QtCore/qcoreapplication.h>
 #endif
+
+#include <algorithm>
+#include <stdlib.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -33,11 +33,11 @@
 #ifndef TOKENIZER_H
 #define TOKENIZER_H
 
-#include <qfile.h>
-#include <qstack.h>
-#include <qstring.h>
-
 #include "location.h"
+
+#include <QtCore/qfile.h>
+#include <QtCore/qstack.h>
+#include <QtCore/qstring.h>
 
 QT_BEGIN_NAMESPACE
 

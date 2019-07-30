@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -30,8 +30,10 @@
   text.cpp
 */
 
-#include <qregexp.h>
 #include "text.h"
+
+#include <QtCore/qregexp.h>
+
 #include <stdio.h>
 
 QT_BEGIN_NAMESPACE

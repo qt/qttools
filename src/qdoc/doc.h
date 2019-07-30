@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -33,11 +33,11 @@
 #ifndef DOC_H
 #define DOC_H
 
-#include <qset.h>
-#include <qstring.h>
-#include <qmap.h>
-
 #include "location.h"
+
+#include <QtCore/qmap.h>
+#include <QtCore/qset.h>
+#include <QtCore/qstring.h>
 
 QT_BEGIN_NAMESPACE
 

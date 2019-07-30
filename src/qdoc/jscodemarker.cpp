@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -33,11 +33,11 @@
 #include "jscodemarker.h"
 
 #include "atom.h"
+#include "generator.h"
 #include "node.h"
 #include "qmlmarkupvisitor.h"
 #include "text.h"
 #include "tree.h"
-#include "generator.h"
 
 #ifndef QT_NO_DECLARATIVE
 #include <private/qqmljsast_p.h>

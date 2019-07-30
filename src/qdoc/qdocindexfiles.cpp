@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -26,15 +26,17 @@
 **
 ****************************************************************************/
 
-#include "qxmlstream.h"
 #include "qdocindexfiles.h"
-#include "qdoctagfiles.h"
-#include "config.h"
-#include "qdocdatabase.h"
-#include "location.h"
+
 #include "atom.h"
+#include "config.h"
 #include "generator.h"
-#include <qdebug.h>
+#include "location.h"
+#include "qdocdatabase.h"
+#include "qdoctagfiles.h"
+
+#include <QtCore/qdebug.h>
+#include <QtCore/qxmlstream.h>
 
 #include <algorithm>
 

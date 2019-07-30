@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2018 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -40,9 +40,9 @@
 #ifndef CLANGCODEPARSER_H
 #define CLANGCODEPARSER_H
 
-#include <QTemporaryDir>
-
 #include "cppcodeparser.h"
+
+#include <QtCore/qtemporarydir.h>
 
 QT_BEGIN_NAMESPACE
 

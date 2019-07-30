@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -33,8 +33,8 @@
 #ifndef LOCATION_H
 #define LOCATION_H
 
-#include <qstack.h>
-#include <qcoreapplication.h>
+#include <QtCore/qcoreapplication.h>
+#include <QtCore/qstack.h>
 
 QT_BEGIN_NAMESPACE
 

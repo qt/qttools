@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -30,23 +30,26 @@
   htmlgenerator.cpp
 */
 
+#include "htmlgenerator.h"
+
 #include "codemarker.h"
 #include "codeparser.h"
 #include "helpprojectwriter.h"
-#include "htmlgenerator.h"
 #include "node.h"
 #include "qdocdatabase.h"
 #include "separator.h"
 #include "tree.h"
 #include "quoter.h"
-#include <ctype.h>
-#include <qdebug.h>
-#include <qlist.h>
-#include <qiterator.h>
-#include <qtextcodec.h>
-#include <quuid.h>
-#include <qmap.h>
+
+#include <QtCore/qdebug.h>
+#include <QtCore/qiterator.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qtextcodec.h>
+#include <QtCore/quuid.h>
 #include <QtCore/qversionnumber.h>
+
+#include <ctype.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -33,12 +33,13 @@
 #ifndef HTMLGENERATOR_H
 #define HTMLGENERATOR_H
 
-#include <qhash.h>
-#include <qregexp.h>
-#include <qxmlstream.h>
 #include "codemarker.h"
 #include "config.h"
 #include "generator.h"
+
+#include <QtCore/qhash.h>
+#include <QtCore/qregexp.h>
+#include <QtCore/qxmlstream.h>
 
 QT_BEGIN_NAMESPACE
 

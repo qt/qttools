@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -29,13 +29,14 @@
 #ifndef NODE_H
 #define NODE_H
 
-#include <qdir.h>
-#include <qmap.h>
-#include <qpair.h>
-#include <qstringlist.h>
-#include <qvector.h>
-#include "parameters.h"
 #include "doc.h"
+#include "parameters.h"
+
+#include <QtCore/qdir.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qpair.h>
+#include <QtCore/qstringlist.h>
+#include <QtCore/qvector.h>
 
 QT_BEGIN_NAMESPACE
 

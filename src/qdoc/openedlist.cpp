@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -30,10 +30,11 @@
   openedlist.cpp
 */
 
-#include <qregexp.h>
+#include "openedlist.h"
 
 #include "atom.h"
-#include "openedlist.h"
+
+#include <QtCore/qregexp.h>
 
 QT_BEGIN_NAMESPACE
 

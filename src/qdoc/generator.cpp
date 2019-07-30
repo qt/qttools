@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -37,10 +37,10 @@
 #include "editdistance.h"
 #include "loggingcategory.h"
 #include "openedlist.h"
+#include "qdocdatabase.h"
 #include "quoter.h"
 #include "separator.h"
 #include "tokenizer.h"
-#include "qdocdatabase.h"
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qdir.h>

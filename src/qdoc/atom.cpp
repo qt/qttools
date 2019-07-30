@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -26,12 +26,15 @@
 **
 ****************************************************************************/
 
-#include <qregexp.h>
 #include "atom.h"
+
 #include "location.h"
 #include "qdocdatabase.h"
+
+#include <QtCore/qdebug.h>
+#include <QtCore/qregexp.h>
+
 #include <stdio.h>
-#include <qdebug.h>
 
 QT_BEGIN_NAMESPACE
 
