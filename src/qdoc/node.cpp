@@ -1495,7 +1495,7 @@ QString Node::physicalModuleName() const
 
 /*!
   If this node has a child that is a QML property or JS property
-  named \a n, return a pointer to that child. Otherwise return 0.
+  named \a n, return a pointer to that child. Otherwise, return \nullptr.
  */
 QmlPropertyNode* Aggregate::hasQmlProperty(const QString& n) const
 {
@@ -1842,8 +1842,9 @@ QmlTypeNode* ClassNode::findQmlBaseNode()
   \a fn is an overriding function in this class or in a class
   derived from this class. Find the node for the function that
   \a fn overrides in this class's children or in one of this
-  class's base classes. Return a pointer to the overridden
-  function or return 0.
+  class's base classes.
+
+  \returns a pointer to the overridden function, or \nullptr.
 
   This should be revised because clang provides the path to the
   overridden function. mws 15/12/2018
@@ -1874,8 +1875,9 @@ FunctionNode* ClassNode::findOverriddenFunction(const FunctionNode* fn)
   \a fn is an overriding function in this class or in a class
   derived from this class. Find the node for the property that
   \a fn overrides in this class's children or in one of this
-  class's base classes. Return a pointer to the overridden
-  property or return 0.
+  class's base classes.
+
+  \returns a pointer to the overridden function, or \nullptr.
  */
 PropertyNode* ClassNode::findOverriddenProperty(const FunctionNode* fn)
 {
