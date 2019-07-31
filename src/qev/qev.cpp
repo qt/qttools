@@ -43,7 +43,7 @@ public:
     bool event(QEvent *e) {
         if (e->type() == QEvent::ContextMenu)
             return false;
-        QDebug(qout) << e << endl;
+        QDebug(qout) << e << Qt::endl;
         return QWidget::event(e);
     }
 };
