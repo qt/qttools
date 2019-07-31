@@ -247,9 +247,9 @@ void dumpVkInfo(QTextStream &str)
         window.setVulkanInstance(&inst);
         for (const VkPhysicalDeviceProperties &props : window.availablePhysicalDevices()) {
             str << "  API version " << vulkanVersion(props.apiVersion).toString()
-                << hex << ", vendor 0x" << props.vendorID
+                << Qt::hex << ", vendor 0x" << props.vendorID
                 << ", device 0x" << props.deviceID << ", " << props.deviceName
-                << dec << ", type " << props.deviceType
+                << Qt::dec << ", type " << props.deviceType
                 << ", driver version " << vulkanVersion(props.driverVersion).toString();
         }
     } else {
