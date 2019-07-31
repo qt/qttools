@@ -622,10 +622,9 @@ static QWidget *fakeContainer(QWidget *w)
         dock->setFeatures(dock->features() & ~(QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable|QDockWidget::DockWidgetClosable));
         dock->setAllowedAreas(Qt::LeftDockWidgetArea);
         QMainWindow *mw = new QMainWindow;
-        int leftMargin, topMargin, rightMargin, bottomMargin;
-        mw->getContentsMargins(&leftMargin, &topMargin, &rightMargin, &bottomMargin);
+        const QMargins cm = mw->contentsMargins();
         mw->addDockWidget(Qt::LeftDockWidgetArea, dock);
-        mw->resize(size + QSize(leftMargin + rightMargin, topMargin + bottomMargin));
+        mw->resize(size + QSize(cm.left() + cm.right(), cm.top() + cm.bottom()));
         return mw;
     }
     return w;

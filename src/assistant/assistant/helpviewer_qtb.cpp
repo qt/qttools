@@ -277,7 +277,7 @@ void HelpViewer::wheelEvent(QWheelEvent *e)
     TRACE_OBJ
     if (e->modifiers() == Qt::ControlModifier) {
         e->accept();
-        e->delta() > 0 ? scaleUp() : scaleDown();
+        e->angleDelta().y() > 0 ? scaleUp() : scaleDown();
     } else {
         QTextBrowser::wheelEvent(e);
     }
