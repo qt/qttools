@@ -695,7 +695,7 @@ void CppCodeParser::processMetaCommand(const Doc &doc,
     } else if (command == COMMAND_QTVARIABLE) {
         node->setQtVariable(arg);
         if (!node->isModule() && !node->isQmlModule())
-            doc.location().warning(tr("Command '\\%1' is only meanigfule in '\\module' and '\\qmlmodule'.")
+            doc.location().warning(tr("Command '\\%1' is only meaningful in '\\module' and '\\qmlmodule'.")
                              .arg(COMMAND_QTVARIABLE));
     } else if (command == COMMAND_NOAUTOLIST) {
         node->setNoAutoList(true);
