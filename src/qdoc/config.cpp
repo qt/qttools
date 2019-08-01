@@ -1181,7 +1181,7 @@ void Config::load(Location location, const QString& fileName)
 
 bool Config::isFileExcluded(const QString &fileName, const QSet<QString> &excludedFiles)
 {
-    for (const QString &entry : qAsConst(excludedFiles)) {
+    for (const QString &entry : excludedFiles) {
         if (entry.contains(QLatin1Char('*')) || entry.contains(QLatin1Char('?'))) {
             QRegExp re(entry, Qt::CaseSensitive, QRegExp::Wildcard);
             if (re.exactMatch(fileName))
