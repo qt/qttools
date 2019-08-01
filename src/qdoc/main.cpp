@@ -258,7 +258,10 @@ static void processQdocconfFile(const QString &fileName, Config &config)
 
     QString msg = "Start qdoc for " + config.getString(CONFIG_PROJECT) + phase;
     Location::logToStdErrAlways(msg);
-
+    if (config.getDebug()) {
+        Utilities::startDebugging(QString("command line"));
+        qCDebug(lcQdoc).noquote() << "Arguments:" << QCoreApplication::arguments();
+    }
     /*
       Initialize all the classes and data structures with the
       qdoc configuration. This is safe to do for each qdocconf
@@ -517,6 +520,26 @@ static void processQdocconfFile(const QString &fileName, Config &config)
     qCDebug(lcQdoc, "qdoc classes terminated");
 }
 
+/* This method is an extremely ugly hack;
+   some or all of these settings must be set before the call to
+   various initialize() methods in main's processQdocconfFile().
+*/
+void postProcess(const QDocCommandLineParser &parser)
+{
+    if (parser.isSet(parser.prepareOption))
+        Generator::setQDocPass(Generator::Prepare);
+    if (parser.isSet(parser.generateOption))
+        Generator::setQDocPass(Generator::Generate);
+    if (parser.isSet(parser.singleExecOption))
+        Generator::setSingleExec();
+    if (parser.isSet(parser.writeQaPagesOption))
+        Generator::setWriteQaPages();
+    if (parser.isSet(parser.logProgressOption))
+        Location::startLoggingProgress();
+    if (parser.isSet(parser.timestampsOption))
+        Generator::setUseTimestamps();
+}
+
 QT_END_NAMESPACE
 
 int main(int argc, char **argv)
@@ -564,6 +587,7 @@ int main(int argc, char **argv)
     QDocCommandLineParser parser;
     parser.process(app.arguments(), qdocGlobals);
     config.setOptions(parser);
+    postProcess(parser);
 
     // Get the list of files to act on:
     QStringList qdocFiles = parser.positionalArguments();

@@ -29,11 +29,11 @@
 #include "qdoccommandlineparser.h"
 
 #include "config.h"
-#include "generator.h"
 #include "loggingcategory.h"
 #include "utilities.h"
 
 #include <QtCore/qdebug.h>
+#include <QtCore/qdir.h>
 #include <QtCore/qfile.h>
 
 QDocCommandLineParser::QDocCommandLineParser()
@@ -203,24 +203,8 @@ void QDocCommandLineParser::process(const QStringList &arguments, QDocGlobals &q
     qdocGlobals.setNoLinkErrors(isSet(noLinkErrorsOption) || qEnvironmentVariableIsSet("QDOC_NOLINKERRORS"));
     qdocGlobals.setAutolinkErrors(isSet(autoLinkErrorsOption));
 
-    if (isSet(debugOption))
-        Utilities::startDebugging(QString("command line"));
-    qCDebug(lcQdoc).noquote() << "Arguments :" << QCoreApplication::arguments();
-    if (isSet(prepareOption))
-        Generator::setQDocPass(Generator::Prepare);
-    if (isSet(generateOption))
-        Generator::setQDocPass(Generator::Generate);
-    if (isSet(singleExecOption)) {
-        Generator::setSingleExec();
-        if (isSet(indexDirOption))
-            qDebug() << "WARNING: -indexdir option ignored: Index files are not used in -single-exec mode.";
-    }
-    if (isSet(writeQaPagesOption))
-        Generator::setWriteQaPages();
-    if (isSet(logProgressOption))
-        Location::startLoggingProgress();
-    if (isSet(timestampsOption))
-        Generator::setUseTimestamps();
+    if (isSet(singleExecOption) && isSet(indexDirOption))
+        qDebug("WARNING: -indexdir option ignored: Index files are not used in single-exec mode.");
 
     QDir currentDir = QDir::current();
     const auto paths = values(includePathOption);

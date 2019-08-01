@@ -340,6 +340,8 @@ void Config::setOptions(const QDocCommandLineParser &parser)
     const auto outputFormats = parser.values(parser.outputFormatOption);
     for (const auto &format : outputFormats)
         overrideOutputFormats.insert(format);
+
+    debug_ = parser.isSet(parser.debugOption);
 }
 
 /*!

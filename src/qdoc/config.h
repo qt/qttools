@@ -77,7 +77,7 @@ public:
     Config(const QString &programName);
     ~Config();
 
-    static bool debug_;
+    bool getDebug() const { return debug_; }
 
     void load(const QString &fileName);
     void setStringList(const QString &var, const QStringList &values);
@@ -142,6 +142,7 @@ public:
     static QSet<QString> overrideOutputFormats;
 
 private:
+    static bool debug_;
     static bool isMetaKeyChar(QChar ch);
     void load(Location location, const QString &fileName);
 
