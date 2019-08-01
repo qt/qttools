@@ -31,6 +31,7 @@
 #include "config.h"
 #include "generator.h"
 #include "loggingcategory.h"
+#include "utilities.h"
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qfile.h>
@@ -210,10 +211,10 @@ void QDocCommandLineParser::process(const QStringList &arguments, QDocGlobals &q
         config->overrideOutputFormats.insert(format);
     qdocGlobals.setNoLinkErrors(isSet(noLinkErrorsOption) || qEnvironmentVariableIsSet("QDOC_NOLINKERRORS"));
     qdocGlobals.setAutolinkErrors(isSet(autoLinkErrorsOption));
-    if (isSet(debugOption))
-        Generator::startDebugging(QString("command line"));
-    qCDebug(lcQdoc).noquote() << "Arguments :" << QCoreApplication::arguments();
 
+    if (isSet(debugOption))
+        Utilities::startDebugging(QString("command line"));
+    qCDebug(lcQdoc).noquote() << "Arguments :" << QCoreApplication::arguments();
     if (isSet(prepareOption))
         Generator::setQDocPass(Generator::Prepare);
     if (isSet(generateOption))

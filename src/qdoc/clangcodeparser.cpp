@@ -48,6 +48,7 @@
 #include "generator.h"
 #include "loggingcategory.h"
 #include "qdocdatabase.h"
+#include "utilities.h"
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qelapsedtimer.h>
@@ -1536,7 +1537,7 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnArg
                                                                CXTranslationUnit_SkipFunctionBodies |
                                                                CXTranslationUnit_KeepGoing);
     // Change 2nd parameter to 1 to make clang report errors.
-    CXIndex index = clang_createIndex(1, Generator::debugging() ? 1 : 0);
+    CXIndex index = clang_createIndex(1, Utilities::debugging() ? 1 : 0);
 
     std::vector<const char *> args(std::begin(defaultArgs_), std::end(defaultArgs_));
     // Add the defines from the qdocconf file.

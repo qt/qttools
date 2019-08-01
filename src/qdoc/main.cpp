@@ -43,6 +43,7 @@
 #include "qdocglobals.h"
 #include "qmlcodemarker.h"
 #include "qmlcodeparser.h"
+#include "utilities.h"
 #include "qtranslator.h"
 #include "tokenizer.h"
 #include "tree.h"
@@ -512,8 +513,8 @@ static void processQdocconfFile(const QString &fileName, Config &config)
     qdb->clearLinkCounts();
 
     qCDebug(lcQdoc, "Terminating qdoc classes");
-    if (Generator::debugging())
-        Generator::stopDebugging(project);
+    if (Utilities::debugging())
+        Utilities::stopDebugging(project);
 
     msg = "End qdoc for " + config.getString(CONFIG_PROJECT) + phase;
     Location::logToStdErrAlways(msg);

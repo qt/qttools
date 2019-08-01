@@ -79,9 +79,6 @@ public:
     static const QStringList &outputFileNames() { return outFileNames_; }
     static void writeOutFileNames();
     static void augmentImageDirs(QSet<QString> &moreImageDirs);
-    static void startDebugging(const QString &message);
-    static void stopDebugging(const QString &message);
-    static bool debugging();
     static bool noLinkErrors() { return noLinkErrors_; }
     static bool autolinkErrors() { return autolinkErrors_; }
     static void setQDocPass(QDocPass t) { qdocPass_ = t; }

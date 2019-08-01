@@ -87,28 +87,6 @@ static QLatin1String gt("&gt;");
 static QLatin1String lt("&lt;");
 static QLatin1String quot("&quot;");
 
-static inline void setDebugEnabled(bool v)
-{
-    const_cast<QLoggingCategory &>(lcQdoc()).setEnabled(QtDebugMsg, v);
-}
-
-void Generator::startDebugging(const QString &message)
-{
-    setDebugEnabled(true);
-    qCDebug(lcQdoc, "START DEBUGGING: %s", qPrintable(message));
-}
-
-void Generator::stopDebugging(const QString &message)
-{
-    qCDebug(lcQdoc, "STOP DEBUGGING: %s", qPrintable(message));
-    setDebugEnabled(false);
-}
-
-bool Generator::debugging()
-{
-    return lcQdoc().isEnabled(QtDebugMsg);
-}
-
 /*!
   Constructs the generator base class. Prepends the newly
   constructed generator to the list of output generators.

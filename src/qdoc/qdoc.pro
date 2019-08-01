@@ -61,7 +61,8 @@ HEADERS += atom.h \
            tree.h \
            webxmlgenerator.h \
            qdocglobals.h \
-           qdoccommandlineparser.h
+           qdoccommandlineparser.h \
+           utilities.h
 
 SOURCES += atom.cpp \
            clangcodeparser.cpp \
@@ -94,7 +95,8 @@ SOURCES += atom.cpp \
            yyindent.cpp \
            webxmlgenerator.cpp \
            qdocglobals.cpp \
-           qdoccommandlineparser.cpp
+           qdoccommandlineparser.cpp \
+           utilities.cpp
 
 ### QML/JS Parser ###
 
