@@ -219,8 +219,7 @@ int Generator::appendSortedNames(Text& text, const ClassNode* cn, const QList<Re
     r = rc.constBegin();
     while (r != rc.constEnd()) {
         ClassNode* rcn = (*r).node_;
-        if (rcn && rcn->access() == Node::Public &&
-            !rcn->isInternal() && !rcn->doc().isEmpty()) {
+        if (rcn && rcn->isInAPI()) {
             Text className;
             appendFullName(className, rcn, cn);
             classMap[className.toString().toLower()] = className;
