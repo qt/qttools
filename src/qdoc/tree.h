@@ -168,12 +168,13 @@ class Tree
     void addPropertyFunction(PropertyNode *property,
                              const QString &funcName,
                              PropertyNode::FunctionRole funcRole);
-    void resolveInheritance(Aggregate *n);
-    void resolveInheritanceHelper(int pass, ClassNode* cn);
+    void resolveBaseClasses(Aggregate *n);
+    void resolveBaseClassesHelper(int pass, ClassNode* cn);
+    void resolvePropertyOverriddenFromPtrs(Aggregate *n);
     void resolveProperties();
     void resolveCppToQmlLinks();
     void resolveUsingClauses();
-    void fixInheritance(NamespaceNode *rootNode);
+    void removePrivateAndInternalBases(NamespaceNode *rootNode);
     NamespaceNode *root() { return &root_; }
     const NamespaceNode *root() const { return &root_; }
 

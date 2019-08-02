@@ -2921,7 +2921,7 @@ void HtmlGenerator::generateClassHierarchy(const Node *relative, NodeMap& classM
 
             NodeMap newTop;
             foreach (const RelatedClass &d, child->derivedClasses()) {
-                if (d.node_ && !d.isPrivate() && !d.node_->isInternal() && d.node_->hasDoc())
+                if (d.node_ && d.node_->isInAPI())
                     newTop.insert(d.node_->name(), d.node_);
             }
             if (!newTop.isEmpty()) {

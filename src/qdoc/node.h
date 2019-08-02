@@ -308,6 +308,7 @@ public:
     const Location& defLocation() const { return defLocation_; }
     const Location& location() const { return (defLocation_.isEmpty() ? declLocation_ : defLocation_); }
     const Doc& doc() const { return doc_; }
+    bool isInAPI() const { return !isPrivate() && !isInternal() && hasDoc(); }
     bool hasDoc() const { return (hadDoc_ || !doc_.isEmpty()); }
     bool hadDoc() const { return hadDoc_; }
     Status status() const { return status_; }
@@ -613,8 +614,8 @@ public:
     void addDerivedClass(Access access, ClassNode* node);
     void addUnresolvedBaseClass(Access access, const QStringList& path, const QString& signature);
     void addUnresolvedUsingClause(const QString& signature);
-    void fixBaseClasses();
-    void fixPropertyUsingBaseClasses(PropertyNode* pn);
+    void removePrivateAndInternalBases();
+    void resolvePropertyOverriddenFromPtrs(PropertyNode* pn);
 
     QList<RelatedClass>& baseClasses() { return bases_; }
     QList<RelatedClass>& derivedClasses() { return derived_; }
@@ -635,6 +636,9 @@ public:
     FunctionNode* findOverriddenFunction(const FunctionNode* fn);
     PropertyNode* findOverriddenProperty(const FunctionNode* fn);
     bool docMustBeGenerated() const override;
+
+ private:
+    void promotePublicBases(const QList<RelatedClass>& bases);
 
 private:
     QList<RelatedClass> bases_;
