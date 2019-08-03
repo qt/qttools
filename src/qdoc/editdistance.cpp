@@ -90,12 +90,10 @@ QString nearestName(const QString &actual, const QSet<QString> &candidates)
         ++c;
     }
 
-    if (numBest == 1 && deltaBest <= 2 &&
-        actual.length() + best.length() >= 5) {
+    if (numBest == 1 && deltaBest <= 2 && actual.length() + best.length() >= 5)
         return best;
-    } else {
-        return QString();
-    }
+
+    return QString();
 }
 
 QT_END_NAMESPACE
