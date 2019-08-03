@@ -225,13 +225,6 @@ void QDocForest::setSearchOrder(QStringList &t)
             forest_.insert(moduleNames_.at(i), searchOrder_.at(i));
         }
     }
-#if 0
-    qDebug() << "    SEARCH ORDER:";
-    for (int i=0; i<moduleNames_.size(); ++i)
-        qDebug() << "      " << i+1 << "." << moduleNames_.at(i);
-    qDebug() << "    FOREST:" << forest_.keys();
-    qDebug() << "SEARCH ORDER:" << moduleNames_;
-#endif
 }
 
 /*!

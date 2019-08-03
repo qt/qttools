@@ -496,10 +496,6 @@ static void processQdocconfFile(const QString &fileName, Config &config)
         generator->generateDocs();
         ++of;
     }
-#if 0
-    if (Generator::generating() && Generator::writeQaPages())
-        qdb->printLinkCounts(project);
-#endif
     qdb->clearLinkCounts();
 
     qCDebug(lcQdoc, "Terminating qdoc classes");

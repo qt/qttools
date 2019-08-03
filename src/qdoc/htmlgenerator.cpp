@@ -307,14 +307,6 @@ void HtmlGenerator::generateKeywordAnchors(const Node *node)
     Q_UNUSED(node);
     // Disabled: keywords always link to the top of the QDoc
     // comment they appear in, and do not use a dedicated anchor.
-#if 0
-    if (!node->doc().isEmpty()) {
-        const QList<Atom *> &keywords = node->doc().keywords();
-        foreach (Atom *a, keywords) {
-            out() << QLatin1String("<a name=\"") << Doc::canonicalTitle(a->string()) << QLatin1String("\"></a>");
-        }
-    }
-#endif
 }
 
 /*!
@@ -752,22 +744,6 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
         else if (atom->string().startsWith("examplefiles") ||
                  atom->string().startsWith("exampleimages")) {
             if (relative->isExample()) {
-#if 0
-                /*
-                  The removed code will be physically removed if and
-                  when this update is determined to be successful.
-                  This overload of generateFileList() should no longer
-                  be needed, so there is a qDebug() there to tell me
-                  if it would have been called. So far, it hasn't
-                  happened. mws 18/08/2018
-                 */
-                Node::NodeSubtype subType = (atom->string().mid(7,5) == "image") ? Node::Image : Node::File;
-                QString regExp;
-                int secondArg = atom->string().indexOf(" ");
-                if (secondArg != -1)
-                regExp = atom->string().mid(++secondArg);
-                generateFileList(static_cast<const PageNode *>(relative), marker, subType, regExp);
-#endif
                 qDebug() << "GENERATE FILE LIST CALLED" << relative->name() << atom->string();
             }
             else
@@ -1954,12 +1930,6 @@ void HtmlGenerator::generateGenericCollectionPage(CollectionNode *cn, CodeMarker
           << "namespace that is documented in a different module. The reference "
           << "page for that class or namespace will link to the function or type "
           << "on this page.";
-#if 0
-          << Atom(Atom::LinkNode, CodeMarker::stringForNode(NS))
-          << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
-          << Atom(Atom::String, " here.")
-          << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
-#endif
     out() << "<p>";
     generateText(brief, cn, marker);
     out() << "</p>\n";

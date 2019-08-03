@@ -127,12 +127,6 @@ class Tree
                             int pathIndex,
                             const Node *start,
                             bool (Node::*) () const) const;
-#if 0
-    Node *findNodeRecursive(const QStringList &path,
-                            int pathIndex,
-                            const Node *start,
-                            Node::NodeType type) const;
-#endif
     const Node *findNodeForTarget(const QStringList &path,
                                   const QString &target,
                                   const Node *node,

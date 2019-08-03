@@ -474,10 +474,6 @@ Node *Tree::findNodeRecursive(const QStringList &path,
     Node *node = const_cast<Node *>(start);
     if (!node->isAggregate())
         return ((pathIndex >= path.size()) ? node : nullptr);
-#if 0
-    if (pathIndex >= path.size())
-        return nullptr;
-#endif
     Aggregate *current = static_cast<Aggregate *>(node);
     const NodeList &children = current->childNodes();
     const QString &name = path.at(pathIndex);

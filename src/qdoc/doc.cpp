@@ -1689,13 +1689,6 @@ void DocParser::include(const QString &fileName, const QString &identifier)
 
     QString userFriendlyFilePath;
     QString filePath = Doc::config()->getIncludeFilePath(fileName);
-#if 0
-    QString filePath = Config::findFile(location(),
-                                        sourceFiles,
-                                        sourceDirs,
-                                        fileName,
-                                        userFriendlyFilePath);
-#endif
     if (filePath.isEmpty()) {
         location().warning(tr("Cannot find qdoc include file '%1'").arg(fileName));
     }

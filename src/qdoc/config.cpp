@@ -1132,11 +1132,6 @@ void Config::load(Location location, const QString &fileName)
                                 if (metWord)
                                     stringValue += QLatin1Char(' ');
                                 stringValue += word;
-#if 0
-                                if (metWord)
-                                    rhsValues << QString(" " + word);
-                                else
-#endif
                                 rhsValues << word;
                                 metWord = true;
                                 word.clear();

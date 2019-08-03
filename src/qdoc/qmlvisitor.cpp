@@ -760,24 +760,6 @@ void QmlDocVisitor::endVisit(QQmlJS::AST::FunctionDeclaration* fd)
  */
 bool QmlDocVisitor::visit(QQmlJS::AST::UiScriptBinding* )
 {
-#if 0
-    if (nestingLevel > 1) {
-        return true;
-    }
-    if (current->isQmlType() || current->isJsType()) {
-        QString handler = sb->qualifiedId->name.toString();
-        if (handler.length() > 2 && handler.startsWith("on") && handler.at(2).isUpper()) {
-            QmlTypeNode *qmlType = static_cast<QmlTypeNode*>(current);
-            if (qmlType) {
-                FunctionNode::Metaness metaness = FunctionNode::QmSignalHandler;
-                if (qmlType->isJsType())
-                    metaness = FunctionNode::JsSignalHandler;
-                FunctionNode *qmlSH = new FunctionNode(metaness, current, handler);
-                applyDocumentation(sb->firstSourceLocation(), qmlSH);
-            }
-        }
-    }
-#endif
     return true;
 }
 
