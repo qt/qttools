@@ -42,7 +42,6 @@ class WebXMLGenerator : public HtmlGenerator, public IndexSectionWriter
 {
 public:
     explicit WebXMLGenerator() {}
-    ~WebXMLGenerator() {}
 
     void initializeGenerator(const Config &config) override;
     void terminateGenerator() override;

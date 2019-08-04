@@ -43,7 +43,7 @@ class JsCodeMarker : public QmlCodeMarker
 
 public:
     JsCodeMarker();
-    ~JsCodeMarker();
+    ~JsCodeMarker() override;
 
     bool recognizeCode(const QString &code) override;
     bool recognizeExtension(const QString &ext) override;

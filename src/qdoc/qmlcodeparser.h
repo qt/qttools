@@ -55,7 +55,7 @@ class QmlCodeParser : public CodeParser
 
 public:
     QmlCodeParser();
-    virtual ~QmlCodeParser();
+    ~QmlCodeParser() override;
 
     void initializeParser(const Config &config) override;
     void terminateParser() override;

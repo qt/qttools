@@ -39,7 +39,7 @@ class CppCodeMarker : public CodeMarker
 
 public:
     CppCodeMarker();
-    ~CppCodeMarker();
+    ~CppCodeMarker() override;
 
     bool recognizeCode(const QString &code) override;
     bool recognizeExtension(const QString &ext) override;

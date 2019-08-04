@@ -4587,14 +4587,6 @@ QmlTypeNode::QmlTypeNode(Aggregate *parent, const QString &name, NodeType type)
 }
 
 /*!
-  Needed for printing a debug messages.
- */
-QmlTypeNode::~QmlTypeNode()
-{
-    // nothing.
-}
-
-/*!
   Clear the static maps so that subsequent runs don't try to use
   contents from a previous run.
  */

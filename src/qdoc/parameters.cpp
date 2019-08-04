@@ -84,13 +84,13 @@ QString Parameter::signature(bool includeValue) const
  */
 
 Parameters::Parameters()
-  : valid_(true), privateSignal_(false), tok_(0), tokenizer_(0)
+  : valid_(true), privateSignal_(false), tok_(0), tokenizer_(nullptr)
 {
     // nothing.
 }
 
 Parameters::Parameters(const QString &signature)
-    : valid_(true), privateSignal_(false), tok_(0), tokenizer_(0)
+    : valid_(true), privateSignal_(false), tok_(0), tokenizer_(nullptr)
 {
     if (!signature.isEmpty()) {
         if (!parse(signature)) {

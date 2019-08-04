@@ -53,7 +53,7 @@ public:
 
 public:
     HtmlGenerator();
-    ~HtmlGenerator();
+    ~HtmlGenerator() override;
 
     void initializeGenerator(const Config &config) override;
     void terminateGenerator() override;

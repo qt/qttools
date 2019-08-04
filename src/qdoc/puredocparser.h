@@ -41,7 +41,7 @@ class PureDocParser : public CppCodeParser
 
 public:
     PureDocParser() : tokenizer_(nullptr), tok_(0) { pureParser_ = this; }
-    virtual ~PureDocParser() { pureParser_ = nullptr; }
+    ~PureDocParser() override { pureParser_ = nullptr; }
 
     QStringList sourceFileNameFilter() override;
     void parseSourceFile(const Location &location, const QString &filePath) override;

@@ -66,7 +66,7 @@ public:
                   QQmlJS::Engine *engine,
                   const QSet<QString> &commands,
                   const QSet<QString> &topics);
-    virtual ~QmlDocVisitor();
+    ~QmlDocVisitor() override;
 
     bool visit(QQmlJS::AST::UiImport *import) override;
     void endVisit(QQmlJS::AST::UiImport *definition) override;

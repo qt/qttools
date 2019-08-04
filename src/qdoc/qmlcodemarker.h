@@ -47,7 +47,7 @@ class QmlCodeMarker : public CppCodeMarker
 
 public:
     QmlCodeMarker();
-    ~QmlCodeMarker();
+    ~QmlCodeMarker() override;
 
     bool recognizeCode(const QString &code) override;
     bool recognizeExtension(const QString &ext) override;

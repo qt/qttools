@@ -53,7 +53,6 @@ class CppCodeParser : public CodeParser
 
 public:
     CppCodeParser();
-    ~CppCodeParser() = default;
 
     void initializeParser(const Config &config) override;
     void terminateParser() override;

@@ -211,7 +211,7 @@ class LinkAtom : public Atom
     LinkAtom(const QString &p1, const QString &p2);
     LinkAtom(const LinkAtom &t);
     LinkAtom(Atom *previous, const LinkAtom &t);
-    virtual ~LinkAtom() { }
+    ~LinkAtom() override { }
 
     bool isLinkAtom() const override { return true; }
     Node::Genus genus() override { resolveSquareBracketParams(); return genus_; }

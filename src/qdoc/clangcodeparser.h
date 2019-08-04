@@ -51,7 +51,7 @@ class ClangCodeParser : public CppCodeParser
     Q_DECLARE_TR_FUNCTIONS(QDoc::ClangCodeParser)
 
 public:
-    ~ClangCodeParser();
+    ~ClangCodeParser() override;
 
     void initializeParser(const Config &config) override;
     void terminateParser() override;

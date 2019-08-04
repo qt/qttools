@@ -90,7 +90,7 @@ class TopicRef : public DitaRef
 {
 public:
     TopicRef() { }
-    ~TopicRef();
+    ~TopicRef() override;
 
     bool isMapRef() const override { return false; }
     const DitaRefList *subrefs() const override { return &subrefs_; }
@@ -104,7 +104,6 @@ class MapRef : public DitaRef
 {
 public:
     MapRef() { }
-    ~MapRef() { }
 
     bool isMapRef() const override { return true; }
 };

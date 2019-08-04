@@ -401,7 +401,6 @@ public:
         noAutoList_(false) { }
     PageNode(Aggregate *parent, const QString &name, PageType ptype) : Node(Page, parent, name),
         noAutoList_(false) { setPageType(ptype); }
-    virtual ~PageNode() { }
 
     bool isPageNode() const override { return true; }
     bool isTextPageNode() const override { return !isAggregate(); } // PageNode but not Aggregate
@@ -499,7 +498,7 @@ public:
 protected:
     Aggregate(NodeType type, Aggregate *parent, const QString &name)
         : PageNode(type, parent, name), functionCount_(0) { }
-    virtual ~Aggregate();
+    ~Aggregate() override;
     void removeFunctionNode(FunctionNode *fn);
 
 private:
@@ -536,7 +535,7 @@ class NamespaceNode : public Aggregate
 public:
     NamespaceNode(Aggregate *parent, const QString &name) : Aggregate(Namespace, parent, name),
         seen_(false), tree_(nullptr), docNode_(nullptr) { }
-    virtual ~NamespaceNode();
+    ~NamespaceNode() override;
     Tree *tree() const override { return (parent() ? parent()->tree() : tree_); }
 
     bool isFirstClassAggregate() const override { return true; }
@@ -599,7 +598,6 @@ class ClassNode : public Aggregate
 public:
     ClassNode(NodeType type, Aggregate *parent, const QString &name) : Aggregate(type, parent, name),
         abstract_(false),  wrapper_(false), qmlelement(nullptr) { }
-    virtual ~ClassNode() { }
     bool isFirstClassAggregate() const override { return true; }
     bool isClassNode() const override { return true; }
     bool isRelatableType() const override { return true; }
@@ -653,7 +651,6 @@ class HeaderNode : public Aggregate
 {
 public:
     HeaderNode(Aggregate *parent, const QString &name);
-    virtual ~HeaderNode() { }
     bool docMustBeGenerated() const override;
     bool isFirstClassAggregate() const override { return true; }
     bool isRelatableType() const override { return true; }
@@ -675,7 +672,6 @@ class ExampleNode : public PageNode
 public:
     ExampleNode(Aggregate *parent, const QString &name)
         : PageNode(Node::Example, parent, name) { }
-    virtual ~ExampleNode() { }
     QString imageFileName() const override { return imageFileName_; }
     void setImageFileName(const QString &ifn) override { imageFileName_ = ifn; }
     const QStringList &files() const { return files_; }
@@ -715,7 +711,6 @@ class QmlTypeNode : public Aggregate
 {
 public:
     QmlTypeNode(Aggregate *parent, const QString &name, NodeType type = QmlType);
-    virtual ~QmlTypeNode();
     bool isFirstClassAggregate() const override { return true; }
     bool isQtQuickNode() const override {
         return (logicalModuleName() == QLatin1String("QtQuick"));
@@ -770,7 +765,6 @@ class QmlBasicTypeNode : public Aggregate
 {
 public:
     QmlBasicTypeNode(Aggregate *parent, const QString &name, NodeType type = QmlBasicType);
-    virtual ~QmlBasicTypeNode() { }
     bool isFirstClassAggregate() const override { return true; }
 };
 
@@ -783,7 +777,6 @@ public:
                     const QString &name,
                     const QString &type,
                     bool attached);
-    virtual ~QmlPropertyNode() { }
 
     void setDataType(const QString &dataType) override { type_ = dataType; }
     void setStored(bool stored) { stored_ = toFlagValue(stored); }
@@ -847,7 +840,6 @@ class EnumNode : public Node
 {
 public:
     EnumNode(Aggregate *parent, const QString &name) : Node(Enum, parent, name), flagsType_(nullptr) { }
-    virtual ~EnumNode() { }
 
     void addItem(const EnumItem &item);
     void setFlagsType(TypedefNode *typedeff);
@@ -870,7 +862,6 @@ class TypedefNode : public Node
 public:
     TypedefNode(Aggregate *parent, const QString &name) : Node(Typedef, parent, name),
         associatedEnum_(nullptr) { }
-    virtual ~TypedefNode() { }
 
     bool hasAssociatedEnum() const { return associatedEnum_ != nullptr; }
     const EnumNode *associatedEnum() const { return associatedEnum_; }
@@ -889,7 +880,6 @@ class TypeAliasNode : public TypedefNode
 public:
     TypeAliasNode(Aggregate *parent, const QString &name, const QString &aliasedType)
         : TypedefNode(parent, name), aliasedType_(aliasedType) { }
-    virtual ~TypeAliasNode() { }
 
     QString aliasedType() { return aliasedType_; }
     Node *clone(Aggregate *parent) override;
@@ -915,7 +905,7 @@ public:
         : Node(Node::SharedComment, parent, group) {
         collective_.reserve(count);
     }
-    virtual ~SharedCommentNode() { collective_.clear(); }
+    ~SharedCommentNode() override { collective_.clear(); }
 
     bool isPropertyGroup() const override { return !collective_.isEmpty() &&
             (collective_.at(0)->isQmlProperty() || collective_.at(0)->isJsProperty());
@@ -959,7 +949,6 @@ public:
 
     FunctionNode(Aggregate *parent, const QString &name); // C++ function (Plain)
     FunctionNode(Metaness type, Aggregate *parent, const QString &name, bool attached = false);
-    virtual ~FunctionNode() { }
 
     Node *clone(Aggregate *parent) override;
     Metaness metaness() const { return metaness_; }
@@ -1108,7 +1097,6 @@ public:
     enum { NumFunctionRoles = Notifier + 1 };
 
     PropertyNode(Aggregate *parent, const QString &name);
-    virtual ~PropertyNode() { }
 
     void setDataType(const QString &dataType) override { type_ = dataType; }
     void addFunction(FunctionNode *function, FunctionRole role);
@@ -1192,7 +1180,6 @@ class VariableNode : public Node
 {
 public:
     VariableNode(Aggregate *parent, const QString &name);
-    virtual ~VariableNode() { }
 
     void setLeftType(const QString &leftType) { leftType_ = leftType; }
     void setRightType(const QString &rightType) { rightType_ = rightType; }
@@ -1221,7 +1208,6 @@ class CollectionNode : public PageNode
 public:
     CollectionNode(NodeType type, Aggregate *parent, const QString &name)
         : PageNode(type, parent, name), seen_(false) { }
-    virtual ~CollectionNode() { }
 
     bool isCollectionNode() const override { return true; }
     QString qtVariable() const override { return qtVariable_; }
