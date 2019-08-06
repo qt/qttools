@@ -1591,7 +1591,7 @@ bool NamespaceNode::isDocumentedHere() const
 bool NamespaceNode::hasDocumentedChildren() const
 {
     foreach (Node *n, children_) {
-        if (n->hasDoc() && !n->isPrivate() && !n->isInternal())
+        if (n->isInAPI())
             return true;
     }
     return false;
@@ -1605,7 +1605,7 @@ bool NamespaceNode::hasDocumentedChildren() const
 void NamespaceNode::reportDocumentedChildrenInUndocumentedNamespace() const
 {
     foreach (Node *n, children_) {
-        if (n->hasDoc() && !n->isPrivate() && !n->isInternal()) {
+        if (n->isInAPI()) {
             QString msg1 = n->name();
             if (n->isFunction())
                 msg1 += "()";
@@ -1623,7 +1623,7 @@ void NamespaceNode::reportDocumentedChildrenInUndocumentedNamespace() const
  */
 bool NamespaceNode::docMustBeGenerated() const
 {
-    if (hasDoc() && !isInternal() && !isPrivate())
+    if (isInAPI())
         return true;
     return (hasDocumentedChildren() ? true : false);
 }
@@ -1703,8 +1703,37 @@ void ClassNode::addUnresolvedUsingClause(const QString& signature)
 }
 
 /*!
+  A base class of this class node was private or internal.
+  That node's list of \a bases is traversed in this function.
+  Each of its public base classes is promoted to be a base
+  class of this node for documentation purposes. For each
+  private or internal class node in \a bases, this function
+  is called recursively with the list of base classes from
+  that private or internal class node.
  */
-void ClassNode::fixBaseClasses()
+void ClassNode::promotePublicBases(const QList<RelatedClass>& bases)
+{
+    if (!bases.isEmpty()) {
+        for (int i = bases.size() - 1; i >= 0; --i) {
+            ClassNode* bc = bases.at(i).node_;
+            if (bc == nullptr)
+                bc = QDocDatabase::qdocDB()->findClassNode(bases.at(i).path_);
+            if (bc != nullptr) {
+                if (bc->isPrivate() || bc->isInternal())
+                    promotePublicBases(bc->baseClasses());
+                else
+                    bases_.append(bases.at(i));
+            }
+        }
+    }
+}
+
+/*!
+  Remove private and internal bases classes from this class's list
+  of base classes. When a base class is removed from the list, add
+  its base classes to this class's list of base classes.
+ */
+void ClassNode::removePrivateAndInternalBases()
 {
     int i;
     i = 0;
@@ -1715,13 +1744,11 @@ void ClassNode::fixBaseClasses()
         ClassNode* bc = bases_.at(i).node_;
         if (bc == nullptr)
             bc = QDocDatabase::qdocDB()->findClassNode(bases_.at(i).path_);
-        if (bc != nullptr && (bc->access() == Node::Private || found.contains(bc))) {
+        if (bc != nullptr && (bc->isPrivate() || bc->isInternal() || found.contains(bc))) {
             RelatedClass rc = bases_.at(i);
             bases_.removeAt(i);
             ignoredBases_.append(rc);
-            const QList<RelatedClass> &bb = bc->baseClasses();
-            for (int j = bb.size() - 1; j >= 0; --j)
-                bases_.insert(i, bb.at(j));
+            promotePublicBases(bc->baseClasses());
         }
         else {
             ++i;
@@ -1732,7 +1759,7 @@ void ClassNode::fixBaseClasses()
     i = 0;
     while (i < derived_.size()) {
         ClassNode* dc = derived_.at(i).node_;
-        if (dc != nullptr && dc->access() == Node::Private) {
+        if (dc != nullptr && (dc->isPrivate() || dc->isInternal())) {
             derived_.removeAt(i);
             const QList<RelatedClass> &dd = dc->derivedClasses();
             for (int j = dd.size() - 1; j >= 0; --j)
@@ -1745,9 +1772,8 @@ void ClassNode::fixBaseClasses()
 }
 
 /*!
-  Not sure why this is needed.
  */
-void ClassNode::fixPropertyUsingBaseClasses(PropertyNode* pn)
+void ClassNode::resolvePropertyOverriddenFromPtrs(PropertyNode* pn)
 {
     QList<RelatedClass>::const_iterator bc = baseClasses().constBegin();
     while (bc != baseClasses().constEnd()) {
@@ -1756,11 +1782,11 @@ void ClassNode::fixPropertyUsingBaseClasses(PropertyNode* pn)
             Node* n = cn->findNonfunctionChild(pn->name(), &Node::isProperty);
             if (n) {
                 PropertyNode* baseProperty = static_cast<PropertyNode*>(n);
-                cn->fixPropertyUsingBaseClasses(baseProperty);
+                cn->resolvePropertyOverriddenFromPtrs(baseProperty);
                 pn->setOverriddenFrom(baseProperty);
             }
             else
-                cn->fixPropertyUsingBaseClasses(pn);
+                cn->resolvePropertyOverriddenFromPtrs(pn);
         }
         ++bc;
     }
@@ -1944,7 +1970,7 @@ HeaderNode::HeaderNode(Aggregate* parent, const QString& name) : Aggregate(Heade
  */
 bool HeaderNode::docMustBeGenerated() const
 {
-    if (hasDoc() && !isInternal() && !isPrivate())
+    if (isInAPI())
         return true;
     return (hasDocumentedChildren() ? true : false);
 }
@@ -1956,7 +1982,7 @@ bool HeaderNode::docMustBeGenerated() const
 bool HeaderNode::hasDocumentedChildren() const
 {
     foreach (Node *n, children_) {
-        if (n->hasDoc() && !n->isPrivate() && !n->isInternal())
+        if (n->isInAPI())
             return true;
     }
     return false;

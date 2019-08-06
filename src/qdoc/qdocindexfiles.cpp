@@ -690,7 +690,8 @@ void QDocIndexFiles::resolveIndex()
 {
     QPair<ClassNode*,QString> pair;
     foreach (pair, basesList_) {
-        foreach (const QString& base, pair.second.split(QLatin1Char(','))) {
+        QStringList bases = pair.second.split(QLatin1Char(','));
+        foreach (const QString& base, bases) {
             QStringList basePath = base.split(QString("::"));
             Node* n = qdb_->findClassNode(basePath);
             if (n)

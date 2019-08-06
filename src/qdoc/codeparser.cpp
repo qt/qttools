@@ -320,7 +320,7 @@ void CodeParser::checkModuleInclusion(Node* n)
         default:
             return;
         }
-        if (!n->isPrivate() && !n->name().isEmpty() && !n->doc().isEmpty()) {
+        if (n->isInAPI() && !n->name().isEmpty()) {
             n->doc().location().warning(tr("%1 %2 has no \\inmodule command; "
                                            "using project name by default: %3")
                                         .arg(word).arg(n->name()).arg(Generator::defaultModuleName()));
