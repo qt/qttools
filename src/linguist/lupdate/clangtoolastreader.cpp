@@ -58,6 +58,25 @@ namespace LupdatePrivate
     {
         return source.contains("\"");
     }
+
+    bool trFunctionPresent(llvm::StringRef text)
+    {
+        /*
+            UNARY_MACRO(qtTrId)
+            UNARY_MACRO(tr)
+            UNARY_MACRO(trUtf8)
+            UNARY_MACRO(translate)
+        */
+        if (text.contains(llvm::StringRef("qtTrId(")))
+            return true;
+        if (text.contains(llvm::StringRef("tr(")))
+            return true;
+        if (text.contains(llvm::StringRef("trUtf8(")))
+            return true;
+        if (text.contains(llvm::StringRef("translate(")))
+            return true;
+        return false;
+    }
 }
 
 // The visit functions are called automatically when the visitor TraverseAST function is called
@@ -104,6 +123,12 @@ bool LupdateVisitor::VisitCallExpr(clang::CallExpr *callExpression)
     store.contextRetrieved = LupdatePrivate::cleanContext(context, contextSuffix);
     qCDebug(lcClang) << "Context retrieved : "
         << store.contextRetrieved << "\n";
+
+    // Here we gonna need to retrieve the comments around the function call
+    // //: //* //~ Things like that
+    const std::vector<QString> rawComments = rawCommentsForCallExpr(callExpression);
+    for (const auto &rawComment : rawComments)
+            qCDebug(lcClang) << "Raw comments     :" << rawComment << "\n";
 
     clang::LangOptions langOpts;
     langOpts.CPlusPlus = true;
@@ -152,6 +177,127 @@ bool LupdateVisitor::VisitCallExpr(clang::CallExpr *callExpression)
         break;
     }
     return true;
+}
+
+// Retrieve the comments associated with the CallExpression
+std::vector<QString> LupdateVisitor::rawCommentsForCallExpr(const clang::CallExpr *callExpr) const
+{
+    if (!m_context)
+        return {};
+    return rawCommentsFromSourceLocation(m_context->getFullLoc(callExpr->getBeginLoc()));
+}
+
+std::vector<QString> LupdateVisitor::rawCommentsFromSourceLocation(
+    clang::SourceLocation sourceLocation) const
+{
+    if (!m_context)
+        return {};
+    if (sourceLocation.isInvalid() || !sourceLocation.isFileID()) {
+        qCDebug(lcClang) << "The declaration does not map directly to a location in a file,"
+            " early return.";
+        return {};
+    }
+    auto &sourceMgr = m_context->getSourceManager();
+
+#if (LUPDATE_CLANG_VERSION >= LUPDATE_CLANG_VERSION_CHECK(10,0,0))
+    const clang::FileID file = sourceMgr.getDecomposedLoc(sourceLocation).first;
+    const auto commentsInThisFile = m_context->getRawCommentList().getCommentsInFile(file);
+    if (!commentsInThisFile)
+        return {};
+
+    std::vector<clang::RawComment *> tmp;
+    for (auto commentInFile : *commentsInThisFile)
+        tmp.emplace_back(commentInFile.second);
+    clang::ArrayRef<clang::RawComment *> rawComments = tmp;
+#else
+    clang::ArrayRef<clang::RawComment *> rawComments = m_context->getRawCommentList().getComments();
+#endif
+
+    // If there are no comments anywhere, we won't find anything.
+    if (rawComments.empty())
+        return {};
+
+    // Create a dummy raw comment with the source location of the declaration.
+    clang::RawComment commentAtDeclarationLocation(sourceMgr,
+        clang::SourceRange(sourceLocation), m_context->getLangOpts().CommentOpts, false);
+
+    // Create a functor object to compare the source location of the comment and the declaration.
+    const clang::BeforeThanCompare<clang::RawComment> compareSourceLocation(sourceMgr);
+    //  Find the comment that occurs just after or within this declaration. Possible findings:
+    //  QObject::tr(/* comment 1 */ "test"); //: comment 2   -> finds "//: comment 1"
+    //  QObject::tr("test"); //: comment 1                   -> finds "//: comment 1"
+    //  QObject::tr("test");
+    //  //: comment 1                                        -> finds "//: comment 1"
+    //  /*: comment 1 */ QObject::tr("test");                -> finds no trailing comment
+    auto comment = std::lower_bound(rawComments.begin(), rawComments.end(),
+        &commentAtDeclarationLocation, compareSourceLocation);
+
+    // We did not find any comment before the declaration.
+    if (comment == rawComments.begin())
+        return {};
+
+    // Decompose the location for the declaration and find the beginning of the file buffer.
+    std::pair<clang::FileID, unsigned> declLocDecomp = sourceMgr.getDecomposedLoc(sourceLocation);
+
+    // Get the text buffer from the beginning of the file up through the declaration's begin.
+    bool invalid = false;
+    const char *buffer = sourceMgr.getBufferData(declLocDecomp.first, &invalid).data();
+    if (invalid) {
+        qCDebug(lcClang).nospace() << "An error occurred fetching the source buffer of file: "
+            << sourceMgr.getFilename(sourceLocation);
+        return {};
+    }
+
+    std::vector<QString> retrievedRawComments;
+    auto lastDecompLoc = declLocDecomp.second;
+    const auto declLineNum = sourceMgr.getLineNumber(declLocDecomp.first, declLocDecomp.second);
+    do {
+        std::advance(comment, -1);
+
+        // Decompose the end of the comment.
+        std::pair<clang::FileID, unsigned> commentEndDecomp
+            = sourceMgr.getDecomposedLoc((*comment)->getSourceRange().getEnd());
+
+        // If the comment and the declaration aren't in the same file, then they aren't related.
+        if (declLocDecomp.first != commentEndDecomp.first) {
+            qCDebug(lcClang) << "Comment and the declaration aren't in the same file. Comment '"
+                << (*comment)->getRawText(sourceMgr) << "' is ignored, return.";
+            return retrievedRawComments;
+        }
+
+        // Current lupdate ignores comments on the same line before the declaration.
+        // void Class42::hello(int something /*= 17 */, QString str = Class42::tr("eyo"))
+        if (declLineNum == sourceMgr.getLineNumber(commentEndDecomp.first, commentEndDecomp.second)) {
+            qCDebug(lcClang) << "Comment ends on same line as the declaration. Comment '"
+                << (*comment)->getRawText(sourceMgr) << "' is ignored, continue.";
+            continue;
+        }
+
+        // Extract text between the comment and declaration.
+        llvm::StringRef text(buffer + commentEndDecomp.second,
+            lastDecompLoc - commentEndDecomp.second);
+
+        // There should be no other declarations or preprocessor directives between
+        // comment and declaration.
+        if (text.find_first_of(";}#@") != llvm::StringRef::npos) {
+            qCDebug(lcClang) << "Found another declaration or preprocessor directive between"
+                " comment and declaration, break.";
+            break;
+        }
+
+        // There should be no other translation function between comment and declaration.
+        if (LupdatePrivate::trFunctionPresent(text)) {
+            qCDebug(lcClang) << "Found another translation function between comment and "
+                "declaration, break.";
+            break;
+        }
+
+        retrievedRawComments.emplace(retrievedRawComments.begin(),
+            QString::fromStdString((*comment)->getRawText(sourceMgr)));
+        lastDecompLoc = sourceMgr.getDecomposedLoc((*comment)->getSourceRange().getBegin()).second;
+    } while (comment != rawComments.begin());
+
+    return retrievedRawComments;
 }
 
 QT_END_NAMESPACE

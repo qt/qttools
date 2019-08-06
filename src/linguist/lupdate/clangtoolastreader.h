@@ -146,6 +146,9 @@ public:
     bool VisitCallExpr(clang::CallExpr *callExpression);
 
 private:
+    std::vector<QString> rawCommentsForCallExpr(const clang::CallExpr *callExpr) const;
+    std::vector<QString> rawCommentsFromSourceLocation(clang::SourceLocation sourceLocation) const;
+
     clang::ASTContext *m_context { nullptr };
     Translator *m_tor { nullptr };
     std::string m_inputFile;
