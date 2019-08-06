@@ -276,6 +276,14 @@ Config::Config(const QString &programName)
     configVars_.clear();
     numInstances++;
     includeFilesMap_.clear();
+
+    // Default values:
+    setStringList(CONFIG_CODEINDENT, QStringList("0"));
+    setStringList(CONFIG_FALSEHOODS, QStringList("0"));
+    setStringList(CONFIG_FILEEXTENSIONS, QStringList("*.cpp *.h *.qdoc *.qml"));
+    setStringList(CONFIG_LANGUAGE, QStringList("Cpp")); // i.e. C++
+    setStringList(CONFIG_OUTPUTFORMATS, QStringList("HTML"));
+    setStringList(CONFIG_TABSIZE, QStringList("8"));
 }
 
 /*!

@@ -80,7 +80,6 @@ public:
     QString previousCurrentDir();
     void setPreviousCurrentDir(const QString &path);
 
-    QHash<QString, QString> &defaults();
 
 private:
     bool m_highlighting = false;
@@ -98,7 +97,6 @@ private:
     QStringList m_indexDirs;
     QString m_currentDir;
     QString m_previousCurrentDir;
-    QHash<QString,QString> m_defaults;
 };
 
 QT_END_NAMESPACE

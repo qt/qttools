@@ -235,22 +235,4 @@ void QDocCommandLineParser::process(const QStringList &arguments, QDocGlobals &q
     const auto paths3 = values(frameworkOption);
     for (const auto &i : paths3)
         qdocGlobals.addIncludePath("-F", currentDir.absoluteFilePath(i));
-
-    /*
-      The default indent for code is 0.
-      The default value for false is 0.
-      The default supported file extensions are cpp, h, qdoc and qml.
-      The default language is c++.
-      The default output format is html.
-      The default tab size is 8.
-      And those are all the default values for configuration variables.
-     */
-    if (qdocGlobals.defaults().isEmpty()) {
-        qdocGlobals.defaults().insert(CONFIG_CODEINDENT, QLatin1String("0"));
-        qdocGlobals.defaults().insert(CONFIG_FALSEHOODS, QLatin1String("0"));
-        qdocGlobals.defaults().insert(CONFIG_FILEEXTENSIONS, QLatin1String("*.cpp *.h *.qdoc *.qml"));
-        qdocGlobals.defaults().insert(CONFIG_LANGUAGE, QLatin1String("Cpp"));
-        qdocGlobals.defaults().insert(CONFIG_OUTPUTFORMATS, QLatin1String("HTML"));
-        qdocGlobals.defaults().insert(CONFIG_TABSIZE, QLatin1String("8"));
-    }
 }

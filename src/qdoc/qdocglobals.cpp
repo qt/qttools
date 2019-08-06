@@ -166,7 +166,3 @@ void QDocGlobals::setPreviousCurrentDir(const QString &path)
     m_previousCurrentDir = path;
 }
 
-QHash<QString, QString> &QDocGlobals::defaults()
-{
-    return m_defaults;
-}

@@ -205,19 +205,6 @@ static void loadIndexFiles(Config &config, const QSet<QString> &formats)
  */
 static void processQdocconfFile(const QString &fileName, Config &config)
 {
-    /*
-      Below, we initialize the configuration with some default values.
-
-      I don't think the call to translate() does anything here. For one
-      thing, the translators haven't been installed at this point. And
-      I doubt any translator would translate QDoc anyway. But I left it
-      here because it does no harm.
-     */
-
-    QHash<QString,QString>::iterator iter;
-    for (iter = qdocGlobals.defaults().begin(); iter != qdocGlobals.defaults().end(); ++iter)
-        config.setStringList(iter.key(), QStringList() << iter.value());
-
     config.setStringList(CONFIG_SYNTAXHIGHLIGHTING, QStringList(qdocGlobals.highlighting() ? "true" : "false"));
     config.setStringList(CONFIG_SHOWINTERNAL, QStringList(qdocGlobals.showInternal() ? "true" : "false"));
     config.setStringList(CONFIG_SINGLEEXEC, QStringList(qdocGlobals.singleExec() ? "true" : "false"));

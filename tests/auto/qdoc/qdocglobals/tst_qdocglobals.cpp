@@ -53,7 +53,6 @@ private slots:
     void testAppendToIndexDirs();
     void testSetCurrentDir();
     void testPreviousCurrentDir();
-    void testDefaults();
 };
 
 void testQDocGlobals::testClassMembersInitializeToFalseOrEmpty()
@@ -74,7 +73,6 @@ void testQDocGlobals::testClassMembersInitializeToFalseOrEmpty()
     QVERIFY(qdocTestGlobals.indexDirs().isEmpty());
     QVERIFY(qdocTestGlobals.currentDir().isEmpty());
     QVERIFY(qdocTestGlobals.previousCurrentDir().isEmpty());
-    QVERIFY(qdocTestGlobals.defaults().isEmpty());
 }
 
 void testQDocGlobals::testEnableHighlighting()
@@ -200,32 +198,6 @@ void testQDocGlobals::testPreviousCurrentDir()
 
     qdocTestGlobals.setCurrentDir(expected);
     QCOMPARE(qdocTestGlobals.currentDir(), expected);
-}
-
-void testQDocGlobals::testDefaults()
-{
-    QDocGlobals qdocTestGlobals;
-
-    QHash<QString, QString> expected = {
-        {"codeindent", "0"}, {"falsehoods", "0"},
-        {"fileextensions", "*.cpp *.h *.qdoc *.qml"}, {"language", "Cpp"},
-        {"outputformats", "HTML"}, {"tabsize", "8"}};
-
-    qdocTestGlobals.defaults().insert(QStringLiteral("codeindent"),
-                                      QLatin1String("0"));
-    qdocTestGlobals.defaults().insert(QStringLiteral("falsehoods"),
-                                      QLatin1String("0"));
-    qdocTestGlobals.defaults().insert(QStringLiteral("fileextensions"),
-                                      QLatin1String("*.cpp *.h *.qdoc *.qml"));
-    qdocTestGlobals.defaults().insert(QStringLiteral("language"),
-                                      QLatin1String("Cpp"));
-    qdocTestGlobals.defaults().insert(QStringLiteral("outputformats"),
-                                      QLatin1String("HTML"));
-    qdocTestGlobals.defaults().insert(QStringLiteral("tabsize"),
-                                      QLatin1String("8"));
-
-    QHash<QString, QString> result = qdocTestGlobals.defaults();
-    QCOMPARE(result, expected);
 }
 
 QTEST_APPLESS_MAIN(testQDocGlobals)
