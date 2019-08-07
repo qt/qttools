@@ -53,7 +53,8 @@ HEADERS += \
 
 qtConfig(clangcpp) {
     SOURCES += \
-        cpp_clang.cpp
+        cpp_clang.cpp \
+        clangtoolastreader.cpp
     HEADERS += \
         cpp_clang.h \
         clangtoolastreader.h

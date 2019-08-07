@@ -137,11 +137,18 @@ public:
     explicit LupdateVisitor(clang::ASTContext *context, Translator *tor)
         : m_context(context),
           m_tor(tor)
-    {}
+    {
+        m_inputFile = m_context->getSourceManager().getFileEntryForID(
+            m_context->getSourceManager().getMainFileID())->getName().rsplit(
+            llvm::StringRef("/")).second;
+    }
+
+    bool VisitCallExpr(clang::CallExpr *callExpression);
 
 private:
     clang::ASTContext *m_context { nullptr };
     Translator *m_tor { nullptr };
+    std::string m_inputFile;
 };
 
 class LupdateASTConsumer : public clang::ASTConsumer
