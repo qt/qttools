@@ -197,10 +197,6 @@ static void printErr(const QString & out)
     std::cerr << qPrintable(out);
 }
 
-class LU {
-    Q_DECLARE_TR_FUNCTIONS(LUpdate)
-};
-
 static void recursiveFileInfoList(const QDir &dir,
     const QSet<QString> &nameFilters, QDir::Filters filter,
     QFileInfoList *fileinfolist)

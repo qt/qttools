@@ -27,6 +27,7 @@ qtHaveModule(qmldevtools-private): SOURCES += qdeclarative.cpp
 
 HEADERS += \
     lupdate.h \
+    cpp.h \
     ../shared/projectdescriptionreader.h \
     ../shared/qrcreader.h \
     ../shared/runqttool.h \

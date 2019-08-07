@@ -26,29 +26,16 @@
 **
 ****************************************************************************/
 
-#include "lupdate.h"
+#include "cpp.h"
 
 #include <translator.h>
-
 #include <QtCore/QBitArray>
-#include <QtCore/QDebug>
-#include <QtCore/QFileInfo>
-#include <QtCore/QRegExp>
 #include <QtCore/QStack>
-#include <QtCore/QString>
 #include <QtCore/QTextCodec>
 #include <QtCore/QTextStream>
-#include <QtCore/QCoreApplication>
-
-#include <iostream>
-
-#include <ctype.h>              // for isXXX()
 
 QT_BEGIN_NAMESPACE
 
-class LU {
-    Q_DECLARE_TR_FUNCTIONS(LUpdate)
-};
 
 /* qmake ignore Q_OBJECT */
 
@@ -58,18 +45,6 @@ static QString MagicComment(QLatin1String("TRANSLATOR"));
 
 //#define DIAGNOSE_RETRANSLATABILITY // FIXME: should make a runtime option of this
 
-class HashString {
-public:
-    HashString() : m_hash(0x80000000) {}
-    explicit HashString(const QString &str) : m_str(str), m_hash(0x80000000) {}
-    void setValue(const QString &str) { m_str = str; m_hash = 0x80000000; }
-    const QString &value() const { return m_str; }
-    bool operator==(const HashString &other) const { return m_str == other.m_str; }
-private:
-    QString m_str;
-    mutable uint m_hash; // We use the highest bit as a validity indicator (set => invalid)
-    friend uint qHash(const HashString &str);
-};
 
 uint qHash(const HashString &str)
 {
@@ -78,16 +53,6 @@ uint qHash(const HashString &str)
     return str.m_hash;
 }
 
-class HashStringList {
-public:
-    explicit HashStringList(const QList<HashString> &list) : m_list(list), m_hash(0x80000000) {}
-    const QList<HashString> &value() const { return m_list; }
-    bool operator==(const HashStringList &other) const { return m_list == other.m_list; }
-private:
-    QList<HashString> m_list;
-    mutable uint m_hash; // We use the highest bit as a validity indicator (set => invalid)
-    friend uint qHash(const HashStringList &list);
-};
 
 uint qHash(const HashStringList &list)
 {
@@ -101,42 +66,6 @@ uint qHash(const HashStringList &list)
     }
     return list.m_hash;
 }
-
-typedef QList<HashString> NamespaceList;
-
-struct Namespace {
-
-    Namespace() :
-            classDef(this),
-            hasTrFunctions(false), complained(false)
-    {}
-    ~Namespace()
-    {
-        qDeleteAll(children);
-    }
-
-    QHash<HashString, Namespace *> children;
-    QHash<HashString, NamespaceList> aliases;
-    QList<HashStringList> usings;
-
-    // Class declarations set no flags and create no namespaces, so they are ignored.
-    // Class definitions may appear multiple times - but only because we are trying to
-    // "compile" all sources irrespective of build configuration.
-    // Nested classes may be forward-declared inside a definition, and defined in another file.
-    // The latter will detach the class' child list, so clones need a backlink to the original
-    // definition (either one in case of multiple definitions).
-    // Namespaces can have tr() functions as well, so we need to track parent definitions for
-    // them as well. The complication is that we may have to deal with a forrest instead of
-    // a tree - in that case the parent will be arbitrary. However, it seem likely that
-    // Q_DECLARE_TR_FUNCTIONS would be used either in "class-like" namespaces with a central
-    // header or only locally in a file.
-    Namespace *classDef;
-
-    QString trQualification;
-
-    bool hasTrFunctions;
-    bool complained; // ... that tr functions are missing.
-};
 
 static int nextFileId;
 
@@ -155,37 +84,6 @@ public:
     }
 private:
     QBitArray m_ba;
-};
-
-struct ParseResults {
-    int fileId;
-    Namespace rootNamespace;
-    QSet<const ParseResults *> includes;
-};
-
-struct IncludeCycle {
-    QSet<QString> fileNames;
-    QSet<const ParseResults *> results;
-};
-
-typedef QHash<QString, IncludeCycle *> IncludeCycleHash;
-typedef QHash<QString, const Translator *> TranslatorHash;
-
-class CppFiles {
-
-public:
-    static QSet<const ParseResults *> getResults(const QString &cleanFile);
-    static void setResults(const QString &cleanFile, const ParseResults *results);
-    static const Translator *getTranslator(const QString &cleanFile);
-    static void setTranslator(const QString &cleanFile, const Translator *results);
-    static bool isBlacklisted(const QString &cleanFile);
-    static void setBlacklisted(const QString &cleanFile);
-    static void addIncludeCycle(const QSet<QString> &fileNames);
-
-private:
-    static IncludeCycleHash &includeCycles();
-    static TranslatorHash &translatedFiles();
-    static QSet<QString> &blacklistedFiles();
 };
 
 class CppParser {

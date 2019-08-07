@@ -52,10 +52,6 @@
 
 QT_BEGIN_NAMESPACE
 
-class LU {
-    Q_DECLARE_TR_FUNCTIONS(LUpdate)
-};
-
 using namespace QQmlJS;
 
 static QString MagicComment(QLatin1String("TRANSLATOR"));
