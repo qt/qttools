@@ -52,7 +52,7 @@ QMap<QString,Node::NodeType> Node::goals_;
   \brief The Node class is the base class for all the nodes in QDoc's parse tree.
 
   Class Node is the base class of all the node subclasses. There is a subclass of Node
-  for each type of entity that QDoc caqn document. The types of entities that QDoc can
+  for each type of entity that QDoc can document. The types of entities that QDoc can
   document are listed in the enum type NodeType.
 
   After ClangCodeParser has parsed all the header files to build its precompiled header,
@@ -62,10 +62,10 @@ QMap<QString,Node::NodeType> Node::goals_;
 
   Each instance of a sublass of Node has a parent pointer to link it into the Tree. The
   parent pointer is obtained by calling \l {parent()}, which returns a pointer to an
-  instance of the Node subclass, Aggregate, which is never instantiated directly but as
-  a base class of some subclass of Node that can have children. For example, ClassNode
-  and QmlTypeNode can have children, so they both inherit Aggregate, while PropertyNode
-  and QmlPropertyNode can not have children, so they both inherit Node.
+  instance of the Node subclass, Aggregate, which is never instantiated directly, but
+  as the base class for certain subclasses of Node that can have children. For example,
+  ClassNode and QmlTypeNode can have children, so they both inherit Aggregate, while
+  PropertyNode and QmlPropertyNode can not have children, so they both inherit Node.
 
   \sa Aggregate, ClassNode, PropertyNode
  */
@@ -212,32 +212,55 @@ bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
   particular subclass of Node.
 
   \value NoType The node type has not been set yet.
-  \value Namespace The Node subclass is NamespaceNode, which represents a C++ namespace.
+  \value Namespace The Node subclass is NamespaceNode, which represents a C++
+         namespace.
   \value Class The Node subclass is ClassNode, which represents a C++ class.
   \value Struct The Node subclass is ClassNode, which represents a C struct.
-  \value Union The Node subclass is ClassNode, which represents a C union (currently no known uses).
-  \value HeaderFile The Node subclass is HeaderNode, which represents a header file.
-  \value Page The Node subclass is PageNode, which represents a text page from a .qdoc file.
-  \value Enum The Node subclass is EnumNode, which represents an enum type or enum class.
-  \value Example The Node subclass is ExampleNode, which represents an example subdirectory.
-  \value ExternalPage The Node subclass is ExternalPageNode, which is for linking to an external page.
-  \value Function The Node subclass is FunctionNode, which can represent C++, QML, and Javascript functions.
-  \value Typedef The Node subclass is TypedefNode, which reresents a C++ typedef.
-  \value Property The Node subclass is PropertyNode, which represents a use of Q_Property.
-  \value Variable The Node subclass is VariableNode, which represents a global variable or class data member.
-  \value Group The Node subclass is CollectionNode, which represents a group of documents.
-  \value Module The Node subclass is CollectionNode, which represents a C++ module.
+  \value Union The Node subclass is ClassNode, which represents a C union
+         (currently no known uses).
+  \value HeaderFile The Node subclass is HeaderNode, which represents a header
+         file.
+  \value Page The Node subclass is PageNode, which represents a text page from
+         a .qdoc file.
+  \value Enum The Node subclass is EnumNode, which represents an enum type or
+         enum class.
+  \value Example The Node subclass is ExampleNode, which represents an example
+         subdirectory.
+  \value ExternalPage The Node subclass is ExternalPageNode, which is for
+         linking to an external page.
+  \value Function The Node subclass is FunctionNode, which can represent C++,
+         QML, and Javascript functions.
+  \value Typedef The Node subclass is TypedefNode, which represents a C++
+         typedef.
+  \value Property The Node subclass is PropertyNode, which represents a use of
+         Q_Property.
+  \value Variable The Node subclass is VariableNode, which represents a global
+         variable or class data member.
+  \value Group The Node subclass is CollectionNode, which represents a group of
+         documents.
+  \value Module The Node subclass is CollectionNode, which represents a C++
+         module.
   \value QmlType The Node subclass is QmlTypeNode, which represents a QML type.
-  \value QmlModule The Node subclass is CollectionNode, which represents a QML module.
-  \value QmlProperty The Node subclass is QmlPropertyNode, which represents a property in a QML type.
-  \value QmlBasicType The Node subclass is QmlBasicTypeNode, which represents a basic type like int, etc.
-  \value JsType The Node subclass is QmlTypeNode, which represents a javascript type.
-  \value JsModule The Node subclass is CollectionNode, which represents a javascript module.
-  \value JsProperty The Node subclass is QmlPropertyNode, which represents a javascript property.
-  \value JsBasicType The Node subclass is QmlBasicTypeNode, which represents a basic type like int, etc.
-  \value SharedComment The Node subclass is SharedCommentNode, which represents a collection of nodes that share the same documentation comment.
+  \value QmlModule The Node subclass is CollectionNode, which represents a QML
+         module.
+  \value QmlProperty The Node subclass is QmlPropertyNode, which represents a
+         property in a QML type.
+  \value QmlBasicType The Node subclass is QmlBasicTypeNode, which represents a
+         basic type like int, etc.
+  \value JsType The Node subclass is QmlTypeNode, which represents a javascript
+         type.
+  \value JsModule The Node subclass is CollectionNode, which represents a
+         javascript module.
+  \value JsProperty The Node subclass is QmlPropertyNode, which represents a
+         javascript property.
+  \value JsBasicType The Node subclass is QmlBasicTypeNode, which represents a
+         basic type like int, etc.
+  \value SharedComment The Node subclass is SharedCommentNode, which represents
+         a collection of nodes that share the same documentation comment.
   \omitvalue Collection
-  \value Proxy The Node subclass is ProxyNode, which represents one or more entities that are documented in the current module but which actually reside in a different module.
+  \value Proxy The Node subclass is ProxyNode, which represents one or more
+         entities that are documented in the current module but which actually
+         reside in a different module.
   \omitvalue LastType
 */
 
@@ -260,7 +283,7 @@ bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
 /*!
   \enum Node::Access
 
-  An unsigned char value that indicates the C++ access level
+  An unsigned char value that indicates the C++ access level.
 
   \value Public The element has public access.
   \value Protected The element has protected access.
@@ -284,9 +307,9 @@ bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
 /*!
   \enum Node::ThreadSafeness
 
-  An unsigned char that specifies the degree of threadsafeness of the element.
+  An unsigned char that specifies the degree of thread-safeness of the element.
 
-  \value UnspecifiedSafeness The threadsafeness is not specified.
+  \value UnspecifiedSafeness The thread-safeness is not specified.
   \value NonReentrant The element is not reentrant.
   \value Reentrant The element is reentrant.
   \value ThreadSafe The element is threadsafe.
@@ -295,7 +318,7 @@ bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
 /*!
   \enum Node::LinkType
 
-  An unsigned char value that probably should be moved out of the Node base class
+  An unsigned char value that probably should be moved out of the Node base class.
 
   \value StartLink
   \value NextLink
@@ -523,7 +546,7 @@ bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
 */
 
 /*! \fn bool Node::isAttached() const
-  Returns true if the QML property or QML method node is marked as attaqched.
+  Returns true if the QML property or QML method node is marked as attached.
 */
 
 /*! \fn bool Node::isClassNode() const
@@ -544,7 +567,7 @@ bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
 */
 
 /*! \fn bool Node::isPageNode() const
-  Returns true if this node represents something generates a documentation
+  Returns true if this node represents something that generates a documentation
   page. In other words, if this Node's subclass inherits PageNode, then this
   function will return \e true.
 */
@@ -855,7 +878,7 @@ Node::Genus Node::getGenus(Node::NodeType t)
   Sets the node's URL to \a url, which is the url to the page that the
   node represents. This function is only called when an index file is
   read. In other words, a node's url is set when qdoc decides where its
-  page will be and what its name will be, which happens when qdoc write's
+  page will be and what its name will be, which happens when qdoc writes
   the index file for the module being documented.
 
   \sa QDocIndexFiles
@@ -1414,7 +1437,7 @@ QString Node::cleanId(const QString &str)
 /*!
   Find the module (Qt Core, Qt GUI, etc.) to which the class belongs.
   We do this by obtaining the full path to the header file's location
-  and examine everything between "src/" and the filename.  This is
+  and examine everything between "src/" and the filename. This is
   semi-dirty because we are assuming a particular directory structure.
 
   This function is only really useful if the class's module has not
@@ -1488,7 +1511,7 @@ QString Node::physicalModuleName() const
 */
 
 /*! void Node::setGenus(Genus t)
-  Sets this node's Genust to \a t.
+  Sets this node's Genus to \a t.
 */
 
 /*! \fn PageType Node::pageType() const
@@ -1503,7 +1526,7 @@ QString Node::physicalModuleName() const
   \sa PageType
 */
 
-/*! \fn  QString Node::signature(bool values,  bool noReturnType) const
+/*! \fn  QString Node::signature(bool values, bool noReturnType) const
 
   If this node is a FunctionNode, this function returns the function's
   signature, including default values if \a values is \c true, and
@@ -1524,7 +1547,7 @@ QString Node::physicalModuleName() const
 */
 
 /*! \fn void Node::setFileNameBase(const QString& t)
-  Sets the node's file name base to \a t. Only called vy
+  Sets the node's file name base to \a t. Only called by
   Generator::fileBase().
 */
 
@@ -1879,9 +1902,9 @@ QString Node::physicalModuleName() const
 /*! \fn void Node::setLogicalModuleInfo(const QString& arg)
   If this node is a CollectionNode, this function splits \a arg
   on the blank character to get a logical module name and version
-  number. If the version number is present, it spilts the version
+  number. If the version number is present, it splits the version
   number on the '.' character to get a major version number and a
-  minor vrsion number. If the version number is present, both the
+  minor version number. If the version number is present, both the
   major and minor version numbers should be there, but the minor
   version number is not absolutely necessary.
 
@@ -1892,8 +1915,8 @@ QString Node::physicalModuleName() const
 /*! \fn void Node::setLogicalModuleInfo(const QStringList& info)
   If this node is a CollectionNode, this function accepts the
   logical module \a info as a string list. If the logical module
-  info contains the version number, it spilts the version number
-  on the '.' character to get the major and minor vrsion numbers.
+  info contains the version number, it splits the version number
+  on the '.' character to get the major and minor version numbers.
   Both major and minor version numbers should be provided, but
   the minor version number is not strictly necessary.
 
@@ -2692,7 +2715,7 @@ bool Aggregate::hasObsoleteMembers()
 /*!
   Finds all the obsolete C++ classes and QML types in this
   aggregate and all the C++ classes and QML types with obsolete
-  members, and inserts them into maps used elesewhere for
+  members, and inserts them into maps used elsewhere for
   generating documentation.
  */
 void Aggregate::findAllObsoleteThings()
@@ -3181,12 +3204,12 @@ void NamespaceNode::includeChild(Node *child)
  */
 
 /*! \fn void NamespaceNode::markSeen()
-  Sets the data member that indicates the \c {\\namespace} command that this
+  Sets the data member that indicates that the \c {\\namespace} command this
   NamespaceNode represents has been parsed by qdoc.
  */
 
 /*! \fn void NamespaceNode::markNotSeen()
-  Clears the data member that indicates the \c {\\namespace} command that this
+  Clears the data member that indicates that the \c {\\namespace} command this
   NamespaceNode represents has been parsed by qdoc.
  */
 
@@ -3224,7 +3247,7 @@ void NamespaceNode::includeChild(Node *child)
 
 /*! \fn void NamespaceNode::setDocNode(NamespaceNode* ns) { docNode_ = ns; }
   Called in QDocDatabase::resolveNamespaces() to set the pointer to the
-  NamespaceNode for for where this namespace is documented.
+  NamespaceNode in which this namespace is documented.
 
   \sa QDocDatabase::resolveNamespaces()
  */
@@ -3295,7 +3318,7 @@ QString RelatedClass::accessString() const
   \struct UsingClause
   \brief This is supposed to describe a using clause, but I think it is not used.
 
-  This struct is only used in ClassNode. It describes a \c using" clause that
+  This struct is only used in ClassNode. It describes a \c using clause that
   was parsed. But now it looks like it is not actually used at all.
 
   Maybe we can get rid of it?
@@ -3581,11 +3604,11 @@ bool HeaderNode::hasDocumentedChildren() const
   Not all subclasses of Node produce documentation pages. FunctionNode,
   PropertyNode, and EnumNode are all examples of subclasses of Node that
   don't produce documentation pages but add documentation to a page.
-  They are always child nodes of an Aggregate, and suclass Aggregate
-  inherits PageNode.
+  They are always child nodes of an Aggregate, and Aggregate inherits
+  PageNode.
 
   Not every subclass of PageNode inherits Aggregate. ExternalPageNode,
-  EXampleNode, and CollectionNode are subclasses of PageNode that are
+  ExampleNode, and CollectionNode are subclasses of PageNode that are
   not subclasses of Aggregate. Because they are not subclasses of
   Aggregate, they can't have children. But they still generate, or
   link to, a documentation page.
@@ -3649,7 +3672,7 @@ bool PageNode::setTitle(const QString &title)
 
 /*! \fn PageNode::PageNode(Aggregate* parent, const QString& name, PageType ptype)
   This constructor is called when the argument to the \c {\\page} command
-  contains a space, which means the second wordof the argument is the page type.
+  contains a space, which means the second word of the argument is the page type.
   It creates a PageNode that has node type Node::Page, with the specified
   \a parent and \name, and the \a ptype is that second word of the argument to
   the \c {\\page} command.
@@ -3668,7 +3691,7 @@ bool PageNode::setTitle(const QString &title)
 /*! \fn bool PageNode::isTextPageNode() const
   Returns \c true if this instance of PageNode is not an Aggregate.
   The significance of a \c true return value is that this PageNode
-  does nt have children, because it is not an Aggregate.
+  doesn't have children, because it is not an Aggregate.
 
   \sa Aggregate.
  */
@@ -3698,7 +3721,7 @@ bool PageNode::setTitle(const QString &title)
  */
 
 /*! \fn const QStringList& PageNode::groupNames() const
-  Returns a const reference to the string list contianing all the group names.
+  Returns a const reference to the string list containing all the group names.
  */
 
 /*! \fn void PageNode::appendGroupName(const QString& t)
@@ -3730,7 +3753,7 @@ bool PageNode::setTitle(const QString &title)
   being generated. 3rd party software pages are often referenced by links
   from the QT documentation. Qdoc creates an ExternalPageNode when it sees
   an \c {\\externalpage} command. The HTML generator can then use the node
-  when it needs to creat links to the external page.
+  when it needs to create links to the external page.
 
   ExternalPageNode inherits PageNode.
 */
@@ -4938,8 +4961,8 @@ void CollectionNode::printMembers(const QString& title)
 /*!
   This function splits \a arg on the blank character to get a
   logical module name and version number. If the version number
-  is present, it spilts the version number on the '.' character
-  to get a major version number and a minor vrsion number. If
+  is present, it splits the version number on the '.' character
+  to get a major version number and a minor version number. If
   the version number is present, both the major and minor version
   numbers should be there, but the minor version number is not
   absolutely necessary.
@@ -4961,8 +4984,8 @@ void CollectionNode::setLogicalModuleInfo(const QString& arg)
 /*!
   This function accepts the logical module \a info as a string
   list. If the logical module info contains the version number,
-  it spilts the version number on the '.' character to get the
-  major and minor vrsion numbers. Both major and minor version
+  it splits the version number on the '.' character to get the
+  major and minor version numbers. Both major and minor version
   numbers should be provided, but the minor version number is
   not strictly necessary.
  */
