@@ -62,18 +62,81 @@
 
 QT_BEGIN_NAMESPACE
 
+inline QDebug operator<<(QDebug out, const std::string& str)
+{
+    out << QString::fromStdString(str);
+    return out;
+}
 Q_DECLARE_LOGGING_CATEGORY(lcClang)
 
 #define LUPDATE_CLANG_VERSION_CHECK(major, minor, patch) ((major<<16)|(minor<<8)|(patch))
 #define LUPDATE_CLANG_VERSION LUPDATE_CLANG_VERSION_CHECK(LUPDATE_CLANG_VERSION_MAJOR, \
     LUPDATE_CLANG_VERSION_MINOR, LUPDATE_CLANG_VERSION_PATCH)
 
+// Local storage of translation information (information from the AST and linguist side)
+struct TranslationRelatedStore
+{
+    QString callType;
+    QString rawCode;
+    QString funcName;
+    qint64 locationCol = -1;
+    QString contextArg;
+    QString contextRetrieved;
+    QString lupdateSource;
+    QString lupdateLocationFile;
+    qint64 lupdateLocationLine = -1;
+    QString lupdateId;
+    QString lupdateSourceWhenId;
+    QString lupdateIdMetaData;
+    QString lupdateMagicMetaData;
+    QHash<QString, QString> lupdateAllMagicMetaData;
+    /*
+     * NOTE: lupdate
+     * //~ meta1 toto
+     * //~ meta2 titi
+     * //~ meta2 tata
+     * =>
+     * <extra-meta1> toto </extra-meta1>
+     * <extra-meta2> tata </extra-meta2>
+     * => titi is lost. For the moment we do as lupdate cpp.cpp does
+     */
+    QString lupdateComment;      //  the one as argument of the tr function
+    QString lupdateExtraComment; //  those  //:
+    QString lupdatePlural;
+
+    bool isValid() const
+    {
+        return !lupdateLocationFile.isEmpty() && (lupdateLocationLine > -1) && (locationCol > -1);
+    }
+
+    void printStore() const
+    {
+        qCDebug(lcClang) << "------------------ Printing Store----------------------------------\n";
+        qCDebug(lcClang) << "callType            : " << callType << "\n"
+            << "rawCode             : \n" << rawCode << "\n"
+            << "funcName            : " << funcName << "\n"
+            << "LocationCol         : " << locationCol << "\n"
+            << "contextArg          : " << contextArg << "\n"
+            << "contextRetrieved    : " << contextRetrieved << "\n"
+            << "lupdateSource       : " << lupdateSource << "\n"
+            << "lupdateLocationFile : " << lupdateLocationFile << "\n"
+            << "lupdateLocationLine : " << lupdateLocationLine << "\n"
+            << "lupdateId           : " << lupdateId << "\n"
+            << "lupdateIdMetaData   : " << lupdateIdMetaData << "\n"
+            << "lupdateMagicMetaData: " << lupdateMagicMetaData << "\n"
+            << "lupdateComment      : " << lupdateComment << "\n"
+            << "lupdateExtraComment : " << lupdateExtraComment << "\n"
+            << "lupdatePlural       : " << lupdatePlural << "\n";
+        qCDebug(lcClang) << "-------------------------------------------------------------------\n";
+    }
+};
+
 class LupdateVisitor : public clang::RecursiveASTVisitor<LupdateVisitor>
 {
 public:
     explicit LupdateVisitor(clang::ASTContext *context, Translator *tor)
-        : m_tor(tor),
-          m_context(context)
+        : m_context(context),
+          m_tor(tor)
     {}
 
 private:
@@ -107,7 +170,7 @@ public:
     {}
 
     std::unique_ptr<clang::ASTConsumer> CreateASTConsumer(
-        clang::CompilerInstance &compiler, llvm::StringRef InFile) override
+        clang::CompilerInstance &compiler, llvm::StringRef /* inFile */) override
     {
         LupdateASTConsumer *consumer = new LupdateASTConsumer(&compiler.getASTContext(), m_tor);
         return std::unique_ptr<clang::ASTConsumer>(consumer);
