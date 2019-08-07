@@ -53,13 +53,13 @@ class ClangCodeParser : public CppCodeParser
 public:
     ~ClangCodeParser();
 
-    void initializeParser(const Config& config) override;
+    void initializeParser(const Config &config) override;
     void terminateParser() override;
     QString language() override;
     QStringList headerFileNameFilter() override;
     QStringList sourceFileNameFilter() override;
-    void parseHeaderFile(const Location& location, const QString& filePath) override;
-    void parseSourceFile(const Location& location, const QString& filePath) override;
+    void parseHeaderFile(const Location &location, const QString &filePath) override;
+    void parseSourceFile(const Location &location, const QString &filePath) override;
     void precompileHeaders() override;
     Node *parseFnArg(const Location &location, const QString &fnArg) override;
 

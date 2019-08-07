@@ -44,7 +44,7 @@ public:
     virtual ~PureDocParser() { pureParser_ = nullptr; }
 
     QStringList sourceFileNameFilter() override;
-    void parseSourceFile(const Location& location, const QString& filePath) override;
+    void parseSourceFile(const Location &location, const QString &filePath) override;
 
     static PureDocParser *pureDocParser() { return pureParser_; }
 

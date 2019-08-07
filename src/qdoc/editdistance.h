@@ -38,8 +38,8 @@
 
 QT_BEGIN_NAMESPACE
 
-int editDistance( const QString& s, const QString& t );
-QString nearestName( const QString& actual, const QSet<QString>& candidates );
+int editDistance(const QString &s, const QString &t);
+QString nearestName(const QString &actual, const QSet<QString> &candidates);
 
 QT_END_NAMESPACE
 

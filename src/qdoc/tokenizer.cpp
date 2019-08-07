@@ -116,7 +116,7 @@ static void insertKwordIntoHash(const char *s, int number)
     kwordHashTable[k] = number;
 }
 
-Tokenizer::Tokenizer(const Location& loc, QFile &in)
+Tokenizer::Tokenizer(const Location &loc, QFile &in)
 {
     init();
     yyIn = in.readAll();
@@ -124,7 +124,7 @@ Tokenizer::Tokenizer(const Location& loc, QFile &in)
     start(loc);
 }
 
-Tokenizer::Tokenizer(const Location& loc, const QByteArray &in)
+Tokenizer::Tokenizer(const Location &loc, const QByteArray &in)
     : yyIn(in)
 {
     init();
@@ -573,7 +573,7 @@ void Tokenizer::init()
     parsingMacro = false;
 }
 
-void Tokenizer::start(const Location& loc)
+void Tokenizer::start(const Location &loc)
 {
     yyTokLoc = loc;
     yyCurLoc = loc;

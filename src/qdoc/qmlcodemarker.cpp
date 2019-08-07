@@ -141,7 +141,7 @@ QString QmlCodeMarker::markedUpFullName(const Node *node, const Node *relative)
     }
 }
 
-QString QmlCodeMarker::markedUpIncludes(const QStringList& includes)
+QString QmlCodeMarker::markedUpIncludes(const QStringList &includes)
 {
     QString code;
 
@@ -154,13 +154,13 @@ QString QmlCodeMarker::markedUpIncludes(const QStringList& includes)
     return addMarkUp(code, nullptr, location);
 }
 
-QString QmlCodeMarker::functionBeginRegExp(const QString& funcName)
+QString QmlCodeMarker::functionBeginRegExp(const QString &funcName)
 {
     return QLatin1Char('^') + QRegExp::escape("function " + funcName) + QLatin1Char('$');
 
 }
 
-QString QmlCodeMarker::functionEndRegExp(const QString& /* funcName */)
+QString QmlCodeMarker::functionEndRegExp(const QString &/* funcName */)
 {
     return "^\\}$";
 }

@@ -37,8 +37,8 @@
 
 QT_BEGIN_NAMESPACE
 
-QString separator( int index, int count );
-QString comma( int index, int count );
+QString separator(int index, int count);
+QString comma(int index, int count);
 
 QT_END_NAMESPACE
 

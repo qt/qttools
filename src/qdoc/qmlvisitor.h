@@ -100,9 +100,9 @@ private:
     QString getFullyQualifiedId(QQmlJS::AST::UiQualifiedId *id);
     QQmlJS::AST::SourceLocation precedingComment(quint32 offset) const;
     bool applyDocumentation(QQmlJS::AST::SourceLocation location, Node *node);
-    void applyMetacommands(QQmlJS::AST::SourceLocation location, Node* node, Doc& doc);
-    bool splitQmlPropertyArg(const Doc& doc,
-                             const QString& arg,
+    void applyMetacommands(QQmlJS::AST::SourceLocation location, Node *node, Doc &doc);
+    bool splitQmlPropertyArg(const Doc &doc,
+                             const QString &arg,
                              QmlPropArgs& qpa);
 
     QQmlJS::Engine *engine;

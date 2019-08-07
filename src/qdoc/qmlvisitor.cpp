@@ -110,7 +110,7 @@ QQmlJS::AST::SourceLocation QmlDocVisitor::precedingComment(quint32 offset) cons
 class QmlSignatureParser
 {
   public:
-    QmlSignatureParser(FunctionNode* func, const QString& signature, const Location& loc);
+    QmlSignatureParser(FunctionNode *func, const QString &signature, const Location &loc);
     void readToken() { tok_ = tokenizer_->getToken(); }
     QString lexeme() { return tokenizer_->lexeme(); }
     QString previousLexeme() { return tokenizer_->previousLexeme(); }
@@ -121,13 +121,13 @@ class QmlSignatureParser
     bool matchFunctionDecl();
 
   private:
-    QString             signature_;
-    QStringList         names_;
-    QString             funcName_;
-    Tokenizer*          tokenizer_;
-    int                 tok_;
-    FunctionNode*       func_;
-    const Location&     location_;
+    QString signature_;
+    QStringList names_;
+    QString funcName_;
+    Tokenizer *tokenizer_;
+    int tok_;
+    FunctionNode *func_;
+    const Location &location_;
 };
 
 /*!
@@ -139,7 +139,7 @@ class QmlSignatureParser
   If a qdoc comment is found for \a location, true is returned.
   If a comment is not found there, false is returned.
  */
-bool QmlDocVisitor::applyDocumentation(QQmlJS::AST::SourceLocation location, Node* node)
+bool QmlDocVisitor::applyDocumentation(QQmlJS::AST::SourceLocation location, Node *node)
 {
     QQmlJS::AST::SourceLocation loc = precedingComment(location.begin());
 
@@ -153,10 +153,10 @@ bool QmlDocVisitor::applyDocumentation(QQmlJS::AST::SourceLocation location, Nod
         finish.setColumnNo(loc.startColumn);
 
         Doc doc(start, finish, source.mid(1), commands_, topics_);
-        const TopicList& topicsUsed = doc.topicsUsed();
+        const TopicList &topicsUsed = doc.topicsUsed();
         NodeList nodes;
-        Node* nodePassedIn = node;
-        Aggregate* parent = nodePassedIn->parent();
+        Node *nodePassedIn = node;
+        Aggregate *parent = nodePassedIn->parent();
         node->setDoc(doc);
         nodes.append(node);
         if (topicsUsed.size() > 0) {
@@ -176,7 +176,7 @@ bool QmlDocVisitor::applyDocumentation(QQmlJS::AST::SourceLocation location, Nod
                         }
                         else {
                             bool isAttached = topic.contains(QLatin1String("attached"));
-                            QmlPropertyNode* n = parent->hasQmlProperty(qpa.name_, isAttached);
+                            QmlPropertyNode *n = parent->hasQmlProperty(qpa.name_, isAttached);
                             if (n == nullptr)
                                 n = new QmlPropertyNode(parent, qpa.name_, qpa.type_, isAttached);
                             n->setLocation(doc.location());
@@ -195,7 +195,7 @@ bool QmlDocVisitor::applyDocumentation(QQmlJS::AST::SourceLocation location, Nod
                         qDebug() << "  FAILED TO PARSE QML OR JS PROPERTY:" << topic << args;
                 } else if (topic.endsWith(QLatin1String("method"))) {
                     if (node->isFunction()) {
-                        FunctionNode* fn = static_cast<FunctionNode*>(node);
+                        FunctionNode *fn = static_cast<FunctionNode *>(node);
                         QmlSignatureParser qsp(fn, args, doc.location());
                         if (topic == COMMAND_JSMETHOD || topic == COMMAND_JSATTACHEDMETHOD)
                             fn->changeMetaness(FunctionNode::QmlMethod, FunctionNode::JsMethod);
@@ -217,7 +217,7 @@ bool QmlDocVisitor::applyDocumentation(QQmlJS::AST::SourceLocation location, Nod
     return false;
 }
 
-QmlSignatureParser::QmlSignatureParser(FunctionNode* func, const QString& signature, const Location& loc)
+QmlSignatureParser::QmlSignatureParser(FunctionNode *func, const QString &signature, const Location &loc)
     : signature_(signature), func_(func), location_(loc)
 {
     QByteArray latin1 = signature.toLatin1();
@@ -405,8 +405,8 @@ bool QmlSignatureParser::matchFunctionDecl()
   are found, a qdoc warning is emitted and false is
   returned.
  */
-bool QmlDocVisitor::splitQmlPropertyArg(const Doc& doc,
-                                        const QString& arg,
+bool QmlDocVisitor::splitQmlPropertyArg(const Doc &doc,
+                                        const QString &arg,
                                         QmlPropArgs& qpa)
 {
     qpa.clear();
@@ -443,10 +443,10 @@ bool QmlDocVisitor::splitQmlPropertyArg(const Doc& doc,
   Applies the metacommands found in the comment.
  */
 void QmlDocVisitor::applyMetacommands(QQmlJS::AST::SourceLocation,
-                                      Node* node,
-                                      Doc& doc)
+                                      Node *node,
+                                      Doc &doc)
 {
-    QDocDatabase* qdb = QDocDatabase::qdocDB();
+    QDocDatabase *qdb = QDocDatabase::qdocDB();
     QSet<QString> metacommands = doc.metaCommandsUsed();
     if (metacommands.count() > 0) {
         metacommands.subtract(topics_);
@@ -469,7 +469,7 @@ void QmlDocVisitor::applyMetacommands(QQmlJS::AST::SourceLocation,
                 if (node->name() == args[0].first)
                     doc.location().warning(tr("%1 tries to inherit itself").arg(args[0].first));
                 else if (node->isQmlType() || node->isJsType()) {
-                    QmlTypeNode *qmlType = static_cast<QmlTypeNode*>(node);
+                    QmlTypeNode *qmlType = static_cast<QmlTypeNode *>(node);
                     qmlType->setQmlBaseName(args[0].first);
                 }
             }
@@ -551,7 +551,7 @@ bool QmlDocVisitor::visit(QQmlJS::AST::UiObjectDefinition *definition)
         QmlTypeNode *component = nullptr;
         Node *candidate = current ->findChildNode(name, Node::QML);
         if (candidate != nullptr)
-            component = static_cast<QmlTypeNode*>(candidate);
+            component = static_cast<QmlTypeNode *>(candidate);
         else
             component = new QmlTypeNode(current, name);
         component->setTitle(name);
@@ -682,7 +682,7 @@ bool QmlDocVisitor::visit(QQmlJS::AST::UiPublicMember *member)
             QmlTypeNode *qmlType = static_cast<QmlTypeNode *>(current);
             if (qmlType) {
                 QString name = member->name.toString();
-                QmlPropertyNode* qmlPropNode = qmlType->hasQmlProperty(name);
+                QmlPropertyNode *qmlPropNode = qmlType->hasQmlProperty(name);
                 if (qmlPropNode == nullptr)
                     qmlPropNode = new QmlPropertyNode(qmlType, name, type, false);
                 qmlPropNode->markReadOnly(member->isReadonlyMember);
@@ -767,12 +767,12 @@ bool QmlDocVisitor::visit(QQmlJS::AST::UiScriptBinding* )
     if (current->isQmlType() || current->isJsType()) {
         QString handler = sb->qualifiedId->name.toString();
         if (handler.length() > 2 && handler.startsWith("on") && handler.at(2).isUpper()) {
-            QmlTypeNode* qmlType = static_cast<QmlTypeNode*>(current);
+            QmlTypeNode *qmlType = static_cast<QmlTypeNode*>(current);
             if (qmlType) {
                 FunctionNode::Metaness metaness = FunctionNode::QmSignalHandler;
                 if (qmlType->isJsType())
                     metaness = FunctionNode::JsSignalHandler;
-                FunctionNode* qmlSH = new FunctionNode(metaness, current, handler);
+                FunctionNode *qmlSH = new FunctionNode(metaness, current, handler);
                 applyDocumentation(sb->firstSourceLocation(), qmlSH);
             }
         }

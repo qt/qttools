@@ -68,7 +68,7 @@ CodeParser::~CodeParser()
 /*!
   Initialize the code parser base class.
  */
-void CodeParser::initializeParser(const Config& config)
+void CodeParser::initializeParser(const Config &config)
 {
     showInternal_ = config.getBool(CONFIG_SHOWINTERNAL);
     singleExec_ = config.getBool(CONFIG_SINGLEEXEC);
@@ -87,7 +87,7 @@ QStringList CodeParser::headerFileNameFilter()
     return sourceFileNameFilter();
 }
 
-void CodeParser::parseHeaderFile(const Location& location, const QString& filePath)
+void CodeParser::parseHeaderFile(const Location &location, const QString &filePath)
 {
     parseSourceFile(location, filePath);
 }
@@ -96,7 +96,7 @@ void CodeParser::parseHeaderFile(const Location& location, const QString& filePa
   All the code parsers in the static list are initialized here,
   after the qdoc configuration variables have been set.
  */
-void CodeParser::initialize(const Config& config)
+void CodeParser::initialize(const Config &config)
 {
     QList<CodeParser *>::ConstIterator p = parsers.constBegin();
     while (p != parsers.constEnd()) {
@@ -117,7 +117,7 @@ void CodeParser::terminate()
     }
 }
 
-CodeParser *CodeParser::parserForLanguage(const QString& language)
+CodeParser *CodeParser::parserForLanguage(const QString &language)
 {
     QList<CodeParser *>::ConstIterator p = parsers.constBegin();
     while (p != parsers.constEnd()) {
@@ -168,7 +168,7 @@ static QSet<QString> commonMetaCommands_;
 /*!
   Returns the set of strings representing the common metacommands.
  */
-const QSet<QString>& CodeParser::commonMetaCommands()
+const QSet<QString> &CodeParser::commonMetaCommands()
 {
     if (commonMetaCommands_.isEmpty()) {
         commonMetaCommands_ << COMMAND_ABSTRACT
@@ -204,9 +204,9 @@ const QSet<QString>& CodeParser::commonMetaCommands()
 /*!
   \internal
  */
-void CodeParser::extractPageLinkAndDesc(const QString& arg,
-                                        QString* link,
-                                        QString* desc)
+void CodeParser::extractPageLinkAndDesc(const QString &arg,
+                                        QString *link,
+                                        QString *desc)
 {
     QRegExp bracedRegExp(QLatin1String("\\{([^{}]*)\\}(?:\\{([^{}]*)\\})?"));
 
@@ -232,7 +232,7 @@ void CodeParser::extractPageLinkAndDesc(const QString& arg,
 /*!
   \internal
  */
-void CodeParser::setLink(Node* node, Node::LinkType linkType, const QString& arg)
+void CodeParser::setLink(Node *node, Node::LinkType linkType, const QString &arg)
 {
     QString link;
     QString desc;
@@ -301,7 +301,7 @@ bool CodeParser::isParsingQdoc() const
   In some cases it prints a qdoc warning that it has done this. Namely,
   for C++ classes and namespaces.
  */
-void CodeParser::checkModuleInclusion(Node* n)
+void CodeParser::checkModuleInclusion(Node *n)
 {
     if (n->physicalModuleName().isEmpty()) {
         n->setPhysicalModuleName(Generator::defaultModuleName());

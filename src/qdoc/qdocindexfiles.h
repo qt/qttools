@@ -63,9 +63,9 @@ class QDocIndexFiles
     QDocIndexFiles();
     ~QDocIndexFiles();
 
-    void readIndexes(const QStringList& indexFiles);
-    void readIndexFile(const QString& path);
-    void readIndexSection(QXmlStreamReader &reader, Node* current, const QString& indexUrl);
+    void readIndexes(const QStringList &indexFiles);
+    void readIndexFile(const QString &path);
+    void readIndexSection(QXmlStreamReader &reader, Node *current, const QString &indexUrl);
     void insertTarget(TargetRec::TargetType type, const QXmlStreamAttributes &attributes, Node *node);
     void resolveIndex();
 
@@ -77,10 +77,10 @@ class QDocIndexFiles
 
  private:
     static QDocIndexFiles* qdocIndexFiles_;
-    QDocDatabase* qdb_;
-    Generator* gen_;
+    QDocDatabase *qdb_;
+    Generator *gen_;
     QString project_;
-    QVector<QPair<ClassNode*,QString> > basesList_;
+    QVector<QPair<ClassNode *, QString> > basesList_;
 };
 
 QT_END_NAMESPACE

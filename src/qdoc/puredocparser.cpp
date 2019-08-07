@@ -52,7 +52,7 @@ QStringList PureDocParser::sourceFileNameFilter()
   parsed contents to the database. The \a location is used for
   reporting errors.
  */
-void PureDocParser::parseSourceFile(const Location& location, const QString& filePath)
+void PureDocParser::parseSourceFile(const Location &location, const QString &filePath)
 {
     QFile in(filePath);
     currentFile_ = filePath;
@@ -85,7 +85,7 @@ void PureDocParser::parseSourceFile(const Location& location, const QString& fil
  */
 bool PureDocParser::processQdocComments()
 {
-    const QSet<QString>& commands = topicCommands() + metaCommands();
+    const QSet<QString> &commands = topicCommands() + metaCommands();
 
     while (tok_ != Tok_Eoi) {
         if (tok_ == Tok_Doc) {
@@ -98,7 +98,7 @@ bool PureDocParser::processQdocComments()
 
             // Doc constructor parses the comment.
             Doc doc(start_loc, end_loc, comment, commands, topicCommands());
-            const TopicList& topics = doc.topicsUsed();
+            const TopicList &topics = doc.topicsUsed();
             if (topics.isEmpty()) {
                 doc.location().warning(tr("This qdoc comment contains no topic command "
                                           "(e.g., '\\%1', '\\%2').")

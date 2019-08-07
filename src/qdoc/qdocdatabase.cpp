@@ -186,7 +186,7 @@ void QDocForest::setSearchOrder(QStringList &t)
     moduleNames_.append(primaryName);
     forest_.remove(primaryName);
 
-    QMap<QString, Tree*>::iterator i;
+    QMap<QString, Tree *>::iterator i;
     foreach (const QString &m, t) {
         if (primaryName != m) {
             i = forest_.find(m);
@@ -259,7 +259,7 @@ void QDocForest::setSearchOrder(QStringList &t)
   ordering required in this temporary search order is that
   the current tree must be searched first.
  */
-const QVector<Tree*> &QDocForest::searchOrder()
+const QVector<Tree *> &QDocForest::searchOrder()
 {
     if (searchOrder_.isEmpty())
         return indexSearchOrder();
@@ -281,7 +281,7 @@ const QVector<Tree*> &QDocForest::searchOrder()
   one being read now. That one is prepended to the front of
   the vector.
  */
-const QVector<Tree*> &QDocForest::indexSearchOrder()
+const QVector<Tree *> &QDocForest::indexSearchOrder()
 {
     if (forest_.size() > indexSearchOrder_.size())
         indexSearchOrder_.prepend(primaryTree_);
@@ -437,8 +437,8 @@ NodeMultiMap QDocDatabase::cppClasses_;
 NodeMultiMap QDocDatabase::qmlBasicTypes_;
 NodeMultiMap QDocDatabase::qmlTypes_;
 NodeMultiMap QDocDatabase::examples_;
-NodeMapMap   QDocDatabase::newClassMaps_;
-NodeMapMap   QDocDatabase::newQmlTypeMaps_;
+NodeMapMap QDocDatabase::newClassMaps_;
+NodeMapMap QDocDatabase::newQmlTypeMaps_;
 NodeMultiMapMap QDocDatabase::newSinceMaps_;
 
 /*!
@@ -516,139 +516,139 @@ void QDocDatabase::destroyQdocDB()
 void QDocDatabase::initializeDB()
 {
     Node::initialize();
-    typeNodeMap_.insert( "accepted", nullptr);
-    typeNodeMap_.insert( "actionPerformed", nullptr);
-    typeNodeMap_.insert( "activated", nullptr);
-    typeNodeMap_.insert( "alias", nullptr);
-    typeNodeMap_.insert( "anchors", nullptr);
-    typeNodeMap_.insert( "any", nullptr);
-    typeNodeMap_.insert( "array", nullptr);
-    typeNodeMap_.insert( "autoSearch", nullptr);
-    typeNodeMap_.insert( "axis", nullptr);
-    typeNodeMap_.insert( "backClicked", nullptr);
-    typeNodeMap_.insert( "boomTime", nullptr);
-    typeNodeMap_.insert( "border", nullptr);
-    typeNodeMap_.insert( "buttonClicked", nullptr);
-    typeNodeMap_.insert( "callback", nullptr);
-    typeNodeMap_.insert( "char", nullptr);
-    typeNodeMap_.insert( "clicked", nullptr);
-    typeNodeMap_.insert( "close", nullptr);
-    typeNodeMap_.insert( "closed", nullptr);
-    typeNodeMap_.insert( "cond", nullptr);
-    typeNodeMap_.insert( "data", nullptr);
-    typeNodeMap_.insert( "dataReady", nullptr);
-    typeNodeMap_.insert( "dateString", nullptr);
-    typeNodeMap_.insert( "dateTimeString", nullptr);
-    typeNodeMap_.insert( "datetime", nullptr);
-    typeNodeMap_.insert( "day", nullptr);
-    typeNodeMap_.insert( "deactivated", nullptr);
-    typeNodeMap_.insert( "drag", nullptr);
-    typeNodeMap_.insert( "easing", nullptr);
-    typeNodeMap_.insert( "error", nullptr);
-    typeNodeMap_.insert( "exposure", nullptr);
-    typeNodeMap_.insert( "fatalError", nullptr);
-    typeNodeMap_.insert( "fileSelected", nullptr);
-    typeNodeMap_.insert( "flags", nullptr);
-    typeNodeMap_.insert( "float", nullptr);
-    typeNodeMap_.insert( "focus", nullptr);
-    typeNodeMap_.insert( "focusZone", nullptr);
-    typeNodeMap_.insert( "format", nullptr);
-    typeNodeMap_.insert( "framePainted", nullptr);
-    typeNodeMap_.insert( "from", nullptr);
-    typeNodeMap_.insert( "frontClicked", nullptr);
-    typeNodeMap_.insert( "function", nullptr);
-    typeNodeMap_.insert( "hasOpened", nullptr);
-    typeNodeMap_.insert( "hovered", nullptr);
-    typeNodeMap_.insert( "hoveredTitle", nullptr);
-    typeNodeMap_.insert( "hoveredUrl", nullptr);
-    typeNodeMap_.insert( "imageCapture", nullptr);
-    typeNodeMap_.insert( "imageProcessing", nullptr);
-    typeNodeMap_.insert( "index", nullptr);
-    typeNodeMap_.insert( "initialized", nullptr);
-    typeNodeMap_.insert( "isLoaded", nullptr);
-    typeNodeMap_.insert( "item", nullptr);
-    typeNodeMap_.insert( "jsdict", nullptr);
-    typeNodeMap_.insert( "jsobject", nullptr);
-    typeNodeMap_.insert( "key", nullptr);
-    typeNodeMap_.insert( "keysequence", nullptr);
-    typeNodeMap_.insert( "listViewClicked", nullptr);
-    typeNodeMap_.insert( "loadRequest", nullptr);
-    typeNodeMap_.insert( "locale", nullptr);
-    typeNodeMap_.insert( "location", nullptr);
-    typeNodeMap_.insert( "long", nullptr);
-    typeNodeMap_.insert( "message", nullptr);
-    typeNodeMap_.insert( "messageReceived", nullptr);
-    typeNodeMap_.insert( "mode", nullptr);
-    typeNodeMap_.insert( "month", nullptr);
-    typeNodeMap_.insert( "name", nullptr);
-    typeNodeMap_.insert( "number", nullptr);
-    typeNodeMap_.insert( "object", nullptr);
-    typeNodeMap_.insert( "offset", nullptr);
-    typeNodeMap_.insert( "ok", nullptr);
-    typeNodeMap_.insert( "openCamera", nullptr);
-    typeNodeMap_.insert( "openImage", nullptr);
-    typeNodeMap_.insert( "openVideo", nullptr);
-    typeNodeMap_.insert( "padding", nullptr);
-    typeNodeMap_.insert( "parent", nullptr);
-    typeNodeMap_.insert( "path", nullptr);
-    typeNodeMap_.insert( "photoModeSelected", nullptr);
-    typeNodeMap_.insert( "position", nullptr);
-    typeNodeMap_.insert( "precision", nullptr);
-    typeNodeMap_.insert( "presetClicked", nullptr);
-    typeNodeMap_.insert( "preview", nullptr);
-    typeNodeMap_.insert( "previewSelected", nullptr);
-    typeNodeMap_.insert( "progress", nullptr);
-    typeNodeMap_.insert( "puzzleLost", nullptr);
-    typeNodeMap_.insert( "qmlSignal", nullptr);
-    typeNodeMap_.insert( "rectangle", nullptr);
-    typeNodeMap_.insert( "request", nullptr);
-    typeNodeMap_.insert( "requestId", nullptr);
-    typeNodeMap_.insert( "section", nullptr);
-    typeNodeMap_.insert( "selected", nullptr);
-    typeNodeMap_.insert( "send", nullptr);
-    typeNodeMap_.insert( "settingsClicked", nullptr);
-    typeNodeMap_.insert( "shoe", nullptr);
-    typeNodeMap_.insert( "short", nullptr);
-    typeNodeMap_.insert( "signed", nullptr);
-    typeNodeMap_.insert( "sizeChanged", nullptr);
-    typeNodeMap_.insert( "size_t", nullptr);
-    typeNodeMap_.insert( "sockaddr", nullptr);
-    typeNodeMap_.insert( "someOtherSignal", nullptr);
-    typeNodeMap_.insert( "sourceSize", nullptr);
-    typeNodeMap_.insert( "startButtonClicked", nullptr);
-    typeNodeMap_.insert( "state", nullptr);
-    typeNodeMap_.insert( "std::initializer_list", nullptr);
-    typeNodeMap_.insert( "std::list", nullptr);
-    typeNodeMap_.insert( "std::map", nullptr);
-    typeNodeMap_.insert( "std::pair", nullptr);
-    typeNodeMap_.insert( "std::string", nullptr);
-    typeNodeMap_.insert( "std::vector", nullptr);
-    typeNodeMap_.insert( "stringlist", nullptr);
-    typeNodeMap_.insert( "swapPlayers", nullptr);
-    typeNodeMap_.insert( "symbol", nullptr);
-    typeNodeMap_.insert( "t", nullptr);
-    typeNodeMap_.insert( "T", nullptr);
-    typeNodeMap_.insert( "tagChanged", nullptr);
-    typeNodeMap_.insert( "timeString", nullptr);
-    typeNodeMap_.insert( "timeout", nullptr);
-    typeNodeMap_.insert( "to", nullptr);
-    typeNodeMap_.insert( "toggled", nullptr);
-    typeNodeMap_.insert( "type", nullptr);
-    typeNodeMap_.insert( "unsigned", nullptr);
-    typeNodeMap_.insert( "urllist", nullptr);
-    typeNodeMap_.insert( "va_list", nullptr);
-    typeNodeMap_.insert( "value", nullptr);
-    typeNodeMap_.insert( "valueEmitted", nullptr);
-    typeNodeMap_.insert( "videoFramePainted", nullptr);
-    typeNodeMap_.insert( "videoModeSelected", nullptr);
-    typeNodeMap_.insert( "videoRecorder", nullptr);
-    typeNodeMap_.insert( "void", nullptr);
-    typeNodeMap_.insert( "volatile", nullptr);
-    typeNodeMap_.insert( "wchar_t", nullptr);
-    typeNodeMap_.insert( "x", nullptr);
-    typeNodeMap_.insert( "y", nullptr);
-    typeNodeMap_.insert( "zoom", nullptr);
-    typeNodeMap_.insert( "zoomTo", nullptr);
+    typeNodeMap_.insert("accepted", nullptr);
+    typeNodeMap_.insert("actionPerformed", nullptr);
+    typeNodeMap_.insert("activated", nullptr);
+    typeNodeMap_.insert("alias", nullptr);
+    typeNodeMap_.insert("anchors", nullptr);
+    typeNodeMap_.insert("any", nullptr);
+    typeNodeMap_.insert("array", nullptr);
+    typeNodeMap_.insert("autoSearch", nullptr);
+    typeNodeMap_.insert("axis", nullptr);
+    typeNodeMap_.insert("backClicked", nullptr);
+    typeNodeMap_.insert("boomTime", nullptr);
+    typeNodeMap_.insert("border", nullptr);
+    typeNodeMap_.insert("buttonClicked", nullptr);
+    typeNodeMap_.insert("callback", nullptr);
+    typeNodeMap_.insert("char", nullptr);
+    typeNodeMap_.insert("clicked", nullptr);
+    typeNodeMap_.insert("close", nullptr);
+    typeNodeMap_.insert("closed", nullptr);
+    typeNodeMap_.insert("cond", nullptr);
+    typeNodeMap_.insert("data", nullptr);
+    typeNodeMap_.insert("dataReady", nullptr);
+    typeNodeMap_.insert("dateString", nullptr);
+    typeNodeMap_.insert("dateTimeString", nullptr);
+    typeNodeMap_.insert("datetime", nullptr);
+    typeNodeMap_.insert("day", nullptr);
+    typeNodeMap_.insert("deactivated", nullptr);
+    typeNodeMap_.insert("drag", nullptr);
+    typeNodeMap_.insert("easing", nullptr);
+    typeNodeMap_.insert("error", nullptr);
+    typeNodeMap_.insert("exposure", nullptr);
+    typeNodeMap_.insert("fatalError", nullptr);
+    typeNodeMap_.insert("fileSelected", nullptr);
+    typeNodeMap_.insert("flags", nullptr);
+    typeNodeMap_.insert("float", nullptr);
+    typeNodeMap_.insert("focus", nullptr);
+    typeNodeMap_.insert("focusZone", nullptr);
+    typeNodeMap_.insert("format", nullptr);
+    typeNodeMap_.insert("framePainted", nullptr);
+    typeNodeMap_.insert("from", nullptr);
+    typeNodeMap_.insert("frontClicked", nullptr);
+    typeNodeMap_.insert("function", nullptr);
+    typeNodeMap_.insert("hasOpened", nullptr);
+    typeNodeMap_.insert("hovered", nullptr);
+    typeNodeMap_.insert("hoveredTitle", nullptr);
+    typeNodeMap_.insert("hoveredUrl", nullptr);
+    typeNodeMap_.insert("imageCapture", nullptr);
+    typeNodeMap_.insert("imageProcessing", nullptr);
+    typeNodeMap_.insert("index", nullptr);
+    typeNodeMap_.insert("initialized", nullptr);
+    typeNodeMap_.insert("isLoaded", nullptr);
+    typeNodeMap_.insert("item", nullptr);
+    typeNodeMap_.insert("jsdict", nullptr);
+    typeNodeMap_.insert("jsobject", nullptr);
+    typeNodeMap_.insert("key", nullptr);
+    typeNodeMap_.insert("keysequence", nullptr);
+    typeNodeMap_.insert("listViewClicked", nullptr);
+    typeNodeMap_.insert("loadRequest", nullptr);
+    typeNodeMap_.insert("locale", nullptr);
+    typeNodeMap_.insert("location", nullptr);
+    typeNodeMap_.insert("long", nullptr);
+    typeNodeMap_.insert("message", nullptr);
+    typeNodeMap_.insert("messageReceived", nullptr);
+    typeNodeMap_.insert("mode", nullptr);
+    typeNodeMap_.insert("month", nullptr);
+    typeNodeMap_.insert("name", nullptr);
+    typeNodeMap_.insert("number", nullptr);
+    typeNodeMap_.insert("object", nullptr);
+    typeNodeMap_.insert("offset", nullptr);
+    typeNodeMap_.insert("ok", nullptr);
+    typeNodeMap_.insert("openCamera", nullptr);
+    typeNodeMap_.insert("openImage", nullptr);
+    typeNodeMap_.insert("openVideo", nullptr);
+    typeNodeMap_.insert("padding", nullptr);
+    typeNodeMap_.insert("parent", nullptr);
+    typeNodeMap_.insert("path", nullptr);
+    typeNodeMap_.insert("photoModeSelected", nullptr);
+    typeNodeMap_.insert("position", nullptr);
+    typeNodeMap_.insert("precision", nullptr);
+    typeNodeMap_.insert("presetClicked", nullptr);
+    typeNodeMap_.insert("preview", nullptr);
+    typeNodeMap_.insert("previewSelected", nullptr);
+    typeNodeMap_.insert("progress", nullptr);
+    typeNodeMap_.insert("puzzleLost", nullptr);
+    typeNodeMap_.insert("qmlSignal", nullptr);
+    typeNodeMap_.insert("rectangle", nullptr);
+    typeNodeMap_.insert("request", nullptr);
+    typeNodeMap_.insert("requestId", nullptr);
+    typeNodeMap_.insert("section", nullptr);
+    typeNodeMap_.insert("selected", nullptr);
+    typeNodeMap_.insert("send", nullptr);
+    typeNodeMap_.insert("settingsClicked", nullptr);
+    typeNodeMap_.insert("shoe", nullptr);
+    typeNodeMap_.insert("short", nullptr);
+    typeNodeMap_.insert("signed", nullptr);
+    typeNodeMap_.insert("sizeChanged", nullptr);
+    typeNodeMap_.insert("size_t", nullptr);
+    typeNodeMap_.insert("sockaddr", nullptr);
+    typeNodeMap_.insert("someOtherSignal", nullptr);
+    typeNodeMap_.insert("sourceSize", nullptr);
+    typeNodeMap_.insert("startButtonClicked", nullptr);
+    typeNodeMap_.insert("state", nullptr);
+    typeNodeMap_.insert("std::initializer_list", nullptr);
+    typeNodeMap_.insert("std::list", nullptr);
+    typeNodeMap_.insert("std::map", nullptr);
+    typeNodeMap_.insert("std::pair", nullptr);
+    typeNodeMap_.insert("std::string", nullptr);
+    typeNodeMap_.insert("std::vector", nullptr);
+    typeNodeMap_.insert("stringlist", nullptr);
+    typeNodeMap_.insert("swapPlayers", nullptr);
+    typeNodeMap_.insert("symbol", nullptr);
+    typeNodeMap_.insert("t", nullptr);
+    typeNodeMap_.insert("T", nullptr);
+    typeNodeMap_.insert("tagChanged", nullptr);
+    typeNodeMap_.insert("timeString", nullptr);
+    typeNodeMap_.insert("timeout", nullptr);
+    typeNodeMap_.insert("to", nullptr);
+    typeNodeMap_.insert("toggled", nullptr);
+    typeNodeMap_.insert("type", nullptr);
+    typeNodeMap_.insert("unsigned", nullptr);
+    typeNodeMap_.insert("urllist", nullptr);
+    typeNodeMap_.insert("va_list", nullptr);
+    typeNodeMap_.insert("value", nullptr);
+    typeNodeMap_.insert("valueEmitted", nullptr);
+    typeNodeMap_.insert("videoFramePainted", nullptr);
+    typeNodeMap_.insert("videoModeSelected", nullptr);
+    typeNodeMap_.insert("videoRecorder", nullptr);
+    typeNodeMap_.insert("void", nullptr);
+    typeNodeMap_.insert("volatile", nullptr);
+    typeNodeMap_.insert("wchar_t", nullptr);
+    typeNodeMap_.insert("x", nullptr);
+    typeNodeMap_.insert("y", nullptr);
+    typeNodeMap_.insert("zoom", nullptr);
+    typeNodeMap_.insert("zoomTo", nullptr);
 }
 
 /*! \fn NamespaceNode *QDocDatabase::primaryTreeRoot()
@@ -803,7 +803,7 @@ QmlTypeNode *QDocDatabase::findQmlType(const QString &qmid, const QString &name)
     QStringList path(name);
     Node *n = forest_.findNodeByNameAndType(path, &Node::isQmlType);
     if (n && (n->isQmlType() || n->isJsType()))
-        return static_cast<QmlTypeNode*>(n);
+        return static_cast<QmlTypeNode *>(n);
     return nullptr;
 }
 
@@ -827,7 +827,7 @@ Aggregate *QDocDatabase::findQmlBasicType(const QString &qmid, const QString &na
     QStringList path(name);
     Node *n = forest_.findNodeByNameAndType(path, &Node::isQmlBasicType);
     if (n && n->isQmlBasicType())
-        return static_cast<Aggregate*>(n);
+        return static_cast<Aggregate *>(n);
     return nullptr;
 }
 
@@ -1196,7 +1196,7 @@ void QDocDatabase::resolveNamespaces()
         int count = namespaceMultimap.remove(s);
         if (count > 0) {
             foreach (Node *n, namespaces) {
-                ns = static_cast<NamespaceNode*>(n);
+                ns = static_cast<NamespaceNode *>(n);
                 if (ns->isDocumentedHere())
                     break;
                 else if (ns->hadDoc())
@@ -1205,7 +1205,7 @@ void QDocDatabase::resolveNamespaces()
             }
             if (ns) {
                 foreach (Node *n, namespaces) {
-                    NamespaceNode *NS = static_cast<NamespaceNode*>(n);
+                    NamespaceNode *NS = static_cast<NamespaceNode *>(n);
                     if (NS->hadDoc() && NS != ns) {
                         ns->doc().location().warning(tr("Namespace %1 documented more than once")
                                                      .arg(NS->name()));
@@ -1215,13 +1215,13 @@ void QDocDatabase::resolveNamespaces()
 
             } else if (somewhere == nullptr) {
                 foreach (Node *n, namespaces) {
-                    NamespaceNode *NS = static_cast<NamespaceNode*>(n);
+                    NamespaceNode *NS = static_cast<NamespaceNode *>(n);
                     NS->reportDocumentedChildrenInUndocumentedNamespace();
                 }
             }
             if (somewhere) {
                 foreach (Node *n, namespaces) {
-                    NamespaceNode *NS = static_cast<NamespaceNode*>(n);
+                    NamespaceNode *NS = static_cast<NamespaceNode *>(n);
                     if (NS != somewhere)
                         NS->setDocNode(somewhere);
                 }
@@ -1237,7 +1237,7 @@ void QDocDatabase::resolveNamespaces()
          */
         if (ns && count > 1) {
             foreach (Node *n, namespaces) {
-                NamespaceNode *NS = static_cast<NamespaceNode*>(n);
+                NamespaceNode *NS = static_cast<NamespaceNode *>(n);
                 if (NS != ns) {
                     NodeList::ConstIterator c = NS->constBegin();
                     while (c != NS->constEnd()) {
@@ -1250,7 +1250,7 @@ void QDocDatabase::resolveNamespaces()
             }
         }
         if (ns == nullptr)
-            ns = static_cast<NamespaceNode*>(namespaces.at(0));
+            ns = static_cast<NamespaceNode *>(namespaces.at(0));
         namespaceIndex_.insert(ns->name(), ns);
     }
 }
@@ -1275,7 +1275,7 @@ void QDocDatabase::resolveProxies()
         NodeList &proxies = t->proxies();
         if (!proxies.isEmpty()) {
             foreach (Node *n, proxies) {
-                ProxyNode *pn = static_cast<ProxyNode*>(n);
+                ProxyNode *pn = static_cast<ProxyNode *>(n);
                 if (pn->count() > 0) {
                     Aggregate *aggregate = primaryTree()->findAggregate(pn->name());
                     if (aggregate != nullptr)
@@ -1464,7 +1464,7 @@ void QDocDatabase::mergeCollections(Node::NodeType type, CNMap &cnm, const Node 
     QRegExp singleDigit("\\b([0-9])\\b");
     QStringList keys = cnmm.uniqueKeys();
     foreach (const QString &key, keys) {
-        QList<CollectionNode*> values = cnmm.values(key);
+        QList<CollectionNode *> values = cnmm.values(key);
         CollectionNode *n = nullptr;
         foreach (CollectionNode *v, values) {
             if (v && v->wasSeen() && (v != relative)) {
@@ -1535,7 +1535,7 @@ const Node *QDocDatabase::findNodeForAtom(const Atom *a, const Node *relative, Q
 {
     const Node *node = nullptr;
 
-    Atom *atom = const_cast<Atom*>(a);
+    Atom *atom = const_cast<Atom *>(a);
     QStringList targetPath = atom->string().split(QLatin1Char('#'));
     QString first = targetPath.first().trimmed();
 

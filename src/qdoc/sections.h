@@ -35,13 +35,13 @@
 
 QT_BEGIN_NAMESPACE
 
-typedef QMultiMap<QString, Node*> MemberMap; // the string is the member signature
-typedef QPair<const QmlTypeNode*, MemberMap> ClassMap;    // the node is the QML type
-typedef QList<ClassMap*> ClassMapList;
+typedef QMultiMap<QString, Node *> MemberMap; // the string is the member signature
+typedef QPair<const QmlTypeNode *, MemberMap> ClassMap;    // the node is the QML type
+typedef QList<ClassMap *> ClassMapList;
 
 typedef QPair<QStringList, NodeVector> KeysAndNodes;
-typedef QPair<const QmlTypeNode*, KeysAndNodes> ClassKeysNodes;
-typedef QList<ClassKeysNodes*> ClassKeysNodesList;
+typedef QPair<const QmlTypeNode *, KeysAndNodes> ClassKeysNodes;
+typedef QList<ClassKeysNodes *> ClassKeysNodesList;
 
 class Section
 {
@@ -54,33 +54,33 @@ class Section
     Section(Style style, Status status);
     ~Section();
 
-    void init(const QString& title) {
+    void init(const QString &title) {
         title_ = title;
     }
-    void init(const QString& singular,
-              const QString& plural) {
+    void init(const QString &singular,
+              const QString &plural) {
         singular_ = singular; plural_ = plural;
     }
-    void init(const QString& title,
-              const QString& singular,
-              const QString& plural) {
+    void init(const QString &title,
+              const QString &singular,
+              const QString &plural) {
         title_ = title; divClass_.clear(); singular_= singular; plural_ = plural;
     }
-    void init(const QString& title,
-              const QString& divClass,
-              const QString& singular,
-              const QString& plural) {
+    void init(const QString &title,
+              const QString &divClass,
+              const QString &singular,
+              const QString &plural) {
         title_ = title; divClass_ = divClass; singular_= singular; plural_ = plural;
     }
 
     void insert(Node *node);
-    void insert(const QString& key, Node *node) { memberMap_.insertMulti(key, node); }
-    bool insertReimplementedMember(Node* node);
+    void insert(const QString &key, Node *node) { memberMap_.insertMulti(key, node); }
+    bool insertReimplementedMember(Node *node);
 
     ClassMap *newClassMap(const Aggregate *aggregate);
     void add(ClassMap *classMap, Node *n);
-    void appendMember(Node* node) { members_.append(node); }
-    void appendReimplementedMember(Node* node) { reimplementedMembers_.append(node); }
+    void appendMember(Node *node) { members_.append(node); }
+    void appendReimplementedMember(Node *node) { reimplementedMembers_.append(node); }
 
     void clear();
     void reduce();
@@ -109,7 +109,7 @@ class Section
     void setAggregate(Aggregate *t) { aggregate_ = t; }
 
  private:
-    QString sortName(const Node *node, const QString* name = nullptr);
+    QString sortName(const Node *node, const QString *name = nullptr);
 
  private:
     Style   style_;
@@ -135,7 +135,7 @@ class Section
 };
 
 typedef QVector<Section> SectionVector;
-typedef QVector<const Section*> SectionPtrVector;
+typedef QVector<const Section *> SectionPtrVector;
 
 class Sections
 {
@@ -198,7 +198,7 @@ class Sections
     };
 
     Sections(Aggregate *aggregate);
-    Sections(const NodeMultiMap& nsmap);
+    Sections(const NodeMultiMap &nsmap);
     ~Sections();
 
     void initSections();
@@ -237,7 +237,7 @@ class Sections
     void initAggregate(SectionVector &v, Aggregate *aggregate);
 
  private:
-    Aggregate   *aggregate_;
+    Aggregate *aggregate_;
 
     static SectionVector stdSummarySections_;
     static SectionVector stdDetailsSections_;

@@ -56,10 +56,10 @@ struct ConfigVar {
 
   ConfigVar() : plus_(false) { }
 
-  ConfigVar(const QString& name, const QStringList& values, const QString& dir)
+  ConfigVar(const QString &name, const QStringList &values, const QString &dir)
     : plus_(true), name_(name), values_(values), currentPath_(dir) { }
 
-  ConfigVar(const QString& name, const QStringList& values, const QString& dir, const Location& loc)
+  ConfigVar(const QString &name, const QStringList &values, const QString &dir, const Location &loc)
     : plus_(false), name_(name), values_(values), currentPath_(dir), location_(loc) { }
 };
 
@@ -73,48 +73,48 @@ class Config
     Q_DECLARE_TR_FUNCTIONS(QDoc::Config)
 
 public:
-    Config(const QString& programName);
+    Config(const QString &programName);
     ~Config();
 
     static bool debug_;
 
-    void load(const QString& fileName);
-    void setStringList(const QString& var, const QStringList& values);
+    void load(const QString &fileName);
+    void setStringList(const QString &var, const QStringList &values);
 
-    const QString& programName() const { return prog; }
-    const Location& location() const { return loc; }
-    const Location& lastLocation() const { return lastLocation_; }
-    bool getBool(const QString& var) const;
-    int getInt(const QString& var) const;
+    const QString &programName() const { return prog; }
+    const Location &location() const { return loc; }
+    const Location &lastLocation() const { return lastLocation_; }
+    bool getBool(const QString &var) const;
+    int getInt(const QString &var) const;
     QString getOutputDir(const QString &format = QString("HTML")) const;
     QSet<QString> getOutputFormats() const;
-    QString getString(const QString& var, const QString& defaultString = QString()) const;
-    QSet<QString> getStringSet(const QString& var) const;
-    QStringList getStringList(const QString& var) const;
-    QStringList getCanonicalPathList(const QString& var, bool validate = false) const;
-    QRegExp getRegExp(const QString& var) const;
-    QList<QRegExp> getRegExpList(const QString& var) const;
-    QSet<QString> subVars(const QString& var) const;
-    void subVarsAndValues(const QString& var, ConfigVarMultimap& t) const;
-    QStringList getAllFiles(const QString& filesVar,
-                            const QString& dirsVar,
+    QString getString(const QString &var, const QString &defaultString = QString()) const;
+    QSet<QString> getStringSet(const QString &var) const;
+    QStringList getStringList(const QString &var) const;
+    QStringList getCanonicalPathList(const QString &var, bool validate = false) const;
+    QRegExp getRegExp(const QString &var) const;
+    QList<QRegExp> getRegExpList(const QString &var) const;
+    QSet<QString> subVars(const QString &var) const;
+    void subVarsAndValues(const QString &var, ConfigVarMultimap &t) const;
+    QStringList getAllFiles(const QString &filesVar,
+                            const QString &dirsVar,
                             const QSet<QString> &excludedDirs = QSet<QString>(),
                             const QSet<QString> &excludedFiles = QSet<QString>());
-    QString getIncludeFilePath(const QString& fileName) const;
+    QString getIncludeFilePath(const QString &fileName) const;
     QStringList getExampleQdocFiles(const QSet<QString> &excludedDirs, const QSet<QString> &excludedFiles);
     QStringList getExampleImageFiles(const QSet<QString> &excludedDirs, const QSet<QString> &excludedFiles);
 
-    static QStringList loadMaster(const QString& fileName);
+    static QStringList loadMaster(const QString &fileName);
     static bool isFileExcluded(const QString &fileName, const QSet<QString> &excludedFiles);
-    static QStringList getFilesHere(const QString& dir,
-                                    const QString& nameFilter,
+    static QStringList getFilesHere(const QString &dir,
+                                    const QString &nameFilter,
                                     const Location &location = Location(),
                                     const QSet<QString> &excludedDirs = QSet<QString>(),
                                     const QSet<QString> &excludedFiles = QSet<QString>());
-    static QString findFile(const Location& location,
+    static QString findFile(const Location &location,
                             const QStringList &files,
-                            const QStringList& dirs,
-                            const QString& fileName,
+                            const QStringList &dirs,
+                            const QString &fileName,
                             QString *userFriendlyFilePath = nullptr);
     static QString findFile(const Location &location,
                             const QStringList &files,
@@ -122,13 +122,13 @@ public:
                             const QString &fileBase,
                             const QStringList &fileExtensions,
                             QString *userFriendlyFilePath = nullptr);
-    static QString copyFile(const Location& location,
-                            const QString& sourceFilePath,
-                            const QString& userFriendlySourceFilePath,
-                            const QString& targetDirPath);
-    static int numParams(const QString& value);
-    static bool removeDirContents(const QString& dir);
-    static void pushWorkingDir(const QString& dir);
+    static QString copyFile(const Location &location,
+                            const QString &sourceFilePath,
+                            const QString &userFriendlySourceFilePath,
+                            const QString &targetDirPath);
+    static int numParams(const QString &value);
+    static bool removeDirContents(const QString &dir);
+    static void pushWorkingDir(const QString &dir);
     static QString popWorkingDir();
 
     static const QString dot;
@@ -140,7 +140,7 @@ public:
 
 private:
     static bool isMetaKeyChar(QChar ch);
-    void load(Location location, const QString& fileName);
+    void load(Location location, const QString &fileName);
 
     QString prog;
     Location loc;

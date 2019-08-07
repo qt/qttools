@@ -43,14 +43,14 @@ QT_BEGIN_NAMESPACE
 
 HelpProjectWriter::HelpProjectWriter(const Config &config,
                                      const QString &defaultFileName,
-                                     Generator* g)
+                                     Generator *g)
 {
     reset(config, defaultFileName, g);
 }
 
 void HelpProjectWriter::reset(const Config &config,
                          const QString &defaultFileName,
-                         Generator* g)
+                         Generator *g)
 {
     projects.clear();
     gen_ = g;
@@ -271,8 +271,8 @@ bool HelpProjectWriter::generateSection(HelpProject &project,
             // Add all group members for '[group|module|qmlmodule]:name' selector
             if (node->isGroup() || node->isModule() || node->isQmlModule()) {
                 if (project.subprojects[i].groups.contains(node->name().toLower())) {
-                    const CollectionNode* cn = static_cast<const CollectionNode*>(node);
-                    foreach (const Node* m, cn->members()) {
+                    const CollectionNode *cn = static_cast<const CollectionNode *>(node);
+                    foreach (const Node *m, cn->members()) {
                         QString memberName = m->isTextPageNode()
                                 ? m->fullTitle() : m->fullDocumentName();
                         project.subprojects[i].nodes[memberName] = m;
@@ -306,7 +306,7 @@ bool HelpProjectWriter::generateSection(HelpProject &project,
     case Node::JsType:
     case Node::JsBasicType:
         if (node->doc().hasKeywords()) {
-            foreach (const Atom* keyword, node->doc().keywords()) {
+            foreach (const Atom *keyword, node->doc().keywords()) {
                 if (!keyword->string().isEmpty()) {
                     QStringList details;
                     details << keyword->string()
@@ -328,7 +328,7 @@ bool HelpProjectWriter::generateSection(HelpProject &project,
     case Node::Enum:
         project.keywords.append(keywordDetails(node));
     {
-        const EnumNode *enumNode = static_cast<const EnumNode*>(node);
+        const EnumNode *enumNode = static_cast<const EnumNode *>(node);
         foreach (const EnumItem &item, enumNode->items()) {
             QStringList details;
 
@@ -353,10 +353,10 @@ bool HelpProjectWriter::generateSection(HelpProject &project,
     case Node::QmlModule:
     case Node::JsModule:
         {
-            const CollectionNode* cn = static_cast<const CollectionNode*>(node);
+            const CollectionNode *cn = static_cast<const CollectionNode *>(node);
             if (!cn->fullTitle().isEmpty()) {
                 if (cn->doc().hasKeywords()) {
-                    foreach (const Atom* keyword, cn->doc().keywords()) {
+                    foreach (const Atom *keyword, cn->doc().keywords()) {
                         if (!keyword->string().isEmpty()) {
                             QStringList details;
                             details << keyword->string()
@@ -436,7 +436,7 @@ bool HelpProjectWriter::generateSection(HelpProject &project,
         // Page nodes (such as manual pages) contain subtypes, titles and other
         // attributes.
     case Node::Page: {
-        const PageNode *pn = static_cast<const PageNode*>(node);
+        const PageNode *pn = static_cast<const PageNode *>(node);
         if (!pn->fullTitle().isEmpty()) {
             if (pn->doc().hasKeywords()) {
                 foreach (const Atom *keyword, pn->doc().keywords()) {
@@ -489,7 +489,7 @@ void HelpProjectWriter::generateSections(HelpProject &project, QXmlStreamWriter 
         const Aggregate *aggregate = static_cast<const Aggregate *>(node);
 
         // Ensure that we don't visit nodes more than once.
-        QSet<const Node*> childSet;
+        QSet<const Node *> childSet;
         const NodeList &children = aggregate->childNodes();
         foreach (const Node *child, children) {
             if (child->isIndexNode() || child->isPrivate())
@@ -499,7 +499,7 @@ void HelpProjectWriter::generateSections(HelpProject &project, QXmlStreamWriter 
             } else {
                 // Store member status of children
                 project.memberStatus[node].insert(child->status());
-                if (child->isFunction() && static_cast<const FunctionNode*>(child)->isOverload())
+                if (child->isFunction() && static_cast<const FunctionNode *>(child)->isOverload())
                     continue;
                 childSet << child;
             }
@@ -612,7 +612,7 @@ void HelpProjectWriter::writeNode(HelpProject &project, QXmlStreamWriter &writer
     case Node::Page: {
         // Page nodes (such as manual pages) contain subtypes, titles and other
         // attributes.
-        const PageNode *pn = static_cast<const PageNode*>(node);
+        const PageNode *pn = static_cast<const PageNode *>(node);
 
         writer.writeStartElement("section");
         writer.writeAttribute("ref", href);
@@ -626,7 +626,7 @@ void HelpProjectWriter::writeNode(HelpProject &project, QXmlStreamWriter &writer
     case Node::JsModule:
     case Node::QmlModule:
         {
-            const CollectionNode* cn = static_cast<const CollectionNode*>(node);
+            const CollectionNode *cn = static_cast<const CollectionNode *>(node);
             writer.writeStartElement("section");
             writer.writeAttribute("ref", href);
             writer.writeAttribute("title", cn->fullTitle());
@@ -643,7 +643,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
     const Node *rootNode;
 
     // Restrict searching only to the local (primary) tree
-    QVector<Tree*> searchOrder = qdb_->searchOrder();
+    QVector<Tree *> searchOrder = qdb_->searchOrder();
     qdb_->setLocalSearch();
 
     if (!project.indexRoot.isEmpty())
@@ -698,7 +698,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
 
     writer.writeStartElement("toc");
     writer.writeStartElement("section");
-    const Node* node = qdb_->findPageNodeByTitle(project.indexTitle);
+    const Node *node = qdb_->findPageNodeByTitle(project.indexTitle);
     if (node == nullptr)
         node = qdb_->findNodeByNameAndType(QStringList("index.html"), &Node::isPageNode);
     QString indexPath;
@@ -811,7 +811,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
                 }
                 // No contents/nextpage links found, write all nodes unsorted
                 if (!contentsFound) {
-                    QList<const Node*> subnodes = subproject.nodes.values();
+                    QList<const Node *> subnodes = subproject.nodes.values();
 
                     std::sort(subnodes.begin(), subnodes.end(), Node::nodeNameLessThan);
 

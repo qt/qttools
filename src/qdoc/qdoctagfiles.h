@@ -42,20 +42,20 @@ class QDocTagFiles
     friend class QDocDatabase;
 
  private:
-    static QDocTagFiles* qdocTagFiles();
+    static QDocTagFiles *qdocTagFiles();
     static void destroyQDocTagFiles();
 
     QDocTagFiles();
     ~QDocTagFiles();
 
-    void generateTagFileCompounds(QXmlStreamWriter& writer, const Aggregate* inner);
-    void generateTagFileMembers(QXmlStreamWriter& writer, const Aggregate* inner);
-    void generateTagFile(const QString& fileName, Generator* g);
+    void generateTagFileCompounds(QXmlStreamWriter &writer, const Aggregate *inner);
+    void generateTagFileMembers(QXmlStreamWriter &writer, const Aggregate *inner);
+    void generateTagFile(const QString &fileName, Generator *g);
 
  private:
-    static QDocTagFiles* qdocTagFiles_;
-    QDocDatabase* qdb_;
-    Generator* gen_;
+    static QDocTagFiles *qdocTagFiles_;
+    QDocDatabase *qdb_;
+    Generator *gen_;
 };
 
 QT_END_NAMESPACE

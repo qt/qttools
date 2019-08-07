@@ -92,7 +92,7 @@ static QDebug operator<<(QDebug debug, const std::vector<T> &v)
 template <typename T> bool visitChildrenLambda(CXCursor cursor, T &&lambda)
 {
     CXCursorVisitor visitor = [](CXCursor c, CXCursor , CXClientData client_data) -> CXChildVisitResult
-    { return (*static_cast<T*>(client_data))(c); };
+    { return (*static_cast<T *>(client_data))(c); };
     return clang_visitChildren(cursor, visitor, &lambda);
 }
 
@@ -218,7 +218,7 @@ static QString reconstructQualifiedPathForCursor(CXCursor cur) {
   Find the node from the QDocDatabase \a qdb that corrseponds to the declaration
   represented by the cursor \a cur, if it exists.
  */
-static Node *findNodeForCursor(QDocDatabase* qdb, CXCursor cur) {
+static Node *findNodeForCursor(QDocDatabase *qdb, CXCursor cur) {
     auto kind = clang_getCursorKind(cur);
     if (clang_isInvalid(kind))
         return nullptr;
@@ -258,7 +258,7 @@ static Node *findNodeForCursor(QDocDatabase* qdb, CXCursor cur) {
         for (Node *candidate : qAsConst(candidates)) {
             if (!candidate->isFunction(Node::CPP))
                 continue;
-            auto fn = static_cast<FunctionNode*>(candidate);
+            auto fn = static_cast<FunctionNode *>(candidate);
             const Parameters &parameters = fn->parameters();
             const int actualArg = numArg - parameters.isPrivateSignal();
             if (parameters.count() != actualArg + isVariadic)
@@ -307,7 +307,7 @@ static Node *findNodeForCursor(QDocDatabase* qdb, CXCursor cur) {
   corrseponds to the declaration represented by the cursor
   \a cur, if it exists.
  */
-static Node *findFunctionNodeForCursor(QDocDatabase* qdb, CXCursor cur) {
+static Node *findFunctionNodeForCursor(QDocDatabase *qdb, CXCursor cur) {
     auto kind = clang_getCursorKind(cur);
     if (clang_isInvalid(kind))
         return nullptr;
@@ -337,7 +337,7 @@ static Node *findFunctionNodeForCursor(QDocDatabase* qdb, CXCursor cur) {
         for (Node *candidate : qAsConst(candidates)) {
             if (!candidate->isFunction(Node::CPP))
                 continue;
-            auto fn = static_cast<FunctionNode*>(candidate);
+            auto fn = static_cast<FunctionNode *>(candidate);
             const Parameters &parameters = fn->parameters();
             if (parameters.count() != (numArg + isVariadic))
                 continue;
@@ -379,7 +379,7 @@ public:
     ClangVisitor(QDocDatabase *qdb, const QHash<QString, QString> &allHeaders)
         : qdb_(qdb), parent_(qdb->primaryTreeRoot()), allHeaders_(allHeaders) { }
 
-    QDocDatabase* qdocDB() { return qdb_; }
+    QDocDatabase *qdocDB() { return qdb_; }
 
     CXChildVisitResult visitChildren(CXCursor cursor)
     {
@@ -412,7 +412,7 @@ public:
       Not sure about all the possibilities, when the cursor
       location is not in the main file.
      */
-    CXChildVisitResult visitFnArg(CXCursor cursor, Node** fnNode, bool &ignoreSignature)
+    CXChildVisitResult visitFnArg(CXCursor cursor, Node **fnNode, bool &ignoreSignature)
     {
         auto ret = visitChildrenLambda(cursor, [&](CXCursor cur) {
             auto loc = clang_getCursorLocation(cur);
@@ -443,7 +443,7 @@ private:
      */
     QMap<SimpleLoc, CXCursor> declMap_;
 
-    QDocDatabase* qdb_;
+    QDocDatabase *qdb_;
     Aggregate *parent_;
     const QHash<QString, QString> allHeaders_;
     QHash<CXFile, bool> isInterestingCache_; // doing a canonicalFilePath is slow, so keep a cache.
@@ -483,9 +483,9 @@ private:
 
     CXChildVisitResult visitSource(CXCursor cursor, CXSourceLocation loc);
     CXChildVisitResult visitHeader(CXCursor cursor, CXSourceLocation loc);
-    CXChildVisitResult visitFnSignature(CXCursor cursor, CXSourceLocation loc, Node** fnNode, bool &ignoreSignature);
+    CXChildVisitResult visitFnSignature(CXCursor cursor, CXSourceLocation loc, Node **fnNode, bool &ignoreSignature);
     void parseProperty(const QString &spelling, const Location &loc);
-    void readParameterNamesAndAttributes(FunctionNode* fn, CXCursor cursor);
+    void readParameterNamesAndAttributes(FunctionNode *fn, CXCursor cursor);
     Aggregate *getSemanticParent(CXCursor cursor);
 };
 
@@ -515,15 +515,15 @@ Aggregate *ClangVisitor::getSemanticParent(CXCursor cursor)
     CXCursor sp = clang_getCursorSemanticParent(cursor);
     CXCursor lp = clang_getCursorLexicalParent(cursor);
     if (!clang_equalCursors(sp, lp) && clang_isDeclaration(clang_getCursorKind(sp))) {
-        Node* spn = findNodeForCursor(qdb_, sp);
+        Node *spn = findNodeForCursor(qdb_, sp);
         if (spn && spn->isAggregate()) {
-            return static_cast<Aggregate*>(spn);
+            return static_cast<Aggregate *>(spn);
         }
     }
     return parent_;
 }
 
-CXChildVisitResult ClangVisitor::visitFnSignature(CXCursor cursor, CXSourceLocation , Node** fnNode, bool &ignoreSignature)
+CXChildVisitResult ClangVisitor::visitFnSignature(CXCursor cursor, CXSourceLocation , Node **fnNode, bool &ignoreSignature)
 {
     switch (clang_getCursorKind(cursor)) {
     case CXCursor_FunctionDecl:
@@ -539,7 +539,7 @@ CXChildVisitResult ClangVisitor::visitFnSignature(CXCursor cursor, CXSourceLocat
         } else {
             *fnNode = findFunctionNodeForCursor(qdb_, cursor);
             if (*fnNode && (*fnNode)->isFunction(Node::CPP)) {
-                FunctionNode* fn = static_cast<FunctionNode*>(*fnNode);
+                FunctionNode *fn = static_cast<FunctionNode *>(*fnNode);
                 readParameterNamesAndAttributes(fn, cursor);
             }
         }
@@ -564,7 +564,7 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
             int lastBlank = typeAlias[0].lastIndexOf(QChar(' '));
             if (lastBlank > 0) {
                 typeAlias[0] = typeAlias[0].right(typeAlias[0].size() - (lastBlank + 1));
-                TypeAliasNode* ta = new TypeAliasNode(parent_, typeAlias[0], typeAlias[1]);
+                TypeAliasNode *ta = new TypeAliasNode(parent_, typeAlias[0], typeAlias[1]);
                 ta->setAccess(fromCX_CXXAccessSpecifier(clang_getCXXAccessSpecifier(cursor)));
                 ta->setLocation(fromCXSourceLocation(clang_getCursorLocation(cursor)));
             }
@@ -586,7 +586,7 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
 
         QString className = fromCXString(clang_getCursorSpelling(cursor));
 
-        Aggregate* semanticParent = getSemanticParent(cursor);
+        Aggregate *semanticParent = getSemanticParent(cursor);
         if (semanticParent && semanticParent->findNonfunctionChild(className, &Node::isClassNode)) {
             return CXChildVisit_Continue;
         }
@@ -618,21 +618,21 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         auto type = clang_getCursorType(cursor);
         auto baseCursor = clang_getTypeDeclaration(type);
         auto baseNode = findNodeForCursor(qdb_, baseCursor);
-        auto classe = static_cast<ClassNode*>(parent_);
+        auto classe = static_cast<ClassNode *>(parent_);
         if (baseNode == nullptr || !baseNode->isClassNode()) {
             QString bcName = fromCXString(clang_getCursorSpelling(baseCursor));
             classe->addUnresolvedBaseClass(access, QStringList(bcName), bcName);
             return CXChildVisit_Continue;
         }
-        auto baseClasse = static_cast<ClassNode*>(baseNode);
+        auto baseClasse = static_cast<ClassNode *>(baseNode);
         classe->addResolvedBaseClass(access, baseClasse);
         return CXChildVisit_Continue;
     }
     case CXCursor_Namespace: {
         QString namespaceName = fromCXString(clang_getCursorDisplayName(cursor));
-        NamespaceNode* ns = nullptr;
+        NamespaceNode *ns = nullptr;
         if (parent_)
-            ns = static_cast<NamespaceNode*>(parent_->findNonfunctionChild(namespaceName, &Node::isNamespace));
+            ns = static_cast<NamespaceNode *>(parent_->findNonfunctionChild(namespaceName, &Node::isNamespace));
         if (!ns) {
             ns = new NamespaceNode(parent_, namespaceName);
             ns->setAccess(Node::Public);
@@ -655,7 +655,7 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
 
         CXType funcType = clang_getCursorType(cursor);
 
-        FunctionNode* fn = new FunctionNode(parent_, name);
+        FunctionNode *fn = new FunctionNode(parent_, name);
 
         CXSourceRange range = clang_Cursor_getCommentRange(cursor);
         if (!clang_Range_isNull(range)) {
@@ -745,7 +745,7 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         Aggregate *ns = parent_;
         while (ns && ns->isClassNode())
             ns = ns->parent();
-        QScopedValueRollback<Aggregate *> setParent(parent_, ns);
+        QScopedValueRollback<Aggregate *>setParent(parent_, ns);
         // Visit the friend functions
         return visitChildren(cursor);
     }
@@ -754,13 +754,13 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         if (findNodeForCursor(qdb_, cursor)) // Was already parsed, propably in another tu
             return CXChildVisit_Continue;
         QString enumTypeName = fromCXString(clang_getCursorSpelling(cursor));
-        EnumNode* en = nullptr;
+        EnumNode *en = nullptr;
         if (enumTypeName.isEmpty()) {
             enumTypeName = "anonymous";
             if (parent_ && (parent_->isClassNode() || parent_->isNamespace())) {
-                Node* n = parent_->findNonfunctionChild(enumTypeName, &Node::isEnumType);
+                Node *n = parent_->findNonfunctionChild(enumTypeName, &Node::isEnumType);
                 if (n)
-                    en = static_cast<EnumNode*>(n);
+                    en = static_cast<EnumNode *>(n);
             }
         }
         if (!en) {
@@ -811,7 +811,7 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
     case CXCursor_TypedefDecl: {
         if (findNodeForCursor(qdb_, cursor)) // Was already parsed, propably in another translation unit
             return CXChildVisit_Continue;
-        TypedefNode* td = new TypedefNode(parent_, fromCXString(clang_getCursorSpelling(cursor)));
+        TypedefNode *td = new TypedefNode(parent_, fromCXString(clang_getCursorSpelling(cursor)));
         td->setAccess(fromCX_CXXAccessSpecifier(clang_getCXXAccessSpecifier(cursor)));
         td->setLocation(fromCXSourceLocation(clang_getCursorLocation(cursor)));
         // Search to see if this is a Q_DECLARE_FLAGS  (if the type is QFlags<ENUM>)
@@ -825,7 +825,7 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
                     return CXChildVisit_Continue;
                 auto *en = findNodeForCursor(qdb_, clang_getTypeDeclaration(clang_getCursorType(cur)));
                 if (en && en->isEnumType())
-                    static_cast<EnumNode*>(en)->setFlagsType(td);
+                    static_cast<EnumNode *>(en)->setFlagsType(td);
                 return CXChildVisit_Break;
             });
             return CXChildVisit_Break;
@@ -846,7 +846,7 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
     }
 }
 
-void ClangVisitor::readParameterNamesAndAttributes(FunctionNode* fn, CXCursor cursor)
+void ClangVisitor::readParameterNamesAndAttributes(FunctionNode *fn, CXCursor cursor)
 {
     Parameters &parameters = fn->parameters();
     // Visit the parameters and attributes
@@ -889,7 +889,7 @@ void ClangVisitor::readParameterNamesAndAttributes(FunctionNode* fn, CXCursor cu
     });
 }
 
-void ClangVisitor::parseProperty(const QString& spelling, const Location& loc)
+void ClangVisitor::parseProperty(const QString &spelling, const Location &loc)
 {
     int lpIdx = spelling.indexOf(QChar('('));
     int rpIdx = spelling.lastIndexOf(QChar(')'));
@@ -971,7 +971,7 @@ void ClangVisitor::parseProperty(const QString& spelling, const Location& loc)
   must be inbetween.
   Returns nullptr if no suitable declaration was found between the two comments.
  */
-Node* ClangVisitor::nodeForCommentAtLocation(CXSourceLocation loc, CXSourceLocation nextCommentLoc)
+Node *ClangVisitor::nodeForCommentAtLocation(CXSourceLocation loc, CXSourceLocation nextCommentLoc)
 {
     ClangVisitor::SimpleLoc docloc;
     clang_getPresumedLocation(loc, nullptr, &docloc.line, &docloc.column);
@@ -1001,7 +1001,7 @@ Node* ClangVisitor::nodeForCommentAtLocation(CXSourceLocation loc, CXSourceLocat
     auto *node = findNodeForCursor(qdb_, *decl_it);
     // borrow the parameter name from the definition
     if (node && node->isFunction(Node::CPP))
-        readParameterNamesAndAttributes(static_cast<FunctionNode*>(node), *decl_it);
+        readParameterNamesAndAttributes(static_cast<FunctionNode *>(node), *decl_it);
     return node;
 }
 
@@ -1368,7 +1368,7 @@ static float getUnpatchedVersion(QString t)
 
   Call matchDocsAndStuff() to do all the parsing and tree building.
  */
-void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QString& filePath)
+void ClangCodeParser::parseSourceFile(const Location &/*location*/, const QString &filePath)
 {
     /*
       The set of open namespaces is cleared before parsing
@@ -1428,7 +1428,7 @@ void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QStrin
         DocList docs;
         QString topic;
         NodeList nodes;
-        const TopicList& topics = doc.topicsUsed();
+        const TopicList &topics = doc.topicsUsed();
         if (!topics.isEmpty())
             topic = topics[0].topic;
 
@@ -1479,9 +1479,9 @@ void ClangCodeParser::parseSourceFile(const Location& /*location*/, const QStrin
   command. \a location is used for reporting errors. \a fnArg
   is the string to parse. It is always a function decl.
  */
-Node* ClangCodeParser::parseFnArg(const Location& location, const QString& fnArg)
+Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnArg)
 {
-    Node* fnNode = nullptr;
+    Node *fnNode = nullptr;
     /*
       If the \fn command begins with a tag, then don't try to
       parse the \fn command with clang. Use the tag to search
@@ -1501,7 +1501,7 @@ Node* ClangCodeParser::parseFnArg(const Location& location, const QString& fnArg
                   parameter names from the \FN command, because
                   they will be the names used in the documentation.
                  */
-                FunctionNode* fn = static_cast<FunctionNode*>(fnNode);
+                FunctionNode *fn = static_cast<FunctionNode *>(fnNode);
                 QStringList leftParenSplit = fnArg.split('(');
                 if (leftParenSplit.size() > 1) {
                     QStringList rightParenSplit = leftParenSplit[1].split(')');
@@ -1599,7 +1599,7 @@ Node* ClangCodeParser::parseFnArg(const Location& location, const QString& fnArg
                             qualifier[i++] = QChar(' ');
                         if (i > 0)
                             qualifier = qualifier.simplified();
-                        ClassNode* cn = qdb_->findClassNode(QStringList(qualifier));
+                        ClassNode *cn = qdb_->findClassNode(QStringList(qualifier));
                         if (cn && cn->isInternal())
                             report = false;
                     }

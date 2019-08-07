@@ -48,23 +48,23 @@ public:
     Quoter();
 
     void reset();
-    void quoteFromFile( const QString& userFriendlyFileName,
-                        const QString& plainCode, const QString& markedCode );
-    QString quoteLine( const Location& docLocation, const QString& command,
-                       const QString& pattern );
-    QString quoteTo( const Location& docLocation, const QString& command,
-                     const QString& pattern );
-    QString quoteUntil( const Location& docLocation, const QString& command,
-                        const QString& pattern );
+    void quoteFromFile(const QString &userFriendlyFileName,
+                       const QString &plainCode, const QString &markedCode);
+    QString quoteLine(const Location &docLocation, const QString &command,
+                      const QString &pattern);
+    QString quoteTo(const Location &docLocation, const QString &command,
+                    const QString &pattern);
+    QString quoteUntil(const Location &docLocation, const QString &command,
+                       const QString &pattern);
     QString quoteSnippet(const Location &docLocation, const QString &identifier);
 
     static QStringList splitLines(const QString &line);
 
 private:
     QString getLine(int unindent = 0);
-    void failedAtEnd( const Location& docLocation, const QString& command );
-    bool match( const Location& docLocation, const QString& pattern,
-                const QString& line );
+    void failedAtEnd(const Location &docLocation, const QString &command);
+    bool match(const Location &docLocation, const QString &pattern,
+               const QString &line);
     QString commentForCode() const;
     QString removeSpecialLines(const QString &line, const QString &comment,
                                int unindent = 0);

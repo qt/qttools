@@ -195,7 +195,7 @@ void WebXMLGenerator::generateDocumentation(Node *node)
 
     if (node->parent()) {
         if (node->isNamespace() || node->isClassNode() || node->isHeader())
-            generateCppReferencePage(static_cast<Aggregate*>(node), nullptr);
+            generateCppReferencePage(static_cast<Aggregate *>(node), nullptr);
         else if (node->isCollectionNode()) {
             if (node->wasSeen()) {
                 // see remarks in base class impl.
@@ -209,7 +209,7 @@ void WebXMLGenerator::generateDocumentation(Node *node)
     }
 
     if (node->isAggregate()) {
-        Aggregate* aggregate = static_cast<Aggregate*>(node);
+        Aggregate *aggregate = static_cast<Aggregate *>(node);
         for (auto c : aggregate->childNodes()) {
             if ((c->isAggregate() ||
                 c->isTextPageNode() ||

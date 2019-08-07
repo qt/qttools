@@ -42,12 +42,12 @@ class CppCodeParser : public CodeParser
     Q_DECLARE_TR_FUNCTIONS(QDoc::CppCodeParser)
 
     struct ExtraFuncData {
-        Aggregate* root; // Used as the parent.
+        Aggregate *root; // Used as the parent.
         Node::NodeType type; // The node type: Function, etc.
         bool isAttached; // If true, the method is attached.
         bool isMacro;    // If true, we are parsing a macro signature.
         ExtraFuncData() : root(nullptr), type(Node::Function), isAttached(false), isMacro(false) { }
-        ExtraFuncData(Aggregate* r, Node::NodeType t, bool a)
+        ExtraFuncData(Aggregate *r, Node::NodeType t, bool a)
           : root(r), type(t), isAttached(a), isMacro(false) { }
     };
 
@@ -55,7 +55,7 @@ public:
     CppCodeParser();
     ~CppCodeParser() = default;
 
-    void initializeParser(const Config& config) override;
+    void initializeParser(const Config &config) override;
     void terminateParser() override;
     QString language() override { return QStringLiteral("Cpp"); }
     QStringList headerFileNameFilter() override;
@@ -68,18 +68,18 @@ public:
     static bool isQMLPropertyTopic(const QString &t);
 
 protected:
-    static const QSet<QString>& topicCommands();
-    static const QSet<QString>& metaCommands();
-    virtual Node* processTopicCommand(const Doc& doc,
-                                      const QString& command,
-                                      const ArgLocPair& arg);
+    static const QSet<QString> &topicCommands();
+    static const QSet<QString> &metaCommands();
+    virtual Node *processTopicCommand(const Doc &doc,
+                                      const QString &command,
+                                      const ArgLocPair &arg);
     void processQmlProperties(const Doc &doc, NodeList &nodes, DocList &docs);
-    bool splitQmlPropertyArg(const QString& arg,
-                             QString& type,
-                             QString& module,
-                             QString& element,
-                             QString& name,
-                             const Location& location);
+    bool splitQmlPropertyArg(const QString &arg,
+                             QString &type,
+                             QString &module,
+                             QString &element,
+                             QString &name,
+                             const Location &location);
     void processMetaCommand(const Doc &doc, const QString &command, const ArgLocPair &argLocPair, Node *node);
     void processMetaCommands(const Doc &doc, Node *node);
     void processMetaCommands(NodeList &nodes, DocList &docs);

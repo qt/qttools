@@ -73,7 +73,7 @@ bool creationTimeBefore(const QFileInfo &fi1, const QFileInfo &fi2)
 }
 
 #ifndef QT_NO_TRANSLATION
-typedef QPair<QString, QTranslator*> Translator;
+typedef QPair<QString, QTranslator *> Translator;
 static QList<Translator> translators;
 #endif
 
@@ -89,9 +89,9 @@ static QDocGlobals qdocGlobals;
   a list of output formats; each format may have a different
   output subdirectory where index files are located.
 */
-static void loadIndexFiles(Config& config, const QSet<QString> &formats)
+static void loadIndexFiles(Config &config, const QSet<QString> &formats)
 {
-    QDocDatabase* qdb = QDocDatabase::qdocDB();
+    QDocDatabase *qdb = QDocDatabase::qdocDB();
     QStringList indexFiles;
     QStringList configIndexes = config.getStringList(CONFIG_INDEXES);
     foreach (const QString &index, configIndexes) {
@@ -336,7 +336,7 @@ static void processQdocconfFile(const QString &fileName, Config &config)
       Note: qdocDB() allocates a new instance only if no instance exists.
       So it is safe to call qdocDB() any time.
      */
-    QDocDatabase* qdb = QDocDatabase::qdocDB();
+    QDocDatabase *qdb = QDocDatabase::qdocDB();
     qdb->setVersion(config.getString(CONFIG_VERSION));
     qdb->setShowInternal(config.getBool(CONFIG_SHOWINTERNAL));
     qdb->setSingleExec(config.getBool(CONFIG_SINGLEEXEC));
@@ -369,7 +369,7 @@ static void processQdocconfFile(const QString &fileName, Config &config)
     qdb->setSearchOrder(qdocGlobals.dependModules());
 
     // Store the title of the index (landing) page
-    NamespaceNode* root = qdb->primaryTreeRoot();
+    NamespaceNode *root = qdb->primaryTreeRoot();
     if (root) {
         QString title = config.getString(CONFIG_NAVIGATION
                                         + Config::dot
@@ -497,7 +497,7 @@ static void processQdocconfFile(const QString &fileName, Config &config)
     qCDebug(lcQdoc, "Generating docs");
     QSet<QString>::ConstIterator of = outputFormats.constBegin();
     while (of != outputFormats.constEnd()) {
-        Generator* generator = Generator::generatorForFormat(*of);
+        Generator *generator = Generator::generatorForFormat(*of);
         if (generator == nullptr)
             outputFormatsLocation.fatal(QCoreApplication::translate("QDoc",
                                                "Unknown output format '%1'").arg(*of));

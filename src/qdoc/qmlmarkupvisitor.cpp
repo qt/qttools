@@ -90,7 +90,7 @@ static const QString slt   = QLatin1String("&lt;");
 static const QString sgt   = QLatin1String("&gt;");
 static const QString squot = QLatin1String("&quot;");
 
-QString QmlMarkupVisitor::protect(const QString& str)
+QString QmlMarkupVisitor::protect(const QString &str)
 {
     int n = str.length();
     QString marked;

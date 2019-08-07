@@ -57,11 +57,11 @@ public:
     QmlCodeParser();
     virtual ~QmlCodeParser();
 
-    void initializeParser(const Config& config) override;
+    void initializeParser(const Config &config) override;
     void terminateParser() override;
     QString language() override;
     QStringList sourceFileNameFilter() override;
-    void parseSourceFile(const Location& location, const QString& filePath) override;
+    void parseSourceFile(const Location &location, const QString &filePath) override;
 
 #ifndef QT_NO_DECLARATIVE
     /* Copied from src/declarative/qml/qdeclarativescriptparser.cpp */
@@ -69,7 +69,7 @@ public:
 #endif
 
 protected:
-    const QSet<QString>& topicCommands();
+    const QSet<QString> &topicCommands();
 
 private:
 #ifndef QT_NO_DECLARATIVE

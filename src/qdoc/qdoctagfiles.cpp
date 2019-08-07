@@ -48,7 +48,7 @@ QT_BEGIN_NAMESPACE
   This class handles the generation of the qdoc tag file.
  */
 
-QDocTagFiles* QDocTagFiles::qdocTagFiles_ = nullptr;
+QDocTagFiles *QDocTagFiles::qdocTagFiles_ = nullptr;
 
 /*!
   Constructs the singleton. \a qdb is the pointer to the
@@ -72,7 +72,7 @@ QDocTagFiles::~QDocTagFiles()
   Creates the singleton. Allows only one instance of the class
   to be created. Returns a pointer to the singleton.
  */
-QDocTagFiles* QDocTagFiles::qdocTagFiles()
+QDocTagFiles *QDocTagFiles::qdocTagFiles()
 {
    if (qdocTagFiles_ == nullptr)
       qdocTagFiles_ = new QDocTagFiles;
@@ -115,7 +115,7 @@ void QDocTagFiles::generateTagFileCompounds(QXmlStreamWriter &writer, const Aggr
         default:
             continue;
         }
-        const Aggregate *aggregate = static_cast<const Aggregate*>(node);
+        const Aggregate *aggregate = static_cast<const Aggregate *>(node);
 
         QString access = "public";
         if (node->isProtected())
@@ -136,10 +136,10 @@ void QDocTagFiles::generateTagFileCompounds(QXmlStreamWriter &writer, const Aggr
             writer.writeTextElement("filename", gen_->fullDocumentLocation(node, false));
 
             // Classes contain information about their base classes.
-            const ClassNode* classNode = static_cast<const ClassNode*>(node);
+            const ClassNode *classNode = static_cast<const ClassNode *>(node);
             QList<RelatedClass> bases = classNode->baseClasses();
             foreach (const RelatedClass& related, bases) {
-                ClassNode* n = related.node_;
+                ClassNode *n = related.node_;
                 if (n)
                     writer.writeTextElement("base", n->name());
             }
@@ -248,7 +248,7 @@ void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter &writer, const Aggreg
                   the type of function being described.
                 */
 
-                const FunctionNode* functionNode = static_cast<const FunctionNode*>(node);
+                const FunctionNode *functionNode = static_cast<const FunctionNode *>(node);
                 writer.writeAttribute("protection", access);
                 writer.writeAttribute("virtualness", functionNode->virtualness());
                 writer.writeAttribute("static", functionNode->isStatic() ? "yes" : "no");
@@ -278,7 +278,7 @@ void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter &writer, const Aggreg
             break;
         case Node::Property:
             {
-                const PropertyNode* propertyNode = static_cast<const PropertyNode*>(node);
+                const PropertyNode *propertyNode = static_cast<const PropertyNode *>(node);
                 writer.writeAttribute("type", propertyNode->dataType());
                 writer.writeTextElement("name", objName);
                 QStringList pieces = gen_->fullDocumentLocation(node, false).split(QLatin1Char('#'));
@@ -290,7 +290,7 @@ void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter &writer, const Aggreg
             break;
         case Node::Enum:
             {
-                const EnumNode* enumNode = static_cast<const EnumNode*>(node);
+                const EnumNode *enumNode = static_cast<const EnumNode *>(node);
                 writer.writeTextElement("name", objName);
                 QStringList pieces = gen_->fullDocumentLocation(node, false).split(QLatin1Char('#'));
                 writer.writeTextElement("anchor", pieces[1]);
@@ -309,7 +309,7 @@ void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter &writer, const Aggreg
             break;
         case Node::Typedef:
             {
-                const TypedefNode* typedefNode = static_cast<const TypedefNode*>(node);
+                const TypedefNode *typedefNode = static_cast<const TypedefNode *>(node);
                 if (typedefNode->associatedEnum())
                     writer.writeAttribute("type", typedefNode->associatedEnum()->fullDocumentName());
                 else
@@ -333,7 +333,7 @@ void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter &writer, const Aggreg
 /*!
   Writes a tag file named \a fileName.
  */
-void QDocTagFiles::generateTagFile(const QString& fileName, Generator* g)
+void QDocTagFiles::generateTagFile(const QString &fileName, Generator *g)
 {
     QFile file(fileName);
     QFileInfo fileInfo(fileName);

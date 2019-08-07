@@ -114,7 +114,7 @@ QStringList QmlCodeParser::sourceFileNameFilter()
   If it can't open the file at \a filePath, it reports an error
   and returns without doing anything.
  */
-void QmlCodeParser::parseSourceFile(const Location& location, const QString& filePath)
+void QmlCodeParser::parseSourceFile(const Location &location, const QString &filePath)
 {
     QFile in(filePath);
     currentFile_ = filePath;
@@ -167,7 +167,7 @@ static QSet<QString> topicCommands_;
 /*!
   Returns the set of strings representing the topic commands.
  */
-const QSet<QString>& QmlCodeParser::topicCommands()
+const QSet<QString> &QmlCodeParser::topicCommands()
 {
     if (topicCommands_.isEmpty()) {
         topicCommands_ << COMMAND_VARIABLE

@@ -116,7 +116,7 @@ void Section::clear()
   a set of nodes into equivalence classes. If \a name is provided,
   start with that name. Itherwise start with the name in \a node.
  */
-QString Section::sortName(const Node *node, const QString* name)
+QString Section::sortName(const Node *node, const QString *name)
 {
     QString nodeName;
     if (name != nullptr)
@@ -176,7 +176,7 @@ void Section::insert(Node *node)
     bool irrelevant = false;
     bool inherited = false;
     if (!node->isRelatedNonmember()) {
-        Aggregate* p = node->parent();
+        Aggregate *p = node->parent();
         if (!p->isNamespace() && p != aggregate_) {
             if ((!p->isQmlType() && !p->isJsType()) || !p->isAbstract())
                 inherited = true;
@@ -193,7 +193,7 @@ void Section::insert(Node *node)
     else if (node->isClassNode() || node->isEnumType() || node->isTypedef() || node->isVariable()) {
         irrelevant = (inherited && style_ != AllMembers);
         if (!irrelevant && style_ == Details && node->isTypedef()) {
-            const TypedefNode* tdn = static_cast<const TypedefNode*>(node);
+            const TypedefNode *tdn = static_cast<const TypedefNode *>(node);
             if (tdn->associatedEnum())
                 irrelevant = true;
         }
@@ -230,10 +230,10 @@ void Section::insert(Node *node)
   That is, false is returned if the \a node is already in
   the map.
  */
-bool Section::insertReimplementedMember(Node* node)
+bool Section::insertReimplementedMember(Node *node)
 {
     if (!node->isPrivate() && !node->isRelatedNonmember()) {
-        const FunctionNode* fn = static_cast<const FunctionNode*>(node);
+        const FunctionNode *fn = static_cast<const FunctionNode *>(node);
         if (!fn->overridesThis().isEmpty() && (status_ == Active)) {
             if (fn->parent() == aggregate_) {
                 QString key = sortName(fn);
@@ -252,10 +252,10 @@ bool Section::insertReimplementedMember(Node* node)
   node, append it to the list of class maps, and return a
   pointer to the new class map.
  */
-ClassMap *Section::newClassMap(const Aggregate* aggregate)
+ClassMap *Section::newClassMap(const Aggregate *aggregate)
 {
     ClassMap *classMap = new ClassMap;
-    classMap->first = static_cast<const QmlTypeNode*>(aggregate);
+    classMap->first = static_cast<const QmlTypeNode *>(aggregate);
     classMapList_.append(classMap);
     return classMap;
 }
@@ -342,7 +342,7 @@ Sections::Sections(Aggregate *aggregate) : aggregate_(aggregate)
   This constructor builds a vector of sections from the \e since
   node map, \a nsmap
  */
-Sections::Sections(const NodeMultiMap& nsmap) : aggregate_(nullptr)
+Sections::Sections(const NodeMultiMap &nsmap) : aggregate_(nullptr)
 {
     initSections();
     if (nsmap.isEmpty())
@@ -350,7 +350,7 @@ Sections::Sections(const NodeMultiMap& nsmap) : aggregate_(nullptr)
     SectionVector &sections = sinceSections();
     NodeMultiMap::const_iterator n = nsmap.constBegin();
     while (n != nsmap.constEnd()) {
-        Node* node = n.value();
+        Node *node = n.value();
         switch (node->nodeType()) {
         case Node::JsType:
         case Node::QmlType:
@@ -371,7 +371,7 @@ Sections::Sections(const NodeMultiMap& nsmap) : aggregate_(nullptr)
             sections[SinceTypedefs].appendMember(node);
             break;
         case Node::Function: {
-            const FunctionNode* fn = static_cast<const FunctionNode*>(node);
+            const FunctionNode *fn = static_cast<const FunctionNode *>(node);
             switch (fn->metaness()) {
             case FunctionNode::JsSignal:
             case FunctionNode::QmlSignal:
@@ -389,7 +389,7 @@ Sections::Sections(const NodeMultiMap& nsmap) : aggregate_(nullptr)
                 if (fn->isMacro())
                     sections[SinceMacros].appendMember(node);
                 else {
-                    Node* p = fn->parent();
+                    Node *p = fn->parent();
                     if (p) {
                         if (p->isClassNode())
                             sections[SinceMemberFunctions].appendMember(node);
@@ -636,7 +636,7 @@ void Sections::stdRefPageSwitch(SectionVector &v, Node *n, Node *t)
         return;
     case Node::Variable:
         {
-            const VariableNode* var = static_cast<const VariableNode*>(t);
+            const VariableNode *var = static_cast<const VariableNode *>(t);
             if (!var->doc().isEmpty()) {
                 if (var->isStatic())
                     v[StdStaticVariables].insert(n);
@@ -675,10 +675,10 @@ void Sections::stdRefPageSwitch(SectionVector &v, Node *n, Node *t)
  */
 void Sections::buildStdRefPageSections()
 {
-    const NamespaceNode* ns = nullptr;
+    const NamespaceNode *ns = nullptr;
     bool documentAll = true; // document all the children
     if (aggregate_->isNamespace()) {
-        ns = static_cast<const NamespaceNode*>(aggregate_);
+        ns = static_cast<const NamespaceNode *>(aggregate_);
         if (!ns->hasDoc())
             documentAll = false; // only document children that have documentation
     }
@@ -728,7 +728,7 @@ void Sections::distributeNodeInSummaryVector(SectionVector &sv, Node *n)
     if (n->isSharedCommentNode())
         return;
     if (n->isFunction()) {
-        FunctionNode *fn = static_cast<FunctionNode*>(n);
+        FunctionNode *fn = static_cast<FunctionNode *>(n);
         if (fn->isRelatedNonmember()) {
             if (fn->isMacro())
                 sv[Macros].insert(n);
@@ -830,7 +830,7 @@ void Sections::distributeNodeInDetailsVector(SectionVector &dv, Node *n)
     }
 
     if (t->isFunction()) {
-        FunctionNode *fn = static_cast<FunctionNode*>(t);
+        FunctionNode *fn = static_cast<FunctionNode *>(t);
         if (fn->isRelatedNonmember()) {
             if (fn->isMacro())
                 dv[DetailsMacros].insert(n);
@@ -881,13 +881,13 @@ void Sections::distributeQmlNodeInDetailsVector(SectionVector &dv, Node *n)
     }
 
     if (t->isQmlProperty() || t->isJsProperty()) {
-        QmlPropertyNode* pn = static_cast<QmlPropertyNode*>(t);
+        QmlPropertyNode *pn = static_cast<QmlPropertyNode *>(t);
         if (pn->isAttached())
             dv[QmlAttachedProperties].insert(n);
         else
             dv[QmlProperties].insert(n);
     } else if (t->isFunction()) {
-        FunctionNode* fn = static_cast<FunctionNode*>(t);
+        FunctionNode *fn = static_cast<FunctionNode *>(t);
         if (fn->isQmlSignal() || fn->isJsSignal()) {
             if (fn->isAttached())
                 dv[QmlAttachedSignals].insert(n);
@@ -909,13 +909,13 @@ void Sections::distributeQmlNodeInSummaryVector(SectionVector &sv, Node *n)
     if (n->isSharedCommentNode())
         return;
     if (n->isQmlProperty() || n->isJsProperty()) {
-        QmlPropertyNode* pn = static_cast<QmlPropertyNode*>(n);
+        QmlPropertyNode *pn = static_cast<QmlPropertyNode *>(n);
         if (pn->isAttached())
             sv[QmlAttachedProperties].insert(pn);
         else
             sv[QmlProperties].insert(pn);
     } else if (n->isFunction()) {
-        FunctionNode* fn = static_cast<FunctionNode*>(n);
+        FunctionNode *fn = static_cast<FunctionNode *>(n);
         if (fn->isQmlSignal() || fn->isJsSignal()) {
             if (fn->isAttached())
                 sv[QmlAttachedSignals].insert(fn);
@@ -932,7 +932,7 @@ void Sections::distributeQmlNodeInSummaryVector(SectionVector &sv, Node *n)
     }
 }
 
-static void pushBaseClasses(QStack<ClassNode*> &stack, ClassNode *cn)
+static void pushBaseClasses(QStack<ClassNode *> &stack, ClassNode *cn)
 {
     QList<RelatedClass>::ConstIterator r = cn->baseClasses().constBegin();
     while (r != cn->baseClasses().constEnd()) {
@@ -956,7 +956,7 @@ void Sections::buildStdCppClassRefPageSections()
         documentAll = false;
     NodeList::ConstIterator c = aggregate_->constBegin();
     while (c != aggregate_->constEnd()) {
-        Node* n = *c;
+        Node *n = *c;
         if (!n->isPrivate() && !n->isProperty() && !n->isRelatedNonmember())
             allMembers.insert(n);
         if (!documentAll && !n->hasDoc()) {
@@ -976,14 +976,14 @@ void Sections::buildStdCppClassRefPageSections()
         }
     }
 
-    QStack<ClassNode*> stack;
-    ClassNode* cn = static_cast<ClassNode*>(aggregate_);
+    QStack<ClassNode *> stack;
+    ClassNode *cn = static_cast<ClassNode *>(aggregate_);
     pushBaseClasses(stack, cn);
     while (!stack.isEmpty()) {
         ClassNode *cn = stack.pop();
         c = cn->constBegin();
         while (c != cn->constEnd()) {
-            Node* n = *c;
+            Node *n = *c;
             if (!n->isPrivate() && !n->isProperty())
                 allMembers.insert(n);
             if (!documentAll && !n->hasDoc()) {
@@ -1012,7 +1012,7 @@ void Sections::buildStdQmlTypeRefPageSections()
     SectionVector &dv = stdQmlTypeDetailsSections();
     Section &allMembers = allMembersSection();
 
-    const Aggregate* qtn = aggregate_;
+    const Aggregate *qtn = aggregate_;
     while (true) {
         if (!qtn->isAbstract() || !classMap)
             classMap = allMembers.newClassMap(qtn);
@@ -1035,7 +1035,7 @@ void Sections::buildStdQmlTypeRefPageSections()
             qtn = nullptr;
             break;
         }
-        qtn = static_cast<QmlTypeNode*>(qtn->qmlBaseNode());
+        qtn = static_cast<QmlTypeNode *>(qtn->qmlBaseNode());
         if (qtn == nullptr)
             break;
         if (!qtn->isAbstract())
@@ -1062,7 +1062,7 @@ void Sections::buildStdQmlTypeRefPageSections()
             qtn = nullptr;
             break;
         }
-        qtn = static_cast<QmlTypeNode*>(qtn->qmlBaseNode());
+        qtn = static_cast<QmlTypeNode *>(qtn->qmlBaseNode());
     }
     reduce(sv);
     reduce(dv);

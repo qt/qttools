@@ -55,7 +55,7 @@ public:
     HtmlGenerator();
     ~HtmlGenerator();
 
-    void initializeGenerator(const Config& config) override;
+    void initializeGenerator(const Config &config) override;
     void terminateGenerator() override;
     QString format() override;
     void generateDocs() override;
@@ -67,17 +67,17 @@ public:
 protected:
     void generateQAPage() override;
     void generateExampleFilePage(const Node *en, const QString &file, CodeMarker *marker) override;
-    QString generateLinksToLinksPage(const QString& module, CodeMarker* marker);
-    QString generateLinksToBrokenLinksPage(CodeMarker* marker, int& count);
+    QString generateLinksToLinksPage(const QString &module, CodeMarker *marker);
+    QString generateLinksToBrokenLinksPage(CodeMarker *marker, int &count);
     virtual int generateAtom(const Atom *atom,
                              const Node *relative,
                              CodeMarker *marker) override;
     void generateCppReferencePage(Aggregate *aggregate, CodeMarker *marker) override;
     void generateProxyPage(Aggregate *aggregate, CodeMarker *marker) override;
-    void generateQmlTypePage(QmlTypeNode* qcn, CodeMarker* marker) override;
-    void generateQmlBasicTypePage(QmlBasicTypeNode* qbtn, CodeMarker* marker) override;
-    void generatePageNode(PageNode* pn, CodeMarker* marker) override;
-    void generateCollectionNode(CollectionNode* cn, CodeMarker* marker) override;
+    void generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker) override;
+    void generateQmlBasicTypePage(QmlBasicTypeNode *qbtn, CodeMarker *marker) override;
+    void generatePageNode(PageNode *pn, CodeMarker *marker) override;
+    void generateCollectionNode(CollectionNode *cn, CodeMarker *marker) override;
     void generateGenericCollectionPage(CollectionNode *cn, CodeMarker *marker) override;
     QString fileExtension() const override;
     virtual QString refForNode(const Node *node);
@@ -85,7 +85,7 @@ protected:
 
     void generateManifestFile(const QString &manifest, const QString &element);
     void readManifestMetaContent(const Config &config);
-    void generateKeywordAnchors(const Node* node);
+    void generateKeywordAnchors(const Node *node);
     void generateAssociatedPropertyNotes(FunctionNode *fn);
 
     QString getLink(const Atom *atom, const Node *relative, const Node **node);
@@ -113,10 +113,10 @@ private:
                                CodeMarker *marker,
                                const QString &buildversion,
                                bool tableItems = false);
-    void generateHeader(const QString& title,
+    void generateHeader(const QString &title,
                         const Node *node = nullptr,
                         CodeMarker *marker = nullptr);
-    void generateTitle(const QString& title,
+    void generateTitle(const QString &title,
                        const Text &subTitle,
                        SubTitleSize subTitleSize,
                        const Node *relative,
@@ -131,16 +131,16 @@ private:
                        const Node *relative = nullptr, bool addLink=true);
     void generateTableOfContents(const Node *node,
                                  CodeMarker *marker,
-                                 QVector<Section>* sections = nullptr);
+                                 QVector<Section> *sections = nullptr);
     void generateSidebar();
     QString generateAllMembersFile(const Section &section, CodeMarker *marker);
-    QString generateAllQmlMembersFile(const Sections &sections, CodeMarker* marker);
+    QString generateAllQmlMembersFile(const Sections &sections, CodeMarker *marker);
     QString generateObsoleteMembersFile(const Sections &sections, CodeMarker *marker);
     QString generateObsoleteQmlMembersFile(const Sections &sections, CodeMarker *marker);
     void generateClassHierarchy(const Node *relative, NodeMap &classMap);
-    void generateAnnotatedList(const Node* relative, CodeMarker* marker, const NodeMultiMap& nodeMap);
-    void generateAnnotatedLists(const Node* relative, CodeMarker* marker, const NodeMultiMap& nodeMap);
-    void generateAnnotatedList(const Node* relative, CodeMarker* marker, const NodeList& nodes);
+    void generateAnnotatedList(const Node *relative, CodeMarker *marker, const NodeMultiMap &nodeMap);
+    void generateAnnotatedLists(const Node *relative, CodeMarker *marker, const NodeMultiMap &nodeMap);
+    void generateAnnotatedList(const Node *relative, CodeMarker *marker, const NodeList &nodes);
     void generateCompactList(ListType listType,
                              const Node *relative,
                              const NodeMultiMap &classMap,
@@ -148,8 +148,8 @@ private:
                              QString commonPrefix);
     void generateFunctionIndex(const Node *relative);
     void generateLegaleseList(const Node *relative, CodeMarker *marker);
-    bool generateGroupList(CollectionNode* cn);
-    void generateList(const Node* relative, CodeMarker* marker, const QString& selector);
+    bool generateGroupList(CollectionNode *cn);
+    void generateList(const Node *relative, CodeMarker *marker, const QString &selector);
     void generateSectionList(const Section& section,
                              const Node *relative,
                              CodeMarker *marker,
@@ -164,20 +164,20 @@ private:
     void generateDetailedQmlMember(Node *node,
                                    const Aggregate *relative,
                                    CodeMarker *marker);
-    void generateQmlInherits(QmlTypeNode* qcn, CodeMarker* marker) override;
-    void generateQmlInstantiates(QmlTypeNode* qcn, CodeMarker* marker);
-    void generateInstantiatedBy(ClassNode* cn, CodeMarker* marker);
+    void generateQmlInherits(QmlTypeNode *qcn, CodeMarker *marker) override;
+    void generateQmlInstantiates(QmlTypeNode *qcn, CodeMarker *marker);
+    void generateInstantiatedBy(ClassNode *cn, CodeMarker *marker);
 
-    void generateSection(const NodeVector& nv, const Node *relative, CodeMarker *marker);
+    void generateSection(const NodeVector &nv, const Node *relative, CodeMarker *marker);
     void generateSynopsis(const Node *node,
                           const Node *relative,
                           CodeMarker *marker,
                           Section::Style style,
                           bool alignNames = false,
-                          const QString* prefix = nullptr);
+                          const QString *prefix = nullptr);
     void generateSectionInheritedList(const Section& section, const Node *relative);
-    QString highlightedCode(const QString& markedCode,
-                            const Node* relative,
+    QString highlightedCode(const QString &markedCode,
+                            const Node *relative,
                             bool alignNames = false,
                             Node::Genus genus = Node::DontCare);
 
@@ -186,7 +186,7 @@ private:
     void generateLink(const Atom *atom, CodeMarker *marker);
 
     inline bool hasBrief(const Node *node);
-    QString registerRef(const QString& ref);
+    QString registerRef(const QString &ref);
     QString fileBase(const Node *node) const override;
     QString fileName(const Node *node);
     static int hOffset(const Node *node);
@@ -198,9 +198,9 @@ private:
     void beginLink(const QString &link, const Node *node, const Node *relative);
     void endLink();
     void generateExtractionMark(const Node *node, ExtractionMarkType markType);
-    void reportOrphans(const Aggregate* parent);
+    void reportOrphans(const Aggregate *parent);
 
-    QXmlStreamWriter& xmlWriter();
+    QXmlStreamWriter &xmlWriter();
 
     QHash<QString, QString> refMap;
     int codeIndent;
@@ -230,7 +230,7 @@ private:
     QStringList stylesheets;
     QStringList customHeadElements;
     bool obsoleteLinks;
-    QStack<QXmlStreamWriter*> xmlWriterStack;
+    QStack<QXmlStreamWriter *> xmlWriterStack;
     static int id;
     QList<ManifestMetaFilter> manifestMetaContent;
     QString homepage;

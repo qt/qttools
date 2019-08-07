@@ -62,7 +62,7 @@ CppCodeMarker::~CppCodeMarker()
 /*!
   Returns \c true.
  */
-bool CppCodeMarker::recognizeCode(const QString & /* code */)
+bool CppCodeMarker::recognizeCode(const QString &/* code */)
 {
     return true;
 }
@@ -71,7 +71,7 @@ bool CppCodeMarker::recognizeCode(const QString & /* code */)
   Returns \c true if \a ext is any of a list of file extensions
   for the C++ language.
  */
-bool CppCodeMarker::recognizeExtension(const QString& extension)
+bool CppCodeMarker::recognizeExtension(const QString &extension)
 {
     QByteArray ext = extension.toLatin1();
     return ext == "c" ||
@@ -316,23 +316,23 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
 
 /*!
  */
-QString CppCodeMarker::markedUpQmlItem(const Node* node, bool summary)
+QString CppCodeMarker::markedUpQmlItem(const Node *node, bool summary)
 {
     QString name = taggedQmlNode(node);
     if (summary)
         name = linkTag(node,name);
     else if (node->isQmlProperty() || node->isJsProperty()) {
-        const QmlPropertyNode* pn = static_cast<const QmlPropertyNode*>(node);
+        const QmlPropertyNode *pn = static_cast<const QmlPropertyNode *>(node);
         if (pn->isAttached())
             name.prepend(pn->element() + QLatin1Char('.'));
     }
     name = "<@name>" + name + "</@name>";
     QString synopsis;
     if (node->isQmlProperty() || node->isJsProperty()) {
-        const QmlPropertyNode* pn = static_cast<const QmlPropertyNode*>(node);
+        const QmlPropertyNode *pn = static_cast<const QmlPropertyNode *>(node);
         synopsis = name + " : " + typified(pn->dataType());
     } else if (node->isFunction(Node::QML) || node->isFunction(Node::JS)) {
-        const FunctionNode* func = static_cast<const FunctionNode*>(node);
+        const FunctionNode *func = static_cast<const FunctionNode *>(node);
         if (!func->returnType().isEmpty())
             synopsis = typified(func->returnType(), true) + name;
         else
@@ -422,7 +422,7 @@ QString CppCodeMarker::markedUpEnumValue(const QString &enumValue, const Node *r
     return fullName;
 }
 
-QString CppCodeMarker::markedUpIncludes(const QStringList& includes)
+QString CppCodeMarker::markedUpIncludes(const QStringList &includes)
 {
     QString code;
 
@@ -434,13 +434,13 @@ QString CppCodeMarker::markedUpIncludes(const QStringList& includes)
     return code;
 }
 
-QString CppCodeMarker::functionBeginRegExp(const QString& funcName)
+QString CppCodeMarker::functionBeginRegExp(const QString &funcName)
 {
     return QLatin1Char('^') + QRegExp::escape(funcName) + QLatin1Char('$');
 
 }
 
-QString CppCodeMarker::functionEndRegExp(const QString& /* funcName */)
+QString CppCodeMarker::functionEndRegExp(const QString &/* funcName */)
 {
     return "^\\}$";
 }
