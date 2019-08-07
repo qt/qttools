@@ -27,6 +27,8 @@
 ****************************************************************************/
 #include "clangtoolastreader.h"
 
+#include <QtCore/qregularexpression.h>
+
 QT_BEGIN_NAMESPACE
 
 namespace LupdatePrivate
@@ -41,17 +43,34 @@ namespace LupdatePrivate
     // retrieved if quotes are not there if the quoteCompulsary = false simply
     // return the input, line by line with the spaces at the beginning of the
     // line removed not looking for real code comment
-    QString cleanQuote(llvm::StringRef s, bool quoteCompulsory = true)
+    QString cleanQuote(llvm::StringRef s, bool leftQuoteCompulsory = true,
+        bool rightQuoteCompulsory = true)
     {
         qCDebug(lcClang) << "==========================================text to clean " << s.str();
         if (s.empty())
             return QString::fromStdString(s);
         s = s.trim();
-        if (!s.consume_front("\"") && quoteCompulsory)
+        if (!s.consume_front("\"") && leftQuoteCompulsory)
             return {};
-        if (!s.consume_back("\"") && quoteCompulsory)
+        if (!s.consume_back("\"") && rightQuoteCompulsory)
             return {};
         return QString::fromStdString(s);
+    }
+
+    static bool capture(const QRegularExpression &exp, const QString &line, QString *i, QString *c)
+    {
+        i->clear(), c->clear();
+        auto result = exp.match(line);
+        if (!result.hasMatch())
+            return false;
+
+        *i = result.captured(QLatin1String("identifier"));
+        *c = result.captured(QStringLiteral("comment")).trimmed();
+
+        if (*i == QLatin1String("%"))
+            *c = LupdatePrivate::cleanQuote(c->toStdString(), true, false);
+
+        return !c->isEmpty();
     }
 
     bool hasQuote(llvm::StringRef source)
@@ -127,8 +146,10 @@ bool LupdateVisitor::VisitCallExpr(clang::CallExpr *callExpression)
     // Here we gonna need to retrieve the comments around the function call
     // //: //* //~ Things like that
     const std::vector<QString> rawComments = rawCommentsForCallExpr(callExpression);
-    for (const auto &rawComment : rawComments)
-            qCDebug(lcClang) << "Raw comments     :" << rawComment << "\n";
+    for (const auto &rawComment : rawComments) {
+        setInfoFromRawComment(rawComment, &store);
+        qCDebug(lcClang) << "Raw comments     :" << rawComment << "\n";
+    }
 
     clang::LangOptions langOpts;
     langOpts.CPlusPlus = true;
@@ -176,6 +197,7 @@ bool LupdateVisitor::VisitCallExpr(clang::CallExpr *callExpression)
         qCDebug(lcClang) << "Plural      : " << store.lupdatePlural << "\n";
         break;
     }
+    store.printStore();
     return true;
 }
 
@@ -298,6 +320,92 @@ std::vector<QString> LupdateVisitor::rawCommentsFromSourceLocation(
     } while (comment != rawComments.begin());
 
     return retrievedRawComments;
+}
+
+// Read the raw comments and split them according to the prefix.
+// Fill the corresponding variables in the TranslationRelatedStore.
+void LupdateVisitor::setInfoFromRawComment(const QString &commentString,
+    TranslationRelatedStore *store)
+{
+    const QStringList commentLines = commentString.split(QLatin1Char('\n'), Qt::SkipEmptyParts);
+
+    static const QRegularExpression
+        cppStyle(QStringLiteral("^\\/\\/(?<identifier>[:=~%])\\s+(?<comment>.+)$"));
+    static const QRegularExpression
+        cStyleSingle(QStringLiteral("^\\/\\*(?<identifier>[:=~%])\\s+(?<comment>.+)\\*\\/$"));
+    static const QRegularExpression
+        cStyleMultiBegin(QStringLiteral("^\\/\\*(?<identifier>[:=~%])\\s+(?<comment>.*)$"));
+
+    static const QRegularExpression isSpace(QStringLiteral("\\s+"));
+    static const QRegularExpression idefix(QStringLiteral("^\\/\\*(?<identifier>[:=~%])"));
+
+    bool save = false;
+    bool sawStarPrefix = false;
+    bool sourceIdentifier = false;
+
+    QString comment, identifier;
+    for (auto line : commentLines) {
+        line = line.trimmed();
+
+        if (!sawStarPrefix) {
+            if (line.startsWith(QStringLiteral("//"))) {
+                // Process C++ style comment.
+                save = LupdatePrivate::capture(cppStyle, line, &identifier, &comment);
+            } else if (line.startsWith(QLatin1String("/*")) && line.endsWith(QLatin1String("*/"))) {
+                // Process C style comment on a single line.
+                save = LupdatePrivate::capture(cStyleSingle, line, &identifier, &comment);
+            } else if (line.startsWith(QLatin1String("/*"))) {
+                sawStarPrefix = true; // Start processing a multi line C style comment.
+
+                auto result = idefix.match(line);
+                if (!result.hasMatch())
+                    continue; // No identifier found.
+                identifier = result.captured(QLatin1String("identifier"));
+
+                if (line.size() > 4) // The line is not just opening, try grab the comment.
+                    LupdatePrivate::capture(cStyleMultiBegin, line, &identifier, &comment);
+                sourceIdentifier = (identifier == QLatin1String("%"));
+            }
+        } else {
+            if (line.endsWith(QLatin1String("*/"))) {
+                sawStarPrefix = false; // Finished processing a multi line C style comment.
+                line = line.remove(QLatin1String("*/")).trimmed(); // Still there can be something.
+            }
+
+            if (sourceIdentifier)
+                line = LupdatePrivate::cleanQuote(line.toStdString(), true, false);
+
+            if (!line.isEmpty() && !comment.isEmpty() && !sourceIdentifier)
+                comment.append(QLatin1Char(' '));
+
+            comment += line;
+            save = !sawStarPrefix && !comment.isEmpty();
+        }
+
+        if (!save)
+            continue;
+
+        if (identifier == QStringLiteral(":")) {
+            if (!store->lupdateExtraComment.isEmpty())
+                store->lupdateExtraComment.append(QLatin1Char(' '));
+            store->lupdateExtraComment += comment;
+        } else if (identifier == QStringLiteral("=")) {
+            if (!store->lupdateIdMetaData.isEmpty())
+                store->lupdateIdMetaData.append(QLatin1Char(' '));
+            store->lupdateIdMetaData = comment; // Only the last one is to be picked up.
+        } else if (identifier == QStringLiteral("~")) {
+            auto first = comment.section(isSpace, 0, 0);
+            auto second = comment.mid(first.size()).trimmed();
+            if (!second.isEmpty())
+                store->lupdateAllMagicMetaData.insert(first, second);
+        } else if (identifier == QLatin1String("%")) {
+            store->lupdateSourceWhenId += comment;
+        }
+
+        save = false;
+        comment.clear();
+        identifier.clear();
+    }
 }
 
 QT_END_NAMESPACE
