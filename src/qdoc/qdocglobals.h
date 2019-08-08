@@ -40,45 +40,45 @@ struct QDocCommandLineParser;
 class QDocGlobals
 {
 public:
-    bool highlighting();
+    bool highlighting() const;
     void enableHighlighting(bool value);
 
-    bool showInternal();
+    bool showInternal() const;
     void setShowInternal(bool value);
 
-    bool singleExec();
+    bool singleExec() const;
     void setSingleExec(bool value);
 
-    bool writeQaPages();
+    bool writeQaPages() const;
     void setWriteQaPages(bool value);
 
-    bool redirectDocumentationToDevNull();
+    bool redirectDocumentationToDevNull() const;
     void setRedirectDocumentationToDevNull(bool value);
 
-    bool noLinkErrors();
+    bool noLinkErrors() const;
     void setNoLinkErrors(bool value);
 
-    bool autolinkErrors();
+    bool autolinkErrors() const;
     void setAutolinkErrors(bool value);
 
-    bool obsoleteLinks();
+    bool obsoleteLinks() const;
     void setObsoleteLinks(bool value);
 
-    QStringList defines();
+    QStringList defines() const;
     void addDefine(const QStringList &valueList);
 
-    QStringList includesPaths();
+    QStringList includesPaths() const;
     void addIncludePath(const QString &flag, const QString &path);
 
     QStringList &dependModules();
 
-    QStringList indexDirs();
+    QStringList indexDirs() const;
     void appendToIndexDirs(const QString &path);
 
-    QString currentDir();
+    QString currentDir() const;
     void setCurrentDir(const QString &path);
 
-    QString previousCurrentDir();
+    QString previousCurrentDir() const;
     void setPreviousCurrentDir(const QString &path);
 
     void setOptions(const QDocCommandLineParser &parser);

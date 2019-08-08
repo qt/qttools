@@ -33,7 +33,7 @@
 #include <QtCore/qdir.h>
 #include <QtCore/qfile.h>
 
-bool QDocGlobals::highlighting()
+bool QDocGlobals::highlighting() const
 {
     return m_highlighting;
 }
@@ -43,7 +43,7 @@ void QDocGlobals::enableHighlighting(bool value)
     m_highlighting = value;
 }
 
-bool QDocGlobals::showInternal()
+bool QDocGlobals::showInternal() const
 {
     return m_showInternal;
 }
@@ -53,7 +53,7 @@ void QDocGlobals::setShowInternal(bool value)
     m_showInternal = value;
 }
 
-bool QDocGlobals::singleExec()
+bool QDocGlobals::singleExec() const
 {
     return m_singleExec;
 }
@@ -62,7 +62,7 @@ void QDocGlobals::setSingleExec(bool value)
     m_singleExec = value;
 }
 
-bool QDocGlobals::writeQaPages()
+bool QDocGlobals::writeQaPages() const
 {
     return m_writeQaPages;
 }
@@ -71,7 +71,7 @@ void QDocGlobals::setWriteQaPages(bool value)
     m_writeQaPages = value;
 }
 
-bool QDocGlobals::redirectDocumentationToDevNull()
+bool QDocGlobals::redirectDocumentationToDevNull() const
 {
     return m_redirectDocumentationToDevNull;
 }
@@ -81,7 +81,7 @@ void QDocGlobals::setRedirectDocumentationToDevNull(bool value)
     m_redirectDocumentationToDevNull = value;
 }
 
-bool QDocGlobals::noLinkErrors()
+bool QDocGlobals::noLinkErrors() const
 {
     return m_noLinkErrors;
 }
@@ -91,7 +91,7 @@ void QDocGlobals::setNoLinkErrors(bool value)
     m_noLinkErrors = value;
 }
 
-bool QDocGlobals::autolinkErrors()
+bool QDocGlobals::autolinkErrors() const
 {
     return m_autolinkErrors;
 }
@@ -101,7 +101,7 @@ void QDocGlobals::setAutolinkErrors(bool value)
     m_autolinkErrors = value;
 }
 
-bool QDocGlobals::obsoleteLinks()
+bool QDocGlobals::obsoleteLinks() const
 {
     return m_obsoleteLinks;
 }
@@ -111,7 +111,7 @@ void QDocGlobals::setObsoleteLinks(bool value)
     m_obsoleteLinks = value;
 }
 
-QStringList QDocGlobals::defines()
+QStringList QDocGlobals::defines() const
 {
     return m_defines;
 }
@@ -121,7 +121,7 @@ void QDocGlobals::addDefine(const QStringList &valueList)
     m_defines += valueList;
 }
 
-QStringList QDocGlobals::includesPaths()
+QStringList QDocGlobals::includesPaths() const
 {
     return m_includesPaths;
 }
@@ -137,7 +137,7 @@ QStringList &QDocGlobals::dependModules()
     return m_dependModules;
 }
 
-QStringList QDocGlobals::indexDirs()
+QStringList QDocGlobals::indexDirs() const
 {
     return m_indexDirs;
 }
@@ -147,7 +147,7 @@ void QDocGlobals::appendToIndexDirs(const QString &path)
     m_indexDirs += path;
 }
 
-QString QDocGlobals::currentDir()
+QString QDocGlobals::currentDir() const
 {
     return m_currentDir;
 }
@@ -157,7 +157,7 @@ void QDocGlobals::setCurrentDir(const QString &path)
     m_currentDir = path;
 }
 
-QString QDocGlobals::previousCurrentDir()
+QString QDocGlobals::previousCurrentDir() const
 {
     return m_previousCurrentDir;
 }
