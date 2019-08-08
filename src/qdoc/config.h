@@ -162,8 +162,6 @@ struct ConfigStrings
 {
     static QString ALIAS;
     static QString AUTOLINKERRORS;
-    static QString BASE;
-    static QString BASEDIR;
     static QString BUILDVERSION;
     static QString CLANGDEFINES;
     static QString CODEINDENT;
@@ -184,7 +182,6 @@ struct ConfigStrings
     static QString EXTRAIMAGES;
     static QString FALSEHOODS;
     static QString FORMATTING;
-    static QString GENERATEINDEX;
     static QString HEADERDIRS;
     static QString HEADERS;
     static QString HEADERSCRIPTS;
@@ -209,7 +206,6 @@ struct ConfigStrings
     static QString OBSOLETELINKS;
     static QString OUTPUTDIR;
     static QString OUTPUTENCODING;
-    static QString OUTPUTLANGUAGE;
     static QString OUTPUTFORMATS;
     static QString OUTPUTPREFIXES;
     static QString OUTPUTSUFFIXES;
@@ -230,7 +226,6 @@ struct ConfigStrings
     static QString STYLES;
     static QString STYLESHEETS;
     static QString SYNTAXHIGHLIGHTING;
-    static QString TEMPLATEDIR;
     static QString TABSIZE;
     static QString TAGFILE;
     static QString TRANSLATORS;
@@ -248,8 +243,6 @@ struct ConfigStrings
 
 #define CONFIG_ALIAS ConfigStrings::ALIAS
 #define CONFIG_AUTOLINKERRORS ConfigStrings::AUTOLINKERRORS
-#define CONFIG_BASE ConfigStrings::BASE
-#define CONFIG_BASEDIR ConfigStrings::BASEDIR
 #define CONFIG_BUILDVERSION ConfigStrings::BUILDVERSION
 #define CONFIG_CLANGDEFINES ConfigStrings::CLANGDEFINES
 #define CONFIG_CODEINDENT ConfigStrings::CODEINDENT
@@ -270,7 +263,6 @@ struct ConfigStrings
 #define CONFIG_EXTRAIMAGES ConfigStrings::EXTRAIMAGES
 #define CONFIG_FALSEHOODS ConfigStrings::FALSEHOODS
 #define CONFIG_FORMATTING ConfigStrings::FORMATTING
-#define CONFIG_GENERATEINDEX ConfigStrings::GENERATEINDEX
 #define CONFIG_HEADERDIRS ConfigStrings::HEADERDIRS
 #define CONFIG_HEADERS ConfigStrings::HEADERS
 #define CONFIG_HEADERSCRIPTS ConfigStrings::HEADERSCRIPTS
@@ -295,7 +287,6 @@ struct ConfigStrings
 #define CONFIG_OBSOLETELINKS ConfigStrings::OBSOLETELINKS
 #define CONFIG_OUTPUTDIR ConfigStrings::OUTPUTDIR
 #define CONFIG_OUTPUTENCODING ConfigStrings::OUTPUTENCODING
-#define CONFIG_OUTPUTLANGUAGE ConfigStrings::OUTPUTLANGUAGE
 #define CONFIG_OUTPUTFORMATS ConfigStrings::OUTPUTFORMATS
 #define CONFIG_OUTPUTPREFIXES ConfigStrings::OUTPUTPREFIXES
 #define CONFIG_OUTPUTSUFFIXES ConfigStrings::OUTPUTSUFFIXES
@@ -316,7 +307,6 @@ struct ConfigStrings
 #define CONFIG_STYLES ConfigStrings::STYLES
 #define CONFIG_STYLESHEETS ConfigStrings::STYLESHEETS
 #define CONFIG_SYNTAXHIGHLIGHTING ConfigStrings::SYNTAXHIGHLIGHTING
-#define CONFIG_TEMPLATEDIR ConfigStrings::TEMPLATEDIR
 #define CONFIG_TABSIZE ConfigStrings::TABSIZE
 #define CONFIG_TAGFILE ConfigStrings::TAGFILE
 #define CONFIG_TRANSLATORS ConfigStrings::TRANSLATORS
