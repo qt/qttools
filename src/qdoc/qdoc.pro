@@ -20,9 +20,6 @@ DEFINES += $$CLANG_DEFINES
 !contains(QMAKE_DEFAULT_LIBDIRS, $$CLANG_LIBDIR):!disable_external_rpath: QMAKE_RPATHDIR += $$CLANG_LIBDIR
 DEFINES += $$shell_quote(CLANG_RESOURCE_DIR=\"$${CLANG_LIBDIR}/clang/$${CLANG_VERSION}/include\")
 
-DEFINES += \
-    QDOC2_COMPAT
-
 INCLUDEPATH += $$QT_SOURCE_TREE/src/tools/qdoc \
                $$QT_SOURCE_TREE/src/tools/qdoc/qmlparser
 
