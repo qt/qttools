@@ -224,6 +224,27 @@ static void loadIndexFiles(Config &config, const QSet<QString> &formats)
 }
 
 /*!
+    \internal
+    Prints to stderr the name of the project that QDoc is running for,
+    in which mode and which phase.
+
+    If QDoc is running in debug mode, also logs the command line arguments.
+ */
+void logStartEndMessage(const QLatin1String &startStop, const Config &config)
+{
+    const QString runName = " qdoc for "
+            + config.getString(CONFIG_PROJECT)
+            + QLatin1String(" in ")
+            + QLatin1String(Generator::singleExec() ? "single" : "dual")
+            + QLatin1String(" process mode, (")
+            + QLatin1String(Generator::preparing() ? "prepare" : "generate")
+            + QLatin1String(" phase)");
+
+    const QString msg = startStop + runName;
+    Location::logToStdErrAlways(msg);
+}
+
+/*!
     Processes the qdoc config file \a fileName. This is the controller for all
     of QDoc. The \a config instance represents the configuration data for QDoc.
     All other classes are initialized with the same config.
@@ -255,22 +276,13 @@ static void processQdocconfFile(const QString &fileName, Config &config)
     if (!config.currentDir().isEmpty())
         QDir::setCurrent(config.currentDir());
 
-    QString phase = " in ";
-    if (Generator::singleExec())
-        phase += "single process mode, ";
-    else
-        phase += "dual process mode, ";
-    if (Generator::preparing())
-        phase += "(prepare phase)";
-    else if (Generator::generating())
-        phase += "(generate phase)";
+    logStartEndMessage(QLatin1String("Start"), config);
 
-    QString msg = "Start qdoc for " + config.getString(CONFIG_PROJECT) + phase;
-    Location::logToStdErrAlways(msg);
     if (config.getDebug()) {
         Utilities::startDebugging(QString("command line"));
         qCDebug(lcQdoc).noquote() << "Arguments:" << QCoreApplication::arguments();
     }
+
     /*
       Initialize all the classes and data structures with the
       qdoc configuration. This is safe to do for each qdocconf
@@ -505,8 +517,7 @@ static void processQdocconfFile(const QString &fileName, Config &config)
     if (Utilities::debugging())
         Utilities::stopDebugging(project);
 
-    msg = "End qdoc for " + config.getString(CONFIG_PROJECT) + phase;
-    Location::logToStdErrAlways(msg);
+    logStartEndMessage(QLatin1String("End"), config);
     QDocDatabase::qdocDB()->setVersion(QString());
     Generator::terminate();
     CodeParser::terminate();
