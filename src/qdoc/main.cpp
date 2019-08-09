@@ -228,7 +228,6 @@ static void processQdocconfFile(const QString &fileName, Config &config)
     Location::initialize(config);
     config.load(fileName);
     QString project = config.getString(CONFIG_PROJECT);
-    QString moduleHeader = config.getString(CONFIG_MODULEHEADER);
     if (project.isEmpty()) {
         Location::logToStdErrAlways(QLatin1String("qdoc can't run; no project set in qdocconf file"));
         exit(1);
@@ -306,8 +305,6 @@ static void processQdocconfFile(const QString &fileName, Config &config)
     }
 #endif
 
-    //QSet<QString> outputLanguages = config.getStringSet(CONFIG_OUTPUTLANGUAGES);
-
     /*
       Get the source language (Cpp) from the configuration
       and the location in the configuration file where the
@@ -348,6 +345,8 @@ static void processQdocconfFile(const QString &fileName, Config &config)
         qdb->newPrimaryTree(project);
     else
         qdb->setPrimaryTree(project);
+
+    const QString moduleHeader = config.getString(CONFIG_MODULEHEADER);
     if (!moduleHeader.isNull())
         clangParser_->setModuleHeader(moduleHeader);
     else
