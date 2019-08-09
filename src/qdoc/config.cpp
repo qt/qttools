@@ -848,7 +848,7 @@ int Config::numParams(const QString &value)
     for (int i = 0; i != value.length(); i++) {
         uint c = value[i].unicode();
         if (c > 0 && c < 8)
-            max = qMax(max, (int)c);
+            max = qMax(max, static_cast<int>(c));
     }
     return max;
 }
@@ -989,7 +989,7 @@ void Config::load(Location location, const QString &fileName)
     int i = 0;
     QChar c = text.at(0);
     uint cc = c.unicode();
-    while (i < (int) text.length()) {
+    while (i < text.length()) {
         if (cc == 0) {
             ++i;
         } else if (c.isSpace()) {
