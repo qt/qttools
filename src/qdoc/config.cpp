@@ -326,6 +326,21 @@ void Config::insertStringList(const QString &var, const QStringList &values)
 }
 
 /*!
+   Set configuration options from \a qdocGlobals.
+ */
+void Config::setOptions(const QDocGlobals &qdocGlobals)
+{
+    setStringList(CONFIG_SYNTAXHIGHLIGHTING, QStringList(qdocGlobals.highlighting() ? "true" : "false"));
+    setStringList(CONFIG_SHOWINTERNAL, QStringList(qdocGlobals.showInternal() ? "true" : "false"));
+    setStringList(CONFIG_SINGLEEXEC, QStringList(qdocGlobals.singleExec() ? "true" : "false"));
+    setStringList(CONFIG_WRITEQAPAGES, QStringList(qdocGlobals.writeQaPages() ? "true" : "false"));
+    setStringList(CONFIG_REDIRECTDOCUMENTATIONTODEVNULL, QStringList(qdocGlobals.redirectDocumentationToDevNull() ? "true" : "false"));
+    setStringList(CONFIG_NOLINKERRORS, QStringList(qdocGlobals.noLinkErrors() ? "true" : "false"));
+    setStringList(CONFIG_AUTOLINKERRORS, QStringList(qdocGlobals.autolinkErrors() ? "true" : "false"));
+    setStringList(CONFIG_OBSOLETELINKS, QStringList(qdocGlobals.obsoleteLinks() ? "true" : "false"));
+}
+
+/*!
    Set configuration options from \a parser.
  */
 void Config::setOptions(const QDocCommandLineParser &parser)

@@ -205,15 +205,6 @@ static void loadIndexFiles(Config &config, const QSet<QString> &formats)
  */
 static void processQdocconfFile(const QString &fileName, Config &config)
 {
-    config.setStringList(CONFIG_SYNTAXHIGHLIGHTING, QStringList(qdocGlobals.highlighting() ? "true" : "false"));
-    config.setStringList(CONFIG_SHOWINTERNAL, QStringList(qdocGlobals.showInternal() ? "true" : "false"));
-    config.setStringList(CONFIG_SINGLEEXEC, QStringList(qdocGlobals.singleExec() ? "true" : "false"));
-    config.setStringList(CONFIG_WRITEQAPAGES, QStringList(qdocGlobals.writeQaPages() ? "true" : "false"));
-    config.setStringList(CONFIG_REDIRECTDOCUMENTATIONTODEVNULL, QStringList(qdocGlobals.redirectDocumentationToDevNull() ? "true" : "false"));
-    config.setStringList(CONFIG_NOLINKERRORS, QStringList(qdocGlobals.noLinkErrors() ? "true" : "false"));
-    config.setStringList(CONFIG_AUTOLINKERRORS, QStringList(qdocGlobals.autolinkErrors() ? "true" : "false"));
-    config.setStringList(CONFIG_OBSOLETELINKS, QStringList(qdocGlobals.obsoleteLinks() ? "true" : "false"));
-
     qdocGlobals.setPreviousCurrentDir(QDir::currentPath());
 
     /*
@@ -582,6 +573,7 @@ int main(int argc, char **argv)
     qdocGlobals.setOptions(parser);
     config.setOptions(parser);
     postProcess(parser);
+    config.setOptions(qdocGlobals);
 
     // Get the list of files to act on:
     QStringList qdocFiles = parser.positionalArguments();

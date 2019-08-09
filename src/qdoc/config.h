@@ -35,6 +35,7 @@
 
 #include "location.h"
 #include "qdoccommandlineparser.h"
+#include "qdocglobals.h"
 
 #include <QtCore/qmap.h>
 #include <QtCore/qpair.h>
@@ -83,6 +84,7 @@ public:
     void setStringList(const QString &var, const QStringList &values);
     void insertStringList(const QString &var, const QStringList &values);
 
+    void setOptions(const QDocGlobals &qdocGlobals);
     void setOptions(const QDocCommandLineParser &parser);
     const QString &programName() const { return prog; }
     const Location &location() const { return loc; }
