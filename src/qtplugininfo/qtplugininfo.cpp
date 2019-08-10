@@ -138,11 +138,6 @@ int main(int argc, char** argv)
             retval = 1;
             continue;
         }
-        if (!userData.isNull() && !userData.isObject()) {
-            std::cerr << "qtplugininfo: " << pluginNativeName.constData() << ": invalid metadata, user data is not a JSON object" << std::endl;
-            retval = 1;
-            continue;
-        }
 
         if (parser.positionalArguments().size() != 1)
             std::cout << pluginNativeName.constData() << ": ";
@@ -159,8 +154,14 @@ int main(int argc, char** argv)
                 std::cout << "Qt " << (version >> 16) << '.' << ((version >> 8) & 0xFF) << '.' << (version & 0xFF)
                           << (debug.toBool() ? " (debug)" : " (release)");
             std::cout << std::endl;
-            if (print & PrintUserData && userData.isObject())
-                std::cout << "User Data: " << QJsonDocument(userData.toObject()).toJson().constData();
+            if (print & PrintUserData) {
+                if (userData.isObject())
+                    std::cout << "User Data: " << QJsonDocument(userData.toObject()).toJson().constData();
+                else if (!userData.isNull()) {
+                    std::cerr << "qtplugininfo: " << pluginNativeName.constData() << ": invalid metadata, user data is not a JSON object" << std::endl;
+                    retval = 1;
+                }
+            }
         }
     }
 
