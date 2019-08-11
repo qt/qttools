@@ -450,10 +450,10 @@ QString HtmlGenerator::generateLinksToLinksPage(const QString &module, CodeMarke
     out() << "Click on a link to go to the location of the link. The link is marked ";
     out() << "with red asterisks. ";
     out() << "Click on the marked link to see if it goes to the right place.</p>\n";
-    TargetList* tlist = qdb_->getTargetList(module);
+    const TargetList *tlist = qdb_->getTargetList(module);
     if (tlist) {
         out() << "<table class=\"valuelist\"><tr valign=\"top\" class=\"odd\"><th class=\"tblConst\">Link to  link...</th><th class=\"tblval\">In file...</th><th class=\"tbldscr\">Somewhere after line number...</th></tr>\n";
-        foreach (TargetLoc* t, *tlist) {
+        for (const TargetLoc *t : *tlist) {
             // e.g.: <a name="link-8421"></a><a href="layout.html">Layout Management</a>
             out() << "<tr><td class=\"topAlign\">";
             out() << "<a href=\"" << t->fileName_ << "#" << t->target_ << "\">";
@@ -483,7 +483,7 @@ QString HtmlGenerator::generateLinksToBrokenLinksPage(CodeMarker *marker, int &c
 {
     QString fileName;
     NamespaceNode *node = qdb_->primaryTreeRoot();
-    TargetList* tlist = qdb_->getTargetList("broken");
+    const TargetList *tlist = qdb_->getTargetList("broken");
     if (tlist && !tlist->isEmpty()) {
         count = tlist->size();
         fileName = "aaa-links-to-broken-links.html";
@@ -495,7 +495,7 @@ QString HtmlGenerator::generateLinksToBrokenLinksPage(CodeMarker *marker, int &c
         out() << "Click on a link to go to the broken link.  ";
         out() << "The link's target could not be found.</p>\n";
         out() << "<table class=\"valuelist\"><tr valign=\"top\" class=\"odd\"><th class=\"tblConst\">Link to broken link...</th><th class=\"tblval\">In file...</th><th class=\"tbldscr\">Somewhere after line number...</th></tr>\n";
-        foreach (TargetLoc* t, *tlist) {
+        for (const TargetLoc *t : *tlist) {
             // e.g.: <a name="link-8421"></a><a href="layout.html">Layout Management</a>
             out() << "<tr><td class=\"topAlign\">";
             out() << "<a href=\"" << t->fileName_ << "#" << t->target_ << "\">";
@@ -2893,7 +2893,8 @@ void HtmlGenerator::generateClassHierarchy(const Node *relative, NodeMap &classM
             stack.top().erase(stack.top().begin());
 
             NodeMap newTop;
-            foreach (const RelatedClass &d, child->derivedClasses()) {
+            const auto derivedClasses = child->derivedClasses();
+            for (const RelatedClass &d : derivedClasses) {
                 if (d.node_ && d.node_->isInAPI())
                     newTop.insert(d.node_->name(), d.node_);
             }
@@ -2926,7 +2927,7 @@ void HtmlGenerator::generateAnnotatedList(const Node *relative,
 {
     NodeMultiMap nmm;
     bool allInternal = true;
-    foreach (Node *node, unsortedNodes) {
+    for (auto *node : unsortedNodes) {
         if (!node->isInternal() && !node->isObsolete()) {
             allInternal = false;
             nmm.insert(node->fullName(relative), node);
@@ -2939,7 +2940,7 @@ void HtmlGenerator::generateAnnotatedList(const Node *relative,
     NodeList nodes = nmm.values();
     std::sort(nodes.begin(), nodes.end(), Node::nodeNameLessThan);
 
-    foreach (const Node *node, nodes) {
+    for (const auto *node : qAsConst(nodes)) {
         if (++row % 2 == 1)
             out() << "<tr class=\"odd topAlign\">";
         else
@@ -2983,7 +2984,8 @@ void HtmlGenerator::generateAnnotatedLists(const Node *relative,
                                           CodeMarker *marker,
                                           const NodeMultiMap &nmm)
 {
-    foreach (const QString &name, nmm.uniqueKeys()) {
+    const auto &uniqueKeys = nmm.uniqueKeys();
+    for (const QString &name : uniqueKeys) {
         if (!name.isEmpty()) {
             out() << "<h2 id=\"" << registerRef(name.toLower())
                   << "\">" << protectEnc(name) << "</h2>\n";
@@ -3276,7 +3278,8 @@ bool HtmlGenerator::generateGroupList(CollectionNode *cn)
     if (cn->members().isEmpty())
         return false;
     out() << "<ul>\n";
-    foreach (const Node *node, cn->members()) {
+    const auto members = cn->members();
+    for (const auto *node : members) {
         out() << "<li>"
               << "<a href=\"#"
               << Doc::canonicalTitle(node->title())
@@ -3301,12 +3304,13 @@ void HtmlGenerator::generateList(const Node *relative, CodeMarker *marker, const
     else if (selector == QLatin1String("js-modules"))
         type = Node::JsModule;
     if (type != Node::NoType) {
-        NodeList nl;
+        NodeList nodeList;
         qdb_->mergeCollections(type, cnm, relative);
-        CollectionList cl = cnm.values();
-        foreach (CollectionNode *cn, cl)
-            nl.append(cn);
-        generateAnnotatedList(relative, marker, nl);
+        const CollectionList collectionList = cnm.values();
+        nodeList.reserve(collectionList.size());
+        for (auto *collectionNode : collectionList)
+            nodeList.append(collectionNode);
+        generateAnnotatedList(relative, marker, nodeList);
     }
     else {
         /*
@@ -4021,12 +4025,12 @@ void HtmlGenerator::generateDetailedMember(const Node *node,
         const QVector<Node *> &collective = scn->collective();
         if (collective.size() > 1)
             out() << "<div class=\"fngroup\">\n";
-        foreach (const Node *n, collective) {
-            if (n->isFunction()) {
-                nodeRef = refForNode(n);
+        for (const auto *node : collective) {
+            if (node->isFunction()) {
+                nodeRef = refForNode(node);
                 out() << "<h3 class=\"fn fngroupitem\" id=\"" << nodeRef << "\">";
                 out() << "<a name=\"" + nodeRef + "\"></a>";
-                generateSynopsis(n, relative, marker, Section::Details);
+                generateSynopsis(node, relative, marker, Section::Details);
                 out() << "</h3>";
             }
         }
@@ -4163,8 +4167,8 @@ void HtmlGenerator::generateMacRef(const Node *node, CodeMarker *marker)
     if (!pleaseGenerateMacRef || marker == 0)
         return;
 
-    QStringList macRefs = marker->macRefsForNode(node);
-    foreach (const QString &macRef, macRefs)
+    const QStringList macRefs = marker->macRefsForNode(node);
+    for (const auto &macRef : macRefs)
         out() << "<a name=\"" << "//apple_ref/" << macRef << "\"></a>\n";
 }
 #endif
@@ -4470,7 +4474,7 @@ void HtmlGenerator::generateExtractionMark(const Node *node, ExtractionMarkType 
                 out() << "-prop";
                 const PropertyNode *prop = static_cast<const PropertyNode *>(node);
                 const NodeList &list = prop->functions();
-                foreach (const Node *propFuncNode, list) {
+                for (const auto *propFuncNode : list) {
                     if (propFuncNode->isFunction()) {
                         const FunctionNode *func = static_cast<const FunctionNode *>(propFuncNode);
                         out() << "$$$" + func->name() + func->parameters().rawSignature().remove(' ');
@@ -4478,7 +4482,8 @@ void HtmlGenerator::generateExtractionMark(const Node *node, ExtractionMarkType 
                 }
             } else if (node->isEnumType()) {
                 const EnumNode *enumNode = static_cast<const EnumNode *>(node);
-                foreach (const EnumItem &item, enumNode->items())
+                const auto items = enumNode->items();
+                for (const auto &item : items)
                     out() << "$$$" + item.name();
             }
         } else if (markType == BriefMark) {
@@ -4570,7 +4575,8 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
         QString docUrl = manifestDir + fileBase(en) + ".html";
         writer.writeAttribute("docUrl", docUrl);
         QStringList proFiles;
-        foreach (const QString file, en->files()) {
+        const auto exampleFiles = en->files();
+        for (const QString &file : exampleFiles) {
             if (file.endsWith(".pro") || file.endsWith(".qmlproject") || file.endsWith(".pyproject"))
                 proFiles << file;
         }
@@ -4603,7 +4609,8 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
         QString fullName = project + QLatin1Char('/') + en->title();
         QSet<QString> tags;
         for (int idx=0; idx < manifestMetaContent.size(); ++idx) {
-            foreach (const QString &name, manifestMetaContent[idx].names) {
+            const auto names = manifestMetaContent[idx].names;
+            for (const QString &name : names) {
                 bool match = false;
                 int wildcard = name.indexOf(QChar('*'));
                 switch (wildcard) {
@@ -4618,7 +4625,8 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
                 }
                 if (match) {
                     tags += manifestMetaContent[idx].tags;
-                    foreach (const QString &attr, manifestMetaContent[idx].attributes) {
+                    const auto attributes = manifestMetaContent[idx].attributes;
+                    for (const QString &attr : attributes) {
                         QLatin1Char div(':');
                         QStringList attrList = attr.split(div);
                         if (attrList.count() == 1)
@@ -4694,7 +4702,7 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
             bool wrote_one = false;
             QStringList sortedTags = tags.values();
             sortedTags.sort();
-            foreach (const QString &tag, sortedTags) {
+            for (const auto &tag : qAsConst(sortedTags)) {
                 if (wrote_one)
                     writer.writeCharacters(",");
                 writer.writeCharacters(tag);
@@ -4705,7 +4713,8 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
 
         QString ename = en->name().mid(en->name().lastIndexOf('/')+1);
         QMap<int, QString> filesToOpen;
-        foreach (QString file, en->files()) {
+        const auto files = en->files();
+        for (const QString &file : files) {
             QFileInfo fileInfo(file);
             QString fileName = fileInfo.fileName().toLower();
             // open .qml, .cpp and .h files with a
@@ -4759,9 +4768,10 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
  */
 void HtmlGenerator::readManifestMetaContent(const Config &config)
 {
-    QStringList names = config.getStringList(CONFIG_MANIFESTMETA + Config::dot + QStringLiteral("filters"));
+    const QStringList names =
+            config.getStringList(CONFIG_MANIFESTMETA + Config::dot + QStringLiteral("filters"));
 
-    foreach (const QString &manifest, names) {
+    for (const auto &manifest : names) {
         ManifestMetaFilter filter;
         QString prefix = CONFIG_MANIFESTMETA + Config::dot + manifest + Config::dot;
         filter.names = config.getStringSet(prefix + QStringLiteral("names"));
@@ -4783,7 +4793,7 @@ void HtmlGenerator::reportOrphans(const Aggregate *parent)
         return;
 
     QString message = "has documentation but no \\relates command";
-    foreach (Node *child, children) {
+    for (const auto *child : children) {
         if (!child || child->isInternal() || child->doc().isEmpty() || !child->isRelatedNonmember())
             continue;
         switch (child->nodeType()) {
@@ -4862,9 +4872,9 @@ void HtmlGenerator::generateAssociatedPropertyNotes(FunctionNode *fn)
         out() << "<p><b>Note:</b> ";
         NodeList &nodes = fn->associatedProperties();
         std::sort(nodes.begin(), nodes.end(), Node::nodeNameLessThan);
-        foreach (const Node *n, nodes) {
+        for (const auto *node : qAsConst(nodes)) {
             QString msg;
-            const PropertyNode *pn = static_cast<const PropertyNode *>(n);
+            const PropertyNode *pn = static_cast<const PropertyNode *>(node);
             switch (pn->role(fn)) {
             case PropertyNode::Getter:
                 msg = QStringLiteral("Getter function ");

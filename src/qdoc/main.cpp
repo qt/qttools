@@ -94,8 +94,8 @@ static void loadIndexFiles(Config &config, const QSet<QString> &formats)
 {
     QDocDatabase *qdb = QDocDatabase::qdocDB();
     QStringList indexFiles;
-    QStringList configIndexes = config.getStringList(CONFIG_INDEXES);
-    foreach (const QString &index, configIndexes) {
+    const QStringList configIndexes = config.getStringList(CONFIG_INDEXES);
+    for (const auto &index : configIndexes) {
         QFileInfo fi(index);
         if (fi.exists() && fi.isFile())
             indexFiles << index;

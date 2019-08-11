@@ -208,7 +208,7 @@ int Generator::appendSortedNames(Text &text, const ClassNode *cn, const QList<Re
     QStringList classNames = classMap.keys();
     classNames.sort();
 
-    foreach (const QString &className, classNames) {
+    for (const auto &className : qAsConst(classNames)) {
         text << classMap[className];
         text << comma(index++, classNames.count());
     }
@@ -232,7 +232,7 @@ int Generator::appendSortedQmlNames(Text &text, const Node *base, const NodeList
     QStringList names = classMap.keys();
     names.sort();
 
-    foreach (const QString &name, names) {
+    for (const auto &name : qAsConst(names)) {
         text << classMap[name];
         text << comma(index++, names.count());
     }
@@ -248,7 +248,8 @@ void Generator::writeOutFileNames()
     if (!files.open(QFile::WriteOnly))
         return;
     QTextStream filesout(&files);
-    foreach (const QString &file, outFileNames_) {
+    const auto names = outFileNames_;
+    for (const auto &file : names) {
         filesout << file << "\n";
     }
 }
@@ -1045,7 +1046,7 @@ void Generator::generateFileList(const ExampleNode *en, CodeMarker *marker, bool
     text << Atom(Atom::ListLeft, openedList.styleString());
 
     QString path;
-    foreach (QString file, paths) {
+    for (const auto &file : qAsConst(paths)) {
         if (images) {
             if (!file.isEmpty()) {
                 QDir dirInfo;
@@ -1226,9 +1227,9 @@ void Generator::generateDocumentation(Node *node)
     if (node->isAggregate()) {
         Aggregate *aggregate = static_cast<Aggregate *>(node);
         const NodeList &children = aggregate->childNodes();
-        foreach (Node *n, children) {
-            if (n->isPageNode() && !n->isPrivate())
-                generateDocumentation(n);
+        for (auto *node : children) {
+            if (node->isPageNode() && !node->isPrivate())
+                generateDocumentation(node);
         }
     }
 }
@@ -1487,21 +1488,21 @@ static bool hasExceptions(const Node *node,
     bool result = false;
     Node::ThreadSafeness ts = node->threadSafeness();
     const NodeList &children = static_cast<const Aggregate *>(node)->childNodes();
-    foreach (Node *n, children) {
-        if (!n->isObsolete()){
-            switch (n->threadSafeness()) {
+    for (auto *node : children) {
+        if (!node->isObsolete()){
+            switch (node->threadSafeness()) {
             case Node::Reentrant:
-                reentrant.append(n);
+                reentrant.append(node);
                 if (ts == Node::ThreadSafe)
                     result = true;
                 break;
             case Node::ThreadSafe:
-                threadsafe.append(n);
+                threadsafe.append(node);
                 if (ts == Node::Reentrant)
                     result = true;
                 break;
             case Node::NonReentrant:
-                nonreentrant.append(n);
+                nonreentrant.append(node);
                 result = true;
                 break;
             default:

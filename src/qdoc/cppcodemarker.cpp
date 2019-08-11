@@ -245,11 +245,12 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
 
             QStringList documentedItems = enume->doc().enumItemNames();
             if (documentedItems.isEmpty()) {
-                foreach (const EnumItem &item, enume->items())
+                const auto enumItems = enume->items();
+                for (const auto &item : enumItems)
                     documentedItems << item.name();
             }
-            QStringList omitItems = enume->doc().omitEnumItemNames();
-            foreach (const QString &item, omitItems)
+            const QStringList omitItems = enume->doc().omitEnumItemNames();
+            for (const auto &item : omitItems)
                 documentedItems.removeAll(item);
 
             if (documentedItems.size() <= MaxEnumValues) {

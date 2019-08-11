@@ -2184,7 +2184,7 @@ QStringList Aggregate::primaryKeys()
  */
 void Aggregate::markUndocumentedChildrenInternal()
 {
-    foreach (Node *child, children_) {
+    for (auto *child : qAsConst(children_)) {
         if (!child->isSharingComment() && !child->hasDoc() && !child->isDontDocument()) {
             if (!child->docMustBeGenerated()) {
                 if (child->isFunction()) {
@@ -2258,9 +2258,9 @@ void Aggregate::normalizeOverloads()
     /*
       Recursive part.
      */
-    foreach (Node *n, children_) {
-        if (n->isAggregate())
-            static_cast<Aggregate *>(n)->normalizeOverloads();
+    for (auto *node : qAsConst(children_)) {
+        if (node->isAggregate())
+            static_cast<Aggregate *>(node)->normalizeOverloads();
     }
 }
 
@@ -2291,7 +2291,7 @@ const NodeList &Aggregate::nonfunctionList()
  */
 const EnumNode *Aggregate::findEnumNodeForValue(const QString &enumValue) const
 {
-    foreach (const Node *node, enumChildren_) {
+    for (const auto *node : qAsConst(enumChildren_)) {
         const EnumNode *en = static_cast<const EnumNode *>(node);
         if (en->hasItem(enumValue))
             return en;
@@ -2503,8 +2503,8 @@ void Aggregate::adoptChild(Node *child)
 void Aggregate::setOutputSubdirectory(const QString &t)
 {
     Node::setOutputSubdirectory(t);
-    foreach (Node *n, children_)
-        n->setOutputSubdirectory(t);
+    for (auto *node : qAsConst(children_))
+        node->setOutputSubdirectory(t);
 }
 
 /*!
@@ -2516,7 +2516,7 @@ QmlPropertyNode *Aggregate::hasQmlProperty(const QString &n) const
     NodeType goal = Node::QmlProperty;
     if (isJsNode())
         goal = Node::JsProperty;
-    foreach (Node *child, children_) {
+    for (auto *child : qAsConst(children_)) {
         if (child->nodeType() == goal) {
             if (child->name() == n)
                 return static_cast<QmlPropertyNode *>(child);
@@ -2535,7 +2535,7 @@ QmlPropertyNode *Aggregate::hasQmlProperty(const QString &n, bool attached) cons
     NodeType goal = Node::QmlProperty;
     if (isJsNode())
         goal = Node::JsProperty;
-    foreach (Node *child, children_) {
+    for (auto *child : qAsConst(children_)) {
         if (child->nodeType() == goal) {
             if (child->name() == n && child->isAttached() == attached)
                 return static_cast<QmlPropertyNode *>(child);
@@ -2664,9 +2664,9 @@ void Aggregate::findAllFunctions(NodeMapMap &functionIndex)
             fn = fn->nextOverload();
         }
     }
-    foreach (Node *n, children_) {
-        if (n->isAggregate() && !n->isPrivate())
-            static_cast<Aggregate *>(n)->findAllFunctions(functionIndex);
+    for (Node *node : qAsConst(children_)) {
+        if (node->isAggregate() && !node->isPrivate())
+            static_cast<Aggregate *>(node)->findAllFunctions(functionIndex);
     }
 }
 
@@ -2686,11 +2686,11 @@ void Aggregate::findAllFunctions(NodeMapMap &functionIndex)
   */
 void Aggregate::findAllNamespaces(NodeMultiMap &namespaces)
 {
-    foreach (Node *n, children_) {
-        if (n->isAggregate() && !n->isPrivate()) {
-            if (n->isNamespace() && !n->name().isEmpty())
-                namespaces.insert(n->name(), n);
-            static_cast<Aggregate *>(n)->findAllNamespaces(namespaces);
+    for (auto *node : qAsConst(children_)) {
+        if (node->isAggregate() && !node->isPrivate()) {
+            if (node->isNamespace() && !node->name().isEmpty())
+                namespaces.insert(node->name(), node);
+            static_cast<Aggregate *>(node)->findAllNamespaces(namespaces);
         }
     }
 }
@@ -2701,11 +2701,11 @@ void Aggregate::findAllNamespaces(NodeMultiMap &namespaces)
  */
 bool Aggregate::hasObsoleteMembers()
 {
-    foreach (Node *n, children_) {
-        if (!n->isPrivate() && n->isObsolete()) {
-            if (n->isFunction() || n->isProperty() || n->isEnumType() ||
-                n->isTypedef() || n->isTypeAlias() || n->isVariable() ||
-                n->isQmlProperty() || n->isJsProperty())
+    for (const auto *node : qAsConst(children_)) {
+        if (!node->isPrivate() && node->isObsolete()) {
+            if (node->isFunction() || node->isProperty() || node->isEnumType() ||
+                node->isTypedef() || node->isTypeAlias() || node->isVariable() ||
+                node->isQmlProperty() || node->isJsProperty())
                 return true;
         }
     }
@@ -2720,26 +2720,24 @@ bool Aggregate::hasObsoleteMembers()
  */
 void Aggregate::findAllObsoleteThings()
 {
-    foreach (Node *n, children_) {
-        if (!n->isPrivate()) {
-            QString name = n->name();
-            if (n->isObsolete()) {
-                if (n->isClassNode())
-                    QDocDatabase::obsoleteClasses().insert(n->qualifyCppName(), n);
-                else if (n->isQmlType() || n->isJsType())
-                    QDocDatabase::obsoleteQmlTypes().insert(n->qualifyQmlName(), n);
-            } else if (n->isClassNode()) {
-                Aggregate *a = static_cast<Aggregate *>(n);
+    for (auto *node : qAsConst(children_)) {
+        if (!node->isPrivate()) {
+            QString name = node->name();
+            if (node->isObsolete()) {
+                if (node->isClassNode())
+                    QDocDatabase::obsoleteClasses().insert(node->qualifyCppName(), node);
+                else if (node->isQmlType() || node->isJsType())
+                    QDocDatabase::obsoleteQmlTypes().insert(node->qualifyQmlName(), node);
+            } else if (node->isClassNode()) {
+                Aggregate *a = static_cast<Aggregate *>(node);
                 if (a->hasObsoleteMembers())
-                    QDocDatabase::classesWithObsoleteMembers().insert(n->qualifyCppName(), n);
-            }
-            else if (n->isQmlType() || n->isJsType()) {
-                Aggregate *a = static_cast<Aggregate *>(n);
+                    QDocDatabase::classesWithObsoleteMembers().insert(node->qualifyCppName(), node);
+            } else if (node->isQmlType() || node->isJsType()) {
+                Aggregate *a = static_cast<Aggregate *>(node);
                 if (a->hasObsoleteMembers())
-                    QDocDatabase::qmlTypesWithObsoleteMembers().insert(n->qualifyQmlName(), n);
-            }
-            else if (n->isAggregate()) {
-                static_cast<Aggregate *>(n)->findAllObsoleteThings();
+                    QDocDatabase::qmlTypesWithObsoleteMembers().insert(node->qualifyQmlName(), node);
+            } else if (node->isAggregate()) {
+                static_cast<Aggregate *>(node)->findAllObsoleteThings();
             }
         }
     }
@@ -2752,24 +2750,24 @@ void Aggregate::findAllObsoleteThings()
  */
 void Aggregate::findAllClasses()
 {
-    foreach (Node *n, children_) {
-        if (!n->isPrivate() && !n->isInternal() &&
-            n->tree()->camelCaseModuleName() != QString("QDoc")) {
-            if (n->isClassNode()) {
-                QDocDatabase::cppClasses().insert(n->qualifyCppName().toLower(), n);
-            } else if (n->isQmlType() || n->isQmlBasicType() || n->isJsType() || n->isJsBasicType()) {
-                QString name = n->unqualifyQmlName();
-                QDocDatabase::qmlTypes().insert(name, n);
+    for (auto *node : qAsConst(children_)) {
+        if (!node->isPrivate() && !node->isInternal() &&
+            node->tree()->camelCaseModuleName() != QString("QDoc")) {
+            if (node->isClassNode()) {
+                QDocDatabase::cppClasses().insert(node->qualifyCppName().toLower(), node);
+            } else if (node->isQmlType() || node->isQmlBasicType() || node->isJsType() || node->isJsBasicType()) {
+                QString name = node->unqualifyQmlName();
+                QDocDatabase::qmlTypes().insert(name, node);
                 //also add to the QML basic type map
-                if (n->isQmlBasicType() || n->isJsBasicType())
-                    QDocDatabase::qmlBasicTypes().insert(name, n);
-            } else if (n->isExample()) {
+                if (node->isQmlBasicType() || node->isJsBasicType())
+                    QDocDatabase::qmlBasicTypes().insert(name, node);
+            } else if (node->isExample()) {
                 // use the module index title as key for the example map
-                QString title = n->tree()->indexTitle();
-                if (!QDocDatabase::examples().contains(title, n))
-                    QDocDatabase::examples().insert(title, n);
-            } else if (n->isAggregate()) {
-                static_cast<Aggregate *>(n)->findAllClasses();
+                QString title = node->tree()->indexTitle();
+                if (!QDocDatabase::examples().contains(title, node))
+                    QDocDatabase::examples().insert(title, node);
+            } else if (node->isAggregate()) {
+                static_cast<Aggregate *>(node)->findAllClasses();
             }
         }
     }
@@ -2781,12 +2779,12 @@ void Aggregate::findAllClasses()
  */
 void Aggregate::findAllAttributions(NodeMultiMap &attributions)
 {
-    foreach (Node *n, children_) {
-        if (!n->isPrivate()) {
-            if (n->pageType() == Node::AttributionPage)
-                attributions.insertMulti(n->tree()->indexTitle(), n);
-            else if (n->isAggregate())
-                static_cast<Aggregate *>(n)->findAllAttributions(attributions);
+    for (auto *node : qAsConst(children_)) {
+        if (!node->isPrivate()) {
+            if (node->pageType() == Node::AttributionPage)
+                attributions.insertMulti(node->tree()->indexTitle(), node);
+            else if (node->isAggregate())
+                static_cast<Aggregate *>(node)->findAllAttributions(attributions);
         }
     }
 }
@@ -2801,10 +2799,10 @@ void Aggregate::findAllAttributions(NodeMultiMap &attributions)
  */
 void Aggregate::findAllSince()
 {
-    foreach (Node *n, children_) {
-        QString sinceString = n->since();
+    for (auto *node : qAsConst(children_)) {
+        QString sinceString = node->since();
         // Insert a new entry into each map for each new since string found.
-        if (!n->isPrivate() && !sinceString.isEmpty()) {
+        if (!node->isPrivate() && !sinceString.isEmpty()) {
             NodeMultiMapMap::iterator nsmap = QDocDatabase::newSinceMaps().find(sinceString);
             if (nsmap == QDocDatabase::newSinceMaps().end())
                 nsmap = QDocDatabase::newSinceMaps().insert(sinceString, NodeMultiMap());
@@ -2817,34 +2815,34 @@ void Aggregate::findAllSince()
             if (nqcmap == QDocDatabase::newQmlTypeMaps().end())
                 nqcmap = QDocDatabase::newQmlTypeMaps().insert(sinceString, NodeMap());
 
-            if (n->isFunction()) {
+            if (node->isFunction()) {
                 // Insert functions into the general since map.
-                FunctionNode *fn = static_cast<FunctionNode *>(n);
+                FunctionNode *fn = static_cast<FunctionNode *>(node);
                 if (!fn->isObsolete() && !fn->isSomeCtor() && !fn->isDtor())
                     nsmap.value().insert(fn->name(), fn);
             }
-            else if (n->isClassNode()) {
+            else if (node->isClassNode()) {
                 // Insert classes into the since and class maps.
-                QString name = n->qualifyWithParentName();
-                nsmap.value().insert(name, n);
-                ncmap.value().insert(name, n);
-            } else if (n->isQmlType() || n->isJsType()) {
+                QString name = node->qualifyWithParentName();
+                nsmap.value().insert(name, node);
+                ncmap.value().insert(name, node);
+            } else if (node->isQmlType() || node->isJsType()) {
                 // Insert QML elements into the since and element maps.
-                QString name = n->qualifyWithParentName();
-                nsmap.value().insert(name, n);
-                nqcmap.value().insert(name, n);
-            } else if (n->isQmlProperty() || n->isJsProperty()) {
+                QString name = node->qualifyWithParentName();
+                nsmap.value().insert(name, node);
+                nqcmap.value().insert(name, node);
+            } else if (node->isQmlProperty() || node->isJsProperty()) {
                 // Insert QML properties into the since map.
-                nsmap.value().insert(n->name(), n);
+                nsmap.value().insert(node->name(), node);
             } else {
                 // Insert external documents into the general since map.
-                QString name = n->qualifyWithParentName();
-                nsmap.value().insert(name, n);
+                QString name = node->qualifyWithParentName();
+                nsmap.value().insert(name, node);
             }
         }
         // Recursively find child nodes with since commands.
-        if (n->isAggregate())
-            static_cast<Aggregate *>(n)->findAllSince();
+        if (node->isAggregate())
+            static_cast<Aggregate *>(node)->findAllSince();
     }
 }
 
@@ -2859,7 +2857,7 @@ void Aggregate::resolveQmlInheritance()
 {
     NodeMap previousSearches;
     // Do we need recursion?
-    foreach (Node *child, children_) {
+    for (auto *child : qAsConst(children_)) {
         if (!child->isQmlType() && !child->isJsType())
             continue;
         QmlTypeNode *type = static_cast<QmlTypeNode *>(child);
@@ -3119,8 +3117,8 @@ bool NamespaceNode::isDocumentedHere() const
  */
 bool NamespaceNode::hasDocumentedChildren() const
 {
-    foreach (Node *n, children_) {
-        if (n->isInAPI())
+    for (const auto *node : qAsConst(children_)) {
+        if (node->isInAPI())
             return true;
     }
     return false;
@@ -3133,15 +3131,15 @@ bool NamespaceNode::hasDocumentedChildren() const
  */
 void NamespaceNode::reportDocumentedChildrenInUndocumentedNamespace() const
 {
-    foreach (Node *n, children_) {
-        if (n->isInAPI()) {
-            QString msg1 = n->name();
-            if (n->isFunction())
+    for (const auto *node : qAsConst(children_)) {
+        if (node->isInAPI()) {
+            QString msg1 = node->name();
+            if (node->isFunction())
                 msg1 += "()";
             msg1 += tr(" is documented, but namespace %1 is not documented in any module.").arg(name());
             QString msg2 = tr("Add /*! '\\%1 %2' ... */ or remove the qdoc comment marker (!) at that line number.").arg(COMMAND_NAMESPACE).arg(name());
 
-            n->doc().location().warning(msg1, msg2);
+            node->doc().location().warning(msg1, msg2);
         }
     }
 }
@@ -3590,8 +3588,8 @@ bool HeaderNode::docMustBeGenerated() const
  */
 bool HeaderNode::hasDocumentedChildren() const
 {
-    foreach (Node *n, children_) {
-        if (n->isInAPI())
+    for (const auto *node : qAsConst(children_)) {
+        if (node->isInAPI())
             return true;
     }
     return false;
@@ -3794,7 +3792,7 @@ Node::Access EnumNode::itemAccess(const QString &name) const
  */
 QString EnumNode::itemValue(const QString &name) const
 {
-    foreach (const EnumItem &item, items_) {
+    for (const auto &item : qAsConst(items_)) {
         if (item.name() == name)
             return item.value();
     }
@@ -4297,8 +4295,8 @@ bool FunctionNode::hasActiveAssociatedProperty() const
 {
     if (associatedProperties_.isEmpty())
         return false;
-    foreach (const Node *p, associatedProperties_) {
-        if (!p->isObsolete())
+    for (const auto *property : qAsConst(associatedProperties_)) {
+        if (!property->isObsolete())
             return true;
     }
     return false;

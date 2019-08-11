@@ -381,9 +381,7 @@ DocPrivate::DocPrivate(const Location &start,
 DocPrivate::~DocPrivate()
 {
     delete extra;
-    foreach (DitaRef *t, ditamap_) {
-        delete t;
-    }
+    qDeleteAll(ditamap_);
 }
 
 void DocPrivate::addAlso(const Text &also)
@@ -3416,9 +3414,7 @@ void Doc::detach()
  */
 TopicRef::~TopicRef()
 {
-    foreach (DitaRef *t, subrefs_) {
-        delete t;
-    }
+    qDeleteAll(subrefs_);
 }
 
 /*!
