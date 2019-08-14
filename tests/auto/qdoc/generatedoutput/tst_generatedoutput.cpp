@@ -37,7 +37,7 @@ private slots:
     void initTestCase();
     void init();
 
-    void htmlFromCpp();
+    void htmlFromQDocFile();
     void htmlFromQml();
 
 private:
@@ -110,7 +110,7 @@ void tst_generatedOutput::compareLineByLine(QString &expected, QString &actual)
     }
 }
 
-void tst_generatedOutput::htmlFromCpp()
+void tst_generatedOutput::htmlFromQDocFile()
 {
     const QStringList arguments = {
             "--outputdir",
