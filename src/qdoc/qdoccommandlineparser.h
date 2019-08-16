@@ -38,7 +38,7 @@ QT_BEGIN_NAMESPACE
 struct QDocCommandLineParser : public QCommandLineParser
 {
     QDocCommandLineParser();
-    void process(const QStringList &arguments, QDocGlobals &qdocGlobals);
+    void process(const QStringList &arguments);
 
     QCommandLineOption defineOption, dependsOption, highlightingOption;
     QCommandLineOption showInternalOption, redirectDocumentationToDevNullOption;

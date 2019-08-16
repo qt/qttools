@@ -28,7 +28,6 @@
 
 #include "qdoccommandlineparser.h"
 
-#include "config.h"
 #include "loggingcategory.h"
 #include "utilities.h"
 
@@ -179,44 +178,11 @@ static QStringList argumentsFromCommandLineAndFile(const QStringList &arguments)
     return allArguments;
 }
 
-void QDocCommandLineParser::process(const QStringList &arguments, QDocGlobals &qdocGlobals)
+void QDocCommandLineParser::process(const QStringList &arguments)
 {
     auto allArguments = argumentsFromCommandLineAndFile(arguments);
     QCommandLineParser::process(allArguments);
 
-    qdocGlobals.addDefine(values(defineOption));
-    qdocGlobals.dependModules() += values(dependsOption);
-    qdocGlobals.enableHighlighting(isSet(highlightingOption));
-    qdocGlobals.setShowInternal(isSet(showInternalOption));
-    qdocGlobals.setSingleExec(isSet(singleExecOption));
-    qdocGlobals.setWriteQaPages(isSet(writeQaPagesOption));
-    qdocGlobals.setRedirectDocumentationToDevNull(isSet(redirectDocumentationToDevNullOption));
-
-    const auto indexDirs = values(indexDirOption);
-    for (const auto &indexDir : indexDirs) {
-        if (QFile::exists(indexDir))
-            qdocGlobals.appendToIndexDirs(indexDir);
-        else
-            qDebug() << "Cannot find index directory" << indexDir;
-    }
-    qdocGlobals.setObsoleteLinks(isSet(obsoleteLinksOption));
-    qdocGlobals.setNoLinkErrors(isSet(noLinkErrorsOption) || qEnvironmentVariableIsSet("QDOC_NOLINKERRORS"));
-    qdocGlobals.setAutolinkErrors(isSet(autoLinkErrorsOption));
-
     if (isSet(singleExecOption) && isSet(indexDirOption))
         qDebug("WARNING: -indexdir option ignored: Index files are not used in single-exec mode.");
-
-    QDir currentDir = QDir::current();
-    const auto paths = values(includePathOption);
-    for (const auto &i : paths)
-        qdocGlobals.addIncludePath("-I", currentDir.absoluteFilePath(i));
-
-#ifdef QDOC_PASS_ISYSTEM
-    const auto paths2 = values(includePathSystemOption);
-    for (const auto &i : paths2)
-        qdocGlobals.addIncludePath("-isystem", currentDir.absoluteFilePath(i));
-#endif
-    const auto paths3 = values(frameworkOption);
-    for (const auto &i : paths3)
-        qdocGlobals.addIncludePath("-F", currentDir.absoluteFilePath(i));
 }

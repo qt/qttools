@@ -581,7 +581,8 @@ int main(int argc, char **argv)
 
     // Set the globals declared at the top of this file:
     QDocCommandLineParser parser;
-    parser.process(app.arguments(), qdocGlobals);
+    parser.process(app.arguments());
+    qdocGlobals.setOptions(parser);
     config.setOptions(parser);
     postProcess(parser);
 
