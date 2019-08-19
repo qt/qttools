@@ -240,3 +240,5 @@ void SelectSignalDialog::currentChanged(const QModelIndex &current, const QModel
 } // namespace qdesigner_internal
 
 QT_END_NAMESPACE
+
+#include "moc_selectsignaldialog_p.cpp"

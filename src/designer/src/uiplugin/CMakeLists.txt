@@ -1,0 +1,19 @@
+# Generated from uiplugin.pro.
+
+#####################################################################
+## UiPlugin Module:
+#####################################################################
+
+add_qt_module(UiPlugin
+    NO_PRIVATE_MODULE
+    HEADER_MODULE
+    QMAKE_MODULE_CONFIG designer_defines
+    PUBLIC_LIBRARIES
+        Qt::Core
+        Qt::Gui
+        Qt::Widgets
+)
+
+#### Keys ignored in scope 1:.:.:uiplugin.pro:<TRUE>:
+# MODULE_CONFIG = "designer_defines"
+# _LOADED = "qt_module"

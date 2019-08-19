@@ -326,3 +326,6 @@ void ConnectDialog::editSignalsSlots(QWidget *w, WidgetMode mode, int signalSlot
 }
 
 QT_END_NAMESPACE
+
+#include "moc_connectdialog_p.cpp"
+
