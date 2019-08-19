@@ -1,7 +1,7 @@
 # Generated from src.pro.
 
 add_subdirectory(linguist)
-#add_subdirectory(qtattributionsscanner)
+add_subdirectory(qtattributionsscanner)
 #if(QT_FEATURE_png AND QT_FEATURE_pushbutton AND QT_FEATURE_toolbutton AND TARGET Qt::Widgets)
     #add_subdirectory(assistant)
     #add_subdirectory(designer)
