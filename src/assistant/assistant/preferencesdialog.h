@@ -97,6 +97,8 @@ private:
     QString suggestedNewFilterName(const QString &initialFilterName) const;
     QString getUniqueFilterName(const QString &windowTitle,
                                 const QString &initialFilterName = QString());
+    void applyDocListFilter(QListWidgetItem *item);
+
     void updateFilterPage();
     void updateCurrentFilter();
     void updateDocumentationPage();
