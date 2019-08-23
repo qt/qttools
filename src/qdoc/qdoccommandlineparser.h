@@ -29,8 +29,6 @@
 #ifndef QDOCCOMMANDLINEPARSER_H
 #define QDOCCOMMANDLINEPARSER_H
 
-#include "qdocglobals.h"
-
 #include <QtCore/qcommandlineparser.h>
 
 QT_BEGIN_NAMESPACE
