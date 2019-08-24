@@ -142,31 +142,6 @@ PreferencesDialog::PreferencesDialog(QWidget *parent)
         setFont(helpEngine.appFont());
 }
 
-PreferencesDialog::~PreferencesDialog()
-{
-    if (m_appFontChanged) {
-        helpEngine.setAppFont(m_appFontPanel->selectedFont());
-        helpEngine.setUseAppFont(m_appFontPanel->isChecked());
-        helpEngine.setAppWritingSystem(m_appFontPanel->writingSystem());
-        emit updateApplicationFont();
-    }
-
-    if (m_browserFontChanged) {
-        helpEngine.setBrowserFont(m_browserFontPanel->selectedFont());
-        helpEngine.setUseBrowserFont(m_browserFontPanel->isChecked());
-        helpEngine.setBrowserWritingSystem(m_browserFontPanel->writingSystem());
-        emit updateBrowserFont();
-    }
-
-    QString homePage = m_ui.homePageLineEdit->text();
-    if (homePage.isEmpty())
-        homePage = QLatin1String("help");
-    helpEngine.setHomePage(homePage);
-
-    int option = m_ui.helpStartComboBox->currentIndex();
-    helpEngine.setStartOption(option);
-}
-
 FilterSetup PreferencesDialog::readOriginalSetup() const
 {
     FilterSetup filterSetup;
@@ -193,12 +168,6 @@ FilterSetup PreferencesDialog::readOriginalSetup() const
     filterSetup.m_currentFilter = helpEngine.filterEngine()->activeFilter();
 
     return filterSetup;
-}
-
-void PreferencesDialog::showDialog()
-{
-    if (exec() != Accepted)
-        m_appFontChanged = m_browserFontChanged = false;
 }
 
 void PreferencesDialog::updateFilterPage()
@@ -563,6 +532,30 @@ void PreferencesDialog::applyChanges()
     helpEngine.setShowTabs(m_ui.showTabs->isChecked());
     if (m_showTabs != m_ui.showTabs->isChecked())
         emit updateUserInterface();
+
+    if (m_appFontChanged) {
+        helpEngine.setAppFont(m_appFontPanel->selectedFont());
+        helpEngine.setUseAppFont(m_appFontPanel->isChecked());
+        helpEngine.setAppWritingSystem(m_appFontPanel->writingSystem());
+        emit updateApplicationFont();
+        m_appFontChanged = false;
+    }
+
+    if (m_browserFontChanged) {
+        helpEngine.setBrowserFont(m_browserFontPanel->selectedFont());
+        helpEngine.setUseBrowserFont(m_browserFontPanel->isChecked());
+        helpEngine.setBrowserWritingSystem(m_browserFontPanel->writingSystem());
+        emit updateBrowserFont();
+        m_browserFontChanged = false;
+    }
+
+    QString homePage = m_ui.homePageLineEdit->text();
+    if (homePage.isEmpty())
+        homePage = QLatin1String("help");
+    helpEngine.setHomePage(homePage);
+
+    const int option = m_ui.helpStartComboBox->currentIndex();
+    helpEngine.setStartOption(option);
 }
 
 void PreferencesDialog::updateFontSettingsPage()
