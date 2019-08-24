@@ -551,7 +551,7 @@ QByteArray MainWindow::createSfntTable()
                 glyphRecord.boundingRectY = qToBigEndian(TO_FIXED_POINT(glyphData.boundingRect.y()));
                 glyphRecord.boundingRectWidth = qToBigEndian(TO_FIXED_POINT(glyphData.boundingRect.width()));
                 glyphRecord.boundingRectHeight = qToBigEndian(TO_FIXED_POINT(glyphData.boundingRect.height()));
-                glyphRecord.textureIndex = qToBigEndian(glyphData.textureIndex);
+                glyphRecord.textureIndex = qToBigEndian(quint16(glyphData.textureIndex));
                 buffer.write(reinterpret_cast<char *>(&glyphRecord), sizeof(QtdfGlyphRecord));
 
                 int expectedWidth = qCeil(glyphData.texCoord.width + glyphData.texCoord.xMargin * 2);
