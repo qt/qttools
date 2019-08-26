@@ -1,0 +1,117 @@
+# Generated from qdoc.pro.
+
+#####################################################################
+## qdoc Tool:
+#####################################################################
+
+
+add_qt_tool(qdoc
+    SOURCES
+        atom.cpp atom.h
+        clangcodeparser.cpp clangcodeparser.h
+        codechunk.cpp codechunk.h
+        codemarker.cpp codemarker.h
+        codeparser.cpp codeparser.h
+        config.cpp config.h
+        cppcodemarker.cpp cppcodemarker.h
+        cppcodeparser.cpp cppcodeparser.h
+        doc.cpp doc.h
+        editdistance.cpp editdistance.h
+        generator.cpp generator.h
+        helpprojectwriter.cpp helpprojectwriter.h
+        htmlgenerator.cpp htmlgenerator.h
+        jscodemarker.cpp jscodemarker.h
+        location.cpp location.h
+        loggingcategory.h
+        main.cpp
+        node.cpp node.h
+        openedlist.cpp openedlist.h
+        parameters.cpp parameters.h
+        puredocparser.cpp puredocparser.h
+        qdoccommandlineparser.cpp qdoccommandlineparser.h
+        qdocdatabase.cpp qdocdatabase.h
+        qdocglobals.cpp qdocglobals.h
+        qdocindexfiles.cpp qdocindexfiles.h
+        qdoctagfiles.cpp qdoctagfiles.h
+        qmlcodemarker.cpp qmlcodemarker.h
+        qmlcodeparser.cpp qmlcodeparser.h
+        qmlmarkupvisitor.cpp qmlmarkupvisitor.h
+        qmlvisitor.cpp qmlvisitor.h
+        quoter.cpp quoter.h
+        sections.cpp sections.h
+        separator.cpp separator.h
+        text.cpp text.h
+        tokenizer.cpp tokenizer.h
+        tree.cpp tree.h
+        webxmlgenerator.cpp webxmlgenerator.h
+        yyindent.cpp
+    LIBRARIES # special case
+        WrapLibClang::WrapLibClang # special case
+    DEFINES
+        QDOC2_COMPAT
+        # join(CLANG_RESOURCE_DIR=\"/clang//include\") # special case remove
+        CLANG_RESOURCE_DIR=${QT_LIBCLANG_RESOURCE_DIR}
+    INCLUDE_DIRECTORIES
+        ${QT_SOURCE_TREE}/src/tools/qdoc
+        ${QT_SOURCE_TREE}/src/tools/qdoc/qmlparser
+)
+
+#### Keys ignored in scope 1:.:.:qdoc.pro:<TRUE>:
+# CMAKE_BIN_DIR = "join($$[QT_HOST_BINS],$$[QT_INSTALL_PREFIX])"
+# CMAKE_INSTALL_LIBS_DIR = "join($$[QT_INSTALL_LIBS])"
+# CMAKE_LIB_DIR = "join($$[QT_INSTALL_LIBS],$$[QT_INSTALL_PREFIX])"
+# CMAKE_PACKAGE_VERSION = "$$MODULE_VERSION"
+# INSTALLS = "cmake_qdoc_tools_files"
+# QMAKE_SUBSTITUTES = "cmake_qdoc_config_file" "cmake_qdoc_config_version_file"
+# QMAKE_TARGET_DESCRIPTION = "Qt Documentation Compiler"
+# TR_EXCLUDE = "$$PWD/*"
+# _LOADED = "qt_tool" "cmake_functions" "qt_build_paths"
+# _OPTION = "host_build"
+# cmake_qdoc_config_file.input = "$$PWD/Qt5DocToolsConfig.cmake.in"
+# cmake_qdoc_config_file.output = "$$MODULE_BASE_OUTDIR/lib/cmake/Qt5DocTools/Qt5DocToolsConfig.cmake"
+# cmake_qdoc_config_version_file.input = "$$[QT_HOST_DATA/src]/mkspecs/features/data/cmake/Qt5ConfigVersion.cmake.in"
+# cmake_qdoc_config_version_file.output = "$$MODULE_BASE_OUTDIR/lib/cmake/Qt5DocTools/Qt5DocToolsConfigVersion.cmake"
+# cmake_qdoc_tools_files.CONFIG = "no_check_exist"
+# cmake_qdoc_tools_files.files = "$$cmake_qdoc_config_file.output" "$$cmake_qdoc_config_version_file.output"
+# cmake_qdoc_tools_files.path = "$$[QT_INSTALL_LIBS]/cmake/Qt5DocTools"
+
+## Scopes:
+#####################################################################
+
+extend_target(qdoc CONDITION TARGET Qt::QmlDevToolsPrivate
+    LIBRARIES
+        Qt::QmlDevToolsPrivate
+    PUBLIC_LIBRARIES
+        Qt::QmlDevTools
+)
+
+extend_target(qdoc CONDITION NOT TARGET Qt::QmlDevToolsPrivate
+    DEFINES
+        QT_NO_DECLARATIVE
+)
+
+#### Keys ignored in scope 6:.:.:qdoc.pro:NOT QMAKE_DEFAULT_LIBDIRS___contains____ss_CLANG_LIBDIR AND NOT disable_external_rpath:
+# QMAKE_RPATHDIR = "$$CLANG_LIBDIR"
+
+extend_target(qdoc CONDITION win32-icc_x_ OR win32-msvc_x_
+    LINK_OPTIONS
+        "/STACK:4194304"
+)
+
+#### Keys ignored in scope 8:.:.:qdoc.pro:CMAKE_INSTALL_LIBS_DIR___contains___^(/usr?/lib(64)?._x_):
+# CMAKE_USR_MOVE_WORKAROUND = "$$CMAKE_INSTALL_LIBS_DIR"
+
+#### Keys ignored in scope 9:.:.:qdoc.pro:NOT CMAKE_LIB_DIR___contains___^\\.\\./._x_:
+# CMAKE_RELATIVE_INSTALL_DIR = "$${CMAKE_RELATIVE_INSTALL_LIBS_DIR}../../"
+# CMAKE_RELATIVE_INSTALL_LIBS_DIR = "join($$[QT_INSTALL_PREFIX],$$[QT_INSTALL_LIBS])"
+
+#### Keys ignored in scope 10:.:.:qdoc.pro:else:
+# CMAKE_LIB_DIR_IS_ABSOLUTE = "True"
+
+#### Keys ignored in scope 11:.:.:qdoc.pro:CMAKE_BIN_DIR___contains___^\\.\\./._x_:
+# CMAKE_BIN_DIR = "$$[QT_HOST_BINS]/"
+# CMAKE_BIN_DIR_IS_ABSOLUTE = "True"
+add_qt_docs(
+    doc/config/qdoc.qdocconf
+)
+

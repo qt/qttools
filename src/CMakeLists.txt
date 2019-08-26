@@ -13,9 +13,19 @@ endif()
 #if(QT_FEATURE_library AND (android_app OR NOT ANDROID))
     #add_subdirectory(qtplugininfo)
 #endif()
-#if(QT_FEATURE_qdoc AND QT_FEATURE_thread)
-    #add_subdirectory(qdoc)
-#endif()
+# special case begin
+qt_feature_module_begin(
+    NO_MODULE
+    PUBLIC_FILE "qdoc/qtqdoc-config.h"
+    PRIVATE_FILE "qdoc/qtqdoc-config_p.h"
+)
+include(qdoc/configure.cmake)
+qt_feature_module_end(NO_MODULE)
+# special case end
+
+if(QT_FEATURE_qdoc AND QT_FEATURE_thread)
+    add_subdirectory(qdoc)
+endif()
 #if(android_app OR NOT ANDROID)
     #add_subdirectory(qtpaths)
 #endif()
