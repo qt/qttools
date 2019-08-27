@@ -27,10 +27,11 @@
 ****************************************************************************/
 
 #include "qdocglobals.h"
+#include "qdoccommandlineparser.h"
 
-QDocGlobals::QDocGlobals()
-{
-}
+#include <QtCore/qdebug.h>
+#include <QtCore/qdir.h>
+#include <QtCore/qfile.h>
 
 bool QDocGlobals::highlighting()
 {
@@ -166,3 +167,47 @@ void QDocGlobals::setPreviousCurrentDir(const QString &path)
     m_previousCurrentDir = path;
 }
 
+void QDocGlobals::setIncludePaths(const QDocCommandLineParser &parser)
+{
+    QDir currentDir = QDir::current();
+    auto includePaths = parser.values(parser.includePathOption);
+    for (const auto &path : qAsConst(includePaths))
+        addIncludePath("-I", currentDir.absoluteFilePath(path));
+
+#ifdef QDOC_PASS_ISYSTEM
+    includePaths = parser.values(parser.includePathSystemOption);
+    for (const auto &path : qAsConst(includePaths))
+        addIncludePath("-isystem", currentDir.absoluteFilePath(path));
+#endif
+    includePaths = parser.values(parser.frameworkOption);
+    for (const auto &path : qAsConst(includePaths))
+        addIncludePath("-F", currentDir.absoluteFilePath(path));
+}
+
+void QDocGlobals::setIndexDirs(const QDocCommandLineParser &parser)
+{
+    const auto indexDirs = parser.values(parser.indexDirOption);
+    for (const auto &indexDir : indexDirs) {
+        if (QFile::exists(indexDir))
+            appendToIndexDirs(indexDir);
+        else
+            qDebug() << "Cannot find index directory" << indexDir;
+    }
+}
+
+void QDocGlobals::setOptions(const QDocCommandLineParser &parser)
+{
+    addDefine(parser.values(parser.defineOption));
+    m_dependModules += parser.values(parser.dependsOption);
+    enableHighlighting(parser.isSet(parser.highlightingOption));
+    setShowInternal(parser.isSet(parser.showInternalOption));
+    setSingleExec(parser.isSet(parser.singleExecOption));
+    setWriteQaPages(parser.isSet(parser.writeQaPagesOption));
+    setRedirectDocumentationToDevNull(parser.isSet(parser.redirectDocumentationToDevNullOption));
+    setIndexDirs(parser);
+    setObsoleteLinks(parser.isSet(parser.obsoleteLinksOption));
+    setNoLinkErrors(parser.isSet(parser.noLinkErrorsOption) ||
+                    qEnvironmentVariableIsSet("QDOC_NOLINKERRORS"));
+    setAutolinkErrors(parser.isSet(parser.autoLinkErrorsOption));
+    setIncludePaths(parser);
+}

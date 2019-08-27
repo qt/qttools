@@ -46,7 +46,7 @@
 
     \snippet code/doc_src_qcache.cpp 1
 
-    ... detailed description ommitted
+    ... detailed description omitted
 
     \sa QPixmapCache, QHash, QMap
 */

@@ -34,11 +34,12 @@
 #include <QtCore/qtranslator.h>
 
 QT_BEGIN_NAMESPACE
+
+struct QDocCommandLineParser;
+
 class QDocGlobals
 {
 public:
-    QDocGlobals();
-
     bool highlighting();
     void enableHighlighting(bool value);
 
@@ -80,8 +81,12 @@ public:
     QString previousCurrentDir();
     void setPreviousCurrentDir(const QString &path);
 
+    void setOptions(const QDocCommandLineParser &parser);
 
 private:
+    void setIncludePaths(const QDocCommandLineParser &parser);
+    void setIndexDirs(const QDocCommandLineParser &parser);
+
     bool m_highlighting = false;
     bool m_showInternal = false;
     bool m_singleExec = false;
