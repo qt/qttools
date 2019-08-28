@@ -81,6 +81,7 @@ public:
 
     void load(const QString &fileName);
     void setStringList(const QString &var, const QStringList &values);
+    void insertStringList(const QString &var, const QStringList &values);
 
     void setOptions(const QDocCommandLineParser &parser);
     const QString &programName() const { return prog; }

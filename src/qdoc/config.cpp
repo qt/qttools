@@ -309,16 +309,20 @@ void Config::load(const QString &fileName)
 }
 
 /*!
-  Joins all the strings in \a values into a single string with the
-  individual \a values separated by ' '. Then it inserts the result
-  into the string list map with \a var as the key.
-
-  It also inserts the \a values string list into a separate map,
-  also with \a var as the key.
+  Sets the \a values of a configuration variable \a var from a string list.
  */
 void Config::setStringList(const QString &var, const QStringList &values)
 {
-    configVars_.insert(var,ConfigVar(var, values, QDir::currentPath()));
+    configVars_.replace(var, ConfigVar(var, values, QDir::currentPath()));
+}
+
+/*!
+  Adds the \a values from a string list to the configuration variable \a var.
+  Existing value(s) are kept.
+*/
+void Config::insertStringList(const QString &var, const QStringList &values)
+{
+    configVars_.insert(var, ConfigVar(var, values, QDir::currentPath()));
 }
 
 /*!

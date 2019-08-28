@@ -234,12 +234,10 @@ static void processQdocconfFile(const QString &fileName, Config &config)
         exit(1);
     }
     /*
-      Add the defines to the configuration variables.
+      Add the defines and includepaths to their respective configuration variables.
      */
-    QStringList defs = qdocGlobals.defines() + config.getStringList(CONFIG_DEFINES);
-    config.setStringList(CONFIG_DEFINES,defs);
-    QStringList incs = qdocGlobals.includesPaths() + config.getStringList(CONFIG_INCLUDEPATHS);
-    config.setStringList(CONFIG_INCLUDEPATHS, incs);
+    config.insertStringList(CONFIG_DEFINES, qdocGlobals.defines());
+    config.insertStringList(CONFIG_INCLUDEPATHS, qdocGlobals.includesPaths());
     Location::terminate();
 
     qdocGlobals.setCurrentDir(QFileInfo(fileName).path());
