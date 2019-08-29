@@ -854,7 +854,7 @@ bool QDesignerActions::writeOutForm(QDesignerFormWindowInterface *fw, const QStr
                         QMessageBox::Cancel, fw);
         box.setWindowModality(Qt::WindowModal);
         box.setInformativeText(tr("It was not possible to write the file %1 to disk."
-                                "\nReason:%2")
+                                "\nReason: %2")
                                 .arg(f.fileName(), f.errorString()));
         box.exec();
         return false;
