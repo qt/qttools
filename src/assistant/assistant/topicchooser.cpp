@@ -120,23 +120,14 @@ bool TopicChooser::eventFilter(QObject *object, QEvent *event)
 {
     TRACE_OBJ
     if (object == ui.lineEdit && event->type() == QEvent::KeyPress) {
-        QModelIndex idx = ui.listWidget->currentIndex();
-        switch ((static_cast<QKeyEvent*>(event)->key())) {
-            case Qt::Key_Up:
-                idx = m_filterModel->index(idx.row() - 1, idx.column(),
-                    idx.parent());
-                if (idx.isValid())
-                    ui.listWidget->setCurrentIndex(idx);
-                break;
-
-            case Qt::Key_Down:
-                idx = m_filterModel->index(idx.row() + 1, idx.column(),
-                    idx.parent());
-                if (idx.isValid())
-                    ui.listWidget->setCurrentIndex(idx);
-                break;
-
-            default: ;
+        QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+        switch (keyEvent->key()) {
+        case Qt::Key_Up:
+        case Qt::Key_Down:
+        case Qt::Key_PageUp:
+        case Qt::Key_PageDown:
+            QCoreApplication::sendEvent(ui.listWidget, event);
+            break;
         }
     } else if (ui.lineEdit && event->type() == QEvent::FocusIn
         && static_cast<QFocusEvent *>(event)->reason() != Qt::MouseFocusReason) {
