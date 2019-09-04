@@ -137,7 +137,8 @@ void tst_generatedOutput::testAndCompare(const char *input,
 void tst_generatedOutput::htmlFromQDocFile()
 {
     testAndCompare("test.qdocconf",
-                   "qdoctests-qdocfileoutput.html");
+                   "qdoctests-qdocfileoutput.html "
+                   "qdoctests-qdocfileoutput-linking.html");
 }
 
 void tst_generatedOutput::htmlFromCpp()
