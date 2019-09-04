@@ -38,6 +38,7 @@ private slots:
     void init();
 
     void htmlFromQDocFile();
+    void htmlFromCpp();
     void htmlFromQml();
 
 private:
@@ -136,6 +137,15 @@ void tst_generatedOutput::htmlFromQDocFile()
 {
     testAndCompare("test.qdocconf",
                    "qdoctests-qdocfileoutput.html");
+}
+
+void tst_generatedOutput::htmlFromCpp()
+{
+    testAndCompare("testcpp.qdocconf",
+                   "testcpp-module.html "
+                   "testqdoc-test.html "
+                   "testqdoc-test-members.html "
+                   "testqdoc.html");
 }
 
 void tst_generatedOutput::htmlFromQml()
