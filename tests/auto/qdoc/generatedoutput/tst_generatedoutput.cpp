@@ -44,8 +44,11 @@ private:
     QScopedPointer<QTemporaryDir> m_outputDir;
     QString m_qdoc;
 
-    bool runQDocProcess(const QStringList &arguments);
-    void compareLineByLine(QString &expectedFilename, QString &actualFilename);
+    void runQDocProcess(const QStringList &arguments);
+    void compareLineByLine(const QStringList &expectedFiles);
+    void testAndCompare(const char *input,
+                        const char *outNames,
+                        const char *extraParams = nullptr);
 };
 
 void tst_generatedOutput::initTestCase()
@@ -66,7 +69,7 @@ void tst_generatedOutput::init()
     }
 }
 
-bool tst_generatedOutput::runQDocProcess(const QStringList &arguments)
+void tst_generatedOutput::runQDocProcess(const QStringList &arguments)
 {
     QProcess qdocProcess;
     qdocProcess.setProgram(m_qdoc);
@@ -75,7 +78,7 @@ bool tst_generatedOutput::runQDocProcess(const QStringList &arguments)
     qdocProcess.waitForFinished();
 
     if (qdocProcess.exitCode() == 0)
-        return true;
+        return;
 
     QString output = qdocProcess.readAllStandardOutput();
     QString errors = qdocProcess.readAllStandardError();
@@ -85,70 +88,61 @@ bool tst_generatedOutput::runQDocProcess(const QStringList &arguments)
         qInfo() << "Received output:\n" << output;
     if (errors.size() > 0)
         qInfo() << "Received errors:\n" << errors;
-    return false;
+
+    QFAIL("Running QDoc failed. See output above.");
 }
 
-void tst_generatedOutput::compareLineByLine(QString &expected, QString &actual)
+void tst_generatedOutput::compareLineByLine(const QStringList &expectedFiles)
 {
-    QFile expectedFile(expected);
-    if (!expectedFile.open(QIODevice::ReadOnly))
-        QFAIL("Cannot open expected data file!");
-    QTextStream expectedIn(&expectedFile);
+    for (const auto &file : expectedFiles) {
+        QString expected(QFINDTESTDATA("/expected_output/" + file));
+        QString actual(m_outputDir->path() + "/" + file);
 
-    QFile actualFile(actual);
-    if (!actualFile.open(QIODevice::ReadOnly))
-        QFAIL("Cannot open actual data file!");
-    QTextStream actualIn(&actualFile);
+        QFile expectedFile(expected);
+        if (!expectedFile.open(QIODevice::ReadOnly))
+            QFAIL("Cannot open expected data file!");
+        QTextStream expectedIn(&expectedFile);
 
-    int lineNumber = 0;
-    while (!expectedIn.atEnd() && !actualIn.atEnd()) {
-        lineNumber++;
-        QString prefix = QString::number(lineNumber) + QLatin1String(": ");
-        QString expectedLine = prefix + expectedIn.readLine();
-        QString actualLine = prefix + actualIn.readLine();
-        QCOMPARE(actualLine, expectedLine);
+        QFile actualFile(actual);
+        if (!actualFile.open(QIODevice::ReadOnly))
+            QFAIL("Cannot open actual data file!");
+        QTextStream actualIn(&actualFile);
+
+        int lineNumber = 0;
+        while (!expectedIn.atEnd() && !actualIn.atEnd()) {
+            lineNumber++;
+            QString prefix = QString::number(lineNumber) + QLatin1String(": ");
+            QString expectedLine = prefix + expectedIn.readLine();
+            QString actualLine = prefix + actualIn.readLine();
+            QCOMPARE(actualLine, expectedLine);
+        }
     }
+}
+
+void tst_generatedOutput::testAndCompare(const char *input,
+                                         const char *outNames,
+                                         const char *extraParams)
+{
+    QStringList args{ "-outputdir", m_outputDir->path(), QFINDTESTDATA(input) };
+    if (extraParams)
+        args << QString(QLatin1String(extraParams)).split(QChar(' '));
+    runQDocProcess(args);
+    if (QTest::currentTestFailed())
+        return;
+    compareLineByLine(QString(QLatin1String(outNames)).split(QChar(' ')));
 }
 
 void tst_generatedOutput::htmlFromQDocFile()
 {
-    const QStringList arguments = {
-            "--outputdir",
-            m_outputDir->path(),
-            QFINDTESTDATA("test.qdocconf")
-    };
-
-    if (!runQDocProcess(arguments))
-        QFAIL("Running QDoc failed. See output above.");
-
-    QString expectedFile = QFINDTESTDATA("/expected_output/qdoctests-qdocfileoutput.html");
-    QString actualFile = m_outputDir->path() + QLatin1String("/qdoctests-qdocfileoutput.html");
-
-    compareLineByLine(expectedFile, actualFile);
+    testAndCompare("test.qdocconf",
+                   "qdoctests-qdocfileoutput.html");
 }
 
 void tst_generatedOutput::htmlFromQml()
 {
-    const QStringList arguments = {
-            "--outputdir",
-            m_outputDir->path(),
-            QFINDTESTDATA("testqml.qdocconf")
-    };
-
-    if (!runQDocProcess(arguments))
-        QFAIL("Running QDoc failed. See output above.");
-
-    const QStringList files{
-        "test-componentset-example.html",
-        "uicomponents-qmlmodule.html"};
-
-    for (const auto &file : files) {
-        QString expectedPath = "/expected_output/" + file;
-        QString expectedFile(QFINDTESTDATA(expectedPath));
-        QString actualFile(m_outputDir->path() + "/" + file);
-
-        compareLineByLine(expectedFile, actualFile);
-    }
+    testAndCompare("testqml.qdocconf",
+                   "test-componentset-example.html "
+                   "uicomponents-qmlmodule.html");
 }
 
 QTEST_APPLESS_MAIN(tst_generatedOutput)
