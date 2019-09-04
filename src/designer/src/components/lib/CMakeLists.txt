@@ -989,7 +989,7 @@ set(qtpropertybrowser_resource_files
     "images/cursor-whatsthis.png"
 )
 
-add_qt_resource(DesignerComponents "qtpropertybrowser"
+add_qt_resource(DesignerComponents "qtpropertybrowser_designercomponents" # special case
     PREFIX
         "/qt-project.org/qtpropertybrowser"
     BASE
@@ -1036,7 +1036,7 @@ set(findwidget_resource_files
     "images/wrap.png"
 )
 
-add_qt_resource(DesignerComponents "findwidget"
+add_qt_resource(DesignerComponents "findwidget_designercomponents" # special case
     PREFIX
         "/qt-project.org/shared"
     BASE

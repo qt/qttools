@@ -18,16 +18,24 @@ function(qt_tools_find_llvm_version_from_lib_dir lib_dir out_var)
 endfunction()
 
 function(qt_tools_find_lib_clang)
+    if(NOT QDOC_USE_STATIC_LIBCLANG AND DEFINED ENV{QDOC_USE_STATIC_LIBCLANG})
+        set(QDOC_USE_STATIC_LIBCLANG "$ENV{QDOC_USE_STATIC_LIBCLANG}")
+    endif()
+
+    if(QDOC_USE_STATIC_LIBCLANG AND MSVC)
+        if (NOT CMAKE_BUILD_TYPE STREQUAL "Release")
+            message(STATUS "Static linkage against libclang with MSVC was requested, but the build is not a release build, therefore libclang cannot be used.")
+            set(WrapLibClang_FOUND FALSE PARENT_SCOPE)
+            return()
+        endif()
+    endif()
+
     # We already looked up all the libclang information before, just create the target
     # and exit early.
     if(QT_LIB_CLANG_LIBS)
         qt_tools_create_lib_clang_target()
         set(WrapLibClang_FOUND TRUE PARENT_SCOPE)
         return()
-    endif()
-
-    if(NOT QDOC_USE_STATIC_LIBCLANG AND DEFINED ENV{QDOC_USE_STATIC_LIBCLANG})
-        set(QDOC_USE_STATIC_LIBCLANG "$ENV{QDOC_USE_STATIC_LIBCLANG}")
     endif()
 
     if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
@@ -207,6 +215,10 @@ function(qt_tools_create_lib_clang_target)
     target_link_directories(WrapLibClang::WrapLibClang INTERFACE ${QT_LIB_CLANG_LIBDIR})
     target_include_directories(WrapLibClang::WrapLibClang INTERFACE ${QT_LIB_CLANG_INCLUDEPATH})
     target_compile_definitions(WrapLibClang::WrapLibClang INTERFACE ${QT_LIB_CLANG_DEFINES})
+    if (NOT TARGET Threads::Threads)
+        find_package(Threads)
+    endif()
+    target_link_libraries(WrapLibClang::WrapLibClang INTERFACE Threads::Threads)
 endfunction()
 
 function(qt_tools_get_flag_list_of_llvm_static_libs out_var)
