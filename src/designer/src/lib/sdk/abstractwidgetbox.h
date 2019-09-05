@@ -71,6 +71,10 @@ public:
         QSharedDataPointer<QDesignerWidgetBoxWidgetData> m_data;
     };
 
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
+    using WidgetList = QList<Widget>;
+#endif
+
     class Category {
     public:
         enum Type { Default, Scratchpad };

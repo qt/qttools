@@ -169,8 +169,12 @@
     \QA provides a powerful full text search engine. You can search for certain
     words or text in the \gui Search window. Enter the text you want to look for
     and press \key{Enter} or click \gui{Search}. The search is not case sensitive.
-    For example, \b Foo, \b fOo and \b FOO are all treated as the same. The
-    following are examples of common search patterns:
+    For example, \b Foo, \b fOo and \b FOO are all treated as the same.
+
+    You can create complex queries using the
+    \l{https://sqlite.org/fts5.html#full_text_query_syntax}{FTS query syntax}.
+
+    The following are examples of common search patterns:
 
     \list
     \li \c deep -- lists all the documents that contain the word \b deep
@@ -181,19 +185,6 @@
     \li \c{"deep copy"} -- list all documents that contain the phrase
      \b {deep copy}
     \endlist
-
-    Use the \gui{Advanced search} for more flexibility.
-    You can specify some words so that hits containing these are excluded from the
-    result, or you can search for an exact phrase. Searching for similar words will
-    give results like these:
-
-    \list
-    \li \c{QStin} -- lists all the documents with titles that are similar, such as \c{QString}
-    \li \c{QSting} -- lists all the documents with titles that are similar, such as \c{QString}
-    \li \c{QStrin} -- lists all the documents with titles that are similar, such as \c{QString}
-    \endlist
-
-    Options can be combined to improve the search results.
 
     The list of documents found is ordered according to the number of
     occurrences of the search text which they contain, with those containing
