@@ -103,6 +103,16 @@ PreferencesDialog::PreferencesDialog(QWidget *parent)
                 this, &PreferencesDialog::addDocumentation);
         connect(m_ui.docRemoveButton, &QAbstractButton::clicked,
                 this, &PreferencesDialog::removeDocumentation);
+        connect(m_ui.registeredDocsFilterLineEdit, &QLineEdit::textChanged,
+                this, [this](const QString &) {
+            for (const auto item : m_namespaceToItem)
+                applyDocListFilter(item);
+        });
+        connect(m_ui.registeredDocsListWidget, &QListWidget::itemSelectionChanged,
+                this, [this](){
+            m_ui.docRemoveButton->setEnabled(
+                        !m_ui.registeredDocsListWidget->selectedItems().isEmpty());
+        });
 
         updateDocumentationPage();
     }
@@ -234,8 +244,23 @@ void PreferencesDialog::updateDocumentationPage()
         QListWidgetItem *item = new QListWidgetItem(namespaceName);
         m_namespaceToItem.insert(namespaceName, item);
         m_itemToNamespace.insert(item, namespaceName);
+        applyDocListFilter(item);
         m_ui.registeredDocsListWidget->addItem(item);
     }
+    m_ui.docRemoveButton->setEnabled(
+                !m_ui.registeredDocsListWidget->selectedItems().isEmpty());
+}
+
+void PreferencesDialog::applyDocListFilter(QListWidgetItem *item)
+{
+    const QString namespaceName = m_itemToNamespace.value(item);
+    const QString nameFilter = m_ui.registeredDocsFilterLineEdit->text();
+
+    const bool matches = nameFilter.isEmpty() || namespaceName.contains(nameFilter);
+
+    if (!matches)
+        item->setSelected(false);
+    item->setHidden(!matches);
 }
 
 void PreferencesDialog::filterSelected(QListWidgetItem *item)
@@ -405,12 +430,17 @@ void PreferencesDialog::addDocumentation()
         m_currentSetup.m_namespaceToVersion.insert(namespaceName, version);
         m_currentSetup.m_versionToNamespace[version].append(namespaceName);
 
+        if (!added) {
+            added = true;
+            m_ui.registeredDocsListWidget->clearSelection();
+        }
+
         QListWidgetItem *item = new QListWidgetItem(namespaceName);
         m_namespaceToItem.insert(namespaceName, item);
         m_itemToNamespace.insert(item, namespaceName);
         m_ui.registeredDocsListWidget->insertItem(m_namespaceToItem.keys().indexOf(namespaceName), item);
-
-        added = true;
+        item->setSelected(true);
+        applyDocListFilter(item);
     }
 
     if (added)
