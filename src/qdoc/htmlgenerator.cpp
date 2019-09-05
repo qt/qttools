@@ -3988,7 +3988,7 @@ QString HtmlGenerator::linkForNode(const Node *node, const Node *relative)
     }
     QString link = fn;
 
-    if ((!node->isAggregate() && !node->isCollectionNode()) || node->isPropertyGroup()) {
+    if (!node->isPageNode() || node->isPropertyGroup()) {
         QString ref = refForNode(node);
         if (relative && fn == fileName(relative) && ref == refForNode(relative))
             return QString();
