@@ -112,6 +112,10 @@ protected:
                     yyMsg(identLineNo) << qPrintable(LU::tr("%1() requires at least one argument.\n").arg(name));
                     return;
                 }
+                if (AST::cast<AST::TemplateLiteral *>(node->arguments->expression)) {
+                    yyMsg(identLineNo) << qPrintable(LU::tr("%1() cannot be used with template literals. Ignoring\n").arg(name));
+                    return;
+                }
 
                 QString source;
                 if (!createString(node->arguments->expression, &source))
