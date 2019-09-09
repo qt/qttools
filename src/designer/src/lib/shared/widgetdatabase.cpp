@@ -613,6 +613,8 @@ static QString generateNewFormXML(const QString &className, const QString &simil
         str << R"(<widget class="QWidget" name="centralwidget"/>)";
     } else if (similarClassName == QLatin1String("QWizard")) {
         str << R"(<widget class="QWizardPage" name="wizardPage1"/><widget class="QWizardPage" name="wizardPage2"/>)";
+    } else if (similarClassName == QLatin1String("QDockWidget")) {
+        str << R"(<widget class="QWidget" name="dockWidgetContents"/>)";
     }
     str << "</widget></ui>\n";
     return rc;
