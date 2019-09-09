@@ -130,8 +130,13 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
     name = "<@name>" + name + "</@name>";
 
     if (style == Section::Details) {
-        if (!node->parent()->name().isEmpty() && !node->parent()->isHeader() &&
-            !node->isProperty() && !node->isQmlNode() && !node->isJsNode())
+        if (!node->isRelatedNonmember() &&
+            !node->isProxyNode() &&
+            !node->parent()->name().isEmpty() &&
+            !node->parent()->isHeader() &&
+            !node->isProperty() &&
+            !node->isQmlNode() &&
+            !node->isJsNode())
             name.prepend(taggedNode(node->parent()) + "::");
     }
 
