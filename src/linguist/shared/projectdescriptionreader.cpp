@@ -70,6 +70,7 @@ private:
                     << QStringLiteral("excluded")
                     << QStringLiteral("includePaths")
                     << QStringLiteral("sources")
+                    << QStringLiteral("compileCommands")
                     << QStringLiteral("subProjects")
                     << QStringLiteral("translations");
         QSet<QString> actualKeys;
@@ -156,6 +157,7 @@ private:
         Project result;
         QJsonObject obj = v.toObject();
         result.filePath = stringValue(obj, QLatin1String("projectFile"));
+        result.compileCommands = stringValue(obj, QLatin1String("compileCommands"));
         result.codec = stringValue(obj, QLatin1String("codec"));
         result.excluded = stringListValue(obj, QLatin1String("excluded"));
         result.includePaths = stringListValue(obj, QLatin1String("includePaths"));

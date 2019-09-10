@@ -29,14 +29,13 @@
 #ifndef CLANG_CPP_H
 #define CLANG_CPP_H
 
+#include "clangtoolastreader.h"
 #include "lupdate.h"
-
 
 QT_BEGIN_NAMESPACE
 
 namespace ClangCppParser {
-   void loadCPP(Translator &translator, const QStringList &filenames,
-   ConversionData &cd);
+    void loadCPP(Translator &translator, const QStringList &filenames, ConversionData &cd);
 }
 
 QT_END_NAMESPACE

@@ -356,6 +356,11 @@ static QJsonArray processProjects(bool topLevel, const QStringList &proFiles,
                 tsFiles << proDir.filePath(tsFile);
             setValue(prj, "translations", tsFiles);
         }
+        if (visitor.contains(QLatin1String("LUPDATE_COMPILE_COMMANDS_PATH"))) {
+            const QStringList thepathjson = visitor.values(
+                QLatin1String("LUPDATE_COMPILE_COMMANDS_PATH"));
+            setValue(prj, "compileCommands", thepathjson.value(0));
+        }
         result.append(prj);
         pro->deref();
     }

@@ -18,6 +18,8 @@ qtConfig(clangcpp) {
     DEFINES += $$shell_quote(CLANG_RESOURCE_DIR=\"$${CLANG_LIBDIR}/clang/$${CLANG_VERSION}/include\")
 }
 
+CONFIG += rtti_off
+
 DEFINES += QT_NO_CAST_TO_ASCII QT_NO_CAST_FROM_ASCII
 
 include(../shared/formats.pri)
@@ -29,11 +31,9 @@ SOURCES += \
     ../shared/runqttool.cpp \
     ../shared/qrcreader.cpp \
     ../shared/simtexth.cpp \
-    \
     cpp.cpp \
     java.cpp \
-    ui.cpp \
-    cpp_clang.cpp
+    ui.cpp
 
 qtHaveModule(qmldevtools-private): SOURCES += qdeclarative.cpp
 
@@ -45,6 +45,14 @@ HEADERS += \
     ../shared/qrcreader.h \
     ../shared/runqttool.h \
     ../shared/simtexth.h
+
+qtConfig(clangcpp) {
+    SOURCES += \
+        cpp_clang.cpp
+    HEADERS += \
+        cpp_clang.h \
+        clangtoolastreader.h
+}
 
 mingw {
     RC_FILE = lupdate.rc

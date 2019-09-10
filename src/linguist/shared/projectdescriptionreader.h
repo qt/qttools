@@ -42,6 +42,7 @@ typedef std::vector<Project> Projects;
 struct Project
 {
     QString filePath;
+    QString compileCommands;
     QString codec;
     QStringList excluded;
     QStringList includePaths;

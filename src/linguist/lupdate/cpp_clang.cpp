@@ -29,34 +29,65 @@
 
 #include <translator.h>
 
+#include <clang/Tooling/CommonOptionsParser.h>
+#include <llvm/Option/Option.h>
+
 QT_BEGIN_NAMESPACE
+
+Q_LOGGING_CATEGORY(lcClang, "qt.lupdate.clang");
+
+// This is a way to add options related to the customized clang tool
+// Needed as one of the arguments to create the OptionParser.
+static llvm::cl::OptionCategory MyToolCategory("my-tool options");
+
+// Makes sure all the comments will be parsed and part of the AST
+// Clang will run with the flag -fparse-all-comments
+clang::tooling::ArgumentsAdjuster getClangArgumentAdjuster()
+{
+    return [](const clang::tooling::CommandLineArguments &args, llvm::StringRef /*unused*/) {
+        clang::tooling::CommandLineArguments adjustedArgs;
+        for (size_t i = 0, e = args.size(); i < e; ++i) {
+            llvm::StringRef arg = args[i];
+            // FIXME: Remove options that generate output.
+            if (!arg.startswith("-fcolor-diagnostics") && !arg.startswith("-fdiagnostics-color"))
+                adjustedArgs.push_back(args[i]);
+        }
+        adjustedArgs.push_back("-fparse-all-comments");
+        adjustedArgs.push_back("-I");
+        adjustedArgs.push_back(CLANG_RESOURCE_DIR);
+        return adjustedArgs;
+    };
+}
 
 void ClangCppParser::loadCPP(Translator &translator, const QStringList &filenames,
     ConversionData &cd)
 {
-    // Going through the files to be parsed
     std::vector<std::string> sources;
-    for (const QString &filename: filenames)
-       sources.push_back(filename.toStdString());
+    for (const QString &filename : filenames)
+        sources.push_back(filename.toStdString());
 
     // The ClangTool is to be created and run from this function.
 
-    // First we'll need an OptionParser
-    // Then we'll create a ClangTool taking the OptionParser and the sources as argument
+    int argc = 4;
+    // NEED 2 empty one to start!!! otherwise: LLVM::ERROR
+    const QByteArray jsonPath = cd.m_compileCommandsPath.toLocal8Bit();
+    const char *argv[4] = { "", "", "-p", jsonPath.constData() };
+    clang::tooling::CommonOptionsParser OptionsParser(argc, argv, MyToolCategory);
 
-    // The translator to store the information from the parsing of the files.
+    clang::tooling::ClangTool tool(OptionsParser.getCompilations(), sources);
+    tool.appendArgumentsAdjuster(getClangArgumentAdjuster());
+
     Translator *tor = new Translator();
 
-    // TODO: set up clang tool for parsing
-    qWarning("lupdate: Clang based C++ parser not implemented!");
+    // A ClangTool needs a new FrontendAction for each translation unit it runs on
+    // A Customized FrontendActionFactory is building a customized FrondendAction
+    tool.run(new LupdateToolActionFactory(tor));
 
-    // TODO: remove this printing at a later point
-    // Printing the translator (storage and manipulation of translation info from linguist module)
-    if (qEnvironmentVariableIsSet("QT_LUPDATE_CLANG_DEBUG"))
+    if (QLoggingCategory("qt.lupdate.clang").isDebugEnabled())
         tor->dump();
 
-    for (const TranslatorMessage &msg: tor->messages())
+    for (const TranslatorMessage &msg : tor->messages())
         translator.extend(msg, cd);
-
 }
+
 QT_END_NAMESPACE
