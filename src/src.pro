@@ -23,9 +23,10 @@ qtConfig(library) {
     !android|android_app: SUBDIRS += qtplugininfo
 }
 
-include($$OUT_PWD/qdoc/qtqdoc-config.pri)
-QT_FOR_CONFIG += qdoc-private
-qtConfig(qdoc): qtConfig(thread): SUBDIRS += qdoc
+SUBDIRS += global
+include($$OUT_PWD/global/qttools-config.pri)
+QT_FOR_CONFIG += tools-private
+qtConfig(clang): qtConfig(thread): SUBDIRS += qdoc
 
 !android|android_app: SUBDIRS += qtpaths
 

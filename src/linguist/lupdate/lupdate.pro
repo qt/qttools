@@ -1,10 +1,21 @@
 option(host_build)
-QT = core-private
+QT = core-private tools-private
 
 qtHaveModule(qmldevtools-private) {
     QT += qmldevtools-private
 } else {
     DEFINES += QT_NO_QML
+}
+
+include($$OUT_PWD/../../global/qttools-config.pri)
+qtConfig(clangcpp) {
+    LIBS += $$CLANGCPP_LIBS $$CLANG_LIBS
+
+    !contains(QMAKE_DEFAULT_INCDIRS, $$CLANG_INCLUDEPATH): INCLUDEPATH += $$CLANG_INCLUDEPATH
+    DEFINES += $$CLANG_DEFINES
+
+    !contains(QMAKE_DEFAULT_LIBDIRS, $$CLANG_LIBDIR):!disable_external_rpath: QMAKE_RPATHDIR += $$CLANG_LIBDIR
+    DEFINES += $$shell_quote(CLANG_RESOURCE_DIR=\"$${CLANG_LIBDIR}/clang/$${CLANG_VERSION}/include\")
 }
 
 DEFINES += QT_NO_CAST_TO_ASCII QT_NO_CAST_FROM_ASCII

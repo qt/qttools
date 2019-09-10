@@ -1,5 +1,5 @@
 {
-    "module": "qdoc",
+    "module": "tools",
     "tests": {
         "libclang": {
             "label": "libclang",
@@ -8,7 +8,7 @@
         }
     },
     "features": {
-        "qdoc": {
+        "clang": {
             "label": "QDoc",
             "condition": "tests.libclang",
             "output": [
@@ -19,25 +19,38 @@
                 { "type": "varAssign", "name": "CLANG_DEFINES", "value": "tests.libclang.defines" },
                 { "type": "varAssign", "name": "CLANG_VERSION", "value": "tests.libclang.version" }
             ]
+        },
+        "clangcpp": {
+            "label": "Clang-based lupdate parser",
+            "condition": "features.clang && tests.libclang.has_clangcpp",
+            "output": [
+                "privateFeature",
+                { "type": "varAssign", "name": "CLANGCPP_LIBS", "value": "tests.libclang.clangcpp_libs" }
+            ]
         }
     },
     "report": [
         {
             "type": "warning",
-            "condition": "!features.qdoc",
-            "message": "QDoc will not be compiled, probably because libclang could not be located. This means that you cannot build the Qt documentation.
-
+            "condition": "!features.clang",
+            "message": "QDoc will not be compiled, probably because libclang could not be located. This means that you cannot build the Qt documentation.\n
 Either ensure that llvm-config is in your PATH environment variable, or set LLVM_INSTALL_DIR to the location of your llvm installation.
 On Linux systems, you may be able to install libclang by installing the libclang-dev or libclang-devel package, depending on your distribution.
 On macOS, you can use Homebrew's llvm package.
 On Windows, you must set LLVM_INSTALL_DIR to the installation path."
+        },
+        {
+            "type": "warning",
+            "condition": "!features.clangcpp",
+            "message": "Clang-based lupdate parser will not be available. LLVM and Clang C++ libraries have not been found."
         }
     ],
     "summary": [
         {
             "section": "Qt Tools",
             "entries": [
-                "qdoc"
+                "clang",
+                "clangcpp"
             ]
         }
     ]
