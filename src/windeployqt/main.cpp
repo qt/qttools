@@ -1494,8 +1494,10 @@ static DeployResult deploy(const Options &options,
             const QString qt5CoreName = QFileInfo(libraryPath(libraryLocation, "Qt5Core", qtLibInfix,
                                                               options.platform, isDebug)).fileName();
 
-            if (!patchQtCore(targetPath + QLatin1Char('/') + qt5CoreName, errorMessage))
-                return result;
+            if (!patchQtCore(targetPath + QLatin1Char('/') + qt5CoreName, errorMessage)) {
+                std::wcerr << "Warning: " << *errorMessage << '\n';
+                errorMessage->clear();
+            }
         }
     } // optLibraries
 
