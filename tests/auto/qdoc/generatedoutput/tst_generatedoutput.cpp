@@ -109,10 +109,11 @@ void tst_generatedOutput::compareLineByLine(const QStringList &expectedFiles)
             QFAIL("Cannot open actual data file!");
         QTextStream actualIn(&actualFile);
 
+        const QLatin1String delim(": ");
         int lineNumber = 0;
         while (!expectedIn.atEnd() && !actualIn.atEnd()) {
             lineNumber++;
-            QString prefix = QString::number(lineNumber) + QLatin1String(": ");
+            QString prefix = file + delim + QString::number(lineNumber) + delim;
             QString expectedLine = prefix + expectedIn.readLine();
             QString actualLine = prefix + actualIn.readLine();
             QCOMPARE(actualLine, expectedLine);
