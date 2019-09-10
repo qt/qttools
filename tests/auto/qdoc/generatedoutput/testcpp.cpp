@@ -37,6 +37,7 @@ namespace TestQDoc {
 
 /*!
     \namespace TestQDoc
+    \inheaderfile TestCPP
     \inmodule TestCPP
     \brief A namespace.
 
@@ -53,6 +54,13 @@ namespace TestQDoc {
 /*!
     \macro QDOCTEST_MACRO
     \relates TestQDoc
+*/
+
+/*!
+    \macro QDOCTEST_MACRO2(x)
+    \relates TestQDoc::Test
+    \since Test 1.1
+    \brief A macro with argument \a x.
 */
 
 /*!
