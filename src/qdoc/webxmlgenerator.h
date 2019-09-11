@@ -29,12 +29,13 @@
 #ifndef WEBXMLGENERATOR_H
 #define WEBXMLGENERATOR_H
 
-#include <QtCore/qxmlstream.h>
-
 #include "codemarker.h"
 #include "config.h"
 #include "htmlgenerator.h"
 #include "qdocindexfiles.h"
+
+#include <QtCore/qxmlstream.h>
+#include <QtCore/qscopedpointer.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -55,6 +56,7 @@ protected:
     void generateCppReferencePage(Aggregate *aggregate, CodeMarker *marker) override;
     void generatePageNode(PageNode *pn, CodeMarker *marker) override;
     void generateDocumentation(Node *node) override;
+    void generateExampleFilePage(const Node *en, const QString &file, CodeMarker *marker) override;
     QString fileExtension() const override;
 
     virtual const Atom *addAtomElements(QXmlStreamWriter &writer, const Atom *atom,
@@ -78,6 +80,8 @@ private:
     bool hasQuotingInformation;
     int numTableRows;
     QString quoteCommand;
+    QScopedPointer<QXmlStreamWriter> currentWriter;
+    bool supplement = false;
 };
 
 QT_END_NAMESPACE
