@@ -32,13 +32,11 @@
 #include <QtCore/QFile>
 #include <QtCore/QLibraryInfo>
 #include <QtCore/QLocale>
-#include <QtCore/QSettings>
 #include <QtCore/QTranslator>
 
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QDesktopWidget>
 #include <QtGui/QPixmap>
-#include <QtWidgets/QSplashScreen>
 
 #ifdef Q_OS_MAC
 #include <QtCore/QUrl>
@@ -134,28 +132,11 @@ int main(int argc, char **argv)
     app.setOrganizationName(QLatin1String("QtProject"));
     app.setApplicationName(QLatin1String("Linguist"));
 
-    QSettings config;
-
-    QWidget tmp;
-    tmp.restoreGeometry(config.value(settingPath("Geometry/WindowGeometry")).toByteArray());
-
-    QSplashScreen *splash = 0;
-    int screenId = QApplication::desktop()->screenNumber(tmp.geometry().center());
-    splash = new QSplashScreen(QApplication::desktop()->screen(screenId),
-        QPixmap(QLatin1String(":/images/icons/linguist-128-32.png")));
-    if (QApplication::desktop()->isVirtualDesktop()) {
-        QRect srect(0, 0, splash->width(), splash->height());
-        splash->move(QApplication::desktop()->availableGeometry(screenId).center() - srect.center());
-    }
-    splash->setAttribute(Qt::WA_DeleteOnClose);
-    splash->show();
-
     MainWindow mw;
 #ifdef Q_OS_MAC
     eventFilter.setMainWindow(&mw);
 #endif // Q_OS_MAC
     mw.show();
-    splash->finish(&mw);
     QApplication::restoreOverrideCursor();
 
     mw.openFiles(files, true);
