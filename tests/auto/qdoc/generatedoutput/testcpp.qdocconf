@@ -1,0 +1,7 @@
+project = TestCPP
+includepaths += -I.
+
+headers = testcpp.h
+sources = testcpp.cpp
+
+macro.CMDFN = \\\\fn
