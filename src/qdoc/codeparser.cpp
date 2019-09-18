@@ -98,11 +98,8 @@ void CodeParser::parseHeaderFile(const Location &location, const QString &filePa
  */
 void CodeParser::initialize(const Config &config)
 {
-    QList<CodeParser *>::ConstIterator p = parsers.constBegin();
-    while (p != parsers.constEnd()) {
-        (*p)->initializeParser(config);
-        ++p;
-    }
+    for (const auto &parser : qAsConst(parsers))
+        parser->initializeParser(config);
 }
 
 /*!
@@ -110,20 +107,15 @@ void CodeParser::initialize(const Config &config)
  */
 void CodeParser::terminate()
 {
-    QList<CodeParser *>::ConstIterator p = parsers.constBegin();
-    while (p != parsers.constEnd()) {
-        (*p)->terminateParser();
-        ++p;
-    }
+    for (const auto parser : parsers)
+        parser->terminateParser();
 }
 
 CodeParser *CodeParser::parserForLanguage(const QString &language)
 {
-    QList<CodeParser *>::ConstIterator p = parsers.constBegin();
-    while (p != parsers.constEnd()) {
-        if ((*p)->language() == language)
-            return *p;
-        ++p;
+    for (const auto parser : qAsConst(parsers)) {
+        if (parser->language() == language)
+            return parser;
     }
     return nullptr;
 }
