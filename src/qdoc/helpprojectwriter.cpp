@@ -216,7 +216,10 @@ QStringList HelpProjectWriter::keywordDetails(const Node *node) const
         else
             details << node->name();
         // "id"
-        details << node->parent()->name()+"::"+node->name();
+        if (!node->isRelatedNonmember())
+            details << node->parent()->name()+"::"+node->name();
+        else
+            details << node->name();
     }
     else if (node->isQmlType() || node->isQmlBasicType()) {
         details << node->name();
@@ -491,6 +494,9 @@ void HelpProjectWriter::generateSections(HelpProject &project, QXmlStreamWriter 
         QSet<const Node*> childSet;
         const NodeList &children = aggregate->childNodes();
         foreach (const Node *child, children) {
+            // Skip related non-members adopted by some other aggregate
+            if (child->parent() != aggregate)
+                continue;
             if (child->isIndexNode() || child->isPrivate())
                 continue;
             if (child->isTextPageNode()) {

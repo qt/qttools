@@ -677,6 +677,7 @@ QString Generator::fullDocumentLocation(const Node *node, bool useSubdir)
     case Node::QmlType:
     case Node::Page:
     case Node::Group:
+    case Node::HeaderFile:
     case Node::Module:
     case Node::JsModule:
     case Node::QmlModule:
