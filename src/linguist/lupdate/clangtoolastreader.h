@@ -64,6 +64,10 @@ QT_BEGIN_NAMESPACE
 
 Q_DECLARE_LOGGING_CATEGORY(lcClang)
 
+#define LUPDATE_CLANG_VERSION_CHECK(major, minor, patch) ((major<<16)|(minor<<8)|(patch))
+#define LUPDATE_CLANG_VERSION LUPDATE_CLANG_VERSION_CHECK(LUPDATE_CLANG_VERSION_MAJOR, \
+    LUPDATE_CLANG_VERSION_MINOR, LUPDATE_CLANG_VERSION_PATCH)
+
 class LupdateVisitor : public clang::RecursiveASTVisitor<LupdateVisitor>
 {
 public:
@@ -120,10 +124,17 @@ public:
         : m_tor(tor)
     {}
 
+#if (LUPDATE_CLANG_VERSION >= LUPDATE_CLANG_VERSION_CHECK(10,0,0))
+    std::unique_ptr<clang::FrontendAction> create() override
+    {
+        return std::make_unique<LupdateFrontendAction>(m_tor);
+    }
+#else
     clang::FrontendAction *create() override
     {
         return new LupdateFrontendAction(m_tor);
     }
+#endif
 
 private:
     Translator *m_tor { nullptr };

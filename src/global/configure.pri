@@ -223,6 +223,10 @@ defineTest(qtConfTest_libclang) {
         !isEmpty(LLVM_INSTALL_DIR): \
             qtLog("Cannot determine version of clang installation in $${clangInstallDir}.")
         return(false)
+    } else {
+        CLANG_MAJOR_VERSION = $$extractMajorVersion($$CLANG_VERSION)
+        CLANG_MINOR_VERSION = $$extractMinorVersion($$CLANG_VERSION)
+        CLANG_PATCH_VERSION = $$extractPatchVersion($$CLANG_VERSION)
     }
 
     LIBCLANG_MAIN_HEADER = $$CLANG_INCLUDEPATH/clang-c/Index.h
@@ -511,6 +515,18 @@ defineTest(qtConfTest_libclang) {
     $${1}.version = $$CLANG_VERSION
     export($${1}.version)
     $${1}.cache += version
+
+    $${1}.major_version = $$CLANG_MAJOR_VERSION
+    export($${1}.major_version)
+    $${1}.cache += major_version
+
+    $${1}.minor_version = $$CLANG_MINOR_VERSION
+    export($${1}.minor_version)
+    $${1}.cache += minor_version
+
+    $${1}.patch_version = $$CLANG_PATCH_VERSION
+    export($${1}.patch_version)
+    $${1}.cache += patch_version
 
     $${1}.has_clangcpp = $$HAS_CLANGCPP
     export($${1}.has_clangcpp)

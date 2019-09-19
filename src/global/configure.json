@@ -17,7 +17,10 @@
                 { "type": "varAssign", "name": "CLANG_INCLUDEPATH", "value": "tests.libclang.includepath" },
                 { "type": "varAssign", "name": "CLANG_LIBDIR", "value": "tests.libclang.libdir" },
                 { "type": "varAssign", "name": "CLANG_DEFINES", "value": "tests.libclang.defines" },
-                { "type": "varAssign", "name": "CLANG_VERSION", "value": "tests.libclang.version" }
+                { "type": "varAssign", "name": "CLANG_VERSION", "value": "tests.libclang.version" },
+                { "type": "varAssign", "name": "CLANG_MAJOR_VERSION", "value": "tests.libclang.major_version" },
+                { "type": "varAssign", "name": "CLANG_MINOR_VERSION", "value": "tests.libclang.minor_version" },
+                { "type": "varAssign", "name": "CLANG_PATCH_VERSION", "value": "tests.libclang.patch_version" }
             ]
         },
         "clangcpp": {
