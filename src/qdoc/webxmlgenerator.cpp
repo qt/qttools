@@ -166,6 +166,9 @@ void WebXMLGenerator::generateIndexSections(QXmlStreamWriter &writer, Node *node
 {
     marker_ = CodeMarker::markerForFileName(node->location().filePath());
     QDocIndexFiles::qdocIndexFiles()->generateIndexSections(writer, node, this);
+    // generateIndexSections does nothing for groups, so handle them explicitly
+    if (node->isGroup())
+        QDocIndexFiles::qdocIndexFiles()->generateIndexSection(writer, node, this);
 }
 
 // Handles callbacks from QDocIndexFiles to add documentation to node
@@ -230,10 +233,15 @@ void WebXMLGenerator::append(QXmlStreamWriter &writer, Node *node)
         }
         writer.writeEndElement(); // see-also
     }
+
     if (node->isExample()) {
         supplement = true;
         generateRequiredLinks(node, marker_);
         supplement = false;
+    } else if (node->isGroup()) {
+        CollectionNode *cn = static_cast<CollectionNode *>(node);
+        if (!cn->noAutoList())
+            generateAnnotatedList(writer, node, cn->members());
     }
 
     writer.writeEndElement(); // description
@@ -281,6 +289,13 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer,
     bool keepQuoting = false;
 
     switch (atom->type()) {
+    case Atom::AnnotatedList:
+    {
+        const CollectionNode* cn = qdb_->getCollectionNode(atom->string(), Node::Group);
+        if (cn)
+            generateAnnotatedList(writer, relative, cn->members());
+    }
+        break;
     case Atom::AutoLink:
         if (!inLink && !inSectionHeading) {
             const Node *node = nullptr;
@@ -865,13 +880,16 @@ void WebXMLGenerator::generateRelations(QXmlStreamWriter &writer, const Node *no
 void WebXMLGenerator::generateAnnotatedList(QXmlStreamWriter &writer,
     const Node *relative, const NodeMap &nodeMap)
 {
+    generateAnnotatedList(writer, relative, nodeMap.values());
+}
+
+void WebXMLGenerator::generateAnnotatedList(QXmlStreamWriter &writer,
+    const Node *relative, const NodeList &nodeList)
+{
     writer.writeStartElement("table");
     writer.writeAttribute("width", "100%");
 
-    for (NodeMap::const_iterator it = nodeMap.cbegin(),
-         end = nodeMap.cend(); it != end; ++it) {
-        const Node *node = it.value();
-
+    for (const auto *node : nodeList) {
         writer.writeStartElement("row");
         writer.writeStartElement("heading");
         generateFullName(writer, node, relative);
@@ -888,10 +906,14 @@ void WebXMLGenerator::generateAnnotatedList(QXmlStreamWriter &writer,
 void WebXMLGenerator::generateFullName(QXmlStreamWriter &writer,
     const Node *node, const Node *relative)
 {
+    QString type = targetType(node);
+    QString name = node->fullName(relative);
     writer.writeStartElement("link");
     writer.writeAttribute("href", fullDocumentLocation(node));
-    writer.writeAttribute("type", targetType(node));
-    writer.writeCharacters(node->fullName(relative));
+    writer.writeAttribute("type", type);
+    if (type == QLatin1String("page"))
+        writer.writeAttribute("page", name);
+    writer.writeCharacters(name);
     writer.writeEndElement(); // link
 }
 
