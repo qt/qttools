@@ -779,7 +779,7 @@ bool savePO(const Translator &translator, QIODevice &dev, ConversionData &)
     out << poEscapedString(QString(), QString::fromLatin1("msgstr"), true, hdrStr);
 
     foreach (const TranslatorMessage &msg, translator.messages()) {
-        out << endl;
+        out << Qt::endl;
 
         if (!msg.translatorComment().isEmpty())
             out << poEscapedLines(QLatin1String("#"), true, msg.translatorComment());
