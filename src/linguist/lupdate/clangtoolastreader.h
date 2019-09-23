@@ -71,9 +71,9 @@ Q_DECLARE_LOGGING_CATEGORY(lcClang)
 class LupdateVisitor : public clang::RecursiveASTVisitor<LupdateVisitor>
 {
 public:
-    explicit LupdateVisitor(clang::ASTContext *Context, Translator *tor)
+    explicit LupdateVisitor(clang::ASTContext *context, Translator *tor)
         : m_tor(tor),
-          m_context(Context)
+          m_context(context)
     {}
 
 private:
@@ -84,14 +84,14 @@ private:
 class LupdateASTConsumer : public clang::ASTConsumer
 {
 public:
-    explicit LupdateASTConsumer(clang::ASTContext *Context, Translator *tor)
-        : m_visitor(Context, tor)
+    explicit LupdateASTConsumer(clang::ASTContext *context, Translator *tor)
+        : m_visitor(context, tor)
     {}
 
     //This method is called when the ASTs for entire translation unit have been parsed.
-    void HandleTranslationUnit(clang::ASTContext &Context) override
+    void HandleTranslationUnit(clang::ASTContext &context) override
     {
-        bool traverse = m_visitor.TraverseAST(Context);
+        bool traverse = m_visitor.TraverseAST(context);
         qCDebug(lcClang) << "TraverseAST: " << traverse << "\n";
     }
 
@@ -107,9 +107,9 @@ public:
     {}
 
     std::unique_ptr<clang::ASTConsumer> CreateASTConsumer(
-        clang::CompilerInstance &Compiler, llvm::StringRef InFile) override
+        clang::CompilerInstance &compiler, llvm::StringRef InFile) override
     {
-        LupdateASTConsumer *consumer = new LupdateASTConsumer(&Compiler.getASTContext(), m_tor);
+        LupdateASTConsumer *consumer = new LupdateASTConsumer(&compiler.getASTContext(), m_tor);
         return std::unique_ptr<clang::ASTConsumer>(consumer);
     }
 
