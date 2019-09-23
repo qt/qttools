@@ -5,6 +5,7 @@
 #####################################################################
 
 qt_add_tool(lconvert
+    TOOLS_TARGET Linguist # special case
     SOURCES
         ../shared/numerus.cpp
         ../shared/po.cpp

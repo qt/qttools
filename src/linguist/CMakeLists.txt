@@ -11,3 +11,6 @@ add_subdirectory(lupdate-pro)
 #    add_subdirectory(linguist)
 #endif()
 # special case end
+
+# Create a fake module that would emulate the Qt5::LinguistTools CMake Config package
+add_qt_module(Linguist NO_MODULE_HEADERS) # special case
