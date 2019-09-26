@@ -80,6 +80,8 @@ public:
 
     bool getDebug() const { return debug_; }
 
+    void clear();
+    void reset();
     void load(const QString &fileName);
     void setStringList(const QString &var, const QStringList &values);
     void insertStringList(const QString &var, const QStringList &values);

@@ -266,13 +266,33 @@ QMap<QString, QStringList> Config::includeFilesMap_;
 Config::Config(const QString &programName)
     : prog(programName)
 {
-    loc = Location::null;
-    lastLocation_ = Location::null;
-    configVars_.clear();
     numInstances++;
-    includeFilesMap_.clear();
+    reset();
+}
 
-    // Default values:
+Config::~Config()
+{
+    clear();
+}
+
+/*!
+  Clears the location and internal maps for config variables.
+ */
+void Config::clear()
+{
+    loc = lastLocation_ = Location::null;
+    configVars_.clear();
+    includeFilesMap_.clear();
+}
+
+/*!
+  Resets the Config instance - used by load()
+ */
+void Config::reset()
+{
+    clear();
+
+    // Default values
     setStringList(CONFIG_CODEINDENT, QStringList("0"));
     setStringList(CONFIG_FALSEHOODS, QStringList("0"));
     setStringList(CONFIG_FILEEXTENSIONS, QStringList("*.cpp *.h *.qdoc *.qml"));
@@ -282,24 +302,17 @@ Config::Config(const QString &programName)
 }
 
 /*!
-  The destructor has nothing special to do.
- */
-Config::~Config()
-{
-    includeFilesMap_.clear();
-}
-
-/*!
   Loads and parses the qdoc configuration file \a fileName.
-  This function calls the other load() function, which does
-  the loading, parsing, and processing of the configuration
-  file.
+  This function first resets the Config instance, then
+  calls the other load() function, which does the loading,
+  parsing, and processing of the configuration file.
 
   Intializes the location variables returned by location()
   and lastLocation().
  */
 void Config::load(const QString &fileName)
 {
+    reset();
     load(Location::null, fileName);
     if (loc.isEmpty())
         loc = Location(fileName);
