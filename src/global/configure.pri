@@ -144,7 +144,6 @@ defineReplace(CheckClangCppLibForLupdateParser) {
             else: \
                 libFullPath += $$clangLibDir/lib$${lib}.a
         }
-        message(libFullPath= $$libFullPath)
 
         CLANG_CPP_LIBS += -l$$lib
         !exists($$libFullPath): {
