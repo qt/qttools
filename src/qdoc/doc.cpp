@@ -2861,9 +2861,9 @@ Doc::Doc(const Location &start_loc,
          const QSet<QString> &metaCommandSet,
          const QSet<QString> &topics)
 {
-    priv = new DocPrivate(start_loc,end_loc,source);
+    priv = new DocPrivate(start_loc, end_loc, source);
     DocParser parser;
-    parser.parse(source,priv,metaCommandSet,topics);
+    parser.parse(source, priv, metaCommandSet, topics);
 }
 
 Doc::Doc(const Doc &doc)
