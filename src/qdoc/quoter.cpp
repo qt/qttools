@@ -134,7 +134,7 @@ void Quoter::reset()
     silent = false;
     plainLines.clear();
     markedLines.clear();
-    codeLocation = Location::null;
+    codeLocation = Location();
 }
 
 void Quoter::quoteFromFile(const QString &userFriendlyFilePath, const QString &plainCode,

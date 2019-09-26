@@ -275,7 +275,7 @@ Config::~Config()
  */
 void Config::clear()
 {
-    loc = lastLocation_ = Location::null;
+    loc = lastLocation_ = Location();
     configVars_.clear();
     includeFilesMap_.clear();
 }
@@ -327,12 +327,12 @@ void Config::load(const QString &fileName)
     if (configVars_.contains(CONFIG_PROJECT))
         reset();
 
-    load(Location::null, fileName);
+    load(Location(), fileName);
     if (loc.isEmpty())
         loc = Location(fileName);
     else
         loc.setEtc(true);
-    lastLocation_ = Location::null;
+    lastLocation_ = Location();
 
     // Add defines and includepaths from command line to their
     // respective configuration variables. Values set here are
@@ -965,7 +965,7 @@ bool Config::isMetaKeyChar(QChar ch)
  */
 QStringList Config::loadMaster(const QString &fileName)
 {
-    Location location = Location::null;
+    Location location;
     QFile fin(fileName);
     if (!fin.open(QFile::ReadOnly | QFile::Text)) {
         if (!Config::installDir.isEmpty()) {

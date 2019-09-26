@@ -341,7 +341,7 @@ void QDocTagFiles::generateTagFile(const QString &fileName, Generator *g)
         file.setFileName(gen_->outputDir() + QLatin1Char('/') + fileInfo.fileName());
 
     if (!file.open(QFile::WriteOnly | QFile::Text)) {
-        Location::null.warning(QString("Failed to open %1 for writing.").arg(file.fileName()));
+        Location().warning(QString("Failed to open %1 for writing.").arg(file.fileName()));
         return;
     }
 

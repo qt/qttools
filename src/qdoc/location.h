@@ -80,8 +80,6 @@ public:
     void fatal(const QString &message, const QString &details = QString()) const;
     void report(const QString &message, const QString &details = QString()) const;
 
-    static const Location null;
-
     static void initialize(const Config &config);
     static void terminate();
     static void information(const QString &message);

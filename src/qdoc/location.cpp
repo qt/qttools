@@ -42,8 +42,6 @@
 
 QT_BEGIN_NAMESPACE
 
-const Location Location::null;
-
 int Location::tabSize;
 int Location::warningCount = 0;
 int Location::warningLimit = -1;
@@ -283,7 +281,7 @@ int Location::exitCode()
     if (warningLimit < 0 || warningCount <= warningLimit)
         return EXIT_SUCCESS;
 
-    Location::null.emitMessage(
+    Location().emitMessage(
             Error,
             tr("Documentation warnings (%1) exceeded the limit (%2) for '%3'.")
                     .arg(QString::number(warningCount), QString::number(warningLimit), project),
@@ -391,11 +389,11 @@ void Location::logToStdErrAlways(const QString &message)
  */
 void Location::internalError(const QString &hint)
 {
-    Location::null.fatal(tr("Internal error (%1)").arg(hint),
-                         tr("There is a bug in %1. Seek advice from your local"
-                            " %2 guru.")
-                                 .arg(programName)
-                                 .arg(programName));
+    Location().fatal(tr("Internal error (%1)").arg(hint),
+                     tr("There is a bug in %1. Seek advice from your local"
+                        " %2 guru.")
+                             .arg(programName)
+                             .arg(programName));
 }
 
 /*!

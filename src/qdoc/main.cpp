@@ -97,7 +97,7 @@ static void loadIndexFiles(Config &config, const QSet<QString> &formats)
         if (fi.exists() && fi.isFile())
             indexFiles << index;
         else
-            Location::null.warning(QString("Index file not found: %1").arg(index));
+            Location().warning(QString("Index file not found: %1").arg(index));
     }
 
     config.dependModules() += config.getStringList(CONFIG_DEPENDS);
@@ -194,10 +194,10 @@ static void loadIndexFiles(Config &config, const QSet<QString> &formats)
                     indexPaths.reserve(foundIndices.size());
                     for (const auto &found : qAsConst(foundIndices))
                         indexPaths << found.absoluteFilePath();
-                    Location::null.warning(
+                    Location().warning(
                             QString("Multiple index files found for dependency \"%1\":\n%2")
                                     .arg(module, indexPaths.join('\n')));
-                    Location::null.warning(
+                    Location().warning(
                             QString("Using %1 as index file for dependency \"%2\"")
                                     .arg(foundIndices[foundIndices.size() - 1].absoluteFilePath(),
                                          module));
@@ -209,13 +209,13 @@ static void loadIndexFiles(Config &config, const QSet<QString> &formats)
                     if (!indexFiles.contains(indexToAdd))
                         indexFiles << indexToAdd;
                 } else if (!asteriskUsed) {
-                    Location::null.warning(
+                    Location().warning(
                             QString("\"%1\" Cannot locate index file for dependency \"%2\"")
                                     .arg(config.getString(CONFIG_PROJECT), module));
                 }
             }
         } else {
-            Location::null.warning(
+            Location().warning(
                     QLatin1String("Dependent modules specified, but no index directories were set. "
                                   "There will probably be errors for missing links."));
         }
