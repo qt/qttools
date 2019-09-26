@@ -1334,11 +1334,11 @@ QString Node::fullDocumentName() const
         if (n->isTextPageNode())
             break;
 
-        // Examine the parent node if one exists.
-        if (n->parent())
-            n = n->parent();
-        else
+        // Examine the parent if the node is a member
+        if (!n->parent() || n->isRelatedNonmember())
             break;
+
+        n = n->parent();
     } while (true);
 
     // Create a name based on the type of the ancestor node.

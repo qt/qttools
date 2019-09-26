@@ -1273,7 +1273,9 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node, 
             }
         }
     }
-    if (node->isExample()) {
+    // WebXMLGenerator - skip the nested <page> elements for example
+    // files/images, as the generator produces them separately
+    if (node->isExample() && gen_->format() != QLatin1String("WebXML")) {
         const ExampleNode *en = static_cast<const ExampleNode *>(node);
         foreach (const QString &file, en->files()) {
             writer.writeStartElement("page");
@@ -1283,7 +1285,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node, 
             writer.writeAttribute("status", "active");
             writer.writeAttribute("subtype", "file");
             writer.writeAttribute("title", "");
-            writer.writeAttribute("fulltitle", file.mid(file.lastIndexOf('/') + 1) + " Example File");
+            writer.writeAttribute("fulltitle", Generator::exampleFileTitle(en, file));
             writer.writeAttribute("subtitle", file);
             writer.writeEndElement(); // page
         }
@@ -1295,7 +1297,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node, 
             writer.writeAttribute("status", "active");
             writer.writeAttribute("subtype", "image");
             writer.writeAttribute("title", "");
-            writer.writeAttribute("fulltitle", file.mid(file.lastIndexOf('/') + 1) + " Image File");
+            writer.writeAttribute("fulltitle", Generator::exampleFileTitle(en, file));
             writer.writeAttribute("subtitle", file);
             writer.writeEndElement(); // page
         }

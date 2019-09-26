@@ -34,6 +34,7 @@
 #include "htmlgenerator.h"
 #include "qdocindexfiles.h"
 
+#include <QtCore/qscopedpointer.h>
 #include <QtCore/qxmlstream.h>
 
 QT_BEGIN_NAMESPACE
@@ -54,6 +55,7 @@ protected:
     void generateCppReferencePage(Aggregate *aggregate, CodeMarker *marker) override;
     void generatePageNode(PageNode *pn, CodeMarker *marker) override;
     void generateDocumentation(Node *node) override;
+    void generateExampleFilePage(const Node *en, const QString &file, CodeMarker *marker) override;
     QString fileExtension() const override;
 
     virtual const Atom *addAtomElements(QXmlStreamWriter &writer, const Atom *atom,
@@ -64,6 +66,7 @@ protected:
 private:
     const QPair<QString,QString> anchorForNode(const Node *node);
     void generateAnnotatedList(QXmlStreamWriter &writer, const Node *relative, const NodeMap &nodeMap);
+    void generateAnnotatedList(QXmlStreamWriter &writer, const Node *relative, const NodeList &nodeList);
     void generateFullName(QXmlStreamWriter &writer, const Node *node,
                           const Node *relative);
     void generateRelations(QXmlStreamWriter &writer, const Node *node);
@@ -77,6 +80,8 @@ private:
     bool hasQuotingInformation;
     int numTableRows;
     QString quoteCommand;
+    QScopedPointer<QXmlStreamWriter> currentWriter;
+    bool supplement = false;
 };
 
 QT_END_NAMESPACE
