@@ -68,8 +68,11 @@ public:
 
     QString fullDocumentLocation(const Node *node, bool useSubdir = false);
     const Config *config() { return config_; }
-    QString linkForExampleFile(const QString &path, const Node *parent);
-
+    QString linkForExampleFile(const QString &path,
+                               const Node *parent,
+                               const QString &fileExt = QString());
+    static QString exampleFileTitle(const ExampleNode *relative,
+                                    const QString &fileName);
     static Generator *currentGenerator() { return currentGenerator_; }
     static Generator *generatorForFormat(const QString &format);
     static void initialize(const Config &config);
@@ -150,10 +153,9 @@ protected:
                                  CodeMarker *marker,
                                  bool generate,
                                  int &numGeneratedAtoms);
-    void generateLinkToExample(const ExampleNode *en,
-                               CodeMarker *marker,
-                               const QString &baseUrl);
-    void generateFileList(const ExampleNode *en, CodeMarker *marker, bool images);
+    void generateRequiredLinks(const Node *node, CodeMarker *marker);
+    void generateLinkToExample(const ExampleNode *en, CodeMarker *marker, const QString &exampleUrl);
+    virtual void generateFileList(const ExampleNode *en, CodeMarker *marker, bool images);
     void generateSince(const Node *node, CodeMarker *marker);
     void generateStatus(const Node *node, CodeMarker *marker);
     void generatePrivateSignalNote(const Node *node, CodeMarker *marker);
