@@ -508,7 +508,7 @@ QString Generator::cleanRef(const QString &ref)
         clean += QLatin1Char('A');
     }
 
-    for (int i = 1; i < (int) ref.length(); i++) {
+    for (int i = 1; i < ref.length(); i++) {
         const QChar c = ref[i];
         const uint u = c.unicode();
         if ((u >= 'a' && u <= 'z') ||
@@ -532,7 +532,7 @@ QString Generator::cleanRef(const QString &ref)
             clean += QLatin1Char('#');
         } else {
             clean += QLatin1Char('-');
-            clean += QString::number((int)u, 16);
+            clean += QString::number(static_cast<int>(u), 16);
         }
     }
     return clean;
@@ -868,7 +868,7 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
         }
 
         if (node->isEnumType()) {
-            const EnumNode *enume = (const EnumNode *) node;
+            const EnumNode *enume = static_cast<const EnumNode *>(node);
 
             QSet<QString> definedItems;
             QList<EnumItem>::ConstIterator it = enume->items().constBegin();
@@ -1014,7 +1014,7 @@ void Generator::generateLinkToExample(const ExampleNode *en,
          << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK)
          << Atom::ParaRight;
 
-    generateText(text, 0, marker);
+    generateText(text, nullptr, marker);
 }
 
 /*!
@@ -1785,7 +1785,7 @@ QString Generator::indent(int level, const QString &markedCode)
     int column = 0;
 
     int i = 0;
-    while (i < (int) markedCode.length()) {
+    while (i < markedCode.length()) {
         if (markedCode.at(i) == QLatin1Char('\n')) {
             column = 0;
         }
