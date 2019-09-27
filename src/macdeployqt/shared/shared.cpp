@@ -53,6 +53,7 @@ bool alwaysOwerwriteEnabled = false;
 bool runCodesign = false;
 QStringList librarySearchPath;
 QString codesignIdentiy;
+bool hardenedRuntime = false;
 bool appstoreCompliant = false;
 int logLevel = 1;
 bool deployFramework = false;
@@ -1371,11 +1372,18 @@ void codesignFile(const QString &identity, const QString &filePath)
     if (!runCodesign)
         return;
 
-    LogNormal() << "codesign" << filePath;
+    QString codeSignLogMessage = "codesign";
+    if (hardenedRuntime)
+        codeSignLogMessage += ", enable hardned runtime";
+    LogNormal() << codeSignLogMessage << filePath;
+
+    QStringList codeSignOptions = { "--preserve-metadata=identifier,entitlements", "--force", "-s",
+                                    identity, filePath };
+    if (hardenedRuntime)
+        codeSignOptions << "-o" << "runtime";
 
     QProcess codesign;
-    codesign.start("codesign", QStringList() << "--preserve-metadata=identifier,entitlements"
-                                             << "--force" << "-s" << identity << filePath);
+    codesign.start("codesign", codeSignOptions);
     codesign.waitForFinished(-1);
 
     QByteArray err = codesign.readAllStandardError();
