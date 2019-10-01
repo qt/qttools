@@ -205,10 +205,8 @@ int Generator::appendSortedNames(Text &text, const ClassNode *cn, const QList<Re
         ++r;
     }
 
-    QStringList classNames = classMap.keys();
-    classNames.sort();
-
-    for (const auto &className : qAsConst(classNames)) {
+    const QStringList classNames = classMap.keys();
+    for (const auto &className : classNames) {
         text << classMap[className];
         text << comma(index++, classNames.count());
     }
@@ -229,10 +227,8 @@ int Generator::appendSortedQmlNames(Text &text, const Node *base, const NodeList
         }
     }
 
-    QStringList names = classMap.keys();
-    names.sort();
-
-    for (const auto &name : qAsConst(names)) {
+    const QStringList names = classMap.keys();
+    for (const auto &name : names) {
         text << classMap[name];
         text << comma(index++, names.count());
     }

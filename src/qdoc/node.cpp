@@ -2291,7 +2291,7 @@ const NodeList &Aggregate::nonfunctionList()
  */
 const EnumNode *Aggregate::findEnumNodeForValue(const QString &enumValue) const
 {
-    for (const auto *node : qAsConst(enumChildren_)) {
+    for (const auto *node : enumChildren_) {
         const EnumNode *en = static_cast<const EnumNode *>(node);
         if (en->hasItem(enumValue))
             return en;
@@ -2699,9 +2699,9 @@ void Aggregate::findAllNamespaces(NodeMultiMap &namespaces)
   Returns true if this aggregate contains at least one child
   that is marked obsolete. Otherwise returns false.
  */
-bool Aggregate::hasObsoleteMembers()
+bool Aggregate::hasObsoleteMembers() const
 {
-    for (const auto *node : qAsConst(children_)) {
+    for (const auto *node : children_) {
         if (!node->isPrivate() && node->isObsolete()) {
             if (node->isFunction() || node->isProperty() || node->isEnumType() ||
                 node->isTypedef() || node->isTypeAlias() || node->isVariable() ||
