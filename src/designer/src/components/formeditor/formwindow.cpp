@@ -684,6 +684,7 @@ bool FormWindow::handleMouseMoveEvent(QWidget *, QWidget *, QMouseEvent *e)
     const bool blocked = blockSelectionChanged(true);
 
     QWidgetList sel = selectedWidgets();
+    const QWidgetList originalSelection = sel;
     simplifySelection(&sel);
 
     QSet<QWidget*> widget_set;
@@ -732,6 +733,11 @@ bool FormWindow::handleMouseMoveEvent(QWidget *, QWidget *, QMouseEvent *e)
             widget->hide();
         }
     }
+
+    // In case when we have reduced the selection (by calling simplifySelection()
+    // beforehand) we still need to hide selection handles for children widgets
+    for (auto *widget : originalSelection)
+        m_selection->hide(widget);
 
     blockSelectionChanged(blocked);
 
