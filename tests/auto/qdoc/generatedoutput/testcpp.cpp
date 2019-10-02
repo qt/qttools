@@ -31,6 +31,7 @@ namespace TestQDoc {
 
 /*!
     \module TestCPP
+    \qtvariable testcpp
     \title QDoc Test C++ Classes
     \brief A test module page.
 */
@@ -62,6 +63,44 @@ namespace TestQDoc {
     \since Test 1.1
     \brief A macro with argument \a x.
 */
+
+/*!
+    \deprecated
+
+    Use someFunction() instead.
+*/
+void Test::deprecatedMember()
+{
+    return;
+}
+
+/*!
+    \obsolete
+
+    Use someFunction() instead.
+*/
+void Test::obsoleteMember()
+{
+    return;
+}
+
+/*!
+    \obsolete
+
+    Use obsoleteMember() instead.
+*/
+void Test::anotherObsoleteMember()
+{
+    return;
+}
+
+/*!
+    Function that takes a parameter \a i and \a b.
+*/
+void Test::someFunctionDefaultArg(int i, bool b = false)
+{
+    return;
+}
 
 /*!
     Function that takes a parameter \a v.
