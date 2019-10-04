@@ -49,11 +49,7 @@ enum { BrushRole = 33 };
 
 PaletteEditor::PaletteEditor(QDesignerFormEditorInterface *core, QWidget *parent) :
     QDialog(parent),
-    m_currentColorGroup(QPalette::Active),
     m_paletteModel(new PaletteModel(this)),
-    m_modelUpdated(false),
-    m_paletteUpdated(false),
-    m_compute(true),
     m_core(core)
 {
     ui.setupUi(this);

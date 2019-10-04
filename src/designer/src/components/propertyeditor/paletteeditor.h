@@ -81,12 +81,12 @@ private:
     Ui::PaletteEditor ui;
     QPalette m_editPalette;
     QPalette m_parentPalette;
-    QPalette::ColorGroup m_currentColorGroup;
     class PaletteModel *m_paletteModel;
-    bool m_modelUpdated;
-    bool m_paletteUpdated;
-    bool m_compute;
     QDesignerFormEditorInterface *m_core;
+    QPalette::ColorGroup m_currentColorGroup = QPalette::Active;
+    bool m_modelUpdated = false;
+    bool m_paletteUpdated = false;
+    bool m_compute = true;
 };
 
 
