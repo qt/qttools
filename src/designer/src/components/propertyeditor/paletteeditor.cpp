@@ -36,6 +36,7 @@
 
 #include <QtCore/qmetaobject.h>
 #include <QtGui/qpainter.h>
+#include <QtGui/qscreen.h>
 #include <QtWidgets/qtoolbutton.h>
 #include <QtWidgets/qlabel.h>
 #include <QtWidgets/qheaderview.h>
@@ -71,6 +72,11 @@ PaletteEditor::PaletteEditor(QDesignerFormEditorInterface *core, QWidget *parent
     ui.paletteView->setRootIsDecorated(false);
     ui.paletteView->setColumnHidden(2, true);
     ui.paletteView->setColumnHidden(3, true);
+
+    const auto itemRect = ui.paletteView->visualRect(m_paletteModel->index(0, 0));
+    const int minHeight = qMin(itemRect.height() * QPalette::NColorRoles,
+                               (screen()->geometry().height() * 2) / 3);
+    ui.paletteView->setMinimumSize({itemRect.width() * 4, minHeight});
 }
 
 PaletteEditor::~PaletteEditor() = default;
