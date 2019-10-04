@@ -112,7 +112,8 @@ struct TranslationRelatedStore
     void printStore() const
     {
         qCDebug(lcClang) << "------------------ Printing Store----------------------------------\n";
-        qCDebug(lcClang) << "callType            : " << callType << "\n"
+        qCDebug(lcClang)
+            << "callType            : " << callType << "\n"
             << "rawCode             : \n" << rawCode << "\n"
             << "funcName            : " << funcName << "\n"
             << "LocationCol         : " << locationCol << "\n"
@@ -126,7 +127,7 @@ struct TranslationRelatedStore
             << "lupdateMagicMetaData: " << lupdateMagicMetaData << "\n"
             << "lupdateComment      : " << lupdateComment << "\n"
             << "lupdateExtraComment : " << lupdateExtraComment << "\n"
-            << "lupdatePlural       : " << lupdatePlural << "\n";
+            << "lupdatePlural       : " << lupdatePlural;
         qCDebug(lcClang) << "-------------------------------------------------------------------\n";
     }
 };
@@ -180,7 +181,7 @@ public:
     void HandleTranslationUnit(clang::ASTContext &context) override
     {
         bool traverse = m_visitor.TraverseAST(context);
-        qCDebug(lcClang) << "TraverseAST: " << traverse << "\n";
+        qCDebug(lcClang) << "TraverseAST: " << traverse;
         m_visitor.fillTranslator();
     }
 

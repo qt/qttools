@@ -140,12 +140,12 @@ bool LupdateVisitor::VisitCallExpr(clang::CallExpr *callExpression)
     store.funcName = QString::fromStdString(funcName);
     store.lupdateLocationFile = QString::fromStdString(fullLocation.getFileEntry()->getName());
     store.lupdateLocationLine = fullLocation.getSpellingLineNumber();
-    qCDebug(lcClang) << "CallType          : ASTRead_CallExpr\n";
-    qCDebug(lcClang) << "Function name     : " << store.funcName << "\n";
-    qCDebug(lcClang) << "File location     : " << store.lupdateLocationFile << "\n";
-    qCDebug(lcClang) << "Line              : " << store.lupdateLocationLine << "\n";
-
     store.contextRetrieved = LupdatePrivate::contextForFunctionDecl(func, funcName);
+
+    qCDebug(lcClang) << "CallType          : ASTRead_CallExpr";
+    qCDebug(lcClang) << "Function name     : " << store.funcName;
+    qCDebug(lcClang) << "File location     : " << store.lupdateLocationFile;
+    qCDebug(lcClang) << "Line              : " << store.lupdateLocationLine;
     qCDebug(lcClang) << "Context retrieved : " << store.contextRetrieved;
 
     // Here we gonna need to retrieve the comments around the function call
@@ -153,7 +153,7 @@ bool LupdateVisitor::VisitCallExpr(clang::CallExpr *callExpression)
     const std::vector<QString> rawComments = rawCommentsForCallExpr(callExpression);
     for (const auto &rawComment : rawComments) {
         setInfoFromRawComment(rawComment, &store);
-        qCDebug(lcClang) << "Raw comments     :" << rawComment << "\n";
+        qCDebug(lcClang) << "Raw comments     :" << rawComment;
     }
 
     clang::LangOptions langOpts;
@@ -175,9 +175,9 @@ bool LupdateVisitor::VisitCallExpr(clang::CallExpr *callExpression)
         store.lupdateSource = LupdatePrivate::cleanQuote(arguments[0]);
         store.lupdateComment = LupdatePrivate::cleanQuote(arguments[1]);
         store.lupdatePlural = QString::fromStdString(arguments[2]);
-        qCDebug(lcClang) << "Source      : " << store.lupdateSource << "\n";
-        qCDebug(lcClang) << "Comment     : " << store.lupdateComment << "\n";
-        qCDebug(lcClang) << "Plural      : " << store.lupdatePlural << "\n";
+        qCDebug(lcClang) << "Source      : " << store.lupdateSource;
+        qCDebug(lcClang) << "Comment     : " << store.lupdateComment;
+        qCDebug(lcClang) << "Plural      : " << store.lupdatePlural;
         break;
     case TrFunctionAliasManager::Function_translate:
         if (arguments.size() != 4 || !LupdatePrivate::hasQuote(arguments[0])
@@ -188,18 +188,18 @@ bool LupdateVisitor::VisitCallExpr(clang::CallExpr *callExpression)
         store.lupdateSource = LupdatePrivate::cleanQuote(arguments[1]);
         store.lupdateComment = LupdatePrivate::cleanQuote(arguments[2]);
         store.lupdatePlural = QString::fromStdString(arguments[3]);
-        qCDebug(lcClang) << "Context Arg : " << store.contextArg << "\n";
-        qCDebug(lcClang) << "Source      : " << store.lupdateSource << "\n";
-        qCDebug(lcClang) << "Comment     : " << store.lupdateComment << "\n";
-        qCDebug(lcClang) << "Plural      : " << store.lupdatePlural << "\n";
+        qCDebug(lcClang) << "Context Arg : " << store.contextArg;
+        qCDebug(lcClang) << "Source      : " << store.lupdateSource;
+        qCDebug(lcClang) << "Comment     : " << store.lupdateComment;
+        qCDebug(lcClang) << "Plural      : " << store.lupdatePlural;
         break;
     case TrFunctionAliasManager::Function_qtTrId:
         if (arguments.size() != 2 || !LupdatePrivate::hasQuote(arguments[0]))
             return true;
         store.lupdateId = LupdatePrivate::cleanQuote(arguments[0]);
         store.lupdatePlural = QString::fromStdString(arguments[1]);
-        qCDebug(lcClang) << "ID          : " << store.lupdateId << "\n";
-        qCDebug(lcClang) << "Plural      : " << store.lupdatePlural << "\n";
+        qCDebug(lcClang) << "ID          : " << store.lupdateId;
+        qCDebug(lcClang) << "Plural      : " << store.lupdatePlural;
         break;
     }
     m_translationStoresFromAST.push_back(store);
