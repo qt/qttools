@@ -230,14 +230,17 @@ PaletteModel::PaletteModel(QObject *parent)  :
     const int index = meta->indexOfProperty("colorRole");
     const QMetaProperty p = meta->property(index);
     const QMetaEnum e = p.enumerator();
+    m_roleEntries.reserve(QPalette::NColorRoles);
     for (int r = QPalette::WindowText; r < QPalette::NColorRoles; r++) {
-        m_roleNames[static_cast<QPalette::ColorRole>(r)] = QLatin1String(e.key(r));
+        const auto role = static_cast<QPalette::ColorRole>(r);
+        if (role != QPalette::NoRole)
+            m_roleEntries.append({QLatin1String(e.key(r)), role});
     }
 }
 
 int PaletteModel::rowCount(const QModelIndex &) const
 {
-    return m_roleNames.count();
+    return m_roleEntries.size();
 }
 
 int PaletteModel::columnCount(const QModelIndex &) const
@@ -249,25 +252,24 @@ QVariant PaletteModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();
-    if (index.row() < 0 || index.row() >= QPalette::NColorRoles)
+    if (index.row() < 0 || index.row() >= m_roleEntries.size())
         return QVariant();
     if (index.column() < 0 || index.column() >= 4)
         return QVariant();
 
     if (index.column() == 0) {
         if (role == Qt::DisplayRole)
-            return m_roleNames[static_cast<QPalette::ColorRole>(index.row())];
+            return m_roleEntries.at(index.row()).name;
         if (role == Qt::EditRole) {
             const uint mask = m_palette.resolve();
-            if (mask & (1 << index.row()))
+            if (mask & (1 << int(roleAt(index.row()))))
                 return true;
             return false;
         }
         return QVariant();
     }
     if (role == BrushRole)
-        return m_palette.brush(columnToGroup(index.column()),
-                    static_cast<QPalette::ColorRole>(index.row()));
+        return m_palette.brush(columnToGroup(index.column()), roleAt(index.row()));
     return QVariant();
 }
 
@@ -276,17 +278,19 @@ bool PaletteModel::setData(const QModelIndex &index, const QVariant &value, int 
     if (!index.isValid())
         return false;
 
+    const int row = index.row();
+    const auto colorRole = roleAt(row);
+
     if (index.column() != 0 && role == BrushRole) {
         const QBrush br = qvariant_cast<QBrush>(value);
-        const QPalette::ColorRole r = static_cast<QPalette::ColorRole>(index.row());
         const QPalette::ColorGroup g = columnToGroup(index.column());
-        m_palette.setBrush(g, r, br);
+        m_palette.setBrush(g, colorRole, br);
 
-        QModelIndex idxBegin = PaletteModel::index(r, 0);
-        QModelIndex idxEnd = PaletteModel::index(r, 3);
+        QModelIndex idxBegin = PaletteModel::index(row, 0);
+        QModelIndex idxEnd = PaletteModel::index(row, 3);
         if (m_compute) {
-            m_palette.setBrush(QPalette::Inactive, r, br);
-            switch (r) {
+            m_palette.setBrush(QPalette::Inactive, colorRole, br);
+            switch (colorRole) {
                 case QPalette::WindowText:
                 case QPalette::Text:
                 case QPalette::ButtonText:
@@ -298,18 +302,18 @@ bool PaletteModel::setData(const QModelIndex &index, const QVariant &value, int 
                     m_palette.setBrush(QPalette::Disabled, QPalette::Text, br);
                     m_palette.setBrush(QPalette::Disabled, QPalette::ButtonText, br);
                     idxBegin = PaletteModel::index(0, 0);
-                    idxEnd = PaletteModel::index(m_roleNames.count() - 1, 3);
+                    idxEnd = PaletteModel::index(m_roleEntries.size() - 1, 3);
                     break;
                 case QPalette::Window:
                     m_palette.setBrush(QPalette::Disabled, QPalette::Base, br);
                     m_palette.setBrush(QPalette::Disabled, QPalette::Window, br);
-                    idxBegin = PaletteModel::index(QPalette::Base, 0);
+                    idxBegin = PaletteModel::index(rowOf(QPalette::Base), 0);
                     break;
                 case QPalette::Highlight:
                     //m_palette.setBrush(QPalette::Disabled, QPalette::Highlight, c.dark(120));
                     break;
                 default:
-                    m_palette.setBrush(QPalette::Disabled, r, br);
+                    m_palette.setBrush(QPalette::Disabled, colorRole, br);
                     break;
             }
         }
@@ -320,22 +324,21 @@ bool PaletteModel::setData(const QModelIndex &index, const QVariant &value, int 
     if (index.column() == 0 && role == Qt::EditRole) {
         uint mask = m_palette.resolve();
         const bool isMask = qvariant_cast<bool>(value);
-        const int r = index.row();
         if (isMask)
-            mask |= (1 << r);
+            mask |= (1 << int(colorRole));
         else {
-            m_palette.setBrush(QPalette::Active, static_cast<QPalette::ColorRole>(r),
-                        m_parentPalette.brush(QPalette::Active, static_cast<QPalette::ColorRole>(r)));
-            m_palette.setBrush(QPalette::Inactive, static_cast<QPalette::ColorRole>(r),
-                        m_parentPalette.brush(QPalette::Inactive, static_cast<QPalette::ColorRole>(r)));
-            m_palette.setBrush(QPalette::Disabled, static_cast<QPalette::ColorRole>(r),
-                        m_parentPalette.brush(QPalette::Disabled, static_cast<QPalette::ColorRole>(r)));
+            m_palette.setBrush(QPalette::Active, colorRole,
+                               m_parentPalette.brush(QPalette::Active, colorRole));
+            m_palette.setBrush(QPalette::Inactive, colorRole,
+                               m_parentPalette.brush(QPalette::Inactive, colorRole));
+            m_palette.setBrush(QPalette::Disabled, colorRole,
+                               m_parentPalette.brush(QPalette::Disabled, colorRole));
 
-            mask &= ~(1 << index.row());
+            mask &= ~(1 << int(colorRole));
         }
         m_palette.resolve(mask);
         emit paletteChanged(m_palette);
-        const QModelIndex idxEnd = PaletteModel::index(r, 3);
+        const QModelIndex idxEnd = PaletteModel::index(row, 3);
         emit dataChanged(index, idxEnd);
         return true;
     }
@@ -375,7 +378,7 @@ void PaletteModel::setPalette(const QPalette &palette, const QPalette &parentPal
     m_parentPalette = parentPalette;
     m_palette = palette;
     const QModelIndex idxBegin = index(0, 0);
-    const QModelIndex idxEnd = index(m_roleNames.count() - 1, 3);
+    const QModelIndex idxEnd = index(m_roleEntries.size() - 1, 3);
     emit dataChanged(idxBegin, idxEnd);
 }
 
@@ -395,6 +398,15 @@ int PaletteModel::groupToColumn(QPalette::ColorGroup group) const
     if (group == QPalette::Inactive)
         return 2;
     return 3;
+}
+
+int PaletteModel::rowOf(QPalette::ColorRole role) const
+{
+    for (int row = 0, size = m_roleEntries.size(); row < size; ++row) {
+        if (m_roleEntries.at(row).role == role)
+            return row;
+    }
+    return -1;
 }
 
 //////////////////////////

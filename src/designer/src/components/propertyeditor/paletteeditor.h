@@ -113,13 +113,20 @@ public:
 signals:
     void paletteChanged(const QPalette &palette);
 private:
+    struct RoleEntry
+    {
+        QString name;
+        QPalette::ColorRole role;
+    };
 
     QPalette::ColorGroup columnToGroup(int index) const;
     int groupToColumn(QPalette::ColorGroup group) const;
+    QPalette::ColorRole roleAt(int row) const { return m_roleEntries.at(row).role; }
+    int rowOf(QPalette::ColorRole role) const;
 
     QPalette m_palette;
     QPalette m_parentPalette;
-    QMap<QPalette::ColorRole, QString> m_roleNames;
+    QVector<RoleEntry> m_roleEntries;
     bool m_compute = true;
 };
 
