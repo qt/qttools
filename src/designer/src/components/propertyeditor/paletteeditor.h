@@ -34,7 +34,9 @@
 
 QT_BEGIN_NAMESPACE
 
+class QAction;
 class QListView;
+class QMenu;
 class QLabel;
 class QtColorButton;
 class QDesignerFormEditorInterface;
@@ -65,6 +67,7 @@ private slots:
     void on_detailsRadio_clicked();
 
     void paletteChanged(const QPalette &palette);
+    void viewContextMenuRequested(const QPoint &pos);
 
 protected:
 
@@ -83,6 +86,10 @@ private:
     QPalette m_parentPalette;
     class PaletteModel *m_paletteModel;
     QDesignerFormEditorInterface *m_core;
+    QAction *m_lighterAction = nullptr;
+    QAction *m_darkerAction = nullptr;
+    QAction *m_copyColorAction = nullptr;
+    QMenu *m_contextMenu = nullptr;
     QPalette::ColorGroup m_currentColorGroup = QPalette::Active;
     bool m_modelUpdated = false;
     bool m_paletteUpdated = false;

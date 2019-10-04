@@ -35,10 +35,16 @@
 #include <QtDesigner/abstractformwindowmanager.h>
 
 #include <QtCore/qmetaobject.h>
+#include <QtGui/qguiapplication.h>
 #include <QtGui/qpainter.h>
 #include <QtGui/qscreen.h>
+#if QT_CONFIG(clipboard)
+#  include <QtGui/qclipboard.h>
+#endif
+#include <QtWidgets/qaction.h>
 #include <QtWidgets/qtoolbutton.h>
 #include <QtWidgets/qlabel.h>
+#include <QtWidgets/qmenu.h>
 #include <QtWidgets/qheaderview.h>
 
 QT_BEGIN_NAMESPACE
@@ -68,6 +74,9 @@ PaletteEditor::PaletteEditor(QDesignerFormEditorInterface *core, QWidget *parent
     ui.paletteView->setRootIsDecorated(false);
     ui.paletteView->setColumnHidden(2, true);
     ui.paletteView->setColumnHidden(3, true);
+    ui.paletteView->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui.paletteView, &QWidget::customContextMenuRequested,
+            this, &PaletteEditor::viewContextMenuRequested);
 
     const auto itemRect = ui.paletteView->visualRect(m_paletteModel->index(0, 0));
     const int minHeight = qMin(itemRect.height() * QPalette::NColorRoles,
@@ -221,6 +230,43 @@ QPalette PaletteEditor::getPalette(QDesignerFormEditorInterface *core, QWidget* 
     if (ok) *ok = result;
 
     return result == QDialog::Accepted ? dlg.palette() : init;
+}
+
+void PaletteEditor::viewContextMenuRequested(const QPoint &pos)
+{
+    const auto index = ui.paletteView->indexAt(pos);
+    if (!index.isValid())
+        return;
+    auto brush = m_paletteModel->brushAt(index);
+    const auto color = brush.color();
+    if (!m_contextMenu) {
+        m_contextMenu = new QMenu(this);
+        m_lighterAction = m_contextMenu->addAction(tr("Lighter"));
+        m_darkerAction = m_contextMenu->addAction(tr("Darker"));
+        m_copyColorAction = m_contextMenu->addAction(QString());
+    }
+    const auto rgb = color.rgb() & 0xffffffu;
+    const bool isBlack = rgb == 0u;
+    m_lighterAction->setEnabled(rgb != 0xffffffu);
+    m_darkerAction->setDisabled(isBlack);
+    m_copyColorAction->setText(tr("Copy color %1").arg(color.name()));
+    auto action = m_contextMenu->exec(ui.paletteView->viewport()->mapToGlobal(pos));
+    if (!action)
+        return;
+    if (action == m_copyColorAction) {
+#if QT_CONFIG(clipboard)
+        QGuiApplication::clipboard()->setText(color.name());
+#endif
+        return;
+    }
+    // Fall through to darker/lighter. Note: black cannot be made lighter due
+    // to QTBUG-9343.
+    enum : int { factor = 120 };
+    const QColor newColor = action == m_darkerAction
+        ? color.darker(factor)
+        : (isBlack ? QColor(0x404040u) : color.lighter(factor));
+    brush.setColor(newColor);
+    m_paletteModel->setData(index, QVariant(brush), BrushRole);
 }
 
 //////////////////////
