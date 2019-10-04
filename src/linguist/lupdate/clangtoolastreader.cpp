@@ -33,9 +33,18 @@ QT_BEGIN_NAMESPACE
 
 namespace LupdatePrivate
 {
-    QString cleanContext(std::string &context, std::string &suffix)
+    QString contextForFunctionDecl(clang::FunctionDecl *func, const std::string &funcName)
     {
-        return QString::fromStdString(context.substr(0, context.find(suffix, 0)));
+        std::string context;
+#if (LUPDATE_CLANG_VERSION >= LUPDATE_CLANG_VERSION_CHECK(10,0,0))
+        {
+            llvm::raw_string_ostream tmp(context);
+            func->printQualifiedName(tmp);
+        }
+#else
+        context = func->getQualifiedNameAsString();
+#endif
+        return QString::fromStdString(context.substr(0, context.find("::" + funcName, 0)));
     }
 
     // Cleaning quotes around the source and the comment quoteCompulsory: we
@@ -136,12 +145,8 @@ bool LupdateVisitor::VisitCallExpr(clang::CallExpr *callExpression)
     qCDebug(lcClang) << "File location     : " << store.lupdateLocationFile << "\n";
     qCDebug(lcClang) << "Line              : " << store.lupdateLocationLine << "\n";
 
-    std::string context = func->getQualifiedNameAsString();
-    std::string contextSuffix = "::";
-    contextSuffix += funcName;
-    store.contextRetrieved = LupdatePrivate::cleanContext(context, contextSuffix);
-    qCDebug(lcClang) << "Context retrieved : "
-        << store.contextRetrieved << "\n";
+    store.contextRetrieved = LupdatePrivate::contextForFunctionDecl(func, funcName);
+    qCDebug(lcClang) << "Context retrieved : " << store.contextRetrieved;
 
     // Here we gonna need to retrieve the comments around the function call
     // //: //* //~ Things like that
