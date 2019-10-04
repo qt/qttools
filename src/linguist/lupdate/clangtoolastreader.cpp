@@ -51,13 +51,13 @@ namespace LupdatePrivate
     // only want to retrieve what is inside the quotes and the text won't be
     // retrieved if quotes are not there if the quoteCompulsary = false simply
     // return the input, line by line with the spaces at the beginning of the
-    // line removed not looking for real code comment
+    // line removed not looking for real code comment.
     QString cleanQuote(llvm::StringRef s, bool leftQuoteCompulsory = true,
         bool rightQuoteCompulsory = true)
     {
         qCDebug(lcClang) << "==========================================text to clean " << s.str();
         if (s.empty())
-            return QString::fromStdString(s);
+            return {};
         s = s.trim();
         if (!s.consume_front("\"") && leftQuoteCompulsory)
             return {};
@@ -107,9 +107,12 @@ namespace LupdatePrivate
     }
 }
 
-// The visit functions are called automatically when the visitor TraverseAST function is called
-// This is the function where the tr qtIdTr translate function are actually picked up
-// In the AST, tr, qtIdTr and translate function are always part of a CallExpression.
+/*
+    The visit call expression function is called automatically after the
+    visitor TraverseAST function is called. This is the function where the
+    "tr", "trUtf8", "qtIdTr", "translate" functions are picked up in the AST.
+    Previously mentioned functions are always part of a CallExpression.
+*/
 bool LupdateVisitor::VisitCallExpr(clang::CallExpr *callExpression)
 {
     clang::FullSourceLoc fullLocation = m_context->getFullLoc(callExpression->getBeginLoc());
@@ -136,7 +139,7 @@ bool LupdateVisitor::VisitCallExpr(clang::CallExpr *callExpression)
     // Retrieving the information needed to fill the lupdate translator.
     // Function independent retrieve
     TranslationRelatedStore store;
-    store.callType = QString::fromLatin1("ASTRead_CallExpr");
+    store.callType = QStringLiteral("ASTRead_CallExpr");
     store.funcName = QString::fromStdString(funcName);
     store.lupdateLocationFile = QString::fromStdString(fullLocation.getFileEntry()->getName());
     store.lupdateLocationLine = fullLocation.getSpellingLineNumber();
@@ -206,7 +209,9 @@ bool LupdateVisitor::VisitCallExpr(clang::CallExpr *callExpression)
     return true;
 }
 
-// Retrieve the comments associated with the CallExpression
+/*
+    Retrieve the comments associated with the CallExpression.
+*/
 std::vector<QString> LupdateVisitor::rawCommentsForCallExpr(const clang::CallExpr *callExpr) const
 {
     if (!m_context)
@@ -327,8 +332,10 @@ std::vector<QString> LupdateVisitor::rawCommentsFromSourceLocation(
     return retrievedRawComments;
 }
 
-// Read the raw comments and split them according to the prefix.
-// Fill the corresponding variables in the TranslationRelatedStore.
+/*
+    Read the raw comments and split them according to the prefix.
+    Fill the corresponding variables in the TranslationRelatedStore.
+*/
 void LupdateVisitor::setInfoFromRawComment(const QString &commentString,
     TranslationRelatedStore *store)
 {
@@ -413,7 +420,9 @@ void LupdateVisitor::setInfoFromRawComment(const QString &commentString,
     }
 }
 
-// To fill m_tor with the retrieved information during the reading of the AST
+/*
+    Fill the Translator with the retrieved information after traversing the AST.
+*/
 void LupdateVisitor::fillTranslator()
 {
     for (const auto &store : m_translationStoresFromAST)
@@ -424,19 +433,15 @@ void LupdateVisitor::fillTranslator()
 void LupdateVisitor::fillTranslator(TranslationRelatedStore store)
 {
     bool forcePlural = false;
-    //============= TODO ===================
-    // If there is a Q_DECLARE_TR_FUNCTION
-    // the context given takes priority over the retrieved context.
-    // The retrieved context for Q_DECLARE_TR_FUNCTION (where the macro was)
-    // has to fit the start of the retrieved context of the tr function or NOOP macro
-    // if there is already a argument giving the context, it has priority
-
-    // This will be dealt after the functionality to retrieve the Q_DECLARE_TR_FUNCTION has beed added
-    //======================================
-
     switch (trFunctionAliasManager.trFunctionByName(store.funcName)) {
     case TrFunctionAliasManager::Function_Q_DECLARE_TR_FUNCTIONS:
-        //handleDeclareTrFunctions(); // not dealt with here!
+        // If there is a Q_DECLARE_TR_FUNCTION the context given takes priority
+        // over the retrieved context.
+        // The retrieved context for Q_DECLARE_TR_FUNCTION (where the macro was)
+        // has to fit the start of the retrieved context of the tr function or
+        // NOOP macro if there is already a argument giving the context, it has
+        // priority.
+        //handleDeclareTrFunctions(); // TODO: Implement.
         break;
     case TrFunctionAliasManager::Function_QT_TR_N_NOOP:
         forcePlural = true;
@@ -468,6 +473,7 @@ void LupdateVisitor::fillTranslator(TranslationRelatedStore store)
         break;
     }
 }
+
 TranslatorMessage LupdateVisitor::fillTranslatorMessage(const TranslationRelatedStore &store,
     bool forcePlural, bool isId)
 {

@@ -73,7 +73,8 @@ Q_DECLARE_LOGGING_CATEGORY(lcClang)
 #define LUPDATE_CLANG_VERSION LUPDATE_CLANG_VERSION_CHECK(LUPDATE_CLANG_VERSION_MAJOR, \
     LUPDATE_CLANG_VERSION_MINOR, LUPDATE_CLANG_VERSION_PATCH)
 
-// Local storage of translation information (information from the AST and linguist side)
+// Local storage of translation information (information from the AST and
+// linguist side)
 struct TranslationRelatedStore
 {
     QString callType;
@@ -90,18 +91,8 @@ struct TranslationRelatedStore
     QString lupdateIdMetaData;
     QString lupdateMagicMetaData;
     QHash<QString, QString> lupdateAllMagicMetaData;
-    /*
-     * NOTE: lupdate
-     * //~ meta1 toto
-     * //~ meta2 titi
-     * //~ meta2 tata
-     * =>
-     * <extra-meta1> toto </extra-meta1>
-     * <extra-meta2> tata </extra-meta2>
-     * => titi is lost. For the moment we do as lupdate cpp.cpp does
-     */
-    QString lupdateComment;      //  the one as argument of the tr function
-    QString lupdateExtraComment; //  those  //:
+    QString lupdateComment;
+    QString lupdateExtraComment;
     QString lupdatePlural;
 
     bool isValid() const
@@ -153,8 +144,6 @@ private:
 
     void setInfoFromRawComment(const QString &commentString, TranslationRelatedStore *store);
 
-    // Functions used to fill the linguist translator
-    // local store -> linguist Translator
     void fillTranslator(TranslationRelatedStore store);
     TranslatorMessage fillTranslatorMessage(const TranslationRelatedStore &store,
         bool forcePlural, bool isID = false);
@@ -166,7 +155,6 @@ private:
     Translator *m_tor { nullptr };
     std::string m_inputFile;
 
-    // Local store for the lupdate translation related info
     std::vector<TranslationRelatedStore> m_translationStoresFromAST;
 };
 
@@ -177,7 +165,8 @@ public:
         : m_visitor(context, tor)
     {}
 
-    //This method is called when the ASTs for entire translation unit have been parsed.
+    // This method is called when the ASTs for entire translation unit have been
+    // parsed.
     void HandleTranslationUnit(clang::ASTContext &context) override
     {
         bool traverse = m_visitor.TraverseAST(context);
