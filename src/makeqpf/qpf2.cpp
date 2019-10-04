@@ -629,7 +629,7 @@ void QPF::dump(const QByteArray &qpf)
         const QFontEngineQPF2::Block *block = reinterpret_cast<const QFontEngineQPF2::Block *>(data);
         quint32 tag = qFromBigEndian(block->tag);
         quint32 blockSize = qFromBigEndian(block->dataSize);
-        qDebug() << "Block: Tag =" << qFromBigEndian(block->tag) << "; Size =" << blockSize << "; Offset =" << hex << data - reinterpret_cast<const uchar *>(qpf.constData());
+        qDebug() << "Block: Tag =" << qFromBigEndian(block->tag) << "; Size =" << blockSize << "; Offset =" << Qt::hex << data - reinterpret_cast<const uchar *>(qpf.constData());
         data += sizeof(QFontEngineQPF2::Block);
 
         if (debugVerbosity) {

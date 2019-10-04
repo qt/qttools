@@ -496,27 +496,27 @@ bool KeymapParser::generateHeader(QFile *f)
 {
     QTextStream ts(f);
 
-    ts << "#ifndef QEVDEVKEYBOARDHANDLER_DEFAULTMAP_H" << endl;
-    ts << "#define QEVDEVKEYBOARDHANDLER_DEFAULTMAP_H" << endl << endl;
+    ts << "#ifndef QEVDEVKEYBOARDHANDLER_DEFAULTMAP_H" << Qt::endl;
+    ts << "#define QEVDEVKEYBOARDHANDLER_DEFAULTMAP_H" << Qt::endl << Qt::endl;
 
-    ts << "const QEvdevKeyboardMap::Mapping QEvdevKeyboardHandler::s_keymap_default[] = {" << endl;
+    ts << "const QEvdevKeyboardMap::Mapping QEvdevKeyboardHandler::s_keymap_default[] = {" << Qt::endl;
 
     for (int i = 0; i < m_keymap.size(); ++i) {
         const QEvdevKeyboardMap::Mapping &m = m_keymap.at(i);
         ts << QString::asprintf("    { %3d, 0x%04x, 0x%08x, 0x%02x, 0x%02x, 0x%04x },\n", m.keycode, m.unicode, m.qtcode, m.modifiers, m.flags, m.special);
     }
 
-    ts << "};" << endl << endl;
+    ts << "};" << Qt::endl << Qt::endl;
 
-    ts << "const QEvdevKeyboardMap::Composing QEvdevKeyboardHandler::s_keycompose_default[] = {" << endl;
+    ts << "const QEvdevKeyboardMap::Composing QEvdevKeyboardHandler::s_keycompose_default[] = {" << Qt::endl;
 
     for (int i = 0; i < m_keycompose.size(); ++i) {
         const QEvdevKeyboardMap::Composing &c = m_keycompose.at(i);
         ts << QString::asprintf("    { 0x%04x, 0x%04x, 0x%04x },\n", c.first, c.second, c.result);
     }
-    ts << "};" << endl << endl;
+    ts << "};" << Qt::endl << Qt::endl;
 
-    ts << "#endif" << endl;
+    ts << "#endif" << Qt::endl;
 
     return (ts.status() == QTextStream::Ok);
 }

@@ -102,7 +102,7 @@ QTextStream &operator<<(QTextStream &str, const QDpi &d)
 
 QTextStream &operator<<(QTextStream &str, const QRect &r)
 {
-    str << r.size() << forcesign << r.x() << r.y() << noforcesign;
+    str << r.size() << Qt::forcesign << r.x() << r.y() << Qt::noforcesign;
     return str;
 }
 
@@ -247,9 +247,9 @@ void dumpVkInfo(QTextStream &str)
         window.setVulkanInstance(&inst);
         for (const VkPhysicalDeviceProperties &props : window.availablePhysicalDevices()) {
             str << "  API version " << vulkanVersion(props.apiVersion).toString()
-                << hex << ", vendor 0x" << props.vendorID
+                << Qt::hex << ", vendor 0x" << props.vendorID
                 << ", device 0x" << props.deviceID << ", " << props.deviceName
-                << dec << ", type " << props.deviceType
+                << Qt::dec << ", type " << props.deviceType
                 << ", driver version " << vulkanVersion(props.driverVersion).toString();
         }
     } else {
@@ -480,7 +480,7 @@ QString qtDiag(unsigned flags)
 #  ifndef QT_NO_SSL
     if (QSslSocket::supportsSsl()) {
         str << "Using \"" << QSslSocket::sslLibraryVersionString() << "\", version: 0x"
-            << hex << QSslSocket::sslLibraryVersionNumber() << dec;
+            << Qt::hex << QSslSocket::sslLibraryVersionNumber() << Qt::dec;
     } else {
         str << "\nSSL is not supported.";
     }
@@ -528,7 +528,7 @@ QString qtDiag(unsigned flags)
     if (passwordMaskCharacter.unicode() >= 32 && passwordMaskCharacter.unicode() < 128)
         str << '\'' << passwordMaskCharacter << '\'';
     else
-        str << "U+" << qSetFieldWidth(4) << qSetPadChar('0') << uppercasedigits << hex << passwordMaskCharacter.unicode() << dec << qSetFieldWidth(0);
+        str << "U+" << qSetFieldWidth(4) << qSetPadChar('0') << Qt::uppercasedigits << Qt::hex << passwordMaskCharacter.unicode() << Qt::dec << qSetFieldWidth(0);
     str << '\n'
         << "  fontSmoothingGamma: " << styleHints->fontSmoothingGamma() << '\n'
         << "  useRtlExtensions: " << styleHints->useRtlExtensions() << '\n'
