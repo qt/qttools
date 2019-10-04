@@ -108,6 +108,8 @@ public:
     QPalette getPalette() const;
     void setPalette(const QPalette &palette, const QPalette &parentPalette);
 
+    QBrush brushAt(const QModelIndex &index) const;
+
     QPalette::ColorRole colorRole() const { return QPalette::NoRole; }
     void setCompute(bool on) { m_compute = on; }
 signals:

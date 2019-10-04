@@ -248,6 +248,11 @@ int PaletteModel::columnCount(const QModelIndex &) const
     return 4;
 }
 
+QBrush PaletteModel::brushAt(const QModelIndex &index) const
+{
+    return m_palette.brush(columnToGroup(index.column()), roleAt(index.row()));
+}
+
 QVariant PaletteModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
@@ -268,8 +273,10 @@ QVariant PaletteModel::data(const QModelIndex &index, int role) const
         }
         return QVariant();
     }
+    if (role == Qt::ToolTipRole)
+        return brushAt(index).color().name();
     if (role == BrushRole)
-        return m_palette.brush(columnToGroup(index.column()), roleAt(index.row()));
+        return brushAt(index);
     return QVariant();
 }
 
