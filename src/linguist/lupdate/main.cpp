@@ -28,7 +28,6 @@
 ****************************************************************************/
 
 #include "lupdate.h"
-#include "cpp_clang.h"
 
 #include <profileutils.h>
 #include <projectdescriptionreader.h>
@@ -47,8 +46,6 @@
 #include <QtCore/QTranslator>
 
 #include <iostream>
-
-bool useClangToParseCpp = false;
 
 // Can't have an array of QStaticStringData<N> for different N, so
 // use QString, which requires constructor calls. Doesn't matter
@@ -278,9 +275,6 @@ static void printUsage()
         "           Specify the output file(s). This will override the TRANSLATIONS.\n"
         "    -version\n"
         "           Display the version of lupdate and exit.\n"
-        "    -clang-parser \n"
-        "           Use clang to parse cpp files. Otherwise a custom parser is used.\n"
-        "           Need a compile_commands.json for the files that needs to be parsed.\n"
         "    @lst-file\n"
         "           Read additional file names (one per line) or includepaths (one per\n"
         "           line, and prefixed with -I) from lst-file.\n"
@@ -519,11 +513,7 @@ static void processSources(Translator &fetchedTor,
         printErr(LU::tr("lupdate warning: Some files have been ignored due to missing qml/javascript support\n"));
 #endif
 
-    if (useClangToParseCpp)
-        ClangCppParser::loadCPP(fetchedTor, sourceFilesCpp, cd);
-    else
-        loadCPP(fetchedTor, sourceFilesCpp, cd);
-
+    loadCPP(fetchedTor, sourceFilesCpp, cd);
     if (!cd.error().isEmpty())
         printErr(cd.error());
 }
@@ -842,9 +832,6 @@ int main(int argc, char **argv)
             } else {
                 includePath += args[i].mid(2);
             }
-            continue;
-        } else if (arg == QLatin1String("-clang-parser")) {
-            useClangToParseCpp = true;
             continue;
         } else if (arg.startsWith(QLatin1String("-")) && arg != QLatin1String("-")) {
             printErr(LU::tr("Unrecognized option '%1'.\n").arg(arg));

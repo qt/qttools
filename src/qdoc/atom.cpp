@@ -399,28 +399,28 @@ void LinkAtom::resolveSquareBracketParams()
 {
     if (resolved_)
         return;
-    QStringList params = squareBracketParams_.toLower().split(QLatin1Char(' '));
-     foreach (const QString &p, params) {
+    const QStringList params = squareBracketParams_.toLower().split(QLatin1Char(' '));
+     for (const auto &param : params) {
         if (!domain_) {
-            domain_ = QDocDatabase::qdocDB()->findTree(p);
+            domain_ = QDocDatabase::qdocDB()->findTree(param);
             if (domain_) {
                  continue;
             }
          }
         if (goal_ == Node::NoType) {
-            goal_ = Node::goal(p);
+            goal_ = Node::goal(param);
             if (goal_ != Node::NoType)
                 continue;
         }
-        if (p == "qml") {
+        if (param == "qml") {
             genus_ = Node::QML;
             continue;
         }
-        if (p == "cpp") {
+        if (param == "cpp") {
             genus_ = Node::CPP;
             continue;
         }
-        if (p == "doc") {
+        if (param == "doc") {
             genus_ = Node::DOC;
             continue;
         }

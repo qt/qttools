@@ -27,12 +27,17 @@
 ****************************************************************************/
 #pragma once
 #define QDOCTEST_MACRO test
+#define QDOCTEST_MACRO2(x) (x) < 0 ? 0 : (x))
 
 namespace TestQDoc {
 
 class Test {
 public:
     int someFunction(int v);
+    void someFunctionDefaultArg(int i, bool b);
+    void obsoleteMember();
+    void anotherObsoleteMember();
+    void deprecatedMember();
     inline void inlineFunction() {};
 };
 

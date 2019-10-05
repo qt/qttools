@@ -485,7 +485,7 @@ public:
     void findAllFunctions(NodeMapMap &functionIndex);
     void findAllNamespaces(NodeMultiMap &namespaces);
     void findAllAttributions(NodeMultiMap &attributions);
-    bool hasObsoleteMembers();
+    bool hasObsoleteMembers() const;
     void findAllObsoleteThings();
     void findAllClasses();
     void findAllSince();

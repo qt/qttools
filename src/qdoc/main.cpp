@@ -94,8 +94,8 @@ static void loadIndexFiles(Config &config, const QSet<QString> &formats)
 {
     QDocDatabase *qdb = QDocDatabase::qdocDB();
     QStringList indexFiles;
-    QStringList configIndexes = config.getStringList(CONFIG_INDEXES);
-    foreach (const QString &index, configIndexes) {
+    const QStringList configIndexes = config.getStringList(CONFIG_INDEXES);
+    for (const auto &index : configIndexes) {
         QFileInfo fi(index);
         if (fi.exists() && fi.isFile())
             indexFiles << index;
@@ -205,15 +205,6 @@ static void loadIndexFiles(Config &config, const QSet<QString> &formats)
  */
 static void processQdocconfFile(const QString &fileName, Config &config)
 {
-    config.setStringList(CONFIG_SYNTAXHIGHLIGHTING, QStringList(qdocGlobals.highlighting() ? "true" : "false"));
-    config.setStringList(CONFIG_SHOWINTERNAL, QStringList(qdocGlobals.showInternal() ? "true" : "false"));
-    config.setStringList(CONFIG_SINGLEEXEC, QStringList(qdocGlobals.singleExec() ? "true" : "false"));
-    config.setStringList(CONFIG_WRITEQAPAGES, QStringList(qdocGlobals.writeQaPages() ? "true" : "false"));
-    config.setStringList(CONFIG_REDIRECTDOCUMENTATIONTODEVNULL, QStringList(qdocGlobals.redirectDocumentationToDevNull() ? "true" : "false"));
-    config.setStringList(CONFIG_NOLINKERRORS, QStringList(qdocGlobals.noLinkErrors() ? "true" : "false"));
-    config.setStringList(CONFIG_AUTOLINKERRORS, QStringList(qdocGlobals.autolinkErrors() ? "true" : "false"));
-    config.setStringList(CONFIG_OBSOLETELINKS, QStringList(qdocGlobals.obsoleteLinks() ? "true" : "false"));
-
     qdocGlobals.setPreviousCurrentDir(QDir::currentPath());
 
     /*
@@ -228,18 +219,15 @@ static void processQdocconfFile(const QString &fileName, Config &config)
     Location::initialize(config);
     config.load(fileName);
     QString project = config.getString(CONFIG_PROJECT);
-    QString moduleHeader = config.getString(CONFIG_MODULEHEADER);
     if (project.isEmpty()) {
         Location::logToStdErrAlways(QLatin1String("qdoc can't run; no project set in qdocconf file"));
         exit(1);
     }
     /*
-      Add the defines to the configuration variables.
+      Add the defines and includepaths to their respective configuration variables.
      */
-    QStringList defs = qdocGlobals.defines() + config.getStringList(CONFIG_DEFINES);
-    config.setStringList(CONFIG_DEFINES,defs);
-    QStringList incs = qdocGlobals.includesPaths() + config.getStringList(CONFIG_INCLUDEPATHS);
-    config.setStringList(CONFIG_INCLUDEPATHS, incs);
+    config.insertStringList(CONFIG_DEFINES, qdocGlobals.defines());
+    config.insertStringList(CONFIG_INCLUDEPATHS, qdocGlobals.includesPaths());
     Location::terminate();
 
     qdocGlobals.setCurrentDir(QFileInfo(fileName).path());
@@ -308,8 +296,6 @@ static void processQdocconfFile(const QString &fileName, Config &config)
     }
 #endif
 
-    //QSet<QString> outputLanguages = config.getStringSet(CONFIG_OUTPUTLANGUAGES);
-
     /*
       Get the source language (Cpp) from the configuration
       and the location in the configuration file where the
@@ -350,6 +336,8 @@ static void processQdocconfFile(const QString &fileName, Config &config)
         qdb->newPrimaryTree(project);
     else
         qdb->setPrimaryTree(project);
+
+    const QString moduleHeader = config.getString(CONFIG_MODULEHEADER);
     if (!moduleHeader.isNull())
         clangParser_->setModuleHeader(moduleHeader);
     else
@@ -585,6 +573,7 @@ int main(int argc, char **argv)
     qdocGlobals.setOptions(parser);
     config.setOptions(parser);
     postProcess(parser);
+    config.setOptions(qdocGlobals);
 
     // Get the list of files to act on:
     QStringList qdocFiles = parser.positionalArguments();

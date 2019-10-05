@@ -55,4 +55,29 @@
         \li \c {\li}
         \li \c {\endlist}
     \endlist
+
+    \section1 Linking
+
+    There are multiple ways to create hyperlinks to other topics:
+
+    \list
+    \li \l {Testing QDoc's link command}{Linking to a page title}
+    \li \l {Link targets}{Linking to a section title}
+    \li \l {link-test-target}{Linking using a \\target string}
+    \li \l {QDoc Linking Test}{Linking using a \\keyword string}
+    \endlist
+*/
+
+/*!
+    \keyword QDoc Linking Test
+    \page qdoctests-qdocfileoutput-linking.html
+    \title Testing QDoc's link command
+    \brief This is a page for testing QDoc's link command.
+
+    \target link-test-target
+    \section1 Link targets
+
+    Valid parameters for the link command (\c {\l}) are page and section
+    titles, targets defined with \\target or \\keyword commands, and API
+    reference keywords (types, methods, namespaces, and so on).
 */

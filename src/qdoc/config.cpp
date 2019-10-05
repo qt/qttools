@@ -266,13 +266,33 @@ QMap<QString, QStringList> Config::includeFilesMap_;
 Config::Config(const QString &programName)
     : prog(programName)
 {
-    loc = Location::null;
-    lastLocation_ = Location::null;
-    configVars_.clear();
     numInstances++;
-    includeFilesMap_.clear();
+    reset();
+}
 
-    // Default values:
+Config::~Config()
+{
+    clear();
+}
+
+/*!
+  Clears the location and internal maps for config variables.
+ */
+void Config::clear()
+{
+    loc = lastLocation_ = Location::null;
+    configVars_.clear();
+    includeFilesMap_.clear();
+}
+
+/*!
+  Resets the Config instance - used by load()
+ */
+void Config::reset()
+{
+    clear();
+
+    // Default values
     setStringList(CONFIG_CODEINDENT, QStringList("0"));
     setStringList(CONFIG_FALSEHOODS, QStringList("0"));
     setStringList(CONFIG_FILEEXTENSIONS, QStringList("*.cpp *.h *.qdoc *.qml"));
@@ -282,24 +302,17 @@ Config::Config(const QString &programName)
 }
 
 /*!
-  The destructor has nothing special to do.
- */
-Config::~Config()
-{
-    includeFilesMap_.clear();
-}
-
-/*!
   Loads and parses the qdoc configuration file \a fileName.
-  This function calls the other load() function, which does
-  the loading, parsing, and processing of the configuration
-  file.
+  This function first resets the Config instance, then
+  calls the other load() function, which does the loading,
+  parsing, and processing of the configuration file.
 
   Intializes the location variables returned by location()
   and lastLocation().
  */
 void Config::load(const QString &fileName)
 {
+    reset();
     load(Location::null, fileName);
     if (loc.isEmpty())
         loc = Location(fileName);
@@ -309,16 +322,35 @@ void Config::load(const QString &fileName)
 }
 
 /*!
-  Joins all the strings in \a values into a single string with the
-  individual \a values separated by ' '. Then it inserts the result
-  into the string list map with \a var as the key.
-
-  It also inserts the \a values string list into a separate map,
-  also with \a var as the key.
+  Sets the \a values of a configuration variable \a var from a string list.
  */
 void Config::setStringList(const QString &var, const QStringList &values)
 {
-    configVars_.insert(var,ConfigVar(var, values, QDir::currentPath()));
+    configVars_.replace(var, ConfigVar(var, values, QDir::currentPath()));
+}
+
+/*!
+  Adds the \a values from a string list to the configuration variable \a var.
+  Existing value(s) are kept.
+*/
+void Config::insertStringList(const QString &var, const QStringList &values)
+{
+    configVars_.insert(var, ConfigVar(var, values, QDir::currentPath()));
+}
+
+/*!
+   Set configuration options from \a qdocGlobals.
+ */
+void Config::setOptions(const QDocGlobals &qdocGlobals)
+{
+    setStringList(CONFIG_SYNTAXHIGHLIGHTING, QStringList(qdocGlobals.highlighting() ? "true" : "false"));
+    setStringList(CONFIG_SHOWINTERNAL, QStringList(qdocGlobals.showInternal() ? "true" : "false"));
+    setStringList(CONFIG_SINGLEEXEC, QStringList(qdocGlobals.singleExec() ? "true" : "false"));
+    setStringList(CONFIG_WRITEQAPAGES, QStringList(qdocGlobals.writeQaPages() ? "true" : "false"));
+    setStringList(CONFIG_REDIRECTDOCUMENTATIONTODEVNULL, QStringList(qdocGlobals.redirectDocumentationToDevNull() ? "true" : "false"));
+    setStringList(CONFIG_NOLINKERRORS, QStringList(qdocGlobals.noLinkErrors() ? "true" : "false"));
+    setStringList(CONFIG_AUTOLINKERRORS, QStringList(qdocGlobals.autolinkErrors() ? "true" : "false"));
+    setStringList(CONFIG_OBSOLETELINKS, QStringList(qdocGlobals.obsoleteLinks() ? "true" : "false"));
 }
 
 /*!

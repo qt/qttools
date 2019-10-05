@@ -911,12 +911,10 @@ void CppCodeParser::setExampleFileLists(PageNode *pn)
         exampleFiles += Config::getFilesHere(fullPath, "*.qrc *.pro *.qmlproject qmldir");
     }
 
-    int i = 0;
-    foreach (const QString &exampleFile, exampleFiles)
-        exampleFiles[i++] = exampleFile.mid(sizeOfBoringPartOfName);
-    i = 0;
-    foreach (const QString &imageFile, imageFiles)
-        imageFiles[i++] = imageFile.mid(sizeOfBoringPartOfName);
+    for (auto &file : exampleFiles)
+        file = file.mid(sizeOfBoringPartOfName);
+    for (auto &file : imageFiles)
+        file = file.mid(sizeOfBoringPartOfName);
     ExampleNode *en = static_cast<ExampleNode *>(pn);
     en->setFiles(exampleFiles);
     en->setImages(imageFiles);

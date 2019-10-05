@@ -96,7 +96,8 @@ void QDocTagFiles::destroyQDocTagFiles()
  */
 void QDocTagFiles::generateTagFileCompounds(QXmlStreamWriter &writer, const Aggregate *parent)
 {
-    foreach (const Node *node, const_cast<Aggregate *>(parent)->nonfunctionList()) {
+    const auto &nonFunctionList = const_cast<Aggregate *>(parent)->nonfunctionList();
+    for (const auto *node : nonFunctionList) {
         if (!node->url().isEmpty() || node->isPrivate())
             continue;
 
@@ -137,8 +138,8 @@ void QDocTagFiles::generateTagFileCompounds(QXmlStreamWriter &writer, const Aggr
 
             // Classes contain information about their base classes.
             const ClassNode *classNode = static_cast<const ClassNode *>(node);
-            QList<RelatedClass> bases = classNode->baseClasses();
-            foreach (const RelatedClass& related, bases) {
+            const QList<RelatedClass> bases = classNode->baseClasses();
+            for (const auto &related : bases) {
                 ClassNode *n = related.node_;
                 if (n)
                     writer.writeTextElement("base", n->name());
@@ -170,7 +171,8 @@ void QDocTagFiles::generateTagFileCompounds(QXmlStreamWriter &writer, const Aggr
  */
 void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter &writer, const Aggregate *parent)
 {
-    foreach (const Node *node, parent->childNodes()) {
+    const auto &childNodes = parent->childNodes();
+    for (const auto *node : childNodes) {
         if (!node->url().isEmpty())
             continue;
 
