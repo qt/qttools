@@ -241,15 +241,15 @@
     \section1 \\dontdocument
 
     The \\dontdocument command is only used in a dontdocument.qdoc file
-    for a particular module.  This file specifies publically declared
-    classes or structs that are not meant to be documented. Then QDoc will
-    not print warnings about missing \class comments for these classes
+    for a particular module. This file specifies publically declared
+    classes or structs that are not meant to be documented. QDoc will
+    not print warnings about missing \\class comments for these classes
     and structs.
 
     Below you will find the \\dontdocument command in the
     dontdocument.qdoc for widgets:
 
-    \code
+    \badcode
     /*!
        \dontdocument (QTypeInfo QMetaTypeId)
     */
