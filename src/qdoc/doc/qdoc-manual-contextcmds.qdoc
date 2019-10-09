@@ -250,9 +250,9 @@
     dontdocument.qdoc for widgets:
 
     \badcode
-    /*!
+    / *!
        \dontdocument (QTypeInfo QMetaTypeId)
-    */
+    * /
     \endcode
 
     \target obsolete-command
