@@ -53,6 +53,12 @@ namespace TestQDoc {
 */
 
 /*!
+    \class TestQDoc::TestDerived
+    \inmodule TestCPP
+    \brief A derived class in a namespace.
+*/
+
+/*!
     \macro QDOCTEST_MACRO
     \relates TestQDoc
 */
@@ -116,5 +122,21 @@ int Test::someFunction(int v)
 
     \brief An inline function, documented using the \CMDFN QDoc command.
 */
+
+/*!
+    Function that must be reimplemented.
+*/
+void Test::virtualFun()
+{
+    return;
+}
+
+/*!
+    \reimp
+*/
+void TestDerived::virtualFun()
+{
+    return;
+}
 
 } // namespace TestQDoc
