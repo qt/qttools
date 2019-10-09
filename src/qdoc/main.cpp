@@ -169,8 +169,9 @@ static void loadIndexFiles(Config &config, const QSet<QString> &formats)
                         highest UNIX timestamp.
                     */
                     QStringList indexPaths;
-                    for (int k = 0; k < foundIndices.size(); k++)
-                        indexPaths << foundIndices[k].absoluteFilePath();
+                    indexPaths.reserve(foundIndices.size());
+                    for (const auto &found : qAsConst(foundIndices))
+                        indexPaths << found.absoluteFilePath();
                     Location::null.warning(QString("Multiple index files found for dependency \"%1\":\n%2").arg(
                                                qdocGlobals.dependModules()[i], indexPaths.join('\n')));
                     Location::null.warning(QString("Using %1 as index file for dependency \"%2\"").arg(
