@@ -426,6 +426,7 @@ public:
     static QStringList exampleDirs;
     static QStringList sourceFiles;
     static QStringList sourceDirs;
+    static QStringList ignorewords;
     static bool quoting;
 
 private:
@@ -470,6 +471,8 @@ private:
     QString getCode(int cmd, CodeMarker *marker, const QString &argStr = QString());
     QString getUnmarkedCode(int cmd);
 
+    inline bool isAutoLinkString(const QString &word);
+    bool isAutoLinkString(const QString &word, int &curPos);
     bool isBlankLine();
     bool isLeftBraceAhead();
     bool isLeftBracketAhead();
@@ -517,6 +520,7 @@ QStringList DocParser::exampleFiles;
 QStringList DocParser::exampleDirs;
 QStringList DocParser::sourceFiles;
 QStringList DocParser::sourceDirs;
+QStringList DocParser::ignorewords;
 bool DocParser::quoting = false;
 
 /*!
@@ -1364,63 +1368,17 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                                 pos = backslashPos;
                             }
                         }
+                    } else if (isAutoLinkString(cmdStr)) {
+                        appendWord(cmdStr);
                     } else {
-                        int curPos = 0;
-                        int numUppercase = 0;
-                        int numLowercase = 0;
-                        int numStrangeSymbols = 0;
-
-                        while (curPos < cmdStr.size()) {
-                            unsigned char latin1Ch = cmdStr.at(curPos).toLatin1();
-                            if (islower(latin1Ch)) {
-                                ++numLowercase;
-                                ++curPos;
-                            } else if (isupper(latin1Ch)) {
-                                ++numUppercase;
-                                ++curPos;
-                            } else if (isdigit(latin1Ch)) {
-                                if (curPos > 0)
-                                    ++curPos;
-                                else
-                                    break;
-                            } else if (latin1Ch == '_' || latin1Ch == '@') {
-                                ++numStrangeSymbols;
-                                ++curPos;
-                            } else if ((latin1Ch == ':') && (curPos < cmdStr.size() - 1)
-                                       && (cmdStr.at(curPos + 1) == QLatin1Char(':'))) {
-                                ++numStrangeSymbols;
-                                curPos += 2;
-                            } else if (latin1Ch == '(') {
-                                if (curPos > 0) {
-                                    if ((curPos < cmdStr.size() - 1)
-                                        && (cmdStr.at(curPos + 1) == QLatin1Char(')'))) {
-                                        ++numStrangeSymbols;
-                                        pos += 2;
-                                        break;
-                                    } else {
-                                        // ### handle functions with signatures
-                                        // and function calls
-                                        break;
-                                    }
-                                } else {
-                                    break;
-                                }
-                            } else {
-                                break;
-                            }
+                        if (!cmdStr.endsWith("propertygroup")) {
+                            // The QML and JS property group commands are no longer required
+                            // for grouping QML and JS properties. They are allowed but ignored.
+                            location().warning(tr("Unknown command '\\%1'").arg(cmdStr),
+                                               detailsUnknownCommand(metaCommandSet,cmdStr));
                         }
-                        if ((numUppercase >= 1 && numLowercase >= 2) || numStrangeSymbols > 0) {
-                            appendWord(cmdStr);
-                        } else {
-                            if (!cmdStr.endsWith("propertygroup")) {
-                                // The QML and JS property group commands are no longer required
-                                // for grouping QML and JS properties. They are allowed but ignored.
-                                location().warning(tr("Unknown command '\\%1'").arg(cmdStr),
-                                                   detailsUnknownCommand(metaCommandSet, cmdStr));
-                            }
-                            enterPara();
-                            append(Atom::UnknownCommand, cmdStr);
-                        }
+                        enterPara();
+                        append(Atom::UnknownCommand, cmdStr);
                     }
                 }
             } // case '\\' (qdoc markup command)
@@ -1505,50 +1463,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
 
             if (newWord) {
                 int startPos = pos;
-                int numInternalUppercase = 0;
-                int numLowercase = 0;
-                int numStrangeSymbols = 0;
-
-                while (pos < len) {
-                    unsigned char latin1Ch = input_.at(pos).toLatin1();
-                    if (islower(latin1Ch)) {
-                        ++numLowercase;
-                        ++pos;
-                    } else if (isupper(latin1Ch)) {
-                        if (pos > startPos)
-                            ++numInternalUppercase;
-                        ++pos;
-                    } else if (isdigit(latin1Ch)) {
-                        if (pos > startPos)
-                            ++pos;
-                        else
-                            break;
-                    } else if (latin1Ch == '_' || latin1Ch == '@') {
-                        ++numStrangeSymbols;
-                        ++pos;
-                    } else if (latin1Ch == ':' && pos < len - 1
-                               && input_.at(pos + 1) == QLatin1Char(':')) {
-                        ++numStrangeSymbols;
-                        pos += 2;
-                    } else if (latin1Ch == '(') {
-                        if (pos > startPos) {
-                            if (pos < len - 1 && input_.at(pos + 1) == QLatin1Char(')')) {
-                                ++numStrangeSymbols;
-                                pos += 2;
-                                break;
-                            } else {
-                                // ### handle functions with signatures
-                                // and function calls
-                                break;
-                            }
-                        } else {
-                            break;
-                        }
-                    } else {
-                        break;
-                    }
-                }
-
+                bool autolink = isAutoLinkString(input_, pos);
                 if (pos == startPos) {
                     if (!ch.isSpace()) {
                         appendChar(ch);
@@ -1556,9 +1471,8 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     }
                 } else {
                     QString word = input_.mid(startPos, pos - startPos);
-                    // is word a C++ symbol or an English word?
-                    if ((numInternalUppercase >= 1 && numLowercase >= 2) || numStrangeSymbols > 0) {
-                        if (word.startsWith(QString("__")))
+                    if (autolink) {
+                        if (ignorewords.contains(word) || word.startsWith(QString("__")))
                             appendWord(word);
                         else
                             append(Atom::AutoLink, word);
@@ -1773,6 +1687,65 @@ bool DocParser::openCommand(int cmd)
         location().warning(tr("Can't use '\\%1' in '\\%2'").arg(cmdName(cmd)).arg(cmdName(outer)));
     }
     return ok;
+}
+
+/*!
+    Returns \c true if \a word qualifies for auto-linking.
+*/
+inline bool DocParser::isAutoLinkString(const QString &word)
+{
+    int start = 0;
+    return isAutoLinkString(word, start);
+}
+
+bool DocParser::isAutoLinkString(const QString &word, int &curPos)
+{
+    int len = word.size();
+    int startPos = curPos;
+    int numUppercase = 0;
+    int numLowercase = 0;
+    int numStrangeSymbols = 0;
+
+    while (curPos < len) {
+        unsigned char latin1Ch = word.at(curPos).toLatin1();
+        if (islower(latin1Ch)) {
+            ++numLowercase;
+            ++curPos;
+        } else if (isupper(latin1Ch)) {
+            if (curPos > startPos)
+                ++numUppercase;
+            ++curPos;
+        } else if (isdigit(latin1Ch)) {
+            if (curPos > startPos)
+                ++curPos;
+            else
+                break;
+        } else if (latin1Ch == '_' || latin1Ch == '@') {
+            ++numStrangeSymbols;
+            ++curPos;
+        } else if ((latin1Ch == ':') &&
+                   (curPos < len - 1) &&
+                   (word.at(curPos + 1) == QLatin1Char(':'))) {
+            ++numStrangeSymbols;
+            curPos += 2;
+        } else if (latin1Ch == '(') {
+            if (curPos > startPos) {
+                if ((curPos < len - 1) &&
+                    (word.at(curPos + 1) == QLatin1Char(')'))) {
+                    ++numStrangeSymbols;
+                    pos += 2;
+                    break;
+                } else {
+                    break;
+                }
+            } else {
+                break;
+            }
+        } else {
+            break;
+        }
+    }
+    return ((numUppercase >= 1 && numLowercase >= 2) || numStrangeSymbols > 0);
 }
 
 bool DocParser::closeCommand(int endCmd)
@@ -3049,6 +3022,7 @@ void Doc::initialize(const Config &config)
     DocParser::exampleDirs = config.getCanonicalPathList(CONFIG_EXAMPLEDIRS);
     DocParser::sourceFiles = config.getCanonicalPathList(CONFIG_SOURCES);
     DocParser::sourceDirs = config.getCanonicalPathList(CONFIG_SOURCEDIRS);
+    DocParser::ignorewords = config.getStringList(CONFIG_IGNOREWORDS);
 
     QmlTypeNode::qmlOnly = config.getBool(CONFIG_QMLONLY);
     QStringMap reverseAliasMap;
