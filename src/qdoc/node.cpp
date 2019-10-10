@@ -3386,7 +3386,7 @@ void Aggregate::findAllObsoleteThings()
 void Aggregate::findAllClasses()
 {
     foreach (Node *n, children_) {
-        if (!n->isPrivate() && !n->isInternal() &&
+        if (!n->isPrivate() && !n->isInternal() && !n->isDontDocument() &&
             n->tree()->camelCaseModuleName() != QString("QDoc")) {
             if (n->isClassNode()) {
                 QDocDatabase::cppClasses().insert(n->qualifyCppName().toLower(), n);
