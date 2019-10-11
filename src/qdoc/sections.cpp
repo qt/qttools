@@ -934,8 +934,11 @@ void Sections::buildStdCppClassRefPageSections()
         documentAll = false;
     NodeList::ConstIterator c = aggregate_->constBegin();
     while (c != aggregate_->constEnd()) {
-        Node* n = *c;
-        if (!n->isPrivate() && !n->isProperty() && !n->isRelatedNonmember())
+        Node *n = *c;
+        if (!n->isPrivate()
+            && !n->isProperty()
+            && !n->isRelatedNonmember()
+            && !n->isSharedCommentNode())
             allMembers.insert(n);
         if (!documentAll && !n->hasDoc()) {
             ++c;
@@ -961,8 +964,11 @@ void Sections::buildStdCppClassRefPageSections()
         ClassNode *cn = stack.pop();
         c = cn->constBegin();
         while (c != cn->constEnd()) {
-            Node* n = *c;
-            if (!n->isPrivate() && !n->isProperty())
+            Node *n = *c;
+            if (!n->isPrivate()
+                && !n->isProperty()
+                && !n->isRelatedNonmember()
+                && !n->isSharedCommentNode())
                 allMembers.insert(n);
             if (!documentAll && !n->hasDoc()) {
                 ++c;
@@ -1001,7 +1007,9 @@ void Sections::buildStdQmlTypeRefPageSections()
                 ++c;
                 continue;
             }
-            allMembers.add(classMap, n);
+            if (!n->isSharedCommentNode())
+                allMembers.add(classMap, n);
+
             distributeQmlNodeInSummaryVector(sv, n);
             distributeQmlNodeInDetailsVector(dv, n);
             ++c;
@@ -1026,7 +1034,7 @@ void Sections::buildStdQmlTypeRefPageSections()
         NodeList::ConstIterator c = qtn->constBegin();
         while (c != qtn->constEnd()) {
             Node *n = *c;
-            if (n->isInternal()) {
+            if (n->isInternal() || n->isSharedCommentNode()) {
                 ++c;
                 continue;
             }
