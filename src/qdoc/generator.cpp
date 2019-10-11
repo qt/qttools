@@ -1467,7 +1467,7 @@ void Generator::generateInvokableNote(const Node* node, CodeMarker* marker)
 
 /*!
   Generate the documentation for \a relative. i.e. \a relative
-  is the node that reporesentas the entity where a qdoc comment
+  is the node that represents the entity where a qdoc comment
   was found, and \a text represents the qdoc comment.
  */
 bool Generator::generateText(const Text& text,
@@ -1707,7 +1707,7 @@ void Generator::generateOverloadedSignal(const Node* node, CodeMarker* marker)
 
 
 /*!
-  Traverses the database recursivly to generate all the documentation.
+  Traverses the database recursively to generate all the documentation.
  */
 void Generator::generateDocs()
 {
