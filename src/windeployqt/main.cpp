@@ -1493,11 +1493,12 @@ static DeployResult deploy(const Options &options,
         if (options.patchQt  && !options.dryRun && !options.isWinRt()) {
             const QString qt6CoreName = QFileInfo(libraryPath(libraryLocation, "Qt6Core", qtLibInfix,
                                                               options.platform, isDebug)).fileName();
-
+#ifndef QT_RELOCATABLE
             if (!patchQtCore(targetPath + QLatin1Char('/') + qt6CoreName, errorMessage)) {
                 std::wcerr << "Warning: " << *errorMessage << '\n';
                 errorMessage->clear();
             }
+#endif
         }
     } // optLibraries
 

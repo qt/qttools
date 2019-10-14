@@ -282,7 +282,6 @@ static void printUsage()
         "           Specify the output file(s). This will override the TRANSLATIONS.\n"
         "    -version\n"
         "           Display the version of lupdate and exit.\n"
-#if QT_CONFIG(clangcpp)
         "    -clang-parser \n"
         "           Use clang to parse cpp files. Otherwise a custom parser is used.\n"
         "           Need a compile_commands.json for the files that needs to be parsed.\n"
@@ -290,7 +289,6 @@ static void printUsage()
         "           under LUPDATE_COMPILE_COMMANDS_PATH.\n"
         "           If no path is given search for compile_commands.json will be attempted\n"
         "           through all parent paths of the first input file.\n"
-#endif
         "    @lst-file\n"
         "           Read additional file names (one per line) or includepaths (one per\n"
         "           line, and prefixed with -I) from lst-file.\n"

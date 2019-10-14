@@ -147,7 +147,8 @@ void QmlCodeParser::parseSourceFile(const Location &location, const QString &fil
                                << "The output is incomplete.";
         }
     }
-    foreach (const QQmlJS::DiagnosticMessage &msg, parser->diagnosticMessages()) {
+    const auto &messages = parser->diagnosticMessages();
+    for (const auto &msg : messages) {
         qDebug().nospace() << qPrintable(filePath) << ':'
 #if Q_QML_PRIVATE_API_VERSION < 5
                            << msg.loc.startLine << ": QML syntax error at col "

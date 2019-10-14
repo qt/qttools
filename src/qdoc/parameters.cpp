@@ -456,7 +456,8 @@ QString Parameters::signature(bool includeValues) const
 QString Parameters::rawSignature(bool names, bool values) const
 {
     QString raw;
-    foreach (const Parameter &parameter, parameters_) {
+    const auto params = parameters_;
+    for (const auto &parameter : params) {
         raw += parameter.type();
         if (names)
             raw += parameter.name();
@@ -508,7 +509,8 @@ void Parameters::set(const QString &signature)
  */
 void Parameters::getNames(QSet<QString> &names) const
 {
-    foreach (const Parameter &parameter, parameters_) {
+    const auto params = parameters_;
+    for (const auto &parameter : params) {
         if (!parameter.name().isEmpty())
             names.insert(parameter.name());
     }

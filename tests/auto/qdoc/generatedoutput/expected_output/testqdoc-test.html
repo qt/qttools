@@ -13,6 +13,7 @@
 <h3><a name="toc">Contents</a></h3>
 <ul>
 <li class="level1"><a href="#public-functions">Public Functions</a></li>
+<li class="level1"><a href="#macros">Macros</a></li>
 <li class="level1"><a href="#details">Detailed Description</a></li>
 </ul>
 </div>
@@ -24,14 +25,21 @@
 <!-- @@@Test -->
 <div class="table"><table class="alignedsummary">
 <tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <span class="preprocessor">#include &lt;Test&gt;</span>
-</td></tr></table></div><ul>
+</td></tr><tr><td class="memItemLeft rightAlign topAlign"> qmake:</td><td class="memItemRight bottomAlign"> QT += testcpp</td></tr></table></div><ul>
 <li><a href="testqdoc-test-members.html">List of all members, including inherited members</a></li>
+<li><a href="testqdoc-test-obsolete.html">Obsolete members</a></li>
 </ul>
 <a name="public-functions"></a>
 <h2 id="public-functions">Public Functions</h2>
 <div class="table"><table class="alignedsummary">
 <tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#inlineFunction">inlineFunction</a></b>()</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> int </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#someFunction">someFunction</a></b>(int <i>v</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#someFunctionDefaultArg">someFunctionDefaultArg</a></b>(int <i>i</i>, bool <i>b</i> = false)</td></tr>
+</table></div>
+<a name="macros"></a>
+<h2 id="macros">Macros</h2>
+<div class="table"><table class="alignedsummary">
+<tr><td class="memItemLeft rightAlign topAlign"> </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#QDOCTEST_MACRO2">QDOCTEST_MACRO2</a></b>(<i>x</i>)</td></tr>
 </table></div>
 <a name="details"></a>
 <!-- $$$Test-description -->
@@ -49,6 +57,18 @@
 <h3 class="fn" id="someFunction"><a name="someFunction"></a><span class="type">int</span> Test::<span class="name">someFunction</span>(<span class="type">int</span> <i>v</i>)</h3>
 <p>Function that takes a parameter <i>v</i>. Also returns the value of <i>v</i>.</p>
 <!-- @@@someFunction -->
+<!-- $$$someFunctionDefaultArg[overload1]$$$someFunctionDefaultArgintbool -->
+<h3 class="fn" id="someFunctionDefaultArg"><a name="someFunctionDefaultArg"></a><span class="type">void</span> Test::<span class="name">someFunctionDefaultArg</span>(<span class="type">int</span> <i>i</i>, <span class="type">bool</span> <i>b</i> = false)</h3>
+<p>Function that takes a parameter <i>i</i> and <i>b</i>.</p>
+<!-- @@@someFunctionDefaultArg -->
+</div>
+<div class="macros">
+<h2>Macro Documentation</h2>
+<!-- $$$QDOCTEST_MACRO2[overload1]$$$QDOCTEST_MACRO2 -->
+<h3 class="fn" id="QDOCTEST_MACRO2"><a name="QDOCTEST_MACRO2"></a><span class="name">QDOCTEST_MACRO2</span>(<i>x</i>)</h3>
+<p>A macro with argument <i>x</i>.</p>
+<p>This function was introduced in  Test 1.1.</p>
+<!-- @@@QDOCTEST_MACRO2 -->
 </div>
 </body>
 </html>

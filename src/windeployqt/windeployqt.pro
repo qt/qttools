@@ -10,4 +10,7 @@ CONFIG += force_bootstrap
 win32: LIBS += -lshlwapi
 
 QMAKE_TARGET_DESCRIPTION = "Qt Windows Deployment Tool"
+
+qtConfig(relocatable): DEFINES += QT_RELOCATABLE
+
 load(qt_tool)

@@ -584,10 +584,14 @@ bool QmlDocVisitor::visit(QQmlJS::AST::UiImport *import)
     QString name = document.mid(import->fileNameToken.offset, import->fileNameToken.length);
     if (name[0] == '\"')
         name = name.mid(1, name.length()-2);
-    QString version = document.mid(import->versionToken.offset, import->versionToken.length);
+    QString version;
+    if (import->version) {
+        const auto start = import->version->firstSourceLocation().begin();
+        const auto end = import->version->lastSourceLocation().end();
+        version = document.mid(start, end - start);
+    }
     QString importId = document.mid(import->importIdToken.offset, import->importIdToken.length);
     QString importUri = getFullyQualifiedId(import->importUri);
-    QString reconstructed = importUri + QLatin1Char(' ') + version;
     importList.append(ImportRec(name, version, importId, importUri));
 
     return true;

@@ -518,17 +518,18 @@ void Tokenizer::initialize(const Config &config)
 
     ignoredTokensAndDirectives = new QHash<QByteArray, bool>;
 
-    QStringList tokens = config.getStringList(LANGUAGE_CPP + Config::dot + CONFIG_IGNORETOKENS);
-    foreach (const QString &t, tokens) {
-        const QByteArray tb = t.toLatin1();
+    const QStringList tokens =
+            config.getStringList(LANGUAGE_CPP + Config::dot + CONFIG_IGNORETOKENS);
+    for (const auto &token : tokens) {
+        const QByteArray tb = token.toLatin1();
         ignoredTokensAndDirectives->insert(tb, false);
         insertKwordIntoHash(tb.data(), -1);
     }
 
-    QStringList directives = config.getStringList(LANGUAGE_CPP + Config::dot
+    const QStringList directives = config.getStringList(LANGUAGE_CPP + Config::dot
                                                   + CONFIG_IGNOREDIRECTIVES);
-    foreach (const QString &d, directives) {
-        const QByteArray db = d.toLatin1();
+    for (const auto &directive : directives) {
+        const QByteArray db = directive.toLatin1();
         ignoredTokensAndDirectives->insert(db, true);
         insertKwordIntoHash(db.data(), -1);
     }

@@ -192,7 +192,7 @@ void QmlMarkupVisitor::addMarkedUpToken(
         return;
 
     output += QString(QLatin1String("<@%1")).arg(tagName);
-    foreach (const QString &key, attributes)
+    for (const auto &key : attributes)
         output += QString(QLatin1String(" %1=\"%2\"")).arg(key).arg(attributes[key]);
     output += QString(QLatin1String(">%2</@%3>")).arg(protect(sourceText(location)), tagName);
     cursor += location.length;
@@ -236,7 +236,8 @@ bool QmlMarkupVisitor::visit(QQmlJS::AST::UiImport *uiimport)
 
 void QmlMarkupVisitor::endVisit(QQmlJS::AST::UiImport *uiimport)
 {
-    addVerbatim(uiimport->versionToken);
+    if (uiimport->version)
+        addVerbatim(uiimport->version->firstSourceLocation(), uiimport->version->lastSourceLocation());
     addVerbatim(uiimport->asToken);
     addMarkedUpToken(uiimport->importIdToken, QLatin1String("headerfile"));
     addVerbatim(uiimport->semicolonToken);

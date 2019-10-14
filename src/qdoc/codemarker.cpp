@@ -369,10 +369,11 @@ QStringList CodeMarker::macRefsForNode(Node *node)
     {
         QStringList stringList;
         stringList << encode(result + QLatin1String("tag/") + macName(node));
-        foreach (const QString &enumName, node->doc().enumItemNames()) {
+        const auto enumItemNames = node->doc().enumItemNames();
+        for (const auto &name : enumItemNames) {
             // ### Write a plainEnumValue() and use it here
             stringList << encode(result + QLatin1String("econst/") +
-                                 macName(node->parent(), enumName));
+                                 macName(node->parent(), name));
         }
         return stringList;
     }
@@ -412,9 +413,9 @@ QStringList CodeMarker::macRefsForNode(Node *node)
         break;
     case Node::Property:
     {
-        NodeList list = static_cast<const PropertyNode *>(node)->functions();
+        const NodeList list = static_cast<const PropertyNode *>(node)->functions();
         QStringList stringList;
-        foreach (Node *node, list) {
+        for (auto *node : list) {
             stringList += macRefsForNode(node);
         }
         return stringList;
