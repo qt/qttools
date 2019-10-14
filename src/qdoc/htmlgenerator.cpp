@@ -2419,6 +2419,13 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
         logicalModuleVersion = collection->logicalModuleVersion();
     else
         logicalModuleVersion = qcn->logicalModuleVersion();
+
+    if (logicalModuleVersion.isEmpty() || qcn->logicalModuleName().isEmpty())
+        qcn->doc().location().warning(tr("Could not resolve QML import "
+                                         "statement for type '%1'").arg(qcn->name()),
+                                      tr("Maybe you forgot to use the "
+                                         "'\\%1' command?").arg(COMMAND_INQMLMODULE));
+
     text.clear();
     text << "import " + qcn->logicalModuleName() + QLatin1Char(' ') + logicalModuleVersion;
     requisites.insert(importText, text);
