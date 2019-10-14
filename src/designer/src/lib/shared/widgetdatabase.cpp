@@ -601,22 +601,22 @@ static QString xmlFromWidgetBox(const QDesignerFormEditorInterface *core, const 
 // Generate default standard ui new form xml based on the class passed on as similarClassName.
 static QString generateNewFormXML(const QString &className, const QString &similarClassName, const QString &name)
 {
-    QString rc; {
-        QTextStream str(&rc);
-        str << QStringLiteral("<ui version=\"4.0\" >\n<class>") << name << QStringLiteral("</class>\n")
-            <<  QStringLiteral("<widget class=\"") << className << QStringLiteral("\" name=\"") << name << QStringLiteral("\" >\n")
-            <<  QStringLiteral("<property name=\"geometry\" >\n<rect><x>0</x><y>0</y><width>")
-            << NewFormWidth << QStringLiteral("</width><height>") << NewFormHeight << QStringLiteral("</height></rect>\n</property>\n");
-        str << QStringLiteral("<property name=\"windowTitle\" >\n<string>") << name << QStringLiteral("</string>\n</property>\n");
+    QString rc;
+    QTextStream str(&rc);
+    str << R"(<ui version="4.0"><class>)" << name << "</class>"
+        << R"(<widget class=")" << className << R"(" name=")" << name << R"(">)"
+        << R"(<property name="geometry" ><rect><x>0</x><y>0</y><width>)"
+        << NewFormWidth << "</width><height>" << NewFormHeight << "</height></rect></property>"
+        << R"(<property name="windowTitle"><string>)" << name << "</string></property>\n";
 
-        if (similarClassName == QStringLiteral("QMainWindow")) {
-            str << QStringLiteral("<widget class=\"QWidget\" name=\"centralwidget\" />\n");
-        } else {
-            if (similarClassName == QStringLiteral("QWizard"))
-                str << QStringLiteral("<widget class=\"QWizardPage\" name=\"wizardPage1\" /><widget class=\"QWizardPage\" name=\"wizardPage2\" />\n");
-        }
-        str << QStringLiteral("</widget>\n</ui>\n");
+    if (similarClassName == QLatin1String("QMainWindow")) {
+        str << R"(<widget class="QWidget" name="centralwidget"/>)";
+    } else if (similarClassName == QLatin1String("QWizard")) {
+        str << R"(<widget class="QWizardPage" name="wizardPage1"/><widget class="QWizardPage" name="wizardPage2"/>)";
+    } else if (similarClassName == QLatin1String("QDockWidget")) {
+        str << R"(<widget class="QWidget" name="dockWidgetContents"/>)";
     }
+    str << "</widget></ui>\n";
     return rc;
 }
 

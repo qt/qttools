@@ -40,7 +40,6 @@
 #include <QtCore/qvariant.h>
 #include <QtCore/qdir.h>
 
-#include <QtWidgets/qdesktopwidget.h>
 #include <QtWidgets/qstyle.h>
 #include <QtWidgets/qlistview.h>
 

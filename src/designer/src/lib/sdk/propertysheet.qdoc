@@ -68,17 +68,24 @@
     also provides an interface for creating custom property sheet
     extensions.
 
-    \warning \QD uses the QDesignerPropertySheetExtension to feed its
-    property editor. Whenever a widget is selected in its workspace,
-    \QD will query for the widget's property sheet extension. If the
-    selected widget has an implemented property sheet extension, this
-    extension will override the default property sheet.
+    Keep the following limitations in mind:
 
-    \warning The data types used by the property sheet for some properties
-    are opaque custom QVariant types containing additional information
-    instead of plain Qt data types.
-    For example, this is the case for enumerations, flags,
-    icons, pixmaps and strings.
+    \list
+        \li \QD uses the QDesignerPropertySheetExtension to feed its
+            property editor. Whenever a widget is selected in its workspace,
+            \QD will query for the widget's property sheet extension. If the
+            selected widget has an implemented property sheet extension, this
+            extension will override the default property sheet.
+
+        \li The data types used by the property sheet for some properties
+            are opaque custom QVariant types containing additional information
+            instead of plain Qt data types. For example, this is the case for
+            enumerations, flags, icons, pixmaps and strings.
+
+        \li \QD's property editor has no implementation for handling
+            Q_PROPERTY types for custom types that have been declared
+            with Q_DECLARE_METATYPE().
+    \endlist
 
     To create a property sheet extension, your extension class must
     inherit from both QObject and

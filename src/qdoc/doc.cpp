@@ -381,9 +381,7 @@ DocPrivate::DocPrivate(const Location &start,
 DocPrivate::~DocPrivate()
 {
     delete extra;
-    foreach (DitaRef *t, ditamap_) {
-        delete t;
-    }
+    qDeleteAll(ditamap_);
 }
 
 void DocPrivate::addAlso(const Text &also)
@@ -2861,9 +2859,9 @@ Doc::Doc(const Location &start_loc,
          const QSet<QString> &metaCommandSet,
          const QSet<QString> &topics)
 {
-    priv = new DocPrivate(start_loc,end_loc,source);
+    priv = new DocPrivate(start_loc, end_loc, source);
     DocParser parser;
-    parser.parse(source,priv,metaCommandSet,topics);
+    parser.parse(source, priv, metaCommandSet, topics);
 }
 
 Doc::Doc(const Doc &doc)
@@ -3416,9 +3414,7 @@ void Doc::detach()
  */
 TopicRef::~TopicRef()
 {
-    foreach (DitaRef *t, subrefs_) {
-        delete t;
-    }
+    qDeleteAll(subrefs_);
 }
 
 /*!

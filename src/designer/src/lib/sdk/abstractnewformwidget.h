@@ -39,7 +39,7 @@ class QDesignerFormEditorInterface;
 
 class QDESIGNER_SDK_EXPORT QDesignerNewFormWidgetInterface : public QWidget
 {
-    Q_DISABLE_COPY_MOVE(QDesignerNewFormWidgetInterface)
+    Q_DISABLE_COPY(QDesignerNewFormWidgetInterface)
     Q_OBJECT
 public:
     explicit QDesignerNewFormWidgetInterface(QWidget *parent = nullptr);

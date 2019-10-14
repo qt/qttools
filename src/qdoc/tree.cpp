@@ -112,8 +112,8 @@ Tree::~Tree()
         while (i != targetListMap_->end()) {
             TargetList *tlist = i.value();
             if (tlist) {
-                foreach (TargetLoc *tloc, *tlist)
-                    delete tloc;
+                for (auto *location : qAsConst(*tlist))
+                    delete location;
             }
             delete tlist;
             ++i;
@@ -364,7 +364,7 @@ void Tree::resolveCppToQmlLinks()
 {
 
     const NodeList &children = root_.childNodes();
-    foreach (Node *child, children) {
+    for (auto *child : children) {
         if (child->isQmlType() || child->isJsType()) {
             QmlTypeNode *qcn = static_cast<QmlTypeNode *>(child);
             ClassNode *cn = const_cast<ClassNode *>(qcn->classNode());
@@ -381,7 +381,7 @@ void Tree::resolveCppToQmlLinks()
 void Tree::resolveUsingClauses()
 {
     const NodeList &children = root_.childNodes();
-    foreach (Node *child, children) {
+    for (auto *child : children) {
         if (child->isClassNode()) {
             ClassNode *cn = static_cast<ClassNode *>(child);
             QList<UsingClause> &usingClauses = cn->usingClauses();
@@ -427,10 +427,11 @@ void Tree::removePrivateAndInternalBases(NamespaceNode *rootNode)
 ClassList Tree::allBaseClasses(const ClassNode *classNode) const
 {
     ClassList result;
-    foreach (const RelatedClass &r, classNode->baseClasses()) {
-        if (r.node_ != nullptr) {
-            result += r.node_;
-            result += allBaseClasses(r.node_);
+    const auto &baseClasses = classNode->baseClasses();
+    for (const auto &relatedClass : baseClasses) {
+        if (relatedClass.node_ != nullptr) {
+            result += relatedClass.node_;
+            result += allBaseClasses(relatedClass.node_);
         }
     }
     return result;
@@ -477,19 +478,19 @@ Node *Tree::findNodeRecursive(const QStringList &path,
     Aggregate *current = static_cast<Aggregate *>(node);
     const NodeList &children = current->childNodes();
     const QString &name = path.at(pathIndex);
-    foreach (Node *n, children) {
-        if (n == nullptr)
+    for (auto *node : children) {
+        if (node == nullptr)
             continue;
-        if (n->name() == name) {
+        if (node->name() == name) {
             if (pathIndex+1 >= path.size()) {
-                if ((n->*(isMatch))())
-                    return n;
+                if ((node->*(isMatch))())
+                    return node;
                 continue;
             }
             else { // Search the children of n for the next name in the path.
-                n = findNodeRecursive(path, pathIndex+1, n, isMatch);
-                if (n != nullptr)
-                    return n;
+                node = findNodeRecursive(path, pathIndex+1, node, isMatch);
+                if (node != nullptr)
+                    return node;
             }
         }
     }
@@ -633,10 +634,10 @@ const Node *Tree::matchPathAndTarget(const QStringList &path,
     if (node->isAggregate()) {
         NodeVector nodes;
         static_cast<const Aggregate *>(node)->findChildren(name, nodes);
-        foreach (const Node *n, nodes) {
-            if (genus != Node::DontCare && n->genus() != genus)
+        for (const auto *node : qAsConst(nodes)) {
+            if (genus != Node::DontCare && node->genus() != genus)
                 continue;
-            const Node *t = matchPathAndTarget(path, idx + 1, target, n, flags, genus, ref);
+            const Node *t = matchPathAndTarget(path, idx + 1, target, node, flags, genus, ref);
             if (t && !t->isPrivate())
                 return t;
         }
@@ -650,8 +651,8 @@ const Node *Tree::matchPathAndTarget(const QStringList &path,
     }
     if (((genus == Node::CPP) || (genus == Node::DontCare)) &&
         node->isClassNode() && (flags & SearchBaseClasses)) {
-        ClassList bases = allBaseClasses(static_cast<const ClassNode *>(node));
-        foreach (const ClassNode *base, bases) {
+        const ClassList bases = allBaseClasses(static_cast<const ClassNode *>(node));
+        for (const auto *base : bases) {
             const Node *t = matchPathAndTarget(path, idx, target, base, flags, genus, ref);
             if (t && ! t->isPrivate())
                 return t;
@@ -720,8 +721,8 @@ const Node *Tree::findNode(const QStringList &path,
             }
             if ((next == nullptr) && ((genus == Node::CPP) || (genus == Node::DontCare)) &&
                 node->isClassNode() && (flags & SearchBaseClasses)) {
-                ClassList bases = allBaseClasses(static_cast<const ClassNode *>(node));
-                foreach (const ClassNode *base, bases) {
+                const ClassList bases = allBaseClasses(static_cast<const ClassNode *>(node));
+                for (const auto *base : bases) {
                     next = base->findChildNode(path.at(i), genus, tmpFlags);
                     if ((next == nullptr) && (flags & SearchEnumValues) && i == path.size() - 1)
                         next = base->findEnumNodeForValue(path.at(i));
@@ -788,7 +789,7 @@ void Tree::insertTarget(const QString &name,
  */
 void Tree::resolveTargets(Aggregate *root)
 {
-    foreach (Node *child, root->childNodes()) {
+    for (auto *child : root->childNodes()) {
         if (child->isTextPageNode()) {
             PageNode *node = static_cast<PageNode *>(child);
             QString key = node->title();
@@ -1284,8 +1285,8 @@ const FunctionNode *Tree::findFunctionNode(const QStringList &path,
                 next = aggregate->findChildNode(path.at(i), genus);
 
             if ((next == nullptr) && aggregate->isClassNode()) {
-                ClassList bases = allBaseClasses(static_cast<const ClassNode *>(aggregate));
-                foreach (ClassNode *base, bases) {
+                const ClassList bases = allBaseClasses(static_cast<const ClassNode *>(aggregate));
+                for (auto *base : bases) {
                     if (i == path.size() - 1)
                         next = base->findFunctionChild(path.at(i), parameters);
                     else

@@ -60,7 +60,6 @@
 
 #include <QtWidgets/QAction>
 #include <QtWidgets/QComboBox>
-#include <QtWidgets/QDesktopWidget>
 #include <QtWidgets/QDockWidget>
 #include <QtGui/QFontDatabase>
 #include <QtGui/QImageReader>

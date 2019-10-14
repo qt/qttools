@@ -108,10 +108,10 @@ void QDocIndexFiles::destroyQDocIndexFiles()
  */
 void QDocIndexFiles::readIndexes(const QStringList &indexFiles)
 {
-    foreach (const QString &indexFile, indexFiles) {
-        QString msg = "Loading index file: " + indexFile;
+    for (const QString &file : indexFiles) {
+        QString msg = "Loading index file: " + file;
         Location::logToStdErr(msg);
-        readIndexFile(indexFile);
+        readIndexFile(file);
     }
 }
 
@@ -608,8 +608,8 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader& reader,
 
         QString groupsAttr = attributes.value(QLatin1String("groups")).toString();
         if (!groupsAttr.isEmpty()) {
-            QStringList groupNames = groupsAttr.split(QLatin1Char(','));
-            foreach (const QString &name, groupNames) {
+            const QStringList groupNames = groupsAttr.split(QLatin1Char(','));
+            for (const auto &name : groupNames) {
                 qdb_->addToGroup(name, node);
             }
         }
@@ -691,9 +691,9 @@ void QDocIndexFiles::insertTarget(TargetRec::TargetType type,
 void QDocIndexFiles::resolveIndex()
 {
     QPair<ClassNode *, QString> pair;
-    foreach (pair, basesList_) {
-        QStringList bases = pair.second.split(QLatin1Char(','));
-        foreach (const QString &base, bases) {
+    for (const auto &pair : qAsConst(basesList_)) {
+        const QStringList bases = pair.second.split(QLatin1Char(','));
+        for (const auto &base : bases) {
             QStringList basePath = base.split(QString("::"));
             Node *n = qdb_->findClassNode(basePath);
             if (n)
@@ -950,9 +950,9 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node, 
         {
             // Classes contain information about their base classes.
             const ClassNode *classNode = static_cast<const ClassNode *>(node);
-            QList<RelatedClass> bases = classNode->baseClasses();
+            const QList<RelatedClass> bases = classNode->baseClasses();
             QSet<QString> baseStrings;
-            foreach (const RelatedClass &related, bases) {
+            for (const auto &related : bases) {
                 ClassNode *n = related.node_;
                 if (n)
                     baseStrings.insert(n->fullName());
@@ -1067,7 +1067,8 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node, 
             */
             if (!cn->members().isEmpty()) {
                 QStringList names;
-                foreach (const Node *member, cn->members())
+                const auto &members = cn->members();
+                for (const Node *member : members)
                     names.append(member->name());
                 writer.writeAttribute("members", names.join(QLatin1Char(',')));
             }
@@ -1092,7 +1093,8 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node, 
             */
             if (!cn->members().isEmpty()) {
                 QStringList names;
-                foreach (const Node *member, cn->members())
+                const auto &members = cn->members();
+                for (const Node *member : members)
                     names.append(member->name());
                 writer.writeAttribute("members", names.join(QLatin1Char(',')));
             }
@@ -1118,7 +1120,8 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node, 
             */
             if (!cn->members().isEmpty()) {
                 QStringList names;
-                foreach (const Node *member, cn->members())
+                const auto &members = cn->members();
+                for (const Node *member : members)
                     names.append(member->name());
                 writer.writeAttribute("members", names.join(QLatin1Char(',')));
             }
@@ -1143,7 +1146,8 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node, 
             writer.writeAttribute("type", propertyNode->dataType());
             if (!brief.isEmpty())
                 writer.writeAttribute("brief", brief);
-            foreach (const Node *fnNode, propertyNode->getters()) {
+            const auto &getters = propertyNode->getters();
+            for (const auto *fnNode : getters) {
                 if (fnNode) {
                     const FunctionNode *functionNode = static_cast<const FunctionNode *>(fnNode);
                     writer.writeStartElement("getter");
@@ -1151,7 +1155,8 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node, 
                     writer.writeEndElement(); // getter
                 }
             }
-            foreach (const Node *fnNode, propertyNode->setters()) {
+            const auto &setters = propertyNode->setters();
+            for (const auto *fnNode : setters) {
                 if (fnNode) {
                     const FunctionNode *functionNode = static_cast<const FunctionNode *>(fnNode);
                     writer.writeStartElement("setter");
@@ -1159,7 +1164,8 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node, 
                     writer.writeEndElement(); // setter
                 }
             }
-            foreach (const Node *fnNode, propertyNode->resetters()) {
+            const auto &resetters = propertyNode->resetters();
+            for (const auto *fnNode : resetters) {
                 if (fnNode) {
                     const FunctionNode *functionNode = static_cast<const FunctionNode *>(fnNode);
                     writer.writeStartElement("resetter");
@@ -1167,7 +1173,8 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node, 
                     writer.writeEndElement(); // resetter
                 }
             }
-            foreach (const Node *fnNode, propertyNode->notifiers()) {
+            const auto &notifiers = propertyNode->notifiers();
+            for (const auto *fnNode : notifiers) {
                 if (fnNode) {
                     const FunctionNode *functionNode = static_cast<const FunctionNode *>(fnNode);
                     writer.writeStartElement("notifier");
@@ -1191,7 +1198,8 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node, 
             const EnumNode *enumNode = static_cast<const EnumNode *>(node);
             if (enumNode->flagsType())
                 writer.writeAttribute("typedef",enumNode->flagsType()->fullDocumentName());
-            foreach (const EnumItem &item, enumNode->items()) {
+            const auto &items = enumNode->items();
+            for (const auto &item : items) {
                 writer.writeStartElement("value");
                 writer.writeAttribute("name", item.name());
                 writer.writeAttribute("value", item.value());
@@ -1227,7 +1235,8 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node, 
         bool external = false;
         if (node->isExternalPage())
             external = true;
-        foreach (const Atom *target, node->doc().targets()) {
+        const auto &targets = node->doc().targets();
+        for (const Atom *target : targets) {
             QString title = target->string();
             QString name =  Doc::canonicalTitle(title);
             writer.writeStartElement("target");
@@ -1241,7 +1250,8 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node, 
         }
     }
     if (node->doc().hasKeywords()) {
-        foreach (const Atom *keyword, node->doc().keywords()) {
+        const auto &keywords = node->doc().keywords();
+        for (const Atom *keyword : keywords) {
             QString title = keyword->string();
             QString name =  Doc::canonicalTitle(title);
             writer.writeStartElement("keyword");
@@ -1273,9 +1283,12 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node, 
             }
         }
     }
-    if (node->isExample()) {
+    // WebXMLGenerator - skip the nested <page> elements for example
+    // files/images, as the generator produces them separately
+    if (node->isExample() && gen_->format() != QLatin1String("WebXML")) {
         const ExampleNode *en = static_cast<const ExampleNode *>(node);
-        foreach (const QString &file, en->files()) {
+        const auto &files = en->files();
+        for (const QString &file : files) {
             writer.writeStartElement("page");
             writer.writeAttribute("name", file);
             QString href = gen_->linkForExampleFile(file, en);
@@ -1283,11 +1296,12 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node, 
             writer.writeAttribute("status", "active");
             writer.writeAttribute("subtype", "file");
             writer.writeAttribute("title", "");
-            writer.writeAttribute("fulltitle", file.mid(file.lastIndexOf('/') + 1) + " Example File");
+            writer.writeAttribute("fulltitle", Generator::exampleFileTitle(en, file));
             writer.writeAttribute("subtitle", file);
             writer.writeEndElement(); // page
         }
-        foreach (const QString &file, en->images()) {
+        const auto &images = en->images();
+        for (const QString &file : images) {
             writer.writeStartElement("page");
             writer.writeAttribute("name", file);
             QString href = gen_->linkForExampleFile(file, en);
@@ -1295,7 +1309,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node, 
             writer.writeAttribute("status", "active");
             writer.writeAttribute("subtype", "image");
             writer.writeAttribute("title", "");
-            writer.writeAttribute("fulltitle", file.mid(file.lastIndexOf('/') + 1) + " Image File");
+            writer.writeAttribute("fulltitle", Generator::exampleFileTitle(en, file));
             writer.writeAttribute("subtitle", file);
             writer.writeEndElement(); // page
         }
@@ -1368,8 +1382,8 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
             writer.writeAttribute("refness", QString::number(2));
         if (fn->hasAssociatedProperties()) {
             QStringList associatedProperties;
-            foreach (Node *n, fn->associatedProperties()) {
-                associatedProperties << n->name();
+            for (const auto *node : qAsConst(fn->associatedProperties())) {
+                associatedProperties << node->name();
             }
             associatedProperties.sort();
             writer.writeAttribute("associated-property", associatedProperties.join(QLatin1Char(',')));
@@ -1462,8 +1476,9 @@ void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node,
             Aggregate *aggregate = static_cast<Aggregate *>(node);
             // First write the function children, then write the nonfunction children.
             generateFunctionSections(writer, aggregate);
-            foreach (Node *n, aggregate->nonfunctionList())
-                generateIndexSections(writer, n, post);
+            const auto &nonFunctionList = aggregate->nonfunctionList();
+            for (auto *node : nonFunctionList)
+                generateIndexSections(writer, node, post);
         }
 
         if (node == root_) {

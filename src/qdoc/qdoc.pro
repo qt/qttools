@@ -11,6 +11,8 @@ qtHaveModule(qmldevtools-private) {
     DEFINES += QT_NO_DECLARATIVE
 }
 
+DEFINES += QT_NO_FOREACH
+
 include($$OUT_PWD/../global/qttools-config.pri)
 
 LIBS += $$CLANG_LIBS

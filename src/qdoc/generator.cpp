@@ -205,10 +205,8 @@ int Generator::appendSortedNames(Text &text, const ClassNode *cn, const QList<Re
         ++r;
     }
 
-    QStringList classNames = classMap.keys();
-    classNames.sort();
-
-    foreach (const QString &className, classNames) {
+    const QStringList classNames = classMap.keys();
+    for (const auto &className : classNames) {
         text << classMap[className];
         text << comma(index++, classNames.count());
     }
@@ -229,10 +227,8 @@ int Generator::appendSortedQmlNames(Text &text, const Node *base, const NodeList
         }
     }
 
-    QStringList names = classMap.keys();
-    names.sort();
-
-    foreach (const QString &name, names) {
+    const QStringList names = classMap.keys();
+    for (const auto &name : names) {
         text << classMap[name];
         text << comma(index++, names.count());
     }
@@ -248,7 +244,8 @@ void Generator::writeOutFileNames()
     if (!files.open(QFile::WriteOnly))
         return;
     QTextStream filesout(&files);
-    foreach (const QString &file, outFileNames_) {
+    const auto names = outFileNames_;
+    for (const auto &file : names) {
         filesout << file << "\n";
     }
 }
@@ -428,9 +425,13 @@ QString Generator::fileBase(const Node *node) const
 
 /*!
   Constructs an href link from an example file name, which
-  is a path to the example file.
+  is a path to the example file. If \a fileExtension is
+  empty (default value), retrieve the file extension from
+  the generator.
  */
-QString Generator::linkForExampleFile(const QString &path, const Node *parent)
+QString Generator::linkForExampleFile(const QString &path,
+                                      const Node *parent,
+                                      const QString &fileExt)
 {
     QString link = path;
     QString modPrefix(parent->physicalModuleName());
@@ -441,8 +442,28 @@ QString Generator::linkForExampleFile(const QString &path, const Node *parent)
     QString res;
     transmogrify(link, res);
     res.append(QLatin1Char('.'));
-    res.append(fileExtension());
+    res.append(fileExt);
+    if (fileExt.isEmpty())
+        res.append(fileExtension());
     return res;
+}
+
+/*!
+    Helper function to construct a title for a file or image page
+    included in an example.
+*/
+QString Generator::exampleFileTitle(const ExampleNode *relative,
+                                    const QString &fileName)
+{
+    QString suffix;
+    if (relative->files().contains(fileName))
+        suffix = QLatin1String(" Example File");
+    else if (relative->images().contains(fileName))
+        suffix = QLatin1String(" Image File");
+    else
+        return suffix;
+
+    return fileName.mid(fileName.lastIndexOf(QLatin1Char('/')) + 1) + suffix;
 }
 
 /*!
@@ -483,7 +504,7 @@ QString Generator::cleanRef(const QString &ref)
         clean += QLatin1Char('A');
     }
 
-    for (int i = 1; i < (int) ref.length(); i++) {
+    for (int i = 1; i < ref.length(); i++) {
         const QChar c = ref[i];
         const uint u = c.unicode();
         if ((u >= 'a' && u <= 'z') ||
@@ -507,7 +528,7 @@ QString Generator::cleanRef(const QString &ref)
             clean += QLatin1Char('#');
         } else {
             clean += QLatin1Char('-');
-            clean += QString::number((int)u, 16);
+            clean += QString::number(static_cast<int>(u), 16);
         }
     }
     return clean;
@@ -658,6 +679,7 @@ QString Generator::fullDocumentLocation(const Node *node, bool useSubdir)
     case Node::QmlType:
     case Node::Page:
     case Node::Group:
+    case Node::HeaderFile:
     case Node::Module:
     case Node::JsModule:
     case Node::QmlModule:
@@ -842,7 +864,7 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
         }
 
         if (node->isEnumType()) {
-            const EnumNode *enume = (const EnumNode *) node;
+            const EnumNode *enume = static_cast<const EnumNode *>(node);
 
             QSet<QString> definedItems;
             QList<EnumItem>::ConstIterator it = enume->items().constBegin();
@@ -920,62 +942,75 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
             }
         }
     }
+    generateRequiredLinks(node, marker);
+}
 
-    // For examples, generate either a link to the project directory
-    // (if url.examples is defined), or a list of files/images.
-    if (node->isExample()) {
-        const ExampleNode *en = static_cast<const ExampleNode *>(node);
-        QString exampleUrl = config()->getString(CONFIG_URL + Config::dot + CONFIG_EXAMPLES);
-        if (!exampleUrl.isEmpty()) {
-            generateLinkToExample(en, marker, exampleUrl);
-        } else if (!en->noAutoList()) {
-            generateFileList(en, marker, false);
-            generateFileList(en, marker, true);
+/*!
+  Generates either a link to the project folder for example \a node, or a list
+  of links files/images if 'url.examples config' variable is not defined.
+
+  Does nothing for non-example nodes.
+*/
+void Generator::generateRequiredLinks(const Node *node, CodeMarker *marker)
+{
+    if (!node->isExample())
+        return;
+
+    const ExampleNode *en = static_cast<const ExampleNode *>(node);
+    QString exampleUrl = config()->getString(CONFIG_URL + Config::dot + CONFIG_EXAMPLES);
+
+    if (exampleUrl.isEmpty()) {
+        if (!en->noAutoList()) {
+            generateFileList(en, marker, false); // files
+            generateFileList(en, marker, true);  // images
         }
+    } else {
+        generateLinkToExample(en, marker, exampleUrl);
     }
 }
 
 /*!
-  Generates a link to the project folder for example node \a en.
-  \a baseUrl is the base URL - path information is available in
-  the example node's name() and 'examplesinstallpath' configuration
-  variable.
+  Generates an external link to the project folder for example \a node.
+  The path to the example is appended to \a baseUrl string, or to a
+  specific location within the string marked with the placeholder '\1'
+  character.
 */
 void Generator::generateLinkToExample(const ExampleNode *en,
                                       CodeMarker *marker,
                                       const QString &baseUrl)
 {
-        Text text;
-        QString exampleUrl(baseUrl);
-
-        if (!exampleUrl.contains("\1")) {
-            if (!exampleUrl.endsWith("/"))
-                exampleUrl += "/";
-            exampleUrl += "\1";
-        }
-
-        // Name of the example node is the path, relative to install path
-        QStringList path = QStringList()
-            << config()->getString(CONFIG_EXAMPLESINSTALLPATH)
-            << en->name();
-        path.removeAll({});
-
-        QString link;
+    QString exampleUrl(baseUrl);
+    QString link;
 #ifndef QT_BOOTSTRAPPED
-        link = QUrl(baseUrl).host();
+    link = QUrl(exampleUrl).host();
 #endif
-        if (!link.isEmpty())
-            link.prepend(" @ ");
-        link.prepend("Example project");
+    if (!link.isEmpty())
+        link.prepend(" @ ");
+    link.prepend("Example project");
 
-        text << Atom::ParaLeft
-             << Atom(Atom::Link, exampleUrl.replace("\1", path.join("/")))
-             << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
-             << Atom(Atom::String, link)
-             << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK)
-             << Atom::ParaRight;
+    const QLatin1Char separator('/');
+    const QLatin1Char placeholder('\1');
+    if (!exampleUrl.contains(placeholder)) {
+        if (!exampleUrl.endsWith(separator))
+            exampleUrl += separator;
+        exampleUrl += placeholder;
+    }
 
-        generateText(text, 0, marker);
+    // Construct a path to the example; <install path>/<example name>
+    QStringList path = QStringList()
+        << config()->getString(CONFIG_EXAMPLESINSTALLPATH)
+        << en->name();
+    path.removeAll({});
+
+    Text text;
+    text << Atom::ParaLeft
+         << Atom(Atom::Link, exampleUrl.replace(placeholder, path.join(separator)))
+         << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
+         << Atom(Atom::String, link)
+         << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK)
+         << Atom::ParaRight;
+
+    generateText(text, nullptr, marker);
 }
 
 /*!
@@ -1007,7 +1042,7 @@ void Generator::generateFileList(const ExampleNode *en, CodeMarker *marker, bool
     text << Atom(Atom::ListLeft, openedList.styleString());
 
     QString path;
-    foreach (QString file, paths) {
+    for (const auto &file : qAsConst(paths)) {
         if (images) {
             if (!file.isEmpty()) {
                 QDir dirInfo;
@@ -1188,9 +1223,9 @@ void Generator::generateDocumentation(Node *node)
     if (node->isAggregate()) {
         Aggregate *aggregate = static_cast<Aggregate *>(node);
         const NodeList &children = aggregate->childNodes();
-        foreach (Node *n, children) {
-            if (n->isPageNode() && !n->isPrivate())
-                generateDocumentation(n);
+        for (auto *node : children) {
+            if (node->isPageNode() && !node->isPrivate())
+                generateDocumentation(node);
         }
     }
 }
@@ -1449,21 +1484,21 @@ static bool hasExceptions(const Node *node,
     bool result = false;
     Node::ThreadSafeness ts = node->threadSafeness();
     const NodeList &children = static_cast<const Aggregate *>(node)->childNodes();
-    foreach (Node *n, children) {
-        if (!n->isObsolete()){
-            switch (n->threadSafeness()) {
+    for (auto *node : children) {
+        if (!node->isObsolete()){
+            switch (node->threadSafeness()) {
             case Node::Reentrant:
-                reentrant.append(n);
+                reentrant.append(node);
                 if (ts == Node::ThreadSafe)
                     result = true;
                 break;
             case Node::ThreadSafe:
-                threadsafe.append(n);
+                threadsafe.append(node);
                 if (ts == Node::Reentrant)
                     result = true;
                 break;
             case Node::NonReentrant:
-                nonreentrant.append(n);
+                nonreentrant.append(node);
                 result = true;
                 break;
             default:
@@ -1746,7 +1781,7 @@ QString Generator::indent(int level, const QString &markedCode)
     int column = 0;
 
     int i = 0;
-    while (i < (int) markedCode.length()) {
+    while (i < markedCode.length()) {
         if (markedCode.at(i) == QLatin1Char('\n')) {
             column = 0;
         }
@@ -2008,8 +2043,6 @@ bool Generator::parseArg(const QString &src,
     //SKIP_CHAR('@');
 
     if (tag != QStringRef(&src, i, tag.length())) {
-        if (0 && debug)
-            qDebug() << "tag " << tag << " not found at " << i;
         return false;
     }
 

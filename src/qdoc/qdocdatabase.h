@@ -74,10 +74,10 @@ class QDocForest
     bool done() { return (currentIndex_ >= searchOrder().size()); }
     const QVector<Tree *> &searchOrder();
     const QVector<Tree *> &indexSearchOrder();
-    void setSearchOrder(QStringList &t);
+    void setSearchOrder(const QStringList &t);
     bool isLoaded(const QString &fn) {
-        foreach (Tree *t, searchOrder()) {
-            if (fn == t->indexFileName())
+        for (const auto *tree : searchOrder()) {
+            if (fn == tree->indexFileName())
                 return true;
         }
         return false;
@@ -87,8 +87,8 @@ class QDocForest
                          const Node *relative,
                          int findFlags,
                          Node::Genus genus) {
-        foreach (Tree *t, searchOrder()) {
-            const Node *n = t->findNode(path, relative, findFlags, genus);
+        for (const auto *tree : searchOrder()) {
+            const Node *n = tree->findNode(path, relative, findFlags, genus);
             if (n)
                 return n;
             relative = nullptr;
@@ -97,8 +97,8 @@ class QDocForest
     }
 
     Node *findNodeByNameAndType(const QStringList &path, bool (Node::*isMatch) () const) {
-        foreach (Tree *t, searchOrder()) {
-            Node *n = t->findNodeByNameAndType(path, isMatch);
+        for (const auto *tree : searchOrder()) {
+            Node *n = tree->findNodeByNameAndType(path, isMatch);
             if (n)
                 return n;
         }
@@ -106,8 +106,8 @@ class QDocForest
     }
 
     ClassNode *findClassNode(const QStringList &path) {
-        foreach (Tree *t, searchOrder()) {
-            ClassNode *n = t->findClassNode(path);
+        for (const auto *tree : searchOrder()) {
+            ClassNode *n = tree->findClassNode(path);
             if (n)
                 return n;
         }
@@ -115,8 +115,8 @@ class QDocForest
     }
 
     Node *findNodeForInclude(const QStringList &path) {
-        foreach (Tree *t, searchOrder()) {
-            Node *n = t->findNodeForInclude(path);
+        for (const auto *tree : searchOrder()) {
+            Node *n = tree->findNodeForInclude(path);
             if (n)
                 return n;
         }
@@ -137,8 +137,8 @@ class QDocForest
         int flags = SearchBaseClasses | SearchEnumValues | TypesOnly;
         if (relative && genus == Node::DontCare && relative->genus() != Node::DOC)
             genus = relative->genus();
-        foreach (Tree *t, searchOrder()) {
-            const Node *n = t->findNode(path, relative, flags, genus);
+        for (const auto *tree : searchOrder()) {
+            const Node *n = tree->findNode(path, relative, flags, genus);
             if (n)
                 return n;
             relative = nullptr;
@@ -148,8 +148,8 @@ class QDocForest
 
     const PageNode *findPageNodeByTitle(const QString &title)
     {
-        foreach (Tree *t, searchOrder()) {
-            const PageNode *n = t->findPageNodeByTitle(title);
+        for (const auto *tree : searchOrder()) {
+            const PageNode *n = tree->findPageNodeByTitle(title);
             if (n)
                 return n;
         }
@@ -158,8 +158,8 @@ class QDocForest
 
     const CollectionNode *getCollectionNode(const QString &name, Node::NodeType type)
     {
-        foreach (Tree *t, searchOrder()) {
-            const CollectionNode *cn = t->getCollection(name, type);
+        for (auto *tree : searchOrder()) {
+            const CollectionNode *cn = tree->getCollection(name, type);
             if (cn)
                 return cn;
         }
@@ -168,8 +168,8 @@ class QDocForest
 
     QmlTypeNode *lookupQmlType(const QString &name)
     {
-        foreach (Tree *t, searchOrder()) {
-            QmlTypeNode *qcn = t->lookupQmlType(name);
+        for (const auto *tree : searchOrder()) {
+            QmlTypeNode *qcn = tree->lookupQmlType(name);
             if (qcn)
                 return qcn;
         }
@@ -178,8 +178,8 @@ class QDocForest
 
     Aggregate *lookupQmlBasicType(const QString &name)
     {
-        foreach (Tree *t, searchOrder()) {
-            Aggregate *a = t->lookupQmlBasicType(name);
+        for (const auto *tree : searchOrder()) {
+            Aggregate *a = tree->lookupQmlBasicType(name);
             if (a)
                 return a;
         }
@@ -188,8 +188,8 @@ class QDocForest
     void clearSearchOrder() { searchOrder_.clear(); }
     void clearLinkCounts()
     {
-        foreach (Tree *t, searchOrder())
-            t->clearLinkCount();
+        for (auto *tree : searchOrder())
+            tree->clearLinkCount();
     }
     void printLinkCounts(const QString &project);
     QString getLinkCounts(QStringList &strings, QVector<int> &counts);
