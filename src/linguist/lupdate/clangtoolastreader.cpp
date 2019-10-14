@@ -197,7 +197,7 @@ bool LupdateVisitor::VisitCallExpr(clang::CallExpr *callExpression)
         qCDebug(lcClang) << "Plural      : " << store.lupdatePlural << "\n";
         break;
     }
-    store.printStore();
+    m_translationStoresFromAST.push_back(store);
     return true;
 }
 
@@ -406,6 +406,121 @@ void LupdateVisitor::setInfoFromRawComment(const QString &commentString,
         comment.clear();
         identifier.clear();
     }
+}
+
+// To fill m_tor with the retrieved information during the reading of the AST
+void LupdateVisitor::fillTranslator()
+{
+    for (const auto &store : m_translationStoresFromAST)
+        fillTranslator(store);
+    // Here also need to fill the translator with the information retrieved from the PreProcessor
+}
+
+void LupdateVisitor::fillTranslator(TranslationRelatedStore store)
+{
+    bool forcePlural = false;
+    //============= TODO ===================
+    // If there is a Q_DECLARE_TR_FUNCTION
+    // the context given takes priority over the retrieved context.
+    // The retrieved context for Q_DECLARE_TR_FUNCTION (where the macro was)
+    // has to fit the start of the retrieved context of the tr function or NOOP macro
+    // if there is already a argument giving the context, it has priority
+
+    // This will be dealt after the functionality to retrieve the Q_DECLARE_TR_FUNCTION has beed added
+    //======================================
+
+    switch (trFunctionAliasManager.trFunctionByName(store.funcName)) {
+    case TrFunctionAliasManager::Function_Q_DECLARE_TR_FUNCTIONS:
+        //handleDeclareTrFunctions(); // not dealt with here!
+        break;
+    case TrFunctionAliasManager::Function_QT_TR_N_NOOP:
+        forcePlural = true;
+        Q_FALLTHROUGH();
+    case TrFunctionAliasManager::Function_tr:
+    case TrFunctionAliasManager::Function_trUtf8:
+    case TrFunctionAliasManager::Function_QT_TR_NOOP:
+    case TrFunctionAliasManager::Function_QT_TR_NOOP_UTF8:
+        handleTr(store, forcePlural);
+        break;
+    case TrFunctionAliasManager::Function_QT_TRANSLATE_N_NOOP:
+    case TrFunctionAliasManager::Function_QT_TRANSLATE_N_NOOP3:
+        forcePlural = true;
+        Q_FALLTHROUGH();
+    case TrFunctionAliasManager::Function_translate:
+    case TrFunctionAliasManager::Function_findMessage:
+    case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP:
+    case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP_UTF8:
+    case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP3:
+    case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP3_UTF8:
+        handleTranslate(store, forcePlural);
+        break;
+    case TrFunctionAliasManager::Function_QT_TRID_N_NOOP:
+        forcePlural = true;
+        Q_FALLTHROUGH();
+    case TrFunctionAliasManager::Function_qtTrId:
+    case TrFunctionAliasManager::Function_QT_TRID_NOOP:
+        handleTrId(store, forcePlural);
+        break;
+    }
+}
+TranslatorMessage LupdateVisitor::fillTranslatorMessage(const TranslationRelatedStore &store,
+    bool forcePlural, bool isId)
+{
+    QString context;
+    if (!isId) {
+        context = ParserTool::transcode(store.contextArg.isEmpty() ? store.contextRetrieved
+            : store.contextArg);
+    }
+
+    TranslatorMessage msg(context,
+                          ParserTool::transcode(isId ? store.lupdateSourceWhenId
+                                                     : store.lupdateSource),
+                          ParserTool::transcode(store.lupdateComment),
+                          QString(),
+                          store.lupdateLocationFile,
+                          store.lupdateLocationLine,
+                          QStringList(),
+                          TranslatorMessage::Type::Unfinished,
+                          (forcePlural ? forcePlural : !store.lupdatePlural.isEmpty()));
+
+    if (!store.lupdateAllMagicMetaData.empty())
+        msg.setExtras(store.lupdateAllMagicMetaData);
+    msg.setExtraComment(ParserTool::transcode(store.lupdateExtraComment));
+    return msg;
+}
+
+void LupdateVisitor::handleTranslate(const TranslationRelatedStore &store, bool forcePlural)
+{
+    if (!store.lupdateSourceWhenId.isEmpty())
+        qCDebug(lcClang) << "//% is ignored when using translate function\n";
+
+    TranslatorMessage msg = fillTranslatorMessage(store, forcePlural);
+    msg.setId(ParserTool::transcode(store.lupdateIdMetaData)); // //= NOT to be used with qTrId
+    m_tor->append(msg);
+}
+
+void LupdateVisitor::handleTr(const TranslationRelatedStore &store, bool forcePlural)
+{
+    if (!store.lupdateSourceWhenId.isEmpty())
+        qCDebug(lcClang) << "//% is ignored when using tr function\n";
+    if (store.contextRetrieved.isEmpty() && store.contextArg.isEmpty()) {
+        qCDebug(lcClang) << "tr() cannot be called without context \n";
+        return;
+    }
+
+    TranslatorMessage msg = fillTranslatorMessage(store, forcePlural);
+    msg.setId(ParserTool::transcode(store.lupdateIdMetaData)); // //= NOT to be used with qTrId
+    m_tor->append(msg);
+}
+
+void LupdateVisitor::handleTrId(const TranslationRelatedStore &store, bool forcePlural)
+{
+    if (!store.lupdateIdMetaData.isEmpty())
+        qCDebug(lcClang) << "//= is ignored when using qtTrId function \n";
+
+    TranslatorMessage msg = fillTranslatorMessage(store, forcePlural, true);
+    msg.setId(ParserTool::transcode(store.lupdateId));
+    m_tor->append(msg);
 }
 
 QT_END_NAMESPACE

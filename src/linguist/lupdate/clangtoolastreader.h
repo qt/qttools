@@ -144,6 +144,7 @@ public:
     }
 
     bool VisitCallExpr(clang::CallExpr *callExpression);
+    void fillTranslator();
 
 private:
     std::vector<QString> rawCommentsForCallExpr(const clang::CallExpr *callExpr) const;
@@ -151,9 +152,21 @@ private:
 
     void setInfoFromRawComment(const QString &commentString, TranslationRelatedStore *store);
 
+    // Functions used to fill the linguist translator
+    // local store -> linguist Translator
+    void fillTranslator(TranslationRelatedStore store);
+    TranslatorMessage fillTranslatorMessage(const TranslationRelatedStore &store,
+        bool forcePlural, bool isID = false);
+    void handleTr(const TranslationRelatedStore &store, bool forcePlural);
+    void handleTrId(const TranslationRelatedStore &store, bool forcePlural);
+    void handleTranslate(const TranslationRelatedStore &store, bool forcePlural);
+
     clang::ASTContext *m_context { nullptr };
     Translator *m_tor { nullptr };
     std::string m_inputFile;
+
+    // Local store for the lupdate translation related info
+    std::vector<TranslationRelatedStore> m_translationStoresFromAST;
 };
 
 class LupdateASTConsumer : public clang::ASTConsumer
@@ -168,6 +181,7 @@ public:
     {
         bool traverse = m_visitor.TraverseAST(context);
         qCDebug(lcClang) << "TraverseAST: " << traverse << "\n";
+        m_visitor.fillTranslator();
     }
 
 private:
