@@ -41,7 +41,7 @@ add_qt_tool(lupdate
 # _LOADED = "qt_tool"
 # _OPTION = "host_build"
 # qmake.name = "QMAKE"
-# qmake.value = "join($$QMAKE_QMAKE)"
+# qmake.value = "$$shell_path($$QMAKE_QMAKE)"
 
 ## Scopes:
 #####################################################################

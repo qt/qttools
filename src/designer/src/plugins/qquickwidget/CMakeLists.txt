@@ -29,6 +29,3 @@ add_qt_resource(qquickwidget "qquickwidget_plugin"
         ${qquickwidget_plugin_resource_files}
 )
 
-
-#### Keys ignored in scope 1:.:.:qquickwidget.pro:<TRUE>:
-# PLUGIN_CLASS_NAME = "QQuickWidgetPlugin"

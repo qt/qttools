@@ -21,9 +21,9 @@ add_qt_tool(qtattributionsscanner
 )
 
 #### Keys ignored in scope 1:.:.:qtattributionsscanner.pro:<TRUE>:
-# CMAKE_BIN_DIR = "join($$[QT_HOST_BINS],$$[QT_INSTALL_PREFIX])"
-# CMAKE_INSTALL_LIBS_DIR = "join($$[QT_INSTALL_LIBS])"
-# CMAKE_LIB_DIR = "join($$[QT_INSTALL_LIBS],$$[QT_INSTALL_PREFIX])"
+# CMAKE_BIN_DIR = "$$cmakeRelativePath($$[QT_HOST_BINS], $$[QT_INSTALL_PREFIX])"
+# CMAKE_INSTALL_LIBS_DIR = "$$cmakeTargetPath($$[QT_INSTALL_LIBS])"
+# CMAKE_LIB_DIR = "$$cmakeRelativePath($$[QT_INSTALL_LIBS], $$[QT_INSTALL_PREFIX])"
 # CMAKE_PACKAGE_VERSION = "$$MODULE_VERSION"
 # INSTALLS = "cmake_qattributionsscanner_tools_files"
 # QMAKE_SUBSTITUTES = "cmake_qattributionsscanner_config_file" "cmake_qattributionsscanner_config_version_file"
@@ -46,7 +46,7 @@ add_qt_tool(qtattributionsscanner
 
 #### Keys ignored in scope 3:.:.:qtattributionsscanner.pro:NOT CMAKE_LIB_DIR___contains___^\\.\\./._x_:
 # CMAKE_RELATIVE_INSTALL_DIR = "$${CMAKE_RELATIVE_INSTALL_LIBS_DIR}../../"
-# CMAKE_RELATIVE_INSTALL_LIBS_DIR = "join($$[QT_INSTALL_PREFIX],$$[QT_INSTALL_LIBS])"
+# CMAKE_RELATIVE_INSTALL_LIBS_DIR = "$$cmakeRelativePath($$[QT_INSTALL_PREFIX], $$[QT_INSTALL_LIBS])"
 
 #### Keys ignored in scope 4:.:.:qtattributionsscanner.pro:else:
 # CMAKE_LIB_DIR_IS_ABSOLUTE = "True"

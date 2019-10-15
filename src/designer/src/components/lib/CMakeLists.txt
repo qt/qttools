@@ -124,6 +124,8 @@ add_qt_module(DesignerComponents
         Qt::Xml
     ENABLE_AUTOGEN_TOOLS
         uic
+    PRECOMPILED_HEADER
+        "lib_pch.h"
 )
 
 # Resources:
@@ -875,7 +877,6 @@ add_qt_resource(DesignerComponents "widgetbox"
 
 #### Keys ignored in scope 1:.:.:lib.pro:<TRUE>:
 # MODULE = "designercomponents"
-# PRECOMPILED_HEADER = "lib_pch.h"
 # _LOADED = "qt_module"
 
 ## Scopes:
@@ -913,135 +914,136 @@ extend_target(DesignerComponents CONDITION QT_BUILD_SHARED_LIBS
         ../../../../shared/qtpropertybrowser
 )
 
-# Resources:
-set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-arrow.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/cursor-arrow.png"
-)
-set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-busy.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/cursor-busy.png"
-)
-set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-closedhand.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/cursor-closedhand.png"
-)
-set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-cross.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/cursor-cross.png"
-)
-set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-forbidden.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/cursor-forbidden.png"
-)
-set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-hand.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/cursor-hand.png"
-)
-set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-hsplit.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/cursor-hsplit.png"
-)
-set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-ibeam.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/cursor-ibeam.png"
-)
-set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-openhand.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/cursor-openhand.png"
-)
-set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-sizeall.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/cursor-sizeall.png"
-)
-set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-sizeb.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/cursor-sizeb.png"
-)
-set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-sizef.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/cursor-sizef.png"
-)
-set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-sizeh.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/cursor-sizeh.png"
-)
-set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-sizev.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/cursor-sizev.png"
-)
-set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-uparrow.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/cursor-uparrow.png"
-)
-set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-vsplit.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/cursor-vsplit.png"
-)
-set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-wait.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/cursor-wait.png"
-)
-set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-whatsthis.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/cursor-whatsthis.png"
-)
-set(qtpropertybrowser_resource_files
-    "images/cursor-arrow.png"
-    "images/cursor-busy.png"
-    "images/cursor-closedhand.png"
-    "images/cursor-cross.png"
-    "images/cursor-forbidden.png"
-    "images/cursor-hand.png"
-    "images/cursor-hsplit.png"
-    "images/cursor-ibeam.png"
-    "images/cursor-openhand.png"
-    "images/cursor-sizeall.png"
-    "images/cursor-sizeb.png"
-    "images/cursor-sizef.png"
-    "images/cursor-sizeh.png"
-    "images/cursor-sizev.png"
-    "images/cursor-uparrow.png"
-    "images/cursor-vsplit.png"
-    "images/cursor-wait.png"
-    "images/cursor-whatsthis.png"
-)
-
-add_qt_resource(DesignerComponents "qtpropertybrowser_designercomponents" # special case
-    PREFIX
-        "/qt-project.org/qtpropertybrowser"
-    BASE
-        "../../../../shared/qtpropertybrowser"
-    FILES
-        ${qtpropertybrowser_resource_files}
-)
-set_source_files_properties("../../../../shared/findwidget/images/mac/closetab.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/mac/closetab.png"
-)
-set_source_files_properties("../../../../shared/findwidget/images/mac/next.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/mac/next.png"
-)
-set_source_files_properties("../../../../shared/findwidget/images/mac/previous.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/mac/previous.png"
-)
-set_source_files_properties("../../../../shared/findwidget/images/mac/searchfind.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/mac/searchfind.png"
-)
-set_source_files_properties("../../../../shared/findwidget/images/win/closetab.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/win/closetab.png"
-)
-set_source_files_properties("../../../../shared/findwidget/images/win/next.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/win/next.png"
-)
-set_source_files_properties("../../../../shared/findwidget/images/win/previous.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/win/previous.png"
-)
-set_source_files_properties("../../../../shared/findwidget/images/win/searchfind.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/win/searchfind.png"
-)
-set_source_files_properties("../../../../shared/findwidget/images/wrap.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/wrap.png"
-)
-set(findwidget_resource_files
-    "images/mac/closetab.png"
-    "images/mac/next.png"
-    "images/mac/previous.png"
-    "images/mac/searchfind.png"
-    "images/win/closetab.png"
-    "images/win/next.png"
-    "images/win/previous.png"
-    "images/win/searchfind.png"
-    "images/wrap.png"
-)
-
-add_qt_resource(DesignerComponents "findwidget_designercomponents" # special case
-    PREFIX
-        "/qt-project.org/shared"
-    BASE
-        "../../../../shared/findwidget"
-    FILES
-        ${findwidget_resource_files}
-)
-
+if(QT_BUILD_SHARED_LIBS)
+    # Resources:
+    set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-arrow.png"
+        PROPERTIES QT_RESOURCE_ALIAS "images/cursor-arrow.png"
+    )
+    set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-busy.png"
+        PROPERTIES QT_RESOURCE_ALIAS "images/cursor-busy.png"
+    )
+    set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-closedhand.png"
+        PROPERTIES QT_RESOURCE_ALIAS "images/cursor-closedhand.png"
+    )
+    set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-cross.png"
+        PROPERTIES QT_RESOURCE_ALIAS "images/cursor-cross.png"
+    )
+    set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-forbidden.png"
+        PROPERTIES QT_RESOURCE_ALIAS "images/cursor-forbidden.png"
+    )
+    set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-hand.png"
+        PROPERTIES QT_RESOURCE_ALIAS "images/cursor-hand.png"
+    )
+    set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-hsplit.png"
+        PROPERTIES QT_RESOURCE_ALIAS "images/cursor-hsplit.png"
+    )
+    set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-ibeam.png"
+        PROPERTIES QT_RESOURCE_ALIAS "images/cursor-ibeam.png"
+    )
+    set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-openhand.png"
+        PROPERTIES QT_RESOURCE_ALIAS "images/cursor-openhand.png"
+    )
+    set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-sizeall.png"
+        PROPERTIES QT_RESOURCE_ALIAS "images/cursor-sizeall.png"
+    )
+    set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-sizeb.png"
+        PROPERTIES QT_RESOURCE_ALIAS "images/cursor-sizeb.png"
+    )
+    set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-sizef.png"
+        PROPERTIES QT_RESOURCE_ALIAS "images/cursor-sizef.png"
+    )
+    set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-sizeh.png"
+        PROPERTIES QT_RESOURCE_ALIAS "images/cursor-sizeh.png"
+    )
+    set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-sizev.png"
+        PROPERTIES QT_RESOURCE_ALIAS "images/cursor-sizev.png"
+    )
+    set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-uparrow.png"
+        PROPERTIES QT_RESOURCE_ALIAS "images/cursor-uparrow.png"
+    )
+    set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-vsplit.png"
+        PROPERTIES QT_RESOURCE_ALIAS "images/cursor-vsplit.png"
+    )
+    set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-wait.png"
+        PROPERTIES QT_RESOURCE_ALIAS "images/cursor-wait.png"
+    )
+    set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-whatsthis.png"
+        PROPERTIES QT_RESOURCE_ALIAS "images/cursor-whatsthis.png"
+    )
+    set(qtpropertybrowser_resource_files
+        "images/cursor-arrow.png"
+        "images/cursor-busy.png"
+        "images/cursor-closedhand.png"
+        "images/cursor-cross.png"
+        "images/cursor-forbidden.png"
+        "images/cursor-hand.png"
+        "images/cursor-hsplit.png"
+        "images/cursor-ibeam.png"
+        "images/cursor-openhand.png"
+        "images/cursor-sizeall.png"
+        "images/cursor-sizeb.png"
+        "images/cursor-sizef.png"
+        "images/cursor-sizeh.png"
+        "images/cursor-sizev.png"
+        "images/cursor-uparrow.png"
+        "images/cursor-vsplit.png"
+        "images/cursor-wait.png"
+        "images/cursor-whatsthis.png"
+    )
+    
+    add_qt_resource(DesignerComponents "qtpropertybrowser"
+        PREFIX
+            "/qt-project.org/qtpropertybrowser"
+        BASE
+            "../../../../shared/qtpropertybrowser"
+        FILES
+            ${qtpropertybrowser_resource_files}
+    )
+    set_source_files_properties("../../../../shared/findwidget/images/mac/closetab.png"
+        PROPERTIES QT_RESOURCE_ALIAS "images/mac/closetab.png"
+    )
+    set_source_files_properties("../../../../shared/findwidget/images/mac/next.png"
+        PROPERTIES QT_RESOURCE_ALIAS "images/mac/next.png"
+    )
+    set_source_files_properties("../../../../shared/findwidget/images/mac/previous.png"
+        PROPERTIES QT_RESOURCE_ALIAS "images/mac/previous.png"
+    )
+    set_source_files_properties("../../../../shared/findwidget/images/mac/searchfind.png"
+        PROPERTIES QT_RESOURCE_ALIAS "images/mac/searchfind.png"
+    )
+    set_source_files_properties("../../../../shared/findwidget/images/win/closetab.png"
+        PROPERTIES QT_RESOURCE_ALIAS "images/win/closetab.png"
+    )
+    set_source_files_properties("../../../../shared/findwidget/images/win/next.png"
+        PROPERTIES QT_RESOURCE_ALIAS "images/win/next.png"
+    )
+    set_source_files_properties("../../../../shared/findwidget/images/win/previous.png"
+        PROPERTIES QT_RESOURCE_ALIAS "images/win/previous.png"
+    )
+    set_source_files_properties("../../../../shared/findwidget/images/win/searchfind.png"
+        PROPERTIES QT_RESOURCE_ALIAS "images/win/searchfind.png"
+    )
+    set_source_files_properties("../../../../shared/findwidget/images/wrap.png"
+        PROPERTIES QT_RESOURCE_ALIAS "images/wrap.png"
+    )
+    set(findwidget_resource_files
+        "images/mac/closetab.png"
+        "images/mac/next.png"
+        "images/mac/previous.png"
+        "images/mac/searchfind.png"
+        "images/win/closetab.png"
+        "images/win/next.png"
+        "images/win/previous.png"
+        "images/win/searchfind.png"
+        "images/wrap.png"
+    )
+    
+    add_qt_resource(DesignerComponents "findwidget"
+        PREFIX
+            "/qt-project.org/shared"
+        BASE
+            "../../../../shared/findwidget"
+        FILES
+            ${findwidget_resource_files}
+    )
+endif()

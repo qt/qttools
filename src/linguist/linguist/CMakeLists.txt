@@ -154,7 +154,7 @@ extend_target(linguist CONDITION QT_PRODUCT___contains___OpenSource._x_
 #### Keys ignored in scope 5:.:.:linguist.pro:APPLE:
 # ICON = "linguist.icns"
 # QMAKE_INFO_PLIST = "Info_mac.plist"
-add_qt_docs(
+add_qt_docs(linguist
     doc/qtlinguist.qdocconf
 )
 

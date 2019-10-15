@@ -46,6 +46,8 @@ add_qt_executable(designer
         Qt::Xml
     ENABLE_AUTOGEN_TOOLS
         uic
+    PRECOMPILED_HEADER
+        "qdesigner_pch.h"
 )
 
 # Resources:
@@ -97,7 +99,6 @@ add_qt_resource(designer "qttoolbardialog"
 
 
 #### Keys ignored in scope 1:.:.:designer.pro:<TRUE>:
-# PRECOMPILED_HEADER = "qdesigner_pch.h"
 # QMAKE_TARGET_DESCRIPTION = "Qt" "Designer"
 # _LOADED = "qt_app"
 
@@ -132,7 +133,7 @@ extend_target(designer CONDITION UNIX AND NOT APPLE_OSX AND NOT HAIKU
     PUBLIC_LIBRARIES
         m
 )
-add_qt_docs(
+add_qt_docs(designer
     doc/qtdesigner.qdocconf
 )
 

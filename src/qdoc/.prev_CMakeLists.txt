@@ -45,17 +45,17 @@ add_qt_tool(qdoc
         webxmlgenerator.cpp webxmlgenerator.h
         yyindent.cpp
     DEFINES
+        (CLANG_RESOURCE_DIR=\"/clang//include\")
         QDOC2_COMPAT
-        join(CLANG_RESOURCE_DIR=\"/clang//include\")
     INCLUDE_DIRECTORIES
         ${QT_SOURCE_TREE}/src/tools/qdoc
         ${QT_SOURCE_TREE}/src/tools/qdoc/qmlparser
 )
 
 #### Keys ignored in scope 1:.:.:qdoc.pro:<TRUE>:
-# CMAKE_BIN_DIR = "join($$[QT_HOST_BINS],$$[QT_INSTALL_PREFIX])"
-# CMAKE_INSTALL_LIBS_DIR = "join($$[QT_INSTALL_LIBS])"
-# CMAKE_LIB_DIR = "join($$[QT_INSTALL_LIBS],$$[QT_INSTALL_PREFIX])"
+# CMAKE_BIN_DIR = "$$cmakeRelativePath($$[QT_HOST_BINS], $$[QT_INSTALL_PREFIX])"
+# CMAKE_INSTALL_LIBS_DIR = "$$cmakeTargetPath($$[QT_INSTALL_LIBS])"
+# CMAKE_LIB_DIR = "$$cmakeRelativePath($$[QT_INSTALL_LIBS], $$[QT_INSTALL_PREFIX])"
 # CMAKE_PACKAGE_VERSION = "$$MODULE_VERSION"
 # INSTALLS = "cmake_qdoc_tools_files"
 # QMAKE_SUBSTITUTES = "cmake_qdoc_config_file" "cmake_qdoc_config_version_file"
@@ -73,6 +73,9 @@ add_qt_tool(qdoc
 
 ## Scopes:
 #####################################################################
+
+#### Keys ignored in scope 2:.:.:qdoc.pro:NOT force_bootstrap:
+# _REQUIREMENTS = "qtConfig(xmlstreamwriter)"
 
 extend_target(qdoc CONDITION TARGET Qt::QmlDevToolsPrivate
     LIBRARIES
@@ -99,7 +102,7 @@ extend_target(qdoc CONDITION win32-icc_x_ OR win32-msvc_x_
 
 #### Keys ignored in scope 9:.:.:qdoc.pro:NOT CMAKE_LIB_DIR___contains___^\\.\\./._x_:
 # CMAKE_RELATIVE_INSTALL_DIR = "$${CMAKE_RELATIVE_INSTALL_LIBS_DIR}../../"
-# CMAKE_RELATIVE_INSTALL_LIBS_DIR = "join($$[QT_INSTALL_PREFIX],$$[QT_INSTALL_LIBS])"
+# CMAKE_RELATIVE_INSTALL_LIBS_DIR = "$$cmakeRelativePath($$[QT_INSTALL_PREFIX], $$[QT_INSTALL_LIBS])"
 
 #### Keys ignored in scope 10:.:.:qdoc.pro:else:
 # CMAKE_LIB_DIR_IS_ABSOLUTE = "True"
@@ -107,7 +110,7 @@ extend_target(qdoc CONDITION win32-icc_x_ OR win32-msvc_x_
 #### Keys ignored in scope 11:.:.:qdoc.pro:CMAKE_BIN_DIR___contains___^\\.\\./._x_:
 # CMAKE_BIN_DIR = "$$[QT_HOST_BINS]/"
 # CMAKE_BIN_DIR_IS_ABSOLUTE = "True"
-add_qt_docs(
+add_qt_docs(qdoc
     doc/config/qdoc.qdocconf
 )
 

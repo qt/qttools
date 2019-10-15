@@ -35,10 +35,7 @@ add_qt_module(UiTools
 
 ## Scopes:
 #####################################################################
-
-#### Keys ignored in scope 2:.:.:uitools.pro:NOT qtBuildPart(tools):
-# MODULE_PLUGIN_TYPES = "designer"
-add_qt_docs(
+add_qt_docs(UiTools
     doc/qtuitools.qdocconf
 )
 
