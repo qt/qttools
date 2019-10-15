@@ -523,6 +523,11 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
 
     switch (atom->type()) {
     case Atom::AutoLink:
+        if (relative && relative->name() == atom->string()) {
+            out() << protectEnc(atom->string());
+            break;
+        }
+        Q_FALLTHROUGH();
     case Atom::NavAutoLink:
         if (!inLink_ && !inContents_ && !inSectionHeading_) {
             const Node *node = nullptr;
