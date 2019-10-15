@@ -458,21 +458,10 @@ void CppCodeParser::processQmlProperties(const Doc &doc, NodeList &nodes, DocLis
             group = property.left(i);
     }
 
+    NodeList sharedNodes;
     QmlTypeNode *qmlType = qdb_->findQmlType(module, qmlTypeName);
     if (qmlType == nullptr)
         qmlType = new QmlTypeNode(qdb_->primaryTreeRoot(), qmlTypeName);
-
-    SharedCommentNode *scn = nullptr;
-    if (topics.size() > 1) {
-        scn = new SharedCommentNode(qmlType, topics.size(), group);
-        scn->setLocation(doc.startLocation());
-        if (jsProps)
-            scn->setGenus(Node::JS);
-        else
-            scn->setGenus(Node::QML);
-        nodes.append(scn);
-        docs.append(doc);
-    }
 
     for (int i=0; i<topics.size(); ++i) {
         QString cmd = topics.at(i).topic;
@@ -492,19 +481,28 @@ void CppCodeParser::processQmlProperties(const Doc &doc, NodeList &nodes, DocLis
                     continue;
                 }
                 QmlPropertyNode *qpn = new QmlPropertyNode(qmlType, property, type, attached);
-                if (scn != nullptr)
-                    qpn->setSharedCommentNode(scn);
                 qpn->setLocation(doc.startLocation());
-                if (jsProps)
-                    qpn->setGenus(Node::JS);
-                else
-                    qpn->setGenus(Node::QML);
+                qpn->setGenus(jsProps ? Node::JS : Node::QML);
                 nodes.append(qpn);
                 docs.append(doc);
+                sharedNodes << qpn;
             }
         } else {
             doc.startLocation().warning(tr("Command '\\%1'; not allowed with QML/JS property commands").arg(cmd));
         }
+    }
+
+    // Construct a SharedCommentNode (scn) if multiple topics generated
+    // valid nodes. Note that it's important to do this *after* constructing
+    // the topic nodes - which need to be written to index before the related
+    // scn.
+    if (sharedNodes.count() > 1) {
+        SharedCommentNode *scn = new SharedCommentNode(qmlType, sharedNodes.count(), group);
+        scn->setLocation(doc.startLocation());
+        nodes.append(scn);
+        docs.append(doc);
+        for (const auto n : sharedNodes)
+            scn->append(n);
     }
 }
 
@@ -1005,7 +1003,7 @@ void CppCodeParser::processTopicArgs(const Doc &doc, const QString &topic, NodeL
                     bool found = false;
                     for (SharedCommentNode *scn : sharedCommentNodes) {
                         if (scn->parent() == node->parent()) {
-                            node->setSharedCommentNode(scn);
+                            scn->append(node);
                             found = true;
                             break;
                         }

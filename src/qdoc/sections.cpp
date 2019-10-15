@@ -904,9 +904,14 @@ void Sections::distributeQmlNodeInDetailsVector(SectionVector &dv, Node *n)
     }
 }
 
-void Sections::distributeQmlNodeInSummaryVector(SectionVector &sv, Node *n)
+/*!
+  Distributes a node \a n into the correct place in the summary section vector \a sv.
+  Nodes that are sharing a comment are handled recursively - for recursion, the \a
+  sharing parameter is set to \c true.
+ */
+void Sections::distributeQmlNodeInSummaryVector(SectionVector &sv, Node *n, bool sharing)
 {
-    if (n->isSharedCommentNode())
+    if (n->isSharingComment() && !sharing)
         return;
     if (n->isQmlProperty() || n->isJsProperty()) {
         QmlPropertyNode *pn = static_cast<QmlPropertyNode *>(n);
@@ -928,6 +933,14 @@ void Sections::distributeQmlNodeInSummaryVector(SectionVector &sv, Node *n)
                 sv[QmlAttachedMethods].insert(fn);
             else
                 sv[QmlMethods].insert(fn);
+        }
+    } else if (n->isSharedCommentNode()) {
+        SharedCommentNode *scn = static_cast<SharedCommentNode*>(n);
+        if (scn->isPropertyGroup()) {
+            sv[QmlProperties].insert(scn);
+        } else {
+            for (auto child : scn->collective())
+                distributeQmlNodeInSummaryVector(sv, child, true);
         }
     }
 }
@@ -1023,7 +1036,9 @@ void Sections::buildStdQmlTypeRefPageSections()
                 ++c;
                 continue;
             }
-            allMembers.add(classMap, n);
+            if (!n->isSharedCommentNode() || n->isPropertyGroup())
+                allMembers.add(classMap, n);
+
             distributeQmlNodeInSummaryVector(sv, n);
             distributeQmlNodeInDetailsVector(dv, n);
             ++c;

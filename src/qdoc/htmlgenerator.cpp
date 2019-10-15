@@ -2738,20 +2738,30 @@ QString HtmlGenerator::generateAllQmlMembersFile(const Sections &sections, CodeM
             }
             out() << "<ul>\n";
             for (int j=0; j<keys.size(); j++) {
-                if (nodes[j]->access() == Node::Private || nodes[j]->isInternal()) {
+                Node *node = nodes[j];
+                if (node->access() == Node::Private || node->isInternal())
                     continue;
-                }
-                out() << "<li class=\"fn\">";
-                QString prefix;
-                if (!keys.isEmpty()) {
-                    prefix = keys.at(j).mid(1);
-                    prefix = prefix.left(keys.at(j).indexOf("::")+1);
-                }
-                generateQmlItem(nodes[j], aggregate, marker, true);
-                if (nodes[j]->isAttached())
-                    out() << " [attached]";
-                //generateSynopsis(nodes[j], qcn, marker, Section::AllMembers, false, &prefix);
-                out() << "</li>\n";
+                if (node->isSharingComment() &&
+                    node->sharedCommentNode()->isPropertyGroup())
+                    continue;
+
+                std::function<void(Node *)> generate = [&](Node *n) {
+                    out() << "<li class=\"fn\">";
+                    generateQmlItem(n, aggregate, marker, true);
+                    if (n->isDefault())
+                        out() << " [default]";
+                    else if (n->isAttached())
+                        out() << " [attached]";
+                    // Indent property group members
+                    if (n->isPropertyGroup()) {
+                        out() << "<ul>\n";
+                        const QVector<Node *> &collective = static_cast<SharedCommentNode *>(n)->collective();
+                        std::for_each(collective.begin(), collective.end(), generate);
+                        out() << "</ul>\n";
+                    }
+                    out() << "</li>\n";
+                };
+                generate(node);
             }
             out() << "</ul>\n";
         }
@@ -4038,13 +4048,11 @@ void HtmlGenerator::generateDetailedMember(const Node *node,
         if (collective.size() > 1)
             out() << "<div class=\"fngroup\">\n";
         for (const auto *node : collective) {
-            if (node->isFunction()) {
-                nodeRef = refForNode(node);
-                out() << "<h3 class=\"fn fngroupitem\" id=\"" << nodeRef << "\">";
-                out() << "<a name=\"" + nodeRef + "\"></a>";
-                generateSynopsis(node, relative, marker, Section::Details);
-                out() << "</h3>";
-            }
+            nodeRef = refForNode(node);
+            out() << "<h3 class=\"fn fngroupitem\" id=\"" << nodeRef << "\">";
+            out() << "<a name=\"" + nodeRef + "\"></a>";
+            generateSynopsis(node, relative, marker, Section::Details);
+            out() << "</h3>";
         }
         if (collective.size() > 1)
             out() << "</div>";
