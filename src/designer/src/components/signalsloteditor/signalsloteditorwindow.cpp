@@ -734,6 +734,8 @@ void SignalSlotEditorWindow::setActiveFormWindow(QDesignerFormWindowInterface *f
                     this, &SignalSlotEditorWindow::updateEditorSelection);
         disconnect(m_editor.data(), &SignalSlotEditor::connectionSelected,
                    this, &SignalSlotEditorWindow::updateDialogSelection);
+        disconnect(m_editor.data(), &SignalSlotEditor::connectionAdded,
+                   this, &SignalSlotEditorWindow::resizeColumns);
         if (integration) {
             disconnect(integration, &QDesignerIntegrationInterface::objectNameChanged,
                        this, &SignalSlotEditorWindow::objectNameChanged);
@@ -753,12 +755,15 @@ void SignalSlotEditorWindow::setActiveFormWindow(QDesignerFormWindowInterface *f
                 this, &SignalSlotEditorWindow::updateEditorSelection);
         connect(m_editor.data(), &SignalSlotEditor::connectionSelected,
                 this, &SignalSlotEditorWindow::updateDialogSelection);
+        connect(m_editor.data(), &SignalSlotEditor::connectionAdded,
+                this, &SignalSlotEditorWindow::resizeColumns);
         if (integration) {
             connect(integration, &QDesignerIntegrationInterface::objectNameChanged,
                     this, &SignalSlotEditorWindow::objectNameChanged);
         }
     }
 
+    resizeColumns();
     updateUi();
 }
 
@@ -824,6 +829,12 @@ void SignalSlotEditorWindow::updateUi()
 {
     m_add_button->setEnabled(!m_editor.isNull());
     m_remove_button->setEnabled(!m_editor.isNull() && m_view->currentIndex().isValid());
+}
+
+void SignalSlotEditorWindow::resizeColumns()
+{
+    for (int c = 0, count = m_model->columnCount(); c < count; ++c)
+        m_view->resizeColumnToContents(c);
 }
 
 } // namespace qdesigner_internal
