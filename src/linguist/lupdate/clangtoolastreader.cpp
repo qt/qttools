@@ -540,6 +540,9 @@ void LupdatePPCallbacks::MacroExpands(const clang::Token &macroNameTok,
     const clang::MacroDefinition &macroDefinition, clang::SourceRange range,
     const clang::MacroArgs *args)
 {
+    llvm::StringRef fileName = m_preprocessor.getSourceManager().getFilename(range.getBegin());
+    if (fileName != m_inputFile)
+        return;
 }
 
 QT_END_NAMESPACE

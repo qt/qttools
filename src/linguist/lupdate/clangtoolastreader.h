@@ -133,7 +133,10 @@ public:
     LupdatePPCallbacks(TranslationStores &translationStores, clang::Preprocessor &preprocessor)
         : m_translationStores(translationStores),
           m_preprocessor(preprocessor)
-    {}
+    {
+        const auto &sm = m_preprocessor.getSourceManager();
+        m_inputFile = sm.getFileEntryForID(sm.getMainFileID())->getName();
+    }
 
     ~LupdatePPCallbacks() override
     {}
@@ -146,6 +149,7 @@ public:
 private:
     TranslationStores &m_translationStores;
     clang::Preprocessor &m_preprocessor;
+    std::string m_inputFile;
 };
 
 class LupdateVisitor : public clang::RecursiveASTVisitor<LupdateVisitor>
