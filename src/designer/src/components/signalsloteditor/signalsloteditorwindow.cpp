@@ -391,7 +391,7 @@ void ConnectionModel::connectionChanged(Connection *con)
 
 void ConnectionModel::updateAll()
 {
-    emit dataChanged(index(0, 0), index(rowCount(), columnCount()));
+    emit dataChanged(index(0, 0), index(rowCount() - 1, columnCount() - 1));
 }
 }
 
