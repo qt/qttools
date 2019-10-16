@@ -6,5 +6,5 @@ dependencies:
     ref: e3f5912747af1d46178886a0c5eaaddaf6d1a23b
     required: true
   ../qtdeclarative:
-    ref: 9793931e958c8e78f3aeed2d2cdb37b2d5ca8207
+    ref: 62e3c7408061b76c9ca585651da4e45ac941fe87
     required: false
