@@ -532,4 +532,14 @@ void LupdateVisitor::handleTrId(const TranslationRelatedStore &store, bool force
     m_tor->append(msg);
 }
 
+void LupdateVisitor::processPreprocessorCalls()
+{
+}
+
+void LupdatePPCallbacks::MacroExpands(const clang::Token &macroNameTok,
+    const clang::MacroDefinition &macroDefinition, clang::SourceRange range,
+    const clang::MacroArgs *args)
+{
+}
+
 QT_END_NAMESPACE

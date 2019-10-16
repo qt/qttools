@@ -47,6 +47,8 @@
 #include <clang/Frontend/CompilerInstance.h>
 #include <clang/Frontend/FrontendActions.h>
 #include <clang/Tooling/Tooling.h>
+#include <clang/Lex/PPCallbacks.h>
+#include <clang/Lex/Preprocessor.h>
 
 #if defined(Q_CC_MSVC)
 # pragma warning(default: 4100)
@@ -123,8 +125,33 @@ struct TranslationRelatedStore
     }
 };
 
+using TranslationStores = std::vector<TranslationRelatedStore>;
+
+class LupdatePPCallbacks : public clang::PPCallbacks
+{
+public:
+    LupdatePPCallbacks(TranslationStores &translationStores, clang::Preprocessor &preprocessor)
+        : m_translationStores(translationStores),
+          m_preprocessor(preprocessor)
+    {}
+
+    ~LupdatePPCallbacks() override
+    {}
+
+    // Overridden callback functions.
+    void MacroExpands(const clang::Token &macroNameTok,
+        const clang::MacroDefinition &macroDefinition, clang::SourceRange range,
+        const clang::MacroArgs *args) override;
+
+private:
+    TranslationStores &m_translationStores;
+    clang::Preprocessor &m_preprocessor;
+};
+
 class LupdateVisitor : public clang::RecursiveASTVisitor<LupdateVisitor>
 {
+    friend class LupdateASTConsumer;
+
 public:
     explicit LupdateVisitor(clang::ASTContext *context, Translator *tor)
         : m_context(context),
@@ -136,6 +163,7 @@ public:
 
     bool VisitCallExpr(clang::CallExpr *callExpression);
     void fillTranslator();
+    void processPreprocessorCalls();
 
 private:
     std::vector<QString> rawCommentsForCallExpr(const clang::CallExpr *callExpr) const;
@@ -154,7 +182,8 @@ private:
     Translator *m_tor { nullptr };
     std::string m_inputFile;
 
-    std::vector<TranslationRelatedStore> m_translationStoresFromAST;
+    TranslationStores m_translationStoresFromAST;
+    TranslationStores m_translationStoresFromPP;
 };
 
 class LupdateASTConsumer : public clang::ASTConsumer
@@ -168,9 +197,15 @@ public:
     // parsed.
     void HandleTranslationUnit(clang::ASTContext &context) override
     {
+        m_visitor.processPreprocessorCalls();
         bool traverse = m_visitor.TraverseAST(context);
         qCDebug(lcClang) << "TraverseAST: " << traverse;
         m_visitor.fillTranslator();
+    }
+
+    TranslationStores &preprocessorStores()
+    {
+        return m_visitor.m_translationStoresFromPP;
     }
 
 private:
@@ -188,6 +223,11 @@ public:
         clang::CompilerInstance &compiler, llvm::StringRef /* inFile */) override
     {
         LupdateASTConsumer *consumer = new LupdateASTConsumer(&compiler.getASTContext(), m_tor);
+        clang::Preprocessor &preprocessor = compiler.getPreprocessor();
+        LupdatePPCallbacks *callbacks = new LupdatePPCallbacks(consumer->preprocessorStores(),
+            preprocessor);
+        preprocessor.addPPCallbacks(std::unique_ptr<clang::PPCallbacks>(callbacks));
+
         return std::unique_ptr<clang::ASTConsumer>(consumer);
     }
 
