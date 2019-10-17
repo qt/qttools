@@ -68,6 +68,8 @@ private slots:
 
     void paletteChanged(const QPalette &palette);
     void viewContextMenuRequested(const QPoint &pos);
+    void save();
+    void load();
 
 protected:
 
