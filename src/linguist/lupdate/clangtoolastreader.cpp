@@ -29,6 +29,9 @@
 
 #include <QtCore/qregularexpression.h>
 
+#include <clang/Lex/MacroArgs.h>
+#include <clang/Basic/TokenKinds.h>
+
 QT_BEGIN_NAMESPACE
 
 namespace LupdatePrivate
@@ -540,9 +543,89 @@ void LupdatePPCallbacks::MacroExpands(const clang::Token &macroNameTok,
     const clang::MacroDefinition &macroDefinition, clang::SourceRange range,
     const clang::MacroArgs *args)
 {
-    llvm::StringRef fileName = m_preprocessor.getSourceManager().getFilename(range.getBegin());
+    if (!args)
+        return;
+    const auto &sm = m_preprocessor.getSourceManager();
+    llvm::StringRef fileName = sm.getFilename(range.getBegin());
     if (fileName != m_inputFile)
         return;
+
+    const QString funcName = QString::fromStdString(m_preprocessor.getSpelling(macroNameTok));
+    qCDebug(lcClang) << "func  Name " << funcName;
+    if (!funcName.contains(QStringLiteral("NOOP"))
+        && !funcName.contains(QStringLiteral("Q_DECLARE_TR_FUNCTIONS"))) {
+        return;
+    }
+
+    TranslationRelatedStore store;
+    store.callType = QStringLiteral("MacroExpands");
+    store.funcName = funcName;
+    store.lupdateLocationFile = QString::fromStdString(fileName);
+    store.lupdateLocationLine = sm.getExpansionLineNumber(range.getBegin());
+    store.locationCol = sm.getExpansionColumnNumber(range.getBegin());
+    store.callLocation = range.getBegin();
+
+    std::vector<QString> arguments(args->getNumMacroArguments());
+    for (unsigned i = 0; i < args->getNumMacroArguments(); i++) {
+        auto preExpArguments = const_cast<clang::MacroArgs*>(args)->getPreExpArgument(i,
+            m_preprocessor);
+        QString temp;
+        for (const auto &preExpArgument : preExpArguments) {
+            const auto kind = preExpArgument.getKind();
+            if (kind == clang::tok::TokenKind::identifier)
+                temp = QString::fromStdString(m_preprocessor.getSpelling(preExpArgument));
+            else if (clang::tok::isStringLiteral(kind))
+                temp += LupdatePrivate::cleanQuote(m_preprocessor.getSpelling(preExpArgument));
+        }
+        arguments[i] = temp;
+    }
+    storeMacroArguments(arguments, &store);
+    if (store.isValid())
+        m_translationStores.push_back(store);
+}
+
+void LupdatePPCallbacks::storeMacroArguments(const std::vector<QString> &args,
+    TranslationRelatedStore *store)
+{
+    switch (trFunctionAliasManager.trFunctionByName(store->funcName)) {
+    // only one argument: the context with no "
+    case TrFunctionAliasManager::Function_Q_DECLARE_TR_FUNCTIONS:
+        if (args.size() != 1)
+            break;
+        store->contextArg = args[0];
+        break;
+    // only one argument: the source
+    case TrFunctionAliasManager::Function_QT_TR_N_NOOP:
+        Q_FALLTHROUGH();
+    case TrFunctionAliasManager::Function_QT_TR_NOOP:
+    case TrFunctionAliasManager::Function_QT_TR_NOOP_UTF8:
+        if (args.size() != 1)
+            break;
+        store->lupdateSource = args[0];
+        break;
+    // two arguments: the context and the source
+    case TrFunctionAliasManager::Function_QT_TRANSLATE_N_NOOP:
+    case TrFunctionAliasManager::Function_QT_TRANSLATE_N_NOOP3:
+        Q_FALLTHROUGH();
+    case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP:
+    case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP_UTF8:
+    case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP3:
+    case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP3_UTF8:
+        if (args.size() != 2)
+            break;
+        store->contextArg = args[0];
+        store->lupdateSource = args[1];
+        break;
+    // only one argument (?) the message Id
+    case TrFunctionAliasManager::Function_QT_TRID_N_NOOP:
+        Q_FALLTHROUGH();
+    case TrFunctionAliasManager::Function_qtTrId:
+    case TrFunctionAliasManager::Function_QT_TRID_NOOP:
+        if (args.size() != 1)
+            break;
+        store->lupdateId = args[0];
+        break;
+    }
 }
 
 QT_END_NAMESPACE

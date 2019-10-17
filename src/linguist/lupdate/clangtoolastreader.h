@@ -96,6 +96,7 @@ struct TranslationRelatedStore
     QString lupdateComment;
     QString lupdateExtraComment;
     QString lupdatePlural;
+    clang::SourceLocation callLocation;
 
     bool isValid() const
     {
@@ -147,6 +148,8 @@ public:
         const clang::MacroArgs *args) override;
 
 private:
+    void storeMacroArguments(const std::vector<QString> &args, TranslationRelatedStore *store);
+
     TranslationStores &m_translationStores;
     clang::Preprocessor &m_preprocessor;
     std::string m_inputFile;
