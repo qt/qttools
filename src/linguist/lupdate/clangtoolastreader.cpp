@@ -92,12 +92,6 @@ namespace LupdatePrivate
 
     bool trFunctionPresent(llvm::StringRef text)
     {
-        /*
-            UNARY_MACRO(qtTrId)
-            UNARY_MACRO(tr)
-            UNARY_MACRO(trUtf8)
-            UNARY_MACRO(translate)
-        */
         if (text.contains(llvm::StringRef("qtTrId(")))
             return true;
         if (text.contains(llvm::StringRef("tr(")))
