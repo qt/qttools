@@ -129,8 +129,6 @@ bool LupdateVisitor::VisitCallExpr(clang::CallExpr *callExpression)
     if (funcName != "tr" && funcName != "qtTrId" && funcName != "translate" && funcName != "trUtf8")
         return true;
     llvm::StringRef fileName = fullLocation.getFileEntry()->getName();
-    if (fileName.contains(llvm::StringRef("/")))
-        fileName = fileName.rsplit(llvm::StringRef("/")).second;
     // Checking that the CallExpression is from the input file we're interested in
     if (fileName != m_inputFile)
         return true;

@@ -131,8 +131,7 @@ public:
           m_tor(tor)
     {
         m_inputFile = m_context->getSourceManager().getFileEntryForID(
-            m_context->getSourceManager().getMainFileID())->getName().rsplit(
-            llvm::StringRef("/")).second;
+            m_context->getSourceManager().getMainFileID())->getName();
     }
 
     bool VisitCallExpr(clang::CallExpr *callExpression);
