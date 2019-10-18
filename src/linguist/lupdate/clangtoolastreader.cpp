@@ -50,23 +50,65 @@ namespace LupdatePrivate
         return QString::fromStdString(context.substr(0, context.find("::" + funcName, 0)));
     }
 
-    // Cleaning quotes around the source and the comment quoteCompulsory: we
-    // only want to retrieve what is inside the quotes and the text won't be
-    // retrieved if quotes are not there if the quoteCompulsary = false simply
-    // return the input, line by line with the spaces at the beginning of the
-    // line removed not looking for real code comment.
-    QString cleanQuote(llvm::StringRef s, bool leftQuoteCompulsory = true,
-        bool rightQuoteCompulsory = true)
+    enum QuoteCompulsary
     {
-        qCDebug(lcClang) << "==========================================text to clean " << s.str();
+        None = 0x01,
+        Left = 0x02,                // Left quote is mandatory
+        Right = 0x04,               // Right quote is mandatory
+        LeftAndRight = Left | Right // Both quotes are mandatory
+    };
+
+    /*
+        Removes the quotes around the lupdate extra, ID meta data, magic and
+        ID prefix comments and source string literals.
+        Depending on the given compulsory option, quotes can be unbalanced and
+        still some text is returned. This is to mimic the old lupdate behavior.
+    */
+    QString cleanQuote(llvm::StringRef s, QuoteCompulsary quote)
+    {
         if (s.empty())
             return {};
         s = s.trim();
-        if (!s.consume_front("\"") && leftQuoteCompulsory)
+        if (!s.consume_front("\"") && ((quote & Left) != 0))
             return {};
-        if (!s.consume_back("\"") && rightQuoteCompulsory)
+        if (!s.consume_back("\"") && ((quote & Right) != 0))
             return {};
         return QString::fromStdString(s);
+    }
+
+    /*
+        Removes the quotes and a possible existing string literal prefix
+        for a given string literal coming from the source code. Do not use
+        to clean the quotes around the lupdate translator specific comments.
+    */
+    QString cleanQuote(const std::string &token)
+    {
+        if (token.empty())
+            return {};
+
+        const QString string = QString::fromStdString(token).trimmed();
+        const int index = string.indexOf(QLatin1Char('"'));
+        if (index <= 0)
+            return LupdatePrivate::cleanQuote(token, QuoteCompulsary::LeftAndRight);
+
+        QRegularExpressionMatch result;
+        if (string.at(index - 1) == QLatin1Char('R')) {
+            static const QRegularExpression rawStringLiteral {
+                QStringLiteral(
+                    "(?:\\bu8|\\b[LuU])??R\\\"([^\\(\\)\\\\ ]{0,16})\\((?<characters>.*)\\)\\1\\\""
+                ), QRegularExpression::DotMatchesEverythingOption };
+            result = rawStringLiteral.match(string);
+        } else {
+            static const QRegularExpression stringLiteral {
+                QStringLiteral(
+                    "(?:\\bu8|\\b[LuU])+?\\\"(?<characters>[^\\\"\\\\]*(?:\\\\.[^\\\"\\\\]*)*)\\\""
+                )
+            };
+            result = stringLiteral.match(string);
+        }
+        if (result.hasMatch())
+            return result.captured(QStringLiteral("characters"));
+        return string;
     }
 
     static bool capture(const QRegularExpression &exp, const QString &line, QString *i, QString *c)
@@ -80,7 +122,7 @@ namespace LupdatePrivate
         *c = result.captured(QStringLiteral("comment")).trimmed();
 
         if (*i == QLatin1String("%"))
-            *c = LupdatePrivate::cleanQuote(c->toStdString(), true, false);
+            *c = LupdatePrivate::cleanQuote(c->toStdString(), QuoteCompulsary::Left);
 
         return !c->isEmpty();
     }
@@ -407,8 +449,10 @@ void LupdateVisitor::setInfoFromRawComment(const QString &commentString,
                 line = line.remove(QLatin1String("*/")).trimmed(); // Still there can be something.
             }
 
-            if (sourceIdentifier)
-                line = LupdatePrivate::cleanQuote(line.toStdString(), true, false);
+            if (sourceIdentifier) {
+                line = LupdatePrivate::cleanQuote(line.toStdString(),
+                    LupdatePrivate::QuoteCompulsary::Left);
+            }
 
             if (!line.isEmpty() && !comment.isEmpty() && !sourceIdentifier)
                 comment.append(QLatin1Char(' '));
