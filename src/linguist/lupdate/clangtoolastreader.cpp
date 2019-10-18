@@ -106,6 +106,30 @@ namespace LupdatePrivate
             return true;
         if (text.contains(llvm::StringRef("translate(")))
             return true;
+        if (text.contains(llvm::StringRef("Q_DECLARE_TR_FUNCTIONS(")))
+            return true;
+        if (text.contains(llvm::StringRef("QT_TR_N_NOOP(")))
+            return true;
+        if (text.contains(llvm::StringRef("QT_TRID_N_NOOP(")))
+            return true;
+        if (text.contains(llvm::StringRef("QT_TRANSLATE_N_NOOP(")))
+            return true;
+        if (text.contains(llvm::StringRef("QT_TRANSLATE_N_NOOP3(")))
+            return true;
+        if (text.contains(llvm::StringRef("QT_TR_NOOP(")))
+            return true;
+        if (text.contains(llvm::StringRef("QT_TRID_NOOP(")))
+            return true;
+        if (text.contains(llvm::StringRef("QT_TRANSLATE_NOOP(")))
+            return true;
+        if (text.contains(llvm::StringRef("QT_TRANSLATE_NOOP3(")))
+            return true;
+        if (text.contains(llvm::StringRef("QT_TR_NOOP_UTF8(")))
+            return true;
+        if (text.contains(llvm::StringRef("QT_TRANSLATE_NOOP_UTF8(")))
+            return true;
+        if (text.contains(llvm::StringRef("QT_TRANSLATE_NOOP3_UTF8(")))
+            return true;
         return false;
     }
 }
@@ -537,6 +561,23 @@ void LupdateVisitor::handleTrId(const TranslationRelatedStore &store, bool force
 
 void LupdateVisitor::processPreprocessorCalls()
 {
+    for (const auto &store : qAsConst(m_translationStoresFromPP))
+        processPreprocessorCall(store);
+}
+
+void LupdateVisitor::processPreprocessorCall(TranslationRelatedStore store)
+{
+    const std::vector<QString> rawComments = rawCommentsFromSourceLocation(store.callLocation);
+    for (const auto &rawComment : rawComments)
+        setInfoFromRawComment(rawComment, &store);
+
+    if (store.isValid()) {
+        if (store.funcName.contains(QStringLiteral("Q_DECLARE_TR_FUNCTIONS")))
+            m_qDeclateTrFunctionContext.push_back(store);
+        else
+            m_noopTranslationStores.push_back(store);
+        store.printStore();
+    }
 }
 
 void LupdatePPCallbacks::MacroExpands(const clang::Token &macroNameTok,

@@ -185,11 +185,15 @@ private:
     void handleTrId(const TranslationRelatedStore &store, bool forcePlural);
     void handleTranslate(const TranslationRelatedStore &store, bool forcePlural);
 
+    void processPreprocessorCall(TranslationRelatedStore store);
+
     clang::ASTContext *m_context { nullptr };
     Translator *m_tor { nullptr };
     std::string m_inputFile;
 
     TranslationStores m_translationStoresFromAST;
+    TranslationStores m_qDeclateTrFunctionContext;
+    TranslationStores m_noopTranslationStores;
     TranslationStores m_translationStoresFromPP;
 };
 
