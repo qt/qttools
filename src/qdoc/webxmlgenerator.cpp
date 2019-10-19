@@ -782,7 +782,7 @@ void WebXMLGenerator::startLink(QXmlStreamWriter &writer, const Atom *atom,
                     break;
                 }
             }
-            // fall through
+            Q_FALLTHROUGH();
             case Node::Page:
                 writer.writeAttribute("page", fullName);
                 break;
@@ -792,8 +792,9 @@ void WebXMLGenerator::startLink(QXmlStreamWriter &writer, const Atom *atom,
                 if (propertyNode->getters().size() > 0)
                     writer.writeAttribute("getter", propertyNode->getters().at(0)->fullName());
             }
+                break;
             default:
-                ;
+                break;
             }
         }
         inLink = true;

@@ -523,6 +523,11 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
 
     switch (atom->type()) {
     case Atom::AutoLink:
+        if (relative && relative->name() == atom->string()) {
+            out() << protectEnc(atom->string());
+            break;
+        }
+        Q_FALLTHROUGH();
     case Atom::NavAutoLink:
         if (!inLink_ && !inContents_ && !inSectionHeading_) {
             const Node *node = nullptr;
@@ -2419,6 +2424,13 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
         logicalModuleVersion = collection->logicalModuleVersion();
     else
         logicalModuleVersion = qcn->logicalModuleVersion();
+
+    if (logicalModuleVersion.isEmpty() || qcn->logicalModuleName().isEmpty())
+        qcn->doc().location().warning(tr("Could not resolve QML import "
+                                         "statement for type '%1'").arg(qcn->name()),
+                                      tr("Maybe you forgot to use the "
+                                         "'\\%1' command?").arg(COMMAND_INQMLMODULE));
+
     text.clear();
     text << "import " + qcn->logicalModuleName() + QLatin1Char(' ') + logicalModuleVersion;
     requisites.insert(importText, text);
@@ -2726,20 +2738,30 @@ QString HtmlGenerator::generateAllQmlMembersFile(const Sections &sections, CodeM
             }
             out() << "<ul>\n";
             for (int j=0; j<keys.size(); j++) {
-                if (nodes[j]->access() == Node::Private || nodes[j]->isInternal()) {
+                Node *node = nodes[j];
+                if (node->access() == Node::Private || node->isInternal())
                     continue;
-                }
-                out() << "<li class=\"fn\">";
-                QString prefix;
-                if (!keys.isEmpty()) {
-                    prefix = keys.at(j).mid(1);
-                    prefix = prefix.left(keys.at(j).indexOf("::")+1);
-                }
-                generateQmlItem(nodes[j], aggregate, marker, true);
-                if (nodes[j]->isAttached())
-                    out() << " [attached]";
-                //generateSynopsis(nodes[j], qcn, marker, Section::AllMembers, false, &prefix);
-                out() << "</li>\n";
+                if (node->isSharingComment() &&
+                    node->sharedCommentNode()->isPropertyGroup())
+                    continue;
+
+                std::function<void(Node *)> generate = [&](Node *n) {
+                    out() << "<li class=\"fn\">";
+                    generateQmlItem(n, aggregate, marker, true);
+                    if (n->isDefault())
+                        out() << " [default]";
+                    else if (n->isAttached())
+                        out() << " [attached]";
+                    // Indent property group members
+                    if (n->isPropertyGroup()) {
+                        out() << "<ul>\n";
+                        const QVector<Node *> &collective = static_cast<SharedCommentNode *>(n)->collective();
+                        std::for_each(collective.begin(), collective.end(), generate);
+                        out() << "</ul>\n";
+                    }
+                    out() << "</li>\n";
+                };
+                generate(node);
             }
             out() << "</ul>\n";
         }
@@ -4026,13 +4048,11 @@ void HtmlGenerator::generateDetailedMember(const Node *node,
         if (collective.size() > 1)
             out() << "<div class=\"fngroup\">\n";
         for (const auto *node : collective) {
-            if (node->isFunction()) {
-                nodeRef = refForNode(node);
-                out() << "<h3 class=\"fn fngroupitem\" id=\"" << nodeRef << "\">";
-                out() << "<a name=\"" + nodeRef + "\"></a>";
-                generateSynopsis(node, relative, marker, Section::Details);
-                out() << "</h3>";
-            }
+            nodeRef = refForNode(node);
+            out() << "<h3 class=\"fn fngroupitem\" id=\"" << nodeRef << "\">";
+            out() << "<a name=\"" + nodeRef + "\"></a>";
+            generateSynopsis(node, relative, marker, Section::Details);
+            out() << "</h3>";
         }
         if (collective.size() > 1)
             out() << "</div>";

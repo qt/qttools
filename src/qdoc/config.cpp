@@ -261,12 +261,14 @@ QMap<QString, QStringList> Config::includeFilesMap_;
 
 /*!
   The constructor sets the \a programName and initializes all
-  internal state variables to empty values.
+  internal state variables to either default values or to ones
+  defined in command line arguments \a args.
  */
-Config::Config(const QString &programName)
+Config::Config(const QString &programName, const QStringList &args)
     : prog(programName)
 {
     numInstances++;
+    processCommandLineOptions(args);
     reset();
 }
 
@@ -299,26 +301,51 @@ void Config::reset()
     setStringList(CONFIG_LANGUAGE, QStringList("Cpp")); // i.e. C++
     setStringList(CONFIG_OUTPUTFORMATS, QStringList("HTML"));
     setStringList(CONFIG_TABSIZE, QStringList("8"));
+
+    // Publish options from the command line as config variables
+    const auto setListFlag = [this](const QString &key, bool test) {
+        setStringList(key, QStringList(test ? QStringLiteral("true") : QStringLiteral("false")));
+    };
+#define SET(opt, test) setListFlag(opt, m_parser.isSet(m_parser.test))
+    SET(CONFIG_SYNTAXHIGHLIGHTING, highlightingOption);
+    SET(CONFIG_SHOWINTERNAL, showInternalOption);
+    SET(CONFIG_SINGLEEXEC, singleExecOption);
+    SET(CONFIG_WRITEQAPAGES, writeQaPagesOption);
+    SET(CONFIG_REDIRECTDOCUMENTATIONTODEVNULL, redirectDocumentationToDevNullOption);
+    SET(CONFIG_AUTOLINKERRORS, autoLinkErrorsOption);
+    SET(CONFIG_OBSOLETELINKS, obsoleteLinksOption);
+#undef SET
+    setListFlag(CONFIG_NOLINKERRORS,
+                m_parser.isSet(m_parser.noLinkErrorsOption)
+                || qEnvironmentVariableIsSet("QDOC_NOLINKERRORS"));
+
+    // CONFIG_DEFINES and CONFIG_INCLUDEPATHS are set in load()
 }
 
 /*!
   Loads and parses the qdoc configuration file \a fileName.
-  This function first resets the Config instance, then
-  calls the other load() function, which does the loading,
-  parsing, and processing of the configuration file.
-
-  Intializes the location variables returned by location()
-  and lastLocation().
+  If a previous project was loaded, this function first resets the
+  Config instance. Then it calls the other load() function, which
+  does the loading, parsing, and processing of the configuration file.
  */
 void Config::load(const QString &fileName)
 {
-    reset();
+    // Reset if a previous project was loaded
+    if (configVars_.contains(CONFIG_PROJECT))
+        reset();
+
     load(Location::null, fileName);
     if (loc.isEmpty())
         loc = Location(fileName);
     else
         loc.setEtc(true);
     lastLocation_ = Location::null;
+
+    // Add defines and includepaths from command line to their
+    // respective configuration variables. Values set here are
+    // always added to what's defined in configuration file.
+    insertStringList(CONFIG_DEFINES, m_defines);
+    insertStringList(CONFIG_INCLUDEPATHS, m_includePaths);
 }
 
 /*!
@@ -339,40 +366,77 @@ void Config::insertStringList(const QString &var, const QStringList &values)
 }
 
 /*!
-   Set configuration options from \a qdocGlobals.
+  Process and store variables from the command line.
  */
-void Config::setOptions(const QDocGlobals &qdocGlobals)
+void Config::processCommandLineOptions(const QStringList &args)
 {
-    setStringList(CONFIG_SYNTAXHIGHLIGHTING, QStringList(qdocGlobals.highlighting() ? "true" : "false"));
-    setStringList(CONFIG_SHOWINTERNAL, QStringList(qdocGlobals.showInternal() ? "true" : "false"));
-    setStringList(CONFIG_SINGLEEXEC, QStringList(qdocGlobals.singleExec() ? "true" : "false"));
-    setStringList(CONFIG_WRITEQAPAGES, QStringList(qdocGlobals.writeQaPages() ? "true" : "false"));
-    setStringList(CONFIG_REDIRECTDOCUMENTATIONTODEVNULL, QStringList(qdocGlobals.redirectDocumentationToDevNull() ? "true" : "false"));
-    setStringList(CONFIG_NOLINKERRORS, QStringList(qdocGlobals.noLinkErrors() ? "true" : "false"));
-    setStringList(CONFIG_AUTOLINKERRORS, QStringList(qdocGlobals.autolinkErrors() ? "true" : "false"));
-    setStringList(CONFIG_OBSOLETELINKS, QStringList(qdocGlobals.obsoleteLinks() ? "true" : "false"));
-}
+    m_parser.process(args);
 
-/*!
-   Set configuration options from \a parser.
- */
-void Config::setOptions(const QDocCommandLineParser &parser)
-{
-    generateExamples = !parser.isSet(parser.noExamplesOption);
-    if (parser.isSet(parser.installDirOption))
-        installDir = parser.value(parser.installDirOption);
-    if (parser.isSet(parser.outputDirOption))
-        overrideOutputDir = parser.value(parser.outputDirOption);
+    m_defines = m_parser.values(m_parser.defineOption);
+    m_dependModules = m_parser.values(m_parser.dependsOption);
+    setIndexDirs();
+    setIncludePaths();
 
-    const auto outputFormats = parser.values(parser.outputFormatOption);
+    generateExamples = !m_parser.isSet(m_parser.noExamplesOption);
+    if (m_parser.isSet(m_parser.installDirOption))
+        installDir = m_parser.value(m_parser.installDirOption);
+    if (m_parser.isSet(m_parser.outputDirOption))
+        overrideOutputDir = m_parser.value(m_parser.outputDirOption);
+
+    const auto outputFormats = m_parser.values(m_parser.outputFormatOption);
     for (const auto &format : outputFormats)
         overrideOutputFormats.insert(format);
 
-    debug_ = parser.isSet(parser.debugOption);
+    debug_ = m_parser.isSet(m_parser.debugOption);
+
+    // TODO: Make Generator use Config instead of storing these separately
+    if (m_parser.isSet(m_parser.prepareOption))
+        Generator::setQDocPass(Generator::Prepare);
+    if (m_parser.isSet(m_parser.generateOption))
+        Generator::setQDocPass(Generator::Generate);
+    if (m_parser.isSet(m_parser.singleExecOption))
+        Generator::setSingleExec();
+    if (m_parser.isSet(m_parser.writeQaPagesOption))
+        Generator::setWriteQaPages();
+    if (m_parser.isSet(m_parser.logProgressOption))
+        Location::startLoggingProgress();
+    if (m_parser.isSet(m_parser.timestampsOption))
+        Generator::setUseTimestamps();
+}
+
+void Config::setIncludePaths()
+{
+    QDir currentDir = QDir::current();
+    const auto addIncludePaths = [this, currentDir](const char *flag, const QStringList &paths) {
+        for (const auto &path : paths)
+            m_includePaths << currentDir.absoluteFilePath(path).insert(0, flag);
+    };
+
+    addIncludePaths("-I", m_parser.values(m_parser.includePathOption));
+#ifdef QDOC_PASS_ISYSTEM
+    addIncludePaths("-isystem", m_parser.values(m_parser.includePathSystemOption));
+#endif
+    addIncludePaths("-F", m_parser.values(m_parser.frameworkOption));
 }
 
 /*!
-  Looks up the configuarion variable \a var in the string
+  Stores paths from -indexdir command line option(s).
+ */
+void Config::setIndexDirs()
+{
+    m_indexDirs = m_parser.values(m_parser.indexDirOption);
+    auto it = std::remove_if(m_indexDirs.begin(), m_indexDirs.end(),
+        [](const QString &s) { return !QFile::exists(s); });
+
+    std::for_each(it, m_indexDirs.end(),
+        [](const QString &s) {
+            Location::logToStdErrAlways(tr("Cannot find index directory: %1").arg(s));
+        });
+    m_indexDirs.erase(it, m_indexDirs.end());
+}
+
+/*!
+  Looks up the configuration variable \a var in the string
   map and returns the boolean value.
  */
 bool Config::getBool(const QString &var) const
