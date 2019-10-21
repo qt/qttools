@@ -553,6 +553,7 @@ void QPixelTool::grabScreen()
 
     update();
 
+    m_currentColor = m_buffer.toImage().pixel(m_buffer.rect().center());
     m_lastMousePos = mousePos;
 }
 
