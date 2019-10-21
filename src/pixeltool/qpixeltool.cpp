@@ -307,8 +307,10 @@ void QPixelTool::keyPressEvent(QKeyEvent *e)
         break;
 #if QT_CONFIG(clipboard)
     case Qt::Key_C:
-        if (e->modifiers() & Qt::ControlModifier)
+        if (e->modifiers().testFlag(Qt::ControlModifier))
             copyToClipboard();
+        else
+            copyColorToClipboard();
         break;
 #endif // QT_CONFIG(clipboard)
     case Qt::Key_S:
@@ -448,6 +450,8 @@ void QPixelTool::contextMenuEvent(QContextMenuEvent *e)
 #if QT_CONFIG(clipboard)
     menu.addAction(QLatin1String("Copy to clipboard"),
                    this, &QPixelTool::copyToClipboard, QKeySequence::Copy);
+    menu.addAction(QLatin1String("Copy color value to clipboard"),
+                   this, &QPixelTool::copyColorToClipboard, Qt::Key_C);
 #endif // QT_CONFIG(clipboard)
 
     menu.addSeparator();
@@ -639,6 +643,11 @@ void QPixelTool::setGridSize(int gridSize)
 void QPixelTool::copyToClipboard()
 {
     QGuiApplication::clipboard()->setPixmap(m_buffer);
+}
+
+void QPixelTool::copyColorToClipboard()
+{
+    QGuiApplication::clipboard()->setText(QColor(m_currentColor).name());
 }
 #endif // QT_CONFIG(clipboard)
 
