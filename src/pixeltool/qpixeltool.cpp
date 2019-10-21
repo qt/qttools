@@ -493,7 +493,7 @@ QSize QPixelTool::sizeHint() const
     return m_initialSize;
 }
 
-static inline QString pixelToolTitle(QPoint pos)
+static inline QString pixelToolTitle(QPoint pos, const QColor &currentColor)
 {
     if (QHighDpiScaling::isActive()) {
         if (auto screen = QGuiApplication::screenAt(pos))
@@ -501,7 +501,8 @@ static inline QString pixelToolTitle(QPoint pos)
     }
     return QCoreApplication::applicationName() + QLatin1String(" [")
         + QString::number(pos.x())
-        + QLatin1String(", ") + QString::number(pos.y()) + QLatin1Char(']');
+        + QLatin1String(", ") + QString::number(pos.y()) + QLatin1String("] ")
+        + currentColor.name();
 }
 
 void QPixelTool::grabScreen()
@@ -519,7 +520,7 @@ void QPixelTool::grabScreen()
         return;
 
     if (m_lastMousePos != mousePos)
-        setWindowTitle(pixelToolTitle(mousePos));
+        setWindowTitle(pixelToolTitle(mousePos, m_currentColor));
 
     int w = int(width() / float(m_zoom));
     int h = int(height() / float(m_zoom));
