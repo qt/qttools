@@ -1239,15 +1239,6 @@ void Node::setLocation(const Location& t)
 }
 
 /*!
-  Adds this node to the shared comment node \a t.
- */
-void Node::setSharedCommentNode(SharedCommentNode *t)
-{
-    sharedCommentNode_ = t;
-    t->append(this);
-}
-
-/*!
   Returns true if this node is sharing a comment and the
   shared comment is not empty.
  */
@@ -2455,10 +2446,10 @@ void Aggregate::addChild(Node *child)
     child->setOutputSubdirectory(this->outputSubdirectory());
     child->setUrl(QString());
     child->setIndexNodeFlag(isIndexNode());
+
     if (child->isFunction()) {
         addFunction(static_cast<FunctionNode *>(child));
-    }
-    else {
+    } else if (!child->name().isEmpty()) {
         nonfunctionMap_.insertMulti(child->name(), child);
         if (child->isEnumType())
             enumChildren_.append(child);
@@ -2483,16 +2474,15 @@ void Aggregate::adoptChild(Node *child)
         child->setParent(this);
         if (child->isFunction()) {
             adoptFunction(static_cast<FunctionNode *>(child));
-        }
-        else {
+        } else if (!child->name().isEmpty()) {
             nonfunctionMap_.insertMulti(child->name(), child);
-            if (child->isEnumType()) {
+            if (child->isEnumType())
                 enumChildren_.append(child);
-            } else if (child->isSharedCommentNode()) {
-                SharedCommentNode *scn = static_cast<SharedCommentNode *>(child);
-                for (Node *n : scn->collective())
-                    adoptChild(n);
-            }
+        }
+        if (child->isSharedCommentNode()) {
+            SharedCommentNode *scn = static_cast<SharedCommentNode *>(child);
+            for (Node *n : scn->collective())
+                adoptChild(n);
         }
     }
 }

@@ -39,6 +39,12 @@ public:
     void anotherObsoleteMember();
     void deprecatedMember();
     inline void inlineFunction() {};
+    virtual void virtualFun();
+};
+
+class TestDerived : public Test {
+public:
+    void virtualFun() override;
 };
 
 } // namespace TestQDoc

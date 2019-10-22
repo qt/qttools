@@ -35,7 +35,6 @@
 
 #include "location.h"
 #include "qdoccommandlineparser.h"
-#include "qdocglobals.h"
 
 #include <QtCore/qmap.h>
 #include <QtCore/qpair.h>
@@ -75,7 +74,7 @@ class Config
     Q_DECLARE_TR_FUNCTIONS(QDoc::Config)
 
 public:
-    Config(const QString &programName);
+    Config(const QString &programName, const QStringList &args);
     ~Config();
 
     bool getDebug() const { return debug_; }
@@ -86,8 +85,8 @@ public:
     void setStringList(const QString &var, const QStringList &values);
     void insertStringList(const QString &var, const QStringList &values);
 
-    void setOptions(const QDocGlobals &qdocGlobals);
-    void setOptions(const QDocCommandLineParser &parser);
+    void showHelp(int exitCode = 0) { m_parser.showHelp(exitCode); }
+    QStringList qdocFiles() const { return m_parser.positionalArguments(); }
     const QString &programName() const { return prog; }
     const Location &location() const { return loc; }
     const Location &lastLocation() const { return lastLocation_; }
@@ -146,7 +145,28 @@ public:
     static QString overrideOutputDir;
     static QSet<QString> overrideOutputFormats;
 
+    inline bool singleExec() const;
+    QStringList &defines() { return m_defines; }
+    QStringList &dependModules() { return m_dependModules; }
+    QStringList &includePaths() { return m_includePaths; }
+    QStringList &indexDirs() { return m_indexDirs; }
+    QString currentDir() const { return m_currentDir; }
+    void setCurrentDir(const QString &path) { m_currentDir = path; }
+    QString previousCurrentDir() const { return m_previousCurrentDir; }
+    void setPreviousCurrentDir(const QString &path) { m_previousCurrentDir = path; }
+
 private:
+    void processCommandLineOptions(const QStringList &args);
+    void setIncludePaths();
+    void setIndexDirs();
+
+    QStringList m_dependModules;
+    QStringList m_defines;
+    QStringList m_includePaths;
+    QStringList m_indexDirs;
+    QString m_currentDir;
+    QString m_previousCurrentDir;
+
     static bool debug_;
     static bool isMetaKeyChar(QChar ch);
     void load(Location location, const QString &fileName);
@@ -161,6 +181,7 @@ private:
     static int numInstances;
     static QStack<QString> workingDirs_;
     static QMap<QString, QStringList> includeFilesMap_;
+    QDocCommandLineParser m_parser;
 };
 
 struct ConfigStrings
@@ -325,6 +346,11 @@ struct ConfigStrings
 #define CONFIG_QMLTYPESTITLE ConfigStrings::QMLTYPESTITLE
 #define CONFIG_WARNINGLIMIT ConfigStrings::WARNINGLIMIT
 #define CONFIG_WRITEQAPAGES ConfigStrings::WRITEQAPAGES
+
+inline bool Config::singleExec() const
+{
+    return getBool(CONFIG_SINGLEEXEC);
+}
 
 QT_END_NAMESPACE
 

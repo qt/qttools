@@ -52,6 +52,7 @@ int main(int argc, char **argv)
         qDebug() << "   -qmlimport=<path>  : Add the given path to the QML module search locations";
         qDebug() << "   -always-overwrite  : Copy files even if the target file exists";
         qDebug() << "   -codesign=<ident>  : Run codesign with the given identity on all executables";
+        qDebug() << "   -hardened-runtime  : Enable Hardened Runtime when code signing";
         qDebug() << "   -appstore-compliant: Skip deployment of components that use private API";
         qDebug() << "   -libpath=<path>    : Add the given path to the library search path";
         qDebug() << "   -fs=<filesystem>   : Set the filesystem used for the .dmg disk image (defaults to HFS+)";
@@ -96,6 +97,7 @@ int main(int argc, char **argv)
     QStringList qmlImportPaths;
     extern bool runCodesign;
     extern QString codesignIdentiy;
+    extern bool hardenedRuntime;
     extern bool appstoreCompliant;
     extern bool deployFramework;
 
@@ -164,6 +166,9 @@ int main(int argc, char **argv)
                 runCodesign = true;
                 codesignIdentiy = argument.mid(index+1);
             }
+        } else if (argument.startsWith(QByteArray("-hardened-runtime"))) {
+            LogDebug() << "Argument found:" << argument;
+            hardenedRuntime = true;
         } else if (argument == QByteArray("-appstore-compliant")) {
             LogDebug() << "Argument found:" << argument;
             appstoreCompliant = true;

@@ -59,7 +59,6 @@ HEADERS += atom.h \
            tokenizer.h \
            tree.h \
            webxmlgenerator.h \
-           qdocglobals.h \
            qdoccommandlineparser.h \
            utilities.h
 
@@ -93,7 +92,6 @@ SOURCES += atom.cpp \
            tree.cpp \
            yyindent.cpp \
            webxmlgenerator.cpp \
-           qdocglobals.cpp \
            qdoccommandlineparser.cpp \
            utilities.cpp
 

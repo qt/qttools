@@ -65,6 +65,7 @@ private slots:
     void addConnection();
     void removeConnection();
     void updateUi();
+    void resizeColumns();
 
 private:
     QTreeView *m_view;

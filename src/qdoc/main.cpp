@@ -38,9 +38,7 @@
 #include "location.h"
 #include "loggingcategory.h"
 #include "puredocparser.h"
-#include "qdoccommandlineparser.h"
 #include "qdocdatabase.h"
-#include "qdocglobals.h"
 #include "qmlcodemarker.h"
 #include "qmlcodeparser.h"
 #include "utilities.h"
@@ -79,7 +77,6 @@ static QList<Translator> translators;
 #endif
 
 static ClangCodeParser* clangParser_ = nullptr;
-static QDocGlobals qdocGlobals;
 
 /*!
   Read some XML indexes containing definitions from other
@@ -103,8 +100,8 @@ static void loadIndexFiles(Config &config, const QSet<QString> &formats)
             Location::null.warning(QString("Index file not found: %1").arg(index));
     }
 
-    qdocGlobals.dependModules() += config.getStringList(CONFIG_DEPENDS);
-    qdocGlobals.dependModules().removeDuplicates();
+    config.dependModules() += config.getStringList(CONFIG_DEPENDS);
+    config.dependModules().removeDuplicates();
     QSet<QString> subDirs;
 
     for (const auto &format : formats) {
@@ -118,41 +115,41 @@ static void loadIndexFiles(Config &config, const QSet<QString> &formats)
         }
     }
 
-    if (qdocGlobals.dependModules().size() > 0) {
-        if (qdocGlobals.indexDirs().size() > 0) {
-            for (int i = 0; i < qdocGlobals.indexDirs().size(); i++) {
-                if (qdocGlobals.indexDirs()[i].startsWith("..")) {
-                    const QString prefix(QDir(qdocGlobals.currentDir()).relativeFilePath(qdocGlobals.previousCurrentDir()));
+    if (config.dependModules().size() > 0) {
+        if (config.indexDirs().size() > 0) {
+            for (int i = 0; i < config.indexDirs().size(); i++) {
+                if (config.indexDirs()[i].startsWith("..")) {
+                    const QString prefix(QDir(config.currentDir()).relativeFilePath(config.previousCurrentDir()));
                     if (!prefix.isEmpty())
-                        qdocGlobals.indexDirs()[i].prepend(prefix + QLatin1Char('/'));
+                        config.indexDirs()[i].prepend(prefix + QLatin1Char('/'));
                 }
             }
             /*
               Add all subdirectories of the indexdirs as dependModules,
               when an asterisk is used in the 'depends' list.
             */
-            if (qdocGlobals.dependModules().contains("*")) {
-                qdocGlobals.dependModules().removeOne("*");
-                for (int i = 0; i < qdocGlobals.indexDirs().size(); i++) {
-                    QDir scanDir = QDir(qdocGlobals.indexDirs()[i]);
+            if (config.dependModules().contains("*")) {
+                config.dependModules().removeOne("*");
+                for (int i = 0; i < config.indexDirs().size(); i++) {
+                    QDir scanDir = QDir(config.indexDirs()[i]);
                     scanDir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
                     QFileInfoList dirList = scanDir.entryInfoList();
                     for (int j = 0; j < dirList.size(); j++) {
                         if (dirList[j].fileName().toLower() != config.getString(CONFIG_PROJECT).toLower())
-                            qdocGlobals.dependModules().append(dirList[j].fileName());
+                            config.dependModules().append(dirList[j].fileName());
                     }
                 }
             }
-            for (int i = 0; i < qdocGlobals.dependModules().size(); i++) {
+            for (int i = 0; i < config.dependModules().size(); i++) {
                 QString indexToAdd;
                 QList<QFileInfo> foundIndices;
                 // Always look in module-specific subdir, even with *.nosubdirs config
-                subDirs << qdocGlobals.dependModules()[i];
-                for (int j = 0; j < qdocGlobals.indexDirs().size(); j++) {
+                subDirs << config.dependModules()[i];
+                for (int j = 0; j < config.indexDirs().size(); j++) {
                     for (const auto &subDir : subDirs) {
-                        QString fileToLookFor = qdocGlobals.indexDirs()[j]
+                        QString fileToLookFor = config.indexDirs()[j]
                                 + QLatin1Char('/') + subDir
-                                + QLatin1Char('/') + qdocGlobals.dependModules()[i] + ".index";
+                                + QLatin1Char('/') + config.dependModules()[i] + ".index";
                         if (QFile::exists(fileToLookFor)) {
                             QFileInfo tempFileInfo(fileToLookFor);
                             if (!foundIndices.contains(tempFileInfo))
@@ -160,7 +157,7 @@ static void loadIndexFiles(Config &config, const QSet<QString> &formats)
                         }
                     }
                 }
-                subDirs.remove(qdocGlobals.dependModules()[i]);
+                subDirs.remove(config.dependModules()[i]);
                 std::sort(foundIndices.begin(), foundIndices.end(), creationTimeBefore);
                 if (foundIndices.size() > 1) {
                     /*
@@ -169,13 +166,14 @@ static void loadIndexFiles(Config &config, const QSet<QString> &formats)
                         highest UNIX timestamp.
                     */
                     QStringList indexPaths;
-                    for (int k = 0; k < foundIndices.size(); k++)
-                        indexPaths << foundIndices[k].absoluteFilePath();
+                    indexPaths.reserve(foundIndices.size());
+                    for (const auto &found : qAsConst(foundIndices))
+                        indexPaths << found.absoluteFilePath();
                     Location::null.warning(QString("Multiple index files found for dependency \"%1\":\n%2").arg(
-                                               qdocGlobals.dependModules()[i], indexPaths.join('\n')));
+                                               config.dependModules()[i], indexPaths.join('\n')));
                     Location::null.warning(QString("Using %1 as index file for dependency \"%2\"").arg(
                                                foundIndices[foundIndices.size() - 1].absoluteFilePath(),
-                                               qdocGlobals.dependModules()[i]));
+                                               config.dependModules()[i]));
                     indexToAdd = foundIndices[foundIndices.size() - 1].absoluteFilePath();
                 }
                 else if (foundIndices.size() == 1) {
@@ -187,7 +185,7 @@ static void loadIndexFiles(Config &config, const QSet<QString> &formats)
                 }
                 else {
                     Location::null.warning(QString("\"%1\" Cannot locate index file for dependency \"%2\"").arg(
-                                               config.getString(CONFIG_PROJECT), qdocGlobals.dependModules()[i]));
+                                               config.getString(CONFIG_PROJECT), config.dependModules()[i]));
                 }
             }
         }
@@ -205,7 +203,7 @@ static void loadIndexFiles(Config &config, const QSet<QString> &formats)
  */
 static void processQdocconfFile(const QString &fileName, Config &config)
 {
-    qdocGlobals.setPreviousCurrentDir(QDir::currentPath());
+    config.setPreviousCurrentDir(QDir::currentPath());
 
     /*
       With the default configuration values in place, load
@@ -223,16 +221,11 @@ static void processQdocconfFile(const QString &fileName, Config &config)
         Location::logToStdErrAlways(QLatin1String("qdoc can't run; no project set in qdocconf file"));
         exit(1);
     }
-    /*
-      Add the defines and includepaths to their respective configuration variables.
-     */
-    config.insertStringList(CONFIG_DEFINES, qdocGlobals.defines());
-    config.insertStringList(CONFIG_INCLUDEPATHS, qdocGlobals.includesPaths());
     Location::terminate();
 
-    qdocGlobals.setCurrentDir(QFileInfo(fileName).path());
-    if (!qdocGlobals.currentDir().isEmpty())
-        QDir::setCurrent(qdocGlobals.currentDir());
+    config.setCurrentDir(QFileInfo(fileName).path());
+    if (!config.currentDir().isEmpty())
+        QDir::setCurrent(config.currentDir());
 
     QString phase = " in ";
     if (Generator::singleExec())
@@ -343,9 +336,9 @@ static void processQdocconfFile(const QString &fileName, Config &config)
     else
         clangParser_->setModuleHeader(project);
 
-    qdocGlobals.dependModules() = config.getStringList(CONFIG_DEPENDS);
-    qdocGlobals.dependModules().removeDuplicates();
-    qdb->setSearchOrder(qdocGlobals.dependModules());
+    config.dependModules() = config.getStringList(CONFIG_DEPENDS);
+    config.dependModules().removeDuplicates();
+    qdb->setSearchOrder(config.dependModules());
 
     // Store the title of the index (landing) page
     NamespaceNode *root = qdb->primaryTreeRoot();
@@ -499,29 +492,9 @@ static void processQdocconfFile(const QString &fileName, Config &config)
     Doc::terminate();
     Tokenizer::terminate();
     Location::terminate();
-    QDir::setCurrent(qdocGlobals.previousCurrentDir());
+    QDir::setCurrent(config.previousCurrentDir());
 
     qCDebug(lcQdoc, "qdoc classes terminated");
-}
-
-/* This method is an extremely ugly hack;
-   some or all of these settings must be set before the call to
-   various initialize() methods in main's processQdocconfFile().
-*/
-void postProcess(const QDocCommandLineParser &parser)
-{
-    if (parser.isSet(parser.prepareOption))
-        Generator::setQDocPass(Generator::Prepare);
-    if (parser.isSet(parser.generateOption))
-        Generator::setQDocPass(Generator::Generate);
-    if (parser.isSet(parser.singleExecOption))
-        Generator::setSingleExec();
-    if (parser.isSet(parser.writeQaPagesOption))
-        Generator::setWriteQaPages();
-    if (parser.isSet(parser.logProgressOption))
-        Location::startLoggingProgress();
-    if (parser.isSet(parser.timestampsOption))
-        Generator::setUseTimestamps();
 }
 
 QT_END_NAMESPACE
@@ -565,41 +538,33 @@ int main(int argc, char **argv)
     HtmlGenerator htmlGenerator;
     WebXMLGenerator webXMLGenerator;
 
-    Config config(QCoreApplication::translate("QDoc", "qdoc"));
-
-    // Set the globals declared at the top of this file:
-    QDocCommandLineParser parser;
-    parser.process(app.arguments());
-    qdocGlobals.setOptions(parser);
-    config.setOptions(parser);
-    postProcess(parser);
-    config.setOptions(qdocGlobals);
+    Config config(QCoreApplication::translate("QDoc", "qdoc"), app.arguments());
 
     // Get the list of files to act on:
-    QStringList qdocFiles = parser.positionalArguments();
+    QStringList qdocFiles = config.qdocFiles();
     if (qdocFiles.isEmpty())
-        parser.showHelp();
+        config.showHelp();
 
-    if (qdocGlobals.singleExec())
+    if (config.singleExec())
         qdocFiles = Config::loadMaster(qdocFiles.at(0));
 
     if (Generator::singleExec()) {
         // single qdoc process for prepare and generate phases
         Generator::setQDocPass(Generator::Prepare);
         for (const auto &file : qAsConst(qdocFiles)) {
-            qdocGlobals.dependModules().clear();
+            config.dependModules().clear();
             processQdocconfFile(file, config);
         }
         Generator::setQDocPass(Generator::Generate);
         QDocDatabase::qdocDB()->processForest();
         for (const auto &file : qAsConst(qdocFiles)) {
-            qdocGlobals.dependModules().clear();
+            config.dependModules().clear();
             processQdocconfFile(file, config);
         }
     } else {
         // separate qdoc processes for prepare and generate phases
         for (const auto &file : qAsConst(qdocFiles)) {
-            qdocGlobals.dependModules().clear();
+            config.dependModules().clear();
             processQdocconfFile(file, config);
         }
     }

@@ -323,7 +323,8 @@ public:
 
     bool isSharingComment() const { return (sharedCommentNode_ != nullptr); }
     bool hasSharedDoc() const;
-    void setSharedCommentNode(SharedCommentNode *t);
+    void setSharedCommentNode(SharedCommentNode *t) { sharedCommentNode_ = t; }
+    SharedCommentNode *sharedCommentNode() { return sharedCommentNode_; }
 
     //QString guid() const;
     QString extractClassName(const QString &string) const;
@@ -899,7 +900,8 @@ class SharedCommentNode : public Node
 public:
     SharedCommentNode(Node *n)
         : Node(Node::SharedComment, n->parent(), QString()) {
-        collective_.reserve(1); n->setSharedCommentNode(this);
+        collective_.reserve(1);
+        append(n);
     }
  SharedCommentNode(QmlTypeNode *parent, int count, QString &group)
         : Node(Node::SharedComment, parent, group) {
@@ -907,11 +909,13 @@ public:
     }
     ~SharedCommentNode() override { collective_.clear(); }
 
-    bool isPropertyGroup() const override { return !collective_.isEmpty() &&
-            (collective_.at(0)->isQmlProperty() || collective_.at(0)->isJsProperty());
+    bool isPropertyGroup() const override {
+        return !name().isEmpty() &&
+               !collective_.isEmpty() &&
+               (collective_.at(0)->isQmlProperty() || collective_.at(0)->isJsProperty());
     }
     int count() const { return collective_.size(); }
-    void append(Node *n) { collective_.append(n); }
+    void append(Node *n) { collective_.append(n);  n->setSharedCommentNode(this); setGenus(n->genus()); }
     const QVector<Node *> &collective() const { return collective_; }
     void setOverloadFlags();
     void setRelatedNonmember(bool b) override;
