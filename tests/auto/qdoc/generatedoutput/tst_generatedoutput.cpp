@@ -37,16 +37,24 @@ private slots:
     void initTestCase();
     void init();
 
+    // HTML generator
     void htmlFromQDocFile();
     void htmlFromCpp();
     void htmlFromQml();
     void htmlFromCppBug80259();
 
+    // WebXML generator
     void webXmlFromQDocFile();
     void webXmlFromCpp();
     void webXmlFromQml();
     void webXmlFromCppBug80259();
 
+    // DocBook generator
+    void docBookFromQDocFile();
+    void docBookFromCpp();
+    void docBookFromQml();
+
+    // Output format independent tests
     void examplesManifestXml();
 
 private:
@@ -178,6 +186,14 @@ void tst_generatedOutput::webXmlFromQDocFile()
                    "html/qdoctests-qdocfileoutput-linking.webxml");
 }
 
+
+void tst_generatedOutput::docBookFromQDocFile()
+{
+    testAndCompare("docbook_test.qdocconf",
+                   "docbook/qdoctests-qdocfileoutput.xml "
+                   "docbook/qdoctests-qdocfileoutput-linking.xml");
+}
+
 void tst_generatedOutput::htmlFromCpp()
 {
     testAndCompare("testcpp.qdocconf",
@@ -187,7 +203,6 @@ void tst_generatedOutput::htmlFromCpp()
                    "testqdoc.html");
 }
 
-
 void tst_generatedOutput::webXmlFromCpp()
 {
     testAndCompare("webxml_testcpp.qdocconf",
@@ -196,6 +211,14 @@ void tst_generatedOutput::webXmlFromCpp()
                    "html/testqdoc-testderived.webxml");
 }
 
+void tst_generatedOutput::docBookFromCpp()
+{
+    testAndCompare("docbook_testcpp.qdocconf",
+                   "docbook/testcpp-module.xml "
+                   "docbook/testqdoc-test.xml "
+                   "docbook/testqdoc-testderived.xml "
+                   "docbook/testqdoc.xml");
+}
 
 void tst_generatedOutput::htmlFromQml()
 {
@@ -219,6 +242,23 @@ void tst_generatedOutput::webXmlFromQml()
     testAndCompare("webxml_testqml.qdocconf",
                    "html/test-componentset-example.webxml "
                    "html/uicomponents-qmlmodule.webxml");
+}
+
+
+void tst_generatedOutput::docBookFromQml()
+{
+    testAndCompare("docbook_testqml.qdocconf",
+                   "docbook/test-componentset-example.xml "
+                   "docbook/uicomponents-qmlmodule.xml "
+                   "docbook/qdoc-test-qmlmodule.xml "
+                   "docbook/qml-qdoc-test-abstractparent.xml "
+                   "docbook/qml-qdoc-test-child.xml "
+                   "docbook/qml-qdoc-test-doctest.xml "
+                   "docbook/qml-qdoc-test-type.xml "
+                   "docbook/qml-uicomponents-progressbar.xml "
+                   "docbook/qml-uicomponents-switch.xml "
+                   "docbook/qml-uicomponents-tabwidget.xml "
+                   "docbook/qml-int.xml");
 }
 
 void tst_generatedOutput::htmlFromCppBug80259()

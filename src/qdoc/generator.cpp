@@ -80,6 +80,7 @@ bool Generator::qdocSingleExec_ = false;
 bool Generator::qdocWriteQaPages_ = false;
 bool Generator::useOutputSubdirs_ = true;
 bool Generator::useTimestamps_ = false;
+bool Generator::useDocBookExtensions_ = false;
 QmlTypeNode *Generator::qmlTypeContext_ = nullptr;
 
 static QRegExp tag("</?@[^>]*>");
@@ -1560,11 +1561,7 @@ QString Generator::getOverloadedSignalCode(const Node *node)
 }
 
 /*!
-    If the node is an overloaded signal, and a node with an example on how to connect to it
-
-    Someone didn't finish writing this comment, and I don't know what this
-    function is supposed to do, so I have not tried to complete the comment
-    yet.
+    If the node is an overloaded signal, add a node with an example on how to connect to it
  */
 void Generator::generateOverloadedSignal(const Node *node, CodeMarker *marker)
 {

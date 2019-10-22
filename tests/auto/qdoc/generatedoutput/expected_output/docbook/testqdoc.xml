@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>TestQDoc Namespace</db:title>
+<db:productname>TestCPP</db:productname>
+<db:titleabbrev>TestCPP Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>A namespace.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>TestCPP</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>qmake</db:term>
+<db:listitem>
+<db:para>QT += testcpp</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:section xml:id="usage">
+<db:title>Usage</db:title>
+<db:para>This namespace is for testing QDoc output.</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="classes">
+<db:title>Classes</db:title>
+<db:section>
+<db:title>class <db:link xlink:href="testqdoc-test.xml" xlink:role="class">Test</db:link></db:title>
+<db:para>A class in a namespace.</db:para>
+</db:section>
+<db:section>
+<db:title>class <db:link xlink:href="testqdoc-testderived.xml" xlink:role="class">TestDerived</db:link></db:title>
+<db:para>A derived class in a namespace.</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="macro-documentation">
+<db:title>Macro Documentation</db:title>
+<db:section xml:id="QDOCTEST_MACRO">
+<db:title>QDOCTEST_MACRO</db:title>
+<db:methodsynopsis>
+<db:methodname>QDOCTEST_MAC</db:methodname>
+<db:synopsisinfo db:role="meta">macrowithoutparams</db:synopsisinfo>
+<db:synopsisinfo db:role="signature">QDOCTEST_MACRO</db:synopsisinfo>
+<db:synopsisinfo db:role="access">public</db:synopsisinfo>
+<db:synopsisinfo db:role="status">active</db:synopsisinfo>
+<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
+</db:methodsynopsis>
+</db:section>
+</db:section>
+</db:article>

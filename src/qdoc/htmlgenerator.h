@@ -81,7 +81,7 @@ protected:
     void generateManifestFile(const QString &manifest, const QString &element);
     void readManifestMetaContent(const Config &config);
     void generateKeywordAnchors(const Node *node);
-    void generateAssociatedPropertyNotes(FunctionNode *fn);
+    void generateAssociatedPropertyNotes(const FunctionNode *fn);
 
 private:
     enum SubTitleSize { SmallSubTitle, LargeSubTitle };

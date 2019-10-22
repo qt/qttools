@@ -1,0 +1,3 @@
+outputformats             = DocBook
+DocBook.nosubdirs          = true
+DocBook.outputsubdir       = docbook

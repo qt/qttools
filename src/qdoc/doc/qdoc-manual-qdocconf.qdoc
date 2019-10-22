@@ -963,9 +963,10 @@
     The \c outputformats variable specifies the format(s) of
     the generated documentation.
 
-    Since Qt 5.11, QDoc supports the HTML and WebXML formats. If no
+    Since Qt 5.11, QDoc supports the HTML and WebXML formats; since
+    Qt 5.15, it can also generate the documentation in DocBook. If no
     \c outputformats are specified, QDoc generates the documentation
-    in HTML (the default format). Both output formats can be specified,
+    in HTML (the default format). All output formats can be specified,
     with dedicated output directories and other settings. For example:
 
     \badcode

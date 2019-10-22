@@ -4204,11 +4204,11 @@ QXmlStreamWriter &HtmlGenerator::xmlWriter()
   Generates bold Note lines that explain how function \a fn
   is associated with each of its associated properties.
  */
-void HtmlGenerator::generateAssociatedPropertyNotes(FunctionNode *fn)
+void HtmlGenerator::generateAssociatedPropertyNotes(const FunctionNode *fn)
 {
     if (fn->hasAssociatedProperties()) {
         out() << "<p><b>Note:</b> ";
-        NodeList &nodes = fn->associatedProperties();
+        NodeList nodes = fn->associatedProperties();
         std::sort(nodes.begin(), nodes.end(), Node::nodeNameLessThan);
         for (const auto *node : qAsConst(nodes)) {
             QString msg;

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>ProgressBar QML Type</db:title>
+<db:productname>Test</db:productname>
+<db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
+<db:abstract>
+<db:para>A component that shows the progress of an event.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Import Statement</db:term>
+<db:listitem>
+<db:para>import UIComponents 1.0</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>A <db:link xlink:href="qml-uicomponents-progressbar.xml">ProgressBar</db:link> shows the linear progress of an event as its <db:link xlink:href="qml-uicomponents-progressbar.xml#value-prop">value</db:link>. The range is specified using the <db:link xlink:href="qml-uicomponents-progressbar.xml#minimum-prop">minimum</db:link> and the <db:link xlink:href="qml-uicomponents-progressbar.xml#maximum-prop">maximum</db:link> values.</db:para>
+<db:para>The <db:link xlink:href="qml-uicomponents-progressbar.xml">ProgressBar</db:link> component is part of the <db:link xlink:href="uicomponents-qmlmodule.xml">UI Components</db:link> module.</db:para>
+<db:para>This documentation is part of the <db:link xlink:href="test-componentset-example.xml">UIComponents</db:link> example.</db:para>
+</db:section>
+<db:section xml:id="property-documentation">
+<db:title>Property Documentation</db:title>
+<db:section xml:id="color-prop">
+<db:title>color : color</db:title>
+<db:fieldsynopsis>
+<db:type>color</db:type>
+<db:varname>color</db:varname>
+<db:modifier>writable</db:modifier>
+<db:synopsisinfo db:role="access">public</db:synopsisinfo>
+<db:synopsisinfo db:role="status">active</db:synopsisinfo>
+<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+</db:fieldsynopsis>
+<db:para>The color of the <db:link xlink:href="qml-uicomponents-progressbar.xml">ProgressBar</db:link>'s gradient. Must bind to a color type.</db:para>
+<db:para><db:emphasis>See also </db:emphasis>
+<db:simplelist type="vert" role="see-also"><db:member><db:link xlink:href="qml-uicomponents-progressbar.xml#secondColor-prop">secondColor</db:link></db:member>
+</db:simplelist>
+</db:para></db:section>
+<db:section xml:id="maximum-prop">
+<db:title>maximum : int</db:title>
+<db:fieldsynopsis>
+<db:type>int</db:type>
+<db:varname>maximum</db:varname>
+<db:modifier>writable</db:modifier>
+<db:synopsisinfo db:role="access">public</db:synopsisinfo>
+<db:synopsisinfo db:role="status">active</db:synopsisinfo>
+<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+</db:fieldsynopsis>
+<db:para>The maximum value of the <db:link xlink:href="qml-uicomponents-progressbar.xml">ProgressBar</db:link> range. The <db:link xlink:href="qml-uicomponents-progressbar.xml#value-prop">value</db:link> must not be more than this value.</db:para>
+</db:section>
+<db:section xml:id="minimum-prop">
+<db:title>minimum : int</db:title>
+<db:fieldsynopsis>
+<db:type>int</db:type>
+<db:varname>minimum</db:varname>
+<db:modifier>writable</db:modifier>
+<db:synopsisinfo db:role="access">public</db:synopsisinfo>
+<db:synopsisinfo db:role="status">active</db:synopsisinfo>
+<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+</db:fieldsynopsis>
+<db:para>The minimum value of the <db:link xlink:href="qml-uicomponents-progressbar.xml">ProgressBar</db:link> range. The <db:link xlink:href="qml-uicomponents-progressbar.xml#value-prop">value</db:link> must not be less than this value.</db:para>
+</db:section>
+<db:section xml:id="secondColor-prop">
+<db:title>secondColor : color</db:title>
+<db:fieldsynopsis>
+<db:type>color</db:type>
+<db:varname>secondColor</db:varname>
+<db:modifier>writable</db:modifier>
+<db:synopsisinfo db:role="access">public</db:synopsisinfo>
+<db:synopsisinfo db:role="status">active</db:synopsisinfo>
+<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+</db:fieldsynopsis>
+<db:para>The second color of the <db:link xlink:href="qml-uicomponents-progressbar.xml">ProgressBar</db:link>'s gradient. Must bind to a color type.</db:para>
+<db:para><db:emphasis>See also </db:emphasis>
+<db:simplelist type="vert" role="see-also"><db:member><db:link xlink:href="qml-uicomponents-progressbar.xml#color-prop">color</db:link></db:member>
+</db:simplelist>
+</db:para></db:section>
+<db:section xml:id="value-prop">
+<db:title>value : int</db:title>
+<db:fieldsynopsis>
+<db:type>int</db:type>
+<db:varname>value</db:varname>
+<db:modifier>writable</db:modifier>
+<db:synopsisinfo db:role="access">public</db:synopsisinfo>
+<db:synopsisinfo db:role="status">active</db:synopsisinfo>
+<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+</db:fieldsynopsis>
+<db:para>The value of the progress.</db:para>
+</db:section>
+</db:section>
+</db:article>

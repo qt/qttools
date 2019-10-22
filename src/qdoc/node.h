@@ -1056,7 +1056,7 @@ public:
     QString signature(bool values, bool noReturnType) const override;
 
     const QString &overridesThis() const { return overridesThis_; }
-    NodeList &associatedProperties() { return associatedProperties_; }
+    const NodeList &associatedProperties() const { return associatedProperties_; }
     const QStringList &parentPath() const { return parentPath_; }
     bool hasAssociatedProperties() const { return !associatedProperties_.isEmpty(); }
     bool hasOneAssociatedProperty() const { return (associatedProperties_.size() == 1); }

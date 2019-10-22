@@ -39,6 +39,7 @@ HEADERS += atom.h \
            cppcodemarker.h \
            cppcodeparser.h \
            doc.h \
+           docbookgenerator.h \
            editdistance.h \
            generator.h \
            helpprojectwriter.h \
@@ -72,6 +73,7 @@ SOURCES += atom.cpp \
            cppcodemarker.cpp \
            cppcodeparser.cpp \
            doc.cpp \
+           docbookgenerator.cpp \
            editdistance.cpp \
            generator.cpp \
            helpprojectwriter.cpp \

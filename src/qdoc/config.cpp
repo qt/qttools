@@ -395,6 +395,8 @@ void Config::processCommandLineOptions(const QStringList &args)
         Location::startLoggingProgress();
     if (m_parser.isSet(m_parser.timestampsOption))
         Generator::setUseTimestamps();
+    if (m_parser.isSet(m_parser.useDocBookExtensions))
+        Generator::setUseDocBookExtensions();
 }
 
 void Config::setIncludePaths()

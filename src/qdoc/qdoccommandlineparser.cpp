@@ -62,7 +62,8 @@ QDocCommandLineParser::QDocCommandLineParser()
                               "path"),
       frameworkOption("F", "Add macOS framework to the include path for header files.",
                       "framework"),
-      timestampsOption(QStringList() << QStringLiteral("timestamps"))
+      timestampsOption(QStringList() << QStringLiteral("timestamps")),
+      useDocBookExtensions(QStringList() << QStringLiteral("docbook-extensions"))
 {
     setApplicationDescription(QCoreApplication::translate("qdoc", "Qt documentation generator"));
     addHelpOption();
@@ -165,6 +166,10 @@ QDocCommandLineParser::QDocCommandLineParser()
     timestampsOption.setDescription(
             QCoreApplication::translate("qdoc", "Timestamp each qdoc log line."));
     addOption(timestampsOption);
+
+    useDocBookExtensions.setDescription(QCoreApplication::translate(
+            "qdoc", "Use the DocBook Library extensions for metadata."));
+    addOption(useDocBookExtensions);
 }
 
 /*!

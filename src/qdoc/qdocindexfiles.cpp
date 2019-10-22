@@ -1357,7 +1357,7 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
             writer.writeAttribute("refness", QString::number(2));
         if (fn->hasAssociatedProperties()) {
             QStringList associatedProperties;
-            for (const auto *node : qAsConst(fn->associatedProperties())) {
+            for (const auto *node : fn->associatedProperties()) {
                 associatedProperties << node->name();
             }
             associatedProperties.sort();
