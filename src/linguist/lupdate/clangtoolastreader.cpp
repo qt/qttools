@@ -136,9 +136,17 @@ namespace LupdatePrivate
 */
 bool LupdateVisitor::VisitCallExpr(clang::CallExpr *callExpression)
 {
-    clang::FullSourceLoc fullLocation = m_context->getFullLoc(callExpression->getBeginLoc());
-    if (fullLocation.isInvalid() || !fullLocation.getFileEntry())
+    const auto fullLocation = m_context->getFullLoc(callExpression->getBeginLoc());
+    if (fullLocation.isInvalid())
         return true;
+
+    // Checking that the CallExpression is from the input file we're interested in
+    std::string fileName;
+    if (const auto fileEntry = fullLocation.getFileEntry())
+        fileName = fileEntry->getName();
+    if (fileName != m_inputFile)
+        return true;
+
     clang::FunctionDecl *func = callExpression->getDirectCallee();
     if (!func)
         return true;
@@ -149,10 +157,6 @@ bool LupdateVisitor::VisitCallExpr(clang::CallExpr *callExpression)
     // Only continue if the function a translation function (TODO: deal with alias function...)
     if (funcName != "tr" && funcName != "qtTrId" && funcName != "translate" && funcName != "trUtf8")
         return true;
-    llvm::StringRef fileName = fullLocation.getFileEntry()->getName();
-    // Checking that the CallExpression is from the input file we're interested in
-    if (fileName != m_inputFile)
-        return true;
 
     qCDebug(lcClang) << "************************** VisitCallExpr ****************";
     // Retrieving the information needed to fill the lupdate translator.
@@ -160,7 +164,7 @@ bool LupdateVisitor::VisitCallExpr(clang::CallExpr *callExpression)
     TranslationRelatedStore store;
     store.callType = QStringLiteral("ASTRead_CallExpr");
     store.funcName = QString::fromStdString(funcName);
-    store.lupdateLocationFile = QString::fromStdString(fullLocation.getFileEntry()->getName());
+    store.lupdateLocationFile = QString::fromStdString(fileName);
     store.lupdateLocationLine = fullLocation.getSpellingLineNumber();
     store.contextRetrieved = LupdatePrivate::contextForFunctionDecl(func, funcName);
 
@@ -444,7 +448,7 @@ void LupdateVisitor::setInfoFromRawComment(const QString &commentString,
 */
 void LupdateVisitor::fillTranslator()
 {
-    for (const auto &store : m_translationStoresFromAST)
+    for (const auto &store : qAsConst(m_translationStoresFromAST))
         fillTranslator(store);
     // Here also need to fill the translator with the information retrieved from the PreProcessor
 }
