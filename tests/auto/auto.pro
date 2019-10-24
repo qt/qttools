@@ -15,7 +15,7 @@ SUBDIRS=\
 installed_cmake.depends = cmake
 
 # These tests don't make sense for cross-compiled builds
-cross_compile:SUBDIRS -= linguist
+cross_compile:SUBDIRS -= linguist qtdiag
 
 # These tests need the QtHelp module
 !qtHaveModule(help): SUBDIRS -= \
@@ -26,5 +26,4 @@ cross_compile:SUBDIRS -= linguist
     qhelpprojectdata \
 
 !qtConfig(process): SUBDIRS -= qtattributionsscanner linguist qtdiag windeployqt
-android|qnx: SUBDIRS -= qtdiag
 !win32|winrt: SUBDIRS -= windeployqt
