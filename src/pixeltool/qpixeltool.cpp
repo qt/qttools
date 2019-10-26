@@ -33,7 +33,7 @@
 #include <qdir.h>
 #include <qapplication.h>
 #include <qscreen.h>
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
 #include <qclipboard.h>
 #endif
 #include <qpainter.h>
@@ -67,14 +67,6 @@ static QPoint initialPos(const QSettings &settings, const QSize &initialSize)
 
 QPixelTool::QPixelTool(QWidget *parent)
     : QWidget(parent)
-    , m_freeze(false)
-    , m_displayZoom(false)
-    , m_displayGridSize(false)
-    , m_mouseDown(false)
-    , m_preview_mode(false)
-    , m_displayZoomId(0)
-    , m_displayGridSizeId(0)
-    , m_currentColor(0)
 {
     setWindowTitle(QCoreApplication::applicationName());
     QSettings settings(QLatin1String("QtProject"), QLatin1String("QPixelTool"));
@@ -313,12 +305,12 @@ void QPixelTool::keyPressEvent(QKeyEvent *e)
     case Qt::Key_A:
         m_autoUpdate = !m_autoUpdate;
         break;
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
     case Qt::Key_C:
         if (e->modifiers() & Qt::ControlModifier)
             copyToClipboard();
         break;
-#endif
+#endif // QT_CONFIG(clipboard)
     case Qt::Key_S:
         if (e->modifiers() & Qt::ControlModifier) {
             releaseKeyboard();
@@ -453,10 +445,10 @@ void QPixelTool::contextMenuEvent(QContextMenuEvent *e)
     // Copy to clipboard / save
     menu.addAction(QLatin1String("Save as image..."),
                    this, &QPixelTool::saveToFile, QKeySequence::SaveAs);
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
     menu.addAction(QLatin1String("Copy to clipboard"),
                    this, &QPixelTool::copyToClipboard, QKeySequence::Copy);
-#endif
+#endif // QT_CONFIG(clipboard)
 
     menu.addSeparator();
     menu.addAction(QLatin1String("About Qt"), qApp, &QApplication::aboutQt);
@@ -642,12 +634,12 @@ void QPixelTool::setGridSize(int gridSize)
     }
 }
 
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
 void QPixelTool::copyToClipboard()
 {
     QGuiApplication::clipboard()->setPixmap(m_buffer);
 }
-#endif
+#endif // QT_CONFIG(clipboard)
 
 void QPixelTool::saveToFile()
 {
