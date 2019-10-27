@@ -111,8 +111,8 @@ static const struct StringEnum {
 static QStringList types()
 {
     QStringList typelist;
-    for (unsigned int i = 0; i < sizeof(lookupTableData)/sizeof(lookupTableData[0]); i++)
-        typelist << QString::fromLatin1(lookupTableData[i].stringvalue);
+    for (const StringEnum &se : lookupTableData)
+        typelist << QString::fromLatin1(se.stringvalue);
     std::sort(typelist.begin(), typelist.end());
     return typelist;
 }
@@ -123,9 +123,9 @@ static QStringList types()
  */
 static QStandardPaths::StandardLocation parseLocationOrError(const QString &locationString)
 {
-    for (unsigned int i = 0; i < sizeof(lookupTableData)/sizeof(lookupTableData[0]); i++)
-        if (locationString == QLatin1String(lookupTableData[i].stringvalue))
-            return lookupTableData[i].enumvalue;
+    for (const StringEnum &se : lookupTableData)
+        if (locationString == QLatin1String(se.stringvalue))
+            return se.enumvalue;
 
     QString message = QCoreApplication::translate("qtpaths", "Unknown location: %1");
     error(message.arg(locationString));
