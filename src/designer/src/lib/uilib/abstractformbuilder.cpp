@@ -1065,7 +1065,7 @@ QBrush QAbstractFormBuilder::setupBrush(DomBrush *brush)
     } else if (style == Qt::TexturePattern) {
         const DomProperty *texture = brush->elementTexture();
         if (texture && texture->kind() == DomProperty::Pixmap) {
-            br.setTexture(domPropertyToPixmap(texture));
+            br.setTexture({});
         }
     } else {
         const DomColor *color = brush->elementColor();
@@ -1138,7 +1138,7 @@ DomBrush *QAbstractFormBuilder::saveBrush(const QBrush &br)
         const QPixmap pixmap = br.texture();
         if (!pixmap.isNull()) {
             DomProperty *p = new DomProperty;
-            setPixmapProperty(*p,  pixmapPaths(pixmap));
+            setPixmapProperty(*p, {});
             brush->setElementTexture(p);
         }
     } else {
@@ -2681,6 +2681,8 @@ QMetaEnum QAbstractFormBuilder::toolBarAreaMetaEnum()
     return metaEnum<QAbstractFormBuilderGadget>("toolBarArea");
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+
 /*!
     \internal
     Return paths of an icon.
@@ -2704,6 +2706,8 @@ QAbstractFormBuilder::IconPaths QAbstractFormBuilder::pixmapPaths(const QPixmap 
     qWarning() << "QAbstractFormBuilder::pixmapPaths() is obsoleted";
     return IconPaths();
 }
+
+#endif // < Qt 6
 
 /*!
     \internal
@@ -2741,6 +2745,8 @@ void QAbstractFormBuilder::setPixmapProperty(DomProperty &p, const IconPaths &ip
     p.setElementPixmap(pix);
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+
 /*!
     \internal
     Convenience. Return DOM property for icon; 0 if icon.isNull().
@@ -2752,6 +2758,8 @@ DomProperty* QAbstractFormBuilder::iconToDomProperty(const QIcon &icon) const
     qWarning() << "QAbstractFormBuilder::iconToDomProperty() is obsoleted";
     return nullptr;
 }
+
+#endif // < Qt 6
 
 /*!
     \internal
@@ -2803,6 +2811,8 @@ const DomResourcePixmap *QAbstractFormBuilder::domPixmap(const DomProperty* p) {
     }
     return nullptr;
 }
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 
 /*!
     \internal
@@ -2857,6 +2867,8 @@ QPixmap QAbstractFormBuilder::domPropertyToPixmap(const DomProperty* p)
     qWarning() << "QAbstractFormBuilder::domPropertyToPixmap() is obsoleted";
     return QPixmap();
 }
+
+#endif // < Qt 6
 
 /*!
     \fn void QAbstractFormBuilder::createConnections ( DomConnections *, QWidget * )
