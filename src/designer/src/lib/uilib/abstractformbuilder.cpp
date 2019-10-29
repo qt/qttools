@@ -959,27 +959,7 @@ QVariant QAbstractFormBuilder::toVariant(const QMetaObject *meta, DomProperty *p
 void QAbstractFormBuilder::setupColorGroup(QPalette &palette, QPalette::ColorGroup colorGroup,
             DomColorGroup *group)
 {
-    // old format
-    const auto &colors = group->elementColor();
-    for (int role = 0; role < colors.size(); ++role) {
-        const DomColor *color = colors.at(role);
-        const QColor c(color->elementRed(), color->elementGreen(), color->elementBlue());
-        palette.setColor(colorGroup, QPalette::ColorRole(role), c);
-    }
-
-    // new format
-    const QMetaEnum colorRole_enum = metaEnum<QAbstractFormBuilderGadget>("colorRole");
-
-    const auto colorRoles = group->elementColorRole();
-    for (const DomColorRole *colorRole : colorRoles) {
-        if (colorRole->hasAttributeRole()) {
-            const int r = colorRole_enum.keyToValue(colorRole->attributeRole().toLatin1());
-            if (r != -1) {
-                const QBrush br = setupBrush(colorRole->elementBrush());
-                palette.setBrush(colorGroup, static_cast<QPalette::ColorRole>(r), br);
-            }
-        }
-    }
+    QFormBuilderExtra::setupColorGroup(palette, colorGroup, group);
 }
 
 /*!
@@ -987,26 +967,7 @@ void QAbstractFormBuilder::setupColorGroup(QPalette &palette, QPalette::ColorGro
 */
 DomColorGroup *QAbstractFormBuilder::saveColorGroup(const QPalette &palette)
 {
-
-    const QMetaEnum colorRole_enum = metaEnum<QAbstractFormBuilderGadget>("colorRole");
-
-    DomColorGroup *group = new DomColorGroup();
-    QVector<DomColorRole *> colorRoles;
-
-    const uint mask = palette.resolve();
-    for (int role = QPalette::WindowText; role < QPalette::NColorRoles; ++role) {
-        if (mask & (1 << role)) {
-            const QBrush &br = palette.brush(QPalette::ColorRole(role));
-
-            DomColorRole *colorRole = new DomColorRole();
-            colorRole->setElementBrush(saveBrush(br));
-            colorRole->setAttributeRole(QLatin1String(colorRole_enum.valueToKey(role)));
-            colorRoles.append(colorRole);
-        }
-    }
-
-    group->setElementColorRole(colorRoles);
-    return group;
+    return QFormBuilderExtra::saveColorGroup(palette);
 }
 
 /*!
@@ -1014,143 +975,12 @@ DomColorGroup *QAbstractFormBuilder::saveColorGroup(const QPalette &palette)
 */
 QBrush QAbstractFormBuilder::setupBrush(DomBrush *brush)
 {
-    QBrush br;
-    if (!brush->hasAttributeBrushStyle())
-        return br;
-
-    const Qt::BrushStyle style = enumKeyOfObjectToValue<QAbstractFormBuilderGadget, Qt::BrushStyle>("brushStyle",
-                                                                                                    brush->attributeBrushStyle().toLatin1().constData());
-
-    if (style == Qt::LinearGradientPattern ||
-            style == Qt::RadialGradientPattern ||
-            style == Qt::ConicalGradientPattern) {
-        const QMetaEnum gradientType_enum = metaEnum<QAbstractFormBuilderGadget>("gradientType");
-        const QMetaEnum gradientSpread_enum = metaEnum<QAbstractFormBuilderGadget>("gradientSpread");
-        const QMetaEnum gradientCoordinate_enum = metaEnum<QAbstractFormBuilderGadget>("gradientCoordinate");
-
-        const DomGradient *gradient = brush->elementGradient();
-        const QGradient::Type type = enumKeyToValue<QGradient::Type>(gradientType_enum, gradient->attributeType().toLatin1());
-
-
-        QGradient *gr = nullptr;
-
-        if (type == QGradient::LinearGradient) {
-            gr = new QLinearGradient(QPointF(gradient->attributeStartX(), gradient->attributeStartY()),
-                            QPointF(gradient->attributeEndX(), gradient->attributeEndY()));
-        } else if (type == QGradient::RadialGradient) {
-            gr = new QRadialGradient(QPointF(gradient->attributeCentralX(), gradient->attributeCentralY()),
-                            gradient->attributeRadius(),
-                            QPointF(gradient->attributeFocalX(), gradient->attributeFocalY()));
-        } else if (type == QGradient::ConicalGradient) {
-            gr = new QConicalGradient(QPointF(gradient->attributeCentralX(), gradient->attributeCentralY()),
-                            gradient->attributeAngle());
-        }
-        if (!gr)
-            return br;
-
-        const QGradient::Spread spread = enumKeyToValue<QGradient::Spread>(gradientSpread_enum, gradient->attributeSpread().toLatin1());
-        gr->setSpread(spread);
-
-        const QGradient::CoordinateMode coord = enumKeyToValue<QGradient::CoordinateMode>(gradientCoordinate_enum, gradient->attributeCoordinateMode().toLatin1());
-        gr->setCoordinateMode(coord);
-
-        const auto &stops = gradient->elementGradientStop();
-        for (const DomGradientStop *stop : stops) {
-            const DomColor *color = stop->elementColor();
-            gr->setColorAt(stop->attributePosition(), QColor::fromRgb(color->elementRed(),
-                            color->elementGreen(), color->elementBlue(), color->attributeAlpha()));
-        }
-        br = QBrush(*gr);
-        delete gr;
-    } else if (style == Qt::TexturePattern) {
-        const DomProperty *texture = brush->elementTexture();
-        if (texture && texture->kind() == DomProperty::Pixmap) {
-            br.setTexture({});
-        }
-    } else {
-        const DomColor *color = brush->elementColor();
-        br.setColor(QColor::fromRgb(color->elementRed(),
-                            color->elementGreen(), color->elementBlue(), color->attributeAlpha()));
-        br.setStyle((Qt::BrushStyle)style);
-    }
-    return br;
+    return QFormBuilderExtra::setupBrush(brush);
 }
 
-/*!
-    \internal
-*/
 DomBrush *QAbstractFormBuilder::saveBrush(const QBrush &br)
 {
-    const QMetaEnum brushStyle_enum = metaEnum<QAbstractFormBuilderGadget>("brushStyle");
-
-    DomBrush *brush = new DomBrush();
-    const Qt::BrushStyle style = br.style();
-    brush->setAttributeBrushStyle(QLatin1String(brushStyle_enum.valueToKey(style)));
-    if (style == Qt::LinearGradientPattern ||
-                style == Qt::RadialGradientPattern ||
-                style == Qt::ConicalGradientPattern) {
-        const QMetaEnum gradientType_enum = metaEnum<QAbstractFormBuilderGadget>("gradientType");
-        const QMetaEnum gradientSpread_enum = metaEnum<QAbstractFormBuilderGadget>("gradientSpread");
-        const QMetaEnum gradientCoordinate_enum = metaEnum<QAbstractFormBuilderGadget>("gradientCoordinate");
-
-        DomGradient *gradient = new DomGradient();
-        const QGradient *gr = br.gradient();
-        const QGradient::Type type = gr->type();
-        gradient->setAttributeType(QLatin1String(gradientType_enum.valueToKey(type)));
-        gradient->setAttributeSpread(QLatin1String(gradientSpread_enum.valueToKey(gr->spread())));
-        gradient->setAttributeCoordinateMode(QLatin1String(gradientCoordinate_enum.valueToKey(gr->coordinateMode())));
-        QVector<DomGradientStop *> stops;
-        const QGradientStops st = gr->stops();
-        for (const QGradientStop &pair : st) {
-            DomGradientStop *stop = new DomGradientStop();
-            stop->setAttributePosition(pair.first);
-            DomColor *color = new DomColor();
-            color->setElementRed(pair.second.red());
-            color->setElementGreen(pair.second.green());
-            color->setElementBlue(pair.second.blue());
-            color->setAttributeAlpha(pair.second.alpha());
-            stop->setElementColor(color);
-            stops.append(stop);
-        }
-        gradient->setElementGradientStop(stops);
-        if (type == QGradient::LinearGradient) {
-            auto lgr = static_cast<const QLinearGradient *>(gr);
-            gradient->setAttributeStartX(lgr->start().x());
-            gradient->setAttributeStartY(lgr->start().y());
-            gradient->setAttributeEndX(lgr->finalStop().x());
-            gradient->setAttributeEndY(lgr->finalStop().y());
-        } else if (type == QGradient::RadialGradient) {
-            auto rgr = static_cast<const QRadialGradient *>(gr);
-            gradient->setAttributeCentralX(rgr->center().x());
-            gradient->setAttributeCentralY(rgr->center().y());
-            gradient->setAttributeFocalX(rgr->focalPoint().x());
-            gradient->setAttributeFocalY(rgr->focalPoint().y());
-            gradient->setAttributeRadius(rgr->radius());
-        } else if (type == QGradient::ConicalGradient) {
-            auto cgr = static_cast<const QConicalGradient *>(gr);
-            gradient->setAttributeCentralX(cgr->center().x());
-            gradient->setAttributeCentralY(cgr->center().y());
-            gradient->setAttributeAngle(cgr->angle());
-        }
-
-        brush->setElementGradient(gradient);
-    } else if (style == Qt::TexturePattern) {
-        const QPixmap pixmap = br.texture();
-        if (!pixmap.isNull()) {
-            DomProperty *p = new DomProperty;
-            setPixmapProperty(*p, {});
-            brush->setElementTexture(p);
-        }
-    } else {
-        const QColor &c = br.color();
-        DomColor *color = new DomColor();
-        color->setElementRed(c.red());
-        color->setElementGreen(c.green());
-        color->setElementBlue(c.blue());
-        color->setAttributeAlpha(c.alpha());
-        brush->setElementColor(color);
-    }
-    return brush;
+    return QFormBuilderExtra::saveBrush(br);
 }
 
 /*!
@@ -2735,14 +2565,7 @@ void QAbstractFormBuilder::setIconProperty(DomProperty &p, const IconPaths &ip) 
 
 void QAbstractFormBuilder::setPixmapProperty(DomProperty &p, const IconPaths &ip) const
 {
-    DomResourcePixmap *pix = new DomResourcePixmap;
-    if (!ip.second.isEmpty())
-        pix->setAttributeResource(ip.second);
-
-    pix->setText(ip.first);
-
-    p.setAttributeName(QFormBuilderStrings::instance().pixmapAttribute);
-    p.setElementPixmap(pix);
+    QFormBuilderExtra::setPixmapProperty(p, ip);
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
