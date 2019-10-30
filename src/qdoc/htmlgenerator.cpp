@@ -4893,7 +4893,7 @@ void HtmlGenerator::generateAssociatedPropertyNotes(FunctionNode *fn)
 {
     if (fn->hasAssociatedProperties()) {
         out() << "<p><b>Note:</b> ";
-        NodeList &nodes = fn->associatedProperties();
+        NodeList nodes = fn->associatedProperties();
         std::sort(nodes.begin(), nodes.end(), Node::nodeNameLessThan);
         for (const auto *node : qAsConst(nodes)) {
             QString msg;
