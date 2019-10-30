@@ -1114,7 +1114,7 @@ QStringList Aggregate::primaryKeys()
 void Aggregate::markUndocumentedChildrenInternal()
 {
     foreach (Node *child, children_) {
-        if (!child->isSharingComment() && !child->hasDoc() && !child->isDontDocument()) {
+        if (!child->isSharingComment() && !child->hasDoc()) {
             if (!child->docMustBeGenerated()) {
                 if (child->isFunction()) {
                     if (static_cast<FunctionNode*>(child)->hasAssociatedProperties())
@@ -3386,7 +3386,7 @@ void Aggregate::findAllObsoleteThings()
 void Aggregate::findAllClasses()
 {
     foreach (Node *n, children_) {
-        if (!n->isPrivate() && !n->isInternal() &&
+        if (!n->isPrivate() && !n->isInternal() && !n->isDontDocument() &&
             n->tree()->camelCaseModuleName() != QString("QDoc")) {
             if (n->isClassNode()) {
                 QDocDatabase::cppClasses().insert(n->qualifyCppName().toLower(), n);
