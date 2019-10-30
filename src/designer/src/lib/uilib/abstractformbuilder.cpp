@@ -959,7 +959,7 @@ QVariant QAbstractFormBuilder::toVariant(const QMetaObject *meta, DomProperty *p
 void QAbstractFormBuilder::setupColorGroup(QPalette &palette, QPalette::ColorGroup colorGroup,
             DomColorGroup *group)
 {
-    QFormBuilderExtra::setupColorGroup(palette, colorGroup, group);
+    QFormBuilderExtra::setupColorGroup(&palette, colorGroup, group);
 }
 
 /*!
@@ -967,7 +967,8 @@ void QAbstractFormBuilder::setupColorGroup(QPalette &palette, QPalette::ColorGro
 */
 DomColorGroup *QAbstractFormBuilder::saveColorGroup(const QPalette &palette)
 {
-    return QFormBuilderExtra::saveColorGroup(palette);
+    return QFormBuilderExtra::saveColorGroup(palette,
+                                             palette.currentColorGroup());
 }
 
 /*!
@@ -2565,7 +2566,7 @@ void QAbstractFormBuilder::setIconProperty(DomProperty &p, const IconPaths &ip) 
 
 void QAbstractFormBuilder::setPixmapProperty(DomProperty &p, const IconPaths &ip) const
 {
-    QFormBuilderExtra::setPixmapProperty(p, ip);
+    QFormBuilderExtra::setPixmapProperty(&p, ip);
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)

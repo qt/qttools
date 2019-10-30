@@ -180,13 +180,14 @@ public:
     static bool setGridLayoutColumnMinimumWidth(const QString &, QGridLayout *);
     static void clearGridLayoutColumnMinimumWidth(QGridLayout *);
 
-    static void setPixmapProperty(DomProperty &p, const QPair<QString, QString> &ip);
+    static void setPixmapProperty(DomProperty *p, const QPair<QString, QString> &ip);
     static QPalette loadPalette(const DomPalette *dom);
-    static void setupColorGroup(QPalette &palette, QPalette::ColorGroup colorGroup,
-                                DomColorGroup *group);
-    static DomColorGroup *saveColorGroup(const QPalette &palette);
-    static DomPalette *savePalette(QPalette palette);
-    static QBrush setupBrush(DomBrush *brush);
+    static void setupColorGroup(QPalette *palette, QPalette::ColorGroup colorGroup,
+                                const DomColorGroup *group);
+    static DomColorGroup *saveColorGroup(const QPalette &palette,
+                                         QPalette::ColorGroup colorGroup);
+    static DomPalette *savePalette(const QPalette &palette);
+    static QBrush setupBrush(const DomBrush *brush);
     static DomBrush *saveBrush(const QBrush &br);
 
     QStringList m_pluginPaths;

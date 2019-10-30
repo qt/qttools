@@ -512,7 +512,7 @@ void QFormBuilderExtra::clearGridLayoutColumnMinimumWidth(QGridLayout *grid)
     clearPerCellValue(grid, grid->columnCount(), &QGridLayout::setColumnMinimumWidth);
 }
 
-void QFormBuilderExtra::setPixmapProperty(DomProperty &p, const QPair<QString, QString> &ip)
+void QFormBuilderExtra::setPixmapProperty(DomProperty *p, const QPair<QString, QString> &ip)
 {
     DomResourcePixmap *pix = new DomResourcePixmap;
     if (!ip.second.isEmpty())
@@ -520,19 +520,19 @@ void QFormBuilderExtra::setPixmapProperty(DomProperty &p, const QPair<QString, Q
 
     pix->setText(ip.first);
 
-    p.setAttributeName(QFormBuilderStrings::instance().pixmapAttribute);
-    p.setElementPixmap(pix);
+    p->setAttributeName(QFormBuilderStrings::instance().pixmapAttribute);
+    p->setElementPixmap(pix);
 }
 
-void QFormBuilderExtra::setupColorGroup(QPalette &palette, QPalette::ColorGroup colorGroup,
-                                        DomColorGroup *group)
+void QFormBuilderExtra::setupColorGroup(QPalette *palette, QPalette::ColorGroup colorGroup,
+                                        const DomColorGroup *group)
 {
     // old format
     const auto &colors = group->elementColor();
     for (int role = 0; role < colors.size(); ++role) {
         const DomColor *color = colors.at(role);
         const QColor c(color->elementRed(), color->elementGreen(), color->elementBlue());
-        palette.setColor(colorGroup, QPalette::ColorRole(role), c);
+        palette->setColor(colorGroup, QPalette::ColorRole(role), c);
     }
 
     // new format
@@ -544,13 +544,14 @@ void QFormBuilderExtra::setupColorGroup(QPalette &palette, QPalette::ColorGroup 
             const int r = colorRole_enum.keyToValue(colorRole->attributeRole().toLatin1());
             if (r != -1) {
                 const QBrush br = setupBrush(colorRole->elementBrush());
-                palette.setBrush(colorGroup, static_cast<QPalette::ColorRole>(r), br);
+                palette->setBrush(colorGroup, static_cast<QPalette::ColorRole>(r), br);
             }
         }
     }
 }
 
-DomColorGroup *QFormBuilderExtra::saveColorGroup(const QPalette &palette)
+DomColorGroup *QFormBuilderExtra::saveColorGroup(const QPalette &palette,
+                                                 QPalette::ColorGroup colorGroup)
 {
 
     const QMetaEnum colorRole_enum = metaEnum<QAbstractFormBuilderGadget>("colorRole");
@@ -561,7 +562,7 @@ DomColorGroup *QFormBuilderExtra::saveColorGroup(const QPalette &palette)
     const uint mask = palette.resolve();
     for (int role = QPalette::WindowText; role < QPalette::NColorRoles; ++role) {
         if (mask & (1 << role)) {
-            const QBrush &br = palette.brush(QPalette::ColorRole(role));
+            const QBrush &br = palette.brush(colorGroup, QPalette::ColorRole(role));
 
             DomColorRole *colorRole = new DomColorRole();
             colorRole->setElementBrush(saveBrush(br));
@@ -574,17 +575,12 @@ DomColorGroup *QFormBuilderExtra::saveColorGroup(const QPalette &palette)
     return group;
 }
 
-DomPalette *QFormBuilderExtra::savePalette(QPalette palette)
+DomPalette *QFormBuilderExtra::savePalette(const QPalette &palette)
 {
     DomPalette *dom = new DomPalette();
-    palette.setCurrentColorGroup(QPalette::Active);
-    dom->setElementActive(QFormBuilderExtra::saveColorGroup(palette));
-
-    palette.setCurrentColorGroup(QPalette::Inactive);
-    dom->setElementInactive(QFormBuilderExtra::saveColorGroup(palette));
-
-    palette.setCurrentColorGroup(QPalette::Disabled);
-    dom->setElementDisabled(QFormBuilderExtra::saveColorGroup(palette));
+    dom->setElementActive(QFormBuilderExtra::saveColorGroup(palette, QPalette::Active));
+    dom->setElementInactive(QFormBuilderExtra::saveColorGroup(palette, QPalette::Inactive));
+    dom->setElementDisabled(QFormBuilderExtra::saveColorGroup(palette, QPalette::Disabled));
 
     return dom;
 }
@@ -594,19 +590,19 @@ QPalette QFormBuilderExtra::loadPalette(const DomPalette *dom)
     QPalette palette;
 
     if (dom->elementActive())
-        QFormBuilderExtra::setupColorGroup(palette, QPalette::Active, dom->elementActive());
+        QFormBuilderExtra::setupColorGroup(&palette, QPalette::Active, dom->elementActive());
 
     if (dom->elementInactive())
-        QFormBuilderExtra::setupColorGroup(palette, QPalette::Inactive, dom->elementInactive());
+        QFormBuilderExtra::setupColorGroup(&palette, QPalette::Inactive, dom->elementInactive());
 
     if (dom->elementDisabled())
-        QFormBuilderExtra::setupColorGroup(palette, QPalette::Disabled, dom->elementDisabled());
+        QFormBuilderExtra::setupColorGroup(&palette, QPalette::Disabled, dom->elementDisabled());
 
     palette.setCurrentColorGroup(QPalette::Active);
     return palette;
 }
 
-QBrush QFormBuilderExtra::setupBrush(DomBrush *brush)
+QBrush QFormBuilderExtra::setupBrush(const DomBrush *brush)
 {
     QBrush br;
     if (!brush->hasAttributeBrushStyle())
@@ -729,7 +725,7 @@ DomBrush *QFormBuilderExtra::saveBrush(const QBrush &br)
         const QPixmap pixmap = br.texture();
         if (!pixmap.isNull()) {
             DomProperty *p = new DomProperty;
-            QFormBuilderExtra::setPixmapProperty(*p, {});
+            QFormBuilderExtra::setPixmapProperty(p, {});
             brush->setElementTexture(p);
         }
     } else {
