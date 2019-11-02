@@ -16,7 +16,7 @@ SUBDIRS=\
 installed_cmake.depends = cmake
 
 # These tests don't make sense for cross-compiled builds
-cross_compile:SUBDIRS -= linguist qdoc qtattributionsscanner windeployqt qhelpgenerator
+cross_compile:SUBDIRS -= linguist qdoc qtattributionsscanner windeployqt qhelpgenerator qtdiag
 
 # Tests that might make sense, but currently use SRCDIR
 cross_compile:SUBDIRS -= qhelpcontentmodel qhelpenginecore qhelpindexmodel qhelpprojectdata
@@ -30,5 +30,4 @@ cross_compile:SUBDIRS -= qhelpcontentmodel qhelpenginecore qhelpindexmodel qhelp
     qhelpprojectdata \
 
 !qtConfig(process): SUBDIRS -= qtattributionsscanner linguist qtdiag windeployqt
-android|qnx: SUBDIRS -= qtdiag
 !win32|winrt: SUBDIRS -= windeployqt

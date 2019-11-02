@@ -307,8 +307,10 @@ void QPixelTool::keyPressEvent(QKeyEvent *e)
         break;
 #if QT_CONFIG(clipboard)
     case Qt::Key_C:
-        if (e->modifiers() & Qt::ControlModifier)
+        if (e->modifiers().testFlag(Qt::ControlModifier))
             copyToClipboard();
+        else
+            copyColorToClipboard();
         break;
 #endif // QT_CONFIG(clipboard)
     case Qt::Key_S:
@@ -448,6 +450,8 @@ void QPixelTool::contextMenuEvent(QContextMenuEvent *e)
 #if QT_CONFIG(clipboard)
     menu.addAction(QLatin1String("Copy to clipboard"),
                    this, &QPixelTool::copyToClipboard, QKeySequence::Copy);
+    menu.addAction(QLatin1String("Copy color value to clipboard"),
+                   this, &QPixelTool::copyColorToClipboard, Qt::Key_C);
 #endif // QT_CONFIG(clipboard)
 
     menu.addSeparator();
@@ -489,7 +493,7 @@ QSize QPixelTool::sizeHint() const
     return m_initialSize;
 }
 
-static inline QString pixelToolTitle(QPoint pos)
+static inline QString pixelToolTitle(QPoint pos, const QColor &currentColor)
 {
     if (QHighDpiScaling::isActive()) {
         if (auto screen = QGuiApplication::screenAt(pos))
@@ -497,7 +501,8 @@ static inline QString pixelToolTitle(QPoint pos)
     }
     return QCoreApplication::applicationName() + QLatin1String(" [")
         + QString::number(pos.x())
-        + QLatin1String(", ") + QString::number(pos.y()) + QLatin1Char(']');
+        + QLatin1String(", ") + QString::number(pos.y()) + QLatin1String("] ")
+        + currentColor.name();
 }
 
 void QPixelTool::grabScreen()
@@ -515,7 +520,7 @@ void QPixelTool::grabScreen()
         return;
 
     if (m_lastMousePos != mousePos)
-        setWindowTitle(pixelToolTitle(mousePos));
+        setWindowTitle(pixelToolTitle(mousePos, m_currentColor));
 
     int w = int(width() / float(m_zoom));
     int h = int(height() / float(m_zoom));
@@ -553,6 +558,7 @@ void QPixelTool::grabScreen()
 
     update();
 
+    m_currentColor = m_buffer.toImage().pixel(m_buffer.rect().center());
     m_lastMousePos = mousePos;
 }
 
@@ -638,6 +644,11 @@ void QPixelTool::setGridSize(int gridSize)
 void QPixelTool::copyToClipboard()
 {
     QGuiApplication::clipboard()->setPixmap(m_buffer);
+}
+
+void QPixelTool::copyColorToClipboard()
+{
+    QGuiApplication::clipboard()->setText(QColor(m_currentColor).name());
 }
 #endif // QT_CONFIG(clipboard)
 
