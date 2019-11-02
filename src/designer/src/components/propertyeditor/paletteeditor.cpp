@@ -31,10 +31,16 @@
 #include <iconloader_p.h>
 #include <qtcolorbutton.h>
 
+#include <private/formbuilderextra_p.h>
+#include <private/ui4_p.h>
+
 #include <QtDesigner/abstractformeditor.h>
 #include <QtDesigner/abstractformwindowmanager.h>
 
+#include <QtCore/qfile.h>
 #include <QtCore/qmetaobject.h>
+#include <QtCore/qsavefile.h>
+#include <QtCore/qxmlstream.h>
 #include <QtGui/qguiapplication.h>
 #include <QtGui/qpainter.h>
 #include <QtGui/qscreen.h>
@@ -42,6 +48,9 @@
 #  include <QtGui/qclipboard.h>
 #endif
 #include <QtWidgets/qaction.h>
+#include <QtWidgets/qfiledialog.h>
+#include <QtWidgets/qmessagebox.h>
+#include <QtWidgets/qpushbutton.h>
 #include <QtWidgets/qtoolbutton.h>
 #include <QtWidgets/qlabel.h>
 #include <QtWidgets/qmenu.h>
@@ -59,6 +68,11 @@ PaletteEditor::PaletteEditor(QDesignerFormEditorInterface *core, QWidget *parent
     m_core(core)
 {
     ui.setupUi(this);
+    auto saveButton = ui.buttonBox->addButton(tr("Save..."), QDialogButtonBox::ActionRole);
+    connect(saveButton, &QPushButton::clicked, this, &PaletteEditor::save);
+    auto loadButton = ui.buttonBox->addButton(tr("Load..."), QDialogButtonBox::ActionRole);
+    connect(loadButton, &QPushButton::clicked, this, &PaletteEditor::load);
+
     ui.paletteView->setModel(m_paletteModel);
     updatePreviewPalette();
     updateStyledButton();
@@ -267,6 +281,108 @@ void PaletteEditor::viewContextMenuRequested(const QPoint &pos)
         : (isBlack ? QColor(0x404040u) : color.lighter(factor));
     brush.setColor(newColor);
     m_paletteModel->setData(index, QVariant(brush), BrushRole);
+}
+
+static inline QString paletteSuffix() { return QStringLiteral("xml"); }
+
+static inline QString paletteFilter()
+{
+    return PaletteEditor::tr("QPalette UI file (*.xml)");
+}
+
+static bool savePalette(const QString &fileName, const QPalette &pal, QString *errorMessage)
+{
+    QSaveFile file;
+    file.setFileName(fileName);
+    if (!file.open(QIODevice::WriteOnly)) {
+        *errorMessage = PaletteEditor::tr("Cannot open %1 for writing: %2")
+                        .arg(QDir::toNativeSeparators(fileName), file.errorString());
+        return false;
+    }
+    {
+        QScopedPointer<DomPalette> domPalette(QFormBuilderExtra::savePalette(pal));
+        QXmlStreamWriter writer(&file);
+        writer.setAutoFormatting(true);
+        writer.setAutoFormattingIndent(1);
+        writer.writeStartDocument();
+        domPalette->write(writer);
+        writer.writeEndDocument();
+    }
+    const bool result = file.commit();
+    if (!result) {
+        *errorMessage = PaletteEditor::tr("Cannot write %1: %2")
+                        .arg(QDir::toNativeSeparators(fileName), file.errorString());
+    }
+    return result;
+}
+
+static QString msgCannotReadPalette(const QString &fileName, const QXmlStreamReader &reader,
+                                    const QString &why)
+{
+    return PaletteEditor::tr("Cannot read palette from %1:%2:%3")
+           .arg(QDir::toNativeSeparators(fileName)).arg(reader.lineNumber()).arg(why);
+}
+
+static inline QString msgCannotReadPalette(const QString &fileName, const QXmlStreamReader &reader)
+{
+    return msgCannotReadPalette(fileName, reader, reader.errorString());
+}
+
+static bool loadPalette(const QString &fileName, QPalette *pal, QString *errorMessage)
+{
+    QFile file(fileName);
+    if (!file.open(QIODevice::ReadOnly)) {
+        *errorMessage = PaletteEditor::tr("Cannot open %1 for reading: %2")
+                        .arg(QDir::toNativeSeparators(fileName), file.errorString());
+        return false;
+    }
+    QXmlStreamReader reader(&file);
+    if (!reader.readNextStartElement()) {
+        *errorMessage = msgCannotReadPalette(fileName, reader);
+        return false;
+    }
+    if (reader.name() != QLatin1String("palette")) {
+        const auto why = PaletteEditor::tr("Invalid element \"%1\", expected \"palette\".")
+                         .arg(reader.name().toString());
+        *errorMessage = msgCannotReadPalette(fileName, reader, why);
+        return false;
+    }
+    QScopedPointer<DomPalette> domPalette(new DomPalette);
+    domPalette->read(reader);
+    if (reader.hasError()) {
+        *errorMessage = msgCannotReadPalette(fileName, reader);
+        return false;
+    }
+    *pal = QFormBuilderExtra::loadPalette(domPalette.data());
+    return true;
+}
+
+void PaletteEditor::save()
+{
+    QFileDialog dialog(this, tr("Save Palette"), QString(), paletteFilter());
+    dialog.setAcceptMode(QFileDialog::AcceptSave);
+    dialog.setDefaultSuffix(paletteSuffix());
+    while (dialog.exec() == QDialog::Accepted) {
+        QString errorMessage;
+        if (savePalette(dialog.selectedFiles().constFirst(), palette(), &errorMessage))
+            break;
+        QMessageBox::warning(this, tr("Error Writing Palette"), errorMessage);
+    }
+}
+
+void PaletteEditor::load()
+{
+    QFileDialog dialog(this, tr("Load Palette"), QString(), paletteFilter());
+    dialog.setAcceptMode(QFileDialog::AcceptOpen);
+    while (dialog.exec() == QDialog::Accepted) {
+        QPalette pal;
+        QString errorMessage;
+        if (loadPalette(dialog.selectedFiles().constFirst(), &pal, &errorMessage)) {
+            setPalette(pal);
+            break;
+        }
+        QMessageBox::warning(this, tr("Error Reading Palette"), errorMessage);
+    }
 }
 
 //////////////////////
