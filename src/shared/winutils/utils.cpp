@@ -991,18 +991,21 @@ bool patchQtCore(const QString &path, QString *errorMessage)
         std::wcout << "Patching " << QFileInfo(path).fileName() << "...\n";
 
     QFile file(path);
-    if (!file.open(QIODevice::ReadWrite)) {
+    if (!file.open(QIODevice::ReadOnly)) {
         *errorMessage = QString::fromLatin1("Unable to patch %1: %2").arg(
                     QDir::toNativeSeparators(path), file.errorString());
         return false;
     }
-    QByteArray content = file.readAll();
+    const QByteArray oldContent = file.readAll();
 
-    if (content.isEmpty()) {
+    if (oldContent.isEmpty()) {
         *errorMessage = QString::fromLatin1("Unable to patch %1: Could not read file content").arg(
                     QDir::toNativeSeparators(path));
         return false;
     }
+    file.close();
+
+    QByteArray content = oldContent;
 
     QByteArray prfxpath("qt_prfxpath=");
     int startPos = content.indexOf(prfxpath);
@@ -1023,11 +1026,13 @@ bool patchQtCore(const QString &path, QString *errorMessage)
     QByteArray replacement = QByteArray(endPos - startPos, char(0));
     replacement[0] = '.';
     content.replace(startPos, endPos - startPos, replacement);
+    if (content == oldContent)
+        return true;
 
-    if (!file.seek(0)
-            || (file.write(content) != content.size())) {
-        *errorMessage = QString::fromLatin1("Unable to patch %1: Could not write to file").arg(
-                    QDir::toNativeSeparators(path));
+    if (!file.open(QIODevice::WriteOnly)
+        || (file.write(content) != content.size())) {
+        *errorMessage = QString::fromLatin1("Unable to patch %1: Could not write to file: %2").arg(
+                    QDir::toNativeSeparators(path), file.errorString());
         return false;
     }
     return true;
